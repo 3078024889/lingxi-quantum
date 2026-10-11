@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   if (!(await checkRateLimit(`mini-topup-ip:${getClientIp(req)}`, 20, 600))) return NextResponse.json({ error: "请稍后再试" }, { status: 429 });
   const session = await requireMiniSession(req);
   if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
+  if (!session.accountConnected) return NextResponse.json({ error: "请先登录灵犀场账户，同步当前手机的到账账户", code: "ACCOUNT_CONNECTION_REQUIRED" }, { status: 409 });
   if (!(await checkRateLimit(`mini-topup-user:${session.userId}`, 10, 600))) return NextResponse.json({ error: "请稍后再试" }, { status: 429 });
   const raw = await req.text();
   if (raw.length > 8192) return NextResponse.json({ error: "请求过大" }, { status: 413 });

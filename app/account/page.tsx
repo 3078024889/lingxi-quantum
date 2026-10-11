@@ -65,7 +65,7 @@ export default async function AccountPage(
     <main className="lx11-page">
       <section className="mx-auto max-w-3xl px-6 py-20">
         {user ? <>
-          {miniLink && <MiniAccountLinkPanel ticket={miniLink} />}
+          {miniLink && <MiniAccountLinkPanel ticket={miniLink} accountLabel={user.email || user.phone || ""} />}
           <AccountProfileCard email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} />
           <div className="mt-6 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7">
             <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]">{T.account}</p>

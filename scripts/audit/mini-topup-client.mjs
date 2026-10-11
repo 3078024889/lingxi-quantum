@@ -6,7 +6,7 @@ const storage=new Map();
 let modalConfirm = true, linked = true, accountOffline = false;
 const wx={getStorageSync:k=>storage.get(k),setStorageSync:(k,v)=>storage.set(k,v),removeStorageSync:k=>storage.delete(k),showModal(options){options.success({confirm:modalConfirm});},requestVirtualPayment(options){charges++;options.success({});}};
 const api={login:async()=>{},publicRequest:async()=>({enabled:false}),wxLogin:async()=>{logins++;return{code:'fresh-code'};},request:async(path,options)=>{
- if(path.endsWith('/account-summary')){if(accountOffline)throw Error('offline');return{linked,balanceFen:250,topups:[]};}
+ if(path.endsWith('/account-summary')){if(accountOffline)throw Error('offline');return{linked,accountLabel:'10505',balanceFen:250,topups:[]};}
  if(path.endsWith('/create')){creates++;await new Promise(resolve=>{release=resolve;});assert.equal(options.data.productId,'sasi-balance-custom-1.23');return{orderId:'owned-order',payment:{mode:'short_series_goods'}};}
  checks++;return responseOverride || {paid:checks>3};
 }};
@@ -43,3 +43,11 @@ page.data.enabled=true;page.data.custom='1.23';const newIntent=page.pay();await 
 assert.notEqual(page.data.requestId,'old-request');release();await newIntent;assert.equal(charges,2);
 page.data.orderId='unknown';page.data.busy=true;await page.startNew();assert.equal(page.data.orderId,'unknown');
 console.log('PASS: old order retained, explicit independent checkout, cancellation guard, decimals, double clicks and durable request identity');
+page.data.busy=false;page.data.accountLabel='9454';page.data.orderId='old-account-order';page.data.requestId='old-request';
+storage.set('lx_mini_topup_pending',{orderId:'old-account-order'});
+const countBeforeSwitch=creates;
+await page.refreshAccount();
+assert.equal(page.data.accountLabel,'10505');assert.equal(page.data.balanceText,'2.50');
+assert.equal(page.data.orderId,'');assert.equal(storage.has('lx_mini_topup_pending'),false);
+assert.equal(creates,countBeforeSwitch,'Switching displayed account never creates or repeats a purchase');
+console.log('PASS: switching 9454 to 10505 clears stale checkout and shows only the refreshed destination balance');

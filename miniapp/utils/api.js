@@ -75,7 +75,7 @@ async function request(path, options = {}, retried = false) {
       },
     })
   } catch (error) {
-    if (!retried && error && error.statusCode === 401) {
+    if (!retried && error && error.statusCode === 401 && (!options.method || options.method === 'GET')) {
       await login(true)
       return request(path, options, true)
     }

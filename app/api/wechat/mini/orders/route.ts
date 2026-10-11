@@ -10,6 +10,7 @@ export const maxDuration = 60;
 export async function GET(req: Request) {
  const session = await requireMiniSession(req);
  if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
+ if (!session.accountConnected) return NextResponse.json({ error: "请先登录灵犀场账户，同步当前手机的账户" }, { status: 409 });
  const admin = createAdminClient();
  // A local pending state is not proof of non-payment. Query the platform first.
  const { data: expired } = await admin.from("orders").select("id")
@@ -32,6 +33,7 @@ export async function GET(req: Request) {
 export async function DELETE(req: Request) {
  const session = await requireMiniSession(req);
  if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
+ if (!session.accountConnected) return NextResponse.json({ error: "请先登录灵犀场账户，同步当前手机的账户" }, { status: 409 });
  if (!(await checkRateLimit(`mini-order-delete:${session.userId}`, 60, 600))) return NextResponse.json({ error: "请稍后再试" }, { status: 429 });
  const raw = await req.text();
  if (raw.length > 8192) return NextResponse.json({ error: "请求过大" }, { status: 413 });

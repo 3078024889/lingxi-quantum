@@ -4,6 +4,7 @@ import {requireMiniSession} from "@/lib/mini/session";
 export const runtime="nodejs"; export const dynamic="force-dynamic";
 export async function GET(req:Request){
  const session=await requireMiniSession(req); if(!session)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
+ if(!session.accountConnected)return NextResponse.json({error:"请先登录灵犀场账户，同步当前手机的账户"},{status:409});
  const admin=createAdminClient(); const url=new URL(req.url); const lang=String(url.searchParams.get("lang")||"zh-CN");
  const [orders,withdrawals,announcements,reads]=await Promise.all([
   admin.from("orders").select("id,product_id,amount_rmb,amount_usd,status,created_at,paid_at").eq("user_id",session.userId).like("product_id","%balance-%").in("status",["paid","pending","refunded"]).or("status.neq.pending,user_deleted_at.is.null").order("created_at",{ascending:false}).limit(30),

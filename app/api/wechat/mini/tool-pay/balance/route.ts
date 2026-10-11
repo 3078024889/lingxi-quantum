@@ -16,6 +16,7 @@ export async function POST(req: Request) {
   if (!(await checkRateLimit(`mini-balance-ip:${getClientIp(req)}`, 30, 600))) return NextResponse.json({ error: "请稍后再试" }, { status: 429 });
   const session = await requireMiniSession(req);
   if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
+  if (!session.accountConnected) return NextResponse.json({ error: "请先登录灵犀场账户，同步当前手机的付款账户" }, { status: 409 });
   if (!(await checkRateLimit(`mini-balance-user:${session.userId}`, 12, 600))) return NextResponse.json({ error: "请稍后再试" }, { status: 429 });
   const body = await req.json().catch(() => ({}));
   if (!UUID.test(String(body.quoteId ?? ""))) return NextResponse.json({ error: "请返回工具重新确认价格" }, { status: 400 });

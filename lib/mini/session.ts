@@ -2,7 +2,7 @@ import { randomBytes } from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sha256 } from "@/lib/mini/crypto";
 
-export type MiniSession = { userId: string; openid: string; expiresAt: string; tokenHash: string };
+export type MiniSession = { userId: string; openid: string; expiresAt: string; tokenHash: string; accountConnected: boolean };
 
 function bearerToken(req: Request): string {
   const auth = req.headers.get("authorization") ?? "";
@@ -30,12 +30,12 @@ export async function requireMiniSession(req: Request): Promise<MiniSession | nu
   const admin = createAdminClient();
   const { data, error } = await admin
     .from("wechat_mini_sessions")
-    .select("user_id, openid, expires_at")
+    .select("user_id, openid, expires_at, account_connected_at")
     .eq("token_hash", sha256(token))
     .gt("expires_at", new Date().toISOString())
     .maybeSingle();
   if (error || !data) return null;
-  return { userId: data.user_id, openid: data.openid, expiresAt: data.expires_at, tokenHash: sha256(token) };
+  return { userId: data.user_id, openid: data.openid, expiresAt: data.expires_at, tokenHash: sha256(token), accountConnected: Boolean(data.account_connected_at) };
 }
 
 export async function revokeMiniSession(req: Request): Promise<boolean> {

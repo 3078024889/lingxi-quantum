@@ -23,9 +23,9 @@ Page({
  },
  toggleHistory() { this.setData({ showHistory: !this.data.showHistory }); this.renderOrders() },
  async load() {
-  this.setData({ loading: true })
+  this.setData({ loading: true, orders: [], message: '' })
   try { const d = await request('/api/wechat/mini/orders'); this._orders = Array.isArray(d.orders) ? d.orders : []; this.renderOrders() }
-  catch (_) { this.setData({ message: '订单暂时没有加载出来，请稍后再试。' }) }
+  catch (error) { this._orders = []; this.setData({ orders: [], message: error && error.data && error.data.error || '订单暂时没有加载出来，请稍后再试。' }) }
   finally { this.setData({ loading: false }) }
  },
  archiveOrder(e) {

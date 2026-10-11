@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   if (!(await checkRateLimit(`mini-virtual-ip:${getClientIp(req)}`, 30, 600))) return NextResponse.json({ error: "请稍后再试" }, { status: 429 });
   const session = await requireMiniSession(req);
   if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
+  if (!session.accountConnected) return NextResponse.json({ error: "请先登录灵犀场账户，同步当前手机的到账账户", code: "ACCOUNT_CONNECTION_REQUIRED" }, { status: 409 });
   if (process.env.WECHAT_MINI_VPAY_ENV === "sandbox" && !miniSandboxUserAllowed(session.userId)) {
     return NextResponse.json(MINI_PAYMENT_PAUSED, { status: 503 });
   }

@@ -24,7 +24,7 @@ storage.set('lx_mini_topup_pending',{orderId:'pending'});await page.deleteOrders
 const source=ts.transpileModule(fs.readFileSync('app/api/wechat/mini/orders/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 const helperModule={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/mini/order-deletion.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:helperModule.exports});
 const id='00000000-0000-0000-0000-000000000001';const foreign='00000000-0000-0000-0000-000000000002';
-const dbRows=[{id,user_id:'owner',status:'paid',product_id:'sasi-balance-10',created_at:new Date(now).toISOString(),user_deleted_at:null},{id:foreign,user_id:'other',status:'pending',user_deleted_at:null}];let session={userId:'owner'},dbFail=false;
+const dbRows=[{id,user_id:'owner',status:'paid',product_id:'sasi-balance-10',created_at:new Date(now).toISOString(),user_deleted_at:null},{id:foreign,user_id:'other',status:'pending',user_deleted_at:null}];let session={userId:'owner',accountConnected:true},dbFail=false;
 function from(){let filters=[],patch,select=false;const q={eq(k,v){filters.push(r=>r[k]===v);return q;},is(k,v){return q.eq(k,v);},in(k,v){filters.push(r=>v.includes(r[k]));return q;},lte(k,v){filters.push(r=>r[k]<=v);return q;},like(){return q;},or(){filters.push(r=>/^(sasi|ai)(-usd)?-balance-/.test(r.product_id||''));return q;},update(v){patch=v;return q;},select(){select=true;return q;},order(){return q;},limit(){return q;},then(resolve){const matches=dbRows.filter(r=>filters.every(f=>f(r)));if(patch&&!dbFail)matches.forEach(r=>Object.assign(r,patch));resolve({data:select?matches:null,error:dbFail?{}:null});}};return q;}
 const exported={};vm.runInNewContext(source,{exports:exported,Date,require:n=>n==='next/server'?{NextResponse:{json:(data,opts)=>({data,status:opts?.status||200})}}:n.endsWith('/admin')?{createAdminClient:()=>({from})}:n.endsWith('/session')?{requireMiniSession:async()=>session}:n.endsWith('/rate-limit')?{checkRateLimit:async()=>true}:helperModule.exports});
 const req=ids=>({text:async()=>JSON.stringify({orderIds:ids})});
@@ -34,6 +34,6 @@ assert.equal((await exported.DELETE(req(['bad']))).status,400);
 dbFail=true;assert.equal((await exported.DELETE(req([id]))).status,503);dbFail=false;
 assert.equal((await exported.DELETE(req([id]))).status,200);assert.equal(dbRows[0].status,'paid','deletion cannot erase payment state');
 assert.equal((await exported.GET({})).data.orders.length,0,'server deletion survives new device');
-session=null;assert.equal((await exported.DELETE(req([id]))).status,401);
+session.accountConnected=false;assert.equal((await exported.DELETE(req([id]))).status,409);session=null;assert.equal((await exported.DELETE(req([id]))).status,401);
 console.log('PASS: persistent order deletion, ownership, batch atomic guard, errors, expiry exclusion, checkout release and iOS payment conditions');
 
