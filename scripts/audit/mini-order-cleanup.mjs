@@ -1,0 +1,10 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import ts from 'typescript';
+const rows=['unpaid','paid','unknown','failure','closed'].map(id=>({id,user_id:'owner',status:'pending',user_deleted_at:null}));
+rows.push({id:'foreign',user_id:'other',status:'pending',user_deleted_at:null});
+function from(){let filters=[],patch;const q={select(){return q},eq(k,v){filters.push(r=>k==='provider'||k==='product_id'||r[k]===v);return q},is(k,v){return q.eq(k,v)},like(){return q},lte(){return q},order(){return q},limit(){return q},in(k,v){filters.push(r=>v.includes(r[k]));return q},update(v){patch=v;return q},then(resolve){const selected=rows.filter(r=>filters.every(f=>f(r)));if(patch)selected.forEach(r=>Object.assign(r,patch));resolve({data:selected.map(r=>({id:r.id})),error:null})}};return q;}
+const exported={};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/mini/order-cleanup.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:exported,Date,Promise,Error,require(n){if(n.endsWith('/admin'))return{createAdminClient:()=>({from})};if(n.endsWith('/order-deletion'))return{TOPUP_EXPIRY_MS:300000};if(n.endsWith('/virtual-fulfillment'))return{reconcileVirtualToolOrder:async(id,user)=>{assert.equal(user,'owner');if(id==='failure')throw Error('provider unavailable');if(id==='paid'){rows.find(r=>r.id===id).status='paid';return{paid:true}}return{paid:false,closed:id==='closed',providerConfirmedUnpaid:id==='unpaid'}}};throw Error(n)}});
+await exported.expireMiniUnpaidOrders('owner');
+for(const id of ['unpaid','closed'])assert.ok(rows.find(r=>r.id===id).user_deleted_at);
+for(const id of ['paid','unknown','failure','foreign'])assert.equal(rows.find(r=>r.id===id).user_deleted_at,null,id+' must remain');
+assert.equal(rows.find(r=>r.id==='paid').status,'paid');
+console.log('PASS: cleanup removes only provider-confirmed unpaid/closed records; paid, unknown, failed queries and other accounts are preserved.');

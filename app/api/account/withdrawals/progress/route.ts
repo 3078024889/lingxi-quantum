@@ -5,6 +5,7 @@ import {isSameOriginMutation} from '@/lib/sasi/request-security';
 import {moneyOperatorSettings} from '@/lib/money/operator-settings';
 import {reconcileWithdrawal} from '@/lib/money/reconcile-worker';
 import {retryVirtualRefunds} from '@/lib/mini/virtual-refund';
+import {expireMiniUnpaidOrders} from '@/lib/mini/order-cleanup';
 export const runtime='nodejs';export const maxDuration=90;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:'INVALID_REQUEST_ORIGIN'},{status:403});
@@ -20,6 +21,7 @@ export async function POST(req:NextRequest){
   const {data,error}=await query;if(error)throw error;
   const results=[];for(const row of data||[])results.push(await reconcileWithdrawal(row.id,{queryOnly:true}));
   const miniRefunds = await retryVirtualRefunds(5, operator ? undefined : user.id);
+  await expireMiniUnpaidOrders(user.id);
   return NextResponse.json({ok:true,checked:results.length,miniRefunds},{headers:{'Cache-Control':'private, no-store'}});
  }catch{return NextResponse.json({error:'PROGRESS_UNAVAILABLE'},{status:503});}
 }

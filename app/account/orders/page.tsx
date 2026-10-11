@@ -23,7 +23,7 @@ export default async function OrdersPage(props:{searchParams?: Promise<{payment?
   if(user&&supabase){
     const {data,error}=await supabase.from("orders")
       .select("id,product_id,amount_rmb,amount_usd,currency,status,provider,created_at,paid_at")
-      .eq("user_id",user.id).order("created_at",{ascending:false}).limit(100);
+      .eq("user_id",user.id).is("user_deleted_at",null).order("created_at",{ascending:false}).limit(100);
     loadFailed=!!error;
     rows=(data as OrderRow[]|null)??[];
   }
