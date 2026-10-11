@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     const linked = session.accountConnected && Boolean(account.user.phone || (email && !email.endsWith('@mini.lingxifield.invalid')));
     const [wallet, orders] = await Promise.all([
       readUnifiedBalanceSnapshot(admin, session.userId),
-      admin.from("orders").select("id,amount_rmb,status,created_at,paid_at").eq("user_id", session.userId)
+      admin.from("orders").select("id,amount_rmb,status,created_at,paid_at").eq("user_id", session.userId).is("user_deleted_at", null)
         .eq("provider", "wechat_mini_virtual").like("product_id", "sasi-balance-%")
         .order("created_at", { ascending: false }).limit(10),
     ]);

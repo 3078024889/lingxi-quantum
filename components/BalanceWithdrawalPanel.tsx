@@ -43,7 +43,7 @@ export default function BalanceWithdrawalPanel({currency,view="all",historyExtra
     const name=order.provider==="wechat"?c.wechat:order.provider==="alipay"?c.alipay:c.other;
     return `${name} · ¥${Number(order.amount_rmb||0).toFixed(2)}`;
   };
-  const providerName=(provider:string)=>provider==="paypal"?"PayPal":provider==="wechat"?c.wechat:provider==="alipay"?c.alipay:c.other;
+  const providerName=(provider:string)=>provider==="wechat_mini_virtual"?(lang==='zh'?'小程序虚拟支付':'Mini-program payment'):provider==="paypal"?"PayPal":provider==="wechat"?c.wechat:provider==="alipay"?c.alipay:c.other;
   const statusLabel=(w:Withdrawal)=>{
     if(w.status==="requested"&&!w.submission_confirmed_at)return moneyText(lang,"waitingConfirm");
     if(w.status==="cancelled")return moneyText(lang,"cancelled");
