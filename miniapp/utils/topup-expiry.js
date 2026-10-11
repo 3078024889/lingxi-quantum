@@ -10,6 +10,7 @@ function timestamp(pending) {
 }
 function expireCheckout(now = Date.now()) {
   const pending = wx.getStorageSync(KEY)
+  if (pending && (pending.paymentAttempted || (pending.orderId && pending.paymentAttempted !== false))) return false
   const started = timestamp(pending)
   if (!started || now - started < TTL) return false
   // Preserve a recovery reference; never delete a financial record on a timer.
@@ -21,6 +22,6 @@ function expireCheckout(now = Date.now()) {
 }
 function expiredOrder(order, now = Date.now()) {
   const created = Date.parse(order.created_at)
-  return order.status === 'pending' && /^(sasi|ai)(-usd)?-balance-/.test(order.product_id || '') && Number.isFinite(created) && now - created >= TTL
+  return order.providerConfirmedUnpaid === true && order.status === 'pending' && /^(sasi|ai)(-usd)?-balance-/.test(order.product_id || '') && Number.isFinite(created) && now - created >= TTL
 }
 module.exports = { TTL, timestamp, expireCheckout, expiredOrder }

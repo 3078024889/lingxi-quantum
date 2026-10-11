@@ -8,6 +8,7 @@ import { buildMiniVirtualPayment } from "@/lib/mini/virtual-pay";
 import { encryptMiniSecret } from "@/lib/mini/crypto";
 import { exchangeMiniCode } from "@/lib/mini/wechat";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { miniAccountLinked } from "@/lib/mini/account";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -28,6 +29,9 @@ export async function POST(req: Request) {
   const admin = createAdminClient();
   let createdId: string | null = null;
   try {
+    if (!(await miniAccountLinked(session.userId))) return NextResponse.json({
+      error: "请先登录并连接灵犀场账户，再充值到账户余额", code: "ACCOUNT_LINK_REQUIRED"
+    }, { status: 409 });
     const fresh = await exchangeMiniCode(body.code);
     if (fresh.openid !== session.openid) return NextResponse.json({ error: "微信身份不一致" }, { status: 403 });
     const outTradeNo = `LXR${body.requestId}`.slice(0, 32);

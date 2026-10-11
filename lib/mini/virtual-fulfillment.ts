@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
 import { queryVirtualOrder, notifyVirtualGoodsProvided, type XpayOrder } from "@/lib/mini/xpay";
 import { miniSandboxUserAllowed, virtualTopupGoods, type VirtualOrderSnapshot } from "@/lib/mini/virtual-goods";
+import { after } from "next/server";
 
 export function virtualOrderPaid(order: XpayOrder, outTradeNo: string, snapshot: VirtualOrderSnapshot, amountFen: number) {
   return order.order_id === outTradeNo && [2, 3, 4].includes(order.status) &&
@@ -47,11 +48,37 @@ export async function reconcileVirtualToolOrder(orderId: string, ownerId?: strin
     return { paid: false, status: "canceled", closed: true };
   }
   if (!virtualOrderPaid(remote, order.provider_payment_id, snapshot, Math.round(Number(order.amount_rmb) * 100))) {
-    return { paid: false, status: order.status };
+    const providerConfirmedUnpaid = remote.order_id === order.provider_payment_id && remote.status === 1 &&
+      remote.paid_fee === 0 && remote.order_fee === Math.round(Number(order.amount_rmb) * 100) &&
+      [0, 7].includes(remote.order_type) && remote.env_type === (snapshot.env === 0 ? 1 : 2);
+    return { paid: false, status: order.status, providerConfirmedUnpaid };
   }
   if (!["pending", "paid"].includes(order.status)) throw new Error("MINI_ORDER_REQUIRES_REVIEW");
   const result = await fulfillPaidOrder(order.id);
   if (!result.ok) throw new Error("MINI_FULFILLMENT_FAILED");
-  if (remote.status !== 4) await notifyVirtualGoodsProvided(order.provider_payment_id, snapshot.env);
+  // A platform delivery acknowledgement cannot undo a committed wallet credit.
+  // Persist the retry before attempting delivery, so subsequent owner checks can retry.
+  if (remote.status !== 4) {
+    const event = { event_type: "virtual_delivery_ack_pending", out_trade_no: order.provider_payment_id,
+      order_id: order.id, transaction_id: "delivery", payload: { env: snapshot.env }, handled: false };
+    after(async () => { try {
+      const saved = await admin.from("wechat_mini_payment_events").upsert(event,
+        { onConflict: "event_type,out_trade_no,transaction_id" });
+      if (saved.error) throw new Error("MINI_DELIVERY_RETRY_PERSIST_FAILED");
+      await notifyVirtualGoodsProvided(order.provider_payment_id, snapshot.env);
+      await admin.from("wechat_mini_payment_events").update({ handled: true })
+        .eq("event_type", event.event_type).eq("order_id", order.id);
+    } catch (error) {
+      console.error("[mini delivery ack] credited order requires retry", order.id,
+        error instanceof Error ? error.message : "unknown");
+    } });
+  } else {
+    after(async () => { try {
+      await admin.from("wechat_mini_payment_events").update({ handled: true })
+        .eq("event_type", "virtual_delivery_ack_pending").eq("order_id", order.id);
+    } catch (error) {
+      console.error("[mini delivery ack] completion recording requires retry", order.id);
+    } });
+  }
   return { paid: true, status: "paid" };
 }

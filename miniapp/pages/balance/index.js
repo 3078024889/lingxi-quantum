@@ -4,13 +4,14 @@ const expiry = require('../../utils/topup-expiry')
 const paymentErrors = require('../../utils/virtual-payment-errors')
 
 Page({
-  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '' },
+  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, balanceText: '', topups: [] },
   async onLoad() {
     this.setData({ paymentNotice: paymentErrors.iosNotice() })
     expiry.expireCheckout()
     const pending = wx.getStorageSync('lx_mini_topup_pending')
     if (pending) this.setData({ orderId: pending.orderId || '', requestId: pending.requestId || '', selected: pending.selected || '10', custom: pending.custom || '' })
     await this.refreshAvailability()
+    await this.refreshAccount()
   },
   async onShow() {
     if (this.data.busy) return
@@ -20,9 +21,24 @@ Page({
     const pending = wx.getStorageSync('lx_mini_topup_pending')
     this.setData({ orderId: pending && pending.orderId || '', requestId: pending && pending.requestId || '' })
     await this.refreshAvailability()
+    await this.refreshAccount()
   },
   onHide() { clearInterval(this._expiryTimer) },
   onUnload() { clearInterval(this._expiryTimer) },
+  async refreshAccount() {
+    try {
+      const result = await request('/api/wechat/mini/account-summary')
+      this.setData({ accountLoaded: true, linked: result.linked === true, balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2),
+        topups: (result.topups || []).map(row => ({ ...row, amountText: Number(row.amount_rmb).toFixed(2), statusText: row.status === 'paid' ? '已到账' : row.status === 'pending' ? '付款确认中' : row.status === 'refunded' ? '已退款' : '已关闭' })) })
+    } catch (_) { this.setData({ accountLoaded: false, message: '账户余额暂未加载，请重试。已付款订单仍会核实到账。' }) }
+  },
+  async connectAccount() {
+    if (this.data.busy) return
+    try {
+      const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
+      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+    } catch (_) { this.setData({ message: '账户连接暂未完成，请重试。' }) }
+  },
   expirePending() {
     const pending = wx.getStorageSync('lx_mini_topup_pending')
     if (!this.data.busy && expiry.expireCheckout()) {
@@ -55,8 +71,10 @@ Page({
     if (result.closed === true && result.status === 'canceled' && result.paid === false) {
       this.clearPending('上一笔充值已关闭且未付款，可以按当前金额重新充值。'); return
     }
-    if (!result.paid) { this.setData({ message: '上一笔付款尚未确认，记录已保留。可以继续查单，也可以选择开始新充值。' }); return }
+    if (!result.paid) { this.setData({ message: '付款结果正在核验，订单已保留。若已扣款，请勿重复付款，可查看下方充值进度。' }); return false }
     this.clearPending('充值已到账，可在账户中查看余额。')
+    await this.refreshAccount()
+    return true
   },
   async startNew() {
     if (this.data.busy || !this.data.orderId) return
@@ -114,8 +132,10 @@ Page({
       if (this.data.orderId) { await this.confirmPayment(); return }
       if (typeof wx.requestVirtualPayment !== 'function') { this.setData({ message: '请更新微信后再试。' }); return }
       const requestId = this.data.requestId || (Date.now().toString(16) + Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2)).padEnd(32, '0').slice(0, 32)
-      this.setData({ requestId })
       await login()
+      await this.refreshAccount()
+      if (!this.data.accountLoaded || !this.data.linked) { this.setData({ message: '请先登录并连接灵犀场账户，确认充值到账的账户。' }); return }
+      this.setData({ requestId })
       const { code } = await wxLogin()
       const productId = `sasi-balance-${this.data.selected === 'custom' ? 'custom-' : ''}${value}`
       const previous = wx.getStorageSync('lx_mini_topup_pending')
@@ -123,9 +143,19 @@ Page({
       wx.setStorageSync('lx_mini_topup_pending', { requestId, createdAt, selected: this.data.selected, custom: this.data.custom })
       const created = await request('/api/wechat/mini/balance-pay/create', { method: 'POST', data: { productId, code, requestId } })
       this.setData({ orderId: created.orderId })
-      wx.setStorageSync('lx_mini_topup_pending', { orderId: created.orderId, requestId, createdAt, selected: this.data.selected, custom: this.data.custom })
-      if (!created.pending && !created.paid) await new Promise((resolve, reject) => wx.requestVirtualPayment({ ...created.payment, success: resolve, fail: reject }))
-      await this.confirmPayment()
+        wx.setStorageSync('lx_mini_topup_pending', { orderId: created.orderId, requestId, createdAt, selected: this.data.selected, custom: this.data.custom, paymentAttempted: false })
+      if (!created.pending && !created.paid) {
+        wx.setStorageSync('lx_mini_topup_pending', { ...wx.getStorageSync('lx_mini_topup_pending'), paymentAttempted: true })
+        await new Promise((resolve, reject) => wx.requestVirtualPayment({ ...created.payment, success: resolve, fail: reject }))
+      }
+      this.setData({ message: '购买操作已完成，正在确认余额到账，请勿重复付款。' })
+      // Read-only recovery: no second purchase, even if the first status request fails.
+      for (let attempt = 0; attempt < 3 && this.data.orderId; attempt++) {
+        try { if (await this.confirmPayment()) break }
+        catch (_) { this.setData({ message: '购买结果正在核验。请勿重复付款，稍后可检查到账进度。' }) }
+        if (attempt < 2 && this.data.orderId) await new Promise(resolve => setTimeout(resolve, 1500))
+      }
+      await this.refreshAccount()
     } catch (error) {
       const message = paymentErrors.failureMessage(error) + (this.data.orderId ? '若已扣款，请查付款结果，勿重复付款。未付款订单5分钟后自动删除。' : '')
       wx.setStorageSync('lx_mini_last_payment_error', { orderId: this.data.orderId, errCode: error && (error.errCode ?? error.errcode), errMsg: String(error && error.errMsg || '').slice(0, 300), at: Date.now() })

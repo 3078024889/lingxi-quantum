@@ -57,7 +57,7 @@ await instance.pay();
 assert.equal(calls.filter(x => x === 'virtual').length, 1, 'Uncertain payment must not charge again');
 assert.equal(calls.filter(x => x.endsWith('/create')).length, 1);
 paid = true; await instance.pay(); assert.match(instance.data.message, /已确认/);
-const fulfillment = load('lib/mini/virtual-fulfillment.ts', { '@/lib/supabase/admin': {}, '@/lib/fulfill-order': {}, '@/lib/mini/xpay': {}, '@/lib/mini/virtual-goods': goods });
+const fulfillment = load('lib/mini/virtual-fulfillment.ts', { 'next/server':{after(){}}, '@/lib/supabase/admin': {}, '@/lib/fulfill-order': {}, '@/lib/mini/xpay': {}, '@/lib/mini/virtual-goods': goods });
 const snapshot = { env: 0, unitPriceFen: 200, quantity: 3 };
 const remote = { order_id: 'n', status: 2, order_type: 0, env_type: 1, paid_fee: 600, order_fee: 600 };
 assert.equal(fulfillment.virtualOrderPaid(remote, 'n', snapshot, 600), true);

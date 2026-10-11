@@ -4,6 +4,7 @@ import{processMoneyWebhookInbox}from"@/lib/money/webhook-inbox";
 import{reconcileDueWithdrawals}from"@/lib/money/reconcile-worker";
 import{secureSecretEqual}from"@/lib/security/secret-equals";
 import{markRuntimeFailed,markRuntimeStarted,markRuntimeSucceeded}from"@/lib/ops/runtime-heartbeat";
+import { reconcileMiniPayments } from "@/lib/mini/reconcile-worker";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -27,6 +28,7 @@ export async function GET(req:Request){
  try{
   const webhookEvents=await processMoneyWebhookInbox(30);
   const result=await reconcileDueWithdrawals(20);
+  const miniPayments = await reconcileMiniPayments();
   const completed=result.filter((x:any)=>x?.status==="completed").length;
   const failed=result.filter((x:any)=>x?.status==="failed").length;
   const pending=result.length-completed-failed;
@@ -42,6 +44,7 @@ export async function GET(req:Request){
    ok:true,
    requestId,
    durationMs,
+   miniPayments,
    webhookEvents:{
     checked:webhookEvents.length,
     deadLetter:webhookEvents.filter((x:any)=>x?.status==="dead_letter").length,

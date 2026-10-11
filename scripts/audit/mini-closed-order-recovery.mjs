@@ -10,6 +10,7 @@ const admin={from(table){let update=false;return{select(){return this},eq(){retu
   then(resolve){resolve({data:update?[{id:'o'}]:[]})}}}};
 const exports={};
 vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/mini/virtual-fulfillment.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require(name){return{
+  'next/server':{after(){}},
   '@/lib/supabase/admin':{createAdminClient:()=>admin},
   '@/lib/fulfill-order':{fulfillPaidOrder:async()=>{credits++;return{ok:true}}},
   '@/lib/mini/xpay':{queryVirtualOrder:async()=>remote,notifyVirtualGoodsProvided:async()=>{}},

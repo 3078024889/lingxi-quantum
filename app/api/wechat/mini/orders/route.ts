@@ -3,18 +3,25 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { requireMiniSession } from "@/lib/mini/session";
 import { TOPUP_EXPIRY_MS, validOrderDeletionIds } from "@/lib/mini/order-deletion";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { reconcileVirtualToolOrder } from "@/lib/mini/virtual-fulfillment";
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 export async function GET(req: Request) {
  const session = await requireMiniSession(req);
  if (!session) return NextResponse.json({ error: "登录状态已失效" }, { status: 401 });
  const admin = createAdminClient();
- // Remove from all customer lists without destroying settlement identifiers.
- const { error: cleanupError } = await admin.from("orders").update({ user_deleted_at: new Date().toISOString() })
-  .eq("user_id", session.userId).is("user_deleted_at", null).eq("status", "pending")
+ // A local pending state is not proof of non-payment. Query the platform first.
+ const { data: expired } = await admin.from("orders").select("id")
+  .eq("user_id", session.userId).is("user_deleted_at", null).eq("status", "pending").eq("provider", "wechat_mini_virtual")
   .lte("created_at", new Date(Date.now() - TOPUP_EXPIRY_MS).toISOString())
-  .or("product_id.like.sasi-balance-%,product_id.like.sasi-usd-balance-%,product_id.like.ai-balance-%,product_id.like.ai-usd-balance-%");
- if (cleanupError) return NextResponse.json({ error: "过期订单清理暂未完成，请重试" }, { status: 503 });
+  .like("product_id", "sasi-balance-%").order("created_at", { ascending: false }).limit(5);
+ await Promise.allSettled((expired || []).map(async row => {
+   const result = await reconcileVirtualToolOrder(row.id, session.userId);
+   if (result.paid || !(result.closed || result.providerConfirmedUnpaid)) return;
+   await admin.from("orders").update({ user_deleted_at: new Date().toISOString() })
+     .eq("id", row.id).eq("user_id", session.userId).in("status", ["pending", "canceled"]);
+ }));
  const { data, error } = await admin.from("orders")
   .select("id,product_id,amount_rmb,amount_usd,currency,status,provider,channel,created_at,paid_at")
   .eq("user_id", session.userId).is("user_deleted_at", null).order("created_at", { ascending: false }).limit(100);

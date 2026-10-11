@@ -5,6 +5,7 @@ import { createAdminClient, isSupabaseAdminConfigured } from "@/lib/supabase/adm
 import { encryptMiniSecret, sha256 } from "@/lib/mini/crypto";
 import { createMiniSession } from "@/lib/mini/session";
 import { exchangeMiniCode, miniWechatConfigured } from "@/lib/mini/wechat";
+import { miniAccountLinked } from "@/lib/mini/account";
 
 export const runtime = "nodejs";
 export const maxDuration = 15;
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
     );
     if (identityError) throw new Error(`Could not save mini identity: ${identityError.code}`);
     const session = await createMiniSession(userId, wxSession.openid);
-    return NextResponse.json({ token: session.token, expiresAt: session.expiresAt, linked: false });
+    return NextResponse.json({ token: session.token, expiresAt: session.expiresAt, linked: await miniAccountLinked(userId) });
   } catch (error) {
     console.error("[mini login] failed", error instanceof Error ? error.message : "unknown");
     return NextResponse.json({ error: "微信登录暂未完成，请稍后重试" }, { status: 502 });

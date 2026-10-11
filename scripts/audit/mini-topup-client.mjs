@@ -3,29 +3,33 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 let definition,charges=0,creates=0,checks=0,logins=0,release,responseOverride;
 const storage=new Map();
-let modalConfirm = true;
+let modalConfirm = true, linked = true, accountOffline = false;
 const wx={getStorageSync:k=>storage.get(k),setStorageSync:(k,v)=>storage.set(k,v),removeStorageSync:k=>storage.delete(k),showModal(options){options.success({confirm:modalConfirm});},requestVirtualPayment(options){charges++;options.success({});}};
 const api={login:async()=>{},publicRequest:async()=>({enabled:false}),wxLogin:async()=>{logins++;return{code:'fresh-code'};},request:async(path,options)=>{
+ if(path.endsWith('/account-summary')){if(accountOffline)throw Error('offline');return{linked,balanceFen:250,topups:[]};}
  if(path.endsWith('/create')){creates++;await new Promise(resolve=>{release=resolve;});assert.equal(options.data.productId,'sasi-balance-custom-1.23');return{orderId:'owned-order',payment:{mode:'short_series_goods'}};}
- checks++;return responseOverride || {paid:checks>1};
+ checks++;return responseOverride || {paid:checks>3};
 }};
 const expiryModule={exports:{}};
 vm.runInNewContext(fs.readFileSync('miniapp/utils/topup-expiry.js','utf8'),{module:expiryModule,wx,Date});
 const paymentModule={exports:{}};
 vm.runInNewContext(fs.readFileSync('miniapp/utils/virtual-payment-errors.js','utf8'),{module:paymentModule,wx});
-vm.runInNewContext(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),{Page:d=>definition=d,wx,require:name=>name.includes('topup-expiry')?expiryModule.exports:name.includes('virtual-payment-errors')?paymentModule.exports:api,Date,Math,Promise});
+vm.runInNewContext(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),{Page:d=>definition=d,wx,setTimeout:fn=>fn(),require:name=>name.includes('topup-expiry')?expiryModule.exports:name.includes('virtual-payment-errors')?paymentModule.exports:api,Date,Math,Promise});
 const page={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
 await page.pay();assert.equal(charges+creates+logins,0);
 page.data.enabled=true;page.data.selected='custom';page.data.custom='1.234';await page.pay();assert.equal(charges+creates+logins,0);
+page.data.custom='1.23';linked=false;await page.pay();assert.equal(charges+creates+logins,0,'Unlinked accounts cannot create or pay');
+linked=true;accountOffline=true;await page.pay();assert.equal(charges+creates+logins,0,'Unknown account status cannot create or pay');
+accountOffline=false;
 page.data.custom='1.23';const pending=page.pay();await new Promise(resolve=>setTimeout(resolve,0));await page.pay();assert.equal(creates,1);assert.match(storage.get('lx_mini_topup_pending').requestId,/^[0-9a-f]{32}$/);
 release();await pending;assert.equal(charges,1);assert.equal(page.data.orderId,'owned-order');
-await page.pay();assert.equal(charges,1);assert.equal(creates,1);assert.equal(checks,2);assert.equal(storage.has('lx_mini_topup_pending'),false);
+await page.pay();assert.equal(charges,1);assert.equal(creates,1);assert.equal(checks,4);assert.equal(storage.has('lx_mini_topup_pending'),false);
 page.data.enabled=false;page.data.orderId='uncertain-order';page.data.requestId='old-request';
 storage.set('lx_mini_topup_pending',{orderId:'uncertain-order',requestId:'old-request',selected:'10',custom:''});
 page.choose({currentTarget:{dataset:{amount:'custom'}}});page.input({detail:{value:'12'}});
 assert.equal(page.data.selected,'custom');assert.equal(page.data.custom,'12');
 assert.equal(page.data.requestId,'old-request','Editing cannot discard an uncertain order identity');
-await page.pay();assert.equal(checks,3,'Pending order can be checked while availability is offline');assert.equal(creates,1);
+await page.pay();assert.equal(checks,5,'Pending order can be checked while availability is offline');assert.equal(creates,1);
 page.data.orderId='closed-order';storage.set('lx_mini_topup_pending',{orderId:'closed-order'});
 responseOverride={paid:false,status:'canceled',closed:true};await page.pay();
 assert.equal(page.data.orderId,'');assert.equal(storage.has('lx_mini_topup_pending'),false);assert.equal(page.data.custom,'12');
