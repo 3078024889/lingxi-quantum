@@ -11,7 +11,9 @@ const api={login:async()=>{},publicRequest:async()=>({enabled:false}),wxLogin:as
 }};
 const expiryModule={exports:{}};
 vm.runInNewContext(fs.readFileSync('miniapp/utils/topup-expiry.js','utf8'),{module:expiryModule,wx,Date});
-vm.runInNewContext(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),{Page:d=>definition=d,wx,require:name=>name.includes('topup-expiry')?expiryModule.exports:api,Date,Math,Promise});
+const paymentModule={exports:{}};
+vm.runInNewContext(fs.readFileSync('miniapp/utils/virtual-payment-errors.js','utf8'),{module:paymentModule,wx});
+vm.runInNewContext(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),{Page:d=>definition=d,wx,require:name=>name.includes('topup-expiry')?expiryModule.exports:name.includes('virtual-payment-errors')?paymentModule.exports:api,Date,Math,Promise});
 const page={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
 await page.pay();assert.equal(charges+creates+logins,0);
 page.data.enabled=true;page.data.selected='custom';page.data.custom='1.234';await page.pay();assert.equal(charges+creates+logins,0);

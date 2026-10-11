@@ -4,7 +4,7 @@ import vm from 'node:vm';
 const storage=new Map();
 const wx={getStorageSync:k=>storage.get(k),setStorageSync:(k,v)=>storage.set(k,v),removeStorageSync:k=>storage.delete(k)};
 const module={exports:{}};
-vm.runInNewContext(fs.readFileSync('miniapp/utils/order-history.js','utf8'),{module,wx});
+vm.runInNewContext(fs.readFileSync('miniapp/utils/order-history.js','utf8'),{module,wx,Date});
 const history=module.exports;
 const rows=[{id:'first',product_id:'sasi-balance-10',status:'pending',currency:'CNY',amount_rmb:10,provider:'wechat_mini_virtual'}, {id:'old',product_id:'stellar-trace',status:'paid',currency:'USD',amount_usd:50}];
 let definition;

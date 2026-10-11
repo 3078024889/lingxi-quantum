@@ -1,10 +1,12 @@
 const MESSAGE = '小程序内充值暂未开放。已有余额和订单仍保留，可在账户中查看。'
 const { login, request, publicRequest, wxLogin, connectionMessage } = require('../../utils/api')
 const expiry = require('../../utils/topup-expiry')
+const paymentErrors = require('../../utils/virtual-payment-errors')
 
 Page({
-  data: { message: '正在检查充值服务…', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '' },
+  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '' },
   async onLoad() {
+    this.setData({ paymentNotice: paymentErrors.iosNotice() })
     expiry.expireCheckout()
     const pending = wx.getStorageSync('lx_mini_topup_pending')
     if (pending) this.setData({ orderId: pending.orderId || '', requestId: pending.requestId || '', selected: pending.selected || '10', custom: pending.custom || '' })
@@ -22,7 +24,11 @@ Page({
   onHide() { clearInterval(this._expiryTimer) },
   onUnload() { clearInterval(this._expiryTimer) },
   expirePending() {
-    if (!this.data.busy && expiry.expireCheckout()) this.setData({ orderId: '', requestId: '', message: '上一笔充值已超过5分钟，已移出当前付款流程。可以开始新充值，付款记录仍可核实。' })
+    const pending = wx.getStorageSync('lx_mini_topup_pending')
+    if (!this.data.busy && expiry.expireCheckout()) {
+      this.setData({ orderId: '', requestId: '', message: '未付款充值已超过5分钟，已从订单列表删除。可以开始新充值；实际付款仍会核实到账。' })
+      if (pending && pending.orderId) request('/api/wechat/mini/orders', { method: 'DELETE', data: { orderIds: [pending.orderId] } }).catch(() => {})
+    }
   },
   async refreshAvailability() {
     if (this._checkingAvailability) return
@@ -64,6 +70,19 @@ Page({
     // Release the checkout slot, retaining the server order and its settlement.
     this.clearPending('旧订单已保留在我的订单中，请确认金额后开始新的充值。')
   },
+  async deletePending() {
+    if (this.data.busy || !this.data.orderId) return
+    const id = this.data.orderId
+    const confirmed = await new Promise(resolve => wx.showModal({ title: '删除充值订单', content: '从当前订单和历史记录中删除。不取消正在进行的付款；实际扣款仍会核实到账。', confirmText: '删除', success: result => resolve(result.confirm), fail: () => resolve(false) }))
+    if (!confirmed || this.data.busy || this.data.orderId !== id) return
+    this.setData({ busy: true })
+    try {
+      const result = await request('/api/wechat/mini/orders', { method: 'DELETE', data: { orderIds: [id] } })
+      if (!Array.isArray(result.deletedIds) || !result.deletedIds.includes(id)) throw new Error('Deletion not confirmed')
+      this.clearPending('旧充值订单已删除，请确认金额后开始新充值。')
+    } catch (_) { this.setData({ message: '删除未完成，请重试。' }) }
+    finally { this.setData({ busy: false }) }
+  },
   async pay() {
     if (this.data.busy) return
     this.expirePending()
@@ -87,6 +106,8 @@ Page({
     const [whole, fraction = ''] = raw.split('.')
     const minor = Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
     if (minor < 1 || minor > 1000000) { this.setData({ message: '金额须大于零，单笔最高10000元。' }); return }
+    const paymentCondition = paymentErrors.preflight(minor)
+    if (paymentCondition) { this.setData({ message: paymentCondition }); wx.showModal({ title: '苹果支付条件', content: paymentCondition, showCancel: false }); return }
     const value = String(minor / 100)
     this.setData({ busy: true })
     try {
@@ -106,9 +127,8 @@ Page({
       if (!created.pending && !created.paid) await new Promise((resolve, reject) => wx.requestVirtualPayment({ ...created.payment, success: resolve, fail: reject }))
       await this.confirmPayment()
     } catch (error) {
-      const code = Number(error && (error.errCode || error.errcode))
-      const restricted = [-15017, -15019].includes(code)
-      const message = restricted ? '微信暂时限制了商家收款，当前无法完成充值。已有余额和订单保留。' : this.data.orderId ? '付款尚未确认，请在订单中查看结果，不要重复付款。' : (error && error.data && error.data.error) || '充值未能开始，请检查网络或更新微信后重试。'
+      const message = paymentErrors.failureMessage(error) + (this.data.orderId ? '若已扣款，请查付款结果，勿重复付款。未付款订单5分钟后自动删除。' : '')
+      wx.setStorageSync('lx_mini_last_payment_error', { orderId: this.data.orderId, errCode: error && (error.errCode ?? error.errcode), errMsg: String(error && error.errMsg || '').slice(0, 300), at: Date.now() })
       this.setData({ message })
       if (typeof wx.showModal === 'function') wx.showModal({ title: '充值未完成', content: message, showCancel: false })
     }

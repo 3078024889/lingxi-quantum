@@ -10,9 +10,16 @@ Page({
  renderOrders() {
   expiry.expireCheckout()
   const hidden = new Set(history.archivedIds())
-  const rows = this._orders || []
-  rows.filter(row => expiry.expiredOrder(row)).forEach(row => hidden.add(row.id))
+  const rows = (this._orders || []).filter(row => !expiry.expiredOrder(row))
   this.setData({ orders: rows.filter(row => this.data.showHistory ? hidden.has(row.id) : !hidden.has(row.id)).map(history.present), historyCount: rows.filter(row => hidden.has(row.id)).length })
+  const expired = (this._orders || []).filter(row => expiry.expiredOrder(row))
+  if (expired.length && !this._syncingExpiry && Date.now() >= (this._nextExpirySync || 0)) {
+   this._syncingExpiry = true
+   this._nextExpirySync = Date.now() + 30000
+   request('/api/wechat/mini/orders', { method: 'DELETE', data: { orderIds: expired.slice(0, 100).map(row => row.id) } })
+    .then(result => { const removed = new Set(result.deletedIds || []); this._orders = (this._orders || []).filter(row => !removed.has(row.id)) })
+    .catch(() => {}).finally(() => { this._syncingExpiry = false })
+  }
  },
  toggleHistory() { this.setData({ showHistory: !this.data.showHistory }); this.renderOrders() },
  async load() {
@@ -30,6 +37,24 @@ Page({
   if (!this.data.showHistory && pending && pending.orderId === id) wx.removeStorageSync('lx_mini_topup_pending')
   this.renderOrders()
   this.setData({ message: this.data.showHistory ? '订单已恢复显示。' : '已移入历史记录。此操作不取消付款，已付款订单仍会核实到账。' })
+ },
+ async deleteOrder(e) { await this.deleteOrders([String(e.currentTarget.dataset.id || '')]) },
+ async clearHistory() { await this.deleteOrders(this.data.orders.map(row => row.id)) },
+ async deleteOrders(ids) {
+  if (this.data.loading || !ids.length || ids.some(id => !(this._orders || []).some(row => row.id === id))) return
+  const confirmed = await new Promise(resolve => wx.showModal({ title: ids.length > 1 ? '清空历史订单' : '删除订单', content: '删除后，当前列表和历史记录均不再显示。不影响已付款到账、退款处理；此操作不会取消正在进行的付款。', confirmText: '删除', success: result => resolve(result.confirm), fail: () => resolve(false) }))
+  if (!confirmed || this.data.loading) return
+  this.setData({ loading: true })
+  try {
+   const result = await request('/api/wechat/mini/orders', { method: 'DELETE', data: { orderIds: ids } })
+   if (!Array.isArray(result.deletedIds) || ids.some(id => !result.deletedIds.includes(id))) throw new Error('Deletion not confirmed')
+   const deleted = new Set(result.deletedIds)
+   this._orders = (this._orders || []).filter(row => !deleted.has(row.id))
+   const pending = wx.getStorageSync('lx_mini_topup_pending')
+   if (pending && deleted.has(pending.orderId)) wx.removeStorageSync('lx_mini_topup_pending')
+   this.renderOrders(); this.setData({ message: '订单已删除，历史记录也不再显示。' })
+  } catch (_) { this.setData({ message: '删除未完成，请重试。' }) }
+  finally { this.setData({ loading: false }) }
  },
  async confirmVirtual(e) {
   if (this.data.loading) return

@@ -3,6 +3,7 @@
  <view class="lx-kicker">订单中心</view><view class="lx-title">{{showHistory ? '历史记录' : '我的订单'}}</view>
  <button class="lx-button secondary" bindtap="toggleHistory">{{showHistory ? '返回当前订单' : '查看历史记录（' + historyCount + '）'}}</button>
  <button class="lx-button" bindtap="openBalance">前往充值</button>
+ <button wx:if="{{showHistory && orders.length}}" class="lx-button secondary" bindtap="clearHistory" disabled="{{loading}}">清空历史订单</button>
  <view wx:if="{{loading}}" class="lx-feature-note">正在加载订单…</view>
  <view wx:if="{{message}}" class="lx-feature-note">{{message}}</view>
  <view wx:if="{{!loading && orders.length === 0}}" class="lx-feature"><view class="lx-feature-note">{{showHistory ? '没有移入历史的订单。' : '当前没有订单。'}}</view></view>
@@ -13,6 +14,7 @@
    <view class="order-actions">
     <button wx:if="{{item.provider === 'wechat_mini_virtual' && item.status === 'pending'}}" class="order-action" data-id="{{item.id}}" bindtap="confirmVirtual" disabled="{{loading}}">查付款结果</button>
     <button class="order-action" data-id="{{item.id}}" bindtap="archiveOrder" disabled="{{loading}}">{{showHistory ? '恢复显示' : '移入历史'}}</button>
+    <button class="order-action" data-id="{{item.id}}" bindtap="deleteOrder" disabled="{{loading}}">删除订单</button>
    </view>
   </view>
  </view>

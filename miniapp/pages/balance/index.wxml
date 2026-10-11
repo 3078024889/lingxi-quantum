@@ -3,10 +3,12 @@
  <view class="lx-title">{{loading ? '正在连接' : enabled ? '余额充值' : '充值服务'}}</view>
  <view class="topup-options"><button wx:for="{{amounts}}" wx:key="*this" data-amount="{{item}}" bindtap="choose" disabled="{{busy}}" class="topup-option {{selected == item ? 'selected' : ''}}">¥{{item}}</button><button data-amount="custom" bindtap="choose" disabled="{{busy}}" class="topup-option {{selected == 'custom' ? 'selected' : ''}}">自定义</button></view>
  <view wx:if="{{selected == 'custom'}}" class="lx-feature"><input type="digit" value="{{custom}}" bindinput="input" disabled="{{busy}}" placeholder="输入金额，例如12或12.34" maxlength="8"/></view>
+ <view wx:if="{{paymentNotice}}" class="lx-feature-note">{{paymentNotice}}</view>
  <view class="lx-feature"><view class="lx-feature-note">{{message}}</view></view>
  <button wx:if="{{!enabled}}" class="lx-button" bindtap="refreshAvailability" loading="{{loading}}" disabled="{{loading}}">重新检查充值服务</button>
  <button wx:if="{{enabled || orderId}}" class="lx-button" bindtap="pay" loading="{{busy}}" disabled="{{busy}}">{{orderId ? '检查上一笔充值结果' : '确认金额并充值'}}</button>
  <button wx:if="{{orderId}}" class="lx-button secondary" bindtap="startNew" disabled="{{busy}}">保留旧订单，开始新充值</button>
+ <button wx:if="{{orderId}}" class="lx-button secondary" bindtap="deletePending" disabled="{{busy}}">删除旧订单，重新充值</button>
  <button class="lx-button secondary" bindtap="openAccount">查看账户</button>
  <button class="lx-button secondary" bindtap="openOrders">查看已有订单</button>
 </view></view>
