@@ -30,27 +30,14 @@ export type SasiJobRow = {
 const MAX_DELIVERY_BYTES = 100 * 1024 * 1024;
 
 async function downloadTrustedVideo(provider: string, initialUrl: string) {
-  let current = new URL(initialUrl);
-  for (let redirects = 0; redirects <= 3; redirects += 1) {
-    const access = providerAssetAccess(provider, current.toString());
-    if (!access.trusted) throw new Error("UNTRUSTED_DELIVERY_HOST");
-    const response = await fetch(current, { headers: access.headers, redirect: "manual", cache: "no-store", signal: AbortSignal.timeout(60_000) });
-    if (response.status >= 300 && response.status < 400) {
-      const location = response.headers.get("location");
-      if (!location) throw new Error("INVALID_DELIVERY_REDIRECT");
-      current = new URL(location, current);
-      continue;
-    }
-    if (!response.ok) throw new Error(`DELIVERY_HTTP_${response.status}`);
-    const declaredSize = Number(response.headers.get("content-length") ?? 0);
-    if (declaredSize > MAX_DELIVERY_BYTES) throw new Error("DELIVERY_TOO_LARGE");
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    if (bytes.byteLength < 12 || bytes.byteLength > MAX_DELIVERY_BYTES) throw new Error("INVALID_DELIVERY_SIZE");
-    const mp4 = String.fromCharCode(...bytes.slice(4, 8)) === "ftyp";
-    if (!mp4) throw new Error("AIGC_LABEL_REQUIRES_MP4");
-    return { bytes, mimeType: "video/mp4", extension: "mp4" };
-  }
-  throw new Error("TOO_MANY_DELIVERY_REDIRECTS");
+  const {fetchPublicMedia}=await import('@/lib/security/public-media-fetch');
+  const downloaded=await fetchPublicMedia(initialUrl,{
+    kind:'video',allowHtml:false,deadline:Date.now()+60_000,maxBytes:MAX_DELIVERY_BYTES,
+    allowTarget:url=>providerAssetAccess(provider,url.toString()).trusted,
+  });
+  const bytes=new Uint8Array(await downloaded.response.arrayBuffer());
+  if(bytes.byteLength<12||String.fromCharCode(...bytes.slice(4,8))!=='ftyp')throw Error('AIGC_LABEL_REQUIRES_MP4');
+  return{bytes,mimeType:'video/mp4',extension:'mp4'};
 }
 
 export async function dispatchSasiJob(admin: SupabaseClient, job: SasiJobRow) {

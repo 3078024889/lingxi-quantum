@@ -17,6 +17,7 @@ export async function beginDurableRun(input:{
  });
  if(error)throw new Error("DURABLE_RUN_BEGIN_FAILED");
  const r=(Array.isArray(data)?data[0]:data)||{};
+ if(r.ok!==true||!r.id)throw new Error(String(r.error||'DURABLE_RUN_BEGIN_FAILED'));
  return {
   id:String(r.id),userId:input.userId,sessionKey:input.sessionKey,task:input.task,
   state:String(r.state||"created") as DurableRunState,currentStep:r.current_step?String(r.current_step):null,
@@ -28,11 +29,12 @@ export async function checkpointRun(input:{
  runId:string;step:string;state:DurableRunState;payload?:unknown;errorCode?:string|null;
 }){
  const admin=createAdminClient();
- const {error}=await admin.rpc("checkpoint_sasi_durable_run_v110",{
+ const {data,error}=await admin.rpc("checkpoint_sasi_durable_run_v110",{
   p_run_id:input.runId,p_step:input.step,p_state:input.state,
   p_payload:input.payload??null,p_error_code:input.errorCode??null
  });
- if(error)throw new Error("DURABLE_RUN_CHECKPOINT_FAILED");
+ const result=(Array.isArray(data)?data[0]:data)||{};
+ if(error||result.ok!==true)throw new Error("DURABLE_RUN_CHECKPOINT_FAILED");
 }
 
 export async function appendRunEvent(input:{

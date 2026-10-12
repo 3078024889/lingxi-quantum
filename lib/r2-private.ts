@@ -58,11 +58,11 @@ export function presignR2(method:"GET"|"PUT"|"HEAD"|"DELETE",key:string,expiresS
 }
 
 export async function r2Head(key:string){
-  const r=await fetch(presignR2("HEAD",key,120),{method:"HEAD",cache:"no-store"});
+  const r=await fetch(presignR2("HEAD",key,120),{method:"HEAD",cache:"no-store",signal:AbortSignal.timeout(10000)});
   if(!r.ok)return null;
   return {size:Number(r.headers.get("content-length")||0),type:r.headers.get("content-type")||""};
 }
 export async function r2Delete(key:string){
-  const r=await fetch(presignR2("DELETE",key,120),{method:"DELETE",cache:"no-store"});
+  const r=await fetch(presignR2("DELETE",key,120),{method:"DELETE",cache:"no-store",signal:AbortSignal.timeout(10000)});
   return r.ok||r.status===404;
 }

@@ -1,8 +1,5 @@
 import "server-only";
 import {createHmac,timingSafeEqual} from "node:crypto";
-import type {NextRequest} from "next/server";
-
-const TRUSTED_HOSTS=new Set(["lingxifield.com","www.lingxifield.com","lingxifield.cn","www.lingxifield.cn"]);
 
 function secret(){
   const value=
@@ -29,24 +26,4 @@ export function verifyBurnRevealToken(id:string,token:string){
   const expected=Buffer.from(sig(id,exp));
   const actual=Buffer.from(m[2]);
   return expected.length===actual.length&&timingSafeEqual(expected,actual);
-}
-function trustedUrl(value:string|null){
-  if(!value)return false;
-  try{const u=new URL(value);return u.protocol==="https:"&&TRUSTED_HOSTS.has(u.hostname.toLowerCase())&&u.pathname.startsWith("/tools/burn-after-read/")}
-  catch{return false}
-}
-function hostOnly(v:string|null){return (v||"").split(",")[0].trim().toLowerCase().replace(/:\d+$/,"")}
-export function isTrustedBurnWebViewRequest(req:NextRequest){
-  const origin=(req.headers.get("origin")||"").trim().toLowerCase();
-  if(origin&&origin!=="null")return false;
-  const site=(req.headers.get("sec-fetch-site")||"").trim().toLowerCase();
-  if(site&&!["none","same-origin","same-site"].includes(site))return false;
-  const referer=req.headers.get("referer");
-  if(!trustedUrl(referer))return false;
-  const hosts=[
-    hostOnly(req.headers.get("x-forwarded-host")),
-    hostOnly(req.headers.get("host")),
-    req.nextUrl.hostname.toLowerCase(),
-  ].filter(Boolean);
-  return hosts.some(h=>TRUSTED_HOSTS.has(h));
 }

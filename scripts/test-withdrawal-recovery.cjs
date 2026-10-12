@@ -16,7 +16,9 @@ async function scenario(status,workerResult){
  await scenario('processing',{status:'pending'});
  const copy=compile('lib/notifications/money-copy.ts',{});
  const admin={from(table){const rows=table==='orders'?[{id:'test',product_id:'toolquote:test',currency:'USD',amount_usd:2,amount_rmb:4,created_at:'2026-10-01'}]:[];const q={select(){return q},eq(){return q},in(){return q},order(){return q},limit(){return Promise.resolve({data:rows,error:null})}};return q}};
- const feed=compile('lib/notifications/money-feed.ts',{'@/lib/supabase/admin':{createAdminClient:()=>admin},'@/lib/money/operator-settings':{moneyOperatorSettings:async()=>({admin_emails:[]})},'./money-copy':copy});
+ const refundUsers=[];
+ const feed=compile('lib/notifications/money-feed.ts',{'@/lib/supabase/admin':{createAdminClient:()=>admin},'@/lib/mini/refund-history':{miniRefundHistory:async userId=>{refundUsers.push(userId);return []}},'@/lib/money/operator-settings':{moneyOperatorSettings:async()=>({admin_emails:[]})},'./money-copy':copy});
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){const result=await feed.accountMoneyFeed('u',lang);assert.equal(result.items[0].currency,'USD');assert.equal(result.items[0].amountMinor,200);assert(result.items[0].title);}
- console.log('PASS: current dispatcher preserves pending/support states and never resubmits closed withdrawals; USD notifications in nine languages.');
+ assert.deepEqual(refundUsers,Array(9).fill('u'));
+ console.log('PASS: current dispatcher preserves pending/support states and never resubmits closed withdrawals; USD notifications and owner-scoped refunds in nine languages.');
 })().catch(e=>{console.error(e);process.exitCode=1});

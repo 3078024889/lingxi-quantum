@@ -10,7 +10,7 @@ def request(method,path,payload=None):
     body=b"" if payload is None else json.dumps(payload,separators=(",",":"),ensure_ascii=False).encode()
     ts=str(int(time.time()*1000)); nonce=str(uuid.uuid4())
     digest=hashlib.sha256(body).hexdigest()
-    canonical=f"{ts}.{nonce}.{method}.{path.split('?')[0]}.{digest}"
+    canonical=f"{ts}.{nonce}.{method}.{path}.{digest}"
     sig=hmac.new(SECRET.encode(),canonical.encode(),hashlib.sha256).hexdigest()
     req=urllib.request.Request(
         BASE+path,data=None if method=="GET" else body,method=method,

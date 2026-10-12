@@ -30,6 +30,7 @@ export async function resilientText(input:{
     await settleExperience(input.userId,referenceId,claim.units,true);
     return {kind:"answer",answer:out.text,source:"experience",experienceExhausted:false,experienceState:claim.state,experienceRemaining:claim.remaining};
    }catch{
+    input.onReset?.();
     // Provider failure never consumes the user's included experience allowance.
     await settleExperience(input.userId,referenceId,claim.units,false);
    }
@@ -39,7 +40,7 @@ export async function resilientText(input:{
    try{
     const connection=await selectUserTextConnection(input.userId);
     if(connection){
-     const out=await runUserText({userId:input.userId,taskId:randomUUID(),messages:input.messages,maxOutputTokens:input.maxOutputTokens});
+     const out=await runUserText({userId:input.userId,taskId:randomUUID(),messages:input.messages,maxOutputTokens:input.maxOutputTokens,validateAnswer:input.validateAnswer});
      input.onDelta?.(out.answer);
      return {kind:"answer",answer:out.answer,source:"connected",experienceExhausted:claim.state==="exhausted",experienceState:claim.state,experienceRemaining:claim.remaining};
     }

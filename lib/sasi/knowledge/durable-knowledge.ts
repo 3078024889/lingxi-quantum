@@ -18,6 +18,9 @@ export async function runKnowledgeText(input:{
  messages:TextMessage[];
  maxOutputTokens:number;
  allowConnected:boolean;
+ validateAnswer?:(answer:string)=>void;
+ onDelta?:(delta:string)=>void;
+ onReset?:()=>void;
 }):Promise<{out:ResilientTextOutcome;runId:string|null;durable:boolean;replayed:boolean}>{
  const payload={
   task:input.task,messages:input.messages,maxOutputTokens:input.maxOutputTokens,
@@ -26,7 +29,8 @@ export async function runKnowledgeText(input:{
  if(!(await durableRuntimeAvailable())){
   const out=await resilientText({
    userId:input.userId,region:input.region,task:input.task,messages:input.messages,
-   maxOutputTokens:input.maxOutputTokens,allowConnected:input.allowConnected,sessionKey:input.sessionKey
+   maxOutputTokens:input.maxOutputTokens,allowConnected:input.allowConnected,sessionKey:input.sessionKey,
+   validateAnswer:input.validateAnswer,onDelta:input.onDelta,onReset:input.onReset
   });
   return{out,runId:null,durable:false,replayed:false};
  }
@@ -46,7 +50,8 @@ export async function runKnowledgeText(input:{
     leaseSeconds:55,
     execute:()=>resilientText({
      userId:input.userId,region:input.region,task:input.task,messages:input.messages,
-     maxOutputTokens:input.maxOutputTokens,allowConnected:input.allowConnected,sessionKey:input.sessionKey
+     maxOutputTokens:input.maxOutputTokens,allowConnected:input.allowConnected,sessionKey:input.sessionKey,
+     validateAnswer:input.validateAnswer,onDelta:input.onDelta,onReset:input.onReset
     })
    });
    return step.value;

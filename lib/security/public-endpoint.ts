@@ -44,7 +44,9 @@ export function isPublicIp(ip: string): boolean {
   }
 
   if (isIP(ip) === 6) {
-    const v = ip.toLowerCase();
+    if(ip.includes('%')) return false;
+    // Canonicalize expanded/mixed representations before matching special-use ranges.
+    const v = new URL(`https://[${ip}]/`).hostname.slice(1,-1).toLowerCase();
     if (v === "::" || v === "::1") return false;
     if (v.startsWith("fc") || v.startsWith("fd")) return false;
     if (/^fe[89ab]/.test(v)) return false;
@@ -54,6 +56,9 @@ export function isPublicIp(ip: string): boolean {
       const mapped = v.slice(7);
       return isIP(mapped) === 4 ? isPublicIp(mapped) : false;
     }
+    const first = parseInt(v.split(':')[0],16);
+    if(first < 0x2000 || first > 0x3fff || !Number.isFinite(first)) return false;
+    if(v.startsWith('2002:') || v.startsWith('2001::') || /^2001:(?:0:|2:|1[0-9a-f]:|2[0-9a-f]:)/.test(v) || /^3fff:/.test(v)) return false;
     return true;
   }
 
@@ -61,7 +66,7 @@ export function isPublicIp(ip: string): boolean {
 }
 
 export async function resolvePublicHost(hostname: string) {
-  const host = hostname.toLowerCase().replace(/\.$/, "");
+  const host = hostname.toLowerCase().replace(/^\[|\]$/g, "").replace(/\.$/, "");
   if (!host || isBlockedHostname(host)) throw new Error("PRIVATE_NETWORK_FORBIDDEN");
 
   if (isIP(host)) {
@@ -111,6 +116,7 @@ export async function pinnedHttpsProbe(raw: string) {
       port: 443,
       servername: url.hostname,
       lookup: pinnedLookup(target.address, target.family),
+      family: target.family,
       headers: {
         "User-Agent": "LINGXIFIELD-Site-Diagnose/1.0",
         Accept: "*/*",

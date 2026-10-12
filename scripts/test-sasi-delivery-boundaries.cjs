@@ -36,7 +36,7 @@ async function main(){
  const resilientCode=ts.transpileModule(fs.readFileSync('lib/sasi/experience/resilient-text.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
  new Function('require','module','exports',resilientCode)(name=>name==='server-only'?{}:name==='./free-text-router'?{runExperienceText:async()=>({text:'invalid website'})}:name==='./daily-budget'?{reserveExperience:async()=>({ok:true,units:36,soft:false}),settleExperience:async(...args)=>settlements.push(args)}:name==='@/lib/sasi/intelligence/user-text'?{selectUserTextConnection:async()=>({id:'test'}),runUserText:async()=>{paid++;return{answer:'paid'}}}:name==='./request-coalescer'?{coalesceKey:()=> 'free-failure',coalesce:async(_key,work)=>work()}:require(name),module,module.exports);
  const outcome=await module.exports.resilientText({userId:'test',region:'global',task:'website',messages:[],allowConnected:false,validateAnswer(){throw new Error('WEBSITE_INVALID')}});assert.equal(outcome.kind,'needs-connection');assert.equal(paid,0);assert.equal(settlements.at(-1)[3],false,'invalid free output must release experience allowance');
- const paidModule={exports:{}},charges=[],balanceChecks=[];let connectionLookups=0,currencyLookups=0,available=Infinity,providerCalls=0;
+ const paidModule={exports:{}},charges=[],balanceChecks=[];let connectionLookups=0,currencyLookups=0,available=Infinity,providerCalls=0,finishReason='stop';
  const approved={id:'approved',provider:'openai',model_id:'approved-model',fingerprint:'approved-key',encrypted_credential:'encrypted',base_url:'https://approved.example/v1'};
  const paidCode=ts.transpileModule(fs.readFileSync('lib/sasi/intelligence/user-text.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
  new Function('require','module','exports',paidCode)(name=>{
@@ -49,13 +49,14 @@ async function main(){
   if(name==='./telemetry')return{recordIntelligenceRun:async()=>{}};
   if(name==='@/lib/sasi/pricing-v49')return{textChargeMinor:()=>1};
   if(name==='@/lib/sasi/unified-balance')return{userSasiCurrency:async()=>{currencyLookups++;return'CNY'},requireSasiBalance:async(_user,_currency,amount)=>{balanceChecks.push(amount);if(amount>available)throw new Error('SASI_BALANCE_INSUFFICIENT')},chargeCompletedSasiUsage:async args=>{charges.push(args);return{}}};
-  if(name==='@/lib/security/provider-json-probe')return{providerJsonProbe:async(url,headers,_time,_size,options)=>{providerCalls++;assert.equal(url,'https://approved.example/v1/chat/completions');assert.equal(JSON.parse(options.body).model,'approved-model');return{ok:true,payload:{choices:[{message:{content:'Real answer'}}]}}}};
+  if(name==='@/lib/security/provider-json-probe')return{providerJsonProbe:async(url,headers,_time,_size,options)=>{providerCalls++;assert.equal(url,'https://approved.example/v1/chat/completions');assert.equal(JSON.parse(options.body).model,'approved-model');return{ok:true,payload:{choices:[{finish_reason:finishReason,message:{content:'Real answer'}}]}}}};
   return require(name);
  },paidModule,paidModule.exports);
  const result=await paidModule.exports.runUserText({userId:'user',messages:[{role:'user',content:'Question'}],connection:approved,billingCurrency:'USD',taskId:'confirmed-task'});
  assert.equal(result.billing.currency,'USD');assert.equal(charges[0].currency,'USD');assert.equal(connectionLookups,0);assert.equal(currencyLookups,0);
  await assert.rejects(paidModule.exports.runUserText({userId:'user',messages:[],connection:approved,billingCurrency:'USD',validateAnswer(){throw new Error('WEBSITE_INVALID')}}),/WEBSITE_INVALID/);
  assert.equal(charges.length,1,'invalid provider output must not charge the platform');
+ finishReason='length';await assert.rejects(paidModule.exports.runUserText({userId:'user',messages:[],connection:approved,billingCurrency:'USD'}),/PROVIDER_ANSWER_TRUNCATED/);assert.equal(charges.length,1,'token-limit termination must not be charged');finishReason='stop';
  const combined={userId:'user',messages:[],connection:approved,billingCurrency:'USD',taskId:'website-task',additionalCharge:{maximumMinor:1000,actualMinor:()=>600,kind:'website'}};
  const websiteResult=await paidModule.exports.runUserText(combined);assert.equal(balanceChecks.at(-1),1001);assert.equal(websiteResult.billing.chargedMinor,601);assert.equal(charges.length,2);assert.equal(charges.at(-1).amountMinor,601);assert.equal(charges.at(-1).kind,'website');
  available=1000;const calls=providerCalls;await assert.rejects(paidModule.exports.runUserText(combined),/SASI_BALANCE_INSUFFICIENT/);assert.equal(providerCalls,calls,'insufficient combined balance must reject before contacting provider');assert.equal(charges.length,2);

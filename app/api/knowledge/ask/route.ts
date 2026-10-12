@@ -7,12 +7,29 @@ import{compileSasiSkillGuidance,validateSasiSkillIds}from"@/lib/sasi/skills/rout
 import{experienceRegionFromHost}from"@/lib/sasi/experience/free-provider-config";
 import{runKnowledgeText}from"@/lib/sasi/knowledge/durable-knowledge";
 import{DurableStepBusyError}from"@/lib/sasi/durable/step-store";
+import{asksSasiIdentity,sasiIdentityAnswer}from'@/lib/sasi/core/platform-identity';
+import{boundedRequestJson}from'@/lib/security/bounded-request-json';
+import{assertRunOwner}from'@/lib/sasi/durable/public-event-store';
 
-export const runtime="nodejs";export const maxDuration=60;
+export const runtime="nodejs";export const maxDuration=180;
 const system="你是灵犀场资料理解助手。只根据用户提供的证据回答；不得把外部知识伪装成证据。引用必须保留证据编号。资料不足时明确说明不足。";
 
 function publicSources(evidence:GroundedEvidence[]){
  return evidence.map(item=>({index:item.index,title:item.title,locator:item.locator||""}));
+}
+
+// Read an existing generation; never resubmit a supplier task while polling.
+export async function GET(req:NextRequest){
+ const runId=req.nextUrl.searchParams.get('runId')||'';
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(runId))return NextResponse.json({error:'NOT_FOUND'},{status:404});
+ const {data:{user}}=await createClient().auth.getUser();
+ if(!user)return NextResponse.json({error:'AUTH_REQUIRED'},{status:401});
+ const run=await assertRunOwner(user.id,runId);
+ if(!run||!String(run.task).startsWith('knowledge.'))return NextResponse.json({error:'NOT_FOUND'},{status:404});
+ const out=run.output_json as {kind?:string;answer?:string;experienceExhausted?:boolean;source?:string}|null;
+ if(run.state==='succeeded'&&out?.kind==='answer'&&typeof out.answer==='string')return NextResponse.json({answer:out.answer,execution:out.source,experienceExhausted:out.experienceExhausted,runId,durableExecution:true},{headers:{'Cache-Control':'no-store'}});
+ if(['failed','cancelled','succeeded'].includes(String(run.state)))return NextResponse.json({error:'KNOWLEDGE_RESPONSE_UNAVAILABLE'},{status:409,headers:{'Cache-Control':'no-store'}});
+ return NextResponse.json({state:'running',runId,retryAfterMs:1200},{status:202,headers:{'Cache-Control':'no-store'}});
 }
 
 export async function POST(req:NextRequest){
@@ -20,8 +37,10 @@ export async function POST(req:NextRequest){
  if(Number.isFinite(contentLength)&&contentLength>384*1024)return NextResponse.json({error:"这次资料太多，请减少引用内容后再试。"},{status:413});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"请求来源无效。"},{status:403});
 
- const body:Record<string,unknown>=await req.json().catch(()=>({}));
+ const rawBody=await boundedRequestJson(req,384*1024).catch(()=>null);
+ const body:Record<string,unknown>=rawBody&&typeof rawBody==='object'&&!Array.isArray(rawBody)?rawBody as Record<string,unknown>:{};
  const question=String(body.question||"").trim().slice(0,4000);
+ if(asksSasiIdentity(question))return NextResponse.json({answer:sasiIdentityAnswer(body.lang),citations:[],sources:[],evidenceCount:0,execution:'platform-info',connectedServiceUsed:false,experienceExhausted:false,intelligence:body.intelligence||'standard'},{headers:{'Cache-Control':'no-store'}});
  const mode:KnowledgeMode=body.mode==="research"?"research":body.mode==="learning"?"learning":"book";
  const intelligence:IntelligenceTier=body.intelligence==="light"?"light":body.intelligence==="high"?"high":"standard";
 
@@ -50,7 +69,8 @@ export async function POST(req:NextRequest){
   experienceExhausted:false,reasoningLevel:intelligence,runId:null,durableExecution:false
  },{headers:{"Cache-Control":"no-store"}});
 
- const abuse=await enforceAbuseGuard(req,{scope:"knowledge-reason",userId:user.id,accountLimit:60,ipLimit:180,windowSeconds:3600});
+ const userId=user.id;
+ const abuse=await enforceAbuseGuard(req,{scope:"knowledge-reason",userId,accountLimit:60,ipLimit:180,windowSeconds:3600});
  if(!abuse.ok)return NextResponse.json({
   answer:fallback.answer,intelligence,evidenceCount:evidence.length,citations:fallback.citations,
   confidence:fallback.confidence,sources,execution:"grounded-fallback",connectedServiceUsed:false,
@@ -62,14 +82,17 @@ export async function POST(req:NextRequest){
  const clientTurnId=String(body.clientTurnId||req.headers.get("idempotency-key")||"").trim();
  const idempotencyKey=(clientTurnId||`${user.id}:${sessionKey}:${question.slice(0,180)}`).slice(0,160);
 
+ async function answer(onDelta?:(delta:string)=>void,onReset?:()=>void){
  try{
   const execution=await runKnowledgeText({
-   userId:user.id,
+   userId,
    region:experienceRegionFromHost(req.headers.get("host")),
    task:mode==="research"?"research":"knowledge",
    messages:[{role:"system",content:`${system}\n${skillGuidance}`},{role:"user",content:prompt}],
    maxOutputTokens:intelligence==="high"?4096:intelligence==="light"?1536:2560,
    allowConnected,
+   validateAnswer:generated=>{if(!validateGroundedAnswer(generated,evidence).ok)throw new Error('GROUNDED_ANSWER_INVALID')},
+   onDelta,onReset,
    sessionKey,
    idempotencyKey
   });
@@ -104,4 +127,19 @@ export async function POST(req:NextRequest){
    experienceExhausted:false,reasoningLevel:intelligence,runId:null,durableExecution:false
   },{headers:{"Cache-Control":"no-store"}});
  }
+ }
+ if(req.headers.get('accept')?.includes('text/event-stream')){
+  const encoder=new TextEncoder();
+  return new Response(new ReadableStream<Uint8Array>({
+   start(controller){
+    const emit=(event:string,data:unknown)=>{try{controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))}catch{}};
+    emit('start',{state:'working'});
+    void answer(delta=>emit('delta',{text:delta}),()=>emit('reset',{}))
+     .then(async response=>emit('done',await response.json()))
+     .catch(()=>emit('done',{error:'KNOWLEDGE_RESPONSE_FAILED'}))
+     .finally(()=>{try{controller.close()}catch{}});
+   }
+  }),{headers:{'Content-Type':'text/event-stream; charset=utf-8','Cache-Control':'private, no-store, no-transform','X-Accel-Buffering':'no'}});
+ }
+ return answer();
 }

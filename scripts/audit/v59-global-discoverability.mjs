@@ -11,8 +11,13 @@ const publicDiscovery=[
  "pages/discover-image-watermark-remover/index","pages/discover-e-sign-pdf/index"
 ];
 for(const p of publicDiscovery)must(app.pages.includes(p),`V59_MINI_DISCOVERY_PAGE_MISSING:${p}`);
-must(app.tabBar.list.length===4,"V59_MINI_PRIMARY_TAB_COUNT");
-must(app.tabBar.list.map(x=>x.pagePath).join("|")==="pages/home/index|pages/tools/index|pages/create/index|pages/profile/index","V59_MINI_PRIMARY_TAB_ORDER");
+must(app.pages[0]==='pages/web/index'&&!app.tabBar,"V59_MINI_UNIFIED_WEB_ENTRY");
+for(const [entry,target] of [['home','/'],['tools','/tools'],['create','/sasi'],['profile','/account']]){
+ const source=read(`miniapp/pages/${entry}/index.js`);
+ must(source.includes('wx.redirectTo')&&source.includes(`encodeURIComponent('${target}')`),`V59_MINI_COMPAT_REDIRECT:${entry}`);
+}
+const nav=read('components/Nav.tsx');
+for(const target of ['/', '/tools','/sasi','/account'])must(nav.includes(`href: "${target}"`),`V59_UNIFIED_WEB_NAV:${target}`);
 
 const sitemap=json("miniapp/sitemap.json");
 const s=JSON.stringify(sitemap);
@@ -29,8 +34,9 @@ const routeMap={
 for(const [dir,[term,target]] of Object.entries(routeMap)){
  const w=read(`miniapp/pages/${dir}/index.wxml`);
  const j=read(`miniapp/pages/${dir}/index.js`);
- must(w.includes(term),`V59_MINI_NATIVE_TERM_MISSING:${dir}`);
- must(j.includes(target.replaceAll("/","%2F")),`V59_MINI_TOOL_TARGET_MISSING:${dir}`);
+ must(w.includes('正在打开')&&j.includes('wx.redirectTo'),`V59_MINI_COMPAT_DISCOVERY:${dir}`);
+ must(j.includes(`encodeURIComponent('${target}')`),`V59_MINI_TOOL_TARGET_MISSING:${dir}`);
+ must(fs.existsSync(`app${target}/page.tsx`),`V59_WEB_TOOL_PAGE_MISSING:${term}`);
 }
 
 const layout=read("app/layout.tsx");
@@ -61,7 +67,7 @@ for(const token of["status:410","x-robots-tag","RETIRED_EXACT"])must(middleware.
 
 console.log("V59_WECHAT_SITEMAP_TRUTH=PASS");
 console.log("V59_WECHAT_NATIVE_TOOL_DISCOVERY=PASS");
-console.log("V59_WECHAT_PRIMARY_NAV_4=PASS");
+console.log("V59_WECHAT_UNIFIED_WEB_NAV_4=PASS");
 console.log("V59_GLOBAL_HREFLANG_SITEMAP=PASS");
 console.log("V59_GLOBAL_TOOL_JSONLD=PASS");
 console.log("V59_CHATGPT_SEARCH_CRAWLABLE=PASS");

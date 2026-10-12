@@ -11,7 +11,7 @@ export const runtime = "nodejs";
 export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
-const PROVIDERS = new Set<SasiVideoProviderId>(["seedance", "xai", "openai", "wan"]);
+const PROVIDERS = new Set<SasiVideoProviderId>(["seedance", "xai", "wan"]);
 
 function authorized(request: Request) {
   const expected = process.env.CRON_SECRET?.trim() ?? "";
@@ -89,10 +89,7 @@ export async function POST(request: Request) {
   }
 
   const duration = Number(body.duration);
-  const allowedDuration =
-    providerId === "openai"
-      ? [4, 8, 12].includes(duration)
-      : Number.isInteger(duration) && duration >= 4 && duration <= 12;
+  const allowedDuration = Number.isInteger(duration) && duration >= 4 && duration <= 12;
 
   if (!allowedDuration) {
     return NextResponse.json({ error: "INVALID_TEST_DURATION" }, { status: 400 });

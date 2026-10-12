@@ -34,7 +34,7 @@ export function assertOwnedSasiObjectKey(userId: string, key: string) {
   return clean;
 }
 
-export function presignSasiArtifact(key: string, expiresSeconds = 300) {
+export function presignSasiArtifact(key: string, expiresSeconds = 300,method:'GET'|'PUT'|'HEAD'='GET') {
   const endpoint = new URL(required("R2_ENDPOINT").replace(/\/+$/, ""));
   if (endpoint.protocol !== "https:") throw new Error("SASI_ARTIFACT_R2_ENDPOINT_INVALID");
   const access = required("R2_ACCESS_KEY_ID");
@@ -53,7 +53,7 @@ export function presignSasiArtifact(key: string, expiresSeconds = 300) {
     "X-Amz-SignedHeaders": "host",
   };
   const canonicalQuery = Object.keys(query).sort().map((k) => `${enc(k)}=${enc(query[k])}`).join("&");
-  const canonical = ["GET", uri, canonicalQuery, `host:${endpoint.host}\n`, "host", "UNSIGNED-PAYLOAD"].join("\n");
+  const canonical = [method, uri, canonicalQuery, `host:${endpoint.host}\n`, "host", "UNSIGNED-PAYLOAD"].join("\n");
   const stringToSign = ["AWS4-HMAC-SHA256", amz, scope, hash(canonical)].join("\n");
   const kDate = hmac(`AWS4${secret}`, date);
   const kRegion = hmac(kDate, "auto");

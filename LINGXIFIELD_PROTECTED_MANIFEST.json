@@ -770,26 +770,6 @@
       "bytes": 2432
     },
     {
-      "path": "app/sasi/SasiComposer.tsx",
-      "bytes": 3027
-    },
-    {
-      "path": "app/sasi/SasiProductionPanels.tsx",
-      "bytes": 24133
-    },
-    {
-      "path": "app/sasi/SasiProjectMemory.tsx",
-      "bytes": 4668
-    },
-    {
-      "path": "app/sasi/SasiV3Panels.tsx",
-      "bytes": 35266
-    },
-    {
-      "path": "app/sasi/SasiWorkspace.tsx",
-      "bytes": 58105
-    },
-    {
       "path": "app/sasi/SeedanceStudio.tsx",
       "bytes": 1986
     },
@@ -1362,10 +1342,6 @@
       "bytes": 886
     },
     {
-      "path": "components/SasiDramaLaunch.tsx",
-      "bytes": 6357
-    },
-    {
       "path": "components/SasiFunctionMenu.tsx",
       "bytes": 4320
     },
@@ -1388,10 +1364,6 @@
     {
       "path": "components/SasiSeriesStudio.tsx",
       "bytes": 7794
-    },
-    {
-      "path": "components/SasiSkillsPanel.tsx",
-      "bytes": 7203
     },
     {
       "path": "components/SearchBox.tsx",
@@ -12974,24 +12946,12 @@
       "bytes": 1310
     },
     {
-      "path": "scripts/accept-v14460.mjs",
-      "bytes": 1453
-    },
-    {
-      "path": "scripts/accept-v14462.mjs",
-      "bytes": 1378
-    },
-    {
       "path": "scripts/accept-v14474.mjs",
       "bytes": 1355
     },
     {
       "path": "scripts/accept-v14480.mjs",
       "bytes": 1457
-    },
-    {
-      "path": "scripts/accept-v14492.mjs",
-      "bytes": 1008
     },
     {
       "path": "scripts/accept-v14500.mjs",
@@ -13004,10 +12964,6 @@
     {
       "path": "scripts/accept-v14511.mjs",
       "bytes": 1340
-    },
-    {
-      "path": "scripts/accept-v14512.mjs",
-      "bytes": 1379
     },
     {
       "path": "scripts/accept-v14513.mjs",
@@ -13024,10 +12980,6 @@
     {
       "path": "scripts/accept-v14603.mjs",
       "bytes": 548
-    },
-    {
-      "path": "scripts/accept-v1466.mjs",
-      "bytes": 999
     },
     {
       "path": "scripts/accept-v14671.mjs",
@@ -13054,10 +13006,6 @@
       "bytes": 2090
     },
     {
-      "path": "scripts/apply-source-patches-v1465.mjs",
-      "bytes": 346
-    },
-    {
       "path": "scripts/audit-alipay.mjs",
       "bytes": 2050
     },
@@ -13068,10 +13016,6 @@
     {
       "path": "scripts/audit-all-tools-v1568.mjs",
       "bytes": 3240
-    },
-    {
-      "path": "scripts/audit-autonomy-v1583.mjs",
-      "bytes": 1932
     },
     {
       "path": "scripts/audit-cangxuan.mjs",
@@ -13334,16 +13278,8 @@
       "bytes": 10561
     },
     {
-      "path": "scripts/patch-sasi-production-v1465.mjs",
-      "bytes": 7944
-    },
-    {
       "path": "scripts/patch-sasi-v52-connections.mjs",
       "bytes": 993
-    },
-    {
-      "path": "scripts/patch-sasi-workspace-v1465.mjs",
-      "bytes": 3266
     },
     {
       "path": "scripts/patch-tools-v14701.mjs",

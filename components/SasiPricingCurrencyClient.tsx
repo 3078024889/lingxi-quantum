@@ -15,6 +15,7 @@ import {CREDIT_PACKS} from "@/lib/sasi/catalog";
 import {customTopupAmount} from "@/lib/balance-topups";
 import {detectMiniPaymentContext, openMiniRecharge} from "@/lib/mini/payment-client";
 import {usdBalanceProducts} from "@/lib/usd-products";
+import SasiUsageRates from '@/components/SasiUsageRates';
 
 type Currency="CNY"|"USD";
 type Snapshot={
@@ -67,6 +68,7 @@ export default function SasiPricingCurrencyClient(){
  const[selected,setSelected]=useState<Currency>(currency);
  const[data,setData]=useState<Summary|null>(null);
  const[error,setError]=useState("");
+ const[needsLogin,setNeedsLogin]=useState(false);
  const[loading,setLoading]=useState(true);
  const[chosenId,setChosenId]=useState<string|null>(null);
  const[customAmount,setCustomAmount]=useState("");
@@ -96,11 +98,12 @@ export default function SasiPricingCurrencyClient(){
   try{
    const r=await fetch("/api/money/summary",{cache:"no-store"});
    const b=await r.json().catch(()=>({}));
-   if(!r.ok)throw new Error("MONEY_SUMMARY_FAILED");
+   if(!r.ok){setData(null);setNeedsLogin(r.status===401);if(r.status===401){setError(moneyText(lang,"login"));return}throw new Error("MONEY_SUMMARY_FAILED")}
+   setNeedsLogin(false);
    setData(b);
   }catch{setError(c.unavailable)}
   finally{setLoading(false)}
- },[c.unavailable]);
+ },[c.unavailable,lang]);
 
  useEffect(()=>{void load()},[load]);
  useMoneyAutoRefresh(()=>load(false),Boolean(data?.withdrawals.some(w=>["requested","processing"].includes(w.status))));
@@ -143,6 +146,8 @@ export default function SasiPricingCurrencyClient(){
     </div>
    </section>
    {selected === 'CNY' && <p className={styles.notice}><Link className={styles.link} href="/refunds#mini">{lang==='zh'?'小程序充值已计入总余额；退款按原支付渠道办理，查看说明。':'Mini-program top-ups are included in the total; view refund channel instructions.'}</Link></p>}
+   {needsLogin&&<p role="alert" className={styles.notice}><Link className={styles.link} href={"/account?next="+encodeURIComponent("/sasi/pricing?currency="+selected+"&lang="+lang+"#"+(tab==="withdrawals"?"withdrawals":tab==="records"?"withdrawal-records":tab==="topup"?"topup":"balance-overview"))}>{moneyText(lang,"login")}</Link></p>}
+   <SasiUsageRates currency={selected} lang={lang}/>
    <div className={styles.sync}>
     <p role={error?"alert":undefined}>{loading?c.loading:error||ui.auto}</p>
     {isAdmin&&<Link className={styles.link} href="/account/money-admin">{moneyText(lang,"moneyAdmin")}</Link>}

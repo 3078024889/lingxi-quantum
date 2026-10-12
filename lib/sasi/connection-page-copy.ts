@@ -33,5 +33,5 @@ const PRODUCTS:Record<string,string>={volcengine:'Doubao · Seedance · Seedream
 const SYMBOLS:Record<string,string>={volcengine:'火',openrouter:'OR',aliyun:'云',openai:'O',xai:'X',anthropic:'C',gemini:'G',deepseek:'D',luma:'L',compatible:'+'};
 export function connectionServiceCopy(id:string,lang:LingxiLang){const c=connectionPageCopy(lang);return{
  symbol:SYMBOLS[id],products:PRODUCTS[id],description:id==='compatible'?c.otherDescription:CONNECTION_GROUPS[0].services.includes(id)?c.platformDescription:c.officialDescription,
- available:id==='luma'?c.luma:[c.text,...(id==='volcengine'?[c.image]:[]),...(['volcengine','aliyun','openai','xai'].includes(id)?[c.video]:[])].join(' ')
+ available:id==='luma'?c.luma:[c.text,...(id==='volcengine'?[c.image]:[]),...(['volcengine','aliyun','xai'].includes(id)?[c.video]:[])].join(' ')
 }}

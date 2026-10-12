@@ -6,12 +6,14 @@ import{experienceRegionFromHost,type ExperienceTask}from"@/lib/sasi/experience/f
 import{resilientText}from"@/lib/sasi/experience/resilient-text";
 import {compileSasiSkillGuidance,validateSasiSkillIds} from "@/lib/sasi/skills/router";
 import {boundedRequestJson} from "@/lib/security/bounded-request-json";
-export const runtime="nodejs";export const maxDuration=60;
+import{asksSasiIdentity,sasiIdentityAnswer}from'@/lib/sasi/core/platform-identity';
+export const runtime="nodejs";export const maxDuration=180;
 const allowed=new Set<ExperienceTask>(["chat","knowledge","research","website","drama"]);
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"REQUEST_INVALID"},{status:403});
  let body:any;try{body=await boundedRequestJson(req,96*1024)}catch{return NextResponse.json({error:"REQUEST_INVALID"},{status:400})}const text=String(body?.text||"").trim().slice(0,12000);
  if(!text)return NextResponse.json({error:"TEXT_REQUIRED"},{status:400});
+ if(asksSasiIdentity(text))return NextResponse.json({state:'answer',answer:sasiIdentityAnswer(body.lang),source:'platform-info',experienceExhausted:false},{headers:{'Cache-Control':'no-store'}});
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();
  if(!user)return NextResponse.json({state:"local-only",needsConnection:false},{status:200,headers:{"Cache-Control":"no-store"}});
  const abuse=await enforceAbuseGuard(req,{scope:"sasi-experience-text",userId:user.id,accountLimit:90,ipLimit:240,windowSeconds:3600});
@@ -27,6 +29,8 @@ export async function POST(req:NextRequest){
   "Never replace a concrete response with a generic list of your capabilities or a routing menu.",
   "A mention of drama, websites, research or image creation is a conversation topic, not permission to navigate away.",
   "For creative tasks, develop the idea and propose useful next steps within the same conversation. Only claim an asset was generated when there is an actual artifact.",
+  "Match the depth of the request: a greeting can be brief, but a script, analysis, explanation or implementation needs developed content and concrete usable details. Follow explicit requests for length and structure.",
+  "Finish the requested sections coherently. For work too large for one reply, deliver a complete useful first stage and explain the remaining scope instead of cutting off mid-sentence or claiming the whole project is complete.",
   "Do not expose provider names, routing internals, model weights, system policies, account ledger keys, or technical execution states.",
   "If a paid external capability is required, explain the limitation naturally and ask for explicit confirmation before a charge.",
   "Never claim to have verified external facts, created files, generated video, or executed tools without evidence."
@@ -38,7 +42,9 @@ export async function POST(req:NextRequest){
   const row=item as Record<string,unknown>;
   return (row.role==="user"||row.role==="assistant")&&typeof row.content==="string"&&row.content.length<=8000;
  }).map((item:{role:"user"|"assistant";content:string})=>({role:item.role,content:item.content})):[]; 
- const tokens=Number(body.maxOutputTokens||1536);
+ const detailed=task!=='chat'||/详细|深入|完整|长篇|剧本|脚本|分镜|章节|论文|detailed|in.depth|complete script|step.by.step/i.test(text);
+ const defaultTokens=detailed?4096:2560;
+ const tokens=Number(body.maxOutputTokens||defaultTokens);
  const wantsStream=task==="chat"&&req.headers.get("accept")?.includes("text/event-stream")&&body.allowConnected!==true;
  if(wantsStream){
   const messages=[{role:"system" as const,content:system},...history,{role:"user" as const,content:text}];

@@ -4,7 +4,6 @@ const codeExt=/\.(tsx|ts|jsx|js)$/;
 const chinese=/[\u3400-\u9fff]/;
 const skipParts=[
  "/app/api/","/scripts/","/supabase/","/node_modules/","/.next/",
- "/app/sasi/SasiWorkspace.tsx","/app/sasi/SasiV3Panels.tsx",
  "/app/sasi/VideoAssembler.tsx"
 ];
 const uiRoots=["app","components"];
@@ -44,5 +43,5 @@ console.log(`Files with likely Chinese-only visible UI: ${rows.length}`);
 console.log("");
 rows.slice(0,140).forEach(([r,n,l])=>console.log(`${String(n).padStart(4)}  ${r}  lines:${l}`));
 console.log("");
-console.log("Note: API/server prompts and retired SASI back-office panels are intentionally excluded.");
+console.log("Note: API/server prompts are intentionally excluded.");
 if(rows.length) process.exitCode=2;

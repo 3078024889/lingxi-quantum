@@ -7,7 +7,7 @@ import {resilientText} from "@/lib/sasi/experience/resilient-text";
 import {WEBSITE_CONTRACT,validateWebsiteArtifact} from "@/lib/sasi/website-artifact";
 import {compileSasiSkillGuidance,validateSasiSkillIds} from "@/lib/sasi/skills/router";
 import {boundedRequestJson} from "@/lib/security/bounded-request-json";
-export const runtime="nodejs";export const maxDuration=60;
+export const runtime="nodejs";export const maxDuration=180;
 const reply=(data:unknown,status=200)=>NextResponse.json(data,{status,headers:{"Cache-Control":"no-store"}});
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return reply({error:"REQUEST_INVALID"},403);

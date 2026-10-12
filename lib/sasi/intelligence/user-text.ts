@@ -81,6 +81,7 @@ export async function runUserText(input:{userId:string;messages:TextMessage[];ma
       body=await json(`${base}/chat/completions`,{method:"POST",headers:{"content-type":"application/json",Authorization:`Bearer ${key}`},body:JSON.stringify({model,messages:input.messages,...tokenField,stream:false})});
       answer=String(body.choices?.[0]?.message?.content||"").trim();usage={inputTokens:body.usage?.prompt_tokens??body.usage?.input_tokens??null,outputTokens:body.usage?.completion_tokens??body.usage?.output_tokens??null};
     }
+    if(body?.choices?.[0]?.finish_reason==='length'||body?.stop_reason==='max_tokens'||body?.candidates?.[0]?.finishReason==='MAX_TOKENS')throw new Error('PROVIDER_ANSWER_TRUNCATED');
     if(!answer)throw new Error("PROVIDER_EMPTY_ANSWER");
     input.validateAnswer?.(answer);
     const additionalMinor=input.additionalCharge?.actualMinor(answer)??0;

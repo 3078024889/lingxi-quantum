@@ -15,7 +15,7 @@ must(footer.includes('骑缝章')&&footer.includes('视频配音')&&footer.inclu
 must(nav.includes('SASI全球多模型智能创作平台'),'R10_NAV_BRAND_MISSING');
 must(!one.includes('SasiTaskNavigation')&&!studio.includes('<SasiTaskToolbar')&&!knowledge.includes('<SasiTaskToolbar'),'R83_ONE_FRONT_DOOR_VIOLATION');
 must(one.includes('onSwitch={switchMode}'),'R10_MODE_SWITCH_NOT_WIRED');
-must(launcher.includes('onDrop=')&&launcher.includes('max-h-[min(72vh,620px)]'),'R10_LAUNCHER_FILE_DROP_OR_SCROLL_MISSING');
+must(launcher.includes('onDrop=')&&launcher.includes('max-h-[min(')&&launcher.includes('overflow-y-auto'),'R10_LAUNCHER_FILE_DROP_OR_SCROLL_MISSING');
 must(launcher.includes('!e.nativeEvent.isComposing'),'R10_LAUNCHER_IME_GUARD_MISSING');
 must(studio.includes('e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229'),'R10_STUDIO_ENTER_MISSING');
 must(knowledge.includes('e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229'),'R10_KNOWLEDGE_ENTER_MISSING');

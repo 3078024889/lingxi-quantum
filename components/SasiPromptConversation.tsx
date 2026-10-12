@@ -18,6 +18,7 @@ import SasiLocalIntelligenceAction from './SasiLocalIntelligenceAction';
 import SasiUserResourceAction from './SasiUserResourceAction';
 import SasiToolContinuation from './SasiToolContinuation';
 import {streamUserResourceText} from '@/lib/sasi/browser/user-resource-text';
+import {receiveSasiStream} from '@/lib/sasi/client/receive-text-stream';
 
 const THREAD_UI:Record<string,{label:string;newConversation:string;newChat:string;error:string}>={
  zh:{label:"继续之前的对话",newConversation:"开始新对话",newChat:"新对话",error:"暂时无法打开这段对话，请稍后重试。"},
@@ -30,33 +31,6 @@ const THREAD_UI:Record<string,{label:string;newConversation:string;newChat:strin
  pt:{label:"Continuar uma conversa",newConversation:"Nova conversa",newChat:"Novo chat",error:"Não foi possível abrir esta conversa. Tente novamente."},
  ar:{label:"متابعة محادثة سابقة",newConversation:"محادثة جديدة",newChat:"دردشة جديدة",error:"تعذّر فتح هذه المحادثة. حاول مرة أخرى."}
 };
-async function receiveSasiStream(response:Response,onDelta:(answer:string)=>void):Promise<any>{
- if(!response.headers.get("content-type")?.includes("text/event-stream"))return response.json();
- if(!response.body)throw Error("SASI_STREAM_MISSING");
- const reader=response.body.getReader(),decoder=new TextDecoder();
- let buffer="",answer="",completed:any=null;
- function process(frame:string){
-  const lines=frame.split("\n"),kind=lines.find(x=>x.startsWith("event:"))?.slice(6).trim();
-  const source=lines.filter(x=>x.startsWith("data:")).map(x=>x.slice(5).trim()).join("\n");
-  if(!source)return;
-  let payload:any;try{payload=JSON.parse(source)}catch{return}
-  if(kind==="reset"){answer="";onDelta("");return}
-  if(kind==="delta"&&typeof payload.text==="string"){answer+=payload.text;onDelta(answer)}
-  if(kind==="done")completed=payload;
- }
- try{
-  while(true){
-   const next=await reader.read();if(next.done)break;
-   buffer+=decoder.decode(next.value,{stream:true}).replace(/\r\n/g,"\n");
-   let pos;
-   while((pos=buffer.indexOf("\n\n"))>=0){process(buffer.slice(0,pos));buffer=buffer.slice(pos+2)}
-   if(buffer.length>1024*1024)throw Error("SASI_STREAM_BUFFER_LIMIT");
-  }
-  if(buffer.trim())process(buffer);
-  if(!completed)throw Error("SASI_STREAM_INTERRUPTED");
-  return completed;
- }finally{reader.releaseLock()}
-}
 
 export default function SasiPromptConversation({task,initialPrompt='',autoStart=false,onFiles,onTask}:{task:'chat'|'image';initialPrompt?:string;autoStart?:boolean;onFiles:(files:File[],prompt:string)=>void;onTask:(task:SasiEntryMode,prompt:string)=>void}){
  const {lang}=useLingxiLang(),ct=(key:Parameters<typeof composerText>[1])=>composerText(lang,key);
@@ -147,7 +121,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
     if(userResource.kind==='answer'){commitText(question,userResource.answer);setStreaming(null);return}
     setStreaming(null);
-    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json','accept':'text/event-stream'},body:JSON.stringify({text:question,history:turns.slice(-12).flatMap(t=>[{role:'user',content:t.question},...(t.answer?[{role:'assistant',content:t.answer}]:[])]),task:'chat',allowConnected:false})});
+    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json','accept':'text/event-stream'},body:JSON.stringify({lang,text:question,history:turns.slice(-12).flatMap(t=>[{role:'user',content:t.question},...(t.answer?[{role:'assistant',content:t.answer}]:[])]),task:'chat',allowConnected:false})});
     const data=await receiveSasiStream(response,answer=>setStreaming(answer?{question,answer}:null));
     exhausted.current=data.experienceExhausted===true;
     if(response.ok&&data.state==='answer'){setStreaming(null);commitText(question,data.answer);return}

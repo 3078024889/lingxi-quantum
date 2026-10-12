@@ -6,6 +6,9 @@ import {validateProviderBaseUrl} from "@/lib/sasi/gateway/ssrf-guard";
 import {errorCode,recordConnectionFailure,recordConnectionSuccess} from "./runtime-health";
 import {recordIntelligenceRun} from "./telemetry";
 import {providerJsonProbe} from "@/lib/security/provider-json-probe";
+import {authenticatedMediaRange} from '@/lib/security/public-media-range';
+import {officialOpenAiVideoRetired} from './provider-lifecycle';
+import {fetchPublicMedia} from '@/lib/security/public-media-fetch';
 
 export type VideoProvider="volcengine"|"xai"|"openai"|"aliyun";
 export type UserVideoConnection={id:string;provider:VideoProvider;encrypted_credential:string;fingerprint:string;model_id:string;discovered_models:unknown;health_status:string;enabled:boolean;base_url?:string|null;cooldown_until?:string|null;last_success_at?:string|null;last_latency_ms?:number|null;updated_at?:string|null};
@@ -18,19 +21,28 @@ function score(c:UserVideoConnection){const success=stamp(c.last_success_at)>Dat
 export async function selectUserVideoConnection(userId:string,preferred?:string|null):Promise<SelectedUserVideoConnection|null>{
  const {data,error}=await createAdminClient().from("sasi_provider_connections").select("id,provider,encrypted_credential,fingerprint,model_id,discovered_models,health_status,enabled,base_url,cooldown_until,last_success_at,last_latency_ms,updated_at").eq("user_id",userId).eq("health_status","healthy").eq("enabled",true).in("provider",["volcengine","xai","openai","aliyun"]).order("updated_at",{ascending:false});
  if(error)throw new Error("VIDEO_CONNECTION_LOOKUP_FAILED");
- const rows=(data??[]) as UserVideoConnection[];
+ const rows=((data??[]) as UserVideoConnection[]).filter(row=>!officialOpenAiVideoRetired(row.provider,row.base_url));
  const mapped=rows.map(row=>({...row,videoModel:chooseVideoModel(row.provider,listModels(row.discovered_models),String(row.model_id||""))})).filter((row):row is SelectedUserVideoConnection=>Boolean(row.videoModel)).sort((a,b)=>(available(b)?1:0)-(available(a)?1:0)||score(b)-score(a));
- const live=mapped.filter(available);return (preferred?live.find(x=>x.provider===preferred):null)||live[0]||mapped[0]||null;
+ const live=mapped.filter(available);return preferred?live.find(x=>x.provider===preferred)||null:live[0]||null;
 }
 function authKey(userId:string,c:UserVideoConnection){return decryptProviderKey(userId,c.provider as ByokProvider,c.encrypted_credential)}
-function safeBase(c:UserVideoConnection){const raw=String(c.base_url||"").trim()||defaultBaseUrl(c.provider as ByokProvider);const g=validateProviderBaseUrl(raw);if(!g.pass||!g.normalized)throw new Error("SERVICE_ADDRESS_INVALID");return g.normalized.replace(/\/$/,"")}
+function safeBase(c:UserVideoConnection){if(officialOpenAiVideoRetired(c.provider,c.base_url))throw Error('OPENAI_VIDEO_RETIRED');const raw=String(c.base_url||"").trim()||defaultBaseUrl(c.provider as ByokProvider);const g=validateProviderBaseUrl(raw);if(!g.pass||!g.normalized)throw new Error("SERVICE_ADDRESS_INVALID");return g.normalized.replace(/\/$/,"")}
 async function requestJson(url:string,init:RequestInit){
  const headers=new Headers(init.headers);let body:string|Uint8Array|undefined;
  if(typeof init.body==="string")body=init.body;
  else if(init.body instanceof FormData){const encoded=new Response(init.body);headers.set("content-type",encoded.headers.get("content-type")!);body=new Uint8Array(await encoded.arrayBuffer())}
  const r=await providerJsonProbe(url,Object.fromEntries(headers.entries()),30_000,2*1024*1024,{method:init.method==="POST"?"POST":"GET",body});if(!r.ok)throw new Error(`VIDEO_PROVIDER_HTTP_${r.status}`);return r.payload as any;
 }
-function httpsUrl(value:unknown){if(typeof value!=="string")return"";try{const u=new URL(value);return u.protocol==="https:"&&!u.username&&!u.password?u.toString():""}catch{return""}}
+function httpsUrl(value:unknown){if(typeof value==='string'&&value.trim()){try{const u=new URL(value);if(u.protocol==='https:'&&!u.username&&!u.password)return u.toString()}catch{}}throw new Error('VIDEO_RESULT_INVALID')}
+export async function downloadAuthenticatedUserVideo(input:{userId:string;connection:SelectedUserVideoConnection;jobId:string;start:number}){
+ if(input.connection.provider!=='openai'||!input.jobId)throw Error('VIDEO_DOWNLOAD_UNSUPPORTED');
+ // Construct the endpoint from the original approved connection; never send its key to an output URL.
+ return authenticatedMediaRange(`${safeBase(input.connection)}/videos/${encodeURIComponent(input.jobId)}/content`,input.start,{Authorization:`Bearer ${authKey(input.userId,input.connection)}`});
+}
+export async function downloadOriginalUserVideo(input:{userId:string;connection:SelectedUserVideoConnection;jobId:string}){
+ if(input.connection.provider!=='openai'||!input.jobId)throw Error('VIDEO_DOWNLOAD_UNSUPPORTED');
+ return fetchPublicMedia(`${safeBase(input.connection)}/videos/${encodeURIComponent(input.jobId)}/content`,{kind:'video',allowHtml:false,deadline:Date.now()+30000,authHeaders:{Authorization:`Bearer ${authKey(input.userId,input.connection)}`}});
+}
 export async function submitUserVideo(input:{userId:string;connection:Awaited<ReturnType<typeof selectUserVideoConnection>>;prompt:string;duration:number;ratio:"16:9"|"9:16"|"1:1";resolution:"720p"|"1080p"|"4k";taskId?:string|null}){
  const c=input.connection;if(!c)throw new Error("VIDEO_CONNECTION_REQUIRED");const started=Date.now(),key=authKey(input.userId,c),model=c.videoModel,base=safeBase(c);
  try{

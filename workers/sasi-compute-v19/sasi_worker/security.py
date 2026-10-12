@@ -26,9 +26,20 @@ async def verify_request(request: Request) -> bytes:
     if abs(now_ms - ts) > CONFIG.max_clock_skew_ms:
         raise HTTPException(401, "SIGNATURE_EXPIRED")
 
-    body = await request.body()
+    chunks = []
+    size = 0
+    async for chunk in request.stream():
+        size += len(chunk)
+        if size > 1024 * 1024:
+            raise HTTPException(413, "REQUEST_TOO_LARGE")
+        chunks.append(chunk)
+    body = b"".join(chunks)
     digest = hashlib.sha256(body).hexdigest()
-    canonical = f"{ts_raw}.{nonce}.{request.method.upper()}.{request.url.path}.{digest}"
+    # Match the TypeScript client's full target and authenticate the owner query.
+    target = request.url.path
+    if request.url.query:
+        target += "?" + request.url.query
+    canonical = f"{ts_raw}.{nonce}.{request.method.upper()}.{target}.{digest}"
     expected = hmac.new(CONFIG.secret.encode(), canonical.encode(), hashlib.sha256).hexdigest()
     if not hmac.compare_digest(expected, signature):
         raise HTTPException(401, "SIGNATURE_INVALID")

@@ -6,7 +6,7 @@ import {enforceAbuseGuard} from '@/lib/security/abuse-guard';
 import {resilientText} from '@/lib/sasi/experience/resilient-text';
 import {experienceRegionFromHost} from '@/lib/sasi/experience/free-provider-config';
 import {AUTOMATIC_VIDEO_CONTRACT,parseAutomaticVideoPlan} from '@/lib/sasi/automatic-video-plan';
-export const runtime='nodejs';export const maxDuration=60;
+export const runtime='nodejs';export const maxDuration=180;
 export async function POST(req:NextRequest){
  const reply=(body:unknown,status=200)=>NextResponse.json(body,{status,headers:{'Cache-Control':'no-store'}});
  if(!isSameOriginMutation(req))return reply({error:'REQUEST_INVALID'},403);

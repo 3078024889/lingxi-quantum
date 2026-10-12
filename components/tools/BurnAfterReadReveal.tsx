@@ -9,14 +9,17 @@ type Item={id:string;name:string;size:number;type:string;url:string};
 export default function BurnAfterReadReveal({id}:{id:string}){
  const{lang}=useLingxiLang();const t=(k:string)=>privacyText(lang,k);
  const[value,setValue]=useState(""),[files,setFiles]=useState<Item[]>([]),[status,setStatus]=useState<"idle"|"busy"|"shown"|"gone"|"missing"|"blocked"|"error">("idle"),[seconds,setSeconds]=useState<number|null>(null);
- const committed=useRef(false);
+ const pending=useRef<{viewId:string;decoded:string;duration:number|null}|null>(null);
+ const opening=useRef(false);
 
  async function reveal(){
+  if(opening.current)return;
   const parts=new URLSearchParams(location.hash.slice(1));
   const keyPart=parts.get("k"),revealToken=parts.get("t");
   if(!keyPart){setStatus("missing");return}
-  setStatus("busy");
+  opening.current=true;setStatus("busy");
   try{
+   if(!pending.current){
    // Phase 1: preview only. This MUST NOT consume a view.
    const r=await fetch("/api/tools/burn-after-read/consume",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id,revealToken})});
    const d=await r.json().catch(()=>({}));
@@ -28,25 +31,29 @@ export default function BurnAfterReadReveal({id}:{id:string}){
    const key=await crypto.subtle.importKey("raw",bytes(keyPart),{name:"AES-GCM"},false,["decrypt"]);
    const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:bytes(d.iv)},key,bytes(d.ciphertext));
    const decoded=new TextDecoder().decode(plain);
+   pending.current={viewId:crypto.randomUUID(),decoded,duration:d.view_duration_seconds??null};
+   }
 
    // Phase 2: only after successful local decrypt do we count the view.
-   const ack=await fetch("/api/tools/burn-after-read/ack",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id,revealToken})});
+   // A lost ACK response retries the same receipt, never another view.
+   const ack=await fetch("/api/tools/burn-after-read/ack",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id,revealToken,viewId:pending.current.viewId})});
    const a=await ack.json().catch(()=>({}));
    if(ack.status===410){setStatus("gone");return}
    if(ack.status===403){setStatus("blocked");return}
    if(!ack.ok)throw new Error(a.error||"COMMIT_FAILED");
 
-   committed.current=true;
-   setValue(decoded);setFiles(d.files||[]);setSeconds(d.view_duration_seconds??null);
+   setValue(pending.current.decoded);setFiles(a.files||[]);
+   setSeconds(pending.current.duration==null?null:Math.max(0,Math.floor((Date.parse(a.access_until)-Date.now())/1000)));
+   pending.current=null;
    // Keep fragment while viewing: embedded browsers can reload on hash/history changes.
    setStatus("shown");
   }catch{
-   // If decrypt or commit fails, the preview route has not consumed the note.
+   // Keep decrypted data only in memory while retrying an uncertain ACK.
    setStatus("error");
-  }
+  }finally{opening.current=false}
  }
 
- useEffect(()=>{if(status!=="shown"||seconds==null)return;if(seconds<=0){setValue("");setFiles([]);setStatus("gone");return}const x=setTimeout(()=>setSeconds(v=>v==null?null:v-1),1000);return()=>clearTimeout(x)},[status,seconds]);
+ useEffect(()=>{if(status!=="shown"||seconds==null)return;if(seconds<=0){pending.current=null;setValue("");setFiles([]);setStatus("gone");return}const x=setTimeout(()=>setSeconds(v=>v==null?null:v-1),1000);return()=>clearTimeout(x)},[status,seconds]);
 
  return <div className="mx-auto max-w-2xl rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
   <h1 className="text-2xl font-semibold text-[var(--lx-ink)]">{t("recipient")}</h1>
@@ -60,6 +67,6 @@ export default function BurnAfterReadReveal({id}:{id:string}){
   {status==="gone"&&<p className="mt-5 text-sm text-[var(--lx-muted)]">{t("gone")}</p>}
   {status==="missing"&&<p className="mt-5 text-sm text-[var(--lx-danger)]">{t("openMissing")}</p>}
   {status==="blocked"&&<p className="mt-5 text-sm text-[var(--lx-danger)]">{t("openBlocked")}</p>}
-  {status==="error"&&<p className="mt-5 text-sm text-[var(--lx-danger)]">{t("openErr")}</p>}
+  {status==="error"&&<><p role="alert" className="mt-5 text-sm text-[var(--lx-danger)]">{t("openErr")}</p><button onClick={reveal} className="mt-4 rounded-full bg-[var(--lx-ink)] px-5 py-3 text-sm text-[var(--lx-bg)]">{t("open")}</button></>}
  </div>;
 }

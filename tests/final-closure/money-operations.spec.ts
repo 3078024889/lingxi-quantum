@@ -9,8 +9,31 @@ async function base(page:Page){
  await page.route('**/api/account/withdrawals',r=>r.fulfill({json:{orders:[],withdrawals:[]}}));
  await page.route('**/api/account/withdrawals/legacy',r=>r.fulfill({json:{items:[]}}));
 }
+test('withdrawal login expiry provides a login link back to the selected withdrawal tab',async({page})=>{
+ await base(page);
+ await page.route('**/api/money/summary',r=>r.fulfill({status:401,json:{error:'UNAUTHORIZED'}}));
+ await page.route('**/api/account/withdrawals',r=>r.fulfill({status:401,json:{error:'LOGIN_REQUIRED'}}));
+ await page.goto('/sasi/pricing?currency=CNY&lang=zh#withdrawals');
+ const panel=page.locator('#withdrawals');
+ const login=panel.getByRole('link',{name:'请先登录后查看'});
+ await expect(login).toBeVisible();
+ await expect(panel).not.toHaveClass(/is-loading/);
+ const target=new URL((await login.getAttribute('href'))!, 'https://lingxifield.com');
+ expect(target.pathname).toBe('/account');
+ expect(target.searchParams.get('next')).toBe('/sasi/pricing?currency=CNY&lang=zh#withdrawals');
+ await expect(page.getByRole('alert').filter({hasText:'暂时无法读取余额'})).toHaveCount(0);
+});
+test('expired balance session removes previously loaded money on refresh',async({page})=>{
+ await base(page);
+ await page.goto('/sasi/pricing?currency=CNY&lang=zh#withdrawals');
+ await expect(page.getByText('¥9.00',{exact:true}).first()).toBeVisible();
+ await page.route('**/api/money/summary',r=>r.fulfill({status:401,json:{error:'UNAUTHORIZED'}}));
+ await page.getByRole('button',{name:'刷新',exact:true}).click();
+ await expect(page.getByText('¥9.00',{exact:true})).toHaveCount(0);
+ await expect(page.getByRole('alert').filter({hasText:'请先登录后查看'}).first()).toBeVisible();
+});
 for(const currency of ['CNY','USD'])test(currency+' compact amount selector and one payment action',async({page},testInfo)=>{
- await base(page);await page.goto('/sasi/pricing?currency='+currency+'&lang=zh#topup');const box=page.locator('fieldset');await expect(box.getByRole('radio')).toHaveCount(9);await box.locator('label').nth(2).click();await expect(box.getByRole('radio').nth(2)).toBeChecked();const link=page.getByTestId('topup-checkout');await expect(link).toHaveCount(1);await expect(link).toContainText('50.00');await expect(link).toHaveAttribute('href',currency==='CNY'?/checkout[?]productId=.*50/:/checkout-usd[?]productId=.*50/);await expect(box.getByRole('button')).toHaveCount(0);await box.scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath('topup-'+currency+'.png')});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await base(page);await page.goto('/sasi/pricing?currency='+currency+'&lang=zh#topup');const box=page.locator('fieldset');await expect(box.getByRole('radio')).toHaveCount(5);await box.locator('label').nth(4).click();await expect(box.locator('input[value="custom"]')).toBeChecked();await page.locator('#custom-topup-amount').fill('50.00');const link=page.getByTestId('topup-checkout');await expect(link).toHaveCount(1);await expect(link).toContainText('50.00');await expect(link).toHaveAttribute('href',currency==='CNY'?/checkout[?]productId=.*custom-50/:/checkout-usd[?]productId=.*custom-50/);await expect(box.getByRole('button')).toHaveCount(0);await box.scrollIntoViewIfNeeded();await page.screenshot({path:testInfo.outputPath('topup-'+currency+'.png')});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 test('cancel draft restores history state and sends only own request ID',async({page})=>{
  await base(page);let state={...draft},cancelBody:any;

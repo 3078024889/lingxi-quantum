@@ -2,6 +2,7 @@ import "server-only";
 import {createHash,randomUUID}from"node:crypto";
 import{beginDurableRun,checkpointRun,appendRunEvent}from"./run-store";
 import{startSpan,endSpan}from"./trace";
+import{DurableStepBusyError}from"./step-store";
 
 function hash(value:unknown){return createHash("sha256").update(JSON.stringify(value)).digest("hex")}
 export async function durableExecute<T>(input:{
@@ -35,6 +36,10 @@ export async function durableExecute<T>(input:{
    await endSpan(span,"error",{verification});
    if(!verification.retryable)break;
   }catch(e){
+   if(e instanceof DurableStepBusyError){
+    await endSpan(span,"ok",{state:"already-running"});
+    throw e;
+   }
    last=e;await appendRunEvent({runId:run.id,kind:"attempt.failed",step:"execute",latencyMs:Date.now()-started,metadata:{attempt,error:e instanceof Error?e.message:String(e)}});
    await endSpan(span,"error",{error:e instanceof Error?e.message:String(e)});
   }

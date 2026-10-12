@@ -13,6 +13,7 @@ function isHeavyEngine(id:string){return new Set(["ffmpeg","whispercpp","faster-
 export async function executeServerEngine(req:ExecuteRequest){
  const d=engineById(req.engineId);if(!d)throw new Error("UNKNOWN_ENGINE");
  if(d.licenseRisk==="deny"||d.license.commercialUse==="denied")throw new Error("ENGINE_LICENSE_DENIED");
+ if(d.licenseRisk!=="allow"||d.license.commercialUse!=="allowed"||!d.license.approvedRuntime?.includes('server'))throw new Error('ENGINE_LICENSE_NOT_APPROVED');
  if(d.runtime==="browser"||d.runtime==="database")throw new Error(`ENGINE_NOT_SERVER_EXECUTABLE:${d.runtime}`);
  const probe=await probeEngine(req.engineId);if(!probe.available)throw new Error(`ENGINE_UNAVAILABLE:${req.engineId}:${probe.reason||"unknown"}`);
  const fn=serverAdapter(req.engineId,req.operation);if(!fn)throw new Error(`ENGINE_OPERATION_UNSUPPORTED:${req.engineId}:${req.operation}`);

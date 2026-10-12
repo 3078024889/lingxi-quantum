@@ -24,7 +24,7 @@ function retryAfterSeconds(headers:Headers){
  return 0;
 }
 function tokenEstimate(messages:Message[],answer=""){return Math.max(1,Math.ceil((messages.reduce((n,m)=>n+m.content.length,0)+answer.length)/3))}
-function successRate(s:{successCount:number;failureCount:number}){const n=s.successCount+s.failureCount;return n?Math.max(.05,s.successCount/n):.85}
+function successRate(s:{successCount:number;failureCount:number;recentSuccessCount?:number;recentFailureCount?:number}){const success=s.recentSuccessCount??s.successCount,failed=s.recentFailureCount??s.failureCount;const n=success+failed;return n?Math.max(.05,success/n):.85}
 function cooled(until:string|null){return Boolean(until&&Date.parse(until)>Date.now())}
 
 async function candidates(region:ExperienceRegion,task:ExperienceTask,userId:string,sessionKey:string){
@@ -38,15 +38,19 @@ async function candidates(region:ExperienceRegion,task:ExperienceTask,userId:str
   // Water-filling first: favor the least-used share. Then quality, health, speed and observed latency.
   const fairness=120/(1+normalizedUse);
   const health=45*successRate(s);
-  const latency=s.latencyEwmaMs==null?12:Math.max(-20,20-s.latencyEwmaMs/250);
+  const measured=s.recentLatencyMs??s.latencyEwmaMs;
+  const latency=measured==null?12:Math.max(-20,20-measured/250);
   const quality=32*p.quality;
   const speed=18*p.speed;
   const priorityPenalty=Math.min(20,p.priority/10);
   const total=s.successCount+s.failureCount;
   const breakerOpen=total>=4&&s.failureCount/total>=0.5;
   const affinityBonus=affinity===p.id?28:0;
-  return {p,s,breakerOpen,score:fairness+health+latency+quality+speed+affinityBonus-priorityPenalty};
- }).filter(x=>!x.breakerOpen&&!cooled(x.s.cooldownUntil)).sort((a,b)=>b.score-a.score);
+  // Fair share must not repeatedly put a known failing service ahead of one that actually delivered.
+  const knownSuccess=s.recentSuccessCount??s.successCount,knownFailure=s.recentFailureCount??s.failureCount;
+  const reliability=knownSuccess>0&&successRate(s)>=.5?1:knownFailure>=2&&knownSuccess===0?-1:0;
+  return {p,s,breakerOpen,reliability,score:fairness+health+latency+quality+speed+affinityBonus-priorityPenalty};
+ }).filter(x=>!x.breakerOpen&&!cooled(x.s.cooldownUntil)).sort((a,b)=>b.reliability-a.reliability||b.score-a.score);
 }
 
 async function readChatEventStream(response:Response,onDelta:(text:string)=>void):Promise<string>{
@@ -59,21 +63,24 @@ async function readChatEventStream(response:Response,onDelta:(text:string)=>void
   const raw=rows.join("\n");if(raw==="[DONE]"){finished=true;return}
   let payload:any;try{payload=JSON.parse(raw)}catch{return}
   if(payload.error)throw new Error("EXPERIENCE_STREAM_ERROR");
+  if(payload?.choices?.[0]?.finish_reason==='length')throw new Error('EXPERIENCE_ANSWER_TRUNCATED');
   const delta=payload?.choices?.[0]?.delta?.content;
   const text=typeof delta==="string"?delta:"";
-  if(text){whole+=text;onDelta(text)}
+  if(text){whole+=text;if(whole.length>32768)throw Error('EXPERIENCE_ANSWER_TOO_LARGE');onDelta(text)}
  }
  try{
   while(true){
    const {done,value}=await reader.read();
    if(done)break;
-   buffer+=decoder.decode(value,{stream:true}).replace(/\r\n/g,"\n");
+   buffer+=decoder.decode(value,{stream:true});
+   buffer=buffer.replace(/\r\n/g,"\n");
    let pos;
    while((pos=buffer.indexOf("\n\n"))!==-1){
     consume(buffer.slice(0,pos));buffer=buffer.slice(pos+2);
    }
    if(buffer.length>1024*1024)throw new Error("EXPERIENCE_STREAM_TOO_LARGE");
   }
+  buffer+=decoder.decode();
   if(buffer.trim())consume(buffer);
   if(!whole.trim()||!finished)throw new Error("EXPERIENCE_STREAM_INCOMPLETE");
   return whole.trim();
@@ -87,6 +94,7 @@ async function openai(p:ExperienceProvider,messages:Message[],maxTokens:number,s
  if(!r.ok){const e:any=new Error(`EXPERIENCE_PROVIDER_HTTP_${r.status}`);e.status=r.status;e.retryAfterSeconds=retryAfterSeconds(r.headers);throw e}
  if(onDelta)return readChatEventStream(r,onDelta);
  const data=await r.json().catch(()=>({}));
+ if(data?.choices?.[0]?.finish_reason==='length')throw new Error('EXPERIENCE_ANSWER_TRUNCATED');
  const text=String(data?.choices?.[0]?.message?.content||"").trim();if(!text)throw new Error("EXPERIENCE_PROVIDER_EMPTY");return text;
 }
 async function gemini(p:ExperienceProvider,messages:Message[],maxTokens:number,signal:AbortSignal){
@@ -96,6 +104,7 @@ async function gemini(p:ExperienceProvider,messages:Message[],maxTokens:number,s
   headers:{"content-type":"application/json","x-goog-api-key":p.apiKey},
   body:JSON.stringify({system_instruction:system?{parts:[{text:system}]}:undefined,contents,generationConfig:{maxOutputTokens:maxTokens}})});
  const data=await r.json().catch(()=>({}));if(!r.ok){const e:any=new Error(`EXPERIENCE_PROVIDER_HTTP_${r.status}`);e.status=r.status;e.retryAfterSeconds=retryAfterSeconds(r.headers);throw e}
+ if(data?.candidates?.[0]?.finishReason==='MAX_TOKENS')throw new Error('EXPERIENCE_ANSWER_TRUNCATED');
  const text=(data?.candidates?.[0]?.content?.parts||[]).map((x:any)=>x?.text||"").join("").trim();if(!text)throw new Error("EXPERIENCE_PROVIDER_EMPTY");return text;
 }
 async function cloudflare(p:ExperienceProvider,messages:Message[],maxTokens:number,signal:AbortSignal){
@@ -107,11 +116,15 @@ async function cloudflare(p:ExperienceProvider,messages:Message[],maxTokens:numb
 }
 async function call(p:ExperienceProvider,messages:Message[],maxTokens:number,timeoutMs:number,onDelta?:(text:string)=>void){
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);
+ // A healthy stream can take longer than its first token. Keep the shared
+ // route deadline, but do not abort a progressing answer after twelve seconds.
+ const firstTokenTimer=p.wire==='openai'?setTimeout(()=>controller.abort(),Math.min(12_000,timeoutMs)):undefined;
+ const emit=(text:string)=>{if(text){clearTimeout(firstTokenTimer);onDelta?.(text)}};
  try{
-  if(p.wire==="gemini"){const answer=await gemini(p,messages,maxTokens,controller.signal);onDelta?.(answer);return answer}
-  if(p.wire==="cloudflare"){const answer=await cloudflare(p,messages,maxTokens,controller.signal);onDelta?.(answer);return answer}
-  return await openai(p,messages,maxTokens,controller.signal,onDelta);
- }finally{clearTimeout(timer)}
+  if(p.wire==="gemini"){const answer=await gemini(p,messages,maxTokens,controller.signal);emit?.(answer);return answer}
+  if(p.wire==="cloudflare"){const answer=await cloudflare(p,messages,maxTokens,controller.signal);emit?.(answer);return answer}
+  return await openai(p,messages,maxTokens,controller.signal,emit);
+ }finally{clearTimeout(timer);clearTimeout(firstTokenTimer)}
 }
 
 /**
@@ -127,15 +140,17 @@ export async function runExperienceText(input:{region:ExperienceRegion;task:Expe
  if(!list.length)throw new Error("EXPERIENCE_POOL_UNAVAILABLE");
  const maxTokens=Math.max(256,Math.min(4096,Number(input.maxOutputTokens||1536)));
  let attempts=0,last:unknown,hadPartial=false;
- // Keep total fallback latency below the 60s route limit, including DB settlement overhead.
- const deadline=Date.now()+42_000;
+ // These callers have a 180s function limit. Allow a progressing long answer
+ // to finish, leaving 30s for persistence and settlement. Initial token remains bounded.
+ const deadline=Date.now()+150_000;
  for(const {p} of list.slice(0,5)){
   const remaining=deadline-Date.now();
   if(remaining<5_000)break;
   if(hadPartial){input.onReset?.();hadPartial=false}
   attempts++;const started=Date.now();
   try{
-   const text=await call(p,input.messages,maxTokens,Math.min(12_000,Math.max(5_000,remaining-1_000)),input.onDelta?chunk=>{hadPartial=true;input.onDelta?.(chunk)}:undefined);const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
+   const timeout=p.wire==='openai'?Math.max(5_000,remaining-1_000):Math.min(60_000,Math.max(5_000,remaining-1_000));
+   const text=await call(p,input.messages,maxTokens,timeout,input.onDelta?chunk=>{hadPartial=true;input.onDelta?.(chunk)}:undefined);const latency=Date.now()-started;const tokens=tokenEstimate(input.messages,text);
    await recordProviderRun({providerId:p.id,ok:true,tokens,latencyMs:latency});
    await setSessionAffinity(input.userId,input.sessionKey,p.id);
    return {text,providerId:p.id,model:p.model,attempts,estimatedTokens:tokens};

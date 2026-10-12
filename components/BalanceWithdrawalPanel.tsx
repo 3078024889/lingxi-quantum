@@ -33,6 +33,7 @@ export default function BalanceWithdrawalPanel({currency,view="all",historyExtra
   const ui=dashboardCopy[lang];
   const[data,setData]=useState<Data|null>(null);
   const[msg,setMsg]=useState("");
+  const[needsLogin,setNeedsLogin]=useState(false);
   const[busy,setBusy]=useState<string|null>(null);
   const requestKeys=useRef<Record<string,string>>({});
   const[amounts,setAmounts]=useState<Record<string,string>>({});
@@ -55,7 +56,7 @@ export default function BalanceWithdrawalPanel({currency,view="all",historyExtra
   async function load(){
     try{const r=await fetch("/api/account/withdrawals",{cache:"no-store"});
     const d=await r.json().catch(()=>({}));
-    if(r.ok)setData(d);else setMsg(moneyError(lang,d.error||""));}catch{setMsg(moneyText(lang,"unavailable"))}
+    if(r.ok){setData(d);setNeedsLogin(false);setMsg(previous=>[moneyText(lang,"login"),moneyText(lang,"unavailable"),c.loadFail].includes(previous)?"":previous)}else{setData(null);setNeedsLogin(r.status===401);setMsg(moneyError(lang,d.error||""));}}catch{setMsg(moneyText(lang,"unavailable"))}
   }
   const loadRef=useRef(load);loadRef.current=load;
  useEffect(()=>{void loadRef.current()},[c.loadFail]);
@@ -101,7 +102,7 @@ export default function BalanceWithdrawalPanel({currency,view="all",historyExtra
     try{const r=await fetch("/api/account/withdrawals/cancel",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({requestId:id})});const b=await r.json();setMsg(r.ok?moneyText(lang,"cancelled"):moneyError(lang,b.error||""));if(r.ok)requestKeys.current={};window.dispatchEvent(new Event("lingxi-money-updated"));await loadRef.current();}catch{setMsg(moneyText(lang,"unavailable"))}finally{setBusy(null)}
   }
 
-  if(!data)return <div hidden={view==="hidden"} role={view==="all"?undefined:"tabpanel"} id={view==="history"?"withdrawal-records":"withdrawals"} aria-labelledby={view==="all"?undefined:view==="history"?"balance-tab-records":"balance-tab-withdrawals"} className="lx-state-card is-loading rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]"><span className="lx-state-dot"/> {msg||c.loading}</div>;
+  if(!data)return <div hidden={view==="hidden"} role={view==="all"?"status":"tabpanel"} id={view==="history"?"withdrawal-records":"withdrawals"} aria-labelledby={view==="all"?undefined:view==="history"?"balance-tab-records":"balance-tab-withdrawals"} className={"lx-state-card "+(needsLogin?"":"is-loading ")+"rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]"}><span className="lx-state-dot"/> {msg||c.loading}{needsLogin&&<Link className="mt-4 block underline" href={"/account?next="+encodeURIComponent("/sasi/pricing?currency="+(currency||"CNY")+"&lang="+lang+(view==="history"?"#withdrawal-records":"#withdrawals"))}>{moneyText(lang,"login")}</Link>}</div>;
 
   const orders=data.orders.filter(o=>!currency||(isUsdWallet(o.product_id)?"USD":"CNY")===currency);
   const withdrawals=data.withdrawals.filter(w=>!currency||w.currency===currency);

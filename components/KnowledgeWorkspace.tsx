@@ -37,6 +37,8 @@ import SasiSkillPicker from"@/components/SasiSkillPicker";
 import type{SasiSkillId}from"@/lib/sasi/skills/types";
 import {inferExplicitUnifiedSasiIntent} from "@/lib/sasi/core/unified-intent";
 import type {SasiEntryMode} from "@/components/SasiUnifiedLauncher";
+import {asksSasiIdentity} from '@/lib/sasi/core/platform-identity';
+import {receiveSasiStream} from '@/lib/sasi/client/receive-text-stream';
 async function zipText(file:File){
  const zip=await JSZip.loadAsync(file);
  const allowed=/\.(txt|md|json|csv|ya?ml|js|jsx|ts|tsx|css|html|sql|py)$/i;
@@ -303,7 +305,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
       apiQuestion="Use this pasted content as source material. Respond in the language of the user’s text, summarize it, and complete any explicit request in it.";
     }
 
-    if(!evidence.length){
+    if(!evidence.length&&!asksSasiIdentity(raw)){
       setNeedsConnection(true);
       const hasMedia=sources.some(source=>!source.text.trim());
       setNotice(actionText(lang,hasMedia?"media":"noEvidence"));
@@ -323,11 +325,22 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     try{
       const skillPlan=selectSasiSkills({mode,prompt:raw,files:sources.map(source=>source.title),hasEvidence:evidence.length>0});
       const skillIds=[...new Set([...selectedSkillIds,...skillPlan.ids])].slice(0,8);
-      const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json","Idempotency-Key":pendingTurn.id},body:JSON.stringify({clientTurnId:pendingTurn.id,acceptConnectedBilling:useConnectedService,
-        question:apiQuestion,mode,intelligence,useConnectedService,skillIds,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
+      const response=await fetch("/api/knowledge/ask",{method:"POST",headers:{"Content-Type":"application/json","Accept":"text/event-stream","Idempotency-Key":pendingTurn.id},body:JSON.stringify({clientTurnId:pendingTurn.id,acceptConnectedBilling:useConnectedService,
+        question:apiQuestion,lang,mode,intelligence,useConnectedService,skillIds,evidence:evidence.map((r,i)=>({index:i+1,title:r.title,locator:r.locator,text:r.text}))
       })});
-      const data=await response.json();
       if(!response.ok)throw new Error(tr(lang,"aiFailed"));
+      let data=await receiveSasiStream(response,partial=>{
+        setAnswer(partial);
+        setThread(rows=>rows.map(row=>row.id===pendingTurn.id?{...row,assistant:partial}:row));
+      });
+      const deadline=Date.now()+45_000;
+      while(data.state==='running'&&typeof data.runId==='string'&&Date.now()<deadline){
+        await new Promise(resolve=>setTimeout(resolve,1200));
+        const recovered=await fetch(`/api/knowledge/ask?runId=${encodeURIComponent(data.runId)}`,{cache:'no-store',signal:AbortSignal.timeout(5000)});
+        if(!recovered.ok)throw new Error(tr(lang,'aiFailed'));
+        data=await recovered.json();
+      }
+      if(data.state==='running'||typeof data.answer!=='string')throw new Error(tr(lang,"aiFailed"));
       setAnswer(data.answer||"");
       setThread(rows=>rows.map(row=>row.id===pendingTurn.id?{...row,assistant:String(data.answer||"")}:row));
       setLearningEventId(String(data.learningEventId||""));
@@ -335,6 +348,8 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
       setNeedsConnection(data.needsConnection===true);setNotice(data.experienceExhausted?EXPERIENCE_USED[lang]:tr(lang,"done"));
     }catch(e:unknown){
       const message=e instanceof Error?e.message:tr(lang,"aiFailed");
+      setAnswer('');
+      setThread(rows=>rows.filter(row=>row.id!==pendingTurn.id));
       setNotice(message);setQuestion(current=>current||raw);
     }finally{asking.current=false;setAskBusy(false)}
   }
@@ -408,7 +423,7 @@ export default function KnowledgeWorkspace({mode="book",initialPrompt="",initial
     <div className="flex-1 pt-8 sm:pt-12">
       <SasiConversationTurns turns={thread.length?thread:(answer?[{id:"current",user:question,assistant:answer,createdAt:""}]:[])}/>
 
-      {(thread.length>0||answer)&&<div className="mb-10 flex flex-wrap gap-2 text-xs">
+      {!askBusy&&(thread.length>0||answer)&&<div className="mb-10 flex flex-wrap gap-2 text-xs">
         <button type="button" onClick={downloadThreadDoc} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{sasiCommonText(lang,"downloadDocument")}</button>
         <button type="button" onClick={()=>void downloadThreadZip()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">ZIP</button>
         <button type="button" onClick={()=>void copyAnswer()} className="rounded-full border border-[var(--lx-line)] px-3 py-1.5">{copied?tr(lang,"copied"):tr(lang,"copyAll")}</button>

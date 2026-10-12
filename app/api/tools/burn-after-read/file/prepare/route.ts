@@ -5,6 +5,7 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {newBurnObjectKey,presignR2,r2Ready} from "@/lib/r2-private";
 import {createBurnRevealToken} from "@/lib/tools/burn-link-token";
+import {boundedRequestJson} from '@/lib/security/bounded-request-json';
 
 export const runtime="nodejs";
 const TTL=new Set([10,60,1440,4320,10080]);
@@ -31,7 +32,7 @@ export async function POST(req:NextRequest){
  const contentLength=Number(req.headers.get("content-length")||0);
  if(Number.isFinite(contentLength)&&contentLength>128*1024)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
 
- const body=await req.json().catch(()=>null) as any;
+ const body=await boundedRequestJson(req,128*1024).catch(()=>null) as any;
  if(!body)return NextResponse.json({error:"INVALID_BODY"},{status:400});
  const quoteId=String(body.quoteId||"");
  const files=Array.isArray(body.files)?body.files:[];
@@ -47,6 +48,7 @@ export async function POST(req:NextRequest){
  }
 
  let total=0;
+ if(files.some((f:any)=>!Number.isSafeInteger(Number(f?.size))||Number(f?.size)<1))return NextResponse.json({error:"INVALID_FILE"},{status:400});
  const normalized=files.map((f:any)=>{
   const size=Math.floor(Number(f?.size||0));
   if(!Number.isFinite(size)||size<1)throw new Error("INVALID_FILE");
@@ -62,13 +64,18 @@ export async function POST(req:NextRequest){
  const mb=Math.max(1,Math.ceil(total/1024/1024));
  if(Math.ceil(Number(q.quantity))!==mb)return NextResponse.json({error:"QUOTE_SIZE_MISMATCH"},{status:409});
 
- const existing=await admin.from("burn_notes").select("id,expires_at,ready_at").eq("quote_id",quoteId).eq("owner_user_id",user.id).maybeSingle();
+ const existing=await admin.from("burn_notes").select("id,expires_at,ready_at,consumed_at").eq("quote_id",quoteId).eq("owner_user_id",user.id).maybeSingle();
+ if(existing.error)return NextResponse.json({error:"SERVICE_BUSY"},{status:503});
  if(existing.data){
-   const {data:rows}=await admin.from("burn_files").select("id,object_key,original_name,size_bytes,mime_type").eq("note_id",existing.data.id).order("created_at");
+   const alreadyReady=Boolean(existing.data.ready_at);
+   if(existing.data.consumed_at||Date.parse(existing.data.expires_at)<=Date.now())return NextResponse.json({error:"SHARE_GONE"},{status:410});
+   const {data:rows,error:filesError}=await admin.from("burn_files").select("id,object_key,original_name,size_bytes,mime_type").eq("note_id",existing.data.id).order("created_at");
+   if(filesError)return NextResponse.json({error:"SERVICE_BUSY"},{status:503});
+   const uploadTtl=Math.max(1,Math.min(600,Math.floor((Date.parse(existing.data.expires_at)-Date.now())/1000)));
    return NextResponse.json({
-     id:existing.data.id,expiresAt:existing.data.expires_at,alreadyPrepared:true,
+     id:existing.data.id,expiresAt:existing.data.expires_at,alreadyPrepared:true,alreadyReady,
      token:createBurnRevealToken(String(existing.data.id),String(existing.data.expires_at)),
-     files:(rows||[]).map((x:any)=>({id:x.id,name:x.original_name,size:x.size_bytes,type:x.mime_type,uploadUrl:presignR2("PUT",x.object_key,600)}))
+     files:(rows||[]).map((x:any)=>({id:x.id,name:x.original_name,size:x.size_bytes,type:x.mime_type,uploadUrl:alreadyReady?null:presignR2("PUT",x.object_key,uploadTtl)}))
    });
  }
 

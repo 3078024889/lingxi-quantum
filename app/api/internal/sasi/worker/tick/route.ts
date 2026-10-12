@@ -4,7 +4,7 @@ import{runOneDetachedJob}from"@/lib/sasi/durable/detached-worker";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
-export const maxDuration=60;
+export const maxDuration=180;
 
 function safeEqual(a:string,b:string){
  const aa=Buffer.from(a),bb=Buffer.from(b);

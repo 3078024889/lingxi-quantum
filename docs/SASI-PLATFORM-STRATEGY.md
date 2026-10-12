@@ -98,7 +98,7 @@ SASI 采用预授权生产模式，而不是先执行后追款：
 
 ## 当前代码落点
 
-- `app/sasi/SasiWorkspace.tsx`：目标入口、双工作室、能力中枢、制作账户与受控预览。
+- `components/SasiOneSurface.tsx`：统一创作入口；通过 `SasiModeHost` 挂载当前创作与知识工作区，旧双工作室已退役。
 - `lib/sasi/catalog.ts`：用户可见的制作规格、能力谱系、能力作品与制作提案。
 - `lib/sasi/provider-economics.ts`：仅服务端使用的供应成本基线。
 - `app/api/sasi/catalog/route.ts`：只输出公共能力目录，不输出供应商采购数据。

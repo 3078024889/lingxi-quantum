@@ -4,6 +4,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 export type ProviderDailyState={
  providerId:string; requestCount:number; successCount:number; failureCount:number;
  estimatedTokens:number; latencyEwmaMs:number|null; cooldownUntil:string|null;
+ recentSuccessCount?:number;recentFailureCount?:number;recentLatencyMs?:number|null;
 };
 
 const memory=new Map<string,ProviderDailyState>();
@@ -17,14 +18,15 @@ export async function providerStates(ids:string[]):Promise<Record<string,Provide
  try{
   const admin=createAdminClient();
   const {data,error}=await admin.from("sasi_experience_provider_daily")
-   .select("provider_id,request_count,success_count,failure_count,estimated_tokens,latency_ewma_ms,cooldown_until")
-   .eq("usage_day",day()).in("provider_id",ids);
+   .select("usage_day,provider_id,request_count,success_count,failure_count,estimated_tokens,latency_ewma_ms,cooldown_until")
+   .gte("usage_day",new Date(Date.now()-6*86400000).toISOString().slice(0,10)).in("provider_id",ids).order('usage_day',{ascending:false}).limit(200);
   if(error)throw error;
-  for(const r of data||[])out[String(r.provider_id)]={
+  for(const r of data||[]){const id=String(r.provider_id);if(r.usage_day===day())out[id]={
    providerId:String(r.provider_id),requestCount:Number(r.request_count||0),successCount:Number(r.success_count||0),
    failureCount:Number(r.failure_count||0),estimatedTokens:Number(r.estimated_tokens||0),
    latencyEwmaMs:r.latency_ewma_ms==null?null:Number(r.latency_ewma_ms),cooldownUntil:r.cooldown_until?String(r.cooldown_until):null
-  };
+  };}
+  for(const id of ids){const history=(data||[]).filter(r=>String(r.provider_id)===id);if(history.length){out[id].recentSuccessCount=history.reduce((n,r)=>n+Number(r.success_count||0),0);out[id].recentFailureCount=history.reduce((n,r)=>n+Number(r.failure_count||0),0);out[id].recentLatencyMs=history.find(r=>r.latency_ewma_ms!=null)?.latency_ewma_ms??null;}}
  }catch{}
  return out;
 }

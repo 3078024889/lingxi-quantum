@@ -7,11 +7,13 @@ must(!plans.includes('aiBalanceProducts')&&!usd.includes('wallet:"ai"')&&!plans.
 must(!checkout.includes('product.group !== "ai"')&&!checkout.includes('product.group === "ai"')&&!checkout.includes('.from("unlocks")'),"LEGACY_CHECKOUT_ENTITLEMENT_REMOVED");
 must(text.includes('chargeCompletedSasiUsage')&&text.includes('textChargeMinor')&&text.includes('requireSasiBalance'),"TEXT_BALANCE_METERING");
 must(image.includes('imageChargeMinor')&&image.includes('chargeCompletedSasiUsage'),"IMAGE_BALANCE_METERING");
-must(video.includes('videoChargeMinor')&&video.includes('chargeCompletedSasiUsage')&&video.includes('result.state==="succeeded"'),"VIDEO_SUCCESS_ONLY_METERING");
+const videoTransaction=r('supabase/migrations/20261011152000_video_result_charge_transaction.sql');
+must(video.includes('videoChargeMinor')&&video.includes("admin.rpc('complete_sasi_byok_video_v64'")&&videoTransaction.includes("if p_state='succeeded' then")&&videoTransaction.includes('public.charge_sasi_usage_v49')&&videoTransaction.includes('for update')&&videoTransaction.includes('update public.sasi_byok_video_tasks'),"VIDEO_ATOMIC_RESULT_AND_SUCCESS_ONLY_METERING");
 must(!knowledge.includes('SASI_PLATFORM_REASONING_ENABLED')&&!knowledge.includes('runNativeReasoningAndWait'),"PLATFORM_MODEL_PATH_REMOVED");
 must(!studio.includes('/api/sasi/quote')&&!studio.includes('quote.kind==="managed"'),"MANAGED_VIDEO_UI_REMOVED");
 must(!exists('app/api/sasi/quote/route.ts')&&!exists('app/api/sasi/jobs/route.ts')&&!exists('components/SasiManagedVideoCreate.tsx')&&!exists('components/AiWalletPanel.tsx'),"LEGACY_ACTIVE_RUNTIME_REMOVED");
-must(ui.includes('一个余额，全部 SASI 共用')&&ui.includes('¥0.50 / 100万 Token')&&ui.includes('¥0.20 / 成功生成秒')&&ui.includes('¥6'),"PUBLIC_PRICING_VISIBLE");
+const rates=r('components/SasiUsageRates.tsx');
+must(ui.includes('一个余额，全部 SASI 共用')&&ui.includes('<SasiUsageRates currency={selected} lang={lang}')&&rates.includes('SASI_PRICING_V49')&&rates.includes('p.textPerMillion')&&rates.includes('p.video720PerSecond')&&rates.includes('p.websiteFirstPage'),"PUBLIC_PRICING_VISIBLE");
 must(migration.includes('charge_sasi_usage_v49')&&migration.includes("kind='usage_v49'")&&migration.includes('credit_sasi_topup'),"DATABASE_LEDGER_MIGRATION");
 console.log("V49_PRICING_CONSTITUTION=PASS");
 console.log("V49_ONE_SASI_BALANCE=PASS");

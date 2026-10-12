@@ -1,7 +1,7 @@
 import "server-only";
 import type { SasiQuality } from "@/lib/sasi/catalog";
 
-export type SasiVideoProviderId = "seedance" | "xai" | "openai" | "wan";
+export type SasiVideoProviderId = "seedance" | "xai" | "wan";
 
 export type SasiVideoSelection = {
   provider: SasiVideoProviderId;
@@ -18,7 +18,6 @@ type SubmitInput = {
 };
 
 const XAI_ORIGIN = "https://api.x.ai/v1";
-const OPENAI_ORIGIN = "https://api.openai.com/v1";
 const ARK_ORIGIN = "https://ark.cn-beijing.volces.com/api/v3";
 
 function env(name: string) {
@@ -47,7 +46,7 @@ function verifiedProviders() {
     env("SASI_VERIFIED_VIDEO_PROVIDERS")
       .split(",")
       .map((item) => item.trim().toLowerCase())
-      .filter((item): item is SasiVideoProviderId => item === "seedance" || item === "xai" || item === "openai" || item === "wan"),
+      .filter((item): item is SasiVideoProviderId => item === "seedance" || item === "xai" || item === "wan"),
   );
 }
 
@@ -63,12 +62,6 @@ export function sasiVideoProviderReadiness() {
       configured: Boolean(env("XAI_API_KEY")),
       verified: Boolean(env("XAI_API_KEY") && verified.has("xai")),
       model: modelName(env("SASI_XAI_VIDEO_MODEL"), "grok-imagine-video-1.5"),
-    },
-    openai: {
-      configured: Boolean(env("OPENAI_API_KEY")),
-      verified: Boolean(env("OPENAI_API_KEY") && verified.has("openai")),
-      model: modelName(env("SASI_OPENAI_VIDEO_MODEL"), "sora-2"),
-      cinemaModel: modelName(env("SASI_OPENAI_CINEMA_MODEL"), "sora-2-pro"),
     },
     wan: {
       configured: Boolean(env("DASHSCOPE_API_KEY") && wanBaseUrl()),
@@ -91,16 +84,15 @@ export function selectSasiVideoProvider(input: {
 }): SasiVideoSelection | null {
   const readiness = sasiVideoProviderReadiness();
   const priorities: Record<SasiQuality, SasiVideoProviderId[]> = {
-    fast: ["wan", "seedance", "xai", "openai"],
-    balanced: ["seedance", "wan", "xai", "openai"],
-    cinema: ["seedance", "openai", "xai", "wan"],
+    fast: ["wan", "seedance", "xai"],
+    balanced: ["seedance", "wan", "xai"],
+    cinema: ["seedance", "xai", "wan"],
   };
   const candidates = input.preferredProvider ? [input.preferredProvider] : priorities[input.quality];
   for (const provider of candidates) {
     const current = readiness.providers[provider];
-    if (!current.verified) continue;
-    if (provider === "openai" && (![4, 8, 12].includes(input.duration) || input.aspectRatio === "1:1")) continue;
-    const model = provider === "openai" && input.quality === "cinema" ? readiness.providers.openai.cinemaModel : current.model;
+    if (!current?.verified) continue;
+    const model = current.model;
     if (model) return { provider, model, quality: input.quality };
   }
   return null;
@@ -123,14 +115,9 @@ function bearer(keyName: string) {
   return `Bearer ${key}`;
 }
 
-function openAiSize(aspectRatio: SubmitInput["aspectRatio"], quality: SasiQuality) {
-  if (aspectRatio === "1:1") throw new Error("OPENAI_VIDEO_ASPECT_UNSUPPORTED");
-  if (quality === "cinema") return aspectRatio === "9:16" ? "1024x1792" : "1792x1024";
-  return aspectRatio === "9:16" ? "720x1280" : "1280x720";
-}
-
 export async function submitSasiVideo(input: SubmitInput) {
   const { provider, model } = input.selection;
+  if(!["seedance","xai","wan"].includes(provider))throw Error("VIDEO_PROVIDER_RETIRED");
   if (provider === "seedance") {
     const payload = await jsonRequest(`${ARK_ORIGIN}/contents/generations/tasks`, {
       method: "POST",
@@ -164,22 +151,6 @@ export async function submitSasiVideo(input: SubmitInput) {
     }, "XAI");
     const requestId = typeof payload.request_id === "string" ? payload.request_id : "";
     if (!/^[A-Za-z0-9_-]{6,180}$/.test(requestId)) throw new Error("XAI_INVALID_REQUEST_ID");
-    return { provider, model, providerJobId: requestId };
-  }
-
-  if (provider === "openai") {
-    const form = new FormData();
-    form.set("model", model);
-    form.set("prompt", input.prompt);
-    form.set("seconds", String(input.duration));
-    form.set("size", openAiSize(input.aspectRatio, input.quality));
-    const payload = await jsonRequest(`${OPENAI_ORIGIN}/videos`, {
-      method: "POST",
-      headers: { Authorization: bearer("OPENAI_API_KEY") },
-      body: form,
-    }, "OPENAI");
-    const requestId = typeof payload.id === "string" ? payload.id : "";
-    if (!/^video_[A-Za-z0-9_-]{6,180}$/.test(requestId)) throw new Error("OPENAI_INVALID_REQUEST_ID");
     return { provider, model, providerJobId: requestId };
   }
 
@@ -221,7 +192,7 @@ function videoUrlFrom(value: unknown) {
 }
 
 export async function pollSasiVideo(provider: string, model: string, providerJobId: string) {
-  if (provider !== "seedance" && provider !== "xai" && provider !== "openai" && provider !== "wan") throw new Error("UNKNOWN_VIDEO_PROVIDER");
+  if (provider !== "seedance" && provider !== "xai" && provider !== "wan") throw new Error("UNKNOWN_VIDEO_PROVIDER");
   if (!modelName(model, "")) throw new Error("INVALID_PROVIDER_MODEL");
   if (!/^[A-Za-z0-9_-]{6,180}$/.test(providerJobId)) throw new Error("INVALID_PROVIDER_JOB_ID");
 
@@ -267,25 +238,6 @@ export async function pollSasiVideo(provider: string, model: string, providerJob
     throw new Error("XAI_UNKNOWN_STATUS");
   }
 
-  if (provider === "openai") {
-    const payload = await jsonRequest(`${OPENAI_ORIGIN}/videos/${providerJobId}`, {
-      headers: { Authorization: bearer("OPENAI_API_KEY") },
-    }, "OPENAI");
-    const status = String(payload.status ?? "").toLowerCase();
-    if (status === "queued") return { state: "queued" as const };
-    if (status === "in_progress") return { state: "running" as const };
-    if (status === "failed") return { state: "failed" as const, errorCode: "OPENAI_FAILED" };
-    if (status === "completed") {
-      return {
-        state: "succeeded" as const,
-        videoUrl: `${OPENAI_ORIGIN}/videos/${providerJobId}/content`,
-        providerCostMinor: null,
-        providerCostCurrency: "USD" as const,
-      };
-    }
-    throw new Error("OPENAI_UNKNOWN_STATUS");
-  }
-
   const baseUrl = wanBaseUrl();
   if (!baseUrl) throw new Error("SASI_WAN_BASE_URL_INVALID");
   const payload = await jsonRequest(`${baseUrl}/tasks/${providerJobId}`, {
@@ -315,9 +267,6 @@ export function providerAssetAccess(provider: string, value: string) {
   if (url.protocol !== "https:") return { trusted: false, headers: {} as Record<string, string> };
   const host = url.hostname.toLowerCase();
   const configured = configuredAssetHosts().has(host);
-  if (provider === "openai" && host === "api.openai.com") {
-    return { trusted: true, headers: { Authorization: bearer("OPENAI_API_KEY") } };
-  }
   const xaiHost = provider === "xai" && (host === "x.ai" || host.endsWith(".x.ai"));
   const wanHost = provider === "wan" && (
     /^dashscope-result-[a-z0-9-]+\.oss-accelerate\.aliyuncs\.com$/.test(host)

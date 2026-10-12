@@ -60,7 +60,6 @@ export function sasiPublicReadiness() {
     videoRoutes: {
       seedance: readiness.providers.seedance.verified,
       xai: readiness.providers.xai.verified,
-      openai: readiness.providers.openai.verified,
       wan: readiness.providers.wan.verified,
     },
     productionAccountReady: readiness.billing,

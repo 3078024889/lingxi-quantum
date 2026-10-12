@@ -1,6 +1,23 @@
 import fs from "node:fs";
 
 const retired=[
+ 'scripts/audit-autonomy-v1583.mjs',
+ 'app/sasi/SasiComposer.tsx',
+ 'app/sasi/SasiProjectMemory.tsx',
+ 'components/SasiDramaLaunch.tsx',
+ 'app/sasi/SasiWorkspace.tsx',
+ 'app/sasi/SasiV3Panels.tsx',
+ 'app/sasi/SasiProductionPanels.tsx',
+ 'components/SasiSkillsPanel.tsx',
+ 'scripts/accept-v14492.mjs',
+ 'scripts/accept-v14512.mjs',
+ 'scripts/accept-v1466.mjs',
+ 'scripts/accept-v14462.mjs',
+ 'scripts/accept-v14460.mjs',
+ 'scripts/patch-sasi-workspace-v1465.mjs',
+ 'scripts/patch-sasi-production-v1465.mjs',
+ 'scripts/apply-source-patches-v1465.mjs',
+ 'tests/final-closure/r33-sasi-skill-creator.spec.ts',
   'components/AiWalletPanel.tsx',
   'components/SasiManagedVideoCreate.tsx',
   'app/api/ai/wallet/route.ts',

@@ -67,7 +67,7 @@ export default function BurnAfterReadWorkbench(){
      files:files.map(f=>({name:f.name,size:f.size,type:f.type||"application/octet-stream"}))
    })});
    const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"PREPARE_FAILED");
-   await uploadPrepared(d.files||[]);
+   if(!d.alreadyReady)await uploadPrepared(d.files||[]);
    const done=await fetch("/api/tools/burn-after-read/file/complete",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:d.id})});
    if(!done.ok)throw new Error("UPLOAD_INCOMPLETE");
    if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");

@@ -5,7 +5,7 @@ export const runtime="nodejs";export const maxDuration=60;
 export async function GET(req:Request){
  const secret=process.env.CRON_SECRET?.trim();if(!secret||req.headers.get("authorization")!==`Bearer ${secret}`)return NextResponse.json({error:"UNAUTHORIZED"},{status:401});
  const admin=createAdminClient();
- const {data:notes,error}=await admin.from("burn_notes").select("id").or(`expires_at.lt.${new Date().toISOString()},consumed_at.not.is.null`).limit(100);
+ const {data:notes,error}=await admin.from("burn_notes").select("id").or(`expires_at.lt.${new Date().toISOString()},consumed_at.lt.${new Date(Date.now()-300000).toISOString()}`).limit(100);
  if(error)return NextResponse.json({error:"QUERY_FAILED"},{status:500});
  let deletedObjects=0,deletedNotes=0,deferredNotes=0,fileQueryErrors=0,objectDeleteErrors=0;
  for(const n of notes||[]){
