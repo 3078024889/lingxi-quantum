@@ -1,0 +1,11 @@
+const fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),assert=require('node:assert/strict');
+const exportsObject={};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/tools/shared/id-generator.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:exportsObject});
+const {createMonotonicUlid,idBatchCount}=exportsObject;
+let now=1700000000000,randomCalls=0;
+const next=createMonotonicUlid(()=>now,()=>{randomCalls++;return new Uint8Array(16).fill(30)});
+const ids=Array.from({length:10000},()=>next());assert.equal(new Set(ids).size,10000);assert.deepEqual(ids,[...ids].sort());assert(ids.every(id=>/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(id)));assert.equal(randomCalls,1);
+now--;assert(next()>ids.at(-1),'Clock rollback must not reverse generation order');now+=2;assert(next()>ids.at(-1));assert.equal(randomCalls,2);
+const overflow=createMonotonicUlid(()=>now,()=>new Uint8Array(16).fill(31));overflow();assert.throws(overflow,/ULID_RANDOM_OVERFLOW/);assert.throws(overflow,/ULID_RANDOM_OVERFLOW/);now++;assert.equal(overflow().length,26);
+for(const invalid of [-1,NaN,Infinity,0x1000000000000])assert.throws(createMonotonicUlid(()=>invalid),/ULID_TIME_INVALID/);
+assert.equal(idBatchCount(3.9),3);assert.equal(idBatchCount(10001),10000);assert.equal(idBatchCount(0),1);assert.throws(()=>idBatchCount(NaN),/ID_COUNT_INVALID/);
+console.log('PASS: 10,000 unique correctly encoded ULIDs sorted within one millisecond; clock rollback, carry, repeated overflow rejection, new-millisecond recovery and batch bounds. No network or production writes.');

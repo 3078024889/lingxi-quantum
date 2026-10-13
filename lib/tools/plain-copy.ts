@@ -1,6 +1,7 @@
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 
 export const PLAIN_COPY = {
+  "saveZip": {"zh":"打包下载 ZIP","en":"Download ZIP","ja":"ZIP をダウンロード","ko":"ZIP 다운로드","fr":"Télécharger ZIP","de":"ZIP herunterladen","es":"Descargar ZIP","pt":"Baixar ZIP","ar":"تنزيل ZIP"},
   "choose": {
     "zh": "选择文件",
     "en": "Choose file",

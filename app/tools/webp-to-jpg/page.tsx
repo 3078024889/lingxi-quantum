@@ -1,3 +1,4 @@
 import AdvancedToolPage from "@/components/tools/AdvancedToolPage";
 import ImageConvertWorkbench from "@/components/tools/ImageConvertWorkbench";
-export default function Page(){return <AdvancedToolPage title="WebP 转 JPG" intro="选择 WebP，转成兼容性更高的 JPG。"><ImageConvertWorkbench output="jpeg" accept="image/webp" title="WebP 转 JPG" /></AdvancedToolPage>}
+import LxText from '@/components/LxText';
+export default function Page(){return <AdvancedToolPage title="WebP → JPG / PNG" intro={<LxText zh="输出 JPG，或保留透明区域的 PNG。" en="Export JPG or PNG with preserved transparency." ja="JPG または透明度を保持した PNG を出力。" ko="JPG 또는 투명도를 유지하는 PNG로 저장하세요." fr="Exportez en JPG ou PNG avec transparence préservée." de="JPG oder PNG mit erhaltener Transparenz exportieren." es="Exporta JPG o PNG conservando la transparencia." pt="Exporte JPG ou PNG preservando a transparência." ar="صدّر JPG أو PNG مع الحفاظ على الشفافية."/>}><ImageConvertWorkbench output="jpeg" accept="image/webp" title="WebP → JPG / PNG" allowPngOutput /></AdvancedToolPage>}

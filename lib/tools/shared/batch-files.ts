@@ -1,28 +1,24 @@
 "use client";
 
 import JSZip from "jszip";
+import {safeFilename} from './download';
 
 export async function filesToZip(
   files: Array<{ name: string; blob: Blob }>,
   zipName = "lingxifield-results.zip",
 ) {
+  if(files.length>1000||files.reduce((size,file)=>size+file.blob.size,0)>256*1024*1024)throw Error('ZIP_INPUT_TOO_LARGE');
   const zip = new JSZip();
-  const used = new Map<string, number>();
+  const used = new Set<string>();
 
   for (const file of files) {
-    let name = file.name || "file";
-    const count = used.get(name) || 0;
-    used.set(name, count + 1);
-
-    if (count > 0) {
-      const dot = name.lastIndexOf(".");
-      name =
-        dot > 0
-          ? `${name.slice(0, dot)}-${count + 1}${name.slice(dot)}`
-          : `${name}-${count + 1}`;
-    }
-
-    zip.file(name, file.blob);
+    const clean=safeFilename(file.name||'file');
+    const base=clean==='.'||clean==='..'?'file':clean;
+    let name=base,index=2;
+    const dot=base.lastIndexOf('.');
+    while(used.has(name.toLowerCase()))name=dot>0?`${base.slice(0,dot)}-${index++}${base.slice(dot)}`:`${base}-${index++}`;
+    used.add(name.toLowerCase());
+    zip.file(name,await file.blob.arrayBuffer());
   }
 
   const blob = await zip.generateAsync({
@@ -31,17 +27,5 @@ export async function filesToZip(
     compressionOptions: { level: 6 },
   });
 
-  return { name: zipName, blob };
-}
-
-export function dedupeFiles(files: File[]) {
-  const seen = new Set<string>();
-  const out: File[] = [];
-  for (const file of files) {
-    const key = `${file.name}:${file.size}:${file.lastModified}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(file);
-  }
-  return out;
+  return { name: safeFilename(zipName), blob };
 }

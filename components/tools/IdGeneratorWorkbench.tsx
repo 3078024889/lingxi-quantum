@@ -1,102 +1,30 @@
 "use client";
-import EditableNumberInput from "@/components/ui/EditableNumberInput";
+import {useRef,useState} from 'react';
+import EditableNumberInput from '@/components/ui/EditableNumberInput';
+import {useLingxiLang} from '@/lib/lingxi-i18n';
+import {idGeneratorCopy} from '@/lib/tools/id-generator-copy';
+import {createMonotonicUlid,idBatchCount} from '@/lib/tools/shared/id-generator';
+import {downloadBlob} from '@/lib/tools/shared/download';
 
-
-import { useState } from "react";
-
-const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-
-function encodeTime(time: number) {
-  let value = Math.floor(time);
-  let output = "";
-  for (let index = 0; index < 10; index++) {
-    output = CROCKFORD[value % 32] + output;
-    value = Math.floor(value / 32);
-  }
-  return output;
-}
-
-function randomUlidTail() {
-  const bytes = crypto.getRandomValues(new Uint8Array(16));
-  let output = "";
-  for (const byte of bytes) output += CROCKFORD[byte & 31];
-  return output;
-}
-
-function ulid() {
-  return encodeTime(Date.now()) + randomUlidTail();
-}
-
-export default function IdGeneratorWorkbench() {
-  const [count, setCount] = useState(10);
-  const [kind, setKind] = useState<"uuid" | "ulid">("uuid");
-  const [values, setValues] = useState<string[]>([]);
-
-  function run() {
-    const amount = Math.max(1, Math.min(10_000, count));
-    setValues(
-      Array.from({ length: amount }, () =>
-        kind === "uuid" ? crypto.randomUUID() : ulid(),
-      ),
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="text-sm">
-          类型
-          <select
-            value={kind}
-            onChange={(event) =>
-              setKind(event.target.value as "uuid" | "ulid")
-            }
-            className="mt-1 w-full rounded-xl border p-2"
-          >
-            <option value="uuid">UUID v4</option>
-            <option value="ulid">ULID</option>
-          </select>
-        </label>
-        <label className="text-sm">
-          数量
-          <EditableNumberInput
-            type="number"
-            min={1}
-            max={10_000}
-            value={count}
-            onChange={(event) => setCount(Number(event.target.value) || 1)}
-            className="mt-1 w-full rounded-xl border p-2"
-          />
-        </label>
-      </div>
-
-      <button
-        onClick={run}
-        className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]"
-      >
-        生成
-      </button>
-
-      {!!values.length && (
-        <>
-          <textarea
-            readOnly
-            rows={14}
-            value={values.join("\n")}
-            className="w-full rounded-xl border bg-[var(--lx-soft)] p-3 font-mono text-xs"
-          />
-          <button
-            onClick={() => navigator.clipboard.writeText(values.join("\n"))}
-            className="rounded-xl border px-4 py-2 text-sm"
-          >
-            复制全部
-          </button>
-        </>
-      )}
-
-      <p className="text-xs text-[var(--lx-muted)]">
-        使用浏览器 Web Crypto。UUID v4 是随机标识；ULID 前 10 位编码毫秒时间，后 16 位使用加密随机字节生成，可按时间大体排序。最多一次生成 10,000 个。
-      </p>
-    </div>
-  );
+export default function IdGeneratorWorkbench(){
+ const {lang}=useLingxiLang(),c=idGeneratorCopy(lang);
+ const [count,setCount]=useState(10),[kind,setKind]=useState<'uuid'|'ulid'>('uuid'),[values,setValues]=useState<string[]>([]),[notice,setNotice]=useState('');
+ const nextUlid=useRef<ReturnType<typeof createMonotonicUlid>|null>(null);
+ function run(){
+  setNotice('');
+  try{const amount=idBatchCount(count);setCount(amount);nextUlid.current??=createMonotonicUlid();setValues(Array.from({length:amount},()=>kind==='uuid'?crypto.randomUUID():nextUlid.current!()));}
+  catch{setValues([]);setNotice(c.failed)}
+ }
+ return <div className="space-y-4" dir={lang==='ar'?'rtl':'ltr'}>
+  <div className="grid gap-3 sm:grid-cols-2">
+   <label className="text-sm">{c.type}<select value={kind} onChange={e=>{setKind(e.target.value as 'uuid'|'ulid');setValues([]);setNotice('')}} className="mt-1 w-full rounded-xl border p-2"><option value="uuid">UUID v4</option><option value="ulid">ULID</option></select></label>
+   <label className="text-sm">{c.count}<EditableNumberInput type="number" min={1} max={10000} step={1} value={count} onChange={e=>setCount(Number(e.target.value))} className="mt-1 w-full rounded-xl border p-2"/></label>
+  </div>
+  <button onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">{c.generate}</button>
+  {!!values.length&&<>
+   <label className="block text-sm">{c.result}<textarea readOnly rows={14} value={values.join('\n')} className="mt-1 w-full rounded-xl border bg-[var(--lx-soft)] p-3 font-mono text-xs"/></label>
+   <div className="flex flex-wrap gap-3"><button onClick={async()=>{try{await navigator.clipboard.writeText(values.join('\n'));setNotice(c.copied)}catch{setNotice(c.copyFailed)}}} className="rounded-xl border px-4 py-2 text-sm">{c.copy}</button><button onClick={async()=>{try{await downloadBlob(new Blob([values.join('\n')+'\n'],{type:'text/plain;charset=utf-8'}),'lingxifield-'+kind+'.txt')}catch{setNotice(c.failed)}}} className="rounded-xl border px-4 py-2 text-sm">{c.download}</button></div>
+  </>}
+  <p role="status" className="text-sm">{notice}</p><p className="text-xs text-[var(--lx-muted)]">{c.help}</p>
+ </div>;
 }

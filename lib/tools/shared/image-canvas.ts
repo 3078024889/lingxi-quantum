@@ -16,7 +16,7 @@ export function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: 
 
 export async function drawFileToCanvas(
   file: File,
-  opts?: { maxWidth?: number; maxHeight?: number; width?: number; height?: number },
+  opts?: { maxWidth?: number; maxHeight?: number; width?: number; height?: number; background?: "white" | "transparent" },
 ): Promise<{ canvas: HTMLCanvasElement; width: number; height: number }> {
   const bmp = await loadImageBitmap(file);
   let w = opts?.width ?? bmp.width;
@@ -35,8 +35,8 @@ export async function drawFileToCanvas(
   canvas.height = h;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("2d context unavailable");
-  // White background for JPEG (avoids black transparent areas)
-  if (true) {
+  // Document/JPEG callers retain white; alpha-capable outputs opt into transparency.
+  if (opts?.background !== "transparent") {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
   }
@@ -50,7 +50,7 @@ export async function convertImage(
   target: "image/jpeg" | "image/png" | "image/webp",
   quality = 0.92,
 ): Promise<{ blob: Blob; name: string; width: number; height: number }> {
-  const { canvas, width, height } = await drawFileToCanvas(file);
+  const { canvas, width, height } = await drawFileToCanvas(file,{background:target==="image/jpeg"?"white":"transparent"});
   const blob = await canvasToBlob(canvas, target, target === "image/png" ? undefined : quality);
   const ext = target === "image/jpeg" ? "jpg" : target === "image/png" ? "png" : "webp";
   return { blob, name: replaceExt(file.name, ext), width, height };
@@ -167,8 +167,10 @@ export async function compressImageToTarget(
 
 /** Re-encode via canvas to strip EXIF/metadata. */
 export async function stripImageMetadata(file: File): Promise<{ blob: Blob; name: string }> {
-  const { canvas } = await drawFileToCanvas(file);
   const isPng = file.type === "image/png" || file.name.toLowerCase().endsWith(".png");
-  const blob = await canvasToBlob(canvas, isPng ? "image/png" : "image/jpeg", isPng ? undefined : 0.95);
-  return { blob, name: replaceExt(file.name, isPng ? "png" : "jpg") };
+  const isWebp = file.type === "image/webp" || file.name.toLowerCase().endsWith(".webp");
+  const target=isPng?"image/png":isWebp?"image/webp":"image/jpeg";
+  const { canvas } = await drawFileToCanvas(file,{background:target==="image/jpeg"?"white":"transparent"});
+  const blob = await canvasToBlob(canvas,target,isPng?undefined:isWebp?1:0.95);
+  return { blob, name: replaceExt(file.name,isPng?"png":isWebp?"webp":"jpg") };
 }

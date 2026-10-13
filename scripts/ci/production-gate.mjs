@@ -36,6 +36,8 @@ const commands=[
  ["node",["scripts/test-sasi-delivery-boundaries.cjs"]],
  ["node",["scripts/test-document-converter-limits.cjs"]],
  ["node",["scripts/test-temp-mail-safety-v81.cjs"]],
+ ["node",["scripts/test-id-generator-v83.cjs"]],
+ ["node",["scripts/test-batch-zip-v83.cjs"]],
  ["node",["scripts/test-document-gateway-limits.mjs"]],
  ["node",["scripts/test-site-facts.cjs"]],
  ["node",["scripts/test-money-lifecycle.cjs"]],

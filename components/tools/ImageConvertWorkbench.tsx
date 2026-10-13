@@ -4,7 +4,8 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
-type Props={output:"jpeg"|"png"|"webp";accept?:string;title:string};
+import {convertImage} from '@/lib/tools/shared/image-canvas';
+type Props={output:"jpeg"|"png"|"webp";accept?:string;title:string;allowPngOutput?:boolean};
 type C={quality:string;run:string;busy:string;ready:string;error:string};
 const D:Record<LingxiLang,C>={
  zh:{quality:"输出质量",run:"开始转换",busy:"正在转换…",ready:"图片转换完成，可以核对结果后单独下载或打包下载。",error:"图片转换没有完成"},
@@ -17,33 +18,28 @@ const D:Record<LingxiLang,C>={
  pt:{quality:"Qualidade de saída",run:"Converter",busy:"Convertendo…",ready:"Conversão concluída. Revise os resultados e baixe individualmente ou em ZIP.",error:"Não foi possível concluir a conversão"},
  ar:{quality:"جودة الإخراج",run:"تحويل",busy:"جارٍ التحويل…",ready:"اكتمل التحويل. راجع النتائج ثم نزّلها منفردة أو في ZIP.",error:"تعذر إكمال تحويل الصور"}
 };
-async function convert(file:File,output:string,quality:number){
- const bmp=await createImageBitmap(file);try{
-  const c=document.createElement("canvas");c.width=bmp.width;c.height=bmp.height;const x=c.getContext("2d")!;
-  if(output==="jpeg"){x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height)}x.drawImage(bmp,0,0);
-  const mime=`image/${output}`;
-  return await new Promise<Blob>((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error("ENCODE_FAILED")),mime,quality));
- }finally{bmp.close?.()}
-}
-export default function ImageConvertWorkbench({output,accept="image/*",title}:Props){
+const FORMAT:Record<LingxiLang,string>={zh:'输出格式',en:'Output format',ja:'出力形式',ko:'출력 형식',fr:'Format de sortie',de:'Ausgabeformat',es:'Formato de salida',pt:'Formato de saída',ar:'صيغة الإخراج'};
+export default function ImageConvertWorkbench({output,accept="image/*",title,allowPngOutput=false}:Props){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[quality,setQuality]=useState(.92),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
+ const[selectedOutput,setSelectedOutput]=useState(output);
  async function run(){
   setBusy(true);setError("");setResults([]);
   try{
-   const ext=output==="jpeg"?"jpg":output,out:ToolResultFile[]=[];
+   const ext=selectedOutput==="jpeg"?"jpg":selectedOutput,out:ToolResultFile[]=[];
    for(const f of files){
-    const blob=await convert(f,output,Math.min(1,Math.max(.4,quality)));
-    out.push({name:`${f.name.replace(/\.[^.]+$/,"")}.${ext}`,blob,mime:blob.type||`image/${output}`,size:blob.size});
+    const {blob}=await convertImage(f,`image/${selectedOutput}`,Math.min(1,Math.max(.4,quality)));
+    out.push({name:`${f.name.replace(/\.[^.]+$/,"")}.${ext}`,blob,mime:blob.type||`image/${selectedOutput}`,size:blob.size});
    }
    setResults(out);
   }catch(e){setError(e instanceof Error?e.message:String(e))}
   finally{setBusy(false)}
  }
  return <div className="space-y-4">
-  <FileDropzone accept={accept} multiple maxFiles={50} maxSizeMB={40} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy} kind="image"/>
-  {output!=="png"&&<label className="block text-sm text-[var(--lx-muted)]">{c.quality}<input type="range" min=".4" max="1" step=".05" value={quality} onChange={e=>setQuality(Math.min(1,Math.max(.4,Number(e.target.value)||.92)))} className="ml-3 align-middle"/><span className="ml-2">{Math.round(quality*100)}%</span></label>}
-  <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:`${c.run} · ${title}`}</button>
+  <FileDropzone accept={accept} multiple append maxFiles={50} maxSizeMB={40} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy} kind="image"/>
+  {allowPngOutput&&<label className="block text-sm">{FORMAT[lang]}<select disabled={busy} value={selectedOutput} onChange={e=>{setSelectedOutput(e.target.value as 'jpeg'|'png');setResults([]);setError('')}} className="ml-3 rounded-lg border bg-[var(--lx-panel)] px-3 py-2"><option value="jpeg">JPG</option><option value="png">PNG</option></select></label>}
+  {selectedOutput!=="png"&&<label className="block text-sm text-[var(--lx-muted)]">{c.quality}<input disabled={busy} type="range" min=".4" max="1" step=".05" value={quality} onChange={e=>setQuality(Math.min(1,Math.max(.4,Number(e.target.value)||.92)))} className="ml-3 align-middle"/><span className="ml-2">{Math.round(quality*100)}%</span></label>}
+  <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:`${c.run} · ${allowPngOutput?'WebP → '+(selectedOutput==='jpeg'?'JPG':'PNG'):title}`}</button>
   {!!results.length&&<ResultPanel files={results} messageZh={c.ready} messageEn={c.ready}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
  </div>;
