@@ -1,5 +1,6 @@
 "use client";
 
+import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
 import JSZip from "jszip";
 import { parseGenericDocument } from "@/lib/files/document-intake";
 
@@ -164,7 +165,7 @@ export async function delimitedToXlsx(file: File) {
     name: `${base}.xlsx`,
     blob,
     rows: rows.length,
-    columns: Math.max(0, ...rows.map((row) => row.length)),
+    columns: rows.reduce((max,row)=>Math.max(max,row.length),0),
   };
 }
 
@@ -185,16 +186,23 @@ function sharedStrings(xml: string) {
 
 function sheetToRows(xml: string, shared: string[]) {
   const rows: string[][] = [];
-  for (const rowHit of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)) {
+  let cells=0;
+  for (const rowHit of xml.matchAll(/<row\b([^>]*)>([\s\S]*?)<\/row>/g)) {
+    const declaredRow=rowHit[1].match(/\br="(\d+)"/)?.[1];
+    const firstCellRow=rowHit[2].match(/<c\b[^>]*\br="[A-Z]+(\d+)"/i)?.[1];
+    const rowIndex=Number(declaredRow||firstCellRow||rows.length+1)-1;
+    if(!Number.isSafeInteger(rowIndex)||rowIndex<0||rowIndex>=1048576||rows[rowIndex])throw Error('XLSX_ROW_INVALID');
     const row: string[] = [];
-    for (const cellHit of rowHit[1].matchAll(/<c\b([^>]*)>([\s\S]*?)<\/c>/g)) {
+    for (const cellHit of rowHit[2].matchAll(/<c\b([^>]*)>([\s\S]*?)<\/c>/g)) {
       const attrs = cellHit[1];
       const body = cellHit[2];
-      const ref = (attrs.match(/\br="([A-Z]+)\d+"/) || [])[1] || "A";
-
-      let index = 0;
-      for (const ch of ref) index = index * 26 + (ch.charCodeAt(0) - 64);
-      index = Math.max(0, index - 1);
+      const reference=attrs.match(/\br="([^"]+)"/)?.[1];
+      const ref=reference?.match(/^([A-Z]+)(\d+)$/i);
+      if(reference&&(!ref||Number(ref[2])!==rowIndex+1))throw Error('XLSX_CELL_REFERENCE_INVALID');
+      let index=row.length;
+      if(ref){index=0;for(const ch of ref[1].toUpperCase())index=index*26+(ch.charCodeAt(0)-64);index--;}
+      if(!Number.isSafeInteger(index)||index<0||index>=16384)throw Error('XLSX_COLUMN_INVALID');
+      cells+=Math.max(0,index+1-row.length);if(cells>2000000)throw Error('XLSX_GRID_TOO_LARGE');
 
       const type = (attrs.match(/\bt="([^"]+)"/) || [])[1] || "";
       const raw = (body.match(/<v>([\s\S]*?)<\/v>/) || [])[1] ?? "";
@@ -211,14 +219,14 @@ function sheetToRows(xml: string, shared: string[]) {
       while (row.length <= index) row.push("");
       row[index] = value;
     }
-    rows.push(row);
+    rows[rowIndex]=row;
   }
   return rows;
 }
 
 export async function xlsxToCsvFiles(file: File) {
-  const zip = await JSZip.loadAsync(await file.arrayBuffer());
-  const sharedXml = await zip.file("xl/sharedStrings.xml")?.async("string");
+  const zip = await openBoundedArchive(file);
+  const sharedXml = await readArchiveText(zip,"xl/sharedStrings.xml");
   const shared = sharedXml ? sharedStrings(sharedXml) : [];
 
   const sheetPaths = Object.keys(zip.files)
@@ -235,7 +243,7 @@ export async function xlsxToCsvFiles(file: File) {
   const base = file.name.replace(/\.xlsx$/i, "") || "workbook";
 
   for (let i = 0; i < sheetPaths.length; i++) {
-    const xml = await zip.file(sheetPaths[i])?.async("string");
+    const xml = await readArchiveText(zip,sheetPaths[i]);
     if (!xml) continue;
     const rows = sheetToRows(xml, shared);
     const csv = "\uFEFF" + rows.map((row) => row.map(csvEscape).join(",")).join("\r\n");
@@ -244,7 +252,7 @@ export async function xlsxToCsvFiles(file: File) {
       name: sheetPaths.length === 1 ? `${base}.csv` : `${base}-sheet${i + 1}.csv`,
       blob,
       rows: rows.length,
-      columns: Math.max(0, ...rows.map((row) => row.length)),
+      columns: rows.reduce((max,row)=>Math.max(max,row.length),0),
     });
   }
 

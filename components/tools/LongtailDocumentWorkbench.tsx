@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import JSZip from "jszip";
+import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
+
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type { ToolResultFile } from "@/lib/tools/types";
@@ -20,12 +21,12 @@ function htmlText(raw:string){
 function csvCell(value:string){return `"${String(value||"").replace(/"/g,'""').replace(/\r?\n/g," ")}"`}
 
 async function epubToText(file:File){
- const zip=await JSZip.loadAsync(file);
- const container=await zip.file("META-INF/container.xml")?.async("string");
+ const zip=await openBoundedArchive(file);
+ const container=await readArchiveText(zip,"META-INF/container.xml");
  if(!container)throw new Error("EPUB_CONTAINER_MISSING");
  const c=xml(container),root=c.querySelector("rootfile")?.getAttribute("full-path");
  if(!root)throw new Error("EPUB_PACKAGE_MISSING");
- const opfRaw=await zip.file(root)?.async("string");
+ const opfRaw=await readArchiveText(zip,root);
  if(!opfRaw)throw new Error("EPUB_OPF_MISSING");
  const opf=xml(opfRaw),base=root.includes("/")?root.slice(0,root.lastIndexOf("/")+1):"";
  const manifest=new Map<string,string>();
@@ -36,7 +37,7 @@ async function epubToText(file:File){
  const parts:string[]=[];
  for(const item of Array.from(opf.querySelectorAll("spine itemref"))){
   const href=manifest.get(item.getAttribute("idref")||"");if(!href)continue;
-  const raw=await zip.file(base+href)?.async("string");if(!raw)continue;
+  const raw=await readArchiveText(zip,base+href);if(!raw)continue;
   const text=htmlText(raw);if(text)parts.push(text);
  }
  if(!parts.length)throw new Error("EPUB_TEXT_EMPTY");
@@ -44,7 +45,7 @@ async function epubToText(file:File){
 }
 
 async function odtToText(file:File){
- const zip=await JSZip.loadAsync(file),raw=await zip.file("content.xml")?.async("string");
+ const zip=await openBoundedArchive(file),raw=await readArchiveText(zip,"content.xml");
  if(!raw)throw new Error("ODT_CONTENT_MISSING");
  const doc=xml(raw),blocks=Array.from(doc.getElementsByTagName("*")).filter(n=>{
   const name=n.localName;return name==="p"||name==="h";

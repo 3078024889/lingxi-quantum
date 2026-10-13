@@ -36,8 +36,8 @@ export async function detectFileType(file: File): Promise<DetectedFileType> {
   if (match(head, [0x50, 0x4b, 0x03, 0x04]) || match(head, [0x50, 0x4b, 0x05, 0x06])) {
     const generic: DetectedFileType = { ext: "zip", mime: "application/zip", label: "ZIP archive", confidence: "high" };
     try {
-      const JSZip = (await import("jszip")).default;
-      const archive = await JSZip.loadAsync(file, { checkCRC32: false, createFolders: false });
+      const { openBoundedArchive } = await import("@/lib/files/bounded-archive");
+      const archive = await openBoundedArchive(file);
       const has = (key: string) => Boolean(archive.file(key));
       if (has("[Content_Types].xml")) {
         if (has("word/document.xml")) return { ext: "docx", mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", label: "Word document (DOCX)", confidence: "high" };

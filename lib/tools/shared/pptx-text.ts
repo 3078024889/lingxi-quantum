@@ -1,6 +1,7 @@
 "use client";
 
-import JSZip from "jszip";
+import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
+
 
 function decodeXml(value: string) {
   return value
@@ -22,7 +23,7 @@ function xmlText(xml: string) {
 }
 
 export async function pptxToText(file: File) {
-  const zip = await JSZip.loadAsync(await file.arrayBuffer());
+  const zip = await openBoundedArchive(file);
   const slides = Object.keys(zip.files)
     .filter((name) => /^ppt\/slides\/slide\d+\.xml$/i.test(name))
     .sort((a, b) => {
@@ -35,7 +36,7 @@ export async function pptxToText(file: File) {
 
   const blocks: string[] = [];
   for (let i = 0; i < slides.length; i++) {
-    const xml = await zip.file(slides[i])?.async("string");
+    const xml = await readArchiveText(zip,slides[i]);
     if (!xml) continue;
     const text = xmlText(xml);
     blocks.push(`# Slide ${i + 1}\n${text}`);

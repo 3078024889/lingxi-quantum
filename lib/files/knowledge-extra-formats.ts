@@ -1,6 +1,7 @@
 "use client";
 
-import JSZip from "jszip";
+import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
+
 
 const decodeXml = (value: string) =>
   value
@@ -81,7 +82,7 @@ export async function structuredTextFile(file: File): Promise<string> {
 export async function pptxToKnowledgeText(
   file: File
 ): Promise<{ text: string; slides: number }> {
-  const zip = await JSZip.loadAsync(await file.arrayBuffer());
+  const zip = await openBoundedArchive(file);
   const slideNames = Object.keys(zip.files)
     .filter((name) => /^ppt\/slides\/slide\d+\.xml$/i.test(name))
     .sort((a, b) => {
@@ -94,7 +95,7 @@ export async function pptxToKnowledgeText(
 
   const blocks: string[] = [];
   for (let i = 0; i < slideNames.length; i += 1) {
-    const xml = await zip.file(slideNames[i])?.async("string");
+    const xml = await readArchiveText(zip,slideNames[i]);
     if (!xml) continue;
     const text = xmlText(xml);
     if (text) blocks.push(`# Slide ${i + 1}\n${text}`);
@@ -109,7 +110,7 @@ export async function pptxToKnowledgeText(
 export async function epubToText(
   file: File
 ): Promise<{ text: string; chapters: number }> {
-  const zip = await JSZip.loadAsync(await file.arrayBuffer());
+  const zip = await openBoundedArchive(file);
 
   const htmlNames = Object.keys(zip.files)
     .filter((name) => /\.(xhtml|html|htm)$/i.test(name))
@@ -120,7 +121,7 @@ export async function epubToText(
 
   const blocks: string[] = [];
   for (const name of htmlNames) {
-    const html = await zip.file(name)?.async("string");
+    const html = await readArchiveText(zip,name);
     if (!html) continue;
     const text = stripHtml(html);
     if (text) blocks.push(text);

@@ -1,6 +1,7 @@
 "use client";
 
-import JSZip from "jszip";
+import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
+
 import { epubToText, pptxToKnowledgeText, structuredTextFile } from "@/lib/files/knowledge-extra-formats";
 import { SASI_INTAKE_LIMITS } from "@/lib/sasi/core/intake-contract";
 
@@ -59,8 +60,8 @@ function xmlText(xml:string){
 }
 
 async function parseDocx(file:File):Promise<ParsedDocument>{
-  const zip=await JSZip.loadAsync(await file.arrayBuffer());
-  const documentXml=await zip.file("word/document.xml")?.async("string");
+  const zip=await openBoundedArchive(file);
+  const documentXml=await readArchiveText(zip,"word/document.xml");
   if(!documentXml)throw new Error("DOCX_DOCUMENT_XML_MISSING");
   const text=xmlText(documentXml);
   if(!text.trim())throw new Error("DOCX_NO_TEXT");
@@ -79,12 +80,12 @@ function sharedStrings(xml:string){
 }
 
 async function parseXlsx(file:File):Promise<ParsedDocument>{
-  const zip=await JSZip.loadAsync(await file.arrayBuffer());
-  const sharedXml=await zip.file("xl/sharedStrings.xml")?.async("string");
+  const zip=await openBoundedArchive(file);
+  const sharedXml=await readArchiveText(zip,"xl/sharedStrings.xml");
   const shared=sharedXml?sharedStrings(sharedXml):[];
 
-  const workbook=await zip.file("xl/workbook.xml")?.async("string");
-  const rels=await zip.file("xl/_rels/workbook.xml.rels")?.async("string");
+  const workbook=await readArchiveText(zip,"xl/workbook.xml");
+  const rels=await readArchiveText(zip,"xl/_rels/workbook.xml.rels");
   const relation=new Map<string,string>();
   if(rels){
     for(const hit of rels.matchAll(/<Relationship\b[^>]*Id="([^"]+)"[^>]*Target="([^"]+)"[^>]*\/?>/g)){
@@ -111,7 +112,7 @@ async function parseXlsx(file:File):Promise<ParsedDocument>{
 
   const blocks:string[]=[];
   for(const sheet of sheetFiles){
-    const xml=await zip.file(`xl/${sheet.path}`)?.async("string");
+    const xml=await readArchiveText(zip,`xl/${sheet.path}`);
     if(!xml)continue;
     const rows:string[]=[];
     for(const rowHit of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)){
@@ -143,8 +144,8 @@ async function parseXlsx(file:File):Promise<ParsedDocument>{
 }
 
 async function parseOds(file:File):Promise<ParsedDocument>{
-  const zip=await JSZip.loadAsync(await file.arrayBuffer());
-  const xml=await zip.file("content.xml")?.async("string");
+  const zip=await openBoundedArchive(file);
+  const xml=await readArchiveText(zip,"content.xml");
   if(!xml)throw new Error("ODS_CONTENT_XML_MISSING");
 
   const rows:string[]=[];
