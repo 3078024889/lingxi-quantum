@@ -36,6 +36,7 @@ for(const r of required)must(exists(r),`MINI_REQUIRED_FILE_MISSING:${r}`);
 
 const app=JSON.parse(read("miniapp/app.json"));
 const expected=[
+ "pages/portal/index",
  "pages/home/index",
  "pages/create/index",
  "pages/tools/index",
@@ -78,7 +79,7 @@ must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALL
 must(web.includes("currency=${preferredCurrency()}"),"MINI_CURRENCY_WEB_SYNC_MISSING");
 
 console.log("AUDIT_MINI_PROGRAM=PASS");
-console.log("CURRENT_MINI_TOPOLOGY=16_PAGES_PASS");
+console.log(`CURRENT_MINI_TOPOLOGY=${expected.length}_PAGES_PASS`);
 console.log("SINGLE_WEB_NAVIGATION=PASS");
 console.log("MINI_9_LANGUAGE_STRUCTURE=PASS");
 console.log("MINI_API_BOUNDARY=PASS");
