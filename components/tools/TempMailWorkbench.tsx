@@ -7,6 +7,7 @@ import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {tempMailText} from "@/lib/temp-mail-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {normalizeStoredMail} from "@/lib/tools/temp-mail-message.client";
+import {detectMiniPaymentContext} from '@/lib/mini/payment-client';
 
 type Box={id:string;address:string;expiresAt:string};
 type Msg={id:string;sender:string;subject:string;text_body:string;received_at:string;size_bytes:number};
@@ -16,6 +17,11 @@ async function copyText(value:string){try{await navigator.clipboard.writeText(va
 
 function extractCode(subject:string,body:string){
  return [...`${subject}\n${body}`.matchAll(/(?:^|\D)(\d{4,8})(?!\d)/g)].map(x=>x[1])[0]||"";
+}
+
+async function openCheckout(payUrl:string){
+ if(await detectMiniPaymentContext()){location.href=payUrl+'&mini=1';return}
+ const popup=window.open(payUrl,'lingxi-pay','width=620,height=820');if(!popup)location.href=payUrl;
 }
 
 export default function TempMailWorkbench(){
@@ -142,7 +148,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
     if(!status.ok)throw new Error("PAYMENT_STATUS_UNAVAILABLE");
     if(current.paid){await createPaidBatch(pendingQuote);return}
     const payUrl=`/tools/pay?quoteId=${encodeURIComponent(pendingQuote)}&return=${encodeURIComponent('/tools/temp-mail')}`;
-    const popup=window.open(payUrl,"lingxi-pay","width=620,height=820");if(!popup)location.href=payUrl;return;
+    await openCheckout(payUrl);return;
    }
    const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},
      body:JSON.stringify({toolId:"temp-mail-batch",quantity:batchCount,metadata:{source:"temp-mail",count:batchCount}})});
@@ -152,7 +158,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
    setPendingQuote(d.id);sessionStorage.setItem("lingxifield:temp-mail-batch-quote",d.id);
    sessionStorage.setItem("lingxifield:temp-mail-batch-count",String(batchCount));
    const payUrl=`/tools/pay?quoteId=${encodeURIComponent(d.id)}&return=${encodeURIComponent('/tools/temp-mail')}`;
-   const w=window.open(payUrl,"lingxi-pay","width=620,height=820");if(!w)location.href=payUrl;
+   await openCheckout(payUrl);
   }catch{setError(t("paymentFailed"))}finally{setBatchBusy(false)}
  }
 

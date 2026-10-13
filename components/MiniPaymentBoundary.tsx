@@ -12,7 +12,7 @@ export function isMiniPaymentContext() {
 
 // Mount checkout only after the browser context is known. This also prevents
 // automatic OAuth payment effects from running inside a mini-program webview.
-export default function MiniPaymentBoundary({ children }: { children: ReactNode }) {
+export default function MiniPaymentBoundary({ children, miniChildren }: { children: ReactNode; miniChildren?: ReactNode }) {
   const [context, setContext] = useState<"checking" | "mini" | "web">("checking");
   const [message, setMessage] = useState("");
   useEffect(() => { let alive = true; void detectMiniPaymentContext().then(mini => { if (alive) setContext(mini ? "mini" : "web"); }); return () => { alive = false; }; }, []);
@@ -22,6 +22,7 @@ export default function MiniPaymentBoundary({ children }: { children: ReactNode 
     setMessage(opened ? "" : "当前小程序版本没有充值页，请使用最新体验版，或等待新版本审核发布。");
   }
   if (context === "checking") return <p className="p-12 text-center" role="status">…</p>;
+  if (context === "mini" && miniChildren) return miniChildren;
   if (context === "mini") return <main className="mx-auto max-w-xl px-6 py-20">
     <h1 className="text-2xl font-semibold">在小程序中充值</h1>
     <p className="mt-4 text-sm">小程序充值使用微信虚拟支付，人民币余额可支付支持余额付款的工具。</p>
