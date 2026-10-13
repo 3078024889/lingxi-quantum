@@ -7,7 +7,7 @@ Page({
  open(event){const path=event.currentTarget.dataset.path;const allowed=[profile.homePath,'/tools','/sasi','/sasi?mode=image','/account','/account/notifications',...shortcuts.map(x=>x.path)];if(!allowed.includes(path))return;wx.navigateTo({url:'/pages/web/index?path='+encodeURIComponent(path)})},
  start(){wx.navigateTo({url:'/pages/web/index?path='+encodeURIComponent(profile.homePath)})},
  recharge(){wx.navigateTo({url:'/pages/balance/index'})},
- otherApp(){const target=profile.kind==='temp-mail'?profile.mainAppId:profile.tempMailAppId;wx.navigateToMiniProgram({appId:target,path:'pages/web/index?path='+encodeURIComponent('/'),envVersion:'release',fail:()=>{if(profile.kind==='main')wx.navigateTo({url:'/pages/web/index?path='+encodeURIComponent('/tools/temp-mail')});else wx.showModal({title:'暂未打开',content:'请重试，或通过官网继续使用。',showCancel:false})}})},
+ otherApp(){if(profile.kind==='main'){wx.navigateTo({url:'/pages/web/index?path='+encodeURIComponent('/tools/temp-mail')});return}wx.navigateToMiniProgram({appId:profile.mainAppId,path:'pages/web/index?path='+encodeURIComponent('/'),envVersion:'release',fail:()=>wx.showModal({title:'暂未打开',content:'请重试，或通过官网继续使用。',showCancel:false})})},
  website(){wx.setClipboardData({data:profile.website,success:()=>wx.showToast({title:'官网链接已复制',icon:'none'})})},
  onShareAppMessage(){return share.appMessage(profile.title,'/pages/portal/index')},
  onShareTimeline(){return share.timeline(profile.title)},
