@@ -2,6 +2,7 @@ import "server-only";
 import {r2Ready} from "@/lib/r2-private";
 import {nativeComputeReadiness} from "@/lib/sasi-kernel/compute/native-client";
 import {mediaProviderReady} from "@/lib/tools/media/provider";
+import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
 
 export type ToolRuntimeState={ready:boolean;mode:"local"|"r2"|"compute";reason?:string};
 
@@ -22,6 +23,7 @@ function nativeConfigured(){
 export function isSasiNativeTool(toolId:string){return SASI_NATIVE.has(toolId)}
 
 export function toolRuntimeState(toolId:string):ToolRuntimeState{
+  if(toolId==='temp-mail-batch'&&!TEMP_MAIL_BATCH_SALES_ENABLED)return{ready:false,mode:'local',reason:'TEMP_MAIL_BATCH_VALIDATION_REQUIRED'};
   if(toolId==="video-dubbing"||toolId==="video-translate"||toolId==="image-translator")return mediaProviderReady()?{ready:true,mode:"compute"}:{ready:false,mode:"compute",reason:"MEDIA_PROVIDER_NOT_CONFIGURED"};
   if(toolId==="sasi-video-generate")return{ready:false,mode:"compute",reason:"VIDEO_BYOK_REQUIRED"};
   if(LOCAL_PAID.has(toolId))return{ready:true,mode:"local"};

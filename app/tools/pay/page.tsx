@@ -2,6 +2,7 @@
 import Link from "next/link";
 import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
 import {openMiniRecharge} from '@/lib/mini/payment-client';
+import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
 import {toolBalanceText} from '@/lib/tools/commerce/balance-copy';
 import {quoteDisplay} from "@/lib/tools/commerce/quote-display";
 import NextImage from "next/image";
@@ -25,6 +26,7 @@ function Inner({balanceOnly=false}:{balanceOnly?:boolean}){
  const[needsLogin,setNeedsLogin]=useState(false);
  const[q,setQ]=useState<Quote|null>(null),[err,setErr]=useState(""),[busy,setBusy]=useState(false),[qr,setQr]=useState(""),[paid,setPaid]=useState(false),[providers,setProviders]=useState<Providers>({wechat:false,alipay:false,paypal:false});
  const foodReturn=q?.tool_id==='food-calorie'&&UUID.test(q.metadata?.foodRequestId||'')?`/tools/food-calorie?resumeDraft=${q.metadata!.foodRequestId}&resumeQuote=${quoteId}`:null;
+ const batchPaused=q?.tool_id==='temp-mail-batch'&&!TEMP_MAIL_BATCH_SALES_ENABLED;
  const returnTo=safeReturn(sp.get('return')||foodReturn);
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),isWechat=!balanceOnly&&typeof navigator!=="undefined"&&/MicroMessenger/i.test(navigator.userAgent),code=sp.get("code")||undefined,state=sp.get("state")||undefined,valid=UUID.test(quoteId);
 
@@ -41,6 +43,7 @@ function Inner({balanceOnly=false}:{balanceOnly?:boolean}){
  function invoke(jsapi:Record<string,unknown>){const bridge=(window as Window&{WeixinJSBridge?:WeixinBridge}).WeixinJSBridge;const run=()=>{const current=(window as Window&{WeixinJSBridge?:WeixinBridge}).WeixinJSBridge;if(!current){setErr("WECHAT_BRIDGE_UNAVAILABLE");return}current.invoke("getBrandWCPayRequest",jsapi,res=>{if(res.err_msg==="get_brand_wcpay_request:ok")void refresh();else setErr(res.err_msg||"PAYMENT_NOT_COMPLETED")})};if(!bridge)document.addEventListener("WeixinJSBridgeReady",run,{once:true});else run()}
 
  async function pay(provider:Provider){
+  if(batchPaused)return;
   if(balanceOnly&&provider!=="balance")return;
   if(!valid||!q||(provider!=="balance"&&!providers[provider])||busy)return;
   if(q.currency==="USD"&&provider!=="paypal"&&provider!=="balance")return;
@@ -71,9 +74,9 @@ function Inner({balanceOnly=false}:{balanceOnly?:boolean}){
    <div className="text-sm text-[var(--lx-muted)]">{t("actualQty")}：{q.quantity} {q.tool_id==='food-calorie'?foodBillingText(lang,q.unit_name==='food'?'foodUnit':'imageUnit'):q.unit_name}</div>
    <div className="mt-3 text-3xl font-semibold">{amount(q)}</div>
    <div className="mt-2 text-xs text-[var(--lx-faint)]">{zh?"支付币种":"Payment currency"} · {q.currency}</div>
-   <button disabled={busy} onClick={()=>void pay("balance")} className="mt-6 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{toolBalanceText(lang,"label")}</b></button>
-   {balanceOnly&&<button disabled={busy} onClick={()=>void openMiniRecharge().then(opened=>{if(!opened)setErr(zh?'暂时无法打开充值，请返回小程序首页重试。':'Unable to open top-up. Please return to the Mini Program home and retry.')})} className="mt-3 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40">{zh?'余额不足？打开账户充值':'Need more balance? Open account top-up'}</button>}
-   {!balanceOnly&&(q.currency==="CNY"?<div className="mt-6 grid gap-3 sm:grid-cols-2">
+   {batchPaused?<p role="status" className="mt-6 text-sm">{zh?'批量邮箱暂不接受新的付费，请查看订单或使用每日免费邮箱。':'New batch mailbox purchases are paused. View existing orders or use your daily free inboxes.'}</p>:<button disabled={busy} onClick={()=>void pay("balance")} className="mt-6 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{toolBalanceText(lang,"label")}</b></button>}
+   {balanceOnly&&!batchPaused&&<button disabled={busy} onClick={()=>void openMiniRecharge().then(opened=>{if(!opened)setErr(zh?'暂时无法打开充值，请返回小程序首页重试。':'Unable to open top-up. Please return to the Mini Program home and retry.')})} className="mt-3 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40">{zh?'余额不足？打开账户充值':'Need more balance? Open account top-up'}</button>}
+   {!balanceOnly&&!batchPaused&&(q.currency==="CNY"?<div className="mt-6 grid gap-3 sm:grid-cols-2">
     <button disabled={busy||!providers.wechat} onClick={()=>void pay("wechat")} className="rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{t("wechat")}</b></button>
     <button disabled={busy||!providers.alipay} onClick={()=>void pay("alipay")} className="rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{t("alipay")}</b></button>
    </div>:<div className="mt-6"><button disabled={busy||!providers.paypal} onClick={()=>void pay("paypal")} className="w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>PayPal</b></button></div>)}

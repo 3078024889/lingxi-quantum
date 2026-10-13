@@ -1,5 +1,6 @@
 "use client";
 import type { LingxiLang } from "@/lib/lingxi-i18n";
+import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
 
 export type TempMailTextKey =
   | "title" | "lead" | "usageHint" | "start" | "generate" | "generating"
@@ -12,11 +13,12 @@ export type TempMailTextKey =
   | "serviceBusy" | "tooMany" | "freeLimit" | "signInRequired"
   | "paidBatchRequired" | "batchAlreadyUsed" | "batchSizeInvalid"
   | "batchCreateFailed" | "createFailed" | "refreshFailed" | "extendFailed"
-  | "paymentFailed" | "signInForWorkspace";
+  | "paymentFailed" | "signInForWorkspace" | "batchPaused" | "batchPausedBody";
 
 type Dict=Record<TempMailTextKey,string>;
 
 const en:Dict={
+ batchPaused:'Batch generation is unavailable',batchPausedBody:'No new batch charges. Previously paid orders can still be recovered.',
  title:"Temporary Email",
  lead:"Create a disposable inbox for verification codes, sign-up confirmations and testing. It expires automatically when time runs out.",
  usageHint:"This page is your temporary inbox. Copy the address where you need it; new mail and verification codes appear here automatically.",
@@ -47,6 +49,7 @@ const en:Dict={
 };
 
 const zh:Dict={
+ batchPaused:'批量生成暂未开放',batchPausedBody:'暂不接受新的批量付费。已付订单保留查询和恢复入口。',
  title:"临时邮箱", lead:"即时生成可丢弃的收件箱，用来接收验证码、注册确认和测试邮件，到期自动销毁。",
  usageHint:"这个页面就是你的临时收件箱。复制邮箱去使用，新邮件和验证码会自动出现在这里。",
  start:"点击即可生成一个临时收件箱。", generate:"生成临时邮箱", generating:"正在生成…",
@@ -200,7 +203,20 @@ const ar:Dict={...en,
 
 const map:Record<LingxiLang,Dict>={zh,en,ja,ko,fr,de,es,pt,ar};
 
+const pausedCopy:Record<LingxiLang,[string,string,string]>={
+ zh:['每天免费 10 个，同时按 IP 和账户限制。','批量生成暂未开放','当前不接受新的批量付费；已付订单保留查询和恢复入口。'],
+ en:['10 free inboxes per day, limited by both IP and account.','Batch generation is unavailable','No new batch charges. Previously paid orders can still be recovered.'],
+ ja:['1日10個まで無料。IPとアカウントの両方で制限します。','一括生成は現在利用できません','新規の一括購入は停止中です。支払い済み注文は確認・復元できます。'],
+ ko:['하루 무료 10개, IP와 계정 모두에 제한이 적용됩니다.','일괄 생성은 현재 사용할 수 없습니다','신규 일괄 결제는 중단되었습니다. 기존 결제 주문은 확인하고 복구할 수 있습니다.'],
+ fr:['10 boîtes gratuites par jour, limitées par IP et par compte.','Création par lot indisponible','Aucun nouveau paiement par lot. Les commandes déjà payées restent récupérables.'],
+ de:['10 kostenlose Postfächer pro Tag, begrenzt nach IP und Konto.','Stapelgenerierung derzeit nicht verfügbar','Keine neuen Stapelzahlungen. Bereits bezahlte Bestellungen bleiben wiederherstellbar.'],
+ es:['10 buzones gratis al día, con límites por IP y cuenta.','Generación por lotes no disponible','No se aceptan nuevos pagos por lotes. Los pedidos pagados se pueden recuperar.'],
+ pt:['10 caixas grátis por dia, com limites por IP e conta.','Geração em lote indisponível','Novos pagamentos em lote estão suspensos. Pedidos pagos podem ser recuperados.'],
+ ar:['10 صناديق مجانية يومياً، بحدود لكل عنوان IP ولكل حساب.','إنشاء الدفعات غير متاح حالياً','لا تُقبل مدفوعات دفعات جديدة. يمكن استعادة الطلبات المدفوعة سابقاً.'],
+};
+
 export function tempMailText(lang:LingxiLang,key:TempMailTextKey,vars:Record<string,string|number>={}){
+ if(!TEMP_MAIL_BATCH_SALES_ENABLED){const copy=pausedCopy[lang]||pausedCopy.en;if(key==='freeDaily'||key==='freeLimit')return copy[0];if(key==='batchPaused')return copy[1];if(key==='batchLead'||key==='paidAfterFree'||key==='batchPausedBody')return copy[2];}
  let value=map[lang]?.[key]??en[key];
  for(const [k,v] of Object.entries(vars))value=value.replaceAll(`{${k}}`,String(v));
  return value;

@@ -8,7 +8,9 @@ for(const locale of Object.keys(SEO_LOCALES)){
  for(const slug of facts.GEO_TOOL_SLUGS){const f=facts.toolGeoFact(slug,locale);assert(f.title&&f.description&&f.question&&f.answer);assert(f.com.includes('/tools/'+slug));if(PUBLIC_PAID_TOOL_IDS.includes(slug))assert(!f.kind.startsWith('free'),slug);if(allToolBillingPolicies().some(p=>p.toolId===slug&&p.billingClass==='DISABLED'))assert.equal(f.kind,'later',slug)}
  for(const slug of ['compress-image-to-100kb','heic-to-jpg','merge-pdf','remove-exif','pdf-to-xlsx'])assert.equal(facts.toolGeoFact(slug,locale).kind,'free-local');
 }
-for(const slug of ['burn-after-read','temp-mail'])assert.equal(facts.toolGeoFact(slug,'en').kind,'paid-online');
+assert.equal(facts.toolGeoFact('burn-after-read','en').kind,'paid-online');
+assert.equal(facts.toolGeoFact('temp-mail','en').kind,'free-online');
+assert(facts.toolGeoFact('temp-mail','en').description.includes('Batch purchases are paused'));
 assert.equal(facts.toolGeoFact('nonexistent-tool','en'),null);
 
 // Billing classification is product state, not translated copy. Every locale must expose

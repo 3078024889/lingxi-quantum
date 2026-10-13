@@ -8,6 +8,7 @@ import {tempMailText} from "@/lib/temp-mail-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {normalizeStoredMail} from "@/lib/tools/temp-mail-message.client";
 import {detectMiniPaymentContext} from '@/lib/mini/payment-client';
+import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
 
 type Box={id:string;address:string;expiresAt:string};
 type Msg={id:string;sender:string;subject:string;text_body:string;received_at:string;size_bytes:number};
@@ -139,6 +140,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
  }
 
  async function startBatchPayment(){
+  if(!TEMP_MAIL_BATCH_SALES_ENABLED)return;
   if(batchBusy)return;
   setBatchBusy(true);setError("");
   try{
@@ -295,9 +297,9 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
    <div className="flex flex-wrap items-end justify-between gap-4">
     <div><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("batchTitle")}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{t("batchLead")}</p><p className="mt-1 text-xs text-[var(--lx-faint)]">{t("paidAfterFree")}</p></div>
     <div className="flex items-center gap-2"><EditableNumberInput type="number" min={11} max={100} value={batchCount} onChange={e=>setBatchCount(Math.max(11,Math.min(100,Number(e.target.value))))} className="w-24 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm"/>
-     <button onClick={startBatchPayment} disabled={batchBusy} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{batchBusy?t("working"):t("generateCount",{count:batchCount,price})}</button></div>
+     <button onClick={startBatchPayment} disabled={batchBusy||!TEMP_MAIL_BATCH_SALES_ENABLED} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{!TEMP_MAIL_BATCH_SALES_ENABLED?t('batchPaused'):batchBusy?t("working"):t("generateCount",{count:batchCount,price})}</button></div>
    </div>
-   <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{t("unitPrice")}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><button onClick={exportCsv} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{t("exportCsv")}</button></>}</div>
+   <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{TEMP_MAIL_BATCH_SALES_ENABLED?t("unitPrice"):t('batchPausedBody')}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><button onClick={exportCsv} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{t("exportCsv")}</button></>}</div>
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>
  </div>;

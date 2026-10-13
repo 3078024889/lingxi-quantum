@@ -2,12 +2,13 @@ import { createHash,createHmac,randomBytes,timingSafeEqual } from "node:crypto";
 import { NextRequest,NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {TEMP_MAIL_FREE_DAILY_LIMIT} from '@/lib/tools/temp-mail-policy';
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { createMailboxAccessCookie,mailboxTokenHash,randomLocalPart,randomMailboxToken,tempMailConfigured,tempMailAddress,TEMP_MAIL_ACCESS_COOKIE,TEMP_MAIL_TTL_MINUTES } from "@/lib/tools/temp-mail";
 
 export const runtime="nodejs";
 const DEVICE_COOKIE="lx_tm_device",DEVICE_MAX_AGE=60*60*24*30;
-const FREE_PER_DEVICE=10,FREE_PER_ACCOUNT=10,FREE_PER_IP=50;
+const FREE_PER_ACCOUNT=TEMP_MAIL_FREE_DAILY_LIMIT,FREE_PER_IP=TEMP_MAIL_FREE_DAILY_LIMIT;
 
 function sha(value:string){return createHash("sha256").update(value).digest("hex")}
 function clientIp(req:NextRequest){return (req.headers.get("x-forwarded-for")||req.headers.get("x-real-ip")||"unknown").split(",")[0].trim().slice(0,128)}
@@ -45,7 +46,7 @@ export async function POST(req:NextRequest){
    if(guards.some(ok=>!ok))return NextResponse.json({error:"TOO_MANY_REQUESTS"},{status:429});
  }catch{return NextResponse.json({error:"SERVICE_BUSY"},{status:503})}
 
- const hashes=[deviceHash],limits=[FREE_PER_DEVICE];
+ const hashes:string[]=[],limits:number[]=[];
  if(accountHash){hashes.push(accountHash);limits.push(FREE_PER_ACCOUNT)}
  hashes.push(ipHash);limits.push(FREE_PER_IP);
 

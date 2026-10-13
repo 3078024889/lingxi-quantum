@@ -4,6 +4,7 @@ import {getTool} from '@/lib/tools/registry';
 import {isPublicPaidToolId} from '@/lib/tools/paid-catalog';
 import {allToolBillingPolicies} from '@/lib/pricing/tool-policy-data';
 import {documentUploadDisclosure} from '@/lib/tools/document/upload-disclosure';
+import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
 export type {SeoLocale} from './global-seo';
 
 const LOCALES:SeoLocale[]=['zh','en','ja','ko','fr','de','es','pt','ar'];
@@ -29,6 +30,7 @@ function fact(title:string,description:string,path:string,locale:SeoLocale,kind?
 }
 export function toolGeoFact(slug:string,locale:SeoLocale):GeoFact|null{
  const tool=GLOBAL_TOOL_CATALOG.find(t=>t.slug===slug);if(!tool)return null;
+ if(slug==='temp-mail'&&!TEMP_MAIL_BATCH_SALES_ENABLED){const copy=['每天免费 10 个，同时按 IP 和账户限制。批量生成暂未开放，不接受新的批量付费。','10 free inboxes daily, limited by both IP and account. Batch purchases are paused.','1日10個まで無料。IPとアカウントで制限。一括購入は停止中。','하루 무료 10개, IP와 계정별 제한. 일괄 구매 중단.','10 boîtes gratuites par jour, limitées par IP et compte. Achats par lot suspendus.','10 kostenlose Postfächer täglich, begrenzt nach IP und Konto. Stapelkäufe pausiert.','10 buzones gratis diarios, limitados por IP y cuenta. Compras por lotes suspendidas.','10 caixas gratuitas diárias, limitadas por IP e conta. Compras em lote suspensas.','10 صناديق مجانية يومياً بحدود لعنوان IP والحساب. شراء الدفعات معلق.'];return fact(toolTitle(locale,tool),[toolDescription(locale,tool),text(ONLINE,locale),text(copy,locale)].join(' '),'/tools/'+slug,locale,'free-online');}
  const billingSlug=slug==='burn-after-read'?'burn-after-read-file':slug==='temp-mail'?'temp-mail-batch':slug;
  const mixed=billingSlug!==slug;
  const meta=getTool(slug),policy=POLICY.get(billingSlug);
