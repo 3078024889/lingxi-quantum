@@ -1,5 +1,6 @@
 "use client";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
+import {formatJsonSource} from "@/lib/tools/shared/json-source-format";
 
 import {plainText} from "@/lib/tools/plain-copy";
 import {downloadUrl} from "@/lib/tools/shared/download";
@@ -595,8 +596,7 @@ function JsonWorkbench() {
 
   function format(pretty: boolean) {
     try {
-      const obj = JSON.parse(text);
-      const out = pretty ? JSON.stringify(obj, null, 2) : JSON.stringify(obj);
+      const out = formatJsonSource(text,pretty);
       setText(out);
       setResult({
         ok: true,

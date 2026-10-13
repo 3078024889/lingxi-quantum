@@ -1,0 +1,32 @@
+{
+  "repository": "contentauth/c2pa-rs",
+  "revision": "d00ffc9ab9bf66170d96d81120a231aa241372c3",
+  "license": "MIT; notice retained in LICENSE-MIT",
+  "purpose": "Actual cryptographic verification of official signed/unsigned specimens; no SDK or provider mocking.",
+  "files": [
+    {
+      "name": "CA.jpg",
+      "source": "https://raw.githubusercontent.com/contentauth/c2pa-rs/d00ffc9ab9bf66170d96d81120a231aa241372c3/sdk/tests/fixtures/CA.jpg",
+      "bytes": 166864,
+      "sha256": "e71bff58fc57640803e6e65f7534e2fb0c2f99018c85276cc14b30f04427cc76"
+    },
+    {
+      "name": "video1.mp4",
+      "source": "https://raw.githubusercontent.com/contentauth/c2pa-rs/d00ffc9ab9bf66170d96d81120a231aa241372c3/sdk/tests/fixtures/video1.mp4",
+      "bytes": 828571,
+      "sha256": "b310ba339ca89950e3c921754566d5e44ef52c45dd1ddbbfe1383c8e7761cfd0"
+    },
+    {
+      "name": "video1_no_manifest.mp4",
+      "source": "https://raw.githubusercontent.com/contentauth/c2pa-rs/d00ffc9ab9bf66170d96d81120a231aa241372c3/sdk/tests/fixtures/video1_no_manifest.mp4",
+      "bytes": 797909,
+      "sha256": "e5acfbfbb0db93b1551520f2f692630dabd507555adc9386aa9595acf261d8c9"
+    },
+    {
+      "name": "LICENSE-MIT",
+      "source": "https://raw.githubusercontent.com/contentauth/c2pa-rs/d00ffc9ab9bf66170d96d81120a231aa241372c3/LICENSE-MIT",
+      "bytes": 1083,
+      "sha256": "89375a50de90d2dcaa04406086da832ad452ebcaf6ab402ef3d51b8401a67c71"
+    }
+  ]
+}

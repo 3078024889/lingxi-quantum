@@ -1,6 +1,7 @@
 {
   "desc": "灵犀场小程序公开搜索索引规则：只允许公开入口与重点工具发现页",
   "rules": [
+    {"action":"allow","page":"pages/portal/index"},
     {
       "action": "allow",
       "page": "pages/home/index"

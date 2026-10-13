@@ -1,0 +1,8 @@
+<view class="portal" style="padding-top:{{topInset}}px">
+ <view class="header"><view class="brand">{{title}}</view><button class="bell" data-path="/account/notifications" bindtap="open" aria-label="消息与公告">🔔</button><button class="small" bindtap="recharge">充值</button><button class="small" data-path="/account" bindtap="open">账户</button></view>
+ <view class="hero"><view class="eyebrow">LINGXIFIELD</view><view class="headline">{{isMail?'10分钟临时邮箱':'今天你要完成什么？'}}</view><view class="intro">{{isMail?'接收验证码和确认邮件，保留你的常用邮箱。':'创作、处理文件、学习与研究，从这里继续。'}}</view><button class="primary" bindtap="start">{{isMail?'打开临时邮箱':'开始使用'}}</button></view>
+ <view class="section">常用工具</view><view class="grid"><button wx:for="{{shortcuts}}" wx:key="path" class="tile" data-path="{{item.path}}" bindtap="open">{{item.title}}<text> →</text></button></view>
+ <button class="row" data-path="/tools" bindtap="open">查看全部工具 →</button><button class="row" data-path="/sasi?mode=image" bindtap="open">AI 图片生成 →</button>
+ <button class="row" bindtap="otherApp">{{isMail?'打开灵犀场主小程序':'临时邮箱小程序'}} →</button><button class="row" bindtap="website">官网入口 →</button>
+ <view class="footer"><button bindtap="start">首页</button><button data-path="/tools" bindtap="open">工具</button><button data-path="/sasi" bindtap="open">创作</button><button data-path="/account" bindtap="open">账户</button></view>
+</view>

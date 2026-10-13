@@ -23,6 +23,7 @@ async function main(){
  const asset=rows.find(row=>row.id===film.assetId);assert.equal(asset.duration_seconds,8);assert.equal(asset.verification,'decoded-and-readback');assert.equal(duration.readMp4DurationSeconds(objects.get(asset.object_key)),8);
  const calls=networkCalls;assert.equal((await compose.executeVideoComposeJob(input)).assetId,film.assetId);assert.equal(networkCalls,calls);
  const output=objects.get(asset.object_key);assert(output.length>source.length);
+ if(process.argv.includes('--emit-simulation')){const dir='_local/handoff/simulated-video-v80';fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(dir+'/SIMULATED-provider-episode-8s.mp4',output);fs.writeFileSync(dir+'/README.txt','SIMULATED PROVIDER ACCEPTANCE FIXTURE\nTwo synthetic 4-second inputs assembled into an 8-second MP4 by the actual production composition code. Provider, database and storage are isolated test adapters. This is not an AI-generated short drama, not a 50-episode production and not paid-model acceptance.\n');}
  rows.splice(rows.indexOf(asset),1);corrupt=true;await assert.rejects(compose.executeVideoComposeJob({...input,runId:randomUUID()}),/EPISODE_ASSET_CHANGED/);
  console.log('PASS: actual Node WASM MP4 concatenation and full frame decoding, 4s+4s=8s private archived result, chronological shot order, persisted replay, owner gate and hash rejection. Database/network/storage adapters isolated; no supplier fee or production writes.');
 }

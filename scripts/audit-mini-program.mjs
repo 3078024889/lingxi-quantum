@@ -60,7 +60,7 @@ for(const p of expected)must(app.pages.includes(p),`MINI_PAGE_MISSING:${p}`);
 for(const p of["pages/field/index","pages/assessment/index","pages/narrative/index"])must(!app.pages.includes(p),`RETIRED_PAGE_REGISTERED:${p}`);
 
 must(!app.tabBar,"DUPLICATE_NATIVE_TABBAR");
-must(app.pages[0]==="pages/web/index","MINI_WEB_ENTRY_REQUIRED");
+must(app.pages[0]==="pages/portal/index"&&app.pages.includes("pages/web/index"),"MINI_NATIVE_SHARE_AND_WEB_ENTRY_REQUIRED");
 for(const p of ["home","tools","create","profile"])must(read(`miniapp/pages/${p}/index.js`).includes("wx.redirectTo"),"LEGACY_LANDING_REMAINS");
 
 const api=read("miniapp/utils/api.js");

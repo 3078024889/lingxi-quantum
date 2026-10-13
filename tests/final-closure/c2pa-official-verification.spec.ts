@@ -1,11 +1,14 @@
 import {test,expect} from "playwright/test";
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const manifest=JSON.parse(readFileSync('tests/fixtures/c2pa-official/manifest.json','utf8'));
+function fixture(name:string){const entry=manifest.files.find((item:{name:string;sha256:string})=>item.name===name);if(!entry)throw Error('Unknown official fixture');const bytes=readFileSync('tests/fixtures/c2pa-official/'+name);expect(createHash('sha256').update(bytes).digest('hex')).toBe(entry.sha256);return bytes;}
 
-const FIXTURE="https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/CA.jpg";
-test("official signed C2PA JPEG receives an actual SDK verification state",async({page,request})=>{
+
+
+test("official signed C2PA JPEG receives an actual SDK verification state",async({page})=>{
  test.setTimeout(90000);
- const response=await request.get(FIXTURE,{timeout:30000,maxRetries:2});
- expect(response.ok(),`Unable to download the CAI signed JPEG specimen: HTTP ${response.status()}`).toBeTruthy();
- const file=await response.body();
+ const file=fixture('CA.jpg');
  expect(file.length).toBeGreaterThan(100);
  await page.goto("/tools/ai-image-check");
  await expect(page.locator('input[type="file"]')).toBeEnabled({timeout:15000});
@@ -32,15 +35,14 @@ test("unsigned local PNG never reports a verified C2PA signature",async({page})=
  await expect(section).toContainText(/这份文件没有可读取的来源签名|No readable origin signature/);
 });
 
-const MP4_BASE="https://raw.githubusercontent.com/contentauth/c2pa-rs/main/sdk/tests/fixtures/";
+
 for(const [filename,expected] of [["video1.mp4","signed"],["video1_no_manifest.mp4","unsigned"]] as const){
  test(`C2PA MP4 ${expected} specimen is verified via media tool`,async({page,request})=>{
   test.setTimeout(90000);
-  const response=await request.get(MP4_BASE+filename,{timeout:30000,maxRetries:2});
-  expect(response.ok(),`Official C2PA MP4 specimen unavailable: HTTP ${response.status()}`).toBeTruthy();
+  const file=fixture(filename);
   await page.goto("/tools/ai-video-audio-check");
   await expect(page.locator('input[type="file"]')).toBeEnabled({timeout:15000});
- await page.locator('input[type="file"]').setInputFiles({name:filename,mimeType:"video/mp4",buffer:await response.body()});
+ await page.locator('input[type="file"]').setInputFiles({name:filename,mimeType:"video/mp4",buffer:file});
   await page.getByRole("button",{name:/开始检查|Start checking/}).click();
   const section=page.locator("[data-c2pa-verification]");
   await expect(section).toHaveAttribute("data-c2pa-verification",expected==="signed"?/^(trusted|valid|untrusted)$/:"absent",{timeout:60000});
@@ -49,9 +51,7 @@ for(const [filename,expected] of [["video1.mp4","signed"],["video1_no_manifest.m
 
 test("altered signed image does not retain a valid or trusted provenance verdict",async({page,request})=>{
  test.setTimeout(90000);
- const response=await request.get(FIXTURE,{timeout:30000,maxRetries:2});
- expect(response.ok()).toBeTruthy();
- const original=await response.body();
+ const original=fixture('CA.jpg');
  const modified=Buffer.from(original);
  modified[modified.length-40]^=0x01;
  await page.goto("/tools/ai-image-check");

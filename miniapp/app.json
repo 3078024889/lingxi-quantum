@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/portal/index",
     "pages/web/index",
     "pages/home/index",
     "pages/create/index",

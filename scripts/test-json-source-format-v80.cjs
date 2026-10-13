@@ -1,0 +1,14 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),ts=require('typescript');
+const exportsObject={};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/tools/shared/json-source-format.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:exportsObject});
+const format=exportsObject.formatJsonSource;
+const raw=' {"id":900719925474099312345,"id":-0,"decimal":1.2300e+40,"text":"a\\n\\\"[,]{}\\u4e2d","empty":[],"object":{}} ';
+const compact=raw.trim();assert.equal(format(raw,false),compact);
+assert.equal(format(format(raw,true),false),compact);
+assert.equal(format('{"a":[1,true,null]}',true),'{\n  "a": [\n    1,\n    true,\n    null\n  ]\n}');
+for(const bad of ['{"a":1,}','[1,]','{"a":NaN}','{"a":undefined}','"unterminated','{"a" 1}','{a:1}',''])assert.throws(()=>format(bad));
+assert.throws(()=>format(' '.repeat(500001)),/JSON_INPUT_TOO_LARGE/);
+assert.throws(()=>format('['.repeat(257)+'0'+']'.repeat(257)),/JSON_DEPTH_LIMIT/);
+const broad='['.repeat(240)+'['+Array(8000).fill('0').join(',')+']'+']'.repeat(240);
+assert.throws(()=>format(broad),/JSON_OUTPUT_TOO_LARGE/);
+assert.equal(format('1e400',false),'1e400');assert.equal(format('-0',true),'-0');
+console.log('PASS: JSON formatting preserves large integers, exact decimal/exponent spelling, duplicate keys, escaped strings and negative zero; malformed input, depth and output limits reject.');

@@ -11,7 +11,8 @@ const publicDiscovery=[
  "pages/discover-image-watermark-remover/index","pages/discover-e-sign-pdf/index"
 ];
 for(const p of publicDiscovery)must(app.pages.includes(p),`V59_MINI_DISCOVERY_PAGE_MISSING:${p}`);
-must(app.pages[0]==='pages/web/index'&&!app.tabBar,"V59_MINI_UNIFIED_WEB_ENTRY");
+must(app.pages[0]==='pages/portal/index'&&app.pages.includes('pages/web/index')&&!app.tabBar,"V59_MINI_NATIVE_SHARE_ENTRY");
+must(!read('miniapp/pages/portal/index.wxml').includes('<web-view'),"V59_MINI_PORTAL_MUST_BE_NATIVE");
 for(const [entry,target] of [['home','/'],['tools','/tools'],['create','/sasi'],['profile','/account']]){
  const source=read(`miniapp/pages/${entry}/index.js`);
  must(source.includes('wx.redirectTo')&&source.includes(`encodeURIComponent('${target}')`),`V59_MINI_COMPAT_REDIRECT:${entry}`);

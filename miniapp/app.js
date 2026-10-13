@@ -1,6 +1,7 @@
+const profile=require('./utils/app-profile')
 App({
   globalData: {
-    apiBase: require('./utils/api').API_BASE,
+    apiBase: profile.sessionMode==='website'?'':require('./utils/api').API_BASE,
     ready: false,
     loginError: '',
     lang: 'zh',
@@ -16,8 +17,9 @@ App({
       })
     }
     const { getLanguage } = require('./utils/i18n')
-    const { login } = require('./utils/api')
     this.globalData.lang = getLanguage()
+    if(profile.sessionMode==='website'){this.globalData.ready=true;return}
+    const { login } = require('./utils/api')
 
     login()
       .then(() => {
