@@ -29,7 +29,7 @@ test('connection defaults, save and check, switch clears key, and delete (mock s
  await page.route('**/api/sasi/connections/test',route=>route.fulfill({json:{healthStatus:'healthy',model:'openai/test-model'}}));
  await key.fill('mock-openrouter-key-123');await page.getByRole('button',{name:'保存并检查',exact:true}).click();
  await expect(page.locator('[data-connection-services]').getByRole('button',{name:/OpenRouter/})).toContainText('已连接');
- expect(payloads).toEqual([{provider:'openrouter',apiKey:'mock-openrouter-key-123',baseUrl:'https://openrouter.ai/api/v1'}]);await expect(key).toHaveCount(0);
+ expect(payloads).toEqual([{provider:'openrouter',apiKey:'mock-openrouter-key-123',baseUrl:'https://openrouter.ai/api/v1',model:'',models:{text:'',video:''}}]);await expect(key).toHaveCount(0);
  await expect(page.locator('[data-connection-details]')).not.toContainText('mock-openrouter-key-123');
  page.once('dialog',dialog=>dialog.accept());await page.route('**/api/sasi/connections?provider=openrouter',route=>route.fulfill({json:{ok:true}}));await page.getByRole('button',{name:'删除连接',exact:true}).click();await expect(key).toHaveValue('');
 });
@@ -52,5 +52,21 @@ test('signed out users can see where to paste their key and the sign-in requirem
 test('other service requires an address and model before saving',async({page})=>{
  await signedInFixture(page);await page.locator('[data-connection-services]').getByRole('button',{name:/添加其他服务/}).click();
  await page.getByRole('textbox',{name:'连接密钥'}).fill('mock-compatible-key-123');const save=page.getByRole('button',{name:'保存并检查',exact:true});await expect(save).toBeDisabled();
- await page.getByLabel('服务地址',{exact:true}).fill('https://service.example/v1');await expect(save).toBeDisabled();await page.getByLabel('模型名称',{exact:true}).fill('example-model');await expect(save).toBeEnabled();
+ await page.getByLabel('服务地址',{exact:true}).fill('https://service.example/v1');await expect(save).toBeDisabled();await page.getByLabel('对话模型 ID',{exact:true}).fill('example-model');await expect(save).toBeEnabled();
+});
+test('owned saved key is retained when editing separate chat and video models (mock services)',async({page})=>{
+ const payloads:any[]=[];
+ await page.route('**/api/sasi/connections',route=>{
+  if(route.request().method()==='POST'){payloads.push(route.request().postDataJSON());return route.fulfill({json:{ok:true,keyHint:'saved…key',healthStatus:'healthy'}})}
+  return route.fulfill({json:{connections:[{service:'volcengine',keyHint:'saved…key',healthStatus:'healthy',baseUrl:'https://ark.cn-beijing.volces.com/api/v3',model:'doubao-seed-1-6',models:{text:'doubao-seed-1-6',video:''}}]}});
+ });
+ await page.route('**/api/sasi/connections/test',route=>route.fulfill({json:{healthStatus:'healthy',model:'doubao-seed-1-6'}}));
+ await page.goto('/sasi/connections?lang=zh');
+ await page.getByRole('button',{name:'修改连接',exact:true}).click();
+ await expect(page.getByRole('textbox',{name:'连接密钥'})).toHaveValue('');
+ await page.getByLabel('视频模型 ID',{exact:true}).fill('doubao-seedance-2-5-260628');
+ await page.getByRole('button',{name:'保存并检查',exact:true}).click();
+ await expect(page.getByRole('button',{name:'修改连接',exact:true})).toBeVisible();
+ expect(payloads).toHaveLength(1);expect(payloads[0]).not.toHaveProperty('apiKey');
+ expect(payloads[0].models).toEqual({text:'doubao-seed-1-6',video:'doubao-seedance-2-5-260628'});
 });

@@ -4,7 +4,7 @@ const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
 const home=r('components/HomeProblemHub.tsx'),footer=r('components/Footer.tsx')+r('lib/footer-catalog-copy.ts')+r('lib/brand-public-copy.ts'),nav=r('components/Nav.tsx');
 const launcher=r('components/SasiUnifiedLauncher.tsx'),one=r('components/SasiOneSurface.tsx'),host=r('components/SasiModeHost.tsx');
 const studio=r('components/SasiChatCreationStudio.tsx'),knowledge=r('components/KnowledgeWorkspace.tsx');
-const skills=r('lib/sasi/skills/ui.ts'),video=r('app/api/sasi/byok/video/route.ts');
+const skills=r('lib/sasi/skills/ui.ts'),videoRoute=r('app/api/sasi/byok/video/route.ts'),video=r('lib/sasi/intelligence/video-actions.ts');
 const center=r('app/sasi/ConnectionCenter.tsx'),conn=r('app/api/sasi/connections/route.ts');
 const exp=r('lib/sasi/experience/free-provider-config.ts'),env=r('.env.example');
 
@@ -21,9 +21,11 @@ must(studio.includes('e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&
 must(knowledge.includes('e.key==="Enter"&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229'),'R10_KNOWLEDGE_ENTER_MISSING');
 must(skills.includes('drama-script')&&skills.includes('drama-storyboard')&&skills.includes('drama-visual')&&skills.includes('drama-sound'),'R10_DRAMA_SKILLS_MISSING');
 must(video.includes('compileSasiSkillGuidance')&&video.includes('skillIds'),'R10_DRAMA_SKILLS_NOT_SERVER_WIRED');
+must(videoRoute.includes('executeOwnedVideoAction(user.id,body)')&&videoRoute.includes('isSameOriginMutation')&&videoRoute.includes('auth.getUser()'),'R78_VIDEO_ACTION_OWNER_WRAPPER_MISSING');
 must(studio.includes('/api/sasi/experience/website')&&studio.includes('website.generate.experience'),'R10_WEBSITE_EXPERIENCE_NOT_WIRED');
 must(!studio.includes('LOCAL_WEBSITE_FALLBACK_V8'),'R10_FAKE_WEBSITE_FALLBACK_STILL_PRESENT');
-must(center.includes('compatible')&&center.includes('Service URL')&&center.includes('Model ID'),'R10_COMPATIBLE_UI_MISSING');
+must(center.includes('compatible')&&center.includes('Service URL')&&center.includes('Chat model ID')&&center.includes('Video model ID'),'R10_COMPATIBLE_UI_MISSING');
+must(conn.includes('model_preferences:preferences')&&conn.includes('if(reuseKey)')&&conn.includes(".eq('user_id',user.id).eq('provider',body.provider)"),'R78_OWNED_MODEL_CONFIG_MISSING');
 must(conn.includes('validateProviderBaseUrl')&&conn.includes('base_url:baseUrl')&&conn.includes('model_id:modelId'),'R10_COMPATIBLE_SAVE_MISSING');
 must(exp.includes('SASI_EXPERIENCE_NVIDIA_PRIORITY",40')&&exp.includes('SASI_EXPERIENCE_MISTRAL_PRIORITY",70')&&exp.includes('SASI_EXPERIENCE_CLOUDFLARE_PRIORITY",60'),'R10_PRIORITY_DEFAULTS_WRONG');
 must(env.includes('SASI_EXPERIENCE_MISTRAL_MODEL=mistral-small-latest')&&env.includes('SASI_EXPERIENCE_FIREWORKS_ENABLED=false'),'R10_ENV_EXAMPLE_INCOMPLETE');
@@ -32,8 +34,9 @@ must(host.includes('hidden={id!==mode}')&&host.includes('key={id}'),'R10_SWITCH_
 must(studio.includes('/api/sasi/experience/website'),'R10_FREE_WEBSITE_ROUTER_MISSING');
 must(knowledge.includes('/api/sasi/research/search'),'R10_REAL_RESEARCH_MISSING');
 must(!r('components/Footer.tsx').includes('<details'),'R12_PUBLIC_TEXT_HIDDEN');
-must(studio.includes('/api/sasi/drama/plan')&&studio.includes('quote-series')&&studio.includes('assembleGeneratedVideo'),'R12_AUTOMATIC_FILM_NOT_WIRED');
-must(!r('app/page.tsx').includes('HomeToolDirectory')&&!r('components/SasiTaskToolbar.tsx').includes('data-sasi-task-toolbar'),'R83_SINGLE_FRONT_DOOR_VISIBLE_ACTIONS');
+must(studio.includes('/api/sasi/drama/series')&&studio.includes('/api/sasi/drama/batch')&&studio.includes('quote-series')&&studio.includes('/api/sasi/drama/delivery')&&!studio.includes('assembleGeneratedVideo'),'R78_PERSISTENT_FILM_NOT_WIRED');
+must(r('lib/sasi/durable/video-compose-job.ts').includes('archiveGeneratedMedia')&&r('lib/sasi/durable/detached-worker.ts').includes('executeVideoComposeJob'),'R78_BACKGROUND_EPISODE_NOT_WIRED');
+must(!r('app/page.tsx').includes('HomeToolDirectory')&&!fs.existsSync('components/SasiTaskToolbar.tsx'),'R83_SINGLE_FRONT_DOOR_VISIBLE_ACTIONS');
 console.log('R10_BRAND_SURFACE=PASS');
 console.log('R10_ONE_SURFACE_SWITCHING=PASS');
 console.log('R10_ENTER_AND_FILE_INTAKE=PASS');

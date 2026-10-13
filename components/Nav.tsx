@@ -1,6 +1,8 @@
 "use client";
 
 import NextImage from "next/image";
+import {imageCreationLabel} from '@/lib/sasi/entry-copy';
+import {openMiniShare} from '@/lib/mini/share-client';
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -213,10 +215,12 @@ export default function Nav() {
 
         <div className="lx11-top-actions">
           <Link href="/sasi" className="lx11-top-link">✨ ＋ {t("create")}</Link>
+          <Link href="/sasi?mode=image" className="lx11-top-link">{imageCreationLabel(lang)}</Link>
 
           <CurrencySelector compact />
 
           <NotificationBell />
+          {miniRecharge&&<button type="button" onClick={()=>void openMiniShare(document.title)} aria-label={lang==='zh'?'分享':'Share'} className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-[var(--lx-line)]">↗</button>}
 
           <Link href="/ai-wallet" onClick={rechargeClick} className="lx11-primary">💎 {t("recharge")}</Link>
 

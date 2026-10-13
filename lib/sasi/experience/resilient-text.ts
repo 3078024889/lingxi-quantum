@@ -8,7 +8,7 @@ import type{TextMessage}from"@/lib/sasi/ark-text";
 import{coalesce,coalesceKey}from"./request-coalescer";
 
 export type ResilientTextOutcome=
- |{kind:"answer";answer:string;source:"experience"|"connected";experienceExhausted:boolean;experienceState:"available"|"exhausted"|"unavailable";experienceRemaining:number|null}
+ |{kind:"answer";answer:string;source:"experience"|"connected";modelInfo?:{model:string;provider:string};experienceExhausted:boolean;experienceState:"available"|"exhausted"|"unavailable";experienceRemaining:number|null}
  |{kind:"needs-connection";experienceExhausted:boolean;experienceState:"available"|"exhausted"|"unavailable";experienceRemaining:number|null};
 
 const units:Record<ExperienceTask,number>={chat:8,knowledge:18,research:28,website:36,drama:32};
@@ -28,7 +28,7 @@ export async function resilientText(input:{
     const out=await runExperienceText({region:input.region,task:input.task,messages:input.messages,maxOutputTokens:input.maxOutputTokens,userId:input.userId,sessionKey,onDelta:input.onDelta,onReset:input.onReset});
     input.validateAnswer?.(out.text);
     await settleExperience(input.userId,referenceId,claim.units,true);
-    return {kind:"answer",answer:out.text,source:"experience",experienceExhausted:false,experienceState:claim.state,experienceRemaining:claim.remaining};
+    return {kind:"answer",answer:out.text,source:"experience",modelInfo:{model:out.model,provider:out.providerId},experienceExhausted:false,experienceState:claim.state,experienceRemaining:claim.remaining};
    }catch{
     input.onReset?.();
     // Provider failure never consumes the user's included experience allowance.

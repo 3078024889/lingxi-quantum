@@ -27,10 +27,18 @@ export function providerDefaults(provider:ByokProvider){return DEFAULTS[provider
 export function defaultBaseUrl(provider:ByokProvider){return DEFAULTS[provider].baseUrl}
 export function providerPublicCapabilities(provider:ByokProvider){return DEFAULTS[provider].capabilities}
 
-const BAD_MODEL=/(embed|embedding|moderation|rerank|whisper|tts|speech|audio|image|video|vision-only)/i;
+const BAD_MODEL=/(embed|embedding|moderation|rerank|whisper|tts|speech|audio|image|video|vision-only|seedance|seedream|sora|dall-e|(^|\/)wan[-\d])/i;
+export type ModelPreferences={text?:string;video?:string};
+export function modelPreferences(value:unknown):ModelPreferences{
+  if(!value||typeof value!=="object"||Array.isArray(value))return {};
+  const result:ModelPreferences={};
+  for(const kind of ["text","video"] as const){const id=(value as Record<string,unknown>)[kind];if(typeof id==="string"&&id.trim()&&id.length<=180&&!/[\r\n\0]/.test(id))result[kind]=id.trim()}
+  return result;
+}
 export function chooseTextModel(provider:ByokProvider, models:string[], explicit?:string|null){
   const wanted=String(explicit||"").trim();
-  if(wanted)return wanted;
+  // Never send a known media-generation model to a chat endpoint, including explicit legacy settings.
+  if(wanted&&!BAD_MODEL.test(wanted))return wanted;
   const cleaned=models.map(x=>x.replace(/^models\//,""))
     .filter(x=>x && x.length<=180 && !BAD_MODEL.test(x));
   const preferred=cleaned.find(x=>/(gpt|claude|gemini|grok|deepseek|qwen|doubao|glm|chat|instruct|reason)/i.test(x));

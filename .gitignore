@@ -86,3 +86,6 @@ lingxifield-food-upload/
 .lingxifield-backups/
 
 _local/
+
+# Named local regression runs; reports remain in the ignored acceptance folder.
+/test-results-*/

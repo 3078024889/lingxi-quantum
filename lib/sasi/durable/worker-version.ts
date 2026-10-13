@@ -2,6 +2,9 @@ import "server-only";
 
 export const SASI_WORKFLOW_COMPATIBILITY={
  "knowledge.generate":["knowledge.v1"],
+ "drama.plan":["drama.plan.v78"],
+ "video.advance":["video.advance.v78"],
+ "video.compose":["video.compose.v78"],
 }as const;
 
 export type SasiJobKind=keyof typeof SASI_WORKFLOW_COMPATIBILITY;

@@ -22,7 +22,8 @@ for(const [i,lang]of languages.entries()){
   await expect(page.getByTestId("draft-saved")).toHaveCount(0);
   await upload(page);
   await expect(page.getByTestId("paid-export-start")).toHaveText(labels[i][1]);
-  await page.locator('input[type="file"][accept="image/*"]').nth(1).setInputFiles({name:"stamp.svg",mimeType:"image/svg+xml",buffer:stamp});
+  await expect(page.locator('input[type="file"][accept="image/*"]').nth(1)).toBeEnabled({timeout:15000});
+ await page.locator('input[type="file"][accept="image/*"]').nth(1).setInputFiles({name:"stamp.svg",mimeType:"image/svg+xml",buffer:stamp});
   await expect(page.locator('option[value="right"]')).toHaveText(labels[i][2]);
   await expect(page.getByTestId("draft-saved")).toBeVisible();
   if(lang!=="en"){
@@ -30,7 +31,8 @@ for(const [i,lang]of languages.entries()){
    await expect(page.locator("main")).not.toContainText("Drag elements");
    await expect(page.locator("main")).not.toContainText("Example:");
   }
-  await page.locator('input[type="file"][accept*="pdf"]').first().setInputFiles({name:"broken.pdf",mimeType:"application/pdf",buffer:Buffer.from("not a PDF")});
+  await expect(page.locator('input[type="file"][accept*="pdf"]').first()).toBeEnabled({timeout:15000});
+ await page.locator('input[type="file"][accept*="pdf"]').first().setInputFiles({name:"broken.pdf",mimeType:"application/pdf",buffer:Buffer.from("not a PDF")});
   const alert=page.locator("main").getByRole("alert");await expect(alert).toBeVisible();
   await expect(alert).not.toContainText(/PDFDocument|PDFParsing|No PDF header|DOCUMENT_OPEN_FAILED/);
   if(lang!=="en")await expect(alert).not.toContainText("This PDF could not be opened");

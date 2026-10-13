@@ -3,6 +3,7 @@ import {FACT_LABELS} from './product-facts';
 import {getTool} from '@/lib/tools/registry';
 import {isPublicPaidToolId} from '@/lib/tools/paid-catalog';
 import {allToolBillingPolicies} from '@/lib/pricing/tool-policy-data';
+import {documentUploadDisclosure} from '@/lib/tools/document/upload-disclosure';
 export type {SeoLocale} from './global-seo';
 
 const LOCALES:SeoLocale[]=['zh','en','ja','ko','fr','de','es','pt','ar'];
@@ -35,7 +36,8 @@ export function toolGeoFact(slug:string,locale:SeoLocale):GeoFact|null{
  const local=policy?policy.executionMode==='local':meta?.localOnly??tool.mode==='local';
  const paid=isPublicPaidToolId(billingSlug)||policy?.billingClass==='PAID_TOOL'||policy?.billingClass==='SASI_BALANCE';
  const kind:FactKind=unavailable?'later':paid?(local?'paid-local':'paid-online'):(local?'free-local':'free-online');
- const description=unavailable?toolTitle(locale,tool)+' · '+text(LATER,locale):[toolDescription(locale,tool),text(local?LOCAL:ONLINE,locale),text(mixed?MIXED:paid?PAID:FREE,locale)].join(' ');
+ const privacy=local&&(meta?.category==='pdf'||slug.startsWith('pdf-')||['e-sign-pdf','merge-pdf','split-pdf','compress-pdf'].includes(slug))?documentUploadDisclosure(locale).notice:text(local?LOCAL:ONLINE,locale);
+ const description=unavailable?toolTitle(locale,tool)+' · '+text(LATER,locale):[toolDescription(locale,tool),privacy,text(mixed?MIXED:paid?PAID:FREE,locale)].join(' ');
  return fact(toolTitle(locale,tool),description,'/tools/'+slug,locale,kind);
 }
 const DIRECTORY=['查看实用工具与 SASI，按页面说明选择处理方式。免费和付费功能分别标明，尚未开放的工具不能使用。','Explore practical tools and SASI. Free and paid features are labeled separately; tools not open yet are unavailable.','実用ツールとSASIを確認できます。無料・有料機能を区別し、未公開ツールは利用できません。','실용 도구와 SASI를 확인하세요. 무료와 유료 기능을 구분하며 미공개 도구는 사용할 수 없습니다.','Découvrez les outils pratiques et SASI. Les fonctions gratuites et payantes sont distinguées ; les outils non ouverts sont indisponibles.','Entdecke praktische Tools und SASI. Kostenlose und kostenpflichtige Funktionen sind gekennzeichnet; nicht freigegebene Tools sind nicht nutzbar.','Explora herramientas prácticas y SASI. Las funciones gratuitas y de pago se identifican; las herramientas no abiertas no están disponibles.','Explore ferramentas práticas e SASI. Funções gratuitas e pagas são identificadas; ferramentas não abertas estão indisponíveis.','استكشف الأدوات العملية وSASI. تُميّز الوظائف المجانية والمدفوعة، والأدوات غير المفتوحة غير متاحة.'];

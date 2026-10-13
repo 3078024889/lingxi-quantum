@@ -1,4 +1,5 @@
 "use client";
+import {openMiniShare} from '@/lib/mini/share-client';
 import{useEffect,useMemo,useState,useRef}from"react";
 import{usePathname}from"next/navigation";
 import {deliveryText} from "@/lib/tools/commerce/delivery-copy";
@@ -26,7 +27,7 @@ export default function ToolShareRail(){
  useEffect(()=>{if(!open)return;let active=true;setQr("");void import('qrcode').then(m=>m.default.toDataURL(url,{width:320,margin:1,errorCorrectionLevel:"M"})).then(v=>{if(active)setQr(v)}).catch(()=>{});return()=>{active=false}},[open,url]);
  useEffect(()=>{if(open)dialog.current?.showModal();else dialog.current?.close()},[open]);
  async function copy(){try{await navigator.clipboard.writeText(url);setCopied(true);setError("")}catch{setError(deliveryText(lang,'manualCopy'))}}
- async function share(){const title=document.querySelector('h1')?.textContent?.trim()||'LINGXIFIELD';if(navigator.share){try{await navigator.share({title,url});return}catch(e){if(e instanceof Error&&e.name==='AbortError')return}}await copy()}
+ async function share(){const title=document.querySelector('h1')?.textContent?.trim()||'LINGXIFIELD';if(await openMiniShare(title)){setOpen(false);return}if(navigator.share){try{await navigator.share({title,url});return}catch(e){if(e instanceof Error&&e.name==='AbortError')return}}await copy()}
  if(!eligible)return null;
  return <>
  <button type="button" data-testid="tool-share-open" aria-haspopup="dialog" aria-expanded={open} disabled={!url} onClick={()=>setOpen(true)} className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-4 z-[70] rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-3 text-sm font-medium shadow-lg backdrop-blur md:bottom-5">↗ {c.open}</button>

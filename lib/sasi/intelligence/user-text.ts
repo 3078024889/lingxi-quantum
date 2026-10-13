@@ -1,7 +1,7 @@
 import "server-only";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {decryptProviderKey, type ByokProvider, validByokProvider} from "@/lib/sasi/credential-vault";
-import {defaultBaseUrl, providerDefaults} from "./provider-defaults";
+import {chooseTextModel,defaultBaseUrl,modelPreferences,providerDefaults} from "./provider-defaults";
 import {validateProviderBaseUrl} from "@/lib/sasi/gateway/ssrf-guard";
 import type {TextMessage} from "@/lib/sasi/ark-text";
 import {errorCode,recordConnectionFailure,recordConnectionSuccess} from "./runtime-health";
@@ -12,7 +12,7 @@ import {providerJsonProbe} from "@/lib/security/provider-json-probe";
 
 export type UserTextConnection={
   id:string; provider:ByokProvider; encrypted_credential:string; fingerprint:string;
-  base_url:string; model_id:string; capabilities:unknown; health_status:string; enabled:boolean;
+  base_url:string; model_id:string; discovered_models?:unknown;model_preferences?:unknown;capabilities:unknown; health_status:string; enabled:boolean;
   capability_checked_at?:string|null;cooldown_until?:string|null;last_success_at?:string|null;last_latency_ms?:number|null;updated_at?:string|null;
 };
 
@@ -35,10 +35,11 @@ function score(c:UserTextConnection){
 export async function listUserTextConnections(userId:string):Promise<UserTextConnection[]>{
   const admin=createAdminClient();
   const {data,error}=await admin.from("sasi_provider_connections")
-    .select("id,provider,encrypted_credential,fingerprint,base_url,model_id,capabilities,health_status,enabled,capability_checked_at,cooldown_until,last_success_at,last_latency_ms,updated_at")
+    .select("id,provider,encrypted_credential,fingerprint,base_url,model_id,discovered_models,model_preferences,capabilities,health_status,enabled,capability_checked_at,cooldown_until,last_success_at,last_latency_ms,updated_at")
     .eq("user_id",userId).eq("health_status","healthy").eq("enabled",true).order("updated_at",{ascending:false});
   if(error)throw new Error("CONNECTION_LOOKUP_FAILED");
   return ((data??[]).filter((r:any)=>validByokProvider(r.provider)) as UserTextConnection[])
+    .map(r=>({...r,model_id:chooseTextModel(r.provider,Array.isArray(r.discovered_models)?r.discovered_models.filter((x):x is string=>typeof x==='string'):[],modelPreferences(r.model_preferences).text||r.model_id)}))
     .filter(r=>providerDefaults(r.provider).textWire&&(caps(r.capabilities).includes("text")||providerDefaults(r.provider).capabilities.includes("text"))&&String(r.model_id||"").trim())
     .sort((a,b)=>(usableNow(b)?1:0)-(usableNow(a)?1:0)||score(b)-score(a));
 }
@@ -58,7 +59,9 @@ async function json(url:string, init:RequestInit){
 }
 export async function runUserText(input:{userId:string;messages:TextMessage[];maxOutputTokens?:number;preferredProvider?:string|null;taskId?:string|null;connection?:UserTextConnection;billingCurrency?:"CNY"|"USD";validateAnswer?:(answer:string)=>void;additionalCharge?:{maximumMinor:number;actualMinor:(answer:string)=>number;kind:string}}){
   const connection=input.connection??await selectUserTextConnection(input.userId,input.preferredProvider);if(!connection)throw new Error("CONNECTION_REQUIRED");
-  const started=Date.now(),key=decryptProviderKey(input.userId,connection.provider,connection.encrypted_credential),model=String(connection.model_id||"").trim();
+  const model=chooseTextModel(connection.provider,[],modelPreferences(connection.model_preferences).text||connection.model_id);
+  if(!model)throw new Error("MODEL_REQUIRED");
+  const started=Date.now(),key=decryptProviderKey(input.userId,connection.provider,connection.encrypted_credential);
   const currency=input.billingCurrency??await userSasiCurrency(input.userId);
   const estimatedTokens=Math.max(1,Math.ceil(input.messages.reduce((n,m)=>n+m.content.length,0)/3)+Math.max(256,Math.min(8192,Number(input.maxOutputTokens||2048))));
   await requireSasiBalance(input.userId,currency,textChargeMinor(estimatedTokens,currency)+(input.additionalCharge?.maximumMinor??0));

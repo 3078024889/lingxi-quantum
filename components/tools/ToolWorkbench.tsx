@@ -1,4 +1,6 @@
 "use client";
+import EditableNumberInput from "@/components/ui/EditableNumberInput";
+
 import {plainText} from "@/lib/tools/plain-copy";
 import {downloadUrl} from "@/lib/tools/shared/download";
 
@@ -16,7 +18,7 @@ import ErrorExplain from "./ErrorExplain";
 import ResizeImageWorkbench from "./ResizeImageWorkbench";
 import TimestampProWorkbench from "./TimestampProWorkbench";
 import QrProWorkbench from "./QrProWorkbench";
-import { convertImage, compressImageToTarget, resizeImage, stripImageMetadata } from "@/lib/tools/shared/image-canvas";
+import { convertImage, compressImageToTarget, stripImageMetadata } from "@/lib/tools/shared/image-canvas";
 import { detectFileType, extensionMismatch } from "@/lib/tools/shared/magic-bytes";
 import { md5Hex, sha256Hex, buffersEqual } from "@/lib/tools/shared/hash";
 import { delimitedToXlsx, docxToText, xlsxToCsvFiles } from "@/lib/tools/shared/office-convert";
@@ -56,9 +58,9 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const [result, setResult] = useState<ToolRunResult | null>(null);
   const [webpTarget, setWebpTarget] = useState<"image/jpeg" | "image/png">("image/jpeg");
   const [quality, setQuality] = useState(0.8);
-  const [width, setWidth] = useState(800);
-  const [height, setHeight] = useState(800);
-  const [keepAspect, setKeepAspect] = useState(true);
+
+
+
   const [customKb, setCustomKb] = useState(100);
   const [pdfCompression, setPdfCompression] = useState<PdfCompressionPreset>("balanced");
   const [recoveryBusy,setRecoveryBusy]=useState(false);
@@ -105,9 +107,9 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       const out = await runFileTool(tool, files, {
         webpTarget,
         quality,
-        width,
-        height,
-        keepAspect,
+
+
+
         targetBytes: preciseTarget,
         pdfCompression,
       });
@@ -159,46 +161,31 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <label className="text-sm text-bone-dim">
             {t("目标大小 (KB)","Target size (KB)")}
-            <input
+            <EditableNumberInput
               type="number"
               min={10}
               max={5000}
               value={customKb}
-              onChange={(e) => setCustomKb(Number(e.target.value) || 100)}
+              onChange={(e) => setCustomKb(Number(e.target.value))}
               className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone outline-none focus:border-lattice/50"
             />
           </label>
           <label className="text-sm text-bone-dim">
             {t("质量起点 (0.4–0.95)","Quality seed (0.4–0.95)")}
-            <input
+            <EditableNumberInput
               type="number"
               step={0.05}
               min={0.4}
               max={0.95}
               value={quality}
-              onChange={(e) => setQuality(Number(e.target.value) || 0.8)}
+              onChange={(e) => setQuality(Number(e.target.value))}
               className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone outline-none focus:border-lattice/50"
             />
           </label>
         </div>
       )}
 
-      {tool.slug === "resize-image" && (
-        <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          <label className="text-sm text-bone-dim">
-            {workbenchCopy(lang,"width")}
-            <input type="number" min={1} value={width} onChange={(e) => setWidth(Number(e.target.value) || 1)} className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone" />
-          </label>
-          <label className="text-sm text-bone-dim">
-            {workbenchCopy(lang,"height")}
-            <input type="number" min={1} value={height} onChange={(e) => setHeight(Number(e.target.value) || 1)} className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone" />
-          </label>
-          <label className="mt-6 flex items-center gap-2 text-sm text-bone-dim">
-            <input type="checkbox" checked={keepAspect} onChange={(e) => setKeepAspect(e.target.checked)} />
-            {t("保持比例","Keep aspect ratio")}
-          </label>
-        </div>
-      )}
+
 
       {files.length>0&&<div className="mt-4 flex flex-wrap gap-2">
         <button type="button" onClick={()=>setFiles([])} className="rounded-sm border border-white/15 px-3 py-2 text-xs text-bone-dim">{t("清空","Clear")}</button>
@@ -256,9 +243,9 @@ async function runFileTool(
   opts: {
     webpTarget: "image/jpeg" | "image/png";
     quality: number;
-    width: number;
-    height: number;
-    keepAspect: boolean;
+
+
+
     targetBytes: number | null;
     pdfCompression: PdfCompressionPreset;
   },
@@ -520,16 +507,7 @@ async function runFileTool(
     };
   }
 
-  if (tool.slug === "resize-image") {
-    const r = await resizeImage(file, opts.width, opts.height, opts.keepAspect, "image/jpeg", 0.92);
-    return {
-      ok: true,
-      files: [{ name: r.name, blob: r.blob, mime: "image/jpeg", size: r.blob.size }],
-      messageZh: `已调整为 ${r.width}×${r.height}。`,
-      messageEn: `Resized to ${r.width}×${r.height}.`,
-      details: { width: r.width, height: r.height, bytes: r.blob.size },
-    };
-  }
+
 
   if (tool.slug === "remove-exif") {
     const r = await stripImageMetadata(file);

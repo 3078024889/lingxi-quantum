@@ -1,5 +1,11 @@
 export type ImageRatioPreset={id:string;labelZh:string;labelEn:string;ratio:number|null};
 export type ImageSizePreset={id:string;groupZh:string;groupEn:string;label:string;width:number;height:number};
+export function linkedImageDimensions(axis:'width'|'height',value:number,ratio:number){
+ const max=16384,n=Math.max(1,Math.round(Number.isFinite(value)?value:1));
+ if(!Number.isFinite(ratio)||ratio<=0)throw Error('IMAGE_RATIO_INVALID');
+ if(axis==='width'){const width=Math.min(n,max,Math.floor(max*ratio));return {width:Math.max(1,width),height:Math.max(1,Math.min(max,Math.round(width/ratio)))}}
+ const height=Math.min(n,max,Math.floor(max/ratio));return {width:Math.max(1,Math.min(max,Math.round(height*ratio))),height:Math.max(1,height)};
+}
 
 export const IMAGE_RATIO_PRESETS:ImageRatioPreset[]=[
  {id:"free",labelZh:"自由",labelEn:"Free",ratio:null},

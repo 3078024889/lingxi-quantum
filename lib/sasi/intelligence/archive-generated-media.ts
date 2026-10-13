@@ -33,7 +33,15 @@ function inspectContainer(bytes:Buffer){
  if(!moov||!mdat||!width||!height||width*height>32_000_000||width>8192||height>8192||!duration||duration>120)throw Error('VIDEO_FORMAT_INVALID');
  return{width,height,duration};
 }
-export async function archiveGeneratedMedia(input:{userId:string;taskId:string;projectId?:string|null;kind:'image'|'video';url:string;expectedDuration?:number;minSide?:number;minImageSide?:number;originalDownload?:()=>Promise<{response:Response}>}){
+function checkVideoSpecification(video:{width:number;height:number;duration:number},input:{expectedDuration?:number;minSide?:number;expectedRatio?:string}){
+ if(input.expectedDuration&&Math.abs(video.duration-input.expectedDuration)>Math.max(.5,input.expectedDuration*.1))throw Error('VIDEO_DURATION_MISMATCH');
+ if(Math.min(video.width,video.height)<(input.minSide||1))throw Error('VIDEO_RESOLUTION_MISMATCH');
+ if(input.expectedRatio){
+  const ratio=({'16:9':16/9,'9:16':9/16,'1:1':1} as Record<string,number>)[input.expectedRatio];
+  if(!ratio||Math.abs(video.width/video.height-ratio)/ratio>.02)throw Error('VIDEO_RATIO_MISMATCH');
+ }
+}
+export async function archiveGeneratedMedia(input:{userId:string;taskId:string;projectId?:string|null;kind:'image'|'video';url:string;expectedDuration?:number;minSide?:number;expectedRatio?:string;minImageSide?:number;originalDownload?:()=>Promise<{response:Response}>}){
  if(!generatedArchiveReady())throw Error('GENERATION_STORAGE_UNAVAILABLE');
  if(active)throw Error('GENERATION_ARCHIVE_BUSY');active++;
  try{
@@ -45,6 +53,7 @@ export async function archiveGeneratedMedia(input:{userId:string;taskId:string;p
    if(asset.storage_provider==='r2'){const response=await fetchPublicMedia(presignSasiArtifact(asset.object_key),{kind:input.kind,allowHtml:false,deadline:Date.now()+30000,maxBytes:asset.byte_size});readback=Buffer.from(await response.response.arrayBuffer())}
    else{const stored=await admin.storage.from(asset.bucket).download(asset.object_key);if(stored.error||!stored.data||stored.data.size!==asset.byte_size)throw Error('GENERATION_ARCHIVE_VERIFY_FAILED');readback=Buffer.from(await stored.data.arrayBuffer())}
    if(readback.length!==asset.byte_size||createHash('sha256').update(readback).digest('hex')!==asset.sha256)throw Error('GENERATION_ARCHIVE_VERIFY_FAILED');
+   if(input.kind==='video')checkVideoSpecification(inspectContainer(readback),input);
    return{...asset,assetId:asset.id};
   }
   const download=input.originalDownload?await input.originalDownload():await fetchPublicMedia(input.url,{kind:input.kind,allowHtml:false,deadline:Date.now()+30000,maxBytes:input.kind==='image'?20*1024*1024:100*1024*1024});
@@ -56,8 +65,7 @@ export async function archiveGeneratedMedia(input:{userId:string;taskId:string;p
    }catch{throw Error('IMAGE_DECODE_INVALID')}
   }else{
    const container=inspectContainer(bytes);duration=container.duration;
-   if(input.expectedDuration&&Math.abs(duration-input.expectedDuration)>Math.max(.5,input.expectedDuration*.1))throw Error('VIDEO_DURATION_MISMATCH');
-   if(Math.min(container.width,container.height)<(input.minSide||1))throw Error('VIDEO_RESOLUTION_MISMATCH');
+   checkVideoSpecification(container,input);
    const dir=await mkdtemp(join(tmpdir(),'sasi-decode-'));
    try{const file=join(dir,'input.mp4');await writeFile(file,bytes);const result=await runCommand(process.execPath,['--max-old-space-size=256',join(process.cwd(),'scripts/runtime/verify-generated-video.cjs'),file],{timeoutMs:45000,maxOutputBytes:64*1024});const decoded=JSON.parse(result.stdout.trim());if(decoded.decoded!==true||decoded.width!==container.width||decoded.height!==container.height)throw Error('VIDEO_DECODE_INVALID');width=decoded.width;height=decoded.height;}finally{await rm(dir,{recursive:true,force:true})}
    extension='mp4';mime='video/mp4';

@@ -17,6 +17,7 @@ export default function PdfToWordWorkbench(){
  const[files,setFiles]=useState<File[]>([]),[pageCount,setPageCount]=useState(0),[mode,setMode]=useState<Mode>("both"),[ocr,setOcr]=useState(true),[lang,setLang]=useState("chi_sim+eng"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
  useEffect(()=>{let active=true;void(async()=>{let total=0;for(const f of files){try{const pdf=await openPdf(f);total+=pdf.numPages;pdf.destroy?.()}catch{}}if(active)setPageCount(total)})();return()=>{active=false}},[files]);
  async function run(){
+  if(!files.length)throw Error('PROCESSING_INPUT_MISSING');
   setBusy(true);setResults([]);setError("");let worker:any=null;
   try{
    if(ocr){const{createWorker}=await import("tesseract.js");worker=await createWorker(lang,undefined,{logger:m=>{if(m.status&&typeof m.progress==="number")setStage(`${m.status} · ${Math.round(m.progress*100)}%`)}})}
@@ -42,7 +43,7 @@ export default function PdfToWordWorkbench(){
     if(mode==="visual"||mode==="both")outs.push(await buildVisualDocx(images,`${stem}-visual.docx`));
    }
    setResults(outs);setStage("完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("")}finally{try{await worker?.terminate()}catch{}setBusy(false)}
+  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}finally{try{await worker?.terminate()}catch{}setBusy(false)}
  }
  return <div className="space-y-4"><FileDropzone accept="application/pdf,.pdf" multiple append maxFiles={10} maxSizeMB={200} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy} kind="pdf"/>
  <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm">Word 输出方式<select value={mode} onChange={e=>setMode(e.target.value as Mode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"><option value="both">可编辑版 + 版式保真版</option><option value="editable">可编辑 Word</option><option value="visual">版式保真 Word</option></select></label><label className="text-sm">扫描件 OCR 语言<select value={lang} onChange={e=>setLang(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label></div>

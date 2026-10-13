@@ -2,6 +2,7 @@ import fs from "node:fs";
 import {test,expect} from "playwright/test";
 test("direct pen signature produces tightly cropped transparent ink and a page overlay",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"contract.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
  await page.getByRole("button",{name:"Draw signature"}).click();
@@ -32,6 +33,7 @@ test("direct pen signature produces tightly cropped transparent ink and a page o
 
 test("a single touch point remains a visible transparent signing mark",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"contract.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
  await page.getByRole("button",{name:"Draw signature"}).click();
@@ -51,6 +53,7 @@ test("a single touch point remains a visible transparent signing mark",async({pa
 
 test("pen pressure and overlapping second touch keep a single valid ink stroke",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"contract.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
  await page.getByRole("button",{name:"Draw signature"}).click();

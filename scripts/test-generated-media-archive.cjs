@@ -19,7 +19,10 @@ async function main(){
  source=await sharp({create:{width:32,height:32,channels:3,background:'blue'}}).png().toBuffer();corrupt=true;await assert.rejects(archive.archiveGeneratedMedia(input('image')),/GENERATION_ARCHIVE_VERIFY_FAILED/);corrupt=false;assert.equal(rows.length,1);
  failSave=true;await assert.rejects(archive.archiveGeneratedMedia(input('image')),/GENERATION_ARCHIVE_SAVE_FAILED/);failSave=false;assert.equal(rows.length,1);
  source=Buffer.from(fs.readFileSync('tests/fixtures/sasi-video-4s.mp4.base64','utf8'),'base64');const videoInput={...input('video'),expectedDuration:4};
+ await assert.rejects(archive.archiveGeneratedMedia({...input('video'),expectedRatio:'16:9'}),/VIDEO_RATIO_MISMATCH/);
  const video=await archive.archiveGeneratedMedia(videoInput);assert.equal(video.width,64);assert.equal(video.height,64);assert.equal(video.duration_seconds,4);assert.equal(video.verification,'decoded-and-readback');
+ await assert.rejects(archive.archiveGeneratedMedia({...videoInput,expectedRatio:'9:16'}),/VIDEO_RATIO_MISMATCH/);
+ assert.equal((await archive.archiveGeneratedMedia({...videoInput,expectedRatio:'1:1'})).assetId,video.assetId);
  await assert.rejects(archive.archiveGeneratedMedia({...input('video'),expectedDuration:10}),/VIDEO_DURATION_MISMATCH/);
  await assert.rejects(archive.archiveGeneratedMedia({...input('video'),minSide:720}),/VIDEO_RESOLUTION_MISMATCH/);
  source=source.subarray(0,source.length-50);await assert.rejects(archive.archiveGeneratedMedia(input('video')),/VIDEO_FORMAT_INVALID/);

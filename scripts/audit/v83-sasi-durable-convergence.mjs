@@ -1,7 +1,6 @@
 import fs from"node:fs";
 const read=p=>fs.readFileSync(p,"utf8");
 const one=read("components/SasiOneSurface.tsx");
-const toolbar=read("components/SasiTaskToolbar.tsx");
 const launcher=read("components/SasiUnifiedLauncher.tsx");
 const local=read("lib/sasi/browser/local-text.ts");
 const user=read("lib/sasi/browser/user-resource-text.ts");
@@ -16,7 +15,7 @@ const invariants=read("lib/sasi/durable/release-invariants.ts");
 const page=read("app/page.tsx");
 const checks=[
  ["V83_ONE_SASI_FRONT_DOOR",!one.includes("SasiTaskNavigation")&&one.includes("inferUnifiedSasiIntent")],
- ["V83_NO_VISIBLE_TASK_TABS",toolbar.includes("return null")&&!toolbar.includes("data-sasi-task-toolbar")],
+ ["V83_NO_VISIBLE_TASK_TABS",!fs.existsSync('components/SasiTaskToolbar.tsx')],
  ["V83_SKILLS_PRESERVED_AS_CAPABILITY",launcher.includes("SasiSkillPicker")&&launcher.includes("selectedSkills")&&launcher.includes("skillIds")],
  ["V83_LOCAL_EXPLICIT_OPTIN",local.includes("browserLocalTextEnabled")&&local.includes("LOCAL_ENABLED_KEY")],
  ["V83_USER_RESOURCE_NO_GLOBAL_SIGNOUT",!user.includes(".signOut")&&!user.includes("gpt-")],

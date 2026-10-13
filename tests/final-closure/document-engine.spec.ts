@@ -67,7 +67,8 @@ test.describe("document engine real browser inputs",()=>{
     await page.goto("/tools/e-sign-pdf",{waitUntil:"domcontentloaded"});
     await uploadPdf(page,9);
     const imageInputs=page.locator('input[type="file"][accept="image/*"]');
-    await imageInputs.nth(1).setInputFiles({name:"stamp.svg",mimeType:"image/svg+xml",buffer:stampSvg});
+    await expect(imageInputs.nth(1)).toBeEnabled({timeout:15000});
+ await imageInputs.nth(1).setInputFiles({name:"stamp.svg",mimeType:"image/svg+xml",buffer:stampSvg});
     await page.getByRole("button",{name:/按选择页切分盖章|Slice across selected pages/i}).click();
     await expect(page.getByText(/已添加到\s*9|Added to\s*9/i)).toBeVisible();
   });

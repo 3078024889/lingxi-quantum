@@ -1,4 +1,6 @@
 "use client";
+import EditableNumberInput from "@/components/ui/EditableNumberInput";
+
 import NextImage from "next/image";
 import {PointerEvent,useEffect,useMemo,useRef,useState} from "react";
 import {PDFDocument} from "pdf-lib";
@@ -43,7 +45,7 @@ export default function PdfRedactWorkbench(){
  async function changePage(n:number){setPage(n);if(file)await show(file,n)}
  function point(e:PointerEvent){const r=wrap.current!.getBoundingClientRect();return{x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))}}
  async function exportRedacted(){
-  if(!file)return;setBusy(true);setError("");setResult([]);
+  if(!file)throw Error('PROCESSING_INPUT_MISSING');setBusy(true);setError("");setResult([]);
   try{
    const pdf=await openPdf(file),out=await PDFDocument.create();
    try{
@@ -55,11 +57,11 @@ export default function PdfRedactWorkbench(){
    }finally{pdf.destroy?.()}
    const bytes=await out.save(),copy=new Uint8Array(bytes.length);copy.set(bytes);const blob=new Blob([copy.buffer],{type:"application/pdf"});
    setResult([{name:`redacted-${file.name}`,blob,mime:"application/pdf",size:blob.size}]);
-  }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}
+  }catch(e){setError(e instanceof Error?e.message:String(e));throw e}finally{setBusy(false)}
  }
  return <div className="space-y-4">
   <FileDropzone accept="application/pdf,.pdf" files={files} onChange={load} disabled={busy} kind="pdf" maxSizeMB={200}/>
-  {preview&&<><div className="flex flex-wrap items-center gap-3 text-sm text-[var(--lx-muted)]"><label>{c.page} <input type="number" min={1} max={pages} value={page} onChange={e=>void changePage(Math.max(1,Math.min(pages,Number(e.target.value)||1)))} className="w-16 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-2 py-1 text-[var(--lx-ink)]"/></label><select value={scope} onChange={e=>setScope(e.target.value as "one"|"all")} className="rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="one">{c.one}</option><option value="all">{c.all}</option></select></div>
+  {preview&&<><div className="flex flex-wrap items-center gap-3 text-sm text-[var(--lx-muted)]"><label>{c.page} <EditableNumberInput type="number" min={1} max={pages} value={page} onChange={e=>void changePage(Math.max(1,Math.min(pages,Number(e.target.value))))} className="w-16 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-2 py-1 text-[var(--lx-ink)]"/></label><select value={scope} onChange={e=>setScope(e.target.value as "one"|"all")} className="rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="one">{c.one}</option><option value="all">{c.all}</option></select></div>
   <div ref={wrap} className="relative mx-auto w-fit max-w-full touch-none overflow-hidden rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)]" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);const p=point(e);start.current=p;setBox({x:p.x,y:p.y,w:0,h:0})}} onPointerMove={e=>{if(!start.current)return;const p=point(e),s=start.current;setBox({x:Math.min(s.x,p.x),y:Math.min(s.y,p.y),w:Math.abs(p.x-s.x),h:Math.abs(p.y-s.y)})}} onPointerUp={()=>start.current=null}><NextImage src={preview} alt="" className="block max-h-[680px] max-w-full select-none" width={1600} height={1200} unoptimized/><div className="pointer-events-none absolute bg-black/75" style={{left:`${box.x*100}%`,top:`${box.y*100}%`,width:`${box.w*100}%`,height:`${box.h*100}%`}}/></div></>}
   <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">{c.warning}</div>
   {file&&box.w>=.005&&box.h>=.005&&!busy&&<PaidActionButton toolId="pdf-redact" quantity={1} metadata={{pages,scope}} onPaid={exportRedacted} label={c.export}/>}

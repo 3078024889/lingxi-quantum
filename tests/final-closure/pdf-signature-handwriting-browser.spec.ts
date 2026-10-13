@@ -3,6 +3,7 @@ import {test,expect} from "playwright/test";
 test("paper signature becomes transparent ink inside PDF editor without charging",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
  const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"paper.pdf",mimeType:"application/pdf",buffer:pdf});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
  const dataUrl=await page.evaluate(()=>{
@@ -14,6 +15,7 @@ test("paper signature becomes transparent ink inside PDF editor without charging
   ctx.beginPath();ctx.moveTo(50,83);ctx.bezierCurveTo(80,12,90,110,130,58);ctx.bezierCurveTo(158,24,200,100,240,59);ctx.stroke();
   return c.toDataURL("image/png");
  });
+ await expect(page.locator("label").filter({hasText:"Extract handwritten signature"}).locator('input[type="file"]')).toBeEnabled({timeout:15000});
  await page.locator("label").filter({hasText:"Extract handwritten signature"}).locator('input[type="file"]').setInputFiles({name:"handwritten.png",mimeType:"image/png",buffer:Buffer.from(dataUrl.split(",")[1],"base64")});
  const preview=page.getByTestId("signature-ink-preview");
  await expect(preview).toBeVisible({timeout:30000});

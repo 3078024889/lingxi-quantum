@@ -36,3 +36,21 @@ test("SASI keeps visible answer when transcript saving fails",async({page})=>{
  await expect(page.locator('[data-sasi-role="assistant"]')).toContainText("Here is your answer.");
  await expect(page.getByRole("status")).toContainText("not been saved",{timeout:12000});
 });
+
+test("an owned local recovery record preserves an unsynced answer after reload without regeneration",async({page})=>{
+ test.setTimeout(60000);
+ let generations=0;
+ await page.route(/\/api\/sasi\/conversations(?:\?|$)/,route=>route.request().method()==="GET"
+  ?route.fulfill({json:{ownerId:USER,threadId:THREAD,threads:[{id:THREAD,title:"Recoverable story"}],messages:[],workspace:{mode:"chat",chatOpened:true}}})
+  :route.fulfill({status:503,json:{error:"HISTORY_UNAVAILABLE"}}));
+ await page.route("**/api/sasi/conversations/workspace",route=>route.fulfill({json:{ok:true}}));
+ await page.route("**/api/sasi/experience/text",route=>{generations++;return route.fulfill({json:{state:"answer",answer:"Keep this unsynced story."}})});
+ await page.goto("/sasi?mode=chat&lang=en");
+ await page.locator("textarea").fill("Continue our recoverable story");
+ await page.locator("textarea").press("Enter");
+ await expect(page.locator('[data-sasi-role="assistant"]')).toContainText("Keep this unsynced story.");
+ await expect(page.getByRole("status")).toContainText("local recovery record",{timeout:12000});
+ await page.reload();
+ await expect(page.locator('[data-sasi-role="assistant"]')).toContainText("Keep this unsynced story.");
+ expect(generations).toBe(1);
+});

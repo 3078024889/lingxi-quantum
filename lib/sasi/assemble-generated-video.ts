@@ -2,7 +2,7 @@ import type {FFmpeg} from '@ffmpeg/ffmpeg';
 import {probeVideo} from './probe-video';
 
 /** Fetch only persisted supplier results. The caller owns URLs and cancellation. */
-export async function assembleGeneratedVideo(urls:string[],ratio:string,signal:AbortSignal):Promise<Blob>{
+export async function assembleGeneratedVideo(urls:string[],ratio:string,signal:AbortSignal,resolution='720p'):Promise<Blob>{
  if(!urls.length||urls.length>24)throw new Error('ASSEMBLY_LIMIT');
  const {FFmpeg}=await import('@ffmpeg/ffmpeg');const engine:FFmpeg=new FFmpeg();
  const stop=()=>engine.terminate();signal.addEventListener('abort',stop,{once:true});
@@ -10,7 +10,8 @@ export async function assembleGeneratedVideo(urls:string[],ratio:string,signal:A
  let bytes=0,seconds=0;
  try{
   check();await engine.load({coreURL:'/media/ffmpeg-0.12.10/ffmpeg-core.js',wasmURL:'/media/ffmpeg-0.12.10/ffmpeg-core.wasm'});
-  const [width,height]=ratio==='9:16'?[720,1280]:ratio==='1:1'?[720,720]:[1280,720];
+  const side=resolution==='1080p'?1080:resolution==='4k'?2160:720;
+  const [width,height]=ratio==='9:16'?[side,Math.round(side*16/9)]:ratio==='1:1'?[side,side]:[Math.round(side*16/9),side];
   for(const [i,url] of urls.entries()){
    check();if(!/^\/api\/sasi\/video-file\?taskId=[0-9a-f-]{36}$/i.test(url))throw new Error('INVALID_VIDEO_URL');
    const chunks:Uint8Array[]=[];let size=0,total=Infinity;

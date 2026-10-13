@@ -1,4 +1,5 @@
 "use client";
+import {imageCreationLabel} from '@/lib/sasi/entry-copy';
 
 import Link from "next/link";
 import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
@@ -76,6 +77,7 @@ export default function SasiUnifiedLauncher({onStart,initialPrompt=""}:{onStart:
      <div className="relative">
       <button type="button" aria-label={t("add")} aria-expanded={open} onClick={()=>setOpen(v=>!v)} className="grid h-9 w-9 place-items-center rounded-full text-2xl hover:bg-[var(--lx-soft)]">＋</button>
       {open&&<div className="absolute bottom-11 start-0 z-50 flex max-h-[min(40vh,280px)] w-[min(320px,calc(100vw-64px))] flex-col overflow-y-auto rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2 shadow-[0_14px_48px_rgba(0,0,0,.16)]">
+       <button type="button" onClick={()=>{setOpen(false);onStart('image',prompt,files,[])}} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">{imageCreationLabel(lang)}</button>
        <button type="button" onClick={()=>inputRef.current?.click()} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">{t("files")}</button>
        {skillMode&&<div className="mt-1 border-t border-[var(--lx-line)] pt-1">
         <button type="button" onClick={()=>setCapabilitiesOpen(v=>!v)} className="block w-full rounded-xl px-3 py-3 text-left text-sm hover:bg-[var(--lx-soft)]">{t("capabilities")} <span className="float-right">{capabilitiesOpen?"−":"＋"}</span></button>

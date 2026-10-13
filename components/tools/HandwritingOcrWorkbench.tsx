@@ -132,7 +132,7 @@ export default function HandwritingOcrWorkbench() {
   );
 
   async function run() {
-    if (!files.length) return;
+    if (!files.length) throw Error('PROCESSING_INPUT_MISSING');
 
     setBusy(true);
     setTexts([]);
@@ -216,6 +216,7 @@ export default function HandwritingOcrWorkbench() {
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
       setStage("");
+      throw cause;
     } finally {
       setBusy(false);
     }

@@ -15,7 +15,7 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
-  outputFileTracingIncludes:{'/api/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm']},
+  outputFileTracingIncludes:{'/api/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm'],'/api/internal/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm']},
   images: {
     formats: ["image/avif", "image/webp"],
   },

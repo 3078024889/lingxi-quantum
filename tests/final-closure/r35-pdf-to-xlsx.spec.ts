@@ -23,6 +23,7 @@ async function paragraphPdf(){
 
 test("PDF to Excel exports a real editable XLSX from positioned table text",async({page})=>{
  await page.goto("/tools/pdf-to-xlsx?lang=en");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"invoice.pdf",mimeType:"application/pdf",buffer:await tablePdf()});
  await page.getByRole("button",{name:"Process now"}).click();
  await expect(page.getByText("invoice.xlsx")).toBeVisible({timeout:30000});
@@ -38,6 +39,7 @@ test("PDF to Excel exports a real editable XLSX from positioned table text",asyn
 
 test("image-only PDF is routed to OCR instead of pretending table extraction succeeded",async({page})=>{
  await page.goto("/tools/pdf-to-xlsx?lang=en");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"scan.pdf",mimeType:"application/pdf",buffer:await imageOnlyPdf()});
  await page.getByRole("button",{name:"Process now"}).click();
  await expect(page.getByText("This PDF has no extractable text table. It may be a scanned or image-based PDF.")).toBeVisible({timeout:30000});
@@ -49,6 +51,7 @@ test("image-only PDF is routed to OCR instead of pretending table extraction suc
 
 test("normal paragraph PDF is not falsely exported as a spreadsheet",async({page})=>{
  await page.goto("/tools/pdf-to-xlsx?lang=en");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"article.pdf",mimeType:"application/pdf",buffer:await paragraphPdf()});
  await page.getByRole("button",{name:"Process now"}).click();
  await expect(page.getByText("article.xlsx")).toHaveCount(0);

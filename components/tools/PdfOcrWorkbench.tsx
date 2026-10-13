@@ -49,8 +49,8 @@ export default function PdfOcrWorkbench(){
   return()=>{alive=false};
  },[file]);
 
- async function run(limit?:number){
-  if(!file)return;
+ async function run(limit?:number,paid=false){
+  if(!file){if(paid)throw Error('PROCESSING_INPUT_MISSING');return}
   setBusy(true);setText("");setError("");setTableFile(null);setTableNote("");stop.current=false;
   let worker:W|null=null,pdf:any=null;
   try{
@@ -58,7 +58,7 @@ export default function PdfOcrWorkbench(){
    pdf=await openPdf(file);const end=Math.min(pdf.numPages,limit||pdf.numPages),chunks:string[]=[];
    const structured:Array<{name:string;tokens:PositionedTextToken[]}>= [];
    for(let n=1;n<=end;n++){
-    if(stop.current)return;
+    if(stop.current){if(paid)throw Error('PROCESSING_CANCELLED');return}
     setStage(t(`识别第 ${n}/${end} 页`,`Recognizing page ${n}/${end}`));
     const rendered=await renderPdfPage(pdf,n,1.8);
     try{
@@ -79,8 +79,9 @@ export default function PdfOcrWorkbench(){
     }
    }
    setStage(t("完成","Done"));
-  }catch{
+  }catch(cause){
    setError(t("这次 OCR 没有完成，请确认 PDF 可以正常打开并稍后重试。","OCR could not finish. Check that the PDF opens normally and try again."));
+   if(paid)throw cause;
   }finally{
    try{await worker?.terminate()}catch{}try{pdf?.destroy?.()}catch{}setBusy(false);
   }
@@ -101,7 +102,7 @@ export default function PdfOcrWorkbench(){
   <div className="flex flex-wrap gap-3">
    {file&&!busy&&<button onClick={()=>void run(1)} className="rounded-xl border px-5 py-2.5 text-sm">{t("免费识别第 1 页","Recognize page 1 free")}</button>}
    {file&&pages===1&&!busy&&<button onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">{t("完整 OCR · 免费","Full OCR · Free")}</button>}
-   {file&&pages>1&&<PaidActionButton toolId="pdf-ocr" quantity={pages} metadata={{pages,freePages:1,continuedFrom:handoffSource||null}} onPaid={()=>run()} label={t("查看完整 OCR 价格","See full OCR price")}/>}
+   {file&&pages>1&&<PaidActionButton toolId="pdf-ocr" quantity={pages} metadata={{pages,freePages:1,continuedFrom:handoffSource||null}} onPaid={()=>run(undefined,true)} label={t("查看完整 OCR 价格","See full OCR price")}/>}
    {busy&&<button onClick={()=>stop.current=true} className="rounded-xl border px-4 py-2">{t("取消","Cancel")}</button>}
   </div>
   {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}

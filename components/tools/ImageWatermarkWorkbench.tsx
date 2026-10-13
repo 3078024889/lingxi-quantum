@@ -53,17 +53,18 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
 
  const selectionReady=mode==="brush"?strokes.some(s=>s.points.length>0):box.w>=.01&&box.h>=.01;
  async function run(){
-  if(!selectionReady)return;setBusy(true);setError("");
+  if(!selectionReady||!files.length)throw Error('PROCESSING_INPUT_MISSING');setBusy(true);setError("");
+  const out=[] as Array<{name:string;blob:Blob;url:string}>;
   try{
-   for(const r of results)URL.revokeObjectURL(r.url);
-   const out=[] as Array<{name:string;blob:Blob;url:string}>;
    for(const file of files){
     const blob=mode==="brush"?await localInpaintMask(file,strokes):await localInpaint(file,box);
     out.push({name:file.name,blob,url:URL.createObjectURL(blob)});
    }
    setResults(out);
-  }catch{
+  }catch(cause){
+   for(const r of out)URL.revokeObjectURL(r.url);
    setError(t("这次没有完成修复。请缩小选区，或分几次处理复杂区域。","Cleanup could not finish. Use a smaller selection or repair complex areas in several passes."));
+   throw cause;
   }finally{setBusy(false)}
  }
 

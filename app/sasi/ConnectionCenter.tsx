@@ -2,15 +2,16 @@
 
 import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
+import {safeContinuation} from '@/lib/sasi/client/continuation-link';
 import {BUILD_CONNECTORS,SASI_INTEGRATIONS,type SasiIntegration} from "@/lib/sasi/integration-catalog";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 import {sasiConnectionText} from "@/lib/sasi/connection-i18n";
 import {connectionPageCopy,connectionServiceCopy,CONNECTION_GROUPS} from "@/lib/sasi/connection-page-copy";
-import {defaultBaseUrl} from "@/lib/sasi/intelligence/provider-defaults";
+import {chooseTextModel,defaultBaseUrl} from "@/lib/sasi/intelligence/provider-defaults";
 import type {ByokProvider} from "@/lib/sasi/credential-vault";
 
 type Props={lang:LingxiLang;dark:boolean;accountEmail:string|null};
-type Connection={service:string;keyHint:string;healthStatus:"stored"|"checking"|"healthy"|"unhealthy";lastCheckedAt:string|null;lastErrorCode:string|null;baseUrl?:string;model?:string};
+type Connection={service:string;keyHint:string;healthStatus:"stored"|"checking"|"healthy"|"unhealthy";lastCheckedAt:string|null;lastErrorCode:string|null;baseUrl?:string;model?:string;models?:{text?:string;video?:string}};
 
 const PRIMARY_IDS=["volcengine","openrouter","compatible","openai","xai","anthropic","gemini","deepseek","luma","aliyun"] as const;
 const TITLE:Record<LingxiLang,string>={
@@ -29,12 +30,15 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
  const[selected,setSelected]=useState<SasiIntegration>(services[0]);
  const[credential,setCredential]=useState("");
  const[baseUrl,setBaseUrl]=useState("");const[model,setModel]=useState("");const[editing,setEditing]=useState(false);
+ const[videoModel,setVideoModel]=useState('');
  const[connections,setConnections]=useState<Connection[]>([]);
  const[state,setState]=useState<"loading"|"ready"|"login"|"unavailable">("loading");
  const[busy,setBusy]=useState<"save"|"test"|"delete"|null>(null);
  const[message,setMessage]=useState("");
+ const[returnPath,setReturnPath]=useState('/sasi');
+ useEffect(()=>{setReturnPath(safeContinuation(new URLSearchParams(location.search).get('next')))},[]);
  const connection=connections.find(x=>x.service===selected.id);
- useEffect(()=>{setBaseUrl(connection?.baseUrl||defaultBaseUrl(selected.id as ByokProvider));setModel(connection?.model||"");setEditing(false);setCredential("")},[selected.id,connection?.baseUrl,connection?.model]);
+ useEffect(()=>{setBaseUrl(connection?.baseUrl||defaultBaseUrl(selected.id as ByokProvider));setModel(connection?.models?.text||chooseTextModel(selected.id as ByokProvider,[],connection?.model));setVideoModel(connection?.models?.video||(/seedance|sora|video|(^|\/)wan[-\d]/i.test(connection?.model||'')?connection?.model||'':''));setEditing(false);setCredential("")},[selected.id,connection?.baseUrl,connection?.model,connection?.models?.text,connection?.models?.video]);
 
  useEffect(()=>{
   let alive=true;
@@ -53,14 +57,15 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
  }
 
  async function save(){
-  if(!credential.trim()||busy)return;
+  if((!credential.trim()&&!connection)||busy)return;
   setBusy("save");setMessage("");
-  try{const r=await fetch("/api/sasi/connections",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider:selected.id,apiKey:credential,...(baseUrl.trim()?{baseUrl:baseUrl.trim()}:{}),...(model.trim()?{model:model.trim()}:{} )})});
+  try{const r=await fetch("/api/sasi/connections",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider:selected.id,...(credential.trim()?{apiKey:credential}:{}),baseUrl:baseUrl.trim(),model:model.trim(),models:{text:model.trim(),video:videoModel.trim()}})});
   const b=await r.json().catch(()=>({}));
   if(r.ok){
-   setConnections(xs=>[...xs.filter(x=>x.service!==selected.id),{service:selected.id,keyHint:b.keyHint,healthStatus:"stored",lastCheckedAt:null,lastErrorCode:null,baseUrl,model}]);
+   setConnections(xs=>[...xs.filter(x=>x.service!==selected.id),{service:selected.id,keyHint:b.keyHint,healthStatus:b.healthStatus,lastCheckedAt:null,lastErrorCode:null,baseUrl,model,models:{text:model,video:videoModel}}]);
    setCredential("");setEditing(false);setMessage(t("已保存，请检查连接。","Saved. Check the connection next."));
-   await checkConnection(selected.id);
+   if(b.healthStatus==='healthy'&&!credential.trim())setMessage(t('模型设置已保存，可返回创作。','Model settings saved. Return to creation.'));
+   else await checkConnection(selected.id);
   }else setMessage(t("暂时无法连接，请稍后再试。","Unable to connect right now. Please try again later."));
   }catch{setMessage(t("暂时无法连接，请稍后再试。","Unable to connect right now. Please try again later."))}finally{setBusy(null)}
  }
@@ -68,6 +73,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
  async function checkConnection(provider:string){
   const r=await fetch("/api/sasi/connections/test",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({provider})});
   const b=await r.json().catch(()=>({}));
+  if(r.status===429){setMessage(t('检查过于频繁，请稍后再试。','Checks are too frequent. Please try again shortly.'));return}
   const healthy=r.ok&&b.healthStatus==="healthy";
   setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED",model:healthy&&b.model?b.model:x.model}:x));
   setMessage(healthy?t("连接正常，可以开始使用。","Connection is ready to use."):t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
@@ -93,6 +99,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
    <p className="text-xs font-semibold tracking-[.18em] text-[var(--lx-faint)]">SASI</p>
    <h1 className="mt-2 text-3xl font-semibold text-[var(--lx-ink)]">{TITLE[lang]}</h1>
    <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--lx-muted)]">{copy.intro}</p>
+   <Link href={returnPath} className="mt-4 inline-block rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{t('返回创作','Return to creation')} →</Link>
   </header>
 
   <div data-connection-layout className="grid items-start gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
@@ -126,17 +133,19 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
       </div>
       {state==="ready"&&(!connection||editing)&&(selected.id==="compatible"?<div className="mt-6 grid gap-3 sm:grid-cols-2">
        <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder={selected.id==="compatible"?"https://example.com/v1":copy.automatic} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
-       <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" placeholder={selected.id==="compatible"?"":copy.automatic} maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
+       <label className="text-sm">{t("对话模型 ID","Chat model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" placeholder={selected.id==="compatible"?"":copy.automatic} maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
       </div>:<details className="mt-6 rounded-xl border border-[var(--lx-line)] p-4"><summary className="cursor-pointer text-sm text-[var(--lx-muted)]">{copy.settings}</summary><p className="mt-2 text-xs leading-6 text-[var(--lx-muted)]">{copy.defaults}</p><div className="mt-3 grid gap-3 sm:grid-cols-2">
        <label className="text-sm">{t("服务地址","Service URL")}<input type="url" value={baseUrl} onChange={e=>setBaseUrl(e.target.value)} placeholder={copy.automatic} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
-       <label className="text-sm">{t("模型名称","Model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
+       <label className="text-sm">{t("对话模型 ID","Chat model ID")}<input value={model} onChange={e=>setModel(e.target.value)} autoComplete="off" maxLength={180} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2" /></label>
       </div></details>)}
+      {state==='ready'&&(!connection||editing)&&['volcengine','aliyun','xai','openai'].includes(selected.id)&&<label className="mt-4 block text-sm">{t('视频模型 ID','Video model ID')}<input aria-label={t('视频模型 ID','Video model ID')} value={videoModel} onChange={e=>setVideoModel(e.target.value)} maxLength={180} autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-transparent px-3 py-2"/><span className="mt-2 block text-xs text-[var(--lx-muted)]">{t('可留空。仅填写已开通的视频模型，保存不会生成或扣费。','Optional. Use a video model you have enabled. Saving does not generate or charge.')}</span></label>}
+      {connection&&editing&&<p className="mt-4 text-xs text-[var(--lx-muted)]">{t('密钥留空会保留已保存的连接凭证。','Leave the key blank to retain the saved credential.')}</p>}
       {(!connection||editing)&&<p className="mt-6 text-sm font-medium">{selected.id==="compatible"?copy.otherDescription:copy.keyOnly}</p>}
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
        {(!connection||editing)?<><input type="password" disabled={state!=="ready"} autoComplete="off" spellCheck={false} value={credential} onChange={e=>setCredential(e.target.value)}
         aria-label={t("连接凭证","Connection credential")} placeholder={t("粘贴 API Key","Paste API key")}
         className="min-w-0 flex-1 rounded-xl border border-[var(--lx-line)] bg-transparent px-4 py-3 text-sm outline-none"/>
-        <button type="button" disabled={state!=="ready"||busy!==null||credential.trim().length<8||(selected.id==="compatible"&&(!baseUrl.trim()||!model.trim()))} onClick={save} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
+        <button type="button" disabled={state!=="ready"||busy!==null||(!connection&&credential.trim().length<8)||(credential.trim().length>0&&credential.trim().length<8)||(selected.id==="compatible"&&(!baseUrl.trim()||!model.trim()))} onClick={save} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">
          {busy==="save"?t("连接中…","Connecting…"):t("保存并检查","Save and check")}
         </button></>
        :connection?<div className="flex flex-wrap gap-2">

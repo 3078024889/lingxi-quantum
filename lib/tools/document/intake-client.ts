@@ -1,4 +1,5 @@
 import type{LingxiLang}from"@/lib/lingxi-i18n";
+import {documentUploadDisclosure} from './upload-disclosure';
 
 export const DOCUMENT_INPUT_ACCEPT=[
  "application/pdf",".pdf",
@@ -11,6 +12,7 @@ const OFFICE_EXT=new Set(["doc","docx","docm","dot","dotm","dotx","odt","fodt","
 function extOf(name:string){return(name.split(".").pop()||"").toLowerCase()}
 export function isDocumentInputFile(file:File){const e=extOf(file.name);return e==="pdf"||file.type==="application/pdf"||OFFICE_EXT.has(e)}
 export function isOfficeDocument(file:File){return OFFICE_EXT.has(extOf(file.name))}
+export function confirmDocumentUpload(files:File[],lang:LingxiLang){return !files.some(isOfficeDocument)||(typeof window!=='undefined'&&window.confirm(documentUploadDisclosure(lang).confirm))}
 
 type Ticket={mode:"direct"|"same-origin";version?:"v1";url?:string;exp?:number;nonce?:string;token?:string;maxBytes:number};
 async function ticketFor(file:File):Promise<Ticket>{
@@ -74,7 +76,7 @@ const copy:Record<LingxiLang,{hint:string;busy:string;unavailable:string;unsuppo
  pt:{hint:"PDF, Word, PowerPoint e Excel são compatíveis. Arquivos que não sejam PDF são convertidos antes do processamento.",busy:"Preparando documento…",unavailable:"A conversão de documentos está temporariamente indisponível. Tente novamente mais tarde ou envie um PDF.",unsupported:"Este formato de documento não é compatível.",size:"O arquivo é muito grande. Escolha um menor ou reduza as imagens do documento."},
  ar:{hint:"يدعم PDF وWord وPowerPoint وExcel. يتم تحويل الملفات غير PDF قبل المعالجة.",busy:"جارٍ تجهيز المستند…",unavailable:"تحويل المستندات غير متاح مؤقتًا. حاول لاحقًا أو ارفع ملف PDF.",unsupported:"تنسيق المستند هذا غير مدعوم.",size:"الملف كبير جداً. اختر ملفاً أصغر أو قلّل الصور في المستند."}
 };
-export function documentIntakeText(lang:LingxiLang,key:keyof(typeof copy.zh)){return(copy[lang]||copy.en)[key]}
+export function documentIntakeText(lang:LingxiLang,key:keyof(typeof copy.zh)){return key==='hint'?documentUploadDisclosure(lang).notice:(copy[lang]||copy.en)[key]}
 export function documentIntakeError(lang:LingxiLang,error:unknown){
  const code=error instanceof Error?error.message:String(error);
  if(code.includes("SIZE_UNSUPPORTED"))return documentIntakeText(lang,"size");

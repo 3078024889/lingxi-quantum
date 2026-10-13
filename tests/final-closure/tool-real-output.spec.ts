@@ -31,6 +31,7 @@ async function saveOutput(page:Page){
 test('PNG to JPG produces a downloadable image with dimensions and white transparency',async({page})=>{
  await page.goto('/tools/png-to-jpg?lang=en');
  const png=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=16;c.height=12;return c.toDataURL('image/png').split(',')[1]});
+ await expect(page.locator('input[type=file]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type=file]').first().setInputFiles({name:'transparent.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});
  await page.getByRole('button',{name:/^Convert ·/}).click();
  const output=await saveOutput(page);expect([...output.subarray(0,3)]).toEqual([255,216,255]);
@@ -42,6 +43,7 @@ test('PDF merge downloads both pages in input order with original page boxes',as
  const files=[];
  for(const width of [123,456]){const pdf=await PDFDocument.create();pdf.addPage([width,200]);files.push({name:`${width}.pdf`,mimeType:'application/pdf',buffer:Buffer.from(await pdf.save())})}
  await page.goto('/tools/merge-pdf?lang=en');
+ await expect(page.locator('input[type=file]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type=file]').first().setInputFiles(files);
  await page.getByRole('button',{name:'Process now',exact:true}).click();
  const pdf=await PDFDocument.load(await saveOutput(page));
@@ -52,6 +54,7 @@ test('PDF merge downloads both pages in input order with original page boxes',as
 for(const [slug,inputType,outputType] of [['jpg-to-png','image/jpeg','image/png'],['webp-to-jpg','image/webp','image/jpeg']] as const)test(`${slug} downloads a decodable image and preserves its dimensions`,async({page})=>{
  await page.goto(`/tools/${slug}?lang=en`);
  const input=await page.evaluate(type=>{const c=document.createElement('canvas');c.width=31;c.height=17;const ctx=c.getContext('2d')!;ctx.fillStyle='#e03070';ctx.fillRect(0,0,31,17);return c.toDataURL(type).split(',')[1]},inputType);
+ await expect(page.locator('input[type=file]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type=file]').first().setInputFiles({name:'sample.'+(inputType==='image/jpeg'?'jpg':'webp'),mimeType:inputType,buffer:Buffer.from(input,'base64')});
  await page.getByRole('button',{name:/^Convert ·/}).click();const output=await saveOutput(page);
  if(outputType==='image/png')expect([...output.subarray(0,8)]).toEqual([137,80,78,71,13,10,26,10]);else expect([...output.subarray(0,3)]).toEqual([255,216,255]);
@@ -62,6 +65,7 @@ for(const [slug,inputType,outputType] of [['jpg-to-png','image/jpeg','image/png'
 test('image to PDF preserves pixel dimensions, page aspect ratio and embeds the image',async({page})=>{
  await page.goto('/tools/image-to-pdf?lang=en');
  const png=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=37;c.height=23;const ctx=c.getContext('2d')!;ctx.fillStyle='red';ctx.fillRect(0,0,37,23);return c.toDataURL('image/png').split(',')[1]});
+ await expect(page.locator('input[type=file]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type=file]').first().setInputFiles({name:'image.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});await page.getByRole('button',{name:'Process now',exact:true}).click();
  const pdf=await PDFDocument.load(await saveOutput(page));expect(pdf.getPageCount()).toBe(1);const outputPage=pdf.getPage(0);expect(outputPage.getWidth()/outputPage.getHeight()).toBeCloseTo(37/23,8);const images=outputPage.node.Resources()!.lookup(PDFName.of('XObject'),PDFDict);expect(images.keys().length).toBeGreaterThan(0);const image=pdf.context.lookup(images.values()[0]) as any;expect(image.dict.get(PDFName.of('Width')).asNumber()).toBe(37);expect(image.dict.get(PDFName.of('Height')).asNumber()).toBe(23);
 });

@@ -5,7 +5,8 @@ import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 import {useCallback,useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {uploadText} from "@/lib/upload-ui-i18n";
-import {DOCUMENT_INPUT_ACCEPT,documentIntakeError,documentIntakeText,normalizeDocumentFiles} from "@/lib/tools/document/intake-client";
+import {DOCUMENT_INPUT_ACCEPT,documentIntakeError,documentIntakeText,confirmDocumentUpload,normalizeDocumentFiles} from "@/lib/tools/document/intake-client";
+
 
 function normalizeExt(name:string){const i=name.lastIndexOf(".");return i>=0?name.slice(i).toLowerCase():""}
 function fileMatchesAccept(file:File,accept:string){
@@ -19,8 +20,10 @@ type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;
 type Preview={key:string;name:string;url:string};
 
 export default function FileDropzone({
-  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled,kind="file",append=false,
+  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled:disabledProp,kind="file",append=false,
 }:Props){
+  const[hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
+  const disabled=Boolean(disabledProp||!hydrated);
   const{lang}=useLingxiLang();
   const inputRef=useRef<HTMLInputElement>(null);
   const[drag,setDrag]=useState(false);
@@ -46,6 +49,7 @@ export default function FileDropzone({
     if(tooBig){setError(uploadText(lang,"tooLarge",{name:tooBig.name,size:maxSizeMB}));return}
     const unsupported=incoming.find(file=>!fileMatchesAccept(file,effectiveAccept));
     if(unsupported){setError(`${unsupported.name} · ${uploadText(lang,"unsupported")}`);return}
+    if(pdfDocumentMode&&!confirmDocumentUpload(incoming,lang))return;
     let prepared=incoming;
     if(pdfDocumentMode){setNormalizing(true);try{prepared=await Promise.all(incoming.map(async file=>file.type.startsWith("image/")?file:(await normalizeDocumentFiles([file]))[0]))}catch(e){setError(documentIntakeError(lang,e));setNormalizing(false);return}setNormalizing(false)}
     const merged=multiple&&append?[...files,...prepared]:prepared;

@@ -1,4 +1,6 @@
 "use client";
+import EditableNumberInput from "@/components/ui/EditableNumberInput";
+
 
 import { useState } from "react";
 
@@ -57,7 +59,7 @@ export default function IdGeneratorWorkbench() {
         </label>
         <label className="text-sm">
           数量
-          <input
+          <EditableNumberInput
             type="number"
             min={1}
             max={10_000}

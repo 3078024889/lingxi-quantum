@@ -1,4 +1,6 @@
 "use client";
+import EditableNumberInput from "@/components/ui/EditableNumberInput";
+
 
 import { useMemo, useState } from "react";
 
@@ -138,7 +140,7 @@ export default function CronParserWorkbench() {
         </label>
         <label className="text-sm">
           显示次数
-          <input
+          <EditableNumberInput
             type="number"
             min={1}
             max={50}

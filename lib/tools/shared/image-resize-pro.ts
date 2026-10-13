@@ -26,6 +26,9 @@ function progressive(source:CanvasImageSource,sw:number,sh:number,tw:number,th:n
  return{source:current,width:cw,height:ch};
 }
 export async function resizeImagePro(file:File,r:ResizeRequest):Promise<ResizeResult>{
+ if(!Number.isSafeInteger(r.width)||!Number.isSafeInteger(r.height)||r.width<1||r.height<1||r.width>16384||r.height>16384)throw Error('IMAGE_DIMENSIONS_INVALID');
+ // Reject an oversized destination before decoding or allocating canvas memory.
+ if(r.width*r.height>40_000_000)throw Error('IMAGE_DIMENSIONS_TOO_LARGE');
  const bmp=await createImageBitmap(file);
  try{
    const tw=safe(r.width),th=safe(r.height),type=r.output??"image/jpeg",q=r.quality??.92,bg=r.background??"#ffffff",up=r.allowUpscale??true;
@@ -33,7 +36,8 @@ export async function resizeImagePro(file:File,r:ResizeRequest):Promise<ResizeRe
    if(type!=="image/png"||r.fit==="contain"){x.fillStyle=bg;x.fillRect(0,0,tw,th)}else x.clearRect(0,0,tw,th);
    let cropped=false,cropMethod="";
    if(r.fit==="stretch"){
-     const s=progressive(bmp,bmp.width,bmp.height,tw,th);x.drawImage(s.source,0,0,s.width,s.height,0,0,tw,th);
+     const dw=up?tw:Math.min(tw,bmp.width),dh=up?th:Math.min(th,bmp.height);
+     const s=progressive(bmp,bmp.width,bmp.height,dw,dh);x.drawImage(s.source,0,0,s.width,s.height,Math.round((tw-dw)/2),Math.round((th-dh)/2),dw,dh);
    }else if(r.fit==="contain"){
      const scale=Math.min(tw/bmp.width,th/bmp.height,up?Infinity:1),dw=Math.max(1,Math.round(bmp.width*scale)),dh=Math.max(1,Math.round(bmp.height*scale));
      const s=progressive(bmp,bmp.width,bmp.height,dw,dh);x.drawImage(s.source,0,0,s.width,s.height,Math.round((tw-dw)/2),Math.round((th-dh)/2),dw,dh);

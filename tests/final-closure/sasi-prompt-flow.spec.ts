@@ -57,23 +57,29 @@ test('one send from unified entry receives a configured response (mock service)'
  await expect(page.locator('[data-sasi-role="assistant"]')).toContainText('configured service');expect(requests).toBe(1);
 });
 
-for(const merge of [false,true])test('short drama automatic '+(merge?'real MP4 composition':'episode delivery')+', confirmation before submit',async({page})=>{
- test.setTimeout(180000);
- const pid='33333333-3333-4333-8333-333333333333',ids=['44444444-4444-4444-8444-444444444444','55555555-5555-4555-8555-555555555555'];let confirms=0,finished=false;
- const shots=ids.map((_,i)=>({episode:merge?1:i+1,duration:8,prompt:'Same traveler explores a mysterious village.',assetIds:[]}));
- const tasks=ids.map((id,i)=>({id,state:'quoted',estimated_fen:20,request:{episode:merge?1:i+1,shotIndex:i,batchId:'batch',batchShotCount:2,billingCurrency:'USD'},output:{videoUrl:'https://video.example/'+id+'.mp4'}}));
- if(merge){const source=Buffer.from(fs.readFileSync('tests/fixtures/sasi-video-4s.mp4.base64','utf8').trim(),'base64');await page.route('**/api/sasi/video-file?*',route=>{const start=Number(new URL(route.request().url()).searchParams.get('start')||0),end=Math.min(start+3*1024*1024,source.length);return route.fulfill({status:206,headers:{'content-range':`bytes ${start}-${end-1}/${source.length}`,'content-type':'application/octet-stream'},body:source.subarray(start,end)})});}
+for(const merge of [false,true])test('short drama server-delivered '+(merge?'composed episode':'episodes')+', confirmation before batch submission',async({page})=>{
+ test.setTimeout(90000);
+ const pid='33333333-3333-4333-8333-333333333333',batchId='66666666-6666-4666-8666-666666666666',productionId='77777777-7777-4777-8777-777777777777';
+ const ids=['44444444-4444-4444-8444-444444444444','55555555-5555-4555-8555-555555555555'];let confirms=0,individualSubmits=0;
+ const episodes=merge?1:2,shots=ids.map((_,i)=>({episode:merge?1:i+1,duration:8,prompt:'Same traveler explores a mysterious village.',assetIds:[]}));
+ const tasks=ids.map((id,i)=>({id,state:'quoted',estimated_fen:20,request:{episode:merge?1:i+1,shotIndex:i,batchId,batchShotCount:2,billingCurrency:'USD'}}));
  await page.route('**/api/sasi/projects',route=>route.fulfill({json:{project:{id:pid}}}));
- await page.route('**/api/sasi/projects/*/context*',route=>route.fulfill({json:{documents:[{name:'source.docx',text:'A traveler meets the same village characters.'}]}}));
- await page.route('**/api/sasi/drama/plan',route=>route.fulfill({json:{state:'answer',plan:{title:'Two episodes',shots}}}));
- await page.route('**/api/sasi/byok/video*',async route=>{
-  if(route.request().method()==='GET')return route.fulfill({json:{connected:true,profiles:[{id:'profile',resolution:'1080p'}],tasks:confirms?tasks.map(t=>({...t,state:'succeeded'})):[]}});
-  const body=route.request().postDataJSON();if(body.action==='quote-series'){expect(body.shots).toHaveLength(2);return route.fulfill({json:{tasks}})}
-  if(body.action==='confirm'){confirms++;finished=confirms===2;return route.fulfill({json:{state:'queued'}})}
-  return route.fulfill({json:{state:finished?'succeeded':'running'}});
+ await page.route(/\/api\/sasi\/drama\/series(?:\?|$)/,route=>route.fulfill({json:route.request().method()==='POST'?{id:productionId,state:'planning'}:{state:'ready',readyEpisodes:episodes,shots}}));
+ await page.route('**/api/sasi/byok/video*',route=>{
+  if(route.request().method()==='GET')return route.fulfill({json:{connected:true,profiles:[{id:'profile',resolution:'1080p'}],tasks:[]}});
+  const body=route.request().postDataJSON();if(body.action==='quote-series'){expect(body.shots).toHaveLength(2);return route.fulfill({json:{batchId,tasks}})}
+  individualSubmits++;return route.fulfill({status:409,json:{error:'UNEXPECTED_DIRECT_SUBMISSION'}});
  });
- await page.goto('/sasi?mode=drama&lang=en');await expect(page.locator('[data-sasi-task="drama"]')).toBeVisible();await page.locator('[data-sasi-task="drama"] textarea').fill('Make a two episode drama about a time traveler.');await page.locator('[data-sasi-task="drama"] input[type="checkbox"]').last().check();await page.locator('[data-sasi-task="drama"] textarea').press('Enter');
- await expect(page.getByRole('button',{name:/Confirm \$0.40/})).toBeVisible();expect(confirms).toBe(0);
- await expect(page.locator('a[href^="/sasi/series"]')).toHaveCount(0);await expect(page.locator('a[href="/sasi/assemble"]')).toHaveCount(0);
- await page.getByRole('button',{name:/Confirm \$0.40/}).click();await expect(page.locator('[data-sasi-result-kind="video"]')).toHaveCount(merge?1:2,{timeout:150000});if(merge){const video=page.locator('video');await expect(video).toHaveAttribute('src',/^blob:/);await expect.poll(()=>video.evaluate((el:HTMLVideoElement)=>el.duration),{timeout:10000}).toBeGreaterThan(0);const properties=await video.evaluate((el:HTMLVideoElement)=>({duration:el.duration,width:el.videoWidth,height:el.videoHeight}));expect(properties.duration).toBeGreaterThanOrEqual(7.9);expect(properties.duration).toBeLessThan(8.5);expect(properties.width).toBe(720);expect(properties.height).toBe(1280);}expect(confirms).toBe(2);
+ await page.route('**/api/sasi/drama/batch',route=>{confirms++;expect(route.request().postDataJSON()).toEqual({batchId,expectedTotalMinor:40,currency:'USD',acceptSupplierBilling:true});return route.fulfill({json:{taskIds:ids}})});
+ const films=ids.slice(0,episodes).map((id,i)=>({episode:i+1,url:'/api/sasi/generated-assets/'+id}));
+ await page.route('**/api/sasi/drama/delivery?*',route=>route.fulfill({json:{state:'complete',expectedEpisodes:episodes,films}}));
+ const source=Buffer.from(fs.readFileSync('tests/fixtures/sasi-video-4s.mp4.base64','utf8'),'base64');
+ await page.route('**/api/sasi/generated-assets/*',route=>route.fulfill({contentType:'video/mp4',body:source}));
+ await page.goto('/sasi?mode=drama&lang=en');const studio=page.locator('[data-sasi-task="drama"]');await expect(studio).toBeVisible();
+ await studio.locator('textarea').fill('Make '+episodes+' episodes about a time traveler.');await studio.locator('input[type="checkbox"]').last().check();await studio.locator('textarea').press('Enter');
+ await expect(studio.getByText('Storyboards ready: '+episodes+'/'+episodes+' episodes. Progress is saved.')).toBeVisible();
+ await studio.locator('textarea').press('Enter');await expect(page.getByRole('button',{name:/Confirm \$0.40/})).toBeVisible();expect(confirms).toBe(0);
+ await page.getByRole('button',{name:/Confirm \$0.40/}).click();await expect(page.locator('[data-sasi-result-kind="video"]')).toHaveCount(episodes);
+ for(const film of films)await expect(page.locator('video[src="'+film.url+'"]')).toBeVisible();
+ expect(confirms).toBe(1);expect(individualSubmits).toBe(0);
 });

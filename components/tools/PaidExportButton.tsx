@@ -7,6 +7,7 @@ import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
 import type{PaidTaskPhase}from"@/lib/tools/commerce/paid-task-state";
 import {deliveryText} from '@/lib/tools/commerce/delivery-copy';
+import {requireCompletedDelivery} from '@/lib/tools/commerce/delivery-proof';
 import {quoteDisplay} from '@/lib/tools/commerce/quote-display';
 
 type Quote={
@@ -26,7 +27,7 @@ function isMini(){return isMiniProgramContext()}
 function clearResume(){try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+(u.search?u.search:"")+u.hash)}catch{}}
 async function openMiniPay(id:string){return new Promise<boolean>(resolve=>{let done=false;const finish=(v:boolean)=>{if(done)return;done=true;resolve(v)},go=()=>{const wx=(window as any).wx;if(!wx?.miniProgram?.navigateTo){finish(false);return}wx.miniProgram.navigateTo({url:`/pages/pay/index?quoteId=${encodeURIComponent(id)}`,success:()=>finish(true),fail:()=>finish(false)})};if((window as any).wx?.miniProgram){go();return}const s=document.createElement("script");s.src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js";s.async=true;s.onload=go;s.onerror=()=>finish(false);document.head.appendChild(s);setTimeout(()=>finish(false),3500)})}
 
-export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted,label,draftId,metadata,beforePayment,disabled=false}:{toolId:string;quantity:number;onUnlocked:()=>Promise<void>|void;onCompleted?:()=>Promise<void>|void;label?:string;draftId?:string;metadata?:Record<string,unknown>;beforePayment?:()=>Promise<void>;disabled?:boolean}){
+export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted,label,draftId,metadata,beforePayment,disabled=false}:{toolId:string;quantity:number;onUnlocked:()=>Promise<void|boolean>|void|boolean;onCompleted?:()=>Promise<void>|void;label?:string;draftId?:string;metadata?:Record<string,unknown>;beforePayment?:()=>Promise<void>;disabled?:boolean}){
  const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();
  const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[phase,setPhase]=useState<PaidTaskPhase>("idle");
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),fails=useRef(0),completedQuote=useRef<string|null>(null),generated=useRef(new Set<string>()),checking=useRef(false);
@@ -46,7 +47,7 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
   processing.current=id;stop();setPhase("generating");
   try{
    setPaidId(id);setMsg(tx('generating'));
-   if(!generated.current.has(id)){await onUnlocked();generated.current.add(id);}
+   if(!generated.current.has(id)){await requireCompletedDelivery(onUnlocked);generated.current.add(id);}
    const c=await fetch("/api/tools/export/consume",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({quoteId:id,draftId:draftId||null})});
    const x=await c.json().catch(()=>({})) as{ok?:boolean;alreadyCompleted?:boolean;error?:string};
    if(x.alreadyCompleted){await finishExisting(id);return}

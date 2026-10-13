@@ -14,13 +14,19 @@ function cleanPath(input) {
   const cut = value.search(/[?#]/)
   const pathname = cut === -1 ? value : value.slice(0, cut)
   if (!pathname || pathname.includes('//') || pathname.includes('\\')) return '/'
-  return pathname
+  return pathname === '/' || pathname === '/sasi' || pathname === '/tools' || /^\/tools\/[a-z0-9-]+$/.test(pathname) || ['/ai-knowledge', '/ai-learning', '/ai-research'].includes(pathname) ? pathname : '/'
 }
 
 function publicWebPath(input) {
   const pathname = cleanPath(input)
   if (PRIVATE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix))) {
     return '/'
+  }
+  if (pathname === '/sasi' && typeof input === 'string') {
+    // Share the creation mode, never personal thread, project, or credential parameters.
+    const query = input.split('?')[1]?.split('#')[0] || ''
+    const match = query.match(/(?:^|&)mode=(chat|image|drama|website|book|learning|research)(?:&|$)/)
+    if (match) return '/sasi?mode=' + match[1]
   }
   return pathname
 }

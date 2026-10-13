@@ -119,4 +119,6 @@ try{
   console.log('PASS: '+currency+' active/legacy wallet reservations, 12 duplicate claims reserve once, second task cannot overcommit, failed persistence retains hold, failed supplier releases once, success settles once.');
  }
  await (await import('./test-generated-assets-postgres.mjs')).verifyGeneratedAssets({db,clients,project});
+ await (await import('./test-video-batch-postgres-v78.mjs')).verifyVideoBatches({db,clients,project});
+ await (await import('./test-worker-schedule-postgres-v78.mjs')).verifyWorkerSchedule({db});
 }finally{await Promise.allSettled(clients.map(c=>c.end()));await server.stop();console.log('LOCAL_POSTGRES_STOPPED');}

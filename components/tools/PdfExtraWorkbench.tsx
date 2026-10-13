@@ -1,4 +1,6 @@
 "use client";
+import EditableNumberInput from "@/components/ui/EditableNumberInput";
+
 import {useState} from "react";
 import {PDFDocument,StandardFonts,rgb,degrees} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -22,9 +24,9 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
  }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}}
  const title={watermark:"PDF 加水印","page-numbers":"PDF 加页码",crop:"PDF 裁边",flatten:"PDF 扁平化",compare:"PDF 比较",text:"PDF 转 TXT",markdown:"PDF 转 Markdown"}[mode];
  return <div className="space-y-4"><FileDropzone accept="application/pdf,.pdf" multiple={multi} append={multi} maxFiles={multi?2:1} maxSizeMB={200} files={files} onChange={f=>{setFiles(multi?f.slice(0,2):f.slice(0,1));setResults([]);setError("")}} disabled={busy} kind="pdf"/>
- {mode==="watermark"&&<div className="grid gap-3 sm:grid-cols-3"><label className="text-sm">水印文字<input value={text} onChange={e=>setText(e.target.value)} className="mt-1 w-full rounded-xl border p-2"/></label><label className="text-sm">字号<input type="number" min={8} max={120} value={size} onChange={e=>setSize(Number(e.target.value)||42)} className="mt-1 w-full rounded-xl border p-2"/></label><label className="text-sm">透明度 {Math.round(opacity*100)}%<input type="range" min=".05" max=".8" step=".05" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} className="mt-3 w-full"/></label></div>}
- {mode==="page-numbers"&&<label className="block text-sm">距页面底部 pt<input type="number" min={8} max={200} value={margin} onChange={e=>setMargin(Number(e.target.value)||20)} className="ml-3 rounded-lg border p-2"/></label>}
- {mode==="crop"&&<label className="block text-sm">四边裁掉 pt<input type="number" min={0} max={300} value={crop} onChange={e=>setCrop(Number(e.target.value)||0)} className="ml-3 rounded-lg border p-2"/></label>}
+ {mode==="watermark"&&<div className="grid gap-3 sm:grid-cols-3"><label className="text-sm">水印文字<input value={text} onChange={e=>setText(e.target.value)} className="mt-1 w-full rounded-xl border p-2"/></label><label className="text-sm">字号<EditableNumberInput type="number" min={8} max={120} value={size} onChange={e=>setSize(Number(e.target.value))} className="mt-1 w-full rounded-xl border p-2"/></label><label className="text-sm">透明度 {Math.round(opacity*100)}%<input type="range" min=".05" max=".8" step=".05" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} className="mt-3 w-full"/></label></div>}
+ {mode==="page-numbers"&&<label className="block text-sm">距页面底部 pt<EditableNumberInput type="number" min={8} max={200} value={margin} onChange={e=>setMargin(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
+ {mode==="crop"&&<label className="block text-sm">四边裁掉 pt<EditableNumberInput type="number" min={0} max={300} value={crop} onChange={e=>setCrop(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
  {mode==="flatten"&&<p className="text-sm text-[var(--lx-muted)]">将 PDF 表单字段写入页面内容，适合提交、归档或避免字段继续被修改；建议先保留原件。</p>}
  {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]">当前比较 PDF 文本层并按页面列出差异；扫描件应先 OCR。不会把“视觉像素比较”冒充成已经实现。</p>}
  {(mode==="text"||mode==="markdown")&&<p className="text-sm text-[var(--lx-muted)]">提取已有文本层；扫描 PDF 请先使用 PDF OCR 或 PDF 转 Word 的自动 OCR。</p>}

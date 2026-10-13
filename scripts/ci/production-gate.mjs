@@ -5,6 +5,11 @@ import {spawnSync} from "node:child_process";
 const root=process.cwd();
 
 const commands=[
+ ["node",["scripts/audit/numeric-input-editability-v78.mjs"]],
+ ["node",["scripts/audit/preview-url-lifecycle-v79.mjs"]],
+ ["node",["scripts/test-mini-sharing-v78.cjs"]],
+ ["node",["scripts/test-series-contract-v78.cjs"]],
+ ["node",["scripts/test-background-episode-v78.cjs"]],
  ["node",["scripts/audit-security.mjs"]],
  ["node",["scripts/test-burn-token-boundaries.cjs"]],
  ["node",["scripts/test-burn-file-completion.cjs"]],
@@ -17,9 +22,15 @@ const commands=[
  ["node",["scripts/test-media-completion.cjs"]],
  ["node",["scripts/test-media-import-security.cjs"]],
  ["node",["scripts/test-developer-data.cjs"]],
+ ["node",["scripts/test-regex-worker-v79.cjs"]],
+ ["node",["scripts/test-xml-bounds-v79.cjs"]],
  ["node",["scripts/test-sasi-response-transport.cjs"]],
  ["node",["scripts/test-sasi-provider-stream.cjs"]],
  ["node",["scripts/test-provider-json-probe.cjs"]],
+ ["node",["scripts/test-model-routing-v78.cjs"]],
+ ["node",["scripts/test-resize-boundaries-v79.cjs"]],
+ ["node",["scripts/test-watermark-resource-v79.cjs"]],
+ ["node",["scripts/test-paid-processing-failure-v79.cjs"]],
  ["node",["scripts/test-sasi-delivery-boundaries.cjs"]],
  ["node",["scripts/test-document-converter-limits.cjs"]],
  ["node",["scripts/test-document-gateway-limits.mjs"]],

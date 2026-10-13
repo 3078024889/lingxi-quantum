@@ -32,6 +32,7 @@ export default function AudioCleanupWorkbench() {
   useEffect(()=>()=>{if(previewUrl)URL.revokeObjectURL(previewUrl)},[previewUrl]);
   const billableMinutes=useMemo(()=>durations.reduce((sum,seconds)=>sum+Math.max(1,Math.ceil(seconds/60)),0),[durations]);
   async function run(previewOnly=false) {
+    if(!files.length){if(!previewOnly)throw Error('PROCESSING_INPUT_MISSING');return}
     setBusy(true);
     setError("");
     setResults([]);
@@ -97,6 +98,7 @@ export default function AudioCleanupWorkbench() {
     } catch (cause) {
       setStage("");
       setError(cause instanceof Error ? cause.message : String(cause));
+      if(!previewOnly)throw cause;
     } finally {
       setBusy(false);
     }

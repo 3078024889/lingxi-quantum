@@ -1,7 +1,7 @@
 import "server-only";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {decryptProviderKey,type ByokProvider} from "@/lib/sasi/credential-vault";
-import {defaultBaseUrl} from "./provider-defaults";
+import {defaultBaseUrl,modelPreferences} from "./provider-defaults";
 import {validateProviderBaseUrl} from "@/lib/sasi/gateway/ssrf-guard";
 import {errorCode,recordConnectionFailure,recordConnectionSuccess} from "./runtime-health";
 import {recordIntelligenceRun} from "./telemetry";
@@ -11,18 +11,18 @@ import {officialOpenAiVideoRetired} from './provider-lifecycle';
 import {fetchPublicMedia} from '@/lib/security/public-media-fetch';
 
 export type VideoProvider="volcengine"|"xai"|"openai"|"aliyun";
-export type UserVideoConnection={id:string;provider:VideoProvider;encrypted_credential:string;fingerprint:string;model_id:string;discovered_models:unknown;health_status:string;enabled:boolean;base_url?:string|null;cooldown_until?:string|null;last_success_at?:string|null;last_latency_ms?:number|null;updated_at?:string|null};
+export type UserVideoConnection={id:string;provider:VideoProvider;encrypted_credential:string;fingerprint:string;model_id:string;model_preferences?:unknown;discovered_models:unknown;health_status:string;enabled:boolean;base_url?:string|null;cooldown_until?:string|null;last_success_at?:string|null;last_latency_ms?:number|null;updated_at?:string|null};
 export type SelectedUserVideoConnection=UserVideoConnection&{videoModel:string};
 function listModels(value:unknown){return Array.isArray(value)?value.filter(x=>typeof x==="string") as string[]:[]}
-function chooseVideoModel(provider:VideoProvider,models:string[],fallback:string){const re=provider==="volcengine"?/seedance/i:provider==="aliyun"?/wan/i:provider==="openai"?/sora|video/i:/grok.*video|imagine.*video|video/i;return models.find(x=>re.test(x))||(re.test(fallback)?fallback:"")}
+function chooseVideoModel(provider:VideoProvider,models:string[],fallback:string){const re=provider==="volcengine"?/seedance/i:provider==="aliyun"?/wan/i:provider==="openai"?/sora|video/i:/grok.*video|imagine.*video|video/i;return (re.test(fallback)?fallback:"")||models.find(x=>re.test(x))||""}
 function stamp(v?:string|null){const n=v?Date.parse(v):0;return Number.isFinite(n)?n:0}
 function available(c:UserVideoConnection){return !c.cooldown_until||stamp(c.cooldown_until)<=Date.now()}
 function score(c:UserVideoConnection){const success=stamp(c.last_success_at)>Date.now()-7*24*3600_000?500:0;const latency=Number.isFinite(c.last_latency_ms)?Math.max(0,3000-Number(c.last_latency_ms))/10:0;return success+latency+stamp(c.updated_at)/1e13}
 export async function selectUserVideoConnection(userId:string,preferred?:string|null):Promise<SelectedUserVideoConnection|null>{
- const {data,error}=await createAdminClient().from("sasi_provider_connections").select("id,provider,encrypted_credential,fingerprint,model_id,discovered_models,health_status,enabled,base_url,cooldown_until,last_success_at,last_latency_ms,updated_at").eq("user_id",userId).eq("health_status","healthy").eq("enabled",true).in("provider",["volcengine","xai","openai","aliyun"]).order("updated_at",{ascending:false});
+ const {data,error}=await createAdminClient().from("sasi_provider_connections").select("id,provider,encrypted_credential,fingerprint,model_id,model_preferences,discovered_models,health_status,enabled,base_url,cooldown_until,last_success_at,last_latency_ms,updated_at").eq("user_id",userId).eq("health_status","healthy").eq("enabled",true).in("provider",["volcengine","xai","openai","aliyun"]).order("updated_at",{ascending:false});
  if(error)throw new Error("VIDEO_CONNECTION_LOOKUP_FAILED");
  const rows=((data??[]) as UserVideoConnection[]).filter(row=>!officialOpenAiVideoRetired(row.provider,row.base_url));
- const mapped=rows.map(row=>({...row,videoModel:chooseVideoModel(row.provider,listModels(row.discovered_models),String(row.model_id||""))})).filter((row):row is SelectedUserVideoConnection=>Boolean(row.videoModel)).sort((a,b)=>(available(b)?1:0)-(available(a)?1:0)||score(b)-score(a));
+ const mapped=rows.map(row=>({...row,videoModel:chooseVideoModel(row.provider,listModels(row.discovered_models),modelPreferences(row.model_preferences).video||String(row.model_id||""))})).filter((row):row is SelectedUserVideoConnection=>Boolean(row.videoModel)).sort((a,b)=>(available(b)?1:0)-(available(a)?1:0)||score(b)-score(a));
  const live=mapped.filter(available);return preferred?live.find(x=>x.provider===preferred)||null:live[0]||null;
 }
 function authKey(userId:string,c:UserVideoConnection){return decryptProviderKey(userId,c.provider as ByokProvider,c.encrypted_credential)}

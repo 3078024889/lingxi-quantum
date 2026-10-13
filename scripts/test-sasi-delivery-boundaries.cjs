@@ -43,7 +43,7 @@ async function main(){
   if(name==='server-only')return{};
   if(name==='@/lib/supabase/admin')return{createAdminClient(){connectionLookups++;throw new Error('must use confirmed connection')}};
   if(name==='@/lib/sasi/credential-vault')return{decryptProviderKey:()=> 'test-key',validByokProvider:()=>true};
-  if(name==='./provider-defaults')return{providerDefaults:()=>({textWire:'openai'}),defaultBaseUrl:()=>''};
+  if(name==='./provider-defaults')return load('lib/sasi/intelligence/provider-defaults.ts');
   if(name==='@/lib/sasi/gateway/ssrf-guard')return{validateProviderBaseUrl:raw=>({pass:true,normalized:raw})};
   if(name==='./runtime-health')return{errorCode:e=>e.message,recordConnectionSuccess:async()=>{},recordConnectionFailure:async()=>{}};
   if(name==='./telemetry')return{recordIntelligenceRun:async()=>{}};

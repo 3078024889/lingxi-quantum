@@ -29,11 +29,10 @@ for(const p of [
 for(const p of [
   "lib/sasi-autonomous/runtime.ts",
   "lib/sasi/autonomy/index.ts",
-  "lib/sasi/sovereign-generation/worker-client.ts",
 ]){
-  must(exists(p),`COMPAT_FACADE_MISSING:${p}`);
-  must(read(p).includes("@deprecated SASI V18 compatibility facade"),`LEGACY_IMPLEMENTATION_NOT_REPLACED:${p}`);
+  must(!exists(p),`UNUSED_COMPAT_FACADE_PRESENT:${p}`);
 }
+must(!exists('lib/sasi/sovereign-generation/worker-client.ts'),'UNUSED_GENERATION_FACADE_PRESENT');
 
 const worker=read("lib/sasi-kernel/worker/security.ts");
 const server=read("workers/sasi-compute/server.mjs");

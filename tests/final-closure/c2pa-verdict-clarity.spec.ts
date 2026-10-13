@@ -3,6 +3,7 @@ import {test,expect} from "playwright/test";
 test("unsigned image explains that no credential is not proof of AI origin",async({page})=>{
  const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/rfoAAAAASUVORK5CYII=","base64");
  await page.goto("/tools/ai-image-check");
+ await expect(page.locator('input[type="file"]')).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').setInputFiles({name:"no-manifest.png",mimeType:"image/png",buffer:png});
  await page.getByRole("button",{name:"开始检查"}).click();
  const result=page.locator('[data-c2pa-verification="absent"]');
@@ -16,6 +17,7 @@ test("unsigned image explains that no credential is not proof of AI origin",asyn
 test("media origin displays human-readable result without internal verification terminology",async({page})=>{
  const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/rfoAAAAASUVORK5CYII=","base64");
  await page.goto("/tools/ai-image-check");
+ await expect(page.locator('input[type="file"]')).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').setInputFiles({name:"unsigned.png",mimeType:"image/png",buffer:png});
  await page.getByRole("button",{name:"开始检查"}).click();
  const result=page.locator('[data-c2pa-verification="absent"]');

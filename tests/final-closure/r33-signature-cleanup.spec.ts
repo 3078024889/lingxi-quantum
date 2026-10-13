@@ -3,6 +3,7 @@ import {test,expect} from "playwright/test";
 test("handwriting cleanup can erase remaining photo marks, undo and update PDF placement",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
  const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"document.pdf",mimeType:"application/pdf",buffer:pdf});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
  const png=await page.evaluate(()=>{
@@ -12,6 +13,7 @@ test("handwriting cleanup can erase remaining photo marks, undo and update PDF p
   ctx.fillRect(258,70,12,12); // accidental remaining mark
   return c.toDataURL("image/png").split(",")[1];
  });
+ await expect(page.locator("label").filter({hasText:"Extract handwritten signature"}).locator('input[type="file"]')).toBeEnabled({timeout:15000});
  await page.locator("label").filter({hasText:"Extract handwritten signature"}).locator('input[type="file"]').setInputFiles({name:"ink.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
  const editor=page.getByTestId("signature-manual-cleanup");
  await expect(editor).toBeVisible();
@@ -56,6 +58,7 @@ test("handwriting cleanup can erase remaining photo marks, undo and update PDF p
 test("already-transparent signature keeps its ink alpha and does not acquire a paper rectangle",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
  const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"document.pdf",mimeType:"application/pdf",buffer:pdf});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible();
  const png=await page.evaluate(()=>{
@@ -65,6 +68,7 @@ test("already-transparent signature keeps its ink alpha and does not acquire a p
   x.beginPath();x.moveTo(70,98);x.bezierCurveTo(140,15,185,145,290,65);x.stroke();
   return c.toDataURL("image/png").split(",")[1];
  });
+ await expect(page.locator("label").filter({hasText:"Extract handwritten signature"}).locator('input[type="file"]')).toBeEnabled({timeout:15000});
  await page.locator("label").filter({hasText:"Extract handwritten signature"}).locator('input[type="file"]').setInputFiles({name:"signature.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
  const preview=page.getByTestId("signature-ink-preview").locator("img");
  await expect(preview).toBeVisible();

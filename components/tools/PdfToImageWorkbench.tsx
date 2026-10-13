@@ -1,7 +1,9 @@
 "use client";
+import EditableNumberInput from "@/components/ui/EditableNumberInput";
+
 import{useRef,useState}from"react";
 import{openPdf,renderPdfPage,canvasToBlob,downloadBlob}from"@/lib/tools/pdf-render-client";
-import{DOCUMENT_INPUT_ACCEPT,documentIntakeError,documentIntakeText,normalizeDocumentFile}from"@/lib/tools/document/intake-client";
+import{DOCUMENT_INPUT_ACCEPT,documentIntakeError,documentIntakeText,normalizeDocumentFile,confirmDocumentUpload}from"@/lib/tools/document/intake-client";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 
 function parseRange(raw:string,max:number){
@@ -15,6 +17,7 @@ export default function PdfToImageWorkbench(){
  const[file,setFile]=useState<File|null>(null),[pages,setPages]=useState(0),[range,setRange]=useState(""),[format,setFormat]=useState<"jpeg"|"png">("jpeg"),[quality,setQuality]=useState(.9),[scale,setScale]=useState(1.5),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState("");
  const abort=useRef(false);
  async function choose(input:File){
+  if(!confirmDocumentUpload([input],lang))return;
   setBusy(true);setError("");
   try{const f=await normalizeDocumentFile(input);setFile(f);const pdf=await openPdf(f);setPages(pdf.numPages);setRange(`1-${pdf.numPages}`);pdf.destroy?.()}
   catch(e){setFile(null);setPages(0);setError(documentIntakeError(lang,e))}
@@ -37,7 +40,7 @@ export default function PdfToImageWorkbench(){
    <label className="text-sm">Pages<input value={range} onChange={e=>setRange(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2" placeholder="1-5,8"/></label>
    <label className="text-sm">Format<select value={format} onChange={e=>setFormat(e.target.value as any)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"><option value="jpeg">JPG</option><option value="png">PNG</option></select></label>
    <label className="text-sm">Scale<select value={scale} onChange={e=>setScale(Number(e.target.value))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"><option value="1">1x</option><option value="1.5">1.5x</option><option value="2">2x</option><option value="3">3x</option></select></label>
-   <label className="text-sm">JPG<input type="number" min=".4" max="1" step=".05" value={quality} onChange={e=>setQuality(Number(e.target.value)||.9)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"/></label>
+   <label className="text-sm">JPG<EditableNumberInput type="number" min=".4" max="1" step=".05" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"/></label>
   </div>
   <div className="flex gap-3"><button disabled={!file||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?documentIntakeText(lang,"busy"):"Convert"}</button>{busy&&<button onClick={()=>abort.current=true} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">Cancel</button>}</div>
   {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}{error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}

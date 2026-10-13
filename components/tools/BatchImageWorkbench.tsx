@@ -1,4 +1,6 @@
 "use client";
+import EditableNumberInput from "@/components/ui/EditableNumberInput";
+
 import {useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -46,8 +48,8 @@ export default function BatchImageWorkbench(){
  return <div className="space-y-4">
   <FileDropzone accept="image/*" multiple maxFiles={50} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy} kind="image"/>
   <div className="grid gap-3 sm:grid-cols-3">
-   <label className="text-sm text-[var(--lx-muted)]">{c.maxW}<input type="number" min={0} value={maxW} onChange={e=>setMaxW(Math.max(0,Number(e.target.value)||0))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
-   <label className="text-sm text-[var(--lx-muted)]">{c.quality}<input type="number" min=".4" max=".95" step=".05" value={quality} onChange={e=>setQuality(Math.min(.95,Math.max(.4,Number(e.target.value)||.82)))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
+   <label className="text-sm text-[var(--lx-muted)]">{c.maxW}<EditableNumberInput type="number" min={0} value={maxW} onChange={e=>setMaxW(Math.max(0,Number(e.target.value)))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
+   <label className="text-sm text-[var(--lx-muted)]">{c.quality}<EditableNumberInput type="number" min=".4" max=".95" step=".05" value={quality} onChange={e=>setQuality(Math.min(.95,Math.max(.4,Number(e.target.value))))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
    <label className="text-sm text-[var(--lx-muted)]">{c.format}<select value={type} onChange={e=>setType(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></label>
   </div>
   {files.length>0&&<p className="text-sm text-[var(--lx-faint)]">{c.selected} {files.length}</p>}

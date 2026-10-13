@@ -23,6 +23,7 @@ async function run(mode,expected){
   '@/lib/sasi/pricing-v49':{videoChargeMinor:()=>10},
   '@/lib/sasi/unified-balance':{requireSasiBalance:async()=>{},userSasiCurrency:async()=> 'CNY'},
  };
+ const actions={};vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/sasi/intelligence/video-actions.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports:actions,require:n=>n==='server-only'?{}:imports[n]||new Proxy({},{get(){return()=>{throw Error('Unexpected dependency '+n)}}}),console,Date});imports['@/lib/sasi/intelligence/video-actions']=actions;
  const exports={};const js=ts.transpileModule(fs.readFileSync('app/api/sasi/byok/video/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
  vm.runInNewContext(js,{exports,require:n=>imports[n]||new Proxy({},{get(){return()=>{throw Error('Unexpected dependency '+n)}}}),console,Date});
  const result=await exports.POST({});assert.equal(result.status,expected,mode);const sends=['valid','save-fails'].includes(mode);assert.equal(submitted,sends?1:0);assert.equal(claimed,sends?2:mode==='recover'?1:0);
