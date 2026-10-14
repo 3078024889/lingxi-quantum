@@ -8,6 +8,7 @@ async function file(files,name){const zip=new JSZip();for(const [key,text] of Ob
  const xlsx=await file({'xl/worksheets/sheet1.xml':'<worksheet><sheetData><row r="1"/><row r="2"><c r="A2"/><c r="B2" t="inlineStr"><is><t>&#x1F30D; &amp;quot;</t></is></c><c r="C2"/></row><row r="3"><c r="A3"><v>42</v></c></row></sheetData></worksheet>'},'sparse.xlsx');
  const outputs=await xlsxToCsvFiles(xlsx);assert.equal(await outputs[0].blob.text(),'\r\n,🌍 &quot;,\r\n42');
  const intake=await parseGenericDocument(xlsx);assert(intake.text.includes('B2\t🌍 &quot;'));assert(intake.text.includes('A3\t42'));assert(!intake.text.includes('A2\t🌍'));
+ const shared=await file({'xl/sharedStrings.xml':'<sst><si/><si><t>Expected</t></si></sst>','xl/worksheets/sheet1.xml':'<worksheet><row r="1"><c r="A1" t="s"><v>1</v></c></row></worksheet>'},'shared.xlsx');assert.equal(await (await xlsxToCsvFiles(shared))[0].blob.text(),'Expected');assert((await parseGenericDocument(shared)).text.includes('A1\tExpected'));
  const dup=await file({'xl/worksheets/sheet1.xml':'<worksheet><row r="1"><c r="A1"/><c r="A1"><v>7</v></c></row></worksheet>'},'duplicate.xlsx');await assert.rejects(()=>xlsxToCsvFiles(dup),/XLSX_CELL_DUPLICATE/);
  const {decodeXmlEntities}=load('lib/files/xml-entities.ts');
  for(const value of ['literal &quot;','世界 🌍','&amp;lt;','<tag>','double "quote"',"apostrophe '"]){const escaped=value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');assert.equal(decodeXmlEntities(escaped),value)}

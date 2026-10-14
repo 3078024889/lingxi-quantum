@@ -171,8 +171,8 @@ export async function delimitedToXlsx(file: File) {
 }
 
 function sharedStrings(xml: string) {
-  return [...xml.matchAll(/<si\b[^>]*>([\s\S]*?)<\/si>/g)].map((hit) =>
-    decodeXml([...hit[1].matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map((x) => x[1]).join("")),
+  return [...xml.matchAll(/<si\b[^>]*?(?:\/>|>([\s\S]*?)<\/si>)/g)].map((hit) =>
+    decodeXml([...(hit[1]??'').matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map((x) => x[1]).join("")),
   );
 }
 

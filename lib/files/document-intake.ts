@@ -64,9 +64,9 @@ async function parseDocx(file:File):Promise<ParsedDocument>{
 
 function sharedStrings(xml:string){
   const out:string[]=[];
-  for(const hit of xml.matchAll(/<si\b[^>]*>([\s\S]*?)<\/si>/g)){
+  for(const hit of xml.matchAll(/<si\b[^>]*?(?:\/>|>([\s\S]*?)<\/si>)/g)){
     const text=decodeXml(
-      [...hit[1].matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map(x=>x[1]).join("")
+      [...(hit[1]??'').matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map(x=>x[1]).join("")
     );
     out.push(text);
   }
