@@ -15,7 +15,7 @@ test('XLSX empty shared-string item preserves later indexes and downloaded value
 for(const item of cases)test(`${item.slug}: real bounded archive produces the complete downloadable text`,async({page})=>{
  await page.goto(`/tools/${item.slug}?lang=en`);
  const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled({timeout:20000});await input.setInputFiles({name:'fixture.'+item.ext,mimeType:'application/octet-stream',buffer:await archive(item.files)});
- await page.getByRole('button',{name:item.ext==='epub'||item.ext==='odt'?'开始处理':'Process now',exact:true}).click();
+ await page.getByRole('button',{name:item.ext==='epub'||item.ext==='odt'?'Process':'Process now',exact:true}).click();
  const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Save file',exact:true}).first().click();const download=await pending;expect(await download.failure()).toBeNull();const output=await readFile((await download.path())!,'utf8');expect(output.replace(/^\uFEFF/,'')).toBe(item.expected);
 });
 test('XLSX invalid columns show an error without generating a misleading result',async({page})=>{

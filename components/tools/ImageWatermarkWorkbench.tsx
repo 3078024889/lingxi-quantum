@@ -1,5 +1,6 @@
 "use client";
 import{PointerEvent,useEffect,useRef,useState,type Dispatch,type SetStateAction}from"react";
+import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import{localInpaint,localInpaintMask,type NormalizedBox,type NormalizedPoint,type NormalizedStroke}from"@/lib/tools/autonomous/image-local";
@@ -33,9 +34,9 @@ function BrushSelector({file,strokes,onChange}:{file:File;strokes:NormalizedStro
    </svg>
   </div>
   <div className="flex flex-wrap items-center gap-3">
-   <label className="text-sm">画笔大小 <input aria-label="Brush size" type="range" min="6" max="60" value={brush} onChange={e=>setBrush(Number(e.target.value))}/></label>
-   <button type="button" disabled={!strokes.length} onClick={()=>onChange(current=>current.slice(0,-1))} className="rounded-xl border px-3 py-2 text-sm">撤销一笔</button>
-   <button type="button" disabled={!strokes.length} onClick={()=>onChange([])} className="rounded-xl border px-3 py-2 text-sm">清空选区</button>
+   <label className="text-sm"><ToolUiText text="画笔大小" /> <input aria-label="Brush size" type="range" min="6" max="60" value={brush} onChange={e=>setBrush(Number(e.target.value))}/></label>
+   <button type="button" disabled={!strokes.length} onClick={()=>onChange(current=>current.slice(0,-1))} className="rounded-xl border px-3 py-2 text-sm"><ToolUiText text="撤销一笔" /></button>
+   <button type="button" disabled={!strokes.length} onClick={()=>onChange([])} className="rounded-xl border px-3 py-2 text-sm"><ToolUiText text="清空选区" /></button>
   </div>
  </div>
 }

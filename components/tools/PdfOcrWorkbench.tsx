@@ -1,5 +1,6 @@
 "use client";
 import{useEffect,useRef,useState}from"react";
+import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
@@ -98,7 +99,7 @@ export default function PdfOcrWorkbench(){
   <FileDropzone accept="application/pdf,.pdf" files={files} onChange={rows=>{setFiles(rows);setText("");setError("");setTableFile(null);setTableNote("");setHandoffSource("")}} disabled={busy} kind="pdf" maxSizeMB={200}/>
   {handoffSource==="pdf-to-xlsx"&&<p className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{t("这是从 PDF 转 Excel 自动继续过来的扫描件。OCR 后会尝试直接生成 Excel，不需要重新上传。","This scanned PDF was continued from PDF to Excel. After OCR, an Excel file will be created when a stable table structure is found.")}</p>}
   <p className="text-sm text-[var(--lx-muted)]">{t("第 1 页免费识别；完整文档从第 2 页起按现有 OCR 规则计费。","Page 1 can be recognized free. Full-document processing follows the existing OCR pricing from page 2 onward.")}{pages?` · ${pages} ${t("页","pages")}`:""}</p>
-  <select value={ocrLang} onChange={e=>setOcrLang(e.target.value)} className="rounded-xl border px-3 py-2"><option value="chi_sim+eng">简体中文 + English</option><option value="chi_tra+eng">繁體中文 + English</option><option value="eng">English</option><option value="jpn+eng">日本語 + English</option><option value="kor+eng">한국어 + English</option></select>
+  <select value={ocrLang} onChange={e=>setOcrLang(e.target.value)} className="rounded-xl border px-3 py-2"><option value="chi_sim+eng"><ToolUiText text="简体中文 + English" /></option><option value="chi_tra+eng"><ToolUiText text="繁體中文 + English" /></option><option value="eng">English</option><option value="jpn+eng"><ToolUiText text="日本語 + English" /></option><option value="kor+eng">한국어 + English</option></select>
   <div className="flex flex-wrap gap-3">
    {file&&!busy&&<button onClick={()=>void run(1)} className="rounded-xl border px-5 py-2.5 text-sm">{t("免费识别第 1 页","Recognize page 1 free")}</button>}
    {file&&pages===1&&!busy&&<button onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">{t("完整 OCR · 免费","Full OCR · Free")}</button>}

@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText from "@/components/tools/ToolUiText";
 import {useEffect,useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
@@ -122,36 +123,36 @@ export default function VideoTranslateWorkbench(){
  return <div className="space-y-5">
   <FileDropzone accept="video/*" multiple append maxFiles={20} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setVideos([]);setSubs([]);setError("")}} disabled={busy} kind="media"/>
   <RemoteMediaImporter acceptKind="video" onImported={addRemote} disabled={busy}/>
-  <p className="text-xs leading-5 text-[var(--lx-faint)]">支持本地视频、直接公开 HTTPS 媒体地址，以及当前解析器支持的抖音、TikTok、小红书、快手公开分享链接。不会绕过登录、DRM、私有权限或平台访问控制。</p>
+  <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="支持本地视频、直接公开 HTTPS 媒体地址，以及当前解析器支持的抖音、TikTok、小红书、快手公开分享链接。不会绕过登录、DRM、私有权限或平台访问控制。" /></p>
 
   <div className="grid gap-3 sm:grid-cols-2">
-   <label className="text-sm">原始语言
+   <label className="text-sm"><ToolUiText text="原始语言" />
     <select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
-     <option value="auto">自动识别</option>{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}
+     <option value="auto"><ToolUiText text="自动识别" /></option>{LANGS.map(([v,n])=><option key={v} value={v}><ToolUiText text={n}/></option>)}
     </select>
    </label>
-   <label className="text-sm">输出方式
+   <label className="text-sm"><ToolUiText text="输出方式" />
     <select value={mode} onChange={e=>setMode(e.target.value as Mode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
-     <option value="subtitle">翻译字幕 + 原音高质量 MP4</option>
-     <option value="dub">翻译字幕 + AI 配音高质量 MP4</option>
+     <option value="subtitle"><ToolUiText text="翻译字幕 + 原音高质量 MP4" /></option>
+     <option value="dub"><ToolUiText text="翻译字幕 + AI 配音高质量 MP4" /></option>
     </select>
    </label>
   </div>
 
   <section className="rounded-2xl border border-[var(--lx-line)] p-4">
-   <div className="text-sm font-medium">目标语言 <span className="text-xs font-normal text-[var(--lx-faint)]">最多同时 3 种；每增加一种目标语言，按相同视频分钟数增加一次计费数量。</span></div>
-   <div className="mt-3 flex flex-wrap gap-2">{LANGS.map(([v,n])=><button type="button" key={v} onClick={()=>addTarget(v)} className={`rounded-full border px-4 py-2 text-sm ${targets.includes(v)?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)]"}`}>{n}</button>)}</div>
+   <div className="text-sm font-medium"><ToolUiText text="目标语言" /> <span className="text-xs font-normal text-[var(--lx-faint)]"><ToolUiText text="最多同时 3 种；每增加一种目标语言，按相同视频分钟数增加一次计费数量。" /></span></div>
+   <div className="mt-3 flex flex-wrap gap-2">{LANGS.map(([v,n])=><button type="button" key={v} onClick={()=>addTarget(v)} className={`rounded-full border px-4 py-2 text-sm ${targets.includes(v)?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)]"}`}><ToolUiText text={n}/></button>)}</div>
   </section>
 
   {files.length>0&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm">
-   <b>{files.length} 个视频 · {startedMinutes} 个起始分钟 · {targets.length} 个目标语言</b>
-   <p className="mt-1 text-[var(--lx-muted)]">计费数量：{startedMinutes} × {targets.length} = {quantity} 分钟单位。人民币 ¥1.50 / 分钟单位；美元 $1.50 / 分钟单位。</p>
-   {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]">这批视频较大，为避免浏览器数据库保存超大文件，付款和处理期间请保持当前页面打开。</p>}
+   <b>{files.length} <ToolUiText text="个视频 ·" /> {startedMinutes} <ToolUiText text="个起始分钟 ·" /> {targets.length} <ToolUiText text="个目标语言" /></b>
+   <p className="mt-1 text-[var(--lx-muted)]"><ToolUiText text="计费数量：" />{startedMinutes} × {targets.length} = {quantity} <ToolUiText text="分钟单位。人民币 ¥1.50 / 分钟单位；美元 $1.50 / 分钟单位。" /></p>
+   {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]"><ToolUiText text="这批视频较大，为避免浏览器数据库保存超大文件，付款和处理期间请保持当前页面打开。" /></p>}
   </section>}
 
   {files.length>0&&targets.length>0&&<PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/>}
-  {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage||"正在处理…"}</p>}
-  <p className="text-xs leading-5 text-[var(--lx-faint)]">高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。</p>
+  {busy&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text={stage||"正在处理…"}/></p>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
   {videos.length>0&&<ResultPanel sourceSlug="video-translate" files={videos} messageZh="翻译视频已生成，可以保存。" messageEn="Translated videos are ready to save."/>}
   {subs.length>0&&<ResultPanel sourceSlug="video-translate" files={subs} messageZh="SRT / VTT / TXT 翻译字幕也已生成。" messageEn="Translated SRT / VTT / TXT files are also ready."/>}

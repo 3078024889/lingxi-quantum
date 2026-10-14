@@ -11,6 +11,8 @@ import {enqueueDurableJob} from '@/lib/sasi/durable/job-queue';
 import {experienceRegionFromHost} from '@/lib/sasi/experience/free-provider-config';
 import {conversationUuid} from '@/lib/sasi/core/conversation-store';
 import {runOneDetachedJob} from '@/lib/sasi/durable/detached-worker';
+import {approvedScriptPreview,approvedEpisodeShots} from '@/lib/sasi/approved-script-preview';
+import {seriesProgressState} from '@/lib/sasi/series-progress-state';
 export const runtime='nodejs';export const dynamic='force-dynamic';export const maxDuration=180;
 const reply=(value:unknown,status=200)=>NextResponse.json(value,{status,headers:{'Cache-Control':'private, no-store'}});
 
@@ -25,10 +27,12 @@ export async function GET(request:NextRequest){
  if(runs.error)return reply({error:'SERIES_PROGRESS_UNAVAILABLE'},503);
  const outputs=(runs.data||[]).map(row=>row.output_json as any);
  const ready=outputs.filter(row=>row?.state==='ready');
- const state=ready.length===production.specification.episodes?'ready':outputs.some(row=>row?.state==='needs-connection')?'needs-connection':(runs.data||[]).some(row=>row.state==='failed')?'failed':'planning';
- const saved=await db.from('sasi_series_productions_v78').update({state,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',user.id);
- if(saved.error)return reply({error:'SERIES_PROGRESS_UNAVAILABLE'},503);
- return reply({id,projectId:production.project_id,specification:production.specification,state,readyEpisodes:ready.length,shots:ready.flatMap(row=>row.shots).sort((a:any,b:any)=>a.episode-b.episode)});
+ // Older completed runs may have exhausted free inference. Recover already
+ // approved, sufficiently detailed episodes without requeueing or paid calls.
+ for(let episode=1;episode<=production.specification.episodes;episode++){if(ready.some(row=>row.episode===episode))continue;const shots=approvedEpisodeShots(production.approved_script,episode,production.specification.episodes,production.specification.seconds);if(shots)ready.push({state:'ready',episode,shots,source:'approved-script'});}
+ const state=seriesProgressState(ready.length,production.specification.episodes,runs.data||[]);
+ // Progress reads compute status without writing stale snapshots over workers.
+ return reply({id,projectId:production.project_id,specification:production.specification,state,readyEpisodes:ready.length,completedEpisodes:(runs.data||[]).filter(run=>['succeeded','failed','cancelled','expired'].includes(run.state)).length,shots:ready.flatMap(row=>row.shots).sort((a:any,b:any)=>a.episode-b.episode),preview:approvedScriptPreview(production.approved_script,production.specification.episodes)});
 }
 
 export async function POST(request:NextRequest){

@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText from "@/components/tools/ToolUiText";
 import {useState} from "react";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 import {syntheticScore,indicatorText,indicatorPercent} from "@/lib/media/ai-indicator-bands";
@@ -42,13 +43,13 @@ export default function OptionalAIImageAnalysis({file,lang}:{file:File;lang:Ling
     finally{ /* Keep file processing local; the library decodes the supplied Blob. */ }
   }
   return <div className="mt-3 space-y-2 border-t pt-3">
-    <p className="text-sm font-semibold">{zh?"AI 生成痕迹分析":"AI-generation indicator analysis"}</p>
-    <p className="text-sm opacity-80">{zh?"点击开始后，将在当前设备分析图片。首次使用会下载检测所需资料，可能需要一点时间。检测结果仅供参考。":"Analyze the image on this device. The first check downloads required resources. Results are indicators, not proof."}</p>
+    <p className="text-sm font-semibold"><ToolUiText text={zh?"AI 生成痕迹分析":"AI-generation indicator analysis"} /></p>
+    <p className="text-sm opacity-80"><ToolUiText text={zh?"点击开始后，将在当前设备分析图片。首次使用会下载检测所需资料，可能需要一点时间。检测结果仅供参考。":"Analyze the image on this device. The first check downloads required resources. Results are indicators, not proof."} /></p>
     <button type="button" onClick={()=>void analyze()} disabled={state==="loading"} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-60">{state==="loading"?(zh?"正在加载并分析…":"Loading and analyzing…"):(zh?"分析图片":"Analyze image")}</button>
-    {state==="error"&&<p role="alert" className="text-sm">{zh?"模型不可用或分析失败：":"Model unavailable or analysis failed: "}{error}</p>}
+    {state==="error"&&<p role="alert" className="text-sm"><ToolUiText text={zh?"模型不可用或分析失败：":"Model unavailable or analysis failed: "} />{error}</p>}
     {state==="done"&&<div className="space-y-1 text-sm" aria-live="polite">
-      {syntheticScore(result)!==null?<p data-ai-indicator-band="image" className="font-medium">{indicatorText(syntheticScore(result)!,lang)} — {indicatorPercent(syntheticScore(result)!)} {zh?"AI 特征参考分数":"AI indicator score"}</p>:<p>{zh?"暂时无法得到明确的分析结果。":"No clear analysis result available."}</p>}
-      <p className="opacity-75">{zh?"分档只代表当前检测方式对画面特征的参考判断，并非图片由 AI 生成的真实概率。来源签名请查看上方。":"These bands reflect the current detector’s signals, not a real-world probability of AI creation. Check the origin signature above."}</p>
+      {syntheticScore(result)!==null?<p data-ai-indicator-band="image" className="font-medium">{indicatorText(syntheticScore(result)!,lang)} — {indicatorPercent(syntheticScore(result)!)} <ToolUiText text={zh?"AI 特征参考分数":"AI indicator score"} /></p>:<p><ToolUiText text={zh?"暂时无法得到明确的分析结果。":"No clear analysis result available."} /></p>}
+      <p className="opacity-75"><ToolUiText text={zh?"分档只代表当前检测方式对画面特征的参考判断，并非图片由 AI 生成的真实概率。来源签名请查看上方。":"These bands reflect the current detector’s signals, not a real-world probability of AI creation. Check the origin signature above."} /></p>
     </div>}
   </div>;
 }

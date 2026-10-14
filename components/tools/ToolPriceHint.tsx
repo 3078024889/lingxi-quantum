@@ -1,5 +1,6 @@
 "use client";
 
+import ToolUiText from "@/components/tools/ToolUiText";
 import {useEffect,useMemo,useState} from "react";
 import {usePathname} from "next/navigation";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
@@ -74,9 +75,9 @@ export default function ToolPriceHint(){
 
   return <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
     <span className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-1.5 text-[var(--lx-ink)]">
-      {zh?"参考价格":"Price"} · <b>{amount}</b> / {unitLabel(price.unit_name,zh)}
+      <ToolUiText text={zh?"参考价格":"Price"} /> · <b>{amount}</b> / {unitLabel(price.unit_name,zh)}
     </span>
     {!price.available&&
-      <span className="text-[var(--lx-muted)]">{zh?"当前暂不可处理":"Temporarily unavailable"}</span>}
+      <span className="text-[var(--lx-muted)]"><ToolUiText text={zh?"当前暂不可处理":"Temporarily unavailable"} /></span>}
   </div>;
 }

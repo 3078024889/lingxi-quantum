@@ -1,0 +1,21 @@
+const fs=require('fs'),ts=require('typescript'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+const source=fs.readFileSync('lib/tools/shared/calendar-contact.ts','utf8'),moduleObject={exports:{}};
+new Function('module','exports',ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(moduleObject,moduleObject.exports);
+const {calendarToCsv,contactsToCsv,decodeCardText}=moduleObject.exports;
+const calendar='BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nSUMMARY:Review\\, team\r\nDTSTART;TZID="Asia/Shanghai":20261014T100000\r\nRRULE:FREQ=WEEKLY;COUNT=3\r\nDESCRIPTION:Line 1\\nLine 2\r\n folded\r\nBEGIN:VALARM\r\nSUMMARY:Alarm title\r\nDESCRIPTION:Alarm text\r\nEND:VALARM\r\nEND:VEVENT\r\nEND:VCALENDAR';
+const csv=calendarToCsv(calendar);assert.ok(csv.includes('"Review, team"'));assert.ok(csv.includes('"Line 1\nLine 2folded"'));assert.ok(csv.includes('"Asia/Shanghai"'));assert.ok(csv.includes('"FREQ=WEEKLY;COUNT=3"'));assert.ok(!csv.includes('Alarm text'));
+const card='BEGIN:VCARD\nVERSION:3.0\nFN:张三\\, Jr\nORG:Company\\; A;Research\nitem1.EMAIL:a@example.com\nTEL;TYPE=HOME:123\nTEL;TYPE=CELL:456\nEND:VCARD';const contact=contactsToCsv(card);for(const text of ['张三, Jr','Company; A / Research','a@example.com','123 | 456'])assert.ok(contact.includes('"'+text+'"'));
+assert.ok(contactsToCsv('BEGIN:VCARD\nVERSION:2.1\nFN;CHARSET=UTF-8;ENCODING=QUOTED-PRINTABLE:=E5=BC=A0=\n=E4=B8=89\nEND:VCARD').includes('"张三"'));
+assert.ok(contactsToCsv('BEGIN:VCARD\nFN;ENCODING=B:5byg5LiJ\nEND:VCARD').includes('"张三"'));
+assert.ok(contactsToCsv('BEGIN:VCARD\nN:Doe;Jane;Ann;Dr.;Jr.\nEND:VCARD').includes('"Dr. Jane Ann Doe Jr."'));
+for(const malformed of ['','not a calendar','BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Broken\nEND:VCALENDAR'])assert.throws(()=>calendarToCsv(malformed));
+assert.throws(()=>contactsToCsv('BEGIN:VCARD\nFN;ENCODING=QUOTED-PRINTABLE:=ZZ\nEND:VCARD'));
+assert.throws(()=>calendarToCsv('x'.repeat(10*1024*1024+1)),/TOO_LARGE/);
+assert.equal(decodeCardText('literal\\\\n and one\\nline'),'literal\\n and one\nline');
+// Actual HEAD implementation, not a second reference implementation.
+const before=execFileSync('git',['show','bc4a7f5f:components/tools/LongtailDocumentWorkbench.tsx'],{encoding:'utf8',windowsHide:true}),ast=ts.createSourceFile('before.tsx',before,99,true,4);
+const functions=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&['csvCell','unfold','parseIcs','parseVcf'].includes(n.name?.text)).map(n=>n.getText(ast)).join('\n');
+const baseline=new Function(ts.transpileModule(functions,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+'\nreturn {parseIcs,parseVcf};')();
+assert.ok(baseline.parseIcs(calendar).includes('\\n'));assert.ok(baseline.parseVcf(card).includes('\\,'));
+fs.mkdirSync('_local/handoff/function-acceptance-v86',{recursive:true});fs.writeFileSync('_local/handoff/function-acceptance-v86/calendar-baseline.json',JSON.stringify({baselineCalendar:baseline.parseIcs(calendar),patchedCalendar:csv,baselineContacts:baseline.parseVcf(card),patchedContacts:contact},null,2));
+console.log('PASS: actual baseline reproduced escaped-content loss; Unicode, folding, alarms, timezone/recurrence preservation, grouped/structured/legacy vCard fields, errors and limits validated.');

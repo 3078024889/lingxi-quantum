@@ -1,6 +1,7 @@
 import {test,expect} from "playwright/test";
 import {SEO_LOCALES} from "../../lib/seo/global-seo";
 import {publicToolSurface} from '../../lib/tools/public-surface';
+test.describe.configure({mode:'parallel'});
 
 test.describe("all public tool routes",()=>{
  for(const tool of publicToolSurface()){
@@ -10,6 +11,7 @@ test.describe("all public tool routes",()=>{
    await expect(page.locator("body")).toBeVisible();
    const text=await page.locator("body").innerText();
    expect(text).not.toMatch(/Internal Server Error|Application error/i);
+   await expect(page.locator('[data-numeric-ready="false"]')).toHaveCount(0);
    const numbers=page.locator('input[type=number]:visible:not([disabled]):not([readonly]),input[inputmode=numeric]:visible:not([disabled]):not([readonly]),input[inputmode=decimal]:visible:not([disabled]):not([readonly])');
    for(let index=0;index<await numbers.count();index++){
     const field=numbers.nth(index);

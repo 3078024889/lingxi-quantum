@@ -45,6 +45,7 @@ test("switching language keeps the public share dialog open and updates its link
 
 const headingCopy={"sign":["PDF电子签名与电子签章","PDF e-signatures and seals","PDFの電子署名と印鑑","PDF 전자 서명 및 도장","Signatures et tampons PDF","PDF-Unterschriften und Stempel","Firmas y sellos PDF","Assinaturas e carimbos PDF","توقيعات وأختام PDF"],"edit":["PDF 自由编辑","Edit PDF","PDFを編集","PDF 편집","Modifier un PDF","PDF bearbeiten","Editar PDF","Editar PDF","تحرير PDF"]};
 test("PDF workbench headings follow all nine selected languages",async({page})=>{
+ test.setTimeout(120000); // Eighteen complete page navigations, not one interaction.
  for(const [i,lang] of ["zh","en","ja","ko","fr","de","es","pt","ar"].entries()){
   for(const [kind,route] of [["sign","e-sign-pdf"],["edit","pdf-editor"]] as const){
    await page.goto("/tools/"+route+"?lang="+lang,{waitUntil:"domcontentloaded"});

@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText from "@/components/tools/ToolUiText";
 import {useMemo,useState} from "react";
 import {downloadUrl} from "@/lib/tools/shared/download";
 type Kind="url"|"wifi"|"vcard"|"email"|"sms"|"tel"|"geo"|"event"|"text";
@@ -20,10 +21,10 @@ export default function QrProWorkbench(){
  const setters=[setA,setB,setC],vals=[a,b,c];
  return <div className="space-y-4">
   <div className="flex flex-wrap gap-2">{(["url","wifi","vcard","email","sms","tel","geo","event","text"] as Kind[]).map(x=><button key={x} onClick={()=>{setKind(x);setDataUrl("");setSvg("")}} className={`rounded-full border px-3 py-1.5 text-xs ${kind===x?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)]"}`}>{x}</button>)}</div>
-  <div className="grid gap-3">{fields.map((label,i)=>label?<label key={i} className="text-sm">{label}<input value={vals[i]} onChange={e=>setters[i](e.target.value)} className="mt-1 w-full rounded-xl border p-2"/></label>:null)}</div>
-  <button onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">生成二维码</button>
+  <div className="grid gap-3">{fields.map((label,i)=>label?<label key={i} className="text-sm"><ToolUiText text={label}/><input value={vals[i]} onChange={e=>setters[i](e.target.value)} className="mt-1 w-full rounded-xl border p-2"/></label>:null)}</div>
+  <button onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]"><ToolUiText text="生成二维码" /></button>
   {dataUrl&&<div className="space-y-3 text-center"><img src={dataUrl} alt="QR" className="mx-auto h-64 w-64 bg-white p-2"/><div className="flex justify-center gap-2"><button onClick={()=>downloadUrl(dataUrl,"qrcode.png")} className="rounded-xl border px-4 py-2 text-sm">PNG</button><button onClick={()=>{const u=URL.createObjectURL(new Blob([svg],{type:"image/svg+xml"}));void downloadUrl(u,"qrcode.svg");setTimeout(()=>URL.revokeObjectURL(u),1200)}} className="rounded-xl border px-4 py-2 text-sm">SVG</button></div></div>}
-  <p className="text-xs leading-5 text-[var(--lx-muted)]">支持静态 URL、Wi‑Fi、vCard、邮件、SMS、电话、地理位置、日历事件和纯文本。QR 本身不会过期；链接安全仍取决于编码内容。</p>
+  <p className="text-xs leading-5 text-[var(--lx-muted)]"><ToolUiText text="支持静态 URL、Wi‑Fi、vCard、邮件、SMS、电话、地理位置、日历事件和纯文本。QR 本身不会过期；链接安全仍取决于编码内容。" /></p>
   {error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>
 }

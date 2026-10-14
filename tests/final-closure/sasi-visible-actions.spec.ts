@@ -17,11 +17,11 @@ test('completed story planning requests a video connection without a quota error
  const productionId='99999999-9999-4999-8999-999999999999';
  await page.route('**/api/sasi/projects',route=>route.fulfill({json:{project:{id:'88888888-8888-4888-8888-888888888888'}}}));
  await page.route('**/api/sasi/byok/video*',route=>route.fulfill({json:{connected:false,profiles:[],tasks:[]}}));
- await page.route(/\/api\/sasi\/drama\/series(?:\?|$)/,route=>route.fulfill({json:route.request().method()==='POST'?{id:productionId,state:'planning'}:{state:'ready',readyEpisodes:20,shots:[{episode:1,duration:8,prompt:'A traveler enters the village.',assetIds:[]}]}}));
+ await page.route(/\/api\/sasi\/drama\/series(?:\?|$)/,route=>route.fulfill({json:route.request().method()==='POST'?{id:productionId,state:'planning'}:{state:'ready',readyEpisodes:20,shots:Array.from({length:20},(_,index)=>({episode:index+1,duration:8,prompt:`Episode ${index+1}: A traveler enters the village.`,assetIds:[]}))}}));
  await page.goto('/sasi?mode=drama&lang=zh');
  const studio=page.locator('[data-sasi-task="drama"]');await expect(studio).toBeVisible();
  await studio.locator('textarea').fill('生成20集短剧');await studio.locator('textarea').press('Enter');
- await expect(page.getByRole('status').filter({hasText:'生成视频需要连接支持视频生成的智能服务'})).toBeVisible();
+ await expect(page.getByRole('status').filter({hasText:'分镜准备完成，可以查看预览并继续制作。'})).toBeVisible();
  await expect(page.getByText('今日免费额度已用完',{exact:true})).toHaveCount(0);
  await expect(studio.locator('a[href^="/sasi/connections?next="]')).toBeVisible();
  await studio.locator('button[aria-expanded]').click();await expect(studio.locator('[role="region"] input[type="checkbox"]')).toHaveCount(0);

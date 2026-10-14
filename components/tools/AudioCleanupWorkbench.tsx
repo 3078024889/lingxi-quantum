@@ -1,5 +1,6 @@
 "use client";
 
+import ToolUiText from "@/components/tools/ToolUiText";
 import { useEffect, useMemo, useState } from "react";
 import { fetchFile } from "@ffmpeg/util";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -141,16 +142,16 @@ export default function AudioCleanupWorkbench() {
                 : "border-[var(--lx-line)]"
             }`}
           >
-            {label}
+            <ToolUiText text={label}/>
           </button>
         ))}
       </div>
 
       <p className="text-xs leading-5 text-[var(--lx-muted)]">
-        这是本地 FFmpeg 频域滤波、动态范围与响度处理，不冒充生成式 AI 修复。强风、多人重叠说话或严重爆音无法保证完整恢复；建议试听原音和结果后再使用。
+        <ToolUiText text="这是本地 FFmpeg 频域滤波、动态范围与响度处理，不冒充生成式 AI 修复。强风、多人重叠说话或严重爆音无法保证完整恢复；建议试听原音和结果后再使用。" />
       </p>
 
-      <div className="flex flex-wrap gap-3"><button disabled={!files.length||busy} onClick={()=>void run(true)} className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm disabled:opacity-40">免费试听前 30 秒</button>{files.length>0&&billableMinutes>0&&!busy&&<PaidActionButton toolId="audio-cleanup" quantity={billableMinutes} metadata={{minutes:billableMinutes,files:files.length,preset}} onPaid={()=>run(false)} label={`处理完整音频 · ${billableMinutes}个起始分钟`}/>}</div>{previewUrl&&<div className="rounded-xl border border-[var(--lx-line)] p-3"><div className="mb-2 text-xs text-[var(--lx-muted)]">免费 30 秒试听，不提供试听文件导出。</div><audio controls src={previewUrl} className="w-full"/></div>}
+      <div className="flex flex-wrap gap-3"><button disabled={!files.length||busy} onClick={()=>void run(true)} className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm disabled:opacity-40"><ToolUiText text="免费试听前 30 秒" /></button>{files.length>0&&billableMinutes>0&&!busy&&<PaidActionButton toolId="audio-cleanup" quantity={billableMinutes} metadata={{minutes:billableMinutes,files:files.length,preset}} onPaid={()=>run(false)} label={`处理完整音频 · ${billableMinutes}个起始分钟`}/>}</div>{previewUrl&&<div className="rounded-xl border border-[var(--lx-line)] p-3"><div className="mb-2 text-xs text-[var(--lx-muted)]"><ToolUiText text="免费 30 秒试听，不提供试听文件导出。" /></div><audio controls src={previewUrl} className="w-full"/></div>}
 
       {stage && <p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
 

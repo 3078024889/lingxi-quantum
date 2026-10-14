@@ -1,5 +1,6 @@
 "use client";
 
+import ToolUiText from "@/components/tools/ToolUiText";
 import { useMemo, useState } from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -258,29 +259,29 @@ export default function HandwritingOcrWorkbench() {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm">
-          识别模式
+          <ToolUiText text="识别模式" />
           <select
             value={mode}
             onChange={(event) => setMode(event.target.value as Mode)}
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
           >
-            <option value="english-handwriting">英文手写 · TrOCR 本地模型</option>
-            <option value="multilingual">多语言文字/工整手写 · Tesseract</option>
+            <option value="english-handwriting"><ToolUiText text="英文手写 · TrOCR 本地模型" /></option>
+            <option value="multilingual"><ToolUiText text="多语言文字/工整手写 · Tesseract" /></option>
           </select>
         </label>
 
         {mode === "multilingual" && (
           <label className="text-sm">
-            语言
+            <ToolUiText text="语言" />
             <select
               value={lang}
               onChange={(event) => setLang(event.target.value)}
               className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
             >
-              <option value="chi_sim+eng">简体中文 + English</option>
-              <option value="chi_tra+eng">繁體中文 + English</option>
+              <option value="chi_sim+eng"><ToolUiText text="简体中文 + English" /></option>
+              <option value="chi_tra+eng"><ToolUiText text="繁體中文 + English" /></option>
               <option value="eng">English</option>
-              <option value="jpn+eng">日本語 + English</option>
+              <option value="jpn+eng"><ToolUiText text="日本語 + English" /></option>
               <option value="kor+eng">한국어 + English</option>
               <option value="fra+eng">Français + English</option>
               <option value="deu+eng">Deutsch + English</option>
@@ -291,9 +292,9 @@ export default function HandwritingOcrWorkbench() {
       </div>
 
       <div className="rounded-xl bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">
-        {mode === "english-handwriting"
+        <ToolUiText text={mode === "english-handwriting"
           ? "英文手写模式会先自动分行，再由 TrOCR 手写模型逐行识别；模型首次使用会下载并缓存，之后可复用。"
-          : "多语言模式适合印刷体和较工整手写。潦草手写尤其中文/日文仍可能误识别，重要内容请核对；这一模式不冒充专业多语言手写模型。"}
+          : "多语言模式适合印刷体和较工整手写。潦草手写尤其中文/日文仍可能误识别，重要内容请核对；这一模式不冒充专业多语言手写模型。"} />
       </div>
 
       {files.length > 0 && !busy && (<PaidActionButton toolId="handwriting-ocr" quantity={files.length} metadata={{pages:files.length,mode}} onPaid={run} label="查看本次手写识别价格" />)}
@@ -335,7 +336,7 @@ export default function HandwritingOcrWorkbench() {
             onClick={downloadDocx}
             className="rounded-xl border border-[var(--lx-line)] px-4 py-2 text-sm"
           >
-            导出 Word DOCX
+            <ToolUiText text="导出 Word DOCX" />
           </button>
         </>
       )}

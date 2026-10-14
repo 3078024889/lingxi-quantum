@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText from "@/components/tools/ToolUiText";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 
@@ -7,6 +8,7 @@ import { useMemo, useState } from "react";
 type Field = { any: boolean; values: Set<number> };
 
 function expandPart(part: string, min: number, max: number) {
+  if(!/^(?:\*|\d+(?:-\d+)?)(?:\/\d+)?$/.test(part))throw new Error('INVALID_FIELD_SYNTAX');
   const values = new Set<number>();
   const [base, stepRaw] = part.split("/");
   const step = stepRaw ? Number(stepRaw) : 1;
@@ -24,7 +26,7 @@ function expandPart(part: string, min: number, max: number) {
   } else {
     const value = Number(base);
     if (!Number.isInteger(value) || value < min || value > max) throw new Error("VALUE_OUT_OF_BOUNDS");
-    values.add(value);
+    if(stepRaw!==undefined)addRange(value,max);else values.add(value);
   }
 
   return values;
@@ -131,7 +133,7 @@ export default function CronParserWorkbench() {
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-[1fr_160px]">
         <label className="text-sm">
-          Cron 表达式
+          <ToolUiText text="Cron 表达式" />
           <input
             value={expression}
             onChange={(event) => setExpression(event.target.value)}
@@ -139,7 +141,7 @@ export default function CronParserWorkbench() {
           />
         </label>
         <label className="text-sm">
-          显示次数
+          <ToolUiText text="显示次数" />
           <EditableNumberInput
             type="number"
             min={1}
@@ -153,18 +155,18 @@ export default function CronParserWorkbench() {
 
       <div className="grid grid-cols-5 gap-2 text-center text-xs text-[var(--lx-muted)]">
         {["分钟", "小时", "日", "月", "星期"].map((item) => (
-          <span key={item} className="rounded-lg bg-[var(--lx-soft)] p-2">{item}</span>
+          <span key={item} className="rounded-lg bg-[var(--lx-soft)] p-2"><ToolUiText text={item}/></span>
         ))}
       </div>
 
       <p className="text-xs leading-5 text-[var(--lx-muted)]">
-        支持标准 5 段 Cron 的 <code>*</code>、列表、范围和步长，例如 <code>*/15 9-18 * * 1-5</code>。结果按浏览器本地时区计算；不把 Quartz 6/7 段语法冒充成已支持。
+        <ToolUiText text="支持标准 5 段 Cron 的" /> <code>*</code><ToolUiText text="、列表、范围和步长，例如" /> <code>*/15 9-18 * * 1-5</code><ToolUiText text="。结果按浏览器本地时区计算；不把 Quartz 6/7 段语法冒充成已支持。" />
       </p>
 
       {parsed.ok ? (
         <>
           <div className="rounded-xl bg-[var(--lx-soft)] p-4 text-sm">
-            {parsed.description}
+            <ToolUiText text={parsed.description}/>
           </div>
           <ol className="space-y-2">
             {parsed.runs.map((date, index) => (
@@ -182,13 +184,13 @@ export default function CronParserWorkbench() {
           </ol>
           {!parsed.runs.length && (
             <p className="text-sm text-[var(--lx-muted)]">
-              未来 366 天没有找到匹配时间。
+              <ToolUiText text="未来 366 天没有找到匹配时间。" />
             </p>
           )}
         </>
       ) : (
         <p className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">
-          无法解析：{parsed.error}
+          <ToolUiText text="无法解析：" />{parsed.error}
         </p>
       )}
     </div>

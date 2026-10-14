@@ -1,6 +1,9 @@
 "use client";
 import {isGeneratedResultUrl} from "@/lib/sasi/client/generated-result-url";
 import {seriesSpecification} from '@/lib/sasi/series-specification';
+import SasiScriptPreview from './SasiScriptPreview';
+import {approvedScriptPreview,type ApprovedScriptPreview} from '@/lib/sasi/approved-script-preview';
+import {seriesProgressText} from '@/lib/sasi/series-progress-copy';
 import {seriesProgressLabel} from '@/lib/sasi/entry-copy';
 import {connectionLink} from "@/lib/sasi/client/continuation-link";
 import {functionMenuText} from '@/lib/sasi/function-menu-i18n';
@@ -77,7 +80,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  const[prompt,setPrompt]=useState<string>(saved.prompt||initialPrompt);
  const[files,setFiles]=useState<FileItem[]>(()=>initialFiles.slice(0,20).map(file=>({id:crypto.randomUUID(),file,state:"queued" as UploadState,progress:0})));
  const[projectId,setProjectId]=useState<string>(saved.projectId||continuity.workspace.projectId||'');
- const[ratio,setRatio]=useState<(typeof VIDEO_RATIOS)[number]>(()=>VIDEO_RATIOS.includes(saved.ratio)?saved.ratio:VIDEO_RATIOS.find(value=>(saved.prompt||initialPrompt).includes(value))||'9:16');
+ const[ratio,setRatio]=useState<(typeof VIDEO_RATIOS)[number]>(()=>VIDEO_RATIOS.includes(saved.ratio)?saved.ratio:VIDEO_RATIOS.find(value=>(saved.prompt||initialPrompt).replace(/：/g,':').replace(/\s/g,'').includes(value))||'9:16');
  const[resolution,setResolution]=useState<(typeof VIDEO_RESOLUTIONS)[number]>(()=>VIDEO_RESOLUTIONS.includes(saved.resolution)?saved.resolution:/720/i.test(saved.prompt||initialPrompt)?'720p':'1080p');
  const[availableResolutions,setAvailableResolutions]=useState<Array<(typeof VIDEO_RESOLUTIONS)[number]>>(["720p","1080p"]);
  const[duration,setDuration]=useState<(typeof VIDEO_DURATIONS)[number]>(()=>VIDEO_DURATIONS.includes(saved.duration)?saved.duration:8);
@@ -88,6 +91,8 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  const[assistantText,setAssistantText]=useState<string>(saved.assistantText||'');
  const[preparedShots,setPreparedShots]=useState<SeriesShot[]>(saved.preparedShots||[]);
  const[productionId,setProductionId]=useState<string>(saved.productionId||'');
+ const[progressRetry,setProgressRetry]=useState(0);
+ const[scriptPreview,setScriptPreview]=useState<ApprovedScriptPreview|null>(()=>approvedScriptPreview(continuity.workspace.approvedScript||'',(()=>{try{return seriesSpecification(saved.prompt||initialPrompt).episodes}catch{return 1}})()));
  const[seriesState,setSeriesState]=useState<string>(saved.seriesState||'');
  const[plannedEpisodes,setPlannedEpisodes]=useState<number>(saved.plannedEpisodes||0);
  const[activeBatch,setActiveBatch]=useState<{batchId:string;taskIds:string[]}|null>(saved.activeBatch||null);
@@ -110,22 +115,33 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  useEffect(()=>{if(mode==='drama'&&projectId&&activeBatch?.taskIds.length)void followFilm(projectId,activeBatch.taskIds,activeBatch.batchId)},[projectId,activeBatch?.batchId]);
  useEffect(()=>{
   if(mode!=='drama'||!productionId)return;
-  let active=true;
+  let active=true,errors=0;const beganAt=Date.now();let timer:ReturnType<typeof setTimeout>|undefined;let controller:AbortController|undefined;
+  const status=(key:Parameters<typeof seriesProgressText>[1])=>{if(!activeBatch)setMessage(seriesProgressText(lang,key));};
   async function progress(){
-   const response=await fetch('/api/sasi/drama/series?id='+encodeURIComponent(productionId),{cache:'no-store'}).catch(()=>null);
-   if(!response?.ok)return;const data=await response.json();if(!active)return;
+   controller=new AbortController();const deadline=setTimeout(()=>controller?.abort(),15000);
+   try{
+   const response=await fetch('/api/sasi/drama/series?id='+encodeURIComponent(productionId),{cache:'no-store',signal:controller.signal});
+   if(response.status===401||response.status===403||response.status===404){if(active)status('unavailable');return;}
+   if(!response.ok)throw Error('PROGRESS_UNAVAILABLE');const data=await response.json();if(!active)return;errors=0;
    setSeriesState(data.state);setPlannedEpisodes(data.readyEpisodes||0);
+   if(data.preview?.kind==='approved-script-preview'&&Array.isArray(data.preview.frames)&&data.preview.frames.length)setScriptPreview(data.preview);
    if(data.state==='ready'){
-    setPreparedShots(data.shots||[]);
-    const service=await fetch('/api/sasi/byok/video?projectId='+encodeURIComponent(projectId),{cache:'no-store'}).catch(()=>null);
+    setPreparedShots(data.shots||[]);status('ready');
+    const service=await fetch('/api/sasi/byok/video?projectId='+encodeURIComponent(projectId),{cache:'no-store',signal:controller.signal}).catch(()=>null);
     const connected=service?.ok?await service.json():null;
-    if(active){setNeedsConnection(!connected?.connected);if(!connected?.connected)setMessage(VIDEO_SERVICE_REQUIRED[lang]);}
+    if(active)setNeedsConnection(!connected?.connected);return;
    }
-   if(data.state==='needs-connection')setNeedsConnection(true);
+   if(data.state==='needs-connection'){setNeedsConnection(true);status('connection');return;}
+   if(data.state==='failed'){status('failed');return;}
+   if(data.state==='planning'&&!activeBatch)setMessage(ctRef.current('organizing')+' '+String(data.completedEpisodes||0)+'/'+String(data.specification?.episodes||1));
+   if(Date.now()-beganAt>30*60*1000){status('unavailable');return;}
+   }catch{if(!active)return;if(++errors>=3){status('unavailable');return;}}
+   finally{clearTimeout(deadline);}
+   if(active)timer=setTimeout(()=>void progress(),10000);
   }
-  void progress();const timer=window.setInterval(()=>void progress(),10000);
-  return()=>{active=false;window.clearInterval(timer)};
- },[mode,productionId,projectId]);
+  void progress();
+  return()=>{active=false;controller?.abort();if(timer)clearTimeout(timer)};
+ },[mode,productionId,projectId,lang,progressRetry,activeBatch]);
 
  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;if(pollRef.current!==null)window.clearTimeout(pollRef.current)}},[]);
  useEffect(()=>{
@@ -164,7 +180,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  },[mode,projectId]);
 
  const track=useCallback(async(signal:string,capability:string,pid?:string)=>{
-  await fetch("/api/sasi/v5/feedback",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
+  void fetch("/api/sasi/v5/feedback",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
    taskFamily:mode==="drama"?"drama.compose":"website.compose",projectId:pid||projectId||null,signal,capability
   })}).catch(()=>{});
  },[mode,projectId]);
@@ -292,12 +308,13 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
 
  async function prepareDrama(pid:string,uploaded:FileItem[]){
   // Plan first. Connecting a video account never discards the approved story.
-  if(!preparedShots.length){
+  if(seriesState!=='ready'||!preparedShots.length||new Set(preparedShots.map(shot=>shot.episode)).size!==seriesSpecification(prompt).episodes){
    const ownCosts=Boolean(productionId&&['needs-connection','failed'].includes(seriesState));
    if(ownCosts&&!window.confirm(SUPPLIER_BILLING_COPY[lang]))return;
    const response=await fetch('/api/sasi/drama/series',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({projectId:pid,threadId:continuity.threadId||null,text:prompt,approvedScript:continuity.workspace.approvedScript||'',acceptOwnModelCosts:ownCosts})});
    const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(ct('genericUnavailable'));
-   setProductionId(data.id);setSeriesState('planning');setMessage(ct('organizing'));return;
+   if(typeof data.id!=='string')throw Error(ct('genericUnavailable'));
+   setProductionId(data.id);setSeriesState(data.state||'planning');setProgressRetry(value=>value+1);setMessage(['needs-connection','failed'].includes(data.state)?seriesProgressText(lang,data.state==='failed'?'failed':'connection'):ct('organizing'));return;
   }
   const response=await fetch('/api/sasi/byok/video?projectId='+encodeURIComponent(pid),{cache:'no-store'});
   const state=await response.json().catch(()=>({}));
@@ -406,6 +423,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
        </div>
      </SasiAssistantText>}
 
+     {mode==='drama'&&scriptPreview&&<SasiScriptPreview preview={scriptPreview} lang={lang}/>}
      {films.map(film=><SasiVideoResult key={film.episode} url={film.url} downloadLabel={`${film.episode} · ${sasiCommonText(lang,"downloadResult")}`}/>)}
      {resultUrl&&<SasiVideoResult url={resultUrl} downloadLabel={sasiCommonText(lang,"downloadResult")}/>}
 
@@ -459,6 +477,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
 
       {mode==="drama"&&<label className="flex items-start gap-2 px-3 pt-2 text-[11px] text-[var(--lx-muted)]"><input type="checkbox" checked={rightsConfirmed} disabled={busy} onChange={e=>{setRightsConfirmed(e.target.checked);setQuote(null)}}/>{ct("rightsConsent")}</label>}
       {mode==='drama'&&productionId&&<p role="status" className="px-3 pt-2 text-xs text-[var(--lx-muted)]">{seriesProgressLabel(lang,plannedEpisodes,(()=>{try{return seriesSpecification(prompt).episodes}catch{return 1}})())}</p>}
+      {mode==='drama'&&productionId&&!busy&&<button type="button" onClick={()=>setProgressRetry(value=>value+1)} className="px-3 py-2 text-xs">{seriesProgressText(lang,'retry')}</button>}
       {quote&&<p className="px-3 pt-2 text-xs text-[var(--lx-muted)]">{SUPPLIER_BILLING_COPY[lang]}</p>}<SasiStatusLine>{message}</SasiStatusLine>{needsConnection&&<Link href={connectionLink(continuity.threadId,mode,continuity.workspace.projectId)} className="inline-block px-3 py-2 text-sm text-blue-600">{functionMenuText(lang,"connect")} →</Link>}
      </SasiComposerSurface>
     </section>

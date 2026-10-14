@@ -1,5 +1,6 @@
 "use client";
 
+import ToolUiText,{useToolUiCopy} from "@/components/tools/ToolUiText";
 import { useMemo, useState } from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -52,6 +53,8 @@ function snippetAround(text: string, index: number, length: number) {
 }
 
 export default function PdfSearchWorkbench() {
+ const toolUiCopy=useToolUiCopy();
+
   const [files, setFiles] = useState<File[]>([]);
   const [query, setQuery] = useState("");
   const [caseSensitive, setCaseSensitive] = useState(false);
@@ -153,7 +156,7 @@ export default function PdfSearchWorkbench() {
       <input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="输入姓名、合同编号、关键词或正则表达式…"
+        placeholder={toolUiCopy("输入姓名、合同编号、关键词或正则表达式…")}
         className="w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-3"
       />
 
@@ -164,7 +167,7 @@ export default function PdfSearchWorkbench() {
             checked={caseSensitive}
             onChange={(event) => setCaseSensitive(event.target.checked)}
           />
-          区分大小写
+          <ToolUiText text="区分大小写" />
         </label>
         <label className="flex items-center gap-2">
           <input
@@ -172,7 +175,7 @@ export default function PdfSearchWorkbench() {
             checked={regexMode}
             onChange={(event) => setRegexMode(event.target.checked)}
           />
-          正则表达式
+          <ToolUiText text="正则表达式" />
         </label>
       </div>
 
@@ -181,7 +184,7 @@ export default function PdfSearchWorkbench() {
         onClick={run}
         className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"
       >
-        {busy ? "正在搜索…" : "搜索所有 PDF"}
+        <ToolUiText text={busy ? "正在搜索…" : "搜索所有 PDF"} />
       </button>
 
       {stage && <p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
@@ -189,7 +192,7 @@ export default function PdfSearchWorkbench() {
       {hits.length > 0 && (
         <>
           <div className="rounded-xl bg-[var(--lx-soft)] p-4 text-sm">
-            找到 <b>{totalMatches}</b> 处匹配，分布在 <b>{hits.length}</b> 个页面。
+            <ToolUiText text="找到" /> <b>{totalMatches}</b> <ToolUiText text="处匹配，分布在" /> <b>{hits.length}</b> <ToolUiText text="个页面。" />
           </div>
 
           <div className="space-y-2">
@@ -199,7 +202,7 @@ export default function PdfSearchWorkbench() {
                 className="rounded-xl border border-[var(--lx-line)] p-3"
               >
                 <div className="text-sm font-medium">
-                  {hit.file} · 第 {hit.page} 页 · {hit.count} 处
+                  {hit.file} <ToolUiText text="· 第" /> {hit.page} <ToolUiText text="页 ·" /> {hit.count} <ToolUiText text="处" />
                 </div>
                 <p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">
                   {hit.snippet}
@@ -219,7 +222,7 @@ export default function PdfSearchWorkbench() {
 
       {!busy && query.trim() && files.length > 0 && hits.length === 0 && !error && (
         <p className="text-sm text-[var(--lx-muted)]">
-          当前文本层没有找到匹配。扫描 PDF 请先使用 PDF OCR。
+          <ToolUiText text="当前文本层没有找到匹配。扫描 PDF 请先使用 PDF OCR。" />
         </p>
       )}
 

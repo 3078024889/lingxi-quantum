@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText from "@/components/tools/ToolUiText";
 import {useState} from "react";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 
@@ -51,13 +52,13 @@ export default function OptionalAIVoiceAnalysis({file,lang}:{file:File;lang:Ling
   }catch(e){setMessage(e instanceof Error?e.message:String(e));setState("error")}
  }
  return <div className="mt-3 space-y-2 border-t pt-3 text-sm">
-  <p className="font-semibold">{zh?"人声 AI 合成痕迹分析":"AI-speech indicator analysis"}</p>
-  <p className="opacity-80">{zh?"检查音频开头最多12秒的人声，寻找可能的 AI 合成痕迹。不适用于纯音乐。首次使用需要联网准备检测资源。":"Checks up to the first 12 seconds for synthesized-speech indicators. Not intended for music."}</p>
+  <p className="font-semibold"><ToolUiText text={zh?"人声 AI 合成痕迹分析":"AI-speech indicator analysis"} /></p>
+  <p className="opacity-80"><ToolUiText text={zh?"检查音频开头最多12秒的人声，寻找可能的 AI 合成痕迹。不适用于纯音乐。首次使用需要联网准备检测资源。":"Checks up to the first 12 seconds for synthesized-speech indicators. Not intended for music."} /></p>
   <button type="button" disabled={state==="busy"} onClick={()=>void run()} className="rounded-lg border px-3 py-2 disabled:opacity-60">{state==="busy"?(zh?"分析中…":"Analyzing…"):(zh?"分析人声":"Analyze speech")}</button>
-  {state==="error"&&<p role="alert">{zh?"暂时无法分析：":"Analysis unavailable: "}{message}</p>}
+  {state==="error"&&<p role="alert"><ToolUiText text={zh?"暂时无法分析：":"Analysis unavailable: "} />{message}</p>}
   {state==="done"&&<div aria-live="polite">
-   {results.map((p,i)=><p key={i}>{p.label.toLowerCase()==="fake"?(zh?"发现 AI 合成人声特征":"Model label: synthetic speech"):p.label.toLowerCase()==="real"?(zh?"未发现明显 AI 合成人声特征":"Model label: natural speech"):p.label} — {(p.score*100).toFixed(1)}% {zh?"参考分数":"indicator score"}</p>)}
-   <p className="opacity-75">{zh?"检测结果仅作参考。语音克隆、背景噪声和音频编辑可能影响判断。":"These indicators can be mistaken, especially with cloned voices, noise or edited audio."}</p>
+   {results.map((p,i)=><p key={i}>{p.label.toLowerCase()==="fake"?(zh?"发现 AI 合成人声特征":"Model label: synthetic speech"):p.label.toLowerCase()==="real"?(zh?"未发现明显 AI 合成人声特征":"Model label: natural speech"):p.label} — {(p.score*100).toFixed(1)}% <ToolUiText text={zh?"参考分数":"indicator score"} /></p>)}
+   <p className="opacity-75"><ToolUiText text={zh?"检测结果仅作参考。语音克隆、背景噪声和音频编辑可能影响判断。":"These indicators can be mistaken, especially with cloned voices, noise or edited audio."} /></p>
   </div>}
  </div>;
 }

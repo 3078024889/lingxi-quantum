@@ -1,4 +1,5 @@
 "use client";
+import {toolRuntimeText} from "@/lib/tool-runtime-i18n";
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 import {isMiniProgramContext,miniVirtualPaymentAvailable} from "@/lib/mini/payment-client";
 
@@ -109,5 +110,5 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
 
  const amount=quote?quoteDisplay(quote,currency).text:'';
  if(phase==="completed")return <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm"><b>{tx('complete')}</b><p className="mt-1 text-[var(--lx-muted)]">{msg}</p></div>;
- return <div><button data-testid="paid-export-start" onClick={start} disabled={disabled||busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label||tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
+ return <div><button data-testid="paid-export-start" onClick={start} disabled={disabled||busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label?toolRuntimeText(lang,label,label):tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
 }

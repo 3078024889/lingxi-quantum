@@ -213,7 +213,7 @@ export default function TimestampProWorkbench() {
           [
             ["convert", t("时间戳/日期", "Timestamp / date")],
             ["batch", t("批量转换", "Batch")],
-            ["jwt", "JWT 时间"],
+            ["jwt", t("JWT 时间", "JWT time")],
             ["excel", "Excel / Sheets"],
           ] as const
         ).map(([value, label]) => (

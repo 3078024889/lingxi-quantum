@@ -1,4 +1,5 @@
 "use client";
+import {toolRuntimeText} from '@/lib/tool-runtime-i18n';
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 import {isMiniProgramContext,miniVirtualPaymentAvailable} from "@/lib/mini/payment-client";
 
@@ -92,7 +93,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
  const changed=quote&&(Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
  if(completed)return <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{deliveryText(lang,"complete")}</b><p className="mt-1 text-xs text-[var(--lx-muted)]">{deliveryText(lang,"existing")}</p></div>;
  return <div>{!quote||changed
-  ?<button onClick={makeQuote} disabled={busy||quantity<=0||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t(UI.pricing):(label||t(UI.defaultLabel))}</button>
+  ?<button onClick={makeQuote} disabled={busy||quantity<=0||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t(UI.pricing):(label?toolRuntimeText(lang,label,label):t(UI.defaultLabel))}</button>
   :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {toolId==="food-calorie"?foodBillingText(lang,quote.unit_name==="food"?"foodUnit":"imageUnit"):unitLabel(quote.unit_name,zh)} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||running||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{paidId?deliveryText(lang,"retry"):t(UI.confirm)}</button><button disabled={!!paidId||running} onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
   {msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}
   {toolId==='food-calorie'&&msg===foodBillingText(lang,'login')&&<a className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent('/tools/food-calorie?resumeDraft='+(draftId||''))}`}>{foodBillingText(lang,'login')}</a>}

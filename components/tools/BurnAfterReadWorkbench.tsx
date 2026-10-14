@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText,{useToolUiCopy} from "@/components/tools/ToolUiText";
 import {useEffect,useMemo,useRef,useState} from "react";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {deliveryText} from "@/lib/tools/commerce/delivery-copy";
@@ -13,6 +14,7 @@ type Mode="once"|"timed"|"limited"|"fast";
 type PreparedFile={id:string;name:string;size:number;type:string;uploadUrl:string};
 
 export default function BurnAfterReadWorkbench(){
+ const toolUiCopy=useToolUiCopy();
  const{lang}=useLingxiLang();const t=(k:string)=>privacyText(lang,k);
  const[text,setText]=useState(""),[mode,setMode]=useState<Mode>("once"),[ttl,setTtl]=useState(1440),[views,setViews]=useState(1),[duration,setDuration]=useState(30);
  const[files,setFiles]=useState<File[]>([]),[link,setLink]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[copied,setCopied]=useState(false);
@@ -114,10 +116,10 @@ export default function BurnAfterReadWorkbench(){
 
  const modes:[Mode,string,string][]=[["once",t("once"),t("onceD")],["timed",t("timed"),t("timedD")],["limited",t("limited"),t("limitedD")],["fast",t("fast"),t("fastD")]];
  return <div className="mx-auto max-w-3xl space-y-5">
-  <Link href="/tools" className="lx-tool-back">← {lang==="zh"?"返回实用工具":"Back to tools"}</Link>
+  <Link href="/tools" className="lx-tool-back">← <ToolUiText text={"返回实用工具"} /></Link>
   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 lx-tool-panel-shell"><div className="lx-special-tool-title"><LingxiMiniIcon name="burn" size="title"/><h1 className="text-3xl font-semibold text-[var(--lx-ink)]">{t("burnTitle")}</h1></div><p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{t("burnLead")}</p></section>
   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-   <textarea value={text} onChange={e=>setText(e.target.value)} maxLength={120000} rows={7} placeholder={lang==="zh"?"输入要分享的私密内容，也可以只上传文件…":"Enter private content, or share files only…"} className="w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
+   <textarea value={text} onChange={e=>setText(e.target.value)} maxLength={120000} rows={7} placeholder={toolUiCopy("输入要分享的私密内容，也可以只上传文件…")} className="w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
    <div className="mt-4 rounded-2xl border border-dashed border-slate-300 p-4">
     <label className="cursor-pointer font-medium text-slate-900">{t("addFiles")}<input className="hidden" type="file" multiple onChange={e=>{const x=Array.from(e.target.files||[]).slice(0,20);if(x.reduce((n,f)=>n+f.size,0)<=2*1024*1024*1024)setFiles(x);else setError(t("fileLimit"))}}/></label>
     <p className="mt-1 text-xs text-slate-500">{t("fileLimit")} {t("filePaid")}</p>

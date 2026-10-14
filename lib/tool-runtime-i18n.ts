@@ -1,4 +1,5 @@
 import type { LingxiLang } from "@/lib/lingxi-i18n";
+import {extraToolCopy} from '@/lib/tools/ui-copy-v86';
 
 const EXACT:Record<string,Record<LingxiLang,string>>={
  "匹配耗时过长，请简化表达式或减少文本。":{zh:"匹配耗时过长，请简化表达式或减少文本。",en:"Matching took too long. Simplify the expression or use less text.",ja:"照合に時間がかかりすぎました。式を簡略化するかテキストを減らしてください。",ko:"일치 검색이 너무 오래 걸립니다. 표현식을 단순화하거나 텍스트를 줄여 주세요.",fr:"La recherche prend trop de temps. Simplifiez l’expression ou réduisez le texte.",de:"Die Suche dauert zu lange. Vereinfachen Sie den Ausdruck oder kürzen Sie den Text.",es:"La búsqueda tarda demasiado. Simplifica la expresión o reduce el texto.",pt:"A busca demorou demais. Simplifique a expressão ou reduza o texto.",ar:"استغرق البحث وقتًا طويلًا. بسّط التعبير أو قلّل النص."},
@@ -44,6 +45,7 @@ const EXACT:Record<string,Record<LingxiLang,string>>={
 function exact(lang:LingxiLang,zh:string,en:string){return EXACT[zh]?.[lang] ?? (lang==="zh"?zh:en);}
 
 export function toolRuntimeText(lang:LingxiLang,zh:string,en:string){
+  const extra=extraToolCopy(lang,zh);if(extra!==undefined)return extra;
   if(EXACT[zh]) return exact(lang,zh,en);
   let m:RegExpMatchArray|null;
 

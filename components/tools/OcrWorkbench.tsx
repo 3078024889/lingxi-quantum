@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText from "@/components/tools/ToolUiText";
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 
 import {useMemo,useState} from "react";
@@ -53,7 +54,7 @@ export default function OcrWorkbench(){
   <FileDropzone accept="image/*" multiple maxFiles={30} maxSizeMB={30} files={files} onChange={setFiles} disabled={busy} kind="image"/>
   <label className="block text-sm text-[var(--lx-muted)]">{c.language}
    <select value={ocrLang} onChange={e=>setOcrLang(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]">
-    <option value="chi_sim+eng">简体中文 + English</option><option value="chi_tra+eng">繁體中文 + English</option><option value="eng">English</option><option value="jpn+eng">日本語 + English</option><option value="kor+eng">한국어 + English</option><option value="fra+eng">Français + English</option><option value="deu+eng">Deutsch + English</option><option value="spa+eng">Español + English</option>
+    <option value="chi_sim+eng"><ToolUiText text="简体中文 + English" /></option><option value="chi_tra+eng"><ToolUiText text="繁體中文 + English" /></option><option value="eng">English</option><option value="jpn+eng"><ToolUiText text="日本語 + English" /></option><option value="kor+eng">한국어 + English</option><option value="fra+eng">Français + English</option><option value="deu+eng">Deutsch + English</option><option value="spa+eng">Español + English</option>
    </select>
   </label>
   <div className="flex flex-wrap items-center gap-3">

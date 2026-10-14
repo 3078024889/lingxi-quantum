@@ -1,4 +1,5 @@
 "use client";
+import ToolUiText from "@/components/tools/ToolUiText";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 import {useCallback,useEffect,useMemo,useRef,useState} from "react";
@@ -234,7 +235,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
  },[pendingQuote]);
 
  return <div className="mx-auto max-w-5xl space-y-5">
-  <Link href="/tools" className="lx-tool-back">← {lang==="zh"?"返回实用工具":"Back to tools"}</Link>
+  <Link href="/tools" className="lx-tool-back">← <ToolUiText text={"返回实用工具"} /></Link>
 
   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
    <div className="lx-special-tool-title"><LingxiMiniIcon name="mail" size="title"/><h1 className="text-3xl font-semibold text-[var(--lx-ink)]">{t("title")}</h1></div>
@@ -270,7 +271,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
 
     <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
      <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("inbox")}</h2><span className="text-xs text-[var(--lx-faint)]">{messages.length} {t("messages")} · {t("autoRefresh")}</span></div>
-     {!messages.length?<div className="mt-5 rounded-2xl bg-[var(--lx-soft)] px-4 py-4"><b className="text-sm text-[var(--lx-ink)]">{lang==="zh"?"邮箱已就绪，正在等待新邮件":"Inbox ready — waiting for mail"}</b><p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">{lang==="zh"?"验证码或通知到达后会自动显示；无需刷新页面。":"Verification codes and notices appear automatically; no page refresh needed."}</p></div>:
+     {!messages.length?<div className="mt-5 rounded-2xl bg-[var(--lx-soft)] px-4 py-4"><b className="text-sm text-[var(--lx-ink)]"><ToolUiText text={"邮箱已就绪，正在等待新邮件"} /></b><p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]"><ToolUiText text={"验证码或通知到达后会自动显示；无需刷新页面。"} /></p></div>:
       <div className="mt-4 space-y-3">{messages.map(m=>{const clean=normalizeStoredMail(m.subject,m.text_body),code=extractCode(clean.subject,clean.text);return <details key={m.id} className="rounded-2xl border border-[var(--lx-line)] p-4">
        <summary className="cursor-pointer list-none"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><b className="block truncate text-[var(--lx-ink)]">{clean.subject||"—"}</b><span className="mt-1 block truncate text-xs text-[var(--lx-faint)]">{m.sender}</span></div><time className="shrink-0 text-xs text-[var(--lx-faint)]">{new Date(m.received_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}</time></div></summary>
        {code&&<div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3"><div><span className="block text-xs text-[var(--lx-muted)]">{t("code")}</span><b className="mt-1 block font-mono text-2xl tracking-[.15em] text-[var(--lx-ink)]">{code}</b></div><button onClick={()=>void copy(code,`code-${m.id}`)} className="rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm">{copied===`code-${m.id}`?t("copied"):t("copyCode")}</button></div>}

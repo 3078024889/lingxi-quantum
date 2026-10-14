@@ -3,7 +3,8 @@ import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 
 import {useMemo,useState} from "react";
-import {PDFDocument,PDFName,StandardFonts,rgb} from "pdf-lib";
+import {preparePdfLabel} from "@/lib/tools/shared/pdf-label";
+import {PDFDocument,PDFName,rgb} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -38,9 +39,9 @@ export default function PdfFinishingWorkbench({mode}:{mode:PdfFinishingMode}){
       const ov=await PDFDocument.load(await overlayFiles[0].arrayBuffer(),{ignoreEncryption:false}); const ovCount=ov.getPageCount(); if(!ovCount)throw new Error("EMPTY_OVERLAY");
       for(let i=0;i<doc.getPageCount();i++){const oi=overlayRule==="first"?0:Math.min(i,ovCount-1);const embedded=await doc.embedPage(ov.getPage(oi));const p=doc.getPage(i);const {width,height}=p.getSize();p.drawPage(embedded,{x:0,y:0,width,height});}
     }else if(mode==="header-footer"){
-      const font=await doc.embedFont(StandardFonts.Helvetica);const count=doc.getPageCount();for(let i=0;i<count;i++){const p=doc.getPage(i);const {width,height}=p.getSize();if(header.trim())p.drawText(header.trim().slice(0,120),{x:36,y:height-28,size:9,font,color:rgb(.25,.25,.25)});let bottom=footer.trim().slice(0,120);if(pageNo)bottom+=(bottom?"   ":"")+`${i+1} / ${count}`;if(bottom)p.drawText(bottom,{x:36,y:18,size:9,font,color:rgb(.25,.25,.25)});}
+      const count=doc.getPageCount();const heading=header.trim()?await preparePdfLabel(doc,Array.from(header.trim()).slice(0,120).join(''),9,rgb(.25,.25,.25)):null;for(let i=0;i<count;i++){const p=doc.getPage(i);const {height}=p.getSize();heading?.draw(p,{x:36,y:height-28});let bottom=Array.from(footer.trim()).slice(0,120).join('');if(pageNo)bottom+=(bottom?"   ":"")+`${i+1} / ${count}`;if(bottom)(await preparePdfLabel(doc,bottom,9,rgb(.25,.25,.25))).draw(p,{x:36,y:18});}
     }else if(mode==="bates"){
-      const font=await doc.embedFont(StandardFonts.Helvetica);for(let i=0;i<doc.getPageCount();i++){const p=doc.getPage(i);const label=`${prefix}${String(Math.max(0,start)+i).padStart(Math.max(1,Math.min(12,digits)),"0")}${suffix}`.slice(0,120);const size=9;const w=font.widthOfTextAtSize(label,size);p.drawText(label,{x:Math.max(24,p.getWidth()-w-28),y:18,size,font,color:rgb(.2,.2,.2)});}
+      for(let i=0;i<doc.getPageCount();i++){const p=doc.getPage(i);const text=Array.from(`${prefix}${String(Math.max(0,start)+i).padStart(Math.max(1,Math.min(12,digits)),"0")}${suffix}`).slice(0,120).join('');const label=await preparePdfLabel(doc,text,9,rgb(.2,.2,.2));label.draw(p,{x:Math.max(24,p.getWidth()-label.width-28),y:18});}
     }else{
       doc.catalog.set(PDFName.of("PageLayout"),PDFName.of(layout));doc.catalog.set(PDFName.of("PageMode"),PDFName.of(pageMode));
       const prefs=doc.context.obj({FitWindow:fit,DisplayDocTitle:showTitle,HideToolbar:hideToolbar,HideMenubar:hideMenubar,Direction:PDFName.of(readingRtl?"R2L":"L2R")});doc.catalog.set(PDFName.of("ViewerPreferences"),prefs);

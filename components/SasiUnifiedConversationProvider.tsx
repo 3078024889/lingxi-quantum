@@ -1,6 +1,7 @@
 "use client";
 import{createContext,useCallback,useContext,useMemo,useState,useEffect,useRef,type ReactNode}from"react";
 import{createUnifiedTurn,completeUnifiedTurn,failUnifiedTurn,type SasiUnifiedMode,type SasiUnifiedTurn}from"@/lib/sasi/core/unified-conversation";
+import {workspaceCheckpoint} from '@/lib/sasi/workspace-checkpoint';
 
 type Ctx={
  ownerId:string;threadId:string;workspace:Record<string,any>;restored:boolean;
@@ -33,7 +34,7 @@ export function SasiUnifiedConversationProvider({children}:{children:ReactNode})
  const updateWorkspace=useCallback((patch:Record<string,any>)=>setWorkspace(old=>({...old,...patch,savedAt:Date.now()})),[]);
  useEffect(()=>{
   if(!ready.current||!ownerId||!threadId||!workspace.mode)return;
-  const snapshot={...workspace,threadId};
+  const snapshot=workspaceCheckpoint({...workspace,threadId});
   try{localStorage.setItem('lx-sasi-workspace-v78:'+ownerId,JSON.stringify(snapshot))}catch{}
   const timer=setTimeout(()=>{void fetch('/api/sasi/conversations/workspace',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({threadId,workspace:snapshot})}).catch(()=>{})},500);
   return()=>clearTimeout(timer);

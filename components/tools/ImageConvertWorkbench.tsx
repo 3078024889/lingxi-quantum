@@ -1,4 +1,6 @@
 "use client";
+import {usePathname} from 'next/navigation';
+import {toolTitle} from '@/lib/tools/card-i18n';
 import {useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -20,7 +22,7 @@ const D:Record<LingxiLang,C>={
 };
 const FORMAT:Record<LingxiLang,string>={zh:'输出格式',en:'Output format',ja:'出力形式',ko:'출력 형식',fr:'Format de sortie',de:'Ausgabeformat',es:'Formato de salida',pt:'Formato de saída',ar:'صيغة الإخراج'};
 export default function ImageConvertWorkbench({output,accept="image/*",title,allowPngOutput=false}:Props){
- const{lang}=useLingxiLang();const c=D[lang]??D.en;
+ const{lang}=useLingxiLang();const pathname=usePathname();const localizedTitle=toolTitle(lang,pathname.split("/").filter(Boolean).pop()||"",title);const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[quality,setQuality]=useState(.92),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
  const[selectedOutput,setSelectedOutput]=useState(output);
  async function run(){
@@ -39,7 +41,7 @@ export default function ImageConvertWorkbench({output,accept="image/*",title,all
   <FileDropzone accept={accept} multiple append maxFiles={50} maxSizeMB={40} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy} kind="image"/>
   {allowPngOutput&&<label className="block text-sm">{FORMAT[lang]}<select disabled={busy} value={selectedOutput} onChange={e=>{setSelectedOutput(e.target.value as 'jpeg'|'png');setResults([]);setError('')}} className="ml-3 rounded-lg border bg-[var(--lx-panel)] px-3 py-2"><option value="jpeg">JPG</option><option value="png">PNG</option></select></label>}
   {selectedOutput!=="png"&&<label className="block text-sm text-[var(--lx-muted)]">{c.quality}<input disabled={busy} type="range" min=".4" max="1" step=".05" value={quality} onChange={e=>setQuality(Math.min(1,Math.max(.4,Number(e.target.value)||.92)))} className="ml-3 align-middle"/><span className="ml-2">{Math.round(quality*100)}%</span></label>}
-  <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:`${c.run} · ${allowPngOutput?'WebP → '+(selectedOutput==='jpeg'?'JPG':'PNG'):title}`}</button>
+  <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:`${c.run} · ${allowPngOutput?'WebP → '+(selectedOutput==='jpeg'?'JPG':'PNG'):localizedTitle}`}</button>
   {!!results.length&&<ResultPanel files={results} messageZh={c.ready} messageEn={c.ready}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
  </div>;

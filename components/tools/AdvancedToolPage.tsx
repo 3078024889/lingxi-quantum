@@ -1,6 +1,8 @@
+import {ToolUiLocaleProvider} from "./ToolUiText";
+import ToolLocalizedHeading from "./ToolLocalizedHeading";
 import Link from"next/link";import type{ReactNode}from"react";import LxText from"@/components/LxText";
 export default function AdvancedToolPage({title,intro,children,note}:{title:ReactNode;intro:ReactNode;children:ReactNode;note?:ReactNode;hidePriceHint?:boolean}){
- return <main className="min-h-screen bg-[var(--lx-bg)] pt-16 text-[var(--lx-ink)] lg:ml-[260px] lg:pt-0"><div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+ return <ToolUiLocaleProvider><main className="min-h-screen bg-[var(--lx-bg)] pt-16 text-[var(--lx-ink)] lg:ml-[260px] lg:pt-0"><div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
   <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/tools" className="text-sm font-medium text-[var(--lx-muted)] hover:text-[var(--lx-ink)]">← <LxText zh="回到全部工具" en="Back to all tools" ja="すべてのツールへ" ko="모든 도구로" fr="Tous les outils" de="Alle Tools" es="Todas las herramientas" pt="Todas as ferramentas" ar="العودة إلى الأدوات"/></Link><Link href="/account/orders" className="text-xs text-[var(--lx-muted)] underline underline-offset-4"><LxText zh="订单与使用记录" en="Orders & usage" ja="注文と利用履歴" ko="주문 및 사용 기록" fr="Commandes et utilisation" de="Bestellungen & Nutzung" es="Pedidos y uso" pt="Pedidos e uso" ar="الطلبات والاستخدام"/></Link></div>
-  <div className="mt-6 max-w-3xl"><h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1><p className="mt-3 text-base leading-7 text-[var(--lx-muted)]">{intro}</p>{note&&<p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{note}</p>}</div><div className="mt-7 rounded-[32px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 shadow-[var(--lx-shadow)] sm:p-6">{children}</div></div></main>
+  <ToolLocalizedHeading title={title} intro={intro} note={note}/><div data-tool-workbench className="mt-7 rounded-[32px] border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 shadow-[var(--lx-shadow)] sm:p-6">{children}</div></div></main></ToolUiLocaleProvider>
 }

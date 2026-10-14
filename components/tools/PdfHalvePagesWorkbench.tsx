@@ -1,5 +1,6 @@
 "use client";
 
+import ToolUiText from "@/components/tools/ToolUiText";
 import { useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -100,19 +101,19 @@ export default function PdfHalvePagesWorkbench() {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm">
-          拆分方向
+          <ToolUiText text="拆分方向" />
           <select
             value={direction}
             onChange={(event) => setDirection(event.target.value as Direction)}
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
           >
-            <option value="left-right">左右拆分 · A3 横版 → 两张 A4</option>
-            <option value="top-bottom">上下拆分 · 长页面 → 上下两页</option>
+            <option value="left-right"><ToolUiText text="左右拆分 · A3 横版 → 两张 A4" /></option>
+            <option value="top-bottom"><ToolUiText text="上下拆分 · 长页面 → 上下两页" /></option>
           </select>
         </label>
 
         <label className="text-sm">
-          输出顺序
+          <ToolUiText text="输出顺序" />
           <select
             value={order}
             onChange={(event) =>
@@ -120,14 +121,14 @@ export default function PdfHalvePagesWorkbench() {
             }
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
           >
-            <option value="first-second">左→右 / 上→下</option>
-            <option value="second-first">右→左 / 下→上</option>
+            <option value="first-second"><ToolUiText text="左→右 / 上→下" /></option>
+            <option value="second-first"><ToolUiText text="右→左 / 下→上" /></option>
           </select>
         </label>
       </div>
 
       <p className="text-xs leading-5 text-[var(--lx-muted)]">
-        直接调整 PDF 页面边界并保留原页面对象，不先把页面栅格化；适合双页扫描、A3 讲义和书籍跨页 PDF。复杂旋转页建议处理后抽查。
+        <ToolUiText text="直接调整 PDF 页面边界并保留原页面对象，不先把页面栅格化；适合双页扫描、A3 讲义和书籍跨页 PDF。复杂旋转页建议处理后抽查。" />
       </p>
 
       <button
@@ -135,7 +136,7 @@ export default function PdfHalvePagesWorkbench() {
         onClick={run}
         className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"
       >
-        {busy ? "正在拆分…" : "开始页面拆半"}
+        <ToolUiText text={busy ? "正在拆分…" : "开始页面拆半"} />
       </button>
 
       {!!results.length && (
