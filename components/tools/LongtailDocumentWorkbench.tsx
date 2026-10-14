@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
+import {readEpub} from '@/lib/files/epub-reader';
 
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -14,34 +15,10 @@ function textBlob(name:string,text:string,type="text/plain;charset=utf-8"):ToolR
  return{name,blob,mime:type,size:blob.size};
 }
 function xml(raw:string){return new DOMParser().parseFromString(raw,"application/xml")}
-function htmlText(raw:string){
- const doc=new DOMParser().parseFromString(raw,"text/html");
- return (doc.body?.innerText||doc.body?.textContent||"").replace(/\n{3,}/g,"\n\n").trim();
-}
 function csvCell(value:string){return `"${String(value||"").replace(/"/g,'""').replace(/\r?\n/g," ")}"`}
 
 async function epubToText(file:File){
- const zip=await openBoundedArchive(file);
- const container=await readArchiveText(zip,"META-INF/container.xml");
- if(!container)throw new Error("EPUB_CONTAINER_MISSING");
- const c=xml(container),root=c.querySelector("rootfile")?.getAttribute("full-path");
- if(!root)throw new Error("EPUB_PACKAGE_MISSING");
- const opfRaw=await readArchiveText(zip,root);
- if(!opfRaw)throw new Error("EPUB_OPF_MISSING");
- const opf=xml(opfRaw),base=root.includes("/")?root.slice(0,root.lastIndexOf("/")+1):"";
- const manifest=new Map<string,string>();
- opf.querySelectorAll("manifest item").forEach(node=>{
-  const id=node.getAttribute("id"),href=node.getAttribute("href");
-  if(id&&href)manifest.set(id,decodeURIComponent(href));
- });
- const parts:string[]=[];
- for(const item of Array.from(opf.querySelectorAll("spine itemref"))){
-  const href=manifest.get(item.getAttribute("idref")||"");if(!href)continue;
-  const raw=await readArchiveText(zip,base+href);if(!raw)continue;
-  const text=htmlText(raw);if(text)parts.push(text);
- }
- if(!parts.length)throw new Error("EPUB_TEXT_EMPTY");
- return parts.join("\n\n");
+ return (await readEpub(file)).text;
 }
 
 async function odtToText(file:File){

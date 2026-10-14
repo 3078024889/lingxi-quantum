@@ -4,10 +4,10 @@ import {readFile} from 'node:fs/promises';
 
 async function archive(files:Record<string,string>){const zip=new JSZip();for(const [name,text] of Object.entries(files))zip.file(name,text);return zip.generateAsync({type:'nodebuffer',compression:'DEFLATE'})}
 const cases:{slug:string;ext:string;files:Record<string,string>;expected:string}[]=[
- {slug:'xlsx-to-csv',ext:'xlsx',files:{'xl/worksheets/sheet1.xml':'<worksheet><sheetData><row r="1"><c><v>12</v></c><c><v>34</v></c></row><row r="3"><c r="B3"><v>56</v></c></row></sheetData></worksheet>'},expected:'12,34\r\n\r\n,56'},
+ {slug:'xlsx-to-csv',ext:'xlsx',files:{'xl/worksheets/sheet1.xml':'<worksheet><sheetData><row r="1"><c><v>12</v></c><c><v>34</v></c></row><row r="2"/><row r="3"><c r="A3"/><c r="B3"><v>56</v></c></row><row r="4"><c r="A4" t="inlineStr"><is><t>&#x1F30D; &amp;quot;</t></is></c></row></sheetData></worksheet>'},expected:'12,34\r\n\r\n,56\r\n🌍 &quot;'},
  {slug:'pptx-to-txt',ext:'pptx',files:{'ppt/slides/slide1.xml':'<p:sld xmlns:p="urn:p" xmlns:a="urn:a"><a:t>你好 🌍</a:t></p:sld>'},expected:'# Slide 1\n你好 🌍'},
  {slug:'odt-to-txt',ext:'odt',files:{'content.xml':'<office:document xmlns:office="urn:o" xmlns:text="urn:t"><text:p>你好 🌍</text:p><text:p>第二段</text:p></office:document>'},expected:'你好 🌍\n第二段'},
- {slug:'epub-to-txt',ext:'epub',files:{'META-INF/container.xml':'<container><rootfiles><rootfile full-path="book/package.opf"/></rootfiles></container>','book/package.opf':'<package><manifest><item id="second" href="two.html"/><item id="first" href="one.html"/></manifest><spine><itemref idref="first"/><itemref idref="second"/></spine></package>','book/two.html':'<html><body>第二章</body></html>','book/one.html':'<html><body>第一章 🌍</body></html>'},expected:'第一章 🌍\n\n第二章'},
+ {slug:'epub-to-txt',ext:'epub',files:{'META-INF/container.xml':'<container><rootfiles><rootfile full-path="book/package.opf"/></rootfiles></container>','book/package.opf':'<package><manifest><item id="second" href="a.html"/><item id="first" href="z.html#section"/></manifest><spine><itemref idref="first"/><itemref idref="second"/></spine></package>','book/a.html':'<html><body>第二章</body></html>','book/z.html':'<html><body><p>第一章 🌍</p><script>wrong text</script></body></html>'},expected:'第一章 🌍\n\n第二章'},
 ];
 for(const item of cases)test(`${item.slug}: real bounded archive produces the complete downloadable text`,async({page})=>{
  await page.goto(`/tools/${item.slug}?lang=en`);

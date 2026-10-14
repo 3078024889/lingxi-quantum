@@ -1,0 +1,61 @@
+diff --git a/.npmignore b/.npmignore
+deleted file mode 100644
+index 096746c1480d8f93be244a3d71f0594b072092d1..0000000000000000000000000000000000000000
+diff --git a/src/sprintf.js b/src/sprintf.js
+index c0fc7c08b2e6fe38de2883034b8d28c8f34e9866..e234e4b9ba198639de6a33ba4ed729588ed6ceca 100644
+--- a/src/sprintf.js
++++ b/src/sprintf.js
+@@ -15,6 +15,9 @@
+ 
+     function sprintf() {
+         var key = arguments[0], cache = sprintf.cache
++        if (typeof key !== 'string' || key.length > 1048576) {
++            throw new RangeError('SPRINTF_FORMAT_LIMIT')
++        }
+         if (!(cache[key] && cache.hasOwnProperty(key))) {
+             cache[key] = sprintf.parse(key)
+         }
+@@ -22,14 +25,23 @@
+     }
+ 
+     sprintf.format = function(parse_tree, argv) {
+-        var cursor = 1, tree_length = parse_tree.length, node_type = "", arg, output = [], i, k, match, pad, pad_character, pad_length, is_positive = true, sign = ""
++        var cursor = 1, tree_length = parse_tree.length, node_type = "", arg, output = [], i, k, match, pad, pad_character, pad_length, is_positive = true, sign = "", output_length = 0
++        function append_output(value) {
++            var part = value == null ? '' : String(value)
++            output_length += part.length
++            if (output_length > 1048576) throw new RangeError('SPRINTF_OUTPUT_LIMIT')
++            output[output.length] = part
++        }
+         for (i = 0; i < tree_length; i++) {
+             node_type = get_type(parse_tree[i])
+             if (node_type === "string") {
+-                output[output.length] = parse_tree[i]
++                append_output(parse_tree[i])
+             }
+             else if (node_type === "array") {
+                 match = parse_tree[i] // convenience purposes only
++                if ((match[6] && Number(match[6]) > 100000) || (match[7] && Number(match[7]) > 1000)) {
++                    throw new RangeError('SPRINTF_FIELD_LIMIT')
++                }
+                 if (match[2]) { // keyword argument
+                     arg = argv[cursor]
+                     for (k = 0; k < match[2].length; k++) {
+@@ -98,7 +110,7 @@
+                     break
+                 }
+                 if (re.json.test(match[8])) {
+-                    output[output.length] = arg
++                    append_output(arg)
+                 }
+                 else {
+                     if (re.number.test(match[8]) && (!is_positive || match[3])) {
+@@ -111,7 +123,7 @@
+                     pad_character = match[4] ? match[4] === "0" ? "0" : match[4].charAt(1) : " "
+                     pad_length = match[6] - (sign + arg).length
+                     pad = match[6] ? (pad_length > 0 ? str_repeat(pad_character, pad_length) : "") : ""
+-                    output[output.length] = match[5] ? sign + arg + pad : (pad_character === "0" ? sign + pad + arg : pad + sign + arg)
++                    append_output(match[5] ? sign + arg + pad : (pad_character === "0" ? sign + pad + arg : pad + sign + arg))
+                 }
+             }
+         }

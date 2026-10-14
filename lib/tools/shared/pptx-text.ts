@@ -1,16 +1,7 @@
 "use client";
 
 import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
-
-
-function decodeXml(value: string) {
-  return value
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'");
-}
+import {decodeXmlEntities as decodeXml} from '@/lib/files/xml-entities';
 
 function xmlText(xml: string) {
   return decodeXml(

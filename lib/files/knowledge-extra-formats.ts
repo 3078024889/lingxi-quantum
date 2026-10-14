@@ -1,15 +1,8 @@
 "use client";
 
 import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
-
-
-const decodeXml = (value: string) =>
-  value
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'");
+import {decodeXmlEntities as decodeXml} from '@/lib/files/xml-entities';
+import {readEpub} from './epub-reader';
 
 function xmlText(xml: string) {
   return decodeXml(
@@ -110,25 +103,5 @@ export async function pptxToKnowledgeText(
 export async function epubToText(
   file: File
 ): Promise<{ text: string; chapters: number }> {
-  const zip = await openBoundedArchive(file);
-
-  const htmlNames = Object.keys(zip.files)
-    .filter((name) => /\.(xhtml|html|htm)$/i.test(name))
-    .filter((name) => !/nav\.xhtml$/i.test(name))
-    .sort();
-
-  if (!htmlNames.length) throw new Error("EPUB_CONTENT_MISSING");
-
-  const blocks: string[] = [];
-  for (const name of htmlNames) {
-    const html = await readArchiveText(zip,name);
-    if (!html) continue;
-    const text = stripHtml(html);
-    if (text) blocks.push(text);
-  }
-
-  const text = blocks.join("\n\n").trim();
-  if (!text) throw new Error("EPUB_NO_TEXT");
-
-  return { text, chapters: blocks.length };
+  return readEpub(file);
 }

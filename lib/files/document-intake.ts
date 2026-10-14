@@ -1,6 +1,7 @@
 "use client";
 
 import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
+import {decodeXmlEntities as decodeXml} from '@/lib/files/xml-entities';
 
 import { epubToText, pptxToKnowledgeText, structuredTextFile } from "@/lib/files/knowledge-extra-formats";
 import { SASI_INTAKE_LIMITS } from "@/lib/sasi/core/intake-contract";
@@ -35,13 +36,6 @@ export type ParsedDocument = {
   kind:"text"|"docx"|"sheet"|"rtf"|"epub"|"pptx"|"structured";
   detail?:string;
 };
-
-const decodeXml=(value:string)=>value
-  .replace(/&lt;/g,"<")
-  .replace(/&gt;/g,">")
-  .replace(/&amp;/g,"&")
-  .replace(/&quot;/g,'"')
-  .replace(/&apos;/g,"'");
 
 function ext(name:string){
   const hit=name.toLowerCase().match(/\.([a-z0-9]+)$/);
@@ -115,10 +109,10 @@ async function parseXlsx(file:File):Promise<ParsedDocument>{
     const xml=await readArchiveText(zip,`xl/${sheet.path}`);
     if(!xml)continue;
     const rows:string[]=[];
-    for(const rowHit of xml.matchAll(/<row\b[^>]*>([\s\S]*?)<\/row>/g)){
+    for(const rowHit of xml.matchAll(/<row\b[^>]*?(?:\/>|>([\s\S]*?)<\/row>)/g)){
       const cells:string[]=[];
-      for(const cellHit of rowHit[1].matchAll(/<c\b([^>]*)>([\s\S]*?)<\/c>/g)){
-        const attrs=cellHit[1],body=cellHit[2];
+      for(const cellHit of (rowHit[1]??'').matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)){
+        const attrs=cellHit[1],body=cellHit[2]??'';
         const ref=(attrs.match(/\br="([^"]+)"/)||[])[1]||"";
         const type=(attrs.match(/\bt="([^"]+)"/)||[])[1]||"";
         const raw=(body.match(/<v>([\s\S]*?)<\/v>/)||[])[1]??"";

@@ -2,18 +2,17 @@ import "server-only";
 import JSZip from "jszip";
 import ExcelJS from "exceljs";
 import mammoth from "mammoth";
+import {decodeXmlEntities} from '@/lib/files/xml-entities';
 
 const MAX_TEXT=700_000;
 function compact(value:string){
   return value.replace(/\r/g,"").replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim().slice(0,MAX_TEXT);
 }
 function xmlText(xml:string){
-  return compact(xml
+  return compact(decodeXmlEntities(xml
     .replace(/<a:br\s*\/>/g,"\n")
     .replace(/<\/(?:a:p|w:p|text:p|h[1-6]|p)>/g,"\n")
-    .replace(/<[^>]+>/g," ")
-    .replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">")
-    .replace(/&quot;/g,'"').replace(/&apos;/g,"'"));
+    .replace(/<[^>]+>/g," ")));
 }
 export async function extractStructuredDocument(extension:string,bytes:ArrayBuffer){
   const buffer=Buffer.from(bytes);

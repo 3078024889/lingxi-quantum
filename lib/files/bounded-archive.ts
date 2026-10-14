@@ -10,9 +10,31 @@ type ByteStream={
  resume():ByteStream;
 };
 
+/** Bound ZIP directory work before JSZip allocates a member object per entry. */
+function validateDirectory(buffer:ArrayBuffer){
+ const data=new DataView(buffer),length=buffer.byteLength;let end=-1;
+ for(let offset=length-22;offset>=Math.max(0,length-65557);offset--){
+  if(data.getUint32(offset,true)===0x06054b50&&offset+22+data.getUint16(offset+20,true)===length){end=offset;break}
+ }
+ if(end<0)throw Error('ARCHIVE_DIRECTORY_INVALID');
+ const count=data.getUint16(end+10,true),size=data.getUint32(end+12,true),start=data.getUint32(end+16,true);
+ if(count>ARCHIVE_LIMITS.entries)throw Error('ARCHIVE_ENTRY_LIMIT');
+ // Multi-disk and ZIP64 containers are outside this bounded Office/EPUB policy.
+ if(data.getUint16(end+4,true)!==0||data.getUint16(end+6,true)!==0||data.getUint16(end+8,true)!==count||start+size!==end)throw Error('ARCHIVE_DIRECTORY_INVALID');
+ let offset=start,total=0;
+ for(let index=0;index<count;index++){
+  if(offset+46>end||data.getUint32(offset,true)!==0x02014b50)throw Error('ARCHIVE_DIRECTORY_INVALID');
+  total+=data.getUint32(offset+24,true);if(total>ARCHIVE_LIMITS.expandedBytes)throw Error('ARCHIVE_EXPANDED_TOO_LARGE');
+  offset+=46+data.getUint16(offset+28,true)+data.getUint16(offset+30,true)+data.getUint16(offset+32,true);
+  if(offset>end)throw Error('ARCHIVE_DIRECTORY_INVALID');
+ }
+ if(offset!==end)throw Error('ARCHIVE_DIRECTORY_INVALID');
+}
+
 export async function openBoundedArchive(file:Blob){
  if(!Number.isFinite(file.size)||file.size<0||file.size>ARCHIVE_LIMITS.compressedBytes)throw Error('ARCHIVE_INPUT_TOO_LARGE');
- const zip=await JSZip.loadAsync(await file.arrayBuffer(),{checkCRC32:false,createFolders:false});
+ const buffer=await file.arrayBuffer();validateDirectory(buffer);
+ const zip=await JSZip.loadAsync(buffer,{checkCRC32:false,createFolders:false});
  const entries=Object.values(zip.files);if(entries.length>ARCHIVE_LIMITS.entries)throw Error('ARCHIVE_ENTRY_LIMIT');
  let total=0;
  for(const entry of entries){

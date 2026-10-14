@@ -1,0 +1,161 @@
+{
+  "count": 19,
+  "thirdPartyScriptsExecuted": false,
+  "paidServicesActivated": false,
+  "installedAt": "2026-10-14T00:24:24.5343562Z",
+  "scope": "Local Codex auditing/development skills; not automatically enabled SASI product features",
+  "skills": [
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/playwright",
+      "license": "Apache-2.0",
+      "name": "playwright",
+      "verifiedSourceFiles": 9,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/playwright-interactive",
+      "license": "Apache-2.0",
+      "name": "playwright-interactive",
+      "verifiedSourceFiles": 6,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/screenshot",
+      "license": "Apache-2.0",
+      "name": "screenshot",
+      "verifiedSourceFiles": 11,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/security-best-practices",
+      "license": "Apache-2.0",
+      "name": "security-best-practices",
+      "verifiedSourceFiles": 13,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/security-ownership-map",
+      "license": "Apache-2.0",
+      "name": "security-ownership-map",
+      "verifiedSourceFiles": 8,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/security-threat-model",
+      "license": "Apache-2.0",
+      "name": "security-threat-model",
+      "verifiedSourceFiles": 5,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/gh-fix-ci",
+      "license": "Apache-2.0",
+      "name": "gh-fix-ci",
+      "verifiedSourceFiles": 6,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "49f948faa9258a0c61caceaf225e179651397431",
+      "path": "skills/.curated/gh-address-comments",
+      "license": "Apache-2.0",
+      "name": "gh-address-comments",
+      "verifiedSourceFiles": 6,
+      "repo": "openai/skills"
+    },
+    {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "path": "skills/frontend-design",
+      "license": "Apache-2.0",
+      "name": "frontend-design",
+      "verifiedSourceFiles": 2,
+      "repo": "anthropics/skills"
+    },
+    {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "path": "skills/webapp-testing",
+      "license": "Apache-2.0",
+      "name": "webapp-testing",
+      "verifiedSourceFiles": 6,
+      "repo": "anthropics/skills"
+    },
+    {
+      "commit": "dbd4588f9e1033efb41dad4bef2f7947c8993d44",
+      "path": "skills/mcp-builder",
+      "license": "Apache-2.0",
+      "name": "mcp-builder",
+      "verifiedSourceFiles": 10,
+      "repo": "anthropics/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/audit-context-building/skills/audit-context-building",
+      "license": "CC-BY-SA-4.0",
+      "name": "audit-context-building",
+      "verifiedSourceFiles": 6,
+      "repo": "trailofbits/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/differential-review/skills/differential-review",
+      "license": "CC-BY-SA-4.0",
+      "name": "differential-review",
+      "verifiedSourceFiles": 7,
+      "repo": "trailofbits/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/property-based-testing/skills/property-based-testing",
+      "license": "CC-BY-SA-4.0",
+      "name": "property-based-testing",
+      "verifiedSourceFiles": 9,
+      "repo": "trailofbits/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/variant-analysis/skills/variant-analysis",
+      "license": "CC-BY-SA-4.0",
+      "name": "variant-analysis",
+      "verifiedSourceFiles": 18,
+      "repo": "trailofbits/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/sharp-edges/skills/sharp-edges",
+      "license": "CC-BY-SA-4.0",
+      "name": "sharp-edges",
+      "verifiedSourceFiles": 19,
+      "repo": "trailofbits/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/supply-chain-risk-auditor/skills/supply-chain-risk-auditor",
+      "license": "CC-BY-SA-4.0",
+      "name": "supply-chain-risk-auditor",
+      "verifiedSourceFiles": 13,
+      "repo": "trailofbits/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/post-patch-validation/skills/post-patch-validation",
+      "license": "CC-BY-SA-4.0",
+      "name": "post-patch-validation",
+      "verifiedSourceFiles": 5,
+      "repo": "trailofbits/skills"
+    },
+    {
+      "commit": "8e54050ae63c2f62224c35b1616efe71865b4777",
+      "path": "plugins/dimensional-analysis/skills/dimensional-analysis",
+      "license": "CC-BY-SA-4.0",
+      "name": "dimensional-analysis",
+      "verifiedSourceFiles": 7,
+      "repo": "trailofbits/skills"
+    }
+  ]
+}

@@ -1,12 +1,14 @@
 const fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),assert=require('node:assert/strict'),JSZip=require('jszip');
 const cache=new Map();
-function load(file){if(cache.has(file))return cache.get(file);const exports={};cache.set(file,exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{exports,Blob,TextEncoder,TextDecoder,require:name=>name==='@/lib/files/bounded-archive'?load('lib/files/bounded-archive.ts'):name==='@/lib/files/document-intake'?{}:require(name)});return exports}
+function load(file){if(cache.has(file))return cache.get(file);const exports={};cache.set(file,exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{exports,Blob,TextEncoder,TextDecoder,require:name=>name==='@/lib/files/bounded-archive'?load('lib/files/bounded-archive.ts'):name==='@/lib/files/xml-entities'?load('lib/files/xml-entities.ts'):name==='@/lib/files/document-intake'?{}:require(name)});return exports}
 async function fixture(files){const zip=new JSZip();for(const [name,value] of Object.entries(files))zip.file(name,value);return new Blob([await zip.generateAsync({type:'uint8array',compression:'DEFLATE'})])}
 (async()=>{
  const {openBoundedArchive:open,readArchiveText:read,ARCHIVE_LIMITS:L}=load('lib/files/bounded-archive.ts');
  const zip=await open(await fixture({'empty':'','中文.xml':'你好 🌍'}));assert.equal(await read(zip,'中文.xml'),'你好 🌍');assert.equal(await read(zip,'empty'),'');assert.equal(await read(zip,'missing'),undefined);
+ const countForgery=new Uint8Array(await (await fixture({'one':'1'})).arrayBuffer()),countView=new DataView(countForgery.buffer);countView.setUint16(countForgery.length-12,L.entries+1,true);await assert.rejects(()=>open(new Blob([countForgery])),/ARCHIVE_ENTRY_LIMIT/);
+ const sizeForgery=new Uint8Array(await (await fixture({'one':'1'})).arrayBuffer()),sizeView=new DataView(sizeForgery.buffer),centralStart=sizeView.getUint32(sizeForgery.length-6,true);sizeView.setUint32(centralStart+24,L.expandedBytes+1,true);await assert.rejects(()=>open(new Blob([sizeForgery])),/ARCHIVE_EXPANDED_TOO_LARGE/);
  await assert.rejects(()=>open({size:L.compressedBytes+1,arrayBuffer(){throw Error('must not read')}}),/ARCHIVE_INPUT_TOO_LARGE/);
- await assert.rejects(()=>open(new Blob(['invalid'])),/zip|central directory/i);
+ await assert.rejects(()=>open(new Blob(['invalid'])),/ARCHIVE_DIRECTORY_INVALID/);
  const many={};for(let i=0;i<=L.entries;i++)many['f'+i]='';await assert.rejects(async()=>open(await fixture(many)),/ARCHIVE_ENTRY_LIMIT/);
  const big=await open(await fixture({'large':'a'.repeat(L.textEntryBytes+1)}));await assert.rejects(()=>read(big,'large'),/ARCHIVE_TEXT_TOO_LARGE/);
  // Forged metadata must not bypass the streamed byte counter.

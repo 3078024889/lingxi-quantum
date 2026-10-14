@@ -11,3 +11,5 @@
 *.yml text eol=lf
 *.yaml text eol=lf
 /tests/fixtures/c2pa-official/* -text
+# Patch context lines contain a structural space; keep patch hashes stable on Windows/Linux.
+/patches/*.patch text eol=lf -whitespace

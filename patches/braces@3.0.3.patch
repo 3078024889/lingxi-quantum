@@ -1,0 +1,20 @@
+diff --git a/lib/parse.js b/lib/parse.js
+index 3a6988e629f52aee6609dc5ec290a5e9ff47cecb..e2bb626f712360892f047e4094830010fa19d88b 100644
+--- a/lib/parse.js
++++ b/lib/parse.js
+@@ -145,6 +145,7 @@ const parse = (input, options = {}) => {
+     if (value === CHAR_LEFT_PARENTHESES) {
+       block = push({ type: 'paren', nodes: [] });
+       stack.push(block);
++      if (stack.length > 128) throw new RangeError('BRACES_NESTING_LIMIT');
+       push({ type: 'text', value });
+       continue;
+     }
+@@ -211,6 +212,7 @@ const parse = (input, options = {}) => {
+ 
+       block = push(brace);
+       stack.push(block);
++      if (stack.length > 128) throw new RangeError('BRACES_NESTING_LIMIT');
+       push({ type: 'open', value });
+       continue;
+     }

@@ -1,0 +1,22 @@
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),ts=require('typescript'),assert=require('node:assert/strict'),JSZip=require('jszip'),{JSDOM}=require('jsdom');
+const dom=new JSDOM(''),cache=new Map();
+function load(file){file=path.resolve(file);if(cache.has(file))return cache.get(file);const exports={};cache.set(file,exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{exports,Blob,URL,TextEncoder,TextDecoder,DOMParser:dom.window.DOMParser,require:name=>name.startsWith('@/')?load(name.slice(2)+'.ts'):name.startsWith('.')?load(path.resolve(path.dirname(file),name)+'.ts'):require(name)});return exports}
+async function file(files,name){const zip=new JSZip();for(const [key,text] of Object.entries(files))zip.file(key,text);const blob=new Blob([await zip.generateAsync({type:'uint8array',compression:'DEFLATE'})]);blob.name=name;return blob}
+(async()=>{
+ const {xlsxToCsvFiles,delimitedToXlsx,parseDelimited}=load('lib/tools/shared/office-convert.ts');
+ const {parseGenericDocument}=load('lib/files/document-intake.ts');
+ const xlsx=await file({'xl/worksheets/sheet1.xml':'<worksheet><sheetData><row r="1"/><row r="2"><c r="A2"/><c r="B2" t="inlineStr"><is><t>&#x1F30D; &amp;quot;</t></is></c><c r="C2"/></row><row r="3"><c r="A3"><v>42</v></c></row></sheetData></worksheet>'},'sparse.xlsx');
+ const outputs=await xlsxToCsvFiles(xlsx);assert.equal(await outputs[0].blob.text(),'\r\n,🌍 &quot;,\r\n42');
+ const intake=await parseGenericDocument(xlsx);assert(intake.text.includes('B2\t🌍 &quot;'));assert(intake.text.includes('A3\t42'));assert(!intake.text.includes('A2\t🌍'));
+ const dup=await file({'xl/worksheets/sheet1.xml':'<worksheet><row r="1"><c r="A1"/><c r="A1"><v>7</v></c></row></worksheet>'},'duplicate.xlsx');await assert.rejects(()=>xlsxToCsvFiles(dup),/XLSX_CELL_DUPLICATE/);
+ const {decodeXmlEntities}=load('lib/files/xml-entities.ts');
+ for(const value of ['literal &quot;','世界 🌍','&amp;lt;','<tag>','double "quote"',"apostrophe '"]){const escaped=value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');assert.equal(decodeXmlEntities(escaped),value)}
+ assert.equal(decodeXmlEntities('&#128768; &#x4e16;'),'🜀 世');await assert.rejects(async()=>decodeXmlEntities('&#x110000;'),/XML_CHARACTER_INVALID/);
+ const epub=await file({'META-INF/container.xml':'<container><rootfiles><rootfile full-path="book/package.opf"/></rootfiles></container>','book/package.opf':'<package><manifest><item id="first" href="z.html#chapter"/><item id="second" href="a.html"/></manifest><spine><itemref idref="first"/><itemref idref="second"/></spine></package>','book/a.html':'<html><body>Second</body></html>','book/z.html':'<html><body><p>First 🌍</p><script>untrusted()</script></body></html>'},'ordered.epub');
+ const {readEpub}=load('lib/files/epub-reader.ts'),{epubToText}=load('lib/files/knowledge-extra-formats.ts');assert.equal((await readEpub(epub)).text,'First 🌍\n\nSecond');assert.equal((await epubToText(epub)).text,(await readEpub(epub)).text);
+ const external=await file({'META-INF/container.xml':'<container><rootfile full-path="https://private.example/book.opf"/></container>'},'external.epub');await assert.rejects(()=>readEpub(external),/EPUB_EXTERNAL_CHAPTER/);
+ // Deterministic generated corpus: CSV -> XLSX -> CSV must preserve every cell.
+ let seed=85;const next=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed};const atoms=['世界','🌍','quote"','comma,','line\nbreak','&quot;','<angle>','  space','123'];
+ for(let n=0;n<80;n++){const rows=Array.from({length:1+next()%6},()=>Array.from({length:1+next()%5},()=>atoms[next()%atoms.length]));const csv=rows.map(row=>row.map(cell=>'"'+cell.replaceAll('"','""')+'"').join(',')).join('\r\n');const input=new Blob([csv]);input.name='corpus.csv';const converted=await delimitedToXlsx(input);converted.blob.name='corpus.xlsx';const result=await xlsxToCsvFiles(converted.blob);const roundtrip=parseDelimited(await result[0].blob.text(),',');assert.equal(JSON.stringify(roundtrip),JSON.stringify(rows),'seed case '+n)}
+ console.log('PASS: self-closing row/cells, shared tool/SASI XML semantics, exact one-pass/numeric entities, duplicate rejection, EPUB spine/fragment order, no script text or external fetch, 80 seeded real CSV/XLSX round trips. No network.');
+})().catch(error=>{console.error(error);process.exitCode=1}).finally(()=>dom.window.close());

@@ -1,6 +1,7 @@
 "use client";
 
 import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
+import {decodeXmlEntities as decodeXml} from '@/lib/files/xml-entities';
 import JSZip from "jszip";
 import { parseGenericDocument } from "@/lib/files/document-intake";
 
@@ -169,15 +170,6 @@ export async function delimitedToXlsx(file: File) {
   };
 }
 
-function decodeXml(value: string) {
-  return value
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'");
-}
-
 function sharedStrings(xml: string) {
   return [...xml.matchAll(/<si\b[^>]*>([\s\S]*?)<\/si>/g)].map((hit) =>
     decodeXml([...hit[1].matchAll(/<t\b[^>]*>([\s\S]*?)<\/t>/g)].map((x) => x[1]).join("")),
@@ -187,21 +179,24 @@ function sharedStrings(xml: string) {
 function sheetToRows(xml: string, shared: string[]) {
   const rows: string[][] = [];
   let cells=0;
-  for (const rowHit of xml.matchAll(/<row\b([^>]*)>([\s\S]*?)<\/row>/g)) {
+  for (const rowHit of xml.matchAll(/<row\b([^>]*?)(?:\/>|>([\s\S]*?)<\/row>)/g)) {
+    const rowBody=rowHit[2]??'';
     const declaredRow=rowHit[1].match(/\br="(\d+)"/)?.[1];
-    const firstCellRow=rowHit[2].match(/<c\b[^>]*\br="[A-Z]+(\d+)"/i)?.[1];
+    const firstCellRow=rowBody.match(/<c\b[^>]*\br="[A-Z]+(\d+)"/i)?.[1];
     const rowIndex=Number(declaredRow||firstCellRow||rows.length+1)-1;
     if(!Number.isSafeInteger(rowIndex)||rowIndex<0||rowIndex>=1048576||rows[rowIndex])throw Error('XLSX_ROW_INVALID');
     const row: string[] = [];
-    for (const cellHit of rowHit[2].matchAll(/<c\b([^>]*)>([\s\S]*?)<\/c>/g)) {
+    const seen=new Set<number>();
+    for (const cellHit of rowBody.matchAll(/<c\b([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)) {
       const attrs = cellHit[1];
-      const body = cellHit[2];
+      const body = cellHit[2]??'';
       const reference=attrs.match(/\br="([^"]+)"/)?.[1];
       const ref=reference?.match(/^([A-Z]+)(\d+)$/i);
       if(reference&&(!ref||Number(ref[2])!==rowIndex+1))throw Error('XLSX_CELL_REFERENCE_INVALID');
       let index=row.length;
       if(ref){index=0;for(const ch of ref[1].toUpperCase())index=index*26+(ch.charCodeAt(0)-64);index--;}
       if(!Number.isSafeInteger(index)||index<0||index>=16384)throw Error('XLSX_COLUMN_INVALID');
+      if(seen.has(index))throw Error('XLSX_CELL_DUPLICATE');seen.add(index);
       cells+=Math.max(0,index+1-row.length);if(cells>2000000)throw Error('XLSX_GRID_TOO_LARGE');
 
       const type = (attrs.match(/\bt="([^"]+)"/) || [])[1] || "";
