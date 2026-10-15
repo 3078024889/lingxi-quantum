@@ -1,9 +1,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const {createRequire}=require('node:module');
 const ocrTarget=path.join(__dirname,'..','public','media','ocr-7.0.0-v1');
 const ocrPackage=path.dirname(require.resolve('tesseract.js/package.json'));
-const corePackage=path.dirname(require.resolve('tesseract.js-core/package.json'));
+const ocrRequire=createRequire(require.resolve('tesseract.js/package.json'));
+const corePackage=path.dirname(ocrRequire.resolve('tesseract.js-core/package.json'));
 const manifest=[];
 function copyAsset(source,relative){
  const destination=path.join(ocrTarget,relative);fs.mkdirSync(path.dirname(destination),{recursive:true});

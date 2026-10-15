@@ -63,6 +63,8 @@ Baseline production availability: both domains' 121 public tool routes returned 
 
 Release receipt: `_local/handoff/tool-runtime-20261015/release-final.json` is the authoritative post-push record of source SHA, Vercel commit status and both domains' live HTTP/assets/actual OCR checks. It must match this source commit before deployment is reported as successful. This avoids embedding a self-referential commit hash or claiming a release based only on a local build.
 
+The first release attempt (`0d109f76`) failed clean-install CI/resource preparation because the script resolved the transitive `tesseract.js-core` package from the project root, where pnpm's isolated install does not expose it. The local existing dependency tree had masked that assumption. Resource preparation now resolves core through `createRequire` anchored to Tesseract's own package. The generated asset bytes/hashes are unchanged; the hosted application/recognition implementation is unchanged by this packaging follow-up. The failed attempt is retained, and release success still requires the follow-up commit's remote status and live checks.
+
 ## Mini Programs and server boundary
 
 Both native build profiles compile/package successfully with the source unchanged, without copying credentials. Profile isolation, sharing, search-index source configuration, bounded public GET recovery and website/account handoff checks passed. Main AppID: `wxbf4ae90406e7e26b`; temporary-mail AppID: `wx3330b29f4613a08e`. The previous release recorded main version 5.5 and temporary-mail version 2.0; this audit has not freshly inspected their authenticated WeChat release pages or claimed a new native publication. Website changes are delivered through the deployed web-view content.
