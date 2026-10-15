@@ -2,6 +2,8 @@
 
 Applied by pnpm's `patchedDependencies` during frozen installs. No advisories are suppressed.
 
+- `tesseract.js@7.0.0.patch`: propagate initialization failure (including language data failures) to the public worker promise, and support an application-owned `abortSignal`. Abort/native worker errors reject pending jobs and terminate the worker; normal termination removes its abort listener. This changes the API module bundled by Next.js, not the unmodified hosted OCR worker/core or recognition algorithm. Upstream: [naptha/tesseract.js](https://github.com/naptha/tesseract.js/tree/v7.0.0), Apache-2.0. Regression coverage includes real browser recognition, missing language data, blocked resources, cancellation and retry.
+
 - `braces@3.0.3.patch`: limit the parser's combined brace/parenthesis stack to 128 before recursive AST visitors see deeply nested **string** patterns. Addresses the demonstrated input path in [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm). Direct caller-supplied AST objects are outside this mitigation claim. Upstream source: [micromatch/braces](https://github.com/micromatch/braces), MIT; attribution/license retained in `LICENSE-braces.txt` and the installed dependency.
 - `sprintf-js@1.0.3.patch`: bound format size to 1 MiB, field width to 100,000, precision to 1,000 and aggregate emitted output to 1 MiB before runaway output allocation. Addresses hostile format specifiers in [GHSA-hp3w-g68c-fv3c](https://github.com/advisories/GHSA-hp3w-g68c-fv3c). Upstream source: [alexei/sprintf.js](https://github.com/alexei/sprintf.js), BSD-3-Clause; attribution/license retained in `LICENSE-sprintf-js.txt` and the installed dependency.
 

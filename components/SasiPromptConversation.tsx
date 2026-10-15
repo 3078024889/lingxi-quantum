@@ -20,6 +20,7 @@ import SasiUserResourceAction from './SasiUserResourceAction';
 import SasiToolContinuation from './SasiToolContinuation';
 import {streamUserResourceText} from '@/lib/sasi/browser/user-resource-text';
 import {receiveSasiStream} from '@/lib/sasi/client/receive-text-stream';
+import {requestStatusCopy} from '@/lib/sasi/client/request-status-copy';
 import {conversationHistory} from '@/lib/sasi/client/conversation-history';
 import {useSasiUnifiedConversation} from './SasiUnifiedConversationProvider';
 import {activeConversationDraft,readConversationDraft,writeConversationDraft,clearActiveConversationDraft,type ConversationDraft} from '@/lib/sasi/client/conversation-draft';
@@ -43,6 +44,9 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const queued=useRef<string[]>([]);const latestSend=useRef<(confirm?:boolean)=>Promise<void>>(async()=>{});
  const {lang}=useLingxiLang(),ct=(key:Parameters<typeof composerText>[1])=>composerText(lang,key);
  const threadText=THREAD_UI[lang]||THREAD_UI.en;
+ const requestCopy=requestStatusCopy(lang),freeRequest=useRef<AbortController|null>(null),freeCancelled=useRef(false);
+ const [waitingFree,setWaitingFree]=useState(false);
+ useEffect(()=>()=>freeRequest.current?.abort(),[]);
  const [prompt,setPrompt]=useState(initialPrompt),[functions,setFunctions]=useState<string[]>([]),[rights,setRights]=useState(false),[busy,setBusy]=useState(false),[notice,setNotice]=useState('');
  const [turns,setTurns]=useState<Array<{question:string;answer?:string;image?:string}>>([]),[quote,setQuote]=useState<{id:string;estimated_fen:number;question:string;currency:string}|null>(null);
  const [streaming,setStreaming]=useState<{question:string;answer:string}|null>(null);
@@ -175,8 +179,16 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
     if(userResource.kind==='answer'){commitText(question,userResource.answer);setStreaming(null);return}
     setStreaming(null);
-    const response=await fetch('/api/sasi/experience/text',{method:'POST',headers:{'content-type':'application/json','accept':'text/event-stream'},body:JSON.stringify({lang,text:question,threadId:threadRef.current,requestId:activeRequest.current,sessionKey:threadRef.current,history:conversationHistory(turns),task:'chat',allowConnected:false})});
-    const data=await receiveSasiStream(response,answer=>setStreaming(answer?{question,answer}:null));
+    const abort=new AbortController();freeRequest.current=abort;freeCancelled.current=false;setWaitingFree(true);
+    let headerTimer:ReturnType<typeof setTimeout>|undefined,totalTimer:ReturnType<typeof setTimeout>|undefined;
+    let response:Response,data:any;
+    try{
+     headerTimer=setTimeout(()=>abort.abort(Error('SASI_REQUEST_TIMEOUT')),30_000);
+     totalTimer=setTimeout(()=>abort.abort(Error('SASI_REQUEST_TIMEOUT')),190_000);
+     response=await fetch('/api/sasi/experience/text',{method:'POST',signal:abort.signal,headers:{'content-type':'application/json','accept':'text/event-stream'},body:JSON.stringify({lang,text:question,threadId:threadRef.current,requestId:activeRequest.current,sessionKey:threadRef.current,history:conversationHistory(turns),task:'chat',allowConnected:false})});
+     clearTimeout(headerTimer);
+     data=await receiveSasiStream(response,answer=>setStreaming(answer?{question,answer}:null));
+    }finally{clearTimeout(headerTimer);clearTimeout(totalTimer);freeRequest.current=null;setWaitingFree(false)}
     exhausted.current=data.experienceExhausted===true;
     if(response.ok&&data.state==='answer'){setStreaming(null);commitText(question,data.answer);return}
     setStreaming(null);
@@ -188,7 +200,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
    if(data.task?.state!=='succeeded'){setQuote(null);setNotice(ct('supplierNeedsCheck'));return}
    const output=data.task.output;if(task==='image'&&!output?.imageUrl||task==='chat'&&!output?.answer)throw Error('RESULT_MISSING');
    if(task==='chat'){commitText(question,output.answer);previous.current=data.task.id}else{setTurns(rows=>[...rows,{question,image:output.imageUrl}]);setPrompt('')}setQuote(null);
-  }catch{setNotice(ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false);const next=queued.current.shift();if(next){setPrompt(next);queueReady.current=true}}
+  }catch{setStreaming(null);setNotice(task==='chat'&&!confirm?(freeCancelled.current?requestCopy.cancelled:requestCopy.failed):ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false);const next=queued.current.shift();if(next){setPrompt(next);queueReady.current=true}}
  }
  const queueReady=useRef(false);
  useEffect(()=>{
@@ -208,6 +220,7 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={loadingThread||(task==='image'&&busy)} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
    <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<div className="grid gap-3"><SasiLocalIntelligenceAction/><SasiUserResourceAction/></div>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}
+   {busy&&waitingFree&&<button type="button" onClick={()=>{freeCancelled.current=true;freeRequest.current?.abort()}} className="rounded-full border px-3 py-2 text-xs">{requestCopy.cancel}</button>}
    <button aria-label={sasiCommonText(lang,'ask')} disabled={loadingThread||(task==='image'&&busy)||!prompt.trim()} onClick={()=>void send()} className="ml-auto grid h-9 w-9 place-items-center rounded-full bg-[var(--lx-ink)] text-[var(--lx-bg)] disabled:opacity-30">{busy?'…':'↑'}</button></div>
 
    {task==='image'&&<label className="flex gap-2 px-3 pt-2 text-xs text-[var(--lx-muted)]"><input type="checkbox" checked={rights} disabled={busy} onChange={e=>{setRights(e.target.checked);setQuote(null)}}/>{ct('rightsConsent')}</label>}{quote&&<p className="px-3 pt-2 text-xs text-[var(--lx-muted)]">{SUPPLIER_BILLING_COPY[lang]}</p>}<SasiStatusLine>{notice}</SasiStatusLine>{needsConnection&&<Link href={connectionLink(continuity.threadId,task,continuity.workspace.projectId)} className="inline-block px-3 py-2 text-sm text-blue-600">{functionMenuText(lang,"connect")} →</Link>}

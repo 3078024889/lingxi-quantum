@@ -10,6 +10,8 @@ import{positionedTextPagesToXlsx,type PositionedTextToken}from"@/lib/tools/share
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
 import type{ToolResultFile}from"@/lib/tools/types";
+import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
+import {ocrCopy} from '@/lib/tools/shared/ocr-copy';
 
 type OcrWord={text?:string;bbox?:{x0?:number;y0?:number;x1?:number;y1?:number}};
 type OcrBlock={paragraphs?:Array<{lines?:Array<{words?:OcrWord[]}>}>};
@@ -32,6 +34,8 @@ export default function PdfOcrWorkbench(){
  const[text,setText]=useState(""),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState("");
  const[tableFile,setTableFile]=useState<ToolResultFile|null>(null),[tableNote,setTableNote]=useState(""),[handoffSource,setHandoffSource]=useState("");
  const stop=useRef(false),file=files[0]||null;
+ const controller=useRef<AbortController|null>(null);
+ useEffect(()=>()=>controller.current?.abort(),[]);
 
  useEffect(()=>{
   let alive=true;const id=new URL(window.location.href).searchParams.get("handoff");if(!id)return;
@@ -52,11 +56,14 @@ export default function PdfOcrWorkbench(){
 
  async function run(limit?:number,paid=false){
   if(!file){if(paid)throw Error('PROCESSING_INPUT_MISSING');return}
+  if(controller.current){if(paid)throw Error('PROCESSING_BUSY');return}
+  const abort=new AbortController();controller.current=abort;setStage(ocrCopy(uiLang).loading);
   setBusy(true);setText("");setError("");setTableFile(null);setTableNote("");stop.current=false;
   let worker:W|null=null,pdf:any=null;
   try{
-   const{createWorker}=await import("tesseract.js");worker=await createWorker(ocrLang) as unknown as W;
+   worker=await createOcrWorker(ocrLang,{signal:abort.signal}) as unknown as W;
    pdf=await openPdf(file);const end=Math.min(pdf.numPages,limit||pdf.numPages),chunks:string[]=[];
+   let hasText=false;
    const structured:Array<{name:string;tokens:PositionedTextToken[]}>= [];
    for(let n=1;n<=end;n++){
     if(stop.current){if(paid)throw Error('PROCESSING_CANCELLED');return}
@@ -65,10 +72,12 @@ export default function PdfOcrWorkbench(){
     try{
      const image=await canvasToBlob(rendered.canvas,"image/png",1);
      const recognized=await worker.recognize(image,{},handoffSource==="pdf-to-xlsx"?{text:true,blocks:true}:{text:true});
-     chunks.push(`===== Page ${n} =====\n${String(recognized.data.text||"").trim()}`);
+     const pageText=String(recognized.data.text||'').trim();hasText ||= Boolean(pageText);
+     chunks.push(`===== Page ${n} =====\n${pageText}`);
      if(handoffSource==="pdf-to-xlsx")structured.push({name:`Page ${n}`,tokens:blockTokens(recognized.data.blocks)});
     }finally{rendered.canvas.width=rendered.canvas.height=1}
    }
+   if(!hasText)throw Error('OCR_EMPTY');
    const joined=chunks.join("\n\n");setText(joined);
    if(handoffSource==="pdf-to-xlsx"){
     try{
@@ -81,10 +90,10 @@ export default function PdfOcrWorkbench(){
    }
    setStage(t("完成","Done"));
   }catch(cause){
-   setError(t("这次 OCR 没有完成，请确认 PDF 可以正常打开并稍后重试。","OCR could not finish. Check that the PDF opens normally and try again."));
+   setStage('');setError(abort.signal.aborted?ocrCopy(uiLang).cancelled:cause instanceof Error&&cause.message==='OCR_EMPTY'?ocrCopy(uiLang).empty:t("这次 OCR 没有完成，请确认 PDF 可以正常打开并稍后重试。","OCR could not finish. Check that the PDF opens normally and try again."));
    if(paid)throw cause;
   }finally{
-   try{await worker?.terminate()}catch{}try{pdf?.destroy?.()}catch{}setBusy(false);
+   try{await worker?.terminate()}catch{}try{pdf?.destroy?.()}catch{}controller.current=null;setBusy(false);
   }
  }
 
@@ -104,7 +113,7 @@ export default function PdfOcrWorkbench(){
    {file&&!busy&&<button onClick={()=>void run(1)} className="rounded-xl border px-5 py-2.5 text-sm">{t("免费识别第 1 页","Recognize page 1 free")}</button>}
    {file&&pages===1&&!busy&&<button onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">{t("完整 OCR · 免费","Full OCR · Free")}</button>}
    {file&&pages>1&&<PaidActionButton toolId="pdf-ocr" quantity={pages} metadata={{pages,freePages:1,continuedFrom:handoffSource||null}} onPaid={()=>run(undefined,true)} label={t("查看完整 OCR 价格","See full OCR price")}/>}
-   {busy&&<button onClick={()=>stop.current=true} className="rounded-xl border px-4 py-2">{t("取消","Cancel")}</button>}
+   {busy&&<button onClick={()=>{stop.current=true;controller.current?.abort()}} className="rounded-xl border px-4 py-2">{t("取消","Cancel")}</button>}
   </div>
   {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   {tableNote&&<p className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{tableNote}</p>}

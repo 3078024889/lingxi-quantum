@@ -1,11 +1,17 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),ts=require('typescript');
-function load(file,imports={}){const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require:n=>{if(n in imports)return imports[n];throw Error(n)},TextDecoder,TextEncoder,console});return exports;}
+function load(file,imports={}){const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,require:n=>{if(n in imports)return imports[n];throw Error(n)},TextDecoder,TextEncoder,console,setTimeout,clearTimeout});return exports;}
 async function main(){
  const identity=load('lib/sasi/core/platform-identity.ts');
  for(const question of ['你好 你是什么模型，有什么功能','Who are you?','What can you do?'])assert(identity.asksSasiIdentity(question));
  for(const question of ['这本书中你是什么模型的解释是什么','你能做什么样的网站？','你觉得幸福是什么？','你解释一下什么模型适合分类','Summarize the author’s argument'])assert.equal(identity.asksSasiIdentity(question),false);
  assert.match(identity.sasiIdentityAnswer('zh'),/不是灵犀场自研/);
  const {receiveSasiStream}=load('lib/sasi/client/receive-text-stream.ts');
+ let cancelled=0;
+ const stalled=()=>new Response(new ReadableStream({cancel(){cancelled++}}),{headers:{'content-type':'text/event-stream'}});
+ await assert.rejects(receiveSasiStream(stalled(),()=>{},{idleTimeoutMs:20,totalTimeoutMs:1000}),/TIMEOUT/);assert.equal(cancelled,1);
+ await assert.rejects(receiveSasiStream(stalled(),()=>{},{idleTimeoutMs:1000,totalTimeoutMs:20}),/INTERRUPTED/);assert.equal(cancelled,2);
+ const terminal=new Response(new ReadableStream({start(c){c.enqueue(new TextEncoder().encode('event: done\ndata: {"state":"answer","answer":"Finished"}\n\n'))},cancel(){cancelled++}}),{headers:{'content-type':'text/event-stream'}});
+ assert.equal((await receiveSasiStream(terminal,()=>{})).answer,'Finished');assert.equal(cancelled,3,'terminal event closes the transport even if the server keeps the connection open');
  const wire='event: delta\r\ndata: {"text":"旧回复"}\r\n\r\nevent: reset\r\ndata: {}\r\n\r\nevent: delta\r\ndata: {"text":"完整回答"}\r\n\r\nevent: done\r\ndata: {"answer":"完整回答","source":"experience"}\r\n\r\n';
  const bytes=new TextEncoder().encode(wire),updates=[];
  const response=new Response(new ReadableStream({start(c){for(const byte of bytes)c.enqueue(Uint8Array.of(byte));c.close()}}),{headers:{'content-type':'text/event-stream'}});

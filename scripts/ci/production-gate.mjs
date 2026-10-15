@@ -5,6 +5,8 @@ import {spawnSync} from "node:child_process";
 const root=process.cwd();
 
 const commands=[
+ ["node",["scripts/prepare-media-runtime.cjs"]],
+ ["node",["scripts/test-ocr-runtime-v87.cjs"]],
  ["node",["scripts/audit/tool-locale-literals-v86.cjs"]],
  ["node",["scripts/test-calendar-contact-v86.cjs"]],
  ["node",["scripts/test-cron-parser-v86.cjs"]],

@@ -7,6 +7,7 @@ import PaidActionButton from "@/components/tools/PaidActionButton";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {openPdf,renderPdfPage,canvasToBlob} from "@/lib/tools/pdf-render-client";
 import {buildEditableDocx,buildVisualDocx} from "@/lib/tools/shared/docx-builder";
+import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 type Mode="editable"|"visual"|"both";
 const LANGS=[["chi_sim+eng","简体中文 + English"],["chi_tra+eng","繁體中文 + English"],["eng","English"],["jpn+eng","日本語 + English"],["kor+eng","한국어 + English"],["fra+eng","Français + English"],["deu+eng","Deutsch + English"],["spa+eng","Español + English"]] as const;
 async function pageText(page:any){
@@ -21,7 +22,6 @@ export default function PdfToWordWorkbench(){
   if(!files.length)throw Error('PROCESSING_INPUT_MISSING');
   setBusy(true);setResults([]);setError("");let worker:any=null;
   try{
-   if(ocr){const{createWorker}=await import("tesseract.js");worker=await createWorker(lang,undefined,{logger:m=>{if(m.status&&typeof m.progress==="number")setStage(`${m.status} · ${Math.round(m.progress*100)}%`)}})}
    const outs:ToolResultFile[]=[];
    for(let fi=0;fi<files.length;fi++){
     const file=files[fi],pdf=await openPdf(file),texts:string[]=[],images:Array<{bytes:Uint8Array;width:number;height:number}>=[];
@@ -31,6 +31,7 @@ export default function PdfToWordWorkbench(){
      if((mode==="editable"||mode==="both")&&ocr&&text.replace(/\s/g,"").length<24){
       const r=await renderPdfPage(pdf,p,2);
       const b=await canvasToBlob(r.canvas,"image/png");
+      worker??=await createOcrWorker(lang,{logger:m=>{if(m.status&&typeof m.progress==="number")setStage(`${m.status} · ${Math.round(m.progress*100)}%`)}});
       const rr=await worker.recognize(b);text=String(rr.data.text||"").trim();r.canvas.width=r.canvas.height=1;
      }
      texts.push(text);

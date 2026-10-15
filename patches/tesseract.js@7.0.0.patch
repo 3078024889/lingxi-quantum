@@ -1,0 +1,76 @@
+diff --git a/src/createWorker.js b/src/createWorker.js
+index 89b53b89b27f6579155ed2a0ef372fa8c2a8b8e6..be94e82180e853228766d7b6c346cc38796d8907 100644
+--- a/src/createWorker.js
++++ b/src/createWorker.js
+@@ -21,6 +21,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
+   const {
+     logger,
+     errorHandler,
++    abortSignal,
+     ...options
+   } = resolvePaths({
+     ...defaultOptions,
+@@ -41,10 +42,23 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
+     workerResResolve = resolve;
+     workerResReject = reject;
+   });
+-  const workerError = (event) => { workerResReject(event.message); };
++  const failWorker = (reason) => {
++    const error = reason instanceof Error ? reason : new Error(String(reason));
++    workerResReject(error);
++    Object.values(promises).forEach(({ reject }) => reject(error));
++    Object.keys(promises).forEach(key => delete promises[key]);
++    if (worker !== null) {
++      terminateWorker(worker);
++      worker = null;
++    }
++    if (abortSignal) abortSignal.removeEventListener('abort', abortWorker);
++  };
++  const abortWorker = () => failWorker(abortSignal.reason || new Error('OCR_CANCELLED'));
++  const workerError = (event) => { failWorker(event.message); };
+ 
+   let worker = spawnWorker(options);
+   worker.onerror = workerError;
++  if (abortSignal) abortSignal.addEventListener('abort', abortWorker, { once: true });
+ 
+   workerCounter += 1;
+ 
+@@ -186,6 +200,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
+   };
+ 
+   const terminate = async () => {
++    if (abortSignal) abortSignal.removeEventListener('abort', abortWorker);
+     if (worker !== null) {
+       /*
+       await startJob(createJob({
+@@ -202,6 +217,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
+   onMessage(worker, ({
+     workerId, jobId, status, action, data,
+   }) => {
++    if (worker === null) return;
+     const promiseId = `${action}-${jobId}`;
+     if (status === 'resolve') {
+       log(`[${workerId}]: Complete ${jobId}`);
+@@ -240,7 +256,9 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
+     .then(() => loadLanguageInternal(langs))
+     .then(() => initializeInternal(langs, oem, config))
+     .then(() => workerResResolve(resolveObj))
+-    .catch(() => {});
++    .catch(failWorker);
++
++  if (abortSignal && abortSignal.aborted) abortWorker();
+ 
+   return workerRes;
+ };
+diff --git a/src/index.d.ts b/src/index.d.ts
+index 2c9689db387906b7ce272ae15005f8b9aa56a269..7a41d9ebb70f6e3040034c1cb6c6d9cbdb1712e0 100644
+--- a/src/index.d.ts
++++ b/src/index.d.ts
+@@ -51,6 +51,7 @@ declare namespace Tesseract {
+   }
+ 
+   interface WorkerOptions {
++    abortSignal?: AbortSignal
+     corePath: string
+     langPath: string
+     cachePath: string

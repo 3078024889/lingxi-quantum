@@ -1,4 +1,5 @@
 "use client";
+import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 
 import ToolUiText from "@/components/tools/ToolUiText";
 import { useMemo, useState } from "react";
@@ -184,8 +185,7 @@ export default function HandwritingOcrWorkbench() {
           });
         }
       } else {
-        const { createWorker } = await import("tesseract.js");
-        const worker = await createWorker(lang, undefined, {
+        const worker = await createOcrWorker(lang, {
           logger(message) {
             if (!message.status) return;
             setStage(

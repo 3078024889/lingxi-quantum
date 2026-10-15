@@ -114,7 +114,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"long-image",zh:"长图拼接",en:"Long Image Stitcher",mode:"local" as const},
   {slug:"md5-sha256",zh:"MD5 / SHA256 校验",en:"MD5 / SHA256 Hash",mode:"local" as const},
   {slug:"merge-pdf",zh:"PDF 合并",en:"Merge PDF",mode:"local" as const},
-  {slug:"ocr",zh:"图片 OCR",en:"Image OCR",mode:"online" as const},
+  {slug:"ocr",zh:"图片 OCR",en:"Image OCR",mode:"local" as const},
   {slug:"pdf-compress",zh:"PDF 压缩",en:"Compress PDF",mode:"local" as const},
   {slug:"pdf-editor",zh:"PDF 编辑",en:"PDF Editor",mode:"local" as const},
   {slug:"pdf-merge-split",zh:"PDF 合并 / 拆分",en:"Merge / Split PDF",mode:"local" as const},

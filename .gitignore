@@ -46,6 +46,7 @@ Thumbs.db
 
 # Large runtime prepared during install/build, not source-controlled
 /public/media/ffmpeg-0.12.10/
+/public/media/ocr-7.0.0-v1/
 
 # Private source material; derived knowledge must be reviewed before commit.
 /research/source-materials/raw/

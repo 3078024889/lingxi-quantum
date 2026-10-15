@@ -5,6 +5,7 @@ import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
+import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
 
@@ -31,9 +32,8 @@ export default function ImageTranslatorWorkbench(){
   setBusy(true);setOutputs([]);setError("");
   let worker:any=null;
   try{
-   const{createWorker}=await import("tesseract.js");
    const map:Record<string,string>={zh:"chi_sim+eng",en:"eng",ja:"jpn+eng",ko:"kor+eng",fr:"fra+eng",de:"deu+eng",es:"spa+eng",pt:"por+eng",ar:"ara+eng"};
-   worker=await createWorker(map[source]||"eng");
+   worker=await createOcrWorker(map[source]||"eng");
    const all:ToolResultFile[]=[];
    for(let i=0;i<files.length;i++){
     const f=files[i];setStage(`${i+1}/${files.length} · 正在识别文字…`);

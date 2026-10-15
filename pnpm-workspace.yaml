@@ -15,3 +15,4 @@ overrides:
 patchedDependencies:
   braces@3.0.3: patches/braces@3.0.3.patch
   sprintf-js@1.0.3: patches/sprintf-js@1.0.3.patch
+  tesseract.js@7.0.0: patches/tesseract.js@7.0.0.patch

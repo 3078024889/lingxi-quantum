@@ -1,8 +1,10 @@
 "use client";
 import ToolUiText from "@/components/tools/ToolUiText";
-import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+import {plainMessage} from "@/lib/tools/plain-copy";
 
-import {useMemo,useState} from "react";
+import {useEffect,useMemo,useRef,useState} from "react";
+import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
+import {ocrCopy} from '@/lib/tools/shared/ocr-copy';
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -23,6 +25,8 @@ const C:Record<LingxiLang,Copy>={
 
 export default function OcrWorkbench(){
  const{lang}=useLingxiLang();const c=C[lang]??C.en;
+ const runtimeCopy=ocrCopy(lang),controller=useRef<AbortController|null>(null);
+ useEffect(()=>()=>controller.current?.abort(),[]);
  const[files,setFiles]=useState<File[]>([]),[ocrLang,setOcrLang]=useState("chi_sim+eng"),[results,setResults]=useState<Array<{name:string;text:string}>>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[copied,setCopied]=useState("");
  const exports=useMemo<ToolResultFile[]>(()=>results.map(r=>{
    const blob=new Blob([r.text],{type:"text/plain;charset=utf-8"});
@@ -31,19 +35,21 @@ export default function OcrWorkbench(){
 
  async function run(){
   if(!files.length)return;
-  setBusy(true);setResults([]);setError("");setCopied("");let worker:any=null;
+  if(controller.current)return;
+  const abort=new AbortController();controller.current=abort;
+  setBusy(true);setResults([]);setError("");setCopied("");setStage(runtimeCopy.loading);let worker:any=null;
   try{
-   const{createWorker}=await import("tesseract.js");
-   worker=await createWorker(ocrLang,undefined,{logger:m=>{if(m.status)setStage(`${c.working}${typeof m.progress==="number"?` · ${Math.round(m.progress*100)}%`:""}`)}});
+   worker=await createOcrWorker(ocrLang,{signal:abort.signal,logger:m=>{if(m.status)setStage(`${m.status==='recognizing text'?runtimeCopy.recognizing:runtimeCopy.loading}${typeof m.progress==="number"?` · ${Math.round(m.progress*100)}%`:""}`)}});
    const out:Array<{name:string;text:string}>=[];
    for(let i=0;i<files.length;i++){
      setStage(`${i+1}/${files.length} · ${files[i].name}`);
      const r=await worker.recognize(files[i]);
-     out.push({name:files[i].name,text:r.data.text});
+     if(!r.data.text.trim())throw Error('OCR_EMPTY');
+     out.push({name:files[i].name,text:r.data.text});setResults([...out]);
    }
    setResults(out);setStage(c.done);
-  }catch(e){setError(plainText(lang,"fileError"));setStage("")}
-  finally{try{await worker?.terminate()}catch{}setBusy(false)}
+  }catch(e){setError(abort.signal.aborted?runtimeCopy.cancelled:e instanceof Error&&e.message==='OCR_EMPTY'?runtimeCopy.empty:runtimeCopy.error);setStage("")}
+  finally{try{await worker?.terminate()}catch{}controller.current=null;setBusy(false)}
  }
 
  async function copy(name:string,text:string){
@@ -51,15 +57,17 @@ export default function OcrWorkbench(){
  }
 
  return <div className="space-y-4">
-  <FileDropzone accept="image/*" multiple maxFiles={30} maxSizeMB={30} files={files} onChange={setFiles} disabled={busy} kind="image"/>
+  <FileDropzone accept="image/*" multiple maxFiles={30} maxSizeMB={30} files={files} onChange={rows=>{setFiles(rows);setResults([]);setStage('');setError('')}} disabled={busy} kind="image"/>
   <label className="block text-sm text-[var(--lx-muted)]">{c.language}
-   <select value={ocrLang} onChange={e=>setOcrLang(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]">
+   <select disabled={busy} value={ocrLang} onChange={e=>setOcrLang(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]">
     <option value="chi_sim+eng"><ToolUiText text="简体中文 + English" /></option><option value="chi_tra+eng"><ToolUiText text="繁體中文 + English" /></option><option value="eng">English</option><option value="jpn+eng"><ToolUiText text="日本語 + English" /></option><option value="kor+eng">한국어 + English</option><option value="fra+eng">Français + English</option><option value="deu+eng">Deutsch + English</option><option value="spa+eng">Español + English</option>
+    <option value="por+eng">Português + English</option><option value="ara+eng">العربية + English</option>
    </select>
   </label>
   <div className="flex flex-wrap items-center gap-3">
    <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?c.working:files.length>1?`${c.batch} · ${files.length}`:c.run}</button>
-   {stage&&<span className="text-sm text-[var(--lx-faint)]">{stage}</span>}
+   {busy&&<button onClick={()=>controller.current?.abort()} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm">{runtimeCopy.cancel}</button>}
+   {stage&&<span role="status" aria-live="polite" className="text-sm text-[var(--lx-faint)]">{stage}</span>}
   </div>
 
   {results.map(r=><section key={r.name} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4">
