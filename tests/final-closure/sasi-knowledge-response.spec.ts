@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('book workspace answers platform identity without requiring a document',async({page})=>{
  // The production mutation guard intentionally rejects localhost. Exercise

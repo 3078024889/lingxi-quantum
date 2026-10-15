@@ -41,7 +41,7 @@ export async function prepareTranslationDocument(file:File,signal:AbortSignal):P
    const walker=dom.createTreeWalker(dom,NodeFilter.SHOW_TEXT);
    for(let node=walker.nextNode();node;node=walker.nextNode()){
     let parent=node.parentElement,allowed=false,blocked=false;
-    for(;parent;parent=parent.parentElement){if(textNames.includes(parent.localName))allowed=true;if(['script','style','math','code','pre'].includes(parent.localName))blocked=true}
+    for(;parent;parent=parent.parentElement){if(textNames.includes(parent.localName))allowed=true;if(['script','style','math','oMath','oMathPara','code','pre'].includes(parent.localName))blocked=true}
     if(!allowed||blocked||!needsTranslation(node.textContent||''))continue;
     // Spreadsheet formulas, styles, relationships and dimensions remain untouched.
     const text=node.textContent||'';nodes.push({node,id:add(text),prefix:text.match(/^\s*/)?.[0]||'',suffix:text.match(/\s*$/)?.[0]||''});
@@ -96,8 +96,9 @@ export async function prepareTranslationDocument(file:File,signal:AbortSignal):P
      const dominant=[...colors].sort((a,b)=>b[1]-a[1])[0][0].split(',').map(Number);
      const translated=translatedValue(values,block.id);let size=block.fontSize*2,lines:string[]=[];
      const font=(v:number)=>`${v}px "Arial","Microsoft YaHei","PingFang SC",sans-serif`;
-     const wrap=()=>{ctx.font=font(size);const result:string[]=[];let line='';for(const char of Array.from(translated.replace(/\s*\n\s*/g,' '))){if(line&&ctx.measureText(line+char).width>w-2){result.push(line.trim());line=char}else line+=char}if(line)result.push(line.trim());return result};
-     for(;size>=12;size-=.5){lines=wrap();if(lines.length*size*1.18<=h-2)break}
+     const characters=Array.from(translated.replace(/\s*\n\s*/g,' '));
+     const wrap=()=>{ctx.font=font(size);const maxLines=Math.floor((h-2)/(size*1.18));if(maxLines<1)return null;const result:string[]=[];let line='';for(const char of characters){if(ctx.measureText(line+char).width>w-2){if(!line)return null;result.push(line.trim());if(result.length>=maxLines||ctx.measureText(char).width>w-2)return null;line=char}else line+=char}if(line)result.push(line.trim());return result};
+     for(;size>=12;size-=.5){const candidate=wrap();if(candidate){lines=candidate;break}}
      if(size<12)throw Error('PDF_LAYOUT_REVIEW_REQUIRED');
      ctx.fillStyle=`rgb(${dominant.join(',')})`;ctx.fillRect(x,y,w,h);ctx.fillStyle=dominant.reduce((a,b)=>a+b,0)>384?'#111':'#fff';ctx.font=font(size);ctx.textBaseline='top';ctx.direction=/[\u0600-\u06FF]/.test(translated)?'rtl':'ltr';ctx.textAlign=ctx.direction==='rtl'?'right':'left';
      lines.forEach((line,i)=>ctx.fillText(line,ctx.direction==='rtl'?x+w-1:x+1,y+1+i*size*1.18));

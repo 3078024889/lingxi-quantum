@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 import {extractHandwritingPixels} from "../../lib/tools/document/signature-ink";
 
 function paper(width:number,height:number,draw:(pixels:Uint8ClampedArray)=>void){

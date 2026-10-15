@@ -1,4 +1,4 @@
-import {test,expect,type Page} from "playwright/test";
+import {test,expect,type Page} from "./export-test";
 import {PDFDocument} from "pdf-lib";
 const languages=["zh","en","ja","ko","fr","de","es","pt","ar"] as const;
 const labels=[

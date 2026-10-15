@@ -1,5 +1,6 @@
 "use client";
 import ToolUiText from "@/components/tools/ToolUiText";
+import {downloadBlob} from "@/lib/tools/shared/download";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 import {useCallback,useEffect,useMemo,useRef,useState} from "react";
@@ -183,8 +184,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
 
  function exportCsv(){
   const csv="email,expires_at,messages\n"+owned.map(x=>`${x.address},${x.expiresAt},${x.messageCount}`).join("\n");
-  const u=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");
-  a.href=u;a.download="lingxifield-temp-mail.csv";a.click();setTimeout(()=>URL.revokeObjectURL(u),500);
+  void downloadBlob(new Blob([csv],{type:"text/csv;charset=utf-8"}),"lingxifield-temp-mail.csv");
  }
 
  const recoverRef=useRef(recover);recoverRef.current=recover;

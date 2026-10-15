@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('no-enlargement preview reflects the retained source size',async({page})=>{
  await page.goto('/tools/resize-image?lang=en');const image=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=20;c.height=10;return c.toDataURL('image/png').split(',')[1]});const upload=page.locator('input[type=file]').first();await expect(upload).toBeEnabled();await upload.setInputFiles({name:'small.png',mimeType:'image/png',buffer:Buffer.from(image,'base64')});

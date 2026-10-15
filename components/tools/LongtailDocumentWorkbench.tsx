@@ -51,7 +51,7 @@ export default function LongtailDocumentWorkbench({mode}:{mode:LongtailMode}){
  }
  return <div className="space-y-4">
   <FileDropzone accept={accept} multiple append maxFiles={50} maxSizeMB={mode==="ics-csv"||mode==="vcf-csv"?10:50} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy}/>
-  <p className="text-xs leading-5 text-[var(--lx-muted)]"><ToolUiText text={mode==="epub-txt"?"按 EPUB 的 OPF spine 阅读顺序提取 XHTML 正文，不只是盲扫 ZIP 文件。":mode==="odt-txt"?"从 OpenDocument content.xml 提取段落和标题文字。":mode==="ics-csv"?"提取日历事件的标题、开始、结束、地点、说明和 UID。":"提取 vCard 姓名、机构、职位、电话和邮箱。"} /> <ToolUiText text="全程浏览器本地处理。" /></p>
+
   <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":"开始处理"} /></button>
   {!!results.length&&<ResultPanel files={results} messageZh={`已处理 ${results.length} 个文件。`} messageEn={`Processed ${results.length} file(s).`}/>}
   {error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}

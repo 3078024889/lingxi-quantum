@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('integer base conversion preserves values beyond floating point precision and rejects invalid digits',async({page})=>{
  await page.goto('/tools/number-base-converter?lang=en');const input=page.getByPlaceholder('255');await input.fill('9007199254740993');await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveValue('20000000000001');

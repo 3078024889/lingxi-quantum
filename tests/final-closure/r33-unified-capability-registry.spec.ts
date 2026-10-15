@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{TOOLS}from"../../lib/tools/registry";
 import{LINGXIFIELD_PUBLIC_TOOL_REGISTRY}from"../../lib/tools/platform/tool-registry";
 import{SASI_SKILLS}from"../../lib/sasi/skills/catalog";

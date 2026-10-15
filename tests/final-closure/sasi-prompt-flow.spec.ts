@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {parseAutomaticVideoPlan} from '../../lib/sasi/automatic-video-plan';
 
 test('automatic planning rejects invalid duration and oversized episodes',()=>{

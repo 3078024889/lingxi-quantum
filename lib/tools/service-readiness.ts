@@ -7,6 +7,7 @@ import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
 export type ToolRuntimeState={ready:boolean;mode:"local"|"r2"|"compute";reason?:string};
 
 const LOCAL_PAID=new Set([
+  "metered-tool-export",
   "batch-pdf",  "pdf-ocr",  "handwriting-ocr",  "pdf-to-word",  "pdf-redact",  "reverse-video",  "loop-video",  "stop-motion-video",  "audio-cleanup",  "audio-transcription","batch-image-watermark-remover","cross-page-stamp","e-sign-pdf",
   "food-calorie","id-photo-ai","image-watermark-remover","pdf-editor","subtitle-translate",
   "temp-mail-batch","video-dubbing","video-translate","video-transcription","video-watermark-remover",

@@ -5,6 +5,7 @@ import ToolUiText from "@/components/tools/ToolUiText";
 import { useMemo, useState } from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
+import {downloadBlob} from "@/lib/tools/shared/download";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import type { ToolResultFile } from "@/lib/tools/types";
 import { buildEditableDocx } from "@/lib/tools/shared/docx-builder";
@@ -231,12 +232,7 @@ export default function HandwritingOcrWorkbench() {
       "handwriting-ocr.docx",
     );
 
-    const url = URL.createObjectURL(docxResult.blob);
-    const anchor = window.document.createElement("a");
-    anchor.href = url;
-    anchor.download = docxResult.name;
-    anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1200);
+    await downloadBlob(docxResult.blob,docxResult.name);
   }
 
   return (
@@ -262,6 +258,7 @@ export default function HandwritingOcrWorkbench() {
           <ToolUiText text="识别模式" />
           <select
             value={mode}
+            disabled={busy}
             onChange={(event) => setMode(event.target.value as Mode)}
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
           >
@@ -275,6 +272,7 @@ export default function HandwritingOcrWorkbench() {
             <ToolUiText text="语言" />
             <select
               value={lang}
+              disabled={busy}
               onChange={(event) => setLang(event.target.value)}
               className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
             >
@@ -297,7 +295,7 @@ export default function HandwritingOcrWorkbench() {
           : "多语言模式适合印刷体和较工整手写。潦草手写尤其中文/日文仍可能误识别，重要内容请核对；这一模式不冒充专业多语言手写模型。"} />
       </div>
 
-      {files.length > 0 && !busy && (<PaidActionButton toolId="handwriting-ocr" quantity={files.length} metadata={{pages:files.length,mode}} onPaid={run} label="查看本次手写识别价格" />)}
+      {files.length > 0 && (<PaidActionButton toolId="handwriting-ocr" quantity={files.length} draftReady={!busy} metadata={{pages:files.length,mode}} onPaid={run} label="查看本次手写识别价格" />)}
 
       {stage && <p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
 

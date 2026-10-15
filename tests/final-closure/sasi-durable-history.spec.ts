@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 const THREAD="aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
 const USER="bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 test("SASI restores owned conversation pairs and keeps follow-ups in context",async({page})=>{

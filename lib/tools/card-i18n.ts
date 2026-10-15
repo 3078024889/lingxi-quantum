@@ -107,6 +107,7 @@ const TITLES:Record<string,Partial<T>>={
 };
 
 export function toolTitle(lang:LingxiLang,slug:string,fallback:string){
+  if(slug==='metered-tool-export')return L('工具文件导出','Tool file export','ツールのファイル出力','도구 파일 내보내기','Export de fichier','Dateiexport','Exportar archivo','Exportar arquivo','تصدير ملف الأداة')[lang];
   return TITLES[slug]?.[lang]||extraToolTitle(lang,slug)||fallback;
 }
 export function toolDescription(lang:LingxiLang,title:string){

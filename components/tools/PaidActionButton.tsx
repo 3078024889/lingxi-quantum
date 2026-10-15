@@ -37,7 +37,7 @@ async function openMiniNativePay(quoteId:string){return new Promise<boolean>(res
 
 export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,draftId,draftReady=true,beforePayment}:{toolId:string;quantity:number;metadata?:Record<string,unknown>;onPaid:(quoteId:string)=>Promise<void|boolean>|void|boolean;label?:string;draftId?:string;draftReady?:boolean;beforePayment?:()=>Promise<void>}){
  const{lang}=useLingxiLang();const zh=lang==="zh";const t=(x:Copy)=>x[lang]||x.en;const{currency}=usePreferredCurrency();
- const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[completed,setCompleted]=useState(false);
+ const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[completed,setCompleted]=useState(false),[loginRequired,setLoginRequired]=useState(false);
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),restoreKey=useRef(""),taskKey=useRef("");
  const [running,setRunning]=useState(false);const completedIds=useRef(new Set<string>());const [paidId,setPaidId]=useState("");
  const signature=`${toolId}:${quantity}:${currency}:${draftId||""}:${JSON.stringify(metadata||{})}`;
@@ -62,11 +62,12 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
 
  async function preparePayment(){try{await beforePayment?.();return true}catch{setMsg(deliveryText(lang,"draftSaveFailed"));return false}}
  async function makeQuote(){
-  if(completed)return;setBusy(true);setMsg("");
+  if(completed)return;setBusy(true);setMsg("");setLoginRequired(false);
   try{
    if(!await preparePayment())return;
    const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
    const d=await r.json().catch(()=>({}));
+   if(r.status===401){setLoginRequired(true);setMsg(deliveryText(lang,"login"));return}
    if(!r.ok)throw new Error(String(d.error||"QUOTE_CREATE_FAILED"));
    setQuote(d);saveStoredQuote(toolId,d,draftId);setMsg(t(UI.priced));
   }catch(e){const m=e instanceof Error?e.message:String(e);setMsg(toolId==="food-calorie"?foodBillingText(lang,/登录|SIGN_IN_REQUIRED/.test(m)?"login":/EXPIRED/.test(m)?"expired":"unavailable"):/TOOL_SERVICE_UNAVAILABLE|PRICE_NOT_AVAILABLE|TOOL_PRICING_NOT_FOUND/.test(m)?t(UI.serviceUnavailable):plainText(lang,"paymentError"))}
@@ -96,6 +97,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   ?<button onClick={makeQuote} disabled={busy||quantity<=0||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t(UI.pricing):(label?toolRuntimeText(lang,label,label):t(UI.defaultLabel))}</button>
   :<div className="flex flex-wrap items-center gap-3"><div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm">{t(UI.thisTime)} {quote.quantity} {toolId==="food-calorie"?foodBillingText(lang,quote.unit_name==="food"?"foodUnit":"imageUnit"):unitLabel(quote.unit_name,zh)} · <b className="text-lg">{price(quote)}</b></div><button onClick={pay} disabled={busy||running||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{paidId?deliveryText(lang,"retry"):t(UI.confirm)}</button><button disabled={!!paidId||running} onClick={()=>{stop();clearStoredQuote(toolId);setQuote(null);setMsg("")}} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm text-[var(--lx-muted)]">{t(UI.recalc)}</button></div>}
   {msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}
+  {loginRequired&&<a target="_blank" rel="noopener noreferrer" className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent(typeof location==='undefined'?'/tools':location.pathname)}`}>{deliveryText(lang,"login")}</a>}
   {toolId==='food-calorie'&&msg===foodBillingText(lang,'login')&&<a className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent('/tools/food-calorie?resumeDraft='+(draftId||''))}`}>{foodBillingText(lang,'login')}</a>}
  </div>;
 }

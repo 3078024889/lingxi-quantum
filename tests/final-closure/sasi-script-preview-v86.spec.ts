@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {approvedScriptPreview,approvedEpisodeShots} from '../../lib/sasi/approved-script-preview';
 import JSZip from 'jszip';
 import sharp from 'sharp';

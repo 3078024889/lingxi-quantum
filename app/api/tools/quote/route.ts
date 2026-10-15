@@ -7,6 +7,7 @@ import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeStateLive } from "@/lib/tools/service-readiness";
 import { isPublicPaidToolId } from "@/lib/tools/paid-catalog";
 import {foodRequestIpHash} from '@/lib/tools/food/request-identity';
+import {isMeteredTool,METERED_EXPORT_TOOL_ID} from '@/lib/tools/commerce/metered-catalog';
 import {
   amountForCurrency,
   parseCurrency,
@@ -93,6 +94,10 @@ export async function POST(req: NextRequest) {
         ? (body.metadata as Record<string, unknown>)
         : {};
 
+    if(toolId==='pdf-redact'&&(!Number.isInteger(quantity)||quantity<1||quantity>200||Number(userMetadata.pages)!==quantity)){
+      return NextResponse.json({error:'REDACTION_PAGE_COUNT_REQUIRED'},{status:400});
+    }
+
     if (JSON.stringify(userMetadata).length > 16 * 1024) {
       return NextResponse.json({ error: "QUOTE_METADATA_TOO_LARGE" }, { status: 413 });
     }
@@ -101,8 +106,21 @@ export async function POST(req: NextRequest) {
     const currency = parseCurrency(body.currency) || recommendedCurrency(req);
     const metadata = { ...userMetadata, pricing_currency: currency };
 
-    const q = await calculateToolQuote(toolId, quantity);
     const admin = createAdminClient();
+    if(toolId===METERED_EXPORT_TOOL_ID){
+      const requestId=String(userMetadata.exportRequestId||'');
+      if(!/^[0-9a-f-]{36}$/i.test(requestId)||userMetadata.draftId!==requestId)return NextResponse.json({error:'EXPORT_REQUEST_REQUIRED'},{status:400});
+      const {data:reservation,error:reservationError}=await admin.from('tool_export_requests').select('*').eq('id',requestId).maybeSingle();
+      if(reservationError||!reservation||!isMeteredTool(reservation.tool_id)||reservation.state!=='payment_required'||quantity!==reservation.paid_units)return NextResponse.json({error:'EXPORT_REQUEST_REQUIRED'},{status:409});
+      if(reservation.user_id?reservation.user_id!==user.id:reservation.ip_hash!==foodRequestIpHash(req))return NextResponse.json({error:'EXPORT_REQUEST_REQUIRED'},{status:403});
+      if(!reservation.user_id){const claim=await admin.rpc('reserve_tool_daily_export',{p_id:requestId,p_tool_id:reservation.tool_id,p_user_id:user.id,p_ip_hash:foodRequestIpHash(req),p_units:reservation.units});if(claim.error||!claim.data||claim.data.user_id!==user.id)return NextResponse.json({error:'EXPORT_REQUEST_REQUIRED'},{status:409})}
+      Object.assign(metadata,{exportRequestId:requestId,draftId:requestId,sourceToolId:reservation.tool_id,returnPath:`/tools/${reservation.tool_id}`,freeUnits:reservation.free_units});
+      const {data:existing,error:existingError}=await admin.from('tool_payment_quotes').select('*').eq('tool_id',toolId).eq('user_id',user.id).contains('metadata',{exportRequestId:requestId}).in('status',['quoted','ordered','paid']).order('created_at',{ascending:false}).limit(1).maybeSingle();
+      if(existingError)return NextResponse.json({error:'QUOTE_CREATE_FAILED'},{status:503});
+      if(existing){if(existing.status==='quoted'&&(existing.currency!==currency||Date.parse(existing.expires_at)<=Date.now())){const retired=await admin.from('tool_payment_quotes').update({status:'canceled'}).eq('id',existing.id).eq('status','quoted').select('id').maybeSingle();if(retired.error||!retired.data)return NextResponse.json({error:'PAYMENT_ALREADY_STARTED'},{status:409})}else return NextResponse.json(publicQuote(existing,parseCurrency(existing.currency)||currency))}
+    }
+    const q = await calculateToolQuote(toolId, quantity);
+    if(toolId===METERED_EXPORT_TOOL_ID&&(q.amountRmb!==quantity||q.amountUsd!==quantity))return NextResponse.json({error:'PRICE_NOT_AVAILABLE'},{status:503});
     if(toolId==='food-calorie'){
       const requestId=String(userMetadata.foodRequestId||'');
       if(!/^[0-9a-f-]{36}$/i.test(requestId))return NextResponse.json({error:'FOOD_ANALYSIS_REQUIRED'},{status:400});

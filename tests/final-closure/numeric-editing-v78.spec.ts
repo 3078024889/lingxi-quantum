@@ -1,4 +1,4 @@
-import {test, expect} from 'playwright/test';
+import {test, expect} from './export-test';
 import fs from 'node:fs/promises';
 import {PDFDocument} from 'pdf-lib';
 

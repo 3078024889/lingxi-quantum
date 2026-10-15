@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 const id='33333333-3333-4333-8333-333333333333';
 async function setup(page:any,currency='CNY'){
  await page.addInitScript(()=>{(window as any).__wxjs_environment='miniprogram';(window as any).wx={miniProgram:{navigateTo:({url,success}:any)=>{(window as any).__rechargeDestination=url;success()}}}});

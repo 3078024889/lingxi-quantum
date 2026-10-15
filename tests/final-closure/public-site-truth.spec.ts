@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {PUBLIC_FEATURE_COPY} from '../../lib/public-feature-copy';
 const locales=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
 const ask=["问问 SASI","Ask SASI","SASIに質問","SASI에 질문","Demandez à SASI","SASI fragen","Pregunta a SASI","Pergunte ao SASI","اسأل SASI"];

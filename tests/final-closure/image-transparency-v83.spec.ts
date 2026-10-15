@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {readFile} from 'node:fs/promises';
 
 for(const [slug,format,output] of [['remove-exif','image/png','image/png'],['remove-exif','image/webp','image/webp'],['webp-to-jpg','image/webp','image/png']] as const){

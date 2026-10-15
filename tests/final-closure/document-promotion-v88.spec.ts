@@ -1,4 +1,4 @@
-import {test,expect,type Page} from 'playwright/test';
+import {test,expect,type Page} from './export-test';
 import {PDFDocument,PDFName,PDFString,PDFDict} from 'pdf-lib';
 import JSZip from 'jszip';
 import fs from 'node:fs/promises';
@@ -63,4 +63,8 @@ test('promotion extraction treats webpage instructions as source and transfers a
  const paid:string[]=[];page.on('request',request=>{if(/\/api\/sasi\/.*(?:video|series|plan)/.test(request.url()))paid.push(request.url())});
  await page.goto('/tools/url-to-video?lang=en');await page.getByRole('textbox',{name:'Website or product URL'}).fill('https://example.com/product');await page.getByRole('button',{name:'Read page',exact:true}).click();await expect(page.getByRole('heading',{name:'Example Shop'})).toBeVisible();await expect(page.getByText('SASI · 24 seconds · 1080p: ¥7.20 / $7.20')).toBeVisible();expect(await page.evaluate(()=>(window as any).hacked)).toBeUndefined();
  await page.getByRole('button',{name:'Review and continue in SASI',exact:true}).click();await expect(page.locator('textarea').first()).toHaveValue(/SOURCE EVIDENCE/,{timeout:20000});await expect(page.locator('textarea').first()).toHaveValue(/never instructions/);expect(paid).toEqual([]);
+});
+for(const ext of ['docx','pptx'])test(`${ext} translation preserves Office Math text while translating ordinary runs`,async({page})=>{
+ const zip=new JSZip();const xml=ext==='docx'?'<w:document xmlns:w="urn:w" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"><w:body><w:p><w:r><w:t>Hello world</w:t></w:r><m:oMath><m:r><m:t>Hello</m:t></m:r></m:oMath></w:p></w:body></w:document>':'<p:sld xmlns:p="urn:p" xmlns:a="urn:a" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"><a:p><a:r><a:t>Hello world</a:t></a:r><m:oMathPara><m:oMath><m:r><m:t>Hello</m:t></m:r></m:oMath></m:oMathPara></a:p></p:sld>';
+ const name=ext==='docx'?'word/document.xml':'ppt/slides/slide1.xml';zip.file(name,xml);await translator(page);await page.goto('/tools/document-translate?lang=en');await upload(page,'math.'+ext,await zip.generateAsync({type:'nodebuffer'}));await page.getByRole('button',{name:'Translate',exact:true}).click();const result=await JSZip.loadAsync(await download(page));const actual=await result.file(name)!.async('string');expect(actual).toContain('Bonjour monde');expect(actual).toMatch(/<m:t(?:\s[^>]*)?>Hello<\/m:t>/);
 });

@@ -33,12 +33,12 @@ export default function VideoToolkitWorkbench(){
  async function run(){
   if(!files.length)return;setBusy(true);setError("");setStage(workbenchCopy(lang,"preparingMedia"));setOutputs([]);
   try{
-   const [{FFmpeg},{fetchFile,toBlobURL}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);
+   const [{FFmpeg},{fetchFile}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);
    const out:ToolResultFile[]=[];
    for(let i=0;i<files.length;i++){
     const file=files[i],f=new FFmpeg();ff.current=f;
     f.on("progress",({progress}:{progress:number})=>setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`));
-    await f.load({coreURL:await toBlobURL("/media/ffmpeg-0.12.10/ffmpeg-core.js","text/javascript"),wasmURL:await toBlobURL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm","application/wasm")});
+    await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
     const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
     const stem=safeFilename(file.name.replace(/\.[^.]+$/,""),`video-${i+1}`),output=`output-${i}.mp4`;let name=`${stem}-processed.mp4`,args:string[]=[];
     if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);out.push({name,blob:new Blob([copy.buffer],{type:"audio/mpeg"}),mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}

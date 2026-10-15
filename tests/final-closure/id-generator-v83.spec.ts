@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {readFile} from 'node:fs/promises';
 
 test('UUID count can be erased and replaced; TXT contains the actual generated UUIDs',async({page})=>{

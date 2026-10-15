@@ -2,6 +2,7 @@
 
 import JSZip from "jszip";
 import {safeFilename} from './download';
+import {registerExportBundle} from '../commerce/export-access-client';
 
 export async function filesToZip(
   files: Array<{ name: string; blob: Blob }>,
@@ -27,5 +28,6 @@ export async function filesToZip(
     compressionOptions: { level: 6 },
   });
 
+  registerExportBundle(blob,files.map(file=>file.blob));
   return { name: safeFilename(zipName), blob };
 }

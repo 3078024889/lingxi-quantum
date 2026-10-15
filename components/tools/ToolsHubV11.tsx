@@ -9,31 +9,35 @@ import {toolCategoryLabel,toolHubCopy,toolCardLine}from"@/lib/tools/hub-copy-v14
 import {TOOL_DISPLAY_CATEGORIES,type ToolDisplayCategory}from"@/lib/tools/display-taxonomy";
 import {searchToolItems}from"@/lib/tools/search-intents-v44r2.mjs";
 import RecentTools from"@/components/tools/RecentTools";
+import {isAnonymousLocalTool,localFreeCopy} from '@/lib/tools/local-free-tools';
 
 export default function ToolsHubV11(){
  const{lang,t}=useLingxiLang();
  const[q,setQ]=useState("");
  const[category,setCategory]=useState<ToolDisplayCategory>("all");
+ const[freeOnly,setFreeOnly]=useState(false);const access=localFreeCopy(lang);
  useEffect(()=>{try{
   const params=new URLSearchParams(window.location.search);
+  setFreeOnly(params.get('access')==='local');
   const fromUrl=(params.get("q")||"").trim(),fromGlobal=(sessionStorage.getItem("lx-global-search")||"").trim();
   const incoming=fromUrl||fromGlobal;if(incoming)setQ(incoming);if(fromGlobal)sessionStorage.removeItem("lx-global-search");
  }catch{}},[]);
  const tools=useMemo(()=>publicToolSurface(),[]);
  const list=useMemo<PublicToolSurfaceItem[]>(()=>searchToolItems(
-  tools,q,category,(item:PublicToolSurfaceItem)=>item.category,
+  freeOnly?tools.filter(isAnonymousLocalTool):tools,q,category,(item:PublicToolSurfaceItem)=>item.category,
   (item:PublicToolSurfaceItem)=>[
    toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn),
    toolCardLine(lang,item.slug,item.kind,item.descZh,item.descEn),
    toolCategoryLabel(lang,item.category)
   ].filter(Boolean).join(" ")
- ),[tools,q,category,lang]);
+ ),[tools,q,category,lang,freeOnly]);
 
  return <main className="lx11-page lx11-tools-page lx-tools-v124"><div className="lx11-wrap">
   <section className="lx11-tools-hero"><div><span>{toolHubCopy(lang,"kicker")}</span><h1>{toolHubCopy(lang,"title")}</h1><p>{toolHubCopy(lang,"subtitle")}</p></div></section>
   <section className="lx11-tool-searchbar lx-tools-v124-search">
    <div className="lx11-tool-searchbox"><span>⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")}/></div>
    <div className="lx-tools-v124-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>
+   <div className="lx-tools-v124-categories" role="group" aria-label={access[3]}>{[false,true].map(value=><button type="button" key={String(value)} className={freeOnly===value?'is-active':''} aria-pressed={freeOnly===value} onClick={()=>setFreeOnly(value)}>{access[value?1:0]}</button>)}</div>
   </section>
   <RecentTools/>
   <section className="lx11-tool-group"><div className="lx11-tool-grid lx-tools-v124-grid">
@@ -45,6 +49,7 @@ export default function ToolsHubV11(){
      <div className="lx11-tool-copy"><div className="lx11-tool-title-row"><h3>{title}</h3></div>
       {summary?<p className="lx-tools-v124-desc">{summary}</p>:null}
       <span className={`lx-tool-kind lx-tool-kind-${item.category}`}>{toolCategoryLabel(lang,item.category)}</span>
+      {isAnonymousLocalTool(item)&&<span className="lx-tool-kind">{access[2]}</span>}
       <span className="lx-tool-card-arrow" aria-hidden="true">→</span>
      </div>
     </Link>

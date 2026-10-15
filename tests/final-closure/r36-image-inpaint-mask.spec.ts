@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{diffuseMaskedPixels}from"../../lib/tools/autonomous/image-local";
 
 test("mask inpainting changes only selected pixels and fills from surrounding image",()=>{

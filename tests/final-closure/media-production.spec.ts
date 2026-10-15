@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 
 test("ffmpeg runtime files are real wasm/js assets",async({page})=>{
  await page.goto("/tools/video-toolkit",{waitUntil:"domcontentloaded"});

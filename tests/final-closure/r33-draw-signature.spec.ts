@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 test("direct pen signature produces tightly cropped transparent ink and a page overlay",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
  await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});

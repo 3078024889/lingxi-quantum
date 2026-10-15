@@ -1,5 +1,5 @@
 const fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),assert=require('node:assert/strict'),JSZip=require('jszip');
-function load(file){const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{exports,Blob,require:name=>name==='./download'?load('lib/tools/shared/download.ts'):require(name)});return exports}
+function load(file){const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{exports,Blob,require:name=>name==='../commerce/export-access-client'?{registerExportBundle:()=>{},ensureToolExportAccess:async()=>{}}:name==='./download'?load('lib/tools/shared/download.ts'):require(name)});return exports}
 (async()=>{
  const {filesToZip}=load('lib/tools/shared/batch-files.ts');
  const names=['image.jpg','image.jpg','image-2.jpg','IMAGE.JPG','../private/file.txt','.'];

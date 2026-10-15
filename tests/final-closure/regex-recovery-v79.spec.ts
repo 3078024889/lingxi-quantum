@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('catastrophic regex times out without freezing the page and the next run succeeds',async({page})=>{
  await page.goto('/tools/regex-tester?lang=en');

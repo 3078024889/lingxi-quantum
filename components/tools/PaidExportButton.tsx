@@ -30,7 +30,7 @@ async function openMiniPay(id:string){return new Promise<boolean>(resolve=>{let 
 
 export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted,label,draftId,metadata,beforePayment,disabled=false}:{toolId:string;quantity:number;onUnlocked:()=>Promise<void|boolean>|void|boolean;onCompleted?:()=>Promise<void>|void;label?:string;draftId?:string;metadata?:Record<string,unknown>;beforePayment?:()=>Promise<void>;disabled?:boolean}){
  const{lang}=useLingxiLang();const{currency}=usePreferredCurrency();
- const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[phase,setPhase]=useState<PaidTaskPhase>("idle");
+ const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[phase,setPhase]=useState<PaidTaskPhase>("idle"),[loginRequired,setLoginRequired]=useState(false);
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),fails=useRef(0),completedQuote=useRef<string|null>(null),generated=useRef(new Set<string>()),checking=useRef(false);
  const [paidId,setPaidId]=useState('');
  const tx=(key:Parameters<typeof deliveryText>[1])=>deliveryText(lang,key);
@@ -89,13 +89,13 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
   if(paidId){await check(paidId);return}
   if(phase==="completed"||phase==="generating")return;
   if(isMini()&&(currency!=="CNY"||!await miniVirtualPaymentAvailable())){setMsg(lang==="zh"?"小程序内付费暂未开放，已有订单仍可查看。":"Payments in the mini program are temporarily unavailable. Existing orders remain available.");return}
-  setBusy(true);setMsg("");setPhase("pricing");
+  setBusy(true);setMsg("");setPhase("pricing");setLoginRequired(false);
   try{
    try{await beforePayment?.()}catch{setPhase("error");setMsg(tx("draftSaveFailed"));return}
    let q=quote;const expires=q?.expires_at||q?.expiresAt;
    if(!q||Number(q.quantity)!==quantity||(expires&&new Date(expires).getTime()<=Date.now())){
     const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
-    const d=await r.json().catch(()=>({})) as Quote&{error?:string};if(!r.ok||!d.id)throw new Error(d.error||plainText(lang,"paymentError"));q=d;setQuote(q);
+    const d=await r.json().catch(()=>({})) as Quote&{error?:string};if(r.status===401){setLoginRequired(true);setPhase('error');setMsg(tx('login'));return}if(!r.ok||!d.id)throw new Error(d.error||plainText(lang,"paymentError"));q=d;setQuote(q);
    }
    setPhase("quoted");save(toolId,q,draftId);setPhase("waitingPayment");
    if(isMini()&&currency==="CNY"){setMsg(plainText(lang,"openingPayment"));if(await openMiniPay(q.id)){stop();timer.current=setInterval(()=>void check(q!.id),POLL_MS)}else{setMsg(lang==="zh"?"请返回小程序重试，未发起付款。":"Return to the mini program and try again. No payment was started.")}return}
@@ -110,5 +110,5 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
 
  const amount=quote?quoteDisplay(quote,currency).text:'';
  if(phase==="completed")return <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm"><b>{tx('complete')}</b><p className="mt-1 text-[var(--lx-muted)]">{msg}</p></div>;
- return <div><button data-testid="paid-export-start" onClick={start} disabled={disabled||busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label?toolRuntimeText(lang,label,label):tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}</div>
+ return <div><button data-testid="paid-export-start" onClick={start} disabled={disabled||busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label?toolRuntimeText(lang,label,label):tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}{loginRequired&&<a target="_blank" rel="noopener noreferrer" className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent(typeof location==="undefined"?"/tools":location.pathname)}`}>{tx("login")}</a>}</div>
 }

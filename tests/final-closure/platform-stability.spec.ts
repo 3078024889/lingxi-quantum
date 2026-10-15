@@ -1,4 +1,4 @@
-import {test,expect,Page} from "playwright/test";
+import {test,expect,Page} from "./export-test";
 const LANGS=[
  ["zh","zh-CN","ltr"],["en","en","ltr"],["ja","ja","ltr"],["ko","ko","ltr"],
  ["fr","fr","ltr"],["de","de","ltr"],["es","es","ltr"],["pt","pt","ltr"],["ar","ar","rtl"]

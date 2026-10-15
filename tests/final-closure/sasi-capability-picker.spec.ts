@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('current SASI launcher selects capabilities without uploading a file',async({page})=>{
  await page.goto('/sasi?lang=en');

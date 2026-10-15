@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 import {SEO_LOCALES} from "../../lib/seo/global-seo";
 import {publicToolSurface} from '../../lib/tools/public-surface';
 test.describe.configure({mode:'parallel'});
