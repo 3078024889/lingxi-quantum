@@ -688,5 +688,27 @@
       "text"
     ],
     "localPreferred": true
+  },
+  {
+    "id": "document.translate",
+    "domain": "document",
+    "input": [
+      "document"
+    ],
+    "output": [
+      "document"
+    ],
+    "localPreferred": false
+  },
+  {
+    "id": "web.promotion",
+    "domain": "media",
+    "input": [
+      "url"
+    ],
+    "output": [
+      "video-brief"
+    ],
+    "localPreferred": false
   }
 ]

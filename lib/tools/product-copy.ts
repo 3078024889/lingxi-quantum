@@ -1,5 +1,11 @@
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 export const TOOL_INTROS = {
+ 'document-translate':{
+  zh:'翻译 PDF、Office、EPUB 与文本文件，支持九种语言和 PDF 原文对照。',en:'Translate PDFs, Office, EPUB and text files in nine languages, with original/translation PDF output.',ja:'PDF・Office・EPUB・テキストを9言語で翻訳し、原文と訳文のPDFを出力。',ko:'PDF, Office, EPUB, 텍스트를 9개 언어로 번역하고 원문 대조 PDF를 만드세요.',fr:'Traduisez PDF, Office, EPUB et textes en neuf langues, avec PDF original et traduction.',de:'PDF-, Office-, EPUB- und Textdateien in neun Sprachen übersetzen, mit Original und Übersetzung als PDF.',es:'Traduce PDF, Office, EPUB y texto en nueve idiomas, con PDF original y traducido.',pt:'Traduza PDF, Office, EPUB e texto em nove idiomas, com PDF original e traduzido.',ar:'ترجم ملفات PDF وOffice وEPUB والنصوص بتسع لغات مع الأصل والترجمة في PDF.'
+ },
+ 'url-to-video':{
+  zh:'读取网站或商品网页，核对卖点后进入 SASI 制作推广视频。',en:'Read a website or product page, review the facts, and continue in SASI to create a promotional video.',ja:'サイトや商品ページを読み、内容を確認してSASIで宣伝動画を制作。',ko:'사이트나 상품 페이지의 내용을 확인한 뒤 SASI에서 홍보 동영상을 만드세요.',fr:'Lisez une page de site ou de produit, vérifiez les faits, puis créez une vidéo dans SASI.',de:'Website oder Produktseite lesen, Fakten prüfen und ein Werbevideo in SASI erstellen.',es:'Lee un sitio o producto, revisa los datos y crea un vídeo promocional en SASI.',pt:'Leia um site ou produto, confira os dados e crie um vídeo promocional no SASI.',ar:'اقرأ صفحة الموقع أو المنتج وراجع الحقائق ثم أنشئ فيديو ترويجيًا في SASI.'
+ },
   "pdf-editor": {
     "zh": "添加文字、图片和签名，轻松整理你的 PDF。",
     "en": "Easily add text, images and signatures to your PDF.",

@@ -1,6 +1,7 @@
 "use client";
 import {isGeneratedResultUrl} from "@/lib/sasi/client/generated-result-url";
 import {seriesSpecification} from '@/lib/sasi/series-specification';
+import {promotionSettings} from '@/lib/sasi/promotion-brief';
 import SasiScriptPreview from './SasiScriptPreview';
 import {approvedScriptPreview,type ApprovedScriptPreview} from '@/lib/sasi/approved-script-preview';
 import {seriesProgressText} from '@/lib/sasi/series-progress-copy';
@@ -80,8 +81,8 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
  const[prompt,setPrompt]=useState<string>(saved.prompt||initialPrompt);
  const[files,setFiles]=useState<FileItem[]>(()=>initialFiles.slice(0,20).map(file=>({id:crypto.randomUUID(),file,state:"queued" as UploadState,progress:0})));
  const[projectId,setProjectId]=useState<string>(saved.projectId||continuity.workspace.projectId||'');
- const[ratio,setRatio]=useState<(typeof VIDEO_RATIOS)[number]>(()=>VIDEO_RATIOS.includes(saved.ratio)?saved.ratio:VIDEO_RATIOS.find(value=>(saved.prompt||initialPrompt).replace(/：/g,':').replace(/\s/g,'').includes(value))||'9:16');
- const[resolution,setResolution]=useState<(typeof VIDEO_RESOLUTIONS)[number]>(()=>VIDEO_RESOLUTIONS.includes(saved.resolution)?saved.resolution:/720/i.test(saved.prompt||initialPrompt)?'720p':'1080p');
+ const[ratio,setRatio]=useState<(typeof VIDEO_RATIOS)[number]>(()=>VIDEO_RATIOS.includes(saved.ratio)?saved.ratio:promotionSettings(saved.prompt||initialPrompt)?.ratio||VIDEO_RATIOS.find(value=>(saved.prompt||initialPrompt).replace(/：/g,':').replace(/\s/g,'').includes(value))||'9:16');
+ const[resolution,setResolution]=useState<(typeof VIDEO_RESOLUTIONS)[number]>(()=>VIDEO_RESOLUTIONS.includes(saved.resolution)?saved.resolution:promotionSettings(saved.prompt||initialPrompt)?.resolution||(/720/i.test(saved.prompt||initialPrompt)?'720p':'1080p'));
  const[availableResolutions,setAvailableResolutions]=useState<Array<(typeof VIDEO_RESOLUTIONS)[number]>>(["720p","1080p"]);
  const[duration,setDuration]=useState<(typeof VIDEO_DURATIONS)[number]>(()=>VIDEO_DURATIONS.includes(saved.duration)?saved.duration:8);
  const[needsConnection,setNeedsConnection]=useState(false);

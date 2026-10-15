@@ -1586,5 +1586,30 @@
     "requiresMobile": true,
     "requiresRealFixture": true,
     "privacyMode": "local-first"
+  },
+  {
+    "slug": "document-translate",
+    "capabilities": [
+      "document.translate",
+      "download.local"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "optional-external"
+  },
+  {
+    "slug": "url-to-video",
+    "capabilities": [
+      "web.promotion"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "optional-external"
   }
 ]

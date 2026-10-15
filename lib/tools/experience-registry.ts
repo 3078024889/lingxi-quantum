@@ -1,6 +1,8 @@
 export type ToolExperienceKind="document"|"image"|"video"|"audio"|"text"|"privacy"|"utility"|"food";
 export type ToolExperience={kind:ToolExperienceKind;primary:string;working:string;result:string;advancedAfterUpload:boolean;localFirst:boolean};
 export const TOOL_EXPERIENCE:Record<string,ToolExperience>={
+ 'document-translate':{kind:'document',primary:'上传文档',working:'正在翻译…',result:'核对并下载译文',advancedAfterUpload:true,localFirst:false},
+ 'url-to-video':{kind:'video',primary:'输入网址',working:'正在读取网页…',result:'核对后进入 SASI 制作',advancedAfterUpload:false,localFirst:false},
 "audio-transcription":{kind:"audio",primary:"上传音频",working:"正在整理文字…",result:"查看文字与字幕",advancedAfterUpload:true,localFirst:true},
 "avif-to-jpg":{kind:"image",primary:"上传图片",working:"正在转换…",result:"下载 JPG",advancedAfterUpload:false,localFirst:true},
 "batch-image-watermark-remover":{kind:"image",primary:"批量上传图片",working:"正在处理图片…",result:"下载处理后的图片",advancedAfterUpload:true,localFirst:true},

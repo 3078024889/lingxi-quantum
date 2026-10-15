@@ -2,6 +2,18 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const {createRequire}=require('node:module');
+const qpdfRoot=path.resolve(path.dirname(require.resolve('qpdf-run/worker')),'..');
+if(JSON.parse(fs.readFileSync(path.join(qpdfRoot,'package.json'))).version!=='0.2.1')throw Error('QPDF_VERSION_MISMATCH');
+const qpdfTarget=path.join(__dirname,'..','public','media','qpdf-0.2.1-v1');
+fs.mkdirSync(qpdfTarget,{recursive:true});
+const qpdfManifest=[];
+for(const [source,file] of [['src/worker.js','worker.js'],['vendor/qpdf/lib/qpdf.js','qpdf.js'],['vendor/qpdf/lib/qpdf.wasm','qpdf.wasm'],['LICENSE','LICENSE-wrapper.txt']]){
+ const bytes=fs.readFileSync(path.join(qpdfRoot,source));fs.writeFileSync(path.join(qpdfTarget,file),bytes);qpdfManifest.push({file,bytes:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex')});
+}
+const qpdfLicense=fs.readFileSync(path.join(__dirname,'..','docs','third-party','qpdf-11.10.0-LICENSE.txt'));
+fs.writeFileSync(path.join(qpdfTarget,'LICENSE-qpdf.txt'),qpdfLicense);qpdfManifest.push({file:'LICENSE-qpdf.txt',bytes:qpdfLicense.length,sha256:crypto.createHash('sha256').update(qpdfLicense).digest('hex')});
+fs.writeFileSync(path.join(qpdfTarget,'manifest.json'),JSON.stringify({engine:'qpdf-run 0.2.1',runtimeVersion:'11.10.0',patch:'patches/qpdf-run@0.2.1.patch',assets:qpdfManifest},null,2));
+fs.writeFileSync(path.join(qpdfTarget,'SOURCE.txt'),'qpdf-run 0.2.1, MIT wrapper, patched initialization cleanup and empty-output inspection support. Source: https://github.com/RabbitHols/qpdf-run . Underlying qpdf runtime: https://github.com/qpdf/qpdf (Apache-2.0); see repository third-party notices. Vendor qpdf.js and qpdf.wasm are copied unchanged.\n');
 const ocrTarget=path.join(__dirname,'..','public','media','ocr-7.0.0-v1');
 const ocrPackage=path.dirname(require.resolve('tesseract.js/package.json'));
 const ocrRequire=createRequire(require.resolve('tesseract.js/package.json'));

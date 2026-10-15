@@ -486,7 +486,13 @@
     "pdf-to-xlsx": {
       "kind": "fixture",
       "fixtureGroup": "pdf-basic"
+    },
+    "document-translate": {
+      "kind": "online-contract"
+    },
+    "url-to-video": {
+      "kind": "online-contract"
     }
   },
-  "classificationCount": 119
+  "classificationCount": 121
 }

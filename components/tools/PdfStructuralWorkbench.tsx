@@ -1,6 +1,7 @@
 "use client";
 
 import {useMemo,useState} from "react";
+import {getQpdfRuntime} from '@/lib/tools/shared/qpdf-runtime';
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -21,20 +22,11 @@ ar:{local:"مجاني · تبقى الملفات داخل المتصفح ولا 
 };
 
 type QpdfRunner={runOne:(o:{input:Uint8Array|ArrayBuffer;inputName:string;outputName:string;args:string[]})=>Promise<Uint8Array>;destroy:()=>Promise<void>|void};
-let toolkitPromise:Promise<QpdfRunner>|null=null;
-async function getToolkit():Promise<QpdfRunner>{
- if(!toolkitPromise)toolkitPromise=import("qpdf-run").then(async m=>{
-   const workerUrl=new URL("qpdf-run/worker",import.meta.url).href;
-   const qpdfJsUrl=new URL("qpdf-run/qpdf.js",import.meta.url).href;
-   const wasmUrl=new URL("qpdf-run/qpdf.wasm",import.meta.url).href;
-   return m.createQpdfRunner({workerUrl,qpdfJsUrl,wasmUrl});
- });
- return toolkitPromise;
-}
-async function runQpdf(file:File,args:string[],tag:string){
+async function getToolkit():Promise<QpdfRunner>{return getQpdfRuntime()}
+async function runQpdf(file:File,args:string[],_tag:string){
  const pdf=await getToolkit();
  const input=new Uint8Array(await file.arrayBuffer());
- return pdf.runOne({input,inputName:"input.pdf",outputName:`${tag}.pdf`,args});
+ return pdf.runOne({input,inputName:"input.pdf",outputName:"output.pdf",args});
 }
 function encryptArgs(userPassword:string,ownerPassword:string,print:string,modify:string,extract:boolean){
  return ["input.pdf","output.pdf","--encrypt",`--user-password=${userPassword}`,`--owner-password=${ownerPassword}`,"--bits=256",`--print=${print}`,`--modify=${modify}`,`--extract=${extract?"y":"n"}`,"--"];

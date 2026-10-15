@@ -1,0 +1,47 @@
+diff --git a/src/browserRunner.js b/src/browserRunner.js
+index ba3472a12d17c8eda1fe4bcc8f92ef560f54581b..cc8c555acb89aed225aa556a79f9933a04866047 100644
+--- a/src/browserRunner.js
++++ b/src/browserRunner.js
+@@ -34,11 +34,13 @@ export async function createBrowserQpdfRunner(options) {
+     pending.clear();
+   };
+ 
+-  await sendWorkerMessage({
+-    type: 'init',
+-    qpdfJsUrl: qpdfJsUrl,
+-    wasmUrl: wasmUrl
+-  });
++  try {
++    await sendWorkerMessage({type: 'init', qpdfJsUrl: qpdfJsUrl, wasmUrl: wasmUrl});
++  } catch (error) {
++    destroyed = true;
++    worker.terminate();
++    throw error;
++  }
+ 
+   return {
+     async run(runOptions) {
+@@ -98,8 +100,8 @@ function validateRunOptions(options) {
+   if (!Array.isArray(options.args) || !options.args.length) {
+     throw createQpdfRunError('QPDF_INVALID_INPUT', 'qpdf.run requires args.');
+   }
+-  if (!Array.isArray(options.outputs) || !options.outputs.length) {
+-    throw createQpdfRunError('QPDF_INVALID_INPUT', 'qpdf.run requires at least one output name.');
++  if (!Array.isArray(options.outputs)) {
++    throw createQpdfRunError('QPDF_INVALID_INPUT', 'qpdf.run requires an output-name array (empty for inspection).');
+   }
+ }
+ 
+diff --git a/src/worker.js b/src/worker.js
+index f3c26098cef184bd3087813b60a201bfe1f01fd2..285692439571246d98aa348f0c06dcbb73532e44 100644
+--- a/src/worker.js
++++ b/src/worker.js
+@@ -148,7 +148,7 @@ function validateRunMessage(message) {
+   if (!Array.isArray(message.args) || !message.args.length) {
+     throw makeWorkerError('QPDF_INVALID_INPUT', 'qpdf.run requires args.');
+   }
+-  if (!Array.isArray(message.outputs) || !message.outputs.length) {
++  if (!Array.isArray(message.outputs)) {
+     throw makeWorkerError('QPDF_INVALID_INPUT', 'qpdf.run requires outputs.');
+   }
+ }

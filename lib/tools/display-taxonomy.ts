@@ -19,6 +19,7 @@ const TABLE=new Set([
  "xlsx-to-csv","csv-to-xlsx","csv-json","ics-to-csv","vcf-to-csv","json-formatter"
 ]);
 const MEDIA=new Set([
+ "url-to-video",
  "video-toolkit","video-watermark-remover","reverse-video","loop-video","stop-motion-video","audio-cleanup","ai-video-audio-check"
 ]);
 const TEXT=new Set([
@@ -30,6 +31,7 @@ const FILES=new Set([
  "file-type-detector","md5-sha256","file-compare","docx-to-txt","pptx-to-txt","epub-to-txt","odt-to-txt"
 ]);
 const PDF_EXACT=new Set([
+ "document-translate",
  "merge-pdf","split-pdf","compress-pdf","image-to-pdf","image-to-pdf-pro","e-sign-pdf",
  "document-copy-layout","batch-pdf"
 ]);

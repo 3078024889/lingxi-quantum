@@ -19,12 +19,26 @@ function SasiOneSurfaceBody(){
  const params=useSearchParams();
  const intent=(params.get("intent")||"").slice(0,16000);
  const legacy=legacyMode(params.get("mode"));
+ const promotion=params.get('promotion')==='1';
  const [mode,setMode]=useState<SasiEntryMode|null>(()=>intent?(inferUnifiedSasiIntent(intent,false)==="image"?"image":"chat"):legacy);
  const [initialPrompt,setInitialPrompt]=useState(intent);
  const [autoStart,setAutoStart]=useState(Boolean(intent));
  const [initialFiles,setInitialFiles]=useState<File[]>([]);
  const [initialSkillIds,setInitialSkillIds]=useState<SasiSkillId[]>([]);
  const didRestore=useRef(false);
+ const didReadPromotion=useRef(false);
+ useEffect(()=>{
+  if(!promotion||!continuity.restored||didReadPromotion.current)return;
+  didReadPromotion.current=true;
+  try{
+   const raw=sessionStorage.getItem('lingxifield.promotionBrief.v1');if(!raw)return;
+   const value=JSON.parse(raw);
+   if(typeof value.brief!=='string'||value.brief.length>16000||!Number.isFinite(value.createdAt)||Date.now()-value.createdAt>30*60_000)return;
+   setInitialPrompt(value.brief);setMode('chat');setAutoStart(false);didRestore.current=true;
+   sessionStorage.removeItem('lingxifield.promotionBrief.v1');
+   const url=new URL(window.location.href);url.searchParams.delete('promotion');url.searchParams.set('mode','chat');window.history.replaceState({},'',url.pathname+'?'+url.searchParams);
+  }catch{}
+ },[promotion,continuity.restored]);
  useEffect(()=>{if(legacy&&!intent)setMode(legacy)},[legacy,intent]);
  useEffect(()=>{
   if(!continuity.restored||didRestore.current)return;didRestore.current=true;

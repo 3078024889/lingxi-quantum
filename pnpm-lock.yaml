@@ -13,6 +13,7 @@ overrides:
 
 patchedDependencies:
   braces@3.0.3: 88e0931b1ed6ebf7aea61d9f8cfad6e579c7620bd415c8fff25405795a8cf6ea
+  qpdf-run@0.2.1: dc28cd9c6f7c472cc9763b2dea97adb12640b3d9e72865274257f18f0a1d3179
   sprintf-js@1.0.3: f8a82f8aff9fc6f4a76a4f6c842ea7713fbf38fa018577197777cb0d3bdebbdc
   tesseract.js@7.0.0: 188993446b1f01de9a947a22b0f4a1742adf6f84547ba9feba84065066edfc11
 
@@ -103,7 +104,7 @@ importers:
         version: 4.10.38
       qpdf-run:
         specifier: 0.2.1
-        version: 0.2.1
+        version: 0.2.1(patch_hash=dc28cd9c6f7c472cc9763b2dea97adb12640b3d9e72865274257f18f0a1d3179)
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
@@ -5991,7 +5992,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  qpdf-run@0.2.1: {}
+  qpdf-run@0.2.1(patch_hash=dc28cd9c6f7c472cc9763b2dea97adb12640b3d9e72865274257f18f0a1d3179): {}
 
   qrcode@1.5.4:
     dependencies:

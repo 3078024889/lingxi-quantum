@@ -3,6 +3,8 @@ type T=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):T=>({zh,en,ja,ko,fr,de,es,pt,ar});
 
 export const EXTRA_TOOL_TITLES:Record<string,T>={
+ 'document-translate':L('PDF / 文档翻译','PDF / Document Translation','PDF・文書翻訳','PDF / 문서 번역','Traduction PDF / Documents','PDF- / Dokumentübersetzung','Traducción de PDF / Documentos','Tradução de PDF / Documentos','ترجمة PDF والمستندات'),
+ 'url-to-video':L('网址生成推广视频','URL to Promotional Video','URLから宣伝動画','URL로 홍보 동영상','URL en vidéo promotionnelle','URL zu Werbevideo','URL a vídeo promocional','URL para vídeo promocional','الرابط إلى فيديو ترويجي'),
 "video-translate":L("视频翻译","Video Translation","動画翻訳","영상 번역","Traduction vidéo","Videoübersetzung","Traducción de vídeo","Tradução de vídeo","ترجمة الفيديو"),
 "batch-pdf":L("批量 PDF 工作台","Batch PDF Workspace","PDF一括処理","PDF 일괄 작업","Traitement PDF par lot","PDF-Stapelverarbeitung","Procesamiento PDF por lotes","Processamento PDF em lote","معالجة PDF دفعة واحدة"),
 "pdf-halve-pages":L("PDF 页面拆半","Halve PDF Pages","PDFページを半分に分割","PDF 페이지 반으로 나누기","Couper les pages PDF en deux","PDF-Seiten halbieren","Dividir páginas PDF por la mitad","Dividir páginas PDF ao meio","تقسيم صفحات PDF إلى نصفين"),

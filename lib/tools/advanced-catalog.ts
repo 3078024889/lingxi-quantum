@@ -13,6 +13,8 @@ export type AdvancedToolCard = {
 };
 
 export const ADVANCED_TOOLS: AdvancedToolCard[] = [
+  {href:'/tools/document-translate',title:'PDF / 文档翻译',description:'翻译 PDF、Office、EPUB 与文本，支持九种语言和 PDF 原文对照。',keywords:['PDF翻译','文档翻译','Word翻译','translate PDF','document translation'],category:'pdf',badge:'AI'},
+  {href:'/tools/url-to-video',title:'网址生成推广视频',description:'读取网站或商品网页，核对卖点后进入 SASI 制作推广视频。',keywords:['网址生成视频','商品推广视频','URL to video','website promo video'],category:'video',badge:'AI'},
   { href:"/tools/pdf-editor", title:"PDF 自由编辑", description:"改文字、加图片、签名、盖章、页面管理，先预览再导出。", keywords:["PDF","改字","修改文字","编辑合同","加图片","删页","旋转"], category:"pdf", popular:true, localOnly:true },
   { href:"/tools/e-sign-pdf", title:"PDF 签名 / 盖章 / 骑缝章", description:"上传签名或印章，多页盖章与骑缝章连续切片。", keywords:["签名","电子签章","公章","印章","骑缝章","合同盖章"], category:"sign", popular:true, localOnly:true },
   { href:"/tools/pdf-merge-split", title:"PDF 合并 / 拆分 / 页面处理", description:"合并、提取页、删除页、旋转页，全部浏览器本地完成。", keywords:["PDF合并","PDF拆分","提取页面","删除页面","旋转PDF"], category:"pdf", popular:true, localOnly:true },

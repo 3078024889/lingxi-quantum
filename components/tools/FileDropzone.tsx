@@ -16,11 +16,11 @@ function fileMatchesAccept(file:File,accept:string){
   return rules.some(rule=>rule.startsWith(".")?ext===rule:rule.endsWith("/*")?mime.startsWith(rule.slice(0,-1)):mime===rule);
 }
 function fileIdentity(file:File){return`${file.name}\u0000${file.size}\u0000${file.lastModified}`}
-type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;files:File[];onChange:(files:File[])=>void;disabled?:boolean;kind?:"file"|"image"|"media"|"pdf"|"subtitle";append?:boolean};
+type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;files:File[];onChange:(files:File[])=>void;disabled?:boolean;kind?:"file"|"image"|"media"|"pdf"|"subtitle";append?:boolean;normalizeDocuments?:boolean};
 type Preview={key:string;name:string;url:string};
 
 export default function FileDropzone({
-  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled:disabledProp,kind="file",append=false,
+  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled:disabledProp,kind="file",append=false,normalizeDocuments=true,
 }:Props){
   const[hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
   const disabled=Boolean(disabledProp||!hydrated);
@@ -30,7 +30,7 @@ export default function FileDropzone({
   const[error,setError]=useState<string|null>(null);
   const[previews,setPreviews]=useState<Preview[]>([]);
   const[normalizing,setNormalizing]=useState(false);
-  const pdfDocumentMode=accept.toLowerCase().includes(".pdf")||accept.toLowerCase().includes("application/pdf");
+  const pdfDocumentMode=normalizeDocuments&&(accept.toLowerCase().includes(".pdf")||accept.toLowerCase().includes("application/pdf"));
   const effectiveAccept=pdfDocumentMode?Array.from(new Set([...accept.split(","),...DOCUMENT_INPUT_ACCEPT.split(",")])).join(","):accept;
 
   useEffect(()=>{
