@@ -1,6 +1,8 @@
 // Original free tool exports. Existing paid tools keep their own payment contracts.
 export const METERED_EXPORT_TOOL_ID="metered-tool-export";
 export const DAILY_FREE_EXPORTS=5;
+// Text-note creation has server-side metering; paid file sharing keeps its contract.
+export const METERED_OPERATION_TOOL_IDS=['burn-after-read'] as const;
 export const METERED_TOOL_IDS=[
   "document-translate",
   "url-to-video",
@@ -80,7 +82,6 @@ export const METERED_TOOL_IDS=[
   "split-pdf",
   "subtitle-tools",
   "svg-to-png",
-  "temp-mail",
   "text-counter",
   "timestamp-converter",
   "url-encode-decode",
@@ -105,5 +106,6 @@ export const METERED_TOOL_IDS=[
   "ai-image-check",
   "ai-video-audio-check"
 ] as const;
-const ids:ReadonlySet<string>=new Set(METERED_TOOL_IDS);
+const ids:ReadonlySet<string>=new Set([...METERED_TOOL_IDS,...METERED_OPERATION_TOOL_IDS]);
 export function isMeteredTool(slug:string){return ids.has(slug)}
+export function isMeteredOperationTool(slug:string){return (METERED_OPERATION_TOOL_IDS as readonly string[]).includes(slug)}

@@ -38,8 +38,9 @@ export default function ExportAccessProvider(){
    return new Promise<boolean>(resolve=>update({request,resolve,paidUnits:data?.paidUnits||0,loginRequired:data?.loginRequired||false,phase:data?(data.allowed?'ready':'payment'):'error'}));
   });
   const id=new URLSearchParams(location.search).get('resumeDraft');
-  if(id)void loadPaidTaskDraft<{toolId:string;units:number}>(id).then(row=>{
+  if(id)void loadPaidTaskDraft<{toolId:string;units:number;operation?:string}>(id).then(row=>{
    if(!row||row.toolId!==METERED_EXPORT_TOOL_ID||!row.file||row.state.toolId!==location.pathname.match(/\/tools\/([^/?#]+)/)?.[1])return;
+   if(row.state.operation==='burn-note')return;
    const blob=row.file,name=row.fileName||'result';restoreExportAccess(blob,id,row.state.units);
    void ensureToolExportAccess(blob,name).then(()=>downloadBlob(blob,name)).catch(()=>{});
   }).catch(()=>{});
@@ -48,9 +49,9 @@ export default function ExportAccessProvider(){
  useEffect(()=>{if(pending&&!dialog.current?.open)dialog.current?.showModal()},[pending]);
  function cancel(){pendingRef.current?.resolve(false);update(null)}
  async function retry(){const current=pendingRef.current;if(!current)return;try{const data=await check(current.request);update({...current,paidUnits:data.paidUnits,loginRequired:data.loginRequired,phase:data.allowed?'ready':'payment'})}catch{update({...current,phase:'error'})}}
- async function persist(){const current=pendingRef.current;if(!current)throw Error('NO_EXPORT');const r=current.request;await savePaidTaskDraft({id:r.id,toolId:METERED_EXPORT_TOOL_ID,file:r.blob,fileName:r.name,fileType:r.blob.type,state:{toolId:r.toolId,units:r.units}})}
+ async function persist(){const current=pendingRef.current;if(!current)throw Error('NO_EXPORT');const r=current.request;await savePaidTaskDraft({id:r.id,toolId:METERED_EXPORT_TOOL_ID,file:r.blob,fileName:r.name,fileType:r.blob.type,state:{toolId:r.toolId,units:r.units,operation:r.operation}})}
  async function paid(){const current=pendingRef.current;if(!current)return;const data=await check(current.request);if(!data.allowed)throw Error('EXPORT_NOT_UNLOCKED');update({...current,phase:'ready'})}
- function continueNow(){const current=pendingRef.current;if(!current)return;current.resolve(true);update(null);void deletePaidTaskDraft(current.request.id)}
+ function continueNow(){const current=pendingRef.current;if(!current)return;current.resolve(true);update(null);if(!current.request.operation)void deletePaidTaskDraft(current.request.id)}
  if(!pending)return null;
  return <dialog ref={dialog} onCancel={e=>{e.preventDefault();cancel()}} aria-labelledby="export-access-title" className="w-[calc(100%-2rem)] max-w-lg rounded-2xl border bg-[var(--lx-panel)] p-5 text-[var(--lx-ink)] backdrop:bg-black/40">
   <h2 id="export-access-title" className="text-lg font-semibold">{c[0]}</h2><p className="my-3 break-all text-sm">{pending.request.name}</p>

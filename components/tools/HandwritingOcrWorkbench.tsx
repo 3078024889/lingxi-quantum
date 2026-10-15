@@ -2,10 +2,11 @@
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 
 import ToolUiText from "@/components/tools/ToolUiText";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {downloadBlob} from "@/lib/tools/shared/download";
+import ResultFileActions from './ResultFileActions';
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import type { ToolResultFile } from "@/lib/tools/types";
 import { buildEditableDocx } from "@/lib/tools/shared/docx-builder";
@@ -117,6 +118,9 @@ export default function HandwritingOcrWorkbench() {
   const [stage, setStage] = useState("");
   const [error, setError] = useState("");
   const [texts, setTexts] = useState<Array<{ name: string; text: string }>>([]);
+  const [docx,setDocx]=useState<ToolResultFile|null>(null);
+  const [preparingDocx,setPreparingDocx]=useState(false);
+  useEffect(()=>setDocx(null),[texts]);
 
   const exports = useMemo<ToolResultFile[]>(
     () =>
@@ -225,14 +229,14 @@ export default function HandwritingOcrWorkbench() {
   }
 
   async function downloadDocx() {
-    if (!texts.length) return;
-
-    const docxResult = await buildEditableDocx(
-      texts.map((item) => `${item.name}\n${item.text}`),
-      "handwriting-ocr.docx",
-    );
-
-    await downloadBlob(docxResult.blob,docxResult.name);
+    if (!texts.length||preparingDocx) return;
+    setPreparingDocx(true);
+    try{
+      const docxResult = docx||await buildEditableDocx(texts.map((item) => `${item.name}\n${item.text}`),"handwriting-ocr.docx");
+      setDocx(docxResult);
+      await downloadBlob(docxResult.blob,docxResult.name);
+    }catch{setError("Unable to save the Word document. Please retry.")}
+    finally{setPreparingDocx(false)}
   }
 
   return (
@@ -332,10 +336,12 @@ export default function HandwritingOcrWorkbench() {
           />
           <button
             onClick={downloadDocx}
+            disabled={preparingDocx}
             className="rounded-xl border border-[var(--lx-line)] px-4 py-2 text-sm"
           >
             <ToolUiText text="导出 Word DOCX" />
           </button>
+          {docx&&<ResultFileActions blob={docx.blob} name={docx.name}/>}
         </>
       )}
 

@@ -19,3 +19,23 @@ test('remote video import refuses more than five links without dropping any sile
 test('tool footer contains tutorial and FAQs without repeated engineering sections',async({page})=>{
  await page.goto('/tools/video-toolkit?lang=zh');const guide=page.getByRole('region',{name:'操作教程',exact:true});await expect(guide).toBeVisible();await expect(guide.getByRole('heading',{name:'常见问题',exact:true})).toBeVisible();await expect(guide.getByRole('heading',{name:'处理方式',exact:true})).toHaveCount(0);await expect(guide.getByRole('heading',{name:'输入与输出',exact:true})).toHaveCount(0);
 });
+
+for(const restore of [false,true])test(`private text notes enforce five daily results and resume the sixth ${restore?'after payment return':'in place'} without exporting the secret draft`,async({page})=>{
+ test.setTimeout(60000);let free=0,paid=false,creates:any[]=[],reservation='',quote:any,consumes=0,downloads=0;
+ const claims=new Map<string,boolean>();page.on('download',()=>downloads++);
+ await page.addInitScript(()=>{localStorage.setItem('lingxifield:preferred-currency','CNY');window.open=()=>({} as Window)});
+ await page.route('**/api/preferences/currency',r=>r.fulfill({json:{accountCurrency:'CNY'}}));
+ await page.route('**/api/tools/free-export',r=>{const b=r.request().postDataJSON();expect(b.toolId).toBe('burn-after-read');expect(b.units).toBe(1);if(!claims.has(b.id)){claims.set(b.id,free<5);if(free<5)free++}const allowed=claims.get(b.id)||paid;reservation=b.id;return r.fulfill({status:allowed?200:402,json:{id:b.id,allowed,paidUnits:allowed?0:1,freeUnits:allowed?1:0,loginRequired:false}})});
+ await page.route('**/api/tools/quote',r=>{const b=r.request().postDataJSON();quote={id:'11111111-1111-4111-8111-111111111111',tool_id:b.toolId,quantity:1,unit_name:'file',currency:'CNY',metadata:b.metadata,amount_rmb:1,amount_usd:1,expires_at:new Date(Date.now()+3600000).toISOString()};return r.fulfill({json:quote})});
+ await page.route('**/api/tools/pay/status**',r=>r.fulfill({json:{paid:!restore||page.url().includes('resumeDraft'),quote,grant:{}}}));
+ await page.route('**/api/tools/export/consume',r=>{consumes++;paid=true;return r.fulfill({json:{ok:true}})});
+ await page.route('**/api/tools/pay/create',r=>{throw Error('Real payment must not be called')});
+ await page.route('**/api/tools/burn-after-read/create',r=>{const b=r.request().postDataJSON();expect(claims.get(b.exportRequestId)||paid).toBeTruthy();expect(JSON.stringify(b)).not.toContain('private note');creates.push(b);return r.fulfill({json:{id:b.exportRequestId,token:'isolated-token',expiresAt:new Date(Date.now()+3600000).toISOString()}})});
+ await page.goto('/tools/burn-after-read?lang=en');
+ for(let i=0;i<5;i++){await page.locator('textarea').first().fill('private note '+i);await page.getByRole('button',{name:'Create private link',exact:true}).click();await expect.poll(()=>creates.length).toBe(i+1);await expect(page.getByText('Link ready',{exact:true})).toBeVisible()}
+ await page.locator('textarea').first().fill('private note sixth');await page.getByRole('button',{name:'Create private link',exact:true}).click();let dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();expect(creates).toHaveLength(5);await dialog.getByRole('button',{name:'Confirm export price',exact:true}).click();await expect.poll(()=>Boolean(quote)).toBe(true);const id=reservation;
+ if(restore)await page.goto('/tools/burn-after-read?lang=en&resumeDraft='+id+'&resumeQuote='+quote.id);
+ dialog=page.getByRole('dialog');await expect(dialog.getByRole('button',{name:'Continue',exact:true})).toBeVisible({timeout:10000});await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect.poll(()=>creates.length).toBe(6);await expect(page.getByText('Link ready',{exact:true})).toBeVisible();expect(creates[5].exportRequestId).toBe(id);expect(consumes).toBe(1);expect(downloads).toBe(0);
+ const text=await page.locator('body').innerText(),link=text.match(/https?:\/\/[^\s]+#k=[^\s]+/)?.[0];expect(link).toBeTruthy();const key=new URLSearchParams(new URL(link!).hash.slice(1)).get('k')!;
+ const plain=await page.evaluate(async({key,body})=>{const bytes=(v:string)=>Uint8Array.from(atob(v.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0));const secret=await crypto.subtle.importKey('raw',bytes(key),'AES-GCM',false,['decrypt']);return new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(body.iv)},secret,bytes(body.ciphertext)))},{key,body:creates[5]});expect(plain).toBe('private note sixth');
+});

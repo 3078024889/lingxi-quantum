@@ -1,6 +1,6 @@
 "use client";
 import ToolUiText from "@/components/tools/ToolUiText";
-import {downloadBlob} from "@/lib/tools/shared/download";
+import ResultFileActions from "./ResultFileActions";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 import {useCallback,useEffect,useMemo,useRef,useState} from "react";
@@ -182,11 +182,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
   }catch(e){setError(friendly(e instanceof Error?e.message:String(e)))}finally{batchProcessing.current=false;setBatchBusy(false)}
  }
 
- function exportCsv(){
-  const csv="email,expires_at,messages\n"+owned.map(x=>`${x.address},${x.expiresAt},${x.messageCount}`).join("\n");
-  void downloadBlob(new Blob([csv],{type:"text/csv;charset=utf-8"}),"lingxifield-temp-mail.csv");
- }
-
+ const csvFile=useMemo(()=>new Blob(["email,expires_at,messages\n"+owned.map(x=>`${x.address},${x.expiresAt},${x.messageCount}`).join("\n")],{type:"text/csv;charset=utf-8"}),[owned]);
  const recoverRef=useRef(recover);recoverRef.current=recover;
  const refreshRef=useRef(refresh);refreshRef.current=refresh;
  const loadOwnedRef=useRef(loadOwned);loadOwnedRef.current=loadOwned;
@@ -300,7 +296,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
     <div className="flex items-center gap-2"><EditableNumberInput type="number" min={11} max={100} value={batchCount} onChange={e=>setBatchCount(Math.max(11,Math.min(100,Number(e.target.value))))} className="w-24 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm"/>
      <button onClick={startBatchPayment} disabled={batchBusy||!TEMP_MAIL_BATCH_SALES_ENABLED} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{!TEMP_MAIL_BATCH_SALES_ENABLED?t('batchPaused'):batchBusy?t("working"):t("generateCount",{count:batchCount,price})}</button></div>
    </div>
-   <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{TEMP_MAIL_BATCH_SALES_ENABLED?t("unitPrice"):t('batchPausedBody')}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><button onClick={exportCsv} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{t("exportCsv")}</button></>}</div>
+   <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{TEMP_MAIL_BATCH_SALES_ENABLED?t("unitPrice"):t('batchPausedBody')}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><ResultFileActions blob={csvFile} name="lingxifield-temp-mail.csv" saveLabel={t("exportCsv")}/></>}</div>
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>
  </div>;

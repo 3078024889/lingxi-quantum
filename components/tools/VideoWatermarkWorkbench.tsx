@@ -5,12 +5,12 @@ import PaidActionButton from "@/components/tools/PaidActionButton";
 
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
-import {downloadUrl} from "@/lib/tools/shared/download";
+import ResultFileActions from './ResultFileActions';
 import {draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
 type MediaItem={file:File;duration:number;width:number;height:number;key:string};
 type Box={x:number;y:number;w:number;h:number};
-type Output={name:string;url:string};
+type Output={name:string;url:string;blob:Blob};
 type Failure={name:string;reason:string};
 type FfmpegHandle={terminate:()=>void};
 type C={hero:string;lead:string;rights:string;x:string;y:string;w:string;h:string;billing:string;working:string;cancel:string;price:string;done:string;download:string;truth:string;metaFail:string;formatFail:string;partial:string};
@@ -48,7 +48,7 @@ export default function VideoWatermarkWorkbench(){
    const code=await f.exec(["-i",input,"-vf",`delogo=x=${px}:y=${py}:w=${pw}:h=${ph}:show=0`,"-c:v","libx264","-preset","veryfast","-crf","20","-c:a","aac","-b:a","160k",output]);
    if(code!==0)throw new Error(`FFMPEG_EXIT_${code}`);
    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);if(copy.byteLength===0)throw new Error("EMPTY_VIDEO_RESULT");
-   const url=URL.createObjectURL(new Blob([copy.buffer],{type:"video/mp4"}));resultUrls.current.push(url);return{name:item.file.name,url};
+   const blob=new Blob([copy.buffer],{type:"video/mp4"}),url=URL.createObjectURL(blob);resultUrls.current.push(url);return{name:item.file.name,url,blob};
   }catch(e){throw e}
   finally{try{f?.terminate()}catch{}if(ff.current===f)ff.current=null}
  }
@@ -69,7 +69,7 @@ export default function VideoWatermarkWorkbench(){
   {items.length>0&&<><div className="grid gap-3 sm:grid-cols-4">{([[c.x,"x"],[c.y,"y"],[c.w,"w"],[c.h,"h"]] as const).map(([name,key])=><label key={key} className="text-sm text-[var(--lx-muted)]">{name} %<input type="range" min={0} max={key==="w"||key==="h"?50:95} value={box[key]} onChange={e=>setBox(v=>({...v,[key]:Number(e.target.value)}))} className="mt-2 w-full"/><span className="text-xs text-[var(--lx-faint)]">{box[key]}%</span></label>)}</div><div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm text-[var(--lx-muted)]">{items.length} · {c.billing}: <b className="text-[var(--lx-ink)]">{units}</b></div></>}
   <div className="flex flex-wrap gap-3">{busy?<><button disabled className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] opacity-50">{c.working}</button><button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{c.cancel}</button></>:null}{units>0&&draftReady?<PaidActionButton toolId="video-watermark-remover" quantity={units} draftId={draftId} draftReady={draftReady} metadata={{minutes:units,files:items.length,box}} onPaid={async()=>{await run()}} label={c.price}/>:null}</div>
   {progress&&<p className="text-sm text-[var(--lx-muted)]">{progress}</p>}
-  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.url} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><video src={r.url} controls className="w-full rounded-xl"/><div className="mt-3 flex items-center justify-between gap-2"><span className="truncate text-sm text-[var(--lx-muted)]">{r.name}</span><button type="button" onClick={()=>void downloadUrl(r.url,`clean-${r.name.replace(/\.[^.]+$/,".mp4")}`)} className="shrink-0 rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">{c.download}</button></div></div>)}</div>}
+  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map(r=><div key={r.url} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3"><video src={r.url} controls className="w-full rounded-xl"/><p className="my-3 break-all text-sm text-[var(--lx-muted)]">{r.name}</p><ResultFileActions blob={r.blob} name={`clean-${r.name.replace(/\.[^.]+$/,".mp4")}`} saveLabel={c.download}/></div>)}</div>}
   {failures.length>0&&<div className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-3 text-xs text-[var(--lx-danger)]">{failures.map(x=><div key={x.name}>{x.name} · {x.reason}</div>)}</div>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
   <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">{c.truth}</div>

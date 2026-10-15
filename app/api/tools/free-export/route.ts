@@ -10,6 +10,7 @@ export async function POST(req:NextRequest){
  if(Number(req.headers.get('content-length')||0)>4096)return NextResponse.json({error:'REQUEST_TOO_LARGE'},{status:413});
  const body=await req.json().catch(()=>null),id=String(body?.id||''),toolId=String(body?.toolId||''),units=Number(body?.units);
  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)||!isMeteredTool(toolId)||!Number.isSafeInteger(units)||units<1||units>1000)return NextResponse.json({error:'EXPORT_INPUT_INVALID'},{status:400});
+ if(toolId==='burn-after-read'&&units!==1)return NextResponse.json({error:'EXPORT_INPUT_INVALID'},{status:400});
  const client=createClient(),{data:{user}}=await client.auth.getUser(),admin=createAdminClient();
  const ipHash=foodRequestIpHash(req);
  const limit=await admin.rpc('rate_limit_check',{p_key:`tool-export:${ipHash}`,p_limit:300,p_window_seconds:3600});

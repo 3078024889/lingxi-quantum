@@ -1,6 +1,7 @@
 import {test,expect,type Page} from './export-test';
 import sharp from 'sharp';
 import fs from 'node:fs/promises';
+import jsQR from 'jsqr';
 async function prepare(page:Page,outcome:string){
  await page.addInitScript(mode=>{
   Object.defineProperty(navigator,'canShare',{configurable:true,value:()=>mode!=='unsupported'});
@@ -34,6 +35,22 @@ test('long exported filenames and file actions fit a 320px viewport',async({page
 test('unsupported file sharing does not reserve an export or ask for payment',async({page})=>{
  let claims=0;await page.route('**/api/tools/free-export',r=>{claims++;return r.fulfill({status:402,json:{id:r.request().postDataJSON().id,allowed:false,paidUnits:1,freeUnits:0,loginRequired:false}})});
  await prepare(page,'unsupported');const actions=page.getByTestId('result-file-actions');await actions.getByRole('button',{name:'Send file',exact:true}).click();await expect(actions.getByRole('status')).toContainText('cannot share');expect(claims).toBe(0);await expect(page.getByRole('dialog')).toHaveCount(0);
+});
+
+test('QR PNG and SVG share the exact downloaded files without spending a second export',async({page})=>{
+ let claims=0;
+ await page.route('**/api/tools/free-export',r=>{claims++;const b=r.request().postDataJSON();return r.fulfill({json:{id:b.id,allowed:true,paidUnits:0,freeUnits:b.units,loginRequired:false}})});
+ await page.addInitScript(()=>{
+  Object.defineProperty(navigator,'canShare',{configurable:true,value:()=>true});
+  Object.defineProperty(navigator,'share',{configurable:true,value:async(data:ShareData)=>{const f=data.files![0];(window as any).__qrShare={name:f.name,type:f.type,bytes:Array.from(new Uint8Array(await f.arrayBuffer()))}}});
+ });
+ await page.goto('/tools/qr-code-generator?lang=en');const area=page.locator('[data-tool-workbench]'),payload='https://example.com/product?lang=中文';await area.locator('input').first().fill(payload);await area.getByRole('button',{name:'Generate QR',exact:true}).click();
+ for(const [i,format,mime] of [[0,'PNG','image/png'],[1,'SVG','image/svg+xml']] as const){
+  const actions=page.getByTestId('result-file-actions').nth(i),waiting=page.waitForEvent('download');await actions.getByRole('button',{name:format,exact:true}).click();const saved=await waiting,bytes=await fs.readFile((await saved.path())!);
+  const {data,info}=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});expect(jsQR(new Uint8ClampedArray(data),info.width,info.height)?.data).toBe(payload);
+  await actions.getByRole('button',{name:'Send file',exact:true}).click();await expect(actions.getByRole('status')).toContainText('Handed to the system');const sent=await page.evaluate(()=>(window as any).__qrShare);expect(sent.type).toBe(mime);expect(sent.name).toBe(saved.suggestedFilename());expect(Buffer.from(sent.bytes)).toEqual(bytes);
+ }
+ expect(claims).toBe(2);
 });
 test('video-toolkit extracts a real playable MP3 and hands identical bytes to file sharing',async({page})=>{
  test.setTimeout(120000);

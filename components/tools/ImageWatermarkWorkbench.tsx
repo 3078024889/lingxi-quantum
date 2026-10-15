@@ -4,7 +4,7 @@ import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import{localInpaint,localInpaintMask,type NormalizedBox,type NormalizedPoint,type NormalizedStroke}from"@/lib/tools/autonomous/image-local";
-import{saveBlob}from"@/lib/tools/autonomous/download-local";
+import ResultFileActions from './ResultFileActions';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
@@ -79,6 +79,6 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
   {files.length>0&&selectionReady&&draftReady&&<PaidActionButton toolId={toolId} quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{mode:"local",selectionMode:mode,box,strokes:mode==="brush"?strokes.length:0}} onPaid={run} label={t("查看本次价格","See price")}/>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{t("正在根据选区修复画面…","Repairing the selected area…")}</p>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
-  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border p-3"><img src={r.url} alt={t("处理结果","Result")} className="w-full rounded-xl"/><button type="button" onClick={()=>saveBlob(r.blob,`clean-${r.name.replace(/\.[^.]+$/,".png")}`)} className="mt-3 rounded-xl bg-[var(--lx-ink)] px-4 py-2 text-sm text-[var(--lx-bg)]">{t("保存结果","Save result")}</button></div>)}</div>}
+  {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border p-3"><img src={r.url} alt={t("处理结果","Result")} className="w-full rounded-xl"/><ResultFileActions blob={r.blob} name={`clean-${r.name.replace(/\.[^.]+$/,".png")}`} saveLabel={t("保存结果","Save result")}/></div>)}</div>}
  </div>;
 }
