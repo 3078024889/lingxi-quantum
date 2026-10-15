@@ -266,8 +266,8 @@ export default function HandwritingOcrWorkbench() {
             onChange={(event) => setMode(event.target.value as Mode)}
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
           >
-            <option value="english-handwriting"><ToolUiText text="英文手写 · TrOCR 本地模型" /></option>
-            <option value="multilingual"><ToolUiText text="多语言文字/工整手写 · Tesseract" /></option>
+            <option value="english-handwriting"><ToolUiText text="英文手写" /></option>
+            <option value="multilingual"><ToolUiText text="多语言文字与工整手写" /></option>
           </select>
         </label>
 
@@ -295,7 +295,7 @@ export default function HandwritingOcrWorkbench() {
 
       <div className="rounded-xl bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">
         <ToolUiText text={mode === "english-handwriting"
-          ? "英文手写模式会先自动分行，再由 TrOCR 手写模型逐行识别；模型首次使用会下载并缓存，之后可复用。"
+          ? "请上传清晰、行距分明的英文手写图片。首次使用准备时间较长，请保持页面打开。"
           : "多语言模式适合印刷体和较工整手写。潦草手写尤其中文/日文仍可能误识别，重要内容请核对；这一模式不冒充专业多语言手写模型。"} />
       </div>
 

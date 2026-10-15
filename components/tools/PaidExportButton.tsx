@@ -38,9 +38,10 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
 
  async function finishExisting(id:string){
   if(completedQuote.current===id)return;
-  completedQuote.current=id;stop();clear(toolId);clearResume();setQuote(null);setPhase("completed");
-  setMsg(tx('existing'));
+  stop();
   await onCompleted?.();
+  completedQuote.current=id;clear(toolId);clearResume();setQuote(null);setPhase("completed");
+  setMsg(tx('existing'));
  }
 
  async function unlock(id:string){
@@ -53,9 +54,9 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
    const x=await c.json().catch(()=>({})) as{ok?:boolean;alreadyCompleted?:boolean;error?:string};
    if(x.alreadyCompleted){await finishExisting(id);return}
    if(!c.ok)throw new Error(x.error||"EXPORT_CONSUME_FAILED");
+   await onCompleted?.();
    completedQuote.current=id;clear(toolId);clearResume();setQuote(null);setPhase("completed");
    setMsg(tx('ready'));
-   await onCompleted?.();
   }catch{setPhase("error");setMsg(tx('failed'))}
   finally{processing.current=null}
  }
