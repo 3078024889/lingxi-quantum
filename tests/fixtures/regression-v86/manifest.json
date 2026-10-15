@@ -1,0 +1,34 @@
+{
+  "commit": "bc4a7f5f667ebe97650675bcdfe874c648f59872",
+  "purpose": "Exact top-level function declarations from the historical repository source, retained only for reproducible baseline regression tests in shallow clones; not production code.",
+  "files": [
+    {
+      "name": "calendar-contact",
+      "source": "components/tools/LongtailDocumentWorkbench.tsx",
+      "functions": [
+        "csvCell",
+        "unfold",
+        "parseIcs",
+        "parseVcf"
+      ],
+      "file": "calendar-contact.ts.txt",
+      "sourceSha256": "912a844e529625069a420281334ca3cd6987ac590735ac389c93fcb91b7dc509",
+      "sha256": "2d1523df68e331f338b0b4d9ffa1c5043d50da4a6dd4478cfe19de591bca0763"
+    },
+    {
+      "name": "cron",
+      "source": "components/tools/CronParserWorkbench.tsx",
+      "functions": [
+        "expandPart",
+        "parseField",
+        "parseCron",
+        "matches",
+        "cronMatches",
+        "describe"
+      ],
+      "file": "cron.ts.txt",
+      "sourceSha256": "5afa306f6cbbd004d24c236126c829e51d9a181d906a1454c23c44f10d2aec78",
+      "sha256": "93772e32f1d75087ddd7c1ce011e01256b59cfe9233d578814cc42ce13528b8a"
+    }
+  ]
+}

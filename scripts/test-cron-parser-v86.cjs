@@ -1,6 +1,6 @@
-const fs=require('fs'),ts=require('typescript'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+const fs=require('fs'),ts=require('typescript'),assert=require('node:assert/strict'),readBaseline=require('./fixtures/read-v86-baseline.cjs');
 function functions(source){const ast=ts.createSourceFile('cron.tsx',source,99,true,4);const code=ast.statements.filter(node=>ts.isFunctionDeclaration(node)&&['expandPart','parseField','parseCron','matches','cronMatches','describe'].includes(node.name?.text)).map(node=>node.getText(ast)).join('\n');return new Function(ts.transpileModule(code,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+'\nreturn {expandPart,parseCron,cronMatches};')();}
-const before=functions(execFileSync('git',['show','bc4a7f5f:components/tools/CronParserWorkbench.tsx'],{encoding:'utf8',windowsHide:true}));const current=functions(fs.readFileSync('components/tools/CronParserWorkbench.tsx','utf8'));
+const before=functions(readBaseline('cron'));const current=functions(fs.readFileSync('components/tools/CronParserWorkbench.tsx','utf8'));
 assert.deepEqual([...before.expandPart('0/15',0,59)],[0]);assert.deepEqual([...current.expandPart('0/15',0,59)],[0,15,30,45]);assert.deepEqual([...current.expandPart('10-20/5',0,59)],[10,15,20]);
 for(const bad of ['*/','*/2/3','1.5-4','1e1','0x10','1-4-5','*/0','-1','60'])assert.throws(()=>current.expandPart(bad,0,59));
 for(let minute=0;minute<60;minute++){const date=new Date(2026,0,1,9,minute);assert.equal(current.cronMatches(date,current.parseCron('0/15 9 * * *')),minute%15===0);}

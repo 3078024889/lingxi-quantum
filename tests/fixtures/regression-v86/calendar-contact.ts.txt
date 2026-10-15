@@ -1,0 +1,16 @@
+function csvCell(value:string){return `"${String(value||"").replace(/"/g,'""').replace(/\r?\n/g," ")}"`}
+function unfold(raw:string){return raw.replace(/\r?\n[ \t]/g,"")}
+function parseIcs(raw:string){
+ const events=unfold(raw).split("BEGIN:VEVENT").slice(1).map(part=>part.split("END:VEVENT")[0]);
+ const rows=[["summary","start","end","location","description","uid"]];
+ const get=(block:string,key:string)=>block.match(new RegExp(`(?:^|\\n)${key}(?:;[^:]*)?:(.*)`,"i"))?.[1]?.trim()||"";
+ for(const e of events)rows.push([get(e,"SUMMARY"),get(e,"DTSTART"),get(e,"DTEND"),get(e,"LOCATION"),get(e,"DESCRIPTION").replace(/\\\\n/g," "),get(e,"UID")]);
+ return rows.map(r=>r.map(csvCell).join(",")).join("\n");
+}
+function parseVcf(raw:string){
+ const cards=unfold(raw).split(/BEGIN:VCARD/i).slice(1).map(x=>x.split(/END:VCARD/i)[0]);
+ const rows=[["name","organization","title","phones","emails"]];
+ const vals=(block:string,key:string)=>[...block.matchAll(new RegExp(`(?:^|\\n)${key}(?:;[^:]*)?:(.*)`,"ig"))].map(m=>m[1].trim());
+ for(const c of cards)rows.push([vals(c,"FN")[0]||vals(c,"N")[0]||"",vals(c,"ORG")[0]||"",vals(c,"TITLE")[0]||"",vals(c,"TEL").join(" | "),vals(c,"EMAIL").join(" | ")]);
+ return rows.map(r=>r.map(csvCell).join(",")).join("\n");
+}

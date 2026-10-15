@@ -1,4 +1,4 @@
-const fs=require('fs'),ts=require('typescript'),assert=require('node:assert/strict'),{execFileSync}=require('node:child_process');
+const fs=require('fs'),ts=require('typescript'),assert=require('node:assert/strict'),readBaseline=require('./fixtures/read-v86-baseline.cjs');
 const source=fs.readFileSync('lib/tools/shared/calendar-contact.ts','utf8'),moduleObject={exports:{}};
 new Function('module','exports',ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(moduleObject,moduleObject.exports);
 const {calendarToCsv,contactsToCsv,decodeCardText}=moduleObject.exports;
@@ -13,7 +13,7 @@ assert.throws(()=>contactsToCsv('BEGIN:VCARD\nFN;ENCODING=QUOTED-PRINTABLE:=ZZ\n
 assert.throws(()=>calendarToCsv('x'.repeat(10*1024*1024+1)),/TOO_LARGE/);
 assert.equal(decodeCardText('literal\\\\n and one\\nline'),'literal\\n and one\nline');
 // Actual HEAD implementation, not a second reference implementation.
-const before=execFileSync('git',['show','bc4a7f5f:components/tools/LongtailDocumentWorkbench.tsx'],{encoding:'utf8',windowsHide:true}),ast=ts.createSourceFile('before.tsx',before,99,true,4);
+const before=readBaseline('calendar-contact'),ast=ts.createSourceFile('before.tsx',before,99,true,4);
 const functions=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&['csvCell','unfold','parseIcs','parseVcf'].includes(n.name?.text)).map(n=>n.getText(ast)).join('\n');
 const baseline=new Function(ts.transpileModule(functions,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+'\nreturn {parseIcs,parseVcf};')();
 assert.ok(baseline.parseIcs(calendar).includes('\\n'));assert.ok(baseline.parseVcf(card).includes('\\,'));

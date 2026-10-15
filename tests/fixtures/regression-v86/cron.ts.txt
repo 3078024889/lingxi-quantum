@@ -1,0 +1,79 @@
+function expandPart(part: string, min: number, max: number) {
+  const values = new Set<number>();
+  const [base, stepRaw] = part.split("/");
+  const step = stepRaw ? Number(stepRaw) : 1;
+  if (!Number.isInteger(step) || step < 1) throw new Error("INVALID_STEP");
+
+  const addRange = (start: number, end: number) => {
+    if (start < min || end > max || start > end) throw new Error("RANGE_OUT_OF_BOUNDS");
+    for (let value = start; value <= end; value += step) values.add(value);
+  };
+
+  if (base === "*") addRange(min, max);
+  else if (base.includes("-")) {
+    const [start, end] = base.split("-").map(Number);
+    addRange(start, end);
+  } else {
+    const value = Number(base);
+    if (!Number.isInteger(value) || value < min || value > max) throw new Error("VALUE_OUT_OF_BOUNDS");
+    values.add(value);
+  }
+
+  return values;
+}
+function parseField(raw: string, min: number, max: number): Field {
+  const value = raw.trim();
+  if (!value) throw new Error("EMPTY_FIELD");
+  const values = new Set<number>();
+
+  for (const part of value.split(",")) {
+    for (const item of expandPart(part, min, max)) values.add(item);
+  }
+
+  return { any: value === "*", values };
+}
+function parseCron(expression: string) {
+  const parts = expression.trim().split(/\s+/);
+  if (parts.length !== 5) throw new Error("STANDARD_CRON_REQUIRES_5_FIELDS");
+
+  return {
+    minute: parseField(parts[0], 0, 59),
+    hour: parseField(parts[1], 0, 23),
+    day: parseField(parts[2], 1, 31),
+    month: parseField(parts[3], 1, 12),
+    weekday: parseField(parts[4], 0, 7),
+  };
+}
+function matches(field: Field, value: number, alternate?: number) {
+  return field.values.has(value) || (alternate !== undefined && field.values.has(alternate));
+}
+function cronMatches(date: Date, cron: ReturnType<typeof parseCron>) {
+  const dayMatches = matches(cron.day, date.getDate());
+  const weekdayMatches = matches(cron.weekday, date.getDay(), date.getDay() === 0 ? 7 : undefined);
+
+  const dayRule =
+    cron.day.any && cron.weekday.any
+      ? true
+      : cron.day.any
+        ? weekdayMatches
+        : cron.weekday.any
+          ? dayMatches
+          : dayMatches || weekdayMatches;
+
+  return (
+    matches(cron.minute, date.getMinutes()) &&
+    matches(cron.hour, date.getHours()) &&
+    dayRule &&
+    matches(cron.month, date.getMonth() + 1)
+  );
+}
+function describe(expression: string) {
+  const [minute, hour, day, month, weekday] = expression.trim().split(/\s+/);
+  if ([minute, hour, day, month, weekday].some((value) => value === undefined)) return "";
+
+  if (expression === "* * * * *") return "每分钟运行";
+  if (minute === "0" && hour === "*" && day === "*" && month === "*" && weekday === "*") return "每小时整点运行";
+  if (/^\d+$/.test(minute) && /^\d+$/.test(hour) && day === "*" && month === "*" && weekday === "*") return `每天 ${hour.padStart(2, "0")}:${minute.padStart(2, "0")} 运行`;
+  if (minute === "0" && hour === "0" && day === "*" && month === "*" && weekday === "0") return "每周日 00:00 运行";
+  return "标准 5 段 Cron：分钟 小时 日 月 星期";
+}
