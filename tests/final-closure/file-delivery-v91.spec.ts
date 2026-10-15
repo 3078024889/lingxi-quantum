@@ -31,6 +31,10 @@ test('long exported filenames and file actions fit a 320px viewport',async({page
  const size=await page.getByTestId('result-file-actions').evaluate(el=>({width:el.getBoundingClientRect().width,right:el.getBoundingClientRect().right,scroll:el.scrollWidth}));expect(size.right).toBeLessThanOrEqual(320);expect(size.scroll).toBeLessThanOrEqual(size.width+1);
  const name=page.getByTestId('result-file-actions').locator('..');expect(await name.evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
 });
+test('unsupported file sharing does not reserve an export or ask for payment',async({page})=>{
+ let claims=0;await page.route('**/api/tools/free-export',r=>{claims++;return r.fulfill({status:402,json:{id:r.request().postDataJSON().id,allowed:false,paidUnits:1,freeUnits:0,loginRequired:false}})});
+ await prepare(page,'unsupported');const actions=page.getByTestId('result-file-actions');await actions.getByRole('button',{name:'Send file',exact:true}).click();await expect(actions.getByRole('status')).toContainText('cannot share');expect(claims).toBe(0);await expect(page.getByRole('dialog')).toHaveCount(0);
+});
 test('video-toolkit extracts a real playable MP3 and hands identical bytes to file sharing',async({page})=>{
  test.setTimeout(120000);
  await page.addInitScript(()=>{const NativeWorker=Worker;(window as any).__ffmpegLogs=[];window.Worker=class extends NativeWorker{constructor(url:string|URL,options?:WorkerOptions){super(url,options);this.addEventListener('message',e=>{if(['LOG','ERROR'].includes(e.data?.type))(window as any).__ffmpegLogs.push(e.data)})}}});

@@ -5,7 +5,6 @@ import Image from"next/image";
 import Link from"next/link";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{productCatalogText}from"@/lib/product-catalog-i18n";
-import{LINGXIFIELD_RELEASE}from"@/lib/release/version";
 
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
 
@@ -29,7 +28,7 @@ export default function Footer(){
  <p className="lx11-footer-brand-lead"><b>{PUBLIC_FEATURE_COPY[lang].headline}</b></p>
  <p>{PUBLIC_FEATURE_COPY[lang].freeTools}</p>
  <div className="lx11-footer-capability"><p>{c.sasiBody}</p></div>
- <span>lingxifield.com · lingxifield.cn</span><span style={{opacity:.58,fontSize:12}}>v{LINGXIFIELD_RELEASE.website} · <Link href="/release">{c.release}</Link></span></section>
+ <span>lingxifield.com · lingxifield.cn</span><span style={{opacity:.58,fontSize:12}}><Link href="/release">{c.release}</Link></span></section>
  <nav><b>{t("start")}</b><Link href="/products">{productCatalogText(lang,"title")}</Link><Link href="/tools">{t("tools")}</Link><Link href="/sasi">{t("studio")}</Link><Link href="/ai-knowledge">{t("books")}</Link><Link href="/ai-learning">{t("learning")}</Link><Link href="/ai-research">{t("research")}</Link><Link href="/ai-wallet">{t("wallet")}</Link></nav>
  <nav><b>{c.useful}</b><Link href="/account">{c.account}</Link><Link href="/account/orders">{c.orders}</Link><Link href="/account/withdrawals">{c.withdraw}</Link><Link href="/refunds">{c.refunds}</Link><Link href="/sasi/connections">{c.connect}</Link></nav>
  <section><b>{t("follow")}</b><div className="lx11-footer-social">{channels.map(([l,h])=>h.startsWith("#")?<a key={l} href={h}>{l}</a>:<a key={l} href={h} target="_blank" rel="noreferrer">{l} ↗</a>)}</div></section>

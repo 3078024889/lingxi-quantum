@@ -22,7 +22,7 @@ const copy:Record<LingxiLang,Copy>={
  zh:{
   kicker:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
   seoTitle:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-  seoDesc:"AI短剧生成、网站构建、书本问答、学习与科研。100+免费在线实用工具：PDF合并、拆分、压缩，图片转换、文字识别，视频裁剪、音频提取、表格转换与隐私清理。",hero:"今天你要完成什么？",
+  seoDesc:"AI短剧生成、网站构建、书本问答、学习与科研。100+在线实用工具，每日免费体验：PDF合并、拆分、压缩，图片转换、文字识别，视频裁剪、音频提取、表格转换与隐私清理。",hero:"今天你要完成什么？",
   lead:"",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",
   taskTitle:"你现在要完成什么？",taskLead:"不需要先理解平台。先解决眼前这件事。",start:"开始",

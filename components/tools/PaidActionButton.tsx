@@ -48,7 +48,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
  async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(q&&((q.tool_id||q.toolId)!==toolId||Number(q.quantity)!==quantity||(q.metadata?.draftId&&q.metadata.draftId!==draftId)))return false;await complete(id);return true}catch{return false}}
  const checkRef=useRef(check);checkRef.current=check;
 
- useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id&&draftReady)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id,draftReady]);
+ useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id&&draftReady)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);window.addEventListener("focus",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);window.removeEventListener("focus",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id,draftReady]);
  useEffect(()=>()=>{if(timer.current){clearInterval(timer.current);timer.current=null}},[]);
 
  useEffect(()=>{

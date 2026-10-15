@@ -34,9 +34,9 @@ export function deliveryFile(blob: Blob, filename: string): File {
 // Resolution confirms OS hand-off only, never delivery to a particular recipient.
 export async function shareFile(blob: Blob, filename: string): Promise<FileShareOutcome> {
   try {
-    await ensureToolExportAccess(blob,filename,'share');
     const file = deliveryFile(blob, filename), payload = {files: [file]};
     if (!navigator.share || !navigator.canShare || !navigator.canShare(payload)) return "unsupported";
+    await ensureToolExportAccess(blob,filename,'share');
     await navigator.share(payload);
     return "shared";
   } catch (error) {

@@ -81,7 +81,8 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
  const checkRef=useRef(check);checkRef.current=check;
 
  useEffect(()=>{stop();completedQuote.current=null;setPaidId('');setPhase("idle");setQuote(null);setMsg("")},[toolId,draftId,quantity,currency]);
- useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);document.removeEventListener("visibilitychange",wake);if(timer.current){clearInterval(timer.current);timer.current=null}}},[quote?.id]);
+ useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);window.addEventListener("focus",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);window.removeEventListener("focus",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id]);
+ useEffect(()=>()=>{if(timer.current){clearInterval(timer.current);timer.current=null}},[]);
  useEffect(()=>{let id=new URLSearchParams(location.search).get("resumeQuote")||"";if(!id){try{const raw=localStorage.getItem(key(toolId));if(raw){const x=JSON.parse(raw);if(Number(x.quantity)===Number(quantity)&&(x.currency===currency||!x.currency)&&(x.draftId===draftId||!x.draftId||!draftId))id=String(x.id||"")}}catch{}}if(id)void checkRef.current(id)},[toolId,quantity,currency,draftId]);
 
  async function start(){
