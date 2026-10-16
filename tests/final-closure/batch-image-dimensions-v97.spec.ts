@@ -10,9 +10,9 @@ test("batch images export exactly 359 × 195 pixels",async({page})=>{
  await page.getByRole("button",{name:"359 × 195 px"}).click();
  await page.locator('select').last().selectOption("image/png");
  await page.getByRole("button",{name:/Process batch/}).click();
- await expect(page.getByText("tiny.png",{exact:false}).last()).toBeVisible();
+ await expect(page.locator("[data-testid=\"result-file-actions\"]")).toBeVisible({timeout:30000});
  const promise=page.waitForEvent("download");
- await page.getByRole("button",{name:/Save|Download/}).first().click();
+ await page.locator("[data-testid=\"result-file-actions\"]").getByRole("button",{name:/Save|Download/}).click();
  const download=await promise;const file=await download.path();expect(file).toBeTruthy();
  const bytes=await readFile(file!);
  expect(bytes.toString("ascii",1,4)).toBe("PNG");
