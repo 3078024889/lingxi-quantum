@@ -1,6 +1,6 @@
 # 2026-10-16 remote handoff and media acceptance
 
-Read-only inventory captured before integration. No production merge, deployment, live charge or database mutation is part of this PR.
+Read-only inventory captured before integration. No production merge, frontend deployment, live charge, price/balance change or existing-user-data mutation is part of this PR. One missing empty temporary-delivery table was restored with an additive migration, documented below.
 
 Production: both domain aliases map to READY deployment `dpl_GRc3K2YcLfRsPUSPuEYrPN3BXyJz`, commit `b42ca0e4cadc8bc842eeb43c0a5b81c19d32ef9d`. PR #35 was already merged as `bef4edebecce07a77a1b4b7dcc5effcf01185030` on 2026-10-16. Main checkout has other ongoing work and was left untouched.
 
@@ -60,4 +60,16 @@ Reference analysis additionally found PR37 video translation preview calls `clip
 Removed the old `shareFile` wrapper after full source/script references showed no production caller; tests now exercise only the prepared-sharing API. Two duplicate metadata readers were consolidated into one lightweight module, including finite-duration discovery for unindexed MediaRecorder WebM and event/URL cleanup tests. Video translation mux now checks source/output durations before exposing a result. No heavy local commands were executed.
 
 First actual-browser media run `38895154366`, job `116953749702`, completed successfully: **98 passed**, including all 72 toolkit cases (four durations × nine operations × desktop/mobile Chromium) and existing delivery/subtitle cases. Source is exactly `42a5fa9acb1f8d4ba8b942668ca4ae46901bf589`. Evidence artifact `12044500152` (`media-saved-file-evidence`, SHA256 `77d2292e3acb7aacd6ad6950dc5da4caa689d40d23d18944827ca132ffa8d9d0`) retains source/downloaded media, stream metadata and first/last frames until 2026-10-23. The 154 MB artifact remains remote. Samples are synthetic 160×90 at 25 fps with an audio tone; this is duration/container/decoder verification, not real-phone memory, high-resolution performance, subjective sound or cinematic quality acceptance. Follow-up changes require a new run and do not inherit this result.
+
+### Missing production temporary-delivery table
+
+An actual read-only query returned `42P01`: `public.tool_temp_files` did not exist, while `tool_export_requests` did. This is a real dependency failure for the existing authorized temporary-file API, independent of browser sharing support.
+
+Applied the narrowly scoped additive migration `20261016115946_restore_mobile_file_delivery_schema.sql` to the existing project. It recreates only that API's missing empty tracking table, expiry index and service-only permissions; it does not replay the historical v210 nutrition/extension changes, change prices/balances or modify existing user records. RLS is enabled, anon/authenticated have no direct SELECT/INSERT, service_role has CRUD. Account deletion sets owner to NULL so that the cleanup worker retains the object reference instead of losing it through cascade deletion. This is a schema repair, not a frontend deployment.
+
+Live PostgreSQL verification used a transaction rolled back afterwards: test-row insertion/update worked and an over-100-MB declared size was rejected. Post-test verification: rows=0, RLS=true, anon/authenticated SELECT/INSERT=false, service CRUD=true, foreign-key cleanup preservation=true. The database size check does not prove the uploaded object size is bounded. Actual R2 upload, signed-link expiry and scheduled deletion remain unverified; no user file or storage object was created. Reference: [Supabase grants and RLS](https://supabase.com/docs/guides/api/securing-your-api).
+
+Second scoped delivery run `38896465816` on `e3b78964` completed **97 passed, 1 skipped, zero failures**. Both previously failing footer cases now pass. The expanded media and full production-gate runs were still pending at this checkpoint.
+
+Expanded media run `38896465778` on `e3b789644c9700196f9acf1db14e3a88401b1b8d` subsequently completed **138 passed**, including all 112 real-output matrix cases (four durations × fourteen processing paths × two Chromium projects). Reverse, loop, stop-motion, boomerang and watermark removal include all four durations through 125 seconds. Payment is intercepted for the watermark workflow; no funds or provider generation are used. Each saved output also passes decoder end-time checks. Metadata lifecycle unit tests and all 37 native reference cases passed on the same runtime source. Evidence artifact `12044965672`, SHA256 `9f57d1737c914fa01be86f7cc4b69fa346b48daa61b958e07e7fe2553f15cc90`, remains remote (257 MB, expires 2026-10-23). The following schema/documentation receipt commit does not change that tested application code. Full production CI was still running; this is not a release approval.
 
