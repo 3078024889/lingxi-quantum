@@ -91,7 +91,7 @@ export async function positionedTextPagesToXlsx(fileName:string,inputPages:Array
   totalRows+=table.rows.length;maxColumns=Math.max(maxColumns,table.columns);
   pages.push({name:(input.name||`Page ${i+1}`).slice(0,31),rows:table.rows,confidence:table.confidence});
  }
- if(totalTokens<2||!pages.length)throw new Error("PDF_TABLE_TEXT_NOT_FOUND");
+ if(totalTokens<2)throw new Error("PDF_TABLE_TEXT_NOT_FOUND");
 
  const ExcelJSImport=await import("exceljs"),ExcelJS=(ExcelJSImport as any).default||ExcelJSImport;
  const workbook=new ExcelJS.Workbook();workbook.creator="LINGXIFIELD";workbook.created=new Date();
