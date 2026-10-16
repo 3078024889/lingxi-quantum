@@ -17,6 +17,7 @@ import FileDropzone from "./FileDropzone";
 import ResultPanel from "./ResultPanel";
 import ErrorExplain from "./ErrorExplain";
 import ResizeImageWorkbench from "./ResizeImageWorkbench";
+import ImageToPdfWorkbench from "./ImageToPdfWorkbench";
 import TimestampProWorkbench from "./TimestampProWorkbench";
 import QrProWorkbench from "./QrProWorkbench";
 import { convertImage, compressImageToTarget, stripImageMetadata } from "@/lib/tools/shared/image-canvas";
@@ -47,6 +48,7 @@ export default function ToolWorkbench({ tool }: Props) {
   if (tool.slug === "timestamp-converter") return <TimestampProWorkbench />;
   if (tool.slug === "qr-code-generator") return <QrProWorkbench />;
   if (tool.slug === "resize-image") return <ResizeImageWorkbench tool={tool} />;
+  if (tool.slug === "image-to-pdf") return <ImageToPdfWorkbench />;
 
   return <FileToolWorkbench tool={tool} />;
 }
