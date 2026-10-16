@@ -34,8 +34,8 @@ export default function FileDropzone({
   const effectiveAccept=pdfDocumentMode?Array.from(new Set([...accept.split(","),...DOCUMENT_INPUT_ACCEPT.split(",")])).join(","):accept;
 
   useEffect(()=>{
-    if(kind!=="image"){setPreviews([]);return}
-    const next=files.slice(0,8).filter(f=>(f.type||"").startsWith("image/")).map(file=>({
+    if(!["image","media"].includes(kind)){setPreviews([]);return}
+    const next=files.slice(0,8).filter(f=>kind==="image"?(f.type||"").startsWith("image/"):(f.type||"").startsWith("video/")||(f.type||"").startsWith("audio/")).map(file=>({
       key:fileIdentity(file),name:file.name,url:URL.createObjectURL(file),
     }));
     setPreviews(next);
@@ -80,9 +80,13 @@ export default function FileDropzone({
 
     {error&&<p role="alert" className="mt-3 text-sm text-[var(--lx-danger)]">{error}</p>}
 
-    {previews.length>0&&<div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4">
+    {previews.length>0&&<div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
       {previews.map(item=><figure key={item.key} className="overflow-hidden rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)]">
-        <img src={item.url} alt={item.name} className="aspect-square w-full object-cover"/>
+        {kind==="media"&&item.url.match(/^(blob:)/)&&files.find(f=>fileIdentity(f)===item.key)?.type.startsWith("video/")
+          ?<video src={item.url} muted playsInline preload="metadata" className="aspect-video w-full object-cover"/>
+          :kind==="media"&&files.find(f=>fileIdentity(f)===item.key)?.type.startsWith("audio/")
+          ?<div className="flex aspect-video items-center justify-center px-2"><audio src={item.url} controls className="w-full"/></div>
+          :<img src={item.url} alt={item.name} className="aspect-square w-full object-cover"/>}
         <figcaption className="truncate px-2 py-1.5 text-[10px] text-[var(--lx-muted)]">{item.name}</figcaption>
       </figure>)}
     </div>}
