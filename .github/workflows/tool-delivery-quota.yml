@@ -32,6 +32,7 @@ jobs:
           node scripts/test-export-access-v92.cjs
           node scripts/test-daily-export-api-v92.cjs
           node scripts/test-temp-mail-safety-v81.cjs
+          node scripts/test-subtitle-translation-v95.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
@@ -42,6 +43,7 @@ jobs:
           daily-export-quota-v92 file-delivery-v91 paid-local-output-v89
           pdf-to-image-output-v90 pdf-redaction-output-v89 screenshot-redaction-v89
           qr-cron-output-v86 burn-reveal-recovery
+          subtitle-translation-v95
           --workers=2 --reporter=list,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/delivery-results.json
