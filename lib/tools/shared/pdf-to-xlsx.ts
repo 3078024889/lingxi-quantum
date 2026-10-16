@@ -61,6 +61,9 @@ function inferColumns(rows:RowToken[][],expected:number){
 function alignRows(rows:RowToken[][]){
  const mode=modeColumnCount(rows);
  if(mode.columns<2||mode.count<2)return{rows:[] as string[][],columns:0,confidence:0};
+ // A chapter/paragraph line can contain two positioned fragments but is not a table.
+ // Require repeated column structure before promoting text into a worksheet.
+ if(mode.columns===2&&mode.count<4)return{rows:[] as string[][],columns:mode.columns,confidence:0};
  const columns=inferColumns(rows,mode.columns);
  if(columns.length<2)return{rows:[] as string[][],columns:0,confidence:0};
  const tolerance=20;
@@ -77,6 +80,12 @@ function alignRows(rows:RowToken[][]){
  }).filter(row=>row.matched>=2);
  const structuralRows=aligned.filter(row=>row.values.filter(Boolean).length>=2);
  const confidence=Math.min(1,structuralRows.length/Math.max(3,rows.length)*Math.min(1,mode.count/3));
+ const numericCells=structuralRows.flatMap(row=>row).filter(v=>/^[\s$€£¥]?[-+]?\d[\d,]*(?:\.\d+)?%?$/.test(v)).length;
+ const cellCount=Math.max(1,structuralRows.reduce((n,row)=>n+row.filter(Boolean).length,0));
+ const numericRatio=numericCells/cellCount;
+ // Two-column prose such as "1 Introduction" is not a table. Two-column data is
+ // accepted only when it has enough repeated rows or clear numeric structure.
+ if(mode.columns===2&&(structuralRows.length<6||numericRatio<0.12)&&confidence<0.7)return{rows:[] as string[][],columns:mode.columns,confidence};
  if(structuralRows.length<2||confidence<.34)return{rows:[] as string[][],columns:columns.length,confidence};
  return{rows:structuralRows.map(row=>row.values),columns:columns.length,confidence};
 }
@@ -96,7 +105,19 @@ export async function positionedTextPagesToXlsx(fileName:string,inputPages:Array
  const ExcelJSImport=await import("exceljs"),ExcelJS=(ExcelJSImport as any).default||ExcelJSImport;
  const workbook=new ExcelJS.Workbook();workbook.creator="LINGXIFIELD";workbook.created=new Date();
 
- // Preserve all readable text so text-heavy PDFs do not become misleading two-column chapter sheets.
+ const overview=workbook.addWorksheet("Read Me");
+ overview.addRows([
+  ["PDF 转 Excel"],
+  ["结果说明","正文会完整保留在“Extracted Text”；只有检测到重复列结构的内容才会进入独立表格页。"],
+  ["识别页数",inputPages.length],
+  ["文本片段",totalTokens],
+  ["检测到表格",pages.length],
+  ["表格置信度",pages.length?Number((pages.reduce((n,p)=>n+p.confidence,0)/pages.length).toFixed(2)):0],
+  ["建议","若原 PDF 是扫描件，请先使用 PDF OCR；若是无边框复杂表格，建议先 OCR/结构化识别后再导出。"]
+ ]);
+ overview.getColumn(1).width=18;overview.getColumn(2).width=100;
+
+ // Preserve all readable text so text-heavy PDFs never degrade into chapter-number sheets.
  const textSheet=workbook.addWorksheet("Extracted Text");
  textSheet.addRow(["Page","Text"]);
  let textLines=0;
@@ -122,7 +143,7 @@ export async function positionedTextPagesToXlsx(fileName:string,inputPages:Array
  }
  const bytes=await workbook.xlsx.writeBuffer();
  const blob=new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
- const confidence=pages.reduce((n,p)=>n+p.confidence,0)/pages.length;
+ const confidence=pages.length?pages.reduce((n,p)=>n+p.confidence,0)/pages.length:0;
  return{name:baseName(fileName)+".xlsx",blob,pages:pages.length,rows:totalRows+textLines,columns:Math.max(maxColumns,2),tokens:totalTokens,confidence,textLines,hasTables:pages.length>0};
 }
 

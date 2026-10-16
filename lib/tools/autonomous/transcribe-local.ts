@@ -68,8 +68,10 @@ async function pipelineFor(device:"webgpu"|"wasm",onProgress?:(p:number,msg:stri
  return pipe;
 }
 
-export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string)=>void):Promise<LocalTranscript>{
- const pcm=await audio(file);
+export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string)=>void,maxSeconds?:number):Promise<LocalTranscript>{
+ const pcmFull=await audio(file);
+ const sampleLimit=Number.isFinite(maxSeconds)&&Number(maxSeconds)>0?Math.min(pcmFull.length,Math.floor(Number(maxSeconds)*16000)):pcmFull.length;
+ const pcm=sampleLimit<pcmFull.length?pcmFull.slice(0,sampleLimit):pcmFull;
  onProgress?.(.08,"正在准备语音识别…");
  const preferred:(("webgpu"|"wasm"))[]=Boolean((navigator as any).gpu)?["webgpu","wasm"]:["wasm"];
  let last:unknown=null;

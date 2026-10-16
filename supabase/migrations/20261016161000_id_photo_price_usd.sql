@@ -1,0 +1,1 @@
+update public.tool_pricing set base_price_rmb=0,unit_price_rmb=2.90,min_price_rmb=2.90,base_price_usd=0,unit_price_usd=2.90,min_price_usd=2.90,enabled=true where tool_id='id-photo-ai';

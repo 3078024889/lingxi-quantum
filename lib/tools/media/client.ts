@@ -31,3 +31,20 @@ export async function muxDubbedVideo(video:File,audio:Blob,onProgress?:(p:number
   return new Blob([copy.buffer],{type:"video/mp4"});
  }finally{try{ff.terminate()}catch{}}
 }
+
+
+export async function clipMedia(file:File,seconds:number,onProgress?:(p:number)=>void){
+ const limit=Math.max(0.1,Math.min(30,Number(seconds)||5));
+ const ff=await createFfmpegRuntime(onProgress);
+ try{
+  const ext=file.name.split(".").pop()||"mp4",input=`clip-input.${ext}`,output=file.type.startsWith("video/")?"preview.mp4":"preview.mp3";
+  await ff.writeFile(input,await fetchFile(file));
+  const args=file.type.startsWith("video/")
+   ?["-i",input,"-t",String(limit),"-map","0:v:0","-map","0:a?","-c:v","libx264","-preset","ultrafast","-crf","28","-c:a","aac","-b:a","96k","-movflags","+faststart",output]
+   :["-i",input,"-t",String(limit),"-vn","-ac","1","-ar","16000","-c:a","libmp3lame","-b:a","64k",output];
+  const code=await ff.exec(args);if(code!==0)throw new Error(`MEDIA_CLIP_${code}`);
+  const data=await ff.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data));
+  const copy=new Uint8Array(bytes.length);copy.set(bytes);if(!copy.length)throw new Error("MEDIA_CLIP_EMPTY");
+  return new File([copy.buffer],output,{type:file.type.startsWith("video/")?"video/mp4":"audio/mpeg"});
+ }finally{try{ff.terminate()}catch{}}
+}

@@ -2,16 +2,17 @@
 import{useEffect,useState}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
-import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
+import{authorizeToolOperation,grantToolOperationResult}from"@/lib/tools/commerce/export-access-client";
+import{useLingxiLang}from"@/lib/lingxi-i18n";import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
 
-async function translate(text:string,source:string,target:string,quoteId:string){
+async function translate(text:string,source:string,target:string,accessId:string){
  if(source===target)return text;
- const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
+ const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,accessId,toolId:"image-translator"})});
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
 }
 function blobOf(c:HTMLCanvasElement){return new Promise<Blob>((resolve,reject)=>c.toBlob(x=>x?resolve(x):reject(new Error("IMAGE_EXPORT_FAILED")),"image/png"))}
@@ -25,14 +26,16 @@ function linesFromBlocks(blocks:any[]){
  return out;
 }
 export default function ImageTranslatorWorkbench(){
+ const{lang}=useLingxiLang(),t=(zh:string,en:string)=>toolRuntimeText(lang,zh,en);
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="image-translator"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en")}setDraftReady(true)})()},[]);
  useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"image-translator",files,state:{source,target}}),120);return()=>clearTimeout(tm)},[files,source,target,draftId,draftReady]);
- async function run(quoteId:string){
+ async function run(){
   setBusy(true);setOutputs([]);setError("");
-  let worker:any=null;
+  let worker:any=null;let reservation:{id:string;toolId:string;units:number}|null=null;
   try{
-   const map:Record<string,string>={zh:"chi_sim+eng",en:"eng",ja:"jpn+eng",ko:"kor+eng",fr:"fra+eng",de:"deu+eng",es:"spa+eng",pt:"por+eng",ar:"ara+eng"};
+   reservation=await authorizeToolOperation("image-translator",files.length,"save");
+    const map:Record<string,string>={zh:"chi_sim+eng",en:"eng",ja:"jpn+eng",ko:"kor+eng",fr:"fra+eng",de:"deu+eng",es:"spa+eng",pt:"por+eng",ar:"ara+eng"};
    worker=await createOcrWorker(map[source]||"eng");
    const all:ToolResultFile[]=[];
    for(let i=0;i<files.length;i++){
@@ -44,14 +47,14 @@ export default function ImageTranslatorWorkbench(){
     for(let j=0;j<lines.length;j++){
       const line=lines[j],b=line.bbox,x=Math.max(0,Math.floor(b.x0)),y=Math.max(0,Math.floor(b.y0)),w=Math.max(4,Math.ceil(b.x1-b.x0)),h=Math.max(4,Math.ceil(b.y1-b.y0));
       setStage(`${i+1}/${files.length} · 正在翻译 ${j+1}/${lines.length}`);
-      const tx=await translate(line.text,source,target,quoteId);
+      const tx=await translate(line.text,source,target,reservation?.id||"");
       const bg=sample(ctx,x,y,w,h);ctx.fillStyle=`rgb(${bg[0]},${bg[1]},${bg[2]})`;ctx.fillRect(x,y,w,h);
       const lum=(bg[0]*.299+bg[1]*.587+bg[2]*.114);ctx.fillStyle=lum>150?"#111":"#fff";
       let size=Math.max(10,Math.floor(h*.72));ctx.font=`${size}px system-ui, sans-serif`;
       while(size>9&&ctx.measureText(tx).width>w*1.08){size-=1;ctx.font=`${size}px system-ui, sans-serif`}
       ctx.textBaseline="middle";ctx.fillText(tx,x,y+h/2,Math.max(8,w));
     }
-    const blob=await blobOf(c);all.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.png`,blob,mime:"image/png",size:blob.size});
+    const blob=await blobOf(c);const item={name:f.name.replace(/\.[^.]+$/,"")+`-${target}.png`,blob,mime:"image/png",size:blob.size};if(reservation)grantToolOperationResult(blob,reservation);all.push(item);
    }
    setOutputs(all);setStage("处理完成");
   }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
@@ -63,7 +66,8 @@ export default function ImageTranslatorWorkbench(){
    <label className="text-sm"><ToolUiText text="图片原文" /><select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm"><ToolUiText text="翻译为" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&<PaidActionButton toolId="image-translator" quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{files:files.length,source,target}} onPaid={run} label={files.length>1?`查看 ${files.length} 张图片翻译价格`:"查看本次图片翻译价格"}/>}
+  {files.length>0&&draftReady&&<button type="button" disabled={busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{t(busy?"正在翻译…":files.length>1?`开始翻译 ${files.length} 张图片`:"开始翻译",busy?"Translating…":files.length>1?`Translate ${files.length} images`:"Translate")}</button>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">{t("每天每个账户和 IP 共 5 张免费；超过部分按 ¥1 / $1 每张计费。价格确认会在免费额度用完时出现。","5 images per account and IP are free each day; additional images are ¥1 / $1 each.")}</p>
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="先识别图片里的文字，再翻译并尽量按原文字区域覆盖。复杂艺术字、弧形字或低清图片可能需要手动微调。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}

@@ -56,6 +56,9 @@ async function remoteTranscribe(file:File,quoteId:string){
  const r=await fetch("/api/tools/media/transcribe",{method:"POST",body:fd});const d=await r.json().catch(()=>({}));
  if(!r.ok)throw new Error(String(d.error||"TRANSCRIBE_FAILED"));return String(d.text||"");
 }
+async function apiTranslatePreview(text:string,source:string,target:string){const r=await fetch("/api/tools/media/preview-translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"PREVIEW_TRANSLATE_FAILED"));return String(d.translated||"")}
+async function translateTimedPreview(input:TimedText[],source:string,target:string){const out:TimedText[]=[];let base=0;for(const group of chunks(input,24)){const payload=group.map((x,i)=>marker(base+i)+" "+x.text).join("\n");const translated=await apiTranslatePreview(payload,source,target);const map=new Map<number,string>();const re=/⟦LX(\\d{4})⟧\\s*([\\s\\S]*?)(?=⟦LX\\d{4}⟧|$)/g;let m:RegExpExecArray|null;while((m=re.exec(translated)))map.set(Number(m[1]),m[2].trim());for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:map.get(base+i)||x.text})}base+=group.length}return out}
+async function previewTts(text:string,target:string){const r=await fetch("/api/tools/media/preview-tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target})});if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"PREVIEW_TTS_FAILED"))}return await r.blob()}
 async function remoteTts(text:string,target:string,quoteId:string){
  const r=await fetch("/api/tools/media/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target,quoteId})});
  if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"TTS_FAILED"))}return await r.blob();
@@ -65,8 +68,9 @@ function blobFile(name:string,text:string,mime:string):ToolResultFile{const b=ne
 export default function VideoTranslateWorkbench(){
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("auto"),[targets,setTargets]=useState<Target[]>(["en"]),[mode,setMode]=useState<Mode>("subtitle"),[durations,setDurations]=useState<number[]>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[videos,setVideos]=useState<ToolResultFile[]>([]),[subs,setSubs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState("");
  useEffect(()=>{let off=false;(async()=>{const ds=[] as number[];for(const f of files)ds.push(await localMediaDuration(f).catch(()=>60));if(!off)setDurations(ds)})();return()=>{off=true}},[files]);
- const startedMinutes=useMemo(()=>durations.reduce((n,d)=>n+Math.max(1,Math.ceil(d/60)),0),[durations]);
- const quantity=Math.max(1,startedMinutes*Math.max(1,targets.length));
+ const billableSeconds=useMemo(()=>durations.reduce((n,d)=>n+Math.max(0,Math.ceil(d-5)),0),[durations]);
+ const quantity=Math.max(1,billableSeconds*Math.max(1,targets.length));
+ const[previewBusy,setPreviewBusy]=useState(false),[previewVideo,setPreviewVideo]=useState<ToolResultFile|null>(null),[previewError,setPreviewError]=useState("");
  const totalBytes=useMemo(()=>files.reduce((n,f)=>n+f.size,0),[files]);
  const persistFiles=totalBytes<=250*1024*1024;
  useEffect(()=>{if(!files.length){setDraftId("");return}if(!draftId)setDraftId(newPaidTaskDraftId())},[files.length,draftId]);
@@ -120,6 +124,7 @@ export default function VideoTranslateWorkbench(){
   }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
   finally{setBusy(false)}
  }
+ async function runPreview(){if(!files[0]||previewBusy||busy)return;setPreviewBusy(true);setPreviewError("");setPreviewVideo(null);try{const target=targets[0]||"en",clip=await clipMedia(files[0],5),local=await transcribeLocal(clip,()=>{},5);const original=local.segments.map(x=>({start:x.start,end:x.end,text:x.text}));if(!original.length)throw new Error("PREVIEW_TRANSCRIPT_EMPTY");const translated=source===target?original:await translateTimedPreview(original,source,target);const srt=toSrtTimed(translated);let dubbed:Blob|null=null;if(mode==="dub"){const txt=translated.map(x=>x.text).join(" ");dubbed=await previewTts(txt,target)}const video=await muxTranslatedVideo({video:clip,subtitles:srt,language:target,duration:Math.min(5,durations[0]||5),dubbedAudio:dubbed});setPreviewVideo({name:files[0].name.replace(/\.[^.]+$/,"")+"-preview-"+target+".mp4",blob:video,mime:"video/mp4",size:video.size})}catch(e){setPreviewError(e instanceof Error?e.message:String(e))}finally{setPreviewBusy(false)}}
  return <div className="space-y-5">
   <FileDropzone accept="video/*" multiple append maxFiles={20} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setVideos([]);setSubs([]);setError("")}} disabled={busy} kind="media"/>
   <RemoteMediaImporter acceptKind="video" onImported={addRemote} disabled={busy}/>
@@ -145,12 +150,13 @@ export default function VideoTranslateWorkbench(){
   </section>
 
   {files.length>0&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm">
-   <b>{files.length} <ToolUiText text="个视频 ·" /> {startedMinutes} <ToolUiText text="个起始分钟 ·" /> {targets.length} <ToolUiText text="个目标语言" /></b>
-   <p className="mt-1 text-[var(--lx-muted)]"><ToolUiText text="计费数量：" />{startedMinutes} × {targets.length} = {quantity} <ToolUiText text="分钟单位。人民币 ¥1.50 / 分钟单位；美元 $1.50 / 分钟单位。" /></p>
+   <b>{files.length} {toolUiText(lang,"个视频","videos")} · {Math.ceil(durations.reduce((n,d)=>n+d,0))} <ToolUiText text="秒" /> · {targets.length} <ToolUiText text="个目标语言" /></b>
+   <p className="mt-1 text-[var(--lx-muted)]">{toolUiText(lang,"前 5 秒免费预览；完整处理按超出 5 秒的实际秒数计费：","First 5 seconds are free; full processing bills the remaining seconds:")}{billableSeconds} × {targets.length} = {quantity} {toolUiText(lang,"秒单位，¥0.10 / 秒，$0.10 / 秒。","seconds, ¥0.10 / $0.10 per second.")}</p>
    {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]"><ToolUiText text="这批视频较大，为避免浏览器数据库保存超大文件，付款和处理期间请保持当前页面打开。" /></p>}
   </section>}
 
-  {files.length>0&&targets.length>0&&<PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/>}
+  {files.length>0&&targets.length>0&&<div className="flex flex-wrap gap-3"><button type="button" disabled={previewBusy||busy} onClick={()=>void runPreview()} className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm">{toolUiText(lang,previewBusy?"正在生成 5 秒预览…":"免费预览前 5 秒",previewBusy?"Generating preview…":"Free first 5-second preview")}</button>{billableSeconds>0?<PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{billableSeconds,targetCount:targets.length,mode,files:files.length,freePreviewSeconds:5}} onPaid={run} label={"完整翻译 · 超出部分 "+billableSeconds+" 秒"}/>:<button type="button" disabled={busy||previewBusy} onClick={()=>void runPreview()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">{toolUiText(lang,"完整处理","Complete")}</button>}</div>}
+  {previewError&&<p role="alert" className="text-sm text-[var(--lx-danger)]"><ToolUiText text={previewError}/></p>}{previewVideo&&<ResultPanel sourceSlug="video-translate" files={[previewVideo]} messageZh="5 秒预览已生成，可以先确认字幕和声音效果。" messageEn="The 5-second preview is ready. Check subtitles and audio before the full run."/>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text={stage||"正在处理…"}/></p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}

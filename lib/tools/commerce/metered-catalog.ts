@@ -104,7 +104,10 @@ export const METERED_TOOL_IDS=[
   "pdf-attachments",
   "pdf-bookmarks",
   "ai-image-check",
-  "ai-video-audio-check"
+  "ai-video-audio-check",
+  "image-translator",
+  "image-watermark-remover",
+  "batch-image-watermark-remover"
 ] as const;
 const ids:ReadonlySet<string>=new Set([...METERED_TOOL_IDS,...METERED_OPERATION_TOOL_IDS]);
 export function isMeteredTool(slug:string){return ids.has(slug)}

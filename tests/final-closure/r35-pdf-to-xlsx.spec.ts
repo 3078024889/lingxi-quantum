@@ -59,7 +59,9 @@ test("text-heavy PDF preserves readable text in an Excel worksheet instead of lo
  await page.getByRole("button",{name:/Save/}).click();
  const download=await downloadPromise,path=await download.path();expect(path).not.toBeNull();
  const workbook=new ExcelJS.Workbook();await workbook.xlsx.readFile(path!);
+ const readme=workbook.getWorksheet("Read Me");expect(readme).toBeTruthy();
  const sheet=workbook.getWorksheet("Extracted Text");expect(sheet).toBeTruthy();
+ expect(workbook.getWorksheet("Page 1")).toBeUndefined();
  const values:string[]=[];sheet!.eachRow(row=>row.eachCell(cell=>values.push(String(cell.value??""))));
  expect(values).toEqual(expect.arrayContaining(["This is a normal paragraph, not a table.","It has several lines of prose with no repeated columns.","The converter should not invent spreadsheet structure."]));
 });

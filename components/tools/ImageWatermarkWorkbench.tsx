@@ -2,22 +2,26 @@
 import{PointerEvent,useEffect,useRef,useState,type Dispatch,type SetStateAction}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
-import PaidActionButton from"@/components/tools/PaidActionButton";
 import{localInpaint,localInpaintMask,type NormalizedBox,type NormalizedPoint,type NormalizedStroke}from"@/lib/tools/autonomous/image-local";
 import ResultFileActions from './ResultFileActions';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
+import{authorizeToolOperation,grantToolOperationResult}from"@/lib/tools/commerce/export-access-client";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
 
 const initial:NormalizedBox={x:.65,y:.72,w:.28,h:.18};
 
 function BoxSelector({file,box,onChange}:{file:File;box:NormalizedBox;onChange:(b:NormalizedBox)=>void}){
- const ref=useRef<HTMLDivElement>(null),[start,setStart]=useState<{x:number;y:number}|null>(null),[src,setSrc]=useState("");
+ const ref=useRef<HTMLDivElement>(null),[start,setStart]=useState<{x:number;y:number}|null>(null),[mode,setMode]=useState<"draw"|"move"|"resize">("draw"),[src,setSrc]=useState("");
  useEffect(()=>{const u=URL.createObjectURL(file);setSrc(u);return()=>URL.revokeObjectURL(u)},[file]);
  const point=(e:PointerEvent)=>{const r=ref.current!.getBoundingClientRect();return{x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))}};
- return <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);const p=point(e);setStart(p);onChange({...p,w:0,h:0})}} onPointerMove={e=>{if(!start)return;const p=point(e);onChange({x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(start.x-p.x),h:Math.abs(start.y-p.y)})}} onPointerUp={()=>setStart(null)} onPointerCancel={()=>setStart(null)}>
+ function down(e:PointerEvent){e.currentTarget.setPointerCapture(e.pointerId);const p=point(e),inside=p.x>=box.x&&p.x<=box.x+box.w&&p.y>=box.y&&p.y<=box.y+box.h,handle=Math.abs(p.x-(box.x+box.w))<.035&&Math.abs(p.y-(box.y+box.h))<.035;setMode(handle?"resize":inside?"move":"draw");setStart(p);if(!inside&&!handle)onChange({x:p.x,y:p.y,w:0,h:0})}
+ function move(e:PointerEvent){if(!start)return;const p=point(e);if(mode==="draw")onChange({x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(start.x-p.x),h:Math.abs(start.y-p.y)});else if(mode==="move"){onChange({x:Math.max(0,Math.min(1-box.w,start.x+(p.x-start.x))),y:Math.max(0,Math.min(1-box.h,start.y+(p.y-start.y))),w:box.w,h:box.h});setStart(p)}else{onChange({x:box.x,y:box.y,w:Math.max(.01,Math.min(1-box.x,p.x-box.x)),h:Math.max(.01,Math.min(1-box.y,p.y-box.y))})}}
+ function up(){setStart(null)}
+ return <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
   {src&&<img src={src} alt="" className="block max-h-[560px] max-w-full select-none"/>}
   <div className="pointer-events-none absolute border-2 border-rose-500 bg-rose-500/15" style={{left:`${box.x*100}%`,top:`${box.y*100}%`,width:`${box.w*100}%`,height:`${box.h*100}%`}}/>
+  {box.w>=.01&&box.h>=.01&&<span aria-hidden="true" className="pointer-events-none absolute h-4 w-4 rounded-full border-2 border-white bg-rose-500 shadow" style={{left:`calc(${(box.x+box.w)*100}% - 8px)`,top:`calc(${(box.y+box.h)*100}% - 8px)`}}/>}
  </div>
 }
 
@@ -56,9 +60,12 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
  async function run(){
   if(!selectionReady||!files.length)throw Error('PROCESSING_INPUT_MISSING');setBusy(true);setError("");
   const out=[] as Array<{name:string;blob:Blob;url:string}>;
+  let reservation:{id:string;toolId:string;units:number}|null=null;
   try{
+   reservation=await authorizeToolOperation(toolId,files.length,"save");
    for(const file of files){
     const blob=mode==="brush"?await localInpaintMask(file,strokes):await localInpaint(file,box);
+    if(reservation)grantToolOperationResult(blob,reservation);
     out.push({name:file.name,blob,url:URL.createObjectURL(blob)});
    }
    setResults(out);
@@ -76,7 +83,8 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
    <p className="text-sm text-[var(--lx-muted)]">{mode==="brush"?t("用画笔只涂住水印本身，可撤销或分多笔选择；选区越准确，修复越自然。","Paint only over the watermark. Smaller, precise masks usually produce cleaner repairs."):t(batch?"在第一张图上框出水印区域，相同位置会用于整批图片。":"拖动框出要移除的区域；适合纯色或简单背景。",batch?"Draw the watermark area on the first image; the same position is used for the batch.":"Draw a box around the area to remove; best for simple backgrounds.")}</p>
    {mode==="brush"?<BrushSelector file={files[0]} strokes={strokes} onChange={setStrokes}/>:<BoxSelector file={files[0]} box={box} onChange={setBox}/>}
   </>}
-  {files.length>0&&selectionReady&&draftReady&&<PaidActionButton toolId={toolId} quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{mode:"local",selectionMode:mode,box,strokes:mode==="brush"?strokes.length:0}} onPaid={run} label={t("查看本次价格","See price")}/>}
+  {files.length>0&&selectionReady&&draftReady&&<button type="button" disabled={busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("正在处理…","Processing…"):t("开始去水印","Remove watermark")}</button>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">{t("每天每个账户和 IP 共 5 张免费；超过部分 ¥1 / $1 每张。可以框选或精细涂抹，结果可直接保存或发送。","5 images per account and IP are free each day; additional images are ¥1 / $1 each. Mark the area or paint precisely, then save or share the result.")}</p>
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{t("正在根据选区修复画面…","Repairing the selected area…")}</p>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
   {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border p-3"><img src={r.url} alt={t("处理结果","Result")} className="w-full rounded-xl"/><ResultFileActions blob={r.blob} name={`clean-${r.name.replace(/\.[^.]+$/,".png")}`} saveLabel={t("保存结果","Save result")}/></div>)}</div>}
