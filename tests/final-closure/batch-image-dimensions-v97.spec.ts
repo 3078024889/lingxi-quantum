@@ -1,4 +1,4 @@
-import{test,expect}from"@playwright/test";
+import{test,expect}from"./export-test";
 import{readFile}from"node:fs/promises";
 
 test("batch images export exactly 359 × 195 pixels",async({page})=>{
