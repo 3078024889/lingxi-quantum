@@ -64,8 +64,8 @@ export default function ImageTranslatorWorkbench(){
    <label className="text-sm"><ToolUiText text="图片原文" /><select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm"><ToolUiText text="翻译为" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&draftReady&&<button type="button" disabled={busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?"正在翻译…":files.length>1?`开始翻译 ${files.length} 张图片`:"开始翻译"}</button>}
-  <p className="text-xs leading-5 text-[var(--lx-faint)]">每天每个账户和 IP 共 5 张免费；超过部分按 ¥1 / $1 每张计费。价格确认会在免费额度用完时出现。</p>
+  {files.length>0&&draftReady&&<button type="button" disabled={busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"正在翻译…":files.length>1?`开始翻译 ${files.length} 张图片`:"开始翻译"}/></button>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="每天每个账户和 IP 共 5 张免费；超过部分按 ¥1 / $1 每张计费。价格确认会在免费额度用完时出现。"/></p>
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="先识别图片里的文字，再翻译并尽量按原文字区域覆盖。复杂艺术字、弧形字或低清图片可能需要手动微调。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
