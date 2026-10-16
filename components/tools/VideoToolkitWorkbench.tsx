@@ -92,7 +92,7 @@ export default function VideoToolkitWorkbench(){
     try{await f.deleteFile(input);await f.deleteFile(output)}catch{}f.terminate();ff.current=null;
    }
    setOutputs(out);setStage(plainText(lang,"ready"));
-  }catch(e){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(plainText(lang,"fileError"))}finally{setBusy(false)}
+  }catch(e){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(e instanceof Error&&e.message.startsWith("MEDIA_OUTPUT_TRUNCATED")?t("导出视频时长不完整，结果已拦截。请尝试较短视频或降低输出清晰度。","The exported video was cut short and has been blocked. Try a shorter file or lower output quality."):plainText(lang,"fileError"))}finally{setBusy(false)}
  }
  function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
  async function addRemote(file:File){setFiles(v=>[...v,file].slice(0,10))}
