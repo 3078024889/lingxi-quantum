@@ -1,4 +1,4 @@
-export type PricingSpec={toolId:string;enabled:boolean;billing:"per_page"|"per_file"|"per_batch"|"per_minute"|"per_character";unitName:"page"|"file"|"batch"|"minute"|"character";cny:string;usd:string;note:string};
+export type PricingSpec={toolId:string;enabled:boolean;billing:"per_page"|"per_file"|"per_batch"|"per_minute"|"per_second"|"per_character";unitName:"page"|"file"|"batch"|"minute"|"character";cny:string;usd:string;note:string};
 export const V67_TOOL_PRICING:PricingSpec[]=[
 {toolId:"metered-tool-export",enabled:true,billing:"per_file",unitName:"file",cny:"1.00/file after daily trial",usd:"1.00/file after daily trial",note:"five daily free exports per original free tool, limited by both account and IP"},
 {toolId:"pdf-ocr",enabled:true,billing:"per_page",unitName:"page",cny:"first page free; +1.00 each additional page",usd:"first page free; +1.00 each additional page",note:"full OCR; first page preview is free"},
@@ -13,7 +13,7 @@ export const V67_TOOL_PRICING:PricingSpec[]=[
 {toolId:"loop-video",enabled:false,billing:"per_minute",unitName:"minute",cny:"free",usd:"free",note:"V69: browser-local effect is free; no payment step"},
 {toolId:"stop-motion-video",enabled:false,billing:"per_minute",unitName:"minute",cny:"free",usd:"free",note:"V69: browser-local Stop Motion/Boomerang is free; no payment step"},
 {toolId:"audio-cleanup",enabled:true,billing:"per_minute",unitName:"minute",cny:"0.50/started minute; min 1.00",usd:"0.50/started minute; min 1.00",note:"first 30 seconds preview free"},
-{toolId:"video-transcription",enabled:true,billing:"per_minute",unitName:"minute",cny:"0.10/second after first 5 seconds free",usd:"0.10/second after first 5 seconds free",note:"UI bills exact whole seconds beyond the free 5-second preview"},
+{toolId:"video-transcription",enabled:true,billing:"per_second",unitName:"second",cny:"0.10/second after first 5 seconds free",usd:"0.10/second after first 5 seconds free",note:"UI bills exact whole seconds beyond the free 5-second preview"},
 {toolId:"audio-transcription",enabled:true,billing:"per_minute",unitName:"minute",cny:"0.10/second after first 5 seconds free",usd:"0.10/second after first 5 seconds free",note:"UI bills exact whole seconds beyond the free 5-second preview"},
 {toolId:"subtitle-translate",enabled:true,billing:"per_character",unitName:"character",cny:"1.00/5000 characters",usd:"1.00/5000 characters",note:"source subtitle character count"},
 {toolId:"video-dubbing",enabled:true,billing:"per_minute",unitName:"minute",cny:"0.10/second after first 5 seconds free",usd:"0.10/second after first 5 seconds free",note:"full output requires provider readiness; first 5 seconds are preview-only"},
