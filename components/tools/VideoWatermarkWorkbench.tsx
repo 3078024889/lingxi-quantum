@@ -51,7 +51,10 @@ export default function VideoWatermarkWorkbench(){
    const code=await f.exec(["-i",input,"-vf",`delogo=x=${px}:y=${py}:w=${pw}:h=${ph}:show=0`,"-c:v","libx264","-preset","veryfast","-crf","20","-c:a","aac","-b:a","160k",output]);
    if(code!==0)throw new Error(`FFMPEG_EXIT_${code}`);
    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);if(copy.byteLength===0)throw new Error("EMPTY_VIDEO_RESULT");
-   const blob=new Blob([copy.buffer],{type:"video/mp4"}),url=URL.createObjectURL(blob);resultUrls.current.push(url);return{name:item.file.name,url,blob};
+   const blob=new Blob([copy.buffer],{type:"video/mp4"});
+   const exported=await mediaMetaOf(new File([blob],"verified.mp4",{type:"video/mp4"}),c.metaFail,c.formatFail);
+   if(Math.abs(exported.duration-item.duration)>Math.max(.4,item.duration*.04))throw new Error(c.metaFail);
+   const url=URL.createObjectURL(blob);resultUrls.current.push(url);return{name:item.file.name,url,blob};
   }catch(e){throw e}
   finally{try{f?.terminate()}catch{}if(ff.current===f)ff.current=null}
  }

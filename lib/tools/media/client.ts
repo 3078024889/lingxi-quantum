@@ -18,7 +18,7 @@ export async function extractCompactAudio(file:File,onProgress?:(p:number)=>void
 
 // Guard final delivery against FFmpeg successfully producing only a short prefix.
 // Browser media metadata is available without additional decoders or network upload.
-function browserMediaDuration(blob:Blob):Promise<number>{
+export function browserMediaDuration(blob:Blob):Promise<number>{
  return new Promise((resolve,reject)=>{
   const video=document.createElement("video"),url=URL.createObjectURL(blob);
   let settled=false;
@@ -40,6 +40,7 @@ function browserMediaDuration(blob:Blob):Promise<number>{
 }
 
 export async function muxDubbedVideo(video:File,audio:Blob,onProgress?:(p:number)=>void){
+ const originalDuration=await browserMediaDuration(video);
  const ff=await createFfmpegRuntime(onProgress);
  try{
   const ext=video.name.split(".").pop()||"mp4",vin=`video.${ext}`,ain="dub.mp3",out="dubbed.mp4";
