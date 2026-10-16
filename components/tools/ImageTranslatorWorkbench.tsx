@@ -2,7 +2,6 @@
 import{useEffect,useState}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
-import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
