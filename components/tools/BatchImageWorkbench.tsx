@@ -9,7 +9,7 @@ import type {ToolResultFile} from "@/lib/tools/types";
 
 type ResizeMode="maxWidth"|"exact"|"contain"|"cover";
 type ResizeOptions={mode:ResizeMode;width:number;height:number;quality:number;type:string;background:string};
-export function outputDimensions(sourceW:number,sourceH:number,o:Pick<ResizeOptions,"mode"|"width"|"height">){
+function outputDimensions(sourceW:number,sourceH:number,o:Pick<ResizeOptions,"mode"|"width"|"height">){
  if(!Number.isFinite(sourceW)||!Number.isFinite(sourceH)||sourceW<1||sourceH<1)throw new Error("INVALID_IMAGE_DIMENSIONS");
  const width=Math.floor(o.width),height=Math.floor(o.height);
  if(!Number.isFinite(width)||width<1||width>8192||!Number.isFinite(height)||height<1||height>8192)throw new Error("TARGET_DIMENSIONS_OUT_OF_RANGE");
