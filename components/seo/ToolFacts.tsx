@@ -14,7 +14,7 @@ export default function ToolFacts({tool,locale}:{tool:GlobalTool;locale:SeoLocal
  return <section lang={c.hreflang} dir={c.dir} aria-label={guide[0]} style={{maxWidth:900,margin:'40px auto',padding:'24px',lineHeight:1.8}}>
   <h2>{guide[0]}</h2><p>{facts.summary}</p>
   {fact?.kind==='later'?null:<ol><li>{guide[8]}</li><li>{guide[9]}</li><li>{guide[10]}</li></ol>}
-  <h2>{c.privacy}</h2><p>{fact?.description??(tool.mode==='local'?c.local:c.online)}</p>
+  <p className="mt-3 text-sm">{fact?.description??(tool.mode==='local'?c.local:c.online)}</p>
   {tool.slug==='food-calorie'&&<section><h2>{FACT_LABELS.sources[locale]}</h2><ul><li><a href="https://fdc.nal.usda.gov/">USDA FoodData Central</a></li><li><a href="https://data.gov.tw/dataset/8543">Taiwan FDA · Open Government Data License 1.0</a></li></ul></section>}
   <h2>{guide[1]}</h2>{([2,4,6] as const).map(index=><details key={index} className="my-3"><summary>{guide[index]}</summary><p>{guide[index+1]}</p></details>)}
   <SearchIntentFaq slug={tool.slug} locale={locale}/>

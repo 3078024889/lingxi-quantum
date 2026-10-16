@@ -7,14 +7,38 @@ import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
 
-async function canvas(file:File,maxW:number,quality:number,type:string){
- const b=await createImageBitmap(file);let w=b.width,h=b.height;
- if(maxW>0&&w>maxW){h=Math.max(1,Math.round(h*maxW/w));w=Math.max(1,Math.round(maxW))}
- const c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d")!;
- if(type==="image/jpeg"){x.fillStyle="#fff";x.fillRect(0,0,w,h)}
- x.drawImage(b,0,0,w,h);b.close?.();
- return await new Promise<Blob>((res,rej)=>c.toBlob(v=>v?res(v):rej(new Error("EXPORT_FAILED")),type,quality));
+type ResizeMode="maxWidth"|"exact"|"contain"|"cover";
+type ResizeOptions={mode:ResizeMode;width:number;height:number;quality:number;type:string;background:string};
+function outputDimensions(sourceW:number,sourceH:number,o:Pick<ResizeOptions,"mode"|"width"|"height">){
+ if(!Number.isFinite(sourceW)||!Number.isFinite(sourceH)||sourceW<1||sourceH<1)throw new Error("INVALID_IMAGE_DIMENSIONS");
+ const width=Math.floor(o.width),height=Math.floor(o.height);
+ if(!Number.isFinite(width)||width<1||width>8192||!Number.isFinite(height)||height<1||height>8192)throw new Error("TARGET_DIMENSIONS_OUT_OF_RANGE");
+ if(o.mode==="maxWidth"){
+  const factor=Math.min(1,width/sourceW);
+  return{width:Math.max(1,Math.round(sourceW*factor)),height:Math.max(1,Math.round(sourceH*factor))};
+ }
+ return{width,height};
 }
+async function canvas(file:File,o:ResizeOptions){
+ const b=await createImageBitmap(file);
+ try{
+  const {width:w,height:h}=outputDimensions(b.width,b.height,o);
+  if(w*h>33554432)throw new Error("IMAGE_TOO_LARGE");
+  const c=document.createElement("canvas");c.width=w;c.height=h;
+  const x=c.getContext("2d");if(!x)throw new Error("CANVAS_UNAVAILABLE");
+  x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";
+  const needsBackground=o.type==="image/jpeg"||o.mode==="contain";
+  if(needsBackground){x.fillStyle=o.background;x.fillRect(0,0,w,h)}
+  if(o.mode==="exact"||o.mode==="maxWidth")x.drawImage(b,0,0,w,h);
+  else {
+   const factor=o.mode==="cover"?Math.max(w/b.width,h/b.height):Math.min(w/b.width,h/b.height);
+   const sw=b.width*factor,sh=b.height*factor;
+   x.drawImage(b,(w-sw)/2,(h-sh)/2,sw,sh);
+  }
+  return await new Promise<Blob>((res,rej)=>c.toBlob(v=>v?res(v):rej(new Error("EXPORT_FAILED")),o.type,o.quality));
+ }finally{b.close?.()}
+}
+
 type C={maxW:string;quality:string;format:string;selected:string;run:string;busy:string;ready:string;error:string};
 const D:Record<LingxiLang,C>={
  zh:{maxW:"最大宽度 px",quality:"质量 0.4–0.95",format:"输出格式",selected:"已选择",run:"开始批量处理",busy:"正在处理…",ready:"批量图片已处理完成，可以核对结果后单独下载或打包下载。",error:"批量图片处理没有完成"},
@@ -30,14 +54,14 @@ const D:Record<LingxiLang,C>={
 
 export default function BatchImageWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
- const[files,setFiles]=useState<File[]>([]),[maxW,setMaxW]=useState(1920),[quality,setQuality]=useState(.82),[type,setType]=useState("image/jpeg"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
+ const[files,setFiles]=useState<File[]>([]),[maxW,setMaxW]=useState(1920),[height,setHeight]=useState(1080),[resizeMode,setResizeMode]=useState<ResizeMode>("maxWidth"),[background,setBackground]=useState("#ffffff"),[quality,setQuality]=useState(.82),[type,setType]=useState("image/jpeg"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
  async function run(){
   setBusy(true);setStage(c.busy);setError("");setResults([]);
   try{
    const out:ToolResultFile[]=[];
    for(let i=0;i<files.length;i++){
     const f=files[i];setStage(`${c.busy} ${i+1}/${files.length} · ${f.name}`);
-    const b=await canvas(f,maxW,Math.min(.95,Math.max(.4,quality)),type),ext=type==="image/png"?"png":type==="image/webp"?"webp":"jpg";
+    const b=await canvas(f,{mode:resizeMode,width:maxW,height,background,quality:Math.min(.95,Math.max(.4,quality)),type}),ext=type==="image/png"?"png":type==="image/webp"?"webp":"jpg";
     out.push({name:f.name.replace(/\.[^.]+$/,"")+"."+ext,blob:b,mime:type,size:b.size});
    }
    setResults(out);setStage("");
@@ -48,7 +72,14 @@ export default function BatchImageWorkbench(){
  return <div className="space-y-4">
   <FileDropzone accept="image/*" multiple append maxFiles={50} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy} kind="image"/>
   <div className="grid gap-3 sm:grid-cols-3">
-   <label className="text-sm text-[var(--lx-muted)]">{c.maxW}<EditableNumberInput type="number" min={0} value={maxW} onChange={e=>setMaxW(Math.max(0,Number(e.target.value)))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
+   <label className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"尺寸方式":lang==="ja"?"サイズ方法":lang==="ko"?"크기 방식":lang==="fr"?"Mode de taille":lang==="de"?"Größenmodus":lang==="es"?"Modo de tamaño":lang==="pt"?"Modo de tamanho":lang==="ar"?"وضع الحجم":"Resize mode"}<select value={resizeMode} onChange={e=>setResizeMode(e.target.value as ResizeMode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="maxWidth">{lang==="zh"?"仅限制最大宽度":"Max width (keep ratio)"}</option><option value="contain">{lang==="zh"?"完整放入指定尺寸（留边）":"Fit inside (padding)"}</option><option value="cover">{lang==="zh"?"填满指定尺寸（居中裁切）":"Fill and crop"}</option><option value="exact">{lang==="zh"?"强制指定宽高（可能拉伸）":"Exact width & height (stretch)"}</option></select></label>
+   <label className="text-sm text-[var(--lx-muted)]">{resizeMode==="maxWidth"?c.maxW:(lang==="zh"?"目标宽度（像素）":"Target width (px)")}<EditableNumberInput type="number" min={1} max={8192} value={maxW} onChange={e=>setMaxW(Math.min(8192,Math.max(1,Math.round(Number(e.target.value)||1))))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
+   {resizeMode!=="maxWidth"&&<label className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"目标高度（像素）":"Target height (px)"}<EditableNumberInput type="number" min={1} max={8192} value={height} onChange={e=>setHeight(Math.min(8192,Math.max(1,Math.round(Number(e.target.value)||1))))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>}
+   {(resizeMode==="contain"||type==="image/jpeg")&&<label className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"背景填充色":"Background color"}<input type="color" value={background} onChange={e=>setBackground(e.target.value)} className="mt-1 block h-11 w-full cursor-pointer rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)]"/></label>}
+  </div>
+  <div className="grid gap-3 sm:grid-cols-2"><button type="button" onClick={()=>{setResizeMode("exact");setMaxW(200);setHeight(200)}} className="rounded-xl border border-[var(--lx-line)] px-3 py-2 text-sm">200 × 200 px</button><button type="button" onClick={()=>{setResizeMode("exact");setMaxW(359);setHeight(195)}} className="rounded-xl border border-[var(--lx-line)] px-3 py-2 text-sm">359 × 195 px</button></div>
+  <div className="grid gap-3 sm:grid-cols-3">
+   
    <label className="text-sm text-[var(--lx-muted)]">{c.quality}<EditableNumberInput type="number" min=".4" max=".95" step=".05" value={quality} onChange={e=>setQuality(Math.min(.95,Math.max(.4,Number(e.target.value))))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/></label>
    <label className="text-sm text-[var(--lx-muted)]">{c.format}<select value={type} onChange={e=>setType(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></label>
   </div>
