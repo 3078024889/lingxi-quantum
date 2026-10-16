@@ -19,5 +19,11 @@
       "path": "/api/cron/sasi-v5-radar",
       "schedule": "27 4 * * *"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "main": true
+    }
+  }
 }
