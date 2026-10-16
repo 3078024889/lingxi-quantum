@@ -74,3 +74,13 @@ test("tool introductions are translated and free of pricing or engine jargon",as
   if(slug==="video-toolkit"&&lang!=="en")await expect(page.locator("main")).not.toContainText(/Batch compress|Batch extract|Start batch/);
  }
 });
+
+test("public tool guide hides implementation labels and keeps user-facing steps",async({page})=>{
+ await page.goto("/tools/base64-encode-decode?lang=zh",{waitUntil:"domcontentloaded"});
+ const main=page.locator("main");
+ await expect(main).toContainText("操作教程");
+ await expect(main).not.toContainText("输入与输出");
+ await expect(main).not.toContainText("处理方式");
+ await expect(main).not.toContainText("image/*");
+ await expect(main).not.toContainText("支持范围");
+});
