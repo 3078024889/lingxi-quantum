@@ -5,21 +5,13 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
+import {createExportPlan} from "@/lib/tools/document/export-plan";
 
 function pdfBlob(bytes:Uint8Array){const c=new Uint8Array(bytes.length);c.set(bytes);return new Blob([c.buffer],{type:"application/pdf"});}
 function parsePages(v:string,max:number){
- const set=new Set<number>();
- for(const part of v.split(",")){
-  const p=part.trim();if(!p)continue;
-  if(p.includes("-")){
-   const [a,b]=p.split("-").map(Number);
-   if(!Number.isFinite(a)||!Number.isFinite(b)||a>b)continue;
-   for(let i=Math.max(1,a);i<=Math.min(max,b);i++)set.add(i-1);
-  }else{
-   const n=Number(p);if(Number.isInteger(n)&&n>=1&&n<=max)set.add(n-1);
-  }
- }
- return [...set].sort((a,b)=>a-b);
+ if(!v.trim())return[];
+ const plan=createExportPlan(v,max);
+ return plan.valid?plan.pages.map(n=>n-1):[];
 }
 type C={choose:string;note:string;pages:string;range:string;merge:string;extract:string;rotate:string;busy:string;ready:string;badRange:string;error:string};
 const D:Record<LingxiLang,C>={
@@ -43,13 +35,13 @@ export default function PdfBasicWorkbench(){
    setFiles(next);setResults([]);setError("");setPages(0);
    if(next[0]){
      try{const d=await PDFDocument.load(await next[0].arrayBuffer());setPages(d.getPageCount())}
-     catch(e){setError(e instanceof Error?e.message:String(e))}
+     catch{setError(c.error)}
    }
  }
  async function wrap(name:string,fn:()=>Promise<Blob>){
    setBusy(true);setError("");setResults([]);
    try{const b=await fn();setResults([{name,blob:b,mime:"application/pdf",size:b.size}])}
-   catch(e){setError(e instanceof Error?e.message:String(e))}
+   catch(e){setError(e instanceof Error&&e.message===c.badRange?c.badRange:c.error)}
    finally{setBusy(false)}
  }
  async function merge(){if(files.length<2)return;await wrap("lingxifield-merged.pdf",async()=>{const out=await PDFDocument.create();for(const f of files){const s=await PDFDocument.load(await f.arrayBuffer());for(const p of await out.copyPages(s,s.getPageIndices()))out.addPage(p)}return pdfBlob(await out.save())})}
@@ -70,6 +62,6 @@ export default function PdfBasicWorkbench(){
    <button disabled={!first||busy} onClick={rotate} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-5 py-2.5 text-sm text-[var(--lx-ink)] disabled:opacity-40">{c.rotate}</button>
   </div>
   {!!results.length&&<ResultPanel files={results} messageZh={c.ready} messageEn={c.ready}/>}
-  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
+  {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>
 }

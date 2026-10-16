@@ -6,7 +6,7 @@ import PaidActionButton from"@/components/tools/PaidActionButton";
 import{localInpaint,localInpaintMask,type NormalizedBox,type NormalizedPoint,type NormalizedStroke}from"@/lib/tools/autonomous/image-local";
 import ResultFileActions from './ResultFileActions';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
-import{useLingxiLang}from"@/lib/lingxi-i18n";
+import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
 
 const initial:NormalizedBox={x:.65,y:.72,w:.28,h:.18};
@@ -48,7 +48,7 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
  const[mode,setMode]=useState<"brush"|"box">(batch?"box":"brush"),[busy,setBusy]=useState(false),[error,setError]=useState("");
  const[results,setResults]=useState<Array<{name:string;blob:Blob;url:string}>>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  const[drawing,setDrawing]=useState(false);
- const gestureLabels:Record<string,[string,string]>={zh:["滚动页面","选择水印"],en:["Scroll page","Select watermark"],ja:["ページをスクロール","透かしを選択"],ko:["페이지 스크롤","워터마크 선택"],fr:["Faire défiler","Sélectionner le filigrane"],de:["Seite scrollen","Wasserzeichen auswählen"],es:["Desplazar página","Seleccionar marca de agua"],pt:["Rolar página","Selecionar marca de água"],ru:["Прокрутка страницы","Выбрать водяной знак"]};
+ const gestureLabels:Record<LingxiLang,[string,string]>={zh:["滚动页面","选择水印"],en:["Scroll page","Select watermark"],ja:["ページをスクロール","透かしを選択"],ko:["페이지 스크롤","워터마크 선택"],fr:["Faire défiler","Sélectionner le filigrane"],de:["Seite scrollen","Wasserzeichen auswählen"],es:["Desplazar página","Seleccionar marca de agua"],pt:["Rolar página","Selecionar marca de água"],ar:["تمرير الصفحة","تحديد العلامة المائية"]};
  const gesture=gestureLabels[lang]||gestureLabels.en;
 
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId===toolId){setDraftId(id);setFiles(f);if(d.state?.box)setBox(d.state.box);if(Array.isArray(d.state?.strokes))setStrokes(d.state.strokes);if(d.state?.mode==="brush"||d.state?.mode==="box")setMode(batch?"box":d.state.mode)}setDraftReady(true)})()},[toolId,batch]);

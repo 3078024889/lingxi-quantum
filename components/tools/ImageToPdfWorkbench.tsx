@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useState} from "react";
 import {PDFDocument} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -51,9 +51,8 @@ export default function ImageToPdfWorkbench(){
    const bytes=await out.save(),copy=new Uint8Array(bytes.length);copy.set(bytes);
    const blob=new Blob([copy.buffer],{type:"application/pdf"});
    setResult([{name:"lingxifield-images.pdf",blob,mime:"application/pdf",size:blob.size}]);
-  }catch(e){setError(c.error+" · "+(e instanceof Error?e.message:""))}finally{setBusy(false)}
+  }catch{setError(c.error)}finally{setBusy(false)}
  }
- const details=useMemo(()=>({pages:files.length,pageSize,orientation,margin}),[files.length,pageSize,orientation,margin]);
  return <div className="space-y-4">
   <FileDropzone accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple maxFiles={100} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy} kind="image"/>
   <p className="text-sm text-[var(--lx-muted)]">{c.lead}</p>
@@ -66,7 +65,7 @@ export default function ImageToPdfWorkbench(){
    <label className="space-y-1 text-sm"><span>{c.margin}</span><select disabled={busy} value={margin} onChange={e=>setMargin(e.target.value as Margin)} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="none">{c.none}</option><option value="small">{c.small}</option><option value="big">{c.big}</option></select></label>
   </div>}
   <button disabled={!files.length||busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.run}</button>
-  {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready} details={details}/>}
+  {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready} details={{pages:files.length}}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>;
 }

@@ -21,5 +21,20 @@ vm.runInNewContext(code,sandbox);
  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(x<5||x>15||y<5||y>15){
   const i=(y*w+x)*4;assert.deepEqual(Array.from(output.slice(i,i+4)),Array.from(input.slice(i,i+4)));
  }
- console.log('PASS: distinct boundary colors interpolate by side; unselected pixels remain unchanged.');
+ // A white footer touching a dark photo must stay white, not inherit a gray band.
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++)pixel(x,y,[255,255,255]);
+ for(let x=5;x<=15;x++)pixel(x,4,[20,30,40]);
+ for(let x=8;x<=11;x++)for(let y=9;y<=10;y++)pixel(x,y,[80,80,80]);
+ const before=new Uint8ClampedArray(input);
+ await sandbox.exports.localInpaint({}, {x:.25,y:.25,w:.5,h:.5});
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+  const i=(y*w+x)*4;
+  assert.deepEqual(Array.from(output.slice(i,i+4)),x>=5&&x<=15&&y>=5&&y<=15?[255,255,255,255]:Array.from(before.slice(i,i+4)));
+ }
+ // The final image row must be repairable too; the old clamp left it untouched.
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++)pixel(x,y,[255,255,255]);
+ pixel(10,19,[80,80,80]);
+ await sandbox.exports.localInpaint({}, {x:.25,y:.75,w:.5,h:.25});
+ assert.deepEqual(Array.from(output.slice((19*w+10)*4,(19*w+10)*4+4)),[255,255,255,255]);
+ console.log('PASS: independent boundary interpolation; white footer without dark bleed; unselected pixels unchanged.');
 })().catch(e=>{console.error(e);process.exitCode=1});

@@ -44,6 +44,9 @@ jobs:
           pdf-to-image-output-v90 pdf-redaction-output-v89 screenshot-redaction-v89
           qr-cron-output-v86 burn-reveal-recovery
           subtitle-translation-v95
+          pdf-real-options-v101 image-watermark-gesture-v100
+          document-upload-consent-v79 public-site-truth sasi-found-issues-v96
+          sasi-prompt-continuation tool-plain-language tool-real-output
           --workers=2 --reporter=list,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/delivery-results.json

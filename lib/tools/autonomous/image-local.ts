@@ -36,16 +36,50 @@ export async function localIdPhoto(file:File,background:string){
  ctx.putImageData(src,0,0);
  return await blobOf(c,"image/png");
 }
+// Use a solid fill only when the selection and independent outside edges agree
+// (three normally, two at the image boundary). Keep photo colors out of flat strips.
+function flatBoxBackground(d:Uint8ClampedArray,w:number,h:number,x0:number,y0:number,x1:number,y1:number){
+ const area=(x1-x0+1)*(y1-y0+1);if(area<32)return null;
+ const step=Math.max(1,Math.ceil(Math.sqrt(area/16384))),bins=new Map<number,number>();
+ let total=0,best=0,bestCount=0;
+ for(let y=y0;y<=y1;y+=step)for(let x=x0;x<=x1;x+=step){
+  const i=(y*w+x)*4;if(d[i+3]!==255)return null;
+  const key=((d[i]>>4)<<8)|((d[i+1]>>4)<<4)|(d[i+2]>>4),count=(bins.get(key)||0)+1;
+  bins.set(key,count);total++;if(count>bestCount){bestCount=count;best=key}
+ }
+ if(bestCount/total<.7)return null;
+ const channels:number[][]=[[],[],[]];
+ for(let y=y0;y<=y1;y+=step)for(let x=x0;x<=x1;x+=step){
+  const i=(y*w+x)*4,key=((d[i]>>4)<<8)|((d[i+1]>>4)<<4)|(d[i+2]>>4);
+  if(key===best)for(let ch=0;ch<3;ch++)channels[ch].push(d[i+ch]);
+ }
+ const color=channels.map(values=>values.sort((a,b)=>a-b)[Math.floor(values.length/2)]);
+ const agrees=(x:number,y:number)=>{const i=(y*w+x)*4;return d[i+3]===255&&color.every((v,ch)=>Math.abs(v-d[i+ch])<=8)};
+ const sides=[{hits:0,total:0},{hits:0,total:0},{hits:0,total:0},{hits:0,total:0}];
+ for(let x=x0;x<=x1;x++)for(const[side,y]of [[0,y0-1],[1,y1+1]]){if(y<0||y>=h)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
+ for(let y=y0;y<=y1;y++)for(const[side,x]of [[2,x0-1],[3,x1+1]]){if(x<0||x>=w)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
+ const available=sides.filter(s=>s.total>0),required=available.length===4?3:2;
+ return available.filter(s=>s.hits/s.total>=.9).length>=required?color:null;
+}
+
 export async function localInpaint(file:File,box:NormalizedBox){
+ if(![box.x,box.y,box.w,box.h].every(Number.isFinite)||box.w<=0||box.h<=0)throw new Error("SELECT_AREA_FIRST");
  const img=await bitmap(file),c=document.createElement("canvas");
  c.width=img.width;c.height=img.height;const ctx=c.getContext("2d",{willReadFrequently:true})!;
  ctx.drawImage(img,0,0);img.close?.();
  const im=ctx.getImageData(0,0,c.width,c.height),d=im.data,w=c.width,h=c.height;
- let x0=Math.max(1,Math.floor(box.x*w)),y0=Math.max(1,Math.floor(box.y*h));
- let x1=Math.min(w-2,Math.ceil((box.x+box.w)*w)),y1=Math.min(h-2,Math.ceil((box.y+box.h)*h));
+ let x0=Math.max(0,Math.floor(box.x*w)),y0=Math.max(0,Math.floor(box.y*h));
+ let x1=Math.min(w-1,Math.ceil((box.x+box.w)*w)),y1=Math.min(h-1,Math.ceil((box.y+box.h)*h));
  if(x1<=x0||y1<=y0)throw new Error("SELECT_AREA_FIRST");
  const at=(x:number,y:number)=>((Math.max(0,Math.min(h-1,y))*w+Math.max(0,Math.min(w-1,x)))*4);
  const band=Math.max(2,Math.round(Math.min(w,h)*.004));
+ const flat=flatBoxBackground(d,w,h,x0,y0,x1,y1);
+ if(!flat&&(x0===0||y0===0||x1===w-1||y1===h-1)){
+  const mask=new Uint8Array(w*h);
+  for(let y=y0;y<=y1;y++)mask.fill(1,y*w+x0,y*w+x1+1);
+  d.set(diffuseMaskedPixels(d,w,h,mask));ctx.putImageData(im,0,0);
+  return await blobOf(c,"image/png");
+ }
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
    const fx=(x-x0)/Math.max(1,x1-x0),fy=(y-y0)/Math.max(1,y1-y0);
    const sides:number[][][]=[[],[],[],[]];
@@ -59,7 +93,7 @@ export async function localInpaint(file:File,box:NormalizedBox){
    for(let ch=0;ch<3;ch++){
      const vertical=avg(top,ch)*(1-fy)+avg(bottom,ch)*fy;
      const horizontal=avg(left,ch)*(1-fx)+avg(right,ch)*fx;
-     d[i+ch]=Math.round((vertical+horizontal)/2);
+     d[i+ch]=flat?flat[ch]:Math.round((vertical+horizontal)/2);
    }
    d[i+3]=255;
  }
