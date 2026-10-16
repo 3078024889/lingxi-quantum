@@ -73,3 +73,17 @@ Second scoped delivery run `38896465816` on `e3b78964` completed **97 passed, 1 
 
 Expanded media run `38896465778` on `e3b789644c9700196f9acf1db14e3a88401b1b8d` subsequently completed **138 passed**, including all 112 real-output matrix cases (four durations × fourteen processing paths × two Chromium projects). Reverse, loop, stop-motion, boomerang and watermark removal include all four durations through 125 seconds. Payment is intercepted for the watermark workflow; no funds or provider generation are used. Each saved output also passes decoder end-time checks. Metadata lifecycle unit tests and all 37 native reference cases passed on the same runtime source. Evidence artifact `12044965672`, SHA256 `9f57d1737c914fa01be86f7cc4b69fa346b48daa61b958e07e7fe2553f15cc90`, remains remote (257 MB, expires 2026-10-23). The following schema/documentation receipt commit does not change that tested application code. Full production CI was still running; this is not a release approval.
 
+### Private real-file acceptance and image selection regression
+
+The user explicitly authorized local Google Chrome use and supplied private files. Reuse one tool tab; close temporary decoder/inspection tabs immediately. Originals and evidence remain on the user's computer, never in Git or public CI artifacts.
+
+Production UI processed a real 720×1280 HEVC/AAC phone clip (~10.1 seconds) through compression and MP3 extraction. Saved outputs were independently reopened and fully decoded using a separate FFmpeg browser instance: compressed H.264 retained 241 frames through 10.10 seconds; MP3 decoded through 10.10 seconds. The supplied precompressed file also fully decoded. This sample did not reproduce two-second truncation and does not establish every codec/tool is accepted.
+
+The supplied 966-page PDF completed production metadata removal. Independent PDF-lib reads with `updateMetadata:false` found no Info keys or catalog XMP in the output; all 966 page content-stream hashes and dimensions matched the source. Visible page text is intentionally retained. This is metadata acceptance, not acceptance of all PDF functions.
+
+Actual stepped mouse dragging in production image watermark selection triggered IMG dragstart, pointercancel and lostpointercapture, leaving an incomplete box. Capturing dragstart prevention restored the complete gesture in an isolated diagnostic. Both brush and box now disable native dragging, cancel dragstart on the surface and default to explicit scroll mode, with nine-language scroll/select controls. The new browser regression exercises stepped mouse drawing and selection preservation in scroll mode; real phone gesture acceptance is still pending.
+
+Box inpainting also interleaved four boundary sides then sliced them as if grouped. A distinct-side color regression fails on HEAD before this patch and passes after correcting grouping; unselected pixels stay unchanged. The existing paid-callback resource cleanup test passes. Retesting the user's image against the patched algorithm still shows a visible footer gradient: quality remains insufficient for that sample. Do not claim watermark restoration is complete or replace this with a paid model call. The algorithm-only retest is not a deployed UI acceptance.
+
+Full production gate run `38897938927` on `9c4f9d6` completed with a failing Desktop closure step. Scoped media and delivery successes do not override this release blocker. No production promotion or main merge has occurred.
+

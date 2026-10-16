@@ -48,13 +48,12 @@ export async function localInpaint(file:File,box:NormalizedBox){
  const band=Math.max(2,Math.round(Math.min(w,h)*.004));
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
    const fx=(x-x0)/Math.max(1,x1-x0),fy=(y-y0)/Math.max(1,y1-y0);
-   const samples:number[][]=[];
+   const sides:number[][][]=[[],[],[],[]];
    for(let b=1;b<=band;b++){
-     for(const [sx,sy] of [[x,y0-b],[x,y1+b],[x0-b,y],[x1+b,y]]){
-       const j=at(sx,sy);samples.push([d[j],d[j+1],d[j+2]]);
-     }
+     const positions=[[x,y0-b],[x,y1+b],[x0-b,y],[x1+b,y]];
+     positions.forEach(([sx,sy],side)=>{const j=at(sx,sy);sides[side].push([d[j],d[j+1],d[j+2]])});
    }
-   const top=samples.slice(0,band),bottom=samples.slice(band,band*2),left=samples.slice(band*2,band*3),right=samples.slice(band*3);
+   const [top,bottom,left,right]=sides;
    const avg=(arr:number[][],ch:number)=>arr.reduce((s,v)=>s+v[ch],0)/Math.max(1,arr.length);
    const i=at(x,y);
    for(let ch=0;ch<3;ch++){
