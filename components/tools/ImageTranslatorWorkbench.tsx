@@ -9,9 +9,9 @@ import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/
 import{authorizeToolOperation,grantToolOperationResult}from"@/lib/tools/commerce/export-access-client";
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
 
-async function translate(text:string,source:string,target:string,quoteId:string){
+async function translate(text:string,source:string,target:string,accessId:string){
  if(source===target)return text;
- const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
+ const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,accessId,toolId:"image-translator"})});
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
 }
 function blobOf(c:HTMLCanvasElement){return new Promise<Blob>((resolve,reject)=>c.toBlob(x=>x?resolve(x):reject(new Error("IMAGE_EXPORT_FAILED")),"image/png"))}
@@ -45,7 +45,7 @@ export default function ImageTranslatorWorkbench(){
     for(let j=0;j<lines.length;j++){
       const line=lines[j],b=line.bbox,x=Math.max(0,Math.floor(b.x0)),y=Math.max(0,Math.floor(b.y0)),w=Math.max(4,Math.ceil(b.x1-b.x0)),h=Math.max(4,Math.ceil(b.y1-b.y0));
       setStage(`${i+1}/${files.length} · 正在翻译 ${j+1}/${lines.length}`);
-      const tx=await translate(line.text,source,target,quoteId);
+      const tx=await translate(line.text,source,target,reservation?.id||"");
       const bg=sample(ctx,x,y,w,h);ctx.fillStyle=`rgb(${bg[0]},${bg[1]},${bg[2]})`;ctx.fillRect(x,y,w,h);
       const lum=(bg[0]*.299+bg[1]*.587+bg[2]*.114);ctx.fillStyle=lum>150?"#111":"#fff";
       let size=Math.max(10,Math.floor(h*.72));ctx.font=`${size}px system-ui, sans-serif`;
