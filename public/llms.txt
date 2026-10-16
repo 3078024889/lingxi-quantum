@@ -1,0 +1,44 @@
+# 灵犀场 LINGXIFIELD
+
+> 灵犀场提供 100+ 在线实用工具与 SASI 智能服务，重点解决 PDF、图片、视频音频、文件表格、隐私和常见数字处理问题。主站为 https://lingxifield.com ，中文镜像域名为 https://lingxifield.cn 。
+
+## 核心入口
+
+- [在线实用工具](https://lingxifield.com/tools): PDF、图片、视频音频、文件、表格、二维码与通用工具。
+- [SASI 智能服务](https://lingxifield.com/sasi): AI 短剧、网站构建、书本、学习与科研创作。
+- [全部产品](https://lingxifield.com/products): 灵犀场公开产品入口。
+
+## 高频工具
+
+- [PDF 压缩](https://lingxifield.com/tools/pdf-compress): 减小 PDF 文件体积，适合图片型和扫描件 PDF。
+- [PDF 合并](https://lingxifield.com/tools/merge-pdf): 将多个 PDF 按顺序合并成一个文件。
+- [PDF 电子签名 / 电子签章](https://lingxifield.com/tools/e-sign-pdf): 添加手写签名、印章并导出 PDF。
+- [PDF 转 Word](https://lingxifield.com/tools/pdf-to-word): 将 PDF 转为可编辑 Word，并检查转换后的版式。
+- [PDF 转 Excel](https://lingxifield.com/tools/pdf-to-xlsx): 从带文字层的 PDF 中提取表格到 XLSX。
+- [PDF 转 JPG](https://lingxifield.com/tools/pdf-to-jpg): 将 PDF 页面导出为独立 JPG 图片。
+- [图片 OCR](https://lingxifield.com/tools/ocr): 从照片、截图和扫描图片中提取文字。
+- [图片压缩](https://lingxifield.com/tools/compress-image): 减小图片文件体积。
+- [图片压缩到 100KB](https://lingxifield.com/tools/compress-image-to-100kb): 以 100KB 为目标压缩图片。
+- [HEIC 转 JPG](https://lingxifield.com/tools/heic-to-jpg): 将 iPhone 常见 HEIC / HEIF 图片转换为 JPG。
+- [视频转文字](https://lingxifield.com/tools/video-transcription): 将视频语音转换为文字。
+- [音频转文字](https://lingxifield.com/tools/audio-transcription): 将录音和音频转换为文字。
+- [临时邮箱](https://lingxifield.com/tools/temp-mail): 用于短期接收验证码和一次性通知。
+- [清除图片 EXIF](https://lingxifield.com/tools/remove-exif): 清理图片中的常见 EXIF / 元数据。
+- [文件真实格式检测](https://lingxifield.com/tools/file-type-detector): 检查文件内容类型是否与扩展名一致。
+- [AI 图片检测](https://lingxifield.com/tools/ai-image-check): 分析图片中的可能 AI 生成特征，并结合来源信息判断。
+- [AI 视频与音频检测](https://lingxifield.com/tools/ai-video-audio-check): 分析视频画面或音频中的可能 AI 合成特征。
+
+## 语言
+
+- [English](https://lingxifield.com/en/tools): English tool pages.
+- [日本語](https://lingxifield.com/ja/tools): Japanese tool pages.
+- [한국어](https://lingxifield.com/ko/tools): Korean tool pages.
+- [Français](https://lingxifield.com/fr/tools): French tool pages.
+- [Deutsch](https://lingxifield.com/de/tools): German tool pages.
+- [Español](https://lingxifield.com/es/tools): Spanish tool pages.
+- [Português](https://lingxifield.com/pt/tools): Portuguese tool pages.
+- [العربية](https://lingxifield.com/ar/tools): Arabic tool pages.
+
+## 说明
+
+这是一个精简的机器可读入口，不替代 sitemap.xml。页面中的工具说明、搜索问题与处理方式以实际工具页面为准。

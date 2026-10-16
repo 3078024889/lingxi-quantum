@@ -25,7 +25,6 @@ export function ToolSeoJsonLd({locale,tool}:{locale:SeoLocale;tool:GlobalTool}){
    {"@type":"ListItem","position":3,"name":toolTitle(locale,tool),"item":url}
   ]}
  ];
- if(fact)graph.push({"@type":"FAQPage","@id":`${url}#faq`,url,inLanguage:c.hreflang,mainEntity:[{"@type":"Question",name:fact.question,acceptedAnswer:{"@type":"Answer",text:fact.answer}}]});
  const data={"@context":"https://schema.org","@graph":graph};
  return <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(data)}}/>;
 }
@@ -33,7 +32,7 @@ export function ToolSeoJsonLd({locale,tool}:{locale:SeoLocale;tool:GlobalTool}){
 export function TopicSeoJsonLd({locale,topic}:{locale:SeoLocale;topic:SeoTopic}){
  const c=SEO_LOCALES[locale],title=topicTitle(locale,topic),url=`${SITE}${localePath(locale,`/discover/${topic}`)}`;
  const data={"@context":"https://schema.org","@graph":[
-  {"@type":"WebPage","@id":`${url}#page`,url,name:title,description:SERVICE_FACTS[topic].description[locale],inLanguage:c.hreflang,isPartOf:{"@id":`${SITE}/#website`}},
+  {"@type":"WebPage","@id":`${url}#page`,url,"name":title,description:SERVICE_FACTS[topic].description[locale],inLanguage:c.hreflang,isPartOf:{"@id":`${SITE}/#website`}},
   {"@type":"Service","@id":`${url}#service`,name:title,description:SERVICE_FACTS[topic].description[locale],url,provider:{"@id":`${SITE}/#organization`},availableChannel:{"@type":"ServiceChannel","serviceUrl":SITE+SERVICE_FACTS[topic].target}}
  ]};
  return <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(data)}}/>;

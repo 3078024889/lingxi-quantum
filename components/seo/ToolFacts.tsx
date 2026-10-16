@@ -2,6 +2,7 @@ import Link from 'next/link';
 import {FACT_LABELS,toolFacts} from '@/lib/seo/product-facts';
 import {toolGeoFact} from '@/lib/seo/site-facts';
 import {getGlobalTool,localePath,SEO_LOCALES,toolTitle,type GlobalTool,type SeoLocale} from '@/lib/seo/global-seo';
+import SearchIntentFaq from './SearchIntentFaq';
 
 export default function ToolFacts({tool,locale}:{tool:GlobalTool;locale:SeoLocale}){
  const facts=toolFacts(tool.slug,locale),c=SEO_LOCALES[locale];
@@ -13,6 +14,7 @@ export default function ToolFacts({tool,locale}:{tool:GlobalTool;locale:SeoLocal
   {fact?.kind==='later'?null:<><h2>{c.how}</h2><ol><li>{FACT_LABELS.choose[locale]}</li><li>{facts.limits}</li><li>{FACT_LABELS.review[locale]}</li></ol></>}
   <h2>{c.privacy}</h2><p>{fact?.description??(tool.mode==='local'?c.local:c.online)}</p>
   {tool.slug==='food-calorie'&&<section><h2>{FACT_LABELS.sources[locale]}</h2><ul><li><a href="https://fdc.nal.usda.gov/">USDA FoodData Central</a></li><li><a href="https://data.gov.tw/dataset/8543">Taiwan FDA · Open Government Data License 1.0</a></li></ul></section>}
+  <SearchIntentFaq slug={tool.slug} locale={locale}/>
   {related.length>0&&<nav aria-label={FACT_LABELS.related[locale]}><h2>{FACT_LABELS.related[locale]}</h2><ul>{related.map(item=><li key={item.slug}><Link href={localePath(locale,`/tools/${item.slug}`)}>{toolTitle(locale,item)}</Link></li>)}</ul></nav>}
  </section>;
 }

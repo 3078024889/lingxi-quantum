@@ -69,7 +69,7 @@ export const metadata:Metadata={
 
 import SiteVisitTracker from "@/components/SiteVisitTracker";
 export default function RootLayout({children}:{children:React.ReactNode}){
- return <html lang="zh-CN" dir="ltr" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:LINGXIFIELD_HTML_LOCALE_BOOTSTRAP}}/>
+ return <html lang="zh-CN" dir="ltr" suppressHydrationWarning><head><link rel="describedby" href="/llms.txt" type="text/markdown"/><script dangerouslySetInnerHTML={{__html:LINGXIFIELD_HTML_LOCALE_BOOTSTRAP}}/>
   <SiteStructuredData/>
   </head><body className="antialiased"><SiteVisitTracker/><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider><LingxifieldFeedback /></body></html>;
 }
