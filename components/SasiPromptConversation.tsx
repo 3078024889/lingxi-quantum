@@ -48,7 +48,8 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  const [waitingFree,setWaitingFree]=useState(false);
  useEffect(()=>()=>freeRequest.current?.abort(),[]);
  const [prompt,setPrompt]=useState(initialPrompt),[functions,setFunctions]=useState<string[]>([]),[rights,setRights]=useState(false),[busy,setBusy]=useState(false),[notice,setNotice]=useState('');
- const [turns,setTurns]=useState<Array<{question:string;answer?:string;image?:string}>>([]),[quote,setQuote]=useState<{id:string;estimated_fen:number;question:string;currency:string}|null>(null);
+ const [imageProfile,setImageProfile]=useState<{model:string;size:string;estimatedFen:number}|null>(null),[imageRatio,setImageRatio]=useState('1:1');
+ const [turns,setTurns]=useState<Array<{question:string;answer?:string;image?:string;imageMeta?:{width?:number;height?:number;size?:string}}>>([]),[quote,setQuote]=useState<{id:string;estimated_fen:number;question:string;currency:string}|null>(null);
  const [streaming,setStreaming]=useState<{question:string;answer:string}|null>(null);
  const [needsConnection,setNeedsConnection]=useState(false);const exhausted=useRef(false);
  const threadRef=useRef("");
@@ -106,6 +107,14 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
  }
 
  useEffect(()=>{if(task==="chat")void loadThread("");return()=>{historyRequest.current++}},[task]);
+ useEffect(()=>{
+  if(task!=="image"){setImageProfile(null);return}
+  let live=true;
+  void fetch('/api/sasi/byok/image',{cache:'no-store'}).then(async r=>r.ok?r.json():null).then(data=>{
+   if(live&&data?.profile?.size)setImageProfile({model:String(data.profile.model||''),size:String(data.profile.size),estimatedFen:Number(data.profile.estimatedFen||0)});
+  }).catch(()=>{});
+  return()=>{live=false};
+ },[task]);
  useEffect(()=>{
   if(!recovering||!activeThread||busy)return;
   let live=true;
@@ -194,12 +203,13 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
     setStreaming(null);
    }
    if(task==='image'&&!rights){setNotice(ct('rightsRequired'));return}
-   const response=await fetch('/api/sasi/byok/'+(task==='image'?'image':'text'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(confirm?{action:'confirm',taskId:quote?.id,acceptSupplierBilling:true}:task==='image'?{action:'quote',prompt:question,functions,rightsConfirmed:rights,aiLabelAcknowledged:rights}:{action:'quote',question,mode:'chat',functions,previousId:previous.current})});
+   const imageQuestion=task==='image'?question+`\n\n画幅：${imageRatio}`:question;
+   const response=await fetch('/api/sasi/byok/'+(task==='image'?'image':'text'),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(confirm?{action:'confirm',taskId:quote?.id,acceptSupplierBilling:true}:task==='image'?{action:'quote',prompt:imageQuestion,functions,rightsConfirmed:rights,aiLabelAcknowledged:rights}:{action:'quote',question,mode:'chat',functions,previousId:previous.current})});
    const data=await response.json();if(!response.ok){setNeedsConnection(/CONNECTION|PRICE/.test(data.error||''));setNotice(data.error==='AUTH_REQUIRED'?ct('loginRequired'):/CONNECTION|PRICE/.test(data.error||'')?(exhausted.current?EXPERIENCE_USED[lang]:SERVICE_REQUIRED[lang]):ct('supplierNeedsCheck'));return}
    if(!confirm){if(!data.task?.id)throw Error('QUOTE_MISSING');setQuote({...data.task,question,currency:data.billingCurrency||data.currency||'CNY'});setNotice(ct('confirm'));return}
    if(data.task?.state!=='succeeded'){setQuote(null);setNotice(ct('supplierNeedsCheck'));return}
    const output=data.task.output;if(task==='image'&&!output?.imageUrl||task==='chat'&&!output?.answer)throw Error('RESULT_MISSING');
-   if(task==='chat'){commitText(question,output.answer);previous.current=data.task.id}else{setTurns(rows=>[...rows,{question,image:output.imageUrl}]);setPrompt('')}setQuote(null);
+   if(task==='chat'){commitText(question,output.answer);previous.current=data.task.id}else{setTurns(rows=>[...rows,{question,image:output.imageUrl,imageMeta:{width:output.width,height:output.height,size:imageProfile?.size}}]);setPrompt('')}setQuote(null);
   }catch{setStreaming(null);setNotice(task==='chat'&&!confirm?(freeCancelled.current?requestCopy.cancelled:requestCopy.failed):ct('supplierNeedsCheck'))}finally{lock.current=false;setBusy(false);const next=queued.current.shift();if(next){setPrompt(next);queueReady.current=true}}
  }
  const queueReady=useRef(false);
@@ -216,8 +226,13 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
     {threadList.map(t=><option key={t.id} value={t.id}>{t.title}</option>)}
    </select>
    <button type="button" disabled={busy||loadingThread} onClick={()=>{switchThread('');const url=new URL(location.href);url.searchParams.delete('threadId');history.replaceState({},'',url);continuity.identify(ownerRef.current,'');continuity.updateWorkspace({chatHistory:[],projectId:null,approvedScript:''})}} className="rounded-lg border border-[var(--lx-line)] px-3 py-2 text-sm">{threadText.newChat}</button>
-  </div>}{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>{continuity.updateWorkspace({approvedScript:turn.answer,chatHistory:turns,chatOpened:true});onTask(destination,turn.question)}} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{task==="chat"&&turn.answer&&<SasiToolContinuation question={turn.question}/>}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
-  <SasiComposerSurface dragging={false} className="sticky bottom-3"><SasiComposerTextarea value={prompt} disabled={loadingThread||(task==='image'&&busy)} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
+  </div>}{turns.map((turn,i)=><div key={i} className="mb-8"><SasiUserMessage className="mb-6">{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}{task==="chat"&&turn.answer&&(() => { const destination=inferUnifiedSasiIntent(turn.question,false); return destination!=="chat"&&destination!=="image"?<button type="button" onClick={()=>{continuity.updateWorkspace({approvedScript:turn.answer,chatHistory:turns,chatOpened:true});onTask(destination,turn.question)}} className="mt-3 rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] hover:bg-[var(--lx-soft)]">{lang==="zh"?"继续制作":lang==="ja"?"制作を続ける":lang==="ko"?"제작 계속하기":lang==="fr"?"Continuer la création":lang==="de"?"Weiter erstellen":lang==="es"?"Continuar creando":lang==="pt"?"Continuar a criar":lang==="ar"?"متابعة الإنشاء":"Continue creating"} →</button>:null; })()}{task==="chat"&&turn.answer&&<SasiToolContinuation question={turn.question}/>}{turn.image&&<div data-sasi-result-kind="image"><img src={turn.image} alt={turn.question} className="max-h-[68vh] max-w-full rounded-2xl"/><div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-[var(--lx-muted)]"><span>{turn.imageMeta?.size||imageProfile?.size||'—'}</span>{turn.imageMeta?.width&&turn.imageMeta?.height&&<span>· {turn.imageMeta.width} × {turn.imageMeta.height}px</span>}</div><a href={turn.image} target="_blank" rel="noreferrer">{sasiCommonText(lang,'downloadResult')}</a></div>}</div>)}{streaming&&<div className="mb-8" data-sasi-streaming="true"><SasiUserMessage className="mb-6">{streaming.question}</SasiUserMessage><SasiAssistantText>{streaming.answer||"…"}</SasiAssistantText></div>}</div>
+  <SasiComposerSurface dragging={false} className="sticky bottom-3">
+   {task==='image'&&<div className="mb-3 flex flex-wrap items-center gap-2 px-2 text-xs">
+    <span className="font-medium text-[var(--lx-ink)]">{ct('resolution')}：{imageProfile?.size||'连接后显示'}</span>
+    <label className="flex items-center gap-1"><span className="text-[var(--lx-muted)]">{ct('ratio')}</span><select disabled={busy} value={imageRatio} onChange={e=>setImageRatio(e.target.value)} className="rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-2 py-1.5"><option>1:1</option><option>4:3</option><option>3:4</option><option>16:9</option><option>9:16</option><option>3:2</option><option>2:3</option><option>21:9</option></select></label>
+   </div>}
+   <SasiComposerTextarea value={prompt} disabled={loadingThread||(task==='image'&&busy)} maxLength={task==='image'?3000:12000} aria-label={sasiCommonText(lang,'ask')} placeholder={sasiCommonText(lang,'ask')} onChange={e=>{setPrompt(e.target.value);setQuote(null)}} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.nativeEvent.isComposing&&e.keyCode!==229){e.preventDefault();void send()}}}/>
    <div className="flex items-center gap-2"><input type="file" ref={input} className="hidden" multiple onChange={e=>{if(e.target.files)onFiles(Array.from(e.target.files),prompt)}}/><SasiFunctionMenu task={task} selected={functions} onChange={ids=>{setFunctions(ids);setQuote(null)}} onUpload={task==='chat'?()=>input.current?.click():undefined} disabled={busy} extraContent={task==='chat'?<div className="grid gap-3"><SasiLocalIntelligenceAction/><SasiUserResourceAction/></div>:undefined}/>
    {quote&&<button disabled={busy} onClick={()=>void send(true)} className="rounded-full border px-3 py-2 text-xs">{ct('confirm')} {quote.currency==='USD'?'$':'¥'}{(Number(quote.estimated_fen)/100).toFixed(2)}</button>}
    {busy&&waitingFree&&<button type="button" onClick={()=>{freeCancelled.current=true;freeRequest.current?.abort()}} className="rounded-full border px-3 py-2 text-xs">{requestCopy.cancel}</button>}
