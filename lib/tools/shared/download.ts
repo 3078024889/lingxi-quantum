@@ -51,7 +51,7 @@ export async function shareFile(blob: Blob, filename: string): Promise<FileShare
 export async function prepareAuthorizedFileShare(blob: Blob, filename: string): Promise<() => Promise<FileShareOutcome>> {
   const file = deliveryFile(blob, filename), payload = {files: [file]};
   if (!navigator.share || !navigator.canShare || !navigator.canShare(payload)) {
-    return async () => "unsupported";
+    return () => Promise.resolve("unsupported" as const);
   }
   await ensureToolExportAccess(blob, filename, "share");
   return () => {
