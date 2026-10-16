@@ -1,4 +1,4 @@
-import {test,expect} from "@playwright/test";
+import {test,expect} from "./export-test";
 import {GLOBAL_TOOL_CATALOG} from "../../lib/seo/global-seo";
 
 // Public-route coverage only. Does not imply that a tool's conversion,
