@@ -49,11 +49,17 @@ test("image-only PDF is routed to OCR instead of pretending table extraction suc
  await expect(page.getByText("This scanned PDF was continued from PDF to Excel.",{exact:false})).toBeVisible({timeout:10000});
 });
 
-test("normal paragraph PDF is not falsely exported as a spreadsheet",async({page})=>{
+test("text-heavy PDF preserves readable text in an Excel worksheet instead of losing the document",async({page})=>{
  await page.goto("/tools/pdf-to-xlsx?lang=en");
  await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type="file"]').first().setInputFiles({name:"article.pdf",mimeType:"application/pdf",buffer:await paragraphPdf()});
  await page.getByRole("button",{name:"Process now"}).click();
- await expect(page.getByText("article.xlsx")).toHaveCount(0);
- await expect(page.getByText("This PDF has no extractable text table. It may be a scanned or image-based PDF.")).toBeVisible({timeout:30000});
+ await expect(page.getByText("article.xlsx")).toBeVisible({timeout:30000});
+ const downloadPromise=page.waitForEvent("download");
+ await page.getByRole("button",{name:/Save/}).click();
+ const download=await downloadPromise,path=await download.path();expect(path).not.toBeNull();
+ const workbook=new ExcelJS.Workbook();await workbook.xlsx.readFile(path!);
+ const sheet=workbook.getWorksheet("Extracted Text");expect(sheet).toBeTruthy();
+ const values:string[]=[];sheet!.eachRow(row=>row.eachCell(cell=>values.push(String(cell.value??""))));
+ expect(values).toEqual(expect.arrayContaining(["This is a normal paragraph, not a table.","It has several lines of prose with no repeated columns.","The converter should not invent spreadsheet structure."]));
 });
