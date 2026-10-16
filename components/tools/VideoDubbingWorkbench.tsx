@@ -7,7 +7,8 @@ import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/transcribe-local";
 import{clipMedia,extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
-import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";\nimport{toolUiText}from "@/lib/tool-ui-i18n";
+import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
+import{toolUiText}from "@/lib/tool-ui-i18n";
 
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
 
