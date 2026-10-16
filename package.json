@@ -65,7 +65,10 @@
     "smoke:document-gateway": "node scripts/document-gateway/smoke.mjs",
     "audit:v32r2-resume-promotion": "node scripts/audit/v32r2-resume-promotion.mjs",
     "smoke:document-gateway:office": "node scripts/document-gateway/smoke-office.mjs",
-    "audit:v33-production-closure": "node scripts/audit/v33-production-closure.mjs"
+    "audit:v33-production-closure": "node scripts/audit/v33-production-closure.mjs",
+    "seo:growth:audit": "node scripts/seo/growth/audit-seo-growth.mjs",
+    "seo:growth:generate": "node scripts/seo/growth/generate-llms-full.mjs",
+    "seo:growth:indexnow": "node scripts/seo/growth/indexnow-submit.mjs"
   },
   "dependencies": {
     "@contentauth/c2pa-web": "0.15.3",

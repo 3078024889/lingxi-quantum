@@ -1,0 +1,1231 @@
+# LINGXIFIELD LLM / AI SEARCH INDEX
+
+Generated: 2026-10-16T02:52:31.672Z
+Tools: 121
+Locales: 9
+
+This machine-readable index maps public tool pages to languages, processing modes and common task-intent questions.
+It does not claim access to private Google/Bing/Search Console query-volume data.
+
+## Primary pages
+- https://lingxifield.com/tools
+- https://lingxifield.com/sasi
+- https://lingxifield.com/products
+
+## Tool index
+- document-translate | PDF / 文档翻译 | PDF / Document Translation | online
+  - zh: https://lingxifield.com/tools/document-translate
+  - en: https://lingxifield.com/en/tools/document-translate
+  - ja: https://lingxifield.com/ja/tools/document-translate
+  - ko: https://lingxifield.com/ko/tools/document-translate
+  - fr: https://lingxifield.com/fr/tools/document-translate
+  - de: https://lingxifield.com/de/tools/document-translate
+  - es: https://lingxifield.com/es/tools/document-translate
+  - pt: https://lingxifield.com/pt/tools/document-translate
+  - ar: https://lingxifield.com/ar/tools/document-translate
+- url-to-video | 网址生成推广视频 | URL to Promotional Video | online
+  - zh: https://lingxifield.com/tools/url-to-video
+  - en: https://lingxifield.com/en/tools/url-to-video
+  - ja: https://lingxifield.com/ja/tools/url-to-video
+  - ko: https://lingxifield.com/ko/tools/url-to-video
+  - fr: https://lingxifield.com/fr/tools/url-to-video
+  - de: https://lingxifield.com/de/tools/url-to-video
+  - es: https://lingxifield.com/es/tools/url-to-video
+  - pt: https://lingxifield.com/pt/tools/url-to-video
+  - ar: https://lingxifield.com/ar/tools/url-to-video
+- audio-transcription | 音频转文字 | Audio Transcription | online
+  - zh: https://lingxifield.com/tools/audio-transcription
+  - en: https://lingxifield.com/en/tools/audio-transcription
+  - ja: https://lingxifield.com/ja/tools/audio-transcription
+  - ko: https://lingxifield.com/ko/tools/audio-transcription
+  - fr: https://lingxifield.com/fr/tools/audio-transcription
+  - de: https://lingxifield.com/de/tools/audio-transcription
+  - es: https://lingxifield.com/es/tools/audio-transcription
+  - pt: https://lingxifield.com/pt/tools/audio-transcription
+  - ar: https://lingxifield.com/ar/tools/audio-transcription
+- avif-to-jpg | AVIF 转 JPG | AVIF to JPG | local
+  - zh: https://lingxifield.com/tools/avif-to-jpg
+  - en: https://lingxifield.com/en/tools/avif-to-jpg
+  - ja: https://lingxifield.com/ja/tools/avif-to-jpg
+  - ko: https://lingxifield.com/ko/tools/avif-to-jpg
+  - fr: https://lingxifield.com/fr/tools/avif-to-jpg
+  - de: https://lingxifield.com/de/tools/avif-to-jpg
+  - es: https://lingxifield.com/es/tools/avif-to-jpg
+  - pt: https://lingxifield.com/pt/tools/avif-to-jpg
+  - ar: https://lingxifield.com/ar/tools/avif-to-jpg
+- base64-encode-decode | Base64 编码解码 | Base64 Encode & Decode | local
+  - zh: https://lingxifield.com/tools/base64-encode-decode
+  - en: https://lingxifield.com/en/tools/base64-encode-decode
+  - ja: https://lingxifield.com/ja/tools/base64-encode-decode
+  - ko: https://lingxifield.com/ko/tools/base64-encode-decode
+  - fr: https://lingxifield.com/fr/tools/base64-encode-decode
+  - de: https://lingxifield.com/de/tools/base64-encode-decode
+  - es: https://lingxifield.com/es/tools/base64-encode-decode
+  - pt: https://lingxifield.com/pt/tools/base64-encode-decode
+  - ar: https://lingxifield.com/ar/tools/base64-encode-decode
+- batch-image | 批量图片处理 | Batch Image Tools | local
+  - zh: https://lingxifield.com/tools/batch-image
+  - en: https://lingxifield.com/en/tools/batch-image
+  - ja: https://lingxifield.com/ja/tools/batch-image
+  - ko: https://lingxifield.com/ko/tools/batch-image
+  - fr: https://lingxifield.com/fr/tools/batch-image
+  - de: https://lingxifield.com/de/tools/batch-image
+  - es: https://lingxifield.com/es/tools/batch-image
+  - pt: https://lingxifield.com/pt/tools/batch-image
+  - ar: https://lingxifield.com/ar/tools/batch-image
+- batch-image-watermark-remover | 批量图片去水印 | Batch Watermark Cleanup | local
+  - zh: https://lingxifield.com/tools/batch-image-watermark-remover
+  - en: https://lingxifield.com/en/tools/batch-image-watermark-remover
+  - ja: https://lingxifield.com/ja/tools/batch-image-watermark-remover
+  - ko: https://lingxifield.com/ko/tools/batch-image-watermark-remover
+  - fr: https://lingxifield.com/fr/tools/batch-image-watermark-remover
+  - de: https://lingxifield.com/de/tools/batch-image-watermark-remover
+  - es: https://lingxifield.com/es/tools/batch-image-watermark-remover
+  - pt: https://lingxifield.com/pt/tools/batch-image-watermark-remover
+  - ar: https://lingxifield.com/ar/tools/batch-image-watermark-remover
+- burn-after-read | 阅后即焚 | Burn After Reading | online
+  - zh: https://lingxifield.com/tools/burn-after-read
+  - en: https://lingxifield.com/en/tools/burn-after-read
+  - ja: https://lingxifield.com/ja/tools/burn-after-read
+  - ko: https://lingxifield.com/ko/tools/burn-after-read
+  - fr: https://lingxifield.com/fr/tools/burn-after-read
+  - de: https://lingxifield.com/de/tools/burn-after-read
+  - es: https://lingxifield.com/es/tools/burn-after-read
+  - pt: https://lingxifield.com/pt/tools/burn-after-read
+  - ar: https://lingxifield.com/ar/tools/burn-after-read
+- compress-image | 图片压缩 | Compress Image | local
+  - zh: https://lingxifield.com/tools/compress-image
+  - en: https://lingxifield.com/en/tools/compress-image
+  - ja: https://lingxifield.com/ja/tools/compress-image
+  - ko: https://lingxifield.com/ko/tools/compress-image
+  - fr: https://lingxifield.com/fr/tools/compress-image
+  - de: https://lingxifield.com/de/tools/compress-image
+  - es: https://lingxifield.com/es/tools/compress-image
+  - pt: https://lingxifield.com/pt/tools/compress-image
+  - ar: https://lingxifield.com/ar/tools/compress-image
+- compress-image-to-100kb | 图片精确压缩到 100KB | Compress Image to 100KB | local
+  - zh: https://lingxifield.com/tools/compress-image-to-100kb
+  - en: https://lingxifield.com/en/tools/compress-image-to-100kb
+  - ja: https://lingxifield.com/ja/tools/compress-image-to-100kb
+  - ko: https://lingxifield.com/ko/tools/compress-image-to-100kb
+  - fr: https://lingxifield.com/fr/tools/compress-image-to-100kb
+  - de: https://lingxifield.com/de/tools/compress-image-to-100kb
+  - es: https://lingxifield.com/es/tools/compress-image-to-100kb
+  - pt: https://lingxifield.com/pt/tools/compress-image-to-100kb
+  - ar: https://lingxifield.com/ar/tools/compress-image-to-100kb
+- compress-image-to-200kb | 图片精确压缩到 200KB | Compress Image to 200KB | local
+  - zh: https://lingxifield.com/tools/compress-image-to-200kb
+  - en: https://lingxifield.com/en/tools/compress-image-to-200kb
+  - ja: https://lingxifield.com/ja/tools/compress-image-to-200kb
+  - ko: https://lingxifield.com/ko/tools/compress-image-to-200kb
+  - fr: https://lingxifield.com/fr/tools/compress-image-to-200kb
+  - de: https://lingxifield.com/de/tools/compress-image-to-200kb
+  - es: https://lingxifield.com/es/tools/compress-image-to-200kb
+  - pt: https://lingxifield.com/pt/tools/compress-image-to-200kb
+  - ar: https://lingxifield.com/ar/tools/compress-image-to-200kb
+- compress-image-to-20kb | 图片精确压缩到 20KB | Compress Image to 20KB | local
+  - zh: https://lingxifield.com/tools/compress-image-to-20kb
+  - en: https://lingxifield.com/en/tools/compress-image-to-20kb
+  - ja: https://lingxifield.com/ja/tools/compress-image-to-20kb
+  - ko: https://lingxifield.com/ko/tools/compress-image-to-20kb
+  - fr: https://lingxifield.com/fr/tools/compress-image-to-20kb
+  - de: https://lingxifield.com/de/tools/compress-image-to-20kb
+  - es: https://lingxifield.com/es/tools/compress-image-to-20kb
+  - pt: https://lingxifield.com/pt/tools/compress-image-to-20kb
+  - ar: https://lingxifield.com/ar/tools/compress-image-to-20kb
+- compress-image-to-500kb | 图片精确压缩到 500KB | Compress Image to 500KB | local
+  - zh: https://lingxifield.com/tools/compress-image-to-500kb
+  - en: https://lingxifield.com/en/tools/compress-image-to-500kb
+  - ja: https://lingxifield.com/ja/tools/compress-image-to-500kb
+  - ko: https://lingxifield.com/ko/tools/compress-image-to-500kb
+  - fr: https://lingxifield.com/fr/tools/compress-image-to-500kb
+  - de: https://lingxifield.com/de/tools/compress-image-to-500kb
+  - es: https://lingxifield.com/es/tools/compress-image-to-500kb
+  - pt: https://lingxifield.com/pt/tools/compress-image-to-500kb
+  - ar: https://lingxifield.com/ar/tools/compress-image-to-500kb
+- compress-image-to-50kb | 图片精确压缩到 50KB | Compress Image to 50KB | local
+  - zh: https://lingxifield.com/tools/compress-image-to-50kb
+  - en: https://lingxifield.com/en/tools/compress-image-to-50kb
+  - ja: https://lingxifield.com/ja/tools/compress-image-to-50kb
+  - ko: https://lingxifield.com/ko/tools/compress-image-to-50kb
+  - fr: https://lingxifield.com/fr/tools/compress-image-to-50kb
+  - de: https://lingxifield.com/de/tools/compress-image-to-50kb
+  - es: https://lingxifield.com/es/tools/compress-image-to-50kb
+  - pt: https://lingxifield.com/pt/tools/compress-image-to-50kb
+  - ar: https://lingxifield.com/ar/tools/compress-image-to-50kb
+- compress-pdf | PDF 重建压缩 | Rebuild & Compress PDF | local
+  - zh: https://lingxifield.com/tools/compress-pdf
+  - en: https://lingxifield.com/en/tools/compress-pdf
+  - ja: https://lingxifield.com/ja/tools/compress-pdf
+  - ko: https://lingxifield.com/ko/tools/compress-pdf
+  - fr: https://lingxifield.com/fr/tools/compress-pdf
+  - de: https://lingxifield.com/de/tools/compress-pdf
+  - es: https://lingxifield.com/es/tools/compress-pdf
+  - pt: https://lingxifield.com/pt/tools/compress-pdf
+  - ar: https://lingxifield.com/ar/tools/compress-pdf
+- csv-to-xlsx | CSV / TSV 转 Excel | CSV / TSV to Excel | local
+  - zh: https://lingxifield.com/tools/csv-to-xlsx
+  - en: https://lingxifield.com/en/tools/csv-to-xlsx
+  - ja: https://lingxifield.com/ja/tools/csv-to-xlsx
+  - ko: https://lingxifield.com/ko/tools/csv-to-xlsx
+  - fr: https://lingxifield.com/fr/tools/csv-to-xlsx
+  - de: https://lingxifield.com/de/tools/csv-to-xlsx
+  - es: https://lingxifield.com/es/tools/csv-to-xlsx
+  - pt: https://lingxifield.com/pt/tools/csv-to-xlsx
+  - ar: https://lingxifield.com/ar/tools/csv-to-xlsx
+- document-copy-layout | 证件复印排版 | Document Copy Layout | local
+  - zh: https://lingxifield.com/tools/document-copy-layout
+  - en: https://lingxifield.com/en/tools/document-copy-layout
+  - ja: https://lingxifield.com/ja/tools/document-copy-layout
+  - ko: https://lingxifield.com/ko/tools/document-copy-layout
+  - fr: https://lingxifield.com/fr/tools/document-copy-layout
+  - de: https://lingxifield.com/de/tools/document-copy-layout
+  - es: https://lingxifield.com/es/tools/document-copy-layout
+  - pt: https://lingxifield.com/pt/tools/document-copy-layout
+  - ar: https://lingxifield.com/ar/tools/document-copy-layout
+- docx-to-txt | DOCX 转 TXT | DOCX to TXT | local
+  - zh: https://lingxifield.com/tools/docx-to-txt
+  - en: https://lingxifield.com/en/tools/docx-to-txt
+  - ja: https://lingxifield.com/ja/tools/docx-to-txt
+  - ko: https://lingxifield.com/ko/tools/docx-to-txt
+  - fr: https://lingxifield.com/fr/tools/docx-to-txt
+  - de: https://lingxifield.com/de/tools/docx-to-txt
+  - es: https://lingxifield.com/es/tools/docx-to-txt
+  - pt: https://lingxifield.com/pt/tools/docx-to-txt
+  - ar: https://lingxifield.com/ar/tools/docx-to-txt
+- e-sign-pdf | PDF电子签名 / 电子签章 | E-sign & Stamp PDF | local
+  - zh: https://lingxifield.com/tools/e-sign-pdf
+  - en: https://lingxifield.com/en/tools/e-sign-pdf
+  - ja: https://lingxifield.com/ja/tools/e-sign-pdf
+  - ko: https://lingxifield.com/ko/tools/e-sign-pdf
+  - fr: https://lingxifield.com/fr/tools/e-sign-pdf
+  - de: https://lingxifield.com/de/tools/e-sign-pdf
+  - es: https://lingxifield.com/es/tools/e-sign-pdf
+  - pt: https://lingxifield.com/pt/tools/e-sign-pdf
+  - ar: https://lingxifield.com/ar/tools/e-sign-pdf
+- file-compare | 两个文件是否完全一致 | Compare Two Files | local
+  - zh: https://lingxifield.com/tools/file-compare
+  - en: https://lingxifield.com/en/tools/file-compare
+  - ja: https://lingxifield.com/ja/tools/file-compare
+  - ko: https://lingxifield.com/ko/tools/file-compare
+  - fr: https://lingxifield.com/fr/tools/file-compare
+  - de: https://lingxifield.com/de/tools/file-compare
+  - es: https://lingxifield.com/es/tools/file-compare
+  - pt: https://lingxifield.com/pt/tools/file-compare
+  - ar: https://lingxifield.com/ar/tools/file-compare
+- file-type-detector | 文件真实格式检测 | Real File Type Detector | local
+  - zh: https://lingxifield.com/tools/file-type-detector
+  - en: https://lingxifield.com/en/tools/file-type-detector
+  - ja: https://lingxifield.com/ja/tools/file-type-detector
+  - ko: https://lingxifield.com/ko/tools/file-type-detector
+  - fr: https://lingxifield.com/fr/tools/file-type-detector
+  - de: https://lingxifield.com/de/tools/file-type-detector
+  - es: https://lingxifield.com/es/tools/file-type-detector
+  - pt: https://lingxifield.com/pt/tools/file-type-detector
+  - ar: https://lingxifield.com/ar/tools/file-type-detector
+- food-calorie | 食物热量与营养 | Food Nutrition Calculator | online
+  - zh: https://lingxifield.com/tools/food-calorie
+  - en: https://lingxifield.com/en/tools/food-calorie
+  - ja: https://lingxifield.com/ja/tools/food-calorie
+  - ko: https://lingxifield.com/ko/tools/food-calorie
+  - fr: https://lingxifield.com/fr/tools/food-calorie
+  - de: https://lingxifield.com/de/tools/food-calorie
+  - es: https://lingxifield.com/es/tools/food-calorie
+  - pt: https://lingxifield.com/pt/tools/food-calorie
+  - ar: https://lingxifield.com/ar/tools/food-calorie
+- heic-local | HEIC 本地转换 | Local HEIC Converter | local
+  - zh: https://lingxifield.com/tools/heic-local
+  - en: https://lingxifield.com/en/tools/heic-local
+  - ja: https://lingxifield.com/ja/tools/heic-local
+  - ko: https://lingxifield.com/ko/tools/heic-local
+  - fr: https://lingxifield.com/fr/tools/heic-local
+  - de: https://lingxifield.com/de/tools/heic-local
+  - es: https://lingxifield.com/es/tools/heic-local
+  - pt: https://lingxifield.com/pt/tools/heic-local
+  - ar: https://lingxifield.com/ar/tools/heic-local
+- heic-to-jpg | HEIC 转 JPG | HEIC to JPG | local
+  - zh: https://lingxifield.com/tools/heic-to-jpg
+  - en: https://lingxifield.com/en/tools/heic-to-jpg
+  - ja: https://lingxifield.com/ja/tools/heic-to-jpg
+  - ko: https://lingxifield.com/ko/tools/heic-to-jpg
+  - fr: https://lingxifield.com/fr/tools/heic-to-jpg
+  - de: https://lingxifield.com/de/tools/heic-to-jpg
+  - es: https://lingxifield.com/es/tools/heic-to-jpg
+  - pt: https://lingxifield.com/pt/tools/heic-to-jpg
+  - ar: https://lingxifield.com/ar/tools/heic-to-jpg
+- id-photo-ai | AI 证件照 | AI ID Photo | online
+  - zh: https://lingxifield.com/tools/id-photo-ai
+  - en: https://lingxifield.com/en/tools/id-photo-ai
+  - ja: https://lingxifield.com/ja/tools/id-photo-ai
+  - ko: https://lingxifield.com/ko/tools/id-photo-ai
+  - fr: https://lingxifield.com/fr/tools/id-photo-ai
+  - de: https://lingxifield.com/de/tools/id-photo-ai
+  - es: https://lingxifield.com/es/tools/id-photo-ai
+  - pt: https://lingxifield.com/pt/tools/id-photo-ai
+  - ar: https://lingxifield.com/ar/tools/id-photo-ai
+- image-to-pdf | 图片转 PDF | Images to PDF | local
+  - zh: https://lingxifield.com/tools/image-to-pdf
+  - en: https://lingxifield.com/en/tools/image-to-pdf
+  - ja: https://lingxifield.com/ja/tools/image-to-pdf
+  - ko: https://lingxifield.com/ko/tools/image-to-pdf
+  - fr: https://lingxifield.com/fr/tools/image-to-pdf
+  - de: https://lingxifield.com/de/tools/image-to-pdf
+  - es: https://lingxifield.com/es/tools/image-to-pdf
+  - pt: https://lingxifield.com/pt/tools/image-to-pdf
+  - ar: https://lingxifield.com/ar/tools/image-to-pdf
+- image-to-pdf-pro | 图片转 PDF | Images to PDF Pro | local
+  - zh: https://lingxifield.com/tools/image-to-pdf-pro
+  - en: https://lingxifield.com/en/tools/image-to-pdf-pro
+  - ja: https://lingxifield.com/ja/tools/image-to-pdf-pro
+  - ko: https://lingxifield.com/ko/tools/image-to-pdf-pro
+  - fr: https://lingxifield.com/fr/tools/image-to-pdf-pro
+  - de: https://lingxifield.com/de/tools/image-to-pdf-pro
+  - es: https://lingxifield.com/es/tools/image-to-pdf-pro
+  - pt: https://lingxifield.com/pt/tools/image-to-pdf-pro
+  - ar: https://lingxifield.com/ar/tools/image-to-pdf-pro
+- image-translator | 图片翻译 | Image Translator | online
+  - zh: https://lingxifield.com/tools/image-translator
+  - en: https://lingxifield.com/en/tools/image-translator
+  - ja: https://lingxifield.com/ja/tools/image-translator
+  - ko: https://lingxifield.com/ko/tools/image-translator
+  - fr: https://lingxifield.com/fr/tools/image-translator
+  - de: https://lingxifield.com/de/tools/image-translator
+  - es: https://lingxifield.com/es/tools/image-translator
+  - pt: https://lingxifield.com/pt/tools/image-translator
+  - ar: https://lingxifield.com/ar/tools/image-translator
+- image-watermark-remover | 图片去水印 | Image Watermark Cleanup | local
+  - zh: https://lingxifield.com/tools/image-watermark-remover
+  - en: https://lingxifield.com/en/tools/image-watermark-remover
+  - ja: https://lingxifield.com/ja/tools/image-watermark-remover
+  - ko: https://lingxifield.com/ko/tools/image-watermark-remover
+  - fr: https://lingxifield.com/fr/tools/image-watermark-remover
+  - de: https://lingxifield.com/de/tools/image-watermark-remover
+  - es: https://lingxifield.com/es/tools/image-watermark-remover
+  - pt: https://lingxifield.com/pt/tools/image-watermark-remover
+  - ar: https://lingxifield.com/ar/tools/image-watermark-remover
+- jpg-to-png | JPG 转 PNG | JPG to PNG | local
+  - zh: https://lingxifield.com/tools/jpg-to-png
+  - en: https://lingxifield.com/en/tools/jpg-to-png
+  - ja: https://lingxifield.com/ja/tools/jpg-to-png
+  - ko: https://lingxifield.com/ko/tools/jpg-to-png
+  - fr: https://lingxifield.com/fr/tools/jpg-to-png
+  - de: https://lingxifield.com/de/tools/jpg-to-png
+  - es: https://lingxifield.com/es/tools/jpg-to-png
+  - pt: https://lingxifield.com/pt/tools/jpg-to-png
+  - ar: https://lingxifield.com/ar/tools/jpg-to-png
+- json-formatter | JSON 格式化 / 修复 | JSON Format / Repair | local
+  - zh: https://lingxifield.com/tools/json-formatter
+  - en: https://lingxifield.com/en/tools/json-formatter
+  - ja: https://lingxifield.com/ja/tools/json-formatter
+  - ko: https://lingxifield.com/ko/tools/json-formatter
+  - fr: https://lingxifield.com/fr/tools/json-formatter
+  - de: https://lingxifield.com/de/tools/json-formatter
+  - es: https://lingxifield.com/es/tools/json-formatter
+  - pt: https://lingxifield.com/pt/tools/json-formatter
+  - ar: https://lingxifield.com/ar/tools/json-formatter
+- long-image | 长图拼接 | Long Image Stitcher | local
+  - zh: https://lingxifield.com/tools/long-image
+  - en: https://lingxifield.com/en/tools/long-image
+  - ja: https://lingxifield.com/ja/tools/long-image
+  - ko: https://lingxifield.com/ko/tools/long-image
+  - fr: https://lingxifield.com/fr/tools/long-image
+  - de: https://lingxifield.com/de/tools/long-image
+  - es: https://lingxifield.com/es/tools/long-image
+  - pt: https://lingxifield.com/pt/tools/long-image
+  - ar: https://lingxifield.com/ar/tools/long-image
+- md5-sha256 | MD5 / SHA256 校验 | MD5 / SHA256 Hash | local
+  - zh: https://lingxifield.com/tools/md5-sha256
+  - en: https://lingxifield.com/en/tools/md5-sha256
+  - ja: https://lingxifield.com/ja/tools/md5-sha256
+  - ko: https://lingxifield.com/ko/tools/md5-sha256
+  - fr: https://lingxifield.com/fr/tools/md5-sha256
+  - de: https://lingxifield.com/de/tools/md5-sha256
+  - es: https://lingxifield.com/es/tools/md5-sha256
+  - pt: https://lingxifield.com/pt/tools/md5-sha256
+  - ar: https://lingxifield.com/ar/tools/md5-sha256
+- merge-pdf | PDF 合并 | Merge PDF | local
+  - zh: https://lingxifield.com/tools/merge-pdf
+  - en: https://lingxifield.com/en/tools/merge-pdf
+  - ja: https://lingxifield.com/ja/tools/merge-pdf
+  - ko: https://lingxifield.com/ko/tools/merge-pdf
+  - fr: https://lingxifield.com/fr/tools/merge-pdf
+  - de: https://lingxifield.com/de/tools/merge-pdf
+  - es: https://lingxifield.com/es/tools/merge-pdf
+  - pt: https://lingxifield.com/pt/tools/merge-pdf
+  - ar: https://lingxifield.com/ar/tools/merge-pdf
+- ocr | 图片 OCR | Image OCR | local
+  - zh: https://lingxifield.com/tools/ocr
+  - en: https://lingxifield.com/en/tools/ocr
+  - ja: https://lingxifield.com/ja/tools/ocr
+  - ko: https://lingxifield.com/ko/tools/ocr
+  - fr: https://lingxifield.com/fr/tools/ocr
+  - de: https://lingxifield.com/de/tools/ocr
+  - es: https://lingxifield.com/es/tools/ocr
+  - pt: https://lingxifield.com/pt/tools/ocr
+  - ar: https://lingxifield.com/ar/tools/ocr
+- pdf-compress | PDF 压缩 | Compress PDF | local
+  - zh: https://lingxifield.com/tools/pdf-compress
+  - en: https://lingxifield.com/en/tools/pdf-compress
+  - ja: https://lingxifield.com/ja/tools/pdf-compress
+  - ko: https://lingxifield.com/ko/tools/pdf-compress
+  - fr: https://lingxifield.com/fr/tools/pdf-compress
+  - de: https://lingxifield.com/de/tools/pdf-compress
+  - es: https://lingxifield.com/es/tools/pdf-compress
+  - pt: https://lingxifield.com/pt/tools/pdf-compress
+  - ar: https://lingxifield.com/ar/tools/pdf-compress
+- pdf-editor | PDF 编辑 | PDF Editor | local
+  - zh: https://lingxifield.com/tools/pdf-editor
+  - en: https://lingxifield.com/en/tools/pdf-editor
+  - ja: https://lingxifield.com/ja/tools/pdf-editor
+  - ko: https://lingxifield.com/ko/tools/pdf-editor
+  - fr: https://lingxifield.com/fr/tools/pdf-editor
+  - de: https://lingxifield.com/de/tools/pdf-editor
+  - es: https://lingxifield.com/es/tools/pdf-editor
+  - pt: https://lingxifield.com/pt/tools/pdf-editor
+  - ar: https://lingxifield.com/ar/tools/pdf-editor
+- pdf-merge-split | PDF 合并 / 拆分 | Merge / Split PDF | local
+  - zh: https://lingxifield.com/tools/pdf-merge-split
+  - en: https://lingxifield.com/en/tools/pdf-merge-split
+  - ja: https://lingxifield.com/ja/tools/pdf-merge-split
+  - ko: https://lingxifield.com/ko/tools/pdf-merge-split
+  - fr: https://lingxifield.com/fr/tools/pdf-merge-split
+  - de: https://lingxifield.com/de/tools/pdf-merge-split
+  - es: https://lingxifield.com/es/tools/pdf-merge-split
+  - pt: https://lingxifield.com/pt/tools/pdf-merge-split
+  - ar: https://lingxifield.com/ar/tools/pdf-merge-split
+- pdf-ocr | PDF OCR | PDF OCR | online
+  - zh: https://lingxifield.com/tools/pdf-ocr
+  - en: https://lingxifield.com/en/tools/pdf-ocr
+  - ja: https://lingxifield.com/ja/tools/pdf-ocr
+  - ko: https://lingxifield.com/ko/tools/pdf-ocr
+  - fr: https://lingxifield.com/fr/tools/pdf-ocr
+  - de: https://lingxifield.com/de/tools/pdf-ocr
+  - es: https://lingxifield.com/es/tools/pdf-ocr
+  - pt: https://lingxifield.com/pt/tools/pdf-ocr
+  - ar: https://lingxifield.com/ar/tools/pdf-ocr
+- pdf-pages | PDF 页面整理 | PDF Page Organizer | local
+  - zh: https://lingxifield.com/tools/pdf-pages
+  - en: https://lingxifield.com/en/tools/pdf-pages
+  - ja: https://lingxifield.com/ja/tools/pdf-pages
+  - ko: https://lingxifield.com/ko/tools/pdf-pages
+  - fr: https://lingxifield.com/fr/tools/pdf-pages
+  - de: https://lingxifield.com/de/tools/pdf-pages
+  - es: https://lingxifield.com/es/tools/pdf-pages
+  - pt: https://lingxifield.com/pt/tools/pdf-pages
+  - ar: https://lingxifield.com/ar/tools/pdf-pages
+- pdf-redact | PDF 永久脱敏 | PDF Redaction | local
+  - zh: https://lingxifield.com/tools/pdf-redact
+  - en: https://lingxifield.com/en/tools/pdf-redact
+  - ja: https://lingxifield.com/ja/tools/pdf-redact
+  - ko: https://lingxifield.com/ko/tools/pdf-redact
+  - fr: https://lingxifield.com/fr/tools/pdf-redact
+  - de: https://lingxifield.com/de/tools/pdf-redact
+  - es: https://lingxifield.com/es/tools/pdf-redact
+  - pt: https://lingxifield.com/pt/tools/pdf-redact
+  - ar: https://lingxifield.com/ar/tools/pdf-redact
+- handwriting-ocr | 手写文字识别 | Handwriting OCR | online
+  - zh: https://lingxifield.com/tools/handwriting-ocr
+  - en: https://lingxifield.com/en/tools/handwriting-ocr
+  - ja: https://lingxifield.com/ja/tools/handwriting-ocr
+  - ko: https://lingxifield.com/ko/tools/handwriting-ocr
+  - fr: https://lingxifield.com/fr/tools/handwriting-ocr
+  - de: https://lingxifield.com/de/tools/handwriting-ocr
+  - es: https://lingxifield.com/es/tools/handwriting-ocr
+  - pt: https://lingxifield.com/pt/tools/handwriting-ocr
+  - ar: https://lingxifield.com/ar/tools/handwriting-ocr
+- pdf-to-xlsx | PDF 转 Excel | PDF to Excel | local
+  - zh: https://lingxifield.com/tools/pdf-to-xlsx
+  - en: https://lingxifield.com/en/tools/pdf-to-xlsx
+  - ja: https://lingxifield.com/ja/tools/pdf-to-xlsx
+  - ko: https://lingxifield.com/ko/tools/pdf-to-xlsx
+  - fr: https://lingxifield.com/fr/tools/pdf-to-xlsx
+  - de: https://lingxifield.com/de/tools/pdf-to-xlsx
+  - es: https://lingxifield.com/es/tools/pdf-to-xlsx
+  - pt: https://lingxifield.com/pt/tools/pdf-to-xlsx
+  - ar: https://lingxifield.com/ar/tools/pdf-to-xlsx
+- pdf-to-word | PDF 转 Word | PDF to Word | local
+  - zh: https://lingxifield.com/tools/pdf-to-word
+  - en: https://lingxifield.com/en/tools/pdf-to-word
+  - ja: https://lingxifield.com/ja/tools/pdf-to-word
+  - ko: https://lingxifield.com/ko/tools/pdf-to-word
+  - fr: https://lingxifield.com/fr/tools/pdf-to-word
+  - de: https://lingxifield.com/de/tools/pdf-to-word
+  - es: https://lingxifield.com/es/tools/pdf-to-word
+  - pt: https://lingxifield.com/pt/tools/pdf-to-word
+  - ar: https://lingxifield.com/ar/tools/pdf-to-word
+- pdf-watermark | PDF 加水印 | Watermark PDF | local
+  - zh: https://lingxifield.com/tools/pdf-watermark
+  - en: https://lingxifield.com/en/tools/pdf-watermark
+  - ja: https://lingxifield.com/ja/tools/pdf-watermark
+  - ko: https://lingxifield.com/ko/tools/pdf-watermark
+  - fr: https://lingxifield.com/fr/tools/pdf-watermark
+  - de: https://lingxifield.com/de/tools/pdf-watermark
+  - es: https://lingxifield.com/es/tools/pdf-watermark
+  - pt: https://lingxifield.com/pt/tools/pdf-watermark
+  - ar: https://lingxifield.com/ar/tools/pdf-watermark
+- pdf-page-numbers | PDF 加页码 | Add PDF Page Numbers | local
+  - zh: https://lingxifield.com/tools/pdf-page-numbers
+  - en: https://lingxifield.com/en/tools/pdf-page-numbers
+  - ja: https://lingxifield.com/ja/tools/pdf-page-numbers
+  - ko: https://lingxifield.com/ko/tools/pdf-page-numbers
+  - fr: https://lingxifield.com/fr/tools/pdf-page-numbers
+  - de: https://lingxifield.com/de/tools/pdf-page-numbers
+  - es: https://lingxifield.com/es/tools/pdf-page-numbers
+  - pt: https://lingxifield.com/pt/tools/pdf-page-numbers
+  - ar: https://lingxifield.com/ar/tools/pdf-page-numbers
+- pdf-crop | PDF 裁边 | Crop PDF | local
+  - zh: https://lingxifield.com/tools/pdf-crop
+  - en: https://lingxifield.com/en/tools/pdf-crop
+  - ja: https://lingxifield.com/ja/tools/pdf-crop
+  - ko: https://lingxifield.com/ko/tools/pdf-crop
+  - fr: https://lingxifield.com/fr/tools/pdf-crop
+  - de: https://lingxifield.com/de/tools/pdf-crop
+  - es: https://lingxifield.com/es/tools/pdf-crop
+  - pt: https://lingxifield.com/pt/tools/pdf-crop
+  - ar: https://lingxifield.com/ar/tools/pdf-crop
+- pdf-flatten | PDF 扁平化 | Flatten PDF | local
+  - zh: https://lingxifield.com/tools/pdf-flatten
+  - en: https://lingxifield.com/en/tools/pdf-flatten
+  - ja: https://lingxifield.com/ja/tools/pdf-flatten
+  - ko: https://lingxifield.com/ko/tools/pdf-flatten
+  - fr: https://lingxifield.com/fr/tools/pdf-flatten
+  - de: https://lingxifield.com/de/tools/pdf-flatten
+  - es: https://lingxifield.com/es/tools/pdf-flatten
+  - pt: https://lingxifield.com/pt/tools/pdf-flatten
+  - ar: https://lingxifield.com/ar/tools/pdf-flatten
+- pdf-compare | PDF 比较 | Compare PDFs | local
+  - zh: https://lingxifield.com/tools/pdf-compare
+  - en: https://lingxifield.com/en/tools/pdf-compare
+  - ja: https://lingxifield.com/ja/tools/pdf-compare
+  - ko: https://lingxifield.com/ko/tools/pdf-compare
+  - fr: https://lingxifield.com/fr/tools/pdf-compare
+  - de: https://lingxifield.com/de/tools/pdf-compare
+  - es: https://lingxifield.com/es/tools/pdf-compare
+  - pt: https://lingxifield.com/pt/tools/pdf-compare
+  - ar: https://lingxifield.com/ar/tools/pdf-compare
+- pdf-to-text | PDF 转 TXT | PDF to Text | local
+  - zh: https://lingxifield.com/tools/pdf-to-text
+  - en: https://lingxifield.com/en/tools/pdf-to-text
+  - ja: https://lingxifield.com/ja/tools/pdf-to-text
+  - ko: https://lingxifield.com/ko/tools/pdf-to-text
+  - fr: https://lingxifield.com/fr/tools/pdf-to-text
+  - de: https://lingxifield.com/de/tools/pdf-to-text
+  - es: https://lingxifield.com/es/tools/pdf-to-text
+  - pt: https://lingxifield.com/pt/tools/pdf-to-text
+  - ar: https://lingxifield.com/ar/tools/pdf-to-text
+- pdf-to-markdown | PDF 转 Markdown | PDF to Markdown | local
+  - zh: https://lingxifield.com/tools/pdf-to-markdown
+  - en: https://lingxifield.com/en/tools/pdf-to-markdown
+  - ja: https://lingxifield.com/ja/tools/pdf-to-markdown
+  - ko: https://lingxifield.com/ko/tools/pdf-to-markdown
+  - fr: https://lingxifield.com/fr/tools/pdf-to-markdown
+  - de: https://lingxifield.com/de/tools/pdf-to-markdown
+  - es: https://lingxifield.com/es/tools/pdf-to-markdown
+  - pt: https://lingxifield.com/pt/tools/pdf-to-markdown
+  - ar: https://lingxifield.com/ar/tools/pdf-to-markdown
+- jfif-to-jpg | JFIF 转 JPG | JFIF to JPG | local
+  - zh: https://lingxifield.com/tools/jfif-to-jpg
+  - en: https://lingxifield.com/en/tools/jfif-to-jpg
+  - ja: https://lingxifield.com/ja/tools/jfif-to-jpg
+  - ko: https://lingxifield.com/ko/tools/jfif-to-jpg
+  - fr: https://lingxifield.com/fr/tools/jfif-to-jpg
+  - de: https://lingxifield.com/de/tools/jfif-to-jpg
+  - es: https://lingxifield.com/es/tools/jfif-to-jpg
+  - pt: https://lingxifield.com/pt/tools/jfif-to-jpg
+  - ar: https://lingxifield.com/ar/tools/jfif-to-jpg
+- bmp-to-png | BMP 转 PNG | BMP to PNG | local
+  - zh: https://lingxifield.com/tools/bmp-to-png
+  - en: https://lingxifield.com/en/tools/bmp-to-png
+  - ja: https://lingxifield.com/ja/tools/bmp-to-png
+  - ko: https://lingxifield.com/ko/tools/bmp-to-png
+  - fr: https://lingxifield.com/fr/tools/bmp-to-png
+  - de: https://lingxifield.com/de/tools/bmp-to-png
+  - es: https://lingxifield.com/es/tools/bmp-to-png
+  - pt: https://lingxifield.com/pt/tools/bmp-to-png
+  - ar: https://lingxifield.com/ar/tools/bmp-to-png
+- ico-to-png | ICO 转 PNG | ICO to PNG | local
+  - zh: https://lingxifield.com/tools/ico-to-png
+  - en: https://lingxifield.com/en/tools/ico-to-png
+  - ja: https://lingxifield.com/ja/tools/ico-to-png
+  - ko: https://lingxifield.com/ko/tools/ico-to-png
+  - fr: https://lingxifield.com/fr/tools/ico-to-png
+  - de: https://lingxifield.com/de/tools/ico-to-png
+  - es: https://lingxifield.com/es/tools/ico-to-png
+  - pt: https://lingxifield.com/pt/tools/ico-to-png
+  - ar: https://lingxifield.com/ar/tools/ico-to-png
+- gif-to-jpg | GIF 转 JPG | GIF to JPG | local
+  - zh: https://lingxifield.com/tools/gif-to-jpg
+  - en: https://lingxifield.com/en/tools/gif-to-jpg
+  - ja: https://lingxifield.com/ja/tools/gif-to-jpg
+  - ko: https://lingxifield.com/ko/tools/gif-to-jpg
+  - fr: https://lingxifield.com/fr/tools/gif-to-jpg
+  - de: https://lingxifield.com/de/tools/gif-to-jpg
+  - es: https://lingxifield.com/es/tools/gif-to-jpg
+  - pt: https://lingxifield.com/pt/tools/gif-to-jpg
+  - ar: https://lingxifield.com/ar/tools/gif-to-jpg
+- epub-to-txt | EPUB 转 TXT | EPUB to TXT | local
+  - zh: https://lingxifield.com/tools/epub-to-txt
+  - en: https://lingxifield.com/en/tools/epub-to-txt
+  - ja: https://lingxifield.com/ja/tools/epub-to-txt
+  - ko: https://lingxifield.com/ko/tools/epub-to-txt
+  - fr: https://lingxifield.com/fr/tools/epub-to-txt
+  - de: https://lingxifield.com/de/tools/epub-to-txt
+  - es: https://lingxifield.com/es/tools/epub-to-txt
+  - pt: https://lingxifield.com/pt/tools/epub-to-txt
+  - ar: https://lingxifield.com/ar/tools/epub-to-txt
+- odt-to-txt | ODT 转 TXT | ODT to TXT | local
+  - zh: https://lingxifield.com/tools/odt-to-txt
+  - en: https://lingxifield.com/en/tools/odt-to-txt
+  - ja: https://lingxifield.com/ja/tools/odt-to-txt
+  - ko: https://lingxifield.com/ko/tools/odt-to-txt
+  - fr: https://lingxifield.com/fr/tools/odt-to-txt
+  - de: https://lingxifield.com/de/tools/odt-to-txt
+  - es: https://lingxifield.com/es/tools/odt-to-txt
+  - pt: https://lingxifield.com/pt/tools/odt-to-txt
+  - ar: https://lingxifield.com/ar/tools/odt-to-txt
+- ics-to-csv | ICS 转 CSV | ICS to CSV | local
+  - zh: https://lingxifield.com/tools/ics-to-csv
+  - en: https://lingxifield.com/en/tools/ics-to-csv
+  - ja: https://lingxifield.com/ja/tools/ics-to-csv
+  - ko: https://lingxifield.com/ko/tools/ics-to-csv
+  - fr: https://lingxifield.com/fr/tools/ics-to-csv
+  - de: https://lingxifield.com/de/tools/ics-to-csv
+  - es: https://lingxifield.com/es/tools/ics-to-csv
+  - pt: https://lingxifield.com/pt/tools/ics-to-csv
+  - ar: https://lingxifield.com/ar/tools/ics-to-csv
+- vcf-to-csv | VCF 转 CSV | VCF to CSV | local
+  - zh: https://lingxifield.com/tools/vcf-to-csv
+  - en: https://lingxifield.com/en/tools/vcf-to-csv
+  - ja: https://lingxifield.com/ja/tools/vcf-to-csv
+  - ko: https://lingxifield.com/ko/tools/vcf-to-csv
+  - fr: https://lingxifield.com/fr/tools/vcf-to-csv
+  - de: https://lingxifield.com/de/tools/vcf-to-csv
+  - es: https://lingxifield.com/es/tools/vcf-to-csv
+  - pt: https://lingxifield.com/pt/tools/vcf-to-csv
+  - ar: https://lingxifield.com/ar/tools/vcf-to-csv
+- uuid-generator | UUID / ULID 生成器 | UUID / ULID Generator | local
+  - zh: https://lingxifield.com/tools/uuid-generator
+  - en: https://lingxifield.com/en/tools/uuid-generator
+  - ja: https://lingxifield.com/ja/tools/uuid-generator
+  - ko: https://lingxifield.com/ko/tools/uuid-generator
+  - fr: https://lingxifield.com/fr/tools/uuid-generator
+  - de: https://lingxifield.com/de/tools/uuid-generator
+  - es: https://lingxifield.com/es/tools/uuid-generator
+  - pt: https://lingxifield.com/pt/tools/uuid-generator
+  - ar: https://lingxifield.com/ar/tools/uuid-generator
+- pdf-rasterize | PDF 栅格化 | Rasterize PDF | local
+  - zh: https://lingxifield.com/tools/pdf-rasterize
+  - en: https://lingxifield.com/en/tools/pdf-rasterize
+  - ja: https://lingxifield.com/ja/tools/pdf-rasterize
+  - ko: https://lingxifield.com/ko/tools/pdf-rasterize
+  - fr: https://lingxifield.com/fr/tools/pdf-rasterize
+  - de: https://lingxifield.com/de/tools/pdf-rasterize
+  - es: https://lingxifield.com/es/tools/pdf-rasterize
+  - pt: https://lingxifield.com/pt/tools/pdf-rasterize
+  - ar: https://lingxifield.com/ar/tools/pdf-rasterize
+- pdf-pages-per-sheet | PDF 多页合一 | PDF Pages per Sheet | local
+  - zh: https://lingxifield.com/tools/pdf-pages-per-sheet
+  - en: https://lingxifield.com/en/tools/pdf-pages-per-sheet
+  - ja: https://lingxifield.com/ja/tools/pdf-pages-per-sheet
+  - ko: https://lingxifield.com/ko/tools/pdf-pages-per-sheet
+  - fr: https://lingxifield.com/fr/tools/pdf-pages-per-sheet
+  - de: https://lingxifield.com/de/tools/pdf-pages-per-sheet
+  - es: https://lingxifield.com/es/tools/pdf-pages-per-sheet
+  - pt: https://lingxifield.com/pt/tools/pdf-pages-per-sheet
+  - ar: https://lingxifield.com/ar/tools/pdf-pages-per-sheet
+- pdf-remove-metadata | 删除 PDF 元数据 | Remove PDF Metadata | local
+  - zh: https://lingxifield.com/tools/pdf-remove-metadata
+  - en: https://lingxifield.com/en/tools/pdf-remove-metadata
+  - ja: https://lingxifield.com/ja/tools/pdf-remove-metadata
+  - ko: https://lingxifield.com/ko/tools/pdf-remove-metadata
+  - fr: https://lingxifield.com/fr/tools/pdf-remove-metadata
+  - de: https://lingxifield.com/de/tools/pdf-remove-metadata
+  - es: https://lingxifield.com/es/tools/pdf-remove-metadata
+  - pt: https://lingxifield.com/pt/tools/pdf-remove-metadata
+  - ar: https://lingxifield.com/ar/tools/pdf-remove-metadata
+- pdf-halve-pages | PDF 页面拆半 | Halve PDF Pages | local
+  - zh: https://lingxifield.com/tools/pdf-halve-pages
+  - en: https://lingxifield.com/en/tools/pdf-halve-pages
+  - ja: https://lingxifield.com/ja/tools/pdf-halve-pages
+  - ko: https://lingxifield.com/ko/tools/pdf-halve-pages
+  - fr: https://lingxifield.com/fr/tools/pdf-halve-pages
+  - de: https://lingxifield.com/de/tools/pdf-halve-pages
+  - es: https://lingxifield.com/es/tools/pdf-halve-pages
+  - pt: https://lingxifield.com/pt/tools/pdf-halve-pages
+  - ar: https://lingxifield.com/ar/tools/pdf-halve-pages
+- pdf-search | PDF 全文搜索 | Search PDFs | local
+  - zh: https://lingxifield.com/tools/pdf-search
+  - en: https://lingxifield.com/en/tools/pdf-search
+  - ja: https://lingxifield.com/ja/tools/pdf-search
+  - ko: https://lingxifield.com/ko/tools/pdf-search
+  - fr: https://lingxifield.com/fr/tools/pdf-search
+  - de: https://lingxifield.com/de/tools/pdf-search
+  - es: https://lingxifield.com/es/tools/pdf-search
+  - pt: https://lingxifield.com/pt/tools/pdf-search
+  - ar: https://lingxifield.com/ar/tools/pdf-search
+- reverse-video | 视频倒放 | Reverse Video | local
+  - zh: https://lingxifield.com/tools/reverse-video
+  - en: https://lingxifield.com/en/tools/reverse-video
+  - ja: https://lingxifield.com/ja/tools/reverse-video
+  - ko: https://lingxifield.com/ko/tools/reverse-video
+  - fr: https://lingxifield.com/fr/tools/reverse-video
+  - de: https://lingxifield.com/de/tools/reverse-video
+  - es: https://lingxifield.com/es/tools/reverse-video
+  - pt: https://lingxifield.com/pt/tools/reverse-video
+  - ar: https://lingxifield.com/ar/tools/reverse-video
+- loop-video | 视频循环 | Loop Video | local
+  - zh: https://lingxifield.com/tools/loop-video
+  - en: https://lingxifield.com/en/tools/loop-video
+  - ja: https://lingxifield.com/ja/tools/loop-video
+  - ko: https://lingxifield.com/ko/tools/loop-video
+  - fr: https://lingxifield.com/fr/tools/loop-video
+  - de: https://lingxifield.com/de/tools/loop-video
+  - es: https://lingxifield.com/es/tools/loop-video
+  - pt: https://lingxifield.com/pt/tools/loop-video
+  - ar: https://lingxifield.com/ar/tools/loop-video
+- stop-motion-video | 视频定格 | Stop Motion Video | local
+  - zh: https://lingxifield.com/tools/stop-motion-video
+  - en: https://lingxifield.com/en/tools/stop-motion-video
+  - ja: https://lingxifield.com/ja/tools/stop-motion-video
+  - ko: https://lingxifield.com/ko/tools/stop-motion-video
+  - fr: https://lingxifield.com/fr/tools/stop-motion-video
+  - de: https://lingxifield.com/de/tools/stop-motion-video
+  - es: https://lingxifield.com/es/tools/stop-motion-video
+  - pt: https://lingxifield.com/pt/tools/stop-motion-video
+  - ar: https://lingxifield.com/ar/tools/stop-motion-video
+- regex-tester | 正则表达式测试 | Regex Tester | local
+  - zh: https://lingxifield.com/tools/regex-tester
+  - en: https://lingxifield.com/en/tools/regex-tester
+  - ja: https://lingxifield.com/ja/tools/regex-tester
+  - ko: https://lingxifield.com/ko/tools/regex-tester
+  - fr: https://lingxifield.com/fr/tools/regex-tester
+  - de: https://lingxifield.com/de/tools/regex-tester
+  - es: https://lingxifield.com/es/tools/regex-tester
+  - pt: https://lingxifield.com/pt/tools/regex-tester
+  - ar: https://lingxifield.com/ar/tools/regex-tester
+- text-diff | 文本对比 | Text Diff | local
+  - zh: https://lingxifield.com/tools/text-diff
+  - en: https://lingxifield.com/en/tools/text-diff
+  - ja: https://lingxifield.com/ja/tools/text-diff
+  - ko: https://lingxifield.com/ko/tools/text-diff
+  - fr: https://lingxifield.com/fr/tools/text-diff
+  - de: https://lingxifield.com/de/tools/text-diff
+  - es: https://lingxifield.com/es/tools/text-diff
+  - pt: https://lingxifield.com/pt/tools/text-diff
+  - ar: https://lingxifield.com/ar/tools/text-diff
+- csv-json | CSV 转 JSON | CSV to JSON | local
+  - zh: https://lingxifield.com/tools/csv-json
+  - en: https://lingxifield.com/en/tools/csv-json
+  - ja: https://lingxifield.com/ja/tools/csv-json
+  - ko: https://lingxifield.com/ko/tools/csv-json
+  - fr: https://lingxifield.com/fr/tools/csv-json
+  - de: https://lingxifield.com/de/tools/csv-json
+  - es: https://lingxifield.com/es/tools/csv-json
+  - pt: https://lingxifield.com/pt/tools/csv-json
+  - ar: https://lingxifield.com/ar/tools/csv-json
+- xml-formatter | XML 格式化 | XML Formatter | local
+  - zh: https://lingxifield.com/tools/xml-formatter
+  - en: https://lingxifield.com/en/tools/xml-formatter
+  - ja: https://lingxifield.com/ja/tools/xml-formatter
+  - ko: https://lingxifield.com/ko/tools/xml-formatter
+  - fr: https://lingxifield.com/fr/tools/xml-formatter
+  - de: https://lingxifield.com/de/tools/xml-formatter
+  - es: https://lingxifield.com/es/tools/xml-formatter
+  - pt: https://lingxifield.com/pt/tools/xml-formatter
+  - ar: https://lingxifield.com/ar/tools/xml-formatter
+- jwt-decoder | JWT 解码 | JWT Decoder | local
+  - zh: https://lingxifield.com/tools/jwt-decoder
+  - en: https://lingxifield.com/en/tools/jwt-decoder
+  - ja: https://lingxifield.com/ja/tools/jwt-decoder
+  - ko: https://lingxifield.com/ko/tools/jwt-decoder
+  - fr: https://lingxifield.com/fr/tools/jwt-decoder
+  - de: https://lingxifield.com/de/tools/jwt-decoder
+  - es: https://lingxifield.com/es/tools/jwt-decoder
+  - pt: https://lingxifield.com/pt/tools/jwt-decoder
+  - ar: https://lingxifield.com/ar/tools/jwt-decoder
+- url-parser | URL 解析 | URL Parser | local
+  - zh: https://lingxifield.com/tools/url-parser
+  - en: https://lingxifield.com/en/tools/url-parser
+  - ja: https://lingxifield.com/ja/tools/url-parser
+  - ko: https://lingxifield.com/ko/tools/url-parser
+  - fr: https://lingxifield.com/fr/tools/url-parser
+  - de: https://lingxifield.com/de/tools/url-parser
+  - es: https://lingxifield.com/es/tools/url-parser
+  - pt: https://lingxifield.com/pt/tools/url-parser
+  - ar: https://lingxifield.com/ar/tools/url-parser
+- case-converter | 大小写转换 | Case Converter | local
+  - zh: https://lingxifield.com/tools/case-converter
+  - en: https://lingxifield.com/en/tools/case-converter
+  - ja: https://lingxifield.com/ja/tools/case-converter
+  - ko: https://lingxifield.com/ko/tools/case-converter
+  - fr: https://lingxifield.com/fr/tools/case-converter
+  - de: https://lingxifield.com/de/tools/case-converter
+  - es: https://lingxifield.com/es/tools/case-converter
+  - pt: https://lingxifield.com/pt/tools/case-converter
+  - ar: https://lingxifield.com/ar/tools/case-converter
+- number-base-converter | 进制转换 | Number Base Converter | local
+  - zh: https://lingxifield.com/tools/number-base-converter
+  - en: https://lingxifield.com/en/tools/number-base-converter
+  - ja: https://lingxifield.com/ja/tools/number-base-converter
+  - ko: https://lingxifield.com/ko/tools/number-base-converter
+  - fr: https://lingxifield.com/fr/tools/number-base-converter
+  - de: https://lingxifield.com/de/tools/number-base-converter
+  - es: https://lingxifield.com/es/tools/number-base-converter
+  - pt: https://lingxifield.com/pt/tools/number-base-converter
+  - ar: https://lingxifield.com/ar/tools/number-base-converter
+- audio-cleanup | 音频降噪 / 人声增强 | Audio Cleanup | local
+  - zh: https://lingxifield.com/tools/audio-cleanup
+  - en: https://lingxifield.com/en/tools/audio-cleanup
+  - ja: https://lingxifield.com/ja/tools/audio-cleanup
+  - ko: https://lingxifield.com/ko/tools/audio-cleanup
+  - fr: https://lingxifield.com/fr/tools/audio-cleanup
+  - de: https://lingxifield.com/de/tools/audio-cleanup
+  - es: https://lingxifield.com/es/tools/audio-cleanup
+  - pt: https://lingxifield.com/pt/tools/audio-cleanup
+  - ar: https://lingxifield.com/ar/tools/audio-cleanup
+- cron-parser | Cron 表达式解析器 | Cron Parser | local
+  - zh: https://lingxifield.com/tools/cron-parser
+  - en: https://lingxifield.com/en/tools/cron-parser
+  - ja: https://lingxifield.com/ja/tools/cron-parser
+  - ko: https://lingxifield.com/ko/tools/cron-parser
+  - fr: https://lingxifield.com/fr/tools/cron-parser
+  - de: https://lingxifield.com/de/tools/cron-parser
+  - es: https://lingxifield.com/es/tools/cron-parser
+  - pt: https://lingxifield.com/pt/tools/cron-parser
+  - ar: https://lingxifield.com/ar/tools/cron-parser
+- batch-pdf | 批量处理 PDF | Batch PDF | local
+  - zh: https://lingxifield.com/tools/batch-pdf
+  - en: https://lingxifield.com/en/tools/batch-pdf
+  - ja: https://lingxifield.com/ja/tools/batch-pdf
+  - ko: https://lingxifield.com/ko/tools/batch-pdf
+  - fr: https://lingxifield.com/fr/tools/batch-pdf
+  - de: https://lingxifield.com/de/tools/batch-pdf
+  - es: https://lingxifield.com/es/tools/batch-pdf
+  - pt: https://lingxifield.com/pt/tools/batch-pdf
+  - ar: https://lingxifield.com/ar/tools/batch-pdf
+- pdf-to-jpg | PDF 转 JPG | PDF to JPG | local
+  - zh: https://lingxifield.com/tools/pdf-to-jpg
+  - en: https://lingxifield.com/en/tools/pdf-to-jpg
+  - ja: https://lingxifield.com/ja/tools/pdf-to-jpg
+  - ko: https://lingxifield.com/ko/tools/pdf-to-jpg
+  - fr: https://lingxifield.com/fr/tools/pdf-to-jpg
+  - de: https://lingxifield.com/de/tools/pdf-to-jpg
+  - es: https://lingxifield.com/es/tools/pdf-to-jpg
+  - pt: https://lingxifield.com/pt/tools/pdf-to-jpg
+  - ar: https://lingxifield.com/ar/tools/pdf-to-jpg
+- png-to-jpg | PNG 转 JPG | PNG to JPG | local
+  - zh: https://lingxifield.com/tools/png-to-jpg
+  - en: https://lingxifield.com/en/tools/png-to-jpg
+  - ja: https://lingxifield.com/ja/tools/png-to-jpg
+  - ko: https://lingxifield.com/ko/tools/png-to-jpg
+  - fr: https://lingxifield.com/fr/tools/png-to-jpg
+  - de: https://lingxifield.com/de/tools/png-to-jpg
+  - es: https://lingxifield.com/es/tools/png-to-jpg
+  - pt: https://lingxifield.com/pt/tools/png-to-jpg
+  - ar: https://lingxifield.com/ar/tools/png-to-jpg
+- pptx-to-txt | PPTX 转 TXT | PPTX to TXT | local
+  - zh: https://lingxifield.com/tools/pptx-to-txt
+  - en: https://lingxifield.com/en/tools/pptx-to-txt
+  - ja: https://lingxifield.com/ja/tools/pptx-to-txt
+  - ko: https://lingxifield.com/ko/tools/pptx-to-txt
+  - fr: https://lingxifield.com/fr/tools/pptx-to-txt
+  - de: https://lingxifield.com/de/tools/pptx-to-txt
+  - es: https://lingxifield.com/es/tools/pptx-to-txt
+  - pt: https://lingxifield.com/pt/tools/pptx-to-txt
+  - ar: https://lingxifield.com/ar/tools/pptx-to-txt
+- privacy-cleaner | 文件隐私清理 | Privacy Cleaner | local
+  - zh: https://lingxifield.com/tools/privacy-cleaner
+  - en: https://lingxifield.com/en/tools/privacy-cleaner
+  - ja: https://lingxifield.com/ja/tools/privacy-cleaner
+  - ko: https://lingxifield.com/ko/tools/privacy-cleaner
+  - fr: https://lingxifield.com/fr/tools/privacy-cleaner
+  - de: https://lingxifield.com/de/tools/privacy-cleaner
+  - es: https://lingxifield.com/es/tools/privacy-cleaner
+  - pt: https://lingxifield.com/pt/tools/privacy-cleaner
+  - ar: https://lingxifield.com/ar/tools/privacy-cleaner
+- qr-code-generator | 二维码生成 | QR Code Generator | local
+  - zh: https://lingxifield.com/tools/qr-code-generator
+  - en: https://lingxifield.com/en/tools/qr-code-generator
+  - ja: https://lingxifield.com/ja/tools/qr-code-generator
+  - ko: https://lingxifield.com/ko/tools/qr-code-generator
+  - fr: https://lingxifield.com/fr/tools/qr-code-generator
+  - de: https://lingxifield.com/de/tools/qr-code-generator
+  - es: https://lingxifield.com/es/tools/qr-code-generator
+  - pt: https://lingxifield.com/pt/tools/qr-code-generator
+  - ar: https://lingxifield.com/ar/tools/qr-code-generator
+- qr-code-reader | 二维码读取 | QR Code Reader | local
+  - zh: https://lingxifield.com/tools/qr-code-reader
+  - en: https://lingxifield.com/en/tools/qr-code-reader
+  - ja: https://lingxifield.com/ja/tools/qr-code-reader
+  - ko: https://lingxifield.com/ko/tools/qr-code-reader
+  - fr: https://lingxifield.com/fr/tools/qr-code-reader
+  - de: https://lingxifield.com/de/tools/qr-code-reader
+  - es: https://lingxifield.com/es/tools/qr-code-reader
+  - pt: https://lingxifield.com/pt/tools/qr-code-reader
+  - ar: https://lingxifield.com/ar/tools/qr-code-reader
+- qr-safe-reader | 二维码安全识别 | Safe QR Reader | local
+  - zh: https://lingxifield.com/tools/qr-safe-reader
+  - en: https://lingxifield.com/en/tools/qr-safe-reader
+  - ja: https://lingxifield.com/ja/tools/qr-safe-reader
+  - ko: https://lingxifield.com/ko/tools/qr-safe-reader
+  - fr: https://lingxifield.com/fr/tools/qr-safe-reader
+  - de: https://lingxifield.com/de/tools/qr-safe-reader
+  - es: https://lingxifield.com/es/tools/qr-safe-reader
+  - pt: https://lingxifield.com/pt/tools/qr-safe-reader
+  - ar: https://lingxifield.com/ar/tools/qr-safe-reader
+- remove-duplicate-lines | 文本去重行 | Remove Duplicate Lines | local
+  - zh: https://lingxifield.com/tools/remove-duplicate-lines
+  - en: https://lingxifield.com/en/tools/remove-duplicate-lines
+  - ja: https://lingxifield.com/ja/tools/remove-duplicate-lines
+  - ko: https://lingxifield.com/ko/tools/remove-duplicate-lines
+  - fr: https://lingxifield.com/fr/tools/remove-duplicate-lines
+  - de: https://lingxifield.com/de/tools/remove-duplicate-lines
+  - es: https://lingxifield.com/es/tools/remove-duplicate-lines
+  - pt: https://lingxifield.com/pt/tools/remove-duplicate-lines
+  - ar: https://lingxifield.com/ar/tools/remove-duplicate-lines
+- remove-empty-lines | 删除空白行 | Remove Empty Lines | local
+  - zh: https://lingxifield.com/tools/remove-empty-lines
+  - en: https://lingxifield.com/en/tools/remove-empty-lines
+  - ja: https://lingxifield.com/ja/tools/remove-empty-lines
+  - ko: https://lingxifield.com/ko/tools/remove-empty-lines
+  - fr: https://lingxifield.com/fr/tools/remove-empty-lines
+  - de: https://lingxifield.com/de/tools/remove-empty-lines
+  - es: https://lingxifield.com/es/tools/remove-empty-lines
+  - pt: https://lingxifield.com/pt/tools/remove-empty-lines
+  - ar: https://lingxifield.com/ar/tools/remove-empty-lines
+- remove-exif | 清除图片 EXIF / 元数据 | Remove Image EXIF / Metadata | local
+  - zh: https://lingxifield.com/tools/remove-exif
+  - en: https://lingxifield.com/en/tools/remove-exif
+  - ja: https://lingxifield.com/ja/tools/remove-exif
+  - ko: https://lingxifield.com/ko/tools/remove-exif
+  - fr: https://lingxifield.com/fr/tools/remove-exif
+  - de: https://lingxifield.com/de/tools/remove-exif
+  - es: https://lingxifield.com/es/tools/remove-exif
+  - pt: https://lingxifield.com/pt/tools/remove-exif
+  - ar: https://lingxifield.com/ar/tools/remove-exif
+- resize-image | 图片尺寸修改 | Resize Image | local
+  - zh: https://lingxifield.com/tools/resize-image
+  - en: https://lingxifield.com/en/tools/resize-image
+  - ja: https://lingxifield.com/ja/tools/resize-image
+  - ko: https://lingxifield.com/ko/tools/resize-image
+  - fr: https://lingxifield.com/fr/tools/resize-image
+  - de: https://lingxifield.com/de/tools/resize-image
+  - es: https://lingxifield.com/es/tools/resize-image
+  - pt: https://lingxifield.com/pt/tools/resize-image
+  - ar: https://lingxifield.com/ar/tools/resize-image
+- screenshot-redact | 截图打码 / 脱敏 | Screenshot Redaction | local
+  - zh: https://lingxifield.com/tools/screenshot-redact
+  - en: https://lingxifield.com/en/tools/screenshot-redact
+  - ja: https://lingxifield.com/ja/tools/screenshot-redact
+  - ko: https://lingxifield.com/ko/tools/screenshot-redact
+  - fr: https://lingxifield.com/fr/tools/screenshot-redact
+  - de: https://lingxifield.com/de/tools/screenshot-redact
+  - es: https://lingxifield.com/es/tools/screenshot-redact
+  - pt: https://lingxifield.com/pt/tools/screenshot-redact
+  - ar: https://lingxifield.com/ar/tools/screenshot-redact
+- split-pdf | PDF 拆分 | Split PDF | local
+  - zh: https://lingxifield.com/tools/split-pdf
+  - en: https://lingxifield.com/en/tools/split-pdf
+  - ja: https://lingxifield.com/ja/tools/split-pdf
+  - ko: https://lingxifield.com/ko/tools/split-pdf
+  - fr: https://lingxifield.com/fr/tools/split-pdf
+  - de: https://lingxifield.com/de/tools/split-pdf
+  - es: https://lingxifield.com/es/tools/split-pdf
+  - pt: https://lingxifield.com/pt/tools/split-pdf
+  - ar: https://lingxifield.com/ar/tools/split-pdf
+- subtitle-tools | 字幕 SRT / VTT 工具 | Subtitle SRT / VTT Tools | local
+  - zh: https://lingxifield.com/tools/subtitle-tools
+  - en: https://lingxifield.com/en/tools/subtitle-tools
+  - ja: https://lingxifield.com/ja/tools/subtitle-tools
+  - ko: https://lingxifield.com/ko/tools/subtitle-tools
+  - fr: https://lingxifield.com/fr/tools/subtitle-tools
+  - de: https://lingxifield.com/de/tools/subtitle-tools
+  - es: https://lingxifield.com/es/tools/subtitle-tools
+  - pt: https://lingxifield.com/pt/tools/subtitle-tools
+  - ar: https://lingxifield.com/ar/tools/subtitle-tools
+- subtitle-translate | 字幕翻译 | Subtitle Translation | online
+  - zh: https://lingxifield.com/tools/subtitle-translate
+  - en: https://lingxifield.com/en/tools/subtitle-translate
+  - ja: https://lingxifield.com/ja/tools/subtitle-translate
+  - ko: https://lingxifield.com/ko/tools/subtitle-translate
+  - fr: https://lingxifield.com/fr/tools/subtitle-translate
+  - de: https://lingxifield.com/de/tools/subtitle-translate
+  - es: https://lingxifield.com/es/tools/subtitle-translate
+  - pt: https://lingxifield.com/pt/tools/subtitle-translate
+  - ar: https://lingxifield.com/ar/tools/subtitle-translate
+- svg-to-png | SVG 转 PNG | SVG to PNG | local
+  - zh: https://lingxifield.com/tools/svg-to-png
+  - en: https://lingxifield.com/en/tools/svg-to-png
+  - ja: https://lingxifield.com/ja/tools/svg-to-png
+  - ko: https://lingxifield.com/ko/tools/svg-to-png
+  - fr: https://lingxifield.com/fr/tools/svg-to-png
+  - de: https://lingxifield.com/de/tools/svg-to-png
+  - es: https://lingxifield.com/es/tools/svg-to-png
+  - pt: https://lingxifield.com/pt/tools/svg-to-png
+  - ar: https://lingxifield.com/ar/tools/svg-to-png
+- temp-mail | 10分钟临时邮箱 | 10-Minute Temporary Email | online
+  - zh: https://lingxifield.com/tools/temp-mail
+  - en: https://lingxifield.com/en/tools/temp-mail
+  - ja: https://lingxifield.com/ja/tools/temp-mail
+  - ko: https://lingxifield.com/ko/tools/temp-mail
+  - fr: https://lingxifield.com/fr/tools/temp-mail
+  - de: https://lingxifield.com/de/tools/temp-mail
+  - es: https://lingxifield.com/es/tools/temp-mail
+  - pt: https://lingxifield.com/pt/tools/temp-mail
+  - ar: https://lingxifield.com/ar/tools/temp-mail
+- text-counter | 字数与字符统计 | Text Counter | local
+  - zh: https://lingxifield.com/tools/text-counter
+  - en: https://lingxifield.com/en/tools/text-counter
+  - ja: https://lingxifield.com/ja/tools/text-counter
+  - ko: https://lingxifield.com/ko/tools/text-counter
+  - fr: https://lingxifield.com/fr/tools/text-counter
+  - de: https://lingxifield.com/de/tools/text-counter
+  - es: https://lingxifield.com/es/tools/text-counter
+  - pt: https://lingxifield.com/pt/tools/text-counter
+  - ar: https://lingxifield.com/ar/tools/text-counter
+- timestamp-converter | 时间戳转换 | Timestamp Converter | local
+  - zh: https://lingxifield.com/tools/timestamp-converter
+  - en: https://lingxifield.com/en/tools/timestamp-converter
+  - ja: https://lingxifield.com/ja/tools/timestamp-converter
+  - ko: https://lingxifield.com/ko/tools/timestamp-converter
+  - fr: https://lingxifield.com/fr/tools/timestamp-converter
+  - de: https://lingxifield.com/de/tools/timestamp-converter
+  - es: https://lingxifield.com/es/tools/timestamp-converter
+  - pt: https://lingxifield.com/pt/tools/timestamp-converter
+  - ar: https://lingxifield.com/ar/tools/timestamp-converter
+- url-encode-decode | URL 编码解码 | URL Encode & Decode | local
+  - zh: https://lingxifield.com/tools/url-encode-decode
+  - en: https://lingxifield.com/en/tools/url-encode-decode
+  - ja: https://lingxifield.com/ja/tools/url-encode-decode
+  - ko: https://lingxifield.com/ko/tools/url-encode-decode
+  - fr: https://lingxifield.com/fr/tools/url-encode-decode
+  - de: https://lingxifield.com/de/tools/url-encode-decode
+  - es: https://lingxifield.com/es/tools/url-encode-decode
+  - pt: https://lingxifield.com/pt/tools/url-encode-decode
+  - ar: https://lingxifield.com/ar/tools/url-encode-decode
+- video-dubbing | 视频配音 | Video Dubbing | online
+  - zh: https://lingxifield.com/tools/video-dubbing
+  - en: https://lingxifield.com/en/tools/video-dubbing
+  - ja: https://lingxifield.com/ja/tools/video-dubbing
+  - ko: https://lingxifield.com/ko/tools/video-dubbing
+  - fr: https://lingxifield.com/fr/tools/video-dubbing
+  - de: https://lingxifield.com/de/tools/video-dubbing
+  - es: https://lingxifield.com/es/tools/video-dubbing
+  - pt: https://lingxifield.com/pt/tools/video-dubbing
+  - ar: https://lingxifield.com/ar/tools/video-dubbing
+- video-toolkit | 视频压缩 / 裁剪 / 提取音频 | Video Toolkit | local
+  - zh: https://lingxifield.com/tools/video-toolkit
+  - en: https://lingxifield.com/en/tools/video-toolkit
+  - ja: https://lingxifield.com/ja/tools/video-toolkit
+  - ko: https://lingxifield.com/ko/tools/video-toolkit
+  - fr: https://lingxifield.com/fr/tools/video-toolkit
+  - de: https://lingxifield.com/de/tools/video-toolkit
+  - es: https://lingxifield.com/es/tools/video-toolkit
+  - pt: https://lingxifield.com/pt/tools/video-toolkit
+  - ar: https://lingxifield.com/ar/tools/video-toolkit
+- video-translate | 视频翻译 | Video Translator | online
+  - zh: https://lingxifield.com/tools/video-translate
+  - en: https://lingxifield.com/en/tools/video-translate
+  - ja: https://lingxifield.com/ja/tools/video-translate
+  - ko: https://lingxifield.com/ko/tools/video-translate
+  - fr: https://lingxifield.com/fr/tools/video-translate
+  - de: https://lingxifield.com/de/tools/video-translate
+  - es: https://lingxifield.com/es/tools/video-translate
+  - pt: https://lingxifield.com/pt/tools/video-translate
+  - ar: https://lingxifield.com/ar/tools/video-translate
+- video-transcription | 视频转文字 | Video Transcription | online
+  - zh: https://lingxifield.com/tools/video-transcription
+  - en: https://lingxifield.com/en/tools/video-transcription
+  - ja: https://lingxifield.com/ja/tools/video-transcription
+  - ko: https://lingxifield.com/ko/tools/video-transcription
+  - fr: https://lingxifield.com/fr/tools/video-transcription
+  - de: https://lingxifield.com/de/tools/video-transcription
+  - es: https://lingxifield.com/es/tools/video-transcription
+  - pt: https://lingxifield.com/pt/tools/video-transcription
+  - ar: https://lingxifield.com/ar/tools/video-transcription
+- video-watermark-remover | 视频去水印 | Video Watermark Cleanup | online
+  - zh: https://lingxifield.com/tools/video-watermark-remover
+  - en: https://lingxifield.com/en/tools/video-watermark-remover
+  - ja: https://lingxifield.com/ja/tools/video-watermark-remover
+  - ko: https://lingxifield.com/ko/tools/video-watermark-remover
+  - fr: https://lingxifield.com/fr/tools/video-watermark-remover
+  - de: https://lingxifield.com/de/tools/video-watermark-remover
+  - es: https://lingxifield.com/es/tools/video-watermark-remover
+  - pt: https://lingxifield.com/pt/tools/video-watermark-remover
+  - ar: https://lingxifield.com/ar/tools/video-watermark-remover
+- webp-to-jpg | WebP 转 JPG / PNG | WebP to JPG / PNG | local
+  - zh: https://lingxifield.com/tools/webp-to-jpg
+  - en: https://lingxifield.com/en/tools/webp-to-jpg
+  - ja: https://lingxifield.com/ja/tools/webp-to-jpg
+  - ko: https://lingxifield.com/ko/tools/webp-to-jpg
+  - fr: https://lingxifield.com/fr/tools/webp-to-jpg
+  - de: https://lingxifield.com/de/tools/webp-to-jpg
+  - es: https://lingxifield.com/es/tools/webp-to-jpg
+  - pt: https://lingxifield.com/pt/tools/webp-to-jpg
+  - ar: https://lingxifield.com/ar/tools/webp-to-jpg
+- xlsx-to-csv | Excel 转 CSV | Excel to CSV | local
+  - zh: https://lingxifield.com/tools/xlsx-to-csv
+  - en: https://lingxifield.com/en/tools/xlsx-to-csv
+  - ja: https://lingxifield.com/ja/tools/xlsx-to-csv
+  - ko: https://lingxifield.com/ko/tools/xlsx-to-csv
+  - fr: https://lingxifield.com/fr/tools/xlsx-to-csv
+  - de: https://lingxifield.com/de/tools/xlsx-to-csv
+  - es: https://lingxifield.com/es/tools/xlsx-to-csv
+  - pt: https://lingxifield.com/pt/tools/xlsx-to-csv
+  - ar: https://lingxifield.com/ar/tools/xlsx-to-csv
+- pdf-overlay | PDF 叠加 | Overlay PDF | local
+  - zh: https://lingxifield.com/tools/pdf-overlay
+  - en: https://lingxifield.com/en/tools/pdf-overlay
+  - ja: https://lingxifield.com/ja/tools/pdf-overlay
+  - ko: https://lingxifield.com/ko/tools/pdf-overlay
+  - fr: https://lingxifield.com/fr/tools/pdf-overlay
+  - de: https://lingxifield.com/de/tools/pdf-overlay
+  - es: https://lingxifield.com/es/tools/pdf-overlay
+  - pt: https://lingxifield.com/pt/tools/pdf-overlay
+  - ar: https://lingxifield.com/ar/tools/pdf-overlay
+- pdf-header-footer | PDF 页眉页脚 | PDF Header & Footer | local
+  - zh: https://lingxifield.com/tools/pdf-header-footer
+  - en: https://lingxifield.com/en/tools/pdf-header-footer
+  - ja: https://lingxifield.com/ja/tools/pdf-header-footer
+  - ko: https://lingxifield.com/ko/tools/pdf-header-footer
+  - fr: https://lingxifield.com/fr/tools/pdf-header-footer
+  - de: https://lingxifield.com/de/tools/pdf-header-footer
+  - es: https://lingxifield.com/es/tools/pdf-header-footer
+  - pt: https://lingxifield.com/pt/tools/pdf-header-footer
+  - ar: https://lingxifield.com/ar/tools/pdf-header-footer
+- pdf-bates-numbering | PDF Bates 编号 | PDF Bates Numbering | local
+  - zh: https://lingxifield.com/tools/pdf-bates-numbering
+  - en: https://lingxifield.com/en/tools/pdf-bates-numbering
+  - ja: https://lingxifield.com/ja/tools/pdf-bates-numbering
+  - ko: https://lingxifield.com/ko/tools/pdf-bates-numbering
+  - fr: https://lingxifield.com/fr/tools/pdf-bates-numbering
+  - de: https://lingxifield.com/de/tools/pdf-bates-numbering
+  - es: https://lingxifield.com/es/tools/pdf-bates-numbering
+  - pt: https://lingxifield.com/pt/tools/pdf-bates-numbering
+  - ar: https://lingxifield.com/ar/tools/pdf-bates-numbering
+- pdf-viewer-preferences | PDF 打开方式 | PDF Viewer Preferences | local
+  - zh: https://lingxifield.com/tools/pdf-viewer-preferences
+  - en: https://lingxifield.com/en/tools/pdf-viewer-preferences
+  - ja: https://lingxifield.com/ja/tools/pdf-viewer-preferences
+  - ko: https://lingxifield.com/ko/tools/pdf-viewer-preferences
+  - fr: https://lingxifield.com/fr/tools/pdf-viewer-preferences
+  - de: https://lingxifield.com/de/tools/pdf-viewer-preferences
+  - es: https://lingxifield.com/es/tools/pdf-viewer-preferences
+  - pt: https://lingxifield.com/pt/tools/pdf-viewer-preferences
+  - ar: https://lingxifield.com/ar/tools/pdf-viewer-preferences
+- pdf-remove-annotations | 删除 PDF 批注 | Remove PDF Annotations | local
+  - zh: https://lingxifield.com/tools/pdf-remove-annotations
+  - en: https://lingxifield.com/en/tools/pdf-remove-annotations
+  - ja: https://lingxifield.com/ja/tools/pdf-remove-annotations
+  - ko: https://lingxifield.com/ko/tools/pdf-remove-annotations
+  - fr: https://lingxifield.com/fr/tools/pdf-remove-annotations
+  - de: https://lingxifield.com/de/tools/pdf-remove-annotations
+  - es: https://lingxifield.com/es/tools/pdf-remove-annotations
+  - pt: https://lingxifield.com/pt/tools/pdf-remove-annotations
+  - ar: https://lingxifield.com/ar/tools/pdf-remove-annotations
+- pdf-grayscale | PDF 转灰度 | Grayscale PDF | local
+  - zh: https://lingxifield.com/tools/pdf-grayscale
+  - en: https://lingxifield.com/en/tools/pdf-grayscale
+  - ja: https://lingxifield.com/ja/tools/pdf-grayscale
+  - ko: https://lingxifield.com/ko/tools/pdf-grayscale
+  - fr: https://lingxifield.com/fr/tools/pdf-grayscale
+  - de: https://lingxifield.com/de/tools/pdf-grayscale
+  - es: https://lingxifield.com/es/tools/pdf-grayscale
+  - pt: https://lingxifield.com/pt/tools/pdf-grayscale
+  - ar: https://lingxifield.com/ar/tools/pdf-grayscale
+- pdf-page-size | 调整 PDF 页面尺寸 | Resize PDF Pages | local
+  - zh: https://lingxifield.com/tools/pdf-page-size
+  - en: https://lingxifield.com/en/tools/pdf-page-size
+  - ja: https://lingxifield.com/ja/tools/pdf-page-size
+  - ko: https://lingxifield.com/ko/tools/pdf-page-size
+  - fr: https://lingxifield.com/fr/tools/pdf-page-size
+  - de: https://lingxifield.com/de/tools/pdf-page-size
+  - es: https://lingxifield.com/es/tools/pdf-page-size
+  - pt: https://lingxifield.com/pt/tools/pdf-page-size
+  - ar: https://lingxifield.com/ar/tools/pdf-page-size
+- pdf-metadata-editor | 编辑 PDF 文件信息 | Edit PDF Metadata | local
+  - zh: https://lingxifield.com/tools/pdf-metadata-editor
+  - en: https://lingxifield.com/en/tools/pdf-metadata-editor
+  - ja: https://lingxifield.com/ja/tools/pdf-metadata-editor
+  - ko: https://lingxifield.com/ko/tools/pdf-metadata-editor
+  - fr: https://lingxifield.com/fr/tools/pdf-metadata-editor
+  - de: https://lingxifield.com/de/tools/pdf-metadata-editor
+  - es: https://lingxifield.com/es/tools/pdf-metadata-editor
+  - pt: https://lingxifield.com/pt/tools/pdf-metadata-editor
+  - ar: https://lingxifield.com/ar/tools/pdf-metadata-editor
+- pdf-protect | PDF 加密码 | Protect PDF | local
+  - zh: https://lingxifield.com/tools/pdf-protect
+  - en: https://lingxifield.com/en/tools/pdf-protect
+  - ja: https://lingxifield.com/ja/tools/pdf-protect
+  - ko: https://lingxifield.com/ko/tools/pdf-protect
+  - fr: https://lingxifield.com/fr/tools/pdf-protect
+  - de: https://lingxifield.com/de/tools/pdf-protect
+  - es: https://lingxifield.com/es/tools/pdf-protect
+  - pt: https://lingxifield.com/pt/tools/pdf-protect
+  - ar: https://lingxifield.com/ar/tools/pdf-protect
+- pdf-unlock | 解除 PDF 密码 | Unlock PDF | local
+  - zh: https://lingxifield.com/tools/pdf-unlock
+  - en: https://lingxifield.com/en/tools/pdf-unlock
+  - ja: https://lingxifield.com/ja/tools/pdf-unlock
+  - ko: https://lingxifield.com/ko/tools/pdf-unlock
+  - fr: https://lingxifield.com/fr/tools/pdf-unlock
+  - de: https://lingxifield.com/de/tools/pdf-unlock
+  - es: https://lingxifield.com/es/tools/pdf-unlock
+  - pt: https://lingxifield.com/pt/tools/pdf-unlock
+  - ar: https://lingxifield.com/ar/tools/pdf-unlock
+- pdf-permissions | PDF 权限设置 | PDF Permissions | local
+  - zh: https://lingxifield.com/tools/pdf-permissions
+  - en: https://lingxifield.com/en/tools/pdf-permissions
+  - ja: https://lingxifield.com/ja/tools/pdf-permissions
+  - ko: https://lingxifield.com/ko/tools/pdf-permissions
+  - fr: https://lingxifield.com/fr/tools/pdf-permissions
+  - de: https://lingxifield.com/de/tools/pdf-permissions
+  - es: https://lingxifield.com/es/tools/pdf-permissions
+  - pt: https://lingxifield.com/pt/tools/pdf-permissions
+  - ar: https://lingxifield.com/ar/tools/pdf-permissions
+- pdf-web-optimize | PDF 网页快速打开 | Optimize PDF for Web | local
+  - zh: https://lingxifield.com/tools/pdf-web-optimize
+  - en: https://lingxifield.com/en/tools/pdf-web-optimize
+  - ja: https://lingxifield.com/ja/tools/pdf-web-optimize
+  - ko: https://lingxifield.com/ko/tools/pdf-web-optimize
+  - fr: https://lingxifield.com/fr/tools/pdf-web-optimize
+  - de: https://lingxifield.com/de/tools/pdf-web-optimize
+  - es: https://lingxifield.com/es/tools/pdf-web-optimize
+  - pt: https://lingxifield.com/pt/tools/pdf-web-optimize
+  - ar: https://lingxifield.com/ar/tools/pdf-web-optimize
+- pdf-inspect | PDF 结构检查 | Inspect PDF | local
+  - zh: https://lingxifield.com/tools/pdf-inspect
+  - en: https://lingxifield.com/en/tools/pdf-inspect
+  - ja: https://lingxifield.com/ja/tools/pdf-inspect
+  - ko: https://lingxifield.com/ko/tools/pdf-inspect
+  - fr: https://lingxifield.com/fr/tools/pdf-inspect
+  - de: https://lingxifield.com/de/tools/pdf-inspect
+  - es: https://lingxifield.com/es/tools/pdf-inspect
+  - pt: https://lingxifield.com/pt/tools/pdf-inspect
+  - ar: https://lingxifield.com/ar/tools/pdf-inspect
+- pdf-attachments | PDF 附件管理 | PDF Attachments | local
+  - zh: https://lingxifield.com/tools/pdf-attachments
+  - en: https://lingxifield.com/en/tools/pdf-attachments
+  - ja: https://lingxifield.com/ja/tools/pdf-attachments
+  - ko: https://lingxifield.com/ko/tools/pdf-attachments
+  - fr: https://lingxifield.com/fr/tools/pdf-attachments
+  - de: https://lingxifield.com/de/tools/pdf-attachments
+  - es: https://lingxifield.com/es/tools/pdf-attachments
+  - pt: https://lingxifield.com/pt/tools/pdf-attachments
+  - ar: https://lingxifield.com/ar/tools/pdf-attachments
+- pdf-bookmarks | PDF 书签查看 | View PDF Bookmarks | local
+  - zh: https://lingxifield.com/tools/pdf-bookmarks
+  - en: https://lingxifield.com/en/tools/pdf-bookmarks
+  - ja: https://lingxifield.com/ja/tools/pdf-bookmarks
+  - ko: https://lingxifield.com/ko/tools/pdf-bookmarks
+  - fr: https://lingxifield.com/fr/tools/pdf-bookmarks
+  - de: https://lingxifield.com/de/tools/pdf-bookmarks
+  - es: https://lingxifield.com/es/tools/pdf-bookmarks
+  - pt: https://lingxifield.com/pt/tools/pdf-bookmarks
+  - ar: https://lingxifield.com/ar/tools/pdf-bookmarks
+
+## Search-intent policy
+- Questions are phrased around real user tasks rather than keyword stuffing.
+- Curated FAQ content is used where first-party product knowledge exists.
+- No claim of private search-volume data is made.
+- The public site remains the source of truth for tool behavior, limits, processing and pricing.
