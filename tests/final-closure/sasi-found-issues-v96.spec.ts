@@ -22,9 +22,9 @@ test("image generation shows the quoted size and actual delivered dimensions",as
  });
  await page.route("**/api/sasi/generated-assets/*",route=>route.fulfill({status:200,contentType:"image/png",body:Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=","base64")}));
  await page.goto("/sasi?mode=image&lang=en");
- await page.getByPlaceholder("Ask SASI to make something…").fill("A celestial landscape");
+ await page.getByPlaceholder("Ask SASI").fill("A celestial landscape");
  await page.locator('input[type="checkbox"]').check();
- await page.getByPlaceholder("Ask SASI to make something…").press("Enter");
+ await page.getByPlaceholder("Ask SASI").press("Enter");
  await expect(page.getByRole("button",{name:/Confirm/})).toBeVisible({timeout:15000});
  await page.getByRole("button",{name:/Confirm/}).click();
  await expect(page.getByText(/2K/).last()).toBeVisible({timeout:15000});
