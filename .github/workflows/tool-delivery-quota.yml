@@ -53,6 +53,7 @@ jobs:
           timestamp-output-v105 remaining-local-output-v89
           rare-image-recovery-v106
           privacy-cleaner-output-v107
+          pdf-search-recovery-v108
           document-upload-consent-v79 public-site-truth sasi-found-issues-v96
           sasi-prompt-continuation tool-plain-language tool-real-output
           --workers=2 --reporter=list,json
