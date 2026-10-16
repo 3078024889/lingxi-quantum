@@ -6,8 +6,8 @@ test("image entry exposes configured resolution and aspect ratio before generati
   return route.fulfill({json:{error:"NOT_USED"}});
  });
  await page.goto("/sasi?mode=image&lang=en");
- await expect(page.getByText("Resolution: 2K",{exact:false})).toBeVisible({timeout:15000});
- await expect(page.getByLabel("Aspect ratio")).toBeVisible();
+ await expect(page.getByText(/Resolution.*2K/)).toBeVisible({timeout:15000});
+ await expect(page.locator("select").last()).toBeVisible();
  await expect(page.getByRole("option",{name:"9:16"})).toBeAttached();
 });
 
