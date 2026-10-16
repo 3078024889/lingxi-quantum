@@ -131,6 +131,10 @@ export async function stripImageMetadata(file: File): Promise<{ blob: Blob; name
   const isWebp = file.type === "image/webp" || file.name.toLowerCase().endsWith(".webp");
   const target=isPng?"image/png":isWebp?"image/webp":"image/jpeg";
   const { canvas } = await drawFileToCanvas(file,{background:target==="image/jpeg"?"white":"transparent"});
-  const blob = await canvasToBlob(canvas,target,isPng?undefined:isWebp?1:0.95);
-  return { blob, name: replaceExt(file.name,isPng?"png":isWebp?"webp":"jpg") };
+  try{
+    const blob = await canvasToBlob(canvas,target,isPng?undefined:isWebp?1:0.95);
+    const ext=blob.type==="image/png"?"png":blob.type==="image/webp"?"webp":blob.type==="image/jpeg"?"jpg":null;
+    if(!ext)throw new Error("IMAGE_EXPORT_FAILED");
+    return { blob, name: replaceExt(file.name,ext) };
+  }finally{canvas.width=canvas.height=1}
 }

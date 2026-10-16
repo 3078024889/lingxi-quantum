@@ -29,3 +29,23 @@ Production also reproduced a stale save button after changing the output format.
 Reference: [MDN object URL lifecycle](https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL_static). No extra image runtime was introduced. A narrow reference scan found the shared converter's unhandled fallback-load rejection; FileDropzone and image-watermark previews already revoke in effect cleanup, and the video-metadata helper has explicit failure cleanup. This is not a whole-repository memory-leak clearance.
 
 The existing `retired-code-cleanup.mjs` audit passed again. No additional modules were deleted without a reference/dependency justification. Vercel authorization remains unresolved; no preview, production deployment, main push or live billing changes occurred.
+
+## Privacy cleaner format mismatch and reuse
+
+Production `privacy-cleaner` was actually used to scan, clean and save a WebP photo derivative. Its downloaded name ended in `.webp`, but independent Sharp decoding identified JPEG bytes. The component duplicated canvas re-encoding, converted every non-PNG input to JPEG, and retained the original filename. This can mislead consumers that infer media type from the extension, including the shared file-delivery helper.
+
+Remove that duplicate image path and reuse `stripImageMetadata`, already used by `remove-exif`. Keep PNG/WebP transparency, flatten JPEG onto white, derive the filename from the actual encoder MIME (including PNG fallback), and release the canvas on export completion/failure. PDF cleaning continues through the existing verified metadata helper. Scan/clean failures now show actionable nine-language copy instead of raw exceptions. This change introduces no new dependency or heavy server runtime.
+
+The patched shared helper ran in real Chrome on a transparent 29×19 WebP. The output was named `.webp`, independently decoded as WebP, retained alpha (89/255), and preserved its dimensions. This is patched-engine evidence, not full patched-page acceptance. New remote UI checks cover PNG/WebP/JPEG/GIF, simulated unsupported-WebP-encoder PNG fallback, author metadata removal, PDF page retention and corrupt-file rejection. Real external-app file delivery still needs separate acceptance.
+
+Production `privacy-cleaner` additionally scanned and saved the real two-page Copernicus copy. Independent PDF loading found two unchanged page boxes, no Info dictionary and no catalog metadata stream. Page-content visual verification from earlier PDF operations remains separate; this specific output has not yet been independently rendered.
+
+## CSV / Excel real round trip
+
+The actual CSV→JSON webpage preserved Chinese text, quoted commas/quotes, an embedded newline, a 16-digit integer as text, leading zeros and empty fields. A row with more values than headers was rejected and its old result removed. This text-only tool provides an output textarea; it was not counted as a downloadable-file operation.
+
+The actual CSV→XLSX webpage accepted a UTF-8 BOM input with those same values. Its downloaded workbook was read independently with ExcelJS; the same values were retained. That saved workbook was then uploaded to the actual XLSX→CSV webpage, exported and read back: quoted fields/newlines, the large integer, leading zeros and trailing empty cells survived. Private inputs/outputs and the structured round-trip report remain on the desktop. This does not establish formula, multi-sheet or every encoding behavior.
+
+## AiFreeForever source check
+
+The discovered [Aifreeforever-2api](https://github.com/lza6/Aifreeforever-2api) repository describes a browser-automation/protocol proxy for the upstream chat site, not the official full source for a 700-tool platform. Its README requires at least 2 GB **available** memory and persistent browser management. It was not installed on the existing 2 GB host or made a provider dependency. The official chat page returned 403 during the repeat fetch; an official full-platform open-source release remains unconfirmed. Existing FFmpeg/PDF.js/Tesseract/canvas implementations remain the integration basis; no unsupported claim of having reviewed every platform or imported their private code is made.
