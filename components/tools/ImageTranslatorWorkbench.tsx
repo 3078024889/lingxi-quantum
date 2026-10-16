@@ -7,6 +7,7 @@ import type{ToolResultFile}from"@/lib/tools/types";
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 import{authorizeToolOperation,grantToolOperationResult}from"@/lib/tools/commerce/export-access-client";
+import{useLingxiLang}from"@/lib/lingxi-i18n";import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
 
 async function translate(text:string,source:string,target:string,accessId:string){
@@ -25,7 +26,7 @@ function linesFromBlocks(blocks:any[]){
  return out;
 }
 export default function ImageTranslatorWorkbench(){
- const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
+ const{lang}=useLingxiLang(),t=(zh:string,en:string)=>toolRuntimeText(lang,zh,en);\n const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="image-translator"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en")}setDraftReady(true)})()},[]);
  useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"image-translator",files,state:{source,target}}),120);return()=>clearTimeout(tm)},[files,source,target,draftId,draftReady]);
  async function run(){
@@ -64,8 +65,8 @@ export default function ImageTranslatorWorkbench(){
    <label className="text-sm"><ToolUiText text="图片原文" /><select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm"><ToolUiText text="翻译为" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&draftReady&&<button type="button" disabled={busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"正在翻译…":files.length>1?`开始翻译 ${files.length} 张图片`:"开始翻译"}/></button>}
-  <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="每天每个账户和 IP 共 5 张免费；超过部分按 ¥1 / $1 每张计费。价格确认会在免费额度用完时出现。"/></p>
+  {files.length>0&&draftReady&&<button type="button" disabled={busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{t(busy?"正在翻译…":files.length>1?`开始翻译 ${files.length} 张图片`:"开始翻译",busy?"Translating…":files.length>1?`Translate ${files.length} images`:"Translate")}</button>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">{t("每天每个账户和 IP 共 5 张免费；超过部分按 ¥1 / $1 每张计费。价格确认会在免费额度用完时出现。","5 images per account and IP are free each day; additional images are ¥1 / $1 each.")}</p>
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="先识别图片里的文字，再翻译并尽量按原文字区域覆盖。复杂艺术字、弧形字或低清图片可能需要手动微调。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
