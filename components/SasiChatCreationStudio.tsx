@@ -58,6 +58,12 @@ function kindFor(name:string){
  if(["txt","md","json","csv","yaml","yml","pdf","docx","pptx","xlsx","epub","odt"].includes(ext))return"document";
  return"other";
 }
+function SasiAttachmentPreview({file}:{file:File}){
+ const kind=kindFor(file.name);const[url,setUrl]=useState("");
+ useEffect(()=>{if(kind!=="image"&&kind!=="video"){setUrl("");return}const u=URL.createObjectURL(file);setUrl(u);return()=>URL.revokeObjectURL(u)},[file,kind]);
+ if(!url)return null;
+ return kind==="video"?<video src={url} muted playsInline preload="metadata" className="mt-2 h-16 w-24 rounded-lg object-cover"/>:<img src={url} alt="" className="mt-2 h-16 w-24 rounded-lg object-cover"/>;
+}
 function humanBytes(bytes:number){
  if(bytes<1024)return`${bytes} B`;
  if(bytes<1024*1024)return`${(bytes/1024).toFixed(1)} KB`;
@@ -438,7 +444,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
      <SasiComposerSurface dragging={dragging} onDragEnter={e=>{e.preventDefault();setDragging(true)}} onDragOver={e=>e.preventDefault()} onDragLeave={()=>setDragging(false)} onDrop={onDrop}>
       {files.length>0&&<div className="mb-2 flex gap-2 overflow-x-auto pb-1">{files.map(item=><div key={item.id} className="min-w-[170px] max-w-[240px] rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-3 py-2 text-xs">
        <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0 flex-1"><b className="block truncate text-[var(--lx-ink)]">{item.file.name}</b><span className="text-[var(--lx-muted)]">{humanBytes(item.file.size)} · {item.state==="uploading"?`${item.progress}%`:item.message||ct("pendingAdd")}</span></div>
+        <div className="min-w-0 flex-1"><b className="block truncate text-[var(--lx-ink)]">{item.file.name}</b><span className="text-[var(--lx-muted)]">{humanBytes(item.file.size)} · {item.state==="uploading"?`${item.progress}%`:item.message||ct("pendingAdd")}</span><SasiAttachmentPreview file={item.file}/>{item.state==="uploading"&&<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--lx-line)]"><div className="h-full rounded-full bg-[var(--lx-ink)] transition-[width]" style={{width:`${Math.max(1,Math.min(100,item.progress))}%`}}/></div>}</div>
         {item.assetId&&["audio","video"].includes(kindFor(item.file.name))&&<button disabled={busy} onClick={()=>void transcribeItem(item)} className="shrink-0 rounded-full border border-[var(--lx-line)] px-2 py-1 text-[10px]">{ct("transcribeMedia")}</button>}
         <button disabled={busy} onClick={()=>removeFile(item.id)} className="text-[var(--lx-muted)]">×</button>
        </div>
