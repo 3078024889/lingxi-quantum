@@ -33,6 +33,7 @@ jobs:
           node scripts/test-daily-export-api-v92.cjs
           node scripts/test-temp-mail-safety-v81.cjs
           node scripts/test-subtitle-translation-v95.cjs
+          node scripts/test-ocr-review-confidence.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
@@ -45,6 +46,7 @@ jobs:
           qr-cron-output-v86 burn-reveal-recovery
           subtitle-translation-v95
           pdf-real-options-v101 image-watermark-gesture-v100
+          image-translation-failure-v102
           document-upload-consent-v79 public-site-truth sasi-found-issues-v96
           sasi-prompt-continuation tool-plain-language tool-real-output
           --workers=2 --reporter=list,json
