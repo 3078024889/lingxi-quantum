@@ -1,6 +1,37 @@
 import{test,expect}from'./export-test';
 import{PDFDocument}from'pdf-lib';
 import{readFile}from'node:fs/promises';
+import{PDFName,PDFString,PDFDict}from'pdf-lib';
+
+for(const[slug,button]of[['pdf-page-numbers','Add PDF page numbers'],['pdf-crop','Crop PDF']]as const)test(`${slug}: changing a numeric option removes the old export`,async({page})=>{
+ const source=await PDFDocument.create();source.addPage([400,600]);
+ await page.goto(`/tools/${slug}?lang=en`);const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();
+ await input.setInputFiles({name:'options.pdf',mimeType:'application/pdf',buffer:Buffer.from(await source.save())});
+ const area=page.locator('[data-tool-workbench]');await area.getByRole('button',{name:button,exact:true}).click();
+ await expect(area.getByRole('button',{name:'Save file',exact:true})).toBeVisible();await area.getByRole('spinbutton').fill('40');
+ await expect(area.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+ await area.getByRole('button',{name:button,exact:true}).click();const pending=page.waitForEvent('download');await area.getByRole('button',{name:'Save file',exact:true}).click();
+ const output=await PDFDocument.load(await readFile((await(await pending).path())!));expect(output.getPageCount()).toBe(1);
+ if(slug==='pdf-crop')expect(output.getPage(0).getCropBox()).toMatchObject({x:40,y:40,width:320,height:520});
+});
+
+test('PDF watermark text, size and opacity changes each invalidate the old export',async({page})=>{
+ const source=await PDFDocument.create();source.addPage();await page.goto('/tools/pdf-watermark?lang=en');const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();
+ await input.setInputFiles({name:'watermark.pdf',mimeType:'application/pdf',buffer:Buffer.from(await source.save())});const area=page.locator('[data-tool-workbench]');
+ for(const[field,value]of[['input:not([type])','NEW WATERMARK'],['input[type=number]','30'],['input[type=range]','0.5']]){
+  await area.getByRole('button',{name:'Add PDF watermark',exact:true}).click();await expect(area.getByRole('button',{name:'Save file',exact:true})).toBeVisible();
+  await area.locator(field).fill(value);await expect(area.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+ }
+});
+
+test('flattened form keeps appearances and valid links without dangling annotation references',async({page})=>{
+ const doc=await PDFDocument.create(),p=doc.addPage(),field=doc.getForm().createTextField('name');field.setText('AUDIT CUSTOMER');field.addToPage(p,{x:20,y:400,width:200,height:30});
+ const link=doc.context.register(doc.context.obj({Type:'Annot',Subtype:'Link',Rect:[0,0,100,20],A:{Type:'Action',S:'URI',URI:PDFString.of('https://example.com')}}));p.node.Annots()!.push(link);
+ await page.goto('/tools/pdf-flatten?lang=en');const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();await input.setInputFiles({name:'form.pdf',mimeType:'application/pdf',buffer:Buffer.from(await doc.save())});
+ await page.getByRole('button',{name:'Flatten PDF',exact:true}).click();const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Save file',exact:true}).click();
+ const output=await PDFDocument.load(await readFile((await(await pending).path())!));expect(output.getForm().getFields()).toHaveLength(0);const annotations=output.getPage(0).node.Annots()!;expect(annotations.size()).toBe(1);
+ expect(output.context.lookup(annotations.get(0),PDFDict).get(PDFName.of('Subtype'))!.toString()).toBe('/Link');
+});
 
 test('PDF basic rejects partially invalid ranges without delivering a silently reduced file',async({page})=>{
  const pdf=await PDFDocument.create();pdf.addPage();pdf.addPage();

@@ -35,6 +35,7 @@ jobs:
           node scripts/test-subtitle-translation-v95.cjs
           node scripts/test-ocr-review-confidence.cjs
           node scripts/test-rare-image-resources.cjs
+          node scripts/test-pdf-flatten-references.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
