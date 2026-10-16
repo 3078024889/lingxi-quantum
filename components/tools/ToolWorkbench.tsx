@@ -488,7 +488,7 @@ async function runFileTool(
 
   if (tool.slug === "compress-image" || tool.slug.startsWith("compress-image-to-")) {
     const target = opts.targetBytes || 100 * 1024;
-    const r = await compressImageToTarget(file, target);
+    const r = await compressImageToTarget(file, target,{maxQuality:opts.quality});
     const exceeded = r.blob.size > target;
     return {
       ok: true,
