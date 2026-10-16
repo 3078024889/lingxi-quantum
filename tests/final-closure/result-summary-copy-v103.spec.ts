@@ -6,6 +6,8 @@ test('result summaries hide internal fields, retain exact hashes and name image 
  expect(resultDetail('zh','height',148)).toEqual({label:'高度',value:'148'});
  expect(resultDetail('en','sizeA',1024)).toEqual({label:'File size (KB) A',value:'1'});
  const digest='0123456789abcdef';expect(resultDetail('en','sha256A',digest)).toEqual({label:'SHA256 A',value:digest});
+ const iso='1970-01-01T00:00:01.000Z';expect(resultDetail('en','ISO',iso)).toEqual({label:'ISO time (UTC)',value:iso});
+ const nanoseconds='1792152000123000000';expect(resultDetail('en','unixNs',nanoseconds)?.value).toBe(nanoseconds);
  for(const key of ['rounds','structureConfidence','sameSize','internalProvider','__proto__','constructor'])expect(resultDetail('en',key,'private diagnostic')).toBeNull();
 });
 
