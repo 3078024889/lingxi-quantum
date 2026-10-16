@@ -12,12 +12,16 @@ import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
 const initial:NormalizedBox={x:.65,y:.72,w:.28,h:.18};
 
 function BoxSelector({file,box,onChange}:{file:File;box:NormalizedBox;onChange:(b:NormalizedBox)=>void}){
- const ref=useRef<HTMLDivElement>(null),[start,setStart]=useState<{x:number;y:number}|null>(null),[src,setSrc]=useState("");
+ const ref=useRef<HTMLDivElement>(null),[start,setStart]=useState<{x:number;y:number}|null>(null),[mode,setMode]=useState<"draw"|"move"|"resize">("draw"),[src,setSrc]=useState("");
  useEffect(()=>{const u=URL.createObjectURL(file);setSrc(u);return()=>URL.revokeObjectURL(u)},[file]);
  const point=(e:PointerEvent)=>{const r=ref.current!.getBoundingClientRect();return{x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))}};
- return <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);const p=point(e);setStart(p);onChange({...p,w:0,h:0})}} onPointerMove={e=>{if(!start)return;const p=point(e);onChange({x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(start.x-p.x),h:Math.abs(start.y-p.y)})}} onPointerUp={()=>setStart(null)} onPointerCancel={()=>setStart(null)}>
+ function down(e:PointerEvent){e.currentTarget.setPointerCapture(e.pointerId);const p=point(e),inside=p.x>=box.x&&p.x<=box.x+box.w&&p.y>=box.y&&p.y<=box.y+box.h,handle=Math.abs(p.x-(box.x+box.w))<.035&&Math.abs(p.y-(box.y+box.h))<.035;setMode(handle?"resize":inside?"move":"draw");setStart(p);if(!inside&&!handle)onChange({x:p.x,y:p.y,w:0,h:0})}
+ function move(e:PointerEvent){if(!start)return;const p=point(e);if(mode==="draw")onChange({x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(start.x-p.x),h:Math.abs(start.y-p.y)});else if(mode==="move"){onChange({x:Math.max(0,Math.min(1-box.w,start.x+(p.x-start.x))),y:Math.max(0,Math.min(1-box.h,start.y+(p.y-start.y))),w:box.w,h:box.h});setStart(p)}else{onChange({x:box.x,y:box.y,w:Math.max(.01,Math.min(1-box.x,p.x-box.x)),h:Math.max(.01,Math.min(1-box.y,p.y-box.y))})}}
+ function up(){setStart(null)}
+ return <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl" onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
   {src&&<img src={src} alt="" className="block max-h-[560px] max-w-full select-none"/>}
   <div className="pointer-events-none absolute border-2 border-rose-500 bg-rose-500/15" style={{left:`${box.x*100}%`,top:`${box.y*100}%`,width:`${box.w*100}%`,height:`${box.h*100}%`}}/>
+  {box.w>=.01&&box.h>=.01&&<span aria-hidden="true" className="pointer-events-none absolute h-4 w-4 rounded-full border-2 border-white bg-rose-500 shadow" style={{left:`calc(${(box.x+box.w)*100}% - 8px)`,top:`calc(${(box.y+box.h)*100}% - 8px)`}}/>}
  </div>
 }
 
