@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const media=readFileSync("lib/tools/media/client.ts","utf8");
+const toolkit=readFileSync("components/tools/VideoToolkitWorkbench.tsx","utf8");
+const share=readFileSync("lib/tools/shared/download.ts","utf8");
+assert.match(media,/const originalDuration=await browserMediaDuration\(video\)/);
+assert.match(media,/const outputDuration=await browserMediaDuration\(result\)/);
+assert.match(media,/DUB_OUTPUT_DURATION_MISMATCH/);
+assert.match(toolkit,/MEDIA_OUTPUT_TRUNCATED/);
+assert.match(share,/prepareAuthorizedFileShare/);
+console.log("MEDIA_EXPORT_DELIVERY_INTEGRITY_CONTRACT=PASS");
