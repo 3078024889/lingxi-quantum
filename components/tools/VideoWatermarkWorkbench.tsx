@@ -29,7 +29,7 @@ function mediaMetaOf(file:File,msg:string,formatMsg:string){return new Promise<{
 export default function VideoWatermarkWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[items,setItems]=useState<MediaItem[]>([]),[preview,setPreview]=useState(""),[box,setBox]=useState<Box>({x:72,y:78,w:24,h:14}),[busy,setBusy]=useState(false),[progress,setProgress]=useState(""),[results,setResults]=useState<Output[]>([]),[failures,setFailures]=useState<Failure[]>([]),[error,setError]=useState(""),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
- const ff=useRef<FfmpegHandle|null>(null),resultUrls=useRef<string[]>([]);
+ const ff=useRef<FfmpegHandle|null>(null),resultUrls=useRef<string[]>([]),cancelled=useRef(false);
  useEffect(()=>()=>{if(preview)URL.revokeObjectURL(preview);for(const u of resultUrls.current)URL.revokeObjectURL(u);try{ff.current?.terminate()}catch{}},[preview]);
  function clearResults(){for(const u of resultUrls.current)URL.revokeObjectURL(u);resultUrls.current=[];setResults([]);setFailures([])}
  async function hydrate(files:File[]){setError("");const next:MediaItem[]=[];for(const file of files.slice(0,10)){try{const m=await mediaMetaOf(file,c.metaFail,c.formatFail);next.push({file,duration:m.duration,width:m.width,height:m.height,key:`${file.name}-${file.size}-${file.lastModified}`})}catch(e){setError(e instanceof Error?e.message:String(e))}}setItems(next);clearResults();if(preview)URL.revokeObjectURL(preview);setPreview(next[0]?URL.createObjectURL(next[0].file):"")}
@@ -44,7 +44,10 @@ export default function VideoWatermarkWorkbench(){
    const [{FFmpeg},{fetchFile}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);f=new FFmpeg();ff.current=f;f.on("progress",({progress}:{progress:number})=>setProgress(`${index+1}/${items.length} · ${Math.round(progress*100)}%`));
    await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
    const ext=item.file.name.split(".").pop()||"mp4",input=`input-${index}.${ext}`,output=`output-${index}.mp4`;await f.writeFile(input,await fetchFile(item.file));
-   const w=item.width,h=item.height,px=Math.round(w*box.x/100),py=Math.round(h*box.y/100),pw=Math.max(8,Math.round(w*box.w/100)),ph=Math.max(8,Math.round(h*box.h/100));
+   const w=item.width,h=item.height;
+   const px=Math.max(0,Math.min(w-9,Math.round(w*box.x/100))),py=Math.max(0,Math.min(h-9,Math.round(h*box.y/100)));
+   const pw=Math.min(w-px,Math.max(8,Math.round(w*box.w/100))),ph=Math.min(h-py,Math.max(8,Math.round(h*box.h/100)));
+   if(pw<8||ph<8)throw new Error("WATERMARK_REGION_INVALID");
    const code=await f.exec(["-i",input,"-vf",`delogo=x=${px}:y=${py}:w=${pw}:h=${ph}:show=0`,"-c:v","libx264","-preset","veryfast","-crf","20","-c:a","aac","-b:a","160k",output]);
    if(code!==0)throw new Error(`FFMPEG_EXIT_${code}`);
    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);if(copy.byteLength===0)throw new Error("EMPTY_VIDEO_RESULT");
@@ -53,13 +56,13 @@ export default function VideoWatermarkWorkbench(){
   finally{try{f?.terminate()}catch{}if(ff.current===f)ff.current=null}
  }
  async function run(){
-  if(!items.length)return;setBusy(true);setError("");setProgress(c.working);clearResults();const out:Output[]=[],bad:Failure[]=[];
+  if(!items.length||busy)return;cancelled.current=false;setBusy(true);setError("");setProgress(c.working);clearResults();const out:Output[]=[],bad:Failure[]=[];
   try{
-   for(let i=0;i<items.length;i++){try{const r=await processOne(items[i],i);out.push(r);setResults([...out])}catch(e){bad.push({name:items[i].file.name,reason:e instanceof Error?e.message:String(e)});setFailures([...bad])}}
-   setProgress(c.done);if(bad.length){setError(c.partial);throw new Error("PARTIAL_RESULT");}
+   for(let i=0;i<items.length;i++){if(cancelled.current)break;try{const r=await processOne(items[i],i);if(cancelled.current)break;out.push(r);setResults([...out])}catch(e){if(cancelled.current)break;bad.push({name:items[i].file.name,reason:e instanceof Error?e.message:String(e)});setFailures([...bad])}}
+   if(cancelled.current){setProgress(c.cancel);throw new Error("VIDEO_CANCELLED")}setProgress(c.done);if(bad.length){setError(c.partial);throw new Error("PARTIAL_RESULT");}
   }finally{setBusy(false)}
  }
- function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setProgress(c.cancel)}
+ function cancel(){cancelled.current=true;try{ff.current?.terminate()}catch{}ff.current=null;setProgress(c.cancel)}
  return <div className="space-y-5">
   <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><div className="text-lg font-semibold text-[var(--lx-ink)]">{c.hero}</div><p className="mt-2 text-sm leading-6 text-[var(--lx-muted)]">{c.lead}</p></div>
   <FileDropzone accept="video/*,.mp4,.mov,.m4v,.webm,.mkv" multiple maxFiles={10} maxSizeMB={500} files={items.map(x=>x.file)} onChange={hydrate} disabled={busy} kind="media"/>
