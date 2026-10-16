@@ -66,6 +66,6 @@ test('image to PDF preserves pixel dimensions, page aspect ratio and embeds the 
  await page.goto('/tools/image-to-pdf?lang=en');
  const png=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=37;c.height=23;const ctx=c.getContext('2d')!;ctx.fillStyle='red';ctx.fillRect(0,0,37,23);return c.toDataURL('image/png').split(',')[1]});
  await expect(page.locator('input[type=file]').first()).toBeEnabled({timeout:15000});
- await page.locator('input[type=file]').first().setInputFiles({name:'image.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});await page.getByRole('button',{name:'Process now',exact:true}).click();
+ await page.locator('input[type=file]').first().setInputFiles({name:'image.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});await page.getByRole('button',{name:/^(Create PDF|Process now)$/}).click();
  const pdf=await PDFDocument.load(await saveOutput(page));expect(pdf.getPageCount()).toBe(1);const outputPage=pdf.getPage(0);expect(outputPage.getWidth()/outputPage.getHeight()).toBeCloseTo(37/23,8);const images=outputPage.node.Resources()!.lookup(PDFName.of('XObject'),PDFDict);expect(images.keys().length).toBeGreaterThan(0);const image=pdf.context.lookup(images.values()[0]) as any;expect(image.dict.get(PDFName.of('Width')).asNumber()).toBe(37);expect(image.dict.get(PDFName.of('Height')).asNumber()).toBe(23);
 });
