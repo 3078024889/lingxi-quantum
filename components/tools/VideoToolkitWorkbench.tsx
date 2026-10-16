@@ -20,9 +20,9 @@ const SCALE:Record<Exclude<Resolution,"source">,string>={"1080":"-2:1080","720":
 
 // Validate source and output durations using browser metadata, not only FFmpeg exit=0.
 // A truncated file must never be presented as a successful full-length conversion.
-function readMediaDuration(blob:Blob):Promise<number>{
+function readMediaDuration(blob:Blob,kind:"video"|"audio"="video"):Promise<number>{
  return new Promise((resolve,reject)=>{
-  const el=document.createElement("video"),url=URL.createObjectURL(blob);
+  const el=document.createElement(kind),url=URL.createObjectURL(blob);
   let settled=false;
   const finish=(err?:Error,value?:number)=>{if(settled)return;settled=true;clearTimeout(timer);el.onloadedmetadata=null;el.onerror=null;el.removeAttribute("src");el.load();URL.revokeObjectURL(url);if(err)reject(err);else resolve(value!)};
   const timer=setTimeout(()=>finish(new Error("MEDIA_METADATA_TIMEOUT")),20000);
@@ -62,7 +62,7 @@ export default function VideoToolkitWorkbench(){
     await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
     const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
     const stem=safeFilename(file.name.replace(/\.[^.]+$/,""),`video-${i+1}`),output=`output-${i}.mp4`;let name=`${stem}-processed.mp4`,args:string[]=[];
-    if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);const extracted=new Blob([copy.buffer],{type:"audio/mpeg"});if(extracted.size<1024)throw new Error("MEDIA_OUTPUT_EMPTY");const extractedDuration=await readMediaDuration(extracted);if(Math.abs(extractedDuration-sourceDuration)>Math.max(.5,sourceDuration*.04))throw new Error(`MEDIA_OUTPUT_TRUNCATED: expected=${sourceDuration.toFixed(2)}, actual=${extractedDuration.toFixed(2)}`);out.push({name,blob:extracted,mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}
+    if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);const extracted=new Blob([copy.buffer],{type:"audio/mpeg"});if(extracted.size<1024)throw new Error("MEDIA_OUTPUT_EMPTY");const extractedDuration=await readMediaDuration(extracted,"audio");if(Math.abs(extractedDuration-sourceDuration)>Math.max(.5,sourceDuration*.04))throw new Error(`MEDIA_OUTPUT_TRUNCATED: expected=${sourceDuration.toFixed(2)}, actual=${extractedDuration.toFixed(2)}`);out.push({name,blob:extracted,mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}
     const base=["-i",input];
     if(mode==="compress"){
       const filters=videoFilters();args=[...base,...(filters.length?["-vf",filters.join(",")]:[]),"-c:v","libx264","-preset","veryfast","-crf",String(CRF[preset]),"-c:a","aac","-b:a",preset==="small"?"96k":"128k",output];name=`${stem}-compressed.mp4`;
