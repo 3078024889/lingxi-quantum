@@ -15,6 +15,30 @@ export async function extractCompactAudio(file:File,onProgress?:(p:number)=>void
  }finally{try{ff.terminate()}catch{}}
 }
 
+
+// Guard final delivery against FFmpeg successfully producing only a short prefix.
+// Browser media metadata is available without additional decoders or network upload.
+function browserMediaDuration(blob:Blob):Promise<number>{
+ return new Promise((resolve,reject)=>{
+  const video=document.createElement("video"),url=URL.createObjectURL(blob);
+  let settled=false;
+  const finish=(duration?:number,error?:Error)=>{
+   if(settled)return;settled=true;clearTimeout(timer);
+   video.onloadedmetadata=null;video.onerror=null;video.removeAttribute("src");video.load();
+   URL.revokeObjectURL(url);
+   if(error)reject(error);else resolve(duration!);
+  };
+  const timer=setTimeout(()=>finish(undefined,new Error("MEDIA_PROBE_TIMEOUT")),20000);
+  video.preload="metadata";
+  video.onloadedmetadata=()=>{
+   const value=video.duration;
+   Number.isFinite(value)&&value>0?finish(value):finish(undefined,new Error("MEDIA_PROBE_INVALID_DURATION"));
+  };
+  video.onerror=()=>finish(undefined,new Error("MEDIA_PROBE_FAILED"));
+  video.src=url;
+ });
+}
+
 export async function muxDubbedVideo(video:File,audio:Blob,onProgress?:(p:number)=>void){
  const ff=await createFfmpegRuntime(onProgress);
  try{
@@ -27,7 +51,10 @@ export async function muxDubbedVideo(video:File,audio:Blob,onProgress?:(p:number
   if(code!==0)throw new Error(`DUB_MUX_${code}`);
   const data=await ff.readFile(out),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data));
   const copy=new Uint8Array(bytes.length);copy.set(bytes);
-  if(!copy.length)throw new Error("DUB_OUTPUT_EMPTY");
-  return new Blob([copy.buffer],{type:"video/mp4"});
+  if(copy.byteLength<1024)throw new Error("DUB_OUTPUT_EMPTY");
+  const result=new Blob([copy.buffer],{type:"video/mp4"});
+  const outputDuration=await browserMediaDuration(result);
+  if(Math.abs(originalDuration-outputDuration)>Math.max(0.4,originalDuration*.04))throw new Error("DUB_OUTPUT_DURATION_MISMATCH");
+  return result;
  }finally{try{ff.terminate()}catch{}}
 }
