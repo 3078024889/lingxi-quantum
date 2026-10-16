@@ -53,7 +53,7 @@ export async function POST(req:NextRequest){
  const quota=await admin.rpc("consume_temp_mail_free_quota_multi",{p_identity_hashes:hashes,p_limits:limits});
  if(quota.error){console.error("[temp mail multi quota]",quota.error.code,quota.error.message);return NextResponse.json({error:"SERVICE_BUSY"},{status:503})}
  const q=(quota.data||{}) as {allowed?:boolean;remaining?:number};
- if(q.allowed!==true)return NextResponse.json({error:"FREE_DAILY_LIMIT_REACHED",freeDailyLimit:10},{status:429});
+ if(q.allowed!==true)return NextResponse.json({error:"FREE_DAILY_LIMIT_REACHED",freeDailyLimit:TEMP_MAIL_FREE_DAILY_LIMIT},{status:429});
 
  for(let i=0;i<6;i++){
    const localPart=randomLocalPart(),token=randomMailboxToken(),expiresAt=new Date(Date.now()+TEMP_MAIL_TTL_MINUTES*60_000).toISOString();

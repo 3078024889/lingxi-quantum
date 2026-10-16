@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{transitionPaidTask}from"../../lib/tools/commerce/paid-task-state";
 
 test("paid task state machine is deterministic and terminal until reset",()=>{

@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 test('json-formatter preserves integer precision and duplicate keys through pretty/minify',async({page})=>{
  await page.goto('/tools/json-formatter?lang=en');
  const input=page.locator('textarea').first(),source='{"id":900719925474099312345,"id":-0,"amount":1.2300e+40,"text":"\\u4e2d"}';

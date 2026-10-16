@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{legacyTaskStateToUnified,unifiedTaskStateToLegacy}from"../../lib/sasi/core/task";
 
 test("legacy SASI task states map cleanly into the shared lifecycle",()=>{

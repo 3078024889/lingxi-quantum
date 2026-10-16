@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 const A="11111111-1111-4111-8111-111111111111";
 const B="22222222-2222-4222-8222-222222222222";
 const threads=[{id:A,title:"Morning plan"},{id:B,title:"Yesterday's writing"}];

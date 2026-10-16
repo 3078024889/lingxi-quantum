@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 const cases=[
  ['我要压缩PDF','/tools/pdf-compress'],

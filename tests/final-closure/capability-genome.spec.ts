@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 import fs from "node:fs";
 
 test("capability genome covers every public tool recipe",async()=>{

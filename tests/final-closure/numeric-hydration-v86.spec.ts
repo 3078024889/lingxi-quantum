@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 test('numeric control stays disabled until its browser handlers are ready',async({page})=>{
  await page.route('**/_next/static/chunks/*.js',async route=>{await new Promise(resolve=>setTimeout(resolve,1200));await route.continue();});
  const response=await page.goto('/tools/pdf-crop?lang=en',{waitUntil:'commit'});const html=await response!.text();const fieldMarkup=html.match(/<input[^>]*type="number"[^>]*>/)?.[0];expect(fieldMarkup).toContain('disabled');expect(fieldMarkup).toContain('data-numeric-ready="false"');

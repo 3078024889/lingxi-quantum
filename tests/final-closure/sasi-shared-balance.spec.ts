@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('every SASI task keeps one stable composer width without task tabs',async({page})=>{
  const core=()=>page.locator('[data-sasi-composer-core]:visible');

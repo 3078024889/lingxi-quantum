@@ -1,4 +1,4 @@
-import {test,expect,Page} from "playwright/test";
+import {test,expect,Page} from "./export-test";
 import {PDFDocument} from "pdf-lib";
 async function uploadPdf(page:Page){
  const pdf=await PDFDocument.create();for(let i=0;i<5;i++)pdf.addPage();

@@ -95,6 +95,21 @@ export async function positionedTextPagesToXlsx(fileName:string,inputPages:Array
 
  const ExcelJSImport=await import("exceljs"),ExcelJS=(ExcelJSImport as any).default||ExcelJSImport;
  const workbook=new ExcelJS.Workbook();workbook.creator="LINGXIFIELD";workbook.created=new Date();
+
+ // Preserve all readable text so text-heavy PDFs do not become misleading two-column chapter sheets.
+ const textSheet=workbook.addWorksheet("Extracted Text");
+ textSheet.addRow(["Page","Text"]);
+ let textLines=0;
+ for(let i=0;i<inputPages.length;i++){
+  const rows=groupPageRows(inputPages[i].tokens);
+  for(const row of rows){
+   const line=row.map(cell=>cell.text).join(" ").trim();
+   if(line){textSheet.addRow([i+1,line]);textLines++;}
+  }
+ }
+ textSheet.getColumn(1).width=10;textSheet.getColumn(2).width=100;
+ textSheet.views=[{state:"frozen",ySplit:1}];
+
  for(const page of pages){
   const sheet=workbook.addWorksheet(page.name);
   for(const row of page.rows)sheet.addRow(row);
@@ -108,7 +123,7 @@ export async function positionedTextPagesToXlsx(fileName:string,inputPages:Array
  const bytes=await workbook.xlsx.writeBuffer();
  const blob=new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
  const confidence=pages.reduce((n,p)=>n+p.confidence,0)/pages.length;
- return{name:`${baseName(fileName)}.xlsx`,blob,pages:pages.length,rows:totalRows,columns:maxColumns,tokens:totalTokens,confidence};
+ return{name:baseName(fileName)+".xlsx",blob,pages:pages.length,rows:totalRows+textLines,columns:Math.max(maxColumns,2),tokens:totalTokens,confidence,textLines,hasTables:pages.length>0};
 }
 
 export async function pdfToXlsx(file:File){

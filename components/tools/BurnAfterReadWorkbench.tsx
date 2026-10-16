@@ -8,10 +8,14 @@ import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {privacyText} from "@/lib/privacy-tools-i18n";
 import Link from "next/link";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
+import {ensureBurnNoteAccess} from '@/lib/tools/commerce/export-access-client';
+import {METERED_EXPORT_TOOL_ID} from '@/lib/tools/commerce/metered-catalog';
 
 function b64url(bytes:Uint8Array){let s="";bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 type Mode="once"|"timed"|"limited"|"fast";
 type PreparedFile={id:string;name:string;size:number;type:string;uploadUrl:string};
+type TextTask={key:string;body:{ciphertext:string;iv:string;ttlMinutes:number;mode:Mode;maxViews:number;viewDurationSeconds:number|null}};
+type PendingTextTask={id:string;signature:string;blob:Blob;task:TextTask};
 
 export default function BurnAfterReadWorkbench(){
  const toolUiCopy=useToolUiCopy();
@@ -24,9 +28,11 @@ export default function BurnAfterReadWorkbench(){
  const [pendingQuote,setPendingQuote]=useState("");
  const [draftId,setDraftId]=useState("");
  const processing=useRef(false),finished=useRef(new Set<string>()),pollTimer=useRef<ReturnType<typeof setInterval>|null>(null);
+ const textTask=useRef<PendingTextTask|null>(null),[recoverText,setRecoverText]=useState<PendingTextTask|null>(null);
  const stopPoll=()=>{if(pollTimer.current){clearInterval(pollTimer.current);pollTimer.current=null}};
  useEffect(()=>()=>stopPoll(),[]);
  useEffect(()=>{const id=new URLSearchParams(location.search).get('resumeDraft');if(!id)return;void loadPaidTaskDraft<any>(id).then(d=>{if(d?.toolId!=='burn-after-read-file')return;setFiles(draftFiles(d));setDraftId(id);setText(d.state.text||'');setMode(d.state.mode||'once');setTtl(d.state.ttl||1440);setViews(d.state.views||1);setDuration(d.state.duration||30);setPendingQuote(d.state.quoteId||'')}).catch(()=>setError(deliveryText(lang,'failed')))},[]);
+ useEffect(()=>{const id=new URLSearchParams(location.search).get('resumeDraft');if(!id)return;void loadPaidTaskDraft<any>(id).then(async d=>{if(d?.toolId!==METERED_EXPORT_TOOL_ID||d.state?.operation!=='burn-note'||d.state?.toolId!=='burn-after-read'||!d.file)return;const task=JSON.parse(await d.file.text()) as TextTask;await deliverText({id,blob:d.file,task,signature:''})}).catch(()=>setError(deliveryText(lang,'failed')))},[]);
 
  async function encryptedText(){
    const key=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
@@ -37,14 +43,26 @@ export default function BurnAfterReadWorkbench(){
  }
 
  async function createText(){
+   if(!text.trim()&&recoverText){await deliverText(recoverText);return}
    if(!text.trim())return;
-   setBusy(true);setError("");setLink("");
+   const signature=JSON.stringify({text,ttl,mode,views,duration});
+   if(textTask.current?.signature===signature){await deliverText(textTask.current);return}
+   setBusy(true);setError('');
    try{
     const enc=await encryptedText();
-    const r=await fetch("/api/tools/burn-after-read/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==="limited"?views:1,viewDurationSeconds:mode==="fast"?duration:null})});
+    const task:TextTask={key:enc.key,body:{ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==='limited'?views:1,viewDurationSeconds:mode==='fast'?duration:null}};
+    const pending={id:crypto.randomUUID(),signature,task,blob:new Blob([JSON.stringify(task)],{type:'application/json'})};textTask.current=pending;
+    await deliverText(pending);
+   }catch{setError(deliveryText(lang,'failed'))}finally{setBusy(false)}
+ }
+ async function deliverText(pending:PendingTextTask){
+   setBusy(true);setError('');setLink('');setRecoverText(pending);
+   try{
+    await ensureBurnNoteAccess(pending.blob,pending.id);
+    const r=await fetch("/api/tools/burn-after-read/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...pending.task.body,exportRequestId:pending.id})});
     const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
     if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
-    setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${enc.key}&t=${encodeURIComponent(String(d.token))}`);setText("");
+    setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${pending.task.key}&t=${encodeURIComponent(String(d.token))}`);setText('');textTask.current=null;setRecoverText(null);await deletePaidTaskDraft(pending.id);
    }catch{setError(lang==="zh"?"暂时无法生成，请稍后再试。":"Unable to create the link right now.")}
    finally{setBusy(false)}
  }
@@ -131,7 +149,7 @@ export default function BurnAfterReadWorkbench(){
     {mode==="limited"&&<label className="text-xs text-slate-500">{t("views")}<select value={views} onChange={e=>setViews(Number(e.target.value))} className="ml-2 rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-800"><option value={1}>{t("v1")}</option><option value={3}>{t("v3")}</option><option value={5}>{t("v5")}</option></select></label>}
     {mode==="fast"&&<label className="text-xs text-slate-500">{t("timer")}<select value={duration} onChange={e=>setDuration(Number(e.target.value))} className="ml-2 rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-800"><option value={5}>{t("s5")}</option><option value={10}>{t("s10")}</option><option value={30}>{t("s30")}</option><option value={60}>{t("s60")}</option></select></label>}
    </div>
-   <button onClick={files.length?payAndUpload:createText} disabled={busy||(!text.trim()&&!files.length)} className="mt-4 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("uploading"):(files.length?t("payUpload"):t("generate"))}</button>
+   <button onClick={files.length?payAndUpload:createText} disabled={busy||(!text.trim()&&!files.length&&!recoverText)} className="mt-4 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("uploading"):(files.length?t("payUpload"):t("generate"))}</button>
    {files.length>0&&<p className="mt-2 text-xs text-slate-500">{lang==="zh"?`本次共 ${totalMb} MB。确认价格后按你选择的支付币种继续。`:`${totalMb} MB total. Continue in your selected payment currency after confirming the price.`}</p>}
    {link&&<div className="mt-5 rounded-2xl bg-slate-50 p-4"><p className="text-sm font-semibold text-slate-900">{t("ready")}</p><div className="mt-2 break-all rounded-xl bg-white p-3 text-sm text-slate-700">{link}</div><div className="mt-3 flex flex-wrap gap-2"><button onClick={()=>void copy()} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{copied?t("copied"):t("copy")}</button><button onClick={()=>void share()} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{t("share")}</button><button onClick={email} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{t("email")}</button></div></div>}
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}

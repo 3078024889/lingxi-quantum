@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 import {indicatorBand,indicatorText,syntheticScore} from "../../lib/media/ai-indicator-bands";
 
 test("AI image and video use consistent five-band presentation boundaries",()=>{

@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {publicToolSurface} from '../../lib/tools/public-surface';
 
 test('all public tool entries resolve to real HTTP 200 pages',async({request})=>{

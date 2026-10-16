@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 
 test("document ticket rejects unsupported files",async({request})=>{
  const r=await request.post("/api/tools/document/ticket",{data:{name:"payload.exe",size:100,type:"application/octet-stream"}});

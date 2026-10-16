@@ -3,6 +3,7 @@ import {detailCopyRows} from './ui-copy-v86-details';
 type Copy=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Copy=>({zh,en,ja,ko,fr,de,es,pt,ar});
 const rows=[
+L('取消','Cancel','キャンセル','취소','Annuler','Abbrechen','Cancelar','Cancelar','إلغاء'),
 L('查看本次手写识别价格','See handwriting recognition price','手書き認識の料金を確認','손글씨 인식 가격 보기','Voir le prix de reconnaissance manuscrite','Preis für Handschrifterkennung ansehen','Ver precio de reconocimiento manuscrito','Ver preço do reconhecimento manuscrito','عرض سعر التعرف على الخط'),
 L('确认价格并保存高清照片','Confirm price and save high-resolution photo','料金を確認して高解像度写真を保存','가격 확인 후 고해상도 사진 저장','Confirmer le prix et enregistrer la photo haute résolution','Preis bestätigen und hochauflösendes Foto speichern','Confirmar precio y guardar foto de alta resolución','Confirmar preço e salvar foto de alta resolução','تأكيد السعر وحفظ الصورة عالية الدقة'),
 L('查看本次图片翻译价格','See image translation price','画像翻訳の料金を確認','이미지 번역 가격 보기','Voir le prix de traduction d’image','Preis für Bildübersetzung ansehen','Ver precio de traducción de imagen','Ver preço da tradução de imagem','عرض سعر ترجمة الصورة'),
@@ -21,8 +22,8 @@ L('显示次数','Number of results','表示件数','표시 개수','Nombre de r
 L('未来 366 天没有找到匹配时间。','No matching time in the next 366 days.','今後366日以内に一致する時刻はありません。','앞으로 366일 내에 일치하는 시간이 없습니다.','Aucune correspondance dans les 366 prochains jours.','Kein passender Zeitpunkt in den nächsten 366 Tagen.','No hay coincidencias en los próximos 366 días.','Nenhum horário correspondente nos próximos 366 dias.','لا يوجد وقت مطابق خلال الـ366 يومًا القادمة.'),
 L('无法解析：','Could not parse: ','解析できません：','분석할 수 없음: ','Analyse impossible : ','Nicht lesbar: ','No se pudo interpretar: ','Não foi possível interpretar: ','تعذر التحليل: '),
 L('识别模式','Recognition mode','認識モード','인식 모드','Mode de reconnaissance','Erkennungsmodus','Modo de reconocimiento','Modo de reconhecimento','وضع التعرف'),
-L('英文手写 · TrOCR 本地模型','English handwriting · local TrOCR','英語手書き · ローカルTrOCR','영어 손글씨 · 로컬 TrOCR','Écriture anglaise · TrOCR local','Englische Handschrift · lokales TrOCR','Escritura inglesa · TrOCR local','Escrita inglesa · TrOCR local','خط إنجليزي · TrOCR محلي'),
-L('多语言文字/工整手写 · Tesseract','Multilingual text/neat handwriting · Tesseract','多言語文字・整った手書き · Tesseract','다국어 텍스트/정자 손글씨 · Tesseract','Texte multilingue/écriture soignée · Tesseract','Mehrsprachiger Text/saubere Handschrift · Tesseract','Texto multilingüe/escritura clara · Tesseract','Texto multilíngue/escrita legível · Tesseract','نص متعدد اللغات/خط واضح · Tesseract'),
+L('英文手写','English handwriting','英語の手書き','영어 손글씨','Écriture anglaise','Englische Handschrift','Escritura inglesa','Escrita inglesa','خط إنجليزي'),
+L('多语言文字与工整手写','Multilingual text and neat handwriting','多言語の文字・読みやすい手書き','다국어 텍스트와 정자 손글씨','Texte multilingue et écriture soignée','Mehrsprachiger Text und klare Handschrift','Texto multilingüe y escritura clara','Texto multilíngue e escrita legível','نص متعدد اللغات وخط واضح'),
 L('语言','Language','言語','언어','Langue','Sprache','Idioma','Idioma','اللغة'),
 L('简体中文 + English','Simplified Chinese + English','簡体字中国語 + English','중국어 간체 + English','Chinois simplifié + English','Vereinfachtes Chinesisch + English','Chino simplificado + English','Chinês simplificado + English','الصينية المبسطة + English'),
 L('繁體中文 + English','Traditional Chinese + English','繁体字中国語 + English','중국어 번체 + English','Chinois traditionnel + English','Traditionelles Chinesisch + English','Chino tradicional + English','Chinês tradicional + English','الصينية التقليدية + English'),

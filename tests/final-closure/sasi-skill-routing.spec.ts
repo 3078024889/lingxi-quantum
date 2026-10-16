@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 import {selectSasiSkills,validateSasiSkillIds,compileSasiSkillGuidance} from "../../lib/sasi/skills/router";
 
 test("explicit paper critique and research tracking survive eight-skill budget",()=>{

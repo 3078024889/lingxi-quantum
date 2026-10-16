@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 const routes=["/tools/e-sign-pdf","/tools/pdf-editor","/tools/pdf-ocr","/tools/pdf-redact","/tools/pdf-pages","/tools/pdf-compress","/tools/pdf-merge-split","/tools/pdf-to-jpg"];
 for(const route of routes)test(`${route} exposes unified document intake`,async({page})=>{
  await page.goto(route);

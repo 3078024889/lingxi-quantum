@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{assertUnifiedCapabilityCatalog,findUnifiedCapabilities}from"../../lib/capabilities/unified-catalog";
 
 test("unified catalog includes 100+ tools and all SASI platform skills",()=>{

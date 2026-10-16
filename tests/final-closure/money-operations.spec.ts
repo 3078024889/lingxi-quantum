@@ -1,4 +1,4 @@
-import {test,expect,type Page} from 'playwright/test';
+import {test,expect,type Page} from './export-test';
 import {adminDashboardFixture as dashboard} from './admin-dashboard-fixture';
 const id='00000000-0000-4000-8000-000000000001';
 const draft={id,order_id:'o',provider:'wechat',currency:'CNY',provider_currency:'CNY',amount_minor:100,provider_amount_minor:100,status:'requested',submission_confirmed_at:null,provider_status:null,failure_code:null,created_at:'2026-10-03T08:00:00Z',completed_at:null};

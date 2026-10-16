@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 import {PDFDocument,rgb} from "pdf-lib";
 
 async function makePdf(pageCount:number){

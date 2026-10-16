@@ -3,7 +3,7 @@ import EditableNumberInput from "@/components/ui/EditableNumberInput";
 import {formatJsonSource} from "@/lib/tools/shared/json-source-format";
 
 import {plainText} from "@/lib/tools/plain-copy";
-import {downloadUrl} from "@/lib/tools/shared/download";
+import ResultFileActions from './ResultFileActions';
 
 import { useEffect, useMemo, useState } from "react";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
@@ -17,6 +17,7 @@ import FileDropzone from "./FileDropzone";
 import ResultPanel from "./ResultPanel";
 import ErrorExplain from "./ErrorExplain";
 import ResizeImageWorkbench from "./ResizeImageWorkbench";
+import ImageToPdfWorkbench from "./ImageToPdfWorkbench";
 import TimestampProWorkbench from "./TimestampProWorkbench";
 import QrProWorkbench from "./QrProWorkbench";
 import { convertImage, compressImageToTarget, stripImageMetadata } from "@/lib/tools/shared/image-canvas";
@@ -47,6 +48,7 @@ export default function ToolWorkbench({ tool }: Props) {
   if (tool.slug === "timestamp-converter") return <TimestampProWorkbench />;
   if (tool.slug === "qr-code-generator") return <QrProWorkbench />;
   if (tool.slug === "resize-image") return <ResizeImageWorkbench tool={tool} />;
+  if (tool.slug === "image-to-pdf") return <ImageToPdfWorkbench />;
 
   return <FileToolWorkbench tool={tool} />;
 }
@@ -705,6 +707,7 @@ function QrWorkbench() {
   const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
   const [text, setText] = useState("https://lingxifield.cn");
   const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const pngFile=useMemo(()=>dataUrl?new Blob([Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0))],{type:'image/png'}):null,[dataUrl]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -745,7 +748,7 @@ function QrWorkbench() {
         <div className="mt-6 rounded-sm border border-white/10 bg-void-deep p-5 text-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={dataUrl} alt="QR code" className="mx-auto h-64 w-64 bg-white p-2" />
-          <button type="button" onClick={()=>void downloadUrl(dataUrl,"qrcode.png")} className="mt-4 inline-block rounded-sm bg-lattice px-5 py-2.5 text-sm text-void-deep">{t("下载 PNG","Download PNG")}</button>
+          {pngFile&&<ResultFileActions blob={pngFile} name="qrcode.png" saveLabel={t("下载 PNG","Download PNG")}/>}
         </div>
       )}
     </div>

@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('user-funded resource can continue chat when the shared experience pool is unavailable',async({page})=>{
  await page.addInitScript(()=>{

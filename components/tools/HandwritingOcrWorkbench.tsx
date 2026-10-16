@@ -2,9 +2,11 @@
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 
 import ToolUiText from "@/components/tools/ToolUiText";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
+import {downloadBlob} from "@/lib/tools/shared/download";
+import ResultFileActions from './ResultFileActions';
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import type { ToolResultFile } from "@/lib/tools/types";
 import { buildEditableDocx } from "@/lib/tools/shared/docx-builder";
@@ -116,6 +118,9 @@ export default function HandwritingOcrWorkbench() {
   const [stage, setStage] = useState("");
   const [error, setError] = useState("");
   const [texts, setTexts] = useState<Array<{ name: string; text: string }>>([]);
+  const [docx,setDocx]=useState<ToolResultFile|null>(null);
+  const [preparingDocx,setPreparingDocx]=useState(false);
+  useEffect(()=>setDocx(null),[texts]);
 
   const exports = useMemo<ToolResultFile[]>(
     () =>
@@ -224,19 +229,14 @@ export default function HandwritingOcrWorkbench() {
   }
 
   async function downloadDocx() {
-    if (!texts.length) return;
-
-    const docxResult = await buildEditableDocx(
-      texts.map((item) => `${item.name}\n${item.text}`),
-      "handwriting-ocr.docx",
-    );
-
-    const url = URL.createObjectURL(docxResult.blob);
-    const anchor = window.document.createElement("a");
-    anchor.href = url;
-    anchor.download = docxResult.name;
-    anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1200);
+    if (!texts.length||preparingDocx) return;
+    setPreparingDocx(true);
+    try{
+      const docxResult = docx||await buildEditableDocx(texts.map((item) => `${item.name}\n${item.text}`),"handwriting-ocr.docx");
+      setDocx(docxResult);
+      await downloadBlob(docxResult.blob,docxResult.name);
+    }catch{setError("Unable to save the Word document. Please retry.")}
+    finally{setPreparingDocx(false)}
   }
 
   return (
@@ -262,11 +262,12 @@ export default function HandwritingOcrWorkbench() {
           <ToolUiText text="识别模式" />
           <select
             value={mode}
+            disabled={busy}
             onChange={(event) => setMode(event.target.value as Mode)}
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
           >
-            <option value="english-handwriting"><ToolUiText text="英文手写 · TrOCR 本地模型" /></option>
-            <option value="multilingual"><ToolUiText text="多语言文字/工整手写 · Tesseract" /></option>
+            <option value="english-handwriting"><ToolUiText text="英文手写" /></option>
+            <option value="multilingual"><ToolUiText text="多语言文字与工整手写" /></option>
           </select>
         </label>
 
@@ -275,6 +276,7 @@ export default function HandwritingOcrWorkbench() {
             <ToolUiText text="语言" />
             <select
               value={lang}
+              disabled={busy}
               onChange={(event) => setLang(event.target.value)}
               className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"
             >
@@ -293,11 +295,11 @@ export default function HandwritingOcrWorkbench() {
 
       <div className="rounded-xl bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">
         <ToolUiText text={mode === "english-handwriting"
-          ? "英文手写模式会先自动分行，再由 TrOCR 手写模型逐行识别；模型首次使用会下载并缓存，之后可复用。"
+          ? "请上传清晰、行距分明的英文手写图片。首次使用准备时间较长，请保持页面打开。"
           : "多语言模式适合印刷体和较工整手写。潦草手写尤其中文/日文仍可能误识别，重要内容请核对；这一模式不冒充专业多语言手写模型。"} />
       </div>
 
-      {files.length > 0 && !busy && (<PaidActionButton toolId="handwriting-ocr" quantity={files.length} metadata={{pages:files.length,mode}} onPaid={run} label="查看本次手写识别价格" />)}
+      {files.length > 0 && (<PaidActionButton toolId="handwriting-ocr" quantity={files.length} draftReady={!busy} metadata={{pages:files.length,mode}} onPaid={run} label="查看本次手写识别价格" />)}
 
       {stage && <p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
 
@@ -334,10 +336,12 @@ export default function HandwritingOcrWorkbench() {
           />
           <button
             onClick={downloadDocx}
+            disabled={preparingDocx}
             className="rounded-xl border border-[var(--lx-line)] px-4 py-2 text-sm"
           >
             <ToolUiText text="导出 Word DOCX" />
           </button>
+          {docx&&<ResultFileActions blob={docx.blob} name={docx.name}/>}
         </>
       )}
 

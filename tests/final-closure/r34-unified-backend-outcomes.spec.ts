@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{verifyUnifiedOutcome,outcomeCompressionImproved}from"../../lib/tasks/outcome-contract";
 import{validateArtifact,compressionActuallyHelped}from"../../lib/tools/engine/quality-gate";
 import{verifyTextOutcome,shouldEscalate}from"../../lib/sasi/durable/outcome-verifier";

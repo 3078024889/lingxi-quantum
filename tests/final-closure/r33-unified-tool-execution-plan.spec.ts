@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{LINGXIFIELD_PUBLIC_TOOL_REGISTRY}from"../../lib/tools/platform/tool-registry";
 import{unifiedToolExecutionPlan}from"../../lib/tools/engine/unified-plan";
 

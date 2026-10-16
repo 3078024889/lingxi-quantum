@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 import{entitlementSnapshot,nextUtcDay}from"../../lib/tasks/entitlement-contract";
 
 test("unified entitlement contract distinguishes exhausted from unavailable",()=>{

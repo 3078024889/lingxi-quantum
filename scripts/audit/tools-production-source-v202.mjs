@@ -13,7 +13,6 @@ for(const p of [
  "components/tools/FileDropzone.tsx",
  "components/tools/ResultPanel.tsx",
  "lib/tools/shared/download.ts",
- "lib/tools/autonomous/download-local.ts",
  "lib/tools/engine/stage-graph.ts",
  "lib/tools/paid-catalog.ts",
 ]) must(exists(p),`TOOLS_PRODUCTION_REQUIRED:${p}`);
@@ -23,7 +22,6 @@ const hub=read("components/tools/ToolsHubV11.tsx");
 const graph=read("lib/tools/engine/stage-graph.ts");
 const fileDrop=read("components/tools/FileDropzone.tsx");
 const sharedDownload=read("lib/tools/shared/download.ts");
-const localDownload=read("lib/tools/autonomous/download-local.ts");
 
 const registrySlugs=[...registry.matchAll(/slug:\s*"([^"]+)"/g)].map(x=>x[1]);
 const dedicatedSlugs=[...hub.matchAll(/href:"\/tools\/([^"]+)"/g)].map(x=>x[1]);
@@ -42,9 +40,9 @@ must(graphMissing.length===0,`TOOLS_GRAPH_MISSING:${graphMissing.join(",")}`);
 
 must(fileDrop.includes("URL.createObjectURL(file)"),"IMAGE_UPLOAD_PREVIEW_MISSING");
 must(fileDrop.includes('kind!=="image"'),"IMAGE_PREVIEW_SCOPE_MISSING");
-must(sharedDownload.includes("navigator as Navigator"),"MOBILE_NATIVE_SHARE_MISSING");
+must(sharedDownload.includes("navigator.share(payload)")&&sharedDownload.includes("navigator.canShare(payload)"),"MOBILE_NATIVE_SHARE_MISSING");
 must(sharedDownload.includes("miniLikeEnvironment"),"WEBVIEW_DOWNLOAD_FALLBACK_MISSING");
-must(localDownload.includes("downloadBlob"),"LEGACY_LOCAL_DOWNLOAD_NOT_MIGRATED");
+must(!exists("lib/tools/autonomous/download-local.ts"),"UNUSED_LOCAL_DOWNLOAD_WRAPPER_REMAINS");
 
 // Fake-function scan.
 // IMPORTANT: TODO/FIXME are intentionally CASE-SENSITIVE.

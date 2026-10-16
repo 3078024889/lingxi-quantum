@@ -1,4 +1,4 @@
-import {test,expect,type Page} from 'playwright/test';
+import {test,expect,type Page} from './export-test';
 import {adminDashboardFixture as dashboard} from './admin-dashboard-fixture';
 import {publicVisitPath} from '../../lib/analytics/public-visit';
 const data={dashboard,stats:{channels:[],notices_pending:0},withdrawals:[],notices:[],notifyEmail:'business@example.com',emailConfigured:true};

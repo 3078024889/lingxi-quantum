@@ -1,0 +1,58 @@
+name: Tool delivery and daily export quota
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tool-delivery-quota-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  delivery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Isolated export authorization contracts
+        run: |
+          node scripts/test-file-delivery-v91.cjs
+          node scripts/test-export-access-v92.cjs
+          node scripts/test-daily-export-api-v92.cjs
+          node scripts/test-temp-mail-safety-v81.cjs
+          node scripts/test-subtitle-translation-v95.cjs
+      - name: Production build on remote runner
+        run: pnpm build
+      - name: Install test browser
+        run: pnpm exec playwright install --with-deps chrome
+      - name: File operations and simulated payment recovery
+        run: >-
+          pnpm exec playwright test -c playwright.final.config.ts
+          daily-export-quota-v92 file-delivery-v91 paid-local-output-v89
+          pdf-to-image-output-v90 pdf-redaction-output-v89 screenshot-redaction-v89
+          qr-cron-output-v86 burn-reveal-recovery
+          subtitle-translation-v95
+          --workers=2 --reporter=list,json
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/delivery-results.json
+      - name: Preserve evidence including failures
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: delivery-quota-evidence
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7

@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 test("paper signature becomes transparent ink inside PDF editor without charging",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
  const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");

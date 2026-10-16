@@ -1,4 +1,4 @@
-import {test,expect as baseExpect} from 'playwright/test';
+import {test,expect as baseExpect} from './export-test';
 const expect=baseExpect.configure({timeout:15000});
 test.describe.configure({mode:'parallel'});
 import {publicToolSurface} from '../../lib/tools/public-surface';

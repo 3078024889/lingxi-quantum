@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 test("handwriting cleanup can erase remaining photo marks, undo and update PDF placement",async({page})=>{
  await page.goto("/tools/e-sign-pdf?lang=en");
  const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");

@@ -5,6 +5,10 @@ import {spawnSync} from "node:child_process";
 const root=process.cwd();
 
 const commands=[
+ ["node",["scripts/test-subtitle-translation-v95.cjs"]],
+ ["node",["scripts/test-export-access-v92.cjs"]],
+ ["node",["scripts/test-daily-export-api-v92.cjs"]],
+ ["node",["scripts/test-file-delivery-v91.cjs"]],
  ["node",["scripts/test-document-promotion-v88.cjs"]],
  ["node",["scripts/test-pdf-structure-v88.cjs"]],
  ["node",["scripts/prepare-media-runtime.cjs"]],

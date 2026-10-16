@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 for(const slug of ['pdf-editor','pdf-to-jpg','compress-pdf']){
 test(`${slug}: declining Office conversion sends no metadata or file bytes`,async({page})=>{
  let calls=0;

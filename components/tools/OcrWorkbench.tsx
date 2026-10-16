@@ -1,4 +1,5 @@
 "use client";
+import {copyToolResult} from "@/lib/tools/commerce/copy-result";
 import ToolUiText from "@/components/tools/ToolUiText";
 import {plainMessage} from "@/lib/tools/plain-copy";
 
@@ -53,7 +54,7 @@ export default function OcrWorkbench(){
  }
 
  async function copy(name:string,text:string){
-  try{await navigator.clipboard.writeText(text);setCopied(name);setTimeout(()=>setCopied(""),1600)}catch{}
+  try{await copyToolResult(text);setCopied(name);setTimeout(()=>setCopied(""),1600)}catch{}
  }
 
  return <div className="space-y-4">

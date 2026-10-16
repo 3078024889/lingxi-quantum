@@ -1,4 +1,4 @@
-import {test,expect,type Page} from 'playwright/test';
+import {test,expect,type Page} from './export-test';
 import fs from 'node:fs/promises';
 
 async function source(page:Page){

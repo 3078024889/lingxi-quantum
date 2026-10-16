@@ -53,8 +53,10 @@ export function SasiConversationTurns({turns}:{turns:SasiConversationTurn[]}){
 }
 
 export function SasiVideoResult({url,downloadLabel}:{url:string;downloadLabel:string}){
+ const valid=/^\/api\/sasi\/generated-assets\/[A-Za-z0-9_-]{8,200}$/.test(url);
+ if(!valid)return null;
  return <div className="mb-8" data-sasi-result-kind="video">
-  <video src={url} controls playsInline className="max-h-[68vh] w-full rounded-3xl bg-black"/>
+  <video src={url} controls playsInline preload="metadata" className="max-h-[68vh] w-full rounded-3xl bg-black"/>
   <a href={url} download className="mt-3 inline-block rounded-full border border-[var(--lx-line)] px-4 py-2 text-sm">{downloadLabel}</a>
  </div>;
 }

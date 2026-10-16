@@ -29,7 +29,7 @@ const checks=[
  ["V83_WORKFLOW_VERSION_COMPAT",workerVersion.includes("workerSupports")&&invariants.includes("workflowVersionCompatibilityRequired")],
  ["V83_MATURE_DURABILITY_INVARIANTS",["resumeAfterColdRestartTest","streamReconnectReplayRequired","providerExactlyOnceNotAssumed","detachedWorkerLeaseRequired","durableStepFencingRequired","staleWorkerCompletionRejected","queuePriorityMustAge"].every(x=>invariants.includes(x))],
  ["V83_NO_PARALLEL_PRODUCTION_KERNEL",!fs.existsSync("lib/sasi/core/production-kernel.ts")],
- ["V83_HOME_STRUCTURED_APPLICATION",page.includes('"@type":"SoftwareApplication"')&&page.includes("100+免费在线实用工具")]
+ ["V83_HOME_STRUCTURED_APPLICATION",page.includes('"@type":"SoftwareApplication"')&&page.includes("100+在线实用工具")&&page.includes("每日免费体验")]
 ];
 let failed=false;
 for(const [name,pass]of checks){console.log(name+"="+(pass?"PASS":"FAIL"));if(!pass)failed=true}

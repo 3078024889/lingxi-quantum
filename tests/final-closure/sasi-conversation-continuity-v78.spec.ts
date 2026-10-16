@@ -1,4 +1,4 @@
-import {test,expect as baseExpect} from 'playwright/test';
+import {test,expect as baseExpect} from './export-test';
 import fs from 'node:fs';
 const expect=baseExpect.configure({timeout:15000});
 

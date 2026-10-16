@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 
 test("browser local handoff survives navigation and is consumed once",async({page})=>{
  await page.goto("/tools/png-to-jpg",{waitUntil:"domcontentloaded"});

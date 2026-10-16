@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 
 test('chat follow-up includes previous conversation without starting paid generation',async({page})=>{
  const requests:Array<{text:string;history?:Array<{role:string;content:string}>}>=[];let paid=0;

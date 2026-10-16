@@ -34,9 +34,9 @@ function SasiOneSurfaceBody(){
    const raw=sessionStorage.getItem('lingxifield.promotionBrief.v1');if(!raw)return;
    const value=JSON.parse(raw);
    if(typeof value.brief!=='string'||value.brief.length>16000||!Number.isFinite(value.createdAt)||Date.now()-value.createdAt>30*60_000)return;
-   setInitialPrompt(value.brief);setMode('chat');setAutoStart(false);didRestore.current=true;
+   setInitialPrompt(value.brief);setMode('drama');setAutoStart(false);didRestore.current=true;
    sessionStorage.removeItem('lingxifield.promotionBrief.v1');
-   const url=new URL(window.location.href);url.searchParams.delete('promotion');url.searchParams.set('mode','chat');window.history.replaceState({},'',url.pathname+'?'+url.searchParams);
+   const url=new URL(window.location.href);url.searchParams.delete('promotion');url.searchParams.set('mode','drama');window.history.replaceState({},'',url.pathname+'?'+url.searchParams);
   }catch{}
  },[promotion,continuity.restored]);
  useEffect(()=>{if(legacy&&!intent)setMode(legacy)},[legacy,intent]);

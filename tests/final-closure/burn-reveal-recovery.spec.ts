@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {webcrypto} from 'node:crypto';
 
 async function encrypted(){

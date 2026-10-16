@@ -1,4 +1,5 @@
 export const PUBLIC_PAID_TOOL_IDS = [
+  "metered-tool-export",
   "batch-pdf",
   "pdf-ocr",
   "handwriting-ocr",

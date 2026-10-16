@@ -27,6 +27,8 @@ async function main(){
  const promotion=load('lib/sasi/promotion-brief.ts');const series=load('lib/sasi/series-specification.ts',{'./pricing-v49':pricing,'./promotion-brief':promotion});
  const tagged='Source page mentions 50 episodes and 720p.\nREQUESTED PROMOTION: 1 episode; each episode 24 seconds; resolution 1080p; ratio 9:16.';
  assert.equal(series.seriesSpecification(tagged).episodes,1);assert.equal(series.seriesSpecification(tagged).seconds,24);assert.equal(promotion.promotionSettings(tagged).resolution,'1080p');
+ const realVideoBrief=promotion.promotionBrief({url:'https://example.com',title:'Verified product',description:'Source description',headings:[],text:'Source facts'},{language:'en',audience:'Customers',channel:'Shorts',seconds:24});
+ assert.match(realVideoBrief,/photoreal live-action/);assert.match(realVideoBrief,/Do not substitute animated cards/);assert(realVideoBrief.indexOf('photoreal live-action')<realVideoBrief.indexOf('SOURCE EVIDENCE'));
  assert.match(fs.readFileSync('app/api/tools/promotion-source/route.ts','utf8'),/fetchPublicMedia\(/);
  console.log('PASS translation complete-ID/Unicode contract, owner gate, language validation, included-only billing with exhausted allowance stopped, existing 720p/1080p pricing reused. API services isolated; no provider requests.');
 }

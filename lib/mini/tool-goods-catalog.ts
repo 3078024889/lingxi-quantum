@@ -1,6 +1,7 @@
 // Pricing units reflect the existing price book, including caps and tier increments.
 // Creation is not publication; runtime payment still requires the explicit approved map.
 export const MINI_TOOL_GOODS = [
+  { toolId: "metered-tool-export", skuId: "lx_tool_export", name: "工具文件导出", unitPriceFen: 100 },
   { toolId: "audio-cleanup", skuId: "lx_audio_clean", name: "音频降噪", unitPriceFen: 50 },
   { toolId: "audio-transcription", skuId: "lx_audio_text", name: "音频转文字", unitPriceFen: 50 },
   { toolId: "batch-image-watermark-remover", skuId: "lx_batch_img", name: "批量图片去水印", unitPriceFen: 10 },
@@ -14,7 +15,7 @@ export const MINI_TOOL_GOODS = [
   { toolId: "image-watermark-remover", skuId: "lx_image_clean", name: "图片去水印", unitPriceFen: 190 },
   { toolId: "pdf-editor", skuId: "lx_pdf_edit", name: "PDF编辑", unitPriceFen: 200 },
   { toolId: "pdf-ocr", skuId: "lx_pdf_ocr", name: "PDF文字识别", unitPriceFen: 100 },
-  { toolId: "pdf-redact", skuId: "lx_pdf_redact", name: "PDF隐私遮盖", unitPriceFen: 200 },
+  { toolId: "pdf-redact", skuId: "lx_pdf_redact", name: "PDF隐私遮盖（每页）", unitPriceFen: 100 },
   { toolId: "pdf-to-word", skuId: "lx_pdf_word", name: "PDF转Word", unitPriceFen: 10 },
   { toolId: "subtitle-translate", skuId: "lx_subtitle", name: "字幕翻译", unitPriceFen: 100 },
   { toolId: "temp-mail-batch", skuId: "lx_temp_mail", name: "临时邮箱批量服务", unitPriceFen: 5 },

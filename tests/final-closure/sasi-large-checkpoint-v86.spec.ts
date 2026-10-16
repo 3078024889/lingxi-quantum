@@ -1,4 +1,4 @@
-import {test,expect} from 'playwright/test';
+import {test,expect} from './export-test';
 import {workspaceCheckpoint} from '../../lib/sasi/workspace-checkpoint';
 const owner='11111111-1111-4111-8111-111111111111',thread='22222222-2222-4222-8222-222222222222',production='66666666-6666-4666-8666-666666666666',project='55555555-5555-4555-8555-555555555555';
 const workspace={mode:'chat',chatOpened:true,projectId:project,approvedScript:'Approved original story retained.',creation:{drama:{productionId:production,projectId:project,prompt:'生成50集，每集1分钟',seriesState:'ready',plannedEpisodes:50,preparedShots:Array.from({length:250},(_,index)=>({episode:Math.floor(index/5)+1,duration:12,prompt:'scene '.repeat(480)}))},website:{websiteHtml:'<h1>Retain website</h1>',websiteFiles:[{path:'index.html',content:'<h1>Retain website</h1>'}]}}};

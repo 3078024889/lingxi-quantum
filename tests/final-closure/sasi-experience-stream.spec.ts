@@ -1,4 +1,4 @@
-import {test,expect} from "playwright/test";
+import {test,expect} from "./export-test";
 test("SASI streams assistant tokens and only stores the completed response",async({page})=>{
  let saved:any=null;
  await page.route("**/api/sasi/conversations",route=>{

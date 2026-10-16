@@ -1,4 +1,4 @@
-import {test,expect,type Page} from 'playwright/test';
+import {test,expect,type Page} from './export-test';
 import {connectionPageCopy} from '../../lib/sasi/connection-page-copy';
 import type {LingxiLang} from '../../lib/lingxi-i18n';
 for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'] as LingxiLang[])test('connection page service groups and responsive layout '+lang,async({page,isMobile})=>{

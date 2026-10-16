@@ -33,12 +33,12 @@ export default function VideoToolkitWorkbench(){
  async function run(){
   if(!files.length)return;setBusy(true);setError("");setStage(workbenchCopy(lang,"preparingMedia"));setOutputs([]);
   try{
-   const [{FFmpeg},{fetchFile,toBlobURL}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);
+   const [{FFmpeg},{fetchFile}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);
    const out:ToolResultFile[]=[];
    for(let i=0;i<files.length;i++){
     const file=files[i],f=new FFmpeg();ff.current=f;
     f.on("progress",({progress}:{progress:number})=>setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`));
-    await f.load({coreURL:await toBlobURL("/media/ffmpeg-0.12.10/ffmpeg-core.js","text/javascript"),wasmURL:await toBlobURL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm","application/wasm")});
+    await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
     const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
     const stem=safeFilename(file.name.replace(/\.[^.]+$/,""),`video-${i+1}`),output=`output-${i}.mp4`;let name=`${stem}-processed.mp4`,args:string[]=[];
     if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);out.push({name,blob:new Blob([copy.buffer],{type:"audio/mpeg"}),mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}
@@ -81,6 +81,6 @@ export default function VideoToolkitWorkbench(){
   {mode==="speed"&&<label className="block text-sm text-[var(--lx-muted)]">{t("播放速度","Playback speed")} {speed.toFixed(2)}×<input className="mt-2 w-full" type="range" min={.5} max={2} step={.05} value={speed} onChange={e=>setSpeed(Number(e.target.value))}/></label>}
   {mode!=="audio"&&<div className="grid gap-3 sm:grid-cols-2"><label className="text-sm text-[var(--lx-muted)]">{t("输出分辨率","Output resolution")}<select value={resolution} onChange={e=>setResolution(e.target.value as Resolution)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"><option value="source">{t("保持原尺寸","Keep source")}</option><option value="1080">1080p</option><option value="720">720p</option><option value="480">480p</option></select></label><label className="text-sm text-[var(--lx-muted)]">{t("输出帧率（0=保持原帧率）","FPS (0 = keep source)")}<EditableNumberInput type="number" min={0} max={120} value={fps} onChange={e=>setFps(Math.max(0,Math.min(120,Number(e.target.value))))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"/></label></div>}
   <div className="flex gap-3"><button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?plainText(lang,"working"):t("开始处理","Start processing")}</button>{busy&&<button onClick={cancel} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">{t("取消","Cancel")}</button>}</div>
-  {stage&&<p className="text-sm text-[var(--lx-faint)]">{stage}</p>}{error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{plainMessage(lang,error)}</p>}{outputs.length>0&&<ResultPanel files={outputs} messageZh={plainText(lang,"ready")} messageEn={plainText(lang,"ready")}/>}
+  {stage&&!outputs.length&&<p className="text-sm text-[var(--lx-faint)]">{stage}</p>}{error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{plainMessage(lang,error)}</p>}{outputs.length>0&&<ResultPanel files={outputs} messageZh={plainText(lang,"ready")} messageEn={plainText(lang,"ready")}/>}
  </div>
 }

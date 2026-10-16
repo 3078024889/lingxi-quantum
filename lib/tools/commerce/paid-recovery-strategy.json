@@ -2,6 +2,7 @@
   "version": 2,
   "rule": "Every public paid tool must declare a recovery strategy. retain-tab is allowed only for local/browser work that remains intact while payment opens in a separate window; stateful same-tab navigation still requires a persistent draft.",
   "strategies": {
+    "metered-tool-export": "persistent-draft",
     "audio-cleanup": "retain-tab",
     "audio-transcription": "persistent-draft",
     "batch-image-watermark-remover": "persistent-draft",

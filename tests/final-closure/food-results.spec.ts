@@ -1,4 +1,4 @@
-import{test,expect}from"playwright/test";
+import{test,expect}from"./export-test";
 const cases=[
  ["油条","CN","youtiao"],["油炸鬼","HK","youtiao"],["youtiao","SG","youtiao"],
  ["水果沙拉","SG","fruit-salad"],["水果拼盘","CN","fruit-platter"],["肠粉","HK","cheung-fun"],

@@ -1,4 +1,4 @@
-import {test,expect,type Page} from 'playwright/test';
+import {test,expect,type Page} from './export-test';
 import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {PDFDocument,StandardFonts,PDFName,PDFDict,PDFArray,PDFRawStream,decodePDFRawStream} from 'pdf-lib';

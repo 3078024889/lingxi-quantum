@@ -18,7 +18,7 @@ function platformOf(raw:string){
 export default function RemoteMediaImporter({acceptKind,onImported,disabled}:{acceptKind:"video"|"audio"|"image";onImported:(file:File)=>void|Promise<void>;disabled?:boolean}){
  const{lang}=useLingxiLang();const t=(key:Parameters<typeof workbenchCopy>[1])=>workbenchCopy(lang,key);
  const[raw,setRaw]=useState(""),[busy,setBusy]=useState(false),[results,setResults]=useState<ImportResult[]>([]);
- const links=useMemo(()=>raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).slice(0,20),[raw]);
+ const links=useMemo(()=>raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),[raw]);
  async function importOne(input:string):Promise<ImportResult>{
   let parsed:URL;
   try{parsed=new URL(input);if(parsed.protocol!=="https:")throw new Error("HTTPS")}
@@ -35,7 +35,7 @@ export default function RemoteMediaImporter({acceptKind,onImported,disabled}:{ac
   }catch{return{input,ok:false,platform:platformOf(input),error:t("remoteFallback")}}
  }
  async function run(){
-  if(!links.length)return;setBusy(true);setResults([]);const out:ImportResult[]=[];
+  if(!links.length||links.length>5)return;setBusy(true);setResults([]);const out:ImportResult[]=[];
   try{for(const link of links){const result=await importOne(link);out.push(result);setResults([...out])}}
   finally{setBusy(false)}
  }
@@ -44,7 +44,7 @@ export default function RemoteMediaImporter({acceptKind,onImported,disabled}:{ac
   <div className="text-sm font-medium text-[var(--lx-ink)]">{t("remoteTitle")}</div>
   <p className="mt-1 text-xs leading-5 text-[var(--lx-muted)]">{t("remoteLead")}</p>
   <textarea value={raw} onChange={e=>setRaw(e.target.value)} disabled={disabled||busy} rows={5} placeholder={"https://v.douyin.com/...\nhttps://www.tiktok.com/...\nhttps://xhslink.com/...\nhttps://v.kuaishou.com/..."} className="mt-3 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-sm text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
-  <div className="mt-3 flex flex-wrap items-center gap-3"><button type="button" onClick={run} disabled={disabled||busy||!links.length} className="rounded-xl bg-[var(--lx-ink)] px-4 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?`${t("remoteRunning")} ${Math.min(results.length+1,links.length)}/${links.length}…`:`${t("remoteRun")} ${links.length||0}`}</button>{results.length>0&&<span className="text-xs text-[var(--lx-faint)]">✓ {ok}{failed?` · × ${failed}`:""}</span>}</div>
+  <div className="mt-3 flex flex-wrap items-center gap-3"><button type="button" onClick={run} disabled={disabled||busy||!links.length||links.length>5} className="rounded-xl bg-[var(--lx-ink)] px-4 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?`${t("remoteRunning")} ${Math.min(results.length+1,links.length)}/${links.length}…`:`${t("remoteRun")} ${links.length||0}`}</button>{results.length>0&&<span className="text-xs text-[var(--lx-faint)]">✓ {ok}{failed?` · × ${failed}`:""}</span>}</div>
   {results.length>0&&<div className="mt-4 space-y-2">{results.map((r,i)=><div key={`${r.input}-${i}`} className={`rounded-xl border px-3 py-2 text-xs ${r.ok?"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-ink)]":"border-[var(--lx-danger)] bg-[var(--lx-panel)] text-[var(--lx-danger)]"}`}><div className="font-medium">{r.ok?"✓":"×"} {r.platform} · {r.ok?t("remoteLoaded"):t("remoteFailed")}</div><div className="mt-1 break-all opacity-80">{r.input}</div>{r.filename&&<div className="mt-1">{r.filename}</div>}{r.error&&<div className="mt-1">{r.error}</div>}</div>)}</div>}
   <p className="mt-3 text-[11px] leading-5 text-[var(--lx-faint)]">{t("remoteRights")}</p>
  </div>;

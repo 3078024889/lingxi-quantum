@@ -1,10 +1,11 @@
 export type PricingSpec={toolId:string;enabled:boolean;billing:"per_page"|"per_file"|"per_batch"|"per_minute"|"per_character";unitName:"page"|"file"|"batch"|"minute"|"character";cny:string;usd:string;note:string};
 export const V67_TOOL_PRICING:PricingSpec[]=[
+{toolId:"metered-tool-export",enabled:true,billing:"per_file",unitName:"file",cny:"1.00/file after daily trial",usd:"1.00/file after daily trial",note:"five daily free exports per original free tool, limited by both account and IP"},
 {toolId:"pdf-ocr",enabled:true,billing:"per_page",unitName:"page",cny:"first page free; +1.00 each additional page",usd:"first page free; +1.00 each additional page",note:"full OCR; first page preview is free"},
 {toolId:"handwriting-ocr",enabled:true,billing:"per_page",unitName:"page",cny:"1.00/page",usd:"1.00/page",note:"multilingual and English TrOCR use the same rate"},
 {toolId:"pdf-to-word",enabled:true,billing:"per_page",unitName:"page",cny:"1.00 first page; +0.30/additional page",usd:"1.00 first page; +0.30/additional page",note:"page count is authoritative quantity"},
 {toolId:"pdf-editor",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"page count is metadata only"},
-{toolId:"pdf-redact",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"true rasterized redaction export"},
+{toolId:"pdf-redact",enabled:true,billing:"per_page",unitName:"page",cny:"1.00/page",usd:"1.00/page",note:"all exported document pages; free selection preview"},
 {toolId:"e-sign-pdf",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"visual signature/seal export"},
 {toolId:"cross-page-stamp",enabled:true,billing:"per_file",unitName:"file",cny:"2.00/file",usd:"2.00/file",note:"cross-page stamp/seal"},
 {toolId:"batch-pdf",enabled:true,billing:"per_batch",unitName:"batch",cny:"3.00/batch",usd:"3.00/batch",note:"reserved until unified batch PDF workbench exists"},
