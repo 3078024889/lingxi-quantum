@@ -34,6 +34,7 @@ jobs:
           node scripts/test-temp-mail-safety-v81.cjs
           node scripts/test-subtitle-translation-v95.cjs
           node scripts/test-ocr-review-confidence.cjs
+          node scripts/test-rare-image-resources.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
@@ -50,6 +51,7 @@ jobs:
           result-summary-copy-v103
           image-compression-limit-v104
           timestamp-output-v105 remaining-local-output-v89
+          rare-image-recovery-v106
           document-upload-consent-v79 public-site-truth sasi-found-issues-v96
           sasi-prompt-continuation tool-plain-language tool-real-output
           --workers=2 --reporter=list,json
