@@ -5,6 +5,7 @@ import {getGlobalTool,localePath,SEO_LOCALES,toolTitle,type GlobalTool,type SeoL
 import SearchIntentFaq from './SearchIntentFaq';
 import {tutorialCopy} from '@/lib/tools/tutorial-copy';
 
+// User-facing copy intentionally excludes internal implementation and engine details.
 export default function ToolFacts({tool,locale}:{tool:GlobalTool;locale:SeoLocale}){
  const facts=toolFacts(tool.slug,locale),c=SEO_LOCALES[locale];
  const fact=toolGeoFact(tool.slug,locale);
