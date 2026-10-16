@@ -1,21 +1,21 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {plainText} from "@/lib/tools/plain-copy";
-import {deliveryFile,downloadBlob,miniLikeEnvironment,privateMobilePreview,shareFile} from "@/lib/tools/shared/download";
-import {ensureToolExportAccess} from "@/lib/tools/commerce/export-access-client";
+import {deliveryFile,downloadBlob,miniLikeEnvironment,privateMobilePreview,prepareAuthorizedFileShare,type FileShareOutcome} from "@/lib/tools/shared/download";
 import {fileDeliveryCopy} from "@/lib/tools/shared/file-delivery-copy";
 
 export default function ResultFileActions({blob,name,saveLabel}:{blob:Blob;name:string;saveLabel?:string}) {
  const {lang}=useLingxiLang(),c=fileDeliveryCopy(lang);
+ const readyShare=useRef<null|(()=>Promise<FileShareOutcome>)>(null);
  const [busy,setBusy]=useState(false),[notice,setNotice]=useState<number|null>(null),[help,setHelp]=useState(false),[audio,setAudio]=useState(""),[shareReady,setShareReady]=useState(false);
- useEffect(()=>{setNotice(null);setHelp(false);setShareReady(false);const file=deliveryFile(blob,name);if(!file.type.startsWith("audio/")){setAudio("");return}const url=URL.createObjectURL(file);setAudio(url);return()=>URL.revokeObjectURL(url)},[blob,name]);
+ useEffect(()=>{setNotice(null);setHelp(false);setShareReady(false);readyShare.current=null;const file=deliveryFile(blob,name);if(!file.type.startsWith("audio/")){setAudio("");return}const url=URL.createObjectURL(file);setAudio(url);return()=>URL.revokeObjectURL(url)},[blob,name]);
  async function save(){setBusy(true);try{await downloadBlob(blob,name);setNotice(5);if(miniLikeEnvironment())setHelp(true)}catch{setNotice(4);setHelp(true)}finally{setBusy(false)}}
  async function send(){setBusy(true);try{
   // Payment/allowance dialogs may consume the transient user activation required by Web Share.
   // Authorize on the first click; perform the native share on a fresh click.
-  if(!shareReady){await ensureToolExportAccess(blob,name,"share");setShareReady(true);setNotice(null);return}
-  const outcome=await shareFile(blob,name);
+  if(!readyShare.current){readyShare.current=await prepareAuthorizedFileShare(blob,name);setShareReady(true);setNotice(null);return}
+  const outcome=await readyShare.current();
   setNotice(outcome==="shared"?1:outcome==="cancelled"?2:outcome==="unsupported"?3:4);
   if(outcome!=="shared")setHelp(true);
  }catch{setNotice(4);setHelp(true)}finally{setBusy(false)}}
