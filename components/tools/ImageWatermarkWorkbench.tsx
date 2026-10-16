@@ -6,6 +6,7 @@ import PaidActionButton from"@/components/tools/PaidActionButton";
 import{localInpaint,localInpaintMask,type NormalizedBox,type NormalizedPoint,type NormalizedStroke}from"@/lib/tools/autonomous/image-local";
 import ResultFileActions from './ResultFileActions';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
+import{authorizeToolOperation,grantToolOperationResult}from"@/lib/tools/commerce/export-access-client";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
 
@@ -56,9 +57,12 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
  async function run(){
   if(!selectionReady||!files.length)throw Error('PROCESSING_INPUT_MISSING');setBusy(true);setError("");
   const out=[] as Array<{name:string;blob:Blob;url:string}>;
+  let reservation:{id:string;toolId:string;units:number}|null=null;
   try{
+   reservation=await authorizeToolOperation(toolId,files.length,"save");
    for(const file of files){
     const blob=mode==="brush"?await localInpaintMask(file,strokes):await localInpaint(file,box);
+    if(reservation)grantToolOperationResult(blob,reservation);
     out.push({name:file.name,blob,url:URL.createObjectURL(blob)});
    }
    setResults(out);
@@ -76,7 +80,8 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
    <p className="text-sm text-[var(--lx-muted)]">{mode==="brush"?t("用画笔只涂住水印本身，可撤销或分多笔选择；选区越准确，修复越自然。","Paint only over the watermark. Smaller, precise masks usually produce cleaner repairs."):t(batch?"在第一张图上框出水印区域，相同位置会用于整批图片。":"拖动框出要移除的区域；适合纯色或简单背景。",batch?"Draw the watermark area on the first image; the same position is used for the batch.":"Draw a box around the area to remove; best for simple backgrounds.")}</p>
    {mode==="brush"?<BrushSelector file={files[0]} strokes={strokes} onChange={setStrokes}/>:<BoxSelector file={files[0]} box={box} onChange={setBox}/>}
   </>}
-  {files.length>0&&selectionReady&&draftReady&&<PaidActionButton toolId={toolId} quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{mode:"local",selectionMode:mode,box,strokes:mode==="brush"?strokes.length:0}} onPaid={run} label={t("查看本次价格","See price")}/>}
+  {files.length>0&&selectionReady&&draftReady&&<button type="button" disabled={busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("正在处理…","Processing…"):t("开始去水印","Remove watermark")}</button>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">{t("每天每个账户和 IP 共 5 张免费；超过部分 ¥1 / $1 每张。可以框选或精细涂抹，结果可直接保存或发送。","5 images per account and IP are free each day; additional images are ¥1 / $1 each. Mark the area or paint precisely, then save or share the result.")}</p>
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{t("正在根据选区修复画面…","Repairing the selected area…")}</p>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
   {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border p-3"><img src={r.url} alt={t("处理结果","Result")} className="w-full rounded-xl"/><ResultFileActions blob={r.blob} name={`clean-${r.name.replace(/\.[^.]+$/,".png")}`} saveLabel={t("保存结果","Save result")}/></div>)}</div>}
