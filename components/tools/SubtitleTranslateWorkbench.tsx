@@ -40,7 +40,7 @@ export default function SubtitleTranslateWorkbench(){
   {online&&<p className="text-sm text-[var(--lx-muted)]">{c[1]}</p>}
   {files.length>0&&<button disabled={busy} onClick={()=>void run()} className="rounded-xl border px-4 py-2">{busy?plainText(lang,'working'):online?c[0]:<ToolUiText text="先免费生成翻译预览"/>}</button>}
   {busy&&<button onClick={()=>active.current?.abort()} className="ml-2 rounded-xl border px-4 py-2"><ToolUiText text="取消"/></button>}
-  {out&&<><textarea aria-label="Translated subtitles" value={out} readOnly rows={12} className="w-full rounded-2xl border bg-[var(--lx-soft)] p-4 text-sm"/><p className="text-xs text-[var(--lx-muted)]"><ToolUiText text="源字幕约"/> {charCount.toLocaleString()} <ToolUiText text="字符；每 5,000 字符 ¥1 / $1。"/></p><PaidActionButton toolId="subtitle-translate" quantity={Math.max(1,charCount)} draftId={draftId} draftReady={draftReady} beforePayment={persist} metadata={{source,target,characters:charCount}} onPaid={exportPaid} label="查看字幕导出价格"/></>}
+  {out&&<><textarea aria-label={plainText(lang,"text")} value={out} readOnly rows={12} className="w-full rounded-2xl border bg-[var(--lx-soft)] p-4 text-sm"/><p className="text-xs text-[var(--lx-muted)]"><ToolUiText text="源字幕约"/> {charCount.toLocaleString()} <ToolUiText text="字符；每 5,000 字符 ¥1 / $1。"/></p><PaidActionButton toolId="subtitle-translate" quantity={Math.max(1,charCount)} draftId={draftId} draftReady={draftReady} beforePayment={persist} metadata={{source,target,characters:charCount}} onPaid={exportPaid} label="查看字幕导出价格"/></>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}{needsLogin&&<Link target="_blank" rel="noreferrer" href="/account" className="underline">{c[4]} ↗</Link>}
  </div>;
 }

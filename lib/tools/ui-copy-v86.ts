@@ -3,6 +3,7 @@ import {detailCopyRows} from './ui-copy-v86-details';
 type Copy=Record<LingxiLang,string>;
 const L=(zh:string,en:string,ja:string,ko:string,fr:string,de:string,es:string,pt:string,ar:string):Copy=>({zh,en,ja,ko,fr,de,es,pt,ar});
 const rows=[
+L('取消','Cancel','キャンセル','취소','Annuler','Abbrechen','Cancelar','Cancelar','إلغاء'),
 L('查看本次手写识别价格','See handwriting recognition price','手書き認識の料金を確認','손글씨 인식 가격 보기','Voir le prix de reconnaissance manuscrite','Preis für Handschrifterkennung ansehen','Ver precio de reconocimiento manuscrito','Ver preço do reconhecimento manuscrito','عرض سعر التعرف على الخط'),
 L('确认价格并保存高清照片','Confirm price and save high-resolution photo','料金を確認して高解像度写真を保存','가격 확인 후 고해상도 사진 저장','Confirmer le prix et enregistrer la photo haute résolution','Preis bestätigen und hochauflösendes Foto speichern','Confirmar precio y guardar foto de alta resolución','Confirmar preço e salvar foto de alta resolução','تأكيد السعر وحفظ الصورة عالية الدقة'),
 L('查看本次图片翻译价格','See image translation price','画像翻訳の料金を確認','이미지 번역 가격 보기','Voir le prix de traduction d’image','Preis für Bildübersetzung ansehen','Ver precio de traducción de imagen','Ver preço da tradução de imagem','عرض سعر ترجمة الصورة'),
