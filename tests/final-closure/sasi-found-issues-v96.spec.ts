@@ -20,7 +20,7 @@ test("URL promotion enters the real drama generation workflow, not a text-as-vid
  await page.getByRole("button",{name:"Read page"}).click();
  await expect(page.getByText("Product",{exact:true})).toBeVisible();
  await page.getByRole("button",{name:"Review and continue in SASI"}).click();
- await expect(page).toHaveURL(/\/sasi\?promotion=1/);
+ await expect(page).toHaveURL(/\/sasi\?.*mode=drama/);
  await expect(page.locator('[data-sasi-task="drama"]')).toBeVisible({timeout:15000});
  await expect(page.locator('[data-sasi-result-kind="video"]')).toHaveCount(0);
 });
