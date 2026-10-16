@@ -45,8 +45,8 @@ export default function VideoWatermarkWorkbench(){
    await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
    const ext=item.file.name.split(".").pop()||"mp4",input=`input-${index}.${ext}`,output=`output-${index}.mp4`;await f.writeFile(input,await fetchFile(item.file));
    const w=item.width,h=item.height;
-   const px=Math.max(0,Math.min(w-9,Math.round(w*box.x/100))),py=Math.max(0,Math.min(h-9,Math.round(h*box.y/100)));
-   const pw=Math.min(w-px,Math.max(8,Math.round(w*box.w/100))),ph=Math.min(h-py,Math.max(8,Math.round(h*box.h/100)));
+   const px=Math.max(1,Math.min(w-10,Math.round(w*box.x/100))),py=Math.max(1,Math.min(h-10,Math.round(h*box.y/100)));
+   const pw=Math.min(w-px-1,Math.max(8,Math.round(w*box.w/100))),ph=Math.min(h-py-1,Math.max(8,Math.round(h*box.h/100)));
    if(pw<8||ph<8)throw new Error("WATERMARK_REGION_INVALID");
    const code=await f.exec(["-i",input,"-vf",`delogo=x=${px}:y=${py}:w=${pw}:h=${ph}:show=0`,"-c:v","libx264","-preset","veryfast","-crf","20","-c:a","aac","-b:a","160k",output]);
    if(code!==0)throw new Error(`FFMPEG_EXIT_${code}`);
