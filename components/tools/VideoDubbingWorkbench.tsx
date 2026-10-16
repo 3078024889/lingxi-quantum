@@ -29,11 +29,11 @@ async function remoteTranscribe(file:File,quoteId:string){
 
 export default function VideoDubbingWorkbench(){
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[durations,setDurations]=useState<number[]>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false),[previewBusy,setPreviewBusy]=useState(false),[previewVideo,setPreviewVideo]=useState<ToolResultFile|null>(null),[previewError,setPreviewError]=useState("");
- useEffect(()=>{let off=false;(async()=>{let total=0;for(const f of files){try{total+=Math.max(1,Math.ceil((await localMediaDuration(f))/60))}catch{total+=1}}if(!off)setMinutes(total)})();return()=>{off=true}},[files]);
- useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setMinutes(Number(d.state?.minutes||0))}setDraftReady(true)})()},[]);
- useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"video-dubbing",files,state:{source,target,durations}}),150);return()=>clearTimeout(tm)},[files,source,target,minutes,draftId,draftReady]);
- const billableSeconds=durations.reduce((n,d)=>n+Math.max(0,Math.ceil(d-5)),0);\n const quantity=Math.max(1,billableSeconds);
-
+ useEffect(()=>{let off=false;(async()=>{const ds:number[]=[];for(const f of files){try{ds.push(await localMediaDuration(f))}catch{ds.push(0)}}if(!off)setDurations(ds)})();return()=>{off=true}},[files]);
+ useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setDurations(Array.isArray(d.state?.durations)?d.state.durations:[])}setDraftReady(true)})()},[]);
+ useEffect(()=>{if(!draftReady||!files.length||!durations.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"video-dubbing",files,state:{source,target,durations}}),150);return()=>clearTimeout(tm)},[files,source,target,durations,draftId,draftReady]);
+ const billableSeconds=durations.reduce((n,d)=>n+Math.max(0,Math.ceil(d-5)),0);
+ const quantity=Math.max(1,billableSeconds);
  async function run(quoteId:string){
   setBusy(true);setError("");setOutputs([]);setSubtitles([]);
   const videos:ToolResultFile[]=[],subs:ToolResultFile[]=[];
