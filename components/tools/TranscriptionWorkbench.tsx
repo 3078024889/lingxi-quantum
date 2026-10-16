@@ -6,10 +6,10 @@ import {localMediaDuration,toSrt,toVtt,transcribeLocal} from "@/lib/tools/autono
 import ResultPanel from './ResultPanel';
 import {draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {plainText,type PlainCopyKey} from "@/lib/tools/plain-copy";
+import {plainText,type PlainCopyKey} from "@/lib/tools/plain-copy";\nimport ToolUiText from "@/components/tools/ToolUiText";import{toolRuntimeText}from "@/lib/tool-runtime-i18n";
 
 export default function TranscriptionWorkbench({video=false}:{video?:boolean}){
- const {lang}=useLingxiLang();
+ const {lang}=useLingxiLang();const t=(zh:string,en:string)=>toolRuntimeText(lang,zh,en);
  const toolId=video?"video-transcription":"audio-transcription";
  const [files,setFiles]=useState<File[]>([]),[duration,setDuration]=useState(0),[busy,setBusy]=useState(false),[progress,setProgress]=useState(0),[text,setText]=useState(""),[srt,setSrt]=useState(""),[vtt,setVtt]=useState(""),[error,setError]=useState<PlainCopyKey|null>(null),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false),[restored,setRestored]=useState(false),[preview,setPreview]=useState(false);
  useEffect(()=>{let active=true;const f=files[0];setDuration(0);if(!f)return;void localMediaDuration(f).then(d=>{if(active){if(!Number.isFinite(d)||d<=0){setError("fileError");return}setDuration(d)}}).catch(()=>{if(active)setError("fileError")});return()=>{active=false}},[files]);
@@ -20,9 +20,9 @@ export default function TranscriptionWorkbench({video=false}:{video?:boolean}){
  const exports=useMemo(()=>text?([[text,'txt','text/plain;charset=utf-8'],[srt,'srt','application/x-subrip'],[vtt,'vtt','text/vtt']] as const).map(([value,extension,mime])=>{const blob=new Blob([value],{type:mime});return{name:'lingxifield-transcript.'+extension,mime,size:blob.size,blob}}):[],[text,srt,vtt]);
  return <div className="space-y-4">
   <FileDropzone accept={video?"video/*,audio/*":"audio/*"} files={files} onChange={f=>{setDraftReady(false);setFiles(f);setText("");setSrt("");setVtt("");setError(null);setDraftId(f[0]?newPaidTaskDraftId():"")}} disabled={busy||!restored} kind="media" maxSizeMB={250}/>
-  {files.length>0&&restored&&duration>0&&<div className="flex flex-wrap gap-3"><button type="button" disabled={busy||!draftReady} onClick={()=>void run(5)} className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm disabled:opacity-40"><span><ToolUiText text="免费预览前 5 秒"/></span></button>{Math.ceil(Math.max(0,duration-5))>0?<PaidActionButton toolId={toolId} quantity={Math.ceil(Math.max(0,duration-5))} draftId={draftId} draftReady={draftReady} beforePayment={persistDraft} metadata={{durationSeconds:Math.ceil(duration),freePreviewSeconds:5,mode:"local-open-model"}} onPaid={()=>run()} label={`完整${video?"视频":"音频"}转文字 · ${Math.ceil(Math.max(0,duration-5))} 秒计费`}/>:<button type="button" disabled={busy||!draftReady} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)]"><ToolUiText text="完整转写"/></button>}</div>}
-  {duration>0&&<p className="text-xs leading-5 text-[var(--lx-muted)]"><ToolUiText text="前 5 秒免费预览；完整结果只按超出 5 秒的实际秒数计费，¥0.10 / 秒，$0.10 / 秒。"/></p>}
-  {preview&&<p className="text-xs leading-5 text-[var(--lx-muted)]"><ToolUiText text="这是前 5 秒预览；完整转写会覆盖整段内容。"/></p>}
+  {files.length>0&&restored&&duration>0&&<div className="flex flex-wrap gap-3"><button type="button" disabled={busy||!draftReady} onClick={()=>void run(5)} className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm disabled:opacity-40"><span>{t("免费预览前 5 秒","Free preview of the first 5 seconds")}</span></button>{Math.ceil(Math.max(0,duration-5))>0?<PaidActionButton toolId={toolId} quantity={Math.ceil(Math.max(0,duration-5))} draftId={draftId} draftReady={draftReady} beforePayment={persistDraft} metadata={{durationSeconds:Math.ceil(duration),freePreviewSeconds:5,mode:"local-open-model"}} onPaid={()=>run()} label={`完整${video?"视频":"音频"}转文字 · ${Math.ceil(Math.max(0,duration-5))} 秒计费`}/>:<button type="button" disabled={busy||!draftReady} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)]">{t("完整转写","Full transcription")}</button>}</div>}
+  {duration>0&&<p className="text-xs leading-5 text-[var(--lx-muted)]">{t("前 5 秒免费预览；完整结果只按超出 5 秒的实际秒数计费，¥0.10 / 秒，$0.10 / 秒。","First 5 seconds are free to preview; full results bill only the seconds beyond 5 at ¥0.10 / $0.10 per second.")}</p>}
+  {preview&&<p className="text-xs leading-5 text-[var(--lx-muted)]">{t("这是前 5 秒预览；完整转写会覆盖整段内容。","This is the first 5-second preview; full transcription covers the entire file.")}</p>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{plainText(lang,"working")} {progress}%</p>}
   {draftReady&&<p role="status" data-testid="draft-saved" className="text-xs text-[var(--lx-muted)]">{plainText(lang,"draftSaved")}</p>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{plainText(lang,error)}</p>}
