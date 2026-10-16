@@ -7,6 +7,7 @@ import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
+import{authorizeToolOperation,grantToolOperationResult}from"@/lib/tools/commerce/export-access-client";
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
 
 async function translate(text:string,source:string,target:string,quoteId:string){
@@ -28,11 +29,12 @@ export default function ImageTranslatorWorkbench(){
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="image-translator"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en")}setDraftReady(true)})()},[]);
  useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"image-translator",files,state:{source,target}}),120);return()=>clearTimeout(tm)},[files,source,target,draftId,draftReady]);
- async function run(quoteId:string){
+ async function run(){
   setBusy(true);setOutputs([]);setError("");
-  let worker:any=null;
+  let worker:any=null;let reservation:{id:string;toolId:string;units:number}|null=null;
   try{
-   const map:Record<string,string>={zh:"chi_sim+eng",en:"eng",ja:"jpn+eng",ko:"kor+eng",fr:"fra+eng",de:"deu+eng",es:"spa+eng",pt:"por+eng",ar:"ara+eng"};
+   reservation=await authorizeToolOperation("image-translator",files.length,"save");
+    const map:Record<string,string>={zh:"chi_sim+eng",en:"eng",ja:"jpn+eng",ko:"kor+eng",fr:"fra+eng",de:"deu+eng",es:"spa+eng",pt:"por+eng",ar:"ara+eng"};
    worker=await createOcrWorker(map[source]||"eng");
    const all:ToolResultFile[]=[];
    for(let i=0;i<files.length;i++){
@@ -51,7 +53,7 @@ export default function ImageTranslatorWorkbench(){
       while(size>9&&ctx.measureText(tx).width>w*1.08){size-=1;ctx.font=`${size}px system-ui, sans-serif`}
       ctx.textBaseline="middle";ctx.fillText(tx,x,y+h/2,Math.max(8,w));
     }
-    const blob=await blobOf(c);all.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.png`,blob,mime:"image/png",size:blob.size});
+    const blob=await blobOf(c);const item={name:f.name.replace(/\.[^.]+$/,"")+`-${target}.png`,blob,mime:"image/png",size:blob.size};if(reservation)grantToolOperationResult(blob,reservation);all.push(item);
    }
    setOutputs(all);setStage("处理完成");
   }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
@@ -63,7 +65,8 @@ export default function ImageTranslatorWorkbench(){
    <label className="text-sm"><ToolUiText text="图片原文" /><select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm"><ToolUiText text="翻译为" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&<PaidActionButton toolId="image-translator" quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{files:files.length,source,target}} onPaid={run} label={files.length>1?`查看 ${files.length} 张图片翻译价格`:"查看本次图片翻译价格"}/>}
+  {files.length>0&&draftReady&&<button type="button" disabled={busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?"正在翻译…":files.length>1?`开始翻译 ${files.length} 张图片`:"开始翻译"}</button>}
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">每天每个账户和 IP 共 5 张免费；超过部分按 ¥1 / $1 每张计费。价格确认会在免费额度用完时出现。</p>
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="先识别图片里的文字，再翻译并尽量按原文字区域覆盖。复杂艺术字、弧形字或低清图片可能需要手动微调。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
