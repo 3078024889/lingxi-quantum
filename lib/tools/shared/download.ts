@@ -43,6 +43,30 @@ export async function shareFile(blob: Blob, filename: string): Promise<FileShare
     return error && typeof error === "object" && "name" in error && error.name === "AbortError" ? "cancelled" : "failed";
   }
 }
+/** Prepare native file sharing after allowance/payment is resolved.
+ * Call the returned function directly inside a fresh click handler: do not await
+ * another gate or fetch before navigator.share, which requires user activation.
+ * The closure is issued only after successful authorization.
+ */
+export async function prepareAuthorizedFileShare(blob: Blob, filename: string): Promise<() => Promise<FileShareOutcome>> {
+  const file = deliveryFile(blob, filename), payload = {files: [file]};
+  if (!navigator.share || !navigator.canShare || !navigator.canShare(payload)) {
+    return async () => "unsupported";
+  }
+  await ensureToolExportAccess(blob, filename, "share");
+  return () => {
+    try {
+      // navigator.share is invoked synchronously before the returned promise is observed.
+      return navigator.share(payload).then(
+        () => "shared" as const,
+        (error: unknown) => error && typeof error === "object" && "name" in error && error.name === "AbortError" ? "cancelled" as const : "failed" as const
+      );
+    } catch {
+      return Promise.resolve("failed" as const);
+    }
+  };
+}
+
 // Cloud fallback requires a separate explicit consent click in the UI.
 // Saving and sharing local files never call this upload function automatically.
 export async function privateMobilePreview(blob: Blob, name: string) {
