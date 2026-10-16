@@ -5,7 +5,8 @@ test("batch images export exactly 359 × 195 pixels",async({page})=>{
  await page.goto("/tools/batch-image?lang=en");
  const input=page.locator('input[type="file"]').first();
  await expect(input).toBeEnabled({timeout:15000});
- const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=","base64");
+ const data=await page.evaluate(()=>{const canvas=document.createElement("canvas");canvas.width=10;canvas.height=8;canvas.getContext("2d")!.fillRect(0,0,10,8);return canvas.toDataURL("image/png").split(",")[1]});
+ const png=Buffer.from(data,"base64");
  await input.setInputFiles({name:"tiny.png",mimeType:"image/png",buffer:png});
  await page.getByRole("button",{name:"359 × 195 px"}).click();
  await page.locator('select').last().selectOption("image/png");
