@@ -58,7 +58,9 @@ const sitemapWeb=read("app/sitemap.ts");
 for(const token of["GLOBAL_TOOL_CATALOG","SEO_LOCALES","languageAlternates"])must(sitemapWeb.includes(token),`V59_GLOBAL_SITEMAP_CAPABILITY_MISSING:${token}`);
 
 const jsonld=read("components/seo/GlobalSeoJsonLd.tsx");
-for(const token of["WebApplication","FAQPage","BreadcrumbList"])must(jsonld.includes(token),`V59_TOOL_JSONLD_MISSING:${token}`);
+for(const token of["WebApplication","BreadcrumbList"])must(jsonld.includes(token),`V59_TOOL_JSONLD_MISSING:${token}`);
+// FAQ content may remain visible to users without publishing blanket FAQPage JSON-LD.
+// Keep schema assertions aligned with actual user-facing, search-policy-compliant markup.
 
 const llms=read("app/llms.txt/route.ts");
 for(const token of["GEO_TOOL_SLUGS","Sitemap","Privacy"])must(llms.includes(token),`V59_LLMS_DISCOVERY_MISSING:${token}`);
