@@ -6,7 +6,7 @@ import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/transcribe-local";
-import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
+import{clipMedia,extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
@@ -15,6 +15,7 @@ async function remoteTranslate(text:string,source:string,target:string,quoteId:s
  const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
 }
+async function previewTts(text:string,target:string){const r=await fetch("/api/tools/media/preview-tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target})});if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"PREVIEW_TTS_FAILED"))}return await r.blob()}
 async function remoteTts(text:string,target:string,quoteId:string){
  const r=await fetch("/api/tools/media/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target,quoteId})});
  if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"TTS_FAILED"))}return await r.blob();
@@ -27,11 +28,11 @@ async function remoteTranscribe(file:File,quoteId:string){
 }
 
 export default function VideoDubbingWorkbench(){
- const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[minutes,setMinutes]=useState(0),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
+ const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[durations,setDurations]=useState<number[]>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false),[previewBusy,setPreviewBusy]=useState(false),[previewVideo,setPreviewVideo]=useState<ToolResultFile|null>(null),[previewError,setPreviewError]=useState("");
  useEffect(()=>{let off=false;(async()=>{let total=0;for(const f of files){try{total+=Math.max(1,Math.ceil((await localMediaDuration(f))/60))}catch{total+=1}}if(!off)setMinutes(total)})();return()=>{off=true}},[files]);
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setMinutes(Number(d.state?.minutes||0))}setDraftReady(true)})()},[]);
- useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"video-dubbing",files,state:{source,target,minutes}}),150);return()=>clearTimeout(tm)},[files,source,target,minutes,draftId,draftReady]);
- const quantity=Math.max(1,minutes);
+ useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"video-dubbing",files,state:{source,target,durations}}),150);return()=>clearTimeout(tm)},[files,source,target,minutes,draftId,draftReady]);
+ const billableSeconds=durations.reduce((n,d)=>n+Math.max(0,Math.ceil(d-5)),0);\n const quantity=Math.max(1,billableSeconds);
 
  async function run(quoteId:string){
   setBusy(true);setError("");setOutputs([]);setSubtitles([]);
@@ -65,13 +66,16 @@ export default function VideoDubbingWorkbench(){
   finally{setBusy(false)}
  }
 
+ async function runPreview(){if(!files[0]||previewBusy||busy)return;setPreviewBusy(true);setPreviewError("");setPreviewVideo(null);try{const clip=await clipMedia(files[0],5),local=await transcribeLocal(clip,()=>{},5);if(!local.text.trim())throw new Error("PREVIEW_TRANSCRIPT_EMPTY");const translated=source===target?local.text:await (async()=>{const r=await fetch("/api/tools/media/preview-translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text:local.text,source,target})});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"PREVIEW_TRANSLATE_FAILED"));return String(d.translated||"")})();const voice=await previewTts(translated,target);const dubbed=await muxDubbedVideo(clip,voice);setPreviewVideo({name:files[0].name.replace(/\.[^.]+$/,"")+"-"+target+"-preview.mp4",blob:dubbed,mime:"video/mp4",size:dubbed.size})}catch(e){setPreviewError(e instanceof Error?e.message:String(e))}finally{setPreviewBusy(false)}}
  return <div className="space-y-4">
   <FileDropzone accept="video/*,audio/*" multiple maxFiles={5} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setSubtitles([]);setError("");setDraftId("")}} disabled={busy} kind="media"/>
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm"><ToolUiText text="原始语言" /><select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm"><ToolUiText text="配音语言" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&<PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{minutes:quantity,files:files.length,source,target,export:"dubbed-mp4"}} onPaid={run} label="查看本次配音成片价格"/>}
+  {files.length>0&&<div className="flex flex-wrap gap-3"><button type="button" disabled={previewBusy||busy} onClick={()=>void runPreview()} className="rounded-xl border border-[var(--lx-line)] px-5 py-2.5 text-sm">{previewBusy?"正在生成 5 秒预览…":"免费预览前 5 秒"}</button>{billableSeconds>0?<PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{billableSeconds,files:files.length,source,target,export:"dubbed-mp4",freePreviewSeconds:5}} onPaid={run} label={"完整配音 · 超出部分 "+billableSeconds+" 秒"}/>:<span className="rounded-xl bg-[var(--lx-soft)] px-4 py-2.5 text-sm">5 秒以内可直接使用免费预览</span>}</div>}
+  <p className="text-xs leading-5 text-[var(--lx-muted)]">前 5 秒免费预览；完整配音按超出部分实际秒数计费，¥0.10 / 秒，$0.10 / 秒。</p>
+  {previewError&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{previewError}</p>}{previewVideo&&<ResultPanel sourceSlug="video-dubbing" files={[previewVideo]} messageZh="5 秒配音预览已生成，可以先试听。" messageEn="The 5-second dubbed preview is ready."/>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage||"正在处理…"}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="生成结果包含翻译字幕和可下载 MP4 配音成片。当前版本使用新的合成语音替换原视频音轨，不宣称口型同步或原声克隆。生成语音为 AI 合成语音。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
