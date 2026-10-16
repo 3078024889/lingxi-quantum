@@ -25,7 +25,9 @@ export function publicToolSurface():PublicToolSurfaceItem[]{
    descZh:tool.oneLinerZh,descEn:tool.oneLinerEn,kind:toolDisplayKind(category),category,localOnly:Boolean(tool.localOnly),source:"registry"});
  }
  for(const tool of ADVANCED_TOOLS){
-  const slug=tool.href.replace(/^\/tools\//,""),category=toolDisplayCategory(slug);
+  const slug=tool.href.replace(/^\/tools\//,"");
+  if(slug==="image-to-pdf-pro")continue;
+  const category=toolDisplayCategory(slug);
   map.set(tool.href,{href:tool.href,slug,titleZh:toolTitle("zh",slug,tool.title),titleEn:toolTitle("en",slug,""),
    descZh:tool.description,descEn:"",kind:ADVANCED_KIND[tool.category]||toolDisplayKind(category),category,
    localOnly:Boolean(tool.localOnly),source:"advanced"});
