@@ -18,6 +18,27 @@ type Resolution="source"|"1080"|"720"|"480";
 const CRF:Record<CompressPreset,number>={high:23,balanced:28,small:33};
 const SCALE:Record<Exclude<Resolution,"source">,string>={"1080":"-2:1080","720":"-2:720","480":"-2:480"};
 
+// Validate source and output durations using browser metadata, not only FFmpeg exit=0.
+// A truncated file must never be presented as a successful full-length conversion.
+function readMediaDuration(blob:Blob):Promise<number>{
+ return new Promise((resolve,reject)=>{
+  const el=document.createElement("video"),url=URL.createObjectURL(blob);
+  let settled=false;
+  const finish=(err?:Error,value?:number)=>{if(settled)return;settled=true;clearTimeout(timer);el.onloadedmetadata=null;el.onerror=null;el.removeAttribute("src");el.load();URL.revokeObjectURL(url);if(err)reject(err);else resolve(value!)};
+  const timer=setTimeout(()=>finish(new Error("MEDIA_METADATA_TIMEOUT")),20000);
+  el.preload="metadata";
+  el.onloadedmetadata=()=>Number.isFinite(el.duration)&&el.duration>0?finish(undefined,el.duration):finish(new Error("MEDIA_DURATION_INVALID"));
+  el.onerror=()=>finish(new Error("MEDIA_METADATA_UNREADABLE"));
+  el.src=url;
+ });
+}
+function expectedOutputDuration(source:number,mode:Mode,start:number,duration:number,speed:number){
+ if(mode==="trim")return Math.max(0,Math.min(duration,source-Math.max(0,start)));
+ if(mode==="speed")return source/Math.max(.5,Math.min(2,speed));
+ return source;
+}
+
+
 export default function VideoToolkitWorkbench(){
  const[hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
  const{lang}=useLingxiLang();const t=(zh:string,en:string)=>toolUiText(lang,zh,en);
@@ -36,7 +57,7 @@ export default function VideoToolkitWorkbench(){
    const [{FFmpeg},{fetchFile}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);
    const out:ToolResultFile[]=[];
    for(let i=0;i<files.length;i++){
-    const file=files[i],f=new FFmpeg();ff.current=f;
+    const file=files[i],sourceDuration=await readMediaDuration(file),f=new FFmpeg();ff.current=f;
     f.on("progress",({progress}:{progress:number})=>setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`));
     await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
     const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
@@ -62,7 +83,12 @@ export default function VideoToolkitWorkbench(){
       const s=Math.max(.5,Math.min(2,speed)),filters=videoFilters([`setpts=${(1/s).toFixed(4)}*PTS`]),atempo=s.toFixed(3);args=[...base,"-vf",filters.join(","),"-filter:a",`atempo=${atempo}`,"-c:v","libx264","-preset","veryfast","-c:a","aac",output];name=`${stem}-${s}x.mp4`;
     }
     const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);
-    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);const blob=new Blob([copy.buffer],{type:"video/mp4"});out.push({name,blob,mime:"video/mp4",size:blob.size});
+    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);const blob=new Blob([copy.buffer],{type:"video/mp4"});
+    if(blob.size<1024)throw new Error("MEDIA_OUTPUT_EMPTY");
+    const actualDuration=await readMediaDuration(blob);
+    const expectedDuration=expectedOutputDuration(sourceDuration,mode,start,duration,speed);
+    if(expectedDuration<=0||Math.abs(actualDuration-expectedDuration)>Math.max(.4,expectedDuration*.04))throw new Error(`MEDIA_OUTPUT_TRUNCATED: expected=${expectedDuration.toFixed(2)}, actual=${actualDuration.toFixed(2)}`);
+    out.push({name,blob,mime:"video/mp4",size:blob.size});
     try{await f.deleteFile(input);await f.deleteFile(output)}catch{}f.terminate();ff.current=null;
    }
    setOutputs(out);setStage(plainText(lang,"ready"));
