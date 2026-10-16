@@ -2,6 +2,18 @@ import {test,expect,type Page} from './export-test';
 import {readFile} from 'node:fs/promises';
 import {PDFDocument,PDFName,PDFDict} from 'pdf-lib';
 
+test('file-type report detects a misleading extension without claiming a downloadable file exists',async({page})=>{
+ await page.goto('/tools/file-type-detector?lang=en');
+ const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();
+ const png=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=20;c.height=20;return c.toDataURL().split(',')[1]});
+ await input.setInputFiles({name:'pretends-to-be-text.txt',mimeType:'text/plain',buffer:Buffer.from(png,'base64')});
+ await page.getByRole('button',{name:'Process now',exact:true}).click();
+ const result=page.locator('[data-tool-workbench]');
+ await expect(result).toContainText('Detected: PNG image. The filename does not match the file type.');
+ await expect(result).not.toContainText('Ready. You can save the file.');
+ await expect(result.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+});
+
 for(const [slug,input,expected] of [
  ['remove-duplicate-lines','first\r\nsecond\r\nfirst','first\nsecond'],
  ['remove-empty-lines','first\n  \nsecond\n','first\nsecond'],
