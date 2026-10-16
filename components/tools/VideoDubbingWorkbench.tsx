@@ -57,6 +57,7 @@ export default function VideoDubbingWorkbench(){
     subs.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
     setStage(`${i+1}/${files.length} · 正在生成配音…`);
     const voice=await remoteTts(translated,target,quoteId);
+    if(f.type.startsWith("audio/")){videos.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}-dubbed.mp3`,blob:voice,mime:"audio/mpeg",size:voice.size});continue}
     setStage(`${i+1}/${files.length} · 正在合成视频…`);
     const dubbed=await muxDubbedVideo(f,voice,p=>setStage(`${i+1}/${files.length} · 正在合成 ${Math.round(p*100)}%`));
     videos.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}-dubbed.mp4`,blob:dubbed,mime:"video/mp4",size:dubbed.size});
