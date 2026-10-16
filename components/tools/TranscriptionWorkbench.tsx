@@ -6,7 +6,8 @@ import {localMediaDuration,toSrt,toVtt,transcribeLocal} from "@/lib/tools/autono
 import ResultPanel from './ResultPanel';
 import {draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {plainText,type PlainCopyKey} from "@/lib/tools/plain-copy";\nimport ToolUiText from "@/components/tools/ToolUiText";import{toolRuntimeText}from "@/lib/tool-runtime-i18n";
+import {plainText,type PlainCopyKey} from "@/lib/tools/plain-copy";
+import ToolUiText from "@/components/tools/ToolUiText";import{toolRuntimeText}from "@/lib/tool-runtime-i18n";
 
 export default function TranscriptionWorkbench({video=false}:{video?:boolean}){
  const {lang}=useLingxiLang();const t=(zh:string,en:string)=>toolRuntimeText(lang,zh,en);
