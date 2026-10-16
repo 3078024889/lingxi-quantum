@@ -11,6 +11,27 @@ test("image entry exposes configured resolution and aspect ratio before generati
  await expect(page.getByRole("option",{name:"9:16"})).toBeAttached();
 });
 
+test("image generation shows the quoted size and actual delivered dimensions",async({page})=>{
+ let confirmed=false;
+ await page.route("**/api/sasi/byok/image",route=>{
+  if(route.request().method()==="GET")return route.fulfill({json:{profile:{model:"seedream-test",size:"2K",estimatedFen:20},tasks:[]}});
+  const body=route.request().postDataJSON();
+  if(body.action==="quote")return route.fulfill({status:201,json:{task:{id:"88888888-8888-4888-8888-888888888888",state:"quoted",estimated_fen:20},billingCurrency:"USD"}});
+  confirmed=true;
+  return route.fulfill({json:{task:{id:"88888888-8888-4888-8888-888888888888",state:"succeeded",output:{imageUrl:"/api/sasi/generated-assets/88888888-8888-4888-8888-888888888888",width:2048,height:2048,aiGenerated:true}}}});
+ });
+ await page.route("**/api/sasi/generated-assets/*",route=>route.fulfill({status:200,contentType:"image/png",body:Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=","base64")}));
+ await page.goto("/sasi?mode=image&lang=en");
+ await page.getByPlaceholder("Ask SASI to make something…").fill("A celestial landscape");
+ await page.locator('input[type="checkbox"]').check();
+ await page.getByPlaceholder("Ask SASI to make something…").press("Enter");
+ await expect(page.getByRole("button",{name:/Confirm/})).toBeVisible({timeout:15000});
+ await page.getByRole("button",{name:/Confirm/}).click();
+ await expect(page.getByText(/2K/).last()).toBeVisible({timeout:15000});
+ await expect(page.getByText("2048 × 2048px")).toBeVisible();
+ expect(confirmed).toBe(true);
+});
+
 test("URL promotion enters the real drama generation workflow, not a text-as-video fallback",async({page})=>{
  await page.route("**/api/tools/promotion-source",route=>route.fulfill({json:{
   url:"https://example.com/product",html:"<html><head><title>Product</title></head><body><h1>Product</h1><p>A useful product.</p></body></html>"
