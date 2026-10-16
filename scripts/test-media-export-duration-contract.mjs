@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const s=readFileSync("components/tools/VideoToolkitWorkbench.tsx","utf8");
+const audio=s.slice(s.indexOf('if(mode==="audio")'),s.indexOf('const base=["-i",input]'));
+assert.ok(audio.includes("const extractedDuration=await readMediaDuration(extracted)"),"Audio export must be probed");
+assert.ok(audio.includes("Math.abs(extractedDuration-sourceDuration)"),"Audio must match original duration");
+assert.ok(audio.includes("MEDIA_OUTPUT_TRUNCATED"),"Truncation must block delivery");
+assert.ok(s.includes("const actualDuration=await readMediaDuration(blob)"),"Video output must be probed");
+assert.ok(s.includes("expectedOutputDuration(sourceDuration,mode,start,duration,speed)"),"Video must compare expected duration");
+console.log("MEDIA_AUDIO_VIDEO_EXPORT_DURATION_CONTRACT=PASS");
