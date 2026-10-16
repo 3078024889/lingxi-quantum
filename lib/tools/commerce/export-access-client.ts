@@ -33,3 +33,20 @@ async function authorizeExport(blob:Blob,name:string,intent:'save'|'share',toolI
  state.allowed=true;
  for(const member of request.members||[]){const original=states.get(member)||{id:crypto.randomUUID(),allowed:false};original.allowed=true;original.toolId=toolId;states.set(member,original)}
 }
+
+
+/** Reserve a daily free allowance before an AI/local operation, then attach that
+ * reservation to the produced blobs so saving/sharing does not consume it again. */
+export async function authorizeToolOperation(toolId:string,units:number,intent:'save'|'share'='save'){
+ if(!isMeteredTool(toolId))return null;
+ if(!Number.isSafeInteger(units)||units<1||units>1000)throw Error('EXPORT_INPUT_INVALID');
+ const probe=new Blob([],{type:'application/octet-stream'}),id=crypto.randomUUID();
+ restoreExportAccess(probe,id,units);
+ await authorizeExport(probe,toolId,intent,toolId);
+ const state=states.get(probe);if(!state?.allowed)throw Error('EXPORT_NOT_UNLOCKED');
+ return{id,toolId,units};
+}
+
+export function grantToolOperationResult(blob:Blob,reservation:{id:string;toolId:string;units:number}){
+ states.set(blob,{id:reservation.id,allowed:true,toolId:reservation.toolId,units:reservation.units});
+}
