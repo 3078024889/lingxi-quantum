@@ -1,4 +1,6 @@
 "use client";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {plainText} from "@/lib/tools/plain-copy";
 import{useEffect,useMemo,useState}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
@@ -27,6 +29,7 @@ async function remoteTranscribe(file:File,quoteId:string){
 }
 
 export default function VideoDubbingWorkbench(){
+ const {lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[minutes,setMinutes]=useState(0),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  useEffect(()=>{let off=false;(async()=>{let total=0;for(const f of files){try{total+=Math.max(1,Math.ceil((await localMediaDuration(f))/60))}catch{total+=1}}if(!off)setMinutes(total)})();return()=>{off=true}},[files]);
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setMinutes(Number(d.state?.minutes||0))}setDraftReady(true)})()},[]);
@@ -61,7 +64,7 @@ export default function VideoDubbingWorkbench(){
     videos.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}-dubbed.mp4`,blob:dubbed,mime:"video/mp4",size:dubbed.size});
    }
    setOutputs(videos);setSubtitles(subs);setStage("处理完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(plainText(lang,e instanceof Error&&/DURATION_MISMATCH|OUTPUT_TRUNCATED/.test(e.message)?"mediaIncomplete":"fileError"));setStage("");throw e}
   finally{setBusy(false)}
  }
 

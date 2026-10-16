@@ -30,23 +30,11 @@ export function deliveryFile(blob: Blob, filename: string): File {
   const name = safeFilename(filename), extension = name.split(".").pop()?.toLowerCase() || "";
   return new File([blob], name, {type: MIME[extension] || blob.type || "application/octet-stream"});
 }
-// Must run directly from a user click, without async fetch/import/encoding first.
-// Resolution confirms OS hand-off only, never delivery to a particular recipient.
-export async function shareFile(blob: Blob, filename: string): Promise<FileShareOutcome> {
-  try {
-    const file = deliveryFile(blob, filename), payload = {files: [file]};
-    if (!navigator.share || !navigator.canShare || !navigator.canShare(payload)) return "unsupported";
-    await ensureToolExportAccess(blob,filename,'share');
-    await navigator.share(payload);
-    return "shared";
-  } catch (error) {
-    return error && typeof error === "object" && "name" in error && error.name === "AbortError" ? "cancelled" : "failed";
-  }
-}
 /** Prepare native file sharing after allowance/payment is resolved.
  * Call the returned function directly inside a fresh click handler: do not await
  * another gate or fetch before navigator.share, which requires user activation.
  * The closure is issued only after successful authorization.
+ * Resolution confirms OS handoff only, never delivery to a recipient.
  */
 export async function prepareAuthorizedFileShare(blob: Blob, filename: string): Promise<() => Promise<FileShareOutcome>> {
   const file = deliveryFile(blob, filename), payload = {files: [file]};

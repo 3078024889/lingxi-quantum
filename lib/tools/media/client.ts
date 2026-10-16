@@ -1,8 +1,10 @@
 "use client";
 import{fetchFile}from"@ffmpeg/util";
 import{createFfmpegRuntime}from"./runtime";
+import{readMediaDuration as browserMediaDuration}from"./metadata";
 
 export async function extractCompactAudio(file:File,onProgress?:(p:number)=>void){
+ const originalDuration=await browserMediaDuration(file);
  const ff=await createFfmpegRuntime(onProgress);
  try{
   const ext=file.name.split(".").pop()||"bin",input=`input.${ext}`,output="speech.mp3";
@@ -11,34 +13,15 @@ export async function extractCompactAudio(file:File,onProgress?:(p:number)=>void
   if(code!==0)throw new Error(`AUDIO_EXTRACT_${code}`);
   const data=await ff.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data));
   const copy=new Uint8Array(bytes.byteLength);copy.set(bytes);
-  return new File([copy.buffer],"speech.mp3",{type:"audio/mpeg"});
+  const result=new File([copy.buffer],"speech.mp3",{type:"audio/mpeg"});
+  const extractedDuration=await browserMediaDuration(result);
+  if(Math.abs(extractedDuration-originalDuration)>Math.max(.5,originalDuration*.04))throw new Error("AUDIO_EXTRACT_DURATION_MISMATCH");
+  return result;
  }finally{try{ff.terminate()}catch{}}
 }
 
 
-// Guard final delivery against FFmpeg successfully producing only a short prefix.
-// Browser media metadata is available without additional decoders or network upload.
-export function browserMediaDuration(blob:Blob):Promise<number>{
- return new Promise((resolve,reject)=>{
-  const video=document.createElement("video"),url=URL.createObjectURL(blob);
-  let settled=false;
-  const finish=(duration?:number,error?:Error)=>{
-   if(settled)return;settled=true;clearTimeout(timer);
-   video.onloadedmetadata=null;video.onerror=null;video.removeAttribute("src");video.load();
-   URL.revokeObjectURL(url);
-   if(error)reject(error);else resolve(duration!);
-  };
-  const timer=setTimeout(()=>finish(undefined,new Error("MEDIA_PROBE_TIMEOUT")),20000);
-  video.preload="metadata";
-  video.onloadedmetadata=()=>{
-   const value=video.duration;
-   Number.isFinite(value)&&value>0?finish(value):finish(undefined,new Error("MEDIA_PROBE_INVALID_DURATION"));
-  };
-  video.onerror=()=>finish(undefined,new Error("MEDIA_PROBE_FAILED"));
-  video.src=url;
- });
-}
-
+export {readMediaDuration as browserMediaDuration} from "./metadata";
 export async function muxDubbedVideo(video:File,audio:Blob,onProgress?:(p:number)=>void){
  const originalDuration=await browserMediaDuration(video);
  const ff=await createFfmpegRuntime(onProgress);

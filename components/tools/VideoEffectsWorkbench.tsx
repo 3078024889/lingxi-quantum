@@ -8,7 +8,7 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {createFfmpegRuntime} from "@/lib/tools/media/runtime";
-import {browserMediaDuration} from "@/lib/tools/media/client";
+import {readMediaDuration as browserMediaDuration} from "@/lib/tools/media/metadata";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 export type VideoEffectMode="reverse"|"loop"|"stop-motion";

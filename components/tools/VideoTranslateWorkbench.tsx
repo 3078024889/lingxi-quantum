@@ -1,4 +1,6 @@
 "use client";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {plainText} from "@/lib/tools/plain-copy";
 import ToolUiText from "@/components/tools/ToolUiText";
 import {useEffect,useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -63,6 +65,7 @@ async function remoteTts(text:string,target:string,quoteId:string){
 function blobFile(name:string,text:string,mime:string):ToolResultFile{const b=new Blob([text],{type:mime});return{name,blob:b,mime,size:b.size}}
 
 export default function VideoTranslateWorkbench(){
+ const {lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("auto"),[targets,setTargets]=useState<Target[]>(["en"]),[mode,setMode]=useState<Mode>("subtitle"),[durations,setDurations]=useState<number[]>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[videos,setVideos]=useState<ToolResultFile[]>([]),[subs,setSubs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState("");
  useEffect(()=>{let off=false;(async()=>{const ds=[] as number[];for(const f of files)ds.push(await localMediaDuration(f).catch(()=>60));if(!off)setDurations(ds)})();return()=>{off=true}},[files]);
  const startedMinutes=useMemo(()=>durations.reduce((n,d)=>n+Math.max(1,Math.ceil(d/60)),0),[durations]);
@@ -117,7 +120,7 @@ export default function VideoTranslateWorkbench(){
     }
    }
    setVideos(vo);setSubs(so);setStage("全部视频翻译完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(plainText(lang,e instanceof Error&&/DURATION_MISMATCH|OUTPUT_TRUNCATED/.test(e.message)?"mediaIncomplete":"fileError"));setStage("");throw e}
   finally{setBusy(false)}
  }
  return <div className="space-y-5">

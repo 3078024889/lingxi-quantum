@@ -9,7 +9,8 @@ const prepared=delivery.split("export async function prepareAuthorizedFileShare"
 assert.ok(prepared.indexOf('await ensureToolExportAccess(')<prepared.indexOf('return () => {'));
 assert.match(prepared,/return navigator\.share\(payload\)/);
 assert.doesNotMatch(prepared,/return \(\) => \{[^]*?await ensureToolExportAccess/);
-assert.match(ui,/readyShare\.current=await prepareAuthorizedFileShare\(blob,name\)/);
+assert.match(ui,/prepared=await prepareAuthorizedFileShare\(blob,name\)/);
+assert.match(ui,/if\(version!==shareVersion\.current\)return/);
 assert.match(ui,/const outcome=await readyShare\.current\(\)/);
 assert.match(ui,/readyShare\.current=null/);
 console.log("PREPARED_NATIVE_SHARE_GESTURE_CONTRACT=PASS");

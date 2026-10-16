@@ -1,4 +1,5 @@
 "use client";
+import {readMediaDuration} from "@/lib/tools/media/metadata";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
@@ -18,20 +19,6 @@ type Resolution="source"|"1080"|"720"|"480";
 const CRF:Record<CompressPreset,number>={high:23,balanced:28,small:33};
 const SCALE:Record<Exclude<Resolution,"source">,string>={"1080":"-2:1080","720":"-2:720","480":"-2:480"};
 
-// Validate source and output durations using browser metadata, not only FFmpeg exit=0.
-// A truncated file must never be presented as a successful full-length conversion.
-function readMediaDuration(blob:Blob,kind:"video"|"audio"="video"):Promise<number>{
- return new Promise((resolve,reject)=>{
-  const el=document.createElement(kind),url=URL.createObjectURL(blob);
-  let settled=false;
-  const finish=(err?:Error,value?:number)=>{if(settled)return;settled=true;clearTimeout(timer);el.onloadedmetadata=null;el.onerror=null;el.removeAttribute("src");el.load();URL.revokeObjectURL(url);if(err)reject(err);else resolve(value!)};
-  const timer=setTimeout(()=>finish(new Error("MEDIA_METADATA_TIMEOUT")),20000);
-  el.preload="metadata";
-  el.onloadedmetadata=()=>Number.isFinite(el.duration)&&el.duration>0?finish(undefined,el.duration):finish(new Error("MEDIA_DURATION_INVALID"));
-  el.onerror=()=>finish(new Error("MEDIA_METADATA_UNREADABLE"));
-  el.src=url;
- });
-}
 function expectedOutputDuration(source:number,mode:Mode,start:number,duration:number,speed:number){
  if(mode==="trim")return Math.max(0,Math.min(duration,source-Math.max(0,start)));
  if(mode==="speed")return source/Math.max(.5,Math.min(2,speed));
@@ -92,7 +79,7 @@ export default function VideoToolkitWorkbench(){
     try{await f.deleteFile(input);await f.deleteFile(output)}catch{}f.terminate();ff.current=null;
    }
    setOutputs(out);setStage(plainText(lang,"ready"));
-  }catch(e){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(e instanceof Error&&e.message.startsWith("MEDIA_OUTPUT_TRUNCATED")?t("导出视频时长不完整，结果已拦截。请尝试较短视频或降低输出清晰度。","The exported video was cut short and has been blocked. Try a shorter file or lower output quality."):plainText(lang,"fileError"))}finally{setBusy(false)}
+  }catch(e){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(e instanceof Error&&e.message.startsWith("MEDIA_OUTPUT_TRUNCATED")?plainText(lang,"mediaIncomplete"):plainText(lang,"fileError"))}finally{setBusy(false)}
  }
  function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
  async function addRemote(file:File){setFiles(v=>[...v,file].slice(0,10))}
