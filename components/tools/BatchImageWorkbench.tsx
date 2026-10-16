@@ -5,7 +5,8 @@ import {useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
-import ToolUiText from "@/components/tools/ToolUiText";\nimport{toolUiText}from "@/lib/tool-ui-i18n";
+import ToolUiText from "@/components/tools/ToolUiText";
+import{toolUiText}from "@/lib/tool-ui-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
 
 async function canvas(file:File,opts:{maxW:number;targetW:number;targetH:number;resizeMode:"max"|"exact"|"contain"|"cover";quality:number;type:string}){
