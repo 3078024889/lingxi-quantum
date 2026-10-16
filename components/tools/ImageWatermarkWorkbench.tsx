@@ -2,7 +2,6 @@
 import{PointerEvent,useEffect,useRef,useState,type Dispatch,type SetStateAction}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
-import PaidActionButton from"@/components/tools/PaidActionButton";
 import{localInpaint,localInpaintMask,type NormalizedBox,type NormalizedPoint,type NormalizedStroke}from"@/lib/tools/autonomous/image-local";
 import ResultFileActions from './ResultFileActions';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
