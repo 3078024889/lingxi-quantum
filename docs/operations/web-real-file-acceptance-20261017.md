@@ -69,3 +69,56 @@ A locally prepared filled PDF form containing a text field, a checked checkbox a
 Introduce one shared `flattenPdfForm` helper for the single and batch PDF workbenches. It retains appearances, verifies zero fields and removes only unresolved annotation references. Resolved annotations such as valid links remain. A real-library regression verifies saved/reopened form output, retained appearance text and preserved valid links. The same filled-form input was processed with the patched helper locally, then independently rendered with PDF.js: field text remained, no annotation dictionary remained, and the reader reported zero interactive annotations. Full patched-page single/batch acceptance is pending remote CI; batch output was not manually exercised in this round.
 
 Actual page-number operation also exposed stale output after editing the bottom margin. The common extra-PDF workbench now clears previous outputs on watermark text/size/opacity, page-number margin and crop-margin changes, and locks those controls while processing. Browser regressions cover each change and re-download updated crop dimensions. This does not imply every parameter in every other workbench is already checked.
+
+## Completed remote baseline and new continuation
+
+Source `6ee4ba52`: production gate [38982469665](https://github.com/3078024889/lingxi-quantum/actions/runs/38982469665) succeeded: desktop 911 passed / 59 skipped, mobile-emulation 912 passed / 58 skipped. The dedicated [delivery run](https://github.com/3078024889/lingxi-quantum/actions/runs/38982469799) succeeded with 311 passed / one skipped; [media run](https://github.com/3078024889/lingxi-quantum/actions/runs/38982469549) succeeded with 140 browser checks plus the native job. These are test cases, not accepted-tool totals. Payment/provider isolation and unavailable production services in the test environment remain limitations. These receipts do not cover the newer continuation below.
+
+### Supplied videos: actual web operations and independent saved-file decoding
+
+Real HEVC and H.264 files supplied by the user were operated on through the production website. Files were downloaded, re-read, independently decoded with FFmpeg (`-xerror`, every stream to null), and their boundaries were decoded to real PNGs. The first browser-canvas capture attempt produced transparent images; it was discarded and replaced with independently decoded first/actual-last video frames, checked for opaque nonempty content. No blank capture is treated as a successful visual check.
+
+| Operation | Saved duration (s) | Dimensions | Decoded video frames | Audio streams |
+|---|---:|---|---:|---:|
+| Rotate 90°, HEVC source | 10.08 | 1280×720 | 241 | 1 |
+| Rotate 180°, HEVC source | 10.08 | 720×1280 | 241 | 1 |
+| Rotate 270°, supplied H.264 copy | 10.10 | 1080×608 | 241 | 1 |
+| Mute, selected 480p | 10.041667 | 270×480 | 241 | 0 |
+| Trim 2–5 seconds, 480p | 3.00 | 270×480 | 72 | 1 |
+| Speed 2×, 480p | 5.125 | 270×480 | 123 | 1 |
+| Speed 0.5×, 480p | 20.151995 | 270×480 | 481 | 1 |
+| Convert MP4, 480p | 10.10 | 270×480 | 241 | 1 |
+| Extract MP3 | 10.10068 | audio only | — | 1 |
+
+All listed saved files completed independent decoding without detected decode errors. Rotation directions were visually inspected. This verifies these actual inputs/options, not every codec, resolution, long clip or subjective audiovisual-sync condition.
+
+Using the already verified 5.125-second 480p derivative, actual reverse/loop/stop-motion exports also completed:
+
+| Effect | Saved duration (s) | Frames | Audio streams |
+|---|---:|---:|---:|
+| Reverse | 5.125 | 123 | 1 |
+| Loop twice | 10.25 | 246 | 1 |
+| Stop-motion, 0.4 s sampling / 12 fps | 5.166667 | 62 | 0 |
+| Stop-motion with reverse pass | 10.333333 | 124 | 0 |
+
+Independent first/last-frame comparison supported the intended ordering: reverse first versus source last RGB MAE 2.007, reverse last versus source first 2.688, loop endpoints 1.558/2.677, and back-and-forth first versus last 1.424. Lossy re-encoding is not claimed to be pixel-identical. Timing differences from sampling/frame quantization are recorded rather than hidden. Inputs, outputs, full decode receipts and valid boundary PNGs remain private on the desktop.
+
+Actual video operations exposed retained old downloads after changing rotation/effect settings, and controls remained editable while encoding. All toolkit/effect parameters now invalidate previous results and lock during processing. The toolkit also assigns each run an identity: cancelled work cannot launch a late runtime, overwrite progress/delivery, clear the next run's busy state or terminate its runtime. Component unmount terminates its owned work. Actual callback regressions fail against the previous code and pass against the patch, including cancellation during metadata preparation and a late old-worker failure after a new job starts. Engine scheduling is isolated in these race regressions; they are not extra real-encoding cases. The existing saved-file matrix now checks control locking and result invalidation after each relevant setting change.
+
+Reference: [official ffmpeg.wasm FAQ](https://github.com/ffmpegwasm/ffmpeg.wasm/blob/main/apps/website/docs/faq.md) and [progress API limitations](https://ffmpegwasm.netlify.app/docs/api/ffmpeg/classes/ffmpeg/). Progress percentage is not used as export-integrity proof. No additional media library, heavy local build or paid model invocation was introduced.
+
+### Actual batch PDF processing and paid-context fixes
+
+The first browser visit moved to the products page, but direct inspection returned HTTP 200 with the proper workbench, and subsequent browser navigation remained on the correct batch route. This intermittent observation is not classified as a permanently missing tool and still requires broader navigation reproduction.
+
+The production workbench actually processed the two-page book copy and a filled form together: metadata removal, rotation 90°, bilingual watermark, page numbers and flattening. Separate downloads independently reopened with page counts 2 and 1, rotations 90°, no Info dictionary and zero form fields. A fresh run with merge enabled produced one three-page PDF with the same properties. Independent PDF.js rendering of all three pages retained book content and filled form appearances; the Chinese/English watermark and page number were visually inspected. Quote/payment status were simulated throughout; payment writes remained zero. An inconsistent completion badge in a merge run is not accepted as proof of payment-state correctness merely because the file was produced.
+
+Changing watermark opacity after completion left both old files and the completed action in place. Every batch input/option edit now clears output, creates a new draft identity and resets the paid context. Before price/payment preparation, files and exact options are saved through the existing local paid-draft store; storage failure blocks price/payment entry. Explicit resume URLs restore the file set and options. The existing seven-day draft expiry is disclosed in nine-language user copy; no physical-deletion claim is made. Original prices and server billing/database data are unchanged.
+
+The shared paid-action component now ignores asynchronous quote/status/persistence completions belonging to a replaced or unmounted context. A changed draft cannot open the previous draft's payment window, and a late response cannot unlock or overwrite a newer request. Separate baseline-versus-patch tests reproduced old quote, paid-status and delayed-persistence failures; all patched cases pass with mocked network/payment. New full-page tests verify actual local draft storage before quoting, new IDs after edits, restored files/options, failed storage, completion state and stale quote rejection. These newer patched-page checks require the new remote run; real payment is still untested.
+
+### Per-route status and deployment access
+
+[The per-route matrix](./real-web-tool-matrix-20261017.csv) retains the legacy route inventory, marks the retired image-to-PDF alias, and separates actual-file evidence, known defects and remaining checks. It does not infer an accepted-tool total from test counts or from merely having a record.
+
+Vercel connector team listing returned an empty list. A cached CLI/login record was found, but CLI inspection failed; a scoped read-only REST check using that existing login returned 403 `Not authorized` for the intended existing project. No credentials were printed or changed. Reconnection to an authorized project account was requested asynchronously while testing continued. No preview/production deployment, main push, live payment, pricing change or important database mutation occurred.

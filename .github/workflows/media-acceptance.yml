@@ -23,6 +23,7 @@ jobs:
       - name: Source delivery contracts
         run: |
           node scripts/test-media-export-duration-contract.mjs
+          node scripts/test-video-task-ownership.cjs
           node scripts/test-media-export-delivery-contract.mjs
           node scripts/test-prepared-share-gesture.mjs
       - name: Existing native regressions

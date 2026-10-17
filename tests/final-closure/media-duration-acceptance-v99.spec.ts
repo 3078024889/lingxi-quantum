@@ -21,6 +21,7 @@ for(const seconds of [2,12,60,125])for(const mode of modes)test(`real saved medi
  // Default trim is intentional. Set an explicit range valid even for a 2s clip.
  if(mode==='Trim'){await area.getByRole('spinbutton').nth(0).fill('0');await area.getByRole('spinbutton').nth(1).fill(String(seconds/2));}
  await area.getByRole('button',{name:'Start processing',exact:true}).click();
+ await expect(area.locator('select:enabled, input[type=number]:enabled, input[type=range]:enabled, button[aria-pressed]:enabled')).toHaveCount(0);
  const actions=page.getByTestId('result-file-actions');
  await expect(actions).toBeVisible({timeout:180000});
  const preview=actions.locator(mode==='Extract MP3'?'audio':'video');
@@ -45,6 +46,16 @@ for(const seconds of [2,12,60,125])for(const mode of modes)test(`real saved medi
  const reportPath=info.outputPath('verification.json');await fs.writeFile(reportPath,JSON.stringify(report,null,2));
  await info.attach('media-verification',{path:reportPath,contentType:'application/json'});
  if(videos.length){for(const [name,time] of [['first',0],['last',Math.max(0,actual-.15)]] as const){const path=info.outputPath(`${name}.png`);run('ffmpeg',['-v','error','-ss',String(time),'-i',output,'-frames:v','1','-y',path]);await info.attach(name,{path,contentType:'image/png'});}}
+ // Reusing a completed tool must never expose a file for the previous settings.
+ if(mode==='Compress'){
+  if(seconds===2)await area.getByRole('combobox').first().selectOption('high');
+  else if(seconds===12)await area.getByRole('combobox').last().selectOption('480');
+  else await area.getByRole('spinbutton').last().fill('12');
+ }else if(mode==='Trim')await area.getByRole('spinbutton').nth(seconds===2?0:1).fill(seconds===2?'0.1':'1');
+ else if(mode.startsWith('Rotate'))await area.getByRole('combobox').first().selectOption(mode==='Rotate180'?'90':'180');
+ else if(mode==='Speed')await area.getByRole('slider').fill('1.5');
+ else await area.getByRole('button',{name:'Compress',exact:true}).click();
+ await expect(page.getByTestId('result-file-actions')).toHaveCount(0);
 });
 
 for(const seconds of [2,12,60,125])for(const effect of ['reverse-video','loop-video','stop-motion-video','boomerang','video-watermark-remover'])test(`real saved effect ${seconds}s ${effect}: full export with isolated payment`,async({page},info)=>{
@@ -63,7 +74,10 @@ for(const seconds of [2,12,60,125])for(const effect of ['reverse-video','loop-vi
   await area.getByRole('button',{name:'See watermark-removal price',exact:true}).click();
   await expect(page.getByRole('button',{name:'Confirm & pay',exact:true})).toBeVisible();
   await page.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
- }else await area.getByRole('button',{name:'Start',exact:true}).click();
+ }else{
+  await area.getByRole('button',{name:'Start',exact:true}).click();
+  await expect(area.locator('select:enabled, input[type=number]:enabled, input[type=range]:enabled, input[type=checkbox]:enabled')).toHaveCount(0);
+ }
  const actions=page.getByTestId('result-file-actions');await expect(actions).toBeVisible({timeout:180000});
  await expect(actions.locator('video')).toHaveCount(1);
  const pending=page.waitForEvent('download');await actions.getByRole('button',{name:effect==='video-watermark-remover'?'Download':'Save file',exact:true}).click();
@@ -80,4 +94,9 @@ for(const seconds of [2,12,60,125])for(const effect of ['reverse-video','loop-vi
  const path=info.outputPath('verification.json');await fs.writeFile(path,JSON.stringify({effect,seconds,expected,actual,decodedEnd,before,after,fullDecode:true,payment:'isolated',quoteCalls,deviceProject:info.project.name},null,2));await info.attach('media-verification',{path,contentType:'application/json'});
  for(const [name,time] of [['first',0],['last',Math.max(0,actual-.2)]] as const){const path=info.outputPath(`${name}.png`);run('ffmpeg',['-v','error','-ss',String(time),'-i',output,'-frames:v','1','-y',path]);await info.attach(name,{path,contentType:'image/png'});}
  expect(quoteCalls).toBe(effect==='video-watermark-remover'?1:0);
+ if(effect==='reverse-video'){if(seconds===2)await area.getByRole('checkbox').check();else await area.getByRole('slider').fill('1.5')}
+ else if(effect==='loop-video')await area.getByRole('spinbutton').fill('3');
+ else if(effect==='stop-motion-video'){if(seconds===2)await area.getByRole('combobox').first().selectOption('0.6');else await area.getByRole('combobox').last().selectOption('10')}
+ else if(effect==='boomerang'){if(seconds===2)await area.getByRole('checkbox').uncheck();else await area.getByRole('combobox').last().selectOption('10')}
+ if(effect!=='video-watermark-remover')await expect(page.getByTestId('result-file-actions')).toHaveCount(0);
 });

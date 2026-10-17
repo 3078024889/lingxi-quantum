@@ -36,6 +36,7 @@ jobs:
           node scripts/test-ocr-review-confidence.cjs
           node scripts/test-rare-image-resources.cjs
           node scripts/test-pdf-flatten-references.cjs
+          node scripts/test-paid-context-races.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
@@ -55,6 +56,7 @@ jobs:
           rare-image-recovery-v106
           privacy-cleaner-output-v107
           pdf-search-recovery-v108
+          batch-pdf-context-v110 batch-pdf-paid-output-v89
           document-upload-consent-v79 public-site-truth sasi-found-issues-v96
           sasi-prompt-continuation tool-plain-language tool-real-output
           --workers=2 --reporter=list,json
