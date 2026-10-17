@@ -23,7 +23,6 @@ jobs:
       - name: Source delivery contracts
         run: |
           node scripts/test-media-export-duration-contract.mjs
-          node scripts/test-video-task-ownership.cjs
           node scripts/test-media-export-delivery-contract.mjs
           node scripts/test-prepared-share-gesture.mjs
       - name: Existing native regressions
@@ -42,6 +41,8 @@ jobs:
           cache: pnpm
       - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
       - run: pnpm install --frozen-lockfile
+      - name: Video task ownership regression with installed TypeScript
+        run: node scripts/test-video-task-ownership.cjs
       - run: node scripts/test-media-metadata.cjs
       - run: node scripts/test-box-inpaint-boundaries.cjs && node scripts/test-watermark-resource-v79.cjs
       - run: pnpm build

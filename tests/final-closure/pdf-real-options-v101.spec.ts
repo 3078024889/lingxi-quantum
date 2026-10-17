@@ -1,7 +1,29 @@
 import{test,expect}from'./export-test';
 import{PDFDocument}from'pdf-lib';
 import{readFile}from'node:fs/promises';
-import{PDFName,PDFString,PDFDict}from'pdf-lib';
+import{PDFName,PDFString,PDFDict,PDFRawStream,decodePDFRawStream}from'pdf-lib';
+
+for(const mode of ['Merge PDFs','Extract pages']as const)test(`PDF basic ${mode} fixes filled form appearances into copied pages`,async({page})=>{
+ const doc=await PDFDocument.create(),p=doc.addPage(),form=doc.getForm();
+ const field=form.createTextField('customer');field.setText('AUDIT CUSTOMER');field.addToPage(p,{x:20,y:400,width:220,height:30});
+ const check=form.createCheckBox('approved');check.addToPage(p,{x:20,y:350,width:20,height:20});check.check();
+ await page.goto('/tools/pdf-merge-split?lang=en');const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();
+ const source={name:'form.pdf',mimeType:'application/pdf',buffer:Buffer.from(await doc.save())};
+ await input.setInputFiles(mode==='Merge PDFs'?[source,{...source,name:'form-copy.pdf'}]:source);
+ await page.getByPlaceholder('1-3,5,8-10').fill('1');await page.getByRole('button',{name:mode,exact:true}).click();
+ const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Save file',exact:true}).click();const saved=await pending;
+ const output=await PDFDocument.load(await readFile((await saved.path())!),{updateMetadata:false});expect(output.getPageCount()).toBe(mode==='Merge PDFs'?2:1);expect(output.getForm().getFields()).toHaveLength(0);
+ for(const page of output.getPages()){expect(page.node.Annots()?.size()||0).toBe(0);expect(page.node.Resources()!.lookup(PDFName.of('XObject'),PDFDict).keys().length).toBeGreaterThanOrEqual(2)}
+ expect(output.context.enumerateIndirectObjects().some(([,obj])=>obj instanceof PDFRawStream&&Buffer.from(decodePDFRawStream(obj).decode()).toString().includes(Buffer.from('AUDIT CUSTOMER').toString('hex').toUpperCase()))).toBe(true);
+ await page.getByPlaceholder('1-3,5,8-10').fill('2');await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+ await expect(page.locator('main')).toContainText('cannot be edited afterwards');
+});
+
+test('PDF basic rotation keeps a filled form editable',async({page})=>{
+ const doc=await PDFDocument.create(),p=doc.addPage(),field=doc.getForm().createTextField('customer');field.setText('AUDIT CUSTOMER');field.addToPage(p,{x:20,y:400,width:220,height:30});
+ await page.goto('/tools/pdf-merge-split?lang=en');const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();await input.setInputFiles({name:'form.pdf',mimeType:'application/pdf',buffer:Buffer.from(await doc.save())});
+ await page.getByRole('button',{name:'Rotate selected pages 90°',exact:true}).click();const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Save file',exact:true}).click();const output=await PDFDocument.load(await readFile((await(await pending).path())!));expect(output.getPage(0).getRotation().angle).toBe(90);expect(output.getForm().getTextField('customer').getText()).toBe('AUDIT CUSTOMER');
+});
 
 for(const[slug,button]of[['pdf-page-numbers','Add PDF page numbers'],['pdf-crop','Crop PDF']]as const)test(`${slug}: changing a numeric option removes the old export`,async({page})=>{
  const source=await PDFDocument.create();source.addPage([400,600]);

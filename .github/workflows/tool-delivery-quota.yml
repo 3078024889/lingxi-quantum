@@ -36,6 +36,7 @@ jobs:
           node scripts/test-ocr-review-confidence.cjs
           node scripts/test-rare-image-resources.cjs
           node scripts/test-pdf-flatten-references.cjs
+          node scripts/test-pdf-basic-forms.cjs
           node scripts/test-paid-context-races.cjs
       - name: Production build on remote runner
         run: pnpm build

@@ -1,11 +1,14 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useRef,useState} from "react";
 import {PDFDocument,degrees} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {createExportPlan} from "@/lib/tools/document/export-plan";
+import {flattenPdfForm} from "@/lib/tools/shared/pdf-flatten";
+
+const formNote:Record<LingxiLang,string>={zh:"合并或提取时，已填写的表单会固定为页面内容，不能继续编辑。旋转保留可填写表单。",en:"Merging or extracting makes filled forms part of the page, so they cannot be edited afterwards. Rotation keeps forms editable.",ja:"結合・抽出では入力済みフォームがページ内容になり、編集できなくなります。回転では編集可能なままです。",ko:"병합·추출하면 작성된 양식이 페이지 내용으로 고정되어 편집할 수 없습니다. 회전은 양식 편집을 유지합니다.",fr:"La fusion et l’extraction figent les formulaires remplis dans les pages. Ils ne sont plus modifiables. La rotation conserve leur édition.",de:"Zusammenführen und Extrahieren betten ausgefüllte Formulare fest in die Seite ein. Danach sind sie nicht bearbeitbar. Drehen erhält die Bearbeitbarkeit.",es:"Al unir o extraer, los formularios rellenados se fijan en las páginas y dejan de ser editables. Girar conserva su edición.",pt:"Mesclar ou extrair fixa os formulários preenchidos nas páginas, sem edição posterior. Girar mantém a edição.",ar:"يؤدي الدمج أو الاستخراج إلى تثبيت النماذج المعبأة ضمن الصفحة فلا يمكن تعديلها لاحقًا. يحافظ التدوير على إمكانية تعديل النماذج."};
 
 function pdfBlob(bytes:Uint8Array){const c=new Uint8Array(bytes.length);c.set(bytes);return new Blob([c.buffer],{type:"application/pdf"});}
 function parsePages(v:string,max:number){
@@ -30,12 +33,14 @@ export default function PdfBasicWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[pages,setPages]=useState(0),[range,setRange]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
  const first=files[0]||null;
+ const selection=useRef(0);
 
  async function syncFiles(next:File[]){
+   const revision=++selection.current;
    setFiles(next);setResults([]);setError("");setPages(0);
    if(next[0]){
-     try{const d=await PDFDocument.load(await next[0].arrayBuffer());setPages(d.getPageCount())}
-     catch{setError(c.error)}
+     try{const d=await PDFDocument.load(await next[0].arrayBuffer());if(revision===selection.current)setPages(d.getPageCount())}
+     catch{if(revision===selection.current)setError(c.error)}
    }
  }
  async function wrap(name:string,fn:()=>Promise<Blob>){
@@ -44,17 +49,18 @@ export default function PdfBasicWorkbench(){
    catch(e){setError(e instanceof Error&&e.message===c.badRange?c.badRange:c.error)}
    finally{setBusy(false)}
  }
- async function merge(){if(files.length<2)return;await wrap("lingxifield-merged.pdf",async()=>{const out=await PDFDocument.create();for(const f of files){const s=await PDFDocument.load(await f.arrayBuffer());for(const p of await out.copyPages(s,s.getPageIndices()))out.addPage(p)}return pdfBlob(await out.save())})}
- async function extract(){if(!first)return;await wrap("lingxifield-pages.pdf",async()=>{const s=await PDFDocument.load(await first.arrayBuffer());const ids=parsePages(range,s.getPageCount());if(!ids.length)throw new Error(c.badRange);const out=await PDFDocument.create();for(const p of await out.copyPages(s,ids))out.addPage(p);return pdfBlob(await out.save())})}
+ async function merge(){if(files.length<2)return;await wrap("lingxifield-merged.pdf",async()=>{const out=await PDFDocument.create();for(const f of files){const s=await PDFDocument.load(await f.arrayBuffer());flattenPdfForm(s);for(const p of await out.copyPages(s,s.getPageIndices()))out.addPage(p)}return pdfBlob(await out.save())})}
+ async function extract(){if(!first)return;await wrap("lingxifield-pages.pdf",async()=>{const s=await PDFDocument.load(await first.arrayBuffer());const ids=parsePages(range,s.getPageCount());if(!ids.length)throw new Error(c.badRange);flattenPdfForm(s);const out=await PDFDocument.create();for(const p of await out.copyPages(s,ids))out.addPage(p);return pdfBlob(await out.save())})}
  async function rotate(){if(!first)return;await wrap("lingxifield-rotated.pdf",async()=>{const d=await PDFDocument.load(await first.arrayBuffer());const ids=parsePages(range||`1-${d.getPageCount()}`,d.getPageCount());if(!ids.length)throw new Error(c.badRange);for(const i of ids){const p=d.getPage(i);p.setRotation(degrees((p.getRotation().angle+90)%360))}return pdfBlob(await d.save())})}
  return <div className="space-y-5">
   <FileDropzone accept="application/pdf,.pdf" multiple maxFiles={30} maxSizeMB={200} files={files} onChange={syncFiles} disabled={busy} kind="pdf"/>
+  <p className="text-sm text-[var(--lx-muted)]">{formNote[lang]}</p>
   {files.length>0&&<div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-3 text-sm text-[var(--lx-muted)]">
    {files.map(f=><div key={`${f.name}-${f.size}`}>{f.name}</div>)}
    {pages>0&&<div className="mt-1 text-[var(--lx-ink)]">{c.pages}: {pages}</div>}
   </div>}
   <label className="block text-sm text-[var(--lx-muted)]">{c.range}
-   <input value={range} onChange={e=>setRange(e.target.value)} placeholder="1-3,5,8-10" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
+   <input value={range} disabled={busy} onChange={e=>{setRange(e.target.value);setResults([]);setError("")}} placeholder="1-3,5,8-10" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
   </label>
   <div className="flex flex-wrap gap-3">
    <button disabled={files.length<2||busy} onClick={merge} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.merge}</button>
