@@ -35,6 +35,7 @@ jobs:
           node scripts/test-subtitle-translation-v95.cjs
           node scripts/test-ocr-review-confidence.cjs
           node scripts/test-rare-image-resources.cjs
+          node scripts/test-svg-image-fallback.cjs
           node scripts/test-pdf-flatten-references.cjs
           node scripts/test-pdf-basic-forms.cjs
           node scripts/test-paid-context-races.cjs
@@ -48,6 +49,7 @@ jobs:
           daily-export-quota-v92 file-delivery-v91 paid-local-output-v89
           pdf-to-image-output-v90 pdf-redaction-output-v89 screenshot-redaction-v89
           qr-cron-output-v86 burn-reveal-recovery
+          qr-reader-roundtrip-v111
           subtitle-translation-v95
           pdf-real-options-v101 image-watermark-gesture-v100
           image-translation-failure-v102

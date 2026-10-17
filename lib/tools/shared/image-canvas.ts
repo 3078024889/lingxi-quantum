@@ -1,7 +1,29 @@
 import { replaceExt } from "./download";
 
 export async function loadImageBitmap(file: File): Promise<ImageBitmap> {
-  return createImageBitmap(file);
+  try { return await createImageBitmap(file); }
+  catch (cause) {
+    if(file.type!=="image/svg+xml"&&!/\.svg$/i.test(file.name))throw cause;
+    // Some browsers can display an SVG image but cannot decode its Blob directly
+    // into ImageBitmap. Rasterize in image context; never insert SVG into the DOM.
+    const url=URL.createObjectURL(file),image=new Image();
+    let canvas:HTMLCanvasElement|undefined,timer:ReturnType<typeof setTimeout>|undefined;
+    try{
+      await new Promise<void>((resolve,reject)=>{
+        image.onload=()=>resolve();image.onerror=()=>reject(new Error("IMAGE_LOAD_FAILED"));
+        timer=setTimeout(()=>reject(new Error("IMAGE_LOAD_TIMEOUT")),10000);image.src=url;
+      });
+      const w=image.naturalWidth,h=image.naturalHeight;
+      if(!w||!h||w*h>33554432)throw new Error("IMAGE_TOO_LARGE");
+      canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");
+      ctx.drawImage(image,0,0);
+      return await createImageBitmap(canvas);
+    }finally{
+      clearTimeout(timer);image.onload=null;image.onerror=null;image.src="";
+      URL.revokeObjectURL(url);if(canvas){canvas.width=0;canvas.height=0}
+    }
+  }
 }
 
 export function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
@@ -34,14 +56,13 @@ export async function drawFileToCanvas(
   canvas.width = w;
   canvas.height = h;
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("2d context unavailable");
+  if (!ctx) {bmp.close?.();canvas.width=0;canvas.height=0;throw new Error("2d context unavailable");}
   // Document/JPEG callers retain white; alpha-capable outputs opt into transparency.
   if (opts?.background !== "transparent") {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
   }
-  ctx.drawImage(bmp, 0, 0, w, h);
-  bmp.close?.();
+  try{ctx.drawImage(bmp, 0, 0, w, h)}catch(error){canvas.width=0;canvas.height=0;throw error}finally{bmp.close?.()}
   return { canvas, width: w, height: h };
 }
 

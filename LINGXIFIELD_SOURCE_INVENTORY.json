@@ -13275,10 +13275,6 @@
       "bytes": 5158
     },
     {
-      "path": "lib/tools/shared/qr-reader.ts",
-      "bytes": 437
-    },
-    {
       "path": "lib/tools/shared/text.ts",
       "bytes": 1424
     },
