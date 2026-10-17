@@ -55,7 +55,7 @@ test('PDF password and permission inputs lock during processing and every edit c
  await page.route('**/media/qpdf-*/qpdf.js',async route=>{loading=true;await gate;await route.continue()});
  await upload(page,'pdf-protect',await source());await page.getByLabel('Open password',{exact:true}).fill('Test-Strong-123');await page.getByLabel('Confirm open password',{exact:true}).fill('Test-Strong-123');
  await page.getByRole('button',{name:'Process',exact:true}).click();
- try{await expect.poll(()=>loading).toBe(true);for(const input of await page.locator('[data-tool-workbench] fieldset input,[data-tool-workbench] fieldset select').all())await expect(input).toBeDisabled()}finally{release()}
+ try{await expect.poll(()=>loading).toBe(true);const controls=page.locator('[data-tool-workbench] fieldset input,[data-tool-workbench] fieldset select');await expect(controls).toHaveCount(6);for(const input of await controls.all())await expect(input).toBeDisabled()}finally{release()}
  await expect(page.getByRole('button',{name:'Save file',exact:true})).toBeVisible({timeout:15000});
  for(const name of ['Open password','Confirm open password','Owner password','Allow printing','Allow changes','Allow copying text and images']){
   if(name==='Allow printing')await page.getByRole('combobox',{name,exact:true}).selectOption('none');
