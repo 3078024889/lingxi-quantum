@@ -2,6 +2,19 @@ import {test,expect} from './export-test';
 import {readFile} from 'node:fs/promises';
 import JSZip from 'jszip';
 
+test('batch image width, quality and format edits remove previous files and ZIP delivery',async({page})=>{
+ await page.goto('/tools/batch-image?lang=en');const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();
+ const base64=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=193;c.height=148;const ctx=c.getContext('2d')!;ctx.fillStyle='#e83719';ctx.fillRect(0,0,193,148);return c.toDataURL('image/png').split(',')[1]});
+ await input.setInputFiles({name:'sample.png',mimeType:'image/png',buffer:Buffer.from(base64,'base64')});
+ const area=page.locator('[data-tool-workbench]'),width=area.getByRole('spinbutton',{name:'Max width px',exact:true});
+ for(const change of ['width','quality','format']){
+  await area.getByRole('button',{name:'Process batch',exact:true}).click();await expect(area.getByRole('button',{name:'Save file',exact:true})).toBeVisible();
+  if(change==='width')await width.fill('100');else if(change==='quality')await area.getByRole('spinbutton',{name:'Quality 0.4–0.95',exact:true}).fill('0.5');else await area.getByRole('combobox',{name:'Output format',exact:true}).selectOption('image/png');
+  await expect(area.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);await expect(area.getByRole('button',{name:'Download ZIP',exact:true})).toHaveCount(0);
+ }
+ await area.getByRole('button',{name:'Process batch',exact:true}).click();const pending=page.waitForEvent('download');await area.getByRole('button',{name:'Save file',exact:true}).click();const bytes=await readFile((await(await pending).path())!);expect([...bytes.subarray(0,8)]).toEqual([137,80,78,71,13,10,26,10]);expect(bytes.readUInt32BE(16)).toBe(100);expect(bytes.readUInt32BE(20)).toBe(77);
+});
+
 test('batch images retain incremental uploads, handle thin images and ZIP every colliding output',async({page})=>{
  await page.goto('/tools/batch-image?lang=en');
  const inputs=[];
