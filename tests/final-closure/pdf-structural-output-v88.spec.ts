@@ -1,10 +1,11 @@
 import {test,expect,type Page} from './export-test';
-import {PDFDocument,PDFName,PDFDict,PDFRawStream,rgb} from 'pdf-lib';
+import {PDFDocument,PDFName,PDFDict,PDFRawStream,PDFArray,decodePDFRawStream,rgb} from 'pdf-lib';
 import fs from 'node:fs/promises';
 import sharp from 'sharp';
 async function source(){const d=await PDFDocument.create();for(let i=0;i<2;i++){const p=d.addPage([400,300]);p.drawRectangle({x:10,y:10,width:60,height:40,color:rgb(1,.2,.1)});p.drawText('Original page '+(i+1),{x:40,y:180,size:20})}return Buffer.from(await d.save())}
 async function upload(page:Page,slug:string,buffer:Buffer){await page.goto(`/tools/${slug}?lang=en`);const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();await input.setInputFiles({name:'source.pdf',mimeType:'application/pdf',buffer})}
 async function download(page:Page){const button=page.getByRole('button',{name:'Save file',exact:true}).first();await expect(button).toBeVisible({timeout:15000});const pending=page.waitForEvent('download');await button.click();return fs.readFile((await (await pending).path())!)}
+function pageContent(doc:PDFDocument,index:number){const contents=doc.getPage(index).node.Contents();const refs=contents instanceof PDFArray?contents.asArray():[contents];return Buffer.concat(refs.map(ref=>Buffer.from(decodePDFRawStream(doc.context.lookup(ref,PDFRawStream)).decode())))}
 test('pdf-rasterize: every resolution preserves the physical page size',async({page})=>{
  await upload(page,'pdf-rasterize',await source());const control=page.locator('[data-tool-workbench] select');
  for(const scale of ['1','1.5','2']){await control.selectOption(scale);await page.getByRole('button',{name:'Process',exact:true}).click();const pdf=await PDFDocument.load(await download(page));expect(pdf.getPages().map(p=>p.getSize())).toEqual([{width:400,height:300},{width:400,height:300}]);}
@@ -53,10 +54,11 @@ test('pdf-protect / pdf-unlock: actual encrypted output rejects reading and the 
 test('PDF password and permission inputs lock during processing and every edit clears the old file',async({page})=>{
  test.setTimeout(90000);let release!:()=>void;const gate=new Promise<void>(r=>{release=r});let loading=false;
  await page.route('**/media/qpdf-*/qpdf.js',async route=>{loading=true;await gate;await route.continue()});
- await upload(page,'pdf-protect',await source());await page.getByLabel('Open password',{exact:true}).fill('Test-Strong-123');await page.getByLabel('Confirm open password',{exact:true}).fill('Test-Strong-123');
+ const originalBytes=await source(),original=await PDFDocument.load(originalBytes);await upload(page,'pdf-protect',originalBytes);await page.getByLabel('Open password',{exact:true}).fill('Test-Strong-123');await page.getByLabel('Confirm open password',{exact:true}).fill('Test-Strong-123');
  await page.getByRole('button',{name:'Process',exact:true}).click();
  try{await expect.poll(()=>loading).toBe(true);const controls=page.locator('[data-tool-workbench] fieldset input,[data-tool-workbench] fieldset select');await expect(controls).toHaveCount(6);for(const input of await controls.all())await expect(input).toBeDisabled()}finally{release()}
  await expect(page.getByRole('button',{name:'Save file',exact:true})).toBeVisible({timeout:15000});
+ const verifier=await page.context().newPage();try{
  for(const name of ['Open password','Confirm open password','Owner password','Allow printing','Allow changes','Allow copying text and images']){
   if(name==='Allow printing')await page.getByRole('combobox',{name,exact:true}).selectOption('none');
   else if(name==='Allow changes')await page.getByRole('combobox',{name,exact:true}).selectOption('none');
@@ -64,8 +66,14 @@ test('PDF password and permission inputs lock during processing and every edit c
   else await page.getByLabel(name,{exact:true}).fill('Changed-Password-123');
   await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
   await page.getByLabel('Open password',{exact:true}).fill('Test-Strong-123');await page.getByLabel('Confirm open password',{exact:true}).fill('Test-Strong-123');
-  await page.getByRole('button',{name:'Process',exact:true}).click();const output=await PDFDocument.load(await download(page),{ignoreEncryption:true});expect(output.getPageCount()).toBe(2);expect(output.context.trailerInfo.Encrypt).toBeTruthy();
+  await page.getByRole('button',{name:'Process',exact:true}).click();const encrypted=await download(page);await expect(PDFDocument.load(encrypted)).rejects.toThrow();expect((await PDFDocument.load(encrypted,{ignoreEncryption:true})).context.trailerInfo.Encrypt).toBeTruthy();
+  // ignoreEncryption bypasses a warning; pdf-lib cannot decrypt encrypted page
+  // object streams. Exercise the real unlock flow before inspecting page data.
+  await upload(verifier,'pdf-unlock',encrypted);await verifier.getByLabel('Current password',{exact:true}).fill('Test-Strong-123');await verifier.getByRole('button',{name:'Process',exact:true}).click();
+  const output=await PDFDocument.load(await download(verifier));expect(output.isEncrypted).toBe(false);expect(output.getPageCount()).toBe(2);expect(output.getPages().map(p=>p.getSize())).toEqual([{width:400,height:300},{width:400,height:300}]);
+  for(let index=0;index<2;index++)expect(pageContent(output,index).equals(pageContent(original,index))).toBe(true);
  }
+ }finally{await verifier.close()}
  await expect(page.locator('[data-tool-workbench]')).not.toContainText('Free ·');
 });
 for(const slug of ['pdf-inspect','pdf-bookmarks'])test(`${slug}: real page count, Unicode attachments and nested bookmark destinations`,async({page})=>{
