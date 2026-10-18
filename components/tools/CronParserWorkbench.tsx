@@ -1,6 +1,7 @@
 "use client";
 import ToolUiText from "@/components/tools/ToolUiText";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
+import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 
 import { useMemo, useState } from "react";
@@ -41,7 +42,7 @@ function parseField(raw: string, min: number, max: number): Field {
     for (const item of expandPart(part, min, max)) values.add(item);
   }
 
-  return { any: value === "*", values };
+  return { any: value.startsWith("*"), values };
 }
 
 function parseCron(expression: string) {
@@ -65,14 +66,9 @@ function cronMatches(date: Date, cron: ReturnType<typeof parseCron>) {
   const dayMatches = matches(cron.day, date.getDate());
   const weekdayMatches = matches(cron.weekday, date.getDay(), date.getDay() === 0 ? 7 : undefined);
 
-  const dayRule =
-    cron.day.any && cron.weekday.any
-      ? true
-      : cron.day.any
-        ? weekdayMatches
-        : cron.weekday.any
-          ? dayMatches
-          : dayMatches || weekdayMatches;
+  const dayRule = cron.day.any || cron.weekday.any
+    ? dayMatches && weekdayMatches
+    : dayMatches || weekdayMatches;
 
   return (
     matches(cron.minute, date.getMinutes()) &&
@@ -111,6 +107,8 @@ function describe(expression: string) {
 }
 
 export default function CronParserWorkbench() {
+  const {lang}=useLingxiLang();
+  const invalid:Record<LingxiLang,string>={zh:"请检查表达式：使用五段格式，并确认数字、范围和步长有效。",en:"Check the expression: use five fields with valid numbers, ranges and steps.",ja:"5項目の形式で、数値・範囲・間隔を確認してください。",ko:"5개 필드 형식과 숫자, 범위, 간격을 확인하세요.",fr:"Vérifiez les cinq champs, les nombres, les plages et les pas.",de:"Prüfen Sie die fünf Felder sowie Zahlen, Bereiche und Schrittweiten.",es:"Revisa los cinco campos, los números, los rangos y los pasos.",pt:"Confira os cinco campos, os números, os intervalos e os passos.",ar:"تحقق من الحقول الخمسة والأرقام والنطاقات والخطوات."};
   const [expression, setExpression] = useState("0 9 * * 1-5");
   const [count, setCount] = useState(10);
 
@@ -121,10 +119,9 @@ export default function CronParserWorkbench() {
         runs: nextRuns(expression, Math.max(1, Math.min(50, count))),
         description: describe(expression),
       };
-    } catch (cause) {
+    } catch {
       return {
         ok: false as const,
-        error: cause instanceof Error ? cause.message : String(cause),
       };
     }
   }, [expression, count]);
@@ -189,8 +186,8 @@ export default function CronParserWorkbench() {
           )}
         </>
       ) : (
-        <p className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">
-          <ToolUiText text="无法解析：" />{parsed.error}
+        <p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">
+          {invalid[lang]}
         </p>
       )}
     </div>

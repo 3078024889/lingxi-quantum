@@ -6,3 +6,8 @@ for(const bad of ['*/','*/2/3','1.5-4','1e1','0x10','1-4-5','*/0','-1','60'])ass
 for(let minute=0;minute<60;minute++){const date=new Date(2026,0,1,9,minute);assert.equal(current.cronMatches(date,current.parseCron('0/15 9 * * *')),minute%15===0);}
 const cron=current.parseCron('0 0 13 * 5');for(const [day,expected]of [[9,true],[13,true],[10,false]])assert.equal(current.cronMatches(new Date(2026,0,day,0,0),cron),expected);
 console.log('PASS: actual baseline N/step loses later times; start/range step expansion, strict syntax, complete hour matching and day-of-month/day-of-week OR contract verified.');
+
+for(const expression of ['0 9 * * 1','0 9 */1 * 1'])for(let day=18;day<=31;day++){const date=new Date(2026,9,day,9,0);assert.equal(current.cronMatches(date,current.parseCron(expression)),date.getDay()===1);}
+for(let day=1;day<=31;day++){const date=new Date(2026,9,day,9,0);assert.equal(current.cronMatches(date,current.parseCron('0 9 */2 * */2')),day%2===1&&date.getDay()%2===0);}
+assert.equal(before.cronMatches(new Date(2026,9,18,9,0),before.parseCron('0 9 */1 * 1')),true);
+console.log('PASS: wildcard day/week steps intersect; literal restrictions retain union; Sunday baseline reproduces unwanted daily runs.');
