@@ -1,11 +1,14 @@
-const fs=require('node:fs'),vm=require('node:vm'),cp=require('node:child_process'),assert=require('node:assert/strict'),ts=require('typescript');
+const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto'),assert=require('node:assert/strict'),ts=require('typescript');
 const guardPath='lib/sasi/request-security.ts',own='lingxi-quantum-example-celestial9.vercel.app',branch='lingxi-quantum-git-audit-celestial9.vercel.app',other='another-project.vercel.app';
 function compile(source,env,imports={}){
  const exports={};vm.runInNewContext(ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,URL,URLSearchParams,console,process:{env},require:id=>{if(id==='server-only')return{};if(id in imports)return imports[id];throw Error('Unexpected import: '+id)}});return exports;
 }
 function request(host=own,origin='https://'+host,extra={}){const headers=new Headers({host,'sec-fetch-site':'same-origin',...extra});if(origin!==null)headers.set('origin',origin);return{headers,nextUrl:new URL('https://'+host),formData:async()=>new Map([['mode','signin'],['email','invalid']])};}
 const source=fs.readFileSync(guardPath,'utf8'),env={VERCEL_ENV:'preview',VERCEL_URL:own,VERCEL_BRANCH_URL:branch},guard=compile(source,env).isSameOriginMutation;
-const baseline=compile(cp.execFileSync('git',['show','HEAD:'+guardPath],{encoding:'utf8'}),env).isSameOriginMutation;
+// Exact source from 4291484f; available in shallow CI without reading moving HEAD.
+const baselineSource=fs.readFileSync('tests/fixtures/preview-origin-before.ts.txt','utf8');
+assert.equal(crypto.createHash('sha256').update(baselineSource).digest('hex'),'82252940a98ea880d9cec7928c0da69490b87125771dba033360fa1e0c211fa2');
+const baseline=compile(baselineSource,env).isSameOriginMutation;
 assert.equal(baseline(request()),false,'baseline must reproduce rejected own preview');
 assert.equal(guard(request()),true);assert.equal(guard(request(branch)),true);
 assert.equal(guard(request(own,null,{referer:'https://'+own+'/account'})),true);
