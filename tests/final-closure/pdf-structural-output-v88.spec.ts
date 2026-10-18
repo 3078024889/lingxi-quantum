@@ -32,6 +32,7 @@ test('pdf-remove-annotations: comments disappear while saved form controls, valu
  for(const subtype of ['Text','Highlight','Stamp'])p.node.Annots()!.push(d.context.register(d.context.obj({Type:'Annot',Subtype:subtype,Rect:[10,10,30,30],Contents:'Private note'})));
  const input=Buffer.from(await d.save());await upload(page,'pdf-remove-annotations',input);await page.getByRole('button',{name:'Process',exact:true}).click();const output=await download(page),out=await PDFDocument.load(output);
  expect(out.getPageCount()).toBe(2);expect(out.getPage(0).node.Annots()!.size()).toBe(3);expect(out.getForm().getFields()).toHaveLength(3);
+ expect(out.context.enumerateIndirectObjects().some(([,obj])=>obj.toString().includes('Private note'))).toBe(false);
  for(const ref of out.getPage(0).node.Annots()!.asArray())expect(out.context.lookup(ref,PDFDict).get(PDFName.of('Subtype'))!.toString()).toBe('/Widget');
  expect(out.getForm().getTextField('customer').getText()).toBe('AUDIT CUSTOMER');expect(out.getForm().getCheckBox('approved').isChecked()).toBe(true);expect(out.getForm().getDropdown('plan').getSelected()).toEqual(['PREMIUM']);expect(pageContent(out,0)).toEqual(pageContent(await PDFDocument.load(input),0));
  out.getForm().getTextField('customer').setText('STILL EDITABLE');const edited=await PDFDocument.load(await out.save());expect(edited.getForm().getTextField('customer').getText()).toBe('STILL EDITABLE');

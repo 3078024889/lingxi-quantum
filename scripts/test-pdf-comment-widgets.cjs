@@ -12,6 +12,7 @@ const {removePdfComments}=exportsObject,{PDFDocument,PDFName,PDFDict}=pdf;
  const input=await doc.save(),loaded=await PDFDocument.load(input);assert.equal(loaded.getPage(0).node.Annots().size(),6);
  assert.equal(removePdfComments(loaded),3);const out=await PDFDocument.load(await loaded.save());
  assert.equal(out.getPageCount(),1);assert.equal(out.getForm().getFields().length,3);assert.equal(out.getPage(0).node.Annots().size(),3);
+ assert(!out.context.enumerateIndirectObjects().some(([,obj])=>obj.toString().includes('Private comment')),'removed comment dictionaries must not remain as saved orphan objects');
  for(const ref of out.getPage(0).node.Annots().asArray())assert.equal(out.context.lookup(ref,PDFDict).get(PDFName.of('Subtype')).toString(),'/Widget');
  assert.equal(out.getForm().getTextField('customer').getText(),'AUDIT CUSTOMER');assert.equal(out.getForm().getCheckBox('approved').isChecked(),true);assert.equal(out.getForm().getDropdown('plan').getSelected()[0],'PREMIUM');assert(out.getPage(0).node.Contents());
  out.getForm().getTextField('customer').setText('STILL EDITABLE');const edited=await PDFDocument.load(await out.save());assert.equal(edited.getForm().getTextField('customer').getText(),'STILL EDITABLE');
