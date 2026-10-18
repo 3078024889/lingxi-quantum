@@ -1,6 +1,17 @@
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 
 export const PLAIN_COPY = {
+  "mediaIncomplete": {
+    "zh":"导出文件不完整，已阻止交付。请保留原件，重试或降低视频清晰度。",
+    "en":"The exported file is incomplete and has been blocked. Keep the original, then retry or lower the video quality.",
+    "ja":"書き出しが不完全なため、ファイルの提供を停止しました。原本を保持し、再試行するか画質を下げてください。",
+    "ko":"내보낸 파일이 불완전하여 제공을 중단했습니다. 원본을 보관하고 다시 시도하거나 화질을 낮춰 주세요.",
+    "fr":"Le fichier exporté est incomplet et a été bloqué. Conservez l’original, puis réessayez ou réduisez la qualité vidéo.",
+    "de":"Die exportierte Datei ist unvollständig und wurde blockiert. Original behalten und erneut versuchen oder die Videoqualität senken.",
+    "es":"El archivo exportado está incompleto y se ha bloqueado. Conserva el original y vuelve a intentarlo o reduce la calidad del vídeo.",
+    "pt":"O arquivo exportado está incompleto e foi bloqueado. Guarde o original e tente novamente ou reduza a qualidade do vídeo.",
+    "ar":"الملف المُصدَّر غير مكتمل وتم منع تسليمه. احتفظ بالأصل ثم أعد المحاولة أو اخفض جودة الفيديو."
+  },
   "saveZip": {"zh":"打包下载 ZIP","en":"Download ZIP","ja":"ZIP をダウンロード","ko":"ZIP 다운로드","fr":"Télécharger ZIP","de":"ZIP herunterladen","es":"Descargar ZIP","pt":"Baixar ZIP","ar":"تنزيل ZIP"},
   "choose": {
     "zh": "选择文件",

@@ -28,7 +28,8 @@ export default function OcrWorkbench(){
  const{lang}=useLingxiLang();const c=C[lang]??C.en;
  const runtimeCopy=ocrCopy(lang),controller=useRef<AbortController|null>(null);
  useEffect(()=>()=>controller.current?.abort(),[]);
- const[files,setFiles]=useState<File[]>([]),[ocrLang,setOcrLang]=useState("chi_sim+eng"),[results,setResults]=useState<Array<{name:string;text:string}>>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[copied,setCopied]=useState("");
+ const[files,setFiles]=useState<File[]>([]),[ocrLang,setOcrLang]=useState("chi_sim+eng"),[results,setResults]=useState<Array<{name:string;text:string;confidence?:number}>>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[copied,setCopied]=useState("");
+ const needsReview=results.some(r=>!Number.isFinite(r.confidence)||(r.confidence??0)<60);
  const exports=useMemo<ToolResultFile[]>(()=>results.map(r=>{
    const blob=new Blob([r.text],{type:"text/plain;charset=utf-8"});
    return {name:r.name.replace(/\.[^.]+$/,"")+".txt",blob,mime:"text/plain",size:blob.size};
@@ -41,14 +42,14 @@ export default function OcrWorkbench(){
   setBusy(true);setResults([]);setError("");setCopied("");setStage(runtimeCopy.loading);let worker:any=null;
   try{
    worker=await createOcrWorker(ocrLang,{signal:abort.signal,logger:m=>{if(m.status)setStage(`${m.status==='recognizing text'?runtimeCopy.recognizing:runtimeCopy.loading}${typeof m.progress==="number"?` · ${Math.round(m.progress*100)}%`:""}`)}});
-   const out:Array<{name:string;text:string}>=[];
+   const out:Array<{name:string;text:string;confidence?:number}>=[];
    for(let i=0;i<files.length;i++){
      setStage(`${i+1}/${files.length} · ${files[i].name}`);
-     const r=await worker.recognize(files[i]);
+     const r=await worker.recognize(files[i],{tessedit_pageseg_mode:"3"});
      if(!r.data.text.trim())throw Error('OCR_EMPTY');
-     out.push({name:files[i].name,text:r.data.text});setResults([...out]);
+     out.push({name:files[i].name,text:r.data.text,confidence:r.data.confidence});setResults([...out]);
    }
-   setResults(out);setStage(c.done);
+   setResults(out);setStage(out.some(r=>!Number.isFinite(r.confidence)||(r.confidence??0)<60)?runtimeCopy.review:c.done);
   }catch(e){setError(abort.signal.aborted?runtimeCopy.cancelled:e instanceof Error&&e.message==='OCR_EMPTY'?runtimeCopy.empty:runtimeCopy.error);setStage("")}
   finally{try{await worker?.terminate()}catch{}controller.current=null;setBusy(false)}
  }
@@ -76,10 +77,11 @@ export default function OcrWorkbench(){
     <div><p className="text-xs text-[var(--lx-faint)]">{c.result}</p><div className="mt-1 text-sm font-medium text-[var(--lx-ink)]">{r.name}</div></div>
     <button onClick={()=>void copy(r.name,r.text)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2 text-sm text-[var(--lx-ink)]">{copied===r.name?c.copied:c.copy}</button>
    </div>
+   {(!Number.isFinite(r.confidence)||(r.confidence??0)<60)&&<p role="status" className="mt-3 text-sm text-[var(--lx-muted)]">{runtimeCopy.review}</p>}
    <textarea value={r.text} readOnly rows={10} className="mt-3 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 font-mono text-sm text-[var(--lx-ink)]"/>
   </section>)}
 
-  {!!exports.length&&<ResultPanel files={exports} messageZh={c.done} messageEn={c.done}/>}
+  {!!exports.length&&<ResultPanel files={exports} messageZh={needsReview?runtimeCopy.review:c.done} messageEn={needsReview?runtimeCopy.review:c.done}/>}
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{plainMessage(lang,error)}</p>}
  </div>;
 }

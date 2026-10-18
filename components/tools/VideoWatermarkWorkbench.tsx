@@ -45,13 +45,16 @@ export default function VideoWatermarkWorkbench(){
    await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
    const ext=item.file.name.split(".").pop()||"mp4",input=`input-${index}.${ext}`,output=`output-${index}.mp4`;await f.writeFile(input,await fetchFile(item.file));
    const w=item.width,h=item.height;
-   const px=Math.max(0,Math.min(w-9,Math.round(w*box.x/100))),py=Math.max(0,Math.min(h-9,Math.round(h*box.y/100)));
-   const pw=Math.min(w-px,Math.max(8,Math.round(w*box.w/100))),ph=Math.min(h-py,Math.max(8,Math.round(h*box.h/100)));
+   const px=Math.max(1,Math.min(w-10,Math.round(w*box.x/100))),py=Math.max(1,Math.min(h-10,Math.round(h*box.y/100)));
+   const pw=Math.min(w-px-1,Math.max(8,Math.round(w*box.w/100))),ph=Math.min(h-py-1,Math.max(8,Math.round(h*box.h/100)));
    if(pw<8||ph<8)throw new Error("WATERMARK_REGION_INVALID");
    const code=await f.exec(["-i",input,"-vf",`delogo=x=${px}:y=${py}:w=${pw}:h=${ph}:show=0`,"-c:v","libx264","-preset","veryfast","-crf","20","-c:a","aac","-b:a","160k",output]);
    if(code!==0)throw new Error(`FFMPEG_EXIT_${code}`);
    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);if(copy.byteLength===0)throw new Error("EMPTY_VIDEO_RESULT");
-   const blob=new Blob([copy.buffer],{type:"video/mp4"}),url=URL.createObjectURL(blob);resultUrls.current.push(url);return{name:item.file.name,url,blob};
+   const blob=new Blob([copy.buffer],{type:"video/mp4"});
+   const exported=await mediaMetaOf(new File([blob],"verified.mp4",{type:"video/mp4"}),c.metaFail,c.formatFail);
+   if(Math.abs(exported.duration-item.duration)>Math.max(.4,item.duration*.04))throw new Error(c.metaFail);
+   const url=URL.createObjectURL(blob);resultUrls.current.push(url);return{name:item.file.name,url,blob};
   }catch(e){throw e}
   finally{try{f?.terminate()}catch{}if(ff.current===f)ff.current=null}
  }

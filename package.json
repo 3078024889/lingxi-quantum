@@ -68,7 +68,8 @@
     "audit:v33-production-closure": "node scripts/audit/v33-production-closure.mjs",
     "seo:growth:audit": "node scripts/seo/growth/audit-seo-growth.mjs",
     "seo:growth:generate": "node scripts/seo/growth/generate-llms-full.mjs",
-    "seo:growth:indexnow": "node scripts/seo/growth/indexnow-submit.mjs"
+    "seo:growth:indexnow": "node scripts/seo/growth/indexnow-submit.mjs",
+    "test:media:native": "node scripts/test-video-stop-motion-timing.mjs && node scripts/test-video-watermark-boundaries.mjs && node scripts/test-video-reverse-audio-sync.mjs && node scripts/test-media-dub-duration.mjs && node scripts/test-video-toolkit-full-export.mjs"
   },
   "dependencies": {
     "@contentauth/c2pa-web": "0.15.3",

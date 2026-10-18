@@ -1,6 +1,7 @@
 "use client";
 import {fetchFile} from "@ffmpeg/util";
 import {createFfmpegRuntime} from "@/lib/tools/media/runtime";
+import {readMediaDuration as browserMediaDuration} from "@/lib/tools/media/metadata";
 
 export type TimedText={start:number;end:number;text:string};
 
@@ -44,6 +45,7 @@ export async function muxTranslatedVideo(input:{
  dubbedAudio?:Blob|null;
  onProgress?:(p:number)=>void;
 }){
+ const originalDuration=await browserMediaDuration(input.video);
  const ff=await createFfmpegRuntime(input.onProgress);
  try{
   const ext=input.video.name.split(".").pop()||"mp4",vin=`video.${ext}`,sin="translated.srt",out="translated.mp4";
@@ -87,6 +89,9 @@ export async function muxTranslatedVideo(input:{
   }
   const data=copyBytes(await ff.readFile(out));
   if(!data.length)throw new Error("VIDEO_TRANSLATE_OUTPUT_EMPTY");
-  return new Blob([data.buffer],{type:"video/mp4"});
+  const result=new Blob([data.buffer],{type:"video/mp4"});
+  const outputDuration=await browserMediaDuration(result);
+  if(Math.abs(outputDuration-originalDuration)>Math.max(.4,originalDuration*.04))throw new Error("VIDEO_TRANSLATE_OUTPUT_DURATION_MISMATCH");
+  return result;
  }finally{try{ff.terminate()}catch{}}
 }

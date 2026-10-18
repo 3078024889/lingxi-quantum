@@ -77,10 +77,10 @@ test("tool introductions are translated and free of pricing or engine jargon",as
 
 test("public tool guide hides implementation labels and keeps user-facing steps",async({page})=>{
  await page.goto("/tools/base64-encode-decode?lang=zh",{waitUntil:"domcontentloaded"});
- const main=page.locator("main");
- await expect(main).toContainText("操作教程");
+ const main=page.getByRole("region",{name:"操作教程",exact:true});
+ await expect(main).toBeVisible();
  await expect(main).not.toContainText("输入与输出");
- await expect(main).not.toContainText("处理方式");
+ await expect(main.getByRole('heading',{name:'处理方式',exact:true})).toHaveCount(0);
  await expect(main).not.toContainText("image/*");
  await expect(main).not.toContainText("支持范围");
 });

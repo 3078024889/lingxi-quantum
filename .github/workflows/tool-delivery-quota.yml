@@ -33,6 +33,12 @@ jobs:
           node scripts/test-daily-export-api-v92.cjs
           node scripts/test-temp-mail-safety-v81.cjs
           node scripts/test-subtitle-translation-v95.cjs
+          node scripts/test-ocr-review-confidence.cjs
+          node scripts/test-rare-image-resources.cjs
+          node scripts/test-svg-image-fallback.cjs
+          node scripts/test-pdf-flatten-references.cjs
+          node scripts/test-pdf-basic-forms.cjs
+          node scripts/test-paid-context-races.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
@@ -43,7 +49,22 @@ jobs:
           daily-export-quota-v92 file-delivery-v91 paid-local-output-v89
           pdf-to-image-output-v90 pdf-redaction-output-v89 screenshot-redaction-v89
           qr-cron-output-v86 burn-reveal-recovery
+          qr-reader-roundtrip-v111
           subtitle-translation-v95
+          pdf-real-options-v101 image-watermark-gesture-v100
+          image-translation-failure-v102
+          result-summary-copy-v103
+          image-compression-limit-v104
+          timestamp-output-v105 remaining-local-output-v89
+          rare-image-recovery-v106
+          privacy-cleaner-output-v107
+          pdf-search-recovery-v108
+          batch-pdf-context-v110 batch-pdf-paid-output-v89
+          batch-zip-v83
+          pdf-structural-output-v88
+          additional-tool-output-v88 function-output-v86 local-tools-v80 developer-real-output regex-recovery-v79
+          document-upload-consent-v79 public-site-truth sasi-found-issues-v96
+          sasi-prompt-continuation tool-plain-language tool-real-output
           --workers=2 --reporter=list,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/delivery-results.json

@@ -1,8 +1,10 @@
 "use client";
 import{fetchFile}from"@ffmpeg/util";
 import{createFfmpegRuntime}from"./runtime";
+import{readMediaDuration as browserMediaDuration}from"./metadata";
 
 export async function extractCompactAudio(file:File,onProgress?:(p:number)=>void){
+ const originalDuration=await browserMediaDuration(file);
  const ff=await createFfmpegRuntime(onProgress);
  try{
   const ext=file.name.split(".").pop()||"bin",input=`input.${ext}`,output="speech.mp3";
@@ -11,11 +13,17 @@ export async function extractCompactAudio(file:File,onProgress?:(p:number)=>void
   if(code!==0)throw new Error(`AUDIO_EXTRACT_${code}`);
   const data=await ff.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data));
   const copy=new Uint8Array(bytes.byteLength);copy.set(bytes);
-  return new File([copy.buffer],"speech.mp3",{type:"audio/mpeg"});
+  const result=new File([copy.buffer],"speech.mp3",{type:"audio/mpeg"});
+  const extractedDuration=await browserMediaDuration(result);
+  if(Math.abs(extractedDuration-originalDuration)>Math.max(.5,originalDuration*.04))throw new Error("AUDIO_EXTRACT_DURATION_MISMATCH");
+  return result;
  }finally{try{ff.terminate()}catch{}}
 }
 
+
+export {readMediaDuration as browserMediaDuration} from "./metadata";
 export async function muxDubbedVideo(video:File,audio:Blob,onProgress?:(p:number)=>void){
+ const originalDuration=await browserMediaDuration(video);
  const ff=await createFfmpegRuntime(onProgress);
  try{
   const ext=video.name.split(".").pop()||"mp4",vin=`video.${ext}`,ain="dub.mp3",out="dubbed.mp4";
@@ -27,7 +35,10 @@ export async function muxDubbedVideo(video:File,audio:Blob,onProgress?:(p:number
   if(code!==0)throw new Error(`DUB_MUX_${code}`);
   const data=await ff.readFile(out),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data));
   const copy=new Uint8Array(bytes.length);copy.set(bytes);
-  if(!copy.length)throw new Error("DUB_OUTPUT_EMPTY");
-  return new Blob([copy.buffer],{type:"video/mp4"});
+  if(copy.byteLength<1024)throw new Error("DUB_OUTPUT_EMPTY");
+  const result=new Blob([copy.buffer],{type:"video/mp4"});
+  const outputDuration=await browserMediaDuration(result);
+  if(Math.abs(originalDuration-outputDuration)>Math.max(0.4,originalDuration*.04))throw new Error("DUB_OUTPUT_DURATION_MISMATCH");
+  return result;
  }finally{try{ff.terminate()}catch{}}
 }

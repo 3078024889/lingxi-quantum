@@ -1,11 +1,12 @@
 "use client";
 
 import ToolUiText,{useToolUiCopy} from "@/components/tools/ToolUiText";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type { ToolResultFile } from "@/lib/tools/types";
 import { openPdf } from "@/lib/tools/pdf-render-client";
+import {runRegexSafely} from '@/lib/tools/shared/regex-worker-client';
 
 type Hit = {
   file: string;
@@ -18,14 +19,13 @@ function csvCell(value: string | number) {
   return `"${String(value).replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
 }
 
-function findHits(text: string, query: string, caseSensitive: boolean, regexMode: boolean) {
+async function findHits(text: string, query: string, caseSensitive: boolean, regexMode: boolean, signal?:AbortSignal) {
   if (!query) return { count: 0, index: -1 };
 
   if (regexMode) {
     const flags = caseSensitive ? "g" : "gi";
-    const expression = new RegExp(query, flags);
-    const matches = [...text.matchAll(expression)];
-    return { count: matches.length, index: matches[0]?.index ?? -1 };
+    const matches = await runRegexSafely(`/${query}/${flags}`,text,signal);
+    return { count: matches.length, index: matches[0]?.position ?? -1 };
   }
 
   const haystack = caseSensitive ? text : text.toLocaleLowerCase();
@@ -63,6 +63,10 @@ export default function PdfSearchWorkbench() {
   const [stage, setStage] = useState("");
   const [error, setError] = useState("");
   const [hits, setHits] = useState<Hit[]>([]);
+  const [searched,setSearched]=useState(false);
+  const active=useRef<AbortController|null>(null);
+  useEffect(()=>()=>active.current?.abort(),[]);
+  function invalidate(){setHits([]);setError("");setSearched(false)}
 
   const totalMatches = useMemo(
     () => hits.reduce((sum, hit) => sum + hit.count, 0),
@@ -86,6 +90,8 @@ export default function PdfSearchWorkbench() {
     setBusy(true);
     setError("");
     setHits([]);
+    setSearched(false);
+    const controller=new AbortController();active.current=controller;
 
     try {
       const output: Hit[] = [];
@@ -95,6 +101,7 @@ export default function PdfSearchWorkbench() {
 
         try {
           for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+            if(controller.signal.aborted)return;
             setStage(`${fileIndex + 1}/${files.length} · page ${pageNumber}/${pdf.numPages}`);
             const page = await pdf.getPage(pageNumber);
             const content = await page.getTextContent();
@@ -104,7 +111,7 @@ export default function PdfSearchWorkbench() {
               .replace(/\s+/g, " ")
               .trim();
 
-            const result = findHits(text, query, caseSensitive, regexMode);
+            const result = await findHits(text, query, caseSensitive, regexMode,controller.signal);
             if (result.count > 0) {
               output.push({
                 file: files[fileIndex].name,
@@ -120,18 +127,18 @@ export default function PdfSearchWorkbench() {
       }
 
       setHits(output);
+      setSearched(true);
       setStage("");
     } catch (cause) {
       setStage("");
-      setError(
-        regexMode
-          ? `搜索失败；请检查正则表达式。${cause instanceof Error ? " " + cause.message : ""}`
-          : cause instanceof Error
-            ? cause.message
-            : String(cause),
-      );
+      if(controller.signal.aborted)return;
+      const code=cause instanceof Error?cause.message:"";
+      setError(regexMode&&code.startsWith('REGEX_')
+        ?toolUiCopy("搜索未完成。请简化正则表达式，或关闭正则模式后重试。")
+        :toolUiCopy("无法处理此文件。请确认文件完整、可以打开，解锁加密文件后再试。"));
     } finally {
       setBusy(false);
+      if(active.current===controller)active.current=null;
     }
   }
 
@@ -146,8 +153,7 @@ export default function PdfSearchWorkbench() {
         files={files}
         onChange={(next) => {
           setFiles(next);
-          setHits([]);
-          setError("");
+          invalidate();
         }}
         disabled={busy}
         kind="pdf"
@@ -155,7 +161,8 @@ export default function PdfSearchWorkbench() {
 
       <input
         value={query}
-        onChange={(event) => setQuery(event.target.value)}
+        disabled={busy}
+        onChange={(event) => {setQuery(event.target.value);invalidate()}}
         placeholder={toolUiCopy("输入姓名、合同编号、关键词或正则表达式…")}
         className="w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-3"
       />
@@ -165,7 +172,8 @@ export default function PdfSearchWorkbench() {
           <input
             type="checkbox"
             checked={caseSensitive}
-            onChange={(event) => setCaseSensitive(event.target.checked)}
+            disabled={busy}
+            onChange={(event) => {setCaseSensitive(event.target.checked);invalidate()}}
           />
           <ToolUiText text="区分大小写" />
         </label>
@@ -173,7 +181,8 @@ export default function PdfSearchWorkbench() {
           <input
             type="checkbox"
             checked={regexMode}
-            onChange={(event) => setRegexMode(event.target.checked)}
+            disabled={busy}
+            onChange={(event) => {setRegexMode(event.target.checked);invalidate()}}
           />
           <ToolUiText text="正则表达式" />
         </label>
@@ -220,13 +229,13 @@ export default function PdfSearchWorkbench() {
         </>
       )}
 
-      {!busy && query.trim() && files.length > 0 && hits.length === 0 && !error && (
+      {!busy && searched && query.trim() && files.length > 0 && hits.length === 0 && !error && (
         <p className="text-sm text-[var(--lx-muted)]">
           <ToolUiText text="当前文本层没有找到匹配。扫描 PDF 请先使用 PDF OCR。" />
         </p>
       )}
 
-      {error && <p className="text-sm text-[var(--lx-danger)]">{error}</p>}
+      {error && <p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
     </div>
   );
 }

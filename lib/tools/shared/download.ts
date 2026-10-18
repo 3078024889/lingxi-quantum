@@ -30,19 +30,31 @@ export function deliveryFile(blob: Blob, filename: string): File {
   const name = safeFilename(filename), extension = name.split(".").pop()?.toLowerCase() || "";
   return new File([blob], name, {type: MIME[extension] || blob.type || "application/octet-stream"});
 }
-// Must run directly from a user click, without async fetch/import/encoding first.
-// Resolution confirms OS hand-off only, never delivery to a particular recipient.
-export async function shareFile(blob: Blob, filename: string): Promise<FileShareOutcome> {
-  try {
-    const file = deliveryFile(blob, filename), payload = {files: [file]};
-    if (!navigator.share || !navigator.canShare || !navigator.canShare(payload)) return "unsupported";
-    await ensureToolExportAccess(blob,filename,'share');
-    await navigator.share(payload);
-    return "shared";
-  } catch (error) {
-    return error && typeof error === "object" && "name" in error && error.name === "AbortError" ? "cancelled" : "failed";
+/** Prepare native file sharing after allowance/payment is resolved.
+ * Call the returned function directly inside a fresh click handler: do not await
+ * another gate or fetch before navigator.share, which requires user activation.
+ * The closure is issued only after successful authorization.
+ * Resolution confirms OS handoff only, never delivery to a recipient.
+ */
+export async function prepareAuthorizedFileShare(blob: Blob, filename: string): Promise<() => Promise<FileShareOutcome>> {
+  const file = deliveryFile(blob, filename), payload = {files: [file]};
+  if (!navigator.share || !navigator.canShare || !navigator.canShare(payload)) {
+    return () => Promise.resolve("unsupported" as const);
   }
+  await ensureToolExportAccess(blob, filename, "share");
+  return () => {
+    try {
+      // navigator.share is invoked synchronously before the returned promise is observed.
+      return navigator.share(payload).then(
+        () => "shared" as const,
+        (error: unknown) => error && typeof error === "object" && "name" in error && error.name === "AbortError" ? "cancelled" as const : "failed" as const
+      );
+    } catch {
+      return Promise.resolve("failed" as const);
+    }
+  };
 }
+
 // Cloud fallback requires a separate explicit consent click in the UI.
 // Saving and sharing local files never call this upload function automatically.
 export async function privateMobilePreview(blob: Blob, name: string) {

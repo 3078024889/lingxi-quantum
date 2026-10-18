@@ -1,7 +1,29 @@
 import { replaceExt } from "./download";
 
 export async function loadImageBitmap(file: File): Promise<ImageBitmap> {
-  return createImageBitmap(file);
+  try { return await createImageBitmap(file); }
+  catch (cause) {
+    if(file.type!=="image/svg+xml"&&!/\.svg$/i.test(file.name))throw cause;
+    // Some browsers can display an SVG image but cannot decode its Blob directly
+    // into ImageBitmap. Rasterize in image context; never insert SVG into the DOM.
+    const url=URL.createObjectURL(file),image=new Image();
+    let canvas:HTMLCanvasElement|undefined,timer:ReturnType<typeof setTimeout>|undefined;
+    try{
+      await new Promise<void>((resolve,reject)=>{
+        image.onload=()=>resolve();image.onerror=()=>reject(new Error("IMAGE_LOAD_FAILED"));
+        timer=setTimeout(()=>reject(new Error("IMAGE_LOAD_TIMEOUT")),10000);image.src=url;
+      });
+      const w=image.naturalWidth,h=image.naturalHeight;
+      if(!w||!h||w*h>33554432)throw new Error("IMAGE_TOO_LARGE");
+      canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");
+      ctx.drawImage(image,0,0);
+      return await createImageBitmap(canvas);
+    }finally{
+      clearTimeout(timer);image.onload=null;image.onerror=null;image.src="";
+      URL.revokeObjectURL(url);if(canvas){canvas.width=0;canvas.height=0}
+    }
+  }
 }
 
 export function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
@@ -34,14 +56,13 @@ export async function drawFileToCanvas(
   canvas.width = w;
   canvas.height = h;
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("2d context unavailable");
+  if (!ctx) {bmp.close?.();canvas.width=0;canvas.height=0;throw new Error("2d context unavailable");}
   // Document/JPEG callers retain white; alpha-capable outputs opt into transparency.
   if (opts?.background !== "transparent") {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, w, h);
   }
-  ctx.drawImage(bmp, 0, 0, w, h);
-  bmp.close?.();
+  try{ctx.drawImage(bmp, 0, 0, w, h)}catch(error){canvas.width=0;canvas.height=0;throw error}finally{bmp.close?.()}
   return { canvas, width: w, height: h };
 }
 
@@ -88,81 +109,41 @@ export async function resizeImage(
   return { blob, name: replaceExt(file.name, ext), width: w, height: h };
 }
 
-/** Iteratively approach targetBytes without exceeding it. */
+/** Search quality first, then adapt dimensions; never deliver above the requested size. */
 export async function compressImageToTarget(
   file: File,
   targetBytes: number,
-  opts?: { minQuality?: number; maxDimension?: number },
+  opts?: { minQuality?: number; maxQuality?: number; maxDimension?: number },
 ): Promise<{ blob: Blob; name: string; width: number; height: number; quality: number; rounds: number }> {
-  const minQ = opts?.minQuality ?? 0.35;
-  const maxDim = opts?.maxDimension ?? 4096;
-  let { canvas, width, height } = await drawFileToCanvas(file, { maxWidth: maxDim, maxHeight: maxDim });
-
-  let lo = minQ;
-  let hi = 0.95;
-  let best: Blob | null = null;
-  let bestQ = lo;
-  let rounds = 0;
-
-  // First try full quality at current dimensions
-  for (let i = 0; i < 8; i++) {
-    rounds++;
-    const q = i === 0 ? 0.92 : (lo + hi) / 2;
-    const blob = await canvasToBlob(canvas, "image/jpeg", q);
-    if (blob.size <= targetBytes) {
-      best = blob;
-      bestQ = q;
-      lo = q;
-    } else {
-      hi = q;
-    }
-  }
-
-  // If still too large, shrink dimensions and retry
-  let scale = 0.9;
-  while ((!best || best.size > targetBytes) && Math.min(width, height) > 320 && rounds < 24) {
-    width = Math.max(1, Math.round(width * scale));
-    height = Math.max(1, Math.round(height * scale));
-    const next = document.createElement("canvas");
-    next.width = width;
-    next.height = height;
-    const ctx = next.getContext("2d");
-    if (!ctx) break;
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, width, height);
-    ctx.drawImage(canvas, 0, 0, width, height);
-    canvas = next;
-    lo = minQ;
-    hi = 0.92;
-    for (let i = 0; i < 6; i++) {
-      rounds++;
-      const q = (lo + hi) / 2;
-      const blob = await canvasToBlob(canvas, "image/jpeg", q);
-      if (blob.size <= targetBytes) {
-        best = blob;
-        bestQ = q;
-        lo = q;
-      } else {
-        hi = q;
+  if(!Number.isFinite(targetBytes)||targetBytes<1)throw new Error("IMAGE_TARGET_INVALID");
+  const minQ=opts?.minQuality??.35,maxQ=opts?.maxQuality??.95;
+  if(!Number.isFinite(minQ)||!Number.isFinite(maxQ)||minQ<=0||maxQ>1||minQ>maxQ)throw new Error("IMAGE_QUALITY_INVALID");
+  const maxDim=opts?.maxDimension??4096;
+  let {canvas,width,height}=await drawFileToCanvas(file,{maxWidth:maxDim,maxHeight:maxDim});
+  let rounds=0;
+  for(let resize=0;resize<14;resize++){
+    rounds++;const smallest=await canvasToBlob(canvas,"image/jpeg",minQ);
+    if(smallest.size<=targetBytes){
+      let best=smallest,bestQ=minQ,lo=minQ,hi=maxQ;
+      rounds++;const highest=await canvasToBlob(canvas,"image/jpeg",maxQ);
+      if(highest.size<=targetBytes){best=highest;bestQ=maxQ}
+      else for(let n=0;n<8;n++){
+        const q=(lo+hi)/2;rounds++;const encoded=await canvasToBlob(canvas,"image/jpeg",q);
+        if(encoded.size<=targetBytes){best=encoded;bestQ=q;lo=q}else hi=q;
       }
+      return{blob:best,name:replaceExt(file.name,"jpg"),width,height,quality:bestQ,rounds};
     }
-    scale = 0.85;
+    if(width===1&&height===1)break;
+    // JPEG size roughly follows pixel count. The safety factor avoids spending
+    // the whole budget on quality searches at dimensions that cannot fit.
+    const scale=Math.max(.1,Math.min(.9,Math.sqrt(targetBytes/smallest.size)*.9));
+    const nextWidth=Math.max(1,Math.floor(width*scale)),nextHeight=Math.max(1,Math.floor(height*scale));
+    const next=document.createElement("canvas");next.width=nextWidth;next.height=nextHeight;
+    const ctx=next.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");
+    ctx.fillStyle="#ffffff";ctx.fillRect(0,0,nextWidth,nextHeight);ctx.drawImage(canvas,0,0,nextWidth,nextHeight);
+    canvas.width=canvas.height=1;canvas=next;width=nextWidth;height=nextHeight;
   }
-
-  if (!best) {
-    // Last resort: lowest quality at current size (may still exceed — caller should explain)
-    best = await canvasToBlob(canvas, "image/jpeg", minQ);
-    bestQ = minQ;
-  }
-
-  return {
-    blob: best,
-    name: replaceExt(file.name, "jpg"),
-    width,
-    height,
-    quality: bestQ,
-    rounds,
-  };
+  throw new Error("IMAGE_TARGET_UNREACHABLE");
 }
 
 /** Re-encode via canvas to strip EXIF/metadata. */
@@ -171,6 +152,10 @@ export async function stripImageMetadata(file: File): Promise<{ blob: Blob; name
   const isWebp = file.type === "image/webp" || file.name.toLowerCase().endsWith(".webp");
   const target=isPng?"image/png":isWebp?"image/webp":"image/jpeg";
   const { canvas } = await drawFileToCanvas(file,{background:target==="image/jpeg"?"white":"transparent"});
-  const blob = await canvasToBlob(canvas,target,isPng?undefined:isWebp?1:0.95);
-  return { blob, name: replaceExt(file.name,isPng?"png":isWebp?"webp":"jpg") };
+  try{
+    const blob = await canvasToBlob(canvas,target,isPng?undefined:isWebp?1:0.95);
+    const ext=blob.type==="image/png"?"png":blob.type==="image/webp"?"webp":blob.type==="image/jpeg"?"jpg":null;
+    if(!ext)throw new Error("IMAGE_EXPORT_FAILED");
+    return { blob, name: replaceExt(file.name,ext) };
+  }finally{canvas.width=canvas.height=1}
 }

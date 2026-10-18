@@ -21,8 +21,8 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/image-to-pdf-pro", title:"图片转 PDF", description:"多张 JPG/PNG 排序后生成一个 PDF。", keywords:["JPG转PDF","PNG转PDF","照片转PDF","图片转PDF"], category:"pdf", popular:true, localOnly:true },
   { href:"/tools/ocr", title:"图片 / 扫描件 OCR", description:"从图片中提取文字，中文、英文、日文等按需加载。", keywords:["OCR","图片转文字","截图转文字","扫描件文字"], category:"pdf", badge:"本地", localOnly:true },
 
-  { href:"/tools/image-watermark-remover", title:"图片去文字 / 去物体", description:"框选需要移除的区域，AI 重建背景。", keywords:["图片","水印","去水印","去文字","去物体","移除路人"], category:"image", badge:"AI", popular:true },
-  { href:"/tools/batch-image-watermark-remover", title:"批量图片去文字 / 去物体", description:"第一张框一次，同区域批量处理多张图片。", keywords:["批量","图片","水印","商品图","去文字"], category:"image", badge:"AI" },
+  { href:"/tools/image-watermark-remover", title:"图片去文字 / 去物体", description:"选择需要清理的区域，检查修复效果后保存；适合简单背景。", keywords:["图片","水印","去水印","去文字","去物体","移除路人"], category:"image", popular:true },
+  { href:"/tools/batch-image-watermark-remover", title:"批量图片去文字 / 去物体", description:"在第一张图选择区域，批量清理相同位置，检查每张结果后保存。", keywords:["批量","图片","水印","商品图","去文字"], category:"image" },
   { href:"/tools/batch-image", title:"批量图片处理", description:"批量压缩、改尺寸、转 JPG/PNG/WebP，打包 ZIP 下载。", keywords:["批量压缩","批量改尺寸","批量转换","ZIP","图片批处理"], category:"image", popular:true, localOnly:true },
   { href:"/tools/heic-local", title:"HEIC 转 JPG", description:"iPhone HEIC 照片直接在浏览器转 JPG。", keywords:["HEIC","JPG","iPhone照片","苹果照片"], category:"image", localOnly:true },
 

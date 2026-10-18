@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useState} from "react";
 import {PDFDocument} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -33,7 +33,7 @@ export default function ImageToPdfWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]);
  const[pageSize,setPageSize]=useState<PageSize>("a4"),[orientation,setOrientation]=useState<Orientation>("auto"),[margin,setMargin]=useState<Margin>("small");
- function move(index:number,direction:-1|1){setFiles(current=>{const next=[...current],target=index+direction;if(target<0||target>=next.length)return current;[next[index],next[target]]=[next[target],next[index]];return next})}
+ function move(index:number,direction:-1|1){setResult([]);setFiles(current=>{const next=[...current],target=index+direction;if(target<0||target>=next.length)return current;[next[index],next[target]]=[next[target],next[index]];return next})}
  async function run(){
   if(!files.length)return;setBusy(true);setError("");setResult([]);
   try{
@@ -51,22 +51,21 @@ export default function ImageToPdfWorkbench(){
    const bytes=await out.save(),copy=new Uint8Array(bytes.length);copy.set(bytes);
    const blob=new Blob([copy.buffer],{type:"application/pdf"});
    setResult([{name:"lingxifield-images.pdf",blob,mime:"application/pdf",size:blob.size}]);
-  }catch(e){setError(c.error+" · "+(e instanceof Error?e.message:""))}finally{setBusy(false)}
+  }catch{setError(c.error)}finally{setBusy(false)}
  }
- const details=useMemo(()=>({pages:files.length,pageSize,orientation,margin}),[files.length,pageSize,orientation,margin]);
  return <div className="space-y-4">
   <FileDropzone accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple maxFiles={100} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy} kind="image"/>
   <p className="text-sm text-[var(--lx-muted)]">{c.lead}</p>
   {files.length>0&&<div className="space-y-2 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm">
-   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate">{i+1}. {f.name}</span><button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="rounded-lg border px-2 py-1 text-xs">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="rounded-lg border px-2 py-1 text-xs">{c.down}</button><button type="button" disabled={busy} onClick={()=>setFiles(current=>current.filter((_,j)=>j!==i))} className="rounded-lg border px-2 py-1 text-xs">{c.remove}</button></div>)}
+   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate">{i+1}. {f.name}</span><button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="rounded-lg border px-2 py-1 text-xs">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="rounded-lg border px-2 py-1 text-xs">{c.down}</button><button type="button" disabled={busy} onClick={()=>{setFiles(current=>current.filter((_,j)=>j!==i));setResult([])}} className="rounded-lg border px-2 py-1 text-xs">{c.remove}</button></div>)}
   </div>}
   {files.length>0&&<div className="grid gap-3 sm:grid-cols-3">
-   <label className="space-y-1 text-sm"><span>{c.pageSize}</span><select disabled={busy} value={pageSize} onChange={e=>setPageSize(e.target.value as PageSize)} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="fit">{c.fit}</option><option value="a4">{c.a4}</option><option value="letter">{c.letter}</option></select></label>
-   <label className="space-y-1 text-sm"><span>{c.orientation}</span><select disabled={busy} value={orientation} onChange={e=>setOrientation(e.target.value as Orientation)} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="auto">{c.auto}</option><option value="portrait">{c.portrait}</option><option value="landscape">{c.landscape}</option></select></label>
-   <label className="space-y-1 text-sm"><span>{c.margin}</span><select disabled={busy} value={margin} onChange={e=>setMargin(e.target.value as Margin)} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="none">{c.none}</option><option value="small">{c.small}</option><option value="big">{c.big}</option></select></label>
+   <label className="space-y-1 text-sm"><span>{c.pageSize}</span><select disabled={busy} value={pageSize} onChange={e=>{setPageSize(e.target.value as PageSize);setResult([])}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="fit">{c.fit}</option><option value="a4">{c.a4}</option><option value="letter">{c.letter}</option></select></label>
+   <label className="space-y-1 text-sm"><span>{c.orientation}</span><select disabled={busy} value={orientation} onChange={e=>{setOrientation(e.target.value as Orientation);setResult([])}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="auto">{c.auto}</option><option value="portrait">{c.portrait}</option><option value="landscape">{c.landscape}</option></select></label>
+   <label className="space-y-1 text-sm"><span>{c.margin}</span><select disabled={busy} value={margin} onChange={e=>{setMargin(e.target.value as Margin);setResult([])}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="none">{c.none}</option><option value="small">{c.small}</option><option value="big">{c.big}</option></select></label>
   </div>}
   <button disabled={!files.length||busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.run}</button>
-  {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready} details={details}/>}
+  {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready} details={{pages:files.length}}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>;
 }

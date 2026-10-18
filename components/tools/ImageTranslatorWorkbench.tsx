@@ -7,12 +7,16 @@ import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
+import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
+const FAILURE:Record<LingxiLang,string>={zh:"图片翻译未完成。请稍后重试；已选文件仍保留。",en:"Image translation could not finish. Try again later; your selected files are still available.",ja:"画像翻訳を完了できませんでした。後ほど再試行してください。選択したファイルは保持されています。",ko:"이미지 번역을 완료하지 못했습니다. 잠시 후 다시 시도하세요. 선택한 파일은 유지됩니다.",fr:"La traduction de l’image n’a pas abouti. Réessayez plus tard ; vos fichiers sont conservés.",de:"Die Bildübersetzung konnte nicht abgeschlossen werden. Bitte später erneut versuchen; die Dateien bleiben erhalten.",es:"No se pudo completar la traducción. Inténtalo más tarde; tus archivos se conservan.",pt:"Não foi possível concluir a tradução. Tente mais tarde; os arquivos são mantidos.",ar:"تعذر إكمال ترجمة الصورة. حاول لاحقاً؛ تبقى الملفات المحددة محفوظة."};
 
 async function translate(text:string,source:string,target:string,quoteId:string){
  if(source===target)return text;
  const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
- const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));
+ if(typeof d.translated!=="string"||!d.translated.trim())throw new Error("TRANSLATE_EMPTY");
+ return d.translated;
 }
 function blobOf(c:HTMLCanvasElement){return new Promise<Blob>((resolve,reject)=>c.toBlob(x=>x?resolve(x):reject(new Error("IMAGE_EXPORT_FAILED")),"image/png"))}
 function sample(ctx:CanvasRenderingContext2D,x:number,y:number,w:number,h:number){
@@ -25,6 +29,7 @@ function linesFromBlocks(blocks:any[]){
  return out;
 }
 export default function ImageTranslatorWorkbench(){
+ const{lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="image-translator"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en")}setDraftReady(true)})()},[]);
  useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"image-translator",files,state:{source,target}}),120);return()=>clearTimeout(tm)},[files,source,target,draftId,draftReady]);
@@ -54,7 +59,7 @@ export default function ImageTranslatorWorkbench(){
     const blob=await blobOf(c);all.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.png`,blob,mime:"image/png",size:blob.size});
    }
    setOutputs(all);setStage("处理完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(FAILURE[lang]);setStage("");throw e}
   finally{try{await worker?.terminate()}catch{}setBusy(false)}
  }
  return <div className="space-y-4">

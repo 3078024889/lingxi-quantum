@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 const retired=[
+ "lib/tools/shared/qr-reader.ts",
  "scripts/audit-autonomy-v1583.mjs",
  "app/sasi/SasiComposer.tsx",
  "app/sasi/SasiProjectMemory.tsx",

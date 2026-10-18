@@ -5,5 +5,5 @@ test('text-counter counts actual Unicode input and displays English result label
 });
 test('case-converter switches formats without losing the editable input',async({page})=>{
  await page.goto('/tools/case-converter?lang=en');const input=page.locator('textarea:not([readonly])');await input.fill('hello_world');await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveValue('helloWorld');
- const format=page.locator('select').filter({has:page.locator('option[value="snake"]')});await format.selectOption('kebab');await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveValue('hello-world');await expect(input).toHaveValue('hello_world');
+ const format=page.locator('select').filter({has:page.locator('option[value="snake"]')});await format.selectOption('kebab');await expect(page.locator('textarea[readonly]')).toHaveCount(0);await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveValue('hello-world');await expect(input).toHaveValue('hello_world');
 });
