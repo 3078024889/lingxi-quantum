@@ -1,7 +1,8 @@
 "use client";
 
 import {useEffect,useMemo,useState} from "react";
-import {PDFDocument,PDFName} from "pdf-lib";
+import {PDFDocument} from "pdf-lib";
+import {removePdfComments} from '@/lib/tools/shared/pdf-annotations';
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {openPdf,renderPdfPage,canvasToBlob} from "@/lib/tools/pdf-render-client";
@@ -37,7 +38,7 @@ export default function PdfDocumentWorkbench({mode}:{mode:PdfDocumentMode}){
 
   async function run(){if(!file||busy)return;setBusy(true);setError("");setResult([]);try{
     if(mode==="remove-annotations"){
-      const d=await PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});for(const p of d.getPages())p.node.delete(PDFName.of("Annots"));const bytes=await d.save();setResult([outFile(tagged(file.name,"no-annotations"),bytes)]);
+      const d=await PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});removePdfComments(d);const bytes=await d.save();setResult([outFile(tagged(file.name,"no-annotations"),bytes)]);
     }else if(mode==="metadata"){
       const d=await PDFDocument.load(await file.arrayBuffer(),{ignoreEncryption:false});d.setTitle(title.trim());d.setAuthor(author.trim());d.setSubject(subject.trim());d.setKeywords(keywords.split(/[,，;；\n]/).map(x=>x.trim()).filter(Boolean));const bytes=await d.save();setResult([outFile(tagged(file.name,"metadata"),bytes)]);
     }else if(mode==="page-size"){

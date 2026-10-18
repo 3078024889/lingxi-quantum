@@ -39,7 +39,7 @@ test("URL promotion enters the real drama generation workflow, not a text-as-vid
  await page.goto("/tools/url-to-video?lang=en");
  await page.getByLabel("Website or product URL").fill("https://example.com/product");
  await page.getByRole("button",{name:"Read page"}).click();
- await expect(page.getByText("Product",{exact:true})).toBeVisible();
+ await expect(page.getByRole("heading",{name:"Product",exact:true})).toBeVisible();
  await page.getByRole("button",{name:"Review and continue in SASI"}).click();
  await expect(page).toHaveURL(/\/sasi\?.*mode=drama/);
  await expect(page.locator('[data-sasi-task="drama"]')).toBeVisible({timeout:15000});

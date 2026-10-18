@@ -1,13 +1,14 @@
 import {test,expect,type Page} from './export-test';
-import {PDFDocument,PDFName,PDFDict,PDFRawStream,rgb} from 'pdf-lib';
+import {PDFDocument,PDFName,PDFDict,PDFRawStream,PDFArray,decodePDFRawStream,rgb} from 'pdf-lib';
 import fs from 'node:fs/promises';
 import sharp from 'sharp';
 async function source(){const d=await PDFDocument.create();for(let i=0;i<2;i++){const p=d.addPage([400,300]);p.drawRectangle({x:10,y:10,width:60,height:40,color:rgb(1,.2,.1)});p.drawText('Original page '+(i+1),{x:40,y:180,size:20})}return Buffer.from(await d.save())}
 async function upload(page:Page,slug:string,buffer:Buffer){await page.goto(`/tools/${slug}?lang=en`);const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();await input.setInputFiles({name:'source.pdf',mimeType:'application/pdf',buffer})}
 async function download(page:Page){const button=page.getByRole('button',{name:'Save file',exact:true}).first();await expect(button).toBeVisible({timeout:15000});const pending=page.waitForEvent('download');await button.click();return fs.readFile((await (await pending).path())!)}
+function pageContent(doc:PDFDocument,index:number){const contents=doc.getPage(index).node.Contents();const refs=contents instanceof PDFArray?contents.asArray():[contents];return Buffer.concat(refs.map(ref=>Buffer.from(decodePDFRawStream(doc.context.lookup(ref,PDFRawStream)).decode())))}
 test('pdf-rasterize: every resolution preserves the physical page size',async({page})=>{
  await upload(page,'pdf-rasterize',await source());const control=page.locator('[data-tool-workbench] select');
- for(const scale of ['1','1.5','2']){await control.selectOption(scale);await page.getByRole('button',{name:'Process',exact:true}).click();const pdf=await PDFDocument.load(await download(page));expect(pdf.getPages().map(p=>p.getSize())).toEqual([{width:400,height:300},{width:400,height:300}]);}
+ for(const scale of ['1','1.5','2']){await control.selectOption(scale);await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);await page.getByRole('button',{name:'Process',exact:true}).click();const pdf=await PDFDocument.load(await download(page));expect(pdf.getPages().map(p=>p.getSize())).toEqual([{width:400,height:300},{width:400,height:300}]);}
 });
 for(const name of ['proof.txt','input.pdf'])test(`pdf-attachments: add, inspect and remove ${name} without losing the result`,async({page})=>{
  test.setTimeout(90000);await upload(page,'pdf-attachments',await source());await page.getByRole('button',{name:'Inspect PDF',exact:true}).click();
@@ -23,6 +24,20 @@ test('pdf-remove-annotations: real annotation dictionaries disappear and page co
  const d=await PDFDocument.load(await source());d.getPage(0).node.set(PDFName.of('Annots'),d.context.obj([d.context.register(d.context.obj({Type:'Annot',Subtype:'Text',Rect:[10,10,30,30],Contents:'Private note'}))]));
  await upload(page,'pdf-remove-annotations',Buffer.from(await d.save()));await page.getByRole('button',{name:'Process',exact:true}).click();const out=await PDFDocument.load(await download(page));expect(out.getPageCount()).toBe(2);for(const p of out.getPages()){expect(p.node.has(PDFName.of('Annots'))).toBe(false);expect(p.node.Contents()).toBeTruthy()}
 });
+test('pdf-remove-annotations: comments disappear while saved form controls, values and editability survive',async({page},info)=>{
+ const d=await PDFDocument.load(await source()),p=d.getPage(0),form=d.getForm();
+ const text=form.createTextField('customer');text.setText('AUDIT CUSTOMER');text.addToPage(p,{x:20,y:100,width:240,height:25});
+ const checkbox=form.createCheckBox('approved');checkbox.addToPage(p,{x:20,y:65,width:20,height:20});checkbox.check();
+ const select=form.createDropdown('plan');select.addOptions(['BASIC','PREMIUM']);select.select('PREMIUM');select.addToPage(p,{x:55,y:60,width:180,height:25});
+ for(const subtype of ['Text','Highlight','Stamp'])p.node.Annots()!.push(d.context.register(d.context.obj({Type:'Annot',Subtype:subtype,Rect:[10,10,30,30],Contents:'Private note'})));
+ const input=Buffer.from(await d.save());await upload(page,'pdf-remove-annotations',input);await page.getByRole('button',{name:'Process',exact:true}).click();const output=await download(page),out=await PDFDocument.load(output);
+ expect(out.getPageCount()).toBe(2);expect(out.getPage(0).node.Annots()!.size()).toBe(3);expect(out.getForm().getFields()).toHaveLength(3);
+ expect(out.context.enumerateIndirectObjects().some(([,obj])=>obj.toString().includes('Private note'))).toBe(false);
+ for(const ref of out.getPage(0).node.Annots()!.asArray())expect(out.context.lookup(ref,PDFDict).get(PDFName.of('Subtype'))!.toString()).toBe('/Widget');
+ expect(out.getForm().getTextField('customer').getText()).toBe('AUDIT CUSTOMER');expect(out.getForm().getCheckBox('approved').isChecked()).toBe(true);expect(out.getForm().getDropdown('plan').getSelected()).toEqual(['PREMIUM']);expect(pageContent(out,0)).toEqual(pageContent(await PDFDocument.load(input),0));
+ out.getForm().getTextField('customer').setText('STILL EDITABLE');const edited=await PDFDocument.load(await out.save());expect(edited.getForm().getTextField('customer').getText()).toBe('STILL EDITABLE');
+ await info.attach('input-comments-and-form.pdf',{body:input,contentType:'application/pdf'});await info.attach('downloaded-form-preserved.pdf',{body:output,contentType:'application/pdf'});
+});
 test('pdf-grayscale: downloaded image streams really have equal RGB channels',async({page})=>{
  await upload(page,'pdf-grayscale',await source());await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));expect(d.getPageCount()).toBe(2);let count=0;
  for(const [,object]of d.context.enumerateIndirectObjects()){if(object instanceof PDFRawStream&&object.dict.get(PDFName.of('Subtype'))===PDFName.of('Image')){const stats=await sharp(Buffer.from(object.contents)).stats();for(const channel of stats.channels.slice(1,3))expect(channel.mean).toBeCloseTo(stats.channels[0].mean,1);count++}}expect(count).toBe(2);
@@ -31,7 +46,7 @@ test('pdf-viewer-preferences: every layout/open-mode and all toggles survive rea
  await upload(page,'pdf-viewer-preferences',await source());const area=page.locator('[data-tool-workbench]'),selects=area.locator('select');
  for(let index=0;index<await selects.count();index++){
   const select=selects.nth(index),values=await select.locator('option').evaluateAll(rows=>rows.map(row=>(row as HTMLOptionElement).value));
-  for(const value of values){await select.selectOption(value);await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));expect(d.catalog.get(PDFName.of(index===0?'PageLayout':'PageMode'))?.toString()).toBe('/'+value)}
+  for(const value of values){const previous=await select.inputValue();await select.selectOption(value);if(value!==previous)await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));expect(d.catalog.get(PDFName.of(index===0?'PageLayout':'PageMode'))?.toString()).toBe('/'+value)}
  }
  const toggles=area.locator('input[type=checkbox]');for(let i=0;i<await toggles.count();i++)await toggles.nth(i).setChecked(i>=2);
  await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));const prefs=d.catalog.lookup(PDFName.of('ViewerPreferences'),PDFDict);expect(prefs.get(PDFName.of('HideToolbar'))?.toString()).toBe('true');expect(prefs.get(PDFName.of('Direction'))?.toString()).toBe('/R2L');
@@ -46,7 +61,34 @@ test('failed qpdf initialization releases its worker and a subsequent click retr
 });
 test('pdf-protect / pdf-unlock: actual encrypted output rejects reading and the correct password restores every page',async({page})=>{
  test.setTimeout(90000);await upload(page,'pdf-protect',await source());await page.getByLabel('Open password',{exact:true}).fill('Test-Strong-123');await page.getByLabel('Confirm open password',{exact:true}).fill('Test-Strong-123');await page.getByRole('button',{name:'Process',exact:true}).click();const protectedBytes=await download(page);await expect(PDFDocument.load(protectedBytes)).rejects.toThrow();
+ await page.getByRole('combobox',{name:'Allow printing',exact:true}).selectOption('none');await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
  await upload(page,'pdf-unlock',protectedBytes);await page.getByLabel('Current password',{exact:true}).fill('Test-Strong-123');await page.getByRole('button',{name:'Process',exact:true}).click();const opened=await PDFDocument.load(await download(page));expect(opened.getPageCount()).toBe(2);expect(opened.isEncrypted).toBe(false);
+});
+
+test('PDF password and permission inputs lock during processing and every edit clears the old file',async({page})=>{
+ test.setTimeout(90000);let release!:()=>void;const gate=new Promise<void>(r=>{release=r});let loading=false;
+ await page.route('**/media/qpdf-*/qpdf.js',async route=>{loading=true;await gate;await route.continue()});
+ const originalBytes=await source(),original=await PDFDocument.load(originalBytes);await upload(page,'pdf-protect',originalBytes);await page.getByLabel('Open password',{exact:true}).fill('Test-Strong-123');await page.getByLabel('Confirm open password',{exact:true}).fill('Test-Strong-123');
+ await page.getByRole('button',{name:'Process',exact:true}).click();
+ try{await expect.poll(()=>loading).toBe(true);const controls=page.locator('[data-tool-workbench] fieldset input,[data-tool-workbench] fieldset select');await expect(controls).toHaveCount(6);for(const input of await controls.all())await expect(input).toBeDisabled()}finally{release()}
+ await expect(page.getByRole('button',{name:'Save file',exact:true})).toBeVisible({timeout:15000});
+ const verifier=await page.context().newPage();try{
+ for(const name of ['Open password','Confirm open password','Owner password','Allow printing','Allow changes','Allow copying text and images']){
+  if(name==='Allow printing')await page.getByRole('combobox',{name,exact:true}).selectOption('none');
+  else if(name==='Allow changes')await page.getByRole('combobox',{name,exact:true}).selectOption('none');
+  else if(name==='Allow copying text and images')await page.getByRole('checkbox',{name,exact:true}).uncheck();
+  else await page.getByLabel(name,{exact:true}).fill('Changed-Password-123');
+  await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+  await page.getByLabel('Open password',{exact:true}).fill('Test-Strong-123');await page.getByLabel('Confirm open password',{exact:true}).fill('Test-Strong-123');
+  await page.getByRole('button',{name:'Process',exact:true}).click();const encrypted=await download(page);await expect(PDFDocument.load(encrypted)).rejects.toThrow();expect((await PDFDocument.load(encrypted,{ignoreEncryption:true})).context.trailerInfo.Encrypt).toBeTruthy();
+  // ignoreEncryption bypasses a warning; pdf-lib cannot decrypt encrypted page
+  // object streams. Exercise the real unlock flow before inspecting page data.
+  await upload(verifier,'pdf-unlock',encrypted);await verifier.getByLabel('Current password',{exact:true}).fill('Test-Strong-123');await verifier.getByRole('button',{name:'Process',exact:true}).click();
+  const output=await PDFDocument.load(await download(verifier));expect(output.isEncrypted).toBe(false);expect(output.getPageCount()).toBe(2);expect(output.getPages().map(p=>p.getSize())).toEqual([{width:400,height:300},{width:400,height:300}]);
+  for(let index=0;index<2;index++)expect(pageContent(output,index).equals(pageContent(original,index))).toBe(true);
+ }
+ }finally{await verifier.close()}
+ await expect(page.locator('[data-tool-workbench]')).not.toContainText('Free ·');
 });
 for(const slug of ['pdf-inspect','pdf-bookmarks'])test(`${slug}: real page count, Unicode attachments and nested bookmark destinations`,async({page})=>{
  const d=await PDFDocument.load(await source());await d.attach(new Uint8Array([1,2,3]),'notes.txt');await d.flush();const dest=d.context.obj([d.getPage(1).ref,PDFName.of('Fit')]);const chapter=d.context.obj({Title:'Chapter two',Dest:dest});
@@ -58,6 +100,6 @@ for(const slug of ['pdf-inspect','pdf-bookmarks'])test(`${slug}: real page count
 test('pdf-permissions: selected restrictions are encoded in the real encryption dictionary',async({page})=>{
  test.setTimeout(90000);await upload(page,'pdf-permissions',await source());await page.getByLabel(/^Owner password/).fill('owner-test');
  for(const print of ['none','low','full'])for(const modify of ['none','form','annotate','assembly','all']){
-  await page.getByRole('combobox',{name:'Allow printing',exact:true}).selectOption(print);await page.getByRole('combobox',{name:'Allow changes',exact:true}).selectOption(modify);const copying=modify==='all';await page.getByLabel('Allow copying text and images',{exact:true}).setChecked(copying);await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page),{ignoreEncryption:true});const encryption=d.context.lookup(d.context.trailerInfo.Encrypt,PDFDict);const permissions=Number(encryption.get(PDFName.of('P'))?.toString());expect(Boolean(permissions&4)).toBe(print!=='none');expect(Boolean(permissions&2048)).toBe(print==='full');expect(Boolean(permissions&8)).toBe(modify==='all');expect(Boolean(permissions&16)).toBe(copying);
+  await page.getByRole('combobox',{name:'Allow printing',exact:true}).selectOption(print);await page.getByRole('combobox',{name:'Allow changes',exact:true}).selectOption(modify);const copying=modify==='all';await page.getByLabel('Allow copying text and images',{exact:true}).setChecked(copying);await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page),{ignoreEncryption:true});const encryption=d.context.lookup(d.context.trailerInfo.Encrypt,PDFDict);const permissions=Number(encryption.get(PDFName.of('P'))?.toString());expect(Boolean(permissions&4)).toBe(print!=='none');expect(Boolean(permissions&2048)).toBe(print==='full');expect(Boolean(permissions&8)).toBe(modify==='all');expect(Boolean(permissions&16)).toBe(copying);
  }
 });

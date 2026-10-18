@@ -38,6 +38,8 @@ export function publicToolSurface():PublicToolSurfaceItem[]{
   map.set(href,{href,slug:tool.slug,titleZh:toolTitle("zh",tool.slug,tool.zh),titleEn:toolTitle("en",tool.slug,tool.en),
    descZh:"",descEn:"",kind:toolDisplayKind(category),category,localOnly:tool.mode==="local",source:"catalog"});
  }
+ // The legacy route is a redirect, regardless of which catalog supplied it.
+ map.delete('/tools/image-to-pdf-pro');
  // Preserve SEO catalog ordering while making every registered live tool discoverable.
  const catalogFirst=GLOBAL_TOOL_CATALOG.map(tool=>map.get(`/tools/${tool.slug}`)).filter((tool):tool is PublicToolSurfaceItem=>Boolean(tool));
  const ordered=new Set(catalogFirst.map(item=>item.href));

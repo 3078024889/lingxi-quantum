@@ -140,7 +140,10 @@ function decodeJwt(raw: string) {
 
 function excelSerialToDate(serial: number, system1904: boolean) {
   if (!Number.isFinite(serial)) return null;
-  const base = Date.UTC(system1904 ? 1904 : 1899, system1904 ? 0 : 11, system1904 ? 1 : 30);
+  // Excel's serial 60 refers to the nonexistent 1900-02-29. Do not silently
+  // convert that day (or its fractional times) into another real calendar date.
+  if (!system1904 && serial >= 60 && serial < 61) return null;
+  const base = Date.UTC(system1904 ? 1904 : 1899, system1904 ? 0 : 11, system1904 ? 1 : 31);
   let days = serial;
   if (!system1904 && serial >= 60) days -= 1;
   return new Date(base + days * 86_400_000);
@@ -192,7 +195,7 @@ export default function TimestampProWorkbench() {
     [batch],
   );
   const excelDate = useMemo(
-    () => excelSerialToDate(Number(excel), system1904),
+    () => excel.trim() ? excelSerialToDate(Number(excel), system1904) : null,
     [excel, system1904],
   );
 

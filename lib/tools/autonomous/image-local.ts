@@ -36,31 +36,69 @@ export async function localIdPhoto(file:File,background:string){
  ctx.putImageData(src,0,0);
  return await blobOf(c,"image/png");
 }
+// Use a solid fill when the selection and independent edges agree. A thin
+// near-white image-border strip may also use its actual image edges as anchors;
+// there is no outside pixel there, and sampling the adjacent photo causes bleed.
+function flatBoxBackground(d:Uint8ClampedArray,w:number,h:number,x0:number,y0:number,x1:number,y1:number){
+ const area=(x1-x0+1)*(y1-y0+1);if(area<32)return null;
+ const edgeStrip=((x1-x0+1)>=w*.9&&(y1-y0+1)<=h*.15&&(y0===0||y1===h-1))||((y1-y0+1)>=h*.9&&(x1-x0+1)<=w*.15&&(x0===0||x1===w-1));
+ const step=Math.max(1,Math.ceil(Math.sqrt(area/16384))),bins=new Map<number,number>();
+ let total=0,best=0,bestCount=0;
+ for(let y=y0;y<=y1;y+=step)for(let x=x0;x<=x1;x+=step){
+  const i=(y*w+x)*4;if(d[i+3]!==255)return null;
+  const key=((d[i]>>4)<<8)|((d[i+1]>>4)<<4)|(d[i+2]>>4),count=(bins.get(key)||0)+1;
+  bins.set(key,count);total++;if(count>bestCount){bestCount=count;best=key}
+ }
+ if(bestCount/total<.7&&!(edgeStrip&&best===0xfff&&bestCount/total>=.65))return null;
+ const channels:number[][]=[[],[],[]];
+ for(let y=y0;y<=y1;y+=step)for(let x=x0;x<=x1;x+=step){
+  const i=(y*w+x)*4,key=((d[i]>>4)<<8)|((d[i+1]>>4)<<4)|(d[i+2]>>4);
+  if(key===best)for(let ch=0;ch<3;ch++)channels[ch].push(d[i+ch]);
+ }
+ const color=channels.map(values=>values.sort((a,b)=>a-b)[Math.floor(values.length/2)]);
+ const whiteStrip=edgeStrip&&color.every(v=>v>=245)&&Math.max(...color)-Math.min(...color)<=8;
+ const agrees=(x:number,y:number)=>{const i=(y*w+x)*4;return d[i+3]===255&&color.every((v,ch)=>Math.abs(v-d[i+ch])<=8)};
+ const sides=[{hits:0,total:0},{hits:0,total:0},{hits:0,total:0},{hits:0,total:0}];
+ for(let x=x0;x<=x1;x++)for(const[side,edgeY]of [[0,y0-1],[1,y1+1]]){const y=Math.max(0,Math.min(h-1,edgeY));if(edgeY!==y&&!whiteStrip)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
+ for(let y=y0;y<=y1;y++)for(const[side,edgeX]of [[2,x0-1],[3,x1+1]]){const x=Math.max(0,Math.min(w-1,edgeX));if(edgeX!==x&&!whiteStrip)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
+ const available=sides.filter(s=>s.total>0),required=available.length===4?3:2;
+ // A one-pixel antialiased photo boundary is significant on a short footer
+ // side. Permit one additional outlier only on these short near-white strips.
+ return available.filter(s=>s.hits>=Math.max(1,Math.ceil(s.total*.9)-(whiteStrip&&s.total>=4&&s.total<=16?1:0))).length>=required?color:null;
+}
+
 export async function localInpaint(file:File,box:NormalizedBox){
+ if(![box.x,box.y,box.w,box.h].every(Number.isFinite)||box.w<=0||box.h<=0)throw new Error("SELECT_AREA_FIRST");
  const img=await bitmap(file),c=document.createElement("canvas");
  c.width=img.width;c.height=img.height;const ctx=c.getContext("2d",{willReadFrequently:true})!;
  ctx.drawImage(img,0,0);img.close?.();
  const im=ctx.getImageData(0,0,c.width,c.height),d=im.data,w=c.width,h=c.height;
- let x0=Math.max(1,Math.floor(box.x*w)),y0=Math.max(1,Math.floor(box.y*h));
- let x1=Math.min(w-2,Math.ceil((box.x+box.w)*w)),y1=Math.min(h-2,Math.ceil((box.y+box.h)*h));
+ let x0=Math.max(0,Math.floor(box.x*w)),y0=Math.max(0,Math.floor(box.y*h));
+ let x1=Math.min(w-1,Math.ceil((box.x+box.w)*w)),y1=Math.min(h-1,Math.ceil((box.y+box.h)*h));
  if(x1<=x0||y1<=y0)throw new Error("SELECT_AREA_FIRST");
  const at=(x:number,y:number)=>((Math.max(0,Math.min(h-1,y))*w+Math.max(0,Math.min(w-1,x)))*4);
  const band=Math.max(2,Math.round(Math.min(w,h)*.004));
+ const flat=flatBoxBackground(d,w,h,x0,y0,x1,y1);
+ if(!flat&&(x0===0||y0===0||x1===w-1||y1===h-1)){
+  const mask=new Uint8Array(w*h);
+  for(let y=y0;y<=y1;y++)mask.fill(1,y*w+x0,y*w+x1+1);
+  d.set(diffuseMaskedPixels(d,w,h,mask));ctx.putImageData(im,0,0);
+  return await blobOf(c,"image/png");
+ }
  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
    const fx=(x-x0)/Math.max(1,x1-x0),fy=(y-y0)/Math.max(1,y1-y0);
-   const samples:number[][]=[];
+   const sides:number[][][]=[[],[],[],[]];
    for(let b=1;b<=band;b++){
-     for(const [sx,sy] of [[x,y0-b],[x,y1+b],[x0-b,y],[x1+b,y]]){
-       const j=at(sx,sy);samples.push([d[j],d[j+1],d[j+2]]);
-     }
+     const positions=[[x,y0-b],[x,y1+b],[x0-b,y],[x1+b,y]];
+     positions.forEach(([sx,sy],side)=>{const j=at(sx,sy);sides[side].push([d[j],d[j+1],d[j+2]])});
    }
-   const top=samples.slice(0,band),bottom=samples.slice(band,band*2),left=samples.slice(band*2,band*3),right=samples.slice(band*3);
+   const [top,bottom,left,right]=sides;
    const avg=(arr:number[][],ch:number)=>arr.reduce((s,v)=>s+v[ch],0)/Math.max(1,arr.length);
    const i=at(x,y);
    for(let ch=0;ch<3;ch++){
      const vertical=avg(top,ch)*(1-fy)+avg(bottom,ch)*fy;
      const horizontal=avg(left,ch)*(1-fx)+avg(right,ch)*fx;
-     d[i+ch]=Math.round((vertical+horizontal)/2);
+     d[i+ch]=flat?flat[ch]:Math.round((vertical+horizontal)/2);
    }
    d[i+3]=255;
  }

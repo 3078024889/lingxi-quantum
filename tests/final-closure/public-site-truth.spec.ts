@@ -78,6 +78,7 @@ test('homepage exposes structured site and application identity',async({page})=>
  const json=(await page.locator('script[type="application/ld+json"]').allTextContents()).join('\n');
  expect(json).toContain('灵犀场 LINGXIFIELD');
  expect(json).toContain('SoftwareApplication');
- expect(json).toContain('100+免费在线实用工具');
+ expect(json).toContain('100+在线实用工具，每日免费体验');
+ expect(json).toContain('确认本次费用再导出');
  expect(json).toContain('https://lingxifield.com/');
 });

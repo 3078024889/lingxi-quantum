@@ -94,6 +94,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   }, [tool.slug, customKb]);
 
   function moveFile(index:number,direction:-1|1){
+    setResult(null);
     setFiles(current=>{
       const next=[...current];
       const target=index+direction;
@@ -131,7 +132,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   }
 
   return (
-    <div>
+    <fieldset disabled={busy} onChangeCapture={()=>setResult(null)} className="min-w-0">
       <FileDropzone
         accept={tool.accept || "*/*"}
         multiple={!!tool.multiple}
@@ -191,7 +192,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
 
 
       {files.length>0&&<div className="mt-4 flex flex-wrap gap-2">
-        <button type="button" onClick={()=>setFiles([])} className="rounded-sm border border-white/15 px-3 py-2 text-xs text-bone-dim">{t("清空","Clear")}</button>
+        <button type="button" onClick={()=>{setFiles([]);setResult(null)}} className="rounded-sm border border-white/15 px-3 py-2 text-xs text-bone-dim">{t("清空","Clear")}</button>
         {(tool.slug==="merge-pdf"||tool.slug==="image-to-pdf")&&files.length>1&&files.map((file,index)=><span key={`${file.name}-${file.lastModified}`} className="inline-flex items-center gap-1 rounded-sm border border-white/10 px-2 py-1 text-xs text-bone-dim">
           {index+1}. {file.name}
           <button type="button" disabled={index===0} onClick={()=>moveFile(index,-1)} aria-label={t("上移","Move up")}>↑</button>
@@ -236,7 +237,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
           }} className="mt-3 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm text-[var(--lx-ink)] disabled:opacity-50">{recoveryBusy?t("正在继续…","Continuing…"):t("继续做 PDF OCR","Continue with PDF OCR")}</button>:null}
         </>
       )}
-    </div>
+    </fieldset>
   );
 }
 
@@ -488,7 +489,7 @@ async function runFileTool(
 
   if (tool.slug === "compress-image" || tool.slug.startsWith("compress-image-to-")) {
     const target = opts.targetBytes || 100 * 1024;
-    const r = await compressImageToTarget(file, target);
+    const r = await compressImageToTarget(file, target,{maxQuality:opts.quality});
     const exceeded = r.blob.size > target;
     return {
       ok: true,

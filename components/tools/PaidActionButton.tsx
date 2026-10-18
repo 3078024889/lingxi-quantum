@@ -41,15 +41,17 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),restoreKey=useRef(""),taskKey=useRef("");
  const [running,setRunning]=useState(false);const completedIds=useRef(new Set<string>());const [paidId,setPaidId]=useState("");
  const signature=`${toolId}:${quantity}:${currency}:${draftId||""}:${JSON.stringify(metadata||{})}`;
- useEffect(()=>{if(taskKey.current&&taskKey.current!==signature){stop();setPaidId("");setCompleted(false);setQuote(null);setMsg("");restoreKey.current=""}taskKey.current=signature},[signature]);
+ const contextSignature=useRef(signature);contextSignature.current=signature;
+ function isCurrent(){return contextSignature.current===signature}
+ useEffect(()=>{if(taskKey.current&&taskKey.current!==signature){stop();setPaidId("");setCompleted(false);setQuote(null);setMsg("");setBusy(false);setRunning(false);processing.current=null;restoreKey.current=""}taskKey.current=signature},[signature]);
  const stop=()=>{if(timer.current){clearInterval(timer.current);timer.current=null}};
  async function status(id:string){const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});return r.ok?r.json():null}
- async function complete(id:string){if(completedIds.current.has(id)||completed||!draftReady||processing.current===id)return;processing.current=id;setRunning(true);setPaidId(id);stop();setMsg(t(UI.paid));try{await requireCompletedDelivery(()=>onPaid(id));completedIds.current.add(id);clearStoredQuote(toolId);setQuote(null);setCompleted(true);try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch{}}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null;setRunning(false)}}
- async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(q&&((q.tool_id||q.toolId)!==toolId||Number(q.quantity)!==quantity||(q.metadata?.draftId&&q.metadata.draftId!==draftId)))return false;await complete(id);return true}catch{return false}}
+ async function complete(id:string){if(!isCurrent())return;if(completedIds.current.has(id)||completed||!draftReady||processing.current===id)return;processing.current=id;setRunning(true);setPaidId(id);stop();setMsg(t(UI.paid));try{await requireCompletedDelivery(()=>onPaid(id));if(!isCurrent())return;completedIds.current.add(id);clearStoredQuote(toolId);setQuote(null);setCompleted(true);try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch{}}catch{if(isCurrent())setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{if(processing.current===id)processing.current=null;if(isCurrent())setRunning(false)}}
+ async function check(id:string){if(!draftReady||!isCurrent())return false;try{const d=await status(id);if(!isCurrent()||!d?.paid)return false;const q=d.quote;if(q&&((q.tool_id||q.toolId)!==toolId||Number(q.quantity)!==quantity||(q.metadata?.draftId&&q.metadata.draftId!==draftId)))return false;await complete(id);return isCurrent()}catch{return false}}
  const checkRef=useRef(check);checkRef.current=check;
 
  useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id&&draftReady)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);window.addEventListener("focus",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);window.removeEventListener("focus",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id,draftReady]);
- useEffect(()=>()=>{if(timer.current){clearInterval(timer.current);timer.current=null}},[]);
+ useEffect(()=>{contextSignature.current=signature;return()=>{contextSignature.current="";if(timer.current){clearInterval(timer.current);timer.current=null}}},[]);
 
  useEffect(()=>{
   if(!draftReady||quantity<=0)return;
@@ -57,24 +59,25 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   let id=new URLSearchParams(location.search).get("resumeQuote")||"";
   if(!id){try{const raw=localStorage.getItem(storageKey(toolId));if(raw){const saved=JSON.parse(raw) as StoredQuote;if(saved.toolId===toolId&&Number(saved.quantity)===Number(quantity)&&saved.currency===currency&&(!saved.draftId||!draftId||saved.draftId===draftId))id=saved.id}}catch{}}
   if(!id)return;
-  void(async()=>{try{const r=await fetch(`/api/tools/quote?id=${encodeURIComponent(id)}`,{cache:"no-store"});if(!r.ok)return;const q=await r.json() as Quote;if(q.tool_id!==toolId||Number(q.quantity)!==Number(quantity)||(toolId!=="food-calorie"&&q.currency!==currency)||(toolId==="food-calorie"&&q.metadata?.foodRequestId!==draftId))return;setQuote(q);saveStoredQuote(toolId,q,draftId);await checkRef.current(q.id)}catch{}})();
+  void(async()=>{try{const r=await fetch(`/api/tools/quote?id=${encodeURIComponent(id)}`,{cache:"no-store"});if(!r.ok)return;const q=await r.json() as Quote;if(!isCurrent()||(q.metadata?.draftId&&q.metadata.draftId!==draftId))return;if(q.tool_id!==toolId||Number(q.quantity)!==Number(quantity)||(toolId!=="food-calorie"&&q.currency!==currency)||(toolId==="food-calorie"&&q.metadata?.foodRequestId!==draftId))return;setQuote(q);saveStoredQuote(toolId,q,draftId);await checkRef.current(q.id)}catch{}})();
  },[toolId,quantity,currency,draftId,draftReady]);
 
- async function preparePayment(){try{await beforePayment?.();return true}catch{setMsg(deliveryText(lang,"draftSaveFailed"));return false}}
+ async function preparePayment(){try{await beforePayment?.();return isCurrent()}catch{if(isCurrent())setMsg(deliveryText(lang,"draftSaveFailed"));return false}}
  async function makeQuote(){
-  if(completed)return;setBusy(true);setMsg("");setLoginRequired(false);
+  if(completed||!isCurrent())return;setBusy(true);setMsg("");setLoginRequired(false);
   try{
    if(!await preparePayment())return;
    const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
    const d=await r.json().catch(()=>({}));
+   if(!isCurrent())return;
    if(r.status===401){setLoginRequired(true);setMsg(deliveryText(lang,"login"));return}
    if(!r.ok)throw new Error(String(d.error||"QUOTE_CREATE_FAILED"));
    setQuote(d);saveStoredQuote(toolId,d,draftId);setMsg(t(UI.priced));
-  }catch(e){const m=e instanceof Error?e.message:String(e);setMsg(toolId==="food-calorie"?foodBillingText(lang,/登录|SIGN_IN_REQUIRED/.test(m)?"login":/EXPIRED/.test(m)?"expired":"unavailable"):/TOOL_SERVICE_UNAVAILABLE|PRICE_NOT_AVAILABLE|TOOL_PRICING_NOT_FOUND/.test(m)?t(UI.serviceUnavailable):plainText(lang,"paymentError"))}
-  finally{setBusy(false)}
+  }catch(e){if(!isCurrent())return;const m=e instanceof Error?e.message:String(e);setMsg(toolId==="food-calorie"?foodBillingText(lang,/登录|SIGN_IN_REQUIRED/.test(m)?"login":/EXPIRED/.test(m)?"expired":"unavailable"):/TOOL_SERVICE_UNAVAILABLE|PRICE_NOT_AVAILABLE|TOOL_PRICING_NOT_FOUND/.test(m)?t(UI.serviceUnavailable):plainText(lang,"paymentError"))}
+  finally{if(isCurrent())setBusy(false)}
  }
  async function pay(){
-  if(completed||running||busy||!quote)return;if(paidId){await complete(paidId);return}
+  if(completed||running||busy||!quote||!isCurrent()||changed)return;if(paidId){await complete(paidId);return}
   if(isMiniProgramWebView()&&(quote.currency!=="CNY"||!await miniVirtualPaymentAvailable())){setMsg(zh?"小程序内付费暂未开放，已有订单仍可查看。":"Payments in the mini program are temporarily unavailable. Existing orders remain available.");return}
   setBusy(true);try{if(!await preparePayment())return;
   saveStoredQuote(toolId,quote,draftId);
@@ -89,9 +92,9 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   // Never destroy a stateful unpaid task in the same tab unless a persistent draft exists.
   if(draftId){location.assign(payUrl);return}
   setMsg(t(UI.popupBlocked));
-  }finally{setBusy(false)}
+  }finally{if(isCurrent())setBusy(false)}
  }
- const changed=quote&&(Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
+ const changed=quote&&((quote.metadata?.draftId&&quote.metadata.draftId!==draftId)||Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
  if(completed)return <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{deliveryText(lang,"complete")}</b><p className="mt-1 text-xs text-[var(--lx-muted)]">{deliveryText(lang,"existing")}</p></div>;
  return <div>{!quote||changed
   ?<button onClick={makeQuote} disabled={busy||quantity<=0||!draftReady} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t(UI.pricing):(label?toolRuntimeText(lang,label,label):t(UI.defaultLabel))}</button>

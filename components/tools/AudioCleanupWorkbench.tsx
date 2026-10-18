@@ -1,6 +1,8 @@
 "use client";
 
 import ToolUiText from "@/components/tools/ToolUiText";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {plainText} from "@/lib/tools/plain-copy";
 import { useEffect, useMemo, useState } from "react";
 import { fetchFile } from "@ffmpeg/util";
 import FileDropzone from "@/components/tools/FileDropzone";
@@ -20,6 +22,7 @@ function copyBytes(data: Uint8Array | string) {
 }
 
 export default function AudioCleanupWorkbench() {
+  const {lang}=useLingxiLang();
   const [files, setFiles] = useState<File[]>([]);
   const [preset, setPreset] = useState<Preset>("voice");
   const [durations,setDurations]=useState<number[]>([]);
@@ -36,7 +39,8 @@ export default function AudioCleanupWorkbench() {
     if(!files.length){if(!previewOnly)throw Error('PROCESSING_INPUT_MISSING');return}
     setBusy(true);
     setError("");
-    setResults([]);
+    if(!previewOnly)setResults([]);
+    setPreviewUrl("");
 
     try {
       const output: ToolResultFile[] = [];
@@ -94,11 +98,11 @@ export default function AudioCleanupWorkbench() {
         }
       }
 
-      setResults(output);
+      if(!previewOnly)setResults(output);
       setStage("");
     } catch (cause) {
       setStage("");
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(plainText(lang,"fileError"));
       if(!previewOnly)throw cause;
     } finally {
       setBusy(false);
@@ -116,7 +120,10 @@ export default function AudioCleanupWorkbench() {
         files={files}
         onChange={(next) => {
           setFiles(next);
+          setDurations([]);
           setResults([]);
+          setPreviewUrl("");
+          setStage("");
           setError("");
         }}
         disabled={busy}
@@ -136,7 +143,7 @@ export default function AudioCleanupWorkbench() {
             key={value}
             type="button"
             disabled={busy}
-            onClick={() => setPreset(value)}
+            onClick={() => {if(value===preset)return;setPreset(value);setResults([]);setPreviewUrl("");setStage("");setError("")}}
             className={`rounded-xl border p-3 text-left text-sm ${
               preset === value
                 ? "border-[var(--lx-line-strong)] bg-[var(--lx-soft)]"

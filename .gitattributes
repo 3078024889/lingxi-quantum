@@ -11,5 +11,8 @@
 *.yml text eol=lf
 *.yaml text eol=lf
 /tests/fixtures/c2pa-official/* -text
+# Historical baselines are verified against their committed byte hashes.
+/tests/fixtures/regression-v86/*.txt text eol=lf
+/tests/fixtures/preview-origin-before.ts.txt text eol=lf
 # Patch context lines contain a structural space; keep patch hashes stable on Windows/Linux.
 /patches/*.patch text eol=lf -whitespace
