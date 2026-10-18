@@ -299,3 +299,11 @@ All three ed943627 remote build lanes failed before browser execution. Logs iden
 - No password reset, account edit, email send, production promotion or real charge. Coverage remains 122 active tools: 28 current-round unreviewed and 94 partial records.
 
 - Regression reproducibility correction: the new preview-origin test initially read its baseline from moving HEAD, which is unsuitable after commit and in shallow CI. It now reads an exact 4291484f fixture with a pinned SHA-256 and LF rule. Baseline contents and assertions are unchanged; the committed-source local rerun passes.
+
+
+## 2026-10-18 actual audio preview continuation
+
+- Formal-site audio cleanup actually processed the supplied original video through Voice clarity free preview. The rendered MP3 decoded fully to 10.1007 s, stereo, 48 kHz, with non-silent first/last samples. A private diagnostic copy and receipts are retained outside Git; this is preview inspection, not a claim that the UI offers preview download or that paid full export passed.
+- Reproduced two stale-result paths: switching to another preset kept the old audio, and removing the only file still left that audio playable. Source now clears preview/results/stage/error on preset/file edits and before another run, resets old duration-derived pricing while new files are inspected, and uses localized failure guidance. Original paid processor failures still reject so retry does not falsely complete or charge anew.
+- Existing actual-output browser regression now additionally generates a free preview and verifies that a preset change removes its audio and save actions. Local actual-function paid-failure and preview-origin regressions pass. The focused six PDF compression page tests also pass on the protected preview after selector repair.
+- Current coverage: 122 active tools, **27 current-round unreviewed and 95 with partial evidence/confirmed defects; all still lack complete feature/delivery sign-off**. No charge, payment creation, account edit or production promotion. The user-assisted authenticated window remains open; extra tool-test tab was closed.
