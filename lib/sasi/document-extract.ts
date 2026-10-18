@@ -4,6 +4,9 @@ import ExcelJS from "exceljs";
 import mammoth from "mammoth";
 import {decodeXmlEntities} from '@/lib/files/xml-entities';
 
+import {readPptxParts} from '@/lib/files/pptx-reader';
+import {odtXmlToText} from '@/lib/files/odt-reader';
+
 const MAX_TEXT=700_000;
 function compact(value:string){
   return value.replace(/\r/g,"").replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim().slice(0,MAX_TEXT);
@@ -68,16 +71,22 @@ export async function extractStructuredDocument(extension:string,bytes:ArrayBuff
     });
     return compact(rows.join("\n"));
   }
-  if(extension==="pptx"){
-    const names=Object.keys(zip.files).filter(n=>/^ppt\/slides\/slide\d+\.xml$/i.test(n)).sort((a,b)=>{
-      const an=Number(a.match(/slide(\d+)/i)?.[1]??0),bn=Number(b.match(/slide(\d+)/i)?.[1]??0);return an-bn;
-    });
-    const slides:string[]=[];
-    for(const [i,name] of names.entries()){
-      const xml=await zip.file(name)!.async("string");
-      slides.push(`## 幻灯片 ${i+1}\n${xmlText(xml)}`);
-    }
-    return compact(slides.join("\n\n"));
+  if(extension==="pptx"||extension==="odt"){
+    const {JSDOM}=await import('jsdom');
+    const dom=new JSDOM('');
+    try{
+      if(extension==='odt'){
+        const raw=await zip.file('content.xml')?.async('string');
+        if(!raw)throw Error('ODT_CONTENT_MISSING');
+        return compact(odtXmlToText(new dom.window.DOMParser().parseFromString(raw,'application/xml')));
+      }
+      const out=await readPptxParts(async name=>zip.file(name)?.async('string'),raw=>{
+        const doc=new dom.window.DOMParser().parseFromString(raw,'application/xml');
+        if(doc.getElementsByTagName('parsererror').length)throw Error('PPTX_XML_INVALID');
+        return doc;
+      });
+      return compact(out.text.replace(/^# Slide (\d+)/gm,'## 幻灯片 $1'));
+    }finally{dom.window.close()}
   }
   if(extension==="epub"){
     // EPUB reading order is defined by its package spine, not ZIP entry order.
@@ -113,11 +122,6 @@ export async function extractStructuredDocument(extension:string,bytes:ArrayBuff
       if(parts.join("\n").length>MAX_TEXT)break;
     }
     return compact(parts.join("\n\n"));
-  }
-  if(extension==="odt"){
-    const file=zip.file("content.xml");
-    if(!file)throw new Error("ODT_CONTENT_MISSING");
-    return xmlText(await file.async("string"));
   }
   throw new Error("DOCUMENT_FORMAT_UNSUPPORTED");
 }

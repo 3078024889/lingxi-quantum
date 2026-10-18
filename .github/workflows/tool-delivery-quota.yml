@@ -39,6 +39,7 @@ jobs:
           node scripts/test-pdf-flatten-references.cjs
           node scripts/test-pdf-basic-forms.cjs
           node scripts/test-paid-context-races.cjs
+          node scripts/test-document-reading-order.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
@@ -57,6 +58,7 @@ jobs:
           image-compression-limit-v104
           timestamp-output-v105 remaining-local-output-v89
           rare-image-recovery-v106
+          document-reading-order-v112 archive-tools-v84
           privacy-cleaner-output-v107
           pdf-search-recovery-v108
           batch-pdf-context-v110 batch-pdf-paid-output-v89

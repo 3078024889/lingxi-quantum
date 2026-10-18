@@ -1,10 +1,13 @@
 "use client";
 
 import ToolUiText from "@/components/tools/ToolUiText";
+import ErrorExplain from '@/components/tools/ErrorExplain';
+import {useLingxiLang} from '@/lib/lingxi-i18n';
+import {workbenchCopy} from '@/lib/tools/workbench-i18n-v1473';
 import {calendarToCsv,contactsToCsv} from "@/lib/tools/shared/calendar-contact";
 import { useState } from "react";
-import {openBoundedArchive,readArchiveText} from '@/lib/files/bounded-archive';
 import {readEpub} from '@/lib/files/epub-reader';
+import {readOdt} from '@/lib/files/odt-reader';
 
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -16,23 +19,18 @@ function textBlob(name:string,text:string,type="text/plain;charset=utf-8"):ToolR
  const blob=new Blob([text],{type});
  return{name,blob,mime:type,size:blob.size};
 }
-function xml(raw:string){return new DOMParser().parseFromString(raw,"application/xml")}
 
 async function epubToText(file:File){
  return (await readEpub(file)).text;
 }
 
 async function odtToText(file:File){
- const zip=await openBoundedArchive(file),raw=await readArchiveText(zip,"content.xml");
- if(!raw)throw new Error("ODT_CONTENT_MISSING");
- const doc=xml(raw),blocks=Array.from(doc.getElementsByTagName("*")).filter(n=>{
-  const name=n.localName;return name==="p"||name==="h";
- }).map(n=>(n.textContent||"").trim()).filter(Boolean);
- return blocks.join("\n");
+ return readOdt(file);
 }
 
 
 export default function LongtailDocumentWorkbench({mode}:{mode:LongtailMode}){
+ const {lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
  const accept=mode==="epub-txt"?".epub,application/epub+zip":mode==="odt-txt"?".odt,application/vnd.oasis.opendocument.text":mode==="ics-csv"?".ics,text/calendar":".vcf,text/vcard,text/x-vcard";
  async function run(){
@@ -54,6 +52,6 @@ export default function LongtailDocumentWorkbench({mode}:{mode:LongtailMode}){
 
   <button disabled={!files.length||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":"开始处理"} /></button>
   {!!results.length&&<ResultPanel files={results} messageZh={`已处理 ${results.length} 个文件。`} messageEn={`Processed ${results.length} file(s).`}/>}
-  {error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}
+  {error&&<div role="alert"><ErrorExplain reasonZh={workbenchCopy(lang,'genericFileHint')} reasonEn={workbenchCopy(lang,'genericFileHint')}/></div>}
  </div>
 }
