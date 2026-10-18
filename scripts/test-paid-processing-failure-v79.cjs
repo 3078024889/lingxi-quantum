@@ -17,6 +17,10 @@ function processor(file,name='run'){
  ['components/tools/PdfToWordWorkbench.tsx','run',[]]
  ]){const test=processor(file,name);await assert.rejects(test.run(...args),/FIXTURE_PROCESSING_FAILURE/,file);assert(test.setters.some(x=>x.name==='setError'&&x.value),'processor must still show its error');}
  for(const [file,args] of [['components/tools/AudioCleanupWorkbench.tsx',[true]],['components/tools/PdfOcrWorkbench.tsx',[1,false]]])await processor(file).run(...args);
+ const audio=processor('components/tools/AudioCleanupWorkbench.tsx'),paidFiles=[{name:'already-paid.mp3'}];let retained=paidFiles;
+ Object.assign(audio.context,{Blob,Uint8Array,TextEncoder,previewUrl:'',preset:'voice',copyBytes:x=>x,fetchFile:async()=>new Uint8Array([1]),URL:{createObjectURL:()=> 'blob:preview',revokeObjectURL(){}},createFfmpegRuntime:async()=>({writeFile:async()=>{},exec:async()=>0,readFile:async()=>new Uint8Array(2048),terminate(){}}),setResults:value=>{retained=value}});
+ await audio.run(true);assert.equal(retained,paidFiles,'free preview must retain the completed full export');
+ await audio.run(false);assert.equal(retained.length,1);assert.equal(retained[0].name,'fixture-clean.mp3');
  const word=processor('components/tools/PdfToWordWorkbench.tsx'),canvas={width:200,height:300};let destroyed=0;
  Object.assign(word.context,{mode:'editable',pageText:async()=>'',openPdf:async()=>({numPages:1,getPage:async()=>({}),destroy:async()=>{destroyed++}}),renderPdfPage:async()=>({canvas}),canvasToBlob:async()=>({})});
  await assert.rejects(word.run(),/FIXTURE_PROCESSING_FAILURE/);assert.equal(destroyed,1);assert.equal(canvas.width,1);assert.equal(canvas.height,1);

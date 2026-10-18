@@ -39,7 +39,7 @@ export default function AudioCleanupWorkbench() {
     if(!files.length){if(!previewOnly)throw Error('PROCESSING_INPUT_MISSING');return}
     setBusy(true);
     setError("");
-    setResults([]);
+    if(!previewOnly)setResults([]);
     setPreviewUrl("");
 
     try {
@@ -98,7 +98,7 @@ export default function AudioCleanupWorkbench() {
         }
       }
 
-      setResults(output);
+      if(!previewOnly)setResults(output);
       setStage("");
     } catch (cause) {
       setStage("");
