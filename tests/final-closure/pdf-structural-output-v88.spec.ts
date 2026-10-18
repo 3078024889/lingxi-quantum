@@ -32,7 +32,7 @@ test('pdf-viewer-preferences: every layout/open-mode and all toggles survive rea
  await upload(page,'pdf-viewer-preferences',await source());const area=page.locator('[data-tool-workbench]'),selects=area.locator('select');
  for(let index=0;index<await selects.count();index++){
   const select=selects.nth(index),values=await select.locator('option').evaluateAll(rows=>rows.map(row=>(row as HTMLOptionElement).value));
-  for(const value of values){await select.selectOption(value);await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));expect(d.catalog.get(PDFName.of(index===0?'PageLayout':'PageMode'))?.toString()).toBe('/'+value)}
+  for(const value of values){const previous=await select.inputValue();await select.selectOption(value);if(value!==previous)await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));expect(d.catalog.get(PDFName.of(index===0?'PageLayout':'PageMode'))?.toString()).toBe('/'+value)}
  }
  const toggles=area.locator('input[type=checkbox]');for(let i=0;i<await toggles.count();i++)await toggles.nth(i).setChecked(i>=2);
  await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));const prefs=d.catalog.lookup(PDFName.of('ViewerPreferences'),PDFDict);expect(prefs.get(PDFName.of('HideToolbar'))?.toString()).toBe('true');expect(prefs.get(PDFName.of('Direction'))?.toString()).toBe('/R2L');

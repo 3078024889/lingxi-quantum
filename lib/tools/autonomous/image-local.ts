@@ -36,10 +36,12 @@ export async function localIdPhoto(file:File,background:string){
  ctx.putImageData(src,0,0);
  return await blobOf(c,"image/png");
 }
-// Use a solid fill only when the selection and independent outside edges agree
-// (three normally, two at the image boundary). Keep photo colors out of flat strips.
+// Use a solid fill when the selection and independent edges agree. A thin
+// near-white image-border strip may also use its actual image edges as anchors;
+// there is no outside pixel there, and sampling the adjacent photo causes bleed.
 function flatBoxBackground(d:Uint8ClampedArray,w:number,h:number,x0:number,y0:number,x1:number,y1:number){
  const area=(x1-x0+1)*(y1-y0+1);if(area<32)return null;
+ const edgeStrip=((x1-x0+1)>=w*.9&&(y1-y0+1)<=h*.15&&(y0===0||y1===h-1))||((y1-y0+1)>=h*.9&&(x1-x0+1)<=w*.15&&(x0===0||x1===w-1));
  const step=Math.max(1,Math.ceil(Math.sqrt(area/16384))),bins=new Map<number,number>();
  let total=0,best=0,bestCount=0;
  for(let y=y0;y<=y1;y+=step)for(let x=x0;x<=x1;x+=step){
@@ -47,19 +49,22 @@ function flatBoxBackground(d:Uint8ClampedArray,w:number,h:number,x0:number,y0:nu
   const key=((d[i]>>4)<<8)|((d[i+1]>>4)<<4)|(d[i+2]>>4),count=(bins.get(key)||0)+1;
   bins.set(key,count);total++;if(count>bestCount){bestCount=count;best=key}
  }
- if(bestCount/total<.7)return null;
+ if(bestCount/total<.7&&!(edgeStrip&&best===0xfff&&bestCount/total>=.65))return null;
  const channels:number[][]=[[],[],[]];
  for(let y=y0;y<=y1;y+=step)for(let x=x0;x<=x1;x+=step){
   const i=(y*w+x)*4,key=((d[i]>>4)<<8)|((d[i+1]>>4)<<4)|(d[i+2]>>4);
   if(key===best)for(let ch=0;ch<3;ch++)channels[ch].push(d[i+ch]);
  }
  const color=channels.map(values=>values.sort((a,b)=>a-b)[Math.floor(values.length/2)]);
+ const whiteStrip=edgeStrip&&color.every(v=>v>=245)&&Math.max(...color)-Math.min(...color)<=8;
  const agrees=(x:number,y:number)=>{const i=(y*w+x)*4;return d[i+3]===255&&color.every((v,ch)=>Math.abs(v-d[i+ch])<=8)};
  const sides=[{hits:0,total:0},{hits:0,total:0},{hits:0,total:0},{hits:0,total:0}];
- for(let x=x0;x<=x1;x++)for(const[side,y]of [[0,y0-1],[1,y1+1]]){if(y<0||y>=h)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
- for(let y=y0;y<=y1;y++)for(const[side,x]of [[2,x0-1],[3,x1+1]]){if(x<0||x>=w)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
+ for(let x=x0;x<=x1;x++)for(const[side,edgeY]of [[0,y0-1],[1,y1+1]]){const y=Math.max(0,Math.min(h-1,edgeY));if(edgeY!==y&&!whiteStrip)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
+ for(let y=y0;y<=y1;y++)for(const[side,edgeX]of [[2,x0-1],[3,x1+1]]){const x=Math.max(0,Math.min(w-1,edgeX));if(edgeX!==x&&!whiteStrip)continue;sides[side].total++;if(agrees(x,y))sides[side].hits++}
  const available=sides.filter(s=>s.total>0),required=available.length===4?3:2;
- return available.filter(s=>s.hits/s.total>=.9).length>=required?color:null;
+ // A one-pixel antialiased photo boundary is significant on a short footer
+ // side. Permit one additional outlier only on these short near-white strips.
+ return available.filter(s=>s.hits>=Math.max(1,Math.ceil(s.total*.9)-(whiteStrip&&s.total>=4&&s.total<=16?1:0))).length>=required?color:null;
 }
 
 export async function localInpaint(file:File,box:NormalizedBox){

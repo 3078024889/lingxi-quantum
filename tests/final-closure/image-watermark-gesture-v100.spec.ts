@@ -1,4 +1,6 @@
 import{test,expect}from'./export-test';
+import sharp from 'sharp';
+import fs from 'node:fs/promises';
 
 test('watermark box survives a real stepped mouse drag and scroll mode preserves selection',async({page})=>{
  await page.goto('/tools/image-watermark-remover?lang=en');
@@ -36,4 +38,20 @@ test('watermark box survives a real stepped mouse drag and scroll mode preserves
  await page.mouse.move(r.x+r.width*.9,r.y+r.height*.5,{steps:12});await page.mouse.up();
  const points=await brush.locator('polyline').getAttribute('points');
  expect(points!.split(' ').length).toBeGreaterThan(8);
+});
+
+test('actual boxed footer repair removes dense lettering without photo bleed or changing unselected pixels (payment isolated)',async({page})=>{
+ const width=80,height=80,input=Buffer.alloc(width*height*4),pixel=(x:number,y:number,rgb:number[])=>input.set([...rgb,255],(y*width+x)*4);
+ for(let y=0;y<height;y++)for(let x=0;x<width;x++)pixel(x,y,y<68?[20,30,40]:[255,255,255]);
+ for(let y=70;y<=74;y++)for(let x=8;x<=71;x++)pixel(x,y,[70,70,70]);for(const y of [68,69])for(const x of [0,79])pixel(x,y,[90,90,90]);
+ const source=await sharp(input,{raw:{width,height,channels:4}}).png().toBuffer();let metadata:unknown;
+ await page.route('**/api/tools/quote**',r=>{const body=r.request().postDataJSON();metadata=body.metadata;return r.fulfill({json:{id:'isolated-footer',tool_id:'image-watermark-remover',quantity:1,unit_name:'image',amount_rmb:1,amount_usd:1,display_amount:1,display_currency:body.currency,currency:body.currency,metadata}})});
+ await page.route('**/api/tools/pay/**',r=>r.request().method()==='GET'?r.fulfill({json:{paid:true,quote:{tool_id:'image-watermark-remover',quantity:1,metadata}}}):r.abort());
+ await page.goto('/tools/image-watermark-remover?lang=en');await page.locator('input[type=file]').setInputFiles({name:'dense-footer.png',mimeType:'image/png',buffer:source});
+ await page.getByRole('button',{name:'Quick box',exact:true}).click();await page.getByRole('button',{name:'Select watermark',exact:true}).click();const surface=page.locator('[data-watermark-surface=box]');await surface.scrollIntoViewIfNeeded();const bounds=(await surface.boundingBox())!;
+ await page.mouse.move(bounds.x+.25,bounds.y+bounds.height*.85);await page.mouse.down();await page.mouse.move(bounds.x+bounds.width-.25,bounds.y+bounds.height-.25,{steps:12});await page.mouse.up();
+ await page.getByRole('button',{name:'See price',exact:true}).click();await expect(page.getByRole('button',{name:'Confirm & pay',exact:true})).toBeVisible();await page.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
+ const save=page.getByRole('button',{name:'Save result',exact:true});await expect(save).toBeVisible();const [download]=await Promise.all([page.waitForEvent('download'),save.click()]);const bytes=await fs.readFile((await download.path())!);const output=await sharp(bytes).ensureAlpha().raw().toBuffer({resolveWithObject:true});expect([output.info.width,output.info.height]).toEqual([width,height]);
+ for(let y=0;y<height;y++)for(let x=0;x<width;x++){const i=(y*width+x)*4;expect([...output.data.subarray(i,i+4)]).toEqual(y>=68?[255,255,255,255]:[...input.subarray(i,i+4)])}
+ await test.info().attach('source-footer',{body:source,contentType:'image/png'});await test.info().attach('saved-clean-footer',{body:bytes,contentType:'image/png'});
 });

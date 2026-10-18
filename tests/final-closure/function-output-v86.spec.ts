@@ -47,6 +47,15 @@ for(const [slug,button]of [['pdf-flatten','Flatten PDF'],['pdf-to-text','PDF to 
 for(const [slug,label]of [['pdf-watermark','Watermark text'],['pdf-header-footer','Header text'],['pdf-bates-numbering','Number prefix']] as const)test(`${slug}: Chinese and emoji annotation produces a real PDF without destroying its original content`,async({page})=>{
  await page.goto(`/tools/${slug}?lang=en`);await upload(page,'source.pdf',await pdf());await page.getByRole('textbox',{name:label,exact:true}).fill('内部资料 🌍');await page.getByRole('button',{name:slug==='pdf-watermark'?'Add PDF watermark':'Process',exact:true}).click();const output=await download(page);const doc=await PDFDocument.load(output);expect(doc.getPageCount()).toBe(3);expect(doc.getPages().map(p=>p.getWidth())).toEqual([400,410,420]);for(const [index,p] of doc.getPages().entries()){const contents=p.node.Contents();const streams=contents instanceof PDFArray?contents.asArray().map(ref=>doc.context.lookup(ref)):[contents];const original=streams.filter((stream):stream is PDFRawStream=>stream instanceof PDFRawStream).map(stream=>Buffer.from(decodePDFRawStream(stream).decode()).toString('latin1')).join('');expect(original.toLowerCase()).toContain(Buffer.from('Original page '+(index+1)).toString('hex'));const x=p.node.Resources()?.lookupMaybe(PDFName.of('XObject'),PDFDict);expect(x?.keys().length??0).toBeGreaterThan(0);}
 });
+
+for(const [slug,fields] of [['pdf-header-footer',['Header text','Footer text']],['pdf-bates-numbering',['Number prefix','Number suffix','Starting number','Number digits']]] as const)test(`${slug}: editing each option removes the previous downloadable file`,async({page})=>{
+ await page.goto(`/tools/${slug}?lang=en`);await upload(page,'source.pdf',await pdf());
+ const run=page.getByRole('button',{name:'Process',exact:true}),save=page.getByRole('button',{name:'Save file',exact:true});
+ await run.click();await expect(save).toBeVisible();
+ for(const [index,label] of fields.entries()){const field=page.getByLabel(label,{exact:true});await field.fill(label==='Starting number'?'99':label==='Number digits'?'4':`Changed-${index}`);await expect(save).toHaveCount(0);await run.click();expect((await PDFDocument.load(await download(page))).getPageCount()).toBe(3)}
+ if(slug==='pdf-header-footer'){await page.getByRole('checkbox',{name:'Add page numbers',exact:true}).uncheck();await expect(save).toHaveCount(0)}
+ await expect(page.locator('[data-tool-workbench]')).not.toContainText('Free ·');
+});
 test('pdf-pages-per-sheet: all four paper-layout choices produce the correct page count',async({page})=>{
  test.setTimeout(60000);await page.goto('/tools/pdf-pages-per-sheet?lang=en');await upload(page,'source.pdf',await pdf());for(const n of [2,4,6,9]){await page.locator('select').filter({has:page.locator('option[value="9"]')}).selectOption(String(n));await page.getByRole('button',{name:'Process',exact:true}).click();expect((await PDFDocument.load(await download(page))).getPageCount()).toBe(Math.ceil(3/n));}
 });
