@@ -5,6 +5,7 @@ test('catastrophic regex times out without freezing the page and the next run su
  await page.locator('input[placeholder="/pattern/gi"]').fill('/(a+)+$/');
  await page.locator('textarea').first().fill('a'.repeat(10000)+'!');
  await page.getByRole('button',{name:'Run',exact:true}).click();
+ await expect(page.locator('input[placeholder="/pattern/gi"]')).toBeDisabled();await expect(page.locator('textarea').first()).toBeDisabled();
  const responsive=await page.evaluate(()=>new Promise<number>(resolve=>setTimeout(()=>resolve(1),100)));
  expect(responsive).toBe(1);
  await expect(page.getByText('Matching took too long. Simplify the expression or use less text.',{exact:true})).toBeVisible({timeout:15000});

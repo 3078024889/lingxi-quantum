@@ -62,6 +62,7 @@ jobs:
           batch-pdf-context-v110 batch-pdf-paid-output-v89
           batch-zip-v83
           pdf-structural-output-v88
+          additional-tool-output-v88 local-tools-v80 developer-real-output regex-recovery-v79
           document-upload-consent-v79 public-site-truth sasi-found-issues-v96
           sasi-prompt-continuation tool-plain-language tool-real-output
           --workers=2 --reporter=list,json

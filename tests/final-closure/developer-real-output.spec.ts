@@ -2,7 +2,7 @@ import {test,expect} from './export-test';
 
 test('integer base conversion preserves values beyond floating point precision and rejects invalid digits',async({page})=>{
  await page.goto('/tools/number-base-converter?lang=en');const input=page.getByPlaceholder('255');await input.fill('9007199254740993');await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveValue('20000000000001');
- await page.getByRole('spinbutton').first().fill('16');await page.getByRole('spinbutton').last().fill('10');await input.fill('20000000000001');await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveValue('9007199254740993');
+ await page.getByRole('spinbutton').first().fill('16');await expect(page.locator('textarea[readonly]')).toHaveCount(0);await page.getByRole('spinbutton').last().fill('10');await input.fill('20000000000001');await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveValue('9007199254740993');
  await page.getByRole('spinbutton').first().fill('2');await input.fill('102');await page.getByRole('button',{name:'Run',exact:true}).click();await expect(page.locator('textarea[readonly]')).toHaveCount(0);await expect(page.getByText('Could not parse the input. Check the format.')).toBeVisible();
 });
 
@@ -17,4 +17,11 @@ test('URL parser retains Unicode query values and fragment',async({page})=>{
 
 test('JWT decoder displays Unicode claims as text without executing them',async({page})=>{
  const header=Buffer.from(JSON.stringify({alg:'none',typ:'JWT'})).toString('base64url'),payload=Buffer.from(JSON.stringify({name:'灵犀场',html:'<script>window.injected=true</script>'})).toString('base64url');await page.goto('/tools/jwt-decoder?lang=en');await page.getByPlaceholder('eyJ...').fill(`${header}.${payload}.`);await page.getByRole('button',{name:'Run',exact:true}).click();expect(JSON.parse(await page.locator('textarea[readonly]').inputValue()).payload.name).toBe('灵犀场');expect(await page.evaluate(()=>Object.hasOwn(window,'injected'))).toBe(false);
+});
+
+test('XML edits clear previous output and parsing errors before the next result',async({page})=>{
+ await page.goto('/tools/xml-formatter?lang=en');const input=page.locator('textarea:not([readonly])'),run=page.getByRole('button',{name:'Run',exact:true});
+ await input.fill('<root><name>你好</name></root>');await run.click();await expect(page.locator('textarea[readonly]')).toHaveValue(/<name>你好<\/name>/);
+ await input.fill('<broken>');await expect(page.locator('textarea[readonly]')).toHaveCount(0);await run.click();await expect(page.getByText('Could not parse the input. Check the format.',{exact:true})).toBeVisible();
+ await input.fill('<root/>');await expect(page.getByText('Could not parse the input. Check the format.',{exact:true})).toHaveCount(0);await run.click();await expect(page.locator('textarea[readonly]')).toHaveValue('<root/>');
 });
