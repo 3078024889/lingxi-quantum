@@ -143,7 +143,7 @@ export default function AudioCleanupWorkbench() {
             key={value}
             type="button"
             disabled={busy}
-            onClick={() => {setPreset(value);setResults([]);setPreviewUrl("");setStage("");setError("")}}
+            onClick={() => {if(value===preset)return;setPreset(value);setResults([]);setPreviewUrl("");setStage("");setError("")}}
             className={`rounded-xl border p-3 text-left text-sm ${
               preset === value
                 ? "border-[var(--lx-line-strong)] bg-[var(--lx-soft)]"
