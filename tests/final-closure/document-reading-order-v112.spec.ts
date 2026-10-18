@@ -28,14 +28,14 @@ test('ODT actual download keeps counted spaces, tab, line break, heading and Uni
  await info.attach('input-whitespace.odt',{body:await archive(odtParts),contentType:'application/vnd.oasis.opendocument.text'});await info.attach('downloaded.txt',{body:text,contentType:'text/plain'});
 });
 for(const raw of ['<unclosed>',odtParts['content.xml'].replace('txt:c="3"','txt:c="1000000000"')])test(`ODT rejects invalid content ${raw.startsWith('<unclosed>')?'XML':'space count'} without a result`,async({page})=>{
- await page.goto('/tools/odt-to-txt?lang=en');await upload(page,{...odtParts,'content.xml':raw},'odt');await page.getByRole('button',{name:'Process',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Check the file format, size and integrity, then try again.');await expect(page.getByRole('alert')).not.toContainText('ODT_');await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+ await page.goto('/tools/odt-to-txt?lang=en');await upload(page,{...odtParts,'content.xml':raw},'odt');await page.getByRole('button',{name:'Process',exact:true}).click();await expect(page.locator('[data-tool-workbench]').getByRole('alert')).toContainText('Check the file format, size and integrity, then try again.');await expect(page.locator('[data-tool-workbench]').getByRole('alert')).not.toContainText('ODT_');await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
 });
 for(const kind of ['ics','vcf'])test(`${kind} incomplete record shows a useful error and replacement recovers`,async({page})=>{
  const broken=kind==='ics'?'BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nSUMMARY:Unfinished\r\n':'BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Unfinished\r\n';
  const valid=kind==='ics'?'BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nSUMMARY:会议\\,测试\r\nDTSTART:20261018T010000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n':'BEGIN:VCARD\r\nVERSION:3.0\r\nFN:张三\\,同事\r\nTEL:+8613800000000\r\nEND:VCARD\r\n';
  await page.goto(`/tools/${kind}-to-csv?lang=en`);
  await page.locator('input[type=file]').first().setInputFiles({name:'broken.'+kind,mimeType:'text/plain',buffer:Buffer.from(broken)});await page.getByRole('button',{name:'Process',exact:true}).click();
- await expect(page.getByRole('alert')).toContainText('Check the file format, size and integrity, then try again.');await expect(page.getByRole('alert')).not.toContainText('NO_COMPLETE_CONTENT_RECORDS');await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
- await page.getByRole('button',{name:'Remove',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);
+ await expect(page.locator('[data-tool-workbench]').getByRole('alert')).toContainText('Check the file format, size and integrity, then try again.');await expect(page.locator('[data-tool-workbench]').getByRole('alert')).not.toContainText('NO_COMPLETE_CONTENT_RECORDS');await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'Remove',exact:true}).click();await expect(page.locator('[data-tool-workbench]').getByRole('alert')).toHaveCount(0);
  await page.locator('input[type=file]').first().setInputFiles({name:'valid.'+kind,mimeType:'text/plain',buffer:Buffer.from(valid)});await page.getByRole('button',{name:'Process',exact:true}).click();expect(await download(page)).toContain(kind==='ics'?'会议,测试':'张三,同事');
 });
