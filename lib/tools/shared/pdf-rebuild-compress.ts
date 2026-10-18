@@ -22,16 +22,18 @@ export async function rebuildCompressedPdf(
   try {
     for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
       const rendered = await renderPdfPage(pdf, pageNumber, config.scale);
-      const { width, height, canvas } = rendered;
+      const { canvas } = rendered;
+      // Raster pixels depend on quality; PDF page dimensions remain points.
+      const sourcePage = await pdf.getPage(pageNumber);
+      const { width, height } = sourcePage.getViewport({ scale: 1 });
       const orientation = width >= height ? "landscape" : "portrait";
 
       if (!doc) {
         doc = new jsPDF({
           orientation,
-          unit: "px",
+          unit: "pt",
           format: [width, height],
           compress: true,
-          hotfixes: ["px_scaling"],
         });
       } else {
         doc.addPage([width, height], orientation);
