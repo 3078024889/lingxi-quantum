@@ -20,7 +20,7 @@ export default function IdGeneratorWorkbench(){
  return <div className="space-y-4" dir={lang==='ar'?'rtl':'ltr'}>
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm">{c.type}<select value={kind} onChange={e=>{setKind(e.target.value as 'uuid'|'ulid');setValues([]);setNotice('')}} className="mt-1 w-full rounded-xl border p-2"><option value="uuid">UUID v4</option><option value="ulid">ULID</option></select></label>
-   <label className="text-sm">{c.count}<EditableNumberInput type="number" min={1} max={10000} step={1} value={count} onChange={e=>setCount(Number(e.target.value))} className="mt-1 w-full rounded-xl border p-2"/></label>
+   <label className="text-sm">{c.count}<EditableNumberInput type="number" min={1} max={10000} step={1} value={count} onChange={e=>{setCount(Number(e.target.value));setValues([]);setNotice('')}} className="mt-1 w-full rounded-xl border p-2"/></label>
   </div>
   <button onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">{c.generate}</button>
   {!!values.length&&<>
