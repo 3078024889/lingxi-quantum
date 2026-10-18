@@ -24,6 +24,19 @@ test('pdf-remove-annotations: real annotation dictionaries disappear and page co
  const d=await PDFDocument.load(await source());d.getPage(0).node.set(PDFName.of('Annots'),d.context.obj([d.context.register(d.context.obj({Type:'Annot',Subtype:'Text',Rect:[10,10,30,30],Contents:'Private note'}))]));
  await upload(page,'pdf-remove-annotations',Buffer.from(await d.save()));await page.getByRole('button',{name:'Process',exact:true}).click();const out=await PDFDocument.load(await download(page));expect(out.getPageCount()).toBe(2);for(const p of out.getPages()){expect(p.node.has(PDFName.of('Annots'))).toBe(false);expect(p.node.Contents()).toBeTruthy()}
 });
+test('pdf-remove-annotations: comments disappear while saved form controls, values and editability survive',async({page},info)=>{
+ const d=await PDFDocument.load(await source()),p=d.getPage(0),form=d.getForm();
+ const text=form.createTextField('customer');text.setText('AUDIT CUSTOMER');text.addToPage(p,{x:20,y:100,width:240,height:25});
+ const checkbox=form.createCheckBox('approved');checkbox.addToPage(p,{x:20,y:65,width:20,height:20});checkbox.check();
+ const select=form.createDropdown('plan');select.addOptions(['BASIC','PREMIUM']);select.select('PREMIUM');select.addToPage(p,{x:55,y:60,width:180,height:25});
+ for(const subtype of ['Text','Highlight','Stamp'])p.node.Annots()!.push(d.context.register(d.context.obj({Type:'Annot',Subtype:subtype,Rect:[10,10,30,30],Contents:'Private note'})));
+ const input=Buffer.from(await d.save());await upload(page,'pdf-remove-annotations',input);await page.getByRole('button',{name:'Process',exact:true}).click();const output=await download(page),out=await PDFDocument.load(output);
+ expect(out.getPageCount()).toBe(2);expect(out.getPage(0).node.Annots()!.size()).toBe(3);expect(out.getForm().getFields()).toHaveLength(3);
+ for(const ref of out.getPage(0).node.Annots()!.asArray())expect(out.context.lookup(ref,PDFDict).get(PDFName.of('Subtype'))!.toString()).toBe('/Widget');
+ expect(out.getForm().getTextField('customer').getText()).toBe('AUDIT CUSTOMER');expect(out.getForm().getCheckBox('approved').isChecked()).toBe(true);expect(out.getForm().getDropdown('plan').getSelected()).toEqual(['PREMIUM']);expect(pageContent(out,0)).toEqual(pageContent(await PDFDocument.load(input),0));
+ out.getForm().getTextField('customer').setText('STILL EDITABLE');const edited=await PDFDocument.load(await out.save());expect(edited.getForm().getTextField('customer').getText()).toBe('STILL EDITABLE');
+ await info.attach('input-comments-and-form.pdf',{body:input,contentType:'application/pdf'});await info.attach('downloaded-form-preserved.pdf',{body:output,contentType:'application/pdf'});
+});
 test('pdf-grayscale: downloaded image streams really have equal RGB channels',async({page})=>{
  await upload(page,'pdf-grayscale',await source());await page.getByRole('button',{name:'Process',exact:true}).click();const d=await PDFDocument.load(await download(page));expect(d.getPageCount()).toBe(2);let count=0;
  for(const [,object]of d.context.enumerateIndirectObjects()){if(object instanceof PDFRawStream&&object.dict.get(PDFName.of('Subtype'))===PDFName.of('Image')){const stats=await sharp(Buffer.from(object.contents)).stats();for(const channel of stats.channels.slice(1,3))expect(channel.mean).toBeCloseTo(stats.channels[0].mean,1);count++}}expect(count).toBe(2);

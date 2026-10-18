@@ -41,6 +41,7 @@ jobs:
           node scripts/test-paid-context-races.cjs
           node scripts/test-document-reading-order.cjs
           node scripts/test-developer-document-content.cjs
+          node scripts/test-pdf-comment-widgets.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
