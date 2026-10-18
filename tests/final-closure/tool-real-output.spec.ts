@@ -88,7 +88,7 @@ test('image to PDF preserves pixel dimensions, page aspect ratio and embeds the 
 for(const preset of ['high','balanced','small'])test('PDF compression preserves physical mixed page sizes: '+preset,async({page})=>{
  const input=await PDFDocument.create();input.addPage([180,260]);input.addPage([420,300]);input.addPage([200,320]).setRotation(degrees(90));
  await page.goto('/tools/compress-pdf?lang=en');await page.locator('[data-tool-workbench] input[type=file]').setInputFiles({name:'mixed.pdf',mimeType:'application/pdf',buffer:Buffer.from(await input.save())});
- const choices=page.getByRole('combobox');await choices.selectOption(preset);await page.getByRole('button',{name:'Process now',exact:true}).click();
+ const choices=page.locator('[data-tool-workbench]').getByRole('combobox');await expect(choices).toHaveCount(1);await choices.selectOption(preset);await page.getByRole('button',{name:'Process now',exact:true}).click();
  const doc=await PDFDocument.load(await saveOutput(page));expect(doc.getPageCount()).toBe(3);for(const [i,[w,h]] of [[180,260],[420,300],[320,200]].entries()){expect(doc.getPages()[i].getWidth()).toBeCloseTo(w,2);expect(doc.getPages()[i].getHeight()).toBeCloseTo(h,2)}
  await choices.selectOption(preset==='small'?'high':'small');await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
 });

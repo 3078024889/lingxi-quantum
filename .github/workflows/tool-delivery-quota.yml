@@ -28,6 +28,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Isolated export authorization contracts
         run: |
+          node scripts/test-preview-request-origin.cjs
           node scripts/test-file-delivery-v91.cjs
           node scripts/test-export-access-v92.cjs
           node scripts/test-daily-export-api-v92.cjs
