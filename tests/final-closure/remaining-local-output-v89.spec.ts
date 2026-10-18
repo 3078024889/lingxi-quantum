@@ -21,3 +21,15 @@ test('subtitle-tools downloads SRT VTT and TXT with shifted timing and Unicode t
 test('timestamp-converter gives the same actual ISO time for all four integer units',async({page})=>{
  await page.goto('/tools/timestamp-converter?lang=en');const area=page.locator('[data-tool-workbench]'),input=area.locator('input').first();for(const [unit,value]of [['s','1'],['ms','1000'],['us','1000000'],['ns','1000000000']]){await area.getByRole('combobox').first().selectOption(unit);await input.fill(value);await expect(area).toContainText('1970-01-01T00:00:01.000Z')}
 });
+
+test('subtitle timing edits invalidate old files and rounded timestamps carry into the next minute',async({page})=>{
+ await page.goto('/tools/subtitle-tools?lang=en');const area=page.locator('[data-tool-workbench]');
+ await area.locator('textarea').fill('1\n00:00:59,999 --> 00:01:01,000\nHello 世界\n');
+ const run=area.getByRole('button',{name:/Create SRT/});await run.click();await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(3);
+ const numbers=area.locator('input[type=number]');
+ for(const [index,value] of [[0,'500'],[1,'1.00001'],[2,'24'],[3,'25']] as const){await numbers.nth(index).fill(value);await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);await run.click();await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(3)}
+ await area.locator('input[type=checkbox]').uncheck();await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+ await numbers.nth(0).fill('0');await numbers.nth(2).fill('0');await numbers.nth(3).fill('0');await run.click();
+ expect((await save(page,0)).toString('utf8')).toContain('00:01:00,000 --> 00:01:01,001');
+ expect((await save(page,1)).toString('utf8')).toContain('00:01:00.000 --> 00:01:01.001');
+});

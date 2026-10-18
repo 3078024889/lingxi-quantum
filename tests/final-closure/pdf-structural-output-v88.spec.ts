@@ -8,7 +8,7 @@ async function download(page:Page){const button=page.getByRole('button',{name:'S
 function pageContent(doc:PDFDocument,index:number){const contents=doc.getPage(index).node.Contents();const refs=contents instanceof PDFArray?contents.asArray():[contents];return Buffer.concat(refs.map(ref=>Buffer.from(decodePDFRawStream(doc.context.lookup(ref,PDFRawStream)).decode())))}
 test('pdf-rasterize: every resolution preserves the physical page size',async({page})=>{
  await upload(page,'pdf-rasterize',await source());const control=page.locator('[data-tool-workbench] select');
- for(const scale of ['1','1.5','2']){await control.selectOption(scale);await page.getByRole('button',{name:'Process',exact:true}).click();const pdf=await PDFDocument.load(await download(page));expect(pdf.getPages().map(p=>p.getSize())).toEqual([{width:400,height:300},{width:400,height:300}]);}
+ for(const scale of ['1','1.5','2']){await control.selectOption(scale);await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);await page.getByRole('button',{name:'Process',exact:true}).click();const pdf=await PDFDocument.load(await download(page));expect(pdf.getPages().map(p=>p.getSize())).toEqual([{width:400,height:300},{width:400,height:300}]);}
 });
 for(const name of ['proof.txt','input.pdf'])test(`pdf-attachments: add, inspect and remove ${name} without losing the result`,async({page})=>{
  test.setTimeout(90000);await upload(page,'pdf-attachments',await source());await page.getByRole('button',{name:'Inspect PDF',exact:true}).click();

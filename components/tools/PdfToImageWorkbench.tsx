@@ -21,6 +21,7 @@ export default function PdfToImageWorkbench(){
  const abort=useRef(false);
  const [result,setResult]=useState<ToolResultFile[]>([]);
  async function choose(input:File){
+  if(busy)return;
   if(!confirmDocumentUpload([input],lang))return;
   setBusy(true);setError("");setResult([]);
   try{const f=await normalizeDocumentFile(input);setFile(f);const pdf=await openPdf(f);setPages(pdf.numPages);setRange(`1-${pdf.numPages}`);pdf.destroy?.()}
@@ -35,17 +36,17 @@ export default function PdfToImageWorkbench(){
   }catch(e){setError(e instanceof Error?e.message:String(e))}finally{pdf?.destroy?.();setBusy(false);setStage("")}
  }
  return <div className="space-y-4">
-  <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)void choose(f)}} className="block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-7 text-center">
-   <input type="file" accept={DOCUMENT_INPUT_ACCEPT} className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)void choose(f)}}/>
+  <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();if(busy)return;const f=e.dataTransfer.files?.[0];if(f)void choose(f)}} className="block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-7 text-center">
+   <input type="file" disabled={busy} accept={DOCUMENT_INPUT_ACCEPT} className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)void choose(f)}}/>
    <b>{busy?documentIntakeText(lang,"busy"):documentIntakeText(lang,"hint")}</b>
   </label>
   {file&&<div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm text-[var(--lx-ink)]">{file.name} · {pages}</div>}
-  <div className="grid gap-3 sm:grid-cols-4">
+  <fieldset disabled={busy} onChangeCapture={()=>{setResult([]);setError("");setStage("")}} className="grid gap-3 sm:grid-cols-4">
    <label className="text-sm">Pages<input value={range} onChange={e=>setRange(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2" placeholder="1-5,8"/></label>
    <label className="text-sm">Format<select value={format} onChange={e=>setFormat(e.target.value as any)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"><option value="jpeg">JPG</option><option value="png">PNG</option></select></label>
    <label className="text-sm">Scale<select value={scale} onChange={e=>setScale(Number(e.target.value))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"><option value="1">1x</option><option value="1.5">1.5x</option><option value="2">2x</option><option value="3">3x</option></select></label>
    <label className="text-sm">JPG<EditableNumberInput type="number" min=".4" max="1" step=".05" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"/></label>
-  </div>
+  </fieldset>
   <div className="flex gap-3"><button disabled={!file||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?documentIntakeText(lang,"busy"):"Convert"}</button>{busy&&<button onClick={()=>abort.current=true} className="rounded-xl border border-[var(--lx-danger)] px-5 py-2.5 text-sm text-[var(--lx-danger)]">Cancel</button>}</div>
   {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}{result.length>0&&<ResultPanel files={result} sourceSlug="pdf-to-jpg"/>}
  </div>;
