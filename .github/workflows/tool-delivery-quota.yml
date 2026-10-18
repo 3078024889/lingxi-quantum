@@ -40,6 +40,7 @@ jobs:
           node scripts/test-pdf-basic-forms.cjs
           node scripts/test-paid-context-races.cjs
           node scripts/test-document-reading-order.cjs
+          node scripts/test-developer-document-content.cjs
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
