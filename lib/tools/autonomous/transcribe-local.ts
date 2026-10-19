@@ -60,7 +60,9 @@ async function pipelineFor(device:"webgpu"|"wasm",onProgress?:(p:number,msg:stri
  const pipe=await mod.pipeline(
   "automatic-speech-recognition",
   "onnx-community/whisper-tiny",
-  {device,progress_callback:(x:any)=>{
+  // The same-origin manifest contains q8 weights; implicit fp32 selection
+  // otherwise misses those files and downloads a different model remotely.
+  {device,dtype:"q8",progress_callback:(x:any)=>{
    if(typeof x?.progress==="number")onProgress?.(Math.max(0,Math.min(1,x.progress/100)),"正在准备语音识别能力…");
   }}
  );
@@ -97,4 +99,10 @@ export function toSrt(segments:LocalSegment[]){
  const t=(sec:number)=>{const ms=Math.max(0,Math.round(sec*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000;return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")},${String(x).padStart(3,"0")}`};
  return segments.map((x,i)=>`${i+1}\n${t(x.start)} --> ${t(x.end)}\n${x.text}`).join("\n\n");
 }
-export function toVtt(segments:LocalSegment[]){return"WEBVTT\n\n"+toSrt(segments).replace(/,/g,".").replace(/^\d+\n/gm,"")}
+export function toVtt(segments:LocalSegment[]){
+ const time=(sec:number)=>{
+  const ms=Math.max(0,Math.round(sec*1000));
+  return `${String(Math.floor(ms/3600000)).padStart(2,"0")}:${String(Math.floor(ms%3600000/60000)).padStart(2,"0")}:${String(Math.floor(ms%60000/1000)).padStart(2,"0")}.${String(ms%1000).padStart(3,"0")}`;
+ };
+ return "WEBVTT\n\n"+segments.map(x=>`${time(x.start)} --> ${time(x.end)}\n${x.text}`).join("\n\n");
+}

@@ -5,9 +5,12 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import ResultPanel from "@/components/tools/ResultPanel";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {plainText} from "@/lib/tools/plain-copy";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {localMediaDuration,transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 import {extractCompactAudio} from "@/lib/tools/media/client";
+import {translateTimedText} from "@/lib/tools/media/translate-timed-text";
 import {concatMp3,muxTranslatedVideo,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
 import {newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
@@ -18,8 +21,6 @@ const LANGS=[
 type Target=typeof LANGS[number][0];
 type Mode="subtitle"|"dub";
 
-function chunks<T>(items:T[],n:number){const out:T[][]=[];for(let i=0;i<items.length;i+=n)out.push(items.slice(i,i+n));return out}
-function marker(i:number){return `⟦LX${String(i).padStart(4,"0")}⟧`}
 function splitTts(text:string,max=10500){
  const parts:string[]=[];let cur="";
  for(const piece of text.split(/(?<=[。！？.!?])\s*/)){
@@ -34,21 +35,7 @@ async function apiTranslate(text:string,source:string,target:string,quoteId:stri
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
 }
 async function translateTimed(input:TimedText[],source:string,target:string,quoteId:string){
- const out:TimedText[]=[];let base=0;
- for(const group of chunks(input,24)){
-  const payload=group.map((x,i)=>`${marker(base+i)} ${x.text}`).join("\n");
-  const translated=await apiTranslate(payload,source,target,quoteId);
-  const map=new Map<number,string>();
-  const re=/⟦LX(\d{4})⟧\s*([\s\S]*?)(?=⟦LX\d{4}⟧|$)/g;let m:RegExpExecArray|null;
-  while((m=re.exec(translated)))map.set(Number(m[1]),m[2].trim());
-  if(map.size!==group.length){
-   for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:await apiTranslate(x.text,source,target,quoteId)})}
-  }else{
-   for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:map.get(base+i)||x.text})}
-  }
-  base+=group.length;
- }
- return out;
+ return translateTimedText(input,source,target,text=>apiTranslate(text,source,target,quoteId));
 }
 async function remoteTranscribe(file:File,quoteId:string){
  const compact=await extractCompactAudio(file);
@@ -63,6 +50,7 @@ async function remoteTts(text:string,target:string,quoteId:string){
 function blobFile(name:string,text:string,mime:string):ToolResultFile{const b=new Blob([text],{type:mime});return{name,blob:b,mime,size:b.size}}
 
 export default function VideoTranslateWorkbench(){
+ const{lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("auto"),[targets,setTargets]=useState<Target[]>(["en"]),[mode,setMode]=useState<Mode>("subtitle"),[durations,setDurations]=useState<number[]>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[videos,setVideos]=useState<ToolResultFile[]>([]),[subs,setSubs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState("");
  useEffect(()=>{let off=false;(async()=>{const ds=[] as number[];for(const f of files)ds.push(await localMediaDuration(f).catch(()=>60));if(!off)setDurations(ds)})();return()=>{off=true}},[files]);
  const startedMinutes=useMemo(()=>durations.reduce((n,d)=>n+Math.max(1,Math.ceil(d/60)),0),[durations]);
@@ -98,7 +86,7 @@ export default function VideoTranslateWorkbench(){
     for(let ti=0;ti<targets.length;ti++){
       const target=targets[ti];
       setStage(`${fi+1}/${files.length} · ${ti+1}/${targets.length} · 正在翻译字幕…`);
-      const translated=source===target?original:await translateTimed(original,source,target,quoteId);
+      const translated=await translateTimed(original,source,target,quoteId);
       const srt=toSrtTimed(translated),vtt=toVttTimed(translated),txt=translated.map(x=>x.text).join("\n");
       so.push(blobFile(`${stem}-${target}.srt`,srt,"application/x-subrip;charset=utf-8"));
       so.push(blobFile(`${stem}-${target}.vtt`,vtt,"text/vtt;charset=utf-8"));
@@ -117,7 +105,7 @@ export default function VideoTranslateWorkbench(){
     }
    }
    setVideos(vo);setSubs(so);setStage("全部视频翻译完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(plainText(lang,"fileError"));setStage("");throw e}
   finally{setBusy(false)}
  }
  return <div className="space-y-5">

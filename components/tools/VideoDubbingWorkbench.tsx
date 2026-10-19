@@ -4,9 +4,12 @@ import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
+import{useLingxiLang}from"@/lib/lingxi-i18n";
+import{plainText}from"@/lib/tools/plain-copy";
 import type{ToolResultFile}from"@/lib/tools/types";
 import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/transcribe-local";
 import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
+import{translateTimedText,type TimedTranslation}from"@/lib/tools/media/translate-timed-text";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
@@ -27,6 +30,7 @@ async function remoteTranscribe(file:File,quoteId:string){
 }
 
 export default function VideoDubbingWorkbench(){
+ const{lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[minutes,setMinutes]=useState(0),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
  useEffect(()=>{let off=false;(async()=>{let total=0;for(const f of files){try{total+=Math.max(1,Math.ceil((await localMediaDuration(f))/60))}catch{total+=1}}if(!off)setMinutes(total)})();return()=>{off=true}},[files]);
  useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setMinutes(Number(d.state?.minutes||0))}setDraftReady(true)})()},[]);
@@ -39,19 +43,21 @@ export default function VideoDubbingWorkbench(){
   try{
    for(let i=0;i<files.length;i++){
     const f=files[i];setStage(`${i+1}/${files.length} · 正在识别语音…`);
-    let text="",srt="";
+    let original:TimedTranslation[]=[];
     try{
      const local=await transcribeLocal(f,(p,m)=>setStage(`${i+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
-     text=local.text;srt=toSrt(local.segments);
+     original=local.segments;
+     if(!original.length&&local.text)original=[{start:0,end:await localMediaDuration(f),text:local.text}];
     }catch{
      setStage(`${i+1}/${files.length} · 正在使用兼容识别…`);
-     text=await remoteTranscribe(f,quoteId);
+     const text=await remoteTranscribe(f,quoteId);
      const duration=await localMediaDuration(f).catch(()=>60);
-     srt=`1\n00:00:00,000 --> ${new Date(Math.max(1000,duration*1000)).toISOString().slice(11,23).replace(".",",")}\n${text}`;
+     original=[{start:0,end:Math.max(1,duration),text}];
     }
     setStage(`${i+1}/${files.length} · 正在翻译…`);
-    const translated=source===target?text:await remoteTranslate(text,source,target,quoteId);
-    const translatedSrt=srt.replace(text,translated);
+    const translatedCues=await translateTimedText(original,source,target,text=>remoteTranslate(text,source,target,quoteId));
+    const translated=translatedCues.map(cue=>cue.text).join('\n');
+    const translatedSrt=toSrt(translatedCues);
     const sb=new Blob([translatedSrt],{type:"text/plain;charset=utf-8"});
     subs.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
     setStage(`${i+1}/${files.length} · 正在生成配音…`);
@@ -61,7 +67,7 @@ export default function VideoDubbingWorkbench(){
     videos.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}-dubbed.mp4`,blob:dubbed,mime:"video/mp4",size:dubbed.size});
    }
    setOutputs(videos);setSubtitles(subs);setStage("处理完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(plainText(lang,"fileError"));setStage("");throw e}
   finally{setBusy(false)}
  }
 
