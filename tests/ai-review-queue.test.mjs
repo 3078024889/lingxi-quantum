@@ -11,3 +11,6 @@ test("cannot approve without reviewer evidence",()=>assert.notEqual(run([{...pen
 test("rejects unsafe URL",()=>assert.notEqual(run([{...pending,official_url:"http://127.0.0.1"}]).code,0));
 test("rejects duplicate ids",()=>assert.notEqual(run([pending,pending]).code,0));
 test("approved decision records reviewer and date",()=>{const r=run([{...pending,status:"approved",reviewer:"editor",reviewed_at:"2026-10-26T00:00:00Z"}]);assert.equal(r.code,0);assert.equal(r.output[0].reviewer,"editor");});
+
+test("rejects loopback, private and IPv6 literal hosts",()=>{for(const host of ["https://127.0.0.1","https://172.16.0.1","https://[::1]","https://metadata.internal"])assert.notEqual(run([{...pending,official_url:host}]).code,0,host);});
+test("rejects invalid URL gracefully",()=>assert.notEqual(run([{...pending,official_url:"not-a-url"}]).code,0));
