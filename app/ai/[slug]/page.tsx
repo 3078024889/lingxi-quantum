@@ -1,0 +1,7 @@
+import {notFound} from "next/navigation";
+import type {Metadata} from "next";
+import Link from "next/link";
+import {aiTools} from "../../../lib/ai-discovery/catalog";
+export function generateStaticParams(){return aiTools.map(t=>({slug:t.slug}));}
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const t=aiTools.find(x=>x.slug===slug);return t?{title:`${t.name} | AI Tools | LINGXIFIELD`,description:t.description,alternates:{canonical:`https://lingxifield.com/ai/${t.slug}`}}:{title:"Tool not found"};}
+export default async function ToolPage({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const t=aiTools.find(x=>x.slug===slug);if(!t)notFound();return <main style={{maxWidth:800,margin:"0 auto",padding:"48px 20px",fontFamily:"system-ui"}}><Link href="/ai">← All AI tools</Link><h1>{t.name}</h1><p>{t.description}</p><p>Category: {t.category}</p><p>Pricing model: {t.pricing} (verify current plans on the official site)</p><p>Catalog review date: {t.verifiedAt}</p><a href={t.url} target="_blank" rel="noopener noreferrer nofollow">Visit official website ↗</a><p>Ranking and GEO metrics are not yet measured for this tool.</p></main>}
