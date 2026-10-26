@@ -23,6 +23,8 @@ jobs:
         run: node scripts/ai-discovery/append-github-history.mjs
       - name: Verify source data
         run: node --test tests/ai-github-observations.test.mjs tests/ai-github-refresh.test.mjs tests/ai-github-history.test.mjs
+      - name: Audit source history and anomalies
+        run: node scripts/ai-discovery/audit-snapshots.mjs
       - name: Upload reviewable artifacts (never deploy)
         uses: actions/upload-artifact@v4
         with:
