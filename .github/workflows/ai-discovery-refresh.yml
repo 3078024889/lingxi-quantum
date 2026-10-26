@@ -22,7 +22,7 @@ jobs:
       - name: Append history
         run: node scripts/ai-discovery/append-github-history.mjs
       - name: Verify source data
-        run: node --test tests/ai-github-observations.test.mjs tests/ai-github-refresh.test.mjs tests/ai-github-history.test.mjs
+        run: node --test tests/ai-*.test.mjs
       - name: Audit source history and anomalies
         run: node scripts/ai-discovery/audit-snapshots.mjs
       - name: Upload reviewable artifacts (never deploy)
