@@ -19,9 +19,9 @@ for(const record of source){
  if(typeof record.official_url!=="string")throw Error("Missing official URL");
  let url;try{url=new URL(record.official_url);}catch{throw Error("Invalid official URL");}
  const host=url.hostname.toLowerCase();
- const ip4=/^(\\d{1,3}\\.){3}\\d{1,3}$/.test(host);
+ const ip4=/^([0-9]{1,3}[.]){3}[0-9]{1,3}$/.test(host);
  const blocked=host==="localhost"||host.endsWith(".localhost")||host.endsWith(".local")||host.endsWith(".internal")||host==="[::1]"||host.startsWith("[")||ip4;
- if(url.protocol!=="https:"||url.username||url.password||!url.hostname.includes(".")||/^(localhost|127\.|10\.|192\.168\.|169\.254\.)/.test(url.hostname))throw Error("Unsafe official URL");
+ if(url.protocol!=="https:"||url.username||url.password||!host.includes(".")||blocked)throw Error("Unsafe official URL");
  if(record.status!=="pending"&&(!record.reviewer||!record.reviewed_at||!Number.isFinite(Date.parse(record.reviewed_at))))throw Error("Decision needs reviewer and review timestamp");
  results.push({id:record.id,name:record.name.trim(),official_url:url.toString(),status:record.status,reviewer:record.reviewer||null,reviewed_at:record.reviewed_at||null,decision_reason:typeof record.decision_reason==="string"?record.decision_reason.slice(0,500):null});
 }
