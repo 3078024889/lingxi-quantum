@@ -16,5 +16,5 @@ for(const [locale,labels] of Object.entries(messages)){assert.equal(Object.keys(
 test("no fabricated popularity numbers or unreviewed public writes",()=>{
 const sql=read("supabase/migrations/20261026150000_ai_discovery_evidence.sql");
 assert.match(sql,/enable row level security/);assert.doesNotMatch(sql,/for insert to anon|for all to anon/i);
-const page=read("app/ai/rankings/page.tsx");assert.match(page,/not verified/);assert.match(page,/not rankings/);
+const page=read("app/ai/rankings/page.tsx");assert.match(page,/not currently verified/);assert.match(page,/not rankings/);
 });
