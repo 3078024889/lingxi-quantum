@@ -4,6 +4,7 @@ import {join} from "node:path";
 import {validateCatalogSnapshot} from "./ai-market-snapshot-guard.mjs";
 const folder="reports/ai-market";
 const files=(await readdir(folder).catch(()=>[])).filter(n=>/^openrouter-\d{4}-\d{2}-\d{2}\.json$/.test(n)).sort();
+if(files.length===0)throw new Error("No model snapshots found; refusing empty manifest");
 const rows=[];
 for(const name of files){
  const doc=JSON.parse(await readFile(join(folder,name),"utf8"));
