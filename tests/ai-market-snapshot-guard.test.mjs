@@ -1,0 +1,10 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {validateCatalogSnapshot} from "../scripts/ai-market-snapshot-guard.mjs";
+const valid=()=>({source:"https://openrouter.ai/api/v1/models",observedAt:new Date().toISOString(),redistributionStatus:"review-required",modelCount:1,models:[{id:"vendor/model",context_length:8192,pricing:{prompt:"0.000001",completion:"0"}}]});
+test("accepts correctly attributed model snapshot",()=>assert.equal(validateCatalogSnapshot(valid()).ok,true));
+test("rejects duplicates",()=>{const x=valid();x.models.push({...x.models[0]});x.modelCount=2;assert.equal(validateCatalogSnapshot(x).ok,false);});
+test("rejects negative prices",()=>{const x=valid();x.models[0].pricing.prompt="-1";assert.equal(validateCatalogSnapshot(x).ok,false);});
+test("rejects mismatched counts",()=>{const x=valid();x.modelCount=9;assert.equal(validateCatalogSnapshot(x).ok,false);});
+test("rejects stale data",()=>{const x=valid();x.observedAt="2020-01-01T00:00:00Z";assert.equal(validateCatalogSnapshot(x).ok,false);});
+test("rejects unreviewed redistribution",()=>{const x=valid();x.redistributionStatus="approved";assert.equal(validateCatalogSnapshot(x).ok,false);});
