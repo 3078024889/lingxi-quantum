@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Local-only moderation queue. Never exposes submissions or contact details via HTTP. */
-import {readFileSync,writeFileSync,renameSync,unlinkSync,existsSync} from "node:fs";
+import {readFileSync,writeFileSync,linkSync,unlinkSync,existsSync} from "node:fs";
 import {resolve,dirname,join} from "node:path";
 import {randomUUID} from "node:crypto";
 const input=process.argv[2];
@@ -26,5 +26,5 @@ for(const record of source){
  results.push({id:record.id,name:record.name.trim(),official_url:url.toString(),status:record.status,reviewer:record.reviewer||null,reviewed_at:record.reviewed_at||null,decision_reason:typeof record.decision_reason==="string"?record.decision_reason.slice(0,500):null});
 }
 const path=resolve(output),tmp=join(dirname(path),".review-"+randomUUID()+".tmp");
-try{writeFileSync(tmp,JSON.stringify(results,null,2)+"\n",{flag:"wx"});if(readFileSync(tmp,"utf8").length<2)throw Error("Empty output");renameSync(tmp,path);}finally{try{unlinkSync(tmp);}catch{}}
+try{writeFileSync(tmp,JSON.stringify(results,null,2)+"\n",{flag:"wx"});if(readFileSync(tmp,"utf8").length<2)throw Error("Empty output");linkSync(tmp,path);}finally{try{unlinkSync(tmp);}catch{}}
 console.log(JSON.stringify({count:results.length,pending:results.filter(x=>x.status==="pending").length,approved:results.filter(x=>x.status==="approved").length,rejected:results.filter(x=>x.status==="rejected").length}));

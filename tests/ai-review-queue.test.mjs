@@ -14,3 +14,5 @@ test("approved decision records reviewer and date",()=>{const r=run([{...pending
 
 test("rejects loopback, private and IPv6 literal hosts",()=>{for(const host of ["https://127.0.0.1","https://172.16.0.1","https://[::1]","https://metadata.internal"])assert.notEqual(run([{...pending,official_url:host}]).code,0,host);});
 test("rejects invalid URL gracefully",()=>assert.notEqual(run([{...pending,official_url:"not-a-url"}]).code,0));
+
+test("never overwrites an existing review export",()=>{const dir=mkdtempSync(join(tmpdir(),"ai-review-"));try{const input=join(dir,"in.json"),output=join(dir,"out.json");writeFileSync(input,JSON.stringify([pending]));writeFileSync(output,"KEEP_EXISTING");const r=spawnSync(process.execPath,["scripts/ai-discovery/review-queue.mjs",input,output],{encoding:"utf8"});assert.notEqual(r.status,0);assert.equal(readFileSync(output,"utf8"),"KEEP_EXISTING");}finally{rmSync(dir,{recursive:true,force:true});}});
