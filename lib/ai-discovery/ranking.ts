@@ -1,9 +1,10 @@
 import type {EvidenceInput,Metric} from "./evidence";
-import {evidenceComparable} from "./evidence";
+import {evidenceComparable,isPublicEvidenceUrl} from "./evidence";
 export type ReviewedEvidence=EvidenceInput&{reviewedAt:string;reviewer:string;sourceChecked:boolean;status:"approved"};
 export type RankedTool={slug:string;value:number;unit:string;sourceUrl:string;sourceName:string;observedAt:string;kind:EvidenceInput["kind"]};
 export type RankingResult={status:"unavailable";reason:string}|{status:"available";metric:Metric;geography:string;periodStart:string;periodEnd:string;unit:string;entries:RankedTool[]};
-const validReview=(r:ReviewedEvidence)=>r.status==="approved"&&r.sourceChecked===true&&r.reviewer.trim().length>0&&Number.isFinite(Date.parse(r.reviewedAt));
+const validTimestamp=(value:string)=>typeof value==="string"&&Number.isFinite(Date.parse(value))&&Date.parse(value)<=Date.now()+86400000;
+const validReview=(r:ReviewedEvidence)=>r.status==="approved"&&r.sourceChecked===true&&typeof r.reviewer==="string"&&r.reviewer.trim().length>0&&validTimestamp(r.reviewedAt)&&validTimestamp(r.observedAt)&&Date.parse(r.reviewedAt)>=Date.parse(r.observedAt)&&typeof r.toolSlug==="string"&&r.toolSlug.length>0&&typeof r.sourceName==="string"&&r.sourceName.trim().length>0&&typeof r.unit==="string"&&r.unit.trim().length>0&&isPublicEvidenceUrl(r.sourceUrl);
 export function rankComparableEvidence(records:readonly ReviewedEvidence[],metric:Metric,geography:string,periodStart:string,periodEnd:string):RankingResult{
  const candidates=records.filter(r=>validReview(r)&&r.metricKey===metric&&r.geography===geography&&r.periodStart===periodStart&&r.periodEnd===periodEnd&&Number.isFinite(r.value)&&r.value>=0);
  if(!candidates.length)return {status:"unavailable",reason:"No independently reviewed observations for this metric, region and period."};
