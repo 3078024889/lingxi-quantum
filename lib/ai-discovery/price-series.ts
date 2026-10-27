@@ -1,12 +1,11 @@
-/** Verified, same-source time series. Missing observations are never interpolated. */
+/** Same-source dated price observations. No interpolation or synthetic values. */
 export type PricePoint={observedAt:string;prompt:number|null;completion:number|null};
 export type PriceSeries={id:string;source:string;points:PricePoint[]};
 export function validatePriceSeries(value:unknown):PriceSeries|null{
  if(!value||typeof value!=="object")return null;
  const v=value as Partial<PriceSeries>;
  if(typeof v.id!=="string"||!/^[a-z0-9][a-z0-9._:/-]{1,180}$/i.test(v.id)||v.source!=="openrouter"||!Array.isArray(v.points)||v.points.length<2||v.points.length>366)return null;
- let last=-Infinity;
- const points:PricePoint[]=[];
+ let last=-Infinity;const points:PricePoint[]=[];
  for(const p of v.points){
   if(!p||typeof p.observedAt!=="string")return null;
   const date=Date.parse(p.observedAt);
