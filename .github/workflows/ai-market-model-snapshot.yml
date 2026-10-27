@@ -16,12 +16,20 @@ jobs:
           node-version: "22"
       - name: Fetch and validate public model metadata
         run: node scripts/ai-openrouter-snapshot.mjs
+      - name: Exercise isolated append-only ingestion and history export
+        run: |
+          SNAPSHOT=$(find reports/ai-market -maxdepth 1 -name 'openrouter-????-??-??.json' -print -quit)
+          test -n "$SNAPSHOT"
+          AI_MARKET_STORE_DIR=reports/ai-market-store node scripts/ai-market-ingest.mjs "$SNAPSHOT"
+          AI_MARKET_STORE_DIR=reports/ai-market-store node scripts/ai-market-store-export.mjs
       - name: Build verified internal manifest
         run: node scripts/ai-market-snapshot-manifest.mjs
       - name: Preserve evidence for review only
         uses: actions/upload-artifact@v4
         with:
           name: ai-market-internal-snapshot
-          path: reports/ai-market/
+          path: |
+            reports/ai-market/
+            reports/ai-market-store/
           retention-days: 14
           if-no-files-found: error
