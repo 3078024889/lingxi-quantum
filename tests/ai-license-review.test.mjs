@@ -2,9 +2,11 @@ import {test} from "node:test";
 import assert from "node:assert/strict";
 import {reviewReuseCandidate} from "../lib/ai-discovery/license-review.mjs";
 const base={repository:"owner/repo",sourceUrl:"https://github.com/owner/repo",spdxId:"MIT",licenseSource:"github_api",checkedAt:"2026-10-27T00:00:00Z",archived:false};
-test("verified permissive source may enter review, never bypass human approval",()=>{const r=reviewReuseCandidate(base);assert.equal(r.canAutoImport,true);assert.equal(r.requiresHumanReview,true);assert.deepEqual(r.flags,[]);});
+test("verified permissive source may enter review, never bypass human approval",()=>{const r=reviewReuseCandidate(base);assert.equal(r.passesPreliminaryScreen,true);assert.equal(r.canAutoImport,false);assert.equal(r.requiresHumanReview,true);assert.deepEqual(r.flags,[]);});
 test("source mismatch fails closed",()=>assert.throws(()=>reviewReuseCandidate({...base,sourceUrl:"https://example.com"})));
 test("missing evidence cannot auto import",()=>assert.equal(reviewReuseCandidate({...base,licenseSource:"self_reported"}).canAutoImport,false));
 test("custom and copyleft licenses require review",()=>{for(const spdxId of ["NOASSERTION","GPL-3.0","AGPL-3.0","LicenseRef-custom"])assert.equal(reviewReuseCandidate({...base,spdxId}).canAutoImport,false)});
 test("archived and unknown maintenance states require review",()=>{for(const archived of [true,undefined])assert.equal(reviewReuseCandidate({...base,archived}).canAutoImport,false)});
 test("model weights and brand assets are separately licensed",()=>{for(const field of ["modelWeights","brandAssets"])assert.equal(reviewReuseCandidate({...base,[field]:true}).canAutoImport,false)});
+
+test("even clean SPDX metadata never authorizes code import",()=>{for(const spdxId of ["MIT","Apache-2.0","BSD-3-Clause"]){const r=reviewReuseCandidate({...base,spdxId});assert.equal(r.passesPreliminaryScreen,true);assert.equal(r.canAutoImport,false);assert.equal(r.requiresHumanReview,true)}});
