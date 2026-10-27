@@ -7,8 +7,10 @@ type Query={q?:string|string[];category?:string|string[];sort?:string|string[]};
 export default async function MarketTerminal({searchParams}:{searchParams:Promise<Query>}){
  const params=await searchParams;
  const q=singleQueryValue(params.q,100).toLowerCase();
- const category=singleQueryValue(params.category,60);
- const sort=singleQueryValue(params.sort,20);
+ const categoryRaw=singleQueryValue(params.category,60);
+ const category=categories.includes(categoryRaw)?categoryRaw:"";
+ const sortRaw=singleQueryValue(params.sort,20);
+ const sort=["name","vendor","category"].includes(sortRaw)?sortRaw:"name";
  const rows=aiTools.filter(t=>(!category||t.category===category)&&
    (!q||[t.name,t.provider,t.description,...t.tags].join(" ").toLowerCase().includes(q)))
    .sort((a,b)=>(sort==="vendor"?a.provider.localeCompare(b.provider):
@@ -34,6 +36,7 @@ export default async function MarketTerminal({searchParams}:{searchParams:Promis
     </tr>)}</tbody>
    </table>
   </div>
+  <p className={styles.muted}><Link href="/ai/sources">View data sources and licensing limitations →</Link></p>
   <p className={styles.muted}>This is an alphabetical watchlist, not a popularity ranking. Unknown metrics are not zero. Numerical leaderboards require source-linked comparable observations.</p>
  </section>;
 }
