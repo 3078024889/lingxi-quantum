@@ -65,3 +65,50 @@ Inventory existing /ai routes, catalog, evidence, rankings, compare, open-source
 - Sponsored content is separated from organic rankings.
 - Old URLs redirect appropriately and no in-use /tools or SASI routes are deleted.
 - Security, data integrity, pricing normalization, E2E and deployment checks pass before main.
+
+## 14. Beginner-critical availability, billing and delivery contract
+Every field is keyed by vendor/platform/product/model/version/plan/region/device/date and backed by a source or a reproducible test. Unknown is distinct from false or zero.
+
+### Access and onboarding
+Country and IP-based availability as officially stated (never advise bypassing restrictions), language availability, age requirements, web/app/API support, account creation and identity verification, phone/email verification, supported phone country codes, mandatory payment card or billing address, accepted payment rails/currencies, free-trial eligibility, invitation/waitlist, education/enterprise restrictions, local tax, cancellation availability, account closure and data portability.
+
+### Free quota and billing lifecycle
+Free requests/credits/tokens per day/week/month, reset time and timezone, whether credits roll over, expiry, per-model and per-plan quotas, daily/concurrent job caps, queue priority, promotional credit expiry, subscription renewal and auto-renewal, proration, tax, cancellation, refund eligibility, failed/timeout/cancelled/moderated generation billing, retries and duplicate charges, chargeback/support escalation, credit refund time, price change effective date, invoice availability, card verification holds, rate-limit response, spending caps, budget alerts and overage prevention.
+
+### Actual output and delivery
+Download eligibility, original versus preview output, resolution/bitrate/codec/frame rate/format, watermark and removal eligibility, editable source/project export, storage quota, artifact retention and expiry, sharing permissions, public-by-default creations, mobile save-to-gallery and share sheet, WeChat and other regional sharing, resumable downloads, export duration correctness, metadata preservation/removal, batch export, transfer rights and deletion confirmation.
+
+### Task reliability and experience
+Time to first output, queue wait p50/p95, generation latency p50/p95, success/error/cancellation rate, retries, moderation false positives, error codes, service outages, geographic latency, concurrent tasks, app crashes, accessibility, customer-support channels, ticket resolution times, real device/browser tests, performance on low-end hardware, compatibility and offline operation.
+
+### Content rights and controls
+Copyright and commercial licensing per plan and jurisdiction, input rights, consent for likeness and voice, music rights, attribution, watermark terms, training opt-in/out, public visibility, retention/deletion, content moderation and appeal, minors' safety, enterprise data boundaries and data residency.
+
+### User-facing task economics
+Show full cost to finish a task (not merely sticker subscription price): number of attempts, per-output credits, likely retries with observed distribution, duration/resolution/quality multipliers, queue time, minimum subscription needed, export/watermark costs, currency and tax, refunds. Every estimate lists assumptions, data date and uncertainty; no false guarantee of expected output quality.
+
+### Provenance and review fairness
+Separate official feature claims, official documented limits, independently reproduced defects, third-party estimates, user-submitted reports and unverified complaints. Store exact reproduction steps, device, locale, plan, model version, timestamp, sample count and correction history. Never silently convert complaints into verified defects. Prevent paid vendors from changing organic ranks.
+
+## 15. Further frequently asked questions and lifecycle risks
+- Is there a login-free demo? Can users test before paying? Are demo outputs downloadable?
+- Does the platform work behind school/company firewalls? Does it require a desktop app, browser extension or GPU?
+- Can users switch models mid-task, preserve prompts, version history, seeds, project assets and editability?
+- Does a claimed maximum video length refer to one generation, extension chain or total export? Are audio, 1080p and 4K extra charges?
+- Is a free tier rate-limited or lower quality? Does the platform add branding or public gallery exposure?
+- Are outputs deterministic, repeatable and auditable? Are prompts or assets reused for training?
+- Are integrations first-party, vendor-supported, community-maintained or unofficial? What happens if APIs are deprecated?
+- Can a vendor terminate service or sunset a model? Are migration, refund, export and notice periods documented?
+- Does a service support accessibility, screen readers, captions and keyboard use?
+- Are app ratings and review counts region-specific, store-specific, verified-purchase-only or subject to sampling bias?
+- Are benchmark results reproducible, contamination-aware, independently audited and version-matched?
+- Can a vendor claim or dispute records, and is the correction visible to users with an immutable audit trail?
+- Are comparison pages clear about availability, costs and limits instead of pushing users toward sponsored entries?
+
+## 16. Build order and release gates
+Phase A: normalized schema and evidence validation; access/quota/billing/output data; migration plan and test fixtures.
+Phase B: market terminal sortable tables, filters, provenance badges, unknown states, comparison and task cost calculator.
+Phase C: versioned history, charts, reliable ingestion and scheduled snapshots with source rights.
+Phase D: vendor verification, claim/correction workflow, analytics, sponsorship separation and API.
+Phase E: nine-language SEO/GEO, real browser/device acceptance, accessibility, production checks and safe main release.
+Do not delete legacy AI pages before redirect and reference audit. Do not remove /tools or SASI.
