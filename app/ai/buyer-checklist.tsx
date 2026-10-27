@@ -1,4 +1,4 @@
-import styles from "../discovery.module.css";
+import styles from "./discovery.module.css";
 const checks=[
  ["Regional access","Supported countries, sign-up and phone verification"],
  ["Payment requirements","Accepted cards, payment methods and billing currencies"],
