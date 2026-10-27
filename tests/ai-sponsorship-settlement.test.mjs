@@ -1,0 +1,14 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {verifySponsorshipSettlement,settlementIdempotencyKey} from "../lib/ai-discovery/sponsorship-settlement.mjs";
+const placement={id:"placement_1234"};
+const order={id:"order_1234",productType:"ai_directory_sponsorship",placementId:placement.id,currency:"CNY",amountMinor:19900,status:"paid"};
+const event={eventId:"event_1234",orderId:order.id,currency:"CNY",amountMinor:19900,status:"settled",signatureValid:true,verifiedByServer:true};
+const verify=(o=order,e=event,p=placement)=>verifySponsorshipSettlement({order:o,trustedGatewayEvent:e,placement:p});
+test("valid server-verified settlement",()=>{const v=verify();assert.equal(v.verifiedPaymentId,order.id);assert.equal(settlementIdempotencyKey(v),"order_1234:event_1234");});
+test("client assertion cannot settle",()=>assert.throws(()=>verify(order,{...event,verifiedByServer:false}),/UNVERIFIED/));
+test("invalid signature cannot settle",()=>assert.throws(()=>verify(order,{...event,signatureValid:false}),/UNVERIFIED/));
+test("different order or placement cannot settle",()=>{assert.throws(()=>verify(order,{...event,orderId:"other_order"}),/MISMATCH/);assert.throws(()=>verify({...order,placementId:"other_placement"}),/MISMATCH/);});
+test("wrong amount or currency cannot settle",()=>{assert.throws(()=>verify(order,{...event,amountMinor:10}),/AMOUNT/);assert.throws(()=>verify(order,{...event,currency:"USD"}),/CURRENCY/);});
+test("unpaid, disputed and refunded orders cannot settle",()=>{assert.throws(()=>verify(order,{...event,status:"pending"}),/NOT_SETTLED/);assert.throws(()=>verify(order,{...event,disputed:true}),/REVERSED/);assert.throws(()=>verify({...order,refunded:true}),/REVERSED/);});
+test("rejects zero and fractional minor-unit charges",()=>{assert.throws(()=>verify({...order,amountMinor:0}),/AMOUNT/);assert.throws(()=>verify({...order,amountMinor:100.5}),/AMOUNT/);});
