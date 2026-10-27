@@ -1,3 +1,4 @@
+import {validateCatalogSnapshot} from "./ai-market-snapshot-guard.mjs";
 /** Run manually: node scripts/ai-openrouter-snapshot.mjs
  * Produces a local artifact for review, not automatic public redistribution. */
 import {mkdir,writeFile} from "node:fs/promises";
@@ -21,6 +22,8 @@ try{
  }));
  const snapshot={source:endpoint,observedAt:new Date().toISOString(),
   redistributionStatus:"review-required",modelCount:rows.length,models:rows};
+ const checked=validateCatalogSnapshot(snapshot,{maxAgeHours:1,minModels:1});
+ if(!checked.ok)throw new Error("Snapshot rejected: "+checked.errors.join(", "));
  await mkdir("reports/ai-market",{recursive:true});
  const name="reports/ai-market/openrouter-"+snapshot.observedAt.slice(0,10)+".json";
  await writeFile(name,JSON.stringify(snapshot,null,2)+"\n");
