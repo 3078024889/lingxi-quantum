@@ -2,10 +2,11 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {aiTools,categories,goals,searchTools} from "../../lib/ai-discovery/catalog";
 import styles from "./discovery.module.css";
+import {singleQueryValue} from "../../lib/ai-discovery/query";
 export const metadata:Metadata={title:"Find AI Tools for Your Goals | LINGXIFIELD",description:"Explore AI tools for writing, research, coding, design, video, audio and work. Compare platforms with clear, transparent descriptions.",alternates:{canonical:"https://lingxifield.com/ai"}};
-type Params={q?:string;category?:string;goal?:string};
+type Params={q?:string|string[];category?:string|string[];goal?:string|string[]};
 export default async function AIDiscovery({searchParams}:{searchParams:Promise<Params>}){
- const p=await searchParams;const q=(p.q||"").slice(0,100),category=(p.category||"").slice(0,60),goal=(p.goal||"").slice(0,40);
+ const p=await searchParams;const q=singleQueryValue(p.q,100),category=singleQueryValue(p.category,60),goal=singleQueryValue(p.goal,40);
  const results=searchTools(q,category,goal);const structured={"@context":"https://schema.org","@type":"CollectionPage",name:"Explore AI tools",url:"https://lingxifield.com/ai",mainEntity:{"@type":"ItemList",itemListElement:results.map((t,i)=>({"@type":"ListItem",position:i+1,name:t.name,url:"https://lingxifield.com/ai/"+t.slug}))}};
  return <main className={styles.page}><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,"\\u003c")}}/><div className={styles.shell}>
  <header className={styles.topbar}><Link href="/ai" className={styles.brand}>LINGXIFIELD <span>AI</span></Link><nav aria-label="AI discovery"><Link href="/ai/compare">Compare</Link><Link href="/ai/rankings">Rankings</Link><Link href="/ai/open-source">Open-source data</Link><Link href="/tools">Tools</Link></nav></header>
