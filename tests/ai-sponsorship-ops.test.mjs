@@ -1,0 +1,10 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {transitionSponsorship,canDisplaySponsorship} from "../lib/ai-discovery/sponsorship-ops.mjs";
+const ctx={actor:"reviewer-1",at:"2026-10-27T09:00:00Z",reason:"Evidence checked"};
+const base={id:"s1",status:"inquiry"};
+test("requires review before approval",()=>assert.throws(()=>transitionSponsorship(base,"approved",ctx),/DENIED/));
+test("requires audit provenance",()=>assert.throws(()=>transitionSponsorship(base,"review",{}),/AUDIT/));
+test("approval requires verified payment and explicit disclosure",()=>{const r=transitionSponsorship(base,"review",ctx);assert.throws(()=>transitionSponsorship(r,"approved",ctx),/REQUIREMENTS/);});
+test("approved placement is visible only in paid time window",()=>{const paid={...transitionSponsorship(base,"review",ctx),verified_payment_id:"settled-order-1",disclosure_label:"Sponsored",starts_at:"2026-10-27T10:00:00Z",ends_at:"2026-10-28T10:00:00Z"};const r=transitionSponsorship(paid,"approved",{...ctx,reason:"Paid placement verified"});assert.equal(canDisplaySponsorship(r,"2026-10-27T12:00:00Z"),true);assert.equal(canDisplaySponsorship(r,"2026-10-28T12:00:00Z"),false);});
+test("unpaid and unapproved placements never display",()=>{assert.equal(canDisplaySponsorship(base,"2026-10-27T10:00:00Z"),false);});
