@@ -19,3 +19,11 @@ test("comparison accepts only known unique IDs and caps at five",()=>{
  const url=new URL(compareProductHref(known.slice(0,5),known),"https://example.test");
  assert.equal(url.pathname,"/ai/compare");assert.equal(url.searchParams.get("products"),known.slice(0,5).join(","));
 });
+
+test("Chinese task names find the same products as their catalog task terms",()=>{
+ for(const [zh,en] of [["做视频","video"],["写代码","coding"],["查资料","research"],["做音乐","music"]]){
+  assert.deepEqual(selectTerminalRows(aiTools,zh,"","name"),selectTerminalRows(aiTools,en,"","name"));
+ }
+ assert.ok(selectTerminalRows(aiTools,"做视频","Audio","name").every(t=>t.category==="Audio"));
+});
+

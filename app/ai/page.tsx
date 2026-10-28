@@ -10,8 +10,9 @@ export default async function AIDiscovery({searchParams}:{searchParams:Promise<P
  const p=await searchParams;
  const structured={"@context":"https://schema.org","@type":"CollectionPage",name:"Global AI Market",url:"https://lingxifield.com/ai"};
  return <main className={styles.page}><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,"\\u003c")}}/><div className={styles.shell}>
- <header className={styles.topbar}><Link href="/ai" className={styles.brand}>LINGXIFIELD <span>AI</span></Link><nav aria-label="AI market"><Link href="/ai/rankings">Rankings</Link><Link href="/ai/compare">Compare</Link><Link href="/ai/open-source">Open-source data</Link></nav></header>
+ <header className={styles.topbar}><Link href="/ai" className={styles.brand}>LINGXIFIELD <span>AI</span></Link><nav aria-label="AI market"><Link href="/ai/rankings">排行榜</Link><Link href="/ai/compare">工具对比</Link><Link href="/ai/open-source">开源工具</Link></nav></header>
  <TerminalWorkbench tools={aiTools} initialQuery={singleQueryValue(p.q,100)} initialCategory={singleQueryValue(p.category,60)}/>
- <footer className={styles.footer}><Link href="/ai/sources">Sources and methodology</Link> · <Link href="/ai/help">Help and corrections</Link> · <Link href="/tools">LINGXIFIELD tools</Link></footer>
+ <footer className={styles.footer}><Link href="/ai/sources">信息来源</Link> · <Link href="/ai/help">帮助与反馈</Link> · <Link href="/tools">灵犀场工具</Link></footer>
  </div></main>;
 }
+

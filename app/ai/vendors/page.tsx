@@ -2,25 +2,5 @@ import type {Metadata} from "next";
 import Link from "next/link";
 import {vendorEnquiryHref} from "../../../lib/ai-discovery/evidence-status";
 import styles from "../discovery.module.css";
-
-export const metadata: Metadata = {
-  title: "Product information and visibility | LINGXIFIELD",
-  description: "Submit product evidence for free or enquire about clearly labelled brand and sponsored placements.",
-  alternates: {canonical: "https://lingxifield.com/ai/vendors"},
-};
-export default function Vendors() {
-  return <main className={styles.page}><div className={styles.shell}>
-    <header className={styles.topbar}><Link className={styles.brand} href="/ai">LINGXIFIELD AI</Link><Link href="/ai">Back to AI market</Link></header>
-    <section className={styles.section}><h1>Help customers understand your product</h1>
-      <p>Start with accurate information. If you need more visibility, ask about a clearly labelled commercial placement.</p>
-      <div className={styles.infoGrid}>
-        <article className={styles.infoPanel}><h2>Complete your information</h2><p>Submit official pricing, free allowance, supported regions and product updates for review. Corrections and evidence submissions are free.</p><a href={vendorEnquiryHref("your product", "correction")}>Submit official information</a></article>
-        <article className={styles.infoPanel}><h2>Brand showcase</h2><p>Enquire about richer product presentations with images, videos and use cases. This does not purchase a verification badge or recommendation.</p><a href={vendorEnquiryHref("your product", "promotion")}>Enquire about brand visibility</a></article>
-        <article className={styles.infoPanel}><h2>Sponsored placement</h2><p>A separately labelled position for an agreed category and period, subject to available inventory. Sponsorship does not override a user’s requirements or change organic results.</p><a href={vendorEnquiryHref("your product", "promotion")}>Enquire about available placements</a></article>
-      </div>
-      <h2>Clear terms before any purchase</h2><p>Self-service claims and checkout are not yet available here. The planned basic allowance is three managed products per verified company with free annual confirmation. Additional management slots and display services will have their currency, price, duration and delivery terms shown before checkout.</p>
-      <p>No payment is taken on this page. An enquiry does not reserve inventory, activate benefits or authorize recurring charges. We do not guarantee rankings, clicks or sales.</p>
-      <p>Email links open your mail app. Nothing is sent until you choose to send it. Please do not include credentials or customer data.</p>
-    </section>
-  </div></main>;
-}
+export const metadata:Metadata={title:"让更多人了解你的 AI 产品｜灵犀场",alternates:{canonical:"https://lingxifield.com/ai/vendors"}};
+export default function Vendors(){return <main className={styles.page}><div className={styles.shell}><header className={styles.topbar}><Link className={styles.brand} href="/ai">LINGXIFIELD</Link><Link href="/ai">返回找工具</Link></header><section className={styles.section}><h1>让合适的用户找到你的产品</h1><p>先把产品介绍清楚，再选择适合自己的展示方式。</p><div className={styles.infoGrid}><article className={styles.infoPanel}><h2>免费完善资料</h2><p>补充功能、官方价格、免费额度和使用地区，让用户更容易判断是否适合。</p><a href={vendorEnquiryHref("我的产品","correction")}>免费补充资料 →</a></article><article className={styles.infoPanel}><h2>品牌展示</h2><p>用图片、视频和真实案例，清楚介绍产品能解决什么问题。</p><a href={vendorEnquiryHref("我的产品","promotion")}>咨询品牌展示 →</a></article><article className={styles.infoPanel}><h2>推广曝光</h2><p>在相关分类的赞助位置展示产品，事先确认位置、时间和费用。</p><a href={vendorEnquiryHref("我的产品","promotion")}>咨询推广位置 →</a></article></div><h2>服务说明</h2><p>目前可通过邮件提交资料和咨询，在线认领与购买暂未开放。基础管理计划支持每家已验证公司免费管理三个产品，年度资料确认免费。</p><p>推广会标注“赞助”，不会改变自然排名或使用结论。付费服务在购买前说明价格、期限与交付内容，不默认自动续费。</p><p>点击邮箱链接后，由你确认发送。咨询不会产生订单或扣款。</p></section></div></main>;}
