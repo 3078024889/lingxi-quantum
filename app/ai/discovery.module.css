@@ -7,3 +7,6 @@
 .infoPanel dl{display:grid;grid-template-columns:minmax(100px,1fr) 2fr;gap:14px;margin:22px 0}.infoPanel dt{font-weight:700;color:#344a66}.infoPanel dd{margin:0;color:#657389}
 .infoPanel ul{padding-left:20px;line-height:2}
 @media(max-width:650px){.infoGrid{grid-template-columns:1fr}.infoPanel{padding:20px}.filters select{min-width:0;flex:1 1 100%}.filters button{width:100%}}
+
+/* Keep the market header compact on small screens. */
+@media(max-width:700px){.topbar{padding:15px 0}.brand{font-size:15px;letter-spacing:.04em}.footer{padding:15px 0 24px}}
