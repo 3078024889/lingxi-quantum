@@ -16,5 +16,9 @@ for(const [locale,labels] of Object.entries(messages)){assert.equal(Object.keys(
 test("no fabricated popularity numbers or unreviewed public writes",()=>{
 const sql=read("supabase/migrations/20261026150000_ai_discovery_evidence.sql");
 assert.match(sql,/enable row level security/);assert.doesNotMatch(sql,/for insert to anon|for all to anon/i);
-const page=read("app/ai/rankings/page.tsx");assert.match(page,/not currently verified/);assert.match(page,/not rankings/);
+const evidence=JSON.parse(read("lib/ai-discovery/reviewed-evidence.json"));
+assert.ok(evidence && typeof evidence==="object");
+// Numeric publication is tested against the ranking functions in ai-ranking.test.mjs,
+// rather than requiring outdated sentences in user-facing copy.
+const page=read("app/ai/rankings/page.tsx");assert.match(page,/MarketTerminal/);
 });

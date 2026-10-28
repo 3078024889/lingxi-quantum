@@ -1,21 +1,17 @@
 import type {Metadata} from "next";
 import Link from "next/link";
-import {aiTools,categories,goals,searchTools} from "../../lib/ai-discovery/catalog";
-import styles from "./discovery.module.css";
+import {aiTools} from "../../lib/ai-discovery/catalog";
 import {singleQueryValue} from "../../lib/ai-discovery/query";
-export const metadata:Metadata={title:"Find AI Tools for Your Goals | LINGXIFIELD",description:"Explore AI tools for writing, research, coding, design, video, audio and work. Compare platforms with clear, transparent descriptions.",alternates:{canonical:"https://lingxifield.com/ai"}};
-type Params={q?:string|string[];category?:string|string[];goal?:string|string[]};
+import TerminalWorkbench from "./terminal-workbench";
+import styles from "./discovery.module.css";
+export const metadata:Metadata={title:"Global AI Market — Compare Products | LINGXIFIELD",description:"Explore AI products by task, compare intended uses and find official information on prices and access.",alternates:{canonical:"https://lingxifield.com/ai"}};
+type Params={q?:string|string[];category?:string|string[]};
 export default async function AIDiscovery({searchParams}:{searchParams:Promise<Params>}){
- const p=await searchParams;const q=singleQueryValue(p.q,100),category=singleQueryValue(p.category,60),goal=singleQueryValue(p.goal,40);
- const results=searchTools(q,category,goal);const structured={"@context":"https://schema.org","@type":"CollectionPage",name:"Explore AI tools",url:"https://lingxifield.com/ai",mainEntity:{"@type":"ItemList",itemListElement:results.map((t,i)=>({"@type":"ListItem",position:i+1,name:t.name,url:"https://lingxifield.com/ai/"+t.slug}))}};
+ const p=await searchParams;
+ const structured={"@context":"https://schema.org","@type":"CollectionPage",name:"Global AI Market",url:"https://lingxifield.com/ai"};
  return <main className={styles.page}><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,"\\u003c")}}/><div className={styles.shell}>
- <header className={styles.topbar}><Link href="/ai" className={styles.brand}>LINGXIFIELD <span>AI</span></Link><nav aria-label="AI discovery"><Link href="/ai/compare">Compare</Link><Link href="/ai/rankings">Rankings</Link><Link href="/ai/open-source">Open-source data</Link><Link href="/tools">Tools</Link></nav></header>
- <section className={styles.hero}><span className={styles.eyebrow}>EXPLORE AI WITH CLARITY</span><h1>What would you like <em>AI to do?</em></h1><p>Discover tools for your next idea, project or everyday task.</p><form action="/ai" className={styles.search}><label htmlFor="ai-search" className={styles.srOnly}>Search AI tools</label><input id="ai-search" name="q" defaultValue={q} placeholder="Try: ChatGPT, video, research, presentations..."/><button type="submit">Find tools →</button></form><p className={styles.muted}>Directory entries are editorial starting points. Features and prices must be checked with providers.</p></section>
- <section className={styles.section}><div className={styles.sectionHead}><div><span className={styles.eyebrow}>START WITH A GOAL</span><h2>What are you working on?</h2></div></div><div className={styles.taskGrid}>{goals.map(g=><Link key={g.key} href={"/ai?goal="+g.key+"#results"} className={styles.task}><span className={styles.taskIcon}>✦</span><strong>{g.name}</strong><small>{g.detail}</small><span className={styles.arrow}>↗</span></Link>)}</div></section>
- <section id="results" className={styles.section}><div className={styles.sectionHead}><div><span className={styles.eyebrow}>DISCOVER</span><h2>Explore AI platforms</h2></div><span className={styles.muted}>{results.length} of {aiTools.length} listings</span></div>
- <form action="/ai" className={styles.filters}><input name="q" defaultValue={q} aria-label="Search platforms" placeholder="Search platforms"/><select name="category" defaultValue={category} aria-label="Category"><option value="">All categories</option>{categories.map(c=><option key={c} value={c}>{c}</option>)}</select><select name="goal" defaultValue={goal} aria-label="Goal"><option value="">Any goal</option>{goals.map(g=><option key={g.key} value={g.key}>{g.name}</option>)}</select><button type="submit">Apply</button></form>
- {results.length?<div className={styles.toolGrid}>{results.map(t=><article className={styles.tool} key={t.slug}><div className={styles.toolTop}><span className={styles.toolMonogram}>{t.name.charAt(0)}</span><span className={styles.price}>{t.category}</span></div><h3>{t.name}</h3><p>{t.description}</p><span className={styles.category}>{t.provider}</span><Link href={"/ai/"+t.slug} className={styles.toolLink}>View details <span aria-hidden="true">↗</span></Link></article>)}</div>:<div className={styles.empty}><h3>No matches found</h3><p>Try another term or clear the filters.</p><Link href="/ai">See all platforms →</Link></div>}</section>
- <section className={styles.bottom}><div><span className={styles.eyebrow}>COMPARE WITH CONTEXT</span><h2>Choosing between two tools?</h2><p>Review their stated use cases side by side. No invented scores or rankings.</p></div><Link href="/ai/compare">Compare platforms →</Link></section>
- <footer className={styles.footer}>Independent discovery directory · Listings are not endorsements · <Link href="/ai/rankings">How rankings work</Link> · <Link href="/tools">LINGXIFIELD tools</Link></footer>
+ <header className={styles.topbar}><Link href="/ai" className={styles.brand}>LINGXIFIELD <span>AI</span></Link><nav aria-label="AI market"><Link href="/ai/rankings">Rankings</Link><Link href="/ai/compare">Compare</Link><Link href="/ai/open-source">Open-source data</Link></nav></header>
+ <TerminalWorkbench tools={aiTools} initialQuery={singleQueryValue(p.q,100)} initialCategory={singleQueryValue(p.category,60)}/>
+ <footer className={styles.footer}><Link href="/ai/sources">Sources and methodology</Link> · <Link href="/ai/help">Help and corrections</Link> · <Link href="/tools">LINGXIFIELD tools</Link></footer>
  </div></main>;
 }

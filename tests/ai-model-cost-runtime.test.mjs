@@ -1,12 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import ts from "typescript";
+import {stripTypeScriptTypes} from "node:module";
 const source=readFileSync("lib/ai-discovery/model-cost.ts","utf8");
-const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-const module={exports:{}};
-new Function("module","exports",js)(module,module.exports);
-const {parseWorkload,estimateRoutingCost,compareModels,formatRoutingCost}=module.exports;
+const js=stripTypeScriptTypes(source);
+const {parseWorkload,estimateRoutingCost,compareModels,formatRoutingCost}=await import("data:text/javascript;base64,"+Buffer.from(js).toString("base64"));
 const base={id:"vendor/a",promptUsdPerMillion:2,completionUsdPerMillion:10};
 test("same workload cost is computed from input and output tokens",()=>{
  assert.equal(estimateRoutingCost(base,{inputTokens:1000,outputTokens:500,requests:100}),0.7);
