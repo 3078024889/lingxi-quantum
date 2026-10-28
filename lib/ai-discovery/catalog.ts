@@ -553,7 +553,7 @@ export const aiTools:AITool[] = [
     "url": "https://n8n.io",
     "description": "Workflow automation platform",
     "tags": [
-      "automation",
+      "automation", "agent",
       "coding"
     ],
     "pricing": "Check official site",
@@ -576,6 +576,7 @@ export const aiTools:AITool[] = [
     "pricing": "Check official site",
     "evidenceStatus": "Unverified catalog entry"
   }
+, {"slug":"ahrefs-brand-radar","name":"Ahrefs Brand Radar","provider":"Ahrefs","category":"SEO","url":"https://ahrefs.com/brand-radar","description":"AI visibility, brand mentions and citations","tags":["seo","geo","marketing"],"pricing":"Check official site","evidenceStatus":"Unverified catalog entry"}
 ];
 export const categories=[...new Set(aiTools.map(t=>t.category))].sort();
 export const goals=[{key:"writing",name:"Write better",detail:"Articles, emails and ideas"},{key:"research",name:"Research",detail:"Find answers and sources"},{key:"video",name:"Create videos",detail:"Clips and presentations"},{key:"design",name:"Make images",detail:"Designs and graphics"},{key:"coding",name:"Build software",detail:"Apps and websites"},{key:"audio",name:"Work with audio",detail:"Voices and music"},{key:"documents",name:"Handle documents",detail:"Slides, PDFs and notes"},{key:"automation",name:"Automate work",detail:"Connect tasks and apps"}];

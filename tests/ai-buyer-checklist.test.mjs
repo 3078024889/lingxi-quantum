@@ -3,14 +3,13 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const rankings=readFileSync("app/ai/rankings/page.tsx","utf8");
 const detail=readFileSync("app/ai/[slug]/page.tsx","utf8");
-const checklist=readFileSync("app/ai/buyer-checklist.tsx","utf8");
+const structured=readFileSync("app/ai/product-detail.tsx","utf8");
 test("rankings no longer render duplicate directory cards",()=>{
  assert.match(rankings,/<MarketTerminal searchParams=\{searchParams\}\/>/);
  assert.ok(!rankings.includes("Browse the directory"));
 });
-test("platform detail shows beginner billing and access checklist",()=>{
- assert.match(detail,/import BuyerChecklist/);
- assert.match(detail,/<BuyerChecklist\/>/);
- for(const term of ["Regional access","Payment requirements","Free allowance","Failed generations","Export and sharing","Real task cost","Not independently verified"])
-  assert.ok(checklist.includes(term),term);
+test("product profiles share sourced conditions with expanded market rows",()=>{
+ assert.match(detail,/<ProductDetail tool=\{t\}/);
+ for(const field of ['"free"','"price"','"region"','"phone"','"card"','"watermark"','"commercial"','"failure"','"refund"'])assert.ok(structured.includes(field));
+ assert.ok(structured.includes('暂无可展示的用户使用记录'));
 });
