@@ -35,3 +35,20 @@ test('CI install/typecheck are distinct YAML steps, not literal escaped newlines
  assert.match(ci,/      - name: Install dependencies with lockfile\n        run: \|\n          corepack enable\n          pnpm install --frozen-lockfile\n      - name: TypeScript integration check\n        run: pnpm exec tsc --noEmit/);
  assert.doesNotMatch(ci,/lockfile\\\\n/);
 });
+
+test('missing staging integration tables exist and are not public-writable',async()=>{
+ const sql=await read('supabase/migrations/20261029_ai_market_h_integration_missing_tables.sql');
+ for(const table of ['ai_market_verified_capabilities','ai_market_profile_claims']){
+  assert.ok(sql.includes('create table if not exists public.'+table));
+  assert.ok(sql.includes('alter table public.'+table+' enable row level security'));
+ }
+ assert.match(sql,/revoke all on public\.ai_market_verified_capabilities,public\.ai_market_profile_claims from anon,authenticated/);
+});
+test('nine languages render from shared translations and Arabic has RTL',async()=>{
+ const page=await read('app/ai-market/lang/[locale]/page.tsx');
+ const messages=await read('lib/ai-market/i18n-market.mjs');
+ assert.match(page,/generateStaticParams/);
+ assert.match(page,/marketDirection\(locale\)/);
+ assert.match(page,/AiMarketSearch labels=/);
+ assert.match(messages,/\['en','ja','ko','fr','de','es','pt','ar','zh'\]/);
+});
