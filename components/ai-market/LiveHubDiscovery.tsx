@@ -4,7 +4,8 @@ import {MARKET_UI_COPY} from '@/lib/ai-market/market-ui-copy.mjs';
 type RecordItem={id:string;name:string;publisher:string;kind:string;officialUrl:string;updatedAt:string|null};
 type Feed={records:RecordItem[];retrievedAt?:string;source?:string;isRanking:false;error?:string};
 export default function LiveHubDiscovery({query='',locale='zh'}:{query?:string;locale?:string}){
- const t=MARKET_UI_COPY[locale]||MARKET_UI_COPY.zh;
+ const localeKey: keyof typeof MARKET_UI_COPY = Object.prototype.hasOwnProperty.call(MARKET_UI_COPY,locale) ? locale as keyof typeof MARKET_UI_COPY : 'zh';
+ const t=MARKET_UI_COPY[localeKey];
  const [kind,setKind]=useState<'models'|'spaces'>('models');
  const [feed,setFeed]=useState<Feed|null>(null);const [busy,setBusy]=useState(false);
  async function load(k:'models'|'spaces'){
