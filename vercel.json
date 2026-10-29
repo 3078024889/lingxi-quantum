@@ -3,7 +3,8 @@
   "git": {
     "deploymentEnabled": {
       "**": false,
-      "main": true
+      "main": true,
+      "feat/account-order-search-20261029": true
     }
   },
   "crons": [
