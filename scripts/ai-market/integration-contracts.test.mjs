@@ -2,6 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const read=path=>readFile(new URL('../../'+path,import.meta.url),'utf8');
+test('workflow preflight uses real lines and includes a cloud build',async()=>{
+ const source=await read('.github/workflows/ai-market-review-gate.yml');
+ assert.doesNotMatch(source,/\\n/);
+ assert.match(source,/name: Source-only total package preflight\r?\n\s+run: node scripts\/ai-market\/total-package-preflight.mjs/);
+ assert.match(source,/run: pnpm build/);
+});
 test('search reads actual identity status database column',async()=>{
  const schema=await read('supabase/migrations/20261029_ai_market_data_center_a.sql');
  const route=await read('app/api/ai-market/verified-search/route.ts');

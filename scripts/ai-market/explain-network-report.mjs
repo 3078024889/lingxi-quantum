@@ -10,5 +10,6 @@ export function diagnose(r){
 }
 if(process.argv[1]&&process.argv[1].endsWith('explain-network-report.mjs')){
  const path=process.argv[2];if(!path)throw Error('REPORT_PATH_REQUIRED');
- console.log(diagnose(JSON.parse(await readFile(path,'utf8'))));
+ try{console.log(diagnose(JSON.parse((await readFile(path,'utf8')).replace(/^\uFEFF/,''))));}
+ catch(error){console.error(error.code==='ENOENT'?'NETWORK_REPORT_MISSING: run diagnose-network.ps1 successfully before reading this report.':error.message);process.exitCode=1;}
 }
