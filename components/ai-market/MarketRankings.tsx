@@ -31,15 +31,15 @@ export default function MarketRankings(){
  const vals=pts.map(x=>x.value),lo=Math.min(...vals),hi=Math.max(...vals),span=Math.max(hi-lo,1);
  const coords=pts.map((x,i)=>`${pad+i*(width-2*pad)/Math.max(pts.length-1,1)},${height-pad-(x.value-lo)*(height-2*pad)/span}`).join(' ');
  return <section style={{marginTop:42}} aria-label="真实 AI 行情">
-  <h2 style={{fontSize:26,marginBottom:6}}>真实 AI 行情与历史走势</h2>
+  <h2 style={{fontSize:26,marginBottom:6}}>AI 行情 · 有来源才上榜</h2>
   <p style={{color:'#64748b'}}>仅显示已核实、同口径的数据。模型仓库下载量不代表实际用户数，第三方数据缺失时不生成模拟排名。</p>
   <form onSubmit={e=>{e.preventDefault();void loadRanking();}} style={{display:'flex',gap:9,flexWrap:'wrap',alignItems:'center',margin:'20px 0'}}>
    <label>指标 <select value={metric} onChange={e=>setMetric(e.target.value)}>{metrics.map(([id,name])=><option key={id} value={id}>{name}</option>)}</select></label>
    <label>日期 <input type="date" value={date} onChange={e=>setDate(e.target.value)}/></label>
-   <label>地区 <input value={region} onChange={e=>setRegion(e.target.value)} maxLength={40} size={8}/></label>
+   <details style={{width:'100%',border:'1px solid #dce4ef',borderRadius:10,padding:'10px 14px'}}><summary style={{cursor:'pointer'}}>高级筛选：地区、统计周期与测量方法</summary><div style={{display:'flex',gap:12,flexWrap:'wrap',marginTop:12}}><label>地区 <input value={region} onChange={e=>setRegion(e.target.value)} maxLength={40} size={8}/></label>
    <label>周期 <input value={period} onChange={e=>setPeriod(e.target.value)} maxLength={40} size={10}/></label>
    <label>方法 <input value={methodology} onChange={e=>setMethodology(e.target.value)} maxLength={70} size={10}/></label>
-   <label>样本 <input value={sample} onChange={e=>setSample(e.target.value)} maxLength={70} size={8}/></label>
+   <label>样本 <input value={sample} onChange={e=>setSample(e.target.value)} maxLength={70} size={8}/></label></div></details>
    <button type="submit" disabled={loading} style={{background:'#155eef',border:0,borderRadius:10,padding:'11px 15px',color:'white',fontWeight:600}}>{loading?'查询中…':'查看真实榜单'}</button>
   </form>
   {ranking?.error?<p role="status">行情数据暂不可用（{ranking.error}）。</p>:null}
