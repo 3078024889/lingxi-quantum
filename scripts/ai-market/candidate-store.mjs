@@ -14,7 +14,8 @@ export function mergeCandidates(current,incoming,{now=new Date().toISOString()}=
   if(!item||!KEY.test(item.candidateKey)||item.status!=='candidate'||typeof item.sourceUrl!=='string'||!item.sourceUrl.startsWith('https://huggingface.co/'))throw new Error('INVALID_INCOMING_CANDIDATE');
   const old=items.get(item.candidateKey);
   if(!old){items.set(item.candidateKey,{...item,firstSeenAt:now,lastSeenAt:now});added++;continue;}
-  const merged={...old,...item,firstSeenAt:old.firstSeenAt||now,lastSeenAt:now,status:old.status==='verified'?'verified':'candidate'};
+  if(old.status==='verified'){items.set(item.candidateKey,{...old,lastSeenAt:now});unchanged++;continue;}
+  const merged={...old,...item,firstSeenAt:old.firstSeenAt||now,lastSeenAt:now,status:'candidate'};
   if(JSON.stringify({...old,lastSeenAt:now})===JSON.stringify(merged))unchanged++;else updated++;
   items.set(item.candidateKey,merged);
  }
