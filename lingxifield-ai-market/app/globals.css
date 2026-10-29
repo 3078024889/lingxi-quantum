@@ -3,3 +3,13 @@
 .marketUtility{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:10px 14px;margin:12px 0;background:#eaf3ff;border:1px solid #d9e6fa;border-radius:8px;color:#466181;font-size:12px;flex-wrap:wrap}.localeControl{display:inline-flex;align-items:center;gap:4px;color:#3d587b}.localeControl select{background:#fff;border:1px solid #dbe5f4;border-radius:6px;padding:6px;color:#11294a;max-width:105px}.answerPanel{margin:12px 0;padding:16px}.answerPanel>div{display:flex;justify-content:space-between;gap:12px}.answerPanel button{border:0;background:transparent;cursor:pointer;font-size:20px}.answerPanel p{line-height:1.7}.answerPanel small{color:#627995}.commercialPanel{margin:18px 0;padding:20px}.commercialPanel h2{margin:0 0 8px}.commercialPanel p{color:#637a98}.commercialPlans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}.commercialPlans>div{background:#f5f9ff;border:1px solid #dce8fa;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}.commercialPlans strong{font-size:26px;color:#0860df}.commercialPlans strong small{font-size:12px;font-weight:400}.commercialPlans span{font-size:11px;color:#6c82a0}.compareOverlay{position:fixed;inset:0;z-index:1000;display:flex;justify-content:center;align-items:center;background:#03132acc;padding:20px}.compareDialog{max-width:1000px;width:100%;max-height:85vh;overflow:auto;padding:24px}.compareHeader{display:flex;justify-content:space-between;align-items:center}.compareHeader button{cursor:pointer;background:none;border:none;font-size:22px}@media(max-width:900px){.commercialPlans{grid-template-columns:repeat(2,minmax(0,1fr))}.marketUtility{justify-content:flex-start}}@media(max-width:520px){.commercialPlans{grid-template-columns:1fr}.localeControl select{max-width:90px}}
 .pagination{display:flex;justify-content:center;gap:16px;align-items:center;padding:16px}.pagination button{border:1px solid #cdddf5;background:white;padding:7px 15px;border-radius:7px;color:#155eef}
 .conditionFact{padding:12px 0;border-bottom:1px solid #e8edf4;line-height:1.65}.conditionFact p{margin:5px 0}.conditionFact small{color:#64748b}.conditionFact a{color:#0864ec}
+/* Let grid children shrink so wide comparison tables scroll inside their panel. */
+.homeGrid > *, .detailGrid > *, .summary > * { min-width: 0; }
+.hero > div { min-width: 0; }
+@media (max-width:750px) {
+  .homeGrid, .detailGrid { grid-template-columns:minmax(0,1fr); }
+  .hero .orb { display:none; }
+  .metric b { font-size:22px; overflow-wrap:anywhere; }
+  .rankHead { flex-wrap:wrap; gap:8px; }
+  .detailIdentity, .detailHead { min-width:0; overflow-wrap:anywhere; }
+}

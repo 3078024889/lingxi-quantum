@@ -57,8 +57,8 @@ export default async function AiMarketReview() {
     {localReadOnly&&<p role="status">本机只读预览：可以查看页面与验收进度；暂不开放审核保存、支付或发布操作。</p>}
     <p style={{color:'#63758f'}}>仅限已认证管理员。审查版不修改线上排行榜、不触发支付，也不会自动合并或部署。</p>
     <div style={{display:'flex',gap:10,flexWrap:'wrap',margin:'22px 0 24px'}}>
-      <Link href="/ai-market" style={{display:'inline-flex',padding:'12px 18px',background:'#155eef',borderRadius:10,color:'#fff'}}>打开当前版本 AI 行情</Link>
-      {preview ? <a href={preview} target="_blank" rel="noopener noreferrer" style={{display:'inline-flex',alignItems:'center',padding:'12px 18px',background:'#155eef',borderRadius:10,color:'#fff',textDecoration:'none',fontWeight:650}}>打开新版云端预览 ↗</a> :
+      <Link href={localReadOnly?'http://127.0.0.1:3201/':'/ai-market'} style={{display:'inline-flex',padding:'12px 18px',background:'#155eef',borderRadius:10,color:'#fff'}}>打开当前版本 AI 行情</Link>
+      {preview ? <a href={preview} target="_blank" rel="noopener noreferrer" style={{display:'inline-flex',alignItems:'center',padding:'12px 18px',background:'#155eef',borderRadius:10,color:'#fff',textDecoration:'none',fontWeight:650}}>打开上次云端预览 ↗</a> :
         <span style={{padding:'12px 18px',borderRadius:10,background:'#edf2fa',color:'#4d637f'}}>预览地址尚未配置</span>}
       <Link href="/account" style={{display:'inline-flex',padding:'12px 18px',border:'1px solid #cbd5e1',borderRadius:10,color:'#193154',textDecoration:'none'}}>返回账户</Link>
     </div>
@@ -80,7 +80,7 @@ export default async function AiMarketReview() {
       </div>
     </section>
     <section aria-label="工程建设进度" style={{margin:'20px 0',padding:20,border:'1px solid #c7d7ee',borderRadius:16,background:'#fff'}}>
-      <h2 style={{fontSize:21,margin:'0 0 8px'}}>实际建设进度与版本差异</h2>
+      <h2 style={{fontSize:21,margin:'0 0 8px'}}>历史建设记录与版本差异</h2>
       <p style={{fontSize:13,color:'#53677f'}}>快照日期：{aiMarketEngineeringStatus.snapshotDate}。{aiMarketEngineeringStatus.note}</p>
       <p style={{fontSize:13}}>代码分支：<code style={{overflowWrap:'anywhere'}}>{aiMarketEngineeringStatus.sourceBranch}</code> · <a href={aiMarketEngineeringStatus.sourceUrl} target="_blank" rel="noopener noreferrer">查看源码与提交</a></p>
       <p style={{fontSize:13,color:'#a65b10'}}>当前开发分支未完成云端预览部署，也未合并 main。浏览器里的旧版不会自动更新。</p>
@@ -98,7 +98,7 @@ export default async function AiMarketReview() {
       <div>Codex V2.9 预览记录：{aiMarketPreview.reviewedOn} · 修订 {aiMarketPreview.revision.slice(0,12)}</div>
       <div>生产数据状态：未通过来源真实性及可比排名验收。旧演示曲线和评分不得当作实时行情。</div>
       <div>下阶段：将审查状态接入持久化数据库、管理员操作审计、版本差异及审核审批流程。</div>
-      {process.env.NODE_ENV === 'development' && <div><a href="http://localhost:3001/" target="_blank" rel="noopener noreferrer">打开独立本地行情预览 ↗</a></div>}
+      {process.env.NODE_ENV === 'development' && <div><a href="http://127.0.0.1:3201/" target="_blank" rel="noopener noreferrer">打开独立本地行情预览 ↗</a></div>}
     </section>
   </main>;
 }
