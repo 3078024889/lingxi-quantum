@@ -1,0 +1,36 @@
+{
+  "name": "lingxifield-ai-market",
+  "version": "2.9.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "validate:data": "node scripts/validate-evidence.mjs && node scripts/validate-catalog.mjs",
+    "test:contracts": "node --test tests/*.test.mjs",
+    "import:evidence": "node scripts/import-evidence.mjs",
+    "test:engine": "node --test tests/market-engine.test.mjs",
+    "import:catalog": "node scripts/import-catalog.mjs",
+    "validate:catalog": "node scripts/validate-catalog-v25.mjs",
+    "test:catalog": "node --test tests/catalog-engine.test.mjs",
+    "test:analytics": "node --test tests/market-analytics.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "gate": "npm run validate:data && npm run validate:catalog && npm run test:contracts && npm run typecheck && npm run build",
+    "preview:catalog": "node scripts/preview-catalog-import.mjs",
+    "review:sources": "node scripts/review-sources.mjs"
+  },
+  "dependencies": {
+    "next": "^15.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49"
+  }
+}

@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {pricing} from '../../../../lib/v2';
+export function GET(request:Request){const u=new URL(request.url);const currency=u.searchParams.get('currency')==='USD'?'USD':'CNY';return NextResponse.json({currency,paymentEnabled:false,data:pricing.map(p=>({id:p.id,amount:p.amount,currency,interval:p.interval,label:p.label})),disclaimer:'Illustrative proposed vendor prices; checkout is not enabled.'})}

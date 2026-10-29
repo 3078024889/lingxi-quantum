@@ -1,0 +1,15 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {auditCatalogImport,discoverCatalog,catalogReadiness} from '../lib/catalog-insights.mjs';
+const base={id:'alpha-ai',name:'Alpha AI',company:'Alpha Labs',category:'AI video',website:'https://alpha.example',description:'Generate short video clips',status:'active',updatedAt:'2026-10-01T00:00:00Z',capabilities:['text to video','editing']};
+test('preview empty',()=>assert.equal(auditCatalogImport([],[]).canImport,true));
+test('preview valid insert',()=>assert.equal(auditCatalogImport([],[base]).insertable,1));
+test('preview duplicate batch rejected',()=>assert.equal(auditCatalogImport([],[base,base]).canImport,false));
+test('preview invalid status rejected',()=>assert.equal(auditCatalogImport([],[{...base,status:'fake'}]).canImport,false));
+test('preview duplicate domain flagged',()=>assert.equal(auditCatalogImport([base],[{...base,id:'other-ai'}]).issues[0].code,'POSSIBLE_DOMAIN_DUPLICATE'));
+test('preview stale update rejected',()=>assert.equal(auditCatalogImport([base],[{...base,description:'changed'}]).canImport,false));
+test('preview newer update accepted',()=>assert.equal(auditCatalogImport([base],[{...base,description:'changed',updatedAt:'2026-10-29T00:00:00Z'}]).updateable,1));
+test('preview identical supported',()=>assert.equal(auditCatalogImport([base],[base]).identical,1));
+test('discovery capability match',()=>assert.equal(discoverCatalog([base],'video').matched,1));
+test('discovery no fabricated ranking',()=>assert.match(discoverCatalog([base],'video').notice,/not evidence-based/));
+test('discovery empty catalog',()=>assert.equal(discoverCatalog([],'video').dataAvailability,'no_imported_records'));
+test('readiness states',()=>assert.equal(catalogReadiness([base]).status.active,1));
+test('readiness no fake verified ranks',()=>assert.equal(catalogReadiness([base]).hasVerifiedRankings,false));

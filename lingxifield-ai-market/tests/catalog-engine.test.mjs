@@ -1,0 +1,12 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {validCatalogEntry,mergeCatalog,searchCatalog} from '../lib/catalog-engine.mjs';
+const row=(id='sample')=>({id,name:'Sample AI',company:'Example Corp',category:'video',website:'https://example.com',description:'Generates videos',status:'active',updatedAt:'2026-10-01T00:00:00Z',capabilities:['text to video']});
+test('validates full normalized entries',()=>assert.equal(validCatalogEntry(row()),true));
+test('rejects non-HTTPS and credential URLs',()=>{assert.equal(validCatalogEntry({...row(),website:'http://example.com'}),false);assert.equal(validCatalogEntry({...row(),website:'https://user:pass@example.com'}),false)});
+test('rejects malformed and missing capabilities',()=>assert.equal(validCatalogEntry({...row(),capabilities:'video'}),false));
+test('deduplicates identical records',()=>{const a=mergeCatalog([row()],[row()]);assert.equal(a.identical,1);assert.equal(a.data.length,1)});
+test('rejects stale conflicting updates',()=>assert.throws(()=>mergeCatalog([row()],[{...row(),name:'Changed'}])));
+test('accepts strictly newer updates',()=>{const r=mergeCatalog([row()],[{...row(),name:'Updated',updatedAt:'2026-10-02T00:00:00Z'}]);assert.equal(r.updated,1)});
+test('searches capabilities and paginates',()=>{const r=searchCatalog([row('one'),{...row('two'),id:'two',name:'Other AI'}],{q:'video',limit:1});assert.equal(r.total,2);assert.equal(r.nextCursor,1)});
+test('does not return discontinued by default',()=>assert.equal(searchCatalog([{...row(),status:'discontinued'}]).total,0));
+test('hard caps API page size',()=>assert.equal(searchCatalog([row()],{limit:99999}).limit,100));
