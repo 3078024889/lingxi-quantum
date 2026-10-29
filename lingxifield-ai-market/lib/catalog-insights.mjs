@@ -44,7 +44,8 @@ export function discoverCatalog(rows,input,{limit=8}={}){
   const n=r.name.normalize('NFKC').toLocaleLowerCase();let score=0;
   if(n===q.toLocaleLowerCase())score+=12;
   if(n.includes(q.toLocaleLowerCase()))score+=6;
-  for(const t of terms){if(n.includes(t))score+=4;else if(r.capabilities.some(c=>c.toLocaleLowerCase().includes(t)))score+=3;else if(text.includes(t))score+=1;}\n  for(const t of intents)if(text.includes(t.toLocaleLowerCase()))score+=2;
+  for(const t of terms){if(n.includes(t))score+=4;else if(r.capabilities.some(c=>c.toLocaleLowerCase().includes(t)))score+=3;else if(text.includes(t))score+=1;}
+  for(const t of intents)if(text.includes(t.toLocaleLowerCase()))score+=2;
   return {r,score};
  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.r.id.localeCompare(b.r.id));
  return {query:q,dataAvailability:rows.length?'catalog_only':'no_imported_records',matched:scored.length,items:scored.slice(0,max).map(x=>({...x.r,matchScore:x.score})),notice:'Matches are catalog relevance suggestions, not evidence-based performance rankings.'};
