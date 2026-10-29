@@ -1,5 +1,5 @@
 import {createHash} from 'node:crypto';
-import {mkdir,readFile,rename,writeFile,rm} from 'node:fs/promises';
+import {mkdir,readFile,rename,writeFile,rm,open} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {discoverHuggingFace} from './huggingface-discovery.mjs';
@@ -31,6 +31,8 @@ export async function saveBatch({file,batch}){
  if(!file||!file.endsWith('.json')||!Array.isArray(batch?.records))throw Error('INVALID_BATCH');
  const path=resolve(file);await mkdir(dirname(path),{recursive:true});
  const temp=path+'.'+process.pid+'.tmp';
+ const lock=path+'.lock';
+ const handle=await open(lock,'wx');
  try{
   let existing=[];
   try{const parsed=JSON.parse(await readFile(path,'utf8'));existing=parsed.records||[];}
@@ -41,7 +43,7 @@ export async function saveBatch({file,batch}){
   await writeFile(temp,JSON.stringify(data,null,2)+'\n',{flag:'wx'});
   await rename(temp,path);
   return {path,stats:merged.stats,publicationApproved:false};
- }finally{await rm(temp,{force:true});}
+ }finally{await rm(temp,{force:true});await handle.close();await rm(lock,{force:true});}
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  const source=process.argv[2]||'huggingface-models';
