@@ -13,7 +13,7 @@ export async function GET(){
    return {id:x.full_name,name:x.name,description:typeof x.description==='string'?x.description.slice(0,240):null,
     sourceUrl:x.html_url,stars:Number.isSafeInteger(x.stargazers_count)?x.stargazers_count:null,
     forks:Number.isSafeInteger(x.forks_count)?x.forks_count:null,
-    updatedAt:x.updated_at,source:'GitHub public repository API',status:'public_repository_unverified_product'};
+    updatedAt:x.updated_at,pushedAt:x.pushed_at,license:x.license?.spdx_id&&x.license.spdx_id!=='NOASSERTION'?x.license.spdx_id:null,source:'GitHub public repository API',status:'public_repository_unverified_product'};
   }catch{return {id:owner+'/'+repo,sourceUrl,status:'unavailable'};}
  }));
  return NextResponse.json({retrievedAt:new Date().toISOString(),records:results,
