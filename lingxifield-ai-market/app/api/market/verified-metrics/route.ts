@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
-import source from '../../../data/verified-market-metrics.json';
-import {marketCards} from '../../../lib/market-metric-contract';
+import source from '../../../../data/verified-market-metrics.json';
+import {marketCards} from '../../../../lib/market-metric-contract';
 export const dynamic='force-dynamic';
 export function GET(){
  const entries=marketCards(source);
