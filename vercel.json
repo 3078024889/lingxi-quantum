@@ -3,7 +3,8 @@
   "git": {
     "deploymentEnabled": {
       "**": false,
-      "main": true
+      "main": true,
+      "fix/orders-i18n-complete-20261029": true
     }
   },
   "crons": [
