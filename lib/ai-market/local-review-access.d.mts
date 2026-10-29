@@ -1,0 +1,1 @@
+export function mayViewLocalReview(input:{user:{email?:string;email_confirmed_at?:string}|null;host:string|null;forwardedHost:string|null;origin?:string;emails?:string;expiresAt?:string;now?:number}):boolean;

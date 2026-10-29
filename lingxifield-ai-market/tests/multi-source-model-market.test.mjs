@@ -14,7 +14,7 @@ test('multi-source orchestrator safely skips unavailable credentials',async()=>{
  const s=await read('scripts/run-source-pipeline.mjs');
  assert.ok(s.includes("requiresEnv:'OPENROUTER_API_KEY'"));
  assert.ok(s.includes("outcome:'skipped_no_credentials'"));
- assert.ok(s.includes('if(ok)state[t.id]'));
+ assert.ok(s.includes('if(ok&&!partial)state[t.id]'));
 });
 test('price change detector compares two snapshots and labels unverified changes',async()=>{
  const s=await read('scripts/compare-model-prices.mjs');

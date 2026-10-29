@@ -9,7 +9,7 @@ test('multiple independently checkpointed batch sources',()=>{
  assert.ok(code.includes('skipped_fresh'));
 });
 test('per-source failures do not mark them successful or mutate production',()=>{
- assert.ok(code.includes('if(ok)state[t.id]'));
+ assert.ok(code.includes('if(ok&&!partial)state[t.id]'));
  assert.ok(code.includes('pipeline-last-run.json'));
  assert.ok(code.includes('timeout:90000'));
  assert.ok(!code.includes('supabase'));
