@@ -1,0 +1,34 @@
+{
+  "snapshotDate": "2026-10-29",
+  "status": "official_references_checked_not_product_verification",
+  "sources": [
+    {
+      "id": "huggingface-hub",
+      "name": "Hugging Face Hub API",
+      "officialUrl": "https://huggingface.co/docs/hub/api",
+      "fact": "Official Hub API supports listing model and Space repositories; repository statistics must not be treated as commercial user counts.",
+      "metricEligible": false
+    },
+    {
+      "id": "huggingface-spaces",
+      "name": "Hugging Face Spaces API",
+      "officialUrl": "https://huggingface.co/docs/hub/spaces-api-endpoints",
+      "fact": "Gradio Spaces expose API endpoints; verify an individual Space before listing it as a usable consumer tool.",
+      "metricEligible": false
+    },
+    {
+      "id": "openai-api-pricing",
+      "name": "OpenAI API Pricing",
+      "officialUrl": "https://developers.openai.com/api/docs/pricing",
+      "fact": "API token pricing differs by model and processing mode; not a ChatGPT consumer subscription quote.",
+      "metricEligible": false
+    },
+    {
+      "id": "gemini-api-pricing",
+      "name": "Gemini Developer API Pricing",
+      "officialUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+      "fact": "Published API rates, free tiers, and availability are model/tier dependent and subject to change.",
+      "metricEligible": false
+    }
+  ]
+}
