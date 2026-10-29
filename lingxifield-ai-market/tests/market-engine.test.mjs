@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {validRecord,mergeRecords,queryRecords,latestSnapshot,history,LANGUAGES} from '../lib/market-engine.mjs';
+const record=(id='a',value=12)=>({id,platformId:'chatgpt',metric:'monthly_visits',value,unit:'visits',region:'global',provider:'test',sourceUrl:'https://example.org/research',collectedAt:'2026-10-29T00:00:00Z',periodStart:'2026-09-01',periodEnd:'2026-09-30',evidenceKind:'third_party',status:'verified',methodology:'test fixture only'});
+test('nine languages',()=>assert.equal(LANGUAGES.length,9));
+test('reject ungrounded data',()=>{assert.equal(validRecord({...record(),sourceUrl:'javascript:alert(1)'}),false);assert.equal(validRecord({...record(),value:-2}),false);assert.equal(validRecord({...record(),status:'invented'}),false)});
+test('immutable and idempotent import',()=>{const a=record();assert.equal(mergeRecords([],[a]).inserted,1);assert.equal(mergeRecords([a],[a]).identical,1);assert.throws(()=>mergeRecords([a],[{...a,value:3}]),/conflict/)});
+test('verified-only query with pagination',()=>{const r=queryRecords([record('a'),{...record('b'),id:'b',status:'pending'}],{limit:1});assert.equal(r.total,1);assert.equal(r.data.length,1)});
+test('snapshot never invents missing values',()=>{assert.deepEqual(latestSnapshot([],{metric:'monthly_visits'}),[]);assert.equal(latestSnapshot([record()],{metric:'monthly_visits'}).length,1)});
+test('historical order',()=>{const a=record(),b={...record('b'),periodEnd:'2026-10-31',periodStart:'2026-10-01'};assert.deepEqual(history([b,a],{platformId:'chatgpt',metric:'monthly_visits'}).map(x=>x.id),['a','b'])});

@@ -1,0 +1,35 @@
+name: AI Market isolated cloud build
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/ai-market-v29-integration-20261029']
+    paths: ['lingxifield-ai-market/**', '.github/workflows/ai-market-cloud-build.yml']
+  pull_request:
+    paths: ['lingxifield-ai-market/**', '.github/workflows/ai-market-cloud-build.yml']
+permissions:
+  contents: read
+concurrency:
+  group: ai-market-build-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  isolated-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: lingxifield-ai-market/package-lock.json
+      - run: npm ci
+      - run: npm run gate
+      - run: node scripts/benchmark-search.mjs > search-capacity.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-market-build-${{ github.sha }}
+          path: lingxifield-ai-market/search-capacity.json
+          retention-days: 7

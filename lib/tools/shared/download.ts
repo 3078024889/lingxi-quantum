@@ -1,6 +1,6 @@
 import {ensureToolExportAccess} from '../commerce/export-access-client';
 export type DownloadOutcome = "download" | "preview";
-export type FileShareOutcome = "shared" | "cancelled" | "unsupported" | "failed";
+export type FileShareOutcome = "shared" | "cancelled" | "unsupported" | "failed" | "ready";
 export function miniLikeEnvironment() {
   try { if (new URLSearchParams(window.location.search).get("mini") === "1") return true; } catch {}
   return /MicroMessenger|WeChat|QQ\/|MQQBrowser|baiduboxapp|BytedanceWebview|Toutiao|Aweme|TikTok|XiaoHongShu|Weibo|; wv\)|Android.*\bwv\b/i.test(navigator.userAgent || "");
@@ -37,11 +37,27 @@ export async function shareFile(blob: Blob, filename: string): Promise<FileShare
     const file = deliveryFile(blob, filename), payload = {files: [file]};
     if (!navigator.share || !navigator.canShare || !navigator.canShare(payload)) return "unsupported";
     await ensureToolExportAccess(blob,filename,'share');
+    // A quota/sign-in/payment round trip can outlive the original click. Keep
+    // the granted export and require a fresh click instead of invoking a native
+    // picker that the browser must reject without transient user activation.
+    if (navigator.userActivation?.isActive === false) return "ready";
     await navigator.share(payload);
     return "shared";
   } catch (error) {
     return error && typeof error === "object" && "name" in error && error.name === "AbortError" ? "cancelled" : "failed";
   }
+}
+// Native image paste is a separate delivery path from the Windows share target.
+// Keep PNG bytes unchanged and never write a URL/text placeholder as an image.
+export async function copyPngForChat(blob:Blob,filename:string):Promise<"copied"|"ready"|"unsupported"|"failed">{
+ try{
+  const file=deliveryFile(blob,filename);
+  if(file.type!=="image/png"||!navigator.clipboard?.write||typeof ClipboardItem==="undefined")return "unsupported";
+  await ensureToolExportAccess(blob,filename,'share');
+  if(navigator.userActivation?.isActive===false)return "ready";
+  await navigator.clipboard.write([new ClipboardItem({"image/png":file})]);
+  return "copied";
+ }catch{return "failed"}
 }
 // Cloud fallback requires a separate explicit consent click in the UI.
 // Saving and sharing local files never call this upload function automatically.

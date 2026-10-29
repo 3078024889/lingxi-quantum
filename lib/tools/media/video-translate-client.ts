@@ -12,7 +12,11 @@ export function toSrtTimed(segments:TimedText[]){
  return segments.map((x,i)=>`${i+1}\n${t(x.start)} --> ${t(x.end)}\n${x.text}`).join("\n\n");
 }
 export function toVttTimed(segments:TimedText[]){
- return "WEBVTT\n\n"+toSrtTimed(segments).replace(/,/g,".").replace(/^\d+\n/gm,"");
+ const time=(sec:number)=>{
+  const ms=Math.max(0,Math.round(sec*1000));
+  return `${String(Math.floor(ms/3600000)).padStart(2,"0")}:${String(Math.floor(ms%3600000/60000)).padStart(2,"0")}:${String(Math.floor(ms%60000/1000)).padStart(2,"0")}.${String(ms%1000).padStart(3,"0")}`;
+ };
+ return "WEBVTT\n\n"+segments.map(x=>`${time(x.start)} --> ${time(x.end)}\n${x.text}`).join("\n\n");
 }
 
 function copyBytes(data:Uint8Array|string){

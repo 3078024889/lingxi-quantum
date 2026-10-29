@@ -1,0 +1,1 @@
+declare module '*market-engine.mjs' { export const METRICS: string[]; export function queryRecords(rows:any[], opts?:any):any; export function latestSnapshot(rows:any[], opts:any):any[]; export function history(rows:any[],opts:any):any[]; }

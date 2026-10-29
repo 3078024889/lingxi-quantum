@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {validSourceCandidate,reviewCandidates,approveCandidates,normalizeWebsite} from '../lib/source-intake.mjs';
+const candidate=(id='test-tool',website='https://example.org/')=>({id,name:'Example',company:'Example Inc',category:'AI',description:'Sample test only',capabilities:['text'],website,sourceUrl:'https://example.org/about',sourceType:'official_site',observedAt:'2026-10-29T00:00:00Z',reviewStatus:'pending'});
+test('valid source',()=>assert.equal(validSourceCandidate(candidate()),true));
+test('reject HTTP',()=>assert.equal(validSourceCandidate(candidate('test-tool','http://example.org')),false));
+test('reject credentials',()=>assert.equal(normalizeWebsite('https://x:y@example.org/'),null));
+test('reject malformed timestamp',()=>assert.equal(validSourceCandidate({...candidate(),observedAt:'nonsense'}),false));
+test('no direct publication',()=>{const r=reviewCandidates([], [candidate()]);assert.equal(r.catalogUnchanged,true);assert.equal(r.staged[0].status,'unverified')});
+test('duplicate ID batch',()=>assert.equal(reviewCandidates([],[candidate(),candidate()]).conflicts[0].reason,'duplicate_batch_id'));
+test('domain collision',()=>assert.equal(reviewCandidates([],[candidate('tool-a'),candidate('tool-b','https://www.example.org')]).conflicts[0].reason,'website_already_used'));
+test('explicit approval needed',()=>assert.throws(()=>approveCandidates([],reviewCandidates([],[candidate()]),['unknown']),/unknown ID/));
+test('approved record remains unverified',()=>assert.equal(approveCandidates([],reviewCandidates([],[candidate()]),['test-tool']).data[0].status,'unverified'));
+test('reject invalid source type',()=>assert.equal(validSourceCandidate({...candidate(),sourceType:'random'}),false));

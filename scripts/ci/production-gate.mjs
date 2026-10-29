@@ -6,6 +6,9 @@ const root=process.cwd();
 
 const commands=[
  ["node",["scripts/test-subtitle-translation-v95.cjs"]],
+ ["node",["scripts/test-timed-media-translation.cjs"]],
+ ["node",["scripts/test-video-dubbing-subtitles.cjs"]],
+ ["node",["scripts/test-vtt-text-preservation.cjs"]],
  ["node",["scripts/test-export-access-v92.cjs"]],
  ["node",["scripts/test-daily-export-api-v92.cjs"]],
  ["node",["scripts/test-file-delivery-v91.cjs"]],
