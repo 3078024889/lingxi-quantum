@@ -24,17 +24,18 @@ export async function persistCandidates({file,candidates}){
  if(typeof file!=='string'||!file.endsWith('.json'))throw new Error('INVALID_FILE');
  const dest=resolve(file);
  await mkdir(dirname(dest),{recursive:true});
- let current=[];
- try {const raw=JSON.parse(await readFile(dest,'utf8'));if(!Array.isArray(raw))throw new Error('INVALID_STORE');current=raw;}
- catch(err){if(err.code!=='ENOENT')throw err;}
- const next=mergeCandidates(current,candidates);
  const lock=dest+'.lock';
  let handle;
  try{
   handle=await open(lock,'wx');
+  let current=[];
+  try {const raw=JSON.parse(await readFile(dest,'utf8'));if(!Array.isArray(raw))throw new Error('INVALID_STORE');current=raw;}
+  catch(err){if(err.code!=='ENOENT')throw err;}
+  const next=mergeCandidates(current,candidates);
   const temp=dest+'.'+process.pid+'.tmp';
   try{await writeFile(temp,JSON.stringify(next.records,null,2)+'\n',{flag:'wx'});await rename(temp,dest);}
   finally{const {rm}=await import('node:fs/promises');await rm(temp,{force:true});}
+  return next.stats;
  }finally{if(handle){await handle.close();const {rm}=await import('node:fs/promises');await rm(lock,{force:true});}}
- return next.stats;
+
 }
