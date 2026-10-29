@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { moneyAdministrator } from '@/lib/money/operator-settings';
+import { aiMarketPreview } from '@/lib/ai-market-preview';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title:'全球 AI 行情审查台 | LINGXIFIELD',robots:{index:false,follow:false} };
@@ -9,12 +10,13 @@ export default async function AiMarketReview(){
   let user=null;
   try {user=await moneyAdministrator();} catch {user=null;}
   if(!user) redirect('/account?next=%2Faccount%2Fai-market-review');
-  const configured=process.env.LINGXIFIELD_AI_MARKET_PREVIEW_URL;
+  const configured=process.env.LINGXIFIELD_AI_MARKET_PREVIEW_URL || aiMarketPreview.url;
   let preview:string|null=null;
   if(configured){try{const u=new URL(configured);if(u.protocol==='https:'&&u.hostname.endsWith('.vercel.app')&&!u.username&&!u.password)preview=u.href;}catch{}}
   return <main style={{maxWidth:1180,margin:'35px auto',padding:'0 20px',fontFamily:'system-ui'}}>
     <p style={{color:'#3674c5',fontSize:13}}>LINGXIFIELD / AI MARKET / REVIEW</p>
     <h1 style={{fontSize:32}}>全球 AI 行情 · 管理审查台</h1>
+    <p>当前版本：V2.9 接管版 · {aiMarketPreview.reviewedOn} · {aiMarketPreview.revision.slice(0,8)}</p>
     <p style={{color:'#64748b'}}>独立审查入口。当前工程不会自动发布审核意见，也不自动合并或部署。</p>
     <div style={{display:'flex',gap:12,flexWrap:'wrap',margin:'24px 0'}}>
       <Link href={preview || "/account/ai-market-review"} style={{background:'#155eef',color:'white',padding:'12px 18px',borderRadius:9}}>{preview?"查看新版 AI 行情":"在线预览尚未配置"}</Link>
