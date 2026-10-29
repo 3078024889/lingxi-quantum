@@ -1,6 +1,6 @@
 import{readFile}from'node:fs/promises';
 import{pathToFileURL}from'node:url';
-const migrationFiles=['20261029_ai_market_data_center_a.sql','20261029_ai_market_metrics_b.sql','20261029_ai_market_h_integration_missing_tables.sql','20261029_ai_market_vendor_f.sql'];
+const migrationFiles=['20261029_ai_market_data_center_a.sql','20261029_ai_market_metrics_b.sql','20261029_ai_market_h_integration_missing_tables.sql','20261029_ai_market_vendor_f.sql','20261029_ai_market_payment_ledger_h.sql'];
 const safeName=s=>/^20261029_ai_market_[a-z0-9_]+\.sql$/.test(s);
 export async function checkPackage({root=new URL('../../',import.meta.url)}={}){
  const issues=[],checked=[];
@@ -14,6 +14,8 @@ export async function checkPackage({root=new URL('../../',import.meta.url)}={}){
  }
  const ci=await readFile(new URL('.github/workflows/ai-market-review-gate.yml',root),'utf8');
  if(!ci.includes('pnpm exec tsc --noEmit'))issues.push('TypeScript CI missing');
+ const paySql=await readFile(new URL('supabase/migrations/20261029_ai_market_payment_ledger_h.sql',root),'utf8');
+ if(!paySql.includes('unique(provider,provider_event_id)')||!paySql.includes('unique(provider,provider_transaction_id)'))issues.push('Database payment idempotency missing');
  const copy=await import(new URL('lib/ai-market/market-ui-copy.mjs',root));
  const locales=['en','ja','ko','fr','de','es','pt','ar','zh'];
  const expected=Object.keys(copy.MARKET_UI_COPY.zh).sort().join(',');
