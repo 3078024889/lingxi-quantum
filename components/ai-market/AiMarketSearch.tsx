@@ -1,5 +1,6 @@
 'use client';
 import {useState,useCallback} from 'react';
+import Link from 'next/link';
 type Result={id:string;name:string;officialUrl:string;matchedTasks:string[];evidenceUrls:string[];price:null;freeQuota:null;regionAccess:null};
 type Response={results?:Result[];reason?:string;limitations?:string;partialCatalog?:boolean;error?:string};
 export default function AiMarketSearch(){
@@ -24,7 +25,7 @@ export default function AiMarketSearch(){
   {answer&&!answer.error&&(!answer.results||answer.results.length===0)?<div role="status" style={{padding:20,background:'#f1f5fb',borderRadius:12}}>当前尚无与这个需求匹配的已核验产品。不会用演示数据凑榜。</div>:null}
   {answer?.results?.length?<section aria-label="匹配工具" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,300px),1fr))',gap:14}}>
     {answer.results.map(item=><article key={item.id} style={{padding:22,border:'1px solid #d9e3f2',background:'white',borderRadius:18,boxShadow:'0 8px 26px #152f5a0a'}}>
-      <h2 style={{fontSize:21,margin:'0 0 12px'}}>{item.name}</h2>
+      <h2 style={{fontSize:21,margin:'0 0 12px'}}><Link href={'/ai-market/products/'+encodeURIComponent(item.id)}>{item.name}</Link></h2>
       <p style={{fontSize:13,color:'#536581'}}>适合：{item.matchedTasks.join('、')}</p>
       <p style={{fontSize:14}}>免费额度：待核实　·　价格：待核实</p><p style={{fontSize:14}}>中国大陆可用性：待核实</p>
       <a href={item.officialUrl} rel="noopener noreferrer" target="_blank" style={{display:'inline-block',padding:'10px 14px',background:'#155eef',color:'#fff',borderRadius:9,textDecoration:'none'}}>打开官方网站</a>
