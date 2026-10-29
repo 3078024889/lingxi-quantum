@@ -1,0 +1,2 @@
+export declare function normalizeLiveHub(items:unknown[],kind:string):{id:string;name:string;publisher:string;kind:string;officialUrl:string;updatedAt:string|null;verification:string}[];
+export declare function getLiveHub(kind?:string,options?:{fetcher?:typeof fetch;signal?:AbortSignal}):Promise<{source:string;sourceUrl:string;retrievedAt:string;kind:string;records:ReturnType<typeof normalizeLiveHub>;isRanking:boolean;note:string}>;
