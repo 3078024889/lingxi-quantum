@@ -7,8 +7,8 @@ type Group={modelId:string;name:string;offers:Offer[];providerCount:number;lowes
 export async function GET(request:Request){
  const sp=new URL(request.url).searchParams;
  const q=(sp.get('q')||'').trim().toLowerCase().slice(0,120);
- const limit=Math.min(30,Math.max(1,Number(sp.get('limit'))||20));
- const cursor=Math.min(100000,Math.max(0,Number(sp.get('cursor'))||0));
+ const limit=Math.floor(Math.min(30,Math.max(1,Number(sp.get('limit'))||20)));
+ const cursor=Math.floor(Math.min(100000,Math.max(0,Number(sp.get('cursor'))||0)));
  try{
   const dir=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||'./reports/model-bulk');
   const data=JSON.parse(await readFile(resolve(dir,'model-offer-groups.json'),'utf8')) as {source:string;sourceCollectedAt:string;groups:Group[];grouping:string};
