@@ -12,6 +12,9 @@ const list=[],errors=[];const collectedAt=new Date().toISOString();
 const target=resolve(out,'github-repository-snapshot.json');
 let prior=null;try{prior=JSON.parse(await readFile(target,'utf8'));}catch{}
 let rateLimit=null;
+const cooldownFile=resolve(out,'github-rate-limit.json');
+let cooldown=null;try{cooldown=JSON.parse(await readFile(cooldownFile,'utf8'));}catch{}
+const skipDirect=Number.isFinite(cooldown?.resetEpoch)&&cooldown.resetEpoch*1000>Date.now();
 const localBase=process.env.AI_MARKET_LOCAL_URL||'http://127.0.0.1:3201';
 // Fall back only to an explicitly local running project. It already queried GitHub upstream.
 const localUrl=new URL(localBase);
@@ -22,6 +25,7 @@ try{const r=await fetch(new URL('/api/market/public-repos',localUrl),{signal:Abo
 }catch{}
 const localByRepo=new Map(localRows.map(x=>[String(x.id).toLowerCase(),x]));
 for(const row of rows){
+ if(skipDirect){rateLimit={remaining:'0',resetEpoch:cooldown.resetEpoch,cached:true};break;}
  const parsed=new URL(row.website),[owner,name]=parsed.pathname.split('/').filter(Boolean);
  try{
   const response=await fetch('https://api.github.com/repos/'+encodeURIComponent(owner)+'/'+encodeURIComponent(name),{headers:{Accept:'application/vnd.github+json','User-Agent':'LINGXIFIELD-Market-Research'},signal:AbortSignal.timeout(12000)});
@@ -60,6 +64,7 @@ const report={kind:'github_repository_snapshot',collectedAt,source:'https://api.
  scope:'repository stars, forks and maintenance only; NOT site visits, app downloads, SEO/GEO, revenue or AI quality',
  requested:rows.length,completed:list.length,retained,rateLimit,errors,localSourceMatched:list.filter(x=>x.verification==='local_app_github_api_cached_response').length,records:list};
 await mkdir(out,{recursive:true});
+if(rateLimit?.resetEpoch&&!rateLimit.cached)await writeFile(cooldownFile,JSON.stringify({resetEpoch:rateLimit.resetEpoch,recordedAt:collectedAt})+'\n');
 const serialized=JSON.stringify(report,null,2)+'\n';
 const digest=createHash('sha256').update(serialized).digest('hex');
 const temporary=target+'.tmp';
