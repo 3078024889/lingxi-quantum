@@ -3,7 +3,8 @@
   "git": {
     "deploymentEnabled": {
       "**": false,
-      "main": true
+      "main": true,
+      "fix/order-explorer-nine-language-labels-20261029": true
     }
   },
   "crons": [
