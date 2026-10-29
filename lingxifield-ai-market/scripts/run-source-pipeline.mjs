@@ -61,6 +61,9 @@ try{await readFile(resolve(dir,'hf-spaces-catalog.json'));
  const run=spawnSync(process.execPath,[resolve(root,'scripts','curate-hf-spaces.mjs')],{cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir},encoding:'utf8',timeout:90000,maxBuffer:1024*1024});
  results.push({source:'apps_curation',outcome:run.status===0?'curated':'failed',code:run.status,output:(run.stdout||'').slice(-500),stderr:(run.stderr||'').slice(-300)});
 }catch{}
+// Always rebuild consolidated candidate inventory; does not require optional Spaces data.
+{const run=spawnSync(process.execPath,[resolve(root,'scripts','build-unified-product-catalog.mjs')],{cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir},encoding:'utf8',timeout:90000,maxBuffer:1024*1024});
+ results.push({source:'unified_products',outcome:run.status===0?'built':'failed',code:run.status,output:(run.stdout||'').slice(-500),stderr:(run.stderr||'').slice(-300)});}
 const report={runAt:new Date().toISOString(),results,note:'Independent adapters. A failed source never causes another source to be falsely marked complete.'};
 const writeJson=async(p,value)=>{const tmp=p+'.tmp';await writeFile(tmp,JSON.stringify(value,null,2)+'\n');await rename(tmp,p)};
 await writeJson(stateFile,state);await writeJson(resolve(dir,'pipeline-last-run.json'),report);
