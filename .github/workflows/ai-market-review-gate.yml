@@ -1,0 +1,30 @@
+name: AI Market Review Gate
+on:
+  push:
+    branches:
+      - 'feature/ai-market-review-gate-*'
+    paths:
+      - 'lib/ai-market-review-validation.*'
+      - 'scripts/ai-market/**'
+      - 'app/api/ai-market/review-feedback/**'
+      - '.github/workflows/ai-market-review-gate.yml'
+  pull_request:
+    paths:
+      - 'lib/ai-market-review-validation.*'
+      - 'scripts/ai-market/**'
+      - 'app/api/ai-market/review-feedback/**'
+jobs:
+  review-contract:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Review input security contracts
+        run: node --test scripts/ai-market/audit-review-gate.test.mjs lib/ai-market-review-validation.test.mjs
+      - name: Validate safe nonpublishable example
+        run: |
+          node scripts/ai-market/audit-review-gate.mjs scripts/ai-market/review-snapshot.example.json
