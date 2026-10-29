@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import OrderExplorer from "@/components/OrderExplorer";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import ToolOrderRecoveryButton from "@/components/tools/ToolOrderRecoveryButton";
@@ -51,7 +52,8 @@ export default function AccountOrdersHistory({signedIn,loadFailed,paymentState,o
   {!signedIn&&<p className="mt-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]">{zh?"请先登录查看订单。":"Please sign in to view orders."}</p>}
   {loadFailed&&<p role="alert" className="mt-8 rounded-2xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-[var(--lx-ink)]">{zh?"订单暂时无法读取，请刷新重试。":"Orders could not be loaded. Refresh and try again."}</p>}
   {signedIn&&!loadFailed&&orders.length===0&&<p className="mt-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 text-[var(--lx-muted)]">{zh?"还没有订单。":"No orders yet."}</p>}
-  <div className="mt-8 space-y-3">
+  {signedIn&&!loadFailed&&<OrderExplorer/>}
+  <details className="mt-6 rounded-xl border border-[var(--lx-line)] p-4"><summary className="cursor-pointer text-sm text-[var(--lx-muted)]">{zh?"展开旧版订单列表（最近100笔）":"Expand legacy recent orders (up to 100)"}</summary><div className="mt-5 space-y-3">
    {deleteError&&<p role="alert">{deleteError}</p>}
    {orders.some(o=>['refunded','canceled','cancelled','failed'].includes(o.status))&&<button disabled={deleting} className="text-sm underline" onClick={()=>void deleteOrders(orders.filter(o=>['refunded','canceled','cancelled','failed'].includes(o.status)).map(o=>o.id))}>{zh?'删除已退款及关闭订单':'Delete refunded and closed orders'}</button>}
    {orders.map(o=>{const tool=o.product_id.startsWith("toolquote:"),viewAi=o.group==="ai"||o.product_id.startsWith("ai-usd-balance-"),viewSasi=o.group==="production"||o.product_id.startsWith("sasi-usd-balance-");return <article key={o.id} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5 lx-order-card">
@@ -64,6 +66,6 @@ export default function AccountOrdersHistory({signedIn,loadFailed,paymentState,o
     {tool&&<div className="mt-4"><ToolOrderRecoveryButton quoteId={o.product_id.slice("toolquote:".length)}/></div>}
     <button disabled={deleting} className="mt-4 block text-sm underline" onClick={()=>void deleteOrders([o.id])}>{zh?'删除订单记录':'Delete order record'}</button>
    </article>})}
-  </div>
+  </div></details>
  </div>;
 }
