@@ -7,7 +7,8 @@ $records=New-Object 'System.Collections.Generic.List[object]'
 foreach($hostName in @('huggingface.co','github.com','api.github.com')){
  $dns=@();$dnsOk=$false;$tcpOk=$false
  try{$dns=@(Resolve-DnsName -Name $hostName -Type A -ErrorAction Stop|Where-Object IPAddress|Select-Object -ExpandProperty IPAddress);$dnsOk=$dns.Count -gt 0}catch{}
- try{$tcpOk=[bool](Test-NetConnection -ComputerName $hostName -Port 443 -InformationLevel Quiet -WarningAction SilentlyContinue)}catch{}
+ $client=New-Object System.Net.Sockets.TcpClient
+ try{$pending=$client.ConnectAsync($hostName,443);$tcpOk=$pending.Wait(5000) -and $client.Connected}catch{}finally{$client.Dispose()}
  $records.Add([pscustomobject]@{Host=$hostName;DNS=$dnsOk;IPv4=($dns -join ',');TCP443=$tcpOk})
 }
 $proxySettings=[pscustomobject]@{
