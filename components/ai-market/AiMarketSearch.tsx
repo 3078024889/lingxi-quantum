@@ -1,6 +1,7 @@
 'use client';
 import {useState,useCallback} from 'react';
 import Link from 'next/link';
+import LiveHubDiscovery from './LiveHubDiscovery';
 type Result={id:string;name:string;officialUrl:string;matchedTasks:string[];evidenceUrls:string[];price:null;freeQuota:null;regionAccess:null};
 type Response={results?:Result[];reason?:string;limitations?:string;partialCatalog?:boolean;error?:string};
 export default function AiMarketSearch(){
@@ -32,6 +33,7 @@ export default function AiMarketSearch(){
       <p style={{fontSize:12,marginTop:14}}>{item.evidenceUrls.slice(0,2).map((url,i)=><span key={url}><a href={url} rel="noopener noreferrer" target="_blank">来源证据 {i+1}</a>{'　'}</span>)}</p>
     </article>)}
    </section>:null}
+  <LiveHubDiscovery query={query}/>
   {answer?.partialCatalog?<p style={{fontSize:12,color:'#64748b',marginTop:20}}>当前为有限范围的已核验数据查询，不代表全球工具全部收录。</p>:null}
  </main>;
 }
