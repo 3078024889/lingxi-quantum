@@ -24,9 +24,11 @@ for(const t of tasks){
  const started=Date.now();
  const run=spawnSync(process.execPath,[resolve(root,'scripts',t.script)],{cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir},encoding:'utf8',timeout:90000,maxBuffer:1024*1024});
  const ok=run.status===0&&!run.error;
- results.push({source:t.id,outcome:ok?'collected':'failed',code:run.status,durationMs:Date.now()-started,error:run.error?.code||null,
+ let partial=false;
+ if(ok&&t.id==='github'){try{const payload=JSON.parse((run.stdout||'').trim());partial=Number(payload.completed)<Number(payload.requested)||Number(payload.errorCount)>0;}catch{partial=true;}}
+ results.push({source:t.id,outcome:ok?(partial?'partial':'collected'):'failed',code:run.status,durationMs:Date.now()-started,error:run.error?.code||null,
   output:(run.stdout||'').slice(-800),stderr:(run.stderr||'').slice(-400)});
- if(ok)state[t.id]={ok:true,at:new Date().toISOString()};
+ if(ok&&!partial)state[t.id]={ok:true,at:new Date().toISOString()};
 }
 // Build a local query index even when the bulk source is still within its refresh window.
 const indexPath=resolve(dir,'models-index.json');
