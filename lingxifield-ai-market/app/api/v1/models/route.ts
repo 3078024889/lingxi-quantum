@@ -5,18 +5,21 @@ export const dynamic='force-dynamic';
 export async function GET(req:Request){
  const sp=new URL(req.url).searchParams;
  const query=(sp.get('q')||'').trim().slice(0,120),provider=(sp.get('provider')||'').trim().slice(0,80);
+ const scope=sp.get('scope')==='all'?'all':'curated';
  const limit=Math.max(1,Math.min(50,Number(sp.get('limit'))||20)),cursor=Math.max(0,Math.min(100000,Number(sp.get('cursor'))||0));
  const upstream=new URL('https://models.dev/api.json');
  // Prefer the user's already collected, provenance-preserving D-drive index.
  // Source data is a third-party aggregation; never relabel as publisher-verified.
  const indexDir=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||'./reports/model-bulk');
  try{
-  const local=JSON.parse(await readFile(resolve(indexDir,'models-index.json'),'utf8'));
+  let local;
+  try{local=JSON.parse(await readFile(resolve(indexDir,scope==='curated'?'models-curated.json':'models-index.json'),'utf8'));}
+  catch{local=JSON.parse(await readFile(resolve(indexDir,'models-index.json'),'utf8'));}
   if(local.source==='models.dev'&&Array.isArray(local.records)){
    const needle=query.toLowerCase(),pid=provider.toLowerCase();
    const filtered=local.records.filter((x:{name:string;modelId:string;providerName:string;providerId:string})=>(!pid||x.providerId.toLowerCase()===pid)&&(!needle||[x.name,x.modelId,x.providerName,x.providerId].some(v=>v.toLowerCase().includes(needle))));
    const items=filtered.slice(cursor,cursor+limit).map((x:{id:string;name:string;providerName:string;inputUsdPerMillion:number|null;outputUsdPerMillion:number|null;contextLimit:number|null;outputLimit:number|null})=>({id:x.id,name:x.name,provider:x.providerName,inputPrice:x.inputUsdPerMillion,outputPrice:x.outputUsdPerMillion,context:x.contextLimit,maxOutput:x.outputLimit}));
-   return NextResponse.json({total:filtered.length,cursor,limit,nextCursor:cursor+items.length<filtered.length?cursor+items.length:null,items,source:local.sourceUrl,sourceCollectedAt:local.sourceCollectedAt,verification:'third_party_aggregated_unverified_against_provider',priceUnit:'USD per 1 million tokens, subject to source verification'},{headers:{'Cache-Control':'no-store'}});
+   return NextResponse.json({total:filtered.length,cursor,limit,nextCursor:cursor+items.length<filtered.length?cursor+items.length:null,items,source:local.sourceUrl,sourceCollectedAt:local.sourceCollectedAt,scope,verification:'third_party_aggregated_unverified_against_provider',priceUnit:'USD per 1 million tokens, subject to source verification'},{headers:{'Cache-Control':'no-store'}});
   }
  }catch{}
  try{
