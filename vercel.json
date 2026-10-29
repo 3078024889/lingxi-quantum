@@ -3,8 +3,7 @@
   "git": {
     "deploymentEnabled": {
       "**": false,
-      "main": true,
-      "fix/paypal-ledger-audit-20261029": true
+      "main": true
     }
   },
   "crons": [
