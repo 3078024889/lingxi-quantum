@@ -16,7 +16,7 @@ pt:["Buscar recargas e pedidos","Número, valor, provedor","Todos","Recargas","F
 ar:["البحث في الشحن والطلبات","رقم الطلب أو المبلغ أو الدفع","الكل","الشحن","الأدوات","أخرى","كل الوقت","هذا الأسبوع","هذا الشهر","6 أشهر","مخصص","من","إلى","بحث","إخفاء","عرض","كل الحالات","مدفوع","معلق","مسترد","ملغى","فشل","لا نتائج","السابق","التالي","سجل","المرشحات","الدفع","تفاصيل"]
 };
 type ResponseData={rows:AccountOrderViewRow[];total:number;page:number;size:number};
-const fmt=(d:Date)=>d.toISOString().slice(0,10);
+const fmt=(d:Date)=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
 function periodDates(period:string){
  const now=new Date(),start=new Date(now);start.setHours(0,0,0,0);
  if(period==="week")start.setDate(start.getDate()-(start.getDay()+6)%7);
@@ -33,7 +33,10 @@ export default function OrderExplorer(){
  const [category,setCategory]=useState("all"),[period,setPeriod]=useState("all"),[status,setStatus]=useState("all"),[query,setQuery]=useState(""),[search,setSearch]=useState(""),[start,setStart]=useState(""),[end,setEnd]=useState(""),[open,setOpen]=useState(false),[page,setPage]=useState(0),[data,setData]=useState<ResponseData|null>(null),[error,setError]=useState(""),[loading,setLoading]=useState(false);
  useEffect(()=>{
   const dates=period==="custom"?{start,end}:periodDates(period);
-  const params=new URLSearchParams({category,status,page:String(page),q:search,...dates});
+  const params=new URLSearchParams({category,status,page:String(page),q:search});
+  const toLocalUtc=(date:string,exclusive=false)=>{if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(date))return "";const [y,m,d]=date.split("-").map(Number);const value=new Date(y,m-1,d+(exclusive?1:0));return Number.isNaN(value.getTime())?"":value.toISOString()};
+  if(dates.start)params.set("fromUtc",toLocalUtc(dates.start));
+  if(dates.end)params.set("toUtc",toLocalUtc(dates.end,true));
   const controller=new AbortController();setLoading(true);
   fetch("/api/account/orders/search?"+params,{cache:"no-store",signal:controller.signal}).then(async r=>{if(!r.ok)throw Error(String(r.status));return r.json()}).then(d=>{if(!controller.signal.aborted){setData(d);setError("")}}).catch(e=>{if(!controller.signal.aborted)setError(e.message)}).finally(()=>{if(!controller.signal.aborted)setLoading(false)});
   return()=>controller.abort();
