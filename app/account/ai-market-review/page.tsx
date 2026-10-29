@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { moneyAdministrator } from '@/lib/money/operator-settings';
 import { aiMarketPreview } from '@/lib/ai-market-preview';
 import AiMarketReviewFeedback from '@/components/ai-market/AiMarketReviewFeedback';
+import AiMarketCandidates from '@/components/ai-market/AiMarketCandidates';
 import { aiMarketEngineeringStatus } from '@/lib/ai-market-engineering-status';
 
 export const dynamic = 'force-dynamic';
@@ -77,6 +78,7 @@ export default async function AiMarketReview() {
         </article>)}
       </div>
     </section>
+    <AiMarketCandidates />
     <AiMarketReviewFeedback revision={aiMarketPreview.revision} />
     <section style={{marginTop:18,padding:20,borderRadius:14,background:'#eef4ff',fontSize:13,color:'#405577',lineHeight:1.8}}>
       <strong>当前审查基线</strong>
