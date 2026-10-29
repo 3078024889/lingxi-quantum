@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { moneyAdministrator } from '@/lib/money/operator-settings';
 import { aiMarketPreview } from '@/lib/ai-market-preview';
 import AiMarketReviewFeedback from '@/components/ai-market/AiMarketReviewFeedback';
+import { aiMarketEngineeringStatus } from '@/lib/ai-market-engineering-status';
 
 export const dynamic = 'force-dynamic';
 export const metadata = {
@@ -60,6 +61,19 @@ export default async function AiMarketReview() {
             <span style={{fontSize:12,color:'#8b5519',background:'#fff2d9',borderRadius:20,padding:'4px 9px'}}>{item.state}</span>
           </div>
           <p style={{color:'#546681',fontSize:13,lineHeight:1.7,marginBottom:0}}>{item.detail}</p>
+        </article>)}
+      </div>
+    </section>
+    <section aria-label="工程建设进度" style={{margin:'20px 0',padding:20,border:'1px solid #c7d7ee',borderRadius:16,background:'#fff'}}>
+      <h2 style={{fontSize:21,margin:'0 0 8px'}}>实际建设进度与版本差异</h2>
+      <p style={{fontSize:13,color:'#53677f'}}>快照日期：{aiMarketEngineeringStatus.snapshotDate}。{aiMarketEngineeringStatus.note}</p>
+      <p style={{fontSize:13}}>代码分支：<code style={{overflowWrap:'anywhere'}}>{aiMarketEngineeringStatus.sourceBranch}</code> · <a href={aiMarketEngineeringStatus.sourceUrl} target="_blank" rel="noopener noreferrer">查看源码与提交</a></p>
+      <p style={{fontSize:13,color:'#a65b10'}}>当前开发分支未完成云端预览部署，也未合并 main。浏览器里的旧版不会自动更新。</p>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(270px,1fr))',gap:10}}>
+        {aiMarketEngineeringStatus.milestones.map(item=><article key={item.name} style={{padding:15,background:'#f8fbff',border:'1px solid #e2e9f3',borderRadius:10}}>
+          <h3 style={{fontSize:15,margin:'0 0 7px'}}>{item.name}</h3>
+          <p style={{fontSize:12,fontWeight:650,color:item.state==='not_ready'||item.state==='not_deployed'?'#a65b10':'#315b9b',margin:'0 0 7px'}}>{item.state==='local_build'?'历史本地编译通过':item.state==='committed'?'源码已提交 · 尚未完整验收':item.state==='migration_pending'?'待数据库迁移':item.state==='not_deployed'?'尚未部署':'尚未完成'}</p>
+          <p style={{fontSize:13,color:'#57677c',lineHeight:1.65,margin:0}}>{item.detail}</p>
         </article>)}
       </div>
     </section>
