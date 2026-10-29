@@ -1,0 +1,42 @@
+[
+  {
+    "id": "huggingface_hub",
+    "source": "https://github.com/huggingface/huggingface_hub",
+    "license": "Apache-2.0 (verify current repository LICENSE before copying)",
+    "role": "Official model/dataset/Spaces discovery, source versioning",
+    "adoption": "documented-api-only",
+    "constraints": "Do not equate downloads with users; obey upstream rate limits and model/dataset licenses."
+  },
+  {
+    "id": "huggingface_datasets",
+    "source": "https://github.com/huggingface/datasets",
+    "license": "Apache-2.0 (verify current repository LICENSE before copying)",
+    "role": "Large JSONL/Parquet data streaming in bounded batches",
+    "adoption": "design-reference",
+    "constraints": "Python/data-engine dependencies are heavy for 2GB production; use optional offline worker."
+  },
+  {
+    "id": "tolgee",
+    "source": "https://github.com/tolgee/tolgee-platform",
+    "license": "Check repository license, edition and commercial-use terms before integrating",
+    "role": "Translation completeness and in-context localization workflow",
+    "adoption": "design-reference",
+    "constraints": "No additional paid service; existing nine-language dictionaries remain source-of-truth until audited."
+  },
+  {
+    "id": "paypal-sandbox",
+    "source": "https://github.com/PayIntLab/payments-sandbox",
+    "license": "Unverified — inspect before copying",
+    "role": "Local payment event lifecycle and replay tests",
+    "adoption": "design-reference",
+    "constraints": "Simulator events are not real PayPal/Alipay/WeChat captures and cannot grant production entitlements."
+  },
+  {
+    "id": "payment-sandbox",
+    "source": "https://github.com/proxynth/payment-sandbox",
+    "license": "Unverified — inspect before copying",
+    "role": "Durable fake payment events and deterministic failure injection",
+    "adoption": "design-reference",
+    "constraints": "No real secrets or live payment data, verify current release stability."
+  }
+]
