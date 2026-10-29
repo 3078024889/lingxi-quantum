@@ -14,7 +14,7 @@ try{
   try{
    const response=await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:30000});
    if(!response?.ok())throw Error('HTTP_'+(response?.status()||'NO_RESPONSE'));
-   const state=await page.evaluate(()=>({lang:document.querySelector('[lang]')?.getAttribute('lang'),dir:document.querySelector('[dir]')?.getAttribute('dir'),text:document.body.innerText,overflow:document.documentElement.scrollWidth>window.innerWidth+3}));
+   const state=await page.evaluate(()=>({lang:document.querySelector('div[lang]')?.getAttribute('lang'),dir:document.querySelector('div[lang]')?.getAttribute('dir'),text:document.body.innerText,overflow:document.documentElement.scrollWidth>window.innerWidth+3}));
    if(state.lang!==locale)throw Error('LANG_MISMATCH:'+state.lang);
    if(state.dir!==(locale==='ar'?'rtl':'ltr'))throw Error('DIRECTION_MISMATCH:'+state.dir);
    if(state.overflow)throw Error('HORIZONTAL_OVERFLOW');
