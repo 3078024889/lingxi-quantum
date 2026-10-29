@@ -9,12 +9,14 @@ export async function GET(request:Request){
  const cursor=Math.max(0,Math.min(10000,Math.trunc(Number(query.get('cursor'))||0)));
  try{
   const dir=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||'./reports/model-bulk');
-  const data=JSON.parse(await readFile(resolve(dir,'hf-spaces-catalog.json'),'utf8')) as {source:string;collectedAt:string;records:App[]};
+  let data: {source:string;collectedAt?:string;sourceCollectedAt?:string;records:App[]};
+  try { data=JSON.parse(await readFile(resolve(dir,'hf-spaces-curated.json'),'utf8')); }
+  catch { data=JSON.parse(await readFile(resolve(dir,'hf-spaces-catalog.json'),'utf8')); }
   if(data.source!=='huggingface_spaces'||!Array.isArray(data.records))throw Error('INVALID_HF_SOURCE');
   const matched=data.records.filter(x=>!q||[x.id,x.name,x.provider,x.description||'',...(x.categories||[])].some(v=>v.toLowerCase().includes(q)));
   const items=matched.slice(cursor,cursor+limit);
   return NextResponse.json({total:matched.length,cursor,limit,nextCursor:cursor+items.length<matched.length?cursor+items.length:null,
-   items,source:'Hugging Face Spaces',sourceCollectedAt:data.collectedAt,
+   items,source:'Hugging Face Spaces',sourceCollectedAt:data.sourceCollectedAt||data.collectedAt,
    caveat:'Space likes are Hugging Face signals only, not site visits, downloads, independent quality, or commercial pricing.'},
    {headers:{'Cache-Control':'no-store'}});
  }catch{return NextResponse.json({total:0,items:[],status:'app_catalog_not_collected',explanation:'The separate public application source needs a successful batch collection.'},{status:503})}
