@@ -120,7 +120,7 @@ export default function SasiPricingCurrencyClient(){
 
  function statusText(value:string){
   if(value==="cancelled")return moneyText(lang,"cancelled");
-  if(value==="succeeded")return c.statusSuccess;
+  if(value==="succeeded"||value==="completed")return c.statusSuccess;
   if(value==="failed")return c.statusFailed;
   return c.statusPending;
  }
