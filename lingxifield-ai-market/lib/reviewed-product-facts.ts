@@ -33,11 +33,24 @@ export const factSnapshots:readonly FactSnapshot[]=[
   free:official("免费用量每 5 小时恢复；消息数浮动，另可能有限额",claudeHelp,"不是固定每天可发送的次数"),
   region:official("仅支持指定地区；使用者须年满 18 岁",claudeHelp,"中国大陆具体支持状态本轮待核实"),
  }},
+ {product:"chatgpt",observedAt:day,facts:{
+  price:official("ChatGPT Plus 为 $20/月（按月收费）；API 用量不包含在 Plus 内","https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus","ChatGPT Plus 个人订阅，美国公开价格；税费及地区结算另依官方页面"),
+  free:official("ChatGPT 提供免费方案；具体使用限额和可用模型可能变化","https://openai.com/chatgpt/pricing/","网页版个人使用；不保证每日固定次数"),
+ }},
+ {product:"claude",observedAt:day,facts:{
+  price:official("Claude Pro 美国按月订阅 $20/月；选择年付时为 $200/年","https://support.claude.com/en/articles/11049762-choose-a-claude-plan","个人 Pro 套餐；不同国家、平台及税费可能不同"),
+  free:official("Claude Free 为 $0，免费使用量有限且随条件变化","https://claude.com/pricing","个人 Free 套餐；不代表固定每日次数"),
+ }},
  {product:"n8n",observedAt:day,facts:{purpose:official("把多步工作连起来，也可创建调用工具的 AI 智能体","https://n8n.io/ai-agents/","工作流与智能体平台；需配置和测试")}},
  {product:"ahrefs-brand-radar",observedAt:day,facts:{purpose:official("查看品牌在 AI 回答中的提及和引用","https://ahrefs.com/brand-radar","AI 可见度分析，不保证提升排名")}},
 ];
 export function latestFacts(slug:string,asOf=day):FactSnapshot|undefined{
- return factSnapshots.filter(s=>s.product===slug&&s.observedAt<=asOf).sort((a,b)=>b.observedAt.localeCompare(a.observedAt))[0];
+ const relevant=factSnapshots.filter(s=>s.product===slug&&s.observedAt<=asOf);
+ if(!relevant.length)return undefined;
+ relevant.sort((a,b)=>a.observedAt.localeCompare(b.observedAt));
+ const facts:Partial<Record<FactKey,ProductFact>>={};
+ for(const snapshot of relevant)Object.assign(facts,snapshot.facts);
+ return {product:slug,observedAt:relevant[relevant.length-1].observedAt,facts};
 }
 export function productHistory(slug:string){return factSnapshots.filter(s=>s.product===slug).slice().sort((a,b)=>a.observedAt.localeCompare(b.observedAt));}
 export function isStale(fact:ProductFact,now:string,maxDays=30){return Date.parse(now)-Date.parse(fact.checkedAt)>maxDays*86400000;}
