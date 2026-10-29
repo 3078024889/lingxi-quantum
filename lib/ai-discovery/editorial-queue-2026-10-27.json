@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-27",
+  "status": "editorial_candidates_not_published",
+  "policy": "User-provided release descriptions are leads, not independently verified claims. Do not add to public catalog until official source URLs, release dates and access limitations are reviewed.",
+  "new_candidates": [
+    {
+      "slug": "contentstack-canoe",
+      "name": "Contentstack Canoe",
+      "category": "SEO / GEO",
+      "claimed_date": "2026-10-01",
+      "access": "Free plan claimed; verify official terms",
+      "official_source_url": null,
+      "verification": "pending"
+    },
+    {
+      "slug": "claude-duet",
+      "name": "Claude Duet",
+      "category": "Agents",
+      "claimed_date": "2026-10-21",
+      "access": "Claimed US Pro/Max waitlist research preview; do not label globally available",
+      "official_source_url": null,
+      "verification": "pending"
+    },
+    {
+      "slug": "anthropic-oss-scanner",
+      "name": "Anthropic OSS Scanner",
+      "category": "Developer security",
+      "claimed_date": "2026-10-08",
+      "access": "Claimed eligibility-restricted application; do not label open access",
+      "official_source_url": null,
+      "verification": "pending"
+    }
+  ],
+  "existing_product_updates": [
+    {
+      "target": "chatgpt",
+      "claim": "GPT-6.1 Terra vision and computer-use update",
+      "claimed_date": "2026-10-26",
+      "verification": "pending"
+    },
+    {
+      "target": "mistral",
+      "claim": "Voxtral 3 transcription, diarization and translation",
+      "claimed_date": "2026-10-20",
+      "verification": "pending"
+    },
+    {
+      "target": "synthesia",
+      "claim": "Synthesia Sessions interactive avatars",
+      "claimed_date": "2026-10-01",
+      "verification": "pending"
+    },
+    {
+      "target": "zoom",
+      "claim": "Unified Context Layer enterprise knowledge workflows",
+      "claimed_date": "2026-10-20",
+      "verification": "pending"
+    },
+    {
+      "target": "mistral",
+      "claim": "Timestral probabilistic time-series forecasting; no profit guarantees",
+      "claimed_date": "2026-10-15",
+      "verification": "pending"
+    }
+  ]
+}

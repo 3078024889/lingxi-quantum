@@ -1,0 +1,34 @@
+name: AI market isolated integration gate
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'app/ai/**'
+      - 'lib/ai-discovery/**'
+      - 'scripts/ai-market-*.mjs'
+      - 'tests/ai-*.test.mjs'
+      - '.github/workflows/ai-market-isolated-validation.yml'
+      - 'docs/AI_MARKET_*.md'
+permissions:
+  contents: read
+jobs:
+  ai-market:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute all AI-specific Node tests
+        run: node --test tests/ai-*.test.mjs
+      - name: Generate conservative release audit
+        run: node scripts/ai-market-release-audit.mjs
+      - name: Upload internal audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-market-isolated-audit
+          path: reports/ai-market/release-audit.json
+          retention-days: 14
+          if-no-files-found: ignore

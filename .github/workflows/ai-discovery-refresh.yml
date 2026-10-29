@@ -1,0 +1,35 @@
+name: AI discovery source refresh (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ai-discovery-refresh
+  cancel-in-progress: false
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Refresh official GitHub observations
+        run: node scripts/ai-discovery/refresh-github.mjs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Append history
+        run: node scripts/ai-discovery/append-github-history.mjs
+      - name: Verify source data
+        run: node --test tests/ai-*.test.mjs
+      - name: Audit source history and anomalies
+        run: node scripts/ai-discovery/audit-snapshots.mjs
+      - name: Upload reviewable artifacts (never deploy)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-discovery-github-snapshot
+          path: |
+            lib/ai-discovery/github-observations.json
+            lib/ai-discovery/github-history.json
+          retention-days: 14

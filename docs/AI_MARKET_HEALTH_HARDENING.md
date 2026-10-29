@@ -1,0 +1,3 @@
+# Snapshot integrity hardening
+
+Health checks now reopen every stored snapshot, validate source/observed time/model count, check strict chronology, compare the exported history observation metadata and compare per-model observation counts. A successful check does not prove public redistribution rights, cross-run persistence, complete price equality or readiness for production. No public API or deployment is enabled. The validator accepts at most 366 points per model in the current UI contract. Continue with a transactional durable store and exact-value cross-check before enabling history charts.

@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {applySettlementEvent,mayFulfillSponsorship} from '../lib/ai-discovery/sponsorship-ledger.mjs';
+const e={eventId:'evt_1234',orderId:'ord_1234',type:'settled',serverVerified:true};
+test('paid only after server-verified settlement',()=>{const r=applySettlementEvent(null,e);assert.equal(r.state.status,'paid');assert.equal(mayFulfillSponsorship(r.state),true)});
+test('duplicate event is idempotent',()=>{const r=applySettlementEvent(null,e);const again=applySettlementEvent(r.state,e);assert.equal(again.changed,false);assert.deepEqual(again.state,r.state)});
+test('unverified event is denied',()=>assert.throws(()=>applySettlementEvent(null,{...e,serverVerified:false}),/VERIFICATION/));
+test('refund revokes fulfillment',()=>{const r=applySettlementEvent(null,e);const refunded=applySettlementEvent(r.state,{...e,eventId:'evt_5678',type:'refunded'});assert.equal(mayFulfillSponsorship(refunded.state),false)});
+test('dispute revokes fulfillment',()=>{const r=applySettlementEvent(null,e);const disputed=applySettlementEvent(r.state,{...e,eventId:'evt_5678',type:'disputed'});assert.equal(mayFulfillSponsorship(disputed.state),false)});
+test('late settlement does not undo refund',()=>{const refunded=applySettlementEvent(null,{...e,type:'refunded'});const late=applySettlementEvent(refunded.state,{...e,eventId:'evt_5678'});assert.equal(late.state.status,'refunded')});
+test('different order is rejected',()=>{const r=applySettlementEvent(null,e);assert.throws(()=>applySettlementEvent(r.state,{...e,eventId:'evt_5678',orderId:'ord_5678'}),/MISMATCH/)});
