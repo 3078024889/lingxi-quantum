@@ -7,7 +7,8 @@ type Result={id:string;name:string;officialUrl:string;matchedTasks:string[];evid
 type Response={results?:Result[];reason?:string;limitations?:string;partialCatalog?:boolean;error?:string};
 type Labels={search:string;placeholder:string;free:string;price:string;limits:string;use:string;unknown:string;source:string;region:string;results:string;empty:string};
 export default function AiMarketSearch({labels,locale='zh'}:{labels?:Labels;locale?:string}={}){
- const t=MARKET_UI_COPY[locale]||MARKET_UI_COPY.zh;
+ const localeKey: keyof typeof MARKET_UI_COPY = Object.prototype.hasOwnProperty.call(MARKET_UI_COPY,locale) ? locale as keyof typeof MARKET_UI_COPY : 'zh';
+ const t=MARKET_UI_COPY[localeKey];
  const [query,setQuery]=useState('');const [busy,setBusy]=useState(false);
  const [answer,setAnswer]=useState<Response|null>(null);
  const search=useCallback(async()=>{
