@@ -1,0 +1,16 @@
+"use client";
+import {useEffect,useState} from "react";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+type Entry={id:string;currency:"CNY"|"USD";kind:string;delta_minor:number;balance_after_minor:number;reference_id:string|null;created_at:string;source:string};
+const labels:Record<string,[string,string,string,string,string]>={
+zh:["资金流水（已记录部分）","日期","类型 / 来源","余额变动","本账本余额"],en:["Recorded wallet activity","Date","Type / source","Change","Ledger balance"],ja:["ウォレット履歴","日時","種類 / 元帳","増減","元帳残高"],ko:["지갑 거래 내역","날짜","유형 / 출처","변동","장부 잔액"],fr:["Historique du portefeuille","Date","Type / source","Variation","Solde du registre"],de:["Guthabenverlauf","Datum","Art / Quelle","Änderung","Buchsaldo"],es:["Movimientos del saldo","Fecha","Tipo / origen","Cambio","Saldo del registro"],pt:["Histórico de saldo","Data","Tipo / origem","Variação","Saldo do registro"],ar:["سجل المحفظة","التاريخ","النوع / المصدر","التغيير","رصيد السجل"]};
+export default function WalletLedgerPanel({currency}:{currency:"CNY"|"USD"}){
+const {lang}=useLingxiLang();const [rows,setRows]=useState<Entry[]>([]);const [error,setError]=useState(false);
+useEffect(()=>{let active=true;fetch("/api/account/wallet-ledger",{cache:"no-store"}).then(async r=>{if(!r.ok)throw Error("ledger");return r.json()}).then(d=>{if(active)setRows(Array.isArray(d.rows)?d.rows:[])}).catch(()=>{if(active)setError(true)});return()=>{active=false}},[]);
+const l=labels[lang]||labels.en;const money=(n:number)=>new Intl.NumberFormat(lang,{style:"currency",currency}).format(n/100);
+return <section aria-label={l[0]} className="mt-8 rounded-2xl border border-[var(--lx-line)] p-4 sm:p-6">
+<h2 className="text-lg font-semibold">{l[0]}</h2>
+<p className="mt-2 text-xs text-[var(--lx-muted)]">{lang==="zh"?"仅展示已有的钱包账本记录，不代表全部支付订单或全部消费。不同账本余额不可直接相加。":"Shows recorded wallet ledger entries only; not a complete payment or spending statement. Balances across ledgers must not be combined."}</p>
+{error?<p role="alert" className="mt-3">{lang==="zh"?"暂时无法读取流水":"Ledger unavailable"}</p>:<div className="mt-4 overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr>{l.slice(1).map(h=><th className="border-b p-2" key={h}>{h}</th>)}</tr></thead><tbody>{rows.filter(r=>r.currency===currency).map(r=><tr key={r.source+r.id}><td className="border-b p-2">{new Date(r.created_at).toLocaleString(lang)}</td><td className="border-b p-2">{r.kind} · {r.source}</td><td className="border-b p-2">{money(r.delta_minor)}</td><td className="border-b p-2">{money(r.balance_after_minor)}</td></tr>)}</tbody></table></div>}
+</section>;
+}

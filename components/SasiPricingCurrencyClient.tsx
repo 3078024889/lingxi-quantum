@@ -15,6 +15,7 @@ import {CREDIT_PACKS} from "@/lib/sasi/catalog";
 import {customTopupAmount} from "@/lib/balance-topups";
 import {detectMiniPaymentContext, openMiniRecharge} from "@/lib/mini/payment-client";
 import {usdBalanceProducts} from "@/lib/usd-products";
+import WalletLedgerPanel from "@/components/WalletLedgerPanel";
 import SasiUsageRates from '@/components/SasiUsageRates';
 
 type Currency="CNY"|"USD";
@@ -120,7 +121,7 @@ export default function SasiPricingCurrencyClient(){
 
  function statusText(value:string){
   if(value==="cancelled")return moneyText(lang,"cancelled");
-  if(value==="succeeded")return c.statusSuccess;
+  if(value==="succeeded"||value==="completed")return c.statusSuccess;
   if(value==="failed")return c.statusFailed;
   return c.statusPending;
  }
