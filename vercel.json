@@ -3,8 +3,7 @@
   "git": {
     "deploymentEnabled": {
       "**": false,
-      "main": true,
-      "fix/paypal-refund-status-20261029": true
+      "main": true
     }
   },
   "crons": [
