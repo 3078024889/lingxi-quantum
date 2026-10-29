@@ -3,8 +3,9 @@ import {createAdminClient,isSupabaseAdminConfigured} from '@/lib/supabase/admin'
 import {assembleProductResponse} from '@/lib/ai-market/profile-response.mjs';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'no-store','X-Robots-Tag':'noindex'};
-export async function GET(_request:NextRequest,{params}:{params:{id:string}}){
- const id=params.id||'';
+export async function GET(_request:NextRequest,{params}:{params:Promise<{id:string}>}){
+ const {id:rawId}=await params;
+ const id=rawId||'';
  if(!id||id.length>250||/[\x00-\x1f]/.test(id))return NextResponse.json({error:'INVALID_ID'},{status:400,headers});
  if(!isSupabaseAdminConfigured())return NextResponse.json({error:'DATA_UNAVAILABLE'},{status:503,headers});
  try{
