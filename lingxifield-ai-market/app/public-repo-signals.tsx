@@ -1,6 +1,6 @@
 'use client';
 import{useEffect,useState}from'react';
-type RecordItem={id:string;name?:string;description?:string|null;stars?:number|null;sourceUrl:string;status:string;updatedAt?:string};
+type RecordItem={id:string;name?:string;description?:string|null;stars?:number|null;sourceUrl:string;status:string;updatedAt?:string;license?:string|null;pushedAt?:string|null};
 export default function PublicRepoSignals(){
  const[items,setItems]=useState<RecordItem[]>([]);const[error,setError]=useState(false);
  useEffect(()=>{const controller=new AbortController();fetch('/api/market/public-repos',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error('UPSTREAM');return r.json()}).then(d=>{if(!controller.signal.aborted)setItems(d.records||[])}).catch(()=>{if(!controller.signal.aborted)setError(true)});return()=>controller.abort()},[]);
@@ -13,6 +13,7 @@ export default function PublicRepoSignals(){
      <small style={{color:'#64748b'}}>{x.id}</small>
      <p style={{fontSize:12,margin:'8px 0'}}>{x.description||'公开项目资料'}</p>
      <div style={{fontSize:12}}>{x.status==='public_repository_unverified_product'&&typeof x.stars==='number'?('GitHub Stars: '+x.stars.toLocaleString()):'来源暂不可用'}</div>
+     {x.status==='public_repository_unverified_product'&&<div style={{fontSize:12,color:'#64748b'}}>许可证（仓库声明）：{x.license||'待核验'} · 最近推送：{x.pushedAt?.slice(0,10)||'未知'}</div>}
      <a href={x.sourceUrl} target="_blank" rel="noopener noreferrer" style={{fontSize:12}}>官方仓库与来源</a>
    </article>)}
   </div>}
