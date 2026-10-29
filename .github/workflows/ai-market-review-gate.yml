@@ -11,6 +11,8 @@ on:
       - 'lib/ai-market-*.test.mjs'
       - 'supabase/migrations/*ai_market*'
       - 'app/api/ai-market/**'
+      - 'app/ai-market/**'
+      - 'components/ai-market/**'
       - 'docs/AI_MARKET_TOTAL_PACKAGE_*.md'
       - '.github/workflows/ai-market-review-gate.yml'
   pull_request:
@@ -22,6 +24,8 @@ on:
       - 'lib/ai-market-*.test.mjs'
       - 'supabase/migrations/*ai_market*'
       - 'app/api/ai-market/**'
+      - 'app/ai-market/**'
+      - 'components/ai-market/**'
       - 'docs/AI_MARKET_TOTAL_PACKAGE_*.md'
 jobs:
   review-contract:
