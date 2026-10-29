@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { moneyAdministrator } from '@/lib/money/operator-settings';
 import { aiMarketPreview } from '@/lib/ai-market-preview';
+import AiMarketReviewFeedback from '@/components/ai-market/AiMarketReviewFeedback';
 
 export const dynamic = 'force-dynamic';
 export const metadata = {
@@ -62,6 +63,7 @@ export default async function AiMarketReview() {
         </article>)}
       </div>
     </section>
+    <AiMarketReviewFeedback revision={aiMarketPreview.revision} />
     <section style={{marginTop:18,padding:20,borderRadius:14,background:'#eef4ff',fontSize:13,color:'#405577',lineHeight:1.8}}>
       <strong>当前审查基线</strong>
       <div>Codex V2.9 预览记录：{aiMarketPreview.reviewedOn} · 修订 {aiMarketPreview.revision.slice(0,12)}</div>
