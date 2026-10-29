@@ -14,6 +14,8 @@ try{
   try{
    const response=await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:30000});
    if(!response?.ok())throw Error('HTTP_'+(response?.status()||'NO_RESPONSE'));
+   if(new URL(page.url()).pathname!==url.pathname)throw Error('UNEXPECTED_REDIRECT:'+page.url());
+   if(page.url().includes('auth_error='))throw Error('AUTH_ORIGIN_ERROR:'+page.url());
    const state=await page.evaluate(()=>({lang:document.querySelector('div[lang]')?.getAttribute('lang'),dir:document.querySelector('div[lang]')?.getAttribute('dir'),text:document.body.innerText,overflow:document.documentElement.scrollWidth>window.innerWidth+3}));
    if(state.lang!==locale)throw Error('LANG_MISMATCH:'+state.lang);
    if(state.dir!==(locale==='ar'?'rtl':'ltr'))throw Error('DIRECTION_MISMATCH:'+state.dir);
