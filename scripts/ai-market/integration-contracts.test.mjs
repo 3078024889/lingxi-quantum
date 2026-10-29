@@ -29,3 +29,9 @@ test('public discovery is labeled non-ranking',async()=>{
  assert.match(source,/isRanking:false/);
  assert.match(route,/getLiveHub/);
 });
+
+test('CI install/typecheck are distinct YAML steps, not literal escaped newlines',async()=>{
+ const ci=await read('.github/workflows/ai-market-review-gate.yml');
+ assert.match(ci,/      - name: Install dependencies with lockfile\n        run: \|\n          corepack enable\n          pnpm install --frozen-lockfile\n      - name: TypeScript integration check\n        run: pnpm exec tsc --noEmit/);
+ assert.doesNotMatch(ci,/lockfile\\\\n/);
+});
