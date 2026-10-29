@@ -9,12 +9,14 @@ const dir=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||resolve(root,'reports','so
 await mkdir(dir,{recursive:true});
 const tasks=[
  {id:'modelsdev',script:'collect-modelsdev-bulk.mjs',ttlHours:24},
- {id:'github',script:'collect-github-catalog.mjs',ttlHours:6}
+ {id:'github',script:'collect-github-catalog.mjs',ttlHours:6},
+ {id:'openrouter',script:'collect-openrouter-bulk.mjs',ttlHours:24,requiresEnv:'OPENROUTER_API_KEY'}
 ];
 const stateFile=resolve(dir,'pipeline-state.json');
 let state={};try{state=JSON.parse(await readFile(stateFile,'utf8'))}catch{}
 const force=process.argv.includes('--force'),now=Date.now(),results=[];
 for(const t of tasks){
+ if(t.requiresEnv&&!process.env[t.requiresEnv]){results.push({source:t.id,outcome:'skipped_no_credentials'});continue;}
  const previous=state[t.id];
  if(!force&&previous?.ok&&Number.isFinite(Date.parse(previous.at))&&now-Date.parse(previous.at)<t.ttlHours*3600000){
   results.push({source:t.id,outcome:'skipped_fresh',lastSuccessAt:previous.at});continue;
