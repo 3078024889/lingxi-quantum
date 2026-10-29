@@ -10,11 +10,13 @@ export async function GET(req:NextRequest){
  const p=req.nextUrl.searchParams;
  const page=Math.min(10000,Math.max(0,Number.parseInt(p.get("page")||"0",10)||0));
  const size=25,category=p.get("category")||"all",status=p.get("status")||"all";
- const start=p.get("start")||"",end=p.get("end")||"",term=(p.get("q")||"").trim().slice(0,80);
- if(start&&!/^\d{4}-\d{2}-\d{2}$/.test(start)||end&&!/^\d{4}-\d{2}-\d{2}$/.test(end))return NextResponse.json({error:"INVALID_DATE"},{status:400});
+ const term=(p.get("q")||"").trim().slice(0,80);
+ const fromUtc=p.get("fromUtc")||"",toUtc=p.get("toUtc")||"";
+ const validIso=(value:string)=>!value||(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/.test(value)&&!Number.isNaN(Date.parse(value)));
+ if(!validIso(fromUtc)||!validIso(toUtc)||fromUtc&&toUtc&&fromUtc>=toUtc)return NextResponse.json({error:"INVALID_DATE"},{status:400});
  let query=db.from("orders").select("id,product_id,amount_rmb,amount_usd,currency,status,provider,created_at,paid_at",{count:"exact"}).eq("user_id",user.id).is("user_deleted_at",null);
- if(start)query=query.gte("created_at",start+"T00:00:00");
- if(end)query=query.lt("created_at",new Date(Date.parse(end+"T00:00:00Z")+86400000).toISOString());
+ if(fromUtc)query=query.gte("created_at",fromUtc);
+ if(toUtc)query=query.lt("created_at",toUtc);
  if(["pending","paid","refunded","failed","cancelled"].includes(status))query=query.eq("status",status);
  if(category==="topup")query=query.or("product_id.like.ai-balance-%,product_id.like.ai-usd-balance-%,product_id.like.sasi-balance-%,product_id.like.sasi-usd-balance-%,product_id.like.sasi-credit-%");
  if(category==="tools")query=query.like("product_id","toolquote:%");
