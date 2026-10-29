@@ -19,20 +19,23 @@ $Files=@(
  'supabase/migrations/20261029_ai_market_metrics_b.sql',
  'supabase/migrations/20261029_ai_market_h_integration_missing_tables.sql',
  'supabase/migrations/20261029_ai_market_vendor_f.sql',
- 'supabase/migrations/20261029_ai_market_payment_ledger_h.sql'
+ 'supabase/migrations/20261029_ai_market_payment_ledger_h.sql',
+ 'scripts/ai-market/local-db-security-probe.sql'
 )
 foreach($f in $Files){if(-not(Test-Path -LiteralPath (Join-Path $Repo $f))){throw "Missing $f"}}
 $env:PGHOST=$HostName;$env:PGPORT="$Port";$env:PGDATABASE=$Database;$env:PGUSER=$Username
+$env:PGSSLMODE='disable'
+$env:PGCONNECT_TIMEOUT='5'
 Write-Host 'Local-only disposable SQL migration: no production environment variables are used.' -ForegroundColor Cyan
 foreach($f in $Files){
  Write-Host "[MIGRATION] $f" -ForegroundColor Cyan
- & psql -X -v ON_ERROR_STOP=1 -f (Join-Path $Repo $f)
+ & psql -X -h $HostName -p $Port -U $Username -d $Database -v ON_ERROR_STOP=1 -1 -f (Join-Path $Repo $f)
  if($LASTEXITCODE -ne 0){throw "Database migration failed: $f"}
 }
 $Probe=@"
 select count(*) as ai_market_tables from information_schema.tables where table_schema='public' and table_name like 'ai_market_%';
 select schemaname,tablename,rowsecurity from pg_tables where schemaname='public' and tablename like 'ai_market_%' order by tablename;
 "@
-$Probe | & psql -X -v ON_ERROR_STOP=1
+$Probe | & psql -X -h $HostName -p $Port -U $Username -d $Database -v ON_ERROR_STOP=1
 if($LASTEXITCODE -ne 0){throw 'Migration probes failed'}
 Write-Host '[LOCAL MIGRATION PASS] Next: inspect permissions, data ingestion, rollback, and authentic Supabase staging.' -ForegroundColor Green
