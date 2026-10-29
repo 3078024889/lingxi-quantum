@@ -38,7 +38,7 @@ for(const row of rows){
 // A failed direct request can be covered by the local application official GitHub API response.
 // These records may be cached; preserve that uncertainty instead of claiming a fresh direct sample.
 for(const row of rows){if(list.some(x=>x.catalogId===row.id))continue;
- const u=new URL(row.website),repo=u.pathname.slice(1).replace(/\\/$/,'').toLowerCase();
+ const u=new URL(row.website),repo=u.pathname.slice(1).replace(/\/$/,'').toLowerCase();
  const v=localByRepo.get(repo);if(!v||!Number.isSafeInteger(v.stars)||v.stars<0||!v.sourceUrl?.startsWith('https://github.com/'))continue;
  list.push({catalogId:row.id,repository:v.id,sourceUrl:v.sourceUrl,collectedAt,stars:v.stars,forks:Number.isSafeInteger(v.forks)?v.forks:null,
  openIssues:null,licenseSpdx:v.license||null,pushedAt:v.pushedAt||null,archived:null,
