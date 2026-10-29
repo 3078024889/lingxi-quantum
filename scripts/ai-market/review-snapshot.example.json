@@ -1,0 +1,18 @@
+{
+  "reviewedAt": "2026-10-29",
+  "previewUrl": "https://example.vercel.app",
+  "reviewApproved": false,
+  "languages": [
+    "zh",
+    "en",
+    "ja",
+    "ko",
+    "fr",
+    "de",
+    "es",
+    "pt",
+    "ar"
+  ],
+  "products": [],
+  "records": []
+}
