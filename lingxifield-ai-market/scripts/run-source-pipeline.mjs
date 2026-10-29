@@ -18,7 +18,7 @@ const force=process.argv.includes('--force'),now=Date.now(),results=[];
 for(const t of tasks){
  if(t.requiresEnv&&!process.env[t.requiresEnv]){results.push({source:t.id,outcome:'skipped_no_credentials'});continue;}
  const previous=state[t.id];
- if(!force&&previous?.ok&&Number.isFinite(Date.parse(previous.at))&&now-Date.parse(previous.at)<t.ttlHours*3600000){
+ if(!force&&previous?.ok&&(t.id!=='github'||previous.complete===true)&&Number.isFinite(Date.parse(previous.at))&&now-Date.parse(previous.at)<t.ttlHours*3600000){
   results.push({source:t.id,outcome:'skipped_fresh',lastSuccessAt:previous.at});continue;
  }
  const started=Date.now();
@@ -28,7 +28,7 @@ for(const t of tasks){
  if(ok&&t.id==='github'){try{const payload=JSON.parse((run.stdout||'').trim());partial=Number(payload.completed)<Number(payload.requested)||Number(payload.errorCount)>0;}catch{partial=true;}}
  results.push({source:t.id,outcome:ok?(partial?'partial':'collected'):'failed',code:run.status,durationMs:Date.now()-started,error:run.error?.code||null,
   output:(run.stdout||'').slice(-800),stderr:(run.stderr||'').slice(-400)});
- if(ok&&!partial)state[t.id]={ok:true,at:new Date().toISOString()};
+ if(ok&&!partial)state[t.id]={ok:true,complete:true,at:new Date().toISOString()};
 }
 // Build a local query index even when the bulk source is still within its refresh window.
 const indexPath=resolve(dir,'models-index.json');
