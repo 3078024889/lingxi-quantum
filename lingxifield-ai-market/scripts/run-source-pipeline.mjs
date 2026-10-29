@@ -43,6 +43,11 @@ if(results.some(x=>x.source==='modelsdev'&&x.outcome==='collected')){
  {cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir,AI_MARKET_PREVIOUS_MODELS_FILE:previousPath},encoding:'utf8',timeout:90000,maxBuffer:1024*1024});
  results.push({source:'model_price_changes',outcome:run.status===0?'compared':'failed',code:run.status,output:(run.stdout||'').slice(-400),stderr:(run.stderr||'').slice(-400)});}
 }
+// Rebuild reproducible curated view when a fresh models index is available.
+try{await readFile(resolve(dir,'models-index.json'));
+ const run=spawnSync(process.execPath,[resolve(root,'scripts','curate-model-index.mjs')],{cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir},encoding:'utf8',timeout:90000,maxBuffer:1024*1024});
+ results.push({source:'models_curation',outcome:run.status===0?'curated':'failed',code:run.status,output:(run.stdout||'').slice(-500)});
+}catch{}
 const report={runAt:new Date().toISOString(),results,note:'Independent adapters. A failed source never causes another source to be falsely marked complete.'};
 const writeJson=async(p,value)=>{const tmp=p+'.tmp';await writeFile(tmp,JSON.stringify(value,null,2)+'\n');await rename(tmp,p)};
 await writeJson(stateFile,state);await writeJson(resolve(dir,'pipeline-last-run.json'),report);
