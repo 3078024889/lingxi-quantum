@@ -10,5 +10,5 @@ export async function generateMetadata({params}:{params:Promise<{locale:string}>
 }
 export default async function LocalizedMarket({params}:{params:Promise<{locale:string}>}){
  const {locale}=await params;if(!MARKET_LOCALES.includes(locale))notFound();
- return <div lang={locale} dir={marketDirection(locale)}><AiMarketSearch labels={MARKET_LABELS[locale]}/></div>;
+ return <div lang={locale} dir={marketDirection(locale)}><AiMarketSearch locale={locale} labels={MARKET_LABELS[locale]}/></div>;
 }
