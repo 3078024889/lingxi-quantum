@@ -36,7 +36,7 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  const out=resolve(process.env.AI_MARKET_CANDIDATE_OUTPUT||'reports/ai-market-local/hf-model-candidates.json');
  if(/^[a-z]:\\/i.test(out)&&!/^d:\\/i.test(out))throw Error('OUTPUT_MUST_BE_ON_D_DRIVE');
  const offline=process.env.AI_MARKET_HF_JSON||null;
- if(offline&&(!/^[dD]:\\\\/.test(offline)||!offline.toLowerCase().endsWith('.json')))throw Error('OFFLINE_INPUT_MUST_BE_D_DRIVE_JSON');
+ if(offline&&(!(offline[0]?.toLowerCase()==='d'&&offline[1]===':'&&offline.charCodeAt(2)===92)||!offline.toLowerCase().endsWith('.json')))throw Error('OFFLINE_INPUT_MUST_BE_D_DRIVE_JSON');
  const report=await collect({offlineJson:offline});await mkdir(dirname(out),{recursive:true});
  await writeFile(out,JSON.stringify(report,null,2));console.log('Candidate-only source file: '+out+' ('+report.candidates.length+' records)');
 }
