@@ -9,6 +9,9 @@ const out=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||resolve(root,'reports','gi
 const max=Math.max(1,Math.min(20,Number(process.env.AI_MARKET_MAX_REPOS)||15));
 const rows=src.filter(x=>x.status==='unverified'&&/^https:\/\/github\.com\/[a-z0-9_.-]+\/[a-z0-9_.-]+\/?$/i.test(x.website)).slice(0,max);
 const list=[],errors=[];const collectedAt=new Date().toISOString();
+const target=resolve(out,'github-repository-snapshot.json');
+let prior=null;try{prior=JSON.parse(await readFile(target,'utf8'));}catch{}
+let rateLimit=null;
 const localBase=process.env.AI_MARKET_LOCAL_URL||'http://127.0.0.1:3201';
 // Fall back only to an explicitly local running project. It already queried GitHub upstream.
 const localUrl=new URL(localBase);
@@ -22,7 +25,11 @@ for(const row of rows){
  const parsed=new URL(row.website),[owner,name]=parsed.pathname.split('/').filter(Boolean);
  try{
   const response=await fetch('https://api.github.com/repos/'+encodeURIComponent(owner)+'/'+encodeURIComponent(name),{headers:{Accept:'application/vnd.github+json','User-Agent':'LINGXIFIELD-Market-Research'},signal:AbortSignal.timeout(12000)});
-  if(!response.ok){errors.push({id:row.id,reason:'HTTP_'+response.status});if(response.status===403||response.status===429){break;}continue;}
+  if(!response.ok){const remaining=response.headers.get('x-ratelimit-remaining'),reset=response.headers.get('x-ratelimit-reset');
+    const reason=response.status===429||response.status===403&&remaining==='0'?'RATE_LIMIT':response.status===403?'ACCESS_DENIED_403':'HTTP_'+response.status;
+    errors.push({id:row.id,reason,httpStatus:response.status});
+    if(reason==='RATE_LIMIT'){rateLimit={remaining,resetEpoch:reset?Number(reset):null};break;}
+    continue;}
   const v=await response.json();
   if(v.private||typeof v.full_name!=='string'||v.full_name.toLowerCase()!==(owner+'/'+name).toLowerCase()){errors.push({id:row.id,reason:'REPOSITORY_IDENTITY_MISMATCH'});continue;}
   list.push({catalogId:row.id,repository:v.full_name,sourceUrl:v.html_url,collectedAt,
@@ -44,14 +51,19 @@ for(const row of rows){if(list.some(x=>x.catalogId===row.id))continue;
  openIssues:null,licenseSpdx:v.license||null,pushedAt:v.pushedAt||null,archived:null,
  metricScope:'github_repository_only',verification:'local_app_github_api_cached_response',freshness:'unknown_or_cached'});
 }
+// Preserve last successful snapshots without pretending they were refreshed today.
+let retained=0;const previous=Array.isArray(prior?.records)?prior.records:[];
+for(const old of previous){if(!rows.some(x=>x.id===old.catalogId)||list.some(x=>x.catalogId===old.catalogId))continue;
+ if(!old.sourceUrl?.startsWith('https://github.com/')||!Number.isSafeInteger(old.stars))continue;
+ list.push({...old,verification:old.verification||'retained_previous_snapshot',freshness:'retained_not_refreshed'});retained++;}
 const report={kind:'github_repository_snapshot',collectedAt,source:'https://api.github.com/repos/{owner}/{repo}',
  scope:'repository stars, forks and maintenance only; NOT site visits, app downloads, SEO/GEO, revenue or AI quality',
- requested:rows.length,completed:list.length,errors,localSourceMatched:list.filter(x=>x.verification==='local_app_github_api_cached_response').length,records:list};
+ requested:rows.length,completed:list.length,retained,rateLimit,errors,localSourceMatched:list.filter(x=>x.verification==='local_app_github_api_cached_response').length,records:list};
 await mkdir(out,{recursive:true});
 const serialized=JSON.stringify(report,null,2)+'\n';
 const digest=createHash('sha256').update(serialized).digest('hex');
-const target=resolve(out,'github-repository-snapshot.json'),temporary=target+'.tmp';
+const temporary=target+'.tmp';
 await writeFile(temporary,serialized);await rename(temporary,target);
 await writeFile(resolve(out,'github-repository-snapshot.sha256'),digest+'  github-repository-snapshot.json\n');
-console.log(JSON.stringify({file:target,sha256:digest,completed:list.length,requested:rows.length,errorCount:errors.length,scope:report.scope},null,2));
+console.log(JSON.stringify({file:target,sha256:digest,completed:list.length,requested:rows.length,errorCount:errors.length,retained,rateLimit,scope:report.scope},null,2));
 if(!list.length)process.exitCode=2;
