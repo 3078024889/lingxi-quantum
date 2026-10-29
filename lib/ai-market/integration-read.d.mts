@@ -1,0 +1,2 @@
+export declare function assembleVerifiedTools(data?:{entities?:unknown[];capabilities?:unknown[];evidence?:unknown[]}):any[];
+export declare function answerVerifiedQuestion(question:string,data:{entities?:unknown[];capabilities?:unknown[];evidence?:unknown[]},options?:{limit?:number}):{query:string;reason:string;needsClarification:boolean;detectedTasks:{id:string;label:string}[];results:{id:string;name:string;officialUrl:string;matchedTasks:string[];evidenceUrls:string[];freeQuota:null;price:null;regionAccess:null;verification:string}[];limitations:string};
