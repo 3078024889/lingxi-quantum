@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,readFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {mergeCandidates,persistCandidates} from './candidate-store.mjs';
+const c=(id)=>({candidateKey:'hf:models:org/'+id,status:'candidate',sourceUrl:'https://huggingface.co/org/'+id,name:id});
+test('insert candidate',()=>assert.equal(mergeCandidates([],[c('one')]).stats.added,1));
+test('merge duplicate upstream ID',()=>assert.equal(mergeCandidates([c('one')],[c('one')]).stats.total,1));
+test('never publish imported candidates',()=>assert.equal(mergeCandidates([],[c('one')]).publicationApproved,false));
+test('preserve verified state',()=>assert.equal(mergeCandidates([{...c('one'),status:'verified'}],[c('one')]).records[0].status,'verified'));
+test('reject duplicate historical records',()=>assert.throws(()=>mergeCandidates([c('one'),c('one')],[]),/DUPLICATE/));
+test('reject malicious candidate key',()=>assert.throws(()=>mergeCandidates([],[{...c('one'),candidateKey:'../../x'}]),/INVALID/));
+test('write file atomically',async()=>{const d=await mkdtemp(join(tmpdir(),'lingxi-market-'));try{const f=join(d,'candidates.json');await persistCandidates({file:f,candidates:[c('one')]});const a=JSON.parse(await readFile(f,'utf8'));assert.equal(a.length,1);}finally{await rm(d,{recursive:true,force:true});}});
