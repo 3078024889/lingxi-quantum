@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: '24'
       - name: Review input security contracts
-        run: node --test scripts/ai-market/audit-review-gate.test.mjs lib/ai-market-review-validation.test.mjs
+        run: node --test scripts/ai-market/audit-review-gate.test.mjs scripts/ai-market/huggingface-discovery.test.mjs lib/ai-market-review-validation.test.mjs
       - name: Validate safe nonpublishable example
         run: |
           node scripts/ai-market/audit-review-gate.mjs scripts/ai-market/review-snapshot.example.json
