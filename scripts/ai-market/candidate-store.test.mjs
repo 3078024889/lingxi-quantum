@@ -12,3 +12,5 @@ test('preserve verified state',()=>assert.equal(mergeCandidates([{...c('one'),st
 test('reject duplicate historical records',()=>assert.throws(()=>mergeCandidates([c('one'),c('one')],[]),/DUPLICATE/));
 test('reject malicious candidate key',()=>assert.throws(()=>mergeCandidates([],[{...c('one'),candidateKey:'../../x'}]),/INVALID/));
 test('write file atomically',async()=>{const d=await mkdtemp(join(tmpdir(),'lingxi-market-'));try{const f=join(d,'candidates.json');await persistCandidates({file:f,candidates:[c('one')]});const a=JSON.parse(await readFile(f,'utf8'));assert.equal(a.length,1);}finally{await rm(d,{recursive:true,force:true});}});
+
+test('verified content cannot be overwritten by unattended refresh',()=>{const first={...c('one'),status:'verified',name:'approved-name'};const x=mergeCandidates([first],[{...c('one'),name:'untrusted-new-name'}]);assert.equal(x.records[0].name,'approved-name');assert.equal(x.records[0].status,'verified');});
