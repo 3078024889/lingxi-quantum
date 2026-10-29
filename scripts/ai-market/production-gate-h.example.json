@@ -1,0 +1,5 @@
+{
+  "releaseApproved": false,
+  "checks": {},
+  "message": "Populate each gate only after actual staging and browser evidence. Do not hand-edit pass without artifacts."
+}
