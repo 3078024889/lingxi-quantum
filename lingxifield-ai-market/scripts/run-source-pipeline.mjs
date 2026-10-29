@@ -9,6 +9,7 @@ const dir=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||resolve(root,'reports','so
 await mkdir(dir,{recursive:true});
 const tasks=[
  {id:'modelsdev',script:'collect-modelsdev-bulk.mjs',ttlHours:24},
+ {id:'huggingface_spaces',script:'collect-hf-spaces.mjs',ttlHours:24},
  {id:'github',script:'collect-github-catalog.mjs',ttlHours:6},
  {id:'openrouter',script:'collect-openrouter-bulk.mjs',ttlHours:24,requiresEnv:'OPENROUTER_API_KEY'}
 ];
