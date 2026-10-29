@@ -1,6 +1,6 @@
 // One-request bulk snapshot from the public models.dev catalog.
 // Attribution and provenance are mandatory. No provider-specific usage statistics inferred.
-import {mkdir,writeFile,rename} from 'node:fs/promises';
+import {mkdir,writeFile,rename,readFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 const out=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||'./reports/model-bulk');
@@ -29,7 +29,16 @@ rows.sort((a,b)=>a.providerId.localeCompare(b.providerId)||a.modelId.localeCompa
 await mkdir(out,{recursive:true});
 const body=JSON.stringify({source:'models.dev',sourceUrl:endpoint,collectedAt,notice:'Third-party aggregation. Prices and specifications require cross-check with each model provider; no global traffic, downloads or SEO/GEO claims.',providerCount:Object.keys(data).length,modelCount:rows.length,records:rows},null,2)+'\n';
 const dest=resolve(out,'modelsdev-bulk.json');
+// Preserve the previously completed snapshot before atomically replacing the latest.
+// The previous copy permits honest changes between two separately collected datasets.
+let archivedPrevious=false;
+try{const previous=await readFile(dest,'utf8');const parsed=JSON.parse(previous);
+ if(parsed.source==='models.dev'&&Array.isArray(parsed.records)){
+  await writeFile(resolve(out,'modelsdev-previous.json.tmp'),previous);
+  await rename(resolve(out,'modelsdev-previous.json.tmp'),resolve(out,'modelsdev-previous.json'));
+  archivedPrevious=true;
+ }}catch(e){if(e?.code!=='ENOENT')throw e;}
 await writeFile(dest+'.tmp',body);await rename(dest+'.tmp',dest);
 const sha256=createHash('sha256').update(body).digest('hex');
 await writeFile(dest+'.sha256',sha256+'  modelsdev-bulk.json\n');
-console.log(JSON.stringify({file:dest,models:rows.length,providers:Object.keys(data).length,sha256,source:endpoint,verifiedAgainstPublishers:false}));
+console.log(JSON.stringify({file:dest,models:rows.length,providers:Object.keys(data).length,sha256,source:endpoint,verifiedAgainstPublishers:false,archivedPrevious}));
