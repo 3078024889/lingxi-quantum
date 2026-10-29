@@ -14,7 +14,7 @@ export async function GET(req:NextRequest){
  try{
   const db=createAdminClient();
   const [entityResponse,capabilityResponse]=await Promise.all([
-   db.from('ai_market_identity').select('id,name,status,entity_type,official_website,verified_at,verified_by').eq('entity_type','product').eq('status','verified').limit(200),
+   db.from('ai_market_identity').select('id,name,status:verification_status,entity_type,official_website,verified_at,verified_by').eq('entity_type','product').eq('verification_status','verified').limit(200),
    db.from('ai_market_verified_capabilities').select('entity_id,capability_key,evidence_id,verified_by,verified_at').limit(1000)
   ]);
   if(entityResponse.error||capabilityResponse.error)return unavailable();
