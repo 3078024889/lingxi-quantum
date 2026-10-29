@@ -49,6 +49,6 @@ test('nine languages render from shared translations and Arabic has RTL',async()
  const messages=await read('lib/ai-market/i18n-market.mjs');
  assert.match(page,/generateStaticParams/);
  assert.match(page,/marketDirection\(locale\)/);
- assert.match(page,/AiMarketSearch labels=/);
+ assert.match(page,/<AiMarketSearch\b[^>]*\blabels=\{MARKET_LABELS\[locale\]\}/);
  assert.match(messages,/\['en','ja','ko','fr','de','es','pt','ar','zh'\]/);
 });
