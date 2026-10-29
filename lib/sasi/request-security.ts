@@ -21,7 +21,7 @@ function trustedUrl(value:string|null){
 function localDevelopmentOrigin(request:NextRequest, origin:string|null, referer:string|null){
   if(process.env.NODE_ENV!=="development")return false;
   const host=request.headers.get("host")?.toLowerCase().trim()||"";
-  if(!/^localhost:\\d{1,5}$/.test(host)&&!/^127\\.0\\.0\\.1:\\d{1,5}$/.test(host))return false;
+  if(!/^localhost:[0-9]{1,5}$/.test(host)&&!/^127[.]0[.]0[.]1:[0-9]{1,5}$/.test(host))return false;
   const source=origin||referer;
   if(!source)return false;
   try{
