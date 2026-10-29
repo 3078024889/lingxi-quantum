@@ -1,0 +1,2 @@
+import test from'node:test';import assert from'node:assert/strict';import{readFile}from'node:fs/promises';
+test('browser smoke never targets production',async()=>{const s=await readFile(new URL('./browser-nine-languages.mjs',import.meta.url),'utf8');assert.match(s,/LOCAL_STAGING_ONLY/);assert.match(s,/chromium\.launch/);assert.match(s,/const locales=\['zh','en','ja','ko','fr','de','es','pt','ar'\]/)});
