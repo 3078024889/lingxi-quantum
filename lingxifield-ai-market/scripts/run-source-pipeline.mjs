@@ -26,6 +26,13 @@ for(const t of tasks){
   output:(run.stdout||'').slice(-800),stderr:(run.stderr||'').slice(-400)});
  if(ok)state[t.id]={ok:true,at:new Date().toISOString()};
 }
+// Build a local query index even when the bulk source is still within its refresh window.
+const indexPath=resolve(dir,'models-index.json');
+let indexExists=false;try{await readFile(indexPath);indexExists=true}catch{}
+if(!indexExists||results.some(x=>x.source==='modelsdev'&&x.outcome==='collected')){
+ const run=spawnSync(process.execPath,[resolve(root,'scripts','build-model-index.mjs')],{cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir},encoding:'utf8',timeout:90000,maxBuffer:1024*1024});
+ results.push({source:'models_index',outcome:run.status===0?'indexed':'failed',code:run.status,output:(run.stdout||'').slice(-800),stderr:(run.stderr||'').slice(-400)});
+}
 const report={runAt:new Date().toISOString(),results,note:'Independent adapters. A failed source never causes another source to be falsely marked complete.'};
 const writeJson=async(p,value)=>{const tmp=p+'.tmp';await writeFile(tmp,JSON.stringify(value,null,2)+'\n');await rename(tmp,p)};
 await writeJson(stateFile,state);await writeJson(resolve(dir,'pipeline-last-run.json'),report);
