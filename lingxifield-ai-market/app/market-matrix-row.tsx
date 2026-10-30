@@ -3,6 +3,7 @@ import {Fragment,useState} from 'react';
 import type {Platform} from '../lib/data';
 import {accessFor,accessValue,geoSummary} from '../lib/platform-access-facts';
 import {platformLinks,safePublisherLink} from '../lib/official-platform-links';
+import {capabilityProfile} from '../lib/capability-profiles';
 import MarketRowActions from './market-row-actions';
 
 export default function MarketMatrixRow({platform:p,position,onDetail,onToggleCompare,isCompared}:{
@@ -10,6 +11,7 @@ export default function MarketMatrixRow({platform:p,position,onDetail,onToggleCo
 }){
  const [expanded,setExpanded]=useState(false);
  const facts=accessFor(p.id),guide=p.guide;
+ const rich=capabilityProfile(p.id);
  const sources=platformLinks(p.id).links.filter(safePublisherLink);
  const officialDownload=sources.find(link=>['desktop','ios','android'].includes(link.kind));
  const modelFact=p.conditions?.find(f=>f.label==='模型与用量');
@@ -34,8 +36,8 @@ export default function MarketMatrixRow({platform:p,position,onDetail,onToggleCo
     <button type="button" className="platformName" onClick={onDetail}><span className="brandIcon">{p.symbol}</span><span><strong>{p.name}</strong><small>{p.company}</small></span></button>
     <small className="matrixTiny">{p.category}</small>
    </td>
-   <td className="matrixBrief"><strong>{guide?.strengths||p.features.slice(0,2).join(' · ')||p.about}</strong>
-    <small>{p.about}</small><small className="matrixCaveat">产品定位，非独立效果评分</small></td>
+   <td className="matrixBrief"><strong>{rich?.headline||guide?.strengths||p.features.slice(0,2).join(' · ')||p.about}</strong>
+    <small>{rich?.differentiator||p.about}</small><small>{rich?rich.capabilities.slice(0,2).map(c=>c.name).join(' · '):p.features.slice(0,3).join(' · ')}</small><small className="matrixCaveat">官网资料整理，非独立效果评分</small></td>
    <td className="matrixBrief"><strong>{model}</strong>
     {modelFact?<a className="matrixSource" target="_blank" rel="noopener noreferrer" href={modelFact.source}>官方型号 · {modelFact.checkedAt.slice(0,10)} ↗</a>:<small>型号随版本与套餐变化</small>}</td>
    <td className="matrixBrief"><strong>{reasoning}</strong>
