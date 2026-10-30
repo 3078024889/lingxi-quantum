@@ -15,5 +15,37 @@ export async function GET(request:Request){
   const items=filtered.slice(cursor,cursor+limit);
   return NextResponse.json({total:filtered.length,items,cursor,limit,nextCursor:cursor+items.length<filtered.length?cursor+items.length:null,
    updatedAt:data.generatedAt,disclosure:'Unverified candidate products; prices, usage, free quotas, company status and SEO/GEO ranking require independent sources.'},{headers:{'Cache-Control':'no-store'}});
- }catch{return NextResponse.json({status:'product_inventory_missing',total:0,items:[],message:'Run the unified catalog builder using AI_MARKET_SNAPSHOT_DIR.'},{status:503})}
+ }catch{
+  // Hugging Face's public Spaces index is a candidate application directory, not vetted products.
+  try{
+   const endpoint=new URL('https://huggingface.co/api/spaces');
+   endpoint.searchParams.set('sort','likes');endpoint.searchParams.set('direction','-1');
+   endpoint.searchParams.set('limit','100');
+   if(q)endpoint.searchParams.set('search',q);
+   const response=await fetch(endpoint.toString(),{next:{revalidate:1800},signal:AbortSignal.timeout(12000),headers:{Accept:'application/json'}});
+   if(!response.ok)throw Error('HUB_SOURCE_UNAVAILABLE');
+   const contentLength=Number(response.headers.get('content-length')||0);
+   if(contentLength>4000000)throw Error('HUB_SOURCE_TOO_LARGE');
+   const raw=await response.text();if(raw.length>4000000)throw Error('HUB_SOURCE_TOO_LARGE');
+   const result=JSON.parse(raw) as unknown;
+   if(!Array.isArray(result))throw Error('HUB_SOURCE_INVALID');
+   const items:Product[]=result.filter(x=>x!==null&&typeof x==='object')
+    .filter(x=>typeof x.id==='string'&&/^[\\w.-]+\\/[\\w.-]+$/.test(x.id)&&x.private!==true)
+    .map(x=>({id:'hf-space:'+x.id,name:x.id.split('/')[1],company:x.id.split('/')[0],
+      category:'Hugging Face Spaces',url:'https://huggingface.co/spaces/'+x.id,
+      description:typeof x.cardData?.short_description==='string'?x.cardData.short_description.slice(0,200):null,
+      capabilities:Array.isArray(x.tags)?x.tags.filter((t:unknown)=>typeof t==='string').slice(0,6):[],
+      price:null,freeQuota:null,usageMetric:null,reviewStatus:'candidate',
+      evidence:{kind:'huggingface_public_space',url:'https://huggingface.co/spaces/'+x.id,observedAt:typeof x.lastModified==='string'?x.lastModified:null}
+    }));
+   const page=items.slice(cursor,cursor+limit);
+   return NextResponse.json({total:items.length,items:page,limit,cursor,
+    nextCursor:cursor+page.length<items.length?cursor+page.length:null,
+    source:'Hugging Face Spaces public API',partialCatalog:true,updatedAt:new Date().toISOString(),
+    disclosure:'Public Hugging Face Spaces candidates only; commercial pricing, global traffic and quality are not verified.'},
+    {headers:{'Cache-Control':'public, s-maxage=600, stale-while-revalidate=1200'}});
+  }catch{
+   return NextResponse.json({status:'SOURCE_TEMPORARILY_UNAVAILABLE',total:0,items:[]},{status:503,headers:{'Cache-Control':'public,s-maxage=60'}});
+  }
+ }
 }
