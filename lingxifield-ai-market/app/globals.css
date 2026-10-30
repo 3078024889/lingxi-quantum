@@ -120,3 +120,14 @@
 .downloadLinks{display:flex;gap:9px;flex-wrap:wrap}
 .downloadLinks>a{padding:10px 12px;border-radius:8px;background:#f2f7ff;border:1px solid #d4e4fa;color:#1356aa;text-decoration:none;font-size:12px;font-weight:650}
 @media(max-width:720px){.downloadCards{grid-template-columns:1fr}.officialDownloads{padding:14px}}
+
+.sponsoredArea{margin:12px 0;padding:14px}
+.sponsoredArea h2{font-size:16px;margin:0 0 10px}
+.sponsoredArea h2 small{font-size:11px;color:#587191;font-weight:500;margin-left:8px}
+.sponsoredCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sponsoredCards>a{display:flex;flex-direction:column;gap:6px;padding:15px;border:1px solid #cbd9ee;border-radius:10px;background:#f9fbff;text-decoration:none;color:#19447d}
+.sponsoredCards .sponsoredTag{width:max-content;background:#e7eef8;color:#60758e;font-size:10px;border-radius:4px;padding:3px 6px}
+.sponsoredCards strong{font-size:15px}
+.sponsoredCards a>span:last-child{color:#1664d0;font-size:12px}
+.sponsoredArea p{font-size:11px;color:#74839c;margin:10px 0 0}
+@media(max-width:640px){.sponsoredCards{grid-template-columns:1fr}}
