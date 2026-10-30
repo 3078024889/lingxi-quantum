@@ -4,7 +4,9 @@ import {readFile} from 'node:fs/promises';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 test('first product screen gives sourced practical outcomes not engineering terms',async()=>{
  const src=await read('app/market-decision-cards.tsx');
- for(const label of ['能做什么','免费的功能','付费功能','参考价格'])assert.ok(src.includes(label),label);
+ const dictionary=await read('lib/market-decision-i18n.ts');
+ for(const label of ['能做什么','免费的功能','付费功能','参考价格'])assert.ok(dictionary.includes(label),label);
+ assert.ok(src.includes('labels.free'));
  const region=await read('app/market-global-access.tsx');
  assert.ok(region.includes('regionName(region,language)'));
  assert.ok(region.includes('x.payments.source'));
@@ -17,7 +19,7 @@ test('unknown product conditions are not labeled free and user can compare',asyn
  const src=await read('app/market-decision-cards.tsx');
  assert.ok(src.includes("platform.conditions||[]"));
  assert.ok(src.includes('selectedForCompare'));
- assert.ok(src.includes('全球地区与支付面板'));
+ assert.ok(src.includes('labels.notice'));
 });
 test('six facts fit on mobile screens without horizontal overflow',async()=>{
  const css=await read('app/globals.css');

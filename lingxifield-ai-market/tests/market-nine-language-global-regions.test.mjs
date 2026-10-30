@@ -25,8 +25,8 @@ test('user-selected country does not derive from UI language',()=>{
 test('official support differs from direct reachability tests',()=>{
  assert.match(source,/reachability:'not_tested'/);
  assert.match(source,/const unsupported=/);
- assert.match(source,/CN:unsupported\(OPENAI_REGIONS\)/);
- assert.match(source,/CN:unsupported\(CLAUDE_REGIONS\)/);
+ assert.match(source,/officialCountrySnapshot\(id\)/);
+ assert.match(source,/officialCountrySnapshot\(id\)/);
  assert.match(source,/status:'conditional'.*GEMINI_REGIONS/s);
  assert.match(source,/paymentNote:'Publisher lists payment methods globally; not all methods are available in every country.'/);
 });

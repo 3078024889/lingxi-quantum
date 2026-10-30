@@ -14,7 +14,7 @@ const [catalog,profiles,platforms]=await Promise.all([
   readFile(path.join(root,'lib/capability-profiles.ts'),'utf8'),
   readFile(path.join(root,'lib/data.ts'),'utf8')
 ]);
-const curated=new Set([...profiles.matchAll(/^\s*([a-z0-9-]+):profile\(/gm)].map(x=>x[1]));
+const curated=new Set([...profiles.matchAll(/^\s*['"]?([a-z0-9-]+)['"]?:profile\(/gm)].map(x=>x[1]));
 const seeded=[...platforms.matchAll(/\{id:'([a-z0-9-]+)',name:'([^']+)',company:'([^']+)'/g)].map(x=>({id:x[1],name:x[2],company:x[3],category:'现有平台',website:'',description:'',capabilities:[]}));
 const merged=new Map(seeded.map(x=>[x.id,x]));
 for(const row of catalog.filter(validCatalogEntry))merged.set(row.id,row);

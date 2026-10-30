@@ -341,3 +341,57 @@
 [dir="rtl"] .marketRegionSelect select{padding:7px 9px 7px 23px}
 @media(max-width:950px){.topbar .marketRegionSelect{max-width:170px}.marketRegionSelect{white-space:normal}.globalRegionFacts{grid-template-columns:1fr}}
 @media(max-width:550px){.globalRegionPanel{padding:12px}.marketRegionSelect select{max-width:155px}.globalRegionHeading h2{font-size:16px}}
+
+
+/* Guest feedback: fast, readable, multilingual and comfortable on 2GB deployments. */
+.visitorFeedback{margin:22px auto;padding:22px 24px;border:1px solid #dae7fa;background:linear-gradient(145deg,#fbfdff,#ffffff);border-radius:15px;max-width:1360px}
+.visitorFeedbackHead{display:flex;gap:13px;align-items:flex-start;margin-bottom:20px}
+.visitorFeedbackHead h2{font-size:20px;color:#0e386c;line-height:1.3;margin:0 0 6px}
+.visitorFeedbackHead p{font-size:13px;color:#526d8a;margin:0;line-height:1.75}
+.visitorFeedbackIcon{border-radius:11px;background:#e9f2ff;color:#1764bd;padding:12px;flex:none}
+.visitorFeedbackCols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:18px}
+.visitorFeedbackForm,.visitorFeedbackPublished{background:#f7faff;border:1px solid #e0eaf7;border-radius:11px;padding:16px;min-width:0}
+.visitorFeedbackForm h3,.visitorFeedbackPublished h3{font-size:14px;color:#17416f;margin:0 0 13px;display:flex;align-items:center;gap:7px}
+.visitorFeedbackForm label{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;font-size:12px;font-weight:650;color:#456388}
+.visitorFeedbackForm select,.visitorFeedbackForm input,.visitorFeedbackForm textarea{width:100%;box-sizing:border-box;padding:10px 11px;border:1px solid #cfdff3;border-radius:7px;color:#183c62;background:white;font:inherit;font-size:13px;line-height:1.5}
+.visitorFeedbackForm textarea{resize:vertical;min-height:100px}
+.visitorFeedbackForm :is(input,select,textarea):focus-visible{outline:2px solid #7aafff;outline-offset:2px}
+.visitorFeedbackPrivacy{display:flex;gap:7px;align-items:flex-start;color:#788ba5;font-size:11px;line-height:1.7}
+.visitorFeedbackActions{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
+.visitorFeedbackActions button{background:#1264d7;color:white;border:0;border-radius:7px;padding:11px 15px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;cursor:pointer}
+.visitorFeedbackActions button:disabled{opacity:.5;cursor:wait}
+.visitorFeedbackActions a{font-size:11px;color:#1764b6;overflow-wrap:anywhere}
+.visitorFeedbackError{font-size:12px;color:#b04d31}
+.visitorFeedbackSuccess{font-size:12px;color:#127652}
+.visitorFeedbackEntry{padding:11px 0;border-bottom:1px solid #e1e9f4}
+.visitorFeedbackEntry>div{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.visitorFeedbackEntry strong{font-size:12px;color:#1e5089}
+.visitorFeedbackEntry span{border:1px solid #d9e8fa;background:#eaf3ff;border-radius:5px;color:#3d6190;font-size:10px;padding:3px 6px}
+.visitorFeedbackEntry time{font-size:10px;color:#8193a9;margin-inline-start:auto}
+.visitorFeedbackEntry p{font-size:12px;color:#426080;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.visitorFeedbackEmpty{padding:20px 0;color:#8397af;font-size:12px;line-height:1.8}
+.visitorFeedbackPublished>small{font-size:10px;color:#8593a6}
+@media(max-width:850px){.visitorFeedbackCols{grid-template-columns:1fr}.visitorFeedback{padding:15px}}
+@media(max-width:550px){.visitorFeedbackHead h2{font-size:17px}.visitorFeedbackForm,.visitorFeedbackPublished{padding:12px}}
+
+
+/* Moderator-only feedback inbox. Not part of the public rating UI. */
+.feedbackAdminPage{max-width:960px;margin:30px auto;padding:0 20px 45px;color:#193c65}
+.feedbackAdminPage>a{color:#2368c2;font-size:13px}
+.feedbackAdminPage header{margin:24px 0 25px}
+.feedbackAdminPage h1{font-size:25px;line-height:1.4;margin:0 0 9px}
+.feedbackAdminPage header p,.feedbackAdminLogin p{color:#617a96;font-size:12px;line-height:1.8}
+.feedbackAdminLogin,.feedbackAdminItem{padding:21px;background:#fff;border:1px solid #dce7f7;border-radius:12px;margin:14px 0}
+.feedbackAdminLogin{max-width:470px}
+.feedbackAdminLogin label,.feedbackAdminItem label{display:flex;flex-direction:column;gap:7px;margin:13px 0;color:#3d5d82;font-size:12px;font-weight:650}
+.feedbackAdminPage input,.feedbackAdminPage textarea{padding:10px;border:1px solid #ccd9ec;border-radius:7px;background:white;color:#1d416d;font-size:13px;width:100%;box-sizing:border-box}
+.feedbackAdminPage button{border:1px solid #b3cdeb;border-radius:7px;background:#eaf3ff;color:#1553a0;padding:9px 13px;cursor:pointer;font-size:12px;font-weight:700}
+.feedbackAdminPage button:disabled{opacity:.55;cursor:wait}
+.feedbackAdminLogin button,.feedbackAdminActions button:first-child{background:#1366d5;color:white}
+.feedbackAdminControls{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.feedbackAdminControls h2{font-size:17px;margin-right:auto}
+.feedbackAdminMeta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:#597697}
+.feedbackAdminMeta strong{color:#1454a4}
+.feedbackAdminItem>p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;font-size:13px}
+.feedbackAdminActions{display:flex;flex-wrap:wrap;gap:10px}
+.feedbackAdminPage :is(button,input,textarea):focus-visible{outline:2px solid #4e9af4;outline-offset:2px}
