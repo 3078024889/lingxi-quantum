@@ -1,0 +1,316 @@
+{
+  "schema": "lingxifield_existing_sources_v1",
+  "note": "Seed URLs are discovery targets and must be checked for redirects, correctness, usage rights and current scope. Data claims require separately verified source text.",
+  "sources": [
+    {
+      "id": "chatgpt",
+      "sourceType": "commercial_official_page",
+      "url": "https://openai.com/chatgpt/pricing/",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "gemini",
+      "sourceType": "commercial_official_page",
+      "url": "https://gemini.google/subscriptions/",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "claude",
+      "sourceType": "commercial_official_page",
+      "url": "https://claude.com/pricing",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "deepseek",
+      "sourceType": "commercial_official_page",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "grok",
+      "sourceType": "commercial_official_page",
+      "url": "https://x.ai/api",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "perplexity",
+      "sourceType": "commercial_official_page",
+      "url": "https://www.perplexity.ai/pro",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "qwen",
+      "sourceType": "commercial_official_page",
+      "url": "https://help.aliyun.com/zh/model-studio/models",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "runway",
+      "sourceType": "commercial_official_page",
+      "url": "https://runwayml.com/pricing",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "luma",
+      "sourceType": "commercial_official_page",
+      "url": "https://lumalabs.ai/dream-machine/pricing",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "midjourney",
+      "sourceType": "commercial_official_page",
+      "url": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
+      "fields": [
+        "price",
+        "free",
+        "region",
+        "commercial",
+        "limits"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "ollama",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/ollama/ollama",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "llamacpp",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/ggml-org/llama.cpp",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "vllm",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/vllm-project/vllm",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "langchain",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/langchain-ai/langchain",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "llamaindex",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/run-llama/llama_index",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "transformers",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/huggingface/transformers",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "comfyui",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/comfyanonymous/ComfyUI",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "automatic1111",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/AUTOMATIC1111/stable-diffusion-webui",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "whisper",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/openai/whisper",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "fasterwhisper",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/SYSTRAN/faster-whisper",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "openwebui",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/open-webui/open-webui",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "dify",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/langgenius/dify",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "n8n",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/n8n-io/n8n",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "openai-python",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/openai/openai-python",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    },
+    {
+      "id": "anthropic-sdk-python",
+      "sourceType": "github_official_repository_api",
+      "url": "https://api.github.com/repos/anthropics/anthropic-sdk-python",
+      "fields": [
+        "repoStars",
+        "repoForks",
+        "repoLicense",
+        "lastCommit"
+      ],
+      "reviewRequired": true
+    }
+  ]
+}
