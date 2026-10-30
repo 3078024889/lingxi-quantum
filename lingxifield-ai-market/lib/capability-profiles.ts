@@ -93,7 +93,33 @@ export const CAPABILITY_PROFILES:Readonly<Record<string,CapabilityProfile>>={
   cap('需求转应用原型','将文字描述变成可操作的网页界面','制作客户预约网页并修改表单布局','生成的功能必须经过实际运行和安全测试','https://docs.lovable.dev/tips-tricks/chatgpt-app'),
   cap('对话迭代网页','通过新的需求逐次修改组件和交互','把单页项目扩展为含多页面的演示站','积分消耗与发布能力受套餐限制','https://docs.lovable.dev/tips-tricks/chatgpt-app'),
   cap('发布前验证','结合应用设置和实际功能检查后再上线','检查移动端与表单完整流程','生成页面不等同于安全审计或生产验收','https://docs.lovable.dev/tips-tricks/chatgpt-app')
- ],['描述想完成的网站、用户和关键流程','生成原型并逐页测试真实交互','核对数据权限和付费条件再发布'])
+ ],['描述想完成的网站、用户和关键流程','生成原型并逐页测试真实交互','核对数据权限和付费条件再发布']),
+ gemini:profile('多模态理解、Google 资料研究与创作','将文件、搜索、Canvas 和 Google 生态的辅助任务结合；具体工具受地区、年龄和方案限制','学生、知识工作者、内容创作者',[
+  cap('文件与长资料分析','上传 PDF、表格等资料，对内容提问、提取数据与整理结论','把长报告拆分成研究结论、依据和待核实问题','上下文长度随方案变化；超大文件可能消耗较多额度','https://support.google.com/gemini/answer/16275805'),
+  cap('Deep Research 多轮研究','围绕一个研究目标搜索多个来源并整理分析报告','比较几家新能源公司的公开政策与技术布局','要求登录且通常需要成年；研究额度和模型按套餐不同','https://support.google.com/gemini/answer/15719111'),
+  cap('图片、视频与文档创作','使用 Gemini 的生成、编辑、Canvas 等创作入口','先生成主题图片，再制作报告或演示内容','视频/图片高级功能和用量由地区及方案决定','https://support.google.com/gemini/')
+ ],['核对所在地区是否支持 Gemini 消费者或 Workspace 入口','上传合规素材或选择研究、Canvas、图像创作任务','核对配额、数据来源和生成结果，再导出']),
+ replit:profile('描述需求即可生成、迭代与部署实际网页应用','从自然语言需求生成界面与代码，并结合数据库、身份验证、托管部署','小团队、创业者、网页开发者、零基础产品经理',[
+  cap('自然语言创建应用','用一句产品需求启动 Agent，创建网页、应用或仪表板','制作一个含登录和管理页的预约网站原型','实际后端权限、费用和安全性仍需测试','https://replit.com/build'),
+  cap('内置应用基础设施','结合托管、数据库、认证等组件部署完整项目','给预约原型添加数据库与用户注册','托管、用量、资源扩容与账单按实际套餐结算','https://replit.com/'),
+  cap('服务集成与迭代','连接外部应用与 AI 服务，并继续通过对话修改','接入 Stripe 和 Google Workspace，再检查错误流程','第三方系统仍需单独授权、密钥管理与集成测试','https://replit.com/')
+ ],['用自然语言说明应用目标、用户和页面','让 Agent 建立初版，实际点击测试每个功能','审核数据、付款、权限，再决定是否发布']),
+ doubao:profile('中文资料、桌面协作、网页视频总结与对照翻译','桌面端能结合屏幕截图、文档、浏览器和代码场景完成即时辅助','中文办公人员、学生、视频资料研究者',[
+  cap('桌面截图提问与跨软件辅助','选中桌面内容、截图或共享文档，进行解释、总结和协助','截取表格截图并请豆包解释指标变化','需安装桌面版；操作权限、数据隐私以功能设置为准','https://www.doubao.com/download/desktop'),
+  cap('PDF 与网页对照翻译','对 PDF、网页和划词内容进行翻译与双语对照','将外文说明书译成中文并对照原文校读','专业术语需人工校正，格式效果因文件差异而不同','https://www.doubao.com/download/desktop'),
+  cap('网页与视频信息总结','从浏览网页或视频提取概要、重点及后续问题','把课程视频整理成时间线和笔记','视频获取能力依网页内容、客户端版本及权限不同','https://www.doubao.com/download/desktop')
+ ],['使用豆包官方网页版或下载适配设备的客户端','输入中文需求、截屏或分享授权文档','检查引用、对照译文并保存最终成果']),
+ llamacpp:profile('在普通电脑或多种硬件上本地运行 GGUF 大模型','C/C++ 推理、量化及 CPU/GPU 混合执行，兼顾低资源与可控性','本地 AI 实验者、隐私敏感开发团队、推理服务运维人员',[
+  cap('下载并运行 GGUF 模型','调用命令行工具在本机加载兼容模型完成文本或多模态推理','在无云端聊天服务时运行本地轻量语言模型','首次模型下载需要网络；性能由内存与模型大小决定','https://github.com/ggml-org/llama.cpp'),
+  cap('兼容 API 的本地推理服务','启动 llama server，向已有开发应用提供模型推理 API','给内部工具提供本地聊天推理接口','需要自行管理服务访问权限、模型许可与运维','https://github.com/ggml-org/llama.cpp'),
+  cap('量化与 CPU/GPU 混合加速','用 GGUF 及量化模型匹配显存、内存与多种硬件后端','把大模型换成合适位宽版本降低硬件门槛','量化可能降低质量，性能取决于具体芯片及后端','https://github.com/ggml-org/llama.cpp/blob/master/docs/models.md')
+ ],['在官方项目下载编译版或安装工具','选择兼容 GGUF 模型、核对授权与硬件','先做少量可复现问答测试再接入应用']),
+ vllm:profile('面向开发者的高吞吐大模型推理服务','持续批处理、缓存、量化与分布式推理，优化大规模 API 服务资源使用','GPU 服务运维人员、模型平台工程师、企业开发团队',[
+  cap('连续批处理与 KV 缓存调度','处理多请求推理并利用 PagedAttention 等机制管理显存','部署供团队共同使用的模型 API 以提升并发吞吐','需要合适 GPU 与运行参数；吞吐表现须同条件测量','https://docs.vllm.ai/en/stable/'),
+  cap('量化及多硬件推理','按模型与硬件支持使用 FP8、INT4、GPTQ 等量化格式','降低服务显存负载并评估性能损失','量化格式、精度与可运行后端需逐型号核验','https://docs.vllm.ai/en/stable/'),
+  cap('分布式部署与高吞吐服务','结合多 GPU、张量并行与服务端配置提供模型推理','为应用部署可扩展文本生成服务','属于开发者基础设施，不是免注册在线聊天产品','https://docs.vllm.ai/en/stable/')
+ ],['检查 GPU 兼容表和目标模型支持情况','安装对应版本并用小样本部署 API','运行并发、延迟与真实计费压力测试'])
+
 };
 export function capabilityProfile(id:string):CapabilityProfile|undefined{return CAPABILITY_PROFILES[id];}
 export function capabilityKeywords(id:string):string[]{const p=capabilityProfile(id);return p?p.capabilities.flatMap(x=>[x.name,x.outcome]):[];}
