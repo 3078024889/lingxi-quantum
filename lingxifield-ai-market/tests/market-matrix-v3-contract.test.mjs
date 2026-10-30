@@ -45,7 +45,7 @@ test('source snapshots distinguish model products and API models',()=>{
  for(const id of ['chatgpt','claude','gemini','runway'])
   assert.match(facts,new RegExp('product:"'+id+'",observedAt:"2026-10-30"'));
  assert.match(facts,/models:"模型与用量",reasoning:"推理与理解能力"/);
- assert.match(facts,/API 模型目录；不是 Gemini App/);
+ assert.match(facts,/API 模型家族；不是 Gemini App/);
 });
 test('wide market matrix remains accessible on mobile and Arabic RTL',()=>{
  assert.match(css,/\.matrixScroll:focus-visible/);
