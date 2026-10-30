@@ -344,5 +344,42 @@
       "文档分析"
     ],
     "websiteKind": "official"
+  },
+  {
+    "id": "jimeng",
+    "name": "即梦AI",
+    "company": "字节跳动",
+    "category": "视频生成",
+    "website": "https://jimeng.jianying.com/",
+    "description": "通过文字、图片创作短剧视频与图片，提供 Seedance 系列视频模型、画面编辑和会员去水印选项。",
+    "status": "active",
+    "updatedAt": "2026-10-30T07:30:00Z",
+    "capabilities": [
+      "短剧视频",
+      "图生视频",
+      "文生视频",
+      "图片生成",
+      "视频编辑",
+      "视频去水印"
+    ],
+    "websiteKind": "official"
+  },
+  {
+    "id": "kling",
+    "name": "可灵AI Kling",
+    "company": "快手",
+    "category": "视频生成",
+    "website": "https://app.klingai.com/",
+    "description": "AI 视频与图片创作，支持文字生成视频、图生视频和动态镜头设计。",
+    "status": "active",
+    "updatedAt": "2026-10-30T07:30:00Z",
+    "capabilities": [
+      "短剧视频",
+      "文生视频",
+      "图生视频",
+      "视频生成",
+      "图片生成"
+    ],
+    "websiteKind": "official"
   }
 ]

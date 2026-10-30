@@ -8,6 +8,6 @@ test('public homepage hides developer-only model-download tables',()=>{
  assert.ok(!page.includes('className="marketUtility"'));
 });
 test('catalog explicitly tells users which features are free, paid and where to download',()=>{
- for(const f of ['免费和付费能做什么','价格 · 水印','官网 · 下载 · 认领','USER_TASKS','/#tools-list','MarketRowActions'])assert.ok(page.includes(f),f);
+ for(const f of ['免费与付费功能','价格 · 水印','官网 · 下载 · 认领','USER_TASKS','/#tools-list','MarketMatrixRow'])assert.ok(page.includes(f),f);
  assert.ok(!page.includes('<td>暂无可靠数据</td>'));
 });

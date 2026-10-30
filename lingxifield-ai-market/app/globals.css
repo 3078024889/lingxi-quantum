@@ -165,3 +165,68 @@
 .marketRowActions a:hover,.marketRowActions button:hover{filter:brightness(.96)}
 @media(min-width:1500px){.marketDirectoryTable{min-width:0}.marketRowActions{gap:6px}}
 @media(max-width:880px){.marketDirectoryTable{min-width:920px}.marketDirectoryTable td{padding:10px 7px}}
+
+/* Expanded exchange matrix: evidence first, airy cells, right-side links visible without overlap. */
+.homeGrid{grid-template-columns:162px minmax(0,1fr);gap:12px}
+.rightAside{display:none}
+.homeGrid>div,.homeGrid>section,.homeGrid>.centerContent{min-width:0}
+.marketMatrixTable{table-layout:fixed;min-width:1430px;width:100%}
+.marketMatrixTable th{font-size:11px;line-height:1.5;padding:10px 8px;vertical-align:middle;background:#eff5ff}
+.marketMatrixTable th:nth-child(1){width:3%}
+.marketMatrixTable th:nth-child(2){width:14%}
+.marketMatrixTable th:nth-child(3){width:12%}
+.marketMatrixTable th:nth-child(4){width:17%}
+.marketMatrixTable th:nth-child(5){width:10%}
+.marketMatrixTable th:nth-child(6){width:14%}
+.marketMatrixTable th:nth-child(7){width:11%}
+.marketMatrixTable th:nth-child(8){width:8%}
+.marketMatrixTable th:nth-child(9){width:11%}
+.marketMatrixTable td{padding:11px 8px;vertical-align:top;white-space:normal;overflow-wrap:anywhere;color:#27445f}
+.marketMatrixTable .marketActionCell{min-width:0}
+.marketMatrixTable .marketRowActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.marketMatrixTable .marketRowActions a,.marketMatrixTable .marketRowActions button{white-space:normal;padding:5px 3px;min-height:27px;font-size:10px;overflow-wrap:anywhere}
+.marketMatrixTable .marketRowActions .vendorRowClaim{font-weight:750}
+.marketMatrixTable .directoryIdentity .platformName{min-width:0}
+.marketMatrixTable .directoryIdentity .brandIcon{flex:0 0 35px}
+.matrixBrief,.matrixPlans{font-size:11px;line-height:1.58}
+.matrixBrief strong{display:block;color:#1c416e;font-size:11px;line-height:1.55}
+.matrixBrief small,.matrixTiny{display:block;font-size:10px;color:#7385a0;line-height:1.5;margin-top:6px}
+.matrixPlans p{display:flex;gap:5px;align-items:flex-start;margin:0 0 7px;line-height:1.55}
+.matrixPlans .planLabel{flex:0 0 auto}
+.matrixMore{display:block;border:0;background:transparent;padding:4px 0;color:#136be1;text-align:left;font-weight:650;font-size:11px;margin-top:4px}
+.matrixExpansion td{padding:15px;background:#f4f8ff}
+.matrixExpandGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.matrixExpandGrid section{padding:12px;background:#fff;border:1px solid #d9e6f8;border-radius:8px}
+.matrixExpandGrid h4{font-size:12px;color:#0c58be;margin:0 0 8px}
+.matrixExpandGrid p{font-size:11px;color:#3e5876;line-height:1.7;margin:6px 0;overflow-wrap:anywhere}
+.matrixExpandGrid a{color:#1457b4;text-decoration:none}
+.matrixScroll{scrollbar-width:thin;scrollbar-color:#c3d7f7 #f5f9ff}
+.matrixScroll::after{content:none}
+@media (min-width:1800px){.marketMatrixTable{min-width:0}}
+@media (max-width:1180px){.marketMatrixTable{min-width:1400px}}
+@media (max-width:900px){.homeGrid{grid-template-columns:minmax(0,1fr)}.leftAside{display:none}.marketMatrixTable{min-width:1300px}.matrixExpandGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:550px){.matrixExpandGrid{grid-template-columns:1fr}.marketMatrixTable{min-width:1200px}}
+
+/* Keep product identity and the real action links visible while scrolling metrics. */
+.matrixScroll .marketMatrixTable th:nth-child(2),.matrixScroll .marketMatrixTable td.directoryIdentity{
+ position:sticky;left:0;z-index:2;background:#fff;box-shadow:2px 0 7px #a9c1dd20;
+}
+.matrixScroll .marketMatrixTable th:nth-child(2){background:#eff5ff;z-index:4}
+.matrixScroll .marketMatrixTable th:last-child,.matrixScroll .marketMatrixTable td.marketActionCell{
+ position:sticky;right:0;z-index:2;background:#fff;box-shadow:-3px 0 9px #8197b324;
+}
+.matrixScroll .marketMatrixTable th:last-child{background:#eff5ff;z-index:4}
+.matrixScroll .marketMatrixTable .matrixExpansion td{position:static!important;background:#f4f8ff}
+@media(max-width:900px){.matrixScroll .marketMatrixTable th:nth-child(2),.matrixScroll .marketMatrixTable td.directoryIdentity{min-width:160px}}
+
+.seoGeoBoard{margin:12px 0;padding:15px}
+.seoGeoBoard .rankHead{padding:5px 4px 15px;gap:12px;flex-wrap:wrap}
+.seoGeoCompare{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.seoGeoCompare article{border:1px solid #e0e9f8;border-radius:9px;background:#f8fbff;padding:12px;min-width:0}
+.seoGeoCompare strong{color:#1656a0;font-size:12px}
+.seoGeoCompare p{font-size:11px;color:#5c7290;line-height:1.7;overflow-wrap:anywhere}
+.seoGeoNote{font-size:12px;color:#375d8a;line-height:1.7;margin:14px 3px}
+.seoGeoFooter{display:flex;gap:14px;justify-content:space-between;align-items:center;font-size:11px;color:#8292a6}
+.seoGeoFooter a{color:#1562c8}
+@media(max-width:850px){.seoGeoCompare{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.seoGeoCompare{grid-template-columns:1fr}}
