@@ -1,9 +1,10 @@
 // Links must resolve to the publisher or official platform download hub. No fabricated app store links.
-export type PlatformLink={label:string;url:string;kind:'desktop'|'ios'|'android'|'x'|'news'|'team'|'github'};
+export type PlatformLink={label:string;url:string;kind:'desktop'|'ios'|'android'|'x'|'news'|'team'|'github'|'reviews'};
 type Profile={links:readonly PlatformLink[];team?:{summary:string;source:string};funding?:{summary:string;source:string}};
 export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  chatgpt:{links:[
  {label:'电脑端下载',url:'https://chatgpt.com/download/',kind:'desktop'},
+ {label:'App Store 评价',url:'https://apps.apple.com/us/app/chatgpt/id6448311069',kind:'reviews'},
  {label:'iPhone 下载',url:'https://chatgpt.com/download/',kind:'ios'},
  {label:'Android 下载',url:'https://chatgpt.com/download/',kind:'android'},
  {label:'X 官方账号',url:'https://x.com/OpenAI',kind:'x'},
@@ -12,6 +13,7 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  ],team:{summary:'OpenAI 于 2015 年成立；公司组织及董事会信息以官方介绍为准。',source:'https://openai.com/our-structure/'}},
  claude:{links:[
  {label:'电脑端下载',url:'https://claude.com/download',kind:'desktop'},
+ {label:'App Store 评价',url:'https://apps.apple.com/us/app/claude-by-anthropic/id6473753684',kind:'reviews'},
  {label:'iPhone 下载',url:'https://claude.com/download',kind:'ios'},
  {label:'Android 下载',url:'https://claude.com/download',kind:'android'},
  {label:'X 官方账号',url:'https://x.com/AnthropicAI',kind:'x'},
@@ -24,6 +26,7 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  ]},
  runway:{links:[
  {label:'iPhone 下载',url:'https://apps.apple.com/us/app/runway-ai-image-video/id1665024375',kind:'ios'},
+ {label:'App Store 评价',url:'https://apps.apple.com/us/app/runway-ai-image-video/id1665024375',kind:'reviews'},
  {label:'X 官方账号',url:'https://x.com/runwayml',kind:'x'},
  {label:'最新动态',url:'https://runwayml.com/research',kind:'news'}
  ]},
@@ -44,5 +47,5 @@ export function platformLinks(id:string):Profile{
  return OFFICIAL_PLATFORM_LINKS[id]||{links:[]};
 }
 export function safePublisherLink(link:PlatformLink):boolean{
- try{const u=new URL(link.url);return u.protocol==='https:'&&!u.username&&!u.password&&u.hostname.length>3&&/^(?:desktop|ios|android|x|news|team|github)$/.test(link.kind)}catch{return false}
+ try{const u=new URL(link.url);return u.protocol==='https:'&&!u.username&&!u.password&&u.hostname.length>3&&/^(?:desktop|ios|android|x|news|team|github|reviews)$/.test(link.kind)}catch{return false}
 }
