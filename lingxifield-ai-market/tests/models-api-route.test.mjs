@@ -10,7 +10,7 @@ test('models API retains source, bounds pages and does not claim official verifi
  assert.ok(api.includes('SOURCE_UNAVAILABLE'));
 });
 test('models discovery page has search, paging, source disclosure',()=>{
- assert.ok(page.includes('搜索模型'));
+ assert.ok(page.includes('aria-label="搜索模型"'));
  assert.ok(page.includes('下一页'));
  assert.ok(page.includes('models.dev'));
 });
