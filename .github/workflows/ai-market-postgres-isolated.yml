@@ -63,6 +63,7 @@ jobs:
             20261030_ai_market_incremental_sources.sql
             20261030_ai_market_vendor_submission.sql
             20261030_ai_market_vendor_public_intake.sql
+            20261030_ai_market_sponsored_disclosure.sql
           )
           for name in "${migrations[@]}"; do
             echo "Applying $name"
@@ -151,6 +152,23 @@ jobs:
             IF (SELECT count(*) FROM public.ai_market_vendor_submissions WHERE status='pending_identity_check' AND verified_domain=false)<>1
             THEN RAISE EXCEPTION 'VENDOR_PENDING_STATE_INVALID'; END IF;
           END $market$;
+          SQL
+      - name: Verify organic ranks cannot read paid placements and public sees no payment receipts
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $check$
+          BEGIN
+            IF has_column_privilege('anon','public.ai_market_sponsored_disclosure','payment_reference','SELECT')
+               OR has_column_privilege('anon','public.ai_market_sponsored_disclosure','reviewer','SELECT')
+            THEN RAISE EXCEPTION 'SPONSOR_PAYMENT_DATA_LEAK'; END IF;
+            IF has_table_privilege('anon','public.ai_market_sponsored_disclosure','INSERT')
+               OR has_table_privilege('authenticated','public.ai_market_sponsored_disclosure','UPDATE')
+            THEN RAISE EXCEPTION 'PUBLIC_SPONSOR_MANIPULATION'; END IF;
+          END $check$;
+          BEGIN;
+          SET LOCAL ROLE anon;
+          SELECT project_id,label,target_url,placement,ends_at FROM public.ai_market_sponsored_disclosure LIMIT 5;
+          COMMIT;
           SQL
       - name: Ensure migrations are re-runnable without destructive reset
         run: |
