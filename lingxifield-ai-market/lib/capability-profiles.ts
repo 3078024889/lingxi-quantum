@@ -187,6 +187,12 @@ export const CAPABILITY_PROFILES:Readonly<Record<string,CapabilityProfile>>={
   cap('首尾帧与角色参考控制','在 Ray3 的特定流程中使用首尾帧和人物参考组织转场','使镜头从起始参考画面过渡到指定结尾','角色一致性不能保证绝对保留，须实测结果','https://lumalabs.ai/learning-hub/ray3-modify-user-guide'),
   cap('修改既有视频','在 Modify 模式进行服装、环境或光照变化','保留演员动作同时重设环境背景','素材时长和角色参考可用性受流程与订阅限制','https://lumalabs.ai/news/ray3-modify')
  ],['确认 Dream Machine 入口、额度和型号','准备合法参考图片或视频并选择镜头控制','短镜头试生成后核对费用、人物一致性与下载'])
+,
+ kling:profile('长镜头短剧、参考角色与多关键帧视频控制','快手官方已发布 Kling 4.0，强调复杂运镜、参考素材组合及多关键帧叙事控制','短剧创作者、广告团队、视频导演',[
+  cap('最长 30 秒原生镜头生成','在 Kling 4.0 的适用入口生成包含连续动作的长镜头','从角色出场到镜头推近生成连贯短剧段落','30 秒是官方公布的型号能力上限，不代表所有套餐/入口均开放','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kelingaixinyidaimoxingklin1g-40zhengshishangxian/'),
+  cap('最多 15 项参考素材组合','整合图片、视频、主体等素材约束角色、动作和运镜','同时提供角色图、分镜图与动作参考视频','单次上限与输入种类受 Kling 4.0 条件限制；实际成功率未实测','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kelingaixinyidaimoxingklin1g-40zhengshishangxian/'),
+  cap('最多 10 张关键帧控制','为一个镜头指定多个情节节点与场景变换','通过多张关键帧安排人物起身、转身和离开','关键帧输入能力按模型版本、账户权益和操作界面开放','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kelingaixinyidaimoxingklin1g-40zhengshishangxian/')
+ ],['打开可灵官方版本入口并选择适用模型','准备合法的角色、场景及关键帧参考素材','先生成短镜头核对积分、最长时长和输出水印'])
 
 };
 export function capabilityProfile(id:string):CapabilityProfile|undefined{return CAPABILITY_PROFILES[id];}
