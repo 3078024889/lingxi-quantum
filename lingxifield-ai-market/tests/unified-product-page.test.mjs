@@ -6,14 +6,14 @@ test('find AI tools page uses completed unified product inventory, not demo-only
  const page=await read('app/apps/page.tsx');
  assert.ok(page.includes('/api/v1/products/all?'));
  assert.ok(!page.includes('/api/v1/products/discover?'));
- assert.ok(page.includes('打开项目'));
+ assert.ok(page.includes('查看应用与使用方式'));
  assert.ok(page.includes('搜索 AI 工具'));
 });
 test('unknown price, free allowance and credit card requirements are not reported as free',async()=>{
  const page=await read('app/apps/page.tsx');
- assert.ok(page.includes("p.price===null?'待核验'"));
- assert.ok(page.includes("p.freeQuota??'待核验'"));
- assert.ok(page.includes('未知收费不能视为免费'));
+ assert.ok(page.includes("p.price!==null?'参考价格：'"));
+ assert.ok(page.includes("p.freeQuota?'免费额度：'"));
+ assert.ok(page.includes('费用与使用方式请查看官方页面'));
 });
 test('product API reads current D-drive merged inventory and provides pagination',async()=>{
  const api=await read('app/api/v1/products/all/route.ts');
