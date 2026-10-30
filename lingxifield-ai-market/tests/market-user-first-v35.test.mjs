@@ -3,15 +3,19 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 const locales=['zh','en','ja','ko','fr','de','es','pt','ar'];
-test('newcomer guide jumps to real controls without login and works in all nine languages',async()=>{
+test('beginner tour moves one step at a time to real interactive targets in nine languages',async()=>{
  const guide=await read('app/market-quick-start.tsx');
  const home=await read('app/market-workbench.tsx');
  for(const locale of locales)assert.ok(guide.includes(' '+locale+':{title:'),locale);
  assert.match(guide,/id="market-guide"/);
- assert.match(guide,/querySelector<HTMLInputElement>\('\.searchBar input'\)/);
+ assert.match(guide,/const STEPS:Step\[\]=\['search','region','filter','compare','feedback'\]/);
+ assert.match(guide,/marketTourPanel/);
+ assert.match(guide,/marketTourNext/);
+ assert.match(guide,/scrollIntoView/);
+ assert.match(guide,/marketTourSpotlight/);
  assert.match(guide,/\.marketRegionSelect select/);
+ assert.match(guide,/#market-filters/);
  assert.match(guide,/#visitor-feedback/);
- assert.match(guide,/if\(step==='compare'\)\{onCompare\(\);return;\}/);
  assert.match(home,/<MarketQuickStart language=\{language\} onCompare=/);
  assert.match(home,/href="\/#market-guide"/);
  assert.doesNotMatch(guide,/login\(|\/auth\/v1\//);
