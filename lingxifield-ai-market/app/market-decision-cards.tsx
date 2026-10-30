@@ -28,7 +28,7 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
    {!!known.length&&<span className="decisionCoverage">{language==='zh'?'来自官方资料':'Official sources'}</span>}
   </div>
   {!!known.length?<div className="decisionGrid">
-   {known.map((card,i)=><article className="decisionCard" key={card.key}>
+   {known.map((card)=><article className="decisionCard" key={card.key}>
     <h3>{card.title}</h3><p className="decisionValue">{card.fact?.text}</p>
     <small>{card.fact?.scope}</small>
     {card.fact&&<a href={card.fact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'查看官方说明':'Official source'} · {card.fact.checkedAt} ↗</a>}
