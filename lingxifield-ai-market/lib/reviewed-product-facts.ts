@@ -43,8 +43,24 @@ export const factSnapshots:readonly FactSnapshot[]=[
  }},
  {product:"n8n",observedAt:day,facts:{purpose:official("把多步工作连起来，也可创建调用工具的 AI 智能体","https://n8n.io/ai-agents/","工作流与智能体平台；需配置和测试")}},
  {product:"ahrefs-brand-radar",observedAt:day,facts:{purpose:official("查看品牌在 AI 回答中的提及和引用","https://ahrefs.com/brand-radar","AI 可见度分析，不保证提升排名")}},
+
+ {product:"comfyui",observedAt:"2026-10-30",facts:{
+  purpose:{text:"开源节点式生成工作流，可运行图像、视频、音频和 3D 模型",source:"https://support.comfy.org/articles/9806306061-about-comfy",scope:"ComfyUI 开源工作流引擎",checkedAt:"2026-10-30",kind:"official"},
+  free:{text:"开源核心可在自有设备上免费运行；硬件和所调用模型的实际成本另计",source:"https://support.comfy.org/articles/9806306061-about-comfy",scope:"本地开源核心，不包括 Comfy Cloud 或 Partner Nodes",checkedAt:"2026-10-30",kind:"official"},
+  price:{text:"Comfy Cloud 和 Partner Nodes 为可选付费服务；实际价格需在购买前核对官网",source:"https://support.comfy.org/articles/9806306061-about-comfy",scope:"托管云服务和第三方节点，不代表本地开源软件收费",checkedAt:"2026-10-30",kind:"official"}
+ }},
+ {product:"n8n",observedAt:"2026-10-30",facts:{
+  price:{text:"n8n Cloud Starter €20/月（按年计费），包含 2,500 次工作流执行；不等同于本地社区版价格",source:"https://n8n.io/pricing/",scope:"Starter Cloud 官方年付套餐示例；币种为 EUR，不兑换成美元",checkedAt:"2026-10-30",kind:"official"},
+  card:{text:"官网显示 n8n Cloud 免费试用无需信用卡",source:"https://n8n.io/pricing/",scope:"仅限试用入口，正式付费仍可能需要支付方式",checkedAt:"2026-10-30",kind:"official"}
+ }},
+ {product:"dify",observedAt:"2026-10-30",facts:{
+  purpose:{text:"支持 AI 智能体、工作流、知识库应用及托管或自部署",source:"https://www.dify.ai/",scope:"Dify Cloud、Enterprise 和 Community Edition 是不同部署形态",checkedAt:"2026-10-30",kind:"official"}
+ }},
+ {product:"openwebui",observedAt:"2026-10-30",facts:{
+  purpose:{text:"自托管 AI 聊天工作空间，可连接本地和云端模型",source:"https://openwebui.com/",scope:"面向自行部署和企业部署；不代表免除第三方模型费用",checkedAt:"2026-10-30",kind:"official"}
+ }},
 ];
-export function latestFacts(slug:string,asOf=day):FactSnapshot|undefined{
+export function latestFacts(slug:string,asOf='2026-10-30'):FactSnapshot|undefined{
  const relevant=factSnapshots.filter(s=>s.product===slug&&s.observedAt<=asOf);
  if(!relevant.length)return undefined;
  relevant.sort((a,b)=>a.observedAt.localeCompare(b.observedAt));
