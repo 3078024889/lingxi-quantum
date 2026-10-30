@@ -29,9 +29,9 @@ const compareRows:{label:string;pick:(p:Platform)=>string}[]=[
  {label:'能做什么',pick:p=>p.guide?.tasks.join(' · ')||p.features.slice(0,4).join(' · ')},
  {label:'最擅长',pick:p=>p.guide?.strengths||p.about},
  {label:'理解与推理',pick:p=>p.guide?.reasoning||'依具体模型和功能'},
- {label:'免费的功能',pick:p=>p.guide?.free||p.free||'查看官网'},
+ {label:'免费的功能',pick:p=>p.conditions?.find(f=>f.label==='免费额度')?.text||p.guide?.free||p.free||'待核验'},
  {label:'付费增加什么',pick:p=>p.guide?.paid||'查看官网套餐'},
- {label:'参考价格',pick:p=>p.guide?.cost||p.price||'以官网为准'},
+ {label:'参考价格',pick:p=>p.conditions?.find(f=>f.label==='价格')?.text||p.guide?.cost||p.price||'待核验'},
  {label:'图片／视频水印',pick:p=>p.guide?.watermarkNote||'请查看具体模型的导出规则'},
  {label:'地区可用性',pick:p=>p.guide?.region||'查看官网'},
  {label:'付款方式',pick:p=>p.guide?.payment||'查看官网结算页'}
