@@ -7,6 +7,18 @@ import {capabilityProfile} from './capability-profiles';
 export type MarketFilter='all'|'free'|'drama'|'video'|'image'|'local'|'code'|'supported'|'commercial';
 export const MARKET_FILTERS:MarketFilter[]=['all','supported','free','drama','video','image','local','code','commercial'];
 export type MarketSort='directory'|'name'|'free'|'drama';
+export type MarketPayment='any'|'card'|'alipay'|'wechat'|'paypal'|'appstore';
+export const PAYMENT_LABELS:Record<Language,{label:string;any:string;card:string;alipay:string;wechat:string;paypal:string;appstore:string}>={
+ zh:{label:'付款方式',any:'不限支付',card:'银行卡',alipay:'支付宝',wechat:'微信支付',paypal:'PayPal',appstore:'应用商店'},
+ en:{label:'Payment',any:'Any payment',card:'Bank card',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'App stores'},
+ ja:{label:'決済',any:'指定なし',card:'カード',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'アプリストア'},
+ ko:{label:'결제',any:'제한 없음',card:'은행 카드',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'앱 스토어'},
+ fr:{label:'Paiement',any:'Tous',card:'Carte bancaire',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'Boutiques mobiles'},
+ de:{label:'Zahlung',any:'Beliebig',card:'Bankkarte',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'App Stores'},
+ es:{label:'Pago',any:'Cualquiera',card:'Tarjeta',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'Tiendas móviles'},
+ pt:{label:'Pagamento',any:'Qualquer',card:'Cartão',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'Lojas de apps'},
+ ar:{label:'الدفع',any:'كل الوسائل',card:'بطاقة مصرفية',alipay:'Alipay',wechat:'WeChat Pay',paypal:'PayPal',appstore:'متجر التطبيقات'}
+};
 type Copy={filters:Record<MarketFilter,string>;sorts:Record<MarketSort,string>;filterLabel:string;sortLabel:string;regionHint:string;dramaYes:string;dramaUnknown:string;source:string;more:string;noMatch:string;footnote:string;reviews:string;payment:string;models:string;business:string;uses:string;};
 export const MARKET_SCREEN_COPY:Record<Language,Copy>={
  zh:{filters:{all:'全部工具',supported:'本地区官方支持',free:'有免费试用',drama:'短剧视频生成',video:'视频创作',image:'图片创作',local:'本地模型',code:'编程开发',commercial:'商用说明可查'},sorts:{directory:'目录顺序',name:'按名称',free:'免费优先',drama:'短剧能力优先'},filterLabel:'快捷筛选',sortLabel:'排序',regionHint:'先选择所在国家，查看当地官方支持政策',dramaYes:'有短剧创作能力',dramaUnknown:'尚无已核实短剧能力',source:'官网资料',more:'查看详情',noMatch:'当前范围没有符合这些条件的工具，请试试其他条件。',footnote:'短剧支持表示厂商公布了相关生成或编辑功能，不等于已经实测成片质量、角色一致性和成本。',reviews:'真实体验',payment:'登录 / 付款',models:'代表模型',business:'商用',uses:'最擅长'},
@@ -53,8 +65,21 @@ export function matchesMarketFilter(p:Platform,filter:MarketFilter,country:Regio
  if(filter==='commercial')return Boolean(p.conditions?.find(x=>x.label==='商用条件')?.source);
  return true;
 }
-export function filterAndSortMarket(p:Platform[],filter:MarketFilter,sort:MarketSort,country:RegionCode){
- const matches=p.filter(x=>matchesMarketFilter(x,filter,country));
+export function filterAndSortMarket(p:Platform[],filter:MarketFilter,sort:MarketSort,country:RegionCode,payment:MarketPayment='any'){
+ const matches=p.filter(x=>{
+  if(!matchesMarketFilter(x,filter,country))return false;
+  if(payment==='any')return true;
+  if(country==='GLOBAL')return false;
+  const fact=globalRegionFact(x.id,country);
+  if(fact.policy.status==='unsupported')return false;
+  const methods=fact.payments.methods.join(' ').toLowerCase();
+  if(payment==='card')return /credit|debit|visa|mastercard|银行卡|bank card/.test(methods);
+  if(payment==='alipay')return methods.includes('alipay');
+  if(payment==='wechat')return methods.includes('wechat');
+  if(payment==='paypal')return methods.includes('paypal');
+  if(payment==='appstore')return /app store|google play/.test(methods);
+  return false;
+ });
  if(sort==='directory')return matches;
  return [...matches].sort((a,b)=>sort==='name'?a.name.localeCompare(b.name):sort==='free'?Number(hasFreeOption(b))-Number(hasFreeOption(a)):Number(Boolean(shortDramaEvidence(b.id)))-Number(Boolean(shortDramaEvidence(a.id))));
 }
