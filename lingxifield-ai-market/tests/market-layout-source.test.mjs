@@ -9,7 +9,7 @@ test('public homepage hides developer-only model-download tables',()=>{
  assert.ok(!page.includes('className="marketUtility"'));
 });
 test('catalog explicitly tells users which features are free, paid and where to download',()=>{
- for(const f of ['USER_TASKS','/#tools-list','MarketMatrixRow','marketRowTitles(language).map'])assert.ok(page.includes(f),f);
+ for(const f of ['marketV36FilterChips','/#tools-list','MarketMatrixRow','marketRowTitles(language).map'])assert.ok(page.includes(f),f);
  for(const f of ['免费额度','实际价格','官网 · 下载','模型 · 版本'])assert.ok(headings.includes(f),f);
  assert.ok(!page.includes('<td>暂无可靠数据</td>'));
 });
