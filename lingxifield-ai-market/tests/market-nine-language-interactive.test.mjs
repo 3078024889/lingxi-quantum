@@ -11,7 +11,9 @@ test('all 9 languages have localized navigation, practical labels and no empty t
 test('all 9 locale URLs use same interactive market, not static dead-end cards',async()=>{
  const route=await read('app/[lang]/ai/page.tsx');
  const page=await read('app/market-workbench.tsx');
- assert.ok(route.includes("Home initialLanguage={lang as Locale} initialPlatforms={searchPlatforms"));
+ assert.ok(route.includes("Home initialLanguage={lang as Locale}"));
+ assert.ok(route.includes("initialCurrency={currency}"));
+ assert.ok(route.includes("initialPlatforms={searchPlatforms"));
  assert.ok(route.includes("robots:{index:false,follow:false}"),'unreviewed market may not be indexed');
  assert.ok(page.includes('initialLanguage?:Language'));
  assert.ok(page.includes('MARKET_UI_EXTRA[language]'));
