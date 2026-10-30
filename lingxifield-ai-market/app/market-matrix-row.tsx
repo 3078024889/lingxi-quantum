@@ -49,10 +49,10 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
     {reasoningFact?<a className="matrixSource" target="_blank" rel="noopener noreferrer" href={reasoningFact.source}>官方说明 · {reasoningFact.checkedAt.slice(0,10)} ↗</a>:<small>暂无可比独立能力评分</small>}</td>
    <td className="matrixBrief"><strong>{useCase}</strong><small>先按任务选工具，再对照费用与限制</small></td>
    <td className="matrixBrief"><strong>{beginner}</strong><small>暂无统一新手上手成功率实测</small></td>
-   <td className="matrixBrief"><strong>{guide?.free||freeFact?.text||p.free||'免费条件待核验'}</strong>
+   <td className="matrixBrief"><strong>{freeFact?.text||guide?.free||p.free||'免费条件待核验'}</strong>
     {freeFact&&<a className="matrixSource" href={freeFact.source} target="_blank" rel="noopener noreferrer">免费规则来源 ↗</a>}</td>
-   <td className="matrixBrief"><strong>{guide?.cost||priceFact?.text||p.price||'价格待核验'}</strong>
-    <small>{guide?.paid||'付费功能待核验'}</small>{(guide?.source||priceFact?.source)&&<a className="matrixSource" target="_blank" rel="noopener noreferrer" href={guide?.source||priceFact!.source}>价格与套餐来源 ↗</a>}</td>
+   <td className="matrixBrief"><strong>{priceFact?.text||guide?.cost||p.price||'价格待核验'}</strong>
+    <small>{guide?.paid||'付费功能待核验'}</small>{(priceFact?.source||guide?.source)&&<a className="matrixSource" target="_blank" rel="noopener noreferrer" href={priceFact?.source||guide!.source}>价格与套餐来源 ↗</a>}</td>
    <td className="matrixBrief"><strong>{limitation&&limitation!=='待核验'?limitation:'使用限制待核验'}</strong>
     <small>{failureFact?.text||'生成失败扣费规则待核验'}</small>{failureFact&&<a className="matrixSource" target="_blank" rel="noopener noreferrer" href={failureFact.source}>失败扣费依据 ↗</a>}</td>
    <td className="matrixBrief"><strong>{regionName(region,language)} · {marketRegion}</strong><small>{localized.untested}</small><button type="button" className="matrixMore" onClick={()=>setExpanded(v=>!v)} aria-expanded={expanded}>{expanded?'收起证据与限制':'展开完整证据与限制'} ▾</button></td>
