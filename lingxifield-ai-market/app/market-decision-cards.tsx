@@ -1,5 +1,8 @@
 'use client';
 import type {Platform} from '../lib/data';
+import type {Language} from '../lib/v2';
+import {DECISION_TITLES} from '../lib/decision-titles';
+import {MARKET_UI_EXTRA} from '../lib/market-ui-extra';
 
 type Condition = NonNullable<Platform['conditions']>[number];
 type Decision = {key:string;title:string;description:string;fact?:Condition};
