@@ -3,3 +3,19 @@
 .marketUtility{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:10px 14px;margin:12px 0;background:#eaf3ff;border:1px solid #d9e6fa;border-radius:8px;color:#466181;font-size:12px;flex-wrap:wrap}.localeControl{display:inline-flex;align-items:center;gap:4px;color:#3d587b}.localeControl select{background:#fff;border:1px solid #dbe5f4;border-radius:6px;padding:6px;color:#11294a;max-width:105px}.answerPanel{margin:12px 0;padding:16px}.answerPanel>div{display:flex;justify-content:space-between;gap:12px}.answerPanel button{border:0;background:transparent;cursor:pointer;font-size:20px}.answerPanel p{line-height:1.7}.answerPanel small{color:#627995}.commercialPanel{margin:18px 0;padding:20px}.commercialPanel h2{margin:0 0 8px}.commercialPanel p{color:#637a98}.commercialPlans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}.commercialPlans>div{background:#f5f9ff;border:1px solid #dce8fa;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}.commercialPlans strong{font-size:26px;color:#0860df}.commercialPlans strong small{font-size:12px;font-weight:400}.commercialPlans span{font-size:11px;color:#6c82a0}.compareOverlay{position:fixed;inset:0;z-index:1000;display:flex;justify-content:center;align-items:center;background:#03132acc;padding:20px}.compareDialog{max-width:1000px;width:100%;max-height:85vh;overflow:auto;padding:24px}.compareHeader{display:flex;justify-content:space-between;align-items:center}.compareHeader button{cursor:pointer;background:none;border:none;font-size:22px}@media(max-width:900px){.commercialPlans{grid-template-columns:repeat(2,minmax(0,1fr))}.marketUtility{justify-content:flex-start}}@media(max-width:520px){.commercialPlans{grid-template-columns:1fr}.localeControl select{max-width:90px}}
 .pagination{display:flex;justify-content:center;gap:16px;align-items:center;padding:16px}.pagination button{border:1px solid #cdddf5;background:white;padding:7px 15px;border-radius:7px;color:#155eef}
 .conditionFact{padding:12px 0;border-bottom:1px solid #e8edf4;line-height:1.65}.conditionFact p{margin:5px 0}.conditionFact small{color:#64748b}.conditionFact a{color:#0864ec}
+
+/* Evidence-based decision surface: readable on desktop and mobile. */
+.decisionAudit{margin:14px 0;padding:18px}
+.decisionAuditIntro{display:flex;gap:14px;justify-content:space-between;align-items:baseline;flex-wrap:wrap}
+.decisionAuditIntro h2{font-size:18px;margin:0 0 8px}
+.decisionAuditIntro p{color:#64748b;margin:0 0 12px}
+.decisionAuditGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.decisionAuditGrid>div{padding:12px;border:1px solid #e3ebf7;border-radius:9px;background:#f8faff;min-width:0}
+.decisionAuditGrid b{display:block;font-size:12px;color:#385579}
+.decisionAuditGrid p{overflow-wrap:anywhere;line-height:1.55;margin:6px 0 0}
+.decisionAuditGrid small{display:block;color:#64748b;margin-top:6px}
+.decisionAuditEvidence{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:12px;font-size:12px}
+.decisionAuditEvidence a{color:#135cbd;text-decoration:none;border:1px solid #dbe7f8;border-radius:5px;padding:6px}
+.marketCellNote{display:block;margin-top:5px;color:#64748b;line-height:1.45;max-width:260px;overflow-wrap:anywhere}
+@media(max-width:1100px){.decisionAuditGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:660px){.decisionAudit{padding:12px}.decisionAuditGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.decisionAuditGrid>div{padding:9px}}
