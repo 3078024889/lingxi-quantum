@@ -668,3 +668,52 @@ body{font-size:16px;line-height:1.6}
  .app .compareDialog .compareFitScroll table{min-width:640px}
  .app .marketPrimaryNav{overflow-x:auto;max-width:100%;width:100%;justify-content:flex-start}
 }
+
+
+/* V3.6: filterable first-view matrix; keep accepted typography and original product content. */
+.app .marketV36Filters{padding:13px 14px 10px;background:#f9fbff;border:1px solid #dce9fa;border-radius:10px;margin:11px 0 15px}
+.app .marketV36FilterHead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#244c79}
+.app .marketV36FilterHead>span{color:#66829f;flex:1;line-height:1.5}
+.app .marketV36FilterHead label{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.app .marketV36FilterHead select{background:#fff;color:#154978;border:1px solid #bad3ee;border-radius:8px;padding:7px 10px;max-width:180px}
+.app .marketV36FilterChips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.app .marketV36FilterChips button{padding:9px 13px;border:1px solid #cadaf0;border-radius:22px;background:white;color:#165395;min-height:35px;white-space:nowrap;cursor:pointer}
+.app .marketV36FilterChips button[aria-pressed="true"]{background:#1269df;color:white;border-color:#1269df}
+.app .marketV36FilterChips button:focus-visible{outline:2px solid #0d64d2;outline-offset:2px}
+.app .marketV36FilterEvidence{color:#627e9b;margin:9px 0 0;line-height:1.5}
+.app .marketOverviewViewport{width:100%;min-width:0;max-width:100%;overflow-x:auto;overflow-y:visible;scrollbar-width:auto;container-type:normal}
+.app table.marketOverviewTable{width:100%!important;min-width:1490px!important;max-width:none!important;table-layout:fixed!important;border-collapse:collapse}
+.app .marketOverviewTable :is(th,td){min-width:0!important;position:static!important;box-shadow:none!important;overflow-wrap:anywhere;white-space:normal!important;padding:13px 9px!important;vertical-align:top!important}
+.app .marketOverviewTable :is(th:nth-child(1),td:nth-child(1)){width:3%}
+.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){width:10%}
+.app .marketOverviewTable :is(th:nth-child(3),td:nth-child(3)){width:22%}
+.app .marketOverviewTable :is(th:nth-child(4),td:nth-child(4)){width:11%}
+.app .marketOverviewTable :is(th:nth-child(5),td:nth-child(5)){width:9%}
+.app .marketOverviewTable :is(th:nth-child(6),td:nth-child(6)){width:9%}
+.app .marketOverviewTable :is(th:nth-child(7),td:nth-child(7)){width:10%}
+.app .marketOverviewTable :is(th:nth-child(8),td:nth-child(8)){width:8%}
+.app .marketOverviewTable :is(th:nth-child(9),td:nth-child(9)){width:7%}
+.app .marketOverviewTable :is(th:nth-child(10),td:nth-child(10)){width:6%}
+.app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){width:5%}
+.app .marketOverviewTable .marketV36Row{display:table-row!important;margin:0!important;border:0!important;border-radius:0!important;background:white}
+.app .marketOverviewTable .marketV36Row:nth-child(even){background:#f8fbff}
+.app .marketOverviewTable .marketV36Row>td{display:table-cell!important;width:auto;grid-column:auto!important}
+.app .marketOverviewTable .marketV36Row>td::before{display:none!important}
+.app .marketOverviewTable .marketV36Row .marketOverviewStrength>strong{color:#154777;font-weight:750}
+.app .marketOverviewTable .marketV36Row .marketOverviewUses{color:#517499!important;font-weight:600;line-height:1.6}
+.app .marketV36Row :is(.marketV36Model,.marketV36Drama,.marketV36Business,.marketV36Login){line-height:1.65;color:#355677}
+.app .marketV36Row :is(.marketV36Drama,.marketV36Login,.marketV36Business)>a,.app .marketV36Row :is(td>a){display:block;margin-top:7px;color:#145ab5;text-decoration:underline;text-underline-offset:2px}
+.app .marketV36Row .marketV36Login>span{display:block;margin-top:7px;overflow-wrap:anywhere}
+.app .marketV36Row .marketDramaYes{font-weight:750;color:#14774a}
+.app .marketV36Row .marketDramaUnknown{color:#7b89a0}
+.app .marketV36Row .marketV36More{display:inline-block;background:none;border:0;padding:7px 0;color:#125abc;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.app .marketV36Row .marketOverviewActions .marketRowActions{display:flex;flex-direction:column;gap:6px}
+.app .marketV36Row .marketOverviewActions .marketRowActions :is(a,button){font-weight:650;width:100%;min-width:0;padding:7px 4px;min-height:34px}
+.app .marketV36Row .marketOverviewIdentity .platformName{gap:7px}
+.app .marketV36Row .marketOverviewIdentity .brandIcon{width:30px;height:30px;flex:0 0 30px}
+.app .marketOverviewViewport :is(th,td):focus-within{outline-offset:-3px}
+.app .marketV36Row .marketRegionStatus{font-weight:700}
+.app .marketV36Row .marketRegionStatus-unsupported{color:#bc4050}
+.app .marketV36Row .marketRegionStatus-supported,.app .marketV36Row .marketRegionStatus-local{color:#18834d}
+@media(max-width:1000px){.app .marketOverviewViewport{overflow-x:auto}.app .marketOverviewTable thead{display:table-header-group}.app .marketOverviewTable tbody{display:table-row-group}.app .marketOverviewTable .marketV36Row{display:table-row!important}}
+[dir="rtl"] .app .marketV36FilterHead,[dir="rtl"] .app .marketV36FilterChips{direction:rtl}

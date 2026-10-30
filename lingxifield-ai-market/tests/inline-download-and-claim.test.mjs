@@ -12,12 +12,12 @@ test('single compact market row has official, desktop, mobile, detail, compariso
  assert.ok(main.includes('id="tools-list"'));
  assert.ok(main.includes('<MarketMatrixRow language={language} region={region} key={p.id}'));
  for(const label of ['官网 · 下载','免费额度','实际价格'])assert.ok(headings.includes(label));
- assert.ok(main.includes('MATRIX_OVERVIEW_HEADINGS[language]'));
+ assert.ok(main.includes('marketRowTitles(language).map'));
  assert.ok(actions.includes("platformLinks(platform.id).links.filter(safePublisherLink)"));
  assert.ok(actions.includes("download:'官方下载'"));
  assert.ok(actions.includes("l.kind==='desktop'||l.kind==='ios'||l.kind==='android'"));
- assert.ok(row.includes('marketVendorClaim'));
- assert.ok(row.includes("'/vendor/claim?'"));
+ assert.ok(main.includes('href="/vendor/claim"'));
+ assert.ok(actions.includes('claimUrl'));
  assert.ok(actions.includes('onToggleCompare'));
  assert.ok(actions.includes('platform.websiteKind'));
  assert.ok(row.includes('onToggleCompare'));

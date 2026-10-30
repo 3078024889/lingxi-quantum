@@ -1,101 +1,72 @@
 'use client';
-import {Fragment,useState} from 'react';
 import type {Platform} from '../lib/data';
 import type {Language} from '../lib/v2';
 import type {RegionCode} from '../lib/global-region-market';
-import {MATRIX_HEADINGS,MATRIX_OVERVIEW_HEADINGS} from '../lib/market-matrix-headings';
 import {globalRegionFact,regionCopy,regionName} from '../lib/global-region-market';
 import {localizedPaymentName} from './market-global-access';
-import {accessFor,accessValue,geoSummary} from '../lib/platform-access-facts';
-import {platformLinks,safePublisherLink} from '../lib/official-platform-links';
-import {capabilityProfile} from '../lib/capability-profiles';
+import {accessFor,accessValue} from '../lib/platform-access-facts';
+import {summaryFor,shortDramaEvidence,shortDramaSummary,MARKET_SCREEN_COPY} from '../lib/market-v36-screening';
 import MarketRowActions from './market-row-actions';
 
+const columns:Record<Language,string[]>={
+ zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','代表模型','短剧生成','商用授权','登录 · 付款','操作'],
+ en:['No.','Tool / Publisher','Core strengths','Free usage','Price','Country support','Models','Short films','Commercial','Login / Pay','Actions'],
+ ja:['番号','ツール / 企業','強みと用途','無料枠','料金','地域対応','モデル','短編動画','商用','登録・支払い','操作'],
+ ko:['번호','도구 / 기업','강점과 사용법','무료 한도','가격','국가 지원','모델','단편 영상','상업 이용','로그인/결제','작업'],
+ fr:['N°','Outil / Éditeur','Atouts et usages','Gratuit','Tarifs','Disponibilité','Modèles','Courts-métrages','Commercial','Accès / Paiement','Actions'],
+ de:['Nr.','Tool / Anbieter','Stärken und Einsatz','Gratis','Preis','Land','Modelle','Kurzfilme','Gewerblich','Login / Zahlung','Aktionen'],
+ es:['N.º','Producto / Empresa','Fortalezas','Gratis','Precio','País','Modelos','Cortos IA','Comercial','Acceso / Pago','Acciones'],
+ pt:['N.º','Produto / Empresa','Pontos fortes','Grátis','Preço','País','Modelos','Curtas IA','Comercial','Acesso / Pagamento','Ações'],
+ ar:['الرقم','الأداة / الشركة','أهم المزايا','المجاني','السعر','توفر البلد','النماذج','فيلم قصير','تجاري','الدخول / الدفع','إجراءات']
+};
+export const V36_COL_COUNT=11;
+export function marketRowTitles(language:Language){return columns[language];}
+const localizedNotice:Record<Language,string>={
+ zh:'尚无可靠资料',en:'Not verified',ja:'未確認',ko:'미확인',fr:'Non vérifié',de:'Nicht geprüft',es:'Sin verificar',pt:'Não verificado',ar:'لم يتم التحقق'
+};
 export default function MarketMatrixRow({platform:p,position,language,region,onDetail,onToggleCompare,isCompared}:{
  platform:Platform;position:number;language:Language;region:RegionCode;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean;
 }){
- const [expanded,setExpanded]=useState(false);
- const facts=accessFor(p.id),guide=p.guide;
- const localized=regionCopy(language),displayRegion=region==='GLOBAL'?'CN':region,globalFact=globalRegionFact(p.id,displayRegion);
- const rich=capabilityProfile(p.id);
- const sources=platformLinks(p.id).links.filter(safePublisherLink);
- const modelFact=p.conditions?.find(f=>f.label==='模型与用量');
- const reasoningFact=p.conditions?.find(f=>f.label==='推理与理解能力');
- const freeFact=p.conditions?.find(f=>f.label==='免费额度');
- const priceFact=p.conditions?.find(f=>f.label==='价格');
- const failureFact=p.conditions?.find(f=>f.label==='失败扣费');
- const commercialFact=p.conditions?.find(f=>f.label==='商用条件');
- const limitation=facts?.limitations||p.restrictions;
- const login=accessValue(facts?.login,'登录方式待核验');
- const marketRegion=localized.status[globalFact.policy.status];
- const payment=globalFact.payments.methods.map(x=>localizedPaymentName(x,language)).join('、')||localized.status.unknown;
- const commercial=facts?.commercial||commercialFact?.text||'商业授权待核验';
- const model=modelFact?.text||facts?.models||'代表模型与版本待核验';
- const reasoning=reasoningFact?.text||guide?.reasoning||'推理与理解能力需按具体模型或任务评估';
-  const useCase=guide?.tasks.slice(0,3).join(' · ')||p.features.slice(0,3).join(' · ')||p.category;
- const free=freeFact?.text||guide?.free||p.free||'免费条件待核验';
- const price=priceFact?.text||guide?.cost||p.price||'价格待核验';
- const headings=MATRIX_HEADINGS[language];
- const compactHeadings=MATRIX_OVERVIEW_HEADINGS[language];
- const detailLabel=({zh:'查看关键资料',en:'Key details',ja:'重要情報',ko:'핵심 정보',fr:'Informations utiles',de:'Wichtige Details',es:'Datos clave',pt:'Dados principais',ar:'التفاصيل الأساسية'} as Record<Language,string>)[language];
- return <Fragment>
-  <tr className="marketOverviewRow" data-market-id={p.id}>
-   <td className="marketOverviewRank" data-label={compactHeadings[0]} title="目录序号，不代表综合排名">{position}</td>
-   <td className="marketOverviewIdentity" data-label={compactHeadings[1]}>
+ const t=MARKET_SCREEN_COPY[language],h=marketRowTitles(language);
+ const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id);
+ const r=region==='GLOBAL'?null:globalRegionFact(p.id,region);
+ const regionText=r?regionCopy(language).status[r.policy.status]:t.regionHint;
+ const statusUnsupported=r?.policy.status==='unsupported';
+ const free=p.conditions?.find(x=>x.label==='免费额度');
+ const price=p.conditions?.find(x=>x.label==='价格');
+ const commercial=p.conditions?.find(x=>x.label==='商用条件');
+ const cost=price?.text||guide?.cost||p.price||localizedNotice[language];
+ const allowance=free?.text||guide?.free||p.free||localizedNotice[language];
+ const models=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models||localizedNotice[language];
+ const commercialValue=access?.commercial||commercial?.text||localizedNotice[language];
+ const login=accessValue(access?.login,localizedNotice[language]);
+ const payment=statusUnsupported?regionCopy(language).status.unsupported:(r?.payments.methods||[]).map(x=>localizedPaymentName(x,language)).join(' · ')||localizedNotice[language];
+ const drama=shortDramaEvidence(p.id);
+ return <tr className="marketOverviewRow marketV36Row" data-market-id={p.id}>
+   <td className="marketOverviewRank" data-label={h[0]}>{position}</td>
+   <td className="marketOverviewIdentity" data-label={h[1]}>
     <button type="button" className="platformName" onClick={onDetail}>
-     <span className="brandIcon">{p.symbol}</span>
+     <span className="brandIcon" aria-hidden="true">{p.symbol}</span>
      <span><strong>{p.name}</strong><small>{p.company}</small></span>
-    </button>
-    <small>{p.category}</small>
+    </button><small>{p.category}</small>
    </td>
-   <td className="marketOverviewStrength" data-label={compactHeadings[2]}>
-    <strong>{rich?.headline||guide?.strengths||p.features.slice(0,2).join(' · ')||p.about}</strong>
-    <p>{rich?.differentiator||p.about}</p>
-    <p className="marketOverviewUses">{rich?rich.capabilities.slice(0,3).map(x=>x.name).join(' · '):useCase}</p>
-    <button type="button" className="marketOverviewExpand" aria-expanded={expanded}
-     aria-controls={'market-details-'+p.id} onClick={()=>setExpanded(v=>!v)}>
-     {expanded?(language==='zh'?'收起完整资料':'Collapse details'):detailLabel} <span aria-hidden="true">{expanded?'▴':'▾'}</span>
-    </button>
+   <td className="marketOverviewStrength" data-label={h[2]}>
+    <strong>{summary.headline}</strong>
+    <p className="marketOverviewUses">{summary.capabilities}</p>
+    <a href={summary.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>
+    <button type="button" className="marketV36More" onClick={onDetail}>{t.more} ↗</button>
    </td>
-   <td className="marketOverviewFree" data-label={compactHeadings[3]}>
-    <strong>{free}</strong>
-    {freeFact&&<a href={freeFact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'官方免费规则':'Official terms'} ↗</a>}
+   <td className="marketOverviewFree" data-label={h[3]}><strong>{allowance}</strong>{free&&<a href={free.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{price&&<a href={price.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewRegion" data-label={h[5]}>
+    <strong>{region==='GLOBAL'?regionCopy(language).global:regionName(region,language)}</strong>
+    <span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{regionText}</span>
+    {r?.policy.source&&<a href={r.policy.source} target="_blank" rel="noopener noreferrer">{r.policy.checkedAt||t.source} ↗</a>}
    </td>
-   <td className="marketOverviewPrice" data-label={compactHeadings[4]}>
-    <strong>{price}</strong>
-    {(priceFact?.source||guide?.source)&&<a href={priceFact?.source||guide!.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'核验价格':'Price source'} ↗</a>}
-   </td>
-   <td className="marketOverviewRegion" data-label={compactHeadings[5]}>
-    <strong>{regionName(displayRegion,language)}</strong>
-    <span>{marketRegion}</span>
-    <small>{globalFact.policy.source?localized.source+' · '+globalFact.policy.checkedAt:localized.untested}</small>
-   </td>
-   <td className="marketOverviewActions" data-label={compactHeadings[6]}>
-    <MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/>
-   </td>
-  </tr>
-  {expanded&&<tr className="marketOverviewDetailsRow">
-   <td colSpan={7}>
-    <div id={'market-details-'+p.id} className="marketOverviewDetails" role="region" aria-label={p.name+' '+detailLabel}>
-     <div className="marketOverviewDetailTitle"><strong>{p.name} · {detailLabel}</strong>
-      <button type="button" onClick={()=>setExpanded(false)}>{language==='zh'?'收起':'Close'} ↑</button></div>
-     <div className="marketOverviewDetailsGrid marketOverviewDetailsCompact">
-      <section><h4>{headings[3]}</h4><p>{model}</p>{modelFact&&<a href={modelFact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'官方版本依据':'Official model versions'} · {modelFact.checkedAt.slice(0,10)} ↗</a>}</section>
-      <section><h4>{headings[4]}</h4><p>{reasoning}</p>{reasoningFact&&<a href={reasoningFact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'官方推理说明':'Reasoning evidence'} ↗</a>}</section>
-      <section><h4>{headings[7]}</h4><p>{free}</p>{freeFact&&<a href={freeFact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'官方免费规则':'Official free limits'} ↗</a>}</section>
-      <section><h4>{headings[8]}</h4><p>{price}</p>{guide?.paid&&<p>{guide.paid}</p>}{failureFact&&<p>{failureFact.text} <a href={failureFact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'失败扣费说明':'Failed-task policy'} ↗</a></p>}{priceFact&&<a href={priceFact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'价格出处':'Price evidence'} ↗</a>}</section>
-      <section className="marketRegionEvidence"><h4>{headings[10]}</h4><p><strong>{regionName(displayRegion,language)} · {marketRegion}</strong></p><p>{localized.untested}</p>{globalFact.policy.source&&<a href={globalFact.policy.source} target="_blank" rel="noopener noreferrer">{localized.source} · {globalFact.policy.checkedAt||''} ↗</a>}</section>
-      <section><h4>{headings[12]}</h4><p>{login}</p><p>{localized.payment}: {payment}</p>{facts?.loginSource&&<a href={facts.loginSource} target="_blank" rel="noopener noreferrer">{language==='zh'?'登录说明':'Sign-in evidence'} ↗</a>}{globalFact.payments.source&&<a href={globalFact.payments.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'付款官方来源':'Payment evidence'} ↗</a>}</section>
-      <section><h4>{headings[11]}</h4><p>{commercial}</p>{(facts?.commercialSource||commercialFact?.source)&&<a href={facts?.commercialSource||commercialFact!.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'商用条款':'Commercial terms'} ↗</a>}</section>
-      <section><h4>{headings[14]}</h4><p><a href={p.website} target="_blank" rel="noopener noreferrer">{p.websiteKind==='repository'?'官方源码':p.websiteKind==='documentation'?'官方文档':'官方网站'} ↗</a></p>{sources.filter(x=>['desktop','ios','android'].includes(x.kind)).map(x=><p key={x.kind+x.url}><a target="_blank" rel="noopener noreferrer" href={x.url}>{x.label} ↗</a></p>)}<div className="marketOverviewDetailActions"><button type="button" onClick={onDetail}>{language==='zh'?'查看具体功能与案例':'Features and examples'}</button><button type="button" onClick={onToggleCompare}>{isCompared?(language==='zh'?'移出对比':'Remove from comparison'):(language==='zh'?'加入并排对比':'Compare side by side')}</button></div><a className="marketVendorClaim" href={'/vendor/claim?'+new URLSearchParams({product:p.id,name:p.name})}>{language==='zh'?'厂商免费认领／补充资料':'Claim or correct listing'} ↗</a></section>
-     </div>
-     <div className="marketOverviewEvidence">
-      <strong>{language==='zh'?'官方证据与更新日期':'Official sources and review dates'}</strong>
-      {p.conditions?.map(f=><p key={f.label}><strong>{f.label}：</strong>{f.text} <a href={f.source} target="_blank" rel="noopener noreferrer">{f.checkedAt} ↗</a></p>)}
-      {guide?.watermarkNote&&<p>{language==='zh'?'导出与水印：':'Export and watermark: '}{guide.watermarkNote}</p>}
-     </div>
-    </div>
-   </td>
-  </tr>}
- </Fragment>;
+   <td className="marketV36Model" data-label={h[6]}>{models}</td>
+   <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<span className="marketDramaUnknown">{t.dramaUnknown}</span>}</td>
+   <td className="marketV36Business" data-label={h[8]}><span>{commercialValue}</span>{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketV36Login" data-label={h[9]}><strong>{login}</strong><span>{payment}</span></td>
+   <td className="marketOverviewActions" data-label={h[10]}><MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/></td>
+  </tr>;
 }
