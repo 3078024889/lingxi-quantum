@@ -29,7 +29,7 @@ test('final brand is globally consistent with evidence-first market labels',asyn
  for(const [label,content] of [['layout',layout],['workbench',main],['dictionary',dictionary],['locale',locale]]){
   assert.ok(content.includes('全球SI AI工具行情平台'),label+' must use final name');
  }
- assert.ok(main.includes('目录序号'),'unverified order must not look like a verified ranking');
+ assert.ok(main.includes('按名称展示'),'unverified order must not look like a verified ranking');
 });
 test('first sourced ranking is limited to official HF model repository signal',async()=>{
  const api=await file('app/api/v1/hf-model-rankings/route.ts');
