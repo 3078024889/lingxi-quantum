@@ -18,8 +18,6 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
    <article><h3>免费的功能</h3><p>{guide.free}</p></article>
    <article><h3>付费功能</h3><p>{guide.paid}</p></article>
    <article><h3>参考价格</h3><p>{guide.cost}</p></article>
-   <article><h3>哪些地区能用</h3><p>{guide.region}</p></article>
-   <article><h3>怎么付费</h3><p>{access?.payment.length?accessValue(access.payment):guide.payment}</p></article>
    <article><h3>注册和登录</h3><p>{accessValue(access?.login,'暂无经核实的账号登录方式')}</p></article>
    <article><h3>模型版本</h3><p>{access?.models||'具体版本与模型限制尚未核实'}</p></article>
    <article><h3>商业用途</h3><p>{access?.commercial||'商用授权资料尚未核实'}</p></article>
@@ -31,7 +29,7 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
   </div>:<div className="decisionSummary"><strong>{platform.category}</strong>
    <span>{platform.features.slice(0,5).join(' · ')}</span>
    {facts.filter(f=>f.label==='免费额度'||f.label==='价格').map(f=><p key={f.label}><strong>{f.label}：</strong>{f.text}</p>)}
-   <p>未列出的收费与地区规则，以厂商官网为准。</p></div>}
+   <p>{language==='zh'?'上方的全球地区与支付面板提供具体结论及官方出处。':'Country-specific availability and payments are shown above with publisher sources.'}</p></div>}
   <details className="decisionMore"><summary>查看官网价格与使用规则</summary>
    {access?.loginSource&&<p><a href={access.loginSource} target="_blank" rel="noopener noreferrer">官方登录方式说明 ↗</a></p>}
    {access?.paymentSource&&<p><a href={access.paymentSource} target="_blank" rel="noopener noreferrer">支付渠道官方说明 ↗</a></p>}

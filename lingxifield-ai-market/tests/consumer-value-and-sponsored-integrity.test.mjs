@@ -6,7 +6,11 @@ test('ordinary users see purpose, free uses, price, watermark and official entry
  const src=await read('app/market-workbench.tsx'),card=await read('app/market-decision-cards.tsx'),headings=await read('lib/market-matrix-headings.ts');
  for(const x of ['PriceLeaderboards','SponsoredFeatures','MarketMatrixRow','MATRIX_HEADINGS[language]'])assert.ok(src.includes(x),x);
  for(const x of ['免费额度','实际价格','官网 · 下载'])assert.ok(headings.includes(x),x);
- for(const x of ['强大优势','理解与推理','导出水印','怎么付费','哪些地区能用'])assert.ok(card.includes(x),x);
+ for(const x of ['强大优势','理解与推理','导出水印'])assert.ok(card.includes(x),x);
+ const global=await read('app/market-global-access.tsx');
+ assert.ok(global.includes('globalRegionFact(platform.id,region)'));
+ assert.ok(global.includes('x.payments.source'));
+ assert.ok(global.includes('x.policy.source'));
  assert.ok(!src.includes('<HfModelRankings/>'));
 });
 test('official Doubao links never point to misleading similar domain',async()=>{

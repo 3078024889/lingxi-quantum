@@ -317,3 +317,27 @@
 .capabilityBottom li span{width:20px;height:20px;flex:0 0 20px;border-radius:50%;background:#e5efff;color:#1c6dcc;text-align:center;font-weight:700;line-height:20px;font-size:11px}
 @media(max-width:1050px){.capabilityGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.capabilityShowcase{padding:17px}.capabilityAudience small{margin-left:0}}
 @media(max-width:680px){.capabilityGrid{grid-template-columns:1fr}.capabilityShowcase{padding:14px}.capabilityHeading h2{font-size:18px}.capabilityBottom ol{flex-direction:column}}
+
+
+/* Region and language are independent. Nine-language global availability UX. */
+.marketRegionSelect{display:flex;align-items:center;gap:7px;white-space:nowrap;font-size:11px;font-weight:600;color:#386493}
+.marketRegionSelect select{min-width:130px;max-width:180px;border:1px solid #cdddf3;background:#fff;color:#164779;border-radius:7px;padding:7px 23px 7px 9px;font:inherit;cursor:pointer}
+.globalRegionPanel{margin:13px 0 16px;border:1px solid #cdddf4;border-radius:12px;background:linear-gradient(135deg,#f9fbff,#fff);padding:19px}
+.globalRegionHeading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding-bottom:13px;border-bottom:1px solid #e5eef9}
+.globalRegionHeading h2{font-size:18px;line-height:1.4;color:#103d76;margin:0}
+.globalRegionHeading p{color:#6d829e;font-size:12px;margin:6px 0 0;line-height:1.5}
+.globalRegionFacts{display:grid;grid-template-columns:1fr 1.4fr;gap:13px;margin-top:13px}
+.globalRegionFacts article{display:flex;flex-direction:column;gap:8px;background:#f6f9fe;border:1px solid #e0eaf8;border-radius:9px;padding:15px;min-width:0}
+.globalRegionFacts h3{font-size:12px;color:#41618a;margin:0}
+.globalRegionFacts strong{font-size:13px;line-height:1.6;color:#1b508e}
+.globalRegionFacts .regionStatus-unsupported{color:#a14b22}
+.globalRegionFacts .regionStatus-supported,.globalRegionFacts .regionStatus-local{color:#176b51}
+.globalRegionFacts .regionStatus-unknown{color:#6d778c}
+.globalRegionFacts .regionStatus-conditional{color:#966b11}
+.globalRegionFacts ul{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.globalRegionFacts li{font-size:11px;color:#174c8b;background:#e7f1ff;border:1px solid #d8e6f9;border-radius:5px;padding:5px 8px}
+.globalRegionFacts small{color:#7a8ca4;font-size:11px;line-height:1.5}
+.globalRegionFacts a{font-size:11px;color:#176ac7;text-decoration:underline}
+[dir="rtl"] .marketRegionSelect select{padding:7px 9px 7px 23px}
+@media(max-width:950px){.topbar .marketRegionSelect{max-width:170px}.marketRegionSelect{white-space:normal}.globalRegionFacts{grid-template-columns:1fr}}
+@media(max-width:550px){.globalRegionPanel{padding:12px}.marketRegionSelect select{max-width:155px}.globalRegionHeading h2{font-size:16px}}
