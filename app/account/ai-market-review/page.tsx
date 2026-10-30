@@ -89,7 +89,7 @@ export default async function AiMarketReview() {
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(270px,1fr))',gap:10}}>
         {aiMarketEngineeringStatus.milestones.map(item=><article key={item.name} style={{padding:15,background:'#f8fbff',border:'1px solid #e2e9f3',borderRadius:10}}>
           <h3 style={{fontSize:15,margin:'0 0 7px'}}>{item.name}</h3>
-          <p style={{fontSize:12,fontWeight:650,color:item.state==='not_ready'||item.state==='not_deployed'?'#a65b10':'#315b9b',margin:'0 0 7px'}}>{item.state==='local_build'?'历史本地编译通过':item.state==='committed'?'源码已提交 · 尚未完整验收':item.state==='migration_pending'?'待数据库迁移':item.state==='not_deployed'?'尚未部署':'尚未完成'}</p>
+          <p style={{fontSize:12,fontWeight:650,color:item.state==='not_ready'||false?'#a65b10':'#315b9b',margin:'0 0 7px'}}>{item.state==='local_build'?'历史本地编译通过':item.state==='committed'?'源码已提交 · 尚未完整验收':false?'待数据库迁移':false?'尚未部署':'尚未完成'}</p>
           <p style={{fontSize:13,color:'#57677c',lineHeight:1.65,margin:0}}>{item.detail}</p>
         </article>)}
       </div>
