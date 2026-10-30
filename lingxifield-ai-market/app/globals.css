@@ -440,3 +440,23 @@ button,a,input,select,textarea{min-height:34px}
 .compareDialog td:first-child,.compareDialog th:first-child{min-width:140px}
 .matrixScroll :is(a,button):focus-visible,.compareDock :is(button):focus-visible{outline:3px solid #196ce2;outline-offset:2px}
 @media(max-width:750px){.compareDock{bottom:8px;padding:10px}.compareDockChoices{max-width:100%;overflow:auto}.compareDialog{padding:12px}}
+
+/* V34 vendor pricing landing: clear pricing with no simulated checkout actions */
+.vendorPricingPage{max-width:1160px;padding:32px 20px 55px;margin:0 auto;color:#16345f}
+.vendorPricingBack{display:inline-flex;color:#195bae;font-size:14px;font-weight:700;align-items:center}
+.vendorPricingHeader{margin:25px 0 20px}
+.vendorPricingHeader h1{font-size:28px;line-height:1.3;margin:0 0 10px;font-weight:800}
+.vendorPricingHeader p{font-size:16px;line-height:1.65;margin:0 0 18px;color:#415f80}
+.vendorPricingControls{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.vendorPricingControls label{font-size:14px;font-weight:700;display:flex;align-items:center;gap:9px}
+.vendorPricingControls select{font-size:15px;background:white;color:#173e70;border:1px solid #abc9e9;border-radius:8px;min-height:42px;padding:7px 12px}
+.vendorPricingCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.vendorPricingCards article{border-radius:12px;border:1px solid #d5e3f7;background:white;padding:24px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.vendorPricingCards h2{font-size:20px;font-weight:800;margin:0}
+.vendorPricingAmount{font-size:36px;font-weight:800;color:#125bc9;font-variant-numeric:tabular-nums}
+.vendorPricingCards p{font-size:15px;line-height:1.65;color:#3f5977;margin:0}
+.vendorPricingCards p.vendorPricingDuration{font-weight:700;color:#275aa3}
+.vendorPricingCards a{display:inline-flex;align-items:center;justify-content:center;margin-top:auto;align-self:start;min-height:42px;padding:8px 16px;background:#155cce;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700}
+.vendorPricingPending{font-size:16px;font-weight:700;color:#70470b;background:#fff7e8;padding:16px;border-radius:10px;margin:18px 0 8px}
+.vendorPricingNote{font-size:14px;color:#405a7e;line-height:1.8}
+@media(max-width:680px){.vendorPricingCards{grid-template-columns:1fr}.vendorPricingPage{padding:18px 12px}.vendorPricingCards article{padding:18px}}
