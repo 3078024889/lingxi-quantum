@@ -34,7 +34,7 @@ test('verified sources and commercial safeguards are retained',()=>{
  assert.match(row,/modelFact\.source/);
  assert.match(row,/reasoningFact\.source/);
  assert.match(row,/failureFact\.source/);
- assert.match(row,/facts\.paymentSource/);
+ assert.match(row,/globalFact\.payments\.source/);
  assert.match(row,/MarketRowActions platform=\{p\}/);
  assert.match(home,/SponsoredFeatures/);
  assert.match(home,/SeoGeoBoard/);
