@@ -37,6 +37,14 @@ jobs:
             console.log(JSON.stringify({rssMiB:r.rssMiB,p95Ms:r.p95Ms,buildMs:r.buildMs}));
             if(r.rssMiB>450||r.p95Ms>450||r.buildMs>30000)process.exit(3);
           '
+      - name: Verify nine real SSR language routes and product APIs
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- -p 3302 > /tmp/ai-market-next.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node scripts/market-local-http-smoke.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: ai-market-build-${{ github.sha }}
