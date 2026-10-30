@@ -131,3 +131,37 @@
 .sponsoredCards a>span:last-child{color:#1664d0;font-size:12px}
 .sponsoredArea p{font-size:11px;color:#74839c;margin:10px 0 0}
 @media(max-width:640px){.sponsoredCards{grid-template-columns:1fr}}
+
+
+/* Exchange-style directory: actions stay in the same horizontal row as the tool. */
+#tools-list{scroll-margin-top:18px}
+.tabQuickLink{display:inline-flex;align-items:center;padding:13px 12px;color:#1459b8;text-decoration:none;font-weight:700;white-space:nowrap}
+.tabQuickLink:hover{color:#075ee1;background:#eef5ff}
+.marketDirectoryTable{width:100%;min-width:910px;table-layout:fixed}
+.marketDirectoryTable th{padding:11px 9px}
+.marketDirectoryTable th:nth-child(1){width:4%}
+.marketDirectoryTable th:nth-child(2){width:21%}
+.marketDirectoryTable th:nth-child(3){width:34%}
+.marketDirectoryTable th:nth-child(4){width:17%}
+.marketDirectoryTable th:nth-child(5){width:24%}
+.marketDirectoryTable td{padding:11px 8px;vertical-align:middle}
+.marketDirectoryTable .rankIndex{font-weight:700;color:#355d92;font-variant-numeric:tabular-nums}
+.directoryIdentity .platformName{padding:0;width:100%;white-space:normal}
+.directoryIdentity .platformName strong{font-size:13px}
+.directoryTasks{font-size:11px;color:#50759c;margin-top:7px;line-height:1.5}
+.directoryPlans>div{display:grid;grid-template-columns:34px minmax(0,1fr);align-items:start;gap:6px;line-height:1.5;margin-bottom:6px;font-size:11.5px;color:#3c5574}
+.directoryPlans>div:last-child{margin-bottom:0}
+.planLabel{font-size:10px;font-weight:700;border-radius:5px;padding:2px 4px;text-align:center}
+.freeLabel{background:#e9f8ef;color:#098348}
+.paidLabel{background:#eef3ff;color:#255fcb}
+.directoryPrice strong{display:block;line-height:1.5;color:#1e4382;font-size:12px}
+.directoryPrice small{display:block;color:#627d9e;font-size:11px;line-height:1.55;margin-top:7px}
+.marketActionCell{min-width:200px}
+.marketRowActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.marketRowActions a,.marketRowActions button{display:inline-flex;justify-content:center;align-items:center;min-height:28px;padding:5px 6px;border:1px solid #d1e2fb;background:#f6f9ff;color:#155cbb;border-radius:5px;font-size:10.5px;font-weight:600;text-align:center;line-height:1.3;text-decoration:none;white-space:nowrap;cursor:pointer}
+.marketRowActions .rowPrimary{background:#1167e9;border-color:#1167e9;color:white}
+.marketRowActions .vendorRowClaim{background:#f5f7fc;border-color:#d6deec;color:#516989}
+.marketRowActions .rowCompareActive{background:#e4f3fd;border-color:#98caf7}
+.marketRowActions a:hover,.marketRowActions button:hover{filter:brightness(.96)}
+@media(min-width:1500px){.marketDirectoryTable{min-width:0}.marketRowActions{gap:6px}}
+@media(max-width:880px){.marketDirectoryTable{min-width:920px}.marketDirectoryTable td{padding:10px 7px}}
