@@ -60,6 +60,7 @@ jobs:
             20261029_ai_market_vendor_f.sql
             20261029_ai_market_payment_ledger_h.sql
             20261029_ai_market_h_integration_missing_tables.sql
+            20261030_ai_market_incremental_sources.sql
           )
           for name in "${migrations[@]}"; do
             echo "Applying $name"
@@ -96,6 +97,37 @@ jobs:
               RAISE EXCEPTION 'PROFILE_SCHEMA_DRIFT: created_at missing';
             END IF;
           END $$;
+          SQL
+      - name: Test private incremental sync, append-only history and anonymous access rejection
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $
+          BEGIN
+            IF has_function_privilege('anon','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
+              OR has_function_privilege('authenticated','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
+            THEN RAISE EXCEPTION 'INSECURE_SOURCE_SYNC_RPC_GRANT'; END IF;
+            IF NOT has_function_privilege('service_role','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
+            THEN RAISE EXCEPTION 'SERVICE_ROLE_CANNOT_SYNC'; END IF;
+          END $;
+          BEGIN;
+          SELECT set_config('request.jwt.claim.role','service_role',true);
+          SET LOCAL ROLE service_role;
+          SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","facts":{"downloads":25}}]'::jsonb);
+          SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","facts":{"downloads":25}}]'::jsonb);
+          SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","facts":{"downloads":26}}]'::jsonb);
+          COMMIT;
+          DO $
+          DECLARE n integer;
+          BEGIN
+            SELECT count(*) INTO n FROM public.ai_market_source_items;
+            IF n<>1 THEN RAISE EXCEPTION 'NOT_IDEMPOTENT_ITEMS'; END IF;
+            SELECT count(*) INTO n FROM public.ai_market_source_history;
+            IF n<>2 THEN RAISE EXCEPTION 'MISSING_APPEND_ONLY_HISTORY'; END IF;
+            SELECT count(*) INTO n FROM public.ai_market_source_sync_runs;
+            IF n<>3 THEN RAISE EXCEPTION 'SYNC_RUNS_NOT_RECORDED'; END IF;
+            IF EXISTS(SELECT 1 FROM public.ai_market_source_sync_runs WHERE publication_approved)
+            THEN RAISE EXCEPTION 'UNREVIEWED_DATA_PUBLISHED'; END IF;
+          END $;
           SQL
       - name: Ensure migrations are re-runnable without destructive reset
         run: |
