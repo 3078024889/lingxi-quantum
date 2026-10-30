@@ -38,6 +38,12 @@ test('sponsored placement cannot manipulate organic price rankings or leak payme
  assert.ok(sql?.includes('paid_verified_at IS NOT NULL'));
  assert.ok(sql?.includes('GRANT SELECT(project_id,label,target_url,placement,ends_at)'));
 });
+test('comparison avoids null scores and shows what customers care about',async()=>{
+ const home=await read('app/market-workbench.tsx');
+ for(const x of ['理解与推理','图片／视频水印','付款方式','付费增加什么','免费'])assert.ok(home.includes(x),x);
+ assert.ok(home.includes('compareRows.map('));
+ assert.ok(!home.includes('String(platform[field.key])'));
+});
 test('task price ranking uses comparable monthly and annual equivalence groups',async()=>{
  const guide=await read('lib/offer-guide.ts'),ui=await read('app/price-leaderboards.tsx');
  assert.ok(guide.includes('annual_equivalent'));
