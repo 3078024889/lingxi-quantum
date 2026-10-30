@@ -9,7 +9,9 @@ export function createSearchIndex(input){
  rows.forEach((r,i)=>{if(byId.has(r.id))throw Error('DUPLICATE_SEARCH_ID');byId.set(r.id,r);if(!categories.has(r.category))categories.set(r.category,[]);categories.get(r.category).push(i);for(const t of terms([r.name,r.company,r.category,r.description,...r.capabilities].join(' '))){if(!postings.has(t))postings.set(t,[]);postings.get(t).push(i);}});
  const all=rows.map((_,i)=>i);
  function search({q='',category='',limit=24,cursor=0}={}){
-  const query=normalize(q).trim().slice(0,120),cap=Math.max(1,Math.min(50,Math.floor(Number(limit)||24))),start=Math.max(0,Math.min(10000,Math.floor(Number(cursor)||0)));
+  // AI and SI are catalog-wide topic queries, not company names or ranking signals.
+  const inputQuery=normalize(q).trim().slice(0,120);
+  const query=['ai','ai工具','ai tools','si','si工具','si tools','super intelligence','super intelligence tools','超级智能','超级智能工具'].includes(inputQuery)?'':inputQuery,cap=Math.max(1,Math.min(50,Math.floor(Number(limit)||24))),start=Math.max(0,Math.min(10000,Math.floor(Number(cursor)||0)));
   const expansions=aliases[query]||[];
   const queryTerms=terms(query);
   const lists=queryTerms.map(t=>postings.get(t)||[]).sort((a,b)=>a.length-b.length);
