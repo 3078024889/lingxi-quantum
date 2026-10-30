@@ -17,13 +17,17 @@ es:{search:'Buscar',currency:'Moneda',localeBanner:'9 idiomas · datos compartid
 pt:{search:'Buscar',currency:'Moeda',localeBanner:'9 idiomas · dados compartilhados',verifiedNotice:'Sem dados reais conectados',questionAnswer:'Resposta rápida (protótipo)',answerDisclaimer:'Confira preços e limites oficiais.',commercialTitle:'Serviços para fornecedores',commercialSubtitle:'As compras ainda não estão disponíveis',perMonth:'/mês',perPlacement:'/anúncio',paymentSelection:'Pagamento pendente',compareTitle:'Comparação',dimension:'Atributo',demoScores:'Pontuações demo'},
 ar:{search:'بحث',currency:'العملة',localeBanner:'٩ لغات · بيانات مشتركة',verifiedNotice:'البيانات المباشرة غير متصلة',questionAnswer:'إجابة سريعة (تجريبية)',answerDisclaimer:'تحقق من الأسعار والقيود الرسمية.',commercialTitle:'خدمات الشركات',commercialSubtitle:'الشراء غير متاح حاليا',perMonth:'/شهر',perPlacement:'/إعلان',paymentSelection:'الدفع غير متصل بعد',compareTitle:'مقارنة المنصات',dimension:'المعيار',demoScores:'نتائج تجريبية'}
 };
-type Price={id:string;amount:number;interval:'monthly'|'placement';label:Record<Language,string>};
+import {VENDOR_PLANS} from './vendor-price-catalog.mjs';
+type Price={id:string;amount:number;interval:'free'|'annual'|'seven_days'|'thirty_days';label:Record<Language,string>};
 const names=(zh:string,en:string):Record<Language,string>=>({zh,en,ja:en,ko:en,fr:en,de:en,es:en,pt:en,ar:en});
-export const pricing:Price[]=[
-{id:'listing',amount:0,interval:'monthly',label:names('基础收录','Basic listing')},
-{id:'geo',amount:29,interval:'monthly',label:names('GEO 排名监测','GEO monitoring')},
-{id:'sponsored',amount:49,interval:'monthly',label:names('厂商推广','Sponsored placement')},
-{id:'brand',amount:149,interval:'placement',label:names('品牌展示','Brand feature')}];
+// Legacy compatibility export. The verified server quote source is vendor-price-catalog.mjs.
+const VENDOR_PLAN_LABELS:Record<string,Record<Language,string>>={
+ listing:{zh:'基础收录',en:'Basic listing',ja:'無料掲載',ko:'무료 등록',fr:'Référencement gratuit',de:'Kostenloser Eintrag',es:'Listado gratuito',pt:'Listagem gratuita',ar:'إدراج مجاني'},
+ brand:{zh:'品牌展示',en:'Brand profile',ja:'ブランド紹介',ko:'브랜드 소개',fr:'Profil de marque',de:'Markenprofil',es:'Perfil de marca',pt:'Perfil de marca',ar:'ملف العلامة'},
+ launch:{zh:'新品推荐',en:'New launch',ja:'新製品紹介',ko:'신제품 홍보',fr:'Lancement',de:'Produktstart',es:'Nuevo lanzamiento',pt:'Lançamento',ar:'إطلاق منتج'},
+ category:{zh:'分类推广',en:'Category promotion',ja:'カテゴリ広告',ko:'카테고리 홍보',fr:'Promotion catégorie',de:'Kategorie-Werbung',es:'Promoción de categoría',pt:'Promoção por categoria',ar:'ترويج فئة'}
+};
+export const pricing:Price[]=VENDOR_PLANS.map(p=>({id:p.id,amount:p.amount,interval:p.id==='listing'?'free':p.id==='brand'?'annual':p.id==='launch'?'seven_days':'thirty_days',label:VENDOR_PLAN_LABELS[p.id]}));
 export const compareFields:{key:keyof Platform;label:Record<Language,string>}[]=[
 {key:'company',label:names('所属公司','Company')},{key:'category',label:names('产品类别','Category')},
 {key:'year',label:names('公司成立','Founded')},{key:'funding',label:names('融资资料','Funding')},
