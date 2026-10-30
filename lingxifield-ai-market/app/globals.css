@@ -717,3 +717,74 @@ body{font-size:16px;line-height:1.6}
 .app .marketV36Row .marketRegionStatus-supported,.app .marketV36Row .marketRegionStatus-local{color:#18834d}
 @media(max-width:1000px){.app .marketOverviewViewport{overflow-x:auto}.app .marketOverviewTable thead{display:table-header-group}.app .marketOverviewTable tbody{display:table-row-group}.app .marketOverviewTable .marketV36Row{display:table-row!important}}
 [dir="rtl"] .app .marketV36FilterHead,[dir="rtl"] .app .marketV36FilterChips{direction:rtl}
+
+
+/* V3.7: eliminate duplicate top-level decision layers and make every line readable. */
+.app .hero{height:auto;min-height:124px;max-height:none;overflow:visible;padding:21px 25px;align-items:center}
+.app .hero h1{font-size:23px;line-height:1.42;margin:0 0 9px;white-space:normal}
+.app .hero p{font-size:14px;line-height:1.65;margin:0;max-width:900px}
+.app .hero .orb{line-height:1;font-size:104px;pointer-events:none;align-self:center}
+.app .rankHead{align-items:center;gap:12px;padding:15px 14px 8px}
+.app .rankHead>div:first-child{min-width:0;flex:1}
+.app .rankHead small{display:block;color:#637fa2;font-size:12px;line-height:1.5;margin-top:5px}
+.app .ranking .marketV36Filters{padding:12px 13px;margin:8px 12px 6px;border:1px solid #d7e5f5;background:#f8fbff}
+.app .ranking .marketV36FilterHead{display:flex;justify-content:flex-end;gap:10px;align-items:center}
+.app .ranking .marketV36FilterHead>strong{margin-inline-end:auto;white-space:nowrap}
+.app .ranking .marketV36FilterChips{margin-top:8px;gap:6px}
+.app .ranking .marketV36FilterChips button{padding:7px 11px;min-height:32px;font-size:13px}
+.app .ranking .marketV36FilterHead label{font-size:12px;gap:5px}
+.app .ranking .marketV36FilterHead select{max-width:145px;font-size:13px;padding:7px}
+.app .marketV37ScrollTools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 12px 7px;color:#5d7899;font-size:12px}
+.app .marketV37ScrollTools>div{display:flex;gap:6px}
+.app .marketV37ScrollTools button{background:#fff;border:1px solid #bed2eb;color:#1354a6;border-radius:7px;padding:4px 13px;font-size:21px;line-height:1.1}
+.app .marketV37ScrollTools button:focus-visible{outline:2px solid #2873e5}
+.app .marketOverviewViewport{margin:0 0 8px;width:100%;max-width:100%;overflow-x:auto;scrollbar-width:thin}
+.app .marketOverviewTable :is(th,td){font-size:13px!important;line-height:1.55!important;padding:11px 9px!important;overflow-wrap:break-word}
+.app .marketOverviewTable th{white-space:normal!important;line-height:1.4!important}
+.app table.marketOverviewTable{min-width:1710px!important}
+.app .marketOverviewTable :is(th:nth-child(1),td:nth-child(1)){width:3%}
+.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){width:10%}
+.app .marketOverviewTable :is(th:nth-child(3),td:nth-child(3)){width:22%}
+.app .marketOverviewTable :is(th:nth-child(4),td:nth-child(4)){width:10%}
+.app .marketOverviewTable :is(th:nth-child(5),td:nth-child(5)){width:9%}
+.app .marketOverviewTable :is(th:nth-child(6),td:nth-child(6)){width:9%}
+.app .marketOverviewTable :is(th:nth-child(7),td:nth-child(7)){width:9%}
+.app .marketOverviewTable :is(th:nth-child(8),td:nth-child(8)){width:9%}
+.app .marketOverviewTable :is(th:nth-child(9),td:nth-child(9)){width:7%}
+.app .marketOverviewTable :is(th:nth-child(10),td:nth-child(10)){width:7%}
+.app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){width:5%}
+.app .marketOverviewTable .marketV36Row>td{vertical-align:top}
+.app .marketV36Row .marketV36Login>span{font-size:12px;line-height:1.6;word-break:normal;overflow-wrap:anywhere}
+.app .marketV37More{background:transparent;border:0;color:#1456a5;text-align:start;margin-top:6px;padding:3px 0;text-decoration:underline}
+.app .marketOverviewTable .marketV36Row .marketOverviewActions .marketRowActions button,.app .marketOverviewTable .marketV36Row .marketOverviewActions .marketRowActions a{font-size:12px!important}
+.app .marketTourRoot{flex:0 0 auto;position:relative}
+.app .marketTourStart{border:1px solid #bdd3f0;border-radius:10px;color:#135ab4;background:#f3f8ff;padding:9px 12px;display:inline-flex;align-items:center;gap:8px;font-weight:700}
+.app .marketTourStart:hover{background:#e6f1ff}
+.app .marketTourPanel{position:fixed;z-index:1200;inset-inline-end:20px;bottom:20px;width:min(390px,calc(100vw - 32px));max-height:65vh;overflow-y:auto;background:white;border:1px solid #c1d5ed;border-radius:16px;box-shadow:0 10px 35px #052f612e;padding:17px 18px;color:#163e6e}
+.app .marketTourPanelHead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.app .marketTourPanelHead>button{border:0;background:transparent;color:#607b98;padding:3px}
+.app .marketTourProgress{display:flex;gap:6px;margin:12px 0}
+.app .marketTourProgress span{flex:1;height:5px;border-radius:10px;background:#dfebf7}
+.app .marketTourProgress span.active{background:#176be1}
+.app .marketTourPanel h3{font-size:18px;margin:10px 0;color:#103d78}
+.app .marketTourPanel p{font-size:14px;line-height:1.7;color:#566f8e;min-height:50px}
+.app .marketTourPanelFoot{display:flex;justify-content:space-between;gap:10px;margin-top:15px}
+.app .marketTourPanelFoot button{display:flex;align-items:center;justify-content:center;gap:4px;border:1px solid #bad0ec;border-radius:8px;padding:9px 11px;background:#fff;color:#1855a3}
+.app .marketTourPanelFoot .marketTourNext{background:#1166db;color:#fff;border-color:#1166db}
+.app .marketTourSpotlight{position:relative;z-index:1190!important;outline:3px solid #217fff!important;outline-offset:4px!important;box-shadow:0 0 0 8px #2b83f61e!important;border-radius:7px}
+.app .searchBar input.marketTourSpotlight{z-index:1190}
+#market-filters,#tools-list{scroll-margin-top:115px}
+@media(max-width:800px){
+ .app .hero{padding:17px 16px}
+ .app .hero h1{font-size:20px}
+ .app .hero .orb{display:none}
+ .app .rankHead{flex-wrap:wrap;align-items:flex-start}
+ .app .marketTourStart{font-size:13px}
+ .app .marketV36FilterHead{justify-content:flex-start}
+ .app .ranking .marketV36FilterHead>strong{flex-basis:100%}
+ .app .marketTourPanel{inset-inline:12px;bottom:12px;width:auto;max-height:52vh}
+}
+@media(prefers-reduced-motion:reduce){.app .marketTourProgress span{transition:none}}
+
+.app .marketTourCompareNow{border:1px solid #b6cfee;border-radius:8px;background:#eef6ff;color:#1857a5;padding:8px 12px;font-weight:700;cursor:pointer}
+.app .marketTourCompareNow:focus-visible{outline:2px solid #1e78e0;outline-offset:2px}

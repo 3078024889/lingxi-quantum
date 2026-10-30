@@ -40,7 +40,11 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
  const models=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models||localizedNotice[language];
  const commercialValue=access?.commercial||commercial?.text||localizedNotice[language];
  const login=accessValue(access?.login,localizedNotice[language]);
- const payment=statusUnsupported?regionCopy(language).status.unsupported:(r?.payments.methods||[]).map(x=>localizedPaymentName(x,language)).join(' · ')||localizedNotice[language];
+ const allPayments=r?.payments.methods||[];
+ const accepted=r?.policy.status==='supported'||r?.policy.status==='conditional'||r?.policy.status==='local';
+ const payment=statusUnsupported?regionCopy(language).status.unsupported:
+  !accepted?localizedNotice[language]:
+  allPayments.length?allPayments.slice(0,2).map(x=>localizedPaymentName(x,language)).join(' · ')+(allPayments.length>2?' +'+(allPayments.length-2):''):localizedNotice[language];
  const drama=shortDramaEvidence(p.id);
  return <tr className="marketOverviewRow marketV36Row" data-market-id={p.id}>
    <td className="marketOverviewRank" data-label={h[0]}>{position}</td>
@@ -66,7 +70,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
    <td className="marketV36Model" data-label={h[6]}>{models}</td>
    <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<span className="marketDramaUnknown">{t.dramaUnknown}</span>}</td>
    <td className="marketV36Business" data-label={h[8]}><span>{commercialValue}</span>{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
-   <td className="marketV36Login" data-label={h[9]}><strong>{login}</strong><span>{payment}</span></td>
+   <td className="marketV36Login" data-label={h[9]}><strong>{login}</strong><span title={accepted?allPayments.map(x=>localizedPaymentName(x,language)).join(' · '):payment}>{payment}</span><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
    <td className="marketOverviewActions" data-label={h[10]}><MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/></td>
   </tr>;
 }
