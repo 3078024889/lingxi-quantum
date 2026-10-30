@@ -26,8 +26,8 @@ test('evidence-first public cards are not dominated by engineering measurements'
  assert.ok(home.includes('<PriceLeaderboards/>'));
  assert.ok(!home.includes('<HfModelRankings/>'));
  assert.ok(home.includes('全球 AI 工具一览'));
- assert.ok(home.includes('<th>免费能做什么</th>'));
- assert.ok(home.includes('<th>参考价格</th>'));
+ assert.ok(home.includes('<th>免费和付费能做什么</th>'));
+ assert.ok(home.includes('<th>价格 · 水印</th>'));
  assert.ok(!home.includes('<div className="marketUtility">'));
  assert.ok(decisions.includes('guide.source'));
  assert.ok(decisions.includes('guide.free'));
