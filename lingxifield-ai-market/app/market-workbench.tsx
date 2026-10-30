@@ -34,8 +34,8 @@ const compareRows:{label:string;pick:(p:Platform,region:RegionCode,language:Lang
  {label:'付费增加什么',pick:p=>p.guide?.paid||'查看官网套餐'},
  {label:'参考价格',pick:p=>p.conditions?.find(f=>f.label==='价格')?.text||p.guide?.cost||p.price||'待核验'},
  {label:'图片／视频水印',pick:p=>p.guide?.watermarkNote||'请查看具体模型的导出规则'},
- {label:'地区可用性',pick:(p,region,language)=>{const country=region==='GLOBAL'?'CN':region;const item=globalRegionFact(p.id,country);return regionName(country,language)+'：'+regionCopy(language).status[item.policy.status]+(item.policy.checkedAt?' · '+item.policy.checkedAt:'');}},
- {label:'付款方式',pick:(p,region,language)=>{const country=region==='GLOBAL'?'CN':region;const item=globalRegionFact(p.id,country);return item.policy.status==='unsupported'?regionCopy(language).status.unsupported:item.payments.methods.join(' / ')||regionCopy(language).status.unknown;}},
+ {label:'地区可用性',pick:(p,region,language)=>{if(region==='GLOBAL')return regionCopy(language).global;const country=region;const item=globalRegionFact(p.id,country);return regionName(country,language)+'：'+regionCopy(language).status[item.policy.status]+(item.policy.checkedAt?' · '+item.policy.checkedAt:'');}},
+ {label:'付款方式',pick:(p,region,language)=>{if(region==='GLOBAL')return regionCopy(language).global;const country=region;const item=globalRegionFact(p.id,country);return item.policy.status==='unsupported'?regionCopy(language).status.unsupported:item.payments.methods.join(' / ')||regionCopy(language).status.unknown;}},
  {label:'短剧生成能力',pick:(p,_region,language)=>shortDramaSummary(p.id,language)||MARKET_SCREEN_COPY[language].dramaUnknown}
 ];
 function Logo(){return <div className="logo"><span><strong>灵犀场</strong><small>LINGXIFIELD</small></span></div>}
