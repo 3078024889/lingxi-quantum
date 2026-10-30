@@ -4,10 +4,11 @@ import {createSearchIndex} from './search-index.mjs';
 import type {CatalogEntry} from './catalog-engine.mjs';
 import {latestFacts,factLabels,type FactKey} from './reviewed-product-facts';
 import {OFFER_GUIDE} from './offer-guide';
+import {accessFor} from './platform-access-facts';
 const seed=new Map(platforms.map(p=>[p.id,p]));
 const records=new Map<string,CatalogEntry>(platforms.map(p=>[p.id,{id:p.id,name:p.name,company:p.company,category:p.category,website:p.website,description:p.about,status:'unverified',updatedAt:'2026-10-29T00:00:00Z',capabilities:p.features}]));
 for(const item of entries)if(item.status!=='discontinued')records.set(item.id,item);
-for(const [id,entry] of records){const guide=OFFER_GUIDE[id];if(guide)records.set(id,{...entry,capabilities:[...new Set([...entry.capabilities,...guide.tasks,'免费体验',guide.free]) ]});}
+for(const [id,entry] of records){const guide=OFFER_GUIDE[id],access=accessFor(id);if(guide||access)records.set(id,{...entry,capabilities:[...new Set([...entry.capabilities,...(guide?.tasks||[]),...(guide?[guide.free,guide.paid,guide.strengths||'']:[]),...(access?.login||[]),...(access?.payment||[])].filter(Boolean)) ]});}
 const index=createSearchIndex([...records.values()]);
 export function toPlatform(e:CatalogEntry):Platform {
  const prior=seed.get(e.id);const facts=latestFacts(e.id)?.facts;
