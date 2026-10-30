@@ -31,7 +31,12 @@ export default function VisitorFeedback({language,productId}:{language:Language;
    if(!response.ok)throw new Error('submit');
    const result=await response.json();
    if(!result.accepted)throw new Error('submit');
-   setSubmitted(t.pending.replace('{nickname}',result.nickname||nickname));
+   setSubmitted((result.published?t.published:t.pending).replace('{nickname}',result.nickname||nickname));
+   if(result.published){
+     const publicQuery=productId?'?product='+encodeURIComponent(productId):'';
+     const fresh=await fetch('/api/v1/feedback'+publicQuery,{cache:'no-store'});
+     if(fresh.ok){const data=await fresh.json();setItems(Array.isArray(data?.items)?data.items:[]);setLoading(false);}
+   }
    setBody('');setNickname('');
   }catch{setError(t.error);}finally{setSending(false);}
  }
