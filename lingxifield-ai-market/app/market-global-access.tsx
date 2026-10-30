@@ -33,8 +33,11 @@ export function MarketRegionSelect({language,region,onChange}:{language:Language
 export default function MarketGlobalAccess({platform,language,region,onChange}:{platform:Platform;language:Language;region:RegionCode;onChange:(next:RegionCode)=>void}){
  const t=regionCopy(language),x=globalRegionFact(platform.id,region);
  const methods=x.payments.methods,allSupported=completeSupportedRegionList(platform.id);
+ const mainland=globalRegionFact(platform.id,'CN');
+ const mainlandCopy=({zh:'中国大陆官方支持状态',en:'Mainland China: official support',ja:'中国本土の公式サポート',ko:'중국 본토 공식 지원',fr:'Chine continentale : prise en charge officielle',de:'Festlandchina: offiziell unterstützt',es:'China continental: compatibilidad oficial',pt:'China continental: suporte oficial',ar:'الصين القارية: الدعم الرسمي'} as Record<Language,string>)[language];
  return <section className="panel globalRegionPanel" aria-label={t.availability} dir={language==='ar'?'rtl':'ltr'}>
   <div className="globalRegionHeading"><div><h2>{t.availability} · {t.payment}</h2><p>{t.note}</p></div><MarketRegionSelect language={language} region={region} onChange={onChange}/></div>
+  {region==='GLOBAL'&&<div className="globalMainlandSpotlight"><strong>{mainlandCopy}：{t.status[mainland.policy.status]}</strong><span>{t.untested}</span>{mainland.policy.source&&<a href={mainland.policy.source} target="_blank" rel="noopener noreferrer">{t.source} · {mainland.policy.checkedAt||''} ↗</a>}</div>}
   <div className="globalRegionFacts">
    <article><h3>{t.access}: {regionName(region,language)}</h3>
     <strong className={'regionStatus regionStatus-'+x.policy.status}>{region==='GLOBAL'?t.global:t.status[x.policy.status]}</strong>

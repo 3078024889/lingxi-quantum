@@ -621,3 +621,50 @@ body{font-size:16px;line-height:1.6}
 }
 [dir="rtl"] .app .marketOverviewTable th{text-align:right}
 [dir="rtl"] .app .marketOverviewTable .marketOverviewIdentity .platformName{text-align:right}
+
+
+/* V3.5: make the strongest product answer visible first without touching the accepted font scale. */
+.app .marketPrimaryNav{display:flex;align-items:center;gap:12px;flex:0 1 auto;min-width:0;flex-wrap:nowrap}
+.app .marketPrimaryNav :is(a,button){display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;word-break:keep-all;overflow-wrap:normal;line-height:1.4;padding:7px 4px;color:#123d75;text-decoration:none;flex:0 0 auto}
+.app .topInner{column-gap:14px;row-gap:12px}
+.app .marketQuickStart{border:1px solid #cadcf7;background:linear-gradient(110deg,#fbfdff,#f1f7ff);border-radius:13px;margin:13px 0;padding:16px 19px;scroll-margin-top:130px}
+.app .marketQuickStartHeading{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.app .marketQuickStartHeading h2{margin:0 0 4px;color:#143e77;font-size:17px}
+.app .marketQuickStartHeading p{margin:0;color:#536e91;line-height:1.6}
+.app .marketQuickStartHeading>button{border:1px solid #b8d0f1;border-radius:8px;background:white;padding:8px 12px;display:flex;align-items:center;gap:6px;color:#1b5baa;white-space:nowrap}
+.app .marketQuickSteps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:13px}
+.app .marketQuickSteps button{display:flex;align-items:flex-start;flex-direction:column;min-width:0;text-align:start;gap:5px;background:white;border:1px solid #d6e4f5;border-radius:9px;padding:12px 14px;color:#225b9c;cursor:pointer}
+.app .marketQuickSteps button strong{color:#153e76}
+.app .marketQuickSteps button span{line-height:1.55;color:#647e9e}
+.app .marketQuickSteps button:focus-visible,.app .marketQuickStartHeading button:focus-visible{outline:2px solid #2d83e6;outline-offset:2px}
+.app .marketOverviewTable :is(th:nth-child(1),td:nth-child(1)){width:4%}
+.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){width:10%}
+.app .marketOverviewTable :is(th:nth-child(3),td:nth-child(3)){width:31%}
+.app .marketOverviewTable :is(th:nth-child(4),td:nth-child(4)){width:17%}
+.app .marketOverviewTable :is(th:nth-child(5),td:nth-child(5)){width:12%}
+.app .marketOverviewTable :is(th:nth-child(6),td:nth-child(6)){width:14%}
+.app .marketOverviewTable :is(th:nth-child(7),td:nth-child(7)){width:12%}
+.app .marketOverviewTable .marketOverviewDetailsCompact{grid-template-columns:repeat(2,minmax(0,1fr))}
+.app .marketOverviewDetailActions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.app .marketOverviewDetailActions button{margin:0!important}
+.app .marketOverviewStrength .marketOverviewUses{color:#1958a0!important}
+.app .globalMainlandSpotlight{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:13px 0;padding:11px 14px;border:1px solid #c8daf3;border-radius:9px;background:#eff6ff;color:#224f85}
+.app .globalMainlandSpotlight strong{font-weight:750}
+.app .globalMainlandSpotlight span{color:#57718f}
+.app .globalMainlandSpotlight a{margin-inline-start:auto;overflow-wrap:anywhere}
+.app .compareDialog{width:min(1320px,96vw);max-width:1320px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.app .compareDialog .compareFitScroll{min-height:0;overflow:auto;max-height:72vh}
+.app .compareDialog .compareFitScroll table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
+.app .compareDialog .compareFitScroll :is(td,th){white-space:normal;overflow-wrap:anywhere;word-break:normal;text-align:start;vertical-align:top}
+.app .compareDialog .compareFitScroll :is(td,th):first-child{width:17%}
+.app .compareDock{scroll-margin-top:120px}
+#tools-list,#visitor-feedback{scroll-margin-top:135px}
+@media(max-width:1120px){.app .marketQuickSteps{grid-template-columns:repeat(2,minmax(0,1fr))}.app .marketPrimaryNav{gap:9px}}
+@media(max-width:700px){
+ .app .marketQuickStart{padding:12px}
+ .app .marketQuickSteps{grid-template-columns:1fr}
+ .app .marketQuickStartHeading{align-items:flex-start}
+ .app .marketOverviewDetailsCompact{grid-template-columns:1fr}
+ .app .compareDialog .compareFitScroll table{min-width:640px}
+ .app .marketPrimaryNav{overflow-x:auto;max-width:100%;width:100%;justify-content:flex-start}
+}
