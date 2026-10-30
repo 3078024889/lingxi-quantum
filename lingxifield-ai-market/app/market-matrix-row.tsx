@@ -5,7 +5,7 @@ import type {RegionCode} from '../lib/global-region-market';
 import {globalRegionFact,regionCopy,regionName} from '../lib/global-region-market';
 import {localizedPaymentName} from './market-global-access';
 import {accessFor,accessValue} from '../lib/platform-access-facts';
-import {summaryFor,shortDramaEvidence,MARKET_SCREEN_COPY} from '../lib/market-v36-screening';
+import {summaryFor,shortDramaEvidence,shortDramaSummary,MARKET_SCREEN_COPY} from '../lib/market-v36-screening';
 import MarketRowActions from './market-row-actions';
 
 const columns:Record<Language,string[]>={
@@ -64,7 +64,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
     {r?.policy.source&&<a href={r.policy.source} target="_blank" rel="noopener noreferrer">{r.policy.checkedAt||t.source} ↗</a>}
    </td>
    <td className="marketV36Model" data-label={h[6]}>{models}</td>
-   <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<span className="marketDramaUnknown">{t.dramaUnknown}</span>}</td>
+   <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<span className="marketDramaUnknown">{t.dramaUnknown}</span>}</td>
    <td className="marketV36Business" data-label={h[8]}><span>{commercialValue}</span>{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketV36Login" data-label={h[9]}><strong>{login}</strong><span>{payment}</span></td>
    <td className="marketOverviewActions" data-label={h[10]}><MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/></td>
