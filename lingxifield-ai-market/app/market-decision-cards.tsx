@@ -16,9 +16,9 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
    <p>{platform.name} · {platform.category}</p></div></div>
   {guide?<div className="choiceFacts">
    {!rich&&<article><h3>{labels.what}</h3><p>{guide.tasks.join(' · ')}</p></article>}
-   <article><h3>{labels.free}</h3><p>{guide.free}</p></article>
+   <article><h3>{labels.free}</h3><p>{facts.find(f=>f.label==='免费额度')?.text||guide.free}</p></article>
    <article><h3>{labels.paid}</h3><p>{guide.paid}</p></article>
-   <article><h3>{labels.price}</h3><p>{guide.cost}</p></article>
+   <article><h3>{labels.price}</h3><p>{facts.find(f=>f.label==='价格')?.text||guide.cost}</p></article>
    <article><h3>{labels.login}</h3><p>{accessValue(access?.login,'暂无经核实的账号登录方式')}</p></article>
    <article><h3>{labels.models}</h3><p>{access?.models||'具体版本与模型限制尚未核实'}</p></article>
    <article><h3>{labels.commercial}</h3><p>{access?.commercial||'商用授权资料尚未核实'}</p></article>
