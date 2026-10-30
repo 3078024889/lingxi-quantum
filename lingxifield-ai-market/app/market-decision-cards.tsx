@@ -36,20 +36,20 @@ export default function MarketDecisionCards({
   return <section className="decisionSurface panel" aria-label="平台使用前的关键问题">
     <div className="decisionHeading">
       <div><h2>{localized[6]}</h2><p>免费多少、实际花费、失败扣费、地区限制、下载和商用条件。仅展示有来源的结论。</p></div>
-      <span className="decisionCoverage">已核验 {covered}/6 项</span>
+      <span className="decisionCoverage">{language==='zh'?'已核验':'Verified'} {covered}/6</span>
     </div>
     <div className="decisionGrid">
       {cards.map((card,i)=><article className="decisionCard" key={card.key}>
         <h3>{localized[i]}</h3>
-        <p className={card.fact?'decisionValue':'decisionUnknown'}>{card.fact?.text||'待核验'}</p>
+        <p className={card.fact?'decisionValue':'decisionUnknown'}>{card.fact?.text||ui.unverified}</p>
         <small>{card.fact?card.fact.scope:card.description}</small>
-        {card.fact&&<a href={card.fact.source} target="_blank" rel="noopener noreferrer">查看依据 · {card.fact.checkedAt} ↗</a>}
+        {card.fact&&<a href={card.fact.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'查看依据':'Source'} · {card.fact.checkedAt} ↗</a>}
       </article>)}
     </div>
     <div className="decisionActions">
-      <button type="button" className="decisionPrimary" onClick={onOpenPricing}>查看详细费用与限制</button>
-      <button type="button" className="decisionSecondary" onClick={onToggleCompare}>{selectedForCompare?'已加入对比 · 点击移除':'加入竞品对比'}</button>
-      <span>未公开、未核实的字段不会用猜测值补齐。</span>
+      <button type="button" className="decisionPrimary" onClick={onOpenPricing}>{ui.pricing} / {ui.limits}</button>
+      <button type="button" className="decisionSecondary" onClick={onToggleCompare}>{selectedForCompare?(language==='zh'?'从对比移除':'Remove comparison'):ui.compare}</button>
+      <span>{language==='zh'?'未公开、未核实的字段不会用猜测值补齐。':ui.noData}</span>
     </div>
   </section>;
 }
