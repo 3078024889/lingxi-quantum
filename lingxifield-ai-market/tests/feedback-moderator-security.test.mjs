@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
+test('public visitor feedback and private moderation are separate flows',async()=>{
+ const publicApi=await read('app/api/v1/feedback/route.ts');
+ const session=await read('app/api/v1/admin/session/route.ts');
+ const moderation=await read('app/api/v1/admin/feedback/route.ts');
+ const dashboard=await read('app/admin/feedback/page.tsx');
+ assert.match(publicApi,/ai_market_submit_visitor_feedback/);
+ assert.doesNotMatch(publicApi,/ai_market_moderate_feedback|ai_market_pending_feedback/);
+ assert.match(session,/grant_type','password'/);
+ assert.match(session,/httpOnly:true,secure:true,sameSite:'strict'/);
+ assert.match(session,/ai_market_pending_feedback/);
+ assert.match(session,/!authorized\.ok/);
+ assert.match(moderation,/ai_market_pending_feedback/);
+ assert.match(moderation,/ai_market_moderate_feedback/);
+ assert.match(moderation,/COOKIE/);
+ assert.match(moderation,/['"]approved['"],['"]rejected['"]/);
+ assert.match(moderation,/request\.headers\.get\('origin'\)/);
+ assert.match(dashboard,/await fetch\('\/api\/v1\/admin\/session'/);
+ assert.match(dashboard,/await fetch\('\/api\/v1\/admin\/feedback'/);
+ assert.match(dashboard,/审核备注（不公开）/);
+ assert.match(dashboard,/退出登录/);
+ assert.doesNotMatch(session+moderation+dashboard,/localStorage|sessionStorage|SUPABASE_SERVICE_ROLE_KEY/);
+});
+test('schema binds moderator to verified auth user, blocks anon RPC and audits status-only changes',async()=>{
+ const sql=await read('../supabase/migrations/20261030195000_ai_market_feedback_moderation.sql');
+ assert.match(sql,/references auth\.users\(id\)/);
+ assert.match(sql,/email='business@lingxifield.com' and email_confirmed_at is not null/);
+ assert.match(sql,/from public,anon/);
+ assert.match(sql,/to authenticated/);
+ assert.match(sql,/from private\.ai_market_feedback_moderators where user_id=v_uid/);
+ assert.match(sql,/where id=p_id and status='pending'/);
+ assert.match(sql,/private\.ai_market_feedback_moderation_audit/);
+ assert.doesNotMatch(sql,/grant (insert|update|delete) on public\.ai_market_visitor_feedback to authenticated/i);
+});
