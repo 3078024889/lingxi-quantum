@@ -1,21 +1,33 @@
 'use client';
 import type {Platform} from '../lib/data';
+import type {Language} from '../lib/v2';
 import {platformLinks,safePublisherLink} from '../lib/official-platform-links';
 
 export function claimUrl(platform:Pick<Platform,'id'|'name'>){
  return '/vendor/claim?'+new URLSearchParams({product:platform.id,name:platform.name}).toString();
 }
-export default function MarketRowActions({platform,onDetail,onToggleCompare,isCompared}:{platform:Platform;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean}){
+const copy:Record<Language,{web:string,detail:string,compare:string,selected:string,download:string,code:string,docs:string}>={
+ zh:{web:'访问官网',detail:'详情',compare:'加入对比',selected:'已选对比',download:'官方下载',code:'源代码',docs:'官方文档'},
+ en:{web:'Official site',detail:'Details',compare:'Compare',selected:'Selected',download:'Download',code:'Source code',docs:'Documentation'},
+ ja:{web:'公式サイト',detail:'詳細',compare:'比較する',selected:'選択済み',download:'ダウンロード',code:'ソースコード',docs:'公式文書'},
+ ko:{web:'공식 사이트',detail:'자세히',compare:'비교',selected:'선택됨',download:'다운로드',code:'소스 코드',docs:'공식 문서'},
+ fr:{web:'Site officiel',detail:'Détails',compare:'Comparer',selected:'Sélectionné',download:'Télécharger',code:'Code source',docs:'Documentation'},
+ de:{web:'Offizielle Seite',detail:'Details',compare:'Vergleichen',selected:'Ausgewählt',download:'Download',code:'Quellcode',docs:'Dokumentation'},
+ es:{web:'Sitio oficial',detail:'Detalles',compare:'Comparar',selected:'Elegido',download:'Descargar',code:'Código fuente',docs:'Documentación'},
+ pt:{web:'Site oficial',detail:'Detalhes',compare:'Comparar',selected:'Selecionado',download:'Baixar',code:'Código-fonte',docs:'Documentação'},
+ ar:{web:'الموقع الرسمي',detail:'التفاصيل',compare:'مقارنة',selected:'تم اختياره',download:'تنزيل',code:'المصدر',docs:'الوثائق'}
+};
+export default function MarketRowActions({platform,onDetail,onToggleCompare,isCompared,language='zh'}:{
+ platform:Platform;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean;language?:Language;
+}){
+ const t=copy[language];
  const links=platformLinks(platform.id).links.filter(safePublisherLink);
- const desktops=links.filter(l=>l.kind==='desktop');
- const mobiles=links.filter(l=>l.kind==='ios'||l.kind==='android');
- const mobileUnique=mobiles.filter((link,i)=>mobiles.findIndex(x=>x.url===link.url)===i);
- return <div className="marketRowActions" aria-label={platform.name+'官网、下载和厂商认领'}>
-  <a href={platform.website} target="_blank" rel="noopener noreferrer" className="rowPrimary" title={platform.websiteKind==='repository'?'此入口是开发源码':platform.websiteKind==='documentation'?'此入口是技术文档':'厂商官网可能需要登录或注册'}>{platform.websiteKind==='repository'?'开源项目':platform.websiteKind==='documentation'?'官方文档':'网页使用 / 登录'} ↗</a>
-  {desktops.length>0&&<a href={desktops[0].url} target="_blank" rel="noopener noreferrer" title={desktops[0].label}>电脑下载 ↗</a>}
-  {mobileUnique.map((link,i)=><a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" title={link.label}>{mobileUnique.length===1?'手机端下载':link.kind==='ios'?'iPhone 下载':'Android 下载'} ↗</a>)}
-  <button type="button" onClick={onDetail}>详情</button>
-  <button type="button" className={isCompared?"rowCompareActive":""} onClick={onToggleCompare}>{isCompared?"已选对比":"对比"}</button>
-  <a href={claimUrl(platform)} className="vendorRowClaim" title={'免费认领或补充 '+platform.name+' 官方资料'}>厂商认领</a>
+ const download=links.find(l=>l.kind==='desktop'||l.kind==='ios'||l.kind==='android');
+ const webLabel=platform.websiteKind==='repository'?t.code:platform.websiteKind==='documentation'?t.docs:t.web;
+ return <div className="marketRowActions" aria-label={platform.name+' '+t.detail}>
+  <a href={platform.website} className="rowPrimary" target="_blank" rel="noopener noreferrer">{webLabel} ↗</a>
+  <button type="button" onClick={onDetail}>{t.detail}</button>
+  <button type="button" className={isCompared?'rowCompareActive':''} onClick={onToggleCompare}>{isCompared?t.selected:t.compare}</button>
+  {download&&<a className="marketRowDownload" href={download.url} target="_blank" rel="noopener noreferrer">{t.download} ↗</a>}
  </div>;
 }

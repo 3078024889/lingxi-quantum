@@ -19,11 +19,13 @@ ar:{search:'بحث',currency:'العملة',localeBanner:'٩ لغات · بيا�
 };
 type Price={id:string;amount:number;interval:'monthly'|'placement';label:Record<Language,string>};
 const names=(zh:string,en:string):Record<Language,string>=>({zh,en,ja:en,ko:en,fr:en,de:en,es:en,pt:en,ar:en});
+/** Vendor promotion only. Never charge end users for opening an external AI tool. */
 export const pricing:Price[]=[
-{id:'listing',amount:0,interval:'monthly',label:names('基础收录','Basic listing')},
-{id:'geo',amount:29,interval:'monthly',label:names('GEO 排名监测','GEO monitoring')},
-{id:'sponsored',amount:49,interval:'monthly',label:names('厂商推广','Sponsored placement')},
-{id:'brand',amount:149,interval:'placement',label:names('品牌展示','Brand feature')}];
+{id:'listing',amount:0,interval:'monthly',label:{zh:'免费收录',en:'Free listing',ja:'無料掲載',ko:'무료 등록',fr:'Référencement gratuit',de:'Kostenloser Eintrag',es:'Ficha gratuita',pt:'Listagem gratuita',ar:'إدراج مجاني'}},
+{id:'sponsored',amount:49,interval:'monthly',label:{zh:'精选推荐位',en:'Sponsored highlight',ja:'注目のスポンサー枠',ko:'스폰서 추천',fr:'Mise en avant sponsorisée',de:'Gesponserte Empfehlung',es:'Destacado patrocinado',pt:'Destaque patrocinado',ar:'ظهور ترويجي مميز'}},
+{id:'category',amount:149,interval:'monthly',label:{zh:'分类赞助位',en:'Category sponsorship',ja:'カテゴリー協賛',ko:'카테고리 후원',fr:'Parrainage de catégorie',de:'Kategorie-Sponsoring',es:'Patrocinio de categoría',pt:'Patrocínio de categoria',ar:'رعاية الفئة'}},
+{id:'brand',amount:299,interval:'placement',label:{zh:'品牌专题（单次）',en:'Brand feature (one-off)',ja:'ブランド特集（単発）',ko:'브랜드 특집 (1회)',fr:'Portrait de marque (ponctuel)',de:'Markenporträt (einmalig)',es:'Reportaje de marca (único)',pt:'Destaque da marca (único)',ar:'ملف تعريفي للعلامة (مرة واحدة)'}},
+{id:'geo',amount:29,interval:'monthly',label:{zh:'GEO 监测（待开放）',en:'GEO monitoring (waitlist)',ja:'GEO監視（準備中）',ko:'GEO 모니터링 (준비 중)',fr:'Veille GEO (à venir)',de:'GEO-Monitoring (bald)',es:'Monitoreo GEO (próximamente)',pt:'Monitoramento GEO (em breve)',ar:'مراقبة الظهور لدى الذكاء الاصطناعي (قريباً)'}}];
 export const compareFields:{key:keyof Platform;label:Record<Language,string>}[]=[
 {key:'company',label:names('所属公司','Company')},{key:'category',label:names('产品类别','Category')},
 {key:'year',label:names('公司成立','Founded')},{key:'funding',label:names('融资资料','Funding')},

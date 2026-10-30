@@ -13,3 +13,18 @@ export const MATRIX_HEADINGS:Record<Language,string[]> = {
 };
 
 export const MATRIX_COLUMN_COUNT=16;
+
+/** Seven decision columns fit on an ordinary desktop. The original sixteen dimensions
+ * remain available as an accessible, on-demand detail grid in every product row. */
+export const MATRIX_OVERVIEW_HEADINGS:Record<Language,string[]> = {
+ zh:['序号','AI 工具 · 厂商','核心优势 · 适合做什么','免费额度','付费价格','地区可用','操作'],
+ en:['No.','AI product · Maker','Strengths & uses','Free allowance','Pricing','Region','Actions'],
+ ja:['番号','AI製品・企業','強み・用途','無料枠','料金','地域','操作'],
+ ko:['번호','AI 제품 · 기업','강점 · 활용','무료 한도','가격','지역','작업'],
+ fr:['N°','Produit · Éditeur','Atouts et usages','Gratuit','Tarifs','Région','Actions'],
+ de:['Nr.','KI-Tool · Anbieter','Stärken & Einsatzzweck','Freikontingent','Preis','Region','Aktionen'],
+ es:['N.º','Producto · Empresa','Ventajas y usos','Gratis','Precio','Región','Acciones'],
+ pt:['N.º','Produto · Empresa','Vantagens e usos','Grátis','Preço','Região','Ações'],
+ ar:['الرقم','المنتج والشركة','المزايا والاستخدامات','المجاني','السعر','المنطقة','الإجراءات']
+};
+export const MATRIX_OVERVIEW_COLUMN_COUNT=7;
