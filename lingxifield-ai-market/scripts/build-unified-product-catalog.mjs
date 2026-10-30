@@ -37,6 +37,26 @@ if(spaces?.source==='huggingface_spaces'&&Array.isArray(spaces.records)){
  }
  sources.huggingfaceSpaces={accepted:count};
 }else{sources.huggingfaceSpaces={status:'not_collected'}}
+// Supplemental public Hub Spaces, never treated as verified commercial SaaS.
+let faceted;
+try{faceted=JSON.parse(await readFile(resolve(dir,'hf-faceted-bulk.json'),'utf8'))}catch{}
+if(faceted?.schema==='lingxifield_hf_faceted_v1'&&Array.isArray(faceted.spaces?.records)){
+ let added=0;
+ for(const x of faceted.spaces.records){
+  if(!x||typeof x.id!=='string')continue;
+  const url=normalizeUrl(x.url);if(!url)continue;
+  const before=entries.length;
+  add({id:'hf:'+x.id,name:x.name,company:null,creator:x.provider||null,
+   category:null,url,description:x.description||null,
+   capabilities:Array.isArray(x.categories)?x.categories:[],
+   price:null,freeQuota:null,requiresCard:null,chinaAvailability:null,license:null,
+   downloadUrl:null,usageMetric:null,seoRank:null,geoRank:null,
+   evidence:{kind:'huggingface_public_space',url,observedAt:x.sourceCollectedAt||faceted.collectedAt||null},
+   hfLikes:typeof x.likes==='number'?x.likes:null,reviewStatus:'candidate_unverified'});
+  if(entries.length>before)added++;
+ }
+ sources.huggingfaceFaceted={accepted:added,sourceUnique:faceted.spaces.records.length,partial:faceted.partial===true};
+}else sources.huggingfaceFaceted={status:'not_collected'};
 entries.sort((a,b)=>a.name.localeCompare(b.name)||a.id.localeCompare(b.id));
 const report={schema:'lingxifield_product_candidates_v1',generatedAt:new Date().toISOString(),total:entries.length,
  notice:'Candidate inventory only. Commercial prices, real usage, download counts, geo visibility, and country access not verified.',
