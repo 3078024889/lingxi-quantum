@@ -60,6 +60,10 @@ jobs:
             echo 'No source succeeded; artifact retains per-source failure evidence'
             exit 1
           fi
+      - name: Audit all existing practical-tool entrances (static only)
+        if: always()
+        continue-on-error: true
+        run: node ../scripts/ai-market/audit-tool-entrances.mjs "$AI_MARKET_SNAPSHOT_DIR/tool-entry-report.json"
       - name: Upload provenance snapshots for human review (never publish directly)
         if: always()
         uses: actions/upload-artifact@v4
