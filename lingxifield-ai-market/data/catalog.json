@@ -253,5 +253,76 @@
     ],
     "repositoryUrl": "https://github.com/anthropics/anthropic-sdk-python",
     "websiteKind": "documentation"
+  },
+  {
+    "id": "suno",
+    "name": "Suno",
+    "company": "Suno",
+    "category": "语音与音乐",
+    "website": "https://suno.com",
+    "description": "用文字描述生成歌曲和伴奏，可制作短剧背景音乐；商用及下载权限随套餐变化。",
+    "status": "active",
+    "updatedAt": "2026-10-30T05:30:00Z",
+    "capabilities": [
+      "AI音乐",
+      "歌曲创作",
+      "短剧配乐",
+      "文字生成歌曲"
+    ],
+    "websiteKind": "official"
+  },
+  {
+    "id": "elevenlabs",
+    "name": "ElevenLabs",
+    "company": "ElevenLabs",
+    "category": "语音与音乐",
+    "website": "https://elevenlabs.io",
+    "description": "输入文字制作旁白和配音，也支持音效、转录和语音工具。",
+    "status": "active",
+    "updatedAt": "2026-10-30T05:30:00Z",
+    "capabilities": [
+      "文字转语音",
+      "中文配音",
+      "视频旁白",
+      "短剧配音",
+      "音效生成"
+    ],
+    "websiteKind": "official"
+  },
+  {
+    "id": "lovable",
+    "name": "Lovable",
+    "company": "Lovable",
+    "category": "编程开发",
+    "website": "https://lovable.dev",
+    "description": "用自然语言生成网站、在线工具和 Web 应用，无须先写代码。",
+    "status": "active",
+    "updatedAt": "2026-10-30T05:30:00Z",
+    "capabilities": [
+      "建网站",
+      "AI网站构建",
+      "网页设计",
+      "应用搭建",
+      "代码开发"
+    ],
+    "websiteKind": "official"
+  },
+  {
+    "id": "replit",
+    "name": "Replit",
+    "company": "Replit",
+    "category": "编程开发",
+    "website": "https://replit.com",
+    "description": "在浏览器内通过 AI 协助编写、运行并部署应用和网站。",
+    "status": "active",
+    "updatedAt": "2026-10-30T05:30:00Z",
+    "capabilities": [
+      "建网站",
+      "在线编程",
+      "AI编程",
+      "网页部署",
+      "代码开发"
+    ],
+    "websiteKind": "official"
   }
 ]
