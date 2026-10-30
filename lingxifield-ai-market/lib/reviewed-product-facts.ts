@@ -109,7 +109,7 @@ export const factSnapshots:readonly FactSnapshot[]=[
  {product:"vllm",observedAt:"2026-10-30",facts:{
   purpose:official2026("在自有服务器上运行模型，支持批处理推理和在线模型服务","https://docs.vllm.ai/en/latest/getting_started/quickstart/","开发者部署工具，不是现成的云端聊天网页"),
   models:official2026("官方快速上手以 Linux 和 Python 3.11–3.14 为基础，GPU 选型依环境而定","https://docs.vllm.ai/en/latest/getting_started/quickstart/","部署条件，具体硬件需求随模型变化")
- }}
+ }},
  {product:"chatgpt",observedAt:"2026-10-30",facts:{
   models:official2026("GPT-6 系列用于 ChatGPT 聊天；GPT-6.1 Terra 在 Work/Codex 推出，不代表聊天界面均可选","https://help.openai.com/en/articles/6825453-chatgpt-release-notes","产品与工作模式分开；实际版本依账户、地区与工作区"),
   reasoning:official2026("GPT-6 在 ChatGPT 支持不同思考档位，具体档位由套餐和权限决定；并非独立综合智力分数","https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt","ChatGPT 模型选择说明，不含跨产品统一基准"),
