@@ -17,6 +17,10 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
    <article><h3>参考价格</h3><p>{guide.cost}</p></article>
    <article><h3>哪些地区能用</h3><p>{guide.region}</p></article>
    <article><h3>怎么付费</h3><p>{guide.payment}</p></article>
+   {guide.strengths&&<article><h3>强大优势</h3><p>{guide.strengths}</p></article>}
+   {guide.reasoning&&<article><h3>理解与推理</h3><p>{guide.reasoning}</p></article>}
+   <article><h3>导出水印</h3><p>{guide.watermarkNote||'该产品的图片、视频或音频导出规则尚无可核查资料，请查看官网。'}</p>
+    {guide.watermarkSource&&<a href={guide.watermarkSource} target="_blank" rel="noopener noreferrer">查看相关说明 ↗</a>}</article>
   </div>:<div className="decisionSummary"><strong>{platform.category}</strong>
    <span>{platform.features.slice(0,5).join(' · ')}</span>
    {facts.filter(f=>f.label==='免费额度'||f.label==='价格').map(f=><p key={f.label}><strong>{f.label}：</strong>{f.text}</p>)}
