@@ -51,3 +51,19 @@ test('obsolete vague region/payment placeholders are not in product fact cards',
  assert.match(component,/x\.policy\.source/);
  assert.match(component,/x\.payments\.source/);
 });
+
+test('top navigation uses nine localized labels without mutating underlying search tabs',async()=>{
+ const nav=await read('lib/market-global-navigation.ts');
+ for(const code of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(nav,new RegExp('\\b'+code+':\\{tabs:'));
+ assert.match(home,/NAV_TABS\.map\(t=>/);
+ assert.match(home,/navUi\.tabs\[t\]/);
+ assert.match(home,/navUi\.downloads/);
+ assert.match(home,/navUi\.claim/);
+});
+test('all ISO 3166-1 countries are selectable but not automatically declared supported',()=>{
+ assert.match(source,/export const ALL_REGIONS/);
+ const match=source.match(/'([A-Z]{2}(?:,[A-Z]{2}){230,})'\.split/);
+ assert.ok(match);
+ assert.ok(match[1].split(',').length>=240);
+ assert.match(source,/p\?\.countries\[region\]\|\|p\?\.globalPolicy\|\|unknown/);
+});
