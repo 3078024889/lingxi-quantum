@@ -101,14 +101,14 @@ jobs:
       - name: Test private incremental sync, append-only history and anonymous access rejection
         run: |
           psql -X -v ON_ERROR_STOP=1 <<'SQL'
-          DO $
+          DO $market$
           BEGIN
             IF has_function_privilege('anon','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
               OR has_function_privilege('authenticated','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
             THEN RAISE EXCEPTION 'INSECURE_SOURCE_SYNC_RPC_GRANT'; END IF;
             IF NOT has_function_privilege('service_role','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
             THEN RAISE EXCEPTION 'SERVICE_ROLE_CANNOT_SYNC'; END IF;
-          END $;
+          END $market$;
           BEGIN;
           SELECT set_config('request.jwt.claim.role','service_role',true);
           SET LOCAL ROLE service_role;
@@ -116,7 +116,7 @@ jobs:
           SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","facts":{"downloads":25}}]'::jsonb);
           SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","facts":{"downloads":26}}]'::jsonb);
           COMMIT;
-          DO $
+          DO $market$
           DECLARE n integer;
           BEGIN
             SELECT count(*) INTO n FROM public.ai_market_source_items;
@@ -127,7 +127,7 @@ jobs:
             IF n<>3 THEN RAISE EXCEPTION 'SYNC_RUNS_NOT_RECORDED'; END IF;
             IF EXISTS(SELECT 1 FROM public.ai_market_source_sync_runs WHERE publication_approved)
             THEN RAISE EXCEPTION 'UNREVIEWED_DATA_PUBLISHED'; END IF;
-          END $;
+          END $market$;
           SQL
       - name: Ensure migrations are re-runnable without destructive reset
         run: |
