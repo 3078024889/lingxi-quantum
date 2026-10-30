@@ -12,7 +12,7 @@ const [row,home,css,headings,facts,actions]=await Promise.all([
  'app/market-row-actions.tsx'
 ].map(read));
 
-test('market has seven readable columns, with all sixteen original dimensions accessible on expansion',()=>{
+test('market has seven readable columns and eight actionable evidence sections',()=>{
  const start=row.indexOf('<tr className="marketOverviewRow"');
  const end=row.indexOf('</tr>',start);
  assert.ok(start>=0&&end>start);
@@ -23,7 +23,7 @@ test('market has seven readable columns, with all sixteen original dimensions ac
  assert.match(home,/MATRIX_OVERVIEW_HEADINGS\[language\]\.map/);
  assert.match(home,/MarketMatrixRow/);
  assert.doesNotMatch(home,/className="marketDirectoryTable marketMatrixTable"/);
- for(const index of [3,4,5,6,7,8,9,10,11,12,13,14,15])assert.ok(row.includes('headings['+index+']'),'detail dimension '+index);
+ for(const index of [3,4,7,8,10,11,12,14])assert.ok(row.includes('headings['+index+']'),'detail dimension '+index);
 });
 
 test('seven overview titles and sixteen detailed titles exist in all nine languages',()=>{
@@ -39,7 +39,7 @@ test('newbie path stays task oriented without fabricated ranking',()=>{
  assert.match(home,/新手友好榜/);
  assert.match(home,/tab==='新手友好榜'\?results\.filter/);
  assert.match(home,/新手友好评分需要实际完成任务的数据/);
- assert.match(row,/暂无统一新手上手成功率实测/);
+ assert.doesNotMatch(row,/暂无统一新手上手成功率实测/);
  assert.match(row,/序号，不代表综合排名/);
 });
 
