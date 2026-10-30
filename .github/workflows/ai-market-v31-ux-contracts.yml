@@ -1,0 +1,37 @@
+name: AI Market V3.1 Compare and Pricing Gate
+on:
+  pull_request:
+    paths:
+      - 'lingxifield-ai-market/**'
+      - '.github/workflows/ai-market-v31-ux-contracts.yml'
+  push:
+    branches:
+      - 'fix/ai-market-accessibility-compare-pricing-20261030'
+    paths:
+      - 'lingxifield-ai-market/**'
+      - '.github/workflows/ai-market-v31-ux-contracts.yml'
+permissions:
+  contents: read
+jobs:
+  market-ux-gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: lingxifield-ai-market/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Region, pricing and comparison tests
+        run: node --test tests/region-billing.test.mjs tests/market-compare-readability-v3.test.mjs
+      - name: TypeScript check
+        run: npm run typecheck
+      - name: Production compilation and static pages
+        run: npm run build
