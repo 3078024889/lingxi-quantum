@@ -5,3 +5,8 @@ node_modules/
 .env*
 !.env.example
 artifacts/
+
+# Generated data, review artifacts and workstation backups (not product source)
+reports/
+*.bak
+*.tmp
