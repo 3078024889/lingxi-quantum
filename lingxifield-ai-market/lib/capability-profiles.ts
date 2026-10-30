@@ -119,6 +119,32 @@ export const CAPABILITY_PROFILES:Readonly<Record<string,CapabilityProfile>>={
   cap('量化及多硬件推理','按模型与硬件支持使用 FP8、INT4、GPTQ 等量化格式','降低服务显存负载并评估性能损失','量化格式、精度与可运行后端需逐型号核验','https://docs.vllm.ai/en/stable/'),
   cap('分布式部署与高吞吐服务','结合多 GPU、张量并行与服务端配置提供模型推理','为应用部署可扩展文本生成服务','属于开发者基础设施，不是免注册在线聊天产品','https://docs.vllm.ai/en/stable/')
  ],['检查 GPU 兼容表和目标模型支持情况','安装对应版本并用小样本部署 API','运行并发、延迟与真实计费压力测试'])
+,
+ whisper:profile('本地多语音频识别与翻译','把音频转换为文字、识别语种，并用合适模型把语音翻译成英文','字幕制作、会议整理、研究人员与开发者',[
+  cap('多语言语音转文字','将录音或音视频中的语音识别为可编辑文本','把 30 分钟中文会议录音转写成初稿','效果随语言、噪声、口音和模型大小变化','https://github.com/openai/whisper'),
+  cap('语音识别与语种检测','识别输入音频主要语言并据此进行转写','把来自多国语言的采访素材按语言整理','多语言混合或低质量录音可能识别错误','https://github.com/openai/whisper/blob/main/README.md'),
+  cap('多语语音翻译成英文','选择支持翻译的多语言模型输出英文文本','将日语受访者音频整理为英文字幕','turbo 版本不能按翻译模式使用，需选择合适多语模型','https://github.com/openai/whisper/blob/main/README.md')
+ ],['安装官方 Python 项目与运行依赖','按音频语言、硬件选择正确模型','检查人名、术语和时间戳后再作为字幕发布']),
+ fasterwhisper:profile('低资源高吞吐的 Whisper 转写实现','基于 CTranslate2 执行 Whisper 模型，支持批量推理和 8-bit 量化','需要批处理音视频字幕的开发者和本地生产团队',[
+  cap('兼容 Whisper 模型转写','用优化的推理引擎进行多语音频转写','把录音批处理成字幕初稿','速度与准确度必须在同硬件、模型和参数下比较','https://github.com/SYSTRAN/faster-whisper'),
+  cap('批量推理与低内存量化','可按 CPU/GPU 环境选 INT8 等运行模式','在有限显存环境试用更紧凑的转写配置','量化与批量大小对速度、内存和精度均有影响','https://github.com/SYSTRAN/faster-whisper'),
+  cap('语音活动过滤与时间片段','使用转写接口输出分段时间信息并过滤部分静音','生成视频字幕片段供人工校对','不同版本、语速和背景噪声可能影响时间对齐','https://github.com/SYSTRAN/faster-whisper')
+ ],['根据硬件配置安装 CTranslate2 和 faster-whisper','选择官方兼容模型与精度设置','对比转写错误率与运行内存，再生成字幕']),
+ llamaindex:profile('把企业数据接入检索问答与智能体','构建 RAG、文档索引与多步骤工具调用应用，而非单一大模型','企业知识库研发团队、RAG 架构师、应用开发者',[
+  cap('文档入库与 RAG 问答','把 PDF、网页等资料索引后用语义搜索为回答提供上下文','对内部操作手册提问并返回对应资料','结果取决于索引切分、检索质量及底层模型','https://developers.llamaindex.ai/python/framework/use_cases/q_and_a/'),
+  cap('智能体与工具连接','让模型选择检索和函数工具分步执行任务','把项目知识库与支持工单动作结合','外部工具必须分别授权并限制写入操作','https://developers.llamaindex.ai/python/framework/use_cases/agents/'),
+  cap('可定制 RAG 工作流','按业务场景编排检索、重排序及输出校验','针对知识库采用多检索器进行证据对照','需要开发和实际评测，非一键免费网页版工具','https://developers.llamaindex.ai/python/framework/understanding/rag/')
+ ],['准备授权的资料和可选模型服务','配置文档解析、索引与检索流程','用已知答案的问题集检验召回、成本和错误率']),
+ transformers:profile('跨模型架构的加载、推理与训练开发框架','Hugging Face 开发库用于运行、微调与分发不同文本、图像、语音模型','机器学习工程师、模型研究人员、开发者',[
+  cap('加载开源预训练模型','使用模型加载器和 tokenizer 运行指定任务','加载公开文本分类模型分析客户反馈','每个模型的权重授权、硬件需求和输入格式不同','https://huggingface.co/docs/transformers/en/index'),
+  cap('Pipeline 高阶推理接口','按文本、视觉或音频任务选择适配模型并处理推理','构建情感分析或语音识别的原型程序','任务表现属于所选模型，不能等同框架自身评分','https://huggingface.co/docs/transformers/en/index'),
+  cap('训练、微调与模型发布','按支持配置进行数据训练和模型权重更新','用许可范围内的数据微调分类模型','需要训练数据、算力、评估集及合规许可','https://huggingface.co/docs/transformers/en/index')
+ ],['先确定具体任务与有许可的模型','按官方版本安装依赖并跑最小实例','对数据泄漏、质量、速度和许可逐项验收']),
+ openwebui:profile('可自建的聊天工作台与多模型入口','将本地模型或兼容接口接入浏览器，提供对话界面和检索扩展','自部署团队、本地模型用户、内网应用管理员',[
+  cap('多模型聊天界面','在自己的环境提供网页聊天入口并切换后端模型','在内网集中使用不同 Ollama 或兼容服务','底层模型能力不属于界面自身，需单独部署推理服务','https://docs.openwebui.com/'),
+  cap('文档检索增强','把获授权的资料接入检索，并辅助回答问题','让内部团队对说明文档进行问答','文档权限、检索质量和敏感资料处理需要审核','https://docs.openwebui.com/'),
+  cap('自托管与账户管理','通过容器等方式运行服务并配置用户及模型访问','让多个办公账号接入同一个内网 AI 工作台','服务器维护、备份和身份权限由部署方负责','https://docs.openwebui.com/')
+ ],['选择可用模型服务和自托管环境','部署 Open WebUI 并配置账户与连接','在正式共享前验证权限、备份和文档隔离'])
 
 };
 export function capabilityProfile(id:string):CapabilityProfile|undefined{return CAPABILITY_PROFILES[id];}
