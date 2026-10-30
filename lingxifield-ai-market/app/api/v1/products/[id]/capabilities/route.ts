@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
-import {findPlatform} from '../../../../../lib/platform-repository';
-import {capabilityProfile} from '../../../../../lib/capability-profiles';
+import {findPlatform} from '../../../../../../lib/platform-repository';
+import {capabilityProfile} from '../../../../../../lib/capability-profiles';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'public, s-maxage=3600, stale-while-revalidate=7200'};
 export async function GET(_request:Request,{params}:{params:Promise<{id:string}>}){
