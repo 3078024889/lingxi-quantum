@@ -2,33 +2,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
-
-test('detail first screen exposes the six practical decisions',async()=>{
- const component=await read('app/market-decision-cards.tsx');
- for(const label of ['免费额度','实际价格','失败会扣费吗？','地区与使用门槛','导出和水印','能否商用？']){
-  assert.ok(component.includes(label),'missing '+label);
- }
+test('first product screen gives sourced practical outcomes not engineering terms',async()=>{
+ const src=await read('app/market-decision-cards.tsx');
+ for(const label of ['能做什么','免费的功能','付费功能','参考价格','哪些地区能用','怎么付费'])assert.ok(src.includes(label),label);
+ assert.ok(src.includes('guide.source'));
+ assert.ok(src.includes('guide.checkedAt'));
  const page=await read('app/market-workbench.tsx');
- const cardAt=page.indexOf('<MarketDecisionCards platform={target}');
- const tabsAt=page.indexOf('<div className="detailTabs">');
- assert.ok(cardAt>0 && tabsAt>cardAt,'decision answers must precede detail tabs');
+ assert.ok(page.indexOf('<MarketDecisionCards platform={target}')<page.indexOf('<div className="detailTabs">'));
 });
-
-test('decision cards keep unknown values unknown and link official dated evidence',async()=>{
- const component=await read('app/market-decision-cards.tsx');
- assert.ok(component.includes("platform.conditions || []"));
- assert.ok(component.includes('known.map('));
- assert.ok(component.includes('missing.length>0'));
- assert.ok(!component.includes('已核验 {covered}/6'));
- assert.ok(component.includes('DECISION_TITLES[language]'));
- assert.ok(component.includes('href={card.fact.source}'));
- assert.ok(component.includes('card.fact.checkedAt'));
- assert.ok(component.includes('selectedForCompare'));
- assert.ok(component.includes('language?:Language'));
+test('unknown product conditions are not labeled free and user can compare',async()=>{
+ const src=await read('app/market-decision-cards.tsx');
+ assert.ok(src.includes("platform.conditions||[]"));
+ assert.ok(src.includes('selectedForCompare'));
+ assert.ok(src.includes('未列出的收费与地区规则'));
 });
-
-test('responsive cards do not force mobile horizontal overflow',async()=>{
+test('six facts fit on mobile screens without horizontal overflow',async()=>{
  const css=await read('app/globals.css');
- assert.ok(css.includes('.decisionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))'));
- assert.ok(css.includes('@media(max-width:600px){.decisionSurface{padding:14px}.decisionGrid{grid-template-columns:minmax(0,1fr)}'));
+ assert.ok(css.includes('.choiceFacts{display:grid'));
+ assert.ok(css.includes('@media(max-width:490px){.choiceFacts{grid-template-columns:1fr}'));
 });
