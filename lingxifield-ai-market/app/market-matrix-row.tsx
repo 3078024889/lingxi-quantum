@@ -38,14 +38,6 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
  const price=priceFact?.text||guide?.cost||p.price||'价格待核验';
  const headings=MATRIX_HEADINGS[language];
  const compactHeadings=MATRIX_OVERVIEW_HEADINGS[language];
- const detailValues=[
-  null,null,null,
-  model,reasoning,useCase,beginner,
-  free,price,limitation&&limitation!=='待核验'?limitation:'使用限制待核验',
-  regionName(region,language)+' · '+marketRegion,
-  commercial,login+' · '+payment,geoSummary(p.id),
-  null,null
- ];
  const detailLabel=language==='zh'?'完整资料 · 16 项':'All details · 16 fields';
  return <Fragment>
   <tr className="marketOverviewRow" data-market-id={p.id}>
@@ -80,7 +72,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
     <small>{localized.untested}</small>
    </td>
    <td className="marketOverviewActions" data-label={compactHeadings[6]}>
-    <MarketRowActions platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/>
+    <MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/>
    </td>
   </tr>
   {expanded&&<tr className="marketOverviewDetailsRow">
