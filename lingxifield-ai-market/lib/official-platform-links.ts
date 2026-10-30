@@ -21,7 +21,6 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  {label:'公司与团队',url:'https://www.anthropic.com/company',kind:'team'}
  ]},
  gemini:{links:[
- {label:'手机端使用说明',url:'https://support.google.com/gemini/answer/14579026',kind:'android'},
  {label:'Google 官方资讯',url:'https://blog.google/technology/ai/',kind:'news'}
  ]},
  runway:{links:[
@@ -38,6 +37,11 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  {label:'Windows / Mac / Linux 下载',url:'https://ollama.com/download',kind:'desktop'},
  {label:'GitHub 源码',url:'https://github.com/ollama/ollama',kind:'github'}
  ]},
+ deepseek:{links:[
+ {label:'Windows / macOS 官方下载',url:'https://www.deepseek.com/download/',kind:'desktop'},
+ {label:'iPhone / Android 官方下载',url:'https://download.deepseek.com/',kind:'ios'},
+ {label:'Android 官方下载',url:'https://download.deepseek.com/',kind:'android'}
+ ]},
  doubao:{links:[
  {label:'Windows 与 Mac 下载',url:'https://www.doubao.com/download',kind:'desktop'},
  {label:'iPhone / 安卓下载',url:'https://www.doubao.com/download',kind:'ios'},
@@ -45,16 +49,16 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  ]},
  suno:{links:[
  {label:'iPhone 下载',url:'https://apps.apple.com/us/app/suno-ai-songs-music-lyrics/id6480136315',kind:'ios'},
- {label:'安卓下载指引',url:'https://help.suno.com/en/articles/3134337',kind:'android'},
+ {label:'Android 官方入口',url:'https://suno.com/release-notes/suno-is-now-available-on-android',kind:'android'},
  {label:'App Store 评价',url:'https://apps.apple.com/us/app/suno-ai-songs-music-lyrics/id6480136315',kind:'reviews'},
  {label:'官方更新',url:'https://suno.com/release-notes',kind:'news'}
  ]},
  elevenlabs:{links:[
- {label:'iPhone 与安卓下载',url:'https://elevenlabs.io/docs/help-center/other/does-eleven-labs-have-an-official-app',kind:'ios'},
- {label:'手机客户端下载',url:'https://elevenlabs.io/docs/help-center/product/mobile-apps/elevenlabs-for-ios-and-android/what-is-the-elevenlabs-app',kind:'android'}
+ {label:'iPhone / 安卓官方下载',url:'https://elevenlabs.io/mobile',kind:'ios'},
+ {label:'安卓官方下载',url:'https://elevenlabs.io/mobile',kind:'android'}
  ]},
  lovable:{links:[
- {label:'Windows / Mac 下载',url:'https://lovable.dev/en/download',kind:'desktop'},
+ {label:'Windows / Mac 下载',url:'https://lovable.dev/download',kind:'desktop'},
  {label:'最新动态',url:'https://lovable.dev/blog',kind:'news'}
  ]},
  replit:{links:[
