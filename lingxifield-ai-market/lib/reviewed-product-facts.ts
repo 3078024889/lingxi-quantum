@@ -44,7 +44,7 @@ export const factSnapshots:readonly FactSnapshot[]=[
  {product:"n8n",observedAt:day,facts:{purpose:official("把多步工作连起来，也可创建调用工具的 AI 智能体","https://n8n.io/ai-agents/","工作流与智能体平台；需配置和测试")}},
  {product:"ahrefs-brand-radar",observedAt:day,facts:{purpose:official("查看品牌在 AI 回答中的提及和引用","https://ahrefs.com/brand-radar","AI 可见度分析，不保证提升排名")}},
 ];
-export function latestFacts(slug:string,asOf=day):FactSnapshot|undefined{
+export function latestFacts(slug:string,asOf=new Date().toISOString().slice(0,10)):FactSnapshot|undefined{
  const relevant=factSnapshots.filter(s=>s.product===slug&&s.observedAt<=asOf);
  if(!relevant.length)return undefined;
  relevant.sort((a,b)=>a.observedAt.localeCompare(b.observedAt));
