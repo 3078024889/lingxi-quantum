@@ -6,7 +6,9 @@ test('ordinary users see purpose, free uses, price, watermark and official entry
  const src=await read('app/market-workbench.tsx'),card=await read('app/market-decision-cards.tsx'),headings=await read('lib/market-matrix-headings.ts');
  for(const x of ['PriceLeaderboards','SponsoredFeatures','MarketMatrixRow','MATRIX_HEADINGS[language]'])assert.ok(src.includes(x),x);
  for(const x of ['免费额度','实际价格','官网 · 下载'])assert.ok(headings.includes(x),x);
- for(const x of ['强大优势','理解与推理','导出水印'])assert.ok(card.includes(x),x);
+ const decisionI18n=await read('lib/market-decision-i18n.ts');
+ for(const x of ['强大优势','理解与推理','导出水印'])assert.ok(decisionI18n.includes(x)||x==='强大优势'&&card.includes('guide.strengths'),x);
+ assert.ok(card.includes('DECISION_I18N[language]'));
  const global=await read('app/market-global-access.tsx');
  assert.ok(global.includes('globalRegionFact(platform.id,region)'));
  assert.ok(global.includes('x.payments.source'));
@@ -45,7 +47,9 @@ test('sponsored placement cannot manipulate organic price rankings or leak payme
 });
 test('comparison avoids null scores and shows what customers care about',async()=>{
  const home=await read('app/market-workbench.tsx');
- for(const x of ['理解与推理','图片／视频水印','付款方式','付费增加什么','免费'])assert.ok(home.includes(x),x);
+ const translations=await read('lib/market-compare-i18n.ts');
+ for(const x of ['理解与推理','图片／视频水印','付款方式','付费增加什么','免费'])assert.ok(translations.includes(x),x);
+ assert.ok(home.includes('COMPARE_LABELS[language][i]'));
  assert.ok(home.includes('compareRows.map('));
  assert.ok(!home.includes('String(platform[field.key])'));
 });
