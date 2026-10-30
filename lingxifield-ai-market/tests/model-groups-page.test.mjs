@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 const page=await readFile(new URL('../app/models/page.tsx',import.meta.url),'utf8');
 test('model page reads grouped offers instead of repeating every provider row',()=>{
  assert.match(page,/api\/v1\/models\/groups/);
- assert.match(page,/g\.offers\]\.sort|\[\.\.\.g\.offers\]\.sort/);
+ assert.match(page,/\[\.\.\.g\.offers\]\.sort/);
  assert.match(page,/比较服务商/);
  assert.match(page,/aria-expanded/);
 });
