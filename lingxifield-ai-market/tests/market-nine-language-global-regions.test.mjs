@@ -45,8 +45,8 @@ test('payments depend on product, country and checkout route',()=>{
 test('obsolete vague region/payment placeholders are not in product fact cards',()=>{
  assert.doesNotMatch(decision,/<h3>哪些地区能用<\/h3>/);
  assert.doesNotMatch(decision,/<h3>怎么付费<\/h3>/);
- assert.match(row,/globalRegionFact\(p.id,displayRegion\)/);
- assert.match(row,/regionName\(displayRegion,language\)/);
+ assert.match(row,/globalRegionFact\(p.id,region\)/);
+ assert.match(row,/regionName\(region,language\)/);
  assert.match(row,/localizedPaymentName\(x,language\)/);
  assert.match(component,/x\.policy\.source/);
  assert.match(component,/x\.payments\.source/);
