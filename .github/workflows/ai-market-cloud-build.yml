@@ -29,6 +29,8 @@ jobs:
       - run: npm run gate
       - name: Read-only audit of obsolete AI market modules
         run: node scripts/audit-obsolete-workspace.mjs
+      - name: Build feature-source review queue for incomplete product profiles
+        run: node scripts/build-capability-review-queue.mjs
       - run: node scripts/benchmark-search.mjs > search-capacity.json
       - name: Enforce bounded 100k-index capacity budget (not HTTP load)
         run: |
@@ -53,4 +55,5 @@ jobs:
           path: |
             lingxifield-ai-market/search-capacity.json
             lingxifield-ai-market/reports/obsolete-workspace-audit.json
+            lingxifield-ai-market/reports/capability-review-queue.json
           retention-days: 7
