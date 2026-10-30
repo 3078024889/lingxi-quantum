@@ -57,6 +57,14 @@ const summary={schema:'lingxifield_candidate_staging_bridge_v1',generatedAt:new 
 await mkdir(out,{recursive:true});
 const atomic=async(name,data)=>{const path=resolve(out,name);await writeFile(path+'.tmp',data);await rename(path+'.tmp',path)};
 await atomic('candidates-staging.jsonl',records.map(x=>stable(x)).join('\n')+'\n');
+const preview=records.map(x=>{
+ const old=priorByKey.get(x.candidate_key);
+ return {candidate_key:x.candidate_key,source_url:x.source_url,kind:x.kind,
+ display_name:x.display_name,publisher:x.publisher,verification_status:'candidate',
+ first_seen_at:old?.first_seen_at||summary.generatedAt,last_seen_at:summary.generatedAt};
+});
+await atomic('main-candidate-import-preview.jsonl',preview.map(x=>stable(x)).join('\n')+'\n');
+
 await atomic('change-report.json',JSON.stringify({summary,changes},null,2)+'\n');
 await atomic('previous-staging.json',JSON.stringify({schema:summary.schema,records},null,2)+'\n');
 console.log(JSON.stringify({...summary,output:out},null,2));
