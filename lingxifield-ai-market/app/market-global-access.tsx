@@ -1,7 +1,7 @@
 'use client';
 import type {Language} from '../lib/v2';
 import type {RegionCode} from '../lib/global-region-market';
-import {REGIONS,regionName,regionCopy,globalRegionFact} from '../lib/global-region-market';
+import {ALL_REGIONS,regionName,regionCopy,globalRegionFact} from '../lib/global-region-market';
 import type {Platform} from '../lib/data';
 
 const paymentNames:Record<string,Partial<Record<Language,string>>>={
@@ -23,7 +23,7 @@ export function MarketRegionSelect({language,region,onChange}:{language:Language
  const t=regionCopy(language);
  return <label className="marketRegionSelect">{t.region}
   <select aria-label={t.region} value={region} onChange={e=>onChange(e.target.value as RegionCode)}>
-   {REGIONS.map(r=><option key={r} value={r}>{regionName(r,language)}</option>)}
+   {ALL_REGIONS.map(r=><option key={r} value={r}>{regionName(r,language)}</option>)}
   </select>
  </label>;
 }
