@@ -2,6 +2,9 @@ name: AI Market sourced evidence (bounded cloud collection)
 
 on:
   workflow_dispatch:
+  schedule:
+    # Runs only when this workflow is on the repository default branch.
+    - cron: '17 3 * * *'
   pull_request:
     paths:
       - '.github/workflows/ai-market-evidence-cloud.yml'
@@ -71,4 +74,4 @@ jobs:
           name: ai-market-evidence-${{ github.run_id }}
           path: lingxifield-ai-market/reports/cloud-evidence/
           if-no-files-found: error
-          retention-days: 7
+          retention-days: 30
