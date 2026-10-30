@@ -54,7 +54,7 @@ export default function MarketQuickStart({language,onCompare}:{language:Language
   {active&&<section className="marketTourPanel" role="dialog" aria-modal="false" aria-label={t.title}>
    <div className="marketTourPanelHead"><strong>{ui.step.replace('{n}',String(step+1))}</strong><button type="button" onClick={close} aria-label={ui.close}><X size={18}/></button></div>
    <div className="marketTourProgress" aria-hidden="true">{STEPS.map((x,i)=><span key={x} className={i<=step?'active':''}/>)}</div>
-   <h3>{name}</h3><p>{hint}</p>
+   <h3>{name}</h3><p>{hint}</p>{step===3&&<button type="button" className="marketTourCompareNow" onClick={onCompare}>{t.compare} ↗</button>}
    <div className="marketTourPanelFoot"><button type="button" disabled={step===0} onClick={()=>setStep(x=>Math.max(0,x-1))}><ChevronLeft size={15}/>{ui.previous}</button>
     <button type="button" className="marketTourNext" onClick={()=>{if(step===STEPS.length-1)close();else setStep(x=>x+1);}}>{step===STEPS.length-1?ui.finish:ui.next}<ChevronRight size={15}/></button>
    </div>
