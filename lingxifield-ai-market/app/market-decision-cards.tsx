@@ -12,13 +12,17 @@ export default function MarketDecisionCards({
   selectedForCompare,
   onToggleCompare,
   onOpenPricing,
+  language='zh',
 }:{
   platform:Platform;
   selectedForCompare:boolean;
   onToggleCompare:()=>void;
   onOpenPricing:()=>void;
+  language?:Language;
 }) {
   const facts=platform.conditions || [];
+  const localized=DECISION_TITLES[language];
+  const ui=MARKET_UI_EXTRA[language];
   const get=(label:string)=>facts.find(f=>f.label===label);
   const cards:Decision[]=[
     {key:'free',title:'免费额度',description:'具体次数、积分及恢复周期',fact:get('免费额度')},
@@ -31,12 +35,12 @@ export default function MarketDecisionCards({
   const covered=cards.filter(c=>c.fact).length;
   return <section className="decisionSurface panel" aria-label="平台使用前的关键问题">
     <div className="decisionHeading">
-      <div><h2>先看能不能用，再看排名</h2><p>免费多少、实际花费、失败扣费、地区限制、下载和商用条件。仅展示有来源的结论。</p></div>
+      <div><h2>{localized[6]}</h2><p>免费多少、实际花费、失败扣费、地区限制、下载和商用条件。仅展示有来源的结论。</p></div>
       <span className="decisionCoverage">已核验 {covered}/6 项</span>
     </div>
     <div className="decisionGrid">
-      {cards.map(card=><article className="decisionCard" key={card.key}>
-        <h3>{card.title}</h3>
+      {cards.map((card,i)=><article className="decisionCard" key={card.key}>
+        <h3>{localized[i]}</h3>
         <p className={card.fact?'decisionValue':'decisionUnknown'}>{card.fact?.text||'待核验'}</p>
         <small>{card.fact?card.fact.scope:card.description}</small>
         {card.fact&&<a href={card.fact.source} target="_blank" rel="noopener noreferrer">查看依据 · {card.fact.checkedAt} ↗</a>}
