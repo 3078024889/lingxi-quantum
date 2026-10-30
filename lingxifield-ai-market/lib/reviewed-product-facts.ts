@@ -1,14 +1,16 @@
 /** Reviewed observations. Keep dated snapshots; never infer missing limits. */
-export type FactKey = "purpose"|"free"|"price"|"region"|"watermark"|"commercial"|"failure"|"refund"|"phone"|"card"|"models";
+export type FactKey = "purpose"|"free"|"price"|"region"|"watermark"|"commercial"|"failure"|"refund"|"phone"|"card"|"models"|"reasoning";
 export type ProductFact = {text:string;source:string;checkedAt:string;scope:string;kind:"official"};
 export type FactSnapshot = {product:string;observedAt:string;facts:Partial<Record<FactKey,ProductFact>>};
 const day="2026-10-29";
+const currentDay="2026-10-30";
 const pikaPrice="https://pika.art/pricing";
 const pikaHelp="https://pika.art/faq";
 const runwayPrice="https://runway.com/pricing";
 const runwayCredits="https://help.runwayml.com/hc/en-us/articles/15124877443219-How-do-credits-work";
 const claudeHelp="https://support.claude.com/en/articles/8114491-get-started-with-claude";
 function official(text:string,source:string,scope:string):ProductFact{return {text,source,scope,checkedAt:day,kind:"official"};}
+function currentOfficial(text:string,source:string,scope:string):ProductFact{return {text,source,scope,checkedAt:currentDay,kind:"official"};}
 export const factSnapshots:readonly FactSnapshot[]=[
  {product:"pika",observedAt:day,facts:{
   purpose:official("生成和编辑视频、图片与音频",pikaHelp,"当前 Pika Create 网页版"),
@@ -43,6 +45,22 @@ export const factSnapshots:readonly FactSnapshot[]=[
  }},
  {product:"n8n",observedAt:day,facts:{purpose:official("把多步工作连起来，也可创建调用工具的 AI 智能体","https://n8n.io/ai-agents/","工作流与智能体平台；需配置和测试")}},
  {product:"ahrefs-brand-radar",observedAt:day,facts:{purpose:official("查看品牌在 AI 回答中的提及和引用","https://ahrefs.com/brand-radar","AI 可见度分析，不保证提升排名")}},
+ {product:"chatgpt",observedAt:currentDay,facts:{
+  models:currentOfficial("GPT-6 系列用于 ChatGPT 聊天；GPT-6.1 Terra 在 Work/Codex 推出，不代表聊天界面均可选","https://help.openai.com/en/articles/6825453-chatgpt-release-notes","产品与工作模式分开；实际版本依账户、地区与工作区"),
+  reasoning:currentOfficial("GPT-6 在 ChatGPT 支持不同思考档位，具体档位由套餐和权限决定；并非独立综合智力分数","https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt","ChatGPT 模型选择说明，不含跨产品统一基准"),
+ }},
+ {product:"claude",observedAt:currentDay,facts:{
+  models:currentOfficial("Anthropic API 模型家族：Claude Fable 5.1、Opus 5.5、Sonnet 5.5、Haiku 5.5；Claude 应用可选型号另依套餐","https://platform.claude.com/docs/en/models/overview","API 模型目录，不表示 Claude 网页端全部开放"),
+  reasoning:currentOfficial("官方将 Fable 5.1 定位为高难推理和长流程智能体任务，将 Opus 5.5 用于知识工作与编程","https://platform.claude.com/docs/en/models/overview","厂商模型定位；不是独立跨平台胜负结论"),
+ }},
+ {product:"gemini",observedAt:currentDay,facts:{
+  models:currentOfficial("Gemini API 模型目录：Gemini 4 Argon、Gemini 3.8 Flash 等；Gemini 网页应用实际可用版本另行核对","https://ai.google.dev/gemini-api/docs/models","API 模型家族；不是 Gemini App 套餐可用性保证"),
+  reasoning:currentOfficial("Gemini 4 Argon 官方定位支持复杂编程、数学、科学和智能体推理，API 上下文上限为 100 万 token","https://ai.google.dev/gemini-api/docs/latest-model","Gemini 4 Argon API 技术规格；非应用端实测分数"),
+ }},
+ {product:"runway",observedAt:currentDay,facts:{
+  models:currentOfficial("Gen-4.5：网页支持文生视频、图生视频，标准及以上方案，2–10 秒，12 积分/秒","https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5","Gen-4.5 文档；其他模型、方案和额度另算"),
+  reasoning:currentOfficial("官方描述其擅长执行复杂镜头编排与时序指令；属于视频指令遵循，不是通用语言模型推理分数","https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5","厂商能力说明，未进行统一质量盲测"),
+ }},
 ];
 export function latestFacts(slug:string,asOf=new Date().toISOString().slice(0,10)):FactSnapshot|undefined{
  const relevant=factSnapshots.filter(s=>s.product===slug&&s.observedAt<=asOf);
@@ -67,4 +85,4 @@ export function questionFields(query:string):FactKey[]{
  if(/大陆|地区|国内|region/i.test(query))result.push("region");
  return result;
 }
-export const factLabels:Record<FactKey,string>={purpose:"主要用途",free:"免费额度",price:"价格",region:"地区与年龄",watermark:"导出水印",commercial:"商用条件",failure:"失败扣费",refund:"取消与退款",phone:"手机号要求",card:"信用卡要求",models:"模型与用量"};
+export const factLabels:Record<FactKey,string>={purpose:"主要用途",free:"免费额度",price:"价格",region:"地区与年龄",watermark:"导出水印",commercial:"商用条件",failure:"失败扣费",refund:"取消与退款",phone:"手机号要求",card:"信用卡要求",models:"模型与用量",reasoning:"推理与理解能力"};
