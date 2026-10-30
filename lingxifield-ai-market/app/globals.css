@@ -373,3 +373,25 @@
 .visitorFeedbackPublished>small{font-size:10px;color:#8593a6}
 @media(max-width:850px){.visitorFeedbackCols{grid-template-columns:1fr}.visitorFeedback{padding:15px}}
 @media(max-width:550px){.visitorFeedbackHead h2{font-size:17px}.visitorFeedbackForm,.visitorFeedbackPublished{padding:12px}}
+
+
+/* Moderator-only feedback inbox. Not part of the public rating UI. */
+.feedbackAdminPage{max-width:960px;margin:30px auto;padding:0 20px 45px;color:#193c65}
+.feedbackAdminPage>a{color:#2368c2;font-size:13px}
+.feedbackAdminPage header{margin:24px 0 25px}
+.feedbackAdminPage h1{font-size:25px;line-height:1.4;margin:0 0 9px}
+.feedbackAdminPage header p,.feedbackAdminLogin p{color:#617a96;font-size:12px;line-height:1.8}
+.feedbackAdminLogin,.feedbackAdminItem{padding:21px;background:#fff;border:1px solid #dce7f7;border-radius:12px;margin:14px 0}
+.feedbackAdminLogin{max-width:470px}
+.feedbackAdminLogin label,.feedbackAdminItem label{display:flex;flex-direction:column;gap:7px;margin:13px 0;color:#3d5d82;font-size:12px;font-weight:650}
+.feedbackAdminPage input,.feedbackAdminPage textarea{padding:10px;border:1px solid #ccd9ec;border-radius:7px;background:white;color:#1d416d;font-size:13px;width:100%;box-sizing:border-box}
+.feedbackAdminPage button{border:1px solid #b3cdeb;border-radius:7px;background:#eaf3ff;color:#1553a0;padding:9px 13px;cursor:pointer;font-size:12px;font-weight:700}
+.feedbackAdminPage button:disabled{opacity:.55;cursor:wait}
+.feedbackAdminLogin button,.feedbackAdminActions button:first-child{background:#1366d5;color:white}
+.feedbackAdminControls{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.feedbackAdminControls h2{font-size:17px;margin-right:auto}
+.feedbackAdminMeta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:#597697}
+.feedbackAdminMeta strong{color:#1454a4}
+.feedbackAdminItem>p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;font-size:13px}
+.feedbackAdminActions{display:flex;flex-wrap:wrap;gap:10px}
+.feedbackAdminPage :is(button,input,textarea):focus-visible{outline:2px solid #4e9af4;outline-offset:2px}
