@@ -15,6 +15,8 @@ const tasks=[
  {id:'typescript',command:process.execPath,args:['node_modules/typescript/bin/tsc','--noEmit']}
 ];
 if(process.argv.includes('--build'))tasks.push({id:'next_build',command:process.execPath,args:['node_modules/next/dist/bin/next','build']});
+// Live official-source requests are opt-in and not part of deterministic build acceptance.
+if(process.argv.includes('--collect-official'))tasks.unshift({id:'official_evidence_collection',command:process.execPath,args:['scripts/collect-existing-official-evidence.mjs']});
 const outcomes=[];
 for(const t of tasks){
  const p=spawnSync(t.command,t.args,{cwd:root,encoding:'utf8',timeout:240000,maxBuffer:3*1024*1024,shell:false});
