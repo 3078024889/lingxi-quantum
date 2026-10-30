@@ -46,7 +46,7 @@ export function matchesMarketFilter(p:Platform,filter:MarketFilter,country:Regio
  if(filter==='supported')return country!=='GLOBAL'&&['supported','local'].includes(globalRegionFact(p.id,country).policy.status);
  if(filter==='free')return hasFreeOption(p);
  if(filter==='drama')return Boolean(shortDramaEvidence(p.id));
- if(filter==='video')return filter==='drama'||p.category.includes('视频')||Boolean(shortDramaEvidence(p.id));
+ if(filter==='video')return p.category.includes('视频')||Boolean(shortDramaEvidence(p.id));
  if(filter==='image')return /图片|图像/.test(p.category)||p.features.some(x=>/图片生成|图像生成|image generation/i.test(x));
  if(filter==='local')return p.websiteKind==='repository'&&/llama|ollama|webui|transformers|comfyui|vllm/i.test(p.id);
  if(filter==='code')return /编程|开发|代码/.test(p.category)||p.features.some(x=>/编程|代码/.test(x));
