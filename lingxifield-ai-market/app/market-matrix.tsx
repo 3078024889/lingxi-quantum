@@ -16,7 +16,7 @@ const headers:Record<Language,string[]> = {
   fr:['N°','Produit · Éditeur','Atouts','Modèles','Raisonnement','Pour qui','Débuter','Gratuit','Tarifs','Limites · Échecs','Régions','Usage commercial · Vie privée','Connexion · Paiement','SEO · GEO','Officiel · Téléchargement','Détails · Comparer'],
   de:['Nr.','KI-Tool · Anbieter','Stärken','Modelle','Schlussfolgern','Geeignet für','Einstieg','Freikontingent','Preis','Grenzen · Fehlversuche','Regionen','Kommerziell · Datenschutz','Login · Zahlung','SEO · GEO','Offiziell · Download','Details · Vergleich'],
   es:['N.º','Producto · Empresa','Ventajas','Modelos','Razonamiento','Usos','Primeros pasos','Gratis','Precio','Límites · Fallos','Regiones','Comercial · Privacidad','Acceso · Pago','SEO · GEO','Oficial · Descarga','Detalles · Comparar'],
-  pt:['N.º','Produto · Empresa','Vantagens','Modelos','Raciocínio','Indicado para','Primeiros passos','Grátis','Preço','Limites · Falhas','Regiões','Comercial · Privacidade','Login · Pagamento','Oficial · Download','SEO · GEO','Detalhes · Comparar'],
+  pt:['N.º','Produto · Empresa','Vantagens','Modelos','Raciocínio','Indicado para','Primeiros passos','Grátis','Preço','Limites · Falhas','Regiões','Comercial · Privacidade','Login · Pagamento','SEO · GEO','Oficial · Download','Detalhes · Comparar'],
   ar:['رقم','المنتج والشركة','المزايا','النماذج','الاستدلال والفهم','مناسب لـ','البدء','المجاني','السعر','القيود والفشل','المناطق','الاستخدام التجاري والخصوصية','الدخول والدفع','SEO وGEO','الرسمي والتنزيل','التفاصيل والمقارنة']
 };
 const labels:Record<Language,{unknown:string;models:string;reasoning:string;newbie:string;technical:string;notRated:string;notTested:string;login:string;payment:string;open:string;repository:string;download:string;more:string;compare:string;remove:string;hint:string;source:string;scope:string;help:string;noTest:string;}> = {
@@ -45,14 +45,14 @@ export default function MarketMatrix({rows,language,startIndex,onOpen,onCompare,
     <caption className="visuallyHidden">{c.hint}</caption>
     <thead><tr>{MATRIX_COLUMNS.map((key,i)=><th key={key} scope="col" className={i===0?'matrixOrdinal':i===1?'matrixIdentity':''}>{h[i]}</th>)}</tr></thead>
     <tbody>{rows.map((p,i)=>{
-     const model=fact(p,['模型与用量','模型','版本']),region=fact(p,['地区','区域']),rights=fact(p,['商用','商业授权','隐私']),failure=fact(p,['失败扣费']),payments=fact(p,['支付','付款','结算']),login=fact(p,['登录','手机号','信用卡']);
+     const model=fact(p,['模型与用量','模型','版本']),reasoning=fact(p,['推理与理解能力','推理','理解']),region=fact(p,['地区','区域']),rights=fact(p,['商用','商业授权','隐私']),failure=fact(p,['失败扣费']),payments=fact(p,['支付','付款','结算']),login=fact(p,['登录','手机号','信用卡']);
      const isRepo=isDeveloperEntry(p),picked=compared.includes(p.id);
      return <tr key={p.id}>
       <td className="matrixOrdinal"><span className="matrixNumber">{startIndex+i+1}</span></td>
       <td className="matrixIdentity"><button type="button" className="matrixProduct" onClick={()=>onOpen(p)}><span className="brandIcon" aria-hidden="true">{p.symbol}</span><span><strong>{p.name}</strong><small>{p.company}</small></span></button><span className="matrixCategory">{p.category}</span></td>
       <td><strong className="matrixEmphasis">{p.features.slice(0,2).join(' · ')||p.category}</strong><span className="matrixLine clamp3">{p.about}</span></td>
       <td>{evidenceCell(model,c.models)}</td>
-      <td><strong className="matrixEmphasis">{p.features.some(v=>/推理|理解|reason|RAG/i.test(v))?p.features.filter(v=>/推理|理解|reason|RAG/i.test(v)).slice(0,2).join(' · '):c.unknown}</strong><span className="matrixLine matrixMuted">{c.reasoning}</span></td>
+      <td>{evidenceCell(reasoning,c.reasoning)}<span className="matrixLine matrixMuted">{c.notTested}</span></td>
       <td><span className="matrixLine">{p.features.slice(0,3).join(' · ')||p.category}</span></td>
       <td><span className="matrixLine">{isRepo?c.technical:c.newbie}</span><span className="matrixLine matrixMuted">{c.notTested}</span></td>
       <td>{evidenceCell(fact(p,['免费额度','免费']),c.unknown)}</td>
