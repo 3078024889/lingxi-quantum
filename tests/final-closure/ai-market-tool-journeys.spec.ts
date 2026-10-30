@@ -2,7 +2,7 @@ import {test,expect} from "./export-test";
 import {readFile} from "node:fs/promises";
 // Real browser-side image conversion and downloaded JPEG magic bytes.
 // The test fixture is a 1x1 public-domain generated PNG; no user file or paid API.
-const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO5+JX8AAAAASUVORK5CYII=","base64");
+const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGOQzrgKAAH6AVmd3LENAAAAAElFTkSuQmCC","base64");
 
 test("PNG to JPG: upload, convert and save real JPEG bytes",async({page})=>{
  const route=await page.goto("/tools/png-to-jpg",{waitUntil:"domcontentloaded"});
