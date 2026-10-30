@@ -30,7 +30,7 @@ export async function GET(request:Request){
    const result=JSON.parse(raw) as unknown;
    if(!Array.isArray(result))throw Error('HUB_SOURCE_INVALID');
    const items:Product[]=result.filter(x=>x!==null&&typeof x==='object')
-    .filter(x=>typeof x.id==='string'&&/^[\\w.-]+\\/[\\w.-]+$/.test(x.id)&&x.private!==true)
+    .filter(x=>typeof x.id==='string'&&/^[a-zA-Z0-9_.-]+[/][a-zA-Z0-9_.-]+$/.test(x.id)&&x.private!==true)
     .map(x=>({id:'hf-space:'+x.id,name:x.id.split('/')[1],company:x.id.split('/')[0],
       category:'Hugging Face Spaces',url:'https://huggingface.co/spaces/'+x.id,
       description:typeof x.cardData?.short_description==='string'?x.cardData.short_description.slice(0,200):null,
