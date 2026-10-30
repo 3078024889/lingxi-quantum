@@ -38,10 +38,12 @@ test('comparison keeps the original 2–3 selection workflow and country-specifi
  assert.match(home,/compareFitScroll/);
  assert.match(css,/\.compareFitScroll table\{width:100%;min-width:0;table-layout:fixed/);
 });
-test('global region policy answers China Mainland explicitly without pretending network tests passed',async()=>{
+test('region selection works for all countries, with no forced mainland spotlight',async()=>{
  const region=await read('app/market-global-access.tsx');
- assert.match(region,/globalRegionFact\(platform\.id,'CN'\)/);
- assert.match(region,/region==='GLOBAL'&&<div className="globalMainlandSpotlight"/);
- assert.match(region,/t\.untested/);
- assert.match(region,/mainland\.policy\.source/);
+ const home=await read('app/market-workbench.tsx');
+ assert.ok(region.includes('globalRegionFact(platform.id,region)'));
+ assert.ok(!region.includes('globalMainlandSpotlight'));
+ assert.ok(region.includes('x.policy.source'));
+ assert.ok(home.includes('lingxifield_market_selected_country'));
+
 });
