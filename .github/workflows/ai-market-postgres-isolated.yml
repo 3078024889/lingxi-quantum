@@ -61,6 +61,7 @@ jobs:
             20261029_ai_market_payment_ledger_h.sql
             20261029_ai_market_h_integration_missing_tables.sql
             20261030_ai_market_incremental_sources.sql
+            20261030_ai_market_vendor_submission.sql
           )
           for name in "${migrations[@]}"; do
             echo "Applying $name"
