@@ -13,13 +13,14 @@ const [row,home,css,headings,facts,actions]=await Promise.all([
 ].map(read));
 
 test('market has eleven visible facts, no duplicate row accordion',()=>{
- assert.match(row,/export const V36_COL_COUNT=11/);
- assert.equal((row.match(/<td\\b/g)||[]).length,11);
- assert.doesNotMatch(row,/setExpanded\\(v=>!v\\)|marketOverviewDetailsRow/);
- assert.match(home,/marketRowTitles\\(language\\)\\.map/);
- assert.match(home,/filterAndSortMarket/);
- assert.match(row,/shortDramaSummary\\(p.id,language\\)/);
- assert.match(row,/globalRegionFact\\(p.id,region\\)/);
+ assert.ok(row.includes('export const V36_COL_COUNT=11'));
+ assert.equal(row.split('<td ').length-1,11);
+ assert.ok(!row.includes('setExpanded('));
+ assert.ok(!row.includes('marketOverviewDetailsRow'));
+ assert.ok(home.includes('marketRowTitles(language).map'));
+ assert.ok(home.includes('filterAndSortMarket'));
+ assert.ok(row.includes('shortDramaSummary(p.id,language)'));
+ assert.ok(row.includes('globalRegionFact(p.id,region)'));
 });
 
 test('all existing source headings and new eleven-column headings are translated to nine languages',()=>{
@@ -29,7 +30,6 @@ test('all existing source headings and new eleven-column headings are translated
  assert.match(headings,/MATRIX_COLUMN_COUNT=16/);
  assert.match(headings,/MATRIX_OVERVIEW_COLUMN_COUNT=7/);
  assert.match(headings,/MATRIX_OVERVIEW_HEADINGS/);
- const v36=read('app/market-matrix-row.tsx');
  assert.match(row,/export const V36_COL_COUNT=11/);
 });
 
