@@ -18,7 +18,7 @@ test('market has eleven visible facts, no duplicate row accordion',()=>{
  assert.ok(!row.includes('setExpanded('));
  assert.ok(!row.includes('marketOverviewDetailsRow'));
  assert.ok(home.includes('marketRowTitles(language).map'));
- assert.ok(home.includes('filterAndSortMarket'));
+ assert.ok(home.includes('const filtered=results;'));
  assert.ok(row.includes('shortDramaSummary(p.id,language)'));
  assert.ok(row.includes('globalRegionFact(p.id,region)'));
 });
