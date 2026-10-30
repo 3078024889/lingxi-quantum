@@ -48,7 +48,7 @@ export default function MarketMatrixRow({platform:p,position,onDetail,onToggleCo
     <small>{guide?.paid||'付费功能待核验'}</small>{(guide?.source||priceFact?.source)&&<a className="matrixSource" target="_blank" rel="noopener noreferrer" href={guide?.source||priceFact!.source}>价格与套餐来源 ↗</a>}</td>
    <td className="matrixBrief"><strong>{limitation&&limitation!=='待核验'?limitation:'使用限制待核验'}</strong>
     <small>{failureFact?.text||'生成失败扣费规则待核验'}</small>{failureFact&&<a className="matrixSource" target="_blank" rel="noopener noreferrer" href={failureFact.source}>失败扣费依据 ↗</a>}</td>
-   <td className="matrixBrief"><strong>{marketRegion}</strong><small>{facts?.regionNote||guide?.region||'具体国家和地区待核验'}</small></td>
+   <td className="matrixBrief"><strong>{marketRegion}</strong><small>{facts?.regionNote||guide?.region||'具体国家和地区待核验'}</small><button type="button" className="matrixMore" onClick={()=>setExpanded(v=>!v)} aria-expanded={expanded}>{expanded?'收起证据与限制':'展开完整证据与限制'} ▾</button></td>
    <td className="matrixBrief"><strong>{commercial}</strong><small>模型与素材授权需分别核对</small>{(facts?.commercialSource||commercialFact?.source)&&<a className="matrixSource" href={facts?.commercialSource||commercialFact!.source} target="_blank" rel="noopener noreferrer">商用规则来源 ↗</a>}</td>
    <td className="matrixBrief"><strong>登录：{accessLogin}</strong><small>付款：{payment}</small>
     {facts?.loginSource&&<a className="matrixSource" href={facts.loginSource} target="_blank" rel="noopener noreferrer">登录依据 ↗</a>}
