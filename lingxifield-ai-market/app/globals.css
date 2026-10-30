@@ -206,3 +206,15 @@
 @media (max-width:1180px){.marketMatrixTable{min-width:1400px}}
 @media (max-width:900px){.homeGrid{grid-template-columns:minmax(0,1fr)}.leftAside{display:none}.marketMatrixTable{min-width:1300px}.matrixExpandGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:550px){.matrixExpandGrid{grid-template-columns:1fr}.marketMatrixTable{min-width:1200px}}
+
+/* Keep product identity and the real action links visible while scrolling metrics. */
+.matrixScroll .marketMatrixTable th:nth-child(2),.matrixScroll .marketMatrixTable td.directoryIdentity{
+ position:sticky;left:0;z-index:2;background:#fff;box-shadow:2px 0 7px #a9c1dd20;
+}
+.matrixScroll .marketMatrixTable th:nth-child(2){background:#eff5ff;z-index:4}
+.matrixScroll .marketMatrixTable th:last-child,.matrixScroll .marketMatrixTable td.marketActionCell{
+ position:sticky;right:0;z-index:2;background:#fff;box-shadow:-3px 0 9px #8197b324;
+}
+.matrixScroll .marketMatrixTable th:last-child{background:#eff5ff;z-index:4}
+.matrixScroll .marketMatrixTable .matrixExpansion td{position:static!important;background:#f4f8ff}
+@media(max-width:900px){.matrixScroll .marketMatrixTable th:nth-child(2),.matrixScroll .marketMatrixTable td.directoryIdentity{min-width:160px}}
