@@ -20,7 +20,7 @@ test('seven-column overview remains readable, screenshot-marked redundant boxes 
  const row=await read('app/market-matrix-row.tsx');
  const css=await read('app/globals.css');
  assert.match(row,/marketOverviewDetailsCompact/);
- assert.match(row,/const displayRegion=region==='GLOBAL'\?'CN':region/);
+ assert.match(row,/displayRegion=region==='GLOBAL'\?'CN':region/);
  assert.doesNotMatch(row,/<h4>\{headings\[5\]\}/);
  assert.doesNotMatch(row,/<h4>\{headings\[6\]\}/);
  assert.doesNotMatch(row,/<h4>\{headings\[9\]\}/);
