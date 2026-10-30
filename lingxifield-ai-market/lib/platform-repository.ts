@@ -5,10 +5,18 @@ import type {CatalogEntry} from './catalog-engine.mjs';
 import {latestFacts,factLabels,type FactKey} from './reviewed-product-facts';
 import {OFFER_GUIDE} from './offer-guide';
 import {accessFor} from './platform-access-facts';
+import {capabilityKeywords} from './capability-profiles';
 const seed=new Map(platforms.map(p=>[p.id,p]));
-const records=new Map<string,CatalogEntry>(platforms.map(p=>[p.id,{id:p.id,name:p.name,company:p.company,category:p.category,website:p.website,description:p.about,status:'unverified',updatedAt:'2026-10-29T00:00:00Z',capabilities:p.features}]));
+type SearchableCatalogEntry=CatalogEntry & {searchTerms?:string[]};
+const records=new Map<string,SearchableCatalogEntry>(platforms.map(p=>[p.id,{id:p.id,name:p.name,company:p.company,category:p.category,website:p.website,description:p.about,status:'unverified',updatedAt:'2026-10-29T00:00:00Z',capabilities:p.features}]));
 for(const item of entries)if(item.status!=='discontinued')records.set(item.id,item);
-for(const [id,entry] of records){const guide=OFFER_GUIDE[id],access=accessFor(id);if(guide||access)records.set(id,{...entry,capabilities:[...new Set([...entry.capabilities,...(guide?.tasks||[]),...(guide?[guide.free,guide.paid,guide.strengths||'']:[]),...(access?.login||[]),...(access?.payment||[])].filter(Boolean)) ]});}
+// Keep functions and categories clean. Price, login, payment and textual selling points
+// are indexed ONLY as hidden search terms, never masquerading as product capabilities.
+for(const [id,entry] of records){
+ const guide=OFFER_GUIDE[id],access=accessFor(id);
+ const terms=[...(guide?.tasks||[]),...capabilityKeywords(id),guide?.strengths||'',guide?.free||'',guide?.paid||'',...(access?.login||[]),...(access?.payment||[])].filter(Boolean);
+ if(terms.length)records.set(id,{...entry,searchTerms:[...new Set(terms)]});
+}
 const index=createSearchIndex([...records.values()]);
 export function toPlatform(e:CatalogEntry):Platform {
  const prior=seed.get(e.id);const facts=latestFacts(e.id)?.facts;
