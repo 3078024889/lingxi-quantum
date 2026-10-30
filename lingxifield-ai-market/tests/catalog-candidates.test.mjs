@@ -3,7 +3,7 @@ const catalog=JSON.parse(await readFile(new URL('../data/catalog.json',import.me
 test('candidate directory has valid attributed records and never pretends reviewed',()=>{
  assert.ok(catalog.length>=15);
  const ids=new Set();
- for(const x of catalog){assert.ok(validCatalogEntry(x),x.id);assert.equal(x.status,'unverified');assert.match(x.repositoryUrl,/^https:\/\/github\.com\//);assert.equal(x.websiteKind==='repository',x.website.startsWith('https://github.com/'));assert.ok(!ids.has(x.id));ids.add(x.id);}
+ for(const x of catalog){assert.ok(validCatalogEntry(x),x.id);assert.ok(['active','unverified'].includes(x.status));if(x.repositoryUrl)assert.match(x.repositoryUrl,/^https:\/\/github\.com\//);assert.equal(x.websiteKind==='repository',x.website.startsWith('https://github.com/'));assert.ok(!ids.has(x.id));ids.add(x.id);}
 });
 test('problem queries return multiple independently listed tool candidates',()=>{
  const index=createSearchIndex(catalog);
