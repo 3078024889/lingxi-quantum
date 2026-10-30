@@ -40,6 +40,18 @@ const compareRows:{label:string;pick:(p:Platform,region:RegionCode,language:Lang
 function Logo(){return <div className="logo"><span><strong>灵犀场</strong><small>LINGXIFIELD</small></span></div>}
 export default function Home({initialPlatforms,initialSelected=null,initialLanguage='zh',initialCurrency='USD'}:{initialPlatforms:Platform[];initialSelected?:string|null;initialLanguage?:Language;initialCurrency?:Currency}){const router=useRouter();const [platforms,setPlatforms]=useState(initialPlatforms),[results,setResults]=useState(initialPlatforms),[cursor,setCursor]=useState(0),[nextCursor,setNextCursor]=useState<number|null>(null),[total,setTotal]=useState(initialPlatforms.length),[searchError,setSearchError]=useState(''),[loading,setLoading]=useState(false);const [selected,setSelected]=useState<string|null>(initialSelected),[query,setQuery]=useState(''),[category,setCategory]=useState('全部平台'),[tab,setTab]=useState('找AI工具'),[compare,setCompare]=useState<string[]>([]),[compareReady,setCompareReady]=useState(false),[detailTab,setDetailTab]=useState('概览'),[period,setPeriod]=useState('30日'),[language,setLanguage]=useState<Language>(initialLanguage),[currency,setCurrency]=useState<Currency>(initialCurrency),[answer,setAnswer]=useState(''),[showCompare,setShowCompare]=useState(false);const tr=I18N[language];const ui=MARKET_UI_EXTRA[language];const navUi=MARKET_NAV_I18N[language];const [metricCards,setMetricCards]=useState<MarketCard[]>(()=>marketCards());const [region,setRegion]=useState<RegionCode>('GLOBAL');const [marketFilter,setMarketFilter]=useState<MarketFilter>('all');const [marketSort,setMarketSort]=useState<MarketSort>('directory');
  useEffect(()=>{
+  const countryKey='lingxifield_market_selected_country';
+  const stored=window.sessionStorage.getItem(countryKey);
+  if(stored&&/^[A-Z]{2}$/.test(stored)){setRegion(stored as RegionCode);return;}
+  const ctrl=new AbortController();
+  fetch('/api/v1/visitor-region',{signal:ctrl.signal,cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{
+   if(!ctrl.signal.aborted&&d&&typeof d.region==='string'&&/^[A-Z]{2}$/.test(d.region))
+    setRegion(current=>current==='GLOBAL'?d.region as RegionCode:current);
+  }).catch(()=>{});
+  return()=>ctrl.abort();
+ },[]);
+ useEffect(()=>{if(region!=='GLOBAL')try{window.sessionStorage.setItem('lingxifield_market_selected_country',region);}catch{}},[region]);
+ useEffect(()=>{
   try {
    const stored=JSON.parse(window.sessionStorage.getItem('lingxifield_market_compare_v1')||'[]');
    if(Array.isArray(stored)){
