@@ -23,7 +23,7 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
    <article><h3>{labels.models}</h3><p>{access?.models||'具体版本与模型限制尚未核实'}</p></article>
    <article><h3>{labels.commercial}</h3><p>{access?.commercial||'商用授权资料尚未核实'}</p></article>
    <article><h3>SEO / GEO</h3><p>{geoSummary(platform.id)}。待完成同关键词、同时间范围的可复现监测后再排名。</p></article>
-   {!rich&&guide.strengths&&<article><h3>{labels.summary}</h3><p>{guide.strengths}</p></article>}
+   {!rich&&guide.strengths&&<article><h3>{labels.advantages}</h3><p>{guide.strengths}</p></article>}
    {!rich&&guide.reasoning&&<article><h3>{labels.reasoning}</h3><p>{guide.reasoning}</p></article>}
    <article><h3>{labels.watermark}</h3><p>{guide.watermarkNote||'该产品的图片、视频或音频导出规则尚无可核查资料，请查看官网。'}</p>
     {guide.watermarkSource&&<a href={guide.watermarkSource} target="_blank" rel="noopener noreferrer">查看相关说明 ↗</a>}</article>
