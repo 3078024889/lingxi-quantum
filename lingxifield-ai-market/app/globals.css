@@ -218,3 +218,15 @@
 .matrixScroll .marketMatrixTable th:last-child{background:#eff5ff;z-index:4}
 .matrixScroll .marketMatrixTable .matrixExpansion td{position:static!important;background:#f4f8ff}
 @media(max-width:900px){.matrixScroll .marketMatrixTable th:nth-child(2),.matrixScroll .marketMatrixTable td.directoryIdentity{min-width:160px}}
+
+.seoGeoBoard{margin:12px 0;padding:15px}
+.seoGeoBoard .rankHead{padding:5px 4px 15px;gap:12px;flex-wrap:wrap}
+.seoGeoCompare{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.seoGeoCompare article{border:1px solid #e0e9f8;border-radius:9px;background:#f8fbff;padding:12px;min-width:0}
+.seoGeoCompare strong{color:#1656a0;font-size:12px}
+.seoGeoCompare p{font-size:11px;color:#5c7290;line-height:1.7;overflow-wrap:anywhere}
+.seoGeoNote{font-size:12px;color:#375d8a;line-height:1.7;margin:14px 3px}
+.seoGeoFooter{display:flex;gap:14px;justify-content:space-between;align-items:center;font-size:11px;color:#8292a6}
+.seoGeoFooter a{color:#1562c8}
+@media(max-width:850px){.seoGeoCompare{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.seoGeoCompare{grid-template-columns:1fr}}
