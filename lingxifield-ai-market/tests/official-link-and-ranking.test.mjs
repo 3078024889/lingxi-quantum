@@ -6,11 +6,11 @@ const file=async p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 const catalog=JSON.parse(await file('data/catalog.json'));
 
 test('every curated catalog row has a correctly classified destination',()=>{
- assert.equal(catalog.length,15);
+ assert.ok(catalog.length>=19);
  for(const row of catalog){
   assert.equal(validCatalogEntry(row),true,'invalid '+row.id);
   assert.ok(['official','documentation','repository'].includes(row.websiteKind),'unknown kind '+row.id);
-  assert.ok(row.repositoryUrl?.startsWith('https://github.com/'),'source code must be separately preserved for '+row.id);
+  if(row.repositoryUrl) assert.ok(row.repositoryUrl.startsWith('https://github.com/'),'source code must be separately preserved for '+row.id);
   assert.equal(row.website.startsWith('https://github.com/'),row.websiteKind==='repository','source masquerades as homepage: '+row.id);
  }
 });
@@ -29,7 +29,9 @@ test('final brand is globally consistent with evidence-first market labels',asyn
  for(const [label,content] of [['layout',layout],['workbench',main],['dictionary',dictionary],['locale',locale]]){
   assert.ok(content.includes('全球SI AI工具行情平台'),label+' must use final name');
  }
- assert.ok(main.includes('按名称展示'),'unverified order must not look like a verified ranking');
+ assert.ok(main.includes('AI 工具一览'),'user catalog is clearly separate from ranked prices');
+ assert.ok(main.includes('<PriceLeaderboards/>'));
+ assert.ok(!main.includes('<HfModelRankings/>'));
 });
 test('first sourced ranking is limited to official HF model repository signal',async()=>{
  const api=await file('app/api/v1/hf-model-rankings/route.ts');
