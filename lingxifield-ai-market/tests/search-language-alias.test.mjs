@@ -5,3 +5,11 @@ test('English video returns Chinese video tools without fabricated ranking',()=>
 test('English image returns Chinese image tools',()=>{const r=index.search({q:'image'});assert.equal(r.total,1);assert.equal(r.items[0].id,'midjourney')});
 test('Category filter still applies on expanded query',()=>{assert.equal(index.search({q:'video',category:'图片生成'}).total,0)});
 test('Empty query still returns catalog',()=>{assert.equal(index.search().total,3)});
+
+test('AI and SI umbrella terms open the same complete catalog without inventing scores',()=>{
+ for(const q of ['AI','SI','SI工具','Super Intelligence','超级智能工具']){
+  const result=index.search({q});
+  assert.equal(result.total,3,'catalog-wide query '+q);
+  assert.deepEqual(result.items.map(x=>x.id).sort(),['deepseek','midjourney','runway']);
+ }
+});
