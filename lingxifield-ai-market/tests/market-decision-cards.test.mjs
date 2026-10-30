@@ -17,10 +17,12 @@ test('detail first screen exposes the six practical decisions',async()=>{
 test('decision cards keep unknown values unknown and link official dated evidence',async()=>{
  const component=await read('app/market-decision-cards.tsx');
  assert.ok(component.includes("platform.conditions || []"));
- assert.ok(component.includes("card.fact?.text||'待核验'"));
+ assert.ok(component.includes('card.fact?.text||ui.unverified'));
+ assert.ok(component.includes('DECISION_TITLES[language]'));
  assert.ok(component.includes('href={card.fact.source}'));
  assert.ok(component.includes('card.fact.checkedAt'));
  assert.ok(component.includes('selectedForCompare'));
+ assert.ok(component.includes('language?:Language'));
 });
 
 test('responsive cards do not force mobile horizontal overflow',async()=>{
