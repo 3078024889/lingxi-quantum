@@ -13,6 +13,9 @@ test('every one of 32 existing publisher products has one detailed capability pr
  assert.equal(cards.length,all.length);
  assert.equal(new Set(cards).size,cards.length);
  assert.deepEqual(all.filter(x=>!cards.includes(x)),[]);
+ const queue=await read('scripts/build-capability-review-queue.mjs');
+ assert.match(queue,/\[\'\"\]\?/);
+ assert.ok(queue.includes('new Set'),'review script must account for every curated profile ID');
  for(const id of ['jimeng','kling','luma','qwen','grok','whisper','fasterwhisper','automatic1111','openai-python','anthropic-sdk-python'])
   assert.ok(cards.includes(id),id);
  assert.ok((source.match(/\bcap\('/g)||[]).length>=90,'Concrete individually sourced feature cards required');
