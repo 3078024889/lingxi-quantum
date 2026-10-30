@@ -25,6 +25,7 @@ test('guide navigates five live controls and highlights the target with an opera
  assert.match(guide,/scrollIntoView\(\{behavior:'smooth'/);
  assert.match(guide,/marketTourSpotlight/);
  assert.match(guide,/marketTourNext/);
+ assert.match(guide,/step===3&&<button[^>]+onClick=\{onCompare\}/);
  assert.match(guide,/setStep\(x=>x\+1\)/);
  assert.match(guide,/role="dialog"/);
  assert.match(css,/\.marketTourPanel/);
