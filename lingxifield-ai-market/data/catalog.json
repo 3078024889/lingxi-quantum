@@ -94,7 +94,7 @@
     "name": "ComfyUI",
     "company": "ComfyUI",
     "category": "图片生成",
-    "website": "https://github.com/comfyanonymous/ComfyUI",
+    "website": "https://github.com/Comfy-Org/ComfyUI",
     "description": "节点式图像生成工作流界面。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
