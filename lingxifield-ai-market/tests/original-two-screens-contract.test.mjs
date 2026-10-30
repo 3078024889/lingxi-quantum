@@ -4,10 +4,14 @@ import {readFile} from 'node:fs/promises';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 test('global market and platform detail preserve original two-screen visual hierarchy',async()=>{
  const home=await read('app/market-workbench.tsx');
- for(const field of ['全球 AI / SI 平台排行榜','排行榜','/apps','/models','detailTab','MARKET_UI_EXTRA[language]']){
+ for(const field of ['全球SI AI工具行情平台','排行榜','/apps','/models','detailTab','MARKET_UI_EXTRA[language]']){
   assert.ok(home.includes(field),'Missing original experience '+field);
  }
  const localized=await read('lib/market-ui-extra.ts');
+ const links=await read('app/product-access-links.tsx');
+ assert.ok(home.includes('<ProductAccessLinks platform={target}/>'));
+ assert.ok(links.includes('data-link-kind={kind}'));
+ assert.ok(links.includes('GitHub 源码 ↗'));
  for(const label of ['AI工具库','对比','搜索平台'])assert.ok(localized.includes(label),'Missing localized original experience '+label);
  assert.ok(!home.includes('logoMark">◈'),'Use official original logo asset, never invented mark');
 });
