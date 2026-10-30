@@ -11,9 +11,9 @@ const tasks=[
  {id:'catalog',command:process.execPath,args:['scripts/validate-catalog-v25.mjs']},
  {id:'source_evidence',command:process.execPath,args:['scripts/validate-evidence.mjs']},
  {id:'contract_tests',command:process.execPath,args:['--test','tests/*.test.mjs']},
- {id:'typescript',command:process.platform==='win32'?'npm.cmd':'npm',args:['run','typecheck']}
+ {id:'typescript',command:process.execPath,args:['node_modules/typescript/bin/tsc','--noEmit']}
 ];
-if(process.argv.includes('--build'))tasks.push({id:'next_build',command:process.platform==='win32'?'npm.cmd':'npm',args:['run','build']});
+if(process.argv.includes('--build'))tasks.push({id:'next_build',command:process.execPath,args:['node_modules/next/dist/bin/next','build']});
 const outcomes=[];
 for(const t of tasks){
  const p=spawnSync(t.command,t.args,{cwd:root,encoding:'utf8',timeout:240000,maxBuffer:3*1024*1024,shell:false});
