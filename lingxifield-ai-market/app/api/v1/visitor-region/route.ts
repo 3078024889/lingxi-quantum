@@ -3,7 +3,7 @@ import {headers} from 'next/headers';
 import {ALL_REGIONS} from '../../../../lib/global-region-market';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
-// Coarse Vercel country code only; no precise location, IP tracking, or account required.
+// Coarse Vercel country code only; no GPS, IP tracking, or account required.
 export async function GET(){
  const h=await headers();
  const raw=(h.get('x-vercel-ip-country')||'').toUpperCase();
