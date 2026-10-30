@@ -27,7 +27,7 @@ test('public visitor feedback and private moderation are separate flows',async()
 test('schema binds moderator to verified auth user, blocks anon RPC and audits status-only changes',async()=>{
  const sql=await read('../supabase/migrations/20261030195000_ai_market_feedback_moderation.sql');
  assert.match(sql,/references auth\.users\(id\)/);
- assert.match(sql,/email='business@lingxifield.com' and email_confirmed_at is not null/);
+ assert.match(sql,/lower\(email\)='business@lingxifield.com' and email_confirmed_at is not null/);
  assert.match(sql,/from public,anon/);
  assert.match(sql,/to authenticated/);
  assert.match(sql,/from private\.ai_market_feedback_moderators where user_id=v_uid/);
