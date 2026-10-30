@@ -4,6 +4,7 @@ import { moneyAdministrator } from '@/lib/money/operator-settings';
 import { aiMarketPreview } from '@/lib/ai-market-preview';
 import AiMarketReviewFeedback from '@/components/ai-market/AiMarketReviewFeedback';
 import AiMarketCandidates from '@/components/ai-market/AiMarketCandidates';
+import AiMarketVendorInbox from '@/components/ai-market/AiMarketVendorInbox';
 import AiMarketCloudProgress from '@/components/ai-market/AiMarketCloudProgress';
 import { aiMarketEngineeringStatus } from '@/lib/ai-market-engineering-status';
 import {headers} from 'next/headers';
@@ -85,7 +86,7 @@ export default async function AiMarketReview() {
       <h2 style={{fontSize:21,margin:'0 0 8px'}}>历史建设记录与版本差异</h2>
       <p style={{fontSize:13,color:'#53677f'}}>快照日期：{aiMarketEngineeringStatus.snapshotDate}。{aiMarketEngineeringStatus.note}</p>
       <p style={{fontSize:13}}>代码分支：<code style={{overflowWrap:'anywhere'}}>{aiMarketEngineeringStatus.sourceBranch}</code> · <a href={aiMarketEngineeringStatus.sourceUrl} target="_blank" rel="noopener noreferrer">查看源码与提交</a></p>
-      <p style={{fontSize:13,color:'#a65b10'}}>当前开发分支未完成云端预览部署，也未合并 main。浏览器里的旧版不会自动更新。</p>
+      <p style={{fontSize:13,color:'#a65b10'}}>行情版本在独立预览部署，主站仍需要正式发布审核。</p>
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(270px,1fr))',gap:10}}>
         {aiMarketEngineeringStatus.milestones.map(item=><article key={item.name} style={{padding:15,background:'#f8fbff',border:'1px solid #e2e9f3',borderRadius:10}}>
           <h3 style={{fontSize:15,margin:'0 0 7px'}}>{item.name}</h3>
@@ -94,7 +95,7 @@ export default async function AiMarketReview() {
         </article>)}
       </div>
     </section>
-    {!localReadOnly&&<><AiMarketCandidates /><AiMarketReviewFeedback revision={aiMarketPreview.revision} /></>}
+    {!localReadOnly&&<><AiMarketVendorInbox /><AiMarketCandidates /><AiMarketReviewFeedback revision={aiMarketPreview.revision} /></>}
     <section style={{marginTop:18,padding:20,borderRadius:14,background:'#eef4ff',fontSize:13,color:'#405577',lineHeight:1.8}}>
       <strong>当前审查基线</strong>
       <div>Codex V2.9 预览记录：{aiMarketPreview.reviewedOn} · 修订 {aiMarketPreview.revision.slice(0,12)}</div>
