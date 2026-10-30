@@ -1,0 +1,70 @@
+name: AI Market sourced evidence (bounded cloud collection)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/ai-market-evidence-cloud.yml'
+      - 'lingxifield-ai-market/scripts/collect-github-catalog.mjs'
+      - 'lingxifield-ai-market/scripts/collect-modelsdev-bulk.mjs'
+      - 'lingxifield-ai-market/scripts/collect-hf-models.mjs'
+      - 'lingxifield-ai-market/scripts/collect-hf-spaces.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-market-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      AI_MARKET_SNAPSHOT_DIR: ${{ github.workspace }}/lingxifield-ai-market/reports/cloud-evidence
+      AI_MARKET_MAX_REPOS: '10'
+      HF_MODELS_LIMIT: '100'
+      HF_SPACES_LIMIT: '100'
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Collect public evidence independently
+        id: collect
+        shell: bash
+        run: |
+          mkdir -p "$AI_MARKET_SNAPSHOT_DIR"
+          set +e
+          for source in github-catalog modelsdev-bulk hf-models hf-spaces; do
+            case "$source" in
+              github-catalog) script=collect-github-catalog.mjs ;;
+              modelsdev-bulk) script=collect-modelsdev-bulk.mjs ;;
+              hf-models) script=collect-hf-models.mjs ;;
+              hf-spaces) script=collect-hf-spaces.mjs ;;
+            esac
+            node "scripts/$script" > "$AI_MARKET_SNAPSHOT_DIR/$source.stdout.json" 2> "$AI_MARKET_SNAPSHOT_DIR/$source.stderr.txt"
+            result=$?
+            printf '%s,%s\n' "$source" "$result" >> "$AI_MARKET_SNAPSHOT_DIR/collection-status.csv"
+          done
+          set -e
+          sha256sum "$AI_MARKET_SNAPSHOT_DIR"/*.json > "$AI_MARKET_SNAPSHOT_DIR/source-digests.sha256"
+          cat "$AI_MARKET_SNAPSHOT_DIR/collection-status.csv"
+          if ! grep -q ',0$' "$AI_MARKET_SNAPSHOT_DIR/collection-status.csv"; then
+            echo 'No source succeeded; artifact retains per-source failure evidence'
+            exit 1
+          fi
+      - name: Upload provenance snapshots for human review (never publish directly)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-market-evidence-${{ github.run_id }}
+          path: lingxifield-ai-market/reports/cloud-evidence/
+          if-no-files-found: error
+          retention-days: 7
