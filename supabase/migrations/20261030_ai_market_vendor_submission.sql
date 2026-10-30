@@ -21,6 +21,7 @@ create table if not exists public.ai_market_vendor_submissions (
 );
 create index if not exists ai_market_vendor_submissions_status_created on public.ai_market_vendor_submissions(status,created_at desc);
 create index if not exists ai_market_vendor_submissions_project on public.ai_market_vendor_submissions(project_id,created_at desc);
+create unique index if not exists ai_market_vendor_one_pending_per_contact on public.ai_market_vendor_submissions(project_id,work_email) where status in ('pending_identity_check','pending_review');
 alter table public.ai_market_vendor_submissions enable row level security;
 revoke all on public.ai_market_vendor_submissions from public,anon,authenticated;
 -- RPC and any publishing workflow require verified official identity and separate editorial review.
