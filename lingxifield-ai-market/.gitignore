@@ -5,3 +5,5 @@ node_modules/
 .env*
 !.env.example
 artifacts/
+# Local-only evidence of unused-module audit (never discard other reports)
+reports/obsolete-workspace-audit.json
