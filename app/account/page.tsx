@@ -13,6 +13,7 @@ import AccountProfileCard from "@/components/AccountProfileCard";
 import LxText from "@/components/LxText";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
+import { moneyAdministrator } from "@/lib/money/operator-settings";
 
 export const metadata = { title: "我的账户 | 灵犀场 LINGXIFIELD" };
 
@@ -54,6 +55,7 @@ export default async function AccountPage(
   const supabase = isSupabasePublicConfigured() ? createClient() : null;
   const user = supabase ? await getServerUser(supabase) : null;
 
+  const marketAdmin = user ? Boolean(await moneyAdministrator().catch(()=>null)) : false;
   let paidOrderCount:number|null=null;
   if(user&&supabase){
     const paid=await supabase.from("orders").select("id",{count:"exact",head:true}).eq("user_id",user.id).eq("status","paid");
@@ -74,6 +76,12 @@ export default async function AccountPage(
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {marketAdmin&&<Link href="/account/ai-market-review" className="lx-account-entry rounded-2xl border border-blue-300 bg-blue-50 p-5">
+              <LingxiMiniIcon name="products" size="title"/>
+              <b><LxText zh="全球 AI / SI 行情管理" en="Global AI / SI Market Review" ja="AI / SI 市場管理" ko="AI / SI 시장 관리" fr="Gestion du marché IA / SI" de="KI / SI Marktverwaltung" es="Gestión del mercado IA / SI" pt="Gestão do mercado IA / SI" ar="إدارة سوق AI / SI"/></b>
+              <p className="mt-2 text-sm text-[var(--lx-muted)]"><LxText zh="管理审查、真实数据来源、候选记录和发布验收" en="Review evidence, candidates and release gates" ja="資料、候補、公開審査" ko="출처, 후보 및 출시 검토" fr="Sources, candidats et validation" de="Quellen, Kandidaten und Freigaben" es="Fuentes, candidatos y validación" pt="Fontes, candidatos e validação" ar="مراجعة المصادر والمرشحين والنشر"/></p>
+            </Link>}
+            <Link href="/tools" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="products" size="title"/><b><LxText zh="全部实用工具" en="All practical tools" ja="すべてのツール" ko="모든 도구" fr="Tous les outils" de="Alle Tools" es="Todas las herramientas" pt="Todas as ferramentas" ar="جميع الأدوات"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><LxText zh="现有 PDF、图片、视频、音频与开发者工具直达" en="Existing PDF, image, video, audio and developer tools" ja="PDF、画像、動画、音声、開発ツール" ko="PDF, 이미지, 동영상, 오디오, 개발자 도구" fr="PDF, image, vidéo, audio et développement" de="PDF, Bilder, Video, Audio und Entwicklung" es="PDF, imagen, vídeo, audio y desarrollo" pt="PDF, imagem, vídeo, áudio e programação" ar="أدوات PDF والصور والفيديو والصوت والبرمجة"/></p></Link>
             <Link href="/products" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="products" size="title"/><b>{T.products}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.productsDesc}</p></Link>
             <Link href="/account/orders" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="orders" size="title"/><b>{T.orders}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.paid}: {paidOrderCount ?? "—"}</p></Link>
             <Link href="/sasi/pricing" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="wallet" size="title"/><b>{T.balance}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.balanceDesc}</p></Link>
