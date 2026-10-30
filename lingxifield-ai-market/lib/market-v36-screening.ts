@@ -29,6 +29,13 @@ const videoSource:Readonly<Record<string,string>>={
 // Evidence of video/storyboard/clip generation is not evidence of a full-feature film maker.
 // Unknown does NOT mean that a platform categorically cannot make films.
 export function shortDramaEvidence(id:string){return videoSource[id]||null;}
+const filmFacts:Record<string,Record<Language,string>>={
+ kling:{zh:'Kling 4.0 · 单段最长30秒 · 最多10关键帧',en:'Kling 4.0 · Up to 30s · 10 keyframes',ja:'Kling 4.0 · 最長30秒 · 10キーフレーム',ko:'Kling 4.0 · 최대 30초 · 키프레임 10개',fr:'Kling 4.0 · 30 s max · 10 images clés',de:'Kling 4.0 · Max. 30 s · 10 Keyframes',es:'Kling 4.0 · Hasta 30 s · 10 fotogramas clave',pt:'Kling 4.0 · Até 30 s · 10 quadros-chave',ar:'Kling 4.0 · حتى 30 ثانية · 10 إطارات رئيسية'},
+ runway:{zh:'Gen-4：单段5或10秒 · 按秒消耗积分',en:'Gen-4: 5 or 10s clips · credits per second',ja:'Gen-4：5秒または10秒・秒単位のクレジット',ko:'Gen-4: 5초 또는 10초 · 초당 크레딧',fr:'Gen-4 : clips de 5 ou 10 s · crédits/s',de:'Gen-4: 5 oder 10 s · Credits pro Sekunde',es:'Gen-4: 5 o 10 s · créditos por segundo',pt:'Gen-4: 5 ou 10 s · créditos por segundo',ar:'Gen-4: مقاطع 5 أو 10 ثوانٍ · رصيد لكل ثانية'},
+ luma:{zh:'Ray3 Modify：参考视频修改 · 角色与镜头控制',en:'Ray3 Modify: video edits · character and shot control',ja:'Ray3 Modify：動画編集と人物・撮影制御',ko:'Ray3 Modify: 영상 수정과 캐릭터·샷 제어',fr:'Ray3 Modify : montage et contrôle des plans',de:'Ray3 Modify: Videobearbeitung und Szenenkontrolle',es:'Ray3 Modify: edición y control de escenas',pt:'Ray3 Modify: edição e controle de cenas',ar:'Ray3 Modify: تعديل الفيديو والتحكم بالمشاهد'},
+ jimeng:{zh:'参考首尾帧 · 镜头与人物画面控制',en:'Start/end frames · shot and subject reference',ja:'開始・終了フレームと人物・カメラ制御',ko:'첫·끝 프레임 · 샷·피사체 참조',fr:'Images de début/fin · références de plan',de:'Start-/Endframes · Kamera- und Figurensteuerung',es:'Fotogramas inicial/final · control de escenas',pt:'Quadros inicial/final · controle de cenas',ar:'إطارات البداية والنهاية · التحكم بالمشاهد'}
+};
+export function shortDramaSummary(id:string,language:Language){return filmFacts[id]?.[language]||null;}
 export function hasFreeOption(p:Platform){
  const text=[p.free,p.guide?.free,p.conditions?.find(x=>x.label==='免费额度')?.text].filter(Boolean).join(' ');
  return /(免费|free|credits|试用|no cost|gratuit|grátis)/i.test(text)
