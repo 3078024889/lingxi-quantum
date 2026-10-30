@@ -7,11 +7,11 @@ test('single compact market row has official, desktop, mobile, detail, compariso
  const main=await read('app/market-workbench.tsx');
  const actions=await read('app/market-row-actions.tsx');
  const headings=await read('lib/market-matrix-headings.ts');
- assert.ok(main.includes('className="marketDirectoryTable marketMatrixTable"'));
+ assert.ok(main.includes('className="marketOverviewTable"'));
  assert.ok(main.includes('id="tools-list"'));
  assert.ok(main.includes('<MarketMatrixRow language={language} region={region} key={p.id}'));
  for(const label of ['官网 · 下载','免费额度','实际价格'])assert.ok(headings.includes(label));
- assert.ok(main.includes('MATRIX_HEADINGS[language]'));
+ assert.ok(main.includes('MATRIX_OVERVIEW_HEADINGS[language]'));
  assert.ok(actions.includes("platformLinks(platform.id).links.filter(safePublisherLink)"));
  assert.ok(actions.includes('电脑下载'));
  assert.ok(actions.includes('手机端下载'));
