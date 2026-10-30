@@ -28,6 +28,15 @@ jobs:
       - run: npm ci
       - run: npm run gate
       - run: node scripts/benchmark-search.mjs > search-capacity.json
+      - name: Enforce bounded 100k-index capacity budget (not HTTP load)
+        run: |
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            const r=JSON.parse(readFileSync("search-capacity.json","utf8"));
+            if(r.fixture!=="synthetic-only"||r.rows!==100000)process.exit(2);
+            console.log(JSON.stringify({rssMiB:r.rssMiB,p95Ms:r.p95Ms,buildMs:r.buildMs}));
+            if(r.rssMiB>450||r.p95Ms>450||r.buildMs>30000)process.exit(3);
+          '
       - uses: actions/upload-artifact@v4
         with:
           name: ai-market-build-${{ github.sha }}
