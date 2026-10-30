@@ -16,19 +16,18 @@ test('newcomer guide jumps to real controls without login and works in all nine 
  assert.match(home,/href="\/#market-guide"/);
  assert.doesNotMatch(guide,/login\(|\/auth\/v1\//);
 });
-test('seven-column overview remains readable, screenshot-marked redundant boxes removed',async()=>{
+test('new view removes all three redundant boxes and keeps the capability evidence visible',async()=>{
  const row=await read('app/market-matrix-row.tsx');
+ const home=await read('app/market-workbench.tsx');
  const css=await read('app/globals.css');
- assert.match(row,/marketOverviewDetailsCompact/);
- assert.match(row,/displayRegion=region==='GLOBAL'\?'CN':region/);
- assert.doesNotMatch(row,/<h4>\{headings\[5\]\}/);
- assert.doesNotMatch(row,/<h4>\{headings\[6\]\}/);
- assert.doesNotMatch(row,/<h4>\{headings\[9\]\}/);
- assert.match(row,/rich\?rich\.capabilities\.slice\(0,3\)/);
- assert.match(css,/td:nth-child\(2\)\)\{width:10%\}/);
- assert.match(css,/td:nth-child\(3\)\)\{width:31%\}/);
- assert.match(css,/marketOverviewDetailsCompact\{grid-template-columns:repeat\(2/);
+ assert.ok(row.includes('V36_COL_COUNT=11'));
+ assert.ok(!row.includes('marketOverviewDetailsCompact'));
+ assert.ok(!row.includes('marketOverviewDetailsRow'));
+ assert.ok(!row.includes('setExpanded('));
+ assert.ok(home.includes('marketV36FilterChips'));
+ assert.ok(css.includes('filterable first-view matrix'));
 });
+
 test('comparison keeps the original 2–3 selection workflow and country-specific factual rules',async()=>{
  const home=await read('app/market-workbench.tsx');
  const css=await read('app/globals.css');
