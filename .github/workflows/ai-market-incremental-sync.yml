@@ -1,0 +1,57 @@
+name: AI Market source change sync (staging/private only)
+on:
+  workflow_dispatch:
+  schedule:
+    # Active only after this file reaches the default branch.
+    - cron: '23 2,8,14,20 * * *'
+  pull_request:
+    paths:
+      - 'scripts/ai-market/source-delta*'
+      - 'scripts/ai-market/sync-public-sources*'
+      - 'supabase/migrations/20261030_ai_market_incremental_sources.sql'
+      - '.github/workflows/ai-market-incremental-sync.yml'
+permissions:
+  contents: read
+concurrency:
+  group: ai-market-source-sync-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  incremental-sources:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      AI_MARKET_OUTPUT: reports/ai-market-deltas
+      AI_MARKET_SOURCES: hf-models,hf-spaces,modelsdev,openrouter
+      SUPABASE_URL: ${{ secrets.AI_MARKET_SUPABASE_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.AI_MARKET_SERVICE_ROLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run deterministic source contracts
+        run: node --test scripts/ai-market/source-delta.test.mjs scripts/ai-market/sync-public-sources.test.mjs
+      - name: Determine trusted private sync permissions
+        shell: bash
+        run: |
+          if [ "$GITHUB_REF" = 'refs/heads/main' ] && [ "$GITHUB_EVENT_NAME" != 'pull_request' ]; then
+            if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+              echo 'PRIVATE_DB_SYNC_NOT_CONFIGURED: provide AI_MARKET_SUPABASE_URL and AI_MARKET_SERVICE_ROLE_KEY as GitHub Actions secrets' >&2
+              exit 1
+            fi
+            echo 'AI_MARKET_COMMIT_PRIVATE=1' >> "$GITHUB_ENV"
+          else
+            echo 'AI_MARKET_COMMIT_PRIVATE=0' >> "$GITHUB_ENV"
+          fi
+      - name: Collect independent public AI model sources and commit only to private staging
+        run: node scripts/ai-market/sync-public-sources.mjs
+      - name: Archive source evidence and per-source results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-market-private-deltas-${{ github.run_id }}
+          path: reports/ai-market-deltas/
+          retention-days: 30
+          if-no-files-found: warn
