@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 test('ordinary users see purpose, free uses, price, watermark and official entry',async()=>{
  const src=await read('app/market-workbench.tsx'),card=await read('app/market-decision-cards.tsx');
- for(const x of ['免费能做什么','付费增加','导出水印','参考价格','官网 / 下载','PriceLeaderboards','SponsoredFeatures'])assert.ok(src.includes(x),x);
+ for(const x of ['免费和付费能做什么','价格 · 水印','官网 · 下载 · 认领','PriceLeaderboards','SponsoredFeatures','MarketRowActions'])assert.ok(src.includes(x),x);
  for(const x of ['强大优势','理解与推理','导出水印','怎么付费','哪些地区能用'])assert.ok(card.includes(x),x);
  assert.ok(!src.includes('<HfModelRankings/>'));
 });
