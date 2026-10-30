@@ -71,11 +71,13 @@ DECLARE
  LOOP
   key:=rec->>'upstreamId'; digest:=rec->>'contentSha256'; url:=rec->>'sourceUrl';
   IF key IS NULL OR char_length(key) NOT BETWEEN 1 AND 280
+   OR coalesce(char_length(rec->>'name'),0) NOT BETWEEN 1 AND 250
    OR digest IS NULL OR digest !~ '^[0-9a-f]{64}$'
    OR url IS NULL OR left(url,length(allowed_prefix))<>allowed_prefix
    OR rec->>'source' IS DISTINCT FROM p_source
    OR coalesce(rec->>'reviewStatus','')<>'candidate'
-   OR jsonb_typeof(rec->'facts')<>'object'
+   OR coalesce(rec->>'sourceClass','') NOT IN ('official_repository_api','independent_aggregator','reseller_official_api')
+   OR jsonb_typeof(rec->'facts') IS DISTINCT FROM 'object'
   THEN RAISE EXCEPTION 'INVALID_RECORD'; END IF;
   SELECT i.content_sha256 INTO prior
    FROM public.ai_market_source_items i
