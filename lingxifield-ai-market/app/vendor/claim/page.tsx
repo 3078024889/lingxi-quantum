@@ -36,7 +36,7 @@ function ClaimContent(){
   finally{setBusy(false);}
  }
  return <main className="vendorClaimPage">
-  <a href="/">← 返回全球SI AI工具行情平台</a>
+  <a href="/">← 返回全球SI AI工具行情平台</a>　 <a href="/vendor/pricing">查看厂商服务与收费</a>
   <div className="vendorClaimIntro"><span>厂商免费服务</span><h1>认领你的 AI 产品</h1>
    <p>访客无需注册即可搜索与查看所有 AI 产品。厂商可以免费提交资料，不必先创建账号；经身份核验后，正式管理产品、提交收费订单与查看私有推广数据才需安全登录。</p></div>
   <form onSubmit={submit} className="vendorClaimForm">
