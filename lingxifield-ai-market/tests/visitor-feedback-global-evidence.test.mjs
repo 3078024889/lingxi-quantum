@@ -32,7 +32,7 @@ test('nine-language form is wired to actual homepage and product detail',async()
  assert.match(home,/<VisitorFeedback language=\{language\} productId=\{target\?\.id\}\/>/);
  assert.match(ui,/fetch\('\/api\/v1\/feedback'/);
  assert.match(ui,/type="submit"/);
- assert.match(ui,/setSubmitted\(t\.pending/);
+ assert.match(ui,/result\.published\?t\.published:t\.pending/);
  assert.match(ui,/Array\.isArray\(data\?\.items\)/);
  for(const lang of FEEDBACK_LOCALES)assert.ok(dictionary.includes(' '+lang+':{title:'),lang);
  assert.doesNotMatch(ui,/sampleReview|mockReviews|fakeComments/);
