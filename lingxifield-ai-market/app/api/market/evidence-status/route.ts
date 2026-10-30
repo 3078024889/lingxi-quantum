@@ -5,7 +5,7 @@ import verifiedMetrics from '../../../../data/verified-market-metrics.json';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 type Coverage={candidateCount:number;approvedCandidateCount:number;sourceItemCount:number;reviewNeededCount:number;syncRunCount:number;latestObservedAt:string|null};
-function safeCount(x:unknown){return Number.isSafeInteger(x)&&Number(x)>=0&&Number(x)<=100000000?x:null;}
+function safeCount(x:unknown){return typeof x==='number'&&Number.isSafeInteger(x)&&x>=0&&x<=100000000?x:null;}
 function validate(x:unknown):Coverage|null{
  if(!x||typeof x!=='object'||Array.isArray(x))return null;
  const d=x as Record<string,unknown>;
