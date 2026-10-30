@@ -5,8 +5,8 @@ const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 test('original dashboard retains market metrics and adds real inventory without fake growth',async()=>{
  const page=await read('app/market-workbench.tsx');
  assert.ok(page.includes('marketCards(d.metrics)'));
- assert.ok(page.includes('<MarketCoverageStrip/>'));
- assert.ok(page.indexOf('<MarketCoverageStrip/>')>page.indexOf('metricCards.map('));
+ assert.ok(!page.includes('<HfModelRankings/>'));
+ assert.ok(page.includes('<PriceLeaderboards/>'));
 });
 test('coverage data has actual local file evidence and reports missing counts honestly',async()=>{
  const route=await read('app/api/market/coverage/route.ts');
