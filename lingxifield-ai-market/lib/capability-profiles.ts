@@ -145,6 +145,32 @@ export const CAPABILITY_PROFILES:Readonly<Record<string,CapabilityProfile>>={
   cap('文档检索增强','把获授权的资料接入检索，并辅助回答问题','让内部团队对说明文档进行问答','文档权限、检索质量和敏感资料处理需要审核','https://docs.openwebui.com/'),
   cap('自托管与账户管理','通过容器等方式运行服务并配置用户及模型访问','让多个办公账号接入同一个内网 AI 工作台','服务器维护、备份和身份权限由部署方负责','https://docs.openwebui.com/')
  ],['选择可用模型服务和自托管环境','部署 Open WebUI 并配置账户与连接','在正式共享前验证权限、备份和文档隔离'])
+,
+ automatic1111:profile('可本地运行的 Stable Diffusion 图像创作界面','提供文生图、图生图、局部重绘、扩图与放大处理，是软件界面而非单一智能模型','本地绘画创作者、模型工作流爱好者',[
+  cap('文生图与图生图','使用适配的扩散模型和提示生成图片或修改已有作品','把角色草图转成场景插画','效果与模型及显存、采样配置有关','https://github.com/AUTOMATIC1111/stable-diffusion-webui'),
+  cap('局部重绘与画布扩展','通过遮罩修改局部画面或在原图外补足内容','只修改人物服装而尽量保留背景','遮罩和选用模型影响一致性及边缘质量','https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features'),
+  cap('模型与 LoRA 风格组合','加载用户安装的权重、LoRA 或其他网络来调整画面风格','在同一批海报里复用特定视觉风格','模型版权、插件安全及具体授权需分别确认','https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features')
+ ],['安装项目依赖并核对设备显存','准备具有许可的模型和图片素材','先测单张图片，再批量执行和保存']),
+ langchain:profile('围绕模型构建工具调用与智能体工作流','组织模型、工具、提示和执行流程的开发框架；不是面向消费者的在线聊天品牌','Agent 开发人员、工具集成工程师、企业应用团队',[
+  cap('模型与工具编排','把不同模型调用和外部函数接入一个应用','让客服问答流程在检索后调用订单工具','工具调用权限、错误处理和费用需要独立控制','https://docs.langchain.com/oss/python/langchain/overview'),
+  cap('构建智能体执行流程','配置智能体在多步骤任务中调用工具和处理结果','按用户提问规划搜索、整理和反馈草稿','智能体不是自动正确，需限制执行副作用','https://docs.langchain.com/oss/python/langchain/overview'),
+  cap('应用扩展与持续调试','为模型应用组织状态、调用和可维护执行逻辑','逐步扩展研究助手的检索与结果校验','对结果可靠性仍需单独设置评测与追踪','https://docs.langchain.com/oss/python/langchain/overview')
+ ],['选定业务任务、模型和合法数据源','按文档搭建最小代理与必要工具','做权限、成本、错误及结果准确率测试']),
+ 'openai-python':profile('OpenAI API 官方 Python 开发接口','同步、异步、流式请求及结构化输入输出的开发工具，不是另一款独立聊天模型','Python 应用工程师、AI 平台研发团队',[
+  cap('模型 API 调用','通过 Python 客户端访问 Responses 等接口','编写带业务输入的服务端文本处理功能','需合法地区和 API 凭据；SDK 安装不等于模型免费','https://github.com/openai/openai-python'),
+  cap('异步与流式输出','通过异步客户端及事件流即时处理结果','在网页中逐步显示长文本生成过程','需要控制超时、重试与网络错误','https://github.com/openai/openai-python/blob/main/README.md'),
+  cap('类型与请求管理','使用 SDK 请求字段类型和底层 HTTP 设置维护集成','在应用中加上请求错误诊断及超时处理','实际模型费用和配额与 SDK 是不同层次','https://github.com/openai/openai-python/blob/main/README.md')
+ ],['按照官方说明安装 Python SDK','使用服务端环境变量安全配置 API 凭据','用受控样本检查费用、权限和失败处理']),
+ 'anthropic-sdk-python':profile('Claude API 官方 Python 开发接口','通过 Python 服务端调用 Claude 消息、流式响应及工具函数，不是第二个 Claude 对话网站','Python 开发者、智能体与应用集成工程师',[
+  cap('Claude Messages API','向官方 Claude 模型发送结构化消息并获取回复','在自己的服务端构建文件问答接口','须持有受支持地区的 API 访问权限和费用预算','https://github.com/anthropics/anthropic-sdk-python'),
+  cap('流式响应输出','使用 SDK 的事件流接口逐步处理响应内容','边生成边向浏览器显示分析文本','连接中断和消息重试应单独处理','https://github.com/anthropics/anthropic-sdk-python/blob/main/helpers.md'),
+  cap('Python 工具调用辅助','按支持功能将应用函数与模型的工具选择衔接','根据产品 ID 查询内部资料并返回结果','程序拥有的真实权限必须由开发者验证','https://github.com/anthropics/anthropic-sdk-python')
+ ],['确认 Claude API 国家和账户权限','安装 SDK、配置仅服务端可见的密钥','先试单一请求再验证工具执行及用量']),
+ jimeng:profile('中文创作提示、首尾帧视频及图片改造','即梦将文生/图生视频、镜头控制与图片参考编辑整合到中文创作流程','短剧制作、海报与视频创作者、中文内容团队',[
+  cap('文字与图片生成视频','描述场景或提供首帧生成短视频片段','用中文写分镜并制作缓慢推进镜头','视频长度、积分和下载权限随模型和套餐变化','https://jimeng.jianying.com/'),
+  cap('首尾帧与镜头控制','给出开头结尾画面约束镜头运动和速度变化','让室内场景从首帧自然过渡到指定结尾','动作连续与人物一致性仍需逐条检验','https://jimeng.jianying.com/'),
+  cap('参考图保留与局部风格调整','在图生图中参考主体特征，进行背景或风格改造','把同一人物转成不同场景的宣传海报','保留能力依模型、参考素材及使用额度变化','https://jimeng.jianying.com/')
+ ],['从即梦官网选择图片或视频入口','输入中文场景、上传有权使用的参考图','核对时长、积分、水印与保存条件'])
 
 };
 export function capabilityProfile(id:string):CapabilityProfile|undefined{return CAPABILITY_PROFILES[id];}
