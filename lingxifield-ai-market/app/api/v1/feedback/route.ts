@@ -62,7 +62,8 @@ export async function POST(request:Request){
   return NextResponse.json({error:'INVALID_PRODUCT'},{status:400,headers:privateHeaders});
  // Pseudonymize network fingerprint; never store raw IP or expose email.
  const ip=request.headers.get('x-vercel-forwarded-for')||request.headers.get('x-forwarded-for')||'unknown';
- const visitorHash=createHmac('sha256',secret).update(ip.split(',')[0].trim()).digest('hex');
+ // Rotate the pseudonymous fingerprint daily; no raw IP is stored in the database.
+ const visitorHash=createHmac('sha256',secret).update(new Date().toISOString().slice(0,10)+'|'+ip.split(',')[0].trim()).digest('hex');
  const nonce=randomBytes(16).toString('hex');
  const issuedAt=Math.floor(Date.now()/1000);
  const signature=createHmac('sha256',secret).update([nonce,issuedAt,visitorHash].join('.')).digest('hex');
