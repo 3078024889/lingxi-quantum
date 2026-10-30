@@ -12,6 +12,6 @@ test('no site traffic or GEO is misrepresented from GitHub stars',()=>{
 });
 test('external requests are bounded and failures are retained',()=>{
  assert.match(src,/Math\.min\(20/);assert.match(src,/AbortSignal\.timeout\(12000\)/);
- assert.match(src,/response\.status===403\|\|response\.status===429/);
+ assert.match(src,/response\.status===429\|\|response\.status===403&&remaining==='0'/);
  assert.match(src,/REPOSITORY_IDENTITY_MISMATCH/);
 });
