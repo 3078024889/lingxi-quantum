@@ -1,0 +1,63 @@
+/* Evidence-first AI market: desktop trading-terminal density without losing readability. */
+.matrixShell{position:relative;border-top:1px solid #e9eef6}
+.matrixIntro{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:11px 16px;background:#f9fbff;color:#375778;border-top:1px solid #edf3fb}
+.matrixIntro>span{display:inline-flex;gap:7px;align-items:center;font-weight:650}
+.matrixIntro small{color:#7386a1;line-height:1.5}
+.marketMatrixScroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-gutter:stable;max-width:100%;scrollbar-color:#94b6e6 #eef4fb}
+.marketMatrixScroll:focus-visible{outline:3px solid #387be5;outline-offset:-3px}
+.marketMatrixTable{border-collapse:separate;border-spacing:0;min-width:2670px;width:100%;table-layout:fixed;font-size:12px;color:#213954}
+.marketMatrixTable th{position:sticky;top:0;z-index:3;padding:13px 11px;background:#ecf3fd;color:#36577e;font-size:11px;letter-spacing:.01em;border-bottom:1px solid #dae5f6;vertical-align:middle}
+.marketMatrixTable td{padding:13px 11px;border-bottom:1px solid #e8edf5;vertical-align:top;white-space:normal;overflow-wrap:anywhere;line-height:1.55;min-height:86px}
+.marketMatrixTable tr:nth-child(even){background:#f9fbfe}
+.marketMatrixTable tbody tr:hover{background:#f0f6ff}
+.marketMatrixTable th:nth-child(1),.marketMatrixTable td:nth-child(1){width:52px;min-width:52px;max-width:52px}
+.marketMatrixTable th:nth-child(2),.marketMatrixTable td:nth-child(2){width:192px;min-width:192px;max-width:192px}
+.marketMatrixTable th:nth-child(3),.marketMatrixTable td:nth-child(3){width:190px}
+.marketMatrixTable th:nth-child(4),.marketMatrixTable td:nth-child(4){width:175px}
+.marketMatrixTable th:nth-child(5),.marketMatrixTable td:nth-child(5){width:150px}
+.marketMatrixTable th:nth-child(6),.marketMatrixTable td:nth-child(6){width:145px}
+.marketMatrixTable th:nth-child(7),.marketMatrixTable td:nth-child(7){width:150px}
+.marketMatrixTable th:nth-child(8),.marketMatrixTable td:nth-child(8){width:160px}
+.marketMatrixTable th:nth-child(9),.marketMatrixTable td:nth-child(9){width:165px}
+.marketMatrixTable th:nth-child(10),.marketMatrixTable td:nth-child(10){width:180px}
+.marketMatrixTable th:nth-child(11),.marketMatrixTable td:nth-child(11){width:155px}
+.marketMatrixTable th:nth-child(12),.marketMatrixTable td:nth-child(12){width:155px}
+.marketMatrixTable th:nth-child(13),.marketMatrixTable td:nth-child(13){width:180px}
+.marketMatrixTable th:nth-child(14),.marketMatrixTable td:nth-child(14){width:150px}
+.marketMatrixTable th:nth-child(15),.marketMatrixTable td:nth-child(15){width:150px}
+.marketMatrixTable th:nth-child(16),.marketMatrixTable td:nth-child(16){width:138px}
+.marketMatrixTable .matrixOrdinal{position:sticky;left:0;z-index:2;text-align:center;padding-left:5px;padding-right:5px;background:#fff;border-right:1px solid #e4ecf9}
+.marketMatrixTable .matrixIdentity{position:sticky;left:52px;z-index:2;background:#fff;box-shadow:5px 0 14px -12px #22395c8a;border-right:1px solid #e4ecf9}
+.marketMatrixTable tr:nth-child(even) .matrixOrdinal,.marketMatrixTable tr:nth-child(even) .matrixIdentity{background:#f9fbfe}
+.marketMatrixTable tbody tr:hover .matrixOrdinal,.marketMatrixTable tbody tr:hover .matrixIdentity{background:#f0f6ff}
+.marketMatrixTable thead .matrixOrdinal,.marketMatrixTable thead .matrixIdentity{background:#eaf2fd;z-index:5}
+.marketMatrixTable[dir=rtl] .matrixOrdinal{left:auto;right:0}
+.marketMatrixTable[dir=rtl] .matrixIdentity{left:auto;right:52px}
+.matrixShell[dir=rtl] .marketMatrixTable .matrixOrdinal{left:auto;right:0}
+.matrixShell[dir=rtl] .marketMatrixTable .matrixIdentity{left:auto;right:52px}
+.matrixNumber{font-variant-numeric:tabular-nums;font-size:12px;color:#50739e}
+.matrixProduct{display:flex;gap:8px;align-items:center;padding:0;border:0;background:none;text-align:start;color:#102f55;max-width:100%}
+.matrixProduct .brandIcon{flex:0 0 32px;width:32px;height:32px;font-size:18px}
+.matrixProduct strong{font-size:13px;display:block;overflow-wrap:anywhere}
+.matrixProduct small{display:block;margin-top:3px;color:#7690ae;font-size:11px}
+.matrixCategory{display:inline-block;margin:8px 0 0 40px;padding:2px 6px;background:#eaf2ff;border-radius:4px;color:#3b69a1;font-size:10px}
+.matrixEmphasis{display:block;font-size:12px;color:#135093;line-height:1.5}
+.matrixLine{display:block;font-size:11px;line-height:1.5;margin-top:4px}
+.matrixMuted{color:#788ba5}
+.matrixUnknown{font-size:11px;color:#8795a9}
+.matrixEvidence{display:inline-block;margin-top:7px;font-size:10px;color:#2168c4;text-decoration:none;border-bottom:1px dashed #b8cbea}
+.matrixEvidence:hover{text-decoration:underline}
+.clamp3{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.matrixOfficial{display:inline-flex;align-items:center;gap:4px;text-decoration:none;color:#125fdd;font-weight:700;line-height:1.4}
+.matrixOfficial:hover{text-decoration:underline}
+.matrixActions{display:grid;gap:5px}
+.matrixActions button{display:inline-flex;align-items:center;justify-content:center;gap:5px;width:100%;min-height:29px;padding:5px 7px;border:1px solid #c9d9f6;border-radius:5px;background:#fff;color:#155db5;font-size:11px}
+.matrixActions button:first-child{color:#fff;background:#1765df;border-color:#1765df}
+.matrixActions button.picked{background:#e3efff;color:#104b9d;border-color:#94b9f5}
+.visuallyHidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.beginnerGuide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 15px 6px}
+.beginnerGuide article{border:1px solid #dce9fa;border-radius:9px;padding:13px;background:linear-gradient(145deg,#f6faff,#fff)}
+.beginnerGuide b{display:block;color:#1a498b;margin-bottom:5px}
+.beginnerGuide p{font-size:12px;color:#647b98;margin:0;line-height:1.55}
+@media(max-width:770px){.matrixIntro{padding:10px}.marketMatrixTable{min-width:2540px}.marketMatrixTable td{padding:10px 8px}.beginnerGuide{grid-template-columns:1fr;margin:10px}.marketMatrixTable th{padding:11px 8px}.matrixIntro small{flex-basis:100%}}
+@media(prefers-reduced-motion:no-preference){.matrixActions button,.matrixOfficial{transition:background .15s,color .15s}}
