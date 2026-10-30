@@ -395,3 +395,58 @@
 .feedbackAdminItem>p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9;font-size:13px}
 .feedbackAdminActions{display:flex;flex-wrap:wrap;gap:10px}
 .feedbackAdminPage :is(button,input,textarea):focus-visible{outline:2px solid #4e9af4;outline-offset:2px}
+
+
+/* Accessibility convergence: minimum readable 14px, clear text hierarchy.
+   Keep model names, brand symbols, headings and icon geometry intact. */
+body{font-size:16px;line-height:1.6}
+.app{font-size:16px;line-height:1.6}
+.app :is(small,a,button,input,textarea,select,option,label,th,td,time,summary,li){font-size:14px!important;line-height:1.6}
+.app span{font-size:14px!important;line-height:1.6}
+.app p{font-size:16px!important;line-height:1.7}
+.app h1{font-size:clamp(24px,2.3vw,32px);font-weight:750}
+.app h2{font-size:clamp(19px,1.5vw,23px);font-weight:750}
+.app h3{font-size:17px;font-weight:750}
+.app :is(.metric span,.metric small,.rankHead span,.seoGeoCompare p,.seoGeoNote,.seoGeoFooter,.seoGeoFooter span,.beginnerGuide p,.beginnerGuide b,.source p,.source small,.subtle,.notice,.capabilityKicker,.capabilityHeading p,.capabilityAudience,.capabilityAudience small,.capabilityCount,.capabilityOutcome,.capabilityExample,.capabilityBoundary,.capabilitySource,.capabilityBottom li,.capabilityCoverage small,.globalRegionFacts li,.globalRegionFacts small,.visitorFeedbackPrivacy,.visitorFeedbackPublished small,.visitorFeedbackEmpty,.visitorFeedbackEntry time,.feedbackAdminMeta,.feedbackAdminPage small){font-size:14px!important;line-height:1.65}
+.app .matrixScroll .marketMatrixTable{min-width:3280px;font-size:14px!important}
+.app .matrixScroll .marketMatrixTable :is(th,td){font-size:14px!important;line-height:1.65;padding:14px 12px;vertical-align:top;white-space:normal;overflow-wrap:anywhere}
+.app .matrixScroll .marketMatrixTable td :is(strong,small,span,a,button,p,.matrixTiny,.matrixSource,.matrixCaveat){font-size:14px!important;line-height:1.65;max-width:none}
+.app .matrixScroll .marketMatrixTable td.directoryIdentity .platformName strong{font-size:16px!important}
+.app .matrixScroll .marketMatrixTable td.directoryIdentity .brandIcon{font-size:21px!important}
+.app .matrixScroll .marketMatrixTable :is(th:nth-child(2),td:nth-child(2)){width:155px!important;min-width:155px!important;max-width:155px!important}
+.app .matrixScroll .marketMatrixTable :is(th:nth-child(8),td:nth-child(8)){width:245px!important;min-width:245px!important;max-width:245px!important}
+.app .matrixScroll .marketMatrixTable :is(th:nth-child(9),td:nth-child(9)){width:225px!important;min-width:225px!important}
+.app .matrixScroll .marketMatrixTable :is(th:nth-child(16),td:nth-child(16)){width:205px!important;min-width:205px!important}
+.app .matrixScroll .marketMatrixTable td:nth-child(8){overflow:visible;word-break:break-word}
+.app .matrixScroll .marketMatrixTable :is(td.directoryIdentity,th:nth-child(2)){left:50px}
+.app .matrixScroll .marketMatrixTable .marketRowActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.app .matrixScroll .marketMatrixTable .marketRowActions :is(button,a){min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:center;padding:9px 5px;font-size:14px!important;line-height:1.4}
+.app .matrixScroll .marketMatrixTable .marketRowActions .rowPrimary{grid-column:1 / -1}
+.app .decisionSurface .choiceFacts :is(h3,p),.app .capabilityShowcase :is(p,small,a),.app .visitorFeedback :is(p,small,span,time,input,textarea,select,label,button,a),.app .vendorClaimInline :is(a,span){font-size:16px!important}
+.app :is(a,button,input,textarea,select):focus-visible{outline:3px solid #2b77e9;outline-offset:2px}
+.app button,.app select{min-height:36px}
+.app .matrixScroll{overflow-x:auto;scrollbar-gutter:stable;scrollbar-width:auto}
+.app .matrixScroll .marketMatrixTable .matrixExpansion td{overflow:visible}
+.app .compareDock{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:10px auto;padding:13px 18px;max-width:1600px;background:#eaf3ff;border:1px solid #bed6fa;border-radius:10px;color:#17466e;position:relative;z-index:8}
+.app .compareDock strong{font-size:16px}
+.app .compareDockItems{display:flex;gap:7px;flex-wrap:wrap;flex:1}
+.app .compareDockItems button{background:white;border:1px solid #b8d4f3;border-radius:8px;color:#1258ad;padding:7px 10px}
+.app .compareDockStart{border:0;background:#125ed2;color:white;border-radius:8px;padding:9px 15px;font-weight:700}
+.app .marketCurrencySelect{display:flex;align-items:center;gap:7px;white-space:nowrap;font-weight:700;color:#255581}
+.app .marketCurrencySelect select{border:1px solid #bdd2eb;border-radius:8px;background:white;color:#193e68;padding:8px 10px}
+.app .marketVendorPlans{padding:22px;margin:18px 0}
+.app .marketPlansHeader{display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.app .marketPlansHeader h2{margin:0 0 7px}
+.app .marketPlansHeader p{margin:0;color:#627c9b}
+.app .marketPlanCards{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:12px;margin-top:16px}
+.app .marketPlanCards article{min-width:0;background:#f7faff;border:1px solid #d9e7f6;border-radius:11px;padding:17px}
+.app .marketPlanCards h3{margin:0 0 13px}
+.app .marketPlanValue{display:flex;align-items:baseline;gap:5px;font-size:27px;font-weight:750;color:#134a94}
+.app .marketPlanValue span{font-size:14px!important;font-weight:500;color:#5d7592}
+.app .marketPlanCards p{font-size:14px!important;color:#53708f;line-height:1.7;margin:10px 0 0}
+@media(max-width:900px){
+ .app .matrixScroll .marketMatrixTable{min-width:3280px}
+ .app .marketVendorPlans{padding:16px}
+ .app .compareDock{margin:8px;padding:12px}
+}
+[dir="rtl"] .app .matrixScroll .marketMatrixTable :is(td.directoryIdentity,th:nth-child(2)){left:auto;right:50px}
