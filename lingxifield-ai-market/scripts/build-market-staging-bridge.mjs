@@ -57,13 +57,16 @@ const summary={schema:'lingxifield_candidate_staging_bridge_v1',generatedAt:new 
 await mkdir(out,{recursive:true});
 const atomic=async(name,data)=>{const path=resolve(out,name);await writeFile(path+'.tmp',data);await rename(path+'.tmp',path)};
 await atomic('candidates-staging.jsonl',records.map(x=>stable(x)).join('\n')+'\n');
+const priorPreview=await read(resolve(out,'main-candidate-import-preview.json'),{records:[]});
+const previewByKey=new Map((priorPreview.records||[]).map(x=>[x.candidate_key,x]));
 const preview=records.map(x=>{
- const old=priorByKey.get(x.candidate_key);
+ const old=previewByKey.get(x.candidate_key);
  return {candidate_key:x.candidate_key,source_url:x.source_url,kind:x.kind,
  display_name:x.display_name,publisher:x.publisher,verification_status:'candidate',
  first_seen_at:old?.first_seen_at||summary.generatedAt,last_seen_at:summary.generatedAt};
 });
 await atomic('main-candidate-import-preview.jsonl',preview.map(x=>stable(x)).join('\n')+'\n');
+await atomic('main-candidate-import-preview.json',JSON.stringify({schema:'ai_market_candidates_review_only_v1',records:preview},null,2)+'\n');
 
 await atomic('change-report.json',JSON.stringify({summary,changes},null,2)+'\n');
 await atomic('previous-staging.json',JSON.stringify({schema:summary.schema,records},null,2)+'\n');
