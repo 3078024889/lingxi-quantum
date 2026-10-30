@@ -11,6 +11,8 @@ export default function VisitorFeedback({language,productId}:{language:Language;
  const [body,setBody]=useState(''),[nickname,setNickname]=useState('');
  const [submitted,setSubmitted]=useState(''),[error,setError]=useState(''),[sending,setSending]=useState(false);
  const [items,setItems]=useState<PublicFeedback[]>([]);
+ const [contacts,setContacts]=useState<string[]>([knownEmail]);
+ useEffect(()=>{fetch('/api/v1/contact-addresses').then(r=>r.ok?r.json():null).then(data=>{if(Array.isArray(data?.addresses))setContacts(data.addresses.slice(0,3));}).catch(()=>{});},[]);
  const [loading,setLoading]=useState(true);
  useEffect(()=>{const ctrl=new AbortController();setLoading(true);const q=productId?'?product='+encodeURIComponent(productId):'';
   fetch('/api/v1/feedback'+q,{signal:ctrl.signal,cache:'no-store'}).then(r=>r.ok?r.json():null)
@@ -49,7 +51,7 @@ export default function VisitorFeedback({language,productId}:{language:Language;
    {error&&<p role="alert" className="visitorFeedbackError">{error}</p>}
    {submitted&&<p role="status" className="visitorFeedbackSuccess">{submitted}</p>}
    <div className="visitorFeedbackActions"><button disabled={sending} type="submit"><Send size={15}/>{sending?'…':t.send}</button>
-    <a href={'mailto:'+knownEmail+'?subject='+encodeURIComponent('LINGXIFIELD AI Market feedback')}>{t.direct}: {knownEmail}</a></div>
+    <div className="visitorFeedbackContacts">{contacts.map(email=><a key={email} href={'mailto:'+email+'?subject='+encodeURIComponent('LINGXIFIELD AI Market feedback')}>{t.direct}: {email}</a>)}</div></div>
   </form><div className="visitorFeedbackPublished"><h3>{t.recent}</h3>
    {items.length?items.map(x=><article key={x.id} className="visitorFeedbackEntry">
     <div><strong>{x.nickname}</strong><span>{t.categories[x.category]}</span>
