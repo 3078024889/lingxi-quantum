@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.ai_market_sponsored_disclosure(
 CREATE INDEX IF NOT EXISTS ai_market_sponsored_active_slots ON public.ai_market_sponsored_disclosure(placement,status,starts_at,ends_at);
 ALTER TABLE public.ai_market_sponsored_disclosure ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.ai_market_sponsored_disclosure FROM PUBLIC,anon,authenticated;
-GRANT SELECT ON public.ai_market_sponsored_disclosure TO anon,authenticated;
+GRANT SELECT(project_id,label,target_url,placement,ends_at) ON public.ai_market_sponsored_disclosure TO anon,authenticated;
 DROP POLICY IF EXISTS ai_market_sponsored_public_active ON public.ai_market_sponsored_disclosure;
 CREATE POLICY ai_market_sponsored_public_active ON public.ai_market_sponsored_disclosure FOR SELECT
  TO anon,authenticated
