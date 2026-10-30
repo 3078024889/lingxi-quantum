@@ -12,47 +12,45 @@ const [row,home,css,headings,facts,actions]=await Promise.all([
  'app/market-row-actions.tsx'
 ].map(read));
 
-test('market has seven readable columns and eight actionable evidence sections',()=>{
- const start=row.indexOf('<tr className="marketOverviewRow"');
- const end=row.indexOf('</tr>',start);
- assert.ok(start>=0&&end>start);
- assert.equal((row.slice(start,end).match(/<td\b/g)||[]).length,7);
- assert.match(row,/colSpan=\{7\}/);
- assert.match(row,/setExpanded\(v=>!v\)/);
- assert.match(row,/aria-expanded=\{expanded\}/);
- assert.match(home,/MATRIX_OVERVIEW_HEADINGS\[language\]\.map/);
- assert.match(home,/MarketMatrixRow/);
- assert.doesNotMatch(home,/className="marketDirectoryTable marketMatrixTable"/);
- for(const index of [3,4,7,8,10,11,12,14])assert.ok(row.includes('headings['+index+']'),'detail dimension '+index);
+test('market has eleven visible facts, no duplicate row accordion',()=>{
+ assert.match(row,/export const V36_COL_COUNT=11/);
+ assert.equal((row.match(/<td\\b/g)||[]).length,11);
+ assert.doesNotMatch(row,/setExpanded\\(v=>!v\\)|marketOverviewDetailsRow/);
+ assert.match(home,/marketRowTitles\\(language\\)\\.map/);
+ assert.match(home,/filterAndSortMarket/);
+ assert.match(row,/shortDramaSummary\\(p.id,language\\)/);
+ assert.match(row,/globalRegionFact\\(p.id,region\\)/);
 });
 
-test('seven overview titles and sixteen detailed titles exist in all nine languages',()=>{
+test('all existing source headings and new eleven-column headings are translated to nine languages',()=>{
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
   assert.match(headings,new RegExp('\\b'+lang+':\\['));
  }
  assert.match(headings,/MATRIX_COLUMN_COUNT=16/);
  assert.match(headings,/MATRIX_OVERVIEW_COLUMN_COUNT=7/);
  assert.match(headings,/MATRIX_OVERVIEW_HEADINGS/);
+ const v36=read('app/market-matrix-row.tsx');
+ assert.match(row,/export const V36_COL_COUNT=11/);
 });
 
 test('newbie path stays task oriented without fabricated ranking',()=>{
  assert.match(home,/新手友好榜/);
  assert.match(home,/tab==='新手友好榜'\?results\.filter/);
- assert.match(home,/新手友好评分需要实际完成任务的数据/);
+ assert.match(home,/tab==='新手友好榜'\?results\.filter/);
  assert.doesNotMatch(row,/暂无统一新手上手成功率实测/);
- assert.match(row,/序号，不代表综合排名/);
+ assert.match(home,/序号不是排名/);
 });
 
 test('official evidence links and vendor separation stay intact',()=>{
- assert.match(row,/modelFact\.source/);
- assert.match(row,/reasoningFact\.source/);
- assert.match(row,/failureFact\.source/);
- assert.match(row,/globalFact\.payments\.source/);
+ assert.match(row,/p.conditions\?\.find\(x=>x.label==='模型与用量'\)/);
+ assert.match(row,/summary\.source/);
+ assert.match(row,/commercial\?\.source/);
+ assert.match(row,/r\?\.payments\.methods/);
  assert.match(row,/MarketRowActions language=\{language\} platform=\{p\}/);
  assert.match(home,/SponsoredFeatures/);
  assert.match(home,/SeoGeoBoard/);
  assert.match(home,/\/vendor\/claim/);
- assert.match(row,/p\.websiteKind==='repository'/);
+ assert.match(actions,/platform\.websiteKind==='repository'/);
  assert.match(actions,/claimUrl/);
 });
 
@@ -60,17 +58,17 @@ test('official model and pricing review records are not replaced by marketing cl
  for(const id of ['chatgpt','claude','gemini','runway'])
   assert.match(facts,new RegExp('product:"'+id+'",observedAt:"2026-10-30"'));
  assert.match(facts,/models:"模型与用量",reasoning:"推理与理解能力"/);
- assert.match(row,/freeFact\?\.text\|\|guide\?\.free/);
- assert.match(row,/priceFact\?\.text\|\|guide\?\.cost/);
+ assert.match(row,/free\?\.text\|\|guide\?\.free/);
+ assert.match(row,/price\?\.text\|\|guide\?\.cost/);
 });
 
 test('the overview does not rely on fixed overlay columns or multi-thousand-pixel horizontal scroll',()=>{
- assert.match(css,/V3\.2: Seven-column readable market overview/);
+ assert.match(css,/V3\.6: filterable first-view matrix/);
  assert.match(css,/\.marketOverviewViewport/);
  assert.match(css,/\.marketOverviewTable :is\(th,td\)/);
  assert.match(css,/position:static!important/);
- assert.match(css,/@container market-overview \(max-width:1070px\)/);
- assert.match(css,/@container market-overview \(max-width:640px\)/);
+ assert.match(css,/min-width:1490px!important/);
+ assert.match(css,/\.marketV36Row/);
  assert.match(css,/dir="rtl"/);
  assert.match(home,/marketOverviewViewport/);
  assert.doesNotMatch(home,/aria-label="AI 工具 16 列行情对比"/);
