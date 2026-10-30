@@ -9,6 +9,7 @@ import {toolCategoryLabel,toolHubCopy,toolCardLine}from"@/lib/tools/hub-copy-v14
 import {TOOL_DISPLAY_CATEGORIES,type ToolDisplayCategory}from"@/lib/tools/display-taxonomy";
 import {searchToolItems}from"@/lib/tools/search-intents-v44r2.mjs";
 import RecentTools from"@/components/tools/RecentTools";
+import LxText from "@/components/LxText";
 import {isAnonymousLocalTool,localFreeCopy} from '@/lib/tools/local-free-tools';
 
 export default function ToolsHubV11(){
@@ -34,6 +35,12 @@ export default function ToolsHubV11(){
 
  return <main className="lx11-page lx11-tools-page lx-tools-v124"><div className="lx11-wrap">
   <section className="lx11-tools-hero"><div><span>{toolHubCopy(lang,"kicker")}</span><h1>{toolHubCopy(lang,"title")}</h1><p>{toolHubCopy(lang,"subtitle")}</p></div></section>
+  <div style={{display:"flex",flexWrap:"wrap",gap:10,alignItems:"center",margin:"8px 0 18px"}}>
+    <Link href="/ai-market" className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700">
+      <LxText zh="全球 AI / SI 工具行情与排名 →" en="Global AI / SI market rankings →" ja="世界の AI / SI ツールランキング →" ko="글로벌 AI / SI 도구 순위 →" fr="Classement mondial des outils IA / SI →" de="Globale KI / SI Tool-Rankings →" es="Ranking global de herramientas IA / SI →" pt="Ranking mundial de ferramentas IA / SI →" ar="ترتيب أدوات AI / SI العالمية ←"/>
+    </Link>
+    <span style={{fontSize:12,color:"#64748b"}}><LxText zh="已有工具继续在这里使用；行情页用于比较全球 AI 产品。" en="Keep using existing tools here; compare external AI products in the market." ja="既存ツールはここで利用し、AI 製品は市場で比較できます。" ko="기존 도구는 여기서, 외부 AI 제품 비교는 마켓에서 이용하세요." fr="Utilisez vos outils ici, comparez les produits IA dans le marché." de="Tools hier nutzen und KI-Produkte im Markt vergleichen." es="Usa tus herramientas aquí y compara productos IA en el mercado." pt="Use suas ferramentas aqui e compare produtos IA no mercado." ar="استخدم أدواتك هنا وقارن منتجات AI في السوق."/></span>
+  </div>
   <section className="lx11-tool-searchbar lx-tools-v124-search">
    <div className="lx11-tool-searchbox"><span>⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")}/></div>
    <div className="lx-tools-v124-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>

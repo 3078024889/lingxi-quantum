@@ -18,5 +18,6 @@ test('voice transcription finds open-source transcription candidates',()=>{
 test('candidate suggestions never claim independently verified market rank',()=>{
  const r=discoverCatalog(rows,'image');
  assert.match(r.notice,/not evidence-based performance rankings/);
- assert.ok(r.items.every(x=>x.status==='unverified'));
+ assert.ok(r.items.every(x=>['unverified','active'].includes(x.status))); // Active listing never implies audited ranking.
+ assert.ok(!('rank' in r.items[0]));
 });

@@ -3,7 +3,7 @@ import {useEffect,useState} from 'react';
 type Offer={id:string;providerId:string;providerName:string;inputUsdPerMillion:number|null;outputUsdPerMillion:number|null;contextLimit:number|null;sourceUrl:string};
 type Group={modelId:string;name:string;providerCount:number;lowestObservedInputUsdPerMillion:number|null;offers:Offer[]};
 type Data={total:number;items:Group[];nextCursor:number|null;sourceCollectedAt?:string;status?:string};
-const money=(value:number|null)=>value===null?'待核验':'$'+value.toLocaleString('en-US',{maximumFractionDigits:5});
+const money=(value:number|null)=>value===null?'—':'$'+value.toLocaleString('en-US',{maximumFractionDigits:5});
 export default function ModelsPage(){
  const [q,setQ]=useState(''),[term,setTerm]=useState(''),[cursor,setCursor]=useState(0);
  const [order,setOrder]=useState<'providers'|'price'>('providers');
@@ -17,7 +17,7 @@ export default function ModelsPage(){
  return()=>ctrl.abort()},[term,cursor,order]);
  return <main style={{maxWidth:1100,margin:'22px auto',padding:'0 18px 36px'}}>
  <a href="/" style={{fontSize:13}}>返回 AI 平台首页</a>
- <h1 style={{margin:'14px 0 6px'}}>全球 AI 模型与价格比较</h1>
+ <h1 style={{margin:'14px 0 6px'}}>全球SI AI模型行情与价格对比</h1>
  <p style={{color:'#64748b',fontSize:13}}>一个模型集中展示，展开后比较不同服务商的报价。数据来自 models.dev 第三方聚合，尚未经各厂商独立核验。</p>
  <form onSubmit={e=>{e.preventDefault();setCursor(0);setExpanded([]);setTerm(q)}} style={{display:'flex',gap:8,margin:'20px 0'}}>
  <input aria-label="搜索模型" value={q} onChange={e=>setQ(e.target.value)} placeholder="搜索 GPT、Claude、Gemini、Qwen…" style={{flex:1,minWidth:0,padding:12,border:'1px solid #cbd5e1',borderRadius:8}}/>
@@ -41,7 +41,7 @@ export default function ModelsPage(){
  <span style={{fontSize:12}}>第 {Math.floor(cursor/20)+1} 页</span>
  <button disabled={busy||data?.nextCursor==null} onClick={()=>{setCursor(data!.nextCursor!);setExpanded([])}}>下一页</button>
  </div>
- <p style={{fontSize:12,color:'#64748b'}}>采集时间：{data?.sourceCollectedAt?.slice(0,10)||'未知'}。最低价仅根据已取得的输入价格计算，不包含输出价格或其他费用；模型标识一致不保证服务质量一致。</p>
+ <p style={{fontSize:12,color:'#64748b'}}>采集时间：{data?.sourceCollectedAt?.slice(0,10)||'未知'}。最低价仅根据已取得的输入价格计算，不包含输出价格或其他费用；模型名称一致不代表服务质量或速度相同。</p>
  <a href="https://models.dev/" target="_blank" rel="noopener noreferrer">核对 models.dev 来源</a>
  </main>;
 }

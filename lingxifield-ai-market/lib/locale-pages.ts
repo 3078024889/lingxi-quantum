@@ -10,5 +10,5 @@ export const localeCopy:Record<Locale,Localized>={
  es:{headline:'Panorama global del mercado de IA',subtitle:'Encuentra herramientas de IA, compara funciones y fuentes.',home:'Inicio',search:'Catálogo',empty:'Aún no se han importado fichas verificadas.',source:'Fuentes y verificación',company:'Empresa',pricing:'Precios'},
  pt:{headline:'Panorama global de ferramentas de IA',subtitle:'Encontre ferramentas de IA e compare recursos e fontes.',home:'Início',search:'Catálogo',empty:'Nenhum registro verificado foi importado.',source:'Fontes e verificação',company:'Empresa',pricing:'Preços'},
  ar:{headline:'دليل سوق أدوات الذكاء الاصطناعي العالمي',subtitle:'اكتشف أدوات الذكاء الاصطناعي وقارن القدرات والمصادر.',home:'الرئيسية',search:'الدليل',empty:'لم يتم استيراد سجلات موثقة بعد.',source:'المصادر والتحقق',company:'الشركة',pricing:'الأسعار'},
- zh:{headline:'全球 AI 产品行情与工具排行',subtitle:'搜全球 AI 工具，比较功能、价格、公司背景与可核验数据。',home:'行情首页',search:'工具目录',empty:'尚未导入经过核验的产品档案。',source:'数据来源与核验状态',company:'所属公司',pricing:'收费信息'}
+ zh:{headline:'全球SI AI工具行情平台',subtitle:'搜全球 AI 工具，比较功能、价格、公司背景与可核验数据。',home:'行情首页',search:'工具目录',empty:'尚未导入经过核验的产品档案。',source:'数据来源与核验状态',company:'所属公司',pricing:'收费信息'}
 };

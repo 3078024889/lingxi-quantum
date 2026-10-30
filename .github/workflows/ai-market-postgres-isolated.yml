@@ -1,0 +1,189 @@
+name: AI Market PostgreSQL 17 isolated migration validation
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'supabase/migrations/*ai_market*.sql'
+      - '.github/workflows/ai-market-postgres-isolated.yml'
+permissions:
+  contents: read
+jobs:
+  schema-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test-only-secret
+          POSTGRES_DB: ai_market_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ai_market_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGUSER: postgres
+      PGPASSWORD: test-only-secret
+      PGDATABASE: ai_market_test
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Bootstrap minimal Supabase roles and auth.users in isolated container only
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $$
+          BEGIN
+            IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='anon') THEN CREATE ROLE anon NOLOGIN; END IF;
+            IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
+            IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='service_role') THEN CREATE ROLE service_role NOLOGIN BYPASSRLS; END IF;
+          END $$;
+          CREATE SCHEMA IF NOT EXISTS auth;
+          CREATE TABLE auth.users (id uuid PRIMARY KEY DEFAULT gen_random_uuid());
+          SQL
+      - name: Apply staged migrations in dependency order
+        shell: bash
+        run: |
+          set -euo pipefail
+          migrations=(
+            20261029_ai_market_candidates.sql
+            20261029_ai_market_review_records.sql
+            20261029_ai_market_candidate_decisions.sql
+            20261029_ai_market_data_center_a.sql
+            20261029_ai_market_graph.sql
+            20261029_ai_market_metrics_b.sql
+            20261029_ai_market_visibility_d.sql
+            20261029_ai_market_profiles_e.sql
+            20261029_ai_market_vendor_f.sql
+            20261029_ai_market_payment_ledger_h.sql
+            20261029_ai_market_h_integration_missing_tables.sql
+            20261030_ai_market_incremental_sources.sql
+            20261030_ai_market_vendor_submission.sql
+            20261030_ai_market_vendor_public_intake.sql
+            20261030_ai_market_sponsored_disclosure.sql
+          )
+          for name in "${migrations[@]}"; do
+            echo "Applying $name"
+            psql -X -v ON_ERROR_STOP=1 -f "supabase/migrations/$name"
+          done
+      - name: Validate all AI market tables restricted from public roles
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $$
+          DECLARE v RECORD;
+          DECLARE n integer:=0;
+          BEGIN
+            FOR v IN SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename LIKE 'ai_market_%'
+            LOOP
+              n:=n+1;
+              IF NOT EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace ns ON ns.oid=c.relnamespace
+                WHERE ns.nspname='public' AND c.relname=v.tablename AND c.relrowsecurity) THEN
+                  RAISE EXCEPTION 'RLS_OFF: %',v.tablename;
+              END IF;
+              IF has_table_privilege('anon','public.'||quote_ident(v.tablename),'SELECT') OR
+                 has_table_privilege('anon','public.'||quote_ident(v.tablename),'INSERT') OR
+                 has_table_privilege('authenticated','public.'||quote_ident(v.tablename),'SELECT') OR
+                 has_table_privilege('authenticated','public.'||quote_ident(v.tablename),'UPDATE') THEN
+                  RAISE EXCEPTION 'PUBLIC_ACCESS: %',v.tablename;
+              END IF;
+            END LOOP;
+            IF n<17 THEN RAISE EXCEPTION 'INCOMPLETE_AI_MARKET_SCHEMA: %',n; END IF;
+            RAISE NOTICE 'AI_MARKET_TABLES=% RLS_AND_GRANTS_PASS',n;
+          END $$;
+          DO $$
+          BEGIN
+            IF NOT EXISTS(SELECT 1 FROM information_schema.columns
+              WHERE table_schema='public' AND table_name='ai_market_profile_claims' AND column_name='created_at') THEN
+              RAISE EXCEPTION 'PROFILE_SCHEMA_DRIFT: created_at missing';
+            END IF;
+          END $$;
+          SQL
+      - name: Test private incremental sync, append-only history and anonymous access rejection
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $market$
+          BEGIN
+            IF has_function_privilege('anon','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
+              OR has_function_privilege('authenticated','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
+            THEN RAISE EXCEPTION 'INSECURE_SOURCE_SYNC_RPC_GRANT'; END IF;
+            IF NOT has_function_privilege('service_role','public.ai_market_apply_source_batch(text,jsonb)','EXECUTE')
+            THEN RAISE EXCEPTION 'SERVICE_ROLE_CANNOT_SYNC'; END IF;
+          END $market$;
+          BEGIN;
+          SELECT set_config('request.jwt.claim.role','service_role',true);
+          SET LOCAL ROLE service_role;
+          SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","facts":{"downloads":25}}]'::jsonb);
+          SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","facts":{"downloads":25}}]'::jsonb);
+          SELECT public.ai_market_apply_source_batch('hf-models','[{"source":"hf-models","upstreamId":"owner/test-model","name":"Test Model","sourceUrl":"https://huggingface.co/owner/test-model","sourceClass":"official_repository_api","reviewStatus":"candidate","contentSha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","facts":{"downloads":26}}]'::jsonb);
+          COMMIT;
+          DO $market$
+          DECLARE n integer;
+          BEGIN
+            SELECT count(*) INTO n FROM public.ai_market_source_items;
+            IF n<>1 THEN RAISE EXCEPTION 'NOT_IDEMPOTENT_ITEMS'; END IF;
+            SELECT count(*) INTO n FROM public.ai_market_source_history;
+            IF n<>2 THEN RAISE EXCEPTION 'MISSING_APPEND_ONLY_HISTORY'; END IF;
+            SELECT count(*) INTO n FROM public.ai_market_source_sync_runs;
+            IF n<>3 THEN RAISE EXCEPTION 'SYNC_RUNS_NOT_RECORDED'; END IF;
+            IF EXISTS(SELECT 1 FROM public.ai_market_source_sync_runs WHERE publication_approved)
+            THEN RAISE EXCEPTION 'UNREVIEWED_DATA_PUBLISHED'; END IF;
+          END $market$;
+          SQL
+      - name: Validate public free intake only creates nonpublished pending requests
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $market$
+          BEGIN
+            IF NOT has_function_privilege('anon','public.ai_market_submit_vendor_submission(jsonb)','EXECUTE')
+            THEN RAISE EXCEPTION 'VENDOR_INTAKE_NOT_CALLABLE'; END IF;
+            IF has_table_privilege('anon','public.ai_market_vendor_submissions','INSERT') OR
+               has_table_privilege('anon','public.ai_market_vendor_submissions','SELECT')
+            THEN RAISE EXCEPTION 'DIRECT_PUBLIC_VENDOR_TABLE_ACCESS'; END IF;
+          END $market$;
+          BEGIN;
+          SET LOCAL ROLE anon;
+          SELECT public.ai_market_submit_vendor_submission('{"project_id":"example","request_type":"claim","product_name":"Example","official_site":"https://example.com","work_email":"team@example.com","submitter_name":"Team","evidence_url":"https://example.com/about","proposed_data":{"x":"https://x.com/example"}}'::jsonb);
+          COMMIT;
+          DO $market$
+          BEGIN
+            IF (SELECT count(*) FROM public.ai_market_vendor_submissions WHERE status='pending_identity_check' AND verified_domain=false)<>1
+            THEN RAISE EXCEPTION 'VENDOR_PENDING_STATE_INVALID'; END IF;
+          END $market$;
+          SQL
+      - name: Verify organic ranks cannot read paid placements and public sees no payment receipts
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $check$
+          BEGIN
+            IF has_column_privilege('anon','public.ai_market_sponsored_disclosure','payment_reference','SELECT')
+               OR has_column_privilege('anon','public.ai_market_sponsored_disclosure','reviewer','SELECT')
+            THEN RAISE EXCEPTION 'SPONSOR_PAYMENT_DATA_LEAK'; END IF;
+            IF has_table_privilege('anon','public.ai_market_sponsored_disclosure','INSERT')
+               OR has_table_privilege('authenticated','public.ai_market_sponsored_disclosure','UPDATE')
+            THEN RAISE EXCEPTION 'PUBLIC_SPONSOR_MANIPULATION'; END IF;
+          END $check$;
+          BEGIN;
+          SET LOCAL ROLE anon;
+          SELECT project_id,label,target_url,placement,ends_at FROM public.ai_market_sponsored_disclosure LIMIT 5;
+          COMMIT;
+          SQL
+      - name: Ensure migrations are re-runnable without destructive reset
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261029_ai_market_candidates.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261029_ai_market_data_center_a.sql
+      - name: Confirm no third-party data published or payment settled
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $$
+          BEGIN
+            IF EXISTS (SELECT 1 FROM public.ai_market_identity WHERE status='verified') THEN
+              RAISE EXCEPTION 'FABRICATED_VERIFICATION';
+            END IF;
+            IF EXISTS (SELECT 1 FROM public.ai_market_payment_events) THEN
+              RAISE EXCEPTION 'UNVERIFIED_PAYMENT_EVENT';
+            END IF;
+          END $$;
+          SQL

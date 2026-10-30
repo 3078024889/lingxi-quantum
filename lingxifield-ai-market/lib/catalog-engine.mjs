@@ -7,6 +7,14 @@ export function validCatalogEntry(x){
  if(!['active','discontinued','unverified'].includes(x.status))return false;
  if(!Number.isFinite(Date.parse(x.updatedAt)))return false;
  if(!Array.isArray(x.capabilities)||x.capabilities.some(y=>!isText(y)))return false;
+ if(x.websiteKind!==undefined&&!['official','documentation','repository'].includes(x.websiteKind))return false;
+ if(x.repositoryUrl!==undefined){
+  if(typeof x.repositoryUrl!=='string')return false;
+  try{const r=new URL(x.repositoryUrl);if(r.protocol!=='https:'||r.hostname!=='github.com'||r.username||r.password)return false;}catch{return false;}
+ }
+ if(x.websiteKind==='repository'&&!/^https:\/\/github\.com\//.test(x.website||''))return false;
+ if(x.websiteKind==='official'&&/^https:\/\/github\.com\//.test(x.website||''))return false;
+ if(x.repositoryUrl===x.website&&x.websiteKind!=='repository')return false;
  try{const url=new URL(x.website);if(url.protocol!=='https:'||url.username||url.password)return false;}catch{return false;}
  return true;
 }

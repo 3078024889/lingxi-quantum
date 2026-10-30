@@ -9,6 +9,7 @@ create table if not exists public.ai_market_profile_claims (
  source_class text not null check(source_class in ('official','registry','licensed_third_party')),
  evidence_id bigint not null references public.ai_market_evidence(id),
  checked_at timestamptz not null,
+ created_at timestamptz not null default now(),
  reviewed_by uuid references auth.users(id),
  reviewed_at timestamptz,
  check ((reviewed_by is null)=(reviewed_at is null))

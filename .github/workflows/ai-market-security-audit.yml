@@ -1,0 +1,44 @@
+name: AI Market dependency security audit
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/ai-market-security-audit.yml'
+      - 'lingxifield-ai-market/package.json'
+      - 'lingxifield-ai-market/package-lock.json'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read dependency advisory report (no install or scripts)
+        shell: bash
+        run: |
+          npm audit --omit=dev --json > security-audit.json || true
+          node --input-type=module -e '
+            import {readFileSync} from "node:fs";
+            const report=JSON.parse(readFileSync("security-audit.json","utf8"));
+            if(report.error){console.error(report.error.message||"AUDIT_UNAVAILABLE");process.exit(3);}
+            const v=report.metadata?.vulnerabilities||{};
+            console.log(JSON.stringify({low:v.low||0,moderate:v.moderate||0,high:v.high||0,critical:v.critical||0},null,2));
+            if((v.high||0)+(v.critical||0)>0)process.exit(2);
+          '
+      - name: Preserve complete npm advisory evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-market-dependency-audit-${{ github.run_id }}
+          path: lingxifield-ai-market/security-audit.json
+          if-no-files-found: warn
+          retention-days: 7
