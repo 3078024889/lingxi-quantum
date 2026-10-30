@@ -55,6 +55,12 @@ const ACCESS:Record<string,AccessConfig>={
   paymentSource:CLAUDE_PAY,payments:['Credit / debit card (web)','Apple App Store (iOS)','Google Play (Android)'],
   paymentScope:'Web subscriptions: cards only; mobile methods determined by Apple or Google stores.'
  },
+ midjourney:{countries:{},globalPolicy:unknown,
+  paymentSource:'https://docs.midjourney.com/hc/en-us/articles/27868831972365-Accepted-Payment-Methods',
+  payments:['Visa','Mastercard','American Express','Apple Pay','Amazon Pay','Alipay','Google Pay','Link'],
+  paymentScope:'Stripe checkout: cards broadly offered; wallets only where shown. PayPal NOT accepted.',
+  paymentNote:'Digital wallets vary by region/checkout; PayPal is not accepted.'
+ },
  runway:{countries:{},globalPolicy:unknown,paymentSource:RUNWAY_PAY,
   payments:['Credit / debit card','Amazon Pay','Apple Pay','Google Pay','Alipay','Cash App Pay','WeChat Pay'],
   paymentsByRegion:{US:['Stripe Instant Bank Payments (US only)']},
