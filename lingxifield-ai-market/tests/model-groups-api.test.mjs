@@ -11,5 +11,6 @@ test('grouped API serves historical D-drive provider offers without inventing pr
 test('grouped API supports bounded model search and transparent missing data',()=>{
  assert.ok(source.includes('Math.min(30'));
  assert.ok(source.includes('offers.slice(0,100)'));
- assert.ok(source.includes('local_group_index_missing'));
+ assert.ok(source.includes('SOURCE_TEMPORARILY_UNAVAILABLE'));
+ assert.ok(source.includes('https://models.dev/api.json'));
 });
