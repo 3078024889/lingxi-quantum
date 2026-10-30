@@ -788,3 +788,10 @@ body{font-size:16px;line-height:1.6}
 
 .app .marketTourCompareNow{border:1px solid #b6cfee;border-radius:8px;background:#eef6ff;color:#1857a5;padding:8px 12px;font-weight:700;cursor:pointer}
 .app .marketTourCompareNow:focus-visible{outline:2px solid #1e78e0;outline-offset:2px}
+
+
+/* V3.8: discreet, evidence-based catalog state; never simulate popularity. */
+.app .marketEvidenceStatus{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;margin:8px 14px 12px;padding:11px 13px;background:#f8fbff;border:1px solid #dbe7f5;border-radius:8px;color:#526c8c;font-size:12px;line-height:1.6}
+.app .marketEvidenceStatus>strong{color:#174879}
+.app .marketEvidenceStatus span b{color:#19559a}
+.app .marketEvidenceStatus small{flex-basis:100%;color:#6e83a0;line-height:1.5}
