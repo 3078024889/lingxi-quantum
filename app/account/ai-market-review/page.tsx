@@ -4,6 +4,7 @@ import { moneyAdministrator } from '@/lib/money/operator-settings';
 import { aiMarketPreview } from '@/lib/ai-market-preview';
 import AiMarketReviewFeedback from '@/components/ai-market/AiMarketReviewFeedback';
 import AiMarketCandidates from '@/components/ai-market/AiMarketCandidates';
+import AiMarketCloudProgress from '@/components/ai-market/AiMarketCloudProgress';
 import { aiMarketEngineeringStatus } from '@/lib/ai-market-engineering-status';
 import {headers} from 'next/headers';
 import {createClient} from '@/lib/supabase/server';
@@ -79,6 +80,7 @@ export default async function AiMarketReview() {
         </article>)}
       </div>
     </section>
+    <AiMarketCloudProgress/>
     <section aria-label="工程建设进度" style={{margin:'20px 0',padding:20,border:'1px solid #c7d7ee',borderRadius:16,background:'#fff'}}>
       <h2 style={{fontSize:21,margin:'0 0 8px'}}>历史建设记录与版本差异</h2>
       <p style={{fontSize:13,color:'#53677f'}}>快照日期：{aiMarketEngineeringStatus.snapshotDate}。{aiMarketEngineeringStatus.note}</p>
