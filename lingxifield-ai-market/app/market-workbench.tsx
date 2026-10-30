@@ -14,7 +14,7 @@ import VisitorFeedback from './visitor-feedback';
 import {globalRegionFact,regionName,regionCopy,type RegionCode} from '../lib/global-region-market';
 import ProductAccessLinks from './product-access-links';
 import MarketMatrixRow,{marketRowTitles} from './market-matrix-row';
-import {MARKET_FILTERS,MARKET_SCREEN_COPY,filterAndSortMarket,type MarketFilter,type MarketSort} from '../lib/market-v36-screening';
+import {MARKET_FILTERS,MARKET_SCREEN_COPY,filterAndSortMarket,shortDramaSummary,type MarketFilter,type MarketSort} from '../lib/market-v36-screening';
 import {platformLinks} from '../lib/official-platform-links';
 import PriceLeaderboards from './price-leaderboards';
 import SeoGeoBoard from './seo-geo-board';
@@ -35,7 +35,8 @@ const compareRows:{label:string;pick:(p:Platform,region:RegionCode,language:Lang
  {label:'参考价格',pick:p=>p.conditions?.find(f=>f.label==='价格')?.text||p.guide?.cost||p.price||'待核验'},
  {label:'图片／视频水印',pick:p=>p.guide?.watermarkNote||'请查看具体模型的导出规则'},
  {label:'地区可用性',pick:(p,region,language)=>{const country=region==='GLOBAL'?'CN':region;const item=globalRegionFact(p.id,country);return regionName(country,language)+'：'+regionCopy(language).status[item.policy.status]+(item.policy.checkedAt?' · '+item.policy.checkedAt:'');}},
- {label:'付款方式',pick:(p,region,language)=>{const country=region==='GLOBAL'?'CN':region;const item=globalRegionFact(p.id,country);return item.policy.status==='unsupported'?regionCopy(language).status.unsupported:item.payments.methods.join(' / ')||regionCopy(language).status.unknown;}}
+ {label:'付款方式',pick:(p,region,language)=>{const country=region==='GLOBAL'?'CN':region;const item=globalRegionFact(p.id,country);return item.policy.status==='unsupported'?regionCopy(language).status.unsupported:item.payments.methods.join(' / ')||regionCopy(language).status.unknown;}},
+ {label:'短剧生成能力',pick:(p,_region,language)=>shortDramaSummary(p.id,language)||MARKET_SCREEN_COPY[language].dramaUnknown}
 ];
 function Logo(){return <div className="logo"><span><strong>灵犀场</strong><small>LINGXIFIELD</small></span></div>}
 export default function Home({initialPlatforms,initialSelected=null,initialLanguage='zh',initialCurrency='USD'}:{initialPlatforms:Platform[];initialSelected?:string|null;initialLanguage?:Language;initialCurrency?:Currency}){const router=useRouter();const [platforms,setPlatforms]=useState(initialPlatforms),[results,setResults]=useState(initialPlatforms),[cursor,setCursor]=useState(0),[nextCursor,setNextCursor]=useState<number|null>(null),[total,setTotal]=useState(initialPlatforms.length),[searchError,setSearchError]=useState(''),[loading,setLoading]=useState(false);const [selected,setSelected]=useState<string|null>(initialSelected),[query,setQuery]=useState(''),[category,setCategory]=useState('全部平台'),[tab,setTab]=useState('找AI工具'),[compare,setCompare]=useState<string[]>([]),[compareReady,setCompareReady]=useState(false),[detailTab,setDetailTab]=useState('概览'),[period,setPeriod]=useState('30日'),[language,setLanguage]=useState<Language>(initialLanguage),[currency,setCurrency]=useState<Currency>(initialCurrency),[answer,setAnswer]=useState(''),[showCompare,setShowCompare]=useState(false);const tr=I18N[language];const ui=MARKET_UI_EXTRA[language];const navUi=MARKET_NAV_I18N[language];const [metricCards,setMetricCards]=useState<MarketCard[]>(()=>marketCards());const [region,setRegion]=useState<RegionCode>('GLOBAL');const [marketFilter,setMarketFilter]=useState<MarketFilter>('all');const [marketSort,setMarketSort]=useState<MarketSort>('directory');
