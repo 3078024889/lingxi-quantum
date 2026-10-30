@@ -398,7 +398,7 @@
 
 /* V34 accessibility: 14px minimum body text; headings retain their existing larger sizes. */
 html{font-size:14px}
-body{font-size:14px;line-height:1.65}
+body{font-size:16px;line-height:1.7}
 small{font-size:14px}
 button,input,select,textarea{font-size:14px;line-height:1.55}
 button,a,input,select,textarea{min-height:34px}
