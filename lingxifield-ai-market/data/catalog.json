@@ -4,7 +4,7 @@
     "name": "Ollama",
     "company": "Ollama",
     "category": "本地模型",
-    "website": "https://github.com/ollama/ollama",
+    "website": "https://ollama.com",
     "description": "本地运行与管理大语言模型的开源项目。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -12,7 +12,9 @@
       "离线部署",
       "本地推理",
       "模型管理"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/ollama/ollama",
+    "websiteKind": "official"
   },
   {
     "id": "llamacpp",
@@ -27,14 +29,16 @@
       "本地推理",
       "量化模型",
       "离线部署"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/ggml-org/llama.cpp",
+    "websiteKind": "repository"
   },
   {
     "id": "vllm",
     "name": "vLLM",
     "company": "vllm-project",
     "category": "编程开发",
-    "website": "https://github.com/vllm-project/vllm",
+    "website": "https://vllm.ai/",
     "description": "用于大模型推理和服务部署的开源引擎。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -42,14 +46,16 @@
       "模型服务",
       "推理吞吐",
       "API"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/vllm-project/vllm",
+    "websiteKind": "official"
   },
   {
     "id": "langchain",
     "name": "LangChain",
     "company": "LangChain",
     "category": "智能体",
-    "website": "https://github.com/langchain-ai/langchain",
+    "website": "https://www.langchain.com/langchain",
     "description": "用于语言模型应用、检索和智能体流程的开源框架。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -57,14 +63,16 @@
       "智能体",
       "RAG",
       "工具调用"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/langchain-ai/langchain",
+    "websiteKind": "official"
   },
   {
     "id": "llamaindex",
     "name": "LlamaIndex",
     "company": "LlamaIndex",
     "category": "搜索研究",
-    "website": "https://github.com/run-llama/llama_index",
+    "website": "https://www.llamaindex.ai/",
     "description": "构建数据检索和基于数据问答应用的开源框架。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -72,14 +80,16 @@
       "RAG",
       "文档搜索",
       "数据连接"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/run-llama/llama_index",
+    "websiteKind": "official"
   },
   {
     "id": "transformers",
     "name": "Transformers",
     "company": "Hugging Face",
     "category": "科研工具",
-    "website": "https://github.com/huggingface/transformers",
+    "website": "https://huggingface.co/docs/transformers/en/index",
     "description": "提供文本、图像、音频等模型使用接口的开源工具库。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -87,14 +97,16 @@
       "模型推理",
       "模型训练",
       "多模态"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/huggingface/transformers",
+    "websiteKind": "documentation"
   },
   {
     "id": "comfyui",
     "name": "ComfyUI",
     "company": "ComfyUI",
     "category": "图片生成",
-    "website": "https://github.com/Comfy-Org/ComfyUI",
+    "website": "https://www.comfy.org/",
     "description": "节点式图像生成工作流界面。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -102,7 +114,9 @@
       "图片生成",
       "节点工作流",
       "本地部署"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/Comfy-Org/ComfyUI",
+    "websiteKind": "official"
   },
   {
     "id": "automatic1111",
@@ -117,7 +131,9 @@
       "图片生成",
       "提示词",
       "本地部署"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
+    "websiteKind": "repository"
   },
   {
     "id": "whisper",
@@ -132,7 +148,9 @@
       "语音转文字",
       "音频识别",
       "多语言"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/openai/whisper",
+    "websiteKind": "repository"
   },
   {
     "id": "fasterwhisper",
@@ -147,14 +165,16 @@
       "语音转文字",
       "字幕",
       "音频"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/SYSTRAN/faster-whisper",
+    "websiteKind": "repository"
   },
   {
     "id": "openwebui",
     "name": "Open WebUI",
     "company": "Open WebUI",
     "category": "综合助手",
-    "website": "https://github.com/open-webui/open-webui",
+    "website": "https://openwebui.com/",
     "description": "可自行部署的 AI 聊天用户界面项目。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -162,14 +182,16 @@
       "聊天",
       "多模型",
       "自托管"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/open-webui/open-webui",
+    "websiteKind": "official"
   },
   {
     "id": "dify",
     "name": "Dify",
     "company": "Dify",
     "category": "智能体",
-    "website": "https://github.com/langgenius/dify",
+    "website": "https://www.dify.ai/",
     "description": "可构建 AI 应用、知识库与工作流的开源项目。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -177,14 +199,16 @@
       "工作流",
       "智能体",
       "RAG"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/langgenius/dify",
+    "websiteKind": "official"
   },
   {
     "id": "n8n",
     "name": "n8n",
     "company": "n8n",
     "category": "自动化工具",
-    "website": "https://github.com/n8n-io/n8n",
+    "website": "https://n8n.io/",
     "description": "面向集成与自动化的工作流软件。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -192,14 +216,16 @@
       "自动化",
       "工作流",
       "AI集成"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/n8n-io/n8n",
+    "websiteKind": "official"
   },
   {
     "id": "openai-python",
     "name": "OpenAI Python SDK",
     "company": "OpenAI",
     "category": "编程开发",
-    "website": "https://github.com/openai/openai-python",
+    "website": "https://developers.openai.com/api/docs/libraries",
     "description": "OpenAI API 官方 Python 客户端。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -207,14 +233,16 @@
       "代码开发",
       "API",
       "模型调用"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/openai/openai-python",
+    "websiteKind": "documentation"
   },
   {
     "id": "anthropic-sdk-python",
     "name": "Anthropic Python SDK",
     "company": "Anthropic",
     "category": "编程开发",
-    "website": "https://github.com/anthropics/anthropic-sdk-python",
+    "website": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python",
     "description": "Anthropic API 官方 Python 客户端。",
     "status": "unverified",
     "updatedAt": "2026-10-29T00:00:00Z",
@@ -222,6 +250,8 @@
       "代码开发",
       "API",
       "模型调用"
-    ]
+    ],
+    "repositoryUrl": "https://github.com/anthropics/anthropic-sdk-python",
+    "websiteKind": "documentation"
   }
 ]
