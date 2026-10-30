@@ -38,6 +38,24 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  {label:'Windows / Mac / Linux 下载',url:'https://ollama.com/download',kind:'desktop'},
  {label:'GitHub 源码',url:'https://github.com/ollama/ollama',kind:'github'}
  ]},
+ suno:{links:[
+ {label:'iPhone 下载',url:'https://apps.apple.com/us/app/suno-ai-songs-music-lyrics/id6480136315',kind:'ios'},
+ {label:'安卓下载指引',url:'https://help.suno.com/en/articles/3134337',kind:'android'},
+ {label:'App Store 评价',url:'https://apps.apple.com/us/app/suno-ai-songs-music-lyrics/id6480136315',kind:'reviews'},
+ {label:'官方更新',url:'https://suno.com/release-notes',kind:'news'}
+ ]},
+ elevenlabs:{links:[
+ {label:'iPhone 与安卓下载',url:'https://elevenlabs.io/docs/help-center/other/does-eleven-labs-have-an-official-app',kind:'ios'},
+ {label:'手机客户端下载',url:'https://elevenlabs.io/docs/help-center/product/mobile-apps/elevenlabs-for-ios-and-android/what-is-the-elevenlabs-app',kind:'android'}
+ ]},
+ lovable:{links:[
+ {label:'Windows / Mac 下载',url:'https://lovable.dev/en/download',kind:'desktop'},
+ {label:'最新动态',url:'https://lovable.dev/blog',kind:'news'}
+ ]},
+ replit:{links:[
+ {label:'iPhone / 安卓下载',url:'https://replit.com/mobile-download',kind:'ios'},
+ {label:'App 介绍',url:'https://replit.com/products/mobile',kind:'android'}
+ ]},
  comfyui:{links:[
  {label:'电脑端安装',url:'https://www.comfy.org/download',kind:'desktop'},
  {label:'GitHub 源码',url:'https://github.com/Comfy-Org/ComfyUI',kind:'github'}
