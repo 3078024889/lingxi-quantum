@@ -14,7 +14,10 @@ test('all 9 locale URLs use same interactive market, not static dead-end cards',
  assert.ok(route.includes("Home initialLanguage={lang as Locale}"));
  assert.ok(route.includes("initialCurrency={currency}"));
  assert.ok(route.includes("initialPlatforms={searchPlatforms"));
- assert.ok(route.includes("robots:{index:false,follow:false}"),'unreviewed market may not be indexed');
+ const policy=await read('lib/market-index-policy.ts');
+ assert.ok(route.includes('mayIndexMarket(lang)'),'indexing must use the verified locale gate');
+ assert.ok(policy.includes("process.env.VERCEL_ENV!=='preview'"),'previews must remain noindex');
+ assert.ok(policy.includes("AI_MARKET_INDEX_READY==='1'"),'production indexing requires explicit release approval');
  assert.ok(page.includes('initialLanguage?:Language'));
  assert.ok(page.includes('MARKET_UI_EXTRA[language]'));
  assert.ok(page.includes("router.push('/'+next+'/ai')"));

@@ -3,17 +3,18 @@ import type {Platform} from '../lib/data';
 import {accessFor,accessValue,geoSummary} from '../lib/platform-access-facts';
 import type {Language} from '../lib/v2';
 import {MARKET_UI_EXTRA} from '../lib/market-ui-extra';
+import {capabilityProfile} from '../lib/capability-profiles';
 export default function MarketDecisionCards({platform,selectedForCompare,onToggleCompare,onOpenPricing,language='zh'}:{
  platform:Platform;selectedForCompare:boolean;onToggleCompare:()=>void;onOpenPricing:()=>void;language?:Language;
 }){
- const guide=platform.guide,ui=MARKET_UI_EXTRA[language];
+ const guide=platform.guide,ui=MARKET_UI_EXTRA[language],rich=capabilityProfile(platform.id);
  const facts=platform.conditions||[];
  const access=accessFor(platform.id);
  return <section className="decisionSurface panel" aria-label="使用与收费">
-  <div className="decisionHeading"><div><h2>{language==='zh'?'这个工具能做什么？免费与付费一眼看懂':ui.features}</h2>
+  <div className="decisionHeading"><div><h2>{language==='zh'?(rich?'费用、使用要求与商业授权':'这个工具能做什么？免费与付费一眼看懂'):ui.features}</h2>
    <p>{platform.name} · {platform.category}</p></div></div>
   {guide?<div className="choiceFacts">
-   <article><h3>能做什么</h3><p>{guide.tasks.join(' · ')}</p></article>
+   {!rich&&<article><h3>能做什么</h3><p>{guide.tasks.join(' · ')}</p></article>}
    <article><h3>免费的功能</h3><p>{guide.free}</p></article>
    <article><h3>付费功能</h3><p>{guide.paid}</p></article>
    <article><h3>参考价格</h3><p>{guide.cost}</p></article>
@@ -23,8 +24,8 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
    <article><h3>模型版本</h3><p>{access?.models||'具体版本与模型限制尚未核实'}</p></article>
    <article><h3>商业用途</h3><p>{access?.commercial||'商用授权资料尚未核实'}</p></article>
    <article><h3>SEO / GEO</h3><p>{geoSummary(platform.id)}。待完成同关键词、同时间范围的可复现监测后再排名。</p></article>
-   {guide.strengths&&<article><h3>强大优势</h3><p>{guide.strengths}</p></article>}
-   {guide.reasoning&&<article><h3>理解与推理</h3><p>{guide.reasoning}</p></article>}
+   {!rich&&guide.strengths&&<article><h3>强大优势</h3><p>{guide.strengths}</p></article>}
+   {!rich&&guide.reasoning&&<article><h3>理解与推理</h3><p>{guide.reasoning}</p></article>}
    <article><h3>导出水印</h3><p>{guide.watermarkNote||'该产品的图片、视频或音频导出规则尚无可核查资料，请查看官网。'}</p>
     {guide.watermarkSource&&<a href={guide.watermarkSource} target="_blank" rel="noopener noreferrer">查看相关说明 ↗</a>}</article>
   </div>:<div className="decisionSummary"><strong>{platform.category}</strong>

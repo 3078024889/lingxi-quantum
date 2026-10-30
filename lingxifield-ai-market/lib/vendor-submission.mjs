@@ -17,6 +17,16 @@ export function validateVendorSubmission(input){
    const link=https(input[key]);if(!link)return null;proposedData[name]=link;
   }
  }
+ // One source-linked capability can be proposed without an account. It is never auto-published.
+ const capabilityName=input.capabilityName===undefined||input.capabilityName===''?'':one(input.capabilityName,90);
+ const capabilityOutcome=input.capabilityOutcome===undefined||input.capabilityOutcome===''?'':one(input.capabilityOutcome,360);
+ const capabilityExample=input.capabilityExample===undefined||input.capabilityExample===''?'':one(input.capabilityExample,320);
+ const capabilitySource=input.capabilitySource===undefined||input.capabilitySource===''?'':https(input.capabilitySource);
+ const capabilityProvided=[input.capabilityName,input.capabilityOutcome,input.capabilityExample,input.capabilitySource].some(v=>typeof v==='string'&&v.trim().length>0);
+ if(capabilityProvided){
+  if(!capabilityName||!capabilityOutcome||!capabilityExample||!capabilitySource)return null;
+  proposedData.capability_proposals=[{name:capabilityName,outcome:capabilityOutcome,example:capabilityExample,source:capabilitySource,reviewStatus:'pending'}];
+ }
  const domain=new URL(site).hostname.toLowerCase().replace(/^www\./,'');
  const mailDomain=workEmail.split('@')[1];
  return {request_type:type,project_id:projectId,product_name:productName,official_site:site,work_email:workEmail,

@@ -1,5 +1,5 @@
 /** Reviewed observations. Keep dated snapshots; never infer missing limits. */
-export type FactKey = "purpose"|"free"|"price"|"region"|"watermark"|"commercial"|"failure"|"refund"|"phone"|"card"|"models";
+export type FactKey = "purpose"|"free"|"price"|"region"|"watermark"|"commercial"|"failure"|"refund"|"phone"|"card"|"models"|"reasoning";
 export type ProductFact = {text:string;source:string;checkedAt:string;scope:string;kind:"official"};
 export type FactSnapshot = {product:string;observedAt:string;facts:Partial<Record<FactKey,ProductFact>>};
 const day="2026-10-29";
@@ -109,7 +109,23 @@ export const factSnapshots:readonly FactSnapshot[]=[
  {product:"vllm",observedAt:"2026-10-30",facts:{
   purpose:official2026("在自有服务器上运行模型，支持批处理推理和在线模型服务","https://docs.vllm.ai/en/latest/getting_started/quickstart/","开发者部署工具，不是现成的云端聊天网页"),
   models:official2026("官方快速上手以 Linux 和 Python 3.11–3.14 为基础，GPU 选型依环境而定","https://docs.vllm.ai/en/latest/getting_started/quickstart/","部署条件，具体硬件需求随模型变化")
- }}
+ }},
+ {product:"chatgpt",observedAt:"2026-10-30",facts:{
+  models:official2026("GPT-6 系列用于 ChatGPT 聊天；GPT-6.1 Terra 在 Work/Codex 推出，不代表聊天界面均可选","https://help.openai.com/en/articles/6825453-chatgpt-release-notes","产品与工作模式分开；实际版本依账户、地区与工作区"),
+  reasoning:official2026("GPT-6 在 ChatGPT 支持不同思考档位，具体档位由套餐和权限决定；并非独立综合智力分数","https://help.openai.com/en/articles/20001354-gpt-6-and-other-models-in-chatgpt","ChatGPT 模型选择说明，不含跨产品统一基准"),
+ }},
+ {product:"claude",observedAt:"2026-10-30",facts:{
+  models:official2026("Anthropic API 模型家族：Claude Fable 5.1、Opus 5.5、Sonnet 5.5、Haiku 5.5；Claude 应用可选型号另依套餐","https://platform.claude.com/docs/en/models/overview","API 模型目录，不表示 Claude 网页端全部开放"),
+  reasoning:official2026("官方将 Fable 5.1 定位为高难推理和长流程智能体任务，将 Opus 5.5 用于知识工作与编程","https://platform.claude.com/docs/en/models/overview","厂商模型定位；不是独立跨平台胜负结论"),
+ }},
+ {product:"gemini",observedAt:"2026-10-30",facts:{
+  models:official2026("Gemini API 模型目录：Gemini 4 Argon、Gemini 3.8 Flash 等；Gemini 网页应用实际可用版本另行核对","https://ai.google.dev/gemini-api/docs/models","API 模型家族；不是 Gemini App 套餐可用性保证"),
+  reasoning:official2026("Gemini 4 Argon 官方定位支持复杂编程、数学、科学和智能体推理，API 上下文上限为 100 万 token","https://ai.google.dev/gemini-api/docs/latest-model","Gemini 4 Argon API 技术规格；非应用端实测分数"),
+ }},
+ {product:"runway",observedAt:"2026-10-30",facts:{
+  models:official2026("Gen-4.5：网页支持文生视频、图生视频，标准及以上方案，2–10 秒，12 积分/秒","https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5","Gen-4.5 文档；其他模型、方案和额度另算"),
+  reasoning:official2026("官方描述其擅长执行复杂镜头编排与时序指令；属于视频指令遵循，不是通用语言模型推理分数","https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5","厂商能力说明，未进行统一质量盲测"),
+ }},
 ];
 export function latestFacts(slug:string,asOf='2026-10-30'):FactSnapshot|undefined{
  const relevant=factSnapshots.filter(s=>s.product===slug&&s.observedAt<=asOf);
@@ -134,4 +150,4 @@ export function questionFields(query:string):FactKey[]{
  if(/大陆|地区|国内|region/i.test(query))result.push("region");
  return result;
 }
-export const factLabels:Record<FactKey,string>={purpose:"主要用途",free:"免费额度",price:"价格",region:"地区与年龄",watermark:"导出水印",commercial:"商用条件",failure:"失败扣费",refund:"取消与退款",phone:"手机号要求",card:"信用卡要求",models:"模型与用量"};
+export const factLabels:Record<FactKey,string>={purpose:"主要用途",free:"免费额度",price:"价格",region:"地区与年龄",watermark:"导出水印",commercial:"商用条件",failure:"失败扣费",refund:"取消与退款",phone:"手机号要求",card:"信用卡要求",models:"模型与用量",reasoning:"推理与理解能力"};
