@@ -1,6 +1,8 @@
 import type {Metadata} from 'next';
 import {notFound} from 'next/navigation';
 import Home from '../../market-workbench';
+import {headers} from 'next/headers';
+import {currencyFromCountry} from '../../../lib/region-billing.mjs';
 import {searchPlatforms} from '../../../lib/platform-repository';
 import {supportedLocales,localeCopy,type Locale} from '../../../lib/locale-pages';
 // Localized routes render the same interactive market, search, price and comparison
@@ -15,7 +17,8 @@ export async function generateMetadata({params}:{params:Promise<{lang:string}>})
 }
 export default async function LocalizedMarket({params}:{params:Promise<{lang:string}>}){
  const {lang}=await params;if(!supportedLocales.includes(lang as Locale))notFound();
+ const h=await headers();const currency=currencyFromCountry(h.get('x-vercel-ip-country')||h.get('cf-ipcountry'));
  return <div lang={lang} dir={lang==='ar'?'rtl':'ltr'}>
-  <Home initialLanguage={lang as Locale} initialPlatforms={searchPlatforms({limit:24}).items}/>
+  <Home initialLanguage={lang as Locale} initialCurrency={currency} initialPlatforms={searchPlatforms({limit:24}).items}/>
  </div>;
 }
