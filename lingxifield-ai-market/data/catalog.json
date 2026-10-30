@@ -324,5 +324,25 @@
       "代码开发"
     ],
     "websiteKind": "official"
+  },
+  {
+    "id": "doubao",
+    "name": "豆包 Doubao",
+    "company": "字节跳动",
+    "category": "综合助手",
+    "website": "https://www.doubao.com/",
+    "description": "中文对话、文章与文档理解、图片生成及视频创作，面向普通用户使用。",
+    "status": "active",
+    "updatedAt": "2026-10-30T06:00:00Z",
+    "capabilities": [
+      "中文理解",
+      "AI图片生成",
+      "视频生成",
+      "短剧视频",
+      "写作",
+      "推理",
+      "文档分析"
+    ],
+    "websiteKind": "official"
   }
 ]
