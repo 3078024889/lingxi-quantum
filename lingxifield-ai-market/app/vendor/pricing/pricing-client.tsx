@@ -29,7 +29,7 @@ export default function VendorPricingClient({initialCurrency}:{initialCurrency:C
   </header>
   <div className="vendorPricingCards">{VENDOR_PLANS.map((plan,i)=><article key={plan.id}>
    <h2>{t.plans[i]}</h2><div className="vendorPricingAmount">{currency==='CNY'?'¥':'$'}{plan.amount}</div>
-   <p className="vendorPricingDuration">{plan.durationDays?plan.durationDays+' '+(language==='zh'?'天':'days'):t.free}</p>
+   <p className="vendorPricingDuration">{plan.durationDays?plan.durationDays===365?({zh:'每产品／年',en:'per product / year',ja:'製品ごと／年',ko:'제품별 / 연간',fr:'par produit / an',de:'pro Produkt / Jahr',es:'por producto / año',pt:'por produto / ano',ar:'لكل منتج / سنة'} as Record<Language,string>)[language]:plan.durationDays+' '+({zh:'天',en:'days',ja:'日',ko:'일',fr:'jours',de:'Tage',es:'días',pt:'dias',ar:'يوم'} as Record<Language,string>)[language]:t.free}</p>
    <p>{t.details[i]}</p><a href="/vendor/claim">{t.apply}</a>
   </article>)}</div>
   <p className="vendorPricingPending" role="status">{t.pending}</p><p className="vendorPricingNote">{t.note}</p>
