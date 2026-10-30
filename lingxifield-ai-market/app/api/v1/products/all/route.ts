@@ -32,7 +32,7 @@ export async function GET(request:Request){
    const items:Product[]=result.filter(x=>x!==null&&typeof x==='object')
     .filter(x=>typeof x.id==='string'&&/^[a-zA-Z0-9_.-]+[/][a-zA-Z0-9_.-]+$/.test(x.id)&&x.private!==true)
     .map(x=>({id:'hf-space:'+x.id,name:x.id.split('/')[1],company:x.id.split('/')[0],
-      category:'Hugging Face Spaces',url:'https://huggingface.co/spaces/'+x.id,
+      category:'公开AI应用',url:'https://huggingface.co/spaces/'+x.id,
       description:typeof x.cardData?.short_description==='string'?x.cardData.short_description.slice(0,200):null,
       capabilities:Array.isArray(x.tags)?x.tags.filter((t:unknown)=>typeof t==='string').slice(0,6):[],
       price:null,freeQuota:null,usageMetric:null,reviewStatus:'candidate',
