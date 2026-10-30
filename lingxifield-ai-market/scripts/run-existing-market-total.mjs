@@ -8,6 +8,7 @@ const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const tasks=[
  {id:'full_identity_and_evidence_gate',command:process.execPath,args:['scripts/run-existing-products-full-gate.mjs']},
  {id:'all_product_review_queue',command:process.execPath,args:['scripts/build-existing-product-review-queue.mjs']},
+ {id:'existing_product_coverage',command:process.execPath,args:['scripts/report-verified-product-coverage.mjs']},
  {id:'catalog',command:process.execPath,args:['scripts/validate-catalog-v25.mjs']},
  {id:'source_evidence',command:process.execPath,args:['scripts/validate-evidence.mjs']},
  {id:'contract_tests',command:process.execPath,args:['--test','tests/*.test.mjs']},
