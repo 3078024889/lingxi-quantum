@@ -4,7 +4,8 @@ import {mkdtemp,mkdir,writeFile,readFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
-const script=resolve(new URL('../scripts/build-market-staging-bridge.mjs',import.meta.url).pathname);
+import {fileURLToPath} from 'node:url';
+const script=fileURLToPath(new URL('../scripts/build-market-staging-bridge.mjs',import.meta.url));
 test('staging import dedupes, diffs, preserves candidates, never promotes verified',async()=>{
  const dir=await mkdtemp(join(tmpdir(),'lingxi-bridge-'));
  try{
