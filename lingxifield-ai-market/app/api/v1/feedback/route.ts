@@ -37,7 +37,7 @@ export async function GET(request:Request){
   const r=await fetch(url,{headers:authHeaders(db.key),signal:AbortSignal.timeout(8000),cache:'no-store'});
   if(!r.ok)return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});
   const rows=await r.json();
-  return NextResponse.json({items:Array.isArray(rows)?rows:[]},{headers:{'Cache-Control':'public, s-maxage=30, stale-while-revalidate=120'}});
+  return NextResponse.json({items:Array.isArray(rows)?rows:[]},{headers:{'Cache-Control':'private, no-store'}});
  }catch{return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});}
 }
 export async function POST(request:Request){
@@ -81,6 +81,6 @@ export async function POST(request:Request){
   }
   const saved=await response.json();
   if(saved?.accepted!==true)return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});
-  return NextResponse.json({accepted:true,reviewRequired:true,nickname:saved.nickname},{status:202,headers:privateHeaders});
+  return NextResponse.json({accepted:true,reviewRequired:saved.reviewRequired===true,published:saved.published===true,nickname:saved.nickname},{status:saved.published===true?201:202,headers:privateHeaders});
  }catch{return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});}
 }
