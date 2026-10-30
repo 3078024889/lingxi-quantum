@@ -10,17 +10,18 @@ const tasks=[
  {id:'all_product_review_queue',command:process.execPath,args:['scripts/build-existing-product-review-queue.mjs']},
  {id:'catalog',command:process.execPath,args:['scripts/validate-catalog-v25.mjs']},
  {id:'source_evidence',command:process.execPath,args:['scripts/validate-evidence.mjs']},
- {id:'contract_tests',command:process.platform==='win32'?'npm.cmd':'npm',args:['run','test:contracts']},
+ {id:'contract_tests',command:process.execPath,args:['--test','tests/*.test.mjs']},
  {id:'typescript',command:process.platform==='win32'?'npm.cmd':'npm',args:['run','typecheck']}
 ];
 if(process.argv.includes('--build'))tasks.push({id:'next_build',command:process.platform==='win32'?'npm.cmd':'npm',args:['run','build']});
 const outcomes=[];
 for(const t of tasks){
- const p=spawnSync(t.command,t.args,{cwd:root,encoding:'utf8',timeout:240000,maxBuffer:3*1024*1024,shell:process.platform==='win32'&&t.command==='npm.cmd'});
+ const p=spawnSync(t.command,t.args,{cwd:root,encoding:'utf8',timeout:240000,maxBuffer:3*1024*1024,shell:false});
  const success=p.status===0&&!p.error;
  outcomes.push({id:t.id,status:success?'PASS':'FAIL',exitCode:p.status,error:p.error?.message||null,
- stdout:(p.stdout||'').slice(-2500),stderr:(p.stderr||'').slice(-2500)});
+ stdout:(p.stdout||'').slice(-25000),stderr:(p.stderr||'').slice(-25000)});
  console.log(t.id+': '+(success?'PASS':'FAIL'));
+ if(!success){console.error('=== '+t.id+' FAILURE STDOUT ===\\n'+(p.stdout||'').slice(-12000));console.error('=== '+t.id+' FAILURE STDERR ===\\n'+(p.stderr||'').slice(-12000));}
 }
 const passed=outcomes.every(x=>x.status==='PASS');
 const output=resolve(process.env.AI_MARKET_REVIEW_DIR||resolve(root,'reports/existing-product-gate'));
