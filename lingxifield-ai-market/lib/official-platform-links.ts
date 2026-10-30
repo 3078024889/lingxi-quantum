@@ -38,6 +38,11 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  {label:'Windows / Mac / Linux 下载',url:'https://ollama.com/download',kind:'desktop'},
  {label:'GitHub 源码',url:'https://github.com/ollama/ollama',kind:'github'}
  ]},
+ doubao:{links:[
+ {label:'Windows 与 Mac 下载',url:'https://www.doubao.com/download',kind:'desktop'},
+ {label:'iPhone / 安卓下载',url:'https://www.doubao.com/download',kind:'ios'},
+ {label:'官方使用入口',url:'https://www.doubao.com/chat/',kind:'news'}
+ ]},
  suno:{links:[
  {label:'iPhone 下载',url:'https://apps.apple.com/us/app/suno-ai-songs-music-lyrics/id6480136315',kind:'ios'},
  {label:'安卓下载指引',url:'https://help.suno.com/en/articles/3134337',kind:'android'},
