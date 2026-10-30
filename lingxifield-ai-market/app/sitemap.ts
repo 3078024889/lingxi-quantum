@@ -1,7 +1,11 @@
-import type { MetadataRoute } from 'next';
-import {supportedLocales} from '../lib/locale-pages';
+import type {MetadataRoute} from 'next';
 import {entries} from '../lib/catalog-store';
+import {indexableMarketLocales,marketCanonicalOrigin} from '../lib/market-index-policy';
 export default function sitemap():MetadataRoute.Sitemap{
  if(entries.length===0)return [];
- return supportedLocales.map(lang=>({url:`https://lingxifield.com/${lang}/ai`,changeFrequency:'daily' as const,priority:0.8}));
+ const languages=indexableMarketLocales();
+ if(!languages.length)return [];
+ // No indexing just a translated navigation shell as unique language content.
+ return languages.map(lang=>({url:marketCanonicalOrigin+'/'+lang+'/ai',
+  changeFrequency:'daily' as const,priority:0.8}));
 }
