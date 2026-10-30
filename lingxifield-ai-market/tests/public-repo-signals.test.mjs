@@ -6,8 +6,8 @@ test('source list uses GitHub official API with bounded timeout and no speculati
  assert.match(s,/Stars and forks do not represent users/);
  assert.doesNotMatch(s,/Math\.random/);
 });
-test('new public repository panel is wired into market UI',async()=>{
+test('GitHub developer signals are not shown as a consumer popularity leaderboard',async()=>{
  const s=await read('app/market-workbench.tsx');
- assert.match(s,/import PublicRepoSignals from/);
- assert.match(s,/<PublicRepoSignals\/>/);
+ assert.doesNotMatch(s,/<PublicRepoSignals\/>/);
+ assert.match(s,/PriceLeaderboards/);
 });
