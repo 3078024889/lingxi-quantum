@@ -62,6 +62,7 @@ jobs:
             20261029_ai_market_h_integration_missing_tables.sql
             20261030_ai_market_incremental_sources.sql
             20261030_ai_market_vendor_submission.sql
+            20261030_ai_market_vendor_public_intake.sql
           )
           for name in "${migrations[@]}"; do
             echo "Applying $name"
@@ -128,6 +129,27 @@ jobs:
             IF n<>3 THEN RAISE EXCEPTION 'SYNC_RUNS_NOT_RECORDED'; END IF;
             IF EXISTS(SELECT 1 FROM public.ai_market_source_sync_runs WHERE publication_approved)
             THEN RAISE EXCEPTION 'UNREVIEWED_DATA_PUBLISHED'; END IF;
+          END $market$;
+          SQL
+      - name: Validate public free intake only creates nonpublished pending requests
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $market$
+          BEGIN
+            IF NOT has_function_privilege('anon','public.ai_market_submit_vendor_submission(jsonb)','EXECUTE')
+            THEN RAISE EXCEPTION 'VENDOR_INTAKE_NOT_CALLABLE'; END IF;
+            IF has_table_privilege('anon','public.ai_market_vendor_submissions','INSERT') OR
+               has_table_privilege('anon','public.ai_market_vendor_submissions','SELECT')
+            THEN RAISE EXCEPTION 'DIRECT_PUBLIC_VENDOR_TABLE_ACCESS'; END IF;
+          END $market$;
+          BEGIN;
+          SET LOCAL ROLE anon;
+          SELECT public.ai_market_submit_vendor_submission('{"project_id":"example","request_type":"claim","product_name":"Example","official_site":"https://example.com","work_email":"team@example.com","submitter_name":"Team","evidence_url":"https://example.com/about","proposed_data":{"x":"https://x.com/example"}}'::jsonb);
+          COMMIT;
+          DO $market$
+          BEGIN
+            IF (SELECT count(*) FROM public.ai_market_vendor_submissions WHERE status='pending_identity_check' AND verified_domain=false)<>1
+            THEN RAISE EXCEPTION 'VENDOR_PENDING_STATE_INVALID'; END IF;
           END $market$;
           SQL
       - name: Ensure migrations are re-runnable without destructive reset
