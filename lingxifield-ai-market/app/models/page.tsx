@@ -3,7 +3,7 @@ import {useEffect,useState} from 'react';
 type Offer={id:string;providerId:string;providerName:string;inputUsdPerMillion:number|null;outputUsdPerMillion:number|null;contextLimit:number|null;sourceUrl:string};
 type Group={modelId:string;name:string;providerCount:number;lowestObservedInputUsdPerMillion:number|null;offers:Offer[]};
 type Data={total:number;items:Group[];nextCursor:number|null;sourceCollectedAt?:string;status?:string};
-const money=(value:number|null)=>value===null?'—':'('en-US',{maximumFractionDigits:5});
+const money=(value:number|null)=>value===null?'—':'$'+value.toLocaleString('en-US',{maximumFractionDigits:5});
 export default function ModelsPage(){
  const [q,setQ]=useState(''),[term,setTerm]=useState(''),[cursor,setCursor]=useState(0);
  const [order,setOrder]=useState<'providers'|'price'>('providers');
