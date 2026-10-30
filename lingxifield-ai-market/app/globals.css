@@ -57,3 +57,23 @@
 .offerText{white-space:normal;min-width:150px;max-width:265px;line-height:1.6;color:#274c7a}
 .dataWaiting{padding:15px;color:#536c89;background:#f5f8ff;border-radius:8px}
 @media(max-width:760px){.offerText{min-width:110px;max-width:180px}.decisionMoreItems{gap:6px}}
+
+
+.vendorClaimInline{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 18px;border-radius:9px;background:#fff;margin:10px 0;color:#536b89}
+.vendorClaimInline a{color:#0b64e8;font-weight:700;text-decoration:none;white-space:nowrap}
+.vendorInvite{margin:16px 0;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.vendorInvite h2{font-size:18px;margin:0 0 6px}.vendorInvite p{margin:0;color:#60768f}
+.vendorInvite a{background:#0b64ec;color:white;font-weight:700;border-radius:8px;padding:12px 18px;text-decoration:none;white-space:nowrap}
+.vendorClaimPage{max-width:960px;margin:20px auto;background:transparent;padding:16px}
+.vendorClaimPage>a{color:#215ba7;text-decoration:none}
+.vendorClaimIntro{padding:28px 0}.vendorClaimIntro span{font-size:12px;color:#0b65e6;font-weight:700}
+.vendorClaimIntro h1{font-size:28px;margin:12px 0}.vendorClaimIntro p{color:#5a718e;line-height:1.8}
+.vendorClaimForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:24px;border:1px solid #dce8f7;background:white;border-radius:14px}
+.vendorClaimForm label{display:flex;flex-direction:column;gap:7px;color:#263f5f;font-weight:600}
+.vendorClaimForm input,.vendorClaimForm textarea,.vendorClaimForm select{width:100%;padding:11px 12px;font:inherit;border:1px solid #cad8ec;border-radius:8px;background:#fff;color:#1f3859}
+.vendorClaimForm .full{grid-column:1/-1}
+.vendorClaimForm .vendorPrivacy{color:#6a7f99;line-height:1.7;font-size:12px;margin:0}
+.vendorClaimForm button[type=submit]{border:0;background:#0968eb;color:#fff;font-weight:700;border-radius:8px;padding:13px 24px}
+.vendorClaimForm details summary{cursor:pointer;font-weight:700;color:#24518c}
+.vendorExtra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:12px}
+@media(max-width:740px){.vendorClaimForm,.vendorExtra{grid-template-columns:1fr}.vendorClaimInline,.vendorInvite{flex-direction:column;align-items:flex-start}.vendorClaimPage{padding:12px}}
