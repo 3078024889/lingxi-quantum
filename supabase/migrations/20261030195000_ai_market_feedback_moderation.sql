@@ -43,7 +43,7 @@ begin
  return jsonb_build_object('items',v_results);
 end
 $$;
-revoke all on function public.ai_market_pending_feedback(integer) from public;
+revoke all on function public.ai_market_pending_feedback(integer) from public,anon;
 grant execute on function public.ai_market_pending_feedback(integer) to authenticated;
 
 create or replace function public.ai_market_moderate_feedback(
@@ -74,5 +74,5 @@ begin
  return jsonb_build_object('ok',true,'id',p_id,'status',v_new);
 end
 $$;
-revoke all on function public.ai_market_moderate_feedback(uuid,text,text) from public;
+revoke all on function public.ai_market_moderate_feedback(uuid,text,text) from public,anon;
 grant execute on function public.ai_market_moderate_feedback(uuid,text,text) to authenticated;
