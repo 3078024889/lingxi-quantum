@@ -9,7 +9,7 @@ test('single compact market row has official, desktop, mobile, detail, compariso
  const headings=await read('lib/market-matrix-headings.ts');
  assert.ok(main.includes('className="marketDirectoryTable marketMatrixTable"'));
  assert.ok(main.includes('id="tools-list"'));
- assert.ok(main.includes('<MarketMatrixRow key={p.id}'));
+ assert.ok(main.includes('<MarketMatrixRow language={language} region={region} key={p.id}'));
  for(const label of ['官网 · 下载','免费额度','实际价格'])assert.ok(headings.includes(label));
  assert.ok(main.includes('MATRIX_HEADINGS[language]'));
  assert.ok(actions.includes("platformLinks(platform.id).links.filter(safePublisherLink)"));
