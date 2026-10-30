@@ -171,6 +171,22 @@ export const CAPABILITY_PROFILES:Readonly<Record<string,CapabilityProfile>>={
   cap('首尾帧与镜头控制','给出开头结尾画面约束镜头运动和速度变化','让室内场景从首帧自然过渡到指定结尾','动作连续与人物一致性仍需逐条检验','https://jimeng.jianying.com/'),
   cap('参考图保留与局部风格调整','在图生图中参考主体特征，进行背景或风格改造','把同一人物转成不同场景的宣传海报','保留能力依模型、参考素材及使用额度变化','https://jimeng.jianying.com/')
  ],['从即梦官网选择图片或视频入口','输入中文场景、上传有权使用的参考图','核对时长、积分、水印与保存条件'])
+,
+ grok:profile('结合 X 场景的对话、问题解答和信息辅助','Grok 面向问题分析、灵感整理和 X 场景使用，相关个性化和数据使用受账号设置约束','X 用户、内容研究者、创作者',[
+  cap('自然语言解答与构思','输入问题，获得说明、备选想法与多轮讨论','将文章主题整理成多个不同角度','回答可能存在事实错误，重要信息需要核查','https://help.x.com/en/using-x/about-grok'),
+  cap('X 环境中的 AI 辅助','在支持的 X 入口使用 Grok 处理信息和创意任务','围绕一个公开话题整理概念与后续问题','入口、模型和配额受地区、账户和产品调整影响','https://help.x.com/en/using-x/about-grok'),
+  cap('语音与个性化控制','按支持功能使用语音和个人偏好控制','通过自然语音交流完成信息查找','交互可能用于模型改进；需核对隐私设置','https://help.x.com/en/using-x/about-grok')
+ ],['核实所在地区和 X/Grok 的使用条件','提交问题或任务并按需要继续追问','核对来源以及隐私和数据训练设置']),
+ qwen:profile('多模态内容理解、中文创作与模型 API','千问区分在线 Qwen Chat、API 模型与不同输入模态，不把整个模型家族混为单一产品','中文研究人员、开发者、多模态资料分析团队',[
+  cap('多语言写作与问答','通过 Qwen 产品或支持的 API 完成创作、翻译、摘要与问答','把一份产品说明整理成不同语言的介绍','不同模型、聊天与 API 入口的额度和模态不同','https://qwen.ai/apiplatform'),
+  cap('图片、视频和文档理解','在支持的视觉模型上提供图片或视频进行问答','提取画面信息并归纳视频内容','须选择视觉语言型号；文本专用型号不具备该能力','https://qwen.ai/apiplatform'),
+  cap('编程与智能体开发','使用特定 Qwen 模型进行编码、工具调用和流程辅助','为业务脚本生成单元测试与纠错建议','代码需运行验证；能力依具体版本和工具权限','https://qwen.ai/blog?id=qwen3.7&locale=en')
+ ],['选择网页版对话还是开发者 API','根据任务选择文本、视觉或编程模型','验证版本、费用、来源与实际运行结果']),
+ luma:profile('有镜头控制的图片视频创作与现有视频再设计','Dream Machine 与 Ray3 系列结合文/图生视频、关键帧、角色参考和视频修改','影视短片、广告视觉、视频创作者',[
+  cap('文字/图片引导视频生成','输入场景提示或图片参考创建镜头动态','从角色参考图制作几秒推进镜头','视频生成模型、额度、时长及分辨率按方案不同','https://lumalabs.ai/changelog/welcome-to-the-all-new-dream-machine'),
+  cap('首尾帧与角色参考控制','在 Ray3 的特定流程中使用首尾帧和人物参考组织转场','使镜头从起始参考画面过渡到指定结尾','角色一致性不能保证绝对保留，须实测结果','https://lumalabs.ai/learning-hub/ray3-modify-user-guide'),
+  cap('修改既有视频','在 Modify 模式进行服装、环境或光照变化','保留演员动作同时重设环境背景','素材时长和角色参考可用性受流程与订阅限制','https://lumalabs.ai/news/ray3-modify')
+ ],['确认 Dream Machine 入口、额度和型号','准备合法参考图片或视频并选择镜头控制','短镜头试生成后核对费用、人物一致性与下载'])
 
 };
 export function capabilityProfile(id:string):CapabilityProfile|undefined{return CAPABILITY_PROFILES[id];}
