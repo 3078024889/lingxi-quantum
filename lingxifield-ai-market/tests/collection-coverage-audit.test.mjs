@@ -10,6 +10,6 @@ test('one-shot batch runner provides source-by-source evidence and explicit gaps
 });
 test('one-shot runner does not silently report success after failed sources',async()=>{
  const source=await read('scripts/run-all-sources-and-audit.mjs');
- assert.ok(source.includes('if(run.status!==0)process.exitCode'));
+ assert.ok(source.includes("if(run.status!==0||staging?.status==='failed')process.exitCode"));
  assert.ok(source.includes('disclaimer:'));
 });
