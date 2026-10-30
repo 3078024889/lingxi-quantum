@@ -5,7 +5,7 @@ import {platformLinks,safePublisherLink} from '../lib/official-platform-links';
 export function claimUrl(platform:Pick<Platform,'id'|'name'>){
  return '/vendor/claim?'+new URLSearchParams({product:platform.id,name:platform.name}).toString();
 }
-export default function MarketRowActions({platform,onDetail}:{platform:Platform;onDetail:()=>void}){
+export default function MarketRowActions({platform,onDetail,onToggleCompare,isCompared}:{platform:Platform;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean}){
  const links=platformLinks(platform.id).links.filter(safePublisherLink);
  const desktops=links.filter(l=>l.kind==='desktop');
  const mobiles=links.filter(l=>l.kind==='ios'||l.kind==='android');
@@ -15,6 +15,7 @@ export default function MarketRowActions({platform,onDetail}:{platform:Platform;
   {desktops.length>0&&<a href={desktops[0].url} target="_blank" rel="noopener noreferrer" title={desktops[0].label}>电脑下载 ↗</a>}
   {mobileUnique.map((link,i)=><a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" title={link.label}>{mobileUnique.length===1?'手机下载':link.kind==='ios'?'iPhone':'安卓'} ↗</a>)}
   <button type="button" onClick={onDetail}>详情</button>
+  <button type="button" className={isCompared?"rowCompareActive":""} onClick={onToggleCompare}>{isCompared?"已选对比":"对比"}</button>
   <a href={claimUrl(platform)} className="vendorRowClaim" title={'免费认领或补充 '+platform.name+' 官方资料'}>厂商认领</a>
  </div>;
 }
