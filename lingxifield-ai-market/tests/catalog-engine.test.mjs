@@ -10,3 +10,17 @@ test('accepts strictly newer updates',()=>{const r=mergeCatalog([row()],[{...row
 test('searches capabilities and paginates',()=>{const r=searchCatalog([row('one'),{...row('two'),id:'two',name:'Other AI'}],{q:'video',limit:1});assert.equal(r.total,2);assert.equal(r.nextCursor,1)});
 test('does not return discontinued by default',()=>assert.equal(searchCatalog([{...row(),status:'discontinued'}]).total,0));
 test('hard caps API page size',()=>assert.equal(searchCatalog([row()],{limit:99999}).limit,100));
+
+
+test('official link and repository are independently typed',()=>{
+ assert.equal(validCatalogEntry({...row(),website:'https://comfy.org/',websiteKind:'official',repositoryUrl:'https://github.com/Comfy-Org/ComfyUI'}),true);
+ assert.equal(validCatalogEntry({...row(),website:'https://github.com/org/repo',websiteKind:'official'}),false);
+ assert.equal(validCatalogEntry({...row(),website:'https://github.com/org/repo',websiteKind:'repository'}),true);
+ assert.equal(validCatalogEntry({...row(),website:'https://github.com/org/repo',websiteKind:'documentation'}),true);
+ assert.equal(validCatalogEntry({...row(),website:'https://example.org',websiteKind:'invalid'}),false);
+ assert.equal(validCatalogEntry({...row(),website:'https://example.org',repositoryUrl:'https://evil.example/source'}),false);
+});
+test('invalid website is rejected without crashing the catalog validator',()=>{
+ assert.equal(validCatalogEntry({...row(),website:'not-an-url',websiteKind:'official'}),false);
+ assert.equal(validCatalogEntry({...row(),website:'not-an-url',websiteKind:'repository'}),false);
+});
