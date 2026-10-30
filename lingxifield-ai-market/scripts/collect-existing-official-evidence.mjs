@@ -4,6 +4,7 @@ import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {classifyRedirect,readBoundedResponse,unmodifiedState} from '../lib/evidence-http.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const dir=resolve(process.env.AI_MARKET_EVIDENCE_DIR||resolve(root,'reports/official-evidence'));
 await mkdir(dir,{recursive:true});
@@ -28,15 +29,14 @@ for(const item of list.slice(0,max)){
  try{response=await fetch(url,{headers,redirect:'manual',signal:AbortSignal.timeout(20000)})}
  catch(e){results.push({id:item.id,state:'NETWORK_ERROR',error:String(e).slice(0,140)});continue}
  const date=new Date().toISOString();
- if(response.status===304){results.push({id:item.id,state:'UNCHANGED',checkedAt:date,priorHash:old.hash||null});continue}
- if(response.status>=300&&response.status<400){results.push({id:item.id,state:'REDIRECT_REVIEW',location:response.headers.get('location'),checkedAt:date});continue}
+ if(response.status===304){results.push({id:item.id,state:unmodifiedState(old),checkedAt:date,priorHash:old.hash||null});continue}
+ if(response.status>=300&&response.status<400){results.push({id:item.id,...classifyRedirect(item.url,response.headers.get('location')),checkedAt:date});continue}
  if(!response.ok){results.push({id:item.id,state:response.status===429?'RATE_LIMITED':'HTTP_ERROR',status:response.status,checkedAt:date});if(response.status===429)break;continue}
  const type=response.headers.get('content-type')||'';
  if(!(item.sourceType==='github_official_repository_api'?type.includes('json'):type.includes('html'))){results.push({id:item.id,state:'CONTENT_TYPE_REVIEW',contentType:type,checkedAt:date});continue}
- const declared=Number(response.headers.get('content-length')||0);
- if(declared>1200000){results.push({id:item.id,state:'TOO_LARGE',checkedAt:date});continue}
- const raw=await response.text();
- if(raw.length>1200000){results.push({id:item.id,state:'TOO_LARGE',checkedAt:date});continue}
+ const body=await readBoundedResponse(response);
+ if(body.status!=='OK'){results.push({id:item.id,state:body.status,checkedAt:date});continue}
+ const raw=body.raw;
  const hash=sha(raw),changed=old.hash!==hash;
  let evidence;
  if(item.sourceType==='github_official_repository_api'){
