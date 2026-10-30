@@ -10,6 +10,16 @@ await mkdir(dir,{recursive:true});
 const run=spawnSync(process.execPath,[resolve(root,'scripts/run-source-pipeline.mjs'),...process.argv.slice(2)],{
  cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir},encoding:'utf8',timeout:240000,maxBuffer:8*1024*1024
 });
+// Always stage identity-normalized product candidates after source collection.
+// This is a local review artifact, not an automatic verification or database import.
+let staging=null;
+try{
+ const stage=spawnSync(process.execPath,[resolve(root,'scripts/build-market-staging-bridge.mjs')],{
+ cwd:root,env:{...process.env,AI_MARKET_SNAPSHOT_DIR:dir},encoding:'utf8',timeout:90000,maxBuffer:1024*1024
+ });
+ staging={status:stage.status===0?'built':'failed',code:stage.status,error:stage.error?.code||null,
+ output:(stage.stdout||'').slice(-500),stderr:(stage.stderr||'').slice(-500)};
+}catch(error){staging={status:'failed',error:String(error)}}
 const names=[
  ['modelsdev','modelsdev-bulk.json','modelCount'],
  ['modelGroups','model-offer-groups.json','distinctModelIdentifiers'],
@@ -23,10 +33,10 @@ const coverage={};for(const [name,file,key] of names){
  catch{coverage[name]={state:'not_collected',count:null}}
 }
 let taskResults=[];try{const r=JSON.parse(await readFile(resolve(dir,'pipeline-last-run.json'),'utf8'));taskResults=r.results||[]}catch{}
-const report={generatedAt:new Date().toISOString(),exitCode:run.status,error:run.error?.code||null,coverage,
+const report={generatedAt:new Date().toISOString(),exitCode:run.status,error:run.error?.code||null,coverage,staging,
  results:taskResults.map(x=>({source:x.source,outcome:x.outcome,code:x.code??null})),
  disclaimer:'HF numbers are HF-only; third party model pricing is not independently verified; commercial pricing, GEO and traffic are not completed.'};
 const file=resolve(dir,'collection-coverage-audit.json');await writeFile(file+'.tmp',JSON.stringify(report,null,2)+'\n');await rename(file+'.tmp',file);
 console.log(JSON.stringify({report:file,...report},null,2));
 if(run.stderr)console.error(run.stderr.slice(-1200));
-if(run.status!==0)process.exitCode=run.status||2;
+if(run.status!==0||staging?.status==='failed')process.exitCode=run.status||2;
