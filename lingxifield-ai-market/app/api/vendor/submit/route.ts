@@ -17,15 +17,17 @@ export async function POST(request:Request){
  const parsed=validateVendorSubmission(payload);
  if(!parsed)return NextResponse.json({error:'INVALID_SUBMISSION'},{status:400,headers});
  const base=process.env.AI_MARKET_SUPABASE_URL||process.env.SUPABASE_URL||process.env.NEXT_PUBLIC_SUPABASE_URL;
- const key=process.env.AI_MARKET_SERVICE_ROLE_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY;
+ const key=process.env.AI_MARKET_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
  if(!base||!key)return NextResponse.json({error:'SUBMISSION_NOT_AVAILABLE'},{status:503,headers});
  let url:URL;
- try{url=new URL('/rest/v1/ai_market_vendor_submissions',base)}catch{return NextResponse.json({error:'SUBMISSION_NOT_AVAILABLE'},{status:503,headers})}
+ try{url=new URL('/rest/v1/rpc/ai_market_submit_vendor_submission',base)}catch{return NextResponse.json({error:'SUBMISSION_NOT_AVAILABLE'},{status:503,headers})}
  if(url.protocol!=='https:'||!url.hostname.endsWith('.supabase.co'))return NextResponse.json({error:'SUBMISSION_NOT_AVAILABLE'},{status:503,headers});
  try{
   const {domainMatches,...row}=parsed;
-  const response=await fetch(url,{method:'POST',headers:{apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'return=minimal'},
-   body:JSON.stringify(row),signal:AbortSignal.timeout(10000),redirect:'error',cache:'no-store'});
+  const authHeaders:Record<string,string>={apikey:key,'Content-Type':'application/json'};
+  if(key.startsWith('eyJ'))authHeaders.Authorization='Bearer '+key; // Legacy anon JWT.
+  const response=await fetch(url,{method:'POST',headers:authHeaders,
+   body:JSON.stringify({p_document:row}),signal:AbortSignal.timeout(10000),redirect:'error',cache:'no-store'});
   if(response.status===409)return NextResponse.json({accepted:true,alreadySubmitted:true},{status:202,headers});
   if(!response.ok)return NextResponse.json({error:'SUBMISSION_NOT_AVAILABLE'},{status:503,headers});
   // No permission or edit rights are granted. Email-domain match is not itself ownership proof.
