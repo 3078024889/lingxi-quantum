@@ -364,9 +364,9 @@ test('video resolutions are sourced per model; 2K and 4K are never backfilled fr
 test('developer API shows model-specific official token rates instead of user-supplied pricing',async()=>{
  const r=await import(pathToFileURL(path.join(ROOT,'lib/market-rate-catalog.ts')).href);
  for(const a of r.API_RATES){assert.ok(a.source.startsWith('https://'));assert.ok(a.inPerMillion>=0);assert.ok(a.outPerMillion>=0);}
- const peak=r.API_RATES.find(a=>a.model.startsWith('deepseek-flash · 高峰'));
- assert.equal(peak.currency,'CNY');
- assert.equal(math.estimateApiUsageCost(1000000,250000,peak.inPerMillion,peak.outPerMillion),4);
+ const peak=r.API_RATES.find(a=>a.model.startsWith('deepseek-flash · peak'));
+ assert.equal(peak.currency,'USD');
+ assert.equal(math.estimateApiUsageCost(1000000,250000,peak.inPerMillion,peak.outPerMillion),0.6);
  const ui=read('app/market-cost-estimator.tsx');
  assert.match(ui,/MARKET_API_PRODUCTS\.map/);
  assert.doesNotMatch(ui,/setInputRate|setOutputRate/);
