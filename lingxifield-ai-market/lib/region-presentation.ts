@@ -14,7 +14,7 @@ const copy:Record<Language,{top:string;more:string;empty:string;partial:string;c
  ar:{top:'المناطق الرئيسية',more:'عرض المزيد',empty:'لم نجمع القائمة الرسمية بعد',partial:'مناطق مؤكدة وليست القائمة الكاملة',complete:'المناطق الرسمية',visit:'المصدر',feedback:'شارك تجربة الوصول',access:'إمكانية الاتصال لا تعني الدعم الرسمي',note:'قد تختلف دولة VPN والحساب والدفع'}
 };
 export function regionPresentation(id:string,language:Language){
- const priority=(id==='gemini'?['HK','US','JP','SG','GB','AU']:['US','JP','SG','GB','AU','HK']).concat(['DE','FR','KR','CA','IN','BR','TW']);
+ const priority=(id==='gemini'?['HK','US','JP','SG','GB','AU']:['US','JP','SG','GB','AU','DE','FR','CA']).concat(['KR','IN','BR','TW','HK']);
  const snapshot=officialCountrySnapshot(id);
  const complete=!(snapshot&&'isComplete' in snapshot&&snapshot.isComplete===false);
  const countries=officialSupportCountries(id);
@@ -22,12 +22,16 @@ export function regionPresentation(id:string,language:Language){
   const x=priority.indexOf(a),y=priority.indexOf(b);
   return (x<0?100:x)-(y<0?100:y)||regionName(a as RegionCode,language).localeCompare(regionName(b as RegionCode,language));
  });
- return {words:copy[language],top:sorted.slice(0,5),other:sorted.slice(5),total:sorted.length,
+ return {words:copy[language],top:sorted.slice(0,8),other:sorted.slice(8),total:sorted.length,
   complete,source:snapshot?.source||null,checkedAt:snapshot?.checkedAt||null};
 }
 export function globalRegionSummary(id:string,language:Language){
  const info=regionPresentation(id,language);
- if(info.top.length)return info.top.map(x=>regionName(x as RegionCode,language)).join(' · ') +(info.other.length?' +'+info.other.length:'')+(!info.complete?' *':'');
+ if(info.top.length){
+  const prefix=id==='anthropic-sdk-python'?(language==='zh'?'Claude API 支持：':'Claude API: '):'';
+  const remaining=info.other.length?(language==='zh'?' · 另'+info.other.length+'个': ' · +'+info.other.length):'';
+  return prefix+info.top.map(x=>regionName(x as RegionCode,language)).join(' · ')+remaining+(!info.complete?(language==='zh'?'（部分名单）':' (partial list)'):'');
+ }
  // Specific offline products are not tied to the publisher's web support country list.
  if(globalRegionFact(id,'HK').policy.status==='local')return language==='zh'?'本地安装运行 · 不限官网服务地区':copy[language].access;
  return info.words.empty;
