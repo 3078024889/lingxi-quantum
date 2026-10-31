@@ -18,8 +18,9 @@ export default function MarketVendorPaymentChannels({language,currency}:{languag
  const t=TEXT[language];const [items,setItems]=useState<Provider[]>([]);
  useEffect(()=>{const c=new AbortController();fetch('/api/v1/billing/providers',{signal:c.signal,cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(!c.signal.aborted&&Array.isArray(d?.providers))setItems(d.providers)}).catch(()=>{});return()=>c.abort()},[]);
  const active=items.filter(p=>(currency==='USD'?p.provider==='paypal':p.provider!=='paypal'));
+ const fallback:Provider[]=currency==='USD'?[{provider:'paypal',checkoutAvailable:false,mode:'not_live',reason:'merchant_credentials_required'}]:[{provider:'alipay',checkoutAvailable:false,mode:'not_live',reason:'merchant_credentials_required'},{provider:'wechat',checkoutAvailable:false,mode:'not_live',reason:'merchant_credentials_required'}];
  return <section className="marketPaymentChannels" aria-label={t.status}><h3>{t.title}</h3><p>{t.info}</p>
-  <div className="marketPaymentChannelList">{(active.length?active:currency==='USD'?[{provider:'paypal',checkoutAvailable:false}]:[{provider:'alipay',checkoutAvailable:false},{provider:'wechat',checkoutAvailable:false}]).map(p=><div key={p.provider} className="marketPaymentChannel"><strong>{names[p.provider]}</strong><span>{currency==='USD'?'USD':'CNY'} · {p.checkoutAvailable?t.ready:t.closed}</span></div>)}</div>
+  <div className="marketPaymentChannelList">{(active.length?active:fallback).map(p=><div key={p.provider} className="marketPaymentChannel"><strong>{names[p.provider]}</strong><span>{currency==='USD'?'USD':'CNY'} · {p.checkoutAvailable?t.ready:t.closed}</span></div>)}</div>
   <p><strong>{t.free}</strong> <a href="/vendor/claim">{t.claim} ↗</a></p>
  </section>;
 }
