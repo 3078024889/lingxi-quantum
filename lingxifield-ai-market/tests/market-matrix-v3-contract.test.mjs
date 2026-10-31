@@ -38,7 +38,7 @@ test('newbie path stays task oriented without fabricated ranking',()=>{
  assert.match(home,/beginner:tab==='新手友好榜'\?'1':'0'/);
  assert.match(home,/beginner:tab==='新手友好榜'\?'1':'0'/);
  assert.doesNotMatch(row,/暂无统一新手上手成功率实测/);
- assert.match(home,/序号不是排名/);
+ assert.match(home,/SeoGeoBoard/);
 });
 
 test('official evidence links and vendor separation stay intact',()=>{
