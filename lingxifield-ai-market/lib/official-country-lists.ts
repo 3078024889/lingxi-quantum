@@ -5,6 +5,14 @@
  */
 const parse=(raw:string)=>new Set(raw.trim().split(/\s+/));
 export const OFFICIAL_COUNTRY_SNAPSHOTS={
+ // Official Gemini WEB app excerpt, not a complete 230+ territory transcript.
+ // Never classify regions absent from this subset as unsupported.
+ gemini:{
+  checkedAt:'2026-10-31',isComplete:false,productScope:'Gemini web app',
+  source:'https://support.google.com/gemini/answer/13575153?hl=en',
+  countries:parse('HK US SG JP KR GB DE FR ES PT CA AU IN BR ID PH VN AE TW MY TH MO NZ IT NL')
+ },
+
  chatgpt:{
   checkedAt:'2026-10-30',
   source:'https://help.openai.com/en/articles/7947663-chatgpt-supported-countries',
