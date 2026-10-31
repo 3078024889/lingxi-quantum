@@ -642,6 +642,12 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   }
 ] as ApiRate[];
+export const KLING_PLANS:readonly {id:string;name:string;monthlyCredits:number;firstMonth:number;renewMonthly:number;currency:'USD';source:string}[]=[
+ {id:'standard',name:'Standard',monthlyCredits:660,firstMonth:6.99,renewMonthly:8.8,currency:'USD',source:'https://kling.ai/blog/kling-video-3-0-credit-cost-guide'},
+ {id:'pro',name:'Pro',monthlyCredits:3000,firstMonth:25.99,renewMonthly:32.56,currency:'USD',source:'https://kling.ai/blog/kling-video-3-0-credit-cost-guide'},
+ {id:'premier',name:'Premier',monthlyCredits:8000,firstMonth:64.99,renewMonthly:80.96,currency:'USD',source:'https://kling.ai/blog/kling-video-3-0-credit-cost-guide'},
+ {id:'ultra',name:'Ultra',monthlyCredits:26000,firstMonth:127.99,renewMonthly:159.99,currency:'USD',source:'https://kling.ai/blog/kling-video-3-0-credit-cost-guide'}
+];
 export const RESOLUTIONS:readonly Resolution[]=['360p','480p','720p','1080p','2K','4K'];
 export function ratesForVideo(platform:string){return VIDEO_RATES.filter(p=>p.platform===platform);}
 export function videoRate(id:string){return VIDEO_RATES.find(p=>p.id===id)||null;}
