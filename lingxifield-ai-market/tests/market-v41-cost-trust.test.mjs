@@ -336,11 +336,15 @@ test('video resolutions are sourced per model; 2K and 4K are never backfilled fr
  assert.equal(wan720.perSecond,.6);
  assert.equal(wan1080.perSecond,1.2);
  const wanQuote=r.estimateKnownVideoRate(wan720,10,6,2);
- assert.ok(Math.abs(wanQuote.amount-43.2)<1e-9); // 6 clips x (10 generated + 2 input video)s x ¥0.6
+ assert.ok(Math.abs(wanQuote.amount-43.2)<1e-9);
+ assert.equal(r.estimateKnownVideoRate(wan720,20,1,11),null); // max combined 30 seconds // 6 clips x (10 generated + 2 input video)s x ¥0.6
  const runway=r.VIDEO_RATES.find(v=>v.platform==='runway'&&v.model==='Gen-4.5 Web');
  assert.equal(runway.resolution,'720p');
  assert.equal(r.estimateKnownVideoRate(runway,5,6).credits,360);
  assert.equal(r.estimateKnownVideoRate(runway,12,6),null);
+ const luma=r.VIDEO_RATES.find(v=>v.id==='luma-ray314-720p');
+ assert.equal(r.estimateKnownVideoRate(luma,5,1).credits,100);
+ assert.equal(r.estimateKnownVideoRate(luma,7,1),null);
  assert.ok(r.VIDEO_RATES.filter(v=>v.platform==='runway'&&v.resolution==='4K').every(v=>v.billing==='unverified'));
  const xai=r.VIDEO_RATES.find(v=>v.platform==='grok'&&v.model==='grok-imagine-video-1.5-lite'&&v.resolution==='1080p');
  assert.equal(xai.outputType,'upscaled');
