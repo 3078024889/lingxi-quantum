@@ -19,8 +19,9 @@ test('detail page renders concrete capability cards instead of generic 13-field 
  const ui=await source('app/capability-showcase.tsx');
  const home=await source('app/market-workbench.tsx');
  assert.match(home,/<CapabilityShowcase platform=\{target\} language=\{language\}\/>/);
- for(const text of ['capabilityGrid','capabilityOutcome','capabilityExample','capabilityBoundary','capabilitySource','profile.firstSteps','/vendor/claim'])assert.ok(ui.includes(text),text);
+ for(const text of ['capabilityGrid','capabilityOutcome','capabilitySource','profile.firstSteps','/vendor/claim'])assert.ok(ui.includes(text),text);
  assert.match(ui,/item\.source/);
+ assert.doesNotMatch(ui,/真实用途示例|使用边界/);
 });
 
 test('visitor can browse without site account; manufacturers submit first and claim later',async()=>{
