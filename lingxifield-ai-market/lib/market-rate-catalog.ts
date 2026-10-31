@@ -656,6 +656,55 @@ export const API_RATES:readonly ApiRate[]=[
   {"id":"verified-text-12","platform":"qwen","provider":"Alibaba Cloud Model Studio","model":"qwen3.5-397b-a17b · Beijing ≤128K","currency":"CNY","inPerMillion":1.2,"outPerMillion":7.2,"source":"https://help.aliyun.com/zh/model-studio/model-pricing","notes":"Beijing only, <=128K input; large-context and international prices differ; output rate includes thinking.","checkedAt":"2026-10-31"},
   {"id":"verified-text-13","platform":"qwen","provider":"Alibaba Cloud Model Studio","model":"qwen3.5-35b-a3b · Beijing ≤128K","currency":"CNY","inPerMillion":0.4,"outPerMillion":3.2,"source":"https://help.aliyun.com/zh/model-studio/model-pricing","notes":"Beijing only, <=128K input; output thinking tokens billed at output rate.","checkedAt":"2026-10-31"},
   {"id":"verified-text-14","platform":"openai-python","provider":"OpenAI API","model":"GPT-6.1 Sol · Python SDK example","currency":"USD","inPerMillion":2,"outPerMillion":10,"source":"https://developers.openai.com/api/docs/pricing","notes":"Python SDK is free; using a remote OpenAI model is metered.","checkedAt":"2026-10-31"}
+,
+  {
+    "id": "qwen3.5-397b-sg",
+    "platform": "qwen",
+    "provider": "Alibaba Cloud Model Studio",
+    "model": "qwen3.5-397b-a17b · Singapore ≤256K",
+    "currency": "CNY",
+    "inPerMillion": 4.404,
+    "outPerMillion": 26.421,
+    "source": "https://help.aliyun.com/zh/model-studio/model-pricing",
+    "notes": "Singapore international deployment price in CNY for 0–256K input tokens; not the Beijing rate. Confirm service region before use.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "qwen3.5-35b-sg",
+    "platform": "qwen",
+    "provider": "Alibaba Cloud Model Studio",
+    "model": "qwen3.5-35b-a3b · Singapore ≤256K",
+    "currency": "CNY",
+    "inPerMillion": 1.835,
+    "outPerMillion": 14.678,
+    "source": "https://help.aliyun.com/zh/model-studio/model-pricing",
+    "notes": "Singapore international service. Input/output rate different from China or US endpoints.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "qwen3.5-397b-us",
+    "platform": "qwen",
+    "provider": "Alibaba Cloud Model Studio",
+    "model": "qwen3.5-397b-a17b · US Virginia ≤128K",
+    "currency": "CNY",
+    "inPerMillion": 1.2,
+    "outPerMillion": 7.2,
+    "source": "https://help.aliyun.com/zh/model-studio/model-pricing",
+    "notes": "US Virginia regional endpoint, 0–128K input tokens; separate long-context bracket.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "qwen3.5-35b-us",
+    "platform": "qwen",
+    "provider": "Alibaba Cloud Model Studio",
+    "model": "qwen3.5-35b-a3b · US Virginia ≤128K",
+    "currency": "CNY",
+    "inPerMillion": 0.4,
+    "outPerMillion": 3.2,
+    "source": "https://help.aliyun.com/zh/model-studio/model-pricing",
+    "notes": "US Virginia regional endpoint, 0–128K input tokens; separate long-context bracket.",
+    "checkedAt": "2026-10-31"
+  }
 ] as ApiRate[];
 export const KLING_PLANS:readonly {id:string;name:string;monthlyCredits:number;firstMonth:number;renewMonthly:number;currency:'USD';source:string}[]=[
  {id:'standard',name:'Standard',monthlyCredits:660,firstMonth:6.99,renewMonthly:8.8,currency:'USD',source:'https://kling.ai/blog/kling-video-3-0-credit-cost-guide'},
