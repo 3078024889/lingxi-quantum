@@ -26,6 +26,6 @@ export default async function Methodology({searchParams}:{searchParams:Promise<{
   <section><h2>{t.geo}</h2><p>{t.geoText}</p></section>
   <section><h2>{t.vendor}</h2><p>{t.vendorText}</p></section>
   <p>{t.correction} <Link href="/vendor/claim" style={{color:'#1766c8'}}>LINGXIFIELD</Link></p>
-  <p><a href="https://artificialanalysis.ai/methodology" target="_blank" rel="noopener noreferrer">Artificial Analysis methodology</a> · <a href="https://thefuturepedia.com/about-us/" target="_blank" rel="noopener noreferrer">Futurepedia verification policy</a></p>
+  <p><a href="https://artificialanalysis.ai/methodology" target="_blank" rel="noopener noreferrer">Artificial Analysis methodology</a> · <a href="https://www.futurepedia.io/update-a-tool" target="_blank" rel="noopener noreferrer">Futurepedia editorial update</a></p>
  </main>;
 }
