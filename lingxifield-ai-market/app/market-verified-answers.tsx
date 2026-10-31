@@ -5,7 +5,7 @@ import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from '../lib/market-researche
 import {commercialEvidence} from '../lib/market-commercial-evidence';
 import {paymentFactsFor} from '../lib/market-payment-facts';
 import {globalRegionSummary} from '../lib/region-presentation';
-import {localizedPaymentName} from './market-global-access';
+import {localizedPaymentName} from '../lib/market-localized-payment';
 
 /** Answers are sourced snapshots, not inferred live vendor checkout, SEO rank or legal advice. */
 const WORDS:Record<Language,{heading:string,free:string,price:string,models:string,payments:string,countries:string,commercial:string,source:string,unknown:string,local:string,scope:string}>={
