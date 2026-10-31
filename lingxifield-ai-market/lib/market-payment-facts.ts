@@ -1,6 +1,7 @@
 import type {RegionCode} from './global-region-market';
 import {globalRegionFact} from './global-region-market';
 import {accessFor} from './platform-access-facts';
+import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from './market-researched-facts';
 export type PaymentKey='card'|'alipay'|'wechat'|'paypal'|'appstore';
 export type PaymentFact={methods:string[];source:string|null;scope:'global_offer'|'selected_region'|'unverified_region'|'unsupported';checkedAt:string|null};
 function normalized(method:string){return method.toLowerCase().normalize('NFKC');}
@@ -17,13 +18,15 @@ export function paymentFactsFor(id:string,region:RegionCode):PaymentFact{
  const snapshot=globalRegionFact(id,region);
  if(region!=='GLOBAL'&&snapshot.policy.status==='unsupported')
    return {methods:[],source:snapshot.policy.source||null,scope:'unsupported',checkedAt:snapshot.policy.checkedAt||null};
- const access=accessFor(id);
- const verified=access?.paymentSource?access.payment.filter(s=>!/不支持|不接受|not accepted|not supported/i.test(s)):[];
- const methods=[...new Set([...snapshot.payments.methods,...verified])];
- const source=snapshot.payments.source||access?.paymentSource||null;
- // Only an attributed publisher source can assert that a checkout method is offered.
- return {methods:source?methods:[],source,scope:region==='GLOBAL'?'global_offer':snapshot.policy.status==='supported'?'selected_region':'unverified_region',
- checkedAt:snapshot.payments.checkedAt||access?.checkedAt||null};
+ const access=accessFor(id),research=researchedFact(id);
+ // A payment source belongs to the named payment methods, not a guessed processor.
+ const sourcedSnapshot=snapshot.payments.source?snapshot.payments.methods:[];
+ const sourcedAccess=access?.paymentSource?access.payment.filter(s=>!/不支持|不接受|not accepted|not supported/i.test(s)):[];
+ const sourcedResearch=research?.paymentSource?research.payments||[]:[];
+ const methods=[...new Set([...sourcedSnapshot,...sourcedAccess,...sourcedResearch])];
+ const source=research?.paymentSource||snapshot.payments.source||access?.paymentSource||null;
+ return {methods,source,scope:region==='GLOBAL'?'global_offer':snapshot.policy.status==='supported'?'selected_region':'unverified_region',
+ checkedAt:research?.paymentSource?MARKET_RESEARCH_CHECKED_AT:snapshot.payments.checkedAt||access?.checkedAt||null};
 }
 export function matchesOfficialPayment(id:string,key:PaymentKey,region:RegionCode):boolean {
  const result=paymentFactsFor(id,region);
