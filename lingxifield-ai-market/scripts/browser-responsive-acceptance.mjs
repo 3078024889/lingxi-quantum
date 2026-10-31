@@ -45,6 +45,25 @@ await run('Arabic mobile RTL drawer opens from right and Escape closes',async()=
  assert.equal(await toggle.getAttribute('aria-expanded'),'false');
  await context.close();
 });
+await run('Right-side help drawer opens without layout space on phone and desktop',async()=>{
+ for(const width of [390,1440]){
+  const context=await browser.newContext({viewport:{width,height:900},hasTouch:width<900,isMobile:width<900});
+  const page=await context.newPage();await goto(page,'/en/ai');
+  const drawer=page.locator('#market-help-sidebar'),toggle=page.locator('.lxRightPanelToggle');
+  assert.ok(await toggle.isVisible());
+  assert.equal(await drawer.isVisible(),false);
+  await toggle.click();
+  assert.equal(await toggle.getAttribute('aria-expanded'),'true');
+  assert.ok(await drawer.isVisible());
+  assert.ok(await drawer.locator('#compare').isVisible());
+  const rect=await drawer.boundingBox();
+  assert.ok(rect&&rect.x>=0&&rect.x+rect.width<=width+2);
+  await page.keyboard.press('Escape');
+  assert.equal(await toggle.getAttribute('aria-expanded'),'false');
+  assert.equal(await drawer.isVisible(),false);
+  await context.close();
+ }
+});
 await run('Desktop 1440px category collapse expands content and reopens',async()=>{
  const context=await browser.newContext({viewport:{width:1440,height:900}});
  const page=await context.newPage();await goto(page,'/zh/ai');
