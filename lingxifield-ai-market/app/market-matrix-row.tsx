@@ -12,6 +12,7 @@ import {paymentFactsFor,matchingPaymentMethods} from '../lib/market-payment-fact
 import type {MarketPayment} from '../lib/market-v36-screening';
 import {commercialEvidence} from '../lib/market-commercial-evidence';
 import {localizedProductSummary} from '../lib/market-product-locale';
+import {localizedCatalogFact,localizedLoginFact} from '../lib/market-fact-locale';
 import {localizedCategory} from '../lib/market-home-i18n';
 
 const columns:Record<Language,string[]>={
@@ -55,11 +56,11 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const price=p.conditions?.find(x=>x.label==='价格');
  const commercial=p.conditions?.find(x=>x.label==='商用条件');
  const rawCost=price?.text||guide?.cost||p.price;
- const cost=isUnknownText(rawCost)?specific.price:rawCost;
+ const cost=localizedCatalogFact(p.id,language,'price',isUnknownText(rawCost)?specific.price:rawCost);
  const rawFree=free?.text||guide?.free||p.free;
- const allowance=isUnknownText(rawFree)?specific.free:rawFree;
+ const allowance=localizedCatalogFact(p.id,language,'free',isUnknownText(rawFree)?specific.free:rawFree);
  const rawModels=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models;
- const models=isUnknownText(rawModels)?specific.models:rawModels;
+ const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?specific.models:rawModels);
  const rawCommercial=access?.commercial||commercial?.text;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
  const licenseFact=commercialEvidence(p.id,language);
@@ -74,7 +75,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
   paymentFact.scope==='unverified_region'?
   ({zh:'官网列有渠道，该地区结算未核实',en:'Provider offers it; local checkout unverified',ja:'公式掲載あり・現地決済未確認',ko:'공식 결제수단, 지역 결제 미확인',fr:'Canal officiel ; paiement local non vérifié',de:'Anbieter nennt Option; vor Ort ungeprüft',es:'Método oficial; pago local sin verificar',pt:'Método oficial; pagamento local não verificado',ar:'طريقة رسمية، الدفع المحلي غير مؤكد'} as Record<Language,string>)[language]:
   ({zh:'厂商公开支付渠道 · 以结算页为准',en:'Publisher-listed methods · checkout may vary',ja:'公式決済方法・購入画面で確認',ko:'공식 결제 수단 · 결제 화면 확인',fr:'Moyens publiés · selon paiement',de:'Offizielle Methoden · je Checkout',es:'Métodos oficiales · depende del pago',pt:'Métodos oficiais · confira no checkout',ar:'طرق رسمية، تتغير عند الدفع'} as Record<Language,string>)[language];
- const login=p.id==='anthropic-sdk-python'?(language==='zh'?'SDK可直接安装；调用API需官方账号与密钥':'Install SDK freely; API account and key required'):accessValue(access?.login,specific.login);
+ const login=p.id==='anthropic-sdk-python'?(language==='zh'?'SDK可直接安装；调用API需官方账号与密钥':'Install SDK freely; API account and key required'):localizedLoginFact(language,accessValue(access?.login,specific.login));
  const drama=shortDramaEvidence(p.id);
  const videoTool=Boolean(drama)||/视频|video|film|clip|短剧/i.test(p.category);
  return <tr className="marketOverviewRow marketV36Row" data-market-id={p.id}>
