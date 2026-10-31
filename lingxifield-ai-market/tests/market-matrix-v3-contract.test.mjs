@@ -45,7 +45,7 @@ test('official evidence links and vendor separation stay intact',()=>{
  assert.match(row,/p.conditions\?\.find\(x=>x.label==='模型与用量'\)/);
  assert.match(row,/summary\.source/);
  assert.match(row,/commercial\?\.source/);
- assert.match(row,/globalRegionFact\(p.id,'GLOBAL'\)/);
+ assert.ok(row.includes('globalRegionSummary(p.id,language)'));
  assert.match(row,/MarketRowActions language=\{language\} platform=\{p\}/);
  assert.match(home,/SponsoredFeatures/);
  assert.match(home,/SeoGeoBoard/);
