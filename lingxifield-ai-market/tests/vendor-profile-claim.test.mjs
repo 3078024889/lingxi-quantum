@@ -36,8 +36,8 @@ test('both homepage and product detail give free vendor correction entry',async(
  const home=await read('app/market-workbench.tsx');
  const form=await read('app/vendor/claim/page.tsx');
  const api=await read('app/api/vendor/submit/route.ts');
- assert.ok(home.includes('免费认领 / 补充资料'));
- assert.ok(home.includes('免费提交产品'));
+ assert.ok(home.includes('hc.vendorClaim'));
+ assert.ok(home.includes('MARKET_VENDOR_TRANSLATIONS[language]'));
  assert.ok(form.includes('免费提交申请'));
  assert.ok(api.includes('INVALID_ORIGIN'));
  assert.ok(api.includes('SUBMISSION_NOT_AVAILABLE'));
