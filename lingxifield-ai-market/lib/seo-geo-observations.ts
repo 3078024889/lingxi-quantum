@@ -21,7 +21,7 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
  if(!['google_search_console','bing_webmaster','independent_serp','ai_answer_citation'].includes(String(o.source)))return false;
  if(!['en','ja','ko','fr','de','es','pt','ar','zh'].includes(String(o.language)))return false;
  if(typeof o.query!=='string'||!o.query.trim()||o.query.length>512)return false;
- if(typeof o.country!=='string'||!/^[A-Z]{2}$/.test(o.country))return false;
+ if(typeof o.country!=='string'||!(/^[A-Z]{2}$/.test(o.country)||o.country==='GLOBAL'))return false;
  if(typeof o.observedAt!=='string'||!/^\d{4}-\d{2}-\d{2}T/.test(o.observedAt)||!Number.isFinite(Date.parse(o.observedAt)))return false;
  if(typeof o.sourceUrl!=='string'||!/^https:\/\//.test(o.sourceUrl))return false;
  if(typeof o.recordHash!=='string'||!/^sha256:[0-9a-f]{64}$/.test(o.recordHash))return false;
@@ -48,7 +48,7 @@ export function coverageForSeoGeo(){
 }
 export function groupedSeoGeo(){
  const groups=new Map<string,SeoGeoObservation[]>();
- for(const row of seoGeoObservations) {
+ for(const row of seoGeoObservations.filter(x=>x.source==='independent_serp'||x.source==='ai_answer_citation')) {
   const key=[row.source,row.country,row.language,row.query,row.model||'',row.methodVersion,row.observedAt.slice(0,10)].join('|');
   const list=groups.get(key)||[];list.push(row);groups.set(key,list);
  }
