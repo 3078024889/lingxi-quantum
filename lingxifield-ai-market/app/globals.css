@@ -874,7 +874,7 @@ body{font-size:16px;line-height:1.6}
 /* V4.1: remove sticky occlusion and show actionable evidence inside cells. */
 .app .marketOverviewViewport{overflow-x:auto!important;scrollbar-width:auto!important}
 .app table.marketOverviewTable{width:2050px!important;min-width:2050px!important}
-.app .marketOverviewTable :is(th,td){position:static!important;left:auto!important;right:auto!important;z-index:auto!important;box-shadow:none!important}
+.app .marketOverviewTable :is(th,td){box-sizing:border-box!important}
 .app .marketOverviewTable :is(th,td):focus-within{outline:2px solid #3373d2;outline-offset:-2px}
 .app .marketOverviewTable :is(th:nth-child(3),td:nth-child(3)){width:290px!important}
 .app .marketOverviewTable :is(th:nth-child(6),td:nth-child(6)){width:260px!important}
@@ -888,3 +888,40 @@ body{font-size:16px;line-height:1.6}
 .app .marketRegionCatalog .globalSupportedCountries{display:block;padding-top:7px}
 .app .marketRegionCatalog .globalSupportedCountries>strong{font-size:12px;color:#245b9d}
 .app .marketRegionCatalog .globalSupportedCountries>div{max-height:240px;overflow-y:auto;scrollbar-width:thin}
+
+
+/* V4.2: fixed publisher identity and operations; only middle fact columns scroll.
+   Keep the sticky offsets equal to the explicit column widths. */
+.app .marketOverviewViewport{position:relative!important;overflow-x:auto!important;overscroll-behavior-inline:contain;scrollbar-width:auto}
+.app table.marketOverviewTable{width:2046px!important;min-width:2046px!important;table-layout:fixed!important;border-collapse:separate!important;border-spacing:0!important}
+.app .marketOverviewTable :is(th,td){position:static!important;box-shadow:none!important;vertical-align:top}
+.app .marketOverviewTable :is(th:nth-child(1),td:nth-child(1)){width:48px!important;min-width:48px!important;max-width:48px!important;position:sticky!important;left:0!important;z-index:12!important}
+.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){width:184px!important;min-width:184px!important;max-width:184px!important;position:sticky!important;left:48px!important;z-index:13!important;box-shadow:3px 0 5px rgba(21,54,100,.13)!important}
+.app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){width:174px!important;min-width:174px!important;max-width:174px!important;position:sticky!important;right:0!important;z-index:13!important;box-shadow:-3px 0 5px rgba(21,54,100,.13)!important}
+.app .marketOverviewTable :is(th:nth-child(3),td:nth-child(3)){width:290px!important}
+.app .marketOverviewTable :is(th:nth-child(4),td:nth-child(4)){width:145px!important}
+.app .marketOverviewTable :is(th:nth-child(5),td:nth-child(5)){width:165px!important}
+.app .marketOverviewTable :is(th:nth-child(6),td:nth-child(6)){width:260px!important}
+.app .marketOverviewTable :is(th:nth-child(7),td:nth-child(7)){width:180px!important}
+.app .marketOverviewTable :is(th:nth-child(8),td:nth-child(8)){width:180px!important}
+.app .marketOverviewTable :is(th:nth-child(9),td:nth-child(9)){width:170px!important}
+.app .marketOverviewTable :is(th:nth-child(10),td:nth-child(10)){width:250px!important}
+.app .marketOverviewTable tbody tr:nth-child(odd) :is(td:nth-child(1),td:nth-child(2),td:nth-child(11)){background:#fff!important}
+.app .marketOverviewTable tbody tr:nth-child(even) :is(td:nth-child(1),td:nth-child(2),td:nth-child(11)){background:#f7fbff!important}
+.app .marketOverviewTable tbody tr:hover :is(td:nth-child(1),td:nth-child(2),td:nth-child(11)){background:#eaf3ff!important}
+.app .marketOverviewTable thead :is(th:nth-child(1),th:nth-child(2),th:nth-child(11)){z-index:21!important;background:#eaf3ff!important}
+.app .marketOverviewTable .marketOverviewActions .marketRowActions{display:flex!important;flex-direction:column;gap:5px}
+.app .marketOverviewTable .marketOverviewActions .marketRowActions :is(a,button){width:100%;font-size:12px;min-height:31px}
+.app .marketOverviewTable .marketV36Login strong{font-size:12px;line-height:1.6}
+.app .marketOverviewTable .marketV36Login>a{display:block}
+.app .marketOverviewTable .marketV36Login>small{font-size:11px;line-height:1.5}
+[dir="rtl"] .app .marketOverviewTable :is(th:nth-child(1),td:nth-child(1)){left:auto!important;right:0!important}
+[dir="rtl"] .app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){left:auto!important;right:48px!important}
+[dir="rtl"] .app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){right:auto!important;left:0!important}
+@media(max-width:720px){
+ .app .marketOverviewTable :is(th:nth-child(1),td:nth-child(1)){display:none!important}
+ .app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){width:138px!important;min-width:138px!important;max-width:138px!important;left:0!important;right:auto!important}
+ .app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){width:122px!important;min-width:122px!important;max-width:122px!important;right:0!important;left:auto!important}
+ [dir="rtl"] .app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){left:auto!important;right:0!important}
+ [dir="rtl"] .app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){left:0!important;right:auto!important}
+}
