@@ -68,8 +68,8 @@ const ACCESS:Record<string,AccessConfig>={
   paymentScope:'Stripe checkout, availability differs by country.'
  },
  gemini:{countries:{CN:{status:'conditional',source:GEMINI_REGIONS,checkedAt:stamp,note:'Mainland China: Workspace only on Gemini web app; consumer availability is not implied.',reachability:'not_tested'}},paymentNote:'Gemini web, mobile, Workspace and Google One have different regional conditions.'},
- comfyui:{countries:Object.fromEntries(REGIONS.filter(x=>x!=='GLOBAL').map(r=>[r,local])) as Record<string,RegionVerdict>,paymentNote:'Local open-source software; cloud hosting, paid model licenses and network downloads are separate.'},
- ollama:{countries:Object.fromEntries(REGIONS.filter(x=>x!=='GLOBAL').map(r=>[r,local])) as Record<string,RegionVerdict>,paymentNote:'Local engine; specific model licenses, cloud access and initial downloads differ.'}
+ comfyui:{globalPolicy:local,countries:Object.fromEntries(REGIONS.filter(x=>x!=='GLOBAL').map(r=>[r,local])) as Record<string,RegionVerdict>,paymentNote:'Local open-source software; cloud hosting, paid model licenses and network downloads are separate.'},
+ ollama:{globalPolicy:local,countries:Object.fromEntries(REGIONS.filter(x=>x!=='GLOBAL').map(r=>[r,local])) as Record<string,RegionVerdict>,paymentNote:'Local engine; specific model licenses, cloud access and initial downloads differ.'}
 };
 export function globalRegionFact(id:string,region:RegionCode):MarketRegionFact{
  const p=ACCESS[id];
