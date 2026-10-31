@@ -29,7 +29,7 @@ test('nine-language cost and evidence sources never prefill unverified prices',(
  }
  assert.match(ui,/"headline":"全球 SI AI 行情平台"/);
  assert.match(calculator,/VIDEO_RATES/);
- assert.match(calculator,/RESOLUTIONS/);
+ assert.match(calculator,/variants\.map\(v=><option/);
  assert.match(calculator,/estimateApiUsageCost/);
 });
 test('commercial rights must carry a vendor policy source and conditions',()=>{
