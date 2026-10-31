@@ -37,5 +37,5 @@ export function officialSupportCountries(productId:string){return [...(officialC
 export function officialCountryStatus(productId:string,region:string){
  const snapshot=officialCountrySnapshot(productId);
  if(!snapshot||region==='GLOBAL')return 'unknown' as const;
- return snapshot.countries.has(region)?'supported' as const:'unsupported' as const;
+ return snapshot.countries.has(region)?'supported' as const:('isComplete' in snapshot && snapshot.isComplete===false)?'unknown' as const:'unsupported' as const;
 }
