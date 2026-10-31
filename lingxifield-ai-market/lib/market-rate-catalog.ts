@@ -642,6 +642,54 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   },
   {
+    "id": "openai-gpt6-astra",
+    "platform": "chatgpt",
+    "provider": "OpenAI API",
+    "model": "gpt-6-astra · Standard · short context",
+    "currency": "USD",
+    "inPerMillion": 10,
+    "outPerMillion": 50,
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "notes": "Standard short context; caching, Fast/Batch and regional processing vary.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "openai-gpt6-luna",
+    "platform": "chatgpt",
+    "provider": "OpenAI API",
+    "model": "gpt-6-luna · Standard · short context",
+    "currency": "USD",
+    "inPerMillion": 0.1,
+    "outPerMillion": 0.5,
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "notes": "Standard short context; not the lower batch tier.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "openai-gpt61-terra",
+    "platform": "chatgpt",
+    "provider": "OpenAI API",
+    "model": "gpt-6.1-terra · Standard · short context",
+    "currency": "USD",
+    "inPerMillion": 1,
+    "outPerMillion": 5,
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "notes": "Standard short context; high-context tiers and tools are separate.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "openai-gpt61-sol",
+    "platform": "chatgpt",
+    "provider": "OpenAI API",
+    "model": "gpt-6.1-sol · Standard · short context",
+    "currency": "USD",
+    "inPerMillion": 2,
+    "outPerMillion": 10,
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "notes": "Standard short-context tier; actual output and cached input tokens billed separately.",
+    "checkedAt": "2026-10-31"
+  },
+  {
     "id": "verified-text-02",
     "platform": "chatgpt",
     "provider": "OpenAI API",
@@ -678,6 +726,42 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   },
   {
+    "id": "claude-haiku55",
+    "platform": "claude",
+    "provider": "Anthropic API",
+    "model": "claude-haiku-5-5 · up to 100K prompt tokens",
+    "currency": "USD",
+    "inPerMillion": 0.1,
+    "outPerMillion": 0.5,
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "notes": "Input $0.10 per MTok for prompts up to 100,000 tokens. Above threshold the input price changes; this row only applies to <=100K.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "claude-opus55",
+    "platform": "claude",
+    "provider": "Anthropic API",
+    "model": "claude-opus-5-5 · Standard",
+    "currency": "USD",
+    "inPerMillion": 4,
+    "outPerMillion": 20,
+    "source": "https://platform.claude.com/docs/en/models/opus-5-5/overview",
+    "notes": "Current Opus 5.5 model; Fast mode, caching and Batch API separately priced.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "claude-sonnet55",
+    "platform": "claude",
+    "provider": "Anthropic API",
+    "model": "claude-sonnet-5-5 · Standard",
+    "currency": "USD",
+    "inPerMillion": 2,
+    "outPerMillion": 10,
+    "source": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
+    "notes": "Current Sonnet 5.5 model; caching and Batch API discounts separately priced.",
+    "checkedAt": "2026-10-31"
+  },
+  {
     "id": "verified-text-05",
     "platform": "claude",
     "provider": "Anthropic API",
@@ -711,6 +795,18 @@ export const API_RATES:readonly ApiRate[]=[
     "outPerMillion": 5,
     "source": "https://platform.claude.com/docs/en/about-claude/pricing",
     "notes": "Standard base input and output, not Anthropic batch rate.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "anthropic-sdk-sonnet55",
+    "platform": "anthropic-sdk-python",
+    "provider": "Anthropic API",
+    "model": "claude-sonnet-5-5 · Python SDK · Standard",
+    "currency": "USD",
+    "inPerMillion": 2,
+    "outPerMillion": 10,
+    "source": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
+    "notes": "SDK library free; official Claude API model usage metered separately.",
     "checkedAt": "2026-10-31"
   },
   {
@@ -786,6 +882,18 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   },
   {
+    "id": "openai-sdk-gpt61-terra",
+    "platform": "openai-python",
+    "provider": "OpenAI API",
+    "model": "gpt-6.1-terra · Python SDK · Standard",
+    "currency": "USD",
+    "inPerMillion": 1,
+    "outPerMillion": 5,
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "notes": "The Python SDK is free; actual model calls billed by OpenAI.",
+    "checkedAt": "2026-10-31"
+  },
+  {
     "id": "verified-text-14",
     "platform": "openai-python",
     "provider": "OpenAI API",
@@ -843,114 +951,6 @@ export const API_RATES:readonly ApiRate[]=[
     "outPerMillion": 3.2,
     "source": "https://help.aliyun.com/zh/model-studio/model-pricing",
     "notes": "US Virginia regional endpoint, 0–128K input tokens; separate long-context bracket.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "openai-gpt6-astra",
-    "platform": "chatgpt",
-    "provider": "OpenAI API",
-    "model": "gpt-6-astra · Standard · short context",
-    "currency": "USD",
-    "inPerMillion": 10,
-    "outPerMillion": 50,
-    "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "Standard short context; caching, Fast/Batch and regional processing vary.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "openai-gpt61-sol",
-    "platform": "chatgpt",
-    "provider": "OpenAI API",
-    "model": "gpt-6.1-sol · Standard · short context",
-    "currency": "USD",
-    "inPerMillion": 2,
-    "outPerMillion": 10,
-    "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "Standard short-context tier; actual output and cached input tokens billed separately.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "openai-gpt61-terra",
-    "platform": "chatgpt",
-    "provider": "OpenAI API",
-    "model": "gpt-6.1-terra · Standard · short context",
-    "currency": "USD",
-    "inPerMillion": 1,
-    "outPerMillion": 5,
-    "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "Standard short context; high-context tiers and tools are separate.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "openai-gpt6-luna",
-    "platform": "chatgpt",
-    "provider": "OpenAI API",
-    "model": "gpt-6-luna · Standard · short context",
-    "currency": "USD",
-    "inPerMillion": 0.1,
-    "outPerMillion": 0.5,
-    "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "Standard short context; not the lower batch tier.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "openai-sdk-gpt61-terra",
-    "platform": "openai-python",
-    "provider": "OpenAI API",
-    "model": "gpt-6.1-terra · Python SDK · Standard",
-    "currency": "USD",
-    "inPerMillion": 1,
-    "outPerMillion": 5,
-    "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "The Python SDK is free; actual model calls billed by OpenAI.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "claude-sonnet55",
-    "platform": "claude",
-    "provider": "Anthropic API",
-    "model": "claude-sonnet-5-5 · Standard",
-    "currency": "USD",
-    "inPerMillion": 2,
-    "outPerMillion": 10,
-    "source": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
-    "notes": "Current Sonnet 5.5 model; caching and Batch API discounts separately priced.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "claude-opus55",
-    "platform": "claude",
-    "provider": "Anthropic API",
-    "model": "claude-opus-5-5 · Standard",
-    "currency": "USD",
-    "inPerMillion": 4,
-    "outPerMillion": 20,
-    "source": "https://platform.claude.com/docs/en/models/opus-5-5/overview",
-    "notes": "Current Opus 5.5 model; Fast mode, caching and Batch API separately priced.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "claude-haiku55",
-    "platform": "claude",
-    "provider": "Anthropic API",
-    "model": "claude-haiku-5-5 · up to 100K prompt tokens",
-    "currency": "USD",
-    "inPerMillion": 0.1,
-    "outPerMillion": 0.5,
-    "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "notes": "Input $0.10 per MTok for prompts up to 100,000 tokens. Above threshold the input price changes; this row only applies to <=100K.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "anthropic-sdk-sonnet55",
-    "platform": "anthropic-sdk-python",
-    "provider": "Anthropic API",
-    "model": "claude-sonnet-5-5 · Python SDK · Standard",
-    "currency": "USD",
-    "inPerMillion": 2,
-    "outPerMillion": 10,
-    "source": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
-    "notes": "SDK library free; official Claude API model usage metered separately.",
     "checkedAt": "2026-10-31"
   }
 ] as ApiRate[];
