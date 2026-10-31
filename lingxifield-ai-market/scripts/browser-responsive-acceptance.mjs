@@ -17,6 +17,7 @@ await run('Mobile 390px Chinese drawer open, auto-close and overlay',async()=>{
  await toggle.click();
  assert.equal(await toggle.getAttribute('aria-expanded'),'true');
  assert.ok(await page.locator('#market-category-sidebar').isVisible());
+ await page.waitForTimeout(320); // allow the 230ms CSS slide transition to settle
  const sidebar=await page.locator('#market-category-sidebar').boundingBox();
  assert.ok(sidebar&&sidebar.x>=-2&&sidebar.x+sidebar.width<=392,'drawer inside 390px viewport');
  await page.locator('#market-category-sidebar > button').first().click();
@@ -39,6 +40,7 @@ await run('Arabic mobile RTL drawer opens from right and Escape closes',async()=
  const page=await context.newPage();await goto(page,'/ar/ai');
  assert.equal(await page.locator('.app').getAttribute('dir'),'rtl');
  const toggle=page.locator('.lxMobileCategoriesButton');await toggle.click();
+ await page.waitForTimeout(320);
  const box=await page.locator('#market-category-sidebar').boundingBox();
  assert.ok(box&&box.x>45&&box.x+box.width<393,'RTL starts from right: '+JSON.stringify(box));
  await page.keyboard.press('Escape');
