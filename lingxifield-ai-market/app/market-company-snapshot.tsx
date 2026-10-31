@@ -30,6 +30,6 @@ export default function MarketCompanySnapshot({platform:p,language}:{platform:Pl
   <div className="marketCompanyFacts">{facts.map(f=><div key={f.name}><small>{f.name}</small><strong>{f.value}</strong></div>)}
    <div><small>{t.site}</small><a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
   </div>
-  {team&&good(team.summary)&&<div className="marketCompanyTeam"><strong>{t.team}</strong><p>{language==='zh'?team.summary:p.company}</p><a href={team.source} target="_blank" rel="noopener noreferrer">{t.site} ↗</a></div>}
+  {team&&good(team.summary)&&<div className="marketCompanyTeam"><strong>{t.team}</strong>{language==='zh'&&<p>{team.summary}</p>}<a href={team.source} target="_blank" rel="noopener noreferrer">{t.site} ↗</a></div>}
  </section>;
 }
