@@ -6,9 +6,25 @@
  */
 export const marketLocales=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
 export type MarketLocale=(typeof marketLocales)[number];
-export const marketCanonicalOrigin='https://lingxifield.com';
+/**
+ * Release URL must be an owned, HTTPS production host. Do not let a preview
+ * deployment publish canonical links to the unrelated LINGXIFIELD main homepage.
+ * A release may target /ai subdomain or a dedicated market domain later.
+ */
+export function verifiedMarketOrigin(env=process.env):string|null{
+ const raw=env.AI_MARKET_CANONICAL_ORIGIN;
+ if(!raw)return null;
+ try{
+  const u=new URL(raw);
+  if(u.protocol!=='https:'||u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash)return null;
+  const host=u.hostname.toLowerCase();
+  if(!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'].includes(host))return null;
+  return u.origin;
+ }catch{return null}
+}
+export const marketCanonicalOrigin=verifiedMarketOrigin()||'https://lingxifield.com';
 export function indexableMarketLocales():MarketLocale[]{
- const enabled=process.env.NODE_ENV==='production'&&process.env.AI_MARKET_INDEX_READY==='1'&&process.env.VERCEL_ENV!=='preview';
+ const enabled=process.env.NODE_ENV==='production'&&process.env.AI_MARKET_INDEX_READY==='1'&&process.env.VERCEL_ENV!=='preview'&&process.env.AI_MARKET_DOMAIN_VERIFIED==='1'&&Boolean(verifiedMarketOrigin());
  if(!enabled)return [];
  const raw=(process.env.AI_MARKET_INDEXED_LOCALES||'').split(',').map(v=>v.trim()).filter(Boolean);
  return marketLocales.filter(lang=>raw.includes(lang));
