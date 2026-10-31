@@ -24,11 +24,12 @@ test('nine-language cost and evidence sources never prefill unverified prices',(
  const ui=read('lib/market-ui-extra.ts');
  const methodology=read('app/methodology/page.tsx');
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
-  assert.match(calculator,new RegExp('\\b'+lang+':\\{'));
+  assert.ok(calculator.includes('"'+lang+'":['),lang+':calculator translations');
   assert.match(methodology,new RegExp('\\b'+lang+':\\{'));
  }
  assert.match(ui,/"headline":"全球 SI AI 行情平台"/);
- assert.match(calculator,/useState\(''\)/);
+ assert.match(calculator,/VIDEO_RATES/);
+ assert.match(calculator,/RESOLUTIONS/);
  assert.match(calculator,/estimateApiUsageCost/);
 });
 test('commercial rights must carry a vendor policy source and conditions',()=>{
@@ -324,4 +325,45 @@ test('V44 searching short video includes known eight products, not only category
  const screen=read('lib/market-v36-screening.ts');
  for(const id of ['grok','gemini','qwen','doubao','kling','jimeng','runway','luma'])
   assert.match(screen,new RegExp('\\b'+id+':.https:\\/\\/'));
+});
+
+test('video resolutions are sourced per model; 2K and 4K are never backfilled from 720p',async()=>{
+ const r=await import(pathToFileURL(path.join(ROOT,'lib/market-rate-catalog.ts')).href);
+ assert.deepEqual(r.RESOLUTIONS,['360p','480p','720p','1080p','2K','4K']);
+ assert.ok(r.VIDEO_RATES.length>=20);
+ const wan720=r.VIDEO_RATES.find(v=>v.platform==='qwen'&&v.region==='北京'&&v.resolution==='720p');
+ const wan1080=r.VIDEO_RATES.find(v=>v.platform==='qwen'&&v.region==='北京'&&v.resolution==='1080p');
+ assert.equal(wan720.perSecond,.6);
+ assert.equal(wan1080.perSecond,1.2);
+ const wanQuote=r.estimateKnownVideoRate(wan720,10,6,2);
+ assert.equal(wanQuote.amount,43.2); // 6 clips x (10 generated + 2 input video)s x ¥0.6
+ const runway=r.VIDEO_RATES.find(v=>v.platform==='runway'&&v.model==='Gen-4.5 Web');
+ assert.equal(runway.resolution,'720p');
+ assert.equal(r.estimateKnownVideoRate(runway,5,6).credits,360);
+ assert.equal(r.estimateKnownVideoRate(runway,12,6),null);
+ assert.equal(r.VIDEO_RATES.filter(v=>v.platform==='runway'&&v.resolution==='4K').length,0);
+ const xai=r.VIDEO_RATES.find(v=>v.platform==='grok'&&v.model==='grok-imagine-video-1.5-lite'&&v.resolution==='1080p');
+ assert.equal(xai.outputType,'upscaled');
+ assert.equal(xai.perSecond,.14);
+ const googleUpscale=r.VIDEO_RATES.find(v=>v.platform==='gemini'&&v.resolution==='4K');
+ assert.equal(googleUpscale.outputType,'upscaled');
+ assert.equal(googleUpscale.billing,'unverified');
+ assert.equal(r.estimateKnownVideoRate(googleUpscale,5,2).amount,null);
+ assert.equal(r.VIDEO_RATES.filter(v=>v.resolution==='2K').length,0);
+ for(const item of r.VIDEO_RATES)assert.ok(item.source.startsWith('https://'),item.id);
+ const ui=read('app/market-cost-estimator.tsx');
+ assert.match(ui,/chooseProvider/);
+ assert.match(ui,/chooseModel/);
+ assert.match(ui,/rate\.chargesInputVideo/);
+ assert.doesNotMatch(ui,/pricePerCredit,setPricePerCredit/);
+});
+test('developer API shows model-specific official token rates instead of user-supplied pricing',async()=>{
+ const r=await import(pathToFileURL(path.join(ROOT,'lib/market-rate-catalog.ts')).href);
+ for(const a of r.API_RATES){assert.ok(a.source.startsWith('https://'));assert.ok(a.inPerMillion>=0);assert.ok(a.outPerMillion>=0);}
+ const peak=r.API_RATES.find(a=>a.model.startsWith('deepseek-flash · 高峰'));
+ assert.equal(peak.currency,'CNY');
+ assert.equal(math.estimateApiUsageCost(1000000,250000,peak.inPerMillion,peak.outPerMillion),4);
+ const ui=read('app/market-cost-estimator.tsx');
+ assert.match(ui,/API_RATES\.map/);
+ assert.doesNotMatch(ui,/setInputRate|setOutputRate/);
 });
