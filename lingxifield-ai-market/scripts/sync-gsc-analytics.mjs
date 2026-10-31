@@ -8,6 +8,7 @@
  *  GSC_SERVICE_ACCOUNT_JSON (whole JSON secret, never commit)
  *  GSC_PROPERTY (e.g. sc-domain:lingxifield.com)
  *  GSC_LOOKBACK_DAYS (7..28)
+ *  AI_MARKET_CANONICAL_ORIGIN (dedicated, owned HTTPS AI market host)
  */
 import {createSign,createHash} from 'node:crypto';
 import fs from 'node:fs';
@@ -25,9 +26,16 @@ function allProductIds(){
 }
 
 function fatal(msg){process.stderr.write(msg+'\n');process.exitCode=2;}
-const raw=process.env.GSC_SERVICE_ACCOUNT_JSON,property=process.env.GSC_PROPERTY;
-if(!raw||!property){fatal('GSC_CONFIG_REQUIRED: Set protected GSC_SERVICE_ACCOUNT_JSON and GSC_PROPERTY, assign service account Search Console read access.');}
+const raw=process.env.GSC_SERVICE_ACCOUNT_JSON,property=process.env.GSC_PROPERTY,origin=process.env.AI_MARKET_CANONICAL_ORIGIN;
+if(!raw||!property||!origin){fatal('GSC_CONFIG_REQUIRED: Set GSC_SERVICE_ACCOUNT_JSON, GSC_PROPERTY and the verified AI_MARKET_CANONICAL_ORIGIN.');}
 else try{
+ const u=new URL(origin);
+ if(u.protocol!=='https:'||u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash||!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'].includes(u.hostname))throw Error('GSC_MARKET_ORIGIN_INVALID');
+ if(property.startsWith('sc-domain:')){
+  const domain=property.slice('sc-domain:'.length).toLowerCase();
+  if(u.hostname!==domain&&!u.hostname.endsWith('.'+domain))throw Error('GSC_PROPERTY_HOST_MISMATCH');
+ }else{const uProperty=new URL(property);if(uProperty.protocol!=='https:'||uProperty.hostname!==u.hostname)throw Error('GSC_PROPERTY_HOST_MISMATCH');}
+
  const key=JSON.parse(raw),now=Math.floor(Date.now()/1000);
  if(!key.client_email||!key.private_key||!property.startsWith('sc-domain:')&&!property.startsWith('https://'))throw Error('GSC_CREDENTIAL_OR_PROPERTY_INVALID');
  const b64=obj=>Buffer.from(JSON.stringify(obj)).toString('base64url');
@@ -53,7 +61,7 @@ else try{
  for(const row of entries){
   const [page,query,date]=row.keys||[];
   if(typeof page!=='string'||typeof query!=='string'||typeof date!=='string')continue;
-  const match=matchGscProductPage(page,known);if(!match)continue;
+  const match=matchGscProductPage(page,known,u.origin);if(!match)continue;
   if((row.impressions||0)<3)continue; // avoid exposing rare possibly sensitive long-tail search terms
   const base={property,page,query,date,impressions:row.impressions,clicks:row.clicks,position:row.position};
   const digest=createHash('sha256').update(JSON.stringify(base)).digest('hex');
