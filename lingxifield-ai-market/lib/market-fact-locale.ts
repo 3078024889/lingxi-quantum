@@ -66,12 +66,12 @@ const FACTS:Readonly<Record<string,FactConfig>>={
   "models": "Whisper · CTranslate2"
  },
  "gemini": {
-  "price": "variable",
+  "price": ["USD",19.99,"monthly"],
   "free": "limited",
   "models": "Gemini family · plan-specific availability"
  },
  "grok": {
-  "price": "variable",
+  "price": ["USD",30,"monthly"],
   "free": "limited",
   "models": "Grok family · plan-specific availability"
  },
@@ -104,12 +104,12 @@ const FACTS:Readonly<Record<string,FactConfig>>={
   "models": "Website and application generation"
  },
  "luma": {
-  "price": "variable",
+  "price": ["USD",49.99,"monthly"],
   "free": "notFreeVerified",
   "models": "Luma video models · versions by plan"
  },
  "midjourney": {
-  "price": "variable",
+  "price": ["USD",10,"monthly"],
   "free": "notFreeVerified",
   "models": "Midjourney image & video models"
  },
@@ -149,7 +149,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
  "replit": {
   "price": [
    "USD",
-   18,
+   20,
    "annual"
   ],
   "free": "limited",
