@@ -99,7 +99,7 @@ export default async function LocalProduct({params}:PageParams){
   const expired=Boolean(v.promoEnds)&&Date.now()>Date.parse(v.promoEnds+'T23:59:59+08:00');
   const cost=expired?(l==='zh'?'活动价已过期':'Offer expired'):v.billing==='credits'?v.creditsPerSecond+' credits/s':v.billing==='plan-equivalent'?v.currency+' '+v.perSecond+' /s '+(l==='zh'?'套餐折合促销价':'promotional plan equivalent'):v.billing==='token-only'?v.currency+' '+v.apiPerMillionNoVideo+'/1M video tokens':v.currency+' '+v.perSecond+' /s';
   return <tr key={v.id}><td>{videoName(l,v)}</td><td>{v.resolution}</td><td>{cost}{v.promoEnds?' · '+v.promoEnds:''}</td><td><a href={v.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></td></tr>;})}</tbody></table></div></section>:null}
-  <footer><a target="_blank" rel="noopener noreferrer" href={p.website}>{w[6]} ↗</a><p>{w[8]}: {date} · {w[10]} · {w[11]}</p></footer>
+  <footer><a target="_blank" rel="noopener noreferrer" href={p.website}>{w[6]} ↗</a><p>{w[8]}: {date} · {w[10]}</p></footer>
   <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,'\\u003c')}}/>
  </main>;
 }
