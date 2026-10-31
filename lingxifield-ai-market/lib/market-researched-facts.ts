@@ -57,7 +57,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "price": "Pro $25/月（月付参考）；免费档可使用基础构建额度",
     "priceSource": "https://lovable.dev/pricing",
     "region": "官网订阅覆盖多个国家，结账时根据所在地动态显示可用钱包与银行卡",
-    "regionSource": "https://stripe.com/customers/lovable"
+    "regionSource": "https://stripe.com/customers/lovable",
+    "commercial": "用户通常拥有自己用 Lovable 建立的应用/网站及生成内容，但平台自身技术与第三方模型仍有独立权利",
+    "commercialSource": "https://lovable.dev/terms"
   },
   "luma": {
     "payments": [
@@ -68,9 +70,11 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     ],
     "paymentSource": "https://lumalabs.ai/learning-hub/payments-subscriptions",
     "price": "Luma 官网：周付 $9.99/周，月付 $49.99/月，年付 $99.99/年；首次周订阅或有优惠",
-    "priceSource": "https://luma.ai/",
+    "priceSource": "https://luma.ai/pricing",
     "region": "官网提供网页订阅与 iOS 购买，具体地区/币种由官方结算和商店决定",
-    "regionSource": "https://lumalabs.ai/learning-hub/payments-subscriptions"
+    "regionSource": "https://lumalabs.ai/learning-hub/payments-subscriptions",
+    "commercial": "商用输出依付费套餐和具体产品条款；创作者须有输入素材的合法权益，第三方素材权利不自动取得",
+    "commercialSource": "https://lumalabs.ai/legal/terms-of-service"
   },
   "langchain": {
     "price": "LangChain 开源框架免费；LangSmith Developer $0/席位/月（每月含 5,000 基础追踪），Plus $39/席位/月，超额按用量计费",
@@ -200,10 +204,69 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercial": "使用 Open WebUI 有商业用途条件；超过 50 个终端用户时不得擅自移除 Open WebUI 品牌，需许可或企业版",
     "commercialSource": "https://github.com/open-webui/open-webui/blob/main/LICENSE"
   },
-"suno":{"payments":["Credit / debit card（Visa / Mastercard / Amex）","Apple Pay（部分地区）","Google Pay（部分地区）","Apple App Store（iOS）","Google Play（Android）"],"paymentSource":"https://help.suno.com/en/articles/2421185","region":"Suno 网页接受多币种信用卡；Apple Pay/Google Pay 及本地银行卡随国家地区显示","regionSource":"https://help.suno.com/en/articles/2421185"},
-"perplexity":{"payments":["信用卡/借记卡（订阅）","Visa / Mastercard / Amex（企业订阅）"],"paymentSource":"https://www.perplexity.ai/help-center/en/articles/10352986-enterprise-pricing-and-billing-frequently-asked-questions","region":"网页个人 Pro 与 Enterprise 付款政策不同，企业接受 Visa/Mastercard/Amex；各地区额外方式以结算页为准","regionSource":"https://www.perplexity.ai/help-center/en/articles/10352986-enterprise-pricing-and-billing-frequently-asked-questions"},
-"qwen":{"payments":["支付宝（阿里云百炼 API 账户充值）","银联在线支付（阿里云百炼 API 账户）","网银（阿里云百炼 API 账户）"],"paymentSource":"https://help.aliyun.com/zh/model-studio/new-free-quota","price":"千问聊天产品与阿里云百炼 API 分开：聊天可体验；百炼模型调用按模型/Token/套餐计费","priceSource":"https://help.aliyun.com/zh/model-studio/what-is-model-studio","region":"千问聊天服务和阿里云百炼 API 是不同入口；百炼提供北京、新加坡、香港、弗吉尼亚、法兰克福及东京区域，模型与价格随区域不同","regionSource":"https://help.aliyun.com/zh/model-studio/what-is-model-studio"},
-"deepseek":{"payments":["支付宝（DeepSeek API 账户充值）","微信支付（DeepSeek API 账户充值）"],"paymentSource":"https://static.deepseek.com/faq/index.html?lang=zh","region":"DeepSeek 聊天网页/应用与开发者 API 分开；API 充值需完成相应实名认证","regionSource":"https://static.deepseek.com/faq/index.html?lang=zh"}
+  "suno": {
+    "payments": [
+      "Credit / debit card（Visa / Mastercard / Amex）",
+      "Apple Pay（部分地区）",
+      "Google Pay（部分地区）",
+      "Apple App Store（iOS）",
+      "Google Play（Android）"
+    ],
+    "paymentSource": "https://help.suno.com/en/articles/2421185",
+    "region": "Suno 网页接受多币种信用卡；Apple Pay/Google Pay 及本地银行卡随国家地区显示",
+    "regionSource": "https://help.suno.com/en/articles/2421185"
+  },
+  "perplexity": {
+    "payments": [
+      "信用卡/借记卡（订阅）",
+      "Visa / Mastercard / Amex（企业订阅）"
+    ],
+    "paymentSource": "https://www.perplexity.ai/help-center/en/articles/10352986-enterprise-pricing-and-billing-frequently-asked-questions",
+    "region": "网页个人 Pro 与 Enterprise 付款政策不同，企业接受 Visa/Mastercard/Amex；各地区额外方式以结算页为准",
+    "regionSource": "https://www.perplexity.ai/help-center/en/articles/10352986-enterprise-pricing-and-billing-frequently-asked-questions",
+    "commercial": "个人版服务条款许可个人非商业使用；企业版和 API 应按独立商业合同，不得直接将个人 Pro 等同企业商用授权",
+    "commercialSource": "https://www.perplexity.ai/zh/hub/legal/terms-of-service"
+  },
+  "qwen": {
+    "payments": [
+      "支付宝（阿里云百炼 API 账户充值）",
+      "银联在线支付（阿里云百炼 API 账户）",
+      "网银（阿里云百炼 API 账户）"
+    ],
+    "paymentSource": "https://help.aliyun.com/zh/model-studio/new-free-quota",
+    "price": "千问聊天产品与阿里云百炼 API 分开：聊天可体验；百炼模型调用按模型/Token/套餐计费",
+    "priceSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
+    "region": "千问聊天服务和阿里云百炼 API 是不同入口；百炼提供北京、新加坡、香港、弗吉尼亚、法兰克福及东京区域，模型与价格随区域不同",
+    "regionSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio"
+  },
+  "deepseek": {
+    "payments": [
+      "支付宝（DeepSeek API 账户充值）",
+      "微信支付（DeepSeek API 账户充值）"
+    ],
+    "paymentSource": "https://static.deepseek.com/faq/index.html?lang=zh",
+    "region": "DeepSeek 聊天网页/应用与开发者 API 分开；API 充值需完成相应实名认证",
+    "regionSource": "https://static.deepseek.com/faq/index.html?lang=zh"
+  },
+  "elevenlabs": {
+    "payments": [
+      "Credit / debit card",
+      "Apple Pay",
+      "Google Pay",
+      "UPI（仅印度，订阅结算）",
+      "Apple App Store（iOS）",
+      "Google Play（Android）"
+    ],
+    "paymentSource": "https://elevenlabs.io/docs/overview/administration/billing",
+    "price": "Free $0/月（10,000积分）；Starter $6/月（30,000）；Creator $22/月（121,000）；Pro $99/月（600,000）",
+    "priceSource": "https://elevenlabs.io/pricing",
+    "free": "免费版每月 10,000 共享积分；语音/转录/音效等功能共用余额",
+    "freeSource": "https://elevenlabs.io/pricing",
+    "region": "Web 支付支持主要银行卡和 Apple Pay/Google Pay；UPI 仅印度结算，移动应用商店另计",
+    "regionSource": "https://elevenlabs.io/docs/overview/administration/billing",
+    "commercial": "免费账户生成内容不附商用授权；付费订阅期间生成内容通常附商业使用许可，Beta 服务和第三方素材有特殊限制",
+    "commercialSource": "https://elevenlabs.io/docs/help-center/legal/can-i-publish-the-content-i-generate-on-the-platform"
+  }
 };
 export const MARKET_RESEARCH_CHECKED_AT='2026-10-31';
 export function researchedFact(id:string){return RESEARCHED_FACTS[id];}
