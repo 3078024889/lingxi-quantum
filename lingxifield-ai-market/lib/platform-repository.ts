@@ -30,7 +30,8 @@ export function toPlatform(e:CatalogEntry):Platform {
  const stronger=[{label:'价格',text:research?.price,source:research?.priceSource},
  {label:'免费额度',text:research?.free,source:research?.freeSource},
  {label:'地区可用性',text:research?.region,source:research?.regionSource},
- {label:'商用条件',text:research?.commercial,source:research?.commercialSource}]
+ {label:'商用条件',text:research?.commercial,source:research?.commercialSource},
+ {label:'模型与用量',text:research?.models,source:research?.modelsSource}]
  .filter((x):x is {label:string;text:string;source:string}=>Boolean(x.text&&x.source))
  .map(x=>({...x,scope:'官方所述具体产品/套餐范围；非全部产品通用',checkedAt:'2026-10-31'}));
  const conditions=[...reviewed.filter(f=>!stronger.some(x=>x.label===f.label)),...stronger];
