@@ -14,6 +14,7 @@ import {commercialEvidence} from '../lib/market-commercial-evidence';
 import {localizedProductSummary} from '../lib/market-product-locale';
 import {localizedCatalogFact,localizedLoginFact} from '../lib/market-fact-locale';
 import {localizedCategory} from '../lib/market-home-i18n';
+import {researchedFact} from '../lib/market-researched-facts';
 
 const columns:Record<Language,string[]>={
  zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','付款 · 登录','短剧 / 短视频','代表模型','商用授权','操作'],
@@ -47,7 +48,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  platform:Platform;position:number;language:Language;region:RegionCode;paymentFilter?:MarketPayment;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean;
 }){
  const t=MARKET_SCREEN_COPY[language],h=marketRowTitles(language),specific=SPECIFIC[language];
- const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id);
+ const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id),research=researchedFact(p.id);
  const r=region==='GLOBAL'?null:globalRegionFact(p.id,region);
  const regionList=regionPresentation(p.id,language);
  const regionText=r?regionCopy(language).status[r.policy.status]:(regionList.total?(regionList.complete?regionList.words.complete:regionList.words.partial):regionList.words.empty);
@@ -67,9 +68,11 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const paymentFact=paymentFactsFor(p.id,region);
  const allPayments=paymentFact.methods;
  const matched=paymentFilter==='any'?[]:matchingPaymentMethods(p.id,paymentFilter,region);
+ const locallyFree=Boolean(research?.priceSource)&&/本地|开源|SDK/.test(research?.price||'')&&!allPayments.length;
  const paymentMethods=allPayments.length?
   [...new Set([...matched,...allPayments])].slice(0,5).map(x=>localizedPaymentName(x,language)).join(' · '):
-  (language==='zh'?'未找到可核实付款方式':specific.payment);
+  locallyFree?({zh:'本地软件免费，无需在线付款',en:'Free local software; no checkout',ja:'本体無料・決済不要',ko:'로컬 무료·결제 불필요',fr:'Logiciel local gratuit',de:'Lokale Software kostenlos',es:'Software local gratuito',pt:'Software local gratuito',ar:'البرنامج المحلي مجاني'} as Record<Language,string>)[language]:
+  (language==='zh'?'尚未找到厂商可核实的支付渠道':specific.payment);
  const paymentScope=paymentFact.scope==='unsupported'?
   regionCopy(language).status.unsupported:
   paymentFact.scope==='unverified_region'?
@@ -96,10 +99,10 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
    <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{price&&<a href={price.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewRegion" data-label={h[5]}>
     <strong>{globalRegionSummary(p.id,language)}</strong>
-    <span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{region==='GLOBAL'?regionText:regionName(region,language)+' · '+regionText}</span>
-    {(r?.policy.source||regionList.source)&&<a href={r?.policy.source||regionList.source||'#'} target="_blank" rel="noopener noreferrer">{language==='zh'?'完整官方国家名单':t.source} ↗</a>}
+    {(region!=='GLOBAL'||regionList.total>0)&&<span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{region==='GLOBAL'?regionText:regionName(region,language)+' · '+regionText}</span>}
+    {(r?.policy.source||regionList.source||research?.regionSource)&&<a href={r?.policy.source||regionList.source||research?.regionSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}
    </td>
-   <td className="marketV36Login" data-label={h[6]}><strong title={allPayments.map(x=>localizedPaymentName(x,language)).join(' · ')}>{p.id==='anthropic-sdk-python'?(language==='zh'?'SDK免费；API单独计费':'SDK free; API billed separately'):paymentMethods}</strong><small>{paymentScope}</small>{paymentFact.source&&<a href={paymentFact.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
+   <td className="marketV36Login" data-label={h[6]}><strong title={allPayments.map(x=>localizedPaymentName(x,language)).join(' · ')}>{p.id==='anthropic-sdk-python'?(language==='zh'?'SDK免费；API单独计费':'SDK free; API billed separately'):paymentMethods}</strong><small>{locallyFree?(language==='zh'?'模型 API/云服务单独计费':specific.payment):paymentScope}</small>{(paymentFact.source|| (locallyFree?research?.priceSource:null))&&<a href={paymentFact.source||(research?.priceSource||'#')} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
    <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:(videoTool?<span className="marketDramaUnknown">{t.dramaUnknown}</span>:<span className="marketDramaNA" aria-label="Not applicable">—</span>)}</td>
    <td className="marketV36Model" data-label={h[8]}>{models}</td>
    <td className="marketV36Business" data-label={h[9]}>{licenseFact?<><strong className="marketLicenseVerdict">{licenseFact.label}</strong><p className="marketLicenseCondition">{licenseFact.condition}</p><a href={licenseFact.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<><strong className="marketLicenseUnknown">{language==='zh'?'商用规则待核实':specific.commercial}</strong>{!isUnknownText(rawCommercial)&&<p className="marketLicenseCondition">{language==='zh'?rawCommercial:({en:'Commercial rights are not yet independently verified for this product and plan.',ja:'この製品・プランの商用条件は確認中です。',ko:'이 제품 및 요금제의 상업적 권리는 확인 중입니다.',fr:'Droits commerciaux non encore vérifiés pour cette offre.',de:'Gewerbliche Nutzungsrechte für diesen Tarif noch ungeprüft.',es:'Derechos comerciales de este plan aún sin verificar.',pt:'Direitos comerciais deste plano ainda não verificados.',ar:'الحقوق التجارية لهذه الخطة قيد التحقق.',zh:''} as Record<Language,string>)[language]}</p>}{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</>}</td>
