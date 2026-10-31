@@ -25,11 +25,21 @@ const WORDS:Record<Language,readonly [string,string,string,string,string,string,
 export const dynamicParams=false;
 export const revalidate=3600;
 export function generateStaticParams(){return marketLocales.flatMap(lang=>searchPlatforms({limit:100}).items.map(e=>({lang,id:e.id})));}
+const DISPLAY_NAMES:Record<string,string>={kling:'Kling AI',jimeng:'Dreamina / Jimeng AI',qwen:'Qwen',doubao:'Doubao'};
+const publicName=(lang:Language,id:string,name:string)=>lang==='zh'?name:DISPLAY_NAMES[id]||name;
+const videoName=(lang:Language,video:{platform:string;model:string;id:string;region:string})=>{
+ if(lang==='zh')return video.model;
+ if(video.platform==='kling')return 'Kling Video 3.0 · '+(video.model.includes('无原生')?'No native audio':'Native audio');
+ if(video.platform==='qwen')return 'Wan 3.0 Video · '+(video.region==='北京'?'Beijing':'Singapore');
+ if(video.platform==='doubao')return 'Seedance 2.5 · Volcano Ark API';
+ if(video.platform==='jimeng')return 'Seedance '+(video.id.includes('25')?'2.5':'2.0')+' · '+(video.id.includes('super')?'Super annual':video.id.includes('advanced')?'Advanced annual':'Basic monthly');
+ return video.model;
+};
 const label=(lang:Language,id:string)=>{const product=findPlatform(id);if(!product)return '';const text=localizedProductSummary(id,lang);return text||product.name;};
 export async function generateMetadata({params}:PageParams):Promise<Metadata>{
  const {lang,id}=await params,product=findPlatform(id);
  if(!product||!marketLocales.includes(lang as Language))return {robots:{index:false}};
- const language=lang as Language,title=product.name+' | '+label(language,id)+' | LINGXIFIELD';
+ const language=lang as Language,displayName=publicName(language,id,product.name),description=label(language,id),title=displayName+(description===displayName?'':' | '+description)+' | LINGXIFIELD';
  const robots=mayIndexMarket(lang);
  const languages:Record<string,string>={};
  if(robots)for(const l of indexableMarketLocales())languages[l]=marketCanonicalOrigin+'/'+l+'/platform/'+encodeURIComponent(id);
@@ -43,7 +53,7 @@ export default async function LocalProduct({params}:PageParams){
  if(!marketLocales.includes(lang as Language))notFound();
  const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l);
- const summary=label(l,id),date='2026-10-31';
+ const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-10-31';
  const videos=VIDEO_RATES.filter(r=>r.platform===id&&r.resolution!=='not-confirmed'&&!['unverified','plan-only'].includes(r.billing));
  const videoTitle=({zh:'短视频/短剧：官方模型与画质计费',en:'Short video: model, resolution and cost',ja:'動画：モデル・画質・料金',ko:'영상: 모델·해상도·요금',fr:'Vidéo : modèle, qualité et coût',de:'Video: Modell, Auflösung und Kosten',es:'Vídeo: modelo, resolución y coste',pt:'Vídeo: modelo, resolução e custo',ar:'الفيديو: النموذج والدقة والتكلفة'} as Record<Language,string>)[l];
  const rows=[
@@ -54,15 +64,15 @@ export default async function LocalProduct({params}:PageParams){
   [w[4],l==='zh'?facts?.region||'':({zh:'',en:'See publisher region and checkout conditions',ja:'公式地域と決済条件を参照',ko:'공식 지역 및 결제 조건 확인',fr:'Voir les pays et conditions officielles',de:'Länder und Bedingungen beim Anbieter',es:'Ver países y condiciones oficiales',pt:'Ver países e condições oficiais',ar:'راجع البلدان وشروط الدفع الرسمية'} as Record<Language,string>)[l],facts?.regionSource],
   [w[5],commercial?.condition||w[11],commercial?.source]
  ] as const;
- const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:p.name,description:summary,url:p.website,publisher:{'@type':'Organization',name:p.company},applicationCategory:localizedCategory(l,p.category)};
+ const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:displayName,description:summary,url:p.website,publisher:{'@type':'Organization',name:p.company},applicationCategory:localizedCategory(l,p.category)};
  return <main lang={l} dir={l==='ar'?'rtl':'ltr'} className="marketLocalizedProduct">
   <nav><Link href={'/'+l+'/ai'}>{w[9]}</Link></nav>
-  <header><small>LINGXIFIELD · GLOBAL SI AI MARKET</small><h1>{p.name}</h1><p>{summary}</p><span>{localizedCategory(l,p.category)}</span></header>
+  <header><small>LINGXIFIELD · GLOBAL SI AI MARKET</small><h1>{displayName}</h1><p>{summary}</p><span>{localizedCategory(l,p.category)}</span></header>
   <section className="marketLocalizedFacts">{rows.map(([title,value,src])=><article key={title}><h2>{title}</h2><p>{value||w[11]}</p>{src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}</article>)}</section>
   {videos.length>0?<section className="marketLocalizedVideoRates"><h2>{videoTitle}</h2><div className="marketLocalizedRatesScroll"><table><thead><tr><th>{w[3]}</th><th>{l==='zh'?'分辨率':'Quality'}</th><th>{w[2]}</th><th>{w[7]}</th></tr></thead><tbody>{videos.map(v=>{
   const expired=Boolean(v.promoEnds)&&Date.now()>Date.parse(v.promoEnds+'T23:59:59+08:00');
   const cost=expired?(l==='zh'?'活动价已过期':'Offer expired'):v.billing==='credits'?v.creditsPerSecond+' credits/s':v.billing==='plan-equivalent'?v.currency+' '+v.perSecond+' /s '+(l==='zh'?'套餐折合促销价':'promotional plan equivalent'):v.billing==='token-only'?v.currency+' '+v.apiPerMillionNoVideo+'/1M video tokens':v.currency+' '+v.perSecond+' /s';
-  return <tr key={v.id}><td>{v.model}</td><td>{v.resolution}</td><td>{cost}{v.promoEnds?' · '+v.promoEnds:''}</td><td><a href={v.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></td></tr>;})}</tbody></table></div></section>:null}
+  return <tr key={v.id}><td>{videoName(l,v)}</td><td>{v.resolution}</td><td>{cost}{v.promoEnds?' · '+v.promoEnds:''}</td><td><a href={v.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></td></tr>;})}</tbody></table></div></section>:null}
   <footer><a target="_blank" rel="noopener noreferrer" href={p.website}>{w[6]} ↗</a><p>{w[8]}: {date} · {w[10]} · {w[11]}</p></footer>
   <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,'\\u003c')}}/>
  </main>;
