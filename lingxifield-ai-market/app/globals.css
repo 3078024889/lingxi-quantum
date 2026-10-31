@@ -1020,3 +1020,48 @@ body{font-size:16px;line-height:1.6}
 .marketLocalizedRatesScroll{overflow-x:auto;max-width:100%}
 .marketLocalizedRatesScroll table{width:100%;min-width:640px;border-collapse:collapse}
 .marketLocalizedRatesScroll th,.marketLocalizedRatesScroll td{border-bottom:1px solid #dce6f1;padding:9px;text-align:left;white-space:normal;overflow-wrap:anywhere;font-size:13px}
+
+
+/* V4.8: use the page width instead of reserving blank columns on wide monitors. */
+.app .topInner,.app .tabInner,.app main {max-width:1920px;width:100%;margin-inline:auto}
+.app main{padding-inline:clamp(12px,1.5vw,28px)}
+.app .homeGrid{display:grid;grid-template-columns:188px minmax(0,1fr);gap:14px;align-items:start}
+.app .homeGrid>.central{min-width:0;max-width:100%}
+.app .homeGrid>.leftAside{min-width:0;position:sticky;top:90px;max-height:calc(100dvh - 108px);overflow-y:auto}
+.app .homeGrid.lxDesktopCategoriesHidden{grid-template-columns:minmax(0,1fr)}
+.app .homeGrid.lxDesktopCategoriesHidden>.leftAside{display:none}
+.app .lxMobileCategoriesButton,.app .lxDesktopCategoriesButton{border:1px solid #d5e5fb;background:#f6faff;color:#194a85;border-radius:9px;width:39px;height:39px;min-width:39px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.app .lxMobileCategoriesButton{display:none}
+.app .lxCategoryDrawerHeader,.app .lxCategoryBackdrop{display:none}
+.app .homeGrid>.leftAside>button{min-height:40px}
+@media (max-width:900px){
+ .app .homeGrid,.app .homeGrid.lxDesktopCategoriesHidden{grid-template-columns:minmax(0,1fr)!important}
+ .app .homeGrid>.central{grid-column:1;min-width:0;width:100%}
+ .app .lxMobileCategoriesButton{display:inline-flex}
+ .app .lxDesktopCategoriesButton{display:none}
+ .app .homeGrid>.leftAside,.app .homeGrid.lxDesktopCategoriesHidden>.leftAside{
+  display:block!important;position:fixed!important;inset-block:0;inset-inline-start:0;
+  left:0;right:auto;top:0;width:min(340px,86vw);height:100dvh;max-height:none;
+  overflow-y:auto;overscroll-behavior:contain;transform:translateX(-110%);
+  box-shadow:0 12px 45px #082b5e38;border-radius:0 15px 15px 0;
+  background:#fff;z-index:1101;visibility:hidden;pointer-events:none;
+  transition:transform .23s ease,visibility .23s ease;padding:16px 12px;
+ }
+ .app[dir="rtl"] .homeGrid>.leftAside,.app[dir="rtl"] .homeGrid.lxDesktopCategoriesHidden>.leftAside{
+  left:auto;right:0;transform:translateX(110%);border-radius:15px 0 0 15px;
+ }
+ .app .homeGrid.lxMobileCategoriesOpen>.leftAside,
+ .app .homeGrid.lxMobileCategoriesOpen.lxDesktopCategoriesHidden>.leftAside,
+ .app[dir="rtl"] .homeGrid.lxMobileCategoriesOpen>.leftAside{
+  transform:translateX(0);visibility:visible;pointer-events:auto
+ }
+ .app .lxCategoryDrawerHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 6px 12px;font-size:15px}
+ .app .lxCategoryDrawerHeader button{width:40px;height:40px;border:0;border-radius:8px;background:#eff5ff;display:grid;place-items:center}
+ .app .homeGrid>.leftAside>h3{display:none}
+ .app .lxCategoryBackdrop{display:block;position:fixed;inset:0;background:rgba(8,26,54,.44);z-index:1100;border:0;border-radius:0;cursor:pointer}
+ .app main{padding-inline:10px}
+ .app .homeGrid{gap:0}
+ .app .topInner{gap:8px}
+ .app .marketOverviewViewport{max-width:100%}
+}
+@media (prefers-reduced-motion:reduce){.app .homeGrid>.leftAside{transition:none!important}}
