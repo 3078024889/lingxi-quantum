@@ -466,3 +466,25 @@ test('FAQ shortcuts use a capability filter without injecting Chinese terms into
  assert.ok(workbench.includes("setMarketFilter(i===0||i===3?'video':'all')"));
  assert.ok(!workbench.includes("setQuery(i===0||i===3?'视频'"));
 });
+
+test('GSC collector recognizes all 9 localized product routes, rejects wrong sites and unknown locales',async()=>{
+ const {matchGscProductPage}=await import(pathToFileURL(path.join(ROOT,'scripts/parse-gsc-product-route.mjs')).href);
+ const ids=new Set(['runway','claude','kling']);
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
+  assert.deepEqual(matchGscProductPage('https://ai.lingxifield.com/'+lang+'/platform/runway',ids),{platformId:'runway',language:lang});
+ }
+ assert.deepEqual(matchGscProductPage('https://lingxifield.com/platform/claude',ids),{platformId:'claude',language:'zh'});
+ for(const url of ['https://lingxifield.com/xx/platform/runway','http://lingxifield.com/en/platform/runway','https://lingxifield.com/en/platform/fake','https://lingxifield.com/en/admin','https://evil.example/@/platform/runway']){
+  assert.equal(matchGscProductPage(url,ids),null,url);
+ }
+ assert.match(read('scripts/sync-gsc-analytics.mjs'),/matchGscProductPage\(page,known\)/);
+ assert.match(read('scripts/sync-gsc-analytics.mjs'),/language:match.language/);
+});
+test('Independent GEO evidence retains capture SHA and compares exact model version',()=>{
+ const library=read('lib/seo-geo-observations.ts');
+ const importer=read('scripts/import-verified-seo-geo.mjs');
+ assert.ok(library.includes("row.modelVersion||''"));
+ assert.ok(library.includes("row.engine||''"));
+ assert.ok(library.includes("o.rawCaptureSha256"));
+ assert.ok(importer.includes("sampleCount,rawCaptureSha256,position:"));
+});
