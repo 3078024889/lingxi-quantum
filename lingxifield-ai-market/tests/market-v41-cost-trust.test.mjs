@@ -488,3 +488,12 @@ test('Independent GEO evidence retains capture SHA and compares exact model vers
  assert.ok(library.includes("o.rawCaptureSha256"));
  assert.ok(importer.includes("sampleCount,rawCaptureSha256,position:"));
 });
+
+test('SEO/GEO endpoint reports the real release index gate and never fabricates observations',()=>{
+ const api=read('app/api/v1/seo-geo/route.ts');
+ const policy=read('lib/market-index-policy.ts');
+ assert.match(api,/indexedCatalog:mayIndexMarket\(\)/);
+ assert.match(api,/coverageForSeoGeo\(\)/);
+ assert.match(api,/groupedSeoGeo\(\)/);
+ assert.match(policy,/VERCEL_ENV!=='preview'/);
+});
