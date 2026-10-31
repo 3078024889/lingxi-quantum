@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import Link from 'next/link';
 import {notFound} from 'next/navigation';
-import {entries} from '../../../../lib/catalog-store';
+import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository';
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
 import {researchedFact} from '../../../../lib/market-researched-facts';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
@@ -22,8 +22,8 @@ const WORDS:Record<Language,readonly [string,string,string,string,string,string,
  ar:['الوظائف والمهام','الاستخدام المجاني','الأسعار الرسمية','النماذج والقدرات','البلدان وإمكانية الوصول','الاستخدام التجاري','الموقع الرسمي','المصدر الرسمي','تاريخ المراجعة','العودة للسوق','تختلف الأسعار حسب الدولة والخطة والعروض.','لا توجد درجة مستقلة قابلة للمقارنة']
 };
 export const dynamicParams=false;
-export function generateStaticParams(){return marketLocales.flatMap(lang=>entries.map(e=>({lang,id:e.id})));}
-const label=(lang:Language,id:string)=>{const product=entries.find(x=>x.id===id);if(!product)return '';const text=localizedProductSummary(id,lang);return text||product.name;};
+export function generateStaticParams(){return marketLocales.flatMap(lang=>searchPlatforms({limit:100}).items.map(e=>({lang,id:e.id})));}
+const label=(lang:Language,id:string)=>{const product=findPlatform(id);if(!product)return '';const text=localizedProductSummary(id,lang);return text||product.name;};
 export async function generateMetadata({params}:PageParams):Promise<Metadata>{
  const {lang,id}=await params,product=entries.find(x=>x.id===id);
  if(!product||!marketLocales.includes(lang as Language))return {robots:{index:false}};
@@ -39,7 +39,7 @@ export async function generateMetadata({params}:PageParams):Promise<Metadata>{
 export default async function LocalProduct({params}:PageParams){
  const {lang,id}=await params;
  if(!marketLocales.includes(lang as Language))notFound();
- const p=entries.find(x=>x.id===id);if(!p)notFound();
+ const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l);
  const summary=label(l,id),date='2026-10-31';
  const rows=[
