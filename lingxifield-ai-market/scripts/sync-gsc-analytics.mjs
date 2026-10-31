@@ -14,6 +14,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),outfile=path.join(root,'data/seo-geo-observations.json');
+function allProductIds(){
+ const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
+ const facts=fs.readFileSync(path.join(root,'lib/market-researched-facts.ts'),'utf8');
+ const token='export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>=';
+ const begin=facts.indexOf(token)+token.length,end=facts.indexOf(';\\nexport const MARKET_RESEARCH_CHECKED_AT',begin);
+ if(begin<token.length||end<begin)throw Error('CURATED_CATALOG_NOT_FOUND');
+ return new Set([...catalog.map(x=>x.id),...Object.keys(JSON.parse(facts.slice(begin,end)))]);
+}
+
 function fatal(msg){process.stderr.write(msg+'\n');process.exitCode=2;}
 const raw=process.env.GSC_SERVICE_ACCOUNT_JSON,property=process.env.GSC_PROPERTY;
 if(!raw||!property){fatal('GSC_CONFIG_REQUIRED: Set protected GSC_SERVICE_ACCOUNT_JSON and GSC_PROPERTY, assign service account Search Console read access.');}
@@ -36,8 +45,7 @@ else try{
   if(!r.ok)throw Error('GSC_QUERY_'+r.status);
   const batch=(await r.json()).rows||[];entries.push(...batch);if(batch.length<25000)break;
  }
- const catalogRaw=fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'); // may not be available; handle in schema below
- const known=new Set(JSON.parse(catalogRaw).map(x=>x.id));
+ const known=allProductIds();
  const old=JSON.parse(fs.readFileSync(outfile,'utf8'));if(!Array.isArray(old))throw Error('GSC_LEDGER_NOT_ARRAY');
  const seen=new Map(old.map(x=>[x.id,x]));
  let count=0;
