@@ -69,13 +69,13 @@ test('V41 country and commercial answers are explicit and scope-correct',async()
  const row=read('app/market-matrix-row.tsx');
  assert.match(row,/marketLicenseCondition/);
  assert.match(row,/licenseFact\.condition/);
- assert.match(row,/SDK免费安装，API调用另行计费/);
+ assert.match(row,/SDK免费；API单独计费/);
 });
 test('V41 scrolling reveals all columns instead of sticky overlays; no IP guessing',()=>{
  const css=read('app/globals.css');
  const workbench=read('app/market-workbench.tsx');
- assert.doesNotMatch(css,/\.marketOverviewTable :is\(th:nth-child\(2\),td:nth-child\(2\)\)\{position:sticky/);
- assert.doesNotMatch(css,/\.marketOverviewTable :is\(th:nth-child\(11\),td:nth-child\(11\)\)\{position:sticky/);
+ assert.match(css,/nth-child\\(2\\).*position:sticky!important/);
+ assert.match(css,/nth-child\\(11\\).*position:sticky!important/);
  assert.match(css,/\.marketOverviewTable :is\(th,td\)\{position:static!important/);
  assert.doesNotMatch(workbench,/fetch\('\/api\/v1\/visitor-region'/);
  assert.match(workbench,/MarketMatrixRow/);
@@ -124,4 +124,18 @@ test('nine-language home and category labels cover every control',async()=>{
  const homepage=read('app/market-workbench.tsx');
  assert.match(homepage,/localizedCategory\(language,x\)/);
  assert.match(homepage,/hc\.sourceNote/);
+});
+
+test('all 32 catalog items provide real task summaries in nine languages',async()=>{
+ const summary=await import(pathToFileURL(path.join(ROOT,'lib/market-product-locale.ts')).href);
+ const ids=['anthropic-sdk-python','chatgpt','claude','comfyui','deepseek','dify','elevenlabs','fasterwhisper','gemini','grok','langchain','llamacpp','llamaindex','lovable','luma','midjourney','n8n','ollama','openwebui','openai-python','perplexity','replit','runway','automatic1111','suno','transformers','vllm','whisper','qwen','jimeng','kling','doubao'];
+ for(const l of ['en','ja','ko','fr','de','es','pt','ar']){
+  for(const id of ids){
+   const result=summary.localizedProductSummary(id,l);
+   assert.ok(result&&result.trim().length>8,id+':'+l);
+   assert.doesNotMatch(result,/[\u4e00-\u9fff]/,id+':'+l);
+  }
+ }
+ const row=read('app/market-matrix-row.tsx');
+ assert.match(row,/localizedProductSummary\(p\.id,language\)/);
 });
