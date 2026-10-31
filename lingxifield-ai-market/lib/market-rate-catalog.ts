@@ -642,27 +642,15 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   },
   {
-    "id": "openai-gpt6-astra",
+    "id": "openai-gpt61-sol",
     "platform": "chatgpt",
     "provider": "OpenAI API",
-    "model": "gpt-6-astra · Standard · short context",
+    "model": "gpt-6.1-sol · Standard · short context",
     "currency": "USD",
-    "inPerMillion": 10,
-    "outPerMillion": 50,
+    "inPerMillion": 2,
+    "outPerMillion": 10,
     "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "Standard short context; caching, Fast/Batch and regional processing vary.",
-    "checkedAt": "2026-10-31"
-  },
-  {
-    "id": "openai-gpt6-luna",
-    "platform": "chatgpt",
-    "provider": "OpenAI API",
-    "model": "gpt-6-luna · Standard · short context",
-    "currency": "USD",
-    "inPerMillion": 0.1,
-    "outPerMillion": 0.5,
-    "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "Standard short context; not the lower batch tier.",
+    "notes": "Standard short-context tier; actual output and cached input tokens billed separately.",
     "checkedAt": "2026-10-31"
   },
   {
@@ -678,15 +666,27 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   },
   {
-    "id": "openai-gpt61-sol",
+    "id": "openai-gpt6-luna",
     "platform": "chatgpt",
     "provider": "OpenAI API",
-    "model": "gpt-6.1-sol · Standard · short context",
+    "model": "gpt-6-luna · Standard · short context",
     "currency": "USD",
-    "inPerMillion": 2,
-    "outPerMillion": 10,
+    "inPerMillion": 0.1,
+    "outPerMillion": 0.5,
     "source": "https://developers.openai.com/api/docs/pricing",
-    "notes": "Standard short-context tier; actual output and cached input tokens billed separately.",
+    "notes": "Standard short context; not the lower batch tier.",
+    "checkedAt": "2026-10-31"
+  },
+  {
+    "id": "openai-gpt6-astra",
+    "platform": "chatgpt",
+    "provider": "OpenAI API",
+    "model": "gpt-6-astra · Standard · short context",
+    "currency": "USD",
+    "inPerMillion": 10,
+    "outPerMillion": 50,
+    "source": "https://developers.openai.com/api/docs/pricing",
+    "notes": "Standard short context; caching, Fast/Batch and regional processing vary.",
     "checkedAt": "2026-10-31"
   },
   {
@@ -726,15 +726,15 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   },
   {
-    "id": "claude-haiku55",
+    "id": "claude-sonnet55",
     "platform": "claude",
     "provider": "Anthropic API",
-    "model": "claude-haiku-5-5 · up to 100K prompt tokens",
+    "model": "claude-sonnet-5-5 · Standard",
     "currency": "USD",
-    "inPerMillion": 0.1,
-    "outPerMillion": 0.5,
-    "source": "https://platform.claude.com/docs/en/about-claude/pricing",
-    "notes": "Input $0.10 per MTok for prompts up to 100,000 tokens. Above threshold the input price changes; this row only applies to <=100K.",
+    "inPerMillion": 2,
+    "outPerMillion": 10,
+    "source": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
+    "notes": "Current Sonnet 5.5 model; caching and Batch API discounts separately priced.",
     "checkedAt": "2026-10-31"
   },
   {
@@ -750,15 +750,15 @@ export const API_RATES:readonly ApiRate[]=[
     "checkedAt": "2026-10-31"
   },
   {
-    "id": "claude-sonnet55",
+    "id": "claude-haiku55",
     "platform": "claude",
     "provider": "Anthropic API",
-    "model": "claude-sonnet-5-5 · Standard",
+    "model": "claude-haiku-5-5 · up to 100K prompt tokens",
     "currency": "USD",
-    "inPerMillion": 2,
-    "outPerMillion": 10,
-    "source": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview",
-    "notes": "Current Sonnet 5.5 model; caching and Batch API discounts separately priced.",
+    "inPerMillion": 0.1,
+    "outPerMillion": 0.5,
+    "source": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "notes": "Input $0.10 per MTok for prompts up to 100,000 tokens. Above threshold the input price changes; this row only applies to <=100K.",
     "checkedAt": "2026-10-31"
   },
   {
