@@ -176,7 +176,7 @@ test('FAQ, publisher invite, footer and payment channels are translated for nine
  const workbook=read('app/market-workbench.tsx');
  assert.match(workbook,/MARKET_FAQ_TRANSLATIONS\[language\]\[i\]/);
  assert.match(workbook,/MARKET_VENDOR_TRANSLATIONS\[language\]\[3\]/);
- const pay=read('app/market-global-access.tsx');
+ const pay=read('lib/market-localized-payment.ts');
  assert.match(pay,/支付宝\|Alipay/);
  assert.match(pay,/微信支付\|WeChat Pay/);
 });
