@@ -266,6 +266,95 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "regionSource": "https://elevenlabs.io/docs/overview/administration/billing",
     "commercial": "免费账户生成内容不附商用授权；付费订阅期间生成内容通常附商业使用许可，Beta 服务和第三方素材有特殊限制",
     "commercialSource": "https://elevenlabs.io/docs/help-center/legal/can-i-publish-the-content-i-generate-on-the-platform"
+  },
+  "anthropic-sdk-python": {
+    "price": "Anthropic Python SDK 免费安装；Claude API 按模型实际输入/输出 Tokens 及工具用量计费；与个人 Claude Pro 分开",
+    "priceSource": "https://github.com/anthropics/anthropic-sdk-python",
+    "free": "SDK 本地免费使用；API 新用户可能有试用额度，但正式 API 按用量结算",
+    "freeSource": "https://platform.claude.com/docs/en/about-claude/pricing",
+    "commercial": "官方 Python SDK 可商用，按代码版本许可履行版权通知；Claude API 受独立商业服务条款约束",
+    "commercialSource": "https://github.com/anthropics/anthropic-sdk-python/blob/main/LICENSE",
+    "region": "Python SDK 可自行安装；Claude API 调用仅限官网支持的国家/地区，需分开查询",
+    "regionSource": "https://platform.claude.com/docs/en/api/supported-regions"
+  },
+  "chatgpt": {
+    "price": "ChatGPT Plus $20/月（月付）；API 另按模型调用计费，Plus 订阅不包含 API 额度",
+    "priceSource": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+    "free": "ChatGPT 有免费方案；文件、研究、图像、模型次数随套餐和负载变化",
+    "freeSource": "https://openai.com/chatgpt/pricing/",
+    "region": "ChatGPT 消费者访问国家和 OpenAI API 支持名单不同；官方国家名单按产品单独核对",
+    "regionSource": "https://help.openai.com/en/articles/7947663-chatgpt-supported-countries"
+  },
+  "claude": {
+    "price": "Claude Free $0；Pro $20/月（月付），年付 $200/年；API 费用另计",
+    "priceSource": "https://claude.com/pricing",
+    "free": "Claude Free 可免费聊天、网络搜索、代码与文档；限制随使用量而变",
+    "freeSource": "https://claude.com/pricing",
+    "region": "Claude 网页与 API 需按官方支持国家分别判断；Pro 个人订阅和商业 API 不互含",
+    "regionSource": "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  },
+  "gemini": {
+    "price": "Gemini 网页有免费功能；Google AI Pro US$19.99/月（美国/部分地区参考），Gemini API 另按 Token 计费",
+    "priceSource": "https://one.google.com/about/plans?hl=en_US",
+    "free": "Gemini 网页有免费访问级别；Gemini 开发者 API 有适用模型免费额度，调用量和地区另有约束",
+    "freeSource": "https://ai.google.dev/gemini-api/docs/pricing",
+    "payments": [
+      "Credit / debit card（Google One 订阅，适用地区）",
+      "Google Play（Android 应用内购买）"
+    ],
+    "paymentSource": "https://support.google.com/googleone/answer/9003634?hl=en",
+    "region": "Gemini Web、Gemini API、Google One 订阅属于不同商品/计费和地区范围；不将 Google One 服务地区等同 Gemini 应用可用地区",
+    "regionSource": "https://support.google.com/gemini/answer/13575153?hl=en"
+  },
+  "grok": {
+    "price": "Grok Free $0/月；SuperGrok $30/月、SuperGrok Plus $100/月为官方公开参考；The X Subscription 的个人套餐另有定价",
+    "priceSource": "https://x.ai/pricing",
+    "free": "Grok 免费版可体验实时 X/网页检索和文字对话，消息/图片/视频额度按官方账号条件",
+    "freeSource": "https://x.ai/pricing",
+    "region": "Grok 网页 grok.com 和 X 内订阅与 xAI 开发者 API 分开购买、分开判断国家和支付",
+    "regionSource": "https://docs.x.ai/grok/overview",
+    "commercial": "按 Grok 消费者及 API 的适用合同判断业务用途；订阅不自动转让模型权重或第三方素材权利",
+    "commercialSource": "https://x.ai/legal/terms-of-service"
+  },
+  "midjourney": {
+    "price": "Basic $10/月（年付折合 $8/月）；Standard $30/月（年付 $24/月）；Pro $60/月（年付 $48/月）；Mega $120/月（年付 $96/月）",
+    "priceSource": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
+    "free": "官网要求订阅套餐才能开始常规生成；不承诺固定免费试用或免费额度，部分活动以官方说明为准",
+    "freeSource": "https://docs.midjourney.com/hc/en-us/articles/33329261836941-Getting-Started-Guide",
+    "region": "官网和 Discord 订阅相通，Stripe 结算仅美元；具体卡与钱包依结账国家而定",
+    "regionSource": "https://docs.midjourney.com/hc/en-us/articles/27868831972365-Accepted-Payment-Methods"
+  },
+  "ollama": {
+    "price": "Ollama 本地运行免费；云模型按百万 Tokens 用量计费；Pro $20/月、Max $100/月、Team $500/月，含不同额度云端积分",
+    "priceSource": "https://ollama.com/pricing",
+    "free": "本地模型运行不限制次数、无需会员；云端按量付费，计划含云端积分与并发限制",
+    "freeSource": "https://ollama.com/pricing",
+    "region": "本地软件可自行部署；Ollama 云端数据处理与在线模型服务可能涉及美国、欧洲、新加坡等区域",
+    "regionSource": "https://ollama.com/pricing"
+  },
+  "replit": {
+    "price": "Replit Starter 免费；Core $25/月（月付），年付折合 $20/月（含 $25/月积分）；Pro $100/月（月付），年付折合 $95/月",
+    "priceSource": "https://replit.com/pricing",
+    "free": "Starter 赠每日 Agent 积分，最多可发布 1 个项目；具体 Agent/发布/数据库使用上限由套餐限制",
+    "freeSource": "https://replit.com/pricing",
+    "payments": [
+      "Credit / debit card（Replit Web 订阅）",
+      "Apple App Store（iOS Core 内购）",
+      "Google Play（Android Core 内购）"
+    ],
+    "paymentSource": "https://docs.replit.com/references/platforms/mobile-app",
+    "region": "Core 可发布项目于多地区，企业版有额外区域部署功能；支付币种和税费按结算页面",
+    "regionSource": "https://replit.com/pricing",
+    "commercial": "Replit Pro 面向专业商业项目，企业/组织另有商业协议；生成应用与模型工具需遵守平台服务及第三方许可",
+    "commercialSource": "https://replit.com/terms-of-service"
+  },
+  "runway": {
+    "price": "Runway Standard 年付折合 $12/月，年付一次结算；每月 625 积分；Pro 及 Unlimited 每月 2,250 积分；Gen-4.5 视频按 12 积分/秒",
+    "priceSource": "https://runway.com/pricing",
+    "free": "Free 账号一次性 125 积分（不每日重置）；Gen-4.5 在 Web 仅 Standard 或以上套餐可用",
+    "freeSource": "https://help.runwayml.com/hc/en-us/articles/15124877443219-How-do-credits-work",
+    "region": "Runway 网页与 App 订阅和具体模型地区规则分开；支付宝、微信等钱包是否出现依所选国家结算",
+    "regionSource": "https://help.runwayml.com/hc/en-us/articles/30657959470483-What-payment-methods-are-available"
   }
 };
 export const MARKET_RESEARCH_CHECKED_AT='2026-10-31';
