@@ -3,7 +3,7 @@ const page=await readFile(new URL('../app/market-workbench.tsx',import.meta.url)
 const headings=await readFile(new URL('../lib/market-matrix-headings.ts',import.meta.url),'utf8');
 test('public homepage hides developer-only model-download tables',()=>{
  assert.ok(page.includes('<div className="panel ranking" id="tools-list">'));
- assert.ok(page.includes('<PriceLeaderboards/>'));
+ assert.ok(page.includes('<PriceLeaderboards language={language}/>'));
  assert.ok(!page.includes('<HfModelRankings/>'));
  assert.ok(!page.includes('sourceDisclosure'));
  assert.ok(!page.includes('className="marketUtility"'));
