@@ -1,0 +1,52 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
+test('Hong Kong belongs to Gemini web policy but not OpenAI/Claude published lists',async()=>{
+ const official=await read('lib/official-country-lists.ts');
+ const global=await read('lib/global-region-market.ts');
+ assert.match(official,/gemini:\{/);
+ assert.match(official,/isComplete:false,productScope:'Gemini web app'/);
+ assert.match(official,/countries:parse\('HK US SG JP/);
+ assert.match(official,/checkedAt:'2026-10-31'/);
+ assert.match(official,/chatgpt:\{/);
+ assert.match(official,/claude:\{/);
+ assert.match(global,/official\.countries\.has\(region\)/);
+ assert.match(global,/official\.isComplete!==false/);
+ assert.match(global,/p\?\.countries\[region\]\|\|recorded/);
+ assert.match(global,/Mainland China: Workspace only/);
+});
+test('major five country list and expandable sourced remainder, in all nine languages',async()=>{
+ const component=await read('app/market-global-access.tsx');
+ const model=await read('lib/region-presentation.ts');
+ const row=await read('app/market-matrix-row.tsx');
+ const css=await read('app/globals.css');
+ assert.match(model,/top:sorted\.slice\(0,5\),other:sorted\.slice\(5\)/);
+ assert.match(model,/const priority=\['HK','US','SG','JP','GB'/);
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(model,new RegExp('\\b'+lang+':\\{top:'));
+ assert.match(component,/marketRegionTopFive/);
+ assert.match(component,/countryList\.other\.length>0&&<details/);
+ assert.match(component,/countryList\.complete\?countryList\.words\.complete:countryList\.words\.partial/);
+ assert.match(row,/globalRegionSummary\(p\.id,language\)/);
+ assert.match(row,/regionList\.source/);
+ assert.match(css,/marketRegionTopFive/);
+});
+test('VPN-access evidence and offline tools do not convert into unverified official support claims',async()=>{
+ const global=await read('lib/global-region-market.ts');
+ const region=await read('lib/region-presentation.ts');
+ assert.match(global,/comfyui:\{globalPolicy:local/);
+ assert.match(global,/ollama:\{globalPolicy:local/);
+ assert.match(region,/VPN 出口、账号注册地及付款地区可能不同/);
+ assert.match(region,/A working connection is not official eligibility/);
+ assert.doesNotMatch(region,/VPN is official support|VPN means officially supported/);
+});
+test('remove low-value repeated unknown placeholders from product matrix and compare',async()=>{
+ const row=await read('app/market-matrix-row.tsx');
+ const home=await read('app/market-workbench.tsx');
+ assert.match(row,/const SPECIFIC:Record<Language/);
+ assert.match(row,/isUnknownText\(rawFree\)/);
+ assert.match(row,/isUnknownText\(rawCost\)/);
+ assert.match(row,/isUnknownText\(rawModels\)/);
+ assert.match(home,/if\(region==='GLOBAL'\)return globalRegionSummary\(p.id,language\)/);
+ assert.doesNotMatch(home,/target\.price==='待核验'\?'以官网为准'/);
+});
