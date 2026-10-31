@@ -321,3 +321,12 @@ test('V44 nine-language pricing/sponsored components and truthful free filter',a
  assert.equal(screening.hasFreeOption({id:'midjourney',free:'Free trial not regular',guide:{free:'free trial may not be offered'}}),false);
  assert.equal(screening.hasFreeOption({id:'runway',free:'免费账号一次性125积分',guide:{free:'Free account'}}),true);
 });
+
+test('V44 searching short video includes known eight products, not only category video items',()=>{
+ const repo=read('lib/platform-repository.ts');
+ assert.match(repo,/videoTerms=shortDramaEvidence\(id\)/);
+ assert.match(repo,/\.\.\.videoTerms/);
+ const screen=read('lib/market-v36-screening.ts');
+ for(const id of ['grok','gemini','qwen','doubao','kling','jimeng','runway','luma'])
+  assert.match(screen,new RegExp('\\b'+id+':.https:\\/\\/'));
+});
