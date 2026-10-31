@@ -10,15 +10,15 @@ import {summaryFor,shortDramaEvidence,shortDramaSummary,MARKET_SCREEN_COPY} from
 import MarketRowActions from './market-row-actions';
 
 const columns:Record<Language,string[]>={
- zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','代表模型','短剧生成','商用授权','登录 · 付款','操作'],
- en:['No.','Tool / Publisher','Core strengths','Free usage','Price','Country support','Models','Short films','Commercial','Login / Pay','Actions'],
- ja:['番号','ツール / 企業','強みと用途','無料枠','料金','地域対応','モデル','短編動画','商用','登録・支払い','操作'],
- ko:['번호','도구 / 기업','강점과 사용법','무료 한도','가격','국가 지원','모델','단편 영상','상업 이용','로그인/결제','작업'],
- fr:['N°','Outil / Éditeur','Atouts et usages','Gratuit','Tarifs','Disponibilité','Modèles','Courts-métrages','Commercial','Accès / Paiement','Actions'],
- de:['Nr.','Tool / Anbieter','Stärken und Einsatz','Gratis','Preis','Land','Modelle','Kurzfilme','Gewerblich','Login / Zahlung','Aktionen'],
- es:['N.º','Producto / Empresa','Fortalezas','Gratis','Precio','País','Modelos','Cortos IA','Comercial','Acceso / Pago','Acciones'],
- pt:['N.º','Produto / Empresa','Pontos fortes','Grátis','Preço','País','Modelos','Curtas IA','Comercial','Acesso / Pagamento','Ações'],
- ar:['الرقم','الأداة / الشركة','أهم المزايا','المجاني','السعر','توفر البلد','النماذج','فيلم قصير','تجاري','الدخول / الدفع','إجراءات']
+ zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','付款 · 登录','短剧 / 短视频','代表模型','商用授权','操作'],
+ en:['No.','Tool / Publisher','Core strengths','Free usage','Price','Country support','Payment / Login','AI short films / clips','Models','Commercial','Actions'],
+ ja:['番号','ツール / 企業','強みと用途','無料枠','料金','地域対応','決済 / 登録','短編映像 / 動画','モデル','商用','操作'],
+ ko:['번호','도구 / 기업','강점과 사용법','무료 한도','가격','국가 지원','결제 / 로그인','단편 영화 / 영상','모델','상업 이용','작업'],
+ fr:['N°','Outil / Éditeur','Atouts et usages','Gratuit','Tarifs','Disponibilité','Paiement / Accès','Courts-métrages / clips','Modèles','Commercial','Actions'],
+ de:['Nr.','Tool / Anbieter','Stärken und Einsatz','Gratis','Preis','Land','Zahlung / Anmeldung','Kurzfilm / Videoclips','Modelle','Gewerblich','Aktionen'],
+ es:['N.º','Producto / Empresa','Fortalezas','Gratis','Precio','País','Pago / Acceso','Cortos / videoclips','Modelos','Comercial','Acciones'],
+ pt:['N.º','Produto / Empresa','Pontos fortes','Grátis','Preço','País','Pagamento / Acesso','Curtas / videoclipes','Modelos','Comercial','Ações'],
+ ar:['الرقم','الأداة / الشركة','أهم المزايا','المجاني','السعر','توفر البلد','الدفع / الدخول','أفلام قصيرة / مقاطع','النماذج','تجاري','إجراءات']
 };
 export const V36_COL_COUNT=11;
 export function marketRowTitles(language:Language){return columns[language];}
@@ -58,12 +58,13 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
  const rawCommercial=access?.commercial||commercial?.text;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
  const login=accessValue(access?.login,specific.login);
- const allPayments=r?.payments.methods||[];
- const accepted=r?.policy.status==='supported'||r?.policy.status==='conditional'||r?.policy.status==='local';
+ const allPayments=(r||globalRegionFact(p.id,'GLOBAL')).payments.methods;
+ const accepted=region==='GLOBAL'||r?.policy.status==='supported'||r?.policy.status==='conditional'||r?.policy.status==='local';
  const payment=statusUnsupported?regionCopy(language).status.unsupported:
   !accepted?specific.payment:
   allPayments.length?allPayments.slice(0,2).map(x=>localizedPaymentName(x,language)).join(' · ')+(allPayments.length>2?' +'+(allPayments.length-2):''):specific.payment;
  const drama=shortDramaEvidence(p.id);
+ const videoTool=Boolean(drama)||/视频|video|film|clip|短剧/i.test(p.category);
  return <tr className="marketOverviewRow marketV36Row" data-market-id={p.id}>
    <td className="marketOverviewRank" data-label={h[0]}>{position}</td>
    <td className="marketOverviewIdentity" data-label={h[1]}>
@@ -81,14 +82,14 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
    <td className="marketOverviewFree" data-label={h[3]}><strong>{allowance}</strong>{free&&<a href={free.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{price&&<a href={price.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewRegion" data-label={h[5]}>
-    <strong>{region==='GLOBAL'?globalRegionSummary(p.id,language):regionName(region,language)}</strong>
+    <strong>{globalRegionSummary(p.id,language)}</strong>
     <span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{regionText}</span>
     {(r?.policy.source||regionList.source)&&<a href={r?.policy.source||regionList.source||'#'} target="_blank" rel="noopener noreferrer">{r?.policy.checkedAt||t.source} ↗</a>}
    </td>
-   <td className="marketV36Model" data-label={h[6]}>{models}</td>
-   <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<span className="marketDramaUnknown">{t.dramaUnknown}</span>}</td>
-   <td className="marketV36Business" data-label={h[8]}><span>{commercialValue}</span>{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
-   <td className="marketV36Login" data-label={h[9]}><strong>{login}</strong><span title={accepted?allPayments.map(x=>localizedPaymentName(x,language)).join(' · '):payment}>{payment}</span><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
+   <td className="marketV36Login" data-label={h[6]}><strong title={accepted?allPayments.map(x=>localizedPaymentName(x,language)).join(' · '):payment}>{region==='GLOBAL'&&allPayments.length?language==='zh'?'常见方式 · 依地区':'Common options · country-dependent':payment}</strong>{region==='GLOBAL'&&allPayments.length?<span>{payment}</span>:null}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
+   <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:(videoTool?<span className="marketDramaUnknown">{t.dramaUnknown}</span>:<span className="marketDramaNA" aria-label="Not applicable">—</span>)}</td>
+   <td className="marketV36Model" data-label={h[8]}>{models}</td>
+   <td className="marketV36Business" data-label={h[9]}><span>{commercialValue}</span>{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewActions" data-label={h[10]}><MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/></td>
   </tr>;
 }
