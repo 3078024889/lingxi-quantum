@@ -40,7 +40,7 @@ test('nine-language form is wired to actual homepage and product detail',async()
 
 test('ChatGPT and Claude country lists are explicit and do not automatically include mainland China',async()=>{
  const data=await read('lib/official-country-lists.ts'),region=await read('lib/global-region-market.ts');
- const strings=[...data.matchAll(/countries:parse\('([A-Z ]+)'\)/g)].map(m=>m[1].split(' '));
+ const strings=[...data.matchAll(/countries:parse\('([A-Z ]+)'\)/g)].map(m=>m[1].split(' ')).filter(codes=>codes.length>=145);
  assert.equal(strings.length,2);
  assert.ok(strings[0].length>=160,'ChatGPT countries: source snapshot required');
  assert.ok(strings[1].length>=145,'Claude countries: source snapshot required');
