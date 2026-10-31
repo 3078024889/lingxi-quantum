@@ -82,6 +82,19 @@ export default async function LocalProduct({params}:PageParams){
    {team&&l==='zh'&&<p>{team.summary} <a href={team.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></p>}
   </section>
   <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src])=><article key={title}><h2>{title}</h2><p>{value}</p>{src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}</article>)}</section>
+  <section className="marketLocalizedApiRates">
+   <h2>{({zh:'开发者 API 计费与会员套餐',en:'Developer API pricing and web plans',ja:'開発者API料金と会員プラン',ko:'개발자 API 요금 및 구독',fr:'Tarifs API et abonnements',de:'API-Preise und Abos',es:'Precios API y planes',pt:'Preços de API e planos',ar:'أسعار API والاشتراكات'} as Record<Language,string>)[l]}</h2>
+   <p>{l==='zh'?api.descriptionZh:api.descriptionEn}</p>
+   {api.tokenRates.length>0?<div className="marketLocalizedRatesScroll"><table><thead><tr>
+    <th>{w[3]}</th><th>{({zh:'输入 / 百万 Token',en:'Input / 1M tokens',ja:'入力/100万Token',ko:'입력/100만토큰',fr:'Entrée/1M tokens',de:'Eingabe/1M Token',es:'Entrada/1M tokens',pt:'Entrada/1M tokens',ar:'الإدخال / مليون رمز'} as Record<Language,string>)[l]}</th>
+    <th>{({zh:'输出 / 百万 Token',en:'Output / 1M tokens',ja:'出力/100万Token',ko:'출력/100만토큰',fr:'Sortie/1M tokens',de:'Ausgabe/1M Token',es:'Salida/1M tokens',pt:'Saída/1M tokens',ar:'الإخراج / مليون رمز'} as Record<Language,string>)[l]}</th><th>{w[7]}</th>
+   </tr></thead><tbody>{api.tokenRates.map(x=><tr key={x.id}><td>{x.model}</td><td>{x.currency} {x.inPerMillion}</td><td>{x.currency} {x.outPerMillion}</td><td><a href={x.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></td></tr>)}</tbody></table></div>:null}
+   {api.unitRates.length>0?<div className="marketLocalizedRatesScroll"><table><thead><tr><th>{w[3]}</th><th>{w[2]}</th><th>{w[7]}</th></tr></thead>
+    <tbody>{api.unitRates.map(x=><tr key={x.id}><td>{x.name}</td><td>{x.currency} {x.price} / {x.unit}</td><td><a href={x.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></td></tr>)}</tbody></table></div>:null}
+   {api.videoRates.length>0?<div className="marketLocalizedRatesScroll"><table><thead><tr><th>{w[3]}</th><th>{w[2]}</th><th>{w[7]}</th></tr></thead><tbody>{api.videoRates.map(x=><tr key={x.id}><td>{x.model} · {x.resolution}</td><td>{x.currency} {x.billing==='per-second'?x.perSecond+' /s':x.apiPerMillionNoVideo+' / 1M video tokens'}</td><td><a href={x.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></td></tr>)}</tbody></table></div>:null}
+   {api.subscriptionZh?<div className="marketLocalizedApiPlan"><strong>{({zh:'网页会员或产品订阅价（不是 API 单次价格）',en:'Web or product subscription (not an API-call fee)',ja:'Web会員費（API従量料金とは別）',ko:'웹 구독료(API 호출 요금과 별도)',fr:'Abonnement web (distinct de l’API)',de:'Web-Abo (nicht API-Aufrufpreis)',es:'Plan web (no es precio de API)',pt:'Plano web (não é preço da API)',ar:'اشتراك الويب (ليس سعر استدعاء API)'} as Record<Language,string>)[l]}</strong>
+    <p>{localizedCatalogFact(id,l,'price',api.subscriptionZh)}</p>{api.subscriptionSource&&<a href={api.subscriptionSource} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a>}</div>:null}
+  </section>
   {videos.length>0?<section className="marketLocalizedVideoRates"><h2>{videoTitle}</h2><div className="marketLocalizedRatesScroll"><table><thead><tr><th>{w[3]}</th><th>{l==='zh'?'分辨率':'Quality'}</th><th>{w[2]}</th><th>{w[7]}</th></tr></thead><tbody>{videos.map(v=>{
   const expired=Boolean(v.promoEnds)&&Date.now()>Date.parse(v.promoEnds+'T23:59:59+08:00');
   const cost=expired?(l==='zh'?'活动价已过期':'Offer expired'):v.billing==='credits'?v.creditsPerSecond+' credits/s':v.billing==='plan-equivalent'?v.currency+' '+v.perSecond+' /s '+(l==='zh'?'套餐折合促销价':'promotional plan equivalent'):v.billing==='token-only'?v.currency+' '+v.apiPerMillionNoVideo+'/1M video tokens':v.currency+' '+v.perSecond+' /s';
