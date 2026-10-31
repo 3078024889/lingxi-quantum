@@ -848,3 +848,7 @@ body{font-size:16px;line-height:1.6}
  .app .marketOverviewTable .marketOverviewActions .marketRowActions :is(a,button){min-height:30px!important;font-size:11px!important;padding:5px!important}
  .app .marketOverviewTable .marketOverviewIdentity .platformName strong{font-size:13px!important}
 }
+
+.app .marketV40AdvancedChipRow{display:flex;gap:6px;flex-wrap:wrap;padding-top:6px}
+.app .marketV40AdvancedChipRow button{border:1px solid #c7dbf4;color:#1658a6;background:#fff;border-radius:19px;padding:7px 11px;font-size:12px}
+.app .marketV40AdvancedChipRow button.active{background:#1164d6;color:#fff;border-color:#1164d6}
