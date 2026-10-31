@@ -979,3 +979,24 @@ body{font-size:16px;line-height:1.6}
 .marketPaymentChannel strong{font-size:14px}
 .marketPaymentChannel span{color:#4c6684;font-size:12px}
 .marketPaymentChannels a{color:#1769c8}
+
+/* Full 32-product developer tariff directory: readable, always visible in API mode. */
+.lxApiDirectory{margin-top:14px}
+.lxApiDirectory>strong{display:block;margin:10px 0;font-size:15px}
+.lxApiDirectoryScroll{max-width:100%;overflow-x:auto;border:1px solid #dbe6f3;border-radius:10px}
+.lxApiDirectoryScroll table{width:100%;min-width:1040px;table-layout:fixed;border-collapse:collapse}
+.lxApiDirectoryScroll :is(td,th){text-align:left;vertical-align:top;padding:11px 12px;white-space:normal!important;overflow-wrap:anywhere;border-bottom:1px solid #e9eef7}
+.lxApiDirectoryScroll th{font-size:12px;background:#f0f5fc}
+.lxApiDirectoryScroll td{font-size:12px;line-height:1.65}
+.lxApiDirectoryScroll td:nth-child(1){width:13%;font-weight:700}
+.lxApiDirectoryScroll td:nth-child(2){width:30%}
+.lxApiDirectoryScroll td:nth-child(3){width:27%}
+.lxApiDirectoryScroll td:nth-child(4){width:22%}
+.lxApiDirectoryScroll td:nth-child(5){width:8%}
+.lxApiDirectoryScroll button{background:transparent;border:0;color:#175ac0;text-align:left;text-decoration:underline;padding:2px}
+.lxApiSubscriptionInfo{border-top:1px solid #dbe5f1;margin:12px 0 0;padding-top:10px}
+.lxApiSubscriptionInfo p{font-size:13px;line-height:1.65}
+.lxApiUnitRow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;padding:8px 0;border-top:1px solid #e5ebf5}
+.lxApiUnitRow>strong{font-size:13px}
+.lxApiUnitRow span{font-size:13px}
+@media(max-width:640px){.lxApiDirectoryScroll{margin-right:0}.lxApiDirectoryScroll td{font-size:12px}}
