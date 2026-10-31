@@ -34,8 +34,7 @@ test('Alipay RSA2 signed order enforces CNY and matching callback amount, mercha
 test('WeChat signed Native order, signed encrypted notification and anti-replay',async()=>{
  const config={appId:'wx123456789',mchId:'1234567890',privateKey,serialNo:'987654321'};
  let sent;const fetcher=async(url,req)=>{sent={url,req};return new Response(JSON.stringify({code_url:'weixin://wxpay/bizpayurl?pr=abcdefg'}),{status:200,headers:{'content-type':'application/json'}})};
- const r=await wechatCreateNative({orderId:'LX1234567890',amount:49,currency:'CNY',notifyUrl:'https://lingxifield.com/wechat-notify',config,fetcher});
- assert.match(r.codeUrl,/^weixin:\/\//);
+ await assert.rejects(()=>wechatCreateNative({orderId:'LX1234567890',amount:49,currency:'CNY',notifyUrl:'https://lingxifield.com/wechat-notify',config,fetcher}),/WECHAT_RESPONSE_SIGNATURE_INVALID/);
  assert.equal(JSON.parse(sent.req.body).amount.total,4900);
  assert.match(sent.req.headers.Authorization,/WECHATPAY2-SHA256-RSA2048/);
  const timestamp=String(Math.floor(Date.now()/1000)),nonce='random-123456789',key='0123456789abcdef0123456789abcdef',nonceIv=randomBytes(9).toString('base64url'),iv=Buffer.from(nonceIv);
