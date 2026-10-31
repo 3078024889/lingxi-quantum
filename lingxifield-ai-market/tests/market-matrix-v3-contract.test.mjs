@@ -35,8 +35,8 @@ test('all existing source headings and new eleven-column headings are translated
 
 test('newbie path stays task oriented without fabricated ranking',()=>{
  assert.match(home,/新手友好榜/);
- assert.match(home,/tab==='新手友好榜'\?results\.filter/);
- assert.match(home,/tab==='新手友好榜'\?results\.filter/);
+ assert.match(home,/beginner:tab==='新手友好榜'\?'1':'0'/);
+ assert.match(home,/beginner:tab==='新手友好榜'\?'1':'0'/);
  assert.doesNotMatch(row,/暂无统一新手上手成功率实测/);
  assert.match(home,/序号不是排名/);
 });
