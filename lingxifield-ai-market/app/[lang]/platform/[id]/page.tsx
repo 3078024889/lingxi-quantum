@@ -12,7 +12,7 @@ import {commercialEvidence} from '../../../../lib/market-commercial-evidence';
 import {apiServiceOffer} from '../../../../lib/market-api-service-catalog';
 import {paymentFactsFor} from '../../../../lib/market-payment-facts';
 import {globalRegionSummary} from '../../../../lib/region-presentation';
-import {localizedPaymentName} from '../../../market-global-access';
+import {localizedPaymentName} from '../../../../lib/market-localized-payment';
 import {platformLinks} from '../../../../lib/official-platform-links';
 import type {Language} from '../../../../lib/v2';
 type PageParams={params:Promise<{lang:string;id:string}>};
