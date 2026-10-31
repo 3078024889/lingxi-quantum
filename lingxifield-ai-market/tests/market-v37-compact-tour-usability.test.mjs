@@ -36,9 +36,9 @@ test('right-hand text remains accessible via explicit horizontal-scroll controls
  const row=await source('app/market-matrix-row.tsx');
  assert.match(home,/marketV37ScrollTools/);
  assert.match(home,/marketScrollRef\.current\?\.scrollBy/);
- assert.match(css,/min-width:1710px!important/);
+ assert.match(css,/min-width:1940px!important/);
  assert.match(row,/allPayments\.slice\(0,2\)/);
  assert.match(row,/allPayments\.length>2/);
- assert.match(row,/!accepted\?localizedNotice\[language\]/);
+ assert.match(row,/!accepted\?specific\.payment/);
  assert.match(row,/marketV37More/);
 });

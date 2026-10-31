@@ -65,5 +65,5 @@ test('all ISO 3166-1 countries are selectable but not automatically declared sup
  const match=source.match(/'([A-Z]{2}(?:,[A-Z]{2}){230,})'\.split/);
  assert.ok(match);
  assert.ok(match[1].split(',').length>=240);
- assert.match(source,/p\?\.countries\[region\]\|\|p\?\.globalPolicy\|\|unknown/);
+ assert.match(source,/p\?\.countries\[region\]\|\|recorded\|\|p\?\.globalPolicy\|\|unknown/);
 });
