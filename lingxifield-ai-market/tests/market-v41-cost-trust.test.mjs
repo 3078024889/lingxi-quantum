@@ -432,7 +432,7 @@ test('V45 nine-language structured product pages and sitemap are release gated',
  const pages=read('app/[lang]/platform/[id]/page.tsx');
  const sitemap=read('app/sitemap.ts');
  const gate=read('lib/market-index-policy.ts');
- assert.match(pages,/marketLocales\.flatMap\(lang=>entries\.map/);
+ assert.match(pages,/marketLocales\.flatMap\(lang=>searchPlatforms/);
  assert.match(pages,/application\/ld\+json/);
  assert.match(pages,/SoftwareApplication/);
  assert.match(pages,/mayIndexMarket\(lang\)/);
