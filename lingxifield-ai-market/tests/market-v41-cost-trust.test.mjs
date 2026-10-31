@@ -368,7 +368,7 @@ test('developer API shows model-specific official token rates instead of user-su
  assert.equal(peak.currency,'CNY');
  assert.equal(math.estimateApiUsageCost(1000000,250000,peak.inPerMillion,peak.outPerMillion),4);
  const ui=read('app/market-cost-estimator.tsx');
- assert.match(ui,/API_RATES\.map/);
+ assert.match(ui,/MARKET_API_PRODUCTS\.map/);
  assert.doesNotMatch(ui,/setInputRate|setOutputRate/);
 });
 
