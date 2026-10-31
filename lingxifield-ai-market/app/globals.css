@@ -1000,3 +1000,23 @@ body{font-size:16px;line-height:1.6}
 .lxApiUnitRow>strong{font-size:13px}
 .lxApiUnitRow span{font-size:13px}
 @media(max-width:640px){.lxApiDirectoryScroll{margin-right:0}.lxApiDirectoryScroll td{font-size:12px}}
+
+/* Focused company overview, no empty investor/team placeholders. */
+.marketCompanySnapshot{background:transparent!important;box-shadow:none!important;border:0!important;padding:10px 0!important;margin:10px 0!important}
+.marketCompanySnapshot h2{font-size:18px;margin:2px 0 10px}
+.marketCompanySummary{font-size:14px;line-height:1.7;max-width:75ch}
+.marketCompanyFacts{display:flex;flex-wrap:wrap;gap:9px}
+.marketCompanyFacts>div{display:flex;flex-direction:column;gap:4px;background:#f5f8fd;border:1px solid #e4eaf4;border-radius:9px;padding:9px 12px;min-width:130px;max-width:260px}
+.marketCompanyFacts small{font-size:12px;color:#65809d}
+.marketCompanyFacts strong{font-size:13px;overflow-wrap:anywhere}
+.marketCompanyTeam{margin-top:12px;padding-top:10px;border-top:1px solid #e4eaf4;font-size:13px}
+.marketCompanyTeam p{line-height:1.65}
+.marketLocalizedCompany,.marketLocalizedApiRates{background:#fff;border:1px solid #e0e8f5;border-radius:12px;padding:16px;margin:12px 0}
+.marketLocalizedCompanyFacts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.marketLocalizedCompanyFacts :is(strong,a){display:inline-block;border:1px solid #e0e9f5;border-radius:7px;padding:7px 10px;font-size:13px;max-width:100%;overflow-wrap:anywhere}
+.marketLocalizedApiRates>p{line-height:1.65;font-size:14px}
+.marketLocalizedApiPlan{margin:14px 0;padding:12px;border-radius:8px;background:#f3f7fd}
+.marketLocalizedApiPlan p{line-height:1.65}
+.marketLocalizedRatesScroll{overflow-x:auto;max-width:100%}
+.marketLocalizedRatesScroll table{width:100%;min-width:640px;border-collapse:collapse}
+.marketLocalizedRatesScroll th,.marketLocalizedRatesScroll td{border-bottom:1px solid #dce6f1;padding:9px;text-align:left;white-space:normal;overflow-wrap:anywhere;font-size:13px}
