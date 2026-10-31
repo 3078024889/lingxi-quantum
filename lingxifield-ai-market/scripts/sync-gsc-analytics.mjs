@@ -18,7 +18,7 @@ function allProductIds(){
  const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
  const facts=fs.readFileSync(path.join(root,'lib/market-researched-facts.ts'),'utf8');
  const token='export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>=';
- const begin=facts.indexOf(token)+token.length,end=facts.indexOf(';\\nexport const MARKET_RESEARCH_CHECKED_AT',begin);
+ const begin=facts.indexOf(token)+token.length,end=facts.lastIndexOf(';',facts.indexOf('export const MARKET_RESEARCH_CHECKED_AT',begin));
  if(begin<token.length||end<begin)throw Error('CURATED_CATALOG_NOT_FOUND');
  return new Set([...catalog.map(x=>x.id),...Object.keys(JSON.parse(facts.slice(begin,end)))]);
 }
