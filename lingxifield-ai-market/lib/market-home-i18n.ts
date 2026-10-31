@@ -35,3 +35,26 @@ const EXTRA_CATEGORIES:Record<Language,Record<string,string>>={
 };
 export function localizedCategory(language:Language,category:string){return CATEGORY_LABELS[language][category]||EXTRA_CATEGORIES[language][category]||category;}
 export function localizedDetailTab(language:Language,tab:string){const labels=HOME_COPY[language];const lookup:Record<string,string>={"概览":"detailTabsOverview","价格与额度":"detailTabsPricing","团队与融资":"detailTabsTeam","用户评价":"detailTabsReviews","最新动态":"detailTabsNews"};return lookup[tab]?labels[lookup[tab] as keyof typeof labels]:tab;}
+
+export const MARKET_FAQ_TRANSLATIONS:Record<Language,readonly [string,string,string,string]>={
+ zh:["哪个 AI 做视频人物一致性更好？","ChatGPT 和 Grok 哪个更适合研究？","千问和 DeepSeek 哪个写代码更好？","免费 AI 视频生成产品有哪些？"],
+ en:["Which AI keeps video characters consistent?","ChatGPT or Grok for research?","Qwen or DeepSeek for coding?","Which AI video products offer free access?"],
+ ja:["動画の人物を一貫して描くAIは？","研究にはChatGPTとGrokのどちら？","コード作成はQwenかDeepSeekか？","無料で使えるAI動画製品は？"],
+ ko:["영상 인물의 일관성을 유지하는 AI는?","연구에는 ChatGPT와 Grok 중 어떤 것이 좋나요?","코딩에는 Qwen과 DeepSeek 중 어떤 것이 좋나요?","무료로 사용할 수 있는 AI 영상 제품은?"],
+ fr:["Quelle IA conserve les personnages d’une vidéo ?","ChatGPT ou Grok pour la recherche ?","Qwen ou DeepSeek pour coder ?","Quels générateurs vidéo IA sont gratuits ?"],
+ de:["Welche KI hält Videopersonen konsistent?","ChatGPT oder Grok für Recherche?","Qwen oder DeepSeek zum Programmieren?","Welche KI-Videoprodukte sind gratis?"],
+ es:["¿Qué IA mantiene los personajes en vídeo?","¿ChatGPT o Grok para investigación?","¿Qwen o DeepSeek para programar?","¿Qué generadores de vídeo IA son gratuitos?"],
+ pt:["Qual IA mantém personagens consistentes no vídeo?","ChatGPT ou Grok para pesquisa?","Qwen ou DeepSeek para programar?","Quais geradores de vídeo IA são gratuitos?"],
+ ar:["أي نموذج يحافظ على ثبات الشخصيات في الفيديو؟","ChatGPT أم Grok للبحث؟","Qwen أم DeepSeek للبرمجة؟","ما منتجات الفيديو المجانية بالذكاء الاصطناعي؟"]
+};
+export const MARKET_VENDOR_TRANSLATIONS:Record<Language,readonly [string,string,string,string]>={
+ zh:["厂商免费入驻与认领","提交官网、下载地址、X、团队和融资资料，经审核后展示。","免费提交产品","灵犀场｜全球 SI AI 行情平台 · 功能、费用与使用条件"],
+ en:["Free publisher listing and product claim","Submit your official website, downloads, X account, team and funding sources for review.","Submit a product for free","LINGXIFIELD | Global SI AI market · Capabilities, prices and conditions"],
+ ja:["企業向け無料掲載・製品認証","公式サイト、ダウンロード、X、チーム・資金調達情報を審査後に掲載します。","無料で製品を登録","LINGXIFIELD｜世界の SI AI 市場 · 機能・料金・利用条件"],
+ ko:["기업 무료 등록 및 소유권 확인","공식 사이트, 다운로드, X, 팀 및 투자 정보를 검토 후 게시합니다.","무료 제품 등록","LINGXIFIELD | 글로벌 SI AI 시장 · 기능·가격·조건"],
+ fr:["Inscription gratuite pour les éditeurs","Soumettez site officiel, téléchargements, X, équipe et financement pour vérification.","Déposer un produit gratuitement","LINGXIFIELD | Marché mondial SI AI · Capacités, prix et conditions"],
+ de:["Kostenlose Anbieteraufnahme","Offizielle Website, Downloads, X, Team und Finanzierung zur Prüfung einreichen.","Produkt kostenlos einreichen","LINGXIFIELD | Globaler SI AI Markt · Funktionen, Preise und Bedingungen"],
+ es:["Registro gratuito para proveedores","Envíe web oficial, descargas, X, equipo y financiación para su revisión.","Enviar producto gratis","LINGXIFIELD | Mercado global SI AI · Funciones, precios y condiciones"],
+ pt:["Cadastro gratuito para fornecedores","Envie site oficial, downloads, X, equipe e financiamento para revisão.","Cadastrar produto grátis","LINGXIFIELD | Mercado global SI AI · Recursos, preços e condições"],
+ ar:["إدراج الشركات مجاناً","أرسل الموقع الرسمي والتنزيلات وحساب X ومعلومات الفريق والتمويل للمراجعة.","أضف منتجاً مجاناً","LINGXIFIELD | سوق SI AI العالمي · الوظائف والأسعار والشروط"]
+};
