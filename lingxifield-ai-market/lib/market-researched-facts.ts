@@ -15,7 +15,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "models": "豆包包含中文对话、图片、文件和多模态功能；聊天模型与火山引擎豆包 API 服务独立计费",
     "modelsSource": "https://www.doubao.com/",
     "free": "豆包网页有免费对话与部分创作能力；专业会员功能和使用次数由账号会员权益决定",
-    "freeSource": "https://www.doubao.com/"
+    "freeSource": "https://www.doubao.com/",
+    "commercial": "豆包可用于创作，但生成内容发布、版权、肖像/隐私及商标须遵守用户协议；不能把付费会员等同所有素材商用授权。",
+    "commercialSource": "https://www.doubao.com/legal/terms"
   },
   "jimeng": {
     "payments": [
@@ -32,7 +34,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "中国版即梦 AI · 网页及移动端；不同国家产品入口与权益不能直接等同",
     "regionSource": "https://jimeng.jianying.com/",
     "models": "即梦提供 Seedance 视频生成模型、图片生成及首尾帧/图生视频创作；模型和积分按会员档位",
-    "modelsSource": "https://jimeng.jianying.com/"
+    "modelsSource": "https://jimeng.jianying.com/",
+    "commercial": "即梦AI 视频/图片可按官方服务协议和会员规则创作与传播，用户须持有输入素材版权；具体商用、水印、第三方授权按所用会员/模型规则核对。",
+    "commercialSource": "https://jimeng.jianying.com/"
   },
   "kling": {
     "payments": [
@@ -49,7 +53,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "models": "可灵视频与图像生成模型适用视频/短剧制作；中国版与国际版的模型、权益和计费可能不同",
     "modelsSource": "https://klingai.com/",
     "free": "可灵中国版免费账号可体验部分图片/视频功能；不同模型/时长/水印消耗的积分按账户与活动变化",
-    "freeSource": "https://klingai.com/"
+    "freeSource": "https://klingai.com/",
+    "commercial": "可灵AI 创作内容使用须遵守用户服务协议；非会员或未经书面许可不得移除可灵品牌标识/水印，或应显著标明由AI生成；不得侵犯第三方权益。",
+    "commercialSource": "https://ppg.viviv.com/doodle/oarzodFE.html"
   },
   "lovable": {
     "payments": [
@@ -150,7 +156,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "自托管运行不需要 SaaS 地区许可；Cloud 账号及付款按官网条件",
     "regionSource": "https://n8n.io/pricing/",
     "models": "n8n 是工作流与 AI 智能体自动化平台，不是单一底座模型；可调用不同 AI 提供商",
-    "modelsSource": "https://docs.n8n.io/"
+    "modelsSource": "https://docs.n8n.io/",
+    "commercial": "n8n 社区版按 Sustainable Use License 可免费用于公司内部工作流、为客户执行自动化并交付结果；若外部客户能自行编辑工作流、白标或经营托管自动化 SaaS，需商业许可。",
+    "commercialSource": "https://support.n8n.io/article/can-i-use-your-license-for-my-use-case"
   },
   "comfyui": {
     "price": "ComfyUI 本地开源软件免费；Comfy Cloud / 第三方节点另计",
@@ -297,7 +305,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "models": "千问聊天应用和阿里云百炼 API 是两个入口：百炼提供不同千问模型、Token 定价及地区版本",
     "modelsSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
     "free": "千问聊天可以免费体验基础对话；阿里云百炼开发者 API 可能提供适用的新用户额度，商业模型另按 Token 计费",
-    "freeSource": "https://help.aliyun.com/zh/model-studio/new-free-quota"
+    "freeSource": "https://help.aliyun.com/zh/model-studio/new-free-quota",
+    "commercial": "千问聊天生成内容与阿里云百炼 Wan/千问 API 以各自服务条款为准。API 可用于业务应用，但应履行模型/第三方素材许可证及适用地区、内容合规义务；不把聊天版会员权益等同视频 API。",
+    "commercialSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio"
   },
   "deepseek": {
     "payments": [
@@ -312,7 +322,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "price": "DeepSeek API：deepseek-flash 高峰缓存未命中输入 ¥2/百万 Tokens、输出 ¥8/百万；闲时输入 ¥1、输出 ¥4；deepseek-v4-pro 高峰输入 ¥9/百万、输出 ¥27/百万；网页聊天与 API 分开",
     "priceSource": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
     "free": "DeepSeek 网页提供免费聊天体验；开发者 API 按模型用量计费，赠送额度及限流以账户规则为准",
-    "freeSource": "https://chat.deepseek.com/"
+    "freeSource": "https://chat.deepseek.com/",
+    "commercial": "DeepSeek 用户协议第4.2条约定：在适用法律及协议范围内，输出可用于包括衍生产品开发在内的多种场景；对外发布须核验真实性并标注AI生成，输入和第三方权益由用户负责。",
+    "commercialSource": "https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html"
   },
   "elevenlabs": {
     "payments": [
@@ -380,7 +392,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "Gemini Web、Gemini API、Google One 订阅属于不同商品/计费和地区范围；不将 Google One 服务地区等同 Gemini 应用可用地区",
     "regionSource": "https://support.google.com/gemini/answer/13575153?hl=en",
     "models": "Gemini 消费者应用和开发者 API 可用模型不同；Google AI Pro 可访问更高等级 Gemini 模型及 Deep Research",
-    "modelsSource": "https://one.google.com/about/plans?hl=en_US"
+    "modelsSource": "https://one.google.com/about/plans?hl=en_US",
+    "commercial": "Gemini 应用与 Gemini API 属不同产品条款；输出商业使用须符合 Google 服务及生成式 AI 禁止使用政策、输入素材权利，组织用户还受 Workspace/Cloud 合同约束。",
+    "commercialSource": "https://policies.google.com/terms/generative-ai"
   },
   "grok": {
     "price": "Grok Free $0/月；SuperGrok $30/月、SuperGrok Plus $100/月为官方公开参考；The X Subscription 的个人套餐另有定价",
