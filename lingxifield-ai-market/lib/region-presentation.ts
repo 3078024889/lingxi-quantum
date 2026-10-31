@@ -13,8 +13,8 @@ const copy:Record<Language,{top:string;more:string;empty:string;partial:string;c
  pt:{top:'Principais regiões',more:'Ver outras',empty:'Lista oficial ainda não coletada',partial:'Exemplos verificados, lista parcial',complete:'Regiões oficiais',visit:'Fonte',feedback:'Relatar experiência',access:'Conectar não significa suporte oficial',note:'VPN, conta e país de pagamento podem diferir'},
  ar:{top:'المناطق الرئيسية',more:'عرض المزيد',empty:'لم نجمع القائمة الرسمية بعد',partial:'مناطق مؤكدة وليست القائمة الكاملة',complete:'المناطق الرسمية',visit:'المصدر',feedback:'شارك تجربة الوصول',access:'إمكانية الاتصال لا تعني الدعم الرسمي',note:'قد تختلف دولة VPN والحساب والدفع'}
 };
-const priority=(id==='gemini'?['HK','US','JP','SG','GB','AU']:['US','JP','SG','GB','AU','HK']).concat(['DE','FR','KR','CA','IN','BR','TW']);
 export function regionPresentation(id:string,language:Language){
+ const priority=(id==='gemini'?['HK','US','JP','SG','GB','AU']:['US','JP','SG','GB','AU','HK']).concat(['DE','FR','KR','CA','IN','BR','TW']);
  const snapshot=officialCountrySnapshot(id);
  const complete=!(snapshot&&'isComplete' in snapshot&&snapshot.isComplete===false);
  const countries=officialSupportCountries(id);
