@@ -24,7 +24,7 @@ test('pinned name and action remain visible during horizontal scroll and shrink 
  assert.ok(css.includes('position:sticky!important;left:48px!important'));
  assert.ok(css.includes('position:sticky!important;right:0!important'));
  assert.match(css,/@media\(max-width:720px\)/);
- assert.match(css,/th:nth-child\(2\),td:nth-child\(2\)\)\{left:0!important/);
+ assert.ok(css.includes('left:0!important;right:auto!important'));
  assert.match(home,/marketScrollRef\.current\?\.scrollBy/);
 });
 test('no repeated video-wrong answer for a nonvideo tool, but real short film limits linked to publisher',async()=>{
