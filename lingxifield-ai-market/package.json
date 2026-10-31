@@ -17,7 +17,9 @@
     "typecheck": "tsc --noEmit",
     "gate": "npm run validate:data && npm run validate:catalog && npm run test:contracts && npm run typecheck && npm run build",
     "preview:catalog": "node scripts/preview-catalog-import.mjs",
-    "review:sources": "node scripts/review-sources.mjs"
+    "review:sources": "node scripts/review-sources.mjs",
+    "prebuild": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs",
+    "test:v41": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
