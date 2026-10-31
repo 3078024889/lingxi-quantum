@@ -27,16 +27,17 @@ export function commercialEvidence(id:string,language:Language):CommercialEviden
  const f=FACTS[id];if(f)return {label:f.labels[language],condition:f.conditions[language],source:f.source,checkedAt:f.checkedAt,scope:f.scope};
  const research=researchedFact(id);
  if(!research?.commercial||!research.commercialSource)return null;
+ const software=new Set(['langchain','llamaindex','llamacpp','dify','automatic1111','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui']).has(id);
  const t:Record<Language,{label:string;condition:string}>={
-  zh:{label:'商用许可已查证',condition:research.commercial},
-  en:{label:'Commercial license verified',condition:'Software commercial rights are documented in the publisher license. Model APIs and output rights require separate checks.'},
-  ja:{label:'商用許諾を確認',condition:'ソフトウェアの商用利用は公式ライセンスを参照。モデル/API権利は別途確認。'},
-  ko:{label:'상업용 라이선스 확인',condition:'소프트웨어 라이선스에 상업적 사용 조건이 있습니다. 모델/API는 별도입니다.'},
-  fr:{label:'Licence commerciale vérifiée',condition:'Droits logiciels documentés ; conditions des modèles et API distinctes.'},
-  de:{label:'Gewerbliche Lizenz geprüft',condition:'Softwarelizenz belegt; Modell- und API-Bedingungen separat.'},
-  es:{label:'Licencia comercial verificada',condition:'Licencia de software documentada; modelos y API aparte.'},
-  pt:{label:'Licença comercial verificada',condition:'Licença do software documentada; modelos e API separados.'},
-  ar:{label:'تم توثيق الترخيص التجاري',condition:'ترخيص البرمجيات موثق؛ شروط النماذج وواجهات API منفصلة.'}
+ zh:{label:software?'软件商用条件已查证':'商用条件已查证',condition:research.commercial},
+ en:{label:'Commercial terms documented',condition:software?'The publisher software license has conditions. Model and cloud-service rights are separate.':'Commercial use is governed by this product’s published plan and terms. Output and third-party rights are separate.'},
+ ja:{label:'商用条件を確認',condition:software?'コードの商用ライセンスを確認。モデル/APIは別です。':'商用利用はプランと規約に従います。素材や出力の権利は別です。'},
+ ko:{label:'상업 이용 조건 확인',condition:software?'코드 라이선스 확인. 모델과 API 조건은 별도입니다.':'상업 이용은 해당 요금제와 약관을 따릅니다.'},
+ fr:{label:'Conditions commerciales documentées',condition:software?'Licence logicielle vérifiée ; modèles distincts.':'Usage commercial selon le forfait et les conditions ; droits des tiers distincts.'},
+ de:{label:'Gewerbliche Bedingungen dokumentiert',condition:software?'Softwarelizenz geprüft; Modelle separat.':'Gewerbliche Nutzung gemäß Tarif und Produktvertrag; Rechte Dritter separat.'},
+ es:{label:'Condiciones comerciales documentadas',condition:software?'Licencia de software documentada; modelos aparte.':'Uso comercial según plan y condiciones; derechos de terceros aparte.'},
+ pt:{label:'Condições comerciais documentadas',condition:software?'Licença de software documentada; modelos separados.':'Uso comercial conforme plano e termos; direitos de terceiros separados.'},
+ ar:{label:'شروط الاستخدام التجاري موثقة',condition:software?'ترخيص البرنامج موثق؛ حقوق النماذج منفصلة.':'الاستخدام التجاري وفق الخطة والشروط وحقوق الأطراف الأخرى.'}
  };
- return {label:t[language].label,condition:t[language].condition,source:research.commercialSource,checkedAt:MARKET_RESEARCH_CHECKED_AT,scope:'Publisher source-code license; separate downstream model/API rights'};
+ return {label:t[language].label,condition:t[language].condition,source:research.commercialSource,checkedAt:MARKET_RESEARCH_CHECKED_AT,scope:software?'Publisher software license':'Publisher plan terms, output-right and third-party constraints'};
 }
