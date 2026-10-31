@@ -12,6 +12,7 @@ test('live coverage never publishes raw candidate rows or fabricated rankings',a
  assert.match(sql,/grant execute on function public\.ai_market_public_coverage\(\) to anon,authenticated/);
  assert.doesNotMatch(sql,/grant select on (table )?public\.ai_market_(candidates|source_items)/i);
  assert.match(api,/ai_market_public_coverage/);
+ assert.match(api,/curatedProfiles:searchPlatforms\(\{limit:1\}\)\.total/);
  assert.match(api,/status:'unavailable',data:null/);
  assert.match(api,/verifiedGeoMetrics:marketCards\(verifiedMetrics\)\.filter/);
  assert.match(view,/candidateCount/);
