@@ -199,7 +199,11 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "regionSource": "https://github.com/open-webui/open-webui",
     "commercial": "使用 Open WebUI 有商业用途条件；超过 50 个终端用户时不得擅自移除 Open WebUI 品牌，需许可或企业版",
     "commercialSource": "https://github.com/open-webui/open-webui/blob/main/LICENSE"
-  }
+  },
+"suno":{"payments":["Credit / debit card（Visa / Mastercard / Amex）","Apple Pay（部分地区）","Google Pay（部分地区）","Apple App Store（iOS）","Google Play（Android）"],"paymentSource":"https://help.suno.com/en/articles/2421185","region":"Suno 网页接受多币种信用卡；Apple Pay/Google Pay 及本地银行卡随国家地区显示","regionSource":"https://help.suno.com/en/articles/2421185"},
+"perplexity":{"payments":["信用卡/借记卡（订阅）","Visa / Mastercard / Amex（企业订阅）"],"paymentSource":"https://www.perplexity.ai/help-center/en/articles/10352986-enterprise-pricing-and-billing-frequently-asked-questions","region":"网页个人 Pro 与 Enterprise 付款政策不同，企业接受 Visa/Mastercard/Amex；各地区额外方式以结算页为准","regionSource":"https://www.perplexity.ai/help-center/en/articles/10352986-enterprise-pricing-and-billing-frequently-asked-questions"},
+"qwen":{"payments":["支付宝（阿里云百炼 API 账户充值）","银联在线支付（阿里云百炼 API 账户）","网银（阿里云百炼 API 账户）"],"paymentSource":"https://help.aliyun.com/zh/model-studio/new-free-quota","price":"千问聊天产品与阿里云百炼 API 分开：聊天可体验；百炼模型调用按模型/Token/套餐计费","priceSource":"https://help.aliyun.com/zh/model-studio/what-is-model-studio","region":"千问聊天服务和阿里云百炼 API 是不同入口；百炼提供北京、新加坡、香港、弗吉尼亚、法兰克福及东京区域，模型与价格随区域不同","regionSource":"https://help.aliyun.com/zh/model-studio/what-is-model-studio"},
+"deepseek":{"payments":["支付宝（DeepSeek API 账户充值）","微信支付（DeepSeek API 账户充值）"],"paymentSource":"https://deepseek.apifox.cn/常见问题-5904006m0","region":"DeepSeek 聊天网页/应用与开发者 API 分开；API 充值需完成相应实名认证","regionSource":"https://deepseek.apifox.cn/常见问题-5904006m0"}
 };
 export const MARKET_RESEARCH_CHECKED_AT='2026-10-31';
 export function researchedFact(id:string){return RESEARCHED_FACTS[id];}
