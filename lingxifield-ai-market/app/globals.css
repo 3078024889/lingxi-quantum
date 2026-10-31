@@ -1065,3 +1065,14 @@ body{font-size:16px;line-height:1.6}
  .app .marketOverviewViewport{max-width:100%}
 }
 @media (prefers-reduced-motion:reduce){.app .homeGrid>.leftAside{transition:none!important}}
+
+/* Optional right-side help and compare drawer: zero reserved space when closed. */
+.app .lxRightPanelToggle{display:inline-flex;align-items:center;justify-content:center;width:39px;height:39px;min-width:39px;border:1px solid #d5e5fb;border-radius:9px;background:#f6faff;color:#194a85;cursor:pointer}
+.app .rightAside.lxRightDrawerOpen{display:block!important;position:fixed;z-index:1201;inset-block:0;inset-inline-end:0;left:auto;right:0;width:min(380px,90vw);height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding:18px;background:#f7faff;box-shadow:0 12px 45px #082b5e38}
+.app .lxRightBackdrop{position:fixed;inset:0;z-index:1200;border:0;background:rgba(8,26,54,.44);border-radius:0}
+.app .lxRightDrawerHeading{display:none}
+.app .rightAside.lxRightDrawerOpen .lxRightDrawerHeading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;font-size:16px}
+.app .lxRightDrawerHeading button{border:0;border-radius:9px;background:#eaf2fd;width:40px;height:40px;display:grid;place-items:center}
+.app .rightAside.lxRightDrawerOpen .rightPanel{display:block!important;margin:0 0 12px}
+.app[dir="rtl"] .rightAside.lxRightDrawerOpen{right:auto;left:0}
+@media(max-width:650px){.app .lxRightPanelToggle{width:36px;min-width:36px;height:36px}.app .rightAside.lxRightDrawerOpen{width:min(360px,92vw);padding:12px}}
