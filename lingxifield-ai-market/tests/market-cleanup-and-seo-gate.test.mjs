@@ -21,7 +21,8 @@ test('staging indexing is blocked unless an explicit reviewed-locale allowlist i
  assert.match(policy,/AI_MARKET_INDEX_READY/);
  assert.match(policy,/AI_MARKET_INDEXED_LOCALES/);
  assert.match(policy,/VERCEL_ENV!=='preview'/);
- assert.match(policy,/marketCanonicalOrigin='https:\/\/lingxifield\.com'/);
+ assert.match(policy,/marketCanonicalOrigin=verifiedMarketOrigin\(\)\|\|/);
+ assert.match(policy,/AI_MARKET_DOMAIN_VERIFIED/);
  assert.match(policy,/marketLocales=\['zh','en','ja','ko','fr','de','es','pt','ar'\]/);
  assert.match(robots,/disallow:'\/'/);
  assert.match(robots,/mayIndexMarket/);
