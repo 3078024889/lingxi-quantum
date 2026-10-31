@@ -958,3 +958,15 @@ body{font-size:16px;line-height:1.6}
 .marketLocalizedVideoRates table{width:100%;min-width:600px;border-collapse:collapse;text-align:start;font-size:13px}
 .marketLocalizedVideoRates th,.marketLocalizedVideoRates td{border-bottom:1px solid #d6e3f5;padding:9px;text-align:start;vertical-align:top}
 .marketLocalizedVideoRates th{background:#e9f2ff}
+
+/* V4.7: all six publisher-sourced answers visible in product details, never in collapsed panels. */
+.marketVerifiedAnswers{padding:20px;margin:14px 0}
+.marketVerifiedAnswers>h2{font-size:19px;margin:0 0 14px}
+.marketVerifiedAnswerGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.marketVerifiedAnswerGrid article{border:1px solid #e3e9f3;background:#fafcff;border-radius:10px;padding:13px;min-width:0}
+.marketVerifiedAnswerGrid h3{font-size:12px;margin:0 0 8px;color:#436491}
+.marketVerifiedAnswerGrid p{font-size:14px;line-height:1.65;margin:0 0 9px;overflow-wrap:anywhere}
+.marketVerifiedAnswerGrid a{font-size:12px;color:#1664cb;overflow-wrap:anywhere}
+.marketVerifiedAnswerScope{display:block;margin-top:13px;color:#59718e;font-size:12px}
+@media(max-width:950px){.marketVerifiedAnswerGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.marketVerifiedAnswerGrid{grid-template-columns:minmax(0,1fr)}}
