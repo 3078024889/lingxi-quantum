@@ -18,19 +18,19 @@ export default function CapabilityShowcase({platform,language='zh'}:{platform:Pl
  const isZh=language==='zh';
  return <section className="panel capabilityShowcase" aria-label="有来源的完整功能与优势">
   <div className="capabilityHeading">
-   <div><span className="capabilityKicker"><Compass size={15}/>{isZh?'产品能力档案 · 官方资料逐项整理':'Publisher capability profile · sourced'}</span>
+   <div><span className="capabilityKicker"><Compass size={15}/>{isZh?'核心功能与优势':'Capabilities and strengths'}</span>
     <h2>{isZh?profile.headline:platform.name+' · Key capabilities'}</h2>
     <p>{isZh?profile.differentiator:platform.about}</p></div>
-   <div className="capabilityCoverage"><strong>{profile.capabilities.length}</strong><span>{isZh?'项具体功能':'documented features'}</span><small>{isZh?'资料审核：': 'Reviewed: '}{profile.checkedAt}</small></div>
+   <div className="capabilityCoverage"><strong>{profile.capabilities.length}</strong><span>{isZh?'项具体功能':'documented features'}</span><small>{profile.checkedAt}</small></div>
   </div>
-  <div className="capabilityAudience"><CheckCircle2 size={16}/><strong>{isZh?'适合谁：':'Audience: '}</strong><span>{isZh?profile.audience:platform.category}</span><small>{isZh?'以下内容为官网功能说明整理，非独立质量测评。':'Publisher-described functions; not an independent benchmark.'}</small></div>
+  <div className="capabilityAudience"><CheckCircle2 size={16}/><strong>{isZh?'适合谁：':'Audience: '}</strong><span>{isZh?profile.audience:platform.category}</span></div>
   <div className="capabilityGrid">{profile.capabilities.map((item,index)=>
     <article className="capabilityItem" key={item.name}>
      <div className="capabilityItemTop"><span className="capabilityCount">{String(index+1).padStart(2,'0')}</span><h3>{item.name}</h3></div>
      <p className="capabilityOutcome">{item.outcome}</p>
-     <div className="capabilityExample"><b>{isZh?'真实用途示例':'Example'}</b><span>{item.example}</span></div>
-     <div className="capabilityBoundary"><b>{isZh?'使用边界':'Conditions'}</b><span>{item.boundary}</span></div>
-     <a href={item.source} target="_blank" rel="noopener noreferrer" className="capabilitySource">{isZh?'查厂商原始资料':'Publisher source'} <ArrowUpRight size={13}/></a>
+     
+     
+     <a href={item.source} target="_blank" rel="noopener noreferrer" className="capabilitySource">{isZh?'功能来源':'Official source'} <ArrowUpRight size={13}/></a>
     </article>)}</div>
   <div className="capabilityBottom">
    <div><h3>{isZh?'新手三步使用':'Getting started'}</h3><ol>{profile.firstSteps.map((step,i)=><li key={i}><span>{i+1}</span>{step}</li>)}</ol></div>
