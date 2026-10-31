@@ -870,3 +870,10 @@ body{font-size:16px;line-height:1.6}
 .app .lxCostResult strong{font-size:13px;color:#134b8e}
 .app .lxCostResult small{font-size:11px;color:#526b84;max-width:600px;line-height:1.5}
 @media(max-width:760px){.app .lxCostFields{grid-template-columns:repeat(2,minmax(0,1fr))}.app .lxCostEstimate{margin:8px 4px}.app .lxCostHeader{flex-direction:column;align-items:stretch}.app .lxCostResult{align-items:flex-start}}
+
+/* Verified, scope-specific commercial usage information. */
+.app .lxCommercialFact{margin:12px 0;padding:12px 15px;border:1px solid #bed7f2;border-radius:10px;background:#f7fbff;line-height:1.6}
+.app .lxCommercialFact strong{font-size:15px;color:#125899}
+.app .lxCommercialFact p{margin:6px 0;font-size:13px;color:#415873}
+.app .lxCommercialFact a{font-size:12px;color:#1460be}
+.app .lxCommercialFact small{font-size:11px;color:#526981}
