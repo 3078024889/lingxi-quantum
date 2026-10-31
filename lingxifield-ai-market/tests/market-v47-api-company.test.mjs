@@ -18,9 +18,9 @@ test('32 named tools have explicit developer billing classification, subscriptio
  assert.match(catalog,/descriptionZh:note\[0\]/);
  assert.match(catalog,/subscriptionSource:facts\?\.priceSource/);
  assert.match(catalog,/API_UNIT_RATES/);
- for(const id of ['verified-text-01','verified-text-07','verified-text-14'])assert.ok(rates.includes(id));
+ for(const id of ['verified-text-02','verified-text-07','verified-text-14'])assert.ok(rates.includes(id));
  assert.ok(rates.includes('deepseek-flash'));
- assert.ok(rates.includes('gemini-omni'));
+ assert.ok(rates.includes('gemini-3.1-flash-lite'));
 });
 test('API estimate shows token input output, unit rates and separate web memberships',()=>{
  const page=get('app/market-cost-estimator.tsx');
