@@ -873,6 +873,7 @@ body{font-size:16px;line-height:1.6}
 
 /* V4.1: remove sticky occlusion and show actionable evidence inside cells. */
 .app .marketOverviewViewport{overflow-x:auto!important;scrollbar-width:auto!important}
+.app table.marketOverviewTable{width:2050px!important;min-width:2050px!important}
 .app .marketOverviewTable :is(th,td){position:static!important;left:auto!important;right:auto!important;z-index:auto!important;box-shadow:none!important}
 .app .marketOverviewTable :is(th,td):focus-within{outline:2px solid #3373d2;outline-offset:-2px}
 .app .marketOverviewTable :is(th:nth-child(3),td:nth-child(3)){width:290px!important}
