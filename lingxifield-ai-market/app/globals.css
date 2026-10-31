@@ -884,3 +884,7 @@ body{font-size:16px;line-height:1.6}
 .app .marketOverviewTable .marketLicenseUnknown{color:#7a5c29;font-size:12px}
 .app .marketOverviewTable .marketOverviewRegion>strong{display:block;line-height:1.5!important;font-size:12px;word-break:normal}
 @media(max-width:720px){.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){position:static!important;left:auto!important}.app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){position:static!important;right:auto!important}}
+
+.app .marketRegionCatalog .globalSupportedCountries{display:block;padding-top:7px}
+.app .marketRegionCatalog .globalSupportedCountries>strong{font-size:12px;color:#245b9d}
+.app .marketRegionCatalog .globalSupportedCountries>div{max-height:240px;overflow-y:auto;scrollbar-width:thin}
