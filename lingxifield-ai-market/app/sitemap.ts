@@ -1,5 +1,5 @@
 import type {MetadataRoute} from 'next';
-import {entries} from '../lib/catalog-store';
+import {searchPlatforms} from '../lib/platform-repository';
 import {indexableMarketLocales,marketCanonicalOrigin} from '../lib/market-index-policy';
 import {researchedFact} from '../lib/market-researched-facts';
 export default function sitemap():MetadataRoute.Sitemap{
@@ -7,7 +7,7 @@ export default function sitemap():MetadataRoute.Sitemap{
  if(!locales.length)return []; // All previews stay excluded until production SEO release gate.
  const pages:MetadataRoute.Sitemap=locales.map(lang=>({url:marketCanonicalOrigin+'/'+lang+'/ai',changeFrequency:'daily',priority:0.8}));
  // Publish a localized detail page only when its vendor price, free, model and region sources exist.
- for(const product of entries){
+ for(const product of searchPlatforms({limit:100}).items){
   const f=researchedFact(product.id);
   if(!f?.priceSource||!f.freeSource||!f.modelsSource||!f.regionSource)continue;
   const languages=Object.fromEntries(locales.map(l=>[l,marketCanonicalOrigin+'/'+l+'/platform/'+encodeURIComponent(product.id)]));
