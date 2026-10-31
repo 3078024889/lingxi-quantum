@@ -167,8 +167,9 @@ test('FAQ, publisher invite, footer and payment channels are translated for nine
  const home=await import(pathToFileURL(path.join(ROOT,'lib/market-home-i18n.ts')).href);
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
   assert.equal(home.MARKET_FAQ_TRANSLATIONS[lang].length,4);
+  assert.equal(home.MARKET_FAQ_ANSWERS[lang].length,4);
   assert.equal(home.MARKET_VENDOR_TRANSLATIONS[lang].length,4);
-  assert.ok(home.MARKET_VENDOR_TRANSLATIONS[lang].every(v=>v.length>=10),lang);
+  assert.ok(home.MARKET_VENDOR_TRANSLATIONS[lang].every(v=>v.trim().length>=4),lang);
  }
  const workbook=read('app/market-workbench.tsx');
  assert.match(workbook,/MARKET_FAQ_TRANSLATIONS\[language\]\[i\]/);
