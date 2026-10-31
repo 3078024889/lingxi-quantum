@@ -22,7 +22,24 @@ const paymentNames:Record<string,Partial<Record<Language,string>>>={
  'MoMo (web checkout: Go / Plus / Pro)':{zh:'MoMo（越南网页购买 Go / Plus / Pro）'},
  'ChatGPT wallet balance (eligible US purchases)':{zh:'ChatGPT 钱包余额（符合条件的美国订单）',ja:'ChatGPT ウォレット（米国の対象購入）',ko:'ChatGPT 지갑 잔액(미국 일부 구매)',fr:'Solde ChatGPT (achats US éligibles)',de:'ChatGPT-Guthaben (bestimmte US-Käufe)',es:'Saldo ChatGPT (compras elegibles en EE. UU.)',pt:'Saldo ChatGPT (compras elegíveis nos EUA)',ar:'رصيد محفظة ChatGPT (مشتريات أمريكية مؤهلة)'}
 };
-export function localizedPaymentName(name:string,language:Language){return paymentNames[name]?.[language]||name;}
+export function localizedPaymentName(name:string,language:Language){
+ const direct=paymentNames[name]?.[language];
+ if(direct)return direct;
+ if(language==='zh')return name;
+ if(!/[\u4e00-\u9fff]/.test(name))return name;
+ const methods:string[]=[];
+ if(/支付宝|Alipay/i.test(name))methods.push('Alipay');
+ if(/微信支付|WeChat Pay/i.test(name))methods.push('WeChat Pay');
+ if(/银行卡|信用卡|借记卡|Visa|Mastercard|American Express/i.test(name))methods.push('Credit / debit card');
+ if(/Apple App Store|苹果商店/i.test(name))methods.push('Apple App Store');
+ if(/Google Play/i.test(name))methods.push('Google Play');
+ if(/Amazon Pay/i.test(name))methods.push('Amazon Pay');
+ if(/PayPal/i.test(name))methods.push('PayPal');
+ if(/Stripe/i.test(name))methods.push('Stripe checkout');
+ // Never display untranslated raw Chinese payment marketing notes in another locale.
+ return methods.length? [...new Set(methods)].join(' · '):
+  ({en:'See official payment policy',ja:'公式決済方法を確認',ko:'공식 결제 방법 확인',fr:'Voir les paiements officiels',de:'Offizielle Zahlungsmethoden prüfen',es:'Ver pagos oficiales',pt:'Ver pagamentos oficiais',ar:'راجع طرق الدفع الرسمية',zh:name} as Record<Language,string>)[language];
+}
 export function MarketRegionSelect({language,region,onChange}:{language:Language;region:RegionCode;onChange:(next:RegionCode)=>void}){
  const t=regionCopy(language);
  return <label className="marketRegionSelect">{t.region}
