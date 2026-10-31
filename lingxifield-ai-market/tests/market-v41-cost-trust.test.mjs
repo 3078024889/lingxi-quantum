@@ -460,3 +460,9 @@ test('all product filters stay visible without a collapsed submenu and header is
  assert.ok(workbench.includes('<div className="siteTitle">{ui.headline}</div>'));
  assert.ok(!workbench.includes('<small>{ui.headline}</small>'));
 });
+
+test('FAQ shortcuts use a capability filter without injecting Chinese terms into foreign-language search',()=>{
+ const workbench=read('app/market-workbench.tsx');
+ assert.ok(workbench.includes("setMarketFilter(i===0||i===3?'video':'all')"));
+ assert.ok(!workbench.includes("setQuery(i===0||i===3?'视频'"));
+});
