@@ -306,3 +306,18 @@ test('V44 SEO/GEO board requires evidence, not fictitious rankings, and is trans
  assert.match(s,/no artificial rankings|no se inventan|不生成自然排名/);
  assert.match(home,/SeoGeoBoard language=\{language\}/);
 });
+
+test('V44 nine-language pricing/sponsored components and truthful free filter',async()=>{
+ const home=read('app/market-workbench.tsx');
+ const pricing=read('app/price-leaderboards.tsx');
+ const sponsored=read('app/sponsored-features.tsx');
+ assert.match(home,/PriceLeaderboards language=\{language\}/);
+ assert.match(home,/SponsoredFeatures language=\{language\}/);
+ for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar']){
+  assert.match(pricing,new RegExp('\\b'+l+':\\['),l);
+  assert.match(sponsored,new RegExp('\\b'+l+':\\['),l);
+ }
+ const screening=await import(pathToFileURL(path.join(ROOT,'lib/market-v36-screening.ts')).href);
+ assert.equal(screening.hasFreeOption({id:'midjourney',free:'Free trial not regular',guide:{free:'free trial may not be offered'}}),false);
+ assert.equal(screening.hasFreeOption({id:'runway',free:'免费账号一次性125积分',guide:{free:'Free account'}}),true);
+});
