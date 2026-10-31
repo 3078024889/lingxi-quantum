@@ -37,7 +37,7 @@ export default function MarketVerifiedAnswers({platform,language}:{platform:Plat
  return <section className="panel marketVerifiedAnswers" aria-label={w.heading}><h2>{w.heading}</h2>
   <div className="marketVerifiedAnswerGrid">{rows.map(row=><article key={row.key} data-answer-kind={row.key}>
    <h3>{row.name}</h3><p>{row.answer||w.unknown}</p>
-   {row.source&&/^https:\/\//.test(row.source)&&<a href={row.source} target="_blank" rel="noopener noreferrer">{w.source} ↗</a>}
+   {row.key==='payments'&&pay.methodEvidence.length>0?<div className="marketPaymentEvidence">{pay.methodEvidence.map(x=><a key={x.method} href={x.source} target="_blank" rel="noopener noreferrer" title={x.checkedAt||w.source}>{localizedPaymentName(x.method,language)} · {w.source} ↗</a>)}</div>:row.source&&/^https:\/\//.test(row.source)&&<a href={row.source} target="_blank" rel="noopener noreferrer">{w.source} ↗</a>}
   </article>)}</div><small className="marketVerifiedAnswerScope">{w.scope} · {MARKET_RESEARCH_CHECKED_AT}</small>
  </section>;
 }
