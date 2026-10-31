@@ -3,7 +3,8 @@ import {globalRegionFact} from './global-region-market';
 import {accessFor} from './platform-access-facts';
 import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from './market-researched-facts';
 export type PaymentKey='card'|'alipay'|'wechat'|'paypal'|'appstore';
-export type PaymentFact={methods:string[];source:string|null;scope:'global_offer'|'selected_region'|'unverified_region'|'unsupported';checkedAt:string|null};
+export type PaymentMethodEvidence={method:string;source:string;checkedAt:string|null;origin:'regional'|'vendor_policy'|'research'};
+export type PaymentFact={methods:string[];methodEvidence:PaymentMethodEvidence[];source:string|null;scope:'global_offer'|'selected_region'|'unverified_region'|'unsupported';checkedAt:string|null};
 function normalized(method:string){return method.toLowerCase().normalize('NFKC');}
 const methodMatches=(method:string,key:PaymentKey)=>{
  const m=normalized(method);
@@ -17,16 +18,25 @@ const methodMatches=(method:string,key:PaymentKey)=>{
 export function paymentFactsFor(id:string,region:RegionCode):PaymentFact{
  const snapshot=globalRegionFact(id,region);
  if(region!=='GLOBAL'&&snapshot.policy.status==='unsupported')
-   return {methods:[],source:snapshot.policy.source||null,scope:'unsupported',checkedAt:snapshot.policy.checkedAt||null};
+   return {methods:[],methodEvidence:[],source:snapshot.policy.source||null,scope:'unsupported',checkedAt:snapshot.policy.checkedAt||null};
  const access=accessFor(id),research=researchedFact(id);
  // A payment source belongs to the named payment methods, not a guessed processor.
- const sourcedSnapshot=snapshot.payments.source?snapshot.payments.methods:[];
- const sourcedAccess=access?.paymentSource?access.payment.filter(s=>!/不支持|不接受|not accepted|not supported/i.test(s)):[];
- const sourcedResearch=research?.paymentSource?research.payments||[]:[];
- const methods=[...new Set([...sourcedSnapshot,...sourcedAccess,...sourcedResearch])];
- const source=research?.paymentSource||snapshot.payments.source||access?.paymentSource||null;
- return {methods,source,scope:region==='GLOBAL'?'global_offer':snapshot.policy.status==='supported'?'selected_region':'unverified_region',
- checkedAt:research?.paymentSource?MARKET_RESEARCH_CHECKED_AT:snapshot.payments.checkedAt||access?.checkedAt||null};
+ const proof:PaymentMethodEvidence[]=[];
+ const append=(methods:readonly string[],source:string|undefined,origin:PaymentMethodEvidence['origin'],checkedAt:string|null)=>{
+  if(!source||!/^https:\/\//.test(source))return;
+  for(const method of methods){
+   if(typeof method!=='string'||!method.trim()||/不支持|不接受|not accepted|not supported/i.test(method))continue;
+   if(!proof.some(x=>normalized(x.method)===normalized(method)))proof.push({method,source,origin,checkedAt});
+  }
+ };
+ // Region-specific evidence is preferred to general vendor payment docs.
+ append(snapshot.payments.methods,snapshot.payments.source,'regional',snapshot.payments.checkedAt||null);
+ append(access?.payment||[],access?.paymentSource,'vendor_policy',access?.checkedAt||null);
+ append(research?.payments||[],research?.paymentSource,'research',research?.paymentSource?MARKET_RESEARCH_CHECKED_AT:null);
+ const methods=proof.map(x=>x.method);
+ const source=proof[0]?.source||null;
+ return {methods,methodEvidence:proof,source,scope:region==='GLOBAL'?'global_offer':snapshot.policy.status==='supported'?'selected_region':'unverified_region',
+ checkedAt:proof[0]?.checkedAt||null};
 }
 export function matchesOfficialPayment(id:string,key:PaymentKey,region:RegionCode):boolean {
  const result=paymentFactsFor(id,region);
