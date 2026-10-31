@@ -83,7 +83,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
    <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{price&&<a href={price.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewRegion" data-label={h[5]}>
     <strong>{globalRegionSummary(p.id,language)}</strong>
-    <span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{regionText}</span>
+    <span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{region==='GLOBAL'?regionText:regionName(region,language)+' · '+regionText}</span>
     {(r?.policy.source||regionList.source)&&<a href={r?.policy.source||regionList.source||'#'} target="_blank" rel="noopener noreferrer">{r?.policy.checkedAt||t.source} ↗</a>}
    </td>
    <td className="marketV36Login" data-label={h[6]}><strong title={accepted?allPayments.map(x=>localizedPaymentName(x,language)).join(' · '):payment}>{region==='GLOBAL'&&allPayments.length?language==='zh'?'常见方式 · 依地区':'Common options · country-dependent':payment}</strong>{region==='GLOBAL'&&allPayments.length?<span>{payment}</span>:null}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
