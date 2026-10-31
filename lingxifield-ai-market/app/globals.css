@@ -934,3 +934,20 @@ body{font-size:16px;line-height:1.6}
 .app .lxCostV44 .lxCostResult a{font-size:12px;color:#125bb4;text-decoration:underline}
 .app .lxCostV44 .lxCostIntro,.app .lxCostV44 .lxCostDisclaimer{font-size:12px;color:#526b84;line-height:1.5;margin:8px 0 0}
 @media(max-width:520px){.app .lxCostV44 .lxCostFields{grid-template-columns:minmax(0,1fr)}}
+
+/* V4.5 indexed local-language product fact pages */
+.marketLocalizedProduct{max-width:1120px;margin:28px auto 70px;padding:0 18px;color:#16345f;font-size:15px;line-height:1.6}
+.marketLocalizedProduct nav{margin:12px 0 22px}
+.marketLocalizedProduct nav a,.marketLocalizedProduct a{color:#1459bd;text-decoration:underline}
+.marketLocalizedProduct header{background:linear-gradient(110deg,#041837,#1a4b87);border-radius:13px;padding:25px;color:#fff}
+.marketLocalizedProduct header h1{font-size:28px;margin:8px 0}
+.marketLocalizedProduct header p{font-size:17px;line-height:1.6}
+.marketLocalizedProduct header span{border:1px solid #92b9f9;padding:4px 9px;border-radius:22px}
+.marketLocalizedFacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:16px 0}
+.marketLocalizedFacts article{background:#f5f8ff;border:1px solid #d1e0f5;border-radius:10px;padding:16px;overflow-wrap:anywhere}
+.marketLocalizedFacts article h2{font-size:15px;color:#123a74;margin:0 0 7px}
+.marketLocalizedFacts article p{font-size:14px;margin:0 0 8px}
+.marketLocalizedProduct footer{border-top:1px solid #bed2ed;padding:15px 0}
+.marketLocalizedProduct footer p{font-size:12px;color:#536b83}
+.app .lxCostFixedResolution{min-height:36px;padding:7px 9px;border-radius:7px;background:#edf4ff;border:1px solid #d0def3;color:#133e73;font-size:13px}
+@media(max-width:640px){.marketLocalizedFacts{grid-template-columns:1fr}.marketLocalizedProduct header{padding:18px}.marketLocalizedProduct header h1{font-size:23px}}
