@@ -87,7 +87,7 @@ test('official lists are readable without accordion and source is directly acces
  assert.match(details,/className="globalSupportedCountries"/);
  assert.doesNotMatch(details,/<details className="globalSupportedCountries"/);
  assert.match(details,/countryList\.other\.map/);
- assert.match(row,/完整官方国家名单/);
+ assert.match(row,/regionList\.source\|\|research\?\.regionSource/);
 });
 
 test('provider-verified payment filtering works without a selected country',()=>{
@@ -98,7 +98,7 @@ test('provider-verified payment filtering works without a selected country',()=>
  assert.match(screen,/matchesOfficialPayment\(p\.id,payment,country\)/);
  assert.doesNotMatch(screen,/if\(country==='GLOBAL'\)return false/);
  assert.match(data,/paymentFactsFor/);
- assert.match(data,/source\?methods:\[\]/);
+ assert.match(data,/snapshot\.payments\.source\?snapshot\.payments\.methods/);\n assert.match(data,/research\?\.paymentSource\?research\.payments/);
  assert.match(row,/matchingPaymentMethods/);
  assert.match(home,/paymentFilter=\{paymentFilter\}/);
 });
