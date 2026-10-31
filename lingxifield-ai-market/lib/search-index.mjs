@@ -8,7 +8,7 @@ export function createSearchIndex(input){
  const byId=new Map(),postings=new Map(),categories=new Map();
  rows.forEach((r,i)=>{if(byId.has(r.id))throw Error('DUPLICATE_SEARCH_ID');byId.set(r.id,r);if(!categories.has(r.category))categories.set(r.category,[]);categories.get(r.category).push(i);for(const t of terms([r.name,r.company,r.category,r.description,...r.capabilities,...(r.searchTerms||[])].join(' '))){if(!postings.has(t))postings.set(t,[]);postings.get(t).push(i);}});
  const all=rows.map((_,i)=>i);
- function search({q='',category='',limit=24,cursor=0}={}){
+ function search({q='',category='',limit=24,cursor=0,matcher=null,sorter=null}={}){
   // AI and SI are catalog-wide topic queries, not company names or ranking signals.
   const inputQuery=normalize(q).trim().slice(0,120);
   const query=['ai','ai工具','ai tools','si','si工具','si tools','super intelligence','super intelligence tools','超级智能','超级智能工具'].includes(inputQuery)?'':inputQuery,cap=Math.max(1,Math.min(50,Math.floor(Number(limit)||24))),start=Math.max(0,Math.min(10000,Math.floor(Number(cursor)||0)));
@@ -19,6 +19,9 @@ export function createSearchIndex(input){
   const filters=lists.slice(1).map(list=>new Set(list));if(filters.length)ids=ids.filter(i=>filters.every(set=>set.has(i)));
   if(expansions.length){const union=new Set(ids);for(const synonym of expansions){const needle=normalize(synonym);for(const [i,row] of rows.entries())if(normalize([row.name,row.company,row.category,row.description,...row.capabilities,...(row.searchTerms||[])].join(' ')).includes(needle))union.add(i);}ids=[...union].sort((a,b)=>a-b);}
   if(category&&queryTerms.length)ids=ids.filter(i=>rows[i].category===category);
+  // Filter the full matching set before pagination. A page-local filter can hide valid results.
+  if(typeof matcher==='function')ids=ids.filter(i=>matcher(rows[i]));
+  if(typeof sorter==='function')ids=[...ids].sort((a,b)=>sorter(rows[a],rows[b])||a-b);
   return {total:ids.length,limit:cap,cursor:start,nextCursor:start+cap<ids.length&&start+cap<=10000?start+cap:null,items:ids.slice(start,start+cap).map(i=>rows[i])};
  }
  return {search,get:id=>byId.get(id),size:rows.length};

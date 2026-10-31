@@ -10,7 +10,7 @@ test('eleven decision columns always visible, no accordion duplication',async()=
  assert.doesNotMatch(row,/setExpanded|marketOverviewDetailsRow|marketOverviewDetailsCompact/);
  assert.match(home,/marketRowTitles\(language\)\.map/);
  assert.match(home,/marketV36FilterChips/);
- assert.match(home,/filterAndSortMarket/);
+ assert.match(home,/filter:marketFilter,payment:paymentFilter,sort:marketSort,region/);
 });
 test('short film capabilities are source-linked, not guessed from marketing rankings',async()=>{
  const s=await read('lib/market-v36-screening.ts');

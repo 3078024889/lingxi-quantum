@@ -65,23 +65,28 @@ export function matchesMarketFilter(p:Platform,filter:MarketFilter,country:Regio
  if(filter==='commercial')return Boolean(p.conditions?.find(x=>x.label==='商用条件')?.source);
  return true;
 }
+export function matchesMarketPayment(p:Platform,payment:MarketPayment,country:RegionCode){
+ if(payment==='any')return true;
+ if(country==='GLOBAL')return false;
+ const fact=globalRegionFact(p.id,country);
+ if(!['supported','conditional','local'].includes(fact.policy.status))return false;
+ const methods=fact.payments.methods.join(' ').toLowerCase();
+ if(payment==='card')return /credit|debit|visa|mastercard|银行卡|bank card/.test(methods);
+ if(payment==='alipay')return methods.includes('alipay');
+ if(payment==='wechat')return methods.includes('wechat');
+ if(payment==='paypal')return methods.includes('paypal');
+ if(payment==='appstore')return /app store|google play/.test(methods);
+ return false;
+}
+export function compareMarketSort(a:Platform,b:Platform,sort:MarketSort){
+ return sort==='name'?a.name.localeCompare(b.name):
+ sort==='free'?Number(hasFreeOption(b))-Number(hasFreeOption(a)):
+ sort==='drama'?Number(Boolean(shortDramaEvidence(b.id)))-Number(Boolean(shortDramaEvidence(a.id))):0;
+}
 export function filterAndSortMarket(p:Platform[],filter:MarketFilter,sort:MarketSort,country:RegionCode,payment:MarketPayment='any'){
- const matches=p.filter(x=>{
-  if(!matchesMarketFilter(x,filter,country))return false;
-  if(payment==='any')return true;
-  if(country==='GLOBAL')return false;
-  const fact=globalRegionFact(x.id,country);
-  if(fact.policy.status==='unsupported')return false;
-  const methods=fact.payments.methods.join(' ').toLowerCase();
-  if(payment==='card')return /credit|debit|visa|mastercard|银行卡|bank card/.test(methods);
-  if(payment==='alipay')return methods.includes('alipay');
-  if(payment==='wechat')return methods.includes('wechat');
-  if(payment==='paypal')return methods.includes('paypal');
-  if(payment==='appstore')return /app store|google play/.test(methods);
-  return false;
- });
+ const matches=p.filter(x=>matchesMarketFilter(x,filter,country)&&matchesMarketPayment(x,payment,country));
  if(sort==='directory')return matches;
- return [...matches].sort((a,b)=>sort==='name'?a.name.localeCompare(b.name):sort==='free'?Number(hasFreeOption(b))-Number(hasFreeOption(a)):Number(Boolean(shortDramaEvidence(b.id)))-Number(Boolean(shortDramaEvidence(a.id))));
+ return [...matches].sort((a,b)=>compareMarketSort(a,b,sort));
 }
 export function summaryFor(p:Platform){
  const rich=capabilityProfile(p.id);
