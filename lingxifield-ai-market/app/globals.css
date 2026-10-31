@@ -925,3 +925,12 @@ body{font-size:16px;line-height:1.6}
  [dir="rtl"] .app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){left:auto!important;right:0!important}
  [dir="rtl"] .app .marketOverviewTable :is(th:nth-child(11),td:nth-child(11)){left:0!important;right:auto!important}
 }
+
+/* Model-driven cost calculator: same clear controls for native and upscaled outputs */
+.app .lxCostV44 .lxCostField select{width:100%;min-width:0;max-width:100%;background:#fff;border:1px solid #a7c1df;border-radius:7px;padding:7px 8px;font:inherit;font-size:13px;color:#1d3557}
+.app .lxCostV44 .lxCostField select:focus-visible{outline:2px solid #2a68ca;outline-offset:1px}
+.app .lxCostV44 .lxCostResult{align-items:flex-start;flex-direction:column;gap:5px}
+.app .lxCostV44 .lxCostResult strong{font-size:16px}
+.app .lxCostV44 .lxCostResult a{font-size:12px;color:#125bb4;text-decoration:underline}
+.app .lxCostV44 .lxCostIntro,.app .lxCostV44 .lxCostDisclaimer{font-size:12px;color:#526b84;line-height:1.5;margin:8px 0 0}
+@media(max-width:520px){.app .lxCostV44 .lxCostFields{grid-template-columns:minmax(0,1fr)}}
