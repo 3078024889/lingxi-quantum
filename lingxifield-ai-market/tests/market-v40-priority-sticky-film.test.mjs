@@ -13,7 +13,7 @@ test('primary columns answer buyer questions before advanced model and licensing
   assert.ok(line,lang+' missing');
   const vals=[...line.matchAll(/'([^']*)'/g)].map(m=>m[1]);
   assert.equal(vals.length,11,lang);
-  assert.match(vals[7],/视频|動画|영상|film|clip|Cortos|Curtas|فيلم/i,lang+' short film/clip label');
+  assert.match(vals[7],/视频|動画|영상|film|clip|Cortos|Curtas|أفلام|فيلم/i,lang+' short film/clip label');
   assert.ok(vals[10],lang+' missing official action');
  }
 });
