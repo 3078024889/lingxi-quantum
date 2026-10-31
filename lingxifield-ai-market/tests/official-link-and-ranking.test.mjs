@@ -27,10 +27,10 @@ test('final brand is globally consistent with evidence-first market labels',asyn
  const dictionary=await file('lib/market-ui-extra.ts');
  const locale=await file('lib/locale-pages.ts');
  for(const [label,content] of [['layout',layout],['workbench',main],['dictionary',dictionary],['locale',locale]]){
-  assert.ok(content.includes('全球SI AI工具行情平台'),label+' must use final name');
+  assert.ok(content.includes('全球 SI AI 行情平台'),label+' must use final name');
  }
- assert.ok(main.includes('AI 工具一览'),'user catalog is clearly separate from ranked prices');
- assert.ok(main.includes('<PriceLeaderboards/>'));
+ assert.ok(main.includes('hc.resultsTitle'),'user catalog is clearly separate from ranked prices');
+ assert.ok(main.includes('<PriceLeaderboards language={language}/>'));
  assert.ok(!main.includes('<HfModelRankings/>'));
 });
 test('first sourced ranking is limited to official HF model repository signal',async()=>{
