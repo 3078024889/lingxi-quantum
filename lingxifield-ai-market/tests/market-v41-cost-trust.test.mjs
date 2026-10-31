@@ -46,3 +46,35 @@ test('SEO indexing stays release-gated; sponsored placement not a rank',()=>{
  assert.match(policy,/VERCEL_ENV!=='preview'/);
  assert.match(methodology,/付费推荐和赞助位必须明示/);
 });
+
+test('V41 country and commercial answers are explicit and scope-correct',async()=>{
+ const regions=await import(pathToFileURL(path.join(ROOT,'lib/official-country-lists.ts')).href);
+ const sdk=regions.officialCountrySnapshot('anthropic-sdk-python');
+ assert.equal(sdk.isComplete,false);
+ assert.ok(sdk.countries.size>=20);
+ for(const country of ['US','SG','JP','GB','AU','DE','FR']){
+   assert.ok(sdk.countries.has(country),country);
+ }
+ assert.equal(regions.officialCountryStatus('anthropic-sdk-python','US'),'supported');
+ assert.equal(regions.officialCountryStatus('anthropic-sdk-python','CN'),'unknown'); // separate documented API unsupported rule
+ assert.equal(regions.officialCountryStatus('anthropic-sdk-python','HK'),'unknown');
+ const facts=read('lib/market-commercial-evidence.ts');
+ for(const id of ['anthropic-sdk-python','claude','suno','midjourney','runway','chatgpt']){
+   assert.ok(facts.includes(id+':')||facts.includes('"'+id+'":'),id);
+ }
+ assert.match(facts,/https:\/\/help\.suno\.com/);
+ assert.match(facts,/Apache-2\.0/);
+ const row=read('app/market-matrix-row.tsx');
+ assert.match(row,/marketLicenseCondition/);
+ assert.match(row,/licenseFact\.condition/);
+ assert.match(row,/SDK免费安装，API调用另行计费/);
+});
+test('V41 scrolling reveals all columns instead of sticky overlays; no IP guessing',()=>{
+ const css=read('app/globals.css');
+ const workbench=read('app/market-workbench.tsx');
+ assert.doesNotMatch(css,/\.marketOverviewTable :is\(th:nth-child\(2\),td:nth-child\(2\)\)\{position:sticky/);
+ assert.doesNotMatch(css,/\.marketOverviewTable :is\(th:nth-child\(11\),td:nth-child\(11\)\)\{position:sticky/);
+ assert.match(css,/\.marketOverviewTable :is\(th,td\)\{position:static!important/);
+ assert.doesNotMatch(workbench,/fetch\('\/api\/v1\/visitor-region'/);
+ assert.match(workbench,/MarketMatrixRow/);
+});
