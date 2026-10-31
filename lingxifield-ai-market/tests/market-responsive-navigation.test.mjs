@@ -32,7 +32,7 @@ test('RTL sidebar opens from the right and user-selected categories close mobile
  const ui=read('app/market-workbench.tsx'),css=read('app/globals.css');
  assert.ok(css.includes('.app[dir="rtl"] .homeGrid>.leftAside'));
  assert.ok(css.includes('transform:translateX(110%)'));
- assert.ok(css.includes('setCategory(x);setMobileCategoriesOpen(false)'));
+ assert.ok(ui.includes('setCategory(x);setMobileCategoriesOpen(false)'));
  assert.ok(css.includes('z-index:1101'));
  assert.ok(ui.includes('setCategory(\'全部平台\');setMobileCategoriesOpen(false)'));
 });
