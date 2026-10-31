@@ -178,3 +178,41 @@ test('FAQ, publisher invite, footer and payment channels are translated for nine
  assert.match(pay,/支付宝\|Alipay/);
  assert.match(pay,/微信支付\|WeChat Pay/);
 });
+
+test('V43 official payment documentation covers domestic AI and international checkout',async()=>{
+ const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
+ const expected={doubao:['alipay'],jimeng:['alipay','wechat'],kling:['alipay','wechat'],lovable:['alipay','wechat','card'],luma:['card']};
+ for(const [id,channels] of Object.entries(expected)){
+  const fact=m.researchedFact(id);
+  assert.ok(fact?.paymentSource?.startsWith('https://'),id);
+  const words=fact.payments.join(' ').toLowerCase();
+  for(const key of channels){
+   if(key==='alipay')assert.match(words,/alipay|支付宝/,id);
+   if(key==='wechat')assert.match(words,/wechat pay|微信支付/,id);
+   if(key==='card')assert.match(words,/credit \/ debit card/,id);
+  }
+ }
+ assert.equal(m.researchedFact('kling').extraPaymentSource.includes('qingque.cn'),true);
+ assert.equal(m.researchedFact('doubao').paymentSource.includes('draftstatic'),true);
+});
+test('V43 source-backed prices distinguish open-source core, vendor cloud and commercial licenses',async()=>{
+ const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
+ for(const id of ['langchain','llamaindex','llamacpp','dify','n8n','comfyui','automatic1111','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui']){
+  const p=m.researchedFact(id);
+  assert.ok(p?.price&&p.priceSource?.startsWith('https://'),id+':price');
+  assert.ok(p?.free&&p.freeSource?.startsWith('https://'),id+':free');
+ }
+ for(const id of ['langchain','llamaindex','llamacpp','dify','comfyui','automatic1111','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui']){
+  assert.ok(m.researchedFact(id)?.commercialSource?.startsWith('https://'),id);
+ }
+ assert.match(m.researchedFact('dify').commercial,/多租户/);
+ assert.match(m.researchedFact('openwebui').commercial,/50/);
+ assert.match(m.researchedFact('luma').price,/49.99/);
+ assert.match(m.researchedFact('jimeng').price,/79/);
+ const repository=read('lib/platform-repository.ts');
+ assert.match(repository,/research\?\.price\|\|guide\?\.cost/);
+ assert.match(repository,/research\?\.payments\|\|\[\]/);
+ const view=read('app/market-matrix-row.tsx');
+ assert.match(view,/locallyFree/);
+ assert.match(view,/research\?\.regionSource/);
+});
