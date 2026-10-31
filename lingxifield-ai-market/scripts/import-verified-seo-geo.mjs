@@ -51,7 +51,7 @@ for(const row of raw){
  const digest=createHash('sha256').update(JSON.stringify(input)).digest('hex');
  const id='proof-'+digest.slice(0,24);
  ids.set(id,{id,platformId,source,country,language,query,sourceUrl,observedAt,model,modelVersion,engine,methodVersion,
-  sampleCount,position:row.position,impressions:row.impressions,clicks:row.clicks,mentions:row.mentions,citations:row.citations,
+  sampleCount,rawCaptureSha256,position:row.position,impressions:row.impressions,clicks:row.clicks,mentions:row.mentions,citations:row.citations,
   recordHash:'sha256:'+digest,sponsored:false,reviewed:true,reviewedAt:new Date().toISOString()});
 }
 const snapshot=[...ids.values()].sort((a,b)=>a.observedAt.localeCompare(b.observedAt)).slice(-20000);
