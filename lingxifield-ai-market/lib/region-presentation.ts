@@ -2,6 +2,7 @@ import type {Language} from './v2';
 import type {RegionCode} from './global-region-market';
 import {regionName,globalRegionFact} from './global-region-market';
 import {officialCountrySnapshot,officialSupportCountries} from './official-country-lists';
+import {researchedFact} from './market-researched-facts';
 const copy:Record<Language,{top:string;more:string;empty:string;partial:string;complete:string;visit:string;feedback:string;access:string;note:string}> = {
  zh:{top:'官网支持的主要地区',more:'展开其他',empty:'本站尚未收录该产品的官方地区清单',partial:'已核实的部分地区（非完整名单）',complete:'官方支持地区名单',visit:'查看来源',feedback:'提供实际使用反馈',access:'网络能打开不等于官方支持',note:'本列只列厂商公开的支持国家/地区；注册、付款与商业许可分别核对'},
  en:{top:'Key supported regions',more:'Show more',empty:'No publisher country list recorded here',partial:'Verified examples (not exhaustive)',complete:'Publisher supported regions',visit:'View source',feedback:'Share an access report',access:'A working connection is not official eligibility',note:'Country list is from publisher policy; signup, payment and license are separate'},
@@ -33,7 +34,33 @@ export function globalRegionSummary(id:string,language:Language){
   return prefix+info.top.map(x=>regionName(x as RegionCode,language)).join(' · ')+remaining+(!info.complete?(language==='zh'?'（部分名单）':' (partial list)'):'');
  }
  // Specific offline products are not tied to the publisher's web support country list.
- if(globalRegionFact(id,'HK').policy.status==='local')return language==='zh'?'本地安装运行 · 不限官网服务地区':copy[language].access;
+ const research=researchedFact(id);
+ if(research?.regionSource&&research.region){
+  if(language==='zh')return research.region;
+  const kinds=['langchain','llamaindex','llamacpp','dify','n8n','comfyui','automatic1111','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui'];
+  return kinds.includes(id)?({
+   en:'Self-hosted / local software; cloud and model rules separate',
+   ja:'自己ホスト・ローカル利用可。クラウドとモデルは別',
+   ko:'자체 호스팅·로컬 가능, 클라우드·모델 정책 별도',
+   fr:'Logiciel local ; règles cloud et modèles distinctes',
+   de:'Lokale Nutzung; Cloud- und Modellregeln separat',
+   es:'Uso local; reglas de nube y modelos por separado',
+   pt:'Uso local; regras de nuvem e modelos separadas',
+   ar:'البرنامج محلي؛ شروط السحابة والنماذج منفصلة',
+   zh:research.region
+  } as Record<Language,string>)[language]:({
+   en:'Publisher app / web access; country-specific checkout varies',
+   ja:'公式Web・アプリ。国ごとの決済条件は別',
+   ko:'공식 웹·앱, 국가별 결제 조건은 별도',
+   fr:'Application officielle ; paiement selon le pays',
+   de:'Offizielle App; Zahlung je nach Land',
+   es:'App oficial; el pago depende del país',
+   pt:'App oficial; pagamento varia por país',
+   ar:'تطبيق رسمي؛ الدفع يختلف حسب البلد',
+   zh:research.region
+  } as Record<Language,string>)[language];
+ }
+ if(globalRegionFact(id,'HK').policy.status==='local')return language==='zh'?'可本地安装运行；云服务另议':copy[language].access;
  return info.words.empty;
 }
 export function chosenRegionSummary(id:string,region:RegionCode,language:Language){
