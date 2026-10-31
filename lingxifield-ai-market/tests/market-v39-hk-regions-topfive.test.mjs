@@ -25,7 +25,7 @@ test('major five country list and expandable sourced remainder, in all nine lang
  assert.match(model,/id==='gemini'\?\['HK','US','JP','SG','GB','AU'\]/);
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(model,new RegExp('\\b'+lang+':\\{top:'));
  assert.match(component,/marketRegionTopFive/);
- assert.match(component,/countryList\.other\.length>0&&<details/);
+ assert.ok(component.includes('countryList.other.length>0&&<div className="globalSupportedCountries"'));
  assert.match(component,/countryList\.complete\?countryList\.words\.complete:countryList\.words\.partial/);
  assert.match(row,/globalRegionSummary\(p\.id,language\)/);
  assert.match(row,/regionList\.source/);
