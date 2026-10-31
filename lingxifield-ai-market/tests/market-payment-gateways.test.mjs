@@ -38,11 +38,11 @@ test('WeChat signed Native order, signed encrypted notification and anti-replay'
  assert.match(r.codeUrl,/^weixin:\/\//);
  assert.equal(JSON.parse(sent.req.body).amount.total,4900);
  assert.match(sent.req.headers.Authorization,/WECHATPAY2-SHA256-RSA2048/);
- const timestamp=String(Math.floor(Date.now()/1000)),nonce='random-123456789',key='0123456789abcdef0123456789abcdef',iv=randomBytes(12);
+ const timestamp=String(Math.floor(Date.now()/1000)),nonce='random-123456789',key='0123456789abcdef0123456789abcdef',nonceIv=randomBytes(9).toString('base64url'),iv=Buffer.from(nonceIv);
  const msg={trade_state:'SUCCESS',out_trade_no:'LX1234567890',mchid:'1234567890',amount:{total:4900,currency:'CNY'},transaction_id:'420000202610310001'};
  const cipher=createCipheriv('aes-256-gcm',Buffer.from(key),iv);cipher.setAAD(Buffer.from('transaction'));
  const enc=Buffer.concat([cipher.update(Buffer.from(JSON.stringify(msg))),cipher.final(),cipher.getAuthTag()]);
- const body=JSON.stringify({event_type:'TRANSACTION.SUCCESS',resource:{algorithm:'AEAD_AES_256_GCM',ciphertext:enc.toString('base64'),nonce:iv.toString(),associated_data:'transaction'}});
+ const body=JSON.stringify({event_type:'TRANSACTION.SUCCESS',resource:{algorithm:'AEAD_AES_256_GCM',ciphertext:enc.toString('base64'),nonce:nonceIv,associated_data:'transaction'}});
  const headers=new Headers({'Wechatpay-Timestamp':timestamp,'Wechatpay-Nonce':nonce,'Wechatpay-Serial':'PUB_KEY_ID_111','Wechatpay-Signature':sig(timestamp+'\n'+nonce+'\n'+body+'\n')});
  const args={headers,rawBody:body,publicKey,publicKeyId:'PUB_KEY_ID_111',apiV3Key:key,expectedOrderId:'LX1234567890',expectedAmount:49,expectedMerchantId:'1234567890'};
  assert.equal(verifyWechatPaidNotification(args).providerTransactionId,msg.transaction_id);
