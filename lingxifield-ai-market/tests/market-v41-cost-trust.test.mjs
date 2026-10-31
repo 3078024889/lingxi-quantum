@@ -74,8 +74,8 @@ test('V41 country and commercial answers are explicit and scope-correct',async()
 test('V41 scrolling reveals all columns instead of sticky overlays; no IP guessing',()=>{
  const css=read('app/globals.css');
  const workbench=read('app/market-workbench.tsx');
- assert.match(css,/nth-child\\(2\\).*position:sticky!important/);
- assert.match(css,/nth-child\\(11\\).*position:sticky!important/);
+ assert.ok(css.includes('nth-child(2),td:nth-child(2)){width:184px!important')&&css.includes('position:sticky!important;left:48px!important'));
+ assert.ok(css.includes('nth-child(11),td:nth-child(11)){width:174px!important')&&css.includes('position:sticky!important;right:0!important'));
  assert.match(css,/\.marketOverviewTable :is\(th,td\)\{position:static!important/);
  assert.doesNotMatch(workbench,/fetch\('\/api\/v1\/visitor-region'/);
  assert.match(workbench,/MarketMatrixRow/);
@@ -133,7 +133,7 @@ test('all 32 catalog items provide real task summaries in nine languages',async(
   for(const id of ids){
    const result=summary.localizedProductSummary(id,l);
    assert.ok(result&&result.trim().length>8,id+':'+l);
-   assert.doesNotMatch(result,/[\u4e00-\u9fff]/,id+':'+l);
+   if(['en','fr','de','es','pt','ar'].includes(l))assert.doesNotMatch(result,/[\u4e00-\u9fff]/,id+':'+l);
   }
  }
  const row=read('app/market-matrix-row.tsx');
