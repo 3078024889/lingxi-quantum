@@ -452,3 +452,11 @@ test('V45 Kling paid plans cover real credit rollover thresholds and renewal ref
  assert.match(ui,/KLING_PLANS\.map/);
  assert.match(ui,/超额积分：/);
 });
+
+test('all product filters stay visible without a collapsed submenu and header is not duplicated',()=>{
+ const workbench=read('app/market-workbench.tsx');
+ assert.ok(workbench.includes('MARKET_FILTERS.map(x=><button type="button"'));
+ assert.ok(!workbench.includes('<details className="marketV40ExtraFilters">'));
+ assert.ok(workbench.includes('<div className="siteTitle">{ui.headline}</div>'));
+ assert.ok(!workbench.includes('<small>{ui.headline}</small>'));
+});
