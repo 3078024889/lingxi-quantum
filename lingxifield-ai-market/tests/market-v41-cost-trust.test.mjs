@@ -162,3 +162,18 @@ test('structured locale facts preserve vendor prices and free credits',async()=>
  assert.match(row,/localizedCatalogFact\(p\.id,language,'free'/);
  assert.match(row,/localizedCatalogFact\(p\.id,language,'models'/);
 });
+
+test('FAQ, publisher invite, footer and payment channels are translated for nine languages',async()=>{
+ const home=await import(pathToFileURL(path.join(ROOT,'lib/market-home-i18n.ts')).href);
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
+  assert.equal(home.MARKET_FAQ_TRANSLATIONS[lang].length,4);
+  assert.equal(home.MARKET_VENDOR_TRANSLATIONS[lang].length,4);
+  assert.ok(home.MARKET_VENDOR_TRANSLATIONS[lang].every(v=>v.length>=10),lang);
+ }
+ const workbook=read('app/market-workbench.tsx');
+ assert.match(workbook,/MARKET_FAQ_TRANSLATIONS\[language\]\[i\]/);
+ assert.match(workbook,/MARKET_VENDOR_TRANSLATIONS\[language\]\[3\]/);
+ const pay=read('app/market-global-access.tsx');
+ assert.match(pay,/支付宝\|Alipay/);
+ assert.match(pay,/微信支付\|WeChat Pay/);
+});
