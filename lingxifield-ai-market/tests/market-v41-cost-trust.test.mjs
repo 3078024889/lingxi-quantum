@@ -217,3 +217,19 @@ test('V43 source-backed prices distinguish open-source core, vendor cloud and co
  assert.match(view,/locallyFree/);
  assert.match(view,/research\?\.regionSource/);
 });
+
+test('V43 localized product evidence has paid-vs-free commercial and payment scope',async()=>{
+ const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
+ const target=m.researchedFact('elevenlabs');
+ assert.match(target.price,/\$6\/月/);
+ assert.match(target.free,/10,000/);
+ assert.match(target.commercial,/免费账户生成内容不附商用授权/);
+ assert.match(target.paymentSource,/elevenlabs.io/);
+ assert.match(m.researchedFact('lovable').commercialSource,/lovable.dev\/terms/);
+ assert.match(m.researchedFact('luma').commercialSource,/lumalabs.ai/);
+ assert.match(m.researchedFact('perplexity').commercial,/个人非商业/);
+ assert.match(m.researchedFact('qwen').price,/百炼 API 分开/);
+ assert.match(m.researchedFact('deepseek').paymentSource,/static.deepseek.com/);
+ const row=read('app/market-matrix-row.tsx');
+ assert.match(row,/region!=='GLOBAL'/);
+});
