@@ -11,6 +11,8 @@ import MarketRowActions from './market-row-actions';
 import {paymentFactsFor,matchingPaymentMethods} from '../lib/market-payment-facts';
 import type {MarketPayment} from '../lib/market-v36-screening';
 import {commercialEvidence} from '../lib/market-commercial-evidence';
+import {localizedProductSummary} from '../lib/market-product-locale';
+import {localizedCategory} from '../lib/market-home-i18n';
 
 const columns:Record<Language,string[]>={
  zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','付款 · 登录','短剧 / 短视频','代表模型','商用授权','操作'],
@@ -81,11 +83,11 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
     <button type="button" className="platformName" onClick={onDetail}>
      <span className="brandIcon" aria-hidden="true">{p.symbol}</span>
      <span><strong>{p.name}</strong><small>{p.company}</small></span>
-    </button><small>{p.category}</small>
+    </button><small>{localizedCategory(language,p.category)}</small>
    </td>
    <td className="marketOverviewStrength" data-label={h[2]}>
-    <strong>{summary.headline}</strong>
-    <p className="marketOverviewUses">{summary.capabilities}</p>
+    <strong>{localizedProductSummary(p.id,language)||summary.headline}</strong>
+    {language==='zh'?<p className="marketOverviewUses">{summary.capabilities}</p>:null}
     <a href={summary.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>
     <button type="button" className="marketV36More" onClick={onDetail}>{t.more} ↗</button>
    </td>
