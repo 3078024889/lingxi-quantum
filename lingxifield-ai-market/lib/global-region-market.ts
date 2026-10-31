@@ -50,6 +50,14 @@ const ACCESS:Record<string,AccessConfig>={
   paymentScope:'Web checkout: card. Mobile purchases: Apple / Google storefront, subject to local eligibility.',
   paymentsByRegion:{KR:['Kakao Pay','Naver Pay','Korean local cards'],IN:['UPI (Go / Plus only)'],BR:['Pix (Go / Plus / Pro)'],ID:['GoPay (Go / Plus / Pro)'],PH:['GCash (Go / Plus / Pro)'],VN:['MoMo (web checkout: Go / Plus / Pro)'],GB:['Bank debit through Link (where available)'],FR:['Bank debit through Link (where available)'],DE:['Bank debit through Link (where available)'],ES:['Bank debit through Link (where available)'],PT:['Bank debit through Link (where available)'],US:['ChatGPT wallet balance (eligible US purchases)']}
  },
+ 'anthropic-sdk-python':{
+  countries:{
+   CN:{status:'unsupported',source:'https://platform.claude.com/docs/en/api/supported-regions',checkedAt:'2026-10-31',note:'The Claude API is not listed for mainland China. The open-source SDK installation is a separate matter.',reachability:'not_tested'},
+   HK:{status:'unsupported',source:'https://platform.claude.com/docs/en/api/supported-regions',checkedAt:'2026-10-31',note:'The Claude API is not listed for Hong Kong. SDK installation is a separate matter.',reachability:'not_tested'}
+  },
+  paymentNote:'The open-source Python SDK is not itself an API subscription.',
+  paymentScope:'Claude API billing is separate; no SDK subscription required.'
+ },
  claude:{
   countries:{},
   paymentSource:CLAUDE_PAY,payments:['Credit / debit card (web)','Apple App Store (iOS)','Google Play (Android)'],
