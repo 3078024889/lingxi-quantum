@@ -951,3 +951,10 @@ body{font-size:16px;line-height:1.6}
 .marketLocalizedProduct footer p{font-size:12px;color:#536b83}
 .app .lxCostFixedResolution{min-height:36px;padding:7px 9px;border-radius:7px;background:#edf4ff;border:1px solid #d0def3;color:#133e73;font-size:13px}
 @media(max-width:640px){.marketLocalizedFacts{grid-template-columns:1fr}.marketLocalizedProduct header{padding:18px}.marketLocalizedProduct header h1{font-size:23px}}
+
+.marketLocalizedVideoRates{margin:17px 0;background:#f6faff;border:1px solid #d2e1f5;border-radius:10px;padding:16px}
+.marketLocalizedVideoRates h2{font-size:17px;margin:0 0 10px;color:#103b73}
+.marketLocalizedRatesScroll{overflow-x:auto}
+.marketLocalizedVideoRates table{width:100%;min-width:600px;border-collapse:collapse;text-align:start;font-size:13px}
+.marketLocalizedVideoRates th,.marketLocalizedVideoRates td{border-bottom:1px solid #d6e3f5;padding:9px;text-align:start;vertical-align:top}
+.marketLocalizedVideoRates th{background:#e9f2ff}
