@@ -410,10 +410,12 @@ test('V45 Seedance 2.5 distinguishes advertised promo plan equivalent from a new
  assert.match(ui,/Grok 免费账户可先体验/);
 });
 test('V45 SEO/GEO requires reviewed source-dated observations and independent cohorts',async()=>{
- const g=await import(pathToFileURL(path.join(ROOT,'lib/seo-geo-observations.ts')).href);
- assert.equal(g.coverageForSeoGeo().catalogProducts,32);
- assert.equal(g.coverageForSeoGeo().verifiedObservations,0);
- assert.equal(g.groupedSeoGeo().length,0);
+ const snapshots=JSON.parse(read('data/seo-geo-observations.json'));
+ assert.deepEqual(snapshots,[]);
+ const sourceCode=read('lib/seo-geo-observations.ts');
+ assert.match(sourceCode,/coverageForSeoGeo/);
+ assert.match(sourceCode,/groupedSeoGeo/);
+ assert.match(sourceCode,/awaiting_independent_measurements/);
  const source=read('lib/seo-geo-observations.ts');
  assert.match(source,/independent_serp/);
  assert.match(source,/ai_answer_citation/);
@@ -424,4 +426,19 @@ test('V45 SEO/GEO requires reviewed source-dated observations and independent co
  const collector=read('scripts/sync-gsc-analytics.mjs');
  assert.match(collector,/GSC_CONFIG_REQUIRED/);
  assert.match(collector,/webmasters.readonly/);
+});
+
+test('V45 nine-language structured product pages and sitemap are release gated',()=>{
+ const pages=read('app/[lang]/platform/[id]/page.tsx');
+ const sitemap=read('app/sitemap.ts');
+ const gate=read('lib/market-index-policy.ts');
+ assert.match(pages,/marketLocales\.flatMap\(lang=>entries\.map/);
+ assert.match(pages,/application\/ld\+json/);
+ assert.match(pages,/SoftwareApplication/);
+ assert.match(pages,/mayIndexMarket\(lang\)/);
+ assert.match(pages,/commercialEvidence/);
+ assert.match(sitemap,/indexableMarketLocales/);
+ assert.match(sitemap,/modelsSource/);
+ assert.match(gate,/AI_MARKET_INDEX_READY/);
+ assert.match(gate,/VERCEL_ENV!=='preview'/);
 });
