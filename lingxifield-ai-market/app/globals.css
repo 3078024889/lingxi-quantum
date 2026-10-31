@@ -852,3 +852,21 @@ body{font-size:16px;line-height:1.6}
 .app .marketV40AdvancedChipRow{display:flex;gap:6px;flex-wrap:wrap;padding-top:6px}
 .app .marketV40AdvancedChipRow button{border:1px solid #c7dbf4;color:#1658a6;background:#fff;border-radius:19px;padding:7px 11px;font-size:12px}
 .app .marketV40AdvancedChipRow button.active{background:#1164d6;color:#fff;border-color:#1164d6}
+
+/* V4.1: transparent cost calculations, compact and accessible. */
+.app .lxCostEstimate{margin:8px 12px 12px;padding:12px 14px;border:1px solid #c8d9ee;border-radius:12px;background:#f8fbff;color:#253d5b}
+.app .lxCostHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.app .lxCostHeader h3{font-size:15px;line-height:1.35;margin:0 0 5px;font-weight:800}
+.app .lxCostHeader p{font-size:12px;margin:0;line-height:1.6;color:#526b84}
+.app .lxCostMode{display:flex;gap:5px;align-items:center}
+.app .lxCostMode button{font-size:12px;border:1px solid #b6cdeb;background:#fff;color:#1756a2;border-radius:18px;padding:6px 10px;cursor:pointer}
+.app .lxCostMode button[aria-pressed="true"]{background:#185db5;color:#fff;border-color:#185db5}
+.app .lxCostFields{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.app .lxCostField{display:flex;flex-direction:column;gap:5px;min-width:0;font-size:12px;color:#38536e}
+.app .lxCostField input{width:100%;min-width:0;border:1px solid #a7c1df;border-radius:7px;background:#fff;padding:7px 8px;font:inherit;font-size:13px;color:#1d3557}
+.app .lxCostField input:focus-visible{outline:2px solid #2a68ca;outline-offset:1px}
+.app .lxCostResult{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;align-items:center;margin-top:10px;padding-top:9px;border-top:1px solid #dbe7f5}
+.app .lxCostResult div{display:flex;flex-direction:column;gap:3px}
+.app .lxCostResult strong{font-size:13px;color:#134b8e}
+.app .lxCostResult small{font-size:11px;color:#526b84;max-width:600px;line-height:1.5}
+@media(max-width:760px){.app .lxCostFields{grid-template-columns:repeat(2,minmax(0,1fr))}.app .lxCostEstimate{margin:8px 4px}.app .lxCostHeader{flex-direction:column;align-items:stretch}.app .lxCostResult{align-items:flex-start}}
