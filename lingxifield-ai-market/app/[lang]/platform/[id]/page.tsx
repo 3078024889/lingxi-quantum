@@ -27,7 +27,7 @@ export const revalidate=3600;
 export function generateStaticParams(){return marketLocales.flatMap(lang=>searchPlatforms({limit:100}).items.map(e=>({lang,id:e.id})));}
 const label=(lang:Language,id:string)=>{const product=findPlatform(id);if(!product)return '';const text=localizedProductSummary(id,lang);return text||product.name;};
 export async function generateMetadata({params}:PageParams):Promise<Metadata>{
- const {lang,id}=await params,product=entries.find(x=>x.id===id);
+ const {lang,id}=await params,product=findPlatform(id);
  if(!product||!marketLocales.includes(lang as Language))return {robots:{index:false}};
  const language=lang as Language,title=product.name+' | '+label(language,id)+' | LINGXIFIELD';
  const robots=mayIndexMarket(lang);
