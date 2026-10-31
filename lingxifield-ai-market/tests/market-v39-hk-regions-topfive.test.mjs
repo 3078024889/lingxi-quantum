@@ -36,7 +36,7 @@ test('VPN-access evidence and offline tools do not convert into unverified offic
  const region=await read('lib/region-presentation.ts');
  assert.match(global,/comfyui:\{globalPolicy:local/);
  assert.match(global,/ollama:\{globalPolicy:local/);
- assert.match(region,/VPN 出口、账号注册地及付款地区可能不同/);
+ assert.match(region,/网络能打开不等于官方支持/);
  assert.match(region,/A working connection is not official eligibility/);
  assert.doesNotMatch(region,/VPN is official support|VPN means officially supported/);
 });
