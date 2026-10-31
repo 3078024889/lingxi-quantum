@@ -61,7 +61,6 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const rawCommercial=access?.commercial||commercial?.text;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
  const licenseFact=commercialEvidence(p.id,language);
- const login=p.id==='anthropic-sdk-python'?(language==='zh'?'SDK可直接安装；调用API需官方账号与密钥':'Install SDK freely; API account and key required'):accessValue(access?.login,specific.login);
  const paymentFact=paymentFactsFor(p.id,region);
  const allPayments=paymentFact.methods;
  const matched=paymentFilter==='any'?[]:matchingPaymentMethods(p.id,paymentFilter,region);
