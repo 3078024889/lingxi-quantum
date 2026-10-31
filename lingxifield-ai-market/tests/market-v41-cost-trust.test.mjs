@@ -148,7 +148,7 @@ test('structured locale facts preserve vendor prices and free credits',async()=>
  assert.match(fact.localizedCatalogFact('suno','en','free','每天50积分'),/50.*noncommercial/);
  assert.match(fact.localizedCatalogFact('dify','en','price','590美元每年'),/\$590.*workspace/);
  assert.match(fact.localizedCatalogFact('ollama','en','price','本地工具免费'),/Local software free/);
- assert.match(fact.localizedCatalogFact('midjourney','en','price','待核验'),/varies by plan/);
+ assert.match(fact.localizedCatalogFact('midjourney','en','price','待核验'),/\$10/);
  assert.match(fact.localizedCatalogFact('chatgpt','ja','models','GPT'),/GPT-6/);
  const ids=['anthropic-sdk-python','chatgpt','claude','comfyui','deepseek','dify','elevenlabs','fasterwhisper','gemini','grok','langchain','llamacpp','llamaindex','lovable','luma','midjourney','n8n','ollama','openwebui','openai-python','perplexity','replit','runway','automatic1111','suno','transformers','vllm','whisper','qwen','jimeng','kling','doubao'];
  for(const id of ids)for(const lang of ['en','fr','de','es','pt','ar']){
