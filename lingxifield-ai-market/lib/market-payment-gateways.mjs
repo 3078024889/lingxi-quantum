@@ -7,7 +7,7 @@
 import {createSign,createVerify,randomBytes,createDecipheriv} from 'node:crypto';
 
 export const amountToMinor=(amount)=>{
- if(typeof amount!=='number'||!Number.isFinite(amount)||amount<=0||Math.round(amount*100)!==amount*100)throw Error('INVALID_AMOUNT');
+ if(typeof amount!=='number'||!Number.isFinite(amount)||amount<=0||Math.abs(Math.round(amount*100)-amount*100)>1e-7)throw Error('INVALID_AMOUNT');
  const minor=Math.round(amount*100);
  if(!Number.isSafeInteger(minor)||minor>100000000)throw Error('INVALID_AMOUNT');
  return minor;
@@ -30,7 +30,7 @@ export function alipaySignedWebCheckout({orderId,amount,currency,appId,privateKe
  if(!safeId(orderId)||currency!=='CNY'||!/^\d{10,32}$/.test(appId))throw Error('INVALID_ORDER');
  const host=new URL(httpsUrl(gateway)).hostname;
  if(!['openapi.alipay.com','openapi.alipaydev.com'].includes(host))throw Error('UNTRUSTED_GATEWAY');
- const p={app_id:appId,method:mobile?'alipay.trade.wap.pay':'alipay.trade.page.pay',format:'JSON',charset:'utf-8',sign_type:'RSA2',timestamp:new Date().toISOString().replace('T',' ').slice(0,19),version:'1.0',
+ const p={app_id:appId,method:mobile?'alipay.trade.wap.pay':'alipay.trade.page.pay',format:'JSON',charset:'utf-8',sign_type:'RSA2',timestamp:new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).format(new Date()),version:'1.0',
   notify_url:httpsUrl(notifyUrl),return_url:httpsUrl(returnUrl),biz_content:JSON.stringify({out_trade_no:orderId,total_amount:(amountToMinor(amount)/100).toFixed(2),subject:'LINGXIFIELD marketplace promotion',product_code:mobile?'QUICK_WAP_WAY':'FAST_INSTANT_TRADE_PAY'})};
  const base=Object.keys(p).sort().map(k=>k+'='+p[k]).join('&');
  p.sign=sign(base,privateKey);
@@ -115,6 +115,6 @@ export async function paypalVerifyCapturedOrder({providerOrderId,expectedOrderId
  const {data}=await jsonFetch(fetcher,paypalHost(environment)+'/v2/checkout/orders/'+encodeURIComponent(providerOrderId),{method:'GET',headers:{Authorization:'Bearer '+token}});
  const unit=data.purchase_units?.find(x=>x.reference_id===expectedOrderId);
  const cap=unit?.payments?.captures?.find(x=>x.status==='COMPLETED');
- if(data.status!=='COMPLETED'||!cap||cap.amount?.currency_code!=='USD'||Math.round(Number(cap.amount.value)*100)!==amountToMinor(amount))return null;
+ if(data.status!=='COMPLETED'||!cap||unit.amount?.currency_code!=='USD'||Math.round(Number(unit.amount.value)*100)!==amountToMinor(amount)||cap.amount?.currency_code!=='USD'||Math.round(Number(cap.amount.value)*100)!==amountToMinor(amount))return null;
  return {provider:'paypal',orderId:expectedOrderId,providerTransactionId:cap.id,currency:'USD',amountMinor:amountToMinor(amount)};
 }
