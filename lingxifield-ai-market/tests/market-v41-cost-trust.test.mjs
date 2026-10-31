@@ -139,3 +139,26 @@ test('all 32 catalog items provide real task summaries in nine languages',async(
  const row=read('app/market-matrix-row.tsx');
  assert.match(row,/localizedProductSummary\(p\.id,language\)/);
 });
+
+test('structured locale facts preserve vendor prices and free credits',async()=>{
+ const fact=await import(pathToFileURL(path.join(ROOT,'lib/market-fact-locale.ts')).href);
+ assert.match(fact.localizedCatalogFact('runway','en','price','年付折合 $12/月'),/\$12.*annually/);
+ assert.match(fact.localizedCatalogFact('runway','fr','free','一次性125积分'),/125.*crédits/);
+ assert.match(fact.localizedCatalogFact('suno','en','free','每天50积分'),/50.*noncommercial/);
+ assert.match(fact.localizedCatalogFact('dify','en','price','590美元每年'),/\$590.*workspace/);
+ assert.match(fact.localizedCatalogFact('ollama','en','price','本地工具免费'),/Local software free/);
+ assert.match(fact.localizedCatalogFact('midjourney','en','price','待核验'),/varies by plan/);
+ assert.match(fact.localizedCatalogFact('chatgpt','ja','models','GPT'),/GPT-6/);
+ const ids=['anthropic-sdk-python','chatgpt','claude','comfyui','deepseek','dify','elevenlabs','fasterwhisper','gemini','grok','langchain','llamacpp','llamaindex','lovable','luma','midjourney','n8n','ollama','openwebui','openai-python','perplexity','replit','runway','automatic1111','suno','transformers','vllm','whisper','qwen','jimeng','kling','doubao'];
+ for(const id of ids)for(const lang of ['en','fr','de','es','pt','ar']){
+  for(const kind of ['free','price','models']){
+   const value=fact.localizedCatalogFact(id,lang,kind,'待核验');
+   assert.ok(value&&value.length>2,id+':'+lang+':'+kind);
+   assert.doesNotMatch(value,/[\u4e00-\u9fff]/,id+':'+lang+':'+kind);
+  }
+ }
+ const row=read('app/market-matrix-row.tsx');
+ assert.match(row,/localizedCatalogFact\(p\.id,language,'price'/);
+ assert.match(row,/localizedCatalogFact\(p\.id,language,'free'/);
+ assert.match(row,/localizedCatalogFact\(p\.id,language,'models'/);
+});
