@@ -13,6 +13,7 @@ import {createSign,createHash} from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {matchGscProductPage} from './parse-gsc-product-route.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),outfile=path.join(root,'data/seo-geo-observations.json');
 function allProductIds(){
  const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
@@ -52,12 +53,12 @@ else try{
  for(const row of entries){
   const [page,query,date]=row.keys||[];
   if(typeof page!=='string'||typeof query!=='string'||typeof date!=='string')continue;
-  const match=new URL(page).pathname.match(/^\/platform\/([a-z0-9-]+)\/?$/);if(!match||!known.has(match[1]))continue;
+  const match=matchGscProductPage(page,known);if(!match)continue;
   if((row.impressions||0)<3)continue; // avoid exposing rare possibly sensitive long-tail search terms
   const base={property,page,query,date,impressions:row.impressions,clicks:row.clicks,position:row.position};
   const digest=createHash('sha256').update(JSON.stringify(base)).digest('hex');
   const id='gsc-'+digest.slice(0,24),observedAt=date+'T12:00:00Z';
-  const result={id,platformId:match[1],source:'google_search_console',observedAt,country:'GLOBAL',language:'zh',
+  const result={id,platformId:match.platformId,source:'google_search_console',observedAt,country:'GLOBAL',language:match.language,
     query,engine:'Google Search Console',sourceUrl:'https://search.google.com/search-console/performance/search-analytics',
     recordHash:'sha256:'+digest,methodVersion:'GSC.web.page-query-date.v1',sampleCount:Math.max(1,Math.floor(row.impressions||0)),
     position:row.position,impressions:row.impressions,clicks:row.clicks,sponsored:false,reviewed:true,reviewedAt:new Date().toISOString()};
