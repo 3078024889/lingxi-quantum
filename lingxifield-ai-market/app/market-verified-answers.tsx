@@ -3,6 +3,7 @@ import type {Platform} from '../lib/data';
 import {localizedCatalogFact} from '../lib/market-fact-locale';
 import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from '../lib/market-researched-facts';
 import {commercialEvidence} from '../lib/market-commercial-evidence';
+import {paymentFactsFor} from '../lib/market-payment-facts';
 import {globalRegionSummary} from '../lib/region-presentation';
 import {localizedPaymentName} from './market-global-access';
 
@@ -20,16 +21,16 @@ const WORDS:Record<Language,{heading:string,free:string,price:string,models:stri
 };
 const LOCAL=new Set(['ollama','llamacpp','vllm','langchain','llamaindex','transformers','comfyui','automatic1111','whisper','fasterwhisper','openwebui','dify','n8n','openai-python','anthropic-sdk-python']);
 export default function MarketVerifiedAnswers({platform,language}:{platform:Platform;language:Language}){
- const f=researchedFact(platform.id),w=WORDS[language],license=commercialEvidence(platform.id,language);
+ const f=researchedFact(platform.id),w=WORDS[language],license=commercialEvidence(platform.id,language),pay=paymentFactsFor(platform.id,'GLOBAL');
  const price=language==='zh'?(f?.price||platform.price):localizedCatalogFact(platform.id,language,'price',platform.price);
  const free=language==='zh'?(f?.free||platform.free):localizedCatalogFact(platform.id,language,'free',platform.free);
  const models=language==='zh'?(f?.models||platform.name):localizedCatalogFact(platform.id,language,'models',platform.name);
- const method=f?.payments?.length?f.payments.map(p=>localizedPaymentName(p,language)).join(' · '):LOCAL.has(platform.id)?w.local:w.unknown;
+ const method=pay.methods.length?pay.methods.map(p=>localizedPaymentName(p,language)).join(' · '):LOCAL.has(platform.id)?w.local:w.unknown;
  const rows=[
   {key:'free',name:w.free,answer:free,source:f?.freeSource},
   {key:'price',name:w.price,answer:price,source:f?.priceSource},
   {key:'models',name:w.models,answer:models,source:f?.modelsSource},
-  {key:'payments',name:w.payments,answer:method,source:f?.paymentSource},
+  {key:'payments',name:w.payments,answer:method,source:pay.source||undefined},
   {key:'countries',name:w.countries,answer:language==='zh'?(f?.region||globalRegionSummary(platform.id,language)):globalRegionSummary(platform.id,language),source:f?.regionSource},
   {key:'commercial',name:w.commercial,answer:license?[license.label,license.condition].join(' · '):language==='zh'?(f?.commercial||w.unknown):w.unknown,source:license?.source||f?.commercialSource},
  ];
