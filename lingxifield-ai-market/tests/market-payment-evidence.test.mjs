@@ -21,3 +21,14 @@ test('compact payment cell does not show repetitive local checkout disclaimers',
  assert.ok(!row.includes('以结算页为准'));
  assert.ok(row.includes('Boolean(paymentScope)'));
 });
+
+test('nine-language static SEO product details use per-method source links after optional facts are filtered',()=>{
+ const page=read('app/[lang]/platform/[id]/page.tsx');
+ const styles=read('app/globals.css');
+ assert.ok(page.includes('const paymentHeading='));
+ assert.ok(page.includes('title===paymentHeading&&payments.methodEvidence.length>0'));
+ assert.ok(page.includes('payments.methodEvidence.map(method=>'));
+ assert.ok(page.includes('href={method.source}'));
+ assert.ok(!page.includes('i===6&&payments.methodEvidence.length'));
+ assert.ok(styles.includes('.marketLocalizedPaymentEvidence{'));
+});
