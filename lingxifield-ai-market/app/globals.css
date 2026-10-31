@@ -970,3 +970,12 @@ body{font-size:16px;line-height:1.6}
 .marketVerifiedAnswerScope{display:block;margin-top:13px;color:#59718e;font-size:12px}
 @media(max-width:950px){.marketVerifiedAnswerGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.marketVerifiedAnswerGrid{grid-template-columns:minmax(0,1fr)}}
+
+.marketPaymentChannels{margin-top:16px;padding:16px;border-top:1px solid #dbe7f6}
+.marketPaymentChannels>h3{font-size:16px;margin:0 0 8px}
+.marketPaymentChannels p{line-height:1.7;font-size:13px}
+.marketPaymentChannelList{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.marketPaymentChannel{display:flex;flex-direction:column;gap:5px;padding:10px 12px;border:1px solid #d7e4f3;background:#f6f9fe;border-radius:9px}
+.marketPaymentChannel strong{font-size:14px}
+.marketPaymentChannel span{color:#4c6684;font-size:12px}
+.marketPaymentChannels a{color:#1769c8}
