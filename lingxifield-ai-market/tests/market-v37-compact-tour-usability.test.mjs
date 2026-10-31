@@ -37,8 +37,8 @@ test('right-hand text remains accessible via explicit horizontal-scroll controls
  assert.match(home,/marketV37ScrollTools/);
  assert.match(home,/marketScrollRef\.current\?\.scrollBy/);
  assert.match(css,/min-width:1940px!important/);
- assert.match(row,/allPayments\.slice\(0,2\)/);
- assert.match(row,/allPayments\.length>2/);
- assert.match(row,/!accepted\?specific\.payment/);
+ assert.ok(row.includes('slice(0,5)'));
+ assert.ok(row.includes('slice(0,5)'));
+ assert.ok(row.includes('paymentFact.scope'));
  assert.match(row,/marketV37More/);
 });

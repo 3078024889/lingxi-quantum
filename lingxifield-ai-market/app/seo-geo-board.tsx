@@ -1,14 +1,34 @@
 import Link from 'next/link';
-export default function SeoGeoBoard(){
- return <section className="panel seoGeoBoard" aria-label="SEO 与 GEO 可见度榜">
-  <div className="rankHead"><h2>SEO / GEO 搜索可见度榜</h2><span>用同一组关键词、地区与日期比较，不用广告排名冒充自然排名</span></div>
+import type {Language} from '../lib/v2';
+import {coverageForSeoGeo,groupedSeoGeo} from '../lib/seo-geo-observations';
+const COPY:Record<Language,readonly [string,string,string,string,string,string,string,string,string,string,string,string,string]>={
+ zh:["SEO / GEO 可见度观察","同一关键词、国家、语言与日期的可比观测；广告位与自然排名分开","SEO 自然搜索","Google/Bing 关键词排名、曝光量、点击与已收录页面。","GEO AI 引用","AI 回答是否提到或引用产品；逐条记录问题、模型与出处。","用户任务","按视频、图片、代码、语音等真实任务比较能力与费用。","时间变化","只有同一测量口径的历史记录才计算 7/30 日趋势。","目前没有足够可复核的观测样本，因此不生成自然排名、GEO 分数或虚构趋势。","免费提交厂商与官方资料","赞助推广位不参与自然排名计算"],
+ en:["SEO / GEO visibility","Comparable measurements by keyword, country, language and date; advertising is separate","Organic SEO","Google/Bing ranks, impressions, clicks and indexed pages.","GEO citations","Track actual AI answer mentions and citations by prompt, model and source.","User tasks","Compare real tasks across video, images, code and audio.","History","7/30-day changes require comparable historical snapshots.","No independently reproducible coverage yet; no artificial rankings or GEO scores are shown.","Submit publisher evidence for free","Sponsored placement never alters organic ranking"],
+ ja:["SEO / GEO 可視性","同じキーワード・国・言語・日付で比較。広告と自然順位を分離","自然検索 SEO","Google/Bing の検索順位、表示、クリック、登録ページ。","GEO 引用","AI 回答での言及・引用を質問、モデル、出典ごとに記録。","利用目的","動画、画像、コード、音声の機能と料金を比較。","履歴","同条件の履歴がある場合のみ7日・30日の変化を表示。","再現可能な観測データが不足しているため、順位・スコアは表示しません。","企業・公式資料を無料登録","広告掲載は自然順位に影響しません"],
+ ko:["SEO / GEO 가시성","동일 키워드·국가·언어·날짜로 비교, 광고 분리","자연 검색 SEO","Google/Bing 순위, 노출, 클릭, 색인 페이지.","GEO 인용","AI 답변에 실제로 언급/인용된 자료를 질문과 모델별 기록.","사용자 작업","영상·이미지·코드·음성 기능과 요금 비교.","변화 추적","동일 조건의 과거 데이터가 있을 때만 7/30일 변화 계산.","재현 가능한 관측이 부족해 순위 및 점수를 생성하지 않습니다.","기업·공식 자료 무료 제출","광고는 자연 검색 순위에 영향을 주지 않습니다"],
+ fr:["Visibilité SEO / GEO","Mesures comparables par mot-clé, pays, langue et date ; publicité séparée","SEO organique","Positions Google/Bing, impressions, clics et pages indexées.","Citations GEO","Mentions et citations dans les réponses IA, selon question et modèle.","Besoins réels","Comparer vidéo, image, code, audio et leurs coûts.","Historique","Variations à 7/30 jours seulement avec séries comparables.","Données observées insuffisantes : aucune note ni classement inventé.","Soumettre les sources officielles gratuitement","Le sponsorisé n’affecte pas les classements organiques"],
+ de:["SEO / GEO Sichtbarkeit","Vergleichbare Messungen je Suchwort, Land, Sprache und Datum; Werbung getrennt","Organische Suche","Google/Bing-Rang, Impressionen, Klicks und indexierte Seiten.","GEO-Zitate","KI-Antworten nach Frage, Modell, Erwähnung und Quelle messen.","Nutzeraufgaben","Videos, Bilder, Code und Audio samt Kosten vergleichen.","Zeitverlauf","7-/30-Tage-Vergleich nur aus gleichartigen historischen Messungen.","Noch keine ausreichend reproduzierbaren Messwerte; keine erfundenen Rankings.","Anbieterquellen kostenlos einreichen","Werbung verändert kein organisches Ranking"],
+ es:["Visibilidad SEO / GEO","Mediciones comparables por palabra, país, idioma y fecha; publicidad separada","SEO orgánico","Posición en Google/Bing, impresiones, clics y páginas indexadas.","Citas GEO","Menciones y referencias en respuestas IA por pregunta, modelo y fuente.","Tareas reales","Comparar vídeo, imágenes, código, audio y costes.","Historial","Variación de 7/30 días solo con datos históricos comparables.","Sin evidencia comparable suficiente; no se inventan rankings ni puntuaciones.","Enviar fuentes oficiales gratis","Los anuncios no alteran el ranking orgánico"],
+ pt:["Visibilidade SEO / GEO","Medições comparáveis por termo, país, idioma e data; anúncios separados","SEO orgânico","Posições Google/Bing, impressões, cliques e páginas indexadas.","Citações GEO","Menções em respostas IA por pergunta, modelo e fonte.","Tarefas reais","Comparar vídeo, imagens, código, áudio e custos.","Histórico","Variação de 7/30 dias somente com amostras comparáveis.","Sem amostras reproduzíveis suficientes; não inventamos rankings.","Enviar fontes oficiais gratuitamente","Anúncios não alteram posição orgânica"],
+ ar:["ظهور SEO / GEO","مقارنة بحسب الكلمة والبلد واللغة والتاريخ مع فصل الإعلانات","البحث الطبيعي SEO","الترتيب في Google/Bing ومرات الظهور والنقر والصفحات المفهرسة.","الاستشهاد في GEO","تسجيل ذكر المنتج ومصادره في إجابات AI بحسب السؤال والنموذج.","مهام المستخدم","مقارنة الفيديو والصور والبرمجة والصوت والتكلفة.","التغير التاريخي","حساب تغير 7 و30 يوماً فقط من بيانات متجانسة.","لا توجد بيانات قابلة للتحقق تكفي لترتيب حقيقي، ولن نختلق نتائج.","أرسل المصادر الرسمية مجاناً","الإعلانات لا تغير الترتيب الطبيعي"]
+};
+export default function SeoGeoBoard({language='zh'}:{language?:Language}){
+ const t=COPY[language]||COPY.zh;
+ const coverage=coverageForSeoGeo(),comparisons=groupedSeoGeo();
+ const notice=({zh:'SEO/GEO 独立观测覆盖',en:'Independent SEO/GEO coverage',ja:'独立 SEO/GEO 観測',ko:'독립 SEO/GEO 관측',fr:'Couverture SEO/GEO indépendante',de:'Unabhängige SEO/GEO-Messungen',es:'Cobertura SEO/GEO independiente',pt:'Cobertura independente SEO/GEO',ar:'تغطية قياسات SEO/GEO المستقلة'} as Record<Language,string>)[language];
+ const ownSite=({zh:'Google Search Console 只测灵犀场自身搜索表现，不代表厂商全球排名。',en:'Google Search Console measures LINGXIFIELD site search only, not vendor global rankings.',ja:'Search Console は当サイトの検索実績のみで、他社の順位ではありません。',ko:'Search Console은 자사 검색 성과이며 공급사 순위가 아닙니다.',fr:'Search Console mesure notre site, non le classement mondial des fournisseurs.',de:'Search Console misst nur unsere Website, keine Anbieterrankings.',es:'Search Console mide nuestro sitio, no clasificaciones de proveedores.',pt:'Search Console mede nosso site, não rankings dos fornecedores.',ar:'تقيس Search Console أداء موقعنا فقط وليس ترتيب الشركات.'} as Record<Language,string>)[language];
+ return <section className="panel seoGeoBoard" aria-label={t[0]}>
+  <div className="rankHead"><h2>{t[0]}</h2><span>{t[1]}</span></div>
+  <div className="seoGeoEvidenceCount" role="status"><strong>{notice}: {coverage.measuredProducts}/{coverage.catalogProducts}</strong><span>{coverage.verifiedObservations} {language==='zh'?'条已核实观测':'observations'} · {coverage.independentSerpObservations} SEO · {coverage.geoObservations} GEO</span></div>
+  <small>{ownSite}</small>
+  {comparisons.length>0?<div className="seoGeoVerifiedComparisons">{comparisons.slice(0,6).map(g=><article key={g.key}><strong>{g.key}</strong>{g.rows.map(r=><p key={r.platformId}><b>{r.platformId}</b> · {r.position!==null?'#'+r.position:r.citations!==null?r.citations+' citations':'—'} · <a href={r.sourceUrl} rel="noopener noreferrer" target="_blank">{language==='zh'?'证据':'Source'} ↗</a></p>)}</article>)}</div>:null}
   <div className="seoGeoCompare">
-   <article><strong>SEO 搜索排名</strong><p>Google / Bing 的关键词自然搜索位置、被收录页面、展示频次和近期变化。</p></article>
-   <article><strong>GEO AI 引用</strong><p>AI 回答中是否真实提到或引用产品，按问题、模型、地区及日期测量。</p></article>
-   <article><strong>用户实际关心</strong><p>哪些 AI 能免费做视频、图片、音乐或网站；有无水印、商用权与地区限制。</p></article>
-   <article><strong>历史趋势</strong><p>从同口径的每日采样计算 7 日、30 日变化；没有历史快照不生成趋势。</p></article>
+   <article><strong>{t[2]}</strong><p>{t[3]}</p></article>
+   <article><strong>{t[4]}</strong><p>{t[5]}</p></article>
+   <article><strong>{t[6]}</strong><p>{t[7]}</p></article>
+   <article><strong>{t[8]}</strong><p>{t[9]}</p></article>
   </div>
-  <p className="seoGeoNote"><strong>当前榜单：</strong>尚无覆盖全体厂商且能公开复核的同口径样本，暂不产生排名和分数。后续只展示带关键词集合、来源、时间与测量方法的有效观测。</p>
-  <div className="seoGeoFooter"><Link href="/vendor/claim">厂商免费提交官网及产品资料 ↗</Link><span>品牌推广与自然可见度排名分别计算。</span></div>
+  <p className="seoGeoNote">{t[10]}</p>
+  <div className="seoGeoFooter"><Link href="/vendor/claim">{t[11]} ↗</Link><span>{t[12]}</span></div>
  </section>;
 }

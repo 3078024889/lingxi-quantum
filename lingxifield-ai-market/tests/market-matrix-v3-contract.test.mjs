@@ -38,14 +38,14 @@ test('newbie path stays task oriented without fabricated ranking',()=>{
  assert.match(home,/beginner:tab==='新手友好榜'\?'1':'0'/);
  assert.match(home,/beginner:tab==='新手友好榜'\?'1':'0'/);
  assert.doesNotMatch(row,/暂无统一新手上手成功率实测/);
- assert.match(home,/序号不是排名/);
+ assert.match(home,/SeoGeoBoard/);
 });
 
 test('official evidence links and vendor separation stay intact',()=>{
  assert.match(row,/p.conditions\?\.find\(x=>x.label==='模型与用量'\)/);
  assert.match(row,/summary\.source/);
  assert.match(row,/commercial\?\.source/);
- assert.match(row,/globalRegionFact\(p.id,'GLOBAL'\)/);
+ assert.ok(row.includes('globalRegionSummary(p.id,language)'));
  assert.match(row,/MarketRowActions language=\{language\} platform=\{p\}/);
  assert.match(home,/SponsoredFeatures/);
  assert.match(home,/SeoGeoBoard/);

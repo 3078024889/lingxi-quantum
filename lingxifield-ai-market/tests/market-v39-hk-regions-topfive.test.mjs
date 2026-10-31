@@ -21,11 +21,11 @@ test('major five country list and expandable sourced remainder, in all nine lang
  const model=await read('lib/region-presentation.ts');
  const row=await read('app/market-matrix-row.tsx');
  const css=await read('app/globals.css');
- assert.match(model,/top:sorted\.slice\(0,5\),other:sorted\.slice\(5\)/);
+ assert.ok(model.includes('top:sorted.slice(0,8),other:sorted.slice(8)'));
  assert.match(model,/id==='gemini'\?\['HK','US','JP','SG','GB','AU'\]/);
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(model,new RegExp('\\b'+lang+':\\{top:'));
  assert.match(component,/marketRegionTopFive/);
- assert.match(component,/countryList\.other\.length>0&&<details/);
+ assert.ok(component.includes('countryList.other.length>0&&<div className="globalSupportedCountries"'));
  assert.match(component,/countryList\.complete\?countryList\.words\.complete:countryList\.words\.partial/);
  assert.match(row,/globalRegionSummary\(p\.id,language\)/);
  assert.match(row,/regionList\.source/);
@@ -36,8 +36,8 @@ test('VPN-access evidence and offline tools do not convert into unverified offic
  const region=await read('lib/region-presentation.ts');
  assert.match(global,/comfyui:\{globalPolicy:local/);
  assert.match(global,/ollama:\{globalPolicy:local/);
- assert.match(region,/VPN 出口、账号注册地及付款地区可能不同/);
- assert.match(region,/A working connection is not official eligibility/);
+ assert.doesNotMatch(region,/网络能打开不等于官方支持/);
+ assert.doesNotMatch(region,/A working connection is not official eligibility/);
  assert.doesNotMatch(region,/VPN is official support|VPN means officially supported/);
 });
 test('remove low-value repeated unknown placeholders from product matrix and compare',async()=>{

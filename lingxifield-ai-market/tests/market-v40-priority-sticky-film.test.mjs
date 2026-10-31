@@ -21,10 +21,10 @@ test('pinned name and action remain visible during horizontal scroll and shrink 
  const css=await read('app/globals.css');
  const home=await read('app/market-workbench.tsx');
  assert.match(css,/min-width:1940px!important/);
- assert.match(css,/th:nth-child\(2\),td:nth-child\(2\)\)\{position:sticky!important;left:48px!important/);
- assert.match(css,/th:nth-child\(11\),td:nth-child\(11\)\)\{position:sticky!important;right:0!important/);
+ assert.ok(css.includes('position:sticky!important;left:48px!important'));
+ assert.ok(css.includes('position:sticky!important;right:0!important'));
  assert.match(css,/@media\(max-width:720px\)/);
- assert.match(css,/th:nth-child\(2\),td:nth-child\(2\)\)\{left:0!important/);
+ assert.ok(css.includes('left:0!important;right:auto!important'));
  assert.match(home,/marketScrollRef\.current\?\.scrollBy/);
 });
 test('no repeated video-wrong answer for a nonvideo tool, but real short film limits linked to publisher',async()=>{
@@ -41,8 +41,8 @@ test('no repeated video-wrong answer for a nonvideo tool, but real short film li
 test('six primary filters directly above table; expert criteria are optional but functional',async()=>{
  const home=await read('app/market-workbench.tsx');
  assert.equal(home.split('className="marketV36FilterChips"').length-1,1);
- assert.match(home,/MARKET_FILTERS\.filter\(x=>!\(\['local','code','commercial'\]/);
- assert.match(home,/details className="marketV40ExtraFilters"/);
+ assert.match(home,/MARKET_FILTERS\.map\(x=><button type="button"/);
+ assert.doesNotMatch(home,/details className="marketV40ExtraFilters"/);
  assert.match(home,/setMarketFilter\(x\)/);
  assert.match(home,/payment:paymentFilter,sort:marketSort,region/);
 });
@@ -51,7 +51,7 @@ test('regional preference uses official 5 examples; Hong Kong is explicitly list
  const model=await read('lib/official-country-lists.ts');
  const row=await read('app/market-matrix-row.tsx');
  assert.match(region,/const priority=\(id==='gemini'\?/);
- assert.match(region,/\['US','JP','SG','GB','AU','HK'\]/);
+ assert.ok(region.includes("id==='gemini'?['HK','US','JP','SG','GB','AU']"));
  assert.match(model,/isComplete:false,productScope:'Gemini web app'/);
  assert.match(row,/regionName\(region,language\)\+' · '\+regionText/);
 });

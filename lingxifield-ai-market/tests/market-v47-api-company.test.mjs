@@ -1,0 +1,51 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const get=f=>fs.readFileSync(path.join(root,f),'utf8');
+test('32 named tools have explicit developer billing classification, subscription is separate',()=>{
+ const catalog=get('lib/market-api-service-catalog.ts');
+ const rates=get('lib/market-rate-catalog.ts');
+ const list=catalog.match(/const ALL=\[([\s\S]*?)\] as const;/);
+ assert.ok(list);
+ const ids=[...list[1].matchAll(/'([a-z0-9-]+)'/g)].map(x=>x[1]);
+ assert.equal(ids.length,32);
+ assert.equal(new Set(ids).size,32);
+ for(const id of ['chatgpt','claude','gemini','grok','deepseek','qwen','elevenlabs','openai-python','anthropic-sdk-python'])assert.ok(ids.includes(id));
+ assert.match(catalog,/const LOCAL=new Set/);
+ assert.match(catalog,/descriptionZh:note\[0\]/);
+ assert.match(catalog,/subscriptionSource:facts\?\.priceSource/);
+ assert.match(catalog,/API_UNIT_RATES/);
+ for(const id of ['verified-text-02','verified-text-07','verified-text-14'])assert.ok(rates.includes(id));
+ assert.ok(rates.includes('deepseek-flash'));
+ assert.ok(rates.includes('gemini-3.1-flash-lite'));
+});
+test('API estimate shows token input output, unit rates and separate web memberships',()=>{
+ const page=get('app/market-cost-estimator.tsx');
+ for(const text of ['MARKET_API_PRODUCTS.map','apiOffer.tokenRates','apiOffer.unitRates','apiOffer.videoRates','apiOffer.subscriptionZh','estimateApiUsageCost'])assert.ok(page.includes(text),text);
+ assert.match(page,/apiProvider,switchApiProvider/);
+ assert.ok(page.includes('lxApiDirectoryScroll'));
+});
+test('localized SEO product pages show developer prices and avoid empty company placeholders',()=>{
+ const page=get('app/[lang]/platform/[id]/page.tsx');
+ const company=get('app/market-company-snapshot.tsx');
+ const workbench=get('app/market-workbench.tsx');
+ for(const text of ['apiServiceOffer(id)','api.tokenRates.map','api.unitRates.map','api.subscriptionZh','payments.methods.map','globalRegionSummary(id,l)','companyFacts'])assert.ok(page.includes(text),text);
+ assert.ok(page.includes('rows.filter(([,value])'));
+ assert.ok(!page.includes('See publisher region and checkout conditions'));
+ assert.ok(company.includes('facts.map'));
+ assert.ok(company.includes('filter(x=>good(x.value))'));
+ assert.ok(workbench.includes('<MarketCompanySnapshot platform={target} language={language}/>'));
+ assert.ok(!workbench.includes('<h2>{hc.teamInfo}</h2>'));
+});
+test('nine-language engineering connection caveats are not rendered',()=>{
+ const region=get('lib/region-presentation.ts');
+ const access=get('app/market-global-access.tsx');
+ assert.ok(!region.includes('网络能打开不等于官方支持'));
+ assert.ok(!region.includes('A working connection is not official eligibility'));
+ assert.ok(!region.includes('Erreichbar heißt nicht offiziell unterstützt'));
+ assert.ok(!access.includes("countryList.words.access+' · '+t.untested"));
+ assert.ok(!access.includes('<small>{countryList.words.note}</small>'));
+});

@@ -8,6 +8,13 @@ import {globalRegionSummary,regionPresentation} from '../lib/region-presentation
 import {accessFor,accessValue} from '../lib/platform-access-facts';
 import {summaryFor,shortDramaEvidence,shortDramaSummary,MARKET_SCREEN_COPY} from '../lib/market-v36-screening';
 import MarketRowActions from './market-row-actions';
+import {paymentFactsFor,matchingPaymentMethods} from '../lib/market-payment-facts';
+import type {MarketPayment} from '../lib/market-v36-screening';
+import {commercialEvidence} from '../lib/market-commercial-evidence';
+import {localizedProductSummary} from '../lib/market-product-locale';
+import {localizedCatalogFact,localizedLoginFact} from '../lib/market-fact-locale';
+import {localizedCategory} from '../lib/market-home-i18n';
+import {researchedFact} from '../lib/market-researched-facts';
 
 const columns:Record<Language,string[]>={
  zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','付款 · 登录','短剧 / 短视频','代表模型','商用授权','操作'],
@@ -37,11 +44,11 @@ pt:{free:"Grátis conforme plano",price:"Sem preço único",models:"Modelos sem 
 ar:{free:"المجاني حسب الخطة",price:"لا يوجد سعر موحد",models:"النماذج غير مفصلة",commercial:"راجع الترخيص",login:"راجع التسجيل",payment:"الدفع المحلي غير موضح"},
 };
 const isUnknownText=(v:string|undefined)=>!v||/^(待核验|尚无可靠资料|以官网为准|暂无可核验资料|not verified)$/i.test(v.trim());
-export default function MarketMatrixRow({platform:p,position,language,region,onDetail,onToggleCompare,isCompared}:{
- platform:Platform;position:number;language:Language;region:RegionCode;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean;
+export default function MarketMatrixRow({platform:p,position,language,region,paymentFilter='any',onDetail,onToggleCompare,isCompared}:{
+ platform:Platform;position:number;language:Language;region:RegionCode;paymentFilter?:MarketPayment;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean;
 }){
  const t=MARKET_SCREEN_COPY[language],h=marketRowTitles(language),specific=SPECIFIC[language];
- const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id);
+ const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id),research=researchedFact(p.id);
  const r=region==='GLOBAL'?null:globalRegionFact(p.id,region);
  const regionList=regionPresentation(p.id,language);
  const regionText=r?regionCopy(language).status[r.policy.status]:(regionList.total?(regionList.complete?regionList.words.complete:regionList.words.partial):regionList.words.empty);
@@ -50,19 +57,26 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
  const price=p.conditions?.find(x=>x.label==='价格');
  const commercial=p.conditions?.find(x=>x.label==='商用条件');
  const rawCost=price?.text||guide?.cost||p.price;
- const cost=isUnknownText(rawCost)?specific.price:rawCost;
+ const cost=localizedCatalogFact(p.id,language,'price',isUnknownText(rawCost)?(research?.price||specific.price):rawCost);
  const rawFree=free?.text||guide?.free||p.free;
- const allowance=isUnknownText(rawFree)?specific.free:rawFree;
+ const allowance=localizedCatalogFact(p.id,language,'free',isUnknownText(rawFree)?(research?.free||specific.free):rawFree);
  const rawModels=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models;
- const models=isUnknownText(rawModels)?specific.models:rawModels;
- const rawCommercial=access?.commercial||commercial?.text;
+ const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?(research?.models||specific.models):rawModels||research?.models||specific.models);
+ const rawCommercial=access?.commercial||commercial?.text||research?.commercial;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
- const login=accessValue(access?.login,specific.login);
- const allPayments=(r||globalRegionFact(p.id,'GLOBAL')).payments.methods;
- const accepted=region==='GLOBAL'||r?.policy.status==='supported'||r?.policy.status==='conditional'||r?.policy.status==='local';
- const payment=statusUnsupported?regionCopy(language).status.unsupported:
-  !accepted?specific.payment:
-  allPayments.length?allPayments.slice(0,2).map(x=>localizedPaymentName(x,language)).join(' · ')+(allPayments.length>2?' +'+(allPayments.length-2):''):specific.payment;
+ const licenseFact=commercialEvidence(p.id,language);
+ const paymentFact=paymentFactsFor(p.id,region);
+ const allPayments=paymentFact.methods;
+ const matched=paymentFilter==='any'?[]:matchingPaymentMethods(p.id,paymentFilter,region);
+ const selfHosted=new Set(['langchain','llamaindex','llamacpp','dify','n8n','comfyui','automatic1111','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui','ollama']).has(p.id);
+ const locallyFree=selfHosted&&!allPayments.length;
+ const paymentMethods=allPayments.length?
+  [...new Set([...matched,...allPayments])].slice(0,5).map(x=>localizedPaymentName(x,language)).join(' · '):
+  locallyFree?({zh:'自托管核心免费 · 云服务另付',en:'Self-hosted core free; cloud billed separately',ja:'本体無料・決済不要',ko:'로컬 무료·결제 불필요',fr:'Logiciel local gratuit',de:'Lokale Software kostenlos',es:'Software local gratuito',pt:'Software local gratuito',ar:'البرنامج المحلي مجاني'} as Record<Language,string>)[language]:
+  (language==='zh'?'厂商尚未公开可核验的支付渠道':specific.payment);
+ const paymentScope=paymentFact.scope==='unsupported'?regionCopy(language).status.unsupported:'';
+ const login=p.id==='anthropic-sdk-python'?(language==='zh'?'SDK可直接安装；调用API需官方账号与密钥':'Install SDK freely; API account and key required'):
+ (locallyFree?(language==='zh'?'本地安装不要求平台注册；外部云API需另登录':'Local install needs no publisher account; external APIs have their own logins'):localizedLoginFact(language,accessValue(access?.login,specific.login)));
  const drama=shortDramaEvidence(p.id);
  const videoTool=Boolean(drama)||/视频|video|film|clip|短剧/i.test(p.category);
  return <tr className="marketOverviewRow marketV36Row" data-market-id={p.id}>
@@ -71,25 +85,25 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
     <button type="button" className="platformName" onClick={onDetail}>
      <span className="brandIcon" aria-hidden="true">{p.symbol}</span>
      <span><strong>{p.name}</strong><small>{p.company}</small></span>
-    </button><small>{p.category}</small>
+    </button><small>{localizedCategory(language,p.category)}</small>
    </td>
    <td className="marketOverviewStrength" data-label={h[2]}>
-    <strong>{summary.headline}</strong>
-    <p className="marketOverviewUses">{summary.capabilities}</p>
+    <strong>{localizedProductSummary(p.id,language)||summary.headline}</strong>
+    {language==='zh'?<p className="marketOverviewUses">{summary.capabilities}</p>:null}
     <a href={summary.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>
     <button type="button" className="marketV36More" onClick={onDetail}>{t.more} ↗</button>
    </td>
-   <td className="marketOverviewFree" data-label={h[3]}><strong>{allowance}</strong>{free&&<a href={free.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
-   <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{price&&<a href={price.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewFree" data-label={h[3]}><strong>{allowance}</strong>{(free?.source||research?.freeSource)&&<a href={free?.source||research?.freeSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{(price?.source||research?.priceSource)&&<a href={price?.source||research?.priceSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewRegion" data-label={h[5]}>
     <strong>{globalRegionSummary(p.id,language)}</strong>
-    <span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{region==='GLOBAL'?regionText:regionName(region,language)+' · '+regionText}</span>
-    {(r?.policy.source||regionList.source)&&<a href={r?.policy.source||regionList.source||'#'} target="_blank" rel="noopener noreferrer">{r?.policy.checkedAt||t.source} ↗</a>}
+    {(region!=='GLOBAL'||regionList.total>0)&&<span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{region==='GLOBAL'?regionText:regionName(region,language)+' · '+regionText}</span>}
+    {(r?.policy.source||regionList.source||research?.regionSource)&&<a href={r?.policy.source||regionList.source||research?.regionSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}
    </td>
-   <td className="marketV36Login" data-label={h[6]}><strong title={accepted?allPayments.map(x=>localizedPaymentName(x,language)).join(' · '):payment}>{region==='GLOBAL'&&allPayments.length?language==='zh'?'常见方式 · 依地区':'Common options · country-dependent':payment}</strong>{region==='GLOBAL'&&allPayments.length?<span>{payment}</span>:null}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
+   <td className="marketV36Login" data-label={h[6]}><strong title={allPayments.map(x=>localizedPaymentName(x,language)).join(' · ')}>{p.id==='anthropic-sdk-python'?(language==='zh'?'SDK免费；API单独计费':'SDK free; API billed separately'):paymentMethods}</strong>{(locallyFree||Boolean(paymentScope))&&<small>{locallyFree?(language==='zh'?'模型 API/云服务单独计费':specific.payment):paymentScope}</small>}{(paymentFact.source|| (!allPayments.length?research?.priceSource:null))&&<a href={paymentFact.source||(research?.priceSource||'#')} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
    <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:(videoTool?<span className="marketDramaUnknown">{t.dramaUnknown}</span>:<span className="marketDramaNA" aria-label="Not applicable">—</span>)}</td>
    <td className="marketV36Model" data-label={h[8]}>{models}</td>
-   <td className="marketV36Business" data-label={h[9]}><span>{commercialValue}</span>{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketV36Business" data-label={h[9]}>{licenseFact?<><strong className="marketLicenseVerdict">{licenseFact.label}</strong><p className="marketLicenseCondition">{licenseFact.condition}</p><a href={licenseFact.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<><strong className="marketLicenseUnknown">{language==='zh'?'商用规则待核实':specific.commercial}</strong>{!isUnknownText(rawCommercial)&&<p className="marketLicenseCondition">{language==='zh'?rawCommercial:({en:'Commercial rights are not yet independently verified for this product and plan.',ja:'この製品・プランの商用条件は確認中です。',ko:'이 제품 및 요금제의 상업적 권리는 확인 중입니다.',fr:'Droits commerciaux non encore vérifiés pour cette offre.',de:'Gewerbliche Nutzungsrechte für diesen Tarif noch ungeprüft.',es:'Derechos comerciales de este plan aún sin verificar.',pt:'Direitos comerciais deste plano ainda não verificados.',ar:'الحقوق التجارية لهذه الخطة قيد التحقق.',zh:''} as Record<Language,string>)[language]}</p>}{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</>}</td>
    <td className="marketOverviewActions" data-label={h[10]}><MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/></td>
   </tr>;
 }

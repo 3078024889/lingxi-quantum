@@ -1,0 +1,51 @@
+name: AI Market mobile and desktop browser acceptance
+on:
+  pull_request:
+    paths:
+      - 'lingxifield-ai-market/**'
+      - '.github/workflows/ai-market-responsive-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ai-market-responsive-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  chromium:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: lingxifield-ai-market/package-lock.json
+      - run: npm ci
+      - name: Install pinned browser harness
+        run: npm install --no-save --no-package-lock playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - name: Build actual marketplace
+        run: npm run build
+      - name: Start server and test real Chromium mobile/tablet/desktop/RTL interactions
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- -p 3302 > /tmp/lingxifield-market-browser.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          node scripts/market-local-http-smoke.mjs
+          node scripts/browser-responsive-acceptance.mjs
+      - name: Retain server log on failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ai-market-responsive-browser-${{ github.run_id }}
+          path: /tmp/lingxifield-market-browser.log
+          retention-days: 7
+          if-no-files-found: ignore

@@ -7,7 +7,7 @@ test('original detail shows provenance without replacing the original visual lay
  assert.ok(page.includes('<PlatformEvidence website={target.website}/>'));
  assert.ok(page.includes('detailGrid'));
  assert.ok(page.includes('团队与融资'));
- assert.ok(page.includes('免费认领 / 补充资料'));
+ assert.ok(page.includes('hc.vendorClaim'));
 });
 test('product evidence endpoint uses exact hostname matching and the local unified catalog',async()=>{
  const api=await read('app/api/v1/products/evidence/route.ts');

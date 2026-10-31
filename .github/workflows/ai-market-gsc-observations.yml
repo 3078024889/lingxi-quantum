@@ -1,0 +1,46 @@
+name: AI Market owned Search Console observations
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '21 3 * * 1'
+permissions:
+  contents: read
+concurrency:
+  group: ai-market-gsc-observations
+  cancel-in-progress: false
+jobs:
+  owned-search-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    env:
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+      GSC_PROPERTY: ${{ vars.GSC_PROPERTY }}
+      AI_MARKET_CANONICAL_ORIGIN: ${{ vars.AI_MARKET_CANONICAL_ORIGIN }}
+      GSC_LOOKBACK_DAYS: '14'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - name: Block unconfigured properties without publishing synthetic data
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$GSC_SERVICE_ACCOUNT_JSON" ] || [ -z "$GSC_PROPERTY" ] || [ -z "$AI_MARKET_CANONICAL_ORIGIN" ]; then
+            echo "::error::GSC_CONFIG_REQUIRED: grant the market service account read access to the dedicated AI-market Search Console property and supply protected repository secret/vars."
+            exit 2
+          fi
+      - name: Read finalized, owned 9-language GSC records
+        run: node scripts/sync-gsc-analytics.mjs
+      - name: Retain evidence as review-only artifact (never auto-publish rankings)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ai-market-gsc-reviewed-input-${{ github.run_id }}
+          path: lingxifield-ai-market/data/seo-geo-observations.json
+          retention-days: 30
+          if-no-files-found: error

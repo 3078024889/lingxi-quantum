@@ -23,9 +23,9 @@ test('cloud AI apps page can discover official Hugging Face Spaces without local
 test('evidence-first public cards are not dominated by engineering measurements',async()=>{
  const home=await source('app/market-workbench.tsx');
  const decisions=await source('app/market-decision-cards.tsx');
- assert.ok(home.includes('<PriceLeaderboards/>'));
+ assert.ok(home.includes('<PriceLeaderboards language={language}/>'));
  assert.ok(!home.includes('<HfModelRankings/>'));
- assert.ok(home.includes('全球 AI 工具一览'));
+ assert.ok(home.includes('hc.resultsTitle'));
  const headings=await source('lib/market-matrix-headings.ts');
  assert.ok(home.includes('marketRowTitles(language).map'));
  assert.ok(headings.includes('免费额度'));

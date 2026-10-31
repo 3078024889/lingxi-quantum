@@ -1,5 +1,6 @@
 import type {Language} from './v2';
 import {officialCountrySnapshot,officialSupportCountries} from './official-country-lists';
+import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from './market-researched-facts';
 
 /**
  * Region & payment facts are GLOBAL and product-specific, never derived from UI locale.
@@ -50,6 +51,14 @@ const ACCESS:Record<string,AccessConfig>={
   paymentScope:'Web checkout: card. Mobile purchases: Apple / Google storefront, subject to local eligibility.',
   paymentsByRegion:{KR:['Kakao Pay','Naver Pay','Korean local cards'],IN:['UPI (Go / Plus only)'],BR:['Pix (Go / Plus / Pro)'],ID:['GoPay (Go / Plus / Pro)'],PH:['GCash (Go / Plus / Pro)'],VN:['MoMo (web checkout: Go / Plus / Pro)'],GB:['Bank debit through Link (where available)'],FR:['Bank debit through Link (where available)'],DE:['Bank debit through Link (where available)'],ES:['Bank debit through Link (where available)'],PT:['Bank debit through Link (where available)'],US:['ChatGPT wallet balance (eligible US purchases)']}
  },
+ 'anthropic-sdk-python':{
+  countries:{
+   CN:{status:'unsupported',source:'https://platform.claude.com/docs/en/api/supported-regions',checkedAt:'2026-10-31',note:'The Claude API is not listed for mainland China. The open-source SDK installation is a separate matter.',reachability:'not_tested'},
+   HK:{status:'unsupported',source:'https://platform.claude.com/docs/en/api/supported-regions',checkedAt:'2026-10-31',note:'The Claude API is not listed for Hong Kong. SDK installation is a separate matter.',reachability:'not_tested'}
+  },
+  paymentNote:'The open-source Python SDK is not itself an API subscription.',
+  paymentScope:'Claude API billing is separate; no SDK subscription required.'
+ },
  claude:{
   countries:{},
   paymentSource:CLAUDE_PAY,payments:['Credit / debit card (web)','Apple App Store (iOS)','Google Play (Android)'],
@@ -81,7 +90,18 @@ export function globalRegionFact(id:string,region:RegionCode):MarketRegionFact{
   source:official.source,checkedAt:official.checkedAt,reachability:'not_tested' as const,
   note:'productScope' in official?String(official.productScope):undefined
  }:undefined;
- const policy=region==='GLOBAL'?{status:'unknown',reachability:'not_tested'} as RegionVerdict:p?.countries[region]||recorded||p?.globalPolicy||unknown;
+ const research=researchedFact(id);
+ const domestic=region==='CN'&&['doubao','jimeng','kling'].includes(id)&&Boolean(research?.regionSource);
+ const locallyInstalled=['langchain','llamaindex','llamacpp','dify','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui','automatic1111'];
+ const localSoftware=region!=='GLOBAL'&&locallyInstalled.includes(id)&&Boolean(research?.regionSource);
+ const explicit:RegionVerdict|undefined=domestic?{
+  status:'supported',source:research?.regionSource,checkedAt:MARKET_RESEARCH_CHECKED_AT,
+  note:'中国大陆版产品入口，不代表所有账号/套餐可用',reachability:'not_tested'
+ }:localSoftware?{
+  status:'local',source:research?.regionSource,checkedAt:MARKET_RESEARCH_CHECKED_AT,
+  note:'本地/自托管运行模式，不代表云端 API 或模型下载不受地区限制',reachability:'not_tested'
+ }:undefined;
+ const policy=region==='GLOBAL'?{status:'unknown',reachability:'not_tested'} as RegionVerdict:explicit||p?.countries[region]||recorded||p?.globalPolicy||unknown;
  const isUnsupported=policy.status==='unsupported';
  const methods=isUnsupported?[]:[...(p?.payments||[]),...(p?.paymentsByRegion?.[region]||[])];
  return {policy,payments:{methods,source:p?.paymentSource,scope:p?.paymentScope,checkedAt:p?.paymentSource?stamp:undefined,note:isUnsupported?'Publisher service not available under this region policy.':p?.paymentNote}};
