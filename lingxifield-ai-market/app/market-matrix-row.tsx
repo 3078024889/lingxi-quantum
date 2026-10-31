@@ -8,6 +8,7 @@ import {globalRegionSummary,regionPresentation} from '../lib/region-presentation
 import {accessFor,accessValue} from '../lib/platform-access-facts';
 import {summaryFor,shortDramaEvidence,shortDramaSummary,MARKET_SCREEN_COPY} from '../lib/market-v36-screening';
 import MarketRowActions from './market-row-actions';
+import {commercialEvidence} from '../lib/market-commercial-evidence';
 
 const columns:Record<Language,string[]>={
  zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','付款 · 登录','短剧 / 短视频','代表模型','商用授权','操作'],
@@ -57,6 +58,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
  const models=isUnknownText(rawModels)?specific.models:rawModels;
  const rawCommercial=access?.commercial||commercial?.text;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
+ const licenseFact=commercialEvidence(p.id,language);
  const login=accessValue(access?.login,specific.login);
  const allPayments=(r||globalRegionFact(p.id,'GLOBAL')).payments.methods;
  const accepted=region==='GLOBAL'||r?.policy.status==='supported'||r?.policy.status==='conditional'||r?.policy.status==='local';
@@ -89,7 +91,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,onD
    <td className="marketV36Login" data-label={h[6]}><strong title={accepted?allPayments.map(x=>localizedPaymentName(x,language)).join(' · '):payment}>{region==='GLOBAL'&&allPayments.length?language==='zh'?'常见方式 · 依地区':'Common options · country-dependent':payment}</strong>{region==='GLOBAL'&&allPayments.length?<span>{payment}</span>:null}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
    <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:(videoTool?<span className="marketDramaUnknown">{t.dramaUnknown}</span>:<span className="marketDramaNA" aria-label="Not applicable">—</span>)}</td>
    <td className="marketV36Model" data-label={h[8]}>{models}</td>
-   <td className="marketV36Business" data-label={h[9]}><span>{commercialValue}</span>{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketV36Business" data-label={h[9]}><strong title={licenseFact?.condition}>{licenseFact?.label||commercialValue}</strong>{(licenseFact?.source||access?.commercialSource||commercial?.source)&&<a href={licenseFact?.source||access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewActions" data-label={h[10]}><MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/></td>
   </tr>;
 }
