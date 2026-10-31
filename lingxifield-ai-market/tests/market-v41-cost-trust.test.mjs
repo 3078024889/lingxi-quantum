@@ -442,3 +442,13 @@ test('V45 nine-language structured product pages and sitemap are release gated',
  assert.match(gate,/AI_MARKET_INDEX_READY/);
  assert.match(gate,/VERCEL_ENV!=='preview'/);
 });
+
+test('V45 Kling paid plans cover real credit rollover thresholds and renewal reference',async()=>{
+ const rates=await import(pathToFileURL(path.join(ROOT,'lib/market-rate-catalog.ts')).href);
+ assert.deepEqual(rates.KLING_PLANS.map(x=>x.monthlyCredits),[660,3000,8000,26000]);
+ assert.deepEqual(rates.KLING_PLANS.map(x=>x.firstMonth),[6.99,25.99,64.99,127.99]);
+ assert.deepEqual(rates.KLING_PLANS.map(x=>x.renewMonthly),[8.8,32.56,80.96,159.99]);
+ const ui=read('app/market-cost-estimator.tsx');
+ assert.match(ui,/KLING_PLANS\.map/);
+ assert.match(ui,/超额积分：/);
+});
