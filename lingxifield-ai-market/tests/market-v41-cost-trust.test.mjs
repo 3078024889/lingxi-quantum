@@ -371,3 +371,57 @@ test('developer API shows model-specific official token rates instead of user-su
  assert.match(ui,/API_RATES\.map/);
  assert.doesNotMatch(ui,/setInputRate|setOutputRate/);
 });
+
+test('V45 cost picker only renders supported resolutions and real Kling 3.0 subscription credits',async()=>{
+ const catalog=await import(pathToFileURL(path.join(ROOT,'lib/market-rate-catalog.ts')).href);
+ const ui=read('app/market-cost-estimator.tsx');
+ assert.match(ui,/variants\.map\(v=><option/);
+ assert.doesNotMatch(ui, /\[\.\.\.RESOLUTIONS,'not-confirmed'/);
+ assert.equal(catalog.VIDEO_RATES.filter(r=>r.resolution==='not-confirmed').length,0);
+ assert.equal(catalog.VIDEO_RATES.filter(r=>r.resolution==='480p'||r.resolution==='360p').length,0);
+ assert.equal(catalog.VIDEO_RATES.filter(r=>r.platform==='kling').length,4);
+ const silent=catalog.VIDEO_RATES.find(r=>r.id==='kling-video3-silent-720p');
+ assert.equal(silent.creditsPerSecond,6);
+ assert.equal(silent.includedCredits,660);
+ assert.equal(catalog.estimateKnownVideoRate(silent,5,6).credits,180);
+ const withAudio=catalog.VIDEO_RATES.find(r=>r.id==='kling-video3-native-audio-1080p');
+ assert.equal(withAudio.creditsPerSecond,12);
+ assert.equal(catalog.estimateKnownVideoRate(withAudio,5,6).credits,360);
+});
+test('V45 Seedance 2.5 distinguishes advertised promo plan equivalent from a new cash payment',async()=>{
+ const catalog=await import(pathToFileURL(path.join(ROOT,'lib/market-rate-catalog.ts')).href);
+ const offer=catalog.VIDEO_RATES.find(r=>r.id==='jimeng-seedance25-720p-promo-advanced-annual');
+ assert.equal(offer.billing,'plan-equivalent');
+ assert.equal(offer.planTotal,5199);
+ assert.equal(offer.renewTotal,10398);
+ assert.equal(offer.includedCredits,12320);
+ assert.equal(offer.promoEnds,'2026-11-05');
+ const q=catalog.estimateKnownVideoRate(offer,10,6);
+ assert.equal(q.kind,'equivalent');
+ assert.ok(Math.abs(q.amount-25.2)<1e-8);
+ const db=catalog.VIDEO_RATES.find(r=>r.platform==='doubao');
+ assert.equal(db.billing,'token-only');
+ assert.equal(db.apiPerMillionNoVideo,70);
+ assert.equal(db.apiPerMillionWithVideo,42);
+ const ui=read('app/market-cost-estimator.tsx');
+ assert.match(ui,/promoExpired/);
+ assert.match(ui,/套餐折合成本/);
+ assert.match(ui,/超出会员积分/);
+ assert.match(ui,/Grok 免费账户可先体验/);
+});
+test('V45 SEO/GEO requires reviewed source-dated observations and independent cohorts',async()=>{
+ const g=await import(pathToFileURL(path.join(ROOT,'lib/seo-geo-observations.ts')).href);
+ assert.equal(g.coverageForSeoGeo().catalogProducts,32);
+ assert.equal(g.coverageForSeoGeo().verifiedObservations,0);
+ assert.equal(g.groupedSeoGeo().length,0);
+ const source=read('lib/seo-geo-observations.ts');
+ assert.match(source,/independent_serp/);
+ assert.match(source,/ai_answer_citation/);
+ assert.match(source,/recordHash/);
+ assert.match(source,/search.google.com/);
+ assert.match(read('app/seo-geo-board.tsx'),/coverage\.measuredProducts/);
+ assert.match(read('app/api/v1/seo-geo/route.ts'),/no-store/);
+ const collector=read('scripts/sync-gsc-analytics.mjs');
+ assert.match(collector,/GSC_CONFIG_REQUIRED/);
+ assert.match(collector,/webmasters.readonly/);
+});
