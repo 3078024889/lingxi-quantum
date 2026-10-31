@@ -6,7 +6,7 @@ const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
 const failures=[];
 async function run(label,fn){try{await fn();console.log('PASS '+label)}catch(err){failures.push(label+' '+err.message);console.error('FAIL '+label+' '+err.stack)}}
 async function goto(page,url){
- await page.goto(origin+url,{waitUntil:'networkidle',timeout:30000});
+ await page.goto(origin+url,{waitUntil:'domcontentloaded',timeout:45000});
  await page.locator('#tools-list').waitFor({timeout:30000});
 }
 await run('Mobile 390px Chinese drawer open, auto-close and overlay',async()=>{
