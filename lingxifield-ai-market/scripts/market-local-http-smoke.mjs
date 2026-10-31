@@ -15,7 +15,7 @@ for(const lang of languages){
  if(!res.ok)throw Error('LOCALE_HTTP_'+lang+'_'+res.status);
  if(!html.includes('lang="'+lang+'"'))throw Error('LOCALE_LANG_MISSING_'+lang);
  if(lang==='ar'&&!html.includes('dir="rtl"'))throw Error('ARABIC_RTL_MISSING');
- if(!html.includes('LINGXIFIELD')||!html.includes('Global AI'))throw Error('INTERACTIVE_MARKET_NOT_RENDERED_'+lang);
+ if(!html.includes('LINGXIFIELD')||!html.includes('id="tools-list"')||!html.includes('marketOverviewTable'))throw Error('INTERACTIVE_MARKET_NOT_RENDERED_'+lang);
  checks.push({path,status:res.status,bytes:html.length});
 }
 for(const path of ['/','/platform/chatgpt','/apps','/models']){
