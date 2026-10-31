@@ -22,5 +22,16 @@ export const CATEGORY_LABELS:Record<Language,Record<string,string>>={
  pt:{"综合助手":"Assistentes","图片生成":"Imagens IA","视频生成":"Vídeos IA","编程开发":"Programação","搜索研究":"Pesquisa","语音与音乐":"Voz e música","AI 智能体":"Agentes IA","3D 与设计":"3D e design","办公生产力":"Produtividade","SEO / GEO":"SEO / GEO","企业与开发平台":"Empresas e API","全部平台":"Todas"},
  ar:{"综合助手":"مساعدون","图片生成":"توليد الصور","视频生成":"توليد الفيديو","编程开发":"البرمجة","搜索研究":"البحث","语音与音乐":"الصوت والموسيقى","AI 智能体":"وكلاء الذكاء","3D 与设计":"3D والتصميم","办公生产力":"الإنتاجية","SEO / GEO":"SEO / GEO","企业与开发平台":"الشركات والتطوير","全部平台":"الكل"},
 };
-export function localizedCategory(language:Language,category:string){return CATEGORY_LABELS[language][category]||category;}
+const EXTRA_CATEGORIES:Record<Language,Record<string,string>>={
+ zh:{'智能体':'智能体','语音音频':'语音音频','本地模型':'本地模型','自动化工具':'自动化工具','科研工具':'科研工具'},
+ en:{'智能体':'AI agents','语音音频':'Speech & audio','本地模型':'Local models','自动化工具':'Automation','科研工具':'Research frameworks'},
+ ja:{'智能体':'AIエージェント','语音音频':'音声・オーディオ','本地模型':'ローカルモデル','自动化工具':'自動化','科研工具':'研究フレームワーク'},
+ ko:{'智能体':'AI 에이전트','语音音频':'음성·오디오','本地模型':'로컬 모델','自动化工具':'자동화','科研工具':'연구 도구'},
+ fr:{'智能体':'Agents IA','语音音频':'Voix et audio','本地模型':'Modèles locaux','自动化工具':'Automatisation','科研工具':'Frameworks de recherche'},
+ de:{'智能体':'KI-Agenten','语音音频':'Sprache und Audio','本地模型':'Lokale Modelle','自动化工具':'Automatisierung','科研工具':'Forschungsframeworks'},
+ es:{'智能体':'Agentes IA','语音音频':'Voz y audio','本地模型':'Modelos locales','自动化工具':'Automatización','科研工具':'Frameworks de investigación'},
+ pt:{'智能体':'Agentes IA','语音音频':'Voz e áudio','本地模型':'Modelos locais','自动化工具':'Automação','科研工具':'Frameworks de pesquisa'},
+ ar:{'智能体':'وكلاء الذكاء','语音音频':'صوت وكلام','本地模型':'نماذج محلية','自动化工具':'أتمتة','科研工具':'أطر البحث'}
+};
+export function localizedCategory(language:Language,category:string){return CATEGORY_LABELS[language][category]||EXTRA_CATEGORIES[language][category]||category;}
 export function localizedDetailTab(language:Language,tab:string){const labels=HOME_COPY[language];const lookup:Record<string,string>={"概览":"detailTabsOverview","价格与额度":"detailTabsPricing","团队与融资":"detailTabsTeam","用户评价":"detailTabsReviews","最新动态":"detailTabsNews"};return lookup[tab]?labels[lookup[tab] as keyof typeof labels]:tab;}
