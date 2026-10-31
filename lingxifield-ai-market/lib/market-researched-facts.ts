@@ -13,7 +13,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "中国大陆版 · 官方网页及 Android/iOS 提供服务；其他市场不与国内版混算",
     "regionSource": "https://www.doubao.com/legal/ey01",
     "models": "豆包包含中文对话、图片、文件和多模态功能；聊天模型与火山引擎豆包 API 服务独立计费",
-    "modelsSource": "https://www.doubao.com/"
+    "modelsSource": "https://www.doubao.com/",
+    "free": "豆包网页有免费对话与部分创作能力；专业会员功能和使用次数由账号会员权益决定",
+    "freeSource": "https://www.doubao.com/"
   },
   "jimeng": {
     "payments": [
@@ -45,7 +47,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "可灵中国版与国际版入口/会员权益不同；本条为中国版官网资料",
     "regionSource": "https://ppg.viviv.com/doodle/kLmGpQFM.html",
     "models": "可灵视频与图像生成模型适用视频/短剧制作；中国版与国际版的模型、权益和计费可能不同",
-    "modelsSource": "https://klingai.com/"
+    "modelsSource": "https://klingai.com/",
+    "free": "可灵中国版免费账号可体验部分图片/视频功能；不同模型/时长/水印消耗的积分按账户与活动变化",
+    "freeSource": "https://klingai.com/"
   },
   "lovable": {
     "payments": [
@@ -67,7 +71,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercial": "用户通常拥有自己用 Lovable 建立的应用/网站及生成内容，但平台自身技术与第三方模型仍有独立权利",
     "commercialSource": "https://lovable.dev/terms",
     "models": "Lovable 以自然语言构建网站与应用；用户看到的构建引擎并非可固定选择的独立底座模型",
-    "modelsSource": "https://lovable.dev/"
+    "modelsSource": "https://lovable.dev/",
+    "free": "Free 每天 5 个构建积分、每月最多 30 个；每月另赠 20 Cloud credits；内置应用 AI 另赠 4 积分",
+    "freeSource": "https://lovable.dev/pricing"
   },
   "luma": {
     "payments": [
@@ -84,7 +90,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercial": "商用输出依付费套餐和具体产品条款；创作者须有输入素材的合法权益，第三方素材权利不自动取得",
     "commercialSource": "https://lumalabs.ai/legal/terms-of-service",
     "models": "Luma 提供视频生成及 Ray 系列编辑/修改能力；各模型视频时长和套餐权限不同",
-    "modelsSource": "https://lumalabs.ai/"
+    "modelsSource": "https://lumalabs.ai/",
+    "free": "Luma Dream Machine Free 可用部分图片及 Ray3 视频草稿，导出带水印，仅个人非商业用途；模型及额度见官网",
+    "freeSource": "https://lumalabs.ai/learning-hub/payments-subscriptions"
   },
   "langchain": {
     "price": "LangChain 开源框架免费；LangSmith Developer $0/席位/月（每月含 5,000 基础追踪），Plus $39/席位/月，超额按用量计费",
@@ -252,7 +260,11 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "Suno 网页接受多币种信用卡；Apple Pay/Google Pay 及本地银行卡随国家地区显示",
     "regionSource": "https://help.suno.com/en/articles/2421185",
     "models": "Suno 根据提示词和歌词生成音乐、歌曲、伴奏；具体生成次数、模型和商业权益依套餐",
-    "modelsSource": "https://suno.com/pricing"
+    "modelsSource": "https://suno.com/pricing",
+    "price": "Suno Pro 年付折合约 $8/月（年付）；Premier 和月付另有套餐，商用只覆盖订阅生效期间作品",
+    "priceSource": "https://suno.com/pricing",
+    "free": "免费方案每天 50 积分，适用免费模型与创作额度；免费生成音乐不附商用授权",
+    "freeSource": "https://suno.com/pricing"
   },
   "perplexity": {
     "payments": [
@@ -265,7 +277,11 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercial": "个人版服务条款许可个人非商业使用；企业版和 API 应按独立商业合同，不得直接将个人 Pro 等同企业商用授权",
     "commercialSource": "https://www.perplexity.ai/zh/hub/legal/terms-of-service",
     "models": "Perplexity 面向联网搜索与研究引用，内置模型和更高级能力随 Free/Pro/Enterprise 变化",
-    "modelsSource": "https://www.perplexity.ai/"
+    "modelsSource": "https://www.perplexity.ai/",
+    "price": "Perplexity Free $0/月；Pro $20/月或 $200/年；Max $200/月，企业收费方案单独计算",
+    "priceSource": "https://www.perplexity.ai/zh/hub/pricing",
+    "free": "免费搜索/聊天，基础模型和有出处的回答；高阶模型、研究次数及 Computer 积分按套餐",
+    "freeSource": "https://www.perplexity.ai/zh/hub/pricing"
   },
   "qwen": {
     "payments": [
@@ -279,7 +295,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "千问聊天服务和阿里云百炼 API 是不同入口；百炼提供北京、新加坡、香港、弗吉尼亚、法兰克福及东京区域，模型与价格随区域不同",
     "regionSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
     "models": "千问聊天应用和阿里云百炼 API 是两个入口：百炼提供不同千问模型、Token 定价及地区版本",
-    "modelsSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio"
+    "modelsSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
+    "free": "千问聊天可以免费体验基础对话；阿里云百炼开发者 API 可能提供适用的新用户额度，商业模型另按 Token 计费",
+    "freeSource": "https://help.aliyun.com/zh/model-studio/new-free-quota"
   },
   "deepseek": {
     "payments": [
@@ -290,7 +308,11 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "DeepSeek 聊天网页/应用与开发者 API 分开；API 充值需完成相应实名认证",
     "regionSource": "https://static.deepseek.com/faq/index.html?lang=zh",
     "models": "DeepSeek 网页对话与深度思考功能；API 提供具体模型 ID 与不同价格/上下文限制",
-    "modelsSource": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing"
+    "modelsSource": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing",
+    "price": "DeepSeek API：deepseek-flash 高峰缓存未命中输入 ¥2/百万 Tokens、输出 ¥8/百万；闲时输入 ¥1、输出 ¥4；deepseek-v4-pro 高峰输入 ¥9/百万、输出 ¥27/百万；网页聊天与 API 分开",
+    "priceSource": "https://api-docs.deepseek.com/zh-cn/quick_start/pricing/",
+    "free": "DeepSeek 网页提供免费聊天体验；开发者 API 按模型用量计费，赠送额度及限流以账户规则为准",
+    "freeSource": "https://chat.deepseek.com/"
   },
   "elevenlabs": {
     "payments": [
