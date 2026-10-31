@@ -41,8 +41,8 @@ test('no repeated video-wrong answer for a nonvideo tool, but real short film li
 test('six primary filters directly above table; expert criteria are optional but functional',async()=>{
  const home=await read('app/market-workbench.tsx');
  assert.equal(home.split('className="marketV36FilterChips"').length-1,1);
- assert.match(home,/MARKET_FILTERS\.filter\(x=>!\(\['local','code','commercial'\]/);
- assert.match(home,/details className="marketV40ExtraFilters"/);
+ assert.match(home,/MARKET_FILTERS\.map\(x=><button type="button"/);
+ assert.doesNotMatch(home,/details className="marketV40ExtraFilters"/);
  assert.match(home,/setMarketFilter\(x\)/);
  assert.match(home,/payment:paymentFilter,sort:marketSort,region/);
 });
