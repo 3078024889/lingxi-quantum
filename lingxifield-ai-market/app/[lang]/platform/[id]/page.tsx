@@ -71,7 +71,7 @@ export default async function LocalProduct({params}:PageParams){
   [w[3],localizedCatalogFact(id,l,'models',facts?.models||''),facts?.modelsSource],
   [w[4],globalRegionSummary(id,l),facts?.regionSource],
   [w[5],commercial?.condition||facts?.commercial,commercial?.source||facts?.commercialSource],
-  [({zh:'支持的付款方式',en:'Payment methods',ja:'支払方法',ko:'결제 수단',fr:'Moyens de paiement',de:'Zahlungsmethoden',es:'Métodos de pago',pt:'Métodos de pagamento',ar:'طرق الدفع'} as Record<Language,string>)[l],payments.methods.map(x=>localizedPaymentName(x,l)).join(' · '),payments.source]
+  [({zh:'支持的付款方式',en:'Payment methods',ja:'支払方法',ko:'결제 수단',fr:'Moyens de paiement',de:'Zahlungsmethoden',es:'Métodos de pago',pt:'Métodos de pagamento',ar:'طرق الدفع'} as Record<Language,string>)[l],payments.methods.map(x=>localizedPaymentName(x,l)).join(' · '),undefined]
  ] as const;
  const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:displayName,description:summary,url:p.website,publisher:{'@type':'Organization',name:p.company},applicationCategory:localizedCategory(l,p.category)};
  return <main lang={l} dir={l==='ar'?'rtl':'ltr'} className="marketLocalizedProduct">
@@ -82,7 +82,10 @@ export default async function LocalProduct({params}:PageParams){
    <p>{summary}</p><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong></span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
    {team&&l==='zh'&&<p>{team.summary} <a href={team.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></p>}
   </section>
-  <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src])=><article key={title}><h2>{title}</h2><p>{value}</p>{src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}</article>)}</section>
+  <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src],i)=><article key={title}><h2>{title}</h2>
+   {i===6&&payments.methodEvidence.length>0?<ul className="marketLocalizedPaymentEvidence">{payments.methodEvidence.map(method=><li key={method.method}><span>{localizedPaymentName(method.method,l)}</span><a href={method.source} rel="nofollow noopener noreferrer" target="_blank">{w[7]} ↗</a></li>)}</ul>:<p>{value}</p>}
+   {src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}
+  </article>)}</section>
   <section className="marketLocalizedApiRates">
    <h2>{({zh:'开发者 API 计费与会员套餐',en:'Developer API pricing and web plans',ja:'開発者API料金と会員プラン',ko:'개발자 API 요금 및 구독',fr:'Tarifs API et abonnements',de:'API-Preise und Abos',es:'Precios API y planes',pt:'Preços de API e planos',ar:'أسعار API والاشتراكات'} as Record<Language,string>)[l]}</h2>
    <p>{l==='zh'?api.descriptionZh:api.descriptionEn}</p>
