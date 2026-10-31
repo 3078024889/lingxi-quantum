@@ -98,7 +98,8 @@ test('provider-verified payment filtering works without a selected country',()=>
  assert.match(screen,/matchesOfficialPayment\(p\.id,payment,country\)/);
  assert.doesNotMatch(screen,/if\(country==='GLOBAL'\)return false/);
  assert.match(data,/paymentFactsFor/);
- assert.match(data,/snapshot\.payments\.source\?snapshot\.payments\.methods/);\n assert.match(data,/research\?\.paymentSource\?research\.payments/);
+ assert.match(data,/snapshot\.payments\.source\?snapshot\.payments\.methods/);
+ assert.match(data,/research\?\.paymentSource\?research\.payments/);
  assert.match(row,/matchingPaymentMethods/);
  assert.match(home,/paymentFilter=\{paymentFilter\}/);
 });
