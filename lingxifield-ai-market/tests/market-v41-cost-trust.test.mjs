@@ -176,9 +176,9 @@ test('FAQ, publisher invite, footer and payment channels are translated for nine
  const workbook=read('app/market-workbench.tsx');
  assert.match(workbook,/MARKET_FAQ_TRANSLATIONS\[language\]\[i\]/);
  assert.match(workbook,/MARKET_VENDOR_TRANSLATIONS\[language\]\[3\]/);
- const pay=read('lib/market-localized-payment.ts');
- assert.match(pay,/支付宝\|Alipay/);
- assert.match(pay,/微信支付\|WeChat Pay/);
+ const payment=await import(pathToFileURL(path.join(ROOT,'lib/market-localized-payment.ts')).href);
+ assert.equal(payment.localizedPaymentName('支付宝','en'),'Alipay');
+ assert.equal(payment.localizedPaymentName('微信支付','en'),'WeChat Pay');
 });
 
 test('V43 official payment documentation covers domestic AI and international checkout',async()=>{
