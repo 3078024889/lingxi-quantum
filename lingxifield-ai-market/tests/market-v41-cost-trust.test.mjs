@@ -254,3 +254,17 @@ test('V43 complete 32/32 curated source records distinguish product scope and ve
  assert.match(locale.localizedCatalogFact('midjourney','en','price',''),/\$10/);
  assert.match(locale.localizedCatalogFact('grok','en','price',''),/\$30/);
 });
+
+test('V43 all 32 model rows describe actual vendor models or clearly say framework is model-agnostic',async()=>{
+ const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
+ const ids=Object.keys(m.RESEARCHED_FACTS);assert.equal(ids.length,32);
+ for(const id of ids){
+   const p=m.researchedFact(id);
+   assert.ok(p.models&&p.models.length>10,id);
+   assert.ok(p.modelsSource?.startsWith('https://'),id);
+ }
+ for(const id of ['langchain','llamaindex','llamacpp','n8n','vllm','openai-python','anthropic-sdk-python'])
+   assert.match(m.researchedFact(id).models,/不是|非固定|并非|本地加载|推理服务器/);
+ const repo=read('lib/platform-repository.ts');
+ assert.match(repo,/label:'模型与用量',text:research\?\.models/);
+});
