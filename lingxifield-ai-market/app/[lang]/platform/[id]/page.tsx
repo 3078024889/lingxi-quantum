@@ -4,6 +4,7 @@ import {notFound} from 'next/navigation';
 import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository';
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
 import {researchedFact} from '../../../../lib/market-researched-facts';
+import {VIDEO_RATES} from '../../../../lib/market-rate-catalog';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
 import {localizedCategory} from '../../../../lib/market-home-i18n';
@@ -22,6 +23,7 @@ const WORDS:Record<Language,readonly [string,string,string,string,string,string,
  ar:['الوظائف والمهام','الاستخدام المجاني','الأسعار الرسمية','النماذج والقدرات','البلدان وإمكانية الوصول','الاستخدام التجاري','الموقع الرسمي','المصدر الرسمي','تاريخ المراجعة','العودة للسوق','تختلف الأسعار حسب الدولة والخطة والعروض.','لا توجد درجة مستقلة قابلة للمقارنة']
 };
 export const dynamicParams=false;
+export const revalidate=3600;
 export function generateStaticParams(){return marketLocales.flatMap(lang=>searchPlatforms({limit:100}).items.map(e=>({lang,id:e.id})));}
 const label=(lang:Language,id:string)=>{const product=findPlatform(id);if(!product)return '';const text=localizedProductSummary(id,lang);return text||product.name;};
 export async function generateMetadata({params}:PageParams):Promise<Metadata>{
@@ -42,6 +44,8 @@ export default async function LocalProduct({params}:PageParams){
  const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l);
  const summary=label(l,id),date='2026-10-31';
+ const videos=VIDEO_RATES.filter(r=>r.platform===id&&r.resolution!=='not-confirmed'&&!['unverified','plan-only'].includes(r.billing));
+ const videoTitle=({zh:'短视频/短剧：官方模型与画质计费',en:'Short video: model, resolution and cost',ja:'動画：モデル・画質・料金',ko:'영상: 모델·해상도·요금',fr:'Vidéo : modèle, qualité et coût',de:'Video: Modell, Auflösung und Kosten',es:'Vídeo: modelo, resolución y coste',pt:'Vídeo: modelo, resolução e custo',ar:'الفيديو: النموذج والدقة والتكلفة'} as Record<Language,string>)[l];
  const rows=[
   [w[0],summary,p.website],
   [w[1],localizedCatalogFact(id,l,'free',facts?.free||''),facts?.freeSource],
@@ -55,6 +59,10 @@ export default async function LocalProduct({params}:PageParams){
   <nav><Link href={'/'+l+'/ai'}>{w[9]}</Link></nav>
   <header><small>LINGXIFIELD · GLOBAL SI AI MARKET</small><h1>{p.name}</h1><p>{summary}</p><span>{localizedCategory(l,p.category)}</span></header>
   <section className="marketLocalizedFacts">{rows.map(([title,value,src])=><article key={title}><h2>{title}</h2><p>{value||w[11]}</p>{src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}</article>)}</section>
+  {videos.length>0?<section className="marketLocalizedVideoRates"><h2>{videoTitle}</h2><div className="marketLocalizedRatesScroll"><table><thead><tr><th>{w[3]}</th><th>{l==='zh'?'分辨率':'Quality'}</th><th>{w[2]}</th><th>{w[7]}</th></tr></thead><tbody>{videos.map(v=>{
+  const expired=Boolean(v.promoEnds)&&Date.now()>Date.parse(v.promoEnds+'T23:59:59+08:00');
+  const cost=expired?(l==='zh'?'活动价已过期':'Offer expired'):v.billing==='credits'?v.creditsPerSecond+' credits/s':v.billing==='plan-equivalent'?v.currency+' '+v.perSecond+' /s '+(l==='zh'?'套餐折合促销价':'promotional plan equivalent'):v.billing==='token-only'?v.currency+' '+v.apiPerMillionNoVideo+'/1M video tokens':v.currency+' '+v.perSecond+' /s';
+  return <tr key={v.id}><td>{v.model}</td><td>{v.resolution}</td><td>{cost}{v.promoEnds?' · '+v.promoEnds:''}</td><td><a href={v.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></td></tr>;})}</tbody></table></div></section>:null}
   <footer><a target="_blank" rel="noopener noreferrer" href={p.website}>{w[6]} ↗</a><p>{w[8]}: {date} · {w[10]} · {w[11]}</p></footer>
   <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,'\\u003c')}}/>
  </main>;
