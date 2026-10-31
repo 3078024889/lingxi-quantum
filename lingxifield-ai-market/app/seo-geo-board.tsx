@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type {Language} from '../lib/v2';
+import {coverageForSeoGeo,groupedSeoGeo} from '../lib/seo-geo-observations';
 const COPY:Record<Language,readonly [string,string,string,string,string,string,string,string,string,string,string,string,string]>={
  zh:["SEO / GEO 可见度观察","同一关键词、国家、语言与日期的可比观测；广告位与自然排名分开","SEO 自然搜索","Google/Bing 关键词排名、曝光量、点击与已收录页面。","GEO AI 引用","AI 回答是否提到或引用产品；逐条记录问题、模型与出处。","用户任务","按视频、图片、代码、语音等真实任务比较能力与费用。","时间变化","只有同一测量口径的历史记录才计算 7/30 日趋势。","目前没有足够可复核的观测样本，因此不生成自然排名、GEO 分数或虚构趋势。","免费提交厂商与官方资料","赞助推广位不参与自然排名计算"],
  en:["SEO / GEO visibility","Comparable measurements by keyword, country, language and date; advertising is separate","Organic SEO","Google/Bing ranks, impressions, clicks and indexed pages.","GEO citations","Track actual AI answer mentions and citations by prompt, model and source.","User tasks","Compare real tasks across video, images, code and audio.","History","7/30-day changes require comparable historical snapshots.","No independently reproducible coverage yet; no artificial rankings or GEO scores are shown.","Submit publisher evidence for free","Sponsored placement never alters organic ranking"],
@@ -13,8 +14,14 @@ const COPY:Record<Language,readonly [string,string,string,string,string,string,s
 };
 export default function SeoGeoBoard({language='zh'}:{language?:Language}){
  const t=COPY[language]||COPY.zh;
+ const coverage=coverageForSeoGeo(),comparisons=groupedSeoGeo();
+ const notice=({zh:'SEO/GEO 独立观测覆盖',en:'Independent SEO/GEO coverage',ja:'独立 SEO/GEO 観測',ko:'독립 SEO/GEO 관측',fr:'Couverture SEO/GEO indépendante',de:'Unabhängige SEO/GEO-Messungen',es:'Cobertura SEO/GEO independiente',pt:'Cobertura independente SEO/GEO',ar:'تغطية قياسات SEO/GEO المستقلة'} as Record<Language,string>)[language];
+ const ownSite=({zh:'Google Search Console 只测灵犀场自身搜索表现，不代表厂商全球排名。',en:'Google Search Console measures LINGXIFIELD site search only, not vendor global rankings.',ja:'Search Console は当サイトの検索実績のみで、他社の順位ではありません。',ko:'Search Console은 자사 검색 성과이며 공급사 순위가 아닙니다.',fr:'Search Console mesure notre site, non le classement mondial des fournisseurs.',de:'Search Console misst nur unsere Website, keine Anbieterrankings.',es:'Search Console mide nuestro sitio, no clasificaciones de proveedores.',pt:'Search Console mede nosso site, não rankings dos fornecedores.',ar:'تقيس Search Console أداء موقعنا فقط وليس ترتيب الشركات.'} as Record<Language,string>)[language];
  return <section className="panel seoGeoBoard" aria-label={t[0]}>
   <div className="rankHead"><h2>{t[0]}</h2><span>{t[1]}</span></div>
+  <div className="seoGeoEvidenceCount" role="status"><strong>{notice}: {coverage.measuredProducts}/{coverage.catalogProducts}</strong><span>{coverage.verifiedObservations} {language==='zh'?'条已核实观测':'observations'} · {coverage.independentSerpObservations} SEO · {coverage.geoObservations} GEO</span></div>
+  <small>{ownSite}</small>
+  {comparisons.length>0?<div className="seoGeoVerifiedComparisons">{comparisons.slice(0,6).map(g=><article key={g.key}><strong>{g.key}</strong>{g.rows.map(r=><p key={r.platformId}><b>{r.platformId}</b> · {r.position!==null?'#'+r.position:r.citations!==null?r.citations+' citations':'—'} · <a href={r.sourceUrl} rel="noopener noreferrer" target="_blank">{language==='zh'?'证据':'Source'} ↗</a></p>)}</article>)}</div>:null}
   <div className="seoGeoCompare">
    <article><strong>{t[2]}</strong><p>{t[3]}</p></article>
    <article><strong>{t[4]}</strong><p>{t[5]}</p></article>
