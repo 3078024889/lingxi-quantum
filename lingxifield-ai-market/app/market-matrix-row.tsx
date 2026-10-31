@@ -60,7 +60,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const rawFree=free?.text||guide?.free||p.free;
  const allowance=localizedCatalogFact(p.id,language,'free',isUnknownText(rawFree)?specific.free:rawFree);
  const rawModels=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models;
- const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?specific.models:rawModels);
+ const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?specific.models:rawModels||specific.models);
  const rawCommercial=access?.commercial||commercial?.text;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
  const licenseFact=commercialEvidence(p.id,language);
