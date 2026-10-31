@@ -5,6 +5,7 @@
  */
 import observations from '../data/seo-geo-observations.json';
 import {entries} from './catalog-store';
+import {platforms} from './data';
 export type SeoGeoSource='google_search_console'|'bing_webmaster'|'independent_serp'|'ai_answer_citation';
 export type SeoGeoObservation={
  id:string;platformId:string;source:SeoGeoSource;observedAt:string;country:string;language:string;query:string;
@@ -12,7 +13,7 @@ export type SeoGeoObservation={
  sampleCount:number;position?:number;impressions?:number;clicks?:number;mentions?:number;citations?:number;
  sponsored:boolean;reviewed:boolean;reviewedAt?:string;
 };
-const allowed=new Set(entries.map(e=>e.id));
+const allowed=new Set([...platforms.map(p=>p.id),...entries.map(e=>e.id)]);
 export function validObservation(x:unknown):x is SeoGeoObservation{
  if(!x||typeof x!=='object')return false;
  const o=x as Record<string,unknown>;
