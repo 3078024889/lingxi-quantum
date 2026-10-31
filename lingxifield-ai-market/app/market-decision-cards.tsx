@@ -1,16 +1,17 @@
 'use client';
 import type {Platform} from '../lib/data';
-import {accessFor,accessValue,geoSummary} from '../lib/platform-access-facts';
+import {accessFor,accessValue} from '../lib/platform-access-facts';
 import type {Language} from '../lib/v2';
 import {MARKET_UI_EXTRA} from '../lib/market-ui-extra';
 import {capabilityProfile} from '../lib/capability-profiles';
 import {DECISION_I18N} from '../lib/market-decision-i18n';
+const missing:Record<Language,Record<"login"|"models"|"commercial"|"export",string>>={zh:{login:"登录入口与条件见官网",models:"具体模型随产品或套餐变化",commercial:"查看官方商用条款",export:"可在官网核对各项导出规则"},en:{login:"Check publisher sign-in conditions",models:"Models depend on product or plan",commercial:"Check commercial license",export:"See publisher export rules"},ja:{login:"公式ログイン条件を確認",models:"モデルはプランごとに異なります",commercial:"商用利用規約を確認",export:"公式の書き出し条件を確認"},ko:{login:"공식 로그인 조건 확인",models:"모델은 요금제에 따라 다름",commercial:"상업용 약관 확인",export:"공식 내보내기 규칙 확인"},fr:{login:"Vérifier les conditions de connexion",models:"Modèles selon le forfait",commercial:"Voir les droits commerciaux",export:"Consulter les règles d’export"},de:{login:"Anmeldebedingungen prüfen",models:"Modelle je nach Tarif",commercial:"Nutzungsrechte prüfen",export:"Exportregeln beim Anbieter prüfen"},es:{login:"Consultar condiciones de acceso",models:"Modelos según plan",commercial:"Revisar licencia comercial",export:"Consultar reglas de exportación"},pt:{login:"Consultar condições de acesso",models:"Modelos conforme plano",commercial:"Ver licença comercial",export:"Consultar regras de exportação"},ar:{login:"راجع شروط الدخول",models:"النماذج تختلف حسب الخطة",commercial:"راجع الترخيص التجاري",export:"راجع قواعد التصدير"}};
 export default function MarketDecisionCards({platform,selectedForCompare,onToggleCompare,onOpenPricing,language='zh'}:{
  platform:Platform;selectedForCompare:boolean;onToggleCompare:()=>void;onOpenPricing:()=>void;language?:Language;
 }){
  const guide=platform.guide,ui=MARKET_UI_EXTRA[language],rich=capabilityProfile(platform.id),labels=DECISION_I18N[language];
  const facts=platform.conditions||[];
- const access=accessFor(platform.id);
+ const access=accessFor(platform.id),fallback=missing[language];
  return <section className="decisionSurface panel" aria-label="使用与收费">
   <div className="decisionHeading"><div><h2>{rich?labels.summary:ui.features}</h2>
    <p>{platform.name} · {platform.category}</p></div></div>
@@ -19,13 +20,13 @@ export default function MarketDecisionCards({platform,selectedForCompare,onToggl
    <article><h3>{labels.free}</h3><p>{facts.find(f=>f.label==='免费额度')?.text||guide.free}</p></article>
    <article><h3>{labels.paid}</h3><p>{guide.paid}</p></article>
    <article><h3>{labels.price}</h3><p>{facts.find(f=>f.label==='价格')?.text||guide.cost}</p></article>
-   <article><h3>{labels.login}</h3><p>{accessValue(access?.login,'暂无经核实的账号登录方式')}</p></article>
-   <article><h3>{labels.models}</h3><p>{access?.models||'具体版本与模型限制尚未核实'}</p></article>
-   <article><h3>{labels.commercial}</h3><p>{access?.commercial||'商用授权资料尚未核实'}</p></article>
-   <article><h3>SEO / GEO</h3><p>{geoSummary(platform.id)}。待完成同关键词、同时间范围的可复现监测后再排名。</p></article>
+   <article><h3>{labels.login}</h3><p>{accessValue(access?.login,fallback.login)}</p></article>
+   <article><h3>{labels.models}</h3><p>{access?.models||fallback.models}</p></article>
+   <article><h3>{labels.commercial}</h3><p>{access?.commercial||fallback.commercial}</p></article>
+   
    {!rich&&guide.strengths&&<article><h3>{labels.advantages}</h3><p>{guide.strengths}</p></article>}
    {!rich&&guide.reasoning&&<article><h3>{labels.reasoning}</h3><p>{guide.reasoning}</p></article>}
-   <article><h3>{labels.watermark}</h3><p>{guide.watermarkNote||'该产品的图片、视频或音频导出规则尚无可核查资料，请查看官网。'}</p>
+   <article><h3>{labels.watermark}</h3><p>{guide.watermarkNote||fallback.export}</p>
     {guide.watermarkSource&&<a href={guide.watermarkSource} target="_blank" rel="noopener noreferrer">查看相关说明 ↗</a>}</article>
   </div>:<div className="decisionSummary"><strong>{platform.category}</strong>
    <span>{platform.features.slice(0,5).join(' · ')}</span>

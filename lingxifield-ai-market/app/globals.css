@@ -795,3 +795,17 @@ body{font-size:16px;line-height:1.6}
 .app .marketEvidenceStatus>strong{color:#174879}
 .app .marketEvidenceStatus span b{color:#19559a}
 .app .marketEvidenceStatus small{flex-basis:100%;color:#6e83a0;line-height:1.5}
+
+
+/* V3.9 country discovery: show five real supported places, expand the rest only when asked. */
+.app .marketRegionCatalog{margin:11px 0 0;padding:10px 12px;border:1px solid #dbe6f4;border-radius:9px;background:#fbfdff;display:flex;flex-direction:column;gap:7px;min-width:0}
+.app .marketRegionCatalog>strong{font-size:13px;color:#244e84}
+.app .marketRegionTopFive{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.app .marketRegionTopFive>span{padding:5px 9px;border-radius:18px;border:1px solid #d5e6f5;background:white;color:#1a588b;font-size:13px}
+.app .marketRegionCatalog .globalSupportedCountries{margin:0}
+.app .marketRegionCatalog .globalSupportedCountries summary{cursor:pointer;font-size:13px;color:#1658a0;padding:7px 0}
+.app .marketRegionCatalog .globalSupportedCountries>div{display:flex;gap:6px;flex-wrap:wrap;max-height:235px;overflow-y:auto;padding:7px 0}
+.app .marketRegionCatalog .globalSupportedCountries>div>span{font-size:12px;background:#fff;border:1px solid #e0e9f7;padding:4px 7px;border-radius:6px}
+.app .marketRegionCatalog>small{font-size:12px;color:#627a95;line-height:1.6}
+.app .marketOverviewTable .marketOverviewRegion>strong{line-height:1.65;font-weight:700;color:#1a4c87;overflow-wrap:break-word}
+.app .marketOverviewTable .marketOverviewRegion>span{display:block;margin-top:7px}
