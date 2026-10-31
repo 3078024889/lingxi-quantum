@@ -37,7 +37,7 @@ test('VPN-access evidence and offline tools do not convert into unverified offic
  assert.match(global,/comfyui:\{globalPolicy:local/);
  assert.match(global,/ollama:\{globalPolicy:local/);
  assert.doesNotMatch(region,/网络能打开不等于官方支持/);
- assert.match(region,/A working connection is not official eligibility/);
+ assert.doesNotMatch(region,/A working connection is not official eligibility/);
  assert.doesNotMatch(region,/VPN is official support|VPN means officially supported/);
 });
 test('remove low-value repeated unknown placeholders from product matrix and compare',async()=>{
