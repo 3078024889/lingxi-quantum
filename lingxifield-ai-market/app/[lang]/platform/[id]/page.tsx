@@ -59,7 +59,7 @@ export default async function LocalProduct({params}:PageParams){
  const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l),api=apiServiceOffer(id),payments=paymentFactsFor(id,'GLOBAL'),team=platformLinks(id).team;
  const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-10-31';
- const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n\\/a|not verified)$/i.test(value.trim()));
+ const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n.?a|not verified)$/i.test(value.trim()));
  const companyFacts=[p.company,p.year,p.location,p.funding,p.listing].filter(useful);
  const videos=VIDEO_RATES.filter(r=>r.platform===id&&r.resolution!=='not-confirmed'&&!['unverified','plan-only'].includes(r.billing));
  const videoTitle=({zh:'短视频/短剧：官方模型与画质计费',en:'Short video: model, resolution and cost',ja:'動画：モデル・画質・料金',ko:'영상: 모델·해상도·요금',fr:'Vidéo : modèle, qualité et coût',de:'Video: Modell, Auflösung und Kosten',es:'Vídeo: modelo, resolución y coste',pt:'Vídeo: modelo, resolução e custo',ar:'الفيديو: النموذج والدقة والتكلفة'} as Record<Language,string>)[l];
