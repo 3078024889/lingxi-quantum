@@ -35,8 +35,8 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "regionSource": "https://jimeng.jianying.com/",
     "models": "即梦提供 Seedance 视频生成模型、图片生成及首尾帧/图生视频创作；模型和积分按会员档位",
     "modelsSource": "https://jimeng.jianying.com/",
-    "commercial": "即梦AI 视频/图片可按官方服务协议和会员规则创作与传播，用户须持有输入素材版权；具体商用、水印、第三方授权按所用会员/模型规则核对。",
-    "commercialSource": "https://jimeng.jianying.com/"
+    "commercial": "即梦 Seedance 2.0 官方功能页说明：视频可用于商品展示、品牌广告等商业创作，须遵守服务协议并确保参考图、音乐、人物肖像、商标等素材已获得授权。平台源码、商标本身不因此获商用许可。",
+    "commercialSource": "https://jimeng.jianying.com/tools/seedance-2-0"
   },
   "kling": {
     "payments": [
@@ -306,7 +306,7 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
     "free": "千问聊天可以免费体验基础对话；阿里云百炼开发者 API 可能提供适用的新用户额度，商业模型另按 Token 计费",
     "freeSource": "https://help.aliyun.com/zh/model-studio/new-free-quota",
-    "commercial": "千问聊天生成内容与阿里云百炼 Wan/千问 API 以各自服务条款为准。API 可用于业务应用，但应履行模型/第三方素材许可证及适用地区、内容合规义务；不把聊天版会员权益等同视频 API。",
+    "commercial": "千问聊天与阿里云百炼 Wan/千问 API 是不同服务。百炼可集成到业务应用，具体输出权利、模型版权、发布限制及地区责任以实际模型服务协议为准，不能把 API 商用权益自动延伸至聊天版。",
     "commercialSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio"
   },
   "deepseek": {
@@ -394,7 +394,7 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "models": "Gemini 消费者应用和开发者 API 可用模型不同；Google AI Pro 可访问更高等级 Gemini 模型及 Deep Research",
     "modelsSource": "https://one.google.com/about/plans?hl=en_US",
     "commercial": "Gemini 应用与 Gemini API 属不同产品条款；输出商业使用须符合 Google 服务及生成式 AI 禁止使用政策、输入素材权利，组织用户还受 Workspace/Cloud 合同约束。",
-    "commercialSource": "https://policies.google.com/terms/generative-ai"
+    "commercialSource": "https://policies.google.com/terms/generative-ai/use-policy?hl=en"
   },
   "grok": {
     "price": "Grok Free $0/月；SuperGrok $30/月、SuperGrok Plus $100/月为官方公开参考；The X Subscription 的个人套餐另有定价",
