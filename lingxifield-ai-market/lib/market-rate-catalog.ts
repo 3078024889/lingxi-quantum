@@ -295,26 +295,6 @@ export const VIDEO_RATES:readonly VideoRate[]=[
     "currency": "USD"
   },
   {
-    "id": "luma-dream-machine-ray3-not-confirmed",
-    "platform": "luma",
-    "provider": "Luma",
-    "model": "Dream Machine / Ray3",
-    "region": "App/Web",
-    "resolution": "not-confirmed",
-    "billing": "plan-only",
-    "perSecond": null,
-    "creditsPerSecond": null,
-    "planMonthly": 49.99,
-    "includedCredits": null,
-    "minSeconds": 1,
-    "maxSeconds": 15,
-    "source": "https://lumalabs.ai/learning-hub/payments-subscriptions",
-    "notes": "公开订阅参考 $49.99/月；尚未匹配该视频模型和分辨率的准确单次消耗。",
-    "outputType": "not-confirmed",
-    "checkedAt": "2026-10-31",
-    "currency": "USD"
-  },
-  {
     "id": "runway-minimax-h3-2k",
     "platform": "runway",
     "provider": "Runway / MiniMax",
