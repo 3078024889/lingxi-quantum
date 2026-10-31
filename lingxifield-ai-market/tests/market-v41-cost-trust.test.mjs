@@ -268,3 +268,41 @@ test('V43 all 32 model rows describe actual vendor models or clearly say framewo
  const repo=read('lib/platform-repository.ts');
  assert.match(repo,/label:'模型与用量',text:research\?\.models/);
 });
+
+test('V44 existing eight short-video providers are in filter and all nine display languages',async()=>{
+ const screen=await import(pathToFileURL(path.join(ROOT,'lib/market-v36-screening.ts')).href);
+ const ids=['grok','gemini','qwen','doubao','kling','jimeng','runway','luma'];
+ for(const id of ids){
+  assert.match(screen.shortDramaEvidence(id)||'',/^https:\/\//,id);
+  for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar']){
+   assert.ok(screen.shortDramaSummary(id,l)?.trim().length>15,id+':'+l);
+  }
+ }
+ assert.equal(screen.shortDramaEvidence('deepseek'),null);
+ assert.match(screen.shortDramaSummary('qwen','zh'),/百炼/);
+ assert.match(screen.shortDramaSummary('doubao','zh'),/Seedance/);
+ const workbench=read('app/market-workbench.tsx');
+ assert.match(workbench,/paymentFactsFor\(p.id,region\)/);
+});
+test('V44 fix placeholder commercial and local payments in 32-product market',async()=>{
+ const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
+ for(const id of ['deepseek','qwen','jimeng','kling','doubao','n8n','gemini']){
+  const f=m.researchedFact(id);
+  assert.ok(f.commercialSource?.startsWith('https://'),id);
+  assert.ok(f.commercial?.length>20,id);
+ }
+ assert.match(m.researchedFact('n8n').commercial,/Sustainable Use License/);
+ assert.match(m.researchedFact('deepseek').commercial,/4\.2/);
+ assert.match(m.researchedFact('jimeng').commercial,/商品展示/);
+ const row=read('app/market-matrix-row.tsx');
+ for(const id of ['dify','openwebui','n8n'])assert.ok(row.includes("'"+id+"'"));
+ assert.match(row,/自托管核心免费/);
+ const legal=read('lib/market-commercial-evidence.ts');
+ assert.match(legal,/Publisher plan terms/);
+});
+test('V44 SEO/GEO board requires evidence, not fictitious rankings, and is translated in nine locales',()=>{
+ const s=read('app/seo-geo-board.tsx'),home=read('app/market-workbench.tsx');
+ for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(s,new RegExp('\\b'+l+':\\['),l);
+ assert.match(s,/no artificial rankings|no se inventan|不生成自然排名/);
+ assert.match(home,/SeoGeoBoard language=\{language\}/);
+});
