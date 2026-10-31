@@ -233,3 +233,24 @@ test('V43 localized product evidence has paid-vs-free commercial and payment sco
  const row=read('app/market-matrix-row.tsx');
  assert.match(row,/region!=='GLOBAL'/);
 });
+
+test('V43 complete 32/32 curated source records distinguish product scope and verified pricing',async()=>{
+ const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
+ const ids=['anthropic-sdk-python','chatgpt','claude','comfyui','deepseek','dify','elevenlabs','fasterwhisper','gemini','grok','langchain','llamacpp','llamaindex','lovable','luma','midjourney','n8n','ollama','openwebui','openai-python','perplexity','replit','runway','automatic1111','suno','transformers','vllm','whisper','qwen','jimeng','kling','doubao'];
+ for(const id of ids){
+  const fact=m.researchedFact(id);
+  assert.ok(fact?.price&&fact.priceSource?.startsWith('https://'),id+':price');
+  assert.ok(fact?.free&&fact.freeSource?.startsWith('https://'),id+':free');
+  assert.ok(fact?.region&&fact.regionSource?.startsWith('https://'),id+':region');
+ }
+ assert.equal(Object.keys(m.RESEARCHED_FACTS).length,32);
+ assert.match(m.researchedFact('replit').price,/\$20/);
+ assert.match(m.researchedFact('midjourney').price,/\$10/);
+ assert.match(m.researchedFact('gemini').price,/19.99/);
+ assert.match(m.researchedFact('grok').price,/30/);
+ assert.match(m.researchedFact('ollama').price,/按百万 Tokens/);
+ const locale=await import(pathToFileURL(path.join(ROOT,'lib/market-fact-locale.ts')).href);
+ assert.match(locale.localizedCatalogFact('replit','en','price',''),/\$20/);
+ assert.match(locale.localizedCatalogFact('midjourney','en','price',''),/\$10/);
+ assert.match(locale.localizedCatalogFact('grok','en','price',''),/\$30/);
+});
