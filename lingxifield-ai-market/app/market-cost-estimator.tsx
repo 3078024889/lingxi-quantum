@@ -66,18 +66,38 @@ export default function MarketCostEstimator({language,currency}:{language:Langua
     <a href={rate.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a>
    </div>:<div className="lxCostResult"><strong>{t[13]}</strong><small>{t[27]}: {variants.map(x=>x.resolution).join(' · ')||t[26]}</small></div>}
   </>:<>
-   <p className="lxCostIntro">{t[24]}</p>
+   <p className="lxCostIntro">{language==='zh'?'覆盖 32 个平台：区分 API 按量收费、单独开发者价格、网页会员套餐、自托管成本；不把会员订阅误算成 API 充值。':t[24]}</p>
    <div className="lxCostFields">
-    {selectField(t[5],apiId,setApiId,API_RATES.map(r=>({value:r.id,label:r.provider+' · '+r.model})))}
-    {numberField(t[22],inTokens,setInTokens)}
-    {numberField(t[23],outTokens,setOutTokens)}
+    {selectField(t[4],apiProvider,switchApiProvider,MARKET_API_PRODUCTS.map(id=>({value:id,label:id==='chatgpt'?'OpenAI / ChatGPT':id==='qwen'?'Qwen / Alibaba':id})))}
+    {apiTokenRates.length?selectField(t[5],tokenRate?.id||'',setApiId,apiTokenRates.map(r=>({value:r.id,label:r.model}))):null}
+    {tokenRate?numberField(t[22],inTokens,setInTokens):null}
+    {tokenRate?numberField(t[23],outTokens,setOutTokens):null}
    </div>
-   {tokenRate?<div className="lxCostResult">
-    <strong>{t[29]}: {apiCost===null?t[12]:tokenRate.currency+' '+fmt(apiCost)}</strong>
-    <small>{tokenRate.currency} {tokenRate.inPerMillion}/1M {t[22]} · {tokenRate.currency} {tokenRate.outPerMillion}/1M {t[23]}</small>
-    <small>{language==='zh'?tokenRate.notes:'Rates apply to the named model and billing period; cache and tool charges may differ.'}</small>
-    <a href={tokenRate.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a>
-   </div>:null}
+   <div className="lxCostResult">
+    <strong>{language==='zh'?'开发者接口如何收费':'How developer usage is billed'}</strong>
+    <p>{language==='zh'?apiOffer.descriptionZh:apiOffer.descriptionEn}</p>
+    {tokenRate?<><strong>{t[29]}: {apiCost===null?t[12]:tokenRate.currency+' '+fmt(apiCost)}</strong>
+      <small>{tokenRate.currency} {tokenRate.inPerMillion}/1M {t[22]} · {tokenRate.currency} {tokenRate.outPerMillion}/1M {t[23]}</small>
+      <small>{language==='zh'?tokenRate.notes:'Official price for this model/context; caching and tools can differ.'}</small>
+      <a href={tokenRate.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a></>:null}
+    {apiOffer.unitRates.map(rate=><div className="lxApiUnitRow" key={rate.id}><strong>{rate.name}</strong><span>{rate.currency} {fmt(rate.price)} / {rate.unit}</span><a href={rate.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a></div>)}
+    {apiOffer.videoRates.map(rate=><div className="lxApiUnitRow" key={rate.id}><strong>{rate.model} · {rate.resolution}</strong><span>{rate.currency} {rate.billing==='per-second'?rate.perSecond+' / sec':rate.apiPerMillionNoVideo+' / 1M video tokens'}</span><a href={rate.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a></div>)}
+    {apiOffer.subscriptionZh?<div className="lxApiSubscriptionInfo"><strong>{language==='zh'?'网页会员 / 产品套餐（与 API 单独计费）':'Web membership / product plan (not API credits)'}</strong>
+      <p>{localizedCatalogFact(apiProvider,language,'price',apiOffer.subscriptionZh)}</p>
+      {apiOffer.subscriptionSource?<a href={apiOffer.subscriptionSource} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a>:null}</div>:null}
+    {!tokenRate&&!apiOffer.unitRates.length&&!apiOffer.videoRates.length&&apiOffer.source?<a href={apiOffer.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a>:null}
+   </div>
+   <div className="lxApiDirectory">
+     <strong>{language==='zh'?'全部 32 个平台的开发者计费与套餐':'Developer billing and plans for all 32 providers'}</strong>
+     <div className="lxApiDirectoryScroll"><table><thead><tr><th>{t[4]}</th><th>{language==='zh'?'API计费方式':'API method'}</th><th>{language==='zh'?'模型/单位示例':'Model / rate'}</th><th>{language==='zh'?'网页会员或独立产品价格':'Web or product plan'}</th><th>{t[11]}</th></tr></thead>
+     <tbody>{MARKET_API_PRODUCTS.map(id=>{const o=apiServiceOffer(id),r=o.tokenRates[0],u=o.unitRates[0],v=o.videoRates[0];return <tr key={id}>
+       <td><button type="button" onClick={()=>switchApiProvider(id)}>{id}</button></td>
+       <td>{language==='zh'?o.descriptionZh:o.descriptionEn}</td>
+       <td>{r?r.model+' · '+r.currency+' '+r.inPerMillion+'/'+r.outPerMillion+' /1M':u?u.name+' · '+u.currency+' '+fmt(u.price)+'/'+u.unit:v?v.model+' · '+v.currency+' '+v.perSecond+'/s':o.kind==='self-hosted'?(language==='zh'?'本地部署不按调用扣费':'Local calls not vendor-metered'):'—'}</td>
+       <td>{o.subscriptionZh?localizedCatalogFact(id,language,'price',o.subscriptionZh):'—'}</td>
+       <td>{o.source?<a href={o.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a>:'—'}</td>
+     </tr>})}</tbody></table></div>
+   </div>
   </>}
   <p className="lxCostDisclaimer">{t[25]} {currency==='CNY'?'CNY':'USD'}</p>
  </section>;
