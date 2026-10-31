@@ -89,3 +89,39 @@ test('official lists are readable without accordion and source is directly acces
  assert.match(details,/countryList\.other\.map/);
  assert.match(row,/完整官方国家名单/);
 });
+
+test('provider-verified payment filtering works without a selected country',()=>{
+ const data=read('lib/market-payment-facts.ts');
+ const screen=read('lib/market-v36-screening.ts');
+ const home=read('app/market-workbench.tsx');
+ const row=read('app/market-matrix-row.tsx');
+ assert.match(screen,/matchesOfficialPayment\(p\.id,payment,country\)/);
+ assert.doesNotMatch(screen,/if\(country==='GLOBAL'\)return false/);
+ assert.match(data,/paymentFactsFor/);
+ assert.match(data,/source\?methods:\[\]/);
+ assert.match(row,/matchingPaymentMethods/);
+ assert.match(home,/paymentFilter=\{paymentFilter\}/);
+});
+test('fixed publisher, rank and action buttons coexist with scrollable center',()=>{
+ const css=read('app/globals.css');
+ const last=css.slice(css.lastIndexOf('V4.2: fixed publisher identity'));
+ assert.match(last,/nth-child\(2\).*position:sticky!important/);
+ assert.match(last,/nth-child\(11\).*position:sticky!important/);
+ assert.match(last,/overflow-x:auto!important/);
+ assert.match(last,/\[dir="rtl"\]/);
+});
+test('nine-language home and category labels cover every control',async()=>{
+ const labels=await import(pathToFileURL(path.join(ROOT,'lib/market-home-i18n.ts')).href);
+ const keys=Object.keys(labels.HOME_COPY.zh).sort();
+ assert.ok(keys.length>=50);
+ for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar']){
+  assert.deepEqual(Object.keys(labels.HOME_COPY[l]).sort(),keys);
+  assert.equal(Object.keys(labels.CATEGORY_LABELS[l]).length,12);
+  for(const key of keys)assert.ok(labels.HOME_COPY[l][key].trim().length>0,l+':'+key);
+  assert.equal(labels.localizedDetailTab(l,'价格与额度'),labels.HOME_COPY[l].detailTabsPricing);
+ }
+ assert.equal(labels.localizedCategory('en','综合助手'),'General assistants');
+ const homepage=read('app/market-workbench.tsx');
+ assert.match(homepage,/localizedCategory\(language,x\)/);
+ assert.match(homepage,/hc\.sourceNote/);
+});
