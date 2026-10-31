@@ -45,7 +45,7 @@ test('official evidence links and vendor separation stay intact',()=>{
  assert.match(row,/p.conditions\?\.find\(x=>x.label==='模型与用量'\)/);
  assert.match(row,/summary\.source/);
  assert.match(row,/commercial\?\.source/);
- assert.match(row,/r\?\.payments\.methods/);
+ assert.match(row,/globalRegionFact\(p.id,'GLOBAL'\)/);
  assert.match(row,/MarketRowActions language=\{language\} platform=\{p\}/);
  assert.match(home,/SponsoredFeatures/);
  assert.match(home,/SeoGeoBoard/);
@@ -58,16 +58,16 @@ test('official model and pricing review records are not replaced by marketing cl
  for(const id of ['chatgpt','claude','gemini','runway'])
   assert.match(facts,new RegExp('product:"'+id+'",observedAt:"2026-10-30"'));
  assert.match(facts,/models:"模型与用量",reasoning:"推理与理解能力"/);
- assert.match(row,/free\?\.text\|\|guide\?\.free/);
- assert.match(row,/price\?\.text\|\|guide\?\.cost/);
+ assert.match(row,/const rawFree=free\?\.text\|\|guide\?\.free/);
+ assert.match(row,/const rawCost=price\?\.text\|\|guide\?\.cost/);
 });
 
 test('the overview does not rely on fixed overlay columns or multi-thousand-pixel horizontal scroll',()=>{
  assert.match(css,/V3\.6: filterable first-view matrix/);
  assert.match(css,/\.marketOverviewViewport/);
  assert.match(css,/\.marketOverviewTable :is\(th,td\)/);
- assert.match(css,/position:static!important/);
- assert.match(css,/min-width:1490px!important/);
+ assert.match(css,/position:sticky!important/);
+ assert.match(css,/min-width:1940px!important/);
  assert.match(css,/\.marketV36Row/);
  assert.match(css,/dir="rtl"/);
  assert.match(home,/marketOverviewViewport/);
