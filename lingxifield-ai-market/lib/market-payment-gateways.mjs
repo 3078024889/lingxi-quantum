@@ -55,11 +55,11 @@ export function wechatAuthorization(method,path,body,{mchId,serialNo,privateKey}
 export function verifyWechatSignedResponse(headers,rawBody,{platformPublicKey,platformPublicKeyId},now=Date.now()){
  const ts=headers.get('wechatpay-timestamp'),nonce=headers.get('wechatpay-nonce');
  const serial=headers.get('wechatpay-serial'),signature=headers.get('wechatpay-signature');
- return Boolean(platformPublicKey&&platformPublicKeyId&&serial===platformPublicKeyId&&/^\\d{10}$/.test(ts||'')&&Math.abs(now-Number(ts)*1000)<=300000
-  &&nonce&&signature&&verify(ts+'\\n'+nonce+'\\n'+rawBody+'\\n',platformPublicKey,signature));
+ return Boolean(platformPublicKey&&platformPublicKeyId&&serial===platformPublicKeyId&&/^\d{10}$/.test(ts||'')&&Math.abs(now-Number(ts)*1000)<=300000
+  &&nonce&&signature&&verify(ts+'\n'+nonce+'\n'+rawBody+'\n',platformPublicKey,signature));
 }
 export async function wechatCreateNative({orderId,amount,currency,notifyUrl,config,fetcher=fetch}){
- if(!safeId(orderId)||orderId.length>32||currency!=='CNY'||!/^\\d{6,32}$/.test(config.mchId)||!config.appId)throw Error('INVALID_ORDER');
+ if(!safeId(orderId)||orderId.length>32||currency!=='CNY'||!/^\d{6,32}$/.test(config.mchId)||!config.appId)throw Error('INVALID_ORDER');
  const path='/v3/pay/transactions/native',url='https://api.mch.weixin.qq.com'+path;
  const body=JSON.stringify({appid:config.appId,mchid:config.mchId,description:'LINGXIFIELD marketplace promotion',out_trade_no:orderId,notify_url:httpsUrl(notifyUrl),amount:{total:amountToMinor(amount),currency:'CNY'}});
  const auth=wechatAuthorization('POST',path,body,config);
