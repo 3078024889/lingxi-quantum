@@ -9,6 +9,11 @@ import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
 import {localizedCategory} from '../../../../lib/market-home-i18n';
 import {commercialEvidence} from '../../../../lib/market-commercial-evidence';
+import {apiServiceOffer} from '../../../../lib/market-api-service-catalog';
+import {paymentFactsFor} from '../../../../lib/market-payment-facts';
+import {globalRegionSummary} from '../../../../lib/region-presentation';
+import {localizedPaymentName} from '../../../market-global-access';
+import {platformLinks} from '../../../../lib/official-platform-links';
 import type {Language} from '../../../../lib/v2';
 type PageParams={params:Promise<{lang:string;id:string}>};
 const WORDS:Record<Language,readonly [string,string,string,string,string,string,string,string,string,string,string,string]>={
@@ -52,7 +57,7 @@ export default async function LocalProduct({params}:PageParams){
  const {lang,id}=await params;
  if(!marketLocales.includes(lang as Language))notFound();
  const p=findPlatform(id);if(!p)notFound();
- const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l);
+ const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l),api=apiServiceOffer(id),payments=paymentFactsFor(id,'GLOBAL'),team=platformLinks(id).team;
  const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-10-31';
  const videos=VIDEO_RATES.filter(r=>r.platform===id&&r.resolution!=='not-confirmed'&&!['unverified','plan-only'].includes(r.billing));
  const videoTitle=({zh:'短视频/短剧：官方模型与画质计费',en:'Short video: model, resolution and cost',ja:'動画：モデル・画質・料金',ko:'영상: 모델·해상도·요금',fr:'Vidéo : modèle, qualité et coût',de:'Video: Modell, Auflösung und Kosten',es:'Vídeo: modelo, resolución y coste',pt:'Vídeo: modelo, resolução e custo',ar:'الفيديو: النموذج والدقة والتكلفة'} as Record<Language,string>)[l];
@@ -61,14 +66,15 @@ export default async function LocalProduct({params}:PageParams){
   [w[1],localizedCatalogFact(id,l,'free',facts?.free||''),facts?.freeSource],
   [w[2],localizedCatalogFact(id,l,'price',facts?.price||''),facts?.priceSource],
   [w[3],localizedCatalogFact(id,l,'models',facts?.models||''),facts?.modelsSource],
-  [w[4],l==='zh'?facts?.region||'':({zh:'',en:'See publisher region and checkout conditions',ja:'公式地域と決済条件を参照',ko:'공식 지역 및 결제 조건 확인',fr:'Voir les pays et conditions officielles',de:'Länder und Bedingungen beim Anbieter',es:'Ver países y condiciones oficiales',pt:'Ver países e condições oficiais',ar:'راجع البلدان وشروط الدفع الرسمية'} as Record<Language,string>)[l],facts?.regionSource],
-  [w[5],commercial?.condition||w[11],commercial?.source]
+  [w[4],globalRegionSummary(id,l),facts?.regionSource],
+  [w[5],commercial?.condition||facts?.commercial,commercial?.source||facts?.commercialSource],
+  [({zh:'支持的付款方式',en:'Payment methods',ja:'支払方法',ko:'결제 수단',fr:'Moyens de paiement',de:'Zahlungsmethoden',es:'Métodos de pago',pt:'Métodos de pagamento',ar:'طرق الدفع'} as Record<Language,string>)[l],payments.methods.map(x=>localizedPaymentName(x,l)).join(' · '),payments.source]
  ] as const;
  const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:displayName,description:summary,url:p.website,publisher:{'@type':'Organization',name:p.company},applicationCategory:localizedCategory(l,p.category)};
  return <main lang={l} dir={l==='ar'?'rtl':'ltr'} className="marketLocalizedProduct">
   <nav><Link href={'/'+l+'/ai'}>{w[9]}</Link></nav>
   <header><small>LINGXIFIELD · GLOBAL SI AI MARKET</small><h1>{displayName}</h1><p>{summary}</p><span>{localizedCategory(l,p.category)}</span></header>
-  <section className="marketLocalizedFacts">{rows.map(([title,value,src])=><article key={title}><h2>{title}</h2><p>{value||w[11]}</p>{src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}</article>)}</section>
+  <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src])=><article key={title}><h2>{title}</h2><p>{value}</p>{src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}</article>)}</section>
   {videos.length>0?<section className="marketLocalizedVideoRates"><h2>{videoTitle}</h2><div className="marketLocalizedRatesScroll"><table><thead><tr><th>{w[3]}</th><th>{l==='zh'?'分辨率':'Quality'}</th><th>{w[2]}</th><th>{w[7]}</th></tr></thead><tbody>{videos.map(v=>{
   const expired=Boolean(v.promoEnds)&&Date.now()>Date.parse(v.promoEnds+'T23:59:59+08:00');
   const cost=expired?(l==='zh'?'活动价已过期':'Offer expired'):v.billing==='credits'?v.creditsPerSecond+' credits/s':v.billing==='plan-equivalent'?v.currency+' '+v.perSecond+' /s '+(l==='zh'?'套餐折合促销价':'promotional plan equivalent'):v.billing==='token-only'?v.currency+' '+v.apiPerMillionNoVideo+'/1M video tokens':v.currency+' '+v.perSecond+' /s';
