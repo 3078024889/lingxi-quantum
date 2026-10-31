@@ -52,12 +52,22 @@ export function wechatAuthorization(method,path,body,{mchId,serialNo,privateKey}
  const message=[method,path,ts,nonce,body,''].join('\n');
  return 'WECHATPAY2-SHA256-RSA2048 mchid="'+mchId+'",nonce_str="'+nonce+'",timestamp="'+ts+'",serial_no="'+serialNo+'",signature="'+sign(message,privateKey)+'"';
 }
+export function verifyWechatSignedResponse(headers,rawBody,{platformPublicKey,platformPublicKeyId},now=Date.now()){
+ const ts=headers.get('wechatpay-timestamp'),nonce=headers.get('wechatpay-nonce');
+ const serial=headers.get('wechatpay-serial'),signature=headers.get('wechatpay-signature');
+ return Boolean(platformPublicKey&&platformPublicKeyId&&serial===platformPublicKeyId&&/^\\d{10}$/.test(ts||'')&&Math.abs(now-Number(ts)*1000)<=300000
+  &&nonce&&signature&&verify(ts+'\\n'+nonce+'\\n'+rawBody+'\\n',platformPublicKey,signature));
+}
 export async function wechatCreateNative({orderId,amount,currency,notifyUrl,config,fetcher=fetch}){
- if(!safeId(orderId)||currency!=='CNY'||!/^\d{6,32}$/.test(config.mchId)||!config.appId)throw Error('INVALID_ORDER');
+ if(!safeId(orderId)||orderId.length>32||currency!=='CNY'||!/^\\d{6,32}$/.test(config.mchId)||!config.appId)throw Error('INVALID_ORDER');
  const path='/v3/pay/transactions/native',url='https://api.mch.weixin.qq.com'+path;
  const body=JSON.stringify({appid:config.appId,mchid:config.mchId,description:'LINGXIFIELD marketplace promotion',out_trade_no:orderId,notify_url:httpsUrl(notifyUrl),amount:{total:amountToMinor(amount),currency:'CNY'}});
  const auth=wechatAuthorization('POST',path,body,config);
- const {data}=await jsonFetch(fetcher,url,{method:'POST',headers:{Authorization:auth,'Content-Type':'application/json',Accept:'application/json'},body});
+ const response=await fetcher(url,{method:'POST',headers:{Authorization:auth,'Content-Type':'application/json',Accept:'application/json'},body,signal:AbortSignal.timeout(15000),redirect:'error',cache:'no-store'});
+ const raw=await response.text();
+ if(!verifyWechatSignedResponse(response.headers,raw,config))throw Error('WECHAT_RESPONSE_SIGNATURE_INVALID');
+ if(!response.ok)throw Error('WECHAT_HTTP_'+response.status);
+ const data=JSON.parse(raw);
  if(typeof data.code_url!=='string'||!data.code_url.startsWith('weixin://'))throw Error('WECHAT_CODE_URL_INVALID');
  return {codeUrl:data.code_url};
 }
@@ -99,6 +109,8 @@ export async function paypalCreateOrder({orderId,amount,currency,returnUrl,cance
  return {providerOrderId:data.id,approveUrl:link.href};
 }
 export async function paypalVerifyWebhook({headers,rawBody,webhookId,clientId,clientSecret,environment='sandbox',fetcher=fetch}){
+ const transmissionTime=headers.get('paypal-transmission-time');
+ if(!transmissionTime||!Number.isFinite(Date.parse(transmissionTime))||Math.abs(Date.now()-Date.parse(transmissionTime))>300000)return null;
  const token=await paypalToken({clientId,clientSecret,environment,fetcher});
  let event;try{event=JSON.parse(rawBody)}catch{return null}
  const required=['paypal-transmission-id','paypal-transmission-time','paypal-cert-url','paypal-auth-algo','paypal-transmission-sig'];
