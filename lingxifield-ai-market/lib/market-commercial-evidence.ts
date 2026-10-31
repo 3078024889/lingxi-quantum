@@ -1,4 +1,5 @@
 import type {Language} from './v2';
+import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from './market-researched-facts';
 
 /** Scope-specific official-policy extracts. Never infer content rights from a software SDK license. */
 export type CommercialEvidence={label:string;condition:string;source:string;checkedAt:string;scope:string};
@@ -23,5 +24,19 @@ const FACTS:Record<string,SourceFact>={
 
 };
 export function commercialEvidence(id:string,language:Language):CommercialEvidence|null{
- const f=FACTS[id];return f?{label:f.labels[language],condition:f.conditions[language],source:f.source,checkedAt:f.checkedAt,scope:f.scope}:null;
+ const f=FACTS[id];if(f)return {label:f.labels[language],condition:f.conditions[language],source:f.source,checkedAt:f.checkedAt,scope:f.scope};
+ const research=researchedFact(id);
+ if(!research?.commercial||!research.commercialSource)return null;
+ const t:Record<Language,{label:string;condition:string}>={
+  zh:{label:'商用许可已查证',condition:research.commercial},
+  en:{label:'Commercial license verified',condition:'Software commercial rights are documented in the publisher license. Model APIs and output rights require separate checks.'},
+  ja:{label:'商用許諾を確認',condition:'ソフトウェアの商用利用は公式ライセンスを参照。モデル/API権利は別途確認。'},
+  ko:{label:'상업용 라이선스 확인',condition:'소프트웨어 라이선스에 상업적 사용 조건이 있습니다. 모델/API는 별도입니다.'},
+  fr:{label:'Licence commerciale vérifiée',condition:'Droits logiciels documentés ; conditions des modèles et API distinctes.'},
+  de:{label:'Gewerbliche Lizenz geprüft',condition:'Softwarelizenz belegt; Modell- und API-Bedingungen separat.'},
+  es:{label:'Licencia comercial verificada',condition:'Licencia de software documentada; modelos y API aparte.'},
+  pt:{label:'Licença comercial verificada',condition:'Licença do software documentada; modelos e API separados.'},
+  ar:{label:'تم توثيق الترخيص التجاري',condition:'ترخيص البرمجيات موثق؛ شروط النماذج وواجهات API منفصلة.'}
+ };
+ return {label:t[language].label,condition:t[language].condition,source:research.commercialSource,checkedAt:MARKET_RESEARCH_CHECKED_AT,scope:'Publisher source-code license; separate downstream model/API rights'};
 }
