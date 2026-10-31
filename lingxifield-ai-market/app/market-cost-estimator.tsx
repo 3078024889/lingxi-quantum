@@ -1,6 +1,7 @@
 'use client';
 import {useState} from 'react';
 import type {Language,Currency} from '../lib/v2';
+import {estimateVideoCredits,estimateVideoCost,estimateApiUsageCost} from '../lib/market-cost-math';
 
 type Words={title:string;desc:string;video:string;api:string;seconds:string;clips:string;credits:string;creditPrice:string;videoCredits:string;inputTokens:string;outputTokens:string;inputRate:string;outputRate:string;estimate:string;missing:string;disclaimer:string;units:string;perMillion:string};
 const COPY:Record<Language,Words>={
@@ -22,8 +23,8 @@ export default function MarketCostEstimator({language,currency}:{language:Langua
  const [inputTokens,setInputTokens]=useState('1000000'),[outputTokens,setOutputTokens]=useState('250000'),[inputRate,setInputRate]=useState(''),[outputRate,setOutputRate]=useState('');
  const sec=parse(seconds),count=parse(clips),credit=parse(creditsPerSecond),price=parse(pricePerCredit);
  const inCount=parse(inputTokens),outCount=parse(outputTokens),inPrice=parse(inputRate),outPrice=parse(outputRate);
- const usedCredits=sec!==null&&count!==null&&credit!==null?sec*count*credit:null;
- const amount=mode==='video'?(usedCredits!==null&&price!==null?usedCredits*price:null):(inCount!==null&&outCount!==null&&inPrice!==null&&outPrice!==null?(inCount*inPrice+outCount*outPrice)/1000000:null);
+ const usedCredits=estimateVideoCredits(sec,count,credit);
+ const amount=mode==='video'?estimateVideoCost(sec,count,credit,price):estimateApiUsageCost(inCount,outCount,inPrice,outPrice);
  const field=(label:string,value:string,set:(s:string)=>void,step='any')=><label className="lxCostField"><span>{label}</span><input type="number" min="0" step={step} inputMode="decimal" value={value} onChange={e=>set(e.target.value)} /></label>;
  return <section className="lxCostEstimate" aria-label={t.title}>
   <div className="lxCostHeader"><div><h3>{t.title}</h3><p>{t.desc}</p></div><div className="lxCostMode" role="group"><button type="button" aria-pressed={mode==='video'} onClick={()=>setMode('video')}>{t.video}</button><button type="button" aria-pressed={mode==='api'} onClick={()=>setMode('api')}>{t.api}</button></div></div>
