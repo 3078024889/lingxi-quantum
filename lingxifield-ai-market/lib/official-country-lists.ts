@@ -13,6 +13,14 @@ export const OFFICIAL_COUNTRY_SNAPSHOTS={
   countries:parse('HK US SG JP KR GB DE FR ES PT CA AU IN BR ID PH VN AE TW MY TH MO NZ IT NL')
  },
 
+ // Verified Claude API countries from Anthropic's developer documentation.
+ // This is a reviewed subset, not a claim that the SDK installer is geo-restricted.
+ 'anthropic-sdk-python':{
+  checkedAt:'2026-10-31',isComplete:false,
+  productScope:'Claude API access; Python SDK installation is separate',
+  source:'https://platform.claude.com/docs/en/api/supported-regions',
+  countries:parse('US JP SG GB AU CA DE FR KR TW IN BR AE IT ES PT NL NZ MY TH PH VN ID MX AR CL CO PE UY ZA EG NG KE GH SA QA KW IL IE BE CH SE NO DK FI PL AT CZ GR RO HU UA TR PK BD LK NP KZ KG UZ AZ AM GE AL HR RS BA ME MK BG SI SK EE LV LT LU MT CY IS JO LB IQ PS OM BH')
+ },
  chatgpt:{
   checkedAt:'2026-10-30',
   source:'https://help.openai.com/en/articles/7947663-chatgpt-supported-countries',
