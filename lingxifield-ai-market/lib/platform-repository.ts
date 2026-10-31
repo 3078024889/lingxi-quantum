@@ -8,6 +8,7 @@ import {accessFor} from './platform-access-facts';
 import {capabilityKeywords} from './capability-profiles';
 import {researchedFact} from './market-researched-facts';
 import {matchesMarketFilter,matchesMarketPayment,compareMarketSort,type MarketFilter,type MarketPayment,type MarketSort} from './market-v36-screening';
+import {shortDramaEvidence,shortDramaSummary} from './market-v36-screening';
 import type {RegionCode} from './global-region-market';
 const seed=new Map(platforms.map(p=>[p.id,p]));
 type SearchableCatalogEntry=CatalogEntry & {searchTerms?:string[]};
@@ -19,7 +20,8 @@ for(const [id,entry] of records){
  const guide=OFFER_GUIDE[id],access=accessFor(id),research=researchedFact(id),reviewed=latestFacts(id)?.facts;
  const searchableEvidence=Object.values(reviewed||{}).flatMap(fact=>fact&&typeof fact.text==='string'?[fact.text]:[]);
  const paymentTerms=(access?.paymentSource?access.payment.filter(x=>!/不支持|不接受|not accepted|not supported/i.test(x)):[])||[];
- const terms=[...(guide?.tasks||[]),...capabilityKeywords(id),guide?.strengths||'',guide?.reasoning||'',guide?.free||'',guide?.paid||'',guide?.cost||'',...(access?.login||[]),...paymentTerms,...(research?.payments||[]),research?.price||'',research?.free||'',research?.region||'',research?.commercial||'',access?.models||'',access?.limitations||'',...searchableEvidence].filter(Boolean);
+ const videoTerms=shortDramaEvidence(id)?['短视频','短剧','视频生成','AI视频','text-to-video','video creation',shortDramaSummary(id,'zh')||'',shortDramaSummary(id,'en')||'']:[];
+ const terms=[...(guide?.tasks||[]),...videoTerms,...capabilityKeywords(id),guide?.strengths||'',guide?.reasoning||'',guide?.free||'',guide?.paid||'',guide?.cost||'',...(access?.login||[]),...paymentTerms,...(research?.payments||[]),research?.price||'',research?.free||'',research?.region||'',research?.commercial||'',access?.models||'',access?.limitations||'',...searchableEvidence].filter(Boolean);
  if(terms.length)records.set(id,{...entry,searchTerms:[...new Set(terms)]});
 }
 const index=createSearchIndex([...records.values()]);
