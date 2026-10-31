@@ -99,8 +99,8 @@ test('provider-verified payment filtering works without a selected country',()=>
  assert.match(screen,/matchesOfficialPayment\(p\.id,payment,country\)/);
  assert.doesNotMatch(screen,/if\(country==='GLOBAL'\)return false/);
  assert.match(data,/paymentFactsFor/);
- assert.match(data,/snapshot\.payments\.source\?snapshot\.payments\.methods/);
- assert.match(data,/research\?\.paymentSource\?research\.payments/);
+ assert.match(data,/append\(snapshot\.payments\.methods,snapshot\.payments\.source/);
+ assert.match(data,/append\(research\?\.payments\|\|\[\],research\?\.paymentSource/);
  assert.match(row,/matchingPaymentMethods/);
  assert.match(home,/paymentFilter=\{paymentFilter\}/);
 });
@@ -477,7 +477,7 @@ test('GSC collector recognizes all 9 localized product routes, rejects wrong sit
  for(const url of ['https://lingxifield.com/xx/platform/runway','http://lingxifield.com/en/platform/runway','https://lingxifield.com/en/platform/fake','https://lingxifield.com/en/admin','https://evil.example/@/platform/runway']){
   assert.equal(matchGscProductPage(url,ids),null,url);
  }
- assert.match(read('scripts/sync-gsc-analytics.mjs'),/matchGscProductPage\(page,known\)/);
+ assert.match(read('scripts/sync-gsc-analytics.mjs'),/matchGscProductPage\(page,known,u\.origin\)/);
  assert.match(read('scripts/sync-gsc-analytics.mjs'),/language:match.language/);
 });
 test('Independent GEO evidence retains capture SHA and compares exact model version',()=>{
