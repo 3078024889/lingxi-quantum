@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {entries} from '../../../../lib/catalog-store';
+import {searchPlatforms} from '../../../../lib/platform-repository';
 import {marketCards} from '../../../../lib/market-metric-contract';
 import verifiedMetrics from '../../../../data/verified-market-metrics.json';
 export const runtime='nodejs';
@@ -31,7 +31,7 @@ function connection(){
 }
 export async function GET(){
  const db=connection();
- const shared={curatedProfiles:entries.filter(x=>x.status!=='discontinued').length,
+ const shared={curatedProfiles:searchPlatforms({limit:1}).total,
   verifiedGeoMetrics:marketCards(verifiedMetrics).filter(x=>x.metric!==null).length};
  if(!db)return NextResponse.json({...shared,status:'unavailable',data:null},{status:503,headers:{'Cache-Control':'no-store'}});
  const url=new URL('/rest/v1/rpc/ai_market_public_coverage',db.base);
