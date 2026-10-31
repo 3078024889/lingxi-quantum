@@ -2,6 +2,7 @@ import type {Platform} from './data';
 import type {Language} from './v2';
 import type {RegionCode} from './global-region-market';
 import {globalRegionFact} from './global-region-market';
+import {matchesOfficialPayment} from './market-payment-facts';
 import {capabilityProfile} from './capability-profiles';
 
 export type MarketFilter='all'|'free'|'drama'|'video'|'image'|'local'|'code'|'supported'|'commercial';
@@ -67,17 +68,9 @@ export function matchesMarketFilter(p:Platform,filter:MarketFilter,country:Regio
 }
 export function matchesMarketPayment(p:Platform,payment:MarketPayment,country:RegionCode){
  if(payment==='any')return true;
- if(country==='GLOBAL')return false;
- const fact=globalRegionFact(p.id,country);
- if(!['supported','conditional','local'].includes(fact.policy.status))return false;
- const methods=fact.payments.methods.join(' ').toLowerCase();
- if(payment==='card')return /credit|debit|visa|mastercard|银行卡|bank card/.test(methods);
- if(payment==='alipay')return methods.includes('alipay');
- if(payment==='wechat')return methods.includes('wechat');
- if(payment==='paypal')return methods.includes('paypal');
- if(payment==='appstore')return /app store|google play/.test(methods);
- return false;
+ return matchesOfficialPayment(p.id,payment,country);
 }
+
 export function compareMarketSort(a:Platform,b:Platform,sort:MarketSort){
  return sort==='name'?a.name.localeCompare(b.name):
  sort==='free'?Number(hasFreeOption(b))-Number(hasFreeOption(a)):
