@@ -57,12 +57,12 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const price=p.conditions?.find(x=>x.label==='价格');
  const commercial=p.conditions?.find(x=>x.label==='商用条件');
  const rawCost=price?.text||guide?.cost||p.price;
- const cost=localizedCatalogFact(p.id,language,'price',isUnknownText(rawCost)?specific.price:rawCost);
+ const cost=localizedCatalogFact(p.id,language,'price',isUnknownText(rawCost)?(research?.price||specific.price):rawCost);
  const rawFree=free?.text||guide?.free||p.free;
- const allowance=localizedCatalogFact(p.id,language,'free',isUnknownText(rawFree)?specific.free:rawFree);
+ const allowance=localizedCatalogFact(p.id,language,'free',isUnknownText(rawFree)?(research?.free||specific.free):rawFree);
  const rawModels=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models;
- const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?specific.models:rawModels||specific.models);
- const rawCommercial=access?.commercial||commercial?.text;
+ const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?(research?.models||specific.models):rawModels||research?.models||specific.models);
+ const rawCommercial=access?.commercial||commercial?.text||research?.commercial;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
  const licenseFact=commercialEvidence(p.id,language);
  const paymentFact=paymentFactsFor(p.id,region);
@@ -73,7 +73,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const paymentMethods=allPayments.length?
   [...new Set([...matched,...allPayments])].slice(0,5).map(x=>localizedPaymentName(x,language)).join(' · '):
   locallyFree?({zh:'自托管核心免费 · 云服务另付',en:'Self-hosted core free; cloud billed separately',ja:'本体無料・決済不要',ko:'로컬 무료·결제 불필요',fr:'Logiciel local gratuit',de:'Lokale Software kostenlos',es:'Software local gratuito',pt:'Software local gratuito',ar:'البرنامج المحلي مجاني'} as Record<Language,string>)[language]:
-  (language==='zh'?'官方付款渠道未公开；查看套餐结算':'See vendor checkout for available methods');
+  (language==='zh'?'厂商尚未公开可核验的支付渠道':specific.payment);
  const paymentScope=paymentFact.scope==='unsupported'?
   regionCopy(language).status.unsupported:
   paymentFact.scope==='unverified_region'?
@@ -97,8 +97,8 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
     <a href={summary.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>
     <button type="button" className="marketV36More" onClick={onDetail}>{t.more} ↗</button>
    </td>
-   <td className="marketOverviewFree" data-label={h[3]}><strong>{allowance}</strong>{free&&<a href={free.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
-   <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{price&&<a href={price.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewFree" data-label={h[3]}><strong>{allowance}</strong>{(free?.source||research?.freeSource)&&<a href={free?.source||research?.freeSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{(price?.source||research?.priceSource)&&<a href={price?.source||research?.priceSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
    <td className="marketOverviewRegion" data-label={h[5]}>
     <strong>{globalRegionSummary(p.id,language)}</strong>
     {(region!=='GLOBAL'||regionList.total>0)&&<span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{region==='GLOBAL'?regionText:regionName(region,language)+' · '+regionText}</span>}
