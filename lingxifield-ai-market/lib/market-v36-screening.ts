@@ -58,6 +58,8 @@ const filmFacts:Record<string,Record<Language,string>>={
 };
 export function shortDramaSummary(id:string,language:Language){return filmFacts[id]?.[language]||null;}
 export function hasFreeOption(p:Platform){
+ // Publisher's "no regular free trial" must never be interpreted as a positive free offering.
+ if(p.id==='midjourney')return false;
  const text=[p.free,p.guide?.free,p.conditions?.find(x=>x.label==='免费额度')?.text].filter(Boolean).join(' ');
  return /(免费|free|credits|试用|no cost|gratuit|grátis)/i.test(text)
    &&!/(不提供免费|没有免费|无免费套餐|no free plan)/i.test(text);
