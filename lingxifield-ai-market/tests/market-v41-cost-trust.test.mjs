@@ -59,11 +59,13 @@ test('V41 country and commercial answers are explicit and scope-correct',async()
  assert.equal(regions.officialCountryStatus('anthropic-sdk-python','CN'),'unknown'); // separate documented API unsupported rule
  assert.equal(regions.officialCountryStatus('anthropic-sdk-python','HK'),'unknown');
  const facts=read('lib/market-commercial-evidence.ts');
- for(const id of ['anthropic-sdk-python','claude','suno','midjourney','runway','chatgpt']){
+ for(const id of ['anthropic-sdk-python','claude','suno','midjourney','runway','chatgpt','comfyui','ollama']){
    assert.ok(facts.includes(id+':')||facts.includes('"'+id+'":'),id);
  }
  assert.match(facts,/https:\/\/help\.suno\.com/);
  assert.match(facts,/Apache-2\.0/);
+ assert.match(facts,/GPL-3\.0/);
+ assert.match(facts,/MIT/);
  const row=read('app/market-matrix-row.tsx');
  assert.match(row,/marketLicenseCondition/);
  assert.match(row,/licenseFact\.condition/);
