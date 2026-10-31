@@ -37,7 +37,11 @@ const videoSource:Readonly<Record<string,string>>={
  kling:'https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kelingaixinyidaimoxingklin1g-40zhengshishangxian/',
  jimeng:'https://jimeng.jianying.com/',
  runway:'https://runwayml.com/',
- luma:'https://lumalabs.ai/news/ray3-modify'
+ luma:'https://lumalabs.ai/news/ray3-modify',
+ grok:'https://x.ai/grok/use-cases/video-generation',
+ gemini:'https://ai.google.dev/gemini-api/docs/video',
+ qwen:'https://help.aliyun.com/zh/model-studio/wan3-video-generation-guide',
+ doubao:'https://seed.bytedance.com/zh/blog/official-launch-of-seedance-2-0'
 };
 // Evidence of video/storyboard/clip generation is not evidence of a full-feature film maker.
 // Unknown does NOT mean that a platform categorically cannot make films.
@@ -46,7 +50,11 @@ const filmFacts:Record<string,Record<Language,string>>={
  kling:{zh:'Kling 4.0 · 单段最长30秒 · 最多10关键帧',en:'Kling 4.0 · Up to 30s · 10 keyframes',ja:'Kling 4.0 · 最長30秒 · 10キーフレーム',ko:'Kling 4.0 · 최대 30초 · 키프레임 10개',fr:'Kling 4.0 · 30 s max · 10 images clés',de:'Kling 4.0 · Max. 30 s · 10 Keyframes',es:'Kling 4.0 · Hasta 30 s · 10 fotogramas clave',pt:'Kling 4.0 · Até 30 s · 10 quadros-chave',ar:'Kling 4.0 · حتى 30 ثانية · 10 إطارات رئيسية'},
  runway:{zh:'Gen-4：单段5或10秒 · 按秒消耗积分',en:'Gen-4: 5 or 10s clips · credits per second',ja:'Gen-4：5秒または10秒・秒単位のクレジット',ko:'Gen-4: 5초 또는 10초 · 초당 크레딧',fr:'Gen-4 : clips de 5 ou 10 s · crédits/s',de:'Gen-4: 5 oder 10 s · Credits pro Sekunde',es:'Gen-4: 5 o 10 s · créditos por segundo',pt:'Gen-4: 5 ou 10 s · créditos por segundo',ar:'Gen-4: مقاطع 5 أو 10 ثوانٍ · رصيد لكل ثانية'},
  luma:{zh:'Ray3 Modify：参考视频修改 · 角色与镜头控制',en:'Ray3 Modify: video edits · character and shot control',ja:'Ray3 Modify：動画編集と人物・撮影制御',ko:'Ray3 Modify: 영상 수정과 캐릭터·샷 제어',fr:'Ray3 Modify : montage et contrôle des plans',de:'Ray3 Modify: Videobearbeitung und Szenenkontrolle',es:'Ray3 Modify: edición y control de escenas',pt:'Ray3 Modify: edição e controle de cenas',ar:'Ray3 Modify: تعديل الفيديو والتحكم بالمشاهد'},
- jimeng:{zh:'参考首尾帧 · 镜头与人物画面控制',en:'Start/end frames · shot and subject reference',ja:'開始・終了フレームと人物・カメラ制御',ko:'첫·끝 프레임 · 샷·피사체 참조',fr:'Images de début/fin · références de plan',de:'Start-/Endframes · Kamera- und Figurensteuerung',es:'Fotogramas inicial/final · control de escenas',pt:'Quadros inicial/final · controle de cenas',ar:'إطارات البداية والنهاية · التحكم بالمشاهد'}
+ jimeng:{zh:'参考首尾帧 · 镜头与人物画面控制',en:'Start/end frames · shot and subject reference',ja:'開始・終了フレームと人物・カメラ制御',ko:'첫·끝 프레임 · 샷·피사체 참조',fr:'Images de début/fin · références de plan',de:'Start-/Endframes · Kamera- und Figurensteuerung',es:'Fotogramas inicial/final · control de escenas',pt:'Quadros inicial/final · controle de cenas',ar:'إطارات البداية والنهاية · التحكم بالمشاهد'},
+ grok:{"zh":"Grok Imagine · 文字/图片生成短片 · 运镜与比例控制","en":"Grok Imagine · Text/image to short video · Camera & aspect controls","ja":"Grok Imagine · テキスト/画像から短編動画 · カメラ制御","ko":"Grok Imagine · 텍스트/이미지로 짧은 영상 · 카메라 제어","fr":"Grok Imagine · Vidéo par texte/image · Contrôle caméra","de":"Grok Imagine · Video aus Text/Bild · Kamerasteuerung","es":"Grok Imagine · Vídeo desde texto/imagen · Control de cámara","pt":"Grok Imagine · Vídeo de texto/imagem · Controle de câmera","ar":"Grok Imagine · فيديو من النص أو الصورة مع تحكم بالكاميرا"},
+ gemini:{"zh":"Gemini Omni Flash · 短视频生成/对话编辑 · API 与 App 条件不同","en":"Gemini Omni Flash · Video creation/editing · App/API terms differ","ja":"Gemini Omni Flash · 動画生成/対話編集 · アプリ/API別","ko":"Gemini Omni Flash · 영상 생성/대화 편집 · 앱/API 별도","fr":"Gemini Omni Flash · Vidéo et montage · App et API distinctes","de":"Gemini Omni Flash · Videos und Bearbeitung · App/API getrennt","es":"Gemini Omni Flash · Generación y edición · App/API separados","pt":"Gemini Omni Flash · Vídeo e edição · App/API distintos","ar":"Gemini Omni Flash · إنشاء الفيديو وتحريره · شروط التطبيق وAPI مختلفة"},
+ qwen:{"zh":"阿里云百炼万相 3.0 API · 文生/图生视频最长30秒；非千问聊天保证","en":"Alibaba Model Studio Wan 3.0 API · Up to 30s; not Qwen chat entitlement","ja":"阿里雲百錬 Wan3.0 API · 最長30秒 · 千問チャットとは別","ko":"알리바바 Model Studio Wan 3.0 API · 최대30초 · Qwen 채팅과 별도","fr":"API Alibaba Wan 3.0 · Jusqu’à 30 s ; distinct de Qwen Chat","de":"Alibaba Wan 3.0 API · Bis 30 s; nicht Qwen Chat","es":"API Alibaba Wan 3.0 · Hasta 30 s; no implica Qwen Chat","pt":"API Alibaba Wan 3.0 · Até 30 s; separado do chat Qwen","ar":"واجهة Alibaba Wan 3.0 · حتى 30 ثانية · منفصلة عن دردشة Qwen"},
+ doubao:{"zh":"豆包 App / Seedance 2.0 · 多模态音视频生成 · 单段15秒","en":"Doubao App / Seedance 2.0 · Multimodal video with audio · 15s","ja":"豆包アプリ/Seedance 2.0 · 音声付き動画生成 · 15秒","ko":"Doubao 앱/Seedance 2.0 · 오디오 포함 영상 · 15초","fr":"Doubao / Seedance 2.0 · Vidéo avec audio · 15 s","de":"Doubao / Seedance 2.0 · Video mit Ton · 15 s","es":"Doubao / Seedance 2.0 · Vídeo con audio · 15 s","pt":"Doubao / Seedance 2.0 · Vídeo com áudio · 15 s","ar":"تطبيق Doubao / Seedance 2.0 · فيديو بالصوت · 15 ثانية"}
 };
 export function shortDramaSummary(id:string,language:Language){return filmFacts[id]?.[language]||null;}
 export function hasFreeOption(p:Platform){
