@@ -15,8 +15,10 @@ for(const item of entries)if(item.status!=='discontinued')records.set(item.id,it
 // Keep functions and categories clean. Price, login, payment and textual selling points
 // are indexed ONLY as hidden search terms, never masquerading as product capabilities.
 for(const [id,entry] of records){
- const guide=OFFER_GUIDE[id],access=accessFor(id);
- const terms=[...(guide?.tasks||[]),...capabilityKeywords(id),guide?.strengths||'',guide?.free||'',guide?.paid||'',...(access?.login||[]),...(access?.payment||[])].filter(Boolean);
+ const guide=OFFER_GUIDE[id],access=accessFor(id),reviewed=latestFacts(id)?.facts;
+ const searchableEvidence=Object.values(reviewed||{}).flatMap(fact=>fact&&typeof fact.text==='string'?[fact.text]:[]);
+ const paymentTerms=(access?.paymentSource?access.payment.filter(x=>!/不支持|不接受|not accepted|not supported/i.test(x)):[])||[];
+ const terms=[...(guide?.tasks||[]),...capabilityKeywords(id),guide?.strengths||'',guide?.reasoning||'',guide?.free||'',guide?.paid||'',guide?.cost||'',...(access?.login||[]),...paymentTerms,access?.models||'',access?.limitations||'',...searchableEvidence].filter(Boolean);
  if(terms.length)records.set(id,{...entry,searchTerms:[...new Set(terms)]});
 }
 const index=createSearchIndex([...records.values()]);
