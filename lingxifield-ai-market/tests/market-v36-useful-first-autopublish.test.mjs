@@ -51,6 +51,6 @@ test('visitor region is independent of site language and user selection override
  const home=await read('app/market-workbench.tsx');
  assert.match(api,/x-vercel-ip-country/);
  assert.match(home,/lingxifield_market_selected_country/);
- assert.match(home,/setRegion\(current=>current==='GLOBAL'/);
+ assert.match(home,/function chooseRegion\(next:RegionCode\)/);
  assert.doesNotMatch(api,/precise|latitude.*longitude/);
 });
