@@ -15,7 +15,7 @@ test('eleven decision columns always visible, no accordion duplication',async()=
 test('short film capabilities are source-linked, not guessed from marketing rankings',async()=>{
  const s=await read('lib/market-v36-screening.ts');
  for(const id of ['kling','jimeng','runway','luma'])assert.match(s,new RegExp(' '+id+':'));
- assert.match(s,/No verified film capability/);
+ assert.match(s,/No documented multi-scene workflow yet/);
  assert.match(s,/not independent quality or cost testing/i);
  assert.match(s,/Boolean\(shortDramaEvidence\(p\.id\)\)/);
  assert.doesNotMatch(s,/fakeRating|fabricatedScore|5\.0 stars/);
@@ -29,7 +29,7 @@ test('all nine locales provide filters and eleven product headings',async()=>{
  }
  assert.match(headings,/shortDramaEvidence\(p\.id\)/);
  assert.match(headings,/globalRegionFact\(p\.id,region\)/);
- assert.match(headings,/region==='GLOBAL'\?regionCopy\(language\)\.global/);
+ assert.match(headings,/globalRegionSummary\(p.id,language\)/);
 });
 test('new reviews really auto-publish when server-signed SQL classifier approves; guest cannot approve directly',async()=>{
  const sql=await read('../supabase/migrations/20261030214500_ai_market_auto_publish.sql');
