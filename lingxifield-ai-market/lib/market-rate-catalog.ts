@@ -534,7 +534,8 @@ export const VIDEO_RATES:readonly VideoRate[]=[
     "notes": "Ray3.14 720p SDR：5秒100积分，10秒200积分；网页模型，套餐购买和实际积分额度需按账户核对。",
     "outputType": "native",
     "currency": "USD",
-    "checkedAt": "2026-10-31"
+    "checkedAt": "2026-10-31",
+    "durationStep": 5
   },
   {
     "id": "luma-ray314-1080p",
@@ -554,7 +555,8 @@ export const VIDEO_RATES:readonly VideoRate[]=[
     "notes": "Ray3.14 1080p SDR：5秒400积分，10秒800积分；云端订阅与积分包另计。",
     "outputType": "native",
     "currency": "USD",
-    "checkedAt": "2026-10-31"
+    "checkedAt": "2026-10-31",
+    "durationStep": 5
   },
   {
     "id": "luma-ray314-upscale-4k",
@@ -647,6 +649,7 @@ export function estimateKnownVideoRate(r:VideoRate,seconds:number,clips:number,i
  if(!Number.isInteger(seconds)||!Number.isInteger(clips)||seconds<r.minSeconds||seconds>r.maxSeconds||clips<1||clips>10000)return null;
  if(r.durationStep&&seconds%r.durationStep!==0)return null;
  if(!Number.isFinite(inputSeconds)||inputSeconds<0)return null;
+ if(r.chargesInputVideo&&seconds+inputSeconds>30)return null; // Wan 3.0 combined input/output video length
  const outputSeconds=seconds*clips,billableSeconds=outputSeconds+(r.chargesInputVideo?inputSeconds*clips:0);
  if(r.billing==='per-second'&&r.perSecond!==null)return {kind:'money' as const,amount:billableSeconds*r.perSecond,credits:null,outputSeconds,billableSeconds};
  if(r.billing==='credits'&&r.creditsPerSecond!==null)return {kind:'credits' as const,amount:null,credits:outputSeconds*r.creditsPerSecond,outputSeconds,billableSeconds};
