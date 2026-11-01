@@ -42,6 +42,7 @@ const commands=[
  ["node",["scripts/test-xml-bounds-v79.cjs"]],
  ["node",["scripts/test-json-source-format-v80.cjs"]],
  ["node",["scripts/test-sasi-20turn-context-v106.cjs"]],
+ ["node",["scripts/test-sasi-project-patch-v112.cjs"]],
  ["node",["scripts/test-sasi-response-transport.cjs"]],
  ["node",["scripts/test-sasi-probe-truth-v108.cjs"]],
  ["node",["scripts/test-sasi-provider-stream.cjs"]],
