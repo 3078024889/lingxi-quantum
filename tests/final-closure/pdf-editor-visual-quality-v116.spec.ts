@@ -1,8 +1,9 @@
 import fs from "node:fs";
 import {test,expect} from "./export-test";
 
-test.setTimeout(90000);
-test("PDF editor renders crisp HiDPI previews and edits text/image objects visually",async({page})=>{
+test.describe("PDF editor visual quality",()=>{
+ test.describe.configure({timeout:90000});
+ test("PDF editor renders crisp HiDPI previews and edits text/image objects visually",async({page})=>{
  await page.goto("/tools/pdf-editor?lang=en");
  const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
  await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
@@ -103,4 +104,5 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  expect(exportMeta.src).toMatch(/^data:image\/png/);
  expect(exportMeta.width).toBeGreaterThanOrEqual(densityTarget);
  expect(exportMeta.width).toBeLessThanOrEqual(densityTarget*1.15);
+ });
 });
