@@ -5,12 +5,14 @@ test('preview cannot index; production launch requires explicitly verified owned
  const layout=read('app/(default)/layout.tsx');
  const home=read('app/(default)/page.tsx');
  const robots=read('app/robots.ts');
+ const collector=read('scripts/sync-gsc-analytics.mjs');
  assert.ok(source.includes('AI_MARKET_INDEX_READY'));
  assert.ok(source.includes('AI_MARKET_DOMAIN_VERIFIED'));
  assert.ok(source.includes('AI_MARKET_CANONICAL_ORIGIN'));
  assert.ok(source.includes("process.env.VERCEL_ENV!=='preview'"));
- for(const domain of ['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'])
+ for(const domain of ['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn'])
   assert.ok(source.includes(domain));
+  assert.ok(collector.includes(domain),domain+': GSC collector must accept only explicitly approved market hosts');
  assert.ok(source.includes("u.protocol!=='https:'"));
  assert.ok(source.includes("u.username||u.password||u.port||u.pathname!=='/'"));
  assert.ok(layout.includes("mayIndexMarket('zh')?verifiedMarketOrigin():null"));
