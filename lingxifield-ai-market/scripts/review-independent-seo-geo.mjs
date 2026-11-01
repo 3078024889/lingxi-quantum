@@ -31,20 +31,26 @@ const captureFilePath=(dir,groupId,hash)=>path.join(dir,captureFileName(groupId,
 
 function validateCapture(capture,knownIds){
  if(!capture||typeof capture!=='object'||Array.isArray(capture))throw new Error('CAPTURE_INVALID');
+ const allowedCaptureKeys=new Set(['source','captureGroupId','observedAt','country','language','query','engine','methodVersion','model','modelVersion','results']);
+ if(Object.keys(capture).some(key=>!allowedCaptureKeys.has(key)))throw new Error('CAPTURE_UNEXPECTED_FIELD');
  if(!['independent_serp','ai_answer_citation'].includes(capture.source))throw new Error('CAPTURE_SOURCE_INVALID');
  if(typeof capture.captureGroupId!=='string'||!/^[-a-zA-Z0-9_.]{8,80}$/.test(capture.captureGroupId))throw new Error('CAPTURE_GROUP_ID_INVALID');
  if(!validDate(capture.observedAt))throw new Error('CAPTURE_TIMESTAMP_INVALID');
  if(typeof capture.country!=='string'||!(/^([A-Z]{2}|GLOBAL)$/.test(capture.country)))throw new Error('CAPTURE_COUNTRY_INVALID');
  if(!languages.has(capture.language))throw new Error('CAPTURE_LANGUAGE_INVALID');
- if(typeof capture.query!=='string'||!capture.query.trim()||capture.query.length>512)throw new Error('CAPTURE_QUERY_INVALID');
+ if(typeof capture.query!=='string'||!capture.query.trim()||capture.query.length>512)throw new Error('CAPTURE_QUERY_INVALID');\n if(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}|(?:\\+?\\d[\\d .()-]{7,}\\d)/i.test(capture.query))throw new Error('CAPTURE_QUERY_PRIVACY_RISK');
  if(typeof capture.engine!=='string'||!capture.engine.trim()||capture.engine.length>100)throw new Error('CAPTURE_ENGINE_INVALID');
  if(typeof capture.methodVersion!=='string'||!capture.methodVersion.trim()||capture.methodVersion.length>80)throw new Error('CAPTURE_METHOD_INVALID');
  if(capture.source==='independent_serp'&&!['Google','Bing'].includes(capture.engine))throw new Error('SERP_ENGINE_UNSUPPORTED');
- if(capture.source==='ai_answer_citation'&&(!capture.model||!capture.modelVersion||String(capture.model).length>100||String(capture.modelVersion).length>120))throw new Error('GEO_MODEL_VERSION_REQUIRED');
+ if(capture.source==='ai_answer_citation'&&(typeof capture.model!=='string'||!capture.model.trim()||typeof capture.modelVersion!=='string'||!capture.modelVersion.trim()||capture.model.length>100||capture.modelVersion.length>120))throw new Error('GEO_MODEL_VERSION_REQUIRED');
  if(!Array.isArray(capture.results)||capture.results.length<2||capture.results.length>32)throw new Error('CAPTURE_REQUIRES_2_TO_32_RESULTS');
  const seen=new Set();
  for(const row of capture.results){
   if(!row||typeof row!=='object'||Array.isArray(row))throw new Error('CAPTURE_RESULT_INVALID');
+  const allowedResultKeys=capture.source==='independent_serp'
+   ?new Set(['platformId','position','sourceUrl','sampleCount','sponsored'])
+   :new Set(['platformId','mentions','citations','sourceUrl','sampleCount','sponsored']);
+  if(Object.keys(row).some(key=>!allowedResultKeys.has(key)))throw new Error('CAPTURE_RESULT_UNEXPECTED_FIELD');
   if(typeof row.platformId!=='string'||!knownIds.has(row.platformId))throw new Error('CAPTURE_PRODUCT_UNKNOWN');
   if(seen.has(row.platformId))throw new Error('CAPTURE_DUPLICATE_PRODUCT');
   seen.add(row.platformId);
@@ -87,8 +93,10 @@ export function reviewCapture(rawText,manifest,{knownIds=new Set()}={}){
  const capture=JSON.parse(rawText);
  validateCapture(capture,knownIds);
  const rawCaptureSha256=digest(Buffer.from(rawText,'utf8'));
- if(!manifest||typeof manifest!=='object'||manifest.captureGroupId!==capture.captureGroupId||
-    manifest.rawCaptureSha256!==rawCaptureSha256)throw new Error('REVIEW_CAPTURE_HASH_OR_GROUP_MISMATCH');
+ if(!manifest||typeof manifest!=='object'||Array.isArray(manifest)||
+    Object.keys(manifest).some(key=>!['captureGroupId','rawCaptureSha256','reviewer','reviewedAt','decisions'].includes(key))||
+    manifest.captureGroupId!==capture.captureGroupId||manifest.rawCaptureSha256!==rawCaptureSha256)
+  throw new Error('REVIEW_CAPTURE_HASH_OR_GROUP_MISMATCH');
  const reviewer=manifest.reviewer,reviewedAt=manifest.reviewedAt;
  if(typeof reviewer!=='string'||!/^[-a-zA-Z0-9_.]{2,80}$/.test(reviewer))throw new Error('REVIEWER_INVALID');
  if(!validDate(reviewedAt)||Date.parse(reviewedAt)<Date.parse(capture.observedAt)||Date.parse(reviewedAt)>Date.now()+300000)throw new Error('REVIEW_TIMESTAMP_INVALID');
