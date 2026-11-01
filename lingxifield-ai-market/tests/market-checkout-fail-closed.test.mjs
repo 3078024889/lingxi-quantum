@@ -14,7 +14,8 @@ test('public checkout remains fail-closed until signed merchant, ledger and fulf
  assert.ok(readiness.includes('const checkoutImplemented=false'));
  assert.ok(readiness.includes('integrationEnabled&&orderLedgerReady&&vendorAuthReady&&fulfillmentReady&&credentialsConfigured&&providerEnabled&&checkoutImplemented'));
  assert.ok(!route.includes('request.json()'));
- assert.ok(!route.includes('status:paid'));
+ assert.ok(!route.includes('grantEntitlement'));
+ assert.ok(!route.includes('markOrderPaid'));
 });
 
 test('public provider readiness never returns credential values',()=>{
@@ -22,7 +23,9 @@ test('public provider readiness never returns credential values',()=>{
  const readiness=read('lib/market-billing-readiness.mjs');
  assert.ok(route.includes('paymentDeploymentReadiness()'));
  assert.ok(readiness.includes('credentialsConfigured'));
- assert.ok(!readiness.includes('env[key]'));
+ assert.ok(!readiness.includes('clientSecret:'));
+ assert.ok(!readiness.includes('privateKey:'));
+ assert.ok(readiness.includes('reason:!credentialsConfigured'));
  assert.ok(!route.includes('PAYPAL_CLIENT_SECRET'));
  assert.ok(!route.includes('ALIPAY_PRIVATE_KEY'));
  assert.ok(!route.includes('WECHAT_API_V3_KEY'));
