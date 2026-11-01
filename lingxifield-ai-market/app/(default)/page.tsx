@@ -8,8 +8,8 @@ import {mayIndexMarket,alternatesForMarket} from '../../lib/market-index-policy'
 export function generateMetadata():Metadata{
  const indexable=mayIndexMarket('zh');
  return {
-  title:'全球 SI AI 行情平台｜灵犀场 LINGXIFIELD',
-  description:'按实际任务查找全球 SI AI 工具，比较免费额度、官方价格、地区可用性、商用条件与来源证据。',
+  title:'灵犀场全球SIAI排行榜｜LINGXIFIELD',
+  description:'灵犀场全球SIAI排行榜，提供全球人工智能产品、模型与服务的查询、行情比较、价格套餐、免费额度、地区支持、商用授权及排行榜。',
   robots:{index:indexable,follow:indexable},
   // The root URL is the Chinese entry alias; /zh/ai is the canonical locale route.
   // Never publish a canonical to the old main site from an unverified preview.
