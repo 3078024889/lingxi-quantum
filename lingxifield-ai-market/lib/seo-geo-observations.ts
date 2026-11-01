@@ -40,13 +40,13 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
  if(o.source==='google_search_console'){
   if(o.sourceUrl!=='https://search.google.com/search-console/performance/search-analytics')return false;
   if(typeof o.sourceProperty!=='string'||typeof o.sourcePage!=='string'||typeof o.sourceDate!=='string')return false;
-  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(o.sourceDate)||!Number.isFinite(Date.parse(o.sourceDate+'T00:00:00Z'))||o.observedAt!==o.sourceDate+'T12:00:00Z')return false;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(o.sourceDate)||!Number.isFinite(Date.parse(o.sourceDate+'T00:00:00Z'))||o.observedAt!==o.sourceDate+'T12:00:00Z')return false;
   if(o.country!=='GLOBAL'||!Number.isInteger(o.impressions)||Number(o.impressions)<3||!Number.isInteger(o.clicks)||Number(o.clicks)<0||Number(o.clicks)>Number(o.impressions)||typeof o.position!=='number'||!Number.isFinite(o.position)||Number(o.position)<1)return false;
   if(o.sampleCount!==o.impressions)return false;
   try{
    const page=new URL(o.sourcePage);
    if(page.protocol!=='https:'||page.username||page.password||page.port||page.search||page.hash||!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'].includes(page.hostname))return false;
-   const route=page.pathname.match(/^\\/(?:([a-z]{2})\\/)?platform\\/([a-z0-9][a-z0-9-]{0,79})\\/?$/);
+   const route=page.pathname.match(/^\/(?:([a-z]{2})\/)?platform\/([a-z0-9][a-z0-9-]{0,79})\/?$/);
    if(!route||(route[1]||'zh')!==o.language||route[2]!==o.platformId)return false;
    let propertyHost='';
    if(o.sourceProperty.startsWith('sc-domain:'))propertyHost=o.sourceProperty.slice('sc-domain:'.length).toLowerCase();
