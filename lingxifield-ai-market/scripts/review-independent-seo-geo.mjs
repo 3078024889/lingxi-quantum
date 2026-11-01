@@ -112,10 +112,9 @@ export function reviewCapture(rawText,manifest,{knownIds=new Set()}={}){
    ...(capture.model!==undefined?{model:capture.model}:{}),
    ...(capture.modelVersion!==undefined?{modelVersion:capture.modelVersion}:{}),
    captureGroupId:capture.captureGroupId,sourceUrl:row.sourceUrl,
-   methodVersion:capture.methodVersion,sampleCount:row.sampleCount,
-   rawCaptureSha256,sponsored:false,reviewed:true,reviewedAt,
-   reviewedBy:reviewer,reviewReason:decision.reason.trim(),
-   ...(capture.source==='independent_serp'?{position:row.position}:{mentions:row.mentions,citations:row.citations})
+   methodVersion:capture.methodVersion,sampleCount:row.sampleCount,rawCaptureSha256,
+   ...(capture.source==='independent_serp'?{position:row.position}:{mentions:row.mentions,citations:row.citations}),
+   sponsored:false,reviewed:true,reviewedAt,reviewedBy:reviewer,reviewReason:decision.reason.trim()
   };
   const recordHash='sha256:'+digest(JSON.stringify(base));
   approved.push({id:prefixFor(capture.source)+recordHash.slice(7,31),...base,recordHash});
@@ -135,7 +134,14 @@ function verifyIndependent(row){
  if(!prefix||row.reviewed!==true||row.sponsored!==false||!row.captureGroupId||
     !/^[a-f0-9]{64}$/.test(row.rawCaptureSha256||'')||!validDate(row.reviewedAt)||
     typeof row.reviewedBy!=='string'||typeof row.reviewReason!=='string'||
-    row.reviewReason.trim().length<20||!safeUrl(row.sourceUrl))throw new Error('INDEPENDENT_OBSERVATION_INVALID');
+    row.reviewReason.trim().length<20||!safeUrl(row.sourceUrl)||
+    !Number.isInteger(row.sampleCount)||row.sampleCount<1||
+    typeof row.engine!=='string'||!row.engine.trim())throw new Error('INDEPENDENT_OBSERVATION_INVALID');
+ if(row.source==='independent_serp'&&(!['Google','Bing'].includes(row.engine)||!Number.isInteger(row.position)||row.position<1||row.position>100))
+  throw new Error('INDEPENDENT_SERP_METRIC_INVALID');
+ if(row.source==='ai_answer_citation'&&(!row.model||!row.modelVersion||
+    !Number.isInteger(row.mentions)||row.mentions<0||!Number.isInteger(row.citations)||row.citations<0))
+  throw new Error('AI_CITATION_METRIC_INVALID');
  const hash=digest(JSON.stringify(observationPayload(row)));
  if(row.recordHash!=='sha256:'+hash||row.id!==prefix+hash.slice(7,31))throw new Error('INDEPENDENT_RECORD_HASH_MISMATCH');
 }
@@ -169,7 +175,7 @@ export function verifyLedger(rows,{captureDirectory}={}){
   }
  }
  return {observations:rows.length,gsc:rows.filter(x=>x.source==='google_search_console').length,
-  comparative:rows.length-groups.size===0?rows.length:rows.filter(x=>x.source!=='google_search_console').length,
+  comparative:rows.filter(x=>x.source!=='google_search_console').length,
   comparisonGroups:groups.size};
 }
 
