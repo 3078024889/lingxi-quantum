@@ -39,12 +39,12 @@ export const PRODUCT_TASK_PHRASES=Object.freeze({
 });
 /** Intent recommendations are editorial capability matches, NOT vendor rankings. */
 export const TASK_INTENTS=Object.freeze([
- {id:'video',pattern:/视频生成|视频制作|图生视频|文生视频|照片动起来|短剧|短视频|image.to.video|text.to.video|ai video/i,ids:['runway','kling','jimeng','luma']},
+ {id:'video',pattern:/视频生成|生成视频|视频制作|图生视频|文生视频|照片动起来|短剧|短视频|image.to.video|text.to.video|ai video/i,ids:['runway','kling','jimeng','luma']},
  {id:'image',pattern:/画图|ai绘画|图片生成|文生图|设计图片|生成插画|ai image|text.to.image/i,ids:['midjourney','comfyui','jimeng','automatic1111','runway','gemini','doubao']},
  {id:'song',pattern:/写歌|编曲|生成音乐|做背景音乐|ai music|song generator/i,ids:['suno']},
  {id:'voice',pattern:/配音|语音合成|旁白|文字转语音|克隆声音|text.to.speech|voiceover/i,ids:['elevenlabs']},
  {id:'transcription',pattern:/字幕|语音转文字|录音转文字|音频转文字|语音识别|转录|transcrib|speech.to.text/i,ids:['whisper','fasterwhisper','elevenlabs']},
- {id:'site',pattern:/ai建站|生成网站|不用写代码做网站|网页原型|web app builder|create website/i,ids:['lovable','replit','dify']},
+ {id:'site',pattern:/ai建站|生成网站|不用写代码做网站|不用编程|网页原型|web app builder|create website/i,ids:['lovable','replit','dify']},
  {id:'automation',pattern:/自动化工作流|自动处理表格|自动化任务|workflow|automation/i,ids:['n8n','dify','langchain']},
  {id:'local',pattern:/本地大模型|离线大模型|私有部署|本地ai|本地模型|offline ai|local llm/i,ids:['ollama','openwebui','llamacpp','vllm','transformers','comfyui']},
  {id:'research',pattern:/带引用的搜索|搜索有出处|联网研究|找资料|搜索论文|搜索资料|找出处|research ai|ai search/i,ids:['perplexity','gemini','chatgpt','claude','grok']},
@@ -52,6 +52,23 @@ export const TASK_INTENTS=Object.freeze([
  {id:'document',pattern:/阅读pdf|分析合同|分析文档|长文档理解|知识库问答|document analysis|pdf question/i,ids:['claude','chatgpt','gemini','llamaindex','dify']},
  {id:'api',pattern:/调用api|python sdk|api开发|模型接口|api price|token price/i,ids:['openai-python','anthropic-sdk-python','deepseek','qwen','langchain','llamaindex','vllm']}
 ]);
+const BRANDS=[
+ ['chatgpt',/chatgpt/i],['claude',/claude/i],['gemini',/gemini/i],
+ ['deepseek',/deepseek/i],['grok',/grok/i],['perplexity',/perplexity/i],
+ ['qwen',/qwen|千问/i],['runway',/runway/i],['luma',/\bluma\b/i],
+ ['midjourney',/midjourney/i],['kling',/可灵|\bkling\b/i],
+ ['jimeng',/即梦|jimeng/i],['doubao',/豆包|doubao/i],
+ ['suno',/\bsuno\b/i],['elevenlabs',/elevenlabs/i],
+ ['comfyui',/comfyui/i],['dify',/\bdify\b/i],['n8n',/\bn8n\b/i],
+ ['ollama',/\bollama\b/i],['openwebui',/open webui|openwebui/i],
+ ['lovable',/\blovable\b/i],['replit',/\breplit\b/i],
+ ['langchain',/langchain/i],['llamaindex',/llamaindex/i],
+ ['llamacpp',/llama[.]cpp/i],['vllm',/\bvllm\b/i],
+ ['transformers',/\btransformers\b/i],['automatic1111',/automatic1111/i],
+ ['anthropic-sdk-python',/anthropic python sdk/i],
+ ['openai-python',/openai python sdk/i],
+ ['fasterwhisper',/faster[- ]whisper/i],['whisper',/(?<!faster[- ])\bwhisper\b/i]
+];
 const fold=s=>String(s||'').normalize('NFKC').trim().toLocaleLowerCase();
 const normalize=s=>fold(s).replace(/[\s\p{P}\p{S}]/gu,'');
 export function questionForProduct(id){return PRODUCT_TASK_PHRASES[id]||[];}
@@ -59,11 +76,15 @@ export function matchingEditorialProductIds(query){
  const q=String(query||'').trim().slice(0,120);
  if(q.length<3)return null;
  const normalized=normalize(q);
- // Exact editorial phrase: return only its clearly scoped product.
+ // Explicit names take priority: "ChatGPT vs Claude" offers both, not a fabricated winner.
+ const named=BRANDS.filter(([,pattern])=>pattern.test(q)).map(([id])=>id);
+ if(named.length)return named.slice(0,3);
+ // General tasks offer several suitable tools so visitors can compare cost and regions.
+ const match=TASK_INTENTS.find(group=>group.pattern.test(q));
+ if(match)return match.ids;
+ // Specific editorial questions without a known synonym retain their product connection.
  for(const [id,phrases] of Object.entries(PRODUCT_TASK_PHRASES)){
   if(phrases.some(phrase=>normalize(phrase)===normalized))return [id];
  }
- // Natural-language intent only; product-name / ordinary text queries retain normal index matching.
- const match=TASK_INTENTS.find(group=>group.pattern.test(q));
- return match?match.ids:null;
+ return null;
 }
