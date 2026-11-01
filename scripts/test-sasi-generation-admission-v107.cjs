@@ -21,7 +21,7 @@ for(const bad of [
  {kind:"video",prompt:"Valid",duration:"Infinity"},{kind:"video",prompt:"Valid",duration:6.5},
  {kind:"image",prompt:"Valid",style:"X".repeat(181)},{kind:"image",prompt:"Valid",ratio:"4:3"}
 ])assert.throws(()=>parse(bad),/INVALID_GENERATION_REQUEST/);
-let authenticated=true,origin=true,guard={ok:true},writes=0,executions=0,taskFails=0;
+let authenticated=true,origin=true,guard={ok:true},writes=0,executions=0,taskFails=0,failInit=false;
 const route=compile("app/api/sasi/generation/submit/route.ts",{
  "next/server":{NextResponse:{json:(body,opts={})=>({body,status:opts.status||200,headers:opts.headers})}},
  "@/lib/supabase/server":{createClient:()=>({auth:{getUser:async()=>({data:{user:authenticated?{id:"user-1"}:null}})}})},
@@ -31,7 +31,7 @@ const route=compile("app/api/sasi/generation/submit/route.ts",{
  "@/lib/security/abuse-guard":{enforceAbuseGuard:async()=>guard},
  "@/lib/sasi-kernel/runtime/generation-request":parser,
  "@/lib/sasi-kernel/runtime/plan":{buildSasiExecutionPlan:()=>({nodes:[{nodeId:"n1"}]})},
- "@/lib/sasi-kernel/runtime/task-store":{createRuntimeTask:async()=>{writes++},failRuntimeTask:async()=>{taskFails++}},
+ "@/lib/sasi-kernel/runtime/task-store":{createRuntimeTask:async()=>{writes++;if(failInit)throw Error("PARTIAL_TASK_INIT")},failRuntimeTask:async()=>{taskFails++}},
  "@/lib/sasi-kernel/runtime/executor":{executeSasiPlan:async()=>{executions++;return {status:"succeeded",output:{kind:"fixture"}}}}
 });
 const req=(body,headers={})=>new Request("https://test.invalid/api/sasi/generation/submit",{method:"POST",headers:{"content-type":"application/json",...headers},body:JSON.stringify(body)});
@@ -50,5 +50,10 @@ const req=(body,headers={})=>new Request("https://test.invalid/api/sasi/generati
  assert.equal(good.status,200);assert.equal(good.body.ok,true);
  assert.equal(writes,1);assert.equal(executions,1);assert.equal(taskFails,0);
  assert.equal(good.headers["Cache-Control"],"private, no-store");
+ failInit=true;
+ const partial=await route.POST(req({kind:"video",prompt:"Create a second scene",duration:8}));
+ assert.equal(partial.status,503);assert.equal(partial.body.error,"GENERATION_UNAVAILABLE");
+ assert.equal(taskFails,1,"partial task initialization must trigger a failed-state compensation");
+ assert.equal(executions,1,"worker must not run after partial initialization failure");
  console.log("SASI_GENERATION_ADMISSION_GATE=PASS: strict input, 12KB bounded upload, origin/auth/quotas precede worker, no unauthorized writes");
 })().catch(error=>{console.error(error);process.exitCode=1});
