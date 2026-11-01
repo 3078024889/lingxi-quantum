@@ -50,6 +50,8 @@ jobs:
           CREATE SCHEMA IF NOT EXISTS auth;
           CREATE SCHEMA IF NOT EXISTS extensions;
           CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+GRANT USAGE ON SCHEMA extensions TO anon;
+GRANT EXECUTE ON FUNCTION extensions.hmac(bytea,bytea,text) TO anon;
           CREATE TABLE auth.users (
             id uuid PRIMARY KEY,
             email text UNIQUE,
@@ -180,11 +182,17 @@ jobs:
           SET LOCAL ROLE authenticated;
           SELECT set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
           DO $moderation$
-          DECLARE v_pending jsonb;
+          DECLARE v_pending jsonb; v_feedback_id uuid; v_result jsonb;
           BEGIN
             v_pending:=public.ai_market_pending_feedback(30);
             IF jsonb_array_length(v_pending->'items')<1
             THEN RAISE EXCEPTION 'VERIFIED_MODERATOR_CANNOT_READ_PENDING'; END IF;
+            SELECT id INTO v_feedback_id FROM public.ai_market_visitor_feedback
+              WHERE status='pending' AND body ILIKE '%Telegram%' LIMIT 1;
+            IF v_feedback_id IS NULL THEN RAISE EXCEPTION 'PENDING_FEEDBACK_FIXTURE_MISSING'; END IF;
+            v_result:=public.ai_market_moderate_feedback(v_feedback_id,'approved','isolated CI review');
+            IF v_result->>'status' IS DISTINCT FROM 'approved'
+            THEN RAISE EXCEPTION 'VERIFIED_MODERATION_FAILED'; END IF;
           END
           $moderation$;
           COMMIT;
