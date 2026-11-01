@@ -33,3 +33,43 @@ Official:
 - https://docs.netlify.com/build/frameworks/framework-setup-guides/nextjs/overview/
 - https://docs.netlify.com/manage/security/secure-access-to-sites/project-visibility/
 - https://developers.google.com/webmaster-tools/v1/how-tos/authorizing
+
+## GSC evidence publication — explicit human approval
+
+The scheduled collector intentionally does **not** write reviewed observations into the public ranking ledger. It creates an artifact containing unreviewed rows only. To publish a GSC observation, every row needs an explicit decision manifest.
+
+1. Download the artifact `ai-market-gsc-reviewed-input-<run-id>` from the successful owned Search Console workflow. Save its JSON as `gsc-pending.json`.
+2. Review every row's query, page URL, locale mapping, date, impressions, clicks and average position against the Search Console property. Reject identifying or ambiguous queries. The collector already suppresses common identifiers and queries with fewer than three impressions; this is a second human review, not a substitute for privacy controls.
+3. Create `gsc-review-manifest.json` with one decision per pending row. Every row must be approved or rejected explicitly; a missing decision stops the process.
+
+Example manifest shape (replace the illustrative ID and reason with the actual artifact rows):
+
+```json
+{
+  "reviewer": "3078024889",
+  "reviewedAt": "2026-11-01T08:00:00.000Z",
+  "decisions": [
+    {
+      "id": "gsc-0123456789abcdef01234567",
+      "approve": true,
+      "reason": "Verified against the owned Search Console property and canonical product page; query contains no personal data."
+    }
+  ]
+}
+```
+
+4. Run from `lingxifield-ai-market` with `GSC_PROPERTY` and `AI_MARKET_CANONICAL_ORIGIN` set to the same values used by the collector:
+
+```bash
+npm run seo:review-evidence -- ./gsc-pending.json ./gsc-review-manifest.json
+```
+
+This is validation-only and prints a summary. It does not change the data file. After the review is complete, rerun with the explicit publish switch:
+
+```bash
+npm run seo:review-evidence -- ./gsc-pending.json ./gsc-review-manifest.json --confirm-publish
+```
+
+The script rechecks the exact property, approved market host, localized product route, privacy-safe query, source date, metrics, record digest and one-to-one review manifest. It writes only approved rows to `data/seo-geo-observations.json`, records reviewer and reason, merges idempotently and rejects conflicting hashes. Rejected rows are not published. Commit the resulting reviewed file to the isolated AI-market feature branch and let CI validate it.
+
+Never commit service-account JSON, OAuth tokens, downloaded account exports containing unrelated queries, or unreviewed artifacts. A green CI build with an empty observation ledger remains **zero measured SEO/GEO coverage**, not a ranking result.
