@@ -25,7 +25,7 @@ test('brand identity is consistent across the homepage and all nine localized SE
  assert.match(localized,/title:localeCopy\[lang as Locale\]\.headline/);
  for(const lang of ['en','ja','ko','fr','de','es','pt','ar']){
   assert.ok(locales.includes(lang+':{headline:"LINGXIFIELD'),lang+': localized SEO title must carry the brand');
-  const localizedUiLine=ui.split('\\n').find(line=>line.startsWith('"'+lang+'":'));
+  const localizedUiLine=ui.split(/\r?\n/).find(line=>line.startsWith('"'+lang+'":'));
   assert.ok(localizedUiLine?.includes('"headline":"LINGXIFIELD'),lang+': visible heading must carry the brand');
  }
 });
