@@ -209,7 +209,9 @@ test('V43 source-backed prices distinguish open-source core, vendor cloud and co
  }
  assert.match(m.researchedFact('dify').commercial,/多租户/);
  assert.match(m.researchedFact('openwebui').commercial,/50/);
- assert.match(m.researchedFact('luma').price,/49.99/);
+ assert.match(m.researchedFact('luma').price,/Plus.*Pro.*Ultra/);
+ assert.match(m.researchedFact('luma').models,/Ray3\.2.*UNI-1\.1/);
+ assert.doesNotMatch(m.researchedFact('luma').price,/49\.99/);
  assert.match(m.researchedFact('jimeng').price,/79/);
  const repository=read('lib/platform-repository.ts');
  assert.match(repository,/research\?\.price\|\|guide\?\.cost/);
