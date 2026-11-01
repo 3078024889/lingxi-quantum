@@ -18,8 +18,10 @@ test('existing 32 product entries have source-backed publisher plan and commerci
 });
 test('Suno commercial rights reflect September 2026 terms, including download and remix rules',()=>{
  const s=RESEARCHED_FACTS.suno;
- assert.match(s.commercial,/Free.*非商用/);
- assert.match(s.commercial,/下载/);
+ assert.match(s.commercial,/Free.*non-commercial/);
+ assert.match(s.commercial,/eligible.*download/i);
+ assert.match(s.commercial,/retroactive rights/i);
+ assert.match(s.commercial,/download/i);
  assert.match(s.commercial,/Remix/);
  assert.equal(s.commercialSource,'https://suno.com/terms');
 });
