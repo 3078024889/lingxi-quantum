@@ -13,7 +13,7 @@ test('all 32 currently published products have distinct practical task searches'
   for(const q of queries){
    assert.ok(q.length>=5&&q.length<=120,id+' '+q);
    assert.ok(!seen.has(q),id+' duplicate '+q);seen.add(q);
-   assert.deepEqual(matchingEditorialProductIds(q),[id],q);
+   assert.ok(matchingEditorialProductIds(q)?.includes(id),q+' should include '+id);
   }
  }
 });
@@ -36,6 +36,13 @@ test('natural-language questions suggest relevant documented capabilities, never
   assert.ok(group.ids.length>=1,group.id);
   for(const id of group.ids)assert.ok(COMPANY_EVIDENCE_IDS.includes(id),group.id+' unknown product: '+id);
  }
+});
+test('named comparisons show both tools while general jobs offer multiple choices',()=>{
+ const x=matchingEditorialProductIds('Claude 和 ChatGPT 哪个适合研究');
+ assert.ok(x.includes('claude')&&x.includes('chatgpt'));
+ const y=matchingEditorialProductIds('怎么把录音转文字');
+ assert.ok(y.includes('whisper')&&y.includes('fasterwhisper'));
+ assert.ok(matchingEditorialProductIds('不用编程怎么做网站').includes('lovable'));
 });
 test('task search is subject to country, payment, product filters and paging',()=>{
  const s=read('lib/platform-repository.ts');
