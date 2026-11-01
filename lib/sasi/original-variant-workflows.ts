@@ -5,8 +5,8 @@
  */
 export type StoryboardScene={id:string;seconds:number;voice:string;visual:string};
 export type WordCue={token:string;approxStartSeconds:number};
-export type VariantScene=StoryboardScene&{startSeconds:number;wordCues:WordCue[]};
-export type StoryboardVariant={id:string;locale:string;hook:string;scenes:VariantScene[];totalSeconds:number};
+export type VariantScene=StoryboardScene&{startSeconds:number;wordCues:WordCue[];cameraCue:string;editRhythm:string};
+export type StoryboardVariant={id:string;locale:string;hook:string;editRecipe:{camera:string;rhythm:string};scenes:VariantScene[];totalSeconds:number};
 export type VariantInput={scenes:StoryboardScene[];hooks:string[];product:string;cta:string;locale:string;count:number};
 
 function clean(s:unknown,max:number,name:string):string{
@@ -49,15 +49,21 @@ export function compileStoryboardVariants(input:VariantInput):StoryboardVariant[
   return {id:"shot-"+String(i+1).padStart(2,"0"),seconds:limitedNumber(scene.seconds,2,30,"SCENE_DURATION"),voice:clean(scene.voice,450,"VOICE"),visual:clean(scene.visual,500,"VISUAL")};
  });
  if(scenes.reduce((sum,s)=>sum+s.seconds,0)>300)throw new Error("STORYBOARD_MAX_300_SECONDS");
+ const cameras=["wide-establishing","macro-detail","handheld-documentary","tracking-follow","over-shoulder","symmetrical-center","top-down","slow-push","low-angle","side-profile"] as const;
+ const rhythms=["steady","fast-cut","soft-dissolve","match-cut","beat-sync","long-take","jump-cut","reveal","split-sequence","quiet-pause"] as const;
  const apply=(text:string,hook:string)=>text.replace(/\{\{\s*(hook|product|cta|locale)\s*\}\}/gi,(_,key:string)=>({hook,product,cta,locale}[key.toLowerCase() as "hook"|"product"|"cta"|"locale"]));
  return Array.from({length:count},(_,i)=>{
   const hook=hooks[i%hooks.length],baseSeconds=scenes.reduce((sum,x)=>sum+x.seconds,0);
+  // 10 camera treatments × 10 edit rhythms prevent duplicate storyboard plans
+  // even when the creator supplies only one opening hook. These are edit
+  // instructions, not claims that 100 distinct rendered videos already exist.
+  const editRecipe={camera:cameras[i%10],rhythm:rhythms[Math.floor(i/10)%10]};
   let elapsed=0;
   const compiled=scenes.map(x=>{
    const voice=apply(x.voice,hook),visual=apply(x.visual,hook);
-   const result:VariantScene={...x,voice,visual,startSeconds:elapsed,wordCues:estimatedWordCues(voice,x.seconds)};
+   const result:VariantScene={...x,voice,visual,startSeconds:elapsed,wordCues:estimatedWordCues(voice,x.seconds),cameraCue:editRecipe.camera,editRhythm:editRecipe.rhythm};
    elapsed+=x.seconds;return result;
   });
-  return {id:"variant-"+String(i+1).padStart(3,"0"),locale,hook,scenes:compiled,totalSeconds:baseSeconds};
+  return {id:"variant-"+String(i+1).padStart(3,"0"),locale,hook,editRecipe,scenes:compiled,totalSeconds:baseSeconds};
  });
 }
