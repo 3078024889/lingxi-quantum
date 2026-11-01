@@ -21,17 +21,23 @@ declare
  v_i integer;
  v_id uuid;
 begin
- if p_document is null or pg_catalog.jsonb_typeof(p_document)<>'object'
- or v_nonce !~ '^[a-f0-9]{32}$' or v_hash !~ '^[a-f0-9]{64}$'
- or p_signature !~ '^[a-f0-9]{64}$' then
+ if p_document is null
+ or pg_catalog.jsonb_typeof(p_document) is distinct from 'object'
+ or v_nonce is null or v_nonce !~ '^[a-f0-9]{32}$'
+ or v_hash is null or v_hash !~ '^[a-f0-9]{64}$'
+ or p_signature is null or p_signature !~ '^[a-f0-9]{64}$' then
    raise exception 'INVALID_FEEDBACK' using errcode='22023';
+ end if;
+ if coalesce(p_document->>'issuedAt','') !~ '^[0-9]{10}$' then
+   raise exception 'INVALID_TIMESTAMP' using errcode='22023';
  end if;
  begin v_issued := (p_document->>'issuedAt')::bigint;
  exception when others then raise exception 'INVALID_TIMESTAMP' using errcode='22023'; end;
- if abs(extract(epoch from pg_catalog.clock_timestamp())::bigint-v_issued)>120 then
+ if v_issued is null or abs(extract(epoch from pg_catalog.clock_timestamp())::bigint-v_issued)>120 then
    raise exception 'EXPIRED_FEEDBACK' using errcode='22023';
  end if;
- if pg_catalog.char_length(v_body) not between 15 and 1500
+ if v_body is null or v_nick is null or v_category is null or v_locale is null
+ or pg_catalog.char_length(v_body) not between 15 and 1500
  or pg_catalog.char_length(v_nick) not between 2 and 32
  or v_category not in ('tool_experience','site_experience','bug','suggestion','correction')
  or v_locale not in ('zh','en','ja','ko','fr','de','es','pt','ar')
@@ -44,6 +50,7 @@ begin
  v_expected := pg_catalog.encode(extensions.hmac(
   pg_catalog.convert_to(v_nonce||'.'||v_issued::text||'.'||v_hash,'UTF8'),
   pg_catalog.convert_to(v_secret,'UTF8'),'sha256'),'hex');
+ if v_expected is null then raise exception 'FEEDBACK_UNAVAILABLE' using errcode='P0001'; end if;
  -- Fixed 64-character loop; do not exit early on the first mismatching byte.
  for v_i in 1..64 loop
   v_diff := v_diff | (
