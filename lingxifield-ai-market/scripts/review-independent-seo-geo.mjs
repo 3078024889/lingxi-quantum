@@ -42,7 +42,7 @@ function validateCapture(capture,knownIds){
  if(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|(?:\+?\d[\d .()-]{7,}\d)/i.test(capture.query))throw new Error('CAPTURE_QUERY_PRIVACY_RISK');
  if(typeof capture.engine!=='string'||!capture.engine.trim()||capture.engine.length>100)throw new Error('CAPTURE_ENGINE_INVALID');
  if(typeof capture.methodVersion!=='string'||!capture.methodVersion.trim()||capture.methodVersion.length>80)throw new Error('CAPTURE_METHOD_INVALID');
- if(capture.source==='independent_serp'&&!['Google','Bing'].includes(capture.engine))throw new Error('SERP_ENGINE_UNSUPPORTED');
+ if(capture.source==='independent_serp'&&(!['Google','Bing'].includes(capture.engine)||capture.model!==undefined||capture.modelVersion!==undefined))throw new Error('SERP_ENGINE_OR_MODEL_INVALID');
  if(capture.source==='ai_answer_citation'&&(typeof capture.model!=='string'||!capture.model.trim()||typeof capture.modelVersion!=='string'||!capture.modelVersion.trim()||capture.model.length>100||capture.modelVersion.length>120))throw new Error('GEO_MODEL_VERSION_REQUIRED');
  if(!Array.isArray(capture.results)||capture.results.length<2||capture.results.length>32)throw new Error('CAPTURE_REQUIRES_2_TO_32_RESULTS');
  const seen=new Set();
@@ -106,6 +106,7 @@ export function reviewCapture(rawText,manifest,{knownIds=new Set()}={}){
  const decisions=new Map();
  for(const d of manifest.decisions){
   if(!d||typeof d.platformId!=='string'||decisions.has(d.platformId)||typeof d.approve!=='boolean'||
+     Object.keys(d).some(key=>!['platformId','approve','reason'].includes(key))||
      typeof d.reason!=='string'||d.reason.trim().length<20||d.reason.length>500)throw new Error('REVIEW_DECISION_INVALID');
   decisions.set(d.platformId,d);
  }
