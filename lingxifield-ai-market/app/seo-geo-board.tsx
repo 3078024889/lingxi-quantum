@@ -12,11 +12,32 @@ const COPY:Record<Language,readonly [string,string,string,string,string,string,s
  pt:["Pesquisa, citações IA e tendências","Veja ferramentas na pesquisa e nas respostas de IA","SEO orgânico","Posição média, impressões e cliques das nossas páginas no Google Search Console; posições independentes nos resultados Google/Bing são medidas separadamente.","Citações GEO","Menções em respostas IA por pergunta, modelo e fonte.","Tarefas reais","Comparar vídeo, imagens, código, áudio e custos.","Histórico","Veja as mudanças da pesquisa e da IA em 7 e 30 dias.","Dados de busca e IA em atualização. Compare por tarefa, preço e país.","Enviar fontes oficiais gratuitamente","Anúncios não alteram posição orgânica"],
  ar:["البحث والاستشهادات والاتجاهات","اكتشف الأدوات في نتائج البحث وإجابات الذكاء الاصطناعي","البحث الطبيعي SEO","متوسط موضع صفحاتنا ومرات الظهور والنقر في Google Search Console؛ وتُقاس نتائج Google/Bing المستقلة بشكل منفصل.","الاستشهاد في GEO","تسجيل ذكر المنتج ومصادره في إجابات AI بحسب السؤال والنموذج.","مهام المستخدم","مقارنة الفيديو والصور والبرمجة والصوت والتكلفة.","التغير التاريخي","شاهد التغيرات في البحث وتوصيات الذكاء الاصطناعي خلال 7 و30 يوماً.","يجري تحديث نتائج البحث وتوصيات الذكاء الاصطناعي. قارن الأدوات حسب الاستخدام والسعر والبلد.","أرسل المصادر الرسمية مجاناً","الإعلانات لا تغير الترتيب الطبيعي"]
 };
+const GSC_COPY:Record<Language,{title:string;impressions:string;clicks:string;ctr:string;position:string;date:string}>={
+ zh:{title:'本站 Google 搜索表现',impressions:'曝光',clicks:'点击',ctr:'点击率',position:'平均位置',date:'数据日期'},
+ en:{title:'Our Google Search performance',impressions:'Impressions',clicks:'Clicks',ctr:'CTR',position:'Average position',date:'Data date'},
+ ja:{title:'自社サイトの Google 検索実績',impressions:'表示回数',clicks:'クリック',ctr:'クリック率',position:'平均掲載順位',date:'データ日'},
+ ko:{title:'자사 사이트 Google 검색 실적',impressions:'노출',clicks:'클릭',ctr:'클릭률',position:'평균 게재순위',date:'데이터 날짜'},
+ fr:{title:'Performances Google de notre site',impressions:'Impressions',clicks:'Clics',ctr:'Taux de clic',position:'Position moyenne',date:'Date des données'},
+ de:{title:'Google-Suchleistung unserer Website',impressions:'Impressionen',clicks:'Klicks',ctr:'Klickrate',position:'Durchschnittliche Position',date:'Datenstand'},
+ es:{title:'Rendimiento de búsqueda de nuestro sitio',impressions:'Impresiones',clicks:'Clics',ctr:'CTR',position:'Posición media',date:'Fecha de datos'},
+ pt:{title:'Desempenho da pesquisa do nosso site',impressions:'Impressões',clicks:'Cliques',ctr:'CTR',position:'Posição média',date:'Data dos dados'},
+ ar:{title:'أداء البحث لموقعنا في Google',impressions:'مرات الظهور',clicks:'النقرات',ctr:'معدل النقر',position:'متوسط الموضع',date:'تاريخ البيانات'}
+};
 export default function SeoGeoBoard({language='zh'}:{language?:Language}){
  const t=COPY[language]||COPY.zh;
  const coverage=coverageForSeoGeo(),comparisons=groupedSeoGeo();
  return <section className="panel seoGeoBoard" aria-label={t[0]}>
   <div className="rankHead"><h2>{t[0]}</h2><span>{t[1]}</span></div>
+  {coverage.gscObservations>0&&coverage.gscCtr!==null&&coverage.gscAveragePosition!==null&&coverage.gscLatestDate?<section className="seoGeoOwnedMetrics" aria-label={GSC_COPY[language].title}>
+   <strong>{GSC_COPY[language].title}</strong>
+   <div>
+    <span><b>{new Intl.NumberFormat(language).format(coverage.gscImpressions)}</b><small>{GSC_COPY[language].impressions}</small></span>
+    <span><b>{new Intl.NumberFormat(language).format(coverage.gscClicks)}</b><small>{GSC_COPY[language].clicks}</small></span>
+    <span><b>{new Intl.NumberFormat(language,{style:'percent',maximumFractionDigits:1}).format(coverage.gscCtr)}</b><small>{GSC_COPY[language].ctr}</small></span>
+    <span><b>{coverage.gscAveragePosition.toFixed(1)}</b><small>{GSC_COPY[language].position}</small></span>
+   </div>
+   <small>{GSC_COPY[language].date}: {new Date(coverage.gscLatestDate+'T00:00:00Z').toLocaleDateString(language)}</small>
+  </section>:null}
   {comparisons.length>0?<div className="seoGeoVerifiedComparisons">{comparisons.slice(0,6).map(g=><article key={g.key}><strong>{g.key}</strong>{g.rows.map(r=><p key={r.platformId}><b>{r.platformId}</b> · {r.position!==null?'#'+r.position:r.citations!==null?r.citations+' citations':'—'} · <a href={r.sourceUrl} rel="noopener noreferrer" target="_blank">{language==='zh'?'证据':'Source'} ↗</a></p>)}</article>)}</div>:null}
   <div className="seoGeoCompare">
    <article><strong>{t[2]}</strong><p>{t[3]}</p></article>
