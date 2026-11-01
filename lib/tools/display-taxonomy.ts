@@ -20,7 +20,7 @@ const TABLE=new Set([
 ]);
 const MEDIA=new Set([
  "url-to-video",
- "video-toolkit","video-watermark-remover","reverse-video","loop-video","stop-motion-video","audio-cleanup","ai-video-audio-check"
+ "video-toolkit","rotate-video","video-watermark-remover","reverse-video","loop-video","stop-motion-video","audio-cleanup","ai-video-audio-check"
 ]);
 const TEXT=new Set([
  "text-counter","remove-duplicate-lines","remove-empty-lines","url-encode-decode","base64-encode-decode",
