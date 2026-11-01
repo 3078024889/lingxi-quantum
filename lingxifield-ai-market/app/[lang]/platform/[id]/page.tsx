@@ -4,6 +4,7 @@ import {notFound} from 'next/navigation';
 import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository';
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
 import {researchedFact} from '../../../../lib/market-researched-facts';
+import {companyEvidenceFor} from '../../../../lib/market-company-evidence';
 import {VIDEO_RATES} from '../../../../lib/market-rate-catalog';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
@@ -58,10 +59,17 @@ export default async function LocalProduct({params}:PageParams){
  if(!marketLocales.includes(lang as Language))notFound();
  const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l),api=apiServiceOffer(id),payments=paymentFactsFor(id,'GLOBAL'),team=platformLinks(id).team;
- const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-10-31';
+ const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-11-01',companyEvidence=companyEvidenceFor(id);
  const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n.?a|not verified)$/i.test(value.trim()));
  const companyWords=({zh:['公司','成立','地区','融资','上市'],en:['Company','Founded','Location','Funding','Listing'],ja:['企業','設立','地域','調達','上場'],ko:['회사','설립','지역','투자','상장'],fr:['Entreprise','Création','Siège','Financement','Cotation'],de:['Firma','Gründung','Sitz','Finanzierung','Börse'],es:['Empresa','Fundación','Sede','Financiación','Bolsa'],pt:['Empresa','Fundação','Sede','Investimento','Bolsa'],ar:['الشركة','تأسست','المنطقة','التمويل','الإدراج']} as Record<Language,string[]>)[l];
- const companyFacts=[p.company,p.year,p.location,p.funding,p.listing].map((value,i)=>({value,label:companyWords[i]})).filter(x=>useful(x.value));
+ const companyFacts=[
+  {value:p.company,label:companyWords[0],source:companyEvidence?.publisherSource},
+  {value:companyEvidence?.founded?.text,label:companyWords[1],source:companyEvidence?.founded?.source},
+  {value:companyEvidence?.headquarters?.text,label:companyWords[2],source:companyEvidence?.headquarters?.source},
+  {value:companyEvidence?.funding?.text,label:companyWords[3],source:companyEvidence?.funding?.source},
+  {value:companyEvidence?.listing?.text,label:companyWords[4],source:companyEvidence?.listing?.source},
+  {value:companyEvidence?.projectStarted?.text,label:l==='zh'?'项目起源':'Project origin',source:companyEvidence?.projectStarted?.source}
+ ].filter(x=>useful(x.value));
  const videos=VIDEO_RATES.filter(r=>r.platform===id&&r.resolution!=='not-confirmed'&&!['unverified','plan-only'].includes(r.billing));
  const videoTitle=({zh:'短视频/短剧：官方模型与画质计费',en:'Short video: model, resolution and cost',ja:'動画：モデル・画質・料金',ko:'영상: 모델·해상도·요금',fr:'Vidéo : modèle, qualité et coût',de:'Video: Modell, Auflösung und Kosten',es:'Vídeo: modelo, resolución y coste',pt:'Vídeo: modelo, resolução e custo',ar:'الفيديو: النموذج والدقة والتكلفة'} as Record<Language,string>)[l];
  const paymentHeading=({zh:'支持的付款方式',en:'Payment methods',ja:'支払方法',ko:'결제 수단',fr:'Moyens de paiement',de:'Zahlungsmethoden',es:'Métodos de pago',pt:'Métodos de pagamento',ar:'طرق الدفع'} as Record<Language,string>)[l];
@@ -80,7 +88,7 @@ export default async function LocalProduct({params}:PageParams){
   <header><small>LINGXIFIELD · GLOBAL SI AI MARKET</small><h1>{displayName}</h1><p>{summary}</p><span>{localizedCategory(l,p.category)}</span></header>
   <section className="marketLocalizedCompany">
    <h2>{({zh:'公司简介',en:'Company overview',ja:'企業概要',ko:'회사 소개',fr:'Profil de l’entreprise',de:'Firmenprofil',es:'Empresa',pt:'Empresa',ar:'نبذة عن الشركة'} as Record<Language,string>)[l]}</h2>
-   <p>{summary}</p><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong></span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
+   <p>{summary}</p><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong>{fact.source&&<a href={fact.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a>}</span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
    {team&&l==='zh'&&<p>{team.summary} <a href={team.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></p>}
   </section>
   <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src])=><article key={title}><h2>{title}</h2>
