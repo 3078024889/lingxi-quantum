@@ -1094,3 +1094,21 @@ body{font-size:16px;line-height:1.6}
 .marketLocalizedFaqLinks a:focus-visible{outline:2px solid #2b7ccc;outline-offset:2px}
 .marketCompanyFacts strong,.marketLocalizedCompanyFacts :is(strong,a),.marketLocalizedRatesScroll :is(th,td),.marketLocalizedPaymentEvidence :is(span,a){font-size:14px}
 @media(max-width:640px){.marketLocalizedFaq{padding:13px}.marketLocalizedFaqLinks{flex-direction:column}.marketLocalizedFaqLinks a{width:100%}}
+
+/* Codex is a supported ChatGPT feature, not a separate unverified product. */
+.marketCodexSection{border:1px solid #d6e5f8;border-radius:14px;background:#f9fcff;max-width:100%;margin-block:15px;padding:18px}
+.marketCodexHeading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.marketCodexHeading h2{font-size:19px;line-height:1.4;margin:0;color:#15345a}
+.marketCodexHeading a,.marketCodexOfficial{color:#145ca8;font-size:14px;font-weight:650;text-decoration:none}
+.marketCodexIntro{margin:10px 0 15px;font-size:14px;line-height:1.75;color:#294b70}
+.marketCodexTasks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.marketCodexTasks>div{display:flex;gap:9px;align-items:start;min-width:0;padding:12px 11px;border:1px solid #dce8f7;border-radius:9px;background:white}
+.marketCodexTasks span{font-size:12px;color:#4c87c1;font-variant-numeric:tabular-nums}
+.marketCodexTasks strong{font-size:14px;line-height:1.5;color:#163b67;font-weight:600;overflow-wrap:anywhere}
+.marketCodexMeta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0 12px}
+.marketCodexMeta>div{min-width:0}
+.marketCodexMeta strong{font-size:14px;color:#17395f}
+.marketCodexMeta p{font-size:14px;line-height:1.6;color:#41617f;margin:5px 0}
+.marketCodexOfficial{display:inline-block;margin-top:6px}
+@media(max-width:850px){.marketCodexTasks{grid-template-columns:repeat(2,minmax(0,1fr))}.marketCodexMeta{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:550px){.marketCodexSection{padding:13px}.marketCodexTasks{grid-template-columns:minmax(0,1fr)}}
