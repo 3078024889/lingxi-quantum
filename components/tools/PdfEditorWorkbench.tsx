@@ -48,7 +48,7 @@ function blobBytes(bytes:Uint8Array){const copy=new Uint8Array(bytes.length);cop
 async function textPng(text:string,size=28){const c=document.createElement("canvas"),ctx=c.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");const raster=4,font=size*raster+"px -apple-system,BlinkMacSystemFont,\"PingFang SC\",\"Microsoft YaHei\",sans-serif";ctx.font=font;const m=ctx.measureText(text);c.width=Math.max(32*raster,Math.ceil(m.width+20*raster));c.height=Math.max(40*raster,Math.ceil(size*1.7*raster));const x=c.getContext("2d")!;x.font=font;x.fillStyle="#142033";x.textBaseline="middle";x.fillText(text,10*raster,c.height/2);return await new Promise<Uint8Array>((res,rej)=>c.toBlob(async b=>b?res(new Uint8Array(await b.arrayBuffer())):rej(new Error("TEXT_RENDER_FAILED")),"image/png"));}
 export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boolean}){
  const {lang}=useLingxiLang();const c=PDF_EDITOR_COPY[lang];
- const sw=SIGNING_WORDS[lang]||SIGNING_WORDS.en;
+ const sw=SIGNING_WORDS[lang]||SIGNING_WORDS.en;const ow=OBJECT_WORDS[lang]||OBJECT_WORDS.en;
  const [inkPreview,setInkPreview]=useState<{file:File;id:number;data:string}|null>(null);
  const [inkSensitivity,setInkSensitivity]=useState(60);
  const [showDrawPad,setShowDrawPad]=useState(false);
