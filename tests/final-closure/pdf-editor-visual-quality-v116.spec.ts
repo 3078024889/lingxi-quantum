@@ -9,8 +9,11 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
  const source=page.getByTestId("pdf-source-preview");
  await expect(source).toBeVisible();
- const sourceWidth=await source.evaluate((node:HTMLImageElement)=>node.naturalWidth);
- expect(sourceWidth).toBeGreaterThan(700);
+ const sourceMeta=await source.evaluate((node:HTMLImageElement)=>({width:node.naturalWidth,src:node.src}));
+ expect(sourceMeta.width).toBeGreaterThan(700);
+ expect(sourceMeta.src).toMatch(/^data:image\\/png/);
+ const densityTarget=await page.getByTestId("pdf-page-stage").evaluate(node=>Math.ceil(node.clientWidth*Math.min(2.5,Math.max(1,window.devicePixelRatio||1))*.95));
+ expect(sourceMeta.width).toBeGreaterThanOrEqual(densityTarget);
 
  await page.getByPlaceholder("Text to add").fill("Approved");
  await page.getByRole("button",{name:"Add text"}).click();
@@ -51,6 +54,8 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await page.getByRole("button",{name:"Preview",exact:true}).click();
  const exportPreview=page.getByTestId("pdf-export-preview").first();
  await expect(exportPreview).toBeVisible({timeout:30000});
- const exportWidth=await exportPreview.evaluate((node:HTMLImageElement)=>node.naturalWidth);
- expect(exportWidth).toBeGreaterThan(700);
+ const exportMeta=await exportPreview.evaluate((node:HTMLImageElement)=>({width:node.naturalWidth,src:node.src}));
+ expect(exportMeta.width).toBeGreaterThan(700);
+ expect(exportMeta.src).toMatch(/^data:image\\/png/);
+ expect(exportMeta.width).toBeGreaterThanOrEqual(densityTarget);
 });
