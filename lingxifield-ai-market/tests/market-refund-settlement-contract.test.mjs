@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 
 test('refund settlement is service-role-only, replay-safe and amount-capped under an order lock',async()=>{
- const sql=await readFile(new URL('../../supabase/migrations/20261101150000_ai_market_atomic_refund_settlement_20261101.sql',import.meta.url),'utf8');
+ const sql=await readFile(new URL('../sql/20261101_ai_market_atomic_refund_settlement.sql',import.meta.url),'utf8');
  assert.ok(sql.includes('FOR UPDATE'));
  assert.ok(sql.includes('REFUND_EXCEEDS_PAID_AMOUNT'));
  assert.ok(sql.includes('REPLAY_EVENT_CONFLICT'));
