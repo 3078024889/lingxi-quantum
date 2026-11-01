@@ -47,7 +47,7 @@ Example manifest shape (replace the illustrative ID and reason with the actual a
 ```json
 {
   "reviewer": "3078024889",
-  "reviewedAt": "2026-11-01T08:00:00.000Z",
+  "reviewedAt": "2026-11-01T07:40:00.000Z",
   "decisions": [
     {
       "id": "gsc-0123456789abcdef01234567",
