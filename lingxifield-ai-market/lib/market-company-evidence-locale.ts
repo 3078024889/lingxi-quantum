@@ -4,8 +4,20 @@ import type {CompanyEvidence} from './market-company-evidence';
 // One source of financial facts, multiple language presentations. Text is never
 // machine-translated at runtime; values absent from the publisher ledger stay absent.
 const ORDER=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
-type Key='anthropic.funding'|'suno.funding'|'replit.funding'|'comfy.funding'|'google.listing'|'alibaba.listing'|'kuaishou.listing'|'kuaishou.projectStarted'|'runway.projectStarted'|'comfy.projectStarted';
+type Key='anthropic.funding'|'suno.funding'|'replit.funding'|'comfy.funding'|'google.listing'|'alibaba.listing'|'kuaishou.listing'|'kuaishou.projectStarted'|'runway.projectStarted'|'comfy.projectStarted'|'dify.funding'|'langchain.projectStarted';
 const texts:Record<Key,readonly string[]>={
+ 'dify.funding':[
+  '2026 年 3 月 Pre-A 轮融资 3000 万美元（单轮）','March 2026: US$30M Pre-A funding round (not cumulative)',
+  '2026年3月：プレAラウンドで3,000万米ドル調達','2026년 3월: Pre-A 투자 3천만 달러(단일 라운드)',
+  'Mars 2026 : tour pré-série A de 30 M$ US','März 2026: Pre-A-Finanzierungsrunde über 30 Mio. US-Dollar',
+  'Marzo de 2026: ronda Pre-A de 30 MUSD','Março de 2026: rodada Pré-A de US$ 30 milhões','مارس 2026: جولة تمويل Pre-A بقيمة 30 مليون دولار'
+ ],
+ 'langchain.projectStarted':[
+  'LangChain 开源项目始于 2022 年末；公司于 2023 年成立','LangChain open-source project began in late 2022; company founded in 2023',
+  'LangChainのOSSは2022年末、会社は2023年に発足','LangChain 오픈소스 프로젝트는 2022년 말, 회사는 2023년 시작',
+  'Projet open source lancé fin 2022 ; société fondée en 2023','Open-Source-Projekt seit Ende 2022; Firma 2023 gegründet',
+  'Proyecto abierto iniciado a finales de 2022; empresa fundada en 2023','Projeto aberto iniciado no fim de 2022; empresa fundada em 2023','بدأ المشروع مفتوح المصدر أواخر 2022 وتأسست الشركة في 2023'
+ ],
  'anthropic.funding':[
   '2022 年 B 轮融资 5.8 亿美元（非累计）','2022 Series B: US$580M (not cumulative)','2022年シリーズB：5.8億米ドル（累計ではありません）','2022년 시리즈 B: 미화 5억 8천만 달러(누적 아님)',
   'Série B en 2022 : 580 M$ US (non cumulés)','Serie B 2022: 580 Mio. US-Dollar (nicht kumuliert)','Serie B de 2022: 580 MUSD (no acumulados)','Série B de 2022: US$ 580 milhões (não acumulados)','الجولة B في 2022: مبلغ 580 مليون دولار (ليست حصيلة تراكمية)'
@@ -60,7 +72,10 @@ const locations:Record<string,{country:string,city:string,openaiAddress?:boolean
  alibaba:{country:'CN',city:'Hangzhou'},
  bytedance:{country:'CN',city:'Beijing'},
  luma:{country:'US',city:'Redwood City'},
- replit:{country:'US',city:'San Francisco'}
+ replit:{country:'US',city:'San Francisco'},
+ langchain:{country:'US',city:'San Francisco'},
+ n8n:{country:'DE',city:'Berlin'},
+ dify:{country:'US',city:'Menlo Park'}
 };
 const originWords:Record<Language,string>={zh:'公司起源',en:'company origin',ja:'会社の起源',ko:'기업 출발지',fr:'origine de la société',de:'Unternehmensursprung',es:'origen de la empresa',pt:'origem da empresa',ar:'منشأ الشركة'};
 const labels:Record<Language,string>={
