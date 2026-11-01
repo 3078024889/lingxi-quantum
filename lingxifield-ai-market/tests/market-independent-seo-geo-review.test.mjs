@@ -138,3 +138,15 @@ test('first-party Search Console rows are hash-checked but never counted as comp
  assert.equal(report.comparisonGroups,0);
  assert.throws(()=>verifyLedger([{...row,position:1}]),/GSC_RECORD_HASH_MISMATCH/);
 });
+
+test('capture ingestion rejects private query data, unexpected fields and oversized raw files',()=>{
+ const capture=serpCapture({privateNote:'must not be archived'});
+ const raw=JSON.stringify(capture);
+ assert.throws(()=>reviewCapture(raw,{}, {knownIds}),/CAPTURE_UNEXPECTED_FIELD/);
+ const privateQuery=serpCapture({query:'search for person@example.com'});
+ const privateRaw=JSON.stringify(privateQuery);
+ assert.throws(()=>reviewCapture(privateRaw,{}, {knownIds}),/CAPTURE_QUERY_PRIVACY_RISK/);
+ assert.throws(()=>reviewCapture(' '.repeat(256001),{}, {knownIds}),/CAPTURE_SIZE_INVALID/);
+ const rowExtra=serpCapture({results:serpCapture().results.map((x,i)=>i===0?{...x,rawHtml:'not allowed'}:x)});
+ assert.throws(()=>reviewCapture(JSON.stringify(rowExtra),{}, {knownIds}),/CAPTURE_RESULT_UNEXPECTED_FIELD/);
+});
