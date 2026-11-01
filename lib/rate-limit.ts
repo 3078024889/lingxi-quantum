@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import {trustedClientIp} from "@/lib/security/trusted-client-ip";
 
 // ────────────────────────────────────────────────────────────────────
 // 简单限流（v225 新增）
@@ -43,9 +44,5 @@ export async function checkRateLimit(
 // 固定字符串，保证限流函数至少能正常调用（这种情况下等于所有查不到
 // IP 的请求共用一个配额，比完全不限流要安全）。
 export function getClientIp(req: Request): string {
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  const realIp = req.headers.get("x-real-ip");
-  if (realIp) return realIp.trim();
-  return "unknown";
+  return trustedClientIp(req);
 }
