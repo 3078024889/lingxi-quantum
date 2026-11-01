@@ -39,8 +39,8 @@ test('provisioning fails closed on HTTP errors and unexpected RPC responses',asy
 });
 
 test('database key provisioning is service-role-only and covered by executable PostgreSQL CI',async()=>{
- const migration=await readFile(new URL('../../../supabase/migrations/20261101_ai_market_feedback_key_provisioning.sql',import.meta.url),'utf8');
- const workflow=await readFile(new URL('../../../.github/workflows/ai-market-postgres-isolated.yml',import.meta.url),'utf8');
+ const migration=await readFile(new URL('../../supabase/migrations/20261101_ai_market_feedback_key_provisioning.sql',import.meta.url),'utf8');
+ const workflow=await readFile(new URL('../../.github/workflows/ai-market-postgres-isolated.yml',import.meta.url),'utf8');
  const api=await readFile(new URL('../app/api/v1/feedback/route.ts',import.meta.url),'utf8');
  assert.match(migration,/request\.jwt\.claim\.role/);
  assert.match(migration,/<> 'service_role'/);
