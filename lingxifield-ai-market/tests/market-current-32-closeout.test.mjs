@@ -47,6 +47,7 @@ test('product detail footer displays useful prices and publisher facts, not inte
  assert.match(s,/点击官方资料查看详情/);
  assert.match(s,/See the publisher source for details/);
 });
+test('commercial summary surfaces consumer license terms, not verification jargon',()=>{const s=file('app/market-matrix-row.tsx');assert.doesNotMatch(s,/Commercial rights are not yet independently verified/);});
 test('new ten-publisher intake does not affect current public catalog',()=>{
  const batch=JSON.parse(file('data/company-intake/batch-001.json'));
  assert.equal(batch.visibleToPublic,false);
