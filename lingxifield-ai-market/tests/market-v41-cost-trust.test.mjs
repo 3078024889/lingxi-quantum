@@ -504,3 +504,21 @@ test('SEO/GEO endpoint reports the real release index gate and never fabricates 
  assert.match(api,/groupedSeoGeo\(\)/);
  assert.match(policy,/VERCEL_ENV!=='preview'/);
 });
+
+
+test('all 32 product payment methods render without untranslated Chinese across nine locales',async()=>{
+ const {RESEARCHED_FACTS}=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
+ const {localizedPaymentName}=await import(pathToFileURL(path.join(ROOT,'lib/market-localized-payment.ts')).href);
+ const locales=['zh','en','ja','ko','fr','de','es','pt','ar'];
+ assert.equal(Object.keys(RESEARCHED_FACTS).length,32);
+ for(const [id,fact] of Object.entries(RESEARCHED_FACTS)){
+  assert.ok(Array.isArray(fact.payments)&&fact.payments.length>0,id+' payment methods');
+  for(const language of locales){
+   for(const method of fact.payments){
+    const label=localizedPaymentName(method,language);
+    assert.ok(typeof label==='string'&&label.trim().length>1,id+':'+language+':'+method);
+    if(language!=='zh')assert.doesNotMatch(label,/[\\u4e00-\\u9fff]/,id+':'+language+':'+method);
+   }
+  }
+ }
+});
