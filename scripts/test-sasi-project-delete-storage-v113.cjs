@@ -35,6 +35,7 @@ const moduleValue={exports:{}};
 const mock={
  "next/server":{NextResponse:{json:(body,opts={})=>({status:opts.status||200,body})}},
  "@/lib/sasi/request-security":{isSameOriginMutation:()=>true},
+ "@/lib/security/bounded-request-json":{boundedRequestJson:async()=>({})},
  "@/lib/supabase/admin":{createAdminClient:()=>admin,isSupabaseAdminConfigured:()=>true},
  "@/lib/supabase/server":{createClient:()=>client}
 };
