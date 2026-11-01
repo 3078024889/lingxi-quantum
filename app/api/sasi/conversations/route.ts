@@ -47,9 +47,10 @@ export async function POST(req:NextRequest){
  const user=await userId();
  if(!user)return NextResponse.json({error:"AUTH_REQUIRED"},{status:401,headers:noCache});
  const guard=await enforceAbuseGuard(req,{scope:"sasi-chat-history",userId:user,accountLimit:80,ipLimit:240,windowSeconds:3600});
- if(!guard.ok)return NextResponse.json({error:"TOO_MANY_REQUESTS"},{status:429,headers:noCache});
+ if(!guard.ok)return NextResponse.json({error:guard.error},{status:guard.status,headers:noCache});
  let body:Record<string,unknown>;
- try{body=await boundedRequestJson(req,196*1024) as Record<string,unknown>}catch{return NextResponse.json({error:"INVALID_REQUEST"},{status:400,headers:noCache})}
+ try{body=await boundedRequestJson(req,196*1024) as Record<string,unknown>}
+ catch(error){const oversized=error instanceof Error&&error.message==="REQUEST_TOO_LARGE";return NextResponse.json({error:oversized?"REQUEST_TOO_LARGE":"INVALID_REQUEST"},{status:oversized?413:400,headers:noCache})}
  const threadId=String(body?.threadId||""), requestId=String(body?.requestId||"");
  const question=typeof body?.question==="string"?body.question.trim():"";
  const answer=typeof body?.answer==="string"?body.answer.trim():"";
