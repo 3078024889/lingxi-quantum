@@ -1,0 +1,53 @@
+import fs from "node:fs";
+import {test,expect} from "./export-test";
+
+test("PDF editor renders crisp HiDPI previews and edits text/image objects visually",async({page})=>{
+ await page.goto("/tools/pdf-editor?lang=en");
+ const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled({timeout:15000});
+ await page.locator('input[type="file"]').first().setInputFiles({name:"basic.pdf",mimeType:"application/pdf",buffer:pdf});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
+ const source=page.getByTestId("pdf-source-preview");
+ await expect(source).toBeVisible();
+ const sourceWidth=await source.evaluate((node:HTMLImageElement)=>node.naturalWidth);
+ expect(sourceWidth).toBeGreaterThan(700);
+
+ await page.getByPlaceholder("Text to add").fill("Approved");
+ await page.getByRole("button",{name:"Add text"}).click();
+ const textObject=page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]');
+ await expect(textObject).toBeVisible();
+ await expect(page.getByTestId("pdf-object-toolbar")).toBeVisible();
+ await expect(page.locator('button[aria-label^="Resize "]')).toHaveCount(8);
+ const before=await textObject.boundingBox();
+ const handle=await page.getByRole("button",{name:"Resize se"}).boundingBox();
+ expect(before).not.toBeNull();expect(handle).not.toBeNull();
+ await page.mouse.move(handle!.x+handle!.width/2,handle!.y+handle!.height/2);
+ await page.mouse.down();
+ await page.mouse.move(handle!.x+handle!.width/2+36,handle!.y+handle!.height/2+20,{steps:4});
+ await page.mouse.up();
+ const after=await textObject.boundingBox();
+ expect(after!.width).toBeGreaterThan(before!.width+10);
+
+ await page.getByTestId("pdf-page-stage").click({position:{x:5,y:5}});
+ await expect(page.locator('button[aria-label^="Resize "]')).toHaveCount(0);
+ await expect(page.getByTestId("pdf-object-toolbar")).toHaveCount(0);
+ await textObject.dblclick();
+ const editor=page.getByRole("textbox",{name:"Edit PDF text"});
+ await expect(editor).toBeVisible();
+ await editor.fill("Approved by reviewer");
+ await editor.press("Enter");
+ await expect(textObject).toContainText("Approved by reviewer");
+
+ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/F7sAAAAASUVORK5CYII=","base64");
+ await page.locator("label").filter({hasText:"Add image"}).locator('input[type="file"]').setInputFiles({name:"stamp.png",mimeType:"image/png",buffer:png});
+ const imageObject=page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]').last();
+ await expect(imageObject).toBeVisible();
+ await expect(page.getByTestId("pdf-object-toolbar")).toBeVisible();
+ await expect(page.getByRole("checkbox",{name:"Lock aspect ratio"})).toBeChecked();
+
+ await page.getByRole("button",{name:"Preview",exact:true}).click();
+ const exportPreview=page.getByTestId("pdf-export-preview").first();
+ await expect(exportPreview).toBeVisible({timeout:30000});
+ const exportWidth=await exportPreview.evaluate((node:HTMLImageElement)=>node.naturalWidth);
+ expect(exportWidth).toBeGreaterThan(700);
+});
