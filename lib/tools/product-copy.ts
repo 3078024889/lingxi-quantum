@@ -1,5 +1,16 @@
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 export const TOOL_INTROS = {
+ 'image-translator':{
+  zh:'识别图片中的文字，翻译成指定语言，并尽量保留原文字的位置与排版。支持单张和批量图片。',
+  en:'Recognize text in images, translate it into your chosen language, and place the translated text near its original position. Supports single and batch images.',
+  ja:'画像内の文字を認識して指定した言語に翻訳し、元の位置とレイアウトをできるだけ保ちます。単枚・一括に対応。',
+  ko:'이미지의 텍스트를 인식해 선택한 언어로 번역하고 원래 위치와 레이아웃을 최대한 유지합니다. 단일 및 일괄 이미지를 지원합니다.',
+  fr:'Reconnaît le texte des images, le traduit dans la langue choisie et conserve autant que possible sa position et sa mise en page. Une image ou un lot.',
+  de:'Erkennt Text in Bildern, übersetzt ihn in die gewählte Sprache und behält Position und Layout möglichst bei. Einzel- und Stapelbilder.',
+  es:'Reconoce el texto de las imágenes, lo traduce al idioma elegido y conserva en lo posible su posición y diseño. Admite imágenes individuales y por lotes.',
+  pt:'Reconhece o texto nas imagens, traduz para o idioma escolhido e mantém, tanto quanto possível, a posição e o layout originais. Suporta imagens únicas e em lote.',
+  ar:'يتعرّف على النص داخل الصور ويترجمه إلى اللغة المختارة مع الحفاظ قدر الإمكان على موضعه وتنسيقه الأصلي. يدعم صورة واحدة أو مجموعة صور.'
+ },
  'document-translate':{
   zh:'翻译 PDF、Office、EPUB 与文本文件，支持九种语言和 PDF 原文对照。',en:'Translate PDFs, Office, EPUB and text files in nine languages, with original/translation PDF output.',ja:'PDF・Office・EPUB・テキストを9言語で翻訳し、原文と訳文のPDFを出力。',ko:'PDF, Office, EPUB, 텍스트를 9개 언어로 번역하고 원문 대조 PDF를 만드세요.',fr:'Traduisez PDF, Office, EPUB et textes en neuf langues, avec PDF original et traduction.',de:'PDF-, Office-, EPUB- und Textdateien in neun Sprachen übersetzen, mit Original und Übersetzung als PDF.',es:'Traduce PDF, Office, EPUB y texto en nueve idiomas, con PDF original y traducido.',pt:'Traduza PDF, Office, EPUB e texto em nove idiomas, com PDF original e traduzido.',ar:'ترجم ملفات PDF وOffice وEPUB والنصوص بتسع لغات مع الأصل والترجمة في PDF.'
  },

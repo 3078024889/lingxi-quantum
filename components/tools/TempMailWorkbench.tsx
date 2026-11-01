@@ -58,11 +58,14 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
   return t(map[code]||"serviceBusy");
  }
 
+ const destroyedBoxIds=useRef(new Set<string>());
  const refresh=useCallback(async (current:Box|null=box)=>{
-  if(!current)return;
+  if(!current||destroyedBoxIds.current.has(current.id))return;
   const r=await fetch(`/api/tools/temp-mail/inbox?id=${encodeURIComponent(current.id)}`,{cache:"no-store"});
   const d=await r.json().catch(()=>({}));
   if(!r.ok)throw new Error(d.error||"INBOX_READ_FAILED");
+  // An in-flight poll must not resurrect a mailbox after the user destroys it.
+  if(destroyedBoxIds.current.has(current.id))return;
   if(d.expired){setBox(null);setMessages([]);return}
   setMessages(d.messages||[]);
   if(d.expiresAt)setBox({...current,expiresAt:d.expiresAt});
@@ -122,14 +125,17 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
  }
 
  async function destroy(target=box){
-  try{
   if(!target)return;
-  const response=await fetch("/api/tools/temp-mail/destroy",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:target.id})});
+  destroyedBoxIds.current.add(target.id);
+  try{
+   const response=await fetch("/api/tools/temp-mail/destroy",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:target.id})});
    if(!response.ok)throw new Error("TEMP_MAIL_DESTROY_FAILED");
-  if(box?.id===target.id){localStorage.removeItem("lingxifield:temp-mail");setBox(null);setMessages([])}
-  setOwned(v=>v.filter(x=>x.id!==target.id));setError("");
-
-  }catch{setError(lang==="zh"?"暂时无法销毁，请稍后再试。":"Unable to destroy this inbox right now.");}
+   if(box?.id===target.id){localStorage.removeItem("lingxifield:temp-mail");setBox(null);setMessages([])}
+   setOwned(v=>v.filter(x=>x.id!==target.id));setError("");
+  }catch{
+   destroyedBoxIds.current.delete(target.id);
+   setError(lang==="zh"?"暂时无法销毁，请稍后再试。":"Unable to destroy this inbox right now.");
+  }
 }
 
  async function copy(value:string,key:string){await copyText(value);setCopied(key);setTimeout(()=>setCopied(""),1400)}
