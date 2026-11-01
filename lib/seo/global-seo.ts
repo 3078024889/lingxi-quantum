@@ -147,6 +147,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"pdf-remove-metadata",zh:"删除 PDF 元数据",en:"Remove PDF Metadata",mode:"local" as const},
   {slug:"pdf-halve-pages",zh:"PDF 页面拆半",en:"Halve PDF Pages",mode:"local" as const},
   {slug:"pdf-search",zh:"PDF 全文搜索",en:"Search PDFs",mode:"local" as const},
+  {slug:"rotate-video",zh:"视频旋转",en:"Rotate Video",mode:"local" as const},
   {slug:"reverse-video",zh:"视频倒放",en:"Reverse Video",mode:"local" as const},
   {slug:"loop-video",zh:"视频循环",en:"Loop Video",mode:"local" as const},
   {slug:"stop-motion-video",zh:"视频定格",en:"Stop Motion Video",mode:"local" as const},
