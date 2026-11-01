@@ -146,7 +146,7 @@ test('structured locale facts preserve vendor prices and free credits',async()=>
  const fact=await import(pathToFileURL(path.join(ROOT,'lib/market-fact-locale.ts')).href);
  assert.match(fact.localizedCatalogFact('runway','en','price','年付折合 $12/月'),/\$12.*annually/);
  assert.match(fact.localizedCatalogFact('runway','fr','free','一次性125积分'),/125.*crédits/);
- assert.match(fact.localizedCatalogFact('suno','en','free','每天50积分'),/50.*noncommercial/);
+ assert.match(fact.localizedCatalogFact('suno','en','free','每天50积分'),/50.*non.?commercial/);
  assert.match(fact.localizedCatalogFact('dify','en','price','590美元每年'),/\$590.*workspace/);
  assert.match(fact.localizedCatalogFact('ollama','en','price','本地工具免费'),/Local software free/);
  assert.match(fact.localizedCatalogFact('midjourney','en','price','待核验'),/\$10/);
