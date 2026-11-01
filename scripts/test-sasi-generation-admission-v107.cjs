@@ -21,7 +21,7 @@ for(const bad of [
  {kind:"video",prompt:"Valid",duration:"Infinity"},{kind:"video",prompt:"Valid",duration:6.5},
  {kind:"image",prompt:"Valid",style:"X".repeat(181)},{kind:"image",prompt:"Valid",ratio:"4:3"}
 ])assert.throws(()=>parse(bad),/INVALID_GENERATION_REQUEST/);
-let authenticated=true,origin=true,guard={ok:true},writes=0,executions=0,taskFails=0,failInit=false,externalModelRequired=false;
+let authenticated=true,origin=true,guard={ok:true},writes=0,executions=0,taskFails=0,failInit=false,externalModelRequired=false,heavyNative=false;
 const previousLegacyFlag=process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED;
 delete process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED;
 const route=compile("app/api/sasi/generation/submit/route.ts",{
@@ -32,7 +32,7 @@ const route=compile("app/api/sasi/generation/submit/route.ts",{
  "@/lib/security/bounded-request-json":bounded,
  "@/lib/security/abuse-guard":{enforceAbuseGuard:async()=>guard},
  "@/lib/sasi-kernel/runtime/generation-request":parser,
- "@/lib/sasi-kernel/runtime/plan":{buildSasiExecutionPlan:()=>({nodes:[{nodeId:"n1"}],externalModelRequired})},
+ "@/lib/sasi-kernel/runtime/plan":{buildSasiExecutionPlan:()=>({nodes:[{nodeId:"n1",capabilityId:heavyNative?"image-generate-native":"layout-generate",executionClass:heavyNative?"semantic-generation":"procedural",fallbackIds:[]}],externalModelRequired})},
  "@/lib/sasi-kernel/runtime/task-store":{createRuntimeTask:async()=>{writes++;if(failInit)throw Error("PARTIAL_TASK_INIT")},failRuntimeTask:async()=>{taskFails++}},
  "@/lib/sasi-kernel/runtime/executor":{executeSasiPlan:async()=>{executions++;return {status:"succeeded",output:{kind:"fixture"}}}}
 });
@@ -58,7 +58,12 @@ const req=(body,headers={})=>new Request("https://test.invalid/api/sasi/generati
  assert.equal(paidDenied.status,402,"externally billable tasks require native entitlement");
  assert.equal(paidDenied.body.error,"PAID_GENERATION_AUTHORIZATION_REQUIRED");
  assert.equal(writes,0);assert.equal(executions,0);
- externalModelRequired=false;
+ externalModelRequired=false;heavyNative=true;
+ const nativeDenied=await route.POST(req({kind:"image",prompt:"Generate scene art"}));
+ assert.equal(nativeDenied.status,402,"native semantic generation is paid even when route metadata says external=false");
+ assert.equal(nativeDenied.body.error,"PAID_GENERATION_AUTHORIZATION_REQUIRED");
+ assert.equal(writes,0);assert.equal(executions,0);
+ heavyNative=false;
  const good=await route.POST(req({kind:"video",prompt:"Scene",duration:8,ratio:"16:9"}));
  assert.equal(good.status,200);assert.equal(good.body.ok,true);
  assert.equal(writes,1);assert.equal(executions,1);assert.equal(taskFails,0);
