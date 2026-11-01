@@ -360,14 +360,14 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://platform.claude.com/docs/en/about-claude/models/overview"
   },
   "chatgpt": {
-    "price": "ChatGPT Plus $20/月（月付）；API 另按模型调用计费，Plus 订阅不包含 API 额度",
+    "price": "ChatGPT Plus $20/月（月付），含对应 Codex 使用额度；独立 API Key 按 API 价格计费，不包含在 Plus 订阅中",
     "priceSource": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
-    "free": "ChatGPT 有免费方案；文件、研究、图像、模型次数随套餐和负载变化",
+    "free": "ChatGPT 有免费方案，Codex 本地等入口也有适用额度；Codex 云端任务需符合资格的套餐；用量随模型和任务变化",
     "freeSource": "https://openai.com/chatgpt/pricing/",
     "region": "ChatGPT 消费者访问国家和 OpenAI API 支持名单不同；官方国家名单按产品单独核对",
     "regionSource": "https://help.openai.com/en/articles/7947663-chatgpt-supported-countries",
-    "models": "ChatGPT 通过用户当前套餐和模型选择器使用 GPT 系列；网页可用型号与开发者 API 型号分开",
-    "modelsSource": "https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview"
+    "models": "ChatGPT 可选择适用 GPT 模型；Codex 是运行在独立编程入口的开发代理，不是单一 GPT 模型，CLI、IDE、云端可用型号随账户变化",
+    "modelsSource": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan"
   },
   "claude": {
     "price": "Claude Free $0；Pro $20/月（月付），年付 $200/年；API 费用另计",
