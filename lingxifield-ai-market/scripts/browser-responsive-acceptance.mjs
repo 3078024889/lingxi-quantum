@@ -84,8 +84,11 @@ await run('Tablet+desktop 3 browser widths have no empty dedicated right column'
   const page=await context.newPage();await goto(page,'/en/ai');
   const aside=page.locator('.rightAside');
   assert.equal(await aside.isVisible(),false,'no empty right column at '+width);
-  const viewport=await page.locator('.central').boundingBox();
-  assert.ok(viewport.width>Math.min(700,width*.65),'main content takes the wide screen at '+width);
+  const central=page.locator('.central');
+  await central.waitFor({state:'visible',timeout:10000});
+  const viewport=await central.boundingBox();
+  assert.ok(viewport,'central content has a measurable layout box at '+width);
+  assert.ok(viewport.width>Math.min(700,width*.65),'main content takes the wide screen at '+width+': '+viewport.width);
   await context.close();
  }
 });
