@@ -32,13 +32,16 @@ test('all nine locales provide filters and eleven product headings',async()=>{
  assert.match(headings,/globalRegionSummary\(p.id,language\)/);
 });
 test('new reviews really auto-publish when server-signed SQL classifier approves; guest cannot approve directly',async()=>{
- const sql=await read('../supabase/migrations/20261030214500_ai_market_auto_publish.sql');
+ const sql=await read('sql/20261030214500_ai_market_auto_publish.sql');
  const api=await read('app/api/v1/feedback/route.ts');
  const view=await read('app/visitor-feedback.tsx');
  assert.match(sql,/private\.ai_market_feedback_auto_safe\(v_body,v_nick\)/);
  assert.match(sql,/case when v_auto then 'approved' else 'pending' end/);
  assert.match(sql,/grant execute on function public\.ai_market_submit_visitor_feedback\(jsonb,text\) to anon,authenticated/);
- assert.match(sql,/v_expected<>p_signature/);
+ assert.match(sql,/for v_i in 1\.\.64 loop/);
+ assert.match(sql,/v_diff<>0/);
+ assert.doesNotMatch(sql,/v_expected<>p_signature/);
+ assert.doesNotMatch(sql,/update public\.ai_market_visitor_feedback\s+set status='approved'/i);
  assert.match(sql,/FEEDBACK_RATE_LIMITED/);
  assert.match(sql,/revoke all on function private\.ai_market_feedback_auto_safe\(text,text\) from public,anon,authenticated/);
  assert.match(api,/published:saved\.published===true/);
