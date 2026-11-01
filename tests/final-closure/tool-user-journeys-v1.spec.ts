@@ -96,7 +96,15 @@ async function syntheticWatermarkVideo(page:any){
   const ctx=canvas.getContext("2d")!;ctx.fillStyle="#304060";ctx.fillRect(0,0,160,120);ctx.fillStyle="#ff2020";ctx.fillRect(120,98,26,12);
   const stream=canvas.captureStream(12);const recorder=new MediaRecorder(stream,{mimeType:"video/webm;codecs=vp8"});const chunks:BlobPart[]=[];
   const done=new Promise<Blob>(resolve=>{recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recorder.onstop=()=>resolve(new Blob(chunks,{type:"video/webm"}))});
-  recorder.start();await new Promise(r=>setTimeout(r,1800));recorder.stop();const blob=await done;stream.getTracks().forEach(t=>t.stop());
+  recorder.start();
+  // Canvas capture is paint-driven in Chromium. Change the frame while recording
+  // so the fixture contains a real multi-frame clip, not a single-frame WebM.
+  for(let i=0;i<24;i++){
+   ctx.fillStyle=i%2?"#304060":"#314061";ctx.fillRect(0,0,160,120);
+   ctx.fillStyle="#ff2020";ctx.fillRect(120,98,26,12);
+   await new Promise(r=>setTimeout(r,85));
+  }
+  recorder.stop();const blob=await done;stream.getTracks().forEach(t=>t.stop());
   return Array.from(new Uint8Array(await blob.arrayBuffer()));
  });
  return Buffer.from(values);
