@@ -229,7 +229,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
 export function localizedCatalogFact(id:string,language:Language,scope:Scope,original:string):string{
  // Luma has one source of truth for all nine languages; do not reintroduce the old $deprecated Luma price snapshot.
  if(id==='luma')return scope==='price'?lumaSubscription(language):scope==='free'?lumaFree(language):lumaModels(language);
- if(id==='suno'&&scope!=='models')return scope==='price'?sunoSubscription(language):sunoFree(language);
+ if(id==='suno')return scope==='price'?sunoSubscription(language):scope==='free'?sunoFree(language):sunoModels(language);
  if(language==='zh')return original;
  const c=FACTS[id],t=TEXT[language];
  if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
