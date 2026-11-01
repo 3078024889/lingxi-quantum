@@ -4,7 +4,7 @@ import type {CompanyEvidence} from './market-company-evidence';
 // One source of financial facts, multiple language presentations. Text is never
 // machine-translated at runtime; values absent from the publisher ledger stay absent.
 const ORDER=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
-type Key='anthropic.funding'|'suno.funding'|'replit.funding'|'comfy.funding'|'google.listing'|'alibaba.listing'|'kuaishou.listing'|'kuaishou.projectStarted'|'runway.projectStarted'|'comfy.projectStarted'|'dify.funding'|'langchain.projectStarted';
+type Key='anthropic.funding'|'suno.funding'|'replit.funding'|'comfy.funding'|'google.listing'|'alibaba.listing'|'kuaishou.listing'|'kuaishou.projectStarted'|'runway.projectStarted'|'comfy.projectStarted'|'dify.funding'|'langchain.projectStarted'|'suno.scale';
 const texts:Record<Key,readonly string[]>={
  'dify.funding':[
   '2026 年 3 月 Pre-A 轮融资 3000 万美元（单轮）','March 2026: US$30M Pre-A funding round (not cumulative)',
@@ -25,6 +25,17 @@ const texts:Record<Key,readonly string[]>={
  'suno.funding':[
   '官方公布累计融资超过 7.75 亿美元','Over US$775M in cumulative funding, per Suno','公式発表の累計調達額は7.75億米ドル超','공식 발표 누적 투자 유치액 7억 7,500만 달러 초과',
   'Plus de 775 M$ US de financements cumulés selon Suno','Laut Suno über 775 Mio. US-Dollar Gesamtfinanzierung','Más de 775 MUSD de financiación acumulada según Suno','Mais de US$ 775 milhões em financiamento acumulado, segundo a Suno','أعلنت Suno أن التمويل التراكمي يتجاوز 775 مليون دولار'
+ ],
+ 'suno.scale':[
+  '超过 1 亿人创作过音乐；团队 250+ 人；官方称在 35 个国家/地区位列音乐应用第一',
+  '100M+ people have made music on Suno; 250+ team members; Suno says it is the No. 1 music app in 35 countries',
+  '1億人以上がSunoで音楽を制作。チームは250人超。35か国で音楽アプリ第1位と公式発表',
+  '1억 명 이상이 Suno에서 음악을 제작; 팀 250명 이상; 35개국 음악 앱 1위라고 공식 발표',
+  'Plus de 100 millions de créateurs ; équipe de plus de 250 personnes ; n° 1 des applications musicales dans 35 pays selon Suno',
+  'Über 100 Mio. Menschen haben Musik erstellt; Team mit mehr als 250 Personen; laut Suno Musik-App Nr. 1 in 35 Ländern',
+  'Más de 100 millones de personas han creado música; equipo de más de 250 personas; Suno afirma ser la app musical n.º 1 en 35 países',
+  'Mais de 100 milhões de pessoas criaram música; equipe com mais de 250 pessoas; a Suno afirma ser o app de música nº 1 em 35 países',
+  'أكثر من 100 مليون شخص أنشأوا الموسيقى؛ فريق يتجاوز 250 شخصاً؛ وتقول Suno إنها تطبيق الموسيقى الأول في 35 دولة'
  ],
  'replit.funding':[
   '2026 年 3 月公布 4 亿美元融资（单轮）','US$400M financing announced March 2026 (this round)','2026年3月発表の調達額4億米ドル（単独ラウンド）','2026년 3월 발표 4억 달러 투자 유치(해당 라운드)',
@@ -93,7 +104,7 @@ export function localizeCompanyEvidence(id:string,language:Language,fact:Company
    local.headquarters={...fact.headquarters,text:country+' · '+place.city+(place.openaiAddress?' ('+labels[language]+')':owner==='bytedance'?' ('+originWords[language]+')':'')};
   }else local.headquarters=undefined;
  }
- for(const field of ['funding','listing','projectStarted'] as const){
+ for(const field of ['funding','listing','projectStarted','scale'] as const){
   if(!fact[field])continue;
   const key=(owner+'.'+field) as Key;
   const alternatives=texts[key];
