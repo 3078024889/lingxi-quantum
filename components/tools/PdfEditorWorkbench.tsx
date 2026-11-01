@@ -32,16 +32,16 @@ const SIGNING_WORDS:Record<string,{ink:string;seal:string;extract:string;again:s
 };
 type Overlay={id:number;kind:"text"|"cover"|"image";page:number;x:number;y:number;w:number;h:number;ratio?:number;locked?:boolean;angle?:number;text?:string;size?:number;data?:string};
 type GestureState={id:number;mode:"move"|"resize"|"rotate";handle?:string;startX:number;startY:number;originX:number;originY:number;originW:number;originH:number;originAngle:number;rect:DOMRect}|null;
-const OBJECT_WORDS:Record<string,{selected:string;editText:string;duplicate:string;undo:string;redo:string;deselect:string;locked:string;width:string;height:string;rotation:string}>={
- zh:{selected:"当前对象",editText:"编辑文字",duplicate:"复制",undo:"撤销",redo:"重做",deselect:"取消选择",locked:"锁定比例",width:"宽度",height:"高度",rotation:"旋转"},
- en:{selected:"Selected object",editText:"Edit text",duplicate:"Duplicate",undo:"Undo",redo:"Redo",deselect:"Deselect",locked:"Lock aspect ratio",width:"Width",height:"Height",rotation:"Rotation"},
- ja:{selected:"選択中のオブジェクト",editText:"テキストを編集",duplicate:"複製",undo:"元に戻す",redo:"やり直す",deselect:"選択解除",locked:"縦横比を固定",width:"幅",height:"高さ",rotation:"回転"},
- ko:{selected:"선택한 개체",editText:"텍스트 편집",duplicate:"복제",undo:"실행 취소",redo:"다시 실행",deselect:"선택 해제",locked:"비율 잠금",width:"너비",height:"높이",rotation:"회전"},
- fr:{selected:"Objet sélectionné",editText:"Modifier le texte",duplicate:"Dupliquer",undo:"Annuler",redo:"Rétablir",deselect:"Désélectionner",locked:"Verrouiller les proportions",width:"Largeur",height:"Hauteur",rotation:"Rotation"},
- de:{selected:"Ausgewähltes Objekt",editText:"Text bearbeiten",duplicate:"Duplizieren",undo:"Rückgängig",redo:"Wiederholen",deselect:"Auswahl aufheben",locked:"Seitenverhältnis sperren",width:"Breite",height:"Höhe",rotation:"Drehung"},
- es:{selected:"Objeto seleccionado",editText:"Editar texto",duplicate:"Duplicar",undo:"Deshacer",redo:"Rehacer",deselect:"Deseleccionar",locked:"Bloquear proporción",width:"Ancho",height:"Alto",rotation:"Rotación"},
- pt:{selected:"Objeto selecionado",editText:"Editar texto",duplicate:"Duplicar",undo:"Desfazer",redo:"Refazer",deselect:"Desmarcar",locked:"Bloquear proporção",width:"Largura",height:"Altura",rotation:"Rotação"},
- ar:{selected:"العنصر المحدد",editText:"تحرير النص",duplicate:"نسخ",undo:"تراجع",redo:"إعادة",deselect:"إلغاء التحديد",locked:"قفل التناسب",width:"العرض",height:"الارتفاع",rotation:"الدوران"}
+const OBJECT_WORDS:Record<string,{selected:string;editText:string;duplicate:string;undo:string;redo:string;deselect:string;locked:string;x:string;y:string;width:string;height:string;rotation:string}>={
+ zh:{selected:"当前对象",editText:"编辑文字",duplicate:"复制",undo:"撤销",redo:"重做",deselect:"取消选择",locked:"锁定比例",x:"横坐标",y:"纵坐标",width:"宽度",height:"高度",rotation:"旋转"},
+ en:{selected:"Selected object",editText:"Edit text",duplicate:"Duplicate",undo:"Undo",redo:"Redo",deselect:"Deselect",locked:"Lock aspect ratio",x:"X",y:"Y",width:"Width",height:"Height",rotation:"Rotation"},
+ ja:{selected:"選択中のオブジェクト",editText:"テキストを編集",duplicate:"複製",undo:"元に戻す",redo:"やり直す",deselect:"選択解除",locked:"縦横比を固定",x:"X",y:"Y",width:"幅",height:"高さ",rotation:"回転"},
+ ko:{selected:"선택한 개체",editText:"텍스트 편집",duplicate:"복제",undo:"실행 취소",redo:"다시 실행",deselect:"선택 해제",locked:"비율 잠금",x:"X",y:"Y",width:"너비",height:"높이",rotation:"회전"},
+ fr:{selected:"Objet sélectionné",editText:"Modifier le texte",duplicate:"Dupliquer",undo:"Annuler",redo:"Rétablir",deselect:"Désélectionner",locked:"Verrouiller les proportions",x:"X",y:"Y",width:"Largeur",height:"Hauteur",rotation:"Rotation"},
+ de:{selected:"Ausgewähltes Objekt",editText:"Text bearbeiten",duplicate:"Duplizieren",undo:"Rückgängig",redo:"Wiederholen",deselect:"Auswahl aufheben",locked:"Seitenverhältnis sperren",x:"X",y:"Y",width:"Breite",height:"Höhe",rotation:"Drehung"},
+ es:{selected:"Objeto seleccionado",editText:"Editar texto",duplicate:"Duplicar",undo:"Deshacer",redo:"Rehacer",deselect:"Deseleccionar",locked:"Bloquear proporción",x:"X",y:"Y",width:"Ancho",height:"Alto",rotation:"Rotación"},
+ pt:{selected:"Objeto selecionado",editText:"Editar texto",duplicate:"Duplicar",undo:"Desfazer",redo:"Refazer",deselect:"Desmarcar",locked:"Bloquear proporção",x:"X",y:"Y",width:"Largura",height:"Altura",rotation:"Rotação"},
+ ar:{selected:"العنصر المحدد",editText:"تحرير النص",duplicate:"نسخ",undo:"تراجع",redo:"إعادة",deselect:"إلغاء التحديد",locked:"قفل التناسب",x:"س",y:"ص",width:"العرض",height:"الارتفاع",rotation:"الدوران"}
 };
 
 function blobBytes(bytes:Uint8Array){const copy=new Uint8Array(bytes.length);copy.set(bytes);return new Blob([copy.buffer],{type:"application/pdf"});}
