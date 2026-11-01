@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';import {rea
 const root=new URL('../',import.meta.url),read=p=>readFileSync(new URL(p,root),'utf8');
 test('preview cannot index; production launch requires explicitly verified owned HTTPS market domain',()=>{
  const source=read('lib/market-index-policy.ts');
- const layout=read('app/layout.tsx');
+ const layout=read('app/(default)/layout.tsx');
  const robots=read('app/robots.ts');
  assert.ok(source.includes('AI_MARKET_INDEX_READY'));
  assert.ok(source.includes('AI_MARKET_DOMAIN_VERIFIED'));
