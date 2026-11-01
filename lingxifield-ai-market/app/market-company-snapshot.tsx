@@ -4,17 +4,17 @@ import {platformLinks} from '../lib/official-platform-links';
 import {localizedProductSummary} from '../lib/market-product-locale';
 import {companyEvidenceFor} from '../lib/market-company-evidence';
 import {localizeCompanyEvidence} from '../lib/market-company-evidence-locale';
-type Copy={title:string,company:string,created:string,location:string,funding:string,listed:string,site:string,about:string,team:string};
+type Copy={title:string,company:string,created:string,location:string,funding:string,listed:string,scale:string,site:string,about:string,team:string};
 const WORDS:Record<Language,Copy>={
- zh:{title:'公司简介',company:'公司',created:'成立',location:'总部/地区',funding:'融资',listed:'上市',site:'官网',about:'主要业务',team:'团队'},
- en:{title:'Company overview',company:'Company',created:'Founded',location:'Headquarters',funding:'Funding',listed:'Listing',site:'Website',about:'What it does',team:'Team'},
- ja:{title:'企業概要',company:'企業',created:'設立',location:'所在地',funding:'調達',listed:'上場',site:'公式サイト',about:'事業',team:'チーム'},
- ko:{title:'기업 소개',company:'회사',created:'설립',location:'본사',funding:'투자',listed:'상장',site:'공식 사이트',about:'주요 사업',team:'팀'},
- fr:{title:'Profil de l’entreprise',company:'Entreprise',created:'Fondée',location:'Siège',funding:'Financement',listed:'Cotation',site:'Site officiel',about:'Activité',team:'Équipe'},
- de:{title:'Firmenprofil',company:'Firma',created:'Gegründet',location:'Sitz',funding:'Finanzierung',listed:'Börse',site:'Website',about:'Geschäft',team:'Team'},
- es:{title:'Empresa',company:'Empresa',created:'Fundación',location:'Sede',funding:'Financiación',listed:'Cotización',site:'Web oficial',about:'Actividad',team:'Equipo'},
- pt:{title:'Empresa',company:'Empresa',created:'Fundação',location:'Sede',funding:'Investimento',listed:'Bolsa',site:'Site oficial',about:'Atividade',team:'Equipe'},
- ar:{title:'نبذة عن الشركة',company:'الشركة',created:'تأسست',location:'المقر',funding:'التمويل',listed:'الإدراج',site:'الموقع',about:'النشاط',team:'الفريق'}
+ zh:{title:'公司简介',company:'公司',created:'成立',location:'总部/地区',funding:'融资',listed:'上市',scale:'公司规模',site:'官网',about:'主要业务',team:'团队'},
+ en:{title:'Company overview',company:'Company',created:'Founded',location:'Headquarters',funding:'Funding',listed:'Listing',scale:'Scale',site:'Website',about:'What it does',team:'Team'},
+ ja:{title:'企業概要',company:'企業',created:'設立',location:'所在地',funding:'調達',listed:'上場',scale:'企業規模',site:'公式サイト',about:'事業',team:'チーム'},
+ ko:{title:'기업 소개',company:'회사',created:'설립',location:'본사',funding:'투자',listed:'상장',scale:'기업 규모',site:'공식 사이트',about:'주요 사업',team:'팀'},
+ fr:{title:'Profil de l’entreprise',company:'Entreprise',created:'Fondée',location:'Siège',funding:'Financement',listed:'Cotation',scale:'Taille de l’entreprise',site:'Site officiel',about:'Activité',team:'Équipe'},
+ de:{title:'Firmenprofil',company:'Firma',created:'Gegründet',location:'Sitz',funding:'Finanzierung',listed:'Börse',scale:'Unternehmensgröße',site:'Website',about:'Geschäft',team:'Team'},
+ es:{title:'Empresa',company:'Empresa',created:'Fundación',location:'Sede',funding:'Financiación',listed:'Cotización',scale:'Tamaño de la empresa',site:'Web oficial',about:'Actividad',team:'Equipo'},
+ pt:{title:'Empresa',company:'Empresa',created:'Fundação',location:'Sede',funding:'Investimento',listed:'Bolsa',scale:'Dimensão da empresa',site:'Site oficial',about:'Atividade',team:'Equipe'},
+ ar:{title:'نبذة عن الشركة',company:'الشركة',created:'تأسست',location:'المقر',funding:'التمويل',listed:'الإدراج',scale:'حجم الشركة',site:'الموقع',about:'النشاط',team:'الفريق'}
 };
 const good=(s:string|undefined)=>Boolean(s&&s.trim()&&!/^(待核验|暂无|—|-|unknown|n\/a|未公开|not verified)$/i.test(s.trim()));
 export default function MarketCompanySnapshot({platform:p,language}:{platform:Platform,language:Language}){
@@ -25,6 +25,7 @@ export default function MarketCompanySnapshot({platform:p,language}:{platform:Pl
   {name:t.location,value:evidence?.headquarters?.text,source:evidence?.headquarters?.source},
   {name:t.funding,value:evidence?.funding?.text,source:evidence?.funding?.source},
   {name:t.listed,value:evidence?.listing?.text,source:evidence?.listing?.source},
+  {name:t.scale,value:evidence?.scale?.text,source:evidence?.scale?.source},
   {name:language==='zh'?'项目起源':'Project origin',value:evidence?.projectStarted?.text,source:evidence?.projectStarted?.source},
  ].filter(x=>good(x.value));
  const about=localizedProductSummary(p.id,language)||p.about;
