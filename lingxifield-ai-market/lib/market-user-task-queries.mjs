@@ -47,7 +47,7 @@ export const TASK_INTENTS=Object.freeze([
  {id:'site',pattern:/ai建站|生成网站|不用写代码做网站|网页原型|web app builder|create website/i,ids:['lovable','replit','dify']},
  {id:'automation',pattern:/自动化工作流|自动处理表格|自动化任务|workflow|automation/i,ids:['n8n','dify','langchain']},
  {id:'local',pattern:/本地大模型|离线大模型|私有部署|本地ai|本地模型|offline ai|local llm/i,ids:['ollama','openwebui','llamacpp','vllm','transformers','comfyui']},
- {id:'research',pattern:/带引用的搜索|搜索有出处|联网研究|找资料|搜索论文|research ai|ai search/i,ids:['perplexity','gemini','chatgpt','claude','grok']},
+ {id:'research',pattern:/带引用的搜索|搜索有出处|联网研究|找资料|搜索论文|搜索资料|找出处|research ai|ai search/i,ids:['perplexity','gemini','chatgpt','claude','grok']},
  {id:'coding',pattern:/ai写代码|代码开发|编程助手|程序开发|code assistant|ai coding/i,ids:['claude','chatgpt','deepseek','qwen','replit','lovable','langchain']},
  {id:'document',pattern:/阅读pdf|分析合同|分析文档|长文档理解|知识库问答|document analysis|pdf question/i,ids:['claude','chatgpt','gemini','llamaindex','dify']},
  {id:'api',pattern:/调用api|python sdk|api开发|模型接口|api price|token price/i,ids:['openai-python','anthropic-sdk-python','deepseek','qwen','langchain','llamaindex','vllm']}
