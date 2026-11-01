@@ -85,9 +85,9 @@
     }
   ],
   "onlineContractOnly": [
-    "audio-transcription",
     "batch-image-watermark-remover",
     "burn-after-read",
+    "document-translate",
     "food-calorie",
     "id-photo-ai",
     "image-translator",
@@ -96,6 +96,7 @@
     "pdf-ocr",
     "subtitle-translate",
     "temp-mail",
+    "url-to-video",
     "video-dubbing",
     "video-transcription",
     "video-translate",
@@ -106,7 +107,7 @@
       "kind": "local-contract"
     },
     "audio-transcription": {
-      "kind": "online-contract"
+      "kind": "local-contract"
     },
     "avif-to-jpg": {
       "kind": "local-contract"
