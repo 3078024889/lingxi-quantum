@@ -22,7 +22,7 @@ test('API input and output prices are independent per million tokens',()=>{
 test('nine-language cost and evidence sources never prefill unverified prices',()=>{
  const calculator=read('app/market-cost-estimator.tsx');
  const ui=read('lib/market-ui-extra.ts');
- const methodology=read('app/methodology/page.tsx');
+ const methodology=read('app/(default)/methodology/page.tsx');
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
   assert.ok(calculator.includes('"'+lang+'":['),lang+':calculator translations');
   assert.match(methodology,new RegExp('\\b'+lang+':\\{'));
@@ -42,7 +42,7 @@ test('commercial rights must carry a vendor policy source and conditions',()=>{
 });
 test('SEO indexing stays release-gated; sponsored placement not a rank',()=>{
  const policy=read('lib/market-index-policy.ts');
- const methodology=read('app/methodology/page.tsx');
+ const methodology=read('app/(default)/methodology/page.tsx');
  assert.match(policy,/AI_MARKET_INDEX_READY/);
  assert.match(policy,/VERCEL_ENV!=='preview'/);
  assert.match(methodology,/付费推荐和赞助位必须明示/);
@@ -63,7 +63,7 @@ test('V41 country and commercial answers are explicit and scope-correct',async()
  for(const id of ['anthropic-sdk-python','claude','suno','midjourney','runway','chatgpt','comfyui','ollama']){
    assert.ok(facts.includes(id+':')||facts.includes('"'+id+'":'),id);
  }
- assert.match(facts,/https:\/\/help\.suno\.com/);
+ assert.match(facts,/https:\/\/suno\.com\/terms/);
  assert.match(facts,/Apache-2\.0/);
  assert.match(facts,/GPL-3\.0/);
  assert.match(facts,/MIT/);
@@ -209,7 +209,9 @@ test('V43 source-backed prices distinguish open-source core, vendor cloud and co
  }
  assert.match(m.researchedFact('dify').commercial,/多租户/);
  assert.match(m.researchedFact('openwebui').commercial,/50/);
- assert.match(m.researchedFact('luma').price,/49.99/);
+ assert.match(m.researchedFact('luma').price,/Plus.*Pro.*Ultra/);
+ assert.match(m.researchedFact('luma').models,/Ray3\.2.*UNI-1\.1/);
+ assert.doesNotMatch(m.researchedFact('luma').price,/49\.99/);
  assert.match(m.researchedFact('jimeng').price,/79/);
  const repository=read('lib/platform-repository.ts');
  assert.match(repository,/research\?\.price\|\|guide\?\.cost/);
@@ -301,7 +303,14 @@ test('V44 fix placeholder commercial and local payments in 32-product market',as
 test('V44 SEO/GEO board requires evidence, not fictitious rankings, and is translated in nine locales',()=>{
  const s=read('app/seo-geo-board.tsx'),home=read('app/market-workbench.tsx');
  for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(s,new RegExp('\\b'+l+':\\['),l);
- assert.match(s,/no artificial rankings|no se inventan|不生成自然排名/);
+ assert.match(s,/coverage\.gscObservations>0/);
+ assert.match(s,/coverage\.independentSerpObservations>0/);
+ assert.match(s,/coverage\.geoObservations>0/);
+ assert.match(s,/filter\(x=>!x\.ready\)/);
+ assert.doesNotMatch(s,/no artificial rankings|no se inventan|不生成自然排名/);
+ const evidence=read('lib/seo-geo-observations.ts');
+ assert.match(evidence,/validObservation/);
+ assert.match(evidence,/rawCaptureSha256/);
  assert.match(home,/SeoGeoBoard language=\{language\}/);
 });
 
@@ -421,7 +430,10 @@ test('V45 SEO/GEO requires reviewed source-dated observations and independent co
  assert.match(source,/ai_answer_citation/);
  assert.match(source,/recordHash/);
  assert.match(source,/search.google.com/);
- assert.match(read('app/seo-geo-board.tsx'),/coverage\.measuredProducts/);
+ assert.match(read('app/seo-geo-board.tsx'),/coverage\.independentSerpObservations>0/);
+ assert.match(read('app/seo-geo-board.tsx'),/coverage\.geoObservations>0/);
+ assert.match(read('app/seo-geo-board.tsx'),/filter\(x=>!x\.ready\)/);
+ assert.doesNotMatch(read('app/seo-geo-board.tsx'),/seoGeoEvidenceCount|coverage\.measuredProducts/);
  assert.match(read('app/api/v1/seo-geo/route.ts'),/no-store/);
  const collector=read('scripts/sync-gsc-analytics.mjs');
  assert.match(collector,/GSC_CONFIG_REQUIRED/);

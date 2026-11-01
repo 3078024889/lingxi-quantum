@@ -2,6 +2,8 @@ import type {Language} from '../lib/v2';
 import type {Platform} from '../lib/data';
 import {platformLinks} from '../lib/official-platform-links';
 import {localizedProductSummary} from '../lib/market-product-locale';
+import {companyEvidenceFor} from '../lib/market-company-evidence';
+import {localizeCompanyEvidence} from '../lib/market-company-evidence-locale';
 type Copy={title:string,company:string,created:string,location:string,funding:string,listed:string,site:string,about:string,team:string};
 const WORDS:Record<Language,Copy>={
  zh:{title:'公司简介',company:'公司',created:'成立',location:'总部/地区',funding:'融资',listed:'上市',site:'官网',about:'主要业务',team:'团队'},
@@ -16,18 +18,19 @@ const WORDS:Record<Language,Copy>={
 };
 const good=(s:string|undefined)=>Boolean(s&&s.trim()&&!/^(待核验|暂无|—|-|unknown|n\/a|未公开|not verified)$/i.test(s.trim()));
 export default function MarketCompanySnapshot({platform:p,language}:{platform:Platform,language:Language}){
- const t=WORDS[language],links=platformLinks(p.id),team=links.team;
+ const t=WORDS[language],links=platformLinks(p.id),team=links.team,evidence=localizeCompanyEvidence(p.id,language,companyEvidenceFor(p.id));
  const facts=[
-  {name:t.company,value:p.company},
-  {name:t.created,value:p.year},
-  {name:t.location,value:p.location},
-  {name:t.funding,value:p.funding},
-  {name:t.listed,value:p.listing},
+  {name:t.company,value:p.company,source:evidence?.publisherSource},
+  {name:t.created,value:evidence?.founded?.text,source:evidence?.founded?.source},
+  {name:t.location,value:evidence?.headquarters?.text,source:evidence?.headquarters?.source},
+  {name:t.funding,value:evidence?.funding?.text,source:evidence?.funding?.source},
+  {name:t.listed,value:evidence?.listing?.text,source:evidence?.listing?.source},
+  {name:language==='zh'?'项目起源':'Project origin',value:evidence?.projectStarted?.text,source:evidence?.projectStarted?.source},
  ].filter(x=>good(x.value));
  const about=localizedProductSummary(p.id,language)||p.about;
  return <section className="panel marketCompanySnapshot" aria-label={t.title}>
   <h2>{t.title}</h2><p className="marketCompanySummary">{about}</p>
-  <div className="marketCompanyFacts">{facts.map(f=><div key={f.name}><small>{f.name}</small><strong>{f.value}</strong></div>)}
+  <div className="marketCompanyFacts">{facts.map(f=><div key={f.name}><small>{f.name}</small><strong>{f.value}</strong>{f.source&&<a href={f.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'出处':'Source'} ↗</a>}</div>)}
    <div><small>{t.site}</small><a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
   </div>
   {team&&good(team.summary)&&<div className="marketCompanyTeam"><strong>{t.team}</strong>{language==='zh'&&<p>{team.summary}</p>}<a href={team.source} target="_blank" rel="noopener noreferrer">{t.site} ↗</a></div>}

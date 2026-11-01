@@ -4,9 +4,13 @@ import {notFound} from 'next/navigation';
 import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository';
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
 import {researchedFact} from '../../../../lib/market-researched-facts';
+import {companyEvidenceFor} from '../../../../lib/market-company-evidence';
+import {localizeCompanyEvidence} from '../../../../lib/market-company-evidence-locale';
+import {questionForProduct} from '../../../../lib/market-user-task-queries.mjs';
 import {VIDEO_RATES} from '../../../../lib/market-rate-catalog';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
+import MarketCodexSection from '../../../market-codex-section';
 import {localizedCategory} from '../../../../lib/market-home-i18n';
 import {commercialEvidence} from '../../../../lib/market-commercial-evidence';
 import {apiServiceOffer} from '../../../../lib/market-api-service-catalog';
@@ -17,15 +21,15 @@ import {platformLinks} from '../../../../lib/official-platform-links';
 import type {Language} from '../../../../lib/v2';
 type PageParams={params:Promise<{lang:string;id:string}>};
 const WORDS:Record<Language,readonly [string,string,string,string,string,string,string,string,string,string,string,string]>={
- zh:['功能和适用任务','免费额度','官方价格','代表模型与能力','国家、地区与使用入口','商用授权和限制','官网和开始使用','官方资料','资料核对时间','返回全部平台','价格可能随地区、套餐和活动变化；未核实的能力不参与排行。','第三方独立评分尚无可比数据'],
- en:['Capabilities and tasks','Free use','Official pricing','Models and capabilities','Countries, regions and access','Commercial rights','Official site and start','Publisher source','Reviewed','Back to market','Prices vary by country, plan and promotion. Unverified claims do not become rankings.','No comparable independent score yet'],
- ja:['機能と用途','無料枠','公式料金','モデルと能力','国・地域・アクセス','商用許諾','公式サイト','公式根拠','確認日','市場に戻る','国・プラン・時期で料金が変わります。','独立評価はまだありません'],
- ko:['기능과 작업','무료 이용','공식 요금','모델과 기능','국가·지역 및 접속','상업적 이용','공식 사이트','공식 자료','확인일','목록으로','지역·요금제에 따라 가격이 다를 수 있습니다.','독립 점수 자료 없음'],
- fr:['Fonctions et usages','Accès gratuit','Tarif officiel','Modèles et capacités','Pays et accès','Droits commerciaux','Site officiel','Source officielle','Vérifié le','Retour au marché','Prix variables selon pays, forfait et promotions.','Pas encore de score indépendant comparable'],
- de:['Funktionen und Einsatzgebiete','Kostenlose Nutzung','Offizielle Preise','Modelle und Fähigkeiten','Länder und Zugang','Gewerbliche Rechte','Offizielle Website','Offizielle Quelle','Geprüft','Zurück zum Markt','Preise variieren nach Land, Tarif und Aktion.','Noch kein unabhängiger Vergleichswert'],
- es:['Funciones y tareas','Uso gratuito','Precio oficial','Modelos y capacidades','Países y acceso','Uso comercial','Sitio oficial','Fuente oficial','Revisado','Volver al mercado','Los precios dependen del país, plan y promoción.','Sin puntuación independiente comparable'],
- pt:['Funções e tarefas','Uso gratuito','Preço oficial','Modelos e capacidades','Países e acesso','Uso comercial','Site oficial','Fonte oficial','Verificado','Voltar ao mercado','Preços dependem de país, plano e promoções.','Sem avaliação independente comparável'],
- ar:['الوظائف والمهام','الاستخدام المجاني','الأسعار الرسمية','النماذج والقدرات','البلدان وإمكانية الوصول','الاستخدام التجاري','الموقع الرسمي','المصدر الرسمي','تاريخ المراجعة','العودة للسوق','تختلف الأسعار حسب الدولة والخطة والعروض.','لا توجد درجة مستقلة قابلة للمقارنة']
+ zh:['功能和适用任务','免费额度','官方价格','代表模型与能力','国家、地区与使用入口','商用授权和限制','官网和开始使用','官方资料','资料核对时间','返回全部平台','价格随地区、套餐和活动变化，点击官方资料查看详情。','第三方独立评分尚无可比数据'],
+ en:['Capabilities and tasks','Free use','Official pricing','Models and capabilities','Countries, regions and access','Commercial rights','Official site and start','Publisher source','Reviewed','Back to market','Prices vary by country and plan. See the publisher source for details.','No comparable independent score yet'],
+ ja:['機能と用途','無料枠','公式料金','モデルと能力','国・地域・アクセス','商用許諾','公式サイト','公式根拠','確認日','市場に戻る','国やプランにより料金が異なります。公式情報をご覧ください。','独立評価はまだありません'],
+ ko:['기능과 작업','무료 이용','공식 요금','모델과 기능','국가·지역 및 접속','상업적 이용','공식 사이트','공식 자료','확인일','목록으로','국가와 요금제에 따라 가격이 다릅니다. 공식 출처를 확인하세요.','독립 점수 자료 없음'],
+ fr:['Fonctions et usages','Accès gratuit','Tarif officiel','Modèles et capacités','Pays et accès','Droits commerciaux','Site officiel','Source officielle','Vérifié le','Retour au marché','Tarifs variables selon pays et forfait. Consultez la source officielle.','Pas encore de score indépendant comparable'],
+ de:['Funktionen und Einsatzgebiete','Kostenlose Nutzung','Offizielle Preise','Modelle und Fähigkeiten','Länder und Zugang','Gewerbliche Rechte','Offizielle Website','Offizielle Quelle','Geprüft','Zurück zum Markt','Die Preise variieren je Land und Tarif. Offizielle Quelle ansehen.','Noch kein unabhängiger Vergleichswert'],
+ es:['Funciones y tareas','Uso gratuito','Precio oficial','Modelos y capacidades','Países y acceso','Uso comercial','Sitio oficial','Fuente oficial','Revisado','Volver al mercado','Los precios dependen del país y del plan. Consulta la fuente oficial.','Sin puntuación independiente comparable'],
+ pt:['Funções e tarefas','Uso gratuito','Preço oficial','Modelos e capacidades','Países e acesso','Uso comercial','Site oficial','Fonte oficial','Verificado','Voltar ao mercado','Os preços dependem do país e do plano. Consulte a fonte oficial.','Sem avaliação independente comparável'],
+ ar:['الوظائف والمهام','الاستخدام المجاني','الأسعار الرسمية','النماذج والقدرات','البلدان وإمكانية الوصول','الاستخدام التجاري','الموقع الرسمي','المصدر الرسمي','تاريخ المراجعة','العودة للسوق','تختلف الأسعار حسب الدولة والخطة؛ راجع المصدر الرسمي.','لا توجد درجة مستقلة قابلة للمقارنة']
 };
 export const dynamicParams=false;
 export const revalidate=3600;
@@ -58,10 +62,17 @@ export default async function LocalProduct({params}:PageParams){
  if(!marketLocales.includes(lang as Language))notFound();
  const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l),api=apiServiceOffer(id),payments=paymentFactsFor(id,'GLOBAL'),team=platformLinks(id).team;
- const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-10-31';
+ const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-11-01',companyEvidence=localizeCompanyEvidence(id,l,companyEvidenceFor(id));
  const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n.?a|not verified)$/i.test(value.trim()));
  const companyWords=({zh:['公司','成立','地区','融资','上市'],en:['Company','Founded','Location','Funding','Listing'],ja:['企業','設立','地域','調達','上場'],ko:['회사','설립','지역','투자','상장'],fr:['Entreprise','Création','Siège','Financement','Cotation'],de:['Firma','Gründung','Sitz','Finanzierung','Börse'],es:['Empresa','Fundación','Sede','Financiación','Bolsa'],pt:['Empresa','Fundação','Sede','Investimento','Bolsa'],ar:['الشركة','تأسست','المنطقة','التمويل','الإدراج']} as Record<Language,string[]>)[l];
- const companyFacts=[p.company,p.year,p.location,p.funding,p.listing].map((value,i)=>({value,label:companyWords[i]})).filter(x=>useful(x.value));
+ const companyFacts=[
+  {value:p.company,label:companyWords[0],source:companyEvidence?.publisherSource},
+  {value:companyEvidence?.founded?.text,label:companyWords[1],source:companyEvidence?.founded?.source},
+  {value:companyEvidence?.headquarters?.text,label:companyWords[2],source:companyEvidence?.headquarters?.source},
+  {value:companyEvidence?.funding?.text,label:companyWords[3],source:companyEvidence?.funding?.source},
+  {value:companyEvidence?.listing?.text,label:companyWords[4],source:companyEvidence?.listing?.source},
+  {value:companyEvidence?.projectStarted?.text,label:l==='zh'?'项目起源':'Project origin',source:companyEvidence?.projectStarted?.source}
+ ].filter(x=>useful(x.value));
  const videos=VIDEO_RATES.filter(r=>r.platform===id&&r.resolution!=='not-confirmed'&&!['unverified','plan-only'].includes(r.billing));
  const videoTitle=({zh:'短视频/短剧：官方模型与画质计费',en:'Short video: model, resolution and cost',ja:'動画：モデル・画質・料金',ko:'영상: 모델·해상도·요금',fr:'Vidéo : modèle, qualité et coût',de:'Video: Modell, Auflösung und Kosten',es:'Vídeo: modelo, resolución y coste',pt:'Vídeo: modelo, resolução e custo',ar:'الفيديو: النموذج والدقة والتكلفة'} as Record<Language,string>)[l];
  const paymentHeading=({zh:'支持的付款方式',en:'Payment methods',ja:'支払方法',ko:'결제 수단',fr:'Moyens de paiement',de:'Zahlungsmethoden',es:'Métodos de pago',pt:'Métodos de pagamento',ar:'طرق الدفع'} as Record<Language,string>)[l];
@@ -80,13 +91,18 @@ export default async function LocalProduct({params}:PageParams){
   <header><small>LINGXIFIELD · GLOBAL SI AI MARKET</small><h1>{displayName}</h1><p>{summary}</p><span>{localizedCategory(l,p.category)}</span></header>
   <section className="marketLocalizedCompany">
    <h2>{({zh:'公司简介',en:'Company overview',ja:'企業概要',ko:'회사 소개',fr:'Profil de l’entreprise',de:'Firmenprofil',es:'Empresa',pt:'Empresa',ar:'نبذة عن الشركة'} as Record<Language,string>)[l]}</h2>
-   <p>{summary}</p><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong></span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
+   <p>{summary}</p><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong>{fact.source&&<a href={fact.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a>}</span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
    {team&&l==='zh'&&<p>{team.summary} <a href={team.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></p>}
   </section>
+  {id==='chatgpt'?<MarketCodexSection language={l}/>:null}
   <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src])=><article key={title}><h2>{title}</h2>
    {title===paymentHeading&&payments.methodEvidence.length>0?<ul className="marketLocalizedPaymentEvidence">{payments.methodEvidence.map(method=><li key={method.method}><span>{localizedPaymentName(method.method,l)}</span><a href={method.source} rel="nofollow noopener noreferrer" target="_blank">{w[7]} ↗</a></li>)}</ul>:<p>{value}</p>}
    {src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}
   </article>)}</section>
+  {l==='zh'&&questionForProduct(id).length>0?<section className="marketLocalizedFaq">
+   <h2>大家还会搜索</h2>
+   <div className="marketLocalizedFaqLinks">{questionForProduct(id).map((q:string)=><Link key={q} href={'/zh/ai?q='+encodeURIComponent(q)}>{q} ↗</Link>)}</div>
+  </section>:null}
   <section className="marketLocalizedApiRates">
    <h2>{({zh:'开发者 API 计费与会员套餐',en:'Developer API pricing and web plans',ja:'開発者API料金と会員プラン',ko:'개발자 API 요금 및 구독',fr:'Tarifs API et abonnements',de:'API-Preise und Abos',es:'Precios API y planes',pt:'Preços de API e planos',ar:'أسعار API والاشتراكات'} as Record<Language,string>)[l]}</h2>
    <p>{l==='zh'?api.descriptionZh:api.descriptionEn}</p>

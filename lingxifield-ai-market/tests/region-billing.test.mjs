@@ -11,7 +11,7 @@ test('geo location chooses a default, not a compulsory checkout currency',()=>{
 test('all market routes retain country-derived initial currency and user can switch',async()=>{
  const {readFile}=await import('node:fs/promises');
  const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
- for(const path of ['app/page.tsx','app/[lang]/ai/page.tsx','app/platform/[id]/page.tsx']){
+ for(const path of ['app/(default)/page.tsx','app/[lang]/ai/page.tsx','app/(default)/platform/[id]/page.tsx']){
   const source=await read(path);
   assert.ok(source.includes('currencyFromCountry('),path);
   assert.ok(source.includes('initialCurrency='),path);

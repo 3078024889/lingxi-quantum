@@ -226,10 +226,14 @@
 .seoGeoCompare strong{color:#1656a0;font-size:12px}
 .seoGeoCompare p{font-size:11px;color:#5c7290;line-height:1.7;overflow-wrap:anywhere}
 .seoGeoNote{font-size:12px;color:#375d8a;line-height:1.7;margin:14px 3px}
+.seoGeoEmptyStatus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0}
+.seoGeoEmptyStatus article{min-width:0;border:1px solid #e4ebf5;border-radius:9px;background:#fbfcfe;padding:11px}
+.seoGeoEmptyStatus strong{display:block;color:#314d70;font-size:12px;line-height:1.5}
+.seoGeoEmptyStatus p{margin:5px 0 0;color:#718198;font-size:11px;line-height:1.65;overflow-wrap:anywhere}
 .seoGeoFooter{display:flex;gap:14px;justify-content:space-between;align-items:center;font-size:11px;color:#8292a6}
 .seoGeoFooter a{color:#1562c8}
-@media(max-width:850px){.seoGeoCompare{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:480px){.seoGeoCompare{grid-template-columns:1fr}}
+@media(max-width:850px){.seoGeoCompare{grid-template-columns:repeat(2,minmax(0,1fr))}.seoGeoEmptyStatus{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.seoGeoCompare{grid-template-columns:1fr}.seoGeoEmptyStatus{grid-template-columns:1fr}}
 
 
 /* V3: 16-column compact market terminal. Scrollable across languages; identity and actions remain visible. */
@@ -1084,3 +1088,41 @@ body{font-size:16px;line-height:1.6}
 .marketLocalizedPaymentEvidence li{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border:1px solid #e0e9f6;border-radius:8px;padding:8px 10px;min-width:0}
 .marketLocalizedPaymentEvidence :is(span,a){font-size:12px!important;overflow-wrap:anywhere}
 @media(max-width:610px){.marketLocalizedPaymentEvidence{grid-template-columns:minmax(0,1fr)}}
+
+/* 2026-11-01: concise, task-linked public questions for each reviewed product. */
+.marketLocalizedFaq{background:#fff;border:1px solid #dfe9f4;border-radius:12px;padding:16px;margin:12px 0}
+.marketLocalizedFaq h2{font-size:18px;font-weight:760;margin:0 0 12px;color:#132f54}
+.marketLocalizedFaqLinks{display:flex;flex-wrap:wrap;gap:10px}
+.marketLocalizedFaqLinks a{display:inline-flex;align-items:center;max-width:100%;min-height:40px;padding:8px 13px;border:1px solid #d8e5f4;border-radius:10px;background:#f5f9ff;color:#16549a;font-size:14px;text-decoration:none;line-height:1.5}
+.marketLocalizedFaqLinks a:hover,.marketLocalizedFaqLinks a:focus-visible{background:#e9f3ff;border-color:#99bce6;text-decoration:underline}
+.marketLocalizedFaqLinks a:focus-visible{outline:2px solid #2b7ccc;outline-offset:2px}
+.marketCompanyFacts strong,.marketLocalizedCompanyFacts :is(strong,a),.marketLocalizedRatesScroll :is(th,td),.marketLocalizedPaymentEvidence :is(span,a){font-size:14px}
+@media(max-width:640px){.marketLocalizedFaq{padding:13px}.marketLocalizedFaqLinks{flex-direction:column}.marketLocalizedFaqLinks a{width:100%}}
+
+/* Codex is a supported ChatGPT feature, not a separate unverified product. */
+.marketCodexSection{border:1px solid #d6e5f8;border-radius:14px;background:#f9fcff;max-width:100%;margin-block:15px;padding:18px}
+.marketCodexHeading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.marketCodexHeading h2{font-size:19px;line-height:1.4;margin:0;color:#15345a}
+.marketCodexHeading a,.marketCodexOfficial{color:#145ca8;font-size:14px;font-weight:650;text-decoration:none}
+.marketCodexIntro{margin:10px 0 15px;font-size:14px;line-height:1.75;color:#294b70}
+.marketCodexTasks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.marketCodexTasks>div{display:flex;gap:9px;align-items:start;min-width:0;padding:12px 11px;border:1px solid #dce8f7;border-radius:9px;background:white}
+.marketCodexTasks span{font-size:12px;color:#4c87c1;font-variant-numeric:tabular-nums}
+.marketCodexTasks strong{font-size:14px;line-height:1.5;color:#163b67;font-weight:600;overflow-wrap:anywhere}
+.marketCodexMeta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0 12px}
+.marketCodexMeta>div{min-width:0}
+.marketCodexMeta strong{font-size:14px;color:#17395f}
+.marketCodexMeta p{font-size:14px;line-height:1.6;color:#41617f;margin:5px 0}
+.marketCodexOfficial{display:inline-block;margin-top:6px}
+@media(max-width:850px){.marketCodexTasks{grid-template-columns:repeat(2,minmax(0,1fr))}.marketCodexMeta{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:550px){.marketCodexSection{padding:13px}.marketCodexTasks{grid-template-columns:minmax(0,1fr)}}
+
+
+.seoGeoOwnedMetrics{margin:14px 0;padding:13px 14px;border:1px solid #dce6f2;border-radius:12px;background:linear-gradient(135deg,#f8fbff,#fff)}
+.seoGeoOwnedMetrics>strong{display:block;margin-bottom:10px;color:#284563;font-size:13px}
+.seoGeoOwnedMetrics>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.seoGeoOwnedMetrics>div>span{display:flex;min-width:0;flex-direction:column;gap:3px;padding:9px;border-radius:8px;background:#fff;border:1px solid #e8edf4}
+.seoGeoOwnedMetrics b{font-size:18px;line-height:1.25;font-variant-numeric:tabular-nums;color:#1e3550}
+.seoGeoOwnedMetrics small{font-size:11px;color:#66788d}
+.seoGeoOwnedMetrics>small{display:block;margin-top:9px;text-align:end}
+@media(max-width:560px){.seoGeoOwnedMetrics>div{grid-template-columns:repeat(2,minmax(0,1fr))}.seoGeoOwnedMetrics b{font-size:16px}}

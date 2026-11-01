@@ -15,6 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {matchGscProductPage} from './parse-gsc-product-route.mjs';
+import {safeGscQuery} from '../lib/gsc-query-safety.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),outfile=path.join(root,'data/seo-geo-observations.json');
 function allProductIds(){
  const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
@@ -61,15 +62,16 @@ else try{
  for(const row of entries){
   const [page,query,date]=row.keys||[];
   if(typeof page!=='string'||typeof query!=='string'||typeof date!=='string')continue;
+  const safeQuery=safeGscQuery(query);if(!safeQuery)continue;
   const match=matchGscProductPage(page,known,u.origin);if(!match)continue;
   if((row.impressions||0)<3)continue; // avoid exposing rare possibly sensitive long-tail search terms
-  const base={property,page,query,date,impressions:row.impressions,clicks:row.clicks,position:row.position};
+  const base={property,page,query:safeQuery,date,impressions:row.impressions,clicks:row.clicks,position:row.position};
   const digest=createHash('sha256').update(JSON.stringify(base)).digest('hex');
   const id='gsc-'+digest.slice(0,24),observedAt=date+'T12:00:00Z';
   const result={id,platformId:match.platformId,source:'google_search_console',observedAt,country:'GLOBAL',language:match.language,
-    query,engine:'Google Search Console',sourceUrl:'https://search.google.com/search-console/performance/search-analytics',
+    query:safeQuery,sourceProperty:property,sourcePage:page,sourceDate:date,engine:'Google Search Console',sourceUrl:'https://search.google.com/search-console/performance/search-analytics',
     recordHash:'sha256:'+digest,methodVersion:'GSC.web.page-query-date.v1',sampleCount:Math.max(1,Math.floor(row.impressions||0)),
-    position:row.position,impressions:row.impressions,clicks:row.clicks,sponsored:false,reviewed:true,reviewedAt:new Date().toISOString()};
+    position:row.position,impressions:row.impressions,clicks:row.clicks,sponsored:false,reviewed:false};
   seen.set(id,result);count++;
  }
  // Dates are immutable GSC aggregates; keep 90-day window and bounded public dataset.

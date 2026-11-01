@@ -25,7 +25,7 @@ test('detail page renders concrete capability cards instead of generic 13-field 
 });
 
 test('visitor can browse without site account; manufacturers submit first and claim later',async()=>{
- const home=await source('app/market-workbench.tsx'),claim=await source('app/vendor/claim/page.tsx');
+ const home=await source('app/market-workbench.tsx'),claim=await source('app/(default)/vendor/claim/page.tsx');
  assert.doesNotMatch(home,/https:\/\/lingxifield\.com\/account/);
  assert.match(claim,/访客无需注册即可搜索/);
  assert.match(claim,/厂商可以免费提交资料，不必先创建账号/);

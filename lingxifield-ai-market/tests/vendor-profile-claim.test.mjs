@@ -34,7 +34,7 @@ test('all publisher links are genuine curated HTTPS entries',async()=>{
 });
 test('both homepage and product detail give free vendor correction entry',async()=>{
  const home=await read('app/market-workbench.tsx');
- const form=await read('app/vendor/claim/page.tsx');
+ const form=await read('app/(default)/vendor/claim/page.tsx');
  const api=await read('app/api/vendor/submit/route.ts');
  assert.ok(home.includes('hc.vendorClaim'));
  assert.ok(home.includes('MARKET_VENDOR_TRANSLATIONS[language]'));

@@ -2,7 +2,8 @@ import test from 'node:test';import assert from 'node:assert/strict';import {rea
 const root=new URL('../',import.meta.url),read=p=>readFileSync(new URL(p,root),'utf8');
 test('preview cannot index; production launch requires explicitly verified owned HTTPS market domain',()=>{
  const source=read('lib/market-index-policy.ts');
- const layout=read('app/layout.tsx');
+ const layout=read('app/(default)/layout.tsx');
+ const home=read('app/(default)/page.tsx');
  const robots=read('app/robots.ts');
  assert.ok(source.includes('AI_MARKET_INDEX_READY'));
  assert.ok(source.includes('AI_MARKET_DOMAIN_VERIFIED'));
@@ -12,7 +13,15 @@ test('preview cannot index; production launch requires explicitly verified owned
   assert.ok(source.includes(domain));
  assert.ok(source.includes("u.protocol!=='https:'"));
  assert.ok(source.includes("u.username||u.password||u.port||u.pathname!=='/'"));
- assert.ok(layout.includes('metadataBase:new URL(marketCanonicalOrigin)'));
+ assert.ok(layout.includes("mayIndexMarket('zh')?verifiedMarketOrigin():null"));
+ assert.ok(layout.includes('publishedOrigin?{metadataBase:new URL(publishedOrigin)}:{}'));
+ const localized=read('app/[lang]/layout.tsx');
+ assert.ok(localized.includes('indexable?verifiedMarketOrigin():null'));
+ assert.ok(localized.includes('origin?{metadataBase:new URL(origin)}:{}'));
+ assert.doesNotMatch(layout,/metadataBase:new URL\(marketCanonicalOrigin\)/);
+ assert.doesNotMatch(localized,/metadataBase:new URL\(marketCanonicalOrigin\)/);
+ assert.ok(home.includes("const indexable=mayIndexMarket('zh')"));
+ assert.ok(home.includes("alternates:indexable?alternatesForMarket('zh'):undefined"));
  assert.ok(robots.includes("if(!mayIndexMarket())"));
 });
 test('locales and multilingual product sitemap remain strict allowlist, never indexed automatically',()=>{

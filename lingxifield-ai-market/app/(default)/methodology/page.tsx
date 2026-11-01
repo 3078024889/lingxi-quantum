@@ -1,7 +1,7 @@
 import type {Metadata} from 'next';
 import Link from 'next/link';
-import type {Language} from '../../lib/v2';
-import {mayIndexMarket} from '../../lib/market-index-policy';
+import type {Language} from '../../../lib/v2';
+import {mayIndexMarket} from '../../../lib/market-index-policy';
 
 type Words={title:string;intro:string;reliability:string;levels:string[];ranking:string;rankingText:string;cost:string;costText:string;geo:string;geoText:string;vendor:string;vendorText:string;correction:string;back:string;pricing:string};
 const TEXT:Record<Language,Words>={

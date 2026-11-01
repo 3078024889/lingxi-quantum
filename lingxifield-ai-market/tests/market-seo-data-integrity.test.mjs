@@ -8,7 +8,11 @@ test('no fabricated SEO/GEO grades, trend percentages or rating scores in the so
  assert.doesNotMatch(source,/geo:'\d+'/);
  assert.doesNotMatch(source,/trend:\d+(\.\d+)?/);
  assert.doesNotMatch(source,/score:\d+(\.\d+)?/);
- assert.match(read('lib/platform-repository.ts'),/score:null,trend:null,seo:'待核验',geo:'待核验'/);
+ const repo=read('lib/platform-repository.ts');
+ assert.match(repo,/visits:'',downloads:'',seo:'',geo:''/);
+ assert.match(repo,/score:null,trend:null/);
+ assert.doesNotMatch(repo,/seo:\s*['"][0-9]/);
+ assert.doesNotMatch(repo,/geo:\s*['"][0-9]/);
 });
 test('Search Console own-site analytics must not be reported as independent competitor rankings',()=>{
  const obs=read('lib/seo-geo-observations.ts'),api=read('app/api/v1/seo-geo/route.ts');

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-const page=await readFile(new URL('../app/models/page.tsx',import.meta.url),'utf8');
+const page=await readFile(new URL('../app/(default)/models/page.tsx',import.meta.url),'utf8');
 test('model page reads grouped offers instead of repeating every provider row',()=>{
  assert.match(page,/api\/v1\/models\/groups/);
  assert.match(page,/g\.offers\]\s*\.sort/);

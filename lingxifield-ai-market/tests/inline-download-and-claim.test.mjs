@@ -24,7 +24,7 @@ test('single compact market row has official, desktop, mobile, detail, compariso
  assert.ok(row.includes('onDetail'));
 });
 test('no separate card downloads maze; legacy path opens the homepage list',async()=>{
- const page=await read('app/downloads/page.tsx');
+ const page=await read('app/(default)/downloads/page.tsx');
  const home=await read('app/market-workbench.tsx');
  assert.ok(page.includes("redirect('/#tools-list')"));
  assert.ok(!page.includes('downloadCards'));

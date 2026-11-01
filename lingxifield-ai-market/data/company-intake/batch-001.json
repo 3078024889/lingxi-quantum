@@ -1,0 +1,201 @@
+{
+  "batch": "B001",
+  "asOf": "2026-11-01",
+  "reviewState": "candidate",
+  "visibleToPublic": false,
+  "products": [
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "company": "Cursor",
+      "category": "编程",
+      "website": "https://cursor.com/pricing",
+      "evidenceUrl": "https://cursor.com/pricing",
+      "tasks": [
+        "代码补全",
+        "仓库编程",
+        "AI智能体"
+      ],
+      "keywords": [
+        "AI代码补全工具",
+        "AI仓库编程工具",
+        "AIAI智能体工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "canva-magic-studio",
+      "name": "Canva Magic Studio",
+      "company": "Canva",
+      "category": "设计",
+      "website": "https://www.canva.com/",
+      "evidenceUrl": "https://www.canva.com/",
+      "tasks": [
+        "设计海报",
+        "营销图片"
+      ],
+      "keywords": [
+        "AI设计海报工具",
+        "AI营销图片工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "gamma",
+      "name": "Gamma",
+      "company": "Gamma",
+      "category": "演示",
+      "website": "https://gamma.app/pricing",
+      "evidenceUrl": "https://gamma.app/pricing",
+      "tasks": [
+        "生成PPT",
+        "编辑演示文稿"
+      ],
+      "keywords": [
+        "AI生成PPT工具",
+        "AI编辑演示文稿工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "pika",
+      "name": "Pika",
+      "company": "Pika",
+      "category": "视频",
+      "website": "https://creation.pika.art/apps/create-video",
+      "evidenceUrl": "https://creation.pika.art/apps/create-video",
+      "tasks": [
+        "图生视频",
+        "视频生成"
+      ],
+      "keywords": [
+        "AI图生视频工具",
+        "AI视频生成工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "ideogram",
+      "name": "Ideogram",
+      "company": "Ideogram",
+      "category": "图片",
+      "website": "https://ideogram.ai/pricing/",
+      "evidenceUrl": "https://ideogram.ai/pricing/",
+      "tasks": [
+        "AI图片",
+        "文字设计"
+      ],
+      "keywords": [
+        "AIAI图片工具",
+        "AI文字设计工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "krea",
+      "name": "Krea",
+      "company": "Krea",
+      "category": "图片",
+      "website": "https://www.krea.ai/",
+      "evidenceUrl": "https://www.krea.ai/",
+      "tasks": [
+        "实时绘图",
+        "图片增强"
+      ],
+      "keywords": [
+        "AI实时绘图工具",
+        "AI图片增强工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "leonardo",
+      "name": "Leonardo AI",
+      "company": "Leonardo AI",
+      "category": "图片",
+      "website": "https://leonardo.ai/",
+      "evidenceUrl": "https://leonardo.ai/",
+      "tasks": [
+        "生成图片",
+        "视觉设计"
+      ],
+      "keywords": [
+        "AI生成图片工具",
+        "AI视觉设计工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "notion-ai",
+      "name": "Notion AI",
+      "company": "Notion",
+      "category": "文档",
+      "website": "https://www.notion.com/product/ai",
+      "evidenceUrl": "https://www.notion.com/product/ai",
+      "tasks": [
+        "文档分析",
+        "会议纪要"
+      ],
+      "keywords": [
+        "AI文档分析工具",
+        "AI会议纪要工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "figma-make",
+      "name": "Figma Make",
+      "company": "Figma",
+      "category": "设计",
+      "website": "https://www.figma.com/make/",
+      "evidenceUrl": "https://www.figma.com/make/",
+      "tasks": [
+        "AI原型",
+        "设计转应用"
+      ],
+      "keywords": [
+        "AIAI原型工具",
+        "AI设计转应用工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "descript",
+      "name": "Descript",
+      "company": "Descript",
+      "category": "视频剪辑",
+      "website": "https://www.descript.com/",
+      "evidenceUrl": "https://www.descript.com/",
+      "tasks": [
+        "视频剪辑",
+        "音频转文字"
+      ],
+      "keywords": [
+        "AI视频剪辑工具",
+        "AI音频转文字工具"
+      ],
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ],
+  "intakePaused": true
+}

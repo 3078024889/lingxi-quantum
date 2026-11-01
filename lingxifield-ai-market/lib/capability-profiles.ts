@@ -20,8 +20,9 @@ const profile=(headline:string,differentiator:string,audience:string,capabilitie
  headline,differentiator,audience,checkedAt:day,capabilities,firstSteps
 });
 export const CAPABILITY_PROFILES:Readonly<Record<string,CapabilityProfile>>={
- chatgpt:profile('把资料、创作、研究与代码任务放到一段连续对话里完成','同一个产品内结合文件理解、图片编辑、数据分析、搜索及多步骤研究；各工具受套餐影响','写作者、学生、研究者、办公人员、开发者',[
+ chatgpt:profile('聊天、研究、图片和 Codex 编程代理：从理解需求到开发、测试和修复项目','ChatGPT 负责对话与研究；Codex 能读取代码仓库、修改源码、运行测试、审查 PR；两者使用入口与权益各有区别','写作者、学生、研究者、办公人员、开发者',[
   cap('文档与音频理解','上传文档或音频，提取摘要、关键数字与问题','阅读一份 PDF：列出结论、待核实事实和对应段落','文件大小、格式和音频可用范围随套餐变化','https://help.openai.com/en/articles/8555545-uploading-files-and-audio-to-chatgpt'),
+  cap('Codex 软件开发代理','读取 GitHub 仓库、理解工程结构、开发新功能、修复 BUG、运行测试并审查代码变更','为已有网站新增功能、运行构建测试并提交可审核的 Pull Request','本地与云端使用入口及额度随账户方案而变化；独立 API Key 费用另计','https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan'),
   cap('网页搜索与引用','检索新信息并展示可查看的来源','比较近期行业公告及每项关键依据','引用不等于事实自动正确，仍需复核','https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview'),
   cap('多步骤深度研究','跨多个来源组织结构化研究报告','制作产品竞争分析：观点、证据、分歧和结论','研究工具及用量受账号方案约束','https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview'),
   cap('图片生成与修改','描述画面、生成图像并通过文字修改','把海报换成夜景并保留主要元素','生成质量、次数与商用条款需单独确认','https://help.openai.com/en/articles/9260256-chatgpt-capabilities-overview'),

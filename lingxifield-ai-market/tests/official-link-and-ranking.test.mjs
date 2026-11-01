@@ -22,7 +22,7 @@ test('clear product-site CTA and code CTA are separate when both exist',async()=
  assert.ok(ui.includes('没有经核验的独立在线使用入口'));
 });
 test('final brand is globally consistent with evidence-first market labels',async()=>{
- const layout=await file('app/layout.tsx');
+ const layout=await file('app/(default)/layout.tsx');
  const main=await file('app/market-workbench.tsx');
  const dictionary=await file('lib/market-ui-extra.ts');
  const locale=await file('lib/locale-pages.ts');

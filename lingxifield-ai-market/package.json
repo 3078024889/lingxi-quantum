@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "validate:data": "node scripts/validate-evidence.mjs && node scripts/validate-catalog.mjs",
+    "validate:data": "node scripts/validate-evidence.mjs && node scripts/validate-catalog.mjs && node scripts/review-independent-seo-geo.mjs --validate-ledger",
     "test:contracts": "node --test tests/*.test.mjs",
     "import:evidence": "node scripts/import-evidence.mjs",
     "test:engine": "node --test tests/market-engine.test.mjs",
@@ -18,8 +18,13 @@
     "gate": "npm run validate:data && npm run validate:catalog && npm run test:contracts && npm run typecheck && npm run build",
     "preview:catalog": "node scripts/preview-catalog-import.mjs",
     "review:sources": "node scripts/review-sources.mjs",
-    "prebuild": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs",
-    "test:v41": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs"
+    "prebuild": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs tests/market-locale-entry.test.mjs tests/market-company-evidence.test.mjs tests/market-locale-html-root.test.mjs tests/market-order-policy.test.mjs tests/market-company-evidence-locale.test.mjs tests/market-user-task-queries.test.mjs tests/market-company-intake.test.mjs tests/market-codex-chatgpt.test.mjs tests/market-current-32-closeout.test.mjs tests/market-current-commercial-terms.test.mjs tests/market-public-seo-probe.test.mjs tests/market-index-release-domain.test.mjs tests/market-reviewed-detail-seo.test.mjs tests/market-llms-index.test.mjs tests/market-robots-crawler-policy.test.mjs tests/market-deployment-region.test.mjs tests/market-checkout-fail-closed.test.mjs tests/market-gsc-query-safety.test.mjs tests/market-gsc-review-pipeline.test.mjs tests/market-seo-board-coverage.test.mjs tests/market-refund-settlement-contract.test.mjs tests/market-geo-waitlist-price.test.mjs tests/market-seo-evidence-comparability.test.mjs tests/market-feedback-key-provisioning.test.mjs tests/market-independent-seo-geo-review.test.mjs tests/visitor-feedback-global-evidence.test.mjs tests/market-ci-action-runtime.test.mjs",
+    "test:v41": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs",
+    "seo:review-evidence": "node scripts/review-gsc-observations.mjs",
+    "seo:verify-public": "node scripts/verify-public-seo.mjs",
+    "feedback:provision-key": "node scripts/provision-feedback-key.mjs",
+    "seo:review-comparison": "node scripts/review-independent-seo-geo.mjs",
+    "seo:validate-ledger": "node scripts/review-independent-seo-geo.mjs --validate-ledger"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
