@@ -45,7 +45,7 @@ const parent={
  vllm:{kind:'open_source_project',publisherSource:'https://github.com/vllm-project/vllm'},
  automatic1111:{kind:'open_source_project',publisherSource:'https://github.com/AUTOMATIC1111/stable-diffusion-webui'},
  fasterwhisper:{kind:'software_library',publisherSource:'https://github.com/SYSTRAN/faster-whisper'},
-};
+} as const satisfies Record<string,CompanyEvidence>;
 const map:Record<string,keyof typeof parent>={
  'anthropic-sdk-python':'anthropic',chatgpt:'openai',claude:'anthropic',comfyui:'comfy',
  deepseek:'deepseek',dify:'dify',elevenlabs:'elevenlabs',fasterwhisper:'fasterwhisper',
