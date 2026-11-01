@@ -40,7 +40,12 @@ guard("complete 9 locale labels for media controls",()=>{
  assert.ok(m,"VIDEO_LABELS dictionary missing");
  const labels=JSON.parse(m[1]);
  const locales=["zh","en","ja","ko","fr","de","es","pt","ar"];
- assert.equal(Object.keys(labels).length,18);
+ assert.ok(Object.keys(labels).length>=18,"all original media control labels must remain present");
+ for(const [label,values] of Object.entries(labels)){
+   assert.deepEqual(Object.keys(values).sort(),locales.slice().sort(),"locale coverage: "+label);
+   for(const locale of locales)assert.ok(values[locale].trim(),"empty translation: "+label+"/"+locale);
+ }
+ for(const name of ["压缩后体积没有变小，已保留原文件","已按指定尺寸或帧率导出，但文件体积比原文件大"])assert.ok(labels[name],"missing size disclosure: "+name);
  const seen=[...media.matchAll(/\bt\("([^"\n]+)","([^"\n]+)"\)/g)].map(x=>x[1]);
  assert.ok(seen.length>=24,"media label extraction insufficient");
  for(const item of seen){

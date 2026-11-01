@@ -33,6 +33,7 @@ const commands=[
  ["node",["scripts/test-engine-path-security.cjs"]],
  ["node",["scripts/test-video-reference-claim.cjs"]],
  ["node",["scripts/test-video-delivery.cjs"]],
+ ["node",["scripts/test-video-compress-size-v110.cjs"]],
  ["node",["scripts/test-generated-media-archive.cjs"]],
  ["node",["scripts/test-public-media-range.cjs"]],
  ["node",["scripts/test-media-completion.cjs"]],
