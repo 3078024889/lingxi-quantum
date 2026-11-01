@@ -159,7 +159,7 @@ function verifyIndependent(row){
     !Number.isInteger(row.mentions)||row.mentions<0||!Number.isInteger(row.citations)||row.citations<0))
   throw new Error('AI_CITATION_METRIC_INVALID');
  const hash=digest(JSON.stringify(observationPayload(row)));
- if(row.recordHash!=='sha256:'+hash||row.id!==prefix+hash.slice(7,31))throw new Error('INDEPENDENT_RECORD_HASH_MISMATCH');
+ if(row.recordHash!=='sha256:'+hash||row.id!==prefix+hash.slice(0,24))throw new Error('INDEPENDENT_RECORD_HASH_MISMATCH');
 }
 
 export function verifyLedger(rows,{captureDirectory,knownIds}={}){
