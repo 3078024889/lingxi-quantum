@@ -62,6 +62,7 @@ const locations:Record<string,{country:string,city:string,openaiAddress?:boolean
  luma:{country:'US',city:'Redwood City'},
  replit:{country:'US',city:'San Francisco'}
 };
+const originWords:Record<Language,string>={zh:'公司起源',en:'company origin',ja:'会社の起源',ko:'기업 출발지',fr:'origine de la société',de:'Unternehmensursprung',es:'origen de la empresa',pt:'origem da empresa',ar:'منشأ الشركة'};
 const labels:Record<Language,string>={
  zh:'公司地址',en:'OpCo address',ja:'運営会社の住所',ko:'운영사 주소',fr:'adresse de la société exploitante',
  de:'Adresse der Betreibergesellschaft',es:'domicilio de la sociedad operadora',
@@ -74,7 +75,7 @@ export function localizeCompanyEvidence(id:string,language:Language,fact:Company
   const place=locations[owner];
   if(place){
    const country=new Intl.DisplayNames([language],{type:'region'}).of(place.country)||place.country;
-   local.headquarters={...fact.headquarters,text:country+' · '+place.city+(place.openaiAddress?' ('+labels[language]+')':'')};
+   local.headquarters={...fact.headquarters,text:country+' · '+place.city+(place.openaiAddress?' ('+labels[language]+')':owner==='bytedance'?' ('+originWords[language]+')':'')};
   }else local.headquarters=undefined;
  }
  for(const field of ['funding','listing','projectStarted'] as const){
