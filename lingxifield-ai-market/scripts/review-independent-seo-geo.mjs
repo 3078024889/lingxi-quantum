@@ -23,7 +23,7 @@ const prefixFor=source=>source==='independent_serp'?'serp-':source==='ai_answer_
 const digest=value=>createHash('sha256').update(value).digest('hex');
 const validDate=value=>typeof value==='string'&&Number.isFinite(Date.parse(value))&&/^\d{4}-\d{2}-\d{2}T/.test(value);
 const safeUrl=value=>{
- try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port;}
+ try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&!u.search&&!u.hash;}
  catch{return false;}
 };
 const captureFileName=(groupId,hash)=>groupId+'-'+hash.slice(0,16)+'.json';
@@ -90,6 +90,7 @@ function observationPayload(row){
 }
 
 export function reviewCapture(rawText,manifest,{knownIds=new Set()}={}){
+ if(typeof rawText!=='string'||Buffer.byteLength(rawText,'utf8')>256000)throw new Error('CAPTURE_SIZE_INVALID');
  const capture=JSON.parse(rawText);
  validateCapture(capture,knownIds);
  const rawCaptureSha256=digest(Buffer.from(rawText,'utf8'));
