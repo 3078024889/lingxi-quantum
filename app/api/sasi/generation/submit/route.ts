@@ -34,8 +34,10 @@ export async function POST(req:NextRequest){
  let admin:ReturnType<typeof createAdminClient>|null=null,created=false;
  try{
   admin=createAdminClient();
-  await createRuntimeTask(admin,{taskId,userId:user.id,kind:input.kind,action:"generate",prompt:input.prompt,plan});
+  // The task row may be inserted before its nodes/events fail. Compensate even
+  // when createRuntimeTask rejects partway through initialization.
   created=true;
+  await createRuntimeTask(admin,{taskId,userId:user.id,kind:input.kind,action:"generate",prompt:input.prompt,plan});
   const result=await executeSasiPlan(admin,{taskId,userId:user.id,plan,input:executionInput});
   if(result.status==="succeeded")return response({ok:true,taskId,result});
   return response({ok:false,taskId,error:"GENERATION_NOT_COMPLETED"},503);
