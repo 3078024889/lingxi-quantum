@@ -12,6 +12,11 @@ test('independent SERP and GEO comparisons require a shared raw capture group',(
  assert.ok(source.includes('new Set(rows.map(x=>x.platformId)).size===rows.length'));
  assert.ok(source.includes("o.source==='independent_serp'||o.source==='ai_answer_citation'"));
  assert.ok(source.includes("o.rawCaptureSha256!=='string'"));
+ assert.ok(source.includes("typeof o.reviewedBy!=='string'"));
+ assert.ok(source.includes("typeof o.reviewReason!=='string'"));
+ assert.ok(source.includes("o.sourcePage"));
+ assert.ok(source.includes("createHash('sha256')"));
+ assert.ok(source.includes("o.id!=='gsc-'+digest.slice(0,24)"));
 });
 
 test('SEO board distinguishes owned Search Console average position from independent SERP rank',()=>{
