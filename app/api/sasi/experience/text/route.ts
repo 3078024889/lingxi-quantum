@@ -8,6 +8,7 @@ import {compileSasiSkillGuidance,validateSasiSkillIds} from "@/lib/sasi/skills/r
 import {boundedRequestJson} from "@/lib/security/bounded-request-json";
 import{asksSasiIdentity,sasiIdentityAnswer}from'@/lib/sasi/core/platform-identity';
 import {saveConversationTurn,finishConversationState,conversationUuid} from '@/lib/sasi/core/conversation-store';
+import {boundedDialogueHistory} from '@/lib/sasi/core/context-window';
 export const runtime="nodejs";export const maxDuration=180;
 const allowed=new Set<ExperienceTask>(["chat","knowledge","research","website","drama"]);
 export async function POST(req:NextRequest){
@@ -41,11 +42,7 @@ export async function POST(req:NextRequest){
  ].join(" ");
  const system=task==="chat"?CHAT_GUIDANCE+"\\n"+instructions:task==="drama"?"Prepare a short-video production plan in the user's language: story, characters, shot sequence, visual references, dialogue, audio and continuity checks. Do not claim to have generated or saved a video.\\n"+instructions:instructions;
  // Preserve role boundaries. Never accept browser-supplied system instructions.
- const history=Array.isArray(body.history)?body.history.slice(-24).filter((item:unknown)=>{
-  if(!item||typeof item!=="object")return false;
-  const row=item as Record<string,unknown>;
-  return (row.role==="user"||row.role==="assistant")&&typeof row.content==="string"&&row.content.length<=32768;
- }).map((item:{role:"user"|"assistant";content:string})=>({role:item.role,content:item.content})):[]; 
+ const history=boundedDialogueHistory(body.history); 
  const detailed=task!=='chat'||/详细|深入|完整|长篇|剧本|脚本|分镜|章节|论文|detailed|in.depth|complete script|step.by.step/i.test(text);
  const defaultTokens=detailed?4096:2560;
  const tokens=Number(body.maxOutputTokens||defaultTokens);
