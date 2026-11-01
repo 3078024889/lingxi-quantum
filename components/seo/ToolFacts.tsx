@@ -16,7 +16,7 @@ export default function ToolFacts({tool,locale}:{tool:GlobalTool;locale:SeoLocal
   {fact?.kind==='later'?null:<ol><li>{steps[0]}</li><li>{steps[1]}</li><li>{steps[2]}</li></ol>}
   <h2>{c.privacy}</h2><p>{fact?.description??(tool.mode==='local'?c.local:c.online)}</p>
   {tool.slug==='food-calorie'&&<section><h2>{FACT_LABELS.sources[locale]}</h2><ul><li><a href="https://fdc.nal.usda.gov/">USDA FoodData Central</a></li><li><a href="https://data.gov.tw/dataset/8543">Taiwan FDA · Open Government Data License 1.0</a></li></ul></section>}
-  <h2>{guide[1]}</h2>{([2,4,6] as const).map(index=><details key={index} className="my-3"><summary>{guide[index]}</summary><p>{guide[index+1]}</p></details>)}
+  <h2>{guide[1]}</h2>{([2,4,6] as const).filter(index=>!["ai-image-check","ai-video-audio-check"].includes(tool.slug)||index!==6).map(index=><details key={index} className="my-3"><summary>{guide[index]}</summary><p>{guide[index+1]}</p></details>)}
   <SearchIntentFaq slug={tool.slug} locale={locale}/>
   {related.length>0&&<nav aria-label={FACT_LABELS.related[locale]}><h2>{FACT_LABELS.related[locale]}</h2><ul>{related.map(item=><li key={item.slug}><Link href={localePath(locale,`/tools/${item.slug}`)}>{toolTitle(locale,item)}</Link></li>)}</ul></nav>}
  </section>;
