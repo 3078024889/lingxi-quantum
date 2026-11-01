@@ -1,0 +1,10 @@
+begin;
+alter table public.sasi_provider_connections drop constraint if exists sasi_provider_connections_provider_check;
+alter table public.sasi_provider_connections add constraint sasi_provider_connections_provider_check check(provider in('openai','xai','anthropic','gemini','deepseek','openrouter','luma','volcengine','aliyun','compatible'));
+alter table public.sasi_provider_connections add column if not exists display_name text not null default '';
+alter table public.sasi_provider_connections add column if not exists base_url text not null default '';
+alter table public.sasi_provider_connections add column if not exists model_id text not null default '';
+alter table public.sasi_provider_connections add column if not exists enabled boolean not null default true;
+alter table public.sasi_provider_connections add constraint sasi_provider_connections_base_url_length check(char_length(base_url)<=500);
+alter table public.sasi_provider_connections add constraint sasi_provider_connections_model_length check(char_length(model_id)<=180);
+commit;
