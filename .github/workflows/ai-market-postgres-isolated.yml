@@ -100,10 +100,31 @@ jobs:
             IF has_table_privilege('anon','private.ai_market_feedback_signing_key','SELECT')
               OR has_table_privilege('authenticated','private.ai_market_feedback_signing_key','SELECT')
             THEN RAISE EXCEPTION 'FEEDBACK_SIGNING_KEY_EXPOSED'; END IF;
-            IF NOT has_table_privilege('anon','public.ai_market_visitor_feedback','SELECT')
+            IF has_table_privilege('anon','public.ai_market_visitor_feedback','SELECT')
+              OR has_table_privilege('authenticated','public.ai_market_visitor_feedback','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','id','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','category','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','product_id','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','nickname','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','body','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','locale','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','status','SELECT')
+              OR NOT has_column_privilege('anon','public.ai_market_visitor_feedback','created_at','SELECT')
+              OR NOT has_column_privilege('authenticated','public.ai_market_visitor_feedback','id','SELECT')
+              OR has_column_privilege('anon','public.ai_market_visitor_feedback','visitor_hash','SELECT')
+              OR has_column_privilege('anon','public.ai_market_visitor_feedback','request_nonce','SELECT')
+              OR has_column_privilege('anon','public.ai_market_visitor_feedback','reviewed_at','SELECT')
+              OR has_column_privilege('anon','public.ai_market_visitor_feedback','moderator_note','SELECT')
+              OR has_column_privilege('authenticated','public.ai_market_visitor_feedback','visitor_hash','SELECT')
+              OR has_column_privilege('authenticated','public.ai_market_visitor_feedback','request_nonce','SELECT')
+              OR has_column_privilege('authenticated','public.ai_market_visitor_feedback','reviewed_at','SELECT')
+              OR has_column_privilege('authenticated','public.ai_market_visitor_feedback','moderator_note','SELECT')
               OR has_table_privilege('anon','public.ai_market_visitor_feedback','INSERT')
               OR has_table_privilege('anon','public.ai_market_visitor_feedback','UPDATE')
+              OR has_table_privilege('anon','public.ai_market_visitor_feedback','DELETE')
               OR has_table_privilege('authenticated','public.ai_market_visitor_feedback','INSERT')
+              OR has_table_privilege('authenticated','public.ai_market_visitor_feedback','UPDATE')
+              OR has_table_privilege('authenticated','public.ai_market_visitor_feedback','DELETE')
             THEN RAISE EXCEPTION 'FEEDBACK_TABLE_GRANTS_INVALID'; END IF;
           END $check$;
           BEGIN;
@@ -136,6 +157,11 @@ jobs:
               PERFORM public.ai_market_submit_visitor_feedback(v_doc,repeat('0',64));
               RAISE EXCEPTION 'INVALID_FEEDBACK_SIGNATURE_ACCEPTED';
             EXCEPTION WHEN SQLSTATE '42501' THEN NULL;
+            END;
+            BEGIN
+              PERFORM public.ai_market_submit_visitor_feedback(v_doc,NULL);
+              RAISE EXCEPTION 'NULL_FEEDBACK_SIGNATURE_ACCEPTED';
+            EXCEPTION WHEN SQLSTATE '22023' THEN NULL;
             END;
             BEGIN
               PERFORM public.ai_market_submit_visitor_feedback(v_doc,v_signature);
