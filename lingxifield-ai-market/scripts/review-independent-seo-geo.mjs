@@ -131,11 +131,16 @@ function verifyGsc(row){
 }
 function verifyIndependent(row){
  const prefix=prefixFor(row.source);
- if(!prefix||row.reviewed!==true||row.sponsored!==false||!row.captureGroupId||
-    !/^[a-f0-9]{64}$/.test(row.rawCaptureSha256||'')||!validDate(row.reviewedAt)||
-    typeof row.reviewedBy!=='string'||typeof row.reviewReason!=='string'||
-    row.reviewReason.trim().length<20||!safeUrl(row.sourceUrl)||
-    !Number.isInteger(row.sampleCount)||row.sampleCount<1||
+ if(!prefix||row.reviewed!==true||row.sponsored!==false||typeof row.captureGroupId!=='string'||
+    !/^[-a-zA-Z0-9_.]{8,80}$/.test(row.captureGroupId)||
+    !/^[a-f0-9]{64}$/.test(row.rawCaptureSha256||'')||!validDate(row.observedAt)||!validDate(row.reviewedAt)||
+    Date.parse(row.reviewedAt)<Date.parse(row.observedAt)||Date.parse(row.reviewedAt)>Date.now()+300000||
+    !['en','ja','ko','fr','de','es','pt','ar','zh'].includes(row.language)||
+    !/^([A-Z]{2}|GLOBAL)$/.test(row.country)||typeof row.query!=='string'||!row.query.trim()||row.query.length>512||
+    typeof row.methodVersion!=='string'||!row.methodVersion.trim()||
+    typeof row.reviewedBy!=='string'||!/^[-a-zA-Z0-9_.]{2,80}$/.test(row.reviewedBy)||
+    typeof row.reviewReason!=='string'||row.reviewReason.trim().length<20||row.reviewReason.length>500||
+    !safeUrl(row.sourceUrl)||!Number.isInteger(row.sampleCount)||row.sampleCount<1||
     typeof row.engine!=='string'||!row.engine.trim())throw new Error('INDEPENDENT_OBSERVATION_INVALID');
  if(row.source==='independent_serp'&&(!['Google','Bing'].includes(row.engine)||!Number.isInteger(row.position)||row.position<1||row.position>100))
   throw new Error('INDEPENDENT_SERP_METRIC_INVALID');
