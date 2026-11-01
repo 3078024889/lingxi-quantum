@@ -23,6 +23,7 @@ const commands=[
  ["node",["scripts/audit/preview-url-lifecycle-v79.mjs"]],
  ["node",["scripts/test-mini-sharing-v78.cjs"]],
  ["node",["scripts/test-mini-profiles-v80.cjs"]],
+ ["node",["scripts/test-sasi-variant-workflows-v105.cjs"]],
  ["node",["scripts/test-series-contract-v78.cjs"]],
  ["node",["scripts/test-background-episode-v78.cjs"]],
  ["node",["scripts/audit-security.mjs"]],

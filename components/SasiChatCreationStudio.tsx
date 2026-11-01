@@ -16,6 +16,7 @@ import {sasiCommonText} from "@/lib/sasi/common-ui-copy";
 
 import {useCallback,useEffect,useRef,useState,type ReactNode} from "react";
 import Link from "next/link";
+import LxText from "@/components/LxText";
 import styles from "./SasiChatCreationStudio.module.css";
 import SasiFunctionMenu,{SasiSelectedFunctions} from "./SasiFunctionMenu";
 import DOMPurify from "dompurify";
@@ -420,6 +421,7 @@ export default function SasiChatCreationStudio({mode,initialPrompt="",initialFil
   return <main data-sasi-composer-version="v5200" className={`${styles.workspace} min-h-[calc(100vh-152px)] bg-[var(--lx-bg)] text-[var(--lx-ink)]`}>
    <div className="lx-sasi-layout flex min-h-[calc(100vh-152px)] flex-col pb-14">
     <section className="flex-1 pt-8 sm:pt-12">
+     {mode==="drama"&&<div className="mb-5 text-sm"><Link href="/sasi/variants" className="inline-flex rounded-full border border-[var(--lx-line)] px-4 py-2 underline-offset-4 hover:underline"><LxText zh="参考视频与批量分镜 · 可编辑工程" en="Reference video & editable storyboard variants" ja="参考動画・編集可能な構成" ko="참고 동영상·편집형 스토리보드" fr="Vidéo de référence et scénarios éditables" de="Referenzvideo und editierbare Storyboards" es="Vídeo de referencia y guiones editables" pt="Vídeo de referência e roteiros editáveis" ar="الفيديو المرجعي ولوحات المشاهد القابلة للتحرير"/></Link></div>}
      {prompt.trim()&&(busy||message||assistantText||resultUrl||websiteHtml)&&<SasiUserMessage className="mb-8">{prompt}</SasiUserMessage>}
 
      {assistantText&&<SasiAssistantText className="mb-8">
