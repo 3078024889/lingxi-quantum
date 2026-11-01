@@ -34,8 +34,17 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
  if(typeof o.reviewReason!=='string'||o.reviewReason.trim().length<20||o.reviewReason.length>500)return false;
  if(typeof o.sponsored!=='boolean')return false;
  if(o.source==='ai_answer_citation'&&(!o.model||!o.modelVersion||!o.engine))return false;
- if((o.source==='independent_serp'||o.source==='ai_answer_citation')&&(typeof o.captureGroupId!=='string'||!/^[-a-zA-Z0-9_.:]{8,128}$/.test(o.captureGroupId)))return false;
+ if((o.source==='independent_serp'||o.source==='ai_answer_citation')&&(typeof o.captureGroupId!=='string'||!/^[-a-zA-Z0-9_.]{8,80}$/.test(o.captureGroupId)))return false;
  if((o.source==='independent_serp'||o.source==='ai_answer_citation')&&(typeof o.rawCaptureSha256!=='string'||!(/^[0-9a-f]{64}$/.test(o.rawCaptureSha256))))return false;
+ if(o.source==='independent_serp'){
+  if(!['Google','Bing'].includes(String(o.engine))||!Number.isInteger(o.position)||Number(o.position)<1||Number(o.position)>100||o.sponsored!==false)return false;
+  if(o.id!=='serp-'+String(o.recordHash).slice(7,31))return false;
+ }
+ if(o.source==='ai_answer_citation'){
+  if(typeof o.engine!=='string'||!o.engine.trim()||!Number.isInteger(o.mentions)||Number(o.mentions)<0||
+     !Number.isInteger(o.citations)||Number(o.citations)<0||o.sponsored!==false)return false;
+  if(o.id!=='geo-'+String(o.recordHash).slice(7,31))return false;
+ }
  if(o.source==='google_search_console'){
   if(o.sourceUrl!=='https://search.google.com/search-console/performance/search-analytics')return false;
   if(typeof o.sourceProperty!=='string'||typeof o.sourcePage!=='string'||typeof o.sourceDate!=='string')return false;
