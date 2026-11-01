@@ -1,5 +1,28 @@
 [
   {
+    "id": "ai.image.indicators",
+    "domain": "ai",
+    "input": [
+      "image"
+    ],
+    "output": [
+      "model-indicators"
+    ],
+    "localPreferred": true
+  },
+  {
+    "id": "ai.media.indicators",
+    "domain": "ai",
+    "input": [
+      "video",
+      "audio"
+    ],
+    "output": [
+      "model-indicators"
+    ],
+    "localPreferred": true
+  },
+  {
     "id": "ai.nutrition",
     "domain": "ai",
     "input": [
@@ -10,6 +33,19 @@
       "nutrition-report"
     ],
     "localPreferred": false
+  },
+  {
+    "id": "ai.provenance.verify",
+    "domain": "ai",
+    "input": [
+      "image",
+      "audio",
+      "video"
+    ],
+    "output": [
+      "c2pa-verification"
+    ],
+    "localPreferred": true
   },
   {
     "id": "archive.package",
@@ -226,6 +262,17 @@
       "pdf"
     ],
     "localPreferred": true
+  },
+  {
+    "id": "document.translate",
+    "domain": "document",
+    "input": [
+      "document"
+    ],
+    "output": [
+      "document"
+    ],
+    "localPreferred": false
   },
   {
     "id": "download.local",
@@ -688,17 +735,6 @@
       "text"
     ],
     "localPreferred": true
-  },
-  {
-    "id": "document.translate",
-    "domain": "document",
-    "input": [
-      "document"
-    ],
-    "output": [
-      "document"
-    ],
-    "localPreferred": false
   },
   {
     "id": "web.promotion",
