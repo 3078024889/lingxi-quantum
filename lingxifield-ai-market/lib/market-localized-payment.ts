@@ -84,6 +84,9 @@ export function localizedPaymentName(name:string,language:Language){
   if(/Amazon Pay/i.test(name))methods.push(t.amazonPay);
   if(/PayPal/i.test(name))methods.push(t.paypal);
   if(/Stripe/i.test(name))methods.push('Stripe');
+  if(/抖音支付/.test(name))methods.push(({zh:'抖音支付',en:'Douyin Pay',ja:'Douyin Pay',ko:'Douyin Pay',fr:'Paiement Douyin',de:'Douyin Pay',es:'Pago Douyin',pt:'Pagamento Douyin',ar:'Douyin Pay'} as Record<Language,string>)[language]);
+  if(/银联在线支付/.test(name))methods.push(({zh:'银联在线支付',en:'UnionPay online',ja:'UnionPayオンライン',ko:'UnionPay 온라인',fr:'UnionPay en ligne',de:'UnionPay online',es:'UnionPay en línea',pt:'UnionPay online',ar:'UnionPay عبر الإنترنت'} as Record<Language,string>)[language]);
+  if(/网银/.test(name))methods.push(({zh:'网银',en:'Online banking',ja:'オンラインバンキング',ko:'온라인 뱅킹',fr:'Banque en ligne',de:'Onlinebanking',es:'Banca en línea',pt:'Internet banking',ar:'الخدمات المصرفية عبر الإنترنت'} as Record<Language,string>)[language]);
   return methods.length?[...new Set(methods)].join(' · '):
    ({en:'See official payment policy',ja:'公式決済方法を確認',ko:'공식 결제 방법 확인',fr:'Voir les paiements officiels',de:'Offizielle Zahlungsmethoden prüfen',es:'Ver pagos oficiales',pt:'Ver pagamentos oficiais',ar:'راجع طرق الدفع الرسمية'} as Record<Exclude<Language,'zh'>,string>)[language as Exclude<Language,'zh'>];
  }

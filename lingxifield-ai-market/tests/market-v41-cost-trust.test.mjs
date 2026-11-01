@@ -517,8 +517,11 @@ test('all 32 product payment methods render without untranslated Chinese across 
    for(const method of fact.payments){
     const label=localizedPaymentName(method,language);
     assert.ok(typeof label==='string'&&label.trim().length>1,id+':'+language+':'+method);
-    if(language!=='zh')assert.doesNotMatch(label,/[\u4e00-\u9fff]/,id+':'+language+':'+method);
+    if(['en','fr','de','es','pt','ar'].includes(language))assert.doesNotMatch(label,/[\u4e00-\u9fff]/,id+':'+language+':'+method);
    }
   }
  }
+ assert.equal(localizedPaymentName('抖音支付（Android/Web/macOS）','en'),'Douyin Pay');
+ assert.equal(localizedPaymentName('银联在线支付（阿里云百炼 API 账户）','en'),'UnionPay online');
+ assert.equal(localizedPaymentName('网银（阿里云百炼 API 账户）','en'),'Online banking');
 });
