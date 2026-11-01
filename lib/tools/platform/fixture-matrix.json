@@ -82,6 +82,20 @@
       "covers": [
         "subtitle-tools"
       ]
+    },
+    {
+      "id": "ai-provenance-image",
+      "file": "tests/fixtures/c2pa-official/CA.jpg",
+      "covers": [
+        "ai-image-check"
+      ]
+    },
+    {
+      "id": "ai-provenance-video",
+      "file": "tests/fixtures/c2pa-official/video1.mp4",
+      "covers": [
+        "ai-video-audio-check"
+      ]
     }
   ],
   "onlineContractOnly": [
@@ -103,6 +117,14 @@
     "video-watermark-remover"
   ],
   "toolClassifications": {
+    "ai-image-check": {
+      "kind": "fixture",
+      "fixtureGroup": "ai-provenance-image"
+    },
+    "ai-video-audio-check": {
+      "kind": "fixture",
+      "fixtureGroup": "ai-provenance-video"
+    },
     "audio-cleanup": {
       "kind": "local-contract"
     },
@@ -498,5 +520,5 @@
       "kind": "local-contract"
     }
   },
-  "classificationCount": 122
+  "classificationCount": 124
 }
