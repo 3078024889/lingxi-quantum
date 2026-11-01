@@ -26,8 +26,13 @@ test('visitor API uses only guarded signed server RPC; no guest identity, no unr
  assert.match(api,/isIP\(ip\)/);
  assert.doesNotMatch(api,/x-forwarded-for/);
  const migration=await read('../supabase/migrations/20261030180000_ai_market_public_feedback.sql');
+ const hardened=await read('../supabase/migrations/20261101_ai_market_feedback_constant_time_hmac.sql');
  for(const word of ['enable row level security','revoke all on public.ai_market_visitor_feedback','security definer','revoke all on function','grant execute','visitor_hash','request_nonce',"status='approved'"])assert.ok(migration.includes(word),word);
  assert.doesNotMatch(migration,/grant (insert|update|delete) on public.ai_market_visitor_feedback to anon/i);
+ assert.match(hardened,/for v_i in 1\.\.64 loop/i);
+ assert.match(hardened,/ascii\(pg_catalog\.substr\(v_expected,v_i,1\)\)/i);
+ assert.match(hardened,/v_diff<>0/);
+ assert.doesNotMatch(hardened,/if v_expected\s*<>\s*p_signature/i);
 });
 
 test('nine-language form is wired to actual homepage and product detail',async()=>{
