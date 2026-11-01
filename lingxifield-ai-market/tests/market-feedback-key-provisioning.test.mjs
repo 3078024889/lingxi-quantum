@@ -39,7 +39,7 @@ test('provisioning fails closed on HTTP errors and unexpected RPC responses',asy
 });
 
 test('database key provisioning is service-role-only and covered by executable PostgreSQL CI',async()=>{
- const migration=await readFile(new URL('../../supabase/migrations/20261101_ai_market_feedback_key_provisioning.sql',import.meta.url),'utf8');
+ const migration=await readFile(new URL('../sql/20261101_ai_market_feedback_key_provisioning.sql',import.meta.url),'utf8');
  const workflow=await readFile(new URL('../../.github/workflows/ai-market-postgres-isolated.yml',import.meta.url),'utf8');
  const api=await readFile(new URL('../app/api/v1/feedback/route.ts',import.meta.url),'utf8');
  assert.match(migration,/request\.jwt\.claim\.role/);
@@ -47,9 +47,15 @@ test('database key provisioning is service-role-only and covered by executable P
  assert.match(migration,/revoke all on function public\.ai_market_configure_feedback_signing_key\(text\) from public,anon,authenticated/);
  assert.match(migration,/grant execute on function public\.ai_market_configure_feedback_signing_key\(text\) to service_role/);
  assert.match(migration,/on conflict\(id\) do update/);
+ const hmac=await readFile(new URL('../sql/20261101_ai_market_feedback_constant_time_hmac.sql',import.meta.url),'utf8');
+ assert.match(hmac,/for v_i in 1\.\.64 loop/);
+ assert.match(hmac,/v_diff<>0/);
+ assert.doesNotMatch(hmac,/v_expected<>p_signature/);
  assert.match(workflow,/20261030180000_ai_market_public_feedback\.sql/);
  assert.match(workflow,/20261030195000_ai_market_feedback_moderation\.sql/);
  assert.match(workflow,/20261101_ai_market_feedback_key_provisioning\.sql/);
+ assert.match(workflow,/20261101_ai_market_feedback_constant_time_hmac\.sql/);
+ assert.match(workflow,/20261030214500_ai_market_auto_publish\.sql/);
  assert.match(workflow,/Verify visitor feedback HMAC provisioning, submission and moderation in isolated PostgreSQL/);
  assert.match(api,/AI_MARKET_FEEDBACK_HMAC_KEY/);
  assert.doesNotMatch(api,/AI_MARKET_SERVICE_ROLE_KEY|SUPABASE_SERVICE_ROLE_KEY/);
