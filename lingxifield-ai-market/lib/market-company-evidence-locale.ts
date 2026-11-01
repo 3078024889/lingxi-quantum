@@ -96,59 +96,7 @@ const texts:Record<Key,readonly string[]>={
   'Announced US$125M funding at a US$1.25B valuation on 20 Oct 2025 (that round)',
   '2025年10月20日発表：1億2,500万米ドルの資金調達、評価額12.5億米ドル（当該ラウンド）',
   '2025년 10월 20일 발표: 1억 2,500만 달러 투자 유치, 기업가치 12억 5,000만 달러(해당 라운드)',
-  'Financement de 125 M$ US annoncé le 20 octobre 2025, valorisation de 1,25 Md
-const identity:Record<string,string>={
- grok:'xai',transformers:'huggingface',
- chatgpt:'openai','openai-python':'openai',whisper:'openai',
- claude:'anthropic','anthropic-sdk-python':'anthropic',gemini:'google',qwen:'alibaba',
- jimeng:'bytedance',doubao:'bytedance',kling:'kuaishou',
- comfyui:'comfy',runway:'runway',luma:'luma',replit:'replit',suno:'suno'
-};
-const locations:Record<string,{country:string,city:string,openaiAddress?:boolean}>={
- openai:{country:'US',city:'San Francisco',openaiAddress:true},
- anthropic:{country:'US',city:'San Francisco'},
- google:{country:'US',city:'Mountain View'},
- alibaba:{country:'CN',city:'Hangzhou'},
- bytedance:{country:'CN',city:'Beijing'},
- luma:{country:'US',city:'Redwood City'},
- replit:{country:'US',city:'San Francisco'},
- langchain:{country:'US',city:'San Francisco'},
- xai:{country:'US',city:'Austin',openaiAddress:true},
- lovable:{country:'SE',city:'Stockholm'},
- n8n:{country:'DE',city:'Berlin'},
- dify:{country:'US',city:'Menlo Park'}
-};
-const originWords:Record<Language,string>={zh:'公司起源',en:'company origin',ja:'会社の起源',ko:'기업 출발지',fr:'origine de la société',de:'Unternehmensursprung',es:'origen de la empresa',pt:'origem da empresa',ar:'منشأ الشركة'};
-const labels:Record<Language,string>={
- zh:'公司地址',en:'OpCo address',ja:'運営会社の住所',ko:'운영사 주소',fr:'adresse de la société exploitante',
- de:'Adresse der Betreibergesellschaft',es:'domicilio de la sociedad operadora',
- pt:'endereço da empresa operadora',ar:'عنوان الشركة المشغلة'
-};
-export function localizeCompanyEvidence(id:string,language:Language,fact:CompanyEvidence|undefined):CompanyEvidence|undefined{
- if(!fact||language==='zh')return fact;
- const owner=identity[id]||id,local:CompanyEvidence={...fact};
- if(fact.headquarters){
-  const place=locations[owner];
-  if(place){
-   const country=new Intl.DisplayNames([language],{type:'region'}).of(place.country)||place.country;
-   local.headquarters={...fact.headquarters,text:country+' · '+place.city+(place.openaiAddress?' ('+labels[language]+')':owner==='bytedance'?' ('+originWords[language]+')':'')};
-  }else local.headquarters=undefined;
- }
- for(const field of ['funding','listing','projectStarted','scale'] as const){
-  if(!fact[field])continue;
-  const key=(owner+'.'+field) as Key;
-  const alternatives=texts[key];
-  const idx=ORDER.indexOf(language);
-  if(alternatives&&idx>=0&&alternatives[idx]){
-   local[field]={...fact[field]!,text:alternatives[idx]};
-  }else{
-   // Avoid mixing unreviewed Chinese factual prose into international SEO.
-   local[field]=undefined;
-  }
- }
- return local;
-}
-,
+  'Financement de 125 M$ US annoncé le 20 octobre 2025, valorisation de 1,25 Md$ US',
   'Am 20. Oktober 2025 angekündigte Finanzierung über 125 Mio. US-Dollar bei einer Bewertung von 1,25 Mrd.',
   'Financiación de 125 MUSD anunciada el 20 de octubre de 2025, valoración de 1.250 MUSD',
   'Financiamento de US$ 125 milhões anunciado em 20 de outubro de 2025, avaliação de US$ 1,25 bilhão',
@@ -203,56 +151,7 @@ export function localizeCompanyEvidence(id:string,language:Language,fact:Company
   'Announced US$400M Series C at a US$13.3B valuation on 12 Aug 2026 (that round)',
   '2026年8月12日発表：シリーズCで4億米ドルを調達、評価額133億米ドル（当該ラウンド）',
   '2026년 8월 12일 발표: Series C 4억 달러, 기업가치 133억 달러(해당 라운드)',
-  'Série C de 400 M$ US annoncée le 12 août 2026, valorisation de 13,3 Md
-const identity:Record<string,string>={
- chatgpt:'openai','openai-python':'openai',whisper:'openai',
- claude:'anthropic','anthropic-sdk-python':'anthropic',gemini:'google',qwen:'alibaba',
- jimeng:'bytedance',doubao:'bytedance',kling:'kuaishou',
- comfyui:'comfy',runway:'runway',luma:'luma',replit:'replit',suno:'suno'
-};
-const locations:Record<string,{country:string,city:string,openaiAddress?:boolean}>={
- openai:{country:'US',city:'San Francisco',openaiAddress:true},
- anthropic:{country:'US',city:'San Francisco'},
- google:{country:'US',city:'Mountain View'},
- alibaba:{country:'CN',city:'Hangzhou'},
- bytedance:{country:'CN',city:'Beijing'},
- luma:{country:'US',city:'Redwood City'},
- replit:{country:'US',city:'San Francisco'},
- langchain:{country:'US',city:'San Francisco'},
- n8n:{country:'DE',city:'Berlin'},
- dify:{country:'US',city:'Menlo Park'}
-};
-const originWords:Record<Language,string>={zh:'公司起源',en:'company origin',ja:'会社の起源',ko:'기업 출발지',fr:'origine de la société',de:'Unternehmensursprung',es:'origen de la empresa',pt:'origem da empresa',ar:'منشأ الشركة'};
-const labels:Record<Language,string>={
- zh:'公司地址',en:'OpCo address',ja:'運営会社の住所',ko:'운영사 주소',fr:'adresse de la société exploitante',
- de:'Adresse der Betreibergesellschaft',es:'domicilio de la sociedad operadora',
- pt:'endereço da empresa operadora',ar:'عنوان الشركة المشغلة'
-};
-export function localizeCompanyEvidence(id:string,language:Language,fact:CompanyEvidence|undefined):CompanyEvidence|undefined{
- if(!fact||language==='zh')return fact;
- const owner=identity[id]||id,local:CompanyEvidence={...fact};
- if(fact.headquarters){
-  const place=locations[owner];
-  if(place){
-   const country=new Intl.DisplayNames([language],{type:'region'}).of(place.country)||place.country;
-   local.headquarters={...fact.headquarters,text:country+' · '+place.city+(place.openaiAddress?' ('+labels[language]+')':owner==='bytedance'?' ('+originWords[language]+')':'')};
-  }else local.headquarters=undefined;
- }
- for(const field of ['funding','listing','projectStarted','scale'] as const){
-  if(!fact[field])continue;
-  const key=(owner+'.'+field) as Key;
-  const alternatives=texts[key];
-  const idx=ORDER.indexOf(language);
-  if(alternatives&&idx>=0&&alternatives[idx]){
-   local[field]={...fact[field]!,text:alternatives[idx]};
-  }else{
-   // Avoid mixing unreviewed Chinese factual prose into international SEO.
-   local[field]=undefined;
-  }
- }
- return local;
-}
-,
+  'Série C de 400 M$ US annoncée le 12 août 2026, valorisation de 13,3 Md$ US',
   'Am 12. August 2026 angekündigte Series C über 400 Mio. US-Dollar bei 13,3 Mrd. Bewertung',
   'Serie C de 400 MUSD anunciada el 12 de agosto de 2026, valoración de 13.300 MUSD',
   'Série C de US$ 400 milhões anunciada em 12 de agosto de 2026, avaliação de US$ 13,3 bilhões',
@@ -326,6 +225,7 @@ export function localizeCompanyEvidence(id:string,language:Language,fact:Company
  ]
 };
 const identity:Record<string,string>={
+ grok:'xai',transformers:'huggingface',
  chatgpt:'openai','openai-python':'openai',whisper:'openai',
  claude:'anthropic','anthropic-sdk-python':'anthropic',gemini:'google',qwen:'alibaba',
  jimeng:'bytedance',doubao:'bytedance',kling:'kuaishou',
@@ -340,6 +240,8 @@ const locations:Record<string,{country:string,city:string,openaiAddress?:boolean
  luma:{country:'US',city:'Redwood City'},
  replit:{country:'US',city:'San Francisco'},
  langchain:{country:'US',city:'San Francisco'},
+ xai:{country:'US',city:'Austin'},
+ lovable:{country:'SE',city:'Stockholm'},
  n8n:{country:'DE',city:'Berlin'},
  dify:{country:'US',city:'Menlo Park'}
 };
