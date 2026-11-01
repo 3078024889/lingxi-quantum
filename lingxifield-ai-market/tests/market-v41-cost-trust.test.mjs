@@ -423,7 +423,8 @@ test('V45 SEO/GEO requires reviewed source-dated observations and independent co
  assert.match(source,/ai_answer_citation/);
  assert.match(source,/recordHash/);
  assert.match(source,/search.google.com/);
- assert.match(read('app/seo-geo-board.tsx'),/coverage\.measuredProducts/);
+ assert.match(read('app/seo-geo-board.tsx'),/coverage\.verifiedObservations===0/);
+ assert.doesNotMatch(read('app/seo-geo-board.tsx'),/seoGeoEvidenceCount|coverage\.measuredProducts/);
  assert.match(read('app/api/v1/seo-geo/route.ts'),/no-store/);
  const collector=read('scripts/sync-gsc-analytics.mjs');
  assert.match(collector,/GSC_CONFIG_REQUIRED/);
