@@ -64,7 +64,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  useEffect(()=>{if(file)void renderSourcePage(file,selectedPage)},[file,selectedPage,renderSourcePage]);
  function commitPageInput(){const n=Number(selectedPageInput);if(Number.isInteger(n)&&n>=1&&n<=pages){setSelectedPage(n);setSelectedPageInput(String(n));}else setSelectedPageInput(String(selectedPage));}
  function patch(id:number,k:Partial<Overlay>){setOverlays(v=>v.map(o=>o.id===id?{...o,...k}:o));}
- function patchDimension(id:number,key:"w"|"h",value:number){setOverlays(v=>v.map(o=>{if(o.id!==id)return o;const safe=Math.max(.5,Math.min(100,Number.isFinite(value)?value:o[key]));if(o.kind==="image"&&o.ratio){if(key==="w")return{...o,w:safe,h:Math.max(.5,Math.min(100,safe/o.ratio))};return{...o,h:safe,w:Math.max(.5,Math.min(100,safe*o.ratio))};}return{...o,[key]:safe};}));}
+ function patchDimension(id:number,key:"w"|"h",value:number){const rect=stageRef.current?.getBoundingClientRect();setOverlays(v=>v.map(o=>{if(o.id!==id)return o;const safe=Math.max(1,Math.min(100,Number.isFinite(value)?value:o[key]));if(o.kind==="image"&&o.ratio&&o.locked!==false&&rect?.width&&rect?.height){if(key==="w"){const pixelWidth=safe/100*rect.width;return{...o,w:safe,h:Math.max(1,Math.min(100,pixelWidth/o.ratio/rect.height*100))};}const pixelHeight=safe/100*rect.height;return{...o,h:safe,w:Math.max(1,Math.min(100,pixelHeight*o.ratio/rect.width*100))};}return{...o,[key]:safe};}));}
  function addText(){const value=text.trim();if(!value)return;const id=Date.now();setOverlays(v=>[...v,{id,kind:"text",page:selectedPage,x:10,y:12,w:55,h:8,text:value,size:14}]);setSelectedOverlayId(id);setEditingTextId(null);setText("");}
  function addCover(){const id=Date.now();setOverlays(v=>[...v,{id,kind:"cover",page:selectedPage,x:10,y:12,w:35,h:8}]);setSelectedOverlayId(id);}
  async function addImage(f:File,asStamp=false,kind:"signature"|"stamp"="stamp"){
@@ -76,13 +76,13 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
     const id=Date.now();
     if(kind==="stamp")setStamp({data:prepared.dataUrl,ratio});
     const w=22,h=Math.min(30,w/ratio);
-    setOverlays(v=>[...v,{id,kind:"image",page:selectedPage,x:68,y:62,w,h,ratio,data:prepared.dataUrl}]);setSelectedOverlayId(id);
+    setOverlays(v=>[...v,{id,kind:"image",page:selectedPage,x:68,y:62,w,h,ratio,locked:true,data:prepared.dataUrl}]);setSelectedOverlayId(id);
     if(kind==="signature")setInkPreview({file:f,id,data:prepared.dataUrl});
    }else{
     const data=await new Promise<string>((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result));r.onerror=()=>rej(new Error("IMAGE_READ_FAILED"));r.readAsDataURL(f)});
     const im=await new Promise<HTMLImageElement>((res,rej)=>{const x=new Image();x.onload=()=>res(x);x.onerror=rej;x.src=data});
     const ratio=im.naturalWidth/im.naturalHeight,w=22,h=Math.min(30,w/ratio),id=Date.now();
-    setOverlays(v=>[...v,{id,kind:"image",page:selectedPage,x:68,y:62,w,h,ratio,data}]);setSelectedOverlayId(id);
+    setOverlays(v=>[...v,{id,kind:"image",page:selectedPage,x:68,y:62,w,h,ratio,locked:true,data}]);setSelectedOverlayId(id);
    }
   }catch(e){
    if(kind==="signature")setInkError(sw.failure);
@@ -115,7 +115,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
   if(gesture.mode==="move"){patch(gesture.id,{x:Math.max(0,Math.min(100-gesture.originW,gesture.originX+dxPct)),y:Math.max(0,Math.min(100-gesture.originH,gesture.originY+dyPct))});return;}
   if(gesture.mode==="rotate"){const cx=(gesture.originX+gesture.originW/2)/100*gesture.rect.width,cy=(gesture.originY+gesture.originH/2)/100*gesture.rect.height;const start=Math.atan2(gesture.startY-gesture.rect.top-cy,gesture.startX-gesture.rect.left-cx),now=Math.atan2(e.clientY-gesture.rect.top-cy,e.clientX-gesture.rect.left-cx);patch(gesture.id,{angle:Math.max(-180,Math.min(180,gesture.originAngle+(now-start)*180/Math.PI))});return;}
   const h=gesture.handle||"se",west=h.includes("w"),east=h.includes("e"),north=h.includes("n"),south=h.includes("s");let x=gesture.originX,y=gesture.originY,w=gesture.originW,ht=gesture.originH;
-  if(o.kind==="image"&&o.ratio){const oldW=gesture.originW/100*gesture.rect.width,oldH=gesture.originH/100*gesture.rect.height;let nextW=oldW+(east?dx:west?-dx:0),nextH=oldH+(south?dy:north?-dy:0);if(!west&&!east)nextW=oldW;if(!north&&!south)nextH=oldH;if(west||east){nextW=Math.max(14,nextW);nextH=nextW/o.ratio;}else{nextH=Math.max(14,nextH);nextW=nextH*o.ratio;}w=nextW/gesture.rect.width*100;ht=nextH/gesture.rect.height*100;if(west)x=gesture.originX+gesture.originW-w;else if(!east)x=gesture.originX+(gesture.originW-w)/2;if(north)y=gesture.originY+gesture.originH-ht;else if(!south)y=gesture.originY+(gesture.originH-ht)/2;
+  if(o.kind==="image"&&o.ratio&&o.locked!==false){const oldW=gesture.originW/100*gesture.rect.width,oldH=gesture.originH/100*gesture.rect.height;let nextW=oldW+(east?dx:west?-dx:0),nextH=oldH+(south?dy:north?-dy:0);if(!west&&!east)nextW=oldW;if(!north&&!south)nextH=oldH;if(west||east){nextW=Math.max(14,nextW);nextH=nextW/o.ratio;}else{nextH=Math.max(14,nextH);nextW=nextH*o.ratio;}w=nextW/gesture.rect.width*100;ht=nextH/gesture.rect.height*100;if(west)x=gesture.originX+gesture.originW-w;else if(!east)x=gesture.originX+(gesture.originW-w)/2;if(north)y=gesture.originY+gesture.originH-ht;else if(!south)y=gesture.originY+(gesture.originH-ht)/2;
   }else{if(east)w=gesture.originW+dxPct;if(west){w=gesture.originW-dxPct;x=gesture.originX+dxPct;}if(south)ht=gesture.originH+dyPct;if(north){ht=gesture.originH-dyPct;y=gesture.originY+dyPct;}w=Math.max(1,w);ht=Math.max(1,ht);if(o.kind==="text"&&(north||south))patch(gesture.id,{size:Math.max(6,Math.min(96,(o.size||14)*ht/Math.max(1,gesture.originH)))});}
   w=Math.max(1,Math.min(100,w));ht=Math.max(1,Math.min(100,ht));x=Math.max(0,Math.min(100-w,x));y=Math.max(0,Math.min(100-ht,y));patch(gesture.id,{x,y,w,h:ht});
  }
