@@ -6,6 +6,7 @@ import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocale
 import {researchedFact} from '../../../../lib/market-researched-facts';
 import {companyEvidenceFor} from '../../../../lib/market-company-evidence';
 import {localizeCompanyEvidence} from '../../../../lib/market-company-evidence-locale';
+import {questionForProduct} from '../../../../lib/market-user-task-queries.mjs';
 import {VIDEO_RATES} from '../../../../lib/market-rate-catalog';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
@@ -96,6 +97,10 @@ export default async function LocalProduct({params}:PageParams){
    {title===paymentHeading&&payments.methodEvidence.length>0?<ul className="marketLocalizedPaymentEvidence">{payments.methodEvidence.map(method=><li key={method.method}><span>{localizedPaymentName(method.method,l)}</span><a href={method.source} rel="nofollow noopener noreferrer" target="_blank">{w[7]} ↗</a></li>)}</ul>:<p>{value}</p>}
    {src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}
   </article>)}</section>
+  {l==='zh'&&questionForProduct(id).length>0?<section className="marketLocalizedFaq">
+   <h2>大家还会搜索</h2>
+   <div className="marketLocalizedFaqLinks">{questionForProduct(id).map(q=><Link key={q} href={'/zh/ai?q='+encodeURIComponent(q)}>{q} ↗</Link>)}</div>
+  </section>:null}
   <section className="marketLocalizedApiRates">
    <h2>{({zh:'开发者 API 计费与会员套餐',en:'Developer API pricing and web plans',ja:'開発者API料金と会員プラン',ko:'개발자 API 요금 및 구독',fr:'Tarifs API et abonnements',de:'API-Preise und Abos',es:'Precios API y planes',pt:'Preços de API e planos',ar:'أسعار API والاشتراكات'} as Record<Language,string>)[l]}</h2>
    <p>{l==='zh'?api.descriptionZh:api.descriptionEn}</p>
