@@ -27,6 +27,9 @@ function SasiOneSurfaceBody(){
  const [initialSkillIds,setInitialSkillIds]=useState<SasiSkillId[]>([]);
  const didRestore=useRef(false);
  const didReadPromotion=useRef(false);
+ // Do not mount the creation studio until the URL promotion brief has been restored.
+ // SasiModeHost and its composer initialize their drafts only on first mount.
+ const [promotionReady,setPromotionReady]=useState(!promotion);
  useEffect(()=>{
   if(!promotion||!continuity.restored||didReadPromotion.current)return;
   didReadPromotion.current=true;
@@ -37,7 +40,7 @@ function SasiOneSurfaceBody(){
    setInitialPrompt(value.brief);setMode('drama');setAutoStart(false);didRestore.current=true;
    sessionStorage.removeItem('lingxifield.promotionBrief.v1');
    const url=new URL(window.location.href);url.searchParams.delete('promotion');url.searchParams.set('mode','drama');window.history.replaceState({},'',url.pathname+'?'+url.searchParams);
-  }catch{}
+  }catch{}finally{setPromotionReady(true)}
  },[promotion,continuity.restored]);
  useEffect(()=>{if(legacy&&!intent)setMode(legacy)},[legacy,intent]);
  useEffect(()=>{
@@ -64,7 +67,7 @@ function SasiOneSurfaceBody(){
   setAutoStart(Boolean(prompt));setInitialPrompt(prompt);setInitialFiles([]);setInitialSkillIds([]);setMode(next);cleanRoute(next,false);
   continuity.updateWorkspace({mode:next,initialPrompt:prompt});
  }
- if(!continuity.restored)return <main className="lx11-page" aria-busy="true"/>;
+ if(!continuity.restored||(promotion&&!promotionReady))return <main className="lx11-page" aria-busy="true"/>;
  return <main className="lx11-page min-h-[calc(100vh-64px)]"><div className="mx-auto max-w-[1440px] px-3 sm:px-5">
  {mode&&mode!=='chat'&&mode!=='image'&&continuity.workspace.chatHistory?.length>0&&<section className="lx-sasi-layout pt-8" data-sasi-continuation-history="true">{continuity.workspace.chatHistory.map((turn:any,index:number)=><div className="mb-8" key={index}><SasiUserMessage>{turn.question}</SasiUserMessage>{turn.answer&&<SasiAssistantText>{turn.answer}</SasiAssistantText>}</div>)}<button type="button" onClick={()=>switchMode('chat')} className="rounded-full border px-4 py-2 text-sm">返回对话</button></section>}
  {(mode==='chat'||mode==='image'||continuity.workspace.chatOpened)&&<div hidden={mode!=='chat'&&mode!=='image'}><SasiPromptConversation key={mode==='image'?'image':'chat'} onTask={(task,prompt)=>switchMode(task,prompt)} autoStart={autoStart&&(mode==='chat'||mode==='image')} task={mode==='image'?'image':'chat'} initialPrompt={initialPrompt} onFiles={(files,prompt)=>enter("book",prompt,files)}/></div>}
