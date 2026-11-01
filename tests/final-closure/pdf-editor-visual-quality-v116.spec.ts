@@ -53,6 +53,14 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  const opacity=page.getByRole("slider",{name:"Opacity"});
  await opacity.press("ArrowLeft");
  await expect(imageObject.locator("img")).toHaveCSS("opacity","0.99");
+ const imageBefore=await imageObject.boundingBox();
+ const imageHandle=await page.getByRole("button",{name:"Resize se"}).boundingBox();
+ await page.mouse.move(imageHandle!.x+imageHandle!.width/2,imageHandle!.y+imageHandle!.height/2);
+ await page.mouse.down();
+ await page.mouse.move(imageHandle!.x+imageHandle!.width/2+28,imageHandle!.y+imageHandle!.height/2+18,{steps:3});
+ await page.mouse.up();
+ const imageAfter=await imageObject.boundingBox();
+ expect(imageAfter!.width).toBeGreaterThan(imageBefore!.width+8);
  await page.getByRole("button",{name:"Duplicate"}).click();
  await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]')).toHaveCount(2);
  await page.getByRole("button",{name:/Undo/}).click();
