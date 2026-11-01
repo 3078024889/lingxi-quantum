@@ -31,6 +31,7 @@ test('AI Market workflows pin all core GitHub actions to reviewed Node 24 releas
    const action=match[1],sha=match[2];
    assert.match(sha,/^[a-f0-9]{40}$/,name+': '+action+' must be pinned to an immutable commit');
    assert.ok(allowed[action]?.has(sha),name+': '+action+' SHA must be an audited Node 24 release');
+   if(action==='actions/setup-node')assert.match(source,/package-manager-cache:\\s*false/,name+': automatic package-manager detection must not assume pnpm is installed');
    checked++;
   }
  }
