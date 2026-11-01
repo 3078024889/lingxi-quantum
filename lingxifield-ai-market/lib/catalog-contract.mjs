@@ -1,0 +1,8 @@
+export const LANGUAGES = Object.freeze(['zh','en','ja','ko','fr','de','es','pt','ar']);
+export const CURRENCIES = Object.freeze(['CNY','USD']);
+export const REGIONS = Object.freeze(['global','CN','US','EU','JP','KR','SG']);
+export function validUrl(value){try{const u=new URL(value);return u.protocol==='https:' && Boolean(u.hostname)}catch{return false}}
+export function validCompany(c){return Boolean(c && /^[a-z0-9-]+$/.test(c.id) && typeof c.name==='string' && c.name.trim() && Array.isArray(c.platformIds) && c.platformIds.length && validUrl(c.officialUrl) && ['verified','needs_verification'].includes(c.status) && (c.funding===null || typeof c.funding==='object') && (c.ipo===null || typeof c.ipo==='object'))}
+export function validExperience(r){return Boolean(r && typeof r.id==='string' && r.id.trim() && typeof r.platformId==='string' && r.platformId.trim() && typeof r.summary==='string' && r.summary.trim().length>=12 && validUrl(r.sourceUrl) && /^\d{4}-\d{2}-\d{2}$/.test(r.publishedOn) && ['user_report','independent_test'].includes(r.kind) && ['verified','pending','disputed'].includes(r.status) && typeof r.region==='string' && r.region.trim())}
+export function findCatalog(catalog, query='', category=''){const q=query.trim().toLocaleLowerCase();return catalog.filter(p=>(!category || category==='全部平台' || p.category===category) && (!q || [p.name,p.company,p.category,p.about,...p.features].join(' ').toLocaleLowerCase().includes(q)))}
+export function nominalPrice(amount,currency){if(!CURRENCIES.includes(currency)|| !Number.isFinite(amount)||amount<0)throw new Error('Invalid quote');return {amount,currency,display:(currency==='CNY'?'¥':'$')+amount};}
