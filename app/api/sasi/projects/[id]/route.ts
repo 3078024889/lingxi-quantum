@@ -100,10 +100,14 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
   if (jobError) return NextResponse.json({ error: "PROJECT_DELETE_CHECK_FAILED" }, { status: 503 });
   if (activeJobs?.length) return NextResponse.json({ error: "PROJECT_HAS_ACTIVE_JOB" }, { status: 409 });
 
-  const [{ data: assets }, { data: deliveries }] = await Promise.all([
+  const [{ data: assets, error: assetReadError }, { data: deliveries, error: deliveryReadError }] = await Promise.all([
     admin.from("sasi_assets").select("bucket_id,object_path").eq("project_id", params.id).eq("user_id", owner.user.id),
     admin.from("sasi_deliveries").select("bucket_id,object_path").eq("project_id", params.id).eq("user_id", owner.user.id),
   ]);
+  // Never delete the project before its storage inventory has been read.
+  // Otherwise a failed SELECT is mistaken for an empty list and leaves orphaned files.
+  if (assetReadError || deliveryReadError)
+    return NextResponse.json({error:"PROJECT_STORAGE_INVENTORY_FAILED"},{status:503});
   const { error: deleteError } = await admin.from("sasi_projects").delete().eq("id", params.id).eq("user_id", owner.user.id);
   if (deleteError) return NextResponse.json({ error: "PROJECT_DELETE_FAILED" }, { status: 503 });
 
