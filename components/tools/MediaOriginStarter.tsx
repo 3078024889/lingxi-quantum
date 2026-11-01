@@ -27,6 +27,30 @@ async function check(file:File):Promise<Result>{
   else if(b.length>=4&&b[0]===26&&b[1]===69&&b[2]===223&&b[3]===163)format="Matroska/WebM";
   return {name:file.name,bytes:file.size,format};
 }
+const INTRO_BY_MODE:Record<"image"|"media",Record<LingxiLang,string>>={
+  "image": {
+    "zh": "仅分析图片：先核验 C2PA 来源签名，再可选运行本机 AI 图片特征检测。模型分数不是图片真伪的证明。",
+    "en": "Image only: check C2PA provenance first, then optionally run an on-device AI-image indicator test. Scores are not proof of authenticity.",
+    "ja": "画像のみ対象。C2PAの出所を確認し、任意で端末内AI画像分析を実行します。スコアは真正性の証明ではありません。",
+    "ko": "이미지만 검사합니다. C2PA 출처를 확인한 뒤 선택적으로 기기 내 AI 특징 분석을 실행합니다. 점수는 진위 증명이 아닙니다.",
+    "fr": "Images uniquement : vérifiez C2PA, puis les indicateurs IA locaux si nécessaire. Les scores ne prouvent pas l’authenticité.",
+    "de": "Nur Bilder: C2PA-Herkunft prüfen und optional KI-Merkmale lokal analysieren. Scores beweisen keine Echtheit.",
+    "es": "Solo imágenes: verifica C2PA y, si quieres, indicadores IA locales. Los resultados no prueban autenticidad.",
+    "pt": "Apenas imagens: verifique C2PA e, se desejar, indicadores de IA locais. Os resultados não comprovam autenticidade.",
+    "ar": "للصور فقط: تحقق من مصدر C2PA، ثم حلل مؤشرات الذكاء الاصطناعي اختياريًا على الجهاز. النتائج لا تثبت الأصالة."
+  },
+  "media": {
+    "zh": "检查视频或音频的 C2PA 来源签名。视频只抽取 3 帧，音频只分析开头最多 12 秒的人声；不能据此断定整段媒体的真伪。",
+    "en": "Check C2PA provenance for video or audio. Optional analysis samples only 3 video frames or up to 12 seconds of speech; it cannot certify an entire recording.",
+    "ja": "動画・音声のC2PA出所を確認します。任意分析は動画3フレームまたは冒頭最大12秒の音声のみで、全体の真偽は判定できません。",
+    "ko": "영상·오디오의 C2PA 출처를 확인합니다. 선택 분석은 영상 3프레임 또는 음성 첫 12초만 검사하며 전체 진위를 보장하지 않습니다.",
+    "fr": "Vérifiez C2PA pour vidéo ou audio. L’analyse optionnelle porte sur 3 images ou 12 secondes de voix au maximum ; elle ne certifie pas tout le média.",
+    "de": "C2PA-Herkunft von Video/Audio prüfen. Optional werden nur 3 Bilder oder bis zu 12 Sekunden Sprache analysiert; nicht die gesamte Aufnahme.",
+    "es": "Comprueba C2PA en vídeo/audio. El análisis opcional examina 3 fotogramas o hasta 12 segundos de voz; no certifica toda la grabación.",
+    "pt": "Verifique C2PA em vídeo/áudio. A análise opcional examina 3 quadros ou até 12 segundos de fala; não certifica a gravação inteira.",
+    "ar": "تحقق من مصدر C2PA للفيديو أو الصوت. يحلل الفحص الاختياري 3 إطارات أو أول 12 ثانية من الكلام فقط، ولا يثبت أصالة الملف بالكامل."
+  }
+};
 export default function MediaOriginStarter({mode}:{mode:Mode}){
   const {lang}=useLingxiLang();const t=(key:string)=>label(key,lang);
   const [files,setFiles]=useState<File[]>([]);
@@ -41,7 +65,7 @@ export default function MediaOriginStarter({mode}:{mode:Mode}){
   }
   return <main className="mx-auto max-w-3xl space-y-6 px-5 py-12" dir={lang==="ar"?"rtl":undefined}>
     <h1 className="text-3xl font-semibold">{t(mode==="image"?"image":"media")}</h1>
-    <p>{t("intro")}</p>
+    <p>{INTRO_BY_MODE[mode][lang]}</p>
     <section className="space-y-4 rounded-2xl border p-5">
       <h2 className="text-lg font-semibold">{t("select")}</h2>
       <FileDropzone files={files} onChange={next=>{setFiles(next);setResults([])}} multiple append maxFiles={20} maxSizeMB={250} accept={accept} kind={mode==="image"?"image":"media"}/>
