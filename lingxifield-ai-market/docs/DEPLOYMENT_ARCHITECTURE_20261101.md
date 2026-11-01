@@ -103,3 +103,14 @@ Targets to measure after a public custom-domain preview is available (these are 
 - Google SoftwareApplication structured data: https://developers.google.com/search/docs/appearance/structured-data/software-app
 - OpenAI crawler policy: https://developers.openai.com/api/docs/bots
 - Cloudflare cache rules: https://developers.cloudflare.com/cache/how-to/cache-rules/
+
+## Cost and commercial-plan guardrails (checked 2026-11-01)
+
+- Vercel Hobby is limited to personal, non-commercial use. The current published Pro starting price is USD 20/month and includes USD 20 in usage credit; metered usage, tax and add-ons can change the invoice. The Vercel team plan for this project was not returned by the connected account API, so it must be checked in the dashboard before commercial production. Do not infer that an SSO-protected project is on a particular plan.
+- Netlify Free is USD 0 with 300 monthly credits and a hard limit. A production deploy consumes 15 credits; compute consumes 10 credits per GB-hour; bandwidth consumes 20 credits per GB; web requests consume 2 credits per 10,000. A project pauses when the shared team allowance is exhausted. It is useful for a low-traffic public preview, not a production availability commitment.
+- Netlify Personal is currently USD 9/month for 1,000 credits; Pro starts at USD 20/month for 3,000 credits. Plan limits, tax and pricing may change.
+- No paid plan, automatic recharge, domain purchase, or billing method has been enabled as part of this work. Any upgrade requires the account owner's explicit choice.
+
+Sources:
+- Vercel pricing and commercial-use FAQ: https://vercel.com/pricing and https://vercel.com/docs/plans/hobby
+- Netlify pricing and credit calculation: https://www.netlify.com/pricing/ and https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/
