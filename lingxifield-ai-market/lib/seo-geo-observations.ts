@@ -9,7 +9,8 @@ import {platforms} from './data';
 export type SeoGeoSource='google_search_console'|'bing_webmaster'|'independent_serp'|'ai_answer_citation';
 export type SeoGeoObservation={
  id:string;platformId:string;source:SeoGeoSource;observedAt:string;country:string;language:string;query:string;
- model?:string;modelVersion?:string;engine?:string;captureGroupId?:string;sourceUrl:string;recordHash:string;methodVersion:string;
+ model?:string;modelVersion?:string;engine?:string;captureGroupId?:string;sourceProperty?:string;sourcePage?:string;sourceDate?:string;
+ reviewedBy?:string;reviewReason?:string;sourceUrl:string;recordHash:string;methodVersion:string;
  sampleCount:number;rawCaptureSha256?:string;position?:number;impressions?:number;clicks?:number;mentions?:number;citations?:number;
  sponsored:boolean;reviewed:boolean;reviewedAt?:string;
 };
@@ -29,11 +30,18 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
  if(typeof o.methodVersion!=='string'||!o.methodVersion.trim())return false;
  if(typeof o.sampleCount!=='number'||!Number.isInteger(o.sampleCount)||o.sampleCount<1)return false;
  if(o.reviewed!==true||typeof o.reviewedAt!=='string'||!Number.isFinite(Date.parse(o.reviewedAt)))return false;
+ if(typeof o.reviewedBy!=='string'||!/^[-a-zA-Z0-9_.@]{2,80}$/.test(o.reviewedBy))return false;
+ if(typeof o.reviewReason!=='string'||o.reviewReason.trim().length<20||o.reviewReason.length>500)return false;
  if(typeof o.sponsored!=='boolean')return false;
  if(o.source==='ai_answer_citation'&&(!o.model||!o.modelVersion||!o.engine))return false;
  if((o.source==='independent_serp'||o.source==='ai_answer_citation')&&(typeof o.captureGroupId!=='string'||!/^[-a-zA-Z0-9_.:]{8,128}$/.test(o.captureGroupId)))return false;
  if((o.source==='independent_serp'||o.source==='ai_answer_citation')&&(typeof o.rawCaptureSha256!=='string'||!(/^[0-9a-f]{64}$/.test(o.rawCaptureSha256))))return false;
- if(o.source==='google_search_console'&&typeof o.sourceUrl==='string'&&!o.sourceUrl.includes('search.google.com'))return false;
+ if(o.source==='google_search_console'){
+  if(typeof o.sourceUrl!=='string'||!o.sourceUrl.startsWith('https://search.google.com/'))return false;
+  if(typeof o.sourceProperty!=='string'||typeof o.sourcePage!=='string'||typeof o.sourceDate!=='string')return false;
+  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(o.sourceDate)||!Number.isFinite(Date.parse(o.sourceDate+'T00:00:00Z')))return false;
+  try{const page=new URL(o.sourcePage);if(page.protocol!=='https:'||page.username||page.password||page.search||page.hash)return false;}catch{return false;}
+ }
  for(const k of ['position','impressions','clicks','mentions','citations']){
   if(o[k]!==undefined&&(typeof o[k]!=='number'||!Number.isFinite(o[k])||Number(o[k])<0))return false;
  }
