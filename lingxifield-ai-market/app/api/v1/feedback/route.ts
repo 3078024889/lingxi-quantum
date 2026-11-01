@@ -61,7 +61,7 @@ export async function POST(request:Request){
  if(!parsed)return NextResponse.json({error:'INVALID_FEEDBACK'},{status:400,headers:privateHeaders});
  if(parsed.productId&&!findPlatform(parsed.productId))
   return NextResponse.json({error:'INVALID_PRODUCT'},{status:400,headers:privateHeaders});
- // Trust only platform-injected client IP headers. Generic x-forwarded-for can be spoofed.
+ // Trust only platform-injected client IP headers; ignore user-controlled forwarding values.
  const rawIp=request.headers.get('x-vercel-forwarded-for')||request.headers.get('x-nf-client-connection-ip')||'';
  const ip=rawIp.split(',')[0].trim();
  if(!ip||!isIP(ip))return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});
