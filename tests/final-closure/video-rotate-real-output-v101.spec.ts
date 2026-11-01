@@ -48,6 +48,10 @@ test("real Opus WebM rotate 90 degrees preserves runtime and shares exact saved 
  await actions.getByRole("button",{name:"Save file",exact:true}).click();
  const downloaded=await downloadEvent,bytes=await fs.readFile((await downloaded.path())!);
  expect(downloaded.suggestedFilename()).toBe("orientation-test-rotate-90.mp4");
+ // MP4 with an Opus track is not reliably playable on many mobile devices.
+ // "mp4a" is the MP4 sample entry for AAC; "Opus" indicates the old broken copy path.
+ expect(bytes.includes(Buffer.from("mp4a"))).toBe(true);
+ expect(bytes.includes(Buffer.from("Opus"))).toBe(false);
  expect(bytes.byteLength).toBeGreaterThan(1000);
  const metadata=await page.evaluate(async(base64)=>{
   const bytes=Uint8Array.from(atob(base64),ch=>ch.charCodeAt(0));
