@@ -12,7 +12,7 @@ test('all 32 products map to sourced corporate, software or open-source entities
   assert.ok(e,id);
   assert.ok(['company','open_source_project','software_library'].includes(e.kind),id);
   assert.match(e.publisherSource,/^https:\/\//,id);
-  for(const key of ['founded','headquarters','projectStarted','funding','listing']){
+  for(const key of ['founded','headquarters','projectStarted','funding','listing','scale']){
    const v=e[key];
    if(v){assert.ok(v.text.trim(),id+' '+key);assert.match(v.source,/^https:\/\//,id+' '+key);}
   }
