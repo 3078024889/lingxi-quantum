@@ -51,8 +51,12 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await editor.press("Enter");
  await expect(textObject).toContainText("Approved by reviewer");
 
+ const imageInput=page.locator("label").filter({hasText:"Add image"}).locator('input[type="file"]');
+ await imageInput.setInputFiles({name:"unsafe.svg",mimeType:"image/svg+xml",buffer:Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"><rect width="10" height="10"/></svg>')});
+ await expect(page.getByRole("alert")).toBeVisible();
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]')).toHaveCount(0);
  const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAHUlEQVR4nGM8ISe3hYECwESJ5lEDRg0YNWAwGQAAPMsB2FuN7EwAAAAASUVORK5CYII=","base64");
- await page.locator("label").filter({hasText:"Add image"}).locator('input[type="file"]').setInputFiles({name:"stamp.png",mimeType:"image/png",buffer:png});
+ await imageInput.setInputFiles({name:"stamp.png",mimeType:"image/png",buffer:png});
  const imageObject=page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]').last();
  await expect(imageObject).toBeVisible();
  await expect(page.getByTestId("pdf-object-toolbar")).toBeVisible();
