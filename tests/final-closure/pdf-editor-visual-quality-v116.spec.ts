@@ -11,7 +11,7 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await expect(source).toBeVisible();
  const sourceMeta=await source.evaluate((node:HTMLImageElement)=>({width:node.naturalWidth,src:node.src}));
  expect(sourceMeta.width).toBeGreaterThan(700);
- expect(sourceMeta.src).toMatch(/^data:image\\/png/);
+ expect(sourceMeta.src).toMatch(/^data:image\/png/);
  const densityTarget=await page.getByTestId("pdf-page-stage").evaluate(node=>Math.ceil(node.clientWidth*Math.min(2.5,Math.max(1,window.devicePixelRatio||1))*.95));
  expect(sourceMeta.width).toBeGreaterThanOrEqual(densityTarget);
 
@@ -56,6 +56,6 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await expect(exportPreview).toBeVisible({timeout:30000});
  const exportMeta=await exportPreview.evaluate((node:HTMLImageElement)=>({width:node.naturalWidth,src:node.src}));
  expect(exportMeta.width).toBeGreaterThan(700);
- expect(exportMeta.src).toMatch(/^data:image\\/png/);
+ expect(exportMeta.src).toMatch(/^data:image\/png/);
  expect(exportMeta.width).toBeGreaterThanOrEqual(densityTarget);
 });
