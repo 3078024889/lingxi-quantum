@@ -269,9 +269,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "regionSource": "https://help.suno.com/en/articles/2421185",
     "models": "Suno 音乐生成、编辑、配音与 Suno Studio；官网已介绍 v6，模型权限、每日积分和作品商用授权按 Free/Pro/Premier 套餐区分",
     "modelsSource": "https://suno.com/zh-cn",
-    "price": "Suno Pro 年付折合约 $8/月（年付）；Premier 和月付另有套餐，商用只覆盖订阅生效期间作品",
+    "price": "Pro 年付 $96/年（折合 $8/月，含每月 2500 积分及 20 首作品下载）；Premier 年付 $288/年（折合 $24/月，含每月 10000 积分及 60 首作品下载）；月付金额以官方套餐选项为准",
     "priceSource": "https://suno.com/pricing",
-    "free": "免费方案每天 50 积分，适用免费模型与创作额度；免费生成音乐不附商用授权",
+    "free": "Free $0，每日 50 积分，不含常规月度歌曲下载额度与商用授权；免费试用下载另有账户及次数限制",
     "freeSource": "https://suno.com/pricing",
     "commercial": "Free 生成作品仅供非商用。Pro/Premier 付费期生成并按当期规则取得下载的作品可用于商用；免费期创作不会因后续订阅自动获得追溯授权；Remix 等功能另有限制。",
     "commercialSource": "https://suno.com/terms"
