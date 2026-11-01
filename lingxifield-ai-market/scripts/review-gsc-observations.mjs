@@ -60,7 +60,7 @@ export function reviewGscEvidence(pending,manifest,{expectedOrigin,expectedPrope
  if(!Array.isArray(pending)||!Array.isArray(manifest?.decisions)||!pending.length)throw new Error('REVIEW_INPUT_INVALID');
  if(!propertyMatchesOrigin(expectedProperty,origin))throw new Error('EXPECTED_PROPERTY_MISMATCH');
  const reviewer=manifest.reviewer;
- if(typeof reviewer!=='string'||!/^[-a-zA-Z0-9_.@]{2,80}$/.test(reviewer))throw new Error('REVIEWER_INVALID');
+ if(typeof reviewer!=='string'||!/^[-a-zA-Z0-9_.]{2,80}$/.test(reviewer))throw new Error('REVIEWER_INVALID');
  const reviewedAt=manifest.reviewedAt;
  const reviewedTime=Date.parse(reviewedAt);
  if(typeof reviewedAt!=='string'||!Number.isFinite(reviewedTime)||reviewedTime>Date.now()+300000||reviewedTime<Date.now()-30*86400000)throw new Error('REVIEW_TIMESTAMP_INVALID');
