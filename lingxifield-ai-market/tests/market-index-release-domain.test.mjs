@@ -13,7 +13,13 @@ test('preview cannot index; production launch requires explicitly verified owned
   assert.ok(source.includes(domain));
  assert.ok(source.includes("u.protocol!=='https:'"));
  assert.ok(source.includes("u.username||u.password||u.port||u.pathname!=='/'"));
- assert.ok(layout.includes('metadataBase:new URL(marketCanonicalOrigin)'));
+ assert.ok(layout.includes("mayIndexMarket('zh')?verifiedMarketOrigin():null"));
+ assert.ok(layout.includes('publishedOrigin?{metadataBase:new URL(publishedOrigin)}:{}'));
+ const localized=read('app/[lang]/layout.tsx');
+ assert.ok(localized.includes('indexable?verifiedMarketOrigin():null'));
+ assert.ok(localized.includes('origin?{metadataBase:new URL(origin)}:{}'));
+ assert.doesNotMatch(layout,/metadataBase:new URL\(marketCanonicalOrigin\)/);
+ assert.doesNotMatch(localized,/metadataBase:new URL\(marketCanonicalOrigin\)/);
  assert.ok(home.includes("const indexable=mayIndexMarket('zh')"));
  assert.ok(home.includes("alternates:indexable?alternatesForMarket('zh'):undefined"));
  assert.ok(robots.includes("if(!mayIndexMarket())"));
