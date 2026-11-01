@@ -24,7 +24,8 @@ test("public catalog, recipes and fixture classifications are exactly one-to-one
  expect(classifications["audio-transcription"]?.kind).toBe("local-contract");
  const audioRecipe=recipes.find((x:any)=>x.slug==="audio-transcription");expect(audioRecipe.privacyMode).toBe("local-first");
  const audioGuide=toolTutorialSteps("en","audio-transcription").join(" ");expect(audioGuide).toMatch(/audio file/i);expect(audioGuide).toContain("browser");expect(audioGuide).not.toMatch(/paste text|paste.*link/i);
- const pdfGuide=toolTutorialSteps("en","pdf-editor").join(" ");expect(pdfGuide).toContain("PDF");expect(pdfGuide).toContain("preview");
+ const pdfGuide=toolTutorialSteps("en","pdf-editor").join(" ");expect(pdfGuide).toContain("signatures");expect(pdfGuide).toContain("preview");
+ const mergeGuide=toolTutorialSteps("en","merge-pdf").join(" ");expect(mergeGuide).toContain("Arrange the files");expect(mergeGuide).toContain("page count");
  const qrGuide=toolTutorialSteps("en","qr-code-generator").join(" ");expect(qrGuide).toContain("scan it with a phone");
  expect(classifications["pdf-merge-split"]?.kind).toBe("fixture");
  expect(classifications["pdf-merge-split"]?.fixtureGroup).toBe("pdf-basic");
