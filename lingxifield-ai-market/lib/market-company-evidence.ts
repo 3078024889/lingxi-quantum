@@ -13,6 +13,7 @@ export type CompanyEvidence={
  projectStarted?:EvidenceValue;
  funding?:EvidenceValue;
  listing?:EvidenceValue;
+ scale?:EvidenceValue;
 };
 const checked='2026-11-01';
 const fact=(text:string,source:string,asOf=checked):EvidenceValue=>({text,source,asOf});
@@ -26,7 +27,7 @@ const parent={
  luma:{kind:'company',publisherSource:'https://lumalabs.ai/llm-info',founded:fact('2021','https://lumalabs.ai/llm-info'),headquarters:fact('美国 · 加州 Redwood City','https://lumalabs.ai/llm-info')},
  runway:{kind:'company',publisherSource:'https://trust.runwayml.com/',projectStarted:fact('2018年起开展生成式媒体研发','https://trust.runwayml.com/')},
  elevenlabs:{kind:'company',publisherSource:'https://elevenlabs.io/about',founded:fact('2022','https://elevenlabs.io/docs/help-center/other/what-is-eleven-labs')},
- suno:{kind:'company',publisherSource:'https://suno.com/about',founded:fact('2022','https://suno.com/about'),funding:fact('官网公布累计融资超过 7.75 亿美元','https://suno.com/about')},
+ suno:{kind:'company',publisherSource:'https://suno.com/about',founded:fact('2022','https://suno.com/about'),funding:fact('官网公布累计融资超过 7.75 亿美元','https://suno.com/about'),scale:fact('超过 1 亿人创作过音乐；团队 250+ 人；官方称在 35 个国家/地区位列音乐应用第一','https://suno.com/about')},
  replit:{kind:'company',publisherSource:'https://replit.com/about',founded:fact('2016','https://replit.com/news/replit-opens-london-office'),headquarters:fact('美国 · 旧金山','https://replit.com/news/replit-opens-london-office'),funding:fact('2026年3月公布 4 亿美元融资（该轮，不等于累计）','https://replit.com/blog/replit-raises-400-million-dollars','2026-03-11')},
  comfy:{kind:'open_source_project',publisherSource:'https://comfy.org/about/',projectStarted:fact('ComfyUI 开源项目始于 2023 年 1 月','https://comfy.org/about/'),funding:fact('Comfy 团队 2026年4月公告：本轮 3000 万美元，累计 4700 万美元','https://blog.comfy.org/p/comfyui-raises-30m-to-scale-open','2026-04-24')},
  huggingface:{kind:'company',publisherSource:'https://huggingface.co/about'},
