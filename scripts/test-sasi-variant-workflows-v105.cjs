@@ -11,6 +11,7 @@ assert.equal(scenes.length,2);assert.equal(scenes[0].seconds,8);
 const cfg={scenes,hooks:["New angle","Another angle"],product:"SASI",cta:"Explore today",locale:"zh",count:100};
 const result=compileStoryboardVariants(cfg);
 assert.equal(result.length,100);
+assert.equal(new Set(result.map(v=>v.editRecipe.camera+"|"+v.editRecipe.rhythm)).size,100,"100 plans must have distinct editorial directions");
 assert.equal(result[0].id,"variant-001");
 assert.equal(result[99].id,"variant-100");
 assert.equal(result[0].scenes[0].voice,"New angle SASI");
