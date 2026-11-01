@@ -155,7 +155,7 @@ function verifyIndependent(row){
     typeof row.engine!=='string'||!row.engine.trim())throw new Error('INDEPENDENT_OBSERVATION_INVALID');
  if(row.source==='independent_serp'&&(!['Google','Bing'].includes(row.engine)||!Number.isInteger(row.position)||row.position<1||row.position>100))
   throw new Error('INDEPENDENT_SERP_METRIC_INVALID');
- if(row.source==='ai_answer_citation'&&(!row.model||!row.modelVersion||
+ if(row.source==='ai_answer_citation'&&(typeof row.model!=='string'||!row.model.trim()||typeof row.modelVersion!=='string'||!row.modelVersion.trim()||
     !Number.isInteger(row.mentions)||row.mentions<0||!Number.isInteger(row.citations)||row.citations<0))
   throw new Error('AI_CITATION_METRIC_INVALID');
  const hash=digest(JSON.stringify(observationPayload(row)));
