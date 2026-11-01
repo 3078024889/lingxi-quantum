@@ -24,8 +24,7 @@
     "seo:verify-public": "node scripts/verify-public-seo.mjs",
     "feedback:provision-key": "node scripts/provision-feedback-key.mjs",
     "seo:review-comparison": "node scripts/review-independent-seo-geo.mjs",
-    "seo:validate-ledger": "node scripts/review-independent-seo-geo.mjs --validate-ledger",
-    "validateData": "node scripts/validate-evidence.mjs && node scripts/validate-catalog.mjs"
+    "seo:validate-ledger": "node scripts/review-independent-seo-geo.mjs --validate-ledger"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
