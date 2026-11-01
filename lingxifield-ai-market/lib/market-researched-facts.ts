@@ -89,8 +89,8 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
       "Apple App Store (iOS)"
     ],
     "paymentSource": "https://lumalabs.ai/learning-hub/payments-subscriptions",
-    "price": "Luma App 现行方案为 Plus、Pro、Ultra 与 Enterprise；API 使用独立积分体系，按模型与输出规格计费，不把旧 Dream Machine 订阅价当作现行方案",
-    "priceSource": "https://lumalabs.ai/llm-info",
+    "price": "Plus $30/月或 $300/年；Pro $90/月或 $900/年；Ultra $300/月或 $3000/年；Team/Enterprise 询价；API 积分独立计费",
+    "priceSource": "https://lumalabs.ai/pricing",
     "region": "官网提供网页订阅与 iOS 购买，具体地区/币种由官方结算和商店决定",
     "regionSource": "https://lumalabs.ai/learning-hub/payments-subscriptions",
     "commercial": "商用输出依付费套餐和具体产品条款；创作者须有输入素材的合法权益，第三方素材权利不自动取得",
