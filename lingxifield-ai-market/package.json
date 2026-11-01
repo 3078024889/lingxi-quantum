@@ -18,7 +18,7 @@
     "gate": "npm run validate:data && npm run validate:catalog && npm run test:contracts && npm run typecheck && npm run build",
     "preview:catalog": "node scripts/preview-catalog-import.mjs",
     "review:sources": "node scripts/review-sources.mjs",
-    "prebuild": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs tests/market-locale-entry.test.mjs tests/market-company-evidence.test.mjs tests/market-locale-html-root.test.mjs tests/market-order-policy.test.mjs tests/market-company-evidence-locale.test.mjs tests/market-user-task-queries.test.mjs tests/market-company-intake.test.mjs tests/market-codex-chatgpt.test.mjs",
+    "prebuild": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs tests/market-locale-entry.test.mjs tests/market-company-evidence.test.mjs tests/market-locale-html-root.test.mjs tests/market-order-policy.test.mjs tests/market-company-evidence-locale.test.mjs tests/market-user-task-queries.test.mjs tests/market-company-intake.test.mjs tests/market-codex-chatgpt.test.mjs tests/market-current-32-closeout.test.mjs",
     "test:v41": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs"
   },
   "dependencies": {
