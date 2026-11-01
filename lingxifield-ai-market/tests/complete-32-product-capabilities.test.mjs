@@ -24,7 +24,7 @@ test('every one of 32 existing publisher products has one detailed capability pr
  assert.ok(hrefs.every(u=>new URL(u).protocol==='https:'));
 });
 test('moderation backend is explicitly separate from public anonymous feedback',async()=>{
- const sql=await read('../supabase/migrations/20261030195000_ai_market_feedback_moderation.sql');
+ const sql=await read('sql/20261030195000_ai_market_feedback_moderation.sql');
  const publicHandler=await read('app/api/v1/feedback/route.ts');
  assert.match(sql,/from public,anon/);
  assert.match(sql,/v_uid:\=\(select auth\.uid\(\)\)/);
