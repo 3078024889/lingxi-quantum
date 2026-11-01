@@ -25,7 +25,7 @@ test('Suno commercial rights reflect September 2026 terms, including download an
 test('Midjourney, Runway, Ollama distinguish commercial products from third-party rights',()=>{
  const facts=RESEARCHED_FACTS;
  assert.match(facts.midjourney.commercial,/100 万美元.*Pro.*Mega/);
- assert.match(facts.runway.commercial,/广告.*短视频/);
+ assert.match(facts.runway.commercial,/广告.*变现视频/);
  assert.match(facts.ollama.commercial,/MIT/);
  assert.match(facts.ollama.commercial,/模型权重/);
 });
