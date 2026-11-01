@@ -6,6 +6,7 @@ const queue=JSON.parse(readFileSync(new URL('../data/company-intake/batch-001.js
 export function validateCompanyBatch(data,known=Object.keys(PRODUCT_TASK_PHRASES)){
  assert.match(data.batch,/^B[0-9]{3}$/);
  assert.equal(data.visibleToPublic,false);
+ assert.equal(data.intakePaused,true,'review-only batch must stay paused until explicit reauthorization');
  assert.equal(data.reviewState,'candidate');
  assert.equal(data.products.length,10);
  const previous=new Set(known),ids=new Set();
