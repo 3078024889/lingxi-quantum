@@ -44,7 +44,7 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await editor.press("Enter");
  await expect(textObject).toContainText("Approved by reviewer");
 
- const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/F7sAAAAASUVORK5CYII=","base64");
+ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAHUlEQVR4nGM8ISe3hYECwESJ5lEDRg0YNWAwGQAAPMsB2FuN7EwAAAAASUVORK5CYII=","base64");
  await page.locator("label").filter({hasText:"Add image"}).locator('input[type="file"]').setInputFiles({name:"stamp.png",mimeType:"image/png",buffer:png});
  const imageObject=page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]').last();
  await expect(imageObject).toBeVisible();
