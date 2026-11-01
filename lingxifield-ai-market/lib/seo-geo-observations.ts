@@ -11,9 +11,9 @@ export type SeoGeoSource='google_search_console'|'bing_webmaster'|'independent_s
 export type SeoGeoObservation={
  id:string;platformId:string;source:SeoGeoSource;observedAt:string;country:string;language:string;query:string;
  model?:string;modelVersion?:string;engine?:string;captureGroupId?:string;sourceProperty?:string;sourcePage?:string;sourceDate?:string;
- reviewedBy?:string;reviewReason?:string;sourceUrl:string;recordHash:string;methodVersion:string;
+ reviewedBy:string;reviewReason:string;reviewedAt:string;sourceUrl:string;recordHash:string;methodVersion:string;
  sampleCount:number;rawCaptureSha256?:string;position?:number;impressions?:number;clicks?:number;mentions?:number;citations?:number;
- sponsored:boolean;reviewed:boolean;reviewedAt?:string;
+ sponsored:boolean;reviewed:true;
 };
 const allowed=new Set([...platforms.map(p=>p.id),...entries.map(e=>e.id)]);
 export function validObservation(x:unknown):x is SeoGeoObservation{
