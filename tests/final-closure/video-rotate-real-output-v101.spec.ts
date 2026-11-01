@@ -5,7 +5,8 @@ test("video rotation is discoverable as its own tool",async({page})=>{
  await page.goto("/tools?q=%E8%A7%86%E9%A2%91%E6%97%8B%E8%BD%AC&lang=zh");
  await expect(page.locator('a[href="/tools/rotate-video"]').first()).toBeVisible();
  await page.goto("/tools/rotate-video?lang=en");
- await expect(page.getByRole("button",{name:"Rotate",exact:true})).toHaveAttribute("aria-pressed","true");
+ await expect(page.locator('input[type="file"]').first()).toBeEnabled();
+ await expect(page.getByRole("button",{name:"Compress",exact:true})).toHaveCount(0);
  await expect(page.getByRole("combobox").filter({has:page.locator('option[value="90"]')}).first()).toBeVisible();
 });
 
