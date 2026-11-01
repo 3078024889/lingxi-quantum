@@ -134,7 +134,6 @@ jobs:
           COMMIT;
           BEGIN;
           SELECT set_config('request.jwt.claim.role','anon',true);
-          SET LOCAL ROLE anon;
           DO $feedback$
           DECLARE
             v_nonce text:=repeat('c',32);
@@ -152,6 +151,7 @@ jobs:
               convert_to(v_nonce||'.'||v_issued::text||'.'||v_hash,'UTF8'),
               convert_to(repeat('a',64),'UTF8'),'sha256'
             ),'hex');
+            EXECUTE 'SET LOCAL ROLE anon';
             PERFORM public.ai_market_submit_visitor_feedback(v_doc,v_signature);
             BEGIN
               PERFORM public.ai_market_submit_visitor_feedback(v_doc,repeat('0',64));
