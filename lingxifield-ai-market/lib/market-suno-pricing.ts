@@ -12,7 +12,7 @@ export const SUNO_PLANS={
 } as const;
 const words:Record<Language,{year:string;equiv:string;credits:string;downloads:string;free:string}>={
  zh:{year:'年',equiv:'年付折合',credits:'每月积分',downloads:'每月可下载歌曲',free:'Free $0 · 每日 50 积分 · 免费作品不可商用；下载名额按账户试用规则'},
- en:{year:'year',equiv:'equivalent/month on annual plan',credits:'credits/month',downloads:'song downloads/month',free:'Free $0 · 50 daily credits · non-commercial; trial downloads depend on account'},
+ en:{year:'year',equiv:'equivalent/month on annual plan',credits:'credits/month',downloads:'song downloads/month',free:'Free $0 · 50 daily credits · noncommercial; trial downloads depend on account'},
  ja:{year:'年',equiv:'年払いの月額換算',credits:'月間クレジット',downloads:'月間ダウンロード数',free:'Free $0 · 毎日50クレジット · 商用不可。試用ダウンロードはアカウント別'},
  ko:{year:'년',equiv:'연간 결제 월 환산',credits:'월간 크레딧',downloads:'월간 다운로드',free:'Free $0 · 매일 50 크레딧 · 상업적 이용 불가, 체험 다운로드는 계정별'},
  fr:{year:'an',equiv:'équivalent mensuel avec paiement annuel',credits:'crédits/mois',downloads:'téléchargements/mois',free:'Free 0 $ · 50 crédits/jour · non commercial ; téléchargements d’essai selon compte'},
