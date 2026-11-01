@@ -33,6 +33,12 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await page.mouse.up();
  const after=await textObject.boundingBox();
  expect(after!.width).toBeGreaterThan(before!.width+10);
+ const rotateHandle=await page.getByRole("button",{name:"Rotate object"}).boundingBox();
+ await page.mouse.move(rotateHandle!.x+rotateHandle!.width/2,rotateHandle!.y+rotateHandle!.height/2);
+ await page.mouse.down();
+ await page.mouse.move(rotateHandle!.x+rotateHandle!.width/2+28,rotateHandle!.y+rotateHandle!.height/2,{steps:4});
+ await page.mouse.up();
+ await expect(textObject).not.toHaveCSS("transform","none");
 
  await page.getByTestId("pdf-page-stage").click({position:{x:5,y:5}});
  await expect(page.locator('button[aria-label^="Resize "]')).toHaveCount(0);
