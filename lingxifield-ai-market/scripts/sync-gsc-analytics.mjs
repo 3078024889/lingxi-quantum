@@ -69,7 +69,7 @@ else try{
   const digest=createHash('sha256').update(JSON.stringify(base)).digest('hex');
   const id='gsc-'+digest.slice(0,24),observedAt=date+'T12:00:00Z';
   const result={id,platformId:match.platformId,source:'google_search_console',observedAt,country:'GLOBAL',language:match.language,
-    query:safeQuery,engine:'Google Search Console',sourceUrl:'https://search.google.com/search-console/performance/search-analytics',
+    query:safeQuery,sourceProperty:property,sourcePage:page,sourceDate:date,engine:'Google Search Console',sourceUrl:'https://search.google.com/search-console/performance/search-analytics',
     recordHash:'sha256:'+digest,methodVersion:'GSC.web.page-query-date.v1',sampleCount:Math.max(1,Math.floor(row.impressions||0)),
     position:row.position,impressions:row.impressions,clicks:row.clicks,sponsored:false,reviewed:false};
   seen.set(id,result);count++;
