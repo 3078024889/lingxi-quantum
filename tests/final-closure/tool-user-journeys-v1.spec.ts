@@ -72,7 +72,7 @@ test("temporary mailbox creates an inbox, retrieves and copies a code, then dest
  await page.route("**/api/tools/temp-mail/recover",route=>route.fulfill({json:{box:null}}));
  await page.route("**/api/tools/temp-mail/mine",route=>route.fulfill({json:{mailboxes:[]}}));
  await page.route("**/api/tools/temp-mail/create",route=>route.fulfill({json:{id:"mailbox-test-01",address:"demo@inbox.test",expiresAt,freeRemaining:4}}));
- await page.route("**/api/tools/temp-mail/inbox?id=mailbox-test-01",async route=>{inboxReads++;if(inboxReads>=2)await new Promise(resolve=>setTimeout(resolve,1200));return route.fulfill({json:{expiresAt,messages:[{id:"message-01",sender:"noreply@example.test",subject:"Your sign-in code",text_body:"Use 654321 to finish signing in.",received_at:new Date().toISOString(),size_bytes:120}]}})});
+ await page.route("**/api/tools/temp-mail/inbox?id=mailbox-test-01",async route=>{inboxReads++;if(inboxReads>=3)await new Promise(resolve=>setTimeout(resolve,1200));return route.fulfill({json:{expiresAt,messages:[{id:"message-01",sender:"noreply@example.test",subject:"Your sign-in code",text_body:"Use 654321 to finish signing in.",received_at:new Date().toISOString(),size_bytes:120}]}})});
  await page.route("**/api/tools/temp-mail/destroy",route=>{destroyed++;return route.fulfill({json:{ok:true}})});
  await page.route("**/api/tools/quote",route=>{quotes++;return route.abort()});
  await page.goto("/tools/temp-mail?lang=en");
@@ -86,14 +86,14 @@ test("temporary mailbox creates an inbox, retrieves and copies a code, then dest
  await expect(page.getByRole("button",{name:"Copied",exact:true})).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>(window as any).__copiedText)).toBe("654321");
  // Wait until a delayed auto-refresh is in flight, then destroy during that request.
- await expect.poll(()=>inboxReads,{timeout:7000}).toBeGreaterThan(1);
+ await expect.poll(()=>inboxReads,{timeout:7000}).toBeGreaterThan(2);
  await page.getByRole("button",{name:"Destroy",exact:true}).click();
  const createButton=page.getByRole("button",{name:"Create temporary email",exact:true});
  await expect(createButton).toBeVisible();
  // Let the stale poll response arrive; it must not restore the destroyed inbox.
  await page.waitForTimeout(1500);
  await expect(createButton).toBeVisible();
- expect(inboxReads).toBeGreaterThan(1);expect(destroyed).toBe(1);expect(quotes).toBe(0);
+ expect(inboxReads).toBeGreaterThan(2);expect(destroyed).toBe(1);expect(quotes).toBe(0);
 });
 
 async function syntheticWatermarkVideo(page:any){
