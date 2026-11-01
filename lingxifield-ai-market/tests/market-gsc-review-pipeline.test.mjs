@@ -77,3 +77,15 @@ test('merge is idempotent and rejects a conflicting hash for the same observatio
  assert.equal(twice.duplicate,1);
  assert.throws(()=>mergeReviewedObservations(once.result,[{...approved[0],recordHash:'sha256:'+'0'.repeat(64)}]),/OBSERVATION_ID_HASH_CONFLICT/);
 });
+
+test('new globalsiai domains pass the explicit GSC property and product-page review gate',()=>{
+ const newOrigin='https://globalsiai.com';
+ const newProperty='sc-domain:globalsiai.com';
+ const pending=row({base:{property:newProperty,page:newOrigin+'/en/platform/chatgpt'}});
+ const result=reviewGscEvidence([pending],manifest([{id:pending.id,approve:true,reason}]),{
+  expectedOrigin:newOrigin,expectedProperty:newProperty,knownIds:new Set(['chatgpt'])
+ });
+ assert.equal(result.approved.length,1);
+ assert.equal(result.approved[0].sourcePage,newOrigin+'/en/platform/chatgpt');
+ assert.equal(result.approved[0].reviewed,true);
+});
