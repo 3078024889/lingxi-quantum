@@ -36,14 +36,14 @@ test('company facts in both consumer views cite their individual official publis
 
 test('official company scale, funding and product-launch facts are current and individually sourced',()=>{
  const e=COMPANY_EVIDENCE;
- assert.match(e.xai.funding.text,/20/);
- assert.match(e.xai.founded.text,/2023/);
- assert.match(e.xai.headquarters.text,/Austin/);
- assert.match(e.langchain.funding.text,/125/);
- assert.match(e.llamaindex.funding.text,/19/);
- assert.match(e.lovable.funding.text,/400/);
+ assert.match(e.grok.funding.text,/200/);
+ assert.match(e.grok.founded.text,/2023/);
+ assert.match(e.grok.headquarters.text,/Austin/);
+ assert.match(e.langchain.funding.text,/1\.25/);
+ assert.match(e.llamaindex.funding.text,/1900/);
+ assert.match(e.lovable.funding.text,/4 亿/);
  assert.match(e.lovable.projectStarted.text,/2024/);
  assert.match(e.midjourney.funding.text,/community-funded/);
  assert.match(e.ollama.scale.text,/900/);
- assert.match(e.huggingface.scale.text,/2M/);
+ assert.match(e.transformers.scale.text,/2M/);
 });
