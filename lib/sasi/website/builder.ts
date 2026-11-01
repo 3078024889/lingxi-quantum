@@ -2,13 +2,15 @@ import type {SiteDNA} from "./site-dna";
 
 const esc=(s="")=>s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
 const PATH=/^\/(?:[a-z0-9][a-z0-9/_-]*)?\/?$/i;
-function resolvedCta(href:string,pages:Set<string>):string{
+function resolvedCta(href:string,pages:Set<string>,currentPath:string):string{
  const raw=href.trim();
  if(raw.length>500||/[\u0000-\u001f\u007f]/.test(raw))throw Error("SITE_CTA_URL_INVALID");
  if(PATH.test(raw)){
   const path=raw.replace(/\/$/,"")||"/";
   if(!pages.has(path))throw Error("SITE_CTA_TARGET_MISSING");
-  return path;
+  const target=path==="/"?"index.html":path.slice(1)+"/index.html";
+  const depth=currentPath==="/"?0:currentPath.replace(/^\//,"").split("/").filter(Boolean).length;
+  return "../".repeat(depth)+target;
  }
  if(/^mailto:[^@\s]+@[^@\s]+\.[^@\s]+$/i.test(raw)||/^tel:\+?[\d ()-]{5,25}$/i.test(raw))return raw;
  if(/^https:\/\//i.test(raw)){
@@ -33,7 +35,7 @@ export function buildStaticSite(site:SiteDNA){
    let cta="";
    if(s.cta?.trim()){
     cta=s.ctaHref?.trim()
-     ?'<a class="site-cta" href="'+esc(resolvedCta(s.ctaHref,pageNames))+'">'+esc(s.cta)+'</a>'
+     ?'<a class="site-cta" href="'+esc(resolvedCta(s.ctaHref,pageNames,p.path))+'">'+esc(s.cta)+'</a>'
      :'<p class="site-cta-note">'+esc(s.cta)+'</p>';
    }
    return '<section data-kind="'+esc(s.type)+'">'+h+(s.body?'<p>'+esc(s.body)+'</p>':"")+cta+'</section>';
