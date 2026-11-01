@@ -17,20 +17,20 @@ function sanitizeSvg(source:string){
   for(const attr of Array.from(node.attributes)){
    const name=attr.name.toLowerCase(),value=attr.value.trim();
    if(!SAFE_SVG_ATTRIBUTES.has(name)||name.startsWith("on")||name==="href"||name==="xlink:href"){node.removeAttribute(attr.name);continue;}
-   if(/url\\s*\\(/i.test(value)&&!/^url\\(\\s*#[\\w:.-]+\\s*\\)$/i.test(value)){node.removeAttribute(attr.name);continue;}
+   if(/url\s*\(/i.test(value)&&!/^url\(\s*#[\w:.-]+\s*\)$/i.test(value)){node.removeAttribute(attr.name);continue;}
    if(/(?:javascript|https?|file|data):/i.test(value)){node.removeAttribute(attr.name);continue;}
-   if(name==="id"&&!/^[\\w:.-]{1,128}$/.test(value))node.removeAttribute(attr.name);
+   if(name==="id"&&!/^[\w:.-]{1,128}$/.test(value))node.removeAttribute(attr.name);
   }
  }
  for(const attr of Array.from(root.attributes)){
   const name=attr.name.toLowerCase(),value=attr.value.trim();
-  if(!SAFE_SVG_ATTRIBUTES.has(name)||name.startsWith("on")||name==="href"||name==="xlink:href"||/(?:javascript|https?|file|data):/i.test(value))root.removeAttribute(attr.name);
+  if(!SAFE_SVG_ATTRIBUTES.has(name)||name.startsWith("on")||name==="href"||name==="xlink:href"||(/url\\s*\\(/i.test(value)&&!/^url\\(\\s*#[\\w:.-]+\\s*\\)$/i.test(value))||/(?:javascript|https?|file|data):/i.test(value))root.removeAttribute(attr.name);
  }
  if(!root.hasAttribute("xmlns"))root.setAttribute("xmlns","http://www.w3.org/2000/svg");
  return new XMLSerializer().serializeToString(root);
 }
 async function loadFileImage(file:File){
- const svg=(file.type||"").toLowerCase()==="image/svg+xml"||/\\.svg$/i.test(file.name);
+ const svg=(file.type||"").toLowerCase()==="image/svg+xml"||/\.svg$/i.test(file.name);
  if(!svg)return loadImage(await fileData(file));
  const source=await file.text(),safe=sanitizeSvg(source),url=URL.createObjectURL(new Blob([safe],{type:"image/svg+xml"}));
  try{return await loadImage(url)}finally{URL.revokeObjectURL(url)}
