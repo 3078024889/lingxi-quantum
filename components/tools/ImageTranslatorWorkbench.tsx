@@ -7,6 +7,7 @@ import ResultPanel from "@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import {createOcrWorker} from "@/lib/tools/shared/ocr-runtime";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
+import{useLingxiLang}from"@/lib/lingxi-i18n";
 import type{LingxiLang}from"@/lib/lingxi-i18n";
 
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
