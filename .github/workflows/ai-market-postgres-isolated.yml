@@ -76,6 +76,7 @@ jobs:
             20261030180000_ai_market_public_feedback.sql
             20261030195000_ai_market_feedback_moderation.sql
             20261101_ai_market_feedback_key_provisioning.sql
+            20261101_ai_market_feedback_constant_time_hmac.sql
           )
           for name in "${migrations[@]}"; do
             echo "Applying $name"
