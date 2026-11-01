@@ -196,5 +196,6 @@
       "reviewed": false,
       "publishApproved": false
     }
-  ]
+  ],
+  "intakePaused": true
 }
