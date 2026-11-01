@@ -9,6 +9,7 @@ import {capabilityKeywords} from './capability-profiles';
 import {researchedFact} from './market-researched-facts';
 import {companyEvidenceFor} from './market-company-evidence';
 import {PRODUCT_STRENGTHS} from './market-missing-strengths';
+import {questionForProduct,matchingEditorialProductIds} from './market-user-task-queries.mjs';
 import {matchesMarketFilter,matchesMarketPayment,compareMarketSort,type MarketFilter,type MarketPayment,type MarketSort} from './market-v36-screening';
 import {shortDramaEvidence,shortDramaSummary} from './market-v36-screening';
 import type {RegionCode} from './global-region-market';
@@ -23,7 +24,7 @@ for(const [id,entry] of records){
  const searchableEvidence=Object.values(reviewed||{}).flatMap(fact=>fact&&typeof fact.text==='string'?[fact.text]:[]);
  const paymentTerms=(access?.paymentSource?access.payment.filter(x=>!/不支持|不接受|not accepted|not supported/i.test(x)):[])||[];
  const videoTerms=shortDramaEvidence(id)?['短视频','短剧','视频生成','AI视频','text-to-video','video creation',shortDramaSummary(id,'zh')||'',shortDramaSummary(id,'en')||'']:[];
- const terms=[...(guide?.tasks||[]),...videoTerms,...capabilityKeywords(id),guide?.strengths||'',guide?.reasoning||'',guide?.free||'',guide?.paid||'',guide?.cost||'',...(access?.login||[]),...paymentTerms,...(research?.payments||[]),research?.price||'',research?.free||'',research?.region||'',research?.commercial||'',access?.models||'',access?.limitations||'',...searchableEvidence].filter(Boolean);
+ const terms=[...questionForProduct(id),...(guide?.tasks||[]),...videoTerms,...capabilityKeywords(id),guide?.strengths||'',guide?.reasoning||'',guide?.free||'',guide?.paid||'',guide?.cost||'',...(access?.login||[]),...paymentTerms,...(research?.payments||[]),research?.price||'',research?.free||'',research?.region||'',research?.commercial||'',access?.models||'',access?.limitations||'',...searchableEvidence].filter(Boolean);
  if(terms.length)records.set(id,{...entry,searchTerms:[...new Set(terms)]});
 }
 const index=createSearchIndex([...records.values()]);
@@ -69,15 +70,20 @@ export function findPlatform(id:string){const row=index.get(id);return row?toPla
 export type PlatformSearchOptions={q?:string;category?:string;limit?:number;cursor?:number;filter?:MarketFilter;payment?:MarketPayment;sort?:MarketSort;region?:RegionCode;beginner?:boolean};
 export function searchPlatforms(options:PlatformSearchOptions={}) {
  const {filter='all',payment='any',sort='directory',region='GLOBAL',beginner=false,...base}=options;
- const needsFilter=filter!=='all'||payment!=='any'||beginner;
+ const editorialIds=matchingEditorialProductIds(base.q||'');
+ const inScope=editorialIds?new Set<string>(editorialIds):null;
+ const needsFilter=filter!=='all'||payment!=='any'||beginner||Boolean(inScope);
  const cache=new Map<string,Platform>();
  const materialize=(e:CatalogEntry)=>{let p=cache.get(e.id);if(!p){p=toPlatform(e);cache.set(e.id,p);}return p;};
  const matcher=needsFilter?(e:CatalogEntry)=>{
+   if(inScope&&!inScope.has(e.id))return false;
    const p=materialize(e);
    return (!beginner||!['repository','documentation'].includes(p.websiteKind||'official'))
     &&matchesMarketFilter(p,filter,region)&&matchesMarketPayment(p,payment,region);
  }:null;
  const sorter=sort!=='directory'?(a:CatalogEntry,b:CatalogEntry)=>compareMarketSort(materialize(a),materialize(b),sort):null;
- const r=index.search({...base,matcher,sorter});
+ // Query intent narrows *relevant capabilities*, not measured customer popularity.
+ // Preserve category, payment and all other filters before pagination.
+ const r=index.search({...base,q:inScope?'':base.q,matcher,sorter});
  return {...r,items:r.items.map(materialize)};
 }
