@@ -9,7 +9,7 @@ import {platforms} from './data';
 export type SeoGeoSource='google_search_console'|'bing_webmaster'|'independent_serp'|'ai_answer_citation';
 export type SeoGeoObservation={
  id:string;platformId:string;source:SeoGeoSource;observedAt:string;country:string;language:string;query:string;
- model?:string;modelVersion?:string;engine?:string;sourceUrl:string;recordHash:string;methodVersion:string;
+ model?:string;modelVersion?:string;engine?:string;captureGroupId?:string;sourceUrl:string;recordHash:string;methodVersion:string;
  sampleCount:number;rawCaptureSha256?:string;position?:number;impressions?:number;clicks?:number;mentions?:number;citations?:number;
  sponsored:boolean;reviewed:boolean;reviewedAt?:string;
 };
@@ -31,6 +31,7 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
  if(o.reviewed!==true||typeof o.reviewedAt!=='string'||!Number.isFinite(Date.parse(o.reviewedAt)))return false;
  if(typeof o.sponsored!=='boolean')return false;
  if(o.source==='ai_answer_citation'&&(!o.model||!o.modelVersion||!o.engine))return false;
+ if((o.source==='independent_serp'||o.source==='ai_answer_citation')&&(typeof o.captureGroupId!=='string'||!/^[-a-zA-Z0-9_.:]{8,128}$/.test(o.captureGroupId)))return false;
  if((o.source==='independent_serp'||o.source==='ai_answer_citation')&&(typeof o.rawCaptureSha256!=='string'||!(/^[0-9a-f]{64}$/.test(o.rawCaptureSha256))))return false;
  if(o.source==='google_search_console'&&typeof o.sourceUrl==='string'&&!o.sourceUrl.includes('search.google.com'))return false;
  for(const k of ['position','impressions','clicks','mentions','citations']){
@@ -51,9 +52,9 @@ export function coverageForSeoGeo(){
 export function groupedSeoGeo(){
  const groups=new Map<string,SeoGeoObservation[]>();
  for(const row of seoGeoObservations.filter(x=>x.source==='independent_serp'||x.source==='ai_answer_citation')) {
-  const key=[row.source,row.country,row.language,row.query,row.model||'',row.modelVersion||'',row.engine||'',row.methodVersion,row.observedAt.slice(0,10)].join('|');
+  const key=[row.source,row.country,row.language,row.query,row.model||'',row.modelVersion||'',row.engine||'',row.methodVersion,row.observedAt.slice(0,10),row.captureGroupId||''].join('|');
   const list=groups.get(key)||[];list.push(row);groups.set(key,list);
  }
- return [...groups.values()].filter(rows=>rows.length>=2&&rows.every(x=>!x.sponsored)).map(rows=>({key:[rows[0].source,rows[0].country,rows[0].language,rows[0].query,rows[0].modelVersion||''].filter(Boolean).join(' · '),count:rows.length,
+ return [...groups.values()].filter(rows=>rows.length>=2&&rows.every(x=>!x.sponsored)&&new Set(rows.map(x=>x.platformId)).size===rows.length).map(rows=>({key:[rows[0].source,rows[0].country,rows[0].language,rows[0].query,rows[0].modelVersion||'',rows[0].captureGroupId||''].filter(Boolean).join(' · '),count:rows.length,
   rows:rows.slice().sort((a,b)=>rows[0].source==='ai_answer_citation'?(b.citations??0)-(a.citations??0):(a.position??Infinity)-(b.position??Infinity)).map(x=>({platformId:x.platformId,position:x.position??null,mentions:x.mentions??null,citations:x.citations??null,sourceUrl:x.sourceUrl,observedAt:x.observedAt,model:x.model||null,modelVersion:x.modelVersion||null,rawCaptureSha256:x.rawCaptureSha256||null}))}));
 }
