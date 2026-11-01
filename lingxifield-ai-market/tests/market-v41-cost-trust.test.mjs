@@ -27,7 +27,7 @@ test('nine-language cost and evidence sources never prefill unverified prices',(
   assert.ok(calculator.includes('"'+lang+'":['),lang+':calculator translations');
   assert.match(methodology,new RegExp('\\b'+lang+':\\{'));
  }
- assert.match(ui,/"headline":"全球 SI AI 行情平台"/);
+ assert.match(ui,/"headline":"灵犀场全球SIAI排行榜"/);
  assert.match(calculator,/VIDEO_RATES/);
  assert.match(calculator,/variants\.map\(v=><option/);
  assert.match(calculator,/estimateApiUsageCost/);
