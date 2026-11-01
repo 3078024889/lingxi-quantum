@@ -16,10 +16,11 @@ test("real Opus WebM rotate 90 degrees preserves runtime and shares exact saved 
   Object.defineProperty(navigator,"canShare",{configurable:true,value:()=>true});
   Object.defineProperty(navigator,"share",{configurable:true,value:async(data:ShareData)=>{
    const file=data.files?.[0];if(!file)throw Error("NO_SHARE_FILE");
-   (window as any).__rotationShare={name:file.name,type:file.type,bytes:Array.from(new Uint8Array(await file.arrayBuffer()))};
+   (window as any).__rotationShare={name:file.name,type:file.type,active:navigator.userActivation?.isActive??null,bytes:Array.from(new Uint8Array(await file.arrayBuffer()))};
   }});
  });
  let privateUploads=0;
+ await page.route("**/api/tools/free-export",route=>route.fulfill({status:200,json:{id:route.request().postDataJSON().id,allowed:true,paidUnits:0,loginRequired:false}}));
  await page.route("**/api/tools/mobile-file",route=>{privateUploads++;return route.abort()});
  await page.goto("/tools/rotate-video?lang=en&mini=1");
  await page.locator("h1").click();
@@ -45,6 +46,15 @@ test("real Opus WebM rotate 90 degrees preserves runtime and shares exact saved 
  await area.getByRole("button",{name:"Start processing"}).click();
  const actions=page.getByTestId("result-file-actions");
  await expect(actions).toBeVisible({timeout:120000});
+ // First click authorizes asynchronously; it MUST NOT invoke native share after the await.
+ await actions.getByRole("button",{name:"Send file",exact:true}).click();
+ await expect(actions.getByRole("status")).toContainText("Export access confirmed");
+ expect(await page.evaluate(()=>(window as any).__rotationShare)).toBeUndefined();
+ // A separate real click preserves transient user activation for native share.
+ await actions.getByRole("button",{name:"Tap to send file",exact:true}).click();
+ await expect(actions.getByRole("status")).toContainText("Handed to the system");
+ const sent=await page.evaluate(()=>(window as any).__rotationShare);
+ expect(sent.active).not.toBe(false);
  const downloadEvent=page.waitForEvent("download");
  await actions.getByRole("button",{name:"Save file",exact:true}).click();
  const downloaded=await downloadEvent,bytes=await fs.readFile((await downloaded.path())!);
@@ -70,9 +80,6 @@ test("real Opus WebM rotate 90 degrees preserves runtime and shares exact saved 
  expect(metadata.height).toBe(160);
  expect(metadata.duration).toBeGreaterThan(1.2);
  expect(metadata.duration).toBeLessThan(3);
- await actions.getByRole("button",{name:"Send file",exact:true}).click();
- await expect(actions.getByRole("status")).toContainText("Handed to the system");
- const sent=await page.evaluate(()=>(window as any).__rotationShare);
  expect(sent.name).toBe(downloaded.suggestedFilename());
  expect(sent.type).toBe("video/mp4");
  expect(Buffer.from(sent.bytes)).toEqual(bytes);
