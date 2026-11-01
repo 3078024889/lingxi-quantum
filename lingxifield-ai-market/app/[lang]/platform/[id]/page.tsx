@@ -21,15 +21,15 @@ import {platformLinks} from '../../../../lib/official-platform-links';
 import type {Language} from '../../../../lib/v2';
 type PageParams={params:Promise<{lang:string;id:string}>};
 const WORDS:Record<Language,readonly [string,string,string,string,string,string,string,string,string,string,string,string]>={
- zh:['功能和适用任务','免费额度','官方价格','代表模型与能力','国家、地区与使用入口','商用授权和限制','官网和开始使用','官方资料','资料核对时间','返回全部平台','价格可能随地区、套餐和活动变化；未核实的能力不参与排行。','第三方独立评分尚无可比数据'],
- en:['Capabilities and tasks','Free use','Official pricing','Models and capabilities','Countries, regions and access','Commercial rights','Official site and start','Publisher source','Reviewed','Back to market','Prices vary by country, plan and promotion. Unverified claims do not become rankings.','No comparable independent score yet'],
- ja:['機能と用途','無料枠','公式料金','モデルと能力','国・地域・アクセス','商用許諾','公式サイト','公式根拠','確認日','市場に戻る','国・プラン・時期で料金が変わります。','独立評価はまだありません'],
- ko:['기능과 작업','무료 이용','공식 요금','모델과 기능','국가·지역 및 접속','상업적 이용','공식 사이트','공식 자료','확인일','목록으로','지역·요금제에 따라 가격이 다를 수 있습니다.','독립 점수 자료 없음'],
- fr:['Fonctions et usages','Accès gratuit','Tarif officiel','Modèles et capacités','Pays et accès','Droits commerciaux','Site officiel','Source officielle','Vérifié le','Retour au marché','Prix variables selon pays, forfait et promotions.','Pas encore de score indépendant comparable'],
- de:['Funktionen und Einsatzgebiete','Kostenlose Nutzung','Offizielle Preise','Modelle und Fähigkeiten','Länder und Zugang','Gewerbliche Rechte','Offizielle Website','Offizielle Quelle','Geprüft','Zurück zum Markt','Preise variieren nach Land, Tarif und Aktion.','Noch kein unabhängiger Vergleichswert'],
- es:['Funciones y tareas','Uso gratuito','Precio oficial','Modelos y capacidades','Países y acceso','Uso comercial','Sitio oficial','Fuente oficial','Revisado','Volver al mercado','Los precios dependen del país, plan y promoción.','Sin puntuación independiente comparable'],
- pt:['Funções e tarefas','Uso gratuito','Preço oficial','Modelos e capacidades','Países e acesso','Uso comercial','Site oficial','Fonte oficial','Verificado','Voltar ao mercado','Preços dependem de país, plano e promoções.','Sem avaliação independente comparável'],
- ar:['الوظائف والمهام','الاستخدام المجاني','الأسعار الرسمية','النماذج والقدرات','البلدان وإمكانية الوصول','الاستخدام التجاري','الموقع الرسمي','المصدر الرسمي','تاريخ المراجعة','العودة للسوق','تختلف الأسعار حسب الدولة والخطة والعروض.','لا توجد درجة مستقلة قابلة للمقارنة']
+ zh:['功能和适用任务','免费额度','官方价格','代表模型与能力','国家、地区与使用入口','商用授权和限制','官网和开始使用','官方资料','资料核对时间','返回全部平台','价格随地区、套餐和活动变化，点击官方资料查看详情。','第三方独立评分尚无可比数据'],
+ en:['Capabilities and tasks','Free use','Official pricing','Models and capabilities','Countries, regions and access','Commercial rights','Official site and start','Publisher source','Reviewed','Back to market','Prices vary by country and plan. See the publisher source for details.','No comparable independent score yet'],
+ ja:['機能と用途','無料枠','公式料金','モデルと能力','国・地域・アクセス','商用許諾','公式サイト','公式根拠','確認日','市場に戻る','国やプランにより料金が異なります。公式情報をご覧ください。','独立評価はまだありません'],
+ ko:['기능과 작업','무료 이용','공식 요금','모델과 기능','국가·지역 및 접속','상업적 이용','공식 사이트','공식 자료','확인일','목록으로','국가와 요금제에 따라 가격이 다릅니다. 공식 출처를 확인하세요.','독립 점수 자료 없음'],
+ fr:['Fonctions et usages','Accès gratuit','Tarif officiel','Modèles et capacités','Pays et accès','Droits commerciaux','Site officiel','Source officielle','Vérifié le','Retour au marché','Tarifs variables selon pays et forfait. Consultez la source officielle.','Pas encore de score indépendant comparable'],
+ de:['Funktionen und Einsatzgebiete','Kostenlose Nutzung','Offizielle Preise','Modelle und Fähigkeiten','Länder und Zugang','Gewerbliche Rechte','Offizielle Website','Offizielle Quelle','Geprüft','Zurück zum Markt','Die Preise variieren je Land und Tarif. Offizielle Quelle ansehen.','Noch kein unabhängiger Vergleichswert'],
+ es:['Funciones y tareas','Uso gratuito','Precio oficial','Modelos y capacidades','Países y acceso','Uso comercial','Sitio oficial','Fuente oficial','Revisado','Volver al mercado','Los precios dependen del país y del plan. Consulta la fuente oficial.','Sin puntuación independiente comparable'],
+ pt:['Funções e tarefas','Uso gratuito','Preço oficial','Modelos e capacidades','Países e acesso','Uso comercial','Site oficial','Fonte oficial','Verificado','Voltar ao mercado','Os preços dependem do país e do plano. Consulte a fonte oficial.','Sem avaliação independente comparável'],
+ ar:['الوظائف والمهام','الاستخدام المجاني','الأسعار الرسمية','النماذج والقدرات','البلدان وإمكانية الوصول','الاستخدام التجاري','الموقع الرسمي','المصدر الرسمي','تاريخ المراجعة','العودة للسوق','تختلف الأسعار حسب الدولة والخطة؛ راجع المصدر الرسمي.','لا توجد درجة مستقلة قابلة للمقارنة']
 };
 export const dynamicParams=false;
 export const revalidate=3600;
