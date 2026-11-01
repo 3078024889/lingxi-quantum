@@ -27,8 +27,9 @@ export async function renderPdfPage(pdf:any,pageNumber:number,scale=1.5,pixelRat
   const viewport=page.getViewport({scale});
   // PDF.js renders in CSS-pixel coordinates by default. Allocate a denser
   // backing canvas so the browser never has to upscale a low-resolution page.
-  const deviceRatio=typeof window!=="undefined"?(window.devicePixelRatio||1):1;
-  const outputScale=Math.max(1,Math.min(2.5,pixelRatio??deviceRatio));
+  // Keep the historical 1x default so export tools retain their explicit
+  // scale contract. Preview callers opt into HiDPI by passing pixelRatio.
+  const outputScale=Math.max(1,Math.min(2.5,pixelRatio??1));
   const canvas=document.createElement("canvas");
   canvas.width=Math.ceil(viewport.width*outputScale);
   canvas.height=Math.ceil(viewport.height*outputScale);
