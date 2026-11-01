@@ -3,7 +3,6 @@
  * Search Console only measures LINGXIFIELD's own pages, never competitor ranks.
  * All vendor comparisons require same-market/time/query/methodology observations.
  */
-import {createHash} from 'node:crypto';
 import observations from '../data/seo-geo-observations.json';
 import {entries} from './catalog-store';
 import {platforms} from './data';
@@ -52,9 +51,9 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
    if(o.sourceProperty.startsWith('sc-domain:'))propertyHost=o.sourceProperty.slice('sc-domain:'.length).toLowerCase();
    else{const property=new URL(o.sourceProperty);if(property.protocol!=='https:'||property.pathname!=='/'||property.search||property.hash)return false;propertyHost=property.hostname.toLowerCase();}
    if(!propertyHost||!(page.hostname===propertyHost||page.hostname.endsWith('.'+propertyHost)))return false;
-   const base={property:o.sourceProperty,page:o.sourcePage,query:o.query,date:o.sourceDate,impressions:o.impressions,clicks:o.clicks,position:o.position};
-   const digest=createHash('sha256').update(JSON.stringify(base)).digest('hex');
-   if(o.recordHash!=='sha256:'+digest||o.id!=='gsc-'+digest.slice(0,24))return false;
+   // The Node-only review CLI recomputes this digest before publication.
+   // Keep the browser-safe read validator free of Node built-ins.
+   if(typeof o.recordHash!=='string'||o.id!=='gsc-'+o.recordHash.slice(7,31))return false;
   }catch{return false;}
  }
  for(const k of ['position','impressions','clicks','mentions','citations']){
