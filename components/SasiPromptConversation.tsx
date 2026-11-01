@@ -179,11 +179,11 @@ export default function SasiPromptConversation({task,initialPrompt='',autoStart=
   try{
    if(task==='chat'&&!confirm){
     const local=await tryBrowserLocalText({lang,messages:[
-     ...turns.slice(-12).flatMap(t=>[{role:'user' as const,content:t.question},...(t.answer?[{role:'assistant' as const,content:t.answer}]:[])]),
+     ...conversationHistory(turns),
      {role:'user',content:question}
     ]});
     if(local.kind==='answer'){commitText(question,local.answer);return}
-    const context=turns.length?turns.slice(-12).map(t=>'User: '+t.question+'\nAssistant: '+(t.answer||'')).join('\n').slice(-16000):'';
+    const context=turns.length?conversationHistory(turns,15000).map(row=>row.role+': '+row.content).join('\n').slice(-16000):'';
     let streamed="";
     const userResource=await streamUserResourceText({prompt:question,context,onDelta:delta=>{streamed+=delta;setStreaming({question,answer:streamed})}});
     if(userResource.kind==='answer'){commitText(question,userResource.answer);setStreaming(null);return}
