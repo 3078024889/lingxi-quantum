@@ -5,6 +5,7 @@ import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository'
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
 import {researchedFact} from '../../../../lib/market-researched-facts';
 import {companyEvidenceFor} from '../../../../lib/market-company-evidence';
+import {localizeCompanyEvidence} from '../../../../lib/market-company-evidence-locale';
 import {VIDEO_RATES} from '../../../../lib/market-rate-catalog';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
@@ -59,7 +60,7 @@ export default async function LocalProduct({params}:PageParams){
  if(!marketLocales.includes(lang as Language))notFound();
  const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l),api=apiServiceOffer(id),payments=paymentFactsFor(id,'GLOBAL'),team=platformLinks(id).team;
- const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-11-01',companyEvidence=companyEvidenceFor(id);
+ const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-11-01',companyEvidence=localizeCompanyEvidence(id,l,companyEvidenceFor(id));
  const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n.?a|not verified)$/i.test(value.trim()));
  const companyWords=({zh:['公司','成立','地区','融资','上市'],en:['Company','Founded','Location','Funding','Listing'],ja:['企業','設立','地域','調達','上場'],ko:['회사','설립','지역','투자','상장'],fr:['Entreprise','Création','Siège','Financement','Cotation'],de:['Firma','Gründung','Sitz','Finanzierung','Börse'],es:['Empresa','Fundación','Sede','Financiación','Bolsa'],pt:['Empresa','Fundação','Sede','Investimento','Bolsa'],ar:['الشركة','تأسست','المنطقة','التمويل','الإدراج']} as Record<Language,string[]>)[l];
  const companyFacts=[
