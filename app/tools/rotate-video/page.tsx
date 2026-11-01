@@ -31,6 +31,6 @@ export const metadata:Metadata={
 
 export default function Page(){
  return <AdvancedToolPage title={<LxText {...title}/>} intro={<LxText {...intro}/>}>
-  <VideoToolkitWorkbench initialMode="rotate"/>
+  <VideoToolkitWorkbench initialMode="rotate" standalone/>
  </AdvancedToolPage>;
 }
