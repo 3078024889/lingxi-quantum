@@ -82,14 +82,14 @@ const texts:Record<Key,readonly string[]>={
  ],
  'xai.scale':[
   '官方公司页面披露 Colossus 计算设施规模为 200,000 GPUs',
-  'Official company page reports 200,000 GPUs in the Colossus compute facility',
-  '公式会社ページによると、Colossus計算施設は200,000 GPU規模',
-  '공식 회사 페이지에 따르면 Colossus 컴퓨팅 시설은 GPU 200,000개 규모입니다',
-  'La page officielle indique que l’infrastructure Colossus compte 200 000 GPU',
-  'Die offizielle Unternehmensseite nennt 200.000 GPUs für die Colossus-Recheninfrastruktur',
-  'La página oficial indica que la infraestructura Colossus cuenta con 200.000 GPU',
-  'A página oficial informa que a infraestrutura Colossus conta com 200.000 GPUs',
-  'تذكر الصفحة الرسمية أن بنية Colossus تضم 200,000 وحدة GPU'
+  'xAI joined SpaceX on 2 Feb 2026; the official company page reports 200,000 GPUs in the Colossus facility',
+  'xAIは2026年2月2日にSpaceXへ参加。公式ページによるとColossusは200,000 GPU規模',
+  'xAI는 2026년 2월 2일 SpaceX에 합류했습니다. 공식 페이지는 Colossus 시설이 GPU 200,000개 규모라고 밝힙니다',
+  'xAI a rejoint SpaceX le 2 février 2026 ; la page officielle indique 200 000 GPU dans l’infrastructure Colossus',
+  'xAI trat SpaceX am 2. Februar 2026 bei; die offizielle Seite nennt 200.000 GPUs für Colossus',
+  'xAI se unió a SpaceX el 2 de febrero de 2026; la página oficial indica 200.000 GPU en Colossus',
+  'A xAI integrou-se à SpaceX em 2 de fevereiro de 2026; a página oficial informa 200.000 GPUs no Colossus',
+  'انضمت xAI إلى SpaceX في 2 فبراير 2026؛ وتذكر الصفحة الرسمية أن منشأة Colossus تضم 200,000 وحدة GPU'
  ],
  'langchain.funding':[
   '2025 年 10 月 20 日公布 1.25 亿美元融资，估值 12.5 亿美元（该轮融资）',
@@ -98,6 +98,7 @@ const texts:Record<Key,readonly string[]>={
   '2025년 10월 20일 발표: 1억 2,500만 달러 투자 유치, 기업가치 12억 5,000만 달러(해당 라운드)',
   'Financement de 125 M$ US annoncé le 20 octobre 2025, valorisation de 1,25 Md
 const identity:Record<string,string>={
+ grok:'xai',transformers:'huggingface',
  chatgpt:'openai','openai-python':'openai',whisper:'openai',
  claude:'anthropic','anthropic-sdk-python':'anthropic',gemini:'google',qwen:'alibaba',
  jimeng:'bytedance',doubao:'bytedance',kling:'kuaishou',

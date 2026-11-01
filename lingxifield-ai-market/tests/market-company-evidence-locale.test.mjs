@@ -19,7 +19,7 @@ test('English, French and Arabic corporate fields do not leak Chinese-only finan
  for(const id of COMPANY_EVIDENCE_IDS){
   for(const language of ['en','fr','ar']){
    const v=localizeCompanyEvidence(id,language,COMPANY_EVIDENCE[id]);
-   for(const key of ['headquarters','funding','listing','projectStarted','scale']){
+   for(const key of ['founded','headquarters','funding','listing','projectStarted','scale']){
     if(v[key])assert.doesNotMatch(v[key].text,/[\u4e00-\u9fff]/,id+' '+language+' '+key);
    }
   }
@@ -29,4 +29,12 @@ test('project birth never becomes the independent AI model company founding year
  assert.match(localizeCompanyEvidence('kling','en',COMPANY_EVIDENCE.kling).projectStarted.text,/not the Kling launch date/);
  assert.match(localizeCompanyEvidence('comfyui','en',COMPANY_EVIDENCE.comfyui).projectStarted.text,/2023/);
  assert.equal(localizeCompanyEvidence('whisper','en',COMPANY_EVIDENCE.whisper).founded.text,'2015');
+});
+
+test('Grok and Transformers use their parent-company locale evidence rather than leaking Chinese',()=>{
+ const grok=localizeCompanyEvidence('grok','en',COMPANY_EVIDENCE.grok);
+ const transformers=localizeCompanyEvidence('transformers','en',COMPANY_EVIDENCE.transformers);
+ assert.match(grok.funding.text,/US\$20B/);
+ assert.match(grok.scale.text,/joined SpaceX/);
+ assert.match(transformers.scale.text,/2M/);
 });
