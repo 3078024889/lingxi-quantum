@@ -14,6 +14,7 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  expect(sourceMeta.src).toMatch(/^data:image\/png/);
  const densityTarget=await page.getByTestId("pdf-page-stage").evaluate((node:HTMLElement)=>Math.ceil(node.clientWidth*Math.min(2.5,Math.max(1,window.devicePixelRatio||1))*.95));
  expect(sourceMeta.width).toBeGreaterThanOrEqual(densityTarget);
+ expect(sourceMeta.width).toBeLessThanOrEqual(densityTarget*1.15);
 
  await page.getByPlaceholder("Text to add").fill("Approved");
  await page.getByRole("button",{name:"Add text"}).click();
@@ -81,4 +82,5 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  expect(exportMeta.width).toBeGreaterThan(700);
  expect(exportMeta.src).toMatch(/^data:image\/png/);
  expect(exportMeta.width).toBeGreaterThanOrEqual(densityTarget);
+ expect(exportMeta.width).toBeLessThanOrEqual(densityTarget*1.15);
 });
