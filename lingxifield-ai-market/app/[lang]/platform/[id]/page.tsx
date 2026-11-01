@@ -10,6 +10,7 @@ import {questionForProduct} from '../../../../lib/market-user-task-queries.mjs';
 import {VIDEO_RATES} from '../../../../lib/market-rate-catalog';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
+import MarketCodexSection from '../../../market-codex-section';
 import {localizedCategory} from '../../../../lib/market-home-i18n';
 import {commercialEvidence} from '../../../../lib/market-commercial-evidence';
 import {apiServiceOffer} from '../../../../lib/market-api-service-catalog';
@@ -93,6 +94,7 @@ export default async function LocalProduct({params}:PageParams){
    <p>{summary}</p><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong>{fact.source&&<a href={fact.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a>}</span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
    {team&&l==='zh'&&<p>{team.summary} <a href={team.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></p>}
   </section>
+  {id==='chatgpt'?<MarketCodexSection language={l}/>:null}
   <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src])=><article key={title}><h2>{title}</h2>
    {title===paymentHeading&&payments.methodEvidence.length>0?<ul className="marketLocalizedPaymentEvidence">{payments.methodEvidence.map(method=><li key={method.method}><span>{localizedPaymentName(method.method,l)}</span><a href={method.source} rel="nofollow noopener noreferrer" target="_blank">{w[7]} ↗</a></li>)}</ul>:<p>{value}</p>}
    {src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}
