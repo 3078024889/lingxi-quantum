@@ -303,7 +303,10 @@ test('V44 fix placeholder commercial and local payments in 32-product market',as
 test('V44 SEO/GEO board requires evidence, not fictitious rankings, and is translated in nine locales',()=>{
  const s=read('app/seo-geo-board.tsx'),home=read('app/market-workbench.tsx');
  for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(s,new RegExp('\\b'+l+':\\['),l);
- assert.match(s,/coverage\.verifiedObservations===0/);
+ assert.match(s,/coverage\.gscObservations>0/);
+ assert.match(s,/coverage\.independentSerpObservations>0/);
+ assert.match(s,/coverage\.geoObservations>0/);
+ assert.match(s,/filter\(x=>!x\.ready\)/);
  assert.doesNotMatch(s,/no artificial rankings|no se inventan|不生成自然排名/);
  const evidence=read('lib/seo-geo-observations.ts');
  assert.match(evidence,/validObservation/);
@@ -427,7 +430,9 @@ test('V45 SEO/GEO requires reviewed source-dated observations and independent co
  assert.match(source,/ai_answer_citation/);
  assert.match(source,/recordHash/);
  assert.match(source,/search.google.com/);
- assert.match(read('app/seo-geo-board.tsx'),/coverage\.verifiedObservations===0/);
+ assert.match(read('app/seo-geo-board.tsx'),/coverage\.independentSerpObservations>0/);
+ assert.match(read('app/seo-geo-board.tsx'),/coverage\.geoObservations>0/);
+ assert.match(read('app/seo-geo-board.tsx'),/filter\(x=>!x\.ready\)/);
  assert.doesNotMatch(read('app/seo-geo-board.tsx'),/seoGeoEvidenceCount|coverage\.measuredProducts/);
  assert.match(read('app/api/v1/seo-geo/route.ts'),/no-store/);
  const collector=read('scripts/sync-gsc-analytics.mjs');
