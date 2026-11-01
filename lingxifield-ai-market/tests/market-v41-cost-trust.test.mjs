@@ -22,7 +22,7 @@ test('API input and output prices are independent per million tokens',()=>{
 test('nine-language cost and evidence sources never prefill unverified prices',()=>{
  const calculator=read('app/market-cost-estimator.tsx');
  const ui=read('lib/market-ui-extra.ts');
- const methodology=read('app/methodology/page.tsx');
+ const methodology=read('app/(default)/methodology/page.tsx');
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
   assert.ok(calculator.includes('"'+lang+'":['),lang+':calculator translations');
   assert.match(methodology,new RegExp('\\b'+lang+':\\{'));
@@ -42,7 +42,7 @@ test('commercial rights must carry a vendor policy source and conditions',()=>{
 });
 test('SEO indexing stays release-gated; sponsored placement not a rank',()=>{
  const policy=read('lib/market-index-policy.ts');
- const methodology=read('app/methodology/page.tsx');
+ const methodology=read('app/(default)/methodology/page.tsx');
  assert.match(policy,/AI_MARKET_INDEX_READY/);
  assert.match(policy,/VERCEL_ENV!=='preview'/);
  assert.match(methodology,/付费推荐和赞助位必须明示/);
