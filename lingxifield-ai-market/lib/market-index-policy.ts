@@ -18,7 +18,7 @@ export function verifiedMarketOrigin(env=process.env):string|null{
   const u=new URL(raw);
   if(u.protocol!=='https:'||u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash)return null;
   const host=u.hostname.toLowerCase();
-  if(!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'].includes(host))return null;
+  if(!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn'].includes(host))return null;
   return u.origin;
  }catch{return null}
 }

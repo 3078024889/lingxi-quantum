@@ -44,7 +44,7 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
   if(o.sampleCount!==o.impressions)return false;
   try{
    const page=new URL(o.sourcePage);
-   if(page.protocol!=='https:'||page.username||page.password||page.port||page.search||page.hash||!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'].includes(page.hostname))return false;
+   if(page.protocol!=='https:'||page.username||page.password||page.port||page.search||page.hash||!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn'].includes(page.hostname))return false;
    const route=page.pathname.match(/^\/(?:([a-z]{2})\/)?platform\/([a-z0-9][a-z0-9-]{0,79})\/?$/);
    if(!route||(route[1]||'zh')!==o.language||route[2]!==o.platformId)return false;
    let propertyHost='';

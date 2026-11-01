@@ -12,7 +12,7 @@ export const dynamicParams=false;
 export function generateStaticParams(){return supportedLocales.map(lang=>({lang}));}
 export async function generateMetadata({params}:{params:Promise<{lang:string}>}):Promise<Metadata>{
  const {lang}=await params;if(!supportedLocales.includes(lang as Locale))return {robots:{index:false}};
- return {title:`LINGXIFIELD | ${localeCopy[lang as Locale].headline}`,
+ return {title:localeCopy[lang as Locale].headline,
  description:localeCopy[lang as Locale].subtitle,
  robots:{index:mayIndexMarket(lang),follow:mayIndexMarket(lang)},
  alternates:mayIndexMarket(lang)?alternatesForMarket(lang):undefined};

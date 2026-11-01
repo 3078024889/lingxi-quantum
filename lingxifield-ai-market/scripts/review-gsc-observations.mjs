@@ -21,7 +21,7 @@ function requireOrigin(value){
  if(typeof value!=='string')throw new Error('CANONICAL_ORIGIN_REQUIRED');
  const u=new URL(value);
  if(u.protocol!=='https:'||u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash||
-  !['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'].includes(u.hostname))
+  !['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn'].includes(u.hostname))
   throw new Error('CANONICAL_ORIGIN_NOT_APPROVED');
  return u.origin;
 }

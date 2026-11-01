@@ -6,7 +6,7 @@
  *
  * Env:
  *  GSC_SERVICE_ACCOUNT_JSON (whole JSON secret, never commit)
- *  GSC_PROPERTY (e.g. sc-domain:lingxifield.com)
+ *  GSC_PROPERTY (e.g. sc-domain:globalsiai.com, only after property ownership is verified)
  *  GSC_LOOKBACK_DAYS (7..28)
  *  AI_MARKET_CANONICAL_ORIGIN (dedicated, owned HTTPS AI market host)
  */
@@ -31,7 +31,7 @@ const raw=process.env.GSC_SERVICE_ACCOUNT_JSON,property=process.env.GSC_PROPERTY
 if(!raw||!property||!origin){fatal('GSC_CONFIG_REQUIRED: Set GSC_SERVICE_ACCOUNT_JSON, GSC_PROPERTY and the verified AI_MARKET_CANONICAL_ORIGIN.');}
 else try{
  const u=new URL(origin);
- if(u.protocol!=='https:'||u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash||!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn'].includes(u.hostname))throw Error('GSC_MARKET_ORIGIN_INVALID');
+ if(u.protocol!=='https:'||u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash||!['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn'].includes(u.hostname))throw Error('GSC_MARKET_ORIGIN_INVALID');
  if(property.startsWith('sc-domain:')){
   const domain=property.slice('sc-domain:'.length).toLowerCase();
   if(u.hostname!==domain&&!u.hostname.endsWith('.'+domain))throw Error('GSC_PROPERTY_HOST_MISMATCH');
