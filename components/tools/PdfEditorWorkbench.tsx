@@ -30,7 +30,7 @@ const SIGNING_WORDS:Record<string,{ink:string;seal:string;extract:string;again:s
  pt:{ink:"Extrair assinatura manuscrita",seal:"Adicionar carimbo",extract:"Sensibilidade da tinta",again:"Extrair novamente",download:"Salvar assinatura transparente",preview:"Prévia da assinatura transparente",failure:"Não foi possível identificar a escrita. Recorte o fundo e tente novamente com mais luz.",hint:"Remove papel e sombras, mantendo só a escrita. Processamento no dispositivo."},
  ar:{ink:"استخراج التوقيع بخط اليد",seal:"إضافة ختم",extract:"حساسية الحبر",again:"استخراج مجددًا",download:"حفظ التوقيع الشفاف",preview:"معاينة توقيع شفاف",failure:"لم يتم العثور على كتابة واضحة. اقتطع الخلفية وحاول مجددًا بإضاءة أفضل.",hint:"إزالة الورق والظلال والإبقاء على الكتابة فقط. تتم المعالجة على جهازك."}
 };
-type Overlay={id:number;kind:"text"|"cover"|"image";page:number;x:number;y:number;w:number;h:number;ratio?:number;angle?:number;text?:string;size?:number;data?:string};
+type Overlay={id:number;kind:"text"|"cover"|"image";page:number;x:number;y:number;w:number;h:number;ratio?:number;locked?:boolean;angle?:number;text?:string;size?:number;data?:string};
 type GestureState={id:number;mode:"move"|"resize"|"rotate";handle?:string;startX:number;startY:number;originX:number;originY:number;originW:number;originH:number;originAngle:number;rect:DOMRect}|null;
 const OBJECT_WORDS:Record<string,{selected:string;editText:string;duplicate:string;undo:string;redo:string;deselect:string;locked:string;width:string;height:string;rotation:string}>={
  zh:{selected:"当前对象",editText:"编辑文字",duplicate:"复制",undo:"撤销",redo:"重做",deselect:"取消选择",locked:"锁定比例",width:"宽度",height:"高度",rotation:"旋转"},
