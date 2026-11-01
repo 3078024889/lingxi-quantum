@@ -226,6 +226,10 @@
 .seoGeoCompare strong{color:#1656a0;font-size:12px}
 .seoGeoCompare p{font-size:11px;color:#5c7290;line-height:1.7;overflow-wrap:anywhere}
 .seoGeoNote{font-size:12px;color:#375d8a;line-height:1.7;margin:14px 3px}
+.seoGeoEmptyStatus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:14px 0}
+.seoGeoEmptyStatus article{min-width:0;border:1px solid #e4ebf5;border-radius:9px;background:#fbfcfe;padding:11px}
+.seoGeoEmptyStatus strong{display:block;color:#314d70;font-size:12px;line-height:1.5}
+.seoGeoEmptyStatus p{margin:5px 0 0;color:#718198;font-size:11px;line-height:1.65;overflow-wrap:anywhere}
 .seoGeoFooter{display:flex;gap:14px;justify-content:space-between;align-items:center;font-size:11px;color:#8292a6}
 .seoGeoFooter a{color:#1562c8}
 @media(max-width:850px){.seoGeoCompare{grid-template-columns:repeat(2,minmax(0,1fr))}}
