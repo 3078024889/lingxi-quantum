@@ -4,7 +4,7 @@ const fs=require("node:fs"),vm=require("node:vm"),ts=require("typescript"),asser
 function compile(file,imports={}){
  const out={exports:{}};
  vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,"utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{
-  module:out,exports:out.exports,require(name){if(name in imports)return imports[name];throw Error("UNEXPECTED_IMPORT:"+name)},Request,Response,Headers,TextDecoder,TextEncoder,AbortController,crypto:crypto.webcrypto,console,process
+  module:out,exports:out.exports,require(name){if(name in imports)return imports[name];throw Error("UNEXPECTED_IMPORT:"+name)},Request,Response,Headers,TextDecoder,TextEncoder,AbortController,crypto:crypto.webcrypto,Error,console,process
  });
  return out.exports;
 }
