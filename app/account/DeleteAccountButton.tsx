@@ -12,6 +12,7 @@ export default function DeleteAccountButton() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "deleting" | "error">("idle");
+  const [reauthRequired, setReauthRequired] = useState(false);
 
   const confirmDelete = async () => {
     setStatus("deleting");
@@ -29,6 +30,8 @@ export default function DeleteAccountButton() {
       router.push("/");
       router.refresh();
     } else {
+      const response = await res.json().catch(() => ({}));
+      setReauthRequired(res.status === 403 && response?.error === "RECENT_SIGN_IN_REQUIRED");
       setStatus("error");
     }
   };
@@ -53,7 +56,9 @@ export default function DeleteAccountButton() {
         />
       </p>
       {status === "error" && (
-        <p className="mt-2 text-xs text-rose"><Bi zh="注销失败，请稍后再试，或联系我们处理。" en="Deletion failed — please try again, or contact us." /></p>
+        <p className="mt-2 text-xs text-rose">{reauthRequired
+          ? <Bi zh="为了保护账户，请先退出并重新登录，再于十分钟内确认注销。" en="To protect your account, sign out and sign in again, then confirm deletion within ten minutes." />
+          : <Bi zh="注销失败，请稍后再试，或联系我们处理。" en="Deletion failed — please try again, or contact us." />}</p>
       )}
       <div className="mt-4 flex gap-3">
         <button
