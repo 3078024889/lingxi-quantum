@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { decryptWechatNotifyResource, verifyWechatNotifySignature } from "@/lib/wechatpay";
+import { decryptWechatNotifyResource, isWechatNotifyTimestampFresh, verifyWechatNotifySignature } from "@/lib/wechatpay";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -21,6 +21,12 @@ export async function POST(req: Request) {
     const nonce = req.headers.get("Wechatpay-Nonce") ?? "";
     const signature = req.headers.get("Wechatpay-Signature") ?? "";
     const serial = req.headers.get("Wechatpay-Serial") ?? "";
+
+    // Reject stale or future-dated signed messages before parsing/decrypting them.
+    // Refund callbacks already apply this same five-minute replay window.
+    if (!isWechatNotifyTimestampFresh(timestamp, 300)) {
+      return NextResponse.json({ code: "FAIL", message: "通知时间戳无效或已过期" }, { status: 401 });
+    }
 
     const validSignature = verifyWechatNotifySignature({ timestamp, nonce, body: rawBody, signature, serial });
     if (!validSignature) {
