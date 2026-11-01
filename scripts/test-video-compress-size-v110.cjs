@@ -28,7 +28,7 @@ for(const marker of [
 ])assert(workbench.includes(marker),"missing media contract: "+marker);
 const labels=fs.readFileSync(paths[2],"utf8");
 for(const phrase of ["压缩后体积没有变小，已保留原文件","已按指定尺寸或帧率导出，但文件体积比原文件大"]){
- const from=labels.indexOf('"'+phrase+'": {'),to=labels.indexOf("\n  },",from);
+ const from=labels.indexOf('"'+phrase+'": {'),to=labels.indexOf("\n  }",from);
  assert(from>=0&&to>from,"missing notice: "+phrase);
  const block=labels.slice(from,to);
  for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"])assert(block.includes('"'+lang+'":'),"missing "+lang+" notice");
