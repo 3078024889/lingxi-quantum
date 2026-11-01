@@ -25,7 +25,7 @@ test("SASI variant reference stays local and requires creator rights",async({pag
  await page.goto("/sasi/variants?lang=en");
  await page.getByLabel("Reference video (local preview only)").setInputFiles({name:"my-reference.mp4",mimeType:"video/mp4",buffer:Buffer.from("local-fixture-only")});
  await page.getByRole("button",{name:"Compile variants"}).click();
- await expect(page.getByRole("alert")).toContainText("rights needed");
+ await expect(page.getByRole("alert").filter({hasText:"rights needed"})).toContainText("rights needed");
  await page.getByRole("checkbox").check();
  await page.getByRole("button",{name:"Compile variants"}).click();
  await expect(page.getByText(/Editable storyboards compiled: 3/)).toBeVisible();
