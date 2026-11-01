@@ -76,6 +76,8 @@ export function matchingEditorialProductIds(query){
  const q=String(query||'').trim().slice(0,120);
  if(q.length<3)return null;
  const normalized=normalize(q);
+ // A brand's Python SDK is a developer library, not just its consumer chat page.
+ if(/claude|anthropic/i.test(q)&&/python|sdk|调用.*api/i.test(q))return ['anthropic-sdk-python','claude'];
  // Explicit names take priority: "ChatGPT vs Claude" offers both, not a fabricated winner.
  const named=BRANDS.filter(([,pattern])=>pattern.test(q)).map(([id])=>id);
  if(named.length)return named.slice(0,3);
