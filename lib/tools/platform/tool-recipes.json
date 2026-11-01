@@ -22,7 +22,7 @@
     "requiresDesktop": true,
     "requiresMobile": true,
     "requiresRealFixture": true,
-    "privacyMode": "declared-online"
+    "privacyMode": "local-first"
   },
   {
     "slug": "avif-to-jpg",
