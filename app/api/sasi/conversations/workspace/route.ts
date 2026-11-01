@@ -22,7 +22,7 @@ export async function POST(request:NextRequest){
  const value=body as Record<string,unknown>;
  if(typeof value.threadId!=='string'||!uuid.test(value.threadId)||!value.workspace||typeof value.workspace!=='object'||Array.isArray(value.workspace))return NextResponse.json({error:'INVALID_WORKSPACE'},{status:400,headers});
  const workspace=value.workspace as Record<string,unknown>;
- const mode=workspace.mode;
+ const mode=typeof workspace.mode==='string'?workspace.mode:'';
  if(!['chat','image','drama','website','book','learning','research'].includes(mode))return NextResponse.json({error:'INVALID_WORKSPACE'},{status:400,headers});
  const db=createAdminClient();
  const projectId=workspace.projectId||null;
