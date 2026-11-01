@@ -11,6 +11,14 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
 
+  // A valid long-lived session alone is insufficient for irreversible deletion.
+  // Require a new login within ten minutes; a missing or invalid timestamp fails closed.
+  const signedInAt = Date.parse(user.last_sign_in_at ?? "");
+  const sessionAge = Date.now() - signedInAt;
+  if (!Number.isFinite(signedInAt) || sessionAge < 0 || sessionAge > 10 * 60 * 1000) {
+    return NextResponse.json({ error: "RECENT_SIGN_IN_REQUIRED" }, { status: 403 });
+  }
+
   const admin = createAdminClient();
   const { error } = await admin.auth.admin.deleteUser(user.id);
   if (error) {
