@@ -34,7 +34,7 @@ test('sponsored placement cannot manipulate organic price rankings or leak payme
  const market=await read('app/market-workbench.tsx');
  const sponsor=await read('app/sponsored-features.tsx');
  const api=await read('app/api/v1/sponsored/route.ts');
- const sql=await read('../supabase/migrations/20261030_ai_market_sponsored_disclosure.sql').catch(()=>null);
+ const sql=await read('sql/20261030_ai_market_sponsored_disclosure.sql').catch(()=>null);
  assert.ok(market.includes('<SponsoredFeatures language={language}/>'));
  assert.ok(sponsor.includes('推广内容 · Sponsored'));
  assert.ok(api.includes("affectsOrganicRank:false"));
