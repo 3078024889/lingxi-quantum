@@ -6,7 +6,7 @@ test('public visitor feedback and private moderation are separate flows',async()
  const publicApi=await read('app/api/v1/feedback/route.ts');
  const session=await read('app/api/v1/admin/session/route.ts');
  const moderation=await read('app/api/v1/admin/feedback/route.ts');
- const dashboard=await read('app/admin/feedback/page.tsx');
+ const dashboard=await read('app/(default)/admin/feedback/page.tsx');
  assert.match(publicApi,/ai_market_submit_visitor_feedback/);
  assert.doesNotMatch(publicApi,/ai_market_moderate_feedback|ai_market_pending_feedback/);
  assert.match(session,/grant_type','password'/);
