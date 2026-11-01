@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 test('preview is noindex; production sitemap requires source-verified localized product metadata',async()=>{
- const detail=await read('app/platform/[id]/page.tsx');
+ const detail=await read('app/(default)/platform/[id]/page.tsx');
  const localized=await read('app/[lang]/platform/[id]/page.tsx');
  const policy=await read('lib/market-index-policy.ts');
  const sitemap=await read('app/sitemap.ts');
