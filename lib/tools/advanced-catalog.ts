@@ -29,6 +29,7 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/video-dubbing", title:"视频翻译配音", description:"语音识别、字幕翻译、AI 配音并合成为可下载 MP4；同时导出翻译字幕。", keywords:["视频翻译","英文视频中文","配音","多语言","字幕翻译"], category:"video", badge:"AI", popular:true },
   { href:"/tools/video-translate", title:"视频翻译", description:"批量上传视频或导入公开视频链接，自动转写并翻译，导出带翻译字幕的 MP4、SRT/VTT/TXT，可选 AI 配音。", keywords:["视频翻译","批量视频翻译","视频链接翻译","翻译字幕","AI配音"], category:"video", badge:"AI", popular:true },
   { href:"/tools/video-toolkit", title:"视频压缩 / 裁剪 / 提取音频", description:"常用视频处理用 FFmpeg 在浏览器本地完成。", keywords:["视频压缩","裁剪视频","提取音频","MP3","视频转音频"], category:"video", popular:true, localOnly:true },
+  { href:"/tools/rotate-video", title:"视频旋转 / 方向纠正", description:"90°、180°、270°真实旋转视频画面，保留完整时长并导出兼容 MP4。", keywords:["视频旋转","视频方向纠正","视频横竖屏","rotate video","video rotator","横屏变竖屏"], category:"video", popular:true, localOnly:true },
   { href:"/tools/video-watermark-remover", title:"视频固定区域清理", description:"清理你有权编辑的视频中的固定遮挡或固定水印区域。", keywords:["视频去水印","固定水印","视频遮挡","logo"], category:"video", localOnly:true },
 
   { href:"/tools/food-calorie", title:"拍照估算卡路里", description:"识别一餐食物并估算热量和三大营养素区间。", keywords:["食物","卡路里","热量","蛋白质","减脂","饮食记录"], category:"daily", badge:"AI", popular:true },

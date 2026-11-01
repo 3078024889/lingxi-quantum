@@ -68,6 +68,7 @@ const TITLES:Record<string,Partial<T>>={
 "pdf-editor":L("PDF 编辑","PDF Editor","PDF編集","PDF 편집","Éditeur PDF","PDF-Editor","Editor PDF","Editor PDF","محرر PDF"),
 "e-sign-pdf":L("PDF 电子签名","E-sign PDF","PDF電子署名","PDF 전자서명","Signer un PDF","PDF elektronisch signieren","Firmar PDF","Assinar PDF","توقيع PDF"),
 "document-copy-layout":L("证件复印排版","Document Copy Layout","証明書コピー配置","문서 복사 배치","Mise en page de document","Dokument-Kopierlayout","Maquetar documento","Layout de cópia","تنسيق نسخة المستند"),
+"rotate-video":L("视频旋转 / 方向纠正","Rotate Video","動画回転","동영상 회전","Rotation vidéo","Video drehen","Rotar vídeo","Girar vídeo","تدوير الفيديو"),
 "video-toolkit":L("视频压缩 / 裁剪 / 提取音频","Video Toolkit","動画圧縮 / 切り抜き / 音声抽出","영상 압축 / 자르기 / 오디오 추출","Outils vidéo","Video-Werkzeuge","Herramientas de vídeo","Ferramentas de vídeo","أدوات الفيديو"),
 "subtitle-tools":L("字幕 SRT / VTT 工具","Subtitle SRT / VTT Tools","字幕 SRT / VTT ツール","자막 SRT / VTT 도구","Outils SRT / VTT","SRT / VTT Werkzeuge","Herramientas SRT / VTT","Ferramentas SRT / VTT","أدوات SRT / VTT"),
 "video-transcription":L("视频转文字","Video Transcription","動画文字起こし","영상 음성 텍스트 변환","Transcription vidéo","Video-Transkription","Transcripción de vídeo","Transcrição de vídeo","تفريغ الفيديو"),

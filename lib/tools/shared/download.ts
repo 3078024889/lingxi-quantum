@@ -1,4 +1,4 @@
-import {ensureToolExportAccess} from '../commerce/export-access-client';
+import {ensureToolExportAccess,isExportAccessGranted} from '../commerce/export-access-client';
 export type DownloadOutcome = "download" | "preview";
 export type FileShareOutcome = "shared" | "cancelled" | "unsupported" | "failed";
 export function miniLikeEnvironment() {
@@ -42,6 +42,16 @@ export async function shareFile(blob: Blob, filename: string): Promise<FileShare
   } catch (error) {
     return error && typeof error === "object" && "name" in error && error.name === "AbortError" ? "cancelled" : "failed";
   }
+}
+// Called from the final, fresh user click. There is no await before navigator.share().
+// Entitlement must have been granted earlier; do not spend funds here.
+export function shareFileReady(blob:Blob,filename:string):Promise<FileShareOutcome>{
+ try{
+  if(!isExportAccessGranted(blob))return Promise.resolve("failed");
+  const file=deliveryFile(blob,filename),payload={files:[file]};
+  if(!navigator.share||!navigator.canShare||!navigator.canShare(payload))return Promise.resolve("unsupported");
+  return navigator.share(payload).then(()=> "shared" as const,(error:unknown)=>error&&typeof error==="object"&&"name" in error&&error.name==="AbortError"?"cancelled" as const:"failed" as const);
+ }catch{return Promise.resolve("failed")}
 }
 // Cloud fallback requires a separate explicit consent click in the UI.
 // Saving and sharing local files never call this upload function automatically.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ResultPanel from "@/components/tools/ResultPanel";
 import ErrorExplain from "@/components/tools/ErrorExplain";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
@@ -151,7 +151,9 @@ export default function TimestampProWorkbench() {
   const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
 
   const [tab, setTab] = useState<"convert" | "batch" | "jwt" | "excel">("convert");
-  const [input, setInput] = useState(() => String(Math.floor(Date.now() / 1_000)));
+  const [input, setInput] = useState("");
+  const [clientReady, setClientReady] = useState(false);
+  useEffect(() => { setInput(String(Math.floor(Date.now() / 1_000))); setClientReady(true); }, []);
   const [unit, setUnit] = useState<Unit>("auto");
   const [zones, setZones] = useState<string[]>([
     "UTC",
@@ -306,6 +308,8 @@ export default function TimestampProWorkbench() {
                 ))}
               </div>
             </>
+          ) : !clientReady ? (
+            <p className="text-sm text-[var(--lx-muted)]" aria-live="polite">{t("正在获取当前时间…", "Reading current time…")}</p>
           ) : (
             <ErrorExplain
               reasonZh="无法解析这个时间值。"

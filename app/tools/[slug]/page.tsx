@@ -30,9 +30,9 @@ export default async function ToolSlugPage(props: Props) {
       <div className="">
         <ToolShell tool={tool}>
           <ToolWorkbench tool={tool} />
+          <ToolGuide slug={tool.slug}/>
         </ToolShell>
       </div>
-      <ToolGuide slug={tool.slug}/>
     </>
   );
 }

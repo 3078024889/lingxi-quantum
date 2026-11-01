@@ -33,7 +33,7 @@ export function publicToolSurface():PublicToolSurfaceItem[]{
    localOnly:Boolean(tool.localOnly),source:"advanced"});
  }
  for(const tool of GLOBAL_TOOL_CATALOG){
-  const href=`/tools/${tool.slug}`; if(map.has(href))continue;
+  const href=`/tools/${tool.slug}`; if(tool.slug==="image-to-pdf-pro"||map.has(href))continue;
   const category=toolDisplayCategory(tool.slug);
   map.set(href,{href,slug:tool.slug,titleZh:toolTitle("zh",tool.slug,tool.zh),titleEn:toolTitle("en",tool.slug,tool.en),
    descZh:"",descEn:"",kind:toolDisplayKind(category),category,localOnly:tool.mode==="local",source:"catalog"});

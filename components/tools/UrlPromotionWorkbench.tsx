@@ -20,7 +20,7 @@ export default function UrlPromotionWorkbench(){
  const active=useRef<AbortController|null>(null);useEffect(()=>()=>active.current?.abort(),[]);
  async function read(){if(active.current)return;const controller=new AbortController();active.current=controller;setBusy(true);setSource(null);setError('');try{const response=await fetch('/api/tools/promotion-source',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url}),signal:AbortSignal.any([controller.signal,AbortSignal.timeout(25000)])});if(!response.ok)throw Error();const data=await response.json();setSource(promotionSource(data.html,data.url))}catch{setError(t[6])}finally{setBusy(false);active.current=null}}
  function continueToSasi(){if(!source)return;const brief=promotionBrief(source,{language:lang,audience,channel,seconds})+`\n🎬 1 × ${seconds}s · ${resolution} · 9:16`;
-  try{sessionStorage.setItem('lingxifield.promotionBrief.v1',JSON.stringify({brief,createdAt:Date.now()}));window.location.assign('/sasi?promotion=1')}catch{setError(t[6])}
+  try{sessionStorage.setItem('lingxifield.promotionBrief.v1',JSON.stringify({brief,createdAt:Date.now()}));window.location.assign('/sasi?mode=drama&promotion=1')}catch{setError(t[6])}
  }
  return <div className="space-y-4" dir={lang==='ar'?'rtl':'ltr'}>
   <label className="block">{t[0]}<input type="url" maxLength={2048} disabled={busy} value={url} onChange={e=>{setUrl(e.target.value);setSource(null);setError('')}} placeholder="https://example.com/product" className="mt-2 w-full rounded-xl border bg-[var(--lx-panel)] p-3"/></label>

@@ -9,7 +9,7 @@ export const SEO_LOCALES={  "zh":{
     hreflang:"zh-CN",name:"中文",dir:"ltr",
     brand:"灵犀场 LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.zh.title,homeDesc:PUBLIC_FEATURE_COPY.zh.description,
     toolsTitle:"在线实用工具｜PDF、图片、视频与文件",toolsDesc:"选择 PDF、图片、视频或文字工具，按步骤处理并保存文件。处理方式和费用请查看工具页面。",
-    open:"打开工具",allTools:"查看全部工具",how:"怎么使用",what:"能做什么",privacy:"处理方式",
+    open:"打开工具",allTools:"查看全部工具",how:"怎么使用",what:"能做什么",privacy:"隐私与文件保存",
     local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"SASI 可以用于短剧、网站、书本、学习和科研创作。需要付费的步骤会在真正执行前显示费用；需要智能生成时可连接自己的智能服务。",
     searchTerms:["灵犀场SASI","LINGXIFIELD SASI","灵犀场实用工具","SASI资料问答","PDF压缩","PDF合并","PDF拆分","图片压缩","图片格式转换","视频转文字","音频转文字","字幕翻译","临时邮箱","阅后即焚","图片OCR","书本智能体","科研智能体","学习智能体"]
   },
@@ -147,6 +147,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"pdf-remove-metadata",zh:"删除 PDF 元数据",en:"Remove PDF Metadata",mode:"local" as const},
   {slug:"pdf-halve-pages",zh:"PDF 页面拆半",en:"Halve PDF Pages",mode:"local" as const},
   {slug:"pdf-search",zh:"PDF 全文搜索",en:"Search PDFs",mode:"local" as const},
+  {slug:"rotate-video",zh:"视频旋转",en:"Rotate Video",mode:"local" as const},
   {slug:"reverse-video",zh:"视频倒放",en:"Reverse Video",mode:"local" as const},
   {slug:"loop-video",zh:"视频循环",en:"Loop Video",mode:"local" as const},
   {slug:"stop-motion-video",zh:"视频定格",en:"Stop Motion Video",mode:"local" as const},

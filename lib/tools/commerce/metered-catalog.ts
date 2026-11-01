@@ -55,6 +55,7 @@ export const METERED_TOOL_IDS=[
   "pdf-remove-metadata",
   "pdf-halve-pages",
   "pdf-search",
+  "rotate-video",
   "reverse-video",
   "loop-video",
   "stop-motion-video",
