@@ -26,9 +26,11 @@ test('final brand is globally consistent with evidence-first market labels',asyn
  const main=await file('app/market-workbench.tsx');
  const dictionary=await file('lib/market-ui-extra.ts');
  const locale=await file('lib/locale-pages.ts');
- for(const [label,content] of [['layout',layout],['workbench',main],['dictionary',dictionary],['locale',locale]]){
-  assert.ok(content.includes('全球 SI AI 行情平台'),label+' must use final name');
- }
+ assert.ok(layout.includes('灵犀场全球SIAI排行榜'),'Chinese document title must match the filing name');
+ assert.ok(main.includes('ui.headline'),'the visible homepage brand must come from the locale dictionary');
+ assert.ok(dictionary.includes('灵犀场全球SIAI排行榜'),'Chinese visible brand');
+ assert.ok(locale.includes('灵犀场全球SIAI排行榜'),'Chinese SEO title');
+ assert.ok(dictionary.includes('LINGXIFIELD Global SIAI Rankings'),'English visible brand');
  assert.ok(main.includes('hc.resultsTitle'),'user catalog is clearly separate from ranked prices');
  assert.ok(main.includes('<PriceLeaderboards language={language}/>'));
  assert.ok(!main.includes('<HfModelRankings/>'));
