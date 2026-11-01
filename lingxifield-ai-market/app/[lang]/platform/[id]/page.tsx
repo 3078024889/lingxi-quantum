@@ -11,6 +11,8 @@ import {VIDEO_RATES} from '../../../../lib/market-rate-catalog';
 import {localizedCatalogFact} from '../../../../lib/market-fact-locale';
 import {localizedProductSummary} from '../../../../lib/market-product-locale';
 import MarketCodexSection from '../../../market-codex-section';
+import SunoPlanComparison from '../../../suno-plan-comparison';
+import {sunoPaymentNote} from '../../../../lib/market-suno-pricing';
 import {localizedCategory} from '../../../../lib/market-home-i18n';
 import {commercialEvidence} from '../../../../lib/market-commercial-evidence';
 import {apiServiceOffer} from '../../../../lib/market-api-service-catalog';
@@ -64,13 +66,14 @@ export default async function LocalProduct({params}:PageParams){
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l),api=apiServiceOffer(id),payments=paymentFactsFor(id,'GLOBAL'),team=platformLinks(id).team;
  const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-11-01',companyEvidence=localizeCompanyEvidence(id,l,companyEvidenceFor(id));
  const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n.?a|not verified)$/i.test(value.trim()));
- const companyWords=({zh:['公司','成立','地区','融资','上市'],en:['Company','Founded','Location','Funding','Listing'],ja:['企業','設立','地域','調達','上場'],ko:['회사','설립','지역','투자','상장'],fr:['Entreprise','Création','Siège','Financement','Cotation'],de:['Firma','Gründung','Sitz','Finanzierung','Börse'],es:['Empresa','Fundación','Sede','Financiación','Bolsa'],pt:['Empresa','Fundação','Sede','Investimento','Bolsa'],ar:['الشركة','تأسست','المنطقة','التمويل','الإدراج']} as Record<Language,string[]>)[l];
+ const companyWords=({zh:['公司','成立','地区','融资','上市','规模'],en:['Company','Founded','Location','Funding','Listing','Scale'],ja:['企業','設立','地域','調達','上場','規模'],ko:['회사','설립','지역','투자','상장','규모'],fr:['Entreprise','Création','Siège','Financement','Cotation','Taille'],de:['Firma','Gründung','Sitz','Finanzierung','Börse','Größe'],es:['Empresa','Fundación','Sede','Financiación','Bolsa','Tamaño'],pt:['Empresa','Fundação','Sede','Investimento','Bolsa','Dimensão'],ar:['الشركة','تأسست','المنطقة','التمويل','الإدراج','الحجم']} as Record<Language,string[]>)[l];
  const companyFacts=[
   {value:p.company,label:companyWords[0],source:companyEvidence?.publisherSource},
   {value:companyEvidence?.founded?.text,label:companyWords[1],source:companyEvidence?.founded?.source},
   {value:companyEvidence?.headquarters?.text,label:companyWords[2],source:companyEvidence?.headquarters?.source},
   {value:companyEvidence?.funding?.text,label:companyWords[3],source:companyEvidence?.funding?.source},
   {value:companyEvidence?.listing?.text,label:companyWords[4],source:companyEvidence?.listing?.source},
+  {value:companyEvidence?.scale?.text,label:companyWords[5],source:companyEvidence?.scale?.source},
   {value:companyEvidence?.projectStarted?.text,label:l==='zh'?'项目起源':'Project origin',source:companyEvidence?.projectStarted?.source}
  ].filter(x=>useful(x.value));
  const videos=VIDEO_RATES.filter(r=>r.platform===id&&r.resolution!=='not-confirmed'&&!['unverified','plan-only'].includes(r.billing));
@@ -96,8 +99,8 @@ export default async function LocalProduct({params}:PageParams){
   </section>
   {id==='chatgpt'?<MarketCodexSection language={l}/>:null}
   <section className="marketLocalizedFacts">{rows.filter(([,value])=>typeof value==='string'&&value.trim().length>0).map(([title,value,src])=><article key={title}><h2>{title}</h2>
-   {title===paymentHeading&&payments.methodEvidence.length>0?<ul className="marketLocalizedPaymentEvidence">{payments.methodEvidence.map(method=><li key={method.method}><span>{localizedPaymentName(method.method,l)}</span><a href={method.source} rel="nofollow noopener noreferrer" target="_blank">{w[7]} ↗</a></li>)}</ul>:<p>{value}</p>}
-   {src&&/^https:\/\//.test(src)&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}
+   {title===paymentHeading&&payments.methodEvidence.length>0?<><ul className="marketLocalizedPaymentEvidence">{payments.methodEvidence.map(method=><li key={method.method}><span>{localizedPaymentName(method.method,l)}</span><a href={method.source} rel="nofollow noopener noreferrer" target="_blank">{w[7]} ↗</a></li>)}</ul>{id==='suno'?<p className="marketPaymentNote">{sunoPaymentNote(l)}</p>:null}</>:title===w[2]&&id==='suno'?<SunoPlanComparison language={l}/>:<p>{value}</p>}
+   {src&&/^https:\/\//.test(src)&&!(id==='suno'&&title===w[2])&&<a rel="nofollow noopener noreferrer" target="_blank" href={src}>{w[7]} ↗</a>}
   </article>)}</section>
   {l==='zh'&&questionForProduct(id).length>0?<section className="marketLocalizedFaq">
    <h2>大家还会搜索</h2>
