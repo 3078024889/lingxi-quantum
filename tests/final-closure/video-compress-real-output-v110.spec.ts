@@ -22,8 +22,8 @@ test("browser compression never delivers a larger unrequested output",async({pag
  await area.getByRole("button",{name:"Start processing"}).click();
  const actions=page.getByTestId("result-file-actions");
  await expect(actions).toBeVisible({timeout:120000});
- await actions.getByRole("button",{name:"Send file",exact:true}).click();
- await expect(actions.getByRole("status")).toContainText("Export access confirmed");
+ // Desktop Chromium may not offer the Web Share API. Compression and download
+ // must work without pretending native sharing is supported.
  const download=page.waitForEvent("download");
  await actions.getByRole("button",{name:"Save file",exact:true}).click();
  const result=await download,bytes=await fs.readFile((await result.path())!);
