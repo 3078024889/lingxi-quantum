@@ -10,9 +10,10 @@ test('preview cannot index; production launch requires explicitly verified owned
  assert.ok(source.includes('AI_MARKET_DOMAIN_VERIFIED'));
  assert.ok(source.includes('AI_MARKET_CANONICAL_ORIGIN'));
  assert.ok(source.includes("process.env.VERCEL_ENV!=='preview'"));
- for(const domain of ['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn'])
-  assert.ok(source.includes(domain));
+ for(const domain of ['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn']){
+  assert.ok(source.includes(domain),domain+': canonical origin must be allowlisted');
   assert.ok(collector.includes(domain),domain+': GSC collector must accept only explicitly approved market hosts');
+ }
  assert.ok(source.includes("u.protocol!=='https:'"));
  assert.ok(source.includes("u.username||u.password||u.port||u.pathname!=='/'"));
  assert.ok(layout.includes("mayIndexMarket('zh')?verifiedMarketOrigin():null"));
