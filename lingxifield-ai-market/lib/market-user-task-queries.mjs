@@ -52,6 +52,7 @@ export const TASK_INTENTS=Object.freeze([
  {id:'document',pattern:/阅读pdf|分析合同|分析文档|长文档理解|知识库问答|document analysis|pdf question/i,ids:['claude','chatgpt','gemini','llamaindex','dify']},
  {id:'api',pattern:/调用api|python sdk|api开发|模型接口|api price|token price/i,ids:['openai-python','anthropic-sdk-python','deepseek','qwen','langchain','llamaindex','vllm']}
 ]);
+/** @type {Array<[string,RegExp]>} */
 const BRANDS=[
  ['chatgpt',/chatgpt/i],['claude',/claude/i],['gemini',/gemini/i],
  ['deepseek',/deepseek/i],['grok',/grok/i],['perplexity',/perplexity/i],
@@ -72,6 +73,7 @@ const BRANDS=[
 const fold=s=>String(s||'').normalize('NFKC').trim().toLocaleLowerCase();
 const normalize=s=>fold(s).replace(/[\s\p{P}\p{S}]/gu,'');
 export function questionForProduct(id){return PRODUCT_TASK_PHRASES[id]||[];}
+/** @returns {string[] | null} */
 export function matchingEditorialProductIds(query){
  const q=String(query||'').trim().slice(0,120);
  if(q.length<3)return null;
