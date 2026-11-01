@@ -61,7 +61,7 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await stampInput.setInputFiles({name:"sanitized-stamp.svg",mimeType:"image/svg+xml",buffer:Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" onload="alert(1)"><script>alert(2)</script><foreignObject><img xmlns="http://www.w3.org/1999/xhtml" src="https://invalid.example/pixel"/></foreignObject><circle cx="40" cy="40" r="25" fill="red"/></svg>')});
  const safeStamp=page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]').last();
  await expect(safeStamp).toBeVisible();
- await expect(safeStamp.locator("img")).toHaveAttribute("src",/^data:image\\/png/);
+ await expect(safeStamp.locator("img")).toHaveAttribute("src",/^data:image\/png/);
  expect(dialogs).toEqual([]);
  await page.getByRole("button",{name:"Delete",exact:true}).click();
  await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]')).toHaveCount(0);
