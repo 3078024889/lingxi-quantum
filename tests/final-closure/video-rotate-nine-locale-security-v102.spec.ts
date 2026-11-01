@@ -1,4 +1,4 @@
-import {test,expect} from "@playwright/test";
+import {test,expect} from "playwright/test";
 
 const cases=[
  {lang:"zh",angle:"旋转角度",clockwise:"顺时针 90°",resolution:"输出分辨率",fps:"输出帧率"},
