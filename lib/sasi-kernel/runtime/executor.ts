@@ -25,8 +25,10 @@ async function event(admin:SupabaseClient,input:{taskId:string;userId:string;ind
 }
 
 async function taskState(admin:SupabaseClient,input:{taskId:string;userId:string;patch:Record<string,unknown>}){
- const {error}=await admin.from("sasi_tasks").update(input.patch).eq("id",input.taskId).eq("user_id",input.userId);
- if(error)throw new Error(`SASI_TASK_UPDATE_FAILED:${error.code||"db"}`);
+ const {data,error}=await admin.from("sasi_tasks").update(input.patch).eq("id",input.taskId).eq("user_id",input.userId).select("id").maybeSingle();
+ // Supabase UPDATE can succeed with zero matched rows. Do not report a task
+ // finished unless the exact user-owned task row was actually updated.
+ if(error||!data)throw new Error(`SASI_TASK_UPDATE_FAILED:${error?.code||"TASK_NOT_FOUND"}`);
 }
 
 async function nodeState(admin:SupabaseClient,input:{taskId:string;userId:string;nodeId:string;state:string;patch?:Record<string,unknown>}){
