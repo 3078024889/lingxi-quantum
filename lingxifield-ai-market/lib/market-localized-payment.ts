@@ -74,7 +74,7 @@ export function localizedPaymentName(name:string,language:Language){
  if(/^naverpay/.test(n))return t.naverPay;
  if(/^link/.test(n))return t.link;
  if(language==='zh')return name;
- if(/[\\u4e00-\\u9fff]/.test(name)){
+ if(/[\u4e00-\u9fff]/.test(name)){
   const methods:string[]=[];
   if(/支付宝|Alipay/i.test(name))methods.push(t.alipay);
   if(/微信支付|WeChat Pay/i.test(name))methods.push(t.wechatPay);
