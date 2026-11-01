@@ -1012,8 +1012,11 @@ body{font-size:16px;line-height:1.6}
 .marketCompanyTeam{margin-top:12px;padding-top:10px;border-top:1px solid #e4eaf4;font-size:13px}
 .marketCompanyTeam p{line-height:1.65}
 .marketLocalizedCompany,.marketLocalizedApiRates{background:#fff;border:1px solid #e0e8f5;border-radius:12px;padding:16px;margin:12px 0}
-.marketLocalizedCompanyFacts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.marketLocalizedCompanyFacts :is(strong,a){display:inline-block;border:1px solid #e0e9f5;border-radius:7px;padding:7px 10px;font-size:13px;max-width:100%;overflow-wrap:anywhere}
+.marketLocalizedCompanyFacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:10px;align-items:stretch}
+.marketLocalizedCompanyFacts>span,.marketLocalizedCompanyFacts>a{display:flex;min-width:0;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:6px;padding:11px 12px;border:1px solid #e0e9f5;border-radius:9px;background:#f8fbff;overflow-wrap:anywhere}
+.marketLocalizedCompanyFacts small{font-size:14px;line-height:1.35;color:#647a95}
+.marketLocalizedCompanyFacts strong{display:block;max-width:100%;padding:0;border:0;font-size:14px;line-height:1.55;color:#173b68;overflow-wrap:anywhere}
+.marketLocalizedCompanyFacts a{display:inline-flex;align-self:flex-start;padding:0;border:0;background:transparent;font-size:14px;color:#1459bd}
 .marketLocalizedApiRates>p{line-height:1.65;font-size:14px}
 .marketLocalizedApiPlan{margin:14px 0;padding:12px;border-radius:8px;background:#f3f7fd}
 .marketLocalizedApiPlan p{line-height:1.65}
@@ -1122,3 +1125,24 @@ body{font-size:16px;line-height:1.6}
 .seoGeoOwnedMetrics small{font-size:11px;color:#66788d}
 .seoGeoOwnedMetrics>small{display:block;margin-top:9px;text-align:end}
 @media(max-width:560px){.seoGeoOwnedMetrics>div{grid-template-columns:repeat(2,minmax(0,1fr))}.seoGeoOwnedMetrics b{font-size:16px}}
+
+
+/* Suno plan comparison: keep subscription, quotas and rights visibly separate. */
+.sunoPlanCompare{display:grid;gap:12px;margin-top:10px}
+.sunoPlanCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:stretch}
+.sunoPlanCard{min-width:0;padding:14px;border:1px solid #d7e3f3;border-radius:11px;background:#fff;display:flex;flex-direction:column;gap:9px}
+.sunoPlan-pro{border-color:#9abce8}
+.sunoPlan-premier{border-color:#6f9dd6;background:#f7faff}
+.sunoPlanTitle{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:end}
+.sunoPlanTitle h3{margin:0;font-size:16px;color:#173d70}
+.sunoPlanTitle strong{font-size:22px;line-height:1.2;color:#0b2d59}
+.sunoPlanTitle small{grid-column:2;font-size:14px;color:#627b99;text-align:end}
+.sunoPlanAnnual{padding:7px 8px;border-radius:7px;background:#edf4ff;color:#244d7c;font-size:14px;line-height:1.5}
+.sunoPlanCard ul{margin:0;padding-inline-start:19px;display:grid;gap:6px}
+.sunoPlanCard li{font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.sunoPlanNote{margin:0;padding:10px 12px;border-radius:8px;background:#f5f8fd;color:#3c5878;font-size:14px;line-height:1.65}
+.sunoPlanSources{display:flex;flex-wrap:wrap;gap:10px 16px}
+.sunoPlanSources a{font-size:14px;font-weight:650}
+.marketPaymentNote{font-size:14px;line-height:1.7;margin:10px 0 0;color:#314e70}
+@media(max-width:820px){.sunoPlanCards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.sunoPlanCards{grid-template-columns:1fr}}
