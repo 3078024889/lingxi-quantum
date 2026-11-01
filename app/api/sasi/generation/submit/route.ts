@@ -33,7 +33,8 @@ export async function POST(req:NextRequest){
  // This legacy endpoint has no paid-quote reservation or usage settlement.
  // Fail closed unless operators explicitly enable local, unmetered generation;
  // paid/provider tasks must use the quote/entitlement-backed native job route.
- if(plan.externalModelRequired)return response({error:"PAID_GENERATION_AUTHORIZATION_REQUIRED",destination:"/sasi/drama"},402);
+ const nativeModelNode=plan.nodes.some(node=>node.executionClass==="semantic-generation"||String(node.capabilityId).endsWith("-native")||node.fallbackIds.some(id=>String(id).endsWith("-native")));
+ if(plan.externalModelRequired||nativeModelNode)return response({error:"PAID_GENERATION_AUTHORIZATION_REQUIRED",destination:"/sasi/drama"},402);
  if(process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED!=="true")
   return response({error:"LEGACY_GENERATION_UNAVAILABLE",destination:"/sasi/drama"},503);
  const executionInput={prompt:input.prompt,ratio:input.ratio,duration:input.duration,style:input.style};
