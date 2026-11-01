@@ -82,6 +82,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  async function addImage(f:File,asStamp=false,kind:"signature"|"stamp"="stamp"){
   setError("");setInkError("");
   try{
+   if(f.size>20*1024*1024)throw new Error("IMAGE_TOO_LARGE");
    if(asStamp){
     const prepared=await prepareSignatureOrStamp(f,kind,inkSensitivity);
     const ratio=prepared.width/prepared.height;
@@ -91,8 +92,10 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
     setOverlays(v=>[...v,{id,kind:"image",page:selectedPage,x:68,y:62,w,h,ratio,locked:true,opacity:1,data:prepared.dataUrl}]);setSelectedOverlayId(id);
     if(kind==="signature")setInkPreview({file:f,id,data:prepared.dataUrl});
    }else{
-    const data=await new Promise<string>((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result));r.onerror=()=>rej(new Error("IMAGE_READ_FAILED"));r.readAsDataURL(f)});
+    let data=await new Promise<string>((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result));r.onerror=()=>rej(new Error("IMAGE_READ_FAILED"));r.readAsDataURL(f)});
     const im=await new Promise<HTMLImageElement>((res,rej)=>{const x=new Image();x.onload=()=>res(x);x.onerror=rej;x.src=data});
+    if(!im.naturalWidth||!im.naturalHeight||im.naturalWidth*im.naturalHeight>40000000)throw new Error("IMAGE_DIMENSIONS_UNSAFE");
+    if(!["image/png","image/jpeg"].includes((f.type||"").toLowerCase())){const scale=Math.min(1,8000/Math.max(im.naturalWidth,im.naturalHeight)),canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(im.naturalWidth*scale));canvas.height=Math.max(1,Math.round(im.naturalHeight*scale));const ctx=canvas.getContext("2d");if(!ctx)throw new Error("CANVAS_UNAVAILABLE");ctx.drawImage(im,0,0,canvas.width,canvas.height);data=canvas.toDataURL("image/png");}
     const ratio=im.naturalWidth/im.naturalHeight,pageAspect=stageRef.current?.clientWidth&&stageRef.current?.clientHeight?stageRef.current.clientWidth/stageRef.current.clientHeight:0.707,w=22,h=Math.min(30,w*pageAspect/ratio),id=Date.now();
     setOverlays(v=>[...v,{id,kind:"image",page:selectedPage,x:68,y:62,w,h,ratio,locked:true,opacity:1,data}]);setSelectedOverlayId(id);
    }
