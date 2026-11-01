@@ -18,7 +18,7 @@ export async function GET(req:Request){
   if(local.source==='models.dev'&&Array.isArray(local.records)){
    const needle=query.toLowerCase(),pid=provider.toLowerCase();
    const filtered=local.records.filter((x:{name:string;modelId:string;providerName:string;providerId:string})=>(!pid||x.providerId.toLowerCase()===pid)&&(!needle||[x.name,x.modelId,x.providerName,x.providerId].some(v=>v.toLowerCase().includes(needle))));
-   const items=filtered.slice(cursor,cursor+limit).map((x:{id:string;name:string;providerName:string;inputUsdPerMillion:number|null;outputUsdPerMillion:number|null;contextLimit:number|null;outputLimit:number|null})=>({id:x.id,name:x.name,provider:x.providerName,inputPrice:x.inputUsdPerMillion,outputPrice:x.outputUsdPerMillion,context:x.contextLimit,maxOutput:x.outputLimit}));
+   const items=filtered.slice(cursor,cursor+limit).map((x:{id:string;name:string;providerName:string;inputUsdPerMillion:number|null;outputUsdPerMillion:number|null;contextLimit:number|null;outputLimit:number|null})=>({id:x.id,name:x.name,provider:x.providerName,inputPrice:x.inputUsdPerMillion,outputPrice:x.outputUsdPerMillion,context:Number.isFinite(x.contextLimit)&&x.contextLimit>0?x.contextLimit:null,maxOutput:Number.isFinite(x.outputLimit)&&x.outputLimit>0?x.outputLimit:null}));
    return NextResponse.json({total:filtered.length,cursor,limit,nextCursor:cursor+items.length<filtered.length?cursor+items.length:null,items,source:local.sourceUrl,sourceCollectedAt:local.sourceCollectedAt,scope,verification:'third_party_aggregated_unverified_against_provider',priceUnit:'USD per 1 million tokens, subject to source verification'},{headers:{'Cache-Control':'no-store'}});
   }
  }catch{}
@@ -32,7 +32,7 @@ export async function GET(req:Request){
    for(const [mid,m] of Object.entries(p.models||{})){
     const name=m?.name||mid;
     if(query&&![name,mid,p.name||pid,pid].some(x=>x.toLowerCase().includes(query.toLowerCase())))continue;
-    if(total>=cursor&&results.length<limit)results.push({id:pid+'/'+mid,provider:p.name||pid,name,inputPrice:Number.isFinite(m?.cost?.input)?m.cost!.input!:null,outputPrice:Number.isFinite(m?.cost?.output)?m.cost!.output!:null,context:Number.isFinite(m?.limit?.context)?m.limit!.context!:null,maxOutput:Number.isFinite(m?.limit?.output)?m.limit!.output!:null});
+    if(total>=cursor&&results.length<limit)results.push({id:pid+'/'+mid,provider:p.name||pid,name,inputPrice:Number.isFinite(m?.cost?.input)?m.cost!.input!:null,outputPrice:Number.isFinite(m?.cost?.output)?m.cost!.output!:null,context:Number.isFinite(m?.limit?.context)&&m.limit!.context!>0?m.limit!.context!:null,maxOutput:Number.isFinite(m?.limit?.output)&&m.limit!.output!>0?m.limit!.output!:null});
     total++;
    }
   }
