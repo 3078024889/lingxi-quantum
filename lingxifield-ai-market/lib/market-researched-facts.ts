@@ -272,7 +272,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "price": "Suno Pro 年付折合约 $8/月（年付）；Premier 和月付另有套餐，商用只覆盖订阅生效期间作品",
     "priceSource": "https://suno.com/pricing",
     "free": "免费方案每天 50 积分，适用免费模型与创作额度；免费生成音乐不附商用授权",
-    "freeSource": "https://suno.com/pricing"
+    "freeSource": "https://suno.com/pricing",
+    "commercial": "Free 生成作品仅供非商用。Pro/Premier 付费期生成并按当期规则取得下载的作品可用于商用；免费期创作不会因后续订阅自动获得追溯授权；Remix 等功能另有限制。",
+    "commercialSource": "https://suno.com/terms"
   },
   "perplexity": {
     "payments": [
@@ -367,7 +369,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "ChatGPT 消费者访问国家和 OpenAI API 支持名单不同；官方国家名单按产品单独核对",
     "regionSource": "https://help.openai.com/en/articles/7947663-chatgpt-supported-countries",
     "models": "ChatGPT 可选择适用 GPT 模型；Codex 是运行在独立编程入口的开发代理，不是单一 GPT 模型，CLI、IDE、云端可用型号随账户变化",
-    "modelsSource": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan"
+    "modelsSource": "https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan",
+    "commercial": "可按适用 OpenAI 使用条款使用输出；用户需拥有输入素材权利，输出可能不唯一，第三方内容权利不自动取得；ChatGPT 个人服务与 API/企业合同分别适用条款。",
+    "commercialSource": "https://openai.com/policies/terms-of-use/"
   },
   "claude": {
     "price": "Claude Free $0；Pro $20/月（月付），年付 $200/年；API 费用另计",
@@ -377,7 +381,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "Claude 网页与 API 需按官方支持国家分别判断；Pro 个人订阅和商业 API 不互含",
     "regionSource": "https://support.claude.com/en/articles/8114491-get-started-with-claude",
     "models": "Claude 网页/工作台提供 Claude 模型家族；模型是否可选取决于个人、团队和 API 套餐",
-    "modelsSource": "https://claude.com/pricing"
+    "modelsSource": "https://claude.com/pricing",
+    "commercial": "Claude Free/Pro/Max 适用消费者条款，Claude API 与企业服务适用商业条款；业务使用、输出权利与输入素材须按实际服务合同判断。",
+    "commercialSource": "https://www.anthropic.com/legal"
   },
   "gemini": {
     "price": "Gemini 网页有免费功能；Google AI Pro US$19.99/月（美国/部分地区参考），Gemini API 另按 Token 计费",
@@ -416,7 +422,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "官网和 Discord 订阅相通，Stripe 结算仅美元；具体卡与钱包依结账国家而定",
     "regionSource": "https://docs.midjourney.com/hc/en-us/articles/27868831972365-Accepted-Payment-Methods",
     "models": "Midjourney 提供图像与短视频生成模型、图像风格控制、角色参考；版本与视频额度按套餐公布",
-    "modelsSource": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans"
+    "modelsSource": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
+    "commercial": "生成作品可按订阅条款商用；年营收超过 100 万美元的企业及其员工，企业商用须使用 Pro 或 Mega。放大他人作品不转移原作者权利。",
+    "commercialSource": "https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service"
   },
   "ollama": {
     "price": "Ollama 本地运行免费；云模型按百万 Tokens 用量计费；Pro $20/月、Max $100/月、Team $500/月，含不同额度云端积分",
@@ -426,7 +434,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "本地软件可自行部署；Ollama 云端数据处理与在线模型服务可能涉及美国、欧洲、新加坡等区域",
     "regionSource": "https://ollama.com/pricing",
     "models": "Ollama 本地运行用户选择的开源模型；云端可按不同模型输入/缓存/输出 Tokens 价格付费",
-    "modelsSource": "https://ollama.com/pricing"
+    "modelsSource": "https://ollama.com/pricing",
+    "commercial": "Ollama 软件本身采用 MIT 许可，可在保留版权与许可声明条件下用于商业软件；下载的具体模型权重、数据和第三方服务分别遵守自己的许可证。",
+    "commercialSource": "https://github.com/ollama/ollama/blob/master/LICENSE"
   },
   "replit": {
     "price": "Replit Starter 免费；Core $25/月（月付），年付折合 $20/月（含 $25/月积分）；Pro $100/月（月付），年付折合 $95/月",
@@ -454,7 +464,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "region": "Runway 网页与 App 订阅和具体模型地区规则分开；支付宝、微信等钱包是否出现依所选国家结算",
     "regionSource": "https://help.runwayml.com/hc/en-us/articles/30657959470483-What-payment-methods-are-available",
     "models": "Gen-4.5 提供文字/图片生成视频，网页 Standard 及以上可用，12 积分/秒，时长 2–10 秒",
-    "modelsSource": "https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5"
+    "modelsSource": "https://help.runwayml.com/hc/en-us/articles/46974685288467-Creating-with-Gen-4-5",
+    "commercial": "Runway 官方说明用户可将其生成内容用于广告、变现视频、社交平台和影视等商业场景，无需向 Runway 强制署名；上传的素材和第三方权利仍须合法。",
+    "commercialSource": "https://help.runwayml.com/hc/en-us/articles/18927776141715-Usage-rights"
   }
 };
 export const MARKET_RESEARCH_CHECKED_AT='2026-10-31';
