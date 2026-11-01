@@ -63,7 +63,7 @@ test('V41 country and commercial answers are explicit and scope-correct',async()
  for(const id of ['anthropic-sdk-python','claude','suno','midjourney','runway','chatgpt','comfyui','ollama']){
    assert.ok(facts.includes(id+':')||facts.includes('"'+id+'":'),id);
  }
- assert.match(facts,/https:\/\/help\.suno\.com/);
+ assert.match(facts,/https:\/\/suno\.com\/terms/);
  assert.match(facts,/Apache-2\.0/);
  assert.match(facts,/GPL-3\.0/);
  assert.match(facts,/MIT/);
