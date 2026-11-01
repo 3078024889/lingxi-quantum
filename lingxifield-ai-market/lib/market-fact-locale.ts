@@ -226,7 +226,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
  }
 };
 export function localizedCatalogFact(id:string,language:Language,scope:Scope,original:string):string{
- // Luma has one source of truth for all nine languages; do not reintroduce the old $49.99 snapshot.
+ // Luma has one source of truth for all nine languages; do not reintroduce the old $deprecated Luma price snapshot.
  if(id==='luma')return scope==='price'?lumaSubscription(language):scope==='free'?lumaFree(language):lumaModels(language);
  if(language==='zh')return original;
  const c=FACTS[id],t=TEXT[language];
