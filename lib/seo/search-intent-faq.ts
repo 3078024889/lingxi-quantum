@@ -195,7 +195,7 @@ const OVERRIDES: Record<string, QOverride> = {
     zh: [
       {q:"PDF怎么转Excel？",a:"上传 PDF 后提取其中的表格并生成 XLSX，完成后检查行列、数字和日期格式。"},
       {q:"PDF表格怎么转换成Excel？",a:"选择 PDF 转 Excel 工具，处理后打开 XLSX 检查表头、行列和数字是否正确。"},
-      {q:"扫描PDF可以转Excel吗？",a:"扫描件没有文字层时通常需要 OCR；当前工具会根据文件类型提示合适的处理方式。"},
+      {q:"扫描PDF可以转Excel吗？",a:"扫描件没有文字层时通常需要先识别文字；上传后按页面提示选择对应工具。"},
       {q:"PDF转Excel后数据错位怎么办？",a:"复杂表格、合并单元格和扫描件更容易出现错位。请保留原 PDF，并逐页核对转换后的行列和数字。"},
     ],
     en: [
@@ -266,7 +266,7 @@ const OVERRIDES: Record<string, QOverride> = {
       {q:"怎么删除图片EXIF？",a:"选择图片并执行 EXIF 清理，处理后保存新的图片文件。"},
       {q:"怎么删除照片GPS位置？",a:"照片中的 GPS 信息通常属于 EXIF 元数据，可使用图片 EXIF 清理工具删除。"},
       {q:"图片元数据怎么清除？",a:"上传图片后执行元数据清理，完成后使用新文件分享。"},
-      {q:"删除EXIF会影响图片画质吗？",a:"清理元数据本身不是为了改变画面内容，但导出格式和处理方式仍应以最终文件为准。"},
+      {q:"删除EXIF会影响图片画质吗？",a:"清理元数据不以改变画面为目的；保存后可以再次检查清晰度和文件格式。"},
     ],
     en: [
       {q:"How do I remove EXIF from a photo?",a:"Select the image, run EXIF cleanup, and save the resulting image as a new file."},
@@ -353,7 +353,7 @@ function genericItems(slug:string,locale:SeoLocale):SearchFaqItem[] {
     "تحقق من السعر الحالي في صفحة الأداة؛ تعرض الخطوات المدفوعة التكلفة قبل التنفيذ."
   )[locale];
   const answerPrivacy = L(
-    "处理方式以工具页面显示为准；本地工具会在浏览器中直接处理，在线工具会明确说明在线处理方式。",
+    "打开工具即可查看如何使用：可在浏览器内完成的操作无需上传文件，需要上传的功能会在使用前说明。",
     "The tool page states the processing method. Local tools process in the browser; online tools identify when online processing is used.",
     "処理方式はツールページに表示されます。ローカル処理はブラウザ内、オンライン処理はオンライン処理であることを明示します。",
     "처리 방식은 도구 페이지에 표시됩니다. 로컬 도구는 브라우저에서 처리하고 온라인 도구는 온라인 처리를 명시합니다.",
