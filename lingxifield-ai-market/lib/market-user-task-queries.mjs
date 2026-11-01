@@ -5,7 +5,7 @@
  */
 export const PRODUCT_TASK_PHRASES=Object.freeze({
  'anthropic-sdk-python':['Python怎么调用Claude API','Claude Python SDK异步流式接口','Anthropic SDK 怎么安装'],
- chatgpt:['ChatGPT免费版能做什么','哪个AI能帮我写邮件和研究资料','ChatGPT能上传文档分析吗'],
+ chatgpt:['ChatGPT免费版能做什么','哪个AI能帮我写邮件和研究资料','ChatGPT能上传文档分析吗','Codex能帮我开发网站吗','Codex能自动修复BUG并运行测试吗','Codex可以审查GitHub PR吗'],
  claude:['Claude适合长文档分析吗','Claude怎么写代码','Claude和ChatGPT有什么区别'],
  comfyui:['ComfyUI如何本地生成图片','免费开源AI绘画工作流','ComfyUI怎么装节点'],
  deepseek:['DeepSeek如何免费使用','DeepSeek编程推理能力','DeepSeek API怎么计费'],
@@ -54,7 +54,7 @@ export const TASK_INTENTS=Object.freeze([
 ]);
 /** @type {Array<[string,RegExp]>} */
 const BRANDS=[
- ['chatgpt',/chatgpt/i],['claude',/claude/i],['gemini',/gemini/i],
+ ['chatgpt',/chatgpt|codex/i],['claude',/claude/i],['gemini',/gemini/i],
  ['deepseek',/deepseek/i],['grok',/grok/i],['perplexity',/perplexity/i],
  ['qwen',/qwen|千问/i],['runway',/runway/i],['luma',/\bluma\b/i],
  ['midjourney',/midjourney/i],['kling',/可灵|\bkling\b/i],
