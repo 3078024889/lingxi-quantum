@@ -77,7 +77,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  function commitPageInput(){const n=Number(selectedPageInput);if(Number.isInteger(n)&&n>=1&&n<=pages){setSelectedPage(n);setSelectedPageInput(String(n));}else setSelectedPageInput(String(selectedPage));}
  function patch(id:number,k:Partial<Overlay>){setOverlays(v=>v.map(o=>o.id===id?{...o,...k}:o));}
  function patchDimension(id:number,key:"w"|"h",value:number){const rect=stageRef.current?.getBoundingClientRect();setOverlays(v=>v.map(o=>{if(o.id!==id)return o;const safe=Math.max(1,Math.min(100,Number.isFinite(value)?value:o[key]));if(o.kind==="image"&&o.ratio&&o.locked!==false&&rect?.width&&rect?.height){if(key==="w"){const pixelWidth=safe/100*rect.width;return{...o,w:safe,h:Math.max(1,Math.min(100,pixelWidth/o.ratio/rect.height*100))};}const pixelHeight=safe/100*rect.height;return{...o,h:safe,w:Math.max(1,Math.min(100,pixelHeight*o.ratio/rect.width*100))};}return{...o,[key]:safe};}));}
- function addText(){const value=text.trim();if(!value)return;const id=Date.now();setOverlays(v=>[...v,{id,kind:"text",page:selectedPage,x:10,y:12,w:55,h:8,text:value,size:14}]);setSelectedOverlayId(id);setEditingTextId(null);setText("");}
+ function addText(){const value=text.trim();if(!value)return;const id=Date.now();setOverlays(v=>[...v,{id,kind:"text",page:selectedPage,x:10,y:12,w:55,h:8,text:value,size:14}]);setSelectedOverlayId(null);setEditingTextId(null);setText("");}
  function addCover(){const id=Date.now();setOverlays(v=>[...v,{id,kind:"cover",page:selectedPage,x:10,y:12,w:35,h:8}]);setSelectedOverlayId(id);}
  async function addImage(f:File,asStamp=false,kind:"signature"|"stamp"="stamp"){
   setError("");setInkError("");
