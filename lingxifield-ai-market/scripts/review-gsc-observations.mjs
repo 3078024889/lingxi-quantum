@@ -40,7 +40,7 @@ function validatePendingRecord(row,{expectedOrigin,expectedProperty,knownIds}){
  if(typeof row.id!=='string'||!/^gsc-[a-f0-9]{24}$/.test(row.id))throw new Error('GSC_ID_INVALID');
  if(row.sourceProperty!==expectedProperty||!propertyMatchesOrigin(row.sourceProperty,expectedOrigin))throw new Error('GSC_PROPERTY_MISMATCH');
  if(row.sourceUrl!==GSC_SOURCE)throw new Error('GSC_SOURCE_URL_INVALID');
- if(typeof row.sourceDate!=='string'||!/^\\d{4}-\\d{2}-\\d{2}$/.test(row.sourceDate)||!Number.isFinite(Date.parse(row.sourceDate+'T00:00:00Z')))throw new Error('GSC_DATE_INVALID');
+ if(typeof row.sourceDate!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(row.sourceDate)||!Number.isFinite(Date.parse(row.sourceDate+'T00:00:00Z')))throw new Error('GSC_DATE_INVALID');
  if(row.observedAt!==row.sourceDate+'T12:00:00Z')throw new Error('GSC_OBSERVATION_DATE_MISMATCH');
  if(typeof row.query!=='string'||safeGscQuery(row.query)!==row.query)throw new Error('GSC_QUERY_NOT_SAFE_OR_NORMALIZED');
  if(row.country!=='GLOBAL'||!LOCALES.has(row.language)||row.sponsored!==false)throw new Error('GSC_DIMENSION_INVALID');
@@ -110,7 +110,7 @@ export function mergeReviewedObservations(existing,approved){
 }
 
 function readJson(file){return JSON.parse(fs.readFileSync(path.resolve(file),'utf8'));}
-function usage(){process.stdout.write('Usage: node scripts/review-gsc-observations.mjs <pending.json> <review-manifest.json> [--confirm-publish]\\n');}
+function usage(){process.stdout.write('Usage: node scripts/review-gsc-observations.mjs <pending.json> <review-manifest.json> [--confirm-publish]\n');}
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
  const [, ,pendingPath,manifestPath,...flags]=process.argv;
  if(!pendingPath||!manifestPath||flags.some(x=>x!=='--confirm-publish')){usage();process.exitCode=2;}
@@ -126,9 +126,9 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const summary={approved:reviewed.approved.length,rejected:reviewed.rejected.length,added:merged.added,duplicates:merged.duplicate,total:merged.result.length,reviewer:reviewed.reviewer,published:flags.includes('--confirm-publish')};
   if(flags.includes('--confirm-publish')){
    const temp=outputFile+'.tmp';
-   fs.writeFileSync(temp,JSON.stringify(merged.result,null,2)+'\\n','utf8');
+   fs.writeFileSync(temp,JSON.stringify(merged.result,null,2)+'\n','utf8');
    fs.renameSync(temp,outputFile);
   }
-  process.stdout.write(JSON.stringify(summary,null,2)+'\\n');
- }catch(error){process.stderr.write(String(error?.message||error)+'\\n');process.exitCode=2;}
+  process.stdout.write(JSON.stringify(summary,null,2)+'\n');
+ }catch(error){process.stderr.write(String(error?.message||error)+'\n');process.exitCode=2;}
 }
