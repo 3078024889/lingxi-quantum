@@ -17,7 +17,7 @@ test('unused module audit is non-destructive and stays in AI market directory',a
 test('staging indexing is blocked unless an explicit reviewed-locale allowlist is enabled',async()=>{
  const policy=await read('lib/market-index-policy.ts');
  const robots=await read('app/robots.ts'),sitemap=await read('app/sitemap.ts');
- const layout=await read('app/layout.tsx'),localized=await read('app/[lang]/ai/page.tsx');
+ const layout=await read('app/(default)/layout.tsx'),localized=await read('app/[lang]/ai/page.tsx');
  assert.match(policy,/AI_MARKET_INDEX_READY/);
  assert.match(policy,/AI_MARKET_INDEXED_LOCALES/);
  assert.match(policy,/VERCEL_ENV!=='preview'/);
