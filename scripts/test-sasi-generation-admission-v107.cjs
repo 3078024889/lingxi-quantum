@@ -21,7 +21,9 @@ for(const bad of [
  {kind:"video",prompt:"Valid",duration:"Infinity"},{kind:"video",prompt:"Valid",duration:6.5},
  {kind:"image",prompt:"Valid",style:"X".repeat(181)},{kind:"image",prompt:"Valid",ratio:"4:3"}
 ])assert.throws(()=>parse(bad),/INVALID_GENERATION_REQUEST/);
-let authenticated=true,origin=true,guard={ok:true},writes=0,executions=0,taskFails=0,failInit=false;
+let authenticated=true,origin=true,guard={ok:true},writes=0,executions=0,taskFails=0,failInit=false,externalModelRequired=false;
+const previousLegacyFlag=process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED;
+delete process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED;
 const route=compile("app/api/sasi/generation/submit/route.ts",{
  "next/server":{NextResponse:{json:(body,opts={})=>({body,status:opts.status||200,headers:opts.headers})}},
  "@/lib/supabase/server":{createClient:()=>({auth:{getUser:async()=>({data:{user:authenticated?{id:"user-1"}:null}})}})},
@@ -30,7 +32,7 @@ const route=compile("app/api/sasi/generation/submit/route.ts",{
  "@/lib/security/bounded-request-json":bounded,
  "@/lib/security/abuse-guard":{enforceAbuseGuard:async()=>guard},
  "@/lib/sasi-kernel/runtime/generation-request":parser,
- "@/lib/sasi-kernel/runtime/plan":{buildSasiExecutionPlan:()=>({nodes:[{nodeId:"n1"}]})},
+ "@/lib/sasi-kernel/runtime/plan":{buildSasiExecutionPlan:()=>({nodes:[{nodeId:"n1"}],externalModelRequired})},
  "@/lib/sasi-kernel/runtime/task-store":{createRuntimeTask:async()=>{writes++;if(failInit)throw Error("PARTIAL_TASK_INIT")},failRuntimeTask:async()=>{taskFails++}},
  "@/lib/sasi-kernel/runtime/executor":{executeSasiPlan:async()=>{executions++;return {status:"succeeded",output:{kind:"fixture"}}}}
 });
@@ -46,6 +48,17 @@ const req=(body,headers={})=>new Request("https://test.invalid/api/sasi/generati
  guard={ok:false,status:503,error:"ABUSE_GUARD_UNAVAILABLE"};
  assert.equal((await route.POST(req({kind:"video",prompt:"Scene",duration:8}))).status,503);
  guard={ok:true};
+ const denied=await route.POST(req({kind:"video",prompt:"Scene",duration:8,ratio:"16:9"}));
+ assert.equal(denied.status,503,"unmetered legacy generation must be disabled by default");
+ assert.equal(denied.body.error,"LEGACY_GENERATION_UNAVAILABLE");
+ assert.equal(writes,0);assert.equal(executions,0);
+ externalModelRequired=true;
+ process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED="true";
+ const paidDenied=await route.POST(req({kind:"video",prompt:"Scene",duration:8,ratio:"16:9"}));
+ assert.equal(paidDenied.status,402,"externally billable tasks require native entitlement");
+ assert.equal(paidDenied.body.error,"PAID_GENERATION_AUTHORIZATION_REQUIRED");
+ assert.equal(writes,0);assert.equal(executions,0);
+ externalModelRequired=false;
  const good=await route.POST(req({kind:"video",prompt:"Scene",duration:8,ratio:"16:9"}));
  assert.equal(good.status,200);assert.equal(good.body.ok,true);
  assert.equal(writes,1);assert.equal(executions,1);assert.equal(taskFails,0);
@@ -55,5 +68,7 @@ const req=(body,headers={})=>new Request("https://test.invalid/api/sasi/generati
  assert.equal(partial.status,503);assert.equal(partial.body.error,"GENERATION_UNAVAILABLE");
  assert.equal(taskFails,1,"partial task initialization must trigger a failed-state compensation");
  assert.equal(executions,1,"worker must not run after partial initialization failure");
- console.log("SASI_GENERATION_ADMISSION_GATE=PASS: strict input, 12KB bounded upload, origin/auth/quotas precede worker, no unauthorized writes");
+ if(previousLegacyFlag===undefined)delete process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED;
+ else process.env.SASI_LEGACY_UNMETERED_GENERATION_ENABLED=previousLegacyFlag;
+ console.log("SASI_GENERATION_ADMISSION_GATE=PASS: fail-closed unmetered default, paid worker denied, strict input, 12KB bound, auth/quotas precede worker");
 })().catch(error=>{console.error(error);process.exitCode=1});
