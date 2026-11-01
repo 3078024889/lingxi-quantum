@@ -35,7 +35,7 @@ export async function renderPdfPage(pdf:any,pageNumber:number,scale=1.5,pixelRat
   const ctx=canvas.getContext("2d",{alpha:false});
   if(!ctx)throw new Error("Canvas is not available.");
   await page.render({canvasContext:ctx,viewport,transform:outputScale===1?undefined:[outputScale,0,0,outputScale,0,0]}).promise;
-  return {pageNumber,canvas,width:viewport.width,height:viewport.height};
+  return {pageNumber,canvas,width:canvas.width,height:canvas.height};
 }
 
 export function canvasToBlob(canvas:HTMLCanvasElement,type="image/jpeg",quality=.9){
