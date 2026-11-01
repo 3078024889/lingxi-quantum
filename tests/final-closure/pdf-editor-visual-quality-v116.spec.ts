@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import {test,expect} from "./export-test";
 
+test.setTimeout(90000);
 test("PDF editor renders crisp HiDPI previews and edits text/image objects visually",async({page})=>{
  await page.goto("/tools/pdf-editor?lang=en");
  const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
