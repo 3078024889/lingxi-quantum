@@ -15,7 +15,7 @@ async function main(){
  const valid={title:'My business',files:[{path:'index.html',content:html('Home','<a href="about.html">About us</a>')},{path:'about.html',content:html('About us','<a href="index.html">Home</a>')}]};
  assert.equal(validate(valid).pageCount,2);assert.equal(validate(valid).spec.pages.length,2);
  const one=content=>({title:'Test',html:content});
- for(const injection of ['<script>alert(1)</script>','<form action="/fake"></form>','<img src="//tracker.example/a">','<meta http-equiv="refresh" content="0;url=https://evil.example">','<a href="javascript:alert(1)">Open</a>','<a href="#">Learn more</a>','<a href="missing.html">About</a>','<a href="#missing">More</a>'])assert.throws(()=>validate(one(html('Test',injection))),/WEBSITE_/);
+ for(const injection of ['<script>alert(1)</script>','<form action="/fake"></form>','<button>Fake action</button>','<input placeholder="Fake login">','<select><option>Fake option</option></select>','<img src="//tracker.example/a">','<meta http-equiv="refresh" content="0;url=https://evil.example">','<a href="javascript:alert(1)">Open</a>','<a href="#">Learn more</a>','<a href="missing.html">About</a>','<a href="#missing">More</a>'])assert.throws(()=>validate(one(html('Test',injection))),/WEBSITE_/);
  assert.throws(()=>validate({...valid,files:[valid.files[0],valid.files[0]]}),/WEBSITE_FILE_INVALID/);
  assert.throws(()=>validate({...valid,files:[{path:'../index.html',content:html('Test')}]}),/WEBSITE_/);
  assert.throws(()=>validate(one('<html><body>Incomplete</body></html>')),/WEBSITE_PAGE_INCOMPLETE/);
