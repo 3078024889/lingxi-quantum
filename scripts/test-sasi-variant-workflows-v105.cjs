@@ -3,9 +3,9 @@
 const fs=require("node:fs"),assert=require("node:assert/strict"),ts=require("typescript"),vm=require("node:vm");
 const source=fs.readFileSync("lib/sasi/original-variant-workflows.ts","utf8");
 const compiled=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-const module={exports:{}};
-vm.runInNewContext(compiled,{exports:module.exports,module,Intl,Number,Array,Object,String,Error},{timeout:2000});
-const {parseStoryboardLines,compileStoryboardVariants,estimatedWordCues}=module.exports;
+const sandboxModule={exports:{}};
+vm.runInNewContext(compiled,{exports:sandboxModule.exports,module:sandboxModule,Intl,Number,Array,Object,String,Error},{timeout:2000});
+const {parseStoryboardLines,compileStoryboardVariants,estimatedWordCues}=sandboxModule.exports;
 const scenes=parseStoryboardLines("8 | {{hook}} {{product}} | Front shot\n9 | {{cta}} | Product detail");
 assert.equal(scenes.length,2);assert.equal(scenes[0].seconds,8);
 const cfg={scenes,hooks:["New angle","Another angle"],product:"SASI",cta:"Explore today",locale:"zh",count:100};
