@@ -12,4 +12,10 @@ test('consumer SEO/GEO board hides empty counters and only renders reviewed comp
  assert.ok(evidence.includes('observations as unknown[]).filter(validObservation)'));
  assert.ok(evidence.includes('o.reviewed!==true'));
  assert.ok(evidence.includes("status:seoGeoObservations.length?'partial_evidence':'awaiting_independent_measurements'"));
+ assert.ok(evidence.includes('gscImpressions'));
+ assert.ok(evidence.includes('gscAveragePosition'));
+ assert.ok(evidence.includes('gscCtr'));
+ assert.ok(board.includes('coverage.gscObservations>0'));
+ assert.ok(board.includes('Our Google Search performance'));
+ assert.ok(board.includes('本站 Google 搜索表现'));
 });
