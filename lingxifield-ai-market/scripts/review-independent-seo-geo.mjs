@@ -38,7 +38,8 @@ function validateCapture(capture,knownIds){
  if(!validDate(capture.observedAt))throw new Error('CAPTURE_TIMESTAMP_INVALID');
  if(typeof capture.country!=='string'||!(/^([A-Z]{2}|GLOBAL)$/.test(capture.country)))throw new Error('CAPTURE_COUNTRY_INVALID');
  if(!languages.has(capture.language))throw new Error('CAPTURE_LANGUAGE_INVALID');
- if(typeof capture.query!=='string'||!capture.query.trim()||capture.query.length>512)throw new Error('CAPTURE_QUERY_INVALID');\n if(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}|(?:\\+?\\d[\\d .()-]{7,}\\d)/i.test(capture.query))throw new Error('CAPTURE_QUERY_PRIVACY_RISK');
+ if(typeof capture.query!=='string'||!capture.query.trim()||capture.query.length>512)throw new Error('CAPTURE_QUERY_INVALID');
+ if(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|(?:\+?\d[\d .()-]{7,}\d)/i.test(capture.query))throw new Error('CAPTURE_QUERY_PRIVACY_RISK');
  if(typeof capture.engine!=='string'||!capture.engine.trim()||capture.engine.length>100)throw new Error('CAPTURE_ENGINE_INVALID');
  if(typeof capture.methodVersion!=='string'||!capture.methodVersion.trim()||capture.methodVersion.length>80)throw new Error('CAPTURE_METHOD_INVALID');
  if(capture.source==='independent_serp'&&!['Google','Bing'].includes(capture.engine))throw new Error('SERP_ENGINE_UNSUPPORTED');
