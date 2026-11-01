@@ -8,7 +8,7 @@ import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {toolUiText} from "@/lib/tool-ui-i18n";
+import {videoUiText} from "@/lib/tools/media/video-labels";
 import {workbenchCopy} from "@/lib/tools/workbench-i18n-v1473";
 import {safeFilename} from "@/lib/tools/shared/download";
 
@@ -20,7 +20,7 @@ const SCALE:Record<Exclude<Resolution,"source">,string>={"1080":"-2:1080","720":
 
 export default function VideoToolkitWorkbench({initialMode="compress",standalone=false}:{initialMode?:Mode;standalone?:boolean}){
  const[hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
- const{lang}=useLingxiLang();const t=(zh:string,en:string)=>toolUiText(lang,zh,en);
+ const{lang}=useLingxiLang();const t=(zh:string,en:string)=>videoUiText(lang,zh,en);
  const[files,setFiles]=useState<File[]>([]),[mode,setMode]=useState<Mode>(initialMode),[start,setStart]=useState(0),[duration,setDuration]=useState(30),[preset,setPreset]=useState<CompressPreset>("balanced"),[resolution,setResolution]=useState<Resolution>("source"),[fps,setFps]=useState(0),[rotation,setRotation]=useState<"90"|"180"|"270">("90"),[speed,setSpeed]=useState(1),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]);
  const ff=useRef<any>(null);
 
