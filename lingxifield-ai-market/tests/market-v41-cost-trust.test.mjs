@@ -517,7 +517,7 @@ test('all 32 product payment methods render without untranslated Chinese across 
    for(const method of fact.payments){
     const label=localizedPaymentName(method,language);
     assert.ok(typeof label==='string'&&label.trim().length>1,id+':'+language+':'+method);
-    if(language!=='zh')assert.doesNotMatch(label,/[\\u4e00-\\u9fff]/,id+':'+language+':'+method);
+    if(language!=='zh')assert.doesNotMatch(label,/[\u4e00-\u9fff]/,id+':'+language+':'+method);
    }
   }
  }
