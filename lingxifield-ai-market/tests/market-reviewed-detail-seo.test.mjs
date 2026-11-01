@@ -8,7 +8,9 @@ test('preview is noindex; production sitemap requires source-verified localized 
  const policy=await read('lib/market-index-policy.ts');
  const sitemap=await read('app/sitemap.ts');
  assert.match(detail,/mayIndexMarket\('zh'\)/);
- assert.match(detail,/marketCanonicalOrigin\+'\/zh\/platform\/'/);
+ assert.ok(detail.includes("const indexable=Boolean(product&&capabilityProfile(id)&&mayIndexMarket('zh'))"));
+ assert.ok(detail.includes('alternates:indexable?'));
+ assert.ok(!detail.includes('alternates:product?'));
  assert.match(localized,/robots:\{index:robots,follow:robots\}/);
  assert.match(localized,/marketLocales\.flatMap/);
  assert.match(localized,/SoftwareApplication/);
