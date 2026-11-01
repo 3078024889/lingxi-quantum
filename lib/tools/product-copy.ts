@@ -126,7 +126,7 @@ export const TOOL_INTROS = {
     "es": "Elimina EXIF, GPS y otros metadatos de las imágenes para proteger la privacidad.",
     "pt": "Remova EXIF, GPS e outros metadados das imagens para proteger a privacidade.",
     "ar": "أزل بيانات EXIF وGPS والبيانات الوصفية الأخرى من الصور لحماية الخصوصية."
-  }
+  },
 
  "ai-image-check":{
   zh:"验证图片 C2PA 来源签名，并可选分析 AI 生成特征；检测指标不是图片真伪的证明。",
