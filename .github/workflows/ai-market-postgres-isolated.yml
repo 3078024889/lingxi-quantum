@@ -138,7 +138,7 @@ jobs:
             v_result:=public.ai_market_submit_visitor_feedback(v_doc,v_sig);
             IF (v_result->>'published')::boolean IS DISTINCT FROM true
             THEN RAISE EXCEPTION 'SAFE_FEEDBACK_NOT_AUTO_PUBLISHED'; END IF;
-            SELECT status INTO v_status FROM public.ai_market_visitor_feedback WHERE request_nonce=v_nonce;
+            SELECT status INTO v_status FROM public.ai_market_visitor_feedback WHERE id=(v_result->>'id')::uuid;
             IF v_status IS DISTINCT FROM 'approved'
             THEN RAISE EXCEPTION 'SAFE_FEEDBACK_STATUS_INVALID'; END IF;
             BEGIN
@@ -187,8 +187,7 @@ jobs:
             v_pending:=public.ai_market_pending_feedback(30);
             IF jsonb_array_length(v_pending->'items')<1
             THEN RAISE EXCEPTION 'VERIFIED_MODERATOR_CANNOT_READ_PENDING'; END IF;
-            SELECT id INTO v_feedback_id FROM public.ai_market_visitor_feedback
-              WHERE status='pending' AND body ILIKE '%Telegram%' LIMIT 1;
+            v_feedback_id:=(v_pending->'items'->0->>'id')::uuid;
             IF v_feedback_id IS NULL THEN RAISE EXCEPTION 'PENDING_FEEDBACK_FIXTURE_MISSING'; END IF;
             v_result:=public.ai_market_moderate_feedback(v_feedback_id,'approved','isolated CI review');
             IF v_result->>'status' IS DISTINCT FROM 'approved'
