@@ -90,11 +90,3 @@ end
 $$;
 revoke all on function public.ai_market_submit_visitor_feedback(jsonb,text) from public;
 grant execute on function public.ai_market_submit_visitor_feedback(jsonb,text) to anon,authenticated;
-
--- A single historical pending user contribution may be safely backfilled by the same
--- classifier. Preserve unrelated older/manual pending content for staff review.
-update public.ai_market_visitor_feedback
-set status='approved',reviewed_at=pg_catalog.clock_timestamp(),moderator_note='automatic_policy_v1_legacy'
-where status='pending'
-  and created_at>=pg_catalog.clock_timestamp()-interval '36 hours'
-  and private.ai_market_feedback_auto_safe(body,nickname);
