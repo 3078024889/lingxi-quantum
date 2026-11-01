@@ -20,6 +20,11 @@ test('visitor API uses only guarded signed server RPC; no guest identity, no unr
  assert.ok(api.includes("if(parsed.productId&&!findPlatform(parsed.productId))"));
  assert.doesNotMatch(api,/service_role|SUPABASE_SERVICE_ROLE_KEY/);
  assert.doesNotMatch(api,/NEXT_PUBLIC_FEEDBACK_HMAC_KEY/);
+ assert.match(api,/\^\[a-f0-9\]\{64\}\$/);
+ assert.match(api,/x-vercel-forwarded-for/);
+ assert.match(api,/x-nf-client-connection-ip/);
+ assert.match(api,/isIP\(ip\)/);
+ assert.doesNotMatch(api,/x-forwarded-for/);
  const migration=await read('../supabase/migrations/20261030180000_ai_market_public_feedback.sql');
  for(const word of ['enable row level security','revoke all on public.ai_market_visitor_feedback','security definer','revoke all on function','grant execute','visitor_hash','request_nonce',"status='approved'"])assert.ok(migration.includes(word),word);
  assert.doesNotMatch(migration,/grant (insert|update|delete) on public.ai_market_visitor_feedback to anon/i);
