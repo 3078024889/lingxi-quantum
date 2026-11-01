@@ -31,6 +31,6 @@ for(const phrase of ["压缩后体积没有变小，已保留原文件","已按�
  const from=labels.indexOf('"'+phrase+'": {'),to=labels.indexOf("\n  },",from);
  assert(from>=0&&to>from,"missing notice: "+phrase);
  const block=labels.slice(from,to);
- for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"])assert(new RegExp("\\b"+lang+":").test(block),"missing "+lang+" notice");
+ for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"])assert(block.includes('"'+lang+'":'),"missing "+lang+" notice");
 }
 console.log("VIDEO_COMPRESSION_INTEGRITY_GATE=PASS: smaller output, original fallback, transformed-size disclosure, zero-byte guard, nine locales");
