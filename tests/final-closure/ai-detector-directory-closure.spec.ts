@@ -48,5 +48,18 @@ for(const id of ids)test(`${id} opens real dedicated detector and nine-language 
   const guide=page.locator("section[aria-label] ol").first();
   await expect(guide).toBeVisible();
   await expect(guide.locator("li")).toHaveCount(3);
+  const expectedSteps=toolTutorialSteps(lang,id);
+  for(let index=0;index<3;index++)await expect(guide.locator("li").nth(index)).toHaveText(expectedSteps[index]);
  }
+});
+
+test("remote media import enforces the actual five-link browser limit",async({page})=>{
+ await page.goto("/tools/video-watermark-remover?lang=en");
+ const links=page.locator('textarea[placeholder*="https://"]').first();
+ await expect(links).toBeVisible();
+ const urls=Array.from({length:6},(_,index)=>`https://example.com/clip-${index}.mp4`);
+ await links.fill(urls.join("\n"));
+ await expect(page.getByRole("button",{name:"Load links 6"})).toBeDisabled();
+ await links.fill(urls.slice(0,5).join("\n"));
+ await expect(page.getByRole("button",{name:"Load links 5"})).toBeEnabled();
 });
