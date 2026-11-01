@@ -258,18 +258,18 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
   },
   "suno": {
     "payments": [
-      "Credit / debit card (Visa, Mastercard, American Express)",
+      "Credit / debit card",
       "Apple Pay (some regions)",
       "Google Pay (some regions)",
       "Cash App Pay (some regions)",
       "Stablecoin (some regions)",
-      "Korean local cards (South Korea)",
-      "UPI (India)",
-      "KakaoPay (South Korea)",
-      "NaverPay (South Korea)",
+      "Korean local cards",
+      "UPI",
+      "KakaoPay",
+      "NaverPay",
       "Apple App Store (iOS)",
       "Google Play (Android)",
-      "PayPal via App Store / Google Play account billing (indirect only; not direct Suno web checkout)"
+      "PayPal via App Store / Google Play (indirect only)"
     ],
     "paymentSource": "https://help.suno.com/en/articles/2421185",
     "extraPaymentSource": "https://help.suno.com/en/articles/2421185",
