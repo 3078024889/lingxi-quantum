@@ -9,7 +9,7 @@ test('all nine languages keep the same official citations and never invent corpo
    const original=COMPANY_EVIDENCE[id],view=localizeCompanyEvidence(id,language,original);
    assert.ok(view,id+' '+language);
    assert.equal(view.publisherSource,original.publisherSource);
-   for(const key of ['founded','headquarters','funding','listing','projectStarted']){
+   for(const key of ['founded','headquarters','funding','listing','projectStarted','scale']){
     if(view[key]){assert.ok(original[key],id+' fabricated '+key);assert.equal(view[key].source,original[key].source);}
    }
   }
@@ -19,7 +19,7 @@ test('English, French and Arabic corporate fields do not leak Chinese-only finan
  for(const id of COMPANY_EVIDENCE_IDS){
   for(const language of ['en','fr','ar']){
    const v=localizeCompanyEvidence(id,language,COMPANY_EVIDENCE[id]);
-   for(const key of ['headquarters','funding','listing','projectStarted']){
+   for(const key of ['headquarters','funding','listing','projectStarted','scale']){
     if(v[key])assert.doesNotMatch(v[key].text,/[\u4e00-\u9fff]/,id+' '+language+' '+key);
    }
   }
