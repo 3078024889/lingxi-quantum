@@ -83,7 +83,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
   setError("");setInkError("");
   try{
    if(f.size>20*1024*1024)throw new Error("IMAGE_TOO_LARGE");
-   if((f.type||"").toLowerCase()==="image/svg+xml"||/\.svg$/i.test(f.name))throw new Error("UNSUPPORTED_IMAGE_FORMAT");
+   if(!asStamp&&((f.type||"").toLowerCase()==="image/svg+xml"||/\.svg$/i.test(f.name)))throw new Error("UNSUPPORTED_IMAGE_FORMAT");
    if(asStamp){
     const prepared=await prepareSignatureOrStamp(f,kind,inkSensitivity);
     const ratio=prepared.width/prepared.height;
