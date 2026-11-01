@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-const page=await readFile(new URL('../app/models/page.tsx',import.meta.url),'utf8');
+const page=await readFile(new URL('../app/(default)/models/page.tsx',import.meta.url),'utf8');
 const api=await readFile(new URL('../app/api/v1/models/groups/route.ts',import.meta.url),'utf8');
 test('price and provider ordering are user-selectable and sent to server',()=>{
  assert.ok(page.includes('sort:order'));
