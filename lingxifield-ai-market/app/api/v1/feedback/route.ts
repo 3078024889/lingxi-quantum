@@ -1,5 +1,6 @@
 import {NextResponse} from 'next/server';
 import {createHmac,randomBytes} from 'node:crypto';
+import {isIP} from 'node:net';
 import {validateVisitorFeedback} from '../../../../lib/visitor-feedback.mjs';
 import {findPlatform} from '../../../../lib/platform-repository';
 export const dynamic='force-dynamic';
@@ -45,7 +46,7 @@ export async function POST(request:Request){
  if(!origin||origin!==new URL(request.url).origin)
   return NextResponse.json({error:'INVALID_ORIGIN'},{status:403,headers:privateHeaders});
  const db=connection(),secret=process.env.AI_MARKET_FEEDBACK_HMAC_KEY;
- if(!db||!secret||secret.length<48)return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});
+ if(!db||!secret||! /^[a-f0-9]{64}$/.test(secret))return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});
  if(Number(request.headers.get('content-length')||0)>5500)
   return NextResponse.json({error:'REQUEST_TOO_LARGE'},{status:413,headers:privateHeaders});
  let data:unknown;
@@ -60,10 +61,12 @@ export async function POST(request:Request){
  if(!parsed)return NextResponse.json({error:'INVALID_FEEDBACK'},{status:400,headers:privateHeaders});
  if(parsed.productId&&!findPlatform(parsed.productId))
   return NextResponse.json({error:'INVALID_PRODUCT'},{status:400,headers:privateHeaders});
- // Pseudonymize network fingerprint; never store raw IP or expose email.
- const ip=request.headers.get('x-vercel-forwarded-for')||request.headers.get('x-forwarded-for')||'unknown';
+ // Trust only platform-injected client IP headers. Generic x-forwarded-for can be spoofed.
+ const rawIp=request.headers.get('x-vercel-forwarded-for')||request.headers.get('x-nf-client-connection-ip')||'';
+ const ip=rawIp.split(',')[0].trim();
+ if(!ip||!isIP(ip))return NextResponse.json({error:'FEEDBACK_NOT_AVAILABLE'},{status:503,headers:privateHeaders});
  // Rotate the pseudonymous fingerprint daily; no raw IP is stored in the database.
- const visitorHash=createHmac('sha256',secret).update(new Date().toISOString().slice(0,10)+'|'+ip.split(',')[0].trim()).digest('hex');
+ const visitorHash=createHmac('sha256',secret).update(new Date().toISOString().slice(0,10)+'|'+ip).digest('hex');
  const nonce=randomBytes(16).toString('hex');
  const issuedAt=Math.floor(Date.now()/1000);
  const signature=createHmac('sha256',secret).update([nonce,issuedAt,visitorHash].join('.')).digest('hex');
