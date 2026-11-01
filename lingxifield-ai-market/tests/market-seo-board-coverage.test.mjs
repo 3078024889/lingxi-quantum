@@ -7,7 +7,12 @@ test('consumer SEO/GEO board hides empty counters and only renders reviewed comp
  const evidence=await readFile(new URL('../lib/seo-geo-observations.ts',import.meta.url),'utf8');
  assert.ok(!board.includes('seoGeoEvidenceCount'));
  assert.ok(!board.includes('coverage.measuredProducts'));
- assert.ok(board.includes('coverage.verifiedObservations===0'));
+ assert.ok(board.includes('missing.length>0'));
+ assert.ok(board.includes('coverage.gscObservations>0'));
+ assert.ok(board.includes('coverage.independentSerpObservations>0'));
+ assert.ok(board.includes('coverage.geoObservations>0'));
+ assert.ok(board.includes('seoGeoEmptyStatus'));
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.ok(board.includes(' '+lang+':{ownedTitle:'),lang);
  assert.ok(board.includes('groupedSeoGeo()'));
  assert.ok(evidence.includes('observations as unknown[]).filter(validObservation)'));
  assert.ok(evidence.includes('o.reviewed!==true'));
