@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {TEMP_MAIL_FREE_DAILY_LIMIT} from '@/lib/tools/temp-mail-policy';
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import {trustedClientIp} from "@/lib/security/trusted-client-ip";
 import { createMailboxAccessCookie,mailboxTokenHash,randomLocalPart,randomMailboxToken,tempMailConfigured,tempMailAddress,TEMP_MAIL_ACCESS_COOKIE,TEMP_MAIL_TTL_MINUTES } from "@/lib/tools/temp-mail";
 
 export const runtime="nodejs";
@@ -11,7 +12,7 @@ const DEVICE_COOKIE="lx_tm_device",DEVICE_MAX_AGE=60*60*24*30;
 const FREE_PER_ACCOUNT=TEMP_MAIL_FREE_DAILY_LIMIT,FREE_PER_IP=TEMP_MAIL_FREE_DAILY_LIMIT;
 
 function sha(value:string){return createHash("sha256").update(value).digest("hex")}
-function clientIp(req:NextRequest){return (req.headers.get("x-forwarded-for")||req.headers.get("x-real-ip")||"unknown").split(",")[0].trim().slice(0,128)}
+function clientIp(req:NextRequest){return trustedClientIp(req)}
 function secret(){return process.env.TEMP_MAIL_INGEST_SECRET?.trim()||""}
 function signDevice(id:string){return createHmac("sha256",secret()).update(`lingxifield:temp-mail-device:v1:${id}`).digest("base64url")}
 function validDevice(value:string|undefined){
