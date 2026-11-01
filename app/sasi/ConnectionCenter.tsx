@@ -23,6 +23,17 @@ const TOOL_TITLE:Record<LingxiLang,string>={
  zh:"连接工具",en:"Connect tools",ja:"ツールを接続",ko:"도구 연결",fr:"Connecter des outils",de:"Tools verbinden",es:"Conectar herramientas",pt:"Conectar ferramentas",ar:"ربط الأدوات",
 };
 
+const PROBE_VERIFIED:Record<LingxiLang,string>={
+ zh:"连接探测通过",en:"Connection check passed",ja:"接続確認済み",ko:"연결 점검 통과",
+ fr:"Connexion vérifiée",de:"Verbindung geprüft",es:"Conexión comprobada",pt:"Conexão verificada",ar:"اجتاز فحص الاتصال"
+};
+const PROBE_EXPLAINED:Record<LingxiLang,string>={
+ zh:"服务接口可访问；尚未验证实际模型生成、输出质量或费用。",en:"Provider endpoint reachable. Actual generation, output quality and charges remain unverified.",
+ ja:"接続先は応答しました。実際の生成結果・品質・料金は未確認です。",ko:"서비스 접속은 확인됐지만 실제 생성과 품질·요금은 검증 전입니다.",
+ fr:"Service accessible. Génération, qualité et coûts réels non vérifiés.",de:"Dienst erreichbar. Tatsächliche Generierung, Qualität und Kosten ungeprüft.",
+ es:"Servicio accesible. Generación, calidad y costes reales sin verificar.",pt:"Serviço acessível. Geração, qualidade e custos reais não verificados.",ar:"الخدمة متاحة؛ لم يُتحقق بعد من التوليد الفعلي أو الجودة أو التكلفة."
+};
+
 export default function ConnectionCenter({lang,accountEmail}:Props){
  const t=(zh:string,en:string)=>sasiConnectionText(lang,zh,en);
  const copy=connectionPageCopy(lang);
@@ -53,7 +64,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
   const item=connections.find(x=>x.service===service);
   if(!item)return t("未连接","Not connected");
   if(item.healthStatus==="unhealthy")return t("连接失败","Connection failed");
-  return item.healthStatus==="healthy"?t("已连接","Connected"):t("已安全保存 · 待验证","Stored · verify next");
+  return item.healthStatus==="healthy"?PROBE_VERIFIED[lang]:t("已安全保存 · 待验证","Stored · verify next");
  }
 
  async function save(){
@@ -76,7 +87,7 @@ export default function ConnectionCenter({lang,accountEmail}:Props){
   if(r.status===429){setMessage(t('检查过于频繁，请稍后再试。','Checks are too frequent. Please try again shortly.'));return}
   const healthy=r.ok&&b.healthStatus==="healthy";
   setConnections(xs=>xs.map(x=>x.service===provider?{...x,healthStatus:healthy?"healthy":"unhealthy",lastCheckedAt:new Date().toISOString(),lastErrorCode:healthy?null:"CHECK_FAILED",model:healthy&&b.model?b.model:x.model}:x));
-  setMessage(healthy?t("连接正常，可以开始使用。","Connection is ready to use."):t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
+  setMessage(healthy?PROBE_EXPLAINED[lang]:t("连接没有成功，请检查后重试。","The connection did not succeed. Please check and try again."));
  }
 
  async function test(){
