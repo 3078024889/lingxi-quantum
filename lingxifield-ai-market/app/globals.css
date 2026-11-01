@@ -1084,3 +1084,13 @@ body{font-size:16px;line-height:1.6}
 .marketLocalizedPaymentEvidence li{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border:1px solid #e0e9f6;border-radius:8px;padding:8px 10px;min-width:0}
 .marketLocalizedPaymentEvidence :is(span,a){font-size:12px!important;overflow-wrap:anywhere}
 @media(max-width:610px){.marketLocalizedPaymentEvidence{grid-template-columns:minmax(0,1fr)}}
+
+/* 2026-11-01: concise, task-linked public questions for each reviewed product. */
+.marketLocalizedFaq{background:#fff;border:1px solid #dfe9f4;border-radius:12px;padding:16px;margin:12px 0}
+.marketLocalizedFaq h2{font-size:18px;font-weight:760;margin:0 0 12px;color:#132f54}
+.marketLocalizedFaqLinks{display:flex;flex-wrap:wrap;gap:10px}
+.marketLocalizedFaqLinks a{display:inline-flex;align-items:center;max-width:100%;min-height:40px;padding:8px 13px;border:1px solid #d8e5f4;border-radius:10px;background:#f5f9ff;color:#16549a;font-size:14px;text-decoration:none;line-height:1.5}
+.marketLocalizedFaqLinks a:hover,.marketLocalizedFaqLinks a:focus-visible{background:#e9f3ff;border-color:#99bce6;text-decoration:underline}
+.marketLocalizedFaqLinks a:focus-visible{outline:2px solid #2b7ccc;outline-offset:2px}
+.marketCompanyFacts strong,.marketLocalizedCompanyFacts :is(strong,a),.marketLocalizedRatesScroll :is(th,td),.marketLocalizedPaymentEvidence :is(span,a){font-size:14px}
+@media(max-width:640px){.marketLocalizedFaq{padding:13px}.marketLocalizedFaqLinks{flex-direction:column}.marketLocalizedFaqLinks a{width:100%}}
