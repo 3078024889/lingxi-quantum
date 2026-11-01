@@ -118,7 +118,13 @@ where status='pending'
  v_expected := pg_catalog.encode(extensions.hmac(
   pg_catalog.convert_to(v_nonce||'.'||v_issued::text||'.'||v_hash,'UTF8'),
   pg_catalog.convert_to(v_secret,'UTF8'),'sha256'),'hex');
- if v_expected<>p_signature then
+ for v_i in 1..64 loop
+  v_diff := v_diff | (
+   pg_catalog.ascii(pg_catalog.substr(v_expected,v_i,1)) #
+   pg_catalog.ascii(pg_catalog.substr(p_signature,v_i,1))
+  );
+ end loop;
+ if v_diff<>0 then
    raise exception 'INVALID_FEEDBACK_SIGNATURE' using errcode='42501';
  end if;
  -- Counters are bounded by the signed visitor fingerprint; storage is privacy-preserving.
@@ -173,7 +179,13 @@ where status='pending'
  v_expected := pg_catalog.encode(extensions.hmac(
   pg_catalog.convert_to(v_nonce||'.'||v_issued::text||'.'||v_hash,'UTF8'),
   pg_catalog.convert_to(v_secret,'UTF8'),'sha256'),'hex');
- if v_expected<>p_signature then
+ for v_i in 1..64 loop
+  v_diff := v_diff | (
+   pg_catalog.ascii(pg_catalog.substr(v_expected,v_i,1)) #
+   pg_catalog.ascii(pg_catalog.substr(p_signature,v_i,1))
+  );
+ end loop;
+ if v_diff<>0 then
    raise exception 'INVALID_FEEDBACK_SIGNATURE' using errcode='42501';
  end if;
  -- Counters are bounded by the signed visitor fingerprint; storage is privacy-preserving.
@@ -227,7 +239,13 @@ where status='pending'
  v_expected := pg_catalog.encode(extensions.hmac(
   pg_catalog.convert_to(v_nonce||'.'||v_issued::text||'.'||v_hash,'UTF8'),
   pg_catalog.convert_to(v_secret,'UTF8'),'sha256'),'hex');
- if v_expected<>p_signature then
+ for v_i in 1..64 loop
+  v_diff := v_diff | (
+   pg_catalog.ascii(pg_catalog.substr(v_expected,v_i,1)) #
+   pg_catalog.ascii(pg_catalog.substr(p_signature,v_i,1))
+  );
+ end loop;
+ if v_diff<>0 then
    raise exception 'INVALID_FEEDBACK_SIGNATURE' using errcode='42501';
  end if;
  -- Counters are bounded by the signed visitor fingerprint; storage is privacy-preserving.
