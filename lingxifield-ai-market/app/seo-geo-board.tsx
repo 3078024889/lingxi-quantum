@@ -23,9 +23,26 @@ const GSC_COPY:Record<Language,{title:string;impressions:string;clicks:string;ct
  pt:{title:'Desempenho da pesquisa do nosso site',impressions:'Impressões',clicks:'Cliques',ctr:'CTR',position:'Posição média',date:'Data dos dados'},
  ar:{title:'أداء البحث لموقعنا في Google',impressions:'مرات الظهور',clicks:'النقرات',ctr:'معدل النقر',position:'متوسط الموضع',date:'تاريخ البيانات'}
 };
+const EMPTY_STATUS:Record<Language,{ownedTitle:string;ownedEmpty:string;serpTitle:string;serpEmpty:string;geoTitle:string;geoEmpty:string}>={
+ zh:{ownedTitle:'本站 Google 搜索数据',ownedEmpty:'尚未接入并发布本站 Search Console 实际数据。',serpTitle:'Google / Bing 自然排名',serpEmpty:'暂无经过核验的真实搜索结果排名。',geoTitle:'AI 回答引用',geoEmpty:'暂无经过核验的模型回答与引用记录。'},
+ en:{ownedTitle:'Our Google search data',ownedEmpty:'Real Search Console data for our pages has not been connected and published yet.',serpTitle:'Google / Bing organic ranks',serpEmpty:'No independently captured and reviewed search positions are available yet.',geoTitle:'AI answer citations',geoEmpty:'No reviewed model-answer mentions or citations are available yet.'},
+ ja:{ownedTitle:'自社サイトの Google 検索データ',ownedEmpty:'Search Console の実測データはまだ接続・公開されていません。',serpTitle:'Google / Bing 自然検索順位',serpEmpty:'検証済みの実際の検索順位データはまだありません。',geoTitle:'AI回答の引用',geoEmpty:'検証済みのAI回答への言及・引用データはまだありません。'},
+ ko:{ownedTitle:'자사 Google 검색 데이터',ownedEmpty:'Search Console 실제 데이터가 아직 연결·공개되지 않았습니다.',serpTitle:'Google / Bing 자연 검색 순위',serpEmpty:'검증된 실제 검색 순위 데이터가 아직 없습니다.',geoTitle:'AI 답변 인용',geoEmpty:'검증된 모델 답변 언급·인용 데이터가 아직 없습니다.'},
+ fr:{ownedTitle:'Données Google de notre site',ownedEmpty:'Les données réelles de Search Console ne sont pas encore connectées et publiées.',serpTitle:'Positions organiques Google / Bing',serpEmpty:'Aucune position issue d’une capture indépendante vérifiée pour le moment.',geoTitle:'Citations dans les réponses IA',geoEmpty:'Aucune mention ou citation IA vérifiée pour le moment.'},
+ de:{ownedTitle:'Google-Suchdaten unserer Website',ownedEmpty:'Echte Search-Console-Daten sind noch nicht verbunden und veröffentlicht.',serpTitle:'Organische Google-/Bing-Ränge',serpEmpty:'Noch liegen keine unabhängig erfassten und geprüften Suchpositionen vor.',geoTitle:'KI-Antwortzitate',geoEmpty:'Noch liegen keine geprüften Erwähnungen oder Zitate aus KI-Antworten vor.'},
+ es:{ownedTitle:'Datos de búsqueda de nuestro sitio',ownedEmpty:'Los datos reales de Search Console aún no están conectados ni publicados.',serpTitle:'Posiciones orgánicas Google / Bing',serpEmpty:'Todavía no hay posiciones de búsqueda capturadas y verificadas de forma independiente.',geoTitle:'Citas en respuestas de IA',geoEmpty:'Todavía no hay menciones ni citas verificadas de respuestas de modelos.'},
+ pt:{ownedTitle:'Dados de pesquisa do nosso site',ownedEmpty:'Os dados reais do Search Console ainda não foram conectados nem publicados.',serpTitle:'Posições orgânicas Google / Bing',serpEmpty:'Ainda não há posições de pesquisa capturadas e verificadas de forma independente.',geoTitle:'Citações em respostas de IA',geoEmpty:'Ainda não há menções ou citações verificadas de respostas de modelos.'},
+ ar:{ownedTitle:'بيانات بحث موقعنا في Google',ownedEmpty:'لم يتم ربط بيانات Search Console الفعلية ونشرها بعد.',serpTitle:'الترتيب الطبيعي في Google / Bing',serpEmpty:'لا توجد حتى الآن مواضع بحث حقيقية تم جمعها والتحقق منها بشكل مستقل.',geoTitle:'الاستشهادات في إجابات الذكاء الاصطناعي',geoEmpty:'لا توجد حتى الآن إشارات أو استشهادات موثقة من إجابات النماذج.'}
+};
 export default function SeoGeoBoard({language='zh'}:{language?:Language}){
  const t=COPY[language]||COPY.zh;
  const coverage=coverageForSeoGeo(),comparisons=groupedSeoGeo();
+ const status=EMPTY_STATUS[language]||EMPTY_STATUS.zh;
+ const missing=[
+  {key:'owned',ready:coverage.gscObservations>0,title:status.ownedTitle,body:status.ownedEmpty},
+  {key:'serp',ready:coverage.independentSerpObservations>0,title:status.serpTitle,body:status.serpEmpty},
+  {key:'geo',ready:coverage.geoObservations>0,title:status.geoTitle,body:status.geoEmpty}
+ ].filter(x=>!x.ready);
  return <section className="panel seoGeoBoard" aria-label={t[0]}>
   <div className="rankHead"><h2>{t[0]}</h2><span>{t[1]}</span></div>
   {coverage.gscObservations>0&&coverage.gscCtr!==null&&coverage.gscAveragePosition!==null&&coverage.gscLatestDate?<section className="seoGeoOwnedMetrics" aria-label={GSC_COPY[language].title}>
@@ -45,7 +62,9 @@ export default function SeoGeoBoard({language='zh'}:{language?:Language}){
    <article><strong>{t[6]}</strong><p>{t[7]}</p></article>
    <article><strong>{t[8]}</strong><p>{t[9]}</p></article>
   </div>
-  {coverage.verifiedObservations===0?<p className="seoGeoNote">{t[10]}</p>:null}
+  {missing.length>0?<div className="seoGeoEmptyStatus" aria-label={t[0]}>
+   {missing.map(item=><article key={item.key}><strong>{item.title}</strong><p>{item.body}</p></article>)}
+  </div>:null}
   <div className="seoGeoFooter"><Link href="/vendor/claim">{t[11]} ↗</Link><span>{t[12]}</span></div>
  </section>;
 }
