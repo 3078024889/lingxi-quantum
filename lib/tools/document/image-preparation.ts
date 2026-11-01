@@ -24,7 +24,7 @@ function sanitizeSvg(source:string){
  }
  for(const attr of Array.from(root.attributes)){
   const name=attr.name.toLowerCase(),value=attr.value.trim();
-  if(!SAFE_SVG_ATTRIBUTES.has(name)||name.startsWith("on")||name==="href"||name==="xlink:href"||(/url\\s*\\(/i.test(value)&&!/^url\\(\\s*#[\\w:.-]+\\s*\\)$/i.test(value))||/(?:javascript|https?|file|data):/i.test(value))root.removeAttribute(attr.name);
+  if(!SAFE_SVG_ATTRIBUTES.has(name)||name.startsWith("on")||name==="href"||name==="xlink:href"||(/url\s*\(/i.test(value)&&!/^url\(\s*#[\w:.-]+\s*\)$/i.test(value))||/(?:javascript|https?|file|data):/i.test(value))root.removeAttribute(attr.name);
  }
  if(!root.hasAttribute("xmlns"))root.setAttribute("xmlns","http://www.w3.org/2000/svg");
  return new XMLSerializer().serializeToString(root);
