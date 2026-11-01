@@ -1,9 +1,6 @@
 import Link from 'next/link';
 import type {Language} from '../lib/v2';
 import {coverageForSeoGeo,groupedSeoGeo} from '../lib/seo-geo-observations';
-const COVERAGE_LABEL:Record<Language,string>={
- zh:'已核验观测',en:'Verified observations',ja:'検証済み観測',ko:'검증된 관측',fr:'Observations vérifiées',de:'Verifizierte Messungen',es:'Observaciones verificadas',pt:'Observações verificadas',ar:'الرصد المتحقق منه'
-};
 const COPY:Record<Language,readonly [string,string,string,string,string,string,string,string,string,string,string,string,string]>={
  zh:["搜索、AI 推荐与历史变化","看看工具在搜索与 AI 回答中的表现","SEO 自然搜索","Google/Bing 关键词排名、曝光量、点击与已收录页面。","GEO AI 引用","AI 回答是否提到或引用产品；逐条记录问题、模型与出处。","用户任务","按视频、图片、代码、语音等真实任务比较能力与费用。","时间变化","查看最近 7 天、30 天的搜索和 AI 推荐变化。","搜索与 AI 推荐榜单正在更新，现在可按用途、价格和地区选择工具。","免费提交厂商与官方资料","赞助推广位不参与自然排名计算"],
  en:["Search, AI citations and trends","Discover how tools appear in search and AI answers","Organic SEO","Google/Bing ranks, impressions, clicks and indexed pages.","GEO citations","Track actual AI answer mentions and citations by prompt, model and source.","User tasks","Compare real tasks across video, images, code and audio.","History","See changes in search and AI answers over 7 or 30 days.","Search and AI recommendations are coming. Compare by task, price and region now.","Submit publisher evidence for free","Sponsored placement never alters organic ranking"],
@@ -21,7 +18,6 @@ export default function SeoGeoBoard({language='zh'}:{language?:Language}){
  return <section className="panel seoGeoBoard" aria-label={t[0]}>
   <div className="rankHead"><h2>{t[0]}</h2><span>{t[1]}</span></div>
   {comparisons.length>0?<div className="seoGeoVerifiedComparisons">{comparisons.slice(0,6).map(g=><article key={g.key}><strong>{g.key}</strong>{g.rows.map(r=><p key={r.platformId}><b>{r.platformId}</b> · {r.position!==null?'#'+r.position:r.citations!==null?r.citations+' citations':'—'} · <a href={r.sourceUrl} rel="noopener noreferrer" target="_blank">{language==='zh'?'证据':'Source'} ↗</a></p>)}</article>)}</div>:null}
-  <p className="seoGeoEvidenceCount">{COVERAGE_LABEL[language]} · SEO {coverage.seoObservations} · GEO {coverage.geoObservations} · {coverage.measuredProducts}/{coverage.catalogProducts}</p>
   <div className="seoGeoCompare">
    <article><strong>{t[2]}</strong><p>{t[3]}</p></article>
    <article><strong>{t[4]}</strong><p>{t[5]}</p></article>
