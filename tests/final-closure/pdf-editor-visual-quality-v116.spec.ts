@@ -16,6 +16,9 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  await page.getByRole("button",{name:"Add text"}).click();
  const textObject=page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]');
  await expect(textObject).toBeVisible();
+ await expect(page.getByTestId("pdf-object-toolbar")).toHaveCount(0);
+ await expect(page.locator('button[aria-label^="Resize "]')).toHaveCount(0);
+ await textObject.click();
  await expect(page.getByTestId("pdf-object-toolbar")).toBeVisible();
  await expect(page.locator('button[aria-label^="Resize "]')).toHaveCount(8);
  const before=await textObject.boundingBox();
