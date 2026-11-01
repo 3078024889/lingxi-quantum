@@ -63,10 +63,9 @@ BEGIN
     RAISE EXCEPTION 'ORDER_PROVIDER_CURRENCY_MISMATCH' USING ERRCODE='22023';
   END IF;
 
-  IF v_order.status NOT IN ('paid','partially_refunded')
-     OR v_order.paid_verified_at IS NULL
+  IF v_order.paid_verified_at IS NULL
      OR v_order.provider_payment_ref IS NULL THEN
-    RAISE EXCEPTION 'ORDER_NOT_REFUNDABLE' USING ERRCODE='22023';
+    RAISE EXCEPTION 'ORDER_PAYMENT_PROOF_MISSING' USING ERRCODE='22023';
   END IF;
 
   INSERT INTO ai_market_private.payment_events
@@ -96,6 +95,12 @@ BEGIN
     END IF;
 
     RETURN 'duplicate';
+  END IF;
+
+  -- Check state only after replay detection: a provider may retry the exact
+  -- successful refund event after the order has already become fully refunded.
+  IF v_order.status NOT IN ('paid','partially_refunded') THEN
+    RAISE EXCEPTION 'ORDER_NOT_REFUNDABLE' USING ERRCODE='22023';
   END IF;
 
   SELECT coalesce(sum(refund_amount_minor),0)
