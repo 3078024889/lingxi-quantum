@@ -68,7 +68,15 @@ export function coverageForSeoGeo(){
  const seo=seoGeoObservations.filter(x=>x.source!=='ai_answer_citation');
  const geo=seoGeoObservations.filter(x=>x.source==='ai_answer_citation');
  const independent=seo.filter(x=>x.source==='independent_serp');
+ const gsc=seoGeoObservations.filter(x=>x.source==='google_search_console');
+ const gscImpressions=gsc.reduce((sum,x)=>sum+(x.impressions??0),0);
+ const gscClicks=gsc.reduce((sum,x)=>sum+(x.clicks??0),0);
+ const weightedPosition=gsc.reduce((sum,x)=>sum+(x.position??0)*(x.impressions??0),0);
+ const latestGscDate=gsc.reduce((latest,x)=>!latest||String(x.sourceDate)>latest?String(x.sourceDate):latest,'');
  return {catalogProducts:allowed.size,verifiedObservations:seoGeoObservations.length,seoObservations:seo.length,geoObservations:geo.length,independentSerpObservations:independent.length,
+  gscObservations:gsc.length,gscImpressions,gscClicks,gscCtr:gscImpressions?gscClicks/gscImpressions:null,
+  gscAveragePosition:gscImpressions?weightedPosition/gscImpressions:null,gscLatestDate:latestGscDate||null,
+  gscMeasuredProducts:new Set(gsc.map(x=>x.platformId)).size,
   measuredProducts:new Set(seoGeoObservations.map(x=>x.platformId)).size,
   status:seoGeoObservations.length?'partial_evidence':'awaiting_independent_measurements'};
 }
