@@ -232,8 +232,8 @@
 .seoGeoEmptyStatus p{margin:5px 0 0;color:#718198;font-size:11px;line-height:1.65;overflow-wrap:anywhere}
 .seoGeoFooter{display:flex;gap:14px;justify-content:space-between;align-items:center;font-size:11px;color:#8292a6}
 .seoGeoFooter a{color:#1562c8}
-@media(max-width:850px){.seoGeoCompare{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:480px){.seoGeoCompare{grid-template-columns:1fr}}
+@media(max-width:850px){.seoGeoCompare{grid-template-columns:repeat(2,minmax(0,1fr))}.seoGeoEmptyStatus{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.seoGeoCompare{grid-template-columns:1fr}.seoGeoEmptyStatus{grid-template-columns:1fr}}
 
 
 /* V3: 16-column compact market terminal. Scrollable across languages; identity and actions remain visible. */
