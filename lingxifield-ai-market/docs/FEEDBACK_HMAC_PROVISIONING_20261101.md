@@ -43,6 +43,7 @@ The new provisioning RPC is callable only with a Supabase `service_role` JWT. It
 
 - HMAC secret is 32 random bytes; only its lowercase hexadecimal representation is shared between server environment and private database.
 - The provisioning RPC is `SECURITY DEFINER`, has an empty search path, checks the signed JWT role claim for `service_role`, and is not executable by `public`, `anon` or `authenticated`.
+- Feedback signature verification uses a fixed 64-iteration comparison instead of exiting on the first mismatching character.
 - The CLI never prints or persists the key. Its success response contains only the configured flag and endpoint host.
 - Public feedback remains pending until an authorized moderator approves it. No review is fabricated.
 - If either side is missing or mismatched, feedback submission fails closed with `FEEDBACK_NOT_AVAILABLE`; the public form must not claim the feedback was saved.
