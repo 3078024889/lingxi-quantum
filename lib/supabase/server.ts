@@ -45,7 +45,10 @@ export async function getServerUser(client: ReturnType<typeof createClient>): Pr
   try {
     const { data, error } = await client.auth.getUser();
     if (error) {
-      console.error("[supabase auth] unavailable", error.code);
+      // Anonymous visitors have no session. This is not a Supabase outage.
+      if (error.name === "AuthSessionMissingError" || error.code === "session_not_found") return null;
+      // Keep unexpected failures observable without logging credentials or tokens.
+      console.error("[supabase auth] unavailable", {name:error.name,code:error.code ?? "unknown",status:error.status ?? 0});
       return null;
     }
     return data.user;
