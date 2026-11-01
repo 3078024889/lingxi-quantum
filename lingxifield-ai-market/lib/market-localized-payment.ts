@@ -41,24 +41,7 @@ const PAYMENT_COPY:Record<Language,{
  pt:{noSoftwareFee:'Sem cobrança de software para a versão auto-hospedada/de código aberto',separateCosts:'Hospedagem, computação e APIs de modelos são cobradas separadamente',card:'Cartão de crédito / débito',cardWeb:'Cartão de crédito / débito (checkout web)',apiCard:'Cartão de crédito / débito (cobrança de API)',appleStore:'Apple App Store (iOS)',googlePlay:'Google Play (Android)',applePay:'Apple Pay',googlePay:'Google Pay',amazonPay:'Amazon Pay',alipay:'Alipay',wechatPay:'WeChat Pay',cashAppPay:'Cash App Pay',stablecoin:'Stablecoin',stripeInstant:'Pagamento bancário instantâneo Stripe (somente EUA)',webStripe:'Checkout web via Stripe',ach:'Transferência ACH (contas API mensais elegíveis)',noPaypalVenmo:'PayPal e Venmo não são aceitos',noPaypal:'PayPal não é aceito',paypalIndirect:'PayPal somente via App Store / Google Play',googleOne:'Cobrança Google One / Google Play',regionCheckout:'Métodos variam por país no checkout',cloudCheckout:'Planos cloud pagos no checkout',link:'Link',upi:'UPI (Índia)',kakaoPay:'KakaoPay (Coreia do Sul)',naverPay:'NaverPay (Coreia do Sul)',koreanCards:'Cartões locais coreanos',paypal:'PayPal'},
  ar:{noSoftwareFee:'لا توجد رسوم للبرنامج ذاتي الاستضافة أو مفتوح المصدر',separateCosts:'تُحاسب تكاليف السحابة والحوسبة والاستضافة وواجهات النماذج بشكل منفصل',card:'بطاقة ائتمان / خصم',cardWeb:'بطاقة ائتمان / خصم (الدفع عبر الويب)',apiCard:'بطاقة ائتمان / خصم (فوترة API)',appleStore:'Apple App Store (iOS)',googlePlay:'Google Play (Android)',applePay:'Apple Pay',googlePay:'Google Pay',amazonPay:'Amazon Pay',alipay:'Alipay',wechatPay:'WeChat Pay',cashAppPay:'Cash App Pay',stablecoin:'عملة مستقرة',stripeInstant:'دفع مصرفي فوري من Stripe (الولايات المتحدة فقط)',webStripe:'الدفع عبر الويب بواسطة Stripe',ach:'تحويل ACH (حسابات API المؤهلة للفوترة الشهرية)',noPaypalVenmo:'PayPal وVenmo غير مقبولين',noPaypal:'PayPal غير مدعوم',paypalIndirect:'PayPal عبر App Store / Google Play فقط',googleOne:'فوترة Google One / Google Play',regionCheckout:'تختلف طرق الدفع حسب البلد وتظهر عند إتمام الشراء',cloudCheckout:'تُدفع خطط السحابة عند إتمام الشراء',link:'Link',upi:'UPI (الهند)',kakaoPay:'KakaoPay (كوريا الجنوبية)',naverPay:'NaverPay (كوريا الجنوبية)',koreanCards:'بطاقات محلية كورية',paypal:'PayPal'}
 };
-(name:string,language:Language){
- const direct=paymentNames[name]?.[language];
- if(direct)return direct;
- if(language==='zh')return name;
- if(!/[\u4e00-\u9fff]/.test(name))return name;
- const methods:string[]=[];
- if(/支付宝|Alipay/i.test(name))methods.push('Alipay');
- if(/微信支付|WeChat Pay/i.test(name))methods.push('WeChat Pay');
- if(/银行卡|信用卡|借记卡|Visa|Mastercard|American Express/i.test(name))methods.push('Credit / debit card');
- if(/Apple App Store|苹果商店/i.test(name))methods.push('Apple App Store');
- if(/Google Play/i.test(name))methods.push('Google Play');
- if(/Amazon Pay/i.test(name))methods.push('Amazon Pay');
- if(/PayPal/i.test(name))methods.push('PayPal');
- if(/Stripe/i.test(name))methods.push('Stripe checkout');
- // Never display untranslated raw Chinese payment marketing notes in another locale.
- return methods.length? [...new Set(methods)].join(' · '):
-  ({en:'See official payment policy',ja:'公式決済方法を確認',ko:'공식 결제 방법 확인',fr:'Voir les paiements officiels',de:'Offizielle Zahlungsmethoden prüfen',es:'Ver pagos oficiales',pt:'Ver pagamentos oficiais',ar:'راجع طرق الدفع الرسمية',zh:name} as Record<Language,string>)[language];
-}export function localizedPaymentName(name:string,language:Language){
+export function localizedPaymentName(name:string,language:Language){
  const exact=paymentNames[name]?.[language];
  if(exact)return exact;
  const n=name.toLowerCase(),t=PAYMENT_COPY[language];
@@ -90,5 +73,19 @@ const PAYMENT_COPY:Record<Language,{
  if(/^kakaopay/.test(n))return t.kakaoPay;
  if(/^naverpay/.test(n))return t.naverPay;
  if(/^link/.test(n))return t.link;
+ if(language==='zh')return name;
+ if(/[\\u4e00-\\u9fff]/.test(name)){
+  const methods:string[]=[];
+  if(/支付宝|Alipay/i.test(name))methods.push(t.alipay);
+  if(/微信支付|WeChat Pay/i.test(name))methods.push(t.wechatPay);
+  if(/银行卡|信用卡|借记卡|Visa|Mastercard|American Express/i.test(name))methods.push(t.card);
+  if(/Apple App Store|苹果商店/i.test(name))methods.push(t.appleStore);
+  if(/Google Play/i.test(name))methods.push(t.googlePlay);
+  if(/Amazon Pay/i.test(name))methods.push(t.amazonPay);
+  if(/PayPal/i.test(name))methods.push(t.paypal);
+  if(/Stripe/i.test(name))methods.push('Stripe');
+  return methods.length?[...new Set(methods)].join(' · '):
+   ({en:'See official payment policy',ja:'公式決済方法を確認',ko:'공식 결제 방법 확인',fr:'Voir les paiements officiels',de:'Offizielle Zahlungsmethoden prüfen',es:'Ver pagos oficiales',pt:'Ver pagamentos oficiais',ar:'راجع طرق الدفع الرسمية'} as Record<Exclude<Language,'zh'>,string>)[language as Exclude<Language,'zh'>];
+ }
  return name;
 }
