@@ -28,7 +28,7 @@ test('connection defaults, save and check, switch clears key, and delete (mock s
  await page.route('**/api/sasi/connections',route=>{if(route.request().method()==='POST'){payloads.push(route.request().postDataJSON());return route.fulfill({status:201,json:{keyHint:'mock…123'}})}return route.fulfill({json:{connections:[]}})});
  await page.route('**/api/sasi/connections/test',route=>route.fulfill({json:{healthStatus:'healthy',model:'openai/test-model'}}));
  await key.fill('mock-openrouter-key-123');await page.getByRole('button',{name:'保存并检查',exact:true}).click();
- await expect(page.locator('[data-connection-services]').getByRole('button',{name:/OpenRouter/})).toContainText('已连接');
+ await expect(page.locator('[data-connection-services]').getByRole('button',{name:/OpenRouter/})).toContainText('连接探测通过');
  expect(payloads).toEqual([{provider:'openrouter',apiKey:'mock-openrouter-key-123',baseUrl:'https://openrouter.ai/api/v1',model:'',models:{text:'',video:''}}]);await expect(key).toHaveCount(0);
  await expect(page.locator('[data-connection-details]')).not.toContainText('mock-openrouter-key-123');
  page.once('dialog',dialog=>dialog.accept());await page.route('**/api/sasi/connections?provider=openrouter',route=>route.fulfill({json:{ok:true}}));await page.getByRole('button',{name:'删除连接',exact:true}).click();await expect(key).toHaveValue('');
