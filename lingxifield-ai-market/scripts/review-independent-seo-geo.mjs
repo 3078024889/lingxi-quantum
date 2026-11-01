@@ -56,7 +56,7 @@ function validateCapture(capture,knownIds){
   if(seen.has(row.platformId))throw new Error('CAPTURE_DUPLICATE_PRODUCT');
   seen.add(row.platformId);
   if(!safeUrl(row.sourceUrl))throw new Error('CAPTURE_SOURCE_URL_INVALID');
-  if(!Number.isInteger(row.sampleCount)||row.sampleCount<1||row.sampleCount>10000)throw new Error('CAPTURE_SAMPLE_COUNT_INVALID');
+  if(!Number.isInteger(row.sampleCount)||row.sampleCount!==1)throw new Error('CAPTURE_SAMPLE_COUNT_INVALID');
   if(row.sponsored!==false)throw new Error('SPONSORED_OR_UNVERIFIED_RESULT_NOT_COMPARABLE');
   if(capture.source==='independent_serp'){
    if(!Number.isInteger(row.position)||row.position<1||row.position>100)throw new Error('SERP_POSITION_INVALID');
@@ -151,7 +151,7 @@ function verifyIndependent(row){
     typeof row.methodVersion!=='string'||!row.methodVersion.trim()||
     typeof row.reviewedBy!=='string'||!/^[-a-zA-Z0-9_.]{2,80}$/.test(row.reviewedBy)||
     typeof row.reviewReason!=='string'||row.reviewReason.trim().length<20||row.reviewReason.length>500||
-    !safeUrl(row.sourceUrl)||!Number.isInteger(row.sampleCount)||row.sampleCount<1||
+    !safeUrl(row.sourceUrl)||row.sampleCount!==1||
     typeof row.engine!=='string'||!row.engine.trim())throw new Error('INDEPENDENT_OBSERVATION_INVALID');
  if(row.source==='independent_serp'&&(!['Google','Bing'].includes(row.engine)||!Number.isInteger(row.position)||row.position<1||row.position>100))
   throw new Error('INDEPENDENT_SERP_METRIC_INVALID');
@@ -162,12 +162,13 @@ function verifyIndependent(row){
  if(row.recordHash!=='sha256:'+hash||row.id!==prefix+hash.slice(7,31))throw new Error('INDEPENDENT_RECORD_HASH_MISMATCH');
 }
 
-export function verifyLedger(rows,{captureDirectory}={}){
+export function verifyLedger(rows,{captureDirectory,knownIds}={}){
  if(!Array.isArray(rows)||rows.length>10000)throw new Error('SEO_GEO_LEDGER_INVALID');
  const ids=new Set(),groups=new Map();
  for(const row of rows){
   if(!row||typeof row.id!=='string'||ids.has(row.id))throw new Error('SEO_GEO_DUPLICATE_OR_INVALID_ID');
   ids.add(row.id);
+  if(knownIds&&!knownIds.has(row.platformId))throw new Error('SEO_GEO_UNKNOWN_PRODUCT');
   if(row.source==='google_search_console')verifyGsc(row);
   else if(row.source==='independent_serp'||row.source==='ai_answer_citation'){
    verifyIndependent(row);
@@ -253,7 +254,7 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
      if(!fs.existsSync(archive)){
       const archiveTmp=archive+'.tmp';fs.writeFileSync(archiveTmp,rawText,'utf8');fs.renameSync(archiveTmp,archive);
      }
-     verifyLedger(merged.result,{captureDirectory:captureDir});
+     verifyLedger(merged.result,{captureDirectory:captureDir,knownIds:knownProductIds()});
      const tmp=ledgerFile+'.tmp';fs.writeFileSync(tmp,JSON.stringify(merged.result,null,2)+'\n','utf8');fs.renameSync(tmp,ledgerFile);
      summary.archive=path.relative(root,archive).replaceAll(path.sep,'/');
     }
