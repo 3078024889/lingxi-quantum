@@ -29,5 +29,7 @@ assert(tight.reduce((sum,x)=>sum+x.content.length,0)<=24);
 const frontend=fs.readFileSync("components/SasiPromptConversation.tsx","utf8");
 const route=fs.readFileSync("app/api/sasi/experience/text/route.ts","utf8");
 assert.match(frontend,/history:conversationHistory\(turns\)/);
+assert.match(frontend,/\.\.\.conversationHistory\(turns\)/,"Browser-local inference must share the 20-turn limit");
+assert.match(frontend,/conversationHistory\(turns,15000\)/,"Resource assistant history must share the bounded window");
 assert.match(route,/const history=boundedDialogueHistory\(body.history\)/);
 console.log("SASI_TWENTY_TURN_CONTEXT_GATE=PASS: 20-turn order, 48k character cap, role isolation, server/client linkage");
