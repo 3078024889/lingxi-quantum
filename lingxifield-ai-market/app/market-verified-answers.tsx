@@ -6,6 +6,7 @@ import {commercialEvidence} from '../lib/market-commercial-evidence';
 import {paymentFactsFor} from '../lib/market-payment-facts';
 import {globalRegionSummary} from '../lib/region-presentation';
 import {localizedPaymentName} from '../lib/market-localized-payment';
+import {codexFor,CODEX_OFFICIAL} from '../lib/market-codex-product';
 
 /** Answers are sourced snapshots, not inferred live vendor checkout, SEO rank or legal advice. */
 const WORDS:Record<Language,{heading:string,free:string,price:string,models:string,payments:string,countries:string,commercial:string,source:string,unknown:string,local:string,scope:string}>={
@@ -30,6 +31,7 @@ export default function MarketVerifiedAnswers({platform,language}:{platform:Plat
   {key:'free',name:w.free,answer:free,source:f?.freeSource},
   {key:'price',name:w.price,answer:price,source:f?.priceSource},
   {key:'models',name:w.models,answer:models,source:f?.modelsSource},
+  ...(platform.id==='chatgpt'?[{key:'codex',name:'Codex',answer:codexFor(language).intro,source:CODEX_OFFICIAL.product}]:[]),
   {key:'payments',name:w.payments,answer:method,source:pay.source||undefined},
   {key:'countries',name:w.countries,answer:language==='zh'?(f?.region||globalRegionSummary(platform.id,language)):globalRegionSummary(platform.id,language),source:f?.regionSource},
   {key:'commercial',name:w.commercial,answer:license?[license.label,license.condition].join(' · '):language==='zh'?(f?.commercial||w.unknown):w.unknown,source:license?.source||f?.commercialSource},
