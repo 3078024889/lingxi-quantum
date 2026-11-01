@@ -2,6 +2,7 @@ import "server-only";
 
 import { createHash } from "node:crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
+import {trustedClientIp} from "@/lib/security/trusted-client-ip";
 
 export type AbuseGuardOptions = {
   scope: string;
@@ -15,13 +16,7 @@ export type AbuseGuardResult =
   | { ok: true }
   | { ok: false; status: 429 | 503; error: "RATE_LIMITED" | "ABUSE_GUARD_UNAVAILABLE" };
 
-function clientIp(request: Request) {
-  const raw =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip")?.trim() ||
-    "unknown";
-  return raw.slice(0, 128);
-}
+function clientIp(request: Request) { return trustedClientIp(request); }
 
 function digest(value: string) {
   return createHash("sha256").update(value).digest("hex");

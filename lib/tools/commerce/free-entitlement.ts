@@ -1,9 +1,10 @@
 import "server-only";
 import{createHash}from"node:crypto";
 import{createAdminClient}from"@/lib/supabase/admin";
+import{trustedClientIp}from"@/lib/security/trusted-client-ip";
 export type FreeEntitlementKind="image-watermark-daily"|"video-watermark-lifetime"|"video-dubbing-preview";
 
-function ip(req:Request){return(req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()||req.headers.get("x-real-ip")?.trim()||"unknown").slice(0,128)}
+function ip(req:Request){return trustedClientIp(req)}
 function salt(){return process.env.LINGXIFIELD_PRIVACY_HASH_SECRET||process.env.SUPABASE_SERVICE_ROLE_KEY||"lingxifield"}
 function hash(v:string){return createHash("sha256").update(`${salt()}:${v}`).digest("hex")}
 
