@@ -15,7 +15,7 @@ export async function ensureToolExportAccess(blob:Blob,name:string,intent:'save'
 }
 // Synchronous read: native file sharing must be started in a fresh click handler.
 export function isExportAccessGranted(blob:Blob):boolean{
- const toolId=location.pathname.match(/\\/tools\\/([^/?#]+)/)?.[1]||'';
+ const toolId=location.pathname.match(/\/tools\/([^/?#]+)/)?.[1]||'';
  if(isMeteredOperationTool(toolId)||!isMeteredTool(toolId))return true;
  const state=states.get(blob);
  return Boolean(state?.allowed&&state.toolId===toolId);
