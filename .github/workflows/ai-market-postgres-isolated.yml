@@ -1,0 +1,191 @@
+name: AI Market PostgreSQL 17 isolated migration validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'lingxifield-ai-market/sql/**'
+      - '.github/workflows/ai-market-postgres-isolated.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  schema-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test-only-secret
+          POSTGRES_DB: ai_market_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d ai_market_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGUSER: postgres
+      PGPASSWORD: test-only-secret
+      PGDATABASE: ai_market_test
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+
+      - name: Bootstrap disposable Supabase-compatible roles and auth schema
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $roles$
+          BEGIN
+            IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='anon') THEN CREATE ROLE anon NOLOGIN; END IF;
+            IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
+            IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='service_role') THEN CREATE ROLE service_role NOLOGIN BYPASSRLS; END IF;
+          END
+          $roles$;
+          CREATE SCHEMA IF NOT EXISTS auth;
+          CREATE SCHEMA IF NOT EXISTS extensions;
+          CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+          CREATE TABLE auth.users (
+            id uuid PRIMARY KEY,
+            email text UNIQUE,
+            email_confirmed_at timestamptz
+          );
+          CREATE OR REPLACE FUNCTION auth.uid() RETURNS uuid
+          LANGUAGE sql STABLE
+          AS $auth_uid$ SELECT nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $auth_uid$;
+          INSERT INTO auth.users(id,email,email_confirmed_at)
+          VALUES('11111111-1111-4111-8111-111111111111','business@lingxifield.com',clock_timestamp());
+          SQL
+
+      - name: Apply feedback migrations in security-preserving order
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in \
+            20261030180000_ai_market_public_feedback.sql \
+            20261030195000_ai_market_feedback_moderation.sql \
+            20261101_ai_market_feedback_key_provisioning.sql \
+            20261101_ai_market_feedback_constant_time_hmac.sql \
+            20261030214500_ai_market_auto_publish.sql
+          do
+            echo "Applying staged migration: $name"
+            psql -X -v ON_ERROR_STOP=1 -f "lingxifield-ai-market/sql/$name"
+          done
+
+      - name: Verify visitor feedback HMAC provisioning, submission and moderation in isolated PostgreSQL
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          DO $check$
+          BEGIN
+            IF has_function_privilege('anon','public.ai_market_configure_feedback_signing_key(text)','EXECUTE')
+              OR has_function_privilege('authenticated','public.ai_market_configure_feedback_signing_key(text)','EXECUTE')
+            THEN RAISE EXCEPTION 'PUBLIC_FEEDBACK_KEY_PROVISIONING'; END IF;
+            IF NOT has_function_privilege('service_role','public.ai_market_configure_feedback_signing_key(text)','EXECUTE')
+            THEN RAISE EXCEPTION 'SERVICE_ROLE_FEEDBACK_KEY_PROVISIONING_MISSING'; END IF;
+            IF has_function_privilege('anon','public.ai_market_pending_feedback(integer)','EXECUTE')
+              OR has_function_privilege('anon','public.ai_market_moderate_feedback(uuid,text,text)','EXECUTE')
+            THEN RAISE EXCEPTION 'ANON_MODERATION_ACCESS'; END IF;
+            IF NOT has_function_privilege('authenticated','public.ai_market_pending_feedback(integer)','EXECUTE')
+              OR NOT has_function_privilege('authenticated','public.ai_market_moderate_feedback(uuid,text,text)','EXECUTE')
+            THEN RAISE EXCEPTION 'AUTHENTICATED_MODERATION_RPC_MISSING'; END IF;
+            IF has_table_privilege('anon','private.ai_market_feedback_signing_key','SELECT')
+              OR has_table_privilege('authenticated','private.ai_market_feedback_signing_key','SELECT')
+            THEN RAISE EXCEPTION 'FEEDBACK_SIGNING_KEY_EXPOSED'; END IF;
+            IF has_table_privilege('anon','public.ai_market_visitor_feedback','INSERT')
+              OR has_table_privilege('anon','public.ai_market_visitor_feedback','UPDATE')
+              OR has_table_privilege('anon','public.ai_market_visitor_feedback','DELETE')
+              OR has_table_privilege('authenticated','public.ai_market_visitor_feedback','INSERT')
+              OR has_table_privilege('authenticated','public.ai_market_visitor_feedback','UPDATE')
+              OR has_table_privilege('authenticated','public.ai_market_visitor_feedback','DELETE')
+            THEN RAISE EXCEPTION 'RAW_FEEDBACK_TABLE_WRITE_ACCESS'; END IF;
+          END
+          $check$;
+
+          BEGIN;
+          SELECT set_config('request.jwt.claim.role','service_role',true);
+          SET LOCAL ROLE service_role;
+          SELECT public.ai_market_configure_feedback_signing_key(repeat('a',64));
+          COMMIT;
+
+          BEGIN;
+          SET LOCAL ROLE anon;
+          DO $submit$
+          DECLARE
+            v_nonce text:=repeat('c',32);
+            v_hash text:=repeat('d',64);
+            v_issued bigint:=extract(epoch from clock_timestamp())::bigint;
+            v_doc jsonb;
+            v_sig text;
+            v_result jsonb;
+            v_status text;
+          BEGIN
+            v_doc:=jsonb_build_object(
+              'nonce',v_nonce,'issuedAt',v_issued,'visitorHash',v_hash,
+              'category','site_experience','productId',null,'locale','en',
+              'nickname','CI Star','body','This product experience is clear and useful for my everyday workflow.'
+            );
+            v_sig:=encode(extensions.hmac(
+              convert_to(v_nonce||'.'||v_issued::text||'.'||v_hash,'UTF8'),
+              convert_to(repeat('a',64),'UTF8'),'sha256'
+            ),'hex');
+            v_result:=public.ai_market_submit_visitor_feedback(v_doc,v_sig);
+            IF (v_result->>'published')::boolean IS DISTINCT FROM true
+            THEN RAISE EXCEPTION 'SAFE_FEEDBACK_NOT_AUTO_PUBLISHED'; END IF;
+            SELECT status INTO v_status FROM public.ai_market_visitor_feedback WHERE request_nonce=v_nonce;
+            IF v_status IS DISTINCT FROM 'approved'
+            THEN RAISE EXCEPTION 'SAFE_FEEDBACK_STATUS_INVALID'; END IF;
+            BEGIN
+              PERFORM public.ai_market_submit_visitor_feedback(v_doc,repeat('0',64));
+              RAISE EXCEPTION 'INVALID_SIGNATURE_ACCEPTED';
+            EXCEPTION WHEN SQLSTATE '42501' THEN NULL;
+            END;
+          END
+          $submit$;
+          COMMIT;
+
+          BEGIN;
+          SET LOCAL ROLE anon;
+          DO $pending$
+          DECLARE
+            v_nonce text:=repeat('e',32);
+            v_hash text:=repeat('f',64);
+            v_issued bigint:=extract(epoch from clock_timestamp())::bigint;
+            v_doc jsonb;
+            v_sig text;
+            v_result jsonb;
+          BEGIN
+            v_doc:=jsonb_build_object(
+              'nonce',v_nonce,'issuedAt',v_issued,'visitorHash',v_hash,
+              'category','site_experience','productId',null,'locale','en',
+              'nickname','CI Star','body','Please contact me on Telegram for further details about this product.'
+            );
+            v_sig:=encode(extensions.hmac(
+              convert_to(v_nonce||'.'||v_issued::text||'.'||v_hash,'UTF8'),
+              convert_to(repeat('a',64),'UTF8'),'sha256'
+            ),'hex');
+            v_result:=public.ai_market_submit_visitor_feedback(v_doc,v_sig);
+            IF (v_result->>'published')::boolean IS DISTINCT FROM false
+              OR (v_result->>'reviewRequired')::boolean IS DISTINCT FROM true
+            THEN RAISE EXCEPTION 'UNSAFE_FEEDBACK_NOT_HELD_FOR_REVIEW'; END IF;
+          END
+          $pending$;
+          COMMIT;
+
+          BEGIN;
+          SET LOCAL ROLE authenticated;
+          SELECT set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+          DO $moderation$
+          DECLARE v_pending jsonb;
+          BEGIN
+            v_pending:=public.ai_market_pending_feedback(30);
+            IF jsonb_array_length(v_pending->'items')<1
+            THEN RAISE EXCEPTION 'VERIFIED_MODERATOR_CANNOT_READ_PENDING'; END IF;
+          END
+          $moderation$;
+          COMMIT;
+          SQL
