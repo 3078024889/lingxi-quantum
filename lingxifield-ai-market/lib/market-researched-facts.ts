@@ -89,16 +89,16 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
       "Apple App Store (iOS)"
     ],
     "paymentSource": "https://lumalabs.ai/learning-hub/payments-subscriptions",
-    "price": "Luma 官网：周付 $9.99/周，月付 $49.99/月，年付 $99.99/年；首次周订阅或有优惠",
-    "priceSource": "https://luma.ai/pricing",
+    "price": "Luma App 现行方案为 Plus、Pro、Ultra 与 Enterprise；API 使用独立积分体系，按模型与输出规格计费，不把旧 Dream Machine 订阅价当作现行方案",
+    "priceSource": "https://lumalabs.ai/llm-info",
     "region": "官网提供网页订阅与 iOS 购买，具体地区/币种由官方结算和商店决定",
     "regionSource": "https://lumalabs.ai/learning-hub/payments-subscriptions",
     "commercial": "商用输出依付费套餐和具体产品条款；创作者须有输入素材的合法权益，第三方素材权利不自动取得",
     "commercialSource": "https://lumalabs.ai/legal/terms-of-service",
-    "models": "Luma 提供视频生成及 Ray 系列编辑/修改能力；各模型视频时长和套餐权限不同",
-    "modelsSource": "https://lumalabs.ai/",
-    "free": "Luma Dream Machine Free 可用部分图片及 Ray3 视频草稿，导出带水印，仅个人非商业用途；模型及额度见官网",
-    "freeSource": "https://lumalabs.ai/learning-hub/payments-subscriptions"
+    "models": "Luma 现行视频模型 Ray3.2、图像模型 UNI-1.1；Luma App 集成创意智能体和多模型创作，API 另有 Build/Scale 计费体系",
+    "modelsSource": "https://lumalabs.ai/llm-info",
+    "free": "Luma 官方说明现行套餐均包含试用积分；具体试用数量及模型使用权限在官方 Plus、Pro、Ultra 方案中展示，不把已停用的 Dream Machine 免费政策当作当前权益",
+    "freeSource": "https://lumalabs.ai/llm-info"
   },
   "langchain": {
     "price": "LangChain 开源框架免费；LangSmith Developer $0/席位/月（每月含 5,000 基础追踪），Plus $39/席位/月，超额按用量计费",
@@ -267,8 +267,8 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "paymentSource": "https://help.suno.com/en/articles/2421185",
     "region": "Suno 网页接受多币种信用卡；Apple Pay/Google Pay 及本地银行卡随国家地区显示",
     "regionSource": "https://help.suno.com/en/articles/2421185",
-    "models": "Suno 根据提示词和歌词生成音乐、歌曲、伴奏；具体生成次数、模型和商业权益依套餐",
-    "modelsSource": "https://suno.com/pricing",
+    "models": "Suno 音乐生成、编辑、配音与 Suno Studio；官网已介绍 v6，模型权限、每日积分和作品商用授权按 Free/Pro/Premier 套餐区分",
+    "modelsSource": "https://suno.com/zh-cn",
     "price": "Suno Pro 年付折合约 $8/月（年付）；Premier 和月付另有套餐，商用只覆盖订阅生效期间作品",
     "priceSource": "https://suno.com/pricing",
     "free": "免费方案每天 50 积分，适用免费模型与创作额度；免费生成音乐不附商用授权",
