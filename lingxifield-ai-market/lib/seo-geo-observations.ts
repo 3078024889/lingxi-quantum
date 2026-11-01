@@ -31,7 +31,7 @@ export function validObservation(x:unknown):x is SeoGeoObservation{
  if(typeof o.methodVersion!=='string'||!o.methodVersion.trim())return false;
  if(typeof o.sampleCount!=='number'||!Number.isInteger(o.sampleCount)||o.sampleCount<1)return false;
  if(o.reviewed!==true||typeof o.reviewedAt!=='string'||!Number.isFinite(Date.parse(o.reviewedAt)))return false;
- if(typeof o.reviewedBy!=='string'||!/^[-a-zA-Z0-9_.@]{2,80}$/.test(o.reviewedBy))return false;
+ if(typeof o.reviewedBy!=='string'||!/^[-a-zA-Z0-9_.]{2,80}$/.test(o.reviewedBy))return false;
  if(typeof o.reviewReason!=='string'||o.reviewReason.trim().length<20||o.reviewReason.length>500)return false;
  if(typeof o.sponsored!=='boolean')return false;
  if(o.source==='ai_answer_citation'&&(!o.model||!o.modelVersion||!o.engine))return false;
