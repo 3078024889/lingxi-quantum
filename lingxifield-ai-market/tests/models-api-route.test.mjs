@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const api=await readFile(new URL('../app/api/v1/models/route.ts',import.meta.url),'utf8');
-const page=await readFile(new URL('../app/models/page.tsx',import.meta.url),'utf8');
+const page=await readFile(new URL('../app/(default)/models/page.tsx',import.meta.url),'utf8');
 test('models API retains source, bounds pages and does not claim official verification',()=>{
  assert.ok(api.includes('https://models.dev/api.json'));
  assert.ok(api.includes('Math.min(50'));
