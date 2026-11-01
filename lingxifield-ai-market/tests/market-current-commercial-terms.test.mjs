@@ -44,5 +44,5 @@ test('all nine locales show Suno annual prices, allowance and monthly download l
   assert.ok(f.includes('50'),l+' free credits');
  }
  const price=RESEARCHED_FACTS.suno.price;
- assert.match(price,/Pro.*Premier.*20.*60/);
+ assert.match(price,/Pro.*20.*Premier.*60/);
 });
