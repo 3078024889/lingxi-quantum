@@ -11,3 +11,141 @@ const COPY={
  ar:['دليل الاستخدام','أسئلة شائعة','لماذا تستغرق المعالجة وقتاً؟','الملفات الكبيرة والاستخدام الأول قد يستغرقان وقتاً أطول. أبق الصفحة مفتوحة وجرّب ملفاً صغيراً.','كيف أحفظ النتيجة أو أرسلها؟','راجع النتيجة ثم اختر الحفظ أو الإرسال. إذا توقف WeChat فاحفظ في الملفات ثم أرفق من داخل المحادثة.','متى يلزم الدفع؟','استخدم حصة التجربة المتاحة. يُعرض السعر للتأكيد قبل المتابعة. إعادة حفظ النتيجة نفسها أو إرسالها لا تُحسب مرتين.','اختر ملفاً أو الصق نصاً أو رابطاً.','اختر الوظيفة والإعدادات ثم ابدأ.','راجع النتيجة واحتفظ بالأصل ثم احفظ أو أرسل.'],
 } as const;
 export function tutorialCopy(locale:SeoLocale){return COPY[locale]||COPY.en}
+
+
+type GuideGroup = "file"|"pdf"|"image"|"audio"|"video"|"text"|"qr"|"ocr"|"privacy"|"translate"|"web";
+const GUIDE_GROUP_BY_SLUG:Record<string,GuideGroup>={
+ "pdf-editor":"pdf","e-sign-pdf":"pdf","pdf-pages":"pdf","pdf-merge-split":"pdf","merge-pdf":"pdf","split-pdf":"pdf","compress-pdf":"pdf","pdf-compress":"pdf","pdf-crop":"pdf","pdf-redact":"pdf","pdf-to-jpg":"pdf","pdf-to-xlsx":"pdf","pdf-watermark":"pdf","pdf-metadata-editor":"pdf","pdf-compare":"pdf","pdf-flatten":"pdf","pdf-permissions":"pdf","pdf-protect":"pdf","pdf-unlock":"pdf","pdf-overlay":"pdf","pdf-page-numbers":"pdf","pdf-pages-per-sheet":"pdf","pdf-search":"pdf","pdf-to-text":"pdf","pdf-to-word":"pdf","pdf-to-markdown":"pdf","pdf-web-optimize":"pdf","pdf-inspect":"pdf","pdf-attachments":"pdf","pdf-bates-numbering":"pdf","pdf-bookmarks":"pdf","pdf-rasterize":"pdf","pdf-grayscale":"pdf","pdf-halve-pages":"pdf","pdf-remove-metadata":"pdf","pdf-remove-annotations":"pdf","pdf-viewer-preferences":"pdf","pdf-page-size":"pdf",
+ "png-to-jpg":"image","jpg-to-png":"image","webp-to-jpg":"image","compress-image":"image","compress-image-to-20kb":"image","compress-image-to-50kb":"image","compress-image-to-100kb":"image","compress-image-to-200kb":"image","compress-image-to-500kb":"image","resize-image":"image","remove-exif":"image","heic-to-jpg":"image","heic-local":"image","avif-to-jpg":"image","bmp-to-png":"image","gif-to-jpg":"image","ico-to-png":"image","jfif-to-jpg":"image","svg-to-png":"image","long-image":"image","image-to-pdf":"image","image-to-pdf-pro":"image","batch-image":"image","image-watermark-remover":"image","batch-image-watermark-remover":"image","screenshot-redact":"image","handwriting-ocr":"image","id-photo-ai":"image",
+ "audio-transcription":"audio","audio-cleanup":"audio","video-transcription":"audio",
+ "video-toolkit":"video","video-dubbing":"video","video-watermark-remover":"video","rotate-video":"video","reverse-video":"video","loop-video":"video","stop-motion-video":"video",
+ "text-counter":"text","remove-duplicate-lines":"text","remove-empty-lines":"text","url-encode-decode":"text","base64-encode-decode":"text","json-formatter":"text","timestamp-converter":"text","csv-json":"text","text-diff":"text","regex-tester":"text","url-parser":"text","jwt-decoder":"text","number-base-converter":"text","uuid-generator":"text","cron-parser":"text","md5-sha256":"text","xml-formatter":"text",
+ "qr-code-generator":"qr","qr-code-reader":"qr","qr-safe-reader":"qr",
+ "ocr":"ocr","pdf-ocr":"ocr",
+ "privacy-cleaner":"privacy","burn-after-read":"privacy","temp-mail":"privacy",
+ "document-translate":"translate","image-translator":"translate","subtitle-translate":"translate","video-translate":"translate",
+ "url-to-video":"web"
+};
+const TASK_GUIDES:Record<SeoLocale,Record<GuideGroup,readonly [string,string,string]>>={
+ zh:{
+  file:["选择本工具支持的文件。","核对文件格式、大小和页面提供的选项。","开始处理，检查结果后保存或发送。"],
+  pdf:["上传 PDF，等待页面预览完成。","选择页面范围，或添加文字、图片、签名并调整位置。","先检查预览，再导出 PDF；重新打开文件核对页面和内容。"],
+  image:["选择图片文件。","设置目标格式、尺寸或压缩质量。","预览结果后保存，检查最终像素尺寸和文件大小。"],
+  audio:["选择音频文件；支持视频的工具也可上传视频。","首次使用会在设备准备语音识别模型，文件处理在浏览器本地完成。","校对识别文字和时间轴，导出 TXT、SRT 或 VTT。"],
+  video:["上传视频文件。","选择压缩、旋转、裁剪或提取音频等操作并设置参数。","预览后导出，检查文件能否正常播放及画面方向。"],
+  text:["输入或粘贴要处理的文本。","选择编码、格式或转换方向。","执行后核对结果，再复制或下载。"],
+  qr:["输入网址、文本，或选择二维码内容类型。","填写对应内容，例如网址、Wi‑Fi 或联系人信息。","生成后用手机扫码核验，再保存二维码图片。"],
+  ocr:["上传图片或扫描版 PDF。","选择图片或文档所使用的识别语言。","开始识别，校对提取文字，再保存 TXT。"],
+  privacy:["选择需要清理或保护的内容。","先查看检测到的信息及本次将执行的操作。","确认后处理，下载结果并复查隐私信息。"],
+  translate:["上传需要翻译的文件，或选择待翻译内容。","选择源语言和目标语言；如页面提示上传或费用确认，先核对再继续。","检查人名、数字、术语和排版，再导出译文。"],
+  web:["输入公开网页的网址。","读取后检查网页标题和提取内容是否正确。","确认素材无误后，再继续交给 SASI 制作视频。"]
+ },
+ en:{
+  file:["Choose a file supported by this tool.","Check the file format, size and options shown on the page.","Run the task, review the result, then save or send it."],
+  pdf:["Upload a PDF and wait for the page preview to finish.","Choose the page range, or add and position text, images or signatures.","Review the preview, export the PDF, then reopen it to check the pages and content."],
+  image:["Choose the image file.","Set the target format, dimensions or compression quality.","Preview and save the image; check its final dimensions and file size."],
+  audio:["Choose an audio file; tools that accept video can also use a video file.","On first use, the speech model may be prepared on your device; the media is processed in your browser.","Review the transcript and timestamps, then export TXT, SRT or VTT."],
+  video:["Choose the video file.","Select an operation such as compression, rotation, trimming or audio extraction.","Preview and export the result, then check that the video plays and the orientation is correct."],
+  text:["Enter or paste the text to process.","Choose the encoding, format or conversion direction.","Run the tool, check the result, then copy or download it."],
+  qr:["Enter a URL or text, or choose a QR content type.","Fill in the details required for that type, such as Wi-Fi or contact information.","Generate the QR code, scan it with a phone to verify, then save the image."],
+  ocr:["Upload an image or scanned PDF.","Choose the language used in the image or document.","Run text recognition, review the extracted text, then save it."],
+  privacy:["Choose the content or file you want to protect or clean.","Review the information detected and the action that will be applied.","Confirm the action, then download and check the result."],
+  translate:["Choose the document or media you want to translate.","Select the source and target languages; review any upload or price confirmation before continuing.","Check names, numbers, terminology and layout, then export the translation."],
+  web:["Enter the URL of a public webpage.","Read the page title and extracted content to confirm it is the intended source.","Continue to SASI only after checking the source information."]
+ },
+ ja:{
+  file:["このツールで対応しているファイルを選択します。","ファイル形式・サイズと画面に表示される設定を確認します。","処理を実行し、結果を確認して保存または送信します。"],
+  pdf:["PDFをアップロードし、ページプレビューが表示されるまで待ちます。","ページ範囲を選ぶか、文字・画像・署名を追加して位置を調整します。","プレビューを確認してPDFを書き出し、再度開いて内容を確認します。"],
+  image:["画像ファイルを選択します。","出力形式、サイズ、圧縮品質を設定します。","プレビューを確認して保存し、画像サイズとファイル容量を確認します。"],
+  audio:["音声ファイルを選択します。動画対応ツールでは動画も選べます。","初回は端末上で音声認識モデルを準備する場合があります。メディアはブラウザ内で処理します。","文字起こしとタイムスタンプを確認し、TXT・SRT・VTTで保存します。"],
+  video:["動画ファイルを選択します。","圧縮、回転、トリミング、音声抽出などの操作を選びます。","プレビュー後に書き出し、再生と向きを確認します。"],
+  text:["処理する文章を入力または貼り付けます。","エンコード、形式、変換方向を選びます。","実行後に結果を確認し、コピーまたはダウンロードします。"],
+  qr:["URLやテキストを入力するか、QRの種類を選びます。","Wi-Fiや連絡先など、必要な情報を入力します。","QRを生成し、スマートフォンで読み取って確認してから保存します。"],
+  ocr:["画像またはスキャンPDFをアップロードします。","文書で使われている認識言語を選びます。","文字認識を実行し、抽出結果を確認して保存します。"],
+  privacy:["保護または整理したい内容・ファイルを選びます。","検出された情報と実行する処理を確認します。","処理を確定し、結果をダウンロードして確認します。"],
+  translate:["翻訳する文書またはメディアを選びます。","原文と翻訳先の言語を選び、アップロードや料金の確認があれば確認します。","名前、数字、用語、レイアウトを確認して翻訳結果を書き出します。"],
+  web:["公開ウェブページのURLを入力します。","読み取ったページ名と内容が正しいか確認します。","内容を確認してからSASIで動画制作へ進みます。"]
+ },
+ ko:{
+  file:["이 도구가 지원하는 파일을 선택하세요.","파일 형식과 크기, 화면에 표시된 옵션을 확인하세요.","실행한 뒤 결과를 확인하고 저장하거나 보내세요."],
+  pdf:["PDF를 업로드하고 페이지 미리보기가 끝날 때까지 기다리세요.","페이지 범위를 선택하거나 텍스트·이미지·서명을 추가하고 위치를 조정하세요.","미리보기를 확인하고 PDF를 내보낸 뒤 다시 열어 내용을 확인하세요."],
+  image:["이미지 파일을 선택하세요.","출력 형식, 크기 또는 압축 품질을 설정하세요.","미리보기 후 저장하고 최종 크기와 파일 용량을 확인하세요."],
+  audio:["오디오 파일을 선택하세요. 동영상을 지원하는 도구에서는 동영상도 선택할 수 있습니다.","처음 사용할 때 기기에서 음성 모델을 준비할 수 있으며 미디어는 브라우저에서 처리됩니다.","변환된 텍스트와 타임스탬프를 확인하고 TXT·SRT·VTT로 내보내세요."],
+  video:["동영상 파일을 선택하세요.","압축, 회전, 자르기 또는 오디오 추출 등 작업을 선택하세요.","미리보기 후 내보내고 동영상 재생과 방향을 확인하세요."],
+  text:["처리할 텍스트를 입력하거나 붙여 넣으세요.","인코딩, 형식 또는 변환 방향을 선택하세요.","실행 후 결과를 확인하고 복사하거나 다운로드하세요."],
+  qr:["URL이나 텍스트를 입력하거나 QR 콘텐츠 유형을 선택하세요.","Wi-Fi 또는 연락처 정보 등 필요한 내용을 입력하세요.","QR을 생성하고 휴대전화로 스캔해 확인한 뒤 저장하세요."],
+  ocr:["이미지 또는 스캔 PDF를 업로드하세요.","문서에 사용된 인식 언어를 선택하세요.","문자 인식을 실행하고 추출된 텍스트를 확인한 뒤 저장하세요."],
+  privacy:["보호하거나 정리할 내용 또는 파일을 선택하세요.","감지된 정보와 적용될 작업을 확인하세요.","작업을 확정하고 결과를 다운로드해 다시 확인하세요."],
+  translate:["번역할 문서나 미디어를 선택하세요.","원본 언어와 대상 언어를 선택하고 업로드·요금 확인이 있으면 검토하세요.","이름, 숫자, 용어와 레이아웃을 확인한 뒤 번역 결과를 내보내세요."],
+  web:["공개 웹페이지 URL을 입력하세요.","읽어 온 페이지 제목과 내용이 올바른지 확인하세요.","출처 정보를 확인한 뒤 SASI에서 영상 제작을 계속하세요."]
+ },
+ fr:{
+  file:["Choisissez un fichier pris en charge par cet outil.","Vérifiez le format, la taille et les options affichées.","Lancez le traitement, vérifiez le résultat puis enregistrez-le ou envoyez-le."],
+  pdf:["Importez un PDF et attendez la fin de l’aperçu des pages.","Choisissez les pages ou ajoutez et positionnez du texte, des images ou des signatures.","Vérifiez l’aperçu, exportez le PDF puis rouvrez-le pour contrôler le résultat."],
+  image:["Choisissez le fichier image.","Définissez le format, les dimensions ou la qualité de compression.","Prévisualisez et enregistrez l’image, puis vérifiez ses dimensions et sa taille."],
+  audio:["Choisissez un fichier audio ; les outils compatibles acceptent aussi la vidéo.","Lors de la première utilisation, le modèle vocal peut être préparé sur votre appareil ; le média est traité dans le navigateur.","Vérifiez le texte et les horodatages, puis exportez en TXT, SRT ou VTT."],
+  video:["Choisissez le fichier vidéo.","Sélectionnez une opération : compression, rotation, découpage ou extraction audio.","Prévisualisez et exportez, puis vérifiez la lecture et l’orientation de la vidéo."],
+  text:["Saisissez ou collez le texte à traiter.","Choisissez l’encodage, le format ou le sens de conversion.","Lancez l’outil, vérifiez le résultat puis copiez-le ou téléchargez-le."],
+  qr:["Saisissez une URL ou un texte, ou choisissez le type de QR.","Renseignez les informations requises, comme le Wi-Fi ou un contact.","Générez le QR, scannez-le avec un téléphone pour le vérifier, puis enregistrez l’image."],
+  ocr:["Importez une image ou un PDF numérisé.","Choisissez la langue utilisée dans le document.","Lancez la reconnaissance, vérifiez le texte extrait puis enregistrez-le."],
+  privacy:["Choisissez le contenu ou le fichier à protéger ou nettoyer.","Vérifiez les informations détectées et l’action prévue.","Confirmez, téléchargez le résultat et contrôlez-le."],
+  translate:["Choisissez le document ou le média à traduire.","Sélectionnez les langues source et cible ; vérifiez toute confirmation d’envoi ou de tarif.","Contrôlez les noms, nombres, termes et la mise en page, puis exportez la traduction."],
+  web:["Saisissez l’URL d’une page web publique.","Vérifiez le titre et le contenu extraits pour confirmer la bonne source.","Après vérification, poursuivez dans SASI pour créer la vidéo."]
+ },
+ de:{
+  file:["Wählen Sie eine von diesem Werkzeug unterstützte Datei.","Prüfen Sie Dateiformat, Größe und die angezeigten Optionen.","Starten Sie die Verarbeitung, prüfen Sie das Ergebnis und speichern oder senden Sie es."],
+  pdf:["Laden Sie ein PDF hoch und warten Sie, bis die Seitenvorschau fertig ist.","Wählen Sie Seiten aus oder fügen Sie Text, Bilder oder Signaturen hinzu und positionieren Sie sie.","Prüfen Sie die Vorschau, exportieren Sie das PDF und öffnen Sie es erneut zur Kontrolle."],
+  image:["Wählen Sie die Bilddatei aus.","Legen Sie Zielformat, Abmessungen oder Komprimierungsqualität fest.","Prüfen und speichern Sie das Bild; kontrollieren Sie Maße und Dateigröße."],
+  audio:["Wählen Sie eine Audiodatei; videofähige Werkzeuge akzeptieren auch Videos.","Beim ersten Einsatz wird das Sprachmodell möglicherweise auf Ihrem Gerät vorbereitet; die Medienverarbeitung erfolgt im Browser.","Prüfen Sie Transkript und Zeitstempel und exportieren Sie TXT, SRT oder VTT."],
+  video:["Wählen Sie die Videodatei aus.","Wählen Sie Komprimieren, Drehen, Zuschneiden oder Audio extrahieren.","Vorschau anzeigen, exportieren und Wiedergabe sowie Ausrichtung prüfen."],
+  text:["Geben Sie den zu verarbeitenden Text ein oder fügen Sie ihn ein.","Wählen Sie Kodierung, Format oder Konvertierungsrichtung.","Starten Sie das Werkzeug, prüfen Sie das Ergebnis und kopieren oder laden Sie es herunter."],
+  qr:["Geben Sie eine URL oder einen Text ein oder wählen Sie einen QR-Inhaltstyp.","Ergänzen Sie die erforderlichen Angaben, etwa WLAN- oder Kontaktdaten.","Erstellen Sie den QR-Code, prüfen Sie ihn mit dem Smartphone und speichern Sie das Bild."],
+  ocr:["Laden Sie ein Bild oder ein gescanntes PDF hoch.","Wählen Sie die im Dokument verwendete Erkennungssprache.","Starten Sie OCR, prüfen Sie den erkannten Text und speichern Sie ihn."],
+  privacy:["Wählen Sie den Inhalt oder die Datei, die geschützt oder bereinigt werden soll.","Prüfen Sie die erkannten Informationen und die vorgesehene Aktion.","Bestätigen Sie, laden Sie das Ergebnis herunter und kontrollieren Sie es."],
+  translate:["Wählen Sie das zu übersetzende Dokument oder Medium.","Wählen Sie Quell- und Zielsprache und prüfen Sie Upload- oder Preisbestätigungen.","Kontrollieren Sie Namen, Zahlen, Fachbegriffe und Layout und exportieren Sie die Übersetzung."],
+  web:["Geben Sie die URL einer öffentlichen Webseite ein.","Prüfen Sie Seitentitel und extrahierte Inhalte auf Richtigkeit.","Fahren Sie erst nach Prüfung der Quelle in SASI mit der Videoerstellung fort."]
+ },
+ es:{
+  file:["Elige un archivo compatible con esta herramienta.","Comprueba el formato, el tamaño y las opciones disponibles.","Inicia el proceso, revisa el resultado y guárdalo o envíalo."],
+  pdf:["Sube un PDF y espera a que termine la vista previa de las páginas.","Elige las páginas o añade y coloca texto, imágenes o firmas.","Revisa la vista previa, exporta el PDF y vuelve a abrirlo para comprobarlo."],
+  image:["Elige el archivo de imagen.","Configura el formato, las dimensiones o la calidad de compresión.","Previsualiza y guarda la imagen; comprueba sus dimensiones y tamaño final."],
+  audio:["Elige un archivo de audio; las herramientas compatibles también aceptan vídeo.","En el primer uso puede prepararse el modelo de voz en tu dispositivo; el archivo se procesa en el navegador.","Revisa el texto y las marcas de tiempo y exporta TXT, SRT o VTT."],
+  video:["Elige el archivo de vídeo.","Selecciona comprimir, girar, recortar o extraer audio.","Previsualiza y exporta; comprueba que el vídeo se reproduce y tiene la orientación correcta."],
+  text:["Escribe o pega el texto que quieres procesar.","Elige la codificación, el formato o la dirección de conversión.","Ejecuta la herramienta, revisa el resultado y cópialo o descárgalo."],
+  qr:["Introduce una URL o texto, o elige el tipo de contenido QR.","Completa los datos necesarios, como Wi-Fi o información de contacto.","Genera el QR, escanéalo con el móvil para verificarlo y guarda la imagen."],
+  ocr:["Sube una imagen o un PDF escaneado.","Elige el idioma utilizado en el documento.","Ejecuta el reconocimiento, revisa el texto extraído y guárdalo."],
+  privacy:["Elige el contenido o archivo que quieres proteger o limpiar.","Revisa la información detectada y la acción que se aplicará.","Confirma, descarga el resultado y vuelve a comprobarlo."],
+  translate:["Elige el documento o medio que quieres traducir.","Selecciona los idiomas de origen y destino; revisa cualquier confirmación de carga o precio.","Comprueba nombres, números, términos y formato y exporta la traducción."],
+  web:["Introduce la URL de una página web pública.","Comprueba el título y el contenido extraído para confirmar la fuente.","Tras verificar la información, continúa en SASI para crear el vídeo."]
+ },
+ pt:{
+  file:["Escolha um arquivo compatível com esta ferramenta.","Confira o formato, o tamanho e as opções disponíveis.","Inicie o processamento, confira o resultado e salve ou envie."],
+  pdf:["Envie um PDF e aguarde a conclusão da prévia das páginas.","Selecione as páginas ou adicione e posicione textos, imagens ou assinaturas.","Confira a prévia, exporte o PDF e abra-o novamente para verificar."],
+  image:["Escolha o arquivo de imagem.","Defina o formato, as dimensões ou a qualidade da compressão.","Visualize e salve a imagem; confira as dimensões e o tamanho final."],
+  audio:["Escolha um arquivo de áudio; ferramentas compatíveis também aceitam vídeo.","No primeiro uso, o modelo de voz pode ser preparado no dispositivo; a mídia é processada no navegador.","Revise o texto e os tempos e exporte TXT, SRT ou VTT."],
+  video:["Escolha o arquivo de vídeo.","Selecione compactar, girar, cortar ou extrair áudio.","Visualize e exporte; confira se o vídeo reproduz e se a orientação está correta."],
+  text:["Digite ou cole o texto que deseja processar.","Escolha a codificação, o formato ou a direção da conversão.","Execute, confira o resultado e copie ou baixe."],
+  qr:["Digite uma URL ou texto, ou escolha o tipo de conteúdo do QR.","Preencha os dados necessários, como Wi-Fi ou contato.","Gere o QR, leia com o celular para conferir e salve a imagem."],
+  ocr:["Envie uma imagem ou PDF digitalizado.","Escolha o idioma usado no documento.","Execute o reconhecimento, revise o texto extraído e salve."],
+  privacy:["Escolha o conteúdo ou arquivo que deseja proteger ou limpar.","Confira as informações detectadas e a ação que será aplicada.","Confirme, baixe o resultado e verifique novamente."],
+  translate:["Escolha o documento ou mídia que deseja traduzir.","Selecione os idiomas de origem e destino; confira qualquer confirmação de envio ou preço.","Revise nomes, números, termos e formatação e exporte a tradução."],
+  web:["Digite a URL de uma página pública.","Confira o título e o conteúdo extraído para confirmar a fonte.","Depois de verificar as informações, continue no SASI para criar o vídeo."]
+ },
+ ar:{
+  file:["اختر ملفًا تدعمه هذه الأداة.","تحقق من صيغة الملف وحجمه والخيارات المعروضة.","ابدأ المعالجة، وراجع النتيجة ثم احفظها أو أرسلها."],
+  pdf:["ارفع ملف PDF وانتظر اكتمال معاينة الصفحات.","حدد الصفحات أو أضف النصوص والصور والتوقيعات واضبط مواضعها.","راجع المعاينة ثم صدّر PDF وافتحه مجددًا للتحقق من المحتوى."],
+  image:["اختر ملف الصورة.","حدد صيغة الإخراج والأبعاد أو جودة الضغط.","عاين الصورة واحفظها، ثم تحقق من أبعادها وحجم الملف."],
+  audio:["اختر ملفًا صوتيًا؛ ويمكن للأدوات التي تدعم الفيديو قبول ملف فيديو أيضًا.","في الاستخدام الأول قد يتم تجهيز نموذج الصوت على جهازك؛ وتتم معالجة الوسائط داخل المتصفح.","راجع النص والتوقيتات ثم صدّر TXT أو SRT أو VTT."],
+  video:["اختر ملف الفيديو.","حدد العملية مثل الضغط أو التدوير أو القص أو استخراج الصوت.","عاين النتيجة وصدّرها، ثم تحقق من تشغيل الفيديو واتجاه الصورة."],
+  text:["أدخل النص المطلوب أو الصقه.","اختر الترميز أو التنسيق أو اتجاه التحويل.","نفّذ العملية وراجع النتيجة ثم انسخها أو نزّلها."],
+  qr:["أدخل رابطًا أو نصًا أو اختر نوع محتوى رمز QR.","أكمل البيانات المطلوبة مثل معلومات Wi-Fi أو جهة الاتصال.","أنشئ الرمز وامسحه بالهاتف للتحقق ثم احفظ الصورة."],
+  ocr:["ارفع صورة أو ملف PDF ممسوحًا ضوئيًا.","اختر لغة النص الموجود في المستند.","ابدأ التعرف على النص وراجعه ثم احفظه."],
+  privacy:["اختر المحتوى أو الملف الذي تريد حمايته أو تنظيفه.","راجع المعلومات المكتشفة والإجراء الذي سيتم تطبيقه.","أكد العملية ونزّل النتيجة ثم تحقق منها."],
+  translate:["اختر المستند أو الوسائط التي تريد ترجمتها.","حدد لغة المصدر واللغة المستهدفة، وراجع أي تأكيد للرفع أو السعر.","تحقق من الأسماء والأرقام والمصطلحات والتنسيق ثم صدّر الترجمة."],
+  web:["أدخل عنوان صفحة ويب عامة.","تحقق من عنوان الصفحة والمحتوى المستخرج للتأكد من المصدر.","بعد مراجعة المعلومات، تابع إلى SASI لإنشاء الفيديو."]
+ }
+};
+export function toolTutorialSteps(locale:SeoLocale,slug:string):readonly [string,string,string]{
+ const group=GUIDE_GROUP_BY_SLUG[slug]||"file";
+ return TASK_GUIDES[locale]?.[group]||TASK_GUIDES.en[group];
+}
