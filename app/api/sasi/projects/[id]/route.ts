@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { createAdminClient, isSupabaseAdminConfigured } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { boundedRequestJson } from "@/lib/security/bounded-request-json";
 
 export const dynamic = "force-dynamic";
 
@@ -65,8 +66,15 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
   if ("error" in owner) return owner.error;
   if (!isSupabaseAdminConfigured()) return NextResponse.json({ error: "SERVER_WRITE_NOT_CONFIGURED" }, { status: 503 });
 
-  let body: Record<string, unknown>;
-  try { body = await request.json(); } catch { return NextResponse.json({ error: "INVALID_JSON" }, { status: 400 }); }
+  let raw: unknown;
+  try { raw = await boundedRequestJson(request, 8 * 1024); }
+  catch (error) {
+    const oversized = error instanceof Error && error.message === "REQUEST_TOO_LARGE";
+    return NextResponse.json({error: oversized ? "PROJECT_REQUEST_TOO_LARGE" : "INVALID_JSON"}, {status: oversized ? 413 : 400});
+  }
+  if (!raw || typeof raw !== "object" || Array.isArray(raw))
+    return NextResponse.json({error: "INVALID_JSON"}, {status: 400});
+  const body = raw as Record<string, unknown>;
   const title = typeof body.title === "string" ? body.title.trim().replace(/\s+/g, " ").slice(0, 72) : "";
   if (!title) return NextResponse.json({ error: "INVALID_PROJECT_TITLE" }, { status: 400 });
 
