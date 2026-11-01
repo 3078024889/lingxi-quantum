@@ -1,5 +1,5 @@
 import {NextResponse} from 'next/server';
-import {COMPANY_EVIDENCE,COMPANY_EVIDENCE_IDS} from '../../../../../lib/market-company-evidence';
+import {COMPANY_EVIDENCE,COMPANY_EVIDENCE_IDS} from '../../../../lib/market-company-evidence';
 export const revalidate=86400;
 /** Every listed entity is source-backed. Missing financing is omitted, not invented. */
 export function GET(){
