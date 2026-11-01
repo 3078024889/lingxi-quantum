@@ -12,7 +12,7 @@ test("PDF editor renders crisp HiDPI previews and edits text/image objects visua
  const sourceMeta=await source.evaluate((node:HTMLImageElement)=>({width:node.naturalWidth,src:node.src}));
  expect(sourceMeta.width).toBeGreaterThan(700);
  expect(sourceMeta.src).toMatch(/^data:image\/png/);
- const densityTarget=await page.getByTestId("pdf-page-stage").evaluate((node:HTMLElement)=>Math.ceil(node.clientWidth*Math.min(2.5,Math.max(1,window.devicePixelRatio||1))*.95));
+ const densityTarget=await page.getByTestId("pdf-page-stage").evaluate((node:HTMLElement)=>Math.ceil(node.clientWidth*Math.min(2.5,Math.max(1.5,window.devicePixelRatio||1))*.95));
  expect(sourceMeta.width).toBeGreaterThanOrEqual(densityTarget);
  expect(sourceMeta.width).toBeLessThanOrEqual(densityTarget*1.15);
 
