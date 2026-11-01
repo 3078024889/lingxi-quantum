@@ -137,7 +137,7 @@ test('first-party Search Console rows are hash-checked but never counted as comp
  assert.equal(report.gsc,1);
  assert.equal(report.comparisonGroups,0);
  assert.throws(()=>verifyLedger([{...row,position:1}]),/GSC_RECORD_HASH_MISMATCH/);
- assert.throws(()=>verifyLedger([row],{knownIds:new Set(['runway'])}),/SEO_GEO_UNKNOWN_PRODUCT/);
+ assert.throws(()=>verifyLedger([{...row,platformId:'unknown-platform'}],{knownIds:new Set(['runway'])}),/SEO_GEO_UNKNOWN_PRODUCT/);
 });
 
 test('capture ingestion rejects private query data, unexpected fields and oversized raw files',()=>{
