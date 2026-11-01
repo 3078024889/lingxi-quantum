@@ -47,6 +47,7 @@ const commands=[
  ["node",["scripts/test-resize-boundaries-v79.cjs"]],
  ["node",["scripts/test-watermark-resource-v79.cjs"]],
  ["node",["scripts/test-paid-processing-failure-v79.cjs"]],
+ ["node",["scripts/test-sasi-generation-admission-v107.cjs"]],
  ["node",["scripts/test-sasi-delivery-boundaries.cjs"]],
  ["node",["scripts/test-document-converter-limits.cjs"]],
  ["node",["scripts/test-temp-mail-safety-v81.cjs"]],
