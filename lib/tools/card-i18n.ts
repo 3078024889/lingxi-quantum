@@ -21,6 +21,9 @@ export const TOOL_UI={
 
 const TITLES:Record<string,Partial<T>>={
 "image-translator":L("图片翻译","Image Translator","画像翻訳","이미지 번역","Traduction d’images","Bildübersetzung","Traductor de imágenes","Tradutor de imagens","ترجمة الصور"),
+
+"ai-image-check":L("AI 图片检测","AI Image Detection","AI画像検出","AI 이미지 감지","Détection d’images IA","KI-Bilderkennung","Detección de imágenes IA","Detecção de imagens IA","فحص الصور بالذكاء الاصطناعي"),
+"ai-video-audio-check":L("AI 视频音频检测","AI Video & Audio Detection","AI動画・音声検出","AI 영상·음성 감지","Détection vidéo et audio IA","KI-Video- und Audioerkennung","Detección de vídeo y audio IA","Detecção de vídeo e áudio IA","فحص الفيديو والصوت بالذكاء الاصطناعي"),
 "text-counter":L("字数与字符统计","Text Counter","文字数・文字統計","글자·문자 수","Compteur de texte","Textzähler","Contador de texto","Contador de texto","عداد النص"),
 "remove-duplicate-lines":L("文本去重行","Remove Duplicate Lines","重複行を削除","중복 줄 제거","Supprimer les lignes en double","Doppelte Zeilen entfernen","Eliminar líneas duplicadas","Remover linhas duplicadas","إزالة الأسطر المكررة"),
 "remove-empty-lines":L("删除空白行","Remove Empty Lines","空行を削除","빈 줄 제거","Supprimer les lignes vides","Leere Zeilen entfernen","Eliminar líneas vacías","Remover linhas vazias","إزالة الأسطر الفارغة"),
