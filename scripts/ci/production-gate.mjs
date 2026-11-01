@@ -40,6 +40,7 @@ const commands=[
  ["node",["scripts/test-regex-worker-v79.cjs"]],
  ["node",["scripts/test-xml-bounds-v79.cjs"]],
  ["node",["scripts/test-json-source-format-v80.cjs"]],
+ ["node",["scripts/test-sasi-20turn-context-v106.cjs"]],
  ["node",["scripts/test-sasi-response-transport.cjs"]],
  ["node",["scripts/test-sasi-provider-stream.cjs"]],
  ["node",["scripts/test-provider-json-probe.cjs"]],
