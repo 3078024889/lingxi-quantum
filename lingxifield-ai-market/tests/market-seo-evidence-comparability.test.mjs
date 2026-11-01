@@ -28,3 +28,11 @@ test('SEO board distinguishes owned Search Console average position from indepen
  assert.ok(board.includes('Google Search Console 统计本站平均排名、曝光与点击'));
  assert.doesNotMatch(board,/indexed pages|已收录页面|색인 페이지/);
 });
+
+test('empty SEO/GEO state is explicit and never promises rankings that have not been measured',()=>{
+ const board=read('app/seo-geo-board.tsx');
+ assert.ok(board.includes('当前尚未发布经核验的搜索排名与 AI 引用数据'));
+ assert.ok(board.includes('No verified search rankings or AI citations have been published yet'));
+ assert.ok(board.includes('Aucun classement de recherche ni citation IA vérifié n’est encore publié'));
+ assert.doesNotMatch(board,/Search and AI recommendations are coming|搜索与 AI 推荐榜单正在更新/);
+});
