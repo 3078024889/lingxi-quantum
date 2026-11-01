@@ -73,3 +73,11 @@ npm run seo:review-evidence -- ./gsc-pending.json ./gsc-review-manifest.json --c
 The script rechecks the exact property, approved market host, localized product route, privacy-safe query, source date, metrics, record digest and one-to-one review manifest. It writes only approved rows to `data/seo-geo-observations.json`, records reviewer and reason, merges idempotently and rejects conflicting hashes. Rejected rows are not published. Commit the resulting reviewed file to the isolated AI-market feature branch and let CI validate it.
 
 Never commit service-account JSON, OAuth tokens, downloaded account exports containing unrelated queries, or unreviewed artifacts. A green CI build with an empty observation ledger remains **zero measured SEO/GEO coverage**, not a ranking result.
+
+## Independent SERP and GEO comparison contract
+
+A SERP or AI-citation comparison is publishable only when all observations belong to the same `captureGroupId`: same query, country, language, engine or model/version, method version, date and raw capture. The capture hash must identify the same saved evidence file. Each product can appear only once in a group, and sponsored results are excluded from organic rank comparisons. A capture group with only one product is evidence, not a comparative ranking.
+
+Google Search Console average position is a first-party metric for LINGXIFIELD pages. It is not a competitor's independent Google/Bing rank. Search Console records are therefore displayed as owned-site SEO measurements and never mixed into the comparative SERP groups. AI citations are compared only within the same model, version, engine and saved answer capture.
+
+Every published observation stores the reviewer handle, review timestamp and reason. GSC rows also retain the exact property, canonical product page, date, sanitized query, raw metric values and a reproducible SHA-256 record digest. The public API filters invalid or unreviewed rows at read time, so a malformed manual edit cannot bypass the review gate.
