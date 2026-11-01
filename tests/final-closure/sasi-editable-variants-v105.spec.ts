@@ -16,6 +16,7 @@ test("SASI owned variant workflow compiles and exports 100 editable plans with n
  expect(result.format).toBe("lingxifield.sasi.storyboard.v1");
  expect(result.timing).toBe("estimated-word-positions-not-audio-alignment");
  expect(result.variants).toHaveLength(100);
+ expect(new Set(result.variants.map((v:any)=>v.editRecipe.camera+"|"+v.editRecipe.rhythm)).size).toBe(100);
  expect(result.variants[0].scenes).toHaveLength(3);
  expect(result.variants[0].totalSeconds).toBe(24);
  expect(charged).toEqual([]);
