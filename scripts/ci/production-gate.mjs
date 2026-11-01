@@ -46,6 +46,7 @@ const commands=[
  ["node",["scripts/test-sasi-project-patch-v112.cjs"]],
  ["node",["scripts/test-sasi-response-transport.cjs"]],
  ["node",["scripts/test-sasi-probe-truth-v108.cjs"]],
+ ["node",["scripts/test-sasi-persistence-truth-v111.cjs"]],
  ["node",["scripts/test-sasi-provider-stream.cjs"]],
  ["node",["scripts/test-provider-json-probe.cjs"]],
  ["node",["scripts/test-model-routing-v78.cjs"]],

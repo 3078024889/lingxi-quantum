@@ -24,6 +24,13 @@ async function event(admin:SupabaseClient,input:{taskId:string;userId:string;ind
  if(error)throw new Error(`SASI_TASK_EVENT_FAILED:${error.code||"db"}`);
 }
 
+async function taskState(admin:SupabaseClient,input:{taskId:string;userId:string;patch:Record<string,unknown>}){
+ const {data,error}=await admin.from("sasi_tasks").update(input.patch).eq("id",input.taskId).eq("user_id",input.userId).select("id").maybeSingle();
+ // Supabase UPDATE can succeed with zero matched rows. Do not report a task
+ // finished unless the exact user-owned task row was actually updated.
+ if(error||!data)throw new Error(`SASI_TASK_UPDATE_FAILED:${error?.code||"TASK_NOT_FOUND"}`);
+}
+
 async function nodeState(admin:SupabaseClient,input:{taskId:string;userId:string;nodeId:string;state:string;patch?:Record<string,unknown>}){
  const {error}=await admin.from("sasi_task_nodes").update({state:input.state,updated_at:new Date().toISOString(),...(input.patch||{})}).eq("task_id",input.taskId).eq("node_id",input.nodeId).eq("user_id",input.userId);
  if(error)throw new Error(`SASI_TASK_NODE_UPDATE_FAILED:${error.code||"db"}`);
@@ -57,15 +64,15 @@ export async function executeSasiPlan(admin:SupabaseClient,input:RuntimeExecutor
   results.push({nodeId:node.nodeId,capabilityId:String(node.capabilityId),status:succeeded?"succeeded":"failed",attempts});
   if(!succeeded){
    await nodeState(admin,{taskId:input.taskId,userId:input.userId,nodeId:node.nodeId,state:"failed",patch:{error:{message:lastError},completed_at:new Date().toISOString(),retry_count:Math.max(0,attempts-1)}}).catch(()=>undefined);
-   await admin.from("sasi_tasks").update({state:"failed",error:{message:lastError,nodeId:node.nodeId},updated_at:new Date().toISOString(),completed_at:new Date().toISOString()}).eq("id",input.taskId).eq("user_id",input.userId);
+   await taskState(admin,{taskId:input.taskId,userId:input.userId,patch:{state:"failed",error:{message:lastError,nodeId:node.nodeId},updated_at:new Date().toISOString(),completed_at:new Date().toISOString()}});
    await event(admin,{taskId:input.taskId,userId:input.userId,index:eventIndex++,type:"task.failed",nodeId:node.nodeId,data:{message:lastError}}).catch(()=>undefined);
    return {status:"failed",nodeResults:results,error:lastError};
   }
   const done=results.length,total=input.plan.nodes.length;
-  await admin.from("sasi_tasks").update({progress:done/total,updated_at:new Date().toISOString()}).eq("id",input.taskId).eq("user_id",input.userId);
+  await taskState(admin,{taskId:input.taskId,userId:input.userId,patch:{progress:done/total,updated_at:new Date().toISOString()}});
  }
  const now=new Date().toISOString();
- await admin.from("sasi_tasks").update({state:"succeeded",progress:1,result:{result:current,nodes:results},completed_at:now,updated_at:now}).eq("id",input.taskId).eq("user_id",input.userId);
+ await taskState(admin,{taskId:input.taskId,userId:input.userId,patch:{state:"succeeded",progress:1,result:{result:current,nodes:results},completed_at:now,updated_at:now}});
  await event(admin,{taskId:input.taskId,userId:input.userId,index:eventIndex,type:"task.succeeded",data:{nodes:results.length}});
  return {status:"succeeded",output:current,nodeResults:results};
 }
