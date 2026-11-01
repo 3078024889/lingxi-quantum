@@ -200,7 +200,29 @@ export const VIDEO_LABELS:Record<string,Record<LingxiLang,string>> = {
     "es": "FPS de salida (0 = original)",
     "pt": "FPS de saída (0 = original)",
     "ar": "معدل الإطارات (0 = الأصلي)"
-  }
+  },
+  "压缩后体积没有变小，已保留原文件": {
+    zh:"压缩后体积没有变小，已保留原文件",
+    en:"The encoded file was not smaller; the original file is provided instead.",
+    ja:"圧縮後のファイルが小さくならなかったため、元のファイルを保持しました。",
+    ko:"압축 후 크기가 줄지 않아 원본 파일을 유지했습니다.",
+    fr:"Le fichier compressé n’étant pas plus petit, le fichier original est conservé.",
+    de:"Die komprimierte Datei ist nicht kleiner; die Originaldatei bleibt erhalten.",
+    es:"El archivo comprimido no es más pequeño; se conserva el original.",
+    pt:"O ficheiro comprimido não ficou menor; foi mantido o original.",
+    ar:"لم يصبح الملف أصغر بعد الضغط، لذا تم الاحتفاظ بالملف الأصلي."
+  },
+  "已按指定尺寸或帧率导出，但文件体积比原文件大": {
+    zh:"已按指定尺寸或帧率导出，但文件体积比原文件大",
+    en:"The requested size or frame rate was applied, but the resulting file is larger.",
+    ja:"指定された解像度またはフレームレートで出力しましたが、元のファイルより大きくなりました。",
+    ko:"요청한 해상도 또는 프레임 속도로 내보냈지만 원본보다 파일이 큽니다.",
+    fr:"La taille ou la fréquence d’images demandée a été appliquée, mais le fichier est plus volumineux.",
+    de:"Die gewünschte Auflösung oder Bildrate wurde angewendet, doch die Datei ist größer.",
+    es:"Se aplicó el tamaño o la frecuencia solicitados, pero el archivo es más grande.",
+    pt:"A resolução ou taxa de fotogramas foi aplicada, mas o ficheiro ficou maior.",
+    ar:"تم تطبيق الدقة أو معدل الإطارات المطلوب، لكن حجم الملف الناتج أكبر."
+  },
 };
 
 export function videoUiText(lang:LingxiLang,zh:string,en:string):string{
