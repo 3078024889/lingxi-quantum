@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const read=p=>readFile(new URL('../'+p,import.meta.url),'utf8');
 test('live coverage never publishes raw candidate rows or fabricated rankings',async()=>{
- const sql=await read('../supabase/migrations/20261031081500_ai_market_aggregate_coverage.sql');
+ const sql=await read('sql/20261031081500_ai_market_aggregate_coverage.sql');
  const api=await read('app/api/market/evidence-status/route.ts');
  const view=await read('app/market-evidence-status.tsx');
  assert.match(sql,/private\.ai_market_coverage_aggregate/);
