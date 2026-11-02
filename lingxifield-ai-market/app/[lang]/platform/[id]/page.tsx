@@ -51,7 +51,9 @@ const label=(lang:Language,id:string)=>{const product=findPlatform(id);if(!produ
 export async function generateMetadata({params}:PageParams):Promise<Metadata>{
  const {lang,id}=await params,product=findPlatform(id);
  if(!product||!marketLocales.includes(lang as Language))return {robots:{index:false}};
- const language=lang as Language,displayName=publicName(language,id,product.name),description=label(language,id),title=displayName+(description===displayName?'':' | '+description)+' | LINGXIFIELD';
+ const language=lang as Language,displayName=publicName(language,id,product.name),description=label(language,id);
+ const editorialQuestion=language==='zh'?questionForProduct(id)[0]:undefined;
+ const title=editorialQuestion?(editorialQuestion+(editorialQuestion.endsWith('？')?'':'？')+' | '+displayName+' | LINGXIFIELD'):(displayName+(description===displayName?'':' | '+description)+' | LINGXIFIELD');
  const robots=mayIndexMarket(lang);
  const languages:Record<string,string>={};
  if(robots)for(const l of indexableMarketLocales())languages[l]=marketCanonicalOrigin+'/'+l+'/platform/'+encodeURIComponent(id);
