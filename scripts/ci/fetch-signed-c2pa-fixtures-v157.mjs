@@ -14,7 +14,9 @@ const files=[
  {name:"sample.jpg",bytes:166864,gitBlob:"551e611e5a4434355d62ce6952d65162fc991dfc"},
  {name:"sample.mp4",bytes:828571,gitBlob:"5802d5d210b5fde8e33249f87a63065de5f127f5"}
 ];
-const directory=path.join("test-results","c2pa-signed-fixtures-v157");
+// Playwright removes test-results/ when a test run starts. Keep upstream assets
+// in a separate ignored cache so preflight-verified media survives that cleanup.
+const directory=path.join(".cache","ci-fixtures","c2pa-signed-v157");
 await mkdir(directory,{recursive:true});
 for(const spec of files){
  const url=`https://raw.githubusercontent.com/richardwooding/c2pa-inspector/${upstream}/site/${spec.name}`;
