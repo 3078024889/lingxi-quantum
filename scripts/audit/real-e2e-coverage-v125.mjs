@@ -28,6 +28,7 @@ const current=new Map([
  ...group(["ico-to-png"],"remaining-ico-real-v129"),
  ...group(["pdf-to-xlsx"],"remaining-pdf-table-real-v129"),
  ...group(["privacy-cleaner"],"remaining-privacy-cleaner-real-v129"),
+ ...group(["ocr"],"remaining-ocr-real-v130"),
  ...group(["qr-code-generator"],"qr-cron-output-v86"),
  ...group(["screenshot-redact"],"screenshot-redaction-v89"),
  ...group(["pdf-redact"],"pdf-redaction-output-v89"),
