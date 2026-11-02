@@ -306,8 +306,11 @@
           "scope": "list_vs_as_low_as_compute"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "fal 官方免费网页工具无需账户，可免费去背景、图片放大和相关图片处理，页面说明无水印及上传次数限制；这些浏览器端免费工具不同于需要登录、按推理计算资源计费的视频生成及开发者 API，不能因此宣称 fal API 所有模型永久免费。",
+          "source": "https://fal.ai/tools",
+          "checkedAt": "2026-11-02",
+          "scope": "browser_image_tools_free_not_inference_api_free"
         },
         "models": {
           "status": "observed",
@@ -440,8 +443,11 @@
       "reviewStatus": "unapproved",
       "facts": {
         "price": {
-          "status": "missing",
-          "reason": "The official billing terms for this exact plan, region and cycle are not fully corroborated."
+          "status": "observed",
+          "text": "GroqCloud 官方 GPT-OSS 120B 模型页面给出按百万 Token 的输入 USD 0.15、缓存输入 USD 0.075、输出 USD 0.60。此仅是 openai/gpt-oss-120b 的单模型价格，其他模型按各自模型页、速率限制和企业合同另计，不是统一 GroqCloud 套餐价。",
+          "source": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+          "checkedAt": "2026-11-02",
+          "scope": "specific_gpt_oss_120b_per_million_tokens_not_all_models"
         },
         "free": {
           "status": "observed",
