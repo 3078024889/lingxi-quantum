@@ -53,7 +53,7 @@ test("HEIC real photo: decode a checked-in HEVC image in browser, save JPEG and 
   const pending=page.waitForEvent("download");
   await results.nth(i).getByRole("button",{name:"Save file",exact:true}).click();
   const dl=await pending;expect(await dl.failure()).toBeNull();
-  expect(dl.suggestedFilename()).toMatch(/^fixture(?:-\\d{2})?\\.jpg$/);
+  expect(dl.suggestedFilename()).toMatch(/^fixture(?:-\d{2})?\.jpg$/);
   const output=await fs.readFile((await dl.path())!);
   const meta=await sharp(output).metadata();
   expect(meta.format).toBe("jpeg");
