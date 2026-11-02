@@ -223,6 +223,17 @@ export const VIDEO_LABELS:Record<string,Record<LingxiLang,string>> = {
     "pt": "A resolução ou taxa de fotogramas foi aplicada, mas o ficheiro ficou maior.",
     "ar": "تم تطبيق الدقة أو معدل الإطارات المطلوب، لكن حجم الملف الناتج أكبر."
   },
+  "这个操作需要视频文件。请更换视频，或选择「提取 MP3」。": {
+    "zh": "这个操作需要视频文件。请更换视频，或选择「提取 MP3」。",
+    "en": "This operation requires a video file. Choose a video or use Extract MP3.",
+    "ja": "この操作には動画ファイルが必要です。動画を選ぶか、「MP3を抽出」に切り替えてください。",
+    "ko": "이 작업에는 동영상 파일이 필요합니다. 동영상을 선택하거나 MP3 추출을 사용하세요.",
+    "fr": "Cette opération nécessite une vidéo. Choisissez une vidéo ou utilisez Extraire MP3.",
+    "de": "Für diesen Vorgang wird ein Video benötigt. Wählen Sie ein Video oder MP3 extrahieren.",
+    "es": "Esta operación requiere un vídeo. Elige un vídeo o usa Extraer MP3.",
+    "pt": "Esta operação requer um vídeo. Escolha um vídeo ou use Extrair MP3.",
+    "ar": "تتطلب هذه العملية ملف فيديو. اختر فيديو أو استخدم استخراج MP3."
+  },
   "一次最多处理 400MB 视频，请分批处理。": {
     "zh": "一次最多处理 400MB 视频，请分批处理。",
     "en": "This batch exceeds 400 MB. Process fewer files at a time.",
