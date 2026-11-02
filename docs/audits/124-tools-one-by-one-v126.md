@@ -1,4 +1,4 @@
-# LINGXIFIELD｜121 个不重复的公开工具验收账本（V128）
+# LINGXIFIELD｜121 个不重复的公开工具验收账本（V130）
 
 **审核日期：2026-11-02，发布候选：[#105](https://github.com/3078024889/lingxi-quantum/pull/105)，基础依赖：[#104](https://github.com/3078024889/lingxi-quantum/pull/104)。**
 
@@ -7,8 +7,8 @@
 | 指标 | 数量 |
 |---|---:|
 | 不重复公开工具 | **121** |
-| 已登记真实浏览器操作场景（不等于 CI 全通过） | **82** |
-| 仅有历史部分样本 | **2** |
+| 已登记真实浏览器操作场景（不等于 CI 全通过） | **97** |
+| 仅有历史部分样本 | **1** |
 | 尚未具备充分真实操作场景 | **23** |
 
 ## 重复工具处理记录
@@ -123,7 +123,7 @@
 | regex-tester | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
 | remove-duplicate-lines | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
 | remove-empty-lines | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
-| remove-exif | HISTORICAL_PARTIAL | — |
+| remove-exif | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remove-exif-real-v130.spec.ts` |
 | resize-image | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
 | reverse-video | FULL_E2E_NOT_PROVEN | — |
 | rotate-video | HISTORICAL_PARTIAL | — |
