@@ -16,6 +16,8 @@ export async function POST(request:Request){
  if(payload.websiteAddress)return NextResponse.json({accepted:true},{status:202,headers});
  const parsed=validateVendorSubmission(payload);
  if(!parsed)return NextResponse.json({error:'INVALID_SUBMISSION'},{status:400,headers});
+ // Ownership applications require the existing LINGXIFIELD account and must never be accepted from this public lead form.
+ if(parsed.request_type==='claim')return NextResponse.json({error:'LOGIN_REQUIRED_MAIN_ACCOUNT'},{status:401,headers});
  const base=process.env.AI_MARKET_SUPABASE_URL||process.env.SUPABASE_URL||process.env.NEXT_PUBLIC_SUPABASE_URL;
  const key=process.env.AI_MARKET_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
  if(!base||!key)return NextResponse.json({error:'SUBMISSION_NOT_AVAILABLE'},{status:503,headers});

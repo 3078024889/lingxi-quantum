@@ -5,7 +5,7 @@ import {Suspense} from 'react';
 type RequestType='claim'|'update'|'list';
 function ClaimContent(){
  const params=useSearchParams();
- const [requestType,setRequestType]=useState<RequestType>(params.get('product')?'claim':'list');
+ const [requestType,setRequestType]=useState<RequestType>('update');
  const [productName,setProductName]=useState(params.get('name')||'');
  const [officialSite,setOfficialSite]=useState('');
  const [workEmail,setWorkEmail]=useState('');
@@ -38,9 +38,16 @@ function ClaimContent(){
  return <main className="vendorClaimPage">
   <a href="/">← 返回全球 SI AI 行情平台</a>
   <div className="vendorClaimIntro"><span>厂商免费服务 · 资料审核与推广独立</span><h1>认领你的 SI AI 产品</h1>
-   <p>访客无需注册即可搜索与查看所有 AI 产品。厂商可以免费提交资料，不必先创建账号；经身份核验后，正式管理产品、提交收费订单与查看私有推广数据才需安全登录。</p></div>
+   <p>所有 AI 产品对访客免费开放。认领现有产品需要使用灵犀场原有账户登录，免费最多认领 3 个；企业身份核验后才能管理产品及申请推广。资料纠错与新产品线索仍可匿名提交。</p></div>
+  <section className="vendorClaimForm" aria-label="登录灵犀场认领厂商">
+   <div className="full">
+    <h2>使用灵犀场账号认领</h2>
+    <p>现有账户和密码直接使用，无需在全球 SIAI 重新注册。认领免费；审核企业身份后，付费推广与自然排名分开。</p>
+    <a className="primaryLink" href={'https://lingxifield.com/account/ai-market?'+new URLSearchParams({product:params.get('product')||''}).toString()} rel="noopener noreferrer" style={{display:'inline-block',padding:'12px 18px',minHeight:44}}>登录灵犀场 · 免费认领现有产品 ↗</a>
+   </div>
+  </section>
   <form onSubmit={submit} className="vendorClaimForm">
-   <label>我要办理<select value={requestType} onChange={e=>setRequestType(e.target.value as RequestType)}><option value="claim">认领已有产品</option><option value="update">修改或补充资料</option><option value="list">提交新产品</option></select></label>
+   <label>我要办理<select value={requestType} onChange={e=>setRequestType(e.target.value as RequestType)}><option value="update">修改或补充资料</option><option value="list">提交新产品</option></select></label>
    <label>产品名称 *<input value={productName} maxLength={160} required onChange={e=>setProductName(e.target.value)}/></label>
    <label>官方网站 *<input type="url" value={officialSite} required placeholder="https://" onChange={e=>setOfficialSite(e.target.value)}/></label>
    <label>你的姓名 *<input value={submitterName} maxLength={120} required onChange={e=>setSubmitterName(e.target.value)}/></label>
