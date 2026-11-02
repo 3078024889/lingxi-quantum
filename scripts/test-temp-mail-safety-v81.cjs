@@ -15,9 +15,49 @@ async function payGate(provider,status='quoted'){
  const route=load('app/api/tools/pay/create/route.ts',{'next/server':{NextResponse:{json}},'next/headers':{},'@/lib/supabase/server':{createClient:()=>({auth:{getUser:async()=>({data:{user:{id:'isolated-account'}}})}})},'@/lib/supabase/admin':{createAdminClient:()=>paymentAdmin},'@/lib/paypal':{},'@/lib/alipay':{},'@/lib/wechatpay':{},'@/lib/wechat-oauth':{},'@/lib/sasi/request-security':{isSameOriginMutation:()=>true},'@/lib/security/abuse-guard':{enforceAbuseGuard:async()=>({ok:true})},'@/lib/tools/service-readiness':pausedReadiness,'@/lib/payments/currency-book':{parseCurrency:value=>value}});
  const result=await route.POST({headers:new Headers(),json:async()=>({quoteId:quote.id,provider})});assert.equal(result.status,status==='paid'?200:503);assert.equal(charges,0);assert.equal(writes,0);
 }
+async function assertDestroyIntegrity(){
+ const id='44444444-4444-4444-8444-444444444444';
+ let allowed=false,dbCalls=0,result={data:null,error:null};
+ const admin={
+  from(name){
+   assert.equal(name,'temp_mailboxes');
+   return{delete(){dbCalls++;return{eq(column,value){
+    assert.equal(column,'id');assert.equal(value,id);
+    return{select(field){
+     assert.equal(field,'id');return{maybeSingle:async()=>result};
+    }};
+   }};}};
+  }
+ };
+ const destroy=load('app/api/tools/temp-mail/destroy/route.ts',{
+  'next/server':{NextResponse:{json}},
+  '@/lib/supabase/admin':{createAdminClient:()=>admin},
+  '@/lib/sasi/request-security':{isSameOriginMutation:()=>true},
+  '@/lib/tools/temp-mail-auth':{authorizeTempMailbox:async(_req,value)=>allowed&&value===id?{id}:null},
+  '@/lib/tools/temp-mail':{TEMP_MAIL_ACCESS_COOKIE:'lx_tm_access'}
+ });
+ const req=mailboxId=>({json:async()=>({id:mailboxId})});
+ let response=await destroy.POST(req('not-a-mailbox'));
+ assert.equal(response.status,400);assert.equal(dbCalls,0,'Invalid id cannot delete');
+ response=await destroy.POST(req(id));
+ assert.equal(response.status,404);assert.equal(dbCalls,0,'Unauthorized caller cannot delete');
+ allowed=true;result={data:null,error:{code:'DB_DOWN'}};
+ response=await destroy.POST(req(id));
+ assert.equal(response.status,503);assert.equal(Object.keys(response.cookies.values).length,0,'DB failure retains access cookie');
+ result={data:null,error:null};
+ response=await destroy.POST(req(id));
+ assert.equal(response.status,404);assert.equal(response.body.ok,undefined,'Zero rows cannot be reported as deleted');
+ result={data:{id},error:null};
+ response=await destroy.POST(req(id));
+ assert.equal(response.status,200);assert.equal(response.body.ok,true);
+ assert.equal(response.cookies.values.lx_tm_access,'','Cookie only cleared on confirmed delete');
+ assert.equal(dbCalls,3);
+}
+
 (async()=>{
  userId='account-a';let cookie='';for(let n=0;n<5;n++){const result=await create.POST(request('203.0.113.1',cookie));assert.equal(result.status,200);cookie=result.cookies.values.lx_tm_device||cookie;assert.equal(result.body.freeRemaining,4-n)}assert.equal((await create.POST(request('203.0.113.1',cookie))).status,429);assert.equal((await create.POST(request('203.0.113.2'))).status,429,'Switching IP cannot reset an account');userId='account-b';assert.equal((await create.POST(request('203.0.113.1'))).status,429,'Switching account cannot reset an IP');assert.equal((await create.POST(request('203.0.113.2',cookie))).status,200,'Distinct IP and account should not inherit an unrelated device daily cap');
  userId='';const before=inserts;const results=await Promise.all(Array.from({length:20},()=>create.POST(request('203.0.113.3'))));assert.equal(results.filter(result=>result.status===200).length,5);assert.equal(inserts-before,5);assert.equal(quotaCalls.at(-1).p_identity_hashes.length,1,'Guests are limited by IP');
  for(const provider of ['balance','wechat','alipay','paypal'])await payGate(provider);await payGate('balance','paid');
- console.log('PASS: daily IP and account quotas are both 5; identity changes do not reset limits; isolated concurrent quota adapter admits 5 of 20; batch sales enabled; isolated disabled-policy safety check rejects all website providers without financial writes/charges; already paid status still recovers. No production writes.');
+ await assertDestroyIntegrity();
+ console.log('PASS: daily IP and account quotas are both 5; identity changes do not reset limits; isolated concurrent quota adapter admits 5 of 20; batch sales enabled; isolated disabled-policy safety check rejects all website providers without financial writes/charges; already paid status still recovers. No production writes; mailbox destroy must confirm authorized deletion.');
 })().catch(error=>{console.error(error);process.exitCode=1});
