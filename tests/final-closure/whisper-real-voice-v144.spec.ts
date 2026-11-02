@@ -45,7 +45,10 @@ test("Whisper Tiny real inference recognizes synthetic English speech and writes
   const began=Date.now();
   while(Date.now()-began<150000){
    if(await transcript.isVisible())break;
-   const retry=await page.getByRole("button",{name:/Resume paid task|Retry the result/i}).count();
+   const retryButton=page.getByRole("button",{name:/Resume paid task|Retry the result/i});
+   // The Resume button is present but DISABLED while inference is actually running.
+   // Its presence alone is not a failure signal; only an enabled retry means processing stopped.
+   const retry=await retryButton.isVisible()&&await retryButton.isEnabled();
    const alerts=await page.locator('[role="alert"]').allTextContents();
    if(retry||alerts.some(x=>/failed|could not|unavailable|失败|无法|暂时/i.test(x))){
     const details={retry,alerts,telemetry:telemetry.slice(-35)};
