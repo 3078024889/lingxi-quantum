@@ -25,6 +25,7 @@ npm-debug.log*
 pnpm-debug.log*
 
 # Generated test / audit / build evidence
+/.cache/ci-fixtures/
 /test-results/
 /playwright-report/
 /audit-output/
