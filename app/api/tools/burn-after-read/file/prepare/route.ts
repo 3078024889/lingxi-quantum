@@ -48,12 +48,16 @@ export async function POST(req:NextRequest){
  }
 
  let total=0;
- if(files.some((f:any)=>!Number.isSafeInteger(Number(f?.size))||Number(f?.size)<1))return NextResponse.json({error:"INVALID_FILE"},{status:400});
+ if(files.some((f:any)=>{
+  const original=Number(f?.originalSize),encoded=Number(f?.size);
+  return String(f?.type)!=="application/vnd.lingxifield.burn-encrypted"||
+   !Number.isSafeInteger(original)||original<1||original>MAX_TOTAL||
+   !Number.isSafeInteger(encoded)||encoded!==20+original+28*Math.ceil(original/(1024*1024));
+ }))return NextResponse.json({error:"ENCRYPTED_FILE_REQUIRED"},{status:400});
  const normalized=files.map((f:any)=>{
-  const size=Math.floor(Number(f?.size||0));
-  if(!Number.isFinite(size)||size<1)throw new Error("INVALID_FILE");
-  total+=size;
-  return {name:safeName(String(f?.name||"file")),size,type:String(f?.type||"application/octet-stream").slice(0,120)};
+  const size=Number(f.size);
+  total+=Number(f.originalSize); // bill on genuine plaintext size, not GCM overhead
+  return {name:safeName(String(f?.name||"file")),size,type:"application/vnd.lingxifield.burn-encrypted"};
  });
  if(total>MAX_TOTAL)return NextResponse.json({error:"FILES_TOO_LARGE"},{status:413});
 
