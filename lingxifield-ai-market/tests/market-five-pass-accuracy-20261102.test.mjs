@@ -60,3 +60,19 @@ test('fourth-pass: non-Chinese translations derive current prices, not stale loc
  assert.match(c,/"openai-python":\s*\{[\s\S]{0,140}?"free": "sdk"/);
  assert.match(c,/"anthropic-sdk-python":\s*\{[\s\S]{0,140}?"free": "sdk"/);
 });
+
+test('second/fourth-pass: Midjourney V8.2 and separate niji trial replace generic placeholders',()=>{
+ const p=facts.midjourney;
+ assert.equal(p.freeSource,'https://docs.midjourney.com/hc/en-us/articles/27870399340173-Free-Trials');
+ assert.match(p.free,/官网与 Discord 当前均不提供免费试用/);
+ assert.match(p.free,/niji · journey/);
+ assert.equal(p.modelsSource,'https://docs.midjourney.com/hc/en-us/articles/32199405667853-Version');
+ assert.match(p.models,/V8\.2/);
+ assert.match(p.models,/2048px/);
+ assert.match(p.models,/Edit Model/);
+ const locale=read('lib/market-fact-locale.ts');
+ assert.match(locale,/MIDJOURNEY_TRIAL_COPY/);
+ assert.match(locale,/MIDJOURNEY_MODELS_COPY/);
+ assert.match(locale,/id==='midjourney'&&scope==='free'/);
+ assert.match(locale,/id==='midjourney'&&scope==='models'/);
+});
