@@ -45,6 +45,14 @@ test('task, categories, corporate state and query refine actual evidence without
  assert.deepEqual(filterMarketRows(rows,{...base,query:'文献'}).map(x=>x.id),['research']);
  assert.deepEqual(filterMarketRows(rows,base).map(x=>x.id),['video','code','research']);
 });
+test('editorial user questions find the right existing tool without made-up search analytics',()=>{
+ const rows=[sample('chatgpt',{searchTerms:['Codex能帮我开发网站吗','ChatGPT能上传文档分析吗']}),
+  sample('suno',{searchTerms:['AI写歌软件哪个好']})];
+ const q={query:'Codex能帮我开发网站吗',category:'*',task:'all',payment:'any',evidence:'all',sort:'catalog'};
+ assert.deepEqual(filterMarketRows(rows,q).map(x=>x.id),['chatgpt']);
+ assert.deepEqual(filterMarketRows(rows,{...q,query:'AI写歌软件哪个好'}).map(x=>x.id),['suno']);
+ assert.deepEqual(filterMarketRows(rows,{...q,query:'不存在的实时搜索量'}),[]);
+});
 test('founded sorts leave unknown last instead of inventing a year or popularity rank',()=>{
  const rows=[sample('unknown'),sample('new',{year:'2024'}),sample('old',{year:'2007-02-01'})];
  const base={query:'',category:'*',task:'all',payment:'any',evidence:'all',sort:'oldest'};
