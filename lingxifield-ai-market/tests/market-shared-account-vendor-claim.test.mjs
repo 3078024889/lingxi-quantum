@@ -50,8 +50,20 @@ test('same account is used for claims but no cross-domain token leak, account du
  assert.doesNotMatch(portal,/access_token|refresh_token|auth\.token|PAYPAL_CLIENT_SECRET/);
  assert.match(account,/href="\/account\/ai-market"/);
  assert.match(claim,/claims\.length>=3/);
- assert.match(claim,/paidRankingEnabled|付费尚未启用|真实支付及权益发放尚未启用/);
+ assert.match(claim,/AI_MARKET_VENDOR_COPY\[lang\]/);
+ assert.match(root('lib/ai-market-vendor-locale.ts'),/付费推广/);
  assert.doesNotMatch(claim,/signInWithPassword|createUser|signup|createAdminClient/);
  const checkout=src('app/api/v1/billing/checkout/route.ts');
  assert.match(checkout,/MARKET_CHECKOUT_NOT_LIVE/);
+});
+
+test('central vendor claim account is translated in all nine languages and Arabic has RTL direction',()=>{
+ const s=root('lib/ai-market-vendor-locale.ts');
+ const portal=root('app/account/ai-market/VendorClaimsPanel.tsx');
+ const page=root('app/account/ai-market/page.tsx');
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(s,new RegExp('\\b'+lang+':\\{'),lang);
+ for(const key of ['claims','empty','form','product','company','site','email','evidence','submit','limit','paidTitle','paid','pending','approved'])assert.match(s,new RegExp(key+':'));
+ assert.match(portal,/dir=\\{lang==="ar"\\?"rtl":"ltr"\\}/);
+ assert.match(portal,/disabled=\\{busy\\|\\|claims.length>=3\\|\\|!ready\\|\\|!available\\}/);
+ assert.match(page,/LxText/);
 });
