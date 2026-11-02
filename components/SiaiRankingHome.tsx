@@ -1,6 +1,6 @@
 "use client";
 
-import {useMemo,useState} from "react";
+import {Fragment,useMemo,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
 
@@ -34,6 +34,11 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang];const [query,setQuery]=useState(""),[category,setCategory]=useState("*"),[expanded,setExpanded]=useState<string|null>(null);
  const categories=useMemo(()=>[...new Set(rows.map(r=>r.category))], [rows]);
  const shown=useMemo(()=>{const q=query.trim().toLocaleLowerCase();return rows.filter(r=>(category==="*"||r.category===category)&&(!q||[r.name,r.company,r.legal||"",r.about,r.strength,r.category,...r.features,r.models].join(" ").toLocaleLowerCase().includes(q)));},[rows,category,query]);
+ const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
+    <p>{p.about}</p><p>{p.features.join(" · ")}</p>
+    <dl><div><dt>{t.free}</dt><dd>{p.free}</dd></div><div><dt>{t.price}</dt><dd>{p.price}</dd></div><div><dt>{t.region}</dt><dd>{p.region}</dd></div><div><dt>{t.payment}</dt><dd>{p.payment}</dd></div><div><dt>{t.models}</dt><dd>{p.models}</dd></div><div><dt>{t.license}</dt><dd>{p.commercial}</dd></div></dl>
+    <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
+   </section>;
  return <main className="siai-home" lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
   <header className="siai-home-head"><p className="siai-kicker">LINGXIFIELD · GLOBAL SI AI</p><h1>{t.title}</h1><p>{t.subtitle}</p></header>
   <div className="siai-home-controls">
@@ -50,7 +55,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     <tbody>
      {shown.map((p,i)=>{
        const listing=p.kind!=="company"?t.na:p.ipoFiling?t.ipoFiled:p.listing==="listed_parent"?t.listedParent:t.notConfirmed;
-       return <tr key={p.id} className="siai-home-tr">
+       return <Fragment key={p.id}><tr className="siai-home-tr">
         <td>{i+1}</td>
         <td className="siai-home-identity"><strong>{p.name}</strong><dl>
          <div><dt>{p.kind==="company"?t.company:t.project}</dt><dd>{p.company}</dd></div>
@@ -65,20 +70,15 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
         <td><span className="siai-cell-preview" title={p.payment}>{short(p.payment,88)}</span></td>
         <td><span className="siai-cell-preview" title={p.models}>{short(p.models,95)}</span></td>
         <td><span className="siai-cell-preview" title={p.commercial}>{short(p.commercial,100)}</span><Source href={p.commercialSource} label={t.source}/></td>
-        <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id}>{expanded===p.id?t.close:t.details}</button></td>
-       </tr>;
+        <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button></td>
+       </tr>
+        {expanded===p.id&&<tr className="siai-home-expanded-row"><td colSpan={10}>{detailPanel(p)}</td></tr>}
+       </Fragment>;
      })}
     </tbody>
    </table>
   </div>
   {shown.length===0&&<p className="siai-home-empty">{t.noResults}</p>}
-  {expanded&&shown.some(p=>p.id===expanded)&&(()=>{
-   const p=shown.find(x=>x.id===expanded)!;
-   return <section className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
-    <p>{p.about}</p><p>{p.features.join(" · ")}</p>
-    <dl><div><dt>{t.free}</dt><dd>{p.free}</dd></div><div><dt>{t.price}</dt><dd>{p.price}</dd></div><div><dt>{t.region}</dt><dd>{p.region}</dd></div><div><dt>{t.payment}</dt><dd>{p.payment}</dd></div><div><dt>{t.models}</dt><dd>{p.models}</dd></div><div><dt>{t.license}</dt><dd>{p.commercial}</dd></div></dl>
-    <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
-   </section>;
-  })()}
+
  </main>;
 }
