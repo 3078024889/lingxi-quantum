@@ -82,11 +82,12 @@ test('V41 scrolling reveals all columns instead of sticky overlays; no IP guessi
  assert.match(workbench,/MarketMatrixRow/);
 });
 
-test('official lists are readable without accordion and source is directly accessible',()=>{
+test('five primary official countries are visible and the rest can expand with source accessible',()=>{
  const details=read('app/market-global-access.tsx');
  const row=read('app/market-matrix-row.tsx');
  assert.match(details,/className="globalSupportedCountries"/);
- assert.doesNotMatch(details,/<details className="globalSupportedCountries"/);
+ assert.match(details,/<details className="globalSupportedCountries"/);
+ assert.match(details,/<summary>\{countryList.words.more\}/);
  assert.match(details,/countryList\.other\.map/);
  assert.match(row,/regionList\.source\|\|research\?\.regionSource/);
 });
@@ -183,7 +184,7 @@ test('FAQ, publisher invite, footer and payment channels are translated for nine
 
 test('V43 official payment documentation covers domestic AI and international checkout',async()=>{
  const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
- const expected={doubao:['alipay'],jimeng:['alipay','wechat'],kling:['alipay','wechat'],luma:['card']};
+ const expected={doubao:['alipay'],jimeng:['alipay','wechat'],kling:['alipay','wechat'],lovable:['alipay','wechat','card'],luma:['card']};
  for(const [id,channels] of Object.entries(expected)){
   const fact=m.researchedFact(id);
   assert.ok(fact?.paymentSource?.startsWith('https://'),id);
@@ -197,7 +198,8 @@ test('V43 official payment documentation covers domestic AI and international ch
  const lovable=m.researchedFact('lovable');
  assert.equal(lovable.paymentSource,'https://stripe.com/customers/lovable');
  assert.match(lovable.payments.join(' '),/Link/);
- assert.doesNotMatch(lovable.payments.join(' '),/Alipay|WeChat|credit \/ debit card|iDEAL|Amazon Pay/i);
+ for(const merchantRail of ['Credit / debit card','Apple Pay','Google Pay','Cash App Pay','WeChat Pay','Alipay','iDEAL','Amazon Pay','Link'])
+  assert.ok(lovable.payments.some(m=>m.includes(merchantRail)),merchantRail);
  assert.equal(m.researchedFact('kling').extraPaymentSource.includes('qingque.cn'),true);
  assert.equal(m.researchedFact('doubao').paymentSource.includes('draftstatic'),true);
 });

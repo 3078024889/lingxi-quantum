@@ -41,7 +41,17 @@ const PAYMENT_COPY:Record<Language,{
  pt:{noSoftwareFee:'Sem cobrança de software para a versão auto-hospedada/de código aberto',separateCosts:'Hospedagem, computação e APIs de modelos são cobradas separadamente',card:'Cartão de crédito / débito',cardWeb:'Cartão de crédito / débito (checkout web)',apiCard:'Cartão de crédito / débito (cobrança de API)',appleStore:'Apple App Store (iOS)',googlePlay:'Google Play (Android)',applePay:'Apple Pay',googlePay:'Google Pay',amazonPay:'Amazon Pay',alipay:'Alipay',wechatPay:'WeChat Pay',cashAppPay:'Cash App Pay',stablecoin:'Stablecoin',stripeInstant:'Pagamento bancário instantâneo Stripe (somente EUA)',webStripe:'Checkout web via Stripe',ach:'Transferência ACH (contas API mensais elegíveis)',noPaypalVenmo:'PayPal e Venmo não são aceitos',noPaypal:'PayPal não é aceito',paypalIndirect:'PayPal somente via App Store / Google Play',googleOne:'Cobrança Google One / Google Play',regionCheckout:'Métodos variam por país no checkout',cloudCheckout:'Planos cloud pagos no checkout',link:'Link',upi:'UPI (Índia)',kakaoPay:'KakaoPay (Coreia do Sul)',naverPay:'NaverPay (Coreia do Sul)',koreanCards:'Cartões locais coreanos',paypal:'PayPal'},
  ar:{noSoftwareFee:'لا توجد رسوم للبرنامج ذاتي الاستضافة أو مفتوح المصدر',separateCosts:'تُحاسب تكاليف السحابة والحوسبة والاستضافة وواجهات النماذج بشكل منفصل',card:'بطاقة ائتمان / خصم',cardWeb:'بطاقة ائتمان / خصم (الدفع عبر الويب)',apiCard:'بطاقة ائتمان / خصم (فوترة API)',appleStore:'Apple App Store (iOS)',googlePlay:'Google Play (Android)',applePay:'Apple Pay',googlePay:'Google Pay',amazonPay:'Amazon Pay',alipay:'Alipay',wechatPay:'WeChat Pay',cashAppPay:'Cash App Pay',stablecoin:'عملة مستقرة',stripeInstant:'دفع مصرفي فوري من Stripe (الولايات المتحدة فقط)',webStripe:'الدفع عبر الويب بواسطة Stripe',ach:'تحويل ACH (حسابات API المؤهلة للفوترة الشهرية)',noPaypalVenmo:'PayPal وVenmo غير مقبولين',noPaypal:'PayPal غير مدعوم',paypalIndirect:'PayPal عبر App Store / Google Play فقط',googleOne:'فوترة Google One / Google Play',regionCheckout:'تختلف طرق الدفع حسب البلد وتظهر عند إتمام الشراء',cloudCheckout:'تُدفع خطط السحابة عند إتمام الشراء',link:'Link',upi:'UPI (الهند)',kakaoPay:'KakaoPay (كوريا الجنوبية)',naverPay:'NaverPay (كوريا الجنوبية)',koreanCards:'بطاقات محلية كورية',paypal:'PayPal'}
 };
-export function localizedPaymentName(name:string,language:Language){
+const REGIONAL_CHECKOUT_SUFFIX:Record<Language,string>={
+ zh:'（视地区结账条件）',en:'(where available at checkout)',ja:'（決済地域による）',ko:'(결제 지역에 따라)',fr:'(selon pays au paiement)',de:'(je nach Land beim Bezahlen)',es:'(según el país al pagar)',pt:'(conforme país na compra)',ar:'(حسب بلد الدفع)'
+};
+export function localizedPaymentName(name:string,language:Language):string{
+ // Preserve documented per-country limits when the original payment entry is localized.
+ // A merchant accepting Alipay somewhere is not proof it will appear for every visitor.
+ const scoped=/（适用地区）$|（地区结账条件适用）$|（Stripe 快捷结账，适用地区）$/.test(name);
+ if(scoped){
+  const base=name.replace(/（适用地区）$|（地区结账条件适用）$|（Stripe 快捷结账，适用地区）$/,'');
+  return localizedPaymentName(base,language)+' '+REGIONAL_CHECKOUT_SUFFIX[language];
+ }
  const exact=paymentNames[name]?.[language];
  if(exact)return exact;
  const n=name.toLowerCase(),t=PAYMENT_COPY[language];

@@ -1,7 +1,7 @@
 import type {RegionCode} from './global-region-market';
 import {globalRegionFact} from './global-region-market';
 import {accessFor} from './platform-access-facts';
-import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from './market-researched-facts';
+import {researchedFact,marketProductReviewedAt} from './market-researched-facts';
 export type PaymentKey='card'|'alipay'|'wechat'|'paypal'|'appstore';
 export type PaymentMethodEvidence={method:string;source:string;checkedAt:string|null;origin:'regional'|'vendor_policy'|'research'};
 export type PaymentFact={methods:string[];methodEvidence:PaymentMethodEvidence[];source:string|null;scope:'global_offer'|'selected_region'|'unverified_region'|'unsupported';checkedAt:string|null};
@@ -32,7 +32,7 @@ export function paymentFactsFor(id:string,region:RegionCode):PaymentFact{
  // Region-specific evidence is preferred to general vendor payment docs.
  append(snapshot.payments.methods,snapshot.payments.source,'regional',snapshot.payments.checkedAt||null);
  append(access?.payment||[],access?.paymentSource,'vendor_policy',access?.checkedAt||null);
- append(research?.payments||[],research?.paymentSource,'research',research?.paymentSource?MARKET_RESEARCH_CHECKED_AT:null);
+ append(research?.payments||[],research?.paymentSource,'research',research?.paymentSource?marketProductReviewedAt(id):null);
  const methods=proof.map(x=>x.method);
  const source=proof[0]?.source||null;
  return {methods,methodEvidence:proof,source,scope:region==='GLOBAL'?'global_offer':snapshot.policy.status==='supported'?'selected_region':'unverified_region',
