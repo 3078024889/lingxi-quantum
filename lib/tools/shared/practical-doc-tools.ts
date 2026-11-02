@@ -1,6 +1,7 @@
 "use client";
 
 import { drawFileToCanvas } from "@/lib/tools/shared/image-canvas";
+import {hasHeicContainer,verifiedJpeg} from "@/lib/tools/shared/heif-validation";
 import { openPdf, renderPdfPage, canvasToBlob } from "@/lib/tools/pdf-render-client";
 
 export type LocalOutput = {
@@ -15,28 +16,27 @@ function replaceExt(name: string, ext: string) {
 }
 
 export async function heicToJpgFiles(files: File[]): Promise<LocalOutput[]> {
-  const heic2any = (await import("heic2any")).default;
-  const outputs: LocalOutput[] = [];
-
-  for (const file of files) {
-    const result = await heic2any({
-      blob: file,
-      toType: "image/jpeg",
-      quality: 0.92,
-    });
-    const blobs = Array.isArray(result) ? result : [result];
-    blobs.forEach((blob, index) => {
-      const suffix = blobs.length > 1 ? `-${index + 1}` : "";
-      const base = file.name.replace(/\.(heic|heif)$/i, "") || "image";
+  // heic2any's JS wrapper is MIT. The underlying HEIF/HEVC decoder also
+  // carries its own redistribution and corresponding-source obligations.
+  const outputs:LocalOutput[]=[];
+  for(const file of files){
+    if(!await hasHeicContainer(file))throw new Error("HEIC_CONTAINER_INVALID");
+    const heic2any=(await import("heic2any")).default;
+    const converted=await heic2any({blob:file,toType:"image/jpeg",quality:.92});
+    const blobs=Array.isArray(converted)?converted:[converted];
+    if(!blobs.length)throw new Error("HEIC_CONVERSION_EMPTY");
+    for(let i=0;i<blobs.length;i++){
+      const blob=await verifiedJpeg(blobs[i]);
+      const suffix=blobs.length>1?`-${String(i+1).padStart(2,"0")}`:"";
+      const base=file.name.replace(/\\.(heic|heif)$/i,"")||"image";
       outputs.push({
-        name: `${base}${suffix}.jpg`,
+        name:`${base}${suffix}.jpg`,
         blob,
-        mime: "image/jpeg",
-        size: blob.size,
+        mime:"image/jpeg",
+        size:blob.size
       });
-    });
+    }
   }
-
   return outputs;
 }
 
