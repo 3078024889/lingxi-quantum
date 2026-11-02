@@ -12,6 +12,8 @@ const updated=[
  ['recraft','price','www.recraft.ai'],
  ['canva-magic-studio','models','www.canva.com'],
  ['mistral-le-chat','payment','help.mistral.ai'],
+ ['canva-magic-studio','models','www.canva.com'],
+ ['mistral-le-chat','payment','help.mistral.ai'],
  ['tabnine','free','www.tabnine.com'],
  ['microsoft-copilot','commercial','www.microsoft.com'],
  ['freepik-ai','payment','www.freepik.com'],
