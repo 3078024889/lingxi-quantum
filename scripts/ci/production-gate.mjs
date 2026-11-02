@@ -25,6 +25,7 @@ const commands=[
  ["node",["scripts/test-mini-profiles-v80.cjs"]],
  ["node",["scripts/test-sasi-variant-workflows-v105.cjs"]],
  ["node",["scripts/test-series-contract-v78.cjs"]],
+ ["node",["scripts/test-sasi-automatic-storyboard-v132.cjs"]],
  ["node",["scripts/test-background-episode-v78.cjs"]],
  ["node",["scripts/audit-security.mjs"]],
  ["node",["scripts/test-burn-token-boundaries.cjs"]],
