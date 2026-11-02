@@ -38,3 +38,7 @@ jobs:
         run: npm ci
       - name: Run data, contract, type and production build gates
         run: npm run gate
+      - name: Probe 32 public publisher entry URLs (nonblocking, no accounts)
+        run: node scripts/probe-official-use.mjs --live
+        timeout-minutes: 3
+        continue-on-error: true
