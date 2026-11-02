@@ -217,10 +217,15 @@ export default function HandwritingOcrWorkbench() {
         }
       }
 
+      // Blank or unrecognizable uploads are not a completed deliverable.
+      // Keep the paid task retryable, rather than showing a zero-byte TXT/Word file.
+      if(!output.some(item=>item.text.trim()))throw Error("HANDWRITING_NO_TEXT");
       setTexts(output);
       setStage("识别完成");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(cause instanceof Error&&cause.message==="HANDWRITING_NO_TEXT"
+        ?"没有识别到可用文字，请换一张清晰、光线充足的照片再试。"
+        :"图片识别没有完成，请检查文件或网络后重试，无需重复付款。");
       setStage("");
       throw cause;
     } finally {
