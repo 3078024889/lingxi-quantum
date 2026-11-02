@@ -43,8 +43,11 @@
           "scope": "vendor_public_page"
         },
         "regions": {
-          "status": "missing",
-          "reason": "缺乏按国家列出的最新注册和支付覆盖清单"
+          "status": "observed",
+          "text": "Cursor 官方地区说明：部分模型供应商因用户所在地实行地区限制，受限模型会从模型选项中隐藏，但 Cursor 可继续使用当地可用的其他模型；Auto 只选择可用模型。自行接入 API Key 仍须遵守该模型供应商的地区政策。此说明不等于 Cursor 所有套餐和付款渠道在全部国家开放，也不构成逐国官方可用白名单。",
+          "source": "https://cursor.com/docs/account/regions",
+          "checkedAt": "2026-11-03",
+          "scope": "provider_model_specific_restrictions_not_full_country_coverage"
         },
         "commercial": {
           "status": "observed",
@@ -118,8 +121,20 @@
           ]
         },
         "regions": {
-          "status": "missing",
-          "reason": "未逐国核对 Canva AI 具体功能的可用地区"
+          "status": "observed",
+          "text": "Canva 官方新闻室说明已退出俄罗斯市场并阻止俄罗斯境内访问 Canva，且公告记载已停止该地区收款。此为 Canva 平台明确披露的地区限制，不能据此推断其他国家的 Canva Magic Studio 全部 AI 功能、订阅付款和登录均可使用。官方声明发表于过去，现时实际登陆状态仍需独立检测。",
+          "source": "https://www.canva.com/newsroom/news/exiting-russia/",
+          "checkedAt": "2026-11-03",
+          "scope": "documented_country_access_restrictions_only_historical_policy_statement",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "source": "https://www.canva.com/help/payment-options/",
+              "checkedAt": "2026-11-03",
+              "scope": "country_specific_checkout_methods_not_ai_availability",
+              "text": "Canva 官方支付指南逐国列出部分本地支付选项，例如日本 PayPay、韩国 Kakao Pay/Naver Pay、印度 UPI、巴西 Pix、新加坡 GrabPay；付款方法的国家细分不等于 Magic Studio 所有 AI 功能已获当地开放。"
+            }
+          ]
         },
         "commercial": {
           "status": "observed",
@@ -323,8 +338,11 @@
           "scope": "vendor_public_page"
         },
         "regions": {
-          "status": "missing",
-          "reason": "未取得当前全部国家的注册或使用限制清单"
+          "status": "observed",
+          "text": "Ideogram 官方服务条款出口管制段落限制向美国禁运国家、美国政府认定的相关受限目的地以及列入制裁/禁用名单的主体提供服务；服务条款不公布逐国注册、生成与收款支持清单。2026 年核查到的网页条款修订日为 2024-08-14，不能推断其他国家均可用或当地结账一定成功。",
+          "source": "https://ideogram.ai/legal/tos",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_controls_only_not_supported_country_list"
         },
         "commercial": {
           "status": "observed",
@@ -557,8 +575,11 @@
           "scope": "current_model_selector_and_time_limited_model_credit_promotions"
         },
         "regions": {
-          "status": "missing",
-          "reason": "地区可用和 AI 模型限制尚未按国家核对"
+          "status": "observed",
+          "text": "Figma 官方 AI 积分推荐活动列出 25 个符合条件的国家/地区（包括美国、英国、日本、德国、韩国、加拿大、法国、澳大利亚、新加坡、香港、台湾等）；仅表示指定用户和新用户在活动期间可领取推荐 AI 积分，领取有条件和截止日期。不是 Figma Make 及全部 Figma AI 模型在这些国家的统一支持清单，也不能作为注册、订阅或付款能力证明。",
+          "source": "https://help.figma.com/hc/en-us/articles/44639429325975-Figma-referral-promotion",
+          "checkedAt": "2026-11-03",
+          "scope": "specific_ai_credit_referral_promotion_eligible_countries_not_full_figma_make_availability"
         },
         "commercial": {
           "status": "observed",
