@@ -69,3 +69,21 @@ test("video-toolkit: a four-second MP4 becomes playable two-times-speed video an
  await slider.press("ArrowLeft");
  await expect(work.getByTestId("result-file-actions")).toHaveCount(0);
 });
+
+test("video-toolkit: audio-only input may be extracted but cannot be billed or processed as an MP4 mode",async({page})=>{
+ test.setTimeout(45000);
+ await page.goto("/tools/video-toolkit?lang=en");
+ const work=page.locator("[data-video-toolkit]");
+ await expect(work).toHaveAttribute("data-hydrated","true");
+ await work.getByRole("button",{name:"Extract MP3",exact:true}).click();
+ await work.locator('input[type="file"]').first().setInputFiles({
+  name:"speech.wav",mimeType:"audio/wav",buffer:toneWav()
+ });
+ await work.getByRole("button",{name:"Compress",exact:true}).click();
+ await work.getByRole("button",{name:"Start processing",exact:true}).click();
+ await expect(work.getByRole("alert")).toContainText("requires a video file");
+ await expect(work.getByTestId("result-file-actions")).toHaveCount(0);
+ await expect(work.getByRole("button",{name:"Start processing",exact:true})).toBeEnabled();
+ await work.getByRole("button",{name:"Extract MP3",exact:true}).click();
+ await expect(work.getByRole("alert")).toHaveCount(0);
+});
