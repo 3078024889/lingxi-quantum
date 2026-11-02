@@ -3,6 +3,7 @@ import {foodMealCsv,csvCell} from "../../lib/tools/food/meal-export";
 import type {MealResult} from "../../lib/tools/food/meal-calculation";
 import fs from "node:fs/promises";
 
+const formulaPrefix=String.fromCharCode(34,39)+"=HYPERLINK(";
 const result:MealResult={
  items:[{food_id:12,name_zh:"米饭",name_en:"Rice",grams:150,kcal:195,protein_g:4,carbs_g:42,fat_g:0.3,fiber_g:null,sugar_g:null,sodium_mg:null,source:"=HYPERLINK(\"https://evil.example\",\"click\")"}],
  total:{grams:150,kcal:195,protein_g:4,carbs_g:42,fat_g:0.3,fiber_g:null,sugar_g:null,sodium_mg:null},
@@ -22,7 +23,7 @@ test("nine-language nutrition CSV serialization preserves unknown nutrients, uni
   expect(lines[1]).toContain(lang==="zh"?"米饭":"Rice");
   expect(lines[1]).toContain('"150"');
   expect(lines[1]).toContain('"195"');
-  expect(lines[1]).toContain('"'=HYPERLINK(');
+  expect(lines[1]).toContain(formulaPrefix);
   expect(lines[1]).toContain(',"","",');
   expect(lines[2]).toContain('"150"');
  }
@@ -59,7 +60,7 @@ test("calorie result: after a simulated authorized analysis users download corre
  expect(bytes.subarray(0,3).toString("hex")).toBe("efbbbf");
  const csv=bytes.toString("utf8");
  expect(csv).toContain('"Rice","150","195"');
- expect(csv).toContain('"'=HYPERLINK(');
+ expect(csv).toContain(formulaPrefix);
  expect(csv).not.toContain('"0","0","0"');
  expect(created).toBe(1);expect(calculated).toBe(1);
 });
