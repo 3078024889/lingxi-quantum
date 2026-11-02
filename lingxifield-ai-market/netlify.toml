@@ -1,0 +1,12 @@
+# Optional zero-subscription commercial hosting on Netlify Free.
+# The site remains a Next.js App Router project (no static-only export).
+# Netlify auto-selects its supported OpenNext adapter; don't pin an old plugin.
+# Set the site base directory to lingxifield-ai-market in Netlify settings.
+# NEVER copy Vercel secrets or credential values into this file.
+[build]
+command = "npm run build"
+publish = ".next"
+[build.environment]
+NODE_VERSION = "22"
+# Preview and public release search-index policies must be configured separately.
+# Keep AI_MARKET_INDEX_READY unset until canonical domain, GSC and i18n HTML root tags pass.

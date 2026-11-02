@@ -1,0 +1,264 @@
+{
+  "schema": "global-siai-curated-use-acceptance-v1",
+  "curatedCount": 32,
+  "generatedAt": "2026-11-02",
+  "verificationPolicy": "Manual or authorized live browser/local use. A public HEAD response and a publisher's documentation are not a completed task.",
+  "items": [
+    {
+      "id": "chatgpt",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "claude",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "gemini",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "grok",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "perplexity",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "deepseek",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "qwen",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "doubao",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "jimeng",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "kling",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "runway",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "luma",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "midjourney",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "suno",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "elevenlabs",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "lovable",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "replit",
+      "archetype": "web_app",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "ollama",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "llamacpp",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "vllm",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "langchain",
+      "archetype": "developer_sdk",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "llamaindex",
+      "archetype": "developer_sdk",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "transformers",
+      "archetype": "developer_sdk",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "comfyui",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "automatic1111",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "whisper",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "fasterwhisper",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "openwebui",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "dify",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "n8n",
+      "archetype": "self_hosted",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "openai-python",
+      "archetype": "developer_sdk",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    },
+    {
+      "id": "anthropic-sdk-python",
+      "archetype": "developer_sdk",
+      "status": "not_run",
+      "testedAt": null,
+      "cases": [],
+      "evidence": []
+    }
+  ]
+}
