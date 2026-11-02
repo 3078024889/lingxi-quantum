@@ -1,143 +1,159 @@
-# LINGXIFIELD｜124 个公开工具逐项验收账本 V126
+# LINGXIFIELD｜121 个不重复的公开工具验收账本（V128）
 
-日期：2026-11-02。统一发布候选： [PR #104](https://github.com/3078024889/lingxi-quantum/pull/104)。**本文件是源码登记证据，不是 124 项已经通过的证书。**
+**审核日期：2026-11-02，发布候选：[#105](https://github.com/3078024889/lingxi-quantum/pull/105)，基础依赖：[#104](https://github.com/3078024889/lingxi-quantum/pull/104)。**
 
-- 实际公开目录：**124**；注册真实浏览器操作情景：**82**（原登记26、V126新增41、V127追加6、追回已有9）；只有历史部分样本：**2**；剩余尚无完整操作情景：**40**。
-- 96 个初始缺口均已加入 `unverified-96-route-audit-v126.spec.ts` 的**逐工具页面入口巡检**，在桌面+手机分别执行；仅证明对应路由、页面标题和基础控件，**不能证明生成结果、付费或真实供应商**。
-- 41 个新增实测工具分别由 `unverified-developer-real-v126.spec.ts`、`unverified-pdf-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-images-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-longtail-documents-v126.spec.ts` 覆盖；实际通过数量取决于精确 SHA 的 CI 结果。
-- 原统计历史 7 项含 5 个已不属于这 124 项目录的老名称：`pdf-to-txt`、`video-trim`、`video-compress`、`video-speed`、`video-mute`，因此 **91 修正为 96**，不可把这些旧名称算作当前工具的验收。
-- 状态 `REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED` = 实测测试源码已登记，仍需浏览器实际执行成功；`HISTORICAL_PARTIAL_ONLY` = 有部分历史证据不代表全面闭环；`ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION` = 仅有路由/控件级巡检计划与测试源码，核心输入→处理→可验证输出尚无充分证据。
-- 已完成的实际源码修复包括：开发者工具输入变化清理旧结果；图片转换、SVG、批量图像、长图处理参数变化清理旧文件链接，避免旧导出结果冒充当前参数。
+此文件沿用旧 `124-tools-one-by-one-v126.md` 路径，以保证历史链接有效。经过代码层查重，原目录 124 项中删除了 3 个重复展示入口，现在 **121 项独立工具**；3 条旧网址继续做 308 跳转，不会丢失用户书签。
 
-## 全部 124 个工具的逐项记录
+| 指标 | 数量 |
+|---|---:|
+| 不重复公开工具 | **121** |
+| 已登记真实浏览器操作场景（不等于 CI 全通过） | **82** |
+| 仅有历史部分样本 | **2** |
+| 尚未具备充分真实操作场景 | **37** |
 
-| 工具 slug | 证据状态 | 已登记的真实操作测试 |
-| --- | --- | --- |
-| ai-image-check | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| ai-video-audio-check | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| audio-cleanup | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`paid-local-output-v89`](../../tests/final-closure/paid-local-output-v89.spec.ts) |
-| audio-transcription | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| avif-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| base64-encode-decode | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| batch-image | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| batch-image-watermark-remover | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| batch-pdf | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| bmp-to-png | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| burn-after-read | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| case-converter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| compress-image | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
-| compress-image-to-100kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| compress-image-to-200kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| compress-image-to-20kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| compress-image-to-500kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| compress-image-to-50kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| compress-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
-| cron-parser | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| csv-json | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| csv-to-xlsx | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-office-roundtrip-v118`](../../tests/final-closure/tool-office-roundtrip-v118.spec.ts) |
-| document-copy-layout | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| document-translate | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| docx-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
-| e-sign-pdf | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| epub-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
-| file-compare | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| file-type-detector | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| food-calorie | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| gif-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| handwriting-ocr | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| heic-local | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| heic-to-jpg | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| ico-to-png | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| ics-to-csv | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
-| id-photo-ai | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| image-to-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-cross-workflow-v125`](../../tests/final-closure/tool-cross-workflow-v125.spec.ts) |
-| image-to-pdf-pro | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| image-translator | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-user-journeys-v1`](../../tests/final-closure/tool-user-journeys-v1.spec.ts) |
-| image-watermark-remover | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| jfif-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| jpg-to-png | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| json-formatter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| jwt-decoder | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| long-image | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| loop-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| md5-sha256 | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| merge-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-pdf-qr-e2e-v119`](../../tests/final-closure/tool-pdf-qr-e2e-v119.spec.ts) |
-| number-base-converter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| ocr | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| odt-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
-| pdf-attachments | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-bates-numbering | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-bookmarks | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-compare | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-compress | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-crop | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-editor | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`pdf-editor-save-reopen-v123`](../../tests/final-closure/pdf-editor-save-reopen-v123.spec.ts) |
-| pdf-flatten | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-grayscale | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-halve-pages | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
-| pdf-header-footer | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-inspect | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-merge-split | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-metadata-editor | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-ocr | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-overlay | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-page-numbers | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-page-size | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-pages | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-pages-per-sheet | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-permissions | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-protect | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-rasterize | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
-| pdf-redact | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`pdf-redaction-output-v89`](../../tests/final-closure/pdf-redaction-output-v89.spec.ts) |
-| pdf-remove-annotations | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
-| pdf-remove-metadata | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-search | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-cross-workflow-v125`](../../tests/final-closure/tool-cross-workflow-v125.spec.ts) |
-| pdf-to-markdown | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-to-text | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-to-word | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`paid-local-output-v89`](../../tests/final-closure/paid-local-output-v89.spec.ts) |
-| pdf-to-xlsx | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-unlock | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-viewer-preferences | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-watermark | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-web-optimize | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| png-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| pptx-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
-| privacy-cleaner | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| qr-code-generator | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`qr-cron-output-v86`](../../tests/final-closure/qr-cron-output-v86.spec.ts) |
-| qr-code-reader | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-pdf-qr-e2e-v119`](../../tests/final-closure/tool-pdf-qr-e2e-v119.spec.ts) |
-| qr-safe-reader | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| regex-tester | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| remove-duplicate-lines | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| remove-empty-lines | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| remove-exif | HISTORICAL_PARTIAL_ONLY | — |
-| resize-image | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
-| reverse-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| rotate-video | HISTORICAL_PARTIAL_ONLY | — |
-| screenshot-redact | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`screenshot-redaction-v89`](../../tests/final-closure/screenshot-redaction-v89.spec.ts) |
-| split-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`pdf-precision-split-v122`](../../tests/final-closure/pdf-precision-split-v122.spec.ts) |
-| stop-motion-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| subtitle-tools | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| subtitle-translate | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`subtitle-translation-v95`](../../tests/final-closure/subtitle-translation-v95.spec.ts) |
-| svg-to-png | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| temp-mail | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-user-journeys-v1`](../../tests/final-closure/tool-user-journeys-v1.spec.ts) |
-| text-counter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| text-diff | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| timestamp-converter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| url-encode-decode | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
-| url-parser | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| url-to-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| uuid-generator | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| vcf-to-csv | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
-| video-dubbing | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| video-toolkit | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| video-transcription | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| video-translate | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| video-watermark-remover | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-user-journeys-v1`](../../tests/final-closure/tool-user-journeys-v1.spec.ts) |
-| webp-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| xlsx-to-csv | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-office-roundtrip-v118`](../../tests/final-closure/tool-office-roundtrip-v118.spec.ts) |
-| xml-formatter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
+## 重复工具处理记录
 
-## 正式通过门禁
+| 旧入口（不再展示工具卡片） | 保留的唯一入口 | 事实依据 |
+|---|---|---|
+| `/tools/image-to-pdf-pro` | `/tools/image-to-pdf` | 原路由已经是直接跳转，不存在第二套处理功能 |
+| `/tools/heic-local` | `/tools/heic-to-jpg` | 均把 HEIC/HEIF 转成 JPG；保留 HeicWorkbench 的批量处理界面 |
+| `/tools/compress-pdf` | `/tools/pdf-compress` | 都基于逐页图片重建压缩；保留三档压缩质量、显示体积变化和取消功能 |
 
-必须是**同一头提交 SHA** 的交付 CI 与生产 CI 均通过、实际下载文件重新解析正确、桌面/手机、九语言重点路线验收；正式 Vercel 预览和部署必须比对 SHA。已登记测试或 GitHub READY 单独都不能等同生产竣工。对外部 AI、商户支付和登录依赖需要隔离单元/契约验证与经过授权的真实端到端测试两套证据；本轮没有开启真实收款、没有读取客户文件，也没有调整生产数据。
+以下**不应误删**：`qr-code-reader` 与 `qr-safe-reader`（后者在打开 URL 前要求用户查看内容）；`pdf-merge-split` 与 `merge-pdf`（前者额外覆盖提取和旋转等操作）；`compress-image-to-20kb` 与 `compress-image-to-100kb`（明确不同目标体积）。
+
+## 九语言名称统一
+
+`food-calorie` 的内部 slug、原有 API 计费标识和历史分享链接保持不变；九语言卡片名称、详情 H1、页面介绍、图片 alt 与 SEO 标题统一为“卡路里识别”（各语言对应表达）。说明依然要求用户确认食物、烹饪方式及份量，图片无法精确测量重量。
+
+## 全部 121 个独立工具的证据状态
+
+| 工具 slug | 验收证据状态 | 登记操作测试 |
+|---|---|---|
+| ai-image-check | FULL_E2E_NOT_PROVEN | — |
+| ai-video-audio-check | FULL_E2E_NOT_PROVEN | — |
+| audio-cleanup | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `paid-local-output-v89.spec.ts` |
+| audio-transcription | FULL_E2E_NOT_PROVEN | — |
+| avif-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| base64-encode-decode | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| batch-image | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| batch-image-watermark-remover | FULL_E2E_NOT_PROVEN | — |
+| batch-pdf | FULL_E2E_NOT_PROVEN | — |
+| bmp-to-png | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| burn-after-read | FULL_E2E_NOT_PROVEN | — |
+| case-converter | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| compress-image | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
+| compress-image-to-100kb | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| compress-image-to-200kb | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| compress-image-to-20kb | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| compress-image-to-500kb | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| compress-image-to-50kb | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| cron-parser | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| csv-json | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| csv-to-xlsx | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-office-roundtrip-v118.spec.ts` |
+| document-copy-layout | FULL_E2E_NOT_PROVEN | — |
+| document-translate | FULL_E2E_NOT_PROVEN | — |
+| docx-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
+| e-sign-pdf | FULL_E2E_NOT_PROVEN | — |
+| epub-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
+| file-compare | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| file-type-detector | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| food-calorie | FULL_E2E_NOT_PROVEN | — |
+| gif-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| handwriting-ocr | FULL_E2E_NOT_PROVEN | — |
+| heic-to-jpg | FULL_E2E_NOT_PROVEN | — |
+| ico-to-png | FULL_E2E_NOT_PROVEN | — |
+| ics-to-csv | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
+| id-photo-ai | FULL_E2E_NOT_PROVEN | — |
+| image-to-pdf | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-cross-workflow-v125.spec.ts` |
+| image-translator | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-user-journeys-v1.spec.ts` |
+| image-watermark-remover | FULL_E2E_NOT_PROVEN | — |
+| jfif-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| jpg-to-png | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| json-formatter | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| jwt-decoder | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| long-image | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| loop-video | FULL_E2E_NOT_PROVEN | — |
+| md5-sha256 | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| merge-pdf | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-pdf-qr-e2e-v119.spec.ts` |
+| number-base-converter | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| ocr | FULL_E2E_NOT_PROVEN | — |
+| odt-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
+| pdf-attachments | FULL_E2E_NOT_PROVEN | — |
+| pdf-bates-numbering | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-bookmarks | FULL_E2E_NOT_PROVEN | — |
+| pdf-compare | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-compress | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
+| pdf-crop | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-editor | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `pdf-editor-save-reopen-v123.spec.ts` |
+| pdf-flatten | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-grayscale | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-halve-pages | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
+| pdf-header-footer | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-inspect | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-merge-split | FULL_E2E_NOT_PROVEN | — |
+| pdf-metadata-editor | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-ocr | FULL_E2E_NOT_PROVEN | — |
+| pdf-overlay | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-page-numbers | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-page-size | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-pages | FULL_E2E_NOT_PROVEN | — |
+| pdf-pages-per-sheet | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-permissions | FULL_E2E_NOT_PROVEN | — |
+| pdf-protect | FULL_E2E_NOT_PROVEN | — |
+| pdf-rasterize | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
+| pdf-redact | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `pdf-redaction-output-v89.spec.ts` |
+| pdf-remove-annotations | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
+| pdf-remove-metadata | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
+| pdf-search | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-cross-workflow-v125.spec.ts` |
+| pdf-to-markdown | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-to-text | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-to-word | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `paid-local-output-v89.spec.ts` |
+| pdf-to-xlsx | FULL_E2E_NOT_PROVEN | — |
+| pdf-unlock | FULL_E2E_NOT_PROVEN | — |
+| pdf-viewer-preferences | FULL_E2E_NOT_PROVEN | — |
+| pdf-watermark | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
+| pdf-web-optimize | FULL_E2E_NOT_PROVEN | — |
+| png-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| pptx-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
+| privacy-cleaner | FULL_E2E_NOT_PROVEN | — |
+| qr-code-generator | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `qr-cron-output-v86.spec.ts` |
+| qr-code-reader | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-pdf-qr-e2e-v119.spec.ts` |
+| qr-safe-reader | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| regex-tester | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| remove-duplicate-lines | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| remove-empty-lines | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| remove-exif | HISTORICAL_PARTIAL | — |
+| resize-image | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
+| reverse-video | FULL_E2E_NOT_PROVEN | — |
+| rotate-video | HISTORICAL_PARTIAL | — |
+| screenshot-redact | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `screenshot-redaction-v89.spec.ts` |
+| split-pdf | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `pdf-precision-split-v122.spec.ts` |
+| stop-motion-video | FULL_E2E_NOT_PROVEN | — |
+| subtitle-tools | FULL_E2E_NOT_PROVEN | — |
+| subtitle-translate | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `subtitle-translation-v95.spec.ts` |
+| svg-to-png | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
+| temp-mail | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-user-journeys-v1.spec.ts` |
+| text-counter | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| text-diff | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| timestamp-converter | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| url-encode-decode | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-real-operations-v118.spec.ts` |
+| url-parser | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| url-to-video | FULL_E2E_NOT_PROVEN | — |
+| uuid-generator | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+| vcf-to-csv | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
+| video-dubbing | FULL_E2E_NOT_PROVEN | — |
+| video-toolkit | FULL_E2E_NOT_PROVEN | — |
+| video-transcription | FULL_E2E_NOT_PROVEN | — |
+| video-translate | FULL_E2E_NOT_PROVEN | — |
+| video-watermark-remover | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-user-journeys-v1.spec.ts` |
+| webp-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
+| xlsx-to-csv | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-office-roundtrip-v118.spec.ts` |
+| xml-formatter | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
+
+## 发布判定
+
+- 测试脚本存在仅是**有测试场景登记**；以精确 SHA 的 GitHub Actions 实际通过、文件重新解析、桌面/手机、九语言验收为准。
+- 原 `unverified-baseline-v126.ts` 记录的是去重前 **96 项缺口**。其路由巡检保留了对 3 个旧别名重定向的验证，不应重新把别名计为独立工具。
+- 真实 AI 模型和第三方供应商、支付与账号授权相关功能须分别提供隔离测试和被授权生产环境端到端证据。不能将 UI 打开或模拟支付冒充功能完全竣工。
+- 合并、上线、付款/数据库变更必须经过最终验收；本轮没有触碰生产数据或执行收款。
