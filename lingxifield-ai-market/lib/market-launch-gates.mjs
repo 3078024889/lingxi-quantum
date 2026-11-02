@@ -33,7 +33,7 @@ export function auditCuratedUseAcceptance(records,expectedIds){
   allVerified:passed.length===expected.size&&invalid.length===0&&missing.length===0&&issues.length===0,
   methodology:'Only executed end-to-end tasks with observed outputs and independently linkable evidence count. HEAD reachability and screenshots without real action are insufficient.'};
 }
-export function evaluatePublicationGates({inventory,uses,seo,merchant,mobile,realSite}){
+export function evaluatePublicationGates({inventory,uses,seo,merchant,mobile,realSite,sourceAudit}){
  const checks={
   exactly32Curated:inventory?.curated===32,
   independentRealUse32:uses?.allVerified===true,
@@ -44,6 +44,19 @@ export function evaluatePublicationGates({inventory,uses,seo,merchant,mobile,rea
   officialSiteExternallyAccessible:realSite?.verifiedPublicProduction===true,
  };
  const blocking=Object.entries(checks).filter(([,pass])=>!pass).map(([k])=>k);
- return {stage:'pre_release',goLive:blocking.length===0,canPublishNext10:blocking.length===0,checks,blocking,
-  note:'Code/CI success alone is not live merchant settlement, user task completion or indexed search traffic. Expansion remains paused until every release gate has evidence.'};
+ // The public, read-only product directory is a distinct release from paid vendor
+ // placements and future unreviewed product expansion. GSC clicks and GEO
+ // citations cannot precede a first search-engine index, so they are measured
+ // after launch, never used as prerequisites to this read-only gate.
+ const readOnlyChecks={
+  curated32WithReviewedSources:inventory?.curated===32&&sourceAudit?.curated32Reviewed===true,
+  nineLocaleMobileBrowser:mobile?.nineLocalesRealBrowser===true,
+  verifiedPublicProduction:realSite?.verifiedPublicProduction===true,
+  merchantCheckoutExplicitlyDisabled:merchant?.checkoutDisabled===true,
+ };
+ const readOnlyBlocking=Object.entries(readOnlyChecks).filter(([,pass])=>!pass).map(([k])=>k);
+ const readOnly={ready:readOnlyBlocking.length===0,checks:readOnlyChecks,blocking:readOnlyBlocking,
+  seoGeoObservationsRequiredBeforeInitialIndex:false};
+ return {stage:'pre_release',goLive:blocking.length===0,canPublishNext10:blocking.length===0,checks,blocking,readOnly,
+  note:'Read-only public catalog, paid merchant release, and next-candidate publication are distinct gates. No preview, unresolved source or disabled payment may be mislabeled as production-ready.'};
 }
