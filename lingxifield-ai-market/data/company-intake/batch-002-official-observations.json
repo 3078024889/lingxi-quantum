@@ -326,8 +326,11 @@
           "scope": "monthly_credit_allowances"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Adobe Firefly Free 官方提供有限的每日免费生成机会，可体验指定图片、视频及音频功能；具体生成次数与可用模型随功能变化，不将付费档的 2,000 至 50,000 积分当作免费额度。",
+          "source": "https://www.adobe.com/products/firefly/features",
+          "checkedAt": "2026-11-02",
+          "scope": "firefly_free_limited_daily_generations"
         },
         "models": {
           "status": "observed",

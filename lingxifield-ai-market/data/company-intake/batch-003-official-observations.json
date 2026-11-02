@@ -247,8 +247,11 @@
           "scope": "model_based_metering"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Replicate 官方 Try for Free 模型合集允许新用户在购买预付额度前免费运行部分指定模型；免费次数有限，用尽后需设置计费并购买额度，不代表全部模型永久免费。",
+          "source": "https://replicate.com/collections/try-for-free",
+          "checkedAt": "2026-11-02",
+          "scope": "selected_models_limited_free_runs"
         },
         "models": {
           "status": "observed",
