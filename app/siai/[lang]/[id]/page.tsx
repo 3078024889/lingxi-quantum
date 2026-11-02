@@ -11,6 +11,9 @@ import {researchedFact} from '@/lingxifield-ai-market/lib/market-researched-fact
 import {companyPresentationFor} from '@/lingxifield-ai-market/lib/market-company-evidence';
 import {localizedProductSummary} from '@/lingxifield-ai-market/lib/market-product-locale';
 import {localizedCatalogFact} from '@/lingxifield-ai-market/lib/market-fact-locale';
+import {globalRegionSummary} from '@/lingxifield-ai-market/lib/region-presentation';
+import {commercialEvidence} from '@/lingxifield-ai-market/lib/market-commercial-evidence';
+import {localizedPaymentName} from '@/lingxifield-ai-market/lib/market-localized-payment';
 import {localizedCategory} from '@/lingxifield-ai-market/lib/market-home-i18n';
 import {questionForProduct} from '@/lingxifield-ai-market/lib/market-user-task-queries.mjs';
 
@@ -40,7 +43,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
  const {lang,id}=await params;
  const {p,facts}=resolve(lang,id);
  const words=WORDS[lang as SiaiDetailLocale];
- const question=questionForProduct(id)[0];
+ const question=lang==='zh'?questionForProduct(id)[0]:null;
  const title=(question?question+'｜':'')+p.name+'｜'+words.price+' / '+words.free+'｜全球 SIAI';
  const description=localizedProductSummary(id,lang as SiaiDetailLocale)||p.about;
  const canonical=PRIMARY_SITE+siaiProductPath(lang as SiaiDetailLocale,id);
@@ -55,6 +58,8 @@ export default async function SiaiProductDetail({params}:Props){
  const {p,facts,publisher}=resolve(lang,id),l=lang as SiaiDetailLocale,t=WORDS[l];
  const listing=publisher.kind==='company'?(publisher.ipoFiling?t.ipo:publisher.listingState==='listed_parent'?t.listedParent:t.notVerified):t.na;
  const strength=localizedProductSummary(id,l)||p.guide?.strengths||p.about;
+ const paymentDisplay=l==='zh'?(facts?.payments?.join(' · ')||'—'):((facts?.payments||[]).map(method=>/Link（Stripe/.test(method)?'Link (Stripe Checkout)':localizedPaymentName(method,l)).join(' · ')||'—');
+ const commercialDisplay=l==='zh'?(facts?.commercial||'—'):(commercialEvidence(id,l)?.condition||'—');
  const items=[
   {label:t.company,value:publisher.name,source:publisher.companySource},
   {label:publisher.legalEntityScope==='group_parent'?t.parent:t.legal,value:publisher.legalEntity||'—',source:publisher.legalEntitySource},
@@ -63,10 +68,10 @@ export default async function SiaiProductDetail({params}:Props){
   {label:t.strength,value:strength,source:p.website},
   {label:t.free,value:localizedCatalogFact(id,l,'free',facts?.free||p.free||'—'),source:facts?.freeSource},
   {label:t.price,value:localizedCatalogFact(id,l,'price',facts?.price||p.price||'—'),source:facts?.priceSource},
-  {label:t.region,value:facts?.region||p.location||'—',source:facts?.regionSource},
-  {label:t.payment,value:facts?.payments?.join(' · ')||'—',source:facts?.paymentSource},
+  {label:t.region,value:l==='zh'?(facts?.region||p.location||'—'):globalRegionSummary(id,l),source:facts?.regionSource},
+  {label:t.payment,value:paymentDisplay,source:facts?.paymentSource},
   {label:t.models,value:localizedCatalogFact(id,l,'models',facts?.models||p.features.join(' · ')),source:facts?.modelsSource},
-  {label:t.commercial,value:facts?.commercial||'—',source:facts?.commercialSource}
+  {label:t.commercial,value:commercialDisplay,source:facts?.commercialSource}
  ];
  const publisherNode={ '@type':'Organization',name:publisher.name,
   ...(publisher.legalEntity&&safe(publisher.legalEntitySource)?{legalName:publisher.legalEntity}:{})};
@@ -79,9 +84,9 @@ export default async function SiaiProductDetail({params}:Props){
   <nav aria-label={t.back}><Link href="/">{t.back}</Link></nav>
   <header><p>{localizedCategory(l,p.category)} · LINGXIFIELD SIAI</p><h1>{p.name}</h1><p>{strength}</p>
    <a href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a></header>
-  <section><h2>{t.intro}</h2><p>{p.about}</p><p>{p.features.join(' · ')}</p></section>
+  <section><h2>{t.intro}</h2><p>{l==='zh'?p.about:strength}</p>{l==='zh'&&<p>{p.features.join(' · ')}</p>}</section>
   <section className="siai-detail-facts"><h2>{t.source}</h2><dl>{items.map(item=><div key={item.label}><dt>{item.label}</dt><dd>{item.value}
    {safe(item.source)&&<a href={item.source!} target="_blank" rel="nofollow noopener noreferrer">{t.source} ↗</a>}</dd></div>)}</dl></section>
-  <section className="siai-detail-questions"><h2>{t.tasks}</h2><ul>{questionForProduct(id).slice(0,6).map((q:string)=><li key={q}>{q}</li>)}</ul></section>
+  {l==='zh'&&<section className="siai-detail-questions"><h2>{t.tasks}</h2><ul>{questionForProduct(id).slice(0,6).map((q:string)=><li key={q}>{q}</li>)}</ul></section>}
  </main><Footer/></>;
 }

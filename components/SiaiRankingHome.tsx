@@ -5,6 +5,9 @@ import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
 import {localizedProductSummary} from "../lingxifield-ai-market/lib/market-product-locale";
 import {localizedCatalogFact} from "../lingxifield-ai-market/lib/market-fact-locale";
+import {globalRegionSummary} from "../lingxifield-ai-market/lib/region-presentation";
+import {commercialEvidence} from "../lingxifield-ai-market/lib/market-commercial-evidence";
+import {localizedPaymentName} from "../lingxifield-ai-market/lib/market-localized-payment";
 import {SIAI_FACET_WORDS} from "../lib/siai-home-facet-labels";
 import {filterMarketRows,toggleMarketComparison,MAX_COMPARISONS,TASK_FACETS,PAYMENT_FACETS,EVIDENCE_FACETS,SORT_OPTIONS,
  type TaskFacet,type PaymentFacet,type EvidenceFacet,type MarketOrder} from "../lib/siai-home-facets";
@@ -50,9 +53,14 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
  const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>localizedCatalogFact(p.id,lang,scope,p[scope]);
  const displayStrength=(p:SiaiHomeRow)=>localizedProductSummary(p.id,lang)||p.strength||p.about;
+ const displayRegion=(p:SiaiHomeRow)=>lang==='zh'?p.region:globalRegionSummary(p.id,lang);
+ const displayCommercial=(p:SiaiHomeRow)=>lang==='zh'?p.commercial:commercialEvidence(p.id,lang)?.condition||p.commercial;
+ const displayPayment=(p:SiaiHomeRow)=>lang==='zh'?p.payment:p.payment.split(' · ').map(s=>
+  /Link（Stripe/.test(s)?'Link (Stripe Checkout)':localizedPaymentName(s,lang)).join(' · ');
+ const displayAbout=(p:SiaiHomeRow)=>lang==='zh'?p.about:localizedProductSummary(p.id,lang)||p.name;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
-    <p>{p.about}</p><p>{p.features.join(" · ")}</p>
-    <dl><div><dt>{t.free}</dt><dd>{p.free}</dd></div><div><dt>{t.price}</dt><dd>{p.price}</dd></div><div><dt>{t.region}</dt><dd>{p.region}</dd></div><div><dt>{t.payment}</dt><dd>{p.payment}</dd></div><div><dt>{t.models}</dt><dd>{p.models}</dd></div><div><dt>{t.license}</dt><dd>{p.commercial}</dd></div></dl>
+    <p>{displayAbout(p)}</p>{lang==="zh"&&<p>{p.features.join(" · ")}</p>}
+    <dl><div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div><div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div><div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div><div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div><div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div><div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div></dl>
     <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.paymentSource,t.payment],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
     <a className="siai-detail-primary-link" href={"/siai/"+lang+"/"+encodeURIComponent(p.id)}>{ui.fullDetails} ↗</a>
    </section>;
@@ -95,12 +103,12 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </tr></thead><tbody>
     {([
      [t.strength,(p:SiaiHomeRow)=>displayStrength(p),(_p:SiaiHomeRow)=>null],
-     [t.free,(p:SiaiHomeRow)=>p.free,(p:SiaiHomeRow)=>p.freeSource],
-     [t.price,(p:SiaiHomeRow)=>p.price,(p:SiaiHomeRow)=>p.priceSource],
-     [t.region,(p:SiaiHomeRow)=>p.region,(p:SiaiHomeRow)=>p.regionSource],
-     [t.payment,(p:SiaiHomeRow)=>p.payment,(p:SiaiHomeRow)=>p.paymentSource],
-     [t.models,(p:SiaiHomeRow)=>p.models,(p:SiaiHomeRow)=>p.modelsSource],
-     [t.license,(p:SiaiHomeRow)=>p.commercial,(p:SiaiHomeRow)=>p.commercialSource],
+     [t.free,(p:SiaiHomeRow)=>displayFact(p,"free"),(p:SiaiHomeRow)=>p.freeSource],
+     [t.price,(p:SiaiHomeRow)=>displayFact(p,"price"),(p:SiaiHomeRow)=>p.priceSource],
+     [t.region,(p:SiaiHomeRow)=>displayRegion(p),(p:SiaiHomeRow)=>p.regionSource],
+     [t.payment,(p:SiaiHomeRow)=>displayPayment(p),(p:SiaiHomeRow)=>p.paymentSource],
+     [t.models,(p:SiaiHomeRow)=>displayFact(p,"models"),(p:SiaiHomeRow)=>p.modelsSource],
+     [t.license,(p:SiaiHomeRow)=>displayCommercial(p),(p:SiaiHomeRow)=>p.commercialSource],
      [t.legal,(p:SiaiHomeRow)=>p.legal||"—",(p:SiaiHomeRow)=>p.legalSource],
      [t.founded,(p:SiaiHomeRow)=>p.year||"—",(p:SiaiHomeRow)=>p.yearSource]
     ] as const).map(([label,value,source])=><tr key={label}><th scope="row">{label}</th>
@@ -124,10 +132,10 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
         <td><strong className="siai-cell-preview" title={p.strength||p.about}>{short(displayStrength(p),100)}</strong></td>
         <td><span className="siai-cell-preview" title={p.free}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
         <td><span className="siai-cell-preview" title={p.price}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.region}>{short(p.region,100)}</span><Source href={p.regionSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.payment}>{short(p.payment,88)}</span><Source href={p.paymentSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={p.region}>{short(displayRegion(p),100)}</span><Source href={p.regionSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={p.payment}>{short(displayPayment(p),88)}</span><Source href={p.paymentSource} label={t.source}/></td>
         <td><span className="siai-cell-preview" title={p.models}>{short(displayFact(p,"models"),95)}</span></td>
-        <td><span className="siai-cell-preview" title={p.commercial}>{short(p.commercial,100)}</span><Source href={p.commercialSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={p.commercial}>{short(displayCommercial(p),100)}</span><Source href={p.commercialSource} label={t.source}/></td>
         <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button>
         <button type="button" className={compareIds.includes(p.id)?"siai-compare-selected":""} onClick={()=>toggleCompare(p.id)}
          disabled={!compareIds.includes(p.id)&&compareIds.length>=MAX_COMPARISONS}

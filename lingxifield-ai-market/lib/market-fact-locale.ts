@@ -7,7 +7,7 @@ type FactConfig={price:string|readonly [string,number,string];free:string|readon
 const FACTS:Readonly<Record<string,FactConfig>>={
  "anthropic-sdk-python": {
   "price": "sdk",
-  "free": "unknownFree",
+  "free": "sdk",
   "models": "Anthropic Python SDK · Python ≥3.10"
  },
  "chatgpt": {
@@ -121,7 +121,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
    20,
    "annual"
   ],
-  "free": "unknownFree",
+  "free": "localUse",
   "models": "Workflow integrations · models connected separately"
  },
  "ollama": {
@@ -136,7 +136,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
  },
  "openai-python": {
   "price": "sdk",
-  "free": "unknownFree",
+  "free": "sdk",
   "models": "OpenAI Python SDK · API model selected separately"
  },
  "perplexity": {
@@ -151,7 +151,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
  "replit": {
   "price": [
    "USD",
-   20,
+   18,
    "annual"
   ],
   "free": "limited",
@@ -226,11 +226,55 @@ const FACTS:Readonly<Record<string,FactConfig>>={
   "models": "Doubao multimodal model family"
  }
 };
+const LOVABLE_TASK_COSTS:Readonly<Partial<Record<Language,string>>>={
+ en:'Task examples: recolor button 0.50 credits; remove footer 0.90; add sign-up/login 1.20; image-rich landing page 1.70. Actual cost varies by task.',
+ ja:'タスク例：ボタン色変更0.50、フッター削除0.90、ログイン追加1.20、画像付きLP作成1.70クレジット。実費は内容で変動。',
+ ko:'작업 예시: 버튼 색상 0.50, 바닥글 삭제 0.90, 회원가입·로그인 1.20, 이미지 랜딩페이지 1.70 크레딧. 작업에 따라 변동.',
+ fr:'Exemples : bouton 0,50 crédit ; pied de page 0,90 ; connexion 1,20 ; page avec images 1,70. Coût variable.',
+ de:'Beispiele: Knopffarbe 0,50 Credits; Fußzeile 0,90; Anmeldung 1,20; Landingpage mit Bildern 1,70. Verbrauch variiert.',
+ es:'Ejemplos: color del botón 0,50 créditos; quitar pie 0,90; registro 1,20; página con imágenes 1,70. Varía por tarea.',
+ pt:'Exemplos: cor do botão 0,50 créditos; remover rodapé 0,90; login 1,20; página com imagens 1,70. Varia por tarefa.',
+ ar:'أمثلة للمهام: لون الزر 0.50، حذف التذييل 0.90، تسجيل الدخول 1.20، صفحة بصور 1.70 رصيد. تختلف التكلفة حسب المهمة.'
+};
+const MIDJOURNEY_TRIAL_COPY:Readonly<Partial<Record<Language,string>>>={
+ en:'No free trial on midjourney.com or Discord; a limited trial is available in the separate niji · journey iOS/Android app.',
+ ja:'MidjourneyのWeb版とDiscordに無料体験はありません。別のniji · journeyアプリ（iOS/Android）では限定体験が可能です。',
+ ko:'Midjourney 웹·Discord에는 무료 체험이 없으며 별도의 niji · journey iOS/Android 앱에 한정 체험이 있습니다.',
+ fr:'Aucun essai gratuit sur le site Midjourney ou Discord ; essai limité dans l’application distincte niji · journey (iOS/Android).',
+ de:'Kein Gratis-Test auf Midjourney-Web oder Discord; begrenzte Testversion nur in der separaten niji · journey App (iOS/Android).',
+ es:'Sin prueba gratis en la web de Midjourney ni en Discord; prueba limitada en la app independiente niji · journey (iOS/Android).',
+ pt:'Sem teste grátis no site Midjourney ou Discord; teste limitado no aplicativo separado niji · journey (iOS/Android).',
+ ar:'لا توجد تجربة مجانية على موقع Midjourney أو Discord؛ تتوفر تجربة محدودة في تطبيق niji · journey المنفصل (iOS/Android).'
+};
+const MIDJOURNEY_MODELS_COPY:Readonly<Partial<Record<Language,string>>>={
+ en:'Midjourney image V8.2 (default) · Edit Model · HD images up to 2048px; video resolution and credits depend on plan.',
+ ja:'Midjourney画像V8.2（標準）・Edit Model・最大2048pxのHD画像。動画の解像度とクレジットはプラン別。',
+ ko:'Midjourney 이미지 V8.2(기본) · Edit Model · 최대 2048px HD 이미지. 영상 해상도·크레딧은 요금제별.',
+ fr:'Midjourney V8.2 (image par défaut), Edit Model, images HD jusqu’à 2048 px. Vidéo selon forfait.',
+ de:'Midjourney Bildmodell V8.2 (Standard), Edit Model, HD bis 2048 px. Videolimits je nach Tarif.',
+ es:'Midjourney V8.2 (imagen predeterminada), Edit Model e imágenes HD hasta 2048 px; vídeo según el plan.',
+ pt:'Midjourney V8.2 (imagem padrão), Edit Model e imagens HD até 2048 px; vídeo conforme o plano.',
+ ar:'Midjourney V8.2 الافتراضي للصور مع Edit Model وصور HD حتى 2048 بكسل؛ حدود الفيديو حسب الخطة.'
+};
 export function localizedCatalogFact(id:string,language:Language,scope:Scope,original:string):string{
- // Luma has one source of truth for all nine languages; do not reintroduce the old $deprecated Luma price snapshot.
+ // Luma and Suno have their own reviewed nine-language product schedules.
  if(id==='luma')return scope==='price'?lumaSubscription(language):scope==='free'?lumaFree(language):lumaModels(language);
  if(id==='suno')return scope==='price'?sunoSubscription(language):scope==='free'?sunoFree(language):sunoModels(language);
  if(language==='zh')return original;
+ if(id==='midjourney'&&scope==='free')return MIDJOURNEY_TRIAL_COPY[language]||original;
+ if(id==='midjourney'&&scope==='models')return MIDJOURNEY_MODELS_COPY[language]||original;
+ // Derive all four translated Replit subscription figures from the reviewed source,
+ // instead of keeping stale copies of prices in each language.
+ if(id==='replit'&&scope==='price'){
+  const values=original.match(/Core \$(\d+(?:\.\d+)?)\/月（月付），年付折合 \$(\d+(?:\.\d+)?)\/月[\s\S]*?Pro \$(\d+(?:\.\d+)?)\/月（月付），年付折合 \$(\d+(?:\.\d+)?)\/月/);
+  if(!values)return TEXT[language].variable;
+  const t=TEXT[language];
+  return 'Core $'+values[1]+' '+t.monthly+' · $'+values[2]+' '+t.annual+'; Pro $'+values[3]+' '+t.monthly+' · $'+values[4]+' '+t.annual;
+ }
+ if(id==='lovable'&&scope==='price'){
+  const pro=original.match(/Pro(?:[\u4e00-\u9fff ]+)?\s*\$(\d+(?:\.\d+)?)\/月/);
+  return (pro?'Pro $'+pro[1]+' '+TEXT[language].monthlyRef+' · ':'')+(LOVABLE_TASK_COSTS[language]||TEXT[language].variable);
+ }
  const c=FACTS[id],t=TEXT[language];
  if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
  if(scope==='models')return c.models||t.modelVaries;
