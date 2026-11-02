@@ -1,4 +1,5 @@
 /** Thirty candidate products => editorial review model. Never import into the 32-product public catalog. */
+import {regionEvidenceLevel} from './market-evidence-readiness.mjs';
 export const CANDIDATE_FACT_ORDER=Object.freeze(['price','free','models','regions','commercial','payment','company']);
 const REGIONAL_BANS=/export|sanction|embargo|restrictions_only|prohibited|provider_model_specific|per_model/i;
 const LEGAL_NAMES=Object.freeze({
@@ -80,6 +81,7 @@ export function materializeCandidateCatalog(cohorts,observations){
     listed:'not_verified',founded:null,category:sourceProduct.category,
     website:sourceProduct.website,tasks:sourceProduct.tasks,keywords:sourceProduct.keywords,
     batch:cohort.batch,facts,regionalEvidence,
+    regionEvidenceQuality:regionEvidenceLevel(record.facts.regions),
     recordedCount:Object.values(facts).filter(f=>f.status==='observed').length,
     missingCount:Object.values(facts).filter(f=>f.status==='missing').length,
     conflicts:Object.values(facts).filter(f=>f.status==='conflict').length,
@@ -92,10 +94,15 @@ export function materializeCandidateCatalog(cohorts,observations){
  }
  if(products.length!==30||usedIds.size!==30||groupNames.size!==28)throw Error('CANDIDATE_30_OR_GROUP_DEDUP_FAILED');
  const totals=products.reduce((r,p)=>{r.observed+=p.recordedCount;r.missing+=p.missingCount;r.conflict+=p.conflicts;return r;},{observed:0,missing:0,conflict:0});
+ const geography={missing:0,restrictions_only:0,provider_specific_restrictions:0,broad_market_statement:0,other_observation_not_country_proof:0,country_by_country_verified:0};
+ for(const p of products){
+  if(!Object.hasOwn(geography,p.regionEvidenceQuality))throw Error('UNKNOWN_REGION_EVIDENCE_LEVEL:'+p.id);
+  geography[p.regionEvidenceQuality]++;
+ }
  if(Object.values(totals).reduce((s,n)=>s+n,0)!==210||products.some(p=>p.publishApproved||p.seoIndex||p.visibleToPublic))
   throw Error('STAGING_PUBLICATION_OR_ACCOUNTING_VIOLATION');
  return {schema:'siai_30_candidate_review_v1',public:false,seoIndex:false,
-  candidateProducts:products.length,publisherGroups:groupNames.size,factCells:210,totals,
+  candidateProducts:products.length,publisherGroups:groupNames.size,factCells:210,totals,geography,
   publisherGroupsDetail:[...groupNames].map(([id,productIds])=>({id,productIds})),
   products};
 }
