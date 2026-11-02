@@ -8,6 +8,18 @@ export const CANDIDATE_FACT_KEYS=Object.freeze(['price','free','models','regions
 const sourceKey=k=>k==='payments'?'paymentSource':k+'Source';
 const isValidUrl=v=>{try{let u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password&&!u.port&&!u.hash}catch{return false}};
 const hasValue=x=>Array.isArray(x)?x.some(t=>typeof t==='string'&&t.trim().length>0):typeof x==='string'&&x.trim().length>0;
+/** A sanctions/export restriction is not a supported-country list. */
+export function regionEvidenceLevel(f){
+ if(!f||f.status!=='observed')return 'missing';
+ const scope=String(f.scope||'').toLowerCase();
+ if(/170plus_markets|market_coverage|country_coverage|official_available_markets/.test(scope))
+  return 'broad_market_statement';
+ if(/provider_model_specific|per_model|third_party_model/.test(scope))
+  return 'provider_specific_restrictions';
+ if(/export|restriction|sanction|embargo|country_whitelist|controls_only/.test(scope))
+  return 'restrictions_only';
+ return 'other_observation_not_country_proof';
+}
 const dateValid=(s,asOf)=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.isNaN(Date.parse(s+'T00:00:00Z'))&&s<=asOf;
 export function buildEvidenceReadiness({curatedIds,curatedFacts,cohorts,observations,asOf}){
  if(!Array.isArray(curatedIds)||!Array.isArray(cohorts)||!Array.isArray(observations)||!curatedFacts||
@@ -69,6 +81,13 @@ export function buildEvidenceReadiness({curatedIds,curatedFacts,cohorts,observat
  const totals=staged.reduce((a,p)=>{a.observed+=p.observed;a.missing+=p.missing;a.conflict+=p.conflict;return a},{observed:0,missing:0,conflict:0});
  if(totals.observed+totals.missing+totals.conflict!==staged.length*CANDIDATE_FACT_KEYS.length)
   structuralIssues.push({code:'STAGED_7_FACT_ACCOUNTING_DRIFT',...totals});
+ const regionalEvidence=staged.reduce((acc,p)=>{
+  const evidence=observations.flatMap(o=>o.products||[]).find(x=>x.id===p.id)?.facts?.regions;
+  const level=regionEvidenceLevel(evidence);
+  acc[level]=(acc[level]||0)+1;
+  return acc;
+ },{missing:0,broad_market_statement:0,provider_specific_restrictions:0,restrictions_only:0,
+    other_observation_not_country_proof:0});
  const curatedCoverage=curated.reduce((n,c)=>n+c.recordedFactCount,0);
  const publishReady=staged.filter(p=>p.publishApproved).length;
  // No legal/production/commerce claim is implied by page observations.
@@ -78,7 +97,7 @@ export function buildEvidenceReadiness({curatedIds,curatedFacts,cohorts,observat
    recordedWithSources:curatedCoverage,missingFieldPairs:curated.length*CURATED_FACT_KEYS.length-curatedCoverage,
    legalAndPaymentTermsIndependentlyRechecked:false,realUserCheckoutVerified:false,products:curated},
   candidateIntake:{batches:cohorts.length,products:staged.length,factCells:staged.length*CANDIDATE_FACT_KEYS.length,
-   ...totals,publishReady,manualReviewRequired:true,publishedFromStaging:0,reviewQueue},
+   ...totals,publishReady,manualReviewRequired:true,publishedFromStaging:0,regionalEvidence,reviewQueue},
   externalObservability:{gscConnectedByThisScript:false,actualSearchTrafficMeasured:false,
    subscriptionCheckoutTested:false,independentReviewCompleted:false},
   safety:{structuralIssues,structurallyValid:structuralIssues.length===0,
@@ -100,6 +119,16 @@ export function evidenceReportMarkdown(r){
   '',
   'Candidate products already approved for publication: '+o.publishReady+'.',
   'Actual GSC traffic and production checkout: NOT CHECKED.',
+  '',
+  '## Geographic evidence quality',
+  '',
+  'A statement banning sanctioned regions does NOT establish which countries support registration or payments.',
+  'Official broad-market statement: '+o.regionalEvidence.broad_market_statement+' product(s).',
+  'Export/sanctions restrictions only: '+o.regionalEvidence.restrictions_only+' product(s).',
+  'Model-provider-specific restrictions: '+o.regionalEvidence.provider_specific_restrictions+' product(s).',
+  'No country evidence recorded: '+o.regionalEvidence.missing+' product(s).',
+  'Country-by-country signup and payment verification: NOT PERFORMED.',
+
   '',
   '## Candidate review order',
   '',
