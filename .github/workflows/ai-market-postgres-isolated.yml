@@ -240,7 +240,7 @@ jobs:
              SELECT user_id,id,product_id,'category','USD','paypal','55555555-5555-4555-8555-555555555555'
               FROM public.ai_market_vendor_claims WHERE product_id='claude' AND status='pending_review';
             RAISE EXCEPTION 'UNAPPROVED_VENDOR_PROMOTION_ACCEPTED';
-           EXCEPTION WHEN check_violation THEN NULL; END;
+           EXCEPTION WHEN check_violation OR insufficient_privilege THEN NULL; END;
            BEGIN
             INSERT INTO public.ai_market_vendor_promotion_requests
              (user_id,claim_id,product_id,plan_id,currency,provider,idempotency_key)
@@ -265,7 +265,7 @@ jobs:
              SELECT user_id,id,product_id,'category','USD','paypal','66666666-6666-4666-8666-666666666666'
                FROM public.ai_market_vendor_claims WHERE product_id='suno';
             RAISE EXCEPTION 'OTHER_VENDOR_PENDING_PROMOTION_ACCEPTED';
-           EXCEPTION WHEN check_violation THEN NULL; END;
+           EXCEPTION WHEN check_violation OR insufficient_privilege THEN NULL; END;
           END
           $isolation$;
           COMMIT;

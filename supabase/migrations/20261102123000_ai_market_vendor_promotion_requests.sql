@@ -47,7 +47,7 @@ CREATE POLICY ai_market_promotion_approved_vendor_submit ON public.ai_market_ven
   user_id=(SELECT auth.uid()) AND status='requested' AND merchant_order_id IS NULL AND
   EXISTS(SELECT 1 FROM public.ai_market_vendor_claims c
     WHERE c.id=claim_id AND c.user_id=(SELECT auth.uid())
-      AND c.product_id=product_id AND c.status='approved')
+      AND c.product_id=public.ai_market_vendor_promotion_requests.product_id AND c.status='approved')
  );
 
 -- Cross-check claims and approved company at insert time; link only immutable,
