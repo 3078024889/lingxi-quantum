@@ -16,6 +16,9 @@ test('both SIAI tables keep full data in detail while compact previews prevent t
  assert.match(home,/aria-controls=\{"siai-detail-"\+p\.id\}/);
  assert.doesNotMatch(home,/shown\.some\(p=>p\.id===expanded\)/);
  assert.match(home,/<Source href=\{p\.priceSource\}/);
+ assert.match(home,/<Source href=\{p\.paymentSource\}/);
+ assert.match(home,/\[p\.paymentSource,t\.payment\]/);
+ assert.match(home,/\[t\.payment,\(p:SiaiHomeRow\)=>p\.payment,\(p:SiaiHomeRow\)=>p\.paymentSource\]/);
  assert.match(home,/p\.commercialSource/);
  assert.match(css,/siai-cell-preview.*-webkit-box/);
  assert.match(css,/-webkit-line-clamp:4/);
