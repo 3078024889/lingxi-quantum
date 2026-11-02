@@ -28,3 +28,11 @@ The Global SIAI hosted market can be served on `globalsiai.com`, while the trust
 - Brand/website names and contact emails are **unverified claims** until reviewed.
 - Checkout is not unlocked by a mere Vercel environment variable.
 - The marketplace does not store passwords or session tokens. 
+
+## Manual approval and audit extension
+
+The central LINGXIFIELD account now has a server-only reviewer API and review queue. Reviewer authorization uses a verified server-fetched Supabase user and `app_metadata.ai_market_vendor_reviewer === true`; never `user_metadata`, a submitted email, a browser-supplied role or an environment-provided static operator token. The explicit reviewer role must be provisioned separately by the authenticated organization administrator; no user is auto-promoted by the PR.
+
+Reviews have an expected current status, human-entered 12-1000 character reason, and for approvals an explicit checkbox confirming independently reviewed corporate evidence. An atomic PostgreSQL trigger writes the previous/new states and reviewer user ID into a non-public audit log; an approval and its audit either both commit or both fail. An index prevents two simultaneously verified/approved representatives for one product; competing pending claims do not silently disappear. `service_role` is available only server-side in the guarded main-site API.
+
+This is an applicant ownership review and **does not** issue a payable SKU, change independent ranking, settle a payment or open production checkout. No migration has been applied to production in this PR.
