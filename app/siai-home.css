@@ -38,3 +38,26 @@
 .siai-home-empty{font-size:14px;padding:26px;text-align:center}
 @media(max-width:1023px){.siai-home{padding:82px 10px 30px}.siai-home-categories{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px}}
 [dir="rtl"] .siai-home-table th{text-align:right}
+
+/* v2 compact, scannable market facts: full evidence stays in the detail panel. */
+.siai-home-table .siai-cell-preview{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;max-height:6.2em;white-space:normal;overflow-wrap:anywhere;line-height:1.55}
+.siai-home-table .siai-home-identity dl{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;box-shadow:none!important}
+.siai-home-table td{max-height:initial}
+.siai-home-table th{position:sticky;top:0;z-index:3}
+.siai-home-actions{position:relative;align-self:start;vertical-align:top}
+.siai-home-identity{min-width:0}
+.siai-home-identity dd{word-break:break-word}
+@media(min-width:960px){
+ .siai-home-table tr>*:first-child{position:sticky;inset-inline-start:0;z-index:2;width:45px;background:#fff}
+ .siai-home-table tr>*:nth-child(2){position:sticky;inset-inline-start:45px;z-index:2;background:#fff;box-shadow:4px 0 7px rgba(20,57,99,.06)}
+ .siai-home-table thead tr>*:first-child,.siai-home-table thead tr>*:nth-child(2){z-index:5;background:#e9f2fc}
+ .siai-home-table tbody tr:nth-child(even)>*:first-child,.siai-home-table tbody tr:nth-child(even)>*:nth-child(2){background:#f8fbff}
+ .siai-home-table tbody tr:hover>*:first-child,.siai-home-table tbody tr:hover>*:nth-child(2){background:#edf5ff}
+}
+@media(max-width:550px){
+ .siai-home-head h1{font-size:24px}
+ .siai-home-categories button{flex:0 0 auto}
+ .siai-home-table-scroll{border-radius:8px}
+ .siai-home-detail{padding:14px}
+ .siai-home-detail dl{grid-template-columns:1fr}
+}
