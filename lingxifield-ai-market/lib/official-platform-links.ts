@@ -1,5 +1,5 @@
 // Links must resolve to the publisher or official platform download hub. No fabricated app store links.
-export type PlatformLink={label:string;url:string;kind:'desktop'|'ios'|'android'|'x'|'news'|'team'|'github'|'reviews'};
+export type PlatformLink={label:string;url:string;kind:'desktop'|'ios'|'android'|'x'|'news'|'team'|'github'|'reviews'|'web'};
 type Profile={links:readonly PlatformLink[];team?:{summary:string;source:string};funding?:{summary:string;source:string}};
 export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  chatgpt:{links:[
@@ -24,6 +24,7 @@ export const OFFICIAL_PLATFORM_LINKS:Record<string,Profile>={
  {label:'Google 官方资讯',url:'https://blog.google/technology/ai/',kind:'news'}
  ]},
  runway:{links:[
+ {label:'直接进入 Runway 创作',url:'https://app.runwayml.com/',kind:'web'},
  {label:'iPhone 下载',url:'https://apps.apple.com/us/app/runway-ai-image-video/id1665024375',kind:'ios'},
  {label:'App Store 评价',url:'https://apps.apple.com/us/app/runway-ai-image-video/id1665024375',kind:'reviews'},
  {label:'X 官方账号',url:'https://x.com/runwayml',kind:'x'},
@@ -74,5 +75,5 @@ export function platformLinks(id:string):Profile{
  return OFFICIAL_PLATFORM_LINKS[id]||{links:[]};
 }
 export function safePublisherLink(link:PlatformLink):boolean{
- try{const u=new URL(link.url);return u.protocol==='https:'&&!u.username&&!u.password&&u.hostname.length>3&&/^(?:desktop|ios|android|x|news|team|github|reviews)$/.test(link.kind)}catch{return false}
+ try{const u=new URL(link.url);return u.protocol==='https:'&&!u.username&&!u.password&&u.hostname.length>3&&/^(?:desktop|ios|android|x|news|team|github|reviews|web)$/.test(link.kind)}catch{return false}
 }

@@ -8,7 +8,7 @@ test('all nine locales present official, app, repository, source and limitation 
  assert.deepEqual([...LINK_LOCALES].sort(),['ar','de','en','es','fr','ja','ko','pt','zh']);
  for(const lang of LINK_LOCALES){
   const c=publisherLinkCopy(lang);
-  for(const key of ['official','repository','documentation','desktop','ios','android','x','news','team','github','reviews','aria','repoNote','docsNote'])assert.ok(c[key]?.length>=4,lang+':'+key);
+  for(const key of ['official','repository','documentation','desktop','ios','android','x','news','team','github','reviews','web','aria','repoNote','docsNote'])assert.ok(c[key]?.length>=4,lang+':'+key);
   assert.equal(publisherLinkLabel('github',lang),c.github);
   assert.equal(publisherLinkLabel('repository',lang),c.repository);
  }
@@ -33,4 +33,12 @@ test('sponsored slots reject expired or off-catalog content and prevent duplicat
  assert.match(endpoint,/visibleSponsored\(rows,\[\.\.\.MARKET_API_PRODUCTS\]\)/);
  assert.match(endpoint,/ends_at','gt\.'/);
  assert.match(endpoint,/affectsOrganicRank:false/);
+});
+
+test('Runway official origin and direct creative web app are distinct approved entrypoints',()=>{
+ const data=src('lib/data.ts'),links=src('lib/official-platform-links.ts');
+ assert.match(data,/domain:'runway\.com'/);
+ assert.match(data,/website:'https:\/\/runway\.com'/);
+ assert.match(links,/url:'https:\/\/app\.runwayml\.com\/',kind:'web'/);
+ assert.match(links,/reviews\|web/);
 });
