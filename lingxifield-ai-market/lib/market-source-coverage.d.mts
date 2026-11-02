@@ -5,6 +5,7 @@ export const SOURCE_FIELDS:readonly (readonly [string,string])[];
 export function auditSourceCoverage(rows:CoverageProduct[]):{
  total:number;fieldCoverage:Record<string,number>;fullySourcedProducts:number;missingByProduct:{id:string;missing:string[]}[]
 };
+export function auditPriceDetail(rows:CoverageProduct[]):{total:number;explicitCurrencyAmountProducts:number;pricedIds:string[];withoutFixedCurrencyQuote:string[];freeSelfHostedIds:string[];methodology:string};
 export function auditCompanyCoverage(rows:CoverageCompany[]):{
  distinctPublishers:number;companies:number;projects:number;companyFoundedSourced:number;missingFounding:string[];
  missingLocation:string[];missingFunding:string[];confirmedListedParent:number;note:string
