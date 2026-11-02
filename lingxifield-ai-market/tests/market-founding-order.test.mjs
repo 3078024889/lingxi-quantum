@@ -44,6 +44,6 @@ test('publisher-backed corporate dates added while unknowns remain unspecified',
   assert.ok(entry.includes("founded:fact('"+year+"'"),name);
   assert.ok(entry.includes(src),src);
  }
- assert.ok(!/llamaindex:\{[^\n]*founded:fact/.test(evidence));
+ assert.match(evidence,/llamaindex:\{[^\n]*founded:fact\('2023'/);
  assert.ok(!/midjourney:\{[^\n]*founded:fact/.test(evidence));
 });
