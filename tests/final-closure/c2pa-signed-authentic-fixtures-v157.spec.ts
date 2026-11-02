@@ -6,7 +6,8 @@ import type {Page} from "playwright";
 // scripts/ci/fetch-signed-c2pa-fixtures-v157.mjs.
 // A test-PKI signer is not a trusted identity. Positive signature validation
 // must never be presented as proof the photo/video depicts a true event.
-const directory="test-results/c2pa-signed-fixtures-v157";
+// Must match the fetch script; Playwright clears test-results/ before execution.
+const directory=".cache/ci-fixtures/c2pa-signed-v157";
 async function inspect(page:Page,slug:string,name:string,mimeType:string,buffer:Buffer){
  await page.goto("/tools/"+slug+"?lang=en");
  await page.locator('main input[type="file"]').first().setInputFiles({name,mimeType,buffer});
