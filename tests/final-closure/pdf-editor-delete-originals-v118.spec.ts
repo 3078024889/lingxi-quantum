@@ -32,4 +32,11 @@ test("PDF editor visually removes original text and images, retaining undo and t
  await page.getByRole("button",{name:/Undo/}).click();
  await expect(page.getByTestId("pdf-original-image")).toHaveCount(1);
  await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
+ // Keyboard Delete must keep the source masked, not reveal the old text.
+ await page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]').click();
+ await page.keyboard.press("Delete");
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]')).toHaveCount(0);
+ await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
+ await page.getByRole("button",{name:/Undo/}).click();
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]')).toHaveCount(1);
 });
