@@ -20,7 +20,7 @@ const cohort=(code,products)=>({batch:code,intakePaused:true,visibleToPublic:fal
 const input=()=>{
  const batchProducts=[entry('alpha'),entry('beta',{facts:{...entry('beta').facts,free:fact('missing','free')}})];
  return {curatedIds:Array.from({length:32},(_,i)=>'p'+i),
- curatedFacts:Object.fromEntries(Array.from({length:32},(_,i)=>['p'+i,curatedFact])),
+ curatedFacts:Object.fromEntries(Array.from({length:32},(_,i)=>['p'+i,{...curatedFact}])),
  cohorts:[cohort('B001',batchProducts),cohort('B002',[]),cohort('B003',[])],
  observations:[{batch:'B001',products:batchProducts},{batch:'B002',products:[]},{batch:'B003',products:[]}],
  asOf:'2026-11-02'};
