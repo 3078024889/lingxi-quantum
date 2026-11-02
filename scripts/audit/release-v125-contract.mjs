@@ -11,7 +11,8 @@ const suites=[
  "tool-pdf-qr-e2e-v119","image-before-after-v120","pdf-page-organizer-v121",
  "pdf-precision-split-v122","pdf-editor-visual-quality-v116",
  "pdf-editor-save-reopen-v123","pdf-editor-text-find-v124",
- "tool-cross-workflow-v125","unverified-developer-real-v126","unverified-pdf-real-v126","unverified-images-real-v126","unverified-pdf-advanced-v126","unverified-longtail-documents-v126","remaining-local-tool-real-v127","food-calorie-nine-language-dedupe-v128","remaining-pdf-subtitle-local-v129","remaining-pdf-security-attachments-v129","remaining-ico-real-v129","remaining-pdf-table-real-v129","remaining-privacy-cleaner-real-v129"
+ "tool-cross-workflow-v125","unverified-developer-real-v126","unverified-pdf-real-v126","unverified-images-real-v126","unverified-pdf-advanced-v126","unverified-longtail-documents-v126","remaining-local-tool-real-v127","food-calorie-nine-language-dedupe-v128","remaining-pdf-subtitle-local-v129","remaining-pdf-security-attachments-v129","remaining-ico-real-v129","remaining-pdf-table-real-v129","remaining-privacy-cleaner-real-v129",
+ "remove-exif-real-v130","tool-output-invalidation-v131","video-toolkit-real-v131"
 ];
 const wf=read(".github/workflows/tool-delivery-quota.yml");
 const prod=read(".github/workflows/production-gate.yml");
@@ -37,6 +38,11 @@ assert(workbench.includes('preserveSameNamedFiles={tool.slug === "file-compare"}
 assert(workbench.includes("const normalized = input.trim()"),"TIMESTAMP_EMPTY_INPUT_FIX_LOST");
 const editor=read("components/tools/PdfEditorWorkbench.tsx");
 assert(editor.includes("PdfTextFind")&&editor.includes("PaidExportButton"),"EDITOR_SEARCH_OR_PAYMENT_GATE_MISSING");
+const openSource=read("app/open-source/page.tsx"),footer=read("components/Footer.tsx"),mediaBuild=read("scripts/prepare-media-runtime.cjs");
+assert(openSource.includes("GPL-2.0-or-later")&&openSource.includes("ffmpeg.wasm")&&openSource.includes("Corresponding source"),"VIDEO_GPL_NOTICE_MISSING");
+assert(footer.includes('href="/open-source"'),"OSS_NOTICE_NOT_LINKED");
+assert(mediaBuild.includes("ffmpeg-0.12.10")&&mediaBuild.includes("SOURCE.txt")&&mediaBuild.includes("GPL-2.0-or-later"),"VIDEO_SOURCE_OFFER_MISSING");
+assert(editor.includes("StandardFonts.Helvetica")&&editor.includes("nativeLatin"),"VECTOR_TEXT_EXPORT_REGRESSION");
 const paid=read("components/tools/PaidExportButton.tsx");
 assert(paid.includes("requireCompletedDelivery")&&paid.includes("/api/tools/export/consume"),"PAID_EXPORT_PROOF_MISSING");
 const arranger=read("components/tools/PdfPageOrganizerWorkbench.tsx");
