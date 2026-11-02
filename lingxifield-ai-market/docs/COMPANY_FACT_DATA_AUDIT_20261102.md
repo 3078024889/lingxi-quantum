@@ -12,7 +12,7 @@ Scope: **32 curated products / SDKs / open-source tools**, not 32 separately inc
 
 ## Open data gaps (do not infer values)
 
-1. **Company identity:** corporate founding year still missing for LlamaIndex and Midjourney; several company headquarters lack direct primary-source evidence; funding amounts are incomplete for multiple companies, and a missing funding amount does not mean zero.
+1. **Company identity:** corporate founding year still missing for Midjourney; several company headquarters lack direct primary-source evidence; funding amounts are incomplete for multiple companies, and a missing funding amount does not mean zero.
 2. **Products and developer APIs:** subscription, usage-based API billing, free quotas, regional support, model versions, taxes, usage caps and commercial licensing change on independent cycles. All 32 require **field-level source dates** and periodic revalidation; no subscription implies free API calls. User experience summaries are not synthetic reviews.
 3. **Comparability:** product task performance, independent model benchmark scores, actual end-to-end short-film cost and per-region checkout performance are **not independently measured** simply because publisher claims are present.
 4. **SEO/GEO:** `data/seo-geo-observations.json` remains `[]`. There are no independent verified rankings, Google Search Console measurements or AI citation samples for this new site in the checked source tree. A search-ready page is not a measured search rank.
