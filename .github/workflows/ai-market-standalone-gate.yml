@@ -44,6 +44,8 @@ jobs:
         run: node scripts/report-evidence-readiness.mjs --json=../siai-evidence-reports/evidence-readiness.json --markdown=../siai-evidence-reports/evidence-readiness.md
       - name: Generate remaining official-only research queue (read-only)
         run: node scripts/report-official-gap-queue.mjs --json=../siai-evidence-reports/gap-queue.json --markdown=../siai-evidence-reports/gap-queue.md
+      - name: Build full 30-product candidate review UI and normalized catalog
+        run: node scripts/build-candidate-review.mjs --html=../siai-evidence-reports/candidate-30-review.html --json=../siai-evidence-reports/candidate-30-catalog.json
       - name: Upload non-public editorial audit (no production data mutation)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
