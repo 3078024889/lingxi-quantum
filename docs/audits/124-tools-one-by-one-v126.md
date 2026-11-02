@@ -9,7 +9,7 @@
 | 不重复公开工具 | **121** |
 | 已登记真实浏览器操作场景（不等于 CI 全通过） | **82** |
 | 仅有历史部分样本 | **2** |
-| 尚未具备充分真实操作场景 | **24** |
+| 尚未具备充分真实操作场景 | **23** |
 
 ## 重复工具处理记录
 
@@ -116,7 +116,7 @@
 | pdf-web-optimize | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | png-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
 | pptx-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
-| privacy-cleaner | FULL_E2E_NOT_PROVEN | — |
+| privacy-cleaner | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-privacy-cleaner-real-v129.spec.ts` |
 | qr-code-generator | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `qr-cron-output-v86.spec.ts` |
 | qr-code-reader | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-pdf-qr-e2e-v119.spec.ts` |
 | qr-safe-reader | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
