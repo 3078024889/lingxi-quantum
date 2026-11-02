@@ -80,7 +80,7 @@ export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]
   if(!current.length||generating)return;
   setGenerating(true);setSaved(null);setError("");
   try{
-   const originals=await Promise.all(files.map(f=>PDFDocument.load(f.arrayBuffer(),{ignoreEncryption:false})));
+   const originals=await Promise.all(files.map(async f=>PDFDocument.load(await f.arrayBuffer(),{ignoreEncryption:false})));
    const output=await PDFDocument.create();
    for(const item of current){
     const [copied]=await output.copyPages(originals[item.file],[item.page-1]);
@@ -114,7 +114,7 @@ export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]
      <div className="mt-2 grid grid-cols-3 gap-1">
       <button type="button" aria-label={t.up+" "+(index+1)} title={t.up} disabled={index===0||generating} onClick={()=>edit(items=>movePage(items,index,index-1))} className="rounded-md border px-1 py-1.5 disabled:opacity-30">←</button>
       <button type="button" aria-label={t.down+" "+(index+1)} title={t.down} disabled={index===current.length-1||generating} onClick={()=>edit(items=>movePage(items,index,index+1))} className="rounded-md border px-1 py-1.5 disabled:opacity-30">→</button>
-      <button type="button" aria-label={t.duplicate+" "+(index+1)} title={t.duplicate} disabled={current.length>=MAX_PAGES||generating} onClick={()=>edit(items=>{const next=[...items];next.splice(index+1,0,{...item,id:item.id+"-copy-"+String(Date.now())});return next;})} className="rounded-md border px-1 py-1.5 disabled:opacity-30">＋</button>
+      <button type="button" aria-label={t.duplicate+" "+(index+1)} title={t.duplicate} disabled={current.length>=MAX_PAGES||generating} onClick={()=>edit(items=>{const next=[...items];next.splice(index+1,0,{...item});return next;})} className="rounded-md border px-1 py-1.5 disabled:opacity-30">＋</button>
       <button type="button" aria-label={t.left+" "+(index+1)} title={t.left} disabled={generating} onClick={()=>edit(items=>items.map((p,j)=>j===index?{...p,angle:(p.angle+270)%360}:p))} className="rounded-md border px-1 py-1.5">↶</button>
       <button type="button" aria-label={t.right+" "+(index+1)} title={t.right} disabled={generating} onClick={()=>edit(items=>items.map((p,j)=>j===index?{...p,angle:(p.angle+90)%360}:p))} className="rounded-md border px-1 py-1.5">↷</button>
       <button type="button" aria-label={t.remove+" "+(index+1)} title={t.remove} disabled={current.length<=1||generating} onClick={()=>edit(items=>items.filter((_,j)=>j!==index))} className="rounded-md border px-1 py-1.5 disabled:opacity-30">×</button>
