@@ -232,7 +232,9 @@ export default function HandwritingOcrWorkbench() {
 
       // Blank or unrecognizable uploads are not a completed deliverable.
       // Keep the paid task retryable, rather than showing a zero-byte TXT/Word file.
-      if(!output.some(item=>item.text.trim()))throw Error("HANDWRITING_NO_TEXT");
+      // A paid batch is not complete if even one input has no readable text.
+      // Never deliver empty TXT/DOCX parts or mark a partially failed batch successful.
+      if(output.length!==files.length||output.some(item=>!item.text.trim()))throw Error("HANDWRITING_NO_TEXT");
       setTexts(output);
       setStage("识别完成");
     } catch (cause) {
