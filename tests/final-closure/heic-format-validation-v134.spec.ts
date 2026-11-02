@@ -1,5 +1,6 @@
 import {test,expect} from "./export-test";
 import sharp from "sharp";
+import fs from "node:fs/promises";
 import {hasHeicContainer,verifiedJpeg} from "../../lib/tools/shared/heif-validation";
 
 function box(major:string,compatible:string[]=[]){
@@ -33,4 +34,31 @@ test("HEIC upload: fake .heic file is rejected before decoder, not exported as J
  await work.getByRole("button",{name:"Convert to JPG",exact:true}).click();
  await expect(work.getByRole("alert")).toBeVisible({timeout:25000});
  await expect(work.getByTestId("result-file-actions")).toHaveCount(0);
+});
+
+test("HEIC real photo: decode a checked-in HEVC image in browser, save JPEG and independently reopen actual pixels",async({page})=>{
+ test.setTimeout(180000);
+ const data=Buffer.from((await fs.readFile("tests/fixtures/heic2any-demo-1.heic.base64","utf8")).trim(),"base64");
+ expect(await hasHeicContainer(new Blob([data]))).toBe(true);
+ await page.goto("/tools/heic-to-jpg?lang=en");
+ const work=page.locator("main");
+ await work.locator('input[type="file"]').first().setInputFiles({name:"fixture.heic",mimeType:"image/heic",buffer:data});
+ await expect(work.getByTestId("result-file-actions")).toHaveCount(0);
+ await work.getByRole("button",{name:"Convert to JPG",exact:true}).click();
+ const results=work.getByTestId("result-file-actions");
+ await expect(results.first()).toBeVisible({timeout:155000});
+ const total=await results.count();
+ expect(total).toBeGreaterThanOrEqual(1);
+ for(let i=0;i<total;i++){
+  const pending=page.waitForEvent("download");
+  await results.nth(i).getByRole("button",{name:"Save file",exact:true}).click();
+  const dl=await pending;expect(await dl.failure()).toBeNull();
+  expect(dl.suggestedFilename()).toMatch(/^fixture(?:-\\d{2})?\\.jpg$/);
+  const output=await fs.readFile((await dl.path())!);
+  const meta=await sharp(output).metadata();
+  expect(meta.format).toBe("jpeg");
+  expect(meta.width).toBeGreaterThan(12);
+  expect(meta.height).toBeGreaterThan(12);
+  expect(output.byteLength).toBeGreaterThan(200);
+ }
 });
