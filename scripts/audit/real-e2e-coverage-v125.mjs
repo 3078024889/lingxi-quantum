@@ -20,7 +20,13 @@ const current=new Map([
  ...group(["case-converter","csv-json","xml-formatter","jwt-decoder","url-parser","number-base-converter","text-diff","regex-tester","uuid-generator","cron-parser"],"unverified-developer-real-v126"),
  ...group(["pdf-to-text","pdf-to-markdown","pdf-page-numbers","pdf-watermark","pdf-crop","pdf-flatten","pdf-compare","pdf-search","pdf-inspect"],"unverified-pdf-real-v126"),
  ...group(["jfif-to-jpg","gif-to-jpg","bmp-to-png","avif-to-jpg","svg-to-png","batch-image","long-image","qr-safe-reader"],"unverified-images-real-v126"),
- ...group(["pdf-metadata-editor","pdf-page-size","pdf-grayscale","pdf-header-footer","pdf-bates-numbering","pdf-pages-per-sheet","pdf-remove-metadata","pdf-overlay"],"unverified-pdf-advanced-v126")
+ ...group(["pdf-metadata-editor","pdf-page-size","pdf-grayscale","pdf-header-footer","pdf-bates-numbering","pdf-pages-per-sheet","pdf-remove-metadata","pdf-overlay"],"unverified-pdf-advanced-v126"),
+ ...group(["qr-code-generator"],"qr-cron-output-v86"),
+ ...group(["screenshot-redact"],"screenshot-redaction-v89"),
+ ...group(["pdf-redact"],"pdf-redaction-output-v89"),
+ ...group(["temp-mail","video-watermark-remover","image-translator"],"tool-user-journeys-v1"),
+ ...group(["audio-cleanup","pdf-to-word"],"paid-local-output-v89"),
+ ...group(["subtitle-translate"],"subtitle-translation-v95")
 ]);
 for(const [slug,file] of current){
  if(!slugs.includes(slug))throw Error("SCENARIO_NOT_PUBLIC_TOOL:"+slug);
