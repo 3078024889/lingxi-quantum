@@ -5,7 +5,8 @@ import fs from "node:fs/promises";
 async function sample(){
  const width=180,height=120;
  const base=await sharp({create:{width,height,channels:3,background:"#ffffff"}}).png().toBuffer();
- return sharp(base).composite([{input:{create:{width:20,height:12,channels:3,background:"#e11d48"}},left:132,top:90}]).png().toBuffer();
+ const mark=await sharp({create:{width:20,height:12,channels:3,background:"#e11d48"}}).png().toBuffer();
+ return sharp(base).composite([{input:mark,left:132,top:90}]).png().toBuffer();
 }
 async function isolatePaid(page:Page,slug:string,quantity:number){
  const id="11111111-1111-4111-8111-111111111111";
@@ -46,7 +47,7 @@ for(const variant of [
    await results.nth(n).getByRole("button",{name:"Save result",exact:true}).click();
    const saved=await pending;
    expect(await saved.failure()).toBeNull();
-   expect(saved.suggestedFilename()).toMatch(/^clean-owned-\\d\\.png$/);
+   expect(saved.suggestedFilename()).toMatch(/^clean-owned-\d\.png$/);
    const output=await fs.readFile((await saved.path())!);
    const metadata=await sharp(output).metadata();
    expect([metadata.format,metadata.width,metadata.height]).toEqual(["png",180,120]);
