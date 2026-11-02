@@ -62,3 +62,17 @@ test('public catalog still 32 products; 30 held candidate rows, 28 deduplicated 
   assert.equal(a.readyForPublication,false);
  }
 });
+
+test('Mistral Le Chat 2026 rebrand uses current Vibe name and official direct URL without losing legacy search',()=>{
+ const p=cohorts[1].products.find(x=>x.id==='mistral-le-chat');
+ const observed=packs[1].products.find(x=>x.id===p.id);
+ assert.equal(p.name,'Mistral Vibe（原 Le Chat）');
+ assert.equal(p.website,'https://chat.mistral.ai/');
+ assert.ok(p.aliases.includes('Mistral Le Chat'));
+ assert.equal(observed.name,p.name);
+ assert.ok(observed.facts.company.additionalEvidence.some(x=>
+  x.source==='https://help.mistral.ai/en/articles/682992-le-chat-is-now-vibe'));
+ const product=materializeCandidateCatalog(cohorts,packs).products.find(x=>x.id===p.id);
+ assert.equal(product.website,p.website);
+ assert.match(product.name,/Vibe/);
+});
