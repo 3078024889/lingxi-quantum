@@ -2,6 +2,8 @@ import type {Metadata} from 'next';
 import Link from 'next/link';
 import {notFound} from 'next/navigation';
 import {MARKET_COMPANIES,marketRegistrySummary} from '../../../lib/market-publisher-registry';
+import {companyPresentationFor} from '../../../lib/market-company-evidence';
+import MarketPublisherFacts from '../../market-publisher-facts';
 import {marketLocales,mayIndexMarket,indexableMarketLocales,marketCanonicalOrigin} from '../../../lib/market-index-policy';
 import {COMPANY_DIRECTORY_COPY} from '../../../lib/market-company-directory-copy';
 import type {Language} from '../../../lib/v2';
@@ -30,9 +32,8 @@ export default async function Companies({params}:Params){
      {MARKET_COMPANIES.filter(x=>x.kind===group.kind).map(c=><article key={c.id}
        style={{border:'1px solid #75757560',borderRadius:12,padding:16,overflowWrap:'anywhere'}}>
       <h3 style={{fontSize:18,fontWeight:700}}>{c.name}</h3>
-      <p style={{fontSize:14,marginTop:8}}>{t.founded}: {c.founded||t.na}</p>
-      <p style={{fontSize:14,marginTop:4}}>{t.location}: {c.headquarters||t.na}</p>
-      <p style={{fontSize:14,marginTop:4}}>{c.listingState==='listed_parent'?t.listed:c.listingState==='unconfirmed'?t.unconfirmed:t.na}</p>
+      <MarketPublisherFacts publisher={companyPresentationFor(c.productIds[0],c.name)} language={language} compact/>
+      <p style={{fontSize:14,marginTop:8}}>{t.location}: {c.headquarters||t.na}</p>
       <p style={{fontSize:14,marginTop:8}}>{t.products}: {c.productIds.length}</p>
       <ul style={{margin:'8px 0 10px',paddingInlineStart:20}}>
        {c.productIds.map(id=><li key={id}><Link href={'/'+lang+'/platform/'+id}>{id}</Link></li>)}
