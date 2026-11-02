@@ -20,7 +20,7 @@ test("document translation: real UTF-8 text round-trip preserves line breaks and
  });
  await page.goto("/tools/document-translate?lang=en");
  const input=page.locator('input[type="file"]').first();
- const text="Hello 42 travelers!\\nSubtotal USD 9.50\\nKeep 2026-11-03 unchanged.\\n";
+ const text="Hello 42 travelers!\nSubtotal USD 9.50\nKeep 2026-11-03 unchanged.\n";
  await input.setInputFiles({name:"memo.txt",mimeType:"text/plain",buffer:Buffer.from(text,"utf8")});
  await page.getByRole("combobox",{name:/Target/i}).selectOption("ja");
  await page.getByRole("button",{name:"Translate",exact:true}).click();
@@ -33,7 +33,7 @@ test("document translation: real UTF-8 text round-trip preserves line breaks and
  const bytes=await fs.readFile((await downloaded.path())!);
  const utf8=bytes.toString("utf8");
  expect(downloaded.suggestedFilename()).toBe("ja-memo.txt");
- expect(utf8).toBe("訳文[Hello 42 travelers!]\\n訳文[Subtotal USD 9.50]\\n訳文[Keep 2026-11-03 unchanged.]\\n");
+ expect(utf8).toBe("訳文[Hello 42 travelers!]\n訳文[Subtotal USD 9.50]\n訳文[Keep 2026-11-03 unchanged.]\n");
  expect(providerCalls).toBe(1);
  await page.getByRole("combobox",{name:/Target/i}).selectOption("fr");
  await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
