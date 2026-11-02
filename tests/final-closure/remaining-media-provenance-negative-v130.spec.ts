@@ -26,7 +26,7 @@ for(const item of [
   const upload=page.locator('main input[type="file"]').first();
   await upload.setInputFiles({name:item.file,mimeType:item.mimeType,buffer:bytes});
   await page.getByRole("button",{name:"Start checking",exact:true}).click();
-  const fileResult=page.locator("main section li").filter({hasText:item.file}).first();
+  const fileResult=page.locator("main > section > ul > li").filter({hasText:item.file}).first();
   await expect(fileResult).toBeVisible({timeout:20000});
   await expect(fileResult).toContainText("Detected format: "+item.expected);
   const status=fileResult.locator("[data-c2pa-verification]");
