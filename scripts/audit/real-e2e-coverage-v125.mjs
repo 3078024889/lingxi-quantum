@@ -16,7 +16,7 @@ const current=new Map([
  ...group(["merge-pdf","qr-code-reader"],"tool-pdf-qr-e2e-v119"),
  ...group(["split-pdf"],"pdf-precision-split-v122"),
  ...group(["pdf-editor"],"pdf-editor-save-reopen-v123"),
- ...group(["image-to-pdf","pdf-to-jpg"],"tool-cross-workflow-v125",
+ ...group(["image-to-pdf","pdf-to-jpg"],"tool-cross-workflow-v125"),
  ...group(["case-converter","csv-json","xml-formatter","jwt-decoder","url-parser","number-base-converter","text-diff","regex-tester","uuid-generator","cron-parser"],"unverified-developer-real-v126"),
  ...group(["pdf-to-text","pdf-to-markdown","pdf-page-numbers","pdf-watermark","pdf-crop","pdf-flatten","pdf-compare","pdf-search","pdf-inspect"],"unverified-pdf-real-v126"),
  ...group(["jfif-to-jpg","gif-to-jpg","bmp-to-png","avif-to-jpg","svg-to-png","batch-image","long-image","qr-safe-reader"],"unverified-images-real-v126")
