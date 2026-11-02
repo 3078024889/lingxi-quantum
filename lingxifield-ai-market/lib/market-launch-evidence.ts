@@ -9,12 +9,16 @@ import intake3 from '../data/company-intake/batch-003.json';
 import obs1 from '../data/company-intake/batch-001-official-observations.json';
 import obs2 from '../data/company-intake/batch-002-official-observations.json';
 import obs3 from '../data/company-intake/batch-003-official-observations.json';
+import realUseLedger from '../data/acceptance/candidate-30-real-use.json';
+import {auditCandidateRealUseAcceptance} from '../lib/market-candidate-use-acceptance.mjs';
 export const marketLaunchEvidence=()=>{
  const uses=auditCuratedUseAcceptance(raw.items,[...MARKET_API_PRODUCTS]);
  const internalBatches=[intake,intake2,intake3];
  const sourcePacks=[obs1,obs2,obs3];
  // Only aggregate counts leave the server; never expose unapproved product IDs or claims.
  const sourceStatuses=sourcePacks.flatMap(pack=>pack.products.flatMap(row=>Object.values(row.facts).map(f=>f.status)));
+ const candidateQA=auditCandidateRealUseAcceptance(realUseLedger,
+  internalBatches.flatMap(b=>b.products.map(p=>p.id)));
  const stagedInventory={
   batchCount:internalBatches.length,
   candidateProducts:internalBatches.reduce((n,b)=>n+b.products.length,0),
@@ -33,6 +37,8 @@ export const marketLaunchEvidence=()=>{
  return {curated:MARKET_API_PRODUCTS.length,uses,release,
   officialHttp:{scope:audit.scope,date:audit.observedAt,results:audit.states,note:'Public HEAD only, not functionality'},
   stagedInventory,
+  candidateRealUse:{expected:candidateQA.expected,verified:candidateQA.verified,pending:candidateQA.pending,
+   releaseEligible:candidateQA.allPassed},
   nextBatch:{batch:intake.batch,products:intake.products.length,paused:intake.intakePaused,
    visibleToPublic:intake.visibleToPublic},
   warning:'These readiness signals are evidence-based; manual flags cannot override missing real-world tests.'};

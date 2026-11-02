@@ -57,7 +57,7 @@ try{
   ['/api/v1/companies?limit=50',data=>data.scope==='curated_32_publishers'&&data.curatedProducts===32&&data.items.length>1],
   ['/api/v1/companies/openai',data=>data.publisher?.products?.some(x=>x.id==='chatgpt')&&data.publisher?.products?.some(x=>x.id==='openai-python')],
   ['/api/v1/model-offers?limit=10',data=>data.scope==='official_rate_rows_for_curated_32'&&data.total>0&&data.items.every(x=>x.source.startsWith('https://'))],
-  ['/api/v1/launch-readiness',data=>data.curated===32&&data.stagedInventory?.candidateProducts===30&&data.stagedInventory?.batchCount===3&&data.stagedInventory?.allHeld===true&&data.stagedInventory?.officialSourceObservations===127&&data.stagedInventory?.conflictingFacts===2&&data.stagedInventory?.missingFacts===81]
+  ['/api/v1/launch-readiness',data=>data.curated===32&&data.stagedInventory?.candidateProducts===30&&data.stagedInventory?.batchCount===3&&data.stagedInventory?.allHeld===true&&data.stagedInventory?.officialSourceObservations===127&&data.stagedInventory?.conflictingFacts===2&&data.stagedInventory?.missingFacts===81&&data.candidateRealUse?.verified===0&&data.candidateRealUse?.pending===30&&data.candidateRealUse?.releaseEligible===false]
  ]){
   try{
    const response=await fetch(origin+path,{signal:AbortSignal.timeout(12000)});
