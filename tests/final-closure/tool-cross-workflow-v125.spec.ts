@@ -70,7 +70,7 @@ test("PNG→JPEG→PDF→JPEG: three real browser tools interoperate with valid 
  const archive=await JSZip.loadAsync(await fs.readFile((await zipped.path())!));
  const entries=Object.keys(archive.files).filter(name=>!archive.files[name].dir);
  expect(entries).toHaveLength(1);
- expect(entries[0]).toMatch(/page-001\\.jpg$/);
+ expect(entries[0]).toMatch(/page-001\.jpg$/);
  const resultBytes=await archive.file(entries[0])!.async("nodebuffer");
  const decoded=await sharp(resultBytes).metadata();
  expect(decoded.format).toBe("jpeg");
