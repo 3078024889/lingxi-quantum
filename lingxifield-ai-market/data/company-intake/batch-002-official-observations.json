@@ -271,8 +271,11 @@
           "scope": "170plus_markets_mainland_excluded_hk_exception"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Microsoft Copilot 个人版 2026年8月18日生效的补充条款规定：用户保留其内容权益，微软不因提供 Copilot 而取得用户内容的所有权；Copilot 个人版仅授权个人用途，不应将个人账户视为商业企业授权。企业版 Microsoft 365 Copilot 的使用和客户数据权利另依企业协议及产品条款，生成结果能否受版权保护和第三方素材许可需用户独立判断。",
+          "source": "https://www.microsoft.com/en-us/microsoft-copilot/for-individuals/termsofuse",
+          "checkedAt": "2026-11-02",
+          "scope": "consumer_personal_use_only_business_licensing_separate"
         },
         "payment": {
           "status": "observed",
