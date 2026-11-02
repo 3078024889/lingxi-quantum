@@ -28,6 +28,8 @@ test('multilingual category selector reuses shared locale vocabulary',()=>{
  const vocab=read('lingxifield-ai-market/lib/market-home-i18n.ts');
  assert.match(home,/import \{localizedCategory\}/);
  assert.match(home,/localizedCategory\(lang,c\)/);
+ assert.match(home,/localizedProductSummary\(p\.id,lang\)/);
+ assert.match(home,/localizedCatalogFact\(p\.id,lang,scope,p\[scope\]\)/);
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.ok(home.includes(lang+':{title:'),lang);
  assert.match(vocab,/export function localizedCategory/);
 });
