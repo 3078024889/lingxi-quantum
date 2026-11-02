@@ -197,7 +197,8 @@ test('V43 official payment documentation covers domestic AI and international ch
  const lovable=m.researchedFact('lovable');
  assert.equal(lovable.paymentSource,'https://stripe.com/customers/lovable');
  assert.match(lovable.payments.join(' '),/Link/);
- assert.doesNotMatch(lovable.payments.join(' '),/Alipay|WeChat|credit \/ debit card|iDEAL|Amazon Pay/i);
+ for(const merchantRail of ['Credit / debit card','Apple Pay','Google Pay','Cash App Pay','WeChat Pay','Alipay','iDEAL','Amazon Pay','Link'])
+  assert.ok(lovable.payments.some(m=>m.includes(merchantRail)),merchantRail);
  assert.equal(m.researchedFact('kling').extraPaymentSource.includes('qingque.cn'),true);
  assert.equal(m.researchedFact('doubao').paymentSource.includes('draftstatic'),true);
 });
