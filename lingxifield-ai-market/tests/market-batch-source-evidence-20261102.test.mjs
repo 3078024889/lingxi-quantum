@@ -55,7 +55,7 @@ test('Fireworks free trial is one-time marketing claim rather than verified enti
 });
 test('public catalog still 32 products; 30 held candidate rows, 28 deduplicated vendors',()=>{
  const r=materializeCandidateCatalog(cohorts,packs);
- assert.deepEqual(r.totals,{observed:187,missing:23,conflict:0});
+ assert.deepEqual(r.totals,{observed:188,missing:22,conflict:0});
  assert.equal(r.candidateProducts,30);
  assert.equal(r.publisherGroups,28);
  assert.equal(r.products.find(p=>p.id==='fireworks-ai').legalEntity,'Fireworks.ai, Inc.');
@@ -126,4 +126,31 @@ test('Devin Desktop payment choices are first-party scoped, not claimed universa
  const audit=auditOfficialObservations(packs[1],cohorts[1],{today:'2026-11-02'});
  assert.equal(audit.issues.length,0,JSON.stringify(audit.issues));
  assert.equal(audit.readyForPublication,false);
+});
+
+
+test('Gamma feature-specific US/Canada mobile app coverage is not a global country/payment whitelist',()=>{
+ const p=packs[0].products.find(p=>p.id==='gamma');
+ const region=p.facts.regions;
+ assert.equal(region.status,'observed');
+ assert.equal(region.source,'https://help.gamma.app/en/articles/11016450-does-gamma-have-a-mobile-app');
+ assert.equal(region.checkedAt,'2026-11-02');
+ assert.match(region.text,/美国、加拿大/);
+ assert.match(region.text,/移动浏览器/);
+ assert.match(region.text,/不是逐国注册、付款/);
+ assert.equal(region.additionalEvidence[0].source,'https://help.gamma.app/en/articles/11048601-why-am-i-having-trouble-connecting-to-gamma');
+ const validated=auditOfficialObservations(packs[0],cohorts[0],{today:'2026-11-02'});
+ assert.deepEqual(validated.issues,[]);
+ assert.equal(validated.readyForPublication,false);
+});
+
+test('Tabnine separates annual $39 Code Assistant from $59 Agentic and additional LLM tokens',()=>{
+ const p=packs[1].products.find(p=>p.id==='tabnine');
+ assert.equal(p.facts.price.source,'https://www.tabnine.com/pricing/');
+ assert.match(p.facts.price.text,/39\/用户\/月/);
+ assert.match(p.facts.price.text,/59\/用户\/月/);
+ assert.match(p.facts.price.text,/年度订阅/);
+ assert.match(p.facts.price.text,/5%/);
+ assert.equal(p.facts.payment.status,'missing');
+ assert.match(p.facts.payment.reason,/Get a quote/);
 });
