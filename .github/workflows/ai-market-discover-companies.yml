@@ -1,0 +1,80 @@
+name: AI Market organization discovery (private review queue)
+
+# GitHub Actions schedules activate only after this file reaches the default branch.
+on:
+  schedule:
+    - cron: '15 1 * * *' # 09:15 Asia/Singapore, best effort
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-market-discovery-bot
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: '22'
+      - name: Test intake dedup, limits, fail-closed publication
+        run: node --test lingxifield-ai-market/tests/discover-ai-publishers.test.mjs
+      - name: Import historical leads from bot branch (read-only)
+        env:
+          HISTORY: ${{ runner.temp }}/discovery-history
+        run: |
+          mkdir -p "$HISTORY"
+          if git fetch --no-tags --depth=1 origin refs/heads/bot/siai-discovery:refs/remotes/origin/bot/siai-discovery; then
+            git archive origin/bot/siai-discovery lingxifield-ai-market/data/company-discovery/archive | tar -xf - -C "$HISTORY" || true
+          fi
+      - name: Discover 20 leads in two editorial batches, no registration or billing
+        env:
+          HF_TOKEN: ${{ secrets.HF_READ_TOKEN }}
+          DISCOVERY_HISTORY_DIR: ${{ runner.temp }}/discovery-history/lingxifield-ai-market/data/company-discovery/archive
+          REPORT: ${{ runner.temp }}/siai-discovery.json
+        run: node lingxifield-ai-market/scripts/discover-ai-publishers.mjs --out "$REPORT"
+      - name: Upload only an unapproved review report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ai-market-discovery-${{ github.run_id }}
+          path: ${{ runner.temp }}/siai-discovery.json
+          retention-days: 30
+      - name: Update bot-only history branch, never main or public catalog
+        env:
+          REPORT: ${{ runner.temp }}/siai-discovery.json
+        run: |
+          set -euo pipefail
+          if git show-ref --verify --quiet refs/remotes/origin/bot/siai-discovery; then
+            git switch --create bot/siai-discovery --track origin/bot/siai-discovery
+          else
+            git switch --create bot/siai-discovery
+          fi
+          ARCHIVE='lingxifield-ai-market/data/company-discovery/archive'
+          mkdir -p "$ARCHIVE"
+          TODAY="$(date -u +%F)"
+          cp "$REPORT" "$ARCHIVE/$TODAY.json"
+          node --input-type=module - "$ARCHIVE" "$REPORT" <<'JS'
+          import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+          import {join} from 'node:path';
+          const [dir,report]=process.argv.slice(2);
+          const f=join(dir,'seen.json');
+          const old=existsSync(f)?JSON.parse(readFileSync(f,'utf8')):[];
+          const next=JSON.parse(readFileSync(report,'utf8'));
+          if(next.schema!=='sia_global_company_leads_v1'||next.candidates.length>20||next.productionPublishAllowed!==false)throw Error('UNSAFE_REPORT');
+          const unique=[...new Set([...old,...next.candidates.map(x=>x.namespace.toLowerCase())])].sort();
+          writeFileSync(f,JSON.stringify(unique,null,2)+'\n');
+          JS
+          git add "$ARCHIVE/$TODAY.json" "$ARCHIVE/seen.json"
+          if git diff --cached --quiet; then exit 0; fi
+          git -c user.name='siai-discovery-bot' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+            commit -m "data(discovery): unapproved organization leads $TODAY"
+          git push origin HEAD:refs/heads/bot/siai-discovery

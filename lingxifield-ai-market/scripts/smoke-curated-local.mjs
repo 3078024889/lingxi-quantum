@@ -1,12 +1,22 @@
 #!/usr/bin/env node
 /** SSR-only 9×32 route smoke. Real browser login, generation and downloads NOT tested. */
 import {spawn} from 'node:child_process';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 const source=readFileSync(new URL('../lib/market-api-service-catalog.ts',import.meta.url),'utf8');
 const match=source.match(/const ALL=\[([^\]]+)\] as const;/);
 if(!match)throw Error('CURATED_IDS_UNAVAILABLE');
 const ids=[...match[1].matchAll(/'([^']+)'/g)].map(x=>x[1]);
 const languages=['zh','en','ja','ko','fr','de','es','pt','ar'];
+const observationDir=new URL('../data/company-intake/',import.meta.url);
+const statuses=readdirSync(observationDir).filter(f=>/^batch-\d{3}-official-observations\.json$/.test(f))
+ .flatMap(f=>JSON.parse(readFileSync(new URL(f,observationDir),'utf8')).products
+ .flatMap(p=>Object.values(p.facts).map(x=>x.status)));
+if(statuses.length!==210)throw Error('OFFICIAL_INTAKE_30X7_SCHEMA_DRIFT');
+const observedCounts={observed:statuses.filter(s=>s==='observed').length,
+ missing:statuses.filter(s=>s==='missing').length,conflict:statuses.filter(s=>s==='conflict').length};
+if(observedCounts.observed+observedCounts.missing+observedCounts.conflict!==210)
+ throw Error('UNKNOWN_OBSERVATION_STATUS');
+
 if(ids.length!==32||new Set(ids).size!==32)throw Error('CURATED_32_REQUIRED');
 const origin='http://127.0.0.1:'+String(Number(process.env.AI_MARKET_SMOKE_PORT)||38433);
 const processArgs=['node_modules/next/dist/bin/next','start','-p',new URL(origin).port,'-H','127.0.0.1'];
@@ -57,7 +67,7 @@ try{
   ['/api/v1/companies?limit=50',data=>data.scope==='curated_32_publishers'&&data.curatedProducts===32&&data.items.length>1],
   ['/api/v1/companies/openai',data=>data.publisher?.products?.some(x=>x.id==='chatgpt')&&data.publisher?.products?.some(x=>x.id==='openai-python')],
   ['/api/v1/model-offers?limit=10',data=>data.scope==='official_rate_rows_for_curated_32'&&data.total>0&&data.items.every(x=>x.source.startsWith('https://'))],
-  ['/api/v1/launch-readiness',data=>data.curated===32&&data.stagedInventory?.candidateProducts===30&&data.stagedInventory?.batchCount===3&&data.stagedInventory?.allHeld===true&&data.stagedInventory?.officialSourceObservations===127&&data.stagedInventory?.conflictingFacts===2&&data.stagedInventory?.missingFacts===81&&data.candidateRealUse?.verified===0&&data.candidateRealUse?.pending===30&&data.candidateRealUse?.releaseEligible===false]
+  ['/api/v1/launch-readiness',data=>data.curated===32&&data.stagedInventory?.candidateProducts===30&&data.stagedInventory?.batchCount===3&&data.stagedInventory?.allHeld===true&&data.stagedInventory?.officialSourceObservations===observedCounts.observed&&data.stagedInventory?.conflictingFacts===observedCounts.conflict&&data.stagedInventory?.missingFacts===observedCounts.missing&&data.candidateRealUse?.verified===0&&data.candidateRealUse?.pending===30&&data.candidateRealUse?.releaseEligible===false]
  ]){
   try{
    const response=await fetch(origin+path,{signal:AbortSignal.timeout(12000)});
