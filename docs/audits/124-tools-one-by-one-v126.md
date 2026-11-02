@@ -9,7 +9,7 @@
 | 不重复公开工具 | **121** |
 | 已登记真实浏览器操作场景（不等于 CI 全通过） | **82** |
 | 仅有历史部分样本 | **2** |
-| 尚未具备充分真实操作场景 | **37** |
+| 尚未具备充分真实操作场景 | **25** |
 
 ## 重复工具处理记录
 
@@ -50,7 +50,7 @@
 | cron-parser | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
 | csv-json | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
 | csv-to-xlsx | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-office-roundtrip-v118.spec.ts` |
-| document-copy-layout | FULL_E2E_NOT_PROVEN | — |
+| document-copy-layout | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | document-translate | FULL_E2E_NOT_PROVEN | — |
 | docx-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
 | e-sign-pdf | FULL_E2E_NOT_PROVEN | — |
@@ -61,7 +61,7 @@
 | gif-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
 | handwriting-ocr | FULL_E2E_NOT_PROVEN | — |
 | heic-to-jpg | FULL_E2E_NOT_PROVEN | — |
-| ico-to-png | FULL_E2E_NOT_PROVEN | — |
+| ico-to-png | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-ico-real-v129.spec.ts` |
 | ics-to-csv | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
 | id-photo-ai | FULL_E2E_NOT_PROVEN | — |
 | image-to-pdf | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-cross-workflow-v125.spec.ts` |
@@ -78,9 +78,9 @@
 | number-base-converter | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-developer-real-v126.spec.ts` |
 | ocr | FULL_E2E_NOT_PROVEN | — |
 | odt-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
-| pdf-attachments | FULL_E2E_NOT_PROVEN | — |
+| pdf-attachments | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-security-attachments-v129.spec.ts` |
 | pdf-bates-numbering | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
-| pdf-bookmarks | FULL_E2E_NOT_PROVEN | — |
+| pdf-bookmarks | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | pdf-compare | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
 | pdf-compress | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
 | pdf-crop | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
@@ -90,16 +90,16 @@
 | pdf-halve-pages | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
 | pdf-header-footer | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
 | pdf-inspect | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
-| pdf-merge-split | FULL_E2E_NOT_PROVEN | — |
+| pdf-merge-split | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | pdf-metadata-editor | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
 | pdf-ocr | FULL_E2E_NOT_PROVEN | — |
 | pdf-overlay | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
 | pdf-page-numbers | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
 | pdf-page-size | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
-| pdf-pages | FULL_E2E_NOT_PROVEN | — |
+| pdf-pages | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | pdf-pages-per-sheet | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-advanced-v126.spec.ts` |
-| pdf-permissions | FULL_E2E_NOT_PROVEN | — |
-| pdf-protect | FULL_E2E_NOT_PROVEN | — |
+| pdf-permissions | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-security-attachments-v129.spec.ts` |
+| pdf-protect | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-security-attachments-v129.spec.ts` |
 | pdf-rasterize | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
 | pdf-redact | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `pdf-redaction-output-v89.spec.ts` |
 | pdf-remove-annotations | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
@@ -110,10 +110,10 @@
 | pdf-to-text | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
 | pdf-to-word | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `paid-local-output-v89.spec.ts` |
 | pdf-to-xlsx | FULL_E2E_NOT_PROVEN | — |
-| pdf-unlock | FULL_E2E_NOT_PROVEN | — |
-| pdf-viewer-preferences | FULL_E2E_NOT_PROVEN | — |
+| pdf-unlock | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-security-attachments-v129.spec.ts` |
+| pdf-viewer-preferences | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | pdf-watermark | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
-| pdf-web-optimize | FULL_E2E_NOT_PROVEN | — |
+| pdf-web-optimize | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | png-to-jpg | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-image-file-e2e-v118.spec.ts` |
 | pptx-to-txt | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-longtail-documents-v126.spec.ts` |
 | privacy-cleaner | FULL_E2E_NOT_PROVEN | — |
@@ -130,7 +130,7 @@
 | screenshot-redact | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `screenshot-redaction-v89.spec.ts` |
 | split-pdf | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `pdf-precision-split-v122.spec.ts` |
 | stop-motion-video | FULL_E2E_NOT_PROVEN | — |
-| subtitle-tools | FULL_E2E_NOT_PROVEN | — |
+| subtitle-tools | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | subtitle-translate | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `subtitle-translation-v95.spec.ts` |
 | svg-to-png | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-images-real-v126.spec.ts` |
 | temp-mail | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `tool-user-journeys-v1.spec.ts` |
