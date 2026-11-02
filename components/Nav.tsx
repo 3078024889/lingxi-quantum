@@ -39,6 +39,11 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   ],
 ]
 
+const taskHomeNavNames:Record<LingxiLang,string>={
+ zh:"任务首页",en:"Task Hub",ja:"タスクのホーム",ko:"작업 홈",fr:"Accueil des tâches",
+ de:"Aufgabenstart",es:"Inicio de tareas",pt:"Início de tarefas",ar:"مركز المهام"
+};
+
 const marketNavNames:Record<LingxiLang,string>={
  zh:"全球 SIAI 排行榜",en:"Global SIAI Rankings",ja:"世界の SIAI ランキング",ko:"글로벌 SIAI 순위",
  fr:"Classement mondial SIAI",de:"Globales SIAI-Ranking",es:"Ranking mundial SIAI",pt:"Ranking global SIAI",ar:"ترتيب SIAI العالمي"
@@ -176,7 +181,7 @@ export default function Nav() {
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
                 <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{item.href==="/"?marketNavNames[lang]:t(item.key)}</span>
+                <span>{item.href==="/"?marketNavNames[lang]:item.href==="/start"?taskHomeNavNames[lang]:t(item.key)}</span>
               </Link>
             ))}
           </section>
