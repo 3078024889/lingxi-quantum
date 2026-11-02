@@ -22,7 +22,7 @@ async function makeFixture(corrupt=false){
 for(const corrupt of [false,true]){
  test("burn-after-read: "+(corrupt?"tampered encrypted R2 attachment never downloads":"signed link decrypts real ciphertext in browser only, downloads the original user file"),async({page})=>{
   const fixture=await makeFixture(corrupt),id="12345678-1234-4234-8234-123456789012";
-  let gets=0;
+  let gets=0,downloadAttempts=0;page.on("download",()=>downloadAttempts++);
   await page.route("**/api/tools/burn-after-read/consume",r=>r.fulfill({json:{ciphertext:fixture.noteCipher,iv:fixture.noteIv,has_files:true,view_duration_seconds:null}}));
   await page.route("**/api/tools/burn-after-read/ack",r=>r.fulfill({json:{ok:true,access_until:new Date(Date.now()+60000).toISOString(),files:[{id:"secret-file",name:"private.txt",size:fixture.cipher.byteLength,type,url:"https://mock-r2.test/file"}]}}));
   await page.route("https://mock-r2.test/file",r=>{gets++;return r.fulfill({status:200,body:fixture.cipher,headers:{"access-control-allow-origin":"*","content-type":"application/octet-stream"}})});
@@ -43,7 +43,8 @@ for(const corrupt of [false,true]){
   }else{
    await item.click();
    await expect(page.locator('main [role="alert"]').filter({hasText:/Unable to open|Try again|无法打开/}).last()).toBeVisible({timeout:15000});
-   await expect(page.getByRole("button",{name:/private\\.txt/})).toBeEnabled();
+   // Authenticated decryption failed: browser must not receive a downloaded file.
+   expect(downloadAttempts).toBe(0);
   }
   expect(gets).toBe(1);
  });
