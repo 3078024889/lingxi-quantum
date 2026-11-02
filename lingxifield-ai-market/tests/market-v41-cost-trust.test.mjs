@@ -82,11 +82,12 @@ test('V41 scrolling reveals all columns instead of sticky overlays; no IP guessi
  assert.match(workbench,/MarketMatrixRow/);
 });
 
-test('official lists are readable without accordion and source is directly accessible',()=>{
+test('five primary official countries are visible and the rest can expand with source accessible',()=>{
  const details=read('app/market-global-access.tsx');
  const row=read('app/market-matrix-row.tsx');
  assert.match(details,/className="globalSupportedCountries"/);
- assert.doesNotMatch(details,/<details className="globalSupportedCountries"/);
+ assert.match(details,/<details className="globalSupportedCountries"/);
+ assert.match(details,/<summary>\{countryList.words.more\}/);
  assert.match(details,/countryList\.other\.map/);
  assert.match(row,/regionList\.source\|\|research\?\.regionSource/);
 });
