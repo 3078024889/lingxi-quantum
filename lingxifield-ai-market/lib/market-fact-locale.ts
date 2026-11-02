@@ -7,7 +7,7 @@ type FactConfig={price:string|readonly [string,number,string];free:string|readon
 const FACTS:Readonly<Record<string,FactConfig>>={
  "anthropic-sdk-python": {
   "price": "sdk",
-  "free": "unknownFree",
+  "free": "sdk",
   "models": "Anthropic Python SDK · Python ≥3.10"
  },
  "chatgpt": {
@@ -121,7 +121,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
    20,
    "annual"
   ],
-  "free": "unknownFree",
+  "free": "localUse",
   "models": "Workflow integrations · models connected separately"
  },
  "ollama": {
@@ -136,7 +136,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
  },
  "openai-python": {
   "price": "sdk",
-  "free": "unknownFree",
+  "free": "sdk",
   "models": "OpenAI Python SDK · API model selected separately"
  },
  "perplexity": {
@@ -151,7 +151,7 @@ const FACTS:Readonly<Record<string,FactConfig>>={
  "replit": {
   "price": [
    "USD",
-   20,
+   18,
    "annual"
   ],
   "free": "limited",
@@ -226,11 +226,152 @@ const FACTS:Readonly<Record<string,FactConfig>>={
   "models": "Doubao multimodal model family"
  }
 };
+const LOVABLE_TASK_COSTS:Readonly<Partial<Record<Language,string>>>={
+ en:'Task examples: recolor button 0.50 credits; remove footer 0.90; add sign-up/login 1.20; image-rich landing page 1.70. Actual cost varies by task.',
+ ja:'タスク例：ボタン色変更0.50、フッター削除0.90、ログイン追加1.20、画像付きLP作成1.70クレジット。実費は内容で変動。',
+ ko:'작업 예시: 버튼 색상 0.50, 바닥글 삭제 0.90, 회원가입·로그인 1.20, 이미지 랜딩페이지 1.70 크레딧. 작업에 따라 변동.',
+ fr:'Exemples : bouton 0,50 crédit ; pied de page 0,90 ; connexion 1,20 ; page avec images 1,70. Coût variable.',
+ de:'Beispiele: Knopffarbe 0,50 Credits; Fußzeile 0,90; Anmeldung 1,20; Landingpage mit Bildern 1,70. Verbrauch variiert.',
+ es:'Ejemplos: color del botón 0,50 créditos; quitar pie 0,90; registro 1,20; página con imágenes 1,70. Varía por tarea.',
+ pt:'Exemplos: cor do botão 0,50 créditos; remover rodapé 0,90; login 1,20; página com imagens 1,70. Varia por tarefa.',
+ ar:'أمثلة للمهام: لون الزر 0.50، حذف التذييل 0.90، تسجيل الدخول 1.20، صفحة بصور 1.70 رصيد. تختلف التكلفة حسب المهمة.'
+};
 export function localizedCatalogFact(id:string,language:Language,scope:Scope,original:string):string{
  // Luma has one source of truth for all nine languages; do not reintroduce the old $deprecated Luma price snapshot.
  if(id==='luma')return scope==='price'?lumaSubscription(language):scope==='free'?lumaFree(language):lumaModels(language);
  if(id==='suno')return scope==='price'?sunoSubscription(language):scope==='free'?sunoFree(language):sunoModels(language);
  if(language==='zh')return original;
+ // Preserve the CURRENT official figures instead of hardcoded, potentially stale locale prices.
+ if(id==='replit'&&scope==='price'){
+  const values=original.match(/Core \\$(\\d+(?:\\.\\d+)?)\\/月（月付），年付折合 \\$(\\d+(?:\\.\\d+)?)\\/月[\\s\\S]*?Pro \\$(\\d+(?:\\.\\d+)?)\\/月（月付），年付折合 \\$(\\d+(?:\\.\\d+)?)\\/月/);
+  if(!values)return TEXT[language].variable;
+  const t=TEXT[language];
+  return 'Core 
+ const c=FACTS[id],t=TEXT[language];
+ if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
+ if(scope==='models')return c.models||t.modelVaries;
+ const field=c[scope];
+ if(typeof field==='string')return (t as Record<string,string>)[field]|| (scope==='price'?t.unknownPrice:t.unknownFree);
+ if(scope==='price'){
+  const [currency,value,kind]=field as [string,number,string];
+  const symbol=currency==='USD'?'$':currency==='EUR'?'€':'¥';
+  return symbol+value+' '+((t as Record<string,string>)[kind]||t.variable);
+ }
+ const [kind,n,max]=(field as [string,number,number?]);
+ const suffix=(t as Record<string,string>)[kind]||t.unknownFree;
+ if(kind==='buildCredits')return n+' '+suffix+' '+max;
+ return n+' '+suffix;
+}
+export function localizedLoginFact(language:Language,raw:string):string{
+ if(language==='zh')return raw;
+ if(!raw)return TEXT[language].loginSource;
+ const parts=raw.split(/[、，·]/).map(x=>x.trim()).filter(Boolean);
+ const translations:Record<string,string>={'邮箱':'Email','邮箱验证链接':'Email verification','邮箱密码':'Email and password','手机短信':'Phone SMS','手机号短信':'Phone SMS','运营商一键登录':'Mobile carrier login','本地无需平台账户':'No account for local software','本地无需平台账号':'No account for local software','账号':'Account','剪映账号':'Jianying account','抖音账号':'Douyin account','快手账号':'Kuaishou account','iOS':'iOS'};
+ const mapped=parts.map(x=>translations[x]||x);
+ return mapped.some(x=>/[\u4e00-\u9fff]/.test(x))?TEXT[language].loginSource:mapped.join(' · ');
+}
++values[1]+' '+t.monthly+' · 
+ const c=FACTS[id],t=TEXT[language];
+ if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
+ if(scope==='models')return c.models||t.modelVaries;
+ const field=c[scope];
+ if(typeof field==='string')return (t as Record<string,string>)[field]|| (scope==='price'?t.unknownPrice:t.unknownFree);
+ if(scope==='price'){
+  const [currency,value,kind]=field as [string,number,string];
+  const symbol=currency==='USD'?'$':currency==='EUR'?'€':'¥';
+  return symbol+value+' '+((t as Record<string,string>)[kind]||t.variable);
+ }
+ const [kind,n,max]=(field as [string,number,number?]);
+ const suffix=(t as Record<string,string>)[kind]||t.unknownFree;
+ if(kind==='buildCredits')return n+' '+suffix+' '+max;
+ return n+' '+suffix;
+}
+export function localizedLoginFact(language:Language,raw:string):string{
+ if(language==='zh')return raw;
+ if(!raw)return TEXT[language].loginSource;
+ const parts=raw.split(/[、，·]/).map(x=>x.trim()).filter(Boolean);
+ const translations:Record<string,string>={'邮箱':'Email','邮箱验证链接':'Email verification','邮箱密码':'Email and password','手机短信':'Phone SMS','手机号短信':'Phone SMS','运营商一键登录':'Mobile carrier login','本地无需平台账户':'No account for local software','本地无需平台账号':'No account for local software','账号':'Account','剪映账号':'Jianying account','抖音账号':'Douyin account','快手账号':'Kuaishou account','iOS':'iOS'};
+ const mapped=parts.map(x=>translations[x]||x);
+ return mapped.some(x=>/[\u4e00-\u9fff]/.test(x))?TEXT[language].loginSource:mapped.join(' · ');
+}
++values[2]+' '+t.annual+'; Pro 
+ const c=FACTS[id],t=TEXT[language];
+ if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
+ if(scope==='models')return c.models||t.modelVaries;
+ const field=c[scope];
+ if(typeof field==='string')return (t as Record<string,string>)[field]|| (scope==='price'?t.unknownPrice:t.unknownFree);
+ if(scope==='price'){
+  const [currency,value,kind]=field as [string,number,string];
+  const symbol=currency==='USD'?'$':currency==='EUR'?'€':'¥';
+  return symbol+value+' '+((t as Record<string,string>)[kind]||t.variable);
+ }
+ const [kind,n,max]=(field as [string,number,number?]);
+ const suffix=(t as Record<string,string>)[kind]||t.unknownFree;
+ if(kind==='buildCredits')return n+' '+suffix+' '+max;
+ return n+' '+suffix;
+}
+export function localizedLoginFact(language:Language,raw:string):string{
+ if(language==='zh')return raw;
+ if(!raw)return TEXT[language].loginSource;
+ const parts=raw.split(/[、，·]/).map(x=>x.trim()).filter(Boolean);
+ const translations:Record<string,string>={'邮箱':'Email','邮箱验证链接':'Email verification','邮箱密码':'Email and password','手机短信':'Phone SMS','手机号短信':'Phone SMS','运营商一键登录':'Mobile carrier login','本地无需平台账户':'No account for local software','本地无需平台账号':'No account for local software','账号':'Account','剪映账号':'Jianying account','抖音账号':'Douyin account','快手账号':'Kuaishou account','iOS':'iOS'};
+ const mapped=parts.map(x=>translations[x]||x);
+ return mapped.some(x=>/[\u4e00-\u9fff]/.test(x))?TEXT[language].loginSource:mapped.join(' · ');
+}
++values[3]+' '+t.monthly+' · 
+ const c=FACTS[id],t=TEXT[language];
+ if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
+ if(scope==='models')return c.models||t.modelVaries;
+ const field=c[scope];
+ if(typeof field==='string')return (t as Record<string,string>)[field]|| (scope==='price'?t.unknownPrice:t.unknownFree);
+ if(scope==='price'){
+  const [currency,value,kind]=field as [string,number,string];
+  const symbol=currency==='USD'?'$':currency==='EUR'?'€':'¥';
+  return symbol+value+' '+((t as Record<string,string>)[kind]||t.variable);
+ }
+ const [kind,n,max]=(field as [string,number,number?]);
+ const suffix=(t as Record<string,string>)[kind]||t.unknownFree;
+ if(kind==='buildCredits')return n+' '+suffix+' '+max;
+ return n+' '+suffix;
+}
+export function localizedLoginFact(language:Language,raw:string):string{
+ if(language==='zh')return raw;
+ if(!raw)return TEXT[language].loginSource;
+ const parts=raw.split(/[、，·]/).map(x=>x.trim()).filter(Boolean);
+ const translations:Record<string,string>={'邮箱':'Email','邮箱验证链接':'Email verification','邮箱密码':'Email and password','手机短信':'Phone SMS','手机号短信':'Phone SMS','运营商一键登录':'Mobile carrier login','本地无需平台账户':'No account for local software','本地无需平台账号':'No account for local software','账号':'Account','剪映账号':'Jianying account','抖音账号':'Douyin account','快手账号':'Kuaishou account','iOS':'iOS'};
+ const mapped=parts.map(x=>translations[x]||x);
+ return mapped.some(x=>/[\u4e00-\u9fff]/.test(x))?TEXT[language].loginSource:mapped.join(' · ');
+}
++values[4]+' '+t.annual;
+ }
+ if(id==='lovable'&&scope==='price'){
+  const pro=original.match(/Pro \\$(\\d+(?:\\.\\d+)?)\\/月/);
+  return (pro?'Pro 
+ const c=FACTS[id],t=TEXT[language];
+ if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
+ if(scope==='models')return c.models||t.modelVaries;
+ const field=c[scope];
+ if(typeof field==='string')return (t as Record<string,string>)[field]|| (scope==='price'?t.unknownPrice:t.unknownFree);
+ if(scope==='price'){
+  const [currency,value,kind]=field as [string,number,string];
+  const symbol=currency==='USD'?'$':currency==='EUR'?'€':'¥';
+  return symbol+value+' '+((t as Record<string,string>)[kind]||t.variable);
+ }
+ const [kind,n,max]=(field as [string,number,number?]);
+ const suffix=(t as Record<string,string>)[kind]||t.unknownFree;
+ if(kind==='buildCredits')return n+' '+suffix+' '+max;
+ return n+' '+suffix;
+}
+export function localizedLoginFact(language:Language,raw:string):string{
+ if(language==='zh')return raw;
+ if(!raw)return TEXT[language].loginSource;
+ const parts=raw.split(/[、，·]/).map(x=>x.trim()).filter(Boolean);
+ const translations:Record<string,string>={'邮箱':'Email','邮箱验证链接':'Email verification','邮箱密码':'Email and password','手机短信':'Phone SMS','手机号短信':'Phone SMS','运营商一键登录':'Mobile carrier login','本地无需平台账户':'No account for local software','本地无需平台账号':'No account for local software','账号':'Account','剪映账号':'Jianying account','抖音账号':'Douyin account','快手账号':'Kuaishou account','iOS':'iOS'};
+ const mapped=parts.map(x=>translations[x]||x);
+ return mapped.some(x=>/[\u4e00-\u9fff]/.test(x))?TEXT[language].loginSource:mapped.join(' · ');
+}
++pro[1]+' '+TEXT[language].monthlyRef+' · ':'')+(LOVABLE_TASK_COSTS[language]||TEXT[language].variable);
+ }
  const c=FACTS[id],t=TEXT[language];
  if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
  if(scope==='models')return c.models||t.modelVaries;
