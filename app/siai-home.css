@@ -111,3 +111,6 @@
  .siai-compare-toolbar{padding:8px}
  .siai-sort-label select{min-width:140px}
 }
+
+.siai-detail-primary-link{display:inline-flex;align-items:center;min-height:36px;padding:7px 12px;margin-top:12px;background:#eaf3ff;color:#185cac;border:1px solid #bcd5ef;border-radius:7px;font-size:14px;font-weight:700}
+.siai-detail-primary-link:hover{text-decoration:underline}

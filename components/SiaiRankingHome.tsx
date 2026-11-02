@@ -54,6 +54,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     <p>{p.about}</p><p>{p.features.join(" · ")}</p>
     <dl><div><dt>{t.free}</dt><dd>{p.free}</dd></div><div><dt>{t.price}</dt><dd>{p.price}</dd></div><div><dt>{t.region}</dt><dd>{p.region}</dd></div><div><dt>{t.payment}</dt><dd>{p.payment}</dd></div><div><dt>{t.models}</dt><dd>{p.models}</dd></div><div><dt>{t.license}</dt><dd>{p.commercial}</dd></div></dl>
     <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
+    <a className="siai-detail-primary-link" href={"/siai/"+lang+"/"+encodeURIComponent(p.id)}>{ui.fullDetails} ↗</a>
    </section>;
  return <main className="siai-home" lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
   <header className="siai-home-head"><p className="siai-kicker">LINGXIFIELD · GLOBAL SI AI</p><h1>{t.title}</h1><p>{t.subtitle}</p></header>
