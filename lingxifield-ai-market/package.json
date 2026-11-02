@@ -24,7 +24,8 @@
     "seo:verify-public": "node scripts/verify-public-seo.mjs",
     "feedback:provision-key": "node scripts/provision-feedback-key.mjs",
     "validate:official-intake": "node scripts/validate-company-official-observations.mjs",
-    "validate:global-intake": "node scripts/validate-global-intake.mjs"
+    "validate:global-intake": "node scripts/validate-global-intake.mjs",
+    "test:main-site-integration": "node --test tests/*.main-site.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
