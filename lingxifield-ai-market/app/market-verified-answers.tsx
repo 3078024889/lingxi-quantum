@@ -7,6 +7,8 @@ import {paymentFactsFor} from '../lib/market-payment-facts';
 import {globalRegionSummary} from '../lib/region-presentation';
 import {localizedPaymentName} from '../lib/market-localized-payment';
 import {codexFor,CODEX_OFFICIAL} from '../lib/market-codex-product';
+import {capabilityProfile} from '../lib/capability-profiles';
+import {localizedProductSummary} from '../lib/market-product-locale';
 
 /** Answers are sourced snapshots, not inferred live vendor checkout, SEO rank or legal advice. */
 const WORDS:Record<Language,{heading:string,free:string,price:string,models:string,payments:string,countries:string,commercial:string,source:string,unknown:string,local:string,scope:string}>={
@@ -22,12 +24,14 @@ const WORDS:Record<Language,{heading:string,free:string,price:string,models:stri
 };
 const LOCAL=new Set(['ollama','llamacpp','vllm','langchain','llamaindex','transformers','comfyui','automatic1111','whisper','fasterwhisper','openwebui','dify','n8n','openai-python','anthropic-sdk-python']);
 export default function MarketVerifiedAnswers({platform,language}:{platform:Platform;language:Language}){
- const f=researchedFact(platform.id),w=WORDS[language],license=commercialEvidence(platform.id,language),pay=paymentFactsFor(platform.id,'GLOBAL');
+ const f=researchedFact(platform.id),w=WORDS[language],license=commercialEvidence(platform.id,language),pay=paymentFactsFor(platform.id,'GLOBAL'),profile=capabilityProfile(platform.id);
+ const tasks=language==='zh'?profile?.capabilities.slice(0,5).map(x=>x.name+'：'+x.outcome).join('；'):localizedProductSummary(platform.id,language);
  const price=language==='zh'?(f?.price||platform.price):localizedCatalogFact(platform.id,language,'price',platform.price);
  const free=language==='zh'?(f?.free||platform.free):localizedCatalogFact(platform.id,language,'free',platform.free);
- const models=language==='zh'?(f?.models||platform.name):localizedCatalogFact(platform.id,language,'models',platform.name);
+ const models=language==='zh'?(f?.models||profile?.headline||platform.name):localizedCatalogFact(platform.id,language,'models',f?.models||localizedProductSummary(platform.id,language)||profile?.headline||platform.name);
  const method=pay.methods.length?pay.methods.map(p=>localizedPaymentName(p,language)).join(' · '):LOCAL.has(platform.id)?w.local:w.unknown;
  const rows=[
+  {key:'tasks',name:({zh:'功能和适用任务',en:'What you can do',ja:'できること',ko:'수행 가능한 작업',fr:'Fonctions et tâches',de:'Funktionen und Aufgaben',es:'Funciones y tareas',pt:'Funções e tarefas',ar:'الوظائف والمهام'} as Record<Language,string>)[language],answer:tasks||platform.about,source:profile?.capabilities[0]?.source},
   {key:'free',name:w.free,answer:free,source:f?.freeSource},
   {key:'price',name:w.price,answer:price,source:f?.priceSource},
   {key:'models',name:w.models,answer:models,source:f?.modelsSource},
