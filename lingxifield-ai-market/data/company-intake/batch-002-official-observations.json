@@ -85,7 +85,8 @@
       "id": "devin-desktop",
       "name": "Devin Desktop",
       "officialHosts": [
-        "devin.ai"
+        "devin.ai",
+        "cognition.com"
       ],
       "reviewStatus": "unapproved",
       "facts": {
@@ -115,8 +116,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Devin Desktop 官网直接链接 Cognition AI, Inc. 于2026年6月30日更新的平台服务条款。第2.1条允许客户与授权用户在订阅期间为内部业务使用服务；第3.1条将代码、建议及其他 Output 中可转让的权利归于客户（以适用法律允许为限）。并不授权转售 Devin 软件、复制其平台或使用服务训练竞争模型；生成代码的第三方知识产权和正确性仍需自行审核。",
+          "source": "https://cognition.com/legal/platform-terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_linked_cognition_platform_terms_internal_business_output_ownership"
         },
         "payment": {
           "status": "missing",
