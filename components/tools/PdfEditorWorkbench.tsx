@@ -118,7 +118,7 @@ if(!signingOnly){try{
   }
   if(ticket===renderTicketRef.current)setOriginalImageHits(images);
  }catch{if(ticket===renderTicketRef.current)setOriginalImageHits([]);}
-}catch{if(ticket===renderTicketRef.current){setOriginalTextHits([]);setOriginalImageHits([]);}}
+}catch{if(ticket===renderTicketRef.current){setOriginalTextHits([]);setOriginalImageHits([]);}}}
 const displayWidth=stageRef.current?.clientWidth||760;const scale=Math.max(.1,Math.min(2.6,displayWidth/base.width));const rendered=await renderPdfPage(pdf,pageNumber,scale,Math.min(2.5,Math.max(1.5,window.devicePixelRatio||1)));const preview=rendered.canvas.toDataURL("image/png");rendered.canvas.width=1;rendered.canvas.height=1;if(ticket===renderTicketRef.current)setPageImage(preview);}catch(e){if(ticket===renderTicketRef.current){setPageImage("");setError("previewError");}}finally{pdf?.destroy?.();if(ticket===renderTicketRef.current)setRendering(false)}},[]);
 
  async function persistDraft(){setDraftSaved(false);if(!file||!draftId)throw new Error(deliveryText(lang,"draftSaveFailed"));try{await savePaidTaskDraft({id:draftId,toolId:signingOnly?"e-sign-pdf":"pdf-editor",file,fileName:file.name,fileType:file.type,state:{pages,overlays,selectedPage,pageRange,stamp,seamSide}});setDraftSaved(true)}catch{throw new Error(deliveryText(lang,"draftSaveFailed"))}}
