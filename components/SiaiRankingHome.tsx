@@ -5,13 +5,16 @@ import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
 import {localizedProductSummary} from "../lingxifield-ai-market/lib/market-product-locale";
 import {localizedCatalogFact} from "../lingxifield-ai-market/lib/market-fact-locale";
+import {SIAI_FACET_WORDS} from "../lib/siai-home-facet-labels";
+import {filterMarketRows,toggleMarketComparison,MAX_COMPARISONS,TASK_FACETS,PAYMENT_FACETS,EVIDENCE_FACETS,SORT_OPTIONS,
+ type TaskFacet,type PaymentFacet,type EvidenceFacet,type MarketOrder} from "../lib/siai-home-facets";
 
 export type SiaiHomeRow={
  id:string;name:string;company:string;legal:string|null;legalScope:"service_operator"|"group_parent"|null;
  kind:"company"|"open_source_project"|"software_library";listing:"listed_parent"|"unconfirmed"|"not_applicable";
  ipoFiling:boolean;year:string|null;companySource:string|null;legalSource:string|null;listingSource:string|null;yearSource:string|null;
  category:string;about:string;strength:string;features:string[];free:string;freeSource:string|null;
- price:string;priceSource:string|null;region:string;regionSource:string|null;payment:string;
+ price:string;priceSource:string|null;region:string;regionSource:string|null;payment:string;paymentSource:string|null;
  models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;
 };
 
@@ -33,9 +36,18 @@ function short(s:string,max=150){return s.length>max?s.slice(0,max-1).trimEnd()+
 function Source({href,label}:{href:string|null;label:string}){return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className="siai-source">{label} ↗</a>:null;}
 
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
- const {lang}=useLingxiLang(),t=labels[lang];const [query,setQuery]=useState(""),[category,setCategory]=useState("*"),[expanded,setExpanded]=useState<string|null>(null);
+ const {lang}=useLingxiLang(),t=labels[lang],ui=SIAI_FACET_WORDS[lang];
+ const [query,setQuery]=useState(""),[category,setCategory]=useState("*"),[expanded,setExpanded]=useState<string|null>(null);
+ const [task,setTask]=useState<TaskFacet>("all"),[payment,setPayment]=useState<PaymentFacet>("any");
+ const [evidence,setEvidence]=useState<EvidenceFacet>("all"),[sort,setSort]=useState<MarketOrder>("catalog");
+ const [compareIds,setCompareIds]=useState<string[]>([]),[comparisonOpen,setComparisonOpen]=useState(false);
  const categories=useMemo(()=>[...new Set(rows.map(r=>r.category))], [rows]);
- const shown=useMemo(()=>{const q=query.trim().toLocaleLowerCase();return rows.filter(r=>(category==="*"||r.category===category)&&(!q||[r.name,r.company,r.legal||"",r.about,r.strength,r.category,...r.features,r.models].join(" ").toLocaleLowerCase().includes(q)));},[rows,category,query]);
+ const localizedRows=useMemo(()=>rows.map(p=>({...p,localizedSummary:localizedProductSummary(p.id,lang)||"",
+  localizedCategory:localizedCategory(lang,p.category)})),[rows,lang]);
+ const shown=useMemo(()=>filterMarketRows(localizedRows,{query,category,task,payment,evidence,sort},lang),
+  [localizedRows,query,category,task,payment,evidence,sort,lang]);
+ const compared=rows.filter(p=>compareIds.includes(p.id));
+ const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
  const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>localizedCatalogFact(p.id,lang,scope,p[scope]);
  const displayStrength=(p:SiaiHomeRow)=>localizedProductSummary(p.id,lang)||p.strength||p.about;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
@@ -49,10 +61,51 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    <label className="siai-home-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}/></label>
    <span className="siai-home-count">{shown.length} / {rows.length}</span>
   </div>
-  <nav className="siai-home-categories" aria-label={t.all}>
-   <button type="button" aria-pressed={category==="*"} className={category==="*"?"selected":""} onClick={()=>setCategory("*")}>{t.all}</button>
-   {categories.map(c=><button key={c} type="button" aria-pressed={category===c} className={category===c?"selected":""} onClick={()=>setCategory(c)}>{localizedCategory(lang,c)}</button>)}
-  </nav>
+  <div className="siai-home-four-filters">
+   <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
+    <button type="button" aria-pressed={category==="*"} className={category==="*"?"selected":""} onClick={()=>setCategory("*")}>{t.all}</button>
+    {categories.map(c=><button key={c} type="button" aria-pressed={category===c} className={category===c?"selected":""} onClick={()=>setCategory(c)}>{localizedCategory(lang,c)}</button>)}
+   </div></nav>
+   <nav className="siai-filter-line" aria-label={ui.task}><strong>{ui.task}</strong><div className="siai-filter-options">
+    {TASK_FACETS.map(v=><button key={v} type="button" aria-pressed={task===v} className={task===v?"selected":""} onClick={()=>setTask(v)}>{ui.taskLabels[v]}</button>)}
+   </div></nav>
+   <nav className="siai-filter-line" aria-label={ui.payment}><strong>{ui.payment}</strong><div className="siai-filter-options">
+    {PAYMENT_FACETS.map(v=><button key={v} type="button" aria-pressed={payment===v} className={payment===v?"selected":""} onClick={()=>setPayment(v)}>{ui.paymentLabels[v]}</button>)}
+   </div></nav>
+   <nav className="siai-filter-line" aria-label={ui.evidence}><strong>{ui.evidence}</strong><div className="siai-filter-options">
+    {EVIDENCE_FACETS.map(v=><button key={v} type="button" aria-pressed={evidence===v} className={evidence===v?"selected":""} onClick={()=>setEvidence(v)}>{ui.evidenceLabels[v]}</button>)}
+    <label className="siai-sort-label">{ui.sort}
+     <select aria-label={ui.sort} value={sort} onChange={e=>setSort(e.target.value as MarketOrder)}>{SORT_OPTIONS.map(v=><option value={v} key={v}>{ui.sortLabels[v]}</option>)}</select>
+    </label>
+   </div></nav>
+  </div>
+  {compareIds.length>0&&<aside className="siai-compare-toolbar" aria-label={ui.selected}>
+   <strong>{ui.selected} ({compareIds.length}/{MAX_COMPARISONS})</strong>
+   <div>{compared.map(p=><button key={p.id} type="button" onClick={()=>toggleCompare(p.id)} aria-label={ui.remove+" "+p.name}>{p.name} ×</button>)}</div>
+   <button type="button" disabled={compareIds.length<2} onClick={()=>setComparisonOpen(v=>!v)}>
+    {comparisonOpen?ui.closeCompare:ui.compareNow}</button>
+   <button type="button" onClick={()=>{setCompareIds([]);setComparisonOpen(false);}}>{ui.clear}</button>
+   {compareIds.length<2&&<small>{ui.compareHint}</small>}
+  </aside>}
+  {comparisonOpen&&compared.length>=2&&<section className="siai-compare-section" id="siai-comparison" aria-label={ui.comparison}>
+   <h2>{ui.comparison}</h2>
+   <div className="siai-compare-scroller"><table><thead><tr><th scope="col">{ui.evidence}</th>
+    {compared.map(p=><th scope="col" key={p.id}>{p.name}<a href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a></th>)}
+   </tr></thead><tbody>
+    {([
+     [t.strength,(p:SiaiHomeRow)=>displayStrength(p),(_p:SiaiHomeRow)=>null],
+     [t.free,(p:SiaiHomeRow)=>p.free,(p:SiaiHomeRow)=>p.freeSource],
+     [t.price,(p:SiaiHomeRow)=>p.price,(p:SiaiHomeRow)=>p.priceSource],
+     [t.region,(p:SiaiHomeRow)=>p.region,(p:SiaiHomeRow)=>p.regionSource],
+     [t.payment,(p:SiaiHomeRow)=>p.payment,(p:SiaiHomeRow)=>p.paymentSource],
+     [t.models,(p:SiaiHomeRow)=>p.models,(p:SiaiHomeRow)=>p.modelsSource],
+     [t.license,(p:SiaiHomeRow)=>p.commercial,(p:SiaiHomeRow)=>p.commercialSource],
+     [t.legal,(p:SiaiHomeRow)=>p.legal||"—",(p:SiaiHomeRow)=>p.legalSource],
+     [t.founded,(p:SiaiHomeRow)=>p.year||"—",(p:SiaiHomeRow)=>p.yearSource]
+    ] as const).map(([label,value,source])=><tr key={label}><th scope="row">{label}</th>
+     {compared.map(p=><td key={p.id}>{value(p)}<Source href={source(p)} label={t.source}/></td>)}</tr>)}
+   </tbody></table></div>
+  </section>}
   <div className="siai-home-table-scroll" tabIndex={0} aria-label={t.title}>
    <table className="siai-home-table">
     <thead><tr><th scope="col">{lang==="zh"?"序号":"#"}</th><th scope="col">{t.tool}</th><th scope="col">{t.strength}</th><th scope="col">{t.free}</th><th scope="col">{t.price}</th><th scope="col">{t.region}</th><th scope="col">{t.payment}</th><th scope="col">{t.models}</th><th scope="col">{t.license}</th><th scope="col">{t.action}</th></tr></thead>
@@ -74,7 +127,10 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
         <td><span className="siai-cell-preview" title={p.payment}>{short(p.payment,88)}</span></td>
         <td><span className="siai-cell-preview" title={p.models}>{short(displayFact(p,"models"),95)}</span></td>
         <td><span className="siai-cell-preview" title={p.commercial}>{short(p.commercial,100)}</span><Source href={p.commercialSource} label={t.source}/></td>
-        <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button></td>
+        <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button>
+        <button type="button" className={compareIds.includes(p.id)?"siai-compare-selected":""} onClick={()=>toggleCompare(p.id)}
+         disabled={!compareIds.includes(p.id)&&compareIds.length>=MAX_COMPARISONS}
+         aria-pressed={compareIds.includes(p.id)}>{compareIds.includes(p.id)?ui.remove:ui.compare}</button></td>
        </tr>
         {expanded===p.id&&<tr className="siai-home-expanded-row"><td colSpan={10}>{detailPanel(p)}</td></tr>}
        </Fragment>;
