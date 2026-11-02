@@ -189,10 +189,10 @@ const displayWidth=stageRef.current?.clientWidth||760;const scale=Math.max(.1,Ma
     // Standard Latin/number text stays native, selectable and searchable in PDF output.
     // Complex-script glyphs or rotated text retain the existing raster fallback until
     // matching licensed Unicode fonts can be embedded and validated.
-    const nativeLatin=/^[\\x20-\\x7e\\n]*$/.test(content)&&content.length>0&&content.length<=4000&&!(o.angle||0);
+    const nativeLatin=/^[\x20-\x7e\n]*$/.test(content)&&content.length>0&&content.length<=4000&&!(o.angle||0);
     if(nativeLatin){
      const font=await doc.embedFont(StandardFonts.Helvetica);
-     const lines=content.split("\\n");
+     const lines=content.split("\n");
      const originalSize=Math.max(4,Math.min(96,o.size||14));
      const widest=Math.max(1,...lines.map(line=>font.widthOfTextAtSize(line,originalSize)));
      const fontSize=Math.max(2,Math.min(originalSize,originalSize*w/widest,h/(Math.max(1,lines.length)*1.25)));
