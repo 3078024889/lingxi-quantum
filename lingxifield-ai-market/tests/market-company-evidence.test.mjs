@@ -51,7 +51,7 @@ test('official company scale, funding and product-launch facts are current and i
 test('company identity, project dates and exchange status never confuse product with publisher',()=>{
  assert.equal(companyPresentationFor('dify','Dify').name,'LangGenius, Inc.');
  assert.equal(companyPresentationFor('dify','Dify').year,'2023');
- assert.equal(companyPresentationFor('kling','快手').year,'2011');
+ assert.equal(companyPresentationFor('kling','快手').year,'2014-02-11'); // Legal entity incorporated in 2014; Kuaishou app launched in 2011.
  assert.equal(companyPresentationFor('kling','快手').listingState,'listed_parent');
  assert.equal(companyPresentationFor('qwen','阿里巴巴').listingState,'listed_parent');
  assert.equal(companyPresentationFor('chatgpt','OpenAI').name,'OpenAI Group PBC');

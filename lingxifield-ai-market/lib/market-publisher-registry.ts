@@ -9,6 +9,8 @@ import {companyEvidenceFor,companyPresentationFor,publisherIdentityFor} from './
 export type PublisherKind='company'|'open_source_project'|'software_library';
 export type PublisherProfile={
  id:string;name:string;kind:PublisherKind;officialSource:string;productIds:string[];
+ legalEntity:string|null;legalEntitySource:string|null;legalEntityScope:'service_operator'|'group_parent'|null;
+ ipoFiling:string|null;ipoFilingSource:string|null;
  founded:string|null;foundedSource:string|null;headquarters:string|null;headquartersSource:string|null;
  listingState:'listed_parent'|'unconfirmed'|'not_applicable';listingDetail:string|null;listingSource:string|null;
  funding:string|null;fundingSource:string|null;
@@ -29,6 +31,8 @@ for(const id of allIds){
  if(!company){
   const presentation=companyPresentationFor(id,product.company);
   company={id:owner.id,name:owner.name,kind:owner.kind,officialSource:owner.officialSource,
+   legalEntity:presentation.legalEntity,legalEntitySource:presentation.legalEntitySource,
+   legalEntityScope:presentation.legalEntityScope,ipoFiling:presentation.ipoFiling,ipoFilingSource:presentation.ipoFilingSource,
    productIds:[],founded:evidence.founded?.text||null,foundedSource:evidence.founded?.source||null,
    headquarters:evidence.headquarters?.text||null,headquartersSource:evidence.headquarters?.source||null,
    listingState:presentation.listingState,listingDetail:presentation.listingDetail,listingSource:presentation.listingSource,

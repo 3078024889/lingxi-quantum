@@ -5,6 +5,7 @@ import {localizedProductSummary} from '../lib/market-product-locale';
 import {companyEvidenceFor,companyPresentationFor} from '../lib/market-company-evidence';
 import {capabilityProfile} from '../lib/capability-profiles';
 import {localizeCompanyEvidence} from '../lib/market-company-evidence-locale';
+import MarketPublisherFacts from './market-publisher-facts';
 type Copy={title:string,company:string,created:string,location:string,funding:string,listed:string,scale:string,site:string,about:string,team:string};
 const WORDS:Record<Language,Copy>={
  zh:{title:'公司简介',company:'公司',created:'成立',location:'总部/地区',funding:'融资',listed:'上市',scale:'公司规模',site:'官网',about:'主要业务',team:'团队'},
@@ -33,13 +34,9 @@ export default function MarketCompanySnapshot({platform:p,language}:{platform:Pl
  ar:{parent:'الشركة الأم مدرجة',undisclosed:'لم يتم تأكيد الإدراج',project:'مشروع مفتوح المصدر',noYear:'السنة غير معلنة',operates:'تطور وتشغّل',projectMaintainer:'تصون',forWho:'مناسب لـ'}
  };
  const s=listingLabels[language];
- const listingText=publisher.listingState==='listed_parent'?(evidence?.listing?.text||s.parent):publisher.listingState==='not_applicable'?s.project:s.undisclosed;
  const facts=[
-  {name:t.company,value:publisher.name,source:publisher.companySource||evidence?.publisherSource},
-  {name:t.created,value:publisher.year||s.noYear,source:publisher.yearSource||undefined},
   {name:t.location,value:evidence?.headquarters?.text,source:evidence?.headquarters?.source},
   {name:t.funding,value:evidence?.funding?.text,source:evidence?.funding?.source},
-  {name:t.listed,value:listingText,source:evidence?.listing?.source},
   {name:t.scale,value:evidence?.scale?.text,source:evidence?.scale?.source},
   {name:language==='zh'?'项目起源':'Project origin',value:evidence?.projectStarted?.text,source:evidence?.projectStarted?.source},
  ].filter(x=>good(x.value));
@@ -49,6 +46,7 @@ export default function MarketCompanySnapshot({platform:p,language}:{platform:Pl
   :publisher.name+' · '+s.operates+' '+p.name+'. '+productSummary;
  return <section className="panel marketCompanySnapshot" aria-label={t.title}>
   <h2>{t.title}</h2><p className="marketCompanySummary">{about}</p>
+  <MarketPublisherFacts publisher={publisher} language={language} showSources/>
   <div className="marketCompanyFacts">{facts.map(f=><div key={f.name}><small>{f.name}</small><strong>{f.value}</strong>{f.source&&<a href={f.source} target="_blank" rel="noopener noreferrer">{language==='zh'?'出处':'Source'} ↗</a>}</div>)}
    <div><small>{t.site}</small><a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
   </div>
