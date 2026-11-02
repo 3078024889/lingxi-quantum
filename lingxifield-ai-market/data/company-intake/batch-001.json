@@ -23,7 +23,13 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "spacex",
+      "aliases": [
+        "Anysphere Cursor"
+      ],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://cursor.com/pricing"
     },
     {
       "id": "canva-magic-studio",
@@ -42,7 +48,13 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "canva",
+      "aliases": [
+        "Canva Magic"
+      ],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://www.canva.com/"
     },
     {
       "id": "gamma",
@@ -61,7 +73,11 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "gamma",
+      "aliases": [],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://gamma.app/pricing"
     },
     {
       "id": "pika",
@@ -80,7 +96,11 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "pika",
+      "aliases": [],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://creation.pika.art/apps/create-video"
     },
     {
       "id": "ideogram",
@@ -99,7 +119,11 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "ideogram",
+      "aliases": [],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://ideogram.ai/pricing/"
     },
     {
       "id": "krea",
@@ -118,7 +142,11 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "krea",
+      "aliases": [],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://www.krea.ai/"
     },
     {
       "id": "leonardo",
@@ -137,7 +165,13 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "canva",
+      "aliases": [
+        "Leonardo.Ai"
+      ],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://leonardo.ai/"
     },
     {
       "id": "notion-ai",
@@ -156,7 +190,11 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "notion",
+      "aliases": [],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://www.notion.com/product/ai"
     },
     {
       "id": "figma-make",
@@ -175,7 +213,11 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "figma",
+      "aliases": [],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://www.figma.com/make/"
     },
     {
       "id": "descript",
@@ -194,7 +236,11 @@
       ],
       "verifiedFacts": {},
       "reviewed": false,
-      "publishApproved": false
+      "publishApproved": false,
+      "publisherGroupId": "descript",
+      "aliases": [],
+      "discoveredAt": "2026-11-01",
+      "discoverySource": "https://www.descript.com/"
     }
   ],
   "intakePaused": true
