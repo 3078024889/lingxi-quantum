@@ -1,0 +1,10 @@
+import{readFile}from'node:fs/promises';import{resolve}from'node:path';
+const dir=resolve(process.env.AI_MARKET_SNAPSHOT_DIR||'./reports/model-bulk');
+const data=JSON.parse(await readFile(resolve(dir,'models-index.json'),'utf8'));
+const params=new URLSearchParams(process.argv.slice(2).join('&'));
+const q=(params.get('q')||'').normalize('NFKC').toLowerCase().slice(0,120);
+const provider=(params.get('provider')||'').toLowerCase().slice(0,80);
+const limit=Math.max(1,Math.min(50,Number(params.get('limit'))||20));
+const offset=Math.max(0,Math.min(100000,Number(params.get('offset'))||0));
+const match=data.records.filter(x=>(!provider||x.providerId.toLowerCase()===provider)&&(!q||[x.name,x.modelId,x.providerName,x.providerId].some(v=>v.toLowerCase().includes(q))));
+console.log(JSON.stringify({query:q,provider,count:match.length,limit,offset,nextOffset:offset+limit<match.length?offset+limit:null,source:data.source,sourceCollectedAt:data.sourceCollectedAt,verification:data.status,items:match.slice(offset,offset+limit)},null,2));

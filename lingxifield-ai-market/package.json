@@ -1,0 +1,47 @@
+{
+  "name": "lingxifield-ai-market",
+  "version": "2.9.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "validate:data": "node scripts/validate-evidence.mjs && node scripts/validate-catalog.mjs && npm run validate:official-intake && npm run validate:global-intake",
+    "test:contracts": "node --test tests/*.test.mjs",
+    "import:evidence": "node scripts/import-evidence.mjs",
+    "test:engine": "node --test tests/market-engine.test.mjs",
+    "import:catalog": "node scripts/import-catalog.mjs",
+    "validate:catalog": "node scripts/validate-catalog-v25.mjs",
+    "test:catalog": "node --test tests/catalog-engine.test.mjs",
+    "test:analytics": "node --test tests/market-analytics.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "gate": "npm run validate:data && npm run validate:catalog && npm run test:contracts && npm run typecheck && npm run build",
+    "preview:catalog": "node scripts/preview-catalog-import.mjs",
+    "review:sources": "node scripts/review-sources.mjs",
+    "prebuild": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs tests/market-locale-entry.test.mjs tests/market-company-evidence.test.mjs tests/market-locale-html-root.test.mjs tests/market-order-policy.test.mjs tests/market-company-evidence-locale.test.mjs tests/market-user-task-queries.test.mjs tests/market-company-intake.test.mjs tests/market-codex-chatgpt.test.mjs tests/market-current-32-closeout.test.mjs tests/market-current-commercial-terms.test.mjs tests/market-public-seo-probe.test.mjs tests/market-index-release-domain.test.mjs tests/market-reviewed-detail-seo.test.mjs tests/market-llms-index.test.mjs tests/market-robots-crawler-policy.test.mjs tests/market-deployment-region.test.mjs tests/market-checkout-fail-closed.test.mjs tests/market-gsc-query-safety.test.mjs tests/market-gsc-review-pipeline.test.mjs tests/market-seo-board-coverage.test.mjs tests/market-refund-settlement-contract.test.mjs tests/market-geo-waitlist-price.test.mjs tests/market-seo-evidence-comparability.test.mjs tests/market-feedback-key-provisioning.test.mjs tests/visitor-feedback-global-evidence.test.mjs tests/market-ci-action-runtime.test.mjs tests/market-payment-coverage.test.mjs",
+    "test:v41": "node --experimental-strip-types --test tests/market-v41-cost-trust.test.mjs",
+    "seo:review-evidence": "node scripts/review-gsc-observations.mjs",
+    "seo:verify-public": "node scripts/verify-public-seo.mjs",
+    "feedback:provision-key": "node scripts/provision-feedback-key.mjs",
+    "validate:official-intake": "node scripts/validate-company-official-observations.mjs",
+    "validate:global-intake": "node scripts/validate-global-intake.mjs",
+    "test:main-site-integration": "node --test tests/*.main-site.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "8.5.32",
+    "typescript": "^5.6.0"
+  },
+  "overrides": {
+    "postcss": "8.5.32"
+  }
+}
