@@ -30,7 +30,7 @@ function splitTts(text:string,max=10500){
 }
 async function apiTranslate(text:string,source:string,target:string,quoteId:string){
  const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
- const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));return String(d.translated||"");
+ const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));const translated=String(d.translated||"").trim();if(!translated)throw Error("TRANSLATION_EMPTY");return translated;
 }
 async function translateTimed(input:TimedText[],source:string,target:string,quoteId:string){
  const out:TimedText[]=[];let base=0;
@@ -40,7 +40,7 @@ async function translateTimed(input:TimedText[],source:string,target:string,quot
   const map=new Map<number,string>();
   const re=/⟦LX(\d{4})⟧\s*([\s\S]*?)(?=⟦LX\d{4}⟧|$)/g;let m:RegExpExecArray|null;
   while((m=re.exec(translated)))map.set(Number(m[1]),m[2].trim());
-  if(map.size!==group.length){
+  if(!group.every((_,i)=>typeof map.get(base+i)==="string"&&Boolean(map.get(base+i)?.trim()))){
    for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:await apiTranslate(x.text,source,target,quoteId)})}
   }else{
    for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:map.get(base+i)||x.text})}
@@ -62,6 +62,8 @@ export default function VideoTranslateWorkbench(){
  const quantity=Math.max(1,startedMinutes*Math.max(1,targets.length));
  const totalBytes=useMemo(()=>files.reduce((n,f)=>n+f.size,0),[files]);
  const persistFiles=totalBytes<=250*1024*1024;
+ // Changing language, source file or output mode invalidates the previously rendered artifact.
+ useEffect(()=>{setVideos([]);setSubs([]);setError("");},[files,source,targets,mode]);
  useEffect(()=>{if(!files.length){setDraftId("");return}if(!draftId)setDraftId(newPaidTaskDraftId())},[files.length,draftId]);
 
  function addTarget(v:Target){setTargets(cur=>cur.includes(v)?cur.filter(x=>x!==v):(cur.length>=3?cur:[...cur,v]))}
@@ -116,12 +118,12 @@ export default function VideoTranslateWorkbench(){
 
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm"><ToolUiText text="原始语言" />
-    <select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
+    <select value={source} disabled={busy} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
      <option value="auto"><ToolUiText text="自动识别" /></option>{LANGS.map(([v,n])=><option key={v} value={v}><ToolUiText text={n}/></option>)}
     </select>
    </label>
    <label className="text-sm"><ToolUiText text="输出方式" />
-    <select value={mode} onChange={e=>setMode(e.target.value as Mode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
+    <select value={mode} disabled={busy} onChange={e=>setMode(e.target.value as Mode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
      <option value="subtitle"><ToolUiText text="翻译字幕 + 原音高质量 MP4" /></option>
      <option value="dub"><ToolUiText text="翻译字幕 + AI 配音高质量 MP4" /></option>
     </select>
@@ -130,7 +132,7 @@ export default function VideoTranslateWorkbench(){
 
   <section className="rounded-2xl border border-[var(--lx-line)] p-4">
    <div className="text-sm font-medium"><ToolUiText text="目标语言" /> <span className="text-xs font-normal text-[var(--lx-faint)]"><ToolUiText text="最多同时 3 种；每增加一种目标语言，按相同视频分钟数增加一次计费数量。" /></span></div>
-   <div className="mt-3 flex flex-wrap gap-2">{LANGS.map(([v,n])=><button type="button" key={v} onClick={()=>addTarget(v)} className={`rounded-full border px-4 py-2 text-sm ${targets.includes(v)?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)]"}`}><ToolUiText text={n}/></button>)}</div>
+   <div className="mt-3 flex flex-wrap gap-2">{LANGS.map(([v,n])=><button type="button" key={v} disabled={busy} onClick={()=>addTarget(v)} className={`rounded-full border px-4 py-2 text-sm ${targets.includes(v)?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)]"}`}><ToolUiText text={n}/></button>)}</div>
   </section>
 
   {files.length>0&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm">
