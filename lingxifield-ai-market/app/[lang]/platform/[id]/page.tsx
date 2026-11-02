@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {notFound} from 'next/navigation';
 import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository';
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
-import {researchedFact} from '../../../../lib/market-researched-facts';
+import {researchedFact,marketProductReviewedAt} from '../../../../lib/market-researched-facts';
 import {companyEvidenceFor,companyPresentationFor} from '../../../../lib/market-company-evidence';
 import MarketPublisherFacts from '../../../market-publisher-facts';
 import {capabilityProfile} from '../../../../lib/capability-profiles';
@@ -68,7 +68,7 @@ export default async function LocalProduct({params}:PageParams){
  if(!marketLocales.includes(lang as Language))notFound();
  const p=findPlatform(id);if(!p)notFound();
  const l=lang as Language,w=WORDS[l],facts=researchedFact(id),commercial=commercialEvidence(id,l),api=apiServiceOffer(id),payments=paymentFactsFor(id,'GLOBAL'),team=platformLinks(id).team;
- const summary=label(l,id),displayName=publicName(l,id,p.name),date='2026-11-01',companyEvidence=localizeCompanyEvidence(id,l,companyEvidenceFor(id));
+ const summary=label(l,id),displayName=publicName(l,id,p.name),date=marketProductReviewedAt(id),companyEvidence=localizeCompanyEvidence(id,l,companyEvidenceFor(id));
  const publisher=companyPresentationFor(id,p.company),profile=capabilityProfile(id);
  const listingCopy=({zh:['未见公开上市公告','开源项目不独立上市'],en:['No confirmed public listing','Open-source project'],ja:['上場情報は未公表','OSSプロジェクト'],ko:['상장 정보 미확인','오픈소스 프로젝트'],fr:['Aucune cotation confirmée','Projet open source'],de:['Keine bestätigte Börsennotierung','Open-Source-Projekt'],es:['Cotización no confirmada','Proyecto de código abierto'],pt:['Cotação não confirmada','Projeto de código aberto'],ar:['لم يتم تأكيد الإدراج','مشروع مفتوح المصدر']} as Record<Language,string[]>)[l];
  const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n.?a|not verified)$/i.test(value.trim()));
