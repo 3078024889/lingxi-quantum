@@ -135,8 +135,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Tabnine 官方使用条款指出免费计划不供持续商业或企业使用；长期企业用途须采用付费订阅并遵守条款。",
+          "source": "https://www.tabnine.com/terms-of-use/",
+          "checkedAt": "2026-11-02",
+          "scope": "free_not_for_ongoing_business"
         },
         "payment": {
           "status": "missing",
@@ -269,23 +272,38 @@
           "scope": "aggregator_not_first_party_model"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Poe 销售条款排除受制裁国家、受限制主体，并明确所在地可能限制支付与服务；并非全球全部国家可用白名单。",
+          "source": "https://poe.com/pages/terms-of-sale",
+          "checkedAt": "2026-11-02",
+          "scope": "restriction_only_not_complete_supported_countries"
         },
         "commercial": {
           "status": "missing",
           "reason": "The complete current licensing terms for this specific plan have not been reviewed."
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Poe 销售条款说明订阅由 Quora/支付代理结算，也可经 Apple App Store / Google Play；支付方式依结算国家而异。",
+          "source": "https://poe.com/pages/terms-of-sale",
+          "checkedAt": "2026-11-02",
+          "scope": "country_dependent_app_store_cards"
         },
         "company": {
           "status": "observed",
           "text": "官方 @poe 账号为 Poe 产品和机器人展示入口；真实经营公司主体尚需另查法律文件。",
           "source": "https://poe.com/poe",
           "checkedAt": "2026-11-02",
-          "scope": "publisher_brand_only"
+          "scope": "publisher_brand_only",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Poe 2026年3月服务条款写明运营及合同主体为 Quora, Inc.及其关联公司；Poe 产品不应被统计为独立已注册公司。",
+              "source": "https://poe.com/pages/tos",
+              "checkedAt": "2026-11-02",
+              "scope": "legal_operator"
+            }
+          ]
         }
       }
     },
@@ -378,7 +396,16 @@
           "text": "Recraft 官方 FAQ 写明使用 Stripe 处理信用卡、借记卡及银行转账。",
           "source": "https://www.recraft.ai/pricing?tab=plans",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_payment_methods"
+          "scope": "vendor_payment_methods",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Recraft 公开 FAQ：支持信用卡、借记卡和银行转账，均由 Stripe 安全处理。",
+              "source": "https://www.recraft.ai/pricing?tab=plans",
+              "checkedAt": "2026-11-02",
+              "scope": "card_debit_bank_stripe"
+            }
+          ]
         },
         "company": {
           "status": "missing",

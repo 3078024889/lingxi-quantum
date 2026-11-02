@@ -47,7 +47,16 @@
           "text": "官网写明自助订阅支持主要信用卡和借记卡；企业发票与电汇按商户洽谈。",
           "source": "https://cursor.com/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "vendor_public_page",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Cursor 的2026-09-03服务条款第4.3节明确，信用卡、借记卡和银行账户收款由 Stripe 处理；不宣称 PayPal/支付宝可用。",
+              "source": "https://cursor.com/en-US/terms-of-service",
+              "checkedAt": "2026-11-02",
+              "scope": "stripe_card_debit_bank_payment"
+            }
+          ]
         },
         "company": {
           "status": "observed",
@@ -90,8 +99,11 @@
           "reason": "未逐国核对 Canva AI 具体功能的可用地区"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "未逐项核对免费/付费内容授权、素材许可和 AI 生成物商业条件"
+          "status": "observed",
+          "text": "Canva 内容许可允许在许可范围内将含 Free/Pro 素材的设计用于广告、商业宣传和产品包装；Pro 素材需要每份设计对应许可，教育版素材不用于商用。",
+          "source": "https://www.canva.com/policies/content-license-agreement/",
+          "checkedAt": "2026-11-02",
+          "scope": "canva_designs_assets_license_not_all_ai_models"
         },
         "payment": {
           "status": "missing",
@@ -141,8 +153,11 @@
           "reason": "公开套餐功能不等于全部内容的可商用授权，合同条款待核对"
         },
         "payment": {
-          "status": "missing",
-          "reason": "尚未取得官方支付方式完整来源"
+          "status": "observed",
+          "text": "Gamma 官方帮助中心明确支持 Visa/Mastercard/AmEx 等信用卡及借记卡，印度可用 UPI、印尼可用 GoPay；以账户结算页展示为准。",
+          "source": "https://help.gamma.app/en/articles/11048302-what-payment-methods-does-gamma-accept",
+          "checkedAt": "2026-11-02",
+          "scope": "global_cards_india_upi_indonesia_gopay"
         },
         "company": {
           "status": "observed",
@@ -200,7 +215,16 @@
           "text": "Pika 产品定价以 pika.art 官网为来源；注册公司主体待核对。",
           "source": "https://pika.art/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "vendor_public_page",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Pika 2026年8月服务条款写明运营主体 Mellis, Inc.，平台可通过 pika.art 与 pika.me 提供视频和聚合 AI 服务。",
+              "source": "https://pika.art/terms-of-service",
+              "checkedAt": "2026-11-02",
+              "scope": "legal_operator_not_parent_ownership"
+            }
+          ]
         }
       }
     },
@@ -298,11 +322,23 @@
           "text": "定价表对付费 Pro 和 Max 列有 Commercial license，其他档位应逐项查看条款。",
           "source": "https://www.krea.ai/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "vendor_public_page",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Krea Business 计划的正式条款规定对输出享有充分商业使用权，普通 Basic/Pro 仍须依据各自许可证核对，不能一概推断。",
+              "source": "https://www.krea.ai/business-terms",
+              "checkedAt": "2026-11-02",
+              "scope": "business_subscription_full_output_rights"
+            }
+          ]
         },
         "payment": {
-          "status": "missing",
-          "reason": "未找到可覆盖全球账号的官方支付渠道清单"
+          "status": "observed",
+          "text": "Krea Business 条款明确付费服务通过 Stripe 收款，银行卡结算由支付服务商处理；具体地区和其他档位支付方式未全部确认。",
+          "source": "https://www.krea.ai/business-terms",
+          "checkedAt": "2026-11-02",
+          "scope": "business_stripe_processor"
         },
         "company": {
           "status": "observed",
@@ -510,7 +546,16 @@
           "text": "Descript 官方定价页确认产品品牌；成立年份和融资情况尚需独立核实。",
           "source": "https://www.descript.com/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "vendor_public_page",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Descript 的服务条款明确法律运营主体为 Descript, Inc.，覆盖 Windows、Mac、Web 编辑产品。",
+              "source": "https://www.descript.com/terms",
+              "checkedAt": "2026-11-02",
+              "scope": "legal_operator"
+            }
+          ]
         }
       }
     }

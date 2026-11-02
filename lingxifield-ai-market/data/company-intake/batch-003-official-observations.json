@@ -34,20 +34,32 @@
           "scope": "included_vendor_and_partner_models"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "HeyGen 官方条款规定受美国禁运国家/地区及美国制裁名单主体不可使用或出口服务；这是限制说明，并非所有其他国家的可用证明。",
+          "source": "https://www.heygen.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "export_control_restrictions_only"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "HeyGen 2026-10-16条款明确 Creator/Pro/Business 输出可按规则商业使用；免费层输出仅供个人、非商业和内部评估，不可变现或用于广告。",
+          "source": "https://www.heygen.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "creator_pro_business_vs_free_noncommercial"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "HeyGen 官方账单帮助页：支持信用卡、借记卡、Cash App、银行账户、预授权借记及部分国家 PayPal，不能宣称 PayPal 全球可用。",
+          "source": "https://help.heygen.com/en/articles/9999710-billing-payments-invoice",
+          "checkedAt": "2026-11-02",
+          "scope": "country_limited_paypal_and_cards"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "HeyGen 官方账单帮助中心公布法人名称 HeyGen Technology Inc. 和美国洛杉矶企业地址，区别于数字人产品名称。",
+          "source": "https://help.heygen.com/en/articles/9999710-billing-payments-invoice",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
         }
       }
     },
@@ -179,16 +191,25 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Scite 官方条款限制文章、引证分类及 AI Content 的再分发、批量采集和训练用途，研究服务不能当成可自由商用的素材许可证。",
+          "source": "https://scite.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "research_content_license_restrictions"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Scite 服务条款规定付费订阅由其支付处理商循环收费，具体支持卡组织和地区的完整清单并未承诺。",
+          "source": "https://scite.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "recurring_payment_processor_not_card_list"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Scite 官方条款写明 Scite, LLC 属于 Research Solutions 公司体系，研究工具与母集团不可重复当作独立公司集团。",
+          "source": "https://scite.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator_and_parent"
         }
       }
     },
@@ -219,20 +240,29 @@
           "scope": "third_party_model_catalog"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Replicate 服务条款要求遵守美国及相关辖区出口管制，受禁止司法辖区和受限主体不可使用；非完整支持地区列表。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "export_controls_only"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Replicate 条款允许客户在合规范围内运行模型，但具体第三方模型受各模型作者授权限制，不能将平台订阅视为所有模型商用许可。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "per_model_third_party_licence"
         },
         "payment": {
           "status": "missing",
           "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Replicate 2026-04-01服务条款明确合同主体 Replicate, LLC，托管不同第三方模型并提供推理 API。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
         }
       }
     },
@@ -271,12 +301,18 @@
           "reason": "The complete current licensing terms for this specific plan have not been reviewed."
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "fal 的服务条款规定使用 API/平台前先购买 credits，调用会从余额扣除；具体支付通道仍需控制台核验。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "prepaid_credits_not_payment_card_coverage"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "fal 2026-09-08服务条款载明合同主体 Features & Labels, Inc.，提供生成式媒体模型 API 与计算服务。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
         }
       }
     },
@@ -319,8 +355,11 @@
           "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Together AI 2026-05-19服务条款明确合法运营主体是 Delaware 注册的 Together Computer, Inc.，并提供推理、训练和微调 API。",
+          "source": "https://www.together.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
         }
       }
     },
@@ -403,8 +442,11 @@
           "reason": "The complete current licensing terms for this specific plan have not been reviewed."
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Groq 官方 Billing FAQ 明确支持 Visa、Mastercard、AmEx、Discover 信用卡、美国银行账户和 SEPA 借记账户。",
+          "source": "https://console.groq.com/docs/billing-faqs",
+          "checkedAt": "2026-11-02",
+          "scope": "cards_us_ach_sepa"
         },
         "company": {
           "status": "missing",
@@ -442,20 +484,32 @@
           "scope": "model_aggregator"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "OpenRouter 官方条款第5.7节要求用户遵守每个模型供应商的国家和地区限制，不允许利用代理服务绕过限制；不等于全球统一白名单。",
+          "source": "https://openrouter.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "provider_model_specific_country_restrictions"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "OpenRouter 服务条款要求各终端使用方遵守模型供应商专门条款，不能通过路由绕过禁止商用/禁止地区限制。",
+          "source": "https://openrouter.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "per_model_provider_terms"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "OpenRouter 官方2026定价页列 Standard/Business 可用信用卡、借记卡、支付宝与 USDC，企业可开具账单；PayPal 未被列为已支持。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "card_alipay_usdc_enterprise_invoicing"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "OpenRouter 2026-08-31服务条款说明签约公司为 OpenRouter, Inc.，聚合第三方模型服务。",
+          "source": "https://openrouter.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
         }
       }
     }

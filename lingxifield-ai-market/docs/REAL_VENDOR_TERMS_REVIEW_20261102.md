@@ -1,0 +1,9 @@
+# Official vendor policy evidence review — 2026-11-02
+
+Source-backed observations added to the three candidate cohort packs. This is **document verification, not authenticated vendor task execution**. Missing supported-country lists must remain unsolved; export sanctions and region restrictions are not proofs that a service is accessible in every other country.
+
+Key direct legal sources: Cursor Terms https://cursor.com/en-US/terms-of-service; Canva Content License https://www.canva.com/policies/content-license-agreement/; Gamma payment https://help.gamma.app/en/articles/11048302-what-payment-methods-does-gamma-accept; Pika legal operator https://pika.art/terms-of-service; Krea Business https://www.krea.ai/business-terms; Descript Terms https://www.descript.com/terms; Tabnine Terms https://www.tabnine.com/terms-of-use/; Poe Terms https://poe.com/pages/tos and https://poe.com/pages/terms-of-sale; Recraft payments https://www.recraft.ai/pricing?tab=plans; HeyGen https://www.heygen.com/terms and https://help.heygen.com/en/articles/9999710-billing-payments-invoice; Scite https://scite.ai/terms; Replicate https://replicate.com/terms; fal https://fal.ai/legal/terms-of-service; Together https://www.together.ai/terms-of-service; Groq https://console.groq.com/docs/billing-faqs; OpenRouter https://openrouter.ai/terms and https://openrouter.ai/pricing.
+
+**Safety-critical interpretation:** HeyGen Free output is expressly non-commercial; Paid outputs subject to plans. Poe and OpenRouter can have geographic restrictions; only exact vendor whitelist/policy supports a 'available in country X' claim. Scite and Replicate reserve restrictions on third-party article/model licenses. Brand and parent company are separate entities.
+
+These records are unapproved pending personal account E2E and independent editorial approval. No scraping/using vendor authenticated services was performed.
