@@ -70,3 +70,18 @@ test("PNG→JPEG→PDF→JPEG: three real browser tools interoperate with valid 
  const avg=(await sharp(rendered.content).stats()).channels.map(v=>v.mean);
  expect(avg.some(v=>v<245)).toBe(true);
 });
+
+
+test("Image converter: quality setting change invalidates prior downloadable output",async({page})=>{
+ const bytes=await sample(84,56,"#ff8866");
+ await page.goto("/tools/png-to-jpg?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"quality.png",mimeType:"image/png",buffer:bytes});
+ await page.getByRole("button",{name:/^Convert(?: ·|$)/}).click();
+ await expect(page.getByTestId("result-file-actions")).toBeVisible();
+ await page.locator('input[type="range"]').first().press("ArrowLeft");
+ await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
+ await expect(page.getByTestId("image-before-after")).toHaveCount(0);
+ await page.getByRole("button",{name:/^Convert(?: ·|$)/}).click();
+ const jpeg=await downloadResult(page);
+ expect((await sharp(jpeg.content).metadata()).format).toBe("jpeg");
+});
