@@ -1,0 +1,55 @@
+name: LINGXIFIELD SIAI homepage integration
+
+on:
+  pull_request:
+    paths:
+      - 'app/page.tsx'
+      - 'app/start/page.tsx'
+      - 'app/layout.tsx'
+      - 'app/siai-home.css'
+      - 'components/SiaiRankingHome.tsx'
+      - 'components/Nav.tsx'
+      - 'lingxifield-ai-market/**'
+      - 'tsconfig.json'
+      - '.github/workflows/siai-home-integration.yml'
+  push:
+    branches: [feat/lingxifield-siai-home-sidebar-20261102, main]
+    paths:
+      - 'app/page.tsx'
+      - 'components/SiaiRankingHome.tsx'
+      - 'components/Nav.tsx'
+      - 'lingxifield-ai-market/**'
+      - '.github/workflows/siai-home-integration.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: siai-home-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-home:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install locked root dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Validate homepage navigation and curated data contract
+        run: node --test scripts/tests/siai-home-*.test.mjs
+      - name: Compile actual LINGXIFIELD production home
+        run: pnpm build
