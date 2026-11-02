@@ -204,7 +204,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
 
       {(tool.slug==="merge-pdf"||tool.slug==="split-pdf")&&files.length>0&&<div className="mt-4 space-y-3">
         <button type="button" aria-expanded={organizerOpen} data-testid="open-pdf-organizer" onClick={()=>setOrganizerOpen(value=>!value)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm font-medium text-[var(--lx-ink)]">{organizerOpen?t("收起页面可视化整理","Close page organizer"):t("可视化整理 PDF 页面 · 排序、旋转、删除","Organize PDF pages · reorder, rotate, delete")}</button>
-        {organizerOpen&&<PdfPageOrganizerWorkbench files={files}/>}
+        {organizerOpen&&<PdfPageOrganizerWorkbench files={files} sourceSlug={tool.slug}/>}
       </div>}
       {tool.slug==="compress-pdf"&&<div className="mt-4 rounded-sm border border-white/10 p-4 text-sm text-bone-dim">
         <label className="block">
