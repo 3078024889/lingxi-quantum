@@ -30,9 +30,9 @@ async function content(bytes:Buffer){
 test("pdf-pages: user moves and rotates pages; prior output vanishes and exported PDF has correct order and geometry",async({page})=>{
  const data=await pdfFixture(3);
  await upload(page,"pdf-pages",[{name:"three.pdf",buffer:data}]);
- await expect(wb(page).getByRole("button",{name:"Down",exact:true}).first()).toBeVisible();
- await wb(page).getByRole("button",{name:"Down",exact:true}).first().click();
- await wb(page).getByRole("button",{name:"Rotate",exact:true}).first().click();
+ await expect(wb(page).getByRole("button",{name:"Move down",exact:true}).first()).toBeVisible();
+ await wb(page).getByRole("button",{name:"Move down",exact:true}).first().click();
+ await wb(page).getByRole("button",{name:"Rotate page",exact:true}).first().click();
  await wb(page).getByRole("button",{name:"Preview",exact:true}).click();
  const out=await PDFDocument.load(await download(page));
  expect(out.getPageCount()).toBe(3);
