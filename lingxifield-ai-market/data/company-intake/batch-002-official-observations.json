@@ -225,8 +225,11 @@
           "scope": "consumer_output_ownership_vs_business_terms"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Mistral 2026 年 Vibe 官方帮助中心确认：Vibe Pro/Team 网页订阅在 Mistral 管理控制台录入账单信息，可月付或年付；iOS 和 Android App 订阅分别经 Apple App Store、Google Play 结算；特定移动运营商 Free Mobile、Orange、NJU 也有运营商账单渠道。具体网页银行卡或 PayPal 品类未在此页逐一确认，不能宣称所有地区支持全部方式。Vibe 套餐结算与开发者 Studio API 另行计算。",
+          "source": "https://help.mistral.ai/en/articles/455205-how-can-i-upgrade-or-cancel-my-vibe-subscription",
+          "checkedAt": "2026-11-02",
+          "scope": "vibe_web_appstore_googleplay_carrier_subscription_channels_not_universal_card_rails"
         },
         "company": {
           "status": "observed",
