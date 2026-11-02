@@ -45,7 +45,7 @@ test("video-toolkit: a four-second MP4 becomes playable two-times-speed video an
  await work.locator('input[type="file"]').first().setInputFiles({name:"four-seconds.mp4",mimeType:"video/mp4",buffer:bytes});
  await work.getByRole("button",{name:"Speed",exact:true}).click();
  const slider=work.getByRole("slider",{name:/Playback speed/});
- await slider.fill("2");
+ await slider.focus();await slider.press("End");
  await work.getByRole("button",{name:"Start processing",exact:true}).click();
  const saved=await output(page);
  expect(saved.name).toMatch(/-2x\.mp4$/);
@@ -66,6 +66,6 @@ test("video-toolkit: a four-second MP4 becomes playable two-times-speed video an
  expect(metadata.height).toBeGreaterThan(0);
  expect(metadata.duration).toBeGreaterThan(1.5);
  expect(metadata.duration).toBeLessThan(3);
- await slider.fill("1.5");
+ await slider.press("ArrowLeft");
  await expect(work.getByTestId("result-file-actions")).toHaveCount(0);
 });
