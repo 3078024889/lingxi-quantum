@@ -52,7 +52,20 @@ try{
   }
  }
  await Promise.all(Array.from({length:6},worker));
- const result={scope:'nine_locale_x_32_products_ssr_smoke',checked,total:paths.length,
+ // Company/API graph is independently queried over HTTP; not just route existence.
+ for(const [path,verify] of [
+  ['/api/v1/companies?limit=50',data=>data.scope==='curated_32_publishers'&&data.curatedProducts===32&&data.items.length>1],
+  ['/api/v1/companies/openai',data=>data.publisher?.products?.some(x=>x.id==='chatgpt')&&data.publisher?.products?.some(x=>x.id==='openai-python')],
+  ['/api/v1/model-offers?limit=10',data=>data.scope==='official_rate_rows_for_curated_32'&&data.total>0&&data.items.every(x=>x.source.startsWith('https://'))]
+ ]){
+  try{
+   const response=await fetch(origin+path,{signal:AbortSignal.timeout(12000)});
+   const body=response.status===200?await response.json():null;
+   if(response.status!==200||!verify(body||{}))failures.push({path,status:response.status,reason:'REGISTRY_API_CONTRACT_INVALID'});
+  }catch(e){failures.push({path,error:e instanceof Error?e.message:'API_NETWORK_FAILURE'})}
+  checked++;
+ }
+ const result={scope:'nine_locale_x_32_products_ssr_smoke',checked,total:paths.length+3,
   passed:checked-failures.length,failed:failures.length,failures:failures.slice(0,60),httpStatuses:statuses,
   note:'Local Next.js SSR HTTP smoke only; NOT a real user journey or verified paid service.'};
  process.stdout.write(JSON.stringify(result,null,2)+'\n');

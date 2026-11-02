@@ -2,14 +2,17 @@ import type {Metadata} from 'next';
 import Link from 'next/link';
 import {notFound} from 'next/navigation';
 import {MARKET_COMPANIES,marketRegistrySummary} from '../../../lib/market-publisher-registry';
-import {marketLocales,mayIndexMarket} from '../../../lib/market-index-policy';
+import {marketLocales,mayIndexMarket,indexableMarketLocales,marketCanonicalOrigin} from '../../../lib/market-index-policy';
 import {COMPANY_DIRECTORY_COPY} from '../../../lib/market-company-directory-copy';
 import type {Language} from '../../../lib/v2';
 type Params={params:Promise<{lang:string}>};
 export async function generateMetadata({params}:Params):Promise<Metadata>{
  const {lang}=await params;if(!marketLocales.includes(lang as Language))return {robots:{index:false,follow:false}};
+ const indexable=mayIndexMarket(lang);
+ const languages=indexable?Object.fromEntries(indexableMarketLocales().map(l=>[l,marketCanonicalOrigin+'/'+l+'/companies'])):undefined;
  return {title:COMPANY_DIRECTORY_COPY[lang as Language].title+' | LINGXIFIELD',
-  robots:{index:mayIndexMarket(lang),follow:mayIndexMarket(lang)}};
+  robots:{index:indexable,follow:indexable},
+  alternates:indexable?{canonical:marketCanonicalOrigin+'/'+lang+'/companies',languages}:undefined};
 }
 export default async function Companies({params}:Params){
  const {lang}=await params;if(!marketLocales.includes(lang as Language))notFound();

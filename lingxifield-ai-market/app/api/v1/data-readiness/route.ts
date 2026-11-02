@@ -7,6 +7,7 @@ import {seoGeoObservations,coverageForSeoGeo} from '../../../../lib/seo-geo-obse
 import rawExperiences from '../../../../data/user-experiences.json';
 import rawMetrics from '../../../../data/evidence.json';
 import {paymentDeploymentReadiness,mainSiteBillingCompatibility} from '../../../../lib/market-billing-readiness.mjs';
+import {marketRegistrySummary} from '../../../../lib/market-publisher-registry';
 /** Read-only, non-personal coverage report; no external API calls or credentials. */
 export const dynamic='force-dynamic';
 export function GET(){
@@ -31,7 +32,7 @@ export function GET(){
   scope:'32_curated_products',checkedAt:'2026-11-02',
   sourceFacts:{...sourceCoverage,priceCoverage,editorialLastReviewed:MARKET_RESEARCH_CHECKED_AT,
    warning:'Source-backed descriptions are not an independent measurement of usability, current checkout price or model quality.'},
-  companies:corporateCoverage,
+  companies:corporateCoverage,publisherIndex:marketRegistrySummary(),
   apiBilling:{classifiedProducts:productIds.length,productsWithExplicitDeveloperUnitRates:pricedApiProducts.length,
    productsWithDeveloperUnitRates:pricedApiProducts,classificationById:apiClassifications,
    caveat:'Web subscriptions and self-hosting costs must not be presented as developer API token rates.'},
