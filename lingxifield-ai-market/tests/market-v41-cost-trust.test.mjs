@@ -183,7 +183,7 @@ test('FAQ, publisher invite, footer and payment channels are translated for nine
 
 test('V43 official payment documentation covers domestic AI and international checkout',async()=>{
  const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
- const expected={doubao:['alipay'],jimeng:['alipay','wechat'],kling:['alipay','wechat'],luma:['card']};
+ const expected={doubao:['alipay'],jimeng:['alipay','wechat'],kling:['alipay','wechat'],lovable:['alipay','wechat','card'],luma:['card']};
  for(const [id,channels] of Object.entries(expected)){
   const fact=m.researchedFact(id);
   assert.ok(fact?.paymentSource?.startsWith('https://'),id);
