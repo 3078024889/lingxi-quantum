@@ -9,6 +9,7 @@ const commands=[
  ["node",["scripts/test-security-release-v1.cjs"]],
  ["node",["scripts/test-subtitle-translation-v95.cjs"]],
  ["node",["scripts/test-transcript-captions-v139.cjs"]],
+ ["node",["scripts/test-whisper-real-timing-v143.cjs"]],
  ["node",["scripts/test-export-access-v92.cjs"]],
  ["node",["scripts/test-daily-export-api-v92.cjs"]],
  ["node",["scripts/test-file-delivery-v91.cjs"]],
