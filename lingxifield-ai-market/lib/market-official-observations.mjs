@@ -56,6 +56,21 @@ export function auditOfficialObservations(pack,batch,{today=new Date().toISOStri
       typeof f.scope!=='string'||f.scope.length<4||
       typeof f.text!=='string'||f.text.trim().length<16)
     issues.push({id:r.id,field:key,code:'BAD_SOURCE_OR_SCOPE'});
+   // Supplemental citations are also untrusted input: check original pinned host,
+   // HTTPS, date, scope and length instead of assuming any attached link is official.
+   if(f.additionalEvidence!==undefined){
+    if(!Array.isArray(f.additionalEvidence)||f.additionalEvidence.length===0||f.additionalEvidence.length>8)
+     issues.push({id:r.id,field:key,code:'INVALID_SUPPLEMENTAL_EVIDENCE_LIST'});
+    else for(const [index,e] of f.additionalEvidence.entries()){
+     const extraHost=urlHost(e?.source);
+     if(e?.status!=='observed'||
+        !r.officialHosts.some(root=>extraHost===root||extraHost?.endsWith('.'+root))||
+        !dateOnly(e?.checkedAt)||e.checkedAt>today||
+        typeof e?.scope!=='string'||e.scope.length<4||
+        typeof e?.text!=='string'||e.text.trim().length<16)
+      issues.push({id:r.id,field:key,index,code:'BAD_SUPPLEMENTAL_SOURCE_OR_SCOPE'});
+    }
+   }
   }
   if(Object.keys(facts).some(k=>!OFFICIAL_REQUIRED_FIELDS.includes(k)))
    issues.push({id:r.id,code:'EXTRA_UNKNOWN_FACT_FIELD'});
