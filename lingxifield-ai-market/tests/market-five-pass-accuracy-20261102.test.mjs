@@ -40,13 +40,17 @@ test('second/third-pass: Lovable task-cost example has source, no fake USD per t
  assert.equal(p.priceSource,'https://lovable.dev/pricing');
 });
 
-test('third/fifth-pass: Stripe provider support is not falsely asserted as Lovable merchant acceptance',()=>{
+test('third/fifth-pass: Stripe case explicitly documents Lovable-enabled wallets; checkout varies by country',()=>{
  const p=facts.lovable;
- assert.deepEqual(p.payments,['Link（Stripe Checkout；Stripe 官方 Lovable 案例确认使用）']);
  assert.equal(p.paymentSource,'https://stripe.com/customers/lovable');
- assert.doesNotMatch(p.payments.join(' '),/Alipay|WeChat|Apple Pay|Google Pay|iDEAL|Cash App|Amazon Pay/i);
- assert.match(p.region,/未提供逐国注册、付款渠道白名单/);
- assert.match(p.region,/不将 Stripe 全平台支持的钱包视为 Lovable 已开通/);
+ assert.equal(p.payments.length,9);
+ for(const method of ['Credit / debit card','Apple Pay','Google Pay','Cash App Pay','WeChat Pay','Alipay','iDEAL','Amazon Pay','Link']){
+  assert.ok(p.payments.some(m=>m.includes(method)),'documented merchant method '+method);
+ }
+ assert.match(p.region,/官方案例明确列出已启用/);
+ assert.match(p.region,/按所在国家、货币与账户等条件动态显示/);
+ assert.match(p.region,/不能保证每个国家每种钱包都可用/);
+ assert.match(p.region,/Stripe 自身覆盖的全部支付方式也不能直接视为 Lovable 已开通/);
 });
 
 test('fourth-pass: non-Chinese translations derive current prices, not stale locale placeholders',()=>{
