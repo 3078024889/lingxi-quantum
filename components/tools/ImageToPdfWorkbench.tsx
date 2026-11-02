@@ -32,7 +32,7 @@ function pageBox(size:PageSize,orientation:Orientation,imageW:number,imageH:numb
 export default function ImageToPdfWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]);
- const[pageSize,setPageSize]=useState<PageSize>("fit"),[orientation,setOrientation]=useState<Orientation>("auto"),[margin,setMargin]=useState<Margin>("small");
+ const[pageSize,setPageSize]=useState<PageSize>("fit"),[orientation,setOrientation]=useState<Orientation>("auto"),[margin,setMargin]=useState<Margin>("none");
  function move(index:number,direction:-1|1){setResult([]);setFiles(current=>{const next=[...current],target=index+direction;if(target<0||target>=next.length)return current;[next[index],next[target]]=[next[target],next[index]];return next})}
  async function run(){
   if(!files.length)return;setBusy(true);setError("");setResult([]);
