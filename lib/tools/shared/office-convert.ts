@@ -61,6 +61,7 @@ export function parseDelimited(text: string, delimiter: string) {
     cell += ch;
   }
 
+  if (quoted) throw new Error("CSV_UNTERMINATED_QUOTED_FIELD");
   row.push(cell.replace(/\r$/, ""));
   if (row.some((value) => value.length) || rows.length === 0) rows.push(row);
   return rows;
