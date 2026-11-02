@@ -59,20 +59,12 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
   },
   "lovable": {
     "payments": [
-      "Credit / debit card",
-      "Apple Pay",
-      "Google Pay",
-      "WeChat Pay",
-      "Alipay",
-      "iDEAL",
-      "Amazon Pay",
-      "Cash App Pay",
-      "Link"
+      "Link（Stripe Checkout；Stripe 官方 Lovable 案例确认使用）"
     ],
     "paymentSource": "https://stripe.com/customers/lovable",
-    "price": "Pro $25/月（月付参考）；免费档可使用基础构建额度",
+    "price": "Pro 套餐起价 $25/月（以现行官网方案及地区结算为准）；官方按任务积分示例：修改按钮颜色 0.50 credits、删除页脚 0.90 credits、增加注册登录 1.20 credits、生成含 3 张图片的落地页 1.70 credits。示例不是固定收费，复杂度及套餐影响积分消耗；不能直接换算为美元/次。",
     "priceSource": "https://lovable.dev/pricing",
-    "region": "官网订阅覆盖多个国家，结账时根据所在地动态显示可用钱包与银行卡",
+    "region": "Lovable 面向国际用户提供网站与应用构建服务，使用 Stripe 进行订阅与用量收费；官网案例未提供逐国注册、付款渠道白名单，不将 Stripe 全平台支持的钱包视为 Lovable 已开通。",
     "regionSource": "https://stripe.com/customers/lovable",
     "commercial": "用户通常拥有自己用 Lovable 建立的应用/网站及生成内容，但平台自身技术与第三方模型仍有独立权利",
     "commercialSource": "https://lovable.dev/terms",
@@ -559,9 +551,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercialSource": "https://github.com/ollama/ollama/blob/master/LICENSE"
   },
   "replit": {
-    "price": "Replit Starter 免费；Core $25/月（月付），年付折合 $20/月（含 $25/月积分）；Pro $100/月（月付），年付折合 $95/月",
+    "price": "Replit Starter 免费；Core $20/月（月付），年付折合 $18/月（全年结算）；Pro $100/月（月付），年付折合 $90/月（全年结算）；Enterprise 询价。Core 年付方案含每月 $20 的高级模型用量额度、Pro 年付方案含每月 $100 额度；超出免费模式与订阅额度的实际消耗依官方计费规则，不把订阅费当作单次生成价格。",
     "priceSource": "https://replit.com/pricing",
-    "free": "Starter 赠每日 Agent 积分，最多可发布 1 个项目；具体 Agent/发布/数据库使用上限由套餐限制",
+    "free": "Starter 提供免费入门体验；Replit 官网将 Free Mode 与付费计划的 Agent/项目额度分开披露，免费模式不等于无限高级模型调用；具体免费项目、AI 任务与发布额度以官方当前 Starter 套餐说明为准。",
     "freeSource": "https://replit.com/pricing",
     "payments": [
       "Credit / debit card（Replit Web 订阅）",
