@@ -1,0 +1,40 @@
+/* Native global SIAI ranking in LINGXIFIELD's existing sidebar shell. */
+.siai-home{width:100%;min-width:0;min-height:calc(100vh - 58px);padding:24px 16px 60px;background:#f8fbff;color:#183b65}
+.siai-home-head{margin:0 0 17px}.siai-kicker{font-size:12px;color:#4775ad;font-weight:750;margin:0 0 6px}
+.siai-home-head h1{font-size:clamp(25px,2.6vw,34px);line-height:1.3;margin:0 0 6px;font-weight:800}
+.siai-home-head>p:last-child{font-size:14px;color:#567391;line-height:1.65}
+.siai-home-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.siai-home-search{display:flex;align-items:center;gap:9px;max-width:540px;width:100%;padding:0 12px;background:#fff;border:1px solid #d5e3f4;border-radius:10px;min-height:42px}
+.siai-home-search>span{font-size:24px}.siai-home-search input{border:0;outline:0;background:transparent;color:#17385e;flex:1;min-width:0;font-size:14px;min-height:40px}
+.siai-home-count{font-size:14px;font-weight:700;color:#3b638b}
+.siai-home-categories{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.siai-home-categories button{background:#fff;border:1px solid #d8e6f5;border-radius:8px;color:#285383;padding:8px 12px;min-height:36px;font-size:14px;font-weight:650;cursor:pointer}
+.siai-home-categories button.selected{background:#e9f3ff;border-color:#92b9e9;color:#155ab8}
+.siai-home-table-scroll{width:100%;overflow-x:auto;overscroll-behavior-x:contain;border:1px solid #dde9f5;border-radius:11px;background:#fff}
+.siai-home-table-scroll:focus-visible{outline:2px solid #2370d2;outline-offset:2px}
+.siai-home-table{min-width:2200px;width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;color:#264d7b;font-size:14px}
+.siai-home-table th{padding:12px 10px;text-align:start;vertical-align:middle;background:#e9f2fc;color:#1c467b;font-weight:750;border-bottom:1px solid #d6e6f7;line-height:1.4}
+.siai-home-table th:nth-child(1){width:45px}.siai-home-table th:nth-child(2){width:260px}.siai-home-table th:nth-child(3){width:270px}.siai-home-table th:nth-child(4){width:230px}.siai-home-table th:nth-child(5){width:260px}.siai-home-table th:nth-child(6){width:215px}.siai-home-table th:nth-child(7){width:200px}.siai-home-table th:nth-child(8){width:245px}.siai-home-table th:nth-child(9){width:245px}.siai-home-table th:nth-child(10){width:130px}
+.siai-home-tr:nth-child(even){background:#f8fbff}.siai-home-tr:hover{background:#edf5ff}
+.siai-home-table td{padding:13px 10px;vertical-align:top;border-bottom:1px solid #e1ebf8;line-height:1.55;overflow-wrap:anywhere;white-space:normal}
+.siai-home-table td:first-child{font-weight:750;color:#2d63a1;text-align:center}
+.siai-home-table td>strong{font-size:14px;font-weight:650}
+.siai-home-identity>strong{font-size:16px!important;font-weight:800!important;display:block;margin-bottom:9px}
+.siai-home-identity dl{margin:0;padding:0;background:none;border:0;box-shadow:none;display:grid;gap:6px;min-width:0}
+.siai-home-identity dl>div{display:grid;grid-template-columns:80px minmax(0,1fr);gap:8px}
+.siai-home-identity dt{margin:0;font-size:13px;font-weight:500;color:#617c9a}
+.siai-home-identity dd{margin:0;font-size:14px;font-weight:650;color:#254a75;overflow-wrap:anywhere}
+.siai-source{display:block;font-size:13px;font-weight:600;color:#1862bd;text-decoration:underline;margin-top:8px}
+.siai-home-actions{display:flex;flex-direction:column;gap:8px;min-width:0}
+.siai-home-actions>a,.siai-home-actions>button{display:flex;width:100%;min-height:35px;justify-content:center;align-items:center;padding:8px;border-radius:7px;border:1px solid #bad2f0;background:#fff;color:#225b9a;font-size:13px;font-weight:650;text-align:center;cursor:pointer}
+.siai-home-actions>a.siai-open{background:#1265d2;border-color:#1265d2;color:#fff}
+.siai-home-actions>button:hover{background:#eaf4ff}
+.siai-home-detail{background:white;border:1px solid #dce9f7;border-radius:11px;padding:20px;margin:16px 0;font-size:14px;line-height:1.65}
+.siai-home-detail>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.siai-home-detail h2{font-size:22px;margin:0}.siai-home-detail>div:first-child button{font-size:22px;border:0;background:#e9f2fb;min-width:36px;min-height:36px;border-radius:8px;cursor:pointer}
+.siai-home-detail dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:15px 0}
+.siai-home-detail dl>div{min-width:0;border:1px solid #dceaf7;padding:12px;border-radius:9px}.siai-home-detail dt{font-weight:750}.siai-home-detail dd{margin:6px 0;overflow-wrap:anywhere}
+.siai-home-sources{display:flex;gap:10px;flex-wrap:wrap}.siai-home-sources a{color:#1265d2;text-decoration:underline}
+.siai-home-empty{font-size:14px;padding:26px;text-align:center}
+@media(max-width:1023px){.siai-home{padding:82px 10px 30px}.siai-home-categories{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px}}
+[dir="rtl"] .siai-home-table th{text-align:right}
