@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {allowedOfficialUrl,publicIp,robotsPermits,extractOfficialText,snapshotOfficialPage} from '../lib/market-safe-source-harvest.mjs';
+import {spawnSync} from 'node:child_process';
+import {mkdtempSync,readFileSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 const host=['fireworks.ai'];
 test('pinned HTTPS sources reject private origins, open redirects and forged vendor domains',()=>{
  assert.ok(allowedOfficialUrl('https://fireworks.ai/pricing',host));
@@ -44,4 +48,19 @@ test('robots denial and private DNS fail without visiting source page',async()=>
  await assert.rejects(()=>snapshotOfficialPage({url:'https://fireworks.ai/pricing',officialHosts:host,
   dnsLookup:async()=>[{address:'127.0.0.1',family:4}],fetchFn:mock}),/SOURCE_PRIVATE_IP_BLOCKED/);
  assert.equal(calls,1);
+});
+
+test('official snapshot CLI defaults to offline dry-run and creates evidence manifest',()=>{
+ const dir=mkdtempSync(join(tmpdir(),'siai-snapshot-'));
+ try{
+  const file=join(dir,'snapshots.json');
+  const r=spawnSync(process.execPath,[new URL('../scripts/snapshot-official-facts.mjs',import.meta.url).pathname,
+   '--max=4','--out='+file],{encoding:'utf8',timeout:15000});
+  assert.equal(r.status,0,r.stdout+'\n'+r.stderr);
+  const json=JSON.parse(readFileSync(file,'utf8'));
+  assert.equal(json.live,false);
+  assert.equal(json.autoApproval,false);
+  assert.equal(json.pages,4);
+  assert.ok(json.results.every(row=>row.status==='dry_run'));
+ }finally{rmSync(dir,{recursive:true,force:true})}
 });
