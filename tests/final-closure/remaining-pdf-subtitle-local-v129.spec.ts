@@ -1,6 +1,6 @@
 import {test,expect} from "./export-test";
 import type {Page} from "playwright";
-import {PDFDocument,StandardFonts,PDFName,rgb} from "pdf-lib";
+import {PDFDocument,StandardFonts,PDFName,PDFString,rgb} from "pdf-lib";
 import sharp from "sharp";
 import fs from "node:fs/promises";
 
@@ -115,9 +115,19 @@ test("document-copy-layout: two genuine image sides become one A4 JPEG-backed PD
  await expect(wb(page).getByTestId("result-file-actions")).toHaveCount(0);
 });
 
-test("pdf-bookmarks: real PDF with no outline honestly shows empty bookmark state",async({page})=>{
- await upload(page,"pdf-bookmarks",[{name:"no-bookmarks.pdf",buffer:await pdfFixture(1)}]);
+test("pdf-bookmarks: actual outline reference is displayed as title and navigable page",async({page})=>{
+ const d=await PDFDocument.load(await pdfFixture(2));
+ const outline=d.context.obj({Type:PDFName.of("Outlines"),Count:1});
+ const root=d.context.register(outline);
+ const destination=d.context.obj([d.getPage(1).ref,PDFName.of("Fit")]);
+ const item=d.context.obj({Title:PDFString.of("Chapter Two"),Parent:root,Dest:destination});
+ const ref=d.context.register(item);
+ outline.set(PDFName.of("First"),ref);
+ outline.set(PDFName.of("Last"),ref);
+ d.catalog.set(PDFName.of("Outlines"),root);
+ await upload(page,"pdf-bookmarks",[{name:"with-bookmark.pdf",buffer:Buffer.from(await d.save())}]);
  await wb(page).getByRole("button",{name:"Inspect PDF",exact:true}).click();
- await expect(wb(page)).toContainText("None",{timeout:60000});
+ await expect(wb(page)).toContainText("Chapter Two",{timeout:60000});
+ await expect(wb(page)).toContainText("· 2");
  await expect(wb(page).getByTestId("result-file-actions")).toHaveCount(0);
 });
