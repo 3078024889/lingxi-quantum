@@ -48,11 +48,11 @@
 .siai-home-identity{min-width:0}
 .siai-home-identity dd{word-break:break-word}
 @media(min-width:960px){
- .siai-home-table tr>*:first-child{position:sticky;inset-inline-start:0;z-index:2;width:45px;background:#fff}
- .siai-home-table tr>*:nth-child(2){position:sticky;inset-inline-start:45px;z-index:2;background:#fff;box-shadow:4px 0 7px rgba(20,57,99,.06)}
- .siai-home-table thead tr>*:first-child,.siai-home-table thead tr>*:nth-child(2){z-index:5;background:#e9f2fc}
- .siai-home-table tbody tr:nth-child(even)>*:first-child,.siai-home-table tbody tr:nth-child(even)>*:nth-child(2){background:#f8fbff}
- .siai-home-table tbody tr:hover>*:first-child,.siai-home-table tbody tr:hover>*:nth-child(2){background:#edf5ff}
+ .siai-home-table tbody tr.siai-home-tr>td:first-child{position:sticky;inset-inline-start:0;z-index:2;width:45px;background:#fff}
+ .siai-home-table tbody tr.siai-home-tr>td:nth-child(2){position:sticky;inset-inline-start:45px;z-index:2;background:#fff;box-shadow:4px 0 7px rgba(20,57,99,.06)}
+ .siai-home-table thead tr>th:first-child,.siai-home-table thead tr>th:nth-child(2){position:sticky;inset-inline-start:0;z-index:5;background:#e9f2fc}.siai-home-table thead tr>th:nth-child(2){inset-inline-start:45px}
+ .siai-home-table tbody tr.siai-home-tr:nth-child(even)>td:first-child,.siai-home-table tbody tr.siai-home-tr:nth-child(even)>td:nth-child(2){background:#f8fbff}
+ .siai-home-table tbody tr.siai-home-tr:hover>td:first-child,.siai-home-table tbody tr.siai-home-tr:hover>td:nth-child(2){background:#edf5ff}
 }
 @media(max-width:550px){
  .siai-home-head h1{font-size:24px}
@@ -61,3 +61,8 @@
  .siai-home-detail{padding:14px}
  .siai-home-detail dl{grid-template-columns:1fr}
 }
+
+/* Expanded rows always occupy all columns; never turn into sticky 45px cells. */
+.siai-home-table .siai-home-expanded-row>td{position:static!important;width:auto!important;min-width:0!important;max-width:none!important;padding:12px 16px!important;background:#f1f7ff!important}
+.siai-home-table .siai-home-expanded-row .siai-home-detail{margin:0;max-width:1300px;white-space:normal}
+.siai-home-table .siai-home-expanded-row .siai-home-detail dl{max-width:1200px}
