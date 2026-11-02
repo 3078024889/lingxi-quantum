@@ -38,12 +38,36 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "GitHub Copilot 官方 FAQ 声明 GitHub 不主张其生成的代码建议的所有权，但建议能否构成版权客体取决于适用法律；建议可能匹配公开代码及许可证，开发者必须自行复核安全性、授权与第三方知识产权，不能把使用 Copilot 等同于自动取得所有第三方代码商用许可。",
+          "source": "https://github.com/features/copilot/",
+          "checkedAt": "2026-11-02",
+          "scope": "no_github_ownership_claim_user_checks_public_code_licence",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "GitHub 官方负责任使用文档提醒用户审核建议、查看公共代码匹配及许可证信息。",
+              "source": "https://docs.github.com/en/copilot/responsible-use/inline-suggestions",
+              "checkedAt": "2026-11-02",
+              "scope": "public_code_matching_and_safety_review"
+            }
+          ]
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "GitHub 官方《支持的付款方式》载明未托管账户按量计费可用信用卡或 PayPal；Copilot 企业席位可使用信用卡、PayPal，受托管/企业账户可采用发票、Azure 订阅等不同方式；预付信用卡或借记卡不被视为有效付款方式，不能宣称所有国家及 Copilot 套餐结账完全相同。",
+          "source": "https://docs.github.com/en/billing/reference/supported-payment-methods",
+          "checkedAt": "2026-11-02",
+          "scope": "github_copilot_billing_by_account_type",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "企业和组织 Copilot Business/Enterprise 席位的信用卡及 PayPal 按账期结算，需按企业协议确认。",
+              "source": "https://docs.github.com/en/copilot/concepts/billing-and-usage/organizations-and-enterprises/seats-and-billing-cycles",
+              "checkedAt": "2026-11-02",
+              "scope": "enterprise_copilot_payment_methods"
+            }
+          ]
         },
         "company": {
           "status": "observed",
