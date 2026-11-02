@@ -55,7 +55,7 @@ test('all 32 products show publisher, founding and listing as three explicit loc
  const company=get('app/market-company-snapshot.tsx');
  const evidence=get('lib/market-company-evidence.ts');
  for(const literal of ['PUBLISHER_ROW','companyPresentationFor(p.id,p.company)','publisher.name','publisher.year','listingText','pubLabel.listed','capability?.capabilities.slice(0,3)'])assert.ok(row.includes(literal),literal);
- for(const locale of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(row,new RegExp('\\\\b'+locale+':\\\\{company:'));
+ for(const locale of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.ok(row.includes(locale+':{company:'),locale+' publisher locale copy');
  assert.ok(!row.includes('</button><small>{localizedCategory(language,p.category)}</small>'));
  assert.ok(company.includes("profile?.differentiator||profile?.headline||p.about"));
  assert.ok(company.includes('publisher.name'));
