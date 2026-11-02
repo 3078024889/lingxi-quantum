@@ -49,3 +49,27 @@ test('nine-language engineering connection caveats are not rendered',()=>{
  assert.ok(!access.includes("countryList.words.access+' · '+t.untested"));
  assert.ok(!access.includes('<small>{countryList.words.note}</small>'));
 });
+
+test('all 32 products show publisher, founding and listing as three explicit localized facts',()=>{
+ const row=get('app/market-matrix-row.tsx');
+ const company=get('app/market-company-snapshot.tsx');
+ const evidence=get('lib/market-company-evidence.ts');
+ for(const literal of ['PUBLISHER_ROW','companyPresentationFor(p.id,p.company)','publisher.name','publisher.year','listingText','pubLabel.listed','capability?.capabilities.slice(0,3)'])assert.ok(row.includes(literal),literal);
+ for(const locale of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(row,new RegExp('\\\\b'+locale+':\\\\{company:'));
+ assert.ok(!row.includes('</button><small>{localizedCategory(language,p.category)}</small>'));
+ assert.ok(company.includes("profile?.differentiator||profile?.headline||p.about"));
+ assert.ok(company.includes('publisher.name'));
+ assert.ok(company.includes('listingText'));
+ assert.ok(evidence.includes("dify:'LangGenius, Inc.'"));
+});
+test('SEO details and source-backed task card must never fall back to displaying product name as its only function',()=>{
+ const seo=get('app/[lang]/platform/[id]/page.tsx'),answers=get('app/market-verified-answers.tsx'),workbench=get('app/market-workbench.tsx');
+ assert.ok(seo.includes("capabilityProfile(id)?.headline||product.about"));
+ assert.ok(!seo.includes("return text||product.name;"));
+ assert.ok(seo.includes("profile.capabilities.map(item=>item.name+'：'+item.outcome)"));
+ assert.ok(seo.includes('featureList:'));
+ assert.ok(seo.includes('publisher.name'));
+ assert.ok(answers.includes("key:'tasks'"));
+ assert.ok(answers.includes('profile?.capabilities.slice(0,5)'));
+ assert.ok(workbench.includes('capabilityProfile(target.id)?.capabilities.map'));
+});
