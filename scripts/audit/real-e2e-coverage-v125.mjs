@@ -16,20 +16,19 @@ const current=new Map([
  ...group(["merge-pdf","qr-code-reader"],"tool-pdf-qr-e2e-v119"),
  ...group(["split-pdf"],"pdf-precision-split-v122"),
  ...group(["pdf-editor"],"pdf-editor-save-reopen-v123"),
- ...group(["image-to-pdf","pdf-to-jpg"],"tool-cross-workflow-v125")
+ ...group(["image-to-pdf","pdf-to-jpg"],"tool-cross-workflow-v125",
+ ...group(["case-converter","csv-json","xml-formatter","jwt-decoder","url-parser","number-base-converter","text-diff","regex-tester","uuid-generator","cron-parser"],"unverified-developer-real-v126"),
+ ...group(["pdf-to-text","pdf-to-markdown","pdf-page-numbers","pdf-watermark","pdf-crop","pdf-flatten","pdf-compare","pdf-search","pdf-inspect"],"unverified-pdf-real-v126"),
+ ...group(["jfif-to-jpg","gif-to-jpg","bmp-to-png","avif-to-jpg","svg-to-png","batch-image","long-image","qr-safe-reader"],"unverified-images-real-v126")
 ]);
 for(const [slug,file] of current){
  if(!slugs.includes(slug))throw Error("SCENARIO_NOT_PUBLIC_TOOL:"+slug);
  if(!read(file).includes(slug))throw Error("SCENARIO_EVIDENCE_FILE_MISSING_NAME:"+slug+":"+file);
 }
+// Only names still in the actual 124-slug public catalog count.
 const historical=new Map([
- ["pdf-to-txt","Historical real-file sample: 2026-11-01"],
  ["remove-exif","Historical real-file sample: 2026-11-01"],
- ["rotate-video","Historical real-file sample: 2026-11-01"],
- ["video-trim","Historical real-file sample: 2026-11-01"],
- ["video-compress","Historical real-file sample: 2026-11-01"],
- ["video-speed","Historical real-file sample: 2026-11-01"],
- ["video-mute","Historical real-file sample: 2026-11-01"]
+ ["rotate-video","Historical real-file sample: 2026-11-01"]
 ]);
 const rows=[["slug","evidence_status","committed_test_or_historical_sample","unproven_scope"]];
 for(const slug of slugs){
