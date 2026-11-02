@@ -53,10 +53,10 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
    const out:ToolResultFile[]=[];let originalKept=false,largerTransformed=false;
    for(let i=0;i<files.length;i++){
     const file=files[i],f=new FFmpeg();ff.current=f;
-    f.on("progress",({progress}:{progress:number})=>setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`));
+    f.on("progress",({progress}:{progress:number})=>{if(op===operationId.current)setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`)});
     await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
     if(op!==operationId.current)throw new Error("CANCELLED");
-    const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
+    const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));if(op!==operationId.current)throw new Error("CANCELLED");
     const stem=safeFilename(file.name.replace(/\.[^.]+$/,""),`video-${i+1}`),output=`output-${i}.mp4`;let name=`${stem}-processed.mp4`,args:string[]=[];
     if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(op!==operationId.current)throw new Error("CANCELLED");if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o);if(op!==operationId.current)throw new Error("CANCELLED");const bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);out.push({name,blob:new Blob([copy.buffer],{type:"audio/mpeg"}),mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}
     const base=["-i",input];
