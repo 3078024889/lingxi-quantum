@@ -43,7 +43,7 @@ for(const [slug,capKB]of caps)test(`image ${slug}: real JPEG download remains re
  await page.goto(`/tools/${slug}?lang=en`);
  const area=page.locator("[data-tool-workbench]");
  await area.locator('input[type="file"]').first().setInputFiles({name:"source.png",mimeType:"image/png",buffer:src});
- await area.getByRole("button",{name:/^Convert(?: ·|$)/}).click();
+ await area.getByRole("button",{name:"Process now"}).click();
  const actions=area.getByTestId("result-file-actions");
  await expect(actions).toBeVisible({timeout:30000});
  const waiting=page.waitForEvent("download");await actions.getByRole("button",{name:"Save file"}).click();
