@@ -27,15 +27,22 @@ test.describe("PDF editor visual quality",()=>{
  await textObject.click();
  await expect(page.getByTestId("pdf-object-toolbar")).toBeVisible();
  await expect(page.locator('button[aria-label^="Resize "]')).toHaveCount(8);
+ // On narrow/mobile viewports, clicking the text overlay may scroll its resize
+ // handle beneath the sticky app toolbar. Center the actual drag target.
+ const textResize=page.getByRole("button",{name:"Resize se"});
+ await textResize.evaluate((node:HTMLElement)=>node.scrollIntoView({block:"center",inline:"nearest",behavior:"instant"}));
+ await expect.poll(async()=>{
+  const b=await textResize.boundingBox(),viewport=page.viewportSize();
+  return Boolean(b&&viewport&&b.y>60&&b.y+b.height<viewport.height-25);
+ },{message:"The real resize handle must be inside the unobstructed mobile viewport"}).toBe(true);
  const before=await textObject.boundingBox();
- const handle=await page.getByRole("button",{name:"Resize se"}).boundingBox();
+ const handle=await textResize.boundingBox();
  expect(before).not.toBeNull();expect(handle).not.toBeNull();
  await page.mouse.move(handle!.x+handle!.width/2,handle!.y+handle!.height/2);
  await page.mouse.down();
  await page.mouse.move(handle!.x+handle!.width/2+36,handle!.y+handle!.height/2+20,{steps:4});
  await page.mouse.up();
- const after=await textObject.boundingBox();
- expect(after!.width).toBeGreaterThan(before!.width+10);
+ await expect.poll(async()=>{const now=await textObject.boundingBox();return now?.width??0},{timeout:10000,message:"Drag must actually expand the text overlay on mobile and desktop"}).toBeGreaterThan(before!.width+10);
  const rotateHandle=await page.getByRole("button",{name:"Rotation"}).boundingBox();
  await page.mouse.move(rotateHandle!.x+rotateHandle!.width/2,rotateHandle!.y+rotateHandle!.height/2);
  await page.mouse.down();
