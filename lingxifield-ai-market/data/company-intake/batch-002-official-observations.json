@@ -148,10 +148,10 @@
       "facts": {
         "price": {
           "status": "observed",
-          "text": "Tabnine 官网 Code Assistant 产品定价披露每用户每月 US$39，按年订阅；不是单次 API token 价格。",
+          "text": "Tabnine 官网现行企业订阅：Code Assistant US$39/用户/月，Agentic Platform US$59/用户/月，两档均以年度订阅计价并通过 Get a quote 询价；不是按月随时取消的月付报价。使用 Tabnine 提供的 LLM 访问需另购 token 额度，按模型供应商实际价格加收 5% 处理费；自带 LLM/模型端点的用量规则另按合同。",
           "source": "https://www.tabnine.com/pricing/",
           "checkedAt": "2026-11-02",
-          "scope": "per_user_annual_contract"
+          "scope": "annual_per_seat_two_distinct_plans_and_additional_provider_tokens_handling_fee"
         },
         "free": {
           "status": "observed",
@@ -180,7 +180,7 @@
         },
         "payment": {
           "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "reason": "官网企业价格通过 Get a quote 询价，尚未找到由 Tabnine 官方明确列出的信用卡、PayPal、银行转账等最终收款渠道及逐国限制；不可依据第三方转售网页推断。"
         },
         "company": {
           "status": "observed",
