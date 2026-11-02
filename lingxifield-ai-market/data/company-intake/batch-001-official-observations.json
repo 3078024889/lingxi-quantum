@@ -117,8 +117,11 @@
           "scope": "canva_designs_assets_license_not_all_ai_models"
         },
         "payment": {
-          "status": "missing",
-          "reason": "未从当前官方公开页面取得针对所有地区的具体结算方式"
+          "status": "observed",
+          "text": "Canva 官方支持 Visa、Mastercard、American Express 等信用卡/借记卡、PayPal，以及部分市场的本地支付渠道（如新加坡 GrabPay、印度 UPI、日本 PayPay、巴西 Pix）。PayPal 需电脑浏览器，限官网列出的支持币种；实际选项由地区、货币与结算页面决定，不能将所有方式视为全球可用。",
+          "source": "https://www.canva.com/en_au/help/payment-options/",
+          "checkedAt": "2026-11-02",
+          "scope": "region_scoped_checkout_rails"
         },
         "company": {
           "status": "observed",
@@ -160,8 +163,11 @@
           "reason": "未查询官方按国家列出的 Gamma 使用和支付覆盖"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "公开套餐功能不等于全部内容的可商用授权，合同条款待核对"
+          "status": "observed",
+          "text": "Gamma 服务条款允许按功能使用平台进行个人或内部业务工作；Gamma 不主张拥有用户提供的内容，但不因此将 Gamma 软件、第三方素材的权利转让给用户。条款对服务中的商业销售和广告等活动另有限制，应按具体用途核实，不等同于无条件商用授权。",
+          "source": "https://gamma.app/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "ownership_and_internal_business_use_with_restricted_commercial_activities"
         },
         "payment": {
           "status": "observed",
@@ -469,8 +475,11 @@
           "reason": "暂无全部国家地区的当前服务和模型许可核实"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "企业数据保留政策不同于生成内容商业许可，须独立审计条款"
+          "status": "observed",
+          "text": "Notion 官方明确：用户拥有输入内容及 Notion AI 输出（视为客户数据），Notion 不主张这些生成内容的所有权；使用仍受 Notion AI 补充条款、内容使用政策及第三方知识产权约束，不代表外部素材全部自动取得商业许可。",
+          "source": "https://www.notion.com/help/notion-ai-security-practices",
+          "checkedAt": "2026-11-02",
+          "scope": "ai_input_output_customer_owned_subject_to_acceptable_use"
         },
         "payment": {
           "status": "observed",
@@ -511,20 +520,29 @@
           "scope": "vendor_public_page"
         },
         "models": {
-          "status": "missing",
-          "reason": "Figma Make 功能介绍可核实，但底层模型、模型版本与推理成本未逐项公布"
+          "status": "observed",
+          "text": "Figma Make 模型选择器官方列明：默认模型（可能更新）、GPT-5.6 Terra、GPT-6.1 Sol、Claude Sonnet 4.5、Claude Opus 5.5、Gemini 3.8 Flash 与 Gemini 4 Argon；不同模型消耗的 AI 积分不同，部分 Gemini 模型优惠仅持续至 2026年11月30日或12月31日。",
+          "source": "https://help.figma.com/hc/en-us/articles/36400680326551-Select-an-AI-model-to-use-in-Figma-Make",
+          "checkedAt": "2026-11-02",
+          "scope": "current_model_selector_and_time_limited_model_credit_promotions"
         },
         "regions": {
           "status": "missing",
           "reason": "地区可用和 AI 模型限制尚未按国家核对"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "Figma Make 生成代码及设计的完整商业授权条款待核实"
+          "status": "observed",
+          "text": "Figma Make 可制作、下载和发布功能原型或网页应用；官方明确提醒生成代码及内容可能引用互联网的字体、代码包、图片，发布者须自行确认这些第三方内容的使用许可。Figma 只提供产品功能说明，不能将所有输出视为无条件可商用授权。",
+          "source": "https://help.figma.com/hc/en-us/articles/31304485164695-Create-a-Figma-Make-file",
+          "checkedAt": "2026-11-02",
+          "scope": "user_must_license_third_party_generated_content"
         },
         "payment": {
-          "status": "missing",
-          "reason": "未取得全球席位付款方式的官方逐国说明"
+          "status": "observed",
+          "text": "Figma 官方账单说明：Professional 套餐支持信用卡付款及部分 SEPA 扣款情形；新购 Professional 升级当前仅接受信用卡；目前不支持 PayPal、ACH 或电汇，Organization 与 Enterprise 账单方式依管理后台与合约调整。不能统一标注为 PayPal 可用。",
+          "source": "https://help.figma.com/hc/en-us/articles/360040532093-Manage-payment-and-invoice-details",
+          "checkedAt": "2026-11-02",
+          "scope": "professional_sepa_credit_card_no_paypal"
         },
         "company": {
           "status": "observed",
