@@ -11,7 +11,7 @@ const source=readFileSync(new URL('lib/market-api-service-catalog.ts',root),'utf
 const match=source.match(/const ALL=\[([^\]]+)\] as const;/);
 if(!match)throw Error('CURATED_SOURCE_CHANGED');
 const ids=[...match[1].matchAll(/'([^']+)'/g)].map(m=>m[1]);
-const result=auditGlobalIntake(cohorts,facts,ids,{today:'2026-11-02'});
+const result=auditGlobalIntake(cohorts,facts,ids,{today:new Date().toISOString().slice(0,10)});
 console.log(JSON.stringify(result,null,2));
 if(!result.allBatchesSafe||result.stagedProducts!==30||result.publishedProducts!==32)
  process.exitCode=1;

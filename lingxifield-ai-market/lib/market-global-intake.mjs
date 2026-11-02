@@ -8,7 +8,7 @@ const safeDate=value=>typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)
 const host=value=>{try{const x=new URL(value);
  return x.protocol==='https:'&&!x.username&&!x.password&&!x.port&&!x.hash?x.hostname.toLowerCase():null;
 }catch{return null}};
-export function auditGlobalIntake(batches,observations,curatedIds,{today='2026-11-02'}={}){
+export function auditGlobalIntake(batches,observations,curatedIds,{today=new Date().toISOString().slice(0,10)}={}){
  if(!Array.isArray(batches)||!Array.isArray(observations)||!Array.isArray(curatedIds))
   throw Error('INVALID_GLOBAL_COHORT_INPUT');
  const issues=[],ids=new Set(curatedIds),aliases=new Map(),reports=[];

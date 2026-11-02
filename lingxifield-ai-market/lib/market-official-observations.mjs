@@ -9,7 +9,7 @@ const urlHost=value=>{
  }catch{return null}
 };
 const dateOnly=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v)&&!Number.isNaN(Date.parse(v+'T00:00:00Z'));
-export function auditOfficialObservations(pack,batch,{today='2026-11-02'}={}){
+export function auditOfficialObservations(pack,batch,{today=new Date().toISOString().slice(0,10)}={}){
  if(!pack||!batch||!Array.isArray(pack.products)||!Array.isArray(batch.products))throw Error('OFFICIAL_BATCH_INVALID');
  const issues=[],totals={observed:0,missing:0,conflict:0},perProduct=[];
  if(pack.schema!=='lingxifield_candidate_official_observations_v1'||pack.batch!==batch.batch||

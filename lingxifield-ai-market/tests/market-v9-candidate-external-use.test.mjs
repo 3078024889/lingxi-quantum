@@ -22,3 +22,10 @@ test('no sign-in, generated output, exported file or paid transaction without ev
  bad.items[0].checks.runTask.status='passed';
  assert.ok(auditCandidateRealUseAcceptance(bad,ids).issues.some(x=>x.code==='UNPROVEN_REAL_USE_CHECK'));
 });
+
+test('date defaults in cohort auditors track the current date without allowing future-dated documents',()=>{
+ const root=readFileSync(new URL('../lib/market-global-intake.mjs',import.meta.url),'utf8');
+ const official=readFileSync(new URL('../lib/market-official-observations.mjs',import.meta.url),'utf8');
+ assert.match(root,/today=new Date\(\)\.toISOString\(\)\.slice\(0,10\)/);
+ assert.match(official,/today=new Date\(\)\.toISOString\(\)\.slice\(0,10\)/);
+});
