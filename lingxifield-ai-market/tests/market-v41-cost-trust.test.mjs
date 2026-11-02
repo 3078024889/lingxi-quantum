@@ -183,7 +183,7 @@ test('FAQ, publisher invite, footer and payment channels are translated for nine
 
 test('V43 official payment documentation covers domestic AI and international checkout',async()=>{
  const m=await import(pathToFileURL(path.join(ROOT,'lib/market-researched-facts.ts')).href);
- const expected={doubao:['alipay'],jimeng:['alipay','wechat'],kling:['alipay','wechat'],lovable:['alipay','wechat','card'],luma:['card']};
+ const expected={doubao:['alipay'],jimeng:['alipay','wechat'],kling:['alipay','wechat'],luma:['card']};
  for(const [id,channels] of Object.entries(expected)){
   const fact=m.researchedFact(id);
   assert.ok(fact?.paymentSource?.startsWith('https://'),id);
@@ -194,6 +194,10 @@ test('V43 official payment documentation covers domestic AI and international ch
    if(key==='card')assert.match(words,/credit \/ debit card/,id);
   }
  }
+ const lovable=m.researchedFact('lovable');
+ assert.equal(lovable.paymentSource,'https://stripe.com/customers/lovable');
+ assert.match(lovable.payments.join(' '),/Link/);
+ assert.doesNotMatch(lovable.payments.join(' '),/Alipay|WeChat|credit \/ debit card|iDEAL|Amazon Pay/i);
  assert.equal(m.researchedFact('kling').extraPaymentSource.includes('qingque.cn'),true);
  assert.equal(m.researchedFact('doubao').paymentSource.includes('draftstatic'),true);
 });
