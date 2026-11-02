@@ -8,7 +8,7 @@ export async function GET(req:Request){
  if(!secret||req.headers.get("authorization")!==`Bearer ${secret}`)return NextResponse.json({error:"UNAUTHORIZED"},{status:401});
  const admin=createAdminClient();
  const {data:notes,error}=await admin.from("burn_notes").select("id").or(`expires_at.lt.${new Date().toISOString()},consumed_at.lt.${new Date(Date.now()-300000).toISOString()}`).limit(100);
- if(error)return NextResponse.json({ok:false,error:"NOTE_QUERY_FAILED"},{status:503});
+ if(error)return NextResponse.json({ok:false,error:"NOTE_QUERY_FAILED"},{status:503,headers:{"Cache-Control":"no-store"}});
  let deletedObjects=0,deletedNotes=0,deferredNotes=0,fileQueryErrors=0,objectDeleteErrors=0;
  for(const note of notes||[]){
   const records=await admin.from("burn_files").select("object_key").eq("note_id",note.id);
