@@ -26,6 +26,22 @@ export function auditSourceCoverage(rows){
  }
  return {total:rows.length,fieldCoverage,fullySourcedProducts:rows.length-missingByProduct.length,missingByProduct};
 }
+/** Explicit currency prices are not the same as self-hosted costs or unit API rates. */
+export function auditPriceDetail(rows){
+ if(!Array.isArray(rows))throw Error('INVALID_PRODUCT_ROWS');
+ const priced=[],notQuoted=[],freeSelfHosted=[];
+ const currencies=/(?:[$€£¥]|(?:USD|CNY|EUR|GBP)\\s*)\\s*\\d+(?:[.,]\\d+)?|\\d+(?:[.,]\\d+)?\\s*(?:元|美元|人民币|USD|CNY|EUR|GBP)/i;
+ for(const r of rows){
+  if(!r||!hasText(r.id))throw Error('INVALID_PRODUCT_ID');
+  const price=r.facts?.price||'';
+  if(hasText(price)&&httpsSource(r.facts?.priceSource)&&currencies.test(price))priced.push(r.id);
+  else notQuoted.push(r.id);
+  if(/(?:开源|自托管|本地).{0,28}免费|免费.{0,28}(?:开源|自托管|本地)/i.test(price))freeSelfHosted.push(r.id);
+ }
+ return {total:rows.length,explicitCurrencyAmountProducts:priced.length,pricedIds:priced,
+  withoutFixedCurrencyQuote:notQuoted,freeSelfHostedIds:freeSelfHosted,
+  methodology:'An absent fixed subscription is not a defect for free SDKs; listed money is not necessarily a developer API or region-independent checkout price.'};
+}
 export function auditCompanyCoverage(rows){
  if(!Array.isArray(rows))throw Error('INVALID_COMPANY_ROWS');
  const publishers=new Map();
