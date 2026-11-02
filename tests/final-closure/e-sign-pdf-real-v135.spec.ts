@@ -46,6 +46,11 @@ test("e-sign PDF: draw by hand, move and resize signature, add user stamp, expor
  await page.mouse.move(h!.x+h!.width/2+30,h!.y+h!.height/2+15,{steps:5});await page.mouse.up();
  const after=await first.boundingBox();
  expect(after!.width).toBeGreaterThan(before!.width+7);
+ const moveFrom=await first.boundingBox();expect(moveFrom).not.toBeNull();
+ const mx=moveFrom!.x+moveFrom!.width*.5,my=moveFrom!.y+moveFrom!.height*.5;
+ await page.mouse.move(mx,my);await page.mouse.down();
+ await page.mouse.move(mx+35,my-18,{steps:6});await page.mouse.up();
+ await expect.poll(async()=>((await first.boundingBox())?.x??0)-moveFrom!.x).toBeGreaterThan(10);
  await page.locator("label").filter({hasText:"Add stamp"}).locator('input[type="file"]').setInputFiles({name:"owned-stamp.png",mimeType:"image/png",buffer:stamp});
  await expect(overlays).toHaveCount(2);
  await page.getByRole("button",{name:"Preview",exact:true}).click();
