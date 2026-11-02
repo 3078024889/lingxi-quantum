@@ -13,7 +13,7 @@ export type SiaiHomeRow={
  id:string;name:string;company:string;legal:string|null;legalScope:"service_operator"|"group_parent"|null;
  kind:"company"|"open_source_project"|"software_library";listing:"listed_parent"|"unconfirmed"|"not_applicable";
  ipoFiling:boolean;year:string|null;companySource:string|null;legalSource:string|null;listingSource:string|null;yearSource:string|null;
- category:string;about:string;strength:string;features:string[];free:string;freeSource:string|null;
+ category:string;about:string;strength:string;features:string[];searchTerms:string[];free:string;freeSource:string|null;
  price:string;priceSource:string|null;region:string;regionSource:string|null;payment:string;paymentSource:string|null;
  models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;
 };
