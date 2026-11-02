@@ -85,7 +85,8 @@
       "id": "devin-desktop",
       "name": "Devin Desktop",
       "officialHosts": [
-        "devin.ai"
+        "devin.ai",
+        "cognition.com"
       ],
       "reviewStatus": "unapproved",
       "facts": {
@@ -115,8 +116,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Devin Desktop 官网直接链接 Cognition AI, Inc. 于2026年6月30日更新的平台服务条款。第2.1条允许客户与授权用户在订阅期间为内部业务使用服务；第3.1条将代码、建议及其他 Output 中可转让的权利归于客户（以适用法律允许为限）。并不授权转售 Devin 软件、复制其平台或使用服务训练竞争模型；生成代码的第三方知识产权和正确性仍需自行审核。",
+          "source": "https://cognition.com/legal/platform-terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_linked_cognition_platform_terms_internal_business_output_ownership"
         },
         "payment": {
           "status": "missing",
@@ -147,8 +151,11 @@
           "scope": "per_user_annual_contract"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Tabnine 2026 年官网公布对 NVIDIA Inception / NVIDIA Connect 合格成员开放 30 天试用：最多可申请 10 个 Tabnine Enterprise SaaS 许可证。这是有资格与审批要求的合作伙伴试点，不等于所有用户均有免费套餐或永久赠送额度；其官网普通 Code Assistant 商业方案另按用户年度订阅报价。",
+          "source": "https://www.tabnine.com/nvidia-benefit/",
+          "checkedAt": "2026-11-02",
+          "scope": "restricted_nvidia_inception_connect_30day_partner_trial_not_general_free"
         },
         "models": {
           "status": "observed",
@@ -183,7 +190,7 @@
     },
     {
       "id": "mistral-le-chat",
-      "name": "Le Chat / Mistral",
+      "name": "Mistral Vibe（原 Le Chat）",
       "officialHosts": [
         "mistral.ai"
       ],
@@ -222,15 +229,27 @@
           "scope": "consumer_output_ownership_vs_business_terms"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Mistral 2026 年 Vibe 官方帮助中心确认：Vibe Pro/Team 网页订阅在 Mistral 管理控制台录入账单信息，可月付或年付；iOS 和 Android App 订阅分别经 Apple App Store、Google Play 结算；特定移动运营商 Free Mobile、Orange、NJU 也有运营商账单渠道。具体网页银行卡或 PayPal 品类未在此页逐一确认，不能宣称所有地区支持全部方式。Vibe 套餐结算与开发者 Studio API 另行计算。",
+          "source": "https://help.mistral.ai/en/articles/455205-how-can-i-upgrade-or-cancel-my-vibe-subscription",
+          "checkedAt": "2026-11-02",
+          "scope": "vibe_web_appstore_googleplay_carrier_subscription_channels_not_universal_card_rails"
         },
         "company": {
           "status": "observed",
           "text": "Mistral 官方商业条款载明运营法人 Mistral AI，为法国股份制公司（SAS），巴黎注册编号 952 418 325，注册地址 15 rue des Halles, 75001 Paris, France；特定企业订单可能由协议列明的关联法人提供，不代表 Mistral 为上市公司。",
           "source": "https://legal.mistral.ai/terms/commercial-terms-of-service/",
           "checkedAt": "2026-11-02",
-          "scope": "registered_french_contracting_entity_company_number_not_listing"
+          "scope": "registered_french_contracting_entity_company_number_not_listing",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Mistral 官方 2026-08-12 品牌通知：Le Chat 更名为 Vibe；旧账户、付费套餐、对话和内容都迁移保留，官方继续使用 chat.mistral.ai 作为入口，功能分 Vibe Work、Vibe Code 与 Vibe Chat。",
+              "source": "https://help.mistral.ai/en/articles/682992-le-chat-is-now-vibe",
+              "checkedAt": "2026-11-02",
+              "scope": "official_2026_product_rename_keep_legal_company_and_stable_id"
+            }
+          ]
         }
       }
     },
@@ -271,12 +290,18 @@
           "scope": "170plus_markets_mainland_excluded_hk_exception"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Microsoft Copilot 个人版 2026年8月18日生效的补充条款规定：用户保留其内容权益，微软不因提供 Copilot 而取得用户内容的所有权；Copilot 个人版仅授权个人用途，不应将个人账户视为商业企业授权。企业版 Microsoft 365 Copilot 的使用和客户数据权利另依企业协议及产品条款，生成结果能否受版权保护和第三方素材许可需用户独立判断。",
+          "source": "https://www.microsoft.com/en-us/microsoft-copilot/for-individuals/termsofuse",
+          "checkedAt": "2026-11-02",
+          "scope": "consumer_personal_use_only_business_licensing_separate"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "微软官方账户支付说明：个人 Microsoft 账户可添加信用卡、借记卡、银行账户、PayPal 或移动电话付款。具体 Microsoft 365/Copilot 订阅可用方式按地区和账户性质不同，以购买页面为准；本资料不代表 Copilot 在所有国家均支持这些方法。",
+          "source": "https://support.microsoft.com/en-us/accounts-billing/add-a-new-bank-or-credit-card-to-your-microsoft-account",
+          "checkedAt": "2026-11-02",
+          "scope": "account_billing_methods_not_guaranteed_copilot_plan"
         },
         "company": {
           "status": "observed",
@@ -423,8 +448,11 @@
       "reviewStatus": "unapproved",
       "facts": {
         "price": {
-          "status": "missing",
-          "reason": "The official billing terms for this exact plan, region and cycle are not fully corroborated."
+          "status": "observed",
+          "text": "Recraft 2026年10月16日官方文章确认美国美元月付起价：Basic USD 12/月（1,000 积分/月），Pro USD 20/月起；Free 免费版最多每日生成 30 张图片，但免费作品公开且不附商业使用权。官网另有年付优惠与 API 按单次操作积分计价，金额和功能须区分套餐、结算周期与 API 使用。",
+          "source": "https://www.recraft.ai/blog/best-ai-ad-generators",
+          "checkedAt": "2026-11-02",
+          "scope": "official_october_2026_monthly_basic_pro_price_and_free_limits"
         },
         "free": {
           "status": "observed",
@@ -526,8 +554,11 @@
           "scope": "subscription_license_scope"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Freepik 旗下 Magnific AI 的订阅帮助列明信用/借记卡、关联银行卡或付款卡的 PayPal、Google Pay 和 Apple Pay，要求支持国际和周期性交易；该 Magnific 套餐以欧元结算。这里只确认 Magnific 订阅，不推断 Freepik 平台其他 AI 产品的收款方法。",
+          "source": "https://www.freepik.com/ai/faq/payment-methods",
+          "checkedAt": "2026-11-02",
+          "scope": "magnific_subscription_payment_methods_only"
         },
         "company": {
           "status": "observed",

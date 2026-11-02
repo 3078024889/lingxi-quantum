@@ -17,6 +17,7 @@ const LEGAL_NAMES=Object.freeze({
  'fal-ai':'Features & Labels, Inc.',
  'together-ai':'Together Computer, Inc.',
  'groqcloud':'Groq, Inc.',
+ 'fireworks-ai':'Fireworks.ai, Inc.',
  'openrouter':'OpenRouter, Inc.'
 });
 function officialUrl(url,hosts){

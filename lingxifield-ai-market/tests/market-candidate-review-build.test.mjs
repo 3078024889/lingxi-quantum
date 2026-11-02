@@ -16,7 +16,7 @@ test('all 30 candidate products and 28 deduplicated publisher groups materialize
  assert.equal(r.candidateProducts,30);
  assert.equal(r.publisherGroups,28);
  assert.equal(r.factCells,210);
- assert.deepEqual(r.totals,{observed:172,missing:38,conflict:0});
+ assert.deepEqual(r.totals,{observed:186,missing:24,conflict:0});
  assert.equal(new Set(r.products.map(p=>p.id)).size,30);
  assert.ok(r.products.every(p=>p.visibleToPublic===false&&p.publishApproved===false&&p.seoIndex===false));
  assert.equal(r.products.find(p=>p.id==='cursor').legalEntity,'Anysphere, Inc.');
@@ -97,7 +97,7 @@ test('CLI produces complete 30-row HTML and normalized JSON without altering pub
   const html=readFileSync(htmlFile,'utf8');
   assert.equal(j.candidateProducts,30);
   assert.equal(j.publisherGroups,28);
-  assert.equal(j.totals.missing,38);
+  assert.equal(j.totals.missing,24);
   assert.match(html,/30 款候选产品内部审核/);
   assert.match(html,/Anysphere, Inc\./);
   assert.equal(j.products.some(p=>p.publishApproved),false);

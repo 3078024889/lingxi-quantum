@@ -83,10 +83,10 @@
     },
     {
       "id": "mistral-le-chat",
-      "name": "Le Chat / Mistral",
+      "name": "Mistral Vibe（原 Le Chat）",
       "company": "Mistral AI",
       "category": "综合助手",
-      "website": "https://mistral.ai/pricing/",
+      "website": "https://chat.mistral.ai/",
       "evidenceUrl": "https://mistral.ai/pricing/",
       "tasks": [
         "AI问答与研究",
@@ -99,7 +99,9 @@
       ],
       "publisherGroupId": "mistral-ai",
       "aliases": [
-        "le-chat"
+        "Le Chat",
+        "Mistral Le Chat",
+        "Mistral Vibe"
       ],
       "discoveredAt": "2026-11-02",
       "discoverySource": "https://mistral.ai/pricing/",

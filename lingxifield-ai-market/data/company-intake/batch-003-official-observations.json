@@ -383,8 +383,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Together AI 2026年5月19日服务条款第7条：用户保留输入和输出的权利；第三方模型的知识产权仍属于各模型提供商。业务使用必须遵守相应模型许可与知识产权要求，不代表可无限制商业转售平台服务。",
+          "source": "https://www.together.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "user_content_output_rights_subject_to_model_terms"
         },
         "payment": {
           "status": "observed",
@@ -418,8 +421,20 @@
           "scope": "serverless_and_gpu_separate"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Fireworks 2026 年官方 API 供应商对比文章明确记载新账户提供 USD 1 的试用积分，Fireworks 账单帮助页说明用完试用额度后须绑定付款方式方可继续调用 API。此为一次性小额试用权益，非长期免费推理套餐；具体注册时是否仍发放需以实时账户页面为准，不把活动专享的 USD 100 抵扣券算作普通注册赠金。",
+          "source": "https://fireworks.ai/blog/best-llm-api-providers",
+          "checkedAt": "2026-11-02",
+          "scope": "official_2026_marketing_signup_one_dollar_credit_not_live_account_test",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Fireworks 账单 FAQ 说明试用 USD 1 积分用尽后无付款方式的账户会暂停服务，继续使用须按实际调用付费。",
+              "source": "https://fireworks.ai/docs/faq-new/billing-pricing/what-happens-when-i-finish-my-1-dollar-credit",
+              "checkedAt": "2026-11-02",
+              "scope": "one_dollar_promotion_spend_cap_vs_real_api_billing"
+            }
+          ]
         },
         "models": {
           "status": "observed",
@@ -433,16 +448,25 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Fireworks 2026年7月10日服务条款第3.2条确认：用户与 Fireworks 之间，输入及生成输出内容权利属于用户；输出仍须符合第三方模型的具体许可及知识产权要求。平台自身源码和模型权重不因此转让给用户。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "user_input_output_ownership_and_model_license_limit"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Fireworks 2026年7月10日官方服务条款第8.2及8.3节：付费服务使用有效付款卡，Stripe 为指定第三方收款处理机构；官网当前介绍推理 API 使用预付积分，按模型 Token 用量计费。未确认 PayPal、支付宝或微信支付可用于 Fireworks 结账。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "paid_card_stripe_2026_and_usage_credits"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Fireworks 2026年7月10日官网服务条款明确合同提供主体为 Fireworks.ai, Inc.；官方隐私政策也载明同名公司。此为法律经营主体，不据此推定上市或成立年份。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_service_operator_fireworks_ai_inc"
         }
       }
     },
@@ -480,8 +504,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Groq 2026年6月22日现行服务协议第8.1条：客户保留其输入、输出、应用和训练数据的知识产权；Groq 保留云服务技术权利。用户仍须遵守对应第三方 AI 模型许可、出口管制及合同限制。",
+          "source": "https://console.groq.com/docs/legal/services-agreement",
+          "checkedAt": "2026-11-02",
+          "scope": "current_customer_generated_output_rights_model_terms"
         },
         "payment": {
           "status": "observed",

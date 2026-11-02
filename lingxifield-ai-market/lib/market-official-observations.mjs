@@ -24,11 +24,17 @@ export function auditOfficialObservations(pack,batch,{today=new Date().toISOStri
   seen.add(r.id);
   const c=targets.get(r.id);
   const batchEvidenceHost=urlHost(c.evidenceUrl),batchWebsiteHost=urlHost(c.website);
+// Exact vendor-to-parent cross-origin policy; Devin's own footer links this
+// Cognition contract. Never let arbitrary sibling domains or evidence URLs
+// expand this whitelist without a separately documented official link.
+const linkedHost=(r.id==='devin-desktop'&&batchWebsiteHost==='devin.ai'&&
+ batchEvidenceHost==='devin.ai')?'cognition.com':null;
   if(!Array.isArray(r.officialHosts)||!r.officialHosts.length||r.officialHosts.some(h=>
        !urlHost('https://'+h)||h!==h.toLowerCase()||h.split('.').length<2||
        h.includes('/')||h.includes('..')||
        ![batchEvidenceHost,batchWebsiteHost].some(host=>
-          host&&(host===h||host.endsWith('.'+h)||h.endsWith('.'+host)))))
+          host&&(host===h||host.endsWith('.'+h)||h.endsWith('.'+host)))&&
+       h!==linkedHost))
    issues.push({id:r.id,code:'INVALID_PUBLISHER_HOST_PIN'});
   if(r.reviewStatus!=='unapproved'||c.reviewed!==false||c.publishApproved!==false||
      batch.visibleToPublic!==false||batch.intakePaused!==true)
