@@ -5,6 +5,7 @@ import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository'
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
 import {researchedFact} from '../../../../lib/market-researched-facts';
 import {companyEvidenceFor,companyPresentationFor} from '../../../../lib/market-company-evidence';
+import MarketPublisherFacts from '../../../market-publisher-facts';
 import {capabilityProfile} from '../../../../lib/capability-profiles';
 import {localizeCompanyEvidence} from '../../../../lib/market-company-evidence-locale';
 import {questionForProduct} from '../../../../lib/market-user-task-queries.mjs';
@@ -73,11 +74,8 @@ export default async function LocalProduct({params}:PageParams){
  const useful=(value:string|undefined)=>Boolean(value&&value.trim()&&!/^(待核验|暂无|—|unknown|n.?a|not verified)$/i.test(value.trim()));
  const companyWords=({zh:['公司','成立','地区','融资','上市','规模'],en:['Company','Founded','Location','Funding','Listing','Scale'],ja:['企業','設立','地域','調達','上場','規模'],ko:['회사','설립','지역','투자','상장','규모'],fr:['Entreprise','Création','Siège','Financement','Cotation','Taille'],de:['Firma','Gründung','Sitz','Finanzierung','Börse','Größe'],es:['Empresa','Fundación','Sede','Financiación','Bolsa','Tamaño'],pt:['Empresa','Fundação','Sede','Investimento','Bolsa','Dimensão'],ar:['الشركة','تأسست','المنطقة','التمويل','الإدراج','الحجم']} as Record<Language,string[]>)[l];
  const companyFacts=[
-  {value:publisher.name,label:companyWords[0],source:publisher.companySource||companyEvidence?.publisherSource},
-  {value:publisher.year||undefined,label:companyWords[1],source:publisher.yearSource||undefined},
   {value:companyEvidence?.headquarters?.text,label:companyWords[2],source:companyEvidence?.headquarters?.source},
   {value:companyEvidence?.funding?.text,label:companyWords[3],source:companyEvidence?.funding?.source},
-  {value:companyEvidence?.listing?.text||listingCopy[publisher.listingState==='not_applicable'?1:0],label:companyWords[4],source:companyEvidence?.listing?.source},
   {value:companyEvidence?.scale?.text,label:companyWords[5],source:companyEvidence?.scale?.source},
   {value:companyEvidence?.projectStarted?.text,label:l==='zh'?'项目起源':'Project origin',source:companyEvidence?.projectStarted?.source}
  ].filter(x=>useful(x.value));
@@ -93,13 +91,13 @@ export default async function LocalProduct({params}:PageParams){
   [w[5],commercial?.condition||facts?.commercial,commercial?.source||facts?.commercialSource],
   [paymentHeading,payments.methods.map(x=>localizedPaymentName(x,l)).join(' · '),undefined]
  ] as const;
- const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:displayName,description:summary,url:p.website,publisher:{'@type':'Organization',name:publisher.name,url:publisher.companySource||p.website},applicationCategory:localizedCategory(l,p.category),featureList:l==='zh'?profile?.capabilities.map(item=>item.name+'：'+item.outcome):undefined};
+ const jsonld={'@context':'https://schema.org','@type':'SoftwareApplication',name:displayName,description:summary,url:p.website,publisher:{'@type':'Organization',name:publisher.name,...(publisher.legalEntity?{legalName:publisher.legalEntity}:{}),url:publisher.companySource||p.website},applicationCategory:localizedCategory(l,p.category),featureList:l==='zh'?profile?.capabilities.map(item=>item.name+'：'+item.outcome):undefined};
  return <main lang={l} dir={l==='ar'?'rtl':'ltr'} className="marketLocalizedProduct">
   <nav><Link href={'/'+l+'/ai'}>{w[9]}</Link></nav>
   <header><small>LINGXIFIELD · GLOBAL SI AI MARKET</small><h1>{displayName}</h1><p>{summary}</p><span>{localizedCategory(l,p.category)}</span></header>
   <section className="marketLocalizedCompany">
    <h2>{({zh:'公司简介',en:'Company overview',ja:'企業概要',ko:'회사 소개',fr:'Profil de l’entreprise',de:'Firmenprofil',es:'Empresa',pt:'Empresa',ar:'نبذة عن الشركة'} as Record<Language,string>)[l]}</h2>
-   <p>{summary}</p><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong>{fact.source&&<a href={fact.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a>}</span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
+   <p>{summary}</p><MarketPublisherFacts publisher={publisher} language={l} showSources/><div className="marketLocalizedCompanyFacts">{companyFacts.map((fact,i)=><span key={i}><small>{fact.label}</small><strong>{fact.value}</strong>{fact.source&&<a href={fact.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a>}</span>)}<a href={p.website} target="_blank" rel="noopener noreferrer">{p.domain} ↗</a></div>
    {team&&l==='zh'&&<p>{team.summary} <a href={team.source} target="_blank" rel="noopener noreferrer">{w[7]} ↗</a></p>}
   </section>
   {id==='chatgpt'?<MarketCodexSection language={l}/>:null}

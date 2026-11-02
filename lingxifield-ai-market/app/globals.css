@@ -1172,3 +1172,28 @@ body{font-size:16px;line-height:1.6}
 .productLinks>a:focus-visible{outline:3px solid #1e55bb;outline-offset:3px}
 [dir='rtl'] .productLinks{text-align:start}
 @media(max-width:640px){.productLinks{gap:8px}.productLinks>a{flex:1 1 145px;padding:11px 12px}}
+
+/* Verified corporate identity directly beneath the publisher name.
+   One vertical card, four facts, no company/legal-entity inference. */
+.marketPublisherIdentity{display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:0;max-width:100%}
+.marketPublisherFactStack{display:flex;flex-direction:column;gap:8px;box-sizing:border-box;min-width:0;
+ max-width:100%;width:min(100%,480px);padding:11px 13px;margin:10px 0 12px;
+ background:var(--market-identity-bg,#f5f9ff);border:1px solid #dce8f5;border-radius:11px;
+ text-align:start;overflow-wrap:anywhere}
+.marketPublisherFactStackCompact{padding:8px 10px;gap:6px;margin:3px 0 0}
+.marketPublisherFact{display:grid;grid-template-columns:minmax(82px,36%) minmax(0,1fr);
+ align-items:start;gap:9px;min-width:0;line-height:1.45}
+.marketPublisherFact dt{margin:0;color:#4f6886;font-size:14px;font-weight:550;white-space:normal}
+.marketPublisherFact dd{margin:0;min-width:0;color:#183552;font-size:14px;font-weight:650;overflow-wrap:anywhere}
+.marketPublisherFact dd a{display:inline-block;margin-inline-start:7px;font-weight:500;font-size:14px;color:#1460ac;text-decoration:underline}
+.app .marketOverviewIdentity .marketPublisherFactStack{max-width:100%;white-space:normal}
+.app .marketOverviewIdentity .marketPublisherFact :is(dt,dd){font-size:14px!important;line-height:1.4}
+.app .marketOverviewIdentity .marketPublisherFactStackCompact{min-width:190px}
+.app .marketOverviewIdentity .platformName:focus-visible{outline:2px solid #2376bd;outline-offset:4px}
+.marketCompanySnapshot .marketPublisherFactStack,.marketLocalizedCompany .marketPublisherFactStack{max-width:580px}
+[dir="rtl"] .marketPublisherFactStack{text-align:start}
+@media(max-width:760px){
+ .marketPublisherFactStack{width:100%;padding:9px 10px}
+ .marketPublisherFact{grid-template-columns:minmax(82px,38%) minmax(0,1fr);gap:7px}
+ .app .marketOverviewIdentity .marketPublisherFactStackCompact{min-width:192px}
+}

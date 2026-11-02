@@ -50,16 +50,20 @@ test('nine-language engineering connection caveats are not rendered',()=>{
  assert.ok(!access.includes('<small>{countryList.words.note}</small>'));
 });
 
-test('all 32 products show publisher, founding and listing as three explicit localized facts',()=>{
- const row=get('app/market-matrix-row.tsx');
- const company=get('app/market-company-snapshot.tsx');
+test('all 32 products display verified legal, company, listing and founding in a single four-row panel',()=>{
+ const row=get('app/market-matrix-row.tsx'),company=get('app/market-company-snapshot.tsx');
+ const panel=get('app/market-publisher-facts.tsx');
  const evidence=get('lib/market-company-evidence.ts');
- for(const literal of ['PUBLISHER_ROW','companyPresentationFor(p.id,p.company)','publisher.name','publisher.year','listingText','pubLabel.listed','capability?.capabilities.slice(0,3)'])assert.ok(row.includes(literal),literal);
- for(const locale of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.ok(row.includes(locale+':{company:'),locale+' publisher locale copy');
- assert.ok(!row.includes('</button><small>{localizedCategory(language,p.category)}</small>'));
+ assert.ok(row.includes('companyPresentationFor(p.id,p.company)'));
+ assert.ok(row.includes('<MarketPublisherFacts publisher={publisher} language={language} compact/>'));
+ assert.ok(row.includes('capability?.capabilities.slice(0,3)'));
  assert.ok(company.includes("profile?.differentiator||profile?.headline||p.about"));
- assert.ok(company.includes('publisher.name'));
- assert.ok(company.includes('listingText'));
+ assert.ok(company.includes('<MarketPublisherFacts publisher={publisher} language={language} showSources/>'));
+ for(const locale of ['zh','en','ja','ko','fr','de','es','pt','ar'])
+  assert.ok(panel.includes(locale+':{company:'),locale+' publisher locale copy');
+ for(const field of ['t.company','t.legal','t.listing','t.founded'])
+  assert.ok(panel.includes(field),field);
+ assert.ok(!row.includes('</button><small>{localizedCategory(language,p.category)}</small>'));
  assert.ok(evidence.includes("dify:'LangGenius, Inc.'"));
 });
 test('SEO details and source-backed task card must never fall back to displaying product name as its only function',()=>{

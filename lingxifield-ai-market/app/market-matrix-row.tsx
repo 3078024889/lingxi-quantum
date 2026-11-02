@@ -15,6 +15,7 @@ import {localizedProductSummary} from '../lib/market-product-locale';
 import {localizedCatalogFact,localizedLoginFact} from '../lib/market-fact-locale';
 import {researchedFact} from '../lib/market-researched-facts';
 import {companyPresentationFor} from '../lib/market-company-evidence';
+import MarketPublisherFacts from './market-publisher-facts';
 import {capabilityProfile} from '../lib/capability-profiles';
 
 const columns:Record<Language,string[]>={
@@ -62,8 +63,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
 }){
  const t=MARKET_SCREEN_COPY[language],h=marketRowTitles(language),specific=SPECIFIC[language];
  const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id),research=researchedFact(p.id);
- const publisher=companyPresentationFor(p.id,p.company),pubLabel=PUBLISHER_ROW[language],capability=capabilityProfile(p.id);
- const listingText=publisher.listingState==='listed_parent'?pubLabel.parent:publisher.listingState==='not_applicable'?pubLabel.openProject:pubLabel.noListing;
+ const publisher=companyPresentationFor(p.id,p.company),capability=capabilityProfile(p.id);
  const r=region==='GLOBAL'?null:globalRegionFact(p.id,region);
  const regionList=regionPresentation(p.id,language);
  const regionText=r?regionCopy(language).status[r.policy.status]:(regionList.total?(regionList.complete?regionList.words.complete:regionList.words.partial):regionList.words.empty);
@@ -99,7 +99,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
    <td className="marketOverviewIdentity" data-label={h[1]}>
     <button type="button" className="platformName" onClick={onDetail}>
      <span className="brandIcon" aria-hidden="true">{p.symbol}</span>
-     <span className="marketPublisherIdentity"><strong>{p.name}</strong><small>{pubLabel.company} · {publisher.name}</small><small>{publisher.kind==='company'?pubLabel.founded:pubLabel.project} · {publisher.year||pubLabel.noYear}</small><small>{pubLabel.listed} · {listingText}</small></span>
+     <span className="marketPublisherIdentity"><strong>{p.name}</strong><MarketPublisherFacts publisher={publisher} language={language} compact/></span>
     </button>
    </td>
    <td className="marketOverviewStrength" data-label={h[2]}>

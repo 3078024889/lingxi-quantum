@@ -14,7 +14,21 @@ const allowed={
 
 test('standalone SIAI app has a path-scoped release gate and isolated PostgreSQL security gate',()=>{
  const files=readdirSync(workflowDir).filter(name=>name.startsWith('ai-market-')&&name.endsWith('.yml')).sort();
- assert.deepEqual(files,['ai-market-postgres-isolated.yml','ai-market-standalone-gate.yml']);
+ assert.deepEqual(files,['ai-market-discover-companies.yml','ai-market-postgres-isolated.yml','ai-market-standalone-gate.yml']);
+ const discovery=readFileSync(resolve(workflowDir,'ai-market-discover-companies.yml'),'utf8');
+ assert.match(discovery,/github\.ref == 'refs\/heads\/main'/);
+ assert.match(discovery,/refs\/heads\/bot\/siai-discovery/);
+ assert.match(discovery,/discover-ai-publishers\.mjs/);
+ assert.match(discovery,/discover-ai-publishers\.test\.mjs/);
+ assert.match(discovery,/productionPublishAllowed/);
+ assert.doesNotMatch(discovery,/refs\/heads\/main.*git push/);
+ const discoveryActions=[...discovery.matchAll(/uses:\s*(actions\/(?:checkout|setup-node|upload-artifact))@([^\s#]+)/g)];
+ assert.equal(discoveryActions.length,3);
+ for(const [,action,sha] of discoveryActions){
+  assert.match(sha,/^[a-f0-9]{40}$/,action+': discovery action must be pinned');
+  if(action==='actions/upload-artifact')assert.equal(sha,'ea165f8d65b6e75b540449e92b4886f43607fa02');
+  else assert.ok(allowed[action]?.has(sha),action+': discovery action must be pinned to audited release');
+ }
  const release=readFileSync(resolve(workflowDir,'ai-market-standalone-gate.yml'),'utf8');
  const postgres=readFileSync(resolve(workflowDir,'ai-market-postgres-isolated.yml'),'utf8');
  assert.match(release,/working-directory:\s*lingxifield-ai-market/);
