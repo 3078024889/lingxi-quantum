@@ -16,13 +16,13 @@ test('all 30 candidate products and 28 deduplicated publisher groups materialize
  assert.equal(r.candidateProducts,30);
  assert.equal(r.publisherGroups,28);
  assert.equal(r.factCells,210);
- assert.deepEqual(r.totals,{observed:188,missing:22,conflict:0});
- assert.deepEqual(r.geography,{missing:21,restrictions_only:6,provider_specific_restrictions:1,
-  broad_market_statement:1,other_observation_not_country_proof:1,country_by_country_verified:0});
+ assert.deepEqual(r.totals,{observed:192,missing:18,conflict:0});
+ assert.deepEqual(r.geography,{missing:17,restrictions_only:8,provider_specific_restrictions:2,
+  broad_market_statement:1,other_observation_not_country_proof:2,country_by_country_verified:0});
  assert.equal(r.products.find(p=>p.id==='microsoft-copilot').regionEvidenceQuality,'broad_market_statement');
  assert.equal(r.products.find(p=>p.id==='adobe-firefly').regionEvidenceQuality,'restrictions_only');
  assert.equal(r.products.find(p=>p.id==='openrouter').regionEvidenceQuality,'provider_specific_restrictions');
- assert.equal(r.products.find(p=>p.id==='cursor').regionEvidenceQuality,'missing');
+ assert.equal(r.products.find(p=>p.id==='cursor').regionEvidenceQuality,'provider_specific_restrictions');
  assert.equal(r.products.find(p=>p.id==='gamma').regionEvidenceQuality,'other_observation_not_country_proof');
  assert.equal(new Set(r.products.map(p=>p.id)).size,30);
  assert.ok(r.products.every(p=>p.visibleToPublic===false&&p.publishApproved===false&&p.seoIndex===false));
@@ -46,7 +46,7 @@ test('real source-backed 7-field data is attached, no missing field becomes fict
     assert.ok(f.checkedAt&&f.scope&&f.text,p.id+':'+name)}
   }
  }
- assert.equal(r.products.find(p=>p.id==='cursor').regionalEvidence,'not_documented');
+ assert.equal(r.products.find(p=>p.id==='cursor').regionalEvidence,'restriction_or_model_specific');
 });
 
 test('candidate review HTML has 30 directly expandable product rows and in-cell legal/company facts',()=>{
@@ -61,7 +61,7 @@ test('candidate review HTML has 30 directly expandable product rows and in-cell 
   assert.ok(html.includes(name),name);
  assert.match(html,/noindex,nofollow,noarchive/);
  assert.match(html,/Content-Security-Policy/);
- assert.match(html,/21 款尚无地区资料/);
+ assert.match(html,/17 款尚无地区资料/);
  assert.match(html,/6 款只有限制条款/);
  assert.match(html,/1 款受模型供应商限制/);
  assert.match(html,/逐国账号与支付验证通过：0 款/);
@@ -110,7 +110,7 @@ test('CLI produces complete 30-row HTML and normalized JSON without altering pub
   const html=readFileSync(htmlFile,'utf8');
   assert.equal(j.candidateProducts,30);
   assert.equal(j.publisherGroups,28);
-  assert.equal(j.totals.missing,22);
+  assert.equal(j.totals.missing,18);
   assert.match(html,/30 款候选产品内部审核/);
   assert.match(html,/Anysphere, Inc\./);
   assert.equal(j.products.some(p=>p.publishApproved),false);
