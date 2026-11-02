@@ -15,6 +15,9 @@ test('ten candidates each have seven explicit sourced/missing observations; no p
 test('changes to manufacturer source hosts cannot launder fake pricing',()=>{
  const v=structuredClone(pack);v.products[0].facts.price.source='https://cursor.com.attacker.invalid/price';
  assert.ok(auditOfficialObservations(v,batch).issues.some(x=>x.code==='BAD_SOURCE_OR_SCOPE'));
+ const forged=structuredClone(pack);forged.products[0].officialHosts=['attacker.invalid'];
+ forged.products[0].facts.price.source='https://attacker.invalid/special';
+ assert.ok(auditOfficialObservations(forged,batch).issues.some(x=>x.code==='INVALID_PUBLISHER_HOST_PIN'));
 });
 test('future-dated claims and arbitrary products are rejected',()=>{
  const v=structuredClone(pack);v.products[1].facts.price.checkedAt='2027-01-01';
@@ -25,6 +28,8 @@ test('future-dated claims and arbitrary products are rejected',()=>{
 test('conflicts remain explicit; old Pika free quota and legacy Cursor pricing never silently become approved',()=>{
  const p=pack.products.find(x=>x.id==='pika'),c=pack.products.find(x=>x.id==='cursor');
  assert.equal(p.facts.free.status,'conflict');assert.equal(c.facts.price.status,'conflict');
+ assert.match(p.facts.free.conflictingSource,/pika\.art\/faq/);
+ assert.match(c.facts.price.conflictingSource,/prod\.cursor\.com/);
  assert.match(p.facts.free.text,/150/);assert.match(p.facts.free.text,/0/);
  assert.match(c.facts.price.text,/Plus \$8/);assert.match(c.facts.price.text,/Pro \$20/);
 });

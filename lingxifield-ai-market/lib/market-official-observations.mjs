@@ -23,8 +23,12 @@ export function auditOfficialObservations(pack,batch,{today='2026-11-02'}={}){
   }
   seen.add(r.id);
   const c=targets.get(r.id);
-  if(!Array.isArray(r.officialHosts)||!r.officialHosts.length||r.officialHosts.some(h=>!urlHost('https://'+h)||
-       h!==h.toLowerCase()||h.includes('/')||h.includes('..')))
+  const batchEvidenceHost=urlHost(c.evidenceUrl),batchWebsiteHost=urlHost(c.website);
+  if(!Array.isArray(r.officialHosts)||!r.officialHosts.length||r.officialHosts.some(h=>
+       !urlHost('https://'+h)||h!==h.toLowerCase()||h.split('.').length<2||
+       h.includes('/')||h.includes('..')||
+       ![batchEvidenceHost,batchWebsiteHost].some(host=>
+          host&&(host===h||host.endsWith('.'+h)||h.endsWith('.'+host)))))
    issues.push({id:r.id,code:'INVALID_PUBLISHER_HOST_PIN'});
   if(r.reviewStatus!=='unapproved'||c.reviewed!==false||c.publishApproved!==false||
      batch.visibleToPublic!==false||batch.intakePaused!==true)
@@ -36,6 +40,12 @@ export function auditOfficialObservations(pack,batch,{today='2026-11-02'}={}){
     issues.push({id:r.id,field:key,code:'INVALID_FACT_STATUS'});continue;
    }
    totals[f.status]++;counts[f.status]++;
+   if(f.status==='conflict'){
+    const other=urlHost(f.conflictingSource),onBrand=Array.isArray(r.officialHosts)&&r.officialHosts.some(root=>
+     other===root||other?.endsWith('.'+root));
+    if(!onBrand||f.conflictingSource===f.source)
+      issues.push({id:r.id,field:key,code:'CONFLICT_SECOND_SOURCE_REQUIRED'});
+   }
    if(f.status==='missing'){
     if(typeof f.reason!=='string'||f.reason.trim().length<12||f.source!==undefined||f.text!==undefined)
      issues.push({id:r.id,field:key,code:'INVALID_MISSING_REASON'});

@@ -17,7 +17,8 @@
           "text": "当前主站显示 Free $0、Plus $8/月、Premium $30/月、Super $100/月、Ultra $200/月；旧 Pro $20/月、Pro+ $60/月另属历史方案，不可当成同一套餐。",
           "source": "https://cursor.com/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "current_subscription_vs_legacy"
+          "scope": "current_subscription_vs_legacy",
+          "conflictingSource": "https://prod.cursor.com/help/account-and-billing/pricing"
         },
         "free": {
           "status": "observed",
@@ -168,10 +169,11 @@
         },
         "free": {
           "status": "conflict",
-          "text": "新定价及 FAQ 显示 Free $0、每月固定赠送积分为 0，可另购积分包；旧 FAQ 仍写 Basic 每月 150 积分，属于版本冲突。",
+          "text": "较新的页面摘录显示 Free 套餐每月固定赠送积分为 0、按包购积分；官方历史完整定价页曾显示 Basic 每月 80 积分，另一版 FAQ 提及 150 积分。三个页面版本存在差异，禁止未经核查直接发布免费额度。",
           "source": "https://pika.art/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "current_vs_legacy_FAQ"
+          "scope": "current_vs_legacy_FAQ",
+          "conflictingSource": "https://pika.art/faq"
         },
         "models": {
           "status": "missing",
