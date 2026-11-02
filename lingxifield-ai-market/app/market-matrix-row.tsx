@@ -13,7 +13,6 @@ import type {MarketPayment} from '../lib/market-v36-screening';
 import {commercialEvidence} from '../lib/market-commercial-evidence';
 import {localizedProductSummary} from '../lib/market-product-locale';
 import {localizedCatalogFact,localizedLoginFact} from '../lib/market-fact-locale';
-import {localizedCategory} from '../lib/market-home-i18n';
 import {researchedFact} from '../lib/market-researched-facts';
 import {companyPresentationFor} from '../lib/market-company-evidence';
 import {capabilityProfile} from '../lib/capability-profiles';
@@ -101,7 +100,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
     <button type="button" className="platformName" onClick={onDetail}>
      <span className="brandIcon" aria-hidden="true">{p.symbol}</span>
      <span className="marketPublisherIdentity"><strong>{p.name}</strong><small>{pubLabel.company} · {publisher.name}</small><small>{publisher.kind==='company'?pubLabel.founded:pubLabel.project} · {publisher.year||pubLabel.noYear}</small><small>{pubLabel.listed} · {listingText}</small></span>
-    </button><small>{localizedCategory(language,p.category)}</small>
+    </button>
    </td>
    <td className="marketOverviewStrength" data-label={h[2]}>
     <strong>{localizedProductSummary(p.id,language)||summary.headline}</strong>
