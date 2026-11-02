@@ -253,19 +253,6 @@
     "privacyMode": "local-first"
   },
   {
-    "slug": "compress-pdf",
-    "capabilities": [
-      "document.compress",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
     "slug": "cron-parser",
     "capabilities": [
       "text.transform"
@@ -443,21 +430,6 @@
     "privacyMode": "local-first"
   },
   {
-    "slug": "heic-local",
-    "capabilities": [
-      "image.decode",
-      "image.convert",
-      "image.encode",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
     "slug": "heic-to-jpg",
     "capabilities": [
       "image.decode",
@@ -514,20 +486,6 @@
   },
   {
     "slug": "image-to-pdf",
-    "capabilities": [
-      "image.decode",
-      "document.overlay.image",
-      "download.local"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "local-first"
-  },
-  {
-    "slug": "image-to-pdf-pro",
     "capabilities": [
       "image.decode",
       "document.overlay.image",
