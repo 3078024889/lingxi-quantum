@@ -51,10 +51,11 @@
         },
         "company": {
           "status": "observed",
-          "text": "Cursor 当前订阅页为 X Subscription，厂商法务/母公司关系需作为独立实体继续核查，不能沿用旧主体结论。",
-          "source": "https://cursor.com/pricing",
+          "text": "Cursor 官方服务条款载明经营主体为 Anysphere, Inc.；2026-08-14 Cursor 官方公告被 SpaceX 收购。软件品牌、经营主体与母集团应分别存储。",
+          "source": "https://cursor.com/en-US/terms-of-service",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "vendor_public_page",
+          "supportingSource": "https://prod.cursor.com/blog/joining-spacex"
         }
       }
     },
@@ -355,10 +356,11 @@
         },
         "company": {
           "status": "observed",
-          "text": "Leonardo.Ai 官方订阅页为产品来源；公司成立及所有权历史尚未独立核实。",
-          "source": "https://leonardo.ai/pricing",
+          "text": "Leonardo.Ai 隐私政策记载法律主体 Leonardo Interactive Pty Ltd，属于 Canva 品牌；独立订阅产品不可重复当作独立集团。",
+          "source": "https://leonardo.ai/privacy-policy",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "vendor_public_page",
+          "supportingSource": "https://www.canva.com/newsroom/news/leonardo-ai/"
         }
       }
     },
@@ -511,6 +513,26 @@
           "scope": "vendor_public_page"
         }
       }
+    }
+  ],
+  "publisherOwnership": [
+    {
+      "productId": "cursor",
+      "legalEntity": "Anysphere, Inc.",
+      "parentGroup": "SpaceX",
+      "relatedCandidateProductId": null,
+      "evidenceUrl": "https://prod.cursor.com/blog/joining-spacex",
+      "legalEntitySource": "https://cursor.com/en-US/terms-of-service",
+      "status": "source_observed_unapproved"
+    },
+    {
+      "productId": "leonardo",
+      "legalEntity": "Leonardo Interactive Pty Ltd",
+      "parentGroup": "Canva",
+      "relatedCandidateProductId": "canva-magic-studio",
+      "evidenceUrl": "https://leonardo.ai/privacy-policy",
+      "legalEntitySource": "https://leonardo.ai/privacy-policy",
+      "status": "source_observed_unapproved"
     }
   ]
 }

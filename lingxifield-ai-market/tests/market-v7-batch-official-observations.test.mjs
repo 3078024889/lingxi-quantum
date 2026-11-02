@@ -38,3 +38,19 @@ test('candidate pack alone cannot change canonical public catalog',()=>{
  assert.doesNotMatch(s,/batch-001-official-observations/);
  assert.ok(batch.products.every(x=>x.reviewed===false&&x.publishApproved===false));
 });
+
+test('Canva and Leonardo are two products but one ownership group, not two unrelated corporations',()=>{
+ const relation=pack.publisherOwnership.find(x=>x.productId==='leonardo');
+ assert.equal(relation.relatedCandidateProductId,'canva-magic-studio');
+ assert.equal(relation.parentGroup,'Canva');
+ assert.equal(relation.legalEntity,'Leonardo Interactive Pty Ltd');
+ const r=auditOfficialObservations(pack,batch);assert.equal(r.ownershipRelations,2);
+});
+test('ownership relation cannot point to unknown parent or forged external evidence host',()=>{
+ const forged=structuredClone(pack);
+ forged.publisherOwnership[1].relatedCandidateProductId='fake-brand';
+ assert.ok(auditOfficialObservations(forged,batch).issues.some(x=>x.code==='UNSUPPORTED_PARENT_OWNERSHIP_SOURCE'));
+ const spoof=structuredClone(pack);
+ spoof.publisherOwnership[0].evidenceUrl='https://fake-space-company.invalid/acquired';
+ assert.ok(auditOfficialObservations(spoof,batch).issues.some(x=>x.code==='UNSUPPORTED_PARENT_OWNERSHIP_SOURCE'));
+});

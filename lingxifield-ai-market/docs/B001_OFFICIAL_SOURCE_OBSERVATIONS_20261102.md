@@ -13,3 +13,8 @@ Important conflicts:
 No scraping of third-party copyrighted listings or backfilling synthetic traffic/SEO was used. `npm run validate:official-intake` rejects duplicate candidate keys, forged source hosts, invalid dates, bad missing reasons and leak into public approvals; `node scripts/validate-company-official-observations.mjs --publication` intentionally fails while data has not been independently approved. Official source observations need human/editor validation before being copied into `verifiedFacts` and published.
 
 Next: country policies and documented company legal identity, further Terms verification, source archive hashes, account-based workflow testing, independent reviewer approvals. Recheck fast-changing plans against official pages at publish time.
+
+### Publisher ownership evidence from original vendor/parent publications
+- **Cursor**: its September 2026 Terms say Anysphere, Inc. operates the software; its August 14, 2026 official company post states SpaceX acquired Cursor. Legal entity, brand and corporate parent must remain separate keys. Sources: https://cursor.com/en-US/terms-of-service and https://prod.cursor.com/blog/joining-spacex.
+- **Leonardo.Ai**: legal entity `Leonardo Interactive Pty Ltd` according to its 2026 privacy policy; this is a Canva brand after Canva's 2024 acquisition. Sources: https://leonardo.ai/privacy-policy and https://www.canva.com/newsroom/news/leonardo-ai/.
+- These 10 candidate **products** should not be advertised as 10 independent corporate groups. Canva + Leonardo share the same ownership group. Current 32 curated company identities must be reconciled separately before company-count reporting; no automatic source backfill or publication.

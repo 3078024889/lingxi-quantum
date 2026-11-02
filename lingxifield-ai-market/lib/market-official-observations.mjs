@@ -61,9 +61,32 @@ export function auditOfficialObservations(pack,batch,{today='2026-11-02'}={}){
    issues.push({id:r.id,code:'EXTRA_UNKNOWN_FACT_FIELD'});
   perProduct.push({id:r.id,...counts,needsReview:counts.missing+counts.conflict});
  }
+ const ownershipSeen=new Set();
+ for(const rel of pack.publisherOwnership||[]){
+  if(!rel||!targets.has(rel.productId)||ownershipSeen.has(rel.productId)||
+     typeof rel.legalEntity!=='string'||rel.legalEntity.length<3||
+     typeof rel.parentGroup!=='string'||rel.parentGroup.length<2||
+     rel.status!=='source_observed_unapproved'){
+   issues.push({id:rel?.productId,code:'INVALID_OWNERSHIP_RELATION'});continue;
+  }
+  ownershipSeen.add(rel.productId);
+  const original=targets.get(rel.productId);
+  const originalHost=urlHost(original.evidenceUrl)||urlHost(original.website);
+  const validRelated=rel.relatedCandidateProductId===null||(
+   typeof rel.relatedCandidateProductId==='string'&&
+   rel.relatedCandidateProductId!==rel.productId&&
+   targets.has(rel.relatedCandidateProductId));
+  const related=validRelated&&rel.relatedCandidateProductId?targets.get(rel.relatedCandidateProductId):null;
+  const relatedHost=related?(urlHost(related.evidenceUrl)||urlHost(related.website)):null;
+  const allowedHosts=[originalHost,relatedHost].filter(Boolean);
+  const sourceHosts=[urlHost(rel.evidenceUrl),urlHost(rel.legalEntitySource)];
+  if(!validRelated||sourceHosts.some(h=>!h||!allowedHosts.some(root=>
+     h===root||h.endsWith('.'+root)||root.endsWith('.'+h))))
+   issues.push({id:rel.productId,code:'UNSUPPORTED_PARENT_OWNERSHIP_SOURCE'});
+ }
  if(seen.size!==targets.size||pack.products.length!==targets.size)
    issues.push({code:'BATCH_COVERAGE_MISMATCH',want:targets.size,got:seen.size});
- return {batch:pack.batch,products:pack.products.length,...totals,perProduct,
+ return {batch:pack.batch,products:pack.products.length,ownershipRelations:ownershipSeen.size,...totals,perProduct,
    readyForEditorialReview:issues.length===0,
    readyForPublication:false, // always fail-closed; a source observation is never authenticated editorial approval
    issues};
