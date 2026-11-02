@@ -53,7 +53,9 @@ jobs:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/delivery-results.json
       - name: Record exact real-operation coverage (not a completion claim)
         if: always()
-        run: node scripts/audit/real-e2e-coverage-v118.mjs
+        run: |
+          node scripts/audit/real-e2e-coverage-v118.mjs
+          node scripts/audit/real-e2e-coverage-v125.mjs
       - name: Preserve evidence including failures
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
