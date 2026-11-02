@@ -21,11 +21,11 @@ test('major five country list and expandable sourced remainder, in all nine lang
  const model=await read('lib/region-presentation.ts');
  const row=await read('app/market-matrix-row.tsx');
  const css=await read('app/globals.css');
- assert.ok(model.includes('top:sorted.slice(0,8),other:sorted.slice(8)'));
+ assert.ok(model.includes('top:sorted.slice(0,5),other:sorted.slice(5)'));
  assert.match(model,/id==='gemini'\?\['HK','US','JP','SG','GB','AU'\]/);
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(model,new RegExp('\\b'+lang+':\\{top:'));
  assert.match(component,/marketRegionTopFive/);
- assert.ok(component.includes('countryList.other.length>0&&<div className="globalSupportedCountries"'));
+ assert.ok(component.includes('countryList.other.length>0&&<details className="globalSupportedCountries"'));
  assert.match(component,/countryList\.complete\?countryList\.words\.complete:countryList\.words\.partial/);
  assert.match(row,/globalRegionSummary\(p\.id,language\)/);
  assert.match(row,/regionList\.source/);
