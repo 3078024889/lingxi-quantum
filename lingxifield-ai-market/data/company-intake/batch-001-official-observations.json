@@ -102,8 +102,20 @@
           "scope": "vendor_public_page"
         },
         "models": {
-          "status": "missing",
-          "reason": "官网主要按 Magic Studio 功能出售，未核定单一代表基础模型及版本"
+          "status": "observed",
+          "text": "Canva 2026年10月官方公布自研图像生成模型 Canva Craft：Dream Lab 已提供该模型，支持最高 2K 与多种宽高比；同月推出 Canva Brush 视觉语言模型，为符合条件的 Canva Pro 用户提供设计编辑。Canva Magic Studio 由多个功能与模型组成，不能把 Craft/Brush 描述为所有 Magic Studio 工具统一的唯一底层模型。",
+          "source": "https://www.canva.com/newsroom/news/canva-craft/",
+          "checkedAt": "2026-11-02",
+          "scope": "2026_craft_in_dream_lab_and_brush_design_edits_not_every_magic_studio_tool",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Canva 官网 2026年10月发布 Canva Brush，明确用于支持范围内的 Canva AI 设计编辑并首先面向 Canva Pro；可用范围将逐步扩大。",
+              "source": "https://www.canva.com/newsroom/news/canva-brush/",
+              "checkedAt": "2026-11-02",
+              "scope": "brush_vision_language_design_edits_pro_rollout"
+            }
+          ]
         },
         "regions": {
           "status": "missing",
