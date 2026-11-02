@@ -4,11 +4,11 @@ const ts=require("typescript");
 const assert=require("node:assert/strict");
 const {webcrypto}=require("node:crypto");
 const source=fs.readFileSync("lib/tools/burn/file-crypto.ts","utf8");
-const exports={};
+const moduleExports={};
 vm.runInNewContext(ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText,{
- exports,crypto:webcrypto,TextEncoder,TextDecoder,Blob,File,Uint8Array,DataView,BigInt,atob,Math,Number,String,Error,
+ exports:moduleExports,crypto:webcrypto,TextEncoder,TextDecoder,Blob,File,Uint8Array,DataView,BigInt,atob,Math,Number,String,Error,
 });
-const {encryptBurnFile,decryptBurnFile,burnEncryptedSize,BURN_ENCRYPTED_MIME}=exports;
+const {encryptBurnFile,decryptBurnFile,burnEncryptedSize,BURN_ENCRYPTED_MIME}=moduleExports;
 function key(n){return Buffer.alloc(32,n).toString("base64url")}
 function buf(b){return Buffer.from(b)}
 (async()=>{
