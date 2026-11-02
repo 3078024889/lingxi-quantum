@@ -24,12 +24,16 @@ test('detail page renders concrete capability cards instead of generic 13-field 
  assert.doesNotMatch(ui,/真实用途示例|使用边界/);
 });
 
-test('visitor can browse without site account; manufacturers submit first and claim later',async()=>{
- const home=await source('app/market-workbench.tsx'),claim=await source('app/(default)/vendor/claim/page.tsx');
+test('visitors browse freely, guest corrections stay open, ownership requires the existing LINGXIFIELD account',async()=>{
+ const home=await source('app/market-workbench.tsx');
+ const form=await source('app/(default)/vendor/claim/page.tsx');
+ const route=await source('app/api/vendor/submit/route.ts');
  assert.doesNotMatch(home,/https:\/\/lingxifield\.com\/account/);
- assert.match(claim,/访客无需注册即可搜索/);
- assert.match(claim,/厂商可以免费提交资料，不必先创建账号/);
- assert.match(claim,/正式管理产品、提交收费订单与查看私有推广数据才需安全登录/);
+ assert.match(form,/资料纠错与新产品线索仍可匿名提交/);
+ assert.match(form,/lingxifield\.com\/account\/ai-market/);
+ assert.match(form,/使用灵犀场账号认领/);
+ assert.match(route,/LOGIN_REQUIRED_MAIN_ACCOUNT/);
+ assert.match(route,/parsed\.request_type==='claim'/);
 });
 
 test('vendor feature suggestions require a complete sourced proposal and are never auto-approved',()=>{
