@@ -1,24 +1,22 @@
 import type {Platform} from '../lib/data';
+import type {Language} from '../lib/v2';
 import {platformLinks,safePublisherLink} from '../lib/official-platform-links';
+import {publisherLinkCopy,publisherLinkLabel} from '../lib/market-link-copy.mjs';
 
-/** Navigate to the publisher's product, its official documentation, or code repository.
- * No repository URL can be represented as an official product website.
- */
-export default function ProductAccessLinks({platform}:{platform:Platform}){
- const url=platform.website;
+/** Outbound URL is publisher-sourced; labels and warnings follow the selected language. */
+export default function ProductAccessLinks({platform,language='zh'}:{platform:Platform;language?:Language}){
+ const t=publisherLinkCopy(language),url=platform.website;
  const kind=platform.websiteKind||(new URL(url).hostname==='github.com'?'repository':'official');
- const isRepo=kind==='repository';
- const isDocs=kind==='documentation';
- const websiteLabel=isRepo?'查看源码与安装说明':isDocs?'查看官方文档':'访问产品官网';
+ const isRepo=kind==='repository',isDocs=kind==='documentation';
  const repo=platform.repositoryUrl;
  const verified=platformLinks(platform.id).links.filter(safePublisherLink);
- return <div className="productLinks" aria-label="官方与开发者入口">
-  <a className={isRepo?'linkSource':'primaryLink'} href={url} target="_blank" rel="noopener noreferrer"
-   data-link-kind={kind}>{websiteLabel} ↗</a>
-  {repo&&repo!==url&&!verified.some(x=>x.url===repo)&&<a className="linkSource" href={repo} target="_blank" rel="noopener noreferrer"
-   data-link-kind="repository">GitHub 源码 ↗</a>}
-  {verified.map(link=><a key={link.kind+link.url} href={link.url} target="_blank" rel="noopener noreferrer" className="linkSource" data-link-kind={link.kind}>{link.label} ↗</a>)}
-  {isRepo&&<span className="subtle" style={{fontSize:12}}>此项目是开发者代码库，没有经核验的独立在线使用入口；可能需要本地部署。</span>}
-  {isDocs&&<span className="subtle" style={{fontSize:12}}>该入口是官方技术文档，并非可直接体验的在线产品。</span>}
+ return <div className="productLinks" aria-label={t.aria} dir={language==='ar'?'rtl':'ltr'}>
+  <a className={isRepo?'linkSource':'primaryLink'} href={url} target="_blank" rel="noopener noreferrer" data-link-kind={kind}>
+   {publisherLinkLabel(kind,language)} ↗
+  </a>
+  {repo&&repo!==url&&!verified.some(x=>x.url===repo)&&<a className="linkSource" href={repo} target="_blank" rel="noopener noreferrer" data-link-kind="repository">{t.source} ↗</a>}
+  {verified.map(link=><a key={link.kind+link.url} href={link.url} target="_blank" rel="noopener noreferrer" className="linkSource" data-link-kind={link.kind}>{publisherLinkLabel(link.kind,language)} ↗</a>)}
+  {isRepo&&<span className="subtle">{t.repoNote}</span>}
+  {isDocs&&<span className="subtle">{t.docsNote}</span>}
  </div>;
 }

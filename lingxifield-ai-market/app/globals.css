@@ -1166,3 +1166,9 @@ body{font-size:16px;line-height:1.6}
  .marketVerifiedAnswerGrid article[data-answer-kind="tasks"]{grid-column:auto}
 }
 [dir="rtl"] .app .marketOverviewTable .marketOverviewIdentity .platformName{text-align:right}
+
+/* Accessible mobile target sizes and keyboard navigation for publisher links. */
+.productLinks>a{min-height:44px;max-width:100%;overflow-wrap:anywhere}
+.productLinks>a:focus-visible{outline:3px solid #1e55bb;outline-offset:3px}
+[dir='rtl'] .productLinks{text-align:start}
+@media(max-width:640px){.productLinks{gap:8px}.productLinks>a{flex:1 1 145px;padding:11px 12px}}
