@@ -2,9 +2,9 @@
 
 日期：2026-11-02。统一发布候选： [PR #104](https://github.com/3078024889/lingxi-quantum/pull/104)。**本文件是源码登记证据，不是 124 项已经通过的证书。**
 
-- 实际公开目录：**124**；注册真实浏览器操作情景：**70**（原登记 26、本轮新增 35、另追回已有真实回归证据 9）；只有历史部分样本：**2**；剩余尚无完整操作情景：**52**。
+- 实际公开目录：**124**；注册真实浏览器操作情景：**76**（原登记 26、本轮新增 41、另追回已有真实回归证据 9）；只有历史部分样本：**2**；剩余尚无完整操作情景：**46**。
 - 96 个初始缺口均已加入 `unverified-96-route-audit-v126.spec.ts` 的**逐工具页面入口巡检**，在桌面+手机分别执行；仅证明对应路由、页面标题和基础控件，**不能证明生成结果、付费或真实供应商**。
-- 35 个新增实测工具分别由 `unverified-developer-real-v126.spec.ts`、`unverified-pdf-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-images-real-v126.spec.ts` 覆盖；实际通过数量取决于精确 SHA 的 CI 结果。
+- 41 个新增实测工具分别由 `unverified-developer-real-v126.spec.ts`、`unverified-pdf-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-images-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-longtail-documents-v126.spec.ts` 覆盖；实际通过数量取决于精确 SHA 的 CI 结果。
 - 原统计历史 7 项含 5 个已不属于这 124 项目录的老名称：`pdf-to-txt`、`video-trim`、`video-compress`、`video-speed`、`video-mute`，因此 **91 修正为 96**，不可把这些旧名称算作当前工具的验收。
 - 状态 `REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED` = 实测测试源码已登记，仍需浏览器实际执行成功；`HISTORICAL_PARTIAL_ONLY` = 有部分历史证据不代表全面闭环；`ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION` = 仅有路由/控件级巡检计划与测试源码，核心输入→处理→可验证输出尚无充分证据。
 - 已完成的实际源码修复包括：开发者工具输入变化清理旧结果；图片转换、SVG、批量图像、长图处理参数变化清理旧文件链接，避免旧导出结果冒充当前参数。
@@ -37,9 +37,9 @@
 | csv-to-xlsx | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-office-roundtrip-v118`](../../tests/final-closure/tool-office-roundtrip-v118.spec.ts) |
 | document-copy-layout | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | document-translate | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| docx-to-txt | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| docx-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
 | e-sign-pdf | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| epub-to-txt | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| epub-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
 | file-compare | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
 | file-type-detector | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
 | food-calorie | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
@@ -48,7 +48,7 @@
 | heic-local | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | heic-to-jpg | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | ico-to-png | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| ics-to-csv | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| ics-to-csv | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
 | id-photo-ai | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | image-to-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-cross-workflow-v125`](../../tests/final-closure/tool-cross-workflow-v125.spec.ts) |
 | image-to-pdf-pro | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
@@ -64,7 +64,7 @@
 | merge-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-pdf-qr-e2e-v119`](../../tests/final-closure/tool-pdf-qr-e2e-v119.spec.ts) |
 | number-base-converter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
 | ocr | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| odt-to-txt | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| odt-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
 | pdf-attachments | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | pdf-bates-numbering | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
 | pdf-bookmarks | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
@@ -102,7 +102,7 @@
 | pdf-watermark | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
 | pdf-web-optimize | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | png-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| pptx-to-txt | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| pptx-to-txt | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
 | privacy-cleaner | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | qr-code-generator | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`qr-cron-output-v86`](../../tests/final-closure/qr-cron-output-v86.spec.ts) |
 | qr-code-reader | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-pdf-qr-e2e-v119`](../../tests/final-closure/tool-pdf-qr-e2e-v119.spec.ts) |
@@ -128,7 +128,7 @@
 | url-parser | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
 | url-to-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | uuid-generator | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| vcf-to-csv | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| vcf-to-csv | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-longtail-documents-v126`](../../tests/final-closure/unverified-longtail-documents-v126.spec.ts) |
 | video-dubbing | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | video-toolkit | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | video-transcription | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
