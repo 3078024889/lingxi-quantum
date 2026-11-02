@@ -7,6 +7,7 @@ on:
       - 'lib/tools/autonomous/transcribe-local.ts'
       - 'components/tools/TranscriptionWorkbench.tsx'
       - 'tests/final-closure/whisper-real-voice-v144.spec.ts'
+      - 'tests/final-closure/whisper-real-video-v150.spec.ts'
       - '.github/workflows/whisper-real-voice-inference.yml'
   pull_request:
     branches: [main]
@@ -14,6 +15,7 @@ on:
       - 'lib/tools/autonomous/transcribe-local.ts'
       - 'components/tools/TranscriptionWorkbench.tsx'
       - 'tests/final-closure/whisper-real-voice-v144.spec.ts'
+      - 'tests/final-closure/whisper-real-video-v150.spec.ts'
   workflow_dispatch:
 
 permissions:
@@ -47,14 +49,14 @@ jobs:
       - name: Install synthetic voice generator
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends espeak-ng
+          sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
           espeak-ng --version
       - name: Build production app
         run: pnpm build
       - name: Install Playwright browser
         run: pnpm exec playwright install --with-deps chrome
-      - name: Real audible voice to true Whisper ONNX to SRT VTT
-        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1 tests/final-closure/whisper-real-voice-v144.spec.ts
+      - name: Genuine WAV and spoken MP4 to on-device Whisper and timed TXT SRT VTT
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1 tests/final-closure/whisper-real-voice-v144.spec.ts tests/final-closure/whisper-real-video-v150.spec.ts
       - name: Upload failed model inference trace
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
