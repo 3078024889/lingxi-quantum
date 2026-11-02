@@ -28,4 +28,13 @@ assert.equal(guard(null).length,0);
 const inference=source.slice(source.indexOf("export async function transcribeLocal("),source.indexOf("function timestamp("));
 assert(inference.includes("normalizeAsrSegments(result?.chunks)"),"Actual inference result must be passed through the timestamp guard");
 assert(!inference.includes("Number(c?.timestamp?.[0]||0)"),"Do not fabricate a zero timestamp for un-timed segments");
+// Model assets must match the exact dtype requested by the browser runtime.
+const localModel="public/models/onnx-community/whisper-tiny/onnx/";
+for(const file of ["encoder_model_quantized.onnx","decoder_model_merged_quantized.onnx"]){
+ const stat=fs.statSync(localModel+file);
+ assert(stat.size>1000000,"Model weight missing/empty: "+file);
+}
+assert(source.includes('dtype:"q8"'),"q8 on-site weights must be selected explicitly");
+assert(source.includes("mod.env.allowRemoteModels=false"),"Whisper must not silently fall back to external downloads");
+assert(source.includes("local_files_only:true"),"Whisper model loads must remain local");
 console.log("WHISPER_REAL_TIMING_V143=PASS: genuine model timestamps only, no fake subtitles for open-ended/malformed chunks, real inference path uses validation");
