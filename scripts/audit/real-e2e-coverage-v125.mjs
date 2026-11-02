@@ -19,7 +19,8 @@ const current=new Map([
  ...group(["image-to-pdf","pdf-to-jpg"],"tool-cross-workflow-v125"),
  ...group(["case-converter","csv-json","xml-formatter","jwt-decoder","url-parser","number-base-converter","text-diff","regex-tester","uuid-generator","cron-parser"],"unverified-developer-real-v126"),
  ...group(["pdf-to-text","pdf-to-markdown","pdf-page-numbers","pdf-watermark","pdf-crop","pdf-flatten","pdf-compare","pdf-search","pdf-inspect"],"unverified-pdf-real-v126"),
- ...group(["jfif-to-jpg","gif-to-jpg","bmp-to-png","avif-to-jpg","svg-to-png","batch-image","long-image","qr-safe-reader"],"unverified-images-real-v126")
+ ...group(["jfif-to-jpg","gif-to-jpg","bmp-to-png","avif-to-jpg","svg-to-png","batch-image","long-image","qr-safe-reader"],"unverified-images-real-v126"),
+ ...group(["pdf-metadata-editor","pdf-page-size","pdf-grayscale","pdf-header-footer","pdf-bates-numbering","pdf-pages-per-sheet","pdf-remove-metadata","pdf-overlay"],"unverified-pdf-advanced-v126")
 ]);
 for(const [slug,file] of current){
  if(!slugs.includes(slug))throw Error("SCENARIO_NOT_PUBLIC_TOOL:"+slug);
