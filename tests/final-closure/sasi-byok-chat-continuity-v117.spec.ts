@@ -5,8 +5,8 @@ test("SASI BYOK chat carries successful context to the next quote, not a new con
  const second="22222222-2222-4222-8222-222222222222";
  const quoted:Array<Record<string,unknown>>=[];
  await page.route("**/api/sasi/byok/text",async route=>{
-  const payload=route.request().postDataJSON() as Record<string,unknown>;
   if(route.request().method()==="GET")return route.fulfill({json:{tasks:[]}});
+  const payload=route.request().postDataJSON() as Record<string,unknown>;
   if(payload.action==="quote"){
    quoted.push(payload);
    return route.fulfill({json:{billingCurrency:"USD",task:{id:quoted.length===1?first:second,state:"quoted",estimated_fen:30,expires_at:"2030-01-01T00:00:00Z"}}});
