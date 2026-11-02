@@ -6,7 +6,7 @@ import {latestFacts,factLabels,type FactKey} from './reviewed-product-facts';
 import {OFFER_GUIDE} from './offer-guide';
 import {accessFor} from './platform-access-facts';
 import {capabilityKeywords} from './capability-profiles';
-import {researchedFact} from './market-researched-facts';
+import {researchedFact,marketProductReviewedAt} from './market-researched-facts';
 import {companyEvidenceFor} from './market-company-evidence';
 import {PRODUCT_STRENGTHS} from './market-missing-strengths';
 import {questionForProduct,matchingEditorialProductIds} from './market-user-task-queries.mjs';
@@ -38,7 +38,7 @@ export function toPlatform(e:CatalogEntry):Platform {
  {label:'商用条件',text:research?.commercial,source:research?.commercialSource},
  {label:'模型与用量',text:research?.models,source:research?.modelsSource}]
  .filter((x):x is {label:string;text:string;source:string}=>Boolean(x.text&&x.source))
- .map(x=>({...x,scope:'官方所述具体产品/套餐范围；非全部产品通用',checkedAt:'2026-10-31'}));
+ .map(x=>({...x,scope:'官方所述具体产品/套餐范围；非全部产品通用',checkedAt:marketProductReviewedAt(e.id)}));
  const conditions=[...reviewed.filter(f=>!stronger.some(x=>x.label===f.label)),...stronger];
  const evidence=companyEvidenceFor(e.id);
  const baseGuide=OFFER_GUIDE[e.id],strength=PRODUCT_STRENGTHS[e.id];
