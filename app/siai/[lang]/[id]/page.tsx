@@ -53,7 +53,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
 export default async function SiaiProductDetail({params}:Props){
  const {lang,id}=await params;
  const {p,facts,publisher}=resolve(lang,id),l=lang as SiaiDetailLocale,t=WORDS[l];
- const listing=p.kind==='company'?(publisher.ipoFiling?t.ipo:publisher.listingState==='listed_parent'?t.listedParent:t.notVerified):t.na;
+ const listing=publisher.kind==='company'?(publisher.ipoFiling?t.ipo:publisher.listingState==='listed_parent'?t.listedParent:t.notVerified):t.na;
  const strength=localizedProductSummary(id,l)||p.guide?.strengths||p.about;
  const items=[
   {label:t.company,value:publisher.name,source:publisher.companySource},
