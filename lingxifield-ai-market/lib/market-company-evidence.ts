@@ -23,7 +23,7 @@ const parent={
  google:{kind:'company',publisherSource:'https://about.google/',founded:fact('1998','https://about.google/our-story/'),headquarters:fact('美国 · 加州 Mountain View','https://about.google/company-info/our-story/'),listing:fact('Alphabet 集团上市公司旗下产品；NASDAQ: GOOGL / GOOG','https://abc.xyz/investor/')},
  alibaba:{kind:'company',publisherSource:'https://www.alibabagroup.com/',founded:fact('1999','https://www.alibabagroup.com/en-US/about-alibaba'),headquarters:fact('中国 · 浙江杭州','https://www.alibabagroup.com/en-US/about-alibaba'),listing:fact('阿里巴巴集团上市公司旗下产品；NYSE: BABA / HKEX: 9988','https://www.alibabagroup.com/en-US/ir')},
  bytedance:{kind:'company',publisherSource:'https://www.bytedance.com/about',founded:fact('2012','https://www.bytedance.com/about'),headquarters:fact('中国 · 北京（公司起源）','https://www.bytedance.com/about')},
- kuaishou:{kind:'company',publisherSource:'https://ir.kuaishou.com/',listing:fact('快手科技旗下产品；港交所 1024.HK，2021年2月5日挂牌','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishoukejijintianyuxiangganglianjiaosuozhubanguapaishangshi','2021-02-05'),projectStarted:fact('快手最早应用于 2011 年推出','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishouliangweilianhechuangshirendiaozhengfengong/')},
+ kuaishou:{kind:'company',publisherSource:'https://ir.kuaishou.com/',founded:fact('2011','https://ir.kuaishou.com/about-us/senior-management/'),listing:fact('快手科技旗下产品；港交所 1024.HK，2021年2月5日挂牌','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishoukejijintianyuxiangganglianjiaosuozhubanguapaishangshi','2021-02-05'),projectStarted:fact('快手最早应用于 2011 年推出','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishouliangweilianhechuangshirendiaozhengfengong/')},
  luma:{kind:'company',publisherSource:'https://lumalabs.ai/llm-info',founded:fact('2021','https://lumalabs.ai/llm-info'),headquarters:fact('美国 · 加州 Redwood City','https://lumalabs.ai/llm-info')},
  runway:{kind:'company',publisherSource:'https://trust.runwayml.com/',projectStarted:fact('2018年起开展生成式媒体研发','https://trust.runwayml.com/')},
  elevenlabs:{kind:'company',publisherSource:'https://elevenlabs.io/about',founded:fact('2022','https://elevenlabs.io/docs/help-center/other/what-is-eleven-labs')},
@@ -39,7 +39,7 @@ const parent={
  llamaindex:{kind:'company',publisherSource:'https://www.llamaindex.ai/about',projectStarted:fact('开源框架于 2022 年末推出','https://www.llamaindex.ai/blog/llamaindex-is-more-than-a-rag-framework'),funding:fact('2025-03-04 公布 1900 万美元 A 轮融资；公告时累计融资 2750 万美元','https://www.llamaindex.ai/blog/announcing-our-series-a-and-llamacloud-general-availability','2025-03-04'),scale:fact('官网当前展示：每月 2500 万+ 软件包下载、30 万+ LlamaParse 用户、1500+ 贡献者、2 万+ 社区成员','https://www.llamaindex.ai/about') },
  lovable:{kind:'company',publisherSource:'https://lovable.dev/blog/series-c',headquarters:fact('瑞典 · 斯德哥尔摩（公司称其为运营重心）','https://lovable.dev/blog/series-c','2026-08-12'),projectStarted:fact('Lovable 产品于 2024 年 11 月上线（产品上线时间，不等同于公司注册日期）','https://lovable.dev/blog/series-c','2026-08-12'),funding:fact('2026-08-12 公布 4 亿美元 C 轮融资，投后估值 133 亿美元（该轮，非累计）','https://lovable.dev/blog/series-c','2026-08-12'),scale:fact('官方披露：用户累计创建超过 6000 万个项目；由 Lovable 构建的应用每月访问量超过 9 亿次','https://lovable.dev/blog/series-c','2026-08-12') },
  midjourney:{kind:'company',publisherSource:'https://www.midjourney.com/',funding:fact('官网将其描述为 community-funded research lab；未在该页面公布融资金额','https://www.midjourney.com/'),scale:fact('官网 About 页面披露团队规模为 60 人','https://www.midjourney.com/') },
- dify:{kind:'company',publisherSource:'https://dify.ai/about-us',founded:fact('2023','https://www.dify.ai/ko/blog/dify-raises-30m-tomorrow-s-organizations-will-be-built-by-people-and-agents'),headquarters:fact('美国 · 加州 Menlo Park（官网总部）','https://dify.ai/about-us'),funding:fact('2026 年 3 月 Pre-A 轮融资 3000 万美元（单轮，非累计）','https://dify.ai/about-us','2026-03-10')},
+ dify:{kind:'company',publisherSource:'https://dify.ai/legal/terms-of-service',founded:fact('2023','https://www.dify.ai/ko/blog/dify-raises-30m-tomorrow-s-organizations-will-be-built-by-people-and-agents'),headquarters:fact('美国 · 加州 Menlo Park（官网总部）','https://dify.ai/about-us'),funding:fact('2026 年 3 月 Pre-A 轮融资 3000 万美元（单轮，非累计）','https://dify.ai/about-us','2026-03-10')},
  ollama:{kind:'company',publisherSource:'https://ollama.com/',scale:fact('官网当前展示：每月安装量 900 万+、模型下载量 10 亿+、累计服务 Token 200T+','https://ollama.com/') },
  openwebui:{kind:'open_source_project',publisherSource:'https://github.com/open-webui/open-webui'},
  ggml:{kind:'open_source_project',publisherSource:'https://github.com/ggml-org/llama.cpp'},
@@ -62,3 +62,32 @@ export const COMPANY_EVIDENCE:Readonly<Record<string,CompanyEvidence>>=Object.fr
 ) as Record<string,CompanyEvidence>;
 export const companyEvidenceFor=(id:string):CompanyEvidence|undefined=>COMPANY_EVIDENCE[id];
 export const COMPANY_EVIDENCE_IDS=Object.freeze(Object.keys(map));
+
+/** Publisher and maintainer names are not the same as product names. Legal
+ * identities are only asserted where the publisher documents them.
+ * A missing exchange announcement is NOT evidence that a firm is unlisted. */
+const COMPANY_PUBLIC_NAMES:Partial<Record<keyof typeof parent,string>>={
+ openai:'OpenAI Group PBC',anthropic:'Anthropic',google:'Google / Alphabet',alibaba:'Alibaba Group',
+ bytedance:'ByteDance',kuaishou:'Kuaishou Technology',luma:'Luma AI',runway:'Runway',
+ elevenlabs:'ElevenLabs',suno:'Suno',replit:'Replit',comfy:'Comfy',
+ huggingface:'Hugging Face',deepseek:'DeepSeek',xai:'xAI',perplexity:'Perplexity AI',
+ n8n:'n8n',langchain:'LangChain',llamaindex:'LlamaIndex',lovable:'Lovable',
+ midjourney:'Midjourney',dify:'LangGenius, Inc.',ollama:'Ollama',
+ openwebui:'Open WebUI project',ggml:'ggml-org',vllm:'vLLM project',
+ automatic1111:'AUTOMATIC1111',fasterwhisper:'SYSTRAN (faster-whisper)'
+};
+export type CompanyListingState='listed_parent'|'unconfirmed'|'not_applicable';
+export function companyPresentationFor(id:string, fallbackName:string){
+ const key=map[id];const evidence=key?(parent as Record<string,CompanyEvidence>)[key]:undefined;
+ const isCompany=evidence?.kind==='company';
+ const projectYear=evidence?.projectStarted?.text.match(/(?:19|20)\d{2}/)?.[0];
+ const started=isCompany?evidence?.founded?.text:projectYear;
+ const startedSource=isCompany?evidence?.founded?.source:evidence?.projectStarted?.source;
+ const listingState:CompanyListingState=evidence?.listing?'listed_parent':isCompany?'unconfirmed':'not_applicable';
+ return {
+  name:key?(COMPANY_PUBLIC_NAMES[key]||fallbackName):fallbackName,
+  kind:evidence?.kind||'company',year:started||null,yearSource:startedSource||null,
+  listingState,listingDetail:evidence?.listing?.text||null,
+  listingSource:evidence?.listing?.source||null,companySource:evidence?.publisherSource||null
+ };
+}
