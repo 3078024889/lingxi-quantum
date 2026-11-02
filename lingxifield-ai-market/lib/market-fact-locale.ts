@@ -237,16 +237,22 @@ const LOVABLE_TASK_COSTS:Readonly<Partial<Record<Language,string>>>={
  ar:'أمثلة للمهام: لون الزر 0.50، حذف التذييل 0.90، تسجيل الدخول 1.20، صفحة بصور 1.70 رصيد. تختلف التكلفة حسب المهمة.'
 };
 export function localizedCatalogFact(id:string,language:Language,scope:Scope,original:string):string{
- // Luma has one source of truth for all nine languages; do not reintroduce the old $deprecated Luma price snapshot.
+ // Luma and Suno have their own reviewed nine-language product schedules.
  if(id==='luma')return scope==='price'?lumaSubscription(language):scope==='free'?lumaFree(language):lumaModels(language);
  if(id==='suno')return scope==='price'?sunoSubscription(language):scope==='free'?sunoFree(language):sunoModels(language);
  if(language==='zh')return original;
- // Preserve the CURRENT official figures instead of hardcoded, potentially stale locale prices.
+ // Derive all four translated Replit subscription figures from the reviewed source,
+ // instead of keeping stale copies of prices in each language.
  if(id==='replit'&&scope==='price'){
-  const values=original.match(/Core \\$(\\d+(?:\\.\\d+)?)\\/月（月付），年付折合 \\$(\\d+(?:\\.\\d+)?)\\/月[\\s\\S]*?Pro \\$(\\d+(?:\\.\\d+)?)\\/月（月付），年付折合 \\$(\\d+(?:\\.\\d+)?)\\/月/);
+  const values=original.match(/Core \$(\d+(?:\.\d+)?)\/月（月付），年付折合 \$(\d+(?:\.\d+)?)\/月[\s\S]*?Pro \$(\d+(?:\.\d+)?)\/月（月付），年付折合 \$(\d+(?:\.\d+)?)\/月/);
   if(!values)return TEXT[language].variable;
   const t=TEXT[language];
-  return 'Core 
+  return 'Core $'+values[1]+' '+t.monthly+' · $'+values[2]+' '+t.annual+'; Pro $'+values[3]+' '+t.monthly+' · $'+values[4]+' '+t.annual;
+ }
+ if(id==='lovable'&&scope==='price'){
+  const pro=original.match(/Pro \$(\d+(?:\.\d+)?)\/月/);
+  return (pro?'Pro $'+pro[1]+' '+TEXT[language].monthlyRef+' · ':'')+(LOVABLE_TASK_COSTS[language]||TEXT[language].variable);
+ }
  const c=FACTS[id],t=TEXT[language];
  if(!c)return scope==='price'?t.unknownPrice:scope==='free'?t.unknownFree:t.modelVaries;
  if(scope==='models')return c.models||t.modelVaries;
