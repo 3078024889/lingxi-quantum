@@ -383,8 +383,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Together AI 2026年5月19日服务条款第7条：用户保留输入和输出的权利；第三方模型的知识产权仍属于各模型提供商。业务使用必须遵守相应模型许可与知识产权要求，不代表可无限制商业转售平台服务。",
+          "source": "https://www.together.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "user_content_output_rights_subject_to_model_terms"
         },
         "payment": {
           "status": "observed",
