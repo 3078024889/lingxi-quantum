@@ -15,7 +15,10 @@ test("real MP4 speech -> browser audio extraction -> Whisper Tiny -> downloadabl
   const wav=path.join(dir,"speech.wav"),video=path.join(dir,"silent.mp4"),voiced=path.join(dir,"spoken.mp4");
   execFileSync("espeak-ng",["-v","en-us","-s","145","-w",wav,"The blue planet Earth has mountains and rivers."],{timeout:15000});
   await writeFile(video,Buffer.from((await readFile("tests/fixtures/sasi-video-4s.mp4.base64","utf8")).trim(),"base64"));
-  // The fixture is a finite 4-second video. Do not loop it indefinitely: stream-copy muxing\n  // combined with -shortest can hang in FFmpeg while reading endless video packets.\n  // A finite video input and -shortest end when either audio or video finishes.\n  execFileSync("ffmpeg",["-hide_banner","-loglevel","error","-y","-i",video,"-i",wav,"-map","0:v:0","-map","1:a:0","-c:v","copy","-c:a","aac","-b:a","96k","-shortest","-movflags","+faststart",voiced],{timeout:30000});
+  // The fixture is a finite 4-second video. Do not loop it indefinitely: stream-copy muxing
+  // combined with -shortest can hang in FFmpeg while reading endless video packets.
+  // A finite video input and -shortest end when either audio or video finishes.
+  execFileSync("ffmpeg",["-hide_banner","-loglevel","error","-y","-i",video,"-i",wav,"-map","0:v:0","-map","1:a:0","-c:v","copy","-c:a","aac","-b:a","96k","-shortest","-movflags","+faststart",voiced],{timeout:30000});
   const asset=await readFile(voiced);
   expect(asset.length).toBeGreaterThan(5000);
   expect(asset.includes(Buffer.from("vide"))).toBe(true);
