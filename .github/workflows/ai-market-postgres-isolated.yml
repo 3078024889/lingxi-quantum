@@ -86,6 +86,7 @@ jobs:
             status text NOT NULL
           );
           REVOKE ALL ON public.orders FROM PUBLIC,anon,authenticated;
+          GRANT SELECT ON public.orders TO service_role;
           SQL
 
       - name: Apply vendor promotion application and order-link migration in disposable Postgres
