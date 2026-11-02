@@ -90,12 +90,12 @@ test("text-diff: changed and retained Unicode lines are represented correctly",a
 
 test("regex-tester: worker matches captures, safely rejects invalid expressions",async({page})=>{
  await page.goto(url("regex-tester"));
- await page.locator('input[placeholder="/pattern/gi"]').fill("(\\d+)");
- await page.getByPlaceholder("Test text").fill("ID15 ID27");
+ await page.locator('[data-tool-workbench] input[placeholder="/pattern/gi"]').fill("/(\\d+)/g");
+ await page.locator("[data-tool-workbench]").getByPlaceholder("Test text").fill("ID15 ID27");
  const matches=JSON.parse(await output(page));
  expect(matches.map((m:{match:string})=>m.match)).toEqual(["15","27"]);
  expect(matches[0].groups).toContain("15");
- await page.locator('input[placeholder="/pattern/gi"]').fill("[unclosed");
+ await page.locator('[data-tool-workbench] input[placeholder="/pattern/gi"]').fill("/[unclosed/g");
  await page.getByRole("button",{name:"Run",exact:true}).click();
  await expect(page.locator("textarea[readonly]")).toHaveCount(0);
 });
@@ -128,7 +128,7 @@ test("uuid-generator: ordered ULID mode changes output and exports same generate
 
 test("cron-parser: invalid 5-field syntax rejected; each step expands schedule",async({page})=>{
  await page.goto(url("cron-parser"));
- const expr=page.getByRole("textbox").first();
+ const expr=page.locator("[data-tool-workbench]").getByRole("textbox").first();
  await expr.fill("*/15 * * * *");
  const runs=page.locator("ol li");
  await expect(runs).toHaveCount(10,{timeout:30000});
