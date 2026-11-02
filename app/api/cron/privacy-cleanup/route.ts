@@ -35,9 +35,11 @@ export async function GET(req:Request){
    else deletedToolTemp++;
   }catch{tempObjectErrors++}
  }
- const cleanup=await admin.rpc("cleanup_ephemeral_privacy_data").catch(()=>({error:{code:"CLEANUP_UNAVAILABLE"},data:null}));
- const dbCleanupErrors=cleanup.error?1:0;
+ let cleanupError=false,cleanupData:unknown=null;
+ try{const result=await admin.rpc("cleanup_ephemeral_privacy_data");cleanupError=Boolean(result.error);cleanupData=result.data;}
+ catch{cleanupError=true}
+ const dbCleanupErrors=cleanupError?1:0;
  const incomplete=deferredNotes+fileQueryErrors+objectDeleteErrors+tempQueryErrors+tempObjectErrors+tempUpdateErrors+dbCleanupErrors>0;
- const report={ok:!incomplete,deletedObjects,deletedNotes,deferredNotes,fileQueryErrors,objectDeleteErrors,deletedToolTemp,tempQueryErrors,tempObjectErrors,tempUpdateErrors,dbCleanupErrors,dbCleanup:cleanup.error?null:cleanup.data};
+ const report={ok:!incomplete,deletedObjects,deletedNotes,deferredNotes,fileQueryErrors,objectDeleteErrors,deletedToolTemp,tempQueryErrors,tempObjectErrors,tempUpdateErrors,dbCleanupErrors,dbCleanup:cleanupError?null:cleanupData};
  return NextResponse.json(report,{status:incomplete?503:200,headers:{"Cache-Control":"no-store"}});
 }
