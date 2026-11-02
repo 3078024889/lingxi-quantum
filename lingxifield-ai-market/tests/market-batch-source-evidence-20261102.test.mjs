@@ -9,6 +9,7 @@ const cohorts=ids.map(n=>read('batch-'+n+'.json'));
 const packs=ids.map(n=>read('batch-'+n+'-official-observations.json'));
 const updated=[
  ['microsoft-copilot','payment','support.microsoft.com'],
+ ['microsoft-copilot','commercial','www.microsoft.com'],
  ['freepik-ai','payment','www.freepik.com'],
  ['together-ai','commercial','www.together.ai'],
  ['groqcloud','commercial','console.groq.com'],
@@ -17,7 +18,7 @@ const updated=[
  ['fireworks-ai','commercial','fireworks.ai'],
  ['fireworks-ai','free','fireworks.ai']
 ];
-test('eight newly sourced factual fields remain dated, scoped and strictly pinned to official origin',()=>{
+test('nine newly sourced factual fields remain dated, scoped and strictly pinned to official origin',()=>{
  const rows=packs.flatMap(p=>p.products);
  for(const [id,key,host] of updated){
   const p=rows.find(x=>x.id===id);
@@ -48,7 +49,7 @@ test('Fireworks free trial is one-time marketing claim rather than verified enti
 });
 test('public catalog still 32 products; 30 held candidate rows, 28 deduplicated vendors',()=>{
  const r=materializeCandidateCatalog(cohorts,packs);
- assert.deepEqual(r.totals,{observed:180,missing:30,conflict:0});
+ assert.deepEqual(r.totals,{observed:181,missing:29,conflict:0});
  assert.equal(r.candidateProducts,30);
  assert.equal(r.publisherGroups,28);
  assert.equal(r.products.find(p=>p.id==='fireworks-ai').legalEntity,'Fireworks.ai, Inc.');
