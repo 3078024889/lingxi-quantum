@@ -17,7 +17,7 @@ for(const [lang,label] of LANGUAGES){
   await expect(page.locator("main h1").first()).toHaveText(label,{timeout:20000});
   await expect(page).toHaveTitle(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")));
   await expect(page.locator("main")).toHaveAttribute("dir",lang==="ar"?"rtl":"ltr");
-  await page.goto(`/tools?lang=${lang}&q=food-calorie`);
+  await page.goto(`/tools?lang=${lang}&q=${encodeURIComponent(label)}`);
   const cards=page.locator("a.lx11-tool-card");
   await expect(cards).toHaveCount(1,{timeout:30000});
   await expect(cards.first().locator("h3")).toHaveText(label);
