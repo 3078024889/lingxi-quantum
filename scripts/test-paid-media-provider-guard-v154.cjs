@@ -13,9 +13,9 @@ const admin={
  from(name){assert.equal(name,"tool_payment_quotes");return query},
  async rpc(name,args){assert.equal(name,"rate_limit_check");rpcCalls.push(args);return{data:limiterAllowed,error:limiterError}}
 };
-const exports={};
+const isolatedExports={};
 vm.runInNewContext(js,{
- exports,
+ exports:isolatedExports,
  require(name){
   if(name==="server-only")return{};
   if(name==="@/lib/supabase/server")return{createClient:()=>({auth:{getUser:async()=>({data:{user:{id:"test-user"}}})}})};
@@ -26,8 +26,8 @@ vm.runInNewContext(js,{
 });
 async function rejects(action,re){await assert.rejects(action,re)}
 async function run(){
- const guard=exports.guardPaidMediaOperation;
- const verify=exports.requirePaidMediaQuote;
+ const guard=isolatedExports.guardPaidMediaOperation;
+ const verify=isolatedExports.requirePaidMediaQuote;
  assert.equal(typeof guard,"function");assert.equal(typeof verify,"function");
  const q=await verify(id,["video-dubbing","video-translate"]);
  assert.equal(q.userId,"test-user");assert.equal(q.quantity,1);
