@@ -42,12 +42,14 @@ jobs:
         run: node scripts/validate-32-launch.mjs
       - name: Generate auditable 32+30 official evidence review report
         run: node scripts/report-evidence-readiness.mjs --json=../siai-evidence-reports/evidence-readiness.json --markdown=../siai-evidence-reports/evidence-readiness.md
+      - name: Generate remaining official-only research queue (read-only)
+        run: node scripts/report-official-gap-queue.mjs --json=../siai-evidence-reports/gap-queue.json --markdown=../siai-evidence-reports/gap-queue.md
       - name: Upload non-public editorial audit (no production data mutation)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: siai-evidence-review-${{ github.run_number }}
-          path: siai-evidence-reports/evidence-readiness.*
+          path: siai-evidence-reports/*
           retention-days: 30
           if-no-files-found: error
       - name: Smoke 9 languages x 32 actual product detail SSR routes (not login/user tasks)

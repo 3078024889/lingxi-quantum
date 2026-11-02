@@ -34,8 +34,11 @@
           "scope": "model_access_by_plan"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "GitHub 官方出口贸易管制政策明确：Copilot 为商业软件，未经授权不得售往禁运或 EAR Country Group E:1 等目的地；当前限制包括古巴、伊朗、朝鲜、俄罗斯、白俄罗斯，以及克里米亚/塞瓦斯托波尔和顿涅茨克、卢甘斯克相关地区。此项仅是官方限制说明，不等于已逐一证实其他国家的注册与付款均可用。",
+          "source": "https://docs.github.com/en/site-policy/other-site-policies/github-and-trade-controls",
+          "checkedAt": "2026-11-02",
+          "scope": "export_trade_restrictions_only_not_supported_country_whitelist"
         },
         "commercial": {
           "status": "observed",
@@ -212,16 +215,22 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Mistral AI 官方消费条款表示，在法律允许范围内，用户保留输入权利并拥有其 AI 输出，Mistral 将其可能拥有的输出权利转让给用户；用户应核验准确性和第三方授权，并遵守内容与使用政策。企业产品另受商业条款约束，不能把模型权重或第三方资源视为用户所有。",
+          "source": "https://legal.mistral.ai/terms/row-consumer-terms/",
+          "checkedAt": "2026-11-02",
+          "scope": "consumer_output_ownership_vs_business_terms"
         },
         "payment": {
           "status": "missing",
           "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Mistral 官方商业条款载明运营法人 Mistral AI，为法国股份制公司（SAS），巴黎注册编号 952 418 325，注册地址 15 rue des Halles, 75001 Paris, France；特定企业订单可能由协议列明的关联法人提供，不代表 Mistral 为上市公司。",
+          "source": "https://legal.mistral.ai/terms/commercial-terms-of-service/",
+          "checkedAt": "2026-11-02",
+          "scope": "registered_french_contracting_entity_company_number_not_listing"
         }
       }
     },
@@ -241,8 +250,11 @@
           "scope": "singapore_region_mixed_currency"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "微软个人 Copilot 官方价格说明确认存在免费版本，但受到容量及每日/功能调用限制，达到限制须等待重置或选择付费版；Microsoft 365 应用深度集成取决于符合条件的订阅，免费版不包括全部 365 Copilot 高级功能。",
+          "source": "https://www.microsoft.com/en-sg/copilot/pricing/individuals",
+          "checkedAt": "2026-11-02",
+          "scope": "limited_free_copilot_web_app_not_full_m365_benefits"
         },
         "models": {
           "status": "observed",
@@ -284,12 +296,18 @@
       "reviewStatus": "unapproved",
       "facts": {
         "price": {
-          "status": "missing",
-          "reason": "The official billing terms for this exact plan, region and cycle are not fully corroborated."
+          "status": "observed",
+          "text": "Poe 官方 2026 年订阅帮助页写明个人订阅起价 USD 4.99/月，计算点数按具体方案、购买地区及付款周期不同；付费附加点数参考 USD 30/100万点，不能把年付每月折算、英镑页面显示和美元月付标价混写。",
+          "source": "https://help.poe.com/hc/en-us/articles/19945140063636-Poe-Purchases-FAQs",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_from_support_subscription_start_and_variable_points"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Poe 官方 FAQ：未订阅用户也有每天更新的免费计算点数，每 24 小时重置且不可结转；不同 Bot 所需点数依模型及任务而异。官网并未统一保证所有用户每天都获得相同点数，不能编造固定每日积分额度。",
+          "source": "https://help.poe.com/hc/en-us/articles/19944206309524-Poe-FAQs",
+          "checkedAt": "2026-11-02",
+          "scope": "nonpaying_daily_compute_points_reset_no_universal_fixed_amount"
         },
         "models": {
           "status": "observed",
@@ -306,8 +324,11 @@
           "scope": "restriction_only_not_complete_supported_countries"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Poe 于 2026-03-19 更新的服务条款规定：用户保留其输入及 Bot 输出等 Your Content 的权利，同时须遵守所用第三方模型及 Bot 的使用政策、知识产权和限制，不可自动把 Poe 全部 Bot 视为无条件商用许可。",
+          "source": "https://poe.com/pages/tos",
+          "checkedAt": "2026-11-02",
+          "scope": "quora_user_content_rights_with_third_party_bot_restrictions"
         },
         "payment": {
           "status": "observed",
@@ -364,8 +385,11 @@
           "scope": "product_and_model_family"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Adobe Firefly 官方 FAQ 明确不在中国、俄罗斯和白俄罗斯提供 Firefly；Adobe 各项服务另受古巴、伊朗、朝鲜、叙利亚、克里米亚和乌克兰相关受限地区制裁限制。此信息属于已证实的不可用地区，不构成其他国家全部功能和付款方式的完整支持清单。",
+          "source": "https://helpx.adobe.com/lv/firefly/web/get-started/learn-the-basics/adobe-firefly-faq.html",
+          "checkedAt": "2026-11-02",
+          "scope": "explicit_product_blocked_countries_and_sanction_restrictions_only"
         },
         "commercial": {
           "status": "observed",
@@ -375,12 +399,18 @@
           "scope": "vendor_commercial_positioning_only"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Adobe 官方 Teams 账户支付文档支持信用卡、借记卡；部分国家可用 PayPal，符合条件的欧洲/中东/非洲客户可能可用 SEPA 扣款。Firefly 随 Creative Cloud 或独立计划结算方式取决于地区与购买渠道，本资料不声称所有用户都可选 PayPal。",
+          "source": "https://helpx.adobe.com/enterprise/using/edit-payment-method.html",
+          "checkedAt": "2026-11-02",
+          "scope": "adobe_teams_payment_rails_region_scoped_not_every_firefly_checkout"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Adobe 官方服务条款按用户居住地确认合同法人：北美为 Adobe Inc.；日本为 Adobe KK；其他地区通常为 Adobe Systems Software Ireland Limited；澳大利亚存在指定代理安排。品牌所属集团为 Adobe，不能给全球用户统一填写同一收款法人。",
+          "source": "https://www.adobe.com/legal/terms.html",
+          "checkedAt": "2026-11-02",
+          "scope": "regional_contracting_entities_not_one_global_operator"
         }
       }
     },
@@ -438,8 +468,11 @@
           ]
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Recraft 官方 2026年10月21日生效的服务条款确认合同运营主体为 Recraft Inc.；这是官网合同主体，并不自动证明其已经上市或披露了完整控股股东信息。",
+          "source": "https://www.recraft.ai/legal/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operating_entity_recraft_inc_contract_not_ipo"
         }
       }
     },
@@ -459,8 +492,20 @@
           "scope": "annual_equivalent_usd"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Freepik（官网近期也使用 Magnific 名称）的 AI Art Generator 官方说明普通免费用户使用其自有模型，每日最多可免费生成 20 张图片；这是指定图片工具的额度，不等于所有第三方高级模型、视频或声音功能都免费。官方订阅帮助说明免费用户生成内容的商用许可与付费级别有差异，应按具体工具和素材确认。",
+          "source": "https://www.freepik.com/ai/art-generator",
+          "checkedAt": "2026-11-02",
+          "scope": "free_in_house_image_generator_up_to_20_daily_not_all_ai_models",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "官网订阅帮助明确免费版为有限每日基本 AI 使用，不支持无条件商用；Premium 与更高套餐按单独许可处理。",
+              "source": "https://www.freepik.com/ai/faq/freepik-subscriptions-plans",
+              "checkedAt": "2026-11-02",
+              "scope": "free_vs_paid_licensing"
+            }
+          ]
         },
         "models": {
           "status": "observed",
@@ -485,8 +530,11 @@
           "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Freepik 官方 2026 年商业订阅条款明确其所属法律主体 Freepik Company, S.L.，该条款适用于其 Magnific 商业订阅；Freepik AI 具体产品结算与权利以各服务协议为准，不能据该合同推定全部 Freepik AI 权益。",
+          "source": "https://www.freepik.com/legal/business-subscription-terms",
+          "checkedAt": "2026-11-02",
+          "scope": "freepik_company_sl_group_legal_entity_magnific_specific_contract"
         }
       }
     },
@@ -531,12 +579,18 @@
           "scope": "stock_avatar_paid_ad_disallowed"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Synthesia 官方支付问题帮助页确认接受主要信用卡、借记卡及预付卡，并可能提供其他支付方式；具体地区可用的支付渠道以账户结账页及 Billing & Usage 为准，不能把 PayPal 一律标为支持。",
+          "source": "https://help.synthesia.io/en/articles/6341896-why-is-my-payment-to-synthesia-unsuccessful",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_debit_prepaid_card_others_account_dependent"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Synthesia 官方 2026年10月更新的法律隐私政策注明其数据控制者为英国 Synthesia Limited，地址 20 Triton St, London NW1 3BF；同期官方活动规则注明其英格兰与威尔士公司编号 10933652。该主体是官方现行法人资料，不代表已上市。",
+          "source": "https://www.synthesia.io/legal/privacy-policy",
+          "checkedAt": "2026-11-02",
+          "scope": "uk_operating_privacy_legal_entity_company_number_in_additional_source"
         }
       }
     }
