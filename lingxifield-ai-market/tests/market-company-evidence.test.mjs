@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {COMPANY_EVIDENCE,COMPANY_EVIDENCE_IDS} from '../lib/market-company-evidence.ts';
+import {COMPANY_EVIDENCE,COMPANY_EVIDENCE_IDS,companyPresentationFor} from '../lib/market-company-evidence.ts';
 import {PRODUCT_STRENGTHS} from '../lib/market-missing-strengths.ts';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 test('all 32 products map to sourced corporate, software or open-source entities',()=>{
@@ -46,4 +46,18 @@ test('official company scale, funding and product-launch facts are current and i
  assert.match(e.midjourney.funding.text,/community-funded/);
  assert.match(e.ollama.scale.text,/900/);
  assert.match(e.transformers.scale.text,/2M/);
+});
+
+test('company identity, project dates and exchange status never confuse product with publisher',()=>{
+ assert.equal(companyPresentationFor('dify','Dify').name,'LangGenius, Inc.');
+ assert.equal(companyPresentationFor('dify','Dify').year,'2023');
+ assert.equal(companyPresentationFor('kling','快手').year,'2011');
+ assert.equal(companyPresentationFor('kling','快手').listingState,'listed_parent');
+ assert.equal(companyPresentationFor('qwen','阿里巴巴').listingState,'listed_parent');
+ assert.equal(companyPresentationFor('chatgpt','OpenAI').name,'OpenAI Group PBC');
+ assert.equal(companyPresentationFor('comfyui','ComfyUI').kind,'open_source_project');
+ assert.equal(companyPresentationFor('comfyui','ComfyUI').year,'2023');
+ assert.equal(companyPresentationFor('dify','Dify').listingState,'unconfirmed');
+ const src=read('lib/market-company-evidence.ts');
+ assert.match(src,/dify\.ai\/legal\/terms-of-service/);
 });
