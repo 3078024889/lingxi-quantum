@@ -39,21 +39,34 @@ export default function VideoDubbingWorkbench(){
   try{
    for(let i=0;i<files.length;i++){
     const f=files[i];setStage(`${i+1}/${files.length} · 正在识别语音…`);
-    let text="",srt="";
+    let text="",timed: {start:number;end:number;text:string}[]=[];
     try{
      const local=await transcribeLocal(f,(p,m)=>setStage(`${i+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
-     text=local.text;srt=toSrt(local.segments);
+     text=local.text;
+     timed=local.segments.filter(seg=>Number.isFinite(seg.start)&&Number.isFinite(seg.end)&&seg.start>=0&&seg.end>seg.start&&seg.text.trim());
     }catch{
      setStage(`${i+1}/${files.length} · 正在使用兼容识别…`);
      text=await remoteTranscribe(f,quoteId);
-     const duration=await localMediaDuration(f).catch(()=>60);
-     srt=`1\n00:00:00,000 --> ${new Date(Math.max(1000,duration*1000)).toISOString().slice(11,23).replace(".",",")}\n${text}`;
+     // The fallback gives text, not a real word-level timing track.
+     // Still deliver the actual dub, but never invent an SRT cue over the whole video.
     }
+    if(!text.trim())throw Error("TRANSCRIPT_EMPTY");
     setStage(`${i+1}/${files.length} · 正在翻译…`);
-    const translated=source===target?text:await remoteTranslate(text,source,target,quoteId);
-    const translatedSrt=srt.replace(text,translated);
-    const sb=new Blob([translatedSrt],{type:"text/plain;charset=utf-8"});
-    subs.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
+    // Translate each real timed chunk independently. Replacing a complete
+    // transcript inside one cue silently leaves other subtitle cues untranslated.
+    const translatedSegments=source===target?timed:await Promise.all(timed.map(async seg=>({
+      ...seg,text:await remoteTranslate(seg.text,source,target,quoteId)
+    })));
+    if(translatedSegments.some(seg=>!seg.text.trim()))throw Error("TRANSLATION_EMPTY_SEGMENT");
+    const translated=source===target?text:translatedSegments.length
+      ?translatedSegments.map(seg=>seg.text).join(" ")
+      :await remoteTranslate(text,source,target,quoteId);
+    if(!translated.trim())throw Error("TRANSLATION_EMPTY");
+    if(translatedSegments.length){
+     const translatedSrt=toSrt(translatedSegments);
+     const sb=new Blob([translatedSrt],{type:"text/plain;charset=utf-8"});
+     subs.push({name:f.name.replace(/\\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
+    }
     setStage(`${i+1}/${files.length} · 正在生成配音…`);
     const voice=await remoteTts(translated,target,quoteId);
     setStage(`${i+1}/${files.length} · 正在合成视频…`);
