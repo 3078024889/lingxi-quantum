@@ -6,7 +6,7 @@ const catalog=fs.readFileSync(path.join(root,"lib/seo/global-seo.ts"),"utf8");
 const slugs=[...new Set([...catalog.matchAll(/[{]slug:"([^"]+)"/g)].map(m=>m[1]))].sort();
 if(slugs.length<100)throw Error("PUBLIC_TOOL_CATALOG_INCOMPLETE");
 
-const v118=["text-counter","remove-duplicate-lines","remove-empty-lines","url-encode-decode","base64-encode-decode","json-formatter","timestamp-converter","md5-sha256","file-type-detector","file-compare","png-to-jpg","jpg-to-png","webp-to-jpg","compress-image-to-20kb","compress-image-to-50kb","compress-image-to-100kb","compress-image-to-200kb","compress-image-to-500kb"];
+const v118=["text-counter","remove-duplicate-lines","remove-empty-lines","url-encode-decode","base64-encode-decode","json-formatter","timestamp-converter","md5-sha256","file-type-detector","file-compare","png-to-jpg","jpg-to-png","webp-to-jpg","compress-image-to-20kb","compress-image-to-50kb","compress-image-to-100kb","compress-image-to-200kb","compress-image-to-500kb","csv-to-xlsx","xlsx-to-csv"];
 const earlier=[
  ["png-to-jpg","Historical real-file sample: 2026-11-01"],
  ["merge-pdf","Historical real-file sample: 2026-11-01"],
@@ -20,7 +20,7 @@ const earlier=[
  ["video-speed","Historical real-file sample: 2026-11-01"],
  ["video-mute","Historical real-file sample: 2026-11-01"],
 ];
-const liveTest=["tests/final-closure/tool-real-operations-v118.spec.ts","tests/final-closure/tool-image-file-e2e-v118.spec.ts"].map(p=>fs.readFileSync(path.join(root,p),"utf8")).join("\\n");
+const liveTest=["tests/final-closure/tool-real-operations-v118.spec.ts","tests/final-closure/tool-image-file-e2e-v118.spec.ts","tests/final-closure/tool-office-roundtrip-v118.spec.ts"].map(p=>fs.readFileSync(path.join(root,p),"utf8")).join("\\n");
 const scenarioSet=new Set(v118);
 for(const slug of v118){
  if(!slugs.includes(slug))throw Error("SCENARIO_NOT_IN_PUBLIC_CATALOG:"+slug);
