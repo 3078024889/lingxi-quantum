@@ -26,6 +26,7 @@ const current=new Map([
  ...group(["pdf-pages","pdf-merge-split","subtitle-tools","pdf-viewer-preferences","pdf-web-optimize","document-copy-layout","pdf-bookmarks"],"remaining-pdf-subtitle-local-v129"),
  ...group(["pdf-protect","pdf-unlock","pdf-permissions","pdf-attachments"],"remaining-pdf-security-attachments-v129"),
  ...group(["ico-to-png"],"remaining-ico-real-v129"),
+ ...group(["pdf-to-xlsx"],"remaining-pdf-table-real-v129"),
  ...group(["qr-code-generator"],"qr-cron-output-v86"),
  ...group(["screenshot-redact"],"screenshot-redaction-v89"),
  ...group(["pdf-redact"],"pdf-redaction-output-v89"),
