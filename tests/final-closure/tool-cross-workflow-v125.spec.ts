@@ -1,5 +1,5 @@
 import {test,expect} from "./export-test";
-import type {Page} from "@playwright/test";
+import type {Page} from "playwright";
 import fs from "node:fs/promises";
 import sharp from "sharp";
 import {PDFDocument} from "pdf-lib";
