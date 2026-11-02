@@ -15,6 +15,8 @@ import {localizedProductSummary} from '../lib/market-product-locale';
 import {localizedCatalogFact,localizedLoginFact} from '../lib/market-fact-locale';
 import {localizedCategory} from '../lib/market-home-i18n';
 import {researchedFact} from '../lib/market-researched-facts';
+import {companyPresentationFor} from '../lib/market-company-evidence';
+import {capabilityProfile} from '../lib/capability-profiles';
 
 const columns:Record<Language,string[]>={
  zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','付款 · 登录','短剧 / 短视频','代表模型','商用授权','操作'],
@@ -27,6 +29,18 @@ const columns:Record<Language,string[]>={
  pt:['N.º','Produto / Empresa','Pontos fortes','Grátis','Preço','País','Pagamento / Acesso','Curtas / videoclipes','Modelos','Comercial','Ações'],
  ar:['الرقم','الأداة / الشركة','أهم المزايا','المجاني','السعر','توفر البلد','الدفع / الدخول','أفلام قصيرة / مقاطع','النماذج','تجاري','إجراءات']
 };
+const PUBLISHER_ROW:Record<Language,{company:string;founded:string;project:string;listed:string;parent:string;noListing:string;openProject:string;noYear:string}>={
+ zh:{company:'公司',founded:'成立',project:'项目始于',listed:'上市',parent:'母公司上市',noListing:'未见公开上市资料',openProject:'独立开源项目',noYear:'年份未公布'},
+ en:{company:'Company',founded:'Founded',project:'Project since',listed:'Listed',parent:'Listed parent',noListing:'No public listing confirmed',openProject:'Open-source project',noYear:'Year undisclosed'},
+ ja:{company:'会社',founded:'設立',project:'公開開始',listed:'上場',parent:'親会社上場',noListing:'上場情報未確認',openProject:'OSSプロジェクト',noYear:'年未公表'},
+ ko:{company:'회사',founded:'설립',project:'프로젝트 시작',listed:'상장',parent:'모기업 상장',noListing:'상장 정보 미확인',openProject:'오픈소스 프로젝트',noYear:'연도 미공개'},
+ fr:{company:'Société',founded:'Fondée',project:'Projet depuis',listed:'Bourse',parent:'Groupe coté',noListing:'Cotation non confirmée',openProject:'Projet libre',noYear:'Année non publiée'},
+ de:{company:'Firma',founded:'Gegründet',project:'Projekt seit',listed:'Börse',parent:'Mutterkonzern börsennotiert',noListing:'Keine bestätigte Börsennotierung',openProject:'Open-Source-Projekt',noYear:'Jahr nicht veröffentlicht'},
+ es:{company:'Empresa',founded:'Fundación',project:'Proyecto desde',listed:'Bolsa',parent:'Matriz cotizada',noListing:'Cotización no confirmada',openProject:'Proyecto abierto',noYear:'Año no publicado'},
+ pt:{company:'Empresa',founded:'Fundação',project:'Projeto desde',listed:'Bolsa',parent:'Controladora listada',noListing:'Cotação não confirmada',openProject:'Projeto aberto',noYear:'Ano não publicado'},
+ ar:{company:'الشركة',founded:'تأسست',project:'بدأ المشروع',listed:'الإدراج',parent:'الشركة الأم مدرجة',noListing:'لا يوجد إدراج مؤكد',openProject:'مشروع مفتوح المصدر',noYear:'السنة غير منشورة'}
+};
+
 export const V36_COL_COUNT=11;
 export function marketRowTitles(language:Language){return columns[language];}
 const localizedNotice:Record<Language,string>={
@@ -49,6 +63,8 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
 }){
  const t=MARKET_SCREEN_COPY[language],h=marketRowTitles(language),specific=SPECIFIC[language];
  const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id),research=researchedFact(p.id);
+ const publisher=companyPresentationFor(p.id,p.company),pubLabel=PUBLISHER_ROW[language],capability=capabilityProfile(p.id);
+ const listingText=publisher.listingState==='listed_parent'?pubLabel.parent:publisher.listingState==='not_applicable'?pubLabel.openProject:pubLabel.noListing;
  const r=region==='GLOBAL'?null:globalRegionFact(p.id,region);
  const regionList=regionPresentation(p.id,language);
  const regionText=r?regionCopy(language).status[r.policy.status]:(regionList.total?(regionList.complete?regionList.words.complete:regionList.words.partial):regionList.words.empty);
@@ -84,12 +100,12 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
    <td className="marketOverviewIdentity" data-label={h[1]}>
     <button type="button" className="platformName" onClick={onDetail}>
      <span className="brandIcon" aria-hidden="true">{p.symbol}</span>
-     <span><strong>{p.name}</strong><small>{p.company}</small></span>
+     <span className="marketPublisherIdentity"><strong>{p.name}</strong><small>{pubLabel.company} · {publisher.name}</small><small>{publisher.kind==='company'?pubLabel.founded:pubLabel.project} · {publisher.year||pubLabel.noYear}</small><small>{pubLabel.listed} · {listingText}</small></span>
     </button><small>{localizedCategory(language,p.category)}</small>
    </td>
    <td className="marketOverviewStrength" data-label={h[2]}>
     <strong>{localizedProductSummary(p.id,language)||summary.headline}</strong>
-    {language==='zh'?<p className="marketOverviewUses">{summary.capabilities}</p>:null}
+    {language==='zh'?<p className="marketOverviewUses">{capability?.capabilities.slice(0,3).map(item=>item.name+'：'+item.outcome).join('；')||summary.capabilities}</p>:null}
     <a href={summary.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>
     <button type="button" className="marketV36More" onClick={onDetail}>{t.more} ↗</button>
    </td>
