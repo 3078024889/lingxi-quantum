@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "validate:data": "node scripts/validate-evidence.mjs && node scripts/validate-catalog.mjs && npm run validate:official-intake",
+    "validate:data": "node scripts/validate-evidence.mjs && node scripts/validate-catalog.mjs && npm run validate:official-intake && npm run validate:global-intake",
     "test:contracts": "node --test tests/*.test.mjs",
     "import:evidence": "node scripts/import-evidence.mjs",
     "test:engine": "node --test tests/market-engine.test.mjs",
@@ -23,7 +23,8 @@
     "seo:review-evidence": "node scripts/review-gsc-observations.mjs",
     "seo:verify-public": "node scripts/verify-public-seo.mjs",
     "feedback:provision-key": "node scripts/provision-feedback-key.mjs",
-    "validate:official-intake": "node scripts/validate-company-official-observations.mjs"
+    "validate:official-intake": "node scripts/validate-company-official-observations.mjs",
+    "validate:global-intake": "node scripts/validate-global-intake.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",
