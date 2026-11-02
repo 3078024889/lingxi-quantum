@@ -1,4 +1,5 @@
 import {test,expect} from "./export-test";
+import sharp from "sharp";
 import {hasHeicContainer,verifiedJpeg} from "../../lib/tools/shared/heif-validation";
 
 function box(major:string,compatible:string[]=[]){
@@ -20,8 +21,10 @@ test("HEIC source fingerprint: use actual compatible brands, not extension or br
 test("HEIC target format: corrupt or mislabeled outputs never get a .jpg successful download",async()=>{
  await expect(verifiedJpeg(new Blob([]))).rejects.toThrow("JPEG_OUTPUT_EMPTY");
  await expect(verifiedJpeg(new Blob([Buffer.from("fake jpeg image")]))).rejects.toThrow("JPEG_OUTPUT_INVALID");
- const realHeader=new Blob([new Uint8Array([0xff,0xd8,0xff,0xe0]),Buffer.alloc(128)]);
- await expect(verifiedJpeg(realHeader)).resolves.toBe(realHeader);
+ const truncated=new Blob([new Uint8Array([0xff,0xd8,0xff,0xe0]),Buffer.alloc(128)]);
+ await expect(verifiedJpeg(truncated)).rejects.toThrow("JPEG_OUTPUT_INVALID");
+ const decoded=new Blob([await sharp({create:{width:8,height:8,channels:3,background:"red"}}).jpeg().toBuffer()]);
+ await expect(verifiedJpeg(decoded)).resolves.toBe(decoded);
 });
 test("HEIC upload: fake .heic file is rejected before decoder, not exported as JPEG",async({page})=>{
  await page.goto("/tools/heic-to-jpg?lang=en");
