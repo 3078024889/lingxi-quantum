@@ -275,8 +275,11 @@
           "reason": "The complete current licensing terms for this specific plan have not been reviewed."
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "微软官方账户支付说明：个人 Microsoft 账户可添加信用卡、借记卡、银行账户、PayPal 或移动电话付款。具体 Microsoft 365/Copilot 订阅可用方式按地区和账户性质不同，以购买页面为准；本资料不代表 Copilot 在所有国家均支持这些方法。",
+          "source": "https://support.microsoft.com/en-us/accounts-billing/add-a-new-bank-or-credit-card-to-your-microsoft-account",
+          "checkedAt": "2026-11-02",
+          "scope": "account_billing_methods_not_guaranteed_copilot_plan"
         },
         "company": {
           "status": "observed",
@@ -526,8 +529,11 @@
           "scope": "subscription_license_scope"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Freepik 旗下 Magnific AI 的订阅帮助列明信用/借记卡、关联银行卡或付款卡的 PayPal、Google Pay 和 Apple Pay，要求支持国际和周期性交易；该 Magnific 套餐以欧元结算。这里只确认 Magnific 订阅，不推断 Freepik 平台其他 AI 产品的收款方法。",
+          "source": "https://www.freepik.com/ai/faq/payment-methods",
+          "checkedAt": "2026-11-02",
+          "scope": "magnific_subscription_payment_methods_only"
         },
         "company": {
           "status": "observed",
