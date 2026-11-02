@@ -62,7 +62,7 @@ test('candidate review HTML has 30 directly expandable product rows and in-cell 
  assert.match(html,/noindex,nofollow,noarchive/);
  assert.match(html,/Content-Security-Policy/);
  assert.match(html,/17 款尚无地区资料/);
- assert.match(html,/6 款只有限制条款/);
+ assert.match(html,/8 款只有限制条款/);
  assert.match(html,/1 款受模型供应商限制/);
  assert.match(html,/逐国账号与支付验证通过：0 款/);
  assert.match(html,/仅明确限制地区，不能推断其他国家均可用/);
