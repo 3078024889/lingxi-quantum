@@ -7,8 +7,8 @@
 | 指标 | 数量 |
 |---|---:|
 | 不重复公开工具 | **121** |
-| 已登记真实浏览器操作场景（不等于 CI 全通过） | **97** |
-| 仅有历史部分样本 | **1** |
+| 已登记真实浏览器操作场景（不等于 CI 全通过） | **98** |
+| 仅有历史部分样本 | **0** |
 | 尚未具备充分真实操作场景 | **23** |
 
 ## 重复工具处理记录
@@ -126,7 +126,7 @@
 | remove-exif | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remove-exif-real-v130.spec.ts` |
 | resize-image | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-local-tool-real-v127.spec.ts` |
 | reverse-video | FULL_E2E_NOT_PROVEN | — |
-| rotate-video | HISTORICAL_PARTIAL | — |
+| rotate-video | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `video-toolkit-real-v131.spec.ts` |
 | screenshot-redact | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `screenshot-redaction-v89.spec.ts` |
 | split-pdf | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `pdf-precision-split-v122.spec.ts` |
 | stop-motion-video | FULL_E2E_NOT_PROVEN | — |
