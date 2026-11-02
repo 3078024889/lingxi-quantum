@@ -76,6 +76,15 @@ async function pipelineFor(device:"webgpu"|"wasm",onProgress?:(p:number,msg:stri
  mod.env.allowRemoteModels=false;
  mod.env.localModelPath="/models/";
  mod.env.useBrowserCache=true;
+ // Transformers.js and its ONNX Runtime must use the exact bundled WASM
+ // distribution. CDN fallback breaks offline/privacy guarantees and CI.
+ if(mod.env.backends?.onnx?.wasm){
+  mod.env.backends.onnx.wasm.numThreads=1;
+  mod.env.backends.onnx.wasm.wasmPaths={
+   mjs:"/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.mjs",
+   wasm:"/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm"
+  };
+ }
  const cached=device==="webgpu"?gpuPipe:wasmPipe;
  if(cached)return cached;
  const pipe=await mod.pipeline(
@@ -92,7 +101,14 @@ async function pipelineFor(device:"webgpu"|"wasm",onProgress?:(p:number,msg:stri
 export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string)=>void):Promise<LocalTranscript>{
  const pcm=await audio(file);
  onProgress?.(.08,"正在准备语音识别…");
- const preferred:(("webgpu"|"wasm"))[]=Boolean((navigator as any).gpu)?["webgpu","wasm"]:["wasm"];
+ // navigator.gpu can exist even when Chrome has no usable GPU adapter.
+ // Check requestAdapter before trying GPU; CPU/WASM remains the fallback.
+ const gpu=(navigator as any).gpu;
+ let gpuReady=false;
+ if(gpu&&typeof gpu.requestAdapter==="function"){
+  try{gpuReady=Boolean(await gpu.requestAdapter())}catch{}
+ }
+ const preferred:(("webgpu"|"wasm"))[]=gpuReady?["webgpu","wasm"]:["wasm"];
  let last:unknown=null;
  for(const device of preferred){
   try{
