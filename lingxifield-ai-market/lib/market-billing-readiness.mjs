@@ -29,3 +29,19 @@ export function paymentDeploymentReadiness(env=process.env){
    },reason:!credentialsConfigured?'merchant_credentials_required':!providerEnabled?'provider_approval_required':!orderLedgerReady?'secure_order_ledger_required':!vendorAuthReady?'verified_vendor_identity_required':!fulfillmentReady?'fulfillment_required':'checkout_handlers_not_activated'};
  });
 }
+
+/** An existing merchant account is reusable, but the main site's known
+ * catalog currently sells SASI topups, not paid marketplace placements.
+ * The market must not alias a topup SKU to a listing/boost entitlement. */
+export function mainSiteBillingCompatibility(env=process.env){
+ const origin=['https://lingxifield.com','https://lingxifield.cn'].includes(env.AI_MARKET_MAIN_SITE_ORIGIN)?env.AI_MARKET_MAIN_SITE_ORIGIN:null;
+ return {
+  strategy:'reuse_approved_lingxifield_merchant',origin,
+  ready:false,
+  sellerMarketplaceSkuImplemented:false,
+  crossSiteVendorAuthenticationImplemented:false,
+  providerVerifiedMarketplaceSettlementImplemented:false,
+  atomicVendorPlacementFulfillmentImplemented:false,
+  reason:origin?'MARKET_SKU_AND_ENTITLEMENT_BRIDGE_NOT_CONNECTED':'MAIN_SITE_ORIGIN_INVALID',
+ };
+}
