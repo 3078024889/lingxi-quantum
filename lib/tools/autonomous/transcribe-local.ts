@@ -4,6 +4,26 @@ import {fetchFile} from "@ffmpeg/util";
 export type LocalSegment={start:number;end:number;text:string};
 export type LocalTranscript={text:string;segments:LocalSegment[];model:string;backend:string};
 
+/** Only real model timestamps generate downloadable caption cues.
+ * Never replace a missing Whisper timestamp with zero or invent a duration. */
+export function normalizeAsrSegments(raw:unknown):LocalSegment[]{
+ if(!Array.isArray(raw))return [];
+ const result:LocalSegment[]=[];
+ for(const chunk of raw){
+  if(!chunk||typeof chunk!=="object")continue;
+  const item=chunk as {timestamp?:unknown;text?:unknown};
+  if(!Array.isArray(item.timestamp)||item.timestamp.length<2)continue;
+  const [start,end]=item.timestamp;
+  if(typeof start!=="number"||typeof end!=="number"||
+     !Number.isFinite(start)||!Number.isFinite(end)||
+     start<0||end<=start)continue;
+  const text=typeof item.text==="string"?item.text.trim():"";
+  if(text)result.push({start,end,text});
+ }
+ return result;
+}
+
+
 let wasmPipe:any=null;
 let gpuPipe:any=null;
 
@@ -78,12 +98,7 @@ export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string
    const pipe=await pipelineFor(device,(p,m)=>onProgress?.(.08+.32*p,m));
    onProgress?.(.45,device==="webgpu"?"正在使用图形加速识别…":"正在使用兼容模式识别…");
    const result:any=await pipe(pcm,{chunk_length_s:30,stride_length_s:5,return_timestamps:true});
-   const chunks=Array.isArray(result?.chunks)?result.chunks:[];
-   const segments:LocalSegment[]=chunks.map((c:any)=>({
-    start:Number(c?.timestamp?.[0]||0),
-    end:Number(c?.timestamp?.[1]||c?.timestamp?.[0]||0),
-    text:String(c?.text||"").trim()
-   })).filter((x:LocalSegment)=>x.text);
+   const segments=normalizeAsrSegments(result?.chunks);
    const text=String(result?.text||segments.map(x=>x.text).join(" ")).trim();
    if(!text)throw new Error("TRANSCRIPT_EMPTY");
    onProgress?.(1,"识别完成");
