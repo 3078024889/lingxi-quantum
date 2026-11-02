@@ -29,7 +29,7 @@ function extractPlanJson(answer:string):unknown{
   if(c==="{")depth++;
   else if(c==="}"){depth--;if(depth<0)throw new Error("VIDEO_PLAN_INVALID");if(depth===0){end=i+1;break}}
  }
- if(end<0||text.length-end>1000)throw new Error("VIDEO_PLAN_INVALID");
+ if(end<0||text.length-end>1000||/[{}]/.test(text.slice(end)))throw new Error("VIDEO_PLAN_INVALID");
  return JSON.parse(text.slice(begin,end));
 }
 
