@@ -186,7 +186,7 @@
     },
     {
       "id": "mistral-le-chat",
-      "name": "Le Chat / Mistral",
+      "name": "Mistral Vibe（原 Le Chat）",
       "officialHosts": [
         "mistral.ai"
       ],
@@ -233,7 +233,16 @@
           "text": "Mistral 官方商业条款载明运营法人 Mistral AI，为法国股份制公司（SAS），巴黎注册编号 952 418 325，注册地址 15 rue des Halles, 75001 Paris, France；特定企业订单可能由协议列明的关联法人提供，不代表 Mistral 为上市公司。",
           "source": "https://legal.mistral.ai/terms/commercial-terms-of-service/",
           "checkedAt": "2026-11-02",
-          "scope": "registered_french_contracting_entity_company_number_not_listing"
+          "scope": "registered_french_contracting_entity_company_number_not_listing",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Mistral 官方 2026-08-12 品牌通知：Le Chat 更名为 Vibe；旧账户、付费套餐、对话和内容都迁移保留，官方继续使用 chat.mistral.ai 作为入口，功能分 Vibe Work、Vibe Code 与 Vibe Chat。",
+              "source": "https://help.mistral.ai/en/articles/682992-le-chat-is-now-vibe",
+              "checkedAt": "2026-11-02",
+              "scope": "official_2026_product_rename_keep_legal_company_and_stable_id"
+            }
+          ]
         }
       }
     },
