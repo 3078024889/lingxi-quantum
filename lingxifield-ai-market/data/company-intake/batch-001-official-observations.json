@@ -195,16 +195,34 @@
           "scope": "monthly_usd"
         },
         "free": {
-          "status": "conflict",
-          "text": "较新的页面摘录显示 Free 套餐每月固定赠送积分为 0、按包购积分；官方历史完整定价页曾显示 Basic 每月 80 积分，另一版 FAQ 提及 150 积分。三个页面版本存在差异，禁止未经核查直接发布免费额度。",
+          "status": "observed",
+          "text": "Pika 新版官网 Free 套餐每月赠送 0 积分，仅支持不订阅月费、按需购买单次积分包；购买积分不会使 Free 套餐获得商用许可。旧版 old.pika.art Basic 的每月免费积分属于历史产品规则，不能用于新版 Free 权益描述。",
           "source": "https://pika.art/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "current_vs_legacy_FAQ",
-          "conflictingSource": "https://pika.art/faq"
+          "scope": "new_pika_free_zero_monthly_credits_legacy_basic_separate",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Pika 新版 FAQ 明确 Free 仅能单独购买积分包，没有每月赠送额度，当前 Free 不包含商用权利。",
+              "source": "https://pika.art/faq",
+              "checkedAt": "2026-11-02",
+              "scope": "new_free_packs_only"
+            },
+            {
+              "status": "observed",
+              "text": "旧版本 Pika Basic 官网保留的旧订阅价目表列有过去的免费积分，不能套用于新 Pika Free。",
+              "source": "https://old.pika.art/pricing",
+              "checkedAt": "2026-11-02",
+              "scope": "archived_legacy_free_basic"
+            }
+          ]
         },
         "models": {
-          "status": "missing",
-          "reason": "旧 FAQ 的 Pika 2.1/2.2 积分表不能视作全部现行模型定价"
+          "status": "observed",
+          "text": "Pika 新版官方 FAQ 列举视频模型 Seedance 2.5、MiniMax H3、Pika 2.5，图像模型 GPT Image 2.5、Nano Banana 2.1、Seedream，以及 ElevenLabs Multilingual、Pika Music 等音频功能；模型目录可调整，API Club 与订阅产品分别计费。",
+          "source": "https://pika.art/faq",
+          "checkedAt": "2026-11-02",
+          "scope": "current_faq_multimodal_models_separate_api_billing"
         },
         "regions": {
           "status": "missing",
