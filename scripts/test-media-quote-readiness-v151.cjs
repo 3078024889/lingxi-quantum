@@ -36,6 +36,6 @@ vm.runInNewContext(code,{exports:exposed,require:(name)=>{if(!Object.hasOwn(bind
  assert.equal(nativeCalls,1);
  const burn=await exposed.toolRuntimeStateLive("burn-after-read-file");
  assert.equal(burn.ready,true,"R2 storage readiness remains separate");
- assert.equal(exposed.toolRuntimeStateLive instanceof Function,true);
+ assert.equal(typeof exposed.toolRuntimeStateLive,"function");
  console.log("MEDIA_QUOTE_READINESS_V151=PASS: video dubbing/translation use independent media provider; outage native compute only blocks native tools; existing media/R2 error gates preserved.");
 })().catch(e=>{console.error(e);process.exitCode=1});
