@@ -44,7 +44,7 @@ const PAYMENT_COPY:Record<Language,{
 const REGIONAL_CHECKOUT_SUFFIX:Record<Language,string>={
  zh:'（视地区结账条件）',en:'(where available at checkout)',ja:'（決済地域による）',ko:'(결제 지역에 따라)',fr:'(selon pays au paiement)',de:'(je nach Land beim Bezahlen)',es:'(según el país al pagar)',pt:'(conforme país na compra)',ar:'(حسب بلد الدفع)'
 };
-export function localizedPaymentName(name:string,language:Language){
+export function localizedPaymentName(name:string,language:Language):string{
  // Preserve documented per-country limits when the original payment entry is localized.
  // A merchant accepting Alipay somewhere is not proof it will appear for every visitor.
  const scoped=/（适用地区）$|（地区结账条件适用）$|（Stripe 快捷结账，适用地区）$/.test(name);
