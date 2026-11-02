@@ -141,8 +141,11 @@ test.describe("PDF editor visual quality",()=>{
   await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
   await expect(page.getByTestId("pdf-original-image")).toHaveCount(1);
   await page.getByRole("button",{name:/Undo/}).click();
+  await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
+  await page.getByRole("button",{name:/Undo/}).click();
   await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(0);
   await expect(original).toBeVisible();
+  await page.getByRole("button",{name:/Redo/}).click();
   await page.getByRole("button",{name:/Redo/}).click();
   await page.getByRole("button",{name:/Redo/}).click();
   await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(2);
