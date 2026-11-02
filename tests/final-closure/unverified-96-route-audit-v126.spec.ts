@@ -16,7 +16,7 @@ for(let start=0;start<UNVERIFIED_BASELINE_V126.length;start+=CASES_PER_TEST){
     const response=await page.goto(`/tools/${slug}?lang=en`,{waitUntil:"domcontentloaded",timeout:22000});
     status=response?.status()??null;
     redirected=!new URL(page.url()).pathname.endsWith("/tools/"+slug);
-    const canonicalAliases:Record<string,string>={"image-to-pdf-pro":"/tools/image-to-pdf"};
+    const canonicalAliases:Record<string,string>={"image-to-pdf-pro":"/tools/image-to-pdf","heic-local":"/tools/heic-to-jpg","compress-pdf":"/tools/pdf-compress"};
     const validAlias=redirected&&canonicalAliases[slug]===new URL(page.url()).pathname;
     await expect(page.locator("main h1").first()).toBeVisible({timeout:11000});
     heading=(await page.locator("main h1").first().innerText()).trim();
