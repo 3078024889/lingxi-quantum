@@ -1,4 +1,5 @@
-import {test,expect,type Page} from "./export-test";
+import {test,expect} from "./export-test";
+import type {Page} from "@playwright/test";
 import fs from "node:fs/promises";
 import sharp from "sharp";
 import {PDFDocument} from "pdf-lib";
@@ -34,7 +35,7 @@ test("Image→PDF: fit margins work; changed options and page order invalidate o
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
  const noMargin=await PDFDocument.load((await downloadResult(page)).content);
  expect(noMargin.getPages().map(p=>[p.getWidth(),p.getHeight()])).toEqual([[72,50],[120,75]]);
- const up=page.getByRole("button",{name:"Up",exact:true});
+ const up=page.getByRole("button",{name:"Move up",exact:true});
  await up.nth(1).click();
  await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
