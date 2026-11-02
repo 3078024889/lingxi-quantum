@@ -44,6 +44,13 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
  }
  async function run(){
   if(!files.length||busy)return;
+  // Extraction accepts an audio source; all six MP4 operations require a real video.
+  // A WAV selected for extraction can remain on the form when users switch mode.
+  if(mode!=="audio"&&files.some(f=>!f.type.startsWith("video/")&&!/\.(mp4|m4v|mov|webm|mkv|avi|mpeg|mpg|3gp)$/i.test(f.name))){
+   setOutputs([]);
+   setError(t("这个操作需要视频文件。请更换视频，或选择「提取 MP3」。","This operation requires a video file. Choose a video or use Extract MP3."));
+   return;
+  }
   const op=++operationId.current;
   const totalBytes=files.reduce((n,f)=>n+f.size,0);
   if(totalBytes>400*1024*1024){setError(t("一次最多处理 400MB 视频，请分批处理。","This batch exceeds 400 MB. Process fewer files at a time."));return}
@@ -102,7 +109,7 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
  async function addRemote(file:File){if(busy)return;setFiles(v=>[...v,file].slice(0,10));setOutputs([]);setStage("");setError("")}
  const modes:[Mode,string][]=[["compress",t("压缩","Compress")],["trim",t("截取","Trim")],["audio",t("提取 MP3","Extract MP3")],["mute",t("静音","Mute")],["convert",t("转 MP4","Convert MP4")],["rotate",t("旋转","Rotate")],["speed",t("变速","Speed")]];
  return <div data-video-toolkit data-hydrated={hydrated ? "true" : "false"} className="space-y-4">
-  <FileDropzone accept="video/*,audio/*" multiple maxFiles={10} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setStage("");setError("")}} disabled={busy||!hydrated} kind="media"/>
+  <FileDropzone accept={mode==="audio"?"video/*,audio/*,.mp4,.mov,.webm,.mkv,.avi,.wav,.mp3,.m4a,.aac,.flac":"video/*,.mp4,.m4v,.mov,.webm,.mkv,.avi,.mpeg,.mpg,.3gp"} multiple maxFiles={10} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setStage("");setError("")}} disabled={busy||!hydrated} kind="media"/>
   <RemoteMediaImporter acceptKind="video" onImported={addRemote} disabled={busy||!hydrated}/>
   {!standalone&&<div className="flex flex-wrap gap-2">{modes.map(([v,n])=><button type="button" key={v} disabled={!hydrated||busy} aria-pressed={mode===v} onClick={()=>setMode(v)} className={`rounded-full border px-4 py-2 text-sm ${mode===v?"border-[var(--lx-line-strong)] bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-muted)]"}`}>{n}</button>)}</div>}
   {mode==="compress"&&<label className="block text-sm text-[var(--lx-muted)]">{t("压缩强度","Compression")}<select disabled={busy} value={preset} onChange={e=>setPreset(e.target.value as CompressPreset)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2"><option value="high">{t("高清","High quality")}</option><option value="balanced">{t("均衡","Balanced")}</option><option value="small">{t("更小体积","Smaller file")}</option></select></label>}
