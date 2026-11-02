@@ -18,8 +18,8 @@ test('clear product-site CTA and code CTA are separate when both exist',async()=
  const ui=await file('app/product-access-links.tsx');
  assert.ok(ui.includes("data-link-kind={kind}"));
  assert.ok(ui.includes("repo&&repo!==url"));
- assert.ok(ui.includes('GitHub 源码 ↗'));
- assert.ok(ui.includes('没有经核验的独立在线使用入口'));
+ assert.ok(ui.includes('publisherLinkLabel(link.kind,language)'));
+ assert.ok(ui.includes('{t.repoNote}'));
 });
 test('final brand is globally consistent with evidence-first market labels',async()=>{
  const layout=await file('app/(default)/layout.tsx');
