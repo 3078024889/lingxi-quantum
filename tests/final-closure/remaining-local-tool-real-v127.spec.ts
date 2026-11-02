@@ -61,7 +61,7 @@ test("compress-pdf: true vector PDF produces valid raster PDF with same pages, t
 test("pdf-halve-pages: true source PDF creates left/right pages without flattening original vector data",async({page})=>{
  await page.goto("/tools/pdf-halve-pages?lang=en");
  await tool(page).locator('input[type="file"]').first().setInputFiles({name:"spread.pdf",mimeType:"application/pdf",buffer:await sourcePdf()});
- await tool(page).getByRole("button",{name:"Split pages",exact:true}).click();
+ await tool(page).locator(":scope > div > button").last().click();
  const output=await save(page);
  const pdf=await PDFDocument.load(output);
  expect(pdf.getPageCount()).toBe(2);
@@ -75,7 +75,7 @@ test("pdf-rasterize: real saved PDF draws image pages and removes extractable te
  test.setTimeout(100000);
  await page.goto("/tools/pdf-rasterize?lang=en");
  await tool(page).locator('input[type="file"]').first().setInputFiles({name:"source.pdf",mimeType:"application/pdf",buffer:await sourcePdf()});
- await tool(page).getByRole("button",{name:"Process",exact:true}).click();
+ await tool(page).locator(":scope > div > button").last().click();
  const output=await save(page);
  const pdf=await PDFDocument.load(output);expect(pdf.getPageCount()).toBe(1);
  const mod=await import("pdfjs-dist/legacy/build/pdf.mjs"),source=await mod.getDocument({data:new Uint8Array(output)}).promise;
@@ -93,7 +93,7 @@ test("pdf-remove-annotations: actual widget annotation removed while document st
  expect(p.node.get(PDFName.of("Annots"))).toBeDefined();
  await page.goto("/tools/pdf-remove-annotations?lang=en");
  await tool(page).locator('input[type="file"]').first().setInputFiles({name:"annotated.pdf",mimeType:"application/pdf",buffer:Buffer.from(await original.save())});
- await tool(page).getByRole("button",{name:/Remove|Process|删除/}).last().click();
+ await tool(page).locator(":scope > div > button").last().click();
  const bytes=await save(page),clean=await PDFDocument.load(bytes);
  expect(clean.getPageCount()).toBe(1);
  expect(clean.getPage(0).node.get(PDFName.of("Annots"))).toBeUndefined();
