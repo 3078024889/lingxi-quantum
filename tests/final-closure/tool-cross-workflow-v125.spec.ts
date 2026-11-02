@@ -29,7 +29,7 @@ test("Image→PDF: fit margins work; changed options and page order invalidate o
  expect(firstOutput.name).toMatch(/\.pdf$/i);
  const pdf=await PDFDocument.load(firstOutput.content);
  expect(pdf.getPages().map(p=>[p.getWidth(),p.getHeight()])).toEqual([[108,86],[156,111]]);
- const margin=page.getByRole("combobox").nth(2);
+ const margin=page.getByRole("combobox",{name:"Margin",exact:true});
  await margin.selectOption("none");
  await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
@@ -53,7 +53,7 @@ test("PNG→JPEG→PDF→JPEG: three real browser tools interoperate with valid 
  expect((await sharp(jpeg.content).metadata()).format).toBe("jpeg");
  await page.goto("/tools/image-to-pdf?lang=en");
  await page.locator('input[type="file"]').first().setInputFiles({name:"converted.jpg",mimeType:"image/jpeg",buffer:jpeg.content});
- await page.getByRole("combobox").nth(2).selectOption("none");
+ await page.getByRole("combobox",{name:"Margin",exact:true}).selectOption("none");
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
  const savedPdf=await downloadResult(page);
  const native=await PDFDocument.load(savedPdf.content);
