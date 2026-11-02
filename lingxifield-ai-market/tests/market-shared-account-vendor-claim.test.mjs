@@ -63,7 +63,7 @@ test('central vendor claim account is translated in all nine languages and Arabi
  const page=root('app/account/ai-market/page.tsx');
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(s,new RegExp('\\b'+lang+':\\{'),lang);
  for(const key of ['claims','empty','form','product','company','site','email','evidence','submit','limit','paidTitle','paid','pending','approved'])assert.match(s,new RegExp(key+':'));
- assert.match(portal,/dir=\\{lang==="ar"\\?"rtl":"ltr"\\}/);
- assert.match(portal,/disabled=\\{busy\\|\\|claims.length>=3\\|\\|!ready\\|\\|!available\\}/);
+ assert.ok(portal.includes('dir={lang==="ar"?"rtl":"ltr"}'));
+ assert.ok(portal.includes('disabled={busy||claims.length>=3||!ready||!available}'));
  assert.match(page,/LxText/);
 });
