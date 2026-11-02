@@ -1146,3 +1146,23 @@ body{font-size:16px;line-height:1.6}
 .marketPaymentNote{font-size:14px;line-height:1.7;margin:10px 0 0;color:#314e70}
 @media(max-width:820px){.sunoPlanCards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.sunoPlanCards{grid-template-columns:1fr}}
+
+
+/* Publisher identity: three compact facts directly below the product name.
+   Keep factual labels readable on phones and inside a horizontally scrollable table. */
+.app .marketOverviewTable .marketPublisherIdentity{display:block;min-width:0}
+.app .marketOverviewTable .marketPublisherIdentity>small{
+ display:block;margin-top:4px!important;color:#526e90!important;
+ font-size:14px!important;line-height:1.35!important;font-weight:500;
+ overflow-wrap:anywhere;
+}
+.app .marketOverviewTable .marketOverviewIdentity .platformName{align-items:flex-start}
+.marketCompanySnapshot .marketCompanySummary{font-size:14px;line-height:1.7;max-width:90ch;color:#274567}
+.marketCompanySnapshot .marketCompanyFacts strong{font-size:14px!important;line-height:1.5}
+.marketVerifiedAnswerGrid article[data-answer-kind="tasks"]{grid-column:1/-1}
+.marketVerifiedAnswerGrid article[data-answer-kind="tasks"] p{line-height:1.75;overflow-wrap:anywhere}
+@media(max-width:760px){
+ .app .marketOverviewTable .marketPublisherIdentity>small{font-size:14px!important}
+ .marketVerifiedAnswerGrid article[data-answer-kind="tasks"]{grid-column:auto}
+}
+[dir="rtl"] .app .marketOverviewTable .marketOverviewIdentity .platformName{text-align:right}
