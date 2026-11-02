@@ -1,5 +1,7 @@
 "use client";
 import ToolUiText from "@/components/tools/ToolUiText";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {mediaDurationCopy} from "@/lib/tools/media/duration-copy";
 import {useEffect,useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
@@ -56,10 +58,26 @@ async function remoteTts(text:string,target:string,quoteId:string){
 function blobFile(name:string,text:string,mime:string):ToolResultFile{const b=new Blob([text],{type:mime});return{name,blob:b,mime,size:b.size}}
 
 export default function VideoTranslateWorkbench(){
- const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("auto"),[targets,setTargets]=useState<Target[]>(["en"]),[mode,setMode]=useState<Mode>("subtitle"),[durations,setDurations]=useState<number[]>([]),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[videos,setVideos]=useState<ToolResultFile[]>([]),[subs,setSubs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState("");
- useEffect(()=>{let off=false;(async()=>{const ds=[] as number[];for(const f of files)ds.push(await localMediaDuration(f).catch(()=>60));if(!off)setDurations(ds)})();return()=>{off=true}},[files]);
- const startedMinutes=useMemo(()=>durations.reduce((n,d)=>n+Math.max(1,Math.ceil(d/60)),0),[durations]);
- const quantity=Math.max(1,startedMinutes*Math.max(1,targets.length));
+ const {lang:uiLang}=useLingxiLang();
+ const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("auto"),[targets,setTargets]=useState<Target[]>(["en"]),[mode,setMode]=useState<Mode>("subtitle"),[durations,setDurations]=useState<number[]>([]),[durationStatus,setDurationStatus]=useState<"loading"|"ready"|"invalid">("loading"),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[videos,setVideos]=useState<ToolResultFile[]>([]),[subs,setSubs]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState("");
+ useEffect(()=>{
+  let off=false;setDurations([]);setDurationStatus("loading");
+  if(files.length)void(async()=>{
+    try{
+      const ds:number[]=[];
+      for(const f of files){
+        const seconds=await localMediaDuration(f);
+        if(!Number.isFinite(seconds)||seconds<=0)throw Error("VIDEO_DURATION_UNVERIFIED");
+        ds.push(seconds);
+      }
+      if(!off){setDurations(ds);setDurationStatus("ready")}
+    }catch{if(!off){setDurations([]);setDurationStatus("invalid")}}
+  })();
+  return()=>{off=true};
+ },[files]);
+ const durationReady=files.length>0&&durationStatus==="ready"&&durations.length===files.length;
+ const startedMinutes=useMemo(()=>durationReady?durations.reduce((n,d)=>n+Math.max(1,Math.ceil(d/60)),0):0,[durations,durationReady]);
+ const quantity=durationReady?startedMinutes*Math.max(1,targets.length):0;
  const totalBytes=useMemo(()=>files.reduce((n,f)=>n+f.size,0),[files]);
  const persistFiles=totalBytes<=250*1024*1024;
  // Changing language, source file or output mode invalidates the previously rendered artifact.
@@ -67,17 +85,18 @@ export default function VideoTranslateWorkbench(){
  useEffect(()=>{if(!files.length){setDraftId("");return}if(!draftId)setDraftId(newPaidTaskDraftId())},[files.length,draftId]);
 
  function addTarget(v:Target){setTargets(cur=>cur.includes(v)?cur.filter(x=>x!==v):(cur.length>=3?cur:[...cur,v]))}
- async function addRemote(file:File){setFiles(cur=>[...cur,file].slice(0,20));setVideos([]);setSubs([]);setError("")}
+ async function addRemote(file:File){setDurations([]);setDurationStatus("loading");setFiles(cur=>[...cur,file].slice(0,20));setVideos([]);setSubs([]);setError("")}
  async function saveDraft(){
   if(!draftId)return;
   await savePaidTaskDraft({id:draftId,toolId:"video-translate",files:persistFiles?files:undefined,state:{source,targets,mode,startedMinutes,fileNames:files.map(f=>f.name),largeBatch:!persistFiles}});
  }
  async function run(quoteId:string){
+  if(!durationReady)throw Error("VIDEO_DURATION_UNVERIFIED");
   setBusy(true);setStage("");setError("");setVideos([]);setSubs([]);
   const vo:ToolResultFile[]=[],so:ToolResultFile[]=[];
   try{
    for(let fi=0;fi<files.length;fi++){
-    const file=files[fi],duration=durations[fi]||await localMediaDuration(file).catch(()=>60),stem=file.name.replace(/\.[^.]+$/,"");
+    const file=files[fi],duration=durations[fi],stem=file.name.replace(/\.[^.]+$/,"");
     setStage(`${fi+1}/${files.length} · 正在识别语音…`);
     let original:TimedText[]=[];
     // Remote fallback supplies text only, not timestamps. A full-video cue
@@ -112,7 +131,7 @@ export default function VideoTranslateWorkbench(){
   finally{setBusy(false)}
  }
  return <div className="space-y-5">
-  <FileDropzone accept="video/*" multiple append maxFiles={20} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setVideos([]);setSubs([]);setError("")}} disabled={busy} kind="media"/>
+  <FileDropzone accept="video/*" multiple append maxFiles={20} maxSizeMB={500} files={files} onChange={f=>{setDurations([]);setDurationStatus("loading");setFiles(f);setVideos([]);setSubs([]);setError("")}} disabled={busy} kind="media"/>
   <RemoteMediaImporter acceptKind="video" onImported={addRemote} disabled={busy}/>
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="支持本地视频、直接公开 HTTPS 媒体地址，以及当前解析器支持的抖音、TikTok、小红书、快手公开分享链接。不会绕过登录、DRM、私有权限或平台访问控制。" /></p>
 
@@ -135,13 +154,14 @@ export default function VideoTranslateWorkbench(){
    <div className="mt-3 flex flex-wrap gap-2">{LANGS.map(([v,n])=><button type="button" key={v} disabled={busy} onClick={()=>addTarget(v)} className={`rounded-full border px-4 py-2 text-sm ${targets.includes(v)?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border-[var(--lx-line)]"}`}><ToolUiText text={n}/></button>)}</div>
   </section>
 
-  {files.length>0&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm">
+  {files.length>0&&!durationReady&&<p role={durationStatus==="invalid"?"alert":"status"} className="text-sm text-[var(--lx-muted)]">{mediaDurationCopy(uiLang,durationStatus==="invalid"?"invalid":"loading")}</p>}
+  {durationReady&&<section className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm">
    <b>{files.length} <ToolUiText text="个视频 ·" /> {startedMinutes} <ToolUiText text="个起始分钟 ·" /> {targets.length} <ToolUiText text="个目标语言" /></b>
    <p className="mt-1 text-[var(--lx-muted)]"><ToolUiText text="计费数量：" />{startedMinutes} × {targets.length} = {quantity} <ToolUiText text="分钟单位。人民币 ¥1.50 / 分钟单位；美元 $1.50 / 分钟单位。" /></p>
    {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]"><ToolUiText text="这批视频较大，为避免浏览器数据库保存超大文件，付款和处理期间请保持当前页面打开。" /></p>}
   </section>}
 
-  {files.length>0&&targets.length>0&&<PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/>}
+  {durationReady&&targets.length>0&&<div data-testid="video-translate-checkout"><PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/></div>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text={stage||"正在处理…"}/></p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
