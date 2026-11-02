@@ -28,7 +28,7 @@ export async function heicToJpgFiles(files: File[]): Promise<LocalOutput[]> {
     for(let i=0;i<blobs.length;i++){
       const blob=await verifiedJpeg(blobs[i]);
       const suffix=blobs.length>1?`-${String(i+1).padStart(2,"0")}`:"";
-      const base=file.name.replace(/\\.(heic|heif)$/i,"")||"image";
+      const base=file.name.replace(/\.(heic|heif)$/i,"")||"image";
       outputs.push({
         name:`${base}${suffix}.jpg`,
         blob,
