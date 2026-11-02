@@ -123,8 +123,11 @@
           "scope": "vendor_linked_cognition_platform_terms_internal_business_output_ownership"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Devin Desktop 官网官方账单指南列明：自助订阅支持主流信用卡和借记卡、Apple Pay、Google Pay、Link；部分地区结账时提供 Klarna。具体方式取决于所在地及结账页面，不能宣称 PayPal、支付宝或 Klarna 在全球通用。账单管理经 Stripe 客户门户完成；企业套餐需按订单合同核实。",
+          "source": "https://docs.devin.ai/desktop/accounts/usage",
+          "checkedAt": "2026-11-02",
+          "scope": "devin_desktop_self_serve_cards_wallets_klarna_select_regions_stripe_billing"
         },
         "company": {
           "status": "observed",

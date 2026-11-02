@@ -55,7 +55,7 @@ test('Fireworks free trial is one-time marketing claim rather than verified enti
 });
 test('public catalog still 32 products; 30 held candidate rows, 28 deduplicated vendors',()=>{
  const r=materializeCandidateCatalog(cohorts,packs);
- assert.deepEqual(r.totals,{observed:186,missing:24,conflict:0});
+ assert.deepEqual(r.totals,{observed:187,missing:23,conflict:0});
  assert.equal(r.candidateProducts,30);
  assert.equal(r.publisherGroups,28);
  assert.equal(r.products.find(p=>p.id==='fireworks-ai').legalEntity,'Fireworks.ai, Inc.');
@@ -109,4 +109,21 @@ test('Devin legal parent origin may not broaden official source trust for other 
  devin.officialHosts.push('cognition.com.attacker.invalid');
  const bad=auditOfficialObservations(forged,cohorts[1],{today:'2026-11-02'});
  assert.ok(bad.issues.some(issue=>issue.id==='devin-desktop'&&issue.code==='INVALID_PUBLISHER_HOST_PIN'));
+});
+
+
+test('Devin Desktop payment choices are first-party scoped, not claimed universal',()=>{
+ const row=packs[1].products.find(x=>x.id==='devin-desktop');
+ const fact=row.facts.payment;
+ assert.equal(fact.status,'observed');
+ assert.equal(fact.source,'https://docs.devin.ai/desktop/accounts/usage');
+ assert.equal(fact.checkedAt,'2026-11-02');
+ assert.match(fact.text,/Apple Pay/);
+ assert.match(fact.text,/Google Pay/);
+ assert.match(fact.text,/Klarna/);
+ assert.match(fact.text,/部分地区/);
+ assert.match(fact.text,/Stripe/);
+ const audit=auditOfficialObservations(packs[1],cohorts[1],{today:'2026-11-02'});
+ assert.equal(audit.issues.length,0,JSON.stringify(audit.issues));
+ assert.equal(audit.readyForPublication,false);
 });
