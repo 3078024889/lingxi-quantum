@@ -1,5 +1,6 @@
 import {MARKET_API_PRODUCTS} from '../lib/market-api-service-catalog';
 import {auditCuratedUseAcceptance,evaluatePublicationGates} from '../lib/market-launch-gates.mjs';
+import {paymentDeploymentReadiness} from '../lib/market-billing-readiness.mjs';
 import raw from '../data/acceptance/curated-32-use.json';
 import seo from '../data/seo-geo-observations.json';
 import audit from '../reports/official-access-http-20261102.json';
@@ -31,7 +32,10 @@ export const marketLaunchEvidence=()=>{
  const release=evaluatePublicationGates({
   inventory:{curated:MARKET_API_PRODUCTS.length},uses,
   seo:{verifiedObservations:seo.length,verifiedOwnership:false},
-  merchant:{verifiedSettlement:false,refundAndRevocation:false},
+  // Sourced catalog review is distinct from source-page observations and external task tests.
+  sourceAudit:{curated32Reviewed:false},
+  merchant:{verifiedSettlement:false,refundAndRevocation:false,
+   checkoutDisabled:paymentDeploymentReadiness().every(provider=>provider.checkoutAvailable===false)},
   mobile:{nineLocalesRealBrowser:false},realSite:{verifiedPublicProduction:false}
  });
  return {curated:MARKET_API_PRODUCTS.length,uses,release,
