@@ -51,7 +51,7 @@ export default function PdfCompressWorkbench(){
  }:undefined,[stats,c]);
  return <div className="space-y-4">
   <FileDropzone accept="application/pdf,.pdf" files={files} onChange={f=>{setFiles(f);setResult([]);setStats(null);setError("")}} disabled={busy} kind="pdf" maxSizeMB={200}/>
-  <div className="flex flex-wrap gap-2">{([["light",c.light],["recommended",c.recommended],["strong",c.strong]] as const).map(([v,n])=><button key={v} onClick={()=>setMode(v)} className={`rounded-full px-4 py-2 text-sm ${mode===v?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-muted)]"}`}>{n}</button>)}</div>
+  <div className="flex flex-wrap gap-2">{([["light",c.light],["recommended",c.recommended],["strong",c.strong]] as const).map(([v,n])=><button key={v} disabled={busy} onClick={()=>{setMode(v);setResult([]);setStats(null);setError("")}} className={`rounded-full px-4 py-2 text-sm ${mode===v?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)] bg-[var(--lx-panel)] text-[var(--lx-muted)]"}`}>{n}</button>)}</div>
   <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">{c.warning}</div>
   <div className="flex gap-3">
    <button disabled={!file||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.compress}</button>
