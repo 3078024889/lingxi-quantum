@@ -81,12 +81,12 @@ export default function RareImageConvertWorkbench({
   <FileDropzone accept="image/*,.jfif,.bmp,.avif,.ico,.gif" multiple append maxFiles={30} maxSizeMB={60} files={files} onChange={f=>{setFiles(f);setResults([]);setError("")}} disabled={busy} kind="image"/>
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm"><ToolUiText text="输出格式" />
-    <select value={format} onChange={e=>setFormat(e.target.value as Mime)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2">
+    <select disabled={busy} value={format} onChange={e=>{setFormat(e.target.value as Mime);setResults([]);setError("")}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2">
      <option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option>
     </select>
    </label>
    {format!=="image/png"&&<label className="text-sm"><ToolUiText text="质量" /> {Math.round(quality*100)}%
-    <input type="range" min=".4" max="1" step=".01" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="mt-3 w-full"/>
+    <input type="range" min=".4" max="1" step=".01" disabled={busy} value={quality} onChange={e=>{setQuality(Number(e.target.value));setResults([]);setError("")}} className="mt-3 w-full"/>
    </label>}
   </div>
   <p className="text-xs leading-5 text-[var(--lx-muted)]">{sourceLabel} · <ToolUiText text={note||"优先使用浏览器原生解码，本地转换，不上传图片。若浏览器本身不支持该源格式，会明确报错而不是生成假文件。"}/></p>
