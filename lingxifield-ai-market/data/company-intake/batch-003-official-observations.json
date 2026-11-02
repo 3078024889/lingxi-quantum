@@ -105,8 +105,11 @@
           "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Elicit 官方条款联系页登记企业为 Elicit Research, PBC，位于美国加州，不应与旧品牌/历史经营主体未经核实混用。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "registered_company_contact"
         }
       }
     },
@@ -254,8 +257,11 @@
           "scope": "per_model_third_party_licence"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Replicate 2026年官方服务条款说明可使用信用卡、借记卡、银行转账等支付，账号可用先付费余额或使用后结算；预付额度有适用有效期。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "card_debit_bank_transfer_prepaid_postpaid"
         },
         "company": {
           "status": "observed",

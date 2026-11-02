@@ -383,12 +383,18 @@
           "reason": "未逐国查明访问、付款及模型政策差异"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "免费公开图片、付费私密生成和商业使用条款需要与内容所有权条款逐项比对"
+          "status": "observed",
+          "text": "Leonardo 2026服务条款与官方使用说明指出，付费订阅私人生成内容的知识产权归用户；公开作品会授予平台永久使用许可，免费公开创作可商用但无法保证私密。",
+          "source": "https://leonardo.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "private_paid_vs_public_content_license"
         },
         "payment": {
-          "status": "missing",
-          "reason": "没有按国家核实可用支付方式"
+          "status": "observed",
+          "text": "Leonardo 2026条款规定可通过信用卡/借记卡和直接借记进行订阅付款，完整支付方法与币种按用户账户平台页面显示。",
+          "source": "https://leonardo.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_debit_direct_debit_account_dependent"
         },
         "company": {
           "status": "observed",

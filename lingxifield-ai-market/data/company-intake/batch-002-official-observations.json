@@ -228,8 +228,11 @@
           "scope": "product_not_base_model"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "微软2026年9月官方支持文件：Microsoft Copilot 在全球170多个市场可用，明确中国内地不包括在支持范围、香港特别行政区为例外；禁运市场亦不支持。并非全部国家的逐一名单。",
+          "source": "https://support.microsoft.com/en-us/microsoft-365-copilot/supported-languages-for-microsoft-365-copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "170plus_markets_mainland_excluded_hk_exception"
         },
         "commercial": {
           "status": "missing",
@@ -494,8 +497,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Synthesia 2026官方视频授权说明：库存/合成数字人可用于官网教程、YouTube及非付费推广，不得用于Facebook/YouTube/TikTok等付费广告或电视广告；自定义数字人另按本人授权。",
+          "source": "https://help.synthesia.io/en/articles/6341928-synthesia-video-licensing",
+          "checkedAt": "2026-11-02",
+          "scope": "stock_avatar_paid_ad_disallowed"
         },
         "payment": {
           "status": "missing",
