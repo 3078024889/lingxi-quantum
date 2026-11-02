@@ -65,7 +65,7 @@ export default function VideoDubbingWorkbench(){
     if(translatedSegments.length){
      const translatedSrt=toSrt(translatedSegments);
      const sb=new Blob([translatedSrt],{type:"text/plain;charset=utf-8"});
-     subs.push({name:f.name.replace(/\\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
+     subs.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
     }
     setStage(`${i+1}/${files.length} · 正在生成配音…`);
     const voice=await remoteTts(translated,target,quoteId);
