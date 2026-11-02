@@ -34,14 +34,16 @@ export default function PdfOcrWorkbench(){
  const[text,setText]=useState(""),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState("");
  const[tableFile,setTableFile]=useState<ToolResultFile|null>(null),[tableNote,setTableNote]=useState(""),[handoffSource,setHandoffSource]=useState("");
  const stop=useRef(false),file=files[0]||null;
+ const jobRef=useRef(0);
+ // Cancellation and source changes invalidate every pending OCR worker response.
  const controller=useRef<AbortController|null>(null);
- useEffect(()=>()=>controller.current?.abort(),[]);
+ useEffect(()=>()=>{jobRef.current++;controller.current?.abort()},[]);
 
  useEffect(()=>{
   let alive=true;const id=new URL(window.location.href).searchParams.get("handoff");if(!id)return;
   void consumeToolHandoff(id).then(payload=>{
    if(!alive||!payload?.files?.length)return;
-   setFiles(payload.files.slice(0,1));setHandoffSource(payload.sourceSlug);
+   jobRef.current++;setFiles(payload.files.slice(0,1));setText("");setTableFile(null);setTableNote("");setHandoffSource(payload.sourceSlug);
    const clean=new URL(window.location.href);clean.searchParams.delete("handoff");
    history.replaceState(history.state,"",clean.pathname+clean.search+clean.hash);
   }).catch(()=>{});
@@ -57,43 +59,48 @@ export default function PdfOcrWorkbench(){
  async function run(limit?:number,paid=false){
   if(!file){if(paid)throw Error('PROCESSING_INPUT_MISSING');return}
   if(controller.current){if(paid)throw Error('PROCESSING_BUSY');return}
-  const abort=new AbortController();controller.current=abort;setStage(ocrCopy(uiLang).loading);
+  const abort=new AbortController();controller.current=abort;const job=++jobRef.current;setStage(ocrCopy(uiLang).loading);
   setBusy(true);setText("");setError("");setTableFile(null);setTableNote("");stop.current=false;
   let worker:W|null=null,pdf:any=null;
   try{
    worker=await createOcrWorker(ocrLang,{signal:abort.signal}) as unknown as W;
-   pdf=await openPdf(file);const end=Math.min(pdf.numPages,limit||pdf.numPages),chunks:string[]=[];
+   if(job!==jobRef.current||abort.signal.aborted)throw Error("PROCESSING_CANCELLED");
+   pdf=await openPdf(file);if(job!==jobRef.current||abort.signal.aborted)throw Error("PROCESSING_CANCELLED");const end=Math.min(pdf.numPages,limit||pdf.numPages),chunks:string[]=[];
    let hasText=false;
    const structured:Array<{name:string;tokens:PositionedTextToken[]}>= [];
    for(let n=1;n<=end;n++){
-    if(stop.current){if(paid)throw Error('PROCESSING_CANCELLED');return}
+    if(stop.current||abort.signal.aborted||job!==jobRef.current)throw Error("PROCESSING_CANCELLED");
     setStage(t(`识别第 ${n}/${end} 页`,`Recognizing page ${n}/${end}`));
     const rendered=await renderPdfPage(pdf,n,1.8);
     try{
      const image=await canvasToBlob(rendered.canvas,"image/png",1);
      const recognized=await worker.recognize(image,{},handoffSource==="pdf-to-xlsx"?{text:true,blocks:true}:{text:true});
+     if(stop.current||abort.signal.aborted||job!==jobRef.current)throw Error("PROCESSING_CANCELLED");
      const pageText=String(recognized.data.text||'').trim();hasText ||= Boolean(pageText);
      chunks.push(`===== Page ${n} =====\n${pageText}`);
      if(handoffSource==="pdf-to-xlsx")structured.push({name:`Page ${n}`,tokens:blockTokens(recognized.data.blocks)});
     }finally{rendered.canvas.width=rendered.canvas.height=1}
    }
+   if(stop.current||abort.signal.aborted||job!==jobRef.current)throw Error("PROCESSING_CANCELLED");
    if(!hasText)throw Error('OCR_EMPTY');
    const joined=chunks.join("\n\n");setText(joined);
    if(handoffSource==="pdf-to-xlsx"){
     try{
      const xlsx=await positionedTextPagesToXlsx(file.name,structured);
+     if(stop.current||abort.signal.aborted||job!==jobRef.current)throw Error("PROCESSING_CANCELLED");
      setTableFile({name:xlsx.name,blob:xlsx.blob,mime:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",size:xlsx.blob.size});
      setTableNote(t(`已从 OCR 结果整理出 Excel：${xlsx.pages} 个工作表，结构参考度 ${Math.round(xlsx.confidence*100)}%。`,`Excel created from OCR: ${xlsx.pages} worksheet(s), structure score ${Math.round(xlsx.confidence*100)}%.`));
     }catch{
      setTableNote(t("OCR 已完成，但没有找到稳定的重复列结构；先提供识别文字，不会强行生成错位 Excel。","OCR finished, but no stable repeated column structure was found. The recognized text is provided instead of a misleading spreadsheet."));
     }
    }
+   if(stop.current||abort.signal.aborted||job!==jobRef.current)throw Error("PROCESSING_CANCELLED");
    setStage(t("完成","Done"));
   }catch(cause){
-   setStage('');setError(abort.signal.aborted?ocrCopy(uiLang).cancelled:cause instanceof Error&&cause.message==='OCR_EMPTY'?ocrCopy(uiLang).empty:t("这次 OCR 没有完成，请确认 PDF 可以正常打开并稍后重试。","OCR could not finish. Check that the PDF opens normally and try again."));
+   if(job===jobRef.current){setStage('');setText("");setTableFile(null);setError(abort.signal.aborted||stop.current?ocrCopy(uiLang).cancelled:cause instanceof Error&&cause.message==='OCR_EMPTY'?ocrCopy(uiLang).empty:t("这次 OCR 没有完成，请确认 PDF 可以正常打开并稍后重试。","OCR could not finish. Check that the PDF opens normally and try again."))}
    if(paid)throw cause;
   }finally{
-   try{await worker?.terminate()}catch{}try{pdf?.destroy?.()}catch{}controller.current=null;setBusy(false);
+   try{await worker?.terminate()}catch{}try{pdf?.destroy?.()}catch{}if(controller.current===abort)controller.current=null;if(job===jobRef.current)setBusy(false);
   }
  }
 
@@ -105,15 +112,15 @@ export default function PdfOcrWorkbench(){
  if(tableFile)results.unshift(tableFile);
 
  return <div className="space-y-4">
-  <FileDropzone accept="application/pdf,.pdf" files={files} onChange={rows=>{setFiles(rows);setText("");setError("");setTableFile(null);setTableNote("");setHandoffSource("")}} disabled={busy} kind="pdf" maxSizeMB={200}/>
+  <FileDropzone accept="application/pdf,.pdf" files={files} onChange={rows=>{jobRef.current++;controller.current?.abort();setFiles(rows);setText("");setError("");setTableFile(null);setTableNote("");setHandoffSource("")}} disabled={busy} kind="pdf" maxSizeMB={200}/>
   {handoffSource==="pdf-to-xlsx"&&<p className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{t("这是从 PDF 转 Excel 自动继续过来的扫描件。OCR 后会尝试直接生成 Excel，不需要重新上传。","This scanned PDF was continued from PDF to Excel. After OCR, an Excel file will be created when a stable table structure is found.")}</p>}
   <p className="text-sm text-[var(--lx-muted)]">{t("第 1 页免费识别；完整文档从第 2 页起按现有 OCR 规则计费。","Page 1 can be recognized free. Full-document processing follows the existing OCR pricing from page 2 onward.")}{pages?` · ${pages} ${t("页","pages")}`:""}</p>
-  <select value={ocrLang} onChange={e=>setOcrLang(e.target.value)} className="rounded-xl border px-3 py-2"><option value="chi_sim+eng"><ToolUiText text="简体中文 + English" /></option><option value="chi_tra+eng"><ToolUiText text="繁體中文 + English" /></option><option value="eng">English</option><option value="jpn+eng"><ToolUiText text="日本語 + English" /></option><option value="kor+eng">한국어 + English</option></select>
+  <select aria-label={t("识别语言","Recognition language")} disabled={busy} value={ocrLang} onChange={e=>{setOcrLang(e.target.value);setText("");setTableFile(null);setTableNote("");setStage("");setError("")}} className="rounded-xl border px-3 py-2"><option value="chi_sim+eng"><ToolUiText text="简体中文 + English" /></option><option value="chi_tra+eng"><ToolUiText text="繁體中文 + English" /></option><option value="eng">English</option><option value="jpn+eng"><ToolUiText text="日本語 + English" /></option><option value="kor+eng">한국어 + English</option></select>
   <div className="flex flex-wrap gap-3">
    {file&&!busy&&<button onClick={()=>void run(1)} className="rounded-xl border px-5 py-2.5 text-sm">{t("免费识别第 1 页","Recognize page 1 free")}</button>}
    {file&&pages===1&&!busy&&<button onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)]">{t("完整 OCR · 免费","Full OCR · Free")}</button>}
    {file&&pages>1&&<PaidActionButton toolId="pdf-ocr" quantity={pages} metadata={{pages,freePages:1,continuedFrom:handoffSource||null}} onPaid={()=>run(undefined,true)} label={t("查看完整 OCR 价格","See full OCR price")}/>}
-   {busy&&<button onClick={()=>{stop.current=true;controller.current?.abort()}} className="rounded-xl border px-4 py-2">{t("取消","Cancel")}</button>}
+   {busy&&<button onClick={()=>{stop.current=true;controller.current?.abort();setText("");setTableFile(null)}} className="rounded-xl border px-4 py-2">{t("取消","Cancel")}</button>}
   </div>
   {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   {tableNote&&<p className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{tableNote}</p>}
