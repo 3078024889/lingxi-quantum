@@ -83,7 +83,9 @@ test.describe("PDF editor visual quality",()=>{
  await expect(imageObject.locator("img")).toHaveCSS("opacity","0.99");
  // The opacity/aspect-ratio controls scroll the document down on desktop.
  // Return the image handle to the viewport before attempting a genuine pointer drag.
- await page.getByRole("button",{name:"Resize se"}).scrollIntoViewIfNeeded();
+ // A sticky header can cover an element scrolled to the top edge. Center it before pointer input.
+ await page.getByRole("button",{name:"Resize se"}).evaluate((node:HTMLElement)=>node.scrollIntoView({block:"center",inline:"nearest",behavior:"instant"}));
+ await expect.poll(async()=>{const box=await page.getByRole("button",{name:"Resize se"}).boundingBox();return box?.y??0}).toBeGreaterThan(110);
  const imageBefore=await imageObject.boundingBox();
  const imageHandle=await page.getByRole("button",{name:"Resize se"}).boundingBox();
  await page.mouse.move(imageHandle!.x+imageHandle!.width/2,imageHandle!.y+imageHandle!.height/2);
