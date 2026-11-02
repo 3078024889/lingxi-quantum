@@ -104,7 +104,7 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"e-sign-pdf",zh:"PDF电子签名 / 电子签章",en:"E-sign & Stamp PDF",mode:"local" as const},
   {slug:"file-compare",zh:"两个文件是否完全一致",en:"Compare Two Files",mode:"local" as const},
   {slug:"file-type-detector",zh:"文件真实格式检测",en:"Real File Type Detector",mode:"local" as const},
-  {slug:"food-calorie",zh:"食物热量与营养",en:"Food Nutrition Calculator",mode:"online" as const},
+  {slug:"food-calorie",zh:"卡路里识别",en:"Calorie Recognition",mode:"online" as const},
   {slug:"heic-local",zh:"HEIC 本地转换",en:"Local HEIC Converter",mode:"local" as const},
   {slug:"heic-to-jpg",zh:"HEIC 转 JPG",en:"HEIC to JPG",mode:"local" as const},
   {slug:"id-photo-ai",zh:"AI 证件照",en:"AI ID Photo",mode:"online" as const},
