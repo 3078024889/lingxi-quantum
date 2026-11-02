@@ -23,7 +23,7 @@ export function regionPresentation(id:string,language:Language){
   const x=priority.indexOf(a),y=priority.indexOf(b);
   return (x<0?100:x)-(y<0?100:y)||regionName(a as RegionCode,language).localeCompare(regionName(b as RegionCode,language));
  });
- return {words:copy[language],top:sorted.slice(0,8),other:sorted.slice(8),total:sorted.length,
+ return {words:copy[language],top:sorted.slice(0,5),other:sorted.slice(5),total:sorted.length,
   complete,source:snapshot?.source||null,checkedAt:snapshot?.checkedAt||null};
 }
 export function globalRegionSummary(id:string,language:Language){
