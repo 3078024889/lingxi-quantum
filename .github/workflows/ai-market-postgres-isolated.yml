@@ -323,7 +323,7 @@ jobs:
                '11111111-1111-4111-8111-111111111111','chatgpt','sponsored',
                clock_timestamp(),clock_timestamp()+interval '30 days');
              RAISE EXCEPTION 'PLACEMENT_GRANTED_WITHOUT_SIGNED_PROOF';
-            EXCEPTION WHEN foreign_key_violation THEN NULL; END;
+            EXCEPTION WHEN foreign_key_violation OR check_violation THEN NULL; END;
             INSERT INTO public.ai_market_promotion_settlement_evidence
              (merchant_order_id,provider,provider_event_ref,provider_transaction_ref,payload_sha256,
               amount_minor,currency,signature_verified_at)
