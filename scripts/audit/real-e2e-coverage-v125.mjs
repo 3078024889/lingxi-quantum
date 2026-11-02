@@ -33,6 +33,7 @@ const current=new Map([
  ...group(["pdf-redact"],"pdf-redaction-output-v89"),
  ...group(["temp-mail","video-watermark-remover","image-translator"],"tool-user-journeys-v1"),
  ...group(["audio-cleanup","pdf-to-word"],"paid-local-output-v89"),
+ ...group(["remove-exif"],"remove-exif-real-v130"),
  ...group(["subtitle-translate"],"subtitle-translation-v95")
 ]);
 for(const [slug,file] of current){
@@ -41,7 +42,6 @@ for(const [slug,file] of current){
 }
 // Only names still in the actual 124-slug public catalog count.
 const historical=new Map([
- ["remove-exif","Historical real-file sample: 2026-11-01"],
  ["rotate-video","Historical real-file sample: 2026-11-01"]
 ]);
 const rows=[["slug","evidence_status","committed_test_or_historical_sample","unproven_scope"]];
