@@ -10,7 +10,7 @@ test('ten candidates each have seven explicit sourced/missing observations; no p
  assert.equal(r.observed+r.missing+r.conflict,70);
  assert.equal(r.readyForEditorialReview,true);
  assert.equal(r.readyForPublication,false);
- assert.ok(r.conflict>=2);
+ assert.equal(r.conflict,0); // verified current-vs-legacy source differences are resolved
 });
 test('changes to manufacturer source hosts cannot launder fake pricing',()=>{
  const v=structuredClone(pack);v.products[0].facts.price.source='https://cursor.com.attacker.invalid/price';
@@ -25,13 +25,17 @@ test('future-dated claims and arbitrary products are rejected',()=>{
  const w=structuredClone(pack);w.products[0].id='unknown-company';
  assert.ok(auditOfficialObservations(w,batch).issues.some(x=>x.code==='UNKNOWN_OR_DUPLICATE_ID'));
 });
-test('conflicts remain explicit; old Pika free quota and legacy Cursor pricing never silently become approved',()=>{
+test('Pika and Cursor current plans retain legacy evidence without implying approval',()=>{
  const p=pack.products.find(x=>x.id==='pika'),c=pack.products.find(x=>x.id==='cursor');
- assert.equal(p.facts.free.status,'conflict');assert.equal(c.facts.price.status,'conflict');
- assert.match(p.facts.free.conflictingSource,/pika\.art\/faq/);
- assert.match(c.facts.price.conflictingSource,/prod\.cursor\.com/);
- assert.match(p.facts.free.text,/150/);assert.match(p.facts.free.text,/0/);
- assert.match(c.facts.price.text,/Plus \$8/);assert.match(c.facts.price.text,/Pro \$20/);
+ assert.equal(p.facts.free.status,'observed');
+ assert.equal(c.facts.price.status,'observed');
+ assert.match(p.facts.free.text,/0 积分/);
+ assert.match(c.facts.price.text,/Plus \\$8/);
+ assert.match(c.facts.price.text,/Pro \\$20/);
+ assert.ok(p.facts.free.additionalEvidence.some(x=>x.source==='https://old.pika.art/pricing'));
+ assert.ok(c.facts.price.additionalEvidence.some(x=>x.source==='https://prod.cursor.com/docs/models-and-pricing'));
+ assert.equal(pack.products.every(x=>x.reviewStatus==='unapproved'),true);
+ assert.equal(batch.products.every(x=>x.reviewed===false&&x.publishApproved===false),true);
 });
 test('candidate pack alone cannot change canonical public catalog',()=>{
  const s=readFileSync(new URL('../lib/platform-repository.ts',import.meta.url),'utf8');
