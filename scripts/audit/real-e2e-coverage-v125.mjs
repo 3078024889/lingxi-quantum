@@ -36,6 +36,7 @@ const current=new Map([
  ...group(["remove-exif"],"remove-exif-real-v130"),
  ...group(["ocr"],"remaining-ocr-real-v130"),
  ...group(["heic-to-jpg"],"heic-format-validation-v134"),
+ ...group(["e-sign-pdf"],"e-sign-pdf-real-v135"),
  ...group(["rotate-video"],"video-toolkit-real-v131"),
  ...group(["loop-video","reverse-video","stop-motion-video"],"video-effects-real-v134"),
  ...group(["subtitle-translate"],"subtitle-translation-v95")
