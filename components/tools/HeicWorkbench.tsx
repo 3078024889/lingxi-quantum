@@ -41,7 +41,7 @@ export default function HeicWorkbench(){
  }
  const total=useMemo(()=>results.reduce((n,r)=>n+r.size,0),[results]);
  return <div className="space-y-4">
-  <FileDropzone accept=".heic,.heif,image/heic,image/heif" multiple maxFiles={30} maxSizeMB={50} files={files} onChange={setFiles} disabled={busy} kind="image"/>
+  <FileDropzone accept=".heic,.heif,image/heic,image/heif" multiple maxFiles={30} maxSizeMB={50} files={files} onChange={next=>{setFiles(next);setResults([]);setError("")}} disabled={busy} kind="image"/>
   <button onClick={run} disabled={!files.length||busy} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?c.working:files.length>1?`${c.batch} · ${files.length}`:c.run}</button>
   {!!results.length&&<ResultPanel files={results} messageZh={c.done} messageEn={c.done} details={{files:results.length,resultKB:Number((total/1024).toFixed(1))}}/>}
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] bg-[var(--lx-panel)] p-4 text-sm text-[var(--lx-danger)]">{plainMessage(lang,error)}</p>}
