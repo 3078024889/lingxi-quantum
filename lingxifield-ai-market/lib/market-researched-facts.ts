@@ -59,12 +59,20 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
   },
   "lovable": {
     "payments": [
-      "Link（Stripe Checkout；Stripe 官方 Lovable 案例确认使用）"
+      "Credit / debit card（地区结账条件适用）",
+      "Apple Pay（适用地区）",
+      "Google Pay（适用地区）",
+      "Cash App Pay（适用地区）",
+      "WeChat Pay（适用地区）",
+      "Alipay（适用地区）",
+      "iDEAL（适用地区）",
+      "Amazon Pay（适用地区）",
+      "Link（Stripe 快捷结账，适用地区）"
     ],
     "paymentSource": "https://stripe.com/customers/lovable",
     "price": "Pro 套餐起价 $25/月（以现行官网方案及地区结算为准）；官方按任务积分示例：修改按钮颜色 0.50 credits、删除页脚 0.90 credits、增加注册登录 1.20 credits、生成含 3 张图片的落地页 1.70 credits。示例不是固定收费，复杂度及套餐影响积分消耗；不能直接换算为美元/次。",
     "priceSource": "https://lovable.dev/pricing",
-    "region": "Lovable 面向国际用户提供网站与应用构建服务，使用 Stripe 进行订阅与用量收费；官网案例未提供逐国注册、付款渠道白名单，不将 Stripe 全平台支持的钱包视为 Lovable 已开通。",
+    "region": "Stripe 对 Lovable 的官方案例明确列出已启用信用卡、Apple Pay、Google Pay、Cash App Pay、微信支付、支付宝、iDEAL、Amazon Pay 和 Link；由结账系统按所在国家、货币与账户等条件动态显示，不能保证每个国家每种钱包都可用。Stripe 自身覆盖的全部支付方式也不能直接视为 Lovable 已开通。",
     "regionSource": "https://stripe.com/customers/lovable",
     "commercial": "用户通常拥有自己用 Lovable 建立的应用/网站及生成内容，但平台自身技术与第三方模型仍有独立权利",
     "commercialSource": "https://lovable.dev/terms",
@@ -593,4 +601,9 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
   }
 };
 export const MARKET_RESEARCH_CHECKED_AT='2026-10-31';
+/** Product-specific first-party recheck dates; original historical observations keep their own date. */
+export const MARKET_PRODUCT_REVIEWED_AT:Readonly<Partial<Record<string,string>>>={
+ lovable:'2026-11-03',replit:'2026-11-02',midjourney:'2026-11-02'
+};
+export function marketProductReviewedAt(id:string){return MARKET_PRODUCT_REVIEWED_AT[id]||MARKET_RESEARCH_CHECKED_AT;}
 export function researchedFact(id:string){return RESEARCHED_FACTS[id];}
