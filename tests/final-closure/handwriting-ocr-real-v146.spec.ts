@@ -8,7 +8,7 @@ async function sample(text:string){
  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="960" height="220"><rect width="100%" height="100%" fill="white"/><text x="36" y="128" font-size="68" font-family="DejaVu Sans" font-weight="bold" fill="black">${text}</text></svg>`;
  return sharp(Buffer.from(svg)).png().toBuffer();
 }
-async function paidOcr(page:Page,buffer:Buffer){
+async function paidOcr(page:Page,buffer:Buffer,extraBlank?:Buffer){
  let quoteCount=0;let quote:any=null;
  await page.route("**/api/tools/quote",r=>{
   if(r.request().method()!=="POST")return r.fulfill({status:404,body:"LOCAL_FIXTURE_ONLY"});
@@ -22,7 +22,10 @@ async function paidOcr(page:Page,buffer:Buffer){
  await page.goto("/tools/handwriting-ocr?lang=en");
  const input=page.locator('input[type="file"]').first();
  await expect(input).toBeEnabled();
- await input.setInputFiles({name:"handwritten-sample.png",mimeType:"image/png",buffer});
+ await input.setInputFiles(extraBlank ? [
+  {name:"handwritten-sample.png",mimeType:"image/png",buffer},
+  {name:"intentionally-empty.png",mimeType:"image/png",buffer:extraBlank}
+ ] : {name:"handwritten-sample.png",mimeType:"image/png",buffer});
  await page.locator("[data-tool-workbench] select").first().selectOption("multilingual");
  await page.locator("[data-tool-workbench] select").last().selectOption("eng");
  const quoteButton=page.locator("[data-tool-workbench] button").filter({hasText:/price|价格/i}).last();
@@ -59,6 +62,18 @@ test("OCR: blank photo must not be accepted as completed paid export; user may r
  const calls=await paidOcr(page,blank);
  const retry=page.getByRole("button",{name:"Resume paid task",exact:true});
  await expect(retry).toBeVisible({timeout:120000});
+ await expect(page.getByText("No readable text was found.",{exact:false})).toBeVisible();
+ await expect(page.getByText("Task complete",{exact:true})).toHaveCount(0);
+ await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
+ expect(calls()).toBe(1);
+});
+
+
+test("OCR: one recognized image cannot hide a blank second item in a paid batch",async({page})=>{
+ test.setTimeout(180000);
+ const blank=await sharp({create:{width:600,height:180,channels:3,background:"white"}}).png().toBuffer();
+ const calls=await paidOcr(page,await sample("HELLO PLANET"),blank);
+ await expect(page.getByRole("button",{name:"Resume paid task",exact:true})).toBeVisible({timeout:150000});
  await expect(page.getByText("No readable text was found.",{exact:false})).toBeVisible();
  await expect(page.getByText("Task complete",{exact:true})).toHaveCount(0);
  await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
