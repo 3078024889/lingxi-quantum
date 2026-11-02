@@ -82,6 +82,9 @@ jobs:
           ffmpeg -version
           ffprobe -version
 
+      - name: Download and integrity-check signed C2PA test fixtures
+        run: node scripts/ci/fetch-signed-c2pa-fixtures-v157.mjs
+
       - name: Desktop closure
         run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1
 
