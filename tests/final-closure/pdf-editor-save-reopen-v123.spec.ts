@@ -56,6 +56,7 @@ test("PDF editor: edit existing vector headline, insert movable image, complete 
  const opened=await pdfjs.getDocument({data:new Uint8Array(bytes)}).promise;
  const text=(await (await opened.getPage(1)).getTextContent()).items.map((v:any)=>v.str||"").join(" ");
  expect(text).toContain("Original Agreement");
+ expect(text).toContain("Updated Agreement"); // Replacement stays selectable/searchable as native PDF text.
  const operators=await (await opened.getPage(1)).getOperatorList();
  expect(operators.fnArray.filter(op=>op===pdfjs.OPS.paintImageXObject||op===pdfjs.OPS.paintInlineImageXObject).length).toBeGreaterThan(0);
  await opened.destroy();
