@@ -48,9 +48,9 @@ test("resize-image: original image becomes exact requested dimensions and is ind
 });
 
 test("compress-pdf: true vector PDF produces valid raster PDF with same pages, text may not be selectable",async({page})=>{
- await page.goto("/tools/compress-pdf?lang=en");
+ await page.goto("/tools/pdf-compress?lang=en");
  await tool(page).locator('input[type="file"]').first().setInputFiles({name:"input.pdf",mimeType:"application/pdf",buffer:await sourcePdf()});
- await tool(page).getByRole("button",{name:"Process now",exact:true}).click();
+ await tool(page).getByRole("button",{name:"Compress PDF",exact:true}).click();
  const output=await save(page);
  const result=await PDFDocument.load(output);
  expect(result.getPageCount()).toBe(1);
