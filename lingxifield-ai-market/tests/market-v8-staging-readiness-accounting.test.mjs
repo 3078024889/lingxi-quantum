@@ -12,6 +12,6 @@ test('release readiness summarizes 30 staged records, but never returns unapprov
 test('one extra HTTP readiness check confirms 32 curated distinct from 30 staged',()=>{
  const s=file('scripts/smoke-curated-local.mjs');
  assert.match(s,/stagedInventory\?\.candidateProducts===30/);
- assert.match(s,/stagedInventory\?\.officialSourceObservations===97/);
+ assert.match(s,/stagedInventory\?\.officialSourceObservations===121/);
  assert.match(s,/total:paths\.length\+4/);
 });
