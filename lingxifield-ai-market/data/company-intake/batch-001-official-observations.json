@@ -155,8 +155,11 @@
           "scope": "vendor_public_page"
         },
         "models": {
-          "status": "missing",
-          "reason": "官方说明提供高级 AI 图像模型，但未取得一份可核对的完整模型版本清单"
+          "status": "observed",
+          "text": "Gamma 官方图片编辑器可在自动选模与手动选模之间切换，帮助中心列出 DALL·E 3、GPT Image、Flux Kontext Max 等代表图片模型；新版 Gamma Agent 的 Lite/Standard 使用 GPT Image 2 Mini、Max 使用 GPT Image 2，具体模型随工作流及会员等级而变，不能归纳成单一固定基础模型。",
+          "source": "https://help.gamma.app/en/articles/11856101-how-do-i-use-the-visuals-menu-in-gamma",
+          "checkedAt": "2026-11-02",
+          "scope": "image_picker_models_distinct_from_agent_effort_models"
         },
         "regions": {
           "status": "missing",
@@ -242,8 +245,11 @@
           "scope": "vendor_public_page"
         },
         "payment": {
-          "status": "missing",
-          "reason": "目前未对支付卡种和地区限制获得官方完整证据"
+          "status": "observed",
+          "text": "Pika 官网帮助中心确认网页订阅和积分包通过 Stripe 账单管理页处理，Stripe 负责银行卡等支付受理；通过 iOS App 购买的订阅由 Apple App Store 结算与取消。具体卡种/本地支付方式仍由结账地区和支付提供商决定，不可据此宣称全部地区支持 PayPal。",
+          "source": "https://pika.art/support",
+          "checkedAt": "2026-11-02",
+          "scope": "web_stripe_and_ios_app_store_billing"
         },
         "company": {
           "status": "observed",
@@ -594,8 +600,11 @@
           "scope": "generated_output_ownership_with_stock_media_separate_licences"
         },
         "payment": {
-          "status": "missing",
-          "reason": "未核对官网当前全球收款渠道的完整清单"
+          "status": "observed",
+          "text": "Descript 官网安全与隐私说明：其付费账户收集信用卡及账单地址等资料，使用 Stripe 处理订阅支付。已证实信用卡及 Stripe 结算渠道；该页面没有确认全球支持 PayPal、支付宝或微信支付，其他收款渠道不能据此推定。",
+          "source": "https://www.descript.com/security",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_card_billing_stripe_not_all_local_rails"
         },
         "company": {
           "status": "observed",
