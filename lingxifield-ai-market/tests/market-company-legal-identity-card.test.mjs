@@ -11,6 +11,15 @@ test('brand, corporation legal entity and parents are separately sourced',()=>{
   ['qwen',['Alibaba Group Holding Limited','group_parent']],
   ['doubao',['ByteDance Ltd.','group_parent']],
   ['kling',['Kuaishou Technology','group_parent']],
+  ['luma',['Luma AI, Inc.','service_operator']],
+  ['elevenlabs',['Eleven Labs Inc.','service_operator']],
+  ['suno',['Suno Inc.','service_operator']],
+  ['replit',['Replit, Inc.','service_operator']],
+  ['perplexity',['Perplexity AI, Inc.','service_operator']],
+  ['n8n',['n8n GmbH','service_operator']],
+  ['langchain',['LangChain Inc.','service_operator']],
+  ['lovable',['Lovable Labs Incorporated','service_operator']],
+  ['midjourney',['Midjourney, Inc.','service_operator']],
  ]);
  for(const [id,[legal,scope]] of known){
   const x=companyPresentationFor(id,id);
