@@ -48,7 +48,8 @@ export async function POST(req:NextRequest){
  }
 
  let total=0;
- if(files.some((f:any)=>!Number.isSafeInteger(Number(f?.size))||Number(f?.size)<1))return NextResponse.json({error:"INVALID_FILE"},{status:400});
+ if(files.some((f:any)=>!Number.isSafeInteger(Number(f?.size))||Number(f?.size)<49||String(f?.type)!=="application/vnd.lingxifield.burn-encrypted"))
+  return NextResponse.json({error:"ENCRYPTED_FILE_REQUIRED"},{status:400});
  const normalized=files.map((f:any)=>{
   const size=Math.floor(Number(f?.size||0));
   if(!Number.isFinite(size)||size<1)throw new Error("INVALID_FILE");
