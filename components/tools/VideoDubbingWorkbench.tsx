@@ -7,6 +7,7 @@ import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
 import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/transcribe-local";
+import{mediaDurationCopy}from"@/lib/tools/media/duration-copy";
 import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 
@@ -41,12 +42,26 @@ const CAPTION_WARNING:Record<string,string>={
 export default function VideoDubbingWorkbench(){
  const {lang:uiLang}=useLingxiLang();
  const[untimed,setUntimed]=useState(false);
- const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[minutes,setMinutes]=useState(0),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
- useEffect(()=>{let off=false;(async()=>{let total=0;for(const f of files){try{total+=Math.max(1,Math.ceil((await localMediaDuration(f))/60))}catch{total+=1}}if(!off)setMinutes(total)})();return()=>{off=true}},[files]);
- useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setMinutes(Number(d.state?.minutes||0))}setDraftReady(true)})()},[]);
+ const[files,setFiles]=useState<File[]>([]),[source,setSource]=useState("zh"),[target,setTarget]=useState("en"),[minutes,setMinutes]=useState<number|null>(null),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]),[subtitles,setSubtitles]=useState<ToolResultFile[]>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
+ useEffect(()=>{
+  let off=false;setMinutes(null);
+  if(files.length)void(async()=>{
+    try{
+      let total=0;
+      for(const f of files){
+        const seconds=await localMediaDuration(f);
+        if(!Number.isFinite(seconds)||seconds<=0)throw Error("VIDEO_DURATION_UNVERIFIED");
+        total+=Math.max(1,Math.ceil(seconds/60));
+      }
+      if(!off)setMinutes(total);
+    }catch{if(!off)setMinutes(-1)}
+  })();
+  return()=>{off=true};
+ },[files]);
+ useEffect(()=>{const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setDraftReady(true);return}void(async()=>{const d=await loadPaidTaskDraft<any>(id),f=draftFiles(d);if(d?.toolId==="video-dubbing"){setDraftId(id);setFiles(f);setSource(d.state?.source||"zh");setTarget(d.state?.target||"en");setMinutes(null)}setDraftReady(true)})()},[]);
  useEffect(()=>{if(!draftReady||!files.length)return;const id=draftId||newPaidTaskDraftId();if(!draftId)setDraftId(id);const tm=setTimeout(()=>void savePaidTaskDraft({id,toolId:"video-dubbing",files,state:{source,target,minutes}}),150);return()=>clearTimeout(tm)},[files,source,target,minutes,draftId,draftReady]);
  useEffect(()=>{setOutputs([]);setSubtitles([]);setUntimed(false);},[files,source,target]);
- const quantity=Math.max(1,minutes);
+ const quantity=minutes!==null&&minutes>0?minutes:0;
 
  async function run(quoteId:string){
   setBusy(true);setError("");setOutputs([]);setSubtitles([]);setUntimed(false);
@@ -96,12 +111,13 @@ export default function VideoDubbingWorkbench(){
  }
 
  return <div className="space-y-4">
-  <FileDropzone accept="video/*" multiple maxFiles={5} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setSubtitles([]);setError("");setDraftId("")}} disabled={busy} kind="media"/>
+  <FileDropzone accept="video/*" multiple maxFiles={5} maxSizeMB={500} files={files} onChange={f=>{setMinutes(null);setFiles(f);setOutputs([]);setSubtitles([]);setError("");setDraftId("")}} disabled={busy} kind="media"/>
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm"><ToolUiText text="原始语言" /><select value={source} disabled={busy} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm"><ToolUiText text="配音语言" /><select value={target} disabled={busy} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&<div data-testid="video-dubbing-checkout"><PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{minutes:quantity,files:files.length,source,target,export:"dubbed-mp4"}} onPaid={run} label="查看本次配音成片价格"/></div>}
+  {files.length>0&&quantity===0&&<p role={minutes===-1?"alert":"status"} className="text-sm text-[var(--lx-muted)]">{mediaDurationCopy(uiLang,minutes===-1?"invalid":"loading")}</p>}
+  {files.length>0&&quantity>0&&<div data-testid="video-dubbing-checkout"><PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{minutes:quantity,files:files.length,source,target,export:"dubbed-mp4"}} onPaid={run} label="查看本次配音成片价格"/></div>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage||"正在处理…"}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="生成结果包含翻译字幕和可下载 MP4 配音成片。当前版本使用新的合成语音替换原视频音轨，不宣称口型同步或原声克隆。生成语音为 AI 合成语音。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
