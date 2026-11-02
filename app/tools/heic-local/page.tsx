@@ -1,5 +1,9 @@
-import LxText from "@/components/LxText";
-import {TOOL_INTROS} from "@/lib/tools/product-copy";
-import AdvancedToolPage from "@/components/tools/AdvancedToolPage";
-import HeicWorkbench from "@/components/tools/HeicWorkbench";
-export default function Page(){return <AdvancedToolPage title={<LxText {...{"zh": "HEIC 转 JPG", "en": "HEIC to JPG", "ja": "HEICをJPGへ", "ko": "HEIC를 JPG로", "fr": "HEIC vers JPG", "de": "HEIC zu JPG", "es": "HEIC a JPG", "pt": "HEIC para JPG", "ar": "HEIC إلى JPG"}}/>} intro={<LxText {...TOOL_INTROS["heic-to-jpg"]}/>}> <HeicWorkbench/></AdvancedToolPage>}
+import {permanentRedirect} from "next/navigation";
+type Props={searchParams:Promise<{lang?:string|string[]}>};
+/** Legacy URL retained for bookmarks; /tools/heic-to-jpg is the sole public tool. */
+export default async function Page({searchParams}:Props){
+ const {lang}=await searchParams;
+ const valid=new Set(["zh","en","ja","ko","fr","de","es","pt","ar"]);
+ const locale=typeof lang==="string"&&valid.has(lang)?`?lang=${encodeURIComponent(lang)}`:"";
+ permanentRedirect("/tools/heic-to-jpg"+locale);
+}
