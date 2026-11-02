@@ -250,7 +250,7 @@ export function localizedCatalogFact(id:string,language:Language,scope:Scope,ori
   return 'Core $'+values[1]+' '+t.monthly+' · $'+values[2]+' '+t.annual+'; Pro $'+values[3]+' '+t.monthly+' · $'+values[4]+' '+t.annual;
  }
  if(id==='lovable'&&scope==='price'){
-  const pro=original.match(/Pro \$(\d+(?:\.\d+)?)\/月/);
+  const pro=original.match(/Pro(?:[\u4e00-\u9fff ]+)?\s*\$(\d+(?:\.\d+)?)\/月/);
   return (pro?'Pro $'+pro[1]+' '+TEXT[language].monthlyRef+' · ':'')+(LOVABLE_TASK_COSTS[language]||TEXT[language].variable);
  }
  const c=FACTS[id],t=TEXT[language];
