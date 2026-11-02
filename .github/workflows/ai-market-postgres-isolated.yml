@@ -7,6 +7,7 @@ on:
       - 'lingxifield-ai-market/sql/**'
       - 'supabase/migrations/20261102120000_ai_market_vendor_account_claims.sql'
       - 'supabase/migrations/20261102123000_ai_market_vendor_promotion_requests.sql'
+      - 'supabase/migrations/20261102130000_ai_market_promotion_placement_lifecycle.sql'
       - '.github/workflows/ai-market-postgres-isolated.yml'
 
 permissions:
@@ -300,6 +301,85 @@ jobs:
           END
           $bridge$;
           COMMIT;
+          SQL
+
+      - name: Apply refund and placement entitlement ledger in disposable Postgres
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261102130000_ai_market_promotion_placement_lifecycle.sql
+
+      - name: Verify signed-settlement gate, anti-replay, refund and immediate entitlement revocation
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          BEGIN;
+          SET LOCAL ROLE service_role;
+          DO $proof$
+          DECLARE r uuid; s uuid; e uuid;
+          BEGIN
+            SELECT id INTO r FROM public.ai_market_vendor_promotion_requests WHERE product_id='chatgpt' AND plan_id='sponsored';
+            UPDATE public.orders SET status='paid' WHERE id='88888888-8888-4888-8888-888888888888';
+            BEGIN
+             INSERT INTO public.ai_market_promotion_entitlements
+              (promotion_request_id,merchant_order_id,settlement_evidence_id,user_id,product_id,plan_id,starts_at,ends_at)
+             VALUES(r,'88888888-8888-4888-8888-888888888888','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+               '11111111-1111-4111-8111-111111111111','chatgpt','sponsored',
+               clock_timestamp(),clock_timestamp()+interval '30 days');
+             RAISE EXCEPTION 'PLACEMENT_GRANTED_WITHOUT_SIGNED_PROOF';
+            EXCEPTION WHEN foreign_key_violation THEN NULL; END;
+            INSERT INTO public.ai_market_promotion_settlement_evidence
+             (merchant_order_id,provider,provider_event_ref,provider_transaction_ref,payload_sha256,
+              amount_minor,currency,signature_verified_at)
+             VALUES('88888888-8888-4888-8888-888888888888','alipay','ALIPAY_EVENT_RECONCILE_001',
+              'ALIPAY_TRANSACTION_RECONCILE_001',repeat('a',64),4900,'CNY',clock_timestamp())
+             RETURNING id INTO s;
+            BEGIN
+             INSERT INTO public.ai_market_promotion_entitlements
+              (promotion_request_id,merchant_order_id,settlement_evidence_id,user_id,product_id,plan_id,starts_at,ends_at)
+             VALUES(r,'88888888-8888-4888-8888-888888888888',s,
+               '22222222-2222-4222-8222-222222222222','chatgpt','sponsored',
+               clock_timestamp(),clock_timestamp()+interval '30 days');
+             RAISE EXCEPTION 'CROSS_VENDOR_SETTLEMENT_ACCEPTED';
+            EXCEPTION WHEN check_violation THEN NULL; END;
+            INSERT INTO public.ai_market_promotion_entitlements
+             (promotion_request_id,merchant_order_id,settlement_evidence_id,user_id,product_id,plan_id,starts_at,ends_at)
+            VALUES(r,'88888888-8888-4888-8888-888888888888',s,
+             '11111111-1111-4111-8111-111111111111','chatgpt','sponsored',
+             clock_timestamp(),clock_timestamp()+interval '30 days') RETURNING id INTO e;
+            IF NOT EXISTS(SELECT 1 FROM public.ai_market_promotion_entitlements WHERE id=e AND status='active')
+             THEN RAISE EXCEPTION 'SETTLEMENT_FAILED_TO_CREATE_PLACEMENT'; END IF;
+            BEGIN
+             INSERT INTO public.ai_market_promotion_settlement_evidence
+              (merchant_order_id,provider,provider_event_ref,provider_transaction_ref,payload_sha256,
+               amount_minor,currency,signature_verified_at)
+             VALUES('88888888-8888-4888-8888-888888888888','alipay','ALIPAY_EVENT_RECONCILE_001',
+               'ALIPAY_TRANSACTION_RECONCILE_001',repeat('a',64),4900,'CNY',clock_timestamp());
+             RAISE EXCEPTION 'DUPLICATE_SETTLEMENT_EVENT_ACCEPTED';
+            EXCEPTION WHEN unique_violation THEN NULL; END;
+            INSERT INTO public.ai_market_promotion_refund_evidence
+             (merchant_order_id,provider,provider_event_ref,refund_reference,amount_minor,currency,payload_sha256,signature_verified_at)
+            VALUES('88888888-8888-4888-8888-888888888888','alipay',
+              'ALIPAY_REFUND_EVENT_001','ALIPAY_REFUND_001',200,'CNY',repeat('b',64),clock_timestamp());
+            IF NOT EXISTS(SELECT 1 FROM public.ai_market_promotion_entitlements
+             WHERE id=e AND status='revoked' AND revocation_reason='provider_refund')
+              THEN RAISE EXCEPTION 'REFUNDED_PLACEMENT_STILL_ACTIVE'; END IF;
+            BEGIN
+             INSERT INTO public.ai_market_promotion_refund_evidence
+              (merchant_order_id,provider,provider_event_ref,refund_reference,amount_minor,currency,payload_sha256,signature_verified_at)
+             VALUES('88888888-8888-4888-8888-888888888888','alipay',
+              'ALIPAY_REFUND_EVENT_002','ALIPAY_REFUND_002',4800,'CNY',repeat('c',64),clock_timestamp());
+             RAISE EXCEPTION 'OVER_REFUND_ACCEPTED';
+            EXCEPTION WHEN check_violation THEN NULL; END;
+          END
+          $proof$;
+          COMMIT;
+
+          DO $permissions$
+          BEGIN
+           IF has_table_privilege('authenticated','public.ai_market_promotion_settlement_evidence','INSERT')
+            OR has_table_privilege('authenticated','public.ai_market_promotion_refund_evidence','INSERT')
+            OR has_table_privilege('anon','public.ai_market_promotion_entitlements','SELECT')
+            OR has_table_privilege('authenticated','public.ai_market_promotion_entitlements','UPDATE')
+           THEN RAISE EXCEPTION 'MERCHANT_EVIDENCE_PRIVILEGE_EXPOSED'; END IF;
+          END
+          $permissions$;
           SQL
 
       - name: Apply feedback migrations in security-preserving order
