@@ -9,7 +9,7 @@
 | 不重复公开工具 | **121** |
 | 已登记真实浏览器操作场景（不等于 CI 全通过） | **82** |
 | 仅有历史部分样本 | **2** |
-| 尚未具备充分真实操作场景 | **25** |
+| 尚未具备充分真实操作场景 | **24** |
 
 ## 重复工具处理记录
 
@@ -109,7 +109,7 @@
 | pdf-to-markdown | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
 | pdf-to-text | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
 | pdf-to-word | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `paid-local-output-v89.spec.ts` |
-| pdf-to-xlsx | FULL_E2E_NOT_PROVEN | — |
+| pdf-to-xlsx | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-table-real-v129.spec.ts` |
 | pdf-unlock | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-security-attachments-v129.spec.ts` |
 | pdf-viewer-preferences | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `remaining-pdf-subtitle-local-v129.spec.ts` |
 | pdf-watermark | REGISTERED_REAL_E2E_NOT_YET_ALL_PASSED | `unverified-pdf-real-v126.spec.ts` |
