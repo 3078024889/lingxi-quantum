@@ -25,6 +25,11 @@ test("Whisper Tiny real inference recognizes synthetic English speech and writes
    return r.fulfill({json:q});
   });
   await page.route("**/api/tools/pay/status**",r=>r.fulfill({json:{paid:true,quote:{tool_id:"audio-transcription",quantity:q?.quantity,metadata:q?.metadata}}}));
+  const telemetry:string[]=[];
+  page.on("pageerror",e=>telemetry.push("PAGE:"+e.message.slice(0,280)));
+  page.on("console",m=>{if(m.type()==="error"||m.type()==="warning")telemetry.push("CONSOLE:"+m.text().slice(0,350))});
+  page.on("requestfailed",r=>{if(/models|onnx|wasm|transformers|huggingface/i.test(r.url()))telemetry.push("REQUEST:"+r.url().slice(0,180)+":"+(r.failure()?.errorText||""))});
+  page.on("response",r=>{if(r.status()>=400&&/models|onnx|wasm|transformers|huggingface/i.test(r.url()))telemetry.push("HTTP:"+r.status()+":"+r.url().slice(0,250))});
   await page.goto("/tools/audio-transcription?lang=en");
   const input=page.locator('input[type="file"]').first();
   await expect(input).toBeEnabled({timeout:15000});
@@ -35,7 +40,23 @@ test("Whisper Tiny real inference recognizes synthetic English speech and writes
   await expect(page.getByRole("button",{name:"Confirm & pay",exact:true})).toBeVisible();
   await page.evaluate(()=>window.dispatchEvent(new Event("pageshow")));
   const transcript=page.locator('textarea[readonly]').first();
-  await expect(transcript).toBeVisible({timeout:240000});
+  // Do not burn four minutes waiting for a result if a paid-job failure
+  // already surfaced. Capture the genuine browser/model condition.
+  const began=Date.now();
+  while(Date.now()-began<150000){
+   if(await transcript.isVisible())break;
+   const retry=await page.getByRole("button",{name:/Resume paid task|Retry the result/i}).count();
+   const alerts=await page.locator('[role="alert"]').allTextContents();
+   if(retry||alerts.some(x=>/failed|could not|unavailable|失败|无法|暂时/i.test(x))){
+    const details={retry,alerts,telemetry:telemetry.slice(-35)};
+    throw new Error("REAL_WHISPER_ASR_FAILED:"+JSON.stringify(details));
+   }
+   await page.waitForTimeout(1000);
+  }
+  if(!await transcript.isVisible()){
+   const details={alerts:await page.locator('[role="alert"]').allTextContents(),status:await page.locator('[role="status"]').allTextContents(),body:(await page.locator("main").innerText()).slice(-1400),telemetry:telemetry.slice(-45)};
+   throw new Error("REAL_WHISPER_TIMEOUT:"+JSON.stringify(details));
+  }
   const recognized=await transcript.inputValue();
   expect(recognized.length).toBeGreaterThan(8);
   expect(recognized.toLowerCase()).toMatch(/earth|planet|mountain|river/);
