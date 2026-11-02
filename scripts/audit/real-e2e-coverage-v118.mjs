@@ -3,7 +3,7 @@ import path from "node:path";
 
 const root=process.cwd();
 const catalog=fs.readFileSync(path.join(root,"lib/seo/global-seo.ts"),"utf8");
-const slugs=[...new Set([...catalog.matchAll(/\\{slug:"([^"]+)"/g)].map(m=>m[1]))].sort();
+const slugs=[...new Set([...catalog.matchAll(/[{]slug:"([^"]+)"/g)].map(m=>m[1]))].sort();
 if(slugs.length<100)throw Error("PUBLIC_TOOL_CATALOG_INCOMPLETE");
 
 const v118=["text-counter","remove-duplicate-lines","remove-empty-lines","url-encode-decode","base64-encode-decode","json-formatter","timestamp-converter","md5-sha256","file-type-detector","file-compare"];
