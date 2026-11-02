@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import {PDFDocument,degrees} from "pdf-lib";
 import {openPdf,renderPdfPage,canvasToBlob} from "@/lib/tools/pdf-render-client";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -23,18 +23,20 @@ const WORDS:Record<LingxiLang,Copy>={
  ar:{title:"ترتيب صفحات PDF",hint:"اسحب الصور المصغرة للترتيب أو استخدم أزرار النقل على الهاتف.",loading:"جارٍ قراءة PDF…",preview:"جارٍ إنشاء الصور المصغرة…",up:"نقل للخلف",down:"نقل للأمام",left:"تدوير يسارًا",right:"تدوير يمينًا",duplicate:"نسخ",remove:"حذف",undo:"تراجع",redo:"إعادة",reset:"استعادة الترتيب",save:"إنشاء PDF",working:"جارٍ الإنشاء…",page:"الصفحة الأصلية",of:"",limit:"حد أقصى 120 صفحة في المرة.",error:"تعذّر قراءة ملف PDF أو تصديره.",empty:"احتفظ بصفحة واحدة على الأقل.",notice:"تبقى الملفات الأصلية والنصوص والرسوم المتجهة كما هي."}
 };
 function movePage(items:PageItem[],from:number,to:number){if(from===to||from<0||to<0||from>=items.length||to>=items.length)return items;const next=[...items];const [picked]=next.splice(from,1);next.splice(to,0,picked);return next;}
-export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]}){
+export default function PdfPageOrganizerWorkbench({files,sourceSlug}:{files:readonly File[];sourceSlug:string}){
  const{lang}=useLingxiLang();const t=WORDS[lang]??WORDS.en;
  const[history,setHistory]=useState<History>(empty);
  const[thumbs,setThumbs]=useState<Record<string,string>>({});
  const[loading,setLoading]=useState(false),[generating,setGenerating]=useState(false),[previewing,setPreviewing]=useState(false);
  const[error,setError]=useState(""),[saved,setSaved]=useState<ToolResultFile|null>(null);
  const[dragged,setDragged]=useState<number|null>(null);
+ const[initial,setInitial]=useState<PageItem[]>([]);
+ const sourceVersion=useRef(0);
  useEffect(()=>{
-  let alive=true;
+  let alive=true;sourceVersion.current++;
   const objectUrls:string[]=[];
   const opened:any[]=[];
-  setHistory(empty());setThumbs({});setError("");setSaved(null);setLoading(files.length>0);setPreviewing(false);
+  setHistory(empty());setInitial([]);setThumbs({});setError("");setSaved(null);setLoading(files.length>0);setPreviewing(false);
   async function load(){
    if(!files.length)return;
    try{
@@ -47,7 +49,7 @@ export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]
     }
     if(!entries.length)throw Error("EMPTY_PDF");
     if(!alive)return;
-    setHistory({past:[],current:entries,future:[]});setLoading(false);setPreviewing(true);
+    setInitial(entries);setHistory({past:[],current:entries,future:[]});setLoading(false);setPreviewing(true);
     for(const item of entries){
      if(!alive)return;
      try{
@@ -67,7 +69,7 @@ export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]
    }
   }
   void load();
-  return()=>{alive=false;for(const url of objectUrls)URL.revokeObjectURL(url);for(const pdf of opened)void pdf.destroy?.().catch?.(()=>{})};
+  return()=>{alive=false;sourceVersion.current++;for(const url of objectUrls)URL.revokeObjectURL(url);for(const pdf of opened)void pdf.destroy?.().catch?.(()=>{})};
  },[files,t.error,t.limit]);
  function edit(change:(items:PageItem[])=>PageItem[]){
   setHistory(h=>{const next=change(h.current);if(next===h.current)return h;return{past:[...h.past.slice(-24),h.current],current:next,future:[]};});
@@ -78,6 +80,7 @@ export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]
  function redo(){setHistory(h=>h.future.length?{past:[...h.past,h.current],current:h.future[0],future:h.future.slice(1)}:h);setSaved(null)}
  async function exportPdf(){
   if(!current.length||generating)return;
+  const version=sourceVersion.current;
   setGenerating(true);setSaved(null);setError("");
   try{
    const originals=await Promise.all(files.map(async f=>PDFDocument.load(await f.arrayBuffer(),{ignoreEncryption:false})));
@@ -90,19 +93,20 @@ export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]
    const bytes=await output.save({useObjectStreams:true,addDefaultPage:false});
    const blob=new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
    const base=files[0]?.name.replace(/\.pdf$/i,"")||"document";
-   setSaved({name:base+"-organized.pdf",blob,mime:"application/pdf",size:blob.size});
+   if(sourceVersion.current===version)setSaved({name:base+"-organized.pdf",blob,mime:"application/pdf",size:blob.size});
   }catch{setError(t.error)}finally{setGenerating(false)}
  }
  if(!files.length)return null;
  return <section data-testid="pdf-page-organizer" className="mt-4 space-y-4 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 sm:p-5">
   <div className="space-y-1"><h3 className="font-semibold">{t.title}</h3><p className="text-sm leading-6 text-[var(--lx-muted)]">{t.hint}</p></div>
   {loading&&<p role="status">{t.loading}</p>}
+  {!loading&&previewing&&<p role="status" className="text-sm text-[var(--lx-muted)]">{t.preview}</p>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
   {current.length>0&&<>
    <div className="flex flex-wrap items-center gap-2">
     <button type="button" disabled={!history.past.length||generating} onClick={undo} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-40">{t.undo}</button>
     <button type="button" disabled={!history.future.length||generating} onClick={redo} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-40">{t.redo}</button>
-    <button type="button" disabled={!history.past.length||generating} onClick={()=>{setHistory(h=>({past:[...h.past,h.current],current:history.past[0]||h.current,future:[]}));setSaved(null)}} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-40">{t.reset}</button>
+    <button type="button" disabled={!history.past.length||generating} onClick={()=>{setHistory(h=>({past:[...h.past,h.current],current:initial,future:[]}));setSaved(null)}} className="rounded-lg border px-3 py-2 text-sm disabled:opacity-40">{t.reset}</button>
     <span data-testid="pdf-organizer-count" className="ml-auto text-sm tabular-nums">{current.length} {t.of}</span>
    </div>
    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" data-testid="pdf-organizer-grid">
@@ -123,6 +127,6 @@ export default function PdfPageOrganizerWorkbench({files}:{files:readonly File[]
    </div>
    <p className="text-xs leading-5 text-[var(--lx-muted)]">{t.notice}</p>
    <button type="button" data-testid="pdf-organizer-export" disabled={generating||loading||!current.length} onClick={()=>void exportPdf()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 font-medium text-[var(--lx-bg)] disabled:opacity-50">{generating?t.working:t.save}</button>
-   {saved&&<ResultPanel files={[saved]} messageZh="PDF 页面整理完成。" messageEn="Organized PDF is ready." sourceSlug="merge-pdf"/>}
+   {saved&&<ResultPanel files={[saved]} messageZh="PDF 页面整理完成。" messageEn="Organized PDF is ready." sourceSlug={sourceSlug}/>}
   </>}
  </section>;
