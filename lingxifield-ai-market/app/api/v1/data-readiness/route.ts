@@ -21,7 +21,7 @@ export function GET(){
   const x=apiServiceOffer(id);
   return x.tokenRates.length+x.unitRates.length+x.videoRates.length>0;
  });
- const measured=Array.isArray(rawMetrics)?rawMetrics.filter(x=>x.status==='verified'):[],
+ const measured=(rawMetrics as Array<{status?:string}>).filter(x=>x.status==='verified'),
        experiences=Array.isArray(rawExperiences)?rawExperiences:[];
  const pay=paymentDeploymentReadiness();
  const seo=coverageForSeoGeo();
