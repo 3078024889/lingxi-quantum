@@ -421,8 +421,20 @@
           "scope": "serverless_and_gpu_separate"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Fireworks 2026 年官方 API 供应商对比文章明确记载新账户提供 USD 1 的试用积分，Fireworks 账单帮助页说明用完试用额度后须绑定付款方式方可继续调用 API。此为一次性小额试用权益，非长期免费推理套餐；具体注册时是否仍发放需以实时账户页面为准，不把活动专享的 USD 100 抵扣券算作普通注册赠金。",
+          "source": "https://fireworks.ai/blog/best-llm-api-providers",
+          "checkedAt": "2026-11-02",
+          "scope": "official_2026_marketing_signup_one_dollar_credit_not_live_account_test",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Fireworks 账单 FAQ 说明试用 USD 1 积分用尽后无付款方式的账户会暂停服务，继续使用须按实际调用付费。",
+              "source": "https://fireworks.ai/docs/faq-new/billing-pricing/what-happens-when-i-finish-my-1-dollar-credit",
+              "checkedAt": "2026-11-02",
+              "scope": "one_dollar_promotion_spend_cap_vs_real_api_billing"
+            }
+          ]
         },
         "models": {
           "status": "observed",
