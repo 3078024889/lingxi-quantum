@@ -1,7 +1,6 @@
 /** Sourced publisher facts. Payment methods are capabilities, not a guarantee of local checkout. */
 export type MarketResearchFact={payments?:string[];paymentSource?:string;extraPaymentSource?:string;price?:string;priceSource?:string;free?:string;freeSource?:string;region?:string;regionSource?:string;commercial?:string;commercialSource?:string;models?:string;modelsSource?:string};
-export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>=
-{
+export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
   "doubao": {
     "payments": [
       "支付宝（Android/Web/macOS）",
@@ -375,7 +374,7 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>=
       "网银（阿里云百炼 API 账户）"
     ],
     "paymentSource": "https://help.aliyun.com/zh/model-studio/new-free-quota",
-    "price": "千问聊天端基础体验与阿里云百炼 API 独立计费；百炼中国北京地域 qwen3.5-397b-a17b 输入每百万 Token ¥1.2、输出 ¥7.2（0–128K 输入区间）；qwen3.5-35b-a3b 输入 ¥0.4、输出 ¥3.2；国际地域/缓存/Batch/长上下文价格另算",
+    "price": "千问聊天端基础体验与阿里云百炼 API 分开；API 费用独立计费。百炼中国北京地域 qwen3.5-397b-a17b 输入每百万 Token ¥1.2、输出 ¥7.2（0–128K 输入区间）；qwen3.5-35b-a3b 输入 ¥0.4、输出 ¥3.2；国际地域/缓存/Batch/长上下文价格另算",
     "priceSource": "https://help.aliyun.com/zh/model-studio/model-pricing",
     "region": "千问聊天服务和阿里云百炼 API 是不同入口；百炼提供北京、新加坡、香港、弗吉尼亚、法兰克福及东京区域，模型与价格随区域不同",
     "regionSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
