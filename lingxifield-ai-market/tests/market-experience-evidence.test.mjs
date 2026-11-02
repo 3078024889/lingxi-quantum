@@ -12,7 +12,7 @@ test('user experiences have dated individual source links, not invented review s
   assert.match(e.sourceUrl,/^https:\/\/www\.reddit\.com\/r\/[A-Za-z0-9_]+\/comments\/[a-z0-9]+\//);
   assert.match(e.publishedOn,/^20\d{2}-\d{2}-\d{2}$/);
   assert.ok(Date.parse(e.publishedOn)<=Date.parse('2026-11-02'));
-  assert.equal(e.kind,'reddit_firsthand_report');
+  assert.equal(e.kind,'user_report');
   assert.equal(e.status,'verified');
   assert.ok(e.summary.length>25&&e.summaryEn?.length>25);
   assert.ok(!Object.hasOwn(e,'rating')&&!Object.hasOwn(e,'score')&&!Object.hasOwn(e,'rank'));
