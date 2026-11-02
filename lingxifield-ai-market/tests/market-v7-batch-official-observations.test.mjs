@@ -30,8 +30,8 @@ test('Pika and Cursor current plans retain legacy evidence without implying appr
  assert.equal(p.facts.free.status,'observed');
  assert.equal(c.facts.price.status,'observed');
  assert.match(p.facts.free.text,/0 积分/);
- assert.match(c.facts.price.text,/Plus \\$8/);
- assert.match(c.facts.price.text,/Pro \\$20/);
+ assert.ok(c.facts.price.text.includes('Plus $8'));
+ assert.ok(c.facts.price.text.includes('Pro $20'));
  assert.ok(p.facts.free.additionalEvidence.some(x=>x.source==='https://old.pika.art/pricing'));
  assert.ok(c.facts.price.additionalEvidence.some(x=>x.source==='https://prod.cursor.com/docs/models-and-pricing'));
  assert.equal(pack.products.every(x=>x.reviewStatus==='unapproved'),true);
