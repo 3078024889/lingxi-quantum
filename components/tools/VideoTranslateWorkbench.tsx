@@ -7,8 +7,7 @@ import PaidActionButton from "@/components/tools/PaidActionButton";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {localMediaDuration,transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
-import {extractCompactAudio} from "@/lib/tools/media/client";
-import {concatMp3,muxTranslatedVideo,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
+import {concatMp3,muxTranslatedVideo,requireTimedTranscript,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
 import {newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[
@@ -50,12 +49,6 @@ async function translateTimed(input:TimedText[],source:string,target:string,quot
  }
  return out;
 }
-async function remoteTranscribe(file:File,quoteId:string){
- const compact=await extractCompactAudio(file);
- const fd=new FormData();fd.set("file",compact);fd.set("quoteId",quoteId);
- const r=await fetch("/api/tools/media/transcribe",{method:"POST",body:fd});const d=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(String(d.error||"TRANSCRIBE_FAILED"));return String(d.text||"");
-}
 async function remoteTts(text:string,target:string,quoteId:string){
  const r=await fetch("/api/tools/media/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,language:target,quoteId})});
  if(!r.ok){const d=await r.json().catch(()=>({}));throw new Error(String(d.error||"TTS_FAILED"))}return await r.blob();
@@ -85,15 +78,11 @@ export default function VideoTranslateWorkbench(){
     const file=files[fi],duration=durations[fi]||await localMediaDuration(file).catch(()=>60),stem=file.name.replace(/\.[^.]+$/,"");
     setStage(`${fi+1}/${files.length} · 正在识别语音…`);
     let original:TimedText[]=[];
-    try{
-      const local=await transcribeLocal(file,(p,m)=>setStage(`${fi+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
-      original=local.segments.map(x=>({start:x.start,end:x.end,text:x.text}));
-      if(!original.length&&local.text)original=[{start:0,end:duration,text:local.text}];
-    }catch{
-      const text=await remoteTranscribe(file,quoteId);
-      original=[{start:0,end:duration,text}];
-    }
-    if(!original.length)throw new Error("TRANSCRIPT_EMPTY");
+    // Remote fallback supplies text only, not timestamps. A full-video cue
+    // would fabricate synchronization and mislead users: fail and preserve the
+    // existing paid job for retry rather than create false translated MP4/SRT.
+    const local=await transcribeLocal(file,(p,m)=>setStage(`${fi+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
+    original=requireTimedTranscript(local.segments.map(x=>({start:x.start,end:x.end,text:x.text})));
 
     for(let ti=0;ti<targets.length;ti++){
       const target=targets[ti];
