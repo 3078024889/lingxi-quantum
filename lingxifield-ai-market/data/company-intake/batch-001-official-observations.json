@@ -13,12 +13,20 @@
       "reviewStatus": "unapproved",
       "facts": {
         "price": {
-          "status": "conflict",
-          "text": "当前主站显示 Free $0、Plus $8/月、Premium $30/月、Super $100/月、Ultra $200/月；旧 Pro $20/月、Pro+ $60/月另属历史方案，不可当成同一套餐。",
+          "status": "observed",
+          "text": "Cursor 当前官网显示 The X Subscription 套餐：Free $0/月、Plus $8/月、Premium $30/月、Super $100/月、Ultra $200/月；Premium 起第三方模型按 API 另计费。旧 Cursor Pro $20/月及 Pro+ $60/月属于保留的历史套餐，不能与当前新套餐混为一谈。",
           "source": "https://cursor.com/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "current_subscription_vs_legacy",
-          "conflictingSource": "https://prod.cursor.com/help/account-and-billing/pricing"
+          "scope": "new_x_subscription_vs_legacy_cursor_plans",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Cursor 官方模型与定价文档说明 Pro/Pro+/Ultra 等为继续可用的旧版方案，现行新订阅采用 The X Subscription。",
+              "source": "https://prod.cursor.com/docs/models-and-pricing",
+              "checkedAt": "2026-11-02",
+              "scope": "explicit_legacy_plan_transition"
+            }
+          ]
         },
         "free": {
           "status": "observed",
@@ -39,8 +47,11 @@
           "reason": "缺乏按国家列出的最新注册和支付覆盖清单"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "尚未对企业商用、代码知识产权与隐私条款做独立逐项核查"
+          "status": "observed",
+          "text": "Cursor 2026-09-03《服务条款》第5.3条：用户保留输入内容的既有权利，Anysphere 将其对 AI 代码建议可能享有的权利转让给用户；可将生成代码用于商业项目，但仍须确保不侵犯第三方版权、专利及其他权利，平台软件本身不随之转让。",
+          "source": "https://cursor.com/en-US/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "customer_code_suggestions_ownership_and_third_party_rights"
         },
         "payment": {
           "status": "observed",
