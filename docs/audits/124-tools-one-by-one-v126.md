@@ -2,7 +2,7 @@
 
 日期：2026-11-02。统一发布候选： [PR #104](https://github.com/3078024889/lingxi-quantum/pull/104)。**本文件是源码登记证据，不是 124 项已经通过的证书。**
 
-- 实际公开目录：**124**；注册真实浏览器操作情景：**61**（之前 26，本轮增加 35）；只有历史部分样本：**2**；剩余尚无完整操作情景：**61**。
+- 实际公开目录：**124**；注册真实浏览器操作情景：**70**（原登记 26、本轮新增 35、另追回已有真实回归证据 9）；只有历史部分样本：**2**；剩余尚无完整操作情景：**52**。
 - 96 个初始缺口均已加入 `unverified-96-route-audit-v126.spec.ts` 的**逐工具页面入口巡检**，在桌面+手机分别执行；仅证明对应路由、页面标题和基础控件，**不能证明生成结果、付费或真实供应商**。
 - 35 个新增实测工具分别由 `unverified-developer-real-v126.spec.ts`、`unverified-pdf-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-images-real-v126.spec.ts` 覆盖；实际通过数量取决于精确 SHA 的 CI 结果。
 - 原统计历史 7 项含 5 个已不属于这 124 项目录的老名称：`pdf-to-txt`、`video-trim`、`video-compress`、`video-speed`、`video-mute`，因此 **91 修正为 96**，不可把这些旧名称算作当前工具的验收。
@@ -15,7 +15,7 @@
 | --- | --- | --- |
 | ai-image-check | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | ai-video-audio-check | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| audio-cleanup | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| audio-cleanup | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`paid-local-output-v89`](../../tests/final-closure/paid-local-output-v89.spec.ts) |
 | audio-transcription | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | avif-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
 | base64-encode-decode | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
@@ -52,7 +52,7 @@
 | id-photo-ai | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | image-to-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-cross-workflow-v125`](../../tests/final-closure/tool-cross-workflow-v125.spec.ts) |
 | image-to-pdf-pro | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| image-translator | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| image-translator | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-user-journeys-v1`](../../tests/final-closure/tool-user-journeys-v1.spec.ts) |
 | image-watermark-remover | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | jfif-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
 | jpg-to-png | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
@@ -88,14 +88,14 @@
 | pdf-permissions | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | pdf-protect | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | pdf-rasterize | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-redact | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| pdf-redact | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`pdf-redaction-output-v89`](../../tests/final-closure/pdf-redaction-output-v89.spec.ts) |
 | pdf-remove-annotations | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | pdf-remove-metadata | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
 | pdf-search | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
 | pdf-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-cross-workflow-v125`](../../tests/final-closure/tool-cross-workflow-v125.spec.ts) |
 | pdf-to-markdown | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
 | pdf-to-text | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
-| pdf-to-word | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| pdf-to-word | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`paid-local-output-v89`](../../tests/final-closure/paid-local-output-v89.spec.ts) |
 | pdf-to-xlsx | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | pdf-unlock | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | pdf-viewer-preferences | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
@@ -104,7 +104,7 @@
 | png-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
 | pptx-to-txt | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | privacy-cleaner | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| qr-code-generator | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| qr-code-generator | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`qr-cron-output-v86`](../../tests/final-closure/qr-cron-output-v86.spec.ts) |
 | qr-code-reader | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-pdf-qr-e2e-v119`](../../tests/final-closure/tool-pdf-qr-e2e-v119.spec.ts) |
 | qr-safe-reader | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
 | regex-tester | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
@@ -114,13 +114,13 @@
 | resize-image | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | reverse-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | rotate-video | HISTORICAL_PARTIAL_ONLY | — |
-| screenshot-redact | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| screenshot-redact | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`screenshot-redaction-v89`](../../tests/final-closure/screenshot-redaction-v89.spec.ts) |
 | split-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`pdf-precision-split-v122`](../../tests/final-closure/pdf-precision-split-v122.spec.ts) |
 | stop-motion-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | subtitle-tools | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| subtitle-translate | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| subtitle-translate | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`subtitle-translation-v95`](../../tests/final-closure/subtitle-translation-v95.spec.ts) |
 | svg-to-png | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
-| temp-mail | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| temp-mail | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-user-journeys-v1`](../../tests/final-closure/tool-user-journeys-v1.spec.ts) |
 | text-counter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
 | text-diff | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
 | timestamp-converter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
@@ -133,7 +133,7 @@
 | video-toolkit | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | video-transcription | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | video-translate | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| video-watermark-remover | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| video-watermark-remover | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-user-journeys-v1`](../../tests/final-closure/tool-user-journeys-v1.spec.ts) |
 | webp-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
 | xlsx-to-csv | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-office-roundtrip-v118`](../../tests/final-closure/tool-office-roundtrip-v118.spec.ts) |
 | xml-formatter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
