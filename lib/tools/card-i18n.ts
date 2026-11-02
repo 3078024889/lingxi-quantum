@@ -86,7 +86,7 @@ const TITLES:Record<string,Partial<T>>={
 "batch-image-watermark-remover":L("批量图片去水印","Batch Watermark Cleanup","画像一括透かし除去","이미지 일괄 워터마크 제거","Retirer des filigranes par lot","Wasserzeichen stapelweise entfernen","Quitar marcas por lotes","Remover marcas em lote","إزالة العلامات دفعة واحدة"),
 "video-watermark-remover":L("视频去水印","Video Watermark Cleanup","動画透かし除去","영상 워터마크 제거","Retirer un filigrane vidéo","Video-Wasserzeichen entfernen","Quitar marca de vídeo","Remover marca de vídeo","إزالة علامة الفيديو"),
 "id-photo-ai":L("AI 证件照","AI ID Photo","AI証明写真","AI 증명사진","Photo d'identité IA","KI-Passfoto","Foto de identificación IA","Foto de identificação IA","صورة هوية بالذكاء الاصطناعي"),
-"food-calorie":L("食物卡路里分析","Food Calorie Analysis","食事カロリー分析","음식 칼로리 분석","Analyse des calories","Kalorienanalyse","Análisis de calorías","Análise de calorias","تحليل السعرات"),
+"food-calorie":L("卡路里识别","Calorie Recognition","カロリー認識","칼로리 인식","Reconnaissance des calories","Kalorienerkennung","Reconocimiento de calorías","Reconhecimento de calorias","التعرف على السعرات الحرارية"),
 "pdf-ocr":L("PDF OCR","PDF OCR","PDF OCR","PDF OCR","OCR PDF","PDF OCR","OCR PDF","OCR PDF","OCR PDF"),
 "ocr":L("图片 OCR","Image OCR","画像 OCR","이미지 OCR","OCR image","Bild-OCR","OCR de imagen","OCR de imagem","OCR للصور"),
 
