@@ -44,3 +44,19 @@ test('market table supports safe sticky columns and scroll without compacting th
  assert.match(market,/marketPublisherFactStackCompact\{background:transparent!important;border:0!important/);
  assert.match(market,/\.marketPublisherFactStackCompact\{min-width:0!important/);
 });
+
+test('task-first SIAI comparison shows evidenced review freshness without inventing live payment or user checkout tests',()=>{
+ const home=read('components/SiaiRankingHome.tsx');
+ const page=read('app/page.tsx');
+ const model=read('lingxifield-ai-market/lib/market-researched-facts.ts');
+ assert.match(page,/checkedAt:fact\?marketProductReviewedAt\(id\):null/);
+ assert.match(home,/checkedAt:string\|null/);
+ assert.match(home,/REVIEWED_COPY:Record<LingxiLang,string>/);
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.ok(home.includes(lang+':'),lang);
+ assert.match(home,/<time dateTime=\{p.checkedAt\}>\{p.checkedAt\}<\/time>/);
+ assert.match(home,/className="siai-checked-date"/);
+ assert.match(model,/lovable:'2026-11-03'/);
+ assert.match(model,/replit:'2026-11-02'/);
+ assert.match(model,/midjourney:'2026-11-02'/);
+ assert.doesNotMatch(home,/Math\.random\(/);
+});

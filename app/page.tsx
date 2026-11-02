@@ -5,7 +5,7 @@ import SiaiRankingHome,{type SiaiHomeRow} from "@/components/SiaiRankingHome";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {MARKET_API_PRODUCTS} from "../lingxifield-ai-market/lib/market-api-service-catalog";
 import {findPlatform} from "../lingxifield-ai-market/lib/platform-repository";
-import {researchedFact} from "../lingxifield-ai-market/lib/market-researched-facts";
+import {researchedFact,marketProductReviewedAt} from "../lingxifield-ai-market/lib/market-researched-facts";
 import {companyPresentationFor} from "../lingxifield-ai-market/lib/market-company-evidence";
 import {questionForProduct} from "../lingxifield-ai-market/lib/market-user-task-queries.mjs";
 
@@ -28,7 +28,7 @@ function getCuratedRows():SiaiHomeRow[]{
   return [{
    id:platform.id,name:platform.name,company:publisher.name,legal:publisher.legalEntity,
    legalScope:publisher.legalEntityScope,kind:publisher.kind,listing:publisher.listingState,
-   ipoFiling:Boolean(publisher.ipoFiling),year:publisher.year,
+   ipoFiling:Boolean(publisher.ipoFiling),year:publisher.year,checkedAt:fact?marketProductReviewedAt(id):null,
    companySource:publisher.companySource,legalSource:publisher.legalEntitySource,
    listingSource:publisher.ipoFilingSource||publisher.listingSource,yearSource:publisher.yearSource,
    category:platform.category,about:platform.about,strength:platform.guide?.strengths||platform.about,
