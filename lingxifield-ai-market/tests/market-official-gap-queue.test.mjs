@@ -18,7 +18,7 @@ test('40 outstanding first-party facts are enumerated and cannot be auto publish
  assert.ok(report.items.every(x=>x.sourceRequired&&x.independentAccountTestRequired&&!x.directPublicationAllowed));
  assert.equal(report.noAutomatedWebScraping,true);
  assert.equal(report.notPublished,true);
- assert.match(gapQueueMarkdown(report),/supported-country whitelist/);
+ assert.match(gapQueueMarkdown(report),/blocked-country list/);
 });
 test('source query builder rejects duplicate candidate and corrupted/forged host',()=>{
  const duplicated=structuredClone(batch);
