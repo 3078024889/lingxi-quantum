@@ -50,8 +50,8 @@ test("Whisper Tiny real inference recognizes synthetic English speech and writes
    const bytes=await readFile((await item.path())!);
    const text=bytes.toString("utf8");
    expect(text.toLowerCase()).toMatch(/earth|planet|mountain|river/);
-   if(expectedTime)expect(text).toMatch(/00:00:\\d{2}[,.]\\d{3} --> 00:00:\\d{2}[,.]\\d{3}/);
-   if(ext==="vtt")expect(text).toMatch(/^WEBVTT\\n\\n/);
+   if(expectedTime)expect(text).toMatch(/00:00:\d{2}[,.]\d{3} --> 00:00:\d{2}[,.]\d{3}/);
+   if(ext==="vtt")expect(text).toMatch(/^WEBVTT\n\n/);
   }
  }finally{await rm(temp,{recursive:true,force:true})}
 });
