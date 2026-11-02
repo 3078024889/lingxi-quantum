@@ -236,11 +236,33 @@ const LOVABLE_TASK_COSTS:Readonly<Partial<Record<Language,string>>>={
  pt:'Exemplos: cor do botão 0,50 créditos; remover rodapé 0,90; login 1,20; página com imagens 1,70. Varia por tarefa.',
  ar:'أمثلة للمهام: لون الزر 0.50، حذف التذييل 0.90، تسجيل الدخول 1.20، صفحة بصور 1.70 رصيد. تختلف التكلفة حسب المهمة.'
 };
+const MIDJOURNEY_TRIAL_COPY:Readonly<Partial<Record<Language,string>>>={
+ en:'No free trial on midjourney.com or Discord; a limited trial is available in the separate niji · journey iOS/Android app.',
+ ja:'MidjourneyのWeb版とDiscordに無料体験はありません。別のniji · journeyアプリ（iOS/Android）では限定体験が可能です。',
+ ko:'Midjourney 웹·Discord에는 무료 체험이 없으며 별도의 niji · journey iOS/Android 앱에 한정 체험이 있습니다.',
+ fr:'Aucun essai gratuit sur le site Midjourney ou Discord ; essai limité dans l’application distincte niji · journey (iOS/Android).',
+ de:'Kein Gratis-Test auf Midjourney-Web oder Discord; begrenzte Testversion nur in der separaten niji · journey App (iOS/Android).',
+ es:'Sin prueba gratis en la web de Midjourney ni en Discord; prueba limitada en la app independiente niji · journey (iOS/Android).',
+ pt:'Sem teste grátis no site Midjourney ou Discord; teste limitado no aplicativo separado niji · journey (iOS/Android).',
+ ar:'لا توجد تجربة مجانية على موقع Midjourney أو Discord؛ تتوفر تجربة محدودة في تطبيق niji · journey المنفصل (iOS/Android).'
+};
+const MIDJOURNEY_MODELS_COPY:Readonly<Partial<Record<Language,string>>>={
+ en:'Midjourney image V8.2 (default) · Edit Model · HD images up to 2048px; video resolution and credits depend on plan.',
+ ja:'Midjourney画像V8.2（標準）・Edit Model・最大2048pxのHD画像。動画の解像度とクレジットはプラン別。',
+ ko:'Midjourney 이미지 V8.2(기본) · Edit Model · 최대 2048px HD 이미지. 영상 해상도·크레딧은 요금제별.',
+ fr:'Midjourney V8.2 (image par défaut), Edit Model, images HD jusqu’à 2048 px. Vidéo selon forfait.',
+ de:'Midjourney Bildmodell V8.2 (Standard), Edit Model, HD bis 2048 px. Videolimits je nach Tarif.',
+ es:'Midjourney V8.2 (imagen predeterminada), Edit Model e imágenes HD hasta 2048 px; vídeo según el plan.',
+ pt:'Midjourney V8.2 (imagem padrão), Edit Model e imagens HD até 2048 px; vídeo conforme o plano.',
+ ar:'Midjourney V8.2 الافتراضي للصور مع Edit Model وصور HD حتى 2048 بكسل؛ حدود الفيديو حسب الخطة.'
+};
 export function localizedCatalogFact(id:string,language:Language,scope:Scope,original:string):string{
  // Luma and Suno have their own reviewed nine-language product schedules.
  if(id==='luma')return scope==='price'?lumaSubscription(language):scope==='free'?lumaFree(language):lumaModels(language);
  if(id==='suno')return scope==='price'?sunoSubscription(language):scope==='free'?sunoFree(language):sunoModels(language);
  if(language==='zh')return original;
+ if(id==='midjourney'&&scope==='free')return MIDJOURNEY_TRIAL_COPY[language]||original;
+ if(id==='midjourney'&&scope==='models')return MIDJOURNEY_MODELS_COPY[language]||original;
  // Derive all four translated Replit subscription figures from the reviewed source,
  // instead of keeping stale copies of prices in each language.
  if(id==='replit'&&scope==='price'){
