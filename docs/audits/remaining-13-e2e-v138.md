@@ -47,3 +47,24 @@
 3. 对用户内容存储验证权限拒绝、过期删除、禁止跨用户取回。隐私相关必须有可证明服务端数据生命周期。
 4. 生产代码提交 SHA 必须与正式 Vercel deployment SHA 一致、正式域名可打开、真实浏览器可用，九语言和手机端实测通过。保留回滚策略。
 5. 当前是 draft 叠加链 PR #104→#105→#106→#111；不独立合并 #111，不绕过生产门禁，不修改支付或数据库真实数据。
+
+
+## V139–V140 实际新增工程与证据（2026-11-02）
+
+### 生产门禁失败定位与修复
+- **已核对生产 CI #41422268484 为 failure**，精确失败在 `node scripts/test-paid-processing-failure-v79.cjs`，模拟运行 `PdfOcrWorkbench.run` 时旧夹具没有 `jobRef`，报 `ReferenceError: jobRef is not defined`，不意味着生产已有可利用漏洞。已在 `scripts/test-paid-processing-failure-v79.cjs` 将任务编号 ref 纳入隔离夹具，新的 SHA 仍须实际跑过才可称修复通过。
+
+### 音频/视频转写与字幕
+- `lib/tools/autonomous/transcribe-local.ts`：不再用全局 `.replace(/,/g, ".")` 把 **WebVTT 正文**中每个普通逗号都破坏；现在单独格式化 cue 起止时间（SRT 逗号、VTT 句点），校验 NaN、负数和非有限时间值，开放式尾片段只给予最短正持续时间，不编造原始语音。
+- `components/tools/TranscriptionWorkbench.tsx`：Whisper 确实返回文本、但没有有效时间段时仅提供 TXT；不生成空白 SRT 和只有文件头的 WebVTT，提供九语客户提示。每次新执行均清理旧文字/字幕结果。
+- `scripts/test-transcript-captions-v139.cjs` 已接入生产 CI，验证毫秒时间戳、字幕内容中逗号（含伪时间串）保留、空片段和非法时间拒绝。
+- 参考模型：`openai/whisper-tiny` Hugging Face 官方模型卡标示 **Apache-2.0**，源 https://huggingface.co/openai/whisper-tiny；现项目 `onnx-community/whisper-tiny` 是其 ONNX 转换，模型镜像元数据并未在此处单独注明许可证，商业交付时须确认实际 ONNX 权重、运行时和服务条款。未将 HF 资源可下载与实时可用混为一谈。
+
+### 浏览器 FFmpeg 真实成片覆盖
+- `components/tools/VideoToolkitWorkbench.tsx`：提取 MP3 出口在解码器返回空字节或非 MP3 文件时拒绝成功，避免空白下载。
+- `video-toolkit-audio-speed-v140.spec.ts`：Playwright 创建 1.5 秒 440Hz、16kHz 的真 WAV，通过现有用户界面提取成 MP3；下载后浏览器 AudioContext 独立解码和对时长。另以仓库现有合成 4 秒 MP4 测试 2× 变速成片、重新读取尺寸/时长、参数改变时旧结果立即失效。
+- 以上新增测试是候选代码，**尚未通过最新 SHA 的 GitHub CI，不能提前登记 video-toolkit 全七模式完整竣工**，因其他模式及物理移动端仍需补证。
+
+### 当前数值不提前增长
+- 已登记真实操作场景的工具仍为 **108 / 121**，余下 **13**。生产商业上线还需当前 HEAD 两套 CI 全绿、真实 SaaS 端点及付款沙盒/隐私后端和手机端联测。
+- PR #111 仍是基于 #104/#105/#106 的叠加草稿，暂不合并或部署。
