@@ -3,6 +3,7 @@ import type {Page} from "playwright";
 import fs from "node:fs/promises";
 import sharp from "sharp";
 import {PDFDocument} from "pdf-lib";
+import JSZip from "jszip";
 
 async function downloadResult(page:Page,index=0){
  const fileAction=page.getByTestId("result-file-actions").nth(index);
@@ -24,6 +25,7 @@ test("Image→PDF: fit margins work; changed options and page order invalidate o
   {name:"red.png",mimeType:"image/png",buffer:first},
   {name:"blue.png",mimeType:"image/png",buffer:second}
  ]);
+ await page.getByRole("combobox",{name:"Margin",exact:true}).selectOption("small");
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
  const firstOutput=await downloadResult(page);
  expect(firstOutput.name).toMatch(/\.pdf$/i);
@@ -35,7 +37,7 @@ test("Image→PDF: fit margins work; changed options and page order invalidate o
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
  const noMargin=await PDFDocument.load((await downloadResult(page)).content);
  expect(noMargin.getPages().map(p=>[p.getWidth(),p.getHeight()])).toEqual([[72,50],[120,75]]);
- const up=page.getByRole("button",{name:"Move up",exact:true});
+ const up=page.getByRole("button",{name:"Up",exact:true});
  await up.nth(1).click();
  await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
@@ -61,13 +63,20 @@ test("PNG→JPEG→PDF→JPEG: three real browser tools interoperate with valid 
  expect([native.getPage(0).getWidth(),native.getPage(0).getHeight()]).toEqual([80,54]);
  await page.goto("/tools/pdf-to-jpg?lang=en");
  await page.locator('input[type="file"]').first().setInputFiles({name:"converted.pdf",mimeType:"application/pdf",buffer:savedPdf.content});
- await page.getByRole("button",{name:"Process now"}).click();
- const rendered=await downloadResult(page);
- const decoded=await sharp(rendered.content).metadata();
+ const pending=page.waitForEvent("download");
+ await page.getByRole("button",{name:"Convert",exact:true}).click();
+ const zipped=await pending;
+ expect(await zipped.failure()).toBeNull();
+ const archive=await JSZip.loadAsync(await fs.readFile((await zipped.path())!));
+ const entries=Object.keys(archive.files).filter(name=>!archive.files[name].dir);
+ expect(entries).toHaveLength(1);
+ expect(entries[0]).toMatch(/page-001\\.jpg$/);
+ const resultBytes=await archive.file(entries[0])!.async("nodebuffer");
+ const decoded=await sharp(resultBytes).metadata();
  expect(decoded.format).toBe("jpeg");
  expect(decoded.width).toBeGreaterThan(80);
  expect(decoded.height).toBeGreaterThan(54);
- const avg=(await sharp(rendered.content).stats()).channels.map(v=>v.mean);
+ const avg=(await sharp(resultBytes).stats()).channels.map(v=>v.mean);
  expect(avg.some(v=>v<245)).toBe(true);
 });
 
