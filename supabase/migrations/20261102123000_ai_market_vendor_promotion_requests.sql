@@ -86,8 +86,9 @@ BEGIN
    OR o.product_id IS DISTINCT FROM ('ai-market:'||NEW.plan_id)
    OR o.provider IS DISTINCT FROM NEW.provider OR o.currency IS DISTINCT FROM NEW.currency
    OR o.status IS DISTINCT FROM 'pending'
+   -- Generated STORED values are assigned AFTER BEFORE triggers; use the immutable plan price here.
    OR (CASE NEW.currency WHEN 'USD' THEN o.amount_usd ELSE o.amount_rmb END)*100
-      IS DISTINCT FROM NEW.amount_minor THEN
+      IS DISTINCT FROM (CASE NEW.plan_id WHEN 'sponsored' THEN 4900 WHEN 'category' THEN 14900 WHEN 'brand' THEN 29900 END) THEN
    RAISE EXCEPTION 'MAIN_SITE_ORDER_NOT_VERIFIED' USING ERRCODE='23514'; END IF;
  RETURN NEW;
 END
