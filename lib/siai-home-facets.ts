@@ -47,6 +47,8 @@ function taskMatches(row:FacetRow,task:TaskFacet){
 }
 /** Prove the *offer*, not merely the presence of a "free" token on a pricing page. */
 export function hasSourcedFreeOffer(row:FacetRow){
+ // The niji mobile trial does not make Midjourney's web/Discord product free.
+ if(row.id==='midjourney')return false;
  if(!knownSource(row.freeSource))return false;
  const text=norm(row.free);
  if(!text||text==='—'||/^(?:无免费|不提供免费|没有免费|no free|not free|paid only)/i.test(text))return false;
