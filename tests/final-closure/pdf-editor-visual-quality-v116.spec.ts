@@ -119,7 +119,7 @@ test.describe("PDF editor visual quality",()=>{
   await expect(page.getByTestId("pdf-source-preview")).toBeVisible({timeout:30000});
   const original=page.getByRole("button",{name:"Edit existing text: Original PDF headline"});
   await expect(original).toBeVisible({timeout:20000});
-  await original.click();
+  await original.dblclick();
   const editor=page.getByRole("textbox",{name:"Edit PDF text"});
   await expect(editor).toBeVisible();
   await editor.fill("Revised PDF headline");
@@ -127,7 +127,14 @@ test.describe("PDF editor visual quality",()=>{
   await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
   const embeddedImage=page.getByTestId("pdf-original-image");
   await expect(embeddedImage).toHaveCount(1,{timeout:20000});
-  await embeddedImage.click();
+  const hideImage=page.getByTestId("pdf-original-image-hide");
+  await expect(hideImage).toBeVisible();
+  await hideImage.click();
+  await expect(page.getByTestId("pdf-original-image")).toHaveCount(0);
+  await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(2);
+  await page.getByRole("button",{name:/Undo/}).click();
+  await expect(embeddedImage).toHaveCount(1);
+  await embeddedImage.dblclick();
   await page.locator('input[type="file"][accept="image/png,image/jpeg,image/webp"]').setInputFiles({name:"replacement.png",mimeType:"image/png",buffer:png});
   await expect(page.getByTestId("pdf-original-image")).toHaveCount(0);
   await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]')).toHaveCount(1);
