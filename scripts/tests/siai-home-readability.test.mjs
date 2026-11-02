@@ -11,6 +11,10 @@ test('both SIAI tables keep full data in detail while compact previews prevent t
   assert.ok(home.includes('title={p.'+prop+'}')||prop==='strength'&&home.includes('title={p.strength||p.about}'),prop+' full fact title missing');
  }
  assert.match(home,/expanded===p\.id/);
+ assert.match(home,/siai-home-expanded-row/);
+ assert.match(home,/colSpan=\{10\}/);
+ assert.match(home,/aria-controls=\{"siai-detail-"\+p\.id\}/);
+ assert.doesNotMatch(home,/shown\.some\(p=>p\.id===expanded\)/);
  assert.match(home,/<Source href=\{p\.priceSource\}/);
  assert.match(home,/p\.commercialSource/);
  assert.match(css,/siai-cell-preview.*-webkit-box/);
