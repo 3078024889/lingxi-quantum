@@ -2,7 +2,7 @@
 
 日期：2026-11-02。统一发布候选： [PR #104](https://github.com/3078024889/lingxi-quantum/pull/104)。**本文件是源码登记证据，不是 124 项已经通过的证书。**
 
-- 实际公开目录：**124**；注册真实浏览器操作情景：**76**（原登记 26、本轮新增 41、另追回已有真实回归证据 9）；只有历史部分样本：**2**；剩余尚无完整操作情景：**46**。
+- 实际公开目录：**124**；注册真实浏览器操作情景：**82**（原登记26、V126新增41、V127追加6、追回已有9）；只有历史部分样本：**2**；剩余尚无完整操作情景：**40**。
 - 96 个初始缺口均已加入 `unverified-96-route-audit-v126.spec.ts` 的**逐工具页面入口巡检**，在桌面+手机分别执行；仅证明对应路由、页面标题和基础控件，**不能证明生成结果、付费或真实供应商**。
 - 41 个新增实测工具分别由 `unverified-developer-real-v126.spec.ts`、`unverified-pdf-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-images-real-v126.spec.ts`、`unverified-pdf-advanced-v126.spec.ts`、`unverified-longtail-documents-v126.spec.ts` 覆盖；实际通过数量取决于精确 SHA 的 CI 结果。
 - 原统计历史 7 项含 5 个已不属于这 124 项目录的老名称：`pdf-to-txt`、`video-trim`、`video-compress`、`video-speed`、`video-mute`，因此 **91 修正为 96**，不可把这些旧名称算作当前工具的验收。
@@ -25,13 +25,13 @@
 | bmp-to-png | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-images-real-v126`](../../tests/final-closure/unverified-images-real-v126.spec.ts) |
 | burn-after-read | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | case-converter | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
-| compress-image | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| compress-image | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
 | compress-image-to-100kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
 | compress-image-to-200kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
 | compress-image-to-20kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
 | compress-image-to-500kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
 | compress-image-to-50kb | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-image-file-e2e-v118`](../../tests/final-closure/tool-image-file-e2e-v118.spec.ts) |
-| compress-pdf | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| compress-pdf | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
 | cron-parser | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
 | csv-json | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-developer-real-v126`](../../tests/final-closure/unverified-developer-real-v126.spec.ts) |
 | csv-to-xlsx | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-office-roundtrip-v118`](../../tests/final-closure/tool-office-roundtrip-v118.spec.ts) |
@@ -74,7 +74,7 @@
 | pdf-editor | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`pdf-editor-save-reopen-v123`](../../tests/final-closure/pdf-editor-save-reopen-v123.spec.ts) |
 | pdf-flatten | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
 | pdf-grayscale | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
-| pdf-halve-pages | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| pdf-halve-pages | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
 | pdf-header-footer | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
 | pdf-inspect | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
 | pdf-merge-split | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
@@ -87,9 +87,9 @@
 | pdf-pages-per-sheet | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
 | pdf-permissions | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | pdf-protect | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
-| pdf-rasterize | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| pdf-rasterize | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
 | pdf-redact | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`pdf-redaction-output-v89`](../../tests/final-closure/pdf-redaction-output-v89.spec.ts) |
-| pdf-remove-annotations | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| pdf-remove-annotations | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
 | pdf-remove-metadata | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-advanced-v126`](../../tests/final-closure/unverified-pdf-advanced-v126.spec.ts) |
 | pdf-search | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`unverified-pdf-real-v126`](../../tests/final-closure/unverified-pdf-real-v126.spec.ts) |
 | pdf-to-jpg | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-cross-workflow-v125`](../../tests/final-closure/tool-cross-workflow-v125.spec.ts) |
@@ -111,7 +111,7 @@
 | remove-duplicate-lines | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
 | remove-empty-lines | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`tool-real-operations-v118`](../../tests/final-closure/tool-real-operations-v118.spec.ts) |
 | remove-exif | HISTORICAL_PARTIAL_ONLY | — |
-| resize-image | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
+| resize-image | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`remaining-local-tool-real-v127`](../../tests/final-closure/remaining-local-tool-real-v127.spec.ts) |
 | reverse-video | ROUTE_AUDIT_REGISTERED_NO_FULL_OPERATION | — |
 | rotate-video | HISTORICAL_PARTIAL_ONLY | — |
 | screenshot-redact | REAL_BROWSER_SCENARIO_REGISTERED_NOT_YET_CONFIRMED | [`screenshot-redaction-v89`](../../tests/final-closure/screenshot-redaction-v89.spec.ts) |
