@@ -24,6 +24,8 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
  const{lang}=useLingxiLang();const t=(zh:string,en:string)=>videoUiText(lang,zh,en);
  const[files,setFiles]=useState<File[]>([]),[mode,setMode]=useState<Mode>(initialMode),[start,setStart]=useState(0),[duration,setDuration]=useState(30),[preset,setPreset]=useState<CompressPreset>("balanced"),[resolution,setResolution]=useState<Resolution>("source"),[fps,setFps]=useState(0),[rotation,setRotation]=useState<"90"|"180"|"270">("90"),[speed,setSpeed]=useState(1),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState(""),[outputs,setOutputs]=useState<ToolResultFile[]>([]);
  const ff=useRef<any>(null);
+ const operationId=useRef(0);
+ // A cancelled FFmpeg promise must never publish a late video or overwrite a newer job.
  const[compressionNotices,setCompressionNotices]=useState({original:false,larger:false});
  // Changing output parameters invalidates the previous downloadable artifact.
  // This prevents the old video from being presented as a result of new settings.
@@ -41,7 +43,11 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
   return filters;
  }
  async function run(){
-  if(!files.length)return;setBusy(true);setError("");setStage(workbenchCopy(lang,"preparingMedia"));setOutputs([]);setCompressionNotices({original:false,larger:false});
+  if(!files.length||busy)return;
+  const op=++operationId.current;
+  const totalBytes=files.reduce((n,f)=>n+f.size,0);
+  if(totalBytes>400*1024*1024){setError(t("一次最多处理 400MB 视频，请分批处理。","This batch exceeds 400 MB. Process fewer files at a time."));return}
+  setBusy(true);setError("");setStage(workbenchCopy(lang,"preparingMedia"));setOutputs([]);setCompressionNotices({original:false,larger:false});
   try{
    const [{FFmpeg},{fetchFile}]=await Promise.all([import("@ffmpeg/ffmpeg"),import("@ffmpeg/util")]);
    const out:ToolResultFile[]=[];let originalKept=false,largerTransformed=false;
@@ -49,9 +55,10 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
     const file=files[i],f=new FFmpeg();ff.current=f;
     f.on("progress",({progress}:{progress:number})=>setStage(`${i+1}/${files.length} · ${Math.max(0,Math.min(100,Math.round(progress*100)))}%`));
     await f.load({coreURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.js",location.origin).href,wasmURL:new URL("/media/ffmpeg-0.12.10/ffmpeg-core.wasm",location.origin).href});
+    if(op!==operationId.current)throw new Error("CANCELLED");
     const ext=file.name.split(".").pop()||"mp4",input=`input-${i}.${ext}`;await f.writeFile(input,await fetchFile(file));
     const stem=safeFilename(file.name.replace(/\.[^.]+$/,""),`video-${i+1}`),output=`output-${i}.mp4`;let name=`${stem}-processed.mp4`,args:string[]=[];
-    if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);out.push({name,blob:new Blob([copy.buffer],{type:"audio/mpeg"}),mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}
+    if(mode==="audio"){const o=`output-${i}.mp3`;name=`${stem}.mp3`;args=["-i",input,"-vn","-c:a","libmp3lame","-b:a","192k",o];const code=await f.exec(args);if(op!==operationId.current)throw new Error("CANCELLED");if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);const data=await f.readFile(o);if(op!==operationId.current)throw new Error("CANCELLED");const bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);out.push({name,blob:new Blob([copy.buffer],{type:"audio/mpeg"}),mime:"audio/mpeg",size:copy.byteLength});try{await f.deleteFile(input);await f.deleteFile(o)}catch{}f.terminate();ff.current=null;continue}
     const base=["-i",input];
     if(mode==="compress"){
       const filters=videoFilters();args=[...base,...(filters.length?["-vf",filters.join(",")]:[]),"-c:v","libx264","-preset","veryfast","-crf",String(CRF[preset]),"-c:a","aac","-b:a",preset==="small"?"96k":"128k",output];name=`${stem}-compressed.mp4`;
@@ -71,8 +78,8 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
     if(mode==="speed"){
       const s=Math.max(.5,Math.min(2,speed)),filters=videoFilters([`setpts=${(1/s).toFixed(4)}*PTS`]),atempo=s.toFixed(3);args=[...base,"-vf",filters.join(","),"-filter:a",`atempo=${atempo}`,"-c:v","libx264","-preset","veryfast","-c:a","aac",output];name=`${stem}-${s}x.mp4`;
     }
-    const code=await f.exec(args);if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);
-    const data=await f.readFile(output),bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);const blob=new Blob([copy.buffer],{type:"video/mp4"});
+    const code=await f.exec(args);if(op!==operationId.current)throw new Error("CANCELLED");if(code!==0)throw new Error(`FFmpeg exited with code ${code}`);
+    const data=await f.readFile(output);if(op!==operationId.current)throw new Error("CANCELLED");const bytes=data instanceof Uint8Array?data:new TextEncoder().encode(String(data)),copy=new Uint8Array(bytes.length);copy.set(bytes);const blob=new Blob([copy.buffer],{type:"video/mp4"});
     if(!blob.size)throw new Error("EMPTY_VIDEO_OUTPUT");
     if(mode==="compress"){
      const delivery=chooseCompressionDelivery(file.size,blob.size,resolution!=="source"||fps>0);
@@ -86,10 +93,12 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
     }else out.push({name,blob,mime:"video/mp4",size:blob.size});
     try{await f.deleteFile(input);await f.deleteFile(output)}catch{}f.terminate();ff.current=null;
    }
-   setOutputs(out);setCompressionNotices({original:originalKept,larger:largerTransformed});setStage(plainText(lang,"ready"));
-  }catch(e){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(plainText(lang,"fileError"))}finally{setBusy(false)}
+   if(op===operationId.current){setOutputs(out);setCompressionNotices({original:originalKept,larger:largerTransformed});setStage(plainText(lang,"ready"))}
+  }catch(e){
+   if(op===operationId.current){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(plainText(lang,"fileError"))}
+  }finally{if(op===operationId.current)setBusy(false)}
  }
- function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
+ function cancel(){operationId.current++;try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setOutputs([]);setError("");setStage(t("已取消处理","Cancelled"))}
  async function addRemote(file:File){if(busy)return;setFiles(v=>[...v,file].slice(0,10));setOutputs([]);setStage("");setError("")}
  const modes:[Mode,string][]=[["compress",t("压缩","Compress")],["trim",t("截取","Trim")],["audio",t("提取 MP3","Extract MP3")],["mute",t("静音","Mute")],["convert",t("转 MP4","Convert MP4")],["rotate",t("旋转","Rotate")],["speed",t("变速","Speed")]];
  return <div data-video-toolkit data-hydrated={hydrated ? "true" : "false"} className="space-y-4">
