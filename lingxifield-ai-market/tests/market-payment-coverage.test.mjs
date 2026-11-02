@@ -5,7 +5,8 @@ import {readFileSync} from 'node:fs';
 const source=readFileSync(new URL('../lib/market-researched-facts.ts',import.meta.url),'utf8');
 const declaration=source.indexOf('export const RESEARCHED_FACTS');
 const start=source.indexOf('={',declaration)+1;
-const end=source.lastIndexOf('};');
+const end=source.indexOf('};\nexport const MARKET_RESEARCH_CHECKED_AT',start)+1;
+assert.ok(start>0&&end>start,'the curated facts table must have an explicit boundary');
 const facts=JSON.parse(source.slice(start,end+1));
 
 test('all 32 published products have explicit payment or no-payment answers with official evidence',()=>{
