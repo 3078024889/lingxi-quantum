@@ -1213,3 +1213,31 @@ body{font-size:16px;line-height:1.6}
 .marketPublisherFact dt{font-size:13px!important}
 .marketPublisherFact dd{font-size:14px!important;overflow-wrap:anywhere;word-break:break-word}
 @media(max-width:760px){.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){min-width:245px!important;width:245px!important}}
+
+/* Compact legacy market matrix without losing official sources or the detail action.
+   The large legal entity block stays INLINE in the first table cell. */
+.app .marketOverviewTable .marketOverviewRow :is(
+ .marketOverviewStrength>strong,.marketOverviewStrength>.marketOverviewUses,
+ .marketOverviewFree>strong,.marketOverviewPrice>strong,.marketOverviewRegion>strong,
+ .marketOverviewRegion>.marketRegionStatus,.marketV36Login>strong,.marketV36Login>small,
+ .marketV36Drama>.marketDramaYes,.marketV36Drama>.marketDramaUnknown,
+ .marketV36Model,.marketV36Business>.marketLicenseCondition
+){display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;overflow-wrap:anywhere;max-height:6.4em;line-height:1.6}
+.app .marketOverviewTable .marketOverviewStrength>.marketOverviewUses{
+ -webkit-line-clamp:3;line-clamp:3;max-height:4.8em
+}
+.app .marketOverviewTable .marketOverviewRow :is(
+ .marketOverviewFree>strong,.marketOverviewRegion>strong,
+ .marketV36Login>strong,.marketV36Login>small
+){-webkit-line-clamp:3;line-clamp:3;max-height:4.8em}
+.app .marketOverviewTable .marketPublisherFactStackCompact{background:transparent!important;border:0!important;box-shadow:none!important}
+.app .marketOverviewTable .marketOverviewIdentity .platformName{align-items:flex-start!important}
+.app .marketOverviewTable td{vertical-align:top}
+.app .marketOverviewTable :is(.marketOverviewStrength,.marketOverviewFree,.marketOverviewPrice,.marketOverviewRegion,.marketV36Login) a{
+ display:inline-flex;align-items:center;margin-block-start:5px
+}
+@media(max-width:760px){
+ .app .marketOverviewTable .marketOverviewRow .marketOverviewPrice>strong{
+  -webkit-line-clamp:4;line-clamp:4
+ }
+}
