@@ -175,10 +175,6 @@
     "compress-image-to-50kb": {
       "kind": "local-contract"
     },
-    "compress-pdf": {
-      "kind": "fixture",
-      "fixtureGroup": "pdf-basic"
-    },
     "cron-parser": {
       "kind": "local-contract"
     },
@@ -220,9 +216,6 @@
     "handwriting-ocr": {
       "kind": "local-contract"
     },
-    "heic-local": {
-      "kind": "local-contract"
-    },
     "heic-to-jpg": {
       "kind": "local-contract"
     },
@@ -236,10 +229,6 @@
       "kind": "online-contract"
     },
     "image-to-pdf": {
-      "kind": "fixture",
-      "fixtureGroup": "image-png"
-    },
-    "image-to-pdf-pro": {
       "kind": "fixture",
       "fixtureGroup": "image-png"
     },
