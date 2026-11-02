@@ -12,7 +12,7 @@ ${DRAMA_SHOT_QUALITY_GUIDANCE}`;
 function extractPlanJson(answer:string):unknown{
  const raw=String(answer||"").trim();
  if(!raw||raw.length>80000)throw new Error("VIDEO_PLAN_INVALID");
- const text=raw.replace(/^\`\`\`(?:json)?\\s*/i,"").replace(/\\s*\`\`\`$/,"");
+ const text=raw.replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/,"");
  if(text.startsWith("{")&&text.endsWith("}"))return JSON.parse(text);
  const begin=text.indexOf("{");
  if(begin<0||begin>1000)throw new Error("VIDEO_PLAN_INVALID");
@@ -21,7 +21,7 @@ function extractPlanJson(answer:string):unknown{
   const c=text[i];
   if(inString){
    if(escaped){escaped=false;continue}
-   if(c==="\\\\"){escaped=true;continue}
+   if(c==="\\"){escaped=true;continue}
    if(c==='"')inString=false;
    continue;
   }
