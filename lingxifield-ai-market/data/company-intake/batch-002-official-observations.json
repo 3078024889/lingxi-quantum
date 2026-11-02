@@ -147,8 +147,11 @@
           "scope": "per_user_annual_contract"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Tabnine 2026 年官网公布对 NVIDIA Inception / NVIDIA Connect 合格成员开放 30 天试用：最多可申请 10 个 Tabnine Enterprise SaaS 许可证。这是有资格与审批要求的合作伙伴试点，不等于所有用户均有免费套餐或永久赠送额度；其官网普通 Code Assistant 商业方案另按用户年度订阅报价。",
+          "source": "https://www.tabnine.com/nvidia-benefit/",
+          "checkedAt": "2026-11-02",
+          "scope": "restricted_nvidia_inception_connect_30day_partner_trial_not_general_free"
         },
         "models": {
           "status": "observed",
@@ -429,8 +432,11 @@
       "reviewStatus": "unapproved",
       "facts": {
         "price": {
-          "status": "missing",
-          "reason": "The official billing terms for this exact plan, region and cycle are not fully corroborated."
+          "status": "observed",
+          "text": "Recraft 2026年10月16日官方文章确认美国美元月付起价：Basic USD 12/月（1,000 积分/月），Pro USD 20/月起；Free 免费版最多每日生成 30 张图片，但免费作品公开且不附商业使用权。官网另有年付优惠与 API 按单次操作积分计价，金额和功能须区分套餐、结算周期与 API 使用。",
+          "source": "https://www.recraft.ai/blog/best-ai-ad-generators",
+          "checkedAt": "2026-11-02",
+          "scope": "official_october_2026_monthly_basic_pro_price_and_free_limits"
         },
         "free": {
           "status": "observed",
