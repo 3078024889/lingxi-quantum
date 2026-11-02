@@ -492,8 +492,20 @@
           "scope": "annual_equivalent_usd"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "Freepik（官网近期也使用 Magnific 名称）的 AI Art Generator 官方说明普通免费用户使用其自有模型，每日最多可免费生成 20 张图片；这是指定图片工具的额度，不等于所有第三方高级模型、视频或声音功能都免费。官方订阅帮助说明免费用户生成内容的商用许可与付费级别有差异，应按具体工具和素材确认。",
+          "source": "https://www.freepik.com/ai/art-generator",
+          "checkedAt": "2026-11-02",
+          "scope": "free_in_house_image_generator_up_to_20_daily_not_all_ai_models",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "官网订阅帮助明确免费版为有限每日基本 AI 使用，不支持无条件商用；Premium 与更高套餐按单独许可处理。",
+              "source": "https://www.freepik.com/ai/faq/freepik-subscriptions-plans",
+              "checkedAt": "2026-11-02",
+              "scope": "free_vs_paid_licensing"
+            }
+          ]
         },
         "models": {
           "status": "observed",
