@@ -6,7 +6,7 @@ Scope: **32 curated products / SDKs / open-source tools**, not 32 separately inc
 
 - Default list order is **company founded year, oldest first**. A reversed order is available. Search API sorts **before pagination**. Alphabetic name, free-first and short-film options remain selectable.
 - Corporate formation dates now explicitly sourced for Runway (2018, [publisher's own announcement](https://runway.com/news/runway-raises-50-series-c)), Lovable (2023, [publisher's origin history](https://lovable.dev/gpt-engineer)), and Ollama (2023, [company-managed profile](https://www.linkedin.com/company/ollama/)). Ollama's company headquarters is supported by that same profile.
-- For source completeness, **LlamaIndex** and **Midjourney** do not yet have a sufficiently sourced corporate founding date in this curated ledger. They are sorted after companies with sourced founding years, rather than being given a guessed corporate date.
+- For source completeness, **Midjourney** does not yet have a sufficiently sourced corporate founding date in this curated ledger. **LlamaIndex** was added as 2023 based on its [company-issued 2025 Series A press release](https://www.prnewswire.com/news-releases/llamaindex-secures-19-million-series-a-to-power-enterprise-grade-knowledge-agents-302390936.html). They are sorted after companies with sourced founding years, rather than being given a guessed corporate date.
 - Six documented non-company open-source projects/libraries are in their own group, ordered by documented repository/project start dates. These are **not** corporate formation dates.
 - 'Listed parent' is only used when a documented stock-exchange listing applies. The absence of a listing citation never proves a company is private or unlisted.
 
