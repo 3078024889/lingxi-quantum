@@ -103,6 +103,9 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   }, [tool.slug, customKb]);
 
   function moveFile(index:number,direction:-1|1){
+    if(busy)return;
+    // A re-ordered input creates a different artifact. Never expose the old download.
+    setResult(null);
     setFiles(current=>{
       const next=[...current];
       const target=index+direction;
@@ -161,11 +164,11 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       {tool.slug === "webp-to-jpg" && (
         <div className="mt-4 flex flex-wrap gap-3 text-sm text-bone-dim">
           <label className="flex items-center gap-2">
-            <input type="radio" checked={webpTarget === "image/jpeg"} onChange={() => setWebpTarget("image/jpeg")} />
+            <input type="radio" checked={webpTarget === "image/jpeg"} disabled={busy} onChange={() => {setWebpTarget("image/jpeg");setResult(null)}} />
             JPG
           </label>
           <label className="flex items-center gap-2">
-            <input type="radio" checked={webpTarget === "image/png"} onChange={() => setWebpTarget("image/png")} />
+            <input type="radio" checked={webpTarget === "image/png"} disabled={busy} onChange={() => {setWebpTarget("image/png");setResult(null)}} />
             PNG
           </label>
         </div>
@@ -180,7 +183,8 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
               min={10}
               max={5000}
               value={customKb}
-              onChange={(e) => setCustomKb(Number(e.target.value))}
+              disabled={busy}
+              onChange={(e) => {setCustomKb(Number(e.target.value));setResult(null)}}
               className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone outline-none focus:border-lattice/50"
             />
           </label>
@@ -192,7 +196,8 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
               min={0.4}
               max={0.95}
               value={quality}
-              onChange={(e) => setQuality(Number(e.target.value))}
+              disabled={busy}
+              onChange={(e) => {setQuality(Number(e.target.value));setResult(null)}}
               className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone outline-none focus:border-lattice/50"
             />
           </label>
@@ -202,11 +207,11 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
 
 
       {files.length>0&&<div className="mt-4 flex flex-wrap gap-2">
-        <button type="button" onClick={()=>setFiles([])} className="rounded-sm border border-white/15 px-3 py-2 text-xs text-bone-dim">{t("清空","Clear")}</button>
+        <button type="button" disabled={busy} onClick={()=>{setFiles([]);setResult(null);setOrganizerOpen(false)}} className="rounded-sm border border-white/15 px-3 py-2 text-xs text-bone-dim">{t("清空","Clear")}</button>
         {(tool.slug==="merge-pdf"||tool.slug==="image-to-pdf")&&files.length>1&&files.map((file,index)=><span key={`${file.name}-${file.lastModified}`} className="inline-flex items-center gap-1 rounded-sm border border-white/10 px-2 py-1 text-xs text-bone-dim">
           {index+1}. {file.name}
-          <button type="button" disabled={index===0} onClick={()=>moveFile(index,-1)} aria-label={t("上移","Move up")}>↑</button>
-          <button type="button" disabled={index===files.length-1} onClick={()=>moveFile(index,1)} aria-label={t("下移","Move down")}>↓</button>
+          <button type="button" onClick={()=>moveFile(index,-1)} disabled={busy||index===0} aria-label={t("上移","Move up")}>↑</button>
+          <button type="button" onClick={()=>moveFile(index,1)} disabled={busy||index===files.length-1} aria-label={t("下移","Move down")}>↓</button>
         </span>)}
       </div>}
 
@@ -225,13 +230,13 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         </label>}
       </div>}
       {(tool.slug==="merge-pdf"||tool.slug==="split-pdf")&&files.length>0&&<div className="mt-4 space-y-3">
-        <button type="button" aria-expanded={organizerOpen} data-testid="open-pdf-organizer" onClick={()=>setOrganizerOpen(value=>!value)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm font-medium text-[var(--lx-ink)]">{organizerOpen?t("收起页面可视化整理","Close page organizer"):t("可视化整理 PDF 页面 · 排序、旋转、删除","Organize PDF pages · reorder, rotate, delete")}</button>
+        <button type="button" aria-expanded={organizerOpen} data-testid="open-pdf-organizer" disabled={busy} onClick={()=>setOrganizerOpen(value=>!value)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm font-medium text-[var(--lx-ink)]">{organizerOpen?t("收起页面可视化整理","Close page organizer"):t("可视化整理 PDF 页面 · 排序、旋转、删除","Organize PDF pages · reorder, rotate, delete")}</button>
         {organizerOpen&&<PdfPageOrganizerWorkbench files={files} sourceSlug={tool.slug}/>}
       </div>}
       {tool.slug==="compress-pdf"&&<div className="mt-4 rounded-sm border border-white/10 p-4 text-sm text-bone-dim">
         <label className="block">
           {t("压缩强度","Compression preset")}
-          <select value={pdfCompression} onChange={e=>setPdfCompression(e.target.value as PdfCompressionPreset)} className="bg-void mt-2 w-full rounded-sm border border-white/15 px-3 py-2 text-bone">
+          <select value={pdfCompression} disabled={busy} onChange={e=>{setPdfCompression(e.target.value as PdfCompressionPreset);setResult(null)}} className="bg-void mt-2 w-full rounded-sm border border-white/15 px-3 py-2 text-bone">
             <option value="high">{t("高清 · 文件较大","High quality · larger")}</option>
             <option value="balanced">{t("均衡","Balanced")}</option>
             <option value="small">{t("更小体积","Smaller file")}</option>
