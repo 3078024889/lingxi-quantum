@@ -1221,7 +1221,7 @@ body{font-size:16px;line-height:1.6}
  .marketOverviewFree>strong,.marketOverviewPrice>strong,.marketOverviewRegion>strong,
  .marketOverviewRegion>.marketRegionStatus,.marketV36Login>strong,.marketV36Login>small,
  .marketV36Drama>.marketDramaYes,.marketV36Drama>.marketDramaUnknown,
- .marketV36Model,.marketV36Business>.marketLicenseCondition
+ .marketV36Business>.marketLicenseCondition
 ){display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;overflow-wrap:anywhere;max-height:6.4em;line-height:1.6}
 .app .marketOverviewTable .marketOverviewStrength>.marketOverviewUses{
  -webkit-line-clamp:3;line-clamp:3;max-height:4.8em
