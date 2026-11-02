@@ -55,6 +55,9 @@ jobs:
       - name: Source and product gates
         run: pnpm ci:source
 
+      - name: Paid media per-quote supplier guard
+        run: node scripts/test-paid-media-provider-guard-v154.cjs
+
       - name: Playwright import/dependency contract
         run: pnpm ci:playwright-contract
 
