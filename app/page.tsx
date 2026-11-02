@@ -35,6 +35,7 @@ function getCuratedRows():SiaiHomeRow[]{
    price:fact?.price||platform.price||"—",priceSource:fact?.priceSource||null,
    region:fact?.region||platform.location||"—",regionSource:fact?.regionSource||null,
    payment:fact?.payments?.join(" · ")||"—",
+   paymentSource:fact?.paymentSource||null,
    models:fact?.models||platform.features.slice(0,3).join(" · "),modelsSource:fact?.modelsSource||null,
    commercial:fact?.commercial||"查看官网商用条件",commercialSource:fact?.commercialSource||null,
    website:platform.website
