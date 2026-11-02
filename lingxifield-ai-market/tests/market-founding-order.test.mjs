@@ -45,5 +45,24 @@ test('publisher-backed corporate dates added while unknowns remain unspecified',
   assert.ok(entry.includes(src),src);
  }
  assert.match(evidence,/llamaindex:\{[^\n]*founded:fact\('2023'/);
- assert.ok(!/midjourney:\{[^\n]*founded:fact/.test(evidence));
+ assert.match(evidence,/midjourney:\{[^\n]*founded:fact\('2021'/);
+});
+
+test('corporate origin sources and financing are individually cited, never borrowed from product launch years',()=>{
+ const evidence=get('lib/market-company-evidence.ts');
+ const locale=get('lib/market-company-evidence-locale.ts');
+ for(const [id,source] of [
+  ['kuaishou','ir.kuaishou.com/zh-hans/investor-resources/investor-faqs'],
+  ['suno','suno.com/careers'],
+  ['runway','runway.com/news/runway-series-e-funding'],
+  ['elevenlabs','elevenlabs.io/blog/series-d'],
+  ['huggingface','newsroom.ibm.com/2023-08-24-IBM'],
+  ['midjourney','linkedin.com/company/midjourney'],
+  ['perplexity','perplexity.ai/zh/hub/legal/terms-of-service']
+ ]){
+  const row=evidence.split('\n '+id+':{')[1]?.split('\n ')[0]||'';
+  assert.ok(row.includes(source),id+' source missing');
+ }
+ for(const key of ['runway.funding','elevenlabs.funding','huggingface.funding'])assert.ok(locale.includes("'"+key+"':["),key);
+ for(const key of ['runway','elevenlabs','suno','midjourney','perplexity','kuaishou'])assert.match(locale,new RegExp(' '+key+':\\{country:'));
 });

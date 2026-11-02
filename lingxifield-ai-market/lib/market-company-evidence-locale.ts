@@ -4,8 +4,29 @@ import type {CompanyEvidence} from './market-company-evidence';
 // One source of financial facts, multiple language presentations. Text is never
 // machine-translated at runtime; values absent from the publisher ledger stay absent.
 const ORDER=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
-type Key='anthropic.funding'|'suno.funding'|'replit.funding'|'comfy.funding'|'google.listing'|'alibaba.listing'|'kuaishou.listing'|'kuaishou.projectStarted'|'runway.projectStarted'|'comfy.projectStarted'|'dify.funding'|'langchain.projectStarted'|'suno.scale'|'xai.funding'|'xai.scale'|'langchain.funding'|'langchain.scale'|'llamaindex.funding'|'llamaindex.projectStarted'|'llamaindex.scale'|'lovable.funding'|'lovable.projectStarted'|'lovable.scale'|'midjourney.funding'|'midjourney.scale'|'ollama.scale'|'huggingface.scale';
+type Key='anthropic.funding'|'suno.funding'|'replit.funding'|'comfy.funding'|'google.listing'|'alibaba.listing'|'kuaishou.listing'|'kuaishou.projectStarted'|'runway.projectStarted'|'comfy.projectStarted'|'dify.funding'|'langchain.projectStarted'|'suno.scale'|'xai.funding'|'xai.scale'|'langchain.funding'|'langchain.scale'|'llamaindex.funding'|'llamaindex.projectStarted'|'llamaindex.scale'|'lovable.funding'|'lovable.projectStarted'|'lovable.scale'|'midjourney.funding'|'midjourney.scale'|'ollama.scale'|'huggingface.scale'|'runway.funding'|'elevenlabs.funding'|'huggingface.funding';
 const texts:Record<Key,readonly string[]>={
+ 'runway.funding':[
+  '2026年2月 E 轮融资 3.15 亿美元（单轮）','February 2026: US$315M Series E (one round)',
+  '2026年2月：シリーズEで3.15億米ドル調達','2026년 2월: 시리즈 E 투자 3억 1,500만 달러(단일 라운드)',
+  'Février 2026 : série E de 315 M$ US (un seul tour)','Februar 2026: Series E über 315 Mio. US-Dollar (eine Runde)',
+  'Febrero de 2026: serie E de 315 MUSD (una ronda)','Fevereiro de 2026: série E de US$ 315 milhões (uma rodada)',
+  'فبراير 2026: جولة E بقيمة 315 مليون دولار (جولة واحدة)'
+ ],
+ 'elevenlabs.funding':[
+  '2026年2月 D 轮融资 5 亿美元；公告时累计 7.81 亿美元','February 2026: US$500M Series D; US$781M cumulative as announced',
+  '2026年2月：シリーズDで5億米ドル、発表時点の累計7.81億米ドル','2026년 2월: 시리즈 D 5억 달러, 발표 당시 누적 7억 8,100만 달러',
+  'Février 2026 : série D de 500 M$ US ; cumul annoncé de 781 M$ US','Februar 2026: Series D 500 Mio. US-Dollar; damals kumuliert 781 Mio.',
+  'Febrero de 2026: serie D de 500 MUSD; total anunciado 781 MUSD','Fevereiro de 2026: série D de US$ 500 milhões; acumulado anunciado US$ 781 milhões',
+  'فبراير 2026: جولة D بقيمة 500 مليون دولار؛ الإجمالي المعلن 781 مليون دولار'
+ ],
+ 'huggingface.funding':[
+  '2023年8月 D 轮融资 2.35 亿美元（单轮）','August 2023: US$235M Series D (one round)',
+  '2023年8月：シリーズDで2.35億米ドル調達','2023년 8월: 시리즈 D 2억 3,500만 달러(단일 라운드)',
+  'Août 2023 : série D de 235 M$ US (un tour)','August 2023: Series D über 235 Mio. US-Dollar (eine Runde)',
+  'Agosto de 2023: serie D de 235 MUSD (una ronda)','Agosto de 2023: série D de US$ 235 milhões (uma rodada)',
+  'أغسطس 2023: جولة D بقيمة 235 مليون دولار (جولة واحدة)'
+ ],
  'dify.funding':[
   '2026 年 3 月 Pre-A 轮融资 3000 万美元（单轮）','March 2026: US$30M Pre-A funding round (not cumulative)',
   '2026年3月：プレAラウンドで3,000万米ドル調達','2026년 3월: Pre-A 투자 3천만 달러(단일 라운드)',
@@ -243,7 +264,18 @@ const locations:Record<string,{country:string,city:string,openaiAddress?:boolean
  xai:{country:'US',city:'Austin'},
  lovable:{country:'SE',city:'Stockholm'},
  n8n:{country:'DE',city:'Berlin'},
+ kuaishou:{country:'CN',city:'Beijing'},
+ runway:{country:'US',city:'New York'},
+ elevenlabs:{country:'GB',city:'London'},
+ suno:{country:'US',city:'Cambridge, MA'},
+ midjourney:{country:'US',city:'San Francisco'},
+ perplexity:{country:'US',city:'San Francisco'},
  dify:{country:'US',city:'Menlo Park'}
+};
+const locationQualifiers:Partial<Record<string,Record<Language,string>>>={
+ runway:{zh:'2022年SEC申报营业地',en:'2022 SEC principal business address',ja:'2022年SEC申告の所在地',ko:'2022년 SEC 신고 영업 주소',fr:'adresse déclarée à la SEC en 2022',de:'2022 bei der SEC gemeldete Adresse',es:'domicilio declarado a la SEC en 2022',pt:'endereço declarado à SEC em 2022',ar:'عنوان العمل المسجل لدى SEC في 2022'},
+ elevenlabs:{zh:'欧洲总部',en:'European HQ',ja:'欧州本部',ko:'유럽 본부',fr:'siège européen',de:'Europazentrale',es:'sede europea',pt:'sede europeia',ar:'المقر الأوروبي'},
+ perplexity:{zh:'官网法务联系地址',en:'official legal contact address',ja:'公式法務連絡先住所',ko:'공식 법률 연락처',fr:'adresse de contact juridique officielle',de:'offizielle juristische Kontaktadresse',es:'dirección de contacto jurídico oficial',pt:'endereço oficial para contato jurídico',ar:'عنوان الاتصال القانوني الرسمي'}
 };
 const originWords:Record<Language,string>={zh:'公司起源',en:'company origin',ja:'会社の起源',ko:'기업 출발지',fr:'origine de la société',de:'Unternehmensursprung',es:'origen de la empresa',pt:'origem da empresa',ar:'منشأ الشركة'};
 const labels:Record<Language,string>={
@@ -258,7 +290,7 @@ export function localizeCompanyEvidence(id:string,language:Language,fact:Company
   const place=locations[owner];
   if(place){
    const country=new Intl.DisplayNames([language],{type:'region'}).of(place.country)||place.country;
-   local.headquarters={...fact.headquarters,text:country+' · '+place.city+(place.openaiAddress?' ('+labels[language]+')':owner==='bytedance'?' ('+originWords[language]+')':'')};
+   local.headquarters={...fact.headquarters,text:country+' · '+place.city+(place.openaiAddress?' ('+labels[language]+')':owner==='bytedance'?' ('+originWords[language]+')':locationQualifiers[owner]?' ('+locationQualifiers[owner]![language]+')':'')};
   }else local.headquarters=undefined;
  }
  for(const field of ['funding','listing','projectStarted','scale'] as const){
