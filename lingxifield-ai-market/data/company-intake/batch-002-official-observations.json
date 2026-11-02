@@ -1,0 +1,484 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B002",
+  "observedOn": "2026-11-02",
+  "disclaimer": "Unapproved public first-party page excerpts, not a verified full account purchase, model evaluation or launch-ready company profile.",
+  "products": [
+    {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "officialHosts": [
+        "github.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "GitHub Copilot Free US$0；Pro US$10/人/月；Pro+ US$39/人/月；Max US$100/人/月。",
+          "source": "https://github.com/features/copilot/plans",
+          "checkedAt": "2026-11-02",
+          "scope": "individual_usd_monthly"
+        },
+        "free": {
+          "status": "observed",
+          "text": "GitHub Copilot Free 公告每月提供 2,000 次代码补全及有限聊天/代理使用，无需信用卡。",
+          "source": "https://github.com/features/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "individual_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "官方定价表披露不同档位有不同模型列表和 GitHub AI Credits；模型可用性受功能及套餐限制。",
+          "source": "https://github.com/features/copilot/plans",
+          "checkedAt": "2026-11-02",
+          "scope": "model_access_by_plan"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "observed",
+          "text": "GitHub 官方 Copilot 产品页面将 Copilot 标为 GitHub 开发产品，和 Microsoft Copilot 不属于同一产品。",
+          "source": "https://github.com/features/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "brand_product_identity"
+        }
+      }
+    },
+    {
+      "id": "devin-desktop",
+      "name": "Devin Desktop",
+      "officialHosts": [
+        "devin.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Devin Desktop 官方产品页列 Free $0、Pro $20/月、Max $200/月；Teams 另外按基础费和席位费计价。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "current_usd_plan"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Devin Desktop 官网发布 Free 免费档，使用量及模型按当前条款限制。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "current_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Devin Desktop 官网说明支持多个编码代理并使用 Agent Client Protocol (ACP)，这是代理接入能力而非单一基础模型版本。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "agents_not_foundation_model"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "observed",
+          "text": "官方 FAQ 写明 Devin Desktop 是 Windsurf 的新名称，升级保留 IDE、工作流和原有设置。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "brand_rename"
+        }
+      }
+    },
+    {
+      "id": "tabnine",
+      "name": "Tabnine",
+      "officialHosts": [
+        "tabnine.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Tabnine 官网 Code Assistant 产品定价披露每用户每月 US$39，按年订阅；不是单次 API token 价格。",
+          "source": "https://www.tabnine.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "per_user_annual_contract"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "Tabnine 官方开发平台介绍 IDE/CLI 编码助手、代码库上下文以及企业部署；具体支持的第三方模型随版本变化。",
+          "source": "https://www.tabnine.com/platform/",
+          "checkedAt": "2026-11-02",
+          "scope": "coding_platform_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "observed",
+          "text": "Tabnine 官网明确公布 Tabnine 已被 Tricentis 收购；Tabnine 产品品牌与母集团不能重复当成独立集团。",
+          "source": "https://www.tabnine.com/platform/",
+          "checkedAt": "2026-11-02",
+          "scope": "parent_ownership"
+        }
+      }
+    },
+    {
+      "id": "mistral-le-chat",
+      "name": "Le Chat / Mistral",
+      "officialHosts": [
+        "mistral.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Mistral 官网公开 Free 免费层，并有付费层级；页面出现 $14.99/月教育资格价，不能代表普通 Pro 统一价。",
+          "source": "https://mistral.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "education_only_price_separate"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Mistral 免费层可在 web/移动端使用个人 AI 代理，消息、搜索、编码和生图均有限额。",
+          "source": "https://mistral.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "free_plan"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Mistral 当前定价页将个人 AI 代理和 Vibe 编码代理分开说明，不能将二者默认为同一 API 计费。",
+          "source": "https://mistral.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "product_family_not_model_version"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "microsoft-copilot",
+      "name": "Microsoft Copilot",
+      "officialHosts": [
+        "microsoft.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "微软新加坡 Copilot 公开页面显示个人方案 SG$15.49/月；企业方案 USD$23.50/用户/月，按年付款且不含 GST。不能混作全球统一美元价格。",
+          "source": "https://www.microsoft.com/en-sg/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "singapore_region_mixed_currency"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "微软官方产品页分为个人、商业和企业 Copilot，包含 Office/业务协作能力；没有把它标为一个单独基础模型。",
+          "source": "https://www.microsoft.com/en-sg/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "product_not_base_model"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "observed",
+          "text": "Microsoft 官方网页为 Microsoft Copilot 多产品方案的发布方，与 GitHub Copilot 的品牌入口应区分。",
+          "source": "https://www.microsoft.com/en-sg/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "brand_publisher"
+        }
+      }
+    },
+    {
+      "id": "poe",
+      "name": "Poe",
+      "officialHosts": [
+        "poe.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "The official billing terms for this exact plan, region and cycle are not fully corroborated."
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "Poe 官方 FAQ 介绍 OpenAI GPT、Anthropic Claude、Google Gemini 及图片、视频和自建机器人；模型由多个厂商提供。",
+          "source": "https://help.poe.com/hc/en-us/articles/19944206309524-Poe-FAQs",
+          "checkedAt": "2026-11-02",
+          "scope": "aggregator_not_first_party_model"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "observed",
+          "text": "官方 @poe 账号为 Poe 产品和机器人展示入口；真实经营公司主体尚需另查法律文件。",
+          "source": "https://poe.com/poe",
+          "checkedAt": "2026-11-02",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "adobe-firefly",
+      "name": "Adobe Firefly",
+      "officialHosts": [
+        "adobe.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Adobe Firefly 现行套餐按不同档位提供 2,000、4,000、10,000 或 50,000 月度生成积分；区域价格动态展示，不据此捏造美元数字。",
+          "source": "https://www.adobe.com/products/firefly/plans.html",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_credit_allowances"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "Adobe 官方说明 Firefly 既有网页版应用也有模型家族，支持图像、视频、矢量等，且可访问部分合作伙伴模型。",
+          "source": "https://helpx.adobe.com/firefly/web/get-started/learn-the-basics/adobe-firefly-faq.html",
+          "checkedAt": "2026-11-02",
+          "scope": "product_and_model_family"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Adobe 官方 Firefly 团队说明明确商业内容工作流和商业安全定位；具体使用仍要按不同生成模型许可审核。",
+          "source": "https://helpx.adobe.com/sg/firefly/web/get-started/learn-the-basics/adobe-firefly-overview.html",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_commercial_positioning_only"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "recraft",
+      "name": "Recraft",
+      "officialHosts": [
+        "recraft.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "The official billing terms for this exact plan, region and cycle are not fully corroborated."
+        },
+        "free": {
+          "status": "observed",
+          "text": "Recraft 官方说明免费档作品公开展示且所有权属于 Recraft，不能当作自动获得商用授权。",
+          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "checkedAt": "2026-11-02",
+          "scope": "free_ownership"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Recraft 官方定价说明其 V2、V3、V4 和 V4.1 模型可经 API 使用，按 API Units 单独计价。",
+          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "checkedAt": "2026-11-02",
+          "scope": "api_models"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Recraft 官方 FAQ 说明付费订阅期生成的图片具备相应所有权与商业使用权益，免费档不同。",
+          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "checkedAt": "2026-11-02",
+          "scope": "paid_vs_free_license"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Recraft 官方 FAQ 写明使用 Stripe 处理信用卡、借记卡及银行转账。",
+          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_payment_methods"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "freepik-ai",
+      "name": "Freepik AI",
+      "officialHosts": [
+        "freepik.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Freepik Premium 官方页显示 USD $14.50/月为年付折合价，全年积分 240K；不等于随时按月 $14.50 付款。",
+          "source": "https://www.freepik.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "annual_equivalent_usd"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "Freepik 官方页面提供多厂商图像、视频与音频模型列表，并单列不同模型的积分消耗；不是所有模型均由 Freepik 开发。",
+          "source": "https://www.freepik.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "aggregated_models"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Freepik Premium 页面标注 Commercial AI license；素材商业使用条件与 AI 模型合作许可仍需按合同分开审核。",
+          "source": "https://www.freepik.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "subscription_license_scope"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "synthesia",
+      "name": "Synthesia",
+      "officialHosts": [
+        "synthesia.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Synthesia 当前页面显示 Starter $19/月（按月结算），Pro $89/月（按月结算），首月可能有不同促销价。",
+          "source": "https://www.synthesia.io/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_monthly_standard_vs_promo"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Synthesia Basic 免费层包含月度视频额度和积分，官网展示 10 分钟视频及 500 credits/月。",
+          "source": "https://www.synthesia.io/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "basic_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Synthesia 提供 AI Avatars、视频助手、配音与字幕等功能；其套餐积分并不对应单个基础大模型。",
+          "source": "https://www.synthesia.io/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "avatar_video_functions"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    }
+  ]
+}

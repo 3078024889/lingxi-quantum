@@ -1,0 +1,249 @@
+{
+  "batch": "B003",
+  "asOf": "2026-11-02",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "products": [
+    {
+      "id": "heygen",
+      "name": "HeyGen",
+      "company": "HeyGen",
+      "category": "AI视频",
+      "website": "https://www.heygen.com/pricing",
+      "evidenceUrl": "https://www.heygen.com/pricing",
+      "tasks": [
+        "数字人视频",
+        "视频翻译",
+        "文本生成视频"
+      ],
+      "keywords": [
+        "HeyGen免费额度",
+        "HeyGen数字人视频"
+      ],
+      "publisherGroupId": "heygen",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://www.heygen.com/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "elicit",
+      "name": "Elicit",
+      "company": "Elicit",
+      "category": "学术研究",
+      "website": "https://elicit.com/pricing",
+      "evidenceUrl": "https://elicit.com/pricing",
+      "tasks": [
+        "论文搜索",
+        "系统性文献综述",
+        "资料提取"
+      ],
+      "keywords": [
+        "Elicit论文研究",
+        "AI系统性综述"
+      ],
+      "publisherGroupId": "elicit",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://elicit.com/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "consensus",
+      "name": "Consensus",
+      "company": "Consensus",
+      "category": "学术研究",
+      "website": "https://consensus.app/",
+      "evidenceUrl": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+      "tasks": [
+        "论文搜索",
+        "研究结论检索",
+        "证据综述"
+      ],
+      "keywords": [
+        "Consensus AI研究",
+        "论文证据搜索"
+      ],
+      "publisherGroupId": "consensus",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "scite",
+      "name": "Scite",
+      "company": "Scite",
+      "category": "学术研究",
+      "website": "https://scite.ai/pricing",
+      "evidenceUrl": "https://scite.ai/pricing",
+      "tasks": [
+        "学术引文核查",
+        "论文证据评估",
+        "研究辅助"
+      ],
+      "keywords": [
+        "Scite智能引文",
+        "论文引证核查"
+      ],
+      "publisherGroupId": "scite",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://scite.ai/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "replicate",
+      "name": "Replicate",
+      "company": "Replicate",
+      "category": "模型API",
+      "website": "https://replicate.com/pricing",
+      "evidenceUrl": "https://replicate.com/pricing",
+      "tasks": [
+        "运行AI模型",
+        "图片视频API",
+        "模型推理"
+      ],
+      "keywords": [
+        "Replicate模型托管",
+        "Replicate推理API"
+      ],
+      "publisherGroupId": "replicate",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://replicate.com/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "fal-ai",
+      "name": "fal",
+      "company": "fal",
+      "category": "模型API",
+      "website": "https://fal.ai/pricing",
+      "evidenceUrl": "https://fal.ai/pricing",
+      "tasks": [
+        "视频图片模型API",
+        "GPU推理部署",
+        "自定义模型运行"
+      ],
+      "keywords": [
+        "fal视频模型API",
+        "fal GPU价格"
+      ],
+      "publisherGroupId": "fal",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://fal.ai/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "together-ai",
+      "name": "Together AI",
+      "company": "Together AI",
+      "category": "模型API",
+      "website": "https://www.together.ai/pricing",
+      "evidenceUrl": "https://www.together.ai/pricing",
+      "tasks": [
+        "语言模型推理",
+        "微调训练",
+        "GPU算力"
+      ],
+      "keywords": [
+        "Together AI模型价格",
+        "大模型API"
+      ],
+      "publisherGroupId": "together-ai",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://www.together.ai/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "fireworks-ai",
+      "name": "Fireworks AI",
+      "company": "Fireworks AI",
+      "category": "模型API",
+      "website": "https://fireworks.ai/pricing",
+      "evidenceUrl": "https://fireworks.ai/pricing",
+      "tasks": [
+        "推理API调用",
+        "模型微调",
+        "专用GPU部署"
+      ],
+      "keywords": [
+        "Fireworks AI模型API",
+        "Fireworks微调价格"
+      ],
+      "publisherGroupId": "fireworks",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://fireworks.ai/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "groqcloud",
+      "name": "GroqCloud",
+      "company": "Groq",
+      "category": "模型API",
+      "website": "https://console.groq.com/docs/rate-limits",
+      "evidenceUrl": "https://console.groq.com/docs/rate-limits",
+      "tasks": [
+        "快速语言模型推理",
+        "语音识别API",
+        "模型调用限速管理"
+      ],
+      "keywords": [
+        "GroqCloud推理API",
+        "Groq API调用限制"
+      ],
+      "publisherGroupId": "groq",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://console.groq.com/docs/rate-limits",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "company": "OpenRouter",
+      "category": "模型API",
+      "website": "https://openrouter.ai/pricing",
+      "evidenceUrl": "https://openrouter.ai/pricing",
+      "tasks": [
+        "多模型路由",
+        "统一模型API",
+        "按token计费"
+      ],
+      "keywords": [
+        "OpenRouter免费模型",
+        "OpenRouter API价格"
+      ],
+      "publisherGroupId": "openrouter",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://openrouter.ai/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}

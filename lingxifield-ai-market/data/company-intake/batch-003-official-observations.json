@@ -1,0 +1,463 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B003",
+  "observedOn": "2026-11-02",
+  "disclaimer": "Unapproved public first-party page excerpts, not a verified full account purchase, model evaluation or launch-ready company profile.",
+  "products": [
+    {
+      "id": "heygen",
+      "name": "HeyGen",
+      "officialHosts": [
+        "heygen.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "HeyGen 官方套餐列 Creator $29/月、Pro $49/月、Business $149/月，企业层级另询价。",
+          "source": "https://www.heygen.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "HeyGen Free $0/月，官方注明每月 3 条带水印视频，每条最长 1 分钟。",
+          "source": "https://www.heygen.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "free_3_videos_per_month"
+        },
+        "models": {
+          "status": "observed",
+          "text": "HeyGen Pro 官方页面列 Avatar V、Seedance 2.5、Veo 3.1 等模型/引擎，部分来自第三方模型厂商。",
+          "source": "https://www.heygen.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "included_vendor_and_partner_models"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "elicit",
+      "name": "Elicit",
+      "officialHosts": [
+        "elicit.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Elicit 官方价格页有 Free、Plus、Pro、Scale 等层级；页面同时出现不同周期及行业选项，不能直接套用搜索片段显示的某一月价。",
+          "source": "https://elicit.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "plan_billing_toggle"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Elicit Free 允许搜索论文并有有限 Research Agent/Reports 用量；高级系统综述工作流按付费档额外计量。",
+          "source": "https://elicit.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "free_research"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Elicit 官方功能包含 Research Agent、Research Reports、Systematic Literature Reviews 和文献导出；模型提供商版本需另查。",
+          "source": "https://elicit.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "features_not_foundation_model"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "consensus",
+      "name": "Consensus",
+      "officialHosts": [
+        "consensus.app"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Consensus 官方帮助中心：Pro $20/月或 $144/年（年付折合 $12/月），两个结算周期应分开展示。",
+          "source": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_vs_annual_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Consensus 免费档 $0，每月有 10 条 Pro 消息、3 次 Deep Review、10 次 Study Snapshot 及 30 次 API/MCP 调用。",
+          "source": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_free_allowance"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Consensus 定价帮助区分 Papers、Pro 和 Deep Review 研究能力；不是公开承诺特定基础模型。",
+          "source": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+          "checkedAt": "2026-11-02",
+          "scope": "research_features"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "scite",
+      "name": "Scite",
+      "officialHosts": [
+        "scite.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Scite 官网 Basic 年付折算每月 $12，Pro 年付折算每月 $40，免费试用期 7 天；不是纯免费 Pro。",
+          "source": "https://scite.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "annual_equivalent_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Scite 定价页提供 7 天免费试用，但未公开承诺永久免费无限 Assistant 使用。",
+          "source": "https://scite.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "trial_not_free_tier"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Scite 官方描述 Smart Citations、论文引用支持/反驳分类、Assistant 和 MCP 积分；不等于单一底层模型产品。",
+          "source": "https://scite.ai/features",
+          "checkedAt": "2026-11-02",
+          "scope": "research_functions"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "replicate",
+      "name": "Replicate",
+      "officialHosts": [
+        "replicate.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Replicate 官方称按使用量收费：部分模型依 GPU 硬件运行时间收费，部分按输入/输出量收费，按模型端点分别计算。",
+          "source": "https://replicate.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "model_based_metering"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "Replicate 模型目录涵盖开源及专有模型，包括图像、视频与推理模型；官方页面逐个模型标示单位费率。",
+          "source": "https://replicate.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "third_party_model_catalog"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "fal-ai",
+      "name": "fal",
+      "officialHosts": [
+        "fal.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "fal 官方公开 GPU H100 标价 $4.50/小时，特定合同优惠可低至 $2.49/小时；模型 API 按视频秒数、图像或 token 分别计费。",
+          "source": "https://fal.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "list_vs_as_low_as_compute"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "fal 官方价格表列 H3 Max 视频 $0.05/秒、图像 Nano Banana 2 $0.08/图等独立第三方模型端点。",
+          "source": "https://fal.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_endpoint_rates"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "together-ai",
+      "name": "Together AI",
+      "officialHosts": [
+        "together.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Together AI 官方 Serverless 推理按每百万输入/输出 token 分别计费，也按模型区分缓存和批处理费用。",
+          "source": "https://www.together.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "per_million_tokens"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "Together AI 当前价格页列 Qwen、DeepSeek、Kimi 等多方模型；并非全部由 Together AI 自研。",
+          "source": "https://www.together.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "provider_model_marketplace"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "fireworks-ai",
+      "name": "Fireworks AI",
+      "officialHosts": [
+        "fireworks.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Fireworks 官方公开 Serverless 按 token 收费，GPU H100 按需报价 $8/小时；训练与推理费率必须分开。",
+          "source": "https://fireworks.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "serverless_and_gpu_separate"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "The current official free entitlement and quota have not been independently pinned."
+        },
+        "models": {
+          "status": "observed",
+          "text": "Fireworks 官方公开多模型推理、微调、专用部署以及 Qwen3 embeddings 等模型服务。",
+          "source": "https://fireworks.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "model_endpoints_and_embeddings"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "groqcloud",
+      "name": "GroqCloud",
+      "officialHosts": [
+        "groq.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "The official billing terms for this exact plan, region and cycle are not fully corroborated."
+        },
+        "free": {
+          "status": "observed",
+          "text": "GroqCloud 官方文档列有限速与免费或开发者档配额，但每个组织的实际限额以控制台为准，不能把示例限额当全部账户权益。",
+          "source": "https://console.groq.com/docs/rate-limits",
+          "checkedAt": "2026-11-02",
+          "scope": "organization_limits_not_guaranteed"
+        },
+        "models": {
+          "status": "observed",
+          "text": "GroqCloud 官方限速表列 gpt-oss-120b、gpt-oss-20b、Whisper 等可用端点，配额包括 RPM/TPM/RPD 等维度。",
+          "source": "https://console.groq.com/docs/rate-limits",
+          "checkedAt": "2026-11-02",
+          "scope": "rate_limit_model_ids"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "officialHosts": [
+        "openrouter.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "OpenRouter 官方定价说明 Standard 按充值金额收 5.5% 平台费用，Business 为 8%；模型 token 推理费按公布的模型价另计。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_purchase_platform_fees"
+        },
+        "free": {
+          "status": "observed",
+          "text": "OpenRouter 免费档提供 25+ 免费模型，默认请求上限 50 次/天；购买积分后免费模型请求限额条件可能变化。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "free_plan_rate_limits"
+        },
+        "models": {
+          "status": "observed",
+          "text": "OpenRouter 官网称付费方案提供 600+ 模型及 80+ 提供商；模型价格、提供商地区和路由策略分别记录。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "model_aggregator"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+        },
+        "company": {
+          "status": "missing",
+          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+        }
+      }
+    }
+  ]
+}
