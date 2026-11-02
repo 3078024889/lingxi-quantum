@@ -19,7 +19,7 @@ test.describe("Every public tool route loads in an actual browser",()=>{
    expect(response!.status(),"Tool route is not a 404/500").toBeLessThan(400);
    // Dedicated workflows render a custom main instead of the shared data-tool-workbench shell.
    // Check their actual controls rather than forcing an unrelated wrapper selector.
-   const dedicated=new Set(["burn-after-read","food-calorie","temp-mail"]);
+   const dedicated=new Set(["burn-after-read","food-calorie","temp-mail","ai-image-check","ai-video-audio-check"]);
    const main=page.locator("main").first();
    await expect(main,"A real tool page must render").toBeVisible({timeout:15000});
    const workspace=dedicated.has(slug)?main:page.locator("[data-tool-workbench]").first();
