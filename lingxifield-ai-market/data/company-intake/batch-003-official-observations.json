@@ -156,8 +156,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Consensus NLP, Inc. 官方 2025-06-25 服务条款规定，其平台网站、数据和内容仅授予有限个人访问及个人复制许可；未经书面授权，不得将平台内容再发布、传输、出售或商业开发。此项约束网站内容和数据库转载，不等于明确承诺用户自己撰写的研究报告或独立论文拥有不受限的商用权。",
+          "source": "https://consensus.app/home/terms-of-service/",
+          "checkedAt": "2026-11-02",
+          "scope": "site_content_personal_use_no_commercial_redistribution_without_permission"
         },
         "payment": {
           "status": "observed",
@@ -324,8 +327,11 @@
           "reason": "Official country-by-country availability and user restrictions have not been checked."
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "fal（Features & Labels, Inc.）2026-07-31 服务条款第4节：在支付所需服务费或积分、遵守协议的前提下，可用于个人或内部业务；经批准 API 集成的客户应用也可向最终用户提供服务。生成内容可能不具独创性，fal 不保证不存在第三方知识产权问题。此项不是所有模型及输出均自动获得无限制商用许可，具体须遵守各模型和 API 许可。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "paid_internal_business_and_approved_api_customer_solutions_with_third_party_ip_caveats"
         },
         "payment": {
           "status": "observed",
