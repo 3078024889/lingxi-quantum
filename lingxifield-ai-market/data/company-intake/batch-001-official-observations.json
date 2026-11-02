@@ -174,8 +174,20 @@
           "scope": "image_picker_models_distinct_from_agent_effort_models"
         },
         "regions": {
-          "status": "missing",
-          "reason": "未查询官方按国家列出的 Gamma 使用和支付覆盖"
+          "status": "observed",
+          "text": "Gamma 官方帮助中心确认：iOS 和 Android 原生 App 在早期开放阶段仅于美国、加拿大应用商店提供。其他国家用户可通过移动浏览器访问 gamma.app 网页版；但这不是逐国注册、付款或所有模型都可使用的证明。Gamma 还说明俄罗斯、印度尼西亚的部分网络访问会遇到 Cloudflare 安全验证挑战，不能误写成该国被官方全面禁止。",
+          "source": "https://help.gamma.app/en/articles/11016450-does-gamma-have-a-mobile-app",
+          "checkedAt": "2026-11-02",
+          "scope": "mobile_app_us_canada_only_web_access_not_complete_geo_or_checkout_verification",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Gamma 官方连接排障文档：俄罗斯及印度尼西亚等部分地区可能受到 Cloudflare 安全挑战；这是反机器人/网络连接问题，不等同服务禁用或完整国家支持名单。",
+              "source": "https://help.gamma.app/en/articles/11048601-why-am-i-having-trouble-connecting-to-gamma",
+              "checkedAt": "2026-11-02",
+              "scope": "network_access_challenges_not_service_country_support"
+            }
+          ]
         },
         "commercial": {
           "status": "observed",
