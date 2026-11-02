@@ -4,15 +4,26 @@ import {createFfmpegRuntime} from "@/lib/tools/media/runtime";
 
 export type TimedText={start:number;end:number;text:string};
 
+/** Subtitle cues must preserve the ASR clock; untimed transcripts cannot be presented as synchronized. */
+export function requireTimedTranscript(segments:TimedText[]){
+ if(!Array.isArray(segments)||!segments.length)throw Error("TRANSCRIPT_TIMESTAMPS_REQUIRED");
+ const valid:TimedText[]=[];
+ for(const x of segments){
+  if(!x||!Number.isFinite(x.start)||!Number.isFinite(x.end)||x.start<0||x.end<=x.start||!x.text?.trim())throw Error("TRANSCRIPT_TIMESTAMPS_INVALID");
+  valid.push({start:x.start,end:x.end,text:x.text.replace(/\r\n?/g,"\n").trim()});
+ }
+ return valid;
+}
+function subtitleTime(sec:number,separator:","|"."){
+ if(!Number.isFinite(sec)||sec<0)throw Error("TRANSCRIPT_TIMESTAMPS_INVALID");
+ const ms=Math.round(sec*1000),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000;
+ return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}${separator}${String(x).padStart(3,"0")}`;
+}
 export function toSrtTimed(segments:TimedText[]){
- const t=(sec:number)=>{
-  const ms=Math.max(0,Math.round(sec*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000;
-  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")},${String(x).padStart(3,"0")}`;
- };
- return segments.map((x,i)=>`${i+1}\n${t(x.start)} --> ${t(x.end)}\n${x.text}`).join("\n\n");
+ return requireTimedTranscript(segments).map((x,i)=>`${i+1}\n${subtitleTime(x.start,",")} --> ${subtitleTime(x.end,",")}\n${x.text}`).join("\n\n");
 }
 export function toVttTimed(segments:TimedText[]){
- return "WEBVTT\n\n"+toSrtTimed(segments).replace(/,/g,".").replace(/^\d+\n/gm,"");
+ return "WEBVTT\n\n"+requireTimedTranscript(segments).map(x=>`${subtitleTime(x.start,".")} --> ${subtitleTime(x.end,".")}\n${x.text}`).join("\n\n");
 }
 
 function copyBytes(data:Uint8Array|string){
