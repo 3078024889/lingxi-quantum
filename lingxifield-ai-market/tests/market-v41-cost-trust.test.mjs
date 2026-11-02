@@ -257,7 +257,7 @@ test('V43 complete 32/32 curated source records distinguish product scope and ve
  assert.match(m.researchedFact('grok').price,/30/);
  assert.match(m.researchedFact('ollama').price,/按百万 Tokens/);
  const locale=await import(pathToFileURL(path.join(ROOT,'lib/market-fact-locale.ts')).href);
- assert.match(locale.localizedCatalogFact('replit','en','price',''),/\$20/);
+ assert.match(locale.localizedCatalogFact('replit','en','price',m.researchedFact('replit').price),/Core \$20.*\$18.*Pro \$100.*\$90/);
  assert.match(locale.localizedCatalogFact('midjourney','en','price',''),/\$10/);
  assert.match(locale.localizedCatalogFact('grok','en','price',''),/\$30/);
 });
