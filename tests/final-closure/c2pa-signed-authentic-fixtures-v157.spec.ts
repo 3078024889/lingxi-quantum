@@ -26,7 +26,10 @@ for(const item of [
   test.setTimeout(150000);
   const data=await readFile(directory+"/"+item.name);
   const status=await inspect(page,item.slug,item.name,item.mime,data);
-  await expect.poll(()=>status.getAttribute("data-c2pa-verification"),{timeout:110000}).toMatch(/^(untrusted|valid|trusted)$/);
+  // Both pinned fixtures are signed by test PKI, not the official C2PA trust list.
+  // A valid content hash/signature must NOT be conflated with a trusted signer.
+  await expect.poll(()=>status.getAttribute("data-c2pa-verification"),{timeout:110000}).toBe("untrusted");
+  await expect(status).toContainText("Signature found; signer is not trusted");
   // A valid signature does not establish human origin or that a scene really happened.
   await expect(page.locator("main")).toContainText("does not prove a scene is real");
  });
