@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {AI_MARKET_PROMOTION_COPY} from "@/lib/ai-market-promotion-locale";
 import {AI_MARKET_CLAIMABLE_LABELS} from "@/lib/ai-market-vendor-claims";
@@ -12,6 +12,8 @@ export default function PromotionRequestsPanel(){
  const [claimId,setClaimId]=useState(""),[plan,setPlan]=useState("sponsored"),[currency,setCurrency]=useState<"CNY"|"USD">("CNY");
  const [provider,setProvider]=useState<"alipay"|"wechat"|"paypal">("alipay");
  const [busy,setBusy]=useState(false),[ready,setReady]=useState(false),[notice,setNotice]=useState("");
+ // A retried network request reuses the SAME UUID for the same quote, preventing accidental duplicates.
+ const retryKey=useRef<{signature:string;key:string}|null>(null);
  async function reload(){
   const [a,b]=await Promise.all([
    fetch("/api/ai-market/vendor-claims",{cache:"no-store"}),
@@ -29,11 +31,14 @@ export default function PromotionRequestsPanel(){
   const product=approved.find(x=>x.id===claimId);if(!product)return;
   setBusy(true);setNotice("");
   try{
-   const key=crypto.randomUUID();
+   const signature=[claimId,product.product_id,plan,currency,provider].join("|");
+   if(!retryKey.current||retryKey.current.signature!==signature)
+    retryKey.current={signature,key:crypto.randomUUID()};
+   const key=retryKey.current.key;
    const res=await fetch("/api/ai-market/vendor-promotions",{method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({requestKey:key,claimId,productId:product.product_id,planId:plan,currency,provider})});
    const x=await res.json();if(!res.ok)throw Error(x.error||"SUBMIT_FAILED");
-   await reload();setNotice("SAVED");
+   retryKey.current=null;await reload();setNotice("SAVED");
   }catch(e){setNotice(e instanceof Error?e.message:"SUBMIT_FAILED")}
   finally{setBusy(false)}
  }
