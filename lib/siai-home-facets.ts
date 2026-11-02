@@ -64,7 +64,11 @@ function evidenceMatches(row:FacetRow,v:EvidenceFacet){
 function paymentMatches(row:FacetRow,payment:PaymentFacet){
  if(payment==='any')return true;
  // Only publisher-supported checkout rails with independent source evidence.
- return knownSource(row.paymentSource)&&PAYMENT_MATCH[payment].test(row.payment);
+ if(!knownSource(row.paymentSource))return false;
+ // One negative rail must never leak into a positive filter alongside another rail.
+ return row.payment.split(/\\s+[·•]\\s+|[,，;；\\n]/).some(method=>
+  PAYMENT_MATCH[payment].test(method)&&
+  !/(?:不支持|不接受|不可用|未开通|无此支付|not\\s+supported|not\\s+accepted|unavailable|disabled)/i.test(method));
 }
 function yearNumber(row:FacetRow){
  const year=row.year?.match(/^(?:19|20)\d{2}/)?.[0];
