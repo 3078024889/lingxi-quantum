@@ -12,5 +12,8 @@ test('machine-readable directory exposes only curated products and evidence rule
  assert.match(route,/Sponsored placements/);
  assert.match(route,/reviewed observations only/);
  assert.match(route,/Cache-Control/);
+ assert.match(route,/companyPresentationFor/);
+ assert.match(route,/capabilityProfile/);
+ assert.match(route,/source-backed publisher|Publisher \/ maintainer/);
  assert.doesNotMatch(route,/B001|future vendor candidates|intakePaused/);
 });
