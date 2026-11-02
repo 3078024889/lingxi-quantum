@@ -130,3 +130,4 @@ export default function PdfPageOrganizerWorkbench({files,sourceSlug}:{files:read
    {saved&&<ResultPanel files={[saved]} messageZh="PDF 页面整理完成。" messageEn="Organized PDF is ready." sourceSlug={sourceSlug}/>}
   </>}
  </section>;
+}
