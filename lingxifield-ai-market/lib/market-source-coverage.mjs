@@ -30,7 +30,7 @@ export function auditSourceCoverage(rows){
 export function auditPriceDetail(rows){
  if(!Array.isArray(rows))throw Error('INVALID_PRODUCT_ROWS');
  const priced=[],notQuoted=[],freeSelfHosted=[];
- const currencies=/(?:[$€£¥]|(?:USD|CNY|EUR|GBP)\\s*)\\s*\\d+(?:[.,]\\d+)?|\\d+(?:[.,]\\d+)?\\s*(?:元|美元|人民币|USD|CNY|EUR|GBP)/i;
+ const currencies=/(?:[$€£¥]|(?:USD|CNY|EUR|GBP)\s*)\s*\d+(?:[.,]\d+)?|\d+(?:[.,]\d+)?\s*(?:元|美元|人民币|USD|CNY|EUR|GBP)/i;
  for(const r of rows){
   if(!r||!hasText(r.id))throw Error('INVALID_PRODUCT_ID');
   const price=r.facts?.price||'';
