@@ -26,6 +26,8 @@ test("Whisper Tiny real inference recognizes synthetic English speech and writes
   });
   await page.route("**/api/tools/pay/status**",r=>r.fulfill({json:{paid:true,quote:{tool_id:"audio-transcription",quantity:q?.quantity,metadata:q?.metadata}}}));
   const telemetry:string[]=[];
+  const externalRuntimeRequests:string[]=[];
+  page.on("request",r=>{if(/cdn\.jsdelivr\.net.*ort-wasm|unpkg\.com.*ort-wasm/i.test(r.url()))externalRuntimeRequests.push(r.url())});
   page.on("pageerror",e=>telemetry.push("PAGE:"+e.message.slice(0,280)));
   page.on("console",m=>{if(m.type()==="error"||m.type()==="warning")telemetry.push("CONSOLE:"+m.text().slice(0,350))});
   page.on("requestfailed",r=>{if(/models|onnx|wasm|transformers|huggingface/i.test(r.url()))telemetry.push("REQUEST:"+r.url().slice(0,180)+":"+(r.failure()?.errorText||""))});
@@ -51,15 +53,16 @@ test("Whisper Tiny real inference recognizes synthetic English speech and writes
    const retry=await retryButton.isVisible()&&await retryButton.isEnabled();
    const alerts=await page.locator('[role="alert"]').allTextContents();
    if(retry||alerts.some(x=>/failed|could not|unavailable|失败|无法|暂时/i.test(x))){
-    const details={retry,alerts,telemetry:telemetry.slice(-35)};
+    const details={retry,alerts,externalRuntimeRequests,telemetry:telemetry.slice(-35)};
     throw new Error("REAL_WHISPER_ASR_FAILED:"+JSON.stringify(details));
    }
    await page.waitForTimeout(1000);
   }
   if(!await transcript.isVisible()){
-   const details={alerts:await page.locator('[role="alert"]').allTextContents(),status:await page.locator('[role="status"]').allTextContents(),body:(await page.locator("main").innerText()).slice(-1400),telemetry:telemetry.slice(-45)};
+   const details={alerts:await page.locator('[role="alert"]').allTextContents(),status:await page.locator('[role="status"]').allTextContents(),body:(await page.locator("main").innerText()).slice(-1400),externalRuntimeRequests,telemetry:telemetry.slice(-45)};
    throw new Error("REAL_WHISPER_TIMEOUT:"+JSON.stringify(details));
   }
+  expect(externalRuntimeRequests,"Whisper ONNX runtime must be self-hosted; no external CDN WASM requests").toEqual([]);
   const recognized=await transcript.inputValue();
   expect(recognized.length).toBeGreaterThan(8);
   expect(recognized.toLowerCase()).toMatch(/earth|planet|mountain|river/);
