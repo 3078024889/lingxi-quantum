@@ -48,7 +48,6 @@
         "resize-image",
         "remove-exif",
         "image-to-pdf",
-        "image-to-pdf-pro",
         "screenshot-redact"
       ]
     },
@@ -63,7 +62,6 @@
         "e-sign-pdf",
         "pdf-redact",
         "pdf-to-jpg",
-        "compress-pdf",
         "pdf-compress",
         "pdf-merge-split",
         "pdf-to-xlsx"
