@@ -5,7 +5,7 @@ import {visibleSponsored} from '../lib/market-sponsored-guard.mjs';
 const src=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 
 test('all nine locales present official, app, repository, source and limitation labels',()=>{
- assert.deepEqual(LINK_LOCALES.sort(),['ar','de','en','es','fr','ja','ko','pt','zh']);
+ assert.deepEqual([...LINK_LOCALES].sort(),['ar','de','en','es','fr','ja','ko','pt','zh']);
  for(const lang of LINK_LOCALES){
   const c=publisherLinkCopy(lang);
   for(const key of ['official','repository','documentation','desktop','ios','android','x','news','team','github','reviews','aria','repoNote','docsNote'])assert.ok(c[key]?.length>=4,lang+':'+key);
