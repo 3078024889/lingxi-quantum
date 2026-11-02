@@ -93,16 +93,25 @@
           "scope": "features_not_foundation_model"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Elicit 服务条款要求符合适用法律与进出口管制；官方并未在该条款公布逐国可用名单，不能把非制裁国家自动标为支持。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "export_reexport_restrictions_not_country_whitelist"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "The complete current licensing terms for this specific plan have not been reviewed."
+          "status": "observed",
+          "text": "Elicit 条款允许经授权代表雇主签约并使用服务，使用者保留其提交内容权益；但并未据此授予所有 AI 输出无限制商业再分发许可。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "authorized_employer_use_no_blanket_output_resale"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Elicit 付费订阅条款明确可以向信用卡收费，亦可能提供其他经批准的支付方式；未确认全部国家支持 PayPal 或支付宝。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_card_or_other_approved_mechanisms"
         },
         "company": {
           "status": "observed",
@@ -151,12 +160,18 @@
           "reason": "The complete current licensing terms for this specific plan have not been reviewed."
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Consensus 官方账单帮助说明订阅设置中可新增银行卡信息，并更新账单地址；尚无官方依据可把支付宝或 PayPal 列为已支持。",
+          "source": "https://help.consensus.app/en/articles/10093375-update-your-payment-information",
+          "checkedAt": "2026-11-02",
+          "scope": "payment_card_subscription_settings"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Consensus AI 研究搜索产品的官方服务条款明确经营主体为 Consensus NLP, Inc.，与同名医疗通信企业 Consensus Cloud Solutions 不同。",
+          "source": "https://consensus.app/home/terms-of-service/",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_entity_disambiguation"
         }
       }
     },
