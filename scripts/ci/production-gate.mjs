@@ -29,6 +29,7 @@ const commands=[
  ["node",["scripts/audit-security.mjs"]],
  ["node",["scripts/test-burn-token-boundaries.cjs"]],
  ["node",["scripts/test-burn-file-completion.cjs"]],
+ ["node",["scripts/test-burn-file-aes-v141.cjs"]],
  ["node",["scripts/test-burn-file-preparation.cjs"]],
  ["node",["scripts/test-engine-path-security.cjs"]],
  ["node",["scripts/test-video-reference-claim.cjs"]],
