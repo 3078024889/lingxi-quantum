@@ -30,3 +30,10 @@ test('search-engine product detail does not publish Chinese editorial Q&A as loc
  assert.match(page,/siaiDetailShouldIndex\(facts\)/);
  assert.match(page,/robots:\{index:isIndexable,follow:true\}/);
 });
+
+test('Midjourney web is not a free offer merely because separate niji mobile app has limited trial',()=>{
+ const filtering=read('lib/siai-home-facets.ts');
+ const market=read('lingxifield-ai-market/lib/market-v36-screening.ts');
+ assert.match(filtering,/if\(row\.id==='midjourney'\)return false/);
+ assert.match(market,/if\(p\.id==='midjourney'\)return false/);
+});
