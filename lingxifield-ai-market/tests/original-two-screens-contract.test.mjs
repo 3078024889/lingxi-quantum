@@ -9,9 +9,9 @@ test('global market and platform detail preserve original two-screen visual hier
  }
  const localized=await read('lib/market-ui-extra.ts');
  const links=await read('app/product-access-links.tsx');
- assert.ok(home.includes('<ProductAccessLinks platform={target}/>'));
+ assert.ok(home.includes('<ProductAccessLinks platform={target} language={language}/>'));
  assert.ok(links.includes('data-link-kind={kind}'));
- assert.ok(links.includes('GitHub 源码 ↗'));
+ assert.ok(links.includes('publisherLinkLabel(link.kind,language)'));
  for(const label of ['排行榜','AI工具库','对比','搜索平台'])assert.ok(localized.includes(label),'Missing localized original experience '+label);
  assert.ok(!home.includes('logoMark">◈'),'Use official original logo asset, never invented mark');
 });
