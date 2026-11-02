@@ -1,0 +1,514 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B001",
+  "observedOn": "2026-11-02",
+  "disclaimer": "Sourced public-page observations awaiting editor approval. No live account/checkout or task execution was performed. Not a publication record.",
+  "products": [
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "officialHosts": [
+        "cursor.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "conflict",
+          "text": "当前主站显示 Free $0、Plus $8/月、Premium $30/月、Super $100/月、Ultra $200/月；旧 Pro $20/月、Pro+ $60/月另属历史方案，不可当成同一套餐。",
+          "source": "https://cursor.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "current_subscription_vs_legacy"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Free $0/月，仅限量 AI、Chat 与 Agent 使用。",
+          "source": "https://cursor.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "observed",
+          "text": "当前价格文档列出 Grok 4.7、Grok 4.6 和 Composer 2.5；第三方模型可能另外按 API 价格计费。",
+          "source": "https://cursor.com/docs/models-and-pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "缺乏按国家列出的最新注册和支付覆盖清单"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "尚未对企业商用、代码知识产权与隐私条款做独立逐项核查"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "官网写明自助订阅支持主要信用卡和借记卡；企业发票与电汇按商户洽谈。",
+          "source": "https://cursor.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Cursor 当前订阅页为 X Subscription，厂商法务/母公司关系需作为独立实体继续核查，不能沿用旧主体结论。",
+          "source": "https://cursor.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "canva-magic-studio",
+      "name": "Canva Magic Studio",
+      "officialHosts": [
+        "canva.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Canva 官方美国美元定价页展示 Free US$0/年和 Pro US$144/年（1 人）；这是年付总价，不应误写成每月 $144。",
+          "source": "https://www.canva.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "us_annual_1_seat"
+        },
+        "free": {
+          "status": "observed",
+          "text": "免费版包含设计编辑器、5GB 存储空间、最高约 20 次标准或高级 AI 使用（权益依具体计数规则）。",
+          "source": "https://www.canva.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "官网主要按 Magic Studio 功能出售，未核定单一代表基础模型及版本"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "未逐国核对 Canva AI 具体功能的可用地区"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "未逐项核对免费/付费内容授权、素材许可和 AI 生成物商业条件"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "未从当前官方公开页面取得针对所有地区的具体结算方式"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网显示 Canva 为平台和 Magic Studio 的产品品牌；企业注册主体和成立资料留给单独公司证据核对。",
+          "source": "https://www.canva.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "gamma",
+      "name": "Gamma",
+      "officialHosts": [
+        "gamma.app"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "官方定价页面显示 Free $0；Plus $9/席位/月（年付 $108/席位）；Pro $18/席位/月（年付 $216/席位）；月付单月价格应另查。",
+          "source": "https://gamma.app/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "annual_equivalent_per_seat"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Free 新注册赠送 400 credits，支持每次提示约 10 页及 PDF/PPTX 导入、导出等，因地区和版本可能变动。",
+          "source": "https://gamma.app/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "官方说明提供高级 AI 图像模型，但未取得一份可核对的完整模型版本清单"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "未查询官方按国家列出的 Gamma 使用和支付覆盖"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "公开套餐功能不等于全部内容的可商用授权，合同条款待核对"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "尚未取得官方支付方式完整来源"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Gamma 定价页为 Gamma 产品官方来源，法律公司注册资料未完成单独核验。",
+          "source": "https://gamma.app/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "pika",
+      "name": "Pika",
+      "officialHosts": [
+        "pika.art"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "现定价页显示 Starter $10/月、Creator $35/月、Fancy 自 $95/月起；年付每月折算不同，按结算周期分开记录。",
+          "source": "https://pika.art/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_usd"
+        },
+        "free": {
+          "status": "conflict",
+          "text": "新定价及 FAQ 显示 Free $0、每月固定赠送积分为 0，可另购积分包；旧 FAQ 仍写 Basic 每月 150 积分，属于版本冲突。",
+          "source": "https://pika.art/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "current_vs_legacy_FAQ"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "旧 FAQ 的 Pika 2.1/2.2 积分表不能视作全部现行模型定价"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "未完整核验每国可用性和支付限制"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "目前套餐表明确显示 Free/Starter 不附商业许可，Creator/Fancy 包含商业许可；具体许可证条款另查。",
+          "source": "https://pika.art/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "目前未对支付卡种和地区限制获得官方完整证据"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Pika 产品定价以 pika.art 官网为来源；注册公司主体待核对。",
+          "source": "https://pika.art/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "ideogram",
+      "name": "Ideogram",
+      "officialHosts": [
+        "ideogram.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Plus 年付折算 $15/月（全年 $180）；Pro 年付折算 $42/月（全年 $504）；月付实际收费另计。",
+          "source": "https://ideogram.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "annual_equivalent_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "官网支持按使用量购买积分；符合条件的免费账号登录后可获得每周积分，实际额度存在变动。",
+          "source": "https://ideogram.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "observed",
+          "text": "官方定价页公开 Ideogram 4.5 / 4.0 / 3.0 与 P-Image 的不同图像模型和 API 按张价格。",
+          "source": "https://ideogram.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "未取得当前全部国家的注册或使用限制清单"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "定价 FAQ 说明用户可将生成图像用于包括商用在内的用途，详细范围仍受官方服务条款约束。",
+          "source": "https://ideogram.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "官网表示使用 Stripe 收卡，接受 Visa、Mastercard、American Express 等；不支持 PayPal 等电子钱包。",
+          "source": "https://ideogram.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网以 Ideogram 品牌发布产品和官方 API 定价；成立及股权仍需独立核验。",
+          "source": "https://ideogram.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "krea",
+      "name": "Krea",
+      "officialHosts": [
+        "krea.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Basic 单月标价约 $9；Pro 单月 $35；Max 单月 $105。年付折算分别约 $5.25、$21、$63/月，具体页面区域活动需核对。",
+          "source": "https://www.krea.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_monthly_vs_annual"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Free $0，官网标示每天约 100 units，无需绑定信用卡，并提供实时图像等有限使用。",
+          "source": "https://www.krea.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "observed",
+          "text": "当前官网列出 Krea 3、Krea Agent、Nano Banana 2、Seedance 视频等跨模型能力；不是声称均由 Krea 自研。",
+          "source": "https://www.krea.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "未逐国核对可用地区和模型供应商区域限制"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "定价表对付费 Pro 和 Max 列有 Commercial license，其他档位应逐项查看条款。",
+          "source": "https://www.krea.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "未找到可覆盖全球账号的官方支付渠道清单"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Krea 官网公开产品品牌信息；注册公司、上市和融资资料待独立核验。",
+          "source": "https://www.krea.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "leonardo",
+      "name": "Leonardo AI",
+      "officialHosts": [
+        "leonardo.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "官网月度表列 Essential $12/月、Premium $30/月、Ultimate $60/月，页面提示不含适用税费。",
+          "source": "https://leonardo.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_monthly"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Free $0/月，每天 150 Fast Tokens；免费档为公开创作，模型权限受限。",
+          "source": "https://leonardo.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "observed",
+          "text": "免费账号 Model Access 为 Auto only；Essential 等付费档标示可用 80+ Models，但非一份模型版本逐项清单。",
+          "source": "https://leonardo.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "未逐国查明访问、付款及模型政策差异"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "免费公开图片、付费私密生成和商业使用条款需要与内容所有权条款逐项比对"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "没有按国家核实可用支付方式"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Leonardo.Ai 官方订阅页为产品来源；公司成立及所有权历史尚未独立核实。",
+          "source": "https://leonardo.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "notion-ai",
+      "name": "Notion AI",
+      "officialHosts": [
+        "notion.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "官方月度 USD 标价 Free $0/人/月、Plus $10/人/月、Business $20/人/月，Enterprise 询价；Custom Agents 另使用积分。",
+          "source": "https://www.notion.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_per_member_monthly"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Free / Plus 可以试用有限 Notion AI；Business 和 Enterprise 的标准与自选积分需按官方积分政策单独计量。",
+          "source": "https://www.notion.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Notion 官方说明 AI Agent、会议笔记、Enterprise Search；新积分制度有标准与自选两类积分，非单一公开模型名称。",
+          "source": "https://www.notion.com/help/manage-your-ai-credits",
+          "checkedAt": "2026-11-02",
+          "scope": "ai_credit_tiers"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "暂无全部国家地区的当前服务和模型许可核实"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "企业数据保留政策不同于生成内容商业许可，须独立审计条款"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Notion 官方 FAQ 表明支持主要信用卡和借记卡，其他方式因结算条款而异。",
+          "source": "https://www.notion.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Notion AI 属于 Notion 工作空间产品；公司成立、法律主体及资本信息另行验证。",
+          "source": "https://www.notion.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "figma-make",
+      "name": "Figma Make",
+      "officialHosts": [
+        "figma.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Figma 官方 Professional Full seat 页面标价 $16/席位/月，AI 附加积分可能单独计费；具体账期须以选择的 Monthly/Annual 为准。",
+          "source": "https://www.figma.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_full_seat"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Starter Free 提供有限 Figma Make 使用；官网列 150 AI credits/天、最多 500 credits/月。",
+          "source": "https://www.figma.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "Figma Make 功能介绍可核实，但底层模型、模型版本与推理成本未逐项公布"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "地区可用和 AI 模型限制尚未按国家核对"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "Figma Make 生成代码及设计的完整商业授权条款待核实"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "未取得全球席位付款方式的官方逐国说明"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Figma Make 为 Figma 产品线下的一项能力，不能把它另算一家独立 AI 公司。",
+          "source": "https://www.figma.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    },
+    {
+      "id": "descript",
+      "name": "Descript",
+      "officialHosts": [
+        "descript.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "官方当前定价页：Hobbyist 月付 $24/人/月（年付折合 $16/月），Creator 月付 $35（年付折合 $24），Business 月付 $65（年付折合 $50）。",
+          "source": "https://www.descript.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_monthly_and_annual_equivalent"
+        },
+        "free": {
+          "status": "observed",
+          "text": "官方提供 Free 套餐；付费 Hobbyist 含 10 media hours/月和 400 AI credits/月，1080p 无水印导出。",
+          "source": "https://www.descript.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        },
+        "models": {
+          "status": "observed",
+          "text": "产品提供 Underlord、Studio Sound、填充词删除、AI Speech、自动字幕等功能；此处不等于底层模型清单。",
+          "source": "https://www.descript.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "features_not_foundation_models"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "未核对所有地区的订阅可用性"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "无水印不等于允许所有素材商用；素材、声音和生成物许可仍需查服务条款"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "未核对官网当前全球收款渠道的完整清单"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Descript 官方定价页确认产品品牌；成立年份和融资情况尚需独立核实。",
+          "source": "https://www.descript.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_public_page"
+        }
+      }
+    }
+  ]
+}
