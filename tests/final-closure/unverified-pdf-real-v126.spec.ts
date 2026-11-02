@@ -15,7 +15,7 @@ async function upload(page:Page,slug:string,contents:string[],names?:string[]){
  await workbench(page).locator('input[type="file"]').first().setInputFiles(files);
  return workbench(page);
 }
-async function press(page:Page){const area=workbench(page);await area.locator("> div > button").first().click();}
+async function press(page:Page){const area=workbench(page);await area.locator(":scope > div > button").first().click();}
 async function getSaved(page:Page){
  const actions=workbench(page).getByTestId("result-file-actions").first();
  await expect(actions).toBeVisible({timeout:30000});
@@ -63,7 +63,7 @@ test("pdf-page-numbers: adds vector number, preserves original text and dimensio
 
 test("pdf-watermark: visible vector text watermark survives downloadable output",async({page})=>{
  const area=await upload(page,"pdf-watermark",["WATERMARK SOURCE"]);
- const field=area.locator('input[type="text"]').first();
+ const field=area.locator('input:not([type="file"])').first();
  if(await field.count())await field.fill("REVIEWED");
  await press(page);
  const out=await getSaved(page);
