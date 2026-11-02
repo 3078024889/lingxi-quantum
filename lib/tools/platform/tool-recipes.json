@@ -1,5 +1,33 @@
 [
   {
+    "slug": "ai-image-check",
+    "capabilities": [
+      "file.detect",
+      "ai.provenance.verify",
+      "ai.image.indicators"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
+    "slug": "ai-video-audio-check",
+    "capabilities": [
+      "file.detect",
+      "ai.provenance.verify",
+      "ai.media.indicators"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
+  },
+  {
     "slug": "audio-cleanup",
     "capabilities": [
       "media.ffmpeg",

@@ -1,4 +1,5 @@
 import type {Metadata} from "next";
 import MediaOriginStarter from "@/components/tools/MediaOriginStarter";
-export const metadata:Metadata={title:"AI 图片检测｜灵犀场",description:"上传图片，查看检测结果及是否能够识别文件格式。"};
-export default function Page(){return <MediaOriginStarter mode="image"/>;}
+import ToolGuide from "@/components/seo/ToolGuide";
+export const metadata:Metadata={title:"AI 图片检测｜灵犀场",description:"核验 C2PA 图片来源签名，按需查看本机 AI 图像特征检测结果。分数不代表真实性证明。"};
+export default function Page(){return <><MediaOriginStarter mode="image"/><ToolGuide slug="ai-image-check"/></>;}

@@ -137,6 +137,29 @@ export const TOOL_INTROS = {
     "es": "Elimina EXIF, GPS y otros metadatos de las imágenes para proteger la privacidad.",
     "pt": "Remova EXIF, GPS e outros metadados das imagens para proteger a privacidade.",
     "ar": "أزل بيانات EXIF وGPS والبيانات الوصفية الأخرى من الصور لحماية الخصوصية."
-  }
+  },
+
+ "ai-image-check":{
+  zh:"验证图片 C2PA 来源签名，并可选分析 AI 生成特征；检测指标不是图片真伪的证明。",
+  en:"Check image C2PA provenance and optionally analyze AI-generation indicators; model scores do not prove authenticity.",
+  ja:"画像のC2PA出所署名を確認し、AI生成の特徴を任意で分析します。スコアは真正性の証明ではありません。",
+  ko:"이미지의 C2PA 출처 서명을 확인하고 AI 생성 특징을 선택적으로 분석합니다. 점수는 진위 증명이 아닙니다.",
+  fr:"Vérifiez la provenance C2PA et les indicateurs IA d’une image. Les scores ne prouvent pas son authenticité.",
+  de:"Prüfe die C2PA-Herkunft und optional KI-Merkmale eines Bildes. Scores belegen keine Echtheit.",
+  es:"Comprueba la procedencia C2PA y los indicios de IA de una imagen. La puntuación no prueba autenticidad.",
+  pt:"Verifique a procedência C2PA e sinais de IA numa imagem. A pontuação não prova autenticidade.",
+  ar:"تحقق من مصدر صورة عبر C2PA، وحلل مؤشرات الذكاء الاصطناعي اختياريًا؛ النتائج لا تثبت الأصالة."
+ },
+ "ai-video-audio-check":{
+  zh:"核验视频或音频的 C2PA 来源签名；视频仅抽取 3 帧，语音仅分析开头最多 12 秒。",
+  en:"Check C2PA provenance for video or audio; optional analysis samples 3 video frames or up to 12 seconds of speech.",
+  ja:"動画・音声のC2PA署名を確認します。動画は3フレーム、音声は冒頭最大12秒のみ任意分析します。",
+  ko:"동영상·오디오의 C2PA 서명을 확인합니다. 영상은 3프레임, 음성은 첫 12초까지만 분석합니다.",
+  fr:"Vérifiez la provenance C2PA des vidéos et sons ; l’analyse évalue 3 images ou 12 secondes de voix au maximum.",
+  de:"Prüfe die C2PA-Herkunft von Video/Audio; optional 3 Bilder oder höchstens 12 Sekunden Sprache.",
+  es:"Verifica C2PA en vídeo y audio; el análisis opcional utiliza 3 fotogramas o hasta 12 segundos de voz.",
+  pt:"Verifique C2PA em vídeo e áudio; a análise opcional usa 3 quadros ou até 12 segundos de voz.",
+  ar:"تحقق من مصدر الفيديو أو الصوت عبر C2PA؛ يحلل الاختبار اختياريًا 3 إطارات أو أول 12 ثانية من الكلام."
+ },
 } satisfies Record<string,Record<LingxiLang,string>>;
 export function toolIntro(lang:LingxiLang,slug:string){return TOOL_INTROS[slug as keyof typeof TOOL_INTROS]?.[lang];}

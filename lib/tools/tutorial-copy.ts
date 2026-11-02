@@ -190,7 +190,118 @@ const TASK_GUIDES:Record<SeoLocale,Record<GuideGroup,readonly [string,string,str
   web:["أدخل عنوان صفحة ويب عامة.","تحقق من عنوان الصفحة والمحتوى المستخرج للتأكد من المصدر.","بعد مراجعة المعلومات، تابع إلى SASI لإنشاء الفيديو."]
  }
 };
+const AI_DETECT_GUIDES:Record<SeoLocale,{image:readonly [string,string,string];media:readonly [string,string,string]}>={
+  "zh": {
+    "image": [
+      "上传图片并查看文件格式和 C2PA 来源签名。",
+      "可选启动设备端 AI 图像特征分析，首次使用可能下载模型文件。",
+      "分别核对来源与 AI 参考指标；分数不能证明图片真伪。"
+    ],
+    "media": [
+      "上传视频或录音，检查格式和 C2PA 来源签名。",
+      "视频仅分析抽取的 3 帧；录音只分析开头最多 12 秒的人声。",
+      "分别核对来源与内容指标；分析不能证明整段媒体真伪。"
+    ]
+  },
+  "en": {
+    "image": [
+      "Upload the image and check the file format and C2PA provenance.",
+      "Optionally analyze AI indicators on-device; model files may download on first use.",
+      "Review provenance and AI indicators separately; scores cannot prove authenticity."
+    ],
+    "media": [
+      "Upload video or audio and inspect its format and C2PA provenance.",
+      "Video checks 3 sampled frames; speech analysis examines up to 12 seconds from the start.",
+      "Check provenance and content signals separately; these do not certify the full file."
+    ]
+  },
+  "ja": {
+    "image": [
+      "画像をアップロードし、形式とC2PA出所情報を確認します。",
+      "必要に応じて端末内AI分析を実行します。初回はモデルがダウンロードされる場合があります。",
+      "出所情報とAI指標を分けて確認します。スコアでは真偽を証明できません。"
+    ],
+    "media": [
+      "動画や音声をアップロードし、形式とC2PA出所情報を確認します。",
+      "動画は3フレーム、音声は冒頭最大12秒を分析します。",
+      "出所情報と指標を分けて確認します。ファイル全体の真偽は証明できません。"
+    ]
+  },
+  "ko": {
+    "image": [
+      "이미지를 업로드하고 파일 형식과 C2PA 출처를 확인하세요.",
+      "필요하면 기기에서 AI 지표를 분석하세요. 첫 사용 시 모델을 다운로드할 수 있습니다.",
+      "출처와 AI 지표를 따로 검토하세요. 점수만으로 진위를 증명할 수 없습니다."
+    ],
+    "media": [
+      "영상이나 오디오를 업로드하고 C2PA 출처를 확인하세요.",
+      "영상은 3프레임, 음성은 시작 부분 최대 12초만 분석합니다.",
+      "출처와 콘텐츠 지표를 따로 검토하세요. 전체 파일의 진위를 증명하지 않습니다."
+    ]
+  },
+  "fr": {
+    "image": [
+      "Importez une image et examinez son format et sa provenance C2PA.",
+      "L’analyse IA locale est facultative ; le modèle peut être téléchargé au premier usage.",
+      "Vérifiez séparément provenance et indices IA ; les scores ne prouvent pas l’authenticité."
+    ],
+    "media": [
+      "Importez une vidéo ou un audio et vérifiez sa provenance C2PA.",
+      "La vidéo utilise 3 images ; la voix, au maximum les 12 premières secondes.",
+      "Examinez séparément la provenance et les indicateurs ; ils ne certifient pas tout le média."
+    ]
+  },
+  "de": {
+    "image": [
+      "Bild hochladen und Dateiformat sowie C2PA-Herkunft prüfen.",
+      "Optional KI-Merkmale lokal analysieren; beim ersten Einsatz können Modelldaten heruntergeladen werden.",
+      "Herkunft und KI-Indikatoren getrennt prüfen; Scores beweisen keine Echtheit."
+    ],
+    "media": [
+      "Video oder Audio hochladen und C2PA-Herkunft prüfen.",
+      "Video: 3 Einzelbilder; Sprache: höchstens die ersten 12 Sekunden.",
+      "Herkunft und Signale getrennt prüfen; dies bestätigt nicht die gesamte Datei."
+    ]
+  },
+  "es": {
+    "image": [
+      "Sube una imagen y comprueba su formato y procedencia C2PA.",
+      "Ejecuta opcionalmente el análisis de IA local; el modelo puede descargarse la primera vez.",
+      "Revisa por separado procedencia e indicadores IA; la puntuación no prueba autenticidad."
+    ],
+    "media": [
+      "Sube un vídeo o audio y comprueba su procedencia C2PA.",
+      "El vídeo analiza 3 fotogramas; la voz, hasta los primeros 12 segundos.",
+      "Revisa procedencia e indicadores por separado; no certifican todo el archivo."
+    ]
+  },
+  "pt": {
+    "image": [
+      "Envie uma imagem e confira o formato e a procedência C2PA.",
+      "Se desejar, analise sinais de IA no dispositivo; o modelo pode ser baixado no primeiro uso.",
+      "Confira procedência e sinais de IA em separado; a pontuação não comprova autenticidade."
+    ],
+    "media": [
+      "Envie vídeo ou áudio e confira a procedência C2PA.",
+      "Vídeo: 3 quadros; voz: até os primeiros 12 segundos.",
+      "Confira procedência e sinais em separado; eles não certificam todo o arquivo."
+    ]
+  },
+  "ar": {
+    "image": [
+      "ارفع الصورة وتحقق من تنسيقها ومعلومات مصدر C2PA.",
+      "يمكنك تحليل مؤشرات الذكاء الاصطناعي على الجهاز؛ وقد يلزم تنزيل النموذج أول مرة.",
+      "راجع المصدر والمؤشرات بشكل منفصل؛ لا تثبت الدرجة أصالة الصورة."
+    ],
+    "media": [
+      "ارفع فيديو أو صوتًا وتحقق من معلومات مصدر C2PA.",
+      "يحلل الفيديو 3 إطارات، والصوت أول 12 ثانية من الكلام كحد أقصى.",
+      "راجع المصدر والمؤشرات بشكل منفصل؛ لا تثبت صحة الملف بأكمله."
+    ]
+  }
+};
 export function toolTutorialSteps(locale:SeoLocale,slug:string):readonly [string,string,string]{
+ if(slug==="ai-image-check"||slug==="ai-video-audio-check")return AI_DETECT_GUIDES[locale][slug==="ai-image-check"?"image":"media"];
  const group=GUIDE_GROUP_BY_SLUG[slug]||"file";
  return TASK_GUIDES[locale]?.[group]||TASK_GUIDES.en[group];
 }

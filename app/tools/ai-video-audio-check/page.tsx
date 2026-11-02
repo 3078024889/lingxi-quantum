@@ -1,4 +1,5 @@
 import type {Metadata} from "next";
 import MediaOriginStarter from "@/components/tools/MediaOriginStarter";
-export const metadata:Metadata={title:"AI 视频音频检测｜灵犀场",description:"选择视频或音频文件，查看检测结果和文件格式。"};
-export default function Page(){return <MediaOriginStarter mode="media"/>;}
+import ToolGuide from "@/components/seo/ToolGuide";
+export const metadata:Metadata={title:"AI 视频音频检测｜灵犀场",description:"核验视频音频 C2PA 来源签名，可选分析视频抽取的三帧或录音开头最多12秒人声。结果仅作参考。"};
+export default function Page(){return <><MediaOriginStarter mode="media"/><ToolGuide slug="ai-video-audio-check"/></>;}
