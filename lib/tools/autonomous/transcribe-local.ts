@@ -103,7 +103,7 @@ function captionSegments(segments:LocalSegment[],separator:","|".",withIndex:boo
  return segments.map((s,i)=>{
   // Whisper can return an open-ended last chunk. Clamp only its end to a tiny
   // positive duration and retain start; never invent an entire transcript.
-  if(!Number.isFinite(s.start)||s.start<0||(!Number.isFinite(s.end)))throw Error("TRANSCRIPT_TIME_INVALID");
+  if(!Number.isFinite(s.start)||s.start<0||!Number.isFinite(s.end)||s.end<0)throw Error("TRANSCRIPT_TIME_INVALID");
   const start=s.start,end=Math.max(start+.001,s.end);
   const line=`${timestamp(start,separator)} --> ${timestamp(end,separator)}\n${s.text.replace(/\r\n?/g,"\n").trim()}`;
   return withIndex?`${i+1}\n${line}`:line;
