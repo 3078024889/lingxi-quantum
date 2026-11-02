@@ -587,8 +587,11 @@
           "reason": "未核对所有地区的订阅可用性"
         },
         "commercial": {
-          "status": "missing",
-          "reason": "无水印不等于允许所有素材商用；素材、声音和生成物许可仍需查服务条款"
+          "status": "observed",
+          "text": "Descript 官方服务条款第8.4条确认生成内容及用户输入在法律允许范围内归用户所有；但 AI 输出可能不具独创性、会涉及第三方素材版权。Premium Media 中的 Storyblocks 素材遵循其单独 EULA，其他素材库未必获商用许可，用户仍需审核。",
+          "source": "https://www.descript.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "generated_output_ownership_with_stock_media_separate_licences"
         },
         "payment": {
           "status": "missing",
