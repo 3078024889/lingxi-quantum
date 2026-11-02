@@ -1,9 +1,9 @@
 "use client";
 let sessionPromise:Promise<any>|null=null;
-const ORT_VERSION="1.21.0";
+// Match the locally shipped ONNX Runtime WASM artifacts: no third-party CDN needed.
 async function ortRuntime(){
   const ort=await import("onnxruntime-web");
-  ort.env.wasm.wasmPaths=`https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_VERSION}/dist/`;
+  ort.env.wasm.wasmPaths={mjs:"/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.mjs",wasm:"/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm"};
   ort.env.wasm.numThreads=1;
   ort.env.wasm.proxy=false;
   return ort;
@@ -15,7 +15,7 @@ async function session(){
     return ort.InferenceSession.create("/models/id-photo/modnet.onnx",{
       executionProviders:["wasm"],graphOptimizationLevel:"all"
     });
-  })();
+  })().catch(error=>{sessionPromise=null;throw error});
   return sessionPromise;
 }
 function bilinear(mask:Float32Array,mw:number,mh:number,x:number,y:number){
