@@ -81,6 +81,9 @@ test.describe("PDF editor visual quality",()=>{
  const opacity=page.getByRole("slider",{name:"Opacity"});
  await opacity.press("ArrowLeft");
  await expect(imageObject.locator("img")).toHaveCSS("opacity","0.99");
+ // The opacity/aspect-ratio controls scroll the document down on desktop.
+ // Return the image handle to the viewport before attempting a genuine pointer drag.
+ await page.getByRole("button",{name:"Resize se"}).scrollIntoViewIfNeeded();
  const imageBefore=await imageObject.boundingBox();
  const imageHandle=await page.getByRole("button",{name:"Resize se"}).boundingBox();
  await page.mouse.move(imageHandle!.x+imageHandle!.width/2,imageHandle!.y+imageHandle!.height/2);
