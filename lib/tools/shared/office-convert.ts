@@ -61,6 +61,7 @@ export function parseDelimited(text: string, delimiter: string) {
     cell += ch;
   }
 
+  if (quoted) throw new Error("CSV_UNTERMINATED_QUOTED_FIELD");
   row.push(cell.replace(/\r$/, ""));
   if (row.some((value) => value.length) || rows.length === 0) rows.push(row);
   return rows;
@@ -101,7 +102,8 @@ function worksheetXml(rows: string[][]) {
 export async function delimitedToXlsx(file: File) {
   const delimiter =
     /\.tsv$/i.test(file.name) || file.type === "text/tab-separated-values" ? "\t" : ",";
-  const rows = parseDelimited(await file.text(), delimiter);
+  const source = await file.text();
+  const rows = parseDelimited(source.charCodeAt(0) === 0xFEFF ? source.slice(1) : source, delimiter);
   const zip = new JSZip();
 
   zip.file(
