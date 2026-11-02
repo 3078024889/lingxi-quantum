@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import ExcelJS from "exceljs";
 
 test("CSV to XLSX to CSV: UTF-8 BOM, Chinese, commas, quotes and multiline cells survive real downloads",async({page})=>{
- const csv="\uFEFF名称,备注,数量\r\n\"星河,银河\",\"第一行\n第二行\",7\r\n\"报价\"\"单\"\",正常,10\r\n";
+ const csv="\uFEFF名称,备注,数量\r\n\"星河,银河\",\"第一行\n第二行\",7\r\n\"报价\"\"单\",正常,10\r\n";
  await page.goto("/tools/csv-to-xlsx?lang=en");
  let area=page.locator("[data-tool-workbench]");
  await area.locator('input[type="file"]').first().setInputFiles({name:"数据.csv",mimeType:"text/csv",buffer:Buffer.from(csv,"utf8")});
