@@ -25,6 +25,19 @@ test('Cursor current 2026 subscription cannot be conflated with retired subscrip
  assert.match(row.facts.commercial.text,/第三方/);
  assert.equal(row.facts.commercial.status,'observed');
 });
+test('Pika new Free has zero recurring credits and current multimodal models; old Pika remains historical',()=>{
+ const row=get(o1,'pika');
+ assert.equal(row.facts.free.status,'observed');
+ assert.match(row.facts.free.text,/0 积分/);
+ assert.match(row.facts.free.text,/购买积分/);
+ assert.match(row.facts.free.text,/不能用于新版/);
+ assert.equal(row.facts.free.source,'https://pika.art/pricing');
+ assert.ok(row.facts.free.additionalEvidence.some(x=>x.source==='https://old.pika.art/pricing'));
+ assert.equal(row.facts.models.status,'observed');
+ assert.equal(row.facts.models.source,'https://pika.art/faq');
+ assert.match(row.facts.models.text,/Seedance 2\.5/);
+ assert.match(row.facts.models.text,/API Club/);
+});
 test('Copilot payment and commercial licensing carefully scope account type and third-party IP',()=>{
  const row=get(o2,'github-copilot');
  assert.equal(row.reviewStatus,'unapproved');
@@ -51,7 +64,7 @@ test('three held batches remain safe and full 7-field observation counts reconci
  const end=f.indexOf('};\nexport const MARKET_RESEARCH_CHECKED_AT',start)+1;
  const facts=JSON.parse(f.slice(start,end));
  const r=buildEvidenceReadiness({curatedIds:ids,curatedFacts:facts,cohorts:[b1,b2,b3],observations:[o1,o2,o3],asOf:'2026-11-02'});
- assert.deepEqual([r.candidateIntake.observed,r.candidateIntake.missing,r.candidateIntake.conflict],[138,71,1]);
+ assert.deepEqual([r.candidateIntake.observed,r.candidateIntake.missing,r.candidateIntake.conflict],[140,70,0]);
  assert.equal(r.candidateIntake.products,30);
  assert.deepEqual(r.candidateIntake.regionalEvidence,{
   missing:24,broad_market_statement:1,provider_specific_restrictions:1,
