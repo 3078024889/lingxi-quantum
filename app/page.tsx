@@ -7,6 +7,7 @@ import {MARKET_API_PRODUCTS} from "../lingxifield-ai-market/lib/market-api-servi
 import {findPlatform} from "../lingxifield-ai-market/lib/platform-repository";
 import {researchedFact} from "../lingxifield-ai-market/lib/market-researched-facts";
 import {companyPresentationFor} from "../lingxifield-ai-market/lib/market-company-evidence";
+import {questionForProduct} from "../lingxifield-ai-market/lib/market-user-task-queries.mjs";
 
 export const dynamic="force-dynamic";
 export const revalidate=0;
@@ -31,6 +32,7 @@ function getCuratedRows():SiaiHomeRow[]{
    companySource:publisher.companySource,legalSource:publisher.legalEntitySource,
    listingSource:publisher.ipoFilingSource||publisher.listingSource,yearSource:publisher.yearSource,
    category:platform.category,about:platform.about,strength:platform.guide?.strengths||platform.about,
+   searchTerms:questionForProduct(id),
    features:platform.features,free:fact?.free||platform.free||"—",freeSource:fact?.freeSource||null,
    price:fact?.price||platform.price||"—",priceSource:fact?.priceSource||null,
    region:fact?.region||platform.location||"—",regionSource:fact?.regionSource||null,
