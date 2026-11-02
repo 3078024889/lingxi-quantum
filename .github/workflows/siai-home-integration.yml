@@ -50,6 +50,6 @@ jobs:
       - name: Install locked root dependencies
         run: pnpm install --frozen-lockfile
       - name: Validate homepage navigation and curated data contract
-        run: node --test scripts/tests/siai-home-*.test.mjs
+        run: node --experimental-strip-types --test scripts/tests/siai-home-*.test.mjs
       - name: Compile actual LINGXIFIELD production home
         run: pnpm build
