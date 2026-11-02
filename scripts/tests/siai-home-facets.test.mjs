@@ -23,10 +23,11 @@ test('payment match requires an actual source for supported checkout rails',()=>
   sample('alipay',{payment:'支付宝 · 微信支付',paymentSource:'https://vendor.com/help'}),
   sample('unsourced',{payment:'Alipay',paymentSource:null}),
   sample('paypal',{payment:'PayPal · Credit card',paymentSource:'https://vendor.com/pricing'}),
+  sample('negative',{payment:'不支持支付宝 · PayPal',paymentSource:'https://vendor.com/faq'}),
  ];
  const base={query:'',category:'*',task:'all',payment:'alipay',evidence:'all',sort:'catalog'};
  assert.deepEqual(filterMarketRows(rows,base).map(p=>p.id),['alipay']);
- assert.deepEqual(filterMarketRows(rows,{...base,payment:'paypal'}).map(p=>p.id),['paypal']);
+ assert.deepEqual(filterMarketRows(rows,{...base,payment:'paypal'}).map(p=>p.id),['paypal','negative']);
  assert.deepEqual(filterMarketRows(rows,{...base,payment:'wechat'}).map(p=>p.id),['alipay']);
 });
 test('task, categories, corporate state and query refine actual evidence without dropping original ordering',()=>{
