@@ -72,7 +72,8 @@ export async function localMediaDuration(file:File){
 async function pipelineFor(device:"webgpu"|"wasm",onProgress?:(p:number,msg:string)=>void){
  const mod:any=await import("@huggingface/transformers");
  mod.env.allowLocalModels=true;
- mod.env.allowRemoteModels=true;
+ // The production model bundle is shipped on-site; no CDN fallback or surprises.
+ mod.env.allowRemoteModels=false;
  mod.env.localModelPath="/models/";
  mod.env.useBrowserCache=true;
  const cached=device==="webgpu"?gpuPipe:wasmPipe;
@@ -80,7 +81,7 @@ async function pipelineFor(device:"webgpu"|"wasm",onProgress?:(p:number,msg:stri
  const pipe=await mod.pipeline(
   "automatic-speech-recognition",
   "onnx-community/whisper-tiny",
-  {device,progress_callback:(x:any)=>{
+  {device,dtype:"q8",local_files_only:true,progress_callback:(x:any)=>{
    if(typeof x?.progress==="number")onProgress?.(Math.max(0,Math.min(1,x.progress/100)),"正在准备语音识别能力…");
   }}
  );
