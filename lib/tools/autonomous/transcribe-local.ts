@@ -93,8 +93,26 @@ export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string
  throw new Error(`LOCAL_ASR_UNAVAILABLE:${last instanceof Error?last.message:String(last||"unknown")}`);
 }
 
-export function toSrt(segments:LocalSegment[]){
- const t=(sec:number)=>{const ms=Math.max(0,Math.round(sec*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000;return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")},${String(x).padStart(3,"0")}`};
- return segments.map((x,i)=>`${i+1}\n${t(x.start)} --> ${t(x.end)}\n${x.text}`).join("\n\n");
+function timestamp(seconds:number,separator:","|"."){
+ if(!Number.isFinite(seconds)||seconds<0)throw Error("TRANSCRIPT_TIME_INVALID");
+ const millis=Math.round(seconds*1000);
+ const hours=Math.floor(millis/3600000),minutes=Math.floor(millis%3600000/60000),secs=Math.floor(millis%60000/1000),rest=millis%1000;
+ return `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(secs).padStart(2,"0")}${separator}${String(rest).padStart(3,"0")}`;
 }
-export function toVtt(segments:LocalSegment[]){return"WEBVTT\n\n"+toSrt(segments).replace(/,/g,".").replace(/^\d+\n/gm,"")}
+function captionSegments(segments:LocalSegment[],separator:","|".",withIndex:boolean){
+ return segments.map((s,i)=>{
+  // Whisper can return an open-ended last chunk. Clamp only its end to a tiny
+  // positive duration and retain start; never invent an entire transcript.
+  if(!Number.isFinite(s.start)||s.start<0||(!Number.isFinite(s.end)))throw Error("TRANSCRIPT_TIME_INVALID");
+  const start=s.start,end=Math.max(start+.001,s.end);
+  const line=`${timestamp(start,separator)} --> ${timestamp(end,separator)}\n${s.text.replace(/\r\n?/g,"\n").trim()}`;
+  return withIndex?`${i+1}\n${line}`:line;
+ }).join("\n\n");
+}
+export function toSrt(segments:LocalSegment[]){
+ return captionSegments(segments,",",true);
+}
+export function toVtt(segments:LocalSegment[]){
+ const cues=captionSegments(segments,".",false);
+ return "WEBVTT\n\n"+cues;
+}
