@@ -36,3 +36,13 @@ test("CSV to XLSX to CSV: UTF-8 BOM, Chinese, commas, quotes and multiline cells
  expect(restored.startsWith("\uFEFF")).toBe(true);
  expect(restored.slice(1).trim()).toBe(csv.slice(1).trim());
 });
+
+test("Malformed CSV: an unterminated quoted field fails without producing an XLSX",async({page})=>{
+ await page.goto("/tools/csv-to-xlsx?lang=en");
+ const area=page.locator("[data-tool-workbench]");
+ const broken=Buffer.from('title,body\r\n"unfinished quote\r\ncontinued','utf8');
+ await area.locator('input[type="file"]').first().setInputFiles({name:"invalid.csv",mimeType:"text/csv",buffer:broken});
+ await area.getByRole("button",{name:"Process now"}).click();
+ await expect(area).toContainText("The file could not be processed this time");
+ await expect(area.getByTestId("result-file-actions")).toHaveCount(0);
+});
