@@ -21,7 +21,7 @@ test("approved claim and RLS owner scope cannot be bypassed with foreign product
  assert.match(sql,/GRANT INSERT\(user_id,claim_id,product_id,plan_id,currency,provider,idempotency_key\)/);
  assert.match(sql,/user_id=\(SELECT auth\.uid\(\)\)/);
  assert.match(sql,/c\.user_id=\(SELECT auth\.uid\(\)\)/);
- assert.match(sql,/c\.product_id=product_id AND c\.status='approved'/);
+ assert.match(sql,/c\.product_id=public\.ai_market_vendor_promotion_requests\.product_id AND c\.status='approved'/);
  assert.match(sql,/APPROVED_VENDOR_REQUIRED/);
  assert.doesNotMatch(sql,/GRANT (?:UPDATE|DELETE).*authenticated/);
 });
@@ -30,7 +30,7 @@ test("bound main-site order must be non-SASI SKU, same owner, plan, amount, prov
  const api=root("app/api/ai-market/vendor-promotions/route.ts");
  for(const token of ["o.user_id IS DISTINCT FROM NEW.user_id","'ai-market:'||NEW.plan_id",
   "o.provider IS DISTINCT FROM NEW.provider","o.currency IS DISTINCT FROM NEW.currency",
-  "o.status IS DISTINCT FROM 'pending'","NEW.amount_minor","MAIN_SITE_ORDER_NOT_VERIFIED"])
+  "o.status IS DISTINCT FROM 'pending'","WHEN 'sponsored' THEN 4900","MAIN_SITE_ORDER_NOT_VERIFIED"])
   assert.ok(sql.includes(token),token);
  assert.match(api,/isSameOriginMutation\(req\)/);
  assert.match(api,/parseMarketPromotionRequest\(raw\)/);
