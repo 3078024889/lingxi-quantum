@@ -47,7 +47,7 @@
           "text": "Cursor 官方地区说明：部分模型供应商因用户所在地实行地区限制，受限模型会从模型选项中隐藏，但 Cursor 可继续使用当地可用的其他模型；Auto 只选择可用模型。自行接入 API Key 仍须遵守该模型供应商的地区政策。此说明不等于 Cursor 所有套餐和付款渠道在全部国家开放，也不构成逐国官方可用白名单。",
           "source": "https://cursor.com/docs/account/regions",
           "checkedAt": "2026-11-02",
-          "scope": "provider_model_specific_restrictions_not_full_country_coverage"
+          "scope": "provider_model_specific_restrictions_not_all_markets_verified"
         },
         "commercial": {
           "status": "observed",
