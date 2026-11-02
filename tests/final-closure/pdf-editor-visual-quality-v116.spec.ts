@@ -87,8 +87,7 @@ test.describe("PDF editor visual quality",()=>{
  await page.mouse.down();
  await page.mouse.move(imageHandle!.x+imageHandle!.width/2+28,imageHandle!.y+imageHandle!.height/2+18,{steps:3});
  await page.mouse.up();
- const imageAfter=await imageObject.boundingBox();
- expect(imageAfter!.width).toBeGreaterThan(imageBefore!.width+8);
+ await expect.poll(async()=>{const box=await imageObject.boundingBox();return box?.width??0},{timeout:10000,message:"Image resize must increase the rendered width after React state settles"}).toBeGreaterThan(imageBefore!.width+8);
  await page.getByRole("button",{name:"Duplicate"}).click();
  await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="image"]')).toHaveCount(2);
  await page.getByRole("button",{name:/Undo/}).click();
