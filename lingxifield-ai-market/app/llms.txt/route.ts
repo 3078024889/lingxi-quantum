@@ -1,6 +1,9 @@
 import {searchPlatforms} from '../../lib/platform-repository';
 import {coverageForSeoGeo} from '../../lib/seo-geo-observations';
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin} from '../../lib/market-index-policy';
+import {companyPresentationFor} from '../../lib/market-company-evidence';
+import {capabilityProfile} from '../../lib/capability-profiles';
+import {localizedProductSummary} from '../../lib/market-product-locale';
 
 export const revalidate=3600;
 
@@ -38,12 +41,19 @@ export function GET(){
  for(const p of products){
   const name=String(p.name||p.id);
   const category=String(p.category||'AI software');
-  const description=String(p.about||'').replace(/\s+/g,' ').trim();
+  const description=String(localizedProductSummary(p.id,'en')||p.about||'').replace(/\s+/g,' ').trim();
+  const publisher=companyPresentationFor(p.id,p.company),profile=capabilityProfile(p.id);
   const site=String(p.website||'');
   const kind=p.websiteKind==='repository'?'Source repository':'Publisher website';
   lines.push('### '+name);
   lines.push('- Category: '+category);
-  if(p.company)lines.push('- Publisher: '+String(p.company));
+  if(publisher.name)lines.push('- Publisher / maintainer: '+publisher.name);
+  if(publisher.companySource)lines.push('- Publisher source: '+publisher.companySource);
+  if(publisher.year)lines.push('- '+(publisher.kind==='company'?'Company founded':'Project started')+': '+publisher.year+(publisher.yearSource?' (source: '+publisher.yearSource+')':''));
+  if(publisher.listingDetail)lines.push('- Stock listing (publisher or parent): '+publisher.listingDetail+(publisher.listingSource?' (source: '+publisher.listingSource+')':''));
+  if(profile)for(const task of profile.capabilities.slice(0,5)){
+   lines.push('- Documented capability (zh): '+task.name+' — '+task.outcome+' (source: '+task.source+')');
+  }
   if(description)lines.push('- Summary: '+description.slice(0,360));
   if(/^https:\/\//i.test(site))lines.push('- '+kind+': '+site);
   lines.push('- Product details: '+(origin?origin+'/zh/platform/'+encodeURIComponent(p.id):'/zh/platform/'+encodeURIComponent(p.id)));
