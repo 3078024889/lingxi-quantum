@@ -80,3 +80,18 @@ test('Mistral Le Chat 2026 rebrand uses current Vibe name and official direct UR
  assert.equal(product.website,p.website);
  assert.match(product.name,/Vibe/);
 });
+
+test('Devin Desktop business-code ownership uses the exact vendor-linked Cognition contract',()=>{
+ const row=packs[1].products.find(x=>x.id==='devin-desktop');
+ const f=row.facts.commercial;
+ assert.equal(f.status,'observed');
+ assert.equal(f.source,'https://cognition.com/legal/platform-terms-of-service');
+ assert.ok(row.officialHosts.includes('cognition.com'));
+ assert.match(f.text,/内部业务/);
+ assert.match(f.text,/代码/);
+ assert.match(f.text,/第三方知识产权/);
+ const data=materializeCandidateCatalog(cohorts,packs);
+ const card=data.products.find(x=>x.id==='devin-desktop');
+ assert.equal(card.facts.commercial.source,f.source);
+ assert.equal(card.publishApproved,false);
+});
