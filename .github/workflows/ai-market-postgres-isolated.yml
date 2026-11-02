@@ -8,6 +8,7 @@ on:
       - 'supabase/migrations/20261102120000_ai_market_vendor_account_claims.sql'
       - 'supabase/migrations/20261102123000_ai_market_vendor_promotion_requests.sql'
       - 'supabase/migrations/20261102130000_ai_market_promotion_placement_lifecycle.sql'
+      - 'supabase/migrations/20261102140000_ai_market_global_registry_staging.sql'
       - '.github/workflows/ai-market-postgres-isolated.yml'
 
 permissions:
@@ -380,6 +381,97 @@ jobs:
            THEN RAISE EXCEPTION 'MERCHANT_EVIDENCE_PRIVILEGE_EXPOSED'; END IF;
           END
           $permissions$;
+          SQL
+
+      - name: Apply global publisher registry schema only to isolated PostgreSQL
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261102140000_ai_market_global_registry_staging.sql
+
+      - name: Validate public RLS, ownership of separate company/products, seven-source approval and private batch
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          BEGIN;
+          SET LOCAL ROLE service_role;
+          INSERT INTO public.ai_market_publishers_v1
+           (publisher_key,name,kind,official_source)
+          VALUES ('test-ai-company','Independent AI Company','company','https://example.org/about');
+          INSERT INTO public.ai_market_products_v1
+           (product_key,publisher_key,name,category,official_url)
+          VALUES ('example-chat','test-ai-company','Example Chat','Assistant','https://example.org/chat'),
+                 ('example-sdk','test-ai-company','Example SDK','Developer','https://example.org/sdk');
+          INSERT INTO public.ai_market_intake_batches_v1(batch_code) VALUES('B900');
+          INSERT INTO public.ai_market_model_rate_offers_v1
+           (product_key,rate_key,model_name,service_channel,billing_unit,currency,unit_price,source_url,checked_at)
+          VALUES('example-chat','model-one','Example Model 1','token_api','per million input tokens','USD',
+           1.25,'https://example.org/prices','2026-11-02');
+          DO $beforeapproval$
+          BEGIN
+           IF (SELECT count(*) FROM public.ai_market_products_v1 WHERE publisher_key='test-ai-company')<>2
+            THEN RAISE EXCEPTION 'PRODUCT_COMPANY_RELATIONSHIP_BROKEN'; END IF;
+           BEGIN
+            UPDATE public.ai_market_products_v1 SET publication_state='published',
+              reviewed_by='11111111-1111-4111-8111-111111111111',reviewed_at=clock_timestamp(),published_at=clock_timestamp()
+              WHERE product_key='example-chat';
+            RAISE EXCEPTION 'UNAPPROVED_COMPANY_PUBLISHED_PRODUCT';
+           EXCEPTION WHEN check_violation THEN NULL; END;
+           UPDATE public.ai_market_publishers_v1 SET publication_state='published',
+            review_source='https://example.org/about',reviewed_by='11111111-1111-4111-8111-111111111111',
+            reviewed_at=clock_timestamp(),published_at=clock_timestamp() WHERE publisher_key='test-ai-company';
+           BEGIN
+            UPDATE public.ai_market_products_v1 SET publication_state='published',
+             reviewed_by='11111111-1111-4111-8111-111111111111',reviewed_at=clock_timestamp(),published_at=clock_timestamp()
+             WHERE product_key='example-chat';
+            RAISE EXCEPTION 'UNVERIFIED_FACTS_PUBLISHED_PRODUCT';
+           EXCEPTION WHEN check_violation THEN NULL; END;
+          END
+          $beforeapproval$;
+          INSERT INTO public.ai_market_product_facts_v1
+           (product_key,fact_key,evidence_status,fact_text,source_url,checked_at,reviewed_by)
+          SELECT 'example-chat',fact,'verified','Official documented value',
+             'https://example.org/source','2026-11-02','11111111-1111-4111-8111-111111111111'
+          FROM unnest(ARRAY['price','free','models','regions','commercial','payment','company']) AS fact;
+          UPDATE public.ai_market_products_v1 SET publication_state='published',
+            reviewed_by='11111111-1111-4111-8111-111111111111',reviewed_at=clock_timestamp(),published_at=clock_timestamp()
+            WHERE product_key='example-chat';
+          UPDATE public.ai_market_model_rate_offers_v1 SET review_state='verified',
+            reviewed_by='11111111-1111-4111-8111-111111111111',reviewed_at=clock_timestamp()
+            WHERE product_key='example-chat';
+          COMMIT;
+
+          BEGIN;
+          SET LOCAL ROLE anon;
+          DO $anonverify$
+          BEGIN
+           IF (SELECT count(*) FROM public.ai_market_publishers_v1)<>1 THEN
+            RAISE EXCEPTION 'PUBLISHED_COMPANY_NOT_VISIBLE'; END IF;
+           IF (SELECT count(*) FROM public.ai_market_products_v1)<>1 THEN
+            RAISE EXCEPTION 'CANDIDATE_PRODUCT_EXPOSED_OR_PUBLISHED_MISSING'; END IF;
+           IF (SELECT count(*) FROM public.ai_market_product_facts_v1)<>7 THEN
+            RAISE EXCEPTION 'PRIVATE_FACTS_EXPOSED_OR_PUBLIC_FACTS_MISSING'; END IF;
+           IF (SELECT count(*) FROM public.ai_market_model_rate_offers_v1)<>1 THEN
+            RAISE EXCEPTION 'UNVERIFIED_RATES_EXPOSED'; END IF;
+           IF has_table_privilege('anon','public.ai_market_products_v1','INSERT')
+            OR has_table_privilege('authenticated','public.ai_market_publishers_v1','UPDATE')
+            OR has_table_privilege('anon','public.ai_market_intake_batches_v1','SELECT')
+           THEN RAISE EXCEPTION 'CATALOG_CLIENT_WRITE_OR_INTAKE_READ'; END IF;
+          END
+          $anonverify$;
+          COMMIT;
+          BEGIN;
+          SET LOCAL ROLE service_role;
+          UPDATE public.ai_market_publishers_v1 SET publication_state='retired'
+           WHERE publisher_key='test-ai-company';
+          COMMIT;
+          BEGIN;
+          SET LOCAL ROLE anon;
+          DO $retired$
+          BEGIN
+           IF EXISTS(SELECT 1 FROM public.ai_market_products_v1)
+            OR EXISTS(SELECT 1 FROM public.ai_market_model_rate_offers_v1)
+            OR EXISTS(SELECT 1 FROM public.ai_market_product_facts_v1)
+            THEN RAISE EXCEPTION 'RETIRED_COMPANY_STILL_VISIBLE'; END IF;
+          END
+          $retired$;
+          COMMIT;
           SQL
 
       - name: Apply feedback migrations in security-preserving order
