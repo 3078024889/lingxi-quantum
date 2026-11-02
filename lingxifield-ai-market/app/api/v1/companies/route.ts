@@ -1,19 +1,14 @@
 import {NextResponse} from 'next/server';
-import {COMPANY_EVIDENCE,COMPANY_EVIDENCE_IDS} from '../../../../lib/market-company-evidence';
-export const revalidate=86400;
-/** Every listed entity is source-backed. Missing financing is omitted, not invented. */
-export function GET(){
- const data=COMPANY_EVIDENCE_IDS.map(id=>({id,...COMPANY_EVIDENCE[id]}));
- return NextResponse.json({
-  count:data.length,total:data.length,
-  methodology:'Corporate founding, open-source project origins, investment rounds, company listings and products are different facts. Missing records must not be interpreted as zero.',
-  coverage:{
-   publisherSources:data.filter(v=>v.publisherSource).length,
-   foundedWithEvidence:data.filter(v=>Boolean(v.founded?.source)).length,
-   locationWithEvidence:data.filter(v=>Boolean(v.headquarters?.source)).length,
-   fundingWithEvidence:data.filter(v=>Boolean(v.funding?.source)).length,
-   listingWithEvidence:data.filter(v=>Boolean(v.listing?.source)).length,
-   projectOriginsWithEvidence:data.filter(v=>Boolean(v.projectStarted?.source)).length
-  },data
- },{headers:{'Cache-Control':'public, s-maxage=3600, stale-while-revalidate=86400','X-Content-Type-Options':'nosniff'}});
+import {listPublishers,marketRegistrySummary} from '../../../../lib/market-publisher-registry';
+import {marketRegistryParams} from '../../../../lib/market-registry-params.mjs';
+export const dynamic='force-dynamic';
+export function GET(request:Request){
+ const sp=new URL(request.url).searchParams,p=marketRegistryParams(sp);
+ if(!p)return NextResponse.json({error:'INVALID_QUERY'},{status:400});
+ const kind=sp.get('kind')||undefined;
+ if(kind&&!['company','open_source_project','software_library'].includes(kind))
+  return NextResponse.json({error:'INVALID_PUBLISHER_KIND'},{status:400});
+ const rows=listPublishers({...p,kind:kind as 'company'|'open_source_project'|'software_library'|undefined});
+ return NextResponse.json({scope:'curated_32_publishers',...marketRegistrySummary(),...rows},
+  {headers:{'Cache-Control':'public, s-maxage=300','X-Content-Type-Options':'nosniff'}});
 }

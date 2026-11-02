@@ -76,6 +76,17 @@ const COMPANY_PUBLIC_NAMES:Partial<Record<keyof typeof parent,string>>={
  openwebui:'Open WebUI project',ggml:'ggml-org',vllm:'vLLM project',
  automatic1111:'AUTOMATIC1111',fasterwhisper:'SYSTRAN (faster-whisper)'
 };
+/** Stable publisher identity. Do NOT infer one company per product or
+ * mistake software libraries for incorporated businesses. The mapping above
+ * is reviewed independently; never derive an owner from a product's name. */
+export function publisherIdentityFor(productId:string){
+ const key=map[productId];
+ if(!key)return null;
+ const value=parent[key];
+ return {id:key,name:COMPANY_PUBLIC_NAMES[key]||key,kind:value.kind,
+  officialSource:value.publisherSource};
+}
+
 export type CompanyListingState='listed_parent'|'unconfirmed'|'not_applicable';
 export function companyPresentationFor(id:string, fallbackName:string){
  const key=map[id];const evidence=key?(parent as Record<string,CompanyEvidence>)[key]:undefined;
