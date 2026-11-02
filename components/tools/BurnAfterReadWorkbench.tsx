@@ -25,7 +25,7 @@ export default function BurnAfterReadWorkbench(){
  const[files,setFiles]=useState<File[]>([]),[link,setLink]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[copied,setCopied]=useState(false);
  const total=useMemo(()=>files.reduce((n,f)=>n+f.size,0),[files]);
  const encryptedTotal=useMemo(()=>{try{return files.reduce((n,f)=>n+burnEncryptedSize(f.size),0)}catch{return 0}},[files]);
- const totalMb=Math.max(1,Math.ceil(encryptedTotal/1024/1024));
+ const totalMb=Math.max(1,Math.ceil(total/1024/1024));
  const {currency}=usePreferredCurrency();
  const [pendingQuote,setPendingQuote]=useState("");
  const [draftId,setDraftId]=useState("");
@@ -91,7 +91,7 @@ export default function BurnAfterReadWorkbench(){
    sessionStorage.setItem(`lingxifield:burn-encryption:${quoteId}`,JSON.stringify(enc));
    const r=await fetch("/api/tools/burn-after-read/file/prepare",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
      quoteId,ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==="limited"?views:1,viewDurationSeconds:mode==="fast"?duration:null,
-     files:files.map(f=>({name:f.name,size:burnEncryptedSize(f.size),type:BURN_ENCRYPTED_MIME}))
+     files:files.map(f=>({name:f.name,size:burnEncryptedSize(f.size),originalSize:f.size,type:BURN_ENCRYPTED_MIME}))
    })});
    const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"PREPARE_FAILED");
    if(!d.alreadyReady)await uploadPrepared(d.files||[],enc.key);
@@ -115,7 +115,7 @@ export default function BurnAfterReadWorkbench(){
      let id=pendingQuote;
      if(id){const status=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});const state=await status.json();if(!status.ok)throw new Error("PAYMENT_STATUS_UNAVAILABLE");if(state.paid){await preparePaidShare(id);return}}
      else{
-      const q=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId:"burn-after-read-file",quantity:totalMb,currency,metadata:{bytes:encryptedTotal,fileCount:files.length,draftId:taskId,encryptedFiles:true}})});
+      const q=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId:"burn-after-read-file",quantity:totalMb,currency,metadata:{bytes:total,encryptedBytes:encryptedTotal,fileCount:files.length,draftId:taskId,encryptedFiles:true}})});
       const result=await q.json().catch(()=>({}));
       if(!q.ok)throw new Error(result.error||"QUOTE_FAILED");
       id=result.id;setPendingQuote(id);
