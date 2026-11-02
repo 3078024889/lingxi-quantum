@@ -69,7 +69,7 @@ export function toPlatform(e:CatalogEntry):Platform {
 export function findPlatform(id:string){const row=index.get(id);return row?toPlatform(row):undefined;}
 export type PlatformSearchOptions={q?:string;category?:string;limit?:number;cursor?:number;filter?:MarketFilter;payment?:MarketPayment;sort?:MarketSort;region?:RegionCode;beginner?:boolean};
 export function searchPlatforms(options:PlatformSearchOptions={}) {
- const {filter='all',payment='any',sort='directory',region='GLOBAL',beginner=false,...base}=options;
+ const {filter='all',payment='any',sort='founded',region='GLOBAL',beginner=false,...base}=options;
  const editorialIds=matchingEditorialProductIds(base.q||'');
  const inScope=editorialIds?new Set<string>(editorialIds):null;
  const needsFilter=filter!=='all'||payment!=='any'||beginner||Boolean(inScope);
