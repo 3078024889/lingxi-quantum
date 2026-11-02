@@ -30,7 +30,7 @@ export default function MarketGlobalAccess({platform,language,region,onChange}:{
     {countryList.total>0?<div className="marketRegionCatalog">
       <strong>{countryList.complete?countryList.words.complete:countryList.words.partial}</strong>
       <div className="marketRegionTopFive">{countryList.top.map(code=><span key={code}>{regionName(code as RegionCode,language)}</span>)}</div>
-      {countryList.other.length>0&&<div className="globalSupportedCountries"><strong>{countryList.words.more} ({countryList.other.length})</strong><div>{countryList.other.map(code=><span key={code}>{regionName(code as RegionCode,language)}</span>)}</div></div>}
+      {countryList.other.length>0&&<details className="globalSupportedCountries"><summary>{countryList.words.more} ({countryList.other.length})</summary><div>{countryList.other.map(code=><span key={code}>{regionName(code as RegionCode,language)}</span>)}</div></details>}
       
       {countryList.source&&<a href={countryList.source} target="_blank" rel="noopener noreferrer">{countryList.words.visit} · {countryList.checkedAt} ↗</a>}<a className="marketRegionFeedback" href="#visitor-feedback">{countryList.words.feedback} ↗</a>
      </div>:<div className="marketRegionCatalog"><span>{countryList.words.empty}</span><a className="marketRegionFeedback" href="#visitor-feedback">{countryList.words.feedback} ↗</a></div>}
