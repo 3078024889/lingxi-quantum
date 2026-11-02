@@ -222,6 +222,17 @@ export const VIDEO_LABELS:Record<string,Record<LingxiLang,string>> = {
     "es": "Se aplicó el tamaño o la frecuencia solicitados, pero el archivo es más grande.",
     "pt": "A resolução ou taxa de fotogramas foi aplicada, mas o ficheiro ficou maior.",
     "ar": "تم تطبيق الدقة أو معدل الإطارات المطلوب، لكن حجم الملف الناتج أكبر."
+  },
+  "一次最多处理 400MB 视频，请分批处理。": {
+    "zh": "一次最多处理 400MB 视频，请分批处理。",
+    "en": "This batch exceeds 400 MB. Process fewer files at a time.",
+    "ja": "一度に処理できる動画は合計400MBまでです。分けて処理してください。",
+    "ko": "한 번에 처리할 수 있는 동영상은 총 400MB까지입니다. 나눠서 처리하세요.",
+    "fr": "Ce lot dépasse 400 Mo. Traitez moins de fichiers à la fois.",
+    "de": "Dieser Stapel überschreitet 400 MB. Bitte weniger Dateien gleichzeitig verarbeiten.",
+    "es": "Este lote supera los 400 MB. Procesa menos archivos a la vez.",
+    "pt": "Este lote excede 400 MB. Processe menos ficheiros de cada vez.",
+    "ar": "يتجاوز هذا الحجم 400 ميغابايت. عالج ملفات أقل في كل مرة."
   }
 };
 
