@@ -1197,3 +1197,19 @@ body{font-size:16px;line-height:1.6}
  .marketPublisherFact{grid-template-columns:minmax(82px,38%) minmax(0,1fr);gap:7px}
  .app .marketOverviewIdentity .marketPublisherFactStackCompact{min-width:192px}
 }
+
+/* V4.9: identity facts are part of the market cell, NOT another bordered white card. */
+.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){min-width:255px!important;width:255px!important}
+.app .marketOverviewTable .marketOverviewIdentity .platformName{min-width:0;max-width:100%;width:100%}
+.app .marketOverviewTable .marketPublisherFactStack,
+.marketCompanySnapshot .marketPublisherFactStack,
+.marketLocalizedCompany .marketPublisherFactStack{
+ background:transparent!important;border:none!important;box-shadow:none!important;
+ border-radius:0!important;padding:0!important;margin:7px 0 0!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;
+}
+.app .marketOverviewTable .marketPublisherFactStackCompact{min-width:0!important}
+.marketPublisherFact{grid-template-columns:minmax(68px,34%) minmax(0,1fr)!important;gap:6px!important}
+.marketPublisherFact dt{font-size:13px!important}
+.marketPublisherFact dd{font-size:14px!important;overflow-wrap:anywhere;word-break:break-word}
+@media(max-width:760px){.app .marketOverviewTable :is(th:nth-child(2),td:nth-child(2)){min-width:245px!important;width:245px!important}}
