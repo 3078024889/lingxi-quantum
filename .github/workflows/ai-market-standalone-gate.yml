@@ -38,6 +38,11 @@ jobs:
         run: npm ci
       - name: Run data, contract, type and production build gates
         run: npm run gate
+      - name: Validate 32 evidence acceptance and next-batch hold
+        run: node scripts/validate-32-launch.mjs
+      - name: Smoke 9 languages x 32 actual product detail SSR routes (not login/user tasks)
+        run: node scripts/smoke-curated-local.mjs
+        timeout-minutes: 9
       - name: Probe 32 public publisher entry URLs (nonblocking, no accounts)
         run: node scripts/probe-official-use.mjs --live
         timeout-minutes: 3
