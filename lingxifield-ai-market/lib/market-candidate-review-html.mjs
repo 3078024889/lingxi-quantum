@@ -2,6 +2,14 @@
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const short=(x,n=110)=>{const s=String(x||'—');return s.length>n?s.slice(0,n-1)+'…':s};
 const FACT_LABEL={price:'真实价格 / 套餐',free:'免费额度',models:'代表模型',regions:'国家与地区',commercial:'商用授权',payment:'付款方式',company:'公司法人资料'};
+const REGION_EVIDENCE_LABEL={
+ missing:'未找到官方可用地区资料',
+ restrictions_only:'仅明确限制地区，不能推断其他国家均可用',
+ provider_specific_restrictions:'模型供应商限制不同，不是统一可用地区清单',
+ broad_market_statement:'官方公布广泛市场范围，尚非逐国注册/付款实测',
+ other_observation_not_country_proof:'已记录地区说明，仍缺逐国实测',
+ country_by_country_verified:'逐国验证通过'
+};
 function sourceLink(f){
  return f.source?'<a href="'+esc(f.source)+'" target="_blank" rel="nofollow noopener noreferrer">官方证据 ↗</a>':'';
 }
@@ -37,7 +45,7 @@ function rows(p,i){
   '<td>'+esc(p.tasks.join(' · '))+'</td>'+
   '<td>'+factDisplay(f.price,'price',true)+'</td>'+
   '<td>'+factDisplay(f.free,'free',true)+'</td>'+
-  '<td>'+factDisplay(f.regions,'regions',true)+'</td>'+
+  '<td>'+factDisplay(f.regions,'regions',true)+'<small class="region-proof">'+esc(REGION_EVIDENCE_LABEL[p.regionEvidenceQuality])+'</small></td>'+
   '<td>'+factDisplay(f.payment,'payment',true)+'</td>'+
   '<td>'+factDisplay(f.models,'models',true)+'</td>'+
   '<td>'+factDisplay(f.commercial,'commercial',true)+'</td>'+
@@ -72,7 +80,7 @@ export function renderCandidateReviewHtml(review){
  .publisher>div{display:grid;grid-template-columns:74px minmax(0,1fr);gap:5px}
  .publisher dt{color:#69819a;font-size:13px}.publisher dd{margin:0;font-weight:600}
  td:not(.identity) span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden}
- .missing{font-size:13px;color:#885229}.official{display:inline-block;background:#1964c2;color:#fff;padding:7px 9px;border-radius:7px;text-decoration:none}
+ .missing{font-size:13px;color:#885229}.region-proof{display:block;margin-top:7px;font-size:12px;color:#765b33;line-height:1.5}.official{display:inline-block;background:#1964c2;color:#fff;padding:7px 9px;border-radius:7px;text-decoration:none}
  .detail td{padding:0 9px 12px!important}.detail details{border:0;background:#f1f6fe;border-radius:8px;padding:7px 12px}
  .detail summary{cursor:pointer;font-weight:700;padding:5px;font-size:14px}.note{font-size:12px;color:#b15b18}
  .scope{font-size:13px;color:#536e8c}.factgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
@@ -112,6 +120,10 @@ export function renderCandidateReviewHtml(review){
   '<h1>全球 SIAI｜30 款候选产品内部审核</h1>'+
   '<p class="lead">实际源数据构建 · 30 款产品 / 28 个集团 · 公司名称、法人、是否上市、成立时间直接在厂商列内竖排展示；没有独立悬浮白框。'+
   '本页仅作为 CI 审核附件，不是用户可见网站、不代表独立测评通过，不允许向搜索引擎提交。</p>'+
+  '<p class="lead">国家地区证据分类：'+review.geography.missing+' 款尚无地区资料、'+review.geography.restrictions_only+
+  ' 款只有限制条款、'+review.geography.provider_specific_restrictions+' 款受模型供应商限制、'+
+  review.geography.broad_market_statement+' 款有官方市场范围声明；逐国账号与支付验证通过：'+
+  review.geography.country_by_country_verified+' 款。限制地区名单不能推断其他地区全都支持。</p>'+ 
   '<div class="summary"><div><strong>30</strong><span>产品候选</span></div>'+
   '<div><strong>28</strong><span>去重厂商集团</span></div>'+
   '<div><strong>'+review.totals.observed+'</strong><span>记录官方资料</span></div>'+
@@ -120,7 +132,7 @@ export function renderCandidateReviewHtml(review){
   '<div class="filters"><input id="search" aria-label="按产品名称、厂商、功能与官方资料搜索" placeholder="搜索 AI 工具 / 厂商 / 功能 / 条款">'+
   '<select id="category" aria-label="领域"><option value="">全部领域</option>'+options+'</select>'+
   '<select id="status" aria-label="资料完整度"><option value="all">全部候选</option><option value="missing">有缺口</option>'+
-  '<option value="complete">7项来源已记录</option></select><span class="count">显示 <b id="visible">30</b> / 30</span></div>'+
+  '<option value="complete">7项官网记录（仍待审核）</option></select><span class="count">显示 <b id="visible">30</b> / 30</span></div>'+
   '<div class="scroll" tabindex="0" aria-label="30个候选产品行情表"><table><thead><tr>'+
   ['#','厂商与法人','能做什么','价格','免费额度','地区','付款方式','模型','商用授权','官网'].map(x=>'<th scope="col">'+x+'</th>').join('')+
   '</tr></thead><tbody>'+review.products.map(rows).join('')+'</tbody></table></div>'+
