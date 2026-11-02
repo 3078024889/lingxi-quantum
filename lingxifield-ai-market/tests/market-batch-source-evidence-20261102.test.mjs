@@ -95,3 +95,18 @@ test('Devin Desktop business-code ownership uses the exact vendor-linked Cogniti
  assert.equal(card.facts.commercial.source,f.source);
  assert.equal(card.publishApproved,false);
 });
+
+test('Devin legal parent origin may not broaden official source trust for other publishers',()=>{
+ const original=auditOfficialObservations(packs[1],cohorts[1],{today:'2026-11-02'});
+ assert.deepEqual(original.issues,[]);
+ const tampered=structuredClone(packs[1]);
+ const other=tampered.products.find(x=>x.id==='tabnine');
+ other.officialHosts.push('cognition.com');
+ const result=auditOfficialObservations(tampered,cohorts[1],{today:'2026-11-02'});
+ assert.ok(result.issues.some(issue=>issue.id==='tabnine'&&issue.code==='INVALID_PUBLISHER_HOST_PIN'));
+ const forged=structuredClone(packs[1]);
+ const devin=forged.products.find(x=>x.id==='devin-desktop');
+ devin.officialHosts.push('cognition.com.attacker.invalid');
+ const bad=auditOfficialObservations(forged,cohorts[1],{today:'2026-11-02'});
+ assert.ok(bad.issues.some(issue=>issue.id==='devin-desktop'&&issue.code==='INVALID_PUBLISHER_HOST_PIN'));
+});
