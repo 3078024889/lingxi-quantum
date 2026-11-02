@@ -35,6 +35,9 @@ jobs:
           node scripts/test-subtitle-translation-v95.cjs
       - name: V125 integrated release source contract (fail closed)
         run: node scripts/audit/release-v125-contract.mjs
+      - name: Paid media per-quote supplier guard
+        run: node scripts/test-paid-media-provider-guard-v154.cjs
+
       - name: Production build on remote runner
         run: pnpm build
       - name: Install test browser
