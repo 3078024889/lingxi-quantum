@@ -1,6 +1,7 @@
 import {test,expect} from "./export-test";
 import fs from "node:fs/promises";
 import JSZip from "jszip";
+import {PDFDocument,StandardFonts,rgb} from "pdf-lib";
 
 // Provider response is isolated deliberately. Parsing, UI state, formatting,
 // real browser download and byte-for-byte output validation are exercised.
@@ -103,4 +104,51 @@ test("document translation: real docx OOXML round-trip preserves bold and headin
  expect(translated).toContain("<w:b/>");
  expect(await result.file("word/styles.xml")!.async("string")).toBe(untouched);
  expect(calls).toBe(1);
+});
+
+test("document translation: actual two-page PDF bilingual export contains four decodable pages, reselecting layout removes old output",async({page})=>{
+ test.setTimeout(140000);
+ const pdf=await PDFDocument.create();
+ const font=await pdf.embedFont(StandardFonts.Helvetica);
+ for(const word of ["Hello one","Hello two"]){
+  const p=pdf.addPage([595,842]);
+  p.drawRectangle({x:38,y:728,width:260,height:60,color:rgb(0.96,0.96,0.96)});
+  p.drawText(word,{x:60,y:753,font,size:18,color:rgb(0.05,0.05,0.05)});
+ }
+ const raw=Buffer.from(await pdf.save());
+ let calls=0;
+ await page.route("**/api/tools/document-translate",async route=>{
+  calls++;
+  const body=route.request().postDataJSON();
+  await route.fulfill({status:200,contentType:"application/json",body:JSON.stringify({
+   segments:body.segments.map((s:{id:string;text:string})=>({
+    id:s.id,text:s.text.replace("Hello","Salut")
+   }))
+  })});
+ });
+ await page.goto("/tools/document-translate?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles({
+  name:"two-pages.pdf",mimeType:"application/pdf",buffer:raw
+ });
+ await page.getByRole("combobox",{name:/Target/i}).selectOption("fr");
+ await page.locator('select[aria-label="PDF"]').selectOption("bilingual");
+ await page.getByRole("button",{name:"Translate",exact:true}).click();
+ const action=page.getByTestId("result-file-actions").first();
+ await expect(action).toBeVisible({timeout:100000});
+ const pending=page.waitForEvent("download");
+ await action.getByRole("button",{name:"Save file",exact:true}).click();
+ const dl=await pending;
+ expect(await dl.failure()).toBeNull();
+ expect(dl.suggestedFilename()).toBe("fr-two-pages.pdf");
+ const bytes=await fs.readFile((await dl.path())!);
+ expect(bytes.subarray(0,5).toString("ascii")).toBe("%PDF-");
+ const checked=await PDFDocument.load(bytes);
+ expect(checked.getPageCount()).toBe(4);
+ for(const p of checked.getPages()){
+  expect(p.getWidth()).toBe(595);
+  expect(p.getHeight()).toBe(842);
+ }
+ expect(calls).toBeGreaterThan(0);
+ await page.locator('select[aria-label="PDF"]').selectOption("layout");
+ await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
 });
