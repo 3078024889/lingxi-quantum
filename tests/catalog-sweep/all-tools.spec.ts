@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import {test,expect} from "@playwright/test";
+import {test,expect} from "playwright/test";
 
 type Recipe={slug:string};
 const recipes=JSON.parse(fs.readFileSync(path.join(process.cwd(),"lib/tools/platform/tool-recipes.json"),"utf-8")) as Recipe[];
