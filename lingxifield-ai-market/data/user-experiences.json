@@ -6,7 +6,7 @@
     "summaryEn": "In a September 2026 user discussion, posters reported intermittent PDF and other file-upload errors. A dated incident report, not evidence of an ongoing outage.",
     "sourceUrl": "https://www.reddit.com/r/ChatGPT/comments/1waqo0t/pdfs_uploads_are_failingagain/",
     "publishedOn": "2026-09-08",
-    "kind": "reddit_firsthand_report",
+    "kind": "user_report",
     "status": "verified",
     "region": "unspecified",
     "reviewedOn": "2026-11-02"
@@ -18,7 +18,7 @@
     "summaryEn": "A user running Ollama on an 8 GB RAM computer without a dedicated GPU described long response times with a 7B model and smoother use after switching to a smaller ~3.8B model. Anecdotal hardware-specific result.",
     "sourceUrl": "https://www.reddit.com/r/ollama/comments/1r72my6/my_experience_with_running_small_scale_open/",
     "publishedOn": "2026-02-17",
-    "kind": "reddit_firsthand_report",
+    "kind": "user_report",
     "status": "verified",
     "region": "unspecified",
     "reviewedOn": "2026-11-02"
@@ -30,7 +30,7 @@
     "summaryEn": "One developer reported higher throughput after changing from Ollama to a CUDA-built and tuned llama.cpp setup on their own hardware. Not an independently replicated benchmark.",
     "sourceUrl": "https://www.reddit.com/r/LocalAIServers/comments/1ugb2z2/i_switched_from_ollama_to_llamacpp_and_saw_a_34x/",
     "publishedOn": "2026-06-26",
-    "kind": "reddit_firsthand_report",
+    "kind": "user_report",
     "status": "verified",
     "region": "unspecified",
     "reviewedOn": "2026-11-02"
@@ -42,7 +42,7 @@
     "summaryEn": "A ComfyUI beginner said the software and starter templates worked and had produced images, but learning how to build workflows from individual nodes remained difficult.",
     "sourceUrl": "https://www.reddit.com/r/comfyui/comments/1uto5ld/how_should_i_actually_learn_comfyui_in_2026/",
     "publishedOn": "2026-07-11",
-    "kind": "reddit_firsthand_report",
+    "kind": "user_report",
     "status": "verified",
     "region": "unspecified",
     "reviewedOn": "2026-11-02"
@@ -54,7 +54,7 @@
     "summaryEn": "A paying Midjourney subscriber praised the images' visual appeal but described difficulties maintaining consistent storyboards across scenes. A creator's individual use-case report.",
     "sourceUrl": "https://www.reddit.com/r/midjourney/comments/1vy25uw/creating_storyboard_or_having_consistency/",
     "publishedOn": "2026-08-25",
-    "kind": "reddit_firsthand_report",
+    "kind": "user_report",
     "status": "verified",
     "region": "unspecified",
     "reviewedOn": "2026-11-02"
