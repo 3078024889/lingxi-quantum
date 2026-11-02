@@ -21,7 +21,7 @@ for(const spec of files){
  const response=await fetch(url,{signal:AbortSignal.timeout(45000)});
  if(!response.ok)throw Error(`C2PA_FIXTURE_FETCH_${response.status}:${spec.name}`);
  const body=Buffer.from(await response.arrayBuffer());
- const blobSha=createHash("sha1").update(Buffer.from(`blob ${body.length}\\0`)).update(body).digest("hex");
+ const blobSha=createHash("sha1").update(Buffer.from(`blob ${body.length}\0`)).update(body).digest("hex");
  if(body.length!==spec.bytes||blobSha!==spec.gitBlob)throw Error(`C2PA_FIXTURE_INTEGRITY:${spec.name}`);
  await writeFile(path.join(directory,spec.name),body);
  console.log("SIGNED_C2PA_FIXTURE_VERIFIED",spec.name,body.length,blobSha);
