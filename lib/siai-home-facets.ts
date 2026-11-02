@@ -14,7 +14,7 @@ export type MarketCriteria={
 export type FacetRow={
  id:string;name:string;company:string;legal:string|null;kind:'company'|'open_source_project'|'software_library';
  listing:'listed_parent'|'unconfirmed'|'not_applicable';year:string|null;category:string;
- about:string;strength:string;features:string[];models:string;region:string;payment:string;
+ about:string;strength:string;features:string[];searchTerms?:readonly string[];models:string;region:string;payment:string;
  paymentSource:string|null;free:string;freeSource:string|null;price:string;commercial:string;
  localizedSummary?:string;localizedCategory?:string;
 };
@@ -81,7 +81,7 @@ export function filterMarketRows<T extends FacetRow>(rows:readonly T[],criteria:
   if(!taskMatches(row,criteria.task)||!evidenceMatches(row,criteria.evidence)||!paymentMatches(row,criteria.payment))return false;
   if(!query)return true;
   const text=[row.name,row.company,row.legal||'',row.category,row.localizedCategory||'',row.about,
-   row.strength,row.localizedSummary||'',row.models,row.region,row.payment,
+   row.strength,row.localizedSummary||'',row.models,row.region,row.payment,...(row.searchTerms||[]),
    ...row.features].join(' ');
   return norm(text).includes(query);
  });
