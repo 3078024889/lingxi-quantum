@@ -37,4 +37,12 @@ for(const file of ["encoder_model_quantized.onnx","decoder_model_merged_quantize
 assert(source.includes('dtype:"q8"'),"q8 on-site weights must be selected explicitly");
 assert(source.includes("mod.env.allowRemoteModels=false"),"Whisper must not silently fall back to external downloads");
 assert(source.includes("local_files_only:true"),"Whisper model loads must remain local");
+
+for(const name of ["ort-wasm-simd-threaded.asyncify.mjs","ort-wasm-simd-threaded.asyncify.wasm"]){
+ const location="public/runtime/food-onnx/"+name;
+ assert(fs.statSync(location).size>10000,"Bundled matching ONNX Runtime missing: "+location);
+ assert(source.includes("/runtime/food-onnx/"+name),"Whisper must use the same on-site ONNX runtime as Food Vision");
+}
+assert(source.includes('gpu.requestAdapter()'),"Check for a real GPU adapter, not only navigator.gpu presence");
+
 console.log("WHISPER_REAL_TIMING_V143=PASS: genuine model timestamps only, no fake subtitles for open-ended/malformed chunks, real inference path uses validation");
