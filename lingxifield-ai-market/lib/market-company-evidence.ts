@@ -8,6 +8,10 @@ type EvidenceValue={text:string;source:string;asOf:string};
 export type CompanyEvidence={
  kind:'company'|'open_source_project'|'software_library';
  publisherSource:string;
+ /** Officially sourced legal entity; this is NOT a natural-person legal representative. */
+ legalEntity?:EvidenceValue;
+ legalEntityScope?:'service_operator'|'group_parent';
+ ipoFiling?:EvidenceValue;
  founded?:EvidenceValue;
  headquarters?:EvidenceValue;
  projectStarted?:EvidenceValue;
@@ -18,12 +22,12 @@ export type CompanyEvidence={
 const checked='2026-11-01';
 const fact=(text:string,source:string,asOf=checked):EvidenceValue=>({text,source,asOf});
 const parent={
- openai:{kind:'company',publisherSource:'https://openai.com/about/',founded:fact('2015','https://openai.com/about/'),headquarters:fact('美国 · 加州旧金山（OpenAI OpCo 地址）','https://openai.com/policies/feb-2024-data-processing-addendum/')},
- anthropic:{kind:'company',publisherSource:'https://www.anthropic.com/company',founded:fact('2021','https://www.anthropic.com/news/anthropic-raises-series-b-to-build-safe-reliable-ai'),headquarters:fact('美国 · 旧金山','https://www.anthropic.com/transparency/voluntary-commitments'),funding:fact('2022年 B 轮融资 5.8 亿美元（历史轮次，非累计融资）','https://www.anthropic.com/news/anthropic-raises-series-b-to-build-safe-reliable-ai','2022-04-29')},
- google:{kind:'company',publisherSource:'https://about.google/',founded:fact('1998','https://about.google/our-story/'),headquarters:fact('美国 · 加州 Mountain View','https://about.google/company-info/our-story/'),listing:fact('Alphabet 集团上市公司旗下产品；NASDAQ: GOOGL / GOOG','https://abc.xyz/investor/')},
- alibaba:{kind:'company',publisherSource:'https://www.alibabagroup.com/',founded:fact('1999','https://www.alibabagroup.com/en-US/about-alibaba'),headquarters:fact('中国 · 浙江杭州','https://www.alibabagroup.com/en-US/about-alibaba'),listing:fact('阿里巴巴集团上市公司旗下产品；NYSE: BABA / HKEX: 9988','https://www.alibabagroup.com/en-US/ir')},
- bytedance:{kind:'company',publisherSource:'https://www.bytedance.com/about',founded:fact('2012','https://www.bytedance.com/about'),headquarters:fact('中国 · 北京（公司起源）','https://www.bytedance.com/about')},
- kuaishou:{kind:'company',publisherSource:'https://ir.kuaishou.com/',founded:fact('2011','https://ir.kuaishou.com/about-us/senior-management/'),headquarters:fact('中国 · 北京海淀区（快手科技总部）','https://ir.kuaishou.com/zh-hans/investor-resources/investor-faqs','2026-11-02'),listing:fact('快手科技旗下产品；港交所 1024.HK，2021年2月5日挂牌','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishoukejijintianyuxiangganglianjiaosuozhubanguapaishangshi','2021-02-05'),projectStarted:fact('快手最早应用于 2011 年推出','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishouliangweilianhechuangshirendiaozhengfengong/')},
+ openai:{kind:'company',publisherSource:'https://openai.com/about/',legalEntity:fact('OpenAI OpCo, LLC','https://openai.com/policies/row-terms-of-use/','2026-01-01'),legalEntityScope:'service_operator',founded:fact('2015','https://openai.com/about/'),headquarters:fact('美国 · 加州旧金山（OpenAI OpCo 地址）','https://openai.com/policies/feb-2024-data-processing-addendum/')},
+ anthropic:{kind:'company',publisherSource:'https://www.anthropic.com/company',legalEntity:fact('Anthropic, PBC','https://www.anthropic.com/news/s1-sec','2026-10-26'),legalEntityScope:'service_operator',ipoFiling:fact('2026-10-26 已提交 S-1，尚未完成上市','https://www.anthropic.com/news/s1-sec','2026-10-26'),founded:fact('2021','https://www.anthropic.com/news/anthropic-raises-series-b-to-build-safe-reliable-ai'),headquarters:fact('美国 · 旧金山','https://www.anthropic.com/transparency/voluntary-commitments'),funding:fact('2022年 B 轮融资 5.8 亿美元（历史轮次，非累计融资）','https://www.anthropic.com/news/anthropic-raises-series-b-to-build-safe-reliable-ai','2022-04-29')},
+ google:{kind:'company',publisherSource:'https://about.google/',legalEntity:fact('Google LLC','https://policies.google.com/terms','2026-07-30'),legalEntityScope:'service_operator',founded:fact('1998','https://about.google/our-story/'),headquarters:fact('美国 · 加州 Mountain View','https://about.google/company-info/our-story/'),listing:fact('Alphabet 集团上市公司旗下产品；NASDAQ: GOOGL / GOOG','https://abc.xyz/investor/')},
+ alibaba:{kind:'company',publisherSource:'https://www.alibabagroup.com/',legalEntity:fact('Alibaba Group Holding Limited','https://home.alibabagroup.com/en-US/document-2003564382071554048','2026-05-20'),legalEntityScope:'group_parent',founded:fact('1999','https://www.alibabagroup.com/en-US/about-alibaba'),headquarters:fact('中国 · 浙江杭州','https://www.alibabagroup.com/en-US/about-alibaba'),listing:fact('阿里巴巴集团上市公司旗下产品；NYSE: BABA / HKEX: 9988','https://www.alibabagroup.com/en-US/ir')},
+ bytedance:{kind:'company',publisherSource:'https://www.bytedance.com/about',legalEntity:fact('ByteDance Ltd.','https://www.bytedance.com/en/corporate-structure','2026-11-02'),legalEntityScope:'group_parent',founded:fact('2012','https://www.bytedance.com/about'),headquarters:fact('中国 · 北京（公司起源）','https://www.bytedance.com/about')},
+ kuaishou:{kind:'company',publisherSource:'https://ir.kuaishou.com/',legalEntity:fact('Kuaishou Technology','https://ir.kuaishou.com/static-files/9b436e92-fd39-404c-877e-c3b0d9b92b80','2026-11-02'),legalEntityScope:'group_parent',founded:fact('2014-02-11','https://ir.kuaishou.com/static-files/9b436e92-fd39-404c-877e-c3b0d9b92b80','2026-11-02'),headquarters:fact('中国 · 北京海淀区（快手科技总部）','https://ir.kuaishou.com/zh-hans/investor-resources/investor-faqs','2026-11-02'),listing:fact('快手科技旗下产品；港交所 1024.HK，2021年2月5日挂牌','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishoukejijintianyuxiangganglianjiaosuozhubanguapaishangshi','2021-02-05'),projectStarted:fact('快手最早应用于 2011 年推出','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kuaishouliangweilianhechuangshirendiaozhengfengong/')},
  luma:{kind:'company',publisherSource:'https://lumalabs.ai/llm-info',founded:fact('2021','https://lumalabs.ai/llm-info'),headquarters:fact('美国 · 加州 Redwood City','https://lumalabs.ai/llm-info')},
  runway:{kind:'company',publisherSource:'https://trust.runwayml.com/',founded:fact('2018','https://runway.com/news/runway-raises-50-series-c','2022-12-05'),headquarters:fact('美国 · 纽约（2022年 SEC 申报的主要营业地址，非2026年实时总部认定）','https://www.sec.gov/Archives/edgar/data/1957455/000123191922000071/xslFormDX01/primary_doc.xml','2022-12-31'),funding:fact('2026年2月 E 轮融资 3.15 亿美元（单轮，非累计）','https://runway.com/news/runway-series-e-funding','2026-02-10'),projectStarted:fact('2018年起开展生成式媒体研发','https://trust.runwayml.com/')},
  elevenlabs:{kind:'company',publisherSource:'https://elevenlabs.io/about',founded:fact('2022','https://elevenlabs.io/docs/help-center/other/what-is-eleven-labs'),headquarters:fact('英国 · 伦敦（欧洲总部与全球运营中心，非全球法定总部）','https://elevenlabs.io/blog/london-office-opening','2024-08-14'),funding:fact('2026年2月 D 轮融资 5 亿美元；公告时累计融资 7.81 亿美元（非估值）','https://elevenlabs.io/blog/series-d','2026-02-04')},
@@ -99,6 +103,9 @@ export function companyPresentationFor(id:string, fallbackName:string){
   name:key?(COMPANY_PUBLIC_NAMES[key]||fallbackName):fallbackName,
   kind:evidence?.kind||'company',year:started||null,yearSource:startedSource||null,
   listingState,listingDetail:evidence?.listing?.text||null,
-  listingSource:evidence?.listing?.source||null,companySource:evidence?.publisherSource||null
+  listingSource:evidence?.listing?.source||null,companySource:evidence?.publisherSource||null,
+  legalEntity:evidence?.legalEntity?.text||null,legalEntitySource:evidence?.legalEntity?.source||null,
+  legalEntityScope:evidence?.legalEntityScope||null,
+  ipoFiling:evidence?.ipoFiling?.text||null,ipoFilingSource:evidence?.ipoFiling?.source||null
  };
 }
