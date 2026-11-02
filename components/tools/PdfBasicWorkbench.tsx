@@ -62,7 +62,7 @@ export default function PdfBasicWorkbench(){
    {pages>0&&<div className="mt-1 text-[var(--lx-ink)]">{c.pages}: {pages}</div>}
   </div>}
   <label className="block text-sm text-[var(--lx-muted)]">{c.range}
-   <input value={range} onChange={e=>setRange(e.target.value)} placeholder="1-3,5,8-10" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
+   <input value={range} onChange={e=>{setRange(e.target.value);setResults([]);setError("")}} placeholder="1-3,5,8-10" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
   </label>
   <div className="flex flex-wrap gap-3">
    <button disabled={files.length<2||busy} onClick={merge} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.merge}</button>
