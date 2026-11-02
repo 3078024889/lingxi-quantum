@@ -28,7 +28,7 @@ async function runMode(page:Page,mode:string,name:string,bytes:Buffer){
  const area=page.locator("[data-video-toolkit]");
  await expect(area).toHaveAttribute("data-hydrated","true");
  await area.locator('input[type="file"]').first().setInputFiles({name,mimeType:mode==="Convert MP4"?"video/quicktime":"video/mp4",buffer:bytes});
- if(mode!=="Compress")await area.getByRole("button",{name:mode,exact:true}).click();
+ if(mode!=="Compress")await area.getByRole("button",{name:mode==="Convert MP4"?"Convert to MP4":mode,exact:true}).click();
  await area.getByRole("button",{name:"Start processing",exact:true}).click();
  const actions=area.getByTestId("result-file-actions").first();
  await expect(actions).toBeVisible({timeout:150000});
