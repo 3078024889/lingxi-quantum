@@ -2,13 +2,14 @@ import {test,expect} from "./export-test";
 import {PDFDocument,StandardFonts} from "pdf-lib";
 import sharp from "sharp";
 import fs from "node:fs/promises";
+import type {Page} from "playwright";
 
 async function makePdf(width:number,height:number,word:string){
  const doc=await PDFDocument.create(),font=await doc.embedFont(StandardFonts.Helvetica);
  doc.addPage([width,height]).drawText(word,{font,size:16,x:30,y:height-55});
  return Buffer.from(await doc.save());
 }
-async function save(page:import("@playwright/test").Page){
+async function save(page:Page){
  const action=page.locator("[data-tool-workbench]").getByTestId("result-file-actions").first();
  await expect(action).toBeVisible({timeout:30000});
  const pending=page.waitForEvent("download");
