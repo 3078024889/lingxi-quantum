@@ -250,8 +250,11 @@
           "scope": "singapore_region_mixed_currency"
         },
         "free": {
-          "status": "missing",
-          "reason": "The current official free entitlement and quota have not been independently pinned."
+          "status": "observed",
+          "text": "微软个人 Copilot 官方价格说明确认存在免费版本，但受到容量及每日/功能调用限制，达到限制须等待重置或选择付费版；Microsoft 365 应用深度集成取决于符合条件的订阅，免费版不包括全部 365 Copilot 高级功能。",
+          "source": "https://www.microsoft.com/en-sg/copilot/pricing/individuals",
+          "checkedAt": "2026-11-02",
+          "scope": "limited_free_copilot_web_app_not_full_m365_benefits"
         },
         "models": {
           "status": "observed",
@@ -396,8 +399,11 @@
           "scope": "vendor_commercial_positioning_only"
         },
         "payment": {
-          "status": "missing",
-          "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
+          "status": "observed",
+          "text": "Adobe 官方 Teams 账户支付文档支持信用卡、借记卡；部分国家可用 PayPal，符合条件的欧洲/中东/非洲客户可能可用 SEPA 扣款。Firefly 随 Creative Cloud 或独立计划结算方式取决于地区与购买渠道，本资料不声称所有用户都可选 PayPal。",
+          "source": "https://helpx.adobe.com/enterprise/using/edit-payment-method.html",
+          "checkedAt": "2026-11-02",
+          "scope": "adobe_teams_payment_rails_region_scoped_not_every_firefly_checkout"
         },
         "company": {
           "status": "observed",
@@ -512,8 +518,11 @@
           "reason": "Accepted payment methods, regional differences and merchant terms are not documented here."
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Freepik 官方 2026 年商业订阅条款明确其所属法律主体 Freepik Company, S.L.，该条款适用于其 Magnific 商业订阅；Freepik AI 具体产品结算与权利以各服务协议为准，不能据该合同推定全部 Freepik AI 权益。",
+          "source": "https://www.freepik.com/legal/business-subscription-terms",
+          "checkedAt": "2026-11-02",
+          "scope": "freepik_company_sl_group_legal_entity_magnific_specific_contract"
         }
       }
     },
@@ -565,8 +574,11 @@
           "scope": "credit_debit_prepaid_card_others_account_dependent"
         },
         "company": {
-          "status": "missing",
-          "reason": "The operating legal entity, corporate ownership and incorporation record need separate verification."
+          "status": "observed",
+          "text": "Synthesia 官方 2026年10月更新的法律隐私政策注明其数据控制者为英国 Synthesia Limited，地址 20 Triton St, London NW1 3BF；同期官方活动规则注明其英格兰与威尔士公司编号 10933652。该主体是官方现行法人资料，不代表已上市。",
+          "source": "https://www.synthesia.io/legal/privacy-policy",
+          "checkedAt": "2026-11-02",
+          "scope": "uk_operating_privacy_legal_entity_company_number_in_additional_source"
         }
       }
     }
