@@ -64,10 +64,10 @@ test("tool timestamp converter: UTC epoch converts correctly; empty value is inv
  await field.fill("0");
  await expect(area.locator("dl")).toContainText("1970-01-01T00:00:00.000Z");
  await field.fill(" ");
- await expect(area).toContainText("Could not parse this timestamp");
+ await expect(area).toContainText("Could not parse this time value");
  await expect(area.locator("dl")).toHaveCount(0);
  await field.fill("1700000000000");
- await area.getByRole("radio",{name:"Milliseconds"}).check();
+ await area.locator("select").first().selectOption("ms");
  await expect(area.locator("dl")).toContainText("2023-11-14T22:13:20.000Z");
 });
 
