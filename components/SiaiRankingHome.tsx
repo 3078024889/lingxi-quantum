@@ -3,6 +3,8 @@
 import {Fragment,useMemo,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
+import {localizedProductSummary} from "../lingxifield-ai-market/lib/market-product-locale";
+import {localizedCatalogFact} from "../lingxifield-ai-market/lib/market-fact-locale";
 
 export type SiaiHomeRow={
  id:string;name:string;company:string;legal:string|null;legalScope:"service_operator"|"group_parent"|null;
@@ -34,6 +36,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang];const [query,setQuery]=useState(""),[category,setCategory]=useState("*"),[expanded,setExpanded]=useState<string|null>(null);
  const categories=useMemo(()=>[...new Set(rows.map(r=>r.category))], [rows]);
  const shown=useMemo(()=>{const q=query.trim().toLocaleLowerCase();return rows.filter(r=>(category==="*"||r.category===category)&&(!q||[r.name,r.company,r.legal||"",r.about,r.strength,r.category,...r.features,r.models].join(" ").toLocaleLowerCase().includes(q)));},[rows,category,query]);
+ const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>localizedCatalogFact(p.id,lang,scope,p[scope]);
+ const displayStrength=(p:SiaiHomeRow)=>localizedProductSummary(p.id,lang)||p.strength||p.about;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
     <p>{p.about}</p><p>{p.features.join(" · ")}</p>
     <dl><div><dt>{t.free}</dt><dd>{p.free}</dd></div><div><dt>{t.price}</dt><dd>{p.price}</dd></div><div><dt>{t.region}</dt><dd>{p.region}</dd></div><div><dt>{t.payment}</dt><dd>{p.payment}</dd></div><div><dt>{t.models}</dt><dd>{p.models}</dd></div><div><dt>{t.license}</dt><dd>{p.commercial}</dd></div></dl>
@@ -63,12 +67,12 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
          <div><dt>{t.listed}</dt><dd>{listing}</dd></div>
          <div><dt>{t.founded}</dt><dd>{p.year||"—"}</dd></div>
         </dl></td>
-        <td><strong className="siai-cell-preview" title={p.strength||p.about}>{short(p.strength||p.about,100)}</strong></td>
-        <td><span className="siai-cell-preview" title={p.free}>{short(p.free,100)}</span><Source href={p.freeSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.price}>{short(p.price,110)}</span><Source href={p.priceSource} label={t.source}/></td>
+        <td><strong className="siai-cell-preview" title={p.strength||p.about}>{short(displayStrength(p),100)}</strong></td>
+        <td><span className="siai-cell-preview" title={p.free}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={p.price}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
         <td><span className="siai-cell-preview" title={p.region}>{short(p.region,100)}</span><Source href={p.regionSource} label={t.source}/></td>
         <td><span className="siai-cell-preview" title={p.payment}>{short(p.payment,88)}</span></td>
-        <td><span className="siai-cell-preview" title={p.models}>{short(p.models,95)}</span></td>
+        <td><span className="siai-cell-preview" title={p.models}>{short(displayFact(p,"models"),95)}</span></td>
         <td><span className="siai-cell-preview" title={p.commercial}>{short(p.commercial,100)}</span><Source href={p.commercialSource} label={t.source}/></td>
         <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button></td>
        </tr>
