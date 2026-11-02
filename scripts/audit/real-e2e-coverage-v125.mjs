@@ -34,6 +34,7 @@ const current=new Map([
  ...group(["temp-mail","video-watermark-remover","image-translator"],"tool-user-journeys-v1"),
  ...group(["audio-cleanup","pdf-to-word"],"paid-local-output-v89"),
  ...group(["remove-exif"],"remove-exif-real-v130"),
+ ...group(["ocr"],"remaining-ocr-real-v130"),
  ...group(["rotate-video"],"video-toolkit-real-v131"),
  ...group(["subtitle-translate"],"subtitle-translation-v95")
 ]);
