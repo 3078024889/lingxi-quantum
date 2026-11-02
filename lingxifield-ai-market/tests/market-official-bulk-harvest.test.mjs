@@ -46,7 +46,7 @@ test('the 210 observed/missing/conflict slots reconcile, without publishing anyo
  const f=JSON.parse(source.slice(a,b));
  const report=buildEvidenceReadiness({curatedIds:ids,curatedFacts:f,cohorts:batches.map(x=>x.batch),
   observations:batches.map(x=>x.pack),asOf:'2026-11-02'});
- assert.deepEqual([report.candidateIntake.observed,report.candidateIntake.missing,report.candidateIntake.conflict],[180,30,0]);
+ assert.deepEqual([report.candidateIntake.observed,report.candidateIntake.missing,report.candidateIntake.conflict],[181,29,0]);
  assert.equal(report.candidateIntake.factCells,210);
  assert.equal(report.candidateIntake.publishReady,0);
  assert.equal(report.candidateIntake.publishedFromStaging,0);
