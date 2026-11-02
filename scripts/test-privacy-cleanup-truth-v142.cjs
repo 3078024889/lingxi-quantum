@@ -11,9 +11,9 @@ async function scenario(mode,expected){
     then(resolve){
      if(table==="burn_notes"&&action==="delete"){stats.noteDelete++;return Promise.resolve({error:mode==="db-delete-fail"?{code:"FAIL"}:null}).then(resolve)}
      if(table==="tool_temp_files"&&action==="update"){stats.marked++;return Promise.resolve({error:mode==="temp-update-fail"?{code:"FAIL"}:null}).then(resolve)}
-     if(table==="burn_notes")return Promise.resolve({data:[{id:"note"}],error:mode==="note-query-fail"?{code:"FAIL"}:null}).then(resolve);
+     if(table==="burn_notes")return Promise.resolve({data:mode==="note-backlog"?Array.from({length:101},(_,i)=>({id:"note-"+i})):[{id:"note"}],error:mode==="note-query-fail"?{code:"FAIL"}:null}).then(resolve);
      if(table==="burn_files")return Promise.resolve({data:[{object_key:"burn/note/file"}],error:mode==="file-query-fail"?{code:"FAIL"}:null}).then(resolve);
-     if(table==="tool_temp_files")return Promise.resolve({data:[{id:"temp",object_key:"temp/file"}],error:mode==="temp-query-fail"?{code:"FAIL"}:null}).then(resolve);
+     if(table==="tool_temp_files")return Promise.resolve({data:mode==="temp-backlog"?Array.from({length:101},(_,i)=>({id:"temp-"+i,object_key:"temp/file-"+i})):[{id:"temp",object_key:"temp/file"}],error:mode==="temp-query-fail"?{code:"FAIL"}:null}).then(resolve);
      throw Error("UNKNOWN_TABLE:"+table);
     }
    };return q;
@@ -36,11 +36,13 @@ async function scenario(mode,expected){
  if(["file-query-fail","r2-delete-fail"].includes(mode))assert.equal(stats.noteDelete,0,"never discard R2 reference before successful object deletion");
  if(mode==="r2-delete-fail")assert.equal(result.body.deferredNotes,1);
  if(mode==="temp-update-fail")assert.equal(result.body.deletedToolTemp,0,"failed DB mark cannot count as cleanup");
+ if(mode==="note-backlog")assert.equal(result.body.notesBacklog,true,"101st expired note must not silently disappear from cleanup report");
+ if(mode==="temp-backlog")assert.equal(result.body.tempBacklog,true,"101st expired temporary file must trigger partial cleanup");
 }
 (async()=>{
  for(const [mode,status] of [
   ["normal",200],["r2-delete-fail",503],["db-delete-fail",503],["file-query-fail",503],
-  ["temp-query-fail",503],["temp-delete-fail",503],["temp-update-fail",503],
+  ["temp-query-fail",503],["temp-delete-fail",503],["temp-update-fail",503],["note-backlog",503],["temp-backlog",503],
   ["rpc-fail",503],["rpc-throw",503],["note-query-fail",503]
  ])await scenario(mode,status);
  console.log("PRIVACY_CLEANUP_TRUTH_V142=PASS: private-object deletion and metadata lifecycle fail visibly; note references never dropped on R2 failures; temp/DB failures cannot return success; cron auth denied. No R2 or production DB operations.");
