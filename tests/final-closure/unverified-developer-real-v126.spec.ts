@@ -20,9 +20,9 @@ async function output(page:Page){
 test("case-converter: real camel, snake and Unicode-safe upper conversion",async({page})=>{
  await editor(page,"case-converter","hello_world Galaxy");
  expect(await output(page)).toBe("helloWorldGalaxy");
- await page.locator("select").selectOption("snake");
+ await page.locator('[data-tool-workbench] select').selectOption("snake");
  expect(await output(page)).toBe("hello_world_galaxy");
- await page.locator("select").selectOption("upper");
+ await page.locator('[data-tool-workbench] select').selectOption("upper");
  expect(await output(page)).toBe("HELLO_WORLD GALAXY");
 });
 
@@ -78,13 +78,13 @@ test("number-base-converter: decimal 255 to hexadecimal FF; invalid characters a
 
 test("text-diff: changed and retained Unicode lines are represented correctly",async({page})=>{
  const a=await editor(page,"text-diff","相同\n旧版本");
- await page.getByPlaceholder("B").fill("相同\n新版本");
+ await page.locator('[data-tool-workbench] textarea[placeholder="B"]').fill("相同\n新版本");
  const value=await output(page);
  expect(value).toContain("  相同");
  expect(value).toContain("- 旧版本");
  expect(value).toContain("+ 新版本");
  await a.fill("一致");
- await page.getByPlaceholder("B").fill("一致");
+ await page.locator('[data-tool-workbench] textarea[placeholder="B"]').fill("一致");
  expect(await output(page)).toContain("  一致");
 });
 
@@ -117,7 +117,7 @@ test("uuid-generator: secure UUID v4 unique values export as actual TXT",async({
 
 test("uuid-generator: ordered ULID mode changes output and exports same generated IDs",async({page})=>{
  await page.goto(url("uuid-generator"));
- await page.getByRole("combobox").first().selectOption("ulid");
+ await page.locator('[data-tool-workbench] select').first().selectOption("ulid");
  await page.getByRole("spinbutton").first().fill("4");
  await page.getByRole("button",{name:"Generate",exact:true}).click();
  const rows=(await page.locator("textarea[readonly]").first().inputValue()).trim().split("\n");
