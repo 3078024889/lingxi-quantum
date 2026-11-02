@@ -42,7 +42,8 @@ for(const corrupt of [false,true]){
    expect(actual).not.toEqual(fixture.cipher);
   }else{
    await item.click();
-   await expect(page.getByRole("alert")).toBeVisible({timeout:15000});
+   await expect(page.locator('main [role="alert"]').filter({hasText:/Unable to open|Try again|无法打开/}).last()).toBeVisible({timeout:15000});
+   await expect(page.getByRole("button",{name:/private\\.txt/})).toBeEnabled();
   }
   expect(gets).toBe(1);
  });
