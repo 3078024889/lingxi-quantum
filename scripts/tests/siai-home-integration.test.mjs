@@ -43,7 +43,7 @@ test("search and category filters preserve all 32 curated publisher IDs, no fake
  const ids=[...match[1].matchAll(/'([a-z0-9-]+)'/g)].map(x=>x[1]);
  assert.equal(ids.length,32);
  assert.equal(new Set(ids).size,32);
- assert.match(home,/rows\.filter\(/);
+ assert.match(home,/filterMarketRows\(localizedRows/);
  assert.match(home,/category===/);
  assert.match(home,/aria-pressed/);
  assert.match(page,/"@type":"ItemList"/);
