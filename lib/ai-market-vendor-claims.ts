@@ -33,6 +33,40 @@ export const AI_MARKET_CLAIMABLE_IDS = [
   'openai-python',
   'anthropic-sdk-python'
 ] as const;
+export const AI_MARKET_CLAIMABLE_LABELS:Record<string,string> = {
+  "chatgpt": "ChatGPT",
+  "claude": "Claude",
+  "gemini": "Gemini",
+  "grok": "Grok",
+  "perplexity": "Perplexity",
+  "deepseek": "DeepSeek",
+  "qwen": "千问 Qwen",
+  "doubao": "豆包",
+  "jimeng": "即梦 AI",
+  "kling": "可灵 Kling",
+  "runway": "Runway",
+  "luma": "Luma",
+  "midjourney": "Midjourney",
+  "suno": "Suno",
+  "elevenlabs": "ElevenLabs",
+  "lovable": "Lovable",
+  "replit": "Replit",
+  "ollama": "Ollama",
+  "llamacpp": "llama.cpp",
+  "vllm": "vLLM",
+  "langchain": "LangChain",
+  "llamaindex": "LlamaIndex",
+  "transformers": "Transformers",
+  "comfyui": "ComfyUI",
+  "automatic1111": "Stable Diffusion WebUI",
+  "whisper": "Whisper",
+  "fasterwhisper": "faster-whisper",
+  "openwebui": "Open WebUI",
+  "dify": "Dify",
+  "n8n": "n8n",
+  "openai-python": "OpenAI Python SDK",
+  "anthropic-sdk-python": "Anthropic Python SDK"
+};
 const claimable = new Set<string>(AI_MARKET_CLAIMABLE_IDS);
 export function safeMarketProductId(raw:unknown){
  return typeof raw==='string'&&claimable.has(raw)?raw:null;

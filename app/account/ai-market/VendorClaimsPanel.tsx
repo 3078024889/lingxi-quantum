@@ -2,6 +2,7 @@
 import {useEffect,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {AI_MARKET_VENDOR_COPY} from "@/lib/ai-market-vendor-locale";
+import {AI_MARKET_CLAIMABLE_IDS,AI_MARKET_CLAIMABLE_LABELS} from "@/lib/ai-market-vendor-claims";
 type Claim={id:string;product_id:string;company_name:string;official_site:string;status:string;created_at:string;reviewed_at?:string|null};
 export default function VendorClaimsPanel({initialProduct=""}:{initialProduct?:string}){
  const {lang}=useLingxiLang(),t=AI_MARKET_VENDOR_COPY[lang];
@@ -39,7 +40,7 @@ export default function VendorClaimsPanel({initialProduct=""}:{initialProduct?:s
   </section>
   <form onSubmit={send} className="grid gap-4 rounded-xl border p-5">
    <h2 className="text-xl font-bold">{t.form}</h2>
-   <label>{t.product}<input className="w-full rounded border p-3" required value={productId} onChange={e=>setProductId(e.target.value)} maxLength={64} placeholder="chatgpt"/></label>
+   <label>{t.product}<select className="w-full rounded border p-3" required value={productId} onChange={e=>setProductId(e.target.value)}><option value="">—</option>{AI_MARKET_CLAIMABLE_IDS.map(id=><option key={id} value={id}>{AI_MARKET_CLAIMABLE_LABELS[id]}</option>)}</select></label>
    <label>{t.company}<input className="w-full rounded border p-3" required minLength={2} maxLength={120} value={companyName} onChange={e=>setCompanyName(e.target.value)}/></label>
    <label>{t.site}<input type="url" className="w-full rounded border p-3" required value={officialSite} onChange={e=>setOfficialSite(e.target.value)} placeholder="https://"/></label>
    <label>{t.email}<input type="email" className="w-full rounded border p-3" required value={workEmail} onChange={e=>setWorkEmail(e.target.value)}/></label>

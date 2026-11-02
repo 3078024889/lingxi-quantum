@@ -67,3 +67,11 @@ test('central vendor claim account is translated in all nine languages and Arabi
  assert.ok(portal.includes('disabled={busy||claims.length>=3||!ready||!available}'));
  assert.match(page,/LxText/);
 });
+
+test('all 32 products have readable names in vendor account select, without free-text ID mistakes',()=>{
+ const src=root('lib/ai-market-vendor-claims.ts'),form=root('app/account/ai-market/VendorClaimsPanel.tsx');
+ assert.match(src,/AI_MARKET_CLAIMABLE_LABELS/);
+ for(const id of ['chatgpt','runway','ollama','anthropic-sdk-python'])assert.ok(src.includes('"'+id+'"'));
+ assert.ok(form.includes('AI_MARKET_CLAIMABLE_IDS.map(id=><option'));
+ assert.ok(form.includes('value={id}>{AI_MARKET_CLAIMABLE_LABELS[id]}'));
+});
