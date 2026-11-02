@@ -22,6 +22,7 @@ const current=new Map([
  ...group(["jfif-to-jpg","gif-to-jpg","bmp-to-png","avif-to-jpg","svg-to-png","batch-image","long-image","qr-safe-reader"],"unverified-images-real-v126"),
  ...group(["pdf-metadata-editor","pdf-page-size","pdf-grayscale","pdf-header-footer","pdf-bates-numbering","pdf-pages-per-sheet","pdf-remove-metadata","pdf-overlay"],"unverified-pdf-advanced-v126"),
  ...group(["ics-to-csv","vcf-to-csv","odt-to-txt","epub-to-txt","pptx-to-txt","docx-to-txt"],"unverified-longtail-documents-v126"),
+ ...group(["compress-image","resize-image","compress-pdf","pdf-halve-pages","pdf-rasterize","pdf-remove-annotations"],"remaining-local-tool-real-v127"),
  ...group(["qr-code-generator"],"qr-cron-output-v86"),
  ...group(["screenshot-redact"],"screenshot-redaction-v89"),
  ...group(["pdf-redact"],"pdf-redaction-output-v89"),
