@@ -24,4 +24,8 @@ test("video dubbing rejects audio-only uploads before checkout, but accepts a re
  await expect(page.getByRole("alert")).toHaveCount(0);
  await expect(page.getByText(/supported-real\.mp4/).first()).toBeVisible();
  await expect(page.getByTestId("video-dubbing-checkout")).toBeVisible({timeout:15000});
+ // A correctly labelled but corrupted MP4 must not receive a guessed one-minute quote.
+ await input.setInputFiles({name:"corrupt-video.mp4",mimeType:"video/mp4",buffer:Buffer.from("not-a-playable-mp4")});
+ await expect(page.getByTestId("video-dubbing-checkout")).toHaveCount(0);
+ await expect(page.getByRole("alert")).toContainText("Unable to read the video duration",{timeout:15000});
 });
