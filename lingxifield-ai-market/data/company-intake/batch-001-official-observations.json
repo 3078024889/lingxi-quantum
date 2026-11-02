@@ -506,17 +506,26 @@
         },
         "free": {
           "status": "observed",
-          "text": "Free / Plus 可以试用有限 Notion AI；Business 和 Enterprise 的标准与自选积分需按官方积分政策单独计量。",
-          "source": "https://www.notion.com/pricing",
+          "text": "Notion 官方说明：Free 和 Plus 仅有有限次数的 Notion AI 试用，消耗完须升级 Business 或 Enterprise；Business 和 Enterprise 现行标准额度按成员每月分配，Standard 1,500 积分、Select 500 积分。实际方案采购合同可能有不同额度，免费试用不代表无限 Agent 或模型调用。",
+          "source": "https://www.notion.com/help/manage-your-ai-credits",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "notion_ai_business_enterprise_per_member_monthly_credit_allowance_and_free_plus_limited_trial",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Notion 官方免费试用页面说明 Free/Plus 的试用 AI 回复次数有限，耗尽后继续 AI 使用需升级到 Business/Enterprise。",
+              "source": "https://www.notion.com/help/complimentary-ai-responses",
+              "checkedAt": "2026-11-02",
+              "scope": "free_plus_trial_limited_responses"
+            }
+          ]
         },
         "models": {
           "status": "observed",
-          "text": "Notion 官方说明 AI Agent、会议笔记、Enterprise Search；新积分制度有标准与自选两类积分，非单一公开模型名称。",
+          "text": "Notion AI 2026年11月新积分结构：Business/Enterprise 的 Standard credits 用于自动选择模型任务，每用户每月 1,500；Select credits 用于用户主动选择模型或部分自定义 Agent，每用户每月 500。高消耗模型可额外扣减 Notion credits，管理员需开启；支持 Notion Agent、AI Meeting Notes、Enterprise Search。不能把全部模型说成同样免费或无限。",
           "source": "https://www.notion.com/help/manage-your-ai-credits",
           "checkedAt": "2026-11-02",
-          "scope": "ai_credit_tiers"
+          "scope": "per_member_standard_select_credits_and_optional_paid_credit_pool"
         },
         "regions": {
           "status": "missing",
@@ -565,7 +574,16 @@
           "text": "Starter Free 提供有限 Figma Make 使用；官网列 150 AI credits/天、最多 500 credits/月。",
           "source": "https://www.figma.com/pricing/",
           "checkedAt": "2026-11-02",
-          "scope": "vendor_public_page"
+          "scope": "vendor_public_page",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Figma Make 官方 FAQ：Starter 免费版仅能在附条件下探索 Figma Make；付费 Full 席位才能在团队文件夹创建、发布；Dev 席位可以在草稿创建并导出代码，Collab/View 在草稿中试用但功能受限。K-12 教育用户不提供 Figma Make，大学及训练营 Education 可使用。",
+              "source": "https://help.figma.com/hc/en-us/articles/31722591905559-Figma-Make-FAQs",
+              "checkedAt": "2026-11-02",
+              "scope": "plan_and_seat_access_rights_not_country_coverage"
+            }
+          ]
         },
         "models": {
           "status": "observed",
