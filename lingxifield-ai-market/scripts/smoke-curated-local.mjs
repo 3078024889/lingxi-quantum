@@ -56,7 +56,8 @@ try{
  for(const [path,verify] of [
   ['/api/v1/companies?limit=50',data=>data.scope==='curated_32_publishers'&&data.curatedProducts===32&&data.items.length>1],
   ['/api/v1/companies/openai',data=>data.publisher?.products?.some(x=>x.id==='chatgpt')&&data.publisher?.products?.some(x=>x.id==='openai-python')],
-  ['/api/v1/model-offers?limit=10',data=>data.scope==='official_rate_rows_for_curated_32'&&data.total>0&&data.items.every(x=>x.source.startsWith('https://'))]
+  ['/api/v1/model-offers?limit=10',data=>data.scope==='official_rate_rows_for_curated_32'&&data.total>0&&data.items.every(x=>x.source.startsWith('https://'))],
+  ['/api/v1/launch-readiness',data=>data.curated===32&&data.stagedInventory?.candidateProducts===30&&data.stagedInventory?.batchCount===3&&data.stagedInventory?.allHeld===true&&data.stagedInventory?.officialSourceObservations===97&&data.stagedInventory?.conflictingFacts===2&&data.stagedInventory?.missingFacts===111]
  ]){
   try{
    const response=await fetch(origin+path,{signal:AbortSignal.timeout(12000)});
@@ -65,7 +66,7 @@ try{
   }catch(e){failures.push({path,error:e instanceof Error?e.message:'API_NETWORK_FAILURE'})}
   checked++;
  }
- const result={scope:'nine_locale_x_32_products_ssr_smoke',checked,total:paths.length+3,
+ const result={scope:'nine_locale_x_32_products_ssr_smoke',checked,total:paths.length+4,
   passed:checked-failures.length,failed:failures.length,failures:failures.slice(0,60),httpStatuses:statuses,
   note:'Local Next.js SSR HTTP smoke only; NOT a real user journey or verified paid service.'};
  process.stdout.write(JSON.stringify(result,null,2)+'\n');
