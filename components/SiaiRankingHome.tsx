@@ -18,7 +18,7 @@ export type SiaiHomeRow={
  ipoFiling:boolean;year:string|null;companySource:string|null;legalSource:string|null;listingSource:string|null;yearSource:string|null;
  category:string;about:string;strength:string;features:string[];searchTerms:string[];free:string;freeSource:string|null;
  price:string;priceSource:string|null;region:string;regionSource:string|null;payment:string;paymentSource:string|null;
- models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;
+ models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;checkedAt:string|null;
 };
 
 const labels:Record<LingxiLang,{title:string,subtitle:string,search:string,all:string,tool:string,company:string,legal:string,parent:string,listed:string,founded:string,
@@ -35,6 +35,7 @@ const labels:Record<LingxiLang,{title:string,subtitle:string,search:string,all:s
  ar:{title:"ترتيب SIAI العالمي",subtitle:"قارن أدوات الذكاء الاصطناعي والميزات المجانية والأسعار والمناطق والتراخيص.",search:"ابحث عن أدوات وشركات الذكاء الاصطناعي",all:"جميع المنصات",tool:"الأداة / الشركة",company:"الشركة",legal:"الكيان القانوني",parent:"الشركة الأم",listed:"الإدراج",founded:"التأسيس",strength:"المزايا",free:"المجاني",price:"السعر",region:"المناطق",payment:"الدفع",models:"النماذج",license:"الاستخدام التجاري",action:"إجراءات",official:"الموقع الرسمي",details:"التفاصيل",close:"إغلاق",noResults:"لا نتائج.",notConfirmed:"غير مؤكد",listedParent:"الشركة الأم مدرجة",ipoFiled:"طلب إدراج مقدم",na:"غير منطبق",project:"الجهة المطورة",source:"مصدر رسمي",sourceHeading:"المصادر",oldHome:"الرئيسية للأدوات"}
 };
 
+const REVIEWED_COPY:Record<LingxiLang,string>={zh:"官方资料复核",en:"Source checked",ja:"公式情報の確認日",ko:"공식 출처 확인일",fr:"Vérification de la source",de:"Quellen geprüft",es:"Fuente revisada",pt:"Fonte verificada",ar:"تاريخ فحص المصدر"};
 function short(s:string,max=150){return s.length>max?s.slice(0,max-1).trimEnd()+"…":s;}
 function Source({href,label}:{href:string|null;label:string}){return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className="siai-source">{label} ↗</a>:null;}
 
@@ -59,7 +60,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
   /Link（Stripe/.test(s)?'Link (Stripe Checkout)':localizedPaymentName(s,lang)).join(' · ');
  const displayAbout=(p:SiaiHomeRow)=>lang==='zh'?p.about:localizedProductSummary(p.id,lang)||p.name;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
-    <p>{displayAbout(p)}</p>{lang==="zh"&&<p>{p.features.join(" · ")}</p>}
+    <p>{displayAbout(p)}</p>{p.checkedAt&&<p className="siai-checked-date">{REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&<p>{p.features.join(" · ")}</p>}
     <dl><div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div><div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div><div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div><div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div><div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div><div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div></dl>
     <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.paymentSource,t.payment],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
     <a className="siai-detail-primary-link" href={"/siai/"+lang+"/"+encodeURIComponent(p.id)}>{ui.fullDetails} ↗</a>
@@ -128,6 +129,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
          <div><dt>{p.legalScope==="group_parent"?t.parent:t.legal}</dt><dd>{p.kind==="company"?(p.legal||"—"):t.na}</dd></div>
          <div><dt>{t.listed}</dt><dd>{listing}</dd></div>
          <div><dt>{t.founded}</dt><dd>{p.year||"—"}</dd></div>
+         {p.checkedAt&&<div><dt>{REVIEWED_COPY[lang]}</dt><dd><time dateTime={p.checkedAt}>{p.checkedAt}</time></dd></div>}
         </dl></td>
         <td><strong className="siai-cell-preview" title={p.strength||p.about}>{short(displayStrength(p),100)}</strong></td>
         <td><span className="siai-cell-preview" title={p.free}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
