@@ -6,6 +6,7 @@ on:
     paths:
       - 'lingxifield-ai-market/sql/**'
       - 'supabase/migrations/20261102120000_ai_market_vendor_account_claims.sql'
+      - 'supabase/migrations/20261102123000_ai_market_vendor_promotion_requests.sql'
       - '.github/workflows/ai-market-postgres-isolated.yml'
 
 permissions:
@@ -70,6 +71,25 @@ jobs:
       - name: Apply shared-account vendor claim migration to disposable Postgres
         run: |
           psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261102120000_ai_market_vendor_account_claims.sql
+
+      - name: Bootstrap main-site order ledger shape for isolated promotion linkage test
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE TABLE public.orders(
+            id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+            user_id uuid NOT NULL REFERENCES auth.users(id),
+            product_id text NOT NULL,
+            amount_rmb numeric(12,2),
+            amount_usd numeric(12,2),
+            currency text NOT NULL,
+            provider text NOT NULL,
+            status text NOT NULL
+          );
+          REVOKE ALL ON public.orders FROM PUBLIC,anon,authenticated;
+          SQL
+
+      - name: Apply vendor promotion application and order-link migration in disposable Postgres
+        run: psql -X -v ON_ERROR_STOP=1 -f supabase/migrations/20261102123000_ai_market_vendor_promotion_requests.sql
 
       - name: Verify RLS claim ownership, limit and no client-side approval
         run: |
@@ -186,6 +206,99 @@ jobs:
            THEN RAISE EXCEPTION 'REVIEW_AUDIT_LEAKED'; END IF;
           END
           $acl$;
+          SQL
+
+      - name: Test vendor promotion amount, ownership, idempotency, and main-site order bridge
+        run: |
+          psql -X -v ON_ERROR_STOP=1 <<'SQL'
+          BEGIN;
+          SET LOCAL ROLE authenticated;
+          SELECT set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+          INSERT INTO public.ai_market_vendor_promotion_requests
+           (user_id,claim_id,product_id,plan_id,currency,provider,idempotency_key)
+          SELECT user_id,id,product_id,'sponsored','CNY','alipay','33333333-3333-4333-8333-333333333333'
+           FROM public.ai_market_vendor_claims WHERE product_id='chatgpt' AND status='approved';
+          DO $verify$
+          BEGIN
+           IF NOT EXISTS(SELECT 1 FROM public.ai_market_vendor_promotion_requests
+             WHERE amount_minor=4900 AND status='requested' AND merchant_order_id IS NULL)
+           THEN RAISE EXCEPTION 'IMMUTABLE_SERVER_PRICE_INCORRECT'; END IF;
+           IF has_column_privilege('authenticated','public.ai_market_vendor_promotion_requests','amount_minor','INSERT')
+            OR has_table_privilege('authenticated','public.ai_market_vendor_promotion_requests','UPDATE')
+           THEN RAISE EXCEPTION 'CLIENT_CAN_CHANGE_PRICE_OR_PAYMENT'; END IF;
+           BEGIN
+            INSERT INTO public.ai_market_vendor_promotion_requests
+             (user_id,claim_id,product_id,plan_id,currency,provider,idempotency_key)
+             SELECT user_id,id,product_id,'category','CNY','paypal','44444444-4444-4444-8444-444444444444'
+              FROM public.ai_market_vendor_claims WHERE product_id='chatgpt' AND status='approved';
+            RAISE EXCEPTION 'MISMATCH_PROVIDER_CURRENCY_ACCEPTED';
+           EXCEPTION WHEN check_violation THEN NULL; END;
+           BEGIN
+            INSERT INTO public.ai_market_vendor_promotion_requests
+             (user_id,claim_id,product_id,plan_id,currency,provider,idempotency_key)
+             SELECT user_id,id,product_id,'category','USD','paypal','55555555-5555-4555-8555-555555555555'
+              FROM public.ai_market_vendor_claims WHERE product_id='claude' AND status='pending_review';
+            RAISE EXCEPTION 'UNAPPROVED_VENDOR_PROMOTION_ACCEPTED';
+           EXCEPTION WHEN check_violation THEN NULL; END;
+           BEGIN
+            INSERT INTO public.ai_market_vendor_promotion_requests
+             (user_id,claim_id,product_id,plan_id,currency,provider,idempotency_key)
+             SELECT user_id,id,product_id,'sponsored','CNY','alipay','33333333-3333-4333-8333-333333333333'
+              FROM public.ai_market_vendor_claims WHERE product_id='chatgpt' AND status='approved';
+            RAISE EXCEPTION 'DUPLICATE_PROMOTION_REQUEST_ACCEPTED';
+           EXCEPTION WHEN unique_violation THEN NULL; END;
+          END
+          $verify$;
+          COMMIT;
+
+          BEGIN;
+          SET LOCAL ROLE authenticated;
+          SELECT set_config('request.jwt.claim.sub','22222222-2222-4222-8222-222222222222',true);
+          DO $isolation$
+          BEGIN
+           IF EXISTS(SELECT 1 FROM public.ai_market_vendor_promotion_requests)
+            THEN RAISE EXCEPTION 'CROSS_ACCOUNT_PROMOTION_LEAK'; END IF;
+           BEGIN
+            INSERT INTO public.ai_market_vendor_promotion_requests
+             (user_id,claim_id,product_id,plan_id,currency,provider,idempotency_key)
+             SELECT user_id,id,product_id,'category','USD','paypal','66666666-6666-4666-8666-666666666666'
+               FROM public.ai_market_vendor_claims WHERE product_id='suno';
+            RAISE EXCEPTION 'OTHER_VENDOR_PENDING_PROMOTION_ACCEPTED';
+           EXCEPTION WHEN check_violation THEN NULL; END;
+          END
+          $isolation$;
+          COMMIT;
+
+          INSERT INTO public.orders(id,user_id,product_id,amount_rmb,currency,provider,status)
+           VALUES('77777777-7777-4777-8777-777777777777','11111111-1111-4111-8111-111111111111',
+            'sasi-balance-49',49,'CNY','alipay','pending'),
+           ('88888888-8888-4888-8888-888888888888','11111111-1111-4111-8111-111111111111',
+            'ai-market:sponsored',49,'CNY','alipay','pending');
+          BEGIN;
+          SET LOCAL ROLE service_role;
+          DO $bridge$
+          DECLARE r_id uuid;
+          BEGIN
+           SELECT id INTO r_id FROM public.ai_market_vendor_promotion_requests WHERE product_id='chatgpt';
+           BEGIN
+            UPDATE public.ai_market_vendor_promotion_requests SET status='merchant_linked',
+              merchant_order_id='77777777-7777-4777-8777-777777777777',linked_at=clock_timestamp()
+             WHERE id=r_id;
+            RAISE EXCEPTION 'SASI_TOPUP_ACCEPTED_FOR_MARKET_PROMOTION';
+           EXCEPTION WHEN check_violation THEN NULL; END;
+           UPDATE public.ai_market_vendor_promotion_requests SET status='merchant_linked',
+             merchant_order_id='88888888-8888-4888-8888-888888888888',linked_at=clock_timestamp()
+            WHERE id=r_id;
+           IF NOT EXISTS(SELECT 1 FROM public.ai_market_vendor_promotion_requests
+             WHERE id=r_id AND status='merchant_linked' AND merchant_order_id='88888888-8888-4888-8888-888888888888')
+            THEN RAISE EXCEPTION 'VALID_LINK_NOT_APPLIED'; END IF;
+           BEGIN
+            UPDATE public.ai_market_vendor_promotion_requests SET status='requested',merchant_order_id=NULL,linked_at=NULL WHERE id=r_id;
+            RAISE EXCEPTION 'ILLEGAL_PAYMENT_STATE_ROLLBACK_ACCEPTED';
+           EXCEPTION WHEN check_violation THEN NULL; END;
+          END
+          $bridge$;
+          COMMIT;
           SQL
 
       - name: Apply feedback migrations in security-preserving order

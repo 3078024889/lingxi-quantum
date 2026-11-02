@@ -36,3 +36,13 @@ The central LINGXIFIELD account now has a server-only reviewer API and review qu
 Reviews have an expected current status, human-entered 12-1000 character reason, and for approvals an explicit checkbox confirming independently reviewed corporate evidence. An atomic PostgreSQL trigger writes the previous/new states and reviewer user ID into a non-public audit log; an approval and its audit either both commit or both fail. An index prevents two simultaneously verified/approved representatives for one product; competing pending claims do not silently disappear. `service_role` is available only server-side in the guarded main-site API.
 
 This is an applicant ownership review and **does not** issue a payable SKU, change independent ranking, settle a payment or open production checkout. No migration has been applied to production in this PR.
+
+## Promotion request and immutable order link (2026-11-02)
+
+Approved claimants can select a paid placement plan from their original `lingxifield.com/account/ai-market` portal. The separate read/write endpoint `/api/ai-market/vendor-promotions` requires the original verified Supabase account, rejects cross-origin submission, takes **only** claim/product/plan/currency/provider/idempotency UUID, and never trusts a submitted amount, status, provider proof or order ID.
+
+`ai_market_vendor_promotion_requests` is a separate RLS-protected table. Price is PostgreSQL **GENERATED ALWAYS AS** from the server-approved plan; CNY/USD use nominally identical 49/149/299. All inserts require an **approved claim owned by the same authenticated user**, an exact product ID, valid provider/currency pair, and are unique per idempotency key. Owner can read requests but cannot UPDATE their price, status, linked order, payment or entitlement.
+
+To reuse the main merchant, a future reviewed **service-role only** adapter may associate a request with an existing `public.orders` UUID. An atomic trigger requires an order for the same user, provider, currency, exact plan SKU `ai-market:sponsored|category|brand`, exact amount and `pending` status. A SASI balance top-up fails. The present main product catalogs do not yet contain these SKUs. No route here creates the real merchant order or updates paid status. Payment providers/entitlements are disabled and no ranking changes.
+
+Security tests run an isolated Supabase-compatible PostgreSQL 17 schema with a disposable `public.orders` ledger and prove price invariance, approved ownership, cross-account isolation, idempotency, forbidden payment/price UPDATE, rejection of SASI recharge, valid exact-SKU association and no state rollback.

@@ -3,6 +3,7 @@ import {useEffect,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {AI_MARKET_VENDOR_COPY} from "@/lib/ai-market-vendor-locale";
 import {AI_MARKET_CLAIMABLE_IDS,AI_MARKET_CLAIMABLE_LABELS} from "@/lib/ai-market-vendor-claims";
+import PromotionRequestsPanel from "./PromotionRequestsPanel";
 type Claim={id:string;product_id:string;company_name:string;official_site:string;status:string;created_at:string;reviewed_at?:string|null};
 export default function VendorClaimsPanel({initialProduct=""}:{initialProduct?:string}){
  const {lang}=useLingxiLang(),t=AI_MARKET_VENDOR_COPY[lang];
@@ -50,6 +51,6 @@ export default function VendorClaimsPanel({initialProduct=""}:{initialProduct?:s
    {claims.length>=3&&<p>{t.limit}</p>}
    {notice&&<p role="status" className="break-words">{renderedNotice}</p>}
   </form>
-  <section className="rounded-xl border p-5"><h2 className="text-xl font-bold">{t.paidTitle}</h2><p className="mt-2">{t.paid}</p></section>
+  <PromotionRequestsPanel/>
  </div>;
 }
