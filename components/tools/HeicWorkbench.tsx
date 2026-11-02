@@ -6,6 +6,7 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
+import {heicToJpgFiles} from "@/lib/tools/shared/practical-doc-tools";
 
 type C={run:string;batch:string;working:string;done:string;error:string};
 const D:Record<LingxiLang,C>={
@@ -23,18 +24,12 @@ const D:Record<LingxiLang,C>={
 export default function HeicWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
- async function one(file:File){
-   const heic2any=(await import("heic2any")).default;
-   const r=await heic2any({blob:file,toType:"image/jpeg",quality:.92});
-   const blob=(Array.isArray(r)?r[0]:r) as Blob;
-   return {name:file.name.replace(/\.(heic|heif)$/i,"")+".jpg",blob,mime:"image/jpeg",size:blob.size};
- }
+
  async function run(){
    if(!files.length)return;
    setBusy(true);setError("");setResults([]);
    try{
-     const out:ToolResultFile[]=[];
-     for(const f of files)out.push(await one(f));
+     const out:ToolResultFile[]=await heicToJpgFiles(files);
      setResults(out);
    }catch(e){setError(plainText(lang,"fileError"))}
    finally{setBusy(false)}
