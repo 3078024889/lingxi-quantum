@@ -1,6 +1,7 @@
 /** Sourced publisher facts. Payment methods are capabilities, not a guarantee of local checkout. */
 export type MarketResearchFact={payments?:string[];paymentSource?:string;extraPaymentSource?:string;price?:string;priceSource?:string;free?:string;freeSource?:string;region?:string;regionSource?:string;commercial?:string;commercialSource?:string;models?:string;modelsSource?:string};
-export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
+export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>=
+{
   "doubao": {
     "payments": [
       "支付宝（Android/Web/macOS）",
@@ -8,14 +9,14 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
       "Apple App Store（iOS）"
     ],
     "paymentSource": "https://lf9-cdn-tos.draftstatic.com/obj/ies-hotsoon-draft/grace_legal/doubao_member_copywrite_for_ai.html",
-    "price": "豆包专业版按网页或 App 订阅购买；各套餐实时金额以官方购买页为准",
-    "priceSource": "https://lf9-cdn-tos.draftstatic.com/obj/ies-hotsoon-draft/grace_legal/doubao_member_copywrite_for_ai.html",
+    "price": "豆包 App 基础版免费；中国 App Store 内购订阅公示：标准版连续月付 ¥68、加强版 ¥200/月、专业版 ¥500/月（iOS 渠道价，不代表网页/Android 同价）。火山方舟模型 API 独立计费：doubao-seed-2.0-mini 输入 0–32K 每百万 Token ¥0.40、输出 ¥4.00；按区域、模型及上下文长度差异计费",
+    "priceSource": "https://apps.apple.com/cn/app/id6459478672",
     "region": "中国大陆版 · 官方网页及 Android/iOS 提供服务；其他市场不与国内版混算",
     "regionSource": "https://www.doubao.com/legal/ey01",
     "models": "豆包包含中文对话、图片、文件和多模态功能；聊天模型与火山引擎豆包 API 服务独立计费",
     "modelsSource": "https://www.doubao.com/",
-    "free": "豆包网页有免费对话与部分创作能力；专业会员功能和使用次数由账号会员权益决定",
-    "freeSource": "https://www.doubao.com/",
+    "free": "豆包 App 基础版免费；付费等级与免费次数以各客户端说明为准。火山引擎的模型 API 免费额度与网页免费使用不通用",
+    "freeSource": "https://apps.apple.com/cn/app/id6459478672",
     "commercial": "豆包可用于创作，但生成内容发布、版权、肖像/隐私及商标须遵守用户协议；不能把付费会员等同所有素材商用授权。",
     "commercialSource": "https://www.doubao.com/legal/terms"
   },
@@ -46,12 +47,12 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     ],
     "paymentSource": "https://ppg.viviv.com/doodle/kLmGpQFM.html",
     "extraPaymentSource": "https://docs.qingque.cn/d/home/eZQCR1cjLJ5SqrV-AfCve0rYn",
-    "price": "会员套餐按网页权益表；API 视频/图片资源包独立计费，购买页显示金额",
-    "priceSource": "https://docs.qingque.cn/d/home/eZQCR1cjLJ5SqrV-AfCve0rYn",
+    "price": "可灵 AI 网页会员 Standard/Pro/Premier/Ultra+ 等具体金额按地区及订阅页实时结账；独立 API 官方套餐示例：视频 Standard Package 1 为 $500/3,250 units（180 天有效）；Kling 4.0 视频 720P 无输入视频为 1 unit/s，1080P 为 1.5 units/s；另有 Kling 3.0 和 4K 档",
+    "priceSource": "https://kling.ai/dev/pricing?packageFilter=flagship-180",
     "region": "可灵中国版与国际版入口/会员权益不同；本条为中国版官网资料",
     "regionSource": "https://ppg.viviv.com/doodle/kLmGpQFM.html",
-    "models": "可灵视频与图像生成模型适用视频/短剧制作；中国版与国际版的模型、权益和计费可能不同",
-    "modelsSource": "https://klingai.com/",
+    "models": "视频 API：Kling 4.0 720P/1080P、Kling 3.0 系列最高 4K（不同功能不同计费）；Image 3.0 支持 1K、2K 和 4K。网页会员标准版、专业版、高级版、企业版为另一权益体系",
+    "modelsSource": "https://kling.ai/dev/pricing?packageFilter=flagship-180",
     "free": "可灵中国版免费账号可体验部分图片/视频功能；不同模型/时长/水印消耗的积分按账户与活动变化",
     "freeSource": "https://klingai.com/",
     "commercial": "可灵AI 创作内容使用须遵守用户服务协议；非会员或未经书面许可不得移除可灵品牌标识/水印，或应显著标明由AI生成；不得侵犯第三方权益。",
@@ -101,7 +102,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "freeSource": "https://lumalabs.ai/llm-info"
   },
   "langchain": {
-    "payments": ["No payment required for open-source framework","Hosted cloud service billed separately"],
+    "payments": [
+      "No payment required for open-source framework",
+      "Hosted cloud service billed separately"
+    ],
     "paymentSource": "https://www.langchain.com/pricing",
     "price": "LangChain 开源框架免费；LangSmith Developer $0/席位/月（每月含 5,000 基础追踪），Plus $39/席位/月，超额按用量计费",
     "priceSource": "https://www.langchain.com/pricing",
@@ -115,12 +119,15 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://python.langchain.com/docs/integrations/"
   },
   "llamaindex": {
-    "payments": ["No payment required for open-source framework","Hosted cloud service billed separately"],
+    "payments": [
+      "No payment required for open-source framework",
+      "Hosted cloud service billed separately"
+    ],
     "paymentSource": "https://www.llamaindex.ai/pricing",
-    "price": "LlamaIndex 开源库免费；LlamaCloud 托管解析、检索与存储是另一个计费服务",
-    "priceSource": "https://github.com/run-llama/llama_index/blob/main/llama-index-core/pyproject.toml",
-    "free": "LlamaIndex Core 可免费本地安装；接入付费 API、LlamaCloud 另计",
-    "freeSource": "https://github.com/run-llama/llama_index/blob/main/llama-index-core/LICENSE",
+    "price": "LlamaIndex 开源框架免费；LlamaParse/LlamaCloud Free $0/月（10,000 credits），Starter $50/月（含 40,000 credits），Pro $500/月（含 400,000 credits）；额外用量依每项任务消耗 credits 计费；1,000 credits 标价 $1.25",
+    "priceSource": "https://www.llamaindex.ai/pricing",
+    "free": "云端 Free $0/月含 10,000 credits、100 用户与基础支持；开源框架另行免费安装，调用第三方模型/API 的费用另计",
+    "freeSource": "https://www.llamaindex.ai/pricing",
     "region": "开源库可本地安装；LlamaCloud 托管服务按厂商规定地区使用",
     "regionSource": "https://github.com/run-llama/llama_index",
     "commercial": "核心开源库 MIT，允许商业使用、修改和发行；须保留许可及版权声明，模型服务另计",
@@ -129,7 +136,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/run-llama/llama_index"
   },
   "llamacpp": {
-    "payments": ["No payment required for self-hosted software","Hardware and cloud compute billed separately"],
+    "payments": [
+      "No payment required for self-hosted software",
+      "Hardware and cloud compute billed separately"
+    ],
     "paymentSource": "https://github.com/ggml-org/llama.cpp",
     "price": "llama.cpp 开源软件免费；本地 GPU/CPU、模型文件、云端算力成本自理",
     "priceSource": "https://github.com/ggml-org/llama.cpp",
@@ -143,12 +153,15 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/ggml-org/llama.cpp"
   },
   "dify": {
-    "payments": ["Self-hosted Community Edition: no payment","Dify Cloud subscription: checkout options vary by country"],
+    "payments": [
+      "Self-hosted Community Edition: no payment",
+      "Dify Cloud subscription: checkout options vary by country"
+    ],
     "paymentSource": "https://dify.ai/pricing",
-    "price": "Community Edition 自托管无需订阅费；Dify Cloud 按消息额度和工作区订阅，企业多租户另需商业许可",
-    "priceSource": "https://github.com/langgenius/dify",
-    "free": "Community Edition 可自行部署；云端 Sandbox 额度另按官方方案",
-    "freeSource": "https://github.com/langgenius/dify",
+    "price": "Community Edition 开源自托管免费；Dify Cloud Sandbox 免费（含 200 条消息额度）；Professional $59/工作空间/月（年付 $590/年），Team $159/工作空间/月（年付 $1,590/年），模型厂商 API 费用另计；Enterprise 单独报价",
+    "priceSource": "https://dify.ai/pricing/dify-cloud",
+    "free": "Cloud Sandbox 免费，含 200 条模型消息额度、1 名成员、5 个应用、50 个知识库文档和 50 MB 存储；本地 Community 版免费，依 Dify Open Source License 使用",
+    "freeSource": "https://dify.ai/pricing/dify-cloud",
     "region": "自托管版可在自有服务器部署；云端服务涉及账号/地区和云计算费用",
     "regionSource": "https://github.com/langgenius/dify",
     "commercial": "可作为企业应用后端，但源码授权是加附加条件的 Apache 2.0：多租户服务需另购商业许可，前端 Logo/版权不可擅自去除",
@@ -157,7 +170,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/langgenius/dify"
   },
   "n8n": {
-    "payments": ["Self-hosted Community Edition: no payment","n8n Cloud subscription: checkout options vary by country"],
+    "payments": [
+      "Self-hosted Community Edition: no payment",
+      "n8n Cloud subscription: checkout options vary by country"
+    ],
     "paymentSource": "https://n8n.io/pricing/",
     "price": "n8n 自托管社区版可免费使用；n8n Cloud Starter €20/月（按年计费，含 2,500 次执行）",
     "priceSource": "https://n8n.io/pricing/",
@@ -171,7 +187,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercialSource": "https://support.n8n.io/article/can-i-use-your-license-for-my-use-case"
   },
   "comfyui": {
-    "payments": ["Local ComfyUI: no payment","Comfy Cloud subscription: checkout options vary by country"],
+    "payments": [
+      "Local ComfyUI: no payment",
+      "Comfy Cloud subscription: checkout options vary by country"
+    ],
     "paymentSource": "https://www.comfy.org/pricing",
     "price": "ComfyUI 本地开源软件免费；Comfy Cloud / 第三方节点另计",
     "priceSource": "https://support.comfy.org/articles/9806306061-about-comfy",
@@ -185,7 +204,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/Comfy-Org/ComfyUI"
   },
   "automatic1111": {
-    "payments": ["No payment required for self-hosted software","GPU, hosting and model costs billed separately"],
+    "payments": [
+      "No payment required for self-hosted software",
+      "GPU, hosting and model costs billed separately"
+    ],
     "paymentSource": "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
     "price": "Stable Diffusion WebUI 开源安装免费；运行 GPU/云算力和模型权重成本自理",
     "priceSource": "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
@@ -199,7 +221,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/AUTOMATIC1111/stable-diffusion-webui"
   },
   "fasterwhisper": {
-    "payments": ["No payment required for self-hosted software","CPU/GPU compute and hosting billed separately"],
+    "payments": [
+      "No payment required for self-hosted software",
+      "CPU/GPU compute and hosting billed separately"
+    ],
     "paymentSource": "https://github.com/SYSTRAN/faster-whisper",
     "price": "faster-whisper 本地开源软件免费；算力和下载模型成本另计",
     "priceSource": "https://github.com/SYSTRAN/faster-whisper",
@@ -213,7 +238,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/SYSTRAN/faster-whisper"
   },
   "openai-python": {
-    "payments": ["SDK: no payment","Credit / debit card (API billing)"],
+    "payments": [
+      "SDK: no payment",
+      "Credit / debit card (API billing)"
+    ],
     "paymentSource": "https://help.openai.com/en/articles/7232916-why-was-my-credit-card-declined",
     "price": "OpenAI 官方 Python SDK 免费；实际模型 API 按调用量计费，不包含在 SDK 许可中",
     "priceSource": "https://github.com/openai/openai-python/blob/main/pyproject.toml",
@@ -227,7 +255,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/openai/openai-python"
   },
   "whisper": {
-    "payments": ["Self-hosted Whisper: no payment","Credit / debit card (OpenAI API billing)"],
+    "payments": [
+      "Self-hosted Whisper: no payment",
+      "Credit / debit card (OpenAI API billing)"
+    ],
     "paymentSource": "https://github.com/openai/whisper",
     "extraPaymentSource": "https://help.openai.com/en/articles/7232916-why-was-my-credit-card-declined",
     "price": "Whisper 官方开源模型/推理代码免费；硬件与托管识别 API 另计",
@@ -242,7 +273,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/openai/whisper"
   },
   "vllm": {
-    "payments": ["No payment required for self-hosted software","GPU, hosting and model costs billed separately"],
+    "payments": [
+      "No payment required for self-hosted software",
+      "GPU, hosting and model costs billed separately"
+    ],
     "paymentSource": "https://github.com/vllm-project/vllm",
     "price": "vLLM 开源推理服务软件免费；GPU/云算力、模型授权与网络运营成本自行承担",
     "priceSource": "https://github.com/vllm-project/vllm",
@@ -256,7 +290,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/vllm-project/vllm"
   },
   "transformers": {
-    "payments": ["No payment required for open-source library","Hosted inference and compute billed separately"],
+    "payments": [
+      "No payment required for open-source library",
+      "Hosted inference and compute billed separately"
+    ],
     "paymentSource": "https://github.com/huggingface/transformers",
     "price": "Transformers 开源框架免费；模型下载、推理 GPU、托管 Inference Providers 另计",
     "priceSource": "https://github.com/huggingface/transformers",
@@ -270,7 +307,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://github.com/huggingface/transformers"
   },
   "openwebui": {
-    "payments": ["No payment required for self-hosted software","Model API and hosting billed separately"],
+    "payments": [
+      "No payment required for self-hosted software",
+      "Model API and hosting billed separately"
+    ],
     "paymentSource": "https://github.com/open-webui/open-webui",
     "price": "Open WebUI 自托管软件可自行安装；调用 OpenAI/Ollama 等模型的实际成本另计",
     "priceSource": "https://github.com/open-webui/open-webui",
@@ -335,12 +375,12 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
       "网银（阿里云百炼 API 账户）"
     ],
     "paymentSource": "https://help.aliyun.com/zh/model-studio/new-free-quota",
-    "price": "千问聊天产品与阿里云百炼 API 分开：聊天可体验；百炼模型调用按模型/Token/套餐计费",
-    "priceSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
+    "price": "千问聊天端基础体验与阿里云百炼 API 独立计费；百炼中国北京地域 qwen3.5-397b-a17b 输入每百万 Token ¥1.2、输出 ¥7.2（0–128K 输入区间）；qwen3.5-35b-a3b 输入 ¥0.4、输出 ¥3.2；国际地域/缓存/Batch/长上下文价格另算",
+    "priceSource": "https://help.aliyun.com/zh/model-studio/model-pricing",
     "region": "千问聊天服务和阿里云百炼 API 是不同入口；百炼提供北京、新加坡、香港、弗吉尼亚、法兰克福及东京区域，模型与价格随区域不同",
     "regionSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
-    "models": "千问聊天应用和阿里云百炼 API 是两个入口：百炼提供不同千问模型、Token 定价及地区版本",
-    "modelsSource": "https://help.aliyun.com/zh/model-studio/what-is-model-studio",
+    "models": "千问 Qwen3.5、Qwen3.7/3.8、Max、Omni、Long 等分别依模型、地域及上下文长度收费；价格示例仅限百炼华北2（北京）指定模型的 0–128K 输入区间",
+    "modelsSource": "https://help.aliyun.com/zh/model-studio/model-pricing",
     "free": "千问聊天可以免费体验基础对话；阿里云百炼开发者 API 可能提供适用的新用户额度，商业模型另按 Token 计费",
     "freeSource": "https://help.aliyun.com/zh/model-studio/new-free-quota",
     "commercial": "千问聊天与阿里云百炼 Wan/千问 API 是不同服务。百炼可集成到业务应用，具体输出权利、模型版权、发布限制及地区责任以实际模型服务协议为准，不能把 API 商用权益自动延伸至聊天版。",
@@ -385,7 +425,12 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://elevenlabs.io/pricing"
   },
   "anthropic-sdk-python": {
-    "payments": ["SDK: no payment","Credit / debit card (API billing)","ACH bank transfer (eligible API monthly invoicing)","PayPal / Venmo not accepted"],
+    "payments": [
+      "SDK: no payment",
+      "Credit / debit card (API billing)",
+      "ACH bank transfer (eligible API monthly invoicing)",
+      "PayPal / Venmo not accepted"
+    ],
     "paymentSource": "https://support.anthropic.com/en/articles/9402418-why-was-my-card-declined",
     "price": "Anthropic Python SDK 免费安装；Claude API 按模型实际输入/输出 Tokens 及工具用量计费；与个人 Claude Pro 分开",
     "priceSource": "https://github.com/anthropics/anthropic-sdk-python",
@@ -399,7 +444,11 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://platform.claude.com/docs/en/about-claude/models/overview"
   },
   "chatgpt": {
-    "payments": ["Credit / debit card (web checkout)","Apple App Store (iOS)","Google Play (Android)"],
+    "payments": [
+      "Credit / debit card (web checkout)",
+      "Apple App Store (iOS)",
+      "Google Play (Android)"
+    ],
     "paymentSource": "https://help.openai.com/en/articles/7905739-chatgpt-ios-app-upgrading-to-a-paid-subscription",
     "extraPaymentSource": "https://help.openai.com/en/articles/20001043-how-do-i-avoid-being-charged-twice-if-i-subscribe-to-chatgpt-on-ios-android-and-the-web",
     "price": "ChatGPT Plus $20/月（月付），含对应 Codex 使用额度；独立 API Key 按 API 价格计费，不包含在 Plus 订阅中",
@@ -414,7 +463,13 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercialSource": "https://openai.com/policies/terms-of-use/"
   },
   "claude": {
-    "payments": ["Credit / debit card (web and API billing)","Apple App Store (iOS)","Google Play (Android)","ACH bank transfer (eligible API monthly invoicing)","PayPal / Venmo not accepted"],
+    "payments": [
+      "Credit / debit card (web and API billing)",
+      "Apple App Store (iOS)",
+      "Google Play (Android)",
+      "ACH bank transfer (eligible API monthly invoicing)",
+      "PayPal / Venmo not accepted"
+    ],
     "paymentSource": "https://support.anthropic.com/en/articles/9402418-why-was-my-card-declined",
     "extraPaymentSource": "https://support.anthropic.com/en/articles/9266495-how-do-i-sign-up-for-claude-pro-on-the-claude-app-for-ios",
     "price": "Claude Free $0；Pro $20/月（月付），年付 $200/年；API 费用另计",
@@ -433,7 +488,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "priceSource": "https://one.google.com/about/plans?hl=en_US",
     "free": "Gemini 网页有免费访问级别；Gemini 开发者 API 有适用模型免费额度，调用量和地区另有约束",
     "freeSource": "https://ai.google.dev/gemini-api/docs/pricing",
-    "payments": ["Google One / Google Play billing","Payment options vary by country at checkout"],
+    "payments": [
+      "Google One / Google Play billing",
+      "Payment options vary by country at checkout"
+    ],
     "paymentSource": "https://support.google.com/googleone/answer/16476811?co=GENIE.Platform%3DAndroid&hl=en",
     "extraPaymentSource": "https://support.google.com/googleplay/answer/2651410",
     "region": "Gemini Web、Gemini API、Google One 订阅属于不同商品/计费和地区范围；不将 Google One 服务地区等同 Gemini 应用可用地区",
@@ -444,7 +502,11 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercialSource": "https://policies.google.com/terms/generative-ai/use-policy?hl=en"
   },
   "grok": {
-    "payments": ["Web checkout via Stripe","Apple App Store (iOS)","Google Play (Android)"],
+    "payments": [
+      "Web checkout via Stripe",
+      "Apple App Store (iOS)",
+      "Google Play (Android)"
+    ],
     "paymentSource": "https://help.x.com/en/using-x/subscriptions",
     "extraPaymentSource": "https://help.x.com/en/using-x/x-subscription",
     "price": "Grok Free $0/月；SuperGrok $30/月、SuperGrok Plus $100/月为官方公开参考；The X Subscription 的个人套餐另有定价",
@@ -459,7 +521,15 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://docs.x.ai/grok/overview"
   },
   "midjourney": {
-    "payments": ["Credit / debit card","Apple Pay (some regions)","Amazon Pay (some regions)","Alipay (some regions)","Google Pay (some regions)","Link (some regions)","PayPal not supported"],
+    "payments": [
+      "Credit / debit card",
+      "Apple Pay (some regions)",
+      "Amazon Pay (some regions)",
+      "Alipay (some regions)",
+      "Google Pay (some regions)",
+      "Link (some regions)",
+      "PayPal not supported"
+    ],
     "paymentSource": "https://docs.midjourney.com/hc/en-us/articles/27868831972365-Accepted-Payment-Methods",
     "price": "Basic $10/月（年付折合 $8/月）；Standard $30/月（年付 $24/月）；Pro $60/月（年付 $48/月）；Mega $120/月（年付 $96/月）",
     "priceSource": "https://docs.midjourney.com/hc/en-us/articles/27870484040333-Comparing-Midjourney-Plans",
@@ -473,7 +543,10 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "commercialSource": "https://docs.midjourney.com/hc/en-us/articles/32083055291277-Terms-of-Service"
   },
   "ollama": {
-    "payments": ["Local runtime: no payment","Cloud plans and usage credits billed at checkout"],
+    "payments": [
+      "Local runtime: no payment",
+      "Cloud plans and usage credits billed at checkout"
+    ],
     "paymentSource": "https://ollama.com/pricing",
     "price": "Ollama 本地运行免费；云模型按百万 Tokens 用量计费；Pro $20/月、Max $100/月、Team $500/月，含不同额度云端积分",
     "priceSource": "https://ollama.com/pricing",
@@ -505,7 +578,16 @@ export const RESEARCHED_FACTS:Readonly<Record<string,MarketResearchFact>>={
     "modelsSource": "https://docs.replit.com/replitai/assistant/"
   },
   "runway": {
-    "payments": ["Credit / debit card","Amazon Pay","Apple Pay","Google Pay","Stripe Instant Bank Payments (US only)","Alipay","Cash App Pay","WeChat Pay"],
+    "payments": [
+      "Credit / debit card",
+      "Amazon Pay",
+      "Apple Pay",
+      "Google Pay",
+      "Stripe Instant Bank Payments (US only)",
+      "Alipay",
+      "Cash App Pay",
+      "WeChat Pay"
+    ],
     "paymentSource": "https://help.runwayml.com/hc/en-us/articles/30657959470483-What-payment-methods-are-available",
     "price": "Runway Standard 年付折合 $12/月，年付一次结算；每月 625 积分；Pro 及 Unlimited 每月 2,250 积分；Gen-4.5 视频按 12 积分/秒",
     "priceSource": "https://runway.com/pricing",
