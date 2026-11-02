@@ -10,15 +10,15 @@ const batches=['001','002','003'].map(n=>{
  return {batch,pack};
 });
 const additions={
- '001':{'canva-magic-studio':['payment'],gamma:['commercial'],'notion-ai':['commercial'],
-  'figma-make':['models','commercial','payment'],descript:['commercial']},
+ '001':{'canva-magic-studio':['payment'],gamma:['commercial','models'],'notion-ai':['commercial'],
+  'figma-make':['models','commercial','payment'],pika:['payment'],descript:['commercial','payment']},
  '002':{'github-copilot':['regions'],'mistral-le-chat':['commercial','company'],poe:['price','free','commercial'],
   'adobe-firefly':['regions','company','payment'],recraft:['company'],synthesia:['payment','company'],
   'microsoft-copilot':['free'],'freepik-ai':['company','free']},
  '003':{'groqcloud':['price','company'],'fal-ai':['free'],'together-ai':['free','payment']}
 };
 function find(pack,id){return pack.products.find(p=>p.id===id)}
-test('exactly 27 explicitly sourced facts were added across all three held batches',()=>{
+test('exactly 30 explicitly sourced facts were added across all three held batches',()=>{
  let count=0;
  for(const [i,fields] of Object.entries(additions)){
   const pack=batches[Number(i)-1].pack;
@@ -34,7 +34,7 @@ test('exactly 27 explicitly sourced facts were added across all three held batch
    }
   }
  }
- assert.equal(count,27);
+ assert.equal(count,30);
 });
 test('the 210 observed/missing/conflict slots reconcile, without publishing anyone',()=>{
  const summary=batches.map(({batch,pack})=>auditOfficialObservations(pack,batch,{today:'2026-11-02'}));
@@ -46,7 +46,7 @@ test('the 210 observed/missing/conflict slots reconcile, without publishing anyo
  const f=JSON.parse(source.slice(a,b));
  const report=buildEvidenceReadiness({curatedIds:ids,curatedFacts:f,cohorts:batches.map(x=>x.batch),
   observations:batches.map(x=>x.pack),asOf:'2026-11-02'});
- assert.deepEqual([report.candidateIntake.observed,report.candidateIntake.missing,report.candidateIntake.conflict],[167,43,0]);
+ assert.deepEqual([report.candidateIntake.observed,report.candidateIntake.missing,report.candidateIntake.conflict],[170,40,0]);
  assert.equal(report.candidateIntake.factCells,210);
  assert.equal(report.candidateIntake.publishReady,0);
  assert.equal(report.candidateIntake.publishedFromStaging,0);
