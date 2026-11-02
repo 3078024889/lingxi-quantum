@@ -47,6 +47,9 @@ jobs:
           --workers=2 --reporter=list,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/delivery-results.json
+      - name: Export every-tool operation coverage (not a pass claim)
+        if: always()
+        run: node scripts/audit/real-e2e-coverage-v118.mjs
       - name: Preserve evidence including failures
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
