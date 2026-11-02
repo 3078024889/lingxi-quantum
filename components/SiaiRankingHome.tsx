@@ -53,7 +53,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
     <p>{p.about}</p><p>{p.features.join(" · ")}</p>
     <dl><div><dt>{t.free}</dt><dd>{p.free}</dd></div><div><dt>{t.price}</dt><dd>{p.price}</dd></div><div><dt>{t.region}</dt><dd>{p.region}</dd></div><div><dt>{t.payment}</dt><dd>{p.payment}</dd></div><div><dt>{t.models}</dt><dd>{p.models}</dd></div><div><dt>{t.license}</dt><dd>{p.commercial}</dd></div></dl>
-    <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
+    <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.paymentSource,t.payment],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
     <a className="siai-detail-primary-link" href={"/siai/"+lang+"/"+encodeURIComponent(p.id)}>{ui.fullDetails} ↗</a>
    </section>;
  return <main className="siai-home" lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
@@ -125,7 +125,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
         <td><span className="siai-cell-preview" title={p.free}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
         <td><span className="siai-cell-preview" title={p.price}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
         <td><span className="siai-cell-preview" title={p.region}>{short(p.region,100)}</span><Source href={p.regionSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.payment}>{short(p.payment,88)}</span></td>
+        <td><span className="siai-cell-preview" title={p.payment}>{short(p.payment,88)}</span><Source href={p.paymentSource} label={t.source}/></td>
         <td><span className="siai-cell-preview" title={p.models}>{short(displayFact(p,"models"),95)}</span></td>
         <td><span className="siai-cell-preview" title={p.commercial}>{short(p.commercial,100)}</span><Source href={p.commercialSource} label={t.source}/></td>
         <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button>
