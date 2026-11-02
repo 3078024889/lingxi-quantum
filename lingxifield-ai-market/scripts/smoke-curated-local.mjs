@@ -27,6 +27,7 @@ try{
  if(!ready)throw Error('NEXT_START_NOT_READY');
  const paths=languages.flatMap(lang=>[
   '/'+lang+'/ai',
+  '/'+lang+'/companies',
   ...ids.map(id=>'/'+lang+'/platform/'+id)
  ]);
  const failures=[],statuses={};let cursor=0,checked=0;
