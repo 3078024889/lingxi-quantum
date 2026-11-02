@@ -24,8 +24,9 @@ test("video-toolkit: an actual synthesized WAV becomes a decodable MP3 file thro
  await page.goto("/tools/video-toolkit?lang=en");
  const work=page.locator("[data-video-toolkit]");
  await expect(work).toHaveAttribute("data-hydrated","true");
- await work.locator('input[type="file"]').first().setInputFiles({name:"private-tone.wav",mimeType:"audio/wav",buffer:toneWav()});
  await work.getByRole("button",{name:"Extract MP3",exact:true}).click();
+ await work.locator('input[type="file"]').first().setInputFiles({name:"private-tone.wav",mimeType:"audio/wav",buffer:toneWav()});
+ await expect(work.getByRole("button",{name:"Start processing",exact:true})).toBeEnabled();
  await work.getByRole("button",{name:"Start processing",exact:true}).click();
  const saved=await output(page);
  expect(saved.name).toBe("private-tone.mp3");
