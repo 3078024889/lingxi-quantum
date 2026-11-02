@@ -2,16 +2,18 @@ import {NextResponse} from 'next/server';
 import {MARKET_API_PRODUCTS,apiServiceOffer} from '../../../../lib/market-api-service-catalog';
 import {researchedFact,MARKET_RESEARCH_CHECKED_AT} from '../../../../lib/market-researched-facts';
 import {companyEvidenceFor,companyPresentationFor} from '../../../../lib/market-company-evidence';
-import {auditSourceCoverage,auditCompanyCoverage} from '../../../../lib/market-source-coverage.mjs';
+import {auditSourceCoverage,auditCompanyCoverage,auditPriceDetail} from '../../../../lib/market-source-coverage.mjs';
 import {seoGeoObservations,coverageForSeoGeo} from '../../../../lib/seo-geo-observations';
 import rawExperiences from '../../../../data/user-experiences.json';
 import rawMetrics from '../../../../data/evidence.json';
-import {paymentDeploymentReadiness} from '../../../../lib/market-billing-readiness.mjs';
+import {paymentDeploymentReadiness,mainSiteBillingCompatibility} from '../../../../lib/market-billing-readiness.mjs';
 /** Read-only, non-personal coverage report; no external API calls or credentials. */
 export const dynamic='force-dynamic';
 export function GET(){
  const productIds=[...MARKET_API_PRODUCTS];
- const sourceCoverage=auditSourceCoverage(productIds.map(id=>({id,facts:researchedFact(id)})));
+ const sourceRows=productIds.map(id=>({id,facts:researchedFact(id)}));
+ const sourceCoverage=auditSourceCoverage(sourceRows);
+ const priceCoverage=auditPriceDetail(sourceRows);
  const corporateCoverage=auditCompanyCoverage(productIds.map(id=>{
   const publisher=companyPresentationFor(id,id);
   return {name:publisher.name,kind:publisher.kind,evidence:companyEvidenceFor(id)};
@@ -27,7 +29,7 @@ export function GET(){
  const seo=coverageForSeoGeo();
  return NextResponse.json({
   scope:'32_curated_products',checkedAt:'2026-11-02',
-  sourceFacts:{...sourceCoverage,editorialLastReviewed:MARKET_RESEARCH_CHECKED_AT,
+  sourceFacts:{...sourceCoverage,priceCoverage,editorialLastReviewed:MARKET_RESEARCH_CHECKED_AT,
    warning:'Source-backed descriptions are not an independent measurement of usability, current checkout price or model quality.'},
   companies:corporateCoverage,
   apiBilling:{classifiedProducts:productIds.length,productsWithExplicitDeveloperUnitRates:pricedApiProducts.length,
@@ -36,7 +38,7 @@ export function GET(){
   independentEvidence:{verifiedMarketMetricRecords:measured.length,
    storedVisitorExperienceRows:experiences.length,verifiedSeoGeoRecords:seoGeoObservations.length,
    seoGeoStatus:seo.status,seoGeo:seo},
-  merchantBilling:{liveProviderCount:pay.filter(x=>x.checkoutAvailable).length,
+  merchantBilling:{mainSiteReuse:mainSiteBillingCompatibility(),liveProviderCount:pay.filter(x=>x.checkoutAvailable).length,
    providers:pay.map(x=>({provider:x.provider,mode:x.mode})),
    checkoutStatus:'not_live'},
   limitations:'Missing independent records are reported as missing; never synthetic zero rankings or fabricated reviews.'
