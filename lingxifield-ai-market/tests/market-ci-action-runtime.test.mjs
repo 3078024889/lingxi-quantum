@@ -22,7 +22,7 @@ test('standalone SIAI app has a path-scoped release gate and isolated PostgreSQL
  assert.match(discovery,/discover-ai-publishers\.test\.mjs/);
  assert.match(discovery,/productionPublishAllowed/);
  assert.doesNotMatch(discovery,/refs\/heads\/main.*git push/);
- const discoveryActions=[...discovery.matchAll(/uses:\\s*(actions\\/(?:checkout|setup-node|upload-artifact))@([^\\s#]+)/g)];
+ const discoveryActions=[...discovery.matchAll(/uses:\s*(actions\/(?:checkout|setup-node|upload-artifact))@([^\s#]+)/g)];
  assert.equal(discoveryActions.length,3);
  for(const [,action,sha] of discoveryActions){
   assert.match(sha,/^[a-f0-9]{40}$/,action+': discovery action must be pinned');
