@@ -1,0 +1,124 @@
+'use client';
+import type {Platform} from '../lib/data';
+import type {Language} from '../lib/v2';
+import type {RegionCode} from '../lib/global-region-market';
+import {globalRegionFact,regionCopy,regionName} from '../lib/global-region-market';
+import {localizedPaymentName} from './market-global-access';
+import {globalRegionSummary,regionPresentation} from '../lib/region-presentation';
+import {accessFor,accessValue} from '../lib/platform-access-facts';
+import {summaryFor,shortDramaEvidence,shortDramaSummary,MARKET_SCREEN_COPY} from '../lib/market-v36-screening';
+import MarketRowActions from './market-row-actions';
+import {paymentFactsFor,matchingPaymentMethods} from '../lib/market-payment-facts';
+import type {MarketPayment} from '../lib/market-v36-screening';
+import {commercialEvidence} from '../lib/market-commercial-evidence';
+import {localizedProductSummary} from '../lib/market-product-locale';
+import {localizedCatalogFact,localizedLoginFact} from '../lib/market-fact-locale';
+import {researchedFact} from '../lib/market-researched-facts';
+import {companyPresentationFor} from '../lib/market-company-evidence';
+import {capabilityProfile} from '../lib/capability-profiles';
+
+const columns:Record<Language,string[]>={
+ zh:['序号','AI 工具 / 厂商','核心优势 · 擅长做什么','免费额度','真实价格','所在国家可用','付款 · 登录','短剧 / 短视频','代表模型','商用授权','操作'],
+ en:['No.','Tool / Publisher','Core strengths','Free usage','Price','Country support','Payment / Login','AI short films / clips','Models','Commercial','Actions'],
+ ja:['番号','ツール / 企業','強みと用途','無料枠','料金','地域対応','決済 / 登録','短編映像 / 動画','モデル','商用','操作'],
+ ko:['번호','도구 / 기업','강점과 사용법','무료 한도','가격','국가 지원','결제 / 로그인','단편 영화 / 영상','모델','상업 이용','작업'],
+ fr:['N°','Outil / Éditeur','Atouts et usages','Gratuit','Tarifs','Disponibilité','Paiement / Accès','Courts-métrages / clips','Modèles','Commercial','Actions'],
+ de:['Nr.','Tool / Anbieter','Stärken und Einsatz','Gratis','Preis','Land','Zahlung / Anmeldung','Kurzfilm / Videoclips','Modelle','Gewerblich','Aktionen'],
+ es:['N.º','Producto / Empresa','Fortalezas','Gratis','Precio','País','Pago / Acceso','Cortos / videoclips','Modelos','Comercial','Acciones'],
+ pt:['N.º','Produto / Empresa','Pontos fortes','Grátis','Preço','País','Pagamento / Acesso','Curtas / videoclipes','Modelos','Comercial','Ações'],
+ ar:['الرقم','الأداة / الشركة','أهم المزايا','المجاني','السعر','توفر البلد','الدفع / الدخول','أفلام قصيرة / مقاطع','النماذج','تجاري','إجراءات']
+};
+const PUBLISHER_ROW:Record<Language,{company:string;founded:string;project:string;listed:string;parent:string;noListing:string;openProject:string;noYear:string}>={
+ zh:{company:'公司',founded:'成立',project:'项目始于',listed:'上市',parent:'母公司上市',noListing:'未见公开上市资料',openProject:'独立开源项目',noYear:'年份未公布'},
+ en:{company:'Company',founded:'Founded',project:'Project since',listed:'Listed',parent:'Listed parent',noListing:'No public listing confirmed',openProject:'Open-source project',noYear:'Year undisclosed'},
+ ja:{company:'会社',founded:'設立',project:'公開開始',listed:'上場',parent:'親会社上場',noListing:'上場情報未確認',openProject:'OSSプロジェクト',noYear:'年未公表'},
+ ko:{company:'회사',founded:'설립',project:'프로젝트 시작',listed:'상장',parent:'모기업 상장',noListing:'상장 정보 미확인',openProject:'오픈소스 프로젝트',noYear:'연도 미공개'},
+ fr:{company:'Société',founded:'Fondée',project:'Projet depuis',listed:'Bourse',parent:'Groupe coté',noListing:'Cotation non confirmée',openProject:'Projet libre',noYear:'Année non publiée'},
+ de:{company:'Firma',founded:'Gegründet',project:'Projekt seit',listed:'Börse',parent:'Mutterkonzern börsennotiert',noListing:'Keine bestätigte Börsennotierung',openProject:'Open-Source-Projekt',noYear:'Jahr nicht veröffentlicht'},
+ es:{company:'Empresa',founded:'Fundación',project:'Proyecto desde',listed:'Bolsa',parent:'Matriz cotizada',noListing:'Cotización no confirmada',openProject:'Proyecto abierto',noYear:'Año no publicado'},
+ pt:{company:'Empresa',founded:'Fundação',project:'Projeto desde',listed:'Bolsa',parent:'Controladora listada',noListing:'Cotação não confirmada',openProject:'Projeto aberto',noYear:'Ano não publicado'},
+ ar:{company:'الشركة',founded:'تأسست',project:'بدأ المشروع',listed:'الإدراج',parent:'الشركة الأم مدرجة',noListing:'لا يوجد إدراج مؤكد',openProject:'مشروع مفتوح المصدر',noYear:'السنة غير منشورة'}
+};
+
+export const V36_COL_COUNT=11;
+export function marketRowTitles(language:Language){return columns[language];}
+const localizedNotice:Record<Language,string>={
+ zh:'尚无可靠资料',en:'Not verified',ja:'未確認',ko:'미확인',fr:'Non vérifié',de:'Nicht geprüft',es:'Sin verificar',pt:'Não verificado',ar:'لم يتم التحقق'
+};
+const SPECIFIC:Record<Language,Record<"free"|"price"|"models"|"commercial"|"login"|"payment",string>>={
+zh:{free:"官网未列出统一免费额度",price:"未公布统一价格",models:"未公布具体模型",commercial:"查看商用许可",login:"查看官网登录",payment:"本地支付方式未说明"},
+en:{free:"Free allowance differs by plan",price:"No single published price",models:"Models not detailed",commercial:"Check commercial terms",login:"See official sign-in",payment:"Local payments not specified"},
+ja:{free:"無料枠はプラン別",price:"統一価格は未公表",models:"モデルの詳細未公開",commercial:"商用条件を確認",login:"公式ログインを確認",payment:"地域別決済未記載"},
+ko:{free:"무료 한도는 요금제별",price:"통합 가격 미공개",models:"모델 상세 미공개",commercial:"상업용 약관 확인",login:"공식 로그인 확인",payment:"지역별 결제 미공개"},
+fr:{free:"Quota selon formule",price:"Pas de prix unique",models:"Modèles non détaillés",commercial:"Vérifier la licence",login:"Voir la connexion",payment:"Paiement local non indiqué"},
+de:{free:"Gratis-Limit je Tarif",price:"Kein Einheitspreis",models:"Modelle nicht angegeben",commercial:"Lizenz prüfen",login:"Anmeldung prüfen",payment:"Regionale Zahlung unklar"},
+es:{free:"Gratis según plan",price:"Sin precio único",models:"Modelos sin detalle",commercial:"Ver licencia",login:"Consultar acceso",payment:"Pago local no indicado"},
+pt:{free:"Grátis conforme plano",price:"Sem preço único",models:"Modelos sem detalhes",commercial:"Ver licença",login:"Consultar acesso",payment:"Pagamento local não indicado"},
+ar:{free:"المجاني حسب الخطة",price:"لا يوجد سعر موحد",models:"النماذج غير مفصلة",commercial:"راجع الترخيص",login:"راجع التسجيل",payment:"الدفع المحلي غير موضح"},
+};
+const isUnknownText=(v:string|undefined)=>!v||/^(待核验|尚无可靠资料|以官网为准|暂无可核验资料|not verified)$/i.test(v.trim());
+export default function MarketMatrixRow({platform:p,position,language,region,paymentFilter='any',onDetail,onToggleCompare,isCompared}:{
+ platform:Platform;position:number;language:Language;region:RegionCode;paymentFilter?:MarketPayment;onDetail:()=>void;onToggleCompare:()=>void;isCompared:boolean;
+}){
+ const t=MARKET_SCREEN_COPY[language],h=marketRowTitles(language),specific=SPECIFIC[language];
+ const summary=summaryFor(p),guide=p.guide,access=accessFor(p.id),research=researchedFact(p.id);
+ const publisher=companyPresentationFor(p.id,p.company),pubLabel=PUBLISHER_ROW[language],capability=capabilityProfile(p.id);
+ const listingText=publisher.listingState==='listed_parent'?pubLabel.parent:publisher.listingState==='not_applicable'?pubLabel.openProject:pubLabel.noListing;
+ const r=region==='GLOBAL'?null:globalRegionFact(p.id,region);
+ const regionList=regionPresentation(p.id,language);
+ const regionText=r?regionCopy(language).status[r.policy.status]:(regionList.total?(regionList.complete?regionList.words.complete:regionList.words.partial):regionList.words.empty);
+ const statusUnsupported=r?.policy.status==='unsupported';
+ const free=p.conditions?.find(x=>x.label==='免费额度');
+ const price=p.conditions?.find(x=>x.label==='价格');
+ const commercial=p.conditions?.find(x=>x.label==='商用条件');
+ const rawCost=price?.text||guide?.cost||p.price;
+ const cost=localizedCatalogFact(p.id,language,'price',isUnknownText(rawCost)?(research?.price||specific.price):rawCost);
+ const rawFree=free?.text||guide?.free||p.free;
+ const allowance=localizedCatalogFact(p.id,language,'free',isUnknownText(rawFree)?(research?.free||specific.free):rawFree);
+ const rawModels=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models;
+ const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?(research?.models||specific.models):rawModels||research?.models||specific.models);
+ const rawCommercial=access?.commercial||commercial?.text||research?.commercial;
+ const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
+ const licenseFact=commercialEvidence(p.id,language);
+ const paymentFact=paymentFactsFor(p.id,region);
+ const allPayments=paymentFact.methods;
+ const matched=paymentFilter==='any'?[]:matchingPaymentMethods(p.id,paymentFilter,region);
+ const selfHosted=new Set(['langchain','llamaindex','llamacpp','dify','n8n','comfyui','automatic1111','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui','ollama']).has(p.id);
+ const locallyFree=selfHosted&&!allPayments.length;
+ const paymentMethods=allPayments.length?
+  [...new Set([...matched,...allPayments])].slice(0,5).map(x=>localizedPaymentName(x,language)).join(' · '):
+  locallyFree?({zh:'自托管核心免费 · 云服务另付',en:'Self-hosted core free; cloud billed separately',ja:'本体無料・決済不要',ko:'로컬 무료·결제 불필요',fr:'Logiciel local gratuit',de:'Lokale Software kostenlos',es:'Software local gratuito',pt:'Software local gratuito',ar:'البرنامج المحلي مجاني'} as Record<Language,string>)[language]:
+  (language==='zh'?'以所选地区的结算方式为准':specific.payment);
+ const paymentScope=paymentFact.scope==='unsupported'?regionCopy(language).status.unsupported:'';
+ const login=p.id==='anthropic-sdk-python'?(language==='zh'?'SDK可直接安装；调用API需官方账号与密钥':'Install SDK freely; API account and key required'):
+ (locallyFree?(language==='zh'?'本地安装不要求平台注册；外部云API需另登录':'Local install needs no publisher account; external APIs have their own logins'):localizedLoginFact(language,accessValue(access?.login,specific.login)));
+ const drama=shortDramaEvidence(p.id);
+ const videoTool=Boolean(drama)||/视频|video|film|clip|短剧/i.test(p.category);
+ return <tr className="marketOverviewRow marketV36Row" data-market-id={p.id}>
+   <td className="marketOverviewRank" data-label={h[0]}>{position}</td>
+   <td className="marketOverviewIdentity" data-label={h[1]}>
+    <button type="button" className="platformName" onClick={onDetail}>
+     <span className="brandIcon" aria-hidden="true">{p.symbol}</span>
+     <span className="marketPublisherIdentity"><strong>{p.name}</strong><small>{pubLabel.company} · {publisher.name}</small><small>{publisher.kind==='company'?pubLabel.founded:pubLabel.project} · {publisher.year||pubLabel.noYear}</small><small>{pubLabel.listed} · {listingText}</small></span>
+    </button>
+   </td>
+   <td className="marketOverviewStrength" data-label={h[2]}>
+    <strong>{localizedProductSummary(p.id,language)||summary.headline}</strong>
+    {language==='zh'?<p className="marketOverviewUses">{capability?.capabilities.slice(0,3).map(item=>item.name+'：'+item.outcome).join('；')||summary.capabilities}</p>:null}
+    <a href={summary.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>
+    <button type="button" className="marketV36More" onClick={onDetail}>{t.more} ↗</button>
+   </td>
+   <td className="marketOverviewFree" data-label={h[3]}><strong>{allowance}</strong>{(free?.source||research?.freeSource)&&<a href={free?.source||research?.freeSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewPrice" data-label={h[4]}><strong>{cost}</strong>{(price?.source||research?.priceSource)&&<a href={price?.source||research?.priceSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</td>
+   <td className="marketOverviewRegion" data-label={h[5]}>
+    <strong>{globalRegionSummary(p.id,language)}</strong>
+    {(region!=='GLOBAL'||regionList.total>0)&&<span className={'marketRegionStatus marketRegionStatus-'+(r?.policy.status||'unknown')}>{region==='GLOBAL'?regionText:regionName(region,language)+' · '+regionText}</span>}
+    {(r?.policy.source||regionList.source||research?.regionSource)&&<a href={r?.policy.source||regionList.source||research?.regionSource} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}
+   </td>
+   <td className="marketV36Login" data-label={h[6]}><strong title={allPayments.map(x=>localizedPaymentName(x,language)).join(' · ')}>{p.id==='anthropic-sdk-python'?(language==='zh'?'SDK免费；API单独计费':'SDK free; API billed separately'):paymentMethods}</strong>{(locallyFree||Boolean(paymentScope))&&<small>{locallyFree?(language==='zh'?'模型 API/云服务单独计费':specific.payment):paymentScope}</small>}{(paymentFact.source|| (!allPayments.length?research?.priceSource:null))&&<a href={paymentFact.source||(research?.priceSource||'#')} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}<small>{login}</small><button type="button" className="marketV37More" onClick={onDetail}>{t.more} ↗</button></td>
+   <td className="marketV36Drama" data-label={h[7]}>{drama?<><span className="marketDramaYes">{shortDramaSummary(p.id,language)||t.dramaYes}</span><a href={drama} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:(videoTool?<span className="marketDramaUnknown">{t.dramaUnknown}</span>:<span className="marketDramaNA" aria-label="Not applicable">—</span>)}</td>
+   <td className="marketV36Model" data-label={h[8]}>{models}</td>
+   <td className="marketV36Business" data-label={h[9]}>{licenseFact?<><strong className="marketLicenseVerdict">{licenseFact.label}</strong><p className="marketLicenseCondition">{licenseFact.condition}</p><a href={licenseFact.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a></>:<><strong className="marketLicenseUnknown">{language==='zh'?'查看商用授权条款':specific.commercial}</strong>{language==='zh'&&!isUnknownText(rawCommercial)&&<p className="marketLicenseCondition">{rawCommercial}</p>}{(access?.commercialSource||commercial?.source)&&<a href={access?.commercialSource||commercial?.source} target="_blank" rel="noopener noreferrer">{t.source} ↗</a>}</>}</td>
+   <td className="marketOverviewActions" data-label={h[10]}><MarketRowActions language={language} platform={p} onDetail={onDetail} onToggleCompare={onToggleCompare} isCompared={isCompared}/></td>
+  </tr>;
+}

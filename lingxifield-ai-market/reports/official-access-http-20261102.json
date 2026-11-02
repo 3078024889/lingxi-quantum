@@ -1,0 +1,249 @@
+{
+  "scope": "32_official_public_entrypoints",
+  "mode": "public_http_head",
+  "observedAt": "2026-11-02T02:36:50.264Z",
+  "total": 32,
+  "states": {
+    "access_control_or_bot_challenge": 4,
+    "http_reachable": 23,
+    "network_unavailable": 1,
+    "redirect_needs_review": 4
+  },
+  "results": [
+    {
+      "id": "chatgpt",
+      "kind": "official",
+      "host": "chatgpt.com",
+      "result": "access_control_or_bot_challenge",
+      "status": 403
+    },
+    {
+      "id": "claude",
+      "kind": "official",
+      "host": "claude.ai",
+      "result": "access_control_or_bot_challenge",
+      "status": 403
+    },
+    {
+      "id": "gemini",
+      "kind": "official",
+      "host": "gemini.google.com",
+      "result": "network_unavailable"
+    },
+    {
+      "id": "grok",
+      "kind": "official",
+      "host": "grok.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "perplexity",
+      "kind": "official",
+      "host": "www.perplexity.ai",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "deepseek",
+      "kind": "official",
+      "host": "www.deepseek.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "qwen",
+      "kind": "official",
+      "host": "chat.qwen.ai",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "doubao",
+      "kind": "official",
+      "host": "www.doubao.com",
+      "result": "redirect_needs_review",
+      "status": 302,
+      "redirectHost": "www.doubao.com"
+    },
+    {
+      "id": "jimeng",
+      "kind": "official",
+      "host": "jimeng.jianying.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "kling",
+      "kind": "official",
+      "host": "app.klingai.com",
+      "result": "redirect_needs_review",
+      "status": 302,
+      "redirectHost": "app.klingai.com"
+    },
+    {
+      "id": "runway",
+      "kind": "official",
+      "host": "runwayml.com",
+      "result": "redirect_needs_review",
+      "status": 308,
+      "redirectHost": "runway.com"
+    },
+    {
+      "id": "luma",
+      "kind": "official",
+      "host": "lumalabs.ai",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "midjourney",
+      "kind": "official",
+      "host": "www.midjourney.com",
+      "result": "access_control_or_bot_challenge",
+      "status": 403
+    },
+    {
+      "id": "suno",
+      "kind": "official",
+      "host": "suno.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "elevenlabs",
+      "kind": "official",
+      "host": "elevenlabs.io",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "lovable",
+      "kind": "official",
+      "host": "lovable.dev",
+      "result": "access_control_or_bot_challenge",
+      "status": 403
+    },
+    {
+      "id": "replit",
+      "kind": "official",
+      "host": "replit.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "ollama",
+      "kind": "official",
+      "host": "ollama.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "llamacpp",
+      "kind": "repository",
+      "host": "github.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "vllm",
+      "kind": "official",
+      "host": "vllm.ai",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "langchain",
+      "kind": "official",
+      "host": "www.langchain.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "llamaindex",
+      "kind": "official",
+      "host": "www.llamaindex.ai",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "transformers",
+      "kind": "documentation",
+      "host": "huggingface.co",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "comfyui",
+      "kind": "official",
+      "host": "www.comfy.org",
+      "result": "redirect_needs_review",
+      "status": 301,
+      "redirectHost": "comfy.org"
+    },
+    {
+      "id": "automatic1111",
+      "kind": "repository",
+      "host": "github.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "whisper",
+      "kind": "repository",
+      "host": "github.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "fasterwhisper",
+      "kind": "repository",
+      "host": "github.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "openwebui",
+      "kind": "official",
+      "host": "openwebui.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "dify",
+      "kind": "official",
+      "host": "www.dify.ai",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "n8n",
+      "kind": "official",
+      "host": "n8n.io",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "openai-python",
+      "kind": "documentation",
+      "host": "developers.openai.com",
+      "result": "http_reachable",
+      "status": 200
+    },
+    {
+      "id": "anthropic-sdk-python",
+      "kind": "documentation",
+      "host": "platform.claude.com",
+      "result": "http_reachable",
+      "status": 200
+    }
+  ],
+  "caveat": "Public HTTP HEAD only. Bot challenges, redirects and rate limits do not prove user-facing failures. No login, account functions, generation, actual pricing or downloads were tested.",
+  "source": {
+    "repository": "3078024889/lingxi-quantum",
+    "workflowRun": "https://github.com/3078024889/lingxi-quantum/actions/runs/41378541846",
+    "commit": "1f68acd264519b428bdda52c684492ad29a18945",
+    "jobId": 125064030682
+  },
+  "interpretation": "Only remote HTTPS HEAD status at observation time. This does not check vendor login, generation tasks, file downloads, payment, rate limits in a user's region, or UI usability."
+}
