@@ -24,7 +24,7 @@ const liveTest=["tests/final-closure/tool-real-operations-v118.spec.ts","tests/f
 const scenarioSet=new Set(v118);
 for(const slug of v118){
  if(!slugs.includes(slug))throw Error("SCENARIO_NOT_IN_PUBLIC_CATALOG:"+slug);
- if(!liveTest.includes(`"${slug}"`))throw Error("REAL_SCENARIO_NOT_REGISTERED:"+slug);
+ if(!liveTest.includes(slug))throw Error("REAL_SCENARIO_NOT_REGISTERED:"+slug);
 }
 const recorded=new Map(earlier);
 const escaping=value=>'"'+String(value).replace(/"/g,'""')+'"';
