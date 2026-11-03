@@ -1,6 +1,7 @@
 "use client";
 
 import {Fragment,useMemo,useRef,useEffect,useState} from "react";
+import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
 import MarketCostEstimator from "../lingxifield-ai-market/app/market-cost-estimator";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
@@ -160,6 +161,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
      {compared.map(p=><td key={p.id}>{value(p)}<Source href={source(p)} label={t.source}/></td>)}</tr>)}
    </tbody></table></div>
   </section>}
+  <SiaiSearchDiscovery variant="ranking"/>
   <div className="siai-home-top-track"><span aria-hidden="true">↔</span><span className="siai-scroll-hint">{label("横向查看全部栏目","Scroll horizontally to see all columns")}</span><div className="siai-home-top-scroll" ref={topRef} onScroll={()=>sync("top")} tabIndex={0} aria-label={label("顶部横向滚动条","Top horizontal scrollbar")}><div style={{width:tableWidth,height:1}}/></div></div>
   <div className="siai-home-table-scroll" ref={gridRef} onScroll={()=>sync("table")} tabIndex={0} aria-label={t.title}>
    <table className="siai-home-table">
