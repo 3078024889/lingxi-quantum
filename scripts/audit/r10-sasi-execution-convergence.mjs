@@ -10,6 +10,10 @@ const exp=r('lib/sasi/experience/free-provider-config.ts'),env=r('.env.example')
 
 must(home.includes('BRAND_PUBLIC_COPY[lang].title')&&brand.includes('全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具'),'R10_HOME_BRAND_MISSING');
 must(home.includes('全球 AI 工具太多，不知道哪个好用？')&&home.includes('你现在要完成什么？')&&home.includes('href="/siai"'),'R10_HOME_HERO_MISSING');
+const mainCards=(home.split(' const cards=[')[1]||'').split('];')[0];
+must((mainCards.match(/href:/g)||[]).length===3&&mainCards.includes('href:"/siai"')&&mainCards.includes('href:"/sasi"')&&mainCards.includes('href:"/tools"'),'R10_HOME_THREE_ENTRIES_MISSING');
+const answers=r('components/HomeSeoAnswers.tsx');
+must(answers.includes('lx-seo-vendor')&&answers.includes('lx-seo-steps')&&answers.includes('TOOL_PATHS')&&answers.includes('CREATIVE_PATHS'),'R10_HOME_WORKFLOW_AND_VENDOR_MISSING');
 must(footer.includes('lx-branded-footer')&&footer.includes('href="/siai"')&&footer.includes('href="/sasi"')&&footer.includes('href="/tools"')&&footer.includes('href="/terms"')&&footer.includes('href="/privacy"'),'R10_FOOTER_BRAND_MISSING');
 must(footer.includes('骑缝章')&&footer.includes('视频配音')&&footer.includes('CSV/TSV转Excel'),'R10_FOOTER_CATALOG_INCOMPLETE');
 must(nav.includes('全球 SIAI · SASI · 免费在线工具')&&nav.includes('href: "/siai"')&&nav.includes('href: "/sasi"'),'R10_NAV_BRAND_MISSING');

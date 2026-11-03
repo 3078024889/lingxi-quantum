@@ -13,7 +13,7 @@ for(const [i,locale]of locales.entries())test('public copy and controls '+locale
  await expect(page.locator('main textarea')).toHaveAttribute('aria-label',/./);
  await expect(page.locator('.lx11-lang-label').first()).not.toContainText('/ Language');
  const cards=await page.locator('.lx11-home-card').evaluateAll(elements=>elements.map(card=>{const desc=card.querySelector('p')!.getBoundingClientRect(),action=card.querySelector('b')!.getBoundingClientRect(),bounds=card.getBoundingClientRect();return{descriptionBottom:desc.bottom,actionTop:action.top,actionBottom:action.bottom,cardBottom:bounds.bottom}}));
- expect(cards).toHaveLength(6);for(const card of cards){expect(card.actionTop).toBeGreaterThanOrEqual(card.descriptionBottom);expect(card.actionBottom).toBeLessThanOrEqual(card.cardBottom);}
+ expect(cards).toHaveLength(3);for(const card of cards){expect(card.actionTop).toBeGreaterThanOrEqual(card.descriptionBottom);expect(card.actionBottom).toBeLessThanOrEqual(card.cardBottom);}
  await expect(page.locator('html')).toHaveAttribute('dir',locale==='ar'?'rtl':'ltr');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  if(locale!=='zh'){

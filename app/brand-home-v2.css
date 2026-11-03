@@ -27,3 +27,21 @@
 .lx-branded-footer .lx-footer-qr-row span{font-size:11px;color:var(--lx-muted)}
 @media(max-width:1160px){.lx-branded-footer .lx11-footer-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:25px}.lx-branded-footer .lx11-footer-brand{grid-column:1/-1}}
 @media(max-width:700px){.lx-seo-answers{width:calc(100% - 30px);margin-bottom:32px}.lx-seo-question-grid{grid-template-columns:1fr}.lx-seo-question{padding:19px}.lx-branded-footer .lx11-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:27px 19px}.lx-branded-footer .lx11-footer-brand{grid-column:1/-1}.lx-branded-footer .lx-footer-social-strip{align-items:flex-start;flex-direction:column}.lx-branded-footer .lx11-footer-logo b{font-size:14px!important}}
+
+/* Home: concrete creation routes, task categories, steps and sourced vendor contact */
+.lx-seo-extra{margin:34px 0 25px}
+.lx-seo-extra>h2,.lx-seo-vendor>h2{font-size:clamp(20px,2vw,26px);font-weight:800;line-height:1.45;margin:0 0 10px}
+.lx-seo-extra>p,.lx-seo-vendor>p{font-size:14px;line-height:1.85;color:var(--lx-muted);margin:0 0 15px}
+.lx-seo-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lx-seo-action{display:block;min-width:0;border:1px solid var(--lx-line);border-radius:14px;padding:16px 18px;background:var(--lx-card,#fff);font-size:14px;font-weight:650;line-height:1.65;color:var(--lx-ink);text-decoration:none}
+.lx-seo-action:hover,.lx-seo-action:focus-visible{border-color:#3c6ad1}
+.lx-seo-action span{color:#3168d6}
+.lx-seo-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0;list-style:none;counter-reset:none}
+.lx-seo-steps li{display:flex;gap:12px;padding:18px;border:1px solid var(--lx-line);border-radius:14px;background:var(--lx-card,#fff);font-size:14px;line-height:1.7}
+.lx-seo-steps li strong{color:#3168d6;font-weight:800}
+.lx-seo-vendor{margin:36px 0;padding:25px;border-radius:17px;background:linear-gradient(110deg,#edf3ff,#f4f7ff);color:#10264d}
+.lx-seo-vendor>p{color:#445472}
+.lx-seo-vendor a{display:inline-block;padding:12px 17px;border-radius:11px;background:#2459c8;color:#fff;font-size:14px;font-weight:700}
+.lx-branded-footer .lx11-footer-grid nav a{font-size:14px!important;line-height:1.7}
+.lx-branded-footer .lx-footer-social-strip a{font-size:14px}
+@media(max-width:700px){.lx-seo-action-grid,.lx-seo-steps{grid-template-columns:1fr}.lx-seo-extra{margin:30px 0 24px}.lx-seo-vendor{padding:20px}.lx-seo-action{padding:15px}}
