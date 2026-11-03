@@ -61,7 +61,7 @@ test('public catalog still 32 products; 30 held candidate rows, 28 deduplicated 
  assert.equal(r.products.find(p=>p.id==='fireworks-ai').legalEntity,'Fireworks.ai, Inc.');
  assert.ok(r.products.every(p=>p.visibleToPublic===false&&p.publishApproved===false&&p.seoIndex===false));
  for(let i=0;i<3;i++){
-  const a=auditOfficialObservations(packs[i],cohorts[i],{today:'2026-11-02'});
+  const a=auditOfficialObservations(packs[i],cohorts[i],{today:'2026-11-03'});
   assert.equal(a.issues.length,0,JSON.stringify(a.issues));
   assert.equal(a.readyForPublication,false);
  }
@@ -97,17 +97,17 @@ test('Devin Desktop business-code ownership uses the exact vendor-linked Cogniti
 });
 
 test('Devin legal parent origin may not broaden official source trust for other publishers',()=>{
- const original=auditOfficialObservations(packs[1],cohorts[1],{today:'2026-11-02'});
+ const original=auditOfficialObservations(packs[1],cohorts[1],{today:'2026-11-03'});
  assert.deepEqual(original.issues,[]);
  const tampered=structuredClone(packs[1]);
  const other=tampered.products.find(x=>x.id==='tabnine');
  other.officialHosts.push('cognition.com');
- const result=auditOfficialObservations(tampered,cohorts[1],{today:'2026-11-02'});
+ const result=auditOfficialObservations(tampered,cohorts[1],{today:'2026-11-03'});
  assert.ok(result.issues.some(issue=>issue.id==='tabnine'&&issue.code==='INVALID_PUBLISHER_HOST_PIN'));
  const forged=structuredClone(packs[1]);
  const devin=forged.products.find(x=>x.id==='devin-desktop');
  devin.officialHosts.push('cognition.com.attacker.invalid');
- const bad=auditOfficialObservations(forged,cohorts[1],{today:'2026-11-02'});
+ const bad=auditOfficialObservations(forged,cohorts[1],{today:'2026-11-03'});
  assert.ok(bad.issues.some(issue=>issue.id==='devin-desktop'&&issue.code==='INVALID_PUBLISHER_HOST_PIN'));
 });
 
@@ -123,7 +123,7 @@ test('Devin Desktop payment choices are first-party scoped, not claimed universa
  assert.match(fact.text,/Klarna/);
  assert.match(fact.text,/部分地区/);
  assert.match(fact.text,/Stripe/);
- const audit=auditOfficialObservations(packs[1],cohorts[1],{today:'2026-11-02'});
+ const audit=auditOfficialObservations(packs[1],cohorts[1],{today:'2026-11-03'});
  assert.equal(audit.issues.length,0,JSON.stringify(audit.issues));
  assert.equal(audit.readyForPublication,false);
 });
@@ -139,7 +139,7 @@ test('Gamma feature-specific US/Canada mobile app coverage is not a global count
  assert.match(region.text,/移动浏览器/);
  assert.match(region.text,/不是逐国注册、付款/);
  assert.equal(region.additionalEvidence[0].source,'https://help.gamma.app/en/articles/11048601-why-am-i-having-trouble-connecting-to-gamma');
- const validated=auditOfficialObservations(packs[0],cohorts[0],{today:'2026-11-02'});
+ const validated=auditOfficialObservations(packs[0],cohorts[0],{today:'2026-11-03'});
  assert.deepEqual(validated.issues,[]);
  assert.equal(validated.readyForPublication,false);
 });
