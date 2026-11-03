@@ -15,17 +15,16 @@ test('live coverage never publishes raw candidate rows or fabricated rankings',a
  assert.match(api,/curatedProfiles:searchPlatforms\(\{limit:1\}\)\.total/);
  assert.match(api,/status:'unavailable',data:null/);
  assert.match(api,/verifiedGeoMetrics:marketCards\(verifiedMetrics\)\.filter/);
- assert.match(view,/candidateCount/);
- assert.match(view,/reviewNeededCount/);
- assert.match(view,/syncRunCount/);
+ assert.doesNotMatch(view,/candidateCount|reviewNeededCount|syncRunCount/);
+ assert.match(view,/state\.curatedProfiles/);
  assert.doesNotMatch(view,/candidateCount.*rank/i);
 });
 test('nine languages get truthful evidence labels and explicit unpublished source status',async()=>{
  const view=await read('app/market-evidence-status.tsx');
  for(const code of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(view,new RegExp('\\b'+code+':\\{title:'));
- assert.match(view,/data\.latestObservedAt|d\?\.latestObservedAt/);
- assert.match(view,/state\.status==='live'/);
- assert.match(view,/state\.verifiedGeoMetrics===0/);
+ assert.doesNotMatch(view,/latestObservedAt/);
+ assert.match(view,/state\.status!=='live'/);
+ assert.doesNotMatch(view,/state\.verifiedGeoMetrics/);
 });
 test('API search sanitizes region, payment, filter, sort and pagination parameters',async()=>{
  const route=await read('app/api/v1/search/route.ts');

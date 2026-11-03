@@ -17,7 +17,7 @@ import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 const SITE=PRIMARY_SITE;
 const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
 
-const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const locales=['en','ja','ko','fr','de','es','pt','ar'];const seg=location.pathname.split('/')[1]||'';const query=new URLSearchParams(location.search).get('lang');const key=locales.includes(seg)?seg:(locales.includes(query)||query==='zh'?query:'zh');const root=document.documentElement;root.lang=key==='zh'?'zh-CN':key;root.dataset.lang=key;root.dir=key==='ar'?'rtl':'ltr';}catch{}})();`;
+const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const locales=['en','ja','ko','fr','de','es','pt','ar'];const segments=location.pathname.split('/');const seg=segments[1]||'';const nested=seg==='siai'?segments[2]||'':'';const routeLang=locales.includes(nested)||nested==='zh'?nested:seg;const query=new URLSearchParams(location.search).get('lang');const key=(locales.includes(routeLang)||routeLang==='zh')?routeLang:(locales.includes(query)||query==='zh'?query:'zh');const root=document.documentElement;root.lang=key==='zh'?'zh-CN':key;root.dataset.lang=key;root.dir=key==='ar'?'rtl':'ltr';}catch{}})();`;
 
 export const metadata:Metadata={
  metadataBase:new URL(SITE),

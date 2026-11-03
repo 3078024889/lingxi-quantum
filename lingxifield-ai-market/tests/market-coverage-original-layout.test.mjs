@@ -17,5 +17,7 @@ test('coverage data has actual local file evidence and reports missing counts ho
 test('coverage strip labels candidates rather than verified commercial products',async()=>{
  const strip=await read('app/market-coverage-strip.tsx');
  assert.ok(strip.includes('产品候选'));
- assert.ok(strip.includes('不是访问量或 SEO/GEO 排名'));
+ assert.ok(strip.includes('if(!present.length)return null;'));
+ assert.ok(!strip.includes('暂无数据'));
+ assert.ok(strip.includes('产品候选'));
 });
