@@ -18,6 +18,13 @@ export async function locateEditableNativeImages(bytes:Uint8Array,pageIndex:numb
  if(pageIndex>=doc.getPageCount())return[];
  const page=doc.getPage(pageIndex);
  if(page.getRotation().angle%360!==0)return[];
+ // PDF.js displays the CropBox. The native-image coordinates below use
+ // MediaBox dimensions. Disallow nonzero origins and cropped pages until
+ // geometry is transformed through the actual viewport on both sides.
+ const media=page.getMediaBox(),crop=page.getCropBox();
+ if(Math.abs(media.x)>.001||Math.abs(media.y)>.001||
+    Math.abs(crop.x-media.x)>.001||Math.abs(crop.y-media.y)>.001||
+    Math.abs(crop.width-media.width)>.001||Math.abs(crop.height-media.height)>.001)return[];
  const W=page.getWidth(),H=page.getHeight();
  if(W<=0||H<=0)return[];
  const images=await locatePageImages(bytes,pageIndex);

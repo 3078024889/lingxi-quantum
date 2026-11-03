@@ -84,3 +84,11 @@ test("image resize and replace work as one source-operator transaction",async()=
  assert.equal(other.naturalWidth,8);
  assert.ok(edited.rect.width>0);
 });
+
+test("cropped PDF pages refuse native-image hit targets instead of editing wrong coordinates",async()=>{
+ const bytes=await sample(),doc=await PDFDocument.load(bytes);
+ doc.getPage(0).setCropBox(12,20,250,280);
+ const cropped=new Uint8Array(await doc.save());
+ assert.equal((await engine.locateEditableNativeImages(cropped,0)).length,0);
+ assert.equal((await engine.locateEditableNativeImages(cropped,1)).length,1);
+});
