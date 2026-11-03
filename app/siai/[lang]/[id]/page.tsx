@@ -127,7 +127,7 @@ export default async function SiaiProductDetail({params}:Props){
    {safe(item.source)&&<a href={item.source!} target="_blank" rel="nofollow noopener noreferrer">{t.source} ↗</a>}</dd></div>)}</dl></section>
   <section className="siai-detail-questions siai-direct-answers"><h2>{l==='zh'?'六个常见问题，直接看答案':t.tasks}</h2>
    <div className="siai-direct-answers-grid">{items.slice(5).map((item,i)=><article key={item.label}>
-    <h3>{l==='zh'?p.name+['免费能用多少？','实际价格是多少？','哪些地区可以用？','支持哪些付款方式？','有哪些模型或功能？','生成内容能商用吗？'][i]:item.label}</h3>
+    <h3>{l==='zh'?p.name+['免费能用多少？','实际价格是多少？','哪些地区可以用？','支持哪些付款方式？','有哪些模型或功能？',publisher.kind==='company'?'生成内容能商用吗？':'软件能用于商业项目吗？'][i]:item.label}</h3>
     <p>{item.value}</p>
     {safe(item.source)&&<a href={item.source!} target="_blank" rel="nofollow noopener noreferrer">{t.source} ↗</a>}
    </article>)}</div>
