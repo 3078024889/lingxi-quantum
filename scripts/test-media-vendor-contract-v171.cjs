@@ -52,7 +52,7 @@ const provider=expose("lib/tools/media/provider.ts",{
 
  const badProvider=expose("lib/tools/media/provider.ts",{
   AbortSignal:{timeout:()=>({})},TextDecoder,Uint8Array,
-  fetch:async(url)=>url.endsWith("/audio/speech")?response({error:"provider failure"},200,"application/json"):response({error:"bad"},200)
+  fetch:async(url)=>url.endsWith("/audio/speech")?response({error:"provider failure ".repeat(40)},200,"application/json"):response({error:"bad"},200)
  });
  await assert.rejects(()=>badProvider.synthesizeRemote("Short sentence","en"),/MEDIA_TTS_UNEXPECTED_CONTENT_TYPE/,"HTTP 200 JSON must never become a paid MP3");
  const failingProvider=expose("lib/tools/media/provider.ts",{
