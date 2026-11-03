@@ -41,11 +41,11 @@ for(const [dir,[term,target]] of Object.entries(routeMap)){
 }
 
 const layout=read("app/layout.tsx");
-must(layout.includes("灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台"),"V59_CURRENT_BRAND_TITLE_MISSING");
+must(layout.includes("灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具"),"V59_CURRENT_BRAND_TITLE_MISSING");
 must(!layout.includes("SASI全球多模型智能创作生态平台"),"V59_OLD_BRAND_TITLE_REMAINS");
 
 const page=read("app/page.tsx")+read('lib/public-feature-copy.ts')+read('lib/brand-public-copy.ts');
-for(const term of["PDF","图片","SASI全球多模型智能创作平台"])must(page.includes(term),`V59_HOME_DISCOVERY_TERM_MISSING:${term}`);
+for(const term of["PDF","图片","全球 SIAI 排行榜","SASI 智能创作"])must(page.includes(term),`V59_HOME_DISCOVERY_TERM_MISSING:${term}`);
 must(read('lib/public-feature-copy.ts').includes('付费功能会在使用前显示费用'),"V59_PAID_FEATURES_NOT_DISCLOSED");
 must(read('components/Footer.tsx').includes('/tools'),"V59_TOOL_HUB_LINK_MISSING");
 must(!read('app/page.tsx').includes('HomeToolDirectory'),"R13_REMOVED_HOME_DIRECTORY_RESTORED");
