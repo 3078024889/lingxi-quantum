@@ -10,6 +10,7 @@ import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/tran
 import{mediaDurationCopy}from"@/lib/tools/media/duration-copy";
 import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
 import {fitVoiceDurationToVideo} from "@/lib/tools/media/voice-duration-fit";
+import {voiceDurationCopy,voiceDurationError} from "@/lib/tools/media/voice-duration-plan";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[["zh","中文"],["en","English"],["ja","日本語"],["ko","한국어"],["fr","Français"],["de","Deutsch"],["es","Español"],["pt","Português"],["ar","العربية"]] as const;
@@ -104,13 +105,13 @@ export default function VideoDubbingWorkbench(){
     const voice=await remoteTts(translated,target,quoteId);
     setStage(`${i+1}/${files.length} · 正在合成视频…`);
     const measured=await localMediaDuration(f);
-    setStage("正在适配完整配音时长…");
+    setStage(voiceDurationCopy(uiLang).stage);
     const voiceFitted=await fitVoiceDurationToVideo(voice,measured);
     const dubbed=await muxDubbedVideo(f,voiceFitted,p=>setStage(`${i+1}/${files.length} · 正在合成 ${Math.round(p*100)}%`));
     videos.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}-dubbed.mp4`,blob:dubbed,mime:"video/mp4",size:dubbed.size});
    }
    setOutputs(videos);setSubtitles(subs);setUntimed(missingTimings);setStage("处理完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(voiceDurationError(uiLang,e)||(e instanceof Error?e.message:String(e)));setStage("");throw e}
   finally{setBusy(false)}
  }
 

@@ -17,4 +17,12 @@ assert(runtime.includes('"-af",plan.filter'));
 assert(runtime.includes("DUB_AUDIO_FIT_DURATION_MISMATCH"));
 for(const path of ["components/tools/VideoDubbingWorkbench.tsx","components/tools/VideoTranslateWorkbench.tsx"])
  assert(fs.readFileSync(path,"utf8").includes("fitVoiceDurationToVideo("),path);
+for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
+ const copy=api.voiceDurationCopy(lang);
+ assert(copy.stage&&copy.tooLong&&copy.failed,"missing translation "+lang);
+ assert(!/DUB_/.test(copy.failed),"engineering error leaked "+lang);
+ assert.equal(api.voiceDurationError(lang,new Error("DUB_AUDIO_TOO_LONG_FOR_VIDEO")),copy.tooLong);
+ assert.equal(api.voiceDurationError(lang,new Error("DUB_AUDIO_FIT_FAILED")),copy.failed);
+ assert.equal(api.voiceDurationError(lang,new Error("OTHER_ERROR")),null);
+}
 console.log("VOICE_DURATION_FIT_V169=PASS: real TTS duration required, bounded atempo speed, no silent truncation; static tests do not contact providers.");

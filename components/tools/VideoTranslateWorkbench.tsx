@@ -12,6 +12,7 @@ import {localMediaDuration,transcribeLocal} from "@/lib/tools/autonomous/transcr
 import {concatMp3,muxTranslatedVideo,requireTimedTranscript,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
 import {extractExactTranslatedCues,requireCuesWithinVideo,pairBilingualCues} from "@/lib/tools/media/video-subtitle-integrity";
 import {fitVoiceDurationToVideo} from "@/lib/tools/media/voice-duration-fit";
+import {voiceDurationCopy,voiceDurationError} from "@/lib/tools/media/voice-duration-plan";
 import {newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[
@@ -140,7 +141,7 @@ export default function VideoTranslateWorkbench(){
        const ttsParts=[] as Blob[];
        for(const part of splitTts(txt)){ttsParts.push(await remoteTts(part,target,quoteId))}
        const whole=await concatMp3(ttsParts,p=>setStage(`${fi+1}/${files.length} · 正在合并语音 ${Math.round(p*100)}%`));
-       setStage("正在适配完整配音时长…");
+       setStage(voiceDurationCopy(uiLang).stage);
        dubbed=await fitVoiceDurationToVideo(whole,duration);
       }
       setStage(`${fi+1}/${files.length} · ${ti+1}/${targets.length} · 正在生成高质量 MP4…`);
@@ -149,7 +150,7 @@ export default function VideoTranslateWorkbench(){
     }
    }
    setVideos(vo);setSubs(so);setStage("全部视频翻译完成");
-  }catch(e){setError(e instanceof Error?e.message:String(e));setStage("");throw e}
+  }catch(e){setError(voiceDurationError(uiLang,e)||(e instanceof Error?e.message:String(e)));setStage("");throw e}
   finally{setBusy(false)}
  }
  return <div className="space-y-5">
