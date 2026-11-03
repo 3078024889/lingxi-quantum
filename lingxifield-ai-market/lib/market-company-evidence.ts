@@ -4,7 +4,7 @@
  * parent-company listings. An absent value is NOT a claim of no funding/IPO.
  * 2026-11-01 manual review; every nonempty fact carries its own source.
  */
-import {founderForPublisher} from './market-founder-evidence';
+import {founderForPublisher} from './market-founder-evidence.ts';
 type EvidenceValue={text:string;source:string;asOf:string};
 export type CompanyEvidence={
  kind:'company'|'open_source_project'|'software_library';
