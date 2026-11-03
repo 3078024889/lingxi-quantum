@@ -30,7 +30,7 @@ export function GET(){
   '## Global SIAI rankings and AI / SI market directory',
   '- [全球 SIAI 排行榜 / Global AI Tool Rankings]('+SITE+'/siai): Global AI, SI and SIAI product directory, official-source pricing, free tiers, regional/payment evidence and commercial-use terms. Directory display order is not a performance or popularity ranking.',
   ...SIAI_DISCOVERY.zh.topics.map(x=>'- '+x.q+': '+x.rank+' '+SITE+'/siai'),
-  '- Verified use: the candidate research previews are not full hands-on tests. A vendor's export restriction is not proof of country-wide support; current pricing and availability need the official vendor's checkout.',
+  "Verified use: Candidate research previews are not hands-on tests. A publisher export restriction does not prove nationwide availability. Current pricing and payment terms must be checked on the official site.",
   '',
   '## Tools',
   ...tools,
