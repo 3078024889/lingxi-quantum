@@ -8,9 +8,9 @@ const source=fs.readFileSync("lib/tools/media/c2pa-verdict.ts","utf8");
 const js=ts.transpileModule(source,{compilerOptions:{
  module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,
 }}).outputText;
-const exports={};
-vm.runInNewContext(js,{exports,require:()=>{throw Error("PURITY_VIOLATION")}}, {timeout:3000});
-const describe=exports.describeC2paManifest;
+const moduleExports={};
+vm.runInNewContext(js,{exports:moduleExports,require:()=>{throw Error("PURITY_VIOLATION")}}, {timeout:3000});
+const describe=moduleExports.describeC2paManifest;
 assert.equal(typeof describe,"function");
 
 function report(state,failures=[],successes=[{code:"claimSignature.validated"}]){
