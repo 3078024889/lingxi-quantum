@@ -122,3 +122,44 @@
 .siai-quick-answer p{font-size:14px;line-height:1.85;margin:6px 0;overflow-wrap:anywhere}
 .siai-quick-answer p b{color:#175b9a}
 .siai-quick-answer>a{font-size:14px;font-weight:750;color:#1468b3;text-decoration:underline;text-underline-offset:3px}
+
+/* Two synchronized horizontal scrollbars; table header and identity columns remain visible. */
+.siai-home-top-track{position:sticky;top:62px;z-index:20;display:flex;align-items:center;gap:9px;padding:6px 10px;border:1px solid #cbdff2;border-radius:10px 10px 0 0;background:#eaf3ff;min-width:0}
+.siai-scroll-hint{font-size:13px;white-space:nowrap;color:#315781}
+.siai-home-top-scroll{height:20px;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:auto;scrollbar-color:#8299b1 #e6eef8}
+.siai-home-table-scroll{height:min(72dvh,750px);min-height:350px;overflow:auto;scrollbar-gutter:stable;border-radius:0 0 10px 10px}
+.siai-home-table thead th{position:sticky;top:0;z-index:9;background:#e9f2fc;box-shadow:inset 0 -1px #bcd5eb}
+@media(min-width:960px){.siai-home-table thead tr>th:first-child,.siai-home-table thead tr>th:nth-child(2){z-index:13}}
+.siai-home-quicklinks{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.siai-home-claim{display:inline-flex;align-items:center;min-height:38px;padding:7px 13px;border-radius:9px;background:#155bb4;color:#fff!important;text-decoration:none;font-size:14px;font-weight:700}
+.siai-home-claim:hover{background:#114b91}
+.siai-home-cost-accordion{background:#fff;border:1px solid #d4e2f2;border-radius:10px;margin:0 0 13px}
+.siai-home-cost-accordion>summary{padding:12px 16px;cursor:pointer;font-size:15px;font-weight:700;color:#205690}
+.siai-home-cost-accordion[open]>summary{background:#f0f6ff;border-bottom:1px solid #d4e2f2}
+.siai-home-cost-inner{padding:14px;max-width:100%;overflow:hidden}
+.siai-home-cost-inner .lxCostHeader{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.siai-home-cost-inner .lxCostHeader h3{font-size:19px;margin:0;font-weight:800}
+.siai-home-cost-inner .lxCostHeader p,.siai-home-cost-inner .lxCostIntro{font-size:14px;line-height:1.7;margin:8px 0}
+.siai-home-cost-inner .lxCostMode{display:flex;gap:7px}
+.siai-home-cost-inner .lxCostMode button{border:1px solid #c0d5ed;background:white;color:#265b99;padding:8px 12px;border-radius:8px;font-size:14px}
+.siai-home-cost-inner .lxCostMode button[aria-pressed=true]{background:#155bb4;color:#fff}
+.siai-home-cost-inner .lxCostFields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
+.siai-home-cost-inner .lxCostField{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:14px;font-weight:650}
+.siai-home-cost-inner .lxCostField input,.siai-home-cost-inner .lxCostField select,.siai-home-cost-inner .lxCostFixedResolution{width:100%;min-width:0;min-height:40px;border:1px solid #b9cfe7;border-radius:8px;background:white;padding:8px;color:#234875}
+.siai-home-cost-inner .lxCostResult{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #d2e2f2;border-radius:10px;background:#f2f7ff;line-height:1.6;overflow-wrap:anywhere}
+.siai-home-cost-inner .lxCostResult>strong{font-size:16px}
+.siai-home-cost-inner .lxCostResult small,.siai-home-cost-inner .lxCostDisclaimer{font-size:13px;line-height:1.7}
+.siai-home-cost-inner .lxApiUnitRow{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:8px 0;border-top:1px solid #dce7f5;padding-top:7px}
+.siai-home-cost-inner a{color:#155eb1;text-decoration:underline}
+.siai-home-cost-inner .lxApiDirectory{margin-top:16px}
+.siai-home-cost-inner .lxApiDirectoryScroll{max-width:100%;overflow-x:auto;margin:10px 0}
+.siai-home-cost-inner .lxApiDirectoryScroll table{min-width:800px;border-collapse:collapse}
+.siai-home-cost-inner .lxApiDirectoryScroll td,.siai-home-cost-inner .lxApiDirectoryScroll th{border:1px solid #d9e6f5;font-size:13px;padding:9px;vertical-align:top}
+.siai-home-cost-inner .lxApiDirectoryScroll th{background:#e8f1fc}
+.siai-home-cost-inner .lxApiDirectoryScroll button{border:1px solid #cee0f4;border-radius:7px;background:#fff;padding:6px 8px}
+.siai-detail-backdrop{position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;padding:15px;background:#0b274ba8}
+.siai-detail-modal{width:min(960px,100%);max-height:calc(100dvh - 30px);overflow:auto;border-radius:15px;background:#fff;padding:12px;box-shadow:0 14px 48px #09172c55}
+.siai-detail-modal:focus{outline:2px solid #1b5db5}
+.siai-detail-modal .siai-home-detail{border:0;margin:0}
+.siai-detail-actions{display:flex;flex-wrap:wrap;gap:10px}
+@media(max-width:900px){.siai-home-top-track{top:57px}.siai-scroll-hint{display:none}.siai-home-table-scroll{height:min(68dvh,700px)}.siai-home-quicklinks{justify-content:space-between;width:100%}}

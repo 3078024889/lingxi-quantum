@@ -56,6 +56,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      { source: "/siai/:lang/:id", destination: "/siai", permanent: true },
       { source: "/tools/pdf-sign", destination: "/tools/e-sign-pdf", permanent: true },
       { source: "/tools/pdf-signature", destination: "/tools/e-sign-pdf", permanent: true },
       { source: "/tools/electronic-signature", destination: "/tools/e-sign-pdf", permanent: true },

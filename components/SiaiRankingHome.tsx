@@ -1,6 +1,7 @@
 "use client";
 
-import {Fragment,useMemo,useState} from "react";
+import {Fragment,useMemo,useRef,useEffect,useState} from "react";
+import MarketCostEstimator from "../lingxifield-ai-market/app/market-cost-estimator";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
 import {capabilityProfile} from "../lingxifield-ai-market/lib/capability-profiles";
@@ -27,23 +28,36 @@ export type SiaiHomeRow={
 const labels:Record<LingxiLang,{title:string,subtitle:string,search:string,all:string,tool:string,company:string,legal:string,parent:string,listed:string,founded:string,founder:string,projectCreator:string,leadAuthor:string,
  strength:string,free:string,price:string,region:string,payment:string,models:string,license:string,action:string,official:string,details:string,close:string,
  noResults:string,notConfirmed:string,listedParent:string,ipoFiled:string,na:string,project:string,source:string,sourceHeading:string,oldHome:string}>={
- zh:{title:"全球 SIAI 排行榜",subtitle:"AI 工具越多，越难选？先看它能替你完成什么，再看真实价格、免费额度、地区、支付与商用条件。",search:"搜索 AI 工具、公司、功能或问题",all:"全部平台",tool:"AI 工具 / 厂商",company:"公司名称",legal:"法律注册名称",parent:"集团注册名称",listed:"是否上市",founded:"成立时间",founder:"主要创始人",projectCreator:"项目原作者",leadAuthor:"初始研发者",strength:"擅长做什么",free:"免费额度",price:"真实价格",region:"地区可用",payment:"付款方式",models:"代表模型",license:"商用授权",action:"操作",official:"访问官网",details:"详情",close:"收起",noResults:"没有找到匹配的工具，换一个关键词试试。",notConfirmed:"未确认上市",listedParent:"所属集团已上市",ipoFiled:"已申请上市，尚未挂牌",na:"不适用",project:"维护方",source:"官方资料",sourceHeading:"官方依据",oldHome:"工具首页"},
- en:{title:"Global SIAI Rankings",subtitle:"More AI tools, harder choices? Start with real tasks, then compare prices, free quotas, regions, checkout and commercial rights.",search:"Search AI tools, publishers and tasks",all:"All platforms",tool:"Tool / Publisher",company:"Company",legal:"Legal entity",parent:"Parent entity",listed:"Listing",founded:"Founded",founder:"Founders",projectCreator:"Original creator",leadAuthor:"Initial authors",strength:"Best for",free:"Free usage",price:"Price",region:"Regions",payment:"Payment",models:"Models",license:"Commercial use",action:"Actions",official:"Official site",details:"Details",close:"Close",noResults:"No matching tools.",notConfirmed:"Not confirmed listed",listedParent:"Listed parent",ipoFiled:"IPO filed; not listed",na:"N/A",project:"Maintainer",source:"Official source",sourceHeading:"Official references",oldHome:"Tools home"},
- ja:{title:"世界の SIAI ランキング",subtitle:"AIツールが多すぎて選べない？まず実際の用途、次に料金・無料枠・地域・支払い・商用条件を比較。",search:"AIツール・会社・用途を検索",all:"すべて",tool:"ツール / 提供元",company:"会社名",legal:"法人名",parent:"親会社法人",listed:"上場状況",founded:"設立",founder:"主な創業者",projectCreator:"原作者",leadAuthor:"初期開発者",strength:"得意分野",free:"無料枠",price:"料金",region:"地域",payment:"支払",models:"モデル",license:"商用",action:"操作",official:"公式サイト",details:"詳細",close:"閉じる",noResults:"該当するツールがありません。",notConfirmed:"未確認",listedParent:"上場親会社",ipoFiled:"IPO申請中",na:"対象外",project:"管理者",source:"公式資料",sourceHeading:"公式情報",oldHome:"ツールのホーム"},
- ko:{title:"글로벌 SIAI 순위",subtitle:"AI 도구가 많아도 정답은 작업에 있습니다. 실제 용도부터 무료 한도·가격·지역·결제·상업적 이용까지 확인하세요.",search:"AI 도구·회사 검색",all:"전체",tool:"도구 / 회사",company:"회사명",legal:"법인",parent:"모기업",listed:"상장",founded:"설립",founder:"주요 창업자",projectCreator:"원작자",leadAuthor:"초기 개발자",strength:"주요 기능",free:"무료",price:"가격",region:"지역",payment:"결제",models:"모델",license:"상업적 이용",action:"작업",official:"공식 사이트",details:"상세",close:"닫기",noResults:"검색 결과가 없습니다.",notConfirmed:"미확인",listedParent:"상장 그룹",ipoFiled:"IPO 신청 중",na:"해당 없음",project:"관리 주체",source:"공식 자료",sourceHeading:"공식 출처",oldHome:"도구 홈"},
- fr:{title:"Classement mondial SIAI",subtitle:"Trop d’outils IA ? Commencez par la tâche à accomplir, puis comparez tarifs, quotas, régions et droits commerciaux.",search:"Rechercher un outil ou une entreprise",all:"Tous",tool:"Outil / Éditeur",company:"Entreprise",legal:"Entité juridique",parent:"Société mère",listed:"Cotation",founded:"Fondation",founder:"Fondateurs",projectCreator:"Créateur original",leadAuthor:"Auteurs initiaux",strength:"Atouts",free:"Gratuit",price:"Prix",region:"Régions",payment:"Paiement",models:"Modèles",license:"Commercial",action:"Actions",official:"Site officiel",details:"Détails",close:"Fermer",noResults:"Aucun résultat.",notConfirmed:"Non confirmé",listedParent:"Groupe coté",ipoFiled:"IPO déposée",na:"Sans objet",project:"Responsable",source:"Source officielle",sourceHeading:"Sources",oldHome:"Accueil outils"},
+ zh:{title:"全球 SIAI 排行榜",subtitle:"SI / AI 工具越多，越难选？先看它能替你完成什么，再看真实价格、免费额度、地区、支付与商用条件。",search:"搜索 SI/AI 工具、公司、功能或问题",all:"全部平台",tool:"SI / AI 工具 / 厂商",company:"公司名称",legal:"法律注册名称",parent:"集团注册名称",listed:"是否上市",founded:"成立时间",founder:"主要创始人",projectCreator:"项目原作者",leadAuthor:"初始研发者",strength:"擅长做什么",free:"免费额度",price:"真实价格",region:"地区可用",payment:"付款方式",models:"代表模型",license:"商用授权",action:"操作",official:"访问官网",details:"详情",close:"收起",noResults:"没有找到匹配的工具，换一个关键词试试。",notConfirmed:"未确认上市",listedParent:"所属集团已上市",ipoFiled:"已申请上市，尚未挂牌",na:"不适用",project:"维护方",source:"官方资料",sourceHeading:"官方依据",oldHome:"工具首页"},
+ en:{title:"Global SIAI Rankings",subtitle:"More SI/AI tools, harder choices? Start with real tasks, then compare prices, free quotas, regions, checkout and commercial rights.",search:"Search SI/AI tools, publishers and tasks",all:"All platforms",tool:"Tool / Publisher",company:"Company",legal:"Legal entity",parent:"Parent entity",listed:"Listing",founded:"Founded",founder:"Founders",projectCreator:"Original creator",leadAuthor:"Initial authors",strength:"Best for",free:"Free usage",price:"Price",region:"Regions",payment:"Payment",models:"Models",license:"Commercial use",action:"Actions",official:"Official site",details:"Details",close:"Close",noResults:"No matching tools.",notConfirmed:"Not confirmed listed",listedParent:"Listed parent",ipoFiled:"IPO filed; not listed",na:"N/A",project:"Maintainer",source:"Official source",sourceHeading:"Official references",oldHome:"Tools home"},
+ ja:{title:"世界の SIAI ランキング",subtitle:"SI/AIツールが多すぎて選べない？まず実際の用途、次に料金・無料枠・地域・支払い・商用条件を比較。",search:"SI/AIツール・会社・用途を検索",all:"すべて",tool:"ツール / 提供元",company:"会社名",legal:"法人名",parent:"親会社法人",listed:"上場状況",founded:"設立",founder:"主な創業者",projectCreator:"原作者",leadAuthor:"初期開発者",strength:"得意分野",free:"無料枠",price:"料金",region:"地域",payment:"支払",models:"モデル",license:"商用",action:"操作",official:"公式サイト",details:"詳細",close:"閉じる",noResults:"該当するツールがありません。",notConfirmed:"未確認",listedParent:"上場親会社",ipoFiled:"IPO申請中",na:"対象外",project:"管理者",source:"公式資料",sourceHeading:"公式情報",oldHome:"ツールのホーム"},
+ ko:{title:"글로벌 SIAI 순위",subtitle:"SI/AI 도구가 많아도 정답은 작업에 있습니다. 실제 용도부터 무료 한도·가격·지역·결제·상업적 이용까지 확인하세요.",search:"SI/AI 도구·회사 검색",all:"전체",tool:"도구 / 회사",company:"회사명",legal:"법인",parent:"모기업",listed:"상장",founded:"설립",founder:"주요 창업자",projectCreator:"원작자",leadAuthor:"초기 개발자",strength:"주요 기능",free:"무료",price:"가격",region:"지역",payment:"결제",models:"모델",license:"상업적 이용",action:"작업",official:"공식 사이트",details:"상세",close:"닫기",noResults:"검색 결과가 없습니다.",notConfirmed:"미확인",listedParent:"상장 그룹",ipoFiled:"IPO 신청 중",na:"해당 없음",project:"관리 주체",source:"공식 자료",sourceHeading:"공식 출처",oldHome:"도구 홈"},
+ fr:{title:"Classement mondial SIAI",subtitle:"Trop d’outils SI/IA ? Commencez par la tâche à accomplir, puis comparez tarifs, quotas, régions et droits commerciaux.",search:"Rechercher un outil ou une entreprise",all:"Tous",tool:"Outil / Éditeur",company:"Entreprise",legal:"Entité juridique",parent:"Société mère",listed:"Cotation",founded:"Fondation",founder:"Fondateurs",projectCreator:"Créateur original",leadAuthor:"Auteurs initiaux",strength:"Atouts",free:"Gratuit",price:"Prix",region:"Régions",payment:"Paiement",models:"Modèles",license:"Commercial",action:"Actions",official:"Site officiel",details:"Détails",close:"Fermer",noResults:"Aucun résultat.",notConfirmed:"Non confirmé",listedParent:"Groupe coté",ipoFiled:"IPO déposée",na:"Sans objet",project:"Responsable",source:"Source officielle",sourceHeading:"Sources",oldHome:"Accueil outils"},
  de:{title:"Globales SIAI-Ranking",subtitle:"Mehr KI-Tools, schwierigere Wahl? Erst konkrete Aufgaben prüfen, dann Preise, Freikontingente, Regionen und Nutzungsrechte.",search:"KI-Tool oder Anbieter suchen",all:"Alle",tool:"Tool / Anbieter",company:"Unternehmen",legal:"Rechtsträger",parent:"Muttergesellschaft",listed:"Börse",founded:"Gründung",founder:"Gründer",projectCreator:"Projekturheber",leadAuthor:"Erstautoren",strength:"Stärken",free:"Kostenlos",price:"Preis",region:"Regionen",payment:"Zahlung",models:"Modelle",license:"Gewerblich",action:"Aktion",official:"Offizielle Seite",details:"Details",close:"Schließen",noResults:"Keine Ergebnisse.",notConfirmed:"Nicht bestätigt",listedParent:"Börsennotierte Mutter",ipoFiled:"IPO beantragt",na:"Nicht zutreffend",project:"Betreiber",source:"Offizielle Quelle",sourceHeading:"Quellen",oldHome:"Werkzeuge"},
- es:{title:"Ranking mundial SIAI",subtitle:"¿Demasiadas herramientas de IA? Empieza por la tarea real y compara precios, límites gratis, países y derechos de uso.",search:"Buscar herramientas y empresas",all:"Todas",tool:"Herramienta / Empresa",company:"Empresa",legal:"Entidad jurídica",parent:"Empresa matriz",listed:"Cotización",founded:"Fundación",founder:"Fundadores",projectCreator:"Creador original",leadAuthor:"Autores iniciales",strength:"Ventajas",free:"Gratis",price:"Precio",region:"Regiones",payment:"Pago",models:"Modelos",license:"Comercial",action:"Acciones",official:"Sitio oficial",details:"Detalles",close:"Cerrar",noResults:"Sin resultados.",notConfirmed:"Sin confirmar",listedParent:"Matriz cotizada",ipoFiled:"IPO presentada",na:"No aplica",project:"Responsable",source:"Fuente oficial",sourceHeading:"Fuentes",oldHome:"Inicio herramientas"},
+ es:{title:"Ranking mundial SIAI",subtitle:"¿Demasiadas herramientas de SI/IA? Empieza por la tarea real y compara precios, límites gratis, países y derechos de uso.",search:"Buscar herramientas y empresas",all:"Todas",tool:"Herramienta / Empresa",company:"Empresa",legal:"Entidad jurídica",parent:"Empresa matriz",listed:"Cotización",founded:"Fundación",founder:"Fundadores",projectCreator:"Creador original",leadAuthor:"Autores iniciales",strength:"Ventajas",free:"Gratis",price:"Precio",region:"Regiones",payment:"Pago",models:"Modelos",license:"Comercial",action:"Acciones",official:"Sitio oficial",details:"Detalles",close:"Cerrar",noResults:"Sin resultados.",notConfirmed:"Sin confirmar",listedParent:"Matriz cotizada",ipoFiled:"IPO presentada",na:"No aplica",project:"Responsable",source:"Fuente oficial",sourceHeading:"Fuentes",oldHome:"Inicio herramientas"},
  pt:{title:"Ranking global SIAI",subtitle:"Ferramentas de IA demais? Comece pela tarefa real e compare preço, limites grátis, regiões e direitos comerciais.",search:"Pesquisar ferramentas e empresas",all:"Todos",tool:"Ferramenta / Empresa",company:"Empresa",legal:"Entidade legal",parent:"Empresa controladora",listed:"Listagem",founded:"Fundação",founder:"Fundadores",projectCreator:"Criador original",leadAuthor:"Autores iniciais",strength:"Vantagens",free:"Grátis",price:"Preço",region:"Regiões",payment:"Pagamento",models:"Modelos",license:"Comercial",action:"Ações",official:"Site oficial",details:"Detalhes",close:"Fechar",noResults:"Sem resultados.",notConfirmed:"Não confirmado",listedParent:"Controladora listada",ipoFiled:"IPO solicitada",na:"Não se aplica",project:"Responsável",source:"Fonte oficial",sourceHeading:"Fontes",oldHome:"Início ferramentas"},
  ar:{title:"ترتيب SIAI العالمي",subtitle:"أدوات ذكاء اصطناعي كثيرة وقرار أصعب؟ ابدأ بالمهمة الفعلية ثم قارن الأسعار والحدود المجانية والمناطق وحقوق الاستخدام.",search:"ابحث عن أدوات وشركات الذكاء الاصطناعي",all:"جميع المنصات",tool:"الأداة / الشركة",company:"الشركة",legal:"الكيان القانوني",parent:"الشركة الأم",listed:"الإدراج",founded:"التأسيس",founder:"المؤسسون",projectCreator:"المنشئ الأصلي",leadAuthor:"المؤلفون الأصليون",strength:"المزايا",free:"المجاني",price:"السعر",region:"المناطق",payment:"الدفع",models:"النماذج",license:"الاستخدام التجاري",action:"إجراءات",official:"الموقع الرسمي",details:"التفاصيل",close:"إغلاق",noResults:"لا نتائج.",notConfirmed:"غير مؤكد",listedParent:"الشركة الأم مدرجة",ipoFiled:"طلب إدراج مقدم",na:"غير منطبق",project:"الجهة المطورة",source:"مصدر رسمي",sourceHeading:"المصادر",oldHome:"الرئيسية للأدوات"}
 };
 
+const RANKING_NEW_UI:Record<LingxiLang,Record<string,string>>={
+ zh:{},
+ en:{"厂商认领":"Claim product","找到":"Results:","项":"","厂商认领 · 提交 SI/AI 平台":"Claim or submit an SI/AI platform","视频／短剧和 API 费用计算器（点击展开）":"Video, short-film and API cost estimator","横向查看全部栏目":"Scroll across all columns","顶部横向滚动条":"Top horizontal scrollbar"},
+ ja:{"厂商认领":"この製品を認証","找到":"検索結果","项":"件","厂商认领 · 提交 SI/AI 平台":"SI/AI製品の登録・認証","视频／短剧和 API 费用计算器（点击展开）":"動画・短編とAPIの料金計算","横向查看全部栏目":"横スクロールで全列を見る","顶部横向滚动条":"上部の横スクロール"},
+ ko:{"厂商认领":"제품 인증","找到":"검색 결과","项":"개","厂商认领 · 提交 SI/AI 平台":"SI/AI 제품 등록·인증","视频／短剧和 API 费用计算器（点击展开）":"영상·단편 및 API 비용 계산기","横向查看全部栏目":"가로로 이동해 모든 항목 보기","顶部横向滚动条":"상단 가로 스크롤"},
+ fr:{"厂商认领":"Revendiquer ce produit","找到":"Résultats :","项":"","厂商认领 · 提交 SI/AI 平台":"Revendiquer ou proposer une plateforme SI/IA","视频／短剧和 API 费用计算器（点击展开）":"Coûts vidéo, court-métrage et API","横向查看全部栏目":"Défiler pour toutes les colonnes","顶部横向滚动条":"Défilement horizontal supérieur"},
+ de:{"厂商认领":"Produkt beanspruchen","找到":"Ergebnisse:","项":"","厂商认领 · 提交 SI/AI 平台":"SI/KI-Produkt beanspruchen oder einreichen","视频／短剧和 API 费用计算器（点击展开）":"Video- und API-Kostenrechner","横向查看全部栏目":"Alle Spalten horizontal anzeigen","顶部横向滚动条":"Obere horizontale Scrollleiste"},
+ es:{"厂商认领":"Reclamar producto","找到":"Resultados:","项":"","厂商认领 · 提交 SI/AI 平台":"Reclamar o enviar plataforma SI/IA","视频／短剧和 API 费用计算器（点击展开）":"Coste de vídeo, cortometraje y API","横向查看全部栏目":"Desplazar para ver todas las columnas","顶部横向滚动条":"Barra de desplazamiento superior"},
+ pt:{"厂商认领":"Reivindicar produto","找到":"Resultados:","项":"","厂商认领 · 提交 SI/AI 平台":"Reivindicar ou enviar plataforma SI/IA","视频／短剧和 API 费用计算器（点击展开）":"Custos de vídeo, curta e API","横向查看全部栏目":"Rolar para ver todas as colunas","顶部横向滚动条":"Rolagem horizontal superior"},
+ ar:{"厂商认领":"المطالبة بهذا المنتج","找到":"النتائج:","项":"","厂商认领 · 提交 SI/AI 平台":"المطالبة بمنصة SI/AI أو تقديمها","视频／短剧和 API 费用计算器（点击展开）":"حاسبة تكلفة الفيديو و API","横向查看全部栏目":"مرر أفقياً لعرض جميع الأعمدة","顶部横向滚动条":"شريط التمرير العلوي"},
+};
 const REVIEWED_COPY:Record<LingxiLang,string>={zh:"官方资料复核",en:"Source checked",ja:"公式情報の確認日",ko:"공식 출처 확인일",fr:"Vérification de la source",de:"Quellen geprüft",es:"Fuente revisada",pt:"Fonte verificada",ar:"تاريخ فحص المصدر"};
 function short(s:string,max=150){return s.length>max?s.slice(0,max-1).trimEnd()+"…":s;}
 function Source({href,label}:{href:string|null;label:string}){return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className="siai-source">{label} ↗</a>:null;}
 
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang],ui=SIAI_FACET_WORDS[lang];
+ const topRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
+ const [tableWidth,setTableWidth]=useState(2200);
  const [query,setQuery]=useState(""),[category,setCategory]=useState("*"),[expanded,setExpanded]=useState<string|null>(null);
  const [task,setTask]=useState<TaskFacet>("all"),[payment,setPayment]=useState<PaymentFacet>("any");
  const [evidence,setEvidence]=useState<EvidenceFacet>("all"),[sort,setSort]=useState<MarketOrder>("catalog");
@@ -54,6 +68,12 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const shown=useMemo(()=>filterMarketRows(localizedRows,{query,category,task,payment,evidence,sort},lang),
   [localizedRows,query,category,task,payment,evidence,sort,lang]);
  const compared=rows.filter(p=>compareIds.includes(p.id));
+ const selectedRow=expanded?rows.find(p=>p.id===expanded):null;
+ const claimUrl=(p?:SiaiHomeRow)=>"/siai/claim?lang="+lang+(p?"&product="+encodeURIComponent(p.id)+"&name="+encodeURIComponent(p.name):"");
+ const label=(zh:string,en:string)=>lang==="zh"?zh:(RANKING_NEW_UI[lang]?.[zh]||en);
+ const sync=(from:"top"|"table")=>{const a=from==="top"?topRef.current:gridRef.current,b=from==="top"?gridRef.current:topRef.current;if(a&&b&&Math.abs(a.scrollLeft-b.scrollLeft)>1)b.scrollLeft=a.scrollLeft;};
+ useEffect(()=>{const v=gridRef.current;if(!v)return;const measure=()=>setTableWidth(v.scrollWidth);measure();const ro=typeof ResizeObserver==="undefined"?null:new ResizeObserver(measure);ro?.observe(v);if(v.firstElementChild)ro?.observe(v.firstElementChild);window.addEventListener("resize",measure);return()=>{ro?.disconnect();window.removeEventListener("resize",measure);};},[shown.length,lang]);
+ useEffect(()=>{if(!expanded)return;dialogRef.current?.focus();const esc=(e:KeyboardEvent)=>{if(e.key==="Escape")setExpanded(null)};window.addEventListener("keydown",esc);return()=>window.removeEventListener("keydown",esc);},[expanded]);
  const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
  const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>localizedCatalogFact(p.id,lang,scope,p[scope]);
  const displayStrength=(p:SiaiHomeRow)=>localizedProductSummary(p.id,lang)||p.strength||p.about;
@@ -71,13 +91,13 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     </div>}
     <dl>{p.legal&&<div><dt>{p.legalScope==="group_parent"?t.parent:t.legal}</dt><dd>{p.legal}</dd></div>}<div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div><div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div><div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div><div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div><div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div><div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div></dl>
     <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.creator?.source,t.founder],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.paymentSource,t.payment],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
-    <a className="siai-detail-primary-link" href={"/siai/"+lang+"/"+encodeURIComponent(p.id)}>{ui.fullDetails} ↗</a>
+    <div className="siai-detail-actions"><a className="siai-detail-primary-link" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><a className="siai-detail-primary-link" href={claimUrl(p)}>{label("厂商认领","Claim product")} ↗</a></div>
    </section>;
  return <main className="siai-home" lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
   <header className="siai-home-head"><p className="siai-kicker">LINGXIFIELD · GLOBAL SI AI</p><h1>{t.title}</h1><p>{t.subtitle}</p></header>
   <div className="siai-home-controls">
    <label className="siai-home-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}/></label>
-   <span className="siai-home-count">{shown.length} / {rows.length}</span>
+   <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a></div>
   </div>
   <div className="siai-home-four-filters">
    <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
@@ -97,7 +117,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     </label>
    </div></nav>
   </div>
-  {compareIds.length>0&&<aside className="siai-compare-toolbar" aria-label={ui.selected}>
+  <details className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
+   {compareIds.length>0&&<aside className="siai-compare-toolbar" aria-label={ui.selected}>
    <strong>{ui.selected} ({compareIds.length}/{MAX_COMPARISONS})</strong>
    <div>{compared.map(p=><button key={p.id} type="button" onClick={()=>toggleCompare(p.id)} aria-label={ui.remove+" "+p.name}>{p.name} ×</button>)}</div>
    <button type="button" disabled={compareIds.length<2} onClick={()=>setComparisonOpen(v=>!v)}>
@@ -124,7 +145,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
      {compared.map(p=><td key={p.id}>{value(p)}<Source href={source(p)} label={t.source}/></td>)}</tr>)}
    </tbody></table></div>
   </section>}
-  <div className="siai-home-table-scroll" tabIndex={0} aria-label={t.title}>
+  <div className="siai-home-top-track"><span aria-hidden="true">↔</span><span className="siai-scroll-hint">{label("横向查看全部栏目","Scroll horizontally to see all columns")}</span><div className="siai-home-top-scroll" ref={topRef} onScroll={()=>sync("top")} tabIndex={0} aria-label={label("顶部横向滚动条","Top horizontal scrollbar")}><div style={{width:tableWidth,height:1}}/></div></div>
+  <div className="siai-home-table-scroll" ref={gridRef} onScroll={()=>sync("table")} tabIndex={0} aria-label={t.title}>
    <table className="siai-home-table">
     <thead><tr><th scope="col">{lang==="zh"?"序号":"#"}</th><th scope="col">{t.tool}</th><th scope="col">{t.strength}</th><th scope="col">{t.free}</th><th scope="col">{t.price}</th><th scope="col">{t.region}</th><th scope="col">{t.payment}</th><th scope="col">{t.models}</th><th scope="col">{t.license}</th><th scope="col">{t.action}</th></tr></thead>
     <tbody>
@@ -151,13 +173,14 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
          disabled={!compareIds.includes(p.id)&&compareIds.length>=MAX_COMPARISONS}
          aria-pressed={compareIds.includes(p.id)}>{compareIds.includes(p.id)?ui.remove:ui.compare}</button></td>
        </tr>
-        {expanded===p.id&&<tr className="siai-home-expanded-row"><td colSpan={10}>{detailPanel(p)}</td></tr>}
+        
        </Fragment>;
      })}
     </tbody>
    </table>
   </div>
   {shown.length===0&&<p className="siai-home-empty">{t.noResults}</p>}
+   {selectedRow&&<div className="siai-detail-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setExpanded(null);}}><div className="siai-detail-modal" role="dialog" aria-modal="true" aria-label={selectedRow.name+" · "+t.details} tabIndex={-1} ref={dialogRef}>{detailPanel(selectedRow)}</div></div>}
 
  </main>;
 }

@@ -66,7 +66,7 @@ export default function MarketCostEstimator({language,currency}:{language:Langua
     <a href={rate.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a>
    </div>:<div className="lxCostResult"><strong>{t[13]}</strong><small>{t[27]}: {variants.map(x=>x.resolution).join(' · ')||t[26]}</small></div>}
   </>:<>
-   <p className="lxCostIntro">{language==='zh'?'覆盖 32 个平台：区分 API 按量收费、单独开发者价格、网页会员套餐、自托管成本；不把会员订阅误算成 API 充值。':t[24]}</p>
+   <p className="lxCostIntro">{language==='zh'?'区分 API 按量收费、单独开发者价格、网页会员套餐、自托管成本；不把会员订阅误算成 API 充值。':t[24]}</p>
    <div className="lxCostFields">
     {selectField(t[4],apiProvider,switchApiProvider,MARKET_API_PRODUCTS.map(id=>({value:id,label:id==='chatgpt'?'OpenAI / ChatGPT':id==='qwen'?'Qwen / Alibaba':id})))}
     {apiTokenRates.length?selectField(t[5],tokenRate?.id||'',setApiId,apiTokenRates.map(r=>({value:r.id,label:r.model}))):null}
@@ -88,7 +88,7 @@ export default function MarketCostEstimator({language,currency}:{language:Langua
     {!tokenRate&&!apiOffer.unitRates.length&&!apiOffer.videoRates.length&&apiOffer.source?<a href={apiOffer.source} target="_blank" rel="noopener noreferrer">{t[11]} ↗</a>:null}
    </div>
    <div className="lxApiDirectory">
-     <strong>{language==='zh'?'全部 32 个平台的开发者计费与套餐':'Developer billing and plans for all 32 providers'}</strong>
+     <strong>{language==='zh'?'开发者计费与套餐对照':'Developer billing and plans by provider'}</strong>
      <div className="lxApiDirectoryScroll"><table><thead><tr><th>{t[4]}</th><th>{language==='zh'?'API计费方式':'API method'}</th><th>{language==='zh'?'模型/单位示例':'Model / rate'}</th><th>{language==='zh'?'网页会员或独立产品价格':'Web or product plan'}</th><th>{t[11]}</th></tr></thead>
      <tbody>{MARKET_API_PRODUCTS.map(id=>{const o=apiServiceOffer(id),r=o.tokenRates[0],u=o.unitRates[0],v=o.videoRates[0];return <tr key={id}>
        <td><button type="button" onClick={()=>switchApiProvider(id)}>{id}</button></td>
