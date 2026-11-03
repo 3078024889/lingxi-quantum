@@ -15,10 +15,10 @@ import {productAnswerHeadline} from "../../lingxifield-ai-market/lib/market-resu
 export const dynamic="force-dynamic";
 export const revalidate=0;
 export const metadata:Metadata={
- title:"全球 SIAI 排行榜｜AI 工具哪个好用？功能、价格与免费额度对比｜灵犀场",
- description:"全球 SIAI AI 工具行情与厂商排行榜：比较真实官方价格、免费额度、主要功能、地区可用、付款方式、创始人与公司背景、上市状态和商用条件。查看官网直接使用。",
+ title:"全球 SIAI 排行榜｜SI/AI 工具哪个好用？功能、价格与免费额度对比｜灵犀场",
+ description:"全球 SIAI（SI/AI）工具行情与厂商排行榜：比较真实官方价格、免费额度、主要功能、地区可用、付款方式、创始人与公司背景、上市状态和商用条件。查看官网直接使用。",
  alternates:{canonical:PRIMARY_SITE+"/siai"},
- openGraph:{title:"全球 SIAI 排行榜｜灵犀场",description:"全球 AI 工具与厂商行情，先找到适合自己任务的工具，再看价格和使用条件。",url:PRIMARY_SITE+"/siai"},
+ openGraph:{title:"全球 SIAI 排行榜｜灵犀场",description:"全球 SI/AI 工具与厂商行情，先找到适合自己任务的工具，再看价格和使用条件。",url:PRIMARY_SITE+"/siai"},
  robots:{index:siaiLandingShouldIndex(),follow:true}
 };
 
@@ -52,7 +52,7 @@ function getCuratedRows():SiaiHomeRow[]{
 export default function Home(){
  const rows=getCuratedRows();
  const jsonld={"@context":"https://schema.org","@type":"CollectionPage",name:"全球 SIAI 排行榜",
-  url:PRIMARY_SITE+"/siai",description:"灵犀场全球 SIAI 排行榜，按功能、模型、免费额度、价格、地区、付款方式及公司背景比较 AI 工具与厂商。",
+  url:PRIMARY_SITE+"/siai",description:"灵犀场全球 SIAI 排行榜，按功能、模型、免费额度、价格、地区、付款方式及公司背景比较 SI/AI 工具与厂商。",
   mainEntity:{"@type":"ItemList",numberOfItems:rows.length,itemListElement:rows.map((r,i)=>({
    "@type":"ListItem",position:i+1,name:r.name,url:r.website
   }))}};

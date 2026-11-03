@@ -21,7 +21,7 @@ const copy:Record<LingxiLang,FooterCopy>={
 
 type LinkLabels={rankings:string;rankSub:string;sasi:string;tools:string;account:string;terms:string;privacy:string;about:string;free:string;contacts:string;drama:string;website:string;books:string;learning:string;research:string;pdf:string;ocr:string;video:string;temp:string;all:string;brandLead:string};
 const FOOTER_LINKS:Record<LingxiLang,LinkLabels>={
- zh:{rankings:"发现全球 AI",rankSub:"AI 工具排行榜",sasi:"SASI 智能创作",tools:"免费在线工具",account:"平台与账户",terms:"使用条款",privacy:"隐私政策",about:"关于灵犀场",free:"每日免费体验",contacts:"关注与联系",drama:"AI 短剧生成",website:"AI 网站构建",books:"书本智能问答",learning:"学习智能体",research:"科研智能体",pdf:"PDF 编辑与签名",ocr:"图片与 OCR 识别",video:"视频字幕与音频",temp:"临时邮箱与隐私",all:"全部在线工具",brandLead:"AI 工具哪个好用？这里比功能、免费额度与价格；需要创作或处理文件，继续用 SASI 和在线工具。"},
+ zh:{rankings:"发现全球 SI/AI",rankSub:"全球 SIAI 排行榜",sasi:"SASI 智能创作",tools:"免费在线工具",account:"平台与账户",terms:"使用条款",privacy:"隐私政策",about:"关于灵犀场",free:"每日免费体验",contacts:"关注与联系",drama:"SI/AI 短剧生成",website:"AI 网站构建",books:"书本智能问答",learning:"学习智能体",research:"科研智能体",pdf:"PDF 编辑与签名",ocr:"图片与 OCR 识别",video:"视频字幕与音频",temp:"临时邮箱与隐私",all:"全部在线工具",brandLead:"AI 工具哪个好用？这里比功能、免费额度与价格；需要创作或处理文件，继续用 SASI 和在线工具。"},
  en:{rankings:"Discover AI",rankSub:"Global AI rankings",sasi:"SASI creation",tools:"Free online tools",account:"About & account",terms:"Terms",privacy:"Privacy",about:"About us",free:"Daily free trial",contacts:"Stay connected",drama:"AI short dramas",website:"Website builder",books:"Book Q&A",learning:"Learning SASI",research:"Research SASI",pdf:"PDF editor & signatures",ocr:"Images & OCR",video:"Video & audio",temp:"Temporary email & privacy",all:"All online tools",brandLead:"Global AI tool rankings · SASI creation · Free online utilities"},
  ja:{rankings:"世界のAIを探す",rankSub:"AIツールランキング",sasi:"SASI創作",tools:"無料オンラインツール",account:"会社・アカウント",terms:"利用規約",privacy:"プライバシー",about:"LINGXIFIELDについて",free:"毎日の無料体験",contacts:"お問い合わせ",drama:"AI短編ドラマ",website:"Webサイト作成",books:"書籍への質問",learning:"学習SASI",research:"研究SASI",pdf:"PDF編集と署名",ocr:"画像とOCR",video:"動画・音声",temp:"一時メールとプライバシー",all:"すべてのツール",brandLead:"世界のAIツール比較 · SASI創作 · 無料オンラインツール"},
  ko:{rankings:"글로벌 AI 발견",rankSub:"AI 도구 순위",sasi:"SASI 창작",tools:"무료 온라인 도구",account:"소개 및 계정",terms:"약관",privacy:"개인정보",about:"소개",free:"매일 무료 체험",contacts:"연락처",drama:"AI 숏드라마",website:"웹사이트 제작",books:"책 질문",learning:"학습 SASI",research:"연구 SASI",pdf:"PDF 편집과 서명",ocr:"이미지와 OCR",video:"영상 및 오디오",temp:"임시 이메일 및 개인정보",all:"전체 도구",brandLead:"글로벌 AI 도구 비교 · SASI 창작 · 무료 온라인 도구"},
@@ -39,7 +39,6 @@ export default function Footer(){
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
-    <p className="lx-footer-position">{c.brandLead}</p>
     <p>{PUBLIC_FEATURE_COPY[lang].description}</p>
     <div className="lx-footer-trio"><span>SIAI Rankings</span><span>SASI Creation</span><span>100+ Online Tools</span></div>
     <p><a href="https://lingxifield.com" rel="noopener noreferrer">lingxifield.com</a> · <span>lingxifield.cn</span></p>
@@ -50,6 +49,7 @@ export default function Footer(){
     <Link href="/siai">{lang==="zh"?"功能与模型对比":c.rankSub}</Link>
     <Link href="/siai">{lang==="zh"?"免费额度与价格":c.free}</Link>
     <Link href="/siai">{lang==="zh"?"地区、付款与商用条件":c.rankings}</Link>
+    <a href={"https://globalsiai.com/"+lang+"/vendor/claim"} target="_blank" rel="noopener noreferrer">{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</a>
    </nav>
    <nav aria-label={c.sasi}>
     <b>{c.sasi}</b>
