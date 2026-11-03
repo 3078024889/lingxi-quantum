@@ -33,10 +33,23 @@ const FOOTER_LINKS:Record<LingxiLang,LinkLabels>={
  ar:{rankings:"اكتشف أدوات الذكاء",rankSub:"تصنيف أدوات الذكاء",sasi:"إبداع SASI",tools:"أدوات مجانية",account:"عن الموقع والحساب",terms:"الشروط",privacy:"الخصوصية",about:"من نحن",free:"تجربة مجانية يومية",contacts:"تواصل معنا",drama:"دراما قصيرة",website:"إنشاء المواقع",books:"أسئلة الكتب",learning:"SASI للتعلّم",research:"SASI للبحث",pdf:"PDF والتوقيع",ocr:"الصور وOCR",video:"الفيديو والصوت",temp:"بريد مؤقت",all:"كل الأدوات",brandLead:"مقارنة أدوات الذكاء · إبداع SASI · أدوات مجانية"}
 };
 
+const FOOTER_MARKET_DETAIL:Record<LingxiLang,[string,string,string]>={
+ zh:["功能与模型对比","免费额度与价格","地区、付款与商用条件"],
+ en:["Features and models","Free tiers and prices","Regions, payment and licenses"],
+ ja:["機能とモデル比較","無料枠と料金","地域・決済・商用条件"],
+ ko:["기능·모델 비교","무료 한도·가격","지역·결제·상업적 이용"],
+ fr:["Fonctions et modèles","Offres gratuites et tarifs","Régions, paiement et licence"],
+ de:["Funktionen und Modelle","Gratis-Tarife und Preise","Regionen, Zahlungen und Lizenzen"],
+ es:["Funciones y modelos","Planes gratis y precios","Regiones, pagos y licencias"],
+ pt:["Recursos e modelos","Planos grátis e preços","Regiões, pagamentos e licenças"],
+ ar:["الوظائف والنماذج","الخطط المجانية والأسعار","المناطق والدفع والتراخيص"]
+};
+
 export default function Footer(){
  const{t,lang}=useLingxiLang();
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
  const discovery=SIAI_DISCOVERY[lang];
+ const [modelLink,freeLink,regionLink]=FOOTER_MARKET_DETAIL[lang];
  return <footer className="lx11-footer lx-branded-footer" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
@@ -48,9 +61,9 @@ export default function Footer(){
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
     <Link href="/siai">{c.rankSub}</Link>
-    <Link href="/siai">{lang==="zh"?"功能与模型对比":c.rankSub}</Link>
-    <Link href="/siai">{lang==="zh"?"免费额度与价格":c.free}</Link>
-    <Link href="/siai">{lang==="zh"?"地区、付款与商用条件":c.rankings}</Link>
+    <Link href="/siai">{modelLink}</Link>
+    <Link href="/siai">{freeLink}</Link>
+    <Link href="/siai">{regionLink}</Link>
     <Link href={"/siai/claim?lang="+lang}>{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</Link>
    </nav>
    <nav aria-label={c.sasi}>
@@ -78,7 +91,7 @@ export default function Footer(){
   </nav>
   <div className="lx-footer-social-strip">
    <div><b>{c.contacts}</b><div className="lx11-footer-social">
-     {channels.map(([label,href])=>href.startsWith("#")?<a key={label} href={href}>{label}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{label} ↗</a>)}
+     {channels.map(([label,href])=>{const localized=label==="微信服务号"&&lang!=="zh"?"WeChat":label;return href.startsWith("#")?<a key={label} href={href}>{localized}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{localized} ↗</a>})}
     <a href="mailto:business@lingxifield.com">business@lingxifield.com</a>
    </div></div>
    <div className="lx-footer-qr-row">
