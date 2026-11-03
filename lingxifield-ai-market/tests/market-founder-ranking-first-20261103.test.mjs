@@ -24,7 +24,7 @@ test('all 32 curated products show sourced people, not legal-person company name
  assert.ok(card.includes('...(!compact&&company?'));
  assert.ok(card.includes('p.legalEntity||t.unverified'));
  assert.ok(card.includes("creator.role==='founder'"));
- for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(card,new RegExp('\\\\b'+lang+':\\\\{'));
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.ok(card.includes(lang+':{company:'),lang);
 });
 test('ranking opens above a default-collapsed, accessible verified cost calculator',()=>{
  const home=read('app/market-workbench.tsx'),css=read('app/globals.css');
