@@ -11,7 +11,13 @@ for(const slug of ["heic-local","heic-to-jpg"]){
   await expect(btn).toBeEnabled();
   await btn.click();
   // FileToolWorkbench uses ErrorExplain, a visible error card without role="alert".
-  await expect(area.getByText("Could not finish this time",{exact:true})).toBeVisible({timeout:50000});
+  if(slug==="heic-local"){
+   // Dedicated HEIC editor uses an accessible native alert with localized text.
+   await expect(area.locator('p[role="alert"]')).toBeVisible({timeout:30000});
+  }else{
+   // Generic file editor uses the ErrorExplain card, without role="alert".
+   await expect(area.getByText("Could not finish this time",{exact:true})).toBeVisible({timeout:30000});
+  }
   await expect(area.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
  });
 }
