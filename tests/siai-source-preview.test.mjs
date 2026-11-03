@@ -7,6 +7,7 @@ const batches=[1,2,3].map(i=>read("lingxifield-ai-market/data/company-intake/bat
 const obs=[1,2,3].map(i=>read("lingxifield-ai-market/data/siai-source-preview-20261103/batch-00"+i+"-official-observations.json"));
 const src=readFileSync(new URL("app/siai/candidate-public.ts",root),"utf8");
 const page=readFileSync(new URL("app/siai/page.tsx",root),"utf8");
+const catalog=readFileSync(new URL("app/siai/catalog-data.ts",root),"utf8");
 test("30 unique staged IDs remain explicitly unapproved in source, no price/region inference",()=>{
  const ids=new Set(),groups=new Set();let observed=0,missing=0,conflict=0;
  for(let i=0;i<3;i++){
@@ -34,7 +35,8 @@ test("30 unique staged IDs remain explicitly unapproved in source, no price/regi
  assert.deepEqual({observed,missing,conflict},{observed:205,missing:5,conflict:0});
 });
 test("preview is joined to main SIAI UI, never published as a verified SEO product page",()=>{
- assert.match(page,/getSiaiSourcePreviewRows/);
+ assert.match(catalog,/getSiaiSourcePreviewRows/);
+ assert.match(page,/getSiaiDirectoryRows/);
  assert.match(src,/recordStatus:"source_preview"/);
  assert(src.includes("year:history?.year||null"));
  assert(src.includes("yearSource:history?.yearSource||null"));
