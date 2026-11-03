@@ -8,7 +8,7 @@ test('global SIAI double horizontal rail and inline details',async({page})=>{
  await expect.poll(()=>grid.evaluate(el=>el.scrollLeft)).toBeGreaterThan(200);
  await grid.evaluate(el=>{el.scrollTop=360;});
  await expect(page.locator('.siai-home-table thead th').first()).toBeVisible();
- await expect(page.locator('.siai-home-claim')).toHaveAttribute('href',/globalsiai\.com\/(zh|en|ja|ko|fr|de|es|pt|ar)\/vendor\/claim/);
+ await expect(page.locator('.siai-home-claim')).toHaveAttribute('href',/\/siai\/claim\?lang=(zh|en|ja|ko|fr|de|es|pt|ar)/);
  const calc=page.locator('.siai-home-cost-accordion');
  await expect(calc).toBeVisible();await calc.locator('summary').click();await expect(calc.locator('.lxCostEstimate')).toBeVisible();
  await page.locator('.siai-home-actions button[aria-expanded]').first().click();
