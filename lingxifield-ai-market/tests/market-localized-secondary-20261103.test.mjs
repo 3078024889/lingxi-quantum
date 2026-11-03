@@ -25,5 +25,7 @@ test('user-facing SEO routes index only via official market release gate; vendor
  assert.match(r,/marketLocales\.map/);
  assert.match(s,/\['apps','models'\]/);
  assert.match(apps,/mayIndexMarket\(lang\)/);assert.match(models,/mayIndexMarket\(lang\)/);
+ assert.match(apps,/from '\.\.\/\.\.\/\.\.\/lib\/market-index-policy'/);
+ assert.match(models,/from '\.\.\/\.\.\/\.\.\/lib\/market-secondary-i18n'/);
  assert.match(claim,/index:false,follow:false/);
 });

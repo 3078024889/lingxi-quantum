@@ -1,7 +1,6 @@
 import type {Metadata} from 'next';
-import {notFound} from 'next/navigation';
-import {marketLocales,mayIndexMarket,indexableMarketLocales,marketCanonicalOrigin,type MarketLocale} from '../../../../lib/market-index-policy';
-import {appsCopy} from '../../../../lib/market-secondary-i18n';
+import {marketLocales,mayIndexMarket,indexableMarketLocales,marketCanonicalOrigin,type MarketLocale} from '../../../lib/market-index-policy';
+import {appsCopy} from '../../../lib/market-secondary-i18n';
 type Props={params:Promise<{lang:string}>};
 export async function generateMetadata({params}:Props):Promise<Metadata>{
  const {lang}=await params;
