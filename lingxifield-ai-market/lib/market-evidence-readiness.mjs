@@ -12,12 +12,15 @@ const hasValue=x=>Array.isArray(x)?x.some(t=>typeof t==='string'&&t.trim().lengt
 export function regionEvidenceLevel(f){
  if(!f||f.status!=='observed')return 'missing';
  const scope=String(f.scope||'').toLowerCase();
- if(/170plus_markets|market_coverage|country_coverage|official_available_markets/.test(scope))
-  return 'broad_market_statement';
+ // Specific model and legal restrictions win over general geographic words:
+ // "not_full_country_coverage" must never turn a restriction into support proof.
  if(/provider_model_specific|per_model|third_party_model/.test(scope))
   return 'provider_specific_restrictions';
  if(/export|restriction|sanction|embargo|country_whitelist|controls_only/.test(scope))
   return 'restrictions_only';
+ if(/170plus_markets|market_coverage|country_coverage|official_available_markets/.test(scope)&&
+    !/(?:not|no|without|unknown|unverified|incomplete|partial)_(?:full_)?(?:country|market|available_market)_coverage/.test(scope))
+  return 'broad_market_statement';
  return 'other_observation_not_country_proof';
 }
 const dateValid=(s,asOf)=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&!Number.isNaN(Date.parse(s+'T00:00:00Z'))&&s<=asOf;

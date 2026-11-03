@@ -459,10 +459,10 @@
         },
         "free": {
           "status": "observed",
-          "text": "Recraft 官方说明免费档作品公开展示且所有权属于 Recraft，不能当作自动获得商用授权。",
-          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "text": "Recraft 当前官方服务条款 7.1 明确：Free Tier 生成的作品归 Recraft 所有，只授权个人非商业使用，不可销售、授权给他人或作为 AI 模型训练素材。免费可生成图片不等于免费商用，也不等于付费订阅作品的授权范围。",
+          "source": "https://www.recraft.ai/legal/terms",
           "checkedAt": "2026-11-02",
-          "scope": "free_ownership"
+          "scope": "recraft_terms_7_1_free_personal_noncommercial_recraft_owned"
         },
         "models": {
           "status": "observed",
@@ -477,10 +477,10 @@
         },
         "commercial": {
           "status": "observed",
-          "text": "Recraft 官方 FAQ 说明付费订阅期生成的图片具备相应所有权与商业使用权益，免费档不同。",
-          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "text": "Recraft 官方服务条款 7.2：付费订阅用户可将自己生成的作品用于个人或商业场景，Recraft 将其对作品所持版权转让给订阅用户；仍禁止将作品用于训练 AI 模型。免费层 7.1 不允许商用且生成作品属于 Recraft，付费订阅授权与免费不同。",
+          "source": "https://www.recraft.ai/legal/terms",
           "checkedAt": "2026-11-02",
-          "scope": "paid_vs_free_license"
+          "scope": "recraft_terms_7_1_and_7_2_paid_ownership_commercial_no_ai_training"
         },
         "payment": {
           "status": "observed",

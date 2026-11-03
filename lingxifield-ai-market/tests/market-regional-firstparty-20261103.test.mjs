@@ -54,7 +54,7 @@ test('Figma AI referral 25 eligible countries relate to a campaign only; Figma M
 test('candidate source material cannot automatically publish the 4 extra records',()=>{
  const data=materializeCandidateCatalog(cohorts,obs);
  assert.equal(data.products.length,30);
- assert.deepEqual(data.totals,{observed:192,missing:18,conflict:0});
+ assert.deepEqual(data.totals,{observed:194,missing:16,conflict:0});
  for(const id of ['cursor','canva-magic-studio','ideogram','figma-make']){
   const p=data.products.find(p=>p.id===id);
   assert.equal(p.visibleToPublic,false);
@@ -62,4 +62,35 @@ test('candidate source material cannot automatically publish the 4 extra records
   assert.equal(p.searchablePublicly,false);
   assert.notEqual(p.regionEvidenceQuality,'country_by_country_verified');
  }
+});
+
+test('Pika terms state provider-model geography and sanctioned-user restrictions without claiming country coverage',()=>{
+ const p=byId('pika'),r=p.facts.regions;
+ assert.equal(r.status,'observed');
+ assert.equal(r.source,'https://pika.art/terms-of-service');
+ assert.equal(regionEvidenceLevel(r),'provider_specific_restrictions');
+ assert.match(r.text,/美国制裁/);
+ assert.match(r.text,/VPN/);
+ assert.match(r.text,/不是 Pika 所有国家的正面可用清单/);
+ sourceCheck(p,r.source);
+});
+test('Leonardo official terms distinguish embargo subject exclusions from verified supported countries',()=>{
+ const p=byId('leonardo'),r=p.facts.regions;
+ assert.equal(r.status,'observed');
+ assert.equal(r.source,'https://leonardo.ai/terms-of-service');
+ assert.equal(regionEvidenceLevel(r),'restrictions_only');
+ assert.match(r.text,/第13.8节/);
+ assert.match(r.text,/禁运/);
+ assert.match(r.text,/不能据此推断其他国家/);
+ sourceCheck(p,r.source);
+});
+
+test('negative country coverage wording cannot be upgraded into broad positive market evidence',()=>{
+ const observed=scope=>({status:'observed',scope});
+ assert.equal(regionEvidenceLevel(observed('provider_model_specific_not_full_country_coverage')),'provider_specific_restrictions');
+ assert.equal(regionEvidenceLevel(observed('official_embargo_restriction_country_coverage_unknown')),'restrictions_only');
+ assert.equal(regionEvidenceLevel(observed('not_full_country_coverage')),'other_observation_not_country_proof');
+ assert.equal(regionEvidenceLevel(observed('170plus_markets_publisher_public_statement')),'broad_market_statement');
+ assert.equal(regionEvidenceLevel(observed('specific_promotion_eligible_countries_not_full_platform_access')),'other_observation_not_country_proof');
+ assert.equal(regionEvidenceLevel({status:'missing'}),'missing');
 });

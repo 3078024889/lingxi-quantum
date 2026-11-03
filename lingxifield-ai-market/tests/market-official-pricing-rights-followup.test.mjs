@@ -52,7 +52,7 @@ test('Copilot payment and commercial licensing carefully scope account type and 
  assert.match(row.facts.commercial.text,/许可证/);
 });
 test('three held batches remain safe and full 7-field observation counts reconcile',()=>{
- const reports=[[b1,o1],[b2,o2],[b3,o3]].map(([b,o])=>auditOfficialObservations(o,b,{today:'2026-11-02'}));
+ const reports=[[b1,o1],[b2,o2],[b3,o3]].map(([b,o])=>auditOfficialObservations(o,b,{today:'2026-11-03'}));
  for(const r of reports){
   assert.equal(r.issues.length,0,JSON.stringify(r.issues));
   assert.equal(r.readyForPublication,false);
@@ -63,12 +63,12 @@ test('three held batches remain safe and full 7-field observation counts reconci
  const start=f.indexOf('={',f.indexOf('RESEARCHED_FACTS:'))+1;
  const end=f.indexOf('};\nexport const MARKET_RESEARCH_CHECKED_AT',start)+1;
  const facts=JSON.parse(f.slice(start,end));
- const r=buildEvidenceReadiness({curatedIds:ids,curatedFacts:facts,cohorts:[b1,b2,b3],observations:[o1,o2,o3],asOf:'2026-11-02'});
- assert.deepEqual([r.candidateIntake.observed,r.candidateIntake.missing,r.candidateIntake.conflict],[192,18,0]);
+ const r=buildEvidenceReadiness({curatedIds:ids,curatedFacts:facts,cohorts:[b1,b2,b3],observations:[o1,o2,o3],asOf:'2026-11-03'});
+ assert.deepEqual([r.candidateIntake.observed,r.candidateIntake.missing,r.candidateIntake.conflict],[194,16,0]);
  assert.equal(r.candidateIntake.products,30);
  assert.deepEqual(r.candidateIntake.regionalEvidence,{
-  missing:17,broad_market_statement:1,provider_specific_restrictions:2,
-  restrictions_only:8,other_observation_not_country_proof:2
+  missing:15,broad_market_statement:1,provider_specific_restrictions:3,
+  restrictions_only:9,other_observation_not_country_proof:2
  });
  assert.equal(r.candidateIntake.publishReady,0);
  assert.equal(r.safety.structurallyValid,true,JSON.stringify(r.safety.structuralIssues));

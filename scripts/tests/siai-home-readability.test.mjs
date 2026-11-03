@@ -7,9 +7,10 @@ test('both SIAI tables keep full data in detail while compact previews prevent t
  const home=read('components/SiaiRankingHome.tsx');
  const css=read('app/siai-home.css');
  const market=read('lingxifield-ai-market/app/globals.css');
- for(const prop of ['strength','price','free','region','payment','models','commercial']){
-  assert.ok(home.includes('title={p.'+prop+'}')||prop==='strength'&&home.includes('title={p.strength||p.about}'),prop+' full fact title missing');
+ for(const render of ['displayStrength(p)','displayFact(p,"price")','displayFact(p,"free")','displayRegion(p)','displayPayment(p)','displayFact(p,"models")','displayCommercial(p)']){
+  assert.ok(home.includes('title={'+render+'}'),render+' localized full fact tooltip missing');
  }
+ assert.doesNotMatch(home,/title=\{p\.(?:price|free|region|payment|models|commercial)\}/);
  assert.match(home,/expanded===p\.id/);
  assert.match(home,/siai-home-expanded-row/);
  assert.match(home,/colSpan=\{10\}/);
@@ -59,4 +60,36 @@ test('task-first SIAI comparison shows evidenced review freshness without invent
  assert.match(model,/replit:'2026-11-02'/);
  assert.match(model,/midjourney:'2026-11-02'/);
  assert.doesNotMatch(home,/Math\.random\(/);
+});
+
+test('verified payment conditions are not stripped by a Stripe Link shortcut',()=>{
+ const home=read('components/SiaiRankingHome.tsx');
+ assert.match(home,/p\.payment\.split\(' · '\)\.map\(s=>localizedPaymentName\(s,lang\)\)/);
+ assert.doesNotMatch(home,/Link（Stripe\/\.test/);
+ assert.match(home,/title=\{displayPayment\(p\)\}/);
+});
+
+test('all SIAI homepage visible labels including 550px mobile facets meet minimum 14px text contract',()=>{
+ const css=read('app/siai-home.css');
+ for(const match of css.matchAll(/font-size:(\d+)px/g))
+  assert.ok(Number(match[1])>=14,'unreadably small source/menu/company/label text: '+match[0]);
+ assert.match(css,/\.siai-home-identity dt\{[^}]*font-size:14px/);
+ assert.match(css,/\.siai-source\{[^}]*font-size:14px/);
+ assert.match(css,/\.siai-home-actions>a,\.siai-home-actions>button\{[^}]*font-size:14px/);
+ assert.match(css,/@media\(max-width:550px\)/);
+ assert.match(css,/\.siai-filter-line>strong\{font-size:14px\}/);
+});
+
+test('Runway corporate legal entity is sourced to Trust Center rather than inferred from product name',()=>{
+ const src=read('lingxifield-ai-market/lib/market-company-evidence.ts');
+ assert.match(src,/runway:\{kind:'company',publisherSource:'https:\/\/trust.runwayml.com\/',legalEntity:fact\('Runway AI, Inc\.'/);
+ assert.match(src,/legalEntityScope:'service_operator',founded:/);
+ assert.match(src,/fact\('Runway AI, Inc\.','https:\/\/trust.runwayml.com\/','2026-11-03'\)/);
+});
+
+test('nine-language product detail breadcrumbs and official evidence links are readable at 14px or above',()=>{
+ const css=read('app/siai-detail.css');
+ for(const match of css.matchAll(/font-size:(\d+)px/g))
+  assert.ok(Number(match[1])>=14,'detail text below 14px: '+match[0]);
+ assert.match(css,/\.siai-detail-facts dd a\{[^}]*font-size:14px/);
 });
