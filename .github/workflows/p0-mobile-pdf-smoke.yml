@@ -42,6 +42,7 @@ jobs:
           tests/final-closure/pdf-overlay-resize.spec.ts
           tests/final-closure/pdf-original-text-quick-edit.spec.ts
           tests/final-closure/pdf-native-export-reopen.spec.ts
+          tests/final-closure/pdf-native-image-ui.spec.ts
           tests/final-closure/siai-market-ui.spec.ts
       - name: Upload mobile Playwright artifacts
         if: ${{ !cancelled() }}

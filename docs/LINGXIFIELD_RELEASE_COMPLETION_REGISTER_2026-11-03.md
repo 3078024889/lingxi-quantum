@@ -68,3 +68,12 @@ License facts should be checked at the exact commit/release before including thi
 - Removing a painting operator from reachable content **does not prove secure redaction**: old revisions, shared/unreachable objects, image pixels or metadata can remain. Never market this as confidential-data deletion.
 - Evidence: `tests/tool-closure/pdf-native-text.test.mjs` checks parser, actual native stream removal, signature denial and fail-closed cases; `tests/final-closure/pdf-native-export-reopen.spec.ts` uses a real PDF, mock payment grant, actual download, pdf-lib reopen, and PDF.js text-layer absence after reupload.
 - Full regression status must be recorded from CI, never inferred from source edits.
+
+
+## 2026-11-03 · Original PDF embedded-image editing UI integration
+
+The original-image engine from MIT-licensed Folio (pinned `8e0a9f86a0957436e47cadb6f6475b2a0aecfd0c`) now has a direct image hit target on supported, unsigned, unrotated pages. Users can click, drag and resize the original image; replace with validated PNG/JPEG or delete it. The UI uses a local pixel crop solely for WYSIWYG preview. Export modifies original `Do` drawing operators, does **not** draw a duplicate overlay, and independently reopens output with PDF.js.
+
+Native images in Form XObjects, signed and rotated pages, ambiguous targets or unsupported transforms are rejected rather than rasterized; the native-image rotation handle is intentionally disabled. Removing an image's `Do` operator does not remove hidden/unreferenced image byte streams and is not secure redaction.
+
+Evidence: 5/5 native image unit tests plus production build passed #41641565253. New real browser tests `tests/final-closure/pdf-native-image-ui.spec.ts` verify original image deletion/replacement, downloadable PDF, re-import and unaffected second-page content. The new UI release remains gated on desktop/mobile CI and must not be merged until green.
