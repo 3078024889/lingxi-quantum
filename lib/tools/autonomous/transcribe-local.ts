@@ -1,3 +1,4 @@
+import {isLikelyVideoMediaFile,safeMediaExtension} from "@/lib/tools/autonomous/media-type";
 import {createFfmpegRuntime} from "@/lib/tools/media/runtime";
 import {fetchFile} from "@ffmpeg/util";
 
@@ -21,7 +22,7 @@ async function decodeWithAudioContext(file:File){
 async function extractVideoAudio(file:File){
  const ffmpeg=await createFfmpegRuntime();
  try{
-  const ext=file.name.split(".").pop()||"bin",input=`input.${ext}`,output="audio.wav";
+  const ext=safeMediaExtension(file.name),input=`input.${ext}`,output="audio.wav";
   await ffmpeg.writeFile(input,await fetchFile(file));
   const code=await ffmpeg.exec(["-i",input,"-vn","-ac","1","-ar","16000","-f","wav",output]);
   if(code!==0)throw new Error(`FFMPEG_AUDIO_EXTRACT_${code}`);
@@ -35,17 +36,31 @@ async function extractVideoAudio(file:File){
 
 async function audio(file:File){
  try{return await decodeWithAudioContext(file)}
- catch(e){if(file.type.startsWith("video/"))return await extractVideoAudio(file);throw e}
+ catch(e){if(isLikelyVideoMediaFile(file))return await extractVideoAudio(file);throw e}
 }
 
 export async function localMediaDuration(file:File){
- return await new Promise<number>((resolve,reject)=>{
-  const el=document.createElement(file.type.startsWith("video/")?"video":"audio"),u=URL.createObjectURL(file);
-  const done=()=>{URL.revokeObjectURL(u);el.removeAttribute("src")};
+ return new Promise<number>((resolve,reject)=>{
+  const el=document.createElement(isLikelyVideoMediaFile(file)?"video":"audio");
+  const url=URL.createObjectURL(file);
+  let settled=false;
+  const timer=setTimeout(()=>finish(undefined,new Error("MEDIA_METADATA_TIMEOUT")),15000);
+  function finish(value?:number,err?:Error){
+   if(settled)return;
+   settled=true;clearTimeout(timer);
+   el.onloadedmetadata=null;el.onerror=null;
+   try{el.pause();el.removeAttribute("src");el.load()}catch{}
+   URL.revokeObjectURL(url);
+   if(err)reject(err);else resolve(value??0);
+  }
   el.preload="metadata";
-  el.onloadedmetadata=()=>{const d=Number(el.duration);done();resolve(Number.isFinite(d)?d:0)};
-  el.onerror=()=>{done();reject(new Error("MEDIA_METADATA_FAILED"))};
-  el.src=u;
+  el.onloadedmetadata=()=>{
+   const duration=Number(el.duration);
+   if(!Number.isFinite(duration)||duration<=0)finish(undefined,new Error("MEDIA_DURATION_INVALID"));
+   else finish(duration);
+  };
+  el.onerror=()=>finish(undefined,new Error("MEDIA_METADATA_FAILED"));
+  el.src=url;
  });
 }
 
