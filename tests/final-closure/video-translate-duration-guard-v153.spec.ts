@@ -34,3 +34,43 @@ test("paid video translation requires actual video duration and invalidates stal
  await expect(page.getByText(/1 × 1 = 1/)).toBeVisible();
  await expect(page.locator("main").getByRole("button",{name:"Remove",exact:true})).toHaveCount(1);
 });
+
+test("changing video translation source or mode rejects the previous quote even at the same price and duration",async({page})=>{
+ test.setTimeout(90000);
+ const issued:any[]=[];
+ await page.route("**/api/tools/quote",async route=>{
+  if(route.request().method()!=="POST")return route.fulfill({status:404,json:{error:"LOCAL_QUOTE_ONLY"}});
+  const body=route.request().postDataJSON();
+  issued.push(body);
+  return route.fulfill({json:{
+   id:"safe-quote-"+issued.length,tool_id:"video-translate",quantity:body.quantity,
+   unit_name:"minute",amount_rmb:1.5,amount_usd:1.5,
+   currency:body.currency,display_amount:1.5,display_currency:body.currency,
+   metadata:body.metadata,expires_at:new Date(Date.now()+3600000).toISOString()
+  }});
+ });
+ await page.goto("/tools/video-translate?lang=en");
+ const video=Buffer.from((await readFile("tests/fixtures/sasi-video-4s.mp4.base64","utf8")).trim(),"base64");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"real.mp4",mimeType:"video/mp4",buffer:video});
+ const panel=page.getByTestId("video-translate-checkout");
+ await expect(panel).toBeVisible({timeout:30000});
+ await panel.getByRole("button").first().click();
+ await expect(panel.getByRole("button",{name:"Confirm & pay",exact:true})).toBeVisible();
+ expect(issued).toHaveLength(1);
+ const first=issued[0].metadata;
+ expect(first.draftId).toBeTruthy();
+ expect(first.source).toBe("auto");
+ await page.locator("main select").first().selectOption("ja");
+ await expect(panel.getByRole("button",{name:"Confirm & pay",exact:true})).toHaveCount(0);
+ await panel.getByRole("button").first().click();
+ await expect.poll(()=>issued.length).toBe(2);
+ expect(issued[1].metadata.source).toBe("ja");
+ expect(issued[1].metadata.draftId).not.toBe(first.draftId);
+ expect(issued[1].quantity).toBe(issued[0].quantity);
+ await page.locator("main select").nth(1).selectOption("dub");
+ await expect(panel.getByRole("button",{name:"Confirm & pay",exact:true})).toHaveCount(0);
+ await panel.getByRole("button").first().click();
+ await expect.poll(()=>issued.length).toBe(3);
+ expect(issued[2].metadata.mode).toBe("dub");
+ expect(issued[2].metadata.draftId).not.toBe(issued[1].metadata.draftId);
+});
