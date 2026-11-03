@@ -56,8 +56,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const displayStrength=(p:SiaiHomeRow)=>localizedProductSummary(p.id,lang)||p.strength||p.about;
  const displayRegion=(p:SiaiHomeRow)=>lang==='zh'?p.region:globalRegionSummary(p.id,lang);
  const displayCommercial=(p:SiaiHomeRow)=>lang==='zh'?p.commercial:commercialEvidence(p.id,lang)?.condition||p.commercial;
- const displayPayment=(p:SiaiHomeRow)=>lang==='zh'?p.payment:p.payment.split(' · ').map(s=>
-  /Link（Stripe/.test(s)?'Link (Stripe Checkout)':localizedPaymentName(s,lang)).join(' · ');
+ const displayPayment=(p:SiaiHomeRow)=>lang==='zh'?p.payment:p.payment.split(' · ').map(s=>localizedPaymentName(s,lang)).join(' · ');
  const displayAbout=(p:SiaiHomeRow)=>lang==='zh'?p.about:localizedProductSummary(p.id,lang)||p.name;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
     <p>{displayAbout(p)}</p>{p.checkedAt&&<p className="siai-checked-date">{REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&<p>{p.features.join(" · ")}</p>}
@@ -131,13 +130,13 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
          <div><dt>{t.founded}</dt><dd>{p.year||"—"}</dd></div>
          {p.checkedAt&&<div><dt>{REVIEWED_COPY[lang]}</dt><dd><time dateTime={p.checkedAt}>{p.checkedAt}</time></dd></div>}
         </dl></td>
-        <td><strong className="siai-cell-preview" title={p.strength||p.about}>{short(displayStrength(p),100)}</strong></td>
-        <td><span className="siai-cell-preview" title={p.free}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.price}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.region}>{short(displayRegion(p),100)}</span><Source href={p.regionSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.payment}>{short(displayPayment(p),88)}</span><Source href={p.paymentSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={p.models}>{short(displayFact(p,"models"),95)}</span></td>
-        <td><span className="siai-cell-preview" title={p.commercial}>{short(displayCommercial(p),100)}</span><Source href={p.commercialSource} label={t.source}/></td>
+        <td><strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),100)}</strong></td>
+        <td><span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayFact(p,"price")}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayRegion(p)}>{short(displayRegion(p),100)}</span><Source href={p.regionSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayPayment(p)}>{short(displayPayment(p),88)}</span><Source href={p.paymentSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayFact(p,"models")}>{short(displayFact(p,"models"),95)}</span></td>
+        <td><span className="siai-cell-preview" title={displayCommercial(p)}>{short(displayCommercial(p),100)}</span><Source href={p.commercialSource} label={t.source}/></td>
         <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button>
         <button type="button" className={compareIds.includes(p.id)?"siai-compare-selected":""} onClick={()=>toggleCompare(p.id)}
          disabled={!compareIds.includes(p.id)&&compareIds.length>=MAX_COMPARISONS}
