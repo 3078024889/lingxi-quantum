@@ -17,6 +17,18 @@ type OcrWord={text?:string;bbox?:{x0?:number;y0?:number;x1?:number;y1?:number}};
 type OcrBlock={paragraphs?:Array<{lines?:Array<{words?:OcrWord[]}>}>};
 type OcrResult={data:{text:string;blocks?:OcrBlock[]|null}};
 type W={recognize:(input:Blob,options?:Record<string,unknown>,output?:Record<string,boolean>)=>Promise<OcrResult>;terminate:()=>Promise<void>};
+const handoffCopy:Record<string,{go:string;error:string}>={
+ zh:{go:"将识别文字继续翻译",error:"暂时无法转交识别文字，已保留本页结果，可继续保存文件。"},
+ en:{go:"Translate recognized text",error:"Could not transfer the OCR text; it remains available here to save."},
+ ja:{go:"認識したテキストを翻訳",error:"OCRテキストを転送できませんでした。結果はこのページに残っています。"},
+ ko:{go:"인식한 텍스트 번역",error:"OCR 텍스트를 전달하지 못했습니다. 결과는 이 페이지에 남아 있습니다."},
+ fr:{go:"Traduire le texte reconnu",error:"Impossible de transférer le texte OCR. Le résultat reste disponible sur cette page."},
+ de:{go:"Erkannten Text übersetzen",error:"OCR-Text konnte nicht übertragen werden. Das Ergebnis bleibt auf dieser Seite verfügbar."},
+ es:{go:"Traducir texto reconocido",error:"No se pudo transferir el texto OCR. El resultado sigue disponible aquí."},
+ pt:{go:"Traduzir texto reconhecido",error:"Não foi possível transferir o texto OCR. O resultado permanece disponível aqui."},
+ ar:{go:"ترجمة النص المُتعرّف عليه",error:"تعذر نقل نص OCR. تبقى النتيجة متاحة للحفظ في هذه الصفحة."}
+};
+
 
 function blockTokens(blocks:OcrBlock[]|null|undefined):PositionedTextToken[]{
  const out:PositionedTextToken[]=[];
@@ -123,7 +135,7 @@ export default function PdfOcrWorkbench(){
    u.searchParams.set("handoff",id);
    location.assign(u.pathname+u.search);
   }catch{
-   setError(t("暂时无法转交识别文字，已保留本页结果，可继续保存文件。","Could not transfer the OCR text; it remains available here to save."));
+   setError(handoffCopy[uiLang]?.error||handoffCopy.en.error);
    setSendingToTranslation(false);
   }
  }
@@ -149,7 +161,7 @@ export default function PdfOcrWorkbench(){
   {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   {tableNote&&<p className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{tableNote}</p>}
   {text&&<textarea value={text} onChange={e=>setText(e.target.value)} rows={18} className="w-full rounded-2xl border p-4 font-mono text-sm"/>}
-  {text.trim()&&!busy&&<button type="button" disabled={sendingToTranslation} onClick={()=>void continueToTranslation()} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-5 py-2.5 text-sm disabled:opacity-40">{t("将识别文字继续翻译","Translate recognized text")}</button>}
+  {text.trim()&&!busy&&<button type="button" disabled={sendingToTranslation} onClick={()=>void continueToTranslation()} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-5 py-2.5 text-sm disabled:opacity-40">{handoffCopy[uiLang]?.go||handoffCopy.en.go}</button>}
   {results.length>0&&<ResultPanel sourceSlug="pdf-ocr" files={results} messageZh={tableFile?"OCR 与 Excel 已生成。":"OCR 文字已生成。"} messageEn={tableFile?"OCR and Excel are ready.":"OCR text is ready."}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>;
