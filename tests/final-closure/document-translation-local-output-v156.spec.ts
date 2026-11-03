@@ -171,7 +171,7 @@ for(const mode of ["omitted-segment","duplicate-id","replacement-character"] as 
   await page.goto("/tools/document-translate?lang=en");
   await page.locator('input[type="file"]').first().setInputFiles({
    name:"multi-line.txt",mimeType:"text/plain",
-   buffer:Buffer.from("First important sentence.\\nSecond independent sentence.\\nThird sentence.\\n")
+   buffer:Buffer.from(["First important sentence.","Second independent sentence.","Third sentence.",""].join(String.fromCharCode(10)))
   });
   await page.getByRole("combobox",{name:/Target/i}).selectOption("fr");
   await page.getByRole("button",{name:"Translate",exact:true}).click();
