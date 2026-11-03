@@ -1,0 +1,42 @@
+import {test,expect} from "./export-test";
+
+test("PDF editor visually removes original text and images, retaining undo and the actual source warning",async({page})=>{
+ test.setTimeout(90000);
+ const {PDFDocument,StandardFonts}=await import("pdf-lib");
+ const pdf=await PDFDocument.create();
+ const sheet=pdf.addPage([595,842]);
+ sheet.drawText("Remove this original headline",{x:65,y:720,size:18,font:await pdf.embedFont(StandardFonts.Helvetica)});
+ const embedded=await pdf.embedPng(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAHUlEQVR4nGM8ISe3hYECwESJ5lEDRg0YNWAwGQAAPMsB2FuN7EwAAAAASUVORK5CYII=","base64"));
+ sheet.drawImage(embedded,{x:300,y:540,width:100,height:80});
+ await page.goto("/tools/pdf-editor?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"source-content.pdf",mimeType:"application/pdf",buffer:Buffer.from(await pdf.save())});
+ await expect(page.getByTestId("pdf-source-preview")).toBeVisible({timeout:30000});
+ const originalText=page.getByRole("button",{name:"Edit existing text: Remove this original headline"});
+ await expect(originalText).toBeVisible({timeout:20000});
+ await originalText.click();
+ await page.getByRole("textbox",{name:"Edit PDF text"}).press("Enter");
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]')).toHaveCount(1);
+ await page.getByRole("button",{name:"Delete",exact:true}).click();
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]')).toHaveCount(0);
+ await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
+ await expect(originalText).toHaveCount(0);
+ await page.getByRole("button",{name:/Undo/}).click();
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]')).toHaveCount(1);
+ await expect(page.getByTestId("pdf-original-image")).toHaveCount(1,{timeout:20000});
+ await page.getByRole("button",{name:"Delete original image"}).click();
+ await expect(page.getByTestId("pdf-original-image")).toHaveCount(0);
+ await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(2);
+ await expect(page.getByText(/Original text may remain in PDF data/)).toBeVisible();
+ await page.getByRole("button",{name:"Preview",exact:true}).click();
+ await expect(page.getByTestId("pdf-export-preview").first()).toBeVisible({timeout:30000});
+ await page.getByRole("button",{name:/Undo/}).click();
+ await expect(page.getByTestId("pdf-original-image")).toHaveCount(1);
+ await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
+ // Keyboard Delete must keep the source masked, not reveal the old text.
+ await page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]').click();
+ await page.keyboard.press("Delete");
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]')).toHaveCount(0);
+ await expect(page.getByTestId("pdf-original-text-mask")).toHaveCount(1);
+ await page.getByRole("button",{name:/Undo/}).click();
+ await expect(page.locator('[data-testid="pdf-overlay"][data-overlay-kind="text"]')).toHaveCount(1);
+});
