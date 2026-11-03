@@ -7,10 +7,10 @@ export async function POST(req:NextRequest){
  try{
   if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
   const b=await req.json(),quoteId=String(b.quoteId||""),text=String(b.text||"");
-  if(!text||text.length>12000)return NextResponse.json({error:"INVALID_TEXT"},{status:400});
+  if(!text||text.length>4000)return NextResponse.json({error:"INVALID_TEXT"},{status:400});
   const verified=await requirePaidMediaQuote(quoteId,["video-dubbing","video-translate"]);
   // A one-minute paid quote cannot authorize a full 12,000-character voice job.
-  const maximumChars=Math.min(12000,Math.max(1200,Math.ceil(verified.quantity)*1500));
+  const maximumChars=Math.min(4000,Math.max(1200,Math.ceil(verified.quantity)*1500));
   if(text.length>maximumChars)return NextResponse.json({error:"QUOTE_TTS_TEXT_EXCEEDS_PAID_UNITS"},{status:409});
   await guardPaidMediaOperation(quoteId,verified.quantity,"tts");
   const audio=await synthesizeRemote(text,String(b.language||"en"));

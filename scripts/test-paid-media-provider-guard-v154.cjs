@@ -63,7 +63,7 @@ async function run(){
   assert.match(src,/MEDIA_USAGE_GUARD_UNAVAILABLE/);
  }
  const tts=fs.readFileSync("app/api/tools/media/tts/route.ts","utf8");
- assert.match(tts,/Math\.min\(12000,Math\.max\(1200,Math\.ceil\(verified\.quantity\)\*1500\)\)/);
+ assert.match(tts,/Math\.min\(4000,Math\.max\(1200,Math\.ceil\(verified\.quantity\)\*1500\)\)/);
  console.log("MEDIA_PAID_GUARD_V154=PASS: authenticated quote, atomic per-quote limits, outage fail-closed, route cost gates, paid-unit TTS length");
 }
 run().catch(e=>{console.error(e);process.exitCode=1});

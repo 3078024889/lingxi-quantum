@@ -12,6 +12,7 @@ import {localMediaDuration,transcribeLocal} from "@/lib/tools/autonomous/transcr
 import {concatMp3,muxTranslatedVideo,requireTimedTranscript,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
 import {extractExactTranslatedCues,requireCuesWithinVideo,pairBilingualCues} from "@/lib/tools/media/video-subtitle-integrity";
 import {fitVoiceDurationToVideo} from "@/lib/tools/media/voice-duration-fit";
+import {splitSpeechText} from "@/lib/tools/media/tts-split";
 import {voiceDurationCopy,voiceDurationError,voiceDurationInfo} from "@/lib/tools/media/voice-duration-plan";
 import {newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
@@ -36,15 +37,6 @@ const bilingualNote:Record<typeof LANGS[number][0],string>={
 
 function chunks<T>(items:T[],n:number){const out:T[][]=[];for(let i=0;i<items.length;i+=n)out.push(items.slice(i,i+n));return out}
 function marker(i:number){return `⟦LX${String(i).padStart(4,"0")}⟧`}
-function splitTts(text:string,max=10500){
- const parts:string[]=[];let cur="";
- for(const piece of text.split(/(?<=[。！？.!?])\s*/)){
-  if(!piece)continue;
-  if((cur+piece).length>max&&cur){parts.push(cur);cur=piece}else cur+=piece;
- }
- if(cur)parts.push(cur);
- return parts.length?parts:[text.slice(0,max)];
-}
 async function apiTranslate(text:string,source:string,target:string,quoteId:string){
  const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));const translated=String(d.translated||"").trim();if(!translated)throw Error("TRANSLATION_EMPTY");return translated;
@@ -139,7 +131,7 @@ export default function VideoTranslateWorkbench(){
       if(mode==="dub"){
        setStage(`${fi+1}/${files.length} · ${ti+1}/${targets.length} · 正在生成 AI 配音…`);
        const ttsParts=[] as Blob[];
-       for(const part of splitTts(txt)){ttsParts.push(await remoteTts(part,target,quoteId))}
+       for(const part of splitSpeechText(txt,Math.min(3500,Math.max(1200,quantity*1500)))){ttsParts.push(await remoteTts(part,target,quoteId))}
        const whole=await concatMp3(ttsParts,p=>setStage(`${fi+1}/${files.length} · 正在合并语音 ${Math.round(p*100)}%`));
        setStage(voiceDurationCopy(uiLang).stage);
        dubbed=await fitVoiceDurationToVideo(whole,duration);

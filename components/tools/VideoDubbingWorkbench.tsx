@@ -10,6 +10,8 @@ import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/tran
 import{mediaDurationCopy}from"@/lib/tools/media/duration-copy";
 import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
 import {fitVoiceDurationToVideo} from "@/lib/tools/media/voice-duration-fit";
+import {concatMp3} from "@/lib/tools/media/video-translate-client";
+import {splitSpeechText} from "@/lib/tools/media/tts-split";
 import {voiceDurationCopy,voiceDurationError,voiceDurationInfo} from "@/lib/tools/media/voice-duration-plan";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 
@@ -102,7 +104,11 @@ export default function VideoDubbingWorkbench(){
      subs.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
     }
     setStage(`${i+1}/${files.length} · 正在生成配音…`);
-    const voice=await remoteTts(translated,target,quoteId);
+    const parts:Blob[]=[];
+    for(const segment of splitSpeechText(translated,Math.min(3500,Math.max(1200,quantity*1500)))){
+      parts.push(await remoteTts(segment,target,quoteId));
+    }
+    const voice=await concatMp3(parts);
     setStage(`${i+1}/${files.length} · 正在合成视频…`);
     const measured=await localMediaDuration(f);
     setStage(voiceDurationCopy(uiLang).stage);

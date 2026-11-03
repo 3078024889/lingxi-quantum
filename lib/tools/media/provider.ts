@@ -20,8 +20,8 @@ export function mediaProviderReady(){return Boolean(mediaProviderConfig())}
 
 async function checked(r:Response){
  if(r.ok)return r;
- const t=await r.text().catch(()=>"");
- throw new Error(`MEDIA_PROVIDER_${r.status}:${t.slice(0,500)}`);
+ // Do not echo provider response bodies (which can include private input or tokens).
+ throw new Error(`MEDIA_PROVIDER_${r.status}`);
 }
 
 export async function translateTextRemote(input:{text:string;source:string;target:string}){
@@ -31,7 +31,7 @@ export async function translateTextRemote(input:{text:string;source:string;targe
   headers:{authorization:`Bearer ${c.key}`,"content-type":"application/json"},
   body:JSON.stringify({
    model:c.translateModel,
-   temperature:0.1,
+   // Legacy GPT-5-mini does not accept non-default temperature; omit it.
    messages:[
     {role:"system",content:"Translate faithfully. Return only the translated text. Preserve line breaks, numbers, names, and subtitle punctuation. Do not add commentary."},
     {role:"user",content:`Source language: ${input.source}\nTarget language: ${input.target}\n\n${input.text}`}
@@ -55,12 +55,13 @@ export async function transcribeAudioRemote(file:File){
 }
 
 export async function synthesizeRemote(text:string,language:string){
+ if(!text.trim()||text.length>4000)throw Error("TTS_TEXT_EXCEEDS_PROVIDER_LIMIT");
  const c=mediaProviderConfig();if(!c)throw new Error("MEDIA_PROVIDER_NOT_CONFIGURED");
  const r=await checked(await fetch(`${c.baseUrl}/audio/speech`,{
   method:"POST",
   headers:{authorization:`Bearer ${c.key}`,"content-type":"application/json"},
   body:JSON.stringify({
-   model:c.ttsModel,voice:c.voice,input:text.slice(0,12000),response_format:"mp3",
+   model:c.ttsModel,voice:c.voice,input:text,response_format:"mp3",
    instructions:`Speak naturally in ${language}. Clear pacing, neutral professional tone.`
   })
  }));
