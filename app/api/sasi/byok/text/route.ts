@@ -30,7 +30,7 @@ export async function GET(){
   selectUserTextConnection(user.id).catch(()=>null),
  ]);
  if(tasks.error)return reply({error:"HISTORY_UNAVAILABLE"},503);
- return reply({ready:Boolean(connection),billing:"supplier_direct",connection:connection?{provider:connection.provider,model:connection.model_id}:null,tasks:(tasks.data??[]).map((row:any)=>({...row,request:undefined,question:row.request?.messages?.at(-1)?.content??""}))});
+ return reply({ready:Boolean(connection),billing:"supplier_direct",connection:connection?{provider:connection.provider,model:connection.model_id}:null,tasks:(tasks.data??[]).map((row:any)=>({...row,request:undefined,mode:row.request?.mode??null,previousId:row.request?.mode==="chat"?row.request?.previousId??null:null,question:row.request?.messages?.at(-1)?.content??""}))});
 }
 
 export async function POST(request:NextRequest){
@@ -58,7 +58,7 @@ export async function POST(request:NextRequest){
   messages.push({role:"user",content:mode==="book"?buildGroundedReasoningPrompt({question:body.question.trim(),mode:"book",intelligence:"standard",evidence}):body.question.trim()});
   if(messages.reduce((n,m)=>n+Buffer.byteLength(m.content),0)>60000)return reply({error:"CONTEXT_LIMIT_START_NEW"},422);
   const expiresAt=new Date(Date.now()+10*60_000).toISOString();const billingCurrency=await userSasiCurrency(user.id);const estimatedTokens=Math.max(1,Math.ceil(messages.reduce((n,m)=>n+m.content.length,0)/3)+(mode==="website"||mode==="video-plan"?4096:2048));const estimatedTextMinor=textChargeMinor(estimatedTokens,billingCurrency);const estimatedPlatformMinor=estimatedTextMinor+(mode==="website"?websiteChargeMinor(3,billingCurrency):0);
-  const result=await db.from("sasi_byok_text_tasks").insert({user_id:user.id,request:{messages,director,mode,evidence,method,skillIds,provider:connection.provider,model:connection.model_id,billingCurrency,maxPages:mode==="website"?3:undefined},profile_version:version,key_fingerprint:connection.fingerprint,estimated_fen:estimatedPlatformMinor,expires_at:expiresAt}).select(fields).single();
+  const result=await db.from("sasi_byok_text_tasks").insert({user_id:user.id,request:{messages,director,mode,previousId:mode==="chat"&&typeof body.previousId==="string"?body.previousId:null,evidence,method,skillIds,provider:connection.provider,model:connection.model_id,billingCurrency,maxPages:mode==="website"?3:undefined},profile_version:version,key_fingerprint:connection.fingerprint,estimated_fen:estimatedPlatformMinor,expires_at:expiresAt}).select(fields).single();
   return result.error?reply({error:"QUOTE_SAVE_FAILED"},503):reply({task:result.data,billing:"supplier_direct",billingCurrency,connection:{provider:connection.provider,model:connection.model_id}},201);
  }
  if(body.acceptSupplierBilling!==true)return reply({error:"BUDGET_CONFIRMATION_REQUIRED"},422);
