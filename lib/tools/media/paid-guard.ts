@@ -11,6 +11,14 @@ export async function requirePaidMediaQuote(quoteId:string,toolIds:string[]){
  if(error)throw new Error("QUOTE_LOOKUP_UNAVAILABLE");
  if(!data||!toolIds.includes(String(data.tool_id)))throw new Error("QUOTE_NOT_FOUND");
  if(String(data.status)!=="paid")throw new Error("QUOTE_NOT_PAID");
+ // A paid quote without an active unconsumed delivery grant must not fund
+ // repeated provider calls after its result has been completed or revoked.
+ const{data:grant,error:grantError}=await admin.from("tool_export_grants")
+   .select("id,consumed_at")
+   .eq("quote_id",quoteId).eq("user_id",user.id).is("revoked_at",null).maybeSingle();
+ if(grantError)throw new Error("MEDIA_GRANT_LOOKUP_UNAVAILABLE");
+ if(!grant)throw new Error("MEDIA_GRANT_NOT_FOUND");
+ if(grant.consumed_at)throw new Error("MEDIA_GRANT_ALREADY_CONSUMED");
  const quantity=Number(data.quantity);
  if(!Number.isFinite(quantity)||quantity<=0)throw new Error("QUOTE_INVALID_QUANTITY");
  return{userId:user.id,toolId:String(data.tool_id),quantity};

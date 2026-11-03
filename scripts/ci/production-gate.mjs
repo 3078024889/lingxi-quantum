@@ -15,6 +15,7 @@ const commands=[
  ["node",["scripts/test-voice-duration-fit-v169.cjs"]],
  ["node",["scripts/test-media-quote-readiness-v151.cjs"]],
  ["node",["scripts/test-media-vendor-contract-v171.cjs"]],
+ ["node",["scripts/test-media-one-time-grant-v173.cjs"]],
  ["node",["scripts/test-export-access-v92.cjs"]],
  ["node",["scripts/test-paid-export-quote-binding-v166.cjs"]],
  ["node",["scripts/test-daily-export-api-v92.cjs"]],

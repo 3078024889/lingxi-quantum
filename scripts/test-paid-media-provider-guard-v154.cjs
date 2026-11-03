@@ -4,13 +4,20 @@ const source=fs.readFileSync("lib/tools/media/paid-guard.ts","utf8");
 const js=ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
 const id="9df2140d-f934-47ab-9ebc-579627052865";
 let paid=true,owner="test-user",serviceError=null,limiterError=null,limiterAllowed=true,rpcCalls=[],filters=[];
+let grantConsumed=false,grantMissing=false,grantError=null;
 const query={
  select(){return this},
  eq(key,value){filters.push([key,value]);return this},
  async maybeSingle(){return{data:serviceError?null:{id,user_id:owner,tool_id:"video-dubbing",status:paid?"paid":"quoted",expires_at:"2026-11-30T00:00:00Z",quantity:1},error:serviceError}}
 };
+const grantQuery={
+ select(){return this},
+ eq(key,value){filters.push([key,value]);return this},
+ is(key,value){assert.equal(key,"revoked_at");assert.equal(value,null);return this},
+ async maybeSingle(){return{data:grantMissing?null:{id:"entitlement",consumed_at:grantConsumed?"2026-11-03T00:00:00Z":null},error:grantError}}
+};
 const admin={
- from(name){assert.equal(name,"tool_payment_quotes");return query},
+ from(name){if(name==="tool_payment_quotes")return query;if(name==="tool_export_grants")return grantQuery;throw Error("UNEXPECTED_TABLE:"+name)},
  async rpc(name,args){assert.equal(name,"rate_limit_check");rpcCalls.push(args);return{data:limiterAllowed,error:limiterError}}
 };
 const isolatedExports={};
@@ -52,6 +59,13 @@ async function run(){
  owner="test-user";serviceError={code:"PGRST"};
  await rejects(()=>verify(id,["video-dubbing"]),/QUOTE_LOOKUP_UNAVAILABLE/);
  serviceError=null;
+ grantConsumed=true;
+ await rejects(()=>verify(id,["video-dubbing"]),/MEDIA_GRANT_ALREADY_CONSUMED/);
+ grantConsumed=false;grantMissing=true;
+ await rejects(()=>verify(id,["video-dubbing"]),/MEDIA_GRANT_NOT_FOUND/);
+ grantMissing=false;grantError={code:"503"};
+ await rejects(()=>verify(id,["video-dubbing"]),/MEDIA_GRANT_LOOKUP_UNAVAILABLE/);
+ grantError=null;
  await rejects(()=>guard("bad-id",1,"tts"),/MEDIA_QUOTE_INVALID/);
  await rejects(()=>guard(id,0,"tts"),/MEDIA_QUOTE_INVALID/);
  for(const file of ["app/api/tools/media/translate/route.ts","app/api/tools/media/tts/route.ts","app/api/tools/media/transcribe/route.ts"]){

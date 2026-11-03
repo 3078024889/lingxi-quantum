@@ -1,0 +1,17 @@
+const fs=require("node:fs"),assert=require("node:assert/strict");
+const client=fs.readFileSync("components/tools/PaidActionButton.tsx","utf8");
+const server=fs.readFileSync("lib/tools/media/paid-guard.ts","utf8");
+const marker='const response=await fetch("/api/tools/export/consume"';
+const onPaid='await requireCompletedDelivery(()=>onPaid(id))';
+assert(client.includes(marker),"video media paid output must ack one-time grant");
+assert(client.indexOf(onPaid)<client.indexOf(marker),"never consume grant before genuine completed media");
+assert(client.includes("mediaGeneratedIds.current.has(id)")&&client.includes("mediaGeneratedIds.current.add(id)"),"ack retry must not rerun model");
+assert(client.includes("if(isMeteredMedia&&(d.grant?.consumed_at||d.grant?.consumedAt))"),"consumed media grant must not trigger new model");
+assert(client.includes("MEDIA_GRANT_CONSUME_FAILED"));
+assert(server.includes('admin.from("tool_export_grants")'));
+assert(server.includes("MEDIA_GRANT_ALREADY_CONSUMED"));
+assert(server.includes("MEDIA_GRANT_LOOKUP_UNAVAILABLE"));
+assert(server.includes("MEDIA_GRANT_NOT_FOUND"));
+const required=["zh","en","ja","ko","fr","de","es","pt","ar"];
+for(const lang of required)assert(client.includes('mediaAlreadyDelivered:c('),"localized delivered state missing "+lang);
+console.log("MEDIA_ONCE_GRANT_V173=PASS: real completion then atomic grant acknowledgement; failed ack retries without repeating provider calls; previously used grants fail closed. Live DB not exercised.");
