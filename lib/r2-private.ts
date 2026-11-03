@@ -62,6 +62,22 @@ export async function r2Head(key:string){
   if(!r.ok)return null;
   return {size:Number(r.headers.get("content-length")||0),type:r.headers.get("content-type")||""};
 }
+/** Read only a small prefix of private R2 objects to prove new uploads are sealed,
+ * without exposing plaintext or fetching the entire private attachment. */
+export async function r2ReadPrefix(key:string,length=20):Promise<Uint8Array|null>{
+ if(!Number.isSafeInteger(length)||length<8||length>128)throw Error("R2_PREFIX_BOUNDS");
+ const response=await fetch(presignR2("GET",key,120),{
+  headers:{Range:`bytes=0-${length-1}`},cache:"no-store",signal:AbortSignal.timeout(10000)
+ });
+ if(response.status!==206){
+  try{await response.body?.cancel()}catch{}
+  return null;
+ }
+ const range=response.headers.get("content-range")||"";
+ if(!range.startsWith(`bytes 0-${length-1}/`))return null;
+ const bytes=new Uint8Array(await response.arrayBuffer());
+ return bytes.length===length?bytes:null;
+}
 export async function r2Delete(key:string){
   const r=await fetch(presignR2("DELETE",key,120),{method:"DELETE",cache:"no-store",signal:AbortSignal.timeout(10000)});
   return r.ok||r.status===404;
