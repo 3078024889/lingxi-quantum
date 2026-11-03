@@ -1,10 +1,8 @@
 "use client";
-import {BRAND_PUBLIC_COPY} from "@/lib/brand-public-copy";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import Image from"next/image";
 import Link from"next/link";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
-import{productCatalogText}from"@/lib/product-catalog-i18n";
 
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
 
