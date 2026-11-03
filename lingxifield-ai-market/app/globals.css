@@ -1241,3 +1241,27 @@ body{font-size:16px;line-height:1.6}
   -webkit-line-clamp:4;line-clamp:4
  }
 }
+
+
+/* Product answers: a helpful example and the real limitation, not internal review notices. */
+.capabilityShowcase{border-color:#d8e5f1;border-radius:15px;background:linear-gradient(175deg,#fff 70%,#f7fbff 100%)}
+.capabilityShowcase .capabilityKicker,.capabilityShowcase .capabilityHeading p,.capabilityShowcase .capabilityAudience,.capabilityShowcase .capabilityAudience span,.capabilityShowcase .capabilityAudience small{font-size:14px}
+.capabilityShowcase .capabilityHeading h2{font-size:clamp(20px,2vw,26px);line-height:1.45}
+.capabilityShowcase .capabilityItem{background:#fff;border-color:#dce5f0;box-shadow:0 5px 15px rgba(19,61,115,.035)}
+.capabilityShowcase .capabilityCount,.capabilityShowcase .capabilityOutcome,.capabilityShowcase .capabilityExample,.capabilityShowcase .capabilityBoundary,
+.capabilityShowcase .capabilityExample b,.capabilityShowcase .capabilityBoundary b,.capabilityShowcase .capabilitySource,.capabilityShowcase .capabilityCoverage span,.capabilityShowcase .capabilityCoverage small,
+.capabilityShowcase .capabilityHeading>a,.capabilityShowcase .capabilityBottom>a,.capabilityShowcase .capabilityBottom li{font-size:14px;line-height:1.75}
+.capabilityShowcase .capabilityExample,.capabilityShowcase .capabilityBoundary{padding:10px 12px;overflow-wrap:anywhere}
+.capabilityShowcase .capabilityExample{background:#ecf5ff;color:#25527d}
+.capabilityShowcase .capabilityBoundary{background:#fff9ef;color:#76552f;border:1px solid #f1e8d5}
+.capabilityShowcase .capabilityItem h3{font-size:16px}
+.capabilityShowcase .capabilitySource{margin-top:auto;text-underline-offset:3px;text-decoration:underline}
+@media(max-width:680px){.capabilityShowcase{padding:14px}.capabilityShowcase .capabilityGrid{grid-template-columns:1fr}}
+
+
+/* The answer and its evidence stay together in side-by-side comparisons. */
+.app .marketCompareProof{display:block;width:max-content;max-width:100%;margin-top:8px;color:#155fa8;font-size:14px;font-weight:750;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.app .marketCompareProof:focus-visible{outline:2px solid #2769ad;outline-offset:3px}
+.app .compareDialog .compareFitScroll tbody td>span{display:block;line-height:1.8;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.app .compareDialog .compareFitScroll tbody tr:nth-child(2n){background:#f8fbff}
+.app .compareDialog .compareFitScroll tbody th{font-size:14px;font-weight:750;color:#294f78}

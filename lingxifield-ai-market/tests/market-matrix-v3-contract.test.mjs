@@ -58,8 +58,8 @@ test('official model and pricing review records are not replaced by marketing cl
  for(const id of ['chatgpt','claude','gemini','runway'])
   assert.match(facts,new RegExp('product:"'+id+'",observedAt:"2026-10-30"'));
  assert.match(facts,/models:"模型与用量",reasoning:"推理与理解能力"/);
- assert.match(row,/const rawFree=free\?\.text\|\|guide\?\.free/);
- assert.match(row,/const rawCost=price\?\.text\|\|guide\?\.cost/);
+ assert.match(row,/const rawFree=research\?\.free\|\|free\?\.text\|\|guide\?\.free/);
+ assert.match(row,/const rawCost=research\?\.price\|\|price\?\.text\|\|guide\?\.cost/);
 });
 
 test('the overview does not rely on fixed overlay columns or multi-thousand-pixel horizontal scroll',()=>{

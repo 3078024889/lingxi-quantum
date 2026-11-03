@@ -38,7 +38,9 @@ test('comparison keeps the original 2–3 selection workflow and country-specifi
  assert.match(home,/sessionStorage\.getItem\('lingxifield_market_compare_v1'\)/);
  assert.match(home,/compare\.length>=2\)\s*setShowCompare\(true\)/);
  assert.match(home,/field\.pick\(platform,region,language\)/);
- assert.match(home,/globalRegionFact\(p\.id,country\)/);
+ assert.match(home,/field\.proof\?\.\(platform,region\)/);
+ assert.match(home,/className="marketCompareProof"/);
+ assert.match(home,/globalRegionFact\(p\.id,region\)/);
  assert.match(home,/compareFitScroll/);
  assert.match(css,/\.compareFitScroll table\{width:100%;min-width:0;table-layout:fixed/);
 });
