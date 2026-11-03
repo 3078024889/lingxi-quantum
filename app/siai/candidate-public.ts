@@ -56,7 +56,7 @@ const trusted=(v:string)=>{try{const u=new URL(v);return u.protocol==="https:"&&
 const text=(f:SourceFact|undefined)=>f?.status==="observed"&&f.text&&trusted(f.source||"")?f.text:NOT_DOCUMENTED;
 const source=(f:SourceFact|undefined)=>f?.status==="observed"&&f.source&&trusted(f.source)?f.source:null;
 export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
- const snapshot=materializeCandidateCatalog([cohort1,cohort2,cohort3],[observed1,observed2,observed3]) as {
+ const snapshot=materializeCandidateCatalog([cohort1,cohort2,cohort3],[observed1,observed2,observed3]) as unknown as {
   candidateProducts:number;publisherGroups:number;totals:{observed:number;missing:number;conflict:number};products:PreviewRecord[];
  };
  // A changed evidence ledger cannot silently turn provisional product rows into verified ranking facts.
