@@ -1,0 +1,48 @@
+name: LINGXIFIELD 124 Tool Route Smoke
+on:
+  push:
+    branches: [test/124-tool-route-smoke-pr136-20261103]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxifield-tool-route-smoke-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  route-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build production server
+        run: pnpm build
+      - name: Install Chrome
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Test 124 routes on desktop and Pixel 7
+        run: pnpm exec playwright test -c playwright.route-smoke.config.ts --workers=4
+      - name: Upload route evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: lingxifield-route-evidence-${{ github.sha }}
+          path: |
+            reports/route-smoke-124.json
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
