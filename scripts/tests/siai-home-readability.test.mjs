@@ -79,3 +79,10 @@ test('all SIAI homepage visible labels including 550px mobile facets meet minimu
  assert.match(css,/@media\(max-width:550px\)/);
  assert.match(css,/\.siai-filter-line>strong\{font-size:14px\}/);
 });
+
+test('Runway corporate legal entity is sourced to Trust Center rather than inferred from product name',()=>{
+ const src=read('lingxifield-ai-market/lib/market-company-evidence.ts');
+ assert.match(src,/runway:\{kind:'company',publisherSource:'https:\/\/trust.runwayml.com\/',legalEntity:fact\('Runway AI, Inc\.'/);
+ assert.match(src,/legalEntityScope:'service_operator',founded:/);
+ assert.match(src,/fact\('Runway AI, Inc\.','https:\/\/trust.runwayml.com\/','2026-11-03'\)/);
+});
