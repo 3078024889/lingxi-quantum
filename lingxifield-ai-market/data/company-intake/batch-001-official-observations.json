@@ -400,8 +400,11 @@
           "scope": "vendor_public_page"
         },
         "regions": {
-          "status": "missing",
-          "reason": "未逐国核对可用地区和模型供应商区域限制"
+          "status": "observed",
+          "text": "Krea 官方法律条款要求使用者遵守适用的出口管制、隐私及其他法律；具体生成内容的商用权限还取决于订阅档位。该条款未提供 Krea AI 逐国允许注册、生成或实际付款的名单；这里记录的是出口法律约束，不是对全球可用的承诺。条款页面显示最后更新为 2024 年 5 月 20 日。",
+          "source": "https://www.krea.ai/terms",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_control_restrictions_only_no_supported_country_list"
         },
         "commercial": {
           "status": "observed",
@@ -658,8 +661,11 @@
           "scope": "features_not_foundation_models"
         },
         "regions": {
-          "status": "missing",
-          "reason": "未核对所有地区的订阅可用性"
+          "status": "observed",
+          "text": "Descript 官方使用条款在法律合规部分要求使用者确认：不位于受美国政府禁运的国家，且不在美国政府禁止或限制往来主体名单内。该规定覆盖 Descript Mac、Windows 和 Web 服务，不能由此推断其他所有国家均可注册、使用 AI 功能或结账。官网条款注明 2025 年 2 月 25 日更新。",
+          "source": "https://www.descript.com/terms",
+          "checkedAt": "2026-11-03",
+          "scope": "official_us_embargo_and_denied_party_restrictions_only"
         },
         "commercial": {
           "status": "observed",
