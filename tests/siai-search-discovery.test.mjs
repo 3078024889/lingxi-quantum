@@ -38,7 +38,7 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(page,/"@type":"FAQPage"/);
  assert.match(read("app/llms.txt/route.ts"),/SIAI_DISCOVERY\.zh\.topics/);
  assert.match(read("public/llms-full.txt"),/Global AI \/ SI \/ SIAI rankings/);
- assert.match(page,/const curated=getCuratedRows\(\)/);
+ assert.match(page,/const \{curated,rows\}=getSiaiDirectoryRows\(\)/);
  assert.match(page,/itemListElement:curated\.map/);
  assert.match(page,/alternates:\{canonical:PRIMARY_SITE\+"\/siai"\}/);
  assert.doesNotMatch(page,/index:false/);
