@@ -175,6 +175,10 @@ export default function Nav() {
             ))}
           </section>
         ))}
+        <Link href="/domains" className={`lx11-link ${active(pathname,"/domains")?"is-active":""}`}>
+          <LingxiMiniIcon name="products" size="nav" className="lx11-nav-icon"/>
+          <span>{{zh:"全球域名中心",en:"Domains",ja:"ドメイン",ko:"도메인",fr:"Domaines",de:"Domains",es:"Dominios",pt:"Domínios",ar:"النطاقات"}[lang]}</span>
+        </Link>
         {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
       </div>
 
