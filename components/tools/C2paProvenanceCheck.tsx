@@ -1,45 +1,9 @@
 "use client";
 import {useEffect,useState} from "react";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
+import {describeC2paManifest,type ProvenanceResult} from "@/lib/tools/media/c2pa-verdict";
+export type {ProvenanceStatus,ProvenanceResult} from "@/lib/tools/media/c2pa-verdict";
 
-export type ProvenanceStatus="checking"|"trusted"|"valid"|"untrusted"|"invalid"|"absent"|"unavailable";
-export type ProvenanceResult={status:ProvenanceStatus;issuer?:string;claim?:string;reason?:string};
-
-let sdkPromise:Promise<Awaited<ReturnType<typeof import("@contentauth/c2pa-web/inline")["createC2pa"]>>>|null=null;
-/** Single SDK instance per browser session: avoid instantiating Wasm for each uploaded file. */
-async function getSdk(){
- if(!sdkPromise)sdkPromise=import("@contentauth/c2pa-web/inline").then(({createC2pa})=>createC2pa()).catch(error=>{sdkPromise=null;throw error});
- return sdkPromise;
-}
-const isObj=(input:unknown):input is Record<string,unknown>=>Boolean(input)&&typeof input==="object"&&!Array.isArray(input);
-function describe(store:unknown):ProvenanceResult{
- if(!isObj(store))return {status:"unavailable",reason:"INVALID_VERIFICATION_REPORT"};
- const manifests=isObj(store.manifests)?store.manifests:{};
- const active=typeof store.active_manifest==="string"?store.active_manifest:"";
- // A manifest-free result is not evidence that the source is human or AI.
- if(!active||!isObj(manifests[active]))return {status:"unavailable",reason:"MISSING_ACTIVE_MANIFEST"};
- const value=store.validation_state;
- const rawState=typeof value==="string"?value.toLowerCase():"";
- const details=manifests[active] as Record<string,unknown>;
- const sig=isObj(details.signature_info)?details.signature_info:{};
- const issuer=typeof sig.issuer==="string"?sig.issuer.slice(0,160):undefined;
- const claim=typeof details.title==="string"?details.title.slice(0,160):undefined;
- if(rawState==="trusted")return {status:"trusted",issuer,claim};
- if(rawState==="valid")return {status:"valid",issuer,claim};
- if(rawState==="invalid"){
-  const validation=isObj(store.validation_results)?store.validation_results:{};
-  const activeResults=isObj(validation.activeManifest)?validation.activeManifest:{};
-  const failures=Array.isArray(activeResults.failure)?activeResults.failure.filter(isObj):[];
-  const successes=Array.isArray(activeResults.success)?activeResults.success.filter(isObj):[];
-  const signatureValidated=successes.some(item=>item.code==="claimSignature.validated");
-  const trustOnly=failures.length>0&&failures.every(item=>typeof item.code==="string"&&
-    (item.code==="signingCredential.untrusted"||item.code==="timeStamp.untrusted"));
-  if(signatureValidated&&trustOnly)return {status:"untrusted",issuer,claim};
-  return {status:"invalid",issuer,claim};
- }
- // An unrecognized or missing validation_state must never be marked valid.
- return {status:"unavailable",issuer,claim,reason:"VERIFICATION_STATE_UNAVAILABLE"};
-}
 export async function verifyC2paFile(file:File):Promise<ProvenanceResult>{
  // The workbench accepts up to 250 MB, but WebAssembly memory must be bounded.
  if(file.size>250*1024*1024)return {status:"unavailable",reason:"FILE_TOO_LARGE"};
@@ -51,7 +15,7 @@ export async function verifyC2paFile(file:File):Promise<ProvenanceResult>{
   const found=await Reader.fromBlob(sdk,file.type||undefined,file,new Context({verify:{verifyTrust:true,verifyAfterReading:true},trust:{trustAnchors:"https://raw.githubusercontent.com/c2pa-org/conformance-public/refs/heads/main/trust-list/C2PA-TRUST-LIST.pem"}}));
   if(!found)return {status:"absent"};
   reader=found;
-  return describe(await found.manifestStore());
+  return describeC2paManifest(await found.manifestStore());
  }catch(e){
   return {status:"unavailable",reason:e instanceof Error?e.message.slice(0,160):"VERIFICATION_FAILED"};
  }finally{
