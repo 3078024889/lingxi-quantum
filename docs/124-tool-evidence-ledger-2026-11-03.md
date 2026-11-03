@@ -30,7 +30,7 @@ Every row remains **UNVERIFIED for complete real task input→processing→downl
 | `csv-to-xlsx` | fixture (table-csv) | pass @ a8422028 | pass @ a8422028 | Targeted CSV/TSV→real XLSX + downloaded ZIP/XML verified on desktop/mobile; #41652881127 (6 cases across two directions+error); **not full 9-locale proof** |
 | `document-copy-layout` | local-contract | pass @ a8422028 | pass @ a8422028 | **not proven** |
 | `document-translate` | online-contract | pass @ a8422028 | pass @ a8422028 | **not proven** |
-| `docx-to-txt` | local-contract | pass @ a8422028 | pass @ a8422028 | **not proven** |
+| `docx-to-txt` | local-contract | pass @ a8422028 | pass @ a8422028 | Actual DOCX→downloaded TXT, UTF-8 Unicode/paragraphs/tab/newline verified desktop and mobile; corrupt/empty DOCX rejected. [#41656166631](https://github.com/3078024889/lingxi-quantum/actions/runs/41656166631), 4/4; other scenarios unproven |
 | `e-sign-pdf` | fixture (pdf-basic) | pass @ a8422028 | pass @ a8422028 | **not proven** |
 | `epub-to-txt` | local-contract | pass @ a8422028 | pass @ a8422028 | **not proven** |
 | `file-compare` | local-contract | pass @ a8422028 | pass @ a8422028 | **not proven** |
@@ -143,3 +143,10 @@ Classification counts: {"fixture":30,"local-contract":78,"online-contract":16}. 
 The 6 real browser cases in [#41652881127](https://github.com/3078024889/lingxi-quantum/actions/runs/41652881127) cover CSV→XLSX→CSV round-trip, TSV→XLSX and corrupt XLSX rejection on desktop and mobile. All output files were downloaded and a separate ZIP/XML parser validated generated workbook contents. A valid file roundtrip does not prove every supported spreadsheet feature or pricing provider.
 
 Desktop original-image/OCR overlap failure in prior full gate #41645522546 was corrected on PR #136 at `55d72677`; focused desktop [#41652212530](https://github.com/3078024889/lingxi-quantum/actions/runs/41652212530) passed 11/11 with one intentional skip, matching mobile [#41652212393](https://github.com/3078024889/lingxi-quantum/actions/runs/41652212393) 11/11. The large full release gate and live payment/provider reconciliation remain mandatory.
+
+## Incremental real I/O and pointer validation after main merge
+
+- Source merge: PR #136 was rebased with an explicit two-parent merge `8bd1fb75084eaae7f6c6f9cc8bba508dc7ef53a9` against main `3b76853f`, preserving 9-language SIAI SEO/GEO and native PDF features.
+- Added DOCX original input→real TXT output→download and decoded UTF-8 content plus malformed/empty DOCX (desktop/mobile) 4/4 pass [#41656166631](https://github.com/3078024889/lingxi-quantum/actions/runs/41656166631).
+- Added PDF source image touch-only resize and rotation, asserting actual transform matrix, desktop/mobile 2/2 pass [#41655819103](https://github.com/3078024889/lingxi-quantum/actions/runs/41655819103). The older combined P0 mobile suite #41654874648 failed a mouse-only mobile synthetic gesture in `pdf-overlay-resize.spec.ts`; test fix awaits integration into the main PR to avoid cancelling the ongoing 900+ case gate.
+- Global SIAI market payment checkout remains deliberately fail-closed (`MARKET_CHECKOUT_NOT_LIVE`), verified payment events/orders not observed in the connected private market tables. Do not claim real settled funds or production payment entitlement.
