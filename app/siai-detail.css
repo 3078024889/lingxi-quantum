@@ -23,3 +23,33 @@
  .siai-detail-page>header{padding:20px 15px}
  .siai-detail-facts dl{grid-template-columns:1fr}
 }
+
+
+/* Task-first product answers. Every capability has a source and a useful boundary. */
+.siai-detail-page>.siai-answer-lead{position:relative;background:linear-gradient(115deg,#f4f8ff 0%,#f9fcff 68%,#fff9ed 100%);border-color:#c9dff1;padding:24px 26px}
+.siai-answer-overline{font-size:14px;letter-spacing:.01em;color:#6a568b;font-weight:750;margin-bottom:8px}
+.siai-detail-page>.siai-answer-lead h2{font-size:clamp(20px,2.3vw,28px);line-height:1.48;color:#103b64;max-width:970px;margin:0 0 12px}
+.siai-answer-lead>p{font-size:16px!important;font-weight:550;color:#395777;margin:0 0 12px}
+.siai-answer-lead-bottom{display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap;font-size:14px;color:#365579}
+.siai-answer-lead-bottom a{color:#175fb4;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.siai-detail-page>.siai-capabilities{border:0;background:transparent;padding:0}
+.siai-capability-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.siai-capability-card{position:relative;display:flex;flex-direction:column;min-width:0;border:1px solid #d7e4f0;background:#fff;border-radius:15px;padding:18px 17px;box-shadow:0 6px 22px rgba(27,76,125,.045)}
+.siai-feature-index{font-size:14px;letter-spacing:.08em;font-weight:850;color:#a78439}
+.siai-capability-card h3{font-size:17px;line-height:1.45;color:#193d66;font-weight:850;margin:7px 0 9px;overflow-wrap:anywhere}
+.siai-capability-card p{font-size:14px;color:#345473;line-height:1.8;margin:0 0 9px;overflow-wrap:anywhere}
+.siai-capability-card .siai-feature-boundary{color:#745c34;border-top:1px solid #f0e5d2;padding-top:9px}
+.siai-capability-card a{display:inline-block;align-self:flex-start;color:#195ca7;font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px;margin-top:auto;padding-top:4px}
+.siai-detail-page>.siai-start-steps{background:#f7faff;border-color:#dbe7f4}
+.siai-start-steps ol{padding:0;margin:10px 0 15px;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.siai-start-steps li{min-width:0;display:flex;align-items:flex-start;gap:12px;padding:14px;background:#fff;border:1px solid #e2eaf5;border-radius:12px;font-size:14px;line-height:1.75;color:#244867}
+.siai-start-steps li>strong{display:grid;place-items:center;flex:0 0 29px;width:29px;height:29px;border-radius:50%;background:#204d7d;color:#fff;font-size:14px}
+.siai-start-steps>a{display:inline-flex;background:#1c63bd;color:#fff;border-radius:9px;padding:10px 16px;font-size:14px;font-weight:750}
+.siai-direct-answers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.siai-direct-answers-grid article{border:1px solid #e1e9f3;background:#f9fbff;border-radius:12px;min-width:0;padding:16px}
+.siai-direct-answers-grid h3{font-size:16px;font-weight:800;line-height:1.55;color:#20486f;margin:0 0 9px}
+.siai-direct-answers-grid p{font-size:14px;color:#365776;margin:0 0 8px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}
+.siai-direct-answers-grid a{font-size:14px;color:#1763b3;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+[dir="rtl"] .siai-answer-lead-bottom{direction:rtl}
+@media(max-width:900px){.siai-capability-grid{grid-template-columns:1fr}.siai-start-steps ol{grid-template-columns:1fr}}
+@media(max-width:600px){.siai-detail-page>.siai-answer-lead{padding:19px 15px}.siai-direct-answers-grid{grid-template-columns:1fr}.siai-capability-card{padding:16px}.siai-detail-page>.siai-answer-lead h2{font-size:21px}}

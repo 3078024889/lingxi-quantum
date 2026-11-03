@@ -16,6 +16,9 @@ import {commercialEvidence} from '@/lingxifield-ai-market/lib/market-commercial-
 import {localizedPaymentName} from '@/lingxifield-ai-market/lib/market-localized-payment';
 import {localizedCategory} from '@/lingxifield-ai-market/lib/market-home-i18n';
 import {questionForProduct} from '@/lingxifield-ai-market/lib/market-user-task-queries.mjs';
+import {capabilityProfile} from '@/lingxifield-ai-market/lib/capability-profiles';
+import {productAnswerHeadline} from '@/lingxifield-ai-market/lib/market-result-headlines';
+import {SIAI_ANSWER_UI} from '@/lingxifield-ai-market/lib/market-answer-i18n';
 
 export const dynamic='force-dynamic';
 type Props={params:Promise<{lang:string;id:string}>};
@@ -56,9 +59,12 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
 export default async function SiaiProductDetail({params}:Props){
  const {lang,id}=await params;
  const {p,facts,publisher}=resolve(lang,id),l=lang as SiaiDetailLocale,t=WORDS[l];
+ const profile=capabilityProfile(id),answerUi=SIAI_ANSWER_UI[l];
+ const answerTitle=l==='zh'?(productAnswerHeadline(id)||profile?.headline||p.about):(localizedProductSummary(id,l)||p.about);
+ const steps=l==='zh'&&profile?[...profile.firstSteps]:[answerUi.first,answerUi.second,answerUi.third].map(s=>s.replace('{name}',p.name));
  const listing=publisher.kind==='company'?(publisher.ipoFiling?t.ipo:publisher.listingState==='listed_parent'?t.listedParent:t.notVerified):t.na;
  const strength=localizedProductSummary(id,l)||p.guide?.strengths||p.about;
- const paymentDisplay=l==='zh'?(facts?.payments?.join(' · ')||'—'):((facts?.payments||[]).map(method=>/Link（Stripe/.test(method)?'Link (Stripe Checkout)':localizedPaymentName(method,l)).join(' · ')||'—');
+ const paymentDisplay=l==='zh'?(facts?.payments?.join(' · ')||'—'):((facts?.payments||[]).map(method=>localizedPaymentName(method,l)).join(' · ')||'—');
  const commercialDisplay=l==='zh'?(facts?.commercial||'—'):(commercialEvidence(id,l)?.condition||'—');
  const items=[
   {label:t.company,value:publisher.name,source:publisher.companySource},
@@ -84,9 +90,47 @@ export default async function SiaiProductDetail({params}:Props){
   <nav aria-label={t.back}><Link href="/">{t.back}</Link></nav>
   <header><p>{localizedCategory(l,p.category)} · LINGXIFIELD SIAI</p><h1>{p.name}</h1><p>{strength}</p>
    <a href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a></header>
-  <section><h2>{t.intro}</h2><p>{l==='zh'?p.about:strength}</p>{l==='zh'&&<p>{p.features.join(' · ')}</p>}</section>
-  <section className="siai-detail-facts"><h2>{t.source}</h2><dl>{items.map(item=><div key={item.label}><dt>{item.label}</dt><dd>{item.value}
+  <section className="siai-answer-lead" aria-label={answerUi.answer}>
+   <div className="siai-answer-overline">{answerUi.eyebrow}</div>
+   <h2>{answerTitle}</h2>
+   <p>{l==='zh'?(profile?.differentiator||p.about):(localizedProductSummary(id,l)||p.about)}</p>
+   <div className="siai-answer-lead-bottom">
+    <span><strong>{answerUi.forWhom}</strong> {l==='zh'?(profile?.audience||p.category):localizedCategory(l,p.category)}</span>
+    {safe(profile?.capabilities[0]?.source)&&<a href={profile!.capabilities[0].source} target="_blank" rel="noopener noreferrer">{answerUi.source} ↗</a>}
+   </div>
+  </section>
+  <section className="siai-capabilities" aria-label={answerUi.taskCards}>
+   <h2>{answerUi.taskCards}</h2>
+   <div className="siai-capability-grid">
+    {(l==='zh'&&profile
+     ?profile.capabilities.slice(0,3).map(feature=>({name:feature.name,outcome:feature.outcome,example:feature.example,boundary:feature.boundary,source:feature.source}))
+     :[
+       {name:answerUi.simple,outcome:localizedProductSummary(id,l)||strength,example:'',boundary:'',source:p.website},
+       {name:t.models,outcome:localizedCatalogFact(id,l,'models',facts?.models||p.features.join(' · ')),example:'',boundary:'',source:facts?.modelsSource||p.website},
+       {name:t.free,outcome:localizedCatalogFact(id,l,'free',facts?.free||p.free||'—'),example:'',boundary:'',source:facts?.freeSource||p.website}
+      ]
+    ).map((feature,i)=><article className="siai-capability-card" key={i}>
+     <span className="siai-feature-index">{String(i+1).padStart(2,'0')}</span>
+     <h3>{feature.name}</h3><p>{feature.outcome}</p>
+     {feature.example&&<p><strong>{answerUi.sample}：</strong>{feature.example}</p>}
+     {feature.boundary&&<p className="siai-feature-boundary"><strong>{answerUi.boundary}：</strong>{feature.boundary}</p>}
+     {safe(feature.source)&&<a href={feature.source} target="_blank" rel="noopener noreferrer">{answerUi.source} ↗</a>}
+    </article>)}
+   </div>
+  </section>
+  <section className="siai-start-steps">
+   <h2>{answerUi.start}</h2>
+   <ol>{steps.map((step,i)=><li key={i}><strong>{i+1}</strong><span>{step}</span></li>)}</ol>
+   <a href={p.website} target="_blank" rel="noopener noreferrer">{answerUi.official} ↗</a>
+  </section>
+  <section className="siai-detail-facts"><h2>{t.company}</h2><dl>{items.slice(0,5).map(item=><div key={item.label}><dt>{item.label}</dt><dd>{item.value}
    {safe(item.source)&&<a href={item.source!} target="_blank" rel="nofollow noopener noreferrer">{t.source} ↗</a>}</dd></div>)}</dl></section>
-  {l==='zh'&&<section className="siai-detail-questions"><h2>{t.tasks}</h2><ul>{questionForProduct(id).slice(0,6).map((q:string)=><li key={q}>{q}</li>)}</ul></section>}
+  <section className="siai-detail-questions siai-direct-answers"><h2>{l==='zh'?'六个常见问题，直接看答案':t.tasks}</h2>
+   <div className="siai-direct-answers-grid">{items.slice(5).map((item,i)=><article key={item.label}>
+    <h3>{l==='zh'?p.name+['免费能用多少？','实际价格是多少？','哪些地区可以用？','支持哪些付款方式？','有哪些模型或功能？',publisher.kind==='company'?'生成内容能商用吗？':'软件能用于商业项目吗？'][i]:item.label}</h3>
+    <p>{item.value}</p>
+    {safe(item.source)&&<a href={item.source!} target="_blank" rel="nofollow noopener noreferrer">{t.source} ↗</a>}
+   </article>)}</div>
+  </section>
  </main><Footer/></>;
 }

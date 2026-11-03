@@ -3,9 +3,9 @@ import {entries} from './catalog-store';
 import {createSearchIndex} from './search-index.mjs';
 import type {CatalogEntry} from './catalog-engine.mjs';
 import {latestFacts,factLabels,type FactKey} from './reviewed-product-facts';
-import {OFFER_GUIDE} from './offer-guide';
+import {OFFER_GUIDE,type OfferGuide} from './offer-guide';
 import {accessFor} from './platform-access-facts';
-import {capabilityKeywords} from './capability-profiles';
+import {capabilityKeywords,capabilityProfile} from './capability-profiles';
 import {researchedFact,marketProductReviewedAt} from './market-researched-facts';
 import {companyEvidenceFor} from './market-company-evidence';
 import {PRODUCT_STRENGTHS} from './market-missing-strengths';
@@ -50,6 +50,20 @@ export function toPlatform(e:CatalogEntry):Platform {
    payment:'自托管或 API 计费依对应服务',
    region:research?.region||'本地使用依设备及模型许可',
    source:strength.source,checkedAt:'2026-11-01',strengths:strength.text};
+ // Display published vendor facts, not legacy generic plan/region/payment placeholders.
+ const profile=capabilityProfile(e.id);
+ const userGuide:OfferGuide|undefined=guide||profile?{
+  ...(guide||{}),
+  tasks:profile?.capabilities.map(cap=>cap.name)||guide?.tasks||[],
+  free:research?.free||guide?.free||'',
+  paid:research?.price||guide?.paid||'',
+  cost:research?.price||guide?.cost||'',
+  payment:research?.payments?.join(' · ')||guide?.payment||'',
+  region:research?.region||guide?.region||'',
+  source:research?.priceSource||guide?.source||profile?.capabilities[0]?.source||e.website,
+  checkedAt:marketProductReviewedAt(e.id),
+  strengths:profile?.differentiator||strength?.text||guide?.strengths
+ }:undefined;
  const original=prior||{symbol:'◇'};
  // A missing figure is omitted, not fabricated; software libraries are not listed corporations.
  return {...original,id:e.id,name:e.name,company:e.company,category:e.category,about:e.description,
@@ -61,7 +75,7 @@ export function toPlatform(e:CatalogEntry):Platform {
   features:e.capabilities,website:e.website,
   websiteKind:e.websiteKind||(new URL(e.website).hostname==='github.com'?'repository':'official'),
   repositoryUrl:e.repositoryUrl||(new URL(e.website).hostname==='github.com'?e.website:undefined),
-  source:e.website,domain:new URL(e.website).hostname,guide,
+  source:e.website,domain:new URL(e.website).hostname,guide:userGuide,
   price:research?.price||guide?.cost||facts?.price?.text||'',
   free:research?.free||guide?.free||facts?.free?.text||'',
   score:null,trend:null,conditions};

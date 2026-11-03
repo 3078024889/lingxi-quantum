@@ -114,3 +114,11 @@
 
 .siai-detail-primary-link{display:inline-flex;align-items:center;min-height:36px;padding:7px 12px;margin-top:12px;background:#eaf3ff;color:#185cac;border:1px solid #bcd5ef;border-radius:7px;font-size:14px;font-weight:700}
 .siai-detail-primary-link:hover{text-decoration:underline}
+
+
+/* User-facing proof: the promised outcome, real tasks, and a clickable vendor source. */
+.siai-quick-answer{padding:13px 16px;margin:10px 0 16px;border:1px solid #caddec;border-inline-start:3px solid #b89757;border-radius:11px;background:linear-gradient(125deg,#f5f9ff,#fffdf7);font-size:14px;color:#284968}
+.siai-quick-answer>strong{display:block;color:#173e67;font-size:17px;line-height:1.6;margin-bottom:7px}
+.siai-quick-answer p{font-size:14px;line-height:1.85;margin:6px 0;overflow-wrap:anywhere}
+.siai-quick-answer p b{color:#175b9a}
+.siai-quick-answer>a{font-size:14px;font-weight:750;color:#1468b3;text-decoration:underline;text-underline-offset:3px}

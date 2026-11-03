@@ -8,6 +8,8 @@ import {findPlatform} from "../lingxifield-ai-market/lib/platform-repository";
 import {researchedFact,marketProductReviewedAt} from "../lingxifield-ai-market/lib/market-researched-facts";
 import {companyPresentationFor} from "../lingxifield-ai-market/lib/market-company-evidence";
 import {questionForProduct} from "../lingxifield-ai-market/lib/market-user-task-queries.mjs";
+import {capabilityProfile} from "../lingxifield-ai-market/lib/capability-profiles";
+import {productAnswerHeadline} from "../lingxifield-ai-market/lib/market-result-headlines";
 
 export const dynamic="force-dynamic";
 export const revalidate=0;
@@ -31,7 +33,8 @@ function getCuratedRows():SiaiHomeRow[]{
    ipoFiling:Boolean(publisher.ipoFiling),year:publisher.year,checkedAt:fact?marketProductReviewedAt(id):null,
    companySource:publisher.companySource,legalSource:publisher.legalEntitySource,
    listingSource:publisher.ipoFilingSource||publisher.listingSource,yearSource:publisher.yearSource,
-   category:platform.category,about:platform.about,strength:platform.guide?.strengths||platform.about,
+   category:platform.category,about:platform.about,
+   strength:[productAnswerHeadline(id),capabilityProfile(id)?.differentiator].filter(Boolean).join(" ")||platform.guide?.strengths||platform.about,
    searchTerms:questionForProduct(id),
    features:platform.features,free:fact?.free||platform.free||"—",freeSource:fact?.freeSource||null,
    price:fact?.price||platform.price||"—",priceSource:fact?.priceSource||null,

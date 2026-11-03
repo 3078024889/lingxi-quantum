@@ -96,3 +96,52 @@ test('mobile: all four facet rows remain present, table scrolls and inline detai
  await expect(page.locator('.siai-home-detail')).toBeVisible();
  await expect(page.locator('.siai-home-expanded-row')).toHaveCount(1);
 });
+
+
+test('all 32 product pages show three factual deliverables, six visible answers and first-party references',async({page},info)=>{
+ test.skip(info.project.name!=='desktop-chromium','One exhaustive catalog crawl on desktop, mobile gets separate layout test');
+ test.setTimeout(180_000);
+ const ids=[
+  'anthropic-sdk-python','chatgpt','claude','comfyui','deepseek','dify','elevenlabs','fasterwhisper',
+  'gemini','grok','langchain','llamacpp','llamaindex','lovable','luma','midjourney','n8n','ollama',
+  'openwebui','openai-python','perplexity','replit','runway','automatic1111','suno','transformers',
+  'vllm','whisper','qwen','jimeng','kling','doubao'
+ ];
+ for(const id of ids){
+  const response=await page.goto('/siai/zh/'+id,{waitUntil:'domcontentloaded'});
+  expect(response?.status(),id+': route status').toBe(200);
+  await expect(page.locator('.siai-answer-lead h2'),id+': actual task answer').toBeVisible();
+  await expect(page.locator('.siai-capability-card'),id+': evidence-backed features').toHaveCount(3);
+  await expect(page.locator('.siai-direct-answers-grid article'),id+': direct six answers').toHaveCount(6);
+  await expect(page.locator('.siai-start-steps li'),id+': beginner action steps').toHaveCount(3);
+  const urls=await page.locator('.siai-capability-card a').evaluateAll(nodes=>
+   nodes.map(el=>(el as HTMLAnchorElement).href));
+  expect(urls.length,id+': missing feature links').toBe(3);
+  expect(urls.every(url=>url.startsWith('https://')),id+': unsafe evidence source').toBe(true);
+ }
+});
+
+test('nine language product routes show native answer, six localized facts and Arabic RTL',async({page},info)=>{
+ test.skip(info.project.name!=='desktop-chromium','One nine-language deep route sweep');
+ test.setTimeout(90_000);
+ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
+  const response=await page.goto('/siai/'+lang+'/runway',{waitUntil:'domcontentloaded'});
+  expect(response?.status()).toBe(200);
+  const pageBody=page.locator('.siai-detail-page');
+  await expect(pageBody).toHaveAttribute('dir',lang==='ar'?'rtl':'ltr');
+  await expect(page.locator('.siai-answer-lead')).toBeVisible();
+  await expect(page.locator('.siai-capability-card')).toHaveCount(3);
+  await expect(page.locator('.siai-direct-answers-grid article')).toHaveCount(6);
+  await expect(page.locator('.siai-start-steps li')).toHaveCount(3);
+ }
+});
+
+test('mobile real product page retains the source cards and answers without horizontal overflow',async({page},info)=>{
+ test.skip(info.project.name!=='mobile-chromium','Actual Pixel 7 layout only');
+ const response=await page.goto('/siai/zh/midjourney',{waitUntil:'domcontentloaded'});
+ expect(response?.status()).toBe(200);
+ await expect(page.locator('.siai-capability-card')).toHaveCount(3);
+ await expect(page.locator('.siai-direct-answers-grid article')).toHaveCount(6);
+ const size=await page.evaluate(()=>({scroll:document.documentElement.scrollWidth,visible:window.innerWidth}));
+ expect(size.scroll).toBeLessThanOrEqual(size.visible+3);
+});
