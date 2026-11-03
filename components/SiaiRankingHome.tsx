@@ -3,6 +3,8 @@
 import {Fragment,useMemo,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
+import {capabilityProfile} from "../lingxifield-ai-market/lib/capability-profiles";
+import {productAnswerHeadline} from "../lingxifield-ai-market/lib/market-result-headlines";
 import {localizedProductSummary} from "../lingxifield-ai-market/lib/market-product-locale";
 import {localizedCatalogFact} from "../lingxifield-ai-market/lib/market-fact-locale";
 import {globalRegionSummary} from "../lingxifield-ai-market/lib/region-presentation";
@@ -59,7 +61,13 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const displayPayment=(p:SiaiHomeRow)=>lang==='zh'?p.payment:p.payment.split(' · ').map(s=>localizedPaymentName(s,lang)).join(' · ');
  const displayAbout=(p:SiaiHomeRow)=>lang==='zh'?p.about:localizedProductSummary(p.id,lang)||p.name;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
-    <p>{displayAbout(p)}</p>{p.checkedAt&&<p className="siai-checked-date">{REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&<p>{p.features.join(" · ")}</p>}
+    <p>{displayAbout(p)}</p>{p.checkedAt&&<p className="siai-checked-date">{REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&capabilityProfile(p.id)&&<div className="siai-quick-answer">
+     <strong>{productAnswerHeadline(p.id)||capabilityProfile(p.id)?.headline}</strong>
+     <p>{capabilityProfile(p.id)?.differentiator}</p>
+     <p><b>适合谁：</b>{capabilityProfile(p.id)?.audience}</p>
+     {capabilityProfile(p.id)?.capabilities.slice(0,3).map((cap,i)=><p key={i}><b>{cap.name}：</b>{cap.outcome}</p>)}
+     <a href={capabilityProfile(p.id)?.capabilities[0].source} target="_blank" rel="noopener noreferrer">查看官方功能说明 ↗</a>
+    </div>}
     <dl><div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div><div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div><div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div><div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div><div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div><div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div></dl>
     <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.companySource,t.company],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.paymentSource,t.payment],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
     <a className="siai-detail-primary-link" href={"/siai/"+lang+"/"+encodeURIComponent(p.id)}>{ui.fullDetails} ↗</a>
