@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import ts from "typescript";
+import {createRequire} from "node:module";
+const ts=createRequire(import.meta.url)("typescript");
 import {readFileSync} from "node:fs";
 import {resolve} from "node:path";
 import {runInNewContext} from "node:vm";
