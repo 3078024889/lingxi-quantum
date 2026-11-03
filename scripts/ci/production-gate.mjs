@@ -37,6 +37,7 @@ const commands=[
  ["node",["scripts/test-burn-file-aes-v141.cjs"]],
  ["node",["scripts/ci/r2-privacy-lifecycle-v159.mjs","--self-test"]],
  ["node",["scripts/test-privacy-cleanup-truth-v142.cjs"]],
+ ["node",["scripts/test-c2pa-verdict-v161.cjs"]],
  ["node",["scripts/test-burn-file-preparation.cjs"]],
  ["node",["scripts/test-engine-path-security.cjs"]],
  ["node",["scripts/test-video-reference-claim.cjs"]],
