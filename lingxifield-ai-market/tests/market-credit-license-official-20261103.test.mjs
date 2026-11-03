@@ -31,7 +31,7 @@ test('Recraft source terms separate free personal-only rights from paid outputs 
  const n=find(b,'recraft');
  assert.equal(n.facts.free.source,'https://www.recraft.ai/legal/terms');
  assert.equal(n.facts.commercial.source,'https://www.recraft.ai/legal/terms');
- assert.match(n.facts.free.text,/属于 Recraft/);
+ assert.match(n.facts.free.text,/归 Recraft 所有/);
  assert.match(n.facts.free.text,/不等于免费商用/);
  assert.match(n.facts.commercial.text,/付费订阅/);
  assert.match(n.facts.commercial.text,/版权转让/);
