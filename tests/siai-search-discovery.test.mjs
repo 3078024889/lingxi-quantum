@@ -40,7 +40,7 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(read("public/llms-full.txt"),/Global AI \/ SI \/ SIAI rankings/);
  assert.match(page,/const \{curated,rows\}=getSiaiDirectoryRows\(\)/);
  assert.match(page,/itemListElement:curated\.map/);
- assert.match(page,/alternates:\{canonical:PRIMARY_SITE\+"\/siai"\}/);
+ assert.match(page,/alternates:\{canonical:PRIMARY_SITE\+"\/siai",languages:/);
  assert.doesNotMatch(page,/index:false/);
 });
 test("eight sourced corporate-history entries remain honest about parent/launch differences",()=>{
