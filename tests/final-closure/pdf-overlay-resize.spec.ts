@@ -1,24 +1,52 @@
 import fs from "node:fs";
-import {test,expect} from "./export-test";
-test("PDF image resizes on-page with handles and rotates",async({page})=>{
- test.setTimeout(90000);await page.goto("/tools/pdf-editor?lang=en");
- const upload=page.locator('input[type=file]').first();await expect(upload).toBeEnabled({timeout:15000});
+import {test,expect,type Page} from "./export-test";
+
+async function dragGesture(page:Page,x:number,y:number,dx:number,dy:number,mobile:boolean){
+ if(mobile){
+  // Dispatch genuine touch events. Mouse-only tests can miss pointer capture
+  // and state updates in mobile Chromium / touch-action:none elements.
+  const cdp=await page.context().newCDPSession(page);
+  try{
+   await cdp.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y,id:1,force:1,radiusX:5,radiusY:5}]});
+   for(let i=1;i<=12;i++)await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+dx*i/12,y:y+dy*i/12,id:1,force:1,radiusX:5,radiusY:5}]});
+   await cdp.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+  }finally{await cdp.detach();}
+ }else{
+  await page.mouse.move(x,y);await page.mouse.down();
+  await page.mouse.move(x+dx,y+dy,{steps:12});await page.mouse.up();
+ }
+}
+
+test("PDF added image resizes on-page with handles and rotates using real mouse or touch",async({page},info)=>{
+ test.setTimeout(90000);
+ const mobile=info.project.name==="mobile-chromium";
+ await page.goto("/tools/pdf-editor?lang=en");
+ const upload=page.locator('input[type=file]').first();
+ await expect(upload).toBeEnabled({timeout:15000});
  await upload.setInputFiles({name:"demo.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
- const png=await page.evaluate(()=>{const c=document.createElement("canvas");c.width=160;c.height=60;const x=c.getContext("2d")!;x.fillStyle="#224488";x.fillRect(4,8,150,44);return c.toDataURL("image/png").split(",")[1]});
+ const png=await page.evaluate(()=>{
+  const c=document.createElement("canvas");c.width=160;c.height=60;
+  const x=c.getContext("2d")!;x.fillStyle="#224488";x.fillRect(4,8,150,44);
+  return c.toDataURL("image/png").split(",")[1];
+ });
  const input=page.locator("label").filter({hasText:"Add image"}).locator('input[type=file]');
  await input.setInputFiles({name:"stamp.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
- const item=page.getByTestId("pdf-overlay").last();await expect(item).toBeVisible();
- const grip=page.getByTestId("pdf-grip-se");await expect(grip).toBeVisible();
- // Playwright's raw mouse does not auto-scroll to coordinates returned by boundingBox().
- await grip.scrollIntoViewIfNeeded();
- const before=await item.boundingBox(),r=await grip.boundingBox();expect(before).not.toBeNull();expect(r).not.toBeNull();
- await page.mouse.move(r!.x+r!.width/2,r!.y+r!.height/2);await page.mouse.down();
- await page.mouse.move(r!.x+r!.width/2+50,r!.y+r!.height/2+15,{steps:10});await page.mouse.up();
- const after=await item.boundingBox();expect(after).not.toBeNull();expect(after!.width).toBeGreaterThan(before!.width+8);
- const rotate=page.getByTestId("pdf-grip-rotate");await expect(rotate).toBeVisible();await rotate.scrollIntoViewIfNeeded();const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
- await page.mouse.move(rr!.x+rr!.width/2,rr!.y+rr!.height/2);await page.mouse.down();
- await page.mouse.move(rr!.x+rr!.width/2+30,rr!.y+rr!.height/2+40,{steps:10});await page.mouse.up();
- expect(await item.evaluate(el=>getComputedStyle(el).transform)).not.toBe("none");
+ const item=page.getByTestId("pdf-overlay").last();
+ await expect(item).toBeVisible();
+ const grip=page.getByTestId("pdf-grip-se");
+ await grip.scrollIntoViewIfNeeded();await expect(grip).toBeVisible();
+ const before=await item.boundingBox(),r=await grip.boundingBox();
+ expect(before).not.toBeNull();expect(r).not.toBeNull();
+ await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
+ await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
+ const rotate=page.getByTestId("pdf-grip-rotate");
+ await rotate.scrollIntoViewIfNeeded();await expect(rotate).toBeVisible();
+ const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
+ await dragGesture(page,rr!.x+rr!.width/2,rr!.y+rr!.height/2,30,40,mobile);
+ await expect.poll(async()=>item.evaluate(el=>{
+  const matrix=new DOMMatrixReadOnly(getComputedStyle(el).transform);
+  return Math.abs(matrix.b)+Math.abs(matrix.c);
+ }),{timeout:10000}).toBeGreaterThan(.05);
  await expect(item.locator("img")).toBeVisible();
 });
