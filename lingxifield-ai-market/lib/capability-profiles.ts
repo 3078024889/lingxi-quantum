@@ -195,24 +195,6 @@ export const CAPABILITY_PROFILES:Readonly<Record<string,CapabilityProfile>>={
   cap('最多 10 张关键帧控制','为一个镜头指定多个情节节点与场景变换','通过多张关键帧安排人物起身、转身和离开','关键帧输入能力按模型版本、账户权益和操作界面开放','https://ir.kuaishou.com/zh-hans/news-releases/news-release-details/kelingaixinyidaimoxingklin1g-40zhengshishangxian/')
  ],['打开可灵官方版本入口并选择适用模型','准备合法的角色、场景及关键帧参考素材','先生成短镜头核对积分、最长时长和输出水印'])
 
-,
- n8n:profile(
-  '不想让员工每天复制粘贴？把表单、邮件、表格和 AI 处理连成工作流',
-  'n8n 可以按触发器连接应用与 API，加入 AI Agent 或人工审核；Cloud 与自行托管有不同成本和维护责任',
-  '运营团队、独立创业者、自动化开发者、企业内部流程负责人',[
-    cap('跨应用自动化','以表单或事件触发，处理数据并把结果发给其他应用','收集报名表→检查字段→归档表格→发通知','第三方连接器需要各自的账户权限；失败路径与重复触发应设置保护','https://docs.n8n.io/'),
-    cap('AI Agent 工具调用','将语言模型与外部工具、数据库或 API 组成可控的工作流','客户问题→查询产品资料→生成回复草稿→人工确认再发送','模型调用按供应商计费；机器人输出需验证，不应直接执行高风险操作','https://docs.n8n.io/advanced-ai/'),
-    cap('Cloud 或自托管部署','云端账号免维护服务器；自托管版可部署在自有主机','小团队先用云端测试流程，复杂隐私需求评估自托管','自行托管需要管理数据库、备份、更新与密钥，不能把软件免费当作零维护成本','https://docs.n8n.io/hosting/')
-  ],['选择 Cloud 或自托管，建立测试工作流','连接一个触发器与一个目标应用，再加入处理节点','先用假数据测试失败重试、权限和通知，再投入正式业务']),
- automatic1111:profile(
-  '图片只差一个局部？不用重新生成整张，选区重绘并控制结果',
-  'Stable Diffusion WebUI 提供 txt2img、img2img、局部重绘、高清修复与扩展生态，运行模型由用户自行安装',
-  '插画师、设计师、本地 AI 绘画用户、需要精细控制提示词与参数的创作者',[
-    cap('文生图与图生图','输入提示词生成图片，或上传原图通过重绘控制风格和结构','把参考草图变成插画后，再以较低重绘幅度调整细节','画质、速度和功能依安装的模型与显存；软件本身不自带所有权重','https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/master/README.md'),
-    cap('蒙版局部重绘 Inpainting','只重画选中区域，保留未选中画面并改变物体或细节','仅替换照片背景中的一个物体，不重新生成整幅作品','局部一致性取决于遮罩、提示词、重绘强度与所选模型','https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features'),
-    cap('Hires.fix 与模型扩展','先低分辨率构图，再放大优化细节；支持扩展、LoRA 等功能','生成构图后使用 Hires.fix 做高清细节修复','放大并不保证保留原构图；扩展和模型应分别检查来源与商用许可证','https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Features')
-  ],['按照项目说明安装 Python、Git 和 WebUI','安装具备授权的模型并在 txt2img 生成第一张图片','需要改动局部时进入 img2img/Inpainting，核对显存与保存结果'])
-
 };
 export function capabilityProfile(id:string):CapabilityProfile|undefined{return CAPABILITY_PROFILES[id];}
 export function capabilityKeywords(id:string):string[]{const p=capabilityProfile(id);return p?p.capabilities.flatMap(x=>[x.name,x.outcome]):[];}
