@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect} from './export-test';
 test('global SIAI double horizontal rail and inline details',async({page})=>{
  await page.goto('/siai');
  const bar=page.locator('.siai-home-top-scroll'),grid=page.locator('.siai-home-table-scroll');
