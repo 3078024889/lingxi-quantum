@@ -54,7 +54,7 @@ export default function Footer(){
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
-    <p className="text-sm leading-6">{c.brandLead}</p>
+    <p className="text-sm leading-6">{PUBLIC_FEATURE_COPY[lang].description}</p>
     <div className="lx-footer-trio">{discovery.trio.map(item=><span key={item}>{item}</span>)}</div>
     <p><a href="https://lingxifield.com" rel="noopener noreferrer">lingxifield.com</a> · <span>lingxifield.cn</span></p>
    </section>
