@@ -10,13 +10,14 @@ export function splitSpeechText(input:string,maxChars=TTS_SAFE_INPUT_CHARACTERS)
  while(remaining.length>maxChars){
   const head=remaining.slice(0,maxChars);
   const limit=Math.floor(maxChars*.55);
-  let cut=maxChars;
+  // Prefer the last natural boundary, keeping fragments close to the
+  // provider limit so repeated small TTS requests do not exhaust paid quotas.
+  let boundary=-1;
   for(const sep of ["\n","。","！","？",". ","! ","? ","; ",", "," "]){
    const i=head.lastIndexOf(sep);
-   if(i>=limit&&i+sep.length<=maxChars){
-    cut=Math.min(cut,Math.max(i+sep.length,limit));
-   }
+   if(i>=limit&&i+sep.length<=maxChars)boundary=Math.max(boundary,i+sep.length);
   }
+  let cut=boundary>0?boundary:maxChars;
   if(cut===maxChars&&/[\uD800-\uDBFF]/.test(remaining[cut-1])&&/[\uDC00-\uDFFF]/.test(remaining[cut]||""))cut--;
   if(cut<1)throw Error("TTS_SPLIT_INVALID");
   const part=remaining.slice(0,cut).trim();
