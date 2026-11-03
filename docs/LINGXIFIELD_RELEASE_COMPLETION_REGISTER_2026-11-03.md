@@ -77,3 +77,10 @@ The original-image engine from MIT-licensed Folio (pinned `8e0a9f86a0957436e47ca
 Native images in Form XObjects, signed and rotated pages, ambiguous targets or unsupported transforms are rejected rather than rasterized; the native-image rotation handle is intentionally disabled. Removing an image's `Do` operator does not remove hidden/unreferenced image byte streams and is not secure redaction.
 
 Evidence: 5/5 native image unit tests plus production build passed #41641565253. New real browser tests `tests/final-closure/pdf-native-image-ui.spec.ts` verify original image deletion/replacement, downloadable PDF, re-import and unaffected second-page content. The new UI release remains gated on desktop/mobile CI and must not be merged until green.
+
+
+## 2026-11-03 OCR hit-area conflict diagnosed and corrected
+
+Desktop full gate #41645522546: 921 passed, 4 skipped and 1 failed; desktop focused #41647191893: 10 passed, 1 skipped and 1 failed. The same failure was Tesseract OCR generated text hit target obscured by a later DOM image hit target covering the scanned page; Playwright reported the original-image selection button intercepted double-click. Source OCR positioned text uses z-index above original-image selection, and a 15-second browser regression now explicitly verifies the scanned source image coexists with the OCR text and can be edited. Do not call this resolved until independent desktop CI proves it.
+
+Cropping security: Native image and text editing are rejected on nonzero MediaBox origins, cropped pages and rotations. This includes an export-time preflight, blocking restored drafts that bypassed UI selection. Direct unit tests assert unsupported cropped-page mutation; both current original PDF operator variants remain fail-closed. The independent native-image crop guard #41646895144 passed 7 tests and a Next.js production build before release integration.

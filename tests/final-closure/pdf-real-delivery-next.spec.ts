@@ -54,7 +54,9 @@ test("scanned PDF OCR finds actual text positions that can be double-click edite
  await page.getByRole("button",{name:"Recognize scanned page",exact:true}).click();
  const result=page.locator('[data-testid="pdf-source-text-region"][data-source="ocr"]').first();
  await expect(result).toBeVisible({timeout:220000});
- await result.dblclick();
+ // A scanned PDF is one large original image. Its image-selection surface must not intercept OCR text edits.
+ await expect(page.getByTestId("pdf-source-image-region").first()).toBeVisible();
+ await result.dblclick({timeout:15000});
  const editing=page.getByRole("textbox",{name:"Edit added text"});
  await expect(editing).toBeVisible();await editing.fill("Replaced OCR text");await editing.press("Enter");
  await expect(page.getByTestId("pdf-overlay").filter({hasText:"Replaced OCR text"})).toBeVisible();

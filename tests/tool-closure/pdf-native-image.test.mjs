@@ -84,3 +84,13 @@ test("image resize and replace work as one source-operator transaction",async()=
  assert.equal(other.naturalWidth,8);
  assert.ok(edited.rect.width>0);
 });
+
+test("image mutation rejects cropped or offset origin pages even for persisted targets",async()=>{
+ const original=await sample(),[region]=await engine.locateEditableNativeImages(original,0);
+ const pdf=await PDFDocument.load(original);
+ pdf.getPage(0).setCropBox(12,20,240,280);
+ const cropped=new Uint8Array(await pdf.save());
+ assert.equal((await engine.locateEditableNativeImages(cropped,0)).length,0);
+ await assert.rejects(engine.applyNativeImageChanges(cropped,[{pageIndex:0,target:region.target,action:{kind:"delete"}}]),/PDF_IMAGE_PAGE_UNSUPPORTED/);
+ assert.equal((await engine.locateEditableNativeImages(cropped,1)).length,1);
+});

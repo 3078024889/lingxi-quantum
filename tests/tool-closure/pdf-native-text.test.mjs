@@ -56,3 +56,13 @@ test("duplicate edits are rejected without silently stripping another text run",
  assert.ok(target);
  await assert.rejects(engine.removeNativePdfTextRuns(bytes,[{pageIndex:0,target},{pageIndex:0,target}]));
 });
+
+test("original text selection and mutation fail closed on cropped PDF pages",async()=>{
+ const original=await sample(),target=await engine.findNativePdfTextTarget(original,0,{x:72,y:680});
+ assert.ok(target);
+ const pdf=await PDFDocument.load(original);
+ pdf.getPage(0).setCropBox(12,20,250,380);
+ const cropped=new Uint8Array(await pdf.save());
+ assert.equal(await engine.findNativePdfTextTarget(cropped,0,{x:72,y:680}),null);
+ await assert.rejects(engine.removeNativePdfTextRuns(cropped,[{pageIndex:0,target}]),/PDF_NATIVE_TEXT_PAGE_UNSUPPORTED/);
+});

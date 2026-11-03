@@ -6,6 +6,7 @@
  */
 import {PDFDocument} from "pdf-lib";
 import {locatePageRuns,commitTextEdit} from "./mutate";
+import {canNativeEditPage} from "./native-page-geometry";
 import type {LocatedRun,ShowOp} from "./types";
 export type NativePdfTextTarget={x:number;y:number;op:ShowOp};
 const signedToken=new TextEncoder().encode("/ByteRange");
@@ -20,7 +21,7 @@ export function hasPdfSignature(bytes:Uint8Array):boolean{
 export async function findNativePdfTextTarget(bytes:Uint8Array,pageIndex:number,point:{x:number;y:number}):Promise<NativePdfTextTarget|null>{
  if(!Number.isFinite(point.x)||!Number.isFinite(point.y)||hasPdfSignature(bytes))return null;
  const pdf=await PDFDocument.load(bytes);
- if(pageIndex<0||pageIndex>=pdf.getPageCount()||pdf.getPage(pageIndex).getRotation().angle%360!==0)return null;
+ if(pageIndex<0||pageIndex>=pdf.getPageCount()||!canNativeEditPage(pdf.getPage(pageIndex)))return null;
  const runs=await locatePageRuns(bytes,pageIndex);
  const matches=runs.filter((r:LocatedRun)=>{
   const tolerance=Math.max(2,.25*Math.abs(r.fontSize));
@@ -32,6 +33,10 @@ export async function findNativePdfTextTarget(bytes:Uint8Array,pageIndex:number,
 export async function removeNativePdfTextRuns(bytes:Uint8Array,changes:Array<{pageIndex:number;target:NativePdfTextTarget}>):Promise<Uint8Array>{
  if(changes.length===0)return bytes;
  if(hasPdfSignature(bytes))throw Error("PDF_SIGNED_OR_SIGNATURE_PRESENT");
+ const originDoc=await PDFDocument.load(bytes);
+ for(const change of changes){
+  if(!Number.isSafeInteger(change.pageIndex)||change.pageIndex<0||change.pageIndex>=originDoc.getPageCount()||!canNativeEditPage(originDoc.getPage(change.pageIndex)))throw Error("PDF_NATIVE_TEXT_PAGE_UNSUPPORTED");
+ }
  let result=bytes;
  const seen=new Set<string>();
  for(const change of changes){
