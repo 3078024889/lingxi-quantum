@@ -29,7 +29,7 @@ jobs:
           cache: pnpm
       - name: Frozen install
         run: pnpm install --frozen-lockfile
-      - name: Native PDF image real files: move, delete, replace, shared resources, signature deny
+      - name: 'Native PDF image real files: move, delete, replace, shared resources, signature deny'
         run: node --test tests/tool-closure/pdf-native-image.test.mjs
       - name: Types and Next.js production build
         run: pnpm build
