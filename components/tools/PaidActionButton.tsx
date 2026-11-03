@@ -7,6 +7,7 @@ import{useEffect,useRef,useState}from"react";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
 import {quoteDisplay} from '@/lib/tools/commerce/quote-display';
+import {matchesPaidExportQuote} from '@/lib/tools/commerce/paid-export-quote-binding';
 import {deliveryText} from '@/lib/tools/commerce/delivery-copy';
 import {requireCompletedDelivery} from '@/lib/tools/commerce/delivery-proof';
 import{foodBillingText}from"@/lib/tools/food/billing-copy";
@@ -45,7 +46,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
  const stop=()=>{if(timer.current){clearInterval(timer.current);timer.current=null}};
  async function status(id:string){const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});return r.ok?r.json():null}
  async function complete(id:string){if(completedIds.current.has(id)||completed||!draftReady||processing.current===id)return;processing.current=id;setRunning(true);setPaidId(id);stop();setMsg(t(UI.paid));try{await requireCompletedDelivery(()=>onPaid(id));completedIds.current.add(id);clearStoredQuote(toolId);setQuote(null);setCompleted(true);try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch{}}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null;setRunning(false)}}
- async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(q&&((q.tool_id||q.toolId)!==toolId||Number(q.quantity)!==quantity||(q.metadata?.draftId&&q.metadata.draftId!==draftId)))return false;await complete(id);return true}catch{return false}}
+ async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(!matchesPaidExportQuote(q,{quoteId:id,toolId,quantity,draftId}))return false;await complete(id);return true}catch{return false}}
  const checkRef=useRef(check);checkRef.current=check;
 
  useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id&&draftReady)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);window.addEventListener("focus",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);window.removeEventListener("focus",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id,draftReady]);
@@ -74,7 +75,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   finally{setBusy(false)}
  }
  async function pay(){
-  if(completed||running||busy||!quote)return;if(paidId){await complete(paidId);return}
+  if(completed||running||busy||!quote)return;if(paidId){await check(paidId);return}
   if(isMiniProgramWebView()&&(quote.currency!=="CNY"||!await miniVirtualPaymentAvailable())){setMsg(zh?"小程序内付费暂未开放，已有订单仍可查看。":"Payments in the mini program are temporarily unavailable. Existing orders remain available.");return}
   setBusy(true);try{if(!await preparePayment())return;
   saveStoredQuote(toolId,quote,draftId);
