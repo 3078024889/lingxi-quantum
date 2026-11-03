@@ -35,7 +35,7 @@ for(const item of [
   const start=page.getByRole("button",{name:/free.*preview|generate.*preview|免费生成预览/i}).first();
   await expect(start).toBeEnabled();
   await start.click();
-  await expect(page.getByRole("alert")).toBeVisible({timeout:85000});
+  await expect(page.getByRole("alert").filter({hasText:item.forceModelFailure?"这张照片暂时没有处理完成":"照片分辨率太低"}).first()).toBeVisible({timeout:85000});
   await expect.poll(()=>page.evaluate(()=>(window as any).__photoBitmapCloses),{timeout:15000}).toBeGreaterThan(0);
   await expect(page.getByText("证件照预览已生成")).toHaveCount(0);
   await expect(page.locator('[data-testid="paid-export-start"]')).toHaveCount(0);
