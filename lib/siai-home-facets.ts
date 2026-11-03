@@ -15,7 +15,7 @@ export type FacetRow={
  id:string;name:string;company:string;legal:string|null;kind:'company'|'open_source_project'|'software_library';
  listing:'listed_parent'|'unconfirmed'|'not_applicable';year:string|null;category:string;
  about:string;strength:string;features:string[];searchTerms?:readonly string[];models:string;region:string;payment:string;
- paymentSource:string|null;free:string;freeSource:string|null;price:string;commercial:string;
+ paymentSource:string|null;verifiedPaymentRails?:readonly PaymentFacet[];free:string;freeSource:string|null;price:string;commercial:string;
  localizedSummary?:string;localizedCategory?:string;
 };
 export const TASK_FACETS:readonly TaskFacet[]=['all','video','image','code','research','audio','agent','local'];
@@ -67,6 +67,7 @@ function paymentMatches(row:FacetRow,payment:PaymentFacet){
  if(payment==='any')return true;
  // Only publisher-supported checkout rails with independent source evidence.
  if(!knownSource(row.paymentSource))return false;
+ if(row.verifiedPaymentRails)return row.verifiedPaymentRails.includes(payment);
  // One negative rail must never leak into a positive filter alongside another rail.
  return row.payment.split(/\s+[·•]\s+|[,，;；\n]/).some(method=>
   PAYMENT_MATCH[payment].test(method)&&
@@ -92,10 +93,12 @@ export function filterMarketRows<T extends FacetRow>(rows:readonly T[],criteria:
  return filtered.sort((a,b)=>{
   if(criteria.sort==='name')return collator.compare(a.name,b.name)||collator.compare(a.id,b.id);
   const ya=yearNumber(a),yb=yearNumber(b);
+  // Company incorporation and open-source project start are different fields, never compare as the same kind of rank.
+  const at=a.kind==='company'?(ya===null?1:0):(ya===null?3:2);
+  const bt=b.kind==='company'?(yb===null?1:0):(yb===null?3:2);
+  if(at!==bt)return at-bt;
   if(ya===null&&yb===null)return collator.compare(a.name,b.name);
-  if(ya===null)return 1; // unknown dates always last
-  if(yb===null)return -1;
-  return (criteria.sort==='oldest'?ya-yb:yb-ya)||collator.compare(a.name,b.name);
+  return (criteria.sort==='oldest'?ya!-yb!:yb!-ya!)||collator.compare(a.name,b.name);
  });
 }
 export const MAX_COMPARISONS=3;
