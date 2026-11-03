@@ -22,7 +22,7 @@ type PreviewRecord={
 };
 const NOT_DOCUMENTED="尚无可靠资料";
 const ENTRY:Readonly<Record<string,string>>={
- cursor:"https://cursor.com/", "canva-magic-studio":"https://www.canva.com/magic-studio/",
+ cursor:"https://cursor.com/", "canva-magic-studio":"https://www.canva.com/canva-ai/",
  gamma:"https://gamma.app/",pika:"https://creation.pika.art/apps/create-video",
  ideogram:"https://ideogram.ai/",krea:"https://www.krea.ai/",leonardo:"https://leonardo.ai/",
  "notion-ai":"https://www.notion.com/product/ai","figma-make":"https://www.figma.com/make/",
@@ -30,7 +30,7 @@ const ENTRY:Readonly<Record<string,string>>={
  "devin-desktop":"https://devin.ai/desktop",tabnine:"https://www.tabnine.com/platform/",
  "mistral-le-chat":"https://chat.mistral.ai/", "microsoft-copilot":"https://www.microsoft.com/en-sg/copilot",
  poe:"https://poe.com/","adobe-firefly":"https://firefly.adobe.com",
- recraft:"https://www.recraft.ai/","freepik-ai":"https://www.freepik.com/ai",
+ recraft:"https://www.recraft.ai/","freepik-ai":"https://www.magnific.com/ai",
  synthesia:"https://www.synthesia.io/",heygen:"https://www.heygen.com/",
  elicit:"https://elicit.com/",consensus:"https://consensus.app/",scite:"https://scite.ai/",
  replicate:"https://replicate.com/", "fal-ai":"https://fal.ai/",
@@ -70,7 +70,10 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
   const officialEntry=ENTRY[p.id]||p.website;
   if(!trusted(officialEntry)||!trusted(p.website))throw Error("UNSAFE_SIAI_OFFICIAL_LINK:"+p.id);
   return {
-   id:p.id,name:p.name,company:p.company,legal:p.legalEntity,
+   id:p.id,
+   name:p.id==="freepik-ai"?"Magnific（原 Freepik AI）":p.id==="canva-magic-studio"?"Canva AI（Magic Studio）":p.name,
+   company:p.company,legal:p.legalEntity,
+   brandSource:p.id==="freepik-ai"?"https://www.magnific.com/freepik":p.id==="canva-magic-studio"?"https://www.canva.com/canva-ai/":null,
    legalScope:p.legalEntity?"service_operator":null,creator:null,kind:"company",
    listing:"unconfirmed",ipoFiling:false,year:null,yearSource:null,
    companySource:source(company),legalSource:p.legalEntitySource,listingSource:null,
