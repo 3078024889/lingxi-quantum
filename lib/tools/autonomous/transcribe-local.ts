@@ -86,6 +86,9 @@ export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string
    })).filter((x:LocalSegment)=>x.text);
    const text=String(result?.text||segments.map(x=>x.text).join(" ")).trim();
    if(!text)throw new Error("TRANSCRIPT_EMPTY");
+   // Some ASR backends return a transcript without per-word timestamps. In that
+   // case produce one full-clip cue instead of delivering empty subtitle files.
+   if(!segments.length)segments.push({start:0,end:pcm.length/16000,text});
    onProgress?.(1,"识别完成");
    return{text,segments,model:"onnx-community/whisper-tiny",backend:device};
   }catch(e){last=e}
@@ -93,8 +96,4 @@ export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string
  throw new Error(`LOCAL_ASR_UNAVAILABLE:${last instanceof Error?last.message:String(last||"unknown")}`);
 }
 
-export function toSrt(segments:LocalSegment[]){
- const t=(sec:number)=>{const ms=Math.max(0,Math.round(sec*1000)),h=Math.floor(ms/3600000),m=Math.floor(ms%3600000/60000),s=Math.floor(ms%60000/1000),x=ms%1000;return`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")},${String(x).padStart(3,"0")}`};
- return segments.map((x,i)=>`${i+1}\n${t(x.start)} --> ${t(x.end)}\n${x.text}`).join("\n\n");
-}
-export function toVtt(segments:LocalSegment[]){return"WEBVTT\n\n"+toSrt(segments).replace(/,/g,".").replace(/^\d+\n/gm,"")}
+export {toSrt,toVtt} from "@/lib/tools/autonomous/subtitle-format";
