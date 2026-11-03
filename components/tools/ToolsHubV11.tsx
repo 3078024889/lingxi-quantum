@@ -28,7 +28,8 @@ export default function ToolsHubV11(){
   (item:PublicToolSurfaceItem)=>[
    toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn),
    toolCardLine(lang,item.slug,item.kind,item.descZh,item.descEn),
-   toolCategoryLabel(lang,item.category)
+   toolCategoryLabel(lang,item.category),
+   item.slug==="food-calorie"?"食物卡路里分析 食物热量与营养 Food Calorie Analysis food nutrition calculator":""
   ].filter(Boolean).join(" ")
  ),[tools,q,category,lang,freeOnly]);
 

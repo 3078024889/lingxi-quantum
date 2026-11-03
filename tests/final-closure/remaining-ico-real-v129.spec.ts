@@ -1,0 +1,25 @@
+import {test,expect} from "./export-test";
+import sharp from "sharp";
+import fs from "node:fs/promises";
+test("ico-to-png: genuine PNG-backed Windows ICO decodes real pixels to independently verified PNG",async({page})=>{
+ const png=await sharp({create:{width:32,height:32,channels:4,background:"#47aacc"}}).png().toBuffer();
+ const header=Buffer.alloc(22);
+ header.writeUInt16LE(0,0);header.writeUInt16LE(1,2);header.writeUInt16LE(1,4);
+ header.writeUInt8(32,6);header.writeUInt8(32,7);
+ header.writeUInt16LE(1,10);header.writeUInt16LE(32,12);
+ header.writeUInt32LE(png.length,14);header.writeUInt32LE(22,18);
+ const ico=Buffer.concat([header,png]);
+ await page.goto("/tools/ico-to-png?lang=en");
+ await page.locator("[data-tool-workbench] input[type=file]").first().setInputFiles({name:"favicon.ico",mimeType:"image/x-icon",buffer:ico});
+ await page.locator("[data-tool-workbench] button").filter({hasText:/Convert|转换/}).last().click();
+ const action=page.getByTestId("result-file-actions").first();
+ await expect(action).toBeVisible({timeout:30000});
+ const pending=page.waitForEvent("download");
+ await action.getByRole("button",{name:"Save file",exact:true}).click();
+ const dl=await pending,bytes=await fs.readFile((await dl.path())!);
+ const decoded=await sharp(bytes).metadata();
+ expect(decoded.format).toBe("png");expect([decoded.width,decoded.height]).toEqual([32,32]);
+ const pixel=await sharp(bytes).extract({left:10,top:10,width:1,height:1}).raw().toBuffer({resolveWithObject:true});
+ expect(pixel.data[0]).toBeGreaterThan(40);
+ expect(pixel.data[2]).toBeGreaterThan(pixel.data[0]);
+});

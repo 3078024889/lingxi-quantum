@@ -97,19 +97,16 @@ export const GLOBAL_TOOL_CATALOG=[
   {slug:"compress-image-to-20kb",zh:"图片精确压缩到 20KB",en:"Compress Image to 20KB",mode:"local" as const},
   {slug:"compress-image-to-500kb",zh:"图片精确压缩到 500KB",en:"Compress Image to 500KB",mode:"local" as const},
   {slug:"compress-image-to-50kb",zh:"图片精确压缩到 50KB",en:"Compress Image to 50KB",mode:"local" as const},
-  {slug:"compress-pdf",zh:"PDF 重建压缩",en:"Rebuild & Compress PDF",mode:"local" as const},
   {slug:"csv-to-xlsx",zh:"CSV / TSV 转 Excel",en:"CSV / TSV to Excel",mode:"local" as const},
   {slug:"document-copy-layout",zh:"证件复印排版",en:"Document Copy Layout",mode:"local" as const},
   {slug:"docx-to-txt",zh:"DOCX 转 TXT",en:"DOCX to TXT",mode:"local" as const},
   {slug:"e-sign-pdf",zh:"PDF电子签名 / 电子签章",en:"E-sign & Stamp PDF",mode:"local" as const},
   {slug:"file-compare",zh:"两个文件是否完全一致",en:"Compare Two Files",mode:"local" as const},
   {slug:"file-type-detector",zh:"文件真实格式检测",en:"Real File Type Detector",mode:"local" as const},
-  {slug:"food-calorie",zh:"食物热量与营养",en:"Food Nutrition Calculator",mode:"online" as const},
-  {slug:"heic-local",zh:"HEIC 本地转换",en:"Local HEIC Converter",mode:"local" as const},
+  {slug:"food-calorie",zh:"卡路里识别",en:"Calorie Recognition",mode:"online" as const},
   {slug:"heic-to-jpg",zh:"HEIC 转 JPG",en:"HEIC to JPG",mode:"local" as const},
   {slug:"id-photo-ai",zh:"AI 证件照",en:"AI ID Photo",mode:"online" as const},
   {slug:"image-to-pdf",zh:"图片转 PDF",en:"Images to PDF",mode:"local" as const},
-  {slug:"image-to-pdf-pro",zh:"图片转 PDF",en:"Images to PDF Pro",mode:"local" as const},
   {slug:"image-translator",zh:"图片翻译",en:"Image Translator",mode:"online" as const},
   {slug:"image-watermark-remover",zh:"图片去水印",en:"Image Watermark Cleanup",mode:"local" as const},
   {slug:"ai-image-check",zh:"AI 图片检测",en:"AI Image Detection",mode:"local" as const},
@@ -270,7 +267,7 @@ export function toolTitle(locale:SeoLocale,tool:GlobalTool){
 }
 
 export function toolDescription(locale:SeoLocale,tool:GlobalTool){
-  const intro=toolIntro(locale,tool.slug==="heic-local"?"heic-to-jpg":tool.slug);if(intro)return intro;
+  const intro=toolIntro(locale,tool.slug);if(intro)return intro;
   const name=toolTitle(locale,tool);
   return `${name} — ${toolFacts(tool.slug,locale).summary}`;
 }
