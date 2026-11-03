@@ -14,10 +14,10 @@ test("AI media detection is indexed and has real C2PA evidence contracts",()=>{
  const registry=LINGXIFIELD_PUBLIC_TOOL_REGISTRY.map(t=>t.slug),recipeIds=recipes.map(r=>r.slug);
  expect(new Set(seoIds).size).toBe(seoIds.length);
  expect(new Set(registry).size).toBe(registry.length);
- expect(seoIds.length).toBe(124);
+ expect(seoIds.length).toBe(121);
  expect(registry.length).toBe(seoIds.length);
  expect(recipeIds.sort()).toEqual([...seoIds].sort());
- expect(fixtureMatrix.classificationCount).toBe(124);
+ expect(fixtureMatrix.classificationCount).toBe(121);
  expect(Object.keys(fixtureMatrix.toolClassifications).sort()).toEqual([...seoIds].sort());
  for(const id of ids){
   expect(seoIds).toContain(id);

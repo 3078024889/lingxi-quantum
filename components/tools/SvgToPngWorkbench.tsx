@@ -51,7 +51,7 @@ export default function SvgToPngWorkbench(){
  return <div className="space-y-4">
   <FileDropzone accept=".svg,image/svg+xml" files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy}/>
   <p className="text-sm text-[var(--lx-muted)]">{c.lead}</p>
-  <label className="block text-sm text-[var(--lx-muted)]">{c.scale}<select value={scale} onChange={e=>setScale(Number(e.target.value))} className="ml-2 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value={1}>1x</option><option value={2}>2x</option><option value={3}>3x</option><option value={4}>4x</option></select></label>
+  <label className="block text-sm text-[var(--lx-muted)]">{c.scale}<select disabled={busy} value={scale} onChange={e=>{setScale(Number(e.target.value));setResult([]);setError("")}} className="ml-2 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value={1}>1x</option><option value={2}>2x</option><option value={3}>3x</option><option value={4}>4x</option></select></label>
   <button disabled={!file||busy} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.run}</button>
   {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
