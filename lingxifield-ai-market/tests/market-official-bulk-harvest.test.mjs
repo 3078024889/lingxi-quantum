@@ -37,7 +37,7 @@ test('exactly 32 explicitly sourced facts were added across all three held batch
  assert.equal(count,32);
 });
 test('the 210 observed/missing/conflict slots reconcile, without publishing anyone',()=>{
- const summary=batches.map(({batch,pack})=>auditOfficialObservations(pack,batch,{today:'2026-11-02'}));
+ const summary=batches.map(({batch,pack})=>auditOfficialObservations(pack,batch,{today:'2026-11-03'}));
  for(const r of summary){assert.deepEqual(r.issues,[]);assert.equal(r.readyForPublication,false)}
  const ids=[...read('lib/market-api-service-catalog.ts').match(/const ALL=\[([^\]]+)\] as const;/)[1].matchAll(/'([^']+)'/g)].map(m=>m[1]);
  const source=read('lib/market-researched-facts.ts');
@@ -45,7 +45,7 @@ test('the 210 observed/missing/conflict slots reconcile, without publishing anyo
  const b=source.indexOf('};\nexport const MARKET_RESEARCH_CHECKED_AT',a)+1;
  const f=JSON.parse(source.slice(a,b));
  const report=buildEvidenceReadiness({curatedIds:ids,curatedFacts:f,cohorts:batches.map(x=>x.batch),
-  observations:batches.map(x=>x.pack),asOf:'2026-11-02'});
+  observations:batches.map(x=>x.pack),asOf:'2026-11-03'});
  assert.deepEqual([report.candidateIntake.observed,report.candidateIntake.missing,report.candidateIntake.conflict],[194,16,0]);
  assert.equal(report.candidateIntake.factCells,210);
  assert.equal(report.candidateIntake.publishReady,0);
@@ -78,8 +78,8 @@ test('secondary source links cannot be smuggled from other hosts or future dates
  const fake=structuredClone(pack),p=find(fake,'freepik-ai');
  assert.ok(Array.isArray(p.facts.free.additionalEvidence));
  p.facts.free.additionalEvidence[0].source='https://www.freepik.com.attacker.invalid/fake';
- assert.ok(auditOfficialObservations(fake,batch,{today:'2026-11-02'}).issues.some(x=>x.code==='BAD_SUPPLEMENTAL_SOURCE_OR_SCOPE'));
+ assert.ok(auditOfficialObservations(fake,batch,{today:'2026-11-03'}).issues.some(x=>x.code==='BAD_SUPPLEMENTAL_SOURCE_OR_SCOPE'));
  const future=structuredClone(pack);
  find(future,'freepik-ai').facts.free.additionalEvidence[0].checkedAt='2027-03-19';
- assert.ok(auditOfficialObservations(future,batch,{today:'2026-11-02'}).issues.some(x=>x.code==='BAD_SUPPLEMENTAL_SOURCE_OR_SCOPE'));
+ assert.ok(auditOfficialObservations(future,batch,{today:'2026-11-03'}).issues.some(x=>x.code==='BAD_SUPPLEMENTAL_SOURCE_OR_SCOPE'));
 });
