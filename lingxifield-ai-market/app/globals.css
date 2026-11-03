@@ -1257,3 +1257,11 @@ body{font-size:16px;line-height:1.6}
 .capabilityShowcase .capabilityItem h3{font-size:16px}
 .capabilityShowcase .capabilitySource{margin-top:auto;text-underline-offset:3px;text-decoration:underline}
 @media(max-width:680px){.capabilityShowcase{padding:14px}.capabilityShowcase .capabilityGrid{grid-template-columns:1fr}}
+
+
+/* The answer and its evidence stay together in side-by-side comparisons. */
+.app .marketCompareProof{display:block;width:max-content;max-width:100%;margin-top:8px;color:#155fa8;font-size:14px;font-weight:750;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.app .marketCompareProof:focus-visible{outline:2px solid #2769ad;outline-offset:3px}
+.app .compareDialog .compareFitScroll tbody td>span{display:block;line-height:1.8;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.app .compareDialog .compareFitScroll tbody tr:nth-child(2n){background:#f8fbff}
+.app .compareDialog .compareFitScroll tbody th{font-size:14px;font-weight:750;color:#294f78}
