@@ -1,0 +1,48 @@
+name: LINGXIFIELD P0 Video Rotate Real Export
+on:
+  push:
+    branches: [test/video-rotate-real-20261103]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxifield-video-rotate-real-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  rotate-real:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout pinned source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Node from lockfile project
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Production server build
+        run: pnpm build
+      - name: Install Chrome
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Real video rotate and MP4 independent decode on desktop and mobile
+        run: pnpm exec playwright test -c playwright.final.config.ts --workers=1 tests/final-closure/rotate-video-real-output.spec.ts
+      - name: Save real video test traces
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: lingxifield-video-rotate-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore
