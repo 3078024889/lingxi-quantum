@@ -49,6 +49,22 @@ const provider=expose("lib/tools/media/provider.ts",{
  const frame=Uint8Array.from(Buffer.concat([Buffer.from([0xff,0xfb]),Buffer.alloc(400,0)]));
  assert.equal(provider.checkedMp3Response(frame,"application/octet-stream").length,402);
  assert(calls.every(c=>c.options.signal&&c.options.signal.timeout===48000),"all provider calls need timeouts");
+
+ const badProvider=expose("lib/tools/media/provider.ts",{
+  AbortSignal:{timeout:()=>({})},TextDecoder,Uint8Array,
+  fetch:async(url)=>url.endsWith("/audio/speech")?response({error:"provider failure"},200,"application/json"):response({error:"bad"},200)
+ });
+ await assert.rejects(()=>badProvider.synthesizeRemote("Short sentence","en"),/MEDIA_TTS_UNEXPECTED_CONTENT_TYPE/,"HTTP 200 JSON must never become a paid MP3");
+ const failingProvider=expose("lib/tools/media/provider.ts",{
+  AbortSignal:{timeout:()=>({})},TextDecoder,Uint8Array,
+  fetch:async()=>response({secret:"private body must not appear"},429)
+ });
+ await assert.rejects(()=>failingProvider.translateTextRemote({text:"private",source:"en",target:"fr"}),/MEDIA_PROVIDER_429/);
+ const tooLargeJsonProvider=expose("lib/tools/media/provider.ts",{
+  AbortSignal:{timeout:()=>({})},TextDecoder,Uint8Array,
+  fetch:async()=>response({choices:[{message:{content:"x".repeat(1200000)}}]},200)
+ });
+ await assert.rejects(()=>tooLargeJsonProvider.translateTextRemote({text:"small",source:"en",target:"fr"}),/MEDIA_PROVIDER_JSON_TOO_LARGE/);
  const n=calls.length;
  await assert.rejects(()=>provider.synthesizeRemote("x".repeat(4001),"en"),/TTS_TEXT_EXCEEDS_PROVIDER_LIMIT/);
  assert.equal(calls.length,n,"oversized payload must fail before spending vendor credit");
