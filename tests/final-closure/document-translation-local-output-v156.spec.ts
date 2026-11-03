@@ -152,3 +152,32 @@ test("document translation: actual two-page PDF bilingual export contains four d
  await page.locator('select[aria-label="PDF"]').selectOption("layout");
  await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
 });
+
+
+for(const mode of ["omitted-segment","duplicate-id","replacement-character"] as const){
+ test(`document translation: ${mode} from provider never creates a downloadable success`,async({page})=>{
+  test.setTimeout(100000);
+  let attempts=0;
+  await page.route("**/api/tools/document-translate",async route=>{
+   attempts++;
+   const body=route.request().postDataJSON() as {segments:Array<{id:string;text:string}>};
+   expect(body.segments.length).toBeGreaterThan(1);
+   let output=body.segments.map(s=>({id:s.id,text:"translated "+s.text}));
+   if(mode==="omitted-segment")output=output.slice(0,-1);
+   if(mode==="duplicate-id")output=output.map((s,i)=>i===1?{...s,id:output[0].id}:s);
+   if(mode==="replacement-character")output[0]={...output[0],text:"bad \uFFFD value"};
+   await route.fulfill({status:200,contentType:"application/json",body:JSON.stringify({segments:output})});
+  });
+  await page.goto("/tools/document-translate?lang=en");
+  await page.locator('input[type="file"]').first().setInputFiles({
+   name:"multi-line.txt",mimeType:"text/plain",
+   buffer:Buffer.from("First important sentence.\\nSecond independent sentence.\\nThird sentence.\\n")
+  });
+  await page.getByRole("combobox",{name:/Target/i}).selectOption("fr");
+  await page.getByRole("button",{name:"Translate",exact:true}).click();
+  await expect(page.getByRole("alert")).toBeVisible({timeout:50000});
+  await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
+  await expect(page.getByRole("button",{name:"Translate",exact:true})).toBeEnabled();
+  expect(attempts).toBe(1);
+ });
+}
