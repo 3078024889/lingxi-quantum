@@ -84,3 +84,13 @@ test('Leonardo official terms distinguish embargo subject exclusions from verifi
  assert.match(r.text,/不能据此推断其他国家/);
  sourceCheck(p,r.source);
 });
+
+test('negative country coverage wording cannot be upgraded into broad positive market evidence',()=>{
+ const observed=scope=>({status:'observed',scope});
+ assert.equal(regionEvidenceLevel(observed('provider_model_specific_not_full_country_coverage')),'provider_specific_restrictions');
+ assert.equal(regionEvidenceLevel(observed('official_embargo_restriction_country_coverage_unknown')),'restrictions_only');
+ assert.equal(regionEvidenceLevel(observed('not_full_country_coverage')),'other_observation_not_country_proof');
+ assert.equal(regionEvidenceLevel(observed('170plus_markets_publisher_public_statement')),'broad_market_statement');
+ assert.equal(regionEvidenceLevel(observed('specific_promotion_eligible_countries_not_full_platform_access')),'other_observation_not_country_proof');
+ assert.equal(regionEvidenceLevel({status:'missing'}),'missing');
+});
