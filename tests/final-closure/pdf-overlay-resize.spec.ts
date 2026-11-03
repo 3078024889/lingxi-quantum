@@ -10,11 +10,13 @@ test("PDF image resizes on-page with handles and rotates",async({page})=>{
  await input.setInputFiles({name:"stamp.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
  const item=page.getByTestId("pdf-overlay").last();await expect(item).toBeVisible();
  const grip=page.getByTestId("pdf-grip-se");await expect(grip).toBeVisible();
+ // Playwright's raw mouse does not auto-scroll to coordinates returned by boundingBox().
+ await grip.scrollIntoViewIfNeeded();
  const before=await item.boundingBox(),r=await grip.boundingBox();expect(before).not.toBeNull();expect(r).not.toBeNull();
  await page.mouse.move(r!.x+r!.width/2,r!.y+r!.height/2);await page.mouse.down();
  await page.mouse.move(r!.x+r!.width/2+50,r!.y+r!.height/2+15,{steps:10});await page.mouse.up();
  const after=await item.boundingBox();expect(after).not.toBeNull();expect(after!.width).toBeGreaterThan(before!.width+8);
- const rotate=page.getByTestId("pdf-grip-rotate");await expect(rotate).toBeVisible();const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
+ const rotate=page.getByTestId("pdf-grip-rotate");await expect(rotate).toBeVisible();await rotate.scrollIntoViewIfNeeded();const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
  await page.mouse.move(rr!.x+rr!.width/2,rr!.y+rr!.height/2);await page.mouse.down();
  await page.mouse.move(rr!.x+rr!.width/2+30,rr!.y+rr!.height/2+40,{steps:10});await page.mouse.up();
  expect(await item.evaluate(el=>getComputedStyle(el).transform)).not.toBe("none");

@@ -12,7 +12,10 @@ test("PDF inline text edits and collapses without a permanent frame",async({page
  await edit.fill("Updated text, 123");await edit.press("Enter");await expect(edit).toHaveCount(0);
  const item=page.getByTestId("pdf-overlay").filter({hasText:"Updated text, 123"}).first();await expect(item).toBeVisible();
  await expect(page.getByTestId("pdf-grip-se")).toHaveCount(0);
- await item.dblclick();await expect(edit).toBeVisible();await edit.fill("Final note");await edit.press("Enter");await expect(item).toContainText("Final note");
+ await item.dblclick();await expect(edit).toBeVisible();await edit.fill("Final note");await edit.press("Enter");
+ const finalItem=page.getByTestId("pdf-overlay").filter({hasText:"Final note"}).first();
+ await expect(finalItem).toContainText("Final note");
+ await expect(page.getByTestId("pdf-overlay").filter({hasText:"Updated text, 123"})).toHaveCount(0);
  await expect(page.locator("div.absolute.border-amber-400")).toHaveCount(0);
  await expect(page.locator('input[aria-label="Signature rotation degrees"]')).toHaveCount(0);
  await expect(page.getByTestId("paid-export-result")).toHaveCount(0);
