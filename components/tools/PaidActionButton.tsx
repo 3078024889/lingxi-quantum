@@ -66,6 +66,12 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   completedIds.current.add(id);clearStoredQuote(toolId);setQuote(null);setCompleted(true);try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch{}}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null;setRunning(false)}}
  async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(!matchesPaidExportQuote(q,{quoteId:id,toolId,quantity,draftId})){setMsg(t(UI.paymentBinding));return false;}
   if(isMeteredMedia&&(d.grant?.consumed_at||d.grant?.consumedAt)){
+   if(mediaGeneratedIds.current.has(id)){
+    // The server may have consumed the grant even if the acknowledgement
+    // response was lost. This browser still has the verified media output:
+    // retry acknowledgement only, never regenerate or spend provider credit.
+    await complete(id);return true;
+   }
    // A refreshed page has no retained media output. Do not silently spend
    // provider credit again on a grant that has already been consumed.
    setPaidId(id);setMsg(t(UI.mediaAlreadyDelivered));return false;

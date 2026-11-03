@@ -7,6 +7,7 @@ assert(client.includes(marker),"video media paid output must ack one-time grant"
 assert(client.indexOf(onPaid)<client.indexOf(marker),"never consume grant before genuine completed media");
 assert(client.includes("mediaGeneratedIds.current.has(id)")&&client.includes("mediaGeneratedIds.current.add(id)"),"ack retry must not rerun model");
 assert(client.includes("if(isMeteredMedia&&(d.grant?.consumed_at||d.grant?.consumedAt))"),"consumed media grant must not trigger new model");
+assert(client.includes("if(mediaGeneratedIds.current.has(id))")&&client.includes("await complete(id);return true;"),"lost acknowledgement response may reconcile already-consumed output without generating again");
 assert(client.includes("MEDIA_GRANT_CONSUME_FAILED"));
 assert(server.includes('admin.from("tool_export_grants")'));
 assert(server.includes("MEDIA_GRANT_ALREADY_CONSUMED"));
