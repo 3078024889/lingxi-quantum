@@ -93,3 +93,22 @@ test('Q&A stays expanded and source-linked on mobile; company facts and answers 
  assert.match(source,/rel="nofollow noopener noreferrer"/);
  assert.doesNotMatch(source,/<details(?:\s|>)/);
 });
+
+
+test('six publisher legal operators are shown as sourced entities, not guessed from company/product brands',()=>{
+ const src=read('lingxifield-ai-market/lib/market-company-evidence.ts');
+ const expected=[
+  ['huggingface','Hugging Face, Inc.','https://huggingface.co/terms-of-service'],
+  ['deepseek','杭州深度求索人工智能基础技术研究有限公司','https://cdn.deepseek.com/policies/zh-CN/deepseek-privacy-policy.html'],
+  ['llamaindex','LlamaIndex, Inc.','https://www.llamaindex.ai/legal/terms-of-service'],
+  ['dify','LangGenius, Inc.','https://www.dify.ai/legal/terms-of-service'],
+  ['ollama','Ollama Inc.','https://ollama.com/terms'],
+  ['xai','SpaceX Super Intelligence LLC','https://x.ai/legal/terms-of-service']
+ ];
+ for(const [id,entity,source] of expected){
+  const exact="legalEntity:fact('"+entity+"','"+source+"','2026-11-03'),legalEntityScope:'service_operator'";
+  assert.ok(src.includes(exact),id+' legal operator must be exactly cited to a publisher');
+ }
+ assert.ok(src.includes("xai:'xAI'"),'retain historic xAI brand, distinguish Grok consumer terms from brand founding year');
+ assert.doesNotMatch(src,/SpaceX Super Intelligence LLC（/,'legal entity must contain company name only');
+});
