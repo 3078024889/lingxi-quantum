@@ -8,7 +8,8 @@ test('production robots explicitly allows search crawlers and ChatGPT search bot
  assert.ok(source.includes("userAgent:'*'"));
  assert.ok(source.includes("userAgent:'OAI-SearchBot'"));
  assert.ok(source.includes("allow:'/'"));
- assert.ok(source.includes("const crawlerPaths=['/api/','/vendor/']"));
+ assert.ok(source.includes("const crawlerPaths=['/api/','/vendor/'"));
+ assert.ok(source.includes("marketLocales.map"));
  assert.ok(source.includes("if(!mayIndexMarket())return {rules:{userAgent:'*',disallow:'/'}}"));
  assert.ok(source.includes("sitemap:marketCanonicalOrigin+'/sitemap.xml'"));
 });

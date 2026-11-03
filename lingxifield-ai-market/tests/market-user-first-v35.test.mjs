@@ -17,7 +17,7 @@ test('beginner tour moves one step at a time to real interactive targets in nine
  assert.match(guide,/#market-filters/);
  assert.match(guide,/#visitor-feedback/);
  assert.match(home,/<MarketQuickStart language=\{language\} onCompare=/);
- assert.match(home,/href="\/#market-guide"/);
+ assert.ok(home.includes('language+"/ai#market-guide"'));
  assert.doesNotMatch(guide,/login\(|\/auth\/v1\//);
 });
 test('new view removes all three redundant boxes and keeps the capability evidence visible',async()=>{

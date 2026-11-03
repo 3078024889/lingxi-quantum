@@ -16,7 +16,7 @@ test('single compact market row has official, desktop, mobile, detail, compariso
  assert.ok(actions.includes("platformLinks(platform.id).links.filter(safePublisherLink)"));
  assert.ok(actions.includes("download:'官方下载'"));
  assert.ok(actions.includes("l.kind==='desktop'||l.kind==='ios'||l.kind==='android'"));
- assert.ok(main.includes('href="/vendor/claim"'));
+ assert.ok(main.includes('language+"/vendor/claim"'));
  assert.ok(actions.includes('claimUrl'));
  assert.ok(actions.includes('onToggleCompare'));
  assert.ok(actions.includes('platform.websiteKind'));
@@ -28,8 +28,8 @@ test('no separate card downloads maze; legacy path opens the homepage list',asyn
  const home=await read('app/market-workbench.tsx');
  assert.ok(page.includes("redirect('/#tools-list')"));
  assert.ok(!page.includes('downloadCards'));
- assert.ok(home.includes('href="/#tools-list"'));
- assert.ok(home.includes('href="/vendor/claim"'));
+ assert.ok(home.includes('language+"/ai#tools-list"'));
+ assert.ok(home.includes('language+"/vendor/claim"'));
 });
 test('action controls fit in a narrow two-column cell',async()=>{
  const css=await read('app/globals.css');
