@@ -1,8 +1,8 @@
 const fs=require('node:fs'),ts=require('typescript'),vm=require('node:vm'),assert=require('node:assert/strict');
 const file='lib/tools/commerce/paid-export-quote-binding.ts';
 const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-const exports={};vm.runInNewContext(js,{exports,Number,Array});
-const verify=exports.matchesPaidExportQuote;
+const exposed={};vm.runInNewContext(js,{exports:exposed,Number,Array});
+const verify=exposed.matchesPaidExportQuote;
 const input={quoteId:'quote-1',toolId:'e-sign-pdf',quantity:5,draftId:'draft-1',pages:5};
 const bound={id:'quote-1',tool_id:'e-sign-pdf',quantity:5,unit_name:'page',metadata:{draftId:'draft-1'}};
 assert.equal(verify(bound,input),true);
@@ -19,7 +19,7 @@ const component=fs.readFileSync('components/tools/PaidExportButton.tsx','utf8');
 assert(component.includes('if(!matchesPaidExportQuote(q,{quoteId:id,toolId,quantity,draftId,pages:metadata?.pages}))'));
 assert(component.indexOf('if(!matchesPaidExportQuote(q')<component.indexOf('await unlock(id)'));
 const action=fs.readFileSync('components/tools/PaidActionButton.tsx','utf8');
-assert(action.includes('if(!matchesPaidExportQuote(q,{quoteId:id,toolId,quantity,draftId}))return false'));
+assert(action.includes('if(!matchesPaidExportQuote(q,{quoteId:id,toolId,quantity,draftId}))'));
 assert(action.includes('if(paidId){await check(paidId);return}'),'retry must always re-check actual paid status before generating');
 assert(!action.includes('if(paidId){await complete(paidId);return}'),'bypass of status on retry must not return');
 

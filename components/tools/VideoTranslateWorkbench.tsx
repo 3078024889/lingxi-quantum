@@ -10,6 +10,7 @@ import ResultPanel from "@/components/tools/ResultPanel";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {localMediaDuration,transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 import {concatMp3,muxTranslatedVideo,requireTimedTranscript,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
+import {extractExactTranslatedCues,requireCuesWithinVideo,pairBilingualCues} from "@/lib/tools/media/video-subtitle-integrity";
 import {newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[
@@ -39,13 +40,15 @@ async function translateTimed(input:TimedText[],source:string,target:string,quot
  for(const group of chunks(input,24)){
   const payload=group.map((x,i)=>`${marker(base+i)} ${x.text}`).join("\n");
   const translated=await apiTranslate(payload,source,target,quoteId);
-  const map=new Map<number,string>();
-  const re=/⟦LX(\d{4})⟧\s*([\s\S]*?)(?=⟦LX\d{4}⟧|$)/g;let m:RegExpExecArray|null;
-  while((m=re.exec(translated)))map.set(Number(m[1]),m[2].trim());
-  if(!group.every((_,i)=>typeof map.get(base+i)==="string"&&Boolean(map.get(base+i)?.trim()))){
-   for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:await apiTranslate(x.text,source,target,quoteId)})}
+  const cues=extractExactTranslatedCues(translated,base,group.length);
+  if(!cues){
+   for(let i=0;i<group.length;i++){
+    const x=group[i],text=await apiTranslate(x.text,source,target,quoteId);
+    if(text.includes("\uFFFD"))throw Error("TRANSLATION_INVALID");
+    out.push({...x,text});
+   }
   }else{
-   for(let i=0;i<group.length;i++){const x=group[i];out.push({...x,text:map.get(base+i)||x.text})}
+   for(let i=0;i<group.length;i++)out.push({...group[i],text:cues[i]});
   }
   base+=group.length;
  }
@@ -103,16 +106,20 @@ export default function VideoTranslateWorkbench(){
     // would fabricate synchronization and mislead users: fail and preserve the
     // existing paid job for retry rather than create false translated MP4/SRT.
     const local=await transcribeLocal(file,(p,m)=>setStage(`${fi+1}/${files.length} · ${m} ${Math.round(p*100)}%`));
-    original=requireTimedTranscript(local.segments.map(x=>({start:x.start,end:x.end,text:x.text})));
+    original=requireCuesWithinVideo(requireTimedTranscript(local.segments.map(x=>({start:x.start,end:x.end,text:x.text}))),duration);
 
     for(let ti=0;ti<targets.length;ti++){
       const target=targets[ti];
       setStage(`${fi+1}/${files.length} · ${ti+1}/${targets.length} · 正在翻译字幕…`);
       const translated=source===target?original:await translateTimed(original,source,target,quoteId);
-      const srt=toSrtTimed(translated),vtt=toVttTimed(translated),txt=translated.map(x=>x.text).join("\n");
+      const checked=requireCuesWithinVideo(requireTimedTranscript(translated),duration);
+      const srt=toSrtTimed(checked),vtt=toVttTimed(checked),txt=checked.map(x=>x.text).join("\n");
+      const bilingual=pairBilingualCues(original,checked);
       so.push(blobFile(`${stem}-${target}.srt`,srt,"application/x-subrip;charset=utf-8"));
       so.push(blobFile(`${stem}-${target}.vtt`,vtt,"text/vtt;charset=utf-8"));
       so.push(blobFile(`${stem}-${target}.txt`,txt,"text/plain;charset=utf-8"));
+      so.push(blobFile(`${stem}-${target}-bilingual.srt`,toSrtTimed(bilingual),"application/x-subrip;charset=utf-8"));
+      so.push(blobFile(`${stem}-${target}-bilingual.vtt`,toVttTimed(bilingual),"text/vtt;charset=utf-8"));
 
       let dubbed:Blob|null=null;
       if(mode==="dub"){

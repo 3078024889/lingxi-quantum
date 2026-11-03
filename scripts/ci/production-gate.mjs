@@ -11,6 +11,7 @@ const commands=[
  ["node",["scripts/test-transcript-captions-v139.cjs"]],
  ["node",["scripts/test-whisper-real-timing-v143.cjs"]],
  ["node",["scripts/test-video-caption-integrity-v148.cjs"]],
+ ["node",["scripts/test-video-translation-integrity-v167.cjs"]],
  ["node",["scripts/test-media-quote-readiness-v151.cjs"]],
  ["node",["scripts/test-export-access-v92.cjs"]],
  ["node",["scripts/test-paid-export-quote-binding-v166.cjs"]],
