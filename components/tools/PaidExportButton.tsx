@@ -10,6 +10,7 @@ import type{PaidTaskPhase}from"@/lib/tools/commerce/paid-task-state";
 import {deliveryText} from '@/lib/tools/commerce/delivery-copy';
 import {requireCompletedDelivery} from '@/lib/tools/commerce/delivery-proof';
 import {quoteDisplay} from '@/lib/tools/commerce/quote-display';
+import {matchesPaidExportQuote} from '@/lib/tools/commerce/paid-export-quote-binding';
 
 type Quote={
  id:string;tool_id?:string;toolId?:string;quantity:number;unit_name?:string;unitName?:string;
@@ -72,9 +73,11 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
    const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});if(!r.ok)throw new Error();
    const d=await r.json();fails.current=0;
    if(!d?.paid)return false;
-   const q=d.quote as Quote|undefined;if(q)setQuote(q);
-   const legacyPdf=Boolean(q&&['pdf-editor','e-sign-pdf'].includes(toolId)&&(q.unit_name||q.unitName)==='page'&&Number(q.quantity)===Number(metadata?.pages)&&Number(metadata?.pages)>0);
-   if(q&&((q.tool_id||q.toolId)!==toolId||(Number(q.quantity)!==quantity&&!legacyPdf)||(q.metadata?.draftId&&q.metadata.draftId!==draftId))){stop();setPaidId(id);setPhase('error');setMsg(tx('failed'));return false;}
+   const q=d.quote as Quote|undefined;
+   if(!matchesPaidExportQuote(q,{quoteId:id,toolId,quantity,draftId,pages:metadata?.pages})){
+    stop();setPaidId(id);setPhase('error');setMsg(tx('failed'));return false;
+   }
+   setQuote(q!);
    if(isConsumed(d.grant as Grant|undefined)){await finishExisting(id);return true}
    setPhase("paid");await unlock(id);return true;
   }catch{fails.current++;if(fails.current>=MAX_POLL_FAILURES){stop();setMsg(plainText(lang,"paymentStatus"))}return false}

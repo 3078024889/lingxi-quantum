@@ -116,3 +116,31 @@ test('mismatched legacy payment cannot export or create a second charge',async({
  await expect(page.getByTestId('pdf-source-page-count')).toContainText('5');
  expect(downloads).toBe(0);expect(consumes).toBe(0);expect(quotes).toBe(0);
 });
+
+
+for(const scenario of [
+ {name:"missing quote",quote:undefined},
+ {name:"wrong tool",quote:{id:Q,tool_id:"video-dubbing",quantity:5,unit_name:"page"}},
+ {name:"wrong quote identity",quote:{id:"different-quote",tool_id:"e-sign-pdf",quantity:5,unit_name:"page"}},
+ {name:"wrong draft binding",quote:{id:Q,tool_id:"e-sign-pdf",quantity:5,unit_name:"page",metadata:{draftId:"different-draft"}}}
+]){
+ test(`paid PDF refuses ${scenario.name} even when status claims paid`,async({page})=>{
+  let statusCalls=0,downloads=0,consumes=0;
+  page.on("download",()=>downloads++);
+  await page.route("**/api/tools/pay/status?quoteId=**",async route=>{
+   statusCalls++;
+   await route.fulfill({json:{ok:true,paid:true,quote:scenario.quote,grant:{consumed_at:null}}});
+  });
+  await page.route("**/api/tools/export/consume",async route=>{
+   consumes++;
+   await route.fulfill({status:200,json:{ok:true}});
+  });
+  const draftId=await createRecoverableDraft(page,5);
+  await page.goto(`/tools/e-sign-pdf?resumeDraft=${encodeURIComponent(draftId)}&resumeQuote=${Q}`,{waitUntil:"domcontentloaded"});
+  await expect.poll(()=>statusCalls,{timeout:15000}).toBeGreaterThan(0);
+  await expect(page.getByTestId("pdf-source-page-count")).toContainText(/\\b5\\b/);
+  await expect(page.getByRole("button",{name:/Resume paid task|继续已付款任务/})).toBeVisible();
+  expect(downloads).toBe(0);
+  expect(consumes).toBe(0);
+ });
+}

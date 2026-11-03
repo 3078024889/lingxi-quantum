@@ -13,6 +13,7 @@ const commands=[
  ["node",["scripts/test-video-caption-integrity-v148.cjs"]],
  ["node",["scripts/test-media-quote-readiness-v151.cjs"]],
  ["node",["scripts/test-export-access-v92.cjs"]],
+ ["node",["scripts/test-paid-export-quote-binding-v166.cjs"]],
  ["node",["scripts/test-daily-export-api-v92.cjs"]],
  ["node",["scripts/test-file-delivery-v91.cjs"]],
  ["node",["scripts/test-document-promotion-v88.cjs"]],
