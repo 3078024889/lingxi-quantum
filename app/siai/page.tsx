@@ -16,7 +16,7 @@ export const dynamic="force-dynamic";
 export const revalidate=0;
 export const metadata:Metadata={
  title:"全球 SIAI 排行榜｜AI 工具、厂商、免费额度与价格｜灵犀场",
- description:"全球 SIAI AI 工具行情与厂商排行榜：比较真实官方价格、免费额度、主要功能、地区可用、付款方式、法律主体、上市状态和商用条件。查看官网直接使用。",
+ description:"全球 SIAI AI 工具行情与厂商排行榜：比较真实官方价格、免费额度、主要功能、地区可用、付款方式、创始人与公司背景、上市状态和商用条件。查看官网直接使用。",
  alternates:{canonical:PRIMARY_SITE+"/siai"},
  openGraph:{title:"全球 SIAI 排行榜｜灵犀场",description:"全球 AI 工具与厂商行情，先找到适合自己任务的工具，再看价格和使用条件。",url:PRIMARY_SITE+"/siai"},
  robots:{index:siaiSeoEnabled(),follow:true}
@@ -29,7 +29,7 @@ function getCuratedRows():SiaiHomeRow[]{
   const publisher=companyPresentationFor(id,platform.company);
   const fact=researchedFact(id);
   return [{
-   id:platform.id,name:platform.name,company:publisher.name,legal:publisher.legalEntity,
+   id:platform.id,name:platform.name,company:publisher.name,legal:publisher.legalEntity,creator:publisher.creator,
    legalScope:publisher.legalEntityScope,kind:publisher.kind,listing:publisher.listingState,
    ipoFiling:Boolean(publisher.ipoFiling),year:publisher.year,checkedAt:fact?marketProductReviewedAt(id):null,
    companySource:publisher.companySource,legalSource:publisher.legalEntitySource,
