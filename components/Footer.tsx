@@ -66,7 +66,7 @@ export default function Footer(){
     <b>{c.account}</b>
     <Link href="/about">{c.about}</Link><Link href="/account">{copy[lang].account}</Link>
     <Link href="/account/orders">{copy[lang].orders}</Link><Link href="/refunds">{copy[lang].refunds}</Link>
-    <Link href="/terms">{c.terms}</Link><Link href="/privacy">{c.privacy}</Link>
+    <Link href="/terms">{c.terms}</Link><Link href="/privacy">{c.privacy}</Link><Link href="/release">{copy[lang].release}</Link>
    </nav>
   </div>
   <div className="lx-footer-social-strip">
