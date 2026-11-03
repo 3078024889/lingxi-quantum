@@ -219,7 +219,16 @@
           "text": "Scite 官方条款限制文章、引证分类及 AI Content 的再分发、批量采集和训练用途，研究服务不能当成可自由商用的素材许可证。",
           "source": "https://scite.ai/terms",
           "checkedAt": "2026-11-02",
-          "scope": "research_content_license_restrictions"
+          "scope": "research_content_license_restrictions",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Scite 官方条款第8节：允许通过正式 Scite API 或其提供的 AI 助手连接器进行授权范围内的研究访问，但禁止超出合理研究范围的批量、系统化获取，也禁止转售论文、引文分类结果和 AI Content 或将其用于训练、微调、评测其他 AI 模型；即使使用 MCP 也受这些限制。",
+              "source": "https://scite.ai/terms",
+              "checkedAt": "2026-11-03",
+              "scope": "api_mcp_authorized_research_no_bulk_scrape_redistribution_model_training"
+            }
+          ]
         },
         "payment": {
           "status": "observed",
