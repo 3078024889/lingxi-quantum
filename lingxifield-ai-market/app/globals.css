@@ -1265,3 +1265,15 @@ body{font-size:16px;line-height:1.6}
 .app .compareDialog .compareFitScroll tbody td>span{display:block;line-height:1.8;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
 .app .compareDialog .compareFitScroll tbody tr:nth-child(2n){background:#f8fbff}
 .app .compareDialog .compareFitScroll tbody th{font-size:14px;font-weight:750;color:#294f78}
+
+/* Rankings first: opt-in cost calculator and source-linked people identities. */
+.marketCostDisclosure{border:1px solid #d6e4f6;border-radius:13px;background:#f7faff;margin:10px 0 12px;overflow:hidden}
+.marketCostDisclosure>summary{list-style:none;display:flex;align-items:center;gap:12px;cursor:pointer;padding:13px 16px;min-height:48px;color:#1d4e87;user-select:none}
+.marketCostDisclosure>summary::-webkit-details-marker{display:none}
+.marketCostSummaryTitle{font-weight:750;font-size:15px;white-space:nowrap}
+.marketCostDisclosure>summary small{font-size:13px;color:#667d96;flex:1}
+.marketCostSummaryChevron{font-size:24px;line-height:1;transition:transform .16s}
+.marketCostDisclosure[open] .marketCostSummaryChevron{transform:rotate(180deg)}
+.marketCostDisclosure .lxCostEstimate{margin:0;border:0;border-top:1px solid #d6e4f6;border-radius:0;background:transparent}
+.marketPublisherFactStackCompact .marketPublisherFact dd span{overflow-wrap:break-word;word-break:normal}
+@media(max-width:640px){.marketCostDisclosure>summary{padding:12px;flex-wrap:wrap;gap:4px 12px}.marketCostDisclosure>summary small{order:3;flex-basis:100%}}
