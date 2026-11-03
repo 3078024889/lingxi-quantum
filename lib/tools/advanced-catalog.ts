@@ -18,13 +18,11 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/pdf-editor", title:"PDF 自由编辑", description:"改文字、加图片、签名、盖章、页面管理，先预览再导出。", keywords:["PDF","改字","修改文字","编辑合同","加图片","删页","旋转"], category:"pdf", popular:true, localOnly:true },
   { href:"/tools/e-sign-pdf", title:"PDF 签名 / 盖章 / 骑缝章", description:"上传签名或印章，多页盖章与骑缝章连续切片。", keywords:["签名","电子签章","公章","印章","骑缝章","合同盖章"], category:"sign", popular:true, localOnly:true },
   { href:"/tools/pdf-merge-split", title:"PDF 合并 / 拆分 / 页面处理", description:"合并、提取页、删除页、旋转页，全部浏览器本地完成。", keywords:["PDF合并","PDF拆分","提取页面","删除页面","旋转PDF"], category:"pdf", popular:true, localOnly:true },
-  { href:"/tools/image-to-pdf-pro", title:"图片转 PDF", description:"多张 JPG/PNG 排序后生成一个 PDF。", keywords:["JPG转PDF","PNG转PDF","照片转PDF","图片转PDF"], category:"pdf", popular:true, localOnly:true },
   { href:"/tools/ocr", title:"图片 / 扫描件 OCR", description:"从图片中提取文字，中文、英文、日文等按需加载。", keywords:["OCR","图片转文字","截图转文字","扫描件文字"], category:"pdf", badge:"本地", localOnly:true },
 
   { href:"/tools/image-watermark-remover", title:"图片去文字 / 去物体", description:"框选需要移除的区域，AI 重建背景。", keywords:["图片","水印","去水印","去文字","去物体","移除路人"], category:"image", badge:"AI", popular:true },
   { href:"/tools/batch-image-watermark-remover", title:"批量图片去文字 / 去物体", description:"第一张框一次，同区域批量处理多张图片。", keywords:["批量","图片","水印","商品图","去文字"], category:"image", badge:"AI" },
   { href:"/tools/batch-image", title:"批量图片处理", description:"批量压缩、改尺寸、转 JPG/PNG/WebP，打包 ZIP 下载。", keywords:["批量压缩","批量改尺寸","批量转换","ZIP","图片批处理"], category:"image", popular:true, localOnly:true },
-  { href:"/tools/heic-local", title:"HEIC 转 JPG", description:"iPhone HEIC 照片直接在浏览器转 JPG。", keywords:["HEIC","JPG","iPhone照片","苹果照片"], category:"image", localOnly:true },
 
   { href:"/tools/video-dubbing", title:"视频翻译配音", description:"语音识别、字幕翻译、AI 配音并合成为可下载 MP4；同时导出翻译字幕。", keywords:["视频翻译","英文视频中文","配音","多语言","字幕翻译"], category:"video", badge:"AI", popular:true },
   { href:"/tools/video-translate", title:"视频翻译", description:"批量上传视频或导入公开视频链接，自动转写并翻译，导出带翻译字幕的 MP4、SRT/VTT/TXT，可选 AI 配音。", keywords:["视频翻译","批量视频翻译","视频链接翻译","翻译字幕","AI配音"], category:"video", badge:"AI", popular:true },

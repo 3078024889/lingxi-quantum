@@ -1,6 +1,7 @@
 "use client";
 
 import { drawFileToCanvas } from "@/lib/tools/shared/image-canvas";
+import {hasHeicContainer,verifiedJpeg} from "@/lib/tools/shared/heif-validation";
 import { openPdf, renderPdfPage, canvasToBlob } from "@/lib/tools/pdf-render-client";
 
 export type LocalOutput = {
@@ -15,28 +16,27 @@ function replaceExt(name: string, ext: string) {
 }
 
 export async function heicToJpgFiles(files: File[]): Promise<LocalOutput[]> {
-  const heic2any = (await import("heic2any")).default;
-  const outputs: LocalOutput[] = [];
-
-  for (const file of files) {
-    const result = await heic2any({
-      blob: file,
-      toType: "image/jpeg",
-      quality: 0.92,
-    });
-    const blobs = Array.isArray(result) ? result : [result];
-    blobs.forEach((blob, index) => {
-      const suffix = blobs.length > 1 ? `-${index + 1}` : "";
-      const base = file.name.replace(/\.(heic|heif)$/i, "") || "image";
+  // heic2any's JS wrapper is MIT. The underlying HEIF/HEVC decoder also
+  // carries its own redistribution and corresponding-source obligations.
+  const outputs:LocalOutput[]=[];
+  for(const file of files){
+    if(!await hasHeicContainer(file))throw new Error("HEIC_CONTAINER_INVALID");
+    const heic2any=(await import("heic2any")).default;
+    const converted=await heic2any({blob:file,toType:"image/jpeg",quality:.92});
+    const blobs=Array.isArray(converted)?converted:[converted];
+    if(!blobs.length)throw new Error("HEIC_CONVERSION_EMPTY");
+    for(let i=0;i<blobs.length;i++){
+      const blob=await verifiedJpeg(blobs[i]);
+      const suffix=blobs.length>1?`-${String(i+1).padStart(2,"0")}`:"";
+      const base=file.name.replace(/\.(heic|heif)$/i,"")||"image";
       outputs.push({
-        name: `${base}${suffix}.jpg`,
+        name:`${base}${suffix}.jpg`,
         blob,
-        mime: "image/jpeg",
-        size: blob.size,
+        mime:"image/jpeg",
+        size:blob.size
       });
-    });
+    }
   }
-
   return outputs;
 }
 
@@ -88,28 +88,73 @@ export async function mergePdfFiles(files: File[]): Promise<LocalOutput> {
   };
 }
 
-export async function splitPdfFile(file: File): Promise<LocalOutput[]> {
+export type PdfSplitMode = "every-page" | "selected-pages" | "extract" | "every-n";
+export type PdfSplitOptions = {
+  mode?: PdfSplitMode;
+  pages?: string;
+  groupSize?: number;
+};
+
+export function parsePdfPageSelection(raw: string, max: number): number[] {
+  if (!Number.isSafeInteger(max) || max < 1 || !raw.trim()) throw new Error("PDF_SPLIT_INVALID_RANGE");
+  const selected = new Set<number>();
+  function parseEndpoint(value: string) {
+    if (value.toLowerCase() === "last") return max;
+    if (!/^\d+$/.test(value)) throw new Error("PDF_SPLIT_INVALID_RANGE");
+    const page = Number(value);
+    if (!Number.isSafeInteger(page) || page < 1 || page > max) throw new Error("PDF_SPLIT_INVALID_RANGE");
+    return page;
+  }
+  for (const part of raw.split(",")) {
+    const token = part.trim().toLowerCase();
+    const match = /^(last|\d+)(?:\s*-\s*(last|\d+)?)?$/.exec(token);
+    if (!match) throw new Error("PDF_SPLIT_INVALID_RANGE");
+    const first = parseEndpoint(match[1]);
+    const last = match[2] ? parseEndpoint(match[2]) : token.endsWith("-") ? max : first;
+    if (last < first) throw new Error("PDF_SPLIT_INVALID_RANGE");
+    for (let page = first; page <= last; page++) selected.add(page);
+  }
+  return [...selected].sort((a,b) => a - b);
+}
+
+export async function splitPdfFile(file: File, options: PdfSplitOptions = {}): Promise<LocalOutput[]> {
   const { PDFDocument } = await import("pdf-lib");
   const source = await PDFDocument.load(await file.arrayBuffer(), {
     ignoreEncryption: false,
   });
+  const total = source.getPageCount();
+  if (total < 1) throw new Error("PDF_SPLIT_EMPTY");
+  const mode = options.mode ?? "every-page";
+  let groups: number[][];
+  if (mode === "every-n") {
+    const n = options.groupSize;
+    if (!Number.isSafeInteger(n) || !n || n < 1 || n > 1000) throw new Error("PDF_SPLIT_INVALID_GROUP");
+    groups = [];
+    for (let first = 1; first <= total; first += n) {
+      groups.push(Array.from({ length: Math.min(n,total-first+1) },(_,offset) => first + offset));
+    }
+  } else if (mode === "selected-pages" || mode === "extract") {
+    const selected = parsePdfPageSelection(options.pages ?? "",total);
+    groups = mode === "extract" ? [selected] : selected.map(page => [page]);
+  } else if (mode === "every-page") {
+    groups = Array.from({ length: total },(_,page) => [page+1]);
+  } else {
+    throw new Error("PDF_SPLIT_INVALID_MODE");
+  }
   const outputs: LocalOutput[] = [];
   const base = file.name.replace(/\.pdf$/i, "") || "document";
-
-  for (let i = 0; i < source.getPageCount(); i++) {
+  for (let i = 0; i < groups.length; i++) {
     const target = await PDFDocument.create();
-    const [page] = await target.copyPages(source, [i]);
-    target.addPage(page);
+    const copied = await target.copyPages(source,groups[i].map(page => page-1));
+    for (const page of copied) target.addPage(page);
     const bytes = await target.save({ useObjectStreams: true });
     const blob = new Blob([new Uint8Array(bytes)], { type: "application/pdf" });
-    outputs.push({
-      name: `${base}-page-${String(i + 1).padStart(3, "0")}.pdf`,
-      blob,
-      mime: "application/pdf",
-      size: blob.size,
-    });
+    const part = String(i+1).padStart(3,"0");
+    const suffix = mode === "extract" ? "extracted"
+      : mode === "every-n" ? `part-${part}`
+      : `page-${String(groups[i][0]).padStart(3,"0")}`;
+    outputs.push({name:`${base}-${suffix}.pdf`,blob,mime:"application/pdf",size:blob.size});
   }
-
   return outputs;
 }
 

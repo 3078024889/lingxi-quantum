@@ -76,13 +76,18 @@ async function render(img:ImageBitmap,matte:any,face:FaceInfo|null,o:IdPhotoProc
 
 export async function processIdPhoto(file:File,o:IdPhotoProcessOptions):Promise<IdPhotoProcessResult>{
  let img=await createImageBitmap(file,{imageOrientation:"from-image"} as ImageBitmapOptions);
- if(Math.min(img.width,img.height)<600)throw new Error("PHOTO_TOO_SMALL");
- let face=await detectFace(img),rotation=face?.angle||0;
- if(Math.abs(rotation)>18){img.close?.();throw new Error("FACE_ANGLE_TOO_LARGE")}
- if(Math.abs(rotation)>.8){img=await rotateBitmap(img,-rotation);face=await detectFace(img)}
- const matte=o.matting===false?null:await portraitMatte(img),{width,height}=presetPixels(o.preset);
- const standard=await render(img,matte,face,o,width,height,1),hd=await render(img,matte,face,o,width,height,3);
- const warnings:string[]=[];if(!face)warnings.push("FACE_NOT_DETECTED");
- const result={blob:await toBlob(standard),hdBlob:await toBlob(hd),width,height,hdWidth:width*3,hdHeight:height*3,faceDetected:Boolean(face),mattingApplied:Boolean(matte),quality:matte?"portrait-matted":"crop-only",warnings,rotation};
- img.close?.();return result;
+ try{
+  if(Math.min(img.width,img.height)<600)throw new Error("PHOTO_TOO_SMALL");
+  let face=await detectFace(img),rotation=face?.angle||0;
+  if(Math.abs(rotation)>18)throw new Error("FACE_ANGLE_TOO_LARGE");
+  if(Math.abs(rotation)>.8){img=await rotateBitmap(img,-rotation);face=await detectFace(img)}
+  const matte=o.matting===false?null:await portraitMatte(img),{width,height}=presetPixels(o.preset);
+  const standard=await render(img,matte,face,o,width,height,1),hd=await render(img,matte,face,o,width,height,3);
+  const warnings:string[]=[];if(!face)warnings.push("FACE_NOT_DETECTED");
+  return{blob:await toBlob(standard),hdBlob:await toBlob(hd),width,height,hdWidth:width*3,hdHeight:height*3,faceDetected:Boolean(face),mattingApplied:Boolean(matte),quality:matte?"portrait-matted":"crop-only",warnings,rotation};
+ }finally{
+  // Invalid images and model failures must release native decoded pixel buffers.
+  // Otherwise repeated paid retries may accumulate large unreclaimed bitmaps.
+  img.close?.();
+ }
 }

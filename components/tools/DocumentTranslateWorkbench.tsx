@@ -5,6 +5,7 @@ import {useLingxiLang} from '@/lib/lingxi-i18n';
 import FileDropzone from './FileDropzone';
 import ResultPanel from './ResultPanel';
 import {prepareTranslationDocument,type TranslationDocument} from '@/lib/tools/shared/document-translation';
+import {consumeToolHandoff} from '@/lib/tools/workspace/handoff';
 import {parseTranslatedSegments,TRANSLATION_LANGUAGES} from '@/lib/tools/document-translation-contract';
 import type {ToolResultFile} from '@/lib/tools/types';
 const names={zh:'中文',en:'English',ja:'日本語',ko:'한국어',fr:'Français',de:'Deutsch',es:'Español',pt:'Português',ar:'العربية'};
@@ -30,6 +31,26 @@ export default function DocumentTranslateWorkbench(){
  const [needsLogin,setNeedsLogin]=useState(false);
  const active=useRef<AbortController|null>(null);
  useEffect(()=>()=>active.current?.abort(),[]);
+ useEffect(()=>{
+  let live=true;
+  const u=new URL(location.href),id=u.searchParams.get("handoff");
+  if(!id)return;
+  // A handoff is a single-use, same-origin browser database record. Accept
+  // only the intended PDF OCR source and a real, bounded UTF-8 text file.
+  void consumeToolHandoff(id).then(payload=>{
+   if(!live||payload?.sourceSlug!=="pdf-ocr"||payload.files.length!==1)return;
+   const file=payload.files[0];
+   if(!file||!file.name.toLowerCase().endsWith(".txt")||
+      file.size<1||file.size>40*1024*1024||!file.type.startsWith("text/plain"))return;
+   setFiles([file]);setResults([]);setStatus("");setError("");setNeedsLogin(false);
+  }).catch(()=>{}).finally(()=>{
+   if(!live)return;
+   const clean=new URL(location.href);clean.searchParams.delete("handoff");
+   history.replaceState(history.state,"",clean.pathname+clean.search+clean.hash);
+  });
+  return()=>{live=false};
+ },[]);
+
  async function run(){
   if(active.current||!files[0])return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setNeedsLogin(false);setResults([]);setStatus(t[10]);let document:TranslationDocument|undefined;
   try{
@@ -51,10 +72,10 @@ export default function DocumentTranslateWorkbench(){
   <FileDropzone accept=".pdf,.docx,.pptx,.xlsx,.odt,.epub,.txt,.md,.srt,.vtt" normalizeDocuments={false} files={files} disabled={busy} maxSizeMB={40} onChange={next=>{setFiles(next);setResults([]);setError('');setStatus('')}}/>
   <p className="text-xs text-[var(--lx-muted)]">PDF · DOCX · PPTX · XLSX · ODT · EPUB · TXT · MD · SRT · VTT</p>
   <p className="text-xs text-[var(--lx-muted)]">{limitsCopy[lang]} <Link href="/tools/split-pdf" className="underline">PDF →</Link></p>
-  <div className="grid gap-3 sm:grid-cols-2"><label>{t[0]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={source} onChange={e=>setSource(e.target.value)}><option value="auto">{t[1]}</option>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label><label>{t[2]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={target} onChange={e=>setTarget(e.target.value)}>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label></div>
-  {files[0]?.name.toLowerCase().endsWith('.pdf')&&<select aria-label="PDF" className="w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={layout} onChange={e=>setLayout(e.target.value as typeof layout)}><option value="bilingual">{t[4]}</option><option value="layout">{t[3]}</option></select>}
+  <div className="grid gap-3 sm:grid-cols-2"><label>{t[0]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={source} onChange={e=>{setSource(e.target.value);setResults([]);setStatus('');setError('')}}><option value="auto">{t[1]}</option>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label><label>{t[2]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={target} onChange={e=>{setTarget(e.target.value);setResults([]);setStatus('');setError('')}}>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label></div>
+  {files[0]?.name.toLowerCase().endsWith('.pdf')&&<select aria-label="PDF" className="w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={layout} onChange={e=>{setLayout(e.target.value as typeof layout);setResults([]);setStatus('');setError('')}}><option value="bilingual">{t[4]}</option><option value="layout">{t[3]}</option></select>}
   <p className="text-sm text-[var(--lx-muted)]">{t[13]}</p><p className="text-xs text-[var(--lx-muted)]">{t[12]} <Link className="underline" href="/tools/pdf-ocr">OCR →</Link></p>
-  <label className="block text-sm">{glossaryLabel[lang]}<textarea disabled={busy} value={glossaryText} maxLength={7260} onChange={e=>setGlossaryText(e.target.value)} rows={3} className="mt-2 w-full rounded-lg border bg-[var(--lx-panel)] p-2"/></label>
+  <label className="block text-sm">{glossaryLabel[lang]}<textarea disabled={busy} value={glossaryText} maxLength={7260} onChange={e=>{setGlossaryText(e.target.value);setResults([]);setStatus('');setError('')}} rows={3} className="mt-2 w-full rounded-lg border bg-[var(--lx-panel)] p-2"/></label>
   <button disabled={busy||!files.length} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)] disabled:opacity-40">{t[5]}</button>{busy&&<button onClick={()=>active.current?.abort()} className="mx-3 rounded-xl border px-4 py-2">{t[6]}</button>}
   {status&&<p role="status">{status}</p>}{error&&<p role="alert">{error}</p>}{needsLogin&&<Link href="/account" target="_blank" rel="noreferrer" className="inline-block underline">{loginCopy[lang][1]} ↗</Link>}{results.length>0&&<ResultPanel sourceSlug="document-translate" files={results} messageZh="翻译文件已生成，请核对内容与排版。" messageEn="Translation generated. Review the text and layout."/>}
  </div>;

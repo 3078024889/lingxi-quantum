@@ -62,7 +62,38 @@ export async function r2Head(key:string){
   if(!r.ok)return null;
   return {size:Number(r.headers.get("content-length")||0),type:r.headers.get("content-type")||""};
 }
+/** Read only a small prefix of private R2 objects to prove new uploads are sealed,
+ * without exposing plaintext or fetching the entire private attachment. */
+export async function r2ReadPrefix(key:string,length=20):Promise<Uint8Array|null>{
+ if(!Number.isSafeInteger(length)||length<8||length>128)throw Error("R2_PREFIX_BOUNDS");
+ const response=await fetch(presignR2("GET",key,120),{
+  headers:{Range:`bytes=0-${length-1}`},cache:"no-store",signal:AbortSignal.timeout(10000)
+ });
+ if(response.status!==206){
+  try{await response.body?.cancel()}catch{}
+  return null;
+ }
+ const range=response.headers.get("content-range")||"";
+ if(!range.startsWith(`bytes 0-${length-1}/`))return null;
+ const bytes=new Uint8Array(await response.arrayBuffer());
+ return bytes.length===length?bytes:null;
+}
+/** Never erase database references merely because DELETE returned HTTP 204.
+ * R2's direct S3 endpoint is strongly consistent after deletion: prove the
+ * object is no longer readable by both HEAD and a one-byte-range GET.
+ * Authorization/timeout/5xx failures must not be mistaken for absence. */
 export async function r2Delete(key:string){
-  const r=await fetch(presignR2("DELETE",key,120),{method:"DELETE",cache:"no-store",signal:AbortSignal.timeout(10000)});
-  return r.ok||r.status===404;
+  const deleted=await fetch(presignR2("DELETE",key,120),{method:"DELETE",cache:"no-store",signal:AbortSignal.timeout(10000)});
+  if(!deleted.ok&&deleted.status!==404)return false;
+  const [head,get]=await Promise.all([
+    fetch(presignR2("HEAD",key,120),{method:"HEAD",cache:"no-store",signal:AbortSignal.timeout(10000)}),
+    fetch(presignR2("GET",key,120),{method:"GET",headers:{Range:"bytes=0-0"},cache:"no-store",signal:AbortSignal.timeout(10000)})
+  ]);
+  try{
+    return head.status===404&&get.status===404;
+  }finally{
+    // Never download private content to verify deletion. A bounded GET and
+    // prompt body cancellation also handle accidental range-ignoring servers.
+    try{await get.body?.cancel()}catch{}
+  }
 }

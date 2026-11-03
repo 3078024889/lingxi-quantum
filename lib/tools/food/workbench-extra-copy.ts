@@ -25,6 +25,7 @@ const rows:Record<string,string[]>={
  fiber:['膳食纤维','Fiber','食物繊維','식이섬유','Fibres','Ballaststoffe','Fibra','Fibras','الألياف'],
  sugar:['糖','Sugars','糖類','당류','Sucres','Zucker','Azúcares','Açúcares','السكريات'],
  sodium:['钠','Sodium','ナトリウム','나트륨','Sodium','Natrium','Sodio','Sódio','الصوديوم'],
+ saveCsv:['下载 CSV 营养记录','Download CSV nutrition record','栄養記録 CSV を保存','영양 기록 CSV 다운로드','Télécharger le relevé CSV','Nährwertdaten als CSV speichern','Descargar registro CSV','Baixar registro CSV','تنزيل سجل التغذية CSV'],
  energy:['热量','Energy','エネルギー','열량','Énergie','Energie','Energía','Energia','الطاقة'],
 };
 export function extraText(lang:LingxiLang,key:string){return rows[key]?.[Math.max(0,languages.indexOf(lang))]||null;}

@@ -5,6 +5,7 @@ import Image from"next/image";
 import Link from"next/link";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{productCatalogText}from"@/lib/product-catalog-i18n";
+import LxText from "@/components/LxText";
 
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
 
@@ -33,5 +34,5 @@ export default function Footer(){
  <nav><b>{c.useful}</b><Link href="/account">{c.account}</Link><Link href="/account/orders">{c.orders}</Link><Link href="/account/withdrawals">{c.withdraw}</Link><Link href="/refunds">{c.refunds}</Link><Link href="/sasi/connections">{c.connect}</Link></nav>
  <section><b>{t("follow")}</b><div className="lx11-footer-social">{channels.map(([l,h])=>h.startsWith("#")?<a key={l} href={h}>{l}</a>:<a key={l} href={h} target="_blank" rel="noreferrer">{l} ↗</a>)}</div></section>
  <section className="lx11-footer-qrs"><div><Image src="/images/lingxifield-wechat-service-qr.jpg" alt="" width={74} height={74}/><span>{t("service")}</span></div><div><Image src="/images/miniapp-qrcode.png" alt="" width={74} height={74}/><span>{t("miniapp")}</span></div></section></div>
- <div className="lx11-footer-legal"><span>© {t("brandFull")}</span><Link href="/terms">{t("terms")}</Link><Link href="/privacy">{t("privacy")}</Link><Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{t("sasiRules")}</Link><a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">湘ICP备2026031465号 ↗</a></div></footer>;
+ <div className="lx11-footer-legal"><span>© {t("brandFull")}</span><Link href="/terms">{t("terms")}</Link><Link href="/privacy">{t("privacy")}</Link><Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{t("sasiRules")}</Link><Link href="/open-source"><LxText zh="开源许可" en="Open-source licenses" ja="オープンソースライセンス" ko="오픈소스 라이선스" fr="Licences open source" de="Open-Source-Lizenzen" es="Licencias open source" pt="Licenças open source" ar="تراخيص المصادر المفتوحة"/></Link><a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">湘ICP备2026031465号 ↗</a></div></footer>;
 }

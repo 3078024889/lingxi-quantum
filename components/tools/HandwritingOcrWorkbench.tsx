@@ -1,5 +1,6 @@
 "use client";
 import {createOcrWorker} from '@/lib/tools/shared/ocr-runtime';
+import {useLingxiLang} from '@/lib/lingxi-i18n';
 
 import ToolUiText from "@/components/tools/ToolUiText";
 import { useEffect, useMemo, useState } from "react";
@@ -110,7 +111,19 @@ async function segmentLines(file: File) {
   }
 }
 
+const OCR_FAILURE_COPY:Record<string,{noText:string;failed:string}>={
+ zh:{noText:"没有识别到可用文字，请换一张清晰、光线充足的照片再试。",failed:"图片识别没有完成，请检查文件或网络后重试，无需重复付款。"},
+ en:{noText:"No readable text was found. Try a clearer, well-lit photo.",failed:"Recognition did not finish. Check the image or connection and retry without paying again."},
+ ja:{noText:"文字を認識できませんでした。鮮明な写真でもう一度お試しください。",failed:"認識が完了しませんでした。画像や接続を確認し、再度支払わずにお試しください。"},
+ ko:{noText:"읽을 수 있는 글자를 찾지 못했습니다. 선명한 사진으로 다시 시도하세요.",failed:"인식이 완료되지 않았습니다. 다시 결제하지 말고 재시도하세요."},
+ fr:{noText:"Aucun texte lisible détecté. Essayez une photo plus nette.",failed:"La reconnaissance n’a pas abouti. Réessayez sans payer à nouveau."},
+ de:{noText:"Kein lesbarer Text erkannt. Versuchen Sie ein schärferes Foto.",failed:"Die Erkennung wurde nicht abgeschlossen. Versuchen Sie es erneut, ohne noch einmal zu bezahlen."},
+ es:{noText:"No se detectó texto legible. Prueba con una foto más nítida.",failed:"No se completó el reconocimiento. Reinténtalo sin volver a pagar."},
+ pt:{noText:"Nenhum texto legível encontrado. Tente uma foto mais nítida.",failed:"O reconhecimento não terminou. Tente novamente sem pagar outra vez."},
+ ar:{noText:"لم يُعثر على نص مقروء. جرّب صورة أوضح.",failed:"لم يكتمل التعرف على النص. أعد المحاولة دون الدفع مرة أخرى."}
+};
 export default function HandwritingOcrWorkbench() {
+  const {lang:uiLang}=useLingxiLang();
   const [files, setFiles] = useState<File[]>([]);
   const [mode, setMode] = useState<Mode>("english-handwriting");
   const [lang, setLang] = useState("chi_sim+eng");
@@ -217,10 +230,16 @@ export default function HandwritingOcrWorkbench() {
         }
       }
 
+      // Blank or unrecognizable uploads are not a completed deliverable.
+      // Keep the paid task retryable, rather than showing a zero-byte TXT/Word file.
+      // A paid batch is not complete if even one input has no readable text.
+      // Never deliver empty TXT/DOCX parts or mark a partially failed batch successful.
+      if(output.length!==files.length||output.some(item=>!item.text.trim()))throw Error("HANDWRITING_NO_TEXT");
       setTexts(output);
       setStage("识别完成");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      const copy=OCR_FAILURE_COPY[uiLang]||OCR_FAILURE_COPY.en;
+      setError(cause instanceof Error&&cause.message==="HANDWRITING_NO_TEXT"?copy.noText:copy.failed);
       setStage("");
       throw cause;
     } finally {

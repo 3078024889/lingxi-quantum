@@ -1,0 +1,57 @@
+name: R2 Private File Lifecycle - Staging Proof (manual only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      bucket_ack:
+        description: "Type the exact separately provisioned NON-PRODUCTION R2 bucket name"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lingxifield-r2-staging-lifecycle
+  cancel-in-progress: false
+
+jobs:
+  proof:
+    name: Encrypt, upload, read, decrypt and verify physical deletion
+    if: github.repository == '3078024889/lingxi-quantum'
+    runs-on: ubuntu-24.04
+    environment: r2-staging
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exactly approved staging code
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify exact non-production bucket acknowledgement
+        env:
+          R2_BUCKET_PRIVATE_BURN: ${{ secrets.R2_STAGING_BUCKET }}
+          R2_STAGING_BUCKET_ACK: ${{ inputs.bucket_ack }}
+        run: |
+          set -euo pipefail
+          test -n "${R2_BUCKET_PRIVATE_BURN:-}"
+          test "${R2_STAGING_BUCKET_ACK}" = "${R2_BUCKET_PRIVATE_BURN}"
+          [[ "${R2_BUCKET_PRIVATE_BURN}" =~ (stage|staging|sandbox|test|e2e) ]]
+          echo "Staging bucket checked; no production objects will be selected."
+
+      - name: Run one random encrypted-object lifecycle and prove HEAD/GET are 404
+        env:
+          R2_STAGING_LIFECYCLE_APPROVED: "yes"
+          R2_STAGING_BUCKET_ACK: ${{ inputs.bucket_ack }}
+          R2_BUCKET_PRIVATE_BURN: ${{ secrets.R2_STAGING_BUCKET }}
+          R2_ENDPOINT: ${{ secrets.R2_STAGING_ENDPOINT }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_STAGING_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_STAGING_SECRET_ACCESS_KEY }}
+        run: node scripts/ci/r2-privacy-lifecycle-v159.mjs --staging

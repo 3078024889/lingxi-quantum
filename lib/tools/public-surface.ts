@@ -12,6 +12,9 @@ export type PublicToolSurfaceItem={
  source:"registry"|"advanced"|"catalog";
 };
 
+/** Legacy URLs remain valid 308 redirects; they must not create duplicate cards. */
+export const DUPLICATE_TOOL_ALIASES=new Set(["image-to-pdf-pro","heic-local","compress-pdf"]);
+
 const ADVANCED_KIND:Record<AdvancedToolCategory,PublicToolGlyphKind>={
  pdf:"document",sign:"document",image:"image",video:"video",audio:"audio",
  text:"utility",privacy:"privacy",daily:"utility",developer:"utility"
@@ -20,20 +23,21 @@ const ADVANCED_KIND:Record<AdvancedToolCategory,PublicToolGlyphKind>={
 export function publicToolSurface():PublicToolSurfaceItem[]{
  const map=new Map<string,PublicToolSurfaceItem>();
  for(const tool of liveTools()){
+  if(DUPLICATE_TOOL_ALIASES.has(tool.slug))continue;
   const href=`/tools/${tool.slug}`,category=toolDisplayCategory(tool.slug);
   map.set(href,{href,slug:tool.slug,titleZh:toolTitle("zh",tool.slug,tool.titleZh),titleEn:toolTitle("en",tool.slug,tool.titleEn),
    descZh:tool.oneLinerZh,descEn:tool.oneLinerEn,kind:toolDisplayKind(category),category,localOnly:Boolean(tool.localOnly),source:"registry"});
  }
  for(const tool of ADVANCED_TOOLS){
   const slug=tool.href.replace(/^\/tools\//,"");
-  if(slug==="image-to-pdf-pro")continue;
+  if(DUPLICATE_TOOL_ALIASES.has(slug))continue;
   const category=toolDisplayCategory(slug);
   map.set(tool.href,{href:tool.href,slug,titleZh:toolTitle("zh",slug,tool.title),titleEn:toolTitle("en",slug,""),
    descZh:tool.description,descEn:"",kind:ADVANCED_KIND[tool.category]||toolDisplayKind(category),category,
    localOnly:Boolean(tool.localOnly),source:"advanced"});
  }
  for(const tool of GLOBAL_TOOL_CATALOG){
-  const href=`/tools/${tool.slug}`; if(tool.slug==="image-to-pdf-pro"||map.has(href))continue;
+  const href=`/tools/${tool.slug}`; if(DUPLICATE_TOOL_ALIASES.has(tool.slug)||map.has(href))continue;
   const category=toolDisplayCategory(tool.slug);
   map.set(href,{href,slug:tool.slug,titleZh:toolTitle("zh",tool.slug,tool.zh),titleEn:toolTitle("en",tool.slug,tool.en),
    descZh:"",descEn:"",kind:toolDisplayKind(category),category,localOnly:tool.mode==="local",source:"catalog"});

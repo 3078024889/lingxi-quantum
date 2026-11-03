@@ -1,5 +1,5 @@
 "use client";
-import {useState} from "react";
+import {useRef,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import FileDropzone from "@/components/tools/FileDropzone";
 import OptionalAIImageAnalysis from "@/components/tools/OptionalAIImageAnalysis";
@@ -10,7 +10,7 @@ const TEXT:Record<string,Record<LingxiLang,string>>={"image":{"zh":"AI 图片检
 function isAudioSelected(file:File){const n=file.name.toLowerCase();return file.type.startsWith("audio/")||[".wav",".mp3",".ogg",".m4a",".flac"].some(ext=>n.endsWith(ext));}
 function isVideoSelected(file:File){const n=file.name.toLowerCase();return file.type.startsWith("video/")||[".mp4",".mov",".webm",".mkv"].some(ext=>n.endsWith(ext));}
 type Mode="image"|"media";
-type Result={name:string;bytes:number;format:string};
+type Result={name:string;bytes:number;format:string;file:File};
 const label=(key:string,lang:LingxiLang)=>TEXT[key]?.[lang]||TEXT[key]?.zh||key;
 function four(b:Uint8Array,i:number){return String.fromCharCode(...b.slice(i,i+4))}
 async function check(file:File):Promise<Result>{
@@ -25,7 +25,7 @@ async function check(file:File):Promise<Result>{
   else if(four(b,0)==="ID3"||(b.length>=2&&b[0]===255&&(b[1]&224)===224))format="Possible MP3";
   else if(four(b,4)==="ftyp"){const brand=four(b,8);format=["heic","heix","mif1","avif","avis"].includes(brand)?"HEIF/AVIF":brand==="qt  "?"MOV":"ISO MP4/M4A media container";}
   else if(b.length>=4&&b[0]===26&&b[1]===69&&b[2]===223&&b[3]===163)format="Matroska/WebM";
-  return {name:file.name,bytes:file.size,format};
+  return {name:file.name,bytes:file.size,format,file};
 }
 const INTRO_BY_MODE:Record<"image"|"media",Record<LingxiLang,string>>={
   "image": {
@@ -56,19 +56,34 @@ export default function MediaOriginStarter({mode}:{mode:Mode}){
   const [files,setFiles]=useState<File[]>([]);
   const [results,setResults]=useState<Result[]>([]);
   const [busy,setBusy]=useState(false);
+  const runTicket=useRef(0);
   const [error,setError]=useState("");
   const accept=mode==="image"?"image/*,.jpg,.jpeg,.png,.webp,.heic,.avif":"video/*,audio/*,.mp4,.mov,.webm,.mp3,.wav,.ogg,.m4a";
   async function run(){
+    const ticket=++runTicket.current;
+    const selectedFiles=[...files];
     setBusy(true);setError("");setResults([]);
-    try{const next:Result[]=[];for(const f of files){if(!f.size)throw Error(f.name+" "+t("empty"));if(f.size>250*1024*1024)throw Error(f.name+" "+t("large"));next.push(await check(f))}setResults(next)}
-    catch(e){setError(e instanceof Error?e.message:t("error"))}finally{setBusy(false)}
+    try{
+      const next:Result[]=[];
+      for(const f of selectedFiles){
+        if(ticket!==runTicket.current)return;
+        if(!f.size)throw Error(f.name+" "+t("empty"));
+        if(f.size>250*1024*1024)throw Error(f.name+" "+t("large"));
+        next.push(await check(f));
+      }
+      if(ticket===runTicket.current)setResults(next);
+    }catch(e){
+      if(ticket===runTicket.current)setError(e instanceof Error?e.message:t("error"));
+    }finally{
+      if(ticket===runTicket.current)setBusy(false);
+    }
   }
   return <main className="mx-auto max-w-3xl space-y-6 px-5 py-12" dir={lang==="ar"?"rtl":undefined}>
     <h1 className="text-3xl font-semibold">{t(mode==="image"?"image":"media")}</h1>
     <p>{INTRO_BY_MODE[mode][lang]}</p>
     <section className="space-y-4 rounded-2xl border p-5">
       <h2 className="text-lg font-semibold">{t("select")}</h2>
-      <FileDropzone files={files} onChange={next=>{setFiles(next);setResults([])}} multiple append maxFiles={20} maxSizeMB={250} accept={accept} kind={mode==="image"?"image":"media"}/>
+      <FileDropzone files={files} onChange={next=>{runTicket.current++;setFiles(next);setResults([]);setError("");setBusy(false)}} multiple append maxFiles={20} maxSizeMB={250} accept={accept} kind={mode==="image"?"image":"media"}/>
       <button type="button" className="rounded-lg border px-5 py-2 disabled:opacity-50" disabled={busy||!files.length} onClick={()=>void run()}>{t(busy?"busy":"run")}</button>
       <p className="text-sm opacity-75">{t("privacy")}</p>
       {error&&<p role="alert">{error}</p>}
@@ -77,11 +92,11 @@ export default function MediaOriginStarter({mode}:{mode:Mode}){
         <p>{t("format")}: {r.format==="unknown"?t("unknown"):r.format}</p>
         <p>{t("size")}: {(r.bytes/1048576).toFixed(2)} MB</p>
         <p>{t(r.format==="unknown"?"uncertain":"notice")}</p>
-        {files[i]&&<C2paProvenanceCheck file={files[i]} lang={lang}/>}
+        <C2paProvenanceCheck file={r.file} lang={lang}/>
         <p className="font-medium">{t("verdict")}</p>
-        {mode==="image"&&files[i]&&<OptionalAIImageAnalysis key={files[i].name+":"+files[i].size+":"+files[i].lastModified} file={files[i]} lang={lang}/> }
-        {mode==="media"&&files[i]&&isAudioSelected(files[i])&&<OptionalAIVoiceAnalysis key={"voice:"+files[i].name+files[i].lastModified} file={files[i]} lang={lang}/>}
-        {mode==="media"&&files[i]&&isVideoSelected(files[i])&&<OptionalAIVideoFrameAnalysis key={"frames:"+files[i].name+files[i].lastModified} file={files[i]} lang={lang}/> }
+        {mode==="image"&&<OptionalAIImageAnalysis key={r.file.name+":"+r.file.size+":"+r.file.lastModified} file={r.file} lang={lang}/> }
+        {mode==="media"&&isAudioSelected(r.file)&&<OptionalAIVoiceAnalysis key={"voice:"+r.file.name+r.file.lastModified} file={r.file} lang={lang}/>}
+        {mode==="media"&&isVideoSelected(r.file)&&<OptionalAIVideoFrameAnalysis key={"frames:"+r.file.name+r.file.lastModified} file={r.file} lang={lang}/> }
       </li>)}</ul>}
     </section>
 

@@ -1,0 +1,59 @@
+name: Real Media Provider Staging Proof (manual, paid usage)
+on:
+  workflow_dispatch:
+    inputs:
+      cost_ack:
+        description: "Type I_APPROVE_THREE_SMALL_STAGING_REQUESTS to authorize three real low-volume API calls"
+        required: true
+        type: string
+      host_ack:
+        description: "If using a custom compatible provider, type its exact HTTPS hostname (otherwise leave blank)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lingxifield-media-provider-staging
+  cancel-in-progress: false
+
+jobs:
+  live-proof:
+    if: github.repository == '3078024889/lingxi-quantum' && inputs.cost_ack == 'I_APPROVE_THREE_SMALL_STAGING_REQUESTS'
+    environment: media-staging
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout approved source only
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+      - name: Prepare audio and MP4 decoders
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
+      - name: Probe real provider with three synthetic low-volume requests
+        env:
+          MEDIA_STAGING_COST_ACK: ${{ inputs.cost_ack }}
+          MEDIA_STAGING_HOST_ACK: ${{ inputs.host_ack }}
+          MEDIA_STAGING_AI_KEY: ${{ secrets.MEDIA_STAGING_AI_KEY }}
+          MEDIA_STAGING_AI_BASE_URL: ${{ vars.MEDIA_STAGING_AI_BASE_URL }}
+          MEDIA_STAGING_ASR_MODEL: ${{ vars.MEDIA_STAGING_ASR_MODEL }}
+          MEDIA_STAGING_TRANSLATE_MODEL: ${{ vars.MEDIA_STAGING_TRANSLATE_MODEL }}
+          MEDIA_STAGING_TTS_MODEL: ${{ vars.MEDIA_STAGING_TTS_MODEL }}
+        run: node scripts/ci/media-provider-staging-real-v171.mjs
+      - name: Retain only synthetic proof and errors
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: staging-real-provider-proof
+          path: test-results/media-provider-staging/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -222,6 +222,28 @@ export const VIDEO_LABELS:Record<string,Record<LingxiLang,string>> = {
     "es": "Se aplicó el tamaño o la frecuencia solicitados, pero el archivo es más grande.",
     "pt": "A resolução ou taxa de fotogramas foi aplicada, mas o ficheiro ficou maior.",
     "ar": "تم تطبيق الدقة أو معدل الإطارات المطلوب، لكن حجم الملف الناتج أكبر."
+  },
+  "这个操作需要视频文件。请更换视频，或选择「提取 MP3」。": {
+    "zh": "这个操作需要视频文件。请更换视频，或选择「提取 MP3」。",
+    "en": "This operation requires a video file. Choose a video or use Extract MP3.",
+    "ja": "この操作には動画ファイルが必要です。動画を選ぶか、「MP3を抽出」に切り替えてください。",
+    "ko": "이 작업에는 동영상 파일이 필요합니다. 동영상을 선택하거나 MP3 추출을 사용하세요.",
+    "fr": "Cette opération nécessite une vidéo. Choisissez une vidéo ou utilisez Extraire MP3.",
+    "de": "Für diesen Vorgang wird ein Video benötigt. Wählen Sie ein Video oder MP3 extrahieren.",
+    "es": "Esta operación requiere un vídeo. Elige un vídeo o usa Extraer MP3.",
+    "pt": "Esta operação requer um vídeo. Escolha um vídeo ou use Extrair MP3.",
+    "ar": "تتطلب هذه العملية ملف فيديو. اختر فيديو أو استخدم استخراج MP3."
+  },
+  "一次最多处理 400MB 视频，请分批处理。": {
+    "zh": "一次最多处理 400MB 视频，请分批处理。",
+    "en": "This batch exceeds 400 MB. Process fewer files at a time.",
+    "ja": "一度に処理できる動画は合計400MBまでです。分けて処理してください。",
+    "ko": "한 번에 처리할 수 있는 동영상은 총 400MB까지입니다. 나눠서 처리하세요.",
+    "fr": "Ce lot dépasse 400 Mo. Traitez moins de fichiers à la fois.",
+    "de": "Dieser Stapel überschreitet 400 MB. Bitte weniger Dateien gleichzeitig verarbeiten.",
+    "es": "Este lote supera los 400 MB. Procesa menos archivos a la vez.",
+    "pt": "Este lote excede 400 MB. Processe menos ficheiros de cada vez.",
+    "ar": "يتجاوز هذا الحجم 400 ميغابايت. عالج ملفات أقل في كل مرة."
   }
 };
 

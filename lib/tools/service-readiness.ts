@@ -35,7 +35,9 @@ export function toolRuntimeState(toolId:string):ToolRuntimeState{
 
 export async function toolRuntimeStateLive(toolId:string):Promise<ToolRuntimeState>{
   const base=toolRuntimeState(toolId);
-  if(!base.ready||base.mode!=="compute")return base;
+  // Media AI has an independent provider. Do not require SASI native
+  // compute to be online before quoting video dubbing/translation.
+  if(!base.ready||base.mode!=="compute"||!isSasiNativeTool(toolId))return base;
   if(Date.now()<liveCache.until)return liveCache.ready?base:{ready:false,mode:"compute",reason:liveCache.reason};
   try{
     const health=await nativeComputeReadiness();

@@ -7,6 +7,7 @@ import{useEffect,useRef,useState}from"react";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
 import {quoteDisplay} from '@/lib/tools/commerce/quote-display';
+import {matchesPaidExportQuote} from '@/lib/tools/commerce/paid-export-quote-binding';
 import {deliveryText} from '@/lib/tools/commerce/delivery-copy';
 import {requireCompletedDelivery} from '@/lib/tools/commerce/delivery-proof';
 import{foodBillingText}from"@/lib/tools/food/billing-copy";
@@ -25,6 +26,8 @@ const UI={
  thisTime:c("本次","This time","今回","이번","Cette fois","Diesmal","Esta vez","Desta vez","هذه المرة"),
  confirm:c("确认并支付","Confirm & pay","確認して支払う","확인 후 결제","Confirmer et payer","Bestätigen & bezahlen","Confirmar y pagar","Confirmar e pagar","تأكيد ودفع"),
  recalc:c("重新确认","Recalculate","再確認","다시 확인","Recalculer","Neu bestätigen","Recalcular","Recalcular","إعادة التأكيد"),
+ paymentBinding:c("付款状态与当前任务不匹配，文件未交付。请返回原订单核对，不会自动重复付款。","Payment details do not match this task. No file was delivered. Review your original order; no new payment will be made.","支払い情報が現在の作業と一致しません。ファイルは未交付です。元の注文を確認してください。","결제 정보가 현재 작업과 일치하지 않아 파일이 전달되지 않았습니다. 기존 주문을 확인하세요.","Le paiement ne correspond pas à cette tâche. Aucun fichier livré. Vérifiez votre commande initiale.","Die Zahlung passt nicht zu diesem Auftrag. Keine Datei ausgegeben. Prüfen Sie die ursprüngliche Bestellung.","El pago no corresponde a esta tarea. No se entregó ningún archivo. Revisa tu pedido original.","O pagamento não corresponde a esta tarefa. Nenhum arquivo foi entregue. Confira o pedido original.","بيانات الدفع لا تطابق هذه المهمة. لم يُسلَّم أي ملف. راجع طلبك الأصلي."),
+ mediaAlreadyDelivered:c("这笔订单的交付权限已使用。请检查此前保存的文件，或联系支持人员核对交付记录。","This order has already been delivered. Check your saved files or contact support about the delivery.","この注文はすでに配信済みです。保存ファイルを確認するかサポートにお問い合わせください。","이 주문은 이미 전달되었습니다. 저장한 파일을 확인하거나 지원팀에 문의하세요.","Cette commande a déjà été livrée. Vérifiez vos fichiers enregistrés ou contactez l’assistance.","Diese Bestellung wurde bereits ausgeliefert. Prüfen Sie gespeicherte Dateien oder wenden Sie sich an den Support.","Este pedido ya se entregó. Revisa tus archivos guardados o contacta con soporte.","Este pedido já foi entregue. Confira os arquivos salvos ou entre em contato com o suporte.","تم تسليم هذا الطلب مسبقًا. تحقق من الملفات المحفوظة أو تواصل مع الدعم."),
  serviceUnavailable:c("这项服务暂时还没准备好，不会产生费用。","This service is not ready yet. You will not be charged.","現在利用できません。","아직 준비되지 않았습니다.","Service indisponible.","Dienst noch nicht verfügbar.","Servicio no disponible.","Serviço indisponível.","الخدمة غير جاهزة.")
 };
 function storageKey(toolId:string){return`lingxifield:paid-tool:quote:${toolId}`}
@@ -39,13 +42,41 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
  const{lang}=useLingxiLang();const zh=lang==="zh";const t=(x:Copy)=>x[lang]||x.en;const{currency}=usePreferredCurrency();
  const[quote,setQuote]=useState<Quote|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState(""),[completed,setCompleted]=useState(false),[loginRequired,setLoginRequired]=useState(false);
  const timer=useRef<ReturnType<typeof setInterval>|null>(null),processing=useRef<string|null>(null),restoreKey=useRef(""),taskKey=useRef("");
- const [running,setRunning]=useState(false);const completedIds=useRef(new Set<string>());const [paidId,setPaidId]=useState("");
+ const [running,setRunning]=useState(false);const completedIds=useRef(new Set<string>()),mediaGeneratedIds=useRef(new Set<string>());const [paidId,setPaidId]=useState("");
+ const isMeteredMedia=toolId==="video-dubbing"||toolId==="video-translate";
  const signature=`${toolId}:${quantity}:${currency}:${draftId||""}:${JSON.stringify(metadata||{})}`;
  useEffect(()=>{if(taskKey.current&&taskKey.current!==signature){stop();setPaidId("");setCompleted(false);setQuote(null);setMsg("");restoreKey.current=""}taskKey.current=signature},[signature]);
  const stop=()=>{if(timer.current){clearInterval(timer.current);timer.current=null}};
  async function status(id:string){const r=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});return r.ok?r.json():null}
- async function complete(id:string){if(completedIds.current.has(id)||completed||!draftReady||processing.current===id)return;processing.current=id;setRunning(true);setPaidId(id);stop();setMsg(t(UI.paid));try{await requireCompletedDelivery(()=>onPaid(id));completedIds.current.add(id);clearStoredQuote(toolId);setQuote(null);setCompleted(true);try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch{}}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null;setRunning(false)}}
- async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(q&&((q.tool_id||q.toolId)!==toolId||Number(q.quantity)!==quantity||(q.metadata?.draftId&&q.metadata.draftId!==draftId)))return false;await complete(id);return true}catch{return false}}
+ async function complete(id:string){if(completedIds.current.has(id)||completed||!draftReady||processing.current===id)return;processing.current=id;setRunning(true);setPaidId(id);stop();setMsg(t(UI.paid));try{
+  if(!isMeteredMedia||!mediaGeneratedIds.current.has(id)){
+   await requireCompletedDelivery(()=>onPaid(id));
+   if(isMeteredMedia)mediaGeneratedIds.current.add(id);
+  }
+  if(isMeteredMedia){
+   // After the client has a real result, atomically consume the one-time
+   // entitlement. A transient acknowledgement failure must NOT rerun TTS/ASR.
+   const response=await fetch("/api/tools/export/consume",{
+    method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({quoteId:id,draftId:draftId||null})
+   });
+   const result=await response.json().catch(()=>({})) as {ok?:boolean;alreadyCompleted?:boolean};
+   if(!response.ok||(!result.ok&&!result.alreadyCompleted))throw Error("MEDIA_GRANT_CONSUME_FAILED");
+  }
+  completedIds.current.add(id);clearStoredQuote(toolId);setQuote(null);setCompleted(true);try{const u=new URL(location.href);u.searchParams.delete("resumeQuote");u.searchParams.delete("resumeDraft");history.replaceState(null,"",u.pathname+u.search+u.hash)}catch{}}catch{setMsg(t(c('支付已确认，结果尚未完成。请重试，无需重复付款。','Payment confirmed. Retry the result without paying again.','支払い確認済みです。再払いせずに再試行してください。','결제가 확인되었습니다. 다시 결제하지 말고 재시도하세요.','Paiement confirmé. Réessayez sans payer à nouveau.','Zahlung bestätigt. Erneut versuchen, nicht nochmals bezahlen.','Pago confirmado. Reintenta sin volver a pagar.','Pagamento confirmado. Tente de novo sem pagar novamente.','تم تأكيد الدفع. أعد المحاولة دون الدفع مجددًا.')))}finally{processing.current=null;setRunning(false)}}
+ async function check(id:string){if(!draftReady)return false;try{const d=await status(id);if(!d?.paid)return false;const q=d.quote;if(!matchesPaidExportQuote(q,{quoteId:id,toolId,quantity,draftId})){setMsg(t(UI.paymentBinding));return false;}
+  if(isMeteredMedia&&(d.grant?.consumed_at||d.grant?.consumedAt)){
+   if(mediaGeneratedIds.current.has(id)){
+    // The server may have consumed the grant even if the acknowledgement
+    // response was lost. This browser still has the verified media output:
+    // retry acknowledgement only, never regenerate or spend provider credit.
+    await complete(id);return true;
+   }
+   // A refreshed page has no retained media output. Do not silently spend
+   // provider credit again on a grant that has already been consumed.
+   setPaidId(id);setMsg(t(UI.mediaAlreadyDelivered));return false;
+  }
+  await complete(id);return true}catch{return false}}
  const checkRef=useRef(check);checkRef.current=check;
 
  useEffect(()=>{const wake=()=>{if(document.visibilityState==="visible"&&quote?.id&&draftReady)void checkRef.current(quote.id)};window.addEventListener("pageshow",wake);window.addEventListener("focus",wake);document.addEventListener("visibilitychange",wake);return()=>{window.removeEventListener("pageshow",wake);window.removeEventListener("focus",wake);document.removeEventListener("visibilitychange",wake)}},[quote?.id,draftReady]);
@@ -74,7 +105,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   finally{setBusy(false)}
  }
  async function pay(){
-  if(completed||running||busy||!quote)return;if(paidId){await complete(paidId);return}
+  if(completed||running||busy||!quote)return;if(paidId){await check(paidId);return}
   if(isMiniProgramWebView()&&(quote.currency!=="CNY"||!await miniVirtualPaymentAvailable())){setMsg(zh?"小程序内付费暂未开放，已有订单仍可查看。":"Payments in the mini program are temporarily unavailable. Existing orders remain available.");return}
   setBusy(true);try{if(!await preparePayment())return;
   saveStoredQuote(toolId,quote,draftId);
