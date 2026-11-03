@@ -63,3 +63,24 @@ test('candidate source material cannot automatically publish the 4 extra records
   assert.notEqual(p.regionEvidenceQuality,'country_by_country_verified');
  }
 });
+
+test('Pika terms state provider-model geography and sanctioned-user restrictions without claiming country coverage',()=>{
+ const p=byId('pika'),r=p.facts.regions;
+ assert.equal(r.status,'observed');
+ assert.equal(r.source,'https://pika.art/terms-of-service');
+ assert.equal(regionEvidenceLevel(r),'provider_specific_restrictions');
+ assert.match(r.text,/美国制裁/);
+ assert.match(r.text,/VPN/);
+ assert.match(r.text,/不是 Pika 所有国家的正面可用清单/);
+ sourceCheck(p,r.source);
+});
+test('Leonardo official terms distinguish embargo subject exclusions from verified supported countries',()=>{
+ const p=byId('leonardo'),r=p.facts.regions;
+ assert.equal(r.status,'observed');
+ assert.equal(r.source,'https://leonardo.ai/terms-of-service');
+ assert.equal(regionEvidenceLevel(r),'restrictions_only');
+ assert.match(r.text,/第13.8节/);
+ assert.match(r.text,/禁运/);
+ assert.match(r.text,/不能据此推断其他国家/);
+ sourceCheck(p,r.source);
+});
