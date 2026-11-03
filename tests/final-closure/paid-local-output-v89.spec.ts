@@ -15,3 +15,28 @@ for(const preset of [0,1,2,3])test(`audio-cleanup preset ${preset} downloads a d
  test.setTimeout(90000);const calls=await isolate(page,'audio-cleanup'),rate=16000,wav=Buffer.alloc(44+rate*2);wav.write('RIFF');wav.writeUInt32LE(wav.length-8,4);wav.write('WAVEfmt ',8);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(rate,24);wav.writeUInt32LE(rate*2,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(rate*2,40);for(let i=0;i<rate;i++)wav.writeInt16LE(Math.round(Math.sin(i*2*Math.PI*440/rate)*9000+Math.sin(i*2*Math.PI*50/rate)*1000),44+i*2);
  await page.goto('/tools/audio-cleanup?lang=en');const input=page.locator('input[type=file]').first();await expect(input).toBeEnabled();await input.setInputFiles({name:'tone.wav',mimeType:'audio/wav',buffer:wav});await page.locator('[data-tool-workbench] div.grid button').nth(preset).click();const start=page.locator('[data-tool-workbench] button').filter({hasText:/处理完整音频|full audio|started minute/i}).last();await expect(start).toBeVisible();await start.click();await paid(page);const save=page.getByRole('button',{name:'Save file',exact:true});await expect(save).toBeVisible({timeout:60000});const waiting=page.waitForEvent('download');await save.click();const bytes=await fs.readFile((await (await waiting).path())!);const duration=await page.evaluate(async base64=>{const ctx=new AudioContext();try{const data=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));return (await ctx.decodeAudioData(data.buffer)).duration}finally{await ctx.close()}},bytes.toString('base64'));expect(duration).toBeGreaterThan(.9);expect(duration).toBeLessThan(1.3);await expect(page.getByText('Task complete',{exact:true})).toBeVisible();expect(calls()).toBe(1);
 });
+
+
+test('paid action: malformed paid status without a quote cannot process or deliver a PDF-to-Word result',async({page})=>{
+ let statuses=0,quotes=0,downloads=0;
+ page.on('download',()=>downloads++);
+ await page.route('**/api/tools/quote',async route=>{
+  quotes++;
+  const body=route.request().postDataJSON();
+  await route.fulfill({json:{id:'isolated-no-binding',tool_id:'pdf-to-word',quantity:body.quantity,unit_name:'page',amount_rmb:1,amount_usd:1,display_currency:body.currency,currency:body.currency,metadata:body.metadata,expires_at:new Date(Date.now()+3600000).toISOString()}});
+ });
+ await page.route('**/api/tools/pay/status**',async route=>{statuses++;await route.fulfill({json:{paid:true}})});
+ const doc=await PDFDocument.create();
+ doc.addPage([400,600]).drawText('A REAL PDF THAT MUST NOT BE DELIVERED',{x:12,y:240});
+ await page.goto('/tools/pdf-to-word?lang=en');
+ await page.locator('input[type=file]').first().setInputFiles({name:'sensitive.pdf',mimeType:'application/pdf',buffer:Buffer.from(await doc.save())});
+ await page.locator('[data-tool-workbench] input[type=checkbox]').uncheck();
+ await page.locator('[data-tool-workbench]').getByRole('button').filter({hasText:/price|价格/i}).last().click();
+ await expect(page.getByRole('button',{name:'Confirm & pay',exact:true})).toBeVisible();
+ await page.evaluate(()=>window.dispatchEvent(new Event('pageshow')));
+ await expect.poll(()=>statuses,{timeout:12000}).toBeGreaterThan(0);
+ await expect(page.getByText('Payment details do not match this task.',{exact:false})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Save file',exact:true})).toHaveCount(0);
+ expect(downloads).toBe(0);
+ expect(quotes).toBe(1);
+});
