@@ -9,11 +9,25 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {openPdf} from "@/lib/tools/pdf-render-client";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {comparePdfTextLayers} from "@/lib/tools/pdf-contract-diff";
 type Mode="watermark"|"page-numbers"|"crop"|"flatten"|"compare"|"text"|"markdown";
+const COMPARE_NO_TEXT:Record<string,string>={
+ zh:"至少一份 PDF 没有可提取的文字。请先对扫描件运行 PDF OCR。",
+ en:"At least one PDF has no extractable text. Run PDF OCR first.",
+ ja:"少なくとも1つのPDFに抽出可能なテキストがありません。先にPDF OCRを実行してください。",
+ ko:"PDF 중 하나 이상에 추출 가능한 텍스트가 없습니다. 먼저 PDF OCR을 실행하세요.",
+ fr:"Au moins un PDF ne contient aucun texte extractible. Lancez d'abord l’OCR PDF.",
+ de:"Mindestens eine PDF enthält keinen extrahierbaren Text. Führen Sie zuerst PDF-OCR aus.",
+ es:"Al menos un PDF no tiene texto extraíble. Ejecuta primero el OCR de PDF.",
+ pt:"Pelo menos um PDF não tem texto extraível. Execute primeiro o OCR de PDF.",
+ ar:"لا يحتوي ملف PDF واحد على الأقل على نص قابل للاستخراج. شغّل OCR لملفات PDF أولاً."
+};
+
 async function extract(file:File){const pdf=await openPdf(file),pages:string[]=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),c=await page.getTextContent();pages.push((c.items||[]).map((x:any)=>String(x.str||"")).join(" "))}pdf.destroy?.();return pages}
 const blob=(bytes:Uint8Array)=>new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
 export default function PdfExtraWorkbench({mode}:{mode:Mode}){
+ const {lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]),[text,setText]=useState("CONFIDENTIAL"),[opacity,setOpacity]=useState(.18),[size,setSize]=useState(42),[margin,setMargin]=useState(20),[crop,setCrop]=useState(10);
  const multi=mode==="compare";
  async function run(){setBusy(true);setError("");setResults([]);try{
@@ -33,5 +47,5 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
  {mode==="flatten"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="将 PDF 表单字段写入页面内容，适合提交、归档或避免字段继续被修改；建议先保留原件。" /></p>}
  {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="逐页比较 PDF 文本层，优先列出金额、日期、条款差异并导出报告；扫描件应先 OCR。此工具不是视觉对比或法律意见。" /></p>}
  {(mode==="text"||mode==="markdown")&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="提取已有文本层；扫描 PDF 请先使用 PDF OCR 或 PDF 转 Word 的自动 OCR。" /></p>}
- <button data-testid={mode==="compare"?"pdf-compare-run":undefined} disabled={busy||files.length<(multi?2:1)} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":title} /></button>{results.length>0&&<ResultPanel files={results} messageZh={`${title}完成。`} messageEn="Done."/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]"><ToolUiText text={error==='CROP_MARGIN_EXCEEDS_PAGE'?'裁边距必须小于每页宽度和高度的一半。':error}/></p>}</div>
+ <button data-testid={mode==="compare"?"pdf-compare-run":undefined} disabled={busy||files.length<(multi?2:1)} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":title} /></button>{results.length>0&&<ResultPanel files={results} messageZh={`${title}完成。`} messageEn="Done."/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]"><ToolUiText text={error==="PDF_COMPARE_OCR_REQUIRED"?(COMPARE_NO_TEXT[lang]||COMPARE_NO_TEXT.en):<ToolUiText text={error==="CROP_MARGIN_EXCEEDS_PAGE"?"裁边距必须小于每页宽度和高度的一半。":error}/>}/></p>}</div>
 }

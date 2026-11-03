@@ -30,6 +30,6 @@ test("two textless PDFs cannot claim no differences or offer downloadable fake c
  test.setTimeout(90000);
  const empty=await pdfWith([]);
  await compare(page,empty,empty);
- await expect(page.getByRole("alert")).toContainText("PDF_COMPARE_OCR_REQUIRED",{timeout:30000});
+ await expect(page.locator('p[role="alert"]')).toHaveText("At least one PDF has no extractable text. Run PDF OCR first.",{timeout:30000});
  await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
 });
