@@ -1,0 +1,285 @@
+{
+  "batch": "B005",
+  "asOf": "2026-11-03",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "products": [
+    {
+      "id": "alibaba-model-studio",
+      "name": "Alibaba Cloud Model Studio（百炼）",
+      "company": "Alibaba Cloud",
+      "category": "模型API",
+      "website": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "evidenceUrl": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "tasks": [
+        "通义模型API",
+        "文生视频",
+        "模型成本比较"
+      ],
+      "keywords": [
+        "通义模型API工具",
+        "文生视频工具",
+        "模型成本比较工具",
+        "Alibaba Cloud Model Studio（百炼）价格"
+      ],
+      "publisherGroupId": "alibaba",
+      "aliases": [
+        "阿里云百炼",
+        "Bailian"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "baidu-qianfan",
+      "name": "百度千帆",
+      "company": "百度智能云",
+      "category": "模型API",
+      "website": "https://cloud.baidu.com/product/qianfan.html",
+      "evidenceUrl": "https://cloud.baidu.com/product/qianfan.html",
+      "tasks": [
+        "文心模型API",
+        "企业Agent",
+        "模型调优"
+      ],
+      "keywords": [
+        "文心模型API工具",
+        "企业Agent工具",
+        "模型调优工具",
+        "百度千帆价格"
+      ],
+      "publisherGroupId": "baidu",
+      "aliases": [
+        "Qianfan"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://cloud.baidu.com/product/qianfan.html",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "tencent-hunyuan",
+      "name": "腾讯云混元",
+      "company": "腾讯云",
+      "category": "模型API",
+      "website": "https://cloud.tencent.com.cn/document/product/1729",
+      "evidenceUrl": "https://cloud.tencent.cn/product/tclm",
+      "tasks": [
+        "混元文本API",
+        "图像生成API",
+        "Embedding"
+      ],
+      "keywords": [
+        "混元文本API工具",
+        "图像生成API工具",
+        "Embedding工具",
+        "腾讯云混元价格"
+      ],
+      "publisherGroupId": "tencent",
+      "aliases": [
+        "Tencent Hunyuan"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://cloud.tencent.cn/product/tclm",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "volcengine-ark",
+      "name": "火山引擎火山方舟",
+      "company": "火山引擎",
+      "category": "模型API",
+      "website": "https://docs.volcengine.com/docs/ark?lang=zh",
+      "evidenceUrl": "https://docs.volcengine.com/docs/ark?lang=zh",
+      "tasks": [
+        "豆包模型推理",
+        "模型精调",
+        "多模态API"
+      ],
+      "keywords": [
+        "豆包模型推理工具",
+        "模型精调工具",
+        "多模态API工具",
+        "火山引擎火山方舟价格"
+      ],
+      "publisherGroupId": "bytedance",
+      "aliases": [
+        "Volcano Ark"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://docs.volcengine.com/docs/ark?lang=zh",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "apple-intelligence",
+      "name": "Apple Intelligence",
+      "company": "Apple",
+      "category": "系统智能助手",
+      "website": "https://support.apple.com/en-us/121115",
+      "evidenceUrl": "https://support.apple.com/en-us/121115",
+      "tasks": [
+        "设备内辅助写作",
+        "Siri",
+        "系统智能功能"
+      ],
+      "keywords": [
+        "设备内辅助写作工具",
+        "Siri工具",
+        "系统智能功能工具",
+        "Apple Intelligence价格"
+      ],
+      "publisherGroupId": "apple",
+      "aliases": [
+        "苹果智能"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://support.apple.com/en-us/121115",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "huggingface-inference-endpoints",
+      "name": "Hugging Face Inference Endpoints",
+      "company": "Hugging Face",
+      "category": "模型托管API",
+      "website": "https://huggingface.co/docs/inference-endpoints/pricing",
+      "evidenceUrl": "https://huggingface.co/docs/inference-endpoints/pricing",
+      "tasks": [
+        "推理端点托管",
+        "CPU/GPU推理价格",
+        "自定义模型部署"
+      ],
+      "keywords": [
+        "Hugging Face Inference Endpoints",
+        "Hugging Face GPU API",
+        "推理端点费用"
+      ],
+      "publisherGroupId": "huggingface",
+      "aliases": [
+        "HF Inference Endpoints"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://huggingface.co/docs/inference-endpoints/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "databricks-foundation-model-apis",
+      "name": "Databricks Foundation Model APIs",
+      "company": "Databricks",
+      "category": "企业模型API",
+      "website": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/",
+      "evidenceUrl": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/",
+      "tasks": [
+        "基础模型API",
+        "云端模型托管",
+        "企业数据与模型结合"
+      ],
+      "keywords": [
+        "Databricks Mosaic AI",
+        "Foundation Model APIs",
+        "Databricks API 价格"
+      ],
+      "publisherGroupId": "databricks",
+      "aliases": [
+        "Databricks Model Serving"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "snowflake-cortex-ai",
+      "name": "Snowflake Cortex AI",
+      "company": "Snowflake",
+      "category": "企业数据AI",
+      "website": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing",
+      "evidenceUrl": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing",
+      "tasks": [
+        "企业数据AI搜索",
+        "SQL 智能分析",
+        "模型推理与智能体"
+      ],
+      "keywords": [
+        "Snowflake Cortex AI",
+        "Cortex Search",
+        "Snowflake AI Credits"
+      ],
+      "publisherGroupId": "snowflake",
+      "aliases": [
+        "Snowflake Cortex"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "cohere-model-api",
+      "name": "Cohere Model API",
+      "company": "Cohere",
+      "category": "模型API",
+      "website": "https://docs.cohere.com/docs/models",
+      "evidenceUrl": "https://docs.cohere.com/docs/models",
+      "tasks": [
+        "企业问答和检索",
+        "多语言模型",
+        "向量重排"
+      ],
+      "keywords": [
+        "Cohere Command",
+        "Cohere Rerank",
+        "Cohere API价格"
+      ],
+      "publisherGroupId": "cohere",
+      "aliases": [
+        "Cohere Command API"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://docs.cohere.com/docs/models",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "stability-ai-developer-platform",
+      "name": "Stability AI Developer Platform",
+      "company": "Stability AI",
+      "category": "图像音频API",
+      "website": "https://platform.stability.ai/docs/getting-started",
+      "evidenceUrl": "https://platform.stability.ai/docs/getting-started",
+      "tasks": [
+        "API图像生成",
+        "音频生成",
+        "积分成本计算"
+      ],
+      "keywords": [
+        "Stable Image Ultra API",
+        "Stable Audio API",
+        "Stability AI积分"
+      ],
+      "publisherGroupId": "stability",
+      "aliases": [
+        "Stability API"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://platform.stability.ai/docs/getting-started",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}

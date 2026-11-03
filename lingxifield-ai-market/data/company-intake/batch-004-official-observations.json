@@ -1,8 +1,8 @@
 {
-  "schema": "first_party_observations_v1",
-  "batch": "004",
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B004",
   "observedOn": "2026-11-03",
-  "disclaimer": "仅为第一方官方页面资料记录；不代表注册、生成、付款、API计费或手机实测完成。对缺失条目保持 missing。禁止自动并入收费排名。",
+  "disclaimer": "官网来源观察，不等于已登录注册、实际调用、付款实测或人工上架批准。",
   "products": [
     {
       "id": "google-ai-studio",
@@ -14,15 +14,11 @@
       "facts": {
         "price": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
         },
         "free": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
         },
         "models": {
           "status": "observed",
@@ -33,21 +29,15 @@
         },
         "regions": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -68,15 +58,11 @@
       "facts": {
         "price": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
         },
         "free": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
         },
         "models": {
           "status": "observed",
@@ -87,21 +73,15 @@
         },
         "regions": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -129,9 +109,7 @@
         },
         "free": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
         },
         "models": {
           "status": "observed",
@@ -149,15 +127,11 @@
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -178,15 +152,11 @@
       "facts": {
         "price": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
         },
         "free": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
         },
         "models": {
           "status": "observed",
@@ -204,15 +174,11 @@
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -254,21 +220,15 @@
         },
         "regions": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -289,9 +249,7 @@
       "facts": {
         "price": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
         },
         "free": {
           "status": "observed",
@@ -309,21 +267,15 @@
         },
         "regions": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -344,15 +296,11 @@
       "facts": {
         "price": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
         },
         "free": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
         },
         "models": {
           "status": "observed",
@@ -370,15 +318,11 @@
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -420,21 +364,15 @@
         },
         "regions": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -455,15 +393,11 @@
       "facts": {
         "price": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
         },
         "free": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
         },
         "models": {
           "status": "observed",
@@ -474,21 +408,15 @@
         },
         "regions": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
@@ -509,9 +437,7 @@
       "facts": {
         "price": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
         },
         "free": {
           "status": "observed",
@@ -529,304 +455,20 @@
         },
         "regions": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
         },
         "commercial": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
         },
         "payment": {
           "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
         },
         "company": {
           "status": "observed",
           "text": "发布品牌 Meta 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
           "source": "https://ai.meta.com/meta-ai/assistant/",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_brand_only"
-        }
-      }
-    },
-    {
-      "id": "alibaba-model-studio",
-      "name": "Alibaba Cloud Model Studio（百炼）",
-      "officialHosts": [
-        "alibabacloud.com"
-      ],
-      "reviewStatus": "unapproved",
-      "facts": {
-        "price": {
-          "status": "observed",
-          "text": "Model Studio 官方按地区、型号、输入/输出 tokens及视频/图像单位分别定价，价格须逐档核算。",
-          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_pricing"
-        },
-        "free": {
-          "status": "observed",
-          "text": "阿里云官方价目表注明部分新用户免费额度只在 Singapore 部署适用且有90天限制，非全部型号均免费。",
-          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_free_conditions"
-        },
-        "models": {
-          "status": "observed",
-          "text": "阿里云官方价目表包括 Qwen、Wan 图像与视频、重排序等模型，不同地区开放型号不同。",
-          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_capabilities"
-        },
-        "regions": {
-          "status": "observed",
-          "text": "Model Studio 官方按 Singapore、China、Hong Kong、US 等不同地区分列费用与部分地区专属额度。",
-          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
-          "checkedAt": "2026-11-03",
-          "scope": "limited_region_evidence"
-        },
-        "commercial": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "payment": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "company": {
-          "status": "observed",
-          "text": "发布品牌 Alibaba Cloud 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
-          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_brand_only"
-        }
-      }
-    },
-    {
-      "id": "baidu-qianfan",
-      "name": "百度千帆",
-      "officialHosts": [
-        "baidu.com"
-      ],
-      "reviewStatus": "unapproved",
-      "facts": {
-        "price": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "free": {
-          "status": "observed",
-          "text": "百度千帆官方文档说明新注册并完成实名认证的用户可领取20元代金券，期限一个月，属于有条件优惠。",
-          "source": "https://cloud.baidu.com/doc/QIANFAN/index.html",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_free_conditions"
-        },
-        "models": {
-          "status": "observed",
-          "text": "百度千帆官方文档介绍文心与主流模型 API、Agent 开发及工具服务。",
-          "source": "https://cloud.baidu.com/doc/QIANFAN/index.html",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_capabilities"
-        },
-        "regions": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "commercial": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "payment": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "company": {
-          "status": "observed",
-          "text": "发布品牌 百度智能云 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
-          "source": "https://cloud.baidu.com/product/qianfan.html",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_brand_only"
-        }
-      }
-    },
-    {
-      "id": "tencent-hunyuan",
-      "name": "腾讯云混元",
-      "officialHosts": [
-        "tencent.com.cn",
-        "tencent.cn"
-      ],
-      "reviewStatus": "unapproved",
-      "facts": {
-        "price": {
-          "status": "observed",
-          "text": "腾讯云混元官网说明可选预付费资源包与后付费日结等计费模式，不同模型和调用量须按对应价格表核实。",
-          "source": "https://cloud.tencent.cn/product/tclm",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_pricing"
-        },
-        "free": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "models": {
-          "status": "observed",
-          "text": "腾讯云官方混元文档覆盖文本生成、图像生成、向量嵌入与兼容接口。",
-          "source": "https://cloud.tencent.com.cn/document/product/1729",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_capabilities"
-        },
-        "regions": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "commercial": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "payment": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "company": {
-          "status": "observed",
-          "text": "发布品牌 腾讯云 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
-          "source": "https://cloud.tencent.com.cn/document/product/1729",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_brand_only"
-        }
-      }
-    },
-    {
-      "id": "volcengine-ark",
-      "name": "火山引擎火山方舟",
-      "officialHosts": [
-        "volcengine.com"
-      ],
-      "reviewStatus": "unapproved",
-      "facts": {
-        "price": {
-          "status": "observed",
-          "text": "火山引擎官网按不同文本、视频、图片模型分别展示计价单位，单一示例价格不代表整个方舟平台价。",
-          "source": "https://www.volcengine.com/",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_pricing"
-        },
-        "free": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "models": {
-          "status": "observed",
-          "text": "火山引擎方舟官方文档提供豆包等大模型推理、评测、精调与应用构建工具。",
-          "source": "https://docs.volcengine.com/docs/ark?lang=zh",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_capabilities"
-        },
-        "regions": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "commercial": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "payment": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "company": {
-          "status": "observed",
-          "text": "发布品牌 火山引擎 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
-          "source": "https://docs.volcengine.com/docs/ark?lang=zh",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_brand_only"
-        }
-      }
-    },
-    {
-      "id": "apple-intelligence",
-      "name": "Apple Intelligence",
-      "officialHosts": [
-        "apple.com"
-      ],
-      "reviewStatus": "unapproved",
-      "facts": {
-        "price": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "free": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "models": {
-          "status": "observed",
-          "text": "Apple Intelligence 是兼容设备与操作系统上的系统级能力，不是无需设备限制的浏览器云SaaS产品。",
-          "source": "https://support.apple.com/en-us/121115",
-          "checkedAt": "2026-11-03",
-          "scope": "publisher_capabilities"
-        },
-        "regions": {
-          "status": "observed",
-          "text": "Apple 官网确认中国大陆购买的支持设备尚不能使用 Apple Intelligence；其他地区仍按设备、语言和功能限制决定。",
-          "source": "https://support.apple.com/zh-cn/121115",
-          "checkedAt": "2026-11-03",
-          "scope": "limited_region_evidence"
-        },
-        "commercial": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "payment": {
-          "status": "missing",
-          "text": null,
-          "source": null,
-          "checkedAt": null
-        },
-        "company": {
-          "status": "observed",
-          "text": "发布品牌 Apple 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
-          "source": "https://support.apple.com/en-us/121115",
           "checkedAt": "2026-11-03",
           "scope": "publisher_brand_only"
         }
