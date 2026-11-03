@@ -1,39 +1,39 @@
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 export const BRAND_PUBLIC_COPY:Record<LingxiLang,{title:string;tagline:string}>={
   "zh": {
-    "title": "灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
-    "tagline": "100+在线实用工具＋SASI创作。"
+    "title": "灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
+    "tagline": "全球 SI/AI 工具一站式比较，SASI 智能创作，100+在线实用工具每日免费体验。"
   },
   "en": {
-    "title": "LINGXIFIELD | SASI global multi-model creative platform",
-    "tagline": "100+ online tools and SASI creation."
+    "title": "LINGXIFIELD | Global SIAI Rankings · SASI AI Creation · Free Online Tools",
+    "tagline": "Compare global SI/AI tools, create with SASI, and try 100+ online utilities daily."
   },
   "ja": {
-    "title": "LINGXIFIELD｜SASI グローバル・マルチモデル創作プラットフォーム",
-    "tagline": "100以上のオンラインツールとSASI創作。"
+    "title": "LINGXIFIELD｜世界の SIAI ランキング・SASI AI創作・無料オンラインツール",
+    "tagline": "世界のSI/AIツールを比較、SASIで制作。100以上のオンラインツールを毎日無料体験。"
   },
   "ko": {
-    "title": "LINGXIFIELD｜SASI 글로벌 멀티모델 창작 플랫폼",
-    "tagline": "100개 이상의 온라인 도구와 SASI 창작."
+    "title": "LINGXIFIELD｜글로벌 SIAI 순위 · SASI AI 창작 · 무료 온라인 도구",
+    "tagline": "글로벌 SI/AI 도구 비교, SASI 창작, 100개 이상의 온라인 도구 매일 무료 체험."
   },
   "fr": {
-    "title": "LINGXIFIELD | SASI, plateforme mondiale de création multimodèle",
-    "tagline": "Plus de 100 outils en ligne et la création avec SASI."
+    "title": "LINGXIFIELD | Classement mondial SIAI · Création SASI · Outils gratuits en ligne",
+    "tagline": "Comparez les outils SI/IA, créez avec SASI et essayez plus de 100 outils en ligne."
   },
   "de": {
-    "title": "LINGXIFIELD | SASI, globale Kreativplattform mit mehreren KI-Modellen",
-    "tagline": "Über 100 Online-Werkzeuge und SASI-Kreation."
+    "title": "LINGXIFIELD | Globales SIAI-Ranking · SASI-KI-Kreation · kostenlose Online-Tools",
+    "tagline": "SI/KI-Tools weltweit vergleichen, mit SASI gestalten und über 100 Online-Tools testen."
   },
   "es": {
-    "title": "LINGXIFIELD | SASI, plataforma global de creación multimodelo",
-    "tagline": "Más de 100 herramientas en línea y creación con SASI."
+    "title": "LINGXIFIELD | Ranking mundial SIAI · Creación SASI · Herramientas online gratis",
+    "tagline": "Compara herramientas SI/IA, crea con SASI y prueba más de 100 utilidades online."
   },
   "pt": {
-    "title": "LINGXIFIELD | SASI, plataforma global de criação multimodelo",
-    "tagline": "Mais de 100 ferramentas online e criação com SASI."
+    "title": "LINGXIFIELD | Ranking global SIAI · Criação SASI · Ferramentas online grátis",
+    "tagline": "Compare ferramentas SI/IA, crie com SASI e experimente mais de 100 ferramentas online."
   },
   "ar": {
-    "title": "LINGXIFIELD | SASI، منصة إبداع عالمية متعددة النماذج",
-    "tagline": "أكثر من 100 أداة عبر الإنترنت والإبداع مع SASI."
+    "title": "LINGXIFIELD | تصنيف SIAI العالمي · إبداع SASI · أدوات مجانية عبر الإنترنت",
+    "tagline": "قارن أدوات SI/AI وأنشئ مع SASI وجرّب أكثر من 100 أداة عبر الإنترنت."
   }
 };

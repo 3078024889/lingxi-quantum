@@ -1,0 +1,165 @@
+/* Native global SIAI ranking in LINGXIFIELD's existing sidebar shell. */
+.siai-home{width:100%;min-width:0;min-height:calc(100vh - 58px);padding:24px 16px 60px;background:#f8fbff;color:#183b65}
+.siai-home-head{margin:0 0 17px}.siai-kicker{font-size:14px;color:#4775ad;font-weight:750;margin:0 0 6px}
+.siai-home-head h1{font-size:clamp(25px,2.6vw,34px);line-height:1.3;margin:0 0 6px;font-weight:800}
+.siai-home-head>p:last-child{font-size:14px;color:#567391;line-height:1.65}
+.siai-home-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.siai-home-search{display:flex;align-items:center;gap:9px;max-width:540px;width:100%;padding:0 12px;background:#fff;border:1px solid #d5e3f4;border-radius:10px;min-height:42px}
+.siai-home-search>span{font-size:24px}.siai-home-search input{border:0;outline:0;background:transparent;color:#17385e;flex:1;min-width:0;font-size:14px;min-height:40px}
+.siai-home-count{font-size:14px;font-weight:700;color:#3b638b}
+.siai-home-categories{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.siai-home-categories button{background:#fff;border:1px solid #d8e6f5;border-radius:8px;color:#285383;padding:8px 12px;min-height:36px;font-size:14px;font-weight:650;cursor:pointer}
+.siai-home-categories button.selected{background:#e9f3ff;border-color:#92b9e9;color:#155ab8}
+.siai-home-table-scroll{width:100%;overflow-x:auto;overscroll-behavior-x:contain;border:1px solid #dde9f5;border-radius:11px;background:#fff}
+.siai-home-table-scroll:focus-visible{outline:2px solid #2370d2;outline-offset:2px}
+.siai-home-table{min-width:2200px;width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;color:#264d7b;font-size:14px}
+.siai-home-table th{padding:12px 10px;text-align:start;vertical-align:middle;background:#e9f2fc;color:#1c467b;font-weight:750;border-bottom:1px solid #d6e6f7;line-height:1.4}
+.siai-home-table th:nth-child(1){width:45px}.siai-home-table th:nth-child(2){width:260px}.siai-home-table th:nth-child(3){width:270px}.siai-home-table th:nth-child(4){width:230px}.siai-home-table th:nth-child(5){width:260px}.siai-home-table th:nth-child(6){width:215px}.siai-home-table th:nth-child(7){width:200px}.siai-home-table th:nth-child(8){width:245px}.siai-home-table th:nth-child(9){width:245px}.siai-home-table th:nth-child(10){width:130px}
+.siai-home-tr:nth-child(even){background:#f8fbff}.siai-home-tr:hover{background:#edf5ff}
+.siai-home-table td{padding:13px 10px;vertical-align:top;border-bottom:1px solid #e1ebf8;line-height:1.55;overflow-wrap:anywhere;white-space:normal}
+.siai-home-table td:first-child{font-weight:750;color:#2d63a1;text-align:center}
+.siai-home-table td>strong{font-size:14px;font-weight:650}
+.siai-home-identity>strong{font-size:16px!important;font-weight:800!important;display:block;margin-bottom:9px}
+.siai-home-identity dl{margin:0;padding:0;background:none;border:0;box-shadow:none;display:grid;gap:6px;min-width:0}
+.siai-home-identity dl>div{display:grid;grid-template-columns:80px minmax(0,1fr);gap:8px}
+.siai-home-identity dt{margin:0;font-size:14px;font-weight:500;color:#617c9a}
+.siai-home-identity dd{margin:0;font-size:14px;font-weight:650;color:#254a75;overflow-wrap:anywhere}
+.siai-source{display:block;font-size:14px;font-weight:600;color:#1862bd;text-decoration:underline;margin-top:8px}
+.siai-home-actions{display:flex;flex-direction:column;gap:8px;min-width:0}
+.siai-home-actions>a,.siai-home-actions>button{display:flex;width:100%;min-height:35px;justify-content:center;align-items:center;padding:8px;border-radius:7px;border:1px solid #bad2f0;background:#fff;color:#225b9a;font-size:14px;font-weight:650;text-align:center;cursor:pointer}
+.siai-home-actions>a.siai-open{background:#1265d2;border-color:#1265d2;color:#fff}
+.siai-home-actions>button:hover{background:#eaf4ff}
+.siai-home-detail{background:white;border:1px solid #dce9f7;border-radius:11px;padding:20px;margin:16px 0;font-size:14px;line-height:1.65}
+.siai-home-detail>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.siai-home-detail h2{font-size:22px;margin:0}.siai-home-detail>div:first-child button{font-size:22px;border:0;background:#e9f2fb;min-width:36px;min-height:36px;border-radius:8px;cursor:pointer}
+.siai-home-detail dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:15px 0}
+.siai-home-detail dl>div{min-width:0;border:1px solid #dceaf7;padding:12px;border-radius:9px}.siai-home-detail dt{font-weight:750}.siai-home-detail dd{margin:6px 0;overflow-wrap:anywhere}
+.siai-home-sources{display:flex;gap:10px;flex-wrap:wrap}.siai-home-sources a{color:#1265d2;text-decoration:underline}
+.siai-home-empty{font-size:14px;padding:26px;text-align:center}
+@media(max-width:1023px){.siai-home{padding:82px 10px 30px}.siai-home-categories{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px}}
+[dir="rtl"] .siai-home-table th{text-align:right}
+
+/* v2 compact, scannable market facts: full evidence stays in the detail panel. */
+.siai-home-table .siai-cell-preview{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;max-height:6.2em;white-space:normal;overflow-wrap:anywhere;line-height:1.55}
+.siai-home-table .siai-home-identity dl{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important;box-shadow:none!important}
+.siai-home-table td{max-height:initial}
+.siai-home-table th{position:sticky;top:0;z-index:3}
+.siai-home-actions{position:relative;align-self:start;vertical-align:top}
+.siai-home-identity{min-width:0}
+.siai-home-identity dd{word-break:break-word}
+@media(min-width:960px){
+ .siai-home-table tbody tr.siai-home-tr>td:first-child{position:sticky;inset-inline-start:0;z-index:2;width:45px;background:#fff}
+ .siai-home-table tbody tr.siai-home-tr>td:nth-child(2){position:sticky;inset-inline-start:45px;z-index:2;background:#fff;box-shadow:4px 0 7px rgba(20,57,99,.06)}
+ .siai-home-table thead tr>th:first-child,.siai-home-table thead tr>th:nth-child(2){position:sticky;inset-inline-start:0;z-index:5;background:#e9f2fc}.siai-home-table thead tr>th:nth-child(2){inset-inline-start:45px}
+ .siai-home-table tbody tr.siai-home-tr:nth-child(even)>td:first-child,.siai-home-table tbody tr.siai-home-tr:nth-child(even)>td:nth-child(2){background:#f8fbff}
+ .siai-home-table tbody tr.siai-home-tr:hover>td:first-child,.siai-home-table tbody tr.siai-home-tr:hover>td:nth-child(2){background:#edf5ff}
+}
+@media(max-width:550px){
+ .siai-home-head h1{font-size:24px}
+ .siai-home-categories button{flex:0 0 auto}
+ .siai-home-table-scroll{border-radius:8px}
+ .siai-home-detail{padding:14px}
+ .siai-home-detail dl{grid-template-columns:1fr}
+}
+
+/* Expanded rows always occupy all columns; never turn into sticky 45px cells. */
+.siai-home-table .siai-home-expanded-row>td{position:static!important;width:auto!important;min-width:0!important;max-width:none!important;padding:12px 16px!important;background:#f1f7ff!important}
+.siai-home-table .siai-home-expanded-row .siai-home-detail{margin:0;max-width:1300px;white-space:normal}
+.siai-home-table .siai-home-expanded-row .siai-home-detail dl{max-width:1200px}
+
+/* Four always-visible filter lanes: no accordion; scroll only each lane on narrow viewports. */
+.siai-home-four-filters{display:flex;flex-direction:column;gap:7px;margin:0 0 13px}
+.siai-filter-line{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;gap:9px;min-height:39px}
+.siai-filter-line>strong{font-size:14px;font-weight:750;color:#36597e;white-space:nowrap}
+.siai-filter-options{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+.siai-filter-options>button{min-height:33px;padding:6px 10px;font-size:14px;font-weight:600;background:transparent;
+ color:#2e5b89;border:1px solid #d5e3f3;border-radius:7px;cursor:pointer;white-space:nowrap}
+.siai-filter-options>button.selected,.siai-filter-options>button[aria-pressed=true]{background:#e5f0ff;border-color:#91bbed;color:#1456ad}
+.siai-filter-options>button:focus-visible,.siai-sort-label select:focus-visible,.siai-compare-toolbar button:focus-visible{
+ outline:2px solid #2567bd;outline-offset:2px}
+.siai-sort-label{display:flex;gap:6px;align-items:center;font-size:14px;color:#36597e;font-weight:650;white-space:nowrap;margin-inline-start:auto}
+.siai-sort-label select{height:35px;min-width:148px;max-width:205px;padding:5px 8px;border:1px solid #cedff2;background:white;color:#234c78;border-radius:7px;font-size:14px}
+.siai-compare-toolbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 12px;background:#f0f6ff;
+ border:1px solid #d5e4f6;border-radius:9px;margin:0 0 13px;font-size:14px;line-height:1.5}
+.siai-compare-toolbar>strong{font-size:14px;flex-shrink:0}
+.siai-compare-toolbar>div{display:flex;gap:5px;flex-wrap:wrap}
+.siai-compare-toolbar button{padding:5px 10px;min-height:32px;border-radius:7px;background:#fff;
+ border:1px solid #c6daef;color:#1c588e;cursor:pointer;font-size:14px;font-weight:650}
+.siai-compare-toolbar button:disabled{opacity:.55;cursor:not-allowed}
+.siai-compare-toolbar>small{color:#557598;font-size:14px}
+.siai-home-actions .siai-compare-selected{background:#e0efff;border-color:#75a9e4;color:#15539a}
+.siai-home-actions button:disabled{opacity:.5;cursor:not-allowed}
+.siai-compare-section{margin-bottom:15px;padding:13px;border:1px solid #d7e6f6;border-radius:10px;background:#fff;min-width:0}
+.siai-compare-section h2{font-size:19px;font-weight:800;margin:0 0 12px;color:#163e70}
+.siai-compare-scroller{overflow:auto;max-width:100%;overscroll-behavior-x:contain}
+.siai-compare-scroller table{width:100%;min-width:650px;border-collapse:collapse;font-size:14px;line-height:1.6}
+.siai-compare-scroller th,.siai-compare-scroller td{padding:9px 11px;text-align:start;vertical-align:top;border:1px solid #e2eaf3;overflow-wrap:anywhere}
+.siai-compare-scroller thead th{background:#eaf3ff}
+.siai-compare-scroller thead a{display:block;font-size:14px;color:#1565bd;text-decoration:underline}
+.siai-compare-scroller tbody th{width:140px;min-width:120px;font-weight:750;background:#f8fbff}
+.siai-compare-scroller tbody td{min-width:200px}
+[dir="rtl"] .siai-compare-scroller th,[dir="rtl"] .siai-compare-scroller td{text-align:right}
+@media(max-width:900px){
+ .siai-filter-line{grid-template-columns:74px minmax(0,1fr)}
+ .siai-filter-options{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;padding-bottom:4px}
+ .siai-sort-label{margin-inline-start:0}
+ .siai-home-four-filters{gap:8px}
+}
+@media(max-width:550px){
+ .siai-filter-line>strong{font-size:14px}
+ .siai-filter-options>button{min-height:34px;padding:6px 9px}
+ .siai-compare-toolbar{padding:8px}
+ .siai-sort-label select{min-width:140px}
+}
+
+.siai-detail-primary-link{display:inline-flex;align-items:center;min-height:36px;padding:7px 12px;margin-top:12px;background:#eaf3ff;color:#185cac;border:1px solid #bcd5ef;border-radius:7px;font-size:14px;font-weight:700}
+.siai-detail-primary-link:hover{text-decoration:underline}
+
+
+/* User-facing proof: the promised outcome, real tasks, and a clickable vendor source. */
+.siai-quick-answer{padding:13px 16px;margin:10px 0 16px;border:1px solid #caddec;border-inline-start:3px solid #b89757;border-radius:11px;background:linear-gradient(125deg,#f5f9ff,#fffdf7);font-size:14px;color:#284968}
+.siai-quick-answer>strong{display:block;color:#173e67;font-size:17px;line-height:1.6;margin-bottom:7px}
+.siai-quick-answer p{font-size:14px;line-height:1.85;margin:6px 0;overflow-wrap:anywhere}
+.siai-quick-answer p b{color:#175b9a}
+.siai-quick-answer>a{font-size:14px;font-weight:750;color:#1468b3;text-decoration:underline;text-underline-offset:3px}
+
+/* Two synchronized horizontal scrollbars; table header and identity columns remain visible. */
+.siai-home-top-track{position:sticky;top:62px;z-index:20;display:flex;align-items:center;gap:9px;padding:6px 10px;border:1px solid #cbdff2;border-radius:10px 10px 0 0;background:#eaf3ff;min-width:0}
+.siai-scroll-hint{font-size:13px;white-space:nowrap;color:#315781}
+.siai-home-top-scroll{height:20px;flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:auto;scrollbar-color:#8299b1 #e6eef8}
+.siai-home-table-scroll{height:min(72dvh,750px);min-height:350px;overflow:auto;scrollbar-gutter:stable;border-radius:0 0 10px 10px}
+.siai-home-table thead th{position:sticky;top:0;z-index:9;background:#e9f2fc;box-shadow:inset 0 -1px #bcd5eb}
+@media(min-width:960px){.siai-home-table thead tr>th:first-child,.siai-home-table thead tr>th:nth-child(2){z-index:13}}
+.siai-home-quicklinks{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.siai-home-claim{display:inline-flex;align-items:center;min-height:38px;padding:7px 13px;border-radius:9px;background:#155bb4;color:#fff!important;text-decoration:none;font-size:14px;font-weight:700}
+.siai-home-claim:hover{background:#114b91}
+.siai-home-cost-accordion{background:#fff;border:1px solid #d4e2f2;border-radius:10px;margin:0 0 13px}
+.siai-home-cost-accordion>summary{padding:12px 16px;cursor:pointer;font-size:15px;font-weight:700;color:#205690}
+.siai-home-cost-accordion[open]>summary{background:#f0f6ff;border-bottom:1px solid #d4e2f2}
+.siai-home-cost-inner{padding:14px;max-width:100%;overflow:hidden}
+.siai-home-cost-inner .lxCostHeader{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.siai-home-cost-inner .lxCostHeader h3{font-size:19px;margin:0;font-weight:800}
+.siai-home-cost-inner .lxCostHeader p,.siai-home-cost-inner .lxCostIntro{font-size:14px;line-height:1.7;margin:8px 0}
+.siai-home-cost-inner .lxCostMode{display:flex;gap:7px}
+.siai-home-cost-inner .lxCostMode button{border:1px solid #c0d5ed;background:white;color:#265b99;padding:8px 12px;border-radius:8px;font-size:14px}
+.siai-home-cost-inner .lxCostMode button[aria-pressed=true]{background:#155bb4;color:#fff}
+.siai-home-cost-inner .lxCostFields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:14px 0}
+.siai-home-cost-inner .lxCostField{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:14px;font-weight:650}
+.siai-home-cost-inner .lxCostField input,.siai-home-cost-inner .lxCostField select,.siai-home-cost-inner .lxCostFixedResolution{width:100%;min-width:0;min-height:40px;border:1px solid #b9cfe7;border-radius:8px;background:white;padding:8px;color:#234875}
+.siai-home-cost-inner .lxCostResult{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #d2e2f2;border-radius:10px;background:#f2f7ff;line-height:1.6;overflow-wrap:anywhere}
+.siai-home-cost-inner .lxCostResult>strong{font-size:16px}
+.siai-home-cost-inner .lxCostResult small,.siai-home-cost-inner .lxCostDisclaimer{font-size:13px;line-height:1.7}
+.siai-home-cost-inner .lxApiUnitRow{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:8px 0;border-top:1px solid #dce7f5;padding-top:7px}
+.siai-home-cost-inner a{color:#155eb1;text-decoration:underline}
+.siai-home-cost-inner .lxApiDirectory{margin-top:16px}
+.siai-home-cost-inner .lxApiDirectoryScroll{max-width:100%;overflow-x:auto;margin:10px 0}
+.siai-home-cost-inner .lxApiDirectoryScroll table{min-width:800px;border-collapse:collapse}
+.siai-home-cost-inner .lxApiDirectoryScroll td,.siai-home-cost-inner .lxApiDirectoryScroll th{border:1px solid #d9e6f5;font-size:13px;padding:9px;vertical-align:top}
+.siai-home-cost-inner .lxApiDirectoryScroll th{background:#e8f1fc}
+.siai-home-cost-inner .lxApiDirectoryScroll button{border:1px solid #cee0f4;border-radius:7px;background:#fff;padding:6px 8px}
+.siai-detail-backdrop{position:fixed;inset:0;z-index:210;display:flex;align-items:center;justify-content:center;padding:15px;background:#0b274ba8}
+.siai-detail-modal{width:min(960px,100%);max-height:calc(100dvh - 30px);overflow:auto;border-radius:15px;background:#fff;padding:12px;box-shadow:0 14px 48px #09172c55}
+.siai-detail-modal:focus{outline:2px solid #1b5db5}
+.siai-detail-modal .siai-home-detail{border:0;margin:0}
+.siai-detail-actions{display:flex;flex-wrap:wrap;gap:10px}
+@media(max-width:900px){.siai-home-top-track{top:57px}.siai-scroll-hint{display:none}.siai-home-table-scroll{height:min(68dvh,700px)}.siai-home-quicklinks{justify-content:space-between;width:100%}}

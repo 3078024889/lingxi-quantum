@@ -1,0 +1,43 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
+const root=new URL('../',import.meta.url),read=p=>readFileSync(new URL(p,root),'utf8');
+test('preview cannot index; production launch requires explicitly verified owned HTTPS market domain',()=>{
+ const source=read('lib/market-index-policy.ts');
+ const layout=read('app/(default)/layout.tsx');
+ const home=read('app/(default)/page.tsx');
+ const robots=read('app/robots.ts');
+ const collector=read('scripts/sync-gsc-analytics.mjs');
+ const reviewer=read('scripts/review-gsc-observations.mjs');
+ const observationReader=read('lib/seo-geo-observations.ts');
+ assert.ok(source.includes('AI_MARKET_INDEX_READY'));
+ assert.ok(source.includes('AI_MARKET_DOMAIN_VERIFIED'));
+ assert.ok(source.includes('AI_MARKET_CANONICAL_ORIGIN'));
+ assert.ok(source.includes("process.env.VERCEL_ENV!=='preview'"));
+ for(const domain of ['ai.lingxifield.com','ai.lingxifield.cn','market.lingxifield.com','market.lingxifield.cn','globalsiai.com','globalsiai.cn']){
+  assert.ok(source.includes(domain),domain+': canonical origin must be allowlisted');
+  assert.ok(collector.includes(domain),domain+': GSC collector must accept only explicitly approved market hosts');
+  assert.ok(reviewer.includes(domain),domain+': human review gate must accept the same approved host');
+  assert.ok(observationReader.includes(domain),domain+': public observation validator must accept the same approved host');
+ }
+ assert.ok(source.includes("u.protocol!=='https:'"));
+ assert.ok(source.includes("u.username||u.password||u.port||u.pathname!=='/'"));
+ assert.ok(layout.includes("mayIndexMarket('zh')?verifiedMarketOrigin():null"));
+ assert.ok(layout.includes('publishedOrigin?{metadataBase:new URL(publishedOrigin)}:{}'));
+ const localized=read('app/[lang]/layout.tsx');
+ assert.ok(localized.includes('indexable?verifiedMarketOrigin():null'));
+ assert.ok(localized.includes('origin?{metadataBase:new URL(origin)}:{}'));
+ assert.doesNotMatch(layout,/metadataBase:new URL\(marketCanonicalOrigin\)/);
+ assert.doesNotMatch(localized,/metadataBase:new URL\(marketCanonicalOrigin\)/);
+ assert.ok(home.includes("const indexable=mayIndexMarket('zh')"));
+ assert.ok(home.includes("alternates:indexable?alternatesForMarket('zh'):undefined"));
+ assert.ok(robots.includes("if(!mayIndexMarket())"));
+});
+test('locales and multilingual product sitemap remain strict allowlist, never indexed automatically',()=>{
+ const policy=read('lib/market-index-policy.ts');
+ const sitemap=read('app/sitemap.ts');
+ const detail=read('app/[lang]/platform/[id]/page.tsx');
+ assert.ok(policy.includes("marketLocales=['zh','en','ja','ko','fr','de','es','pt','ar']"));
+ assert.ok(policy.includes('AI_MARKET_INDEXED_LOCALES'));
+ assert.ok(sitemap.includes('indexableMarketLocales()'));
+ assert.ok(sitemap.includes('marketCanonicalOrigin'));
+ assert.ok(detail.includes('marketCanonicalOrigin'));
+});

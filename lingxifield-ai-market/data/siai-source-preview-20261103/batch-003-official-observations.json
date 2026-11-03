@@ -1,0 +1,622 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B003",
+  "observedOn": "2026-11-02",
+  "disclaimer": "Unapproved public first-party page excerpts, not a verified full account purchase, model evaluation or launch-ready company profile.",
+  "products": [
+    {
+      "id": "heygen",
+      "name": "HeyGen",
+      "officialHosts": [
+        "heygen.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "HeyGen 官方套餐列 Creator $29/月、Pro $49/月、Business $149/月，企业层级另询价。",
+          "source": "https://www.heygen.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "HeyGen Free $0/月，官方注明每月 3 条带水印视频，每条最长 1 分钟。",
+          "source": "https://www.heygen.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "free_3_videos_per_month"
+        },
+        "models": {
+          "status": "observed",
+          "text": "HeyGen Pro 官方页面列 Avatar V、Seedance 2.5、Veo 3.1 等模型/引擎，部分来自第三方模型厂商。",
+          "source": "https://www.heygen.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "included_vendor_and_partner_models"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "HeyGen 官方条款规定受美国禁运国家/地区及美国制裁名单主体不可使用或出口服务；这是限制说明，并非所有其他国家的可用证明。",
+          "source": "https://www.heygen.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "export_control_restrictions_only"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "HeyGen 2026-10-16条款明确 Creator/Pro/Business 输出可按规则商业使用；免费层输出仅供个人、非商业和内部评估，不可变现或用于广告。",
+          "source": "https://www.heygen.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "creator_pro_business_vs_free_noncommercial"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "HeyGen 官方账单帮助页：支持信用卡、借记卡、Cash App、银行账户、预授权借记及部分国家 PayPal，不能宣称 PayPal 全球可用。",
+          "source": "https://help.heygen.com/en/articles/9999710-billing-payments-invoice",
+          "checkedAt": "2026-11-02",
+          "scope": "country_limited_paypal_and_cards"
+        },
+        "company": {
+          "status": "observed",
+          "text": "HeyGen 官方账单帮助中心公布法人名称 HeyGen Technology Inc. 和美国洛杉矶企业地址，区别于数字人产品名称。",
+          "source": "https://help.heygen.com/en/articles/9999710-billing-payments-invoice",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
+        }
+      }
+    },
+    {
+      "id": "elicit",
+      "name": "Elicit",
+      "officialHosts": [
+        "elicit.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Elicit 官方价格页有 Free、Plus、Pro、Scale 等层级；页面同时出现不同周期及行业选项，不能直接套用搜索片段显示的某一月价。",
+          "source": "https://elicit.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "plan_billing_toggle"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Elicit Free 允许搜索论文并有有限 Research Agent/Reports 用量；高级系统综述工作流按付费档额外计量。",
+          "source": "https://elicit.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "free_research"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Elicit 官方功能包含 Research Agent、Research Reports、Systematic Literature Reviews 和文献导出；模型提供商版本需另查。",
+          "source": "https://elicit.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "features_not_foundation_model"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Elicit 服务条款要求符合适用法律与进出口管制；官方并未在该条款公布逐国可用名单，不能把非制裁国家自动标为支持。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "export_reexport_restrictions_not_country_whitelist"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Elicit 条款允许经授权代表雇主签约并使用服务，使用者保留其提交内容权益；但并未据此授予所有 AI 输出无限制商业再分发许可。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "authorized_employer_use_no_blanket_output_resale"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Elicit 付费订阅条款明确可以向信用卡收费，亦可能提供其他经批准的支付方式；未确认全部国家支持 PayPal 或支付宝。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_card_or_other_approved_mechanisms"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Elicit 官方条款联系页登记企业为 Elicit Research, PBC，位于美国加州，不应与旧品牌/历史经营主体未经核实混用。",
+          "source": "https://elicit.com/operations/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "registered_company_contact"
+        }
+      }
+    },
+    {
+      "id": "consensus",
+      "name": "Consensus",
+      "officialHosts": [
+        "consensus.app"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Consensus 官方帮助中心：Pro $20/月或 $144/年（年付折合 $12/月），两个结算周期应分开展示。",
+          "source": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_vs_annual_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Consensus 免费档 $0，每月有 10 条 Pro 消息、3 次 Deep Review、10 次 Study Snapshot 及 30 次 API/MCP 调用。",
+          "source": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_free_allowance"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Consensus 定价帮助区分 Papers、Pro 和 Deep Review 研究能力；不是公开承诺特定基础模型。",
+          "source": "https://help.consensus.app/en/articles/10087865-subscription-plans",
+          "checkedAt": "2026-11-02",
+          "scope": "research_features"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Consensus NLP, Inc. 官方 2025年6月25日服务条款明确，平台有权自行决定拒绝向任何地理区域或司法辖区提供产品或服务，包括因涉嫌欺诈或违法行为而限制访问或支付方式。该条款并未列出 2026 年各国家真实可注册、搜索论文或支付的完整清单，也不能把未点名国家推定为支持。",
+          "source": "https://consensus.app/home/terms-of-service/",
+          "checkedAt": "2026-11-03",
+          "scope": "geo_discretion_to_refuse_access_not_country_allowlist"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Consensus NLP, Inc. 官方 2025-06-25 服务条款规定，其平台网站、数据和内容仅授予有限个人访问及个人复制许可；未经书面授权，不得将平台内容再发布、传输、出售或商业开发。此项约束网站内容和数据库转载，不等于明确承诺用户自己撰写的研究报告或独立论文拥有不受限的商用权。",
+          "source": "https://consensus.app/home/terms-of-service/",
+          "checkedAt": "2026-11-02",
+          "scope": "site_content_personal_use_no_commercial_redistribution_without_permission"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Consensus 官方账单帮助说明订阅设置中可新增银行卡信息，并更新账单地址；尚无官方依据可把支付宝或 PayPal 列为已支持。",
+          "source": "https://help.consensus.app/en/articles/10093375-update-your-payment-information",
+          "checkedAt": "2026-11-02",
+          "scope": "payment_card_subscription_settings"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Consensus AI 研究搜索产品的官方服务条款明确经营主体为 Consensus NLP, Inc.，与同名医疗通信企业 Consensus Cloud Solutions 不同。",
+          "source": "https://consensus.app/home/terms-of-service/",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_entity_disambiguation"
+        }
+      }
+    },
+    {
+      "id": "scite",
+      "name": "Scite",
+      "officialHosts": [
+        "scite.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Scite 官网 Basic 年付折算每月 $12，Pro 年付折算每月 $40，免费试用期 7 天；不是纯免费 Pro。",
+          "source": "https://scite.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "annual_equivalent_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Scite 定价页提供 7 天免费试用，但未公开承诺永久免费无限 Assistant 使用。",
+          "source": "https://scite.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "trial_not_free_tier"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Scite 官方描述 Smart Citations、论文引用支持/反驳分类、Assistant 和 MCP 积分；不等于单一底层模型产品。",
+          "source": "https://scite.ai/features",
+          "checkedAt": "2026-11-02",
+          "scope": "research_functions"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Scite 官方条款限制文章、引证分类及 AI Content 的再分发、批量采集和训练用途，研究服务不能当成可自由商用的素材许可证。",
+          "source": "https://scite.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "research_content_license_restrictions",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Scite 官方条款第8节：允许通过正式 Scite API 或其提供的 AI 助手连接器进行授权范围内的研究访问，但禁止超出合理研究范围的批量、系统化获取，也禁止转售论文、引文分类结果和 AI Content 或将其用于训练、微调、评测其他 AI 模型；即使使用 MCP 也受这些限制。",
+              "source": "https://scite.ai/terms",
+              "checkedAt": "2026-11-03",
+              "scope": "api_mcp_authorized_research_no_bulk_scrape_redistribution_model_training"
+            }
+          ]
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Scite 服务条款规定付费订阅由其支付处理商循环收费，具体支持卡组织和地区的完整清单并未承诺。",
+          "source": "https://scite.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "recurring_payment_processor_not_card_list"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Scite 官方条款写明 Scite, LLC 属于 Research Solutions 公司体系，研究工具与母集团不可重复当作独立公司集团。",
+          "source": "https://scite.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator_and_parent"
+        }
+      }
+    },
+    {
+      "id": "replicate",
+      "name": "Replicate",
+      "officialHosts": [
+        "replicate.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Replicate 官方称按使用量收费：部分模型依 GPU 硬件运行时间收费，部分按输入/输出量收费，按模型端点分别计算。",
+          "source": "https://replicate.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "model_based_metering"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Replicate 官方 Try for Free 模型合集允许新用户在购买预付额度前免费运行部分指定模型；免费次数有限，用尽后需设置计费并购买额度，不代表全部模型永久免费。",
+          "source": "https://replicate.com/collections/try-for-free",
+          "checkedAt": "2026-11-02",
+          "scope": "selected_models_limited_free_runs"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Replicate 模型目录涵盖开源及专有模型，包括图像、视频与推理模型；官方页面逐个模型标示单位费率。",
+          "source": "https://replicate.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "third_party_model_catalog"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Replicate 服务条款要求遵守美国及相关辖区出口管制，受禁止司法辖区和受限主体不可使用；非完整支持地区列表。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "export_controls_only"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Replicate 条款允许客户在合规范围内运行模型，但具体第三方模型受各模型作者授权限制，不能将平台订阅视为所有模型商用许可。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "per_model_third_party_licence"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Replicate 2026年官方服务条款说明可使用信用卡、借记卡、银行转账等支付，账号可用先付费余额或使用后结算；预付额度有适用有效期。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "card_debit_bank_transfer_prepaid_postpaid"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Replicate 2026-04-01服务条款明确合同主体 Replicate, LLC，托管不同第三方模型并提供推理 API。",
+          "source": "https://replicate.com/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
+        }
+      }
+    },
+    {
+      "id": "fal-ai",
+      "name": "fal",
+      "officialHosts": [
+        "fal.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "fal 官方公开 GPU H100 标价 $4.50/小时，特定合同优惠可低至 $2.49/小时；模型 API 按视频秒数、图像或 token 分别计费。",
+          "source": "https://fal.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "list_vs_as_low_as_compute"
+        },
+        "free": {
+          "status": "observed",
+          "text": "fal 官方免费网页工具无需账户，可免费去背景、图片放大和相关图片处理，页面说明无水印及上传次数限制；这些浏览器端免费工具不同于需要登录、按推理计算资源计费的视频生成及开发者 API，不能因此宣称 fal API 所有模型永久免费。",
+          "source": "https://fal.ai/tools",
+          "checkedAt": "2026-11-02",
+          "scope": "browser_image_tools_free_not_inference_api_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "fal 官方价格表列 H3 Max 视频 $0.05/秒、图像 Nano Banana 2 $0.08/图等独立第三方模型端点。",
+          "source": "https://fal.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_endpoint_rates"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "fal 2026年9月8日官方服务条款第21节要求用户遵守美国出口管制，并保证本人不位于美国禁运或其他受限制国家，也不属于美国限制往来主体。官方可接受使用政策另明确对受综合制裁的国家、地区或地域施加限制。这是 fal API/计算服务的禁运范围规则，不能当作其他国家模型和付款渠道均可使用的完整名单。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "official_us_embargo_and_sanctions_export_restrictions_only",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "source": "https://fal.ai/legal/acceptable-use-policy",
+              "checkedAt": "2026-11-03",
+              "scope": "ofac_comprehensive_sanctions_region_restriction",
+              "text": "fal 官方 Acceptable Use Policy 禁止位于美国 OFAC 综合制裁国家、地区或地域的用户使用服务，另有年龄及内容规则。"
+            }
+          ]
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "fal（Features & Labels, Inc.）2026-07-31 服务条款第4节：在支付所需服务费或积分、遵守协议的前提下，可用于个人或内部业务；经批准 API 集成的客户应用也可向最终用户提供服务。生成内容可能不具独创性，fal 不保证不存在第三方知识产权问题。此项不是所有模型及输出均自动获得无限制商用许可，具体须遵守各模型和 API 许可。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "paid_internal_business_and_approved_api_customer_solutions_with_third_party_ip_caveats"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "fal 的服务条款规定使用 API/平台前先购买 credits，调用会从余额扣除；具体支付通道仍需控制台核验。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "prepaid_credits_not_payment_card_coverage"
+        },
+        "company": {
+          "status": "observed",
+          "text": "fal 2026-09-08服务条款载明合同主体 Features & Labels, Inc.，提供生成式媒体模型 API 与计算服务。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
+        }
+      }
+    },
+    {
+      "id": "together-ai",
+      "name": "Together AI",
+      "officialHosts": [
+        "together.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Together AI 官方 Serverless 推理按每百万输入/输出 token 分别计费，也按模型区分缓存和批处理费用。",
+          "source": "https://www.together.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "per_million_tokens"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Together AI 官方帮助中心确认现不提供新用户免费试用或赠送注册额度，历史免费积分优惠已结束；使用 API 或其他服务须先购买至少 USD 5 的预付积分包，因此不应向新用户显示「注册送免费额度」。",
+          "source": "https://support.together.ai/articles/1862638756-changes-to-free-tier-and-billing-july-2025",
+          "checkedAt": "2026-11-02",
+          "scope": "no_signup_free_trial_minimum_five_usd_prepaid"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Together AI 当前价格页列 Qwen、DeepSeek、Kimi 等多方模型；并非全部由 Together AI 自研。",
+          "source": "https://www.together.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "provider_model_marketplace"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Together AI 于2026年5月19日更新的官方服务协议第4节要求 AI API、推理、训练和微调服务使用者遵守所有适用法律，包括出口法规；违规使用超出授权范围。该条款没有逐国列出可创建账户、充值、购买 credits 或调用模型的国家名单，不能把遵守法律概括成全球完全开放。",
+          "source": "https://www.together.ai/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_law_restrictions_not_positive_market_coverage"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Together AI 2026年5月19日服务条款第7条：用户保留输入和输出的权利；第三方模型的知识产权仍属于各模型提供商。业务使用必须遵守相应模型许可与知识产权要求，不代表可无限制商业转售平台服务。",
+          "source": "https://www.together.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "user_content_output_rights_subject_to_model_terms"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Together AI 官方说明信用卡与借记卡（Visa、Mastercard、American Express 等可用于定期付款的银行发卡）支持预付积分包；不支持虚拟卡或预付卡。另支持美国绑定银行账户 ACH 购买积分，但 ACH 入账可能需 1–3 个工作日且不支持自动充值；企业合同单独结算。",
+          "source": "https://support.together.ai/articles/6180701933-what-are-credit-packs",
+          "checkedAt": "2026-11-02",
+          "scope": "card_and_us_ach_scoped_no_virtual_prepaid_cards"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Together AI 2026-05-19服务条款明确合法运营主体是 Delaware 注册的 Together Computer, Inc.，并提供推理、训练和微调 API。",
+          "source": "https://www.together.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
+        }
+      }
+    },
+    {
+      "id": "fireworks-ai",
+      "name": "Fireworks AI",
+      "officialHosts": [
+        "fireworks.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Fireworks 官方公开 Serverless 按 token 收费，GPU H100 按需报价 $8/小时；训练与推理费率必须分开。",
+          "source": "https://fireworks.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "serverless_and_gpu_separate"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Fireworks 2026 年官方 API 供应商对比文章明确记载新账户提供 USD 1 的试用积分，Fireworks 账单帮助页说明用完试用额度后须绑定付款方式方可继续调用 API。此为一次性小额试用权益，非长期免费推理套餐；具体注册时是否仍发放需以实时账户页面为准，不把活动专享的 USD 100 抵扣券算作普通注册赠金。",
+          "source": "https://fireworks.ai/blog/best-llm-api-providers",
+          "checkedAt": "2026-11-02",
+          "scope": "official_2026_marketing_signup_one_dollar_credit_not_live_account_test",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Fireworks 账单 FAQ 说明试用 USD 1 积分用尽后无付款方式的账户会暂停服务，继续使用须按实际调用付费。",
+              "source": "https://fireworks.ai/docs/faq-new/billing-pricing/what-happens-when-i-finish-my-1-dollar-credit",
+              "checkedAt": "2026-11-02",
+              "scope": "one_dollar_promotion_spend_cap_vs_real_api_billing"
+            }
+          ]
+        },
+        "models": {
+          "status": "observed",
+          "text": "Fireworks 官方公开多模型推理、微调、专用部署以及 Qwen3 embeddings 等模型服务。",
+          "source": "https://fireworks.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "model_endpoints_and_embeddings"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Fireworks AI 官网服务条款第17节规定：用户须遵守美国出口管理规定、OFAC 制裁及其他贸易管制；若用户或相关控制人属于制裁名单，或位于/属于美国制裁、禁运国家或领土，则不符合相关保证条件。这是 Fireworks 模型推理服务的法定限制，不能推定其他国家可注册、付款与调用全部模型。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_control_ofac_embargo_restrictions_only"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Fireworks 2026年7月10日服务条款第3.2条确认：用户与 Fireworks 之间，输入及生成输出内容权利属于用户；输出仍须符合第三方模型的具体许可及知识产权要求。平台自身源码和模型权重不因此转让给用户。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "user_input_output_ownership_and_model_license_limit"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Fireworks 2026年7月10日官方服务条款第8.2及8.3节：付费服务使用有效付款卡，Stripe 为指定第三方收款处理机构；官网当前介绍推理 API 使用预付积分，按模型 Token 用量计费。未确认 PayPal、支付宝或微信支付可用于 Fireworks 结账。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "paid_card_stripe_2026_and_usage_credits"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Fireworks 2026年7月10日官网服务条款明确合同提供主体为 Fireworks.ai, Inc.；官方隐私政策也载明同名公司。此为法律经营主体，不据此推定上市或成立年份。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_service_operator_fireworks_ai_inc"
+        }
+      }
+    },
+    {
+      "id": "groqcloud",
+      "name": "GroqCloud",
+      "officialHosts": [
+        "groq.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "GroqCloud 官方 GPT-OSS 120B 模型页面给出按百万 Token 的输入 USD 0.15、缓存输入 USD 0.075、输出 USD 0.60。此仅是 openai/gpt-oss-120b 的单模型价格，其他模型按各自模型页、速率限制和企业合同另计，不是统一 GroqCloud 套餐价。",
+          "source": "https://console.groq.com/docs/model/openai/gpt-oss-120b",
+          "checkedAt": "2026-11-02",
+          "scope": "specific_gpt_oss_120b_per_million_tokens_not_all_models"
+        },
+        "free": {
+          "status": "observed",
+          "text": "GroqCloud 官方文档列有限速与免费或开发者档配额，但每个组织的实际限额以控制台为准，不能把示例限额当全部账户权益。",
+          "source": "https://console.groq.com/docs/rate-limits",
+          "checkedAt": "2026-11-02",
+          "scope": "organization_limits_not_guaranteed"
+        },
+        "models": {
+          "status": "observed",
+          "text": "GroqCloud 官方限速表列 gpt-oss-120b、gpt-oss-20b、Whisper 等可用端点，配额包括 RPM/TPM/RPD 等维度。",
+          "source": "https://console.groq.com/docs/rate-limits",
+          "checkedAt": "2026-11-02",
+          "scope": "rate_limit_model_ids"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "GroqCloud 2026 官方服务协议将出口控制法律定义为包含美国 EAR、OFAC 和 ITAR，并规定违反相关法律可暂停或终止服务。合同签约主体还按客户住所区分：欧洲经济区/瑞士为 Groq UK Limited，沙特阿拉伯为 Groq Limited，其他地区一般为 Groq LLC（另有指定公共部门合同）。这证明条款和法人按地区变化，不是逐国账户及付款功能的全量开放声明。",
+          "source": "https://console.groq.com/docs/legal/services-agreement",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_controls_region_specific_contracting_entities_not_full_country_whitelist"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Groq 2026年6月22日现行服务协议第8.1条：客户保留其输入、输出、应用和训练数据的知识产权；Groq 保留云服务技术权利。用户仍须遵守对应第三方 AI 模型许可、出口管制及合同限制。",
+          "source": "https://console.groq.com/docs/legal/services-agreement",
+          "checkedAt": "2026-11-02",
+          "scope": "current_customer_generated_output_rights_model_terms"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Groq 官方 Billing FAQ 明确支持 Visa、Mastercard、AmEx、Discover 信用卡、美国银行账户和 SEPA 借记账户。",
+          "source": "https://console.groq.com/docs/billing-faqs",
+          "checkedAt": "2026-11-02",
+          "scope": "cards_us_ach_sepa"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Groq 官网2026年服务协议按客户所在地指定法人：欧洲经济区/瑞士通常 Groq UK Limited，沙特阿拉伯 Groq Limited，其余地区 Groq LLC；若订单指定 Groq Public Sector, LLC 则该主体签约。应按地区和订单显示实际合同法人，不能以旧版美国 Groq, Inc. 统一代替，更不能从品牌推测上市状态。",
+          "source": "https://console.groq.com/docs/legal/services-agreement",
+          "checkedAt": "2026-11-03",
+          "scope": "contracting_legal_entity_by_customer_region_not_ipo"
+        }
+      }
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "officialHosts": [
+        "openrouter.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "OpenRouter 官方定价说明 Standard 按充值金额收 5.5% 平台费用，Business 为 8%；模型 token 推理费按公布的模型价另计。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_purchase_platform_fees"
+        },
+        "free": {
+          "status": "observed",
+          "text": "OpenRouter 免费档提供 25+ 免费模型，默认请求上限 50 次/天；购买积分后免费模型请求限额条件可能变化。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "free_plan_rate_limits"
+        },
+        "models": {
+          "status": "observed",
+          "text": "OpenRouter 官网称付费方案提供 600+ 模型及 80+ 提供商；模型价格、提供商地区和路由策略分别记录。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "model_aggregator"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "OpenRouter 官方条款第5.7节要求用户遵守每个模型供应商的国家和地区限制，不允许利用代理服务绕过限制；不等于全球统一白名单。",
+          "source": "https://openrouter.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "provider_model_specific_country_restrictions"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "OpenRouter 服务条款要求各终端使用方遵守模型供应商专门条款，不能通过路由绕过禁止商用/禁止地区限制。",
+          "source": "https://openrouter.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "per_model_provider_terms"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "OpenRouter 官方2026定价页列 Standard/Business 可用信用卡、借记卡、支付宝与 USDC，企业可开具账单；PayPal 未被列为已支持。",
+          "source": "https://openrouter.ai/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "card_alipay_usdc_enterprise_invoicing"
+        },
+        "company": {
+          "status": "observed",
+          "text": "OpenRouter 2026-08-31服务条款说明签约公司为 OpenRouter, Inc.，聚合第三方模型服务。",
+          "source": "https://openrouter.ai/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operator"
+        }
+      }
+    }
+  ]
+}

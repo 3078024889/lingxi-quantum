@@ -1,0 +1,686 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B002",
+  "observedOn": "2026-11-02",
+  "disclaimer": "Unapproved public first-party page excerpts, not a verified full account purchase, model evaluation or launch-ready company profile.",
+  "products": [
+    {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "officialHosts": [
+        "github.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "GitHub Copilot Free US$0；Pro US$10/人/月；Pro+ US$39/人/月；Max US$100/人/月。",
+          "source": "https://github.com/features/copilot/plans",
+          "checkedAt": "2026-11-02",
+          "scope": "individual_usd_monthly"
+        },
+        "free": {
+          "status": "observed",
+          "text": "GitHub Copilot Free 公告每月提供 2,000 次代码补全及有限聊天/代理使用，无需信用卡。",
+          "source": "https://github.com/features/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "individual_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "官方定价表披露不同档位有不同模型列表和 GitHub AI Credits；模型可用性受功能及套餐限制。",
+          "source": "https://github.com/features/copilot/plans",
+          "checkedAt": "2026-11-02",
+          "scope": "model_access_by_plan"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "GitHub 官方出口贸易管制政策明确：Copilot 为商业软件，未经授权不得售往禁运或 EAR Country Group E:1 等目的地；当前限制包括古巴、伊朗、朝鲜、俄罗斯、白俄罗斯，以及克里米亚/塞瓦斯托波尔和顿涅茨克、卢甘斯克相关地区。此项仅是官方限制说明，不等于已逐一证实其他国家的注册与付款均可用。",
+          "source": "https://docs.github.com/en/site-policy/other-site-policies/github-and-trade-controls",
+          "checkedAt": "2026-11-02",
+          "scope": "export_trade_restrictions_only_not_supported_country_whitelist"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "GitHub Copilot 官方 FAQ 声明 GitHub 不主张其生成的代码建议的所有权，但建议能否构成版权客体取决于适用法律；建议可能匹配公开代码及许可证，开发者必须自行复核安全性、授权与第三方知识产权，不能把使用 Copilot 等同于自动取得所有第三方代码商用许可。",
+          "source": "https://github.com/features/copilot/",
+          "checkedAt": "2026-11-02",
+          "scope": "no_github_ownership_claim_user_checks_public_code_licence",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "GitHub 官方负责任使用文档提醒用户审核建议、查看公共代码匹配及许可证信息。",
+              "source": "https://docs.github.com/en/copilot/responsible-use/inline-suggestions",
+              "checkedAt": "2026-11-02",
+              "scope": "public_code_matching_and_safety_review"
+            }
+          ]
+        },
+        "payment": {
+          "status": "observed",
+          "text": "GitHub 官方《支持的付款方式》载明未托管账户按量计费可用信用卡或 PayPal；Copilot 企业席位可使用信用卡、PayPal，受托管/企业账户可采用发票、Azure 订阅等不同方式；预付信用卡或借记卡不被视为有效付款方式，不能宣称所有国家及 Copilot 套餐结账完全相同。",
+          "source": "https://docs.github.com/en/billing/reference/supported-payment-methods",
+          "checkedAt": "2026-11-02",
+          "scope": "github_copilot_billing_by_account_type",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "企业和组织 Copilot Business/Enterprise 席位的信用卡及 PayPal 按账期结算，需按企业协议确认。",
+              "source": "https://docs.github.com/en/copilot/concepts/billing-and-usage/organizations-and-enterprises/seats-and-billing-cycles",
+              "checkedAt": "2026-11-02",
+              "scope": "enterprise_copilot_payment_methods"
+            }
+          ]
+        },
+        "company": {
+          "status": "observed",
+          "text": "GitHub 官方 Copilot 产品页面将 Copilot 标为 GitHub 开发产品，和 Microsoft Copilot 不属于同一产品。",
+          "source": "https://github.com/features/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "brand_product_identity"
+        }
+      }
+    },
+    {
+      "id": "devin-desktop",
+      "name": "Devin Desktop",
+      "officialHosts": [
+        "devin.ai",
+        "cognition.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Devin Desktop 官方产品页列 Free $0、Pro $20/月、Max $200/月；Teams 另外按基础费和席位费计价。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "current_usd_plan"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Devin Desktop 官网发布 Free 免费档，使用量及模型按当前条款限制。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "current_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Devin Desktop 官网说明支持多个编码代理并使用 Agent Client Protocol (ACP)，这是代理接入能力而非单一基础模型版本。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "agents_not_foundation_model"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Devin Desktop 官网直接链接 Cognition AI, Inc. 于2026年6月30日更新的平台服务条款。第2.1条允许客户与授权用户在订阅期间为内部业务使用服务；第3.1条将代码、建议及其他 Output 中可转让的权利归于客户（以适用法律允许为限）。并不授权转售 Devin 软件、复制其平台或使用服务训练竞争模型；生成代码的第三方知识产权和正确性仍需自行审核。",
+          "source": "https://cognition.com/legal/platform-terms-of-service",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_linked_cognition_platform_terms_internal_business_output_ownership"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Devin Desktop 官网官方账单指南列明：自助订阅支持主流信用卡和借记卡、Apple Pay、Google Pay、Link；部分地区结账时提供 Klarna。具体方式取决于所在地及结账页面，不能宣称 PayPal、支付宝或 Klarna 在全球通用。账单管理经 Stripe 客户门户完成；企业套餐需按订单合同核实。",
+          "source": "https://docs.devin.ai/desktop/accounts/usage",
+          "checkedAt": "2026-11-02",
+          "scope": "devin_desktop_self_serve_cards_wallets_klarna_select_regions_stripe_billing"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官方 FAQ 写明 Devin Desktop 是 Windsurf 的新名称，升级保留 IDE、工作流和原有设置。",
+          "source": "https://devin.ai/desktop",
+          "checkedAt": "2026-11-02",
+          "scope": "brand_rename"
+        }
+      }
+    },
+    {
+      "id": "tabnine",
+      "name": "Tabnine",
+      "officialHosts": [
+        "tabnine.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Tabnine 官网现行企业订阅：Code Assistant US$39/用户/月，Agentic Platform US$59/用户/月，两档均以年度订阅计价并通过 Get a quote 询价；不是按月随时取消的月付报价。使用 Tabnine 提供的 LLM 访问需另购 token 额度，按模型供应商实际价格加收 5% 处理费；自带 LLM/模型端点的用量规则另按合同。",
+          "source": "https://www.tabnine.com/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "annual_per_seat_two_distinct_plans_and_additional_provider_tokens_handling_fee",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Tabnine 官方法律条款的 Fees; Payment 部分写明订阅费用以美元报价和支付，税费另计；基础订阅按照所购服务（而非实际使用量）计费。当前 Code Assistant / Agentic Platform 企业报价及额外模型 Token/处理费按 2026年官网价格页为准。美元是计费币种，不能由此认定支持哪一种银行卡、PayPal 或银行转账。",
+              "source": "https://www.tabnine.com/terms-of-use/",
+              "checkedAt": "2026-11-03",
+              "scope": "subscription_contract_usd_currency_and_tax_not_verified_credit_card_rail"
+            }
+          ]
+        },
+        "free": {
+          "status": "observed",
+          "text": "Tabnine 2026 年官网公布对 NVIDIA Inception / NVIDIA Connect 合格成员开放 30 天试用：最多可申请 10 个 Tabnine Enterprise SaaS 许可证。这是有资格与审批要求的合作伙伴试点，不等于所有用户均有免费套餐或永久赠送额度；其官网普通 Code Assistant 商业方案另按用户年度订阅报价。",
+          "source": "https://www.tabnine.com/nvidia-benefit/",
+          "checkedAt": "2026-11-02",
+          "scope": "restricted_nvidia_inception_connect_30day_partner_trial_not_general_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Tabnine 官方开发平台介绍 IDE/CLI 编码助手、代码库上下文以及企业部署；具体支持的第三方模型随版本变化。",
+          "source": "https://www.tabnine.com/platform/",
+          "checkedAt": "2026-11-02",
+          "scope": "coding_platform_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Tabnine 官方服务条款规定：若 Tabnine 服务或部分功能依用户所在国家的法律被认定为非法，该用户不获得对应服务使用许可，必须停止使用。该条款只说明当地法律限制，并没有公布可注册企业 SaaS、付款、部署企业模型的完整支持国家名单。另需按企业采购合同及模型提供商的地区规定判断。",
+          "source": "https://www.tabnine.com/terms-of-use/",
+          "checkedAt": "2026-11-03",
+          "scope": "official_local_law_country_restrictions_only_not_global_checkout_or_model_support"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Tabnine 官方使用条款指出免费计划不供持续商业或企业使用；长期企业用途须采用付费订阅并遵守条款。",
+          "source": "https://www.tabnine.com/terms-of-use/",
+          "checkedAt": "2026-11-02",
+          "scope": "free_not_for_ongoing_business",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Tabnine 官方法律条款明示：免费计划（评估期除外）不用于持续商业或企业使用；长期商用应采用付费订阅。用户还必须遵守第三方模型提供商的独立使用条款，不能把 Tabnine 订阅等同所有模型商用授权。",
+              "source": "https://www.tabnine.com/terms-of-use/",
+              "checkedAt": "2026-11-03",
+              "scope": "subscription_free_plan_business_limit_and_third_party_model_terms"
+            }
+          ]
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网企业价格通过 Get a quote 询价，尚未找到由 Tabnine 官方明确列出的信用卡、PayPal、银行转账等最终收款渠道及逐国限制；不可依据第三方转售网页推断。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Tabnine 官网于 2026 年 7 月 30 日宣布被 Tricentis 收购。Tabnine 继续是企业编码助手及 Enterprise Context Engine 产品品牌，现归属 Tricentis；此收购不代表 Tabnine 单独上市，也不能推断收购对价或将两家公司成立年份混同。",
+          "source": "https://www.tabnine.com/blog/category/product-news/",
+          "checkedAt": "2026-11-03",
+          "scope": "acquired_by_tricentis_20260730_official_tabnine_news_separate_brand_not_independent_listing"
+        }
+      }
+    },
+    {
+      "id": "mistral-le-chat",
+      "name": "Mistral Vibe（原 Le Chat）",
+      "officialHosts": [
+        "mistral.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Mistral 2026 年 Vibe 官方发布说明列出：Free 免费；Pro 标准参考价 US$14.99/月；Team US$24.99/用户/月；Enterprise 按合同报价。Pro 比免费层提供更高的聊天、研究和长时编程额度，Team 增加团队管理功能。教育优惠、货币/税费及各地结账可能不同；Studio/API 模型按用量及套餐包含额度独立核算，不是 Pro 无限免费 API。",
+          "source": "https://mistral.ai/news/vibe-agent/",
+          "checkedAt": "2026-11-03",
+          "scope": "official_2026_vibe_free_pro_team_enterprise_subscription_prices_vs_api_usage_not_education_only",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Mistral 官方订阅文档说明：Free/Pro/Team/Enterprise 计划覆盖 Vibe/Studio/API 并共享月度用量；预付 PAYG 仅在启用时增加超出套餐的调用。教育资格价需与普通消费者订阅区分。",
+              "source": "https://docs.mistral.ai/admin/billing-usage/subscriptions",
+              "checkedAt": "2026-11-03",
+              "scope": "subscription_shared_usage_and_optional_prepaid_payg_does_not_include_unlimited_api"
+            }
+          ]
+        },
+        "free": {
+          "status": "observed",
+          "text": "Mistral 免费层可在 web/移动端使用个人 AI 代理，消息、搜索、编码和生图均有限额。",
+          "source": "https://mistral.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "free_plan"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Mistral 当前定价页将个人 AI 代理和 Vibe 编码代理分开说明，不能将二者默认为同一 API 计费。",
+          "source": "https://mistral.ai/pricing/",
+          "checkedAt": "2026-11-02",
+          "scope": "product_family_not_model_version"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Mistral AI 2026年10月12日生效的非欧洲经济区消费者条款适用于 Vibe 等个人产品，禁止违反欧盟、美国和新加坡出口管制与制裁规则。条款列举截至生效日受全面制裁或禁运的古巴、伊朗、朝鲜、叙利亚及乌克兰克里米亚、顿涅茨克、卢甘斯克地区，并排除受制裁名单限制的主体。欧洲经济区消费者另有对应条款，组织客户使用商业条款；上述清单并非所有允许注册、付款和模型可用国家的完整名单。",
+          "source": "https://legal.mistral.ai/terms/row-consumer-terms/",
+          "checkedAt": "2026-11-03",
+          "scope": "official_eu_us_singapore_sanctions_export_restrictions_only_not_supported_country_whitelist",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Mistral AI 欧洲经济区消费者适用独立的 EU Consumer Terms；企业 Vibe 与开发 API 根据商业条款另行签约。地区适用合同的区分，不等于该地区所有功能和付款方式已经实测。",
+              "source": "https://legal.mistral.ai/terms/eu-consumers-terms-of-service/",
+              "checkedAt": "2026-11-03",
+              "scope": "eea_consumer_separate_legal_terms_not_country_allowlist"
+            }
+          ]
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Mistral AI 官方消费条款表示，在法律允许范围内，用户保留输入权利并拥有其 AI 输出，Mistral 将其可能拥有的输出权利转让给用户；用户应核验准确性和第三方授权，并遵守内容与使用政策。企业产品另受商业条款约束，不能把模型权重或第三方资源视为用户所有。",
+          "source": "https://legal.mistral.ai/terms/row-consumer-terms/",
+          "checkedAt": "2026-11-02",
+          "scope": "consumer_output_ownership_vs_business_terms"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Mistral 2026 年 Vibe 官方帮助中心确认：Vibe Pro/Team 网页订阅在 Mistral 管理控制台录入账单信息，可月付或年付；iOS 和 Android App 订阅分别经 Apple App Store、Google Play 结算；特定移动运营商 Free Mobile、Orange、NJU 也有运营商账单渠道。具体网页银行卡或 PayPal 品类未在此页逐一确认，不能宣称所有地区支持全部方式。Vibe 套餐结算与开发者 Studio API 另行计算。",
+          "source": "https://help.mistral.ai/en/articles/455205-how-can-i-upgrade-or-cancel-my-vibe-subscription",
+          "checkedAt": "2026-11-02",
+          "scope": "vibe_web_appstore_googleplay_carrier_subscription_channels_not_universal_card_rails"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Mistral 官方商业条款载明运营法人 Mistral AI，为法国股份制公司（SAS），巴黎注册编号 952 418 325，注册地址 15 rue des Halles, 75001 Paris, France；特定企业订单可能由协议列明的关联法人提供，不代表 Mistral 为上市公司。",
+          "source": "https://legal.mistral.ai/terms/commercial-terms-of-service/",
+          "checkedAt": "2026-11-02",
+          "scope": "registered_french_contracting_entity_company_number_not_listing",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Mistral 官方 2026-08-12 品牌通知：Le Chat 更名为 Vibe；旧账户、付费套餐、对话和内容都迁移保留，官方继续使用 chat.mistral.ai 作为入口，功能分 Vibe Work、Vibe Code 与 Vibe Chat。",
+              "source": "https://help.mistral.ai/en/articles/682992-le-chat-is-now-vibe",
+              "checkedAt": "2026-11-02",
+              "scope": "official_2026_product_rename_keep_legal_company_and_stable_id"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "microsoft-copilot",
+      "name": "Microsoft Copilot",
+      "officialHosts": [
+        "microsoft.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "微软新加坡 Copilot 公开页面显示个人方案 SG$15.49/月；企业方案 USD$23.50/用户/月，按年付款且不含 GST。不能混作全球统一美元价格。",
+          "source": "https://www.microsoft.com/en-sg/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "singapore_region_mixed_currency"
+        },
+        "free": {
+          "status": "observed",
+          "text": "微软个人 Copilot 官方价格说明确认存在免费版本，但受到容量及每日/功能调用限制，达到限制须等待重置或选择付费版；Microsoft 365 应用深度集成取决于符合条件的订阅，免费版不包括全部 365 Copilot 高级功能。",
+          "source": "https://www.microsoft.com/en-sg/copilot/pricing/individuals",
+          "checkedAt": "2026-11-02",
+          "scope": "limited_free_copilot_web_app_not_full_m365_benefits"
+        },
+        "models": {
+          "status": "observed",
+          "text": "微软官方产品页分为个人、商业和企业 Copilot，包含 Office/业务协作能力；没有把它标为一个单独基础模型。",
+          "source": "https://www.microsoft.com/en-sg/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "product_not_base_model"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "微软2026年9月官方支持文件：Microsoft Copilot 在全球170多个市场可用，明确中国内地不包括在支持范围、香港特别行政区为例外；禁运市场亦不支持。并非全部国家的逐一名单。",
+          "source": "https://support.microsoft.com/en-us/microsoft-365-copilot/supported-languages-for-microsoft-365-copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "170plus_markets_mainland_excluded_hk_exception"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Microsoft Copilot 个人版 2026年8月18日生效的补充条款规定：用户保留其内容权益，微软不因提供 Copilot 而取得用户内容的所有权；Copilot 个人版仅授权个人用途，不应将个人账户视为商业企业授权。企业版 Microsoft 365 Copilot 的使用和客户数据权利另依企业协议及产品条款，生成结果能否受版权保护和第三方素材许可需用户独立判断。",
+          "source": "https://www.microsoft.com/en-us/microsoft-copilot/for-individuals/termsofuse",
+          "checkedAt": "2026-11-02",
+          "scope": "consumer_personal_use_only_business_licensing_separate"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "微软官方账户支付说明：个人 Microsoft 账户可添加信用卡、借记卡、银行账户、PayPal 或移动电话付款。具体 Microsoft 365/Copilot 订阅可用方式按地区和账户性质不同，以购买页面为准；本资料不代表 Copilot 在所有国家均支持这些方法。",
+          "source": "https://support.microsoft.com/en-us/accounts-billing/add-a-new-bank-or-credit-card-to-your-microsoft-account",
+          "checkedAt": "2026-11-02",
+          "scope": "account_billing_methods_not_guaranteed_copilot_plan"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Microsoft 官方网页为 Microsoft Copilot 多产品方案的发布方，与 GitHub Copilot 的品牌入口应区分。",
+          "source": "https://www.microsoft.com/en-sg/copilot",
+          "checkedAt": "2026-11-02",
+          "scope": "brand_publisher"
+        }
+      }
+    },
+    {
+      "id": "poe",
+      "name": "Poe",
+      "officialHosts": [
+        "poe.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Poe 官方 2026 年订阅帮助页写明个人订阅起价 USD 4.99/月，计算点数按具体方案、购买地区及付款周期不同；付费附加点数参考 USD 30/100万点，不能把年付每月折算、英镑页面显示和美元月付标价混写。",
+          "source": "https://help.poe.com/hc/en-us/articles/19945140063636-Poe-Purchases-FAQs",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_from_support_subscription_start_and_variable_points"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Poe 官方 FAQ：未订阅用户也有每天更新的免费计算点数，每 24 小时重置且不可结转；不同 Bot 所需点数依模型及任务而异。官网并未统一保证所有用户每天都获得相同点数，不能编造固定每日积分额度。",
+          "source": "https://help.poe.com/hc/en-us/articles/19944206309524-Poe-FAQs",
+          "checkedAt": "2026-11-02",
+          "scope": "nonpaying_daily_compute_points_reset_no_universal_fixed_amount"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Poe 官方 FAQ 介绍 OpenAI GPT、Anthropic Claude、Google Gemini 及图片、视频和自建机器人；模型由多个厂商提供。",
+          "source": "https://help.poe.com/hc/en-us/articles/19944206309524-Poe-FAQs",
+          "checkedAt": "2026-11-02",
+          "scope": "aggregator_not_first_party_model"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Poe 销售条款排除受制裁国家、受限制主体，并明确所在地可能限制支付与服务；并非全球全部国家可用白名单。",
+          "source": "https://poe.com/pages/terms-of-sale",
+          "checkedAt": "2026-11-02",
+          "scope": "restriction_only_not_complete_supported_countries"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Poe 于 2026-03-19 更新的服务条款规定：用户保留其输入及 Bot 输出等 Your Content 的权利，同时须遵守所用第三方模型及 Bot 的使用政策、知识产权和限制，不可自动把 Poe 全部 Bot 视为无条件商用许可。",
+          "source": "https://poe.com/pages/tos",
+          "checkedAt": "2026-11-02",
+          "scope": "quora_user_content_rights_with_third_party_bot_restrictions"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Poe 销售条款说明订阅由 Quora/支付代理结算，也可经 Apple App Store / Google Play；支付方式依结算国家而异。",
+          "source": "https://poe.com/pages/terms-of-sale",
+          "checkedAt": "2026-11-02",
+          "scope": "country_dependent_app_store_cards"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官方 @poe 账号为 Poe 产品和机器人展示入口；真实经营公司主体尚需另查法律文件。",
+          "source": "https://poe.com/poe",
+          "checkedAt": "2026-11-02",
+          "scope": "publisher_brand_only",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Poe 2026年3月服务条款写明运营及合同主体为 Quora, Inc.及其关联公司；Poe 产品不应被统计为独立已注册公司。",
+              "source": "https://poe.com/pages/tos",
+              "checkedAt": "2026-11-02",
+              "scope": "legal_operator"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "adobe-firefly",
+      "name": "Adobe Firefly",
+      "officialHosts": [
+        "adobe.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Adobe Firefly 现行套餐按不同档位提供 2,000、4,000、10,000 或 50,000 月度生成积分；区域价格动态展示，不据此捏造美元数字。",
+          "source": "https://www.adobe.com/products/firefly/plans.html",
+          "checkedAt": "2026-11-02",
+          "scope": "monthly_credit_allowances"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Adobe Firefly Free 官方提供有限的每日免费生成机会，可体验指定图片、视频及音频功能；具体生成次数与可用模型随功能变化，不将付费档的 2,000 至 50,000 积分当作免费额度。",
+          "source": "https://www.adobe.com/products/firefly/features",
+          "checkedAt": "2026-11-02",
+          "scope": "firefly_free_limited_daily_generations"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Adobe 官方说明 Firefly 既有网页版应用也有模型家族，支持图像、视频、矢量等，且可访问部分合作伙伴模型。",
+          "source": "https://helpx.adobe.com/firefly/web/get-started/learn-the-basics/adobe-firefly-faq.html",
+          "checkedAt": "2026-11-02",
+          "scope": "product_and_model_family"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Adobe Firefly 官方 FAQ 明确不在中国、俄罗斯和白俄罗斯提供 Firefly；Adobe 各项服务另受古巴、伊朗、朝鲜、叙利亚、克里米亚和乌克兰相关受限地区制裁限制。此信息属于已证实的不可用地区，不构成其他国家全部功能和付款方式的完整支持清单。",
+          "source": "https://helpx.adobe.com/lv/firefly/web/get-started/learn-the-basics/adobe-firefly-faq.html",
+          "checkedAt": "2026-11-02",
+          "scope": "explicit_product_blocked_countries_and_sanction_restrictions_only"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Adobe 官方 Firefly 团队说明明确商业内容工作流和商业安全定位；具体使用仍要按不同生成模型许可审核。",
+          "source": "https://helpx.adobe.com/sg/firefly/web/get-started/learn-the-basics/adobe-firefly-overview.html",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_commercial_positioning_only"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Adobe 官方 Teams 账户支付文档支持信用卡、借记卡；部分国家可用 PayPal，符合条件的欧洲/中东/非洲客户可能可用 SEPA 扣款。Firefly 随 Creative Cloud 或独立计划结算方式取决于地区与购买渠道，本资料不声称所有用户都可选 PayPal。",
+          "source": "https://helpx.adobe.com/enterprise/using/edit-payment-method.html",
+          "checkedAt": "2026-11-02",
+          "scope": "adobe_teams_payment_rails_region_scoped_not_every_firefly_checkout"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Adobe 官方服务条款按用户居住地确认合同法人：北美为 Adobe Inc.；日本为 Adobe KK；其他地区通常为 Adobe Systems Software Ireland Limited；澳大利亚存在指定代理安排。品牌所属集团为 Adobe，不能给全球用户统一填写同一收款法人。",
+          "source": "https://www.adobe.com/legal/terms.html",
+          "checkedAt": "2026-11-02",
+          "scope": "regional_contracting_entities_not_one_global_operator"
+        }
+      }
+    },
+    {
+      "id": "recraft",
+      "name": "Recraft",
+      "officialHosts": [
+        "recraft.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Recraft 2026年10月16日官方文章确认美国美元月付起价：Basic USD 12/月（1,000 积分/月），Pro USD 20/月起；Free 免费版最多每日生成 30 张图片，但免费作品公开且不附商业使用权。官网另有年付优惠与 API 按单次操作积分计价，金额和功能须区分套餐、结算周期与 API 使用。",
+          "source": "https://www.recraft.ai/blog/best-ai-ad-generators",
+          "checkedAt": "2026-11-02",
+          "scope": "official_october_2026_monthly_basic_pro_price_and_free_limits"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Recraft 当前官方服务条款 7.1 明确：Free Tier 生成的作品归 Recraft 所有，只授权个人非商业使用，不可销售、授权给他人或作为 AI 模型训练素材。免费可生成图片不等于免费商用，也不等于付费订阅作品的授权范围。",
+          "source": "https://www.recraft.ai/legal/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "recraft_terms_7_1_free_personal_noncommercial_recraft_owned"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Recraft 官方定价说明其 V2、V3、V4 和 V4.1 模型可经 API 使用，按 API Units 单独计价。",
+          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "checkedAt": "2026-11-02",
+          "scope": "api_models"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Recraft 2026年10月21日更新的官方服务条款针对欧盟、欧洲经济区和英国的消费者规定：新订阅通常有14天撤回期，但在结账时明确同意立刻分配积分并确认放弃撤回权，或者积分已使用时，退款规则会受到相应限制；自动续订与API积分包也有不同条件。这是特定居住地区的消费者付款权利，不是 Recraft 在这些国家全部模型、注册和支付功能均开放的证明。",
+          "source": "https://www.recraft.ai/legal/terms",
+          "checkedAt": "2026-11-03",
+          "scope": "eu_eea_uk_consumer_subscription_withdrawal_rights_not_service_availability"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Recraft 官方服务条款 7.2：付费订阅用户可将自己生成的作品用于个人或商业场景，Recraft 将其对作品所持版权转让给订阅用户；仍禁止将作品用于训练 AI 模型。免费层 7.1 不允许商用且生成作品属于 Recraft，付费订阅授权与免费不同。",
+          "source": "https://www.recraft.ai/legal/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "recraft_terms_7_1_and_7_2_paid_ownership_commercial_no_ai_training"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Recraft 官方 FAQ 写明使用 Stripe 处理信用卡、借记卡及银行转账。",
+          "source": "https://www.recraft.ai/pricing?tab=plans",
+          "checkedAt": "2026-11-02",
+          "scope": "vendor_payment_methods",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Recraft 公开 FAQ：支持信用卡、借记卡和银行转账，均由 Stripe 安全处理。",
+              "source": "https://www.recraft.ai/pricing?tab=plans",
+              "checkedAt": "2026-11-02",
+              "scope": "card_debit_bank_stripe"
+            }
+          ]
+        },
+        "company": {
+          "status": "observed",
+          "text": "Recraft 官方 2026年10月21日生效的服务条款确认合同运营主体为 Recraft Inc.；这是官网合同主体，并不自动证明其已经上市或披露了完整控股股东信息。",
+          "source": "https://www.recraft.ai/legal/terms",
+          "checkedAt": "2026-11-02",
+          "scope": "legal_operating_entity_recraft_inc_contract_not_ipo"
+        }
+      }
+    },
+    {
+      "id": "freepik-ai",
+      "name": "Freepik AI",
+      "officialHosts": [
+        "freepik.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Freepik Premium 官方页显示 USD $14.50/月为年付折合价，全年积分 240K；不等于随时按月 $14.50 付款。",
+          "source": "https://www.freepik.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "annual_equivalent_usd"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Freepik（官网近期也使用 Magnific 名称）的 AI Art Generator 官方说明普通免费用户使用其自有模型，每日最多可免费生成 20 张图片；这是指定图片工具的额度，不等于所有第三方高级模型、视频或声音功能都免费。官方订阅帮助说明免费用户生成内容的商用许可与付费级别有差异，应按具体工具和素材确认。",
+          "source": "https://www.freepik.com/ai/art-generator",
+          "checkedAt": "2026-11-02",
+          "scope": "free_in_house_image_generator_up_to_20_daily_not_all_ai_models",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "官网订阅帮助明确免费版为有限每日基本 AI 使用，不支持无条件商用；Premium 与更高套餐按单独许可处理。",
+              "source": "https://www.freepik.com/ai/faq/freepik-subscriptions-plans",
+              "checkedAt": "2026-11-02",
+              "scope": "free_vs_paid_licensing"
+            }
+          ]
+        },
+        "models": {
+          "status": "observed",
+          "text": "Freepik 官方页面提供多厂商图像、视频与音频模型列表，并单列不同模型的积分消耗；不是所有模型均由 Freepik 开发。",
+          "source": "https://www.freepik.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "aggregated_models"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Freepik Premium 页面标注 Commercial AI license；素材商业使用条件与 AI 模型合作许可仍需按合同分开审核。",
+          "source": "https://www.freepik.com/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "subscription_license_scope"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Freepik 旗下 Magnific AI 的订阅帮助列明信用/借记卡、关联银行卡或付款卡的 PayPal、Google Pay 和 Apple Pay，要求支持国际和周期性交易；该 Magnific 套餐以欧元结算。这里只确认 Magnific 订阅，不推断 Freepik 平台其他 AI 产品的收款方法。",
+          "source": "https://www.freepik.com/ai/faq/payment-methods",
+          "checkedAt": "2026-11-02",
+          "scope": "magnific_subscription_payment_methods_only"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Freepik 官方 2026 年商业订阅条款明确其所属法律主体 Freepik Company, S.L.，该条款适用于其 Magnific 商业订阅；Freepik AI 具体产品结算与权利以各服务协议为准，不能据该合同推定全部 Freepik AI 权益。",
+          "source": "https://www.freepik.com/legal/business-subscription-terms",
+          "checkedAt": "2026-11-02",
+          "scope": "freepik_company_sl_group_legal_entity_magnific_specific_contract"
+        }
+      }
+    },
+    {
+      "id": "synthesia",
+      "name": "Synthesia",
+      "officialHosts": [
+        "synthesia.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Synthesia 当前页面显示 Starter $19/月（按月结算），Pro $89/月（按月结算），首月可能有不同促销价。",
+          "source": "https://www.synthesia.io/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "usd_monthly_standard_vs_promo"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Synthesia Basic 免费层包含月度视频额度和积分，官网展示 10 分钟视频及 500 credits/月。",
+          "source": "https://www.synthesia.io/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "basic_free"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Synthesia 提供 AI Avatars、视频助手、配音与字幕等功能；其套餐积分并不对应单个基础大模型。",
+          "source": "https://www.synthesia.io/pricing",
+          "checkedAt": "2026-11-02",
+          "scope": "avatar_video_functions",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Synthesia 2026 年官方说明：其新生成的视频自动嵌入 C2PA 来源信号，标示内容为 AI 生成并记录防篡改的来源链；发布视频时是否还需对观众显式标注，须依目标市场（如欧盟或加州）的适用法律判断。这是输出来源标记功能，不是视频生成地区可用性清单。",
+              "source": "https://help.synthesia.io/en/articles/16046624-what-does-the-eu-ai-act-article-50-mean-for-my-synthesia-videos",
+              "checkedAt": "2026-11-03",
+              "scope": "generated_video_c2pa_provenance_eu_california_deployer_disclosure_not_region_access"
+            }
+          ]
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "Official country-by-country availability and user restrictions have not been checked."
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Synthesia 2026官方视频授权说明：库存/合成数字人可用于官网教程、YouTube及非付费推广，不得用于Facebook/YouTube/TikTok等付费广告或电视广告；自定义数字人另按本人授权。",
+          "source": "https://help.synthesia.io/en/articles/6341928-synthesia-video-licensing",
+          "checkedAt": "2026-11-02",
+          "scope": "stock_avatar_paid_ad_disallowed"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "Synthesia 官方支付问题帮助页确认接受主要信用卡、借记卡及预付卡，并可能提供其他支付方式；具体地区可用的支付渠道以账户结账页及 Billing & Usage 为准，不能把 PayPal 一律标为支持。",
+          "source": "https://help.synthesia.io/en/articles/6341896-why-is-my-payment-to-synthesia-unsuccessful",
+          "checkedAt": "2026-11-02",
+          "scope": "credit_debit_prepaid_card_others_account_dependent"
+        },
+        "company": {
+          "status": "observed",
+          "text": "Synthesia 官方 2026年10月更新的法律隐私政策注明其数据控制者为英国 Synthesia Limited，地址 20 Triton St, London NW1 3BF；同期官方活动规则注明其英格兰与威尔士公司编号 10933652。该主体是官方现行法人资料，不代表已上市。",
+          "source": "https://www.synthesia.io/legal/privacy-policy",
+          "checkedAt": "2026-11-02",
+          "scope": "uk_operating_privacy_legal_entity_company_number_in_additional_source"
+        }
+      }
+    }
+  ]
+}

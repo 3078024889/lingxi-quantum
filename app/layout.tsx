@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./unified-shell.css";
+import "./siai-home.css";
+import "./siai-detail.css";
 import "./v201-quality.css";
 import "./v40-mobile.css";
 import "./v43-product-visuals.css";
+import "./brand-home-v2.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
@@ -15,35 +18,35 @@ import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 const SITE=PRIMARY_SITE;
 const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
 
-const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const locales=['en','ja','ko','fr','de','es','pt','ar'];const seg=location.pathname.split('/')[1]||'';const query=new URLSearchParams(location.search).get('lang');const key=locales.includes(seg)?seg:(locales.includes(query)||query==='zh'?query:'zh');const root=document.documentElement;root.lang=key==='zh'?'zh-CN':key;root.dataset.lang=key;root.dir=key==='ar'?'rtl':'ltr';}catch{}})();`;
+const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const locales=['en','ja','ko','fr','de','es','pt','ar'];const segments=location.pathname.split('/');const seg=segments[1]||'';const nested=seg==='siai'?segments[2]||'':'';const routeLang=locales.includes(nested)||nested==='zh'?nested:seg;const query=new URLSearchParams(location.search).get('lang');const key=(locales.includes(routeLang)||routeLang==='zh')?routeLang:(locales.includes(query)||query==='zh'?query:'zh');const root=document.documentElement;root.lang=key==='zh'?'zh-CN':key;root.dataset.lang=key;root.dir=key==='ar'?'rtl':'ltr';}catch{}})();`;
 
 export const metadata:Metadata={
  metadataBase:new URL(SITE),
  title:{
-  default:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
+  default:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
   template:"%s ｜ 灵犀场 LINGXIFIELD"
  },
  description:PUBLIC_FEATURE_COPY.zh.description,
- applicationName:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
+ applicationName:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
  alternates:{canonical:SITE},
  keywords:[
-  "灵犀场","LINGXIFIELD","SASI","免费在线工具",
+  "灵犀场","LINGXIFIELD","全球SIAI排行榜","全球AI工具排行榜","AI工具对比","AI模型价格","AI工具免费额度","SASI","免费在线工具",
   "PDF压缩","PDF合并","PDF拆分","PDF编辑","电子签名",
   "图片压缩","图片格式转换","图片OCR","视频转文字","音频转文字","字幕翻译",
-  "临时邮箱","阅后即焚",
+  "临时邮箱","阅后即焚","AI短剧生成","AI网站构建",
   "书本智能体","文档智能体","学习智能体","科研智能体"
  ],
  openGraph:{
   type:"website",
   siteName:"灵犀场 LINGXIFIELD",
-  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
+  title:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
   description:PUBLIC_FEATURE_COPY.zh.description,
   url:SITE,
   images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
  },
  twitter:{
   card:"summary_large_image",
-  title:"灵犀场 LINGXIFIELD｜SASI全球多模型智能创作平台",
+  title:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
   description:PUBLIC_FEATURE_COPY.zh.description,
   images:[SHARE_IMAGE]
  },
