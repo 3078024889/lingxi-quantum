@@ -43,9 +43,6 @@ const PUBLISHER_ROW:Record<Language,{company:string;founded:string;project:strin
 
 export const V36_COL_COUNT=11;
 export function marketRowTitles(language:Language){return columns[language];}
-const localizedNotice:Record<Language,string>={
- zh:'尚无可靠资料',en:'Not verified',ja:'未確認',ko:'미확인',fr:'Non vérifié',de:'Nicht geprüft',es:'Sin verificar',pt:'Não verificado',ar:'لم يتم التحقق'
-};
 const SPECIFIC:Record<Language,Record<"free"|"price"|"models"|"commercial"|"login"|"payment",string>>={
 zh:{free:"官网未列出统一免费额度",price:"未公布统一价格",models:"未公布具体模型",commercial:"查看商用许可",login:"查看官网登录",payment:"本地支付方式未说明"},
 en:{free:"Free allowance differs by plan",price:"No single published price",models:"Models not detailed",commercial:"Check commercial terms",login:"See official sign-in",payment:"Local payments not specified"},
