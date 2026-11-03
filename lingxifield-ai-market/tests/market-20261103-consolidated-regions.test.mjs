@@ -56,15 +56,15 @@ test('all 30 candidate products remain held; full-region payment and end-to-end 
  const c=materializeCandidateCatalog(cohorts,observations);
  assert.equal(c.candidateProducts,30);
  assert.equal(c.factCells,210);
- assert.deepEqual(c.totals,{observed:202,missing:8,conflict:0});
+ assert.deepEqual(c.totals,{observed:204,missing:6,conflict:0});
  assert.deepEqual(c.geography,{
-   missing:7,restrictions_only:15,provider_specific_restrictions:3,
+   missing:5,restrictions_only:17,provider_specific_restrictions:3,
    broad_market_statement:1,other_observation_not_country_proof:4,country_by_country_verified:0
  });
  assert.ok(c.products.every(p=>p.publishApproved===false&&p.visibleToPublic===false&&p.seoIndex===false));
  const queue=buildOfficialGapQueue(observations,'2026-11-03');
- assert.equal(queue.missingFields,8);
- assert.equal(queue.perField.regions,7);
+ assert.equal(queue.missingFields,6);
+ assert.equal(queue.perField.regions,5);
  assert.equal(queue.perField.payment,1);
  assert.ok(queue.items.some(x=>x.id==='tabnine'&&x.field==='payment'));
  assert.equal(queue.notPublished,true);

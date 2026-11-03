@@ -168,8 +168,11 @@
           "scope": "coding_platform_capabilities"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Tabnine 官方服务条款规定：若 Tabnine 服务或部分功能依用户所在国家的法律被认定为非法，该用户不获得对应服务使用许可，必须停止使用。该条款只说明当地法律限制，并没有公布可注册企业 SaaS、付款、部署企业模型的完整支持国家名单。另需按企业采购合同及模型提供商的地区规定判断。",
+          "source": "https://www.tabnine.com/terms-of-use/",
+          "checkedAt": "2026-11-03",
+          "scope": "official_local_law_country_restrictions_only_not_global_checkout_or_model_support"
         },
         "commercial": {
           "status": "observed",
@@ -221,8 +224,20 @@
           "scope": "product_family_not_model_version"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Mistral AI 2026年10月12日生效的非欧洲经济区消费者条款适用于 Vibe 等个人产品，禁止违反欧盟、美国和新加坡出口管制与制裁规则。条款列举截至生效日受全面制裁或禁运的古巴、伊朗、朝鲜、叙利亚及乌克兰克里米亚、顿涅茨克、卢甘斯克地区，并排除受制裁名单限制的主体。欧洲经济区消费者另有对应条款，组织客户使用商业条款；上述清单并非所有允许注册、付款和模型可用国家的完整名单。",
+          "source": "https://legal.mistral.ai/terms/row-consumer-terms/",
+          "checkedAt": "2026-11-03",
+          "scope": "official_eu_us_singapore_sanctions_export_restrictions_only_not_supported_country_whitelist",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Mistral AI 欧洲经济区消费者适用独立的 EU Consumer Terms；企业 Vibe 与开发 API 根据商业条款另行签约。地区适用合同的区分，不等于该地区所有功能和付款方式已经实测。",
+              "source": "https://legal.mistral.ai/terms/eu-consumers-terms-of-service/",
+              "checkedAt": "2026-11-03",
+              "scope": "eea_consumer_separate_legal_terms_not_country_allowlist"
+            }
+          ]
         },
         "commercial": {
           "status": "observed",
@@ -602,7 +617,16 @@
           "text": "Synthesia 提供 AI Avatars、视频助手、配音与字幕等功能；其套餐积分并不对应单个基础大模型。",
           "source": "https://www.synthesia.io/pricing",
           "checkedAt": "2026-11-02",
-          "scope": "avatar_video_functions"
+          "scope": "avatar_video_functions",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Synthesia 2026 年官方说明：其新生成的视频自动嵌入 C2PA 来源信号，标示内容为 AI 生成并记录防篡改的来源链；发布视频时是否还需对观众显式标注，须依目标市场（如欧盟或加州）的适用法律判断。这是输出来源标记功能，不是视频生成地区可用性清单。",
+              "source": "https://help.synthesia.io/en/articles/16046624-what-does-the-eu-ai-act-article-50-mean-for-my-synthesia-videos",
+              "checkedAt": "2026-11-03",
+              "scope": "generated_video_c2pa_provenance_eu_california_deployer_disclosure_not_region_access"
+            }
+          ]
         },
         "regions": {
           "status": "missing",
