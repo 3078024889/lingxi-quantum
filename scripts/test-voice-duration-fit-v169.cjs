@@ -20,6 +20,7 @@ for(const path of ["components/tools/VideoDubbingWorkbench.tsx","components/tool
 for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
  const copy=api.voiceDurationCopy(lang);
  assert(copy.stage&&copy.tooLong&&copy.failed,"missing translation "+lang);
+ assert(api.voiceDurationInfo(lang).length>24,"missing localized narration detail "+lang);
  assert(!/DUB_/.test(copy.failed),"engineering error leaked "+lang);
  assert.equal(api.voiceDurationError(lang,new Error("DUB_AUDIO_TOO_LONG_FOR_VIDEO")),copy.tooLong);
  assert.equal(api.voiceDurationError(lang,new Error("DUB_AUDIO_FIT_FAILED")),copy.failed);

@@ -31,3 +31,16 @@ export function voiceDurationError(locale:string,cause:unknown):string|null{
  const copy=voiceDurationCopy(locale);
  return cause.message==="DUB_AUDIO_TOO_LONG_FOR_VIDEO"?copy.tooLong:copy.failed;
 }
+
+const VOICE_INFO:Record<string,string>={
+ zh:"配音会核对合成音频与视频总时长，必要时在合理范围内调整语速，避免尾音被截断；这不代表逐句或口型同步。",
+ en:"Narration is checked against video duration and its tempo is adjusted moderately when needed to prevent clipping. This is not per-sentence or lip synchronization.",
+ ja:"音声と動画の全体の長さを確認し、必要に応じて速度を適度に調整し、末尾の音声が切れないようにします。文や口の動きとの同期ではありません。",
+ ko:"음성 및 영상의 전체 길이를 확인하고 필요할 때 적정 범위에서 말하기 속도를 조정해 끝부분이 잘리지 않도록 합니다. 문장별 또는 입 모양 동기화는 아닙니다.",
+ fr:"La durée totale est vérifiée ; la vitesse de la voix est ajustée modérément si nécessaire pour éviter les coupures, sans synchronisation labiale ou phrase par phrase.",
+ de:"Gesamtlängen von Ton und Video werden geprüft; die Sprechgeschwindigkeit wird bei Bedarf moderat angepasst, ohne Satz- oder Lippensynchronität zu behaupten.",
+ es:"Se comprueba la duración de la narración y el vídeo y se ajusta moderadamente la velocidad cuando hace falta, para evitar cortes; no es sincronización labial ni por frase.",
+ pt:"A duração da narração é comparada à do vídeo e a velocidade é ajustada moderadamente para evitar cortes; isso não implica sincronização labial ou frase a frase.",
+ ar:"يُتحقق من مدة الصوت والفيديو، وتُضبط سرعة الكلام باعتدال عند الحاجة لتجنب قطع النهاية. هذا ليس تزامنًا مع الشفاه أو مع كل جملة."
+};
+export function voiceDurationInfo(locale:string):string{return VOICE_INFO[locale]||VOICE_INFO.en}

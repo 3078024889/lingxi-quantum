@@ -12,7 +12,7 @@ import {localMediaDuration,transcribeLocal} from "@/lib/tools/autonomous/transcr
 import {concatMp3,muxTranslatedVideo,requireTimedTranscript,toSrtTimed,toVttTimed,type TimedText} from "@/lib/tools/media/video-translate-client";
 import {extractExactTranslatedCues,requireCuesWithinVideo,pairBilingualCues} from "@/lib/tools/media/video-subtitle-integrity";
 import {fitVoiceDurationToVideo} from "@/lib/tools/media/voice-duration-fit";
-import {voiceDurationCopy,voiceDurationError} from "@/lib/tools/media/voice-duration-plan";
+import {voiceDurationCopy,voiceDurationError,voiceDurationInfo} from "@/lib/tools/media/voice-duration-plan";
 import {newPaidTaskDraftId,savePaidTaskDraft} from "@/lib/tools/workspace/paid-task-draft";
 
 const LANGS=[
@@ -186,7 +186,8 @@ export default function VideoTranslateWorkbench(){
 
   {durationReady&&targets.length>0&&<div data-testid="video-translate-checkout"><PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/></div>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text={stage||"正在处理…"}/></p>}
-  <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音会根据真实音视频时长适配整轨语速，避免静默截断尾音；不宣称逐句或口型同步、原声克隆。" /></p>
+  <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。" /></p>
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">{voiceDurationInfo(uiLang)}</p>
   <p className="text-xs leading-5 text-[var(--lx-faint)]">{bilingualNote[uiLang]}</p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
   {videos.length>0&&<ResultPanel sourceSlug="video-translate" files={videos} messageZh="翻译视频已生成，可以保存。" messageEn="Translated videos are ready to save."/>}
