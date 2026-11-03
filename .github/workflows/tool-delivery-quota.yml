@@ -57,7 +57,7 @@ jobs:
       - name: File operations and simulated payment recovery
         run: >-
           pnpm exec playwright test -c playwright.final.config.ts
-          daily-export-quota-v92 file-delivery-v91 paid-local-output-v89
+          daily-export-quota-v92 file-delivery-v91 paid-local-output-v89 paid-return-v45 video-dubbing-input-validation-v152 video-translate-duration-guard-v153
           pdf-to-image-output-v90 pdf-redaction-output-v89 screenshot-redaction-v89
           qr-cron-output-v86 burn-reveal-recovery burn-encrypted-attachments-v141
           subtitle-translation-v95 tool-user-journeys-v1

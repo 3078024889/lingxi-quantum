@@ -101,8 +101,8 @@ export default function VideoTranslateWorkbench(){
  useEffect(()=>{setVideos([]);setSubs([]);setError("");},[files,source,targets,mode]);
  useEffect(()=>{if(!files.length){setDraftId("");return}if(!draftId)setDraftId(newPaidTaskDraftId())},[files.length,draftId]);
 
- function addTarget(v:Target){setTargets(cur=>cur.includes(v)?cur.filter(x=>x!==v):(cur.length>=3?cur:[...cur,v]))}
- async function addRemote(file:File){setDurations([]);setDurationStatus("loading");setFiles(cur=>[...cur,file].slice(0,20));setVideos([]);setSubs([]);setError("")}
+ function addTarget(v:Target){if(!targets.includes(v)&&targets.length>=3)return;setDraftId(newPaidTaskDraftId());setTargets(cur=>cur.includes(v)?cur.filter(x=>x!==v):[...cur,v])}
+ async function addRemote(file:File){setDurations([]);setDurationStatus("loading");setFiles(cur=>[...cur,file].slice(0,20));setDraftId(newPaidTaskDraftId());setVideos([]);setSubs([]);setError("")}
  async function saveDraft(){
   if(!draftId)return;
   await savePaidTaskDraft({id:draftId,toolId:"video-translate",files:persistFiles?files:undefined,state:{source,targets,mode,startedMinutes,fileNames:files.map(f=>f.name),largeBatch:!persistFiles}});
@@ -154,18 +154,18 @@ export default function VideoTranslateWorkbench(){
   finally{setBusy(false)}
  }
  return <div className="space-y-5">
-  <FileDropzone accept="video/*" multiple append maxFiles={20} maxSizeMB={500} files={files} onChange={f=>{setDurations([]);setDurationStatus("loading");setFiles(f);setVideos([]);setSubs([]);setError("")}} disabled={busy} kind="media"/>
+  <FileDropzone accept="video/*" multiple append maxFiles={20} maxSizeMB={500} files={files} onChange={f=>{setDurations([]);setDurationStatus("loading");setFiles(f);setDraftId(newPaidTaskDraftId());setVideos([]);setSubs([]);setError("")}} disabled={busy} kind="media"/>
   <RemoteMediaImporter acceptKind="video" onImported={addRemote} disabled={busy}/>
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="支持本地视频、直接公开 HTTPS 媒体地址，以及当前解析器支持的抖音、TikTok、小红书、快手公开分享链接。不会绕过登录、DRM、私有权限或平台访问控制。" /></p>
 
   <div className="grid gap-3 sm:grid-cols-2">
    <label className="text-sm"><ToolUiText text="原始语言" />
-    <select value={source} disabled={busy} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
+    <select value={source} disabled={busy} onChange={e=>{setSource(e.target.value);setDraftId(newPaidTaskDraftId())}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
      <option value="auto"><ToolUiText text="自动识别" /></option>{LANGS.map(([v,n])=><option key={v} value={v}><ToolUiText text={n}/></option>)}
     </select>
    </label>
    <label className="text-sm"><ToolUiText text="输出方式" />
-    <select value={mode} disabled={busy} onChange={e=>setMode(e.target.value as Mode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
+    <select value={mode} disabled={busy} onChange={e=>{setMode(e.target.value as Mode);setDraftId(newPaidTaskDraftId())}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">
      <option value="subtitle"><ToolUiText text="翻译字幕 + 原音高质量 MP4" /></option>
      <option value="dub"><ToolUiText text="翻译字幕 + AI 配音高质量 MP4" /></option>
     </select>
@@ -184,7 +184,7 @@ export default function VideoTranslateWorkbench(){
    {!persistFiles&&<p className="mt-2 text-xs text-[var(--lx-faint)]"><ToolUiText text="这批视频较大，为避免浏览器数据库保存超大文件，付款和处理期间请保持当前页面打开。" /></p>}
   </section>}
 
-  {durationReady&&targets.length>0&&<div data-testid="video-translate-checkout"><PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/></div>}
+  {durationReady&&targets.length>0&&<div data-testid="video-translate-checkout"><PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,source,targets,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/></div>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text={stage||"正在处理…"}/></p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。" /></p>
   <p className="text-xs leading-5 text-[var(--lx-faint)]">{voiceDurationInfo(uiLang)}</p>

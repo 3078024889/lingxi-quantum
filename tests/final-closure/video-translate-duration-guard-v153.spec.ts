@@ -19,9 +19,18 @@ test("paid video translation requires actual video duration and invalidates stal
  const checkout=page.getByTestId("video-translate-checkout");
  await expect(checkout).toBeVisible({timeout:30000});
  await expect(page.getByText(/1 × 1 = 1/)).toBeVisible();
+ // This multi-file tool intentionally APPENDS new uploads. Remove the previous
+ // input with the actual UI before testing a replacement, preventing stale
+ // files from being included in the new paid quote.
+ await page.locator("main").getByRole("button",{name:"Remove",exact:true}).first().click();
+ await expect(checkout).toHaveCount(0);
  await input.setInputFiles({name:"corrupt.mp4",mimeType:"video/mp4",buffer:Buffer.from("invalid-video-stream")});
  await expect(checkout).toHaveCount(0);
  await expect(page.getByRole("alert").filter({hasText:"Unable to read the video duration"}).first()).toBeVisible({timeout:15000});
+ await page.locator("main").getByRole("button",{name:"Remove",exact:true}).first().click();
+ await expect(page.getByText(/corrupt\.mp4/)).toHaveCount(0);
  await input.setInputFiles({name:"recovered.mp4",mimeType:"video/mp4",buffer:video});
  await expect(checkout).toBeVisible({timeout:30000});
+ await expect(page.getByText(/1 × 1 = 1/)).toBeVisible();
+ await expect(page.locator("main").getByRole("button",{name:"Remove",exact:true})).toHaveCount(1);
 });

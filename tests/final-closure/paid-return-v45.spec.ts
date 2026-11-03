@@ -138,7 +138,7 @@ for(const scenario of [
   const draftId=await createRecoverableDraft(page,5);
   await page.goto(`/tools/e-sign-pdf?resumeDraft=${encodeURIComponent(draftId)}&resumeQuote=${Q}`,{waitUntil:"domcontentloaded"});
   await expect.poll(()=>statusCalls,{timeout:15000}).toBeGreaterThan(0);
-  await expect(page.getByTestId("pdf-source-page-count")).toContainText(/\\b5\\b/);
+  await expect(page.getByTestId("pdf-source-page-count")).toContainText(/\b5\b/);
   await expect(page.getByRole("button",{name:/Resume paid task|继续已付款任务/})).toBeVisible();
   expect(downloads).toBe(0);
   expect(consumes).toBe(0);
