@@ -45,7 +45,7 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
  {mode==="page-numbers"&&<label className="block text-sm"><ToolUiText text="距页面底部 pt" /><EditableNumberInput type="number" min={8} max={200} value={margin} onChange={e=>setMargin(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
  {mode==="crop"&&<label className="block text-sm"><ToolUiText text="四边裁掉 pt" /><EditableNumberInput type="number" min={0} max={300} value={crop} onChange={e=>setCrop(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
  {mode==="flatten"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="将 PDF 表单字段写入页面内容，适合提交、归档或避免字段继续被修改；建议先保留原件。" /></p>}
- {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="逐页比较 PDF 文本层，优先列出金额、日期、条款差异并导出报告；扫描件应先 OCR。此工具不是视觉对比或法律意见。" /></p>}
+ {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="比较两份 PDF，快速查看金额、日期和条款差异，并下载对比报告。" /></p>}
  {(mode==="text"||mode==="markdown")&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="提取已有文本层；扫描 PDF 请先使用 PDF OCR 或 PDF 转 Word 的自动 OCR。" /></p>}
  <button data-testid={mode==="compare"?"pdf-compare-run":undefined} disabled={busy||files.length<(multi?2:1)} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":title} /></button>{results.length>0&&<ResultPanel files={results} messageZh={`${title}完成。`} messageEn="Done."/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error==="PDF_COMPARE_OCR_REQUIRED"?(COMPARE_NO_TEXT[lang]||COMPARE_NO_TEXT.en):<ToolUiText text={error==="CROP_MARGIN_EXCEEDS_PAGE"?"裁边距必须小于每页宽度和高度的一半。":error}/>}</p>}</div>
 }
