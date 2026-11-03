@@ -1,5 +1,7 @@
 "use client";
 import {BRAND_PUBLIC_COPY} from "@/lib/brand-public-copy";
+import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
+import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import {FOOTER_CATALOG} from "@/lib/footer-catalog-copy";
 
@@ -202,6 +204,7 @@ export default function HomeProblemHub(){
  const{lang}=useLingxiLang();const c=copy[lang]??copy.en;const market=SIAI_HOME_ENTRY[lang]??SIAI_HOME_ENTRY.en;
  const[q,setQ]=useState("");
  const intents=useMemo(()=>[
+  {words:["全球ai","全球si","全球siai","ai工具","siai","排行榜","行情平台","模型价格","工具排名","免费ai","ai工具哪个好","ai视频","ai绘画","ai编程","api价格","ai模型","国内能用ai","全球人工智能"],href:"/siai",label:market.title},
   {words:["pdf","合并","压缩","拆分","ocr","签名","盖章"],href:"/tools",label:"PDF"},
   {words:["图片","照片","jpg","png","webp","水印","放大"],href:"/tools",label:c.img},
   {words:["视频","字幕","音频","配音","转文字"],href:"/tools",label:c.video},
@@ -209,8 +212,8 @@ export default function HomeProblemHub(){
   {words:["学习","复习","知识"],href:"/sasi?mode=learning",label:c.learning},
   {words:["科研","研究","证据"],href:"/sasi?mode=research",label:c.research},
   {words:["短剧","剧本","广告","mv","cg","创作"],href:"/sasi",label:c.sasi},
- ],[c]);
- const hit=useMemo(()=>{const s=q.toLowerCase();return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
+ ],[c,market.title]);
+ const hit=useMemo(()=>{const s=q.toLowerCase().replace(/\s+/g,"");return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
   {href:"/siai",icon:"products" as LingxiIconName,title:market.title,desc:market.description},
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
@@ -227,7 +230,7 @@ export default function HomeProblemHub(){
      <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].headline}</strong></p>
      <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].freeTools}</strong></p>
      <Link href="/siai" data-testid="home-global-siai-entry" className="mt-4 flex w-full max-w-3xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-300 bg-blue-50 px-5 py-4 text-blue-950 shadow-sm transition-shadow hover:border-blue-500 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600">
-      <span className="min-w-0 flex-1"><strong className="block text-base font-bold">{market.title}</strong><small className="mt-1 block text-sm leading-6">{market.description}</small></span>
+      <span className="min-w-0 flex-1"><strong className="block text-base font-bold">{market.title}</strong><span className="mt-1 block text-xs leading-5">{SIAI_DISCOVERY[lang].hero}</span><small className="mt-1 block text-sm leading-6">{market.description}</small></span>
       <span className="shrink-0 rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white">{market.cta} →</span>
      </Link>
      <details className="mt-4 rounded-xl border border-[var(--lx-border)] p-3" data-home-tool-catalog>
@@ -246,6 +249,7 @@ export default function HomeProblemHub(){
   <section className="lx11-home-section"><div className="lx11-section-heading"><div><span>01</span><h2>{c.taskTitle}</h2></div><p>{c.taskLead}</p></div>
    <div className="lx11-home-grid lx-home-v143-grid">{cards.map((item,i)=><Link href={item.href} key={item.href} className={`lx11-home-card lx-v143-card tone-${(i%6)+1}`}><LingxiMiniIcon name={item.icon} size="card" className="lx-v143-icon"/><h3>{item.title}</h3><p>{item.desc}</p><b>{c.start} →</b></Link>)}</div>
   </section>
+  <SiaiSearchDiscovery variant="home"/>
   <section className="lx11-home-section lx-v143-about"><div className="lx11-section-heading"><div><span>02</span><h2>{c.why}</h2></div></div><div className="lx-v143-about-grid">
    <article><LingxiMiniIcon name="tools" size="card" className="lx-v143-icon"/><h3>{c.finishNow}</h3><p>{c.finishNowBody}</p></article>
    <article><LingxiMiniIcon name="sasi" size="card" className="lx-v143-icon"/><h3>{c.important}</h3><p>{c.importantBody}</p></article>

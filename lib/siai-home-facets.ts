@@ -13,7 +13,7 @@ export type MarketCriteria={
 };
 export type FacetRow={
  id:string;name:string;company:string;legal:string|null;kind:'company'|'open_source_project'|'software_library';
- listing:'listed_parent'|'unconfirmed'|'not_applicable';year:string|null;category:string;
+ listing:'listed_parent'|'listed_company'|'unconfirmed'|'not_applicable';year:string|null;category:string;
  about:string;strength:string;features:string[];searchTerms?:readonly string[];models:string;region:string;payment:string;
  paymentSource:string|null;verifiedPaymentRails?:readonly PaymentFacet[];free:string;freeSource:string|null;price:string;commercial:string;
  localizedSummary?:string;localizedCategory?:string;
@@ -58,7 +58,7 @@ function evidenceMatches(row:FacetRow,v:EvidenceFacet){
  switch(v){
  case 'all':return true;
  case 'verified_free':return hasSourcedFreeOffer(row);
- case 'listed_parent':return row.listing==='listed_parent';
+ case 'listed_parent':return row.listing==='listed_parent'||row.listing==='listed_company';
  case 'company':return row.kind==='company';
  case 'open_source':return row.kind==='open_source_project'||row.kind==='software_library';
  }

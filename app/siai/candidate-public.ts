@@ -4,6 +4,7 @@
  * Do not export these rows into checkout, sponsored ranking, standalone public APIs or SEO product pages.
  * Historical first-party observations are pinned to a dated immutable snapshot.
  */
+import {CANDIDATE_HISTORY} from "./candidate-company-evidence";
 import type {PaymentFacet} from "../../lib/siai-home-facets";
 import type {SiaiHomeRow} from "../../components/SiaiRankingHome";
 import {materializeCandidateCatalog} from "../../lingxifield-ai-market/lib/market-candidate-review-build.mjs";
@@ -61,11 +62,11 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
  };
  // A changed evidence ledger cannot silently turn provisional product rows into verified ranking facts.
  if(snapshot.candidateProducts!==30||snapshot.publisherGroups!==28||
-    snapshot.totals.observed!==204||snapshot.totals.missing!==6||snapshot.totals.conflict!==0){
+    snapshot.totals.observed!==205||snapshot.totals.missing!==5||snapshot.totals.conflict!==0){
   throw Error("SIAI_PREVIEW_SOURCE_SNAPSHOT_CHANGED");
  }
  return snapshot.products.map(p=>{
-  const f=p.facts,company=f.company,region=f.regions;
+  const f=p.facts,company=f.company,region=f.regions,history=CANDIDATE_HISTORY[p.id];
   const latest=Object.values(f).map(v=>v.checkedAt).filter((v):v is string=>Boolean(v)).sort().at(-1)||null;
   const officialEntry=ENTRY[p.id]||p.website;
   if(!trusted(officialEntry)||!trusted(p.website))throw Error("UNSAFE_SIAI_OFFICIAL_LINK:"+p.id);
@@ -74,9 +75,10 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
    name:p.id==="freepik-ai"?"Magnific（原 Freepik AI）":p.id==="canva-magic-studio"?"Canva AI（Magic Studio）":p.name,
    company:p.company,legal:p.legalEntity,
    brandSource:p.id==="freepik-ai"?"https://www.magnific.com/freepik":p.id==="canva-magic-studio"?"https://www.canva.com/canva-ai/":null,
-   legalScope:p.legalEntity?"service_operator":null,creator:null,kind:"company",
-   listing:"unconfirmed",ipoFiling:false,year:null,yearSource:null,
-   companySource:source(company),legalSource:p.legalEntitySource,listingSource:null,
+   legalScope:p.legalEntity?"service_operator":null,
+   creator:history?.creator?{...history.creator,role:"founder" as const}:null,kind:"company",
+   listing:history?.listing||"unconfirmed",ipoFiling:false,year:history?.year||null,yearSource:history?.yearSource||null,
+   companySource:source(company),legalSource:p.legalEntitySource,listingSource:history?.listingSource||null,
    checkedAt:latest,recordStatus:"source_preview" as const,
    verifiedPaymentRails:source(f.payment)?PAYMENT_RAILS[p.id]||[]:[],
    category:p.category,about:p.tasks.join("、"),strength:p.tasks.join(" · "),

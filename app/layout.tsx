@@ -30,7 +30,7 @@ export const metadata:Metadata={
  applicationName:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
  alternates:{canonical:SITE},
  keywords:[
-  "灵犀场","LINGXIFIELD","全球SIAI排行榜","全球AI工具排行榜","AI工具对比","AI模型价格","AI工具免费额度","SASI","免费在线工具",
+  "灵犀场","LINGXIFIELD","全球SIAI排行榜","全球AI行情平台","全球AI排行榜","全球SI排行榜","全球SI行情平台","全球SIAI行情平台","全球SIAI排行榜","全球AI工具排行榜","AI工具对比","AI模型价格","AI模型价格对比","AI工具免费额度","AI工具哪个好用","免费AI工具排行榜","AI公司排行榜","SASI","免费在线工具",
   "PDF压缩","PDF合并","PDF拆分","PDF编辑","电子签名",
   "图片压缩","图片格式转换","图片OCR","视频转文字","音频转文字","字幕翻译",
   "临时邮箱","阅后即焚","AI短剧生成","AI网站构建",

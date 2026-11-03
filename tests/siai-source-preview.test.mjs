@@ -31,12 +31,14 @@ test("30 unique staged IDs remain explicitly unapproved in source, no price/regi
   }
  }
  assert.equal(ids.size,30);assert.equal(groups.size,28);
- assert.deepEqual({observed,missing,conflict},{observed:204,missing:6,conflict:0});
+ assert.deepEqual({observed,missing,conflict},{observed:205,missing:5,conflict:0});
 });
 test("preview is joined to main SIAI UI, never published as a verified SEO product page",()=>{
  assert.match(page,/getSiaiSourcePreviewRows/);
  assert.match(src,/recordStatus:"source_preview"/);
- assert.match(src,/year:null,yearSource:null/);
+ assert(src.includes("year:history?.year||null"));
+ assert(src.includes("yearSource:history?.yearSource||null"));
+ assert.match(readFileSync(new URL("app/siai/candidate-company-evidence.ts",root),"utf8"),/"figma-make"/);
  assert.match(src,/并非逐国注册或支付验证/);
  assert.match(src,/materializeCandidateCatalog/);
  assert.match(src,/verifiedPaymentRails/);

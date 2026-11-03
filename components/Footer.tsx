@@ -3,6 +3,7 @@ import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import Image from"next/image";
 import Link from"next/link";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
+import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
 
@@ -32,23 +33,37 @@ const FOOTER_LINKS:Record<LingxiLang,LinkLabels>={
  ar:{rankings:"اكتشف أدوات الذكاء",rankSub:"تصنيف أدوات الذكاء",sasi:"إبداع SASI",tools:"أدوات مجانية",account:"عن الموقع والحساب",terms:"الشروط",privacy:"الخصوصية",about:"من نحن",free:"تجربة مجانية يومية",contacts:"تواصل معنا",drama:"دراما قصيرة",website:"إنشاء المواقع",books:"أسئلة الكتب",learning:"SASI للتعلّم",research:"SASI للبحث",pdf:"PDF والتوقيع",ocr:"الصور وOCR",video:"الفيديو والصوت",temp:"بريد مؤقت",all:"كل الأدوات",brandLead:"مقارنة أدوات الذكاء · إبداع SASI · أدوات مجانية"}
 };
 
+const FOOTER_MARKET_DETAIL:Record<LingxiLang,[string,string,string]>={
+ zh:["功能与模型对比","免费额度与价格","地区、付款与商用条件"],
+ en:["Features and models","Free tiers and prices","Regions, payment and licenses"],
+ ja:["機能とモデル比較","無料枠と料金","地域・決済・商用条件"],
+ ko:["기능·모델 비교","무료 한도·가격","지역·결제·상업적 이용"],
+ fr:["Fonctions et modèles","Offres gratuites et tarifs","Régions, paiement et licence"],
+ de:["Funktionen und Modelle","Gratis-Tarife und Preise","Regionen, Zahlungen und Lizenzen"],
+ es:["Funciones y modelos","Planes gratis y precios","Regiones, pagos y licencias"],
+ pt:["Recursos e modelos","Planos grátis e preços","Regiões, pagamentos e licenças"],
+ ar:["الوظائف والنماذج","الخطط المجانية والأسعار","المناطق والدفع والتراخيص"]
+};
+
 export default function Footer(){
  const{t,lang}=useLingxiLang();
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
+ const discovery=SIAI_DISCOVERY[lang];
+ const [modelLink,freeLink,regionLink]=FOOTER_MARKET_DETAIL[lang];
  return <footer className="lx11-footer lx-branded-footer" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
-    <p>{PUBLIC_FEATURE_COPY[lang].description}</p>
-    <div className="lx-footer-trio"><span>SIAI Rankings</span><span>SASI Creation</span><span>100+ Online Tools</span></div>
+    <p className="text-sm leading-6">{PUBLIC_FEATURE_COPY[lang].description}</p>
+    <div className="lx-footer-trio">{discovery.trio.map(item=><span key={item}>{item}</span>)}</div>
     <p><a href="https://lingxifield.com" rel="noopener noreferrer">lingxifield.com</a> · <span>lingxifield.cn</span></p>
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
     <Link href="/siai">{c.rankSub}</Link>
-    <Link href="/siai">{lang==="zh"?"功能与模型对比":c.rankSub}</Link>
-    <Link href="/siai">{lang==="zh"?"免费额度与价格":c.free}</Link>
-    <Link href="/siai">{lang==="zh"?"地区、付款与商用条件":c.rankings}</Link>
+    <Link href="/siai">{modelLink}</Link>
+    <Link href="/siai">{freeLink}</Link>
+    <Link href="/siai">{regionLink}</Link>
     <Link href={"/siai/claim?lang="+lang}>{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</Link>
    </nav>
    <nav aria-label={c.sasi}>
@@ -69,9 +84,16 @@ export default function Footer(){
     <Link href="/terms">{c.terms}</Link><Link href="/privacy">{c.privacy}</Link><Link href="/release">{copy[lang].release}</Link>
    </nav>
   </div>
+  <nav className="mx-auto mb-5 max-w-7xl rounded-xl border border-[var(--lx-line)] px-5 py-4" aria-label={discovery.footerTitle}>
+   <h2 className="mb-2 font-semibold">{discovery.footerTitle}</h2>
+   <p lang={lang==="zh"?"zh-CN":lang} className="mb-2 text-sm leading-7">{lang==="zh"?"灵犀场 LINGXIFIELD 汇集全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台和全球SIAI排行榜。比较全球SI/AI公司、模型、工具的功能、免费额度、官方价格、地区可用、支付方式与商用条件；未核实的资料会明确标注。":PUBLIC_FEATURE_COPY[lang].description}</p>
+   {lang!=="en"&&<p lang="en" className="mb-3 text-sm leading-7 text-[var(--lx-muted)]">LINGXIFIELD is a global AI market information and SIAI rankings directory. Compare AI and SI tools, model capabilities, published prices, free tiers, regional access, payments and commercial terms using links to publisher sources.</p>}
+   <p className="mb-3 text-xs text-[var(--lx-muted)]">{discovery.footerNote}</p>
+   <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">{discovery.topics.map(v=>v.q).map((label,i)=><Link key={label} href={"/#siai-search-home-"+i} className="underline underline-offset-4">{label}</Link>)}{discovery.extras.map(label=><Link key={label} href="/siai" className="underline underline-offset-4">{label}</Link>)}</div>
+  </nav>
   <div className="lx-footer-social-strip">
    <div><b>{c.contacts}</b><div className="lx11-footer-social">
-     {channels.map(([label,href])=>href.startsWith("#")?<a key={label} href={href}>{label}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{label} ↗</a>)}
+     {channels.map(([label,href])=>{const localized=label==="微信服务号"&&lang!=="zh"?"WeChat":label;return href.startsWith("#")?<a key={label} href={href}>{localized}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{localized} ↗</a>})}
     <a href="mailto:business@lingxifield.com">business@lingxifield.com</a>
    </div></div>
    <div className="lx-footer-qr-row">
