@@ -19,10 +19,13 @@ assert(chunks.every(x=>x.length<=3500));
 for(const invalid of ["", " ", "x".repeat(250001)])assert.throws(()=>split(invalid),/TTS_TEXT_INVALID/);
 let calls=[];
 const response=(value,status=200,kind="application/json")=>({
- ok:status>=200&&status<300,status,headers:{get:()=>kind},
- json:async()=>value,text:async()=>JSON.stringify(value),arrayBuffer:async()=>Buffer.from("ID3"+("x".repeat(512)))
+ ok:status>=200&&status<300,status,headers:{get:(name)=>name==="content-type"?kind:null},
+ json:async()=>value,text:async()=>JSON.stringify(value),arrayBuffer:async()=>Buffer.from("ID3"+("x".repeat(512))),
+ body:null
 });
 const provider=expose("lib/tools/media/provider.ts",{
+ AbortSignal:{timeout:(ms)=>{assert.equal(ms,48000);return {timeout:ms};}},TextDecoder,Uint8Array,
+
  fetch:async(url,options)=>{
   calls.push({url,options});
   if(url.endsWith("/chat/completions"))return response({choices:[{message:{content:"Bonjour"}}]});
@@ -36,6 +39,16 @@ const provider=expose("lib/tools/media/provider.ts",{
  assert(!("temperature" in request),"unsupported temperature leaked into legacy GPT5 Mini");
  assert.equal(request.model,"gpt-5-mini");
  assert.equal(await provider.synthesizeRemote("Hello world","en").then(x=>x.length),515);
+ // Reject application/json with HTTP 200, a common compatible-provider error.
+ const good=Uint8Array.from(Buffer.from("ID3"+("x".repeat(512))));
+ assert.equal(provider.checkedMp3Response(good,"audio/mpeg").byteLength,515);
+ assert.throws(()=>provider.checkedMp3Response(good,"application/json"),/MEDIA_TTS_UNEXPECTED_CONTENT_TYPE/);
+ assert.throws(()=>provider.checkedMp3Response(Uint8Array.from(Buffer.alloc(512,0)),"audio/mpeg"),/MEDIA_TTS_NOT_MP3/);
+ assert.throws(()=>provider.checkedMp3Response(Uint8Array.from(Buffer.from("ID3")),"audio/mpeg"),/MEDIA_TTS_INVALID_AUDIO_SIZE/);
+ assert.throws(()=>provider.checkedMp3Response(Uint8Array.from(Buffer.alloc(33*1024*1024,0)),"audio/mpeg"),/MEDIA_TTS_INVALID_AUDIO_SIZE/);
+ const frame=Uint8Array.from(Buffer.concat([Buffer.from([0xff,0xfb]),Buffer.alloc(400,0)]));
+ assert.equal(provider.checkedMp3Response(frame,"application/octet-stream").length,402);
+ assert(calls.every(c=>c.options.signal&&c.options.signal.timeout===48000),"all provider calls need timeouts");
  const n=calls.length;
  await assert.rejects(()=>provider.synthesizeRemote("x".repeat(4001),"en"),/TTS_TEXT_EXCEEDS_PROVIDER_LIMIT/);
  assert.equal(calls.length,n,"oversized payload must fail before spending vendor credit");
