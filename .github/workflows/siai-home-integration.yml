@@ -11,6 +11,8 @@ on:
       - 'components/Nav.tsx'
       - 'lingxifield-ai-market/**'
       - 'tsconfig.json'
+      - 'tests/siai-local/**'
+      - 'playwright.siai-local.config.ts'
       - '.github/workflows/siai-home-integration.yml'
   push:
     branches: [feat/lingxifield-siai-home-sidebar-20261102, main]
@@ -31,7 +33,7 @@ concurrency:
 jobs:
   native-home:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Checkout source
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -53,3 +55,9 @@ jobs:
         run: node --experimental-strip-types --test scripts/tests/siai-home-*.test.mjs
       - name: Compile actual LINGXIFIELD production home
         run: pnpm build
+      - name: Install local Chromium (no preview deployment)
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Test real SIAI desktop, mobile, search, comparison, details and 9 languages locally
+        run: pnpm exec playwright test -c playwright.siai-local.config.ts --workers=1
+        env:
+          LINGXIFIELD_E2E_BASE_URL: http://127.0.0.1:3000
