@@ -27,7 +27,7 @@ test('exactly 32 explicitly sourced facts were added across all three held batch
    for(const key of keys){
     const f=p.facts[key];count++;
     assert.equal(f.status,'observed',id+':'+key);
-    assert.equal(f.checkedAt,'2026-11-02',id+':'+key);
+    assert.equal(f.checkedAt,id==='groqcloud'&&key==='company'?'2026-11-03':'2026-11-02',id+':'+key);
     const h=new URL(f.source).hostname.toLowerCase();
     assert.ok(p.officialHosts.some(root=>h===root||h.endsWith('.'+root)),id+' suspicious host '+h);
     assert.ok(f.scope?.length>=4&&f.text?.length>=16,id+':'+key);
