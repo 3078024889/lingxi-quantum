@@ -7,6 +7,15 @@ Locales: 9
 This machine-readable index maps public tool pages to languages, processing modes and common task-intent questions.
 It does not claim access to private Google/Bing/Search Console query-volume data.
 
+## Global AI / SI / SIAI rankings
+
+- Global SIAI Tool Directory: https://lingxifield.com/siai
+- 中文搜索：全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台、全球SIAI排行榜
+- Compare product functions, free allowances, official pricing, commercial-use terms, country restrictions and payment evidence by source.
+- Publication is a sourced directory, not a verified performance leaderboard or live stock/crypto quote. Candidate rows labeled as research previews have not passed real-use tests.
+- Site index: https://lingxifield.com/sitemap.xml
+- Search phrase groups are aliases of the same canonical SIAI page, not six duplicate content pages.
+
 ## Primary pages
 - https://lingxifield.com/tools
 - https://lingxifield.com/sasi

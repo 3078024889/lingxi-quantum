@@ -56,6 +56,8 @@ export default function Home(){
  const curated=getCuratedRows();
  const rows=[...curated,...getSiaiSourcePreviewRows()];
  if(rows.length!==62||new Set(rows.map(r=>r.id)).size!==62)throw Error("SIAI_DIRECTORY_62_UNIQUE_ROWS_REQUIRED");
+ const faqld={"@context":"https://schema.org","@type":"FAQPage","@id":PRIMARY_SITE+"/siai#faq",
+  mainEntity:SIAI_DISCOVERY.zh.topics.map(t=>({"@type":"Question",name:t.q,acceptedAnswer:{"@type":"Answer",text:t.rank}}))};
  const jsonld={"@context":"https://schema.org","@type":"CollectionPage",name:"全球 SIAI 排行榜",
   alternateName:SIAI_DISCOVERY.zh.topics.map(t=>t.q),keywords:[...SIAI_DISCOVERY.zh.topics.map(t=>t.q),...SIAI_DISCOVERY.zh.extras].join(", "),
   about:[{"@type":"Thing",name:"AI / SI tools"},{"@type":"Thing",name:"AI software pricing and free tiers"}],

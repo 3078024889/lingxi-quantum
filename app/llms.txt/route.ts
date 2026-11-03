@@ -1,3 +1,4 @@
+import {SIAI_DISCOVERY} from '@/lib/siai-search-discovery';
 import {GLOBAL_TOOL_CATALOG,SEO_LOCALES,SEO_TOPICS,SITE,localePath,type SeoLocale,type SeoTopic} from '@/lib/seo/global-seo';
 import {SERVICE_FACTS} from '@/lib/seo/service-facts';
 import {GEO_PAGE_IDS,GEO_TOOL_SLUGS,pageGeoFact,toolGeoFact} from '@/lib/seo/site-facts';
@@ -25,6 +26,11 @@ export function GET(){
   '',
   '## Public pages',
   ...pages,
+  '',
+  '## Global SIAI rankings and AI / SI market directory',
+  '- [全球 SIAI 排行榜 / Global AI Tool Rankings]('+SITE+'/siai): Global AI, SI and SIAI product directory, official-source pricing, free tiers, regional/payment evidence and commercial-use terms. Directory display order is not a performance or popularity ranking.',
+  ...SIAI_DISCOVERY.zh.topics.map(x=>'- '+x.q+': '+x.rank+' '+SITE+'/siai'),
+  '- Verified use: the candidate research previews are not full hands-on tests. A vendor's export restriction is not proof of country-wide support; current pricing and availability need the official vendor's checkout.',
   '',
   '## Tools',
   ...tools,
