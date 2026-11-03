@@ -1,0 +1,58 @@
+[
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "platformIds": [
+      "chatgpt"
+    ],
+    "founded": "2015",
+    "location": "United States",
+    "officialUrl": "https://openai.com",
+    "funding": null,
+    "ipo": null,
+    "ticker": null,
+    "status": "needs_verification"
+  },
+  {
+    "id": "google",
+    "name": "Google",
+    "platformIds": [
+      "gemini"
+    ],
+    "founded": "1998",
+    "location": "United States",
+    "officialUrl": "https://about.google",
+    "funding": null,
+    "ipo": null,
+    "ticker": null,
+    "status": "needs_verification"
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "platformIds": [
+      "claude"
+    ],
+    "founded": "2021",
+    "location": "United States",
+    "officialUrl": "https://www.anthropic.com",
+    "funding": null,
+    "ipo": null,
+    "ticker": null,
+    "status": "needs_verification"
+  },
+  {
+    "id": "alibaba",
+    "name": "Alibaba",
+    "platformIds": [
+      "qwen"
+    ],
+    "founded": "1999",
+    "location": "China",
+    "officialUrl": "https://www.alibabagroup.com",
+    "funding": null,
+    "ipo": null,
+    "ticker": null,
+    "status": "needs_verification"
+  }
+]

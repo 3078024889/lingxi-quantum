@@ -1,0 +1,65 @@
+name: AI Market standalone release gate
+
+on:
+  pull_request:
+    paths:
+      - "lingxifield-ai-market/**"
+      - ".github/workflows/ai-market-standalone-gate.yml"
+  push:
+    branches: [main]
+    paths:
+      - "lingxifield-ai-market/**"
+      - ".github/workflows/ai-market-standalone-gate.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ai-market-gate-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Set up Node.js
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+          cache: npm
+          cache-dependency-path: lingxifield-ai-market/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run data, contract, type and production build gates
+        run: npm run gate
+      - name: Validate 32 evidence acceptance and next-batch hold
+        run: node scripts/validate-32-launch.mjs
+      - name: Generate auditable 32+30 official evidence review report
+        run: node scripts/report-evidence-readiness.mjs --json=../siai-evidence-reports/evidence-readiness.json --markdown=../siai-evidence-reports/evidence-readiness.md
+      - name: Generate remaining official-only research queue (read-only)
+        run: node scripts/report-official-gap-queue.mjs --json=../siai-evidence-reports/gap-queue.json --markdown=../siai-evidence-reports/gap-queue.md
+      - name: Build full 30-product candidate review UI and normalized catalog
+        run: node scripts/build-candidate-review.mjs --html=../siai-evidence-reports/candidate-30-review.html --json=../siai-evidence-reports/candidate-30-catalog.json
+      - name: Stage bounded first-party source snapshot plan (offline; no unauthorized web requests)
+        run: node scripts/snapshot-official-facts.mjs --max=10 --out=../siai-evidence-reports/official-snapshot-plan.json
+      - name: Upload non-public editorial audit (no production data mutation)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: siai-evidence-review-${{ github.run_number }}
+          path: siai-evidence-reports/*
+          retention-days: 30
+          if-no-files-found: error
+      - name: Smoke 9 languages x 32 actual product detail SSR routes (not login/user tasks)
+        run: node scripts/smoke-curated-local.mjs
+        timeout-minutes: 9
+      - name: Probe 32 public publisher entry URLs (nonblocking, no accounts)
+        run: node scripts/probe-official-use.mjs --live
+        timeout-minutes: 3
+        continue-on-error: true

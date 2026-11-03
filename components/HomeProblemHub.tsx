@@ -174,8 +174,20 @@ const copy:Record<LingxiLang,Copy>={
  }
 };
 
+const SIAI_HOME_ENTRY:Record<LingxiLang,{title:string;description:string;cta:string}>={
+ zh:{title:"全球 SIAI 排行榜",description:"32 个精选 AI 工具 · 创始人、功能、免费额度、价格和地区一眼看清",cta:"查看 32 个 AI 平台"},
+ en:{title:"Global SIAI Rankings",description:"Compare 32 selected AI tools by founders, capabilities, free plans, prices and regions",cta:"Explore 32 AI tools"},
+ ja:{title:"世界の SIAI ランキング",description:"選定した32のAIツールを創業者・機能・無料枠・価格・地域で比較",cta:"32のAIツールを見る"},
+ ko:{title:"글로벌 SIAI 순위",description:"선정된 32개 AI 도구의 창업자, 기능, 무료 한도, 요금, 지역을 비교하세요",cta:"32개 AI 도구 보기"},
+ fr:{title:"Classement mondial SIAI",description:"Comparez 32 outils IA : fondateurs, fonctions, offres gratuites, tarifs et régions",cta:"Comparer 32 outils IA"},
+ de:{title:"Globales SIAI-Ranking",description:"32 ausgewählte KI-Tools nach Gründern, Funktionen, Gratisangeboten, Preisen und Regionen",cta:"32 KI-Tools vergleichen"},
+ es:{title:"Ranking mundial SIAI",description:"Compara 32 herramientas IA: fundadores, funciones, cuotas gratis, precios y países",cta:"Explorar 32 herramientas IA"},
+ pt:{title:"Ranking global SIAI",description:"Compare 32 ferramentas IA: fundadores, recursos, opções grátis, preços e regiões",cta:"Explorar 32 ferramentas IA"},
+ ar:{title:"تصنيف SIAI العالمي",description:"قارن 32 أداة ذكاء اصطناعي حسب المؤسسين والوظائف والاستخدام المجاني والأسعار والمناطق",cta:"استعرض 32 أداة"},
+};
+
 export default function HomeProblemHub(){
- const{lang}=useLingxiLang();const c=copy[lang]??copy.en;
+ const{lang}=useLingxiLang();const c=copy[lang]??copy.en;const market=SIAI_HOME_ENTRY[lang]??SIAI_HOME_ENTRY.en;
  const[q,setQ]=useState("");
  const intents=useMemo(()=>[
   {words:["pdf","合并","压缩","拆分","ocr","签名","盖章"],href:"/tools",label:"PDF"},
@@ -188,6 +200,7 @@ export default function HomeProblemHub(){
  ],[c]);
  const hit=useMemo(()=>{const s=q.toLowerCase();return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
+  {href:"/siai",icon:"products" as LingxiIconName,title:market.title,desc:market.description},
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
   {href:"/sasi?mode=book",icon:"book" as LingxiIconName,title:c.book,desc:c.bookDesc},
@@ -204,6 +217,10 @@ export default function HomeProblemHub(){
      <h1>{c.hero}</h1>
      <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].headline}</strong></p>
      <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].freeTools}</strong></p>
+     <Link href="/siai" data-testid="home-global-siai-entry" className="mt-4 flex w-full max-w-3xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-300 bg-blue-50 px-5 py-4 text-blue-950 shadow-sm transition-shadow hover:border-blue-500 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600">
+      <span className="min-w-0 flex-1"><strong className="block text-base font-bold">{market.title}</strong><small className="mt-1 block text-sm leading-6">{market.description}</small></span>
+      <span className="shrink-0 rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white">{market.cta} →</span>
+     </Link>
      <div className="mt-3 grid gap-1 text-sm leading-6 text-[var(--lx-muted)]" data-home-tool-catalog>
       {FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong className="text-[var(--lx-ink)]">{category.title}：</strong>{category.body}</p>)}
      </div>

@@ -1,0 +1,45 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
+const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const src=p=>fs.readFileSync(path.join(ROOT,p),'utf8');
+test('32 source-backed products are audited for six actual buyer answers',()=>{
+ const report=JSON.parse(execFileSync(process.execPath,['scripts/audit-user-answer-coverage.mjs'],{cwd:ROOT,encoding:'utf8'}));
+ assert.equal(report.totalProducts,32);
+ assert.equal(report.fieldsPerProduct,6);
+ assert.ok(report.verifiedAnswerCells>145,'most answers need real citations');
+ assert.equal(report.coverageByField.free.answered,32);
+ assert.equal(report.coverageByField.price.answered,32);
+ assert.equal(report.coverageByField.models.answered,32);
+ assert.equal(report.coverageByField.region.answered,32);
+ assert.equal(report.rule.includes('not a substitute'),true);
+ assert.equal(report.reviewOnly,true);assert.equal(report.published,false);
+ assert.ok(Array.isArray(report.placeholdersInSource));
+});
+test('all 9 product detail pages display 6 direct answer fields and cited official sources',()=>{
+ const component=src('app/market-verified-answers.tsx');
+ const home=src('app/market-workbench.tsx');
+ for(const locale of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.ok(component.includes(locale+':{heading:'),locale);
+ for(const key of ['free','price','models','payments','countries','commercial'])assert.ok(component.includes("key:'"+key+"'"));
+ assert.ok(component.includes('paymentFactsFor(platform.id'));
+ assert.ok(component.includes('MARKET_RESEARCH_CHECKED_AT'));
+ assert.ok(component.includes('row.source&&'));
+ assert.ok(home.includes('<MarketVerifiedAnswers platform={target} language={language}/>'));
+ assert.ok(!component.includes('dangerouslySetInnerHTML'));
+});
+test('three merchant channels are shown only with verified server readiness and no fake success path',()=>{
+ const readiness=src('lib/market-billing-readiness.mjs');
+ const providers=src('app/api/v1/billing/providers/route.ts');
+ const checkout=src('app/api/v1/billing/checkout/route.ts');
+ const ui=src('app/market-vendor-payment-channels.tsx');
+ const home=src('app/market-workbench.tsx');
+ for(const code of ['alipay','wechat','paypal'])assert.ok(readiness.includes("'"+code+"'"));
+ assert.ok(providers.includes('paymentDeploymentReadiness()'));
+ assert.ok(providers.includes('merchantAcceptanceEnabled'));
+ assert.ok(checkout.includes('MARKET_CHECKOUT_NOT_LIVE'));
+ assert.ok(checkout.includes('status:503'));
+ assert.ok(ui.includes('/api/v1/billing/providers'));
+ assert.ok(ui.includes('3 个产品'));
+ assert.ok(home.includes('<MarketVendorPaymentChannels language={language} currency={currency}/>'));
+ assert.ok(!ui.includes('setPaid('));
+});
