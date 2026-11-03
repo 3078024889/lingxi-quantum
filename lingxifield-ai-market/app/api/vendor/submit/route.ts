@@ -1,11 +1,10 @@
 import {NextResponse} from 'next/server';
 import {validateVendorSubmission} from '../../../../lib/vendor-submission.mjs';
+import {isVendorSameOrigin} from '../../../../lib/vendor-same-origin.mjs';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store'};
 export async function POST(request:Request){
- const origin=request.headers.get('origin');
- const here=new URL(request.url);
- if(!origin||origin!==here.origin)return NextResponse.json({error:'INVALID_ORIGIN'},{status:403,headers});
+ if(!isVendorSameOrigin(request))return NextResponse.json({error:'INVALID_ORIGIN'},{status:403,headers});
  const length=Number(request.headers.get('content-length')||0);
  if(length>6500)return NextResponse.json({error:'REQUEST_TOO_LARGE'},{status:413,headers});
  let raw:string;try{raw=await request.text();}catch{return NextResponse.json({error:'INVALID_BODY'},{status:400,headers});}
