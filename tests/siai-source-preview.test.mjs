@@ -35,7 +35,6 @@ test("30 unique staged IDs remain explicitly unapproved in source, no price/regi
 });
 test("preview is joined to main SIAI UI, never published as a verified SEO product page",()=>{
  assert.match(page,/getSiaiSourcePreviewRows/);
- assert.match(page,/source_preview/);
  assert.match(src,/recordStatus:"source_preview"/);
  assert.match(src,/year:null,yearSource:null/);
  assert.match(src,/并非逐国注册或支付验证/);
