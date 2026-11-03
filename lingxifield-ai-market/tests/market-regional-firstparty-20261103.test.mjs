@@ -54,7 +54,7 @@ test('Figma AI referral 25 eligible countries relate to a campaign only; Figma M
 test('candidate source material cannot automatically publish the 4 extra records',()=>{
  const data=materializeCandidateCatalog(cohorts,obs);
  assert.equal(data.products.length,30);
- assert.deepEqual(data.totals,{observed:194,missing:16,conflict:0});
+ assert.deepEqual(data.totals,{observed:202,missing:8,conflict:0});
  for(const id of ['cursor','canva-magic-studio','ideogram','figma-make']){
   const p=data.products.find(p=>p.id===id);
   assert.equal(p.visibleToPublic,false);
