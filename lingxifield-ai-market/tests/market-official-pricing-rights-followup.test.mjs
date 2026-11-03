@@ -64,11 +64,11 @@ test('three held batches remain safe and full 7-field observation counts reconci
  const end=f.indexOf('};\nexport const MARKET_RESEARCH_CHECKED_AT',start)+1;
  const facts=JSON.parse(f.slice(start,end));
  const r=buildEvidenceReadiness({curatedIds:ids,curatedFacts:facts,cohorts:[b1,b2,b3],observations:[o1,o2,o3],asOf:'2026-11-02'});
- assert.deepEqual([r.candidateIntake.observed,r.candidateIntake.missing,r.candidateIntake.conflict],[192,18,0]);
+ assert.deepEqual([r.candidateIntake.observed,r.candidateIntake.missing,r.candidateIntake.conflict],[194,16,0]);
  assert.equal(r.candidateIntake.products,30);
  assert.deepEqual(r.candidateIntake.regionalEvidence,{
-  missing:17,broad_market_statement:1,provider_specific_restrictions:2,
-  restrictions_only:8,other_observation_not_country_proof:2
+  missing:15,broad_market_statement:1,provider_specific_restrictions:3,
+  restrictions_only:9,other_observation_not_country_proof:2
  });
  assert.equal(r.candidateIntake.publishReady,0);
  assert.equal(r.safety.structurallyValid,true,JSON.stringify(r.safety.structuralIssues));
