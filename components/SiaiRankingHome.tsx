@@ -22,7 +22,7 @@ export type SiaiHomeRow={
  ipoFiling:boolean;year:string|null;companySource:string|null;legalSource:string|null;listingSource:string|null;yearSource:string|null;
  category:string;about:string;strength:string;features:string[];searchTerms:string[];free:string;freeSource:string|null;
  price:string;priceSource:string|null;region:string;regionSource:string|null;payment:string;paymentSource:string|null;
- models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;checkedAt:string|null;recordStatus?:"source_preview";
+ models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;checkedAt:string|null;recordStatus?:"source_preview";verifiedPaymentRails?:readonly PaymentFacet[];
 };
 
 const labels:Record<LingxiLang,{title:string,subtitle:string,search:string,all:string,tool:string,company:string,legal:string,parent:string,listed:string,founded:string,founder:string,projectCreator:string,leadAuthor:string,
@@ -50,6 +50,17 @@ const RANKING_NEW_UI:Record<LingxiLang,Record<string,string>>={
  pt:{"厂商认领":"Reivindicar produto","找到":"Resultados:","项":"","厂商认领 · 提交 SI/AI 平台":"Reivindicar ou enviar plataforma SI/IA","视频／短剧和 API 费用计算器（点击展开）":"Custos de vídeo, curta e API","横向查看全部栏目":"Rolar para ver todas as colunas","顶部横向滚动条":"Rolagem horizontal superior"},
  ar:{"厂商认领":"المطالبة بهذا المنتج","找到":"النتائج:","项":"","厂商认领 · 提交 SI/AI 平台":"المطالبة بمنصة SI/AI أو تقديمها","视频／短剧和 API 费用计算器（点击展开）":"حاسبة تكلفة الفيديو و API","横向查看全部栏目":"مرر أفقياً لعرض جميع الأعمدة","顶部横向滚动条":"شريط التمرير العلوي"},
 };
+const CANDIDATE_CATEGORIES:Record<LingxiLang,Record<string,string>>={
+ zh:{"编程":"编程","设计":"设计","演示":"演示文稿","视频":"视频","图片":"图片","文档":"文档","视频剪辑":"视频剪辑","综合助手":"综合助手","聚合模型":"聚合模型","图片视频":"图片与视频","图片设计":"图片设计","多模态创作":"多模态创作","AI视频":"SI/AI 视频","学术研究":"学术研究","模型API":"模型 API"},
+ en:{"编程":"Coding","设计":"Design","演示":"Presentations","视频":"Video","图片":"Images","文档":"Documents","视频剪辑":"Video editing","综合助手":"General assistant","聚合模型":"Model aggregator","图片视频":"Images & video","图片设计":"Image design","多模态创作":"Multimodal creation","AI视频":"SI/AI video","学术研究":"Academic research","模型API":"Model APIs"},
+ ja:{"编程":"プログラミング","设计":"デザイン","演示":"プレゼン","视频":"動画","图片":"画像","文档":"文書","视频剪辑":"動画編集","综合助手":"総合アシスタント","聚合模型":"モデル統合","图片视频":"画像と動画","图片设计":"画像デザイン","多模态创作":"マルチモーダル制作","AI视频":"SI/AI動画","学术研究":"学術研究","模型API":"モデルAPI"},
+ ko:{"编程":"코딩","设计":"디자인","演示":"프레젠테이션","视频":"동영상","图片":"이미지","文档":"문서","视频剪辑":"동영상 편집","综合助手":"범용 어시스턴트","聚合模型":"모델 통합","图片视频":"이미지·동영상","图片设计":"이미지 디자인","多模态创作":"멀티모달 제작","AI视频":"SI/AI 동영상","学术研究":"학술 연구","模型API":"모델 API"},
+ fr:{"编程":"Programmation","设计":"Design","演示":"Présentations","视频":"Vidéo","图片":"Images","文档":"Documents","视频剪辑":"Montage vidéo","综合助手":"Assistant général","聚合模型":"Agrégateur de modèles","图片视频":"Images et vidéo","图片设计":"Design d’images","多模态创作":"Création multimodale","AI视频":"Vidéo SI/AI","学术研究":"Recherche académique","模型API":"API de modèles"},
+ de:{"编程":"Programmierung","设计":"Design","演示":"Präsentationen","视频":"Video","图片":"Bilder","文档":"Dokumente","视频剪辑":"Videobearbeitung","综合助手":"Allgemeiner Assistent","聚合模型":"Modell-Aggregator","图片视频":"Bilder und Video","图片设计":"Bildgestaltung","多模态创作":"Multimodale Erstellung","AI视频":"SI/AI-Video","学术研究":"Wissenschaftliche Forschung","模型API":"Modell-APIs"},
+ es:{"编程":"Programación","设计":"Diseño","演示":"Presentaciones","视频":"Vídeo","图片":"Imágenes","文档":"Documentos","视频剪辑":"Edición de vídeo","综合助手":"Asistente general","聚合模型":"Agregador de modelos","图片视频":"Imagen y vídeo","图片设计":"Diseño de imágenes","多模态创作":"Creación multimodal","AI视频":"Vídeo SI/AI","学术研究":"Investigación académica","模型API":"API de modelos"},
+ pt:{"编程":"Programação","设计":"Design","演示":"Apresentações","视频":"Vídeo","图片":"Imagens","文档":"Documentos","视频剪辑":"Edição de vídeo","综合助手":"Assistente geral","聚合模型":"Agregador de modelos","图片视频":"Imagens e vídeo","图片设计":"Design de imagens","多模态创作":"Criação multimodal","AI视频":"Vídeo SI/AI","学术研究":"Pesquisa acadêmica","模型API":"APIs de modelos"},
+ ar:{"编程":"البرمجة","设计":"التصميم","演示":"العروض التقديمية","视频":"الفيديو","图片":"الصور","文档":"المستندات","视频剪辑":"تحرير الفيديو","综合助手":"مساعد عام","聚合模型":"مجمع نماذج","图片视频":"الصور والفيديو","图片设计":"تصميم الصور","多模态创作":"إنشاء متعدد الوسائط","AI视频":"فيديو SI/AI","学术研究":"بحث أكاديمي","模型API":"واجهات النماذج"}
+};
 const PREVIEW_COPY:Record<LingxiLang,string>={zh:"新增资料预览 · 尚未完成实际使用测试",en:"New research preview · real use untested",ja:"新規資料プレビュー・実利用テスト未完了",ko:"신규 자료 미리보기 · 실제 사용 테스트 미완료",fr:"Nouvelle fiche préliminaire · usage non testé",de:"Neue Datenvorschau · Praxistest ausstehend",es:"Nueva ficha preliminar · uso sin probar",pt:"Nova ficha preliminar · uso não testado",ar:"معاينة معلومات جديدة · لم تُختبر فعليًا"};
 const PREVIEW_DATE:Record<LingxiLang,string>={zh:"官网资料记录日期",en:"Publisher-source observation date",ja:"公式資料記録日",ko:"공식 자료 기록일",fr:"Date de relevé de la source",de:"Datum der Quellenrecherche",es:"Fecha del registro oficial",pt:"Data do registro oficial",ar:"تاريخ تسجيل المصدر"};
 const PREVIEW_FIELD:Record<LingxiLang,string>={zh:"原始资料（中文摘要），以官网为准",en:"Source notes are in Chinese; consult linked publisher terms",ja:"資料原文は中国語。公式リンクをご参照ください",ko:"원문 요약은 중국어입니다. 공식 링크를 참조하세요",fr:"Résumé en chinois ; consulter la source officielle",de:"Zusammenfassung auf Chinesisch; Originalquelle öffnen",es:"Resumen en chino; consulte la fuente oficial",pt:"Resumo em chinês; consulte a fonte oficial",ar:"الملخص بالصينية؛ راجع المصدر الرسمي"};
@@ -65,9 +76,10 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const [task,setTask]=useState<TaskFacet>("all"),[payment,setPayment]=useState<PaymentFacet>("any");
  const [evidence,setEvidence]=useState<EvidenceFacet>("all"),[sort,setSort]=useState<MarketOrder>("oldest");
  const [compareIds,setCompareIds]=useState<string[]>([]),[comparisonOpen,setComparisonOpen]=useState(false);
+ const categoryName=(name:string)=>CANDIDATE_CATEGORIES[lang][name]||localizedCategory(lang,name);
  const categories=useMemo(()=>[...new Set(rows.map(r=>r.category))], [rows]);
  const localizedRows=useMemo(()=>rows.map(p=>({...p,localizedSummary:localizedProductSummary(p.id,lang)||"",
-  localizedCategory:localizedCategory(lang,p.category)})),[rows,lang]);
+  localizedCategory:categoryName(p.category)})),[rows,lang]);
  const shown=useMemo(()=>filterMarketRows(localizedRows,{query,category,task,payment,evidence,sort},lang),
   [localizedRows,query,category,task,payment,evidence,sort,lang]);
  const compared=rows.filter(p=>compareIds.includes(p.id));
@@ -105,7 +117,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
   <div className="siai-home-four-filters">
    <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
     <button type="button" aria-pressed={category==="*"} className={category==="*"?"selected":""} onClick={()=>setCategory("*")}>{t.all}</button>
-    {categories.map(c=><button key={c} type="button" aria-pressed={category===c} className={category===c?"selected":""} onClick={()=>setCategory(c)}>{localizedCategory(lang,c)}</button>)}
+    {categories.map(c=><button key={c} type="button" aria-pressed={category===c} className={category===c?"selected":""} onClick={()=>setCategory(c)}>{categoryName(c)}</button>)}
    </div></nav>
    <nav className="siai-filter-line" aria-label={ui.task}><strong>{ui.task}</strong><div className="siai-filter-options">
     {TASK_FACETS.map(v=><button key={v} type="button" aria-pressed={task===v} className={task===v?"selected":""} onClick={()=>setTask(v)}>{ui.taskLabels[v]}</button>)}

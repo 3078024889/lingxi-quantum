@@ -40,5 +40,7 @@ test("preview is joined to main SIAI UI, never published as a verified SEO produ
  assert.match(src,/year:null,yearSource:null/);
  assert.match(src,/并非逐国注册或支付验证/);
  assert.match(src,/materializeCandidateCatalog/);
+ assert.match(src,/verifiedPaymentRails/);
+ assert.match(src,/freepik-ai":\[\]/);
  assert.doesNotMatch(src,/publishApproved:true|verifiedRealUse:true|signedVendorSettlement:true/);
 });

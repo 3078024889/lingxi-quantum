@@ -4,6 +4,7 @@
  * Do not export these rows into checkout, sponsored ranking, standalone public APIs or SEO product pages.
  * Historical first-party observations are pinned to a dated immutable snapshot.
  */
+import type {PaymentFacet} from "../../lib/siai-home-facets";
 import type {SiaiHomeRow} from "../../components/SiaiRankingHome";
 import {materializeCandidateCatalog} from "../../lingxifield-ai-market/lib/market-candidate-review-build.mjs";
 import cohort1 from "../../lingxifield-ai-market/data/company-intake/batch-001.json";
@@ -36,6 +37,21 @@ const ENTRY:Readonly<Record<string,string>>={
  "together-ai":"https://www.together.ai/", "fireworks-ai":"https://fireworks.ai/",
  groqcloud:"https://console.groq.com/",openrouter:"https://openrouter.ai/"
 };
+/** Only payment rails explicitly supported by a scoped first-party observation; no keyword guessing.
+ * Unknown/unavailable and references to other products never create a positive filter hit.
+ * PayPal is region-limited for several vendors; display the full source note alongside the filter.
+ */
+const PAYMENT_RAILS:Readonly<Record<string,readonly PaymentFacet[]>>={
+ cursor:["card"],"canva-magic-studio":["card","paypal"],gamma:["card"],
+ pika:["card","appstore"],ideogram:["card"],krea:["card"],leonardo:["card"],
+ "notion-ai":["card"],"figma-make":["card"],descript:["card"],
+ "github-copilot":["card","paypal"],"devin-desktop":["card"],
+ tabnine:[],"mistral-le-chat":["appstore"],"microsoft-copilot":["card","paypal"],
+ poe:["appstore"],"adobe-firefly":["card","paypal"],recraft:["card"],
+ "freepik-ai":[],synthesia:["card"],heygen:["card","paypal"],elicit:["card"],
+ consensus:["card"],scite:[],replicate:["card"],"fal-ai":[],
+ "together-ai":["card"],"fireworks-ai":["card"],groqcloud:["card"],openrouter:["card","alipay"]
+};
 const trusted=(v:string)=>{try{const u=new URL(v);return u.protocol==="https:"&&!u.username&&!u.password&&!u.port&&!!u.hostname;}catch{return false}};
 const text=(f:SourceFact|undefined)=>f?.status==="observed"&&f.text&&trusted(f.source||"")?f.text:NOT_DOCUMENTED;
 const source=(f:SourceFact|undefined)=>f?.status==="observed"&&f.source&&trusted(f.source)?f.source:null;
@@ -59,6 +75,7 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
    listing:"unconfirmed",ipoFiling:false,year:null,yearSource:null,
    companySource:source(company),legalSource:p.legalEntitySource,listingSource:null,
    checkedAt:latest,recordStatus:"source_preview" as const,
+   verifiedPaymentRails:source(f.payment)?PAYMENT_RAILS[p.id]||[]:[],
    category:p.category,about:p.tasks.join("、"),strength:p.tasks.join(" · "),
    features:p.tasks,searchTerms:p.keywords,website:officialEntry,
    free:text(f.free),freeSource:source(f.free),
