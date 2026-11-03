@@ -16,11 +16,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  production-gate:
-    name: production-gate
+  source:
+    name: source-and-production-build
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
-
+    timeout-minutes: 30
     steps:
       - name: Checkout exact source
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -28,64 +27,98 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
           submodules: false
-
       - name: Install pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: 11.28.0
           run_install: false
-
       - name: Use pinned Node
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .nvmrc
           cache: pnpm
-
       - name: Show toolchain
         run: |
           node --version
           pnpm --version
-
       - name: Frozen dependency install
         run: pnpm install --frozen-lockfile
-
       - name: Clean baseline audit
         run: pnpm ci:baseline
-
       - name: Source and product gates
         run: pnpm ci:source
-
       - name: SIAI 62-row source-preview provenance gate
         run: node --test tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs
-
       - name: Playwright import/dependency contract
         run: pnpm ci:playwright-contract
-
       - name: AI tools search regression
         run: |
           node scripts/ci/verify-ai-tool-search.mjs
           node scripts/ci/verify-ai-media-pricing-policy.mjs
           node scripts/ci/verify-miniapp-search-index.mjs
-
       - name: Production build
         run: pnpm build
 
+  browser:
+    name: browser-${{ matrix.project }}-shard-${{ matrix.shard }}-of-2
+    needs: source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop-chromium, mobile-chromium]
+        shard: [1, 2]
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependency install
+        run: pnpm install --frozen-lockfile
+      # Each runner owns its Next.js server and does not share browser state.
+      - name: Build isolated production candidate
+        run: pnpm build
       - name: Install Chrome media runtime
         run: pnpm exec playwright install --with-deps chrome
-
-      - name: Desktop closure
-        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --workers=1
-
-      - name: Mobile closure
-        run: pnpm exec playwright test -c playwright.final.config.ts --project=mobile-chromium --workers=1
-
-      - name: Upload Playwright evidence
+      - name: Browser closure shard
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --workers=1
+      - name: Upload shard evidence
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
-          name: lingxifield-playwright-${{ github.sha }}
+          name: lingxifield-e2e-${{ github.sha }}-${{ matrix.project }}-${{ matrix.shard }}-of-2
           path: |
             playwright-report/
             test-results/
           retention-days: 14
           if-no-files-found: ignore
+
+  # Required branch-protection check stays named production-gate.
+  # A failed shard cannot be hidden by a successful source build.
+  production-gate:
+    name: production-gate
+    if: ${{ always() }}
+    needs: [source, browser]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check source, desktop and mobile shards
+        run: |
+          if [ "${{ needs.source.result }}" != "success" ] || [ "${{ needs.browser.result }}" != "success" ]; then
+            echo "::error::A required source/build gate or desktop/mobile Playwright shard failed."
+            exit 1
+          fi
+          echo "ALL_REQUIRED_RELEASE_GATES_PASS"
