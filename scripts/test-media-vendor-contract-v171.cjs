@@ -20,7 +20,7 @@ for(const invalid of ["", " ", "x".repeat(250001)])assert.throws(()=>split(inval
 let calls=[];
 const response=(value,status=200,kind="application/json")=>({
  ok:status>=200&&status<300,status,headers:{get:(name)=>name==="content-type"?kind:null},
- json:async()=>value,text:async()=>JSON.stringify(value),arrayBuffer:async()=>Buffer.from("ID3"+("x".repeat(512))),
+ json:async()=>value,text:async()=>JSON.stringify(value),arrayBuffer:async()=>kind==="application/json"?Buffer.from(JSON.stringify(value)):Buffer.from("ID3"+("x".repeat(512))),
  body:null
 });
 const provider=expose("lib/tools/media/provider.ts",{
