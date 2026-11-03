@@ -120,10 +120,19 @@ async function sampleVideoPixel(page:any,bytes:Buffer,mime:string,x:number,y:num
  return page.evaluate(async({base64,type,x,y})=>{
   const raw=Uint8Array.from(atob(base64),ch=>ch.charCodeAt(0)),url=URL.createObjectURL(new Blob([raw],{type}));
   try{
-   const video=document.createElement("video");video.preload="auto";video.src=url;
+   const video=document.createElement("video");video.preload="auto";video.muted=true;video.playsInline=true;video.src=url;
    await new Promise<void>((resolve,reject)=>{video.onloadedmetadata=()=>resolve();video.onerror=()=>reject(Error("VIDEO_UNPLAYABLE"));setTimeout(()=>reject(Error("VIDEO_META_TIMEOUT")),15000)});
    video.currentTime=Math.min(.6,video.duration/2);
    await new Promise<void>((resolve,reject)=>{video.onseeked=()=>resolve();video.onerror=()=>reject(Error("VIDEO_SEEK_FAILED"))});
+   // seeked does not always mean a decoded frame is ready in headless Chromium.
+   await video.play();
+   if("requestVideoFrameCallback" in video){
+    await new Promise<void>((resolve,reject)=>{
+     const deadline=setTimeout(()=>reject(Error("VIDEO_FRAME_DECODE_TIMEOUT")),10000);
+     video.requestVideoFrameCallback(()=>{clearTimeout(deadline);resolve()});
+    });
+   }
+   video.pause();
    const canvas=document.createElement("canvas");canvas.width=video.videoWidth;canvas.height=video.videoHeight;const ctx=canvas.getContext("2d")!;ctx.drawImage(video,0,0);
    return Array.from(ctx.getImageData(x,y,1,1).data).slice(0,3);
   }finally{URL.revokeObjectURL(url)}
