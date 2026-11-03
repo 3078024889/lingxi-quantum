@@ -16,8 +16,8 @@ test('all 30 candidate products and 28 deduplicated publisher groups materialize
  assert.equal(r.candidateProducts,30);
  assert.equal(r.publisherGroups,28);
  assert.equal(r.factCells,210);
- assert.deepEqual(r.totals,{observed:202,missing:8,conflict:0});
- assert.deepEqual(r.geography,{missing:7,restrictions_only:15,provider_specific_restrictions:3,
+ assert.deepEqual(r.totals,{observed:204,missing:6,conflict:0});
+ assert.deepEqual(r.geography,{missing:5,restrictions_only:17,provider_specific_restrictions:3,
   broad_market_statement:1,other_observation_not_country_proof:4,country_by_country_verified:0});
  assert.equal(r.products.find(p=>p.id==='microsoft-copilot').regionEvidenceQuality,'broad_market_statement');
  assert.equal(r.products.find(p=>p.id==='adobe-firefly').regionEvidenceQuality,'restrictions_only');
@@ -61,8 +61,8 @@ test('candidate review HTML has 30 directly expandable product rows and in-cell 
   assert.ok(html.includes(name),name);
  assert.match(html,/noindex,nofollow,noarchive/);
  assert.match(html,/Content-Security-Policy/);
- assert.match(html,/7 款尚无地区资料/);
- assert.match(html,/15 款只有限制条款/);
+ assert.match(html,/5 款尚无地区资料/);
+ assert.match(html,/17 款只有限制条款/);
  assert.match(html,/3 款受模型供应商限制/);
  assert.match(html,/逐国账号与支付验证通过：0 款/);
  assert.match(html,/仅明确限制地区，不能推断其他国家均可用/);
@@ -110,7 +110,7 @@ test('CLI produces complete 30-row HTML and normalized JSON without altering pub
   const html=readFileSync(htmlFile,'utf8');
   assert.equal(j.candidateProducts,30);
   assert.equal(j.publisherGroups,28);
-  assert.equal(j.totals.missing,8);
+  assert.equal(j.totals.missing,6);
   assert.match(html,/30 款候选产品内部审核/);
   assert.match(html,/Anysphere, Inc\./);
   assert.equal(j.products.some(p=>p.publishApproved),false);
