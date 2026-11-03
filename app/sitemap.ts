@@ -8,7 +8,10 @@ export default function sitemap():MetadataRoute.Sitemap{
   const languages=Object.fromEntries(Object.entries(languageAlternates(path)).map(([lang,url])=>[lang,SITE+url]));
   for(const locale of Object.keys(SEO_LOCALES) as SeoLocale[])rows.push({url:SITE+localePath(locale,path),alternates:{languages}});
  }
- if(siaiLandingShouldIndex())rows.push({url:SITE+"/siai",changeFrequency:"daily",priority:0.9});
+ if(siaiLandingShouldIndex()){
+  const languages=Object.fromEntries(Object.entries(languageAlternates("/siai")).map(([lang,path])=>[lang,SITE+path]));
+  for(const locale of Object.keys(SEO_LOCALES) as SeoLocale[])rows.push({url:SITE+localePath(locale,"/siai"),alternates:{languages},changeFrequency:"daily",priority:0.9});
+ }
  for(const path of ["/sasi","/sasi/drama","/sasi/build","/sasi/image","/ai-knowledge","/ai-learning","/ai-research","/about","/privacy","/terms","/refunds","/legal/sasi","/release"])rows.push({url:SITE+path});
  return rows;
 }
