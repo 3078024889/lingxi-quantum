@@ -1,0 +1,56 @@
+name: LINGXIFIELD Native PDF Desktop Reopen Smoke
+on:
+  push:
+    branches: [test/pdf-native-image-desktop-fast-20261103]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxifield-p0-desktop-native-pdf-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  p0-desktop-native-pdf:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependency install
+        run: pnpm install --frozen-lockfile
+      - name: Build actual production server
+        run: pnpm build
+      - name: Install Chrome media runtime
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Desktop Chromium original PDF text/image output
+        run: >-
+          pnpm exec playwright test -c playwright.final.config.ts
+          --project=desktop-chromium --workers=1
+          tests/final-closure/pdf-real-delivery-next.spec.ts
+          tests/final-closure/pdf-overlay-resize.spec.ts
+          tests/final-closure/pdf-original-text-quick-edit.spec.ts
+          tests/final-closure/pdf-native-export-reopen.spec.ts
+          tests/final-closure/pdf-native-image-ui.spec.ts
+          tests/final-closure/siai-market-ui.spec.ts
+      - name: Upload mobile Playwright artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: lingxifield-p0-desktop-native-pdf-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
