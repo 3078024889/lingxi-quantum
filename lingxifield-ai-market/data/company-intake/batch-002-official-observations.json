@@ -205,10 +205,10 @@
         },
         "company": {
           "status": "observed",
-          "text": "Tabnine 官网明确公布 Tabnine 已被 Tricentis 收购；Tabnine 产品品牌与母集团不能重复当成独立集团。",
-          "source": "https://www.tabnine.com/platform/",
-          "checkedAt": "2026-11-02",
-          "scope": "parent_ownership"
+          "text": "Tabnine 官网于 2026 年 7 月 30 日宣布被 Tricentis 收购。Tabnine 继续是企业编码助手及 Enterprise Context Engine 产品品牌，现归属 Tricentis；此收购不代表 Tabnine 单独上市，也不能推断收购对价或将两家公司成立年份混同。",
+          "source": "https://www.tabnine.com/blog/category/product-news/",
+          "checkedAt": "2026-11-03",
+          "scope": "acquired_by_tricentis_20260730_official_tabnine_news_separate_brand_not_independent_listing"
         }
       }
     },
@@ -222,10 +222,19 @@
       "facts": {
         "price": {
           "status": "observed",
-          "text": "Mistral 官网公开 Free 免费层，并有付费层级；页面出现 $14.99/月教育资格价，不能代表普通 Pro 统一价。",
-          "source": "https://mistral.ai/pricing/",
-          "checkedAt": "2026-11-02",
-          "scope": "education_only_price_separate"
+          "text": "Mistral 2026 年 Vibe 官方发布说明列出：Free 免费；Pro 标准参考价 US$14.99/月；Team US$24.99/用户/月；Enterprise 按合同报价。Pro 比免费层提供更高的聊天、研究和长时编程额度，Team 增加团队管理功能。教育优惠、货币/税费及各地结账可能不同；Studio/API 模型按用量及套餐包含额度独立核算，不是 Pro 无限免费 API。",
+          "source": "https://mistral.ai/news/vibe-agent/",
+          "checkedAt": "2026-11-03",
+          "scope": "official_2026_vibe_free_pro_team_enterprise_subscription_prices_vs_api_usage_not_education_only",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Mistral 官方订阅文档说明：Free/Pro/Team/Enterprise 计划覆盖 Vibe/Studio/API 并共享月度用量；预付 PAYG 仅在启用时增加超出套餐的调用。教育资格价需与普通消费者订阅区分。",
+              "source": "https://docs.mistral.ai/admin/billing-usage/subscriptions",
+              "checkedAt": "2026-11-03",
+              "scope": "subscription_shared_usage_and_optional_prepaid_payg_does_not_include_unlimited_api"
+            }
+          ]
         },
         "free": {
           "status": "observed",
