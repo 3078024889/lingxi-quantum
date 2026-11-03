@@ -49,7 +49,7 @@ export default function Footer(){
     <Link href="/siai">{lang==="zh"?"功能与模型对比":c.rankSub}</Link>
     <Link href="/siai">{lang==="zh"?"免费额度与价格":c.free}</Link>
     <Link href="/siai">{lang==="zh"?"地区、付款与商用条件":c.rankings}</Link>
-    <a href={"https://globalsiai.com/"+lang+"/vendor/claim"} target="_blank" rel="noopener noreferrer">{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</a>
+    <Link href={"/siai/claim?lang="+lang}>{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</Link>
    </nav>
    <nav aria-label={c.sasi}>
     <b>{c.sasi}</b>

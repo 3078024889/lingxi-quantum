@@ -27,3 +27,11 @@ test('global SIAI scroll rail and vendor entry work at mobile width',async({page
  await grid.evaluate(el=>{el.scrollLeft=180;el.dispatchEvent(new Event('scroll'));});
  await expect.poll(()=>page.locator('.siai-home-top-scroll').evaluate(el=>el.scrollLeft)).toBeGreaterThan(80);
 });
+
+test('main-site vendor submission is reachable and rejects invalid requests',async({page})=>{
+ await page.goto('/siai/claim?lang=zh&product=chatgpt&name=ChatGPT');
+ await expect(page.locator('input[name="productName"]')).toHaveValue('ChatGPT');
+ await expect(page.locator('input[name="officialSite"]')).toBeVisible();
+ const invalid=await page.request.post('/api/vendor/submit',{headers:{origin:new URL(page.url()).origin},data:{}});
+ expect(invalid.status()).toBe(400);
+});
