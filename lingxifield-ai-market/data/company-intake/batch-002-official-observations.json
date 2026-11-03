@@ -151,7 +151,16 @@
           "text": "Tabnine 官网现行企业订阅：Code Assistant US$39/用户/月，Agentic Platform US$59/用户/月，两档均以年度订阅计价并通过 Get a quote 询价；不是按月随时取消的月付报价。使用 Tabnine 提供的 LLM 访问需另购 token 额度，按模型供应商实际价格加收 5% 处理费；自带 LLM/模型端点的用量规则另按合同。",
           "source": "https://www.tabnine.com/pricing/",
           "checkedAt": "2026-11-02",
-          "scope": "annual_per_seat_two_distinct_plans_and_additional_provider_tokens_handling_fee"
+          "scope": "annual_per_seat_two_distinct_plans_and_additional_provider_tokens_handling_fee",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Tabnine 官方法律条款的 Fees; Payment 部分写明订阅费用以美元报价和支付，税费另计；基础订阅按照所购服务（而非实际使用量）计费。当前 Code Assistant / Agentic Platform 企业报价及额外模型 Token/处理费按 2026年官网价格页为准。美元是计费币种，不能由此认定支持哪一种银行卡、PayPal 或银行转账。",
+              "source": "https://www.tabnine.com/terms-of-use/",
+              "checkedAt": "2026-11-03",
+              "scope": "subscription_contract_usd_currency_and_tax_not_verified_credit_card_rail"
+            }
+          ]
         },
         "free": {
           "status": "observed",
@@ -179,7 +188,16 @@
           "text": "Tabnine 官方使用条款指出免费计划不供持续商业或企业使用；长期企业用途须采用付费订阅并遵守条款。",
           "source": "https://www.tabnine.com/terms-of-use/",
           "checkedAt": "2026-11-02",
-          "scope": "free_not_for_ongoing_business"
+          "scope": "free_not_for_ongoing_business",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "text": "Tabnine 官方法律条款明示：免费计划（评估期除外）不用于持续商业或企业使用；长期商用应采用付费订阅。用户还必须遵守第三方模型提供商的独立使用条款，不能把 Tabnine 订阅等同所有模型商用授权。",
+              "source": "https://www.tabnine.com/terms-of-use/",
+              "checkedAt": "2026-11-03",
+              "scope": "subscription_free_plan_business_limit_and_third_party_model_terms"
+            }
+          ]
         },
         "payment": {
           "status": "missing",
