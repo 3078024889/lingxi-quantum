@@ -20,9 +20,11 @@ const cohortFiles=readdirSync(new URL(folder,cwd)).filter(f=>/^batch-\d{3}\.json
 const cohorts=cohortFiles.map(p=>load(folder+p));
 const proofs=cohortFiles.map(p=>load(folder+p.replace('.json','-official-observations.json')));
 const staged=auditGlobalIntake(cohorts,proofs,ids);
-const candidateQA=auditCandidateRealUseAcceptance(load('data/acceptance/candidate-30-real-use.json'),cohorts.flatMap(b=>b.products.map(p=>p.id)));
-if(candidateQA.issues.length)throw Error('CANDIDATE_REAL_USE_LEDGER_INVALID');
-if(!staged.allBatchesSafe||staged.stagedProducts!==30||staged.stagedBatches!==3)
+const stagedIds=cohorts.flatMap(b=>b.products.map(p=>p.id));
+const candidateQA=auditCandidateRealUseAcceptance(load('data/acceptance/candidate-all-real-use.json'),stagedIds);
+if(candidateQA.issues.length||candidateQA.verified!==0||candidateQA.pending!==stagedIds.length)
+ throw Error('CANDIDATE_REAL_USE_LEDGER_INVALID');
+if(!staged.allBatchesSafe||cohorts.length<3||staged.stagedProducts!==cohorts.length*10||staged.stagedBatches!==cohorts.length)
  throw Error('GLOBAL_STAGING_EVIDENCE_OR_PAUSE_BROKEN:'+JSON.stringify(staged.issues));
 const result=evaluatePublicationGates({inventory:{curated:32},uses:QA,
  seo:{verifiedObservations:seo.length,verifiedOwnership:false},

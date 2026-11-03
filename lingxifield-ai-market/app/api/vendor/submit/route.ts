@@ -1,27 +1,10 @@
 import {NextResponse} from 'next/server';
 import {validateVendorSubmission} from '../../../../lib/vendor-submission.mjs';
+import {isVendorSameOrigin} from '../../../../lib/vendor-same-origin.mjs';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store'};
 export async function POST(request:Request){
- const origin=request.headers.get('origin');
- const here=new URL(request.url);
- // Next.js can expose localhost/127.0.0.1 or the internal proxy origin in tests.
- // Compare the browser Origin with the actual HTTP Host as well as request.url.
- // Never rely on untrusted X-Forwarded-Host or accept a missing/foreign Origin.
- let sameOrigin=Boolean(origin&&origin===here.origin);
- if(!sameOrigin&&origin){
-  try{
-   const parsed=new URL(origin),httpHost=request.headers.get('host')?.toLowerCase();
-   const loopback=(h:string)=>h==='localhost'||h==='127.0.0.1'||h==='[::1]';
-   const localProtocol=parsed.protocol==='http:'&&loopback(parsed.hostname);
-   const validProtocol=parsed.protocol==='https:'||localProtocol;
-   if(parsed.origin===origin&&validProtocol){
-    if(httpHost&&parsed.host.toLowerCase()===httpHost)sameOrigin=true;
-    else if(localProtocol&&loopback(here.hostname)&&parsed.port===here.port&&here.protocol==='http:')sameOrigin=true;
-   }
-  }catch{sameOrigin=false;}
- }
- if(!sameOrigin)return NextResponse.json({error:'INVALID_ORIGIN'},{status:403,headers});
+ if(!isVendorSameOrigin(request))return NextResponse.json({error:'INVALID_ORIGIN'},{status:403,headers});
  const length=Number(request.headers.get('content-length')||0);
  if(length>6500)return NextResponse.json({error:'REQUEST_TOO_LARGE'},{status:413,headers});
  let raw:string;try{raw=await request.text();}catch{return NextResponse.json({error:'INVALID_BODY'},{status:400,headers});}

@@ -42,7 +42,7 @@ console.log(JSON.stringify({schema:report.schema,curated:report.curated.count,
  conflicts:report.candidateIntake.conflict,publishReady:report.candidateIntake.publishReady,
  structuralIssues:report.safety.structuralIssues},null,2));
 if(!report.safety.structurallyValid||report.curated.count!==32||
- report.candidateIntake.products!==30||report.candidateIntake.publishReady!==0){
+ cohorts.length<3||report.candidateIntake.batches!==cohorts.length||report.candidateIntake.products!==cohorts.length*10||report.candidateIntake.publishReady!==0){
  console.error('SIAI_EVIDENCE_READINESS_GATE_FAILED');
  process.exitCode=1;
 }

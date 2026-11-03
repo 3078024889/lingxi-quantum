@@ -14,6 +14,9 @@ test('one extra HTTP readiness check confirms 32 curated distinct from 30 staged
  const s=file('scripts/smoke-curated-local.mjs');
  assert.match(s,/stagedInventory\?\.candidateProducts===30/);
  assert.match(s,/stagedInventory\?\.officialSourceObservations===observedCounts\.observed/);
- assert.match(s,/observedCounts\.observed\+observedCounts\.missing\+observedCounts\.conflict!==210/);
+ assert.match(s,/publishedLaunchStatuses\.length!==210/);
+ assert.match(s,/statusOf\(packs\.slice\(0,3\)\)/);
+ assert.match(s,/statuses\.length!==expectedFacts/);
+ assert.match(s,/statuses\.some\(s=>!/);
  assert.match(s,/total:paths\.length\+4/);
 });

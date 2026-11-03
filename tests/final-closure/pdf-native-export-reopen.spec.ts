@@ -1,0 +1,40 @@
+import fs from "node:fs/promises";
+import {PDFDocument,StandardFonts} from "pdf-lib";
+import {test,expect} from "./export-test";
+
+test("native PDF text edit strips the original drawn glyphs from a downloaded, reopened PDF",async({page})=>{
+ test.setTimeout(130000);
+ await page.addInitScript(()=>{window.open=()=>({} as Window)});
+ let quote:any=null;
+ await page.route("**/api/tools/quote",route=>{
+  const b=route.request().postDataJSON();expect(b.toolId).toBe("pdf-editor");
+  quote={id:"55555555-5555-4555-8555-555555555555",tool_id:b.toolId,quantity:b.quantity,unit_name:"file",amount_rmb:1,amount_usd:1,currency:b.currency,display_currency:b.currency,display_amount:1,expires_at:new Date(Date.now()+3600000).toISOString(),metadata:b.metadata};
+  return route.fulfill({json:quote});
+ });
+ await page.route("**/api/tools/pay/status**",route=>route.fulfill({json:{paid:true,quote}}));
+ await page.route("**/api/tools/export/consume",route=>route.fulfill({json:{ok:true}}));
+ const doc=await PDFDocument.create(),p=doc.addPage([612,792]);
+ const font=await doc.embedFont(StandardFonts.Helvetica);
+ p.drawText("ORIGINAL SECRET AMOUNT 123",{x:72,y:680,size:18,font});
+ const original=Buffer.from(await doc.save());
+ await page.goto("/tools/pdf-editor?lang=en");
+ await page.locator('input[type=file]').first().setInputFiles({name:"native-source.pdf",mimeType:"application/pdf",buffer:original});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
+ const region=page.locator('[data-testid="pdf-source-text-region"][data-source="pdf"]').first();
+ await expect(region).toBeVisible({timeout:30000});
+ await region.dblclick();
+ const editing=page.getByRole("textbox",{name:"Edit added text"});
+ await expect(editing).toBeVisible({timeout:30000});
+ await editing.fill("UPDATED AMOUNT 456");await editing.press("Enter");
+ await expect(page.locator('[data-testid="pdf-overlay"][data-native="true"]')).toBeVisible();
+ const pending=page.waitForEvent("download",{timeout:90000});
+ await page.getByTestId("paid-export-start").click();
+ const dl=await pending,bytes=await fs.readFile((await dl.path())!);
+ expect(bytes.length).toBeGreaterThan(1000);
+ const reopened=await PDFDocument.load(bytes);
+ expect(reopened.getPageCount()).toBe(1);
+ await page.locator('input[type=file]').first().setInputFiles({name:"native-reopened.pdf",mimeType:"application/pdf",buffer:bytes});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
+ await expect(page.getByTestId("pdf-source-text-region")).toHaveCount(0,{timeout:30000});
+ await expect(page.getByTestId("pdf-stage").locator("img")).toBeVisible();
+});

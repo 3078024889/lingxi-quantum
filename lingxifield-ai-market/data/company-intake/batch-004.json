@@ -1,0 +1,290 @@
+{
+  "batch": "B004",
+  "asOf": "2026-11-03",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "products": [
+    {
+      "id": "google-ai-studio",
+      "name": "Google AI Studio",
+      "company": "Google",
+      "category": "模型API",
+      "website": "https://ai.google.dev/aistudio",
+      "evidenceUrl": "https://ai.google.dev/aistudio",
+      "tasks": [
+        "Gemini API开发",
+        "多模态模型试用",
+        "应用构建"
+      ],
+      "keywords": [
+        "Gemini API开发工具",
+        "多模态模型试用工具",
+        "应用构建工具",
+        "Google AI Studio价格"
+      ],
+      "publisherGroupId": "google",
+      "aliases": [
+        "AI Studio"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://ai.google.dev/aistudio",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "google-gemini-agent-platform",
+      "name": "Gemini Enterprise Agent Platform（原 Vertex AI）",
+      "company": "Google Cloud",
+      "category": "企业模型API",
+      "website": "https://cloud.google.com/products/gemini-enterprise-agent-platform",
+      "evidenceUrl": "https://cloud.google.com/products/gemini-enterprise-agent-platform",
+      "tasks": [
+        "企业智能体开发",
+        "模型部署",
+        "模型目录"
+      ],
+      "keywords": [
+        "企业智能体开发工具",
+        "模型部署工具",
+        "模型目录工具",
+        "Gemini Enterprise Agent Platform（原 Vertex AI）价格"
+      ],
+      "publisherGroupId": "google",
+      "aliases": [
+        "Vertex AI",
+        "Gemini platform"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://cloud.google.com/products/gemini-enterprise-agent-platform",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "amazon-bedrock",
+      "name": "Amazon Bedrock",
+      "company": "Amazon Web Services",
+      "category": "模型API",
+      "website": "https://aws.amazon.com/bedrock/",
+      "evidenceUrl": "https://aws.amazon.com/bedrock/",
+      "tasks": [
+        "模型调用",
+        "云端智能体",
+        "知识库"
+      ],
+      "keywords": [
+        "模型调用工具",
+        "云端智能体工具",
+        "知识库工具",
+        "Amazon Bedrock价格"
+      ],
+      "publisherGroupId": "amazon",
+      "aliases": [
+        "AWS Bedrock"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://aws.amazon.com/bedrock/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "microsoft-foundry",
+      "name": "Microsoft Foundry",
+      "company": "Microsoft",
+      "category": "企业模型API",
+      "website": "https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview",
+      "evidenceUrl": "https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview",
+      "tasks": [
+        "模型发现",
+        "模型评估",
+        "部署智能体"
+      ],
+      "keywords": [
+        "模型发现工具",
+        "模型评估工具",
+        "部署智能体工具",
+        "Microsoft Foundry价格"
+      ],
+      "publisherGroupId": "microsoft",
+      "aliases": [
+        "Azure AI Foundry"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "ibm-watsonx-ai",
+      "name": "IBM watsonx.ai",
+      "company": "IBM",
+      "category": "企业模型API",
+      "website": "https://www.ibm.com/products/watsonx-ai",
+      "evidenceUrl": "https://www.ibm.com/products/watsonx-ai",
+      "tasks": [
+        "企业模型调试",
+        "推理API",
+        "模型部署"
+      ],
+      "keywords": [
+        "企业模型调试工具",
+        "推理API工具",
+        "模型部署工具",
+        "IBM watsonx.ai价格"
+      ],
+      "publisherGroupId": "ibm",
+      "aliases": [
+        "watsonx.ai"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://www.ibm.com/products/watsonx-ai",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "nvidia-nim",
+      "name": "NVIDIA NIM",
+      "company": "NVIDIA",
+      "category": "模型API",
+      "website": "https://build.nvidia.com/",
+      "evidenceUrl": "https://build.nvidia.com/",
+      "tasks": [
+        "推理API",
+        "推理微服务",
+        "模型托管"
+      ],
+      "keywords": [
+        "推理API工具",
+        "推理微服务工具",
+        "模型托管工具",
+        "NVIDIA NIM价格"
+      ],
+      "publisherGroupId": "nvidia",
+      "aliases": [
+        "NVIDIA AI"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://build.nvidia.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "oracle-oci-generative-ai",
+      "name": "Oracle OCI Generative AI",
+      "company": "Oracle",
+      "category": "企业模型API",
+      "website": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "evidenceUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "tasks": [
+        "企业模型托管",
+        "智能体开发",
+        "数据库与模型集成"
+      ],
+      "keywords": [
+        "企业模型托管工具",
+        "智能体开发工具",
+        "数据库与模型集成工具",
+        "Oracle OCI Generative AI价格"
+      ],
+      "publisherGroupId": "oracle",
+      "aliases": [
+        "OCI Generative AI"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "salesforce-agentforce",
+      "name": "Salesforce Agentforce",
+      "company": "Salesforce",
+      "category": "企业智能体",
+      "website": "https://www.salesforce.com/agentforce/",
+      "evidenceUrl": "https://www.salesforce.com/agentforce/",
+      "tasks": [
+        "智能客服",
+        "销售和流程自动化",
+        "企业智能体"
+      ],
+      "keywords": [
+        "智能客服工具",
+        "销售和流程自动化工具",
+        "企业智能体工具",
+        "Salesforce Agentforce价格"
+      ],
+      "publisherGroupId": "salesforce",
+      "aliases": [
+        "Agentforce 360"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://www.salesforce.com/agentforce/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "sap-joule",
+      "name": "SAP Joule",
+      "company": "SAP",
+      "category": "企业智能体",
+      "website": "https://www.sap.com/products/artificial-intelligence.html",
+      "evidenceUrl": "https://www.sap.com/products/artificial-intelligence.html",
+      "tasks": [
+        "企业智能体",
+        "流程编排",
+        "ERP数据查询"
+      ],
+      "keywords": [
+        "企业智能体工具",
+        "流程编排工具",
+        "ERP数据查询工具",
+        "SAP Joule价格"
+      ],
+      "publisherGroupId": "sap",
+      "aliases": [
+        "Joule Work"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://www.sap.com/products/artificial-intelligence.html",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "meta-ai",
+      "name": "Meta AI",
+      "company": "Meta",
+      "category": "综合助手",
+      "website": "https://ai.meta.com/meta-ai/assistant/",
+      "evidenceUrl": "https://ai.meta.com/meta-ai/assistant/",
+      "tasks": [
+        "智能问答",
+        "图像生成",
+        "社交平台智能助手"
+      ],
+      "keywords": [
+        "智能问答工具",
+        "图像生成工具",
+        "社交平台智能助手工具",
+        "Meta AI价格"
+      ],
+      "publisherGroupId": "meta",
+      "aliases": [
+        "Meta Assistant"
+      ],
+      "discoveredAt": "2026-11-03",
+      "discoverySource": "https://ai.meta.com/meta-ai/assistant/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}

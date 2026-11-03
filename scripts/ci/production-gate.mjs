@@ -6,8 +6,12 @@ const root=process.cwd();
 
 const commands=[
  ["node",["scripts/test-trusted-client-ip-v103.cjs"]],
+ ["node",["--test","tests/tool-closure/vendor-submit-origin.test.mjs"]],
+ ["node",["--test","tests/tool-closure/pdf-native-text.test.mjs"]],
+ ["node",["--test","tests/tool-closure/pdf-native-image.test.mjs"]],
  ["node",["scripts/test-security-release-v1.cjs"]],
  ["node",["scripts/test-subtitle-translation-v95.cjs"]],
+ ["node",["--test","tests/tool-closure/subtitle-format.test.mjs","tests/tool-closure/media-type.test.mjs","tests/tool-closure/pdf-overlay-text.test.mjs","tests/tool-closure/pdf-overlay-geometry.test.mjs","tests/tool-closure/pdf-text-regions.test.mjs","tests/tool-closure/pdf-save-verified.test.mjs"]],
  ["node",["scripts/test-export-access-v92.cjs"]],
  ["node",["scripts/test-daily-export-api-v92.cjs"]],
  ["node",["scripts/test-file-delivery-v91.cjs"]],

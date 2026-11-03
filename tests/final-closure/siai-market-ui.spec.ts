@@ -32,11 +32,15 @@ test('main-site vendor submission is reachable and rejects invalid requests',asy
  await page.goto('/siai/claim?lang=zh&product=chatgpt&name=ChatGPT');
  await expect(page.locator('input[name="productName"]')).toHaveValue('ChatGPT');
  await expect(page.locator('input[name="officialSite"]')).toBeVisible();
- const invalid=await page.request.post('/api/vendor/submit',{headers:{origin:new URL(page.url()).origin},data:{}});
- // A genuine same-origin request reaches body validation. Foreign origins fail closed.
- expect(invalid.status()).toBe(400);
- expect((await invalid.json()).error).toBe("INVALID_SUBMISSION");
- const spoof=await page.request.post('/api/vendor/submit',{headers:{origin:'https://attacker.example'},data:{}});
- expect(spoof.status()).toBe(403);
- expect((await spoof.json()).error).toBe("INVALID_ORIGIN");
+ // Submit from the actual browser origin; the server must reject malformed data at validation.
+ const sameOrigin=await page.evaluate(async()=>{
+  const result=await fetch('/api/vendor/submit',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+  const body=await result.json();
+  return {status:result.status,error:body.error};
+ });
+ expect(sameOrigin).toEqual({status:400,error:'INVALID_SUBMISSION'});
+ // A forged cross-site origin must still fail closed before body validation.
+ const forged=await page.request.post('/api/vendor/submit',{headers:{origin:'https://untrusted.example'},data:{}});
+ expect(forged.status()).toBe(403);
+ expect((await forged.json()).error).toBe('INVALID_ORIGIN');
 });
