@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SiaiRankingHome,{type SiaiHomeRow} from "@/components/SiaiRankingHome";
+import {getSiaiSourcePreviewRows} from "./candidate-public";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 import {MARKET_API_PRODUCTS} from "../../lingxifield-ai-market/lib/market-api-service-catalog";
@@ -50,10 +51,12 @@ function getCuratedRows():SiaiHomeRow[]{
 }
 
 export default function Home(){
- const rows=getCuratedRows();
+ const curated=getCuratedRows();
+ const rows=[...curated,...getSiaiSourcePreviewRows()];
+ if(rows.length!==62||new Set(rows.map(r=>r.id)).size!==62)throw Error("SIAI_DIRECTORY_62_UNIQUE_ROWS_REQUIRED");
  const jsonld={"@context":"https://schema.org","@type":"CollectionPage",name:"全球 SIAI 排行榜",
   url:PRIMARY_SITE+"/siai",description:"灵犀场全球 SIAI 排行榜，按功能、模型、免费额度、价格、地区、付款方式及公司背景比较 SI/AI 工具与厂商。",
-  mainEntity:{"@type":"ItemList",numberOfItems:rows.length,itemListElement:rows.map((r,i)=>({
+  mainEntity:{"@type":"ItemList",numberOfItems:curated.length,itemListElement:curated.map((r,i)=>({
    "@type":"ListItem",position:i+1,name:r.name,url:r.website
   }))}};
  return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld)}}/><Nav/><SiaiRankingHome rows={rows}/><Footer/></>;

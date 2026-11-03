@@ -92,10 +92,12 @@ export function filterMarketRows<T extends FacetRow>(rows:readonly T[],criteria:
  return filtered.sort((a,b)=>{
   if(criteria.sort==='name')return collator.compare(a.name,b.name)||collator.compare(a.id,b.id);
   const ya=yearNumber(a),yb=yearNumber(b);
+  // Company incorporation and open-source project start are different fields, never compare as the same kind of rank.
+  const at=a.kind==='company'?(ya===null?1:0):(ya===null?3:2);
+  const bt=b.kind==='company'?(yb===null?1:0):(yb===null?3:2);
+  if(at!==bt)return at-bt;
   if(ya===null&&yb===null)return collator.compare(a.name,b.name);
-  if(ya===null)return 1; // unknown dates always last
-  if(yb===null)return -1;
-  return (criteria.sort==='oldest'?ya-yb:yb-ya)||collator.compare(a.name,b.name);
+  return (criteria.sort==='oldest'?ya!-yb!:yb!-ya!)||collator.compare(a.name,b.name);
  });
 }
 export const MAX_COMPARISONS=3;

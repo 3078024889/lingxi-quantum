@@ -22,7 +22,7 @@ export type SiaiHomeRow={
  ipoFiling:boolean;year:string|null;companySource:string|null;legalSource:string|null;listingSource:string|null;yearSource:string|null;
  category:string;about:string;strength:string;features:string[];searchTerms:string[];free:string;freeSource:string|null;
  price:string;priceSource:string|null;region:string;regionSource:string|null;payment:string;paymentSource:string|null;
- models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;checkedAt:string|null;
+ models:string;modelsSource:string|null;commercial:string;commercialSource:string|null;website:string;checkedAt:string|null;recordStatus?:"source_preview";
 };
 
 const labels:Record<LingxiLang,{title:string,subtitle:string,search:string,all:string,tool:string,company:string,legal:string,parent:string,listed:string,founded:string,founder:string,projectCreator:string,leadAuthor:string,
@@ -50,6 +50,9 @@ const RANKING_NEW_UI:Record<LingxiLang,Record<string,string>>={
  pt:{"厂商认领":"Reivindicar produto","找到":"Resultados:","项":"","厂商认领 · 提交 SI/AI 平台":"Reivindicar ou enviar plataforma SI/IA","视频／短剧和 API 费用计算器（点击展开）":"Custos de vídeo, curta e API","横向查看全部栏目":"Rolar para ver todas as colunas","顶部横向滚动条":"Rolagem horizontal superior"},
  ar:{"厂商认领":"المطالبة بهذا المنتج","找到":"النتائج:","项":"","厂商认领 · 提交 SI/AI 平台":"المطالبة بمنصة SI/AI أو تقديمها","视频／短剧和 API 费用计算器（点击展开）":"حاسبة تكلفة الفيديو و API","横向查看全部栏目":"مرر أفقياً لعرض جميع الأعمدة","顶部横向滚动条":"شريط التمرير العلوي"},
 };
+const PREVIEW_COPY:Record<LingxiLang,string>={zh:"新增资料预览 · 尚未完成实际使用测试",en:"New research preview · real use untested",ja:"新規資料プレビュー・実利用テスト未完了",ko:"신규 자료 미리보기 · 실제 사용 테스트 미완료",fr:"Nouvelle fiche préliminaire · usage non testé",de:"Neue Datenvorschau · Praxistest ausstehend",es:"Nueva ficha preliminar · uso sin probar",pt:"Nova ficha preliminar · uso não testado",ar:"معاينة معلومات جديدة · لم تُختبر فعليًا"};
+const PREVIEW_DATE:Record<LingxiLang,string>={zh:"官网资料记录日期",en:"Publisher-source observation date",ja:"公式資料記録日",ko:"공식 자료 기록일",fr:"Date de relevé de la source",de:"Datum der Quellenrecherche",es:"Fecha del registro oficial",pt:"Data do registro oficial",ar:"تاريخ تسجيل المصدر"};
+const PREVIEW_FIELD:Record<LingxiLang,string>={zh:"原始资料（中文摘要），以官网为准",en:"Source notes are in Chinese; consult linked publisher terms",ja:"資料原文は中国語。公式リンクをご参照ください",ko:"원문 요약은 중국어입니다. 공식 링크를 참조하세요",fr:"Résumé en chinois ; consulter la source officielle",de:"Zusammenfassung auf Chinesisch; Originalquelle öffnen",es:"Resumen en chino; consulte la fuente oficial",pt:"Resumo em chinês; consulte a fonte oficial",ar:"الملخص بالصينية؛ راجع المصدر الرسمي"};
 const REVIEWED_COPY:Record<LingxiLang,string>={zh:"官方资料复核",en:"Source checked",ja:"公式情報の確認日",ko:"공식 출처 확인일",fr:"Vérification de la source",de:"Quellen geprüft",es:"Fuente revisada",pt:"Fonte verificada",ar:"تاريخ فحص المصدر"};
 function short(s:string,max=150){return s.length>max?s.slice(0,max-1).trimEnd()+"…":s;}
 function Source({href,label}:{href:string|null;label:string}){return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className="siai-source">{label} ↗</a>:null;}
@@ -60,7 +63,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const [tableWidth,setTableWidth]=useState(2200);
  const [query,setQuery]=useState(""),[category,setCategory]=useState("*"),[expanded,setExpanded]=useState<string|null>(null);
  const [task,setTask]=useState<TaskFacet>("all"),[payment,setPayment]=useState<PaymentFacet>("any");
- const [evidence,setEvidence]=useState<EvidenceFacet>("all"),[sort,setSort]=useState<MarketOrder>("catalog");
+ const [evidence,setEvidence]=useState<EvidenceFacet>("all"),[sort,setSort]=useState<MarketOrder>("oldest");
  const [compareIds,setCompareIds]=useState<string[]>([]),[comparisonOpen,setComparisonOpen]=useState(false);
  const categories=useMemo(()=>[...new Set(rows.map(r=>r.category))], [rows]);
  const localizedRows=useMemo(()=>rows.map(p=>({...p,localizedSummary:localizedProductSummary(p.id,lang)||"",
@@ -75,14 +78,14 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  useEffect(()=>{const v=gridRef.current;if(!v)return;const measure=()=>setTableWidth(v.scrollWidth);measure();const ro=typeof ResizeObserver==="undefined"?null:new ResizeObserver(measure);ro?.observe(v);if(v.firstElementChild)ro?.observe(v.firstElementChild);window.addEventListener("resize",measure);return()=>{ro?.disconnect();window.removeEventListener("resize",measure);};},[shown.length,lang]);
  useEffect(()=>{if(!expanded)return;dialogRef.current?.focus();const esc=(e:KeyboardEvent)=>{if(e.key==="Escape")setExpanded(null)};window.addEventListener("keydown",esc);return()=>window.removeEventListener("keydown",esc);},[expanded]);
  const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
- const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>localizedCatalogFact(p.id,lang,scope,p[scope]);
- const displayStrength=(p:SiaiHomeRow)=>localizedProductSummary(p.id,lang)||p.strength||p.about;
- const displayRegion=(p:SiaiHomeRow)=>lang==='zh'?p.region:globalRegionSummary(p.id,lang);
- const displayCommercial=(p:SiaiHomeRow)=>lang==='zh'?p.commercial:commercialEvidence(p.id,lang)?.condition||p.commercial;
- const displayPayment=(p:SiaiHomeRow)=>lang==='zh'?p.payment:p.payment.split(' · ').map(s=>localizedPaymentName(s,lang)).join(' · ');
- const displayAbout=(p:SiaiHomeRow)=>lang==='zh'?p.about:localizedProductSummary(p.id,lang)||p.name;
+ const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>p.recordStatus==="source_preview"?(lang==="zh"?p[scope]:PREVIEW_FIELD[lang]+" · "+p[scope]):localizedCatalogFact(p.id,lang,scope,p[scope]);
+ const displayStrength=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?(lang==="zh"?p.strength:p.name+" · "+PREVIEW_COPY[lang]):localizedProductSummary(p.id,lang)||p.strength||p.about;
+ const displayRegion=(p:SiaiHomeRow)=>p.recordStatus==='source_preview'?(lang==='zh'?p.region:PREVIEW_FIELD[lang]):lang==='zh'?p.region:globalRegionSummary(p.id,lang);
+ const displayCommercial=(p:SiaiHomeRow)=>p.recordStatus==='source_preview'?(lang==='zh'?p.commercial:PREVIEW_FIELD[lang]):lang==='zh'?p.commercial:commercialEvidence(p.id,lang)?.condition||p.commercial;
+ const displayPayment=(p:SiaiHomeRow)=>p.recordStatus==='source_preview'?(lang==='zh'?p.payment:PREVIEW_FIELD[lang]):lang==='zh'?p.payment:p.payment.split(' · ').map(s=>localizedPaymentName(s,lang)).join(' · ');
+ const displayAbout=(p:SiaiHomeRow)=>p.recordStatus==='source_preview'?(lang==='zh'?p.about:p.name+' · '+PREVIEW_COPY[lang]):lang==='zh'?p.about:localizedProductSummary(p.id,lang)||p.name;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
-    <p>{displayAbout(p)}</p>{p.checkedAt&&<p className="siai-checked-date">{REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&capabilityProfile(p.id)&&<div className="siai-quick-answer">
+    <p>{displayAbout(p)}</p>{p.recordStatus==="source_preview"&&<p className="siai-checked-date" role="status">{PREVIEW_COPY[lang]}</p>}{p.checkedAt&&<p className="siai-checked-date">{p.recordStatus==="source_preview"?PREVIEW_DATE[lang]:REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&capabilityProfile(p.id)&&<div className="siai-quick-answer">
      <strong>{productAnswerHeadline(p.id)||capabilityProfile(p.id)?.headline}</strong>
      <p>{capabilityProfile(p.id)?.differentiator}</p>
      <p><b>适合谁：</b>{capabilityProfile(p.id)?.audience}</p>
@@ -154,12 +157,12 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
        const listing=p.kind!=="company"?t.na:p.ipoFiling?t.ipoFiled:p.listing==="listed_parent"?t.listedParent:t.notConfirmed;
        return <Fragment key={p.id}><tr className="siai-home-tr">
         <td>{i+1}</td>
-        <td className="siai-home-identity"><strong>{p.name}</strong><dl>
+        <td className="siai-home-identity"><strong>{p.name}</strong>{p.recordStatus==="source_preview"&&<small className="siai-checked-date">{PREVIEW_COPY[lang]}</small>}<dl>
          <div><dt>{p.kind==="company"?t.company:t.project}</dt><dd>{p.company}</dd></div>
          <div><dt>{p.creator?.role==='founder'?t.founder:p.creator?.role==='project_creator'?t.projectCreator:t.leadAuthor}</dt><dd>{p.creator?(lang==="zh"?p.creator.zh:p.creator.en):"—"}<Source href={p.creator?.source||null} label={t.source}/></dd></div>
          <div><dt>{t.listed}</dt><dd>{listing}</dd></div>
          <div><dt>{t.founded}</dt><dd>{p.year||"—"}</dd></div>
-         {p.checkedAt&&<div><dt>{REVIEWED_COPY[lang]}</dt><dd><time dateTime={p.checkedAt}>{p.checkedAt}</time></dd></div>}
+         {p.checkedAt&&<div><dt>{p.recordStatus==="source_preview"?PREVIEW_DATE[lang]:REVIEWED_COPY[lang]}</dt><dd><time dateTime={p.checkedAt}>{p.checkedAt}</time></dd></div>}
         </dl></td>
         <td><strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),100)}</strong></td>
         <td><span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
