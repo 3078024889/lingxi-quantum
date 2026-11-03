@@ -1,0 +1,29 @@
+/* LINGXIFIELD branded answer hub: visible human-readable answers for search and AI retrieval */
+.lx-seo-answers{width:min(1120px,calc(100% - 64px));margin:0 auto 62px;padding:34px 0 0;color:var(--lx-ink)}
+.lx-seo-answers-head{margin-bottom:22px;max-width:760px}
+.lx-seo-eyebrow{font-size:12px;letter-spacing:.06em;font-weight:700;color:#3868cb;margin-bottom:9px}
+.lx-seo-answers-head h2{font-size:clamp(23px,2.5vw,30px);font-weight:800;letter-spacing:-.025em;margin:0}
+.lx-seo-answers-head>p:not(.lx-seo-eyebrow){font-size:14px;line-height:1.9;color:var(--lx-muted);margin-top:10px}
+.lx-seo-question-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.lx-seo-question{border:1px solid var(--lx-line);background:var(--lx-card,#fff);border-radius:16px;padding:22px 23px;min-width:0}
+.lx-seo-question h3{font-size:16px;font-weight:750;line-height:1.5;margin:0 0 9px}
+.lx-seo-question p{font-size:14px;line-height:1.9;color:var(--lx-muted);margin:0 0 13px}
+.lx-seo-question a{font-size:13px;font-weight:700;color:#3168d6}
+.lx-seo-answers-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:19px}
+.lx-seo-answers-links a{border:1px solid var(--lx-line);border-radius:11px;padding:11px 16px;font-size:13px;font-weight:700}
+.lx11-footer.lx-branded-footer{background:var(--lx-bg,#f7f9fd);padding:45px 28px 22px}
+.lx-branded-footer .lx11-footer-grid{grid-template-columns:minmax(290px,1.6fr) repeat(4,minmax(120px,.8fr));gap:32px;max-width:1270px}
+.lx-branded-footer .lx11-footer-brand .lx-footer-position{font-size:12px;line-height:1.85;margin:14px 0;color:var(--lx-muted)}
+.lx-branded-footer .lx-footer-trio{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+.lx-branded-footer .lx-footer-trio span{font-size:11px;border:1px solid var(--lx-line);border-radius:7px;padding:6px 9px}
+.lx-branded-footer .lx11-footer-grid b{font-size:14px!important;line-height:1.5}
+.lx-branded-footer .lx11-footer-grid nav a{font-size:12px!important;line-height:1.6}
+.lx-branded-footer .lx-footer-social-strip{max-width:1270px;margin:30px auto 0;padding-top:20px;border-top:1px solid var(--lx-line);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.lx-branded-footer .lx-footer-social-strip a{font-size:12px;color:var(--lx-muted)}
+.lx-branded-footer .lx-footer-social-strip .lx11-footer-social{display:flex;gap:15px;flex-wrap:wrap}
+.lx-branded-footer .lx-footer-qr-row{display:flex;gap:12px;flex-wrap:wrap}
+.lx-branded-footer .lx-footer-qr-row>div{display:flex;align-items:center;gap:9px}
+.lx-branded-footer .lx-footer-qr-row img{border-radius:6px;border:1px solid var(--lx-line)}
+.lx-branded-footer .lx-footer-qr-row span{font-size:11px;color:var(--lx-muted)}
+@media(max-width:1160px){.lx-branded-footer .lx11-footer-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:25px}.lx-branded-footer .lx11-footer-brand{grid-column:1/-1}}
+@media(max-width:700px){.lx-seo-answers{width:calc(100% - 30px);margin-bottom:32px}.lx-seo-question-grid{grid-template-columns:1fr}.lx-seo-question{padding:19px}.lx-branded-footer .lx11-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:27px 19px}.lx-branded-footer .lx11-footer-brand{grid-column:1/-1}.lx-branded-footer .lx-footer-social-strip{align-items:flex-start;flex-direction:column}.lx-branded-footer .lx11-footer-logo b{font-size:14px!important}}

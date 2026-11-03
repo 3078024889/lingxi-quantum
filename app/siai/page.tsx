@@ -3,7 +3,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SiaiRankingHome,{type SiaiHomeRow} from "@/components/SiaiRankingHome";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
-import {siaiSeoEnabled} from "@/lib/siai-seo-policy";
+import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 import {MARKET_API_PRODUCTS} from "../../lingxifield-ai-market/lib/market-api-service-catalog";
 import {findPlatform} from "../../lingxifield-ai-market/lib/platform-repository";
 import {researchedFact,marketProductReviewedAt} from "../../lingxifield-ai-market/lib/market-researched-facts";
@@ -19,7 +19,7 @@ export const metadata:Metadata={
  description:"全球 SIAI AI 工具行情与厂商排行榜：比较真实官方价格、免费额度、主要功能、地区可用、付款方式、创始人与公司背景、上市状态和商用条件。查看官网直接使用。",
  alternates:{canonical:PRIMARY_SITE+"/siai"},
  openGraph:{title:"全球 SIAI 排行榜｜灵犀场",description:"全球 AI 工具与厂商行情，先找到适合自己任务的工具，再看价格和使用条件。",url:PRIMARY_SITE+"/siai"},
- robots:{index:siaiSeoEnabled(),follow:true}
+ robots:{index:siaiLandingShouldIndex(),follow:true}
 };
 
 function getCuratedRows():SiaiHomeRow[]{

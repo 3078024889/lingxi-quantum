@@ -6,6 +6,7 @@ import "./siai-detail.css";
 import "./v201-quality.css";
 import "./v40-mobile.css";
 import "./v43-product-visuals.css";
+import "./brand-home-v2.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
