@@ -12,6 +12,11 @@ test("PDF inline text edits and collapses without a permanent frame",async({page
  await edit.fill("Updated text, 123");await edit.press("Enter");await expect(edit).toHaveCount(0);
  const item=page.getByTestId("pdf-overlay").filter({hasText:"Updated text, 123"}).first();await expect(item).toBeVisible();
  await expect(page.getByTestId("pdf-grip-se")).toHaveCount(0);
+ const source=page.getByTestId("pdf-source-text-region").first();await expect(source).toBeVisible();
+ const overlayZ=await item.evaluate(el=>Number(getComputedStyle(el).zIndex));
+ const sourceZ=await source.evaluate(el=>Number(getComputedStyle(el).zIndex));
+ expect(overlayZ).toBeGreaterThan(sourceZ);
+ await item.evaluate(el=>el.scrollIntoView({block:"center",behavior:"instant"}));
  await item.dblclick();await expect(edit).toBeVisible();await edit.fill("Final note");await edit.press("Enter");
  const finalItem=page.getByTestId("pdf-overlay").filter({hasText:"Final note"}).first();
  await expect(finalItem).toContainText("Final note");
