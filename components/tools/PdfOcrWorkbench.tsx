@@ -5,7 +5,7 @@ import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
 import{openPdf,renderPdfPage,canvasToBlob}from"@/lib/tools/pdf-render-client";
-import{consumeToolHandoff}from"@/lib/tools/workspace/handoff";
+import{consumeToolHandoff,createToolHandoff}from"@/lib/tools/workspace/handoff";
 import{positionedTextPagesToXlsx,type PositionedTextToken}from"@/lib/tools/shared/pdf-to-xlsx";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
@@ -32,6 +32,7 @@ export default function PdfOcrWorkbench(){
  const{lang:uiLang}=useLingxiLang(),t=(zh:string,en:string)=>toolRuntimeText(uiLang,zh,en);
  const[files,setFiles]=useState<File[]>([]),[pages,setPages]=useState(0),[ocrLang,setOcrLang]=useState("chi_sim+eng");
  const[text,setText]=useState(""),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState("");
+ const [sendingToTranslation,setSendingToTranslation]=useState(false);
  const[tableFile,setTableFile]=useState<ToolResultFile|null>(null),[tableNote,setTableNote]=useState(""),[handoffSource,setHandoffSource]=useState("");
  const stop=useRef(false),file=files[0]||null;
  const jobRef=useRef(0);
@@ -104,6 +105,29 @@ export default function PdfOcrWorkbench(){
   }
  }
 
+
+ async function continueToTranslation(){
+  if(busy||sendingToTranslation||!text.trim()||!file)return;
+  setSendingToTranslation(true);setError("");
+  try{
+   const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
+   if(blob.size>40*1024*1024)throw Error("OCR_TEXT_TOO_LARGE");
+   const id=await createToolHandoff("pdf-ocr",[{
+    name:(file.name.replace(/\.pdf$/i,"")||"scanned-document")+"-ocr.txt",
+    blob,mime:"text/plain;charset=utf-8",size:blob.size
+   }]);
+   // Browser-only 30-minute single-use transfer. Never send the raw scanned
+   // image or OCR text to a remote file-import endpoint.
+   const u=new URL("/tools/document-translate",location.origin);
+   u.searchParams.set("lang",uiLang);
+   u.searchParams.set("handoff",id);
+   location.assign(u.pathname+u.search);
+  }catch{
+   setError(t("暂时无法转交识别文字，已保留本页结果，可继续保存文件。","Could not transfer the OCR text; it remains available here to save."));
+   setSendingToTranslation(false);
+  }
+ }
+
  const results:ToolResultFile[]=[];
  if(text&&file){
   const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
@@ -112,7 +136,7 @@ export default function PdfOcrWorkbench(){
  if(tableFile)results.unshift(tableFile);
 
  return <div className="space-y-4">
-  <FileDropzone accept="application/pdf,.pdf" files={files} onChange={rows=>{jobRef.current++;controller.current?.abort();setFiles(rows);setText("");setError("");setTableFile(null);setTableNote("");setHandoffSource("")}} disabled={busy} kind="pdf" maxSizeMB={200}/>
+  <FileDropzone accept="application/pdf,.pdf" files={files} onChange={rows=>{setSendingToTranslation(false);jobRef.current++;controller.current?.abort();setFiles(rows);setText("");setError("");setTableFile(null);setTableNote("");setHandoffSource("")}} disabled={busy} kind="pdf" maxSizeMB={200}/>
   {handoffSource==="pdf-to-xlsx"&&<p className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{t("这是从 PDF 转 Excel 自动继续过来的扫描件。OCR 后会尝试直接生成 Excel，不需要重新上传。","This scanned PDF was continued from PDF to Excel. After OCR, an Excel file will be created when a stable table structure is found.")}</p>}
   <p className="text-sm text-[var(--lx-muted)]">{t("第 1 页免费识别；完整文档从第 2 页起按现有 OCR 规则计费。","Page 1 can be recognized free. Full-document processing follows the existing OCR pricing from page 2 onward.")}{pages?` · ${pages} ${t("页","pages")}`:""}</p>
   <select aria-label={t("识别语言","Recognition language")} disabled={busy} value={ocrLang} onChange={e=>{setOcrLang(e.target.value);setText("");setTableFile(null);setTableNote("");setStage("");setError("")}} className="rounded-xl border px-3 py-2"><option value="chi_sim+eng"><ToolUiText text="简体中文 + English" /></option><option value="chi_tra+eng"><ToolUiText text="繁體中文 + English" /></option><option value="eng">English</option><option value="jpn+eng"><ToolUiText text="日本語 + English" /></option><option value="kor+eng">한국어 + English</option></select>
@@ -125,6 +149,7 @@ export default function PdfOcrWorkbench(){
   {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   {tableNote&&<p className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{tableNote}</p>}
   {text&&<textarea value={text} onChange={e=>setText(e.target.value)} rows={18} className="w-full rounded-2xl border p-4 font-mono text-sm"/>}
+  {text.trim()&&!busy&&<button type="button" disabled={sendingToTranslation} onClick={()=>void continueToTranslation()} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-5 py-2.5 text-sm disabled:opacity-40">{t("将识别文字继续翻译","Translate recognized text")}</button>}
   {results.length>0&&<ResultPanel sourceSlug="pdf-ocr" files={results} messageZh={tableFile?"OCR 与 Excel 已生成。":"OCR 文字已生成。"} messageEn={tableFile?"OCR and Excel are ready.":"OCR text is ready."}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
  </div>;

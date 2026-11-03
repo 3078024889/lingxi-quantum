@@ -5,6 +5,7 @@ import {useLingxiLang} from '@/lib/lingxi-i18n';
 import FileDropzone from './FileDropzone';
 import ResultPanel from './ResultPanel';
 import {prepareTranslationDocument,type TranslationDocument} from '@/lib/tools/shared/document-translation';
+import {consumeToolHandoff} from '@/lib/tools/workspace/handoff';
 import {parseTranslatedSegments,TRANSLATION_LANGUAGES} from '@/lib/tools/document-translation-contract';
 import type {ToolResultFile} from '@/lib/tools/types';
 const names={zh:'中文',en:'English',ja:'日本語',ko:'한국어',fr:'Français',de:'Deutsch',es:'Español',pt:'Português',ar:'العربية'};
@@ -30,6 +31,26 @@ export default function DocumentTranslateWorkbench(){
  const [needsLogin,setNeedsLogin]=useState(false);
  const active=useRef<AbortController|null>(null);
  useEffect(()=>()=>active.current?.abort(),[]);
+ useEffect(()=>{
+  let live=true;
+  const u=new URL(location.href),id=u.searchParams.get("handoff");
+  if(!id)return;
+  // A handoff is a single-use, same-origin browser database record. Accept
+  // only the intended PDF OCR source and a real, bounded UTF-8 text file.
+  void consumeToolHandoff(id).then(payload=>{
+   if(!live||payload?.sourceSlug!=="pdf-ocr"||payload.files.length!==1)return;
+   const file=payload.files[0];
+   if(!file||!file.name.toLowerCase().endsWith(".txt")||
+      file.size<1||file.size>40*1024*1024||!file.type.startsWith("text/plain"))return;
+   setFiles([file]);setResults([]);setStatus("");setError("");setNeedsLogin(false);
+  }).catch(()=>{}).finally(()=>{
+   if(!live)return;
+   const clean=new URL(location.href);clean.searchParams.delete("handoff");
+   history.replaceState(history.state,"",clean.pathname+clean.search+clean.hash);
+  });
+  return()=>{live=false};
+ },[]);
+
  async function run(){
   if(active.current||!files[0])return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setNeedsLogin(false);setResults([]);setStatus(t[10]);let document:TranslationDocument|undefined;
   try{
