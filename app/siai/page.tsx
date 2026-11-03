@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SiaiRankingHome,{type SiaiHomeRow} from "@/components/SiaiRankingHome";
+import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {getSiaiSourcePreviewRows} from "./candidate-public";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
@@ -16,10 +17,11 @@ import {productAnswerHeadline} from "../../lingxifield-ai-market/lib/market-resu
 export const dynamic="force-dynamic";
 export const revalidate=0;
 export const metadata:Metadata={
- title:"全球 SIAI 排行榜｜SI/AI 工具哪个好用？功能、价格与免费额度对比｜灵犀场",
- description:"全球 SIAI（SI/AI）工具行情与厂商排行榜：比较真实官方价格、免费额度、主要功能、地区可用、付款方式、创始人与公司背景、上市状态和商用条件。查看官网直接使用。",
+ title:"全球AI排行榜与AI行情平台｜全球SI／SIAI排行榜｜灵犀场 LINGXIFIELD",
+ description:"找全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台、全球SIAI排行榜？灵犀场按用途展示全球AI公司、模型、工具、免费额度、价格、地区和商用条件，并链接官方资料。",
+ keywords:[...SIAI_DISCOVERY.zh.topics.map(t=>t.q),...SIAI_DISCOVERY.zh.extras,"灵犀场","LINGXIFIELD","全球AI工具行情","全球AI模型排行榜","AI工具推荐","AI模型API价格","AI视频生成平台","AI公司排行榜"],
  alternates:{canonical:PRIMARY_SITE+"/siai"},
- openGraph:{title:"全球 SIAI 排行榜｜灵犀场",description:"全球 SI/AI 工具与厂商行情，先找到适合自己任务的工具，再看价格和使用条件。",url:PRIMARY_SITE+"/siai"},
+ openGraph:{title:"全球AI排行榜与SIAI行情平台｜灵犀场",description:"全球AI、SI与SIAI工具目录：比较功能、价格、免费额度、地区条件和官方来源。",url:PRIMARY_SITE+"/siai"},
  robots:{index:siaiLandingShouldIndex(),follow:true}
 };
 
@@ -55,9 +57,11 @@ export default function Home(){
  const rows=[...curated,...getSiaiSourcePreviewRows()];
  if(rows.length!==62||new Set(rows.map(r=>r.id)).size!==62)throw Error("SIAI_DIRECTORY_62_UNIQUE_ROWS_REQUIRED");
  const jsonld={"@context":"https://schema.org","@type":"CollectionPage",name:"全球 SIAI 排行榜",
+  alternateName:SIAI_DISCOVERY.zh.topics.map(t=>t.q),keywords:[...SIAI_DISCOVERY.zh.topics.map(t=>t.q),...SIAI_DISCOVERY.zh.extras].join(", "),
+  about:[{"@type":"Thing",name:"AI / SI tools"},{"@type":"Thing",name:"AI software pricing and free tiers"}],
   url:PRIMARY_SITE+"/siai",description:"灵犀场全球 SIAI 排行榜，按功能、模型、免费额度、价格、地区、付款方式及公司背景比较 SI/AI 工具与厂商。",
   mainEntity:{"@type":"ItemList",numberOfItems:curated.length,itemListElement:curated.map((r,i)=>({
    "@type":"ListItem",position:i+1,name:r.name,url:r.website
   }))}};
- return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld)}}/><Nav/><SiaiRankingHome rows={rows}/><Footer/></>;
+ return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><Nav/><SiaiRankingHome rows={rows}/><Footer/></>;
 }

@@ -1,6 +1,6 @@
 import type {LingxiLang} from './lingxi-i18n';
 export const PUBLIC_SEARCH_TITLES:Record<LingxiLang,string>={
- zh:'灵犀场 LINGXIFIELD｜全球SI/AI工具排行榜、SASI创作与在线实用工具',
+ zh:'全球AI排行榜与全球SIAI行情平台｜SI/AI工具比较、SASI创作与免费在线工具｜灵犀场 LINGXIFIELD',
  en:'Global SIAI (SI/AI) Tool Rankings, SASI Creation & Online Utilities | LINGXIFIELD',
  ja:'世界のSIAI（SI/AI）ツールランキング・SASI創作・オンラインツール｜LINGXIFIELD',
  ko:'글로벌 SIAI(SI/AI) 도구 순위 · SASI 창작 · 온라인 도구 | LINGXIFIELD',
@@ -11,7 +11,7 @@ export const PUBLIC_SEARCH_TITLES:Record<LingxiLang,string>={
  ar:'تصنيف أدوات SI/AI وإبداع SASI والأدوات عبر الإنترنت | LINGXIFIELD'
 };
 export const PUBLIC_FEATURE_COPY:Record<LingxiLang,{headline:string;freeTools:string;description:string;directory:string;free:string;paid:string}>={
- zh:{headline:'全球 SIAI（SI/AI）工具排行榜 · SASI 智能创作 · 100+在线实用工具',freeTools:'100+在线工具 · 每日免费体验',description:'全球SI/AI工具太多，不知道哪个好用？灵犀场全球SIAI排行榜帮助比较SI/AI公司、模型、功能、价格、免费额度、地区可用性和使用条件。还能使用SASI生成AI短剧、构建网站、开展智能问答，以及100+在线实用工具，每日免费体验。付费功能会在使用前显示费用。',directory:'按功能找工具',free:'每日体验',paid:'有收费功能'},
+ zh:{headline:'全球 SIAI（SI/AI）工具排行榜 · SASI 智能创作 · 100+在线实用工具',freeTools:'100+在线工具 · 每日免费体验',description:'找全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台？灵犀场全球SIAI排行榜比较AI公司、模型、功能、价格、免费额度、地区可用性和使用条件；还提供SASI创作和100+在线实用工具。产品资料附官方来源，付费功能执行前显示费用。',directory:'按功能找工具',free:'每日体验',paid:'有收费功能'},
  en:{headline:'Global SIAI (SI/AI) Rankings · SASI creation · 100+ online utilities',freeTools:'100+ online tools · daily free trials',description:'Too many SI/AI tools to choose from? LINGXIFIELD Global SIAI Rankings compares SI/AI companies, models, features, prices, free plans and availability. Create SI/AI short dramas with SASI and explore 100+ online utilities with daily trials.',directory:'Find a tool by function',free:'Daily trial',paid:'Includes paid features'},
  ja:{headline:'世界のSIAI（SI/AI）ツールランキング・SASI創作・100以上のオンラインツール',freeTools:'100以上のツール・毎日無料体験',description:'SI/AIツールが多すぎて選べない？LINGXIFIELDの世界SIAIランキングで企業・モデル・機能・価格・無料枠・利用地域を比較。SASIでSI/AI短編ドラマやWebサイトを制作し、100以上のオンラインツールも毎日体験できます。',directory:'機能からツールを探す',free:'毎日体験',paid:'有料機能あり'},
  ko:{headline:'글로벌 SIAI(SI/AI) 순위 · SASI 창작 · 100개 이상의 온라인 도구',freeTools:'100개 이상 도구 · 매일 무료 체험',description:'SI/AI 도구가 너무 많아 선택하기 어렵나요? LINGXIFIELD 글로벌 SIAI 순위에서 SI/AI 기업, 모델, 기능, 가격, 무료 한도, 지원 지역을 비교하세요. SASI 영상·웹사이트 제작과 100개 이상의 온라인 도구도 이용할 수 있습니다.',directory:'기능별 도구 찾기',free:'일일 체험',paid:'유료 기능 포함'},
