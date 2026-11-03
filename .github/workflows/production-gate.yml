@@ -56,7 +56,7 @@ jobs:
         run: pnpm ci:source
 
       - name: SIAI 62-row source-preview provenance gate
-        run: node --test tests/siai-source-preview.test.mjs
+        run: node --test tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs
 
       - name: Playwright import/dependency contract
         run: pnpm ci:playwright-contract

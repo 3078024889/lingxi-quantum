@@ -33,5 +33,10 @@ test('main-site vendor submission is reachable and rejects invalid requests',asy
  await expect(page.locator('input[name="productName"]')).toHaveValue('ChatGPT');
  await expect(page.locator('input[name="officialSite"]')).toBeVisible();
  const invalid=await page.request.post('/api/vendor/submit',{headers:{origin:new URL(page.url()).origin},data:{}});
+ // A genuine same-origin request reaches body validation. Foreign origins fail closed.
  expect(invalid.status()).toBe(400);
+ expect((await invalid.json()).error).toBe("INVALID_SUBMISSION");
+ const spoof=await page.request.post('/api/vendor/submit',{headers:{origin:'https://attacker.example'},data:{}});
+ expect(spoof.status()).toBe(403);
+ expect((await spoof.json()).error).toBe("INVALID_ORIGIN");
 });

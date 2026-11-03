@@ -1,7 +1,7 @@
 import {SITE} from "@/lib/seo/global-seo";
 import {PUBLIC_FEATURE_COPY} from '@/lib/public-feature-copy';
 export default function SiteStructuredData(){
- const aliases=["LINGXIFIELD","灵犀场","灵犀场 LINGXIFIELD"];
+ const aliases=["LINGXIFIELD","灵犀场","灵犀场 LINGXIFIELD","全球 SIAI 排行榜"];
  const graph={"@context":"https://schema.org","@graph":[
   {"@type":"Organization","@id":`${SITE}/#organization`,name:"灵犀场 LINGXIFIELD",alternateName:aliases,url:SITE,logo:`${SITE}/images/lingxifield-logo.png`,email:"support@lingxifield.com",description:PUBLIC_FEATURE_COPY.zh.description},
   {"@type":"WebSite","@id":`${SITE}/#website`,url:SITE,name:"灵犀场 LINGXIFIELD",alternateName:aliases,description:PUBLIC_FEATURE_COPY.zh.description,publisher:{"@id":`${SITE}/#organization`},inLanguage:["zh-CN","en","ja","ko","fr","de","es","pt","ar"]}

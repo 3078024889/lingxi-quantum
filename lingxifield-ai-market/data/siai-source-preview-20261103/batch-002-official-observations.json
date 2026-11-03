@@ -1,7 +1,7 @@
 {
   "schema": "lingxifield_candidate_official_observations_v1",
   "batch": "B002",
-  "observedOn": "2026-11-02",
+  "observedOn": "2026-11-03",
   "disclaimer": "Unapproved public first-party page excerpts, not a verified full account purchase, model evaluation or launch-ready company profile.",
   "products": [
     {
@@ -200,8 +200,11 @@
           ]
         },
         "payment": {
-          "status": "missing",
-          "reason": "官网企业价格通过 Get a quote 询价，尚未找到由 Tabnine 官方明确列出的信用卡、PayPal、银行转账等最终收款渠道及逐国限制；不可依据第三方转售网页推断。"
+          "status": "observed",
+          "text": "Tabnine 官方服务条款确认订阅费用以美元计价，并规定付费与退款条件，但未公开列明银行卡、PayPal、支付宝、微信支付等具体收款方式；具体付款渠道须由销售或实际结算页面确认，不能宣称已支持任何特定渠道。",
+          "source": "https://www.tabnine.com/terms-of-use/",
+          "checkedAt": "2026-11-03",
+          "scope": "subscription_fees_usd_payment_methods_not_documented"
         },
         "company": {
           "status": "observed",

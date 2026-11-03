@@ -1,5 +1,7 @@
+"use client";
 import Link from "next/link";
 import type {SeoLocale} from "@/lib/seo/global-seo";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
 
 type Question = {q:string;a:string;href:string;link:string};
 type Content = {eyebrow:string;title:string;intro:string;questions:Question[];explore:string;create:string;tools:string};
@@ -366,7 +368,9 @@ const HOME_EXTRA:Record<SeoLocale,HomeExtra>={
 const CREATIVE_PATHS=["/sasi/drama","/sasi/build","/ai-knowledge","/ai-learning"] as const;
 const TOOL_PATHS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=CSV","/tools?q=临时邮箱"] as const;
 
-export default function HomeSeoAnswers({locale}:{locale:SeoLocale}){
+export default function HomeSeoAnswers({locale:initialLocale}:{locale:SeoLocale}){
+ const {lang}=useLingxiLang();
+ const locale=(lang||initialLocale) as SeoLocale;
  const copy=FAQ[locale]||FAQ.zh;
  const extra=HOME_EXTRA[locale]||HOME_EXTRA.zh;
  return <section className="lx-seo-answers" aria-labelledby="lx-seo-title" lang={locale==="zh"?"zh-CN":locale} dir={locale==="ar"?"rtl":"ltr"}>
