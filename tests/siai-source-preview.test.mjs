@@ -31,7 +31,7 @@ test("30 unique staged IDs remain explicitly unapproved in source, no price/regi
   }
  }
  assert.equal(ids.size,30);assert.equal(groups.size,28);
- assert.deepEqual({observed,missing,conflict},{observed:204,missing:6,conflict:0});
+ assert.deepEqual({observed,missing,conflict},{observed:205,missing:5,conflict:0});
 });
 test("preview is joined to main SIAI UI, never published as a verified SEO product page",()=>{
  assert.match(page,/getSiaiSourcePreviewRows/);

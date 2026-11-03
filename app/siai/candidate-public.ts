@@ -62,7 +62,7 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
  };
  // A changed evidence ledger cannot silently turn provisional product rows into verified ranking facts.
  if(snapshot.candidateProducts!==30||snapshot.publisherGroups!==28||
-    snapshot.totals.observed!==204||snapshot.totals.missing!==6||snapshot.totals.conflict!==0){
+    snapshot.totals.observed!==205||snapshot.totals.missing!==5||snapshot.totals.conflict!==0){
   throw Error("SIAI_PREVIEW_SOURCE_SNAPSHOT_CHANGED");
  }
  return snapshot.products.map(p=>{
