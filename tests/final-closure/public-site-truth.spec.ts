@@ -8,12 +8,14 @@ for(const [i,locale]of locales.entries())test('public copy and controls '+locale
  const footer=page.locator('footer');
  await expect(footer.locator('a[href="/release"]')).toHaveText(release[i]);
  await expect(footer).not.toContainText(/生态|Intelligent Ecosystem|Ecossistema inteligente|Ecosistema inteligente/);
- await expect(footer).toContainText(PUBLIC_FEATURE_COPY[locale].headline);
- await expect(footer).toContainText(PUBLIC_FEATURE_COPY[locale].freeTools);
+ await expect(footer).toContainText(PUBLIC_FEATURE_COPY[locale].description);
+ for(const path of ['/siai','/sasi','/tools','/terms','/privacy'])await expect(footer.locator('a[href="'+path+'"]').first()).toBeVisible();
+ await expect(page.locator('.lx-seo-answers')).toBeVisible();
+ await expect(page.locator('.lx-seo-vendor a[href^="mailto:business@lingxifield.com"]')).toBeVisible();
  await expect(page.locator('main textarea')).toHaveAttribute('aria-label',/./);
  await expect(page.locator('.lx11-lang-label').first()).not.toContainText('/ Language');
  const cards=await page.locator('.lx11-home-card').evaluateAll(elements=>elements.map(card=>{const desc=card.querySelector('p')!.getBoundingClientRect(),action=card.querySelector('b')!.getBoundingClientRect(),bounds=card.getBoundingClientRect();return{descriptionBottom:desc.bottom,actionTop:action.top,actionBottom:action.bottom,cardBottom:bounds.bottom}}));
- expect(cards).toHaveLength(6);for(const card of cards){expect(card.actionTop).toBeGreaterThanOrEqual(card.descriptionBottom);expect(card.actionBottom).toBeLessThanOrEqual(card.cardBottom);}
+ expect(cards).toHaveLength(3);for(const card of cards){expect(card.actionTop).toBeGreaterThanOrEqual(card.descriptionBottom);expect(card.actionBottom).toBeLessThanOrEqual(card.cardBottom);}
  await expect(page.locator('html')).toHaveAttribute('dir',locale==='ar'?'rtl':'ltr');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  if(locale!=='zh'){
@@ -78,6 +80,6 @@ test('homepage exposes structured site and application identity',async({page})=>
  const json=(await page.locator('script[type="application/ld+json"]').allTextContents()).join('\n');
  expect(json).toContain('灵犀场 LINGXIFIELD');
  expect(json).toContain('SoftwareApplication');
- expect(json).toContain('100+免费在线实用工具');
+ expect(json).toContain('100+在线实用工具');
  expect(json).toContain('https://lingxifield.com/');
 });

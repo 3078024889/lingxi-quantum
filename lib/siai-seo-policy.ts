@@ -15,6 +15,10 @@ export function hasIndexableFacts(facts:RequiredFact|undefined|null){
  return (['price','free','models','region'] as const).every(k=>
   known(facts[k])&&sourced(facts[(k+'Source') as keyof RequiredFact]));
 }
+/** The public ranking landing page is indexable in production independently of detail-page evidence gates. */
+export function siaiLandingShouldIndex(env:Record<string,string|undefined>=process.env){
+ return env.VERCEL_ENV==="production";
+}
 export function siaiSeoEnabled(env:Record<string,string|undefined>=process.env){
  return env.VERCEL_ENV==='production'&&env.SIAI_MAIN_INDEX_READY==='1';
 }
