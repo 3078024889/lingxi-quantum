@@ -25,7 +25,8 @@ test("OCR line bbox is preserved even when only word boxes exist",()=>{
  assert.equal(r.text,"Hello world");assert.equal(r.x,10);assert.equal(r.y,30);assert.equal(r.w,65);assert.equal(r.h,30);
 });
 test("oversized OCR boxes clip to the page and invalid words are discarded",()=>{
- const data=[{paragraphs:[{lines:[{text:"TEXT",bbox:{x0:-10,y0:-10,x1:2000,y1:3000}},{text:"bad",bbox:{x0:40,y0:30,x1:40,y1:30}}]}]}]}];
+ const lines=[{text:"TEXT",bbox:{x0:-10,y0:-10,x1:2000,y1:3000}},{text:"bad",bbox:{x0:40,y0:30,x1:40,y1:30}}];
+ const data=[{paragraphs:[{lines}]}];
  const r=pdfOcrTextRegions(data,200,100);
  assert.equal(r.length,1);assert.equal(r[0].x,0);assert.equal(r[0].w,100);
 });
