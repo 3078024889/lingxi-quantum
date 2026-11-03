@@ -1,0 +1,65 @@
+name: LINGXIFIELD Real HEVC HEIC Desktop Mobile File Conversion
+on:
+  push:
+    branches: [test/heic-file-delivery-20261104]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxi-heic-real-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  real-heic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Pin pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Pin Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install HEIF fixture encoder and check commands
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libheif-examples libheif-plugin-x265 libheif-plugin-libde265
+          heif-enc --help | head -n 5
+      - name: Generate a real HEVC HEIC photo from original geometric pixels
+        run: |
+          node --input-type=module <<'NODE'
+          import sharp from "sharp";
+          const out="/tmp/lingxifield-real-heic-source.png";
+          await sharp({create:{width:360,height:240,channels:3,background:{r:190,g:62,b:38}}}).png().toFile(out);
+          console.log("Original synthetic raster ready");
+          NODE
+          heif-enc -q 82 /tmp/lingxifield-real-heic-source.png -o /tmp/lingxifield-real-heic-fixture.heic
+          heif-info /tmp/lingxifield-real-heic-fixture.heic
+          test -s /tmp/lingxifield-real-heic-fixture.heic
+      - name: Build real production Next.js app
+        run: pnpm build
+      - name: Install Chrome with all dependencies
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Browser two actual HEIC conversions and two corrupt-input tests on desktop/mobile
+        env:
+          HEIC_FIXTURE_PATH: /tmp/lingxifield-real-heic-fixture.heic
+        run: pnpm exec playwright test -c playwright.final.config.ts --workers=2 tests/final-closure/heic-output-v91.spec.ts tests/final-closure/heic-invalid-real.spec.ts
+      - name: Traces and outputs for diagnosis
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: lingxi-real-heic-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore
