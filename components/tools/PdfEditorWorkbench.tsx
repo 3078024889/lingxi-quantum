@@ -212,7 +212,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
    setSelectedOverlayId(o.id);
   }catch{setRecognitionMessage(imageCopy.rejected)}finally{setBusy(false)}
  }
- function deleteNativeImage(o:Overlay){setOverlays(items=>items.map(v=>v.id===o.id?{...v,nativeImageDeleted:true,nativeImageReplacement:false}:v));setSelectedOverlayId(null)}
+ function deleteNativeImage(o:Overlay){setOverlays(items=>items.map(v=>v.id===o.id?{...v,nativeImageDeleted:true}:v));setSelectedOverlayId(null)}
  async function load(f:File){if(!confirmDocumentUpload([f],lang))return;setDoneNote("");setError("");if(!isDocumentInputFile(f)){setError(c.unsupported);return}setBusy(true);setPreviewImages([]);setOverlays([]);try{const normalized=await normalizeInput(f);const d=await PDFDocument.load(await normalized.arrayBuffer());const count=d.getPageCount();if(count<1)throw new Error("EMPTY_PDF");const id=newPaidTaskDraftId();setOutput(null);pendingDownload.current=null;setStamp(null);setInkPreview(null);setInkError("");setSeamNote("");await deletePaidTaskDraft(resultKey).catch(()=>{});setDraftId(id);setFile(normalized);setPages(count);setSelectedPage(1);setSelectedPageInput("1");setPageRange(`1-${count}`);await renderSourcePage(normalized,1);}catch(e){setFile(null);setPages(0);setPageImage("");setError(e instanceof Error&&e.message.startsWith("DOCUMENT_")?documentIntakeError(lang,e):plainText(lang,"pdfError"));}finally{setBusy(false)}}
  useEffect(()=>{if(file)void renderSourcePage(file,selectedPage)},[file,selectedPage,renderSourcePage]);
  function commitPageInput(){const n=Number(selectedPageInput);if(Number.isInteger(n)&&n>=1&&n<=pages){setSelectedPage(n);setSelectedPageInput(String(n));}else setSelectedPageInput(String(selectedPage));}

@@ -41,11 +41,11 @@ export async function applyNativeImageChanges(bytes:Uint8Array,changes:NativeIma
  const seen=new Set<string>();
  for(const change of changes){
   if(!Number.isSafeInteger(change.pageIndex)||change.pageIndex<0)throw Error("PDF_IMAGE_PAGE_INVALID");
-  const key=[change.pageIndex,change.target.name,change.target.rect.x,change.target.rect.y].join(":");
+  const key=[change.pageIndex,change.target.name,change.target.rect.x,change.target.rect.y,change.target.rect.width,change.target.rect.height].join(":");
   if(seen.has(key))throw Error("PDF_IMAGE_DUPLICATE_TARGET");seen.add(key);
   const images=await locatePageImages(result,change.pageIndex);
   const candidate=images.filter(img=>img.editable&&img.name===change.target.name&&
-    Math.hypot(img.rect.x-change.target.rect.x,img.rect.y-change.target.rect.y)<2);
+    Math.hypot(img.rect.x-change.target.rect.x,img.rect.y-change.target.rect.y)<2&&Math.abs(img.rect.width-change.target.rect.width)<2&&Math.abs(img.rect.height-change.target.rect.height)<2);
   if(candidate.length!==1)throw Error("PDF_IMAGE_TARGET_MISSING_OR_AMBIGUOUS");
   const image=candidate[0];
   if(change.action.kind==="move"&&!image.transformable)throw Error("PDF_IMAGE_TRANSFORM_UNSUPPORTED");

@@ -50,8 +50,13 @@ test("image replacement changes one page without replacing shared XObject on ano
  const out=await engine.applyNativeImageChanges(bytes,[{pageIndex:0,target:region.target,action:{kind:"replace",dataUrl,mime:"image/png"}}]);
  const {locatePageImages}=load("lib/tools/pdf-native/image-mutate.ts");
  const [edited]=await locatePageImages(out,0),[other]=await locatePageImages(out,1);
+ const [beforeOther]=await locatePageImages(bytes,1);
  assert.notEqual(edited.name,region.target.name);
- assert.equal(other.name,region.target.name);
+ // PDF-lib may assign different resource aliases on each page even for one shared XObject.
+ // Compare the untouched page to its own original instead of assuming aliases coincide.
+ assert.equal(other.name,beforeOther.name);
+ assert.equal(other.rect.x,beforeOther.rect.x);assert.equal(other.rect.y,beforeOther.rect.y);
+ assert.equal(other.naturalWidth,beforeOther.naturalWidth);
  assert.equal(edited.naturalWidth,4);assert.equal(other.naturalWidth,8);
 });
 test("suspicious signatures and duplicate original image targets fail closed",async()=>{
@@ -63,4 +68,19 @@ test("suspicious signatures and duplicate original image targets fail closed",as
  {pageIndex:0,target:region.target,action:{kind:"delete"}},
  {pageIndex:0,target:region.target,action:{kind:"delete"}}
  ]));
+});
+
+test("image resize and replace work as one source-operator transaction",async()=>{
+ const bytes=await sample(),[region]=await engine.locateEditableNativeImages(bytes,0);
+ const original=region.target,rect={...original.rect,width:125,height:75};
+ const png=await sharp({create:{width:12,height:10,channels:4,background:{r:0,g:180,b:255,alpha:1}}}).png().toBuffer();
+ const out=await engine.applyNativeImageChanges(bytes,[
+  {pageIndex:0,target:original,action:{kind:"move",rect}},
+  {pageIndex:0,target:{...original,rect},action:{kind:"replace",mime:"image/png",dataUrl:"data:image/png;base64,"+png.toString("base64")}}
+ ]);
+ const {locatePageImages}=load("lib/tools/pdf-native/image-mutate.ts");
+ const [edited]=await locatePageImages(out,0),[other]=await locatePageImages(out,1);
+ assert.equal(edited.naturalWidth,12);
+ assert.equal(other.naturalWidth,8);
+ assert.ok(edited.rect.width>0);
 });

@@ -77,3 +77,32 @@ test("original PDF image can be replaced with an independent resource, without a
  expect(other.naturalWidth).toBe(64);
  expect(other.rect.x).toBeCloseTo(170,2);
 });
+
+test("dragging a corner of an existing PDF image changes its original PDF drawing geometry",async({page},testInfo)=>{
+ test.setTimeout(150000);
+ await paymentMock(page);
+ const original=await twoPageSource();
+ await upload(page,original);
+ await page.getByTestId("pdf-source-image-region").first().click();
+ const overlay=page.locator('[data-testid="pdf-overlay"][data-native-image="true"]');
+ const grip=page.getByTestId("pdf-grip-se");
+ await expect(grip).toBeVisible();
+ const before=await overlay.boundingBox(),box=await grip.boundingBox();
+ expect(before).not.toBeNull();expect(box).not.toBeNull();
+ const x=box!.x+box!.width/2,y=box!.y+box!.height/2;
+ if(testInfo.project.name==="mobile-chromium"){
+  const client=await page.context().newCDPSession(page);
+  await client.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y,id:1,force:1,radiusX:4,radiusY:4}]});
+  for(let i=1;i<=10;i++)await client.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+5*i,y:y+2*i,id:1,force:1,radiusX:4,radiusY:4}]});
+  await client.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+ }else{
+  await page.mouse.move(x,y);await page.mouse.down();
+  await page.mouse.move(x+50,y+20,{steps:10});await page.mouse.up();
+ }
+ await expect.poll(async()=> (await overlay.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+5);
+ const after=await exportPdf(page);
+ const [moved]=await locatePageImages(after,0),[sibling]=await locatePageImages(after,1);
+ expect(moved.rect.width).toBeGreaterThan(120);
+ expect(sibling.rect.x).toBeCloseTo(170,2);
+ expect(sibling.rect.width).toBeCloseTo(120,2);
+});
