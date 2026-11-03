@@ -23,7 +23,7 @@ const copy:Record<LingxiLang,Copy>={
   kicker:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
   seoTitle:"灵犀场 LINGXIFIELD｜全球AI工具排行榜、SASI创作与在线实用工具",
   seoDesc:"全球AI工具太多，不知道哪个好用？灵犀场全球SIAI排行榜帮助比较AI公司、模型、功能、价格、免费额度、地区可用性和使用条件。还能使用SASI生成AI短剧、构建网站、开展智能问答，以及100+在线实用工具，每日免费体验。",hero:"全球 AI 工具太多，不知道哪个好用？",
-  lead:"灵犀场全球 SIAI 排行榜帮你找答案。比较功能、价格、免费额度与地区，找到适合你的 AI，再用 SASI 创作或直接使用在线工具。",
+  lead:"灵犀场全球 SIAI 排行榜帮你找答案。汇聚全球 AI 公司、模型与工具，比较能做什么、真实价格、免费额度、地区和使用体验。少花钱、少踩坑，找到适合自己任务的智能 SI 或 AI 伙伴。",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",
   taskTitle:"你现在要完成什么？",taskLead:"选一个任务，就能看到对应工具和下一步操作。",start:"开始",
   why:"不知道从哪开始？按问题直接找答案",finishNow:"PDF 改不了怎么办？图片太大怎么压？",finishNowBody:"按文件类型找到工具：合并 PDF、压缩图片、转换格式、制作字幕或处理表格。上传前看清格式要求，完成后核对结果。",
@@ -175,7 +175,7 @@ const copy:Record<LingxiLang,Copy>={
 };
 
 const SIAI_HOME_ENTRY:Record<LingxiLang,{title:string;description:string;cta:string}>={
- zh:{title:"全球 SIAI 排行榜",description:"全球 AI 公司、模型与工具一站式对比，功能、价格、免费额度、地区与使用条件一眼看清",cta:"比较全球 AI 工具"},
+ zh:{title:"全球 SIAI 发现",description:"想写文章、做视频还是编程？按任务比较模型能力、价格、免费额度和地区，找到能完成任务的 AI。",cta:"探索全球 SIAI 排行榜"},
  en:{title:"Global SIAI Rankings",description:"Compare AI companies, models and tools by tasks, pricing, free plans and regional access",cta:"Compare AI tools"},
  ja:{title:"世界の SIAI ランキング",description:"世界のAI企業・モデル・ツールの機能、価格、無料枠、利用地域を比較",cta:"AIツールを比較"},
  ko:{title:"글로벌 SIAI 순위",description:"글로벌 AI 기업, 모델 및 도구의 기능, 가격, 무료 한도, 지원 지역 비교",cta:"AI 도구 비교"},
@@ -184,6 +184,18 @@ const SIAI_HOME_ENTRY:Record<LingxiLang,{title:string;description:string;cta:str
  es:{title:"Ranking mundial SIAI",description:"Compara empresas, modelos y herramientas IA: funciones, precios, planes gratis y regiones",cta:"Comparar herramientas IA"},
  pt:{title:"Ranking global SIAI",description:"Compare empresas, modelos e ferramentas IA: recursos, preços, opções grátis e regiões",cta:"Comparar ferramentas IA"},
  ar:{title:"تصنيف SIAI العالمي",description:"قارن شركات ونماذج وأدوات الذكاء الاصطناعي حسب الوظائف والأسعار والحصص المجانية والمناطق",cta:"قارن أدوات الذكاء الاصطناعي"},
+};
+
+const TOOL_CATEGORY_LABEL:Record<LingxiLang,string>={
+ zh:"展开查看：PDF · 图片 · 视频 · 音频 · 文件表格 · 隐私工具",
+ en:"Explore PDF, images, video, audio, spreadsheets and privacy tools",
+ ja:"PDF・画像・動画・音声・表計算・プライバシーツールを表示",
+ ko:"PDF·이미지·영상·오디오·표·개인정보 보호 도구 보기",
+ fr:"Voir les outils PDF, image, vidéo, audio, tableurs et confidentialité",
+ de:"PDF-, Bild-, Video-, Audio-, Tabellen- und Datenschutztools anzeigen",
+ es:"Ver herramientas de PDF, imagen, vídeo, audio, hojas de cálculo y privacidad",
+ pt:"Ver ferramentas de PDF, imagem, vídeo, áudio, planilhas e privacidade",
+ ar:"عرض أدوات PDF والصور والفيديو والصوت والجداول والخصوصية",
 };
 
 export default function HomeProblemHub(){
@@ -201,12 +213,8 @@ export default function HomeProblemHub(){
  const hit=useMemo(()=>{const s=q.toLowerCase();return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
   {href:"/siai",icon:"products" as LingxiIconName,title:market.title,desc:market.description},
-  {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
-  {href:"/sasi?mode=book",icon:"book" as LingxiIconName,title:c.book,desc:c.bookDesc},
-  {href:"/sasi?mode=learning",icon:"learning" as LingxiIconName,title:c.learning,desc:c.learningDesc},
-  {href:"/sasi?mode=research",icon:"research" as LingxiIconName,title:c.research,desc:c.researchDesc},
-  {href:"/products",icon:"products" as LingxiIconName,title:c.all,desc:c.allDesc},
+  {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
  ];
  function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
@@ -223,12 +231,12 @@ export default function HomeProblemHub(){
       <span className="shrink-0 rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white">{market.cta} →</span>
      </Link>
      <details className="mt-4 rounded-xl border border-[var(--lx-border)] p-3" data-home-tool-catalog>
-      <summary className="cursor-pointer font-medium text-[var(--lx-ink)]">{lang==="zh"?"查看全部在线工具分类":"Explore online tool categories"}</summary>
+      <summary className="cursor-pointer font-medium text-[var(--lx-ink)]">{TOOL_CATEGORY_LABEL[lang]}</summary>
       <div className="mt-3 grid gap-1 text-sm leading-6 text-[var(--lx-muted)]">
        {FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong className="text-[var(--lx-ink)]">{category.title}：</strong>{category.body}</p>)}
       </div>
      </details>
-     <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"短剧视频生成、网站构建、书本、学习、科研多模型创作；9国语言，支持 CNY/USD 与微信支付、支付宝、PayPal。":"SASI supports short-video creation, websites, books, study and research across nine languages, with CNY/USD payments."}</p>
+     <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"SASI 可用于短剧、网站、书本、学习和科研。涉及收费的操作会先展示费用和可用支付方式。":"SASI supports video, websites, books, study and research. Paid steps display prices and available payment methods before confirmation."}</p>
      <p className="mt-1 text-xs text-[var(--lx-muted)]">lingxifield.com · lingxifield.cn</p>
      <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
      {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
