@@ -175,7 +175,7 @@ for(const mode of ["omitted-segment","duplicate-id","replacement-character"] as 
   });
   await page.getByRole("combobox",{name:/Target/i}).selectOption("fr");
   await page.getByRole("button",{name:"Translate",exact:true}).click();
-  await expect(page.getByRole("alert")).toBeVisible({timeout:50000});
+  await expect(page.getByRole("alert").filter({hasText:"Processing incomplete"}).first()).toBeVisible({timeout:50000});
   await expect(page.getByTestId("result-file-actions")).toHaveCount(0);
   await expect(page.getByRole("button",{name:"Translate",exact:true})).toBeEnabled();
   expect(attempts).toBe(1);

@@ -78,7 +78,22 @@ export async function r2ReadPrefix(key:string,length=20):Promise<Uint8Array|null
  const bytes=new Uint8Array(await response.arrayBuffer());
  return bytes.length===length?bytes:null;
 }
+/** Never erase database references merely because DELETE returned HTTP 204.
+ * R2's direct S3 endpoint is strongly consistent after deletion: prove the
+ * object is no longer readable by both HEAD and a one-byte-range GET.
+ * Authorization/timeout/5xx failures must not be mistaken for absence. */
 export async function r2Delete(key:string){
-  const r=await fetch(presignR2("DELETE",key,120),{method:"DELETE",cache:"no-store",signal:AbortSignal.timeout(10000)});
-  return r.ok||r.status===404;
+  const deleted=await fetch(presignR2("DELETE",key,120),{method:"DELETE",cache:"no-store",signal:AbortSignal.timeout(10000)});
+  if(!deleted.ok&&deleted.status!==404)return false;
+  const [head,get]=await Promise.all([
+    fetch(presignR2("HEAD",key,120),{method:"HEAD",cache:"no-store",signal:AbortSignal.timeout(10000)}),
+    fetch(presignR2("GET",key,120),{method:"GET",headers:{Range:"bytes=0-0"},cache:"no-store",signal:AbortSignal.timeout(10000)})
+  ]);
+  try{
+    return head.status===404&&get.status===404;
+  }finally{
+    // Never download private content to verify deletion. A bounded GET and
+    // prompt body cancellation also handle accidental range-ignoring servers.
+    try{await get.body?.cancel()}catch{}
+  }
 }
