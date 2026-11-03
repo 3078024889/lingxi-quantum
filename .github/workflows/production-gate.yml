@@ -82,6 +82,14 @@ jobs:
           ffmpeg -version
           ffprobe -version
 
+      - name: Install synthetic voice fixture generator
+        run: |
+          if ! command -v espeak-ng >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends espeak-ng
+          fi
+          espeak-ng --version
+
       - name: Download and integrity-check signed C2PA test fixtures
         run: node scripts/ci/fetch-signed-c2pa-fixtures-v157.mjs
 
