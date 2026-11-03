@@ -273,8 +273,11 @@
           "scope": "current_faq_multimodal_models_separate_api_billing"
         },
         "regions": {
-          "status": "missing",
-          "reason": "未完整核验每国可用性和支付限制"
+          "status": "observed",
+          "text": "Pika 2026年8月4日更新的官方服务条款第11节：在美国制裁国家或受限名单中的用户不得访问服务；平台可能面向全球提供服务，但不是逐国注册/付款保证。其聚合平台提供的第三方模型还按各供应商地区限制，条款禁止通过 VPN 或代理绕开这些模型限制。此信息不是 Pika 所有国家的正面可用清单。",
+          "source": "https://pika.art/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "provider_model_specific_restrictions_and_us_sanctions_not_country_whitelist"
         },
         "commercial": {
           "status": "observed",
@@ -462,8 +465,11 @@
           "scope": "vendor_public_page"
         },
         "regions": {
-          "status": "missing",
-          "reason": "未逐国查明访问、付款及模型政策差异"
+          "status": "observed",
+          "text": "Leonardo.Ai 2026年1月19日官方服务条款第13.8节：用户保证自己不在美国政府禁运国家，也不是美国政府禁止或限制的主体；这是已明示的禁运合规条件，不能据此推断其他国家完整支持 AI 生成、注册和付款。条款披露的合同法人为 Leonardo Interactive Pty Ltd（ACN 662 209 485）。",
+          "source": "https://leonardo.ai/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "official_embargo_restrictions_only_no_full_country_support"
         },
         "commercial": {
           "status": "observed",
