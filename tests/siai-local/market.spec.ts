@@ -67,7 +67,7 @@ test('compare two independently selected products, then remove one without losin
 
 test('all nine languages switch the actual ranking interface, Arabic flips reading direction',async({page},testInfo)=>{
  test.skip(testInfo.project.name!=='desktop-chromium','Language selector is in a desktop sidebar; mobile uses account menu');
- const select=page.locator('aside.lx11-sidebar:not(.lx11-drawer) .lx11-lang-select');
+ const select=page.locator('aside.lx11-sidebar:not(.lx11-drawer) label.lx11-lang-label + select.lx11-lang-select');
  await expect(select).toBeVisible();
  const main=page.locator(home);
  const langs=['zh','en','ja','ko','fr','de','es','pt','ar'];
