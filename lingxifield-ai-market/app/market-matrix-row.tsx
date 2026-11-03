@@ -68,13 +68,13 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const free=p.conditions?.find(x=>x.label==='免费额度');
  const price=p.conditions?.find(x=>x.label==='价格');
  const commercial=p.conditions?.find(x=>x.label==='商用条件');
- const rawCost=price?.text||guide?.cost||p.price;
+ const rawCost=research?.price||price?.text||guide?.cost||p.price;
  const cost=localizedCatalogFact(p.id,language,'price',isUnknownText(rawCost)?(research?.price||specific.price):rawCost);
- const rawFree=free?.text||guide?.free||p.free;
+ const rawFree=research?.free||free?.text||guide?.free||p.free;
  const allowance=localizedCatalogFact(p.id,language,'free',isUnknownText(rawFree)?(research?.free||specific.free):rawFree);
- const rawModels=p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models;
+ const rawModels=research?.models||p.conditions?.find(x=>x.label==='模型与用量')?.text||access?.models;
  const models=localizedCatalogFact(p.id,language,'models',isUnknownText(rawModels)?(research?.models||specific.models):rawModels||research?.models||specific.models);
- const rawCommercial=access?.commercial||commercial?.text||research?.commercial;
+ const rawCommercial=research?.commercial||commercial?.text||access?.commercial;
  const commercialValue=isUnknownText(rawCommercial)?specific.commercial:rawCommercial;
  const licenseFact=commercialEvidence(p.id,language);
  const paymentFact=paymentFactsFor(p.id,region);
@@ -83,7 +83,7 @@ export default function MarketMatrixRow({platform:p,position,language,region,pay
  const selfHosted=new Set(['langchain','llamaindex','llamacpp','dify','n8n','comfyui','automatic1111','fasterwhisper','openai-python','whisper','vllm','transformers','openwebui','ollama']).has(p.id);
  const locallyFree=selfHosted&&!allPayments.length;
  const paymentMethods=allPayments.length?
-  [...new Set([...matched,...allPayments])].slice(0,5).map(x=>localizedPaymentName(x,language)).join(' · '):
+  [...new Set([...matched,...allPayments])].slice(0,5).map(x=>localizedPaymentName(x,language)).join(' · ')+(region!=='GLOBAL'&&paymentFact.scope==='unverified_region'?(language==='zh'?'（本地区结账需确认）':' (verify for selected country)'):''):
   locallyFree?({zh:'自托管核心免费 · 云服务另付',en:'Self-hosted core free; cloud billed separately',ja:'本体無料・決済不要',ko:'로컬 무료·결제 불필요',fr:'Logiciel local gratuit',de:'Lokale Software kostenlos',es:'Software local gratuito',pt:'Software local gratuito',ar:'البرنامج المحلي مجاني'} as Record<Language,string>)[language]:
   (language==='zh'?'以所选地区的结算方式为准':specific.payment);
  const paymentScope=paymentFact.scope==='unsupported'?regionCopy(language).status.unsupported:'';
