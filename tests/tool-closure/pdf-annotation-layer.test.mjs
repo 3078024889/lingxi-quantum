@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import test from "node:test";
-const src=readFileSync(new URL("../components/tools/PdfEditorWorkbench.tsx",import.meta.url),"utf8");
+const src=readFileSync(new URL("../../components/tools/PdfEditorWorkbench.tsx",import.meta.url),"utf8");
 test("PDF original text hitboxes sit below interactive annotations",()=>{
  const nativeAt=src.indexOf('data-testid="pdf-source-text-region"');
  assert(nativeAt>0);
