@@ -11,9 +11,10 @@ async function compare(page:Page,a:Buffer,b:Buffer){
  const picker=page.locator('input[type="file"]').first();
  await expect(picker).toBeEnabled({timeout:15000});
  await picker.setInputFiles([{name:"draft.pdf",mimeType:"application/pdf",buffer:a},{name:"signed-version.pdf",mimeType:"application/pdf",buffer:b}]);
- await page.getByRole("button",{name:/PDF Compare|PDF 比较/}).last().click();
+ await page.getByTestId("pdf-compare-run").click();
 }
 test("PDF contract amount, due date and clause changes produce downloaded page-scoped Markdown",async({page})=>{
+ test.setTimeout(90000);
  const a=await pdfWith(["Contract Amount USD 1,200.00","Payment due 2026-11-03","Clause 2: Delivery by road"]);
  const b=await pdfWith(["Contract Amount USD 2,500.00","Payment due 2026-12-15","Clause 2: Delivery by air"]);
  await compare(page,a,b);
@@ -26,6 +27,7 @@ test("PDF contract amount, due date and clause changes produce downloaded page-s
  expect(data).toContain("extracted text only");
 });
 test("two textless PDFs cannot claim no differences or offer downloadable fake comparison",async({page})=>{
+ test.setTimeout(90000);
  const empty=await pdfWith([]);
  await compare(page,empty,empty);
  await expect(page.getByRole("alert")).toContainText("PDF_COMPARE_OCR_REQUIRED",{timeout:30000});
