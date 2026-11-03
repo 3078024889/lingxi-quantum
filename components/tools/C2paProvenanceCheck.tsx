@@ -3,6 +3,12 @@ import {useEffect,useState} from "react";
 import type {LingxiLang} from "@/lib/lingxi-i18n";
 import {describeC2paManifest,type ProvenanceResult} from "@/lib/tools/media/c2pa-verdict";
 export type {ProvenanceStatus,ProvenanceResult} from "@/lib/tools/media/c2pa-verdict";
+let sdkPromise:Promise<Awaited<ReturnType<typeof import("@contentauth/c2pa-web/inline")["createC2pa"]>>>|null=null;
+/** Single SDK instance per browser session: avoid instantiating Wasm for each uploaded file. */
+async function getSdk(){
+ if(!sdkPromise)sdkPromise=import("@contentauth/c2pa-web/inline").then(({createC2pa})=>createC2pa()).catch(error=>{sdkPromise=null;throw error});
+ return sdkPromise;
+}
 
 export async function verifyC2paFile(file:File):Promise<ProvenanceResult>{
  // The workbench accepts up to 250 MB, but WebAssembly memory must be bounded.
