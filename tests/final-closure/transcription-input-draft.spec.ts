@@ -32,6 +32,6 @@ test("audio transcription rejects a non-media input before metering",async({page
  const upload=page.locator('input[type="file"]').first();
  await expect(upload).toBeEnabled({timeout:15000});
  await upload.setInputFiles({name:"not-audio.txt",mimeType:"text/plain",buffer:Buffer.from("Not media")});
- await expect(page.getByRole("alert")).toBeVisible();
+ await expect(page.locator('p[role="alert"]').filter({hasText:"Unsupported file type"})).toBeVisible();
  await expect(page.locator('[data-testid="draft-saved"]')).toHaveCount(0);
 });

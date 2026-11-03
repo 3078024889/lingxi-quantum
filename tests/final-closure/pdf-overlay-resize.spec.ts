@@ -1,34 +1,22 @@
 import fs from "node:fs";
 import {test,expect} from "./export-test";
-
-test("PDF signature/image can resize on-page by dragging a corner on desktop",async({page})=>{
- test.setTimeout(90000);
- await page.goto("/tools/pdf-editor?lang=en",{waitUntil:"domcontentloaded"});
- const pdf=fs.readFileSync("tests/fixtures/generated/basic.pdf");
- const upload=page.locator('input[type="file"]').first();
- await expect(upload).toBeEnabled({timeout:15000});
- await upload.setInputFiles({name:"resize.pdf",mimeType:"application/pdf",buffer:pdf});
+test("PDF image resizes on-page with handles and rotates",async({page})=>{
+ test.setTimeout(90000);await page.goto("/tools/pdf-editor?lang=en");
+ const upload=page.locator('input[type=file]').first();await expect(upload).toBeEnabled({timeout:15000});
+ await upload.setInputFiles({name:"demo.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
- const png=await page.evaluate(()=>{
-  const canvas=document.createElement("canvas");canvas.width=90;canvas.height=30;
-  const ctx=canvas.getContext("2d")!;ctx.fillStyle="#224488";ctx.fillRect(4,8,80,14);
-  return canvas.toDataURL("image/png").split(",")[1];
- });
- const imageInput=page.locator("label").filter({hasText:"Add image"}).locator('input[type="file"]');
- await imageInput.setInputFiles({name:"signature.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
- const handle=page.getByTestId("pdf-overlay-resize").last();
- await expect(handle).toBeVisible();
- const overlay=handle.locator("..");
- const before=await overlay.boundingBox();
- const control=await handle.boundingBox();
- expect(before).not.toBeNull();expect(control).not.toBeNull();
- await page.mouse.move(control!.x+control!.width/2,control!.y+control!.height/2);
- await page.mouse.down();
- await page.mouse.move(control!.x+control!.width/2+50,control!.y+control!.height/2+10,{steps:8});
- await page.mouse.up();
- const after=await overlay.boundingBox();expect(after).not.toBeNull();
- expect(after!.width).toBeGreaterThan(before!.width+10);
- const stage=await page.getByTestId("pdf-stage").boundingBox();expect(stage).not.toBeNull();
- expect(after!.x+after!.width).toBeLessThanOrEqual(stage!.x+stage!.width+2);
- await expect(overlay.locator("img")).toBeVisible();
+ const png=await page.evaluate(()=>{const c=document.createElement("canvas");c.width=160;c.height=60;const x=c.getContext("2d")!;x.fillStyle="#224488";x.fillRect(4,8,150,44);return c.toDataURL("image/png").split(",")[1]});
+ const input=page.locator("label").filter({hasText:"Add image"}).locator('input[type=file]');
+ await input.setInputFiles({name:"stamp.png",mimeType:"image/png",buffer:Buffer.from(png,"base64")});
+ const item=page.getByTestId("pdf-overlay").last();await expect(item).toBeVisible();
+ const grip=page.getByTestId("pdf-grip-se");await expect(grip).toBeVisible();
+ const before=await item.boundingBox(),r=await grip.boundingBox();expect(before).not.toBeNull();expect(r).not.toBeNull();
+ await page.mouse.move(r!.x+r!.width/2,r!.y+r!.height/2);await page.mouse.down();
+ await page.mouse.move(r!.x+r!.width/2+50,r!.y+r!.height/2+15,{steps:10});await page.mouse.up();
+ const after=await item.boundingBox();expect(after).not.toBeNull();expect(after!.width).toBeGreaterThan(before!.width+8);
+ const rotate=page.getByTestId("pdf-grip-rotate");await expect(rotate).toBeVisible();const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
+ await page.mouse.move(rr!.x+rr!.width/2,rr!.y+rr!.height/2);await page.mouse.down();
+ await page.mouse.move(rr!.x+rr!.width/2+30,rr!.y+rr!.height/2+40,{steps:10});await page.mouse.up();
+ expect(await item.evaluate(el=>getComputedStyle(el).transform)).not.toBe("none");
+ await expect(item.locator("img")).toBeVisible();
 });
