@@ -19,6 +19,18 @@ const LANGS=[
 
 type Target=typeof LANGS[number][0];
 type Mode="subtitle"|"dub";
+const bilingualNote:Record<typeof LANGS[number][0],string>={
+ zh:"同步提供原文＋译文双语 SRT/VTT；时间码来自真实语音识别，异常时间轴不会生成文件。",
+ en:"Bilingual SRT/VTT (original + translation) included. Timing comes from real speech recognition; invalid timestamps block export.",
+ ja:"原文＋訳文の二言語SRT/VTTも出力。音声認識の実際の時間情報を維持し、不正な時間情報は出力しません。",
+ ko:"원문과 번역문이 함께 있는 SRT/VTT도 제공합니다. 실제 음성 인식 시각을 유지하며 잘못된 시각은 내보내지 않습니다.",
+ fr:"SRT/VTT bilingues inclus (original + traduction). Horodatages issus de la reconnaissance vocale ; les horodatages invalides bloquent l'export.",
+ de:"Zweisprachige SRT/VTT (Original + Übersetzung) inklusive. Zeitstempel stammen aus der Spracherkennung; ungültige Zeiten verhindern den Export.",
+ es:"Incluye SRT/VTT bilingüe (original y traducción). Los tiempos proceden del reconocimiento real de voz; los tiempos inválidos bloquean la exportación.",
+ pt:"Inclui SRT/VTT bilíngue (original e tradução). Os tempos vêm do reconhecimento real de fala; tempos inválidos impedem a exportação.",
+ ar:"تتضمن النتيجة ترجمات SRT/VTT ثنائية اللغة (الأصل والترجمة). التوقيت من التعرف الحقيقي على الكلام، والتوقيت غير الصالح يمنع التصدير."
+};
+
 
 function chunks<T>(items:T[],n:number){const out:T[][]=[];for(let i=0;i<items.length;i+=n)out.push(items.slice(i,i+n));return out}
 function marker(i:number){return `⟦LX${String(i).padStart(4,"0")}⟧`}
@@ -171,6 +183,7 @@ export default function VideoTranslateWorkbench(){
   {durationReady&&targets.length>0&&<div data-testid="video-translate-checkout"><PaidActionButton toolId="video-translate" quantity={quantity} draftId={persistFiles?draftId:undefined} draftReady={true} beforePayment={persistFiles?saveDraft:undefined} metadata={{startedMinutes,targetCount:targets.length,mode,files:files.length}} onPaid={run} label="查看本次视频翻译价格"/></div>}
   {busy&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text={stage||"正在处理…"}/></p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="高质量模式优先保留原视频码流，只新增翻译字幕轨；需要兼容重编码时使用 H.264 高质量参数。AI 配音为整轨合成语音，不宣称口型同步、原声克隆或逐句声纹复刻。" /></p>
+  <p className="text-xs leading-5 text-[var(--lx-faint)]">{bilingualNote[uiLang]}</p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
   {videos.length>0&&<ResultPanel sourceSlug="video-translate" files={videos} messageZh="翻译视频已生成，可以保存。" messageEn="Translated videos are ready to save."/>}
   {subs.length>0&&<ResultPanel sourceSlug="video-translate" files={subs} messageZh="SRT / VTT / TXT 翻译字幕也已生成。" messageEn="Translated SRT / VTT / TXT files are also ready."/>}

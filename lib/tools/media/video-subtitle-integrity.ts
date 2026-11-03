@@ -4,7 +4,7 @@ export type IntegrityCue={start:number;end:number;text:string};
 /** Require exactly one translated result for each ASR segment. */
 export function extractExactTranslatedCues(reply:string,firstIndex:number,count:number):string[]|null{
  if(typeof reply!=="string"||reply.length>100000||!Number.isSafeInteger(firstIndex)||!Number.isSafeInteger(count)||count<1||count>24)return null;
- const marker=/⟦LX(\d{4})⟧/g,marks=[...reply.matchAll(marker)];
+ const marker=/⟦LX(\d{4,6})⟧/g,marks=[...reply.matchAll(marker)];
  if(marks.length!==count||!marks.length||reply.slice(0,marks[0].index).trim())return null;
  const values=new Map<number,string>();
  for(let i=0;i<marks.length;i++){
