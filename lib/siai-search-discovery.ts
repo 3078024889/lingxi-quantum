@@ -4,7 +4,7 @@ export type SiaiDiscoveryCopy={hero:string;homeTitle:string;homeIntro:string;ran
 /** Localized search-intent answers. Each displayed keyword has distinct, factual copy. */
 export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
   "zh": {
-    "hero": "全球AI行情平台 · 全球AI排行榜 · 全球SI排行榜 · 全球SI行情平台 · 全球SIAI行情平台",
+    "hero": "全球AI行情平台 · 全球AI排行榜 · 全球SI排行榜 · 全球SI行情平台 · 全球SIAI行情平台 · 全球SIAI排行榜",
     "homeTitle": "全球 AI 与 SI 工具怎么选？六个真实搜索问题，一处找到答案",
     "homeIntro": "搜索全球 AI 排行榜、全球 SI 行情或全球 SIAI 排行榜，都能在灵犀场比较产品。不是股票行情，也不把成立年份当能力名次。",
     "rankTitle": "全球 SI AI 工具行情：从搜索问题到官方资料",

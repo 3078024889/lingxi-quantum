@@ -51,3 +51,21 @@ test("eight sourced corporate-history entries remain honest about parent/launch 
  assert.match(company,/2010（Freepik 起始）/);
  assert.match(company,/https:\/\/www\.synthesia\.io\/about/);
 });
+
+test("the footer is bilingual in Chinese locale, other languages use their own copy, and six links target distinct useful answers",()=>{
+ const footer=read("components/Footer.tsx"),cards=read("components/SiaiSearchDiscovery.tsx");
+ assert.match(footer,/lang!=="en"/);
+ assert.match(footer,/lang="en"/);
+ assert.match(footer,/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
+ assert.match(footer,/discovery\.topics\.map\(v=>v\.q\)/);
+ assert.match(footer,/siai-search-home-/);
+ assert.match(cards,/id=\{prefix\+"-"\+i\}/);
+});
+test("nine-language FAQ body follows the language selection and spaced keywords reach SIAI instead of tools",()=>{
+ const home=read("components/HomeProblemHub.tsx"),faq=read("components/HomeSeoAnswers.tsx");
+ assert.match(faq,/"use client"/);
+ assert.match(faq,/useLingxiLang\(\)/);
+ assert.match(faq,/lang\|\|initialLocale/);
+ assert.match(home,/replace\(\/\\s\+\/g,""\)/);
+ assert.match(home,/"ai视频"/);
+});

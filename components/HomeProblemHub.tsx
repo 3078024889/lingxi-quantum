@@ -204,7 +204,7 @@ export default function HomeProblemHub(){
  const{lang}=useLingxiLang();const c=copy[lang]??copy.en;const market=SIAI_HOME_ENTRY[lang]??SIAI_HOME_ENTRY.en;
  const[q,setQ]=useState("");
  const intents=useMemo(()=>[
-  {words:["全球ai","全球si","全球siai","ai工具","siai","排行榜","行情平台","模型价格","工具排名","免费ai","ai工具哪个好","全球人工智能"],href:"/siai",label:market.title},
+  {words:["全球ai","全球si","全球siai","ai工具","siai","排行榜","行情平台","模型价格","工具排名","免费ai","ai工具哪个好","ai视频","ai绘画","ai编程","api价格","ai模型","国内能用ai","全球人工智能"],href:"/siai",label:market.title},
   {words:["pdf","合并","压缩","拆分","ocr","签名","盖章"],href:"/tools",label:"PDF"},
   {words:["图片","照片","jpg","png","webp","水印","放大"],href:"/tools",label:c.img},
   {words:["视频","字幕","音频","配音","转文字"],href:"/tools",label:c.video},
@@ -213,7 +213,7 @@ export default function HomeProblemHub(){
   {words:["科研","研究","证据"],href:"/sasi?mode=research",label:c.research},
   {words:["短剧","剧本","广告","mv","cg","创作"],href:"/sasi",label:c.sasi},
  ],[c,market.title]);
- const hit=useMemo(()=>{const s=q.toLowerCase();return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
+ const hit=useMemo(()=>{const s=q.toLowerCase().replace(/\s+/g,"");return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
   {href:"/siai",icon:"products" as LingxiIconName,title:market.title,desc:market.description},
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
