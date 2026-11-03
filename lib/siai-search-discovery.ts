@@ -5,10 +5,10 @@ export type SiaiDiscoveryCopy={hero:string;homeTitle:string;homeIntro:string;ran
 export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
   "zh": {
     "hero": "全球AI行情平台 · 全球AI排行榜 · 全球SI排行榜 · 全球SI行情平台 · 全球SIAI行情平台 · 全球SIAI排行榜",
-    "homeTitle": "全球 AI 与 SI 工具怎么选？六个真实搜索问题，一处找到答案",
-    "homeIntro": "搜索全球 AI 排行榜、全球 SI 行情或全球 SIAI 排行榜，都能在灵犀场比较产品。不是股票行情，也不把成立年份当能力名次。",
-    "rankTitle": "全球 SI AI 工具行情：从搜索问题到官方资料",
-    "rankIntro": "不同搜索说法指向同一个全球 SIAI 产品目录。按用途、价格、免费额度、地区和官方来源判断，未证实项目不冒充实测。",
+    "homeTitle": "全球 AI / SI 工具怎么选？按任务比较六类产品",
+    "homeIntro": "从写作、编程、图片、视频到模型 API，按功能、价格、免费额度与地区找到适合自己的 AI 工具。",
+    "rankTitle": "全球 SIAI 工具功能、价格与免费额度对比",
+    "rankIntro": "查看产品能完成什么任务，比较代表模型、套餐价格、免费使用次数、地区可用性、付款方式及商用条件。",
     "footerTitle": "全球 AI / SI / SIAI 行情与排行榜搜索入口",
     "footerNote": "按问题进入工具比较目录；产品价格、地区、商用授权请查看官方来源。",
     "trio": [
@@ -26,42 +26,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "全球AI行情平台",
-        "home": "想看全球 AI 公司和产品的最新行情？把官网功能、会员价格、免费额度与使用限制放在同一处比较。",
-        "rank": "这里的行情指产品与收费信息，不是股票价格或实时成交量；每条资料附来源，费用以厂商最新结算为准。"
+        "home": "查看 AI 软件、模型 API 和视频创作工具的套餐价格、免费额度与功能说明，按预算快速找到适用产品。",
+        "rank": "查看 AI 软件订阅价格、免费视频额度、视频积分和模型 API 费用，快速找到适合预算的产品。"
       },
       {
         "q": "全球AI排行榜",
-        "home": "选 AI 不必只看名气。先按写作、研究、编程、图片和视频任务筛选，再比较真实限制。",
-        "rank": "序号不是能力评测名次；可按成立时间、名称及领域查看，尚未完成实测的项目有明显标注。"
+        "home": "想写文章、做演示、画图片、生成视频或编程？在这里按任务对比不同工具的特色和操作方式。",
+        "rank": "按写作、办公、图片、视频、编程和研究等用途筛选产品，比较功能特色与使用步骤。"
       },
       {
         "q": "全球SI排行榜",
-        "home": "搜索 SI 或 AI 都可以找到灵犀场的全球工具目录；同一款工具只保留一份产品档案。",
-        "rank": "SI 是本平台兼容的搜索表达；不把它写成行业统一官方分类，实际能力按模型和任务说明。"
+        "home": "需要长文分析、代码辅助或图像理解？查看不同 SI/AI 工具擅长的任务和代表模型。",
+        "rank": "比较长文理解、代码辅助、多模态识别和工具调用等能力，按具体任务选择智能工具。"
       },
       {
         "q": "全球SI行情平台",
-        "home": "想知道一款工具在香港、内地或海外能不能用？先核对官方地区条款与付款方式。",
-        "rank": "受限地区说明不等于已逐国证实可注册、付费和使用；缺少证据的项目如实标明。"
+        "home": "经常在香港、内地或海外使用 AI？可按使用地区、付款方式和商用条件筛选工具。",
+        "rank": "根据所在地查看产品的使用地区、支付方式和商用条件，了解不同方案适合谁。"
       },
       {
         "q": "全球SIAI行情平台",
-        "home": "从通用助手到图像、视频、语音和模型 API，集中了解用途、免费方案及一次任务的可能成本。",
-        "rank": "网页版会员、视频积分和开发者 API 属于不同计费口径，比较时分开查看，不混算。"
+        "home": "从聊天助手到图像、视频、语音和模型 API，一起比较可用功能、价格和免费试用方案。",
+        "rank": "对比智能助手、图像、视频、语音和开发者 API，查看套餐、积分与单次任务成本。"
       },
       {
         "q": "全球SIAI排行榜",
-        "home": "灵犀场 LINGXIFIELD 汇集全球 SI/AI 产品档案，点开来源与官网再决定用哪个。",
-        "rank": "本页有已收录资料与新增研究预览；厂商归属、上市状态、商用许可和模型限制分别呈现。"
+        "home": "灵犀场汇集不同用途的全球 SI/AI 工具，选择产品后即可查看功能详情并进入厂商官网。",
+        "rank": "浏览新手友好工具、创意制作产品和开发者平台，一键查看功能详情并进入厂商官网。"
       }
     ]
   },
   "en": {
     "hero": "Global AI tool rankings · SI directory · SIAI market guide",
     "homeTitle": "Six ways to find the right global SI/AI tool",
-    "homeIntro": "Explore sources and prices, free limits and features; a product directory, not a stock market ticker.",
+    "homeIntro": "Explore AI tools for writing, coding, images, video and model APIs. Compare features, free plans, pricing and availability.",
     "rankTitle": "Global SIAI market information: compare by real task",
-    "rankIntro": "Different search phrases lead to one source-linked directory; unknowns and untested previews stay labeled.",
+    "rankIntro": "Find what each product does, its models, plans, free allowances, regional access, payment options and commercial terms.",
     "footerTitle": "Global AI / SI / SIAI discovery",
     "footerNote": "Compare products by task and use official sources for current pricing and regional terms.",
     "trio": [
@@ -79,42 +79,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "Global AI market directory",
-        "home": "Compare products, official plans, free limits and restrictions instead of browsing unrelated pricing pages.",
-        "rank": "Market information here means AI product offerings, not live stock quotes. Publisher terms and checkout remain authoritative."
+        "home": "Compare subscription plans, free allowances, creative tool credits and model API costs in one directory.",
+        "rank": "Compare subscriptions, free usage, video credits and API pricing to choose tools for your budget."
       },
       {
         "q": "Global AI tool rankings",
-        "home": "Find tools for writing, coding, research, images and video based on the task you need to finish.",
-        "rank": "Directory positions are not measured performance scores. Filter by purpose or sort by documented company history."
+        "home": "Writing, slides, images, videos or code: search tools by the task you need to finish and explore their strengths.",
+        "rank": "Browse tools for writing, office tasks, research, image generation, video and coding, then compare their strengths."
       },
       {
         "q": "Global SI directory",
-        "home": "Search for SI or AI and reach the same source-linked catalog without duplicate product listings.",
-        "rank": "SI is an additional discovery term here, not a claim about a universal industry classification."
+        "home": "Explore assistants for long documents, coding tasks, image understanding and connections to other services.",
+        "rank": "Explore long-document analysis, coding assistance, multimodal understanding and tool integrations."
       },
       {
         "q": "Global SI market guide",
-        "home": "Check regional rules and payment rails before relying on a service abroad or at home.",
-        "rank": "Export restrictions alone do not prove country-by-country signup or checkout availability."
+        "home": "Find tools available in your region and compare supported payment methods and licensing conditions.",
+        "rank": "Check regional availability, payment methods and licensing before choosing a plan."
       },
       {
         "q": "Global SIAI market platform",
-        "home": "Browse model APIs, creative subscriptions and free tiers with clearer cost boundaries.",
-        "rank": "API tokens, video credits and web memberships are separate billing units; compare like with like."
+        "home": "Browse assistants, image and video generators, speech tools and developer APIs by features and pricing.",
+        "rank": "Compare assistants, creative tools and developer APIs with the right pricing units for each task."
       },
       {
         "q": "Global SIAI rankings",
-        "home": "LINGXIFIELD links product features, sources and publisher information to official sites.",
-        "rank": "Reviewed source records and untested research previews are labeled separately; no invented performance ranks."
+        "home": "Choose a tool that fits your work, explore its details and open the official provider website.",
+        "rank": "Browse beginner-friendly products, creative platforms and APIs, then visit their official websites."
       }
     ]
   },
   "ja": {
     "hero": "世界のAIツール比較 · SIツール一覧 · SIAI市場ガイド",
     "homeTitle": "世界のSI/AIツールを探す6つの質問",
-    "homeIntro": "公式の機能・価格・無料枠を比較。株価情報ではなく製品情報の一覧です。",
+    "homeIntro": "文章、開発、画像、動画、モデルAPIから、機能・無料枠・価格・地域条件で適切なツールを探せます。",
     "rankTitle": "世界のSIAIツール情報を目的別に比較",
-    "rankIntro": "異なる検索語でも同じ公式資料付き一覧に到達できます。未確認事項は明示します。",
+    "rankIntro": "できること、モデル、プラン料金、無料枠、利用地域、決済方法、商用条件を比較できます。",
     "footerTitle": "世界のAI / SI / SIAIツール検索",
     "footerNote": "用途で比較し、価格と地域の条件は公式情報を確認してください。",
     "trio": [
@@ -132,42 +132,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "世界のAI製品・料金情報",
-        "home": "世界のAIツールの機能、公式プラン、無料枠、制限をまとめて比較できます。",
-        "rank": "ここでの市場情報は製品と料金の比較であり、株価のリアルタイム相場ではありません。"
+        "home": "AIソフトの月額料金、無料枠、動画制作クレジット、APIの料金をまとめて比べられます。",
+        "rank": "月額料金、無料枠、動画クレジット、モデルAPI料金を比べ、予算に合う製品を選びます。"
       },
       {
         "q": "世界のAIツールランキング",
-        "home": "文章、研究、開発、画像、動画などの目的別にツールを探せます。",
-        "rank": "掲載順は性能順位ではありません。企業の設立年や用途で並べ替えられます。"
+        "home": "文章、プレゼン、画像、動画、プログラミングなど、したいことから最適なツールを探せます。",
+        "rank": "文章、研究、画像、動画、開発などの目的別に製品を探し、特徴と使い方を比べます。"
       },
       {
         "q": "世界のSIツール一覧",
-        "home": "SIやAIで検索しても同じ製品情報と公式リンクを探せます。",
-        "rank": "SIは検索用の別表現であり、業界全体の公式分類を意味しません。"
+        "home": "長文読解、コード支援、画像理解など、必要な機能に合うSI/AIモデルを比較します。",
+        "rank": "長文理解、コーディング支援、マルチモーダル処理、外部ツール連携を確認します。"
       },
       {
         "q": "世界のSI製品情報",
-        "home": "地域ごとの提供条件と決済手段を事前に確認しましょう。",
-        "rank": "輸出規制だけでは各国で登録・決済できることの証明にはなりません。"
+        "home": "地域ごとの利用条件、決済方法、商用ライセンスでツールを絞り込めます。",
+        "rank": "利用地域、決済方法、商用ライセンスを確認してプランを選びます。"
       },
       {
         "q": "世界のSIAI市場ガイド",
-        "home": "AIモデルAPI、動画制作、無料プランの特徴を比較します。",
-        "rank": "APIトークン、動画クレジット、会員料金は別の課金単位として扱います。"
+        "home": "チャット、画像、動画、音声、モデルAPIなどの機能と料金をまとめて比較できます。",
+        "rank": "AIアシスタント、画像・動画・音声生成、開発者APIの料金体系を比較します。"
       },
       {
         "q": "世界のSIAIランキング",
-        "home": "LINGXIFIELDで各製品の情報源、会社概要、公式サイトを確認できます。",
-        "rank": "実利用テストを終えていない新規資料は明確に区別して表示します。"
+        "home": "世界のSI/AI製品を用途別に探し、機能を確認して公式サイトへ進めます。",
+        "rank": "初心者向け、創作向け、開発者向けの製品を探し、公式サイトを開きます。"
       }
     ]
   },
   "ko": {
     "hero": "글로벌 AI 도구 비교 · SI 도구 목록 · SIAI 시장 안내",
     "homeTitle": "글로벌 SI/AI 도구를 찾는 여섯 가지 질문",
-    "homeIntro": "공식 기능과 요금, 무료 한도를 비교하세요. 주가 정보가 아닌 제품 안내입니다.",
+    "homeIntro": "글쓰기, 코딩, 이미지, 동영상과 모델 API를 기능, 무료 한도, 가격 및 지역별로 비교하세요.",
     "rankTitle": "글로벌 SIAI 정보를 작업별로 비교",
-    "rankIntro": "서로 다른 검색어가 하나의 출처 기반 목록으로 연결됩니다. 미확인 사항은 표시됩니다.",
+    "rankIntro": "제품 기능, 모델, 요금제, 무료 이용량, 지원 지역, 결제와 상업적 이용 조건을 확인하세요.",
     "footerTitle": "글로벌 AI / SI / SIAI 검색",
     "footerNote": "용도에 맞게 비교하고 요금·지역 조건은 공식 자료를 확인하세요.",
     "trio": [
@@ -185,42 +185,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "글로벌 AI 제품·요금 정보",
-        "home": "전 세계 도구의 기능, 공식 요금제, 무료 한도와 제한을 한곳에서 비교하세요.",
-        "rank": "이곳의 시장 정보는 제품과 비용 정보이며 실시간 주가가 아닙니다."
+        "home": "AI 구독 요금, 무료 한도, 동영상 크레딧, 모델 API 사용료를 한곳에서 비교합니다.",
+        "rank": "구독료, 무료 이용량, 동영상 크레딧과 모델 API 비용을 비교합니다."
       },
       {
         "q": "글로벌 AI 도구 순위",
-        "home": "글쓰기, 연구, 코딩, 이미지, 영상 작업에 맞는 도구를 찾아보세요.",
-        "rank": "목록 순서는 성능 점수가 아닙니다. 확인된 회사 설립 연도나 용도로 정렬할 수 있습니다."
+        "home": "글쓰기, 발표 자료, 이미지, 동영상, 코딩 등 필요한 작업으로 도구를 찾아보세요.",
+        "rank": "글쓰기, 사무, 연구, 이미지, 동영상, 코딩 작업에 맞는 도구를 찾아봅니다."
       },
       {
         "q": "글로벌 SI 도구 목록",
-        "home": "SI 또는 AI 검색어로 같은 공식 출처 기반 도구 목록에 접근하세요.",
-        "rank": "SI는 추가 검색 표현이며 업계 전체의 공식 분류라는 뜻은 아닙니다."
+        "home": "긴 문서 분석, 코딩 보조, 이미지 이해와 외부 도구 연결 기능을 살펴보세요.",
+        "rank": "긴 문서 이해, 코딩 지원, 멀티모달 기능과 도구 연동을 살펴봅니다."
       },
       {
         "q": "글로벌 SI 시장 안내",
-        "home": "거주 지역 이용 조건과 결제 방식을 먼저 확인하세요.",
-        "rank": "수출 제한 안내만으로 모든 국가에서 가입·결제가 가능함을 증명할 수 없습니다."
+        "home": "사용 지역과 결제 방법, 상업적 이용 조건으로 적합한 제품을 고릅니다.",
+        "rank": "지역별 제공 여부, 결제 방법, 상업용 사용 조건을 비교합니다."
       },
       {
         "q": "글로벌 SIAI 시장 정보",
-        "home": "모델 API, 영상 제작, 무료 플랜과 비용을 비교하세요.",
-        "rank": "API 토큰, 영상 크레딧, 웹 구독은 서로 다른 과금 단위입니다."
+        "home": "대화형 AI, 이미지, 영상, 음성 생성과 모델 API의 기능과 요금을 비교합니다.",
+        "rank": "AI 어시스턴트, 이미지·동영상·음성 제작과 개발 API 비용을 비교합니다."
       },
       {
         "q": "글로벌 SIAI 랭킹",
-        "home": "LINGXIFIELD에서 제품 기능, 회사 정보와 공식 출처를 확인할 수 있습니다.",
-        "rank": "실제 사용 테스트를 완료하지 않은 연구 자료는 별도로 표시됩니다."
+        "home": "글로벌 SI/AI 도구의 기능을 살펴보고 원하는 제품의 공식 웹사이트를 방문하세요.",
+        "rank": "초보자용 및 제작·개발 도구를 살펴보고 공식 웹사이트로 이동합니다."
       }
     ]
   },
   "fr": {
     "hero": "Comparateur IA mondial · Répertoire SI · Marché SIAI",
     "homeTitle": "Six recherches pour choisir votre outil SI/IA",
-    "homeIntro": "Comparez les fonctions, tarifs et limites des produits, pas les cours boursiers.",
+    "homeIntro": "Trouvez des outils pour écrire, coder, créer des images, des vidéos ou utiliser une API selon les fonctions, prix et offres gratuites.",
     "rankTitle": "Marché SIAI : réponses selon votre usage",
-    "rankIntro": "Plusieurs recherches, un même répertoire sourcé. Les points non vérifiés sont signalés.",
+    "rankIntro": "Comparez les capacités, modèles, abonnements, quotas gratuits, régions, paiements et conditions commerciales.",
     "footerTitle": "Rechercher des outils IA / SI / SIAI",
     "footerNote": "Comparez les usages et consultez les sources officielles pour les prix et régions.",
     "trio": [
@@ -238,42 +238,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "Marché mondial des outils IA",
-        "home": "Comparez fonctionnalités, tarifs officiels, offres gratuites et restrictions au même endroit.",
-        "rank": "Les informations de marché portent sur les produits IA, pas sur les cotations boursières en direct."
+        "home": "Comparez les abonnements IA, les quotas gratuits, les crédits vidéo et les tarifs API au même endroit.",
+        "rank": "Comparez abonnements, quotas gratuits, crédits vidéo et prix des API selon votre budget."
       },
       {
         "q": "Classement mondial des outils IA",
-        "home": "Choisissez des outils pour la rédaction, la recherche, le code, l’image ou la vidéo.",
-        "rank": "L’ordre du catalogue n’est pas un score de performance ; triez par usage ou date de création documentée."
+        "home": "Pour rédiger, créer des présentations, des images, des vidéos ou du code, cherchez par tâche.",
+        "rank": "Recherchez des outils pour la rédaction, la bureautique, les études, l'image, la vidéo ou le code."
       },
       {
         "q": "Répertoire mondial SI",
-        "home": "Les recherches SI et IA mènent au même catalogue de produits avec sources officielles.",
-        "rank": "SI sert aussi de terme de recherche ; ce n’est pas une classification universelle du secteur."
+        "home": "Comparez l'analyse de documents longs, l'assistance au code, la vision et les intégrations.",
+        "rank": "Découvrez l'analyse de longs documents, l'assistance au code et les fonctions multimodales."
       },
       {
         "q": "Guide mondial du marché SI",
-        "home": "Vérifiez les conditions d’accès régionales et les moyens de paiement.",
-        "rank": "Les restrictions à l’export ne prouvent pas la disponibilité d’inscription dans chaque pays."
+        "home": "Choisissez selon votre région, les moyens de paiement et les licences d'utilisation commerciale.",
+        "rank": "Vérifiez les pays disponibles, les moyens de paiement et les licences commerciales."
       },
       {
         "q": "Marché mondial SIAI",
-        "home": "Comparez API de modèles, abonnements créatifs et offres gratuites.",
-        "rank": "Les jetons API, crédits vidéo et abonnements web sont facturés différemment."
+        "home": "Parcourez assistants, générateurs d'images, vidéo et voix, ainsi que les API de modèles.",
+        "rank": "Comparez assistants, outils créatifs et API selon leurs unités de facturation."
       },
       {
         "q": "Classement mondial SIAI",
-        "home": "LINGXIFIELD rassemble les caractéristiques, entreprises et liens officiels des produits.",
-        "rank": "Les fiches de recherche non testées sont signalées séparément des données documentées."
+        "home": "Découvrez des outils SI/IA pour chaque tâche, consultez leurs fonctions et ouvrez leur site officiel.",
+        "rank": "Trouvez des outils pour débutants, créateurs et développeurs, puis ouvrez le site officiel."
       }
     ]
   },
   "de": {
     "hero": "KI-Tools weltweit · SI-Verzeichnis · SIAI-Marktübersicht",
     "homeTitle": "Sechs Suchfragen zum passenden SI/KI-Tool",
-    "homeIntro": "Vergleichen Sie Funktionen, Preise und Gratis-Tarife – keine Börsenkurse.",
+    "homeIntro": "Finde KI-Tools für Texte, Code, Bilder, Videos und Modell-APIs nach Funktionen, Gratisplänen, Preisen und Region.",
     "rankTitle": "Globaler SIAI-Markt: Antworten nach Aufgabe",
-    "rankIntro": "Verschiedene Suchbegriffe führen zu einem quellengestützten Katalog.",
+    "rankIntro": "Vergleiche Aufgaben, Modelle, Tarife, kostenlose Kontingente, Regionen, Zahlungen und kommerzielle Nutzungsrechte.",
     "footerTitle": "KI / SI / SIAI-Werkzeuge finden",
     "footerNote": "Vergleichen Sie nach Aufgabe und prüfen Sie Preise und Regionen beim Anbieter.",
     "trio": [
@@ -291,42 +291,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "Globaler KI-Produktmarkt",
-        "home": "Vergleichen Sie Funktionen, offizielle Tarife, Gratis-Kontingente und Einschränkungen.",
-        "rank": "Die Marktübersicht betrifft KI-Produkte, nicht Echtzeit-Börsenkurse."
+        "home": "Vergleiche KI-Abos, kostenlose Kontingente, Videocredits und Modell-API-Kosten an einem Ort.",
+        "rank": "Abos, Gratis-Kontingente, Videocredits und API-Kosten passend zum Budget vergleichen."
       },
       {
         "q": "Globales KI-Tool-Ranking",
-        "home": "Finden Sie passende Werkzeuge für Texte, Recherche, Code, Bilder und Videos.",
-        "rank": "Die Listenposition ist keine Leistungswertung. Sortieren Sie nach Aufgabe oder belegtem Gründungsjahr."
+        "home": "Finde passende Tools für Texte, Präsentationen, Bilder, Videos und Code direkt nach Aufgabe.",
+        "rank": "Tools für Schreiben, Büroarbeit, Forschung, Bilder, Videos und Programmierung finden."
       },
       {
         "q": "Globales SI-Verzeichnis",
-        "home": "Mit SI oder KI finden Sie denselben quellengestützten Produktkatalog.",
-        "rank": "SI ist hier ein zusätzlicher Suchbegriff, keine allgemeine Branchenklassifikation."
+        "home": "Entdecke Langtextanalyse, Programmierhilfe, Bilderkennung und Integrationen.",
+        "rank": "Langtext-Verständnis, Programmierhilfe, multimodale Funktionen und Integrationen vergleichen."
       },
       {
         "q": "Globaler SI-Marktüberblick",
-        "home": "Prüfen Sie regionale Nutzungsbedingungen und Zahlungsmethoden.",
-        "rank": "Exportbeschränkungen belegen keine Registrierung oder Zahlung in jedem Land."
+        "home": "Filtere Dienste nach Region, Zahlungsart und kommerziellen Nutzungsrechten.",
+        "rank": "Verfügbarkeit nach Region, Zahlungsmethoden und kommerzielle Lizenzbedingungen prüfen."
       },
       {
         "q": "Globale SIAI-Marktinformationen",
-        "home": "Vergleichen Sie Modell-APIs, Kreativ-Abos und kostenlose Einstiege.",
-        "rank": "API-Token, Video-Credits und Web-Abos haben unterschiedliche Kostenmodelle."
+        "home": "Vergleiche Assistenten, Bild-, Video- und Sprachgeneratoren sowie Entwickler-APIs.",
+        "rank": "Assistenten, Bild-, Video- und Sprachtools sowie APIs nach Kostenmodellen vergleichen."
       },
       {
         "q": "Globales SIAI-Ranking",
-        "home": "LINGXIFIELD zeigt Produktmerkmale, Anbieter und offizielle Quellen.",
-        "rank": "Nicht praktisch getestete Forschungsprofile werden separat gekennzeichnet."
+        "home": "Durchsuche internationale SI/KI-Tools nach Funktion und öffne die offizielle Produktwebsite.",
+        "rank": "Einsteiger-, Kreativ- und Entwicklertools entdecken und direkt zur Herstellerseite wechseln."
       }
     ]
   },
   "es": {
     "hero": "Herramientas IA globales · Directorio SI · Mercado SIAI",
     "homeTitle": "Seis preguntas para elegir una herramienta SI/IA",
-    "homeIntro": "Compare funciones, precios y límites gratuitos, no cotizaciones bursátiles.",
+    "homeIntro": "Encuentra herramientas para escribir, programar, crear imágenes o vídeos y usar API según funciones, precios y planes gratis.",
     "rankTitle": "Mercado SIAI: respuestas para cada tarea",
-    "rankIntro": "Varias búsquedas conducen al mismo directorio con fuentes y datos pendientes señalados.",
+    "rankIntro": "Compara capacidades, modelos, precios, cuotas gratuitas, disponibilidad regional, pagos y condiciones comerciales.",
     "footerTitle": "Buscar herramientas IA / SI / SIAI",
     "footerNote": "Compare por tarea y consulte las fuentes oficiales de precios y regiones.",
     "trio": [
@@ -344,42 +344,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "Mercado global de herramientas de IA",
-        "home": "Compare funciones, precios oficiales, planes gratis y restricciones en un solo lugar.",
-        "rank": "Aquí el mercado se refiere a productos de IA, no a cotizaciones bursátiles en tiempo real."
+        "home": "Compara suscripciones de IA, cuotas gratuitas, créditos de vídeo y tarifas de API en un mismo lugar.",
+        "rank": "Compara suscripciones, usos gratuitos, créditos de vídeo y tarifas de API según tu presupuesto."
       },
       {
         "q": "Ranking global de herramientas IA",
-        "home": "Elija según su tarea: escritura, investigación, programación, imagen o vídeo.",
-        "rank": "El orden no equivale a una puntuación de rendimiento; puede ordenar por uso o fundación documentada."
+        "home": "Busca herramientas para escribir, presentar, crear imágenes o vídeos y programar según tu tarea.",
+        "rank": "Busca herramientas de escritura, oficina, investigación, imágenes, vídeos y programación."
       },
       {
         "q": "Directorio global SI",
-        "home": "Las búsquedas SI e IA llevan al mismo catálogo con fuentes oficiales.",
-        "rank": "SI es una expresión adicional de búsqueda, no una clasificación universal del sector."
+        "home": "Explora lectura de documentos largos, ayuda con código, comprensión de imágenes e integraciones.",
+        "rank": "Explora análisis de documentos largos, programación asistida y funciones multimodales."
       },
       {
         "q": "Guía del mercado SI",
-        "home": "Revise condiciones regionales y métodos de pago antes de suscribirse.",
-        "rank": "Las restricciones de exportación no prueban que se pueda pagar desde todos los países."
+        "home": "Filtra por país, formas de pago y permisos para usar los resultados comercialmente.",
+        "rank": "Consulta las regiones disponibles, los métodos de pago y las licencias comerciales."
       },
       {
         "q": "Plataforma global SIAI",
-        "home": "Compare API de modelos, suscripciones creativas y opciones gratuitas.",
-        "rank": "Tokens API, créditos de vídeo y membresías web se cobran de manera distinta."
+        "home": "Compara asistentes, generadores de imágenes, vídeo, voz y plataformas de API para modelos.",
+        "rank": "Compara asistentes, herramientas creativas y API según su forma de facturación."
       },
       {
         "q": "Ranking global SIAI",
-        "home": "LINGXIFIELD reúne características, empresas y fuentes oficiales.",
-        "rank": "Las fichas de investigación aún no probadas aparecen claramente diferenciadas."
+        "home": "Descubre productos SI/IA por función, consulta sus detalles y abre el sitio oficial del proveedor.",
+        "rank": "Descubre herramientas para principiantes, creadores y desarrolladores y accede a su web oficial."
       }
     ]
   },
   "pt": {
     "hero": "Ferramentas IA globais · Diretório SI · Mercado SIAI",
     "homeTitle": "Seis perguntas para escolher ferramentas SI/IA",
-    "homeIntro": "Compare funções, preços e limites gratuitos, não cotações de ações.",
+    "homeIntro": "Encontre ferramentas para texto, código, imagem, vídeo e APIs por função, preço, plano gratuito e região.",
     "rankTitle": "Mercado SIAI: respostas por tarefa",
-    "rankIntro": "Buscas diferentes levam ao mesmo diretório com fontes e incertezas identificadas.",
+    "rankIntro": "Compare recursos, modelos, assinaturas, limites gratuitos, regiões, pagamentos e condições comerciais.",
     "footerTitle": "Buscar ferramentas IA / SI / SIAI",
     "footerNote": "Compare por objetivo e confirme preços e regiões nas fontes oficiais.",
     "trio": [
@@ -397,42 +397,42 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "Mercado global de ferramentas IA",
-        "home": "Compare recursos, preços oficiais, planos gratuitos e limitações no mesmo lugar.",
-        "rank": "Aqui o mercado significa ofertas de IA, não cotações de ações em tempo real."
+        "home": "Compare assinaturas de IA, limites gratuitos, créditos de vídeo e preços de API em um só lugar.",
+        "rank": "Compare assinaturas, cotas gratuitas, créditos de vídeo e preços de API conforme seu orçamento."
       },
       {
         "q": "Ranking global de ferramentas IA",
-        "home": "Escolha por tarefa: texto, pesquisa, código, imagens e vídeo.",
-        "rank": "A ordem não mede desempenho; classifique por finalidade ou ano de fundação comprovado."
+        "home": "Encontre ferramentas para textos, apresentações, imagens, vídeos e código conforme sua tarefa.",
+        "rank": "Busque ferramentas de escrita, escritório, pesquisa, imagens, vídeo e programação."
       },
       {
         "q": "Diretório global SI",
-        "home": "Pesquisas por SI ou IA levam ao mesmo catálogo com fontes oficiais.",
-        "rank": "SI é um termo adicional de busca, não uma categoria oficial universal."
+        "home": "Veja análise de documentos longos, suporte à programação, imagens e integração de ferramentas.",
+        "rank": "Veja análise de documentos longos, assistência de código e recursos multimodais."
       },
       {
         "q": "Guia do mercado SI",
-        "home": "Confira condições regionais de acesso e opções de pagamento.",
-        "rank": "Restrições de exportação não comprovam cadastro e cobrança em todos os países."
+        "home": "Filtre por região, formas de pagamento e condições de uso comercial.",
+        "rank": "Consulte disponibilidade regional, meios de pagamento e direitos comerciais."
       },
       {
         "q": "Plataforma global SIAI",
-        "home": "Compare APIs de modelos, assinaturas criativas e planos gratuitos.",
-        "rank": "Tokens de API, créditos de vídeo e assinaturas web têm cobranças distintas."
+        "home": "Compare assistentes, geradores de imagens, vídeo, voz e plataformas de APIs de modelos.",
+        "rank": "Compare assistentes, criação de imagem, vídeo, áudio e APIs com custos separados."
       },
       {
         "q": "Ranking global SIAI",
-        "home": "LINGXIFIELD reúne recursos, empresas e referências oficiais.",
-        "rank": "Perfis de pesquisa não testados são identificados separadamente."
+        "home": "Explore ferramentas SI/IA por função, confira os detalhes e acesse o site oficial do produto.",
+        "rank": "Encontre ferramentas para iniciantes, criadores e desenvolvedores e acesse o site oficial."
       }
     ]
   },
   "ar": {
     "hero": "دليل أدوات AI العالمي · دليل SI · سوق SIAI",
     "homeTitle": "ستة أسئلة لاختيار أدوات SI/AI",
-    "homeIntro": "قارن الوظائف والأسعار والحصص المجانية؛ وليست هذه أسعار أسهم مباشرة.",
+    "homeIntro": "اعثر على أدوات للكتابة والبرمجة والصور والفيديو وواجهات النماذج حسب الوظائف والأسعار والحصص المجانية والمنطقة.",
     "rankTitle": "معلومات سوق SIAI حسب المهمة",
-    "rankIntro": "تؤدي مصطلحات البحث المختلفة إلى الدليل نفسه مع مصادر واضحة ومعلومات غير مؤكدة مميزة.",
+    "rankIntro": "قارن القدرات والنماذج والاشتراكات والحصص المجانية والمناطق وطرق الدفع وشروط الاستخدام التجاري.",
     "footerTitle": "البحث عن أدوات AI / SI / SIAI",
     "footerNote": "قارن حسب المهمة وتحقق من الأسعار والبلدان لدى المصدر الرسمي.",
     "trio": [
@@ -450,33 +450,33 @@ export const SIAI_DISCOVERY:Record<LingxiLang,SiaiDiscoveryCopy>={
     "topics": [
       {
         "q": "سوق أدوات الذكاء الاصطناعي العالمي",
-        "home": "قارن الوظائف والأسعار الرسمية والخطط المجانية والقيود في مكان واحد.",
-        "rank": "المقصود بمعلومات السوق هنا عروض المنتجات وليس أسعار الأسهم المباشرة."
+        "home": "قارن اشتراكات الذكاء الاصطناعي والحصص المجانية وأرصدة الفيديو وأسعار واجهات النماذج في مكان واحد.",
+        "rank": "قارن الاشتراكات والحصص المجانية وأرصدة الفيديو وأسعار واجهات النماذج وفق ميزانيتك."
       },
       {
         "q": "تصنيف أدوات الذكاء الاصطناعي عالميًا",
-        "home": "اختر أدوات الكتابة والبحث والبرمجة والصور والفيديو حسب المهمة.",
-        "rank": "ترتيب القائمة ليس مقياسًا للأداء؛ ويمكن الفرز حسب الاستخدام أو سنة التأسيس المثبتة."
+        "home": "اعثر على أدوات الكتابة والعروض التقديمية والصور والفيديو والبرمجة حسب المهمة المطلوبة.",
+        "rank": "ابحث عن أدوات الكتابة والمكتب والبحث والصور والفيديو والبرمجة."
       },
       {
         "q": "دليل أدوات SI العالمي",
-        "home": "يصل البحث عن SI أو AI إلى دليل واحد بروابط ومصادر رسمية.",
-        "rank": "SI مصطلح بحث إضافي هنا وليس تصنيفًا رسميًا عالميًا للصناعة."
+        "home": "استكشف تحليل المستندات الطويلة ومساعدة البرمجة وفهم الصور وتكامل الأدوات الخارجية.",
+        "rank": "اكتشف فهم المستندات الطويلة ومساعدة البرمجة والوسائط المتعددة وتكامل الأدوات."
       },
       {
         "q": "دليل سوق SI العالمي",
-        "home": "تحقق من شروط الدول وطرق الدفع قبل الاعتماد على الخدمة.",
-        "rank": "قيود التصدير لا تثبت إمكانية التسجيل أو الدفع من جميع الدول."
+        "home": "اختر الأدوات حسب المنطقة وطرق الدفع وحقوق الاستخدام التجاري المتاحة.",
+        "rank": "تحقق من المناطق المتاحة ووسائل الدفع وشروط الاستخدام التجاري."
       },
       {
         "q": "منصة سوق SIAI العالمية",
-        "home": "قارن واجهات النماذج والخطط الإبداعية والحصص المجانية.",
-        "rank": "تختلف تكلفة رموز API وأرصدة الفيديو واشتراكات الويب."
+        "home": "قارن المساعدات ومولدات الصور والفيديو والصوت ومنصات واجهات النماذج وتكاليفها.",
+        "rank": "قارن المساعدات وأدوات الصور والفيديو والصوت وواجهات المطورين وأساليب التسعير."
       },
       {
         "q": "تصنيف SIAI العالمي",
-        "home": "يعرض LINGXIFIELD خصائص المنتجات والشركات والمصادر الرسمية.",
-        "rank": "تُميّز الملفات البحثية التي لم تُختبر عمليًا بوضوح."
+        "home": "تصفح أدوات SI/AI العالمية حسب الوظيفة واطلع على التفاصيل وانتقل إلى الموقع الرسمي للمنتج.",
+        "rank": "اكتشف أدوات المبتدئين والمبدعين والمطورين وانتقل إلى مواقع الناشرين الرسمية."
       }
     ]
   }

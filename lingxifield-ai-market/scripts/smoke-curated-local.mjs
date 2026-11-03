@@ -8,15 +8,22 @@ if(!match)throw Error('CURATED_IDS_UNAVAILABLE');
 const ids=[...match[1].matchAll(/'([^']+)'/g)].map(x=>x[1]);
 const languages=['zh','en','ja','ko','fr','de','es','pt','ar'];
 const observationDir=new URL('../data/company-intake/',import.meta.url);
-const statuses=readdirSync(observationDir).filter(f=>/^batch-\d{3}-official-observations\.json$/.test(f))
- .flatMap(f=>JSON.parse(readFileSync(new URL(f,observationDir),'utf8')).products
- .flatMap(p=>Object.values(p.facts).map(x=>x.status)));
-if(statuses.length!==210)throw Error('OFFICIAL_INTAKE_30X7_SCHEMA_DRIFT');
-const observedCounts={observed:statuses.filter(s=>s==='observed').length,
- missing:statuses.filter(s=>s==='missing').length,conflict:statuses.filter(s=>s==='conflict').length};
-if(observedCounts.observed+observedCounts.missing+observedCounts.conflict!==210)
+const packs=readdirSync(observationDir).filter(f=>/^batch-\d{3}-official-observations\.json$/.test(f)).sort()
+ .map(f=>JSON.parse(readFileSync(new URL(f,observationDir),'utf8')));
+const statusOf=groups=>groups.flatMap(pack=>pack.products.flatMap(p=>Object.values(p.facts).map(x=>x.status)));
+const statuses=statusOf(packs);
+const expectedFacts=packs.reduce((n,p)=>n+p.products.length*7,0);
+if(packs.length<3||packs.some(p=>p.products.length!==10)||statuses.length!==expectedFacts)
+ throw Error('OFFICIAL_INTAKE_10_PER_BATCH_SCHEMA_DRIFT');
+if(statuses.some(s=>!['observed','missing','conflict'].includes(s)))
  throw Error('UNKNOWN_OBSERVATION_STATUS');
-
+// launch-readiness is deliberately scoped to first 3 held batches (30),
+// while the private global intake now also retains B004/B005 (20 more).
+const publishedLaunchStatuses=statusOf(packs.slice(0,3));
+const observedCounts={observed:publishedLaunchStatuses.filter(s=>s==='observed').length,
+ missing:publishedLaunchStatuses.filter(s=>s==='missing').length,
+ conflict:publishedLaunchStatuses.filter(s=>s==='conflict').length};
+if(publishedLaunchStatuses.length!==210)throw Error('LAUNCH_FIRST_30_SCHEMA_DRIFT');
 if(ids.length!==32||new Set(ids).size!==32)throw Error('CURATED_32_REQUIRED');
 const origin='http://127.0.0.1:'+String(Number(process.env.AI_MARKET_SMOKE_PORT)||38433);
 const processArgs=['node_modules/next/dist/bin/next','start','-p',new URL(origin).port,'-H','127.0.0.1'];

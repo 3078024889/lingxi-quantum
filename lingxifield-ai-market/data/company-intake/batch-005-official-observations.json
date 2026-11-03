@@ -1,0 +1,494 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B005",
+  "observedOn": "2026-11-03",
+  "disclaimer": "官网来源观察，不等于已登录注册、实际调用、付款实测或人工上架批准。",
+  "products": [
+    {
+      "id": "alibaba-model-studio",
+      "name": "Alibaba Cloud Model Studio（百炼）",
+      "officialHosts": [
+        "alibabacloud.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Model Studio 官方按地区、型号、输入/输出 tokens及视频/图像单位分别定价，价格须逐档核算。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "阿里云官方价目表注明部分新用户免费额度只在 Singapore 部署适用且有90天限制，非全部型号均免费。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "阿里云官方价目表包括 Qwen、Wan 图像与视频、重排序等模型，不同地区开放型号不同。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Model Studio 官方按 Singapore、China、Hong Kong、US 等不同地区分列费用与部分地区专属额度。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "limited_region_evidence"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Alibaba Cloud 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "baidu-qianfan",
+      "name": "百度千帆",
+      "officialHosts": [
+        "baidu.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
+        },
+        "free": {
+          "status": "observed",
+          "text": "百度千帆官方文档说明新注册并完成实名认证的用户可领取20元代金券，期限一个月，属于有条件优惠。",
+          "source": "https://cloud.baidu.com/doc/QIANFAN/index.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "百度千帆官方文档介绍文心与主流模型 API、Agent 开发及工具服务。",
+          "source": "https://cloud.baidu.com/doc/QIANFAN/index.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 百度智能云 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://cloud.baidu.com/product/qianfan.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "tencent-hunyuan",
+      "name": "腾讯云混元",
+      "officialHosts": [
+        "tencent.com.cn",
+        "tencent.cn"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "腾讯云混元官网说明可选预付费资源包与后付费日结等计费模式，不同模型和调用量须按对应价格表核实。",
+          "source": "https://cloud.tencent.cn/product/tclm",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "腾讯云官方混元文档覆盖文本生成、图像生成、向量嵌入与兼容接口。",
+          "source": "https://cloud.tencent.com.cn/document/product/1729",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 腾讯云 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://cloud.tencent.com.cn/document/product/1729",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "volcengine-ark",
+      "name": "火山引擎火山方舟",
+      "officialHosts": [
+        "volcengine.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "火山引擎官网按不同文本、视频、图片模型分别展示计价单位，单一示例价格不代表整个方舟平台价。",
+          "source": "https://www.volcengine.com/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "火山引擎方舟官方文档提供豆包等大模型推理、评测、精调与应用构建工具。",
+          "source": "https://docs.volcengine.com/docs/ark?lang=zh",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 火山引擎 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://docs.volcengine.com/docs/ark?lang=zh",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "apple-intelligence",
+      "name": "Apple Intelligence",
+      "officialHosts": [
+        "apple.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项价格证据，保持缺失，待人工复核。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Apple Intelligence 是兼容设备与操作系统上的系统级能力，不是无需设备限制的浏览器云SaaS产品。",
+          "source": "https://support.apple.com/en-us/121115",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Apple 官网确认中国大陆购买的支持设备尚不能使用 Apple Intelligence；其他地区仍按设备、语言和功能限制决定。",
+          "source": "https://support.apple.com/zh-cn/121115",
+          "checkedAt": "2026-11-03",
+          "scope": "limited_region_evidence"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Apple 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://support.apple.com/en-us/121115",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "huggingface-inference-endpoints",
+      "name": "Hugging Face Inference Endpoints",
+      "officialHosts": [
+        "huggingface.co"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Inference Endpoints 官方给出按小时实例价格，实际按分钟计费，例如部分CPU实例低于每小时0.10美元，GPU单价按规格变化。",
+          "source": "https://huggingface.co/docs/inference-endpoints/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Hugging Face 官方提供专用模型端点及自动扩缩容，收费取决于实例规格、实例数量和运行时间。",
+          "source": "https://huggingface.co/docs/inference-endpoints/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "官方接入指南要求有效支付方式才能使用专用推理端点，并有企业发票选项；不能由此推断支持某种本地电子钱包。",
+          "source": "https://huggingface.co/docs/inference-endpoints/guides/access",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品由 Hugging Face 官方站点发布；产品归属可由官网确认，具体法律签约主体、成立时间与是否上市尚未验证。",
+          "source": "https://huggingface.co/docs/inference-endpoints/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "databricks-foundation-model-apis",
+      "name": "Databricks Foundation Model APIs",
+      "officialHosts": [
+        "databricks.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "官方说明 pay-per-token 与预留吞吐量为不同计费模式，实际价格需按照模型、企业云合同、地区和部署模式分别核实。",
+          "source": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Databricks 官方列有 pay-per-token 和 provisioned throughput 两种基础模型推理方式，允许通过服务端点访问不同模型。",
+          "source": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品由 Databricks 官方站点发布；产品归属可由官网确认，具体法律签约主体、成立时间与是否上市尚未验证。",
+          "source": "https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "snowflake-cortex-ai",
+      "name": "Snowflake Cortex AI",
+      "officialHosts": [
+        "snowflake.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Snowflake 官方将 AI Credits 与 Platform Credits 分开计价；全球路由和区域路由价格不同，AI Functions 等按模型用量另计。",
+          "source": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Snowflake 官方列出 Cortex Agents、AI Functions、Cortex REST API、Cortex Search、数据分析及企业智能体等 AI 功能。",
+          "source": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Snowflake 的区域路由、全球路由采用不同定价和数据驻留配置，不能把开放的全球路由误认为每个地区均可用。",
+          "source": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品由 Snowflake 官方站点发布；产品归属可由官网确认，具体法律签约主体、成立时间与是否上市尚未验证。",
+          "source": "https://docs.snowflake.com/en/user-guide/snowflake-cortex/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "cohere-model-api",
+      "name": "Cohere Model API",
+      "officialHosts": [
+        "cohere.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Cohere 官网价格表按生成模型的输入和输出百万tokens分别标价，向量重排、嵌入模型另有独立计费口径。",
+          "source": "https://cohere.com/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项免费额度证据，保持缺失，待人工复核。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Cohere 官方模型目录列有 Command、Embed、Rerank 和多语言模型，具体型号与上下文长度可能调整。",
+          "source": "https://docs.cohere.com/docs/models",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品由 Cohere 官方站点发布；产品归属可由官网确认，具体法律签约主体、成立时间与是否上市尚未验证。",
+          "source": "https://docs.cohere.com/docs/models",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "stability-ai-developer-platform",
+      "name": "Stability AI Developer Platform",
+      "officialHosts": [
+        "stability.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Stability AI 官方API价目按1积分0.01美元计费，不同图像/音频模型消耗积分不同。",
+          "source": "https://platform.stability.ai/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Stability AI 官方入门说明经Google登录的新账户可获25免费积分，属于入门额度而不是永久无限免费。",
+          "source": "https://platform.stability.ai/docs/getting-started",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Stability AI 官方开发者平台提供 Stable Image 和 Stable Audio 等生成API，须用密钥调用并按模型和请求计积分。",
+          "source": "https://platform.stability.ai/docs/getting-started",
+          "checkedAt": "2026-11-03",
+          "scope": "first_party_product_note"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项国家地区可用证据，保持缺失，待人工复核。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项商用授权证据，保持缺失，待人工复核。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官网资料尚无可独立复核的该项支付方式证据，保持缺失，待人工复核。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品由 Stability AI 官方站点发布；产品归属可由官网确认，具体法律签约主体、成立时间与是否上市尚未验证。",
+          "source": "https://platform.stability.ai/docs/getting-started",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    }
+  ]
+}

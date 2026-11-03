@@ -38,9 +38,9 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(page,/"@type":"FAQPage"/);
  assert.match(read("app/llms.txt/route.ts"),/SIAI_DISCOVERY\.zh\.topics/);
  assert.match(read("public/llms-full.txt"),/Global AI \/ SI \/ SIAI rankings/);
- assert.match(page,/const curated=getCuratedRows\(\)/);
+ assert.match(page,/const \{curated,rows\}=getSiaiDirectoryRows\(\)/);
  assert.match(page,/itemListElement:curated\.map/);
- assert.match(page,/alternates:\{canonical:PRIMARY_SITE\+"\/siai"\}/);
+ assert.match(page,/alternates:\{canonical:PRIMARY_SITE\+"\/siai",languages:/);
  assert.doesNotMatch(page,/index:false/);
 });
 test("eight sourced corporate-history entries remain honest about parent/launch differences",()=>{
@@ -54,9 +54,10 @@ test("eight sourced corporate-history entries remain honest about parent/launch 
 
 test("the footer is bilingual in Chinese locale, other languages use their own copy, and six links target distinct useful answers",()=>{
  const footer=read("components/Footer.tsx"),cards=read("components/SiaiSearchDiscovery.tsx");
- assert.match(footer,/lang!=="en"/);
+ assert.match(footer,/lang==="zh"/);
  assert.match(footer,/lang="en"/);
- assert.match(footer,/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
+ assert.match(read("lib/public-feature-copy.ts"),/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
+ assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,1);
  assert.match(footer,/discovery\.topics\.map\(v=>v\.q\)/);
  assert.match(footer,/siai-search-home-/);
  assert.match(cards,/id=\{prefix\+"-"\+i\}/);

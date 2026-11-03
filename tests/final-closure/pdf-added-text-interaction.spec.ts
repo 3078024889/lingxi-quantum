@@ -1,0 +1,28 @@
+import fs from "node:fs";
+import {test,expect} from "./export-test";
+test("PDF inline text edits and collapses without a permanent frame",async({page})=>{
+ test.setTimeout(90000);
+ await page.goto("/tools/pdf-editor?lang=en");
+ const upload=page.locator('input[type=file]').first();await expect(upload).toBeEnabled({timeout:15000});
+ await upload.setInputFiles({name:"demo.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
+ await page.getByPlaceholder("Text to add").fill("Original new note");
+ await page.getByRole("button",{name:"Add text",exact:true}).click();
+ const edit=page.getByRole("textbox",{name:"Edit added text"});await expect(edit).toBeVisible();
+ await edit.fill("Updated text, 123");await edit.press("Enter");await expect(edit).toHaveCount(0);
+ const item=page.getByTestId("pdf-overlay").filter({hasText:"Updated text, 123"}).first();await expect(item).toBeVisible();
+ await expect(page.getByTestId("pdf-grip-se")).toHaveCount(0);
+ // Real pointer action: keep the edited annotation below the sticky navigation before interacting.
+ await item.evaluate(el=>el.scrollIntoView({block:"center",inline:"nearest",behavior:"auto"}));
+ await expect.poll(async()=>item.evaluate(el=>{
+  const r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+  return Boolean(hit&&(hit===el||el.contains(hit)));
+ })).toBe(true);
+ await item.dblclick();await expect(edit).toBeVisible();await edit.fill("Final note");await edit.press("Enter");
+ const finalItem=page.getByTestId("pdf-overlay").filter({hasText:"Final note"}).first();
+ await expect(finalItem).toContainText("Final note");
+ await expect(page.getByTestId("pdf-overlay").filter({hasText:"Updated text, 123"})).toHaveCount(0);
+ await expect(page.locator("div.absolute.border-amber-400")).toHaveCount(0);
+ await expect(page.locator('input[aria-label="Signature rotation degrees"]')).toHaveCount(0);
+ await expect(page.getByTestId("paid-export-result")).toHaveCount(0);
+});

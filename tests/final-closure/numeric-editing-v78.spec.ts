@@ -33,7 +33,7 @@ test('food portions and nutrition-label numbers accept empty and replacement dra
  }
 });
 
-for(const slug of ['pdf-editor','e-sign-pdf','pdf-redact'])test(`${slug}: uploaded-document page and overlay inputs remain editable`,async({page})=>{
+for(const slug of ['pdf-editor','e-sign-pdf','pdf-redact'])test(`${slug}: page navigation and direct overlay editing remain usable`,async({page})=>{
  test.setTimeout(120000);
  const pdf=await PDFDocument.create();pdf.addPage([200,280]);pdf.addPage([200,280]);
  await page.goto('/tools/'+slug+'?lang=en',{waitUntil:'domcontentloaded'});
@@ -47,8 +47,13 @@ for(const slug of ['pdf-editor','e-sign-pdf','pdf-redact'])test(`${slug}: upload
  const png=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=32;c.height=24;c.getContext('2d')!.fillRect(0,0,32,24);return c.toDataURL('image/png').split(',')[1]});
  await expect(page.locator('input[type=file][accept="image/*"]').first()).toBeEnabled({timeout:15000});
  await page.locator('input[type=file][accept="image/*"]').first().setInputFiles({name:'overlay.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});
- const fields=page.locator('input[type=number]');await expect(fields).toHaveCount(5);
- for(let i=0;i<5;i++){await fields.nth(i).fill('');await expect(fields.nth(i)).toHaveValue('');await fields.nth(i).pressSequentially('10');await fields.nth(i).press('Tab');await expect(fields.nth(i)).toHaveValue('10');}
+ // The PDF editor intentionally replaced the legacy five-number geometry form with direct manipulation.
+ const overlay=page.getByTestId('pdf-overlay').last();
+ await expect(overlay).toBeVisible();
+ await expect(page.getByTestId('pdf-grip-se')).toBeVisible();
+ await expect(page.getByTestId('pdf-grip-rotate')).toBeVisible();
+ await expect(page.locator('input[type=number]')).toHaveCount(0);
+ await expect(page.locator('input[aria-label="Signature rotation degrees"]')).toHaveCount(0);
 });
 
 test('video trim start, duration and FPS accept empty intermediate values',async({page})=>{

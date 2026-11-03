@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../../'+p,import.meta.url),'utf8');
 test('main SIAI route shows human creators in ranking and comparison, keeps corporations in details',()=>{
- const home=read('components/SiaiRankingHome.tsx'),route=read('app/siai/page.tsx'),sitemap=read('app/sitemap.ts');
- assert.ok(route.includes('creator:publisher.creator'));
+ const home=read('components/SiaiRankingHome.tsx'),route=read('app/siai/page.tsx'),catalog=read('app/siai/catalog-data.ts'),sitemap=read('app/sitemap.ts');
+ assert.ok(route.includes('getSiaiDirectoryRows()'));
+ assert.ok(catalog.includes('creator:publisher.creator'));
+ assert.ok(catalog.includes('companyPresentationFor(id,platform.company)'));
  assert.ok(home.includes("p.creator?.role==='founder'"));
  assert.ok(home.includes('p.creator?.source||null'));
  assert.ok(!home.includes('p.kind==="company"?(p.legal||"—")'));

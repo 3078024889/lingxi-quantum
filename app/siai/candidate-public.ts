@@ -85,7 +85,7 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
    features:p.tasks,searchTerms:p.keywords,website:officialEntry,
    free:text(f.free),freeSource:source(f.free),
    price:text(f.price),priceSource:source(f.price),
-   region:region?.status==="observed"?"官方地区条款/限制说明，并非逐国注册或支付验证："+text(region):NOT_DOCUMENTED,
+   region:text(region),
    regionSource:source(region),
    payment:text(f.payment),paymentSource:source(f.payment),
    models:text(f.models),modelsSource:source(f.models),

@@ -78,7 +78,7 @@ export function buildEvidenceReadiness({curatedIds,curatedFacts,cohorts,observat
   }
  }
  const expected=cohorts.reduce((n,b)=>n+(b.products?.length||0),0);
- if(cohorts.length!==3||expected!==30||staged.length!==30)
+ if(cohorts.length<3||expected!==cohorts.length*10||staged.length!==expected)
   structuralIssues.push({code:'STAGED_COHORT_COUNTS_CHANGED',batches:cohorts.length,expected,actual:staged.length});
  if(observations.length!==cohorts.length)structuralIssues.push({code:'OBSERVATION_BATCH_COUNT_MISMATCH'});
  const totals=staged.reduce((a,p)=>{a.observed+=p.observed;a.missing+=p.missing;a.conflict+=p.conflict;return a},{observed:0,missing:0,conflict:0});
@@ -118,7 +118,7 @@ export function evidenceReportMarkdown(r){
   '| Ledger | Recorded | Outstanding |',
   '| --- | ---: | ---: |',
   '| Public 32 curated × 6 sourced fact fields | '+c.recordedWithSources+' | '+c.missingFieldPairs+' |',
-  '| Candidate 30 × 7 observations | '+o.observed+' | '+o.missing+' missing + '+o.conflict+' conflicting |',
+  '| Candidate '+o.products+' × 7 observations | '+o.observed+' | '+o.missing+' missing + '+o.conflict+' conflicting |',
   '',
   'Candidate products already approved for publication: '+o.publishReady+'.',
   'Actual GSC traffic and production checkout: NOT CHECKED.',
