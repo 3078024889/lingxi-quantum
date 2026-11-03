@@ -1,0 +1,27 @@
+name: SIAI major publisher source provenance
+on:
+  push:
+    branches:
+      - 'research/siai-major-publishers-batch004-*'
+  pull_request:
+    paths:
+      - 'lingxifield-ai-market/data/company-intake/batch-004*.json'
+      - 'tests/siai-major-publishers-004.test.mjs'
+permissions:
+  contents: read
+jobs:
+  source-provenance:
+    name: source-provenance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+      - name: Validate first-party major publishers
+        run: node --test tests/siai-major-publishers-004.test.mjs
