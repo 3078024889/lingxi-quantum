@@ -27,6 +27,7 @@ type K =
 const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   [
     { href: "/", key: "home", icon: "home" },
+    { href: "/siai", key: "home", icon: "tools" },
     { href: "/tools", key: "tools", icon: "tools" },
   ],
   [
@@ -37,6 +38,8 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
     { href: "/account", key: "myField", icon: "account" },
   ],
 ]
+
+const marketNavNames:Record<LingxiLang,string>={zh:"全球 SIAI 排行榜",en:"Global SIAI Rankings",ja:"世界の SIAI ランキング",ko:"글로벌 SIAI 순위",fr:"Classement mondial SIAI",de:"Globales SIAI-Ranking",es:"Ranking mundial SIAI",pt:"Ranking global SIAI",ar:"ترتيب SIAI العالمي"};
 
 function active(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -170,7 +173,7 @@ export default function Nav() {
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
                 <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{t(item.key)}</span>
+                <span>{item.href==="/siai"?marketNavNames[lang]:t(item.key)}</span>
               </Link>
             ))}
           </section>

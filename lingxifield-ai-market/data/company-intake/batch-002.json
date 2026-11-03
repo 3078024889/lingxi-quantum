@@ -1,0 +1,257 @@
+{
+  "batch": "B002",
+  "asOf": "2026-11-02",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "products": [
+    {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "company": "GitHub",
+      "category": "编程",
+      "website": "https://github.com/features/copilot",
+      "evidenceUrl": "https://github.com/features/copilot/plans",
+      "tasks": [
+        "代码补全",
+        "代码审查",
+        "软件开发代理"
+      ],
+      "keywords": [
+        "AI代码助手",
+        "GitHub编程代理"
+      ],
+      "publisherGroupId": "microsoft",
+      "aliases": [
+        "copilot"
+      ],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://github.com/features/copilot/plans",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "devin-desktop",
+      "name": "Devin Desktop",
+      "company": "Cognition",
+      "category": "编程",
+      "website": "https://devin.ai/desktop",
+      "evidenceUrl": "https://devin.ai/desktop",
+      "tasks": [
+        "IDE编程",
+        "多代理代码任务",
+        "代码调试"
+      ],
+      "keywords": [
+        "Windsurf新名字",
+        "多代理编程IDE"
+      ],
+      "publisherGroupId": "cognition",
+      "aliases": [
+        "windsurf"
+      ],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://devin.ai/desktop",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "tabnine",
+      "name": "Tabnine",
+      "company": "Tabnine / Tricentis",
+      "category": "编程",
+      "website": "https://www.tabnine.com/platform/",
+      "evidenceUrl": "https://www.tabnine.com/pricing/",
+      "tasks": [
+        "私有代码辅助",
+        "企业代码库理解",
+        "安全代码生成"
+      ],
+      "keywords": [
+        "企业私有AI编程",
+        "本地部署代码助手"
+      ],
+      "publisherGroupId": "tricentis",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://www.tabnine.com/pricing/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "mistral-le-chat",
+      "name": "Mistral Vibe（原 Le Chat）",
+      "company": "Mistral AI",
+      "category": "综合助手",
+      "website": "https://chat.mistral.ai/",
+      "evidenceUrl": "https://mistral.ai/pricing/",
+      "tasks": [
+        "AI问答与研究",
+        "联网搜索",
+        "代码辅助"
+      ],
+      "keywords": [
+        "Mistral智能助手",
+        "Le Chat免费"
+      ],
+      "publisherGroupId": "mistral-ai",
+      "aliases": [
+        "Le Chat",
+        "Mistral Le Chat",
+        "Mistral Vibe"
+      ],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://mistral.ai/pricing/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "microsoft-copilot",
+      "name": "Microsoft Copilot",
+      "company": "Microsoft",
+      "category": "综合助手",
+      "website": "https://www.microsoft.com/en-sg/copilot",
+      "evidenceUrl": "https://www.microsoft.com/en-sg/copilot",
+      "tasks": [
+        "Office文档辅助",
+        "企业知识助手",
+        "日常AI问答"
+      ],
+      "keywords": [
+        "Microsoft Copilot多少钱",
+        "Office办公AI"
+      ],
+      "publisherGroupId": "microsoft",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://www.microsoft.com/en-sg/copilot",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "poe",
+      "name": "Poe",
+      "company": "Poe",
+      "category": "聚合模型",
+      "website": "https://poe.com/poe",
+      "evidenceUrl": "https://help.poe.com/hc/en-us/articles/19944206309524-Poe-FAQs",
+      "tasks": [
+        "多模型聊天",
+        "图片视频生成",
+        "自建聊天机器人"
+      ],
+      "keywords": [
+        "Poe多模型聚合",
+        "Poe聊天机器人"
+      ],
+      "publisherGroupId": "poe",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://help.poe.com/hc/en-us/articles/19944206309524-Poe-FAQs",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "adobe-firefly",
+      "name": "Adobe Firefly",
+      "company": "Adobe",
+      "category": "图片视频",
+      "website": "https://firefly.adobe.com",
+      "evidenceUrl": "https://helpx.adobe.com/firefly/web/get-started/learn-the-basics/adobe-firefly-faq.html",
+      "tasks": [
+        "AI图片生成",
+        "AI视频生成",
+        "图片编辑"
+      ],
+      "keywords": [
+        "Adobe Firefly商用",
+        "AI图像视频"
+      ],
+      "publisherGroupId": "adobe",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://helpx.adobe.com/firefly/web/get-started/learn-the-basics/adobe-firefly-faq.html",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "recraft",
+      "name": "Recraft",
+      "company": "Recraft",
+      "category": "图片设计",
+      "website": "https://www.recraft.ai/pricing?tab=plans",
+      "evidenceUrl": "https://www.recraft.ai/pricing?tab=plans",
+      "tasks": [
+        "生成图片与矢量",
+        "局部修图",
+        "品牌设计"
+      ],
+      "keywords": [
+        "Recraft矢量图",
+        "Recraft免费商用"
+      ],
+      "publisherGroupId": "recraft",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://www.recraft.ai/pricing?tab=plans",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "freepik-ai",
+      "name": "Freepik AI",
+      "company": "Freepik",
+      "category": "多模态创作",
+      "website": "https://www.freepik.com/pricing",
+      "evidenceUrl": "https://www.freepik.com/pricing",
+      "tasks": [
+        "AI图片生成",
+        "AI视频生成",
+        "素材与配音"
+      ],
+      "keywords": [
+        "Freepik AI积分",
+        "Freepik多模型"
+      ],
+      "publisherGroupId": "freepik",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://www.freepik.com/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "synthesia",
+      "name": "Synthesia",
+      "company": "Synthesia",
+      "category": "AI视频",
+      "website": "https://www.synthesia.io/pricing",
+      "evidenceUrl": "https://www.synthesia.io/pricing",
+      "tasks": [
+        "数字人视频制作",
+        "视频配音与翻译",
+        "企业培训视频"
+      ],
+      "keywords": [
+        "Synthesia数字人",
+        "Synthesia视频套餐"
+      ],
+      "publisherGroupId": "synthesia",
+      "aliases": [],
+      "discoveredAt": "2026-11-02",
+      "discoverySource": "https://www.synthesia.io/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}
