@@ -9,10 +9,25 @@ import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {openPdf} from "@/lib/tools/pdf-render-client";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {comparePdfTextLayers} from "@/lib/tools/pdf-contract-diff";
 type Mode="watermark"|"page-numbers"|"crop"|"flatten"|"compare"|"text"|"markdown";
+const COMPARE_NO_TEXT:Record<string,string>={
+ zh:"至少一份 PDF 没有可提取的文字。请先对扫描件运行 PDF OCR。",
+ en:"At least one PDF has no extractable text. Run PDF OCR first.",
+ ja:"少なくとも1つのPDFに抽出可能なテキストがありません。先にPDF OCRを実行してください。",
+ ko:"PDF 중 하나 이상에 추출 가능한 텍스트가 없습니다. 먼저 PDF OCR을 실행하세요.",
+ fr:"Au moins un PDF ne contient aucun texte extractible. Lancez d'abord l’OCR PDF.",
+ de:"Mindestens eine PDF enthält keinen extrahierbaren Text. Führen Sie zuerst PDF-OCR aus.",
+ es:"Al menos un PDF no tiene texto extraíble. Ejecuta primero el OCR de PDF.",
+ pt:"Pelo menos um PDF não tem texto extraível. Execute primeiro o OCR de PDF.",
+ ar:"لا يحتوي ملف PDF واحد على الأقل على نص قابل للاستخراج. شغّل OCR لملفات PDF أولاً."
+};
+
 async function extract(file:File){const pdf=await openPdf(file),pages:string[]=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),c=await page.getTextContent();pages.push((c.items||[]).map((x:any)=>String(x.str||"")).join(" "))}pdf.destroy?.();return pages}
 const blob=(bytes:Uint8Array)=>new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
 export default function PdfExtraWorkbench({mode}:{mode:Mode}){
+ const {lang}=useLingxiLang();
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]),[text,setText]=useState("CONFIDENTIAL"),[opacity,setOpacity]=useState(.18),[size,setSize]=useState(42),[margin,setMargin]=useState(20),[crop,setCrop]=useState(10);
  const multi=mode==="compare";
  async function run(){setBusy(true);setError("");setResults([]);try{
@@ -21,7 +36,7 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
   if(mode==="page-numbers"){const d=await PDFDocument.load(await files[0].arrayBuffer()),font=await d.embedFont(StandardFonts.Helvetica),ps=d.getPages();ps.forEach((p,i)=>{const{width}=p.getSize(),s=String(i+1),w=font.widthOfTextAtSize(s,10);p.drawText(s,{x:(width-w)/2,y:Math.max(8,margin),size:10,font,color:rgb(.2,.2,.2)})});const b=blob(await d.save());setResults([{name:"numbered-"+files[0].name,blob:b,mime:"application/pdf",size:b.size}])}
   if(mode==="crop"){const d=await PDFDocument.load(await files[0].arrayBuffer());for(const p of d.getPages()){const box=p.getCropBox(),m=crop;if(!Number.isFinite(m)||m<0||m*2>=box.width||m*2>=box.height)throw Error('CROP_MARGIN_EXCEEDS_PAGE');p.setCropBox(box.x+m,box.y+m,box.width-m*2,box.height-m*2)}const b=blob(await d.save());setResults([{name:"cropped-"+files[0].name,blob:b,mime:"application/pdf",size:b.size}])}
   if(mode==="flatten"){const d=await PDFDocument.load(await files[0].arrayBuffer());d.getForm().flatten();if(d.getForm().getFields().length)throw Error('PDF_FLATTEN_INCOMPLETE');const b=blob(await d.save({useObjectStreams:true}));setResults([{name:"flattened-"+files[0].name,blob:b,mime:"application/pdf",size:b.size}])}
-  if(mode==="compare"){const[a,b]=await Promise.all([extract(files[0]),extract(files[1])]),max=Math.max(a.length,b.length),lines:string[]=[];for(let i=0;i<max;i++){if((a[i]||"")!==(b[i]||""))lines.push(`## Page ${i+1}\n\n### A\n${a[i]||""}\n\n### B\n${b[i]||""}\n`)}const out=lines.length?lines.join("\n"):"No text-layer differences detected.";const bl=new Blob([out],{type:"text/markdown;charset=utf-8"});setResults([{name:"pdf-compare.md",blob:bl,mime:"text/markdown",size:bl.size}])}
+  if(mode==="compare"){const[a,b]=await Promise.all([extract(files[0]),extract(files[1])]);const out=comparePdfTextLayers(a,b);const bl=new Blob([out],{type:"text/markdown;charset=utf-8"});setResults([{name:"pdf-compare.md",blob:bl,mime:"text/markdown",size:bl.size}])}
   if(mode==="text"||mode==="markdown"){const pages=await extract(files[0]),content=mode==="markdown"?pages.map((p,i)=>`# Page ${i+1}\n\n${p}`).join("\n\n"):pages.map((p,i)=>`--- Page ${i+1} ---\n${p}`).join("\n\n"),ext=mode==="markdown"?"md":"txt",mime=mode==="markdown"?"text/markdown":"text/plain";const bl=new Blob([content],{type:mime+";charset=utf-8"});setResults([{name:files[0].name.replace(/\.pdf$/i,"")+"."+ext,blob:bl,mime,size:bl.size}])}
  }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}}
  const title={watermark:"PDF 加水印","page-numbers":"PDF 加页码",crop:"PDF 裁边",flatten:"PDF 扁平化",compare:"PDF 比较",text:"PDF 转 TXT",markdown:"PDF 转 Markdown"}[mode];
@@ -30,7 +45,7 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
  {mode==="page-numbers"&&<label className="block text-sm"><ToolUiText text="距页面底部 pt" /><EditableNumberInput type="number" min={8} max={200} value={margin} onChange={e=>setMargin(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
  {mode==="crop"&&<label className="block text-sm"><ToolUiText text="四边裁掉 pt" /><EditableNumberInput type="number" min={0} max={300} value={crop} onChange={e=>setCrop(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
  {mode==="flatten"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="将 PDF 表单字段写入页面内容，适合提交、归档或避免字段继续被修改；建议先保留原件。" /></p>}
- {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="当前比较 PDF 文本层并按页面列出差异；扫描件应先 OCR。不会把“视觉像素比较”冒充成已经实现。" /></p>}
+ {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="逐页比较 PDF 文本层，优先列出金额、日期、条款差异并导出报告；扫描件应先 OCR。此工具不是视觉对比或法律意见。" /></p>}
  {(mode==="text"||mode==="markdown")&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="提取已有文本层；扫描 PDF 请先使用 PDF OCR 或 PDF 转 Word 的自动 OCR。" /></p>}
- <button disabled={busy||files.length<(multi?2:1)} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":title} /></button>{results.length>0&&<ResultPanel files={results} messageZh={`${title}完成。`} messageEn="Done."/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]"><ToolUiText text={error==='CROP_MARGIN_EXCEEDS_PAGE'?'裁边距必须小于每页宽度和高度的一半。':error}/></p>}</div>
+ <button data-testid={mode==="compare"?"pdf-compare-run":undefined} disabled={busy||files.length<(multi?2:1)} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":title} /></button>{results.length>0&&<ResultPanel files={results} messageZh={`${title}完成。`} messageEn="Done."/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error==="PDF_COMPARE_OCR_REQUIRED"?(COMPARE_NO_TEXT[lang]||COMPARE_NO_TEXT.en):<ToolUiText text={error==="CROP_MARGIN_EXCEEDS_PAGE"?"裁边距必须小于每页宽度和高度的一半。":error}/>}</p>}</div>
 }
