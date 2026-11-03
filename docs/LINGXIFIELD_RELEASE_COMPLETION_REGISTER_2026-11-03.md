@@ -59,3 +59,12 @@ License facts should be checked at the exact commit/release before including thi
 6. After promotion: verify domains, locale-specific paths, vendor signup, content security, logs, rollback recovery and receipt reconciliation. Store exact deployment ID, git SHA, smoke traces and release notes.
 
 **Current blockers are not cleared by this document.** Do not assert "all tools real-tested" or "deployed" until there is evidence, and do not use a simulated payment as evidence of a real financial transaction.
+
+## 2026-11-03 P0 native PDF text engine integration (development branch)
+
+- Pinned original `owenpkent/folio` MIT commit `8e0a9f86a0957436e47cadb6f6475b2a0aecfd0c`, selectively imported the text content-stream tokenizer, edit mutation and types under `lib/tools/pdf-native`, retaining the license notice.
+- Original PDF.js text baseline coordinates are matched to at most one editable `Tj/TJ/'/"` run. On export, the safe run is removed and replacement visual text is rendered on top; output is independently reopened by PDF.js and page count verified.
+- Scanned pages continue to use Tesseract OCR + visual overlays. Rotated pages, signed files, ambiguous matches or unsafe content-stream states are refused for native mode; no silent whiteout fallback.
+- Removing a painting operator from reachable content **does not prove secure redaction**: old revisions, shared/unreachable objects, image pixels or metadata can remain. Never market this as confidential-data deletion.
+- Evidence: `tests/tool-closure/pdf-native-text.test.mjs` checks parser, actual native stream removal, signature denial and fail-closed cases; `tests/final-closure/pdf-native-export-reopen.spec.ts` uses a real PDF, mock payment grant, actual download, pdf-lib reopen, and PDF.js text-layer absence after reupload.
+- Full regression status must be recorded from CI, never inferred from source edits.

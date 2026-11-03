@@ -16,6 +16,7 @@ test("PDF original text is double-click editable as a visual replacement with no
  await input.fill("Invoice total 456");
  await input.press("Enter");
  await expect(page.getByTestId("pdf-overlay").filter({hasText:"Invoice total 456"})).toBeVisible();
+ await expect(page.getByTestId("pdf-overlay").first()).toHaveAttribute("data-native","true");
  await expect(page.getByTestId("pdf-source-text-region")).toHaveCount(0);
  await expect(page.locator('input[aria-label="Signature rotation degrees"]')).toHaveCount(0);
  await expect(page.getByTestId("paid-export-result")).toHaveCount(0);

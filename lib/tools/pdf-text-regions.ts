@@ -1,7 +1,7 @@
 /** Map text coordinates from PDF.js/Tesseract to the responsive PDF editor viewport.
  * Visual editing overlays the original PDF; it is NOT a secure redaction.
  */
-export type PdfTextRegion={key:string;text:string;x:number;y:number;w:number;h:number;fontPt:number;source:"pdf"|"ocr"};
+export type PdfTextRegion={key:string;text:string;x:number;y:number;w:number;h:number;fontPt:number;source:"pdf"|"ocr";pdfX?:number;pdfY?:number};
 type Viewport={width:number;height:number;transform:number[]};
 const finite=(n:unknown)=>typeof n==="number"&&Number.isFinite(n)?n:0;
 const clamp=(x:number,lo:number,hi:number)=>Math.max(lo,Math.min(hi,x));
@@ -30,7 +30,7 @@ export function pdfNativeTextRegions(content:{items?:unknown[]}|null|undefined,v
   const height=Math.max(2,Math.abs(finite(item.height))*Math.hypot(v[2],v[3]),Math.hypot(finite(t[2]),finite(t[3])));
   const textX=horizontalX<0?baseX-width:baseX;
   const r=region("pdf-"+i,item.str,textX,baseY-height*.87,width,height,"pdf",viewport.width,viewport.height);
-  if(r)out.push(r);
+  if(r){r.pdfX=t[4];r.pdfY=t[5];out.push(r)}
  }
  return out;
 }
