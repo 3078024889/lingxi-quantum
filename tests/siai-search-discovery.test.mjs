@@ -69,3 +69,9 @@ test("nine-language FAQ body follows the language selection and spaced keywords 
  assert.match(home,/replace\(\/\\s\+\/g,""\)/);
  assert.match(home,/"ai视频"/);
 });
+
+test("the ranking title is absolute and cannot duplicate the global brand suffix",()=>{
+ assert.match(page,/title:\{absolute:"全球AI排行榜与AI行情平台/);
+ assert.match(layout,/template:"%s ｜ 灵犀场 LINGXIFIELD"/);
+ assert.doesNotMatch(page,/title:"全球AI排行榜与AI行情平台/);
+});

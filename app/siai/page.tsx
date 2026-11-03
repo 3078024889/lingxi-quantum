@@ -17,7 +17,7 @@ import {productAnswerHeadline} from "../../lingxifield-ai-market/lib/market-resu
 export const dynamic="force-dynamic";
 export const revalidate=0;
 export const metadata:Metadata={
- title:"全球AI排行榜与AI行情平台｜全球SI／SIAI排行榜｜灵犀场 LINGXIFIELD",
+ title:{absolute:"全球AI排行榜与AI行情平台｜全球SI／SIAI排行榜｜灵犀场 LINGXIFIELD"},
  description:"找全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台、全球SIAI排行榜？灵犀场按用途展示全球AI公司、模型、工具、免费额度、价格、地区和商用条件，并链接官方资料。",
  keywords:[...SIAI_DISCOVERY.zh.topics.map(t=>t.q),...SIAI_DISCOVERY.zh.extras,"灵犀场","LINGXIFIELD","全球AI工具行情","全球AI模型排行榜","AI工具推荐","AI模型API价格","AI视频生成平台","AI公司排行榜"],
  alternates:{canonical:PRIMARY_SITE+"/siai"},
