@@ -20,12 +20,19 @@ test('main SIAI market shows non-Chinese factual details in localized words rath
 test('search-engine product detail does not publish Chinese editorial Q&A as localized non-Chinese content',()=>{
  const page=read('app/siai/[lang]/[id]/page.tsx');
  assert.match(page,/const question=lang==='zh'\?questionForProduct\(id\)\[0\]:null/);
- assert.match(page,/\{l==='zh'&&<section className="siai-detail-questions"/);
+ assert.match(page,/SIAI_ANSWER_UI\[l\]/);
+ assert.match(page,/l==='zh'&&profile/);
+ assert.match(page,/siai-capability-grid/);
+ assert.match(page,/siai-direct-answers-grid/);
+ assert.match(page,/l==='zh'\?p\.name\+/);
+ assert.match(page,/localizedProductSummary\(id,l\)/);
+ assert.match(page,/localizedCatalogFact\(id,l,'models'/);
+ assert.match(page,/items\.slice\(5\)/);
  assert.match(page,/globalRegionSummary\(id,l\)/);
  assert.match(page,/commercialEvidence\(id,l\)/);
  assert.match(page,/localizedPaymentName\(method,l\)/);
- assert.match(page,/l==='zh'\?p\.about:strength/);
- assert.match(page,/l==='zh'&&<p>\{p\.features\.join/);
+
+
  assert.doesNotMatch(page,/<p>\{p\.about\}<\/p><p>\{p\.features/);
  assert.match(page,/siaiDetailShouldIndex\(facts\)/);
  assert.match(page,/robots:\{index:isIndexable,follow:true\}/);
