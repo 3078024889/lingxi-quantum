@@ -1,0 +1,9 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import test from "node:test";
+const load=p=>JSON.parse(readFileSync(new URL("../"+p,import.meta.url),"utf8"));
+const b=load("lingxifield-ai-market/data/company-intake/batch-004.json");
+const s=load("lingxifield-ai-market/data/company-intake/batch-004-official-observations.json");
+test("15 major publisher products staged but not approved",()=>{assert.equal(b.products.length,15);assert.equal(s.products.length,15);assert.equal(new Set(b.products.map(p=>p.id)).size,15);assert.equal(new Set(b.products.map(p=>p.publisherGroupId)).size,14);assert.equal(b.visibleToPublic,false);assert.equal(b.intakePaused,true);for(const p of b.products){assert.equal(p.reviewed,false);assert.equal(p.publishApproved,false);}});
+test("All observed facts have publisher HTTPS links and unknown payments remain unknown",()=>{let facts=0;for(const p of s.products){assert.equal(p.reviewStatus,"unapproved");for(const field of ["price","free","models","regions","commercial","payment","company"]){let f=p.facts[field];assert(f);if(f.status==="missing"){assert.equal(f.source,null);continue;}assert.equal(f.status,"observed");const h=f.source.match(/^https:\/\/([^/]+)/)?.[1];assert(h);assert(p.officialHosts.some(s=>h===s||h.endsWith("."+s)),p.id+":"+field);assert.equal(f.checkedAt,"2026-11-03");facts++;}assert.equal(p.facts.payment.status,"missing");assert.equal(p.facts.commercial.status,"missing");}assert(facts>=40);});
+test("Old and new platform aliases are not counted as new independent companies",()=>{const g=b.products.find(p=>p.id==="google-gemini-agent-platform");assert(g.aliases.includes("Vertex AI"));assert.equal(b.products.filter(p=>p.publisherGroupId==="google").length,2);const a=s.products.find(p=>p.id==="apple-intelligence");assert.match(a.facts.regions.text,/中国大陆/);});

@@ -1,0 +1,836 @@
+{
+  "schema": "first_party_observations_v1",
+  "batch": "004",
+  "observedOn": "2026-11-03",
+  "disclaimer": "仅为第一方官方页面资料记录；不代表注册、生成、付款、API计费或手机实测完成。对缺失条目保持 missing。禁止自动并入收费排名。",
+  "products": [
+    {
+      "id": "google-ai-studio",
+      "name": "Google AI Studio",
+      "officialHosts": [
+        "google.dev"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "官方提供 Gemini 多模态模型、提示词测试与应用构建入口，模型额度须以对应 API 条款为准。",
+          "source": "https://ai.google.dev/aistudio",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Google 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://ai.google.dev/aistudio",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "google-gemini-agent-platform",
+      "name": "Gemini Enterprise Agent Platform（原 Vertex AI）",
+      "officialHosts": [
+        "google.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "Google 官方明确 Vertex AI Platform 更名为 Gemini Enterprise Agent Platform；模型与部署能力以新品牌的官方文档为准。",
+          "source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/vertex-ai-name-changes",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Google Cloud 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://cloud.google.com/products/gemini-enterprise-agent-platform",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "amazon-bedrock",
+      "name": "Amazon Bedrock",
+      "officialHosts": [
+        "amazon.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "AWS 按模型、地域、部署级别及 token 使用量分别计价，不存在所有模型统一单价。",
+          "source": "https://aws.amazon.com/bedrock/pricing/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "AWS 官方模型目录提供 Amazon Nova 及第三方模型，具体型号随地区和套餐变化。",
+          "source": "https://docs.aws.amazon.com/bedrock/latest/userguide/model-cards.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "AWS 官网按不同地区列出模型定价，地区价格表不能当作所有模型均可注册使用的证明。",
+          "source": "https://aws.amazon.com/bedrock/pricing/",
+          "checkedAt": "2026-11-03",
+          "scope": "limited_region_evidence"
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Amazon Web Services 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://aws.amazon.com/bedrock/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "microsoft-foundry",
+      "name": "Microsoft Foundry",
+      "officialHosts": [
+        "microsoft.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "Microsoft Foundry 官方提供 Microsoft 与第三方模型的发现、评估和多种部署选项。",
+          "source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Microsoft Foundry 官方指出可用模型与部署类型按 Azure 区域和云环境区分，不代表全球所有区域通用。",
+          "source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview",
+          "checkedAt": "2026-11-03",
+          "scope": "limited_region_evidence"
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Microsoft 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://learn.microsoft.com/en-us/azure/foundry/concepts/foundry-models-overview",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "ibm-watsonx-ai",
+      "name": "IBM watsonx.ai",
+      "officialHosts": [
+        "ibm.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "IBM 官网介绍按量推理和企业计费方案，模型及地区不同，不能将起价当固定任务总价。",
+          "source": "https://www.ibm.com/products/watsonx-ai/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "IBM 官方免费 Toolbox playground 列每月最多30万模型 tokens、20 CUH及100份文本提取文档，具体适用条款须核对。",
+          "source": "https://www.ibm.com/products/watsonx-ai/pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "IBM watsonx.ai 官方提供大模型开发、PromptLab、推理、微调、模型部署与集成 API。",
+          "source": "https://developer.ibm.com/components/watsonx-ai/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 IBM 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://www.ibm.com/products/watsonx-ai",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "nvidia-nim",
+      "name": "NVIDIA NIM",
+      "officialHosts": [
+        "nvidia.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "observed",
+          "text": "NVIDIA 官方称 NIM 基础发行可按适用许可免费使用，NIM Certified 企业支持另行区分；不意味着无限免费云推理。",
+          "source": "https://docs.nvidia.com/nim/large-language-models/latest/about-nim-llm/nim-offerings.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "NVIDIA NIM 为不同模型提供推理微服务和部署能力；NIM Certified 另有企业生产验证和维护机制。",
+          "source": "https://docs.nvidia.com/nim/large-language-models/latest/about-nim-llm/nim-offerings.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 NVIDIA 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://build.nvidia.com/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "oracle-oci-generative-ai",
+      "name": "Oracle OCI Generative AI",
+      "officialHosts": [
+        "oracle.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "Oracle 官方将 OCI Generative AI 描述为模型调用、企业智能体、向量检索和治理控制平台。",
+          "source": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "OCI 官方设有 Models by region 文档入口，具体模型地区可用需逐型号确认。",
+          "source": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+          "checkedAt": "2026-11-03",
+          "scope": "limited_region_evidence"
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Oracle 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "salesforce-agentforce",
+      "name": "Salesforce Agentforce",
+      "officialHosts": [
+        "salesforce.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Salesforce 官网分别列 Flex Credits 每10万 credits 500美元、按对话2美元等不同购买方式，不可直接合并计算。",
+          "source": "https://www.salesforce.com/agentforce/pricing/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Salesforce 官方列 Foundations 方案起点为 0 美元，具体额度与企业合约依官方定价详情。",
+          "source": "https://www.salesforce.com/agentforce/pricing/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Salesforce Agentforce 在企业业务数据与逻辑基础上构建、部署及编排智能体。",
+          "source": "https://www.salesforce.com/platform/agentforce-platform",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Salesforce 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://www.salesforce.com/agentforce/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "sap-joule",
+      "name": "SAP Joule",
+      "officialHosts": [
+        "sap.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "SAP 官方产品页说明 Joule 助手与企业 Agents 可在 SAP 及非 SAP 业务系统中执行带有上下文的工作流。",
+          "source": "https://www.sap.com/products/artificial-intelligence.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 SAP 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://www.sap.com/products/artificial-intelligence.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "meta-ai",
+      "name": "Meta AI",
+      "officialHosts": [
+        "meta.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "observed",
+          "text": "Meta AI 官方称日常问答可以免费使用，但高算力功能有使用量限制，部分情况提供付费扩展。",
+          "source": "https://ai.meta.com/meta-ai/assistant/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Meta 官方说明 Meta AI 由 Muse Spark 提供能力，支持多模态问答和图像生成，并集成到旗下社交应用。",
+          "source": "https://ai.meta.com/meta-ai/assistant/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Meta 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://ai.meta.com/meta-ai/assistant/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "alibaba-model-studio",
+      "name": "Alibaba Cloud Model Studio（百炼）",
+      "officialHosts": [
+        "alibabacloud.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Model Studio 官方按地区、型号、输入/输出 tokens及视频/图像单位分别定价，价格须逐档核算。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "阿里云官方价目表注明部分新用户免费额度只在 Singapore 部署适用且有90天限制，非全部型号均免费。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "阿里云官方价目表包括 Qwen、Wan 图像与视频、重排序等模型，不同地区开放型号不同。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Model Studio 官方按 Singapore、China、Hong Kong、US 等不同地区分列费用与部分地区专属额度。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "limited_region_evidence"
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Alibaba Cloud 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "baidu-qianfan",
+      "name": "百度千帆",
+      "officialHosts": [
+        "baidu.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "observed",
+          "text": "百度千帆官方文档说明新注册并完成实名认证的用户可领取20元代金券，期限一个月，属于有条件优惠。",
+          "source": "https://cloud.baidu.com/doc/QIANFAN/index.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "百度千帆官方文档介绍文心与主流模型 API、Agent 开发及工具服务。",
+          "source": "https://cloud.baidu.com/doc/QIANFAN/index.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 百度智能云 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://cloud.baidu.com/product/qianfan.html",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "tencent-hunyuan",
+      "name": "腾讯云混元",
+      "officialHosts": [
+        "tencent.com.cn",
+        "tencent.cn"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "腾讯云混元官网说明可选预付费资源包与后付费日结等计费模式，不同模型和调用量须按对应价格表核实。",
+          "source": "https://cloud.tencent.cn/product/tclm",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "腾讯云官方混元文档覆盖文本生成、图像生成、向量嵌入与兼容接口。",
+          "source": "https://cloud.tencent.com.cn/document/product/1729",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 腾讯云 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://cloud.tencent.com.cn/document/product/1729",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "volcengine-ark",
+      "name": "火山引擎火山方舟",
+      "officialHosts": [
+        "volcengine.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "火山引擎官网按不同文本、视频、图片模型分别展示计价单位，单一示例价格不代表整个方舟平台价。",
+          "source": "https://www.volcengine.com/",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "火山引擎方舟官方文档提供豆包等大模型推理、评测、精调与应用构建工具。",
+          "source": "https://docs.volcengine.com/docs/ark?lang=zh",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 火山引擎 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://docs.volcengine.com/docs/ark?lang=zh",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "apple-intelligence",
+      "name": "Apple Intelligence",
+      "officialHosts": [
+        "apple.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "free": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "models": {
+          "status": "observed",
+          "text": "Apple Intelligence 是兼容设备与操作系统上的系统级能力，不是无需设备限制的浏览器云SaaS产品。",
+          "source": "https://support.apple.com/en-us/121115",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "Apple 官网确认中国大陆购买的支持设备尚不能使用 Apple Intelligence；其他地区仍按设备、语言和功能限制决定。",
+          "source": "https://support.apple.com/zh-cn/121115",
+          "checkedAt": "2026-11-03",
+          "scope": "limited_region_evidence"
+        },
+        "commercial": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "payment": {
+          "status": "missing",
+          "text": null,
+          "source": null,
+          "checkedAt": null
+        },
+        "company": {
+          "status": "observed",
+          "text": "发布品牌 Apple 的官方产品资料能确认产品归属；本条不代表已经核定合同法律实体、成立年份或上市状态。",
+          "source": "https://support.apple.com/en-us/121115",
+          "checkedAt": "2026-11-03",
+          "scope": "publisher_brand_only"
+        }
+      }
+    }
+  ]
+}
