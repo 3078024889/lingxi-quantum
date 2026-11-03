@@ -15,6 +15,7 @@ import type { ToolRunResult } from "@/lib/tools/types";
 import { targetBytesForSlug } from "@/lib/tools/registry";
 import FileDropzone from "./FileDropzone";
 import ResultPanel from "./ResultPanel";
+import ImageBeforeAfter from "./ImageBeforeAfter";
 import ErrorExplain from "./ErrorExplain";
 import ResizeImageWorkbench from "./ResizeImageWorkbench";
 import ImageToPdfWorkbench from "./ImageToPdfWorkbench";
@@ -220,6 +221,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         {busy ? t("处理中…","Working…") : t("立即处理","Process now")}
       </button>
 
+      {result?.ok === true && result.files?.length&&files.length&& (tool.slug === "compress-image"||tool.slug.startsWith("compress-image-to-"))&&<ImageBeforeAfter sources={files} results={result.files}/>}
       {result?.ok === true && (
         <ResultPanel sourceSlug={tool.slug} files={result.files} messageZh={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageZh} messageEn={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageEn} details={tool.slug==="heic-to-jpg"?{files:result.files?.length||0}:result.details} />
       )}
