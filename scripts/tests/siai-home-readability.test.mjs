@@ -68,3 +68,14 @@ test('verified payment conditions are not stripped by a Stripe Link shortcut',()
  assert.doesNotMatch(home,/Link（Stripe\/\.test/);
  assert.match(home,/title=\{displayPayment\(p\)\}/);
 });
+
+test('all SIAI homepage visible labels including 550px mobile facets meet minimum 14px text contract',()=>{
+ const css=read('app/siai-home.css');
+ for(const match of css.matchAll(/font-size:(\d+)px/g))
+  assert.ok(Number(match[1])>=14,'unreadably small source/menu/company/label text: '+match[0]);
+ assert.match(css,/\.siai-home-identity dt\{[^}]*font-size:14px/);
+ assert.match(css,/\.siai-source\{[^}]*font-size:14px/);
+ assert.match(css,/\.siai-home-actions>a,\.siai-home-actions>button\{[^}]*font-size:14px/);
+ assert.match(css,/@media\(max-width:550px\)/);
+ assert.match(css,/\.siai-filter-line>strong\{font-size:14px\}/);
+});
