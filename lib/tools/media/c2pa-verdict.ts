@@ -6,12 +6,6 @@
 export type ProvenanceStatus="checking"|"trusted"|"valid"|"untrusted"|"invalid"|"absent"|"unavailable";
 export type ProvenanceResult={status:ProvenanceStatus;issuer?:string;claim?:string;reason?:string};
 
-let sdkPromise:Promise<Awaited<ReturnType<typeof import("@contentauth/c2pa-web/inline")["createC2pa"]>>>|null=null;
-/** Single SDK instance per browser session: avoid instantiating Wasm for each uploaded file. */
-async function getSdk(){
- if(!sdkPromise)sdkPromise=import("@contentauth/c2pa-web/inline").then(({createC2pa})=>createC2pa()).catch(error=>{sdkPromise=null;throw error});
- return sdkPromise;
-}
 const isObj=(input:unknown):input is Record<string,unknown>=>Boolean(input)&&typeof input==="object"&&!Array.isArray(input);
 export function describeC2paManifest(store:unknown):ProvenanceResult{
  if(!isObj(store))return {status:"unavailable",reason:"INVALID_VERIFICATION_REPORT"};
