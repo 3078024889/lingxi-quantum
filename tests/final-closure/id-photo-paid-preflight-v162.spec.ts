@@ -15,6 +15,19 @@ for(const item of [
   if(item.forceModelFailure){
    await page.route("**/models/id-photo/modnet.onnx",route=>route.fulfill({status:503,body:"ISOLATED_UNAVAILABLE_MODEL"}));
   }
+  await page.addInitScript(()=>{
+   const original=(window as any).createImageBitmap.bind(window);
+   (window as any).__photoBitmapCloses=0;
+   (window as any).createImageBitmap=async(...args:any[])=>{
+    const bitmap=await original(...args);
+    const close=bitmap.close.bind(bitmap);
+    bitmap.close=()=>{
+     (window as any).__photoBitmapCloses++;
+     close();
+    };
+    return bitmap;
+   };
+  });
   await page.goto("/tools/id-photo-ai?lang=en");
   const input=page.locator('input[type="file"]').first();
   await expect(input).toBeEnabled();
@@ -23,6 +36,7 @@ for(const item of [
   await expect(start).toBeEnabled();
   await start.click();
   await expect(page.getByRole("alert")).toBeVisible({timeout:85000});
+  await expect.poll(()=>page.evaluate(()=>(window as any).__photoBitmapCloses),{timeout:15000}).toBeGreaterThan(0);
   await expect(page.getByText("证件照预览已生成")).toHaveCount(0);
   await expect(page.locator('[data-testid="paid-export-start"]')).toHaveCount(0);
   await expect(page.getByRole("button",{name:/free.*preview|generate.*preview|免费生成预览/i}).first()).toBeEnabled();
