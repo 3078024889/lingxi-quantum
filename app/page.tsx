@@ -31,13 +31,13 @@ const HOME_STRUCTURED_DATA=[
   url:homeFact.com,
   description:PUBLIC_FEATURE_COPY.zh.description,
   featureList:[
+   "全球 SIAI 排行榜：AI 公司、模型、功能、价格和免费额度对比",
    "SASI多模型智能创作",
    "AI短剧生成",
    "网站构建",
    "书本问答",
    "学习与科研",
    "100+在线实用工具，每日免费体验",
-   "100+免费在线实用工具（每日免费体验额度）",
    "PDF、图片、视频音频、文件表格、开发者与隐私工具"
   ]
  }

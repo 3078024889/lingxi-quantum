@@ -154,7 +154,7 @@ export default function Nav() {
           <NextImage src="/images/lingxifield-logo.png" alt=""  width={64} height={64}/>
           <span>
             <b>{lang==="zh"?"灵犀场 LINGXIFIELD":t("brand")}</b>
-            <small>{agent ? "SASI" : (lang==="zh"?"SASI全球多模型智能创作平台":"LINGXIFIELD")}</small>
+            <small>{agent ? "SASI" : (lang==="zh"?"全球 SIAI · SASI · 免费在线工具":"SIAI · SASI · Online Tools")}</small>
           </span>
         </Link>
         <button className="lx11-close lg:hidden" onClick={() => setOpen(false)}>×</button>
