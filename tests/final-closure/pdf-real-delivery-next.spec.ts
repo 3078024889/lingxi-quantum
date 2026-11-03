@@ -76,10 +76,14 @@ test("mobile touch drag enlarges PDF image overlay without numeric fields",async
  await grip.scrollIntoViewIfNeeded();await expect(grip).toBeVisible();
  const a=await overlay.boundingBox(),r=await grip.boundingBox();expect(a).not.toBeNull();expect(r).not.toBeNull();
  const x=r!.x+r!.width/2,y=r!.y+r!.height/2;
+ // Match the separately green pointer-resize fixture: full 55px gesture,
+ // 12 native touch-move steps and guaranteed CDP session cleanup.
  const client=await page.context().newCDPSession(page);
- await client.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y,id:1,force:1,radiusX:4,radiusY:4}]});
- for(let i=1;i<=8;i++)await client.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+i*5,y:y+i*2,id:1,force:1,radiusX:4,radiusY:4}]});
- await client.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+ try{
+  await client.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y,id:1,force:1,radiusX:5,radiusY:5}]});
+  for(let i=1;i<=12;i++)await client.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+55*i/12,y:y+18*i/12,id:1,force:1,radiusX:5,radiusY:5}]});
+  await client.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+ }finally{await client.detach()}
  await expect.poll(async()=> (await overlay.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(a!.width+5);
  await expect(page.locator('input[type=number]')).toHaveCount(0);
 });
