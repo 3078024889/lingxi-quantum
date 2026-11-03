@@ -1,7 +1,7 @@
 import type {MetadataRoute} from 'next';
-import {mayIndexMarket,marketCanonicalOrigin} from '../lib/market-index-policy';
+import {mayIndexMarket,marketCanonicalOrigin,marketLocales} from '../lib/market-index-policy';
 
-const crawlerPaths=['/api/','/vendor/'];
+const crawlerPaths=['/api/','/vendor/',...marketLocales.map(lang=>'/'+lang+'/vendor/')];
 
 export default function robots():MetadataRoute.Robots{
  if(!mayIndexMarket())return {rules:{userAgent:'*',disallow:'/'}};

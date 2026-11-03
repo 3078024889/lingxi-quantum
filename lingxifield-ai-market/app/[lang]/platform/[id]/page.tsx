@@ -107,7 +107,7 @@ export default async function LocalProduct({params}:PageParams){
   </article>)}</section>
   {l==='zh'&&questionForProduct(id).length>0?<section className="marketLocalizedFaq">
    <h2>大家还会搜索</h2>
-   <div className="marketLocalizedFaqLinks">{questionForProduct(id).map((q:string)=><Link key={q} href={'/zh/ai?q='+encodeURIComponent(q)}>{q} ↗</Link>)}</div>
+   <div className="marketLocalizedFaqLinks">{questionForProduct(id).map((q:string)=><Link key={q} href={'/'+l+'/ai?q='+encodeURIComponent(q)}>{q} ↗</Link>)}</div>
   </section>:null}
   <section className="marketLocalizedApiRates">
    <h2>{({zh:'开发者 API 计费与会员套餐',en:'Developer API pricing and web plans',ja:'開発者API料金と会員プラン',ko:'개발자 API 요금 및 구독',fr:'Tarifs API et abonnements',de:'API-Preise und Abos',es:'Precios API y planes',pt:'Preços de API e planos',ar:'أسعار API والاشتراكات'} as Record<Language,string>)[l]}</h2>

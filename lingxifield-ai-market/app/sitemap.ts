@@ -14,6 +14,11 @@ export default function sitemap():MetadataRoute.Sitemap{
   const languages=Object.fromEntries(locales.map(l=>[l,marketCanonicalOrigin+'/'+l+'/platform/'+encodeURIComponent(product.id)]));
   for(const locale of locales)pages.push({url:languages[locale],changeFrequency:'weekly',priority:0.65,alternates:{languages}});
  }
+ // Public task and price directories are localized. Vendor submission and admin URLs are deliberately omitted.
+ for(const section of ['apps','models'] as const){
+  const languages=Object.fromEntries(locales.map(l=>[l,marketCanonicalOrigin+'/'+l+'/'+section]));
+  for(const lang of locales)pages.push({url:languages[lang],changeFrequency:'weekly',priority:0.58,alternates:{languages}});
+ }
  // One publisher entity may own multiple products. Show only sourced, curated pages.
  for(const c of MARKET_COMPANIES){
   if(!c.officialSource.startsWith('https://'))continue;

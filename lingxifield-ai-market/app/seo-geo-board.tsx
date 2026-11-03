@@ -46,6 +46,6 @@ export default function SeoGeoBoard({language='zh'}:{language?:Language}){
    <article><strong>{t[8]}</strong><p>{t[9]}</p></article>
   </div>
   {coverage.verifiedObservations===0?<p className="seoGeoNote">{t[10]}</p>:null}
-  <div className="seoGeoFooter"><Link href="/vendor/claim">{t[11]} ↗</Link><span>{t[12]}</span></div>
+  <div className="seoGeoFooter"><Link href={"/"+language+"/vendor/claim"}>{t[11]} ↗</Link><span>{t[12]}</span></div>
  </section>;
 }
