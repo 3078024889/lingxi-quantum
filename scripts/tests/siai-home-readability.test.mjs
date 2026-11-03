@@ -86,3 +86,10 @@ test('Runway corporate legal entity is sourced to Trust Center rather than infer
  assert.match(src,/legalEntityScope:'service_operator',founded:/);
  assert.match(src,/fact\('Runway AI, Inc\.','https:\/\/trust.runwayml.com\/','2026-11-03'\)/);
 });
+
+test('nine-language product detail breadcrumbs and official evidence links are readable at 14px or above',()=>{
+ const css=read('app/siai-detail.css');
+ for(const match of css.matchAll(/font-size:(\d+)px/g))
+  assert.ok(Number(match[1])>=14,'detail text below 14px: '+match[0]);
+ assert.match(css,/\.siai-detail-facts dd a\{[^}]*font-size:14px/);
+});
