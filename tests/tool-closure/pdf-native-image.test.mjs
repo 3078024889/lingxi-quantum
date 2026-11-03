@@ -50,8 +50,13 @@ test("image replacement changes one page without replacing shared XObject on ano
  const out=await engine.applyNativeImageChanges(bytes,[{pageIndex:0,target:region.target,action:{kind:"replace",dataUrl,mime:"image/png"}}]);
  const {locatePageImages}=load("lib/tools/pdf-native/image-mutate.ts");
  const [edited]=await locatePageImages(out,0),[other]=await locatePageImages(out,1);
+ const [beforeOther]=await locatePageImages(bytes,1);
  assert.notEqual(edited.name,region.target.name);
- assert.equal(other.name,region.target.name);
+ // PDF-lib may assign different resource aliases on each page even for one shared XObject.
+ // Compare the untouched page to its own original instead of assuming aliases coincide.
+ assert.equal(other.name,beforeOther.name);
+ assert.equal(other.rect.x,beforeOther.rect.x);assert.equal(other.rect.y,beforeOther.rect.y);
+ assert.equal(other.naturalWidth,beforeOther.naturalWidth);
  assert.equal(edited.naturalWidth,4);assert.equal(other.naturalWidth,8);
 });
 test("suspicious signatures and duplicate original image targets fail closed",async()=>{
