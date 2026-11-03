@@ -19,7 +19,7 @@ import {filterMarketRows,toggleMarketComparison,MAX_COMPARISONS,TASK_FACETS,PAYM
 export type SiaiHomeRow={
  id:string;name:string;company:string;legal:string|null;legalScope:"service_operator"|"group_parent"|null;
  creator:{en:string;zh:string;role:'founder'|'project_creator'|'lead_author';source:string}|null;
- kind:"company"|"open_source_project"|"software_library";listing:"listed_parent"|"unconfirmed"|"not_applicable";
+ kind:"company"|"open_source_project"|"software_library";listing:"listed_parent"|"listed_company"|"unconfirmed"|"not_applicable";
  ipoFiling:boolean;year:string|null;companySource:string|null;legalSource:string|null;listingSource:string|null;yearSource:string|null;
  category:string;about:string;strength:string;features:string[];searchTerms:string[];free:string;freeSource:string|null;
  price:string;priceSource:string|null;region:string;regionSource:string|null;payment:string;paymentSource:string|null;
@@ -62,6 +62,7 @@ const CANDIDATE_CATEGORIES:Record<LingxiLang,Record<string,string>>={
  pt:{"编程":"Programação","设计":"Design","演示":"Apresentações","视频":"Vídeo","图片":"Imagens","文档":"Documentos","视频剪辑":"Edição de vídeo","综合助手":"Assistente geral","聚合模型":"Agregador de modelos","图片视频":"Imagens e vídeo","图片设计":"Design de imagens","多模态创作":"Criação multimodal","AI视频":"Vídeo SI/AI","学术研究":"Pesquisa acadêmica","模型API":"APIs de modelos"},
  ar:{"编程":"البرمجة","设计":"التصميم","演示":"العروض التقديمية","视频":"الفيديو","图片":"الصور","文档":"المستندات","视频剪辑":"تحرير الفيديو","综合助手":"مساعد عام","聚合模型":"مجمع نماذج","图片视频":"الصور والفيديو","图片设计":"تصميم الصور","多模态创作":"إنشاء متعدد الوسائط","AI视频":"فيديو SI/AI","学术研究":"بحث أكاديمي","模型API":"واجهات النماذج"}
 };
+const LISTED_COMPANY:Record<LingxiLang,string>={zh:"公司已上市",en:"Publicly listed company",ja:"上場企業",ko:"상장 회사",fr:"Entreprise cotée",de:"Börsennotiertes Unternehmen",es:"Empresa cotizada",pt:"Empresa listada",ar:"شركة مدرجة"};
 const PREVIEW_COPY:Record<LingxiLang,string>={zh:"新增资料预览 · 尚未完成实际使用测试",en:"New research preview · real use untested",ja:"新規資料プレビュー・実利用テスト未完了",ko:"신규 자료 미리보기 · 실제 사용 테스트 미완료",fr:"Nouvelle fiche préliminaire · usage non testé",de:"Neue Datenvorschau · Praxistest ausstehend",es:"Nueva ficha preliminar · uso sin probar",pt:"Nova ficha preliminar · uso não testado",ar:"معاينة معلومات جديدة · لم تُختبر فعليًا"};
 const PREVIEW_DATE:Record<LingxiLang,string>={zh:"官网资料记录日期",en:"Publisher-source observation date",ja:"公式資料記録日",ko:"공식 자료 기록일",fr:"Date de relevé de la source",de:"Datum der Quellenrecherche",es:"Fecha del registro oficial",pt:"Data do registro oficial",ar:"تاريخ تسجيل المصدر"};
 const PREVIEW_FIELD:Record<LingxiLang,string>={zh:"原始资料（中文摘要），以官网为准",en:"Source notes are in Chinese; consult linked publisher terms",ja:"資料原文は中国語。公式リンクをご参照ください",ko:"원문 요약은 중국어입니다. 공식 링크를 참조하세요",fr:"Résumé en chinois ; consulter la source officielle",de:"Zusammenfassung auf Chinesisch; Originalquelle öffnen",es:"Resumen en chino; consulte la fuente oficial",pt:"Resumo em chinês; consulte a fonte oficial",ar:"الملخص بالصينية؛ راجع المصدر الرسمي"};
@@ -168,7 +169,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     <thead><tr><th scope="col">{lang==="zh"?"序号":"#"}</th><th scope="col">{t.tool}</th><th scope="col">{t.strength}</th><th scope="col">{t.free}</th><th scope="col">{t.price}</th><th scope="col">{t.region}</th><th scope="col">{t.payment}</th><th scope="col">{t.models}</th><th scope="col">{t.license}</th><th scope="col">{t.action}</th></tr></thead>
     <tbody>
      {shown.map((p,i)=>{
-       const listing=p.kind!=="company"?t.na:p.ipoFiling?t.ipoFiled:p.listing==="listed_parent"?t.listedParent:t.notConfirmed;
+       const listing=p.kind!=="company"?t.na:p.ipoFiling?t.ipoFiled:p.listing==="listed_parent"?t.listedParent:p.listing==="listed_company"?LISTED_COMPANY[lang]:t.notConfirmed;
        return <Fragment key={p.id}><tr className="siai-home-tr">
         <td>{i+1}</td>
         <td className="siai-home-identity"><strong>{p.name}</strong>{p.recordStatus==="source_preview"&&<small className="siai-checked-date">{PREVIEW_COPY[lang]}</small>}<dl>
