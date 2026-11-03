@@ -1,0 +1,36 @@
+name: SIAI public-facing copy and nine-language quality
+
+on:
+  push:
+    branches:
+      - 'fix/siai-user-copy-footer-dedup-*'
+  pull_request:
+    paths:
+      - 'components/Footer.tsx'
+      - 'components/SiaiRankingHome.tsx'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'lib/siai-search-discovery.ts'
+      - 'app/siai/candidate-public.ts'
+      - 'tests/siai-customer-language.test.mjs'
+      - 'tests/siai-search-discovery.test.mjs'
+      - 'tests/siai-source-preview.test.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  customer-copy:
+    name: readable-customer-copy-and-source-boundaries
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+      - name: Verify nine-language public descriptions and source data
+        run: node --test tests/siai-customer-language.test.mjs tests/siai-search-discovery.test.mjs tests/siai-source-preview.test.mjs

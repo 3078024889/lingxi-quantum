@@ -54,9 +54,10 @@ test("eight sourced corporate-history entries remain honest about parent/launch 
 
 test("the footer is bilingual in Chinese locale, other languages use their own copy, and six links target distinct useful answers",()=>{
  const footer=read("components/Footer.tsx"),cards=read("components/SiaiSearchDiscovery.tsx");
- assert.match(footer,/lang!=="en"/);
+ assert.match(footer,/lang==="zh"/);
  assert.match(footer,/lang="en"/);
- assert.match(footer,/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
+ assert.match(read("lib/public-feature-copy.ts"),/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
+ assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,1);
  assert.match(footer,/discovery\.topics\.map\(v=>v\.q\)/);
  assert.match(footer,/siai-search-home-/);
  assert.match(cards,/id=\{prefix\+"-"\+i\}/);
