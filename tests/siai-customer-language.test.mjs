@@ -4,12 +4,12 @@ import test from "node:test";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const raw=read("lib/siai-search-discovery.ts");
 const start=raw.indexOf("={",raw.indexOf("export const SIAI_DISCOVERY"));
-const langs=JSON.parse(raw.slice(start+1).trim().replace(/;\\s*$/,""));
+const langs=JSON.parse(raw.slice(start+1).trim().replace(/;\s*$/,""));
 test("all nine market discovery descriptions explain features, not unrelated stock data or internal process",()=>{
  assert.equal(Object.keys(langs).length,9);
  for(const [lang,c]of Object.entries(langs)){
   assert.equal(c.topics.length,6);
-  const visible=[c.homeIntro,c.rankIntro,...c.topics.map(x=>x.rank)].join(" ");
+  const visible=[c.homeIntro,c.rankIntro,...c.topics.flatMap(x=>[x.home,x.rank])].join(" ");
   assert.doesNotMatch(visible,/股票|株価|주가|stock quotes|stock market|cours de bourse|Börsenkurse|cotizaciones bursátiles|preço das ações|أسهم/iu,lang);
   assert.doesNotMatch(visible,/未完成实测|未证实|研究预览|technical debt|CI|QA|发布门禁|审核状态/iu,lang);
   assert(c.topics.every(x=>x.rank.length>=25),lang);
