@@ -7,9 +7,10 @@ test('both SIAI tables keep full data in detail while compact previews prevent t
  const home=read('components/SiaiRankingHome.tsx');
  const css=read('app/siai-home.css');
  const market=read('lingxifield-ai-market/app/globals.css');
- for(const prop of ['strength','price','free','region','payment','models','commercial']){
-  assert.ok(home.includes('title={p.'+prop+'}')||prop==='strength'&&home.includes('title={p.strength||p.about}'),prop+' full fact title missing');
+ for(const render of ['displayStrength(p)','displayFact(p,"price")','displayFact(p,"free")','displayRegion(p)','displayPayment(p)','displayFact(p,"models")','displayCommercial(p)']){
+  assert.ok(home.includes('title={'+render+'}'),render+' localized full fact tooltip missing');
  }
+ assert.doesNotMatch(home,/title=\{p\.(?:price|free|region|payment|models|commercial)\}/);
  assert.match(home,/expanded===p\.id/);
  assert.match(home,/siai-home-expanded-row/);
  assert.match(home,/colSpan=\{10\}/);
@@ -59,4 +60,11 @@ test('task-first SIAI comparison shows evidenced review freshness without invent
  assert.match(model,/replit:'2026-11-02'/);
  assert.match(model,/midjourney:'2026-11-02'/);
  assert.doesNotMatch(home,/Math\.random\(/);
+});
+
+test('verified payment conditions are not stripped by a Stripe Link shortcut',()=>{
+ const home=read('components/SiaiRankingHome.tsx');
+ assert.match(home,/p\.payment\.split\(' · '\)\.map\(s=>localizedPaymentName\(s,lang\)\)/);
+ assert.doesNotMatch(home,/Link（Stripe\/\.test/);
+ assert.match(home,/title=\{displayPayment\(p\)\}/);
 });
