@@ -54,8 +54,7 @@ export default function Footer(){
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
-    <p className="text-sm leading-6">{PUBLIC_FEATURE_COPY[lang].description}</p>
-    <div className="lx-footer-trio">{discovery.trio.map(item=><span key={item}>{item}</span>)}</div>
+    <p className="text-sm leading-6">{copy[lang].lead}</p>
     <p><a href="https://lingxifield.com" rel="noopener noreferrer">lingxifield.com</a> · <span>lingxifield.cn</span></p>
    </section>
    <nav aria-label={c.rankings}>
@@ -86,9 +85,8 @@ export default function Footer(){
   </div>
   <nav className="mx-auto mb-5 max-w-7xl rounded-xl border border-[var(--lx-line)] px-5 py-4" aria-label={discovery.footerTitle}>
    <h2 className="mb-2 font-semibold">{discovery.footerTitle}</h2>
-   <p lang={lang==="zh"?"zh-CN":lang} className="mb-2 text-sm leading-7">{lang==="zh"?"灵犀场 LINGXIFIELD 汇集全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台和全球SIAI排行榜。比较全球SI/AI公司、模型、工具的功能、免费额度、官方价格、地区可用、支付方式与商用条件；未核实的资料会明确标注。":PUBLIC_FEATURE_COPY[lang].description}</p>
-   {lang!=="en"&&<p lang="en" className="mb-3 text-sm leading-7 text-[var(--lx-muted)]">LINGXIFIELD is a global AI market information and SIAI rankings directory. Compare AI and SI tools, model capabilities, published prices, free tiers, regional access, payments and commercial terms using links to publisher sources.</p>}
-   <p className="mb-3 text-xs text-[var(--lx-muted)]">{discovery.footerNote}</p>
+   <p lang={lang==="zh"?"zh-CN":lang} className="mb-2 text-sm leading-7">{PUBLIC_FEATURE_COPY[lang].description}</p>
+   {lang==="zh"&&<p lang="en" className="mb-3 text-sm leading-7 text-[var(--lx-muted)]">LINGXIFIELD is a global AI market information and SIAI rankings directory. Compare AI and SI tools, model capabilities, published prices, free tiers, regional access, payments and commercial terms using links to publisher sources.</p>}
    <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">{discovery.topics.map(v=>v.q).map((label,i)=><Link key={label} href={"/#siai-search-home-"+i} className="underline underline-offset-4">{label}</Link>)}{discovery.extras.map(label=><Link key={label} href="/siai" className="underline underline-offset-4">{label}</Link>)}</div>
   </nav>
   <div className="lx-footer-social-strip">
