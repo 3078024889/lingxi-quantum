@@ -55,7 +55,7 @@ test('Fireworks free trial is one-time marketing claim rather than verified enti
 });
 test('public catalog still 32 products; 30 held candidate rows, 28 deduplicated vendors',()=>{
  const r=materializeCandidateCatalog(cohorts,packs);
- assert.deepEqual(r.totals,{observed:192,missing:18,conflict:0});
+ assert.deepEqual(r.totals,{observed:194,missing:16,conflict:0});
  assert.equal(r.candidateProducts,30);
  assert.equal(r.publisherGroups,28);
  assert.equal(r.products.find(p=>p.id==='fireworks-ai').legalEntity,'Fireworks.ai, Inc.');
