@@ -22,15 +22,20 @@ export async function openPdf(file:File){
   return pdfjs.getDocument({data}).promise;
 }
 
-export async function renderPdfPage(pdf:any,pageNumber:number,scale=1.5):Promise<RenderedPdfPage>{
+export async function renderPdfPage(pdf:any,pageNumber:number,scale=1.5,pixelRatio?:number):Promise<RenderedPdfPage>{
   const page=await pdf.getPage(pageNumber);
   const viewport=page.getViewport({scale});
+  // PDF.js renders in CSS-pixel coordinates by default. Allocate a denser
+  // backing canvas so the browser never has to upscale a low-resolution page.
+  // Keep the historical 1x default so export tools retain their explicit
+  // scale contract. Preview callers opt into HiDPI by passing pixelRatio.
+  const outputScale=Math.max(1,Math.min(2.5,pixelRatio??1));
   const canvas=document.createElement("canvas");
-  canvas.width=Math.ceil(viewport.width);
-  canvas.height=Math.ceil(viewport.height);
+  canvas.width=Math.ceil(viewport.width*outputScale);
+  canvas.height=Math.ceil(viewport.height*outputScale);
   const ctx=canvas.getContext("2d",{alpha:false});
   if(!ctx)throw new Error("Canvas is not available.");
-  await page.render({canvasContext:ctx,viewport}).promise;
+  await page.render({canvasContext:ctx,viewport,transform:outputScale===1?undefined:[outputScale,0,0,outputScale,0,0]}).promise;
   return {pageNumber,canvas,width:canvas.width,height:canvas.height};
 }
 

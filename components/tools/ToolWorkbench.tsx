@@ -1,5 +1,7 @@
 "use client";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
+import dynamic from "next/dynamic";
+const PdfPageOrganizerWorkbench=dynamic(()=>import("./PdfPageOrganizerWorkbench"),{ssr:false});
 import {formatJsonSource} from "@/lib/tools/shared/json-source-format";
 
 import {plainText} from "@/lib/tools/plain-copy";
@@ -15,6 +17,7 @@ import type { ToolRunResult } from "@/lib/tools/types";
 import { targetBytesForSlug } from "@/lib/tools/registry";
 import FileDropzone from "./FileDropzone";
 import ResultPanel from "./ResultPanel";
+import ImageBeforeAfter from "./ImageBeforeAfter";
 import ErrorExplain from "./ErrorExplain";
 import ResizeImageWorkbench from "./ResizeImageWorkbench";
 import ImageToPdfWorkbench from "./ImageToPdfWorkbench";
@@ -24,6 +27,8 @@ import { convertImage, compressImageToTarget, stripImageMetadata } from "@/lib/t
 import { detectFileType, extensionMismatch } from "@/lib/tools/shared/magic-bytes";
 import { md5Hex, sha256Hex, buffersEqual } from "@/lib/tools/shared/hash";
 import { delimitedToXlsx, docxToText, xlsxToCsvFiles } from "@/lib/tools/shared/office-convert";
+import {pdfSplitCopy,PDF_SPLIT_CHOICES} from "@/lib/tools/pdf-split-copy";
+import type {PdfSplitOptions,PdfSplitMode} from "@/lib/tools/shared/practical-doc-tools";
 import {pdfToXlsx} from "@/lib/tools/shared/pdf-to-xlsx";
 import { heicToJpgFiles, imagesToPdf, mergePdfFiles, pdfToJpgFiles, readQrCode, splitPdfFile } from "@/lib/tools/shared/practical-doc-tools";
 import { rebuildCompressedPdf, type PdfCompressionPreset } from "@/lib/tools/shared/pdf-rebuild-compress";
@@ -66,7 +71,11 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
 
   const [customKb, setCustomKb] = useState(100);
   const [pdfCompression, setPdfCompression] = useState<PdfCompressionPreset>("balanced");
+  const [splitMode,setSplitMode]=useState<PdfSplitMode>("every-page");
+  const [splitPages,setSplitPages]=useState("");
+  const [splitGroupSize,setSplitGroupSize]=useState(2);
   const [recoveryBusy,setRecoveryBusy]=useState(false);
+  const [organizerOpen,setOrganizerOpen]=useState(false);
 
   // HANDOFF_APPLIED: one-shot local browser handoff from a previous tool.
   useEffect(()=>{
@@ -115,6 +124,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
 
         targetBytes: preciseTarget,
         pdfCompression,
+        pdfSplit:{mode:splitMode,pages:splitPages,groupSize:splitGroupSize},
       });
       setResult(out);
     } catch {
@@ -137,6 +147,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         multiple={!!tool.multiple}
         append={!!tool.multiple}
         maxFiles={tool.maxFiles || 1}
+        preserveSameNamedFiles={tool.slug === "file-compare"}
         maxSizeMB={tool.maxSizeMB || 40}
         files={files}
         onChange={(f) => {
@@ -199,6 +210,24 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         </span>)}
       </div>}
 
+      {tool.slug==="split-pdf"&&<div className="mt-4 space-y-3 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4">
+        <label className="block text-sm font-medium">{pdfSplitCopy[lang].title}
+          <select data-testid="pdf-split-mode" className="mt-2 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2.5" value={splitMode} onChange={e=>{setSplitMode(e.target.value as PdfSplitMode);setResult(null)}}>
+            {PDF_SPLIT_CHOICES.map(item=><option key={item.value} value={item.value}>{pdfSplitCopy[lang][item.key]}</option>)}
+          </select>
+        </label>
+        {(splitMode==="selected-pages"||splitMode==="extract")&&<label className="block text-sm">{pdfSplitCopy[lang].range}
+          <input data-testid="pdf-split-range" type="text" inputMode="text" value={splitPages} onChange={e=>{setSplitPages(e.target.value);setResult(null)}} placeholder="1,3-5,7-,last" aria-describedby="pdf-split-range-help" className="mt-2 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2.5"/>
+          <span id="pdf-split-range-help" className="mt-1 block text-xs text-[var(--lx-muted)]">{pdfSplitCopy[lang].help}</span>
+        </label>}
+        {splitMode==="every-n"&&<label className="block text-sm">{pdfSplitCopy[lang].size}
+          <EditableNumberInput data-testid="pdf-split-group-size" type="number" min={1} max={1000} step={1} value={splitGroupSize} onChange={e=>{setSplitGroupSize(Number(e.target.value));setResult(null)}} className="mt-2 w-full rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2.5"/>
+        </label>}
+      </div>}
+      {(tool.slug==="merge-pdf"||tool.slug==="split-pdf")&&files.length>0&&<div className="mt-4 space-y-3">
+        <button type="button" aria-expanded={organizerOpen} data-testid="open-pdf-organizer" onClick={()=>setOrganizerOpen(value=>!value)} className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-2.5 text-sm font-medium text-[var(--lx-ink)]">{organizerOpen?t("收起页面可视化整理","Close page organizer"):t("可视化整理 PDF 页面 · 排序、旋转、删除","Organize PDF pages · reorder, rotate, delete")}</button>
+        {organizerOpen&&<PdfPageOrganizerWorkbench files={files} sourceSlug={tool.slug}/>}
+      </div>}
       {tool.slug==="compress-pdf"&&<div className="mt-4 rounded-sm border border-white/10 p-4 text-sm text-bone-dim">
         <label className="block">
           {t("压缩强度","Compression preset")}
@@ -220,6 +249,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         {busy ? t("处理中…","Working…") : t("立即处理","Process now")}
       </button>
 
+      {result?.ok === true && result.files?.length&&files.length&& (tool.slug === "compress-image"||tool.slug.startsWith("compress-image-to-"))&&<ImageBeforeAfter sources={files} results={result.files}/>}
       {result?.ok === true && (
         <ResultPanel sourceSlug={tool.slug} files={result.files} messageZh={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageZh} messageEn={tool.slug==="heic-to-jpg"?plainText(lang,"ready"):result.messageEn} details={tool.slug==="heic-to-jpg"?{files:result.files?.length||0}:result.details} />
       )}
@@ -251,6 +281,7 @@ async function runFileTool(
 
     targetBytes: number | null;
     pdfCompression: PdfCompressionPreset;
+    pdfSplit: PdfSplitOptions;
   },
 ): Promise<ToolRunResult> {
   if (!files.length) {
@@ -335,13 +366,21 @@ async function runFileTool(
   }
 
   if (tool.slug === "split-pdf") {
-    const outputs=await splitPdfFile(file);
+    let outputs;
+    try {
+      outputs=await splitPdfFile(file,opts.pdfSplit);
+    } catch (error) {
+      if (error instanceof Error&&(error.message==="PDF_SPLIT_INVALID_RANGE"||error.message==="PDF_SPLIT_INVALID_GROUP")) {
+        return {ok:false,reasonZh:error.message==="PDF_SPLIT_INVALID_RANGE"?pdfSplitCopy.zh.rangeError:pdfSplitCopy.zh.groupError,reasonEn:error.message==="PDF_SPLIT_INVALID_RANGE"?pdfSplitCopy.en.rangeError:pdfSplitCopy.en.groupError};
+      }
+      throw error;
+    }
     return {
       ok:true,
       files:outputs,
-      messageZh:`已拆成 ${outputs.length} 个独立页面 PDF。`,
-      messageEn:`Split into ${outputs.length} single-page PDFs.`,
-      details:{pages:outputs.length},
+      messageZh:`已生成 ${outputs.length} 份 PDF，保留原有页面文字与尺寸。`,
+      messageEn:`Created ${outputs.length} PDF file(s), preserving source page content and sizes.`,
+      details:{outputFiles:outputs.length,mode:opts.pdfSplit.mode||"every-page"},
     };
   }
 
@@ -647,7 +686,9 @@ function TimestampWorkbench() {
   const [mode, setMode] = useState<"sec" | "ms">("sec");
 
   const parsed = useMemo(() => {
-    const n = Number(input.trim());
+    const normalized = input.trim();
+    if (!normalized) return null;
+    const n = Number(normalized);
     if (!Number.isFinite(n)) return null;
     const ms = mode === "sec" ? n * 1000 : n;
     const d = new Date(ms);
