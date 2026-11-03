@@ -17,7 +17,7 @@ const LEGAL_NAMES=Object.freeze({
  'replicate':'Replicate, LLC',
  'fal-ai':'Features & Labels, Inc.',
  'together-ai':'Together Computer, Inc.',
- 'groqcloud':'Groq, Inc.',
+ 'groqcloud':null, // 2026 agreement contracts by EEA/Swiss, Saudi and other jurisdictions; no universal single legal entity
  'fireworks-ai':'Fireworks.ai, Inc.',
  'openrouter':'OpenRouter, Inc.'
 });

@@ -27,7 +27,7 @@ test('exactly 32 explicitly sourced facts were added across all three held batch
    for(const key of keys){
     const f=p.facts[key];count++;
     assert.equal(f.status,'observed',id+':'+key);
-    assert.equal(f.checkedAt,'2026-11-02',id+':'+key);
+    assert.equal(f.checkedAt,id==='groqcloud'&&key==='company'?'2026-11-03':'2026-11-02',id+':'+key);
     const h=new URL(f.source).hostname.toLowerCase();
     assert.ok(p.officialHosts.some(root=>h===root||h.endsWith('.'+root)),id+' suspicious host '+h);
     assert.ok(f.scope?.length>=4&&f.text?.length>=16,id+':'+key);
@@ -46,13 +46,13 @@ test('the 210 observed/missing/conflict slots reconcile, without publishing anyo
  const f=JSON.parse(source.slice(a,b));
  const report=buildEvidenceReadiness({curatedIds:ids,curatedFacts:f,cohorts:batches.map(x=>x.batch),
   observations:batches.map(x=>x.pack),asOf:'2026-11-03'});
- assert.deepEqual([report.candidateIntake.observed,report.candidateIntake.missing,report.candidateIntake.conflict],[194,16,0]);
+ assert.deepEqual([report.candidateIntake.observed,report.candidateIntake.missing,report.candidateIntake.conflict],[202,8,0]);
  assert.equal(report.candidateIntake.factCells,210);
  assert.equal(report.candidateIntake.publishReady,0);
  assert.equal(report.candidateIntake.publishedFromStaging,0);
  assert.deepEqual(report.candidateIntake.regionalEvidence,{
-  missing:15,broad_market_statement:1,provider_specific_restrictions:3,
-  restrictions_only:9,other_observation_not_country_proof:2
+  missing:7,broad_market_statement:1,provider_specific_restrictions:3,
+  restrictions_only:15,other_observation_not_country_proof:4
  });
  assert.equal(report.safety.structurallyValid,true,JSON.stringify(report.safety.structuralIssues));
 });

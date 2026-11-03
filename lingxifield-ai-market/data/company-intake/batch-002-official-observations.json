@@ -472,8 +472,11 @@
           "scope": "api_models"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Recraft 2026年10月21日更新的官方服务条款针对欧盟、欧洲经济区和英国的消费者规定：新订阅通常有14天撤回期，但在结账时明确同意立刻分配积分并确认放弃撤回权，或者积分已使用时，退款规则会受到相应限制；自动续订与API积分包也有不同条件。这是特定居住地区的消费者付款权利，不是 Recraft 在这些国家全部模型、注册和支付功能均开放的证明。",
+          "source": "https://www.recraft.ai/legal/terms",
+          "checkedAt": "2026-11-03",
+          "scope": "eu_eea_uk_consumer_subscription_withdrawal_rights_not_service_availability"
         },
         "commercial": {
           "status": "observed",

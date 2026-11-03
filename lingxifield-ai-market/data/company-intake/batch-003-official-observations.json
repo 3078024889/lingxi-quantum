@@ -152,8 +152,11 @@
           "scope": "research_features"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Consensus NLP, Inc. 官方 2025年6月25日服务条款明确，平台有权自行决定拒绝向任何地理区域或司法辖区提供产品或服务，包括因涉嫌欺诈或违法行为而限制访问或支付方式。该条款并未列出 2026 年各国家真实可注册、搜索论文或支付的完整清单，也不能把未点名国家推定为支持。",
+          "source": "https://consensus.app/home/terms-of-service/",
+          "checkedAt": "2026-11-03",
+          "scope": "geo_discretion_to_refuse_access_not_country_allowlist"
         },
         "commercial": {
           "status": "observed",
@@ -323,8 +326,20 @@
           "scope": "vendor_endpoint_rates"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "fal 2026年9月8日官方服务条款第21节要求用户遵守美国出口管制，并保证本人不位于美国禁运或其他受限制国家，也不属于美国限制往来主体。官方可接受使用政策另明确对受综合制裁的国家、地区或地域施加限制。这是 fal API/计算服务的禁运范围规则，不能当作其他国家模型和付款渠道均可使用的完整名单。",
+          "source": "https://fal.ai/legal/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "official_us_embargo_and_sanctions_export_restrictions_only",
+          "additionalEvidence": [
+            {
+              "status": "observed",
+              "source": "https://fal.ai/legal/acceptable-use-policy",
+              "checkedAt": "2026-11-03",
+              "scope": "ofac_comprehensive_sanctions_region_restriction",
+              "text": "fal 官方 Acceptable Use Policy 禁止位于美国 OFAC 综合制裁国家、地区或地域的用户使用服务，另有年龄及内容规则。"
+            }
+          ]
         },
         "commercial": {
           "status": "observed",
@@ -379,8 +394,11 @@
           "scope": "provider_model_marketplace"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Together AI 于2026年5月19日更新的官方服务协议第4节要求 AI API、推理、训练和微调服务使用者遵守所有适用法律，包括出口法规；违规使用超出授权范围。该条款没有逐国列出可创建账户、充值、购买 credits 或调用模型的国家名单，不能把遵守法律概括成全球完全开放。",
+          "source": "https://www.together.ai/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_law_restrictions_not_positive_market_coverage"
         },
         "commercial": {
           "status": "observed",
@@ -444,8 +462,11 @@
           "scope": "model_endpoints_and_embeddings"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "Fireworks AI 官网服务条款第17节规定：用户须遵守美国出口管理规定、OFAC 制裁及其他贸易管制；若用户或相关控制人属于制裁名单，或位于/属于美国制裁、禁运国家或领土，则不符合相关保证条件。这是 Fireworks 模型推理服务的法定限制，不能推定其他国家可注册、付款与调用全部模型。",
+          "source": "https://fireworks.ai/terms-of-service",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_control_ofac_embargo_restrictions_only"
         },
         "commercial": {
           "status": "observed",
@@ -500,8 +521,11 @@
           "scope": "rate_limit_model_ids"
         },
         "regions": {
-          "status": "missing",
-          "reason": "Official country-by-country availability and user restrictions have not been checked."
+          "status": "observed",
+          "text": "GroqCloud 2026 官方服务协议将出口控制法律定义为包含美国 EAR、OFAC 和 ITAR，并规定违反相关法律可暂停或终止服务。合同签约主体还按客户住所区分：欧洲经济区/瑞士为 Groq UK Limited，沙特阿拉伯为 Groq Limited，其他地区一般为 Groq LLC（另有指定公共部门合同）。这证明条款和法人按地区变化，不是逐国账户及付款功能的全量开放声明。",
+          "source": "https://console.groq.com/docs/legal/services-agreement",
+          "checkedAt": "2026-11-03",
+          "scope": "official_export_controls_region_specific_contracting_entities_not_full_country_whitelist"
         },
         "commercial": {
           "status": "observed",
@@ -519,10 +543,10 @@
         },
         "company": {
           "status": "observed",
-          "text": "Groq 官方法律说明和 GroqCloud 销售条款中将美国合同主体列为 Groq, Inc.；另有沙特阿拉伯当地 Groq Limited Company 的独立条款，不可将美国公司主体误视为所有地区的唯一签约法人，也不代表上市。",
-          "source": "https://console.groq.com/docs/legal/archive",
-          "checkedAt": "2026-11-02",
-          "scope": "groq_inc_us_sale_terms_separate_saudi_affiliate"
+          "text": "Groq 官网2026年服务协议按客户所在地指定法人：欧洲经济区/瑞士通常 Groq UK Limited，沙特阿拉伯 Groq Limited，其余地区 Groq LLC；若订单指定 Groq Public Sector, LLC 则该主体签约。应按地区和订单显示实际合同法人，不能以旧版美国 Groq, Inc. 统一代替，更不能从品牌推测上市状态。",
+          "source": "https://console.groq.com/docs/legal/services-agreement",
+          "checkedAt": "2026-11-03",
+          "scope": "contracting_legal_entity_by_customer_region_not_ipo"
         }
       }
     },
