@@ -26,8 +26,8 @@ const LOCAL=new Set(['ollama','llamacpp','vllm','langchain','llamaindex','transf
 export default function MarketVerifiedAnswers({platform,language}:{platform:Platform;language:Language}){
  const f=researchedFact(platform.id),w=WORDS[language],license=commercialEvidence(platform.id,language),pay=paymentFactsFor(platform.id,'GLOBAL'),profile=capabilityProfile(platform.id);
  const tasks=language==='zh'?profile?.capabilities.slice(0,5).map(x=>x.name+'：'+x.outcome).join('；'):localizedProductSummary(platform.id,language);
- const price=language==='zh'?(f?.price||platform.price):localizedCatalogFact(platform.id,language,'price',platform.price);
- const free=language==='zh'?(f?.free||platform.free):localizedCatalogFact(platform.id,language,'free',platform.free);
+ const price=language==='zh'?(f?.price||platform.price):localizedCatalogFact(platform.id,language,'price',f?.price||platform.price);
+ const free=language==='zh'?(f?.free||platform.free):localizedCatalogFact(platform.id,language,'free',f?.free||platform.free);
  const models=language==='zh'?(f?.models||profile?.headline||platform.name):localizedCatalogFact(platform.id,language,'models',f?.models||localizedProductSummary(platform.id,language)||profile?.headline||platform.name);
  const method=pay.methods.length?pay.methods.map(p=>localizedPaymentName(p,language)).join(' · '):LOCAL.has(platform.id)?w.local:w.unknown;
  const rows=[
@@ -36,7 +36,7 @@ export default function MarketVerifiedAnswers({platform,language}:{platform:Plat
   {key:'price',name:w.price,answer:price,source:f?.priceSource},
   {key:'models',name:w.models,answer:models,source:f?.modelsSource},
   ...(platform.id==='chatgpt'?[{key:'codex',name:'Codex',answer:codexFor(language).intro,source:CODEX_OFFICIAL.product}]:[]),
-  {key:'payments',name:w.payments,answer:method,source:pay.source||undefined},
+  {key:'payments',name:w.payments,answer:method,source:pay.source||f?.paymentSource},
   {key:'countries',name:w.countries,answer:language==='zh'?(f?.region||globalRegionSummary(platform.id,language)):globalRegionSummary(platform.id,language),source:f?.regionSource},
   {key:'commercial',name:w.commercial,answer:license?[license.label,license.condition].join(' · '):language==='zh'?(f?.commercial||w.unknown):w.unknown,source:license?.source||f?.commercialSource},
  ];
