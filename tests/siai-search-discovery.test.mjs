@@ -7,7 +7,8 @@ const catalog=read("lib/siai-search-discovery.ts");
 const page=read("app/siai/page.tsx"),layout=read("app/layout.tsx");
 const home=read("components/HomeProblemHub.tsx"),rank=read("components/SiaiRankingHome.tsx");
 const footer=read("components/Footer.tsx");
-const data=JSON.parse(catalog.slice(catalog.indexOf("={")+1).trim().replace(/;\s*$/,""));
+const declaration=catalog.indexOf("export const SIAI_DISCOVERY");
+const data=JSON.parse(catalog.slice(catalog.indexOf("={",declaration)+1).trim().replace(/;\s*$/,""));
 const langs=["zh","en","ja","ko","fr","de","es","pt","ar"];
 const keywords=["全球AI行情平台","全球AI排行榜","全球SI排行榜","全球SI行情平台","全球SIAI行情平台","全球SIAI排行榜"];
 test("nine-language search-intent sections have six distinct human-readable topic answers",()=>{
