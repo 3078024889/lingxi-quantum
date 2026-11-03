@@ -1,0 +1,22 @@
+import {test,expect} from "./export-test";
+import {PDFDocument} from "pdf-lib";
+test("PDF original text is double-click editable as a visual replacement with no numeric controls",async({page})=>{
+ test.setTimeout(90000);
+ const doc=await PDFDocument.create(),p=doc.addPage([612,792]);
+ p.drawText("Invoice total 123",{x:72,y:680,size:20});
+ await page.goto("/tools/pdf-editor?lang=en");
+ await page.locator('input[type=file]').first().setInputFiles({name:"native-text.pdf",mimeType:"application/pdf",buffer:Buffer.from(await doc.save())});
+ await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
+ const hit=page.getByTestId("pdf-source-text-region").first();
+ await expect(hit).toBeVisible({timeout:30000});
+ await expect(hit).toHaveAttribute("data-source","pdf");
+ await hit.dblclick();
+ const input=page.getByRole("textbox",{name:"Edit added text"});
+ await expect(input).toBeVisible();
+ await input.fill("Invoice total 456");
+ await input.press("Enter");
+ await expect(page.getByTestId("pdf-overlay").filter({hasText:"Invoice total 456"})).toBeVisible();
+ await expect(page.getByTestId("pdf-source-text-region")).toHaveCount(0);
+ await expect(page.locator('input[aria-label="Signature rotation degrees"]')).toHaveCount(0);
+ await expect(page.getByTestId("paid-export-result")).toHaveCount(0);
+});
