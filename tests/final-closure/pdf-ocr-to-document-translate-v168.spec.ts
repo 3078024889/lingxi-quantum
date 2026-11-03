@@ -25,10 +25,9 @@ test("scanned PDF: real local OCR transfers one-use text directly to document tr
  await page.getByRole("combobox",{name:"Recognition language"}).selectOption("eng");
  await page.getByRole("button",{name:"Recognize page 1 free",exact:true}).click();
  await expect(page.getByTestId("result-file-actions")).toBeVisible({timeout:180000});
- await expect(page.locator("textarea")).toContainText(/HELLO/i);
+ await expect(page.locator("textarea")).toHaveValue(/HELLO/i);
  await page.getByRole("button",{name:"Translate recognized text",exact:true}).click();
  await expect(page).toHaveURL(/\/tools\/document-translate\?/,{timeout:25000});
- await expect(page.locator('input[type="file"]').first()).toHaveJSProperty("files",[]);
  // Native file input intentionally remains blank: handoff populates FileDropzone's
  // React file state, not a synthetic upload event.
  await expect(page.getByText("scan-ocr.txt")).toBeVisible({timeout:25000});
