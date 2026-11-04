@@ -9,18 +9,24 @@ function signature(bytes:Uint8Array):BatchImageMime|null{
  if(bytes.length>=12&&str(0,4)==="RIFF"&&str(8,4)==="WEBP")return "image/webp";
  return null;
 }
-function animatedPng(bytes:Uint8Array){
- // acTL must precede IDAT in a valid APNG. Reject before calling createImageBitmap.
- let i=8;
- while(i+8<=bytes.length){
-  const length=((bytes[i]*2**24)+(bytes[i+1]<<16)+(bytes[i+2]<<8)+bytes[i+3])>>>0;
-  const tag=String.fromCharCode(...bytes.subarray(i+4,i+8));
+async function animatedPng(file:File,bytes:Uint8Array){
+ // A valid APNG may place large ancillary chunks before acTL/IDAT.
+ // Read only the next 8-byte chunk header beyond the initial preview; never decode
+ // while the animation state is unknown, and cap scanning to bound CPU work.
+ let i=8,chunks=0;
+ while(i+12<=file.size&&chunks++<4096){
+  const header=i+8<=bytes.length?bytes.subarray(i,i+8):
+   new Uint8Array(await file.slice(i,i+8).arrayBuffer());
+  if(header.length!==8)break;
+  const length=((header[0]*2**24)+(header[1]<<16)+(header[2]<<8)+header[3])>>>0;
+  const tag=String.fromCharCode(...header.subarray(4,8));
+  if(length>file.size-i-12)throw Error("IMAGE_STRUCTURE_UNVERIFIED");
   if(tag==="acTL")return true;
-  if(tag==="IDAT"||tag==="IEND")break;
-  if(length>bytes.length-i-12)break;
+  if(tag==="IDAT")return false;
+  if(tag==="IEND")break;
   i+=12+length;
  }
- return false;
+ throw Error("IMAGE_STRUCTURE_UNVERIFIED");
 }
 function animatedWebp(bytes:Uint8Array){
  let i=12;
@@ -82,9 +88,10 @@ export async function validateStaticBatchImage(file:File){
  const found=signature(head);
  if(!found)throw Error("UNSUPPORTED_IMAGE_BYTES");
  if(file.type&&file.type!==found)throw Error("IMAGE_MIME_MISMATCH");
- if(found==="image/png"&&animatedPng(head))throw Error("ANIMATED_IMAGE_UNSUPPORTED");
+ if(found==="image/png"&&await animatedPng(file,head))throw Error("ANIMATED_IMAGE_UNSUPPORTED");
  if(found==="image/webp"&&animatedWebp(head))throw Error("ANIMATED_IMAGE_UNSUPPORTED");
  const dimensions=imageSizeHeader(head,found);
+ if(!dimensions)throw Error("IMAGE_STRUCTURE_UNVERIFIED");
  if(dimensions&&(!dimensions.width||!dimensions.height||dimensions.width>MAX_SIDE||dimensions.height>MAX_SIDE||dimensions.width*dimensions.height>MAX_PIXELS))throw Error("IMAGE_DIMENSIONS_TOO_LARGE");
  return found;
 }
