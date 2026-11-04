@@ -2,6 +2,7 @@
 
 import {Fragment,useMemo,useRef,useEffect,useState,type PointerEvent as ReactPointerEvent,type CSSProperties} from "react";
 import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
+import {SIAI_ICON_BY_ID} from "@/lib/siai-brand-icon-ids";
 import MarketCostEstimator from "../lingxifield-ai-market/app/market-cost-estimator";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
@@ -88,12 +89,11 @@ function short(s:string,max=150){return s.length>max?s.slice(0,max-1).trimEnd()+
 function Source({href,label,compact=false}:{href:string|null;label:string;compact?:boolean}){
  return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className={compact?"siai-source siai-source-compact":"siai-source"} aria-label={label} title={label}>{compact?"↗":label+" ↗"}</a>:null;
 }
-function BrandMark({website,name}:{website:string;name:string}){
- const [stage,setStage]=useState(0);
- let origin:string|null=null,hostname:string|null=null;
- try{const u=new URL(website);if(u.protocol==="https:"){origin=u.origin;hostname=u.hostname;}}catch{}
- const src=stage===0&&origin?origin+"/favicon.ico":stage===1&&hostname?"https://www.google.com/s2/favicons?domain="+encodeURIComponent(hostname)+"&sz=64":null;
- return <span className="siai-brand-mark">{src?<img loading="lazy" decoding="async" src={src} alt={name+" logo"} onError={()=>setStage(v=>v+1)}/>:<span aria-hidden="true">{name.slice(0,2).toUpperCase()}</span>}</span>;
+function BrandMark({id,name}:{id:string;name:string}){
+ const [failed,setFailed]=useState(false);
+ const localSlug=SIAI_ICON_BY_ID[id];
+ const src=localSlug&&!failed?"/siai-brand-icons/"+localSlug+".svg":null;
+ return <span className="siai-brand-mark">{src?<img loading="lazy" decoding="async" src={src} alt={name+" brand logo"} onError={()=>setFailed(true)}/>:<span aria-hidden="true">{name.slice(0,2).toUpperCase()}</span>}</span>;
 }
 
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
@@ -276,7 +276,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
        return <Fragment key={p.id}><tr className="siai-home-tr">
         <td>{pageStart+i+1}</td>
         <td className="siai-home-identity">
-         <div className="siai-brand-line"><BrandMark website={p.website} name={p.name}/><div className="siai-brand-title"><strong>{p.name}</strong><span className="siai-badge-si">SI</span></div></div>
+         <div className="siai-brand-line"><BrandMark id={p.id} name={p.name}/><div className="siai-brand-title"><strong>{p.name}</strong><span className="siai-badge-si">SI</span></div></div>
          <dl className="siai-compact-facts">
           <div><dt>{p.kind==="company"?t.company:t.project}</dt><dd>{p.company}<Source href={p.companySource} label={t.source} compact/></dd></div>
           {p.legal&&<div><dt>{t.legal}</dt><dd>{p.legal}<Source href={p.legalSource} label={t.source} compact/></dd></div>}

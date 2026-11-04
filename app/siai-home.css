@@ -340,3 +340,6 @@
  font-size:14px!important;line-height:1.65;
 }
 .lx-footer-brand-intro{font-size:14px!important;line-height:1.7!important}
+
+/* Stored SVG logos are local, not remote favicons: no broken placeholder or outside tracking. */
+.siai-brand-mark img{width:32px;height:32px;max-width:32px;max-height:32px;object-fit:contain}

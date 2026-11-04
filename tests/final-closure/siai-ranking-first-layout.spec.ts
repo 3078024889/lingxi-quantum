@@ -75,7 +75,9 @@ test('SIAI restores sourced company facts on every row and preserves original re
  const first=rows.first();
  await expect(first.locator('.siai-home-identity')).toContainText('Microsoft');
  for(const text of ['公司名称','主要创始人','是否上市','成立时间','资料更新日期'])await expect(first.locator('.siai-home-identity')).toContainText(text);
- await expect(first.locator('.siai-brand-mark img')).toHaveAttribute('src',/^https:\/\//);
+ await expect(first.locator('.siai-brand-mark img')).toHaveAttribute('src',/^\/siai-brand-icons\//);
+ const iconLoaded=await first.locator('.siai-brand-mark img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0);
+ expect(iconLoaded).toBe(true);
  await expect(first.locator('.siai-home-identity')).not.toContainText('内容补充中');
  await expect(first.locator('.siai-home-identity a.siai-source').first()).toHaveAttribute('href',/^https:\/\//);
  const table=page.locator('.siai-home-table-flow');
