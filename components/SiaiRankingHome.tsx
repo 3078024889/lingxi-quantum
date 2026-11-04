@@ -1,6 +1,6 @@
 "use client";
 
-import {Fragment,useMemo,useRef,useEffect,useState,type PointerEvent as ReactPointerEvent} from "react";
+import {Fragment,useMemo,useRef,useEffect,useState,type PointerEvent as ReactPointerEvent,type CSSProperties} from "react";
 import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
 import MarketCostEstimator from "../lingxifield-ai-market/app/market-cost-estimator";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -65,7 +65,6 @@ const CANDIDATE_CATEGORIES:Record<LingxiLang,Record<string,string>>={
 const LISTED_COMPANY:Record<LingxiLang,string>={zh:"公司已上市",en:"Publicly listed company",ja:"上場企業",ko:"상장 회사",fr:"Entreprise cotée",de:"Börsennotiertes Unternehmen",es:"Empresa cotizada",pt:"Empresa listada",ar:"شركة مدرجة"};
 const PREVIEW_DATE:Record<LingxiLang,string>={zh:"资料更新日期",en:"Updated",ja:"更新日",ko:"업데이트 날짜",fr:"Mis à jour le",de:"Aktualisiert",es:"Actualizado",pt:"Atualizado em",ar:"تاريخ التحديث"};
 const PREVIEW_RAW_LABEL:Record<LingxiLang,string>={zh:"",en:"Source summary (Chinese): ",ja:"資料要約（中国語）：",ko:"출처 요약(중국어): ",fr:"Résumé de source (chinois) : ",de:"Quellenzusammenfassung (Chinesisch): ",es:"Resumen de fuente (chino): ",pt:"Resumo da fonte (chinês): ",ar:"ملخص المصدر (بالصينية): "};
-const PREVIEW_MISSING:Record<LingxiLang,string>={zh:"尚无可靠资料",en:"No reliable information",ja:"信頼できる資料なし",ko:"확인된 정보 없음",fr:"Information non disponible",de:"Keine verlässlichen Angaben",es:"Sin información fiable",pt:"Sem informação confiável",ar:"لا تتوفر معلومات موثوقة"};
 const REVIEWED_COPY:Record<LingxiLang,string>={zh:"资料更新日期",en:"Updated",ja:"更新日",ko:"업데이트 날짜",fr:"Mis à jour le",de:"Aktualisiert",es:"Actualizado",pt:"Atualizado em",ar:"تاريخ التحديث"};
 const VIEW_COPY:Record<LingxiLang,{expand:string;exit:string}>={
  zh:{expand:"⛶ 全屏查看榜单",exit:"↙ 退出全屏"},en:{expand:"⛶ Expand rankings",exit:"↙ Exit full screen"},
@@ -103,6 +102,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const bottomRef=useRef<HTMLDivElement>(null);
  const [tableWidth,setTableWidth]=useState(1860);
  const [fullscreen,setFullscreen]=useState(false);
+ const [wideOffset,setWideOffset]=useState(0);
+ const mainRef=useRef<HTMLElement>(null);
  const [page,setPage]=useState(1),[pageSize,setPageSize]=useState<20|50|100>(100);
  const [pageDraft,setPageDraft]=useState("1");
  const [bounded,setBounded]=useState(false),[panelHeight,setPanelHeight]=useState(620);
@@ -178,15 +179,21 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  useEffect(()=>{const v=gridRef.current;if(!v)return;const measure=()=>setTableWidth(v.scrollWidth);measure();const ro=typeof ResizeObserver==="undefined"?null:new ResizeObserver(measure);ro?.observe(v);if(v.firstElementChild)ro?.observe(v.firstElementChild);window.addEventListener("resize",measure);return()=>{ro?.disconnect();window.removeEventListener("resize",measure);};},[shown.length,lang]);
  useEffect(()=>{
   if(!fullscreen)return;
-  const original=document.body.style.overflow;
-  document.body.style.overflow="hidden";
   const onEscape=(e:KeyboardEvent)=>{if(e.key==="Escape")setFullscreen(false)};
   window.addEventListener("keydown",onEscape);
-  return()=>{document.body.style.overflow=original;window.removeEventListener("keydown",onEscape)};
+  return()=>window.removeEventListener("keydown",onEscape);
  },[fullscreen]);
+ const toggleWide=()=>{
+  if(!fullscreen&&mainRef.current){
+   const r=mainRef.current.getBoundingClientRect();
+   setWideOffset(Math.max(0,lang==="ar"?window.innerWidth-r.right:r.left-12));
+  }
+  setFullscreen(v=>!v);
+ };
  useEffect(()=>{if(!expanded)return;dialogRef.current?.focus();const esc=(e:KeyboardEvent)=>{if(e.key==="Escape")setExpanded(null)};window.addEventListener("keydown",esc);return()=>window.removeEventListener("keydown",esc);},[expanded]);
  const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
- const previewValue=(value:string)=>value==="尚无可靠资料"?PREVIEW_MISSING[lang]:lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
+ const hasFact=(value:string|null|undefined)=>Boolean(value?.trim()&&!/(?:官网资料|内容|资料).{0,8}补充中/.test(value)&&value?.trim()!=="尚无可靠资料");
+ const previewValue=(value:string)=>!hasFact(value)?"":lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
  const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>p.recordStatus==="source_preview"?previewValue(p[scope]):localizedCatalogFact(p.id,lang,scope,p[scope]);
  const displayStrength=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.strength):localizedProductSummary(p.id,lang)||p.strength||p.about;
  const displayRegion=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.region):lang==="zh"?p.region:globalRegionSummary(p.id,lang);
@@ -194,23 +201,23 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const displayPayment=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.payment):lang==="zh"?p.payment:p.payment.split(" · ").map(s=>localizedPaymentName(s,lang)).join(" · ");
  const displayAbout=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.about):lang==="zh"?p.about:localizedProductSummary(p.id,lang)||p.name;
  const detailPanel=(p:SiaiHomeRow)=><section id={"siai-detail-"+p.id} className="siai-home-detail" aria-live="polite"><div><h2>{p.name}</h2><button type="button" onClick={()=>setExpanded(null)} aria-label={t.close}>×</button></div>
-    <p>{displayAbout(p)}</p>{p.checkedAt&&<p className="siai-checked-date">{p.recordStatus==="source_preview"?PREVIEW_DATE[lang]:REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&capabilityProfile(p.id)&&<div className="siai-quick-answer">
+    {displayAbout(p)&&<p>{displayAbout(p)}</p>}{p.checkedAt&&<p className="siai-checked-date">{p.recordStatus==="source_preview"?PREVIEW_DATE[lang]:REVIEWED_COPY[lang]}: <time dateTime={p.checkedAt}>{p.checkedAt}</time></p>}{lang==="zh"&&capabilityProfile(p.id)&&<div className="siai-quick-answer">
      <strong>{productAnswerHeadline(p.id)||capabilityProfile(p.id)?.headline}</strong>
      <p>{capabilityProfile(p.id)?.differentiator}</p>
      <p><b>适合谁：</b>{capabilityProfile(p.id)?.audience}</p>
      {capabilityProfile(p.id)?.capabilities.slice(0,3).map((cap,i)=><p key={i}><b>{cap.name}：</b>{cap.outcome}</p>)}
      <a href={capabilityProfile(p.id)?.capabilities[0].source} target="_blank" rel="noopener noreferrer">查看官方功能说明 ↗</a>
     </div>}
-    <dl><div><dt>{p.kind==="company"?t.company:t.project}</dt><dd>{p.company}<Source href={p.companySource} label={t.source}/></dd></div><div><dt>{p.creator?.role==="founder"?t.founder:p.creator?.role==="project_creator"?t.projectCreator:t.leadAuthor}</dt><dd>{p.creator?(lang==="zh"?p.creator.zh:p.creator.en):"—"}<Source href={p.creator?.source||null} label={t.source}/></dd></div><div><dt>{t.listed}</dt><dd>{listingFor(p)}<Source href={p.listingSource} label={t.source}/></dd></div><div><dt>{t.founded}</dt><dd>{p.year||"—"}<Source href={p.yearSource} label={t.source}/></dd></div>{p.legal&&<div><dt>{p.legalScope==="group_parent"?t.parent:t.legal}</dt><dd>{p.legal}</dd></div>}<div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div><div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div><div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div><div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div><div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div><div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div></dl>
+    <dl><div><dt>{p.kind==="company"?t.company:t.project}</dt><dd>{p.company}<Source href={p.companySource} label={t.source}/></dd></div>{p.creator&&<div><dt>{p.creator.role==="founder"?t.founder:p.creator.role==="project_creator"?t.projectCreator:t.leadAuthor}</dt><dd>{lang==="zh"?p.creator.zh:p.creator.en}<Source href={p.creator.source||null} label={t.source}/></dd></div>}{(p.listing!=="unconfirmed"&&p.listing!=="not_applicable"||p.ipoFiling)&&<div><dt>{t.listed}</dt><dd>{listingFor(p)}<Source href={p.listingSource} label={t.source}/></dd></div>}{p.year&&<div><dt>{t.founded}</dt><dd>{p.year}<Source href={p.yearSource} label={t.source}/></dd></div>}{p.legal&&<div><dt>{p.legalScope==="group_parent"?t.parent:t.legal}</dt><dd>{p.legal}</dd></div>}{displayFact(p,"free")&&<div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div>}{displayFact(p,"price")&&<div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div>}{displayRegion(p)&&<div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div>}{displayPayment(p)&&<div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div>}{displayFact(p,"models")&&<div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div>}{displayCommercial(p)&&<div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div>}</dl>
     <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.brandSource,t.official],[p.companySource,t.company],[p.creator?.source,t.founder],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.paymentSource,t.payment],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
     <div className="siai-detail-actions"><a className="siai-detail-primary-link" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><a className="siai-detail-primary-link" href={claimUrl(p)}>{label("厂商认领","Claim product")} ↗</a></div>
    </section>;
- return <main className={fullscreen?"siai-home siai-home-fullscreen":"siai-home"} lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
+ return <main ref={mainRef} style={fullscreen?({"--siai-wide-offset":wideOffset+"px"} as CSSProperties):undefined} className={fullscreen?"siai-home siai-home-fullscreen":"siai-home"} lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
   <header className="siai-home-head"><p className="siai-kicker">LINGXIFIELD · GLOBAL SI AI</p><h1>{t.title}</h1><p>{t.subtitle}</p></header>
   <div className="siai-home-controls">
    <label className="siai-home-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}/></label>
    <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a>
-    <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={()=>setFullscreen(v=>!v)}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
+    <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={toggleWide}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
   </div>
   <div className="siai-home-four-filters">
    <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">

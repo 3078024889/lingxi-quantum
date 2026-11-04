@@ -41,9 +41,13 @@ test('SIAI ranking fullscreen view expands to viewport and exits without losing 
  await toggle.click();
  const main=page.locator('.siai-home-fullscreen');
  await expect(main).toBeVisible();
- await expect(page.locator('body')).toHaveCSS('overflow','hidden');
+ expect(await page.locator('body').evaluate(el=>el.style.overflow)).not.toBe('hidden');
  const rect=await main.boundingBox();
- expect(rect?.x).toBeLessThan(2);
+ expect(rect?.width).toBeGreaterThanOrEqual((page.viewportSize()?.width||0)-36);
+ const pageHeight=await page.evaluate(()=>document.documentElement.scrollHeight);
+ expect(pageHeight).toBeGreaterThan((page.viewportSize()?.height||0)+700);
+ await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+ await expect(page.locator('footer.lx11-footer')).toBeVisible();
  expect(rect?.width).toBeGreaterThan(300);
  await page.keyboard.press('Escape');
  await expect(main).toHaveCount(0);

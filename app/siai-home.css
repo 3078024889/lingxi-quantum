@@ -312,3 +312,22 @@
 .siai-discovery-card:nth-child(3n) .siai-discovery-icon{background:#f4edff}
 @media(max-width:1200px){.siai-discovery-six{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:640px){.siai-discovery-six{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Wide table stays in document flow, so wheel and touch scrolling always reach calculator and footer.
+   Body scrolling must never be locked by the ranking expand button. */
+.siai-home.siai-home-fullscreen{
+ position:relative!important;inset:auto!important;z-index:4!important;
+ width:calc(100vw - 24px)!important;max-width:none!important;
+ height:auto!important;max-height:none!important;min-height:0!important;
+ margin-inline-start:calc(-1 * var(--siai-wide-offset, 0px))!important;margin-inline-end:0!important;
+ overflow:visible!important;overscroll-behavior-y:auto!important;
+ padding:16px 12px 22px!important;
+}
+.siai-home.siai-home-fullscreen .siai-home-top-track{top:62px!important}
+.siai-home.siai-home-fullscreen .siai-home-table-flow{height:auto!important;max-height:none!important;overflow-y:visible!important}
+@media(max-width:900px){
+ .siai-home.siai-home-fullscreen{padding:12px 8px 18px!important}
+ .siai-home.siai-home-fullscreen .siai-home-top-track{top:57px!important}
+}
+/* Never insert artificial 'not documented' or vendor profile placeholder text. */
+.siai-home-identity .siai-compact-facts>div:empty{display:none!important}
