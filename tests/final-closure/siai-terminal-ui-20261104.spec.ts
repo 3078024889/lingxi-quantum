@@ -49,7 +49,7 @@ test('real cost formulas remain interactive in three panels, then six search car
  test.setTimeout(150000);
  await page.goto('/siai');
  const cost=page.locator('#siai-cost-calculator');
- await cost.locator('summary').click();
+ await cost.locator(':scope > summary').click();
  const panels=cost.locator('.siai-cost-grid');
  await expect(panels).toHaveCount(1);
  await expect(cost.locator('.siai-cost-guide li')).toHaveCount(3);
@@ -67,7 +67,7 @@ test('real cost formulas remain interactive in three panels, then six search car
  await cost.getByRole('button',{name:/短剧生成|Short film/}).click();
  await expect(cost.locator('.siai-cost-settings')).toBeVisible();
  await cost.getByRole('button',{name:/程序接口 API|Developer API/}).click();
- await expect(cost.locator('.siai-cost-api')).toHaveCount(0); // API form retains the same three-panel layout.
+ await expect(cost.locator('.siai-cost-grid')).toHaveCount(1);
  await expect(cost.locator('.siai-cost-results')).toBeVisible();
  const discovery=page.locator('[data-siai-search-intents="ranking"]');
  await expect(discovery.locator('.siai-discovery-card')).toHaveCount(6);
