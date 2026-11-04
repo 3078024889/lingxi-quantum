@@ -138,3 +138,72 @@ test("Oversized PNG dimensions are rejected from the header before unsafe browse
  await expect(page.locator('section[aria-label="Failed files"]')).toContainText("dimensions are too large");
  await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
 });
+
+
+test("APNG marker after a 1 MiB ancillary PNG chunk is still rejected before decoding",async({page})=>{
+ test.setTimeout(90000);
+ // Build a two-frame APNG with valid PNG CRCs and a large tEXt chunk.
+ // The animation control block is deliberately placed beyond the 1 MiB preview.
+ const crc32=(data:Buffer)=>{
+  let crc=0xffffffff;
+  for(const byte of data){
+   crc^=byte;
+   for(let bit=0;bit<8;bit++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);
+  }
+  return (crc^0xffffffff)>>>0;
+ };
+ const chunk=(tag:string,data:Buffer)=>{
+  const name=Buffer.from(tag,"ascii");
+  const length=Buffer.alloc(4);length.writeUInt32BE(data.length);
+  const crc=Buffer.alloc(4);crc.writeUInt32BE(crc32(Buffer.concat([name,data])));
+  return Buffer.concat([length,name,data,crc]);
+ };
+ const chunks=(png:Buffer)=>{
+  const out:{tag:string;data:Buffer}[]=[];
+  for(let i=8;i+12<=png.length;){
+   const size=png.readUInt32BE(i);
+   out.push({tag:png.toString("ascii",i+4,i+8),data:png.subarray(i+8,i+8+size)});
+   i+=size+12;
+  }
+  return out;
+ };
+ const frameControl=(seq:number)=>{
+  const data=Buffer.alloc(26);
+  data.writeUInt32BE(seq,0);data.writeUInt32BE(18,4);data.writeUInt32BE(18,8);
+  data.writeUInt16BE(1,20);data.writeUInt16BE(10,22);
+  return data;
+ };
+ const frame0=chunks(await sharp({create:{width:18,height:18,channels:4,background:"#ff1100"}}).png().toBuffer());
+ const frame1=chunks(await sharp({create:{width:18,height:18,channels:4,background:"#0011ff"}}).png().toBuffer());
+ const idats=(items:typeof frame0)=>Buffer.concat(items.filter(c=>c.tag==="IDAT").map(c=>c.data));
+ const actl=Buffer.alloc(8);actl.writeUInt32BE(2,0);
+ const seq2=Buffer.alloc(4);seq2.writeUInt32BE(2,0);
+ const apng=Buffer.concat([
+  Buffer.from([137,80,78,71,13,10,26,10]),
+  chunk("IHDR",frame0.find(c=>c.tag==="IHDR")!.data),
+  chunk("tEXt",Buffer.concat([Buffer.from("Comment\0"),Buffer.alloc(1024*1024+128,120)])),
+  chunk("acTL",actl),
+  chunk("fcTL",frameControl(0)),
+  chunk("IDAT",idats(frame0)),
+  chunk("fcTL",frameControl(1)),
+  chunk("fdAT",Buffer.concat([seq2,idats(frame1)])),
+  chunk("IEND",Buffer.alloc(0))
+ ]);
+ expect(apng.indexOf(Buffer.from("acTL"))).toBeGreaterThan(1024*1024);
+ const input=await ready(page);
+ await input.setInputFiles({name:"two-frame-large-metadata.png",mimeType:"image/png",buffer:apng});
+ await page.getByRole("button",{name:"Process batch",exact:true}).click();
+ await expect(page.locator('section[aria-label="Failed files"]')).toContainText("animated image");
+ await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
+});
+
+test("Malformed PNG chunk lengths fail closed without entering browser decode",async({page})=>{
+ const input=await ready(page);
+ const broken=Buffer.from(await sharp({create:{width:12,height:12,channels:3,background:"#ffffff"}}).png().toBuffer());
+ // Next chunk after the 25-byte IHDR begins at offset 33.
+ broken.writeUInt32BE(0x7fffffff,33);
+ await input.setInputFiles({name:"invalid-chunk.png",mimeType:"image/png",buffer:broken});
+ await page.getByRole("button",{name:"Process batch",exact:true}).click();
+ await expect(page.locator('section[aria-label="Failed files"]')).toContainText("Could not read or convert");
+ await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
+});
