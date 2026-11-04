@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync} from 'node:fs';
 import {estimateApiBatchCost,estimateApiUsageCost} from '../lib/market-cost-math.ts';
 import {VIDEO_RATES,API_RATES,estimateKnownVideoRate} from '../lib/market-rate-catalog.ts';
 const findVideo=id=>VIDEO_RATES.find(x=>x.id===id);
@@ -34,10 +34,16 @@ test('Original 32 products and unpublished B006 have separate identities',()=>{
  const curated=readFileSync(new URL('../lib/market-api-service-catalog.ts',import.meta.url),'utf8');
  assert.match(curated,/const ALL=\[/);
  assert.equal([...curated.matchAll(/'(?:[a-z][a-z0-9-]+)'/g)].length>32,true);
- const intake=JSON.parse(readFileSync(new URL('../data/company-intake/batch-006.json',import.meta.url),'utf8'));
- assert.equal(intake.visibleToPublic,false);
- assert.equal(intake.products.length,10);
- assert.ok(intake.products.every(p=>p.publishApproved===false&&p.reviewed===false));
+ // PR #152 targets main; B006 belongs to the independent draft PR #150.
+ // Verify that *all present* staged batches remain nonpublic, without assuming a sibling PR has merged.
+ for(const id of [1,2,3,4,5,6]){
+  const path=new URL('../data/company-intake/batch-'+String(id).padStart(3,'0')+'.json',import.meta.url);
+  if(!existsSync(path))continue;
+  const intake=JSON.parse(readFileSync(path,'utf8'));
+  assert.equal(intake.visibleToPublic,false);
+  assert.equal(intake.products.length,10);
+  assert.ok(intake.products.every(p=>p.publishApproved===false&&p.reviewed===false));
+ }
 });
 test('Mistral, Cohere and MiniMax text prices use verified exact model IDs',()=>{
  for(const [id,inRate,outRate] of [
