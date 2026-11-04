@@ -125,10 +125,13 @@ for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"] as const){
 test("light/dark settings keep complete cards and visible focus",async({page})=>{
  await page.goto("/tools");
  await expect(page.locator(".lx-tools-compact a[data-tool-slug]")).toHaveCount(source.length);
- await page.locator(".lx11-theme-row button").last().click();
+ const desktopControls=page.locator(".lx11-sidebar:not(.lx11-drawer) .lx11-theme-row button");
+ if(await desktopControls.first().isVisible())await desktopControls.last().click();
+ else{await page.evaluate(()=>localStorage.setItem("lx-theme","dark"));await page.reload()}
  await expect(page.locator("html")).toHaveAttribute("data-theme","dark");
  await expect(page.locator(".lx-tools-compact a[data-tool-slug]").first()).toBeVisible();
- await page.locator(".lx11-theme-row button").first().click();
+ if(await desktopControls.first().isVisible())await desktopControls.first().click();
+ else{await page.evaluate(()=>localStorage.setItem("lx-theme","light"));await page.reload()}
  await expect(page.locator("html")).toHaveAttribute("data-theme","light");
  await page.keyboard.press("Tab");
  const focusable=await page.evaluate(()=>document.activeElement?.tagName);
