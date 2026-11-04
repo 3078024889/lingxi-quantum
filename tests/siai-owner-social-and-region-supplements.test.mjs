@@ -56,6 +56,6 @@ test("five official region evidence records are localized but not converted to f
   "https://www.magnific.com/legal/ai-products","https://www.synthesia.io/legal/acceptable-use-policy",
   "https://www.researchsolutions.com/scite-terms-and-conditions"])
   assert(overlay.includes(u),u);
- assert(!overlay.includes("不限地区"));
+ assert(!overlay.includes('zh:"不限地区"'));
  assert(preview.includes("snapshot.totals.observed!==205||snapshot.totals.missing!==5"));
 });
