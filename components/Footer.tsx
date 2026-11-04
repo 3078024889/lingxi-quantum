@@ -1,9 +1,9 @@
 "use client";
 import Image from"next/image";
 import Link from"next/link";
-import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
-import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
-import {FOOTER_UNIFIED,FOOTER_TOOL_ICONS,FOOTER_TOOL_LINKS} from "@/lib/footer-unified-copy";
+import{useLingxiLang,LANG_NAMES,type LingxiLang}from"@/lib/lingxi-i18n";
+import {FOOTER_TERMINAL,FOOTER_NAV_ANCHORS,FOOTER_TOOL_TARGETS,FOOTER_QUESTION_TARGETS,FOOTER_TOOL_ICONS_COMPACT} from "@/lib/footer-terminal-copy";
+import {FOOTER_UNIFIED} from "@/lib/footer-unified-copy";
 
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
 
@@ -46,84 +46,79 @@ const FOOTER_MARKET_DETAIL:Record<LingxiLang,[string,string,string]>={
 };
 
 export default function Footer(){
- const{t,lang}=useLingxiLang();
+ const{t,lang,setLang}=useLingxiLang();
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
- const discovery=SIAI_DISCOVERY[lang];
- const overview=FOOTER_UNIFIED[lang];
- const [modelLink,freeLink,regionLink]=FOOTER_MARKET_DETAIL[lang];
+ const overview=FOOTER_UNIFIED[lang],terminal=FOOTER_TERMINAL[lang];
+ const marketPoints=[overview.marketPoints[0],overview.marketPoints[1],overview.marketPoints[2],overview.marketPoints[4]+" · "+overview.marketPoints[5],overview.marketPoints[3]];
  return <footer className="lx11-footer lx-branded-footer" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
+    <p className="lx-footer-brand-description">{terminal.brand}</p>
+    <div className="lx11-footer-social lx-footer-social-compact" aria-label={c.contacts}>
+     {channels.map(([title,href])=>href.startsWith("#")?<a key={title} href={href}>{lang==="zh"?title:"WeChat"}</a>:<a key={title} href={href} target="_blank" rel="noreferrer noopener">{title}</a>)}
+     <a href="mailto:business@lingxifield.com">business@lingxifield.com</a>
+    </div>
    </section>
-   <nav aria-label={c.rankings}>
-    <b>{c.rankings}</b>
-    <Link href="/siai">{c.rankSub}</Link>
-    <Link href="/siai">{modelLink}</Link>
-    <Link href="/siai">{freeLink}</Link>
-    <Link href="/siai">{regionLink}</Link>
+   <nav aria-label={c.rankings}><b>{c.rankings}</b>
+    {terminal.discover.map((title,i)=><Link href={FOOTER_NAV_ANCHORS[i]} key={title}>{title}</Link>)}
     <Link href={"/siai/claim?lang="+lang}>{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</Link>
    </nav>
-   <nav aria-label={c.sasi}>
-    <b>{c.sasi}</b>
-    <Link href="/sasi">{c.sasi}</Link><Link href="/sasi/drama">{c.drama}</Link><Link href="/sasi/build">{c.website}</Link>
-    <Link href="/ai-knowledge">{c.books}</Link><Link href="/ai-learning">{c.learning}</Link><Link href="/ai-research">{c.research}</Link>
+   <nav aria-label={c.sasi}><b>{c.sasi}</b>
+    <Link href="/sasi">{c.sasi}</Link>
+    <Link href="/sasi/drama">{c.drama}</Link>
+    <Link href="/sasi">{lang==="zh"?"AI 视频与图像创作":c.sasi}</Link>
+    <Link href="/sasi/build">{c.website}</Link>
+    <Link href="/ai-knowledge">{c.books}</Link>
+    <Link href="/ai-learning">{c.learning}</Link>
+    <Link href="/ai-research">{c.research}</Link>
    </nav>
-   <nav aria-label={c.tools}>
-    <b>{c.tools}</b>
-    <Link href="/tools">{c.all}</Link><Link href="/tools?q=PDF">{c.pdf}</Link>
-    <Link href="/tools?q=OCR">{c.ocr}</Link><Link href="/tools?q=视频">{c.video}</Link>
-    <Link href="/tools?q=临时邮箱">{c.temp}</Link>
+   <nav aria-label={c.tools}><b>{c.tools}</b>
+    <Link href="/tools?q=PDF">{c.pdf}</Link>
+    <Link href="/tools?q=图片">{c.ocr}</Link>
+    <Link href="/tools?q=视频">{c.video}</Link>
+    <Link href="/tools?q=Excel">{terminal.tools[5]}</Link>
+    <Link href="/tools?q=隐私">{c.temp}</Link>
+    <Link href="/tools">{c.all}</Link>
    </nav>
-   <nav aria-label={c.account}>
-    <b>{c.account}</b>
-    <Link href="/about">{c.about}</Link><Link href="/account">{copy[lang].account}</Link>
-    <Link href="/account/orders">{copy[lang].orders}</Link><Link href="/refunds">{copy[lang].refunds}</Link>
-    <Link href="/terms">{c.terms}</Link><Link href="/privacy">{c.privacy}</Link><Link href="/release">{copy[lang].release}</Link>
+   <nav aria-label={c.account}><b>{c.account}</b>
+    <Link href="/about">{c.about}</Link>
+    <Link href="/account">{copy[lang].account}</Link>
+    <Link href="/account/orders">{copy[lang].orders}</Link>
+    <Link href="/account">{lang==="zh"?"使用帮助":c.about}</Link>
+    <Link href="/privacy">{c.privacy}</Link>
+    <Link href="/terms">{c.terms}</Link>
+    <Link href="/refunds">{copy[lang].refunds}</Link>
+    <Link href="/release">{copy[lang].release}</Link>
    </nav>
   </div>
   <section className="lx-footer-unified" lang={lang==="zh"?"zh-CN":lang} aria-label={overview.headline}>
-   <header className="lx-footer-unified-head">
-    <h2>{overview.headline}</h2>
-    <p>{overview.intro}</p>
-   </header>
    <div className="lx-footer-unified-columns">
-    <section className="lx-footer-market" aria-label={overview.headline}>
-     <ul>{overview.marketPoints.map(point=><li key={point}><span aria-hidden="true">🔹</span><span>{point}</span></li>)}</ul>
+    <section className="lx-footer-market" aria-label={terminal.strength}>
+     <h3>💎 {terminal.strength}</h3>
+     <ul>{marketPoints.map(point=><li key={point}><span aria-hidden="true">✓</span><span>{point}</span></li>)}</ul>
     </section>
     <section className="lx-footer-tools">
      <h3><Link href="/tools">{overview.toolsTitle}</Link></h3>
-     <div className="lx-footer-tools-list">
-      {overview.toolCategories.map((item,i)=><p key={item.title}><Link href={FOOTER_TOOL_LINKS[i]}><strong><span aria-hidden="true">{FOOTER_TOOL_ICONS[i]}</span> {item.title}：</strong></Link><span>{item.description}</span></p>)}
+     <div className="lx-footer-tool-pills">
+      {terminal.tools.map((title,i)=><Link href={FOOTER_TOOL_TARGETS[i]} key={title}><span aria-hidden="true">{FOOTER_TOOL_ICONS_COMPACT[i]}</span>{title}</Link>)}
      </div>
     </section>
-   </div>
-   <div className="lx-footer-unified-secondary">
-    <section className="lx-footer-sasi">
-     <h3><Link href="/sasi">{overview.sasiTitle}</Link></h3>
-     <p>{overview.sasiDescription}</p>
-    </section>
-    <nav className="lx-footer-search-list" aria-label={overview.searchTitle}>
-     <h3>{overview.searchTitle}</h3>
-     <ol>{discovery.topics.map((topic,i)=><li key={topic.q}><Link href={"/siai#siai-search-ranking-"+i}><span className="lx-footer-search-number">{String(i+1).padStart(2,"0")}｜</span>{topic.q}</Link></li>)}</ol>
+    <nav className="lx-footer-search-list" aria-label={terminal.search}>
+     <h3>🔎 {terminal.search}</h3>
+     <ol>{terminal.questions.map((q,i)=><li key={q}><Link href={FOOTER_QUESTION_TARGETS[i]}><span className="lx-footer-search-number">{String(i+1).padStart(2,"0")}｜</span>{q}</Link></li>)}</ol>
     </nav>
-   </div>
-   <div className="lx-footer-unified-close">
-    <h3>{overview.closingTitle}</h3>
-    <p>{overview.closingDescription}</p>
    </div>
   </section>
   <div className="lx-footer-social-strip">
-   <div><b>{c.contacts}</b><div className="lx11-footer-social">
-     {channels.map(([label,href])=>{const localized=label==="微信服务号"&&lang!=="zh"?"WeChat":label;return href.startsWith("#")?<a key={label} href={href}>{localized}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{localized} ↗</a>})}
-    <a href="mailto:business@lingxifield.com">business@lingxifield.com</a>
-   </div></div>
    <div className="lx-footer-qr-row">
     <div><Image src="/images/lingxifield-wechat-service-qr.jpg" alt="WeChat Service" width={56} height={56}/><span>{t("service")}</span></div>
     <div><Image src="/images/miniapp-qrcode.png" alt="Miniapp" width={56} height={56}/><span>{t("miniapp")}</span></div>
    </div>
   </div>
-  <div className="lx11-footer-legal"><span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>
+  <div className="lx11-footer-legal">
+   <span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>
+   <label className="lx-footer-language">🌐 <select value={lang} onChange={e=>setLang(e.target.value as LingxiLang)} aria-label={lang==="zh"?"语言":"Language"}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(code=><option key={code} value={code}>{LANG_NAMES[code]}</option>)}</select></label>
    <Link href="/terms">{t("terms")}</Link><Link href="/privacy">{t("privacy")}</Link>
    <Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{t("sasiRules")}</Link>
    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener">湘ICP备2026031465号 ↗</a>
