@@ -1,0 +1,34 @@
+import {test,expect} from './export-test';
+test('desktop/mobile calculate a sourced H3 short film with image and input-video extras',async({page})=>{
+ test.setTimeout(120000);
+ await page.goto('/siai');
+ const d=page.getByTestId('market-cost-disclosure');
+ await d.locator('summary').click();
+ const cost=d.locator('.lxCostEstimate');
+ await expect(cost.getByText('按平台算真实费用')).toBeVisible();
+ await cost.getByLabel('AI 平台').selectOption('minimax');
+ await cost.getByRole('button',{name:'1 分钟短剧'}).click();
+ await expect(cost.getByText(/60 秒/)).toBeVisible();
+ await cost.getByLabel('每段秒数').fill('5');
+ await cost.getByLabel('生成段数').fill('2');
+ await cost.getByLabel('输入参考视频秒数（每次）').fill('3');
+ await cost.getByLabel('每段参考图片张数').fill('7');
+ await expect(cost.locator('.lxCostResult').first()).toContainText('USD 1.44');
+ await expect(cost.locator('.lxCostResult').first()).toContainText('USD 0.64');
+});
+test('desktop/mobile calculate per-call Mistral price and hide the huge table initially',async({page})=>{
+ test.setTimeout(120000);
+ await page.goto('/siai');
+ const d=page.getByTestId('market-cost-disclosure');
+ await d.locator('summary').click();
+ const cost=d.locator('.lxCostEstimate');
+ await cost.getByRole('button',{name:'程序接口 API'}).click();
+ await cost.getByLabel('AI 平台').selectOption('mistral');
+ await expect(cost.getByText('Mistral Small 4 · Standard')).toBeVisible();
+ await cost.getByLabel('调用次数').fill('100');
+ await expect(cost.locator('.lxCostResult').first()).toContainText('USD 0.06');
+ const directory=cost.locator('details.lxApiDirectory');
+ await expect(directory).not.toHaveAttribute('open','');
+ await directory.locator('summary').click();
+ await expect(directory.locator('table')).toBeVisible();
+});

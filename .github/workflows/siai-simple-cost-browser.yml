@@ -1,0 +1,52 @@
+name: SIAI simple verified cost calculator browser
+on:
+  pull_request:
+    paths:
+      - 'lingxifield-ai-market/lib/market-cost-math.ts'
+      - 'lingxifield-ai-market/lib/market-rate-catalog.ts'
+      - 'lingxifield-ai-market/app/market-cost-estimator.tsx'
+      - 'lingxifield-ai-market/app/globals.css'
+      - 'lingxifield-ai-market/tests/market-cost-estimator-v2.test.mjs'
+      - 'tests/final-closure/siai-cost-estimator-real.spec.ts'
+      - '.github/workflows/siai-simple-cost-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-cost-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop-chromium, mobile-chromium]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify real provider rates and equations
+        run: |
+          node --test lingxifield-ai-market/tests/market-cost-estimator-v2.test.mjs
+          node --test lingxifield-ai-market/tests/market-v41-cost-trust.test.mjs
+      - name: Build real production app
+        run: pnpm build
+      - name: Install browser
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Real desktop/mobile price calculator interactions
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-cost-estimator-real.spec.ts
+      - name: Retain browser evidence
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: siai-cost-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
