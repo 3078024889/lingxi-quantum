@@ -5,7 +5,7 @@ import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 export function SiaiSearchDiscovery({variant}:{variant:"home"|"ranking"}){
  const {lang}=useLingxiLang(),copy=SIAI_DISCOVERY[lang];
  const icons=["🌐","🏆","✨","🧭","📊","👑"] as const;
- const intents=["cost","all","company","free","api","video"] as const;
+ // Only open a narrowed view when its meaning matches the search intent.\n const intents=["cost","all","all","all","api","all"] as const;
  const home=variant==="home",prefix=home?"siai-search-home":"siai-search-ranking";
  return <section className={home?"lx11-home-section my-8":"mx-auto my-5 w-full px-3 sm:px-5"} aria-labelledby={prefix+"-title"} lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} data-siai-search-intents={variant}>
   <div className="mb-4">
