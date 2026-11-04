@@ -33,7 +33,9 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(home,/<SiaiSearchDiscovery variant="home"\/>/);
  assert.match(rank,/<SiaiSearchDiscovery variant="ranking"\/>/);
  assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
- assert.match(footer,/FOOTER_MARKET_DETAIL/);
+ assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
+ assert.match(footer,/href=\{"\/siai#siai-search-ranking-"\+i\}/);
+ assert.match(footer,/FOOTER_BRAND_SHORT\[lang\]/);
  assert.match(page,/alternateName:SIAI_DISCOVERY\.zh\.topics/);
  assert.match(page,/"@type":"FAQPage"/);
  assert.match(read("app/llms.txt/route.ts"),/SIAI_DISCOVERY\.zh\.topics/);
