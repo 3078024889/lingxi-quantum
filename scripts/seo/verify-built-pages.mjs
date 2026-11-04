@@ -46,6 +46,7 @@ async function run(){
   await new Promise(r=>setTimeout(r,1000));
  }
  assert(ready,"Next.js server failed to start: "+output);
+ let globalLocs=[];
  for(const host of ["lingxifield.com","lingxifield.cn"]){
   const site="https://"+host;
   const [robots,map,page]=await Promise.all([
@@ -55,6 +56,7 @@ async function run(){
   assert(robots.body.includes("Sitemap: "+site+"/sitemap.xml"),host+" robots sitemap");
   const urls=Array.from(map.body.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g),m=>m[1]);
   assert(urls.includes(site+"/siai"),host+" sitemap missing SIAI");
+  if(host==="lingxifield.com")globalLocs=urls;
   assert(urls.every(url=>new URL(url).origin===site),host+" sitemap cross-origin loc");
   assert.equal(canonical(page),site+"/siai",host+" HTML canonical");
   alternate(page,"zh-CN","https://lingxifield.cn/siai");
@@ -80,6 +82,39 @@ async function run(){
   assert(!/noindex/i.test(String(page.headers["x-robots-tag"]??"")),path+" noindex");
   console.log("SSR TITLE PASS",path,title);
  }
+
+ // Exhaustive Chinese tool route check: avoid misleading 200-only sitemap audits.
+ const publishedTools=globalLocs.map(url=>new URL(url).pathname).filter(path=>/^\/tools\/[^/]+$/.test(path));
+ assert.equal(publishedTools.length,123,"Expected all 123 canonical nonalias tool URLs");
+ assert.equal(new Set(publishedTools).size,publishedTools.length,"Duplicate tool URL in XML sitemap");
+ let checked=0;
+ for(let i=0;i<publishedTools.length;i+=6){
+  const paths=publishedTools.slice(i,i+6);
+  const responses=await Promise.all(paths.map(path=>request(path)));
+  for(let k=0;k<paths.length;k++){
+   const path=paths[k],res=responses[k];
+   assert200(res,path);
+   assert.equal(canonical(res),"https://lingxifield.com"+path,"Canonical points away from published tool");
+   assert(!/noindex/i.test(String(res.headers["x-robots-tag"]||"")),"Tool accidentally noindexed: "+path);
+   const title=titleOf(res);
+   assert((title.match(/LINGXIFIELD/g)||[]).length<=1,"Duplicate brand in "+path);
+   assert((title.match(/灵犀场/g)||[]).length<=1,"Duplicate Chinese brand in "+path);
+   checked++;
+  }
+ }
+ assert.equal(checked,123);
+ console.log("SSR FULL CHINESE TOOL COVERAGE PASS",checked);
+ // Representative localized directories and rankings, not just English.
+ for(const lang of ["en","ja","ko","fr","de","es","pt","ar"]){
+  for(const path of ["/"+lang+"/tools","/"+lang+"/siai"]){
+   const res=await request(path);
+   assert200(res,path);
+   assert.equal(canonical(res),"https://lingxifield.com"+path,"Localized canonical mismatch");
+   assert(!/noindex/i.test(String(res.headers["x-robots-tag"]||"")),"Localized page noindex "+path);
+   titleOf(res);
+  }
+ }
+ console.log("SSR ALL 8 LOCALIZED TOOLS AND SIAI ROUTES PASS",16);
  const moved=await request("/tools/image-to-pdf-pro");
  assert([301,307,308].includes(moved.status),"Deprecated tool alias must redirect permanently");
  const location=String(moved.headers.location||"");
