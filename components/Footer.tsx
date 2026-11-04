@@ -1,10 +1,8 @@
 "use client";
-import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import Image from"next/image";
-import {usePathname} from "next/navigation";
 import Link from"next/link";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
-import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
+import UnifiedFooterOverview from "@/components/UnifiedFooterOverview";
 
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
 
@@ -49,15 +47,12 @@ const FOOTER_MARKET_DETAIL:Record<LingxiLang,[string,string,string]>={
 export default function Footer(){
  const{t,lang}=useLingxiLang();
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
- const discovery=SIAI_DISCOVERY[lang];
- const pathname=usePathname()||"";
- const isRankingRoute=/^\/(?:en\/|ja\/|ko\/|fr\/|de\/|es\/|pt\/|ar\/)?siai(?:\/|$)/.test(pathname);
  const [modelLink,freeLink,regionLink]=FOOTER_MARKET_DETAIL[lang];
  return <footer className="lx11-footer lx-branded-footer" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
+  <UnifiedFooterOverview/>
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
-    <p className="text-sm leading-6">{copy[lang].lead}</p>
     <p><a href="https://lingxifield.com" rel="noopener noreferrer">lingxifield.com</a> · <span>lingxifield.cn</span></p>
    </section>
    <nav aria-label={c.rankings}>
@@ -86,11 +81,6 @@ export default function Footer(){
     <Link href="/terms">{c.terms}</Link><Link href="/privacy">{c.privacy}</Link><Link href="/release">{copy[lang].release}</Link>
    </nav>
   </div>
-  {!isRankingRoute&&<nav className="mx-auto mb-5 max-w-7xl rounded-xl border border-[var(--lx-line)] px-5 py-4" aria-label={discovery.footerTitle}>
-   <h2 className="mb-2 font-semibold">{discovery.footerTitle}</h2>
-   <p lang={lang==="zh"?"zh-CN":lang} className="mb-2 text-sm leading-7">{PUBLIC_FEATURE_COPY[lang].description}</p>
-   <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">{discovery.topics.map(v=>v.q).map((label,i)=><Link key={label} href={"/#siai-search-home-"+i} className="underline underline-offset-4">{label}</Link>)}{discovery.extras.map(label=><Link key={label} href="/siai" className="underline underline-offset-4">{label}</Link>)}</div>
-  </nav>}
   <div className="lx-footer-social-strip">
    <div><b>{c.contacts}</b><div className="lx11-footer-social">
      {channels.map(([label,href])=>{const localized=label==="微信服务号"&&lang!=="zh"?"WeChat":label;return href.startsWith("#")?<a key={label} href={href}>{localized}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{localized} ↗</a>})}
