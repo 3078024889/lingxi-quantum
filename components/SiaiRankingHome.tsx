@@ -95,6 +95,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const [tableWidth,setTableWidth]=useState(1640);
  const [fullscreen,setFullscreen]=useState(false);
  const [page,setPage]=useState(1),[pageSize,setPageSize]=useState<20|50|100>(100);
+ const [pageDraft,setPageDraft]=useState("1");
  const [bounded,setBounded]=useState(false),[panelHeight,setPanelHeight]=useState(620);
  const dragRef=useRef<{startY:number;startHeight:number}|null>(null);
  const rankingRef=useRef<HTMLElement>(null);
@@ -113,7 +114,9 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const pageStart=(safePage-1)*pageSize;
  const visibleRows=shown.slice(pageStart,pageStart+pageSize);
  const pageCopy=PAGE_COPY[lang];
- const goPage=(next:number)=>{setPage(Math.max(1,Math.min(pageCount,next)));rankingRef.current?.scrollIntoView({block:"start",behavior:"instant"});};
+ const goPage=(next:number)=>{const nextPage=Math.max(1,Math.min(pageCount,Number.isFinite(next)?Math.trunc(next):1));setPage(nextPage);setPageDraft(String(nextPage));rankingRef.current?.scrollIntoView({block:"start",behavior:"auto"});};
+ const commitPageDraft=()=>goPage(Number.parseInt(pageDraft,10)||1);
+ useEffect(()=>{setPageDraft(String(safePage));},[safePage]);
  useEffect(()=>{setPage(1);},[query,category,task,payment,evidence,sort,pageSize]);
  const startDrag=(e:ReactPointerEvent<HTMLDivElement>)=>{if(!bounded)return;e.preventDefault();dragRef.current={startY:e.clientY,startHeight:panelHeight};e.currentTarget.setPointerCapture(e.pointerId);};
  const moveDrag=(e:ReactPointerEvent<HTMLDivElement>)=>{if(!dragRef.current)return;setPanelHeight(Math.min(1400,Math.max(280,dragRef.current.startHeight+e.clientY-dragRef.current.startY)));};
@@ -250,7 +253,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    <div className="siai-page-buttons">
     <button type="button" disabled={safePage===1} onClick={()=>goPage(1)}>{pageCopy.first}</button>
     <button type="button" disabled={safePage===1} onClick={()=>goPage(safePage-1)}>{pageCopy.prev}</button>
-    <label>{pageCopy.page}<input type="number" aria-label={pageCopy.page} min={1} max={pageCount} value={safePage} onChange={e=>goPage(Number(e.target.value)||1)}/></label>
+    <label>{pageCopy.page}<input type="number" aria-label={pageCopy.page} min={1} max={pageCount} value={pageDraft} onChange={e=>setPageDraft(e.target.value)} onBlur={commitPageDraft} onKeyDown={e=>{if(e.key==="Enter"){e.preventDefault();commitPageDraft();}}}/></label>
     <span>{pageCopy.of} {pageCount}</span>
     <button type="button" disabled={safePage===pageCount} onClick={()=>goPage(safePage+1)}>{pageCopy.next}</button>
     <button type="button" disabled={safePage===pageCount} onClick={()=>goPage(pageCount)}>{pageCopy.last}</button>
