@@ -1001,3 +1001,64 @@ html[data-theme="dark"] .lx-footer-search-number{color:#91bcfa}
  .lx-footer-unified h3{font-size:17px!important}
  .lx-footer-tools-list{gap:10px}
 }
+
+
+/* V164 global SaaS footer: 5 real navigation groups + 3 user-intent columns. */
+.lx11-footer{padding:27px clamp(14px,2vw,28px) 18px!important;background:#fff!important;border-top:1px solid #dce6f2!important}
+.lx11-footer .lx11-footer-grid{display:grid!important;grid-template-columns:minmax(210px,1.45fr) repeat(4,minmax(150px,1fr))!important;align-items:start!important;gap:clamp(15px,2vw,27px)!important;max-width:1480px!important;margin:0 auto!important}
+.lx11-footer .lx11-footer-grid>nav,.lx11-footer .lx11-footer-grid>section{min-width:0;grid-column:auto!important}
+.lx11-footer .lx11-footer-grid nav{gap:8px!important}
+.lx11-footer .lx11-footer-grid b{font-size:16px!important;line-height:1.4!important;font-weight:800!important;color:#183c69!important;margin:0 0 9px!important}
+.lx11-footer .lx11-footer-grid nav a{font-size:14px!important;line-height:1.5!important;overflow-wrap:anywhere;color:#507092}
+.lx11-footer .lx11-footer-grid nav a:hover{color:#155eb2;text-decoration:underline;text-underline-offset:3px}
+.lx11-footer .lx11-footer-logo{align-items:center;gap:9px}
+.lx11-footer .lx11-footer-logo img{width:46px;height:46px;object-fit:contain;border-radius:50%}
+.lx11-footer .lx11-footer-logo b{font-size:17px!important;font-weight:800!important;color:#172f55!important;margin:0!important}
+.lx11-footer .lx-footer-brand-description{font-size:14px!important;color:#5c7590;line-height:1.7!important;margin:12px 0 12px!important;max-width:280px}
+.lx11-footer .lx-footer-social-compact{display:flex!important;flex-wrap:wrap!important;gap:6px 8px!important}
+.lx11-footer .lx-footer-social-compact a{font-size:14px!important;color:#2c659b;border:1px solid #deebfa;border-radius:7px;padding:4px 6px;text-decoration:none;overflow-wrap:anywhere}
+.lx11-footer .lx-footer-social-compact a:hover{background:#f1f7ff}
+.lx11-footer .lx-footer-unified{max-width:1480px!important;margin:28px auto 0!important;padding:22px!important;background:#f9fbff!important;border:1px solid #dfebf8!important;border-radius:15px!important}
+.lx11-footer .lx-footer-unified-columns{display:grid!important;grid-template-columns:1.05fr .88fr 1.12fr!important;gap:clamp(15px,2vw,32px)!important;padding:0!important;border:0!important}
+.lx11-footer .lx-footer-unified-columns>section,.lx11-footer .lx-footer-unified-columns>nav{min-width:0}
+.lx11-footer .lx-footer-unified h3{font-size:17px!important;margin:0 0 13px!important;line-height:1.5!important;color:#18416f;font-weight:800!important}
+.lx11-footer .lx-footer-market ul{display:grid;gap:9px;padding:0;margin:0}
+.lx11-footer .lx-footer-market li{display:flex;gap:9px;align-items:baseline;font-size:14px!important;line-height:1.65!important;color:#3c6084}
+.lx11-footer .lx-footer-market li>span:first-child{color:#0c9f70;font-weight:800;font-size:15px!important}
+.lx11-footer .lx-footer-tool-pills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lx11-footer .lx-footer-tool-pills>a{display:flex;align-items:center;gap:7px;min-height:41px;border:1px solid #d4e5f7;background:#fff;border-radius:8px;padding:7px 9px;color:#2b5481;text-decoration:none;font-size:14px!important;line-height:1.4!important;overflow-wrap:anywhere}
+.lx11-footer .lx-footer-tool-pills>a>span{flex:none;font-size:17px}
+.lx11-footer .lx-footer-tool-pills>a:hover,.lx11-footer .lx-footer-tool-pills>a:focus-visible{background:#ebf4ff;border-color:#8dbced}
+.lx11-footer .lx-footer-search-list ol{display:grid;gap:5px;list-style:none;margin:0;padding:0}
+.lx11-footer .lx-footer-search-list li{min-width:0}
+.lx11-footer .lx-footer-search-list li a{display:inline-flex;gap:3px;align-items:baseline;min-height:30px;color:#225892;font-size:14px!important;line-height:1.55!important;overflow-wrap:anywhere;text-decoration:none}
+.lx11-footer .lx-footer-search-list li a:hover{text-decoration:underline;text-underline-offset:3px}
+.lx11-footer .lx-footer-search-number{color:#2678d4;font-size:14px!important;font-variant-numeric:tabular-nums;flex:none}
+.lx11-footer .lx-footer-social-strip{display:flex;justify-content:flex-end;align-items:center;margin:16px auto 0;max-width:1480px;padding:8px 0 0;border:0}
+.lx11-footer .lx-footer-qr-row{display:flex;gap:16px;align-items:center}
+.lx11-footer .lx-footer-qr-row>div{display:flex;align-items:center;gap:7px;font-size:14px!important;color:#617f99}
+.lx11-footer .lx11-footer-legal{display:flex;max-width:1480px!important;gap:10px 15px!important;align-items:center;margin:14px auto 0!important;padding-top:12px!important;font-size:14px!important;color:#67819c;flex-wrap:wrap}
+.lx11-footer .lx11-footer-legal>a{font-size:14px!important;line-height:1.5}
+.lx11-footer .lx-footer-language{display:inline-flex;align-items:center;gap:5px;font-size:14px!important}
+.lx11-footer .lx-footer-language select{font-size:14px!important;min-height:34px;padding:4px 7px;border:1px solid #d2e2f3;border-radius:6px;background:#fff;color:#245280}
+.lx11-footer .lx11-footer-legal a:last-child{margin-left:auto}
+@media(max-width:1180px){
+ .lx11-footer .lx11-footer-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .lx11-footer .lx11-footer-grid>section:first-child{grid-column:span 1!important}
+ .lx11-footer .lx-footer-unified-columns{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .lx11-footer .lx-footer-search-list{grid-column:1/-1}
+}
+@media(max-width:780px){
+ .lx11-footer .lx11-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .lx11-footer .lx11-footer-grid>section:first-child{grid-column:1/-1!important}
+ .lx11-footer .lx-footer-unified-columns{grid-template-columns:1fr!important}
+ .lx11-footer .lx-footer-search-list{grid-column:auto}
+ .lx11-footer .lx-footer-unified{padding:17px!important}
+}
+@media(max-width:420px){
+ .lx11-footer .lx11-footer-grid{gap:20px 14px!important}
+ .lx11-footer .lx11-footer-grid b{font-size:15px!important}
+ .lx11-footer .lx-footer-tool-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .lx11-footer .lx-footer-social-strip{justify-content:center}
+ .lx11-footer .lx11-footer-legal a:last-child{margin-left:0}
+}
