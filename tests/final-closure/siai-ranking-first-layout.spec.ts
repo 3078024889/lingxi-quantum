@@ -72,8 +72,9 @@ test('SIAI restores sourced company facts on every row and preserves original re
  await expect(first.locator('.siai-home-identity')).toContainText('Microsoft');
  await expect(first.locator('.siai-home-identity dt')).toContainText(['公司名称','主要创始人','是否上市','成立时间','资料更新日期']);
  await expect(first.locator('.siai-home-identity a.siai-source').first()).toHaveAttribute('href',/^https:\/\//);
- await expect(page.locator('.siai-home-table-flow')).toBeVisible();
- const noInnerVerticalScroll=await page.locator('.siai-home-table-flow').evaluate((el:HTMLElement)=>el.scrollHeight-el.clientHeight<=3);
+ const table=page.locator('.siai-home-table-flow');
+ await expect(table).toBeVisible();
+ const noInnerVerticalScroll=await table.evaluate((el:HTMLElement)=>el.scrollHeight-el.clientHeight<=3);
  expect(noInnerVerticalScroll).toBe(true);
  expect(await table.evaluate((el:HTMLElement)=>getComputedStyle(el).overflowX)).toBe('hidden');
  expect(await page.evaluate(()=>document.documentElement.scrollHeight>window.innerHeight*2)).toBe(true);

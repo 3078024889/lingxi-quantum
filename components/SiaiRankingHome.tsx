@@ -119,6 +119,20 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  useEffect(()=>{setPageDraft(String(safePage));},[safePage]);
  useEffect(()=>{setPage(1);},[query,category,task,payment,evidence,sort,pageSize]);
  const startDrag=(e:ReactPointerEvent<HTMLDivElement>)=>{if(!bounded)return;e.preventDefault();dragRef.current={startY:e.clientY,startHeight:panelHeight};e.currentTarget.setPointerCapture(e.pointerId);};
+ useEffect(()=>{
+  if(!bounded)return;
+  // Window capture handles pointer moves even when the grip changes position during resize.
+  const pointerMove=(e:PointerEvent)=>{
+   const start=dragRef.current;
+   if(!start)return;
+   setPanelHeight(Math.min(1400,Math.max(280,start.startHeight+e.clientY-start.startY)));
+  };
+  const pointerEnd=()=>{dragRef.current=null;};
+  window.addEventListener("pointermove",pointerMove,true);
+  window.addEventListener("pointerup",pointerEnd);
+  window.addEventListener("pointercancel",pointerEnd);
+  return()=>{window.removeEventListener("pointermove",pointerMove,true);window.removeEventListener("pointerup",pointerEnd);window.removeEventListener("pointercancel",pointerEnd);};
+ },[bounded]);
  const moveDrag=(e:ReactPointerEvent<HTMLDivElement>)=>{if(!dragRef.current)return;setPanelHeight(Math.min(1400,Math.max(280,dragRef.current.startHeight+e.clientY-dragRef.current.startY)));};
  const stopDrag=(e:ReactPointerEvent<HTMLDivElement>)=>{dragRef.current=null;if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId);};
  const listingFor=(p:SiaiHomeRow)=>p.kind!=="company"?t.na:p.ipoFiling?t.ipoFiled:p.listing==="listed_parent"?t.listedParent:p.listing==="listed_company"?LISTED_COMPANY[lang]:t.notConfirmed;
