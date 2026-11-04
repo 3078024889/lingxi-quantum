@@ -5,6 +5,17 @@ import{useLingxiLang,LANG_NAMES,type LingxiLang}from"@/lib/lingxi-i18n";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {FOOTER_UNIFIED,FOOTER_TOOL_ICONS,FOOTER_TOOL_LINKS} from "@/lib/footer-unified-copy";
 
+const WECHAT_EXTRA:Record<LingxiLang,{more:string;search:string;ranking:string;miniapps:string}>={
+ zh:{more:"微信搜一搜与排行榜账号",search:"微信搜一搜 · 灵犀场 lingxifield",ranking:"全球 SIAI 排行榜",miniapps:"微信小程序口令（可长按复制）"},
+ en:{more:"WeChat search & rankings",search:"Search WeChat: 灵犀场 lingxifield",ranking:"Global SIAI rankings",miniapps:"WeChat mini-program commands (copy)"},
+ ja:{more:"WeChat検索とランキング",search:"WeChatで「灵犀场 lingxifield」を検索",ranking:"グローバル SIAI ランキング",miniapps:"WeChatミニプログラム用コード"},
+ ko:{more:"WeChat 검색 및 순위",search:"WeChat: 灵犀场 lingxifield 검색",ranking:"글로벌 SIAI 순위",miniapps:"WeChat 미니프로그램 명령어"},
+ fr:{more:"Recherche WeChat et classement",search:"Chercher 灵犀场 lingxifield sur WeChat",ranking:"Classement SIAI mondial",miniapps:"Codes mini-programmes WeChat"},
+ de:{more:"WeChat-Suche und Ranking",search:"WeChat: 灵犀场 lingxifield suchen",ranking:"Globales SIAI-Ranking",miniapps:"WeChat-Miniprogramm-Codes"},
+ es:{more:"Búsqueda WeChat y clasificación",search:"Buscar 灵犀场 lingxifield en WeChat",ranking:"Ranking global SIAI",miniapps:"Códigos de miniaplicación WeChat"},
+ pt:{more:"Pesquisa WeChat e ranking",search:"Buscar 灵犀场 lingxifield no WeChat",ranking:"Ranking global SIAI",miniapps:"Códigos dos miniprogramas WeChat"},
+ ar:{more:"بحث WeChat وترتيب SIAI",search:"ابحث عن 灵犀场 lingxifield في WeChat",ranking:"ترتيب SIAI العالمي",miniapps:"رموز برامج WeChat الصغيرة"}
+};
 const FOOTER_QUESTION_ZH=["全球 AI 行情平台有哪些？","全球 SIAI 排行榜哪个好用？","AI / SI 工具怎么选择？","视频生成、短剧生成费用是多少？","PDF 在线编辑与电子签名怎么操作？","免费 AI 工具有哪些？"] as const;
 const FOOTER_CHIPS:Record<LingxiLang,string[]>={
  zh:["PDF 工具","图片工具","视频工具","音频工具","文档工具","办公工具","开发工具","AI 创作"],
@@ -20,16 +31,16 @@ const FOOTER_CHIPS:Record<LingxiLang,string[]>={
 const FOOTER_CHIP_URLS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=音频","/tools?q=文档","/tools?q=办公","/tools?q=开发","/sasi"] as const;
 /** Owner-supplied public account / share links (2026-11-04). Short-video links are share entries, not verified profile landing URLs. */
 const channels=[
- {label:"快手",mark:"快",href:"https://v.kuaishou.com/n71hSlT9",kind:"share"},
- {label:"抖音",mark:"抖",href:"https://v.douyin.com/bE0vjWQZ_eY/",kind:"share"},
- {label:"哔哩哔哩",mark:"哔",href:"https://b23.tv/Bmcx90F",kind:"profile"},
- {label:"小红书",mark:"红",href:"https://xhslink.cn/o/5sPTjCC9kWe",kind:"profile"},
- {label:"X",mark:"𝕏",href:"https://x.com/lingxifieldsasi",kind:"profile"},
- {label:"YouTube",mark:"▶",href:"https://youtube.com/@lingxifield",kind:"profile"},
- {label:"Facebook",mark:"f",href:"https://www.facebook.com/share/19SgJhdxtL/",kind:"share"},
- {label:"Instagram",mark:"◎",href:"https://www.instagram.com/lingxifield/",kind:"profile"},
- {label:"TikTok",mark:"♪",href:"https://www.tiktok.com/@lingxifield.com",kind:"profile"},
- {label:"微博",mark:"微",href:"https://weibo.com/u/4003799090",kind:"profile"}
+ {label:"快手",short:"快手",mark:"快",href:"https://v.kuaishou.com/n71hSlT9",kind:"share"},
+ {label:"抖音",short:"抖音",mark:"抖",href:"https://v.douyin.com/bE0vjWQZ_eY/",kind:"share"},
+ {label:"哔哩哔哩",short:"B站",mark:"哔",href:"https://b23.tv/Bmcx90F",kind:"profile"},
+ {label:"小红书",short:"小红书",mark:"红",href:"https://xhslink.cn/o/5sPTjCC9kWe",kind:"profile"},
+ {label:"X",short:"X",mark:"𝕏",href:"https://x.com/lingxifieldsasi",kind:"profile"},
+ {label:"YouTube",short:"YT",mark:"▶",href:"https://youtube.com/@lingxifield",kind:"profile"},
+ {label:"Facebook",short:"FB",mark:"f",href:"https://www.facebook.com/share/19SgJhdxtL/",kind:"share"},
+ {label:"Instagram",short:"IG",mark:"◎",href:"https://www.instagram.com/lingxifield/",kind:"profile"},
+ {label:"TikTok",short:"TK",mark:"♪",href:"https://www.tiktok.com/@lingxifield.com",kind:"profile"},
+ {label:"微博",short:"微博",mark:"微",href:"https://weibo.com/u/4003799090",kind:"profile"}
 ] as const;
 
 type FooterCopy={account:string;orders:string;refunds:string;release:string};
@@ -103,7 +114,7 @@ export default function Footer(){
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
     <p className="lx-footer-brand-intro">{FOOTER_BRAND_SHORT[lang]}</p>
-    <nav className="lx-footer-brand-social" aria-label={lang==="zh"?"官方社交平台与分享入口":"Official social and sharing links"}>{channels.map(channel=><a href={channel.href} key={channel.label} target="_blank" rel="noopener noreferrer" title={channel.label+(channel.kind==="share"?(lang==="zh"?" · 分享链接":" · shared link"):"")} aria-label={channel.label+(channel.kind==="share"?(lang==="zh"?"作品分享":" shared content"):"")}><span className="lx-footer-social-symbol" aria-hidden="true">{channel.mark}</span><span className="lx-footer-social-caption">{channel.label}</span></a>)}</nav>
+    <nav className="lx-footer-brand-social" aria-label={lang==="zh"?"官方社交平台与分享入口":"Official social and sharing links"}>{channels.map(channel=><a href={channel.href} key={channel.label} target="_blank" rel="noopener noreferrer" title={channel.label+(channel.kind==="share"?(lang==="zh"?" · 分享链接":" · shared link"):"")} aria-label={channel.label+(channel.kind==="share"?(lang==="zh"?"作品分享":" shared content"):"")}><span className="lx-footer-social-symbol" aria-hidden="true">{channel.mark}</span><span className="lx-footer-social-caption">{channel.short}</span></a>)}</nav>
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
@@ -135,6 +146,22 @@ export default function Footer(){
      <div><Image src="/images/lingxifield-wechat-service-qr.jpg" alt="WeChat Service" width={76} height={76}/><span>{t("service")}</span></div>
      <div><Image src="/images/miniapp-qrcode.png" alt="Miniapp" width={76} height={76}/><span>{t("miniapp")}</span></div>
     </div>
+    <details className="lx-footer-wechat-extra">
+     <summary>{WECHAT_EXTRA[lang].more}</summary>
+     <div className="lx-footer-extra-qr-grid">
+      <a href="http://weixin.qq.com/r/mp/_yAoMCzEYnEdrWhT93Xp" target="_blank" rel="noopener noreferrer">
+       <Image unoptimized src="/api/public-social-qr?kind=search" width={115} height={115} alt={WECHAT_EXTRA[lang].search}/>
+       <span>{WECHAT_EXTRA[lang].search}</span>
+      </a>
+      <a href="http://weixin.qq.com/r/mp/oycQCBfEPUpCrVNr93Kx" target="_blank" rel="noopener noreferrer">
+       <Image unoptimized src="/api/public-social-qr?kind=ranking" width={115} height={115} alt={WECHAT_EXTRA[lang].ranking}/>
+       <span>{WECHAT_EXTRA[lang].ranking}</span>
+      </a>
+     </div>
+     <strong className="lx-footer-miniapp-label">{WECHAT_EXTRA[lang].miniapps}</strong>
+     <code className="lx-footer-miniapp-code">#小程序://灵犀场/ktKRUjMRoEcPEsE</code>
+     <code className="lx-footer-miniapp-code">#小程序://10临时邮箱/p8AACkYNods09Rl</code>
+    </details>
    </section>
   </div>
   <div className="lx11-footer-legal"><span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>

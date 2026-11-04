@@ -12,6 +12,7 @@ import {productAnswerHeadline} from "../lingxifield-ai-market/lib/market-result-
 import {localizedProductSummary} from "../lingxifield-ai-market/lib/market-product-locale";
 import {localizedCatalogFact} from "../lingxifield-ai-market/lib/market-fact-locale";
 import {globalRegionSummary} from "../lingxifield-ai-market/lib/region-presentation";
+import {supplementalRegionFor} from "@/app/siai/official-region-supplements";
 import {commercialEvidence} from "../lingxifield-ai-market/lib/market-commercial-evidence";
 import {localizedPaymentName} from "../lingxifield-ai-market/lib/market-localized-payment";
 import {SIAI_FACET_WORDS} from "../lib/siai-home-facet-labels";
@@ -224,7 +225,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const previewValue=(value:string)=>!hasFact(value)?"":lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
  const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>p.recordStatus==="source_preview"?previewValue(p[scope]):localizedCatalogFact(p.id,lang,scope,p[scope]);
  const displayStrength=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.strength):localizedProductSummary(p.id,lang)||p.strength||p.about;
- const displayRegion=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.region):lang==="zh"?p.region:globalRegionSummary(p.id,lang);
+ const displayRegion=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?(supplementalRegionFor(p.id,lang)||previewValue(p.region)):lang==="zh"?p.region:globalRegionSummary(p.id,lang);
  const displayCommercial=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.commercial):lang==="zh"?p.commercial:commercialEvidence(p.id,lang)?.condition||p.commercial;
  const displayPayment=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.payment):lang==="zh"?p.payment:p.payment.split(" · ").map(s=>localizedPaymentName(s,lang)).join(" · ");
  const factOrUnknown=(value:string)=>value.trim()||NO_SOURCE_COPY[lang];
