@@ -82,21 +82,23 @@ export function buildSearchOptimizedToolMetadata(slug: string, locale: SeoLocale
   if (!tool) return { title: "Tool not found｜工具未找到" };
   const base = toolSeo(slug);
   const title = TITLE_OVERRIDES[slug]?.[locale] || (locale === "zh" ? base.title : toolTitle(locale, tool));
+  // All public tool titles are absolute: root template must not append the brand twice.
+  const brandedTitle=/LINGXIFIELD|灵犀场/i.test(title)?title:`${title}${locale==="zh"?"｜灵犀场 LINGXIFIELD":" | LINGXIFIELD"}`;
   const description = toolDescription(locale, tool);
   const canonical = localePath(locale, `/tools/${slug}`);
   return {
-    title,
+    title:{absolute:brandedTitle},
     description,
     alternates: { canonical, languages: { ...Object.fromEntries(Object.entries(SEO_LOCALES).map(([key]) => [SEO_LOCALES[key as SeoLocale].hreflang, localePath(key as SeoLocale, `/tools/${slug}`)])), "x-default": localePath("zh", `/tools/${slug}`) } },
     openGraph: {
       images: SHARE_IMAGES,
       type: "website",
       url: `${SITE}${canonical}`,
-      title,
+      title:brandedTitle,
       description,
       siteName: "灵犀场 LINGXIFIELD",
     },
-    twitter: { card: "summary_large_image", images: [SHARE_IMAGE_URL], title, description },
+    twitter: { card: "summary_large_image", images: [SHARE_IMAGE_URL], title:brandedTitle, description },
     robots: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large", "max-video-preview": -1 },
   };
 }

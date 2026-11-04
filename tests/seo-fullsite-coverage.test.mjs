@@ -48,3 +48,23 @@ test("GEO file provides only canonical public entry links and protects private U
  assert(!llms.includes("fact.answer"));
  assert.match(llms,/Do not crawl private share links/);
 });
+
+test("public tool titles do not inherit a duplicate LINGXIFIELD brand suffix",()=>{
+ const layout=read("app/tools/layout.tsx");
+ const searchMetadata=read("lib/seo/search-tool-metadata.ts");
+ const dedicated=read("lib/tools/seo.ts");
+ assert.match(layout,/template:"%s"/);
+ assert.match(searchMetadata,/title:\{absolute:brandedTitle\}/);
+ assert.match(dedicated,/title:\{absolute:brandedTitle\}/);
+ assert.match(searchMetadata,/LINGXIFIELD\|灵犀场/);
+ assert.match(dedicated,/LINGXIFIELD\|灵犀场/);
+});
+test("language tool paths exclude permanently redirected image-to-pdf alias",()=>{
+ const locale=read("app/[locale]/tools/[slug]/page.tsx");
+ assert.match(locale,/filter\(tool=>tool\.slug!=="image-to-pdf-pro"\)/);
+});
+test("search FAQs never claim unverified search demand",()=>{
+ const content=read("lib/seo/search-intent-faq.ts");
+ assert.match(content,/具体操作和可用功能请以当前页面为准/);
+ assert(!content.includes("这些问题来自当前公开搜索结果中反复出现的真实搜索表达"));
+});
