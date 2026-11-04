@@ -468,3 +468,25 @@
  .lx-footer-v3 .lx11-footer-legal{justify-content:flex-start}
 }
 @media(prefers-reduced-motion:reduce){.lx-footer-v3 .lx-footer-tool-chips a{transition:none}}
+
+
+/* 20261104 persistent floating SIAI header: the real data table stays in
+   natural document flow. This overlay exposes no extra links or tab stops. */
+.siai-floating-header{position:sticky;top:101px;height:0;width:100%;min-width:0;z-index:25;pointer-events:none;visibility:hidden;opacity:0}
+.siai-floating-header.is-visible{visibility:visible;opacity:1}
+.siai-floating-viewport{position:relative;overflow:hidden;width:100%;height:57px;min-width:0;border:1px solid #c5d9f1;border-top:0;background:#e9f2fc;box-shadow:0 5px 13px rgba(25,69,129,.11)}
+.siai-floating-header .siai-home-table{margin:0;min-width:1860px!important;border-spacing:0;table-layout:fixed;transition:none;will-change:transform}
+.siai-floating-header .siai-home-table th{height:56px;padding:8px!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;border-bottom:1px solid #c6dcf6;box-shadow:none;top:auto!important}
+.siai-floating-pinned{position:absolute;z-index:5;top:0;height:56px;display:flex;align-items:center;padding:8px;font-size:14px;font-weight:750;color:#1c467b;background:#e9f2fc;border-bottom:1px solid #c6dcf6;box-sizing:border-box}
+.siai-floating-number{left:0;width:46px;justify-content:center}
+.siai-floating-company{left:46px;width:365px;box-shadow:4px 0 7px rgba(20,57,99,.08)}
+[dir="rtl"] .siai-floating-number{left:auto;right:0}
+[dir="rtl"] .siai-floating-company{left:auto;right:46px}
+@media(max-width:900px){
+ .siai-floating-header{top:89px}
+ .siai-floating-header .siai-home-table{min-width:1840px!important}
+ .siai-floating-viewport{height:55px}
+ .siai-floating-pinned{height:54px}
+}
+/* Absence of published facts must never be rendered as unrestricted regions. */
+.siai-home-table tbody td .siai-cell-preview{min-height:1.4em}
