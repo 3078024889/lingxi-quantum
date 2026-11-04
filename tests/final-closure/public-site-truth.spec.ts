@@ -13,10 +13,14 @@ for(const [i,locale]of locales.entries())test('public copy and controls '+locale
  await expect(overview).toHaveCount(1);
  await expect(overview).toContainText(expected.headline);
  await expect(overview).toContainText(expected.intro);
- await expect(overview).toContainText(expected.sasiDescription);
- await expect(overview).toContainText(expected.closingDescription);
+ // SASI is visible in its own concise row, not duplicated inside the ranking section.
+ await expect(footer.locator('.lx-footer-v3-sasi')).toContainText(expected.sasiDescription);
+ const brandSummary=footer.locator('.lx11-footer-brand .lx-footer-brand-intro');
+ await expect(brandSummary).toContainText('SIAI');
+ await expect(brandSummary).toContainText('SASI');
+ await expect(brandSummary).toContainText('100');
  await expect(overview.locator('.lx-footer-market li')).toHaveCount(expected.marketPoints.length);
- await expect(overview.locator('.lx-footer-tools-list p')).toHaveCount(expected.toolCategories.length);
+ await expect(overview.locator('.lx-footer-v3-toolstrip>a')).toHaveCount(expected.toolCategories.length);
  await expect(overview.locator('.lx-footer-search-list li')).toHaveCount(6);
  for(const point of expected.marketPoints)await expect(overview).toContainText(point);
  for(const tool of expected.toolCategories)await expect(overview).toContainText(tool.description);

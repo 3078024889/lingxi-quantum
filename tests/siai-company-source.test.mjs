@@ -13,7 +13,7 @@ test("publisher identity, listing, years and source links survive UI redesign",(
   "checkedAt:fact?marketProductReviewedAt(id):null"
  ])assert(catalog.includes(token),"Catalog missing "+token);
  for(const token of [
-  "p.creator?.role","p.creator?.source","listingFor(p)","p.listingSource",
+  "p.creator.role","p.creator.source","listingFor(p)","p.listingSource",
   "p.yearSource","p.checkedAt","p.companySource","visibleRows.map",
   "setPanelHeight","siai-home-table-flow","siai-home-table-bounded"
  ])assert(home.includes(token),"UI missing "+token);

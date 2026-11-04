@@ -1,0 +1,435 @@
+/* LINGXIFIELD /tools compact visual layout, 2026-11-04.
+ * Scoped to the actual tools index. The existing registry, search, pricing,
+ * navigation, category taxonomy and continuation flows are untouched. */
+/* Preserve the full original LINGXIFIELD brand inside the narrower tools rail.
+ * The original logo image and text are unchanged; only wrapping is adjusted. */
+@media (min-width:1024px) {
+ html:has(.lx-tools-compact) .lx11-brand-row {padding-inline:11px!important}
+ html:has(.lx-tools-compact) .lx11-brand {gap:8px!important;min-width:0!important}
+ html:has(.lx-tools-compact) .lx11-brand span {min-width:0!important;overflow:visible!important}
+ html:has(.lx-tools-compact) .lx11-brand b {
+  display:block!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:normal!important;
+  overflow:visible!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+ }
+ html:has(.lx-tools-compact) .lx11-link.is-active {
+  border:1px solid #dfd7f6!important;
+  background:linear-gradient(95deg,#eeebff,#f7f5ff)!important;
+  color:#292340!important;
+ }
+ html[data-theme="dark"]:has(.lx-tools-compact) .lx11-link.is-active {
+  border-color:#57516f!important;background:#302a40!important;color:#f1eaff!important;
+ }
+}
+/* Only the public tools directory gets the reference's narrower, fixed rail.
+ * Other routes keep the existing shell dimensions and logo asset. */
+@media (min-width:1024px) {
+  html:has(.lx-tools-compact) {
+    --lx-side:224px;
+    --lx-top:62px;
+  }
+}
+.lx-tools-compact {
+  min-width:0;
+  padding:16px clamp(16px,2.25vw,32px) 56px!important;
+  background:
+    radial-gradient(ellipse 68% 220px at 84% 0%,rgba(164,138,247,.11),transparent 80%),
+    linear-gradient(180deg,rgba(250,249,255,.94),rgba(251,252,255,.98) 320px,#fff 620px)!important;
+}
+.lx-tools-compact .lx11-wrap {
+  width:100%!important;
+  max-width:1510px!important;
+  min-width:0;
+  margin-inline:auto!important;
+}
+.lx-tools-compact .lx11-tools-hero {
+  min-height:0!important;
+  margin:0!important;
+  padding:4px 0 12px!important;
+  border:0!important;
+  background:transparent!important;
+}
+.lx-tools-compact .lx11-tools-hero>div {max-width:980px!important}
+.lx-tools-compact .lx11-tools-hero>div>span {
+  display:inline-flex;
+  min-height:26px;
+  align-items:center;
+  border-radius:999px;
+  padding:3px 12px;
+  background:#eee9ff;
+  color:#7355b5;
+  font-size:14px!important;
+  font-weight:700;
+}
+.lx-tools-compact .lx11-tools-hero h1 {
+  margin:9px 0 0!important;
+  color:var(--lx-ink)!important;
+  font-size:clamp(28px,3vw,38px)!important;
+  font-weight:800!important;
+  letter-spacing:-.03em!important;
+  line-height:1.18!important;
+}
+.lx-tools-compact .lx11-tools-hero p {
+  max-width:930px!important;
+  margin:6px 0 0!important;
+  color:var(--lx-muted)!important;
+  font-size:14px!important;
+  line-height:1.6!important;
+  font-weight:500!important;
+}
+.lx-tools-compact .lx11-tool-searchbar {
+  position:relative!important;
+  top:auto!important;
+  z-index:1;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:9px!important;
+  margin:0!important;
+  padding:0 0 11px!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.lx-tools-compact .lx11-tool-searchbox {
+  display:flex!important;
+  align-items:center!important;
+  width:min(840px,100%)!important;
+  max-width:100%!important;
+  height:46px!important;
+  min-height:46px!important;
+  margin:0!important;
+  padding:0 15px!important;
+  border:1px solid #b6a3ef!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 3px 12px rgba(111,89,209,.10)!important;
+}
+.lx-tools-compact .lx11-tool-searchbox:focus-within {
+  outline:2px solid rgba(114,88,217,.36)!important;
+  outline-offset:1px!important;
+}
+.lx-tools-compact .lx11-tool-searchbox input {
+  width:100%!important;
+  min-width:0!important;
+  height:42px!important;
+  font-size:14px!important;
+  color:var(--lx-ink)!important;
+}
+.lx-tools-compact .lx-tools-v124-categories {
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:7px!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  overscroll-behavior-x:contain;
+  scrollbar-width:thin;
+  scrollbar-color:#b9b1d9 transparent;
+  padding:3px 1px 8px!important;
+  margin:0!important;
+  -webkit-overflow-scrolling:touch;
+}
+.lx-tools-compact .lx-tools-v124-categories button {
+  flex:0 0 auto!important;
+  min-height:32px!important;
+  height:auto!important;
+  max-width:none!important;
+  padding:6px 14px!important;
+  border:1px solid #dfdeea!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.92)!important;
+  color:#4b5065!important;
+  font-size:14px!important;
+  font-weight:600!important;
+  line-height:1.3!important;
+  white-space:nowrap!important;
+  box-shadow:0 2px 6px rgba(34,41,72,.025)!important;
+}
+.lx-tools-compact .lx-tools-v124-categories button:hover {
+  border-color:#a99cd9!important;
+}
+.lx-tools-compact .lx-tools-v124-categories button.is-active {
+  border-color:#292b37!important;
+  background:#292b37!important;
+  color:#fff!important;
+}
+.lx-tools-compact .lx11-tool-group {
+  min-width:0!important;
+  padding:0 0 12px!important;
+  margin:12px 0 0!important;
+}
+.lx-tools-compact .lx-tools-v124-grid {
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:12px!important;
+  align-items:stretch!important;
+  grid-auto-rows:auto!important;
+  min-width:0!important;
+}
+.lx-tools-compact .lx-tools-v124-card {
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:44px minmax(0,1fr)!important;
+  align-items:start!important;
+  align-content:start!important;
+  column-gap:11px!important;
+  row-gap:0!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:100px!important;
+  max-height:none!important;
+  padding:13px 13px 12px!important;
+  overflow:visible!important;
+  border:1px solid #e8e6f0!important;
+  border-radius:17px!important;
+  background:rgba(255,255,255,.98)!important;
+  box-shadow:0 4px 14px rgba(58,66,111,.035)!important;
+  color:var(--lx-ink)!important;
+  text-align:start!important;
+  text-decoration:none!important;
+  transform:none!important;
+  transition:border-color .16s ease,box-shadow .16s ease!important;
+}
+.lx-tools-compact .lx-tools-v124-card:hover {
+  border-color:#b8a6ed!important;
+  box-shadow:0 9px 23px rgba(86,75,135,.09)!important;
+  transform:none!important;
+}
+.lx-tools-compact .lx-tools-v124-card:focus-visible {
+  outline:3px solid #8066ed!important;
+  outline-offset:2px!important;
+}
+.lx-tools-compact .lx-tools-v124-card .lx11-tool-cover {
+  display:flex!important;
+  flex:0 0 44px!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  width:44px!important;
+  min-width:44px!important;
+  max-width:44px!important;
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.lx-tools-compact .lx-tools-v124-card .lx-mini-icon-card {
+  display:inline-grid!important;
+  flex:0 0 44px!important;
+  width:44px!important;
+  min-width:44px!important;
+  max-width:44px!important;
+  height:44px!important;
+  min-height:44px!important;
+  max-height:44px!important;
+  margin:0!important;
+  border-radius:12px!important;
+  font-size:23px!important;
+}
+.lx-tools-compact .lx-tools-v124-card .lx11-tool-copy {
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0 25px 0 0!important;
+  background:transparent!important;
+}
+.lx-tools-compact .lx-tools-v124-card .lx11-tool-title-row {
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+.lx-tools-compact .lx-tools-v124-card .lx11-tool-title-row h3 {
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  color:var(--lx-ink)!important;
+  font-size:15px!important;
+  font-weight:750!important;
+  line-height:1.42!important;
+  letter-spacing:-.012em!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  overflow-wrap:anywhere!important;
+  text-overflow:clip!important;
+}
+.lx-tools-compact .lx-tools-v124-card .lx-tools-v124-desc {
+  display:block!important;
+  width:100%!important;
+  margin:4px 0 7px!important;
+  padding:0!important;
+  color:var(--lx-muted)!important;
+  font-size:14px!important;
+  font-weight:450!important;
+  line-height:1.48!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  max-height:none!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  text-overflow:clip!important;
+  overflow-wrap:anywhere!important;
+}
+.lx-tools-compact .lx-tools-compact-badges {
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:5px 6px!important;
+  width:100%!important;
+  margin-top:auto!important;
+  padding:0!important;
+}
+.lx-tools-compact .lx-tools-compact-badges .lx-tool-kind {
+  display:inline-flex!important;
+  flex:0 1 auto!important;
+  align-self:auto!important;
+  align-items:center!important;
+  width:auto!important;
+  min-height:23px!important;
+  margin:0!important;
+  padding:3px 8px!important;
+  border-radius:999px!important;
+  font-size:14px!important;
+  font-weight:650!important;
+  line-height:1.3!important;
+  white-space:normal!important;
+}
+.lx-tools-compact .lx-tools-v124-card .lx-tool-card-arrow {
+  position:absolute!important;
+  top:9px!important;
+  right:9px!important;
+  left:auto!important;
+  display:grid!important;
+  place-items:center!important;
+  width:23px!important;
+  min-width:23px!important;
+  height:23px!important;
+  min-height:23px!important;
+  padding:0!important;
+  margin:0!important;
+  border:1px solid #e4e3f3!important;
+  border-radius:999px!important;
+  background:#f7f5ff!important;
+  color:#6561c5!important;
+  font-size:16px!important;
+  line-height:1!important;
+  box-shadow:0 2px 5px rgba(75,67,136,.04)!important;
+}
+.lx-tools-compact-recent {
+  display:grid!important;
+  grid-template-columns:minmax(195px,1fr) minmax(0,2.75fr)!important;
+  gap:15px!important;
+  align-items:center!important;
+  min-width:0!important;
+  min-height:70px!important;
+  margin:5px 0 12px!important;
+  padding:9px 14px!important;
+  border:1px solid #dedaf2!important;
+  border-radius:15px!important;
+  background:rgba(248,247,255,.88)!important;
+  box-shadow:0 3px 13px rgba(72,65,150,.035)!important;
+}
+.lx-tools-compact-recent-head {min-width:0!important}
+.lx-tools-compact-recent-head h2 {font-size:15px!important;font-weight:750!important;line-height:1.4!important}
+.lx-tools-compact-recent-head p {margin:3px 0 0!important;font-size:14px!important;line-height:1.35!important}
+.lx-tools-compact-recent-list {
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:8px!important;
+  min-width:0!important;
+  overflow-x:auto!important;
+  padding:2px 1px 5px!important;
+  margin:0!important;
+  scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+}
+.lx-tools-compact-recent-item {
+  flex:0 0 auto!important;
+  min-width:210px!important;
+  max-width:300px!important;
+  margin:0!important;
+  padding:8px 11px!important;
+  border:1px solid #e9e7f0!important;
+  border-radius:12px!important;
+  background:#fff!important;
+}
+.lx-tools-compact-recent-item p {font-size:14px!important;line-height:1.4!important}
+.lx-tools-compact-recent-item p:first-child {font-size:14px!important;line-height:1.35!important}
+.lx-tools-compact-recent-item p:nth-child(2) {font-size:14px!important;line-height:1.35!important}
+.lx-tools-compact-recent-actions {margin-top:5px!important;gap:6px 12px!important}
+.lx-tools-compact-recent-actions a,
+.lx-tools-compact-recent-actions button {font-size:14px!important;line-height:1.35!important}
+.lx-tools-compact-recent-item p[role="alert"] {font-size:14px!important}
+.lx-tools-compact .lx11-tool-empty {font-size:14px!important}
+.lx-tools-compact .lx-tools-v124-categories button:focus-visible,
+.lx-tools-compact-recent a:focus-visible,
+.lx-tools-compact-recent button:focus-visible {
+  outline:2px solid #8066ed!important;outline-offset:2px!important;
+}
+@media(max-width:1320px) {
+  .lx-tools-compact .lx-tools-v124-grid {grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:1100px) {
+  .lx-tools-compact .lx-tools-v124-grid {grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .lx-tools-compact-recent {grid-template-columns:minmax(0,1fr)!important}
+}
+@media(max-width:640px) {
+  .lx-tools-compact {padding:14px 14px 42px!important}
+  .lx-tools-compact .lx11-tools-hero {padding:0 0 11px!important}
+  .lx-tools-compact .lx11-tools-hero h1 {font-size:28px!important}
+  .lx-tools-compact .lx-tools-v124-grid {grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+  .lx-tools-compact .lx-tools-v124-card {padding:12px!important;grid-template-columns:42px minmax(0,1fr)!important;min-height:88px!important}
+  .lx-tools-compact .lx-tools-v124-card .lx11-tool-cover,
+  .lx-tools-compact .lx-tools-v124-card .lx-mini-icon-card {width:42px!important;min-width:42px!important;max-width:42px!important;height:42px!important;min-height:42px!important;max-height:42px!important}
+  .lx-tools-compact .lx-tools-v124-card .lx11-tool-title-row h3 {font-size:15px!important}
+  .lx-tools-compact .lx-tools-v124-card .lx11-tool-copy {padding-inline-end:22px!important;padding-right:22px!important}
+  .lx-tools-compact-recent {padding:9px 11px!important}
+}
+html[data-theme="dark"] .lx-tools-compact {
+  background:linear-gradient(180deg,#171624,#11121a 450px,#101116)!important;
+}
+html[data-theme="dark"] .lx-tools-compact .lx11-tools-hero>div>span {
+  background:#2d2647!important;color:#e1cffe!important;
+}
+html[data-theme="dark"] .lx-tools-compact .lx11-tool-searchbox,
+html[data-theme="dark"] .lx-tools-compact .lx-tools-v124-card,
+html[data-theme="dark"] .lx-tools-compact-recent-item {
+  background:#20212c!important;border-color:#404154!important;
+}
+html[data-theme="dark"] .lx-tools-compact .lx-tools-v124-categories button {
+  background:#242532!important;border-color:#454658!important;color:#d6d8e5!important;
+}
+html[data-theme="dark"] .lx-tools-compact .lx-tools-v124-categories button.is-active {
+  background:#e0d6ff!important;color:#28203f!important;border-color:#e0d6ff!important;
+}
+html[data-theme="dark"] .lx-tools-compact-recent {
+  background:#242331!important;border-color:#484358!important;
+}
+html[data-theme="dark"] .lx-tools-compact .lx-tools-v124-card .lx-tool-card-arrow {
+  background:#302d47!important;border-color:#4c4671!important;color:#e1d7ff!important;
+}
+html[dir="rtl"] .lx-tools-compact .lx-tools-v124-card .lx11-tool-copy {
+  padding-left:25px!important;padding-right:0!important;
+}
+html[dir="rtl"] .lx-tools-compact .lx-tools-v124-card .lx-tool-card-arrow {
+  right:auto!important;left:9px!important;
+}
+@media(prefers-reduced-motion:reduce) {
+  .lx-tools-compact .lx-tools-v124-card {transition:none!important}
+}

@@ -1,3 +1,4 @@
+import {buildSearchOptimizedToolMetadata} from "@/lib/seo/search-tool-metadata";
 import LxText from "@/components/LxText";
 import AdvancedToolPage from "@/components/tools/AdvancedToolPage";
 import PdfToImageWorkbench from "@/components/tools/PdfToImageWorkbench";
@@ -6,3 +7,4 @@ export default function Page(){return <AdvancedToolPage
  intro={<LxText zh="选择页码，转换成图片，检查结果后再保存。" en="Select pages, convert to images, then review before saving." ja="ページを選んで画像に変換し、確認して保存します。" ko="페이지를 선택해 이미지로 변환하고 확인한 뒤 저장하세요." fr="Choisissez les pages, convertissez-les en images puis vérifiez avant d’enregistrer." de="Seiten auswählen, in Bilder umwandeln und vor dem Speichern prüfen." es="Selecciona páginas, convierte a imágenes y revisa antes de guardar." pt="Selecione páginas, converta em imagens e confira antes de salvar." ar="حدد الصفحات وحوّلها إلى صور ثم راجعها قبل الحفظ."/>}>
  <PdfToImageWorkbench/>
  </AdvancedToolPage>}
+export const metadata=buildSearchOptimizedToolMetadata("pdf-to-jpg","zh");

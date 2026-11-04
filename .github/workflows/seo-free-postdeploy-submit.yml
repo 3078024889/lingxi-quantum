@@ -1,0 +1,88 @@
+name: LINGXIFIELD Free Post-Deploy Search Submission
+on:
+  deployment_status:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxifield-free-search-submit
+  cancel-in-progress: false
+jobs:
+  notify:
+    name: verify-live-then-notify-IndexNow-and-Baidu
+    # PRs never submit indexing notifications. A production deployment must be successful.
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout current default branch, never a preview branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Pin Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+      - name: Reject non-production and stale deployment notifications
+        id: eligibility
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          DEPLOYED_SHA: ${{ github.event.deployment.sha }}
+          DEPLOY_ENV: ${{ github.event.deployment.environment }}
+        run: |
+          if [ "$EVENT" = 'deployment_status' ]; then
+            if [[ "${DEPLOY_ENV,,}" != *production* ]]; then
+              echo 'Not a production deployment: skip'; echo 'eligible=false' >> "$GITHUB_OUTPUT"; exit 0
+            fi
+            if [ -z "$DEPLOYED_SHA" ] || [ "$DEPLOYED_SHA" != "$(git rev-parse HEAD)" ]; then
+              echo 'Deployed SHA is not the current main: skip'; echo 'eligible=false' >> "$GITHUB_OUTPUT"; exit 0
+            fi
+          fi
+          echo 'eligible=true' >> "$GITHUB_OUTPUT"
+      - name: Wait for both real domain SEO endpoints to pass
+        if: steps.eligibility.outputs.eligible == 'true'
+        shell: bash
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if node scripts/seo/live-postdeploy-check.mjs; then
+              echo 'LIVE_INDEXABILITY_PASS'; exit 0
+            fi
+            if [ "$attempt" -lt 5 ]; then sleep 20; fi
+          done
+          echo '::error::Live canonical / robots / sitemap checks failed; submit nothing.'
+          exit 1
+      - name: Notify Bing, Yandex, Naver, Seznam, Yep and other IndexNow participants (.com)
+        if: steps.eligibility.outputs.eligible == 'true'
+        env:
+          INDEXNOW_SITE: https://lingxifield.com
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: node scripts/seo/indexnow-submit-hostmap.mjs
+      - name: Notify IndexNow participants (.cn)
+        if: steps.eligibility.outputs.eligible == 'true'
+        env:
+          INDEXNOW_SITE: https://lingxifield.cn
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: node scripts/seo/indexnow-submit-hostmap.mjs
+      - name: Submit .com sitemap URLs to Baidu only with a verified site token
+        if: steps.eligibility.outputs.eligible == 'true'
+        env:
+          BAIDU_SITE: https://lingxifield.com
+          BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN_COM }}
+        shell: bash
+        run: |
+          if [ -z "$BAIDU_TOKEN" ]; then echo 'BAIDU_COM=SKIP_TOKEN_NOT_CONFIGURED'; exit 0; fi
+          node scripts/seo/baidu-submit.mjs
+      - name: Submit .cn sitemap URLs to Baidu only with a verified site token
+        if: steps.eligibility.outputs.eligible == 'true'
+        env:
+          BAIDU_SITE: https://lingxifield.cn
+          BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN_CN }}
+        shell: bash
+        run: |
+          if [ -z "$BAIDU_TOKEN" ]; then echo 'BAIDU_CN=SKIP_TOKEN_NOT_CONFIGURED'; exit 0; fi
+          node scripts/seo/baidu-submit.mjs
+      # Google discovers sitemaps from robots.txt / Search Console; its old sitemap
+      # ping endpoint is retired and its Indexing API cannot be used for these tools.

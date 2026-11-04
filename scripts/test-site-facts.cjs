@@ -21,5 +21,15 @@ for(let i=1;i<localeKinds.length;i++)assert.deepEqual(localeKinds[i],localeKinds
 const freeCount=localeKinds[0].filter(kind=>kind.startsWith('free')).length;
 assert(freeCount>0&&freeCount<=facts.GEO_TOOL_SLUGS.length,'Free-tool classification count must remain internally valid');
 
-const {buildToolMetadata}=load('lib/tools/seo.ts');for(const slug of facts.GEO_TOOL_SLUGS){const meta=buildToolMetadata(slug);assert.equal(typeof meta.title,'string');assert.equal(typeof meta.description,'string');assert(meta.description.length>0)}
+const {buildToolMetadata}=load('lib/tools/seo.ts');
+for(const slug of facts.GEO_TOOL_SLUGS){
+ const meta=buildToolMetadata(slug);
+ // Next.js accepts both simple titles and absolute titles that bypass root templates.
+ const title=typeof meta.title==='string'?meta.title:meta.title&&typeof meta.title==='object'&&typeof meta.title.absolute==='string'?meta.title.absolute:null;
+ assert(title&&title.trim(),`missing public tool title: ${slug}`);
+ assert((title.match(/灵犀场/g)||[]).length<=1,`duplicate Chinese brand: ${slug}`);
+ assert((title.match(/LINGXIFIELD/g)||[]).length<=1,`duplicate Latin brand: ${slug}`);
+ assert.equal(typeof meta.description,'string');
+ assert(meta.description.length>0);
+}
 const response=load('app/llms.txt/route.ts').GET();response.text().then(s=>{assert(s.includes('CNY')&&s.includes('USD'));assert(s.includes('Paid processing'));assert(s.includes('Not open yet'));console.log('PASS: full tool catalog, six public pages, nine languages, paid/free/disabled distinctions, both hosts and actual llms.txt output.');}).catch(e=>{console.error(e);process.exitCode=1});
