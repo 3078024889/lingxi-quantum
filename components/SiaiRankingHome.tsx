@@ -68,13 +68,21 @@ const PREVIEW_DATE:Record<LingxiLang,string>={zh:"资料更新日期",en:"Update
 const PREVIEW_RAW_LABEL:Record<LingxiLang,string>={zh:"",en:"Source summary (Chinese): ",ja:"資料要約（中国語）：",ko:"출처 요약(중국어): ",fr:"Résumé de source (chinois) : ",de:"Quellenzusammenfassung (Chinesisch): ",es:"Resumen de fuente (chino): ",pt:"Resumo da fonte (chinês): ",ar:"ملخص المصدر (بالصينية): "};
 const PREVIEW_MISSING:Record<LingxiLang,string>={zh:"尚无可靠资料",en:"No reliable information",ja:"信頼できる資料なし",ko:"확인된 정보 없음",fr:"Information non disponible",de:"Keine verlässlichen Angaben",es:"Sin información fiable",pt:"Sem informação confiável",ar:"لا تتوفر معلومات موثوقة"};
 const REVIEWED_COPY:Record<LingxiLang,string>={zh:"资料更新日期",en:"Updated",ja:"更新日",ko:"업데이트 날짜",fr:"Mis à jour le",de:"Aktualisiert",es:"Actualizado",pt:"Atualizado em",ar:"تاريخ التحديث"};
+const VIEW_COPY:Record<LingxiLang,{expand:string;exit:string}>={
+ zh:{expand:"⛶ 全屏查看榜单",exit:"↙ 退出全屏"},en:{expand:"⛶ Expand rankings",exit:"↙ Exit full screen"},
+ ja:{expand:"⛶ 全画面表示",exit:"↙ 全画面を終了"},ko:{expand:"⛶ 전체 화면",exit:"↙ 전체 화면 종료"},
+ fr:{expand:"⛶ Plein écran",exit:"↙ Quitter le plein écran"},de:{expand:"⛶ Vollbild",exit:"↙ Vollbild schließen"},
+ es:{expand:"⛶ Pantalla completa",exit:"↙ Salir de pantalla completa"},pt:{expand:"⛶ Tela cheia",exit:"↙ Sair da tela cheia"},
+ ar:{expand:"⛶ عرض كامل",exit:"↙ إنهاء العرض الكامل"}
+};
 function short(s:string,max=150){return s.length>max?s.slice(0,max-1).trimEnd()+"…":s;}
 function Source({href,label}:{href:string|null;label:string}){return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className="siai-source">{label} ↗</a>:null;}
 
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang],ui=SIAI_FACET_WORDS[lang];
  const topRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
- const [tableWidth,setTableWidth]=useState(2200);
+ const [tableWidth,setTableWidth]=useState(1640);
+ const [fullscreen,setFullscreen]=useState(false);
  const [query,setQuery]=useState(""),[category,setCategory]=useState("*"),[expanded,setExpanded]=useState<string|null>(null);
  const [task,setTask]=useState<TaskFacet>("all"),[payment,setPayment]=useState<PaymentFacet>("any");
  const [evidence,setEvidence]=useState<EvidenceFacet>("all"),[sort,setSort]=useState<MarketOrder>("oldest");
@@ -91,6 +99,14 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const label=(zh:string,en:string)=>lang==="zh"?zh:(RANKING_NEW_UI[lang]?.[zh]||en);
  const sync=(from:"top"|"table")=>{const a=from==="top"?topRef.current:gridRef.current,b=from==="top"?gridRef.current:topRef.current;if(a&&b&&Math.abs(a.scrollLeft-b.scrollLeft)>1)b.scrollLeft=a.scrollLeft;};
  useEffect(()=>{const v=gridRef.current;if(!v)return;const measure=()=>setTableWidth(v.scrollWidth);measure();const ro=typeof ResizeObserver==="undefined"?null:new ResizeObserver(measure);ro?.observe(v);if(v.firstElementChild)ro?.observe(v.firstElementChild);window.addEventListener("resize",measure);return()=>{ro?.disconnect();window.removeEventListener("resize",measure);};},[shown.length,lang]);
+ useEffect(()=>{
+  if(!fullscreen)return;
+  const original=document.body.style.overflow;
+  document.body.style.overflow="hidden";
+  const onEscape=(e:KeyboardEvent)=>{if(e.key==="Escape")setFullscreen(false)};
+  window.addEventListener("keydown",onEscape);
+  return()=>{document.body.style.overflow=original;window.removeEventListener("keydown",onEscape)};
+ },[fullscreen]);
  useEffect(()=>{if(!expanded)return;dialogRef.current?.focus();const esc=(e:KeyboardEvent)=>{if(e.key==="Escape")setExpanded(null)};window.addEventListener("keydown",esc);return()=>window.removeEventListener("keydown",esc);},[expanded]);
  const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
  const previewValue=(value:string)=>value==="尚无可靠资料"?PREVIEW_MISSING[lang]:lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
@@ -108,15 +124,16 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
      {capabilityProfile(p.id)?.capabilities.slice(0,3).map((cap,i)=><p key={i}><b>{cap.name}：</b>{cap.outcome}</p>)}
      <a href={capabilityProfile(p.id)?.capabilities[0].source} target="_blank" rel="noopener noreferrer">查看官方功能说明 ↗</a>
     </div>}
-    <dl>{p.legal&&<div><dt>{p.legalScope==="group_parent"?t.parent:t.legal}</dt><dd>{p.legal}</dd></div>}<div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div><div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div><div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div><div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div><div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div><div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div></dl>
+    <dl><div><dt>{t.company}</dt><dd>{p.company}</dd></div><div><dt>{t.founder}</dt><dd>{p.creator?(lang==="zh"?p.creator.zh:p.creator.en):"—"}</dd></div><div><dt>{t.founded}</dt><dd>{p.year||"—"}</dd></div>{p.legal&&<div><dt>{p.legalScope==="group_parent"?t.parent:t.legal}</dt><dd>{p.legal}</dd></div>}<div><dt>{t.free}</dt><dd>{displayFact(p,"free")}</dd></div><div><dt>{t.price}</dt><dd>{displayFact(p,"price")}</dd></div><div><dt>{t.region}</dt><dd>{displayRegion(p)}</dd></div><div><dt>{t.payment}</dt><dd>{displayPayment(p)}</dd></div><div><dt>{t.models}</dt><dd>{displayFact(p,"models")}</dd></div><div><dt>{t.license}</dt><dd>{displayCommercial(p)}</dd></div></dl>
     <h3>{t.sourceHeading}</h3><div className="siai-home-sources">{[[p.brandSource,t.official],[p.companySource,t.company],[p.creator?.source,t.founder],[p.legalSource,t.legal],[p.listingSource,t.listed],[p.yearSource,t.founded],[p.freeSource,t.free],[p.priceSource,t.price],[p.regionSource,t.region],[p.paymentSource,t.payment],[p.modelsSource,t.models],[p.commercialSource,t.license]].filter((x):x is [string,string]=>typeof x[0]==="string"&&/^https:\/\//.test(x[0])).map(([href,label])=><a key={label+href} href={href} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
     <div className="siai-detail-actions"><a className="siai-detail-primary-link" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><a className="siai-detail-primary-link" href={claimUrl(p)}>{label("厂商认领","Claim product")} ↗</a></div>
    </section>;
- return <main className="siai-home" lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
+ return <main className={fullscreen?"siai-home siai-home-fullscreen":"siai-home"} lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
   <header className="siai-home-head"><p className="siai-kicker">LINGXIFIELD · GLOBAL SI AI</p><h1>{t.title}</h1><p>{t.subtitle}</p></header>
   <div className="siai-home-controls">
    <label className="siai-home-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}/></label>
-   <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a></div>
+   <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a>
+    <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={()=>setFullscreen(v=>!v)}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
   </div>
   <div className="siai-home-four-filters">
    <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
@@ -136,7 +153,6 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     </label>
    </div></nav>
   </div>
-  <details className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
    {compareIds.length>0&&<aside className="siai-compare-toolbar" aria-label={ui.selected}>
    <strong>{ui.selected} ({compareIds.length}/{MAX_COMPARISONS})</strong>
    <div>{compared.map(p=><button key={p.id} type="button" onClick={()=>toggleCompare(p.id)} aria-label={ui.remove+" "+p.name}>{p.name} ×</button>)}</div>
@@ -164,30 +180,27 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
      {compared.map(p=><td key={p.id}>{value(p)}<Source href={source(p)} label={t.source}/></td>)}</tr>)}
    </tbody></table></div>
   </section>}
-  <SiaiSearchDiscovery variant="ranking"/>
   <div className="siai-home-top-track"><span aria-hidden="true">↔</span><span className="siai-scroll-hint">{label("横向查看全部栏目","Scroll horizontally to see all columns")}</span><div className="siai-home-top-scroll" ref={topRef} onScroll={()=>sync("top")} tabIndex={0} aria-label={label("顶部横向滚动条","Top horizontal scrollbar")}><div style={{width:tableWidth,height:1}}/></div></div>
   <div className="siai-home-table-scroll" ref={gridRef} onScroll={()=>sync("table")} tabIndex={0} aria-label={t.title}>
    <table className="siai-home-table">
     <thead><tr><th scope="col">{lang==="zh"?"序号":"#"}</th><th scope="col">{t.tool}</th><th scope="col">{t.strength}</th><th scope="col">{t.free}</th><th scope="col">{t.price}</th><th scope="col">{t.region}</th><th scope="col">{t.payment}</th><th scope="col">{t.models}</th><th scope="col">{t.license}</th><th scope="col">{t.action}</th></tr></thead>
     <tbody>
      {shown.map((p,i)=>{
-       const listing=p.kind!=="company"?t.na:p.ipoFiling?t.ipoFiled:p.listing==="listed_parent"?t.listedParent:p.listing==="listed_company"?LISTED_COMPANY[lang]:t.notConfirmed;
        return <Fragment key={p.id}><tr className="siai-home-tr">
         <td>{i+1}</td>
         <td className="siai-home-identity"><strong>{p.name}</strong>{p.recordStatus==="source_preview"&&<small className="siai-checked-date">{PREVIEW_COPY[lang]}</small>}<dl>
          <div><dt>{p.kind==="company"?t.company:t.project}</dt><dd>{p.company}</dd></div>
-         <div><dt>{p.creator?.role==='founder'?t.founder:p.creator?.role==='project_creator'?t.projectCreator:t.leadAuthor}</dt><dd>{p.creator?(lang==="zh"?p.creator.zh:p.creator.en):"—"}<Source href={p.creator?.source||null} label={t.source}/></dd></div>
-         <div><dt>{t.listed}</dt><dd>{listing}</dd></div>
-         <div><dt>{t.founded}</dt><dd>{p.year||"—"}</dd></div>
-         {p.checkedAt&&<div><dt>{p.recordStatus==="source_preview"?PREVIEW_DATE[lang]:REVIEWED_COPY[lang]}</dt><dd><time dateTime={p.checkedAt}>{p.checkedAt}</time></dd></div>}
+         
+         
+         
         </dl></td>
-        <td><strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),100)}</strong></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"price")}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayRegion(p)}>{short(displayRegion(p),100)}</span><Source href={p.regionSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayPayment(p)}>{short(displayPayment(p),88)}</span><Source href={p.paymentSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"models")}>{short(displayFact(p,"models"),95)}</span></td>
-        <td><span className="siai-cell-preview" title={displayCommercial(p)}>{short(displayCommercial(p),100)}</span><Source href={p.commercialSource} label={t.source}/></td>
+        <td><strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),75)}</strong></td>
+        <td><span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),75)}</span><Source href={p.freeSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayFact(p,"price")}>{short(displayFact(p,"price"),75)}</span><Source href={p.priceSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayRegion(p)}>{short(displayRegion(p),75)}</span><Source href={p.regionSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayPayment(p)}>{short(displayPayment(p),75)}</span><Source href={p.paymentSource} label={t.source}/></td>
+        <td><span className="siai-cell-preview" title={displayFact(p,"models")}>{short(displayFact(p,"models"),75)}</span></td>
+        <td><span className="siai-cell-preview" title={displayCommercial(p)}>{short(displayCommercial(p),75)}</span><Source href={p.commercialSource} label={t.source}/></td>
         <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button>
         <button type="button" className={compareIds.includes(p.id)?"siai-compare-selected":""} onClick={()=>toggleCompare(p.id)}
          disabled={!compareIds.includes(p.id)&&compareIds.length>=MAX_COMPARISONS}
@@ -200,6 +213,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </table>
   </div>
   {shown.length===0&&<p className="siai-home-empty">{t.noResults}</p>}
+  <details className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
+  <SiaiSearchDiscovery variant="ranking"/>
    {selectedRow&&<div className="siai-detail-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setExpanded(null);}}><div className="siai-detail-modal" role="dialog" aria-modal="true" aria-label={selectedRow.name+" · "+t.details} tabIndex={-1} ref={dialogRef}>{detailPanel(selectedRow)}</div></div>}
 
  </main>;
