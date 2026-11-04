@@ -72,6 +72,7 @@ export default function Footer(){
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
+    <Link href="/siai">{c.rankSub}</Link>
     {discovery.topics.map((topic,i)=><Link key={topic.q} href={"/siai#siai-search-ranking-"+i}>{topic.q}</Link>)}
     <Link href={"/siai/claim?lang="+lang}>{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</Link>
    </nav>
