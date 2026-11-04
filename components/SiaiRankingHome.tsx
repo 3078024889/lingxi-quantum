@@ -63,7 +63,7 @@ const CANDIDATE_CATEGORIES:Record<LingxiLang,Record<string,string>>={
  ar:{"编程":"البرمجة","设计":"التصميم","演示":"العروض التقديمية","视频":"الفيديو","图片":"الصور","文档":"المستندات","视频剪辑":"تحرير الفيديو","综合助手":"مساعد عام","聚合模型":"مجمع نماذج","图片视频":"الصور والفيديو","图片设计":"تصميم الصور","多模态创作":"إنشاء متعدد الوسائط","AI视频":"فيديو SI/AI","学术研究":"بحث أكاديمي","模型API":"واجهات النماذج"}
 };
 const LISTED_COMPANY:Record<LingxiLang,string>={zh:"公司已上市",en:"Publicly listed company",ja:"上場企業",ko:"상장 회사",fr:"Entreprise cotée",de:"Börsennotiertes Unternehmen",es:"Empresa cotizada",pt:"Empresa listada",ar:"شركة مدرجة"};
-const PREVIEW_COPY:Record<LingxiLang,string>={zh:"官网资料 · 内容补充中",en:"Publisher information · details being added",ja:"公式資料・内容を更新中",ko:"공식 제품 정보 · 내용 업데이트 중",fr:"Informations éditeur · détails en cours",de:"Herstellerinformationen · Details folgen",es:"Información del proveedor · más detalles próximamente",pt:"Informações do fornecedor · detalhes em atualização",ar:"معلومات الناشر · يجري استكمال التفاصيل"};
+const PREVIEW_COPY:Record<LingxiLang,string>={zh:"来源预览",en:"Source preview",ja:"情報プレビュー",ko:"출처 미리보기",fr:"Aperçu des sources",de:"Quellenvorschau",es:"Vista previa de fuentes",pt:"Prévia de fontes",ar:"معاينة المصادر"};
 const PREVIEW_DATE:Record<LingxiLang,string>={zh:"资料更新日期",en:"Updated",ja:"更新日",ko:"업데이트 날짜",fr:"Mis à jour le",de:"Aktualisiert",es:"Actualizado",pt:"Atualizado em",ar:"تاريخ التحديث"};
 const PREVIEW_RAW_LABEL:Record<LingxiLang,string>={zh:"",en:"Source summary (Chinese): ",ja:"資料要約（中国語）：",ko:"출처 요약(중국어): ",fr:"Résumé de source (chinois) : ",de:"Quellenzusammenfassung (Chinesisch): ",es:"Resumen de fuente (chino): ",pt:"Resumo da fonte (chinês): ",ar:"ملخص المصدر (بالصينية): "};
 const PREVIEW_MISSING:Record<LingxiLang,string>={zh:"尚无可靠资料",en:"No reliable information",ja:"信頼できる資料なし",ko:"확인된 정보 없음",fr:"Information non disponible",de:"Keine verlässlichen Angaben",es:"Sin información fiable",pt:"Sem informação confiável",ar:"لا تتوفر معلومات موثوقة"};
@@ -87,13 +87,24 @@ const PAGE_COPY:Record<LingxiLang,{size:string;page:string;of:string;prev:string
  ar:{size:"صفوف لكل صفحة",page:"الصفحة",of:"من",prev:"السابق",next:"التالي",first:"الأولى",last:"الأخيرة",showing:"عرض",units:"سجلات",panel:"ارتفاع قابل للتعديل",pageFlow:"صفحة كاملة",resize:"اسحب لتغيير ارتفاع القائمة"}
 };
 function short(s:string,max=150){return s.length>max?s.slice(0,max-1).trimEnd()+"…":s;}
-function Source({href,label}:{href:string|null;label:string}){return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className="siai-source">{label} ↗</a>:null;}
+function Source({href,label,compact=false}:{href:string|null;label:string;compact?:boolean}){return href&&/^https:\/\//.test(href)?<a href={href} target="_blank" rel="nofollow noopener noreferrer" className={compact?"siai-source siai-source-compact":"siai-source"} aria-label={label} title={label}>{compact?"↗":label+" ↗"}</a>:null;}
+// A favicon is fetched for the verified product website host, never from mockup assets.
+// If the publisher has no usable favicon, show a neutral monogram, not another brand's logo.
+function SiaiBrandLogo({website,name}:{website:string;name:string}){
+ const [failed,setFailed]=useState(false);
+ let host:string|null=null;
+ try{const u=new URL(website);if(u.protocol==="https:")host=u.hostname;}catch{}
+ useEffect(()=>setFailed(false),[website]);
+ const initials=name.trim().slice(0,2).toUpperCase()||"SI";
+ return <span className="siai-brand-logo" aria-hidden="true">{host&&!failed?<img key={host} src={"https://www.google.com/s2/favicons?domain="+encodeURIComponent(host)+"&sz=64"} alt="" width={36} height={36} loading="lazy" onError={()=>setFailed(true)}/>:<span className="siai-brand-monogram">{initials}</span>}</span>;
+}
 
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang],ui=SIAI_FACET_WORDS[lang];
- const topRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
+ const topRef=useRef<HTMLDivElement>(null),bottomRef=useRef<HTMLDivElement>(null),headingRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
  const [tableWidth,setTableWidth]=useState(1640);
  const [fullscreen,setFullscreen]=useState(false);
+ const [showFloatingColumns,setShowFloatingColumns]=useState(false);
  const [page,setPage]=useState(1),[pageSize,setPageSize]=useState<20|50|100>(100);
  const [pageDraft,setPageDraft]=useState("1");
  const [bounded,setBounded]=useState(false),[panelHeight,setPanelHeight]=useState(620);
@@ -148,19 +159,38 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const selectedRow=expanded?rows.find(p=>p.id===expanded):null;
  const claimUrl=(p?:SiaiHomeRow)=>"/siai/claim?lang="+lang+(p?"&product="+encodeURIComponent(p.id)+"&name="+encodeURIComponent(p.name):"");
  const label=(zh:string,en:string)=>lang==="zh"?zh:(RANKING_NEW_UI[lang]?.[zh]||en);
- const sync=(from:"top"|"table")=>{const a=from==="top"?topRef.current:gridRef.current,b=from==="top"?gridRef.current:topRef.current;if(a&&b&&Math.abs(a.scrollLeft-b.scrollLeft)>1)b.scrollLeft=a.scrollLeft;};
+ const sync=(from:"top"|"table"|"bottom"|"heading")=>{
+  const current=from==="top"?topRef.current:from==="bottom"?bottomRef.current:from==="heading"?headingRef.current:gridRef.current;
+  if(!current)return;
+  for(const other of [topRef.current,gridRef.current,bottomRef.current,headingRef.current]){
+   if(other&&other!==current&&Math.abs(other.scrollLeft-current.scrollLeft)>1)other.scrollLeft=current.scrollLeft;
+  }
+ };
+ useEffect(()=>{
+  const check=()=>{
+   const node=gridRef.current;
+   if(!node||bounded){setShowFloatingColumns(false);return;}
+   const rect=node.getBoundingClientRect();
+   setShowFloatingColumns(rect.top<122&&rect.bottom>165);
+  };
+  window.addEventListener("scroll",check,{passive:true});
+  window.addEventListener("resize",check);
+  check();
+  return()=>{window.removeEventListener("scroll",check);window.removeEventListener("resize",check);};
+ },[bounded,fullscreen,page,pageSize]);
  useEffect(()=>{const v=gridRef.current;if(!v)return;const measure=()=>setTableWidth(v.scrollWidth);measure();const ro=typeof ResizeObserver==="undefined"?null:new ResizeObserver(measure);ro?.observe(v);if(v.firstElementChild)ro?.observe(v.firstElementChild);window.addEventListener("resize",measure);return()=>{ro?.disconnect();window.removeEventListener("resize",measure);};},[shown.length,lang]);
  useEffect(()=>{
-  if(!fullscreen)return;
-  const original=document.body.style.overflow;
-  document.body.style.overflow="hidden";
+  // Wide mode never locks the body's wheel scrolling or hides later sections.
+  document.body.classList.toggle("siai-wide-mode",fullscreen);
+  if(!fullscreen)return()=>document.body.classList.remove("siai-wide-mode");
   const onEscape=(e:KeyboardEvent)=>{if(e.key==="Escape")setFullscreen(false)};
   window.addEventListener("keydown",onEscape);
-  return()=>{document.body.style.overflow=original;window.removeEventListener("keydown",onEscape)};
+  return()=>{document.body.classList.remove("siai-wide-mode");window.removeEventListener("keydown",onEscape)};
  },[fullscreen]);
  useEffect(()=>{if(!expanded)return;dialogRef.current?.focus();const esc=(e:KeyboardEvent)=>{if(e.key==="Escape")setExpanded(null)};window.addEventListener("keydown",esc);return()=>window.removeEventListener("keydown",esc);},[expanded]);
  const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
- const previewValue=(value:string)=>value==="尚无可靠资料"?PREVIEW_MISSING[lang]:lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
+ const previewValue=(value:string)=>value==="尚无可靠资料"||value==="—"?"":lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
+ const hasVisibleFact=(value:string)=>Boolean(value.trim())&&value.trim()!=="—"&&!Object.values(PREVIEW_MISSING).includes(value.trim());
  const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>p.recordStatus==="source_preview"?previewValue(p[scope]):localizedCatalogFact(p.id,lang,scope,p[scope]);
  const displayStrength=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.strength):localizedProductSummary(p.id,lang)||p.strength||p.about;
  const displayRegion=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.region):lang==="zh"?p.region:globalRegionSummary(p.id,lang);
@@ -186,7 +216,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a>
     <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={()=>setFullscreen(v=>!v)}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
   </div>
-  <div className="siai-home-four-filters">
+  <div className="siai-home-four-filters" id="siai-filter-panel">
    <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
     <button type="button" aria-pressed={category==="*"} className={category==="*"?"selected":""} onClick={()=>setCategory("*")}>{t.all}</button>
     {categories.map(c=><button key={c} type="button" aria-pressed={category===c} className={category===c?"selected":""} onClick={()=>setCategory(c)}>{categoryName(c)}</button>)}
@@ -231,10 +261,11 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
      {compared.map(p=><td key={p.id}>{value(p)}<Source href={source(p)} label={t.source}/></td>)}</tr>)}
    </tbody></table></div>
   </section>}
-  <section className="siai-ranking-data" ref={rankingRef} aria-label={t.title}>
+  <section className="siai-ranking-data" id="siai-ranking-data" ref={rankingRef} aria-label={t.title}>
   <div className="siai-home-top-track">
    <button type="button" className="siai-height-toggle" aria-pressed={bounded} onClick={()=>setBounded(v=>!v)}>{bounded?pageCopy.pageFlow:pageCopy.panel}</button>
    <span aria-hidden="true">↔</span><span className="siai-scroll-hint">{label("横向查看全部栏目","Scroll horizontally to see all columns")}</span><div className="siai-home-top-scroll" ref={topRef} onScroll={()=>sync("top")} tabIndex={0} aria-label={label("顶部横向滚动条","Top horizontal scrollbar")}><div style={{width:tableWidth,height:1}}/></div>{fullscreen&&<button type="button" className="siai-expand-view" onClick={()=>setFullscreen(false)}>{VIEW_COPY[lang].exit}</button>}</div>
+  <div className={showFloatingColumns?"siai-floating-columnbar siai-floating-columnbar-active":"siai-floating-columnbar"} aria-hidden="true"><div ref={headingRef} className="siai-floating-columnbar-scroll" onScroll={()=>sync("heading")}><div className="siai-floating-columnbar-grid" style={{width:tableWidth}}>{[lang==="zh"?"序号":"#",t.tool,t.strength,t.free,t.price,t.region,t.payment,t.models,t.license,t.action].map((name,i)=><span key={i}>{name}</span>)}</div></div></div>
   <div className={bounded?"siai-home-table-scroll siai-home-table-bounded":"siai-home-table-scroll siai-home-table-flow"} ref={gridRef} style={bounded?{height:panelHeight}:undefined} onScroll={()=>sync("table")} tabIndex={0} aria-label={t.title}>
    <table className="siai-home-table">
     <thead><tr><th scope="col">{lang==="zh"?"序号":"#"}</th><th scope="col">{t.tool}</th><th scope="col">{t.strength}</th><th scope="col">{t.free}</th><th scope="col">{t.price}</th><th scope="col">{t.region}</th><th scope="col">{t.payment}</th><th scope="col">{t.models}</th><th scope="col">{t.license}</th><th scope="col">{t.action}</th></tr></thead>
@@ -242,20 +273,28 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
      {visibleRows.map((p,i)=>{
        return <Fragment key={p.id}><tr className="siai-home-tr">
         <td>{pageStart+i+1}</td>
-        <td className="siai-home-identity"><strong>{p.name}</strong>{p.recordStatus==="source_preview"&&<small className="siai-checked-date">{PREVIEW_COPY[lang]}</small>}<dl>
-         <div><dt>{p.kind==="company"?t.company:t.project}</dt><dd>{p.company}<Source href={p.companySource} label={t.source}/></dd></div>
-         <div><dt>{p.creator?.role==="founder"?t.founder:p.creator?.role==="project_creator"?t.projectCreator:t.leadAuthor}</dt><dd>{p.creator?(lang==="zh"?p.creator.zh:p.creator.en):"—"}<Source href={p.creator?.source||null} label={t.source}/></dd></div>
-         <div><dt>{t.listed}</dt><dd>{listingFor(p)}<Source href={p.listingSource} label={t.source}/></dd></div>
-         <div><dt>{t.founded}</dt><dd>{p.year||"—"}<Source href={p.yearSource} label={t.source}/></dd></div>
-         {p.checkedAt&&<div><dt>{p.recordStatus==="source_preview"?PREVIEW_DATE[lang]:REVIEWED_COPY[lang]}</dt><dd><time dateTime={p.checkedAt}>{p.checkedAt}</time></dd></div>}
-        </dl></td>
-        <td><strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),100)}</strong></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"price")}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayRegion(p)}>{short(displayRegion(p),100)}</span><Source href={p.regionSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayPayment(p)}>{short(displayPayment(p),88)}</span><Source href={p.paymentSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"models")}>{short(displayFact(p,"models"),95)}</span></td>
-        <td><span className="siai-cell-preview" title={displayCommercial(p)}>{short(displayCommercial(p),100)}</span><Source href={p.commercialSource} label={t.source}/></td>
+        <td className="siai-home-identity"><div className="siai-identity-flex">
+         <SiaiBrandLogo website={p.website} name={p.name}/>
+         <div className="siai-identity-content">
+          <strong className="siai-brand-name">{p.name}</strong>
+          {p.recordStatus==="source_preview"&&<span className="siai-preview-status">{PREVIEW_COPY[lang]}</span>}
+          <div className="siai-identity-line">{p.company&&<span><span className="siai-identity-key">{p.kind==="company"?t.company:t.project}：</span>{p.company}<Source href={p.companySource} label={t.company+" · "+t.source} compact/></span>}
+           {p.creator&&<span><span className="siai-identity-key">{p.creator.role==="founder"?t.founder:p.creator.role==="project_creator"?t.projectCreator:t.leadAuthor}：</span>{lang==="zh"?p.creator.zh:p.creator.en}<Source href={p.creator.source} label={t.founder+" · "+t.source} compact/></span>}
+          </div>
+          <div className="siai-identity-line">
+           {p.year&&<span><span className="siai-identity-key">{t.founded}：</span>{p.year}<Source href={p.yearSource} label={t.founded+" · "+t.source} compact/></span>}
+           {p.kind==="company"&&p.listing!=="unconfirmed"&&p.listing!=="not_applicable"&&<span><span className="siai-identity-key">{t.listed}：</span>{listingFor(p)}<Source href={p.listingSource} label={t.listed+" · "+t.source} compact/></span>}
+           {p.checkedAt&&<span><span className="siai-identity-key">{p.recordStatus==="source_preview"?PREVIEW_DATE[lang]:REVIEWED_COPY[lang]}：</span><time dateTime={p.checkedAt}>{p.checkedAt}</time></span>}
+          </div>
+         </div>
+        </div></td>
+        <td>{hasVisibleFact(displayStrength(p))&&<strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),100)}</strong>}</td>
+        <td>{hasVisibleFact(displayFact(p,"free"))&&<span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),100)}</span>}<Source href={p.freeSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayFact(p,"price"))&&<span className="siai-cell-preview" title={displayFact(p,"price")}>{short(displayFact(p,"price"),110)}</span>}<Source href={p.priceSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayRegion(p))&&<span className="siai-cell-preview" title={displayRegion(p)}>{short(displayRegion(p),100)}</span>}<Source href={p.regionSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayPayment(p))&&<span className="siai-cell-preview" title={displayPayment(p)}>{short(displayPayment(p),88)}</span>}<Source href={p.paymentSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayFact(p,"models"))&&<span className="siai-cell-preview" title={displayFact(p,"models")}>{short(displayFact(p,"models"),95)}</span>}</td>
+        <td>{hasVisibleFact(displayCommercial(p))&&<span className="siai-cell-preview" title={displayCommercial(p)}>{short(displayCommercial(p),100)}</span>}<Source href={p.commercialSource} label={t.source}/></td>
         <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button>
         <button type="button" className={compareIds.includes(p.id)?"siai-compare-selected":""} onClick={()=>toggleCompare(p.id)}
          disabled={!compareIds.includes(p.id)&&compareIds.length>=MAX_COMPARISONS}
@@ -267,6 +306,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     </tbody>
    </table>
   </div>
+  <div className="siai-home-bottom-scroll" ref={bottomRef} onScroll={()=>sync("bottom")} tabIndex={0} aria-label={label("底部横向滚动条","Bottom horizontal scrollbar")}><div style={{width:tableWidth,height:1}}/></div>
   {bounded&&<div className="siai-height-grip" role="separator" aria-orientation="horizontal" aria-label={pageCopy.resize} aria-valuemin={280} aria-valuemax={1400} aria-valuenow={panelHeight} tabIndex={0} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={stopDrag} onPointerCancel={stopDrag} onKeyDown={e=>{if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();setPanelHeight(h=>Math.min(1400,Math.max(280,h+(e.key==="ArrowDown"?60:-60))));}}}>⋮⋮ <span>{pageCopy.resize}</span></div>}
   {shown.length===0&&<p className="siai-home-empty">{t.noResults}</p>}
   <nav className="siai-page-controls" aria-label={pageCopy.page}>
@@ -282,7 +322,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </div>
   </nav>
  </section>
-  <details className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
+  <details className="siai-home-cost-accordion" id="siai-cost-calculator"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
   <SiaiSearchDiscovery variant="ranking"/>
    {selectedRow&&<div className="siai-detail-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setExpanded(null);}}><div className="siai-detail-modal" role="dialog" aria-modal="true" aria-label={selectedRow.name+" · "+t.details} tabIndex={-1} ref={dialogRef}>{detailPanel(selectedRow)}</div></div>}
 

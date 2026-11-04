@@ -32,7 +32,7 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(home,/SIAI_DISCOVERY\[lang\]\.hero/);
  assert.match(home,/<SiaiSearchDiscovery variant="home"\/>/);
  assert.match(rank,/<SiaiSearchDiscovery variant="ranking"\/>/);
- assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
+ assert.match(footer,/terminal\.questions\.map\(\(q,i\)=>/);
  assert.match(footer,/FOOTER_MARKET_DETAIL/);
  assert.match(page,/alternateName:SIAI_DISCOVERY\.zh\.topics/);
  assert.match(page,/"@type":"FAQPage"/);
@@ -61,8 +61,8 @@ test("the footer does not duplicate English copy or ranking SEO panels and six l
  assert(rank.indexOf('<SiaiSearchDiscovery variant="ranking"/>')>rank.indexOf('className="siai-home-table-scroll"'));
  assert.match(read("lib/public-feature-copy.ts"),/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
  assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,0);
- assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
- assert.match(footer,/siai-search-ranking-/);
+ assert.match(footer,/terminal\.questions\.map\(\(q,i\)=>/);
+ assert.match(footer,/FOOTER_NAV_ANCHORS\[i\]/);
  assert.match(cards,/id=\{prefix\+"-"\+i\}/);
 });
 test("nine-language FAQ body follows the language selection and spaced keywords reach SIAI instead of tools",()=>{

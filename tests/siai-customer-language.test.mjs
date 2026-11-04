@@ -25,12 +25,13 @@ test("footer describes capabilities once in a full-width panel and avoids duplic
  assert.match(footer,/<section className="lx-footer-unified"/);
  assert.doesNotMatch(footer,/lang==="zh"&&<p lang="en"/);
  assert.match(read("components/SiaiRankingHome.tsx"),/<SiaiSearchDiscovery variant="ranking"\/>/);
- assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
+ assert.match(footer,/terminal\.questions\.map\(\(q,i\)=>/);
 });
 test("preview rows present clear product information without internal test-state prose or blanket region denials",()=>{
  const component=read("components/SiaiRankingHome.tsx");
  const candidate=read("app/siai/candidate-public.ts");
- assert.match(component,/官网资料 · 内容补充中/);
+ assert.doesNotMatch(component,/官网资料 · 内容补充中/);
+ assert.match(component,/zh:"来源预览"/);
  assert.doesNotMatch(component,/尚未完成实际使用测试|real use untested/);
  assert.match(component,/previewValue\(p\[scope\]\)/);
  assert.match(component,/PREVIEW_RAW_LABEL/);
