@@ -628,3 +628,117 @@ html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-heading,
 html[data-theme="dark"] .lx-footer-v4 .lx11-footer-logo b,
 html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-email{color:#e9ddff!important}
 @media(prefers-reduced-motion:reduce){.lx-footer-v4 .lx-footer-v4-qr-card{transition:none}}
+
+
+/* SIAI 2026-11-05: first-screen compact discovery; preserve floating header,
+   both synchronized table scrollbars, wheel behavior and pinned identity columns. */
+.siai-home .siai-home-head{margin-bottom:7px}
+.siai-home .siai-home-head h1{margin-bottom:3px}
+.siai-home .siai-home-controls.siai-controls-compact{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
+ gap:7px 10px;margin-bottom:8px;
+}
+.siai-home .siai-discovery-line{display:flex;align-items:center;gap:9px;min-width:0;overflow:hidden}
+.siai-home .siai-discovery-line .siai-home-search{
+ max-width:480px;min-width:220px;flex:0 1 38%;min-height:36px;border-radius:9px;
+}
+.siai-home .siai-discovery-line .siai-home-search input{min-height:34px}
+.siai-home .siai-hot-searches{
+ display:flex;flex:1;align-items:center;gap:5px;min-width:0;
+ overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap;
+ scrollbar-width:none;
+}
+.siai-home .siai-hot-searches::-webkit-scrollbar{display:none}
+.siai-home .siai-hot-searches strong{flex:none;font-size:13px;color:#607b9c;font-weight:700}
+.siai-home .siai-hot-searches button{
+ flex:none;min-height:30px;border:1px solid #d6e3f4;border-radius:18px;
+ padding:3px 9px;background:#f8fbff;color:#2c5186;
+ font-size:13px;cursor:pointer;line-height:1.3;
+}
+.siai-home .siai-hot-searches button:hover{background:#e9f2ff}
+.siai-home .siai-hot-searches button:focus-visible{outline:2px solid #245fd4;outline-offset:1px}
+.siai-home .siai-controls-compact .siai-home-quicklinks{gap:5px;flex-wrap:nowrap;min-width:0}
+.siai-home .siai-controls-compact .siai-home-quicklinks :is(a,button){
+ min-height:32px;padding:5px 9px;font-size:13px;white-space:nowrap;
+}
+.siai-home .siai-controls-compact .siai-home-count{font-size:13px;white-space:nowrap}
+.siai-home .siai-home-four-filters.siai-filter-compact{
+ display:flex;flex-direction:column;gap:4px;margin-bottom:8px;
+}
+.siai-home .siai-filter-compact .siai-filter-line{
+ display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;
+ min-height:34px;align-items:center;
+}
+.siai-home .siai-filter-compact .siai-filter-line>strong,
+.siai-home .siai-filter-compact .siai-pay-choices>strong{
+ color:#36597e;font-size:14px;font-weight:750;white-space:nowrap;
+}
+.siai-home .siai-filter-compact .siai-filter-options{gap:5px;padding-bottom:1px}
+.siai-home .siai-filter-compact .siai-filter-options>button{
+ display:inline-flex;align-items:center;gap:5px;
+ min-height:31px;padding:3px 9px;border-radius:7px;line-height:1.3;
+ font-size:14px;white-space:nowrap;
+}
+.siai-home .siai-filter-compact .siai-facet-count{
+ border-radius:10px;padding:1px 5px;min-width:20px;
+ text-align:center;line-height:1.3;font-size:12px;
+ background:#edf2f9;color:#587395;font-weight:700;
+ font-variant-numeric:tabular-nums;
+}
+.siai-home .siai-filter-compact .selected .siai-facet-count{background:#c9ddff;color:#184fae}
+.siai-home .siai-home-four-filters.siai-filter-compact>.siai-payment-line{
+ display:grid;grid-template-columns:minmax(0,1fr) auto!important;gap:7px;
+}
+.siai-home .siai-filter-compact .siai-pay-choices{
+ display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;
+ align-items:center;min-width:0;
+}
+.siai-home .siai-filter-compact .siai-compact-selects{
+ display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0;
+}
+.siai-home .siai-filter-compact :is(.siai-evidence-select,.siai-sort-label){
+ display:flex;align-items:center;gap:5px;white-space:nowrap;
+ color:#36597e;font-size:13px;font-weight:700;position:static;
+ margin:0;padding:0;
+}
+.siai-home .siai-filter-compact :is(.siai-evidence-select select,.siai-sort-label select){
+ min-height:32px;height:32px;min-width:0;max-width:190px;
+ border:1px solid #d3e2f2;border-radius:7px;background:#fff;
+ color:#265082;font-size:13px;padding:4px 7px;
+}
+.siai-home .siai-filter-compact select:focus-visible{
+ outline:2px solid #2567bd;outline-offset:2px;
+}
+@media(min-width:901px){
+ .siai-home .siai-home-identity .siai-compact-facts{gap:1px 7px!important;line-height:1.26}
+ .siai-home .siai-home-identity .siai-compact-facts>div{gap:3px}
+ .siai-home .siai-home-identity .siai-compact-facts dt,
+ .siai-home .siai-home-identity .siai-compact-facts dd{font-size:12.5px!important;line-height:1.3}
+}
+@media(max-width:1480px){
+ .siai-home .siai-home-controls.siai-controls-compact{grid-template-columns:minmax(0,1fr)}
+ .siai-home .siai-controls-compact .siai-home-quicklinks{justify-content:flex-end}
+}
+@media(max-width:1100px){
+ .siai-home .siai-home-four-filters.siai-filter-compact>.siai-payment-line{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ .siai-home .siai-filter-compact .siai-compact-selects{justify-content:flex-start;padding-inline-start:104px}
+}
+@media(max-width:700px){
+ .siai-home .siai-discovery-line{flex-wrap:wrap;gap:5px;overflow:visible}
+ .siai-home .siai-discovery-line .siai-home-search{flex:1 1 100%;max-width:none}
+ .siai-home .siai-hot-searches{flex:1 1 100%;max-width:100%}
+ .siai-home .siai-controls-compact .siai-home-quicklinks{
+  justify-content:flex-start;overflow-x:auto;max-width:100%;width:100%;
+ }
+ .siai-home .siai-filter-compact .siai-filter-line,
+ .siai-home .siai-filter-compact .siai-pay-choices{grid-template-columns:78px minmax(0,1fr)}
+ .siai-home .siai-filter-compact .siai-compact-selects{padding-inline-start:0;justify-content:space-between}
+ .siai-home .siai-filter-compact :is(.siai-evidence-select,.siai-sort-label){font-size:12px}
+ .siai-home .siai-filter-compact :is(.siai-evidence-select select,.siai-sort-label select){max-width:min(120px,28vw)}
+}
+html[data-theme="dark"] .siai-home .siai-hot-searches button,
+html[data-theme="dark"] .siai-home .siai-filter-compact select{
+ background:#243348;color:#d5e7ff;border-color:#485e7a;
+}
