@@ -22,7 +22,9 @@ test("footer describes capabilities once in a full-width panel and avoids duplic
  assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,1);
  assert.doesNotMatch(footer,/lx-footer-trio/);
  assert.doesNotMatch(footer,/discovery\.footerNote/);
- assert.match(footer,/lang==="zh"&&<p lang="en"/);
+ assert.match(footer,/!isRankingRoute&&<nav/);
+ assert.doesNotMatch(footer,/lang==="zh"&&<p lang="en"/);
+ assert.match(read("components/SiaiRankingHome.tsx"),/<SiaiSearchDiscovery variant="ranking"\/>/);
  assert.match(footer,/discovery\.topics\.map\(v=>v\.q\)/);
 });
 test("preview rows present clear product information without internal test-state prose or blanket region denials",()=>{

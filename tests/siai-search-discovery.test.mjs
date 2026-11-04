@@ -52,10 +52,12 @@ test("eight sourced corporate-history entries remain honest about parent/launch 
  assert.match(company,/https:\/\/www\.synthesia\.io\/about/);
 });
 
-test("the footer is bilingual in Chinese locale, other languages use their own copy, and six links target distinct useful answers",()=>{
+test("the footer does not duplicate English copy or ranking SEO panels and six links still reach useful answers",()=>{
  const footer=read("components/Footer.tsx"),cards=read("components/SiaiSearchDiscovery.tsx");
  assert.match(footer,/lang==="zh"/);
- assert.match(footer,/lang="en"/);
+ assert.doesNotMatch(footer,/lang="en"/);
+ assert.match(footer,/!isRankingRoute&&<nav/);
+ assert(rank.indexOf('<SiaiSearchDiscovery variant="ranking"/>')>rank.indexOf('className="siai-home-table-scroll"'));
  assert.match(read("lib/public-feature-copy.ts"),/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
  assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,1);
  assert.match(footer,/discovery\.topics\.map\(v=>v\.q\)/);

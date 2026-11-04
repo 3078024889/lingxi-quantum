@@ -67,6 +67,17 @@ export default function Nav() {
 
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sidebarCollapsed,setSidebarCollapsed]=useState(false);
+  useEffect(()=>{
+   let saved=false;
+   try{saved=localStorage.getItem("lx-sidebar-collapsed")==="1"}catch{}
+   setSidebarCollapsed(saved);
+  },[]);
+  useEffect(()=>{
+   document.documentElement.dataset.lxSidebar=sidebarCollapsed?"closed":"open";
+   try{localStorage.setItem("lx-sidebar-collapsed",sidebarCollapsed?"1":"0")}catch{}
+   return()=>{delete document.documentElement.dataset.lxSidebar};
+  },[sidebarCollapsed]);
   const [theme, setTheme] = useState<Theme>("light");
   const [query, setQuery] = useState("");
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
@@ -211,6 +222,7 @@ export default function Nav() {
       <aside className="lx11-sidebar hidden lg:flex">{side}</aside>
 
       <header className="lx11-topbar">
+        <button type="button" className="lx11-desktop-side-toggle" aria-expanded={!sidebarCollapsed} aria-label={sidebarCollapsed?(lang==="zh"?"展开左侧导航":"Show sidebar"):(lang==="zh"?"收起左侧导航":"Hide sidebar")} onClick={()=>setSidebarCollapsed(v=>!v)}>{sidebarCollapsed?"☰":"⇤"}</button>
         <form className="lx11-search" onSubmit={submit}>
           <span>🔎</span>
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("search")} />
