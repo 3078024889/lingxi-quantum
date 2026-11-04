@@ -34,8 +34,11 @@ jobs:
           node --test tests/siai-ssr-root-locale.test.mjs
           node --test lingxifield-ai-market/tests/market-major-publisher-b006-official.test.mjs
           node lingxifield-ai-market/scripts/validate-company-official-observations.mjs
-      - name: Build Next.js production
-        run: pnpm build
+      - name: Build Next.js and preserve static SEO routes
+        run: |
+          set -o pipefail
+          pnpm build | tee next-production-build.log
+          node scripts/ci/ensure-static-page-budget.mjs next-production-build.log
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chrome
       - name: Real browser SSR and downloaded document checks
