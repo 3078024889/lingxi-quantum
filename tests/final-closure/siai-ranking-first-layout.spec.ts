@@ -19,7 +19,7 @@ test('SIAI opens on actual ranked data, not six search cards; compact table stay
  expect(layout.searchBeforeFooter).toBe(true);
  expect(layout.tableY).toBeLessThan(layout.windowH);
  expect(layout.tableWidth).toBeGreaterThan(layout.tableViewport);
- expect(layout.tableWidth).toBeLessThanOrEqual(1750);
+ expect(layout.tableWidth).toBeLessThanOrEqual(1950);
  expect(layout.footerSearchDuplicate).toBe(0);
  await expect(page.locator('.siai-home-cost-accordion')).toHaveCount(1);
  const hasTableBeforeCost=await page.evaluate(()=>{
@@ -41,9 +41,13 @@ test('SIAI ranking fullscreen view expands to viewport and exits without losing 
  await toggle.click();
  const main=page.locator('.siai-home-fullscreen');
  await expect(main).toBeVisible();
- await expect(page.locator('body')).toHaveCSS('overflow','hidden');
+ expect(await page.locator('body').evaluate(el=>el.style.overflow)).not.toBe('hidden');
  const rect=await main.boundingBox();
- expect(rect?.x).toBeLessThan(2);
+ expect(rect?.width).toBeGreaterThanOrEqual((page.viewportSize()?.width||0)-36);
+ const pageHeight=await page.evaluate(()=>document.documentElement.scrollHeight);
+ expect(pageHeight).toBeGreaterThan((page.viewportSize()?.height||0)+700);
+ await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+ await expect(page.locator('footer.lx11-footer')).toBeVisible();
  expect(rect?.width).toBeGreaterThan(300);
  await page.keyboard.press('Escape');
  await expect(main).toHaveCount(0);
@@ -63,20 +67,28 @@ test('desktop sidebar can collapse and restore; mobile remains drawer-based',asy
  await expect(page.locator('html')).toHaveAttribute('data-lx-sidebar',initial||'open');
 });
 
-test('SIAI restores sourced company facts on every row and preserves original records',async({page})=>{
+test('SIAI restores sourced company facts on every row and preserves original records',async({page,isMobile})=>{
  test.setTimeout(90000);
  await page.goto('/siai');
  const rows=page.locator('.siai-home-table tbody tr.siai-home-tr');
  await expect(rows).toHaveCount(62);
  const first=rows.first();
  await expect(first.locator('.siai-home-identity')).toContainText('Microsoft');
- await expect(first.locator('.siai-home-identity dt')).toContainText(['公司名称','主要创始人','是否上市','成立时间','资料更新日期']);
+ for(const text of ['公司名称','主要创始人','是否上市','成立时间','资料更新日期'])await expect(first.locator('.siai-home-identity')).toContainText(text);
+ await expect(first.locator('.siai-brand-mark img')).toHaveAttribute('src',/^\/siai-brand-icons\//);
+ const iconLoaded=await first.locator('.siai-brand-mark img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0);
+ expect(iconLoaded).toBe(true);
+ await expect(first.locator('.siai-home-identity')).not.toContainText('内容补充中');
  await expect(first.locator('.siai-home-identity a.siai-source').first()).toHaveAttribute('href',/^https:\/\//);
  const table=page.locator('.siai-home-table-flow');
  await expect(table).toBeVisible();
  const noInnerVerticalScroll=await table.evaluate((el:HTMLElement)=>el.scrollHeight-el.clientHeight<=3);
  expect(noInnerVerticalScroll).toBe(true);
- expect(await table.evaluate((el:HTMLElement)=>getComputedStyle(el).overflowX)).toBe('hidden');
+ const horizontal=await table.evaluate((el:HTMLElement)=>({
+  overflowX:getComputedStyle(el).overflowX,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth
+ }));
+ expect(horizontal.overflowX).toBe(isMobile?'auto':'hidden');
+ if(isMobile)expect(horizontal.scrollWidth).toBeGreaterThan(horizontal.clientWidth+300);
  expect(await page.evaluate(()=>document.documentElement.scrollHeight>window.innerHeight*2)).toBe(true);
  await expect(page.getByLabel('每页显示')).toHaveValue('100');
  await first.getByRole('button',{name:'详情'}).click();

@@ -8,7 +8,7 @@ import LocaleEntryLink from '@/components/seo/LocaleEntryLink';
 import {GLOBAL_TOOL_CATALOG,LOCALIZED_LOCALES,SEO_LOCALES,getGlobalTool,isSeoLocale,localePath,toolTitle,type SeoLocale} from "@/lib/seo/global-seo";
 import {buildSearchOptimizedToolMetadata} from '@/lib/seo/search-tool-metadata';
 type Props={params: Promise<{locale:string;slug:string}>};
-export function generateStaticParams(){return LOCALIZED_LOCALES.flatMap(locale=>GLOBAL_TOOL_CATALOG.map(tool=>({locale,slug:tool.slug})))}
+export function generateStaticParams(){return LOCALIZED_LOCALES.flatMap(locale=>GLOBAL_TOOL_CATALOG.filter(tool=>tool.slug!=="image-to-pdf-pro").map(tool=>({locale,slug:tool.slug})))}
 export async function generateMetadata(props:Props):Promise<Metadata> {
  const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh")return {};

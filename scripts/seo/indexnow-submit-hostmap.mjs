@@ -1,6 +1,6 @@
 const SITE=(process.env.INDEXNOW_SITE||"").trim().replace(/\/+$/,"");
 const KEY=(process.env.INDEXNOW_KEY||"7c56b31c5ed003a219fe79c3177ee7ac").trim();
-const SOURCE_SITEMAP=(process.env.INDEXNOW_SOURCE_SITEMAP||"https://lingxifield.com/sitemap.xml").trim();
+const SOURCE_SITEMAP=(process.env.INDEXNOW_SOURCE_SITEMAP||`${SITE}/sitemap.xml`).trim();
 const ENDPOINT=(process.env.INDEXNOW_ENDPOINT||"https://api.indexnow.org/indexnow").trim();
 if(!SITE)throw new Error("INDEXNOW_SITE_REQUIRED");
 const target=new URL(SITE);
@@ -20,12 +20,11 @@ const retired=[
  "/subconscious","/life-map","/relationship","/tarot","/wealth","/daily"
 ];
 
-const urls=[...new Set(source.map(raw=>{
- const u=new URL(raw);
- return new URL(u.pathname+u.search,target.origin).toString();
-}))];
-
-for(const p of retired)urls.push(new URL(p,target.origin).toString());
+const sourceUrls=source.map(raw=>new URL(raw));
+if(sourceUrls.some(u=>u.origin!==target.origin))throw new Error("INDEXNOW_SITEMAP_HOST_MISMATCH");
+const urls=[...new Set(sourceUrls.map(u=>u.toString()))];
+if(target.hostname==="lingxifield.com")
+  for(const p of retired)urls.push(new URL(p,target.origin).toString());
 
 if(urls.some(url=>new URL(url).origin!==target.origin))
   throw new Error("INDEXNOW_HOST_MAPPING_FAILED");

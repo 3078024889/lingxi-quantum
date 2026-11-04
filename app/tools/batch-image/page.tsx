@@ -1,3 +1,4 @@
+import {buildSearchOptimizedToolMetadata} from "@/lib/seo/search-tool-metadata";
 import LxText from "@/components/LxText";
 import AdvancedToolPage from "@/components/tools/AdvancedToolPage";
 import BatchImageWorkbench from "@/components/tools/BatchImageWorkbench";
@@ -13,3 +14,4 @@ export default function Page(){return <AdvancedToolPage
  ar="اختر عدة صور وحدد الحجم والجودة ثم راجع النتائج قبل الحفظ."/>}>
  <BatchImageWorkbench/>
  </AdvancedToolPage>}
+export const metadata=buildSearchOptimizedToolMetadata("batch-image","zh");
