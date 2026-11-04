@@ -34,13 +34,13 @@ export default function RecentTools(){
   setBusy(item.slug);setError(null);
   try{const recovered=await loadRecoverableResult(item.workspaceId);if(!recovered){setError(item.slug);return}const targets=continueTargets(item.slug,recovered.files);if(!targets.length){router.push(`/tools/${item.slug}`);return}const token=await createToolHandoff(item.slug,recovered.files);router.push(`/tools/${targets[0].slug}?handoff=${encodeURIComponent(token)}`)}catch{setError(item.slug)}finally{setBusy(null)}
  }
- return <section className="mb-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 sm:p-5" aria-label={txt(lang,"title")}>
-  <div><h2 className="text-base font-medium text-[var(--lx-ink)]">{txt(lang,"title")}</h2><p className="mt-1 text-xs leading-5 text-[var(--lx-faint)]">{txt(lang,"lead")}</p></div>
-  <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-   {rows.map(({item,tool})=><div key={item.slug} className="min-w-[210px] rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3">
+ return <section className="lx-tools-compact-recent mb-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-4 sm:p-5" aria-label={txt(lang,"title")}>
+  <div className="lx-tools-compact-recent-head"><h2 className="text-base font-medium text-[var(--lx-ink)]">{txt(lang,"title")}</h2><p className="mt-1 text-xs leading-5 text-[var(--lx-faint)]">{txt(lang,"lead")}</p></div>
+  <div className="lx-tools-compact-recent-list mt-4 flex gap-2 overflow-x-auto pb-1">
+   {rows.map(({item,tool})=><div key={item.slug} className="lx-tools-compact-recent-item min-w-[210px] rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3">
     <p className="text-sm font-medium text-[var(--lx-ink)]">{toolTitle(lang,item.slug,lang==="zh"?tool!.titleZh:tool!.titleEn)}</p>
     <p className="mt-1 text-[11px] text-[var(--lx-faint)]">{age(lang,item.at)}</p>
-    <div className="mt-3 flex flex-wrap gap-2"><Link href={`/tools/${item.slug}`} className="text-xs text-[var(--lx-muted)] underline-offset-2 hover:underline">{txt(lang,"open")}</Link>{item.workspaceId?<button type="button" disabled={busy!==null} onClick={()=>resume(item)} className="text-xs font-medium text-[var(--lx-ink)] disabled:opacity-50">{busy===item.slug?txt(lang,"restoring"):txt(lang,"resume")}</button>:null}</div>
+    <div className="lx-tools-compact-recent-actions mt-3 flex flex-wrap gap-2"><Link href={`/tools/${item.slug}`} className="text-xs text-[var(--lx-muted)] underline-offset-2 hover:underline">{txt(lang,"open")}</Link>{item.workspaceId?<button type="button" disabled={busy!==null} onClick={()=>resume(item)} className="text-xs font-medium text-[var(--lx-ink)] disabled:opacity-50">{busy===item.slug?txt(lang,"restoring"):txt(lang,"resume")}</button>:null}</div>
     {error===item.slug?<p className="mt-2 text-[11px] text-[var(--lx-danger)]">{txt(lang,"expired")}</p>:null}
    </div>)}
   </div>
