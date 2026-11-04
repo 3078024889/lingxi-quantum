@@ -76,3 +76,12 @@ test('Calculator does not prefill unknown provider prices, and long table is opt
  assert.match(ui,/tx\.minute/);
  for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(ui,new RegExp('\\b'+l+':\\{calls:'));
 });
+
+test('Public publisher model graph does not leak unapproved vendor candidates',async()=>{
+ const registry=await import('../lib/market-publisher-registry.ts');
+ for(const id of ['minimax','mistral','cohere']){
+  assert.ok(API_RATES.some(r=>r.platform===id));
+  assert.equal(registry.MARKET_MODEL_OFFERS.some(p=>p.productId===id),false);
+  assert.equal(registry.MARKET_COMPANY_PRODUCTS.some(p=>p.id===id),false);
+ }
+});
