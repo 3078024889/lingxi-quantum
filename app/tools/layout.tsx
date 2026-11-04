@@ -1,4 +1,5 @@
 import type {Metadata} from "next";
+import "./tools-hub-compact.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import ToolShareRail from "@/components/tools/ToolShareRail";
