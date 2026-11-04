@@ -31,7 +31,7 @@ test('SIAI four production DOM screenshots: compact sourced ranking, live estima
  await expect(page.locator('.siai-home-identity').first()).not.toContainText('内容补充中');
  await expect(page.locator('.siai-home-identity').first()).not.toContainText('官网资料补充中');
  await expect(page.locator('.siai-home-identity').first()).not.toContainText('尚无可靠资料');
- const tableWidth=await page.locator('.siai-home-table').evaluate((el:HTMLElement)=>el.scrollWidth);
+ const tableWidth=await page.locator('.siai-home-table-scroll .siai-home-table').evaluate((el:HTMLElement)=>el.scrollWidth);
  expect(tableWidth).toBeGreaterThan(1750);
  const top=page.locator('.siai-home-top-scroll'), bottom=page.locator('.siai-home-bottom-track');
  await top.evaluate((el:HTMLElement)=>el.scrollLeft=180);
