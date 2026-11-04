@@ -26,6 +26,9 @@ test("Image-to-PDF: original-size pages retain exact margins and image order aft
   {name:"portrait.jpg",mimeType:"image/jpeg",buffer:portrait}
  ]);
  await expect(page.getByText("1. landscape.png")).toBeVisible();
+ const upButton=page.getByRole("button",{name:"Up",exact:true}).last();
+ const hitArea=await upButton.boundingBox();
+ expect(hitArea?.height).toBeGreaterThanOrEqual(44);
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
  const first=await download(page);
  expect(first.getPageCount()).toBe(2);
