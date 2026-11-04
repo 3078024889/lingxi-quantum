@@ -146,8 +146,8 @@ export default function Footer(){
      <div><Image src="/images/lingxifield-wechat-service-qr.jpg" alt="WeChat Service" width={76} height={76}/><span>{t("service")}</span></div>
      <div><Image src="/images/miniapp-qrcode.png" alt="Miniapp" width={76} height={76}/><span>{t("miniapp")}</span></div>
     </div>
-    <details className="lx-footer-wechat-extra">
-     <summary>{WECHAT_EXTRA[lang].more}</summary>
+    <section className="lx-footer-wechat-extra" aria-label={WECHAT_EXTRA[lang].more}>
+     <h4>{WECHAT_EXTRA[lang].more}</h4>
      <div className="lx-footer-extra-qr-grid">
       <a href="http://weixin.qq.com/r/mp/_yAoMCzEYnEdrWhT93Xp" target="_blank" rel="noopener noreferrer">
        <Image unoptimized src="/api/public-social-qr?kind=search" width={115} height={115} alt={WECHAT_EXTRA[lang].search}/>
@@ -161,7 +161,7 @@ export default function Footer(){
      <strong className="lx-footer-miniapp-label">{WECHAT_EXTRA[lang].miniapps}</strong>
      <code className="lx-footer-miniapp-code">#小程序://灵犀场/ktKRUjMRoEcPEsE</code>
      <code className="lx-footer-miniapp-code">#小程序://10临时邮箱/p8AACkYNods09Rl</code>
-    </details>
+    </section>
    </section>
   </div>
   <div className="lx11-footer-legal"><span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>
