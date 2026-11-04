@@ -41,9 +41,9 @@ test("preview is joined to main SIAI UI, never published as a verified SEO produ
  assert(src.includes("year:history?.year||null"));
  assert(src.includes("yearSource:history?.yearSource||null"));
  assert.match(readFileSync(new URL("app/siai/candidate-company-evidence.ts",root),"utf8"),/"figma-make"/);
- assert.match(src,/region:text\(region\)/);
+ assert(src.includes('region:regionSupplement?.localized.zh||text(region)'));
  assert.doesNotMatch(src,/并非逐国注册或支付验证/);
- assert.match(src,/regionSource:source\(region\)/);
+ assert(src.includes('regionSource:regionSupplement?.source||source(region)'));
  assert.match(src,/materializeCandidateCatalog/);
  assert.match(src,/verifiedPaymentRails/);
  assert.match(src,/https:\/\/www\.magnific\.com\/ai/);
