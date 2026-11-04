@@ -45,7 +45,7 @@ test("PDF invalid or oversized ranges fail closed; never silently export only a 
  for(const bad of ["1,2-foo","1-99999999","1.5-2","2-1","1,","1--2"]){
   await page.getByRole("textbox",{name:/Page range/}).fill(bad);
   await page.getByRole("button",{name:"Extract pages",exact:true}).click();
-  await expect(page.getByRole("alert")).toContainText("Enter valid pages",{timeout:15000});
+  await expect(page.locator("[data-tool-workbench] p[role=alert]")).toContainText("Enter valid pages",{timeout:15000});
   await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
  }
 });
