@@ -1,6 +1,14 @@
 /* LINGXIFIELD /tools compact visual layout, 2026-11-04.
  * Scoped to the actual tools index. The existing registry, search, pricing,
  * navigation, category taxonomy and continuation flows are untouched. */
+/* Only the public tools directory gets the reference's narrower, fixed rail.
+ * Other routes keep the existing shell dimensions and logo asset. */
+@media (min-width:1024px) {
+  html:has(.lx-tools-compact) {
+    --lx-side:224px;
+    --lx-top:62px;
+  }
+}
 .lx-tools-compact {
   min-width:0;
   padding:16px clamp(16px,2.25vw,32px) 56px!important;
