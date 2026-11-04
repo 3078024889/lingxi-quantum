@@ -8,6 +8,12 @@ function load(name){
  new Function('require','module','exports',code)(p=>p.startsWith('@/')?load(p.slice(2)):p.startsWith('.')?load(path.resolve(path.dirname(file),p)):require(p),mod,mod.exports);
  return mod.exports;
 }
+// Catch syntax mistakes in the GEO/metadata routes before an expensive Next.js build.
+for(const candidate of ['app/llms.txt/route.ts','app/sitemap.ts','app/robots.ts','lib/seo/sitemap-build.ts','lib/seo/siai-domain-policy.ts']){
+ const source=fs.readFileSync(path.join(root,candidate),'utf8');
+ const parsed=ts.createSourceFile(candidate,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ assert.equal(parsed.parseDiagnostics.length,0,`syntax in ${candidate}: ${parsed.parseDiagnostics.map(d=>ts.flattenDiagnosticMessageText(d.messageText,' ')).join('; ')}`);
+}
 const seo=load('lib/seo/global-seo.ts'),registry=load('lib/tools/registry.ts');
 const indexing=load('lib/seo/indexing.ts');
 const {buildSiteSitemap}=load('lib/seo/sitemap-build.ts');
