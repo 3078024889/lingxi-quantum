@@ -1,3 +1,4 @@
+import {buildSearchOptimizedToolMetadata} from "@/lib/seo/search-tool-metadata";
 import LxText from "@/components/LxText";
 import AdvancedToolPage from "@/components/tools/AdvancedToolPage";
 import PdfBasicWorkbench from "@/components/tools/PdfBasicWorkbench";
@@ -18,3 +19,4 @@ export default function Page(){
   <PdfBasicWorkbench/>
  </AdvancedToolPage>;
 }
+export const metadata=buildSearchOptimizedToolMetadata("pdf-merge-split","zh");

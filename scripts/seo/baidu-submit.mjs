@@ -1,6 +1,6 @@
 const SITE=(process.env.BAIDU_SITE||"").trim().replace(/\/+$/,"");
 const TOKEN=(process.env.BAIDU_TOKEN||"").trim();
-const SOURCE_SITEMAP=(process.env.BAIDU_SITEMAP||"https://lingxifield.com/sitemap.xml").trim();
+const SOURCE_SITEMAP=(process.env.BAIDU_SITEMAP||`${SITE}/sitemap.xml`).trim();
 const ENDPOINT=(process.env.BAIDU_ENDPOINT||"https://data.zz.baidu.com/urls").trim();
 const BATCH_SIZE=Math.max(1,Math.min(Number(process.env.BAIDU_BATCH_SIZE||2000),2000));
 
@@ -23,10 +23,9 @@ const blocked=[
  /^\/(?:explore|learn|glossary|live-as|subconscious|practice|field-tests|life-map|relationship|qian|mirror|tarot|resilience|romance|daily|wealth|archetype|mini-report|membership|origin|dream|declaration|narrative|number-energy|gate|field|field-test|manifestation|consciousness|inner-sovereignty|energy-exchange|energy|exchange|inner-practice|inner-practice-technique)(?:\/|$)/
 ];
 
-const urls=[...new Set(source.map(raw=>{
- const u=new URL(raw);
- return new URL(u.pathname+u.search,target.origin).toString();
-}).filter(raw=>!blocked.some(re=>re.test(new URL(raw).pathname))))];
+const sourceUrls=source.map(raw=>new URL(raw));
+if(sourceUrls.some(u=>u.origin!==target.origin))throw new Error("BAIDU_SITEMAP_HOST_MISMATCH");
+const urls=[...new Set(sourceUrls.map(u=>u.toString()).filter(raw=>!blocked.some(re=>re.test(new URL(raw).pathname))))];
 
 console.log(`BAIDU_SITE=${target.origin}`);
 console.log(`BAIDU_SOURCE_SITEMAP=${SOURCE_SITEMAP}`);

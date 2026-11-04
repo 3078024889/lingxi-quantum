@@ -11,15 +11,15 @@ const SECTION_TITLE = L(
   "Questions fréquentes", "Häufig gesucht", "Búsquedas frecuentes", "Pesquisas frequentes", "عمليات البحث الشائعة"
 );
 const SECTION_INTRO = L(
-  "这些问题来自当前公开搜索结果中反复出现的真实搜索表达，并会随着实际搜索数据继续更新。",
-  "These questions reflect recurring search wording seen in current public search results and are intended to be updated with first-party search data.",
-  "現在の公開検索結果で繰り返し見られる検索表現をもとにし、実際の検索データに合わせて更新します。",
-  "현재 공개 검색 결과에서 반복적으로 나타나는 검색 표현을 바탕으로 하며 실제 검색 데이터에 맞춰 업데이트합니다.",
-  "Ces questions reprennent des formulations récurrentes observées dans les résultats publics et seront mises à jour avec les données de recherche propriétaires.",
-  "Diese Fragen greifen wiederkehrende Suchformulierungen aus aktuellen öffentlichen Ergebnissen auf und werden mit eigenen Suchdaten weiter gepflegt.",
-  "Estas preguntas reflejan formulaciones recurrentes observadas en resultados públicos y se actualizarán con datos propios de búsqueda.",
-  "Estas perguntas refletem formulações recorrentes observadas nos resultados públicos e serão atualizadas com dados próprios de pesquisa.",
-  "تعكس هذه الأسئلة صيغ بحث متكررة ظهرت في نتائج البحث العامة الحالية، وسيتم تحديثها ببيانات البحث الفعلية."
+  "围绕本工具实际用途整理的常见问题。具体操作和可用功能请以当前页面为准。",
+  "Practical questions about using this tool. Check this page for actual features and limitations.",
+  "このツールの用途に関する質問です。対応機能と制限は現在のページでご確認ください。",
+  "이 도구를 사용할 때 도움이 되는 질문입니다. 현재 페이지에서 기능과 제한을 확인하세요.",
+  "Questions pratiques sur cet outil. Vérifiez les fonctions et limites affichées sur cette page.",
+  "Praktische Fragen zu diesem Tool. Funktionen und Grenzen stehen auf dieser Seite.",
+  "Preguntas prácticas sobre esta herramienta. Consulta aquí las funciones y limitaciones actuales.",
+  "Dúvidas práticas sobre esta ferramenta. Confira nesta página as funções e limitações.",
+  "أسئلة عملية عن استخدام هذه الأداة. راجع الوظائف والقيود الحالية على الصفحة."
 );
 
 const GENERIC = {

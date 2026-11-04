@@ -73,14 +73,15 @@ export function buildToolMetadata(slug:string):Metadata{
  const seo=toolSeo(slug),canonical=`/tools/${slug}`;
  const fact=toolGeoFact(slug,'zh');
  const title=toolZhSeoTitle(slug)??seo.title;
+ const brandedTitle:string=/LINGXIFIELD|灵犀场/i.test(title)?title:`${title}｜灵犀场 LINGXIFIELD`;
  const description=fact?.description??seo.description;
  return{
-  title,
+  title:{absolute:brandedTitle},
   description,
   keywords:seo.keywords,
   alternates:{canonical,...(getGlobalTool(slug)?{languages:languageAlternates(canonical)}:{})},
-  openGraph:{images:SHARE_IMAGES,type:"website",url:`${SITE}${canonical}`,title:`${title}｜灵犀场 LINGXIFIELD`,description},
-  twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL],title:`${title}｜灵犀场 LINGXIFIELD`,description},
+  openGraph:{images:SHARE_IMAGES,type:"website",url:`${SITE}${canonical}`,title:brandedTitle,description},
+  twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL],title:brandedTitle,description},
   robots:{index:true,follow:true,"max-snippet":-1,"max-image-preview":"large"},
  };
 }

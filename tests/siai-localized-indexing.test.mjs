@@ -5,16 +5,21 @@ const read=(path)=>readFileSync(new URL("../"+path,import.meta.url),"utf8");
 const localized=read("app/[locale]/siai/page.tsx");
 const root=read("app/siai/page.tsx");
 const sitemap=read("app/sitemap.ts");
+const sitemapBuild=read("lib/seo/sitemap-build.ts");
+const hostPolicy=read("lib/seo/siai-domain-policy.ts");
 const data=read("app/siai/catalog-data.ts");
 test("SIAI has nine canonical indexable page paths with hreflang, inLanguage and localized FAQs",()=>{
  assert.match(localized,/generateStaticParams/);
  assert.match(localized,/LOCALIZED_LOCALES/);
- assert.match(localized,/languageAlternates\("\/siai"\)/);
+ assert.match(localized,/siaiLanguageAlternates\(\)/);
  assert.match(localized,/inLanguage:c\.hreflang/);
  assert.match(localized,/SIAI_DISCOVERY\[locale\]/);
  assert.match(localized,/getSiaiDirectoryRows\(\)/);
- assert.match(sitemap,/localePath\(locale,"\/siai"\)/);
- assert.match(root,/languageAlternates\("\/siai"\)/);
+ assert.match(sitemapBuild,/localePath\(locale,"\/siai"\)/);
+ assert.match(sitemap,/buildSiteSitemap\(/);
+ assert.match(root,/siaiLanguageAlternates\(\)/);
+ assert.match(root,/generateMetadata/);
+ assert.match(hostPolicy,/CHINA_SITE/);
  assert.match(root,/title:\{absolute:/);
 });
 test("No duplicate company profiles and no unsourced candidate SEO listing",()=>{

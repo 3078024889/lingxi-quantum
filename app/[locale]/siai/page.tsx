@@ -6,14 +6,15 @@ import SiaiRankingHome from "@/components/SiaiRankingHome";
 import {getSiaiDirectoryRows} from "../../siai/catalog-data";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
-import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,localePath,languageAlternates} from "@/lib/seo/global-seo";
+import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,localePath} from "@/lib/seo/global-seo";
+import {siaiLanguageAlternates} from "@/lib/seo/siai-domain-policy";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 
 export const dynamic="force-dynamic";
 export const revalidate=0;
 type Props={params:Promise<{locale:string}>};
 export function generateStaticParams(){return LOCALIZED_LOCALES.map(locale=>({locale}))}
-const languages=Object.fromEntries(Object.entries(languageAlternates("/siai")).map(([lang,path])=>[lang,PRIMARY_SITE+path]));
+const languages=siaiLanguageAlternates();
 export async function generateMetadata({params}:Props):Promise<Metadata>{
  const {locale}=await params;
  if(!isSeoLocale(locale)||locale==="zh")return {robots:{index:false,follow:false}};
