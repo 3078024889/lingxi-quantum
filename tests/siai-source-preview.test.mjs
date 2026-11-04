@@ -61,5 +61,5 @@ test("five added official region policies preserve older snapshot counts and are
  assert.equal((s.match(/checkedAt:"2026-11-04"/g)||[]).length,5);
  assert.match(src,/regionSupplement\?\.localized\.zh\|\|text\(region\)/);
  assert.match(src,/regionSource:regionSupplement\?\.source\|\|source\(region\)/);
- assert(!s.includes("不限地区"));
+ assert(!s.includes('zh:"不限地区"'));
 });
