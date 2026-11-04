@@ -10,6 +10,15 @@ test('SIAI four production DOM screenshots: compact sourced ranking, live estima
  await expect(rows).toHaveCount(62);
  await expect(page.locator('.siai-home-table-scroll')).toHaveClass(/siai-home-table-flow/);
  await expect(page.locator('.siai-brand-mark').first()).toBeVisible();
+ // Eagerly decode every mapped local brand image; visible containers alone do not prove a logo loaded.
+ const logos=await page.locator('.siai-home-table tbody .siai-brand-mark img').evaluateAll(async nodes=>Promise.all(nodes.map(async node=>{
+  const img=node as HTMLImageElement;
+  img.loading='eager';
+  try{await img.decode();}catch{}
+  return {src:img.getAttribute('src')||'',ok:img.complete&&img.naturalWidth>0&&img.naturalHeight>0};
+ })));
+ expect(logos.length).toBeGreaterThanOrEqual(40);
+ expect(logos.filter(l=>!l.ok||!l.src.startsWith('/siai-brand-icons/'))).toEqual([]);
  await expect(page.locator('.siai-home-bottom-track')).toBeVisible();
  await expect(page.locator('.siai-home-identity').first()).not.toContainText('内容补充中');
  await expect(page.locator('.siai-home-identity').first()).not.toContainText('官网资料补充中');
