@@ -98,12 +98,30 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  const imageCopy=NATIVE_IMAGE_COPY[lang]||NATIVE_IMAGE_COPY.en;
  useEffect(()=>()=>recognitionAbort.current?.abort(),[]);
  const gestureRef=useRef<Gesture|null>(null);
+ const activeTouchRef=useRef<number|null>(null);
  const gestureUpdate=useRef<(x:number,y:number,id:number)=>void>(()=>{});
  useEffect(()=>{
   const move=(e:PointerEvent)=>gestureUpdate.current(e.clientX,e.clientY,e.pointerId);
-  const up=(e:PointerEvent)=>{if(gestureRef.current?.pointerId===e.pointerId)gestureRef.current=null};
+  const up=(e:PointerEvent)=>{if(activeTouchRef.current===null&&gestureRef.current?.pointerId===e.pointerId)gestureRef.current=null};
+  // Follow the active finger when mobile PointerEvents are cancelled or coalesced.
+  const touchMove=(e:TouchEvent)=>{
+   const finger=activeTouchRef.current,g=gestureRef.current;if(finger===null||!g)return;
+   const t=Array.from(e.touches).find(item=>item.identifier===finger);if(!t)return;
+   if(e.cancelable)e.preventDefault();gestureUpdate.current(t.clientX,t.clientY,g.pointerId);
+  };
+  const touchEnd=(e:TouchEvent)=>{
+   const finger=activeTouchRef.current;if(finger===null)return;
+   const t=Array.from(e.changedTouches).find(item=>item.identifier===finger);if(!t)return;
+   if(gestureRef.current)gestureUpdate.current(t.clientX,t.clientY,gestureRef.current.pointerId);
+   activeTouchRef.current=null;gestureRef.current=null;
+  };
   window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);window.addEventListener("pointercancel",up);
-  return()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);window.removeEventListener("pointercancel",up)};
+  window.addEventListener("touchmove",touchMove,{passive:false});
+  window.addEventListener("touchend",touchEnd);window.addEventListener("touchcancel",touchEnd);
+  return()=>{
+   window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);window.removeEventListener("pointercancel",up);
+   window.removeEventListener("touchmove",touchMove);window.removeEventListener("touchend",touchEnd);window.removeEventListener("touchcancel",touchEnd);
+  };
  },[]);
  const renderRevision=useRef(0);
  const [hydrated,setHydrated]=useState(false);
@@ -300,13 +318,26 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  async function exportNow(){setBusy(true);setError("");try{const bytes=await build();const result={blob:blobBytes(bytes),name:`lingxifield-${file?.name||"edited.pdf"}`};setOutput(result);pendingDownload.current=result;await savePaidTaskDraft({id:resultKey,toolId:resultKey,file:result.blob,fileName:result.name,fileType:result.blob.type,state:{ready:true}}).catch(()=>{});setDoneNote(deliveryText(lang,"ready"))}catch(e){setError(plainText(lang,"fileError"));throw e}finally{setBusy(false)}}
  async function completeExport(){await resetPaidTask();const result=pendingDownload.current;pendingDownload.current=null;if(result)await downloadBlob(result.blob,result.name);else setDoneNote(deliveryText(lang,"existing"));}
  async function rotateCurrent(){if(!file)return;setBusy(true);try{const d=await PDFDocument.load(await file.arrayBuffer()),p=d.getPage(selectedPage-1);p.setRotation(degrees((p.getRotation().angle+90)%360));const bytes=new Uint8Array(await d.save()),nf=new File([blobBytes(bytes)],file.name,{type:"application/pdf"});setOverlays(v=>v.filter(o=>o.page!==selectedPage));setFile(nf);await renderSourcePage(nf,selectedPage)}catch{setError(plainText(lang,"pdfError"))}finally{setBusy(false)}}
+ function beginGesture(id:number,grip:Grip,clientX:number,clientY:number,pointerId:number){
+  const stage=stageRef.current,o=overlays.find(v=>v.id===id);
+  if(!stage||!o||editingTextId===id||o.nativeImageDeleted||(o.nativeImageTarget&&grip==="rotate"))return;
+  setSelectedOverlayId(id);
+  const r=stage.getBoundingClientRect(),cx=r.left+(o.x+o.w/2)*r.width/100,cy=r.top+(o.y+o.h/2)*r.height/100;
+  gestureRef.current={id,pointerId,grip,startX:clientX,startY:clientY,angle0:Math.atan2(clientY-cy,clientX-cx),rect:r,origin:{...o}};
+ }
  function startGesture(e:React.PointerEvent,id:number,grip:Grip){
- const stage=stageRef.current,o=overlays.find(v=>v.id===id);if(!stage||!o||editingTextId===id||o.nativeImageDeleted||(o.nativeImageTarget&&grip==="rotate"))return;
- if(grip!=="move")e.preventDefault();e.stopPropagation();setSelectedOverlayId(id);
- const r=stage.getBoundingClientRect(),cx=r.left+(o.x+o.w/2)*r.width/100,cy=r.top+(o.y+o.h/2)*r.height/100;
- gestureRef.current={id,pointerId:e.pointerId,grip,startX:e.clientX,startY:e.clientY,angle0:Math.atan2(e.clientY-cy,e.clientX-cx),rect:r,origin:{...o}};
- try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
-}
+  if(grip!=="move")e.preventDefault();e.stopPropagation();
+  beginGesture(id,grip,e.clientX,e.clientY,e.pointerId);
+  if(gestureRef.current?.pointerId===e.pointerId)try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
+ }
+ function startTouchGesture(e:React.TouchEvent,id:number,grip:Grip){
+  if(e.touches.length!==1)return;
+  const t=e.changedTouches[0];if(!t)return;
+  e.stopPropagation();if(e.cancelable)e.preventDefault();
+  activeTouchRef.current=t.identifier;
+  // Most browsers start PointerEvents first; touch-only devices can also begin here.
+  if(!gestureRef.current)beginGesture(id,grip,t.clientX,t.clientY,-1);
+ }
 gestureUpdate.current=(px,py,pid)=>{
  const g=gestureRef.current;if(!g||g.pointerId!==pid)return;
  const o=g.origin,dx=(px-g.startX)/g.rect.width*100,dy=(py-g.startY)/g.rect.height*100;
@@ -326,11 +357,12 @@ function stopPointer(e:React.PointerEvent){
  // The last CDP/mobile touch movement can be coalesced into pointerup.
  // Commit the final real pointer position before releasing the gesture.
  gestureUpdate.current(e.clientX,e.clientY,e.pointerId);
- gestureRef.current=null;
+ if(activeTouchRef.current===null)gestureRef.current=null;
 }
-function cancelPointer(){gestureRef.current=null}
+function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=null}
  return <div className="space-y-5">{output&&<section data-testid="paid-export-result" className="rounded-2xl border p-5 space-y-3"><h2 className="font-semibold">{deliveryText(lang,"complete")}</h2><p className="break-all">{output.name}</p><p className="text-sm">{deliveryText(lang,"ready")}</p><div className="flex flex-wrap gap-3"><ResultFileActions blob={output.blob} name={output.name}/><button className="rounded-xl border px-4 py-3" onClick={()=>{setOutput(null);setDoneNote("");void deletePaidTaskDraft(resultKey);void resetPaidTask()}}>{deliveryText(lang,"fresh")}</button></div></section>}{!output&&doneNote&&<div role="status" className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{doneNote}</b></div>}<label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)void load(f)}} className="block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-7 text-center"><input type="file" accept={DOCUMENT_INPUT_ACCEPT} disabled={!hydrated||busy} className="hidden" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void load(f)}}/><b>{busy&&!file?c.opening:c.upload}</b></label>{file&&<><div className="flex flex-wrap items-center gap-2 text-sm"><span data-testid="pdf-source-page-count" className="rounded-full bg-[var(--lx-soft)] px-3 py-2">{plainText(lang,"pageCount",{count:pages})}</span><button disabled={selectedPage<=1} onClick={()=>{const n=Math.max(1,selectedPage-1);setSelectedPage(n);setSelectedPageInput(String(n))}} className="rounded-full border px-3 py-2">{c.prev}</button><label className="rounded-full border px-3 py-2">{c.page} <input data-testid="pdf-page-number-input" aria-label={c.page} inputMode="numeric" value={selectedPageInput} onChange={e=>setSelectedPageInput(e.target.value)} onBlur={commitPageInput} onKeyDown={e=>{if(e.key==="Enter")commitPageInput()}} className="w-12 bg-transparent text-center"/></label><button disabled={selectedPage>=pages} onClick={()=>{const n=Math.min(pages,selectedPage+1);setSelectedPage(n);setSelectedPageInput(String(n))}} className="rounded-full border px-3 py-2">{c.next}</button><button onClick={()=>void rotateCurrent()} className="rounded-full border px-3 py-2">{c.rotate}</button>{!signingOnly&&<button type="button" disabled={!pageImage||busy||recognizingPage} onClick={()=>void recognizeScannedPage()} className="rounded-full border px-3 py-2 disabled:opacity-40">{recognizingPage?sourceUi.scanning:sourceUi.scan}</button>}</div>{!signingOnly&&sourceTextRegions.length>0&&<p className="text-xs text-[var(--lx-muted)]">{sourceUi.hint} · {nativeCopy.explain}</p>}{recognitionMessage&&<p role="status" className="text-xs text-[var(--lx-muted)]">{recognitionMessage}</p>}<section className="rounded-2xl border bg-[var(--lx-soft)] p-3 sm:p-5"><div className="mb-3"><b>{c.edit}</b><p className="text-xs text-[var(--lx-muted)]">{c.editHint}</p></div><div ref={stageRef} data-testid="pdf-stage" onPointerMove={handlePointerMove} onPointerUp={stopPointer} onPointerCancel={cancelPointer} className="relative mx-auto w-full max-w-[760px] overflow-visible rounded-xl border bg-white shadow-sm touch-none">{pageImage?<img src={pageImage} alt="" className="block h-auto w-full select-none"/>:<div className="aspect-[0.707/1] w-full"/>}{!signingOnly&&sourceTextRegions.filter(r=>!visible.some(o=>o.sourceKey===r.key)).map(region=><button type="button" key={region.key} data-testid="pdf-source-text-region" data-source={region.source} aria-label={sourceUi.hint+": "+region.text} title={region.text} onDoubleClick={e=>{e.stopPropagation();void editExistingVisualText(region)}} className="absolute z-[3] cursor-text border border-transparent bg-transparent hover:border-sky-500 hover:bg-sky-300/10 focus:border-sky-600 focus:outline-none" style={{left:region.x+"%",top:region.y+"%",width:region.w+"%",height:region.h+"%",minHeight:"8px"}}/>)}{visible.filter(o=>o.nativeImageTarget&&o.nativeImageOriginal).map(o=><div key={"mask-"+o.id} data-testid="pdf-native-image-source-mask" aria-hidden="true" className="pointer-events-none absolute z-[1] bg-white" style={{left:o.nativeImageOriginal!.x+"%",top:o.nativeImageOriginal!.y+"%",width:o.nativeImageOriginal!.w+"%",height:o.nativeImageOriginal!.h+"%"}}/>)}{!signingOnly&&sourceImageRegions.filter(region=>!visible.some(o=>o.sourceKey===region.key)).map(region=><button key={region.key} type="button" data-testid="pdf-source-image-region" aria-label={imageCopy.select} title={imageCopy.select} onClick={e=>{e.stopPropagation();void selectNativeImage(region)}} className="absolute z-[1] cursor-pointer border border-transparent bg-transparent hover:border-sky-500 hover:bg-sky-300/10 focus:border-sky-600 focus:outline-none" style={{left:region.x+"%",top:region.y+"%",width:region.w+"%",height:region.h+"%"}}/>)}{visible.filter(o=>!o.nativeImageDeleted).map(o=><div key={o.id} data-testid="pdf-overlay" data-kind={o.kind} data-native={o.nativeTarget?"true":"false"} data-native-image={o.nativeImageTarget?"true":"false"} role="group" tabIndex={0}
  onPointerDown={e=>{if(editingTextId!==o.id)startGesture(e,o.id,"move")}}
+ onTouchStart={e=>{if(editingTextId!==o.id)startTouchGesture(e,o.id,"move")}}
  onDoubleClick={e=>{if(o.kind==="text"){e.stopPropagation();setSelectedOverlayId(o.id);setEditingTextId(o.id)}}}
  onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==="Delete"||e.key==="Backspace"){e.preventDefault();if(o.nativeImageTarget)deleteNativeImage(o);else setOverlays(v=>v.filter(x=>x.id!==o.id))}else if(e.key==="Enter"&&o.kind==="text"){e.preventDefault();setEditingTextId(o.id)}}}
  className={"absolute z-[4] select-none border-2 "+(selectedOverlayId===o.id&&editingTextId!==o.id?"border-sky-500":"border-transparent")}
@@ -348,11 +380,11 @@ function cancelPointer(){gestureRef.current=null}
  {selectedOverlayId===o.id&&editingTextId!==o.id&&<>
   {(["nw","n","ne","e","se","s","sw","w"] as const).map(grip=><button key={grip} type="button" data-testid={"pdf-grip-"+grip}
     aria-label={(RESIZE_LABEL[lang]||RESIZE_LABEL.en)+" "+grip}
-    onPointerDown={e=>startGesture(e,o.id,grip)} onPointerMove={handlePointerMove}
+    onPointerDown={e=>startGesture(e,o.id,grip)} onTouchStart={e=>startTouchGesture(e,o.id,grip)} onPointerMove={handlePointerMove}
     className="absolute z-30 h-6 w-6 rounded-full border-2 border-sky-600 bg-white shadow-sm touch-none sm:h-4 sm:w-4"
     style={{left:grip.includes("w")?"0%":grip.includes("e")?"100%":"50%",top:grip.includes("n")?"0%":grip.includes("s")?"100%":"50%",transform:"translate(-50%,-50%)"}}/>)}
   {!o.nativeImageTarget&&<button type="button" data-testid="pdf-grip-rotate" aria-label={lang==="zh"?"自由旋转":"Rotate freely"}
-    onPointerDown={e=>startGesture(e,o.id,"rotate")} onPointerMove={handlePointerMove}
+    onPointerDown={e=>startGesture(e,o.id,"rotate")} onTouchStart={e=>startTouchGesture(e,o.id,"rotate")} onPointerMove={handlePointerMove}
     className="absolute left-1/2 top-0 z-30 flex h-8 w-8 -translate-x-1/2 -translate-y-12 items-center justify-center rounded-full border-2 border-sky-600 bg-white text-sky-800 shadow touch-none">↻</button>}
   <button type="button" aria-label={c.delete} onPointerDown={e=>e.stopPropagation()} onClick={()=>{if(o.nativeImageTarget)deleteNativeImage(o);else{setOverlays(v=>v.filter(x=>x.id!==o.id));setSelectedOverlayId(null)}}}
     className="absolute -right-2 -top-11 z-30 rounded-full border bg-white px-2 py-1 text-rose-600 shadow">×</button>
