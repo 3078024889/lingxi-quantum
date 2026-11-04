@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import {headers} from "next/headers";
 import "./globals.css";
 import "./unified-shell.css";
 import "./siai-home.css";
@@ -71,8 +72,12 @@ export const metadata:Metadata={
 };
 
 import SiteVisitTracker from "@/components/SiteVisitTracker";
-export default function RootLayout({children}:{children:React.ReactNode}){
- return <html lang="zh-CN" dir="ltr" suppressHydrationWarning><head><link rel="describedby" href="/llms.txt" type="text/markdown"/><script dangerouslySetInnerHTML={{__html:LINGXIFIELD_HTML_LOCALE_BOOTSTRAP}}/>
+const VALID_SSR_LOCALES=new Set(["zh","en","ja","ko","fr","de","es","pt","ar"]);
+export default async function RootLayout({children}:{children:React.ReactNode}){
+ // Locale originates only from the middleware-derived, allowlisted request header.
+ const rawLocale=(await headers()).get("x-lingxifield-ssr-locale")||"zh";
+ const locale=VALID_SSR_LOCALES.has(rawLocale)?rawLocale:"zh";
+ return <html lang={locale==="zh"?"zh-CN":locale} dir={locale==="ar"?"rtl":"ltr"} suppressHydrationWarning><head><link rel="describedby" href="/llms.txt" type="text/markdown"/><script dangerouslySetInnerHTML={{__html:LINGXIFIELD_HTML_LOCALE_BOOTSTRAP}}/>
   <SiteStructuredData/>
   </head><body className="antialiased"><SiteVisitTracker/><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider><LingxifieldFeedback /></body></html>;
 }

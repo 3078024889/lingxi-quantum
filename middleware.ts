@@ -51,7 +51,12 @@ export async function middleware(request:NextRequest){
  }
  if(pathname.startsWith("/api/"))return NextResponse.next({request});
 
- let response=NextResponse.next({request});
+ const ssrLocaleMatch=pathname.match(/^\/(en|ja|ko|fr|de|es|pt|ar)(?:\/|$)/);
+ // Overwrite any client-supplied value, preventing locale-header spoofing.
+ const localeRequestHeaders=new Headers(request.headers);
+ localeRequestHeaders.set("x-lingxifield-ssr-locale",ssrLocaleMatch?.[1]||"zh");
+
+ let response=NextResponse.next({request:{headers:localeRequestHeaders}});
  if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
  if(requestHostname==="lingxifield.cn")response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
 
@@ -67,7 +72,7 @@ export async function middleware(request:NextRequest){
   getAll(){return request.cookies.getAll()},
   setAll(cookiesToSet){
    cookiesToSet.forEach(({name,value})=>request.cookies.set(name,value));
-   response=NextResponse.next({request});
+   response=NextResponse.next({request:{headers:localeRequestHeaders}});
    if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
    if(requestHostname==="lingxifield.cn")response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
    cookiesToSet.forEach(({name,value,options})=>response.cookies.set(name,value,options));
