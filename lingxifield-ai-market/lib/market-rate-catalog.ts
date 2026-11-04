@@ -578,8 +578,7 @@ export const VIDEO_RATES:readonly VideoRate[]=[
     "checkedAt": "2026-10-31",
     "apiPerMillionNoVideo": 70,
     "apiPerMillionWithVideo": 42
-  }
-] as VideoRate[,
+  },
 {
   "id": "minimax-h3-api-768p",
   "platform": "minimax",
@@ -626,8 +625,8 @@ export const VIDEO_RATES:readonly VideoRate[]=[
   "inputImagePrice": 0.04,
   "freeInputImagesPerClip": 5
 }
-];
-export const API_RATES:readonly ApiRate[
+] as VideoRate[];
+export const API_RATES:readonly ApiRate[]=[
 {
   "id": "minimax-m27-api",
   "platform": "minimax",
@@ -664,7 +663,6 @@ export const API_RATES:readonly ApiRate[
   "notes": "Command A 官方标准单价，按输入/输出 Token，特定上下文和工具调用另计。",
   "checkedAt": "2026-11-04"
 },
-]=[
   {
     "platform": "deepseek",
     "provider": "DeepSeek",
