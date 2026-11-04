@@ -88,18 +88,22 @@ export function filterMarketRows<T extends FacetRow>(rows:readonly T[],criteria:
   if(criteria.category!=='*'&&row.category!==criteria.category)return false;
   if(!taskMatches(row,criteria.task)||!evidenceMatches(row,criteria.evidence)||!paymentMatches(row,criteria.payment))return false;
   if(!query)return true;
-  const compact=query.replace(/[\\s，,。！!？?、：:（）()·]/g,'');
-  const imageQuestion=/图片生成|图片创作|生成图片|做图片|ai绘画|image generation|create images/i.test(compact);
-  const videoQuestion=/视频生成|生成视频|做视频|制作视频|免费视频|短剧生成|video generation|create videos/i.test(compact);
+  const compact=query.replace(/\s+|[，,。！!？?、：:（）()·]/g,'');
+  const both=/图片.{0,8}视频|images?.{0,24}videos?|同时做图片和视频|imageandvideo/i.test(compact);
+  const imageQuestion=both||/图片生成|图片创作|生成图片|做图片|ai绘画|文生图|imagegeneration|createimages/i.test(compact);
+  const videoQuestion=both||/视频生成|生成视频|做视频|制作视频|免费视频|短剧生成|图生视频|videogeneration|videogenerators?|createvideos/i.test(compact);
   // Common real task questions are capability intersections, not one literal string.
   if(imageQuestion&&videoQuestion)return taskMatches(row,'image')&&taskMatches(row,'video')&&(!/免费|free/i.test(compact)||hasSourcedFreeOffer(row));
   if(videoQuestion&&/免费|free/i.test(compact))return taskMatches(row,'video')&&hasSourcedFreeOffer(row);
+  if(imageQuestion&&/免费|free/i.test(compact))return taskMatches(row,'image')&&hasSourcedFreeOffer(row);
   if(/微信支付|wechatpay|weixinpay/i.test(compact))return paymentMatches(row,'wechat');
   if(/支付宝|alipay/i.test(compact))return paymentMatches(row,'alipay');
   if(/paypal/i.test(compact))return paymentMatches(row,'paypal');
   if(/^(?:图片生成|图片创作|ai绘画|文生图|imagegeneration)$/i.test(compact))return taskMatches(row,'image');
   if(/^(?:视频生成|视频创作|文生视频|图生视频|videogeneration)$/i.test(compact))return taskMatches(row,'video');
   if(/^(?:编程建站|ai编程建站|编程助手)$/i.test(compact))return taskMatches(row,'code');
+  if(imageQuestion)return taskMatches(row,'image');
+  if(videoQuestion)return taskMatches(row,'video');
   const text=[row.name,row.company,row.legal||'',row.category,row.localizedCategory||'',row.about,
    row.strength,row.localizedSummary||'',row.models,row.region,row.payment,...(row.searchTerms||[]),
    ...row.features].join(' ');
