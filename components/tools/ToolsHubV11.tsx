@@ -32,7 +32,7 @@ export default function ToolsHubV11(){
   ].filter(Boolean).join(" ")
  ),[tools,q,category,lang,freeOnly]);
 
- return <main className="lx11-page lx11-tools-page lx-tools-v124"><div className="lx11-wrap">
+ return <main className="lx11-page lx11-tools-page lx-tools-v124 lx-tools-compact"><div className="lx11-wrap">
   <section className="lx11-tools-hero"><div><span>{toolHubCopy(lang,"kicker")}</span><h1>{toolHubCopy(lang,"title")}</h1><p>{toolHubCopy(lang,"subtitle")}</p></div></section>
   <section className="lx11-tool-searchbar lx-tools-v124-search">
    <div className="lx11-tool-searchbox"><span>⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")}/></div>
@@ -44,12 +44,14 @@ export default function ToolsHubV11(){
    {list.map(item=>{
     const title=toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn);
     const summary=toolCardLine(lang,item.slug,item.kind,item.descZh,item.descEn);
-    return <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card">
+    return <Link href={item.href} key={item.href} className="lx11-tool-card lx-tools-v124-card" data-tool-slug={item.slug}>
      <div className="lx11-tool-cover"><ToolGlyph kind={item.kind} slug={item.slug}/></div>
      <div className="lx11-tool-copy"><div className="lx11-tool-title-row"><h3>{title}</h3></div>
       {summary?<p className="lx-tools-v124-desc">{summary}</p>:null}
-      <span className={`lx-tool-kind lx-tool-kind-${item.category}`}>{toolCategoryLabel(lang,item.category)}</span>
-      {isAnonymousLocalTool(item)&&<span className="lx-tool-kind">{access[2]}</span>}
+      <div className="lx-tools-compact-badges">
+       <span className={`lx-tool-kind lx-tool-kind-${item.category}`}>{toolCategoryLabel(lang,item.category)}</span>
+       {isAnonymousLocalTool(item)&&<span className="lx-tool-kind">{access[2]}</span>}
+      </div>
       <span className="lx-tool-card-arrow" aria-hidden="true">→</span>
      </div>
     </Link>
