@@ -68,7 +68,7 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
  }
  return snapshot.products.map(p=>{
   const f=p.facts,company=f.company,region=f.regions,history=CANDIDATE_HISTORY[p.id],regionSupplement=OFFICIAL_REGION_SUPPLEMENTS[p.id];
-  const latest=Object.values(f).map(v=>v.checkedAt).filter((v):v is string=>Boolean(v)).sort().at(-1)||null;
+  const latest=[...Object.values(f).map(v=>v.checkedAt),regionSupplement?.checkedAt].filter((v):v is string=>Boolean(v)).sort().at(-1)||null;
   const officialEntry=ENTRY[p.id]||p.website;
   if(!trusted(officialEntry)||!trusted(p.website))throw Error("UNSAFE_SIAI_OFFICIAL_LINK:"+p.id);
   return {
