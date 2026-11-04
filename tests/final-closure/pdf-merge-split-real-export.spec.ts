@@ -67,3 +67,24 @@ test("PDF merge retains page dimensions and order of both uploaded source PDFs",
  const reopened=await takePdf(page);
  expect(reopened.getPages().map(p=>p.getWidth())).toEqual([310,320,410]);
 });
+
+test("PDF merge/split offers correctly translated page headings in all nine site languages",async({page})=>{
+ test.setTimeout(90000);
+ const headings:{
+  lang:string;name:string
+ }[]=[
+  {lang:"zh",name:"PDF 合并、拆分与旋转"},
+  {lang:"en",name:"Merge, Split & Rotate PDFs"},
+  {lang:"ja",name:"PDFの結合・分割・回転"},
+  {lang:"ko",name:"PDF 병합·분할·회전"},
+  {lang:"fr",name:"Fusionner, diviser et pivoter des PDF"},
+  {lang:"de",name:"PDFs zusammenfügen, teilen und drehen"},
+  {lang:"es",name:"Unir, dividir y girar PDF"},
+  {lang:"pt",name:"Mesclar, dividir e girar PDFs"},
+  {lang:"ar",name:"دمج وتقسيم وتدوير ملفات PDF"},
+ ];
+ for(const {lang,name} of headings){
+  await page.goto("/tools/pdf-merge-split?lang="+lang);
+  await expect(page.getByRole("heading",{level:1})).toHaveText(name,{timeout:15000});
+ }
+});
