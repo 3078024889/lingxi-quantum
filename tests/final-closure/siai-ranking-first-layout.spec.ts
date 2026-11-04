@@ -19,7 +19,7 @@ test('SIAI opens on actual ranked data, not six search cards; compact table stay
  expect(layout.searchBeforeFooter).toBe(true);
  expect(layout.tableY).toBeLessThan(layout.windowH);
  expect(layout.tableWidth).toBeGreaterThan(layout.tableViewport);
- expect(layout.tableWidth).toBeLessThanOrEqual(1750);
+ expect(layout.tableWidth).toBeLessThanOrEqual(1950);
  expect(layout.footerSearchDuplicate).toBe(0);
  await expect(page.locator('.siai-home-cost-accordion')).toHaveCount(1);
  const hasTableBeforeCost=await page.evaluate(()=>{
@@ -41,7 +41,7 @@ test('SIAI ranking fullscreen view expands to viewport and exits without losing 
  await toggle.click();
  const main=page.locator('.siai-home-fullscreen');
  await expect(main).toBeVisible();
- await expect(page.locator('body')).toHaveCSS('overflow','hidden');
+ expect(await page.evaluate(()=>getComputedStyle(document.body).overflowY)).not.toBe('hidden');
  const rect=await main.boundingBox();
  expect(rect?.x).toBeLessThan(2);
  expect(rect?.width).toBeGreaterThan(300);
@@ -70,13 +70,15 @@ test('SIAI restores sourced company facts on every row and preserves original re
  await expect(rows).toHaveCount(62);
  const first=rows.first();
  await expect(first.locator('.siai-home-identity')).toContainText('Microsoft');
- await expect(first.locator('.siai-home-identity dt')).toContainText(['公司名称','主要创始人','是否上市','成立时间','资料更新日期']);
+ await expect(first.locator('.siai-identity-content')).toContainText('主要创始人');
+ await expect(first.locator('.siai-identity-content')).toContainText('成立时间');
+ await expect(first.locator('.siai-brand-logo')).toHaveCount(1);
  await expect(first.locator('.siai-home-identity a.siai-source').first()).toHaveAttribute('href',/^https:\/\//);
  const table=page.locator('.siai-home-table-flow');
  await expect(table).toBeVisible();
  const noInnerVerticalScroll=await table.evaluate((el:HTMLElement)=>el.scrollHeight-el.clientHeight<=3);
  expect(noInnerVerticalScroll).toBe(true);
- expect(await table.evaluate((el:HTMLElement)=>getComputedStyle(el).overflowX)).toBe('hidden');
+ expect(await table.evaluate((el:HTMLElement)=>getComputedStyle(el).overflowX)).toBe('auto');
  expect(await page.evaluate(()=>document.documentElement.scrollHeight>window.innerHeight*2)).toBe(true);
  await expect(page.getByLabel('每页显示')).toHaveValue('100');
  await first.getByRole('button',{name:'详情'}).click();

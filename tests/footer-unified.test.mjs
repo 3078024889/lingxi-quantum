@@ -52,9 +52,11 @@ test("home, market, SASI and tools all render one shared footer with original li
   assert(read(page).includes('import Footer from "@/components/Footer"'),page);
  assert.match(footer,/<section className="lx-footer-unified"/);
  assert.match(footer,/FOOTER_UNIFIED\[lang\]/);
- assert.match(footer,/FOOTER_TOOL_ICONS\[i\]/);
- assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
- assert.match(footer,/siai-search-ranking-/);
+ assert.match(footer,/FOOTER_TOOL_ICONS_COMPACT\[i\]/);
+ assert.match(footer,/terminal\.questions\.map\(\(q,i\)=>/);
+ assert.match(footer,/FOOTER_NAV_ANCHORS\[i\]/);
+ assert.match(footer,/FOOTER_QUESTION_TARGETS\[i\]/);
+ assert.match(footer,/FOOTER_TOOL_TARGETS\[i\]/);
  for(const marker of ["lx11-footer-grid","lx11-footer-social","lx-footer-qr-row","lx11-footer-legal","business@lingxifield.com"])
   assert(footer.includes(marker),marker);
  assert.doesNotMatch(footer,/!isRankingRoute|usePathname|copy\[lang\]\.lead/);
