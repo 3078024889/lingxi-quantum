@@ -40,6 +40,16 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
  await expect(item).toBeVisible();
  const grip=page.getByTestId("pdf-grip-se");
  await grip.scrollIntoViewIfNeeded();await expect(grip).toBeVisible();
+ if(mobile){
+  // The 44px southeast touch target must be the actual hit-tested control.
+  // On small overlays, eight adjacent touch handles previously overlapped.
+  await expect(page.getByTestId("pdf-grip-e")).toBeHidden();
+  const target=await grip.evaluate(el=>{
+   const r=el.getBoundingClientRect();
+   return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.closest('[data-testid="pdf-grip-se"]')===el;
+  });
+  expect(target).toBe(true);
+ }
  const before=await item.boundingBox(),r=await grip.boundingBox();
  expect(before).not.toBeNull();expect(r).not.toBeNull();
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
