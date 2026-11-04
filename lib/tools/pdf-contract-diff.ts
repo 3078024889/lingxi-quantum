@@ -17,10 +17,19 @@ function uniqueMatches(pages:string[],pattern:RegExp):Match[]{
  }
  return values;
 }
+function escapeInline(value:string):string{
+ // Extracted PDF text must not introduce Markdown links, HTML tags, or forged report structure.
+ return value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/([\\\x60*_!\[\]])/g,"\\$1");
+}
+function codeBlock(value:string):string{
+ // Indented code blocks preserve PDF text without executing HTML or loading remote images.
+ return (value||"[No extractable text]").replace(/\r\n?/g,"\n").split("\n").map(line=>"    "+line).join("\n");
+}
 function section(title:string,a:Match[],b:Match[]):string{
  const fa=a.map(x=>"Page "+x.page+": "+x.value),fb=b.map(x=>"Page "+x.page+": "+x.value);
  if(JSON.stringify(fa)===JSON.stringify(fb))return "";
- const show=(v:string[])=>v.length?v.slice(0,25).map(x=>"- "+x).join("\n"):"- None extracted";
+ const show=(v:string[])=>v.length?v.slice(0,25).map(x=>"- "+escapeInline(x)).join("\n")+(v.length>25?"\n- At least "+(v.length-25)+" additional matches omitted from this summary. Review the page comparison.":"")+(v.length>=80?"\n- Match collection capped at 80 entries; further matches may exist.":""):"- None extracted";
  return "### "+title+"\n\n**Document A**\n"+show(fa)+"\n\n**Document B**\n"+show(fb)+"\n";
 }
 const amountRe=/(?:\b(?:USD|CNY|RMB|EUR|GBP|HKD|SGD)\b|[¥￥$€£])\s*\d[\d,]*(?:\.\d{1,2})?/gi;
@@ -36,7 +45,7 @@ export function comparePdfTextLayers(a:string[],b:string[]):string{
  ].filter(Boolean);
  const pages:string[]=[];
  for(let i=0;i<Math.max(a.length,b.length);i++){
-  if((a[i]||"")!==(b[i]||""))pages.push("### Page "+(i+1)+"\n\n**A**\n"+(a[i]||"[No extractable text]")+"\n\n**B**\n"+(b[i]||"[No extractable text]")+"\n");
+  if((a[i]||"")!==(b[i]||""))pages.push("### Page "+(i+1)+"\n\n**A**\n\n"+codeBlock(a[i]||"")+"\n\n**B**\n\n"+codeBlock(b[i]||"")+"\n");
  }
  const partial=a.some(x=>!x?.trim())||b.some(x=>!x?.trim());
  return intro+(partial?"> Some pages have no extractable text. A scan may require OCR before comparing.\n\n":"")+

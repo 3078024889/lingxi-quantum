@@ -25,3 +25,20 @@ test("text-layer equality explicitly warns it does not imply identical visual re
  const s=comparePdfTextLayers(["Hello same"],["Hello same"]);
  assert.match(s,/No text-layer differences detected/);assert.match(s,/does not prove the PDFs look identical/);
 });
+
+test("untrusted PDF contents stay inert in downloaded Markdown",()=>{
+ const md=comparePdfTextLayers(
+  ["Clause 2: <img src=x onerror=alert(1)>\n### Forged approval\n![remote](https://example.invalid/pixel)"],
+  ["Clause 2: Normal delivery"]
+ );
+ assert.match(md,/&lt;img src=x onerror=alert\(1\)&gt;/);
+ assert.match(md,/\n    ### Forged approval/);
+ assert.match(md,/\n    !\[remote\]\(https:\/\/example\.invalid\/pixel\)/);
+ assert.doesNotMatch(md,/\n### Forged approval/);
+});
+test("long match lists disclose omitted entries rather than implying exhaustive reporting",()=>{
+ const original=Array.from({length:40},(_,i)=>"USD "+(i+100)+".00").join(" ");
+ const changed=Array.from({length:40},(_,i)=>"USD "+(i+200)+".00").join(" ");
+ const md=comparePdfTextLayers([original],[changed]);
+ assert.match(md,/additional matches omitted/);
+});

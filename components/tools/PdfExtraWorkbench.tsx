@@ -24,7 +24,7 @@ const COMPARE_NO_TEXT:Record<string,string>={
  ar:"لا يحتوي ملف PDF واحد على الأقل على نص قابل للاستخراج. شغّل OCR لملفات PDF أولاً."
 };
 
-async function extract(file:File){const pdf=await openPdf(file),pages:string[]=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),c=await page.getTextContent();pages.push((c.items||[]).map((x:any)=>String(x.str||"")).join(" "))}pdf.destroy?.();return pages}
+async function extract(file:File){const pdf=await openPdf(file),pages:string[]=[];try{for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),c=await page.getTextContent();pages.push((c.items||[]).map((x:any)=>String(x.str||"")).join(" "))}return pages}finally{await pdf.destroy?.()}}
 const blob=(bytes:Uint8Array)=>new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
 export default function PdfExtraWorkbench({mode}:{mode:Mode}){
  const {lang}=useLingxiLang();
