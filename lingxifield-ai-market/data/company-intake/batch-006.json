@@ -22,9 +22,7 @@
         "GPT 开发接口"
       ],
       "publisherGroupId": "openai",
-      "aliases": [
-        "OpenAI Developer API"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://developers.openai.com/api/docs/pricing",
       "verifiedFacts": {},
@@ -48,9 +46,7 @@
         "Anthropic开发者平台"
       ],
       "publisherGroupId": "anthropic",
-      "aliases": [
-        "Claude Platform API"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://docs.anthropic.com/zh-CN/home",
       "verifiedFacts": {},
@@ -74,9 +70,7 @@
         "Perplexity Search API"
       ],
       "publisherGroupId": "perplexity",
-      "aliases": [
-        "Perplexity Agent API"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://www.perplexity.ai/api-platform",
       "verifiedFacts": {},
@@ -100,9 +94,7 @@
         "Mistral开发者"
       ],
       "publisherGroupId": "mistral",
-      "aliases": [
-        "Mistral Studio Developer API"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://docs.mistral.ai/studio",
       "verifiedFacts": {},
@@ -126,9 +118,7 @@
         "Grok API定价"
       ],
       "publisherGroupId": "xai",
-      "aliases": [
-        "xAI Grok Developer API"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://docs.x.ai/developers/pricing",
       "verifiedFacts": {},
@@ -152,9 +142,7 @@
         "DeepSeek开发接口"
       ],
       "publisherGroupId": "deepseek",
-      "aliases": [
-        "DeepSeek API"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://api-docs.deepseek.com/quick_start/pricing-details-cny/",
       "verifiedFacts": {},
@@ -178,9 +166,7 @@
         "月之暗面开发接口"
       ],
       "publisherGroupId": "moonshot",
-      "aliases": [
-        "Kimi API 开放平台"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://www.kimi.ai/help/kimi-api/api-overview",
       "verifiedFacts": {},
@@ -204,9 +190,7 @@
         "GLM模型开发"
       ],
       "publisherGroupId": "zhipu",
-      "aliases": [
-        "智谱 BigModel 开放平台 API"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://docs.bigmodel.cn/cn/api/introduction",
       "verifiedFacts": {},
@@ -230,9 +214,7 @@
         "海螺视频API"
       ],
       "publisherGroupId": "minimax",
-      "aliases": [
-        "MiniMax API Platform"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
       "verifiedFacts": {},
@@ -256,9 +238,7 @@
         "ElevenAPI语音生成"
       ],
       "publisherGroupId": "elevenlabs",
-      "aliases": [
-        "ElevenLabs ElevenAPI"
-      ],
+      "aliases": [],
       "discoveredAt": "2026-11-04",
       "discoverySource": "https://elevenlabs.io/pricing/api",
       "verifiedFacts": {},
