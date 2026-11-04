@@ -46,16 +46,16 @@ const FOOTER_LINKS:Record<LingxiLang,LinkLabels>={
  ar:{rankings:"اكتشف أدوات الذكاء",rankSub:"تصنيف أدوات الذكاء",sasi:"إبداع SASI",tools:"أدوات مجانية",account:"عن الموقع والحساب",terms:"الشروط",privacy:"الخصوصية",about:"من نحن",free:"تجربة مجانية يومية",contacts:"تواصل معنا",drama:"دراما قصيرة",website:"إنشاء المواقع",books:"أسئلة الكتب",learning:"SASI للتعلّم",research:"SASI للبحث",pdf:"PDF والتوقيع",ocr:"الصور وOCR",video:"الفيديو والصوت",temp:"بريد مؤقت",all:"كل الأدوات",brandLead:"مقارنة أدوات الذكاء · إبداع SASI · أدوات مجانية"}
 };
 
-const FOOTER_MARKET_DETAIL:Record<LingxiLang,[string,string,string]>={
- zh:["功能与模型对比","免费额度与价格","地区、付款与商用条件"],
- en:["Features and models","Free tiers and prices","Regions, payment and licenses"],
- ja:["機能とモデル比較","無料枠と料金","地域・決済・商用条件"],
- ko:["기능·모델 비교","무료 한도·가격","지역·결제·상업적 이용"],
- fr:["Fonctions et modèles","Offres gratuites et tarifs","Régions, paiement et licence"],
- de:["Funktionen und Modelle","Gratis-Tarife und Preise","Regionen, Zahlungen und Lizenzen"],
- es:["Funciones y modelos","Planes gratis y precios","Regiones, pagos y licencias"],
- pt:["Recursos e modelos","Planos grátis e preços","Regiões, pagamentos e licenças"],
- ar:["الوظائف والنماذج","الخطط المجانية والأسعار","المناطق والدفع والتراخيص"]
+const FOOTER_BRAND_SHORT:Record<LingxiLang,string>={
+ zh:"全球 SI / AI / SIAI 工具行情、排行榜、SASI 智能创作与 100+ 在线实用工具。",
+ en:"Global SI / AI / SIAI rankings, SASI creation and 100+ online utilities.",
+ ja:"世界のSI・AI・SIAIランキング、SASI創作、100以上のオンラインツール。",
+ ko:"글로벌 SI / AI / SIAI 순위, SASI 창작과 100개 이상의 온라인 도구.",
+ fr:"Classements mondiaux SI/IA/SIAI, création SASI et plus de 100 outils en ligne.",
+ de:"Globale SI/KI/SIAI-Rankings, SASI-Kreation und über 100 Online-Tools.",
+ es:"Ranking mundial SI/IA/SIAI, creación SASI y más de 100 herramientas en línea.",
+ pt:"Ranking global SI/IA/SIAI, criação SASI e mais de 100 ferramentas online.",
+ ar:"تصنيفات SI وAI وSIAI العالمية وإبداع SASI وأكثر من 100 أداة عبر الإنترنت."
 };
 
 export default function Footer(){
@@ -63,20 +63,16 @@ export default function Footer(){
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
  const discovery=SIAI_DISCOVERY[lang];
  const overview=FOOTER_UNIFIED[lang];
- const [modelLink,freeLink,regionLink]=FOOTER_MARKET_DETAIL[lang];
  return <footer className="lx11-footer lx-branded-footer" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
-    <p className="lx-footer-brand-intro">{overview.intro}</p>
+    <p className="lx-footer-brand-intro">{FOOTER_BRAND_SHORT[lang]}</p>
     <div className="lx-footer-brand-social">{channels.filter(([label])=>["小红书","X","YouTube"].includes(label)).map(([label,href])=><a href={href} key={label} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
-    <Link href="/siai">{c.rankSub}</Link>
-    <Link href="/siai">{modelLink}</Link>
-    <Link href="/siai">{freeLink}</Link>
-    <Link href="/siai">{regionLink}</Link>
+    {discovery.topics.map((topic,i)=><Link key={topic.q} href={"/siai#siai-search-ranking-"+i}>{topic.q}</Link>)}
     <Link href={"/siai/claim?lang="+lang}>{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</Link>
    </nav>
    <nav aria-label={c.sasi}>

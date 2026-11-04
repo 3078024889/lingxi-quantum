@@ -39,6 +39,9 @@ test('SIAI four production DOM screenshots: compact sourced ranking, live estima
  const footer=page.locator('footer.lx11-footer');
  await expect(footer).toBeVisible();
  await expect(footer.locator('.lx11-footer-grid>nav')).toHaveCount(4);
+ const discoveryLinks=footer.locator('.lx11-footer-grid>nav').first().locator('a[href*="#siai-search-ranking-"]');
+ await expect(discoveryLinks).toHaveCount(6);
+ for(let i=0;i<6;i++)await expect(discoveryLinks.nth(i)).toHaveAttribute('href',"/siai#siai-search-ranking-"+i);
  await expect(footer.locator('.lx-footer-tool-chips a')).toHaveCount(8);
  await footer.locator('.lx11-footer-grid').screenshot({path:'test-results/siai-4-footer-nav-'+platform+'.png',animations:'disabled'});
  await footer.locator('.lx-footer-unified').screenshot({path:'test-results/siai-5-footer-information-'+platform+'.png',animations:'disabled'});
