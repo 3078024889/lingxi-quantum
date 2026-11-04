@@ -82,7 +82,7 @@ test("changing size, format, fit and output quality hides stale exports; PNG has
  await page.getByRole("button",{name:/^Process 1 image/}).click();
  const save=page.getByRole("button",{name:"Save file",exact:true}).first();
  await expect(save).toBeVisible({timeout:20000});
- await page.getByRole("button",{name:"512×512",exact:true}).click();
+ await page.getByRole("button",{name:/512×512/}).click();
  await expect(save).toHaveCount(0);
  await output.selectOption("image/jpeg");
  await expect(page.locator("label").filter({hasText:/^Quality\s+\d+%$/})).toBeVisible();
