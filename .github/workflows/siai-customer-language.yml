@@ -7,6 +7,9 @@ on:
   pull_request:
     paths:
       - 'components/Footer.tsx'
+      - 'components/UnifiedFooterOverview.tsx'
+      - 'app/unified-shell.css'
+      - 'tests/siai-unified-footer.test.mjs'
       - 'components/SiaiRankingHome.tsx'
       - 'components/HomeSeoAnswers.tsx'
       - 'lib/siai-search-discovery.ts'
@@ -33,4 +36,4 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: Verify nine-language public descriptions and source data
-        run: node --test tests/siai-customer-language.test.mjs tests/siai-search-discovery.test.mjs tests/siai-source-preview.test.mjs
+        run: node --test tests/siai-customer-language.test.mjs tests/siai-search-discovery.test.mjs tests/siai-source-preview.test.mjs tests/siai-unified-footer.test.mjs
