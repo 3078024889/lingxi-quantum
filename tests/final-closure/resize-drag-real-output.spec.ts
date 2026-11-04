@@ -43,9 +43,12 @@ test("dragging a crop on the real preview moves the actual saved pixels and inva
  await page.getByRole("combobox",{name:"Output format",exact:true}).selectOption("image/png");
  const preview=page.getByTestId("resize-drag-preview");
  await expect(preview).toHaveAttribute("data-fit","cover");
+ await expect(preview.locator('img[src^="blob:"]')).toBeVisible({timeout:15000});
  await expect(page.getByText("Drag the image to choose what stays in frame.",{exact:true})).toBeVisible();
  await expect(page.getByText("Fine-tune position (optional)",{exact:true})).toBeVisible();
  const rect=await preview.boundingBox();if(!rect)throw Error("PREVIEW_NOT_VISIBLE");
+ // The viewport, not the natural image dimensions, determines the crop ratio.
+ expect(Math.abs(rect.width-rect.height)).toBeLessThan(4);
  const y=rect.y+rect.height/2;
  await page.mouse.move(rect.x+rect.width*.5,y);
  await page.mouse.down();
