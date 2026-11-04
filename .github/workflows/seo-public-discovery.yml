@@ -49,7 +49,11 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Audit all indexable public content
         run: pnpm seo:audit:fullsite
-      - name: Production build (without deployment)
+      - name: Production-indexing-mode build (without deployment)
+        env:
+          VERCEL_ENV: production
         run: pnpm build
       - name: Check actual server-rendered URLs and metadata
+        env:
+          VERCEL_ENV: production
         run: node scripts/seo/verify-built-pages.mjs
