@@ -50,8 +50,8 @@ for(const t of seo.GLOBAL_TOOL_CATALOG){
  const direct=path.join(root,'app','tools',t.slug,'page.tsx');
  if(fs.existsSync(direct)){
   const code=fs.readFileSync(direct,'utf8');
-  assert(!/\\bredirect\\s*\\(/.test(code),`redirecting tool included in sitemap: ${t.slug}`);
-  assert(/export\\s+const\\s+metadata\\b|generateMetadata\\s*\\(/.test(code),`dedicated tool metadata missing: ${t.slug}`);
+  assert(!/\bredirect\s*\(/.test(code),`redirecting tool included in sitemap: ${t.slug}`);
+  assert(/export\s+const\s+metadata\b|generateMetadata\s*\(/.test(code),`dedicated tool metadata missing: ${t.slug}`);
   assert(/canonical|buildToolMetadata|buildSearchOptimizedToolMetadata|publicPageMetadata/.test(code),`dedicated tool canonical missing: ${t.slug}`);
  }
  assert(fs.existsSync(path.join(root,`app/tools/${t.slug}/page.tsx`))||registry.getTool(t.slug)&&!registry.getTool(t.slug).dedicatedRoute,`missing route: ${t.slug}`);
