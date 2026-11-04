@@ -349,3 +349,15 @@
 
 /* Stored SVG logos are local, not remote favicons: no broken placeholder or outside tracking. */
 .siai-brand-mark img{width:32px;height:32px;max-width:32px;max-height:32px;object-fit:contain}
+
+/* Mobile-first table interaction: swipe columns directly on data cells.
+   Preserve normal document wheel/vertical touch scrolling in full-page mode.
+   Do not force the user to drag only the tiny top or bottom tracks. */
+@media (max-width:900px){
+ .siai-home-table-scroll.siai-home-table-flow,
+ .siai-home-table-scroll.siai-home-table-bounded{
+  overflow-x:auto!important;
+  touch-action:pan-x pan-y!important;
+  -webkit-overflow-scrolling:touch;
+ }
+}
