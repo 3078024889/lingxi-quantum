@@ -10,7 +10,7 @@ type Orientation="auto"|"portrait"|"landscape";
 type Margin="none"|"small"|"big";
 type C={lead:string;run:string;busy:string;ready:string;error:string;pageSize:string;orientation:string;margin:string;fit:string;a4:string;letter:string;auto:string;portrait:string;landscape:string;none:string;small:string;big:string;up:string;down:string;remove:string};
 const D:Record<LingxiLang,C>={
- zh:{lead:"多张图片可以一次整理成 PDF：拖动调整顺序，并选择页面大小、方向和边距。",run:"生成 PDF",busy:"正在生成…",ready:"PDF 已生成，可以核对页数后下载。",error:"图片转 PDF 没有完成",pageSize:"页面大小",orientation:"方向",margin:"边距",fit:"按图片原尺寸",a4:"A4",letter:"US Letter",auto:"自动",portrait:"竖向",landscape:"横向",none:"无",small:"小",big:"大",up:"上移",down:"下移",remove:"移除"},
+ zh:{lead:"多张图片一次转 PDF，用上移、下移调整顺序，选择页面尺寸和边距。",run:"生成 PDF",busy:"正在生成…",ready:"PDF 已生成，可以核对页数后下载。",error:"图片转 PDF 没有完成",pageSize:"页面大小",orientation:"方向",margin:"边距",fit:"按图片原尺寸",a4:"A4",letter:"US Letter",auto:"自动",portrait:"竖向",landscape:"横向",none:"无",small:"小",big:"大",up:"上移",down:"下移",remove:"移除"},
  en:{lead:"Turn multiple images into one PDF, reorder them, and choose page size, orientation, and margins.",run:"Create PDF",busy:"Creating…",ready:"The PDF is ready. Review the page count before downloading.",error:"Image-to-PDF did not finish",pageSize:"Page size",orientation:"Orientation",margin:"Margin",fit:"Fit image size",a4:"A4",letter:"US Letter",auto:"Auto",portrait:"Portrait",landscape:"Landscape",none:"None",small:"Small",big:"Large",up:"Up",down:"Down",remove:"Remove"},
  ja:{lead:"複数の画像を1つのPDFにまとめ、順序・用紙サイズ・向き・余白を調整できます。",run:"PDFを生成",busy:"生成中…",ready:"PDFを生成しました。ページ数を確認して保存できます。",error:"PDFを生成できませんでした",pageSize:"用紙サイズ",orientation:"向き",margin:"余白",fit:"画像サイズ",a4:"A4",letter:"US Letter",auto:"自動",portrait:"縦",landscape:"横",none:"なし",small:"小",big:"大",up:"上へ",down:"下へ",remove:"削除"},
  ko:{lead:"여러 이미지를 하나의 PDF로 만들고 순서, 용지 크기, 방향과 여백을 조정할 수 있습니다.",run:"PDF 생성",busy:"생성 중…",ready:"PDF가 준비되었습니다. 페이지 수를 확인한 후 저장하세요.",error:"이미지 PDF 변환을 완료하지 못했습니다",pageSize:"페이지 크기",orientation:"방향",margin:"여백",fit:"이미지 크기",a4:"A4",letter:"US Letter",auto:"자동",portrait:"세로",landscape:"가로",none:"없음",small:"작게",big:"크게",up:"위로",down:"아래로",remove:"삭제"},
@@ -21,8 +21,8 @@ const D:Record<LingxiLang,C>={
  ar:{lead:"حوّل عدة صور إلى ملف PDF واحد، ورتّبها واختر حجم الصفحة والاتجاه والهوامش.",run:"إنشاء PDF",busy:"جارٍ الإنشاء…",ready:"ملف PDF جاهز. راجع عدد الصفحات قبل التنزيل.",error:"تعذر إنشاء PDF",pageSize:"حجم الصفحة",orientation:"الاتجاه",margin:"الهامش",fit:"حجم الصورة",a4:"A4",letter:"US Letter",auto:"تلقائي",portrait:"عمودي",landscape:"أفقي",none:"بدون",small:"صغير",big:"كبير",up:"أعلى",down:"أسفل",remove:"إزالة"}
 };
 function mm(value:Margin){return value==="none"?0:value==="small"?18:36}
-function pageBox(size:PageSize,orientation:Orientation,imageW:number,imageH:number){
- if(size==="fit")return{w:imageW,h:imageH};
+function pageBox(size:PageSize,orientation:Orientation,imageW:number,imageH:number,marginPoints:number){
+ if(size==="fit")return{w:imageW+marginPoints*2,h:imageH+marginPoints*2};
  const base=size==="a4"?[595.28,841.89]:[612,792];
  let [w,h]=base as [number,number];
  const landscape=orientation==="landscape"||(orientation==="auto"&&imageW>imageH);
@@ -33,7 +33,8 @@ export default function ImageToPdfWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]);
  const[pageSize,setPageSize]=useState<PageSize>("fit"),[orientation,setOrientation]=useState<Orientation>("auto"),[margin,setMargin]=useState<Margin>("small");
- function move(index:number,direction:-1|1){setFiles(current=>{const next=[...current],target=index+direction;if(target<0||target>=next.length)return current;[next[index],next[target]]=[next[target],next[index]];return next})}
+ function invalidate(){setResult([]);setError("")}
+ function move(index:number,direction:-1|1){invalidate();setFiles(current=>{const next=[...current],target=index+direction;if(target<0||target>=next.length)return current;[next[index],next[target]]=[next[target],next[index]];return next})}
  async function run(){
   if(!files.length)return;setBusy(true);setError("");setResult([]);
   try{
@@ -42,7 +43,7 @@ export default function ImageToPdfWorkbench(){
     const ab=await f.arrayBuffer(),isPng=f.type==="image/png"||/\.png$/i.test(f.name),isJpg=f.type==="image/jpeg"||/\.jpe?g$/i.test(f.name);
     if(!isPng&&!isJpg)throw new Error("UNSUPPORTED_IMAGE");
     const img=isPng?await out.embedPng(ab):await out.embedJpg(ab);
-    const box=pageBox(pageSize,orientation,img.width,img.height),m=mm(margin);
+    const m=mm(margin),box=pageBox(pageSize,orientation,img.width,img.height,m);
     const availableW=Math.max(1,box.w-m*2),availableH=Math.max(1,box.h-m*2),scale=Math.min(availableW/img.width,availableH/img.height);
     const drawW=pageSize==="fit"?img.width:img.width*scale,drawH=pageSize==="fit"?img.height:img.height*scale;
     const page=out.addPage([box.w,box.h]);
@@ -58,12 +59,12 @@ export default function ImageToPdfWorkbench(){
   <FileDropzone accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple maxFiles={100} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy} kind="image"/>
   <p className="text-sm text-[var(--lx-muted)]">{c.lead}</p>
   {files.length>0&&<div className="space-y-2 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm">
-   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate">{i+1}. {f.name}</span><button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="rounded-lg border px-2 py-1 text-xs">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="rounded-lg border px-2 py-1 text-xs">{c.down}</button><button type="button" disabled={busy} onClick={()=>setFiles(current=>current.filter((_,j)=>j!==i))} className="rounded-lg border px-2 py-1 text-xs">{c.remove}</button></div>)}
+   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate">{i+1}. {f.name}</span><button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="rounded-lg border px-2 py-1 text-xs">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="rounded-lg border px-2 py-1 text-xs">{c.down}</button><button type="button" disabled={busy} onClick={()=>{invalidate();setFiles(current=>current.filter((_,j)=>j!==i))}} className="rounded-lg border px-2 py-1 text-xs">{c.remove}</button></div>)}
   </div>}
   {files.length>0&&<div className="grid gap-3 sm:grid-cols-3">
-   <label className="space-y-1 text-sm"><span>{c.pageSize}</span><select disabled={busy} value={pageSize} onChange={e=>setPageSize(e.target.value as PageSize)} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="fit">{c.fit}</option><option value="a4">{c.a4}</option><option value="letter">{c.letter}</option></select></label>
-   <label className="space-y-1 text-sm"><span>{c.orientation}</span><select disabled={busy} value={orientation} onChange={e=>setOrientation(e.target.value as Orientation)} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="auto">{c.auto}</option><option value="portrait">{c.portrait}</option><option value="landscape">{c.landscape}</option></select></label>
-   <label className="space-y-1 text-sm"><span>{c.margin}</span><select disabled={busy} value={margin} onChange={e=>setMargin(e.target.value as Margin)} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="none">{c.none}</option><option value="small">{c.small}</option><option value="big">{c.big}</option></select></label>
+   <label className="space-y-1 text-sm"><span>{c.pageSize}</span><select disabled={busy} value={pageSize} onChange={e=>{setPageSize(e.target.value as PageSize);invalidate()}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="fit">{c.fit}</option><option value="a4">{c.a4}</option><option value="letter">{c.letter}</option></select></label>
+   <label className="space-y-1 text-sm"><span>{c.orientation}</span><select disabled={busy} value={orientation} onChange={e=>{setOrientation(e.target.value as Orientation);invalidate()}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="auto">{c.auto}</option><option value="portrait">{c.portrait}</option><option value="landscape">{c.landscape}</option></select></label>
+   <label className="space-y-1 text-sm"><span>{c.margin}</span><select disabled={busy} value={margin} onChange={e=>{setMargin(e.target.value as Margin);invalidate()}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="none">{c.none}</option><option value="small">{c.small}</option><option value="big">{c.big}</option></select></label>
   </div>}
   <button disabled={!files.length||busy} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.run}</button>
   {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready} details={details}/>}
