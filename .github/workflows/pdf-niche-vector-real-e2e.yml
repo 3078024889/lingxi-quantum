@@ -2,11 +2,18 @@ name: LINGXIFIELD Vector Nup Rasterization and Metadata Real Output
 on:
   push:
     branches: [feature/pdf-nup-vector-reliable-delivery-20261104]
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/pdf-niche-vector-real-e2e.yml'
+      - 'components/tools/PdfNicheWorkbench.tsx'
+      - 'lib/tools/pdf-nup-vector.ts'
+      - 'tests/final-closure/pdf-niche-vector-real-output.spec.ts'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: pdf-nup-vector-reliable-delivery-20261104
+  group: pdf-nup-vector-reliable-delivery-20261104-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   vector-pdf:

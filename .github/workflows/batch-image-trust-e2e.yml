@@ -2,11 +2,18 @@ name: LINGXIFIELD Batch Image Safe Real Delivery E2E
 on:
   push:
     branches: [feature/batch-image-simple-safe-20261104]
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/batch-image-trust-e2e.yml'
+      - 'components/tools/BatchImageWorkbench.tsx'
+      - 'lib/tools/shared/batch-image-client.ts'
+      - 'tests/final-closure/batch-image-trust-e2e.spec.ts'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: lingxi-batch-image-safe-20261104
+  group: lingxi-batch-image-safe-20261104-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   batch-images:
