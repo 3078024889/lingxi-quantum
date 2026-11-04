@@ -101,9 +101,10 @@ function SiaiBrandLogo({website,name}:{website:string;name:string}){
 
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang],ui=SIAI_FACET_WORDS[lang];
- const topRef=useRef<HTMLDivElement>(null),bottomRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
+ const topRef=useRef<HTMLDivElement>(null),bottomRef=useRef<HTMLDivElement>(null),headingRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
  const [tableWidth,setTableWidth]=useState(1640);
  const [fullscreen,setFullscreen]=useState(false);
+ const [showFloatingColumns,setShowFloatingColumns]=useState(false);
  const [page,setPage]=useState(1),[pageSize,setPageSize]=useState<20|50|100>(100);
  const [pageDraft,setPageDraft]=useState("1");
  const [bounded,setBounded]=useState(false),[panelHeight,setPanelHeight]=useState(620);
@@ -158,13 +159,25 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const selectedRow=expanded?rows.find(p=>p.id===expanded):null;
  const claimUrl=(p?:SiaiHomeRow)=>"/siai/claim?lang="+lang+(p?"&product="+encodeURIComponent(p.id)+"&name="+encodeURIComponent(p.name):"");
  const label=(zh:string,en:string)=>lang==="zh"?zh:(RANKING_NEW_UI[lang]?.[zh]||en);
- const sync=(from:"top"|"table"|"bottom")=>{
-  const current=from==="top"?topRef.current:from==="bottom"?bottomRef.current:gridRef.current;
+ const sync=(from:"top"|"table"|"bottom"|"heading")=>{
+  const current=from==="top"?topRef.current:from==="bottom"?bottomRef.current:from==="heading"?headingRef.current:gridRef.current;
   if(!current)return;
-  for(const other of [topRef.current,gridRef.current,bottomRef.current]){
+  for(const other of [topRef.current,gridRef.current,bottomRef.current,headingRef.current]){
    if(other&&other!==current&&Math.abs(other.scrollLeft-current.scrollLeft)>1)other.scrollLeft=current.scrollLeft;
   }
  };
+ useEffect(()=>{
+  const check=()=>{
+   const node=gridRef.current;
+   if(!node||bounded){setShowFloatingColumns(false);return;}
+   const rect=node.getBoundingClientRect();
+   setShowFloatingColumns(rect.top<122&&rect.bottom>165);
+  };
+  window.addEventListener("scroll",check,{passive:true});
+  window.addEventListener("resize",check);
+  check();
+  return()=>{window.removeEventListener("scroll",check);window.removeEventListener("resize",check);};
+ },[bounded,fullscreen,page,pageSize]);
  useEffect(()=>{const v=gridRef.current;if(!v)return;const measure=()=>setTableWidth(v.scrollWidth);measure();const ro=typeof ResizeObserver==="undefined"?null:new ResizeObserver(measure);ro?.observe(v);if(v.firstElementChild)ro?.observe(v.firstElementChild);window.addEventListener("resize",measure);return()=>{ro?.disconnect();window.removeEventListener("resize",measure);};},[shown.length,lang]);
  useEffect(()=>{
   // Wide mode never locks the body's wheel scrolling or hides later sections.
@@ -252,6 +265,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
   <div className="siai-home-top-track">
    <button type="button" className="siai-height-toggle" aria-pressed={bounded} onClick={()=>setBounded(v=>!v)}>{bounded?pageCopy.pageFlow:pageCopy.panel}</button>
    <span aria-hidden="true">↔</span><span className="siai-scroll-hint">{label("横向查看全部栏目","Scroll horizontally to see all columns")}</span><div className="siai-home-top-scroll" ref={topRef} onScroll={()=>sync("top")} tabIndex={0} aria-label={label("顶部横向滚动条","Top horizontal scrollbar")}><div style={{width:tableWidth,height:1}}/></div>{fullscreen&&<button type="button" className="siai-expand-view" onClick={()=>setFullscreen(false)}>{VIEW_COPY[lang].exit}</button>}</div>
+  <div className={showFloatingColumns?"siai-floating-columnbar siai-floating-columnbar-active":"siai-floating-columnbar"} aria-hidden="true"><div ref={headingRef} className="siai-floating-columnbar-scroll" onScroll={()=>sync("heading")}><div className="siai-floating-columnbar-grid" style={{width:tableWidth}}>{[lang==="zh"?"序号":"#",t.tool,t.strength,t.free,t.price,t.region,t.payment,t.models,t.license,t.action].map((name,i)=><span key={i}>{name}</span>)}</div></div></div>
   <div className={bounded?"siai-home-table-scroll siai-home-table-bounded":"siai-home-table-scroll siai-home-table-flow"} ref={gridRef} style={bounded?{height:panelHeight}:undefined} onScroll={()=>sync("table")} tabIndex={0} aria-label={t.title}>
    <table className="siai-home-table">
     <thead><tr><th scope="col">{lang==="zh"?"序号":"#"}</th><th scope="col">{t.tool}</th><th scope="col">{t.strength}</th><th scope="col">{t.free}</th><th scope="col">{t.price}</th><th scope="col">{t.region}</th><th scope="col">{t.payment}</th><th scope="col">{t.models}</th><th scope="col">{t.license}</th><th scope="col">{t.action}</th></tr></thead>
