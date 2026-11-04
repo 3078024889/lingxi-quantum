@@ -1,0 +1,79 @@
+name: SIAI compact discovery isolated acceptance
+
+on:
+  push:
+    branches:
+      - 'ui/siai-compact-multicapability-*'
+    paths:
+      - 'lib/siai-home-facets.ts'
+      - 'lib/siai-home-facet-labels.ts'
+      - 'components/SiaiRankingHome.tsx'
+      - 'app/siai-home.css'
+      - 'tests/siai-compact-facets.test.mjs'
+      - 'tests/final-closure/siai-compact-discovery-real.spec.ts'
+      - 'tests/final-closure/siai-ranking-first-layout.spec.ts'
+      - '.github/workflows/siai-compact-discovery-isolated.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: siai-compact-discovery-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source:
+    name: source-build-and-62-row-contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node --test tests/siai-compact-facets.test.mjs tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs tests/siai-customer-language.test.mjs
+      - run: pnpm build
+
+  browser:
+    name: real-browser-${{ matrix.project }}
+    needs: source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop-chromium, mobile-chromium]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-compact-discovery-real.spec.ts tests/final-closure/siai-ranking-first-layout.spec.ts
+      - if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: siai-compact-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
