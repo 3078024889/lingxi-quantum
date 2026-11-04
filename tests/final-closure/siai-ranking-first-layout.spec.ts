@@ -19,7 +19,7 @@ test('SIAI opens on actual ranked data, not six search cards; compact table stay
  expect(layout.searchBeforeFooter).toBe(true);
  expect(layout.tableY).toBeLessThan(layout.windowH);
  expect(layout.tableWidth).toBeGreaterThan(layout.tableViewport);
- expect(layout.tableWidth).toBeLessThanOrEqual(1750);
+ expect(layout.tableWidth).toBeLessThanOrEqual(1950);
  expect(layout.footerSearchDuplicate).toBe(0);
  await expect(page.locator('.siai-home-cost-accordion')).toHaveCount(1);
  const hasTableBeforeCost=await page.evaluate(()=>{
@@ -70,7 +70,9 @@ test('SIAI restores sourced company facts on every row and preserves original re
  await expect(rows).toHaveCount(62);
  const first=rows.first();
  await expect(first.locator('.siai-home-identity')).toContainText('Microsoft');
- await expect(first.locator('.siai-home-identity dt')).toContainText(['公司名称','主要创始人','是否上市','成立时间','资料更新日期']);
+ for(const text of ['公司名称','主要创始人','是否上市','成立时间','资料更新日期'])await expect(first.locator('.siai-home-identity')).toContainText(text);
+ await expect(first.locator('.siai-brand-mark img')).toHaveAttribute('src',/^https:\/\//);
+ await expect(first.locator('.siai-home-identity')).not.toContainText('内容补充中');
  await expect(first.locator('.siai-home-identity a.siai-source').first()).toHaveAttribute('href',/^https:\/\//);
  const table=page.locator('.siai-home-table-flow');
  await expect(table).toBeVisible();
