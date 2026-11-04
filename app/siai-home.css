@@ -235,3 +235,44 @@
 .siai-page-buttons button{background:#eef5ff;color:#1759a2;border:1px solid #bdd5ee;border-radius:7px;padding:7px 9px;min-height:36px;font-size:14px;font-weight:650}
 .siai-page-buttons button:disabled{opacity:.35;cursor:not-allowed}
 @media(max-width:900px){.siai-page-controls{justify-content:flex-start}.siai-home-top-track{gap:5px}.siai-height-toggle{padding:3px 6px}}
+
+
+/* Compact sourced publisher directory; do not alter the research catalog. */
+.siai-home-table{min-width:1860px;table-layout:fixed}
+.siai-home-table th:nth-child(1){width:46px}
+.siai-home-table th:nth-child(2){width:365px}
+.siai-home-table th:nth-child(3){width:230px}
+.siai-home-table th:nth-child(4){width:180px}
+.siai-home-table th:nth-child(5){width:190px}
+.siai-home-table th:nth-child(6){width:180px}
+.siai-home-table th:nth-child(7){width:165px}
+.siai-home-table th:nth-child(8){width:160px}
+.siai-home-table th:nth-child(9){width:180px}
+.siai-home-table th:nth-child(10){width:145px}
+.siai-home-table td{padding:9px 8px!important;vertical-align:top;line-height:1.45;font-size:14px}
+.siai-home-table .siai-cell-preview{-webkit-line-clamp:3;line-clamp:3;max-height:4.4em;line-height:1.47}
+.siai-home-identity{font-size:14px;min-width:0}
+.siai-brand-line{display:flex;align-items:center;gap:10px;min-width:0;margin-bottom:6px}
+.siai-brand-mark{width:38px;height:38px;display:grid;place-items:center;flex:none;border:1px solid #d7e3f4;border-radius:9px;background:white;overflow:hidden;color:#2559a2;font-weight:800;font-size:14px}
+.siai-brand-mark img{display:block;max-height:34px;max-width:34px;object-fit:contain}
+.siai-brand-title{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.siai-brand-title>strong{font-size:16px!important;font-weight:800!important;line-height:1.35;overflow-wrap:anywhere}
+.siai-badge-si{background:#175fc5;color:white;font-size:14px;font-weight:750;border-radius:4px;padding:0 4px;line-height:1.4}
+.siai-home-identity .siai-compact-facts{display:flex!important;flex-wrap:wrap;gap:3px 10px!important;margin:0;align-items:baseline;line-height:1.4}
+.siai-home-identity .siai-compact-facts>div{display:inline-flex!important;align-items:baseline;gap:4px;flex-wrap:wrap;max-width:100%;min-width:0}
+.siai-home-identity .siai-compact-facts dt{font-size:14px!important;color:#637a98;white-space:nowrap}
+.siai-home-identity .siai-compact-facts dd{font-size:14px!important;color:#244a79;font-weight:600;min-width:0;margin:0;overflow-wrap:anywhere}
+.siai-source-compact{display:inline!important;margin-inline-start:4px!important;font-size:14px!important;text-decoration:none!important;white-space:nowrap}
+.siai-home-actions{gap:5px}
+.siai-home-actions>a,.siai-home-actions>button{min-height:32px!important;padding:4px 6px!important}
+.siai-home-table-flow{height:auto!important;max-height:none!important;min-height:0!important;overflow-y:visible!important;overscroll-behavior-y:auto!important}
+.siai-home-table-bounded{overscroll-behavior-y:auto!important;overflow-y:auto!important}
+.siai-home-table-scroll{overscroll-behavior-y:auto!important}
+.siai-home-bottom-track{height:19px;overflow-x:auto;overflow-y:hidden;scrollbar-width:auto;border:1px solid #cbdff2;border-top:0;border-radius:0 0 8px 8px;background:#e9f3ff}
+.siai-home-bottom-track>div{height:1px}
+.siai-home-bottom-track::-webkit-scrollbar{height:13px}
+.siai-home-bottom-track::-webkit-scrollbar-thumb{background:#9bb6d6;border:3px solid #e9f3ff;border-radius:8px}
+.siai-home-bottom-track::-webkit-scrollbar-track{background:#eaf3ff}
+.siai-home-top-track{top:62px}
+.siai-home-fullscreen .siai-home-table-flow{max-height:none!important;height:auto!important}
+@media(max-width:900px){.siai-home-identity .siai-compact-facts{gap:4px 8px!important}.siai-home-table{min-width:1840px}.siai-home-bottom-track{height:22px}}
