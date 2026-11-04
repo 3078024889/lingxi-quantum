@@ -445,6 +445,7 @@
 .lx-footer-v3 .lx-footer-v3-contact .lx-footer-qr-row span{font-size:14px!important;color:#626682}
 .lx-footer-v3 .lx11-footer-legal{max-width:1500px;border-top:1px solid #e3dcf2;margin:0 auto!important;padding-top:17px!important;display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap}
 .lx-footer-v3 .lx11-footer-legal a,.lx-footer-v3 .lx11-footer-legal span,.lx-footer-v3 .lx-footer-language{font-size:14px!important}
+.lx-footer-v3 .lx11-footer-legal>a:last-child{margin-inline-start:auto}
 @media(max-width:1300px){
  .lx-footer-v3 .lx-footer-v3-nav{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:22px!important}
  .lx-footer-v3 .lx-footer-v3-toolstrip{grid-template-columns:repeat(3,minmax(0,1fr))}
