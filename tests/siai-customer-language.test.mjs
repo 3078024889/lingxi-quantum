@@ -38,6 +38,6 @@ test("preview rows present clear product information without internal test-state
  assert.match(component,/value\?\.trim\(\)!=="尚无可靠资料"/);
  assert.match(component,/!hasFact\(value\)\?"":/);
  assert.doesNotMatch(component,/PREVIEW_FIELD/);
- assert.match(candidate,/region:text\(region\)/);
+ assert(candidate.includes('region:regionSupplement?.localized.zh||text(region)'));
  assert.doesNotMatch(candidate,/并非逐国注册或支付验证/);
 });
