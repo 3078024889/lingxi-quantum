@@ -73,7 +73,7 @@ export function buildToolMetadata(slug:string):Metadata{
  const seo=toolSeo(slug),canonical=`/tools/${slug}`;
  const fact=toolGeoFact(slug,'zh');
  const title=toolZhSeoTitle(slug)??seo.title;
- const brandedTitle=/LINGXIFIELD|灵犀场/i.test(title)?title:brandedTitle;
+ const brandedTitle:string=/LINGXIFIELD|灵犀场/i.test(title)?title:`${title}｜灵犀场 LINGXIFIELD`;
  const description=fact?.description??seo.description;
  return{
   title:{absolute:brandedTitle},
