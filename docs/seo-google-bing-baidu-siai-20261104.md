@@ -62,3 +62,6 @@ Remove-Item Env:BAIDU_SITE
 - 构建前强制审计所有独立工具页面的 metadata 与 canonical；发现遗漏就阻断发布，而非把 SEO 工具都标记完成。
 
 - 补齐 AI 图片检测与 AI 视频音频检测两个已发布页面原本缺失的 canonical/hreflang，保留各自真实功能限制描述。所有 94 个独立工具路由已逐个核对，重定向别名不作为独立页面。
+
+### SSR 生产网页自动门禁
+新增 `node scripts/seo/verify-built-pages.mjs`，在 GitHub 执行 `pnpm build` 后启动本地 Next.js 生产服务器（不部署），用不同 Host 模拟 .com/.cn 测试真实 robots、XML sitemap、SIAI canonical、语言备用链接、已开放工具、去重标题、永久重定向、余额 noindex。此检查从 HTML 与 HTTP 响应判定，避免只靠源码正则假阳性。正式域名上线后仍需执行独立 `pnpm seo:check:live`。
