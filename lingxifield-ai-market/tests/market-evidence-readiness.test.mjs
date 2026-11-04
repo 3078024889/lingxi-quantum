@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {readFileSync,mkdtempSync,rmSync} from 'node:fs';
+import {readFileSync,mkdtempSync,rmSync,readdirSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {buildEvidenceReadiness,evidenceReportMarkdown} from '../lib/market-evidence-readiness.mjs';
@@ -55,7 +55,7 @@ test('markdown queue explicitly distinguishes observed pages from verified produ
  assert.match(m,/B001 \| alpha/);
  assert.match(m,/Candidate products already approved for publication: 0/);
 });
-test('real CLI confirms 32 public and 50 held source-only candidates, emits the same report to temporary files',()=>{
+test('real CLI confirms 32 public and all held source-only candidates, emits the same report to temporary files',()=>{
  const temp=mkdtempSync(join(tmpdir(),'siai-evidence-'));
  try{
   const json=join(temp,'readiness.json'),md=join(temp,'readiness.md');
@@ -65,10 +65,13 @@ test('real CLI confirms 32 public and 50 held source-only candidates, emits the 
   const report=JSON.parse(readFileSync(json,'utf8'));
   assert.equal(report.curated.count,32);
   assert.equal(report.curated.recordedWithSources,192);
-  assert.equal(report.candidateIntake.products,50);
-  assert.equal(report.candidateIntake.factCells,350);
+  const intakeFolder=new URL('../data/company-intake/',import.meta.url);
+  const stagedExpected=readdirSync(intakeFolder).filter(x=>/^batch-\d{3}\.json$/.test(x)).length*10;
+  assert.equal(stagedExpected,60);
+  assert.equal(report.candidateIntake.products,stagedExpected);
+  assert.equal(report.candidateIntake.factCells,stagedExpected*7);
   assert.equal(report.candidateIntake.publishReady,0);
-  assert.equal(report.candidateIntake.observed+report.candidateIntake.missing+report.candidateIntake.conflict,350);
+  assert.equal(report.candidateIntake.observed+report.candidateIntake.missing+report.candidateIntake.conflict,stagedExpected*7);
   assert.equal(report.safety.structurallyValid,true);
   assert.match(readFileSync(md,'utf8'),/Candidate review order/);
  }finally{rmSync(temp,{recursive:true,force:true})}

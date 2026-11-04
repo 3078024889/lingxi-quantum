@@ -1,0 +1,249 @@
+{
+  "batch": "B006",
+  "asOf": "2026-11-04",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "products": [
+    {
+      "id": "openai-developer-api",
+      "name": "OpenAI Developer API",
+      "company": "OpenAI",
+      "category": "模型 API",
+      "website": "https://developers.openai.com/api/docs/pricing",
+      "evidenceUrl": "https://developers.openai.com/api/docs/pricing",
+      "tasks": [
+        "模型推理API",
+        "输入输出Token费用",
+        "多模型能力比较"
+      ],
+      "keywords": [
+        "OpenAI API 价格",
+        "GPT 开发接口"
+      ],
+      "publisherGroupId": "openai",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://developers.openai.com/api/docs/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "anthropic-claude-platform-api",
+      "name": "Claude Platform API",
+      "company": "Anthropic",
+      "category": "模型 API",
+      "website": "https://docs.anthropic.com/zh-CN/home",
+      "evidenceUrl": "https://docs.anthropic.com/zh-CN/home",
+      "tasks": [
+        "Claude Messages API",
+        "视觉理解",
+        "工具调用"
+      ],
+      "keywords": [
+        "Claude API",
+        "Anthropic开发者平台"
+      ],
+      "publisherGroupId": "anthropic",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://docs.anthropic.com/zh-CN/home",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "perplexity-agent-api",
+      "name": "Perplexity Agent API",
+      "company": "Perplexity",
+      "category": "搜索智能体 API",
+      "website": "https://www.perplexity.ai/api-platform",
+      "evidenceUrl": "https://www.perplexity.ai/api-platform",
+      "tasks": [
+        "联网检索",
+        "带来源回答",
+        "智能体API"
+      ],
+      "keywords": [
+        "Perplexity Agent API",
+        "Perplexity Search API"
+      ],
+      "publisherGroupId": "perplexity",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://www.perplexity.ai/api-platform",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "mistral-studio-developer",
+      "name": "Mistral Studio Developer API",
+      "company": "Mistral AI",
+      "category": "开发者模型 API",
+      "website": "https://docs.mistral.ai/studio",
+      "evidenceUrl": "https://docs.mistral.ai/studio",
+      "tasks": [
+        "文本生成API",
+        "OCR文档理解",
+        "Agent开发"
+      ],
+      "keywords": [
+        "Mistral Studio API",
+        "Mistral开发者"
+      ],
+      "publisherGroupId": "mistral",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://docs.mistral.ai/studio",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "xai-grok-developer-api",
+      "name": "xAI Grok Developer API",
+      "company": "xAI",
+      "category": "模型 API",
+      "website": "https://docs.x.ai/developers/pricing",
+      "evidenceUrl": "https://docs.x.ai/developers/pricing",
+      "tasks": [
+        "Grok文本模型",
+        "图像与视频生成",
+        "API费用比较"
+      ],
+      "keywords": [
+        "xAI API",
+        "Grok API定价"
+      ],
+      "publisherGroupId": "xai",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://docs.x.ai/developers/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "deepseek-developer-api",
+      "name": "DeepSeek API",
+      "company": "DeepSeek",
+      "category": "模型 API",
+      "website": "https://api-docs.deepseek.com/quick_start/pricing-details-cny/",
+      "evidenceUrl": "https://api-docs.deepseek.com/quick_start/pricing-details-cny/",
+      "tasks": [
+        "文本推理",
+        "聊天与代码",
+        "兼容接口"
+      ],
+      "keywords": [
+        "DeepSeek API",
+        "DeepSeek开发接口"
+      ],
+      "publisherGroupId": "deepseek",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://api-docs.deepseek.com/quick_start/pricing-details-cny/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "kimi-api-open-platform",
+      "name": "Kimi API 开放平台",
+      "company": "Moonshot AI",
+      "category": "模型 API",
+      "website": "https://www.kimi.ai/help/kimi-api/api-overview",
+      "evidenceUrl": "https://www.kimi.ai/help/kimi-api/api-overview",
+      "tasks": [
+        "Kimi模型API",
+        "长文档",
+        "视觉理解"
+      ],
+      "keywords": [
+        "Kimi API",
+        "月之暗面开发接口"
+      ],
+      "publisherGroupId": "moonshot",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://www.kimi.ai/help/kimi-api/api-overview",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "zhipu-bigmodel-platform-api",
+      "name": "智谱 BigModel 开放平台 API",
+      "company": "智谱",
+      "category": "模型 API",
+      "website": "https://docs.bigmodel.cn/cn/api/introduction",
+      "evidenceUrl": "https://docs.bigmodel.cn/cn/api/introduction",
+      "tasks": [
+        "GLM对话API",
+        "视频与图像API",
+        "知识库"
+      ],
+      "keywords": [
+        "智谱BigModel API",
+        "GLM模型开发"
+      ],
+      "publisherGroupId": "zhipu",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://docs.bigmodel.cn/cn/api/introduction",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "minimax-open-platform-api",
+      "name": "MiniMax API Platform",
+      "company": "MiniMax",
+      "category": "多模态模型 API",
+      "website": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+      "evidenceUrl": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+      "tasks": [
+        "文本模型API",
+        "视频生成",
+        "语音合成"
+      ],
+      "keywords": [
+        "MiniMax API定价",
+        "海螺视频API"
+      ],
+      "publisherGroupId": "minimax",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "elevenlabs-developer-api",
+      "name": "ElevenLabs ElevenAPI",
+      "company": "ElevenLabs",
+      "category": "语音音频 API",
+      "website": "https://elevenlabs.io/pricing/api",
+      "evidenceUrl": "https://elevenlabs.io/pricing/api",
+      "tasks": [
+        "文字转语音",
+        "语音识别",
+        "多语言配音"
+      ],
+      "keywords": [
+        "ElevenLabs API价格",
+        "ElevenAPI语音生成"
+      ],
+      "publisherGroupId": "elevenlabs",
+      "aliases": [],
+      "discoveredAt": "2026-11-04",
+      "discoverySource": "https://elevenlabs.io/pricing/api",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "schema": "candidate_external_use_acceptance_v1",
-  "asOf": "2026-11-03",
-  "expected": 50,
+  "asOf": "2026-11-04",
+  "expected": 60,
   "evidenceClassification": "NO_AUTHENTICATED_VENDOR_TASK_OR_PAYMENT_VERIFICATION",
   "browserBlocker": "Individual vendor login, live model task, output inspection, export, and real checkout have not been completed. Publisher documentation is only a source observation, not live-use evidence.",
   "items": [
@@ -1773,6 +1773,366 @@
       "id": "stability-ai-developer-platform",
       "task": "API图像生成",
       "sourceUrl": "https://platform.stability.ai/docs/getting-started",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "openai-developer-api",
+      "task": "模型推理API",
+      "sourceUrl": "https://developers.openai.com/api/docs/pricing",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "anthropic-claude-platform-api",
+      "task": "Claude Messages API",
+      "sourceUrl": "https://docs.anthropic.com/zh-CN/home",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "perplexity-agent-api",
+      "task": "联网检索",
+      "sourceUrl": "https://www.perplexity.ai/api-platform",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "mistral-studio-developer",
+      "task": "文本生成API",
+      "sourceUrl": "https://docs.mistral.ai/studio",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "xai-grok-developer-api",
+      "task": "Grok文本模型",
+      "sourceUrl": "https://docs.x.ai/developers/pricing",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "deepseek-developer-api",
+      "task": "文本推理",
+      "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing-details-cny/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "kimi-api-open-platform",
+      "task": "Kimi模型API",
+      "sourceUrl": "https://www.kimi.ai/help/kimi-api/api-overview",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "zhipu-bigmodel-platform-api",
+      "task": "GLM对话API",
+      "sourceUrl": "https://docs.bigmodel.cn/cn/api/introduction",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "minimax-open-platform-api",
+      "task": "文本模型API",
+      "sourceUrl": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "elevenlabs-developer-api",
+      "task": "文字转语音",
+      "sourceUrl": "https://elevenlabs.io/pricing/api",
       "checks": {
         "officialPage": {
           "status": "public_document_review_only",

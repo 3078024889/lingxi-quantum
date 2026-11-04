@@ -1,6 +1,7 @@
 "use client";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import Image from"next/image";
+import {usePathname} from "next/navigation";
 import Link from"next/link";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
@@ -49,6 +50,8 @@ export default function Footer(){
  const{t,lang}=useLingxiLang();
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
  const discovery=SIAI_DISCOVERY[lang];
+ const pathname=usePathname()||"";
+ const isRankingRoute=/^\/(?:en\/|ja\/|ko\/|fr\/|de\/|es\/|pt\/|ar\/)?siai(?:\/|$)/.test(pathname);
  const [modelLink,freeLink,regionLink]=FOOTER_MARKET_DETAIL[lang];
  return <footer className="lx11-footer lx-branded-footer" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
   <div className="lx11-footer-grid">
@@ -83,12 +86,11 @@ export default function Footer(){
     <Link href="/terms">{c.terms}</Link><Link href="/privacy">{c.privacy}</Link><Link href="/release">{copy[lang].release}</Link>
    </nav>
   </div>
-  <nav className="mx-auto mb-5 max-w-7xl rounded-xl border border-[var(--lx-line)] px-5 py-4" aria-label={discovery.footerTitle}>
+  {!isRankingRoute&&<nav className="mx-auto mb-5 max-w-7xl rounded-xl border border-[var(--lx-line)] px-5 py-4" aria-label={discovery.footerTitle}>
    <h2 className="mb-2 font-semibold">{discovery.footerTitle}</h2>
    <p lang={lang==="zh"?"zh-CN":lang} className="mb-2 text-sm leading-7">{PUBLIC_FEATURE_COPY[lang].description}</p>
-   {lang==="zh"&&<p lang="en" className="mb-3 text-sm leading-7 text-[var(--lx-muted)]">LINGXIFIELD is a global AI market information and SIAI rankings directory. Compare AI and SI tools, model capabilities, published prices, free tiers, regional access, payments and commercial terms using links to publisher sources.</p>}
    <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">{discovery.topics.map(v=>v.q).map((label,i)=><Link key={label} href={"/#siai-search-home-"+i} className="underline underline-offset-4">{label}</Link>)}{discovery.extras.map(label=><Link key={label} href="/siai" className="underline underline-offset-4">{label}</Link>)}</div>
-  </nav>
+  </nav>}
   <div className="lx-footer-social-strip">
    <div><b>{c.contacts}</b><div className="lx11-footer-social">
      {channels.map(([label,href])=>{const localized=label==="微信服务号"&&lang!=="zh"?"WeChat":label;return href.startsWith("#")?<a key={label} href={href}>{localized}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{localized} ↗</a>})}

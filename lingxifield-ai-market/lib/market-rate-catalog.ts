@@ -2,8 +2,8 @@
  * Curated vendor billing facts; never infer rates for unknown resolution or a plan-only SKU.
  * Currency denotes publisher's billing unit, not platform-selected display currency.
  */
-export type Resolution='360p'|'480p'|'720p'|'1080p'|'2K'|'4K'|'not-confirmed';
-export type VideoRate={id:string;platform:string;provider:string;model:string;region:string;resolution:Resolution;currency:'USD'|'CNY';billing:'per-second'|'credits'|'plan-only'|'plan-equivalent'|'token-only'|'unverified';perSecond:number|null;creditsPerSecond:number|null;planMonthly:number|null;includedCredits:number|null;minSeconds:number;maxSeconds:number;source:string;notes:string;outputType:'native'|'upscaled'|'not-confirmed';checkedAt:string;approximate?:boolean;chargesInputVideo?:boolean;subscription?:string;durationStep?:number;renewMonthly?:number;planTotal?:number;renewTotal?:number;termMonths?:number;promoEnds?:string;promotional?:boolean;apiPerMillionNoVideo?:number;apiPerMillionWithVideo?:number};
+export type Resolution='360p'|'480p'|'720p'|'768p'|'1080p'|'2K'|'4K'|'not-confirmed';
+export type VideoRate={id:string;platform:string;provider:string;model:string;region:string;resolution:Resolution;currency:'USD'|'CNY';billing:'per-second'|'credits'|'plan-only'|'plan-equivalent'|'token-only'|'unverified';perSecond:number|null;creditsPerSecond:number|null;planMonthly:number|null;includedCredits:number|null;minSeconds:number;maxSeconds:number;source:string;notes:string;outputType:'native'|'upscaled'|'not-confirmed';checkedAt:string;approximate?:boolean;chargesInputVideo?:boolean;subscription?:string;durationStep?:number;renewMonthly?:number;planTotal?:number;renewTotal?:number;termMonths?:number;promoEnds?:string;promotional?:boolean;apiPerMillionNoVideo?:number;apiPerMillionWithVideo?:number;inputImagePrice?:number;freeInputImagesPerClip?:number;inputVideoPricePerSecond?:number};
 export type ApiRate={id:string;platform:string;provider:string;model:string;currency:'USD'|'CNY';inPerMillion:number;outPerMillion:number;source:string;notes:string;checkedAt:string};
 export const VIDEO_RATES:readonly VideoRate[]=[
   {
@@ -578,9 +578,91 @@ export const VIDEO_RATES:readonly VideoRate[]=[
     "checkedAt": "2026-10-31",
     "apiPerMillionNoVideo": 70,
     "apiPerMillionWithVideo": 42
-  }
+  },
+{
+  "id": "minimax-h3-api-768p",
+  "platform": "minimax",
+  "provider": "MiniMax Developer API",
+  "model": "MiniMax H3 · API",
+  "region": "API",
+  "resolution": "768p",
+  "currency": "USD",
+  "billing": "per-second",
+  "perSecond": 0.08,
+  "creditsPerSecond": null,
+  "planMonthly": null,
+  "includedCredits": null,
+  "minSeconds": 4,
+  "maxSeconds": 15,
+  "source": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+  "notes": "API 生成视频按输出秒数计费；输入参考视频按同档秒数另计，单段前5张参考图片免费，额外每张 $0.04；并非网页会员折算价。",
+  "outputType": "native",
+  "checkedAt": "2026-11-04",
+  "chargesInputVideo": true,
+  "inputImagePrice": 0.04,
+  "freeInputImagesPerClip": 5
+},
+{
+  "id": "minimax-h3-api-2K",
+  "platform": "minimax",
+  "provider": "MiniMax Developer API",
+  "model": "MiniMax H3 · API",
+  "region": "API",
+  "resolution": "2K",
+  "currency": "USD",
+  "billing": "per-second",
+  "perSecond": 0.13,
+  "creditsPerSecond": null,
+  "planMonthly": null,
+  "includedCredits": null,
+  "minSeconds": 4,
+  "maxSeconds": 15,
+  "source": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+  "notes": "API 生成视频按输出秒数计费；输入参考视频按同档秒数另计，单段前5张参考图片免费，额外每张 $0.04；并非网页会员折算价。",
+  "outputType": "native",
+  "checkedAt": "2026-11-04",
+  "chargesInputVideo": true,
+  "inputImagePrice": 0.04,
+  "freeInputImagesPerClip": 5
+}
 ] as VideoRate[];
 export const API_RATES:readonly ApiRate[]=[
+{
+  "id": "minimax-m27-api",
+  "platform": "minimax",
+  "provider": "MiniMax Developer API",
+  "model": "MiniMax-M2.7 · API Standard",
+  "currency": "USD",
+  "inPerMillion": 0.3,
+  "outPerMillion": 1.2,
+  "source": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+  "notes": "API 文本标准计费；缓存读写另计，与网页会员/视频计费相互独立。",
+  "checkedAt": "2026-11-04"
+},
+{
+  "id": "mistral-small4-api",
+  "platform": "mistral",
+  "provider": "Mistral Studio API",
+  "model": "Mistral Small 4 · Standard",
+  "currency": "USD",
+  "inPerMillion": 0.15,
+  "outPerMillion": 0.6,
+  "source": "https://docs.mistral.ai/models/mistral-small-4-0-26-03",
+  "notes": "每百万文本输入/输出 Token；缓存、批处理、地域优先级另计。",
+  "checkedAt": "2026-11-04"
+},
+{
+  "id": "cohere-command-a-api",
+  "platform": "cohere",
+  "provider": "Cohere API",
+  "model": "Command A · v2 API",
+  "currency": "USD",
+  "inPerMillion": 2.5,
+  "outPerMillion": 10,
+  "source": "https://docs.cohere.com/docs/command-a",
+  "notes": "Command A 官方标准单价，按输入/输出 Token，特定上下文和工具调用另计。",
+  "checkedAt": "2026-11-04"
+},
   {
     "platform": "deepseek",
     "provider": "DeepSeek",
@@ -960,18 +1042,34 @@ export const KLING_PLANS:readonly {id:string;name:string;monthlyCredits:number;f
  {id:'premier',name:'Premier',monthlyCredits:8000,firstMonth:64.99,renewMonthly:80.96,currency:'USD',source:'https://kling.ai/blog/kling-video-3-0-credit-cost-guide'},
  {id:'ultra',name:'Ultra',monthlyCredits:26000,firstMonth:127.99,renewMonthly:159.99,currency:'USD',source:'https://kling.ai/blog/kling-video-3-0-credit-cost-guide'}
 ];
-export const RESOLUTIONS:readonly Resolution[]=['360p','480p','720p','1080p','2K','4K'];
+export const RESOLUTIONS:readonly Resolution[]=['360p','480p','720p','768p','1080p','2K','4K'];
 export function ratesForVideo(platform:string){return VIDEO_RATES.filter(p=>p.platform===platform);}
 export function videoRate(id:string){return VIDEO_RATES.find(p=>p.id===id)||null;}
 export function apiRate(id:string){return API_RATES.find(p=>p.id===id)||null;}
-export function estimateKnownVideoRate(r:VideoRate,seconds:number,clips:number,inputSeconds=0){
- if(!Number.isInteger(seconds)||!Number.isInteger(clips)||seconds<r.minSeconds||seconds>r.maxSeconds||clips<1||clips>10000)return null;
+/** A transparent output-only estimate plus documented reference media fees.
+ * No guessed exchange rates, retries or subscription-to-API conversions.
+ */
+export function estimateKnownVideoRate(r:VideoRate,seconds:number,clips:number,inputSeconds=0,inputImagesPerClip=0){
+ if(!Number.isSafeInteger(seconds)||!Number.isSafeInteger(clips)||seconds<r.minSeconds||seconds>r.maxSeconds||clips<1||clips>10000)return null;
  if(r.durationStep&&seconds%r.durationStep!==0)return null;
- if(!Number.isFinite(inputSeconds)||inputSeconds<0)return null;
- if(r.chargesInputVideo&&seconds+inputSeconds>30)return null; // Wan 3.0 combined input/output video length
- const outputSeconds=seconds*clips,billableSeconds=outputSeconds+(r.chargesInputVideo?inputSeconds*clips:0);
- if(r.billing==='plan-equivalent'&&r.perSecond!==null)return {kind:'equivalent' as const,amount:outputSeconds*r.perSecond,credits:null,outputSeconds,billableSeconds};
- if(r.billing==='per-second'&&r.perSecond!==null)return {kind:'money' as const,amount:billableSeconds*r.perSecond,credits:null,outputSeconds,billableSeconds};
- if(r.billing==='credits'&&r.creditsPerSecond!==null)return {kind:'credits' as const,amount:null,credits:outputSeconds*r.creditsPerSecond,outputSeconds,billableSeconds};
- return {kind:'unverified' as const,amount:null,credits:null,outputSeconds,billableSeconds};
+ if(!Number.isSafeInteger(inputSeconds)||inputSeconds<0||inputSeconds>600)return null;
+ if(!Number.isSafeInteger(inputImagesPerClip)||inputImagesPerClip<0||inputImagesPerClip>50)return null;
+ if(r.platform==='qwen'&&r.chargesInputVideo&&seconds+inputSeconds>30)return null;
+ if(r.platform==='minimax'&&inputSeconds>15)return null;
+ const outputSeconds=seconds*clips;
+ const inputBillableSeconds=(r.chargesInputVideo||r.inputVideoPricePerSecond!==undefined)?inputSeconds*clips:0;
+ const billableSeconds=outputSeconds+inputBillableSeconds;
+ const inputMediaCost=(r.inputVideoPricePerSecond??(r.chargesInputVideo?r.perSecond:0)??0)*inputBillableSeconds;
+ const chargedImages=Math.max(0,inputImagesPerClip-(r.freeInputImagesPerClip??0))*clips;
+ const inputImageCost=chargedImages*(r.inputImagePrice??0);
+ const extras=inputMediaCost+inputImageCost;
+ if(!Number.isFinite(extras)||extras<0)return null;
+ if(r.billing==='plan-equivalent'&&r.perSecond!==null)return {kind:'equivalent' as const,amount:outputSeconds*r.perSecond,credits:null,outputSeconds,billableSeconds,inputMediaCost:0,inputImageCost:0};
+ if(r.billing==='per-second'&&r.perSecond!==null){
+  const amount=outputSeconds*r.perSecond+extras;
+  if(!Number.isFinite(amount)||amount<0)return null;
+  return {kind:'money' as const,amount,credits:null,outputSeconds,billableSeconds,inputMediaCost,inputImageCost};
+ }
+ if(r.billing==='credits'&&r.creditsPerSecond!==null)return {kind:'credits' as const,amount:null,credits:outputSeconds*r.creditsPerSecond,outputSeconds,billableSeconds,inputMediaCost:0,inputImageCost:0};
+ return {kind:'unverified' as const,amount:null,credits:null,outputSeconds,billableSeconds,inputMediaCost:0,inputImageCost:0};
 }
