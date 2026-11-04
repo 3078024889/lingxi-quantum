@@ -54,7 +54,9 @@ const robots=read("app/robots.ts");
 must(robots.includes("allow:'/'")||robots.includes('allow:"/"'),"V59_ROBOTS_PUBLIC_ALLOW_MISSING");
 must(!/OAI-SearchBot[^]*disallow\s*:\s*['"]\/['"]/.test(robots),"V59_OAI_SEARCHBOT_BLOCKED");
 
-const sitemapWeb=read("app/sitemap.ts");
+// Sitemap route delegates canonical path expansion to the audited host-aware builder.
+const sitemapWeb=read("app/sitemap.ts")+read("lib/seo/sitemap-build.ts");
+must(sitemapWeb.includes("buildSiteSitemap"),"V59_SITEMAP_BUILDER_MISSING");
 for(const token of["GLOBAL_TOOL_CATALOG","SEO_LOCALES","languageAlternates"])must(sitemapWeb.includes(token),`V59_GLOBAL_SITEMAP_CAPABILITY_MISSING:${token}`);
 
 const jsonld=read("components/seo/GlobalSeoJsonLd.tsx");
