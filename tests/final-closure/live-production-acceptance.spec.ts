@@ -93,7 +93,7 @@ test('all 124 indexed tool routes respond on the real production domain',async({
  const source=await readFile('lib/seo/global-seo.ts','utf8');
  const start=source.indexOf('export const GLOBAL_TOOL_CATALOG=['),end=source.indexOf('] as const',start);
  expect(start).toBeGreaterThan(0);expect(end).toBeGreaterThan(start);
- const slugs=[...source.slice(start,end).matchAll(/\\{slug:"([a-z0-9-]+)"/g)].map(m=>m[1]);
+ const slugs=[...source.slice(start,end).matchAll(/\{slug:"([a-z0-9-]+)"/g)].map(m=>m[1]);
  expect(slugs.length,'catalogue count').toBe(124);
  const bad:string[]=[];
  for(const slug of slugs){
