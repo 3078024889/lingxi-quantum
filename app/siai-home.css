@@ -439,10 +439,7 @@
 .lx-footer-v3 .lx-footer-v3-contact{display:flex;flex-direction:column;gap:12px;min-width:0}
 .lx-footer-v3 .lx-footer-v3-contact>a{font-size:14px!important;overflow-wrap:anywhere;color:#3e4775;text-decoration:none}
 .lx-footer-v3 .lx-footer-v3-contact>a:hover{text-decoration:underline}
-.lx-footer-v3 .lx-footer-v3-contact .lx-footer-qr-row{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
-.lx-footer-v3 .lx-footer-v3-contact .lx-footer-qr-row>div{display:grid;justify-items:center;gap:5px;min-width:76px}
-.lx-footer-v3 .lx-footer-v3-contact .lx-footer-qr-row img{width:76px;height:76px;object-fit:contain;border-radius:8px;border:1px solid #e5dcfa}
-.lx-footer-v3 .lx-footer-v3-contact .lx-footer-qr-row span{font-size:14px!important;color:#626682}
+
 .lx-footer-v3 .lx11-footer-legal{max-width:1500px;border-top:1px solid #e3dcf2;margin:0 auto!important;padding-top:17px!important;display:flex;align-items:center;gap:10px 18px;flex-wrap:wrap}
 .lx-footer-v3 .lx11-footer-legal a,.lx-footer-v3 .lx11-footer-legal span,.lx-footer-v3 .lx-footer-language{font-size:14px!important}
 .lx-footer-v3 .lx11-footer-legal>a:last-child{margin-inline-start:auto}
@@ -520,16 +517,114 @@ html[data-theme="dark"] .lx-footer-v3 .lx-footer-brand-social a{color:#ded6ff;ba
 .lx-footer-v3 .lx-footer-brand-social a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
 @media(max-width:700px){.lx-footer-v3 .lx-footer-brand-social{max-width:310px}}
 
-/* Owner's WeChat scan targets are added behind a compact, opt-in disclosure;
-   existing service and official mini-program QR images remain unchanged. */
-.lx-footer-v3 .lx-footer-wechat-extra{margin-top:6px;border:1px solid #e5d9fa;border-radius:11px;min-width:0}
-.lx-footer-v3 .lx-footer-wechat-extra h4{margin:0;padding:8px;font-size:14px;font-weight:700;line-height:1.5;color:#6b44bf}
-.lx-footer-v3 .lx-footer-wechat-extra{grid-column:auto;overflow-wrap:anywhere}
-.lx-footer-v3 .lx-footer-extra-qr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:3px 7px 12px}
-.lx-footer-v3 .lx-footer-extra-qr-grid a{display:flex;flex-direction:column;gap:5px;align-items:center;color:#51436c;text-decoration:none;font-size:14px;text-align:center;min-width:0}
-.lx-footer-v3 .lx-footer-extra-qr-grid a:hover{text-decoration:underline}
-.lx-footer-v3 .lx-footer-extra-qr-grid img{width:min(100%,115px);height:auto;aspect-ratio:1/1;border:1px solid #e2ddf4;border-radius:8px;background:#fff;padding:4px}
-.lx-footer-v3 .lx-footer-miniapp-label{display:block;margin:0 7px 5px;font-size:14px!important;color:#4b4374}
-.lx-footer-v3 .lx-footer-miniapp-code{display:block;overflow-wrap:anywhere;white-space:normal;padding:4px 7px;font-size:14px;line-height:1.6;user-select:text;color:#574f79}
-html[data-theme="dark"] .lx-footer-v3 .lx-footer-wechat-extra{border-color:#615176}
-html[data-theme="dark"] .lx-footer-v3 .lx-footer-wechat-extra h4,html[data-theme="dark"] .lx-footer-v3 .lx-footer-extra-qr-grid a,html[data-theme="dark"] .lx-footer-v3 .lx-footer-miniapp-label,html[data-theme="dark"] .lx-footer-v3 .lx-footer-miniapp-code{color:#ddd1f7}
+/* 2026-11-04 reference footer v4: remove the tall QR tail, keep four real scan targets */
+.lx11-footer.lx-footer-v4{
+ background:radial-gradient(ellipse at 70% 0%,rgba(170,134,246,.10),transparent 42%),linear-gradient(180deg,#faf8ff 0%,#fff 100%)!important;
+}
+.lx-footer-v4 .lx-footer-v4-nav{
+ display:grid!important;
+ grid-template-columns:minmax(205px,1.25fr) repeat(4,minmax(130px,.87fr)) minmax(235px,1.18fr)!important;
+ gap:clamp(12px,1.3vw,22px)!important;
+ align-items:start!important;
+ padding:26px 4px 18px!important;
+ margin-bottom:14px!important;
+}
+.lx-footer-v4 .lx-footer-v4-nav>nav,.lx-footer-v4 .lx-footer-v4-nav>section{min-width:0}
+.lx-footer-v4 .lx-footer-v4-nav>nav{gap:8px!important}
+.lx-footer-v4 .lx-footer-v4-heading{
+ display:flex!important;align-items:center;flex-wrap:wrap;gap:8px;
+ margin-bottom:10px!important;color:#2c225d!important;font-weight:800!important;
+ font-size:16px!important;line-height:1.45!important;
+}
+.lx-footer-v4 .lx-footer-v4-heading>span{
+ display:inline-grid;place-items:center;flex:none;width:30px;height:30px;
+ border-radius:10px;background:#f0e8ff;color:#8c55e7;font-size:21px!important;
+}
+.lx-footer-v4 .lx11-footer-logo{align-items:center;gap:12px;max-width:100%}
+.lx-footer-v4 .lx11-footer-logo img{width:70px!important;height:70px!important;object-fit:contain;flex-shrink:0}
+.lx-footer-v4 .lx11-footer-logo b{font-size:17px!important;line-height:1.45!important;color:#26204e}
+.lx-footer-v4 .lx-footer-brand-social{max-width:285px;margin-top:14px!important}
+.lx-footer-v4 .lx-footer-v4-contact{gap:8px!important}
+.lx-footer-v4 .lx-footer-v4-contact .lx-footer-v4-email{
+ font-size:14px!important;color:#504183;line-height:1.5;overflow-wrap:anywhere;
+ margin:0 0 3px;text-decoration:none;
+}
+.lx-footer-v4 .lx-footer-v4-contact .lx-footer-v4-email:hover{text-decoration:underline}
+.lx-footer-v4 .lx-footer-v4-qr-grid{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:9px;width:100%;min-width:0;margin:0;padding:0;
+}
+.lx-footer-v4 .lx-footer-v4-qr-card{
+ min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+ gap:6px;padding:7px 4px 6px;min-height:137px;
+ border:1px solid #e4d8fb;border-radius:13px;
+ background:linear-gradient(145deg,#fff,#fbf8ff);
+ box-shadow:0 2px 8px rgba(87,52,147,.035);
+ color:#3b2d72;text-decoration:none;transition:border-color .16s,transform .16s;
+}
+.lx-footer-v4 .lx-footer-v4-qr-card img{
+ display:block!important;width:94px!important;height:94px!important;max-width:100%;
+ aspect-ratio:1;object-fit:contain;background:white;border-radius:6px;
+}
+.lx-footer-v4 .lx-footer-v4-qr-card span{
+ font-size:14px!important;line-height:1.35!important;
+ font-weight:650;text-align:center;overflow-wrap:anywhere;
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+ min-height:19px;
+}
+.lx-footer-v4 a.lx-footer-v4-qr-card:hover{border-color:#ad90ee;transform:translateY(-1px)}
+.lx-footer-v4 .lx-footer-v4-miniapp-actions{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;
+ width:100%;margin-top:2px;
+}
+.lx-footer-v4 .lx-footer-v4-miniapp-actions button{
+ display:flex;align-items:center;justify-content:center;gap:5px;
+ min-width:0;min-height:38px;border-radius:9px;
+ border:1px solid #e3d7fc;background:#f7f2ff;color:#6841b6;
+ padding:6px 5px;font-size:14px!important;font-weight:700;line-height:1.3;
+ cursor:pointer;overflow-wrap:anywhere;
+}
+.lx-footer-v4 .lx-footer-v4-miniapp-actions button:hover{background:#f0e6ff;border-color:#ad8dee}
+.lx-footer-v4 .lx-footer-v4-miniapp-actions button:focus-visible,
+.lx-footer-v4 .lx-footer-v4-qr-card:focus-visible{
+ outline:2px solid #8051d6;outline-offset:2px;
+}
+.lx-footer-v4 .lx11-footer-legal{
+ border-top:1px solid #e8ddfa!important;
+ padding-top:14px!important;padding-bottom:8px!important;
+ gap:10px 15px!important;
+}
+.lx-footer-v4 .lx-footer-v4-nav>nav>a{line-height:1.6!important}
+@media(max-width:1390px){
+ .lx-footer-v4 .lx-footer-v4-nav{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:22px!important;
+ }
+ .lx-footer-v4 .lx-footer-v4-contact{max-width:330px}
+}
+@media(max-width:700px){
+ .lx-footer-v4 .lx-footer-v4-nav{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:23px 15px!important;
+  padding:16px 0!important;
+ }
+ .lx-footer-v4 .lx-footer-v4-nav .lx11-footer-brand{grid-column:1/-1!important}
+ .lx-footer-v4 .lx-footer-v4-contact{grid-column:1/-1!important;max-width:360px!important}
+ .lx-footer-v4 .lx-footer-v4-qr-grid{max-width:330px}
+ .lx-footer-v4 .lx-footer-v4-miniapp-actions{max-width:330px}
+ .lx-footer-v4 .lx11-footer-logo img{width:62px!important;height:62px!important}
+ .lx-footer-v4 .lx-footer-v4-nav>nav{gap:7px!important}
+}
+@media(max-width:380px){
+ .lx-footer-v4 .lx-footer-v4-nav{grid-template-columns:minmax(0,1fr)!important}
+ .lx-footer-v4 .lx-footer-v4-nav .lx11-footer-brand{grid-column:auto!important}
+}
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-qr-card{
+ background:#26233f;border-color:#51416c;color:#e9ddff;
+}
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-miniapp-actions button{
+ background:#292140;border-color:#554271;color:#dfceff;
+}
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-heading,
+html[data-theme="dark"] .lx-footer-v4 .lx11-footer-logo b,
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-email{color:#e9ddff!important}
+@media(prefers-reduced-motion:reduce){.lx-footer-v4 .lx-footer-v4-qr-card{transition:none}}

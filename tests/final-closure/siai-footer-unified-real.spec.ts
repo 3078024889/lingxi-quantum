@@ -18,7 +18,10 @@ test('global footer displays the same complete content on home, SIAI, SASI and t
   await expect(footer.locator('.lx-footer-v3-sasi')).toHaveCount(1);
   await expect(footer).not.toContainText('AI 工具先比清楚，再决定用哪一个');
   await expect(footer.locator('.lx-footer-brand-social')).toBeAttached();
-  await expect(footer.locator('.lx-footer-qr-row img')).toHaveCount(2);
+  await expect(footer.locator('.lx-footer-v4-qr-grid img')).toHaveCount(4);
+  await expect(footer.locator('.lx-footer-v4-miniapp-actions button')).toHaveCount(2);
+  await expect(footer.locator('.lx-footer-wechat-extra')).toHaveCount(0);
+  await expect(footer.locator('.lx-footer-miniapp-code')).toHaveCount(0);
   await expect(footer.locator('.lx11-footer-legal')).toBeAttached();
   const text=await overview.innerText();
   if(!original)original=text;
