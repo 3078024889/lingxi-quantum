@@ -10,14 +10,14 @@ test('global footer displays the same complete content on home, SIAI, SASI and t
   const overview=footer.locator('.lx-footer-unified');
   await expect(overview.getByRole('heading',{name:'🌍 全球SIAI排行榜｜全球SI AI工具行情平台'})).toHaveCount(1);
   await expect(overview.locator('.lx-footer-market li')).toHaveCount(7);
-  await expect(overview.locator('.lx-footer-tools-list p')).toHaveCount(6);
+  await expect(overview.locator('.lx-footer-v3-toolstrip>a')).toHaveCount(6);
   await expect(overview.locator('.lx-footer-search-list li')).toHaveCount(6);
   await expect(overview).toContainText('API Token调用费用估算与模型成本对比');
   await expect(overview).toContainText('临时邮箱、阅后即焚、隐私清理、文件加密。');
   await expect(overview).toContainText('食物卡路里识别');
-  await expect(overview).toContainText('💎 灵犀场 LINGXIFIELD');
+  await expect(footer.locator('.lx-footer-v3-sasi')).toHaveCount(1);
   await expect(footer).not.toContainText('AI 工具先比清楚，再决定用哪一个');
-  await expect(footer.locator('.lx11-footer-social')).toBeAttached();
+  await expect(footer.locator('.lx-footer-brand-social')).toBeAttached();
   await expect(footer.locator('.lx-footer-qr-row img')).toHaveCount(2);
   await expect(footer.locator('.lx11-footer-legal')).toBeAttached();
   const text=await overview.innerText();

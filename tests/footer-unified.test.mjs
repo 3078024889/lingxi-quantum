@@ -50,15 +50,34 @@ test("home, market, SASI and tools all render one shared footer with original li
  const footer=read("components/Footer.tsx");
  for(const page of ["app/page.tsx","app/siai/page.tsx","app/sasi/page.tsx","app/tools/layout.tsx"])
   assert(read(page).includes('import Footer from "@/components/Footer"'),page);
- assert.match(footer,/<section className="lx-footer-unified"/);
+ assert.match(footer,/<section className="lx-footer-unified lx-footer-v3-showcase"/);
  assert.match(footer,/FOOTER_UNIFIED\[lang\]/);
  assert.match(footer,/FOOTER_TOOL_ICONS\[i\]/);
  assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
  assert.match(footer,/siai-search-ranking-/);
- for(const marker of ["lx11-footer-grid","lx11-footer-social","lx-footer-qr-row","lx11-footer-legal","business@lingxifield.com"])
+ for(const marker of ["lx11-footer-grid","lx-footer-v3-nav","lx-footer-brand-social","lx-footer-v3-contact","lx-footer-qr-row","lx-footer-v3-toolstrip","lx11-footer-legal","business@lingxifield.com"])
   assert(footer.includes(marker),marker);
  assert.doesNotMatch(footer,/!isRankingRoute|usePathname|copy\[lang\]\.lead/);
  assert.doesNotMatch(footer,/AI 工具先比清楚，再决定用哪一个/);
  assert.doesNotMatch(footer,/PUBLIC_FEATURE_COPY\[lang\]\.description/);
- assert.equal((footer.match(/className="lx-footer-unified"/g)||[]).length,1);
+ assert.equal((footer.match(/className="lx-footer-unified lx-footer-v3-showcase"/g)||[]).length,1);
+ assert.doesNotMatch(footer,/lx-footer-unified-secondary|lx-footer-unified-close|lx-footer-social-strip/);
+});
+
+test("owner-submitted public social links and two real WeChat QR destinations are present",()=>{
+ const footer=read("components/Footer.tsx");
+ const route=read("app/api/public-social-qr/route.ts");
+ for(const url of [
+  "https://v.kuaishou.com/n71hSlT9","https://v.douyin.com/bE0vjWQZ_eY/","https://b23.tv/Bmcx90F",
+  "https://xhslink.cn/o/5sPTjCC9kWe","https://x.com/lingxifieldsasi","https://youtube.com/@lingxifield",
+  "https://www.facebook.com/share/19SgJhdxtL/","https://www.instagram.com/lingxifield/",
+  "https://www.tiktok.com/@lingxifield.com","https://weibo.com/u/4003799090"
+ ])assert(footer.includes(url),url);
+ assert.equal((footer.match(/kind:"(?:share|profile)"/g)||[]).length,10);
+ assert(footer.includes("#小程序://灵犀场/ktKRUjMRoEcPEsE"));
+ assert(footer.includes("#小程序://10临时邮箱/p8AACkYNods09Rl"));
+ assert(route.includes("http://weixin.qq.com/r/mp/_yAoMCzEYnEdrWhT93Xp"));
+ assert(route.includes("http://weixin.qq.com/r/mp/oycQCBfEPUpCrVNr93Kx"));
+ for(const asset of ["/images/lingxifield-wechat-service-qr.jpg","/images/miniapp-qrcode.png"])
+  assert(footer.includes(asset),asset);
 });
