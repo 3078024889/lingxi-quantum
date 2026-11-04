@@ -31,16 +31,16 @@ const FOOTER_CHIPS:Record<LingxiLang,string[]>={
 const FOOTER_CHIP_URLS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=音频","/tools?q=文档","/tools?q=办公","/tools?q=开发","/sasi"] as const;
 /** Owner-supplied public account / share links (2026-11-04). Short-video links are share entries, not verified profile landing URLs. */
 const channels=[
- {label:"快手",short:"快手",mark:"快",href:"https://v.kuaishou.com/n71hSlT9",kind:"share"},
- {label:"抖音",short:"抖音",mark:"抖",href:"https://v.douyin.com/bE0vjWQZ_eY/",kind:"share"},
- {label:"哔哩哔哩",short:"B站",mark:"哔",href:"https://b23.tv/Bmcx90F",kind:"profile"},
- {label:"小红书",short:"小红书",mark:"红",href:"https://xhslink.cn/o/5sPTjCC9kWe",kind:"profile"},
- {label:"X",short:"X",mark:"𝕏",href:"https://x.com/lingxifieldsasi",kind:"profile"},
- {label:"YouTube",short:"YT",mark:"▶",href:"https://youtube.com/@lingxifield",kind:"profile"},
- {label:"Facebook",short:"FB",mark:"f",href:"https://www.facebook.com/share/19SgJhdxtL/",kind:"share"},
- {label:"Instagram",short:"IG",mark:"◎",href:"https://www.instagram.com/lingxifield/",kind:"profile"},
- {label:"TikTok",short:"TK",mark:"♪",href:"https://www.tiktok.com/@lingxifield.com",kind:"profile"},
- {label:"微博",short:"微博",mark:"微",href:"https://weibo.com/u/4003799090",kind:"profile"}
+ {label:"快手",tone:"#ff611a",short:"快手",mark:"快",href:"https://v.kuaishou.com/n71hSlT9",kind:"share"},
+ {label:"抖音",tone:"#17171f",short:"抖音",mark:"抖",href:"https://v.douyin.com/bE0vjWQZ_eY/",kind:"share"},
+ {label:"哔哩哔哩",tone:"#00a1d6",short:"B站",mark:"哔",href:"https://b23.tv/Bmcx90F",kind:"profile"},
+ {label:"小红书",tone:"#e42d32",short:"小红书",mark:"红",href:"https://xhslink.cn/o/5sPTjCC9kWe",kind:"profile"},
+ {label:"X",tone:"#111827",short:"X",mark:"𝕏",href:"https://x.com/lingxifieldsasi",kind:"profile"},
+ {label:"YouTube",tone:"#e62117",short:"YT",mark:"▶",href:"https://youtube.com/@lingxifield",kind:"profile"},
+ {label:"Facebook",tone:"#0866ff",short:"FB",mark:"f",href:"https://www.facebook.com/share/19SgJhdxtL/",kind:"share"},
+ {label:"Instagram",tone:"#c13584",short:"IG",mark:"◎",href:"https://www.instagram.com/lingxifield/",kind:"profile"},
+ {label:"TikTok",tone:"#111827",short:"TK",mark:"♪",href:"https://www.tiktok.com/@lingxifield.com",kind:"profile"},
+ {label:"微博",tone:"#ea232c",short:"微博",mark:"微",href:"https://weibo.com/u/4003799090",kind:"profile"}
 ] as const;
 
 type FooterCopy={account:string;orders:string;refunds:string;release:string};
@@ -114,7 +114,7 @@ export default function Footer(){
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
     <p className="lx-footer-brand-intro">{FOOTER_BRAND_SHORT[lang]}</p>
-    <nav className="lx-footer-brand-social" aria-label={lang==="zh"?"官方社交平台与分享入口":"Official social and sharing links"}>{channels.map(channel=><a href={channel.href} key={channel.label} target="_blank" rel="noopener noreferrer" title={channel.label+(channel.kind==="share"?(lang==="zh"?" · 分享链接":" · shared link"):"")} aria-label={channel.label+(channel.kind==="share"?(lang==="zh"?"作品分享":" shared content"):"")}><span className="lx-footer-social-symbol" aria-hidden="true">{channel.mark}</span><span className="lx-footer-social-caption">{channel.short}</span></a>)}</nav>
+    <nav className="lx-footer-brand-social" aria-label={lang==="zh"?"官方社交平台与分享入口":"Official social and sharing links"}>{channels.map(channel=><a href={channel.href} key={channel.label} target="_blank" rel="noopener noreferrer" title={channel.label+(channel.kind==="share"?(lang==="zh"?" · 分享链接":" · shared link"):"")} aria-label={channel.label+(channel.kind==="share"?(lang==="zh"?"作品分享":" shared content"):"")}><span className="lx-footer-social-symbol" style={{color:channel.tone}} aria-hidden="true">{channel.mark}</span><span className="lx-footer-social-caption">{channel.short}</span></a>)}</nav>
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
