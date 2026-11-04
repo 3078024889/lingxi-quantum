@@ -58,3 +58,25 @@ test("Screenshot redaction rejects animated GIF and SVG instead of silently flat
  await expect(page.locator("[data-tool-workbench] p[role=alert]")).toContainText("vector.svg");
  await expect(page.getByRole("button",{name:"Export redacted image",exact:true})).toBeDisabled();
 });
+
+
+test("Screenshot redaction blocks spoofed animated bytes and preserves a fail-closed export gate",async({page})=>{
+ test.setTimeout(90000);
+ await page.goto("/tools/screenshot-redact?lang=en");
+ const input=page.locator('input[type="file"]').first();
+ await expect(input).toBeEnabled({timeout:20000});
+ const gif=await sharp({create:{width:18,height:18,channels:3,background:"#fa2000"}}).gif().toBuffer();
+ // The name and MIME falsely claim PNG. The actual bytes still identify GIF.
+ await input.setInputFiles({name:"spoofed.png",mimeType:"image/png",buffer:gif});
+ await expect(page.locator("[data-tool-workbench] p[role=alert]")).toContainText("Animated or mislabeled files",{timeout:20000});
+ await expect(page.locator("[data-redaction-surface]")).toHaveCount(0);
+ await expect(page.getByRole("button",{name:"Export redacted image",exact:true})).toBeDisabled();
+ const a=await sharp({create:{width:18,height:18,channels:4,background:"#ff0000"}}).png().toBuffer();
+ const b=await sharp({create:{width:18,height:18,channels:4,background:"#0000ff"}}).png().toBuffer();
+ const animated=await sharp([a,b],{join:{animated:true}}).webp({delay:[100,100],loop:0}).toBuffer();
+ expect((await sharp(animated,{animated:true}).metadata()).pages).toBe(2);
+ await input.setInputFiles({name:"moving.webp",mimeType:"image/webp",buffer:animated});
+ await expect(page.locator("[data-tool-workbench] p[role=alert]")).toContainText("Animated or mislabeled files",{timeout:20000});
+ await expect(page.locator("[data-redaction-surface]")).toHaveCount(0);
+ await expect(page.getByRole("button",{name:"Export redacted image",exact:true})).toBeDisabled();
+});
