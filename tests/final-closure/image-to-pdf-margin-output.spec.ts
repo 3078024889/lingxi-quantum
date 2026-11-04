@@ -68,3 +68,23 @@ test("Image-to-PDF desktop drag-and-drop reorders output pages without image re-
   {width:126,height:81}
  ]);
 });
+
+test("Image-to-PDF A4 layout preserves standard page dimensions in both orientations",async({page})=>{
+ test.setTimeout(90000);
+ const source=await sharp({create:{width:140,height:80,channels:3,background:"#406080"}}).png().toBuffer();
+ await page.goto("/tools/image-to-pdf?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles({name:"landscape.png",mimeType:"image/png",buffer:source});
+ await page.getByRole("combobox",{name:"Page size",exact:true}).selectOption("a4");
+ await page.getByRole("combobox",{name:"Margin",exact:true}).selectOption("big");
+ await page.getByRole("button",{name:"Create PDF",exact:true}).click();
+ const landscape=await download(page);
+ expect(landscape.getPageCount()).toBe(1);
+ expect(landscape.getPage(0).getWidth()).toBeCloseTo(841.89,2);
+ expect(landscape.getPage(0).getHeight()).toBeCloseTo(595.28,2);
+ await page.getByRole("combobox",{name:"Orientation",exact:true}).selectOption("portrait");
+ await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
+ await page.getByRole("button",{name:"Create PDF",exact:true}).click();
+ const portrait=await download(page);
+ expect(portrait.getPage(0).getWidth()).toBeCloseTo(595.28,2);
+ expect(portrait.getPage(0).getHeight()).toBeCloseTo(841.89,2);
+});
