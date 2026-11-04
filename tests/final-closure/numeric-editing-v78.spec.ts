@@ -2,7 +2,8 @@ import {test, expect} from './export-test';
 import fs from 'node:fs/promises';
 import {PDFDocument} from 'pdf-lib';
 
-for(const [slug,count] of [['batch-image',2],['number-base-converter',2],['cron-parser',1],['long-image',2],['uuid-generator',1],['pdf-watermark',1],['pdf-page-numbers',1],['pdf-crop',1],['pdf-bates-numbering',2],['subtitle-tools',4],['loop-video',1],['video-toolkit',1],['compress-image',2],['pdf-to-jpg',1],['temp-mail',1]] as const){
+// Batch image uses one optional custom-width spinbutton; quality is a preset selector.
+for(const [slug,count] of [['batch-image',1],['number-base-converter',2],['cron-parser',1],['long-image',2],['uuid-generator',1],['pdf-watermark',1],['pdf-page-numbers',1],['pdf-crop',1],['pdf-bates-numbering',2],['subtitle-tools',4],['loop-video',1],['video-toolkit',1],['compress-image',2],['pdf-to-jpg',1],['temp-mail',1]] as const){
  test(`${slug}: every numeric field accepts deletion and replacement`,async({page})=>{
   test.setTimeout(90000);
   await page.goto('/tools/'+slug+'?lang=en',{waitUntil:'domcontentloaded'});

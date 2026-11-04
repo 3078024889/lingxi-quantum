@@ -1,1 +1,7 @@
-import type{Metadata}from"next";import AdvancedToolPage from"@/components/tools/AdvancedToolPage";import PdfNicheWorkbench from"@/components/tools/PdfNicheWorkbench";import{languageAlternates}from"@/lib/seo/global-seo";export const metadata:Metadata={title:"PDF 栅格化｜灵犀场",description:"把 PDF 每页重新渲染成图像页，固定外观并移除可编辑文本层。",alternates:{canonical:"/tools/pdf-rasterize",languages:languageAlternates("/tools/pdf-rasterize")}};export default function Page(){return <AdvancedToolPage title="PDF 栅格化" intro="把 PDF 每页重新渲染成图像页，固定外观并移除可编辑文本层。"><PdfNicheWorkbench mode="rasterize"/></AdvancedToolPage>}
+import type {Metadata} from "next";
+import LxText from "@/components/LxText";
+import AdvancedToolPage from "@/components/tools/AdvancedToolPage";
+import PdfNicheWorkbench from "@/components/tools/PdfNicheWorkbench";
+import {languageAlternates} from "@/lib/seo/global-seo";
+export const metadata:Metadata={title:"PDF 栅格化｜灵犀场",description:"把 PDF 页转换为图片，不等于安全脱敏。",alternates:{canonical:"/tools/pdf-rasterize",languages:languageAlternates("/tools/pdf-rasterize")}};
+export default function Page(){return <AdvancedToolPage title={<LxText zh="PDF 栅格化" en="Rasterize PDF" ja="PDFを画像化" ko="PDF 이미지화" fr="Pixelliser un PDF" de="PDF rasterisieren" es="Rasterizar PDF" pt="Rasterizar PDF" ar="تحويل PDF إلى صور"/>} intro={<LxText zh="把 PDF 页转换为图片，不等于安全脱敏。" en="Convert PDF pages to images. This does not securely redact visible information." ja="PDFを画像化" ko="PDF 이미지화" fr="Pixelliser un PDF" de="PDF rasterisieren" es="Rasterizar PDF" pt="Rasterizar PDF" ar="تحويل PDF إلى صور"/>}><PdfNicheWorkbench mode="rasterize"/></AdvancedToolPage>}
