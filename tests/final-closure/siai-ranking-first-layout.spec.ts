@@ -75,6 +75,8 @@ test('SIAI restores sourced company facts on every row and preserves original re
  await expect(page.locator('.siai-home-table-flow')).toBeVisible();
  const noInnerVerticalScroll=await page.locator('.siai-home-table-flow').evaluate((el:HTMLElement)=>el.scrollHeight-el.clientHeight<=3);
  expect(noInnerVerticalScroll).toBe(true);
+ expect(await table.evaluate((el:HTMLElement)=>getComputedStyle(el).overflowX)).toBe('hidden');
+ expect(await page.evaluate(()=>document.documentElement.scrollHeight>window.innerHeight*2)).toBe(true);
  await expect(page.getByLabel('每页显示')).toHaveValue('100');
  await first.getByRole('button',{name:'详情'}).click();
  const details=page.locator('.siai-detail-modal');
@@ -115,6 +117,7 @@ test('SIAI resizable panel mode is optional; mouse drag and Escape do not trap d
  const grip=page.getByRole('separator',{name:'拖动调整榜单高度'});
  await expect(grip).toBeVisible();
  const before=await table.evaluate((el:HTMLElement)=>el.clientHeight);
+ await grip.evaluate((el:HTMLElement)=>el.scrollIntoView({block:'center'}));
  const rect=await grip.boundingBox();
  expect(rect).not.toBeNull();
  await page.mouse.move(rect!.x+rect!.width/2,rect!.y+rect!.height/2);

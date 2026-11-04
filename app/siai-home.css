@@ -211,6 +211,9 @@
 .siai-home-four-filters .siai-sort-label{position:sticky;inset-inline-end:0;background:#f8fbff;padding-inline-start:7px;z-index:2}
 .siai-home-top-track .siai-expand-view{min-height:30px;padding:4px 9px}
 
+/* Horizontal travel is controlled exclusively by the top track.
+   overflow-x:hidden still permits synchronized programmatic scrollLeft. */
+.siai-home-table-scroll.siai-home-table-flow,.siai-home-table-scroll.siai-home-table-bounded{overflow-x:hidden!important}
 /* Market records are read in document flow. No nested vertical scrolling by default. */
 .siai-ranking-data{position:relative;min-width:0;scroll-margin-top:90px}
 .siai-home-table-scroll.siai-home-table-flow,.siai-home-fullscreen .siai-home-table-scroll.siai-home-table-flow{height:auto!important;min-height:0!important;max-height:none!important;overflow-x:auto;overflow-y:visible;scrollbar-gutter:auto}
