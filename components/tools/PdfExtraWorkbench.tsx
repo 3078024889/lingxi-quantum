@@ -35,6 +35,18 @@ const EXTRACT_NO_TEXT:Record<string,string>={
  ar:"لا يحتوي ملف PDF هذا على نص قابل للاستخراج. شغّل OCR لملفات PDF أولاً."
 };
 
+const CROP_ONLY_VISUAL:Record<string,string>={
+ zh:"裁边只改变可见范围，原始内容仍保留。删除敏感信息请使用 PDF 安全脱敏。",
+ en:"Cropping only hides the outer area; the original content remains in the PDF. Use secure PDF redaction to remove private information.",
+ ja:"トリミングは表示範囲のみを変更し、元の内容はPDF内に残ります。機密情報には安全な墨消しを使用してください。",
+ ko:"자르기는 보이는 영역만 바꾸며 원본 내용은 PDF에 남습니다. 민감한 정보는 안전한 가림 처리로 삭제하세요.",
+ fr:"Le recadrage ne modifie que la zone visible ; le contenu original reste dans le PDF. Utilisez le masquage sécurisé pour supprimer des informations sensibles.",
+ de:"Beschneiden ändert nur den sichtbaren Bereich; der ursprüngliche Inhalt bleibt in der PDF. Verwenden Sie sichere Schwärzung für vertrauliche Daten.",
+ es:"Recortar solo cambia la zona visible; el contenido original permanece en el PDF. Usa la eliminación segura para datos sensibles.",
+ pt:"Cortar só altera a área visível; o conteúdo original permanece no PDF. Use a ocultação segura para remover dados sensíveis.",
+ ar:"يغيّر الاقتصاص الجزء الظاهر فقط؛ ويبقى المحتوى الأصلي داخل PDF. استخدم الحجب الآمن لإزالة المعلومات الحساسة."
+};
+
 async function extract(file:File){const pdf=await openPdf(file),pages:string[]=[];try{for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),c=await page.getTextContent();pages.push((c.items||[]).map((x:any)=>String(x.str||"")).join(" "))}return pages}finally{await pdf.destroy?.()}}
 const blob=(bytes:Uint8Array)=>new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
 export default function PdfExtraWorkbench({mode}:{mode:Mode}){
@@ -55,6 +67,7 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
  {mode==="watermark"&&<div className="grid gap-3 sm:grid-cols-3"><label className="text-sm"><ToolUiText text="水印文字" /><input value={text} onChange={e=>setText(e.target.value)} className="mt-1 w-full rounded-xl border p-2"/></label><label className="text-sm"><ToolUiText text="字号" /><EditableNumberInput type="number" min={8} max={120} value={size} onChange={e=>setSize(Number(e.target.value))} className="mt-1 w-full rounded-xl border p-2"/></label><label className="text-sm"><ToolUiText text="透明度" /> {Math.round(opacity*100)}%<input type="range" min=".05" max=".8" step=".05" value={opacity} onChange={e=>setOpacity(Number(e.target.value))} className="mt-3 w-full"/></label></div>}
  {mode==="page-numbers"&&<label className="block text-sm"><ToolUiText text="距页面底部 pt" /><EditableNumberInput type="number" min={8} max={200} value={margin} onChange={e=>setMargin(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
  {mode==="crop"&&<label className="block text-sm"><ToolUiText text="四边裁掉 pt" /><EditableNumberInput type="number" min={0} max={300} value={crop} onChange={e=>setCrop(Number(e.target.value))} className="ml-3 rounded-lg border p-2"/></label>}
+ {mode==="crop"&&<p className="text-sm text-[var(--lx-muted)]">{CROP_ONLY_VISUAL[lang]||CROP_ONLY_VISUAL.en}</p>}
  {mode==="flatten"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="将 PDF 表单字段写入页面内容，适合提交、归档或避免字段继续被修改；建议先保留原件。" /></p>}
  {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="比较两份 PDF，快速查看金额、日期和条款差异，并下载对比报告。" /></p>}
  {(mode==="text"||mode==="markdown")&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="提取已有文本层；扫描 PDF 请先使用 PDF OCR 或 PDF 转 Word 的自动 OCR。" /></p>}
