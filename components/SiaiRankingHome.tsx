@@ -107,6 +107,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const topRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
  const bottomRef=useRef<HTMLDivElement>(null),floatingTableRef=useRef<HTMLTableElement>(null);
  const [headerDocked,setHeaderDocked]=useState(false);
+ const [dockedBox,setDockedBox]=useState({left:0,width:0});
  const [tableWidth,setTableWidth]=useState(1860);
  const [fullscreen,setFullscreen]=useState(false);
  const [wideOffset,setWideOffset]=useState(0);
@@ -193,7 +194,10 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    if(!area||!grid||!head)return;
    const end=area.getBoundingClientRect().bottom;
    const top=head.getBoundingClientRect().bottom;
+   const box=grid.getBoundingClientRect();
    setHeaderDocked(!bounded&&top<106&&end>166);
+   const left=Math.round(box.left),width=Math.round(box.width);
+   setDockedBox(previous=>previous.left===left&&previous.width===width?previous:{left,width});
   };
   update();
   window.addEventListener("scroll",update,{passive:true});
@@ -291,7 +295,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </tbody></table></div>
   </section>}
   <section className="siai-ranking-data" ref={rankingRef} aria-label={t.title}>
-  <div className={"siai-floating-header"+(headerDocked?" is-visible":"")} aria-hidden="true" data-sticky-active={headerDocked?"true":"false"}>
+  <div className={"siai-floating-header"+(headerDocked?" is-visible":"")} style={{left:dockedBox.left,width:dockedBox.width}} aria-hidden="true" data-sticky-active={headerDocked?"true":"false"}>
    <div className="siai-floating-viewport">
     <table className="siai-home-table" ref={floatingTableRef} style={{width:tableWidth}}>
      <thead><tr><th scope="col">{lang==="zh"?"序号":"#"}</th><th scope="col">{t.tool}</th><th scope="col">{t.strength}</th><th scope="col">{t.free}</th><th scope="col">{t.price}</th><th scope="col">{t.region}</th><th scope="col">{t.payment}</th><th scope="col">{t.models}</th><th scope="col">{t.license}</th><th scope="col">{t.action}</th></tr></thead>
