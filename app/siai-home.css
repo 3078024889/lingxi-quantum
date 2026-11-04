@@ -490,3 +490,23 @@
 }
 /* Absence of published facts must never be rendered as unrestricted regions. */
 .siai-home-table tbody td .siai-cell-preview{min-height:1.4em}
+
+
+/* 20261104 dark footer parity: preserve contrast when the user switches theme. */
+html[data-theme="dark"] .lx11-footer.lx-branded-footer.lx-footer-v3{background:linear-gradient(180deg,#12192e,#19152a)!important;color:#e9ebff}
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-showcase{background:linear-gradient(130deg,#19223c,#251b45)!important;border-color:#47345e!important;color:#e9ebff}
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-sasi,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-tool-chips a{background:#25233e!important;border-color:#51416c!important;color:#e9ebff!important}
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-unified-head h2,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-unified h3,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-market li,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-toolstrip a,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-toolstrip strong,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-sasi strong,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-nav b,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-nav nav a{color:#e9ebff!important}
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-unified-head p,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-toolstrip small,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-sasi span,
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-contact>a{color:#c0bbda!important}
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-brand-social a{color:#ded6ff;background:#30294b;border-color:#5a4877}
