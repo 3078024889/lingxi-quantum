@@ -87,6 +87,10 @@ test("changing size, format, fit and output quality hides stale exports; PNG has
  await expect(save).toBeVisible({timeout:20000});
  await page.getByRole("button",{name:/512×512/}).click();
  await expect(save).toHaveCount(0);
+ await page.getByRole("button",{name:/1080×1920/}).click();
+ const portrait=await page.getByTestId("resize-drag-preview").boundingBox();
+ if(!portrait)throw Error("PORTRAIT_PREVIEW_NOT_VISIBLE");
+ expect(Math.abs(portrait.width/portrait.height-9/16)).toBeLessThan(0.02);
  await output.selectOption("image/jpeg");
  await expect(page.locator("label").filter({hasText:/^Quality\s+\d+%$/})).toBeVisible();
  await page.getByRole("button",{name:/^Manual crop/}).click();
