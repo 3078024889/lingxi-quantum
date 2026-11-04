@@ -1,6 +1,30 @@
 /* LINGXIFIELD /tools compact visual layout, 2026-11-04.
  * Scoped to the actual tools index. The existing registry, search, pricing,
  * navigation, category taxonomy and continuation flows are untouched. */
+/* Preserve the full original LINGXIFIELD brand inside the narrower tools rail.
+ * The original logo image and text are unchanged; only wrapping is adjusted. */
+@media (min-width:1024px) {
+ html:has(.lx-tools-compact) .lx11-brand-row {padding-inline:11px!important}
+ html:has(.lx-tools-compact) .lx11-brand {gap:8px!important;min-width:0!important}
+ html:has(.lx-tools-compact) .lx11-brand span {min-width:0!important;overflow:visible!important}
+ html:has(.lx-tools-compact) .lx11-brand b {
+  display:block!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:normal!important;
+  overflow:visible!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+ }
+ html:has(.lx-tools-compact) .lx11-link.is-active {
+  border:1px solid #dfd7f6!important;
+  background:linear-gradient(95deg,#eeebff,#f7f5ff)!important;
+  color:#292340!important;
+ }
+ html[data-theme="dark"]:has(.lx-tools-compact) .lx11-link.is-active {
+  border-color:#57516f!important;background:#302a40!important;color:#f1eaff!important;
+ }
+}
 /* Only the public tools directory gets the reference's narrower, fixed rail.
  * Other routes keep the existing shell dimensions and logo asset. */
 @media (min-width:1024px) {
