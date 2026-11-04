@@ -9,6 +9,14 @@ test('SIAI four production DOM screenshots: compact sourced ranking, live estima
  const rows=page.locator('.siai-home-table tbody tr.siai-home-tr');
  await expect(rows).toHaveCount(62);
  await expect(page.locator('.siai-home-table-scroll')).toHaveClass(/siai-home-table-flow/);
+ const filterOptions=page.locator('.siai-home-four-filters .siai-filter-line').last().locator('.siai-filter-options');
+ const sortLabel=page.locator('.siai-home-four-filters .siai-sort-label');
+ const filterBox=await filterOptions.boundingBox(),sortBox=await sortLabel.boundingBox();
+ expect(filterBox).not.toBeNull();
+ expect(sortBox).not.toBeNull();
+ const verticalOverlap=Math.max(0,Math.min(filterBox!.y+filterBox!.height,sortBox!.y+sortBox!.height)-Math.max(filterBox!.y,sortBox!.y));
+ const horizontalOverlap=Math.max(0,Math.min(filterBox!.x+filterBox!.width,sortBox!.x+sortBox!.width)-Math.max(filterBox!.x,sortBox!.x));
+ expect(horizontalOverlap*verticalOverlap).toBeLessThan(4);
  await expect(page.locator('.siai-brand-mark').first()).toBeVisible();
  // Eagerly decode every mapped local brand image; visible containers alone do not prove a logo loaded.
  const logos=await page.locator('.siai-home-table tbody .siai-brand-mark img').evaluateAll(async nodes=>Promise.all(nodes.map(async node=>{

@@ -208,7 +208,13 @@
 /* Keep exactly four user-selectable filter lanes; no wrapping into a tall menu. */
 .siai-home-four-filters .siai-filter-options{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;padding-bottom:3px;scrollbar-width:thin}
 .siai-home-four-filters .siai-filter-options>button{flex:none}
-.siai-home-four-filters .siai-sort-label{position:sticky;inset-inline-end:0;background:#f8fbff;padding-inline-start:7px;z-index:2}
+.siai-home-four-filters .siai-filter-line:last-child{grid-template-columns:96px minmax(0,1fr) auto}
+.siai-home-four-filters .siai-sort-label{position:static;z-index:auto;inset-inline-end:auto;background:transparent;padding-inline-start:7px;justify-self:end;margin-inline-start:0}
+@media(max-width:900px){
+ .siai-home-four-filters .siai-filter-line:last-child{grid-template-columns:74px minmax(0,1fr);row-gap:5px}
+ .siai-home-four-filters .siai-filter-line:last-child>.siai-sort-label{grid-column:2;grid-row:2;justify-self:end;max-width:100%;padding:2px 0}
+ .siai-home-four-filters .siai-sort-label select{max-width:min(205px,65vw)}
+}
 .siai-home-top-track .siai-expand-view{min-height:30px;padding:4px 9px}
 
 /* Horizontal travel is controlled exclusively by the top track.

@@ -232,10 +232,11 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </div></nav>
    <nav className="siai-filter-line" aria-label={ui.evidence}><strong>{ui.evidence}</strong><div className="siai-filter-options">
     {EVIDENCE_FACETS.map(v=><button key={v} type="button" aria-pressed={evidence===v} className={evidence===v?"selected":""} onClick={()=>setEvidence(v)}>{ui.evidenceLabels[v]}</button>)}
+   </div>
     <label className="siai-sort-label">{ui.sort}
      <select aria-label={ui.sort} value={sort} onChange={e=>setSort(e.target.value as MarketOrder)}>{SORT_OPTIONS.map(v=><option value={v} key={v}>{ui.sortLabels[v]}</option>)}</select>
     </label>
-   </div></nav>
+   </nav>
   </div>
    {compareIds.length>0&&<aside className="siai-compare-toolbar" aria-label={ui.selected}>
    <strong>{ui.selected} ({compareIds.length}/{MAX_COMPARISONS})</strong>
