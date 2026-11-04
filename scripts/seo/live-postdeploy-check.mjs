@@ -25,5 +25,28 @@ for(const site of sites){
  assert(!/noindex/i.test(page.r.headers.get("x-robots-tag")||""),site+" noindex response");
  assert(!/rel=["']?canonical/i.test(page.r.headers.get("link")||""),site+" conflicting HTTP canonical");
  assert(/全球\s*SIAI\s*排行榜/.test(page.content),site+" missing SSR heading");
+
+ if(site==="https://lingxifield.com"){
+  const toolUrls=locs.filter(url=>/^https:\/\/lingxifield\.com\/tools\/[^/]+$/.test(url));
+  assert(toolUrls.length>=100,"public tools disappeared from production sitemap");
+  const sample=[
+   "/tools/pdf-editor","/tools/pdf-compress","/tools/batch-image",
+   "/tools/ocr","/tools/video-transcription","/tools/food-calorie",
+   "/tools/temp-mail"
+  ].map(path=>site+path);
+  for(const url of sample){
+   assert(toolUrls.includes(url),"core tool missing from production sitemap: "+url);
+  }
+  const picks=[...new Set([...sample,toolUrls[0],toolUrls[Math.floor(toolUrls.length/2)],toolUrls.at(-1)])];
+  for(const url of picks){
+   const html=await get(url);
+   const canonicals=tags(html.content).filter(t=>attr(t,"rel")==="canonical");
+   assert.equal(canonicals.length,1,"tool canonical count "+url);
+   assert.equal(attr(canonicals[0],"href"),url,"wrong tool canonical "+url);
+   assert(!/noindex/i.test(html.r.headers.get("x-robots-tag")||""),"tool noindex "+url);
+   assert(/<title>[^<]+<\/title>/i.test(html.content),"missing tool title "+url);
+  }
+  console.log("SEO LIVE TOOL SAMPLE PASS",picks.length,"of",toolUrls.length);
+ }
  console.log("SEO LIVE PASS",site,JSON.stringify({sitemapUrls:locs.length,canonical:site+"/siai",alternates:alternates.length}));
 }
