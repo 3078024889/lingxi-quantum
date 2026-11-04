@@ -1,5 +1,38 @@
 import {test,expect} from './export-test';
 
+test('SIAI shares selected comparisons and restores them with a clipboard fallback',async({page})=>{
+ test.setTimeout(90000);
+ await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new Error('Clipboard unavailable')}}}));
+ await page.goto('/siai?lang=zh&token=do-not-share');
+ const rows=page.locator('tr.siai-home-tr');
+ await expect(rows).toHaveCount(62,{timeout:30000});
+ await rows.nth(0).getByRole('button',{name:'加入对比',exact:true}).click();
+ await rows.nth(1).getByRole('button',{name:'加入对比',exact:true}).click();
+ await page.getByRole('button',{name:'分享当前筛选与对比',exact:true}).click();
+ const input=page.getByRole('textbox',{name:'分享链接',exact:true});
+ await expect(input).toBeVisible();
+ const url=await input.inputValue(),shared=new URL(url);
+ expect(shared.searchParams.get('compare')?.split(',')).toHaveLength(2);
+ expect(shared.searchParams.has('token')).toBe(false);
+ await page.goto(shared.pathname+shared.search);
+ await expect(page.locator('.siai-compare-section')).toBeVisible();
+ await expect(page.locator('.siai-compare-section thead th')).toHaveCount(3);
+ await expect(page.locator('.siai-compare-selected')).toHaveCount(2);
+});
+
+test('SIAI restores valid task filters and copies only public selection parameters',async({page})=>{
+ test.setTimeout(90000);
+ await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(value:string)=>{(window as any).__siaiCopied=value;}}}));
+ await page.goto('/siai?lang=zh&task=image&compare=unknown&token=do-not-share');
+ await expect(page.getByRole('button',{name:'图片创作',exact:true})).toHaveAttribute('aria-pressed','true');
+ await expect(page.locator('.siai-compare-section')).toHaveCount(0);
+ await page.getByRole('button',{name:'分享当前筛选与对比',exact:true}).click();
+ await expect(page.getByRole('status').filter({hasText:'链接已复制'})).toBeVisible();
+ const copied=await page.evaluate(()=>(window as any).__siaiCopied as string);
+ expect(new URL(copied).searchParams.get('task')).toBe('image');
+ expect(copied).not.toContain('token');
+});
+
 test('SIAI opens on actual ranked data, not six search cards; compact table stays navigable',async({page})=>{
  test.setTimeout(90000);
  await page.goto('/siai');
