@@ -59,7 +59,7 @@ test("the footer does not duplicate English copy or ranking SEO panels and six l
  assert.match(footer,/lang==="zh"/);
  assert.doesNotMatch(footer,/lang="en"/);
  assert.doesNotMatch(footer,/isRankingRoute/);
- assert.match(footer,/<section className="lx-footer-unified"/);
+ assert.match(footer,/<section className="lx-footer-unified lx-footer-v3-showcase"/);
  assert(rank.indexOf('<SiaiSearchDiscovery variant="ranking"/>')>rank.indexOf('className="siai-home-table-scroll"'));
  assert.match(read("lib/public-feature-copy.ts"),/全球AI行情平台、全球AI排行榜、全球SI排行榜/);
  assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,0);
