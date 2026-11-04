@@ -204,3 +204,9 @@
  .siai-home-fullscreen .siai-home-table-scroll{height:max(280px,calc(100dvh - 350px))}
 }
 @media(prefers-reduced-motion:reduce){.siai-home-fullscreen{scroll-behavior:auto}}
+
+/* Keep exactly four user-selectable filter lanes; no wrapping into a tall menu. */
+.siai-home-four-filters .siai-filter-options{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;padding-bottom:3px;scrollbar-width:thin}
+.siai-home-four-filters .siai-filter-options>button{flex:none}
+.siai-home-four-filters .siai-sort-label{position:sticky;inset-inline-end:0;background:#f8fbff;padding-inline-start:7px;z-index:2}
+.siai-home-top-track .siai-expand-view{min-height:30px;padding:4px 9px}
