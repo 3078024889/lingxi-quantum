@@ -43,3 +43,25 @@ test("Image-to-PDF: original-size pages retain exact margins and image order aft
  // Big = 36pt; page sequence changed as requested.
  expect(second.getPages().map(p=>p.getSize())).toEqual([{width:112,height:172},{width:192,height:152}]);
 });
+
+test("Image-to-PDF desktop drag-and-drop reorders output pages without image re-encoding",async({page,isMobile})=>{
+ test.skip(isMobile,"Mobile users can reorder using the up/down controls");
+ test.setTimeout(90000);
+ const first=await sharp({create:{width:90,height:45,channels:3,background:"#cc2200"}}).png().toBuffer();
+ const second=await sharp({create:{width:35,height:95,channels:3,background:"#0022cc"}}).jpeg().toBuffer();
+ await page.goto("/tools/image-to-pdf?lang=en");
+ await page.locator('input[type="file"]').first().setInputFiles([
+  {name:"wide.png",mimeType:"image/png",buffer:first},
+  {name:"tall.jpg",mimeType:"image/jpeg",buffer:second}
+ ]);
+ const rows=page.getByTestId("image-to-pdf-sort-item");
+ await expect(rows).toHaveCount(2);
+ await rows.nth(1).dragTo(rows.nth(0));
+ await expect(page.getByText("1. tall.jpg")).toBeVisible();
+ await page.getByRole("button",{name:"Create PDF",exact:true}).click();
+ const pdf=await download(page);
+ expect(pdf.getPages().map(p=>p.getSize())).toEqual([
+  {width:71,height:131},
+  {width:126,height:81}
+ ]);
+});
