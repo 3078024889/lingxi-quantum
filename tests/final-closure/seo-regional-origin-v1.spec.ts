@@ -40,3 +40,23 @@ test("real Next dynamic robots and sitemap share the forwarded .cn regional orig
  if(locs.length)expect(locs).toContain("https://lingxifield.cn/siai");
  expect(locs).not.toContain("https://lingxifield.com/siai");
 });
+
+
+test("ECS public marker survives a normalized Vercel forwarded host and rejects arbitrary values",()=>{
+ expect(seoSiteForRequest("lingxifield.com","lingxifield.com","lingxifield.cn")).toBe("https://lingxifield.cn");
+ for(const value of ["evil.invalid","lingxifield.cn,evil.invalid","lingxifield.cn:443","https://lingxifield.cn","lingxifield.cn@evil.invalid"])
+  expect(seoSiteForRequest("lingxifield.com","lingxifield.com",value)).toBe("https://lingxifield.com");
+});
+
+test("ECS marker selects regional robots, sitemap and SIAI metadata through the real routes",async({request})=>{
+ const headers={"x-forwarded-host":"lingxifield.com","x-lingxi-public-host":"lingxifield.cn"};
+ const robots=await request.get("/robots.txt",{headers});
+ expect(robots.status()).toBe(200);
+ expect(await robots.text()).toContain("Sitemap: https://lingxifield.cn/sitemap.xml");
+ const sitemap=await request.get("/sitemap.xml",{headers});
+ expect(sitemap.status()).toBe(200);
+ for(const match of (await sitemap.text()).matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g))expect(new URL(match[1]).origin).toBe("https://lingxifield.cn");
+ const page=await request.get("/siai",{headers});
+ expect(page.status()).toBe(200);
+ expect(await page.text()).toContain('rel="canonical" href="https://lingxifield.cn/siai"');
+});
