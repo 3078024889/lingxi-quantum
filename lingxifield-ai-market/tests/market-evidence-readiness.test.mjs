@@ -66,7 +66,7 @@ test('real CLI confirms 32 public and all held source-only candidates, emits the
   assert.equal(report.curated.count,32);
   assert.equal(report.curated.recordedWithSources,192);
   const intakeFolder=new URL('../data/company-intake/',import.meta.url);
-  const stagedExpected=readdirSync(intakeFolder).filter(x=>/^batch-\\d{3}\\.json$/.test(x)).length*10;
+  const stagedExpected=readdirSync(intakeFolder).filter(x=>/^batch-\d{3}\.json$/.test(x)).length*10;
   assert.equal(stagedExpected,60);
   assert.equal(report.candidateIntake.products,stagedExpected);
   assert.equal(report.candidateIntake.factCells,stagedExpected*7);

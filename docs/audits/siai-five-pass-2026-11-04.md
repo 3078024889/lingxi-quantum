@@ -27,3 +27,7 @@
 - `main` 当前 `da81393c`，双 Vercel production READY。Hobby 额度敏感，所有本轮提交停留 Draft，验收完整后再合并，严禁自动覆盖正式站。
 - 必须核对构建 commit SHA，Next TS 源码、整合桌面手机 E2E、性能/静态生成变化、官方数据校验、数据库安全告警及恢复。
 - 所有运行日志及验收证据附 GitHub Action URL；没有成功报告则维持阻断，不把正在跑的测试写成成功。
+
+## 2026-11-04 官网复核补充（B006）
+- xAI 官方[区域端点](https://docs.x.ai/developers/advanced-api-usage/regions)与[账单说明](https://docs.x.ai/console/billing)分别提供区域**处理**和付款证据。美国端点并不等于美国以外不能访问；账户国家和全部 API 型号仍待独立验证。
+- B006 七字段合计 70：现有 **29 条官网观察、41 条证据缺失**，无商用授权或实付款证明。全部产品仍为候选，不能公开上榜。

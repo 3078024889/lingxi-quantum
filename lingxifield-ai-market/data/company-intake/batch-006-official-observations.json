@@ -213,16 +213,22 @@
           "scope": "publisher_capabilities"
         },
         "regions": {
-          "status": "missing",
-          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+          "status": "observed",
+          "text": "xAI 官方文档区分全球 API 地址 api.x.ai 与美国区域处理端点 us.api.x.ai/v1；美国端点只提供部分文本模型，Token费率高于全球端点。此项仅说明可选处理区域，不代表所有国家均可注册或付款。",
+          "source": "https://docs.x.ai/developers/advanced-api-usage/regions",
+          "checkedAt": "2026-11-04",
+          "scope": "regional_processing_scope"
         },
         "commercial": {
           "status": "missing",
           "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
         },
         "payment": {
-          "status": "missing",
-          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+          "status": "observed",
+          "text": "xAI 官方计费页支持团队预充值API credits；通过信用卡或银行转账购入，按资格申请月度账单，印度付款卡受特别限制。并不代表支持本地电子钱包。",
+          "source": "https://docs.x.ai/console/billing",
+          "checkedAt": "2026-11-04",
+          "scope": "official_payment_methods"
         },
         "company": {
           "status": "observed",
