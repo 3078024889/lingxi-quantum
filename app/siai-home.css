@@ -235,3 +235,111 @@
 .siai-page-buttons button{background:#eef5ff;color:#1759a2;border:1px solid #bdd5ee;border-radius:7px;padding:7px 9px;min-height:36px;font-size:14px;font-weight:650}
 .siai-page-buttons button:disabled{opacity:.35;cursor:not-allowed}
 @media(max-width:900px){.siai-page-controls{justify-content:flex-start}.siai-home-top-track{gap:5px}.siai-height-toggle{padding:3px 6px}}
+
+
+/* Compact sourced publisher directory; do not alter the research catalog. */
+.siai-home-table{min-width:1860px;table-layout:fixed}
+.siai-home-table th:nth-child(1){width:46px}
+.siai-home-table th:nth-child(2){width:365px}
+.siai-home-table th:nth-child(3){width:230px}
+.siai-home-table th:nth-child(4){width:180px}
+.siai-home-table th:nth-child(5){width:190px}
+.siai-home-table th:nth-child(6){width:180px}
+.siai-home-table th:nth-child(7){width:165px}
+.siai-home-table th:nth-child(8){width:160px}
+.siai-home-table th:nth-child(9){width:180px}
+.siai-home-table th:nth-child(10){width:145px}
+.siai-home-table td{padding:9px 8px!important;vertical-align:top;line-height:1.45;font-size:14px}
+.siai-home-table .siai-cell-preview{-webkit-line-clamp:3;line-clamp:3;max-height:4.4em;line-height:1.47}
+.siai-home-identity{font-size:14px;min-width:0}
+.siai-brand-line{display:flex;align-items:center;gap:10px;min-width:0;margin-bottom:6px}
+.siai-brand-mark{width:38px;height:38px;display:grid;place-items:center;flex:none;border:1px solid #d7e3f4;border-radius:9px;background:white;overflow:hidden;color:#2559a2;font-weight:800;font-size:14px}
+.siai-brand-mark img{display:block;max-height:34px;max-width:34px;object-fit:contain}
+.siai-brand-title{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.siai-brand-title>strong{font-size:16px!important;font-weight:800!important;line-height:1.35;overflow-wrap:anywhere}
+.siai-badge-si{background:#175fc5;color:white;font-size:14px;font-weight:750;border-radius:4px;padding:0 4px;line-height:1.4}
+.siai-home-identity .siai-compact-facts{display:flex!important;flex-wrap:wrap;gap:3px 10px!important;margin:0;align-items:baseline;line-height:1.4}
+.siai-home-identity .siai-compact-facts>div{display:inline-flex!important;align-items:baseline;gap:4px;flex-wrap:wrap;max-width:100%;min-width:0}
+.siai-home-identity .siai-compact-facts dt{font-size:14px!important;color:#637a98;white-space:nowrap}
+.siai-home-identity .siai-compact-facts dd{font-size:14px!important;color:#244a79;font-weight:600;min-width:0;margin:0;overflow-wrap:anywhere}
+.siai-source-compact{display:inline!important;margin-inline-start:4px!important;font-size:14px!important;text-decoration:none!important;white-space:nowrap}
+.siai-home-actions{gap:5px}
+.siai-home-actions>a,.siai-home-actions>button{min-height:32px!important;padding:4px 6px!important}
+.siai-home-table-flow{height:auto!important;max-height:none!important;min-height:0!important;overflow-y:visible!important;overscroll-behavior-y:auto!important}
+.siai-home-table-bounded{overscroll-behavior-y:auto!important;overflow-y:auto!important}
+.siai-home-table-scroll{overscroll-behavior-y:auto!important}
+.siai-home-bottom-track{height:19px;overflow-x:auto;overflow-y:hidden;scrollbar-width:auto;border:1px solid #cbdff2;border-top:0;border-radius:0 0 8px 8px;background:#e9f3ff}
+.siai-home-bottom-track>div{height:1px}
+.siai-home-bottom-track::-webkit-scrollbar{height:13px}
+.siai-home-bottom-track::-webkit-scrollbar-thumb{background:#9bb6d6;border:3px solid #e9f3ff;border-radius:8px}
+.siai-home-bottom-track::-webkit-scrollbar-track{background:#eaf3ff}
+.siai-home-top-track{top:62px}
+.siai-home-fullscreen .siai-home-table-flow{max-height:none!important;height:auto!important}
+@media(max-width:900px){.siai-home-identity .siai-compact-facts{gap:4px 8px!important}.siai-home-table{min-width:1840px}.siai-home-bottom-track{height:22px}}
+
+/* Three-column estimator visual layout; all rate data and math remain unchanged. */
+.siai-home-cost-inner .lxCostEstimate{display:grid!important;grid-template-columns:minmax(240px,1fr) minmax(300px,1.2fr) minmax(230px,.82fr);gap:15px;align-items:start}
+.siai-home-cost-inner .lxCostHeader{grid-column:1/-1;padding:2px 0 10px;border-bottom:1px solid #dce8f7}
+.siai-home-cost-inner .lxCostFields{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr!important;gap:10px;margin:0!important;padding:15px;border:1px solid #dce8f7;border-radius:12px;background:#fff}
+.siai-home-cost-inner .lxCostField input,.siai-home-cost-inner .lxCostField select{font-size:14px}
+.siai-home-cost-inner .lxCostResult{grid-column:2;grid-row:2;min-width:0;height:100%;background:linear-gradient(135deg,#eef3ff,#f7f2ff);border-color:#d4ddfb;padding:16px}
+.siai-home-cost-inner .lxCostResult>strong:first-child{font-size:18px!important;color:#4222ad;font-weight:800}
+.siai-home-cost-inner .lxCostAside,.siai-home-cost-inner .lxCostIntro{grid-column:3;grid-row:2;margin:0!important;padding:15px!important;border:1px solid #d8e7f8;border-radius:12px;background:#f8fbff;line-height:1.65}
+.siai-home-cost-inner .lxCostAside h4{font-size:16px;font-weight:800;color:#194c94;margin:0 0 12px}
+.siai-home-cost-inner .lxCostAside ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.siai-home-cost-inner .lxCostAside li{font-size:14px;line-height:1.6;padding-inline-start:18px;position:relative}
+.siai-home-cost-inner .lxCostAside li:before{content:"✓";color:#0b938c;font-weight:800;position:absolute;inset-inline-start:0}
+.siai-home-cost-inner .lxApiDirectory{grid-column:1/-1;margin-top:0}
+.siai-home-cost-inner .lxCostDisclaimer{grid-column:1/-1;margin:0;padding:6px 3px;font-size:14px}
+.siai-home-cost-inner .lxCost-api .lxCostIntro{display:block}
+@media(max-width:1190px){.siai-home-cost-inner .lxCostEstimate{grid-template-columns:minmax(210px,1fr) minmax(230px,1fr)}
+.siai-home-cost-inner .lxCostAside,.siai-home-cost-inner .lxCostIntro{grid-column:1/-1;grid-row:3}
+.siai-home-cost-inner .lxCost-api .lxApiDirectory{grid-row:auto}}
+@media(max-width:690px){.siai-home-cost-inner .lxCostEstimate{grid-template-columns:minmax(0,1fr)}
+.siai-home-cost-inner :is(.lxCostFields,.lxCostResult,.lxCostAside,.lxCostIntro){grid-column:1;grid-row:auto}
+.siai-home-cost-inner .lxCostHeader{grid-column:1}}
+
+/* Compact six-card discovery, each linking to a real ranking filter or estimator. */
+.siai-discovery-six{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.siai-discovery-card{border:1px solid #d5e3f5;border-radius:12px;background:#fff;min-width:0;box-shadow:0 1px 3px #143c6e0a;transition:box-shadow .16s,border-color .16s,transform .16s}
+.siai-discovery-card:hover{border-color:#74a9ee;box-shadow:0 5px 18px #2871c41c;transform:translateY(-2px)}
+.siai-discovery-card a{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;height:100%;min-height:127px;padding:12px 7px;color:#224b81;text-decoration:none}
+.siai-discovery-card a:focus-visible{outline:2px solid #155cc3;outline-offset:3px}
+.siai-discovery-card h3{font-size:14px!important;font-weight:800!important;line-height:1.45;margin:0;overflow-wrap:anywhere}
+.siai-discovery-card p{font-size:14px!important;line-height:1.5;color:#557391;margin:0;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.siai-discovery-icon{display:grid;place-items:center;width:33px;height:33px;border:1px solid #e1e7fb;border-radius:10px;background:#eef6ff;font-size:18px}
+.siai-discovery-card:nth-child(2n) .siai-discovery-icon{background:#fff7e9}
+.siai-discovery-card:nth-child(3n) .siai-discovery-icon{background:#f4edff}
+@media(max-width:1200px){.siai-discovery-six{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.siai-discovery-six{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Wide table stays in document flow, so wheel and touch scrolling always reach calculator and footer.
+   Body scrolling must never be locked by the ranking expand button. */
+.siai-home.siai-home-fullscreen{
+ position:relative!important;inset:auto!important;z-index:4!important;
+ width:calc(100vw - 24px)!important;max-width:none!important;
+ height:auto!important;max-height:none!important;min-height:0!important;
+ margin-inline-start:calc(-1 * var(--siai-wide-offset, 0px))!important;margin-inline-end:0!important;
+ overflow:visible!important;overscroll-behavior-y:auto!important;
+ padding:16px 12px 22px!important;
+}
+.siai-home.siai-home-fullscreen .siai-home-top-track{top:62px!important}
+.siai-home.siai-home-fullscreen .siai-home-table-flow{height:auto!important;max-height:none!important;overflow-y:visible!important}
+@media(max-width:900px){
+ .siai-home.siai-home-fullscreen{padding:12px 8px 18px!important}
+ .siai-home.siai-home-fullscreen .siai-home-top-track{top:57px!important}
+}
+/* Never insert artificial 'not documented' or vendor profile placeholder text. */
+.siai-home-identity .siai-compact-facts>div:empty{display:none!important}
+
+/* Keep auxiliary cost information legible at 14 px, including mobile and API comparison rows. */
+.siai-home-cost-inner .lxCostEstimate small,
+.siai-home-cost-inner .lxCostDisclaimer,
+.siai-home-cost-inner .lxApiDirectoryScroll th,
+.siai-home-cost-inner .lxApiDirectoryScroll td{
+ font-size:14px!important;line-height:1.65;
+}
+.lx-footer-brand-intro{font-size:14px!important;line-height:1.7!important}
+
+/* Stored SVG logos are local, not remote favicons: no broken placeholder or outside tracking. */
+.siai-brand-mark img{width:32px;height:32px;max-width:32px;max-height:32px;object-fit:contain}

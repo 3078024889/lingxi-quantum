@@ -30,11 +30,13 @@ test("footer describes capabilities once in a full-width panel and avoids duplic
 test("preview rows present clear product information without internal test-state prose or blanket region denials",()=>{
  const component=read("components/SiaiRankingHome.tsx");
  const candidate=read("app/siai/candidate-public.ts");
- assert.match(component,/官网资料 · 内容补充中/);
+ assert.doesNotMatch(component,/官网资料 · 内容补充中|官网资料补充中|内容补充中/);
  assert.doesNotMatch(component,/尚未完成实际使用测试|real use untested/);
  assert.match(component,/previewValue\(p\[scope\]\)/);
  assert.match(component,/PREVIEW_RAW_LABEL/);
- assert.match(component,/PREVIEW_MISSING/);
+ assert.match(component,/const hasFact=/);
+ assert.match(component,/value\?\.trim\(\)!=="尚无可靠资料"/);
+ assert.match(component,/!hasFact\(value\)\?"":/);
  assert.doesNotMatch(component,/PREVIEW_FIELD/);
  assert.match(candidate,/region:text\(region\)/);
  assert.doesNotMatch(candidate,/并非逐国注册或支付验证/);
