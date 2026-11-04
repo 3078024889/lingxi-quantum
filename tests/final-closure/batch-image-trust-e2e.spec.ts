@@ -207,3 +207,27 @@ test("Malformed PNG chunk lengths fail closed without entering browser decode",a
  await expect(page.locator('section[aria-label="Failed files"]')).toContainText("Could not read or convert");
  await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
 });
+
+
+test("Batch usage records partial completion and export attempts without file content",async({page})=>{
+ test.setTimeout(90000);
+ const events:Array<{eventType:string;metadata:Record<string,number>}>=[];
+ await page.addInitScript(()=>{Object.defineProperty(navigator,"userAgent",{value:"UsageTestBrowser"});sessionStorage.removeItem("lx-analytics-test")});
+ await page.route("**/api/tools/analytics/track",async route=>{
+  const data=route.request().postDataJSON();events.push(data);
+  await route.fulfill({status:200,contentType:"application/json",body:'{"ok":true}'});
+ });
+ const input=await ready(page);
+ const png=await sharp({create:{width:20,height:20,channels:3,background:"red"}}).png().toBuffer();
+ await input.setInputFiles([{name:"private-photo.png",mimeType:"image/png",buffer:png},{name:"private-broken.png",mimeType:"image/png",buffer:Buffer.from("broken")}]);
+ await page.getByRole("button",{name:"Process batch",exact:true}).click();
+ await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(1);
+ const download=page.waitForEvent("download");
+ await page.getByRole("button",{name:"Save file",exact:true}).click();await download;
+ await expect.poll(()=>events.map(e=>e.eventType)).toContain("export_clicked");
+ const complete=events.filter(e=>e.eventType==="process_completed");
+ expect(complete).toHaveLength(1);expect(complete[0].metadata.file_count).toBe(1);expect(complete[0].metadata.failed_count).toBe(1);
+ expect(events.filter(e=>e.eventType==="process_started")).toHaveLength(1);
+ expect(JSON.stringify(events)).not.toContain("private-");
+ expect(events.some(e=>e.eventType==="export_paid")).toBe(false);
+});
