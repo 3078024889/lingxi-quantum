@@ -5,6 +5,7 @@ import FileDropzone from '@/components/tools/FileDropzone';
 import ResultPanel from '@/components/tools/ResultPanel';
 import {useLingxiLang,type LingxiLang} from '@/lib/lingxi-i18n';
 import type {ToolResultFile} from '@/lib/tools/types';
+import {validateStaticBatchImage} from '@/lib/tools/shared/batch-image-client';
 
 type Mode='blur'|'black'|'pixelate';
 type Box={x:number;y:number;w:number;h:number;mode:Mode};
@@ -19,16 +20,41 @@ const copy:Record<LingxiLang,string[]>={
  pt:['Rolar','Marcar área','Desfocar','Pixelizar','Preto','Desfazer','Limpar','Exportar imagem','Criando…','Revise a imagem antes de salvar.','Marque uma área e volte a rolar. Use preto opaco para texto sensível; desfoque e pixels são efeitos visuais.'],
  ar:['تمرير','تحديد منطقة','تمويه','بكسلة','أسود','تراجع','مسح','تصدير الصورة','جارٍ الإنشاء…','راجع الصورة قبل الحفظ.','حدد منطقة ثم مرر. استخدم الأسود المعتم للنص الحساس؛ التمويه والبكسلة تأثيرات بصرية.']
 };
+const STATIC_IMAGE_ERROR:Record<LingxiLang,string>={
+ zh:'请选择有效的静态 JPG、PNG 或 WebP 图片。动图和伪装的图片格式不支持。',
+ en:'Choose a valid static JPG, PNG or WebP image. Animated or mislabeled files are not supported.',
+ ja:'有効な静止画の JPG、PNG、WebP を選択してください。アニメーションや偽装された画像には対応していません。',
+ ko:'올바른 정적 JPG, PNG 또는 WebP 이미지를 선택하세요. 움직이는 이미지나 형식이 일치하지 않는 파일은 지원하지 않습니다.',
+ fr:'Choisissez une image JPG, PNG ou WebP fixe et valide. Les animations et formats déguisés ne sont pas acceptés.',
+ de:'Bitte ein gültiges statisches JPG-, PNG- oder WebP-Bild wählen. Animationen und falsch deklarierte Dateien werden nicht unterstützt.',
+ es:'Elige una imagen JPG, PNG o WebP estática y válida. No se admiten animaciones ni archivos con formato incorrecto.',
+ pt:'Selecione uma imagem JPG, PNG ou WebP estática e válida. Animações e arquivos com formato disfarçado não são aceitos.',
+ ar:'اختر صورة ثابتة صالحة بصيغة JPG أو PNG أو WebP. لا تُقبل الصور المتحركة أو الملفات ذات التنسيق المضلل.'
+};
 export default function ScreenshotRedactWorkbench(){
  const {lang}=useLingxiLang(),t=copy[lang]||copy.en;
  const [files,setFiles]=useState<File[]>([]),[src,setSrc]=useState(''),[size,setSize]=useState({width:1,height:1}),[boxes,setBoxes]=useState<Box[]>([]),[pending,setPending]=useState<Box|null>(null),[draw,setDraw]=useState(false),[mode,setMode]=useState<Mode>('black'),[busy,setBusy]=useState(false),[error,setError]=useState(''),[result,setResult]=useState<ToolResultFile[]>([]);
- const wrap=useRef<HTMLDivElement>(null),start=useRef<{x:number;y:number;pointer:number}|null>(null),file=files[0];
+ const wrap=useRef<HTMLDivElement>(null),start=useRef<{x:number;y:number;pointer:number}|null>(null),chooseSeq=useRef(0),file=files[0];
  useEffect(()=>()=>{if(src)URL.revokeObjectURL(src)},[src]);
- function choose(next:File[]){setFiles(next);setBoxes([]);setPending(null);setDraw(false);start.current=null;setResult([]);setError('');setSrc(next[0]?URL.createObjectURL(next[0]):'')}
+ async function choose(next:File[]){
+  const version=++chooseSeq.current;
+  setFiles([]);setBoxes([]);setPending(null);setDraw(false);start.current=null;
+  setResult([]);setError('');setSrc('');
+  if(!next[0])return;
+  try{
+   // Do not preview, decode or let users export a mislabeled/animated image.
+   // Reuses the byte-signature, APNG/WebP frame and dimension checks from batch images.
+   await validateStaticBatchImage(next[0]);
+   if(version!==chooseSeq.current)return;
+   setFiles([next[0]]);setSrc(URL.createObjectURL(next[0]));
+  }catch{
+   if(version===chooseSeq.current)setError(STATIC_IMAGE_ERROR[lang]||STATIC_IMAGE_ERROR.en);
+  }
+ }
  function point(e:PointerEvent){const r=wrap.current!.getBoundingClientRect();return{x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))}}
  async function exportImg(){
   if(!file||!boxes.length||busy)return;setBusy(true);setError('');setResult([]);let bmp:ImageBitmap|null=null,canvas:HTMLCanvasElement|null=null;
-  try{bmp=await createImageBitmap(file);if(bmp.width*bmp.height>32_000_000)throw Error('IMAGE_PIXEL_LIMIT_32000000');canvas=document.createElement('canvas');canvas.width=bmp.width;canvas.height=bmp.height;const ctx=canvas.getContext('2d');if(!ctx)throw Error('CANVAS_UNAVAILABLE');ctx.drawImage(bmp,0,0);
+  try{await validateStaticBatchImage(file);bmp=await createImageBitmap(file);if(bmp.width*bmp.height>32_000_000)throw Error('IMAGE_PIXEL_LIMIT_32000000');canvas=document.createElement('canvas');canvas.width=bmp.width;canvas.height=bmp.height;const ctx=canvas.getContext('2d');if(!ctx)throw Error('CANVAS_UNAVAILABLE');ctx.drawImage(bmp,0,0);
    for(const b of boxes){const x=Math.floor(b.x*canvas.width),y=Math.floor(b.y*canvas.height),w=Math.max(1,Math.ceil((b.x+b.w)*canvas.width)-x),h=Math.max(1,Math.ceil((b.y+b.h)*canvas.height)-y);
     if(b.mode==='black'){ctx.fillStyle='#000';ctx.globalAlpha=1;ctx.fillRect(x,y,w,h);continue}
     const temp=document.createElement('canvas');try{if(b.mode==='pixelate'){const block=Math.max(6,Math.min(30,Math.round(Math.min(w,h)/12)));temp.width=Math.max(1,Math.ceil(w/block));temp.height=Math.max(1,Math.ceil(h/block));temp.getContext('2d')!.drawImage(canvas,x,y,w,h,0,0,temp.width,temp.height);ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(temp,0,0,temp.width,temp.height,x,y,w,h);ctx.restore()}else{const sx=Math.max(0,x-20),sy=Math.max(0,y-20),sw=Math.min(canvas.width-sx,w+40),sh=Math.min(canvas.height-sy,h+40);temp.width=sw;temp.height=sh;temp.getContext('2d')!.drawImage(canvas,sx,sy,sw,sh,0,0,sw,sh);ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.filter='blur(18px)';ctx.drawImage(temp,sx,sy,sw,sh);ctx.restore()}}finally{temp.width=temp.height=1}
