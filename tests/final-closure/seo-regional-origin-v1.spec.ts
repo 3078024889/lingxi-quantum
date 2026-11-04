@@ -24,6 +24,8 @@ test("real Next dynamic robots and sitemap share the forwarded .cn regional orig
  expect(robots.status()).toBe(200);
  const text=await robots.text();
  expect(text).toContain("Sitemap: https://lingxifield.cn/sitemap.xml");
+ expect(text).toContain("Host: https://lingxifield.cn");
+ expect(text).not.toContain("Host: https://lingxifield.com");
  expect(text).not.toContain("Sitemap: https://lingxifield.com/sitemap.xml");
  const sitemap=await request.get("/sitemap.xml",{headers});
  expect(sitemap.status()).toBe(200);
