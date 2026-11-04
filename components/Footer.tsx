@@ -113,7 +113,6 @@ export default function Footer(){
       {overview.toolCategories.map((item,i)=><p key={item.title}><Link href={FOOTER_TOOL_LINKS[i]}><strong><span aria-hidden="true">{FOOTER_TOOL_ICONS[i]}</span> {item.title}：</strong></Link><span>{item.description}</span></p>)}
      </div>
     </section>
-   </div>
     <nav className="lx-footer-search-list" aria-label={overview.searchTitle}>
      <h3>{overview.searchTitle}</h3>
      <ol>{discovery.topics.map((topic,i)=><li key={topic.q}><Link href={"/siai#siai-search-ranking-"+i}><span className="lx-footer-search-number">{String(i+1).padStart(2,"0")}｜</span>{lang==="zh"?FOOTER_QUESTION_ZH[i]:topic.q}</Link></li>)}</ol>
