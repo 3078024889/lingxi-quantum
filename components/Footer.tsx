@@ -165,19 +165,19 @@ export default function Footer(){
     <a className="lx-footer-v4-email" href="mailto:business@lingxifield.com">business@lingxifield.com</a>
     <div className="lx-footer-v4-qr-grid" aria-label={WECHAT_EXTRA[lang].more}>
      <div className="lx-footer-v4-qr-card">
-      <Image src="/images/lingxifield-wechat-service-qr.jpg" alt={t("service")} width={100} height={100}/>
+      <Image unoptimized loading="eager" src="/images/lingxifield-wechat-service-qr.jpg" alt={t("service")} width={100} height={100}/>
       <span>{t("service")}</span>
      </div>
      <a className="lx-footer-v4-qr-card" href="http://weixin.qq.com/r/mp/oycQCBfEPUpCrVNr93Kx" target="_blank" rel="noopener noreferrer">
-      <Image unoptimized src="/api/public-social-qr?kind=ranking" alt={WECHAT_EXTRA[lang].ranking} width={100} height={100}/>
+      <Image unoptimized loading="eager" src="/api/public-social-qr?kind=ranking" alt={WECHAT_EXTRA[lang].ranking} width={100} height={100}/>
       <span>{WECHAT_EXTRA[lang].ranking}</span>
      </a>
      <div className="lx-footer-v4-qr-card">
-      <Image src="/images/miniapp-qrcode.png" alt={t("miniapp")} width={100} height={100}/>
+      <Image unoptimized loading="eager" src="/images/miniapp-qrcode.png" alt={t("miniapp")} width={100} height={100}/>
       <span>{t("miniapp")}</span>
      </div>
      <a className="lx-footer-v4-qr-card" href="http://weixin.qq.com/r/mp/_yAoMCzEYnEdrWhT93Xp" target="_blank" rel="noopener noreferrer">
-      <Image unoptimized src="/api/public-social-qr?kind=search" alt={WECHAT_EXTRA[lang].search} width={100} height={100}/>
+      <Image unoptimized loading="eager" src="/api/public-social-qr?kind=search" alt={WECHAT_EXTRA[lang].search} width={100} height={100}/>
       <span>{WECHAT_EXTRA[lang].search}</span>
      </a>
     </div>
