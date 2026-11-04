@@ -23,6 +23,17 @@ const COMPARE_NO_TEXT:Record<string,string>={
  pt:"Pelo menos um PDF não tem texto extraível. Execute primeiro o OCR de PDF.",
  ar:"لا يحتوي ملف PDF واحد على الأقل على نص قابل للاستخراج. شغّل OCR لملفات PDF أولاً."
 };
+const EXTRACT_NO_TEXT:Record<string,string>={
+ zh:"这份 PDF 没有可提取的文字。请先使用 PDF OCR 识别扫描件。",
+ en:"This PDF has no extractable text. Run PDF OCR first.",
+ ja:"このPDFには抽出可能なテキストがありません。先にPDF OCRを実行してください。",
+ ko:"이 PDF에 추출 가능한 텍스트가 없습니다. 먼저 PDF OCR을 실행하세요.",
+ fr:"Ce PDF ne contient aucun texte extractible. Lancez d'abord l’OCR PDF.",
+ de:"Diese PDF enthält keinen extrahierbaren Text. Führen Sie zuerst PDF-OCR aus.",
+ es:"Este PDF no tiene texto extraíble. Ejecuta primero el OCR de PDF.",
+ pt:"Este PDF não tem texto extraível. Execute primeiro o OCR de PDF.",
+ ar:"لا يحتوي ملف PDF هذا على نص قابل للاستخراج. شغّل OCR لملفات PDF أولاً."
+};
 
 async function extract(file:File){const pdf=await openPdf(file),pages:string[]=[];try{for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),c=await page.getTextContent();pages.push((c.items||[]).map((x:any)=>String(x.str||"")).join(" "))}return pages}finally{await pdf.destroy?.()}}
 const blob=(bytes:Uint8Array)=>new Blob([new Uint8Array(bytes)],{type:"application/pdf"});
@@ -37,7 +48,7 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
   if(mode==="crop"){const d=await PDFDocument.load(await files[0].arrayBuffer());for(const p of d.getPages()){const box=p.getCropBox(),m=crop;if(!Number.isFinite(m)||m<0||m*2>=box.width||m*2>=box.height)throw Error('CROP_MARGIN_EXCEEDS_PAGE');p.setCropBox(box.x+m,box.y+m,box.width-m*2,box.height-m*2)}const b=blob(await d.save());setResults([{name:"cropped-"+files[0].name,blob:b,mime:"application/pdf",size:b.size}])}
   if(mode==="flatten"){const d=await PDFDocument.load(await files[0].arrayBuffer());d.getForm().flatten();if(d.getForm().getFields().length)throw Error('PDF_FLATTEN_INCOMPLETE');const b=blob(await d.save({useObjectStreams:true}));setResults([{name:"flattened-"+files[0].name,blob:b,mime:"application/pdf",size:b.size}])}
   if(mode==="compare"){const[a,b]=await Promise.all([extract(files[0]),extract(files[1])]);const out=comparePdfTextLayers(a,b);const bl=new Blob([out],{type:"text/markdown;charset=utf-8"});setResults([{name:"pdf-compare.md",blob:bl,mime:"text/markdown",size:bl.size}])}
-  if(mode==="text"||mode==="markdown"){const pages=await extract(files[0]),content=mode==="markdown"?pages.map((p,i)=>`# Page ${i+1}\n\n${p}`).join("\n\n"):pages.map((p,i)=>`--- Page ${i+1} ---\n${p}`).join("\n\n"),ext=mode==="markdown"?"md":"txt",mime=mode==="markdown"?"text/markdown":"text/plain";const bl=new Blob([content],{type:mime+";charset=utf-8"});setResults([{name:files[0].name.replace(/\.pdf$/i,"")+"."+ext,blob:bl,mime,size:bl.size}])}
+  if(mode==="text"||mode==="markdown"){const pages=await extract(files[0]);if(pages.every(p=>!p?.trim()))throw Error("PDF_COMPARE_OCR_REQUIRED");const content=mode==="markdown"?pages.map((p,i)=>`# Page ${i+1}\n\n${p}`).join("\n\n"):pages.map((p,i)=>`--- Page ${i+1} ---\n${p}`).join("\n\n"),ext=mode==="markdown"?"md":"txt",mime=mode==="markdown"?"text/markdown":"text/plain";const bl=new Blob([content],{type:mime+";charset=utf-8"});setResults([{name:files[0].name.replace(/\.pdf$/i,"")+"."+ext,blob:bl,mime,size:bl.size}])}
  }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setBusy(false)}}
  const title={watermark:"PDF 加水印","page-numbers":"PDF 加页码",crop:"PDF 裁边",flatten:"PDF 扁平化",compare:"PDF 比较",text:"PDF 转 TXT",markdown:"PDF 转 Markdown"}[mode];
  return <div className="space-y-4"><FileDropzone accept="application/pdf,.pdf" multiple={multi} append={multi} maxFiles={multi?2:1} maxSizeMB={200} files={files} onChange={f=>{setFiles(multi?f.slice(0,2):f.slice(0,1));setResults([]);setError("")}} disabled={busy} kind="pdf"/>
@@ -47,5 +58,5 @@ export default function PdfExtraWorkbench({mode}:{mode:Mode}){
  {mode==="flatten"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="将 PDF 表单字段写入页面内容，适合提交、归档或避免字段继续被修改；建议先保留原件。" /></p>}
  {mode==="compare"&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="比较两份 PDF，快速查看金额、日期和条款差异，并下载对比报告。" /></p>}
  {(mode==="text"||mode==="markdown")&&<p className="text-sm text-[var(--lx-muted)]"><ToolUiText text="提取已有文本层；扫描 PDF 请先使用 PDF OCR 或 PDF 转 Word 的自动 OCR。" /></p>}
- <button data-testid={mode==="compare"?"pdf-compare-run":undefined} disabled={busy||files.length<(multi?2:1)} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":title} /></button>{results.length>0&&<ResultPanel files={results} messageZh={`${title}完成。`} messageEn="Done."/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error==="PDF_COMPARE_OCR_REQUIRED"?(COMPARE_NO_TEXT[lang]||COMPARE_NO_TEXT.en):<ToolUiText text={error==="CROP_MARGIN_EXCEEDS_PAGE"?"裁边距必须小于每页宽度和高度的一半。":error}/>}</p>}</div>
+ <button data-testid={mode==="compare"?"pdf-compare-run":mode==="text"?"pdf-text-run":mode==="markdown"?"pdf-markdown-run":undefined} disabled={busy||files.length<(multi?2:1)} onClick={run} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text={busy?"处理中…":title} /></button>{results.length>0&&<ResultPanel files={results} messageZh={`${title}完成。`} messageEn="Done."/>}{error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error==="PDF_COMPARE_OCR_REQUIRED"?(mode==="compare"?(COMPARE_NO_TEXT[lang]||COMPARE_NO_TEXT.en):(EXTRACT_NO_TEXT[lang]||EXTRACT_NO_TEXT.en)):<ToolUiText text={error==="CROP_MARGIN_EXCEEDS_PAGE"?"裁边距必须小于每页宽度和高度的一半。":error}/>}</p>}</div>
 }
