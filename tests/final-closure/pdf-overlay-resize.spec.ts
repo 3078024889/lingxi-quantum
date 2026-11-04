@@ -8,7 +8,11 @@ async function dragGesture(page:Page,x:number,y:number,dx:number,dy:number,mobil
   const cdp=await page.context().newCDPSession(page);
   try{
    await cdp.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y,id:1,force:1,radiusX:5,radiusY:5}]});
-   for(let i=1;i<=12;i++)await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+dx*i/12,y:y+dy*i/12,id:1,force:1,radiusX:5,radiusY:5}]});
+   for(let i=1;i<=12;i++){
+    await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+dx*i/12,y:y+dy*i/12,id:1,force:1,radiusX:5,radiusY:5}]});
+    // A physical finger spans multiple animation frames; do not batch 12 moves into one frame.
+    await page.waitForTimeout(16);
+   }
    await cdp.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
   }finally{await cdp.detach();}
  }else{
