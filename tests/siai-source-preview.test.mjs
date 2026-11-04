@@ -56,7 +56,7 @@ test("five added official region policies preserve older snapshot counts and are
  const s=readFileSync(new URL("app/siai/official-region-supplements.ts",root),"utf8");
  for(const id of ["notion-ai","devin-desktop","freepik-ai","synthesia","scite"])assert(s.includes('"'+id+'":{'),id);
  for(const code of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
-  assert.equal(s.split(new RegExp("(^|\\\\s)"+code+":","gm")).length-1,5,code);
+  assert.equal(s.split("\n   "+code+":").length-1,5,code);
  }
  assert.equal((s.match(/checkedAt:"2026-11-04"/g)||[]).length,5);
  assert.match(src,/regionSupplement\?\.localized\.zh\|\|text\(region\)/);
