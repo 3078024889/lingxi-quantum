@@ -65,3 +65,6 @@ Remove-Item Env:BAIDU_SITE
 
 ### SSR 生产网页自动门禁
 新增 `node scripts/seo/verify-built-pages.mjs`，在 GitHub 执行 `pnpm build` 后启动本地 Next.js 生产服务器（不部署），用不同 Host 模拟 .com/.cn 测试真实 robots、XML sitemap、SIAI canonical、语言备用链接、已开放工具、去重标题、永久重定向、余额 noindex。此检查从 HTML 与 HTTP 响应判定，避免只靠源码正则假阳性。正式域名上线后仍需执行独立 `pnpm seo:check:live`。
+
+### 每天只读线上 SEO 巡检
+新增 `.github/workflows/seo-live-monitor.yml`：在本 PR 经完整验收合并到默认分支后，每天北京时间 09:15 自动运行（也可以手动 workflow_dispatch），不需要 pnpm、网站权限或任何密钥，不触发 Vercel 预览/生产部署，也不执行 IndexNow/百度主动推送。只读取两域名 SIAI、robots、sitemap，并抽查 7 个关键公开工具及 3 个 sitemap 位置样本；校验 canonical、HTTP 200、索引状态、HTML 标题和可发现性。运行失败由 GitHub Actions 记录并警示；搜索平台实际收录须查询已验证的站长后台，不能用此巡检代替。
