@@ -13,6 +13,7 @@ import {globalRegionSummary} from "../lingxifield-ai-market/lib/region-presentat
 import {commercialEvidence} from "../lingxifield-ai-market/lib/market-commercial-evidence";
 import {localizedPaymentName} from "../lingxifield-ai-market/lib/market-localized-payment";
 import {SIAI_FACET_WORDS} from "../lib/siai-home-facet-labels";
+import {readSiaiShareState,siaiSharePath,SIAI_SHARE_COPY} from "../lib/siai-share-state";
 import {filterMarketRows,toggleMarketComparison,MAX_COMPARISONS,TASK_FACETS,PAYMENT_FACETS,EVIDENCE_FACETS,SORT_OPTIONS,
  type TaskFacet,type PaymentFacet,type EvidenceFacet,type MarketOrder} from "../lib/siai-home-facets";
 
@@ -103,8 +104,23 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const [task,setTask]=useState<TaskFacet>("all"),[payment,setPayment]=useState<PaymentFacet>("any");
  const [evidence,setEvidence]=useState<EvidenceFacet>("all"),[sort,setSort]=useState<MarketOrder>("oldest");
  const [compareIds,setCompareIds]=useState<string[]>([]),[comparisonOpen,setComparisonOpen]=useState(false);
+ const [shareStatus,setShareStatus]=useState<'copied'|'fallback'|null>(null),[shareLink,setShareLink]=useState('');
+ const sharedInitialized=useRef(false);
  const categoryName=(name:string)=>CANDIDATE_CATEGORIES[lang][name]||localizedCategory(lang,name);
  const categories=useMemo(()=>[...new Set(rows.map(r=>r.category))], [rows]);
+ useEffect(()=>{
+  if(sharedInitialized.current)return;sharedInitialized.current=true;
+  const state=readSiaiShareState(location.search,rows.map(r=>r.id),categories);
+  setQuery(state.query);setCategory(state.category);setTask(state.task);setPayment(state.payment);
+  setEvidence(state.evidence);setSort(state.sort);setCompareIds(state.compareIds);setComparisonOpen(state.compareIds.length>=2);
+ },[rows,categories]);
+ useEffect(()=>{setShareStatus(null);setShareLink('');},[query,category,task,payment,evidence,sort,compareIds,lang]);
+ async function shareSelection(){
+  const url=new URL(siaiSharePath({query,category,task,payment,evidence,sort,compareIds},lang),location.origin).href;
+  setShareLink(url);
+  try{await navigator.clipboard.writeText(url);setShareStatus('copied');}
+  catch{setShareStatus('fallback');}
+ }
  const localizedRows=useMemo(()=>rows.map(p=>({...p,localizedSummary:localizedProductSummary(p.id,lang)||"",
   localizedCategory:categoryName(p.category)})),[rows,lang]);
  const shown=useMemo(()=>filterMarketRows(localizedRows,{query,category,task,payment,evidence,sort},lang),
@@ -184,8 +200,10 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
   <div className="siai-home-controls">
    <label className="siai-home-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}/></label>
    <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a>
+    <button type="button" className="siai-expand-view" onClick={shareSelection}>{SIAI_SHARE_COPY[lang].share}</button>
     <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={()=>setFullscreen(v=>!v)}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
   </div>
+  {shareStatus&&<div className="mb-3 min-w-0 text-sm"><p role="status">{SIAI_SHARE_COPY[lang][shareStatus]}</p>{shareStatus==='fallback'&&<input className="mt-2 w-full min-w-0 rounded border p-2" readOnly value={shareLink} aria-label={SIAI_SHARE_COPY[lang].link} onFocus={e=>e.currentTarget.select()}/>}</div>}
   <div className="siai-home-four-filters">
    <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
     <button type="button" aria-pressed={category==="*"} className={category==="*"?"selected":""} onClick={()=>setCategory("*")}>{t.all}</button>
