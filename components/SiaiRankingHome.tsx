@@ -202,7 +202,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a>
     <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={()=>setFullscreen(v=>!v)}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
   </div>
-  <div className="siai-home-four-filters">
+  <div className="siai-home-four-filters" id="siai-filter-panel">
    <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
     <button type="button" aria-pressed={category==="*"} className={category==="*"?"selected":""} onClick={()=>setCategory("*")}>{t.all}</button>
     {categories.map(c=><button key={c} type="button" aria-pressed={category===c} className={category===c?"selected":""} onClick={()=>setCategory(c)}>{categoryName(c)}</button>)}
@@ -247,7 +247,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
      {compared.map(p=><td key={p.id}>{value(p)}<Source href={source(p)} label={t.source}/></td>)}</tr>)}
    </tbody></table></div>
   </section>}
-  <section className="siai-ranking-data" ref={rankingRef} aria-label={t.title}>
+  <section className="siai-ranking-data" id="siai-ranking-data" ref={rankingRef} aria-label={t.title}>
   <div className="siai-home-top-track">
    <button type="button" className="siai-height-toggle" aria-pressed={bounded} onClick={()=>setBounded(v=>!v)}>{bounded?pageCopy.pageFlow:pageCopy.panel}</button>
    <span aria-hidden="true">↔</span><span className="siai-scroll-hint">{label("横向查看全部栏目","Scroll horizontally to see all columns")}</span><div className="siai-home-top-scroll" ref={topRef} onScroll={()=>sync("top")} tabIndex={0} aria-label={label("顶部横向滚动条","Top horizontal scrollbar")}><div style={{width:tableWidth,height:1}}/></div>{fullscreen&&<button type="button" className="siai-expand-view" onClick={()=>setFullscreen(false)}>{VIEW_COPY[lang].exit}</button>}</div>
@@ -307,7 +307,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </div>
   </nav>
  </section>
-  <details className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
+  <details className="siai-home-cost-accordion" id="siai-cost-calculator"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
   <SiaiSearchDiscovery variant="ranking"/>
    {selectedRow&&<div className="siai-detail-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setExpanded(null);}}><div className="siai-detail-modal" role="dialog" aria-modal="true" aria-label={selectedRow.name+" · "+t.details} tabIndex={-1} ref={dialogRef}>{detailPanel(selectedRow)}</div></div>}
 

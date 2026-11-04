@@ -310,3 +310,47 @@ body.siai-wide-mode{overflow-x:hidden!important;overflow-y:auto!important}
  .siai-brand-logo{width:34px;height:34px;flex-basis:34px}
  .siai-brand-logo img{width:30px;height:30px}
 }
+
+/* Six search-intent cards. Each links into real ranking, filter or calculator UI. */
+.siai-discovery-section{max-width:100%;min-width:0;margin:20px auto 24px;padding:0 12px;scroll-margin-top:90px}
+.siai-discovery-header{margin:0 0 14px}
+.siai-discovery-header h2{font-size:clamp(22px,2vw,24px)!important;line-height:1.35!important;font-weight:800!important;color:#183e70!important;margin:0 0 7px!important}
+.siai-discovery-header p{font-size:14px;line-height:1.65;color:#547295}
+.siai-discovery-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;min-width:0}
+.siai-discovery-card{background:#fff;border:1px solid #d9e5f4;border-radius:11px;min-width:0;transition:background .18s,border-color .18s,box-shadow .18s}
+.siai-discovery-card:hover,.siai-discovery-card:focus-within{background:#f4f8ff;border-color:#83b6ed;box-shadow:0 4px 16px rgba(25,95,170,.08)}
+.siai-discovery-link{display:flex;flex-direction:column;gap:7px;min-height:142px;padding:13px 10px;text-decoration:none!important;color:#1e4774!important}
+.siai-discovery-link:focus-visible{outline:2px solid #2c69c8;outline-offset:3px}
+.siai-discovery-icon{font-size:23px;line-height:1.25}
+.siai-discovery-card h3{font-size:15px!important;font-weight:800!important;line-height:1.4!important;margin:0!important;overflow-wrap:anywhere}
+.siai-discovery-card p{font-size:14px!important;line-height:1.45!important;color:#5c7691;margin:0!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+@media(max-width:1150px){.siai-discovery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.siai-discovery-section{padding:0 3px}.siai-discovery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.siai-discovery-link{padding:10px;min-height:146px}}
+@media(max-width:350px){.siai-discovery-grid{grid-template-columns:1fr}}
+/* Calculator: forms | live verified amount | scenarios, without touching pricing math. */
+.siai-home-cost-accordion{scroll-margin-top:94px}
+.siai-home-cost-inner .lxCostEstimate{max-width:100%;min-width:0}
+.siai-home-cost-inner .lxCostHeader{margin-bottom:12px}
+.siai-home-cost-inner .lxCostHeader h3{font-size:18px!important}
+.siai-home-cost-inner .siai-cost-grid{display:grid;grid-template-columns:minmax(240px,1.12fr) minmax(260px,1fr) minmax(210px,.9fr);gap:12px;align-items:stretch}
+.siai-home-cost-inner .siai-cost-settings,.siai-home-cost-inner .siai-cost-results,.siai-home-cost-inner .siai-cost-guide{min-width:0;background:#fff;border:1px solid #d8e5f5;border-radius:12px;padding:14px}
+.siai-home-cost-inner .siai-cost-settings .lxCostFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.siai-home-cost-inner .siai-cost-settings .lxCostField{font-size:14px!important;gap:5px}
+.siai-home-cost-inner .siai-cost-settings .lxCostField input,.siai-home-cost-inner .siai-cost-settings .lxCostField select{min-height:38px;font-size:14px!important}
+.siai-home-cost-inner .siai-cost-results .lxCostResult{padding:13px;margin:0;height:100%;border-color:#d7d3fd;background:#f7f6ff;gap:9px!important}
+.siai-home-cost-inner .siai-cost-results .lxCostResult>strong{font-size:18px!important;color:#3932a1}
+.siai-home-cost-inner .siai-cost-results .lxCostResult small{font-size:14px!important;line-height:1.6!important}
+.siai-home-cost-inner .siai-cost-guide{background:#f6faff}
+.siai-home-cost-inner .siai-cost-guide h4{margin:0 0 14px;font-size:17px;font-weight:800;color:#1c4f8a}
+.siai-home-cost-inner .siai-cost-guide ul{list-style:none;display:grid;gap:13px;padding:0;margin:0}
+.siai-home-cost-inner .siai-cost-guide li{display:flex;gap:8px;align-items:baseline;font-size:14px;line-height:1.65;color:#244c79}
+.siai-home-cost-inner .siai-cost-guide li::before{content:"✓";flex:0 0 auto;color:#1676da;font-weight:800}
+.siai-home-cost-inner .siai-cost-guide p{font-size:14px;line-height:1.55;margin:15px 0 0;color:#6785a4}
+.siai-cost-breakdown{border-top:1px solid #d9dff7;padding-top:7px;margin-top:3px}
+.siai-cost-breakdown summary{cursor:pointer;display:list-item;font-weight:750;font-size:14px;color:#265fb1}
+.siai-cost-breakdown>small{display:block;margin:6px 0}
+.siai-home-cost-inner .lxApiDirectory{margin-top:15px}
+.siai-home-cost-inner .lxCostMode{flex-wrap:wrap}
+.siai-home-cost-inner .lxCostMode button{min-height:35px;font-size:14px}
+@media(max-width:1120px){.siai-home-cost-inner .siai-cost-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.siai-home-cost-inner .siai-cost-guide{grid-column:1/-1}}
+@media(max-width:650px){.siai-home-cost-inner{padding:10px!important}.siai-home-cost-inner .siai-cost-grid{grid-template-columns:1fr}.siai-home-cost-inner .siai-cost-guide{grid-column:auto}.siai-home-cost-inner .siai-cost-settings .lxCostFields{grid-template-columns:repeat(2,minmax(0,1fr))}}
