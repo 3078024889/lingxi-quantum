@@ -142,6 +142,6 @@ test('SIAI resizable panel mode is optional; mouse drag and Escape do not trap d
  await page.getByRole('button',{name:'整页展开'}).click();
  await expect(table).toHaveClass(/siai-home-table-flow/);
  await expect(grip).toHaveCount(0);
- const flow=await table.evaluate((el:HTMLElement)=>({overflowY:getComputedStyle(el).overflowY,height:el.scrollHeight-clientHeight}));
+ const flow=await table.evaluate((el:HTMLElement)=>({overflowY:getComputedStyle(el).overflowY,height:el.scrollHeight-el.clientHeight}));
  expect(flow.height).toBeLessThanOrEqual(3);
 });
