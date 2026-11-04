@@ -1,5 +1,5 @@
 import {test,expect} from './export-test';
-import {PUBLIC_FEATURE_COPY} from '../../lib/public-feature-copy';
+import {FOOTER_UNIFIED} from '../../lib/footer-unified-copy';
 const locales=['zh','en','ja','ko','fr','de','es','pt','ar'] as const;
 const ask=["问问 SASI","Ask SASI","SASIに質問","SASI에 질문","Demandez à SASI","SASI fragen","Pregunta a SASI","Pergunte ao SASI","اسأل SASI"];
 const release=['版本与更新','Release notes','更新情報','업데이트','Mises à jour','Aktualisierungen','Actualizaciones','Atualizações','التحديثات'];
@@ -8,7 +8,18 @@ for(const [i,locale]of locales.entries())test('public copy and controls '+locale
  const footer=page.locator('footer');
  await expect(footer.locator('a[href="/release"]')).toHaveText(release[i]);
  await expect(footer).not.toContainText(/生态|Intelligent Ecosystem|Ecossistema inteligente|Ecosistema inteligente/);
- await expect(footer).toContainText(PUBLIC_FEATURE_COPY[locale].description);
+ const overview=footer.locator('.lx-footer-unified');
+ const expected=FOOTER_UNIFIED[locale];
+ await expect(overview).toHaveCount(1);
+ await expect(overview).toContainText(expected.headline);
+ await expect(overview).toContainText(expected.intro);
+ await expect(overview).toContainText(expected.sasiDescription);
+ await expect(overview).toContainText(expected.closingDescription);
+ await expect(overview.locator('.lx-footer-market li')).toHaveCount(expected.marketPoints.length);
+ await expect(overview.locator('.lx-footer-tools-list p')).toHaveCount(expected.toolCategories.length);
+ await expect(overview.locator('.lx-footer-search-list li')).toHaveCount(6);
+ for(const point of expected.marketPoints)await expect(overview).toContainText(point);
+ for(const tool of expected.toolCategories)await expect(overview).toContainText(tool.description);
  for(const path of ['/siai','/sasi','/tools','/terms','/privacy'])await expect(footer.locator('a[href="'+path+'"]').first()).toBeVisible();
  await expect(page.locator('.lx-seo-answers')).toBeVisible();
  await expect(page.locator('.lx-seo-vendor a[href^="mailto:business@lingxifield.com"]')).toBeVisible();
