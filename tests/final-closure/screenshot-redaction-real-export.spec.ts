@@ -12,6 +12,7 @@ test("Screenshot redaction: exported PNG truly overwrites sensitive pixels and r
  await input.setInputFiles({name:"private.jpg",mimeType:"image/jpeg",buffer:original});
  const image=page.locator("[data-redaction-surface] img");
  await expect(image).toBeVisible({timeout:15000});
+ await expect.poll(()=>image.evaluate(el=>(el as HTMLImageElement).naturalWidth),{timeout:15000}).toBe(200);
  await page.getByRole("button",{name:"Draw redaction",exact:true}).click();
  const surface=page.locator("[data-redaction-surface]");
  await expect(surface).toHaveAttribute("data-mode","draw");
@@ -50,10 +51,10 @@ test("Screenshot redaction rejects animated GIF and SVG instead of silently flat
  await expect(input).toBeEnabled({timeout:15000});
  const gif=await sharp({create:{width:12,height:12,channels:3,background:"#ff0000"}}).gif().toBuffer();
  await input.setInputFiles({name:"animated.gif",mimeType:"image/gif",buffer:gif});
- await expect(page.getByRole("alert")).toContainText("animated.gif");
+ await expect(page.locator("[data-tool-workbench] p[role=alert]")).toContainText("animated.gif");
  await expect(page.getByRole("button",{name:"Export redacted image",exact:true})).toBeDisabled();
  const svg=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="15">PRIVATE</text></svg>');
  await input.setInputFiles({name:"vector.svg",mimeType:"image/svg+xml",buffer:svg});
- await expect(page.getByRole("alert")).toContainText("vector.svg");
+ await expect(page.locator("[data-tool-workbench] p[role=alert]")).toContainText("vector.svg");
  await expect(page.getByRole("button",{name:"Export redacted image",exact:true})).toBeDisabled();
 });
