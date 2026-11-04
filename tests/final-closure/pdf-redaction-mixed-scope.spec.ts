@@ -94,8 +94,12 @@ test("mixed page-specific and all-page masks survive mode switching and PDF down
  expect((await colorAt(page,.2,.26)).every(x=>x<15)).toBe(true);
  expect((await colorAt(page,.7,.56)).every(x=>x<15)).toBe(true);
  expect((await colorAt(page,.48,.1)).every(x=>x>240)).toBe(true);
+ const previousPageImage=await img(page).getAttribute("src");
  await page.getByRole("spinbutton",{name:"Page",exact:true}).fill("2");
- await expect(img(page)).toBeVisible({timeout:45000});
+ // The page field updates before PDF.js has rendered the newly selected page.
+ // Pixel checks must wait for the new blob image, not just visibility of the old one.
+ await expect(img(page)).not.toHaveAttribute("src",previousPageImage||"",{timeout:45000});
+ await img(page).evaluate(async node=>{const picture=node as HTMLImageElement;if(!picture.complete)await picture.decode()});
  expect((await colorAt(page,.2,.26)).every(x=>x>240)).toBe(true);
  expect((await colorAt(page,.7,.56)).every(x=>x<15)).toBe(true);
 });
