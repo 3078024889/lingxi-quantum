@@ -22,7 +22,7 @@ const BASE_METADATA:Metadata={
 
 export async function generateMetadata():Promise<Metadata>{
  const h=await headers();
- const site=seoSiteForRequest(h.get("host"),h.get("x-forwarded-host"));
+ const site=seoSiteForRequest(h.get("host"),h.get("x-forwarded-host"),h.get("x-lingxi-public-host"));
  return {...BASE_METADATA,
   alternates:{canonical:site+"/siai",languages:siaiLanguageAlternates()},
   openGraph:{...BASE_METADATA.openGraph,url:site+"/siai"}
@@ -31,7 +31,7 @@ export async function generateMetadata():Promise<Metadata>{
 
 export default async function Home(){
  const h=await headers();
- const site=seoSiteForRequest(h.get("host"),h.get("x-forwarded-host"));
+ const site=seoSiteForRequest(h.get("host"),h.get("x-forwarded-host"),h.get("x-lingxi-public-host"));
  const canonical=site+"/siai";
  const {curated,rows}=getSiaiDirectoryRows();
  const faqld={"@context":"https://schema.org","@type":"FAQPage","@id":canonical+"#faq",

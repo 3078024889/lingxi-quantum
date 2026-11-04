@@ -6,6 +6,6 @@ import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 
 export default async function sitemap():Promise<MetadataRoute.Sitemap>{
   const h=await headers();
-  const site=seoSiteForRequest(h.get("host"),h.get("x-forwarded-host"));
+  const site=seoSiteForRequest(h.get("host"),h.get("x-forwarded-host"),h.get("x-lingxi-public-host"));
   return buildSiteSitemap(site,siaiLandingShouldIndex());
 }
