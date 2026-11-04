@@ -276,3 +276,25 @@
 .siai-home-top-track{top:62px}
 .siai-home-fullscreen .siai-home-table-flow{max-height:none!important;height:auto!important}
 @media(max-width:900px){.siai-home-identity .siai-compact-facts{gap:4px 8px!important}.siai-home-table{min-width:1840px}.siai-home-bottom-track{height:22px}}
+
+/* Three-column estimator visual layout; all rate data and math remain unchanged. */
+.siai-home-cost-inner .lxCostEstimate{display:grid!important;grid-template-columns:minmax(240px,1fr) minmax(300px,1.2fr) minmax(230px,.82fr);gap:15px;align-items:start}
+.siai-home-cost-inner .lxCostHeader{grid-column:1/-1;padding:2px 0 10px;border-bottom:1px solid #dce8f7}
+.siai-home-cost-inner .lxCostFields{grid-column:1;grid-row:2;display:grid;grid-template-columns:1fr!important;gap:10px;margin:0!important;padding:15px;border:1px solid #dce8f7;border-radius:12px;background:#fff}
+.siai-home-cost-inner .lxCostField input,.siai-home-cost-inner .lxCostField select{font-size:14px}
+.siai-home-cost-inner .lxCostResult{grid-column:2;grid-row:2;min-width:0;height:100%;background:linear-gradient(135deg,#eef3ff,#f7f2ff);border-color:#d4ddfb;padding:16px}
+.siai-home-cost-inner .lxCostResult>strong:first-child{font-size:18px!important;color:#4222ad;font-weight:800}
+.siai-home-cost-inner .lxCostAside,.siai-home-cost-inner .lxCostIntro{grid-column:3;grid-row:2;margin:0!important;padding:15px!important;border:1px solid #d8e7f8;border-radius:12px;background:#f8fbff;line-height:1.65}
+.siai-home-cost-inner .lxCostAside h4{font-size:16px;font-weight:800;color:#194c94;margin:0 0 12px}
+.siai-home-cost-inner .lxCostAside ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.siai-home-cost-inner .lxCostAside li{font-size:14px;line-height:1.6;padding-inline-start:18px;position:relative}
+.siai-home-cost-inner .lxCostAside li:before{content:"✓";color:#0b938c;font-weight:800;position:absolute;inset-inline-start:0}
+.siai-home-cost-inner .lxApiDirectory{grid-column:1/-1;margin-top:0}
+.siai-home-cost-inner .lxCostDisclaimer{grid-column:1/-1;margin:0;padding:6px 3px;font-size:14px}
+.siai-home-cost-inner .lxCost-api .lxCostIntro{display:block}
+@media(max-width:1190px){.siai-home-cost-inner .lxCostEstimate{grid-template-columns:minmax(210px,1fr) minmax(230px,1fr)}
+.siai-home-cost-inner .lxCostAside,.siai-home-cost-inner .lxCostIntro{grid-column:1/-1;grid-row:3}
+.siai-home-cost-inner .lxCost-api .lxApiDirectory{grid-row:auto}}
+@media(max-width:690px){.siai-home-cost-inner .lxCostEstimate{grid-template-columns:minmax(0,1fr)}
+.siai-home-cost-inner :is(.lxCostFields,.lxCostResult,.lxCostAside,.lxCostIntro){grid-column:1;grid-row:auto}
+.siai-home-cost-inner .lxCostHeader{grid-column:1}}
