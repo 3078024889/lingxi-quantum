@@ -354,3 +354,13 @@ body.siai-wide-mode{overflow-x:hidden!important;overflow-y:auto!important}
 .siai-home-cost-inner .lxCostMode button{min-height:35px;font-size:14px}
 @media(max-width:1120px){.siai-home-cost-inner .siai-cost-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.siai-home-cost-inner .siai-cost-guide{grid-column:1/-1}}
 @media(max-width:650px){.siai-home-cost-inner{padding:10px!important}.siai-home-cost-inner .siai-cost-grid{grid-template-columns:1fr}.siai-home-cost-inner .siai-cost-guide{grid-column:auto}.siai-home-cost-inner .siai-cost-settings .lxCostFields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Synced column labels appear after the normal header leaves the viewport.
+   Sticky overlay has zero footprint and does not intercept pointer/wheel input. */
+.siai-floating-columnbar{display:none;position:sticky;top:98px;height:0;z-index:25;min-width:0;pointer-events:none}
+.siai-floating-columnbar-active{display:block}
+.siai-floating-columnbar-scroll{width:100%;max-width:100%;height:41px;overflow:hidden;box-shadow:0 3px 8px rgba(18,66,122,.12);border:1px solid #cbdff6;border-radius:0 0 6px 6px;background:#dfeeff}
+.siai-floating-columnbar-grid{display:grid;grid-template-columns:42fr 365fr 230fr 155fr 160fr 152fr 150fr 166fr 158fr 116fr;height:40px;align-items:center;text-align:start;min-width:1780px;color:#1b4b81}
+.siai-floating-columnbar-grid>span{min-width:0;font-size:14px;font-weight:750;line-height:1.2;padding:5px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.siai-floating-columnbar-grid{grid-template-columns:42fr 315fr 230fr 155fr 160fr 152fr 150fr 166fr 158fr 116fr;min-width:1750px}}
