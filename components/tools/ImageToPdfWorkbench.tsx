@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useMemo,useRef,useState} from "react";
 import {PDFDocument} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -32,9 +32,16 @@ function pageBox(size:PageSize,orientation:Orientation,imageW:number,imageH:numb
 export default function ImageToPdfWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[result,setResult]=useState<ToolResultFile[]>([]);
- const[pageSize,setPageSize]=useState<PageSize>("fit"),[orientation,setOrientation]=useState<Orientation>("auto"),[margin,setMargin]=useState<Margin>("small");
+ const[pageSize,setPageSize]=useState<PageSize>("fit"),[orientation,setOrientation]=useState<Orientation>("auto"),[margin,setMargin]=useState<Margin>("small"),[dragOver,setDragOver]=useState<number|null>(null);const dragSource=useRef<number|null>(null);
  function invalidate(){setResult([]);setError("")}
- function move(index:number,direction:-1|1){invalidate();setFiles(current=>{const next=[...current],target=index+direction;if(target<0||target>=next.length)return current;[next[index],next[target]]=[next[target],next[index]];return next})}
+ function reorder(index:number,target:number){
+  if(index<0||target<0||index>=files.length||target>=files.length||index===target)return;
+  invalidate();setFiles(current=>{
+   if(index>=current.length||target>=current.length)return current;
+   const next=[...current];const [picked]=next.splice(index,1);next.splice(target,0,picked);return next;
+  });
+ }
+ function move(index:number,direction:-1|1){reorder(index,index+direction)}
  async function run(){
   if(!files.length)return;setBusy(true);setError("");setResult([]);
   try{
@@ -59,7 +66,12 @@ export default function ImageToPdfWorkbench(){
   <FileDropzone accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple maxFiles={100} maxSizeMB={50} files={files} onChange={f=>{setFiles(f);setResult([]);setError("")}} disabled={busy} kind="image"/>
   <p className="text-sm text-[var(--lx-muted)]">{c.lead}</p>
   {files.length>0&&<div className="space-y-2 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm">
-   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} className="flex items-center gap-2"><span className="min-w-0 flex-1 truncate">{i+1}. {f.name}</span><button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="rounded-lg border px-2 py-1 text-xs">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="rounded-lg border px-2 py-1 text-xs">{c.down}</button><button type="button" disabled={busy} onClick={()=>{invalidate();setFiles(current=>current.filter((_,j)=>j!==i))}} className="rounded-lg border px-2 py-1 text-xs">{c.remove}</button></div>)}
+   {files.map((f,i)=><div key={f.name+"-"+f.lastModified} data-testid="image-to-pdf-sort-item" draggable={!busy}
+   onDragStart={e=>{dragSource.current=i;e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",String(i))}}
+   onDragOver={e=>{if(dragSource.current===null)return;e.preventDefault();e.dataTransfer.dropEffect="move";if(dragOver!==i)setDragOver(i)}}
+   onDrop={e=>{if(dragSource.current===null)return;e.preventDefault();reorder(dragSource.current,i);dragSource.current=null;setDragOver(null)}}
+   onDragEnd={()=>{dragSource.current=null;setDragOver(null)}}
+   className={`flex items-center gap-2 rounded-lg px-2 py-1 sm:cursor-move ${dragOver===i?"outline outline-2 outline-[var(--lx-line-strong)]":""}`}><span className="min-w-0 flex-1 truncate">{i+1}. {f.name}</span><button type="button" disabled={i===0||busy} onClick={()=>move(i,-1)} className="rounded-lg border px-2 py-1 text-xs">{c.up}</button><button type="button" disabled={i===files.length-1||busy} onClick={()=>move(i,1)} className="rounded-lg border px-2 py-1 text-xs">{c.down}</button><button type="button" disabled={busy} onClick={()=>{invalidate();setFiles(current=>current.filter((_,j)=>j!==i))}} className="rounded-lg border px-2 py-1 text-xs">{c.remove}</button></div>)}
   </div>}
   {files.length>0&&<div className="grid gap-3 sm:grid-cols-3">
    <label className="space-y-1 text-sm"><span>{c.pageSize}</span><select disabled={busy} value={pageSize} onChange={e=>{setPageSize(e.target.value as PageSize);invalidate()}} className="w-full rounded-xl border bg-[var(--lx-panel)] p-3"><option value="fit">{c.fit}</option><option value="a4">{c.a4}</option><option value="letter">{c.letter}</option></select></label>
