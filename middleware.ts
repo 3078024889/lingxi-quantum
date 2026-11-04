@@ -49,11 +49,12 @@ export async function middleware(request:NextRequest){
  if(pathname.length>1&&pathname.endsWith("/")){
   const clean=request.nextUrl.clone();clean.pathname=pathname.slice(0,-1);return NextResponse.redirect(clean,308);
  }
+ const needsMirrorCanonical=requestHostname==="lingxifield.cn"&&!["/siai","/robots.txt","/sitemap.xml"].includes(pathname);
  if(pathname.startsWith("/api/"))return NextResponse.next({request});
 
  let response=NextResponse.next({request});
  if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
- if(requestHostname==="lingxifield.cn"&&pathname!=="/siai")response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
+ if(needsMirrorCanonical)response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
 
  const url=process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
  const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
@@ -69,7 +70,7 @@ export async function middleware(request:NextRequest){
    cookiesToSet.forEach(({name,value})=>request.cookies.set(name,value));
    response=NextResponse.next({request});
    if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
-   if(requestHostname==="lingxifield.cn"&&pathname!=="/siai")response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
+   if(needsMirrorCanonical)response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
    cookiesToSet.forEach(({name,value,options})=>response.cookies.set(name,value,options));
   },
  }});
