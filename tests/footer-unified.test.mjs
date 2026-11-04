@@ -50,15 +50,16 @@ test("home, market, SASI and tools all render one shared footer with original li
  const footer=read("components/Footer.tsx");
  for(const page of ["app/page.tsx","app/siai/page.tsx","app/sasi/page.tsx","app/tools/layout.tsx"])
   assert(read(page).includes('import Footer from "@/components/Footer"'),page);
- assert.match(footer,/<section className="lx-footer-unified"/);
+ assert.match(footer,/<section className="lx-footer-unified lx-footer-v3-showcase"/);
  assert.match(footer,/FOOTER_UNIFIED\[lang\]/);
  assert.match(footer,/FOOTER_TOOL_ICONS\[i\]/);
  assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
  assert.match(footer,/siai-search-ranking-/);
- for(const marker of ["lx11-footer-grid","lx11-footer-social","lx-footer-qr-row","lx11-footer-legal","business@lingxifield.com"])
+ for(const marker of ["lx11-footer-grid","lx-footer-v3-nav","lx-footer-brand-social","lx-footer-v3-contact","lx-footer-qr-row","lx-footer-v3-toolstrip","lx11-footer-legal","business@lingxifield.com"])
   assert(footer.includes(marker),marker);
  assert.doesNotMatch(footer,/!isRankingRoute|usePathname|copy\[lang\]\.lead/);
  assert.doesNotMatch(footer,/AI 工具先比清楚，再决定用哪一个/);
  assert.doesNotMatch(footer,/PUBLIC_FEATURE_COPY\[lang\]\.description/);
- assert.equal((footer.match(/className="lx-footer-unified"/g)||[]).length,1);
+ assert.equal((footer.match(/className="lx-footer-unified lx-footer-v3-showcase"/g)||[]).length,1);
+ assert.doesNotMatch(footer,/lx-footer-unified-secondary|lx-footer-unified-close|lx-footer-social-strip/);
 });
