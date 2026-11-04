@@ -50,3 +50,7 @@ Remove-Item Env:BAIDU_SITE
 
 ## 监测与发布门禁
 仅以站长平台反馈与实际搜索展示为收录证据。现有 Google/Bing/百度验证文件或 meta 标签不等于账号已完成所有权验证。非 main Vercel 部署已由仓库 `vercel.json` 禁止；独立分支 PR 审核通过后，合并生产需遵守原发布门禁。
+
+## 全站公开内容发现门禁（新）
+
+`pnpm seo:audit:fullsite`：审计 124 条 SEO 工具、九语言路由、站点地图、SIAI 区域入口、SEO 页面元数据及教程内链。已确认的 5 个 SASI 重定向入口不再进入 sitemap；账户、订单、私密链接不可被索引。GEO 文本只提供 canonical 链接，避免误把 `.cn` 镜像页面写成独立的九语言页面。公开网页和真实官方来源是主要搜索入口，`llms.txt` 只是辅助导航文件，不能保证 AI 引用。

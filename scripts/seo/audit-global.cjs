@@ -24,6 +24,12 @@ assert.equal(siaiLanguageAlternates()['zh-CN'],'https://lingxifield.cn/siai');
 assert.equal(siaiLanguageAlternates()['zh'],'https://lingxifield.com/siai');
 assert.equal(siaiLanguageAlternates()['x-default'],'https://lingxifield.com/siai');
 const urls=new Set(sitemap.map(x=>x.url));assert.equal(urls.size,sitemap.length,'duplicate canonical URLs');
+const redirectedLegacy=['/sasi/drama','/sasi/build','/ai-knowledge','/ai-learning','/ai-research'];
+for(const p of redirectedLegacy)assert(!urls.has(seo.SITE+p),`redirected URL in sitemap: ${p}`);
+for(const p of ['/sasi','/sasi/image','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])
+  assert(urls.has(seo.SITE+p),`indexable public route absent: ${p}`);
+for(const slug of ['pdf-editor','batch-image','video-transcription','temp-mail','e-sign-pdf','food-calorie'])
+  assert(urls.has(seo.SITE+'/tools/'+slug),`core public tool missing from sitemap: ${slug}`);
 for(const row of sitemap){
  assert(!row.lastModified,'do not pretend every page changed at build time');
  assert(!indexing.privateSearchPath(new URL(row.url).pathname));
@@ -47,4 +53,4 @@ for(const [topic,value] of Object.entries(facts.SERVICE_FACTS)){
  for(const locale of Object.keys(seo.SEO_LOCALES))assert(value.description[locale]?.length>30,`${topic}:${locale}`);
 }
 assert.equal(facts.SERVICE_FACTS['ai-website-builder'].target,'/sasi/build');
-console.log(`PASS: 2 domains (.com global + .cn SIAI), ${seo.GLOBAL_TOOL_CATALOG.length} tools, ${Object.keys(facts.SERVICE_FACTS).length} SASI product guides, 9 languages, ${urls.size} canonical URLs, reciprocal sitemap alternates, real entry routes and private-page exclusions.`);
+console.log(`PASS: canonical-only sitemap and GEO guide with 2 domains (.com global + .cn SIAI), ${seo.GLOBAL_TOOL_CATALOG.length} tools, ${Object.keys(facts.SERVICE_FACTS).length} SASI product guides, 9 languages, ${urls.size} canonical URLs, reciprocal sitemap alternates, real entry routes and private-page exclusions.`);

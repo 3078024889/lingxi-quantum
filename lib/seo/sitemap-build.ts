@@ -29,7 +29,9 @@ export function buildSiteSitemap(site:string,siaiIndexable:boolean):MetadataRout
     for(const locale of Object.keys(SEO_LOCALES) as SeoLocale[])
       rows.push({url:PRIMARY_SITE+localePath(locale,"/siai"),alternates:{languages},changeFrequency:"daily",priority:0.9});
   }
-  for(const path of ["/sasi","/sasi/drama","/sasi/build","/sasi/image","/ai-knowledge","/ai-learning","/ai-research","/about","/privacy","/terms","/refunds","/legal/sasi","/release"])
+  // Only pages responding with their own public content belong in the XML sitemap.
+  // /sasi/drama, /sasi/build and /ai-{knowledge,learning,research} redirect to /sasi.
+  for(const path of ["/sasi","/sasi/image","/about","/privacy","/terms","/refunds","/legal/sasi","/release"])
     rows.push({url:PRIMARY_SITE+path});
   return rows;
 }
