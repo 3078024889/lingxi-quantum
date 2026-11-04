@@ -9,12 +9,26 @@ function load(name){
  return mod.exports;
 }
 const seo=load('lib/seo/global-seo.ts'),registry=load('lib/tools/registry.ts');
-const sitemap=load('app/sitemap.ts').default(),indexing=load('lib/seo/indexing.ts');
+const indexing=load('lib/seo/indexing.ts');
+const {buildSiteSitemap}=load('lib/seo/sitemap-build.ts');
+const {seoSiteForRequest,siaiLanguageAlternates}=load('lib/seo/siai-domain-policy.ts');
+const sitemap=buildSiteSitemap(seo.SITE,true);
+const cnSitemap=buildSiteSitemap('https://lingxifield.cn',true);
+assert.deepEqual(cnSitemap.map(x=>x.url),['https://lingxifield.cn/siai']);
+assert.equal(seoSiteForRequest('lingxifield.cn'),'https://lingxifield.cn');
+assert.equal(seoSiteForRequest('www.lingxifield.cn'),'https://lingxifield.cn');
+assert.equal(seoSiteForRequest('lingxifield.com','lingxifield.cn'),'https://lingxifield.com');
+assert.equal(seoSiteForRequest('evil.invalid','lingxifield.cn'),'https://lingxifield.cn');
+assert.equal(seoSiteForRequest('evil.invalid','evil.invalid'),'https://lingxifield.com');
+assert.equal(siaiLanguageAlternates()['zh-CN'],'https://lingxifield.cn/siai');
+assert.equal(siaiLanguageAlternates()['zh'],'https://lingxifield.com/siai');
+assert.equal(siaiLanguageAlternates()['x-default'],'https://lingxifield.com/siai');
 const urls=new Set(sitemap.map(x=>x.url));assert.equal(urls.size,sitemap.length,'duplicate canonical URLs');
 for(const row of sitemap){
  assert(!row.lastModified,'do not pretend every page changed at build time');
  assert(!indexing.privateSearchPath(new URL(row.url).pathname));
- for(const url of Object.values(row.alternates?.languages||{}))assert(urls.has(url),`alternate absent from sitemap: ${url}`);
+ for(const url of Object.values(row.alternates?.languages||{}))
+  assert(urls.has(url)||cnSitemap.some(x=>x.url===url),`alternate absent from cross-domain sitemaps: ${url}`);
 }
 for(const t of seo.GLOBAL_TOOL_CATALOG){
  assert(fs.existsSync(path.join(root,`app/tools/${t.slug}/page.tsx`))||registry.getTool(t.slug)&&!registry.getTool(t.slug).dedicatedRoute,`missing route: ${t.slug}`);
@@ -33,4 +47,4 @@ for(const [topic,value] of Object.entries(facts.SERVICE_FACTS)){
  for(const locale of Object.keys(seo.SEO_LOCALES))assert(value.description[locale]?.length>30,`${topic}:${locale}`);
 }
 assert.equal(facts.SERVICE_FACTS['ai-website-builder'].target,'/sasi/build');
-console.log(`PASS: ${seo.GLOBAL_TOOL_CATALOG.length} tools, ${Object.keys(facts.SERVICE_FACTS).length} SASI product guides, 9 languages, ${urls.size} canonical URLs, reciprocal sitemap alternates, real entry routes and private-page exclusions.`);
+console.log(`PASS: 2 domains (.com global + .cn SIAI), ${seo.GLOBAL_TOOL_CATALOG.length} tools, ${Object.keys(facts.SERVICE_FACTS).length} SASI product guides, 9 languages, ${urls.size} canonical URLs, reciprocal sitemap alternates, real entry routes and private-page exclusions.`);
