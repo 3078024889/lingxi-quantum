@@ -60,3 +60,5 @@ Remove-Item Env:BAIDU_SITE
 - 另为 `/release`、`/legal/sasi` 补独立 canonical，删除过期的「SASI 智能生态」元文案。
 - `/tools/image-to-pdf-pro` 是重定向别名（真实操作页 `/tools/image-to-pdf`），不作为独立 sitemap 页面；八种语言的别名也 308 重定向。目录仍记录 124 个 SEO 项，其中 123 个是非别名的可索引工具入口。
 - 构建前强制审计所有独立工具页面的 metadata 与 canonical；发现遗漏就阻断发布，而非把 SEO 工具都标记完成。
+
+- 补齐 AI 图片检测与 AI 视频音频检测两个已发布页面原本缺失的 canonical/hreflang，保留各自真实功能限制描述。所有 94 个独立工具路由已逐个核对，重定向别名不作为独立页面。
