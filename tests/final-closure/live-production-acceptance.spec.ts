@@ -62,3 +62,16 @@ test('production creates a vector PDF from real bytes on both devices without mo
  await expect(page.getByRole('button',{name:'Save file',exact:true}).first()).toBeVisible({timeout:30000});
  // Separate output test opens actual downloads, with metering-only test stub.
 });
+
+
+for(const [site,url] of [
+ ['Global SIAI','https://globalsiai.com/'],
+ ['Global SIAI www','https://www.globalsiai.com/'],
+ ['LINGXIFIELD CN','https://lingxifield.cn/']
+] as const){
+ test('real production custom domain: '+site,async({request})=>{
+  const response=await request.get(url,{timeout:30000,maxRedirects:5});
+  expect(response.status(),site+' HTTP status').toBe(200);
+  expect((await response.text()).length,site+' nonempty HTML').toBeGreaterThan(200);
+ });
+}
