@@ -1,4 +1,5 @@
 import {test,expect} from "./export-test";
+import {mkdir} from "node:fs/promises";
 import {publicToolSurface} from "../../lib/tools/public-surface";
 import {isAnonymousLocalTool} from "../../lib/tools/local-free-tools";
 import {toolTitle} from "../../lib/tools/card-i18n";
@@ -68,7 +69,7 @@ test("recent work remains a scrollable complete list with direct opening and con
   const now=Date.now();
   localStorage.setItem("lingxifield-recent-tool-results-v2",JSON.stringify([
    {slug:"compress-image",at:now,fileCount:1,bytes:12000},
-   {slug:"png-to-jpg",at:now-60000,fileCount:1,bytes:9000,workspaceId:"11111111-1111-4111-8111-111111111111"}
+   {slug:"png-to-jpg",at:now-60000,fileCount:1,bytes:9000,workspaceId:"111111111111411181111111111111111111"}
   ]));
   window.dispatchEvent(new CustomEvent("lingxifield:recent-tools"));
  });
@@ -145,9 +146,15 @@ test("original public production before / branch-built after screenshots for des
  const before=await page.goto("https://lingxifield.com/tools",{waitUntil:"domcontentloaded",timeout:30000});
  expect(before?.status()).toBe(200);
  await page.locator("main").first().waitFor();
- await testInfo.attach(`before-live-${mobile?"390":"1440"}`,{body:await page.screenshot({animations:"disabled"}),contentType:"image/png"});
+ const outputDir="test-results/tools-compact-screenshots";
+ await mkdir(outputDir,{recursive:true});
+ const beforePath=`${outputDir}/before-live-${mobile?"390":"1440"}-${testInfo.project.name}.png`;
+ await page.screenshot({path:beforePath,animations:"disabled"});
+ await testInfo.attach(`before-live-${mobile?"390":"1440"}`,{path:beforePath,contentType:"image/png"});
  const after=await page.goto("/tools",{waitUntil:"domcontentloaded"});
  expect(after?.status()).toBe(200);
  await expect(page.locator(".lx-tools-compact a[data-tool-slug]")).toHaveCount(source.length);
- await testInfo.attach(`after-branch-${mobile?"390":"1440"}`,{body:await page.screenshot({animations:"disabled"}),contentType:"image/png"});
+ const afterPath=`${outputDir}/after-branch-${mobile?"390":"1440"}-${testInfo.project.name}.png`;
+ await page.screenshot({path:afterPath,animations:"disabled"});
+ await testInfo.attach(`after-branch-${mobile?"390":"1440"}`,{path:afterPath,contentType:"image/png"});
 });
