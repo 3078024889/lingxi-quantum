@@ -523,8 +523,8 @@ html[data-theme="dark"] .lx-footer-v3 .lx-footer-brand-social a{color:#ded6ff;ba
 /* Owner's WeChat scan targets are added behind a compact, opt-in disclosure;
    existing service and official mini-program QR images remain unchanged. */
 .lx-footer-v3 .lx-footer-wechat-extra{margin-top:6px;border:1px solid #e5d9fa;border-radius:11px;min-width:0}
-.lx-footer-v3 .lx-footer-wechat-extra summary{cursor:pointer;list-style-position:inside;padding:8px;font-size:14px;font-weight:700;line-height:1.5;color:#6b44bf}
-.lx-footer-v3 .lx-footer-wechat-extra[open]{grid-column:1/-1}
+.lx-footer-v3 .lx-footer-wechat-extra h4{margin:0;padding:8px;font-size:14px;font-weight:700;line-height:1.5;color:#6b44bf}
+.lx-footer-v3 .lx-footer-wechat-extra{grid-column:auto;overflow-wrap:anywhere}
 .lx-footer-v3 .lx-footer-extra-qr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:3px 7px 12px}
 .lx-footer-v3 .lx-footer-extra-qr-grid a{display:flex;flex-direction:column;gap:5px;align-items:center;color:#51436c;text-decoration:none;font-size:14px;text-align:center;min-width:0}
 .lx-footer-v3 .lx-footer-extra-qr-grid a:hover{text-decoration:underline}
@@ -532,4 +532,4 @@ html[data-theme="dark"] .lx-footer-v3 .lx-footer-brand-social a{color:#ded6ff;ba
 .lx-footer-v3 .lx-footer-miniapp-label{display:block;margin:0 7px 5px;font-size:14px!important;color:#4b4374}
 .lx-footer-v3 .lx-footer-miniapp-code{display:block;overflow-wrap:anywhere;white-space:normal;padding:4px 7px;font-size:14px;line-height:1.6;user-select:text;color:#574f79}
 html[data-theme="dark"] .lx-footer-v3 .lx-footer-wechat-extra{border-color:#615176}
-html[data-theme="dark"] .lx-footer-v3 .lx-footer-wechat-extra summary,html[data-theme="dark"] .lx-footer-v3 .lx-footer-extra-qr-grid a,html[data-theme="dark"] .lx-footer-v3 .lx-footer-miniapp-label,html[data-theme="dark"] .lx-footer-v3 .lx-footer-miniapp-code{color:#ddd1f7}
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-wechat-extra h4,html[data-theme="dark"] .lx-footer-v3 .lx-footer-extra-qr-grid a,html[data-theme="dark"] .lx-footer-v3 .lx-footer-miniapp-label,html[data-theme="dark"] .lx-footer-v3 .lx-footer-miniapp-code{color:#ddd1f7}
