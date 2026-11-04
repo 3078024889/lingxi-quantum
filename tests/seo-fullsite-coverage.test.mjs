@@ -9,17 +9,21 @@ const main=read("app/sitemap.ts");
 const metadata=read("lib/seo/search-tool-metadata.ts");
 const guide=read("components/seo/ToolFacts.tsx");
 const tools=read("components/tools/ToolsHubV11.tsx");
-test("all 124 SEO tool entries and nine locale paths feed a canonical public sitemap",()=>{
+test("124 catalog entries, 123 non-alias tools and nine locales have canonical indexable paths",()=>{
  const slugs=[...seoCatalog.matchAll(/\{slug:"([^"]+)"/g)].map(x=>x[1]);
  assert.equal(slugs.length,124);
  assert.equal(new Set(slugs).size,slugs.length);
- assert.match(sitemap,/GLOBAL_TOOL_CATALOG\.map\(t=>/);
+ assert.match(sitemap,/GLOBAL_TOOL_CATALOG\.filter\(t=>t\.slug!==/);
+ assert.match(sitemap,/\.map\(t=>/);
  assert.match(sitemap,/Object\.keys\(SEO_LOCALES\)/);
  assert.match(sitemap,/localePath\(locale,path\)/);
  assert.match(main,/buildSiteSitemap/);
 });
 test("redirected and private pages do not masquerade as sitemap content",()=>{
  const active=sitemap.match(/for\(const path of (\[[^\n]+\])\)/)?.[1]||"";
+ assert.match(sitemap,/image-to-pdf-pro/);
+ const redirectCfg=read("next.config.js");
+ assert.match(redirectCfg,/source: "\/tools\/image-to-pdf-pro"/);
  assert(active.includes('"/sasi/image"'));
  for(const redirected of ['"/sasi/drama"','"/sasi/build"','"/ai-knowledge"','"/ai-learning"','"/ai-research"'])
    assert(!active.includes(redirected),redirected+" is a redirect");

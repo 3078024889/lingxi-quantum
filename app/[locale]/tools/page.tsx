@@ -19,7 +19,7 @@ export default async function LocalizedTools(props:Props) {
   <Link href={localePath(locale,"/")}>← {c.brand}</Link>
   <h1 style={{fontSize:"clamp(32px,5vw,56px)"}}>{c.toolsTitle}</h1><p style={{fontSize:18,lineHeight:1.7}}>{c.toolsDesc}</p>
   <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))",gap:12,marginTop:32}}>
-   {GLOBAL_TOOL_CATALOG.map(tool=><Link key={tool.slug} href={localePath(locale,`/tools/${tool.slug}`)} style={{padding:18,border:"1px solid #9995",borderRadius:16,textDecoration:"none"}}><b>{toolTitle(locale,tool)}</b><div style={{marginTop:8,opacity:.72}}>{toolDescription(locale,tool)}</div></Link>)}
+   {GLOBAL_TOOL_CATALOG.filter(tool=>tool.slug!=="image-to-pdf-pro").map(tool=><Link key={tool.slug} href={localePath(locale,`/tools/${tool.slug}`)} style={{padding:18,border:"1px solid #9995",borderRadius:16,textDecoration:"none"}}><b>{toolTitle(locale,tool)}</b><div style={{marginTop:8,opacity:.72}}>{toolDescription(locale,tool)}</div></Link>)}
   </div>
  </main>
 }

@@ -30,7 +30,7 @@ assert.equal(siaiLanguageAlternates()['zh-CN'],'https://lingxifield.cn/siai');
 assert.equal(siaiLanguageAlternates()['zh'],'https://lingxifield.com/siai');
 assert.equal(siaiLanguageAlternates()['x-default'],'https://lingxifield.com/siai');
 const urls=new Set(sitemap.map(x=>x.url));assert.equal(urls.size,sitemap.length,'duplicate canonical URLs');
-const redirectedLegacy=['/sasi/drama','/sasi/build','/ai-knowledge','/ai-learning','/ai-research'];
+const redirectedLegacy=['/tools/image-to-pdf-pro','/sasi/drama','/sasi/build','/ai-knowledge','/ai-learning','/ai-research'];
 for(const p of redirectedLegacy)assert(!urls.has(seo.SITE+p),`redirected URL in sitemap: ${p}`);
 for(const p of ['/sasi','/sasi/image','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])
   assert(urls.has(seo.SITE+p),`indexable public route absent: ${p}`);
@@ -43,6 +43,17 @@ for(const row of sitemap){
   assert(urls.has(url)||cnSitemap.some(x=>x.url===url),`alternate absent from cross-domain sitemaps: ${url}`);
 }
 for(const t of seo.GLOBAL_TOOL_CATALOG){
+ if(t.slug==='image-to-pdf-pro'){
+  for(const locale of Object.keys(seo.SEO_LOCALES))assert(!urls.has(seo.SITE+seo.localePath(locale,'/tools/'+t.slug)),'redirected legacy tool in sitemap');
+  continue;
+ }
+ const direct=path.join(root,'app','tools',t.slug,'page.tsx');
+ if(fs.existsSync(direct)){
+  const code=fs.readFileSync(direct,'utf8');
+  assert(!/\\bredirect\\s*\\(/.test(code),`redirecting tool included in sitemap: ${t.slug}`);
+  assert(/export\\s+const\\s+metadata\\b|generateMetadata\\s*\\(/.test(code),`dedicated tool metadata missing: ${t.slug}`);
+  assert(/canonical|buildToolMetadata|buildSearchOptimizedToolMetadata|publicPageMetadata/.test(code),`dedicated tool canonical missing: ${t.slug}`);
+ }
  assert(fs.existsSync(path.join(root,`app/tools/${t.slug}/page.tsx`))||registry.getTool(t.slug)&&!registry.getTool(t.slug).dedicatedRoute,`missing route: ${t.slug}`);
  for(const locale of Object.keys(seo.SEO_LOCALES)){
   assert(seo.toolTitle(locale,t));assert(seo.toolDescription(locale,t));

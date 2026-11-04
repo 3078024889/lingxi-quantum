@@ -54,3 +54,9 @@ Remove-Item Env:BAIDU_SITE
 ## 全站公开内容发现门禁（新）
 
 `pnpm seo:audit:fullsite`：审计 124 条 SEO 工具、九语言路由、站点地图、SIAI 区域入口、SEO 页面元数据及教程内链。已确认的 5 个 SASI 重定向入口不再进入 sitemap；账户、订单、私密链接不可被索引。GEO 文本只提供 canonical 链接，避免误把 `.cn` 镜像页面写成独立的九语言页面。公开网页和真实官方来源是主要搜索入口，`llms.txt` 只是辅助导航文件，不能保证 AI 引用。
+
+### 2026-11-04 工具网页独立收录修复
+- 扫描 94 个独立工具路由，定位并为 29 个真实工具页增加独立的 SEO 标题、摘要、hreflang 和自引用 canonical，不修改任何工具处理逻辑。
+- 另为 `/release`、`/legal/sasi` 补独立 canonical，删除过期的「SASI 智能生态」元文案。
+- `/tools/image-to-pdf-pro` 是重定向别名（真实操作页 `/tools/image-to-pdf`），不作为独立 sitemap 页面；八种语言的别名也 308 重定向。目录仍记录 124 个 SEO 项，其中 123 个是非别名的可索引工具入口。
+- 构建前强制审计所有独立工具页面的 metadata 与 canonical；发现遗漏就阻断发布，而非把 SEO 工具都标记完成。
