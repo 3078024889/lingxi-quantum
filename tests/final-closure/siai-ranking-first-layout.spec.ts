@@ -67,7 +67,7 @@ test('desktop sidebar can collapse and restore; mobile remains drawer-based',asy
  await expect(page.locator('html')).toHaveAttribute('data-lx-sidebar',initial||'open');
 });
 
-test('SIAI restores sourced company facts on every row and preserves original records',async({page})=>{
+test('SIAI restores sourced company facts on every row and preserves original records',async({page,isMobile})=>{
  test.setTimeout(90000);
  await page.goto('/siai');
  const rows=page.locator('.siai-home-table tbody tr.siai-home-tr');
@@ -84,7 +84,11 @@ test('SIAI restores sourced company facts on every row and preserves original re
  await expect(table).toBeVisible();
  const noInnerVerticalScroll=await table.evaluate((el:HTMLElement)=>el.scrollHeight-el.clientHeight<=3);
  expect(noInnerVerticalScroll).toBe(true);
- expect(await table.evaluate((el:HTMLElement)=>getComputedStyle(el).overflowX)).toBe('hidden');
+ const horizontal=await table.evaluate((el:HTMLElement)=>({
+  overflowX:getComputedStyle(el).overflowX,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth
+ }));
+ expect(horizontal.overflowX).toBe(isMobile?'auto':'hidden');
+ if(isMobile)expect(horizontal.scrollWidth).toBeGreaterThan(horizontal.clientWidth+300);
  expect(await page.evaluate(()=>document.documentElement.scrollHeight>window.innerHeight*2)).toBe(true);
  await expect(page.getByLabel('每页显示')).toHaveValue('100');
  await first.getByRole('button',{name:'详情'}).click();
