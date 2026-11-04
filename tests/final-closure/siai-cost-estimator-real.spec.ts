@@ -1,8 +1,9 @@
 import {test,expect} from './export-test';
 test('desktop/mobile calculate a sourced H3 short film with image and input-video extras',async({page})=>{
- test.setTimeout(120000);
+ test.setTimeout(60000);
  await page.goto('/siai');
- const d=page.getByTestId('market-cost-disclosure');
+ const d=page.locator('.siai-home-cost-accordion');
+ await expect(d).toBeVisible({timeout:20000});
  await d.locator('summary').click();
  const cost=d.locator('.lxCostEstimate');
  await expect(cost.getByText('按平台算真实费用')).toBeVisible();
@@ -17,14 +18,15 @@ test('desktop/mobile calculate a sourced H3 short film with image and input-vide
  await expect(cost.locator('.lxCostResult').first()).toContainText('USD 0.64');
 });
 test('desktop/mobile calculate per-call Mistral price and hide the huge table initially',async({page})=>{
- test.setTimeout(120000);
+ test.setTimeout(60000);
  await page.goto('/siai');
- const d=page.getByTestId('market-cost-disclosure');
+ const d=page.locator('.siai-home-cost-accordion');
+ await expect(d).toBeVisible({timeout:20000});
  await d.locator('summary').click();
  const cost=d.locator('.lxCostEstimate');
  await cost.getByRole('button',{name:'程序接口 API'}).click();
  await cost.getByLabel('AI 平台').selectOption('mistral');
- await expect(cost.getByText('Mistral Small 4 · Standard')).toBeVisible();
+ await expect(cost.getByLabel('模型 / 套餐')).toHaveValue('mistral-small4-api');
  await cost.getByLabel('调用次数').fill('100');
  await expect(cost.locator('.lxCostResult').first()).toContainText('USD 0.06');
  const directory=cost.locator('details.lxApiDirectory');
