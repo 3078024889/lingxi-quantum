@@ -127,6 +127,17 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const commitPageDraft=()=>goPage(Number.parseInt(pageDraft,10)||1);
  useEffect(()=>{setPageDraft(String(safePage));},[safePage]);
  useEffect(()=>{setPage(1);},[query,category,task,payment,evidence,sort,pageSize]);
+ useEffect(()=>{
+  const intent=new URLSearchParams(window.location.search).get("intent");
+  if(intent==="free")setEvidence("verified_free");
+  if(intent==="company")setEvidence("company");
+  if(intent==="video")setTask("video");
+  if(intent==="all"){setTask("all");setEvidence("all");}
+  if(intent==="cost"||intent==="api"){
+   const panel=document.getElementById("siai-cost-estimator");
+   if(panel instanceof HTMLDetailsElement)panel.open=true;
+  }
+ },[]);
  const startDrag=(e:ReactPointerEvent<HTMLDivElement>)=>{
   if(!bounded)return;
   e.preventDefault();
@@ -301,7 +312,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </div>
   </nav>
  </section>
-  <details className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
+  <details id="siai-cost-estimator" className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
   <SiaiSearchDiscovery variant="ranking"/>
    {selectedRow&&<div className="siai-detail-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setExpanded(null);}}><div className="siai-detail-modal" role="dialog" aria-modal="true" aria-label={selectedRow.name+" · "+t.details} tabIndex={-1} ref={dialogRef}>{detailPanel(selectedRow)}</div></div>}
 
