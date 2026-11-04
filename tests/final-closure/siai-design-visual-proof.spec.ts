@@ -49,6 +49,14 @@ test('SIAI four production DOM screenshots: compact sourced ranking, live estima
  await expect(cost.locator('.lxCostFields')).toBeVisible();
  await expect(cost.locator('.lxCostResult')).toBeVisible();
  await expect(cost.locator('.lxCostAside')).toBeVisible();
+ // Billing display must follow the shared currency selector, never infer it from Chinese/English.
+ const currencyPicker=page.locator('select[aria-label="支付币种"]:visible').first();
+ await expect(currencyPicker).toBeVisible();
+ await currencyPicker.selectOption('CNY');
+ await expect(cost.locator('.lxCostDisclaimer')).toContainText('CNY');
+ await currencyPicker.selectOption('USD');
+ await expect(cost.locator('.lxCostDisclaimer')).toContainText('USD');
+ await currencyPicker.selectOption('CNY');
  await cost.screenshot({path:'test-results/siai-2-estimator-'+platform+'.png',animations:'disabled'});
  const seo=page.locator('[data-siai-search-intents="ranking"]');
  await expect(seo.locator('.siai-discovery-card')).toHaveCount(6);
