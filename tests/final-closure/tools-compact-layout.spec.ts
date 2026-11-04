@@ -123,6 +123,21 @@ for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"] as const){
  });
 }
 
+test("desktop original brand name stays fully visible inside the compact 224px sidebar",async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto("/tools");
+ const name=page.locator(".lx11-sidebar:not(.lx11-drawer) .lx11-brand b");
+ await expect(name).toContainText("LINGXIFIELD");
+ const box=await name.evaluate(el=>{
+  const range=document.createRange();range.selectNodeContents(el);
+  const rendered=range.getBoundingClientRect();
+  const rail=el.closest(".lx11-sidebar")!.getBoundingClientRect();
+  return {right:rendered.right,boundary:rail.right-2,font:parseFloat(getComputedStyle(el).fontSize)};
+ });
+ expect(box.right,JSON.stringify(box)).toBeLessThanOrEqual(box.boundary);
+ expect(box.font).toBeGreaterThanOrEqual(14);
+});
+
 test("light/dark settings keep complete cards and visible focus",async({page})=>{
  await page.goto("/tools");
  await expect(page.locator(".lx-tools-compact a[data-tool-slug]")).toHaveCount(source.length);
