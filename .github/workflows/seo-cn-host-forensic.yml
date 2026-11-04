@@ -15,7 +15,8 @@ jobs:
         run: |
           node --input-type=module <<'NODE'
           const origins=["https://lingxifield.com","https://lingxifield.cn",
-            "https://www.lingxifield.com","https://www.lingxifield.cn"];
+            "https://www.lingxifield.com","https://www.lingxifield.cn",
+            "https://globalsiai.com","https://www.globalsiai.com"];
           for(const origin of origins){
             for(const path of ["/robots.txt","/sitemap.xml","/siai"]){
               const url=origin+path;
