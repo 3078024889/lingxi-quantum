@@ -82,7 +82,8 @@ test('SIAI four production DOM screenshots: compact sourced ranking, live estima
  for(let i=0;i<4;i++)await expect(discoveryLinks.nth(i)).toHaveAttribute('href',"/siai#siai-search-ranking-"+i);
  await expect(footer.locator('.lx-footer-search-list li')).toHaveCount(6);
  await expect(footer.locator('.lx-footer-v3-toolstrip>a')).toHaveCount(6);
- await expect(footer.locator('.lx-footer-v3-contact .lx-footer-qr-row img')).toHaveCount(2);
+ await expect(footer.locator('.lx-footer-v4-contact .lx-footer-v4-qr-grid img')).toHaveCount(4);
+ await expect(footer.locator('.lx-footer-v4-miniapp-actions button')).toHaveCount(2);
  await expect(footer.locator('.lx-footer-unified-secondary')).toHaveCount(0);
  await expect(footer.locator('.lx-footer-unified-close')).toHaveCount(0);
  await expect(footer.locator('.lx-footer-tool-chips a')).toHaveCount(8);
