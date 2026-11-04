@@ -51,3 +51,15 @@ test("preview is joined to main SIAI UI, never published as a verified SEO produ
  assert.match(src,/freepik-ai":\[\]/);
  assert.doesNotMatch(src,/publishApproved:true|verifiedRealUse:true|signedVendorSettlement:true/);
 });
+
+test("five added official region policies preserve older snapshot counts and are translated nine ways",()=>{
+ const s=readFileSync(new URL("app/siai/official-region-supplements.ts",root),"utf8");
+ for(const id of ["notion-ai","devin-desktop","freepik-ai","synthesia","scite"])assert(s.includes('"'+id+'":{'),id);
+ for(const code of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
+  assert.equal(s.split(new RegExp("(^|\\\\s)"+code+":","gm")).length-1,5,code);
+ }
+ assert.equal((s.match(/checkedAt:"2026-11-04"/g)||[]).length,5);
+ assert.match(src,/regionSupplement\?\.localized\.zh\|\|text\(region\)/);
+ assert.match(src,/regionSource:regionSupplement\?\.source\|\|source\(region\)/);
+ assert(!s.includes("不限地区"));
+});
