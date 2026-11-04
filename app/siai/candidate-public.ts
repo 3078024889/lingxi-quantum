@@ -5,6 +5,7 @@
  * Historical first-party observations are pinned to a dated immutable snapshot.
  */
 import {CANDIDATE_HISTORY} from "./candidate-company-evidence";
+import {OFFICIAL_REGION_SUPPLEMENTS} from "./official-region-supplements";
 import type {PaymentFacet} from "../../lib/siai-home-facets";
 import type {SiaiHomeRow} from "../../components/SiaiRankingHome";
 import {materializeCandidateCatalog} from "../../lingxifield-ai-market/lib/market-candidate-review-build.mjs";
@@ -66,7 +67,7 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
   throw Error("SIAI_PREVIEW_SOURCE_SNAPSHOT_CHANGED");
  }
  return snapshot.products.map(p=>{
-  const f=p.facts,company=f.company,region=f.regions,history=CANDIDATE_HISTORY[p.id];
+  const f=p.facts,company=f.company,region=f.regions,history=CANDIDATE_HISTORY[p.id],regionSupplement=OFFICIAL_REGION_SUPPLEMENTS[p.id];
   const latest=Object.values(f).map(v=>v.checkedAt).filter((v):v is string=>Boolean(v)).sort().at(-1)||null;
   const officialEntry=ENTRY[p.id]||p.website;
   if(!trusted(officialEntry)||!trusted(p.website))throw Error("UNSAFE_SIAI_OFFICIAL_LINK:"+p.id);
@@ -85,8 +86,8 @@ export function getSiaiSourcePreviewRows():SiaiHomeRow[]{
    features:p.tasks,searchTerms:p.keywords,website:officialEntry,
    free:text(f.free),freeSource:source(f.free),
    price:text(f.price),priceSource:source(f.price),
-   region:text(region),
-   regionSource:source(region),
+   region:regionSupplement?.localized.zh||text(region),
+   regionSource:regionSupplement?.source||source(region),
    payment:text(f.payment),paymentSource:source(f.payment),
    models:text(f.models),modelsSource:source(f.models),
    commercial:text(f.commercial),commercialSource:source(f.commercial)
