@@ -34,7 +34,9 @@ test("preview rows present clear product information without internal test-state
  assert.doesNotMatch(component,/尚未完成实际使用测试|real use untested/);
  assert.match(component,/previewValue\(p\[scope\]\)/);
  assert.match(component,/PREVIEW_RAW_LABEL/);
- assert.match(component,/PREVIEW_MISSING/);
+ assert.match(component,/const hasFact=/);
+ assert.match(component,/value\?\.trim\(\)!=="尚无可靠资料"/);
+ assert.match(component,/!hasFact\(value\)\?"":/);
  assert.doesNotMatch(component,/PREVIEW_FIELD/);
  assert.match(candidate,/region:text\(region\)/);
  assert.doesNotMatch(candidate,/并非逐国注册或支付验证/);
