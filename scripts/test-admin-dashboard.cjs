@@ -3,6 +3,9 @@ const {NextRequest}=require('next/server');
 function compile(file,imports){const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText)(p=>p==='server-only'?{}:imports[p]||require(p),m,m.exports);return m.exports}
 (async()=>{
  const paths=compile('lib/analytics/public-visit.ts',{}),bounded=compile('lib/security/bounded-request-json.ts',{}),origin=compile('lib/sasi/request-security.ts',{});
+ for(const path of ['/siai','/siai/claim','/en/siai','/ja/tools','/fr/products','/ar/tools/batch-image'])assert.equal(paths.publicVisitPath(path),path);
+ assert.equal(paths.publicVisitPath('/en/siai/'),'/en/siai');
+ for(const path of ['/siai/private-id','/siai?search=secret','/en/account','/en/sasi/connections','/en/tools/admin','/en/tools/pay','/en/tools/history','/en/tools/result','/en/tools/private%2Fid','/xx/siai','/en/siai/claim','/en/products/private-id'])assert.equal(paths.publicVisitPath(path),null);
  let inserts=[],guardCalls=0,guardOk=true;
  const track=compile('app/api/analytics/visit/route.ts',{'@/lib/analytics/public-visit':paths,'@/lib/security/bounded-request-json':bounded,'@/lib/sasi/request-security':origin,'@/lib/security/abuse-guard':{enforceAbuseGuard:async()=>{guardCalls++;return guardOk?{ok:true}:{ok:false,status:429,error:'RATE_LIMITED'}}},'@/lib/supabase/admin':{createAdminClient:()=>({from:()=>({insert:async x=>{inserts.push(x);return{error:null}}})})}});
  const base={id:'00000000-0000-4000-8000-000000000001',session:'00000000-0000-4000-8000-000000000002',path:'/tools/food-calorie',referrer:'google.com',device:'desktop'};
@@ -16,6 +19,13 @@ function compile(file,imports){const m={exports:{}};new Function('require','modu
  const before=guardCalls;for(const headers of [{dnt:'1'},{'sec-gpc':'1'},{'user-agent':'Googlebot'}])assert.equal((await track.POST(req(base,headers))).status,204);assert.equal(guardCalls,before);assert.equal(inserts.length,1);
  assert.equal((await track.POST(req({...base,extra:'x'.repeat(3000)}))).status,400);
  guardOk=false;assert.equal((await track.POST(req())).status,429);assert.equal(inserts.length,1);
+ guardOk=true;
+ for(const path of ['/siai','/siai/claim','/en/siai','/ja/tools/batch-image']){
+  assert.equal((await track.POST(req({...base,path}))).status,204);
+  assert.equal(inserts.at(-1).path,path);
+ }
+ const cnRequest=new NextRequest('https://lingxifield.cn/api/analytics/visit',{method:'POST',headers:{origin:'https://lingxifield.cn','content-type':'application/json','user-agent':'Browser'},body:JSON.stringify({...base,path:'/siai'})});
+ assert.equal((await track.POST(cnRequest)).status,204);assert.equal(inserts.at(-1).host,'lingxifield.cn');
  let reads=0;const adminRoute=compile('app/api/account/money-admin/route.ts',{'@/lib/money/operator-settings':{moneyAdministrator:async()=>null},'@/lib/supabase/admin':{createAdminClient:()=>{reads++;throw new Error('Unauthorized read')}},'@/lib/sasi/request-security':origin,'@/lib/money/operator-notifications':{},'@/lib/money/reconcile-worker':{},'@/lib/mini/virtual-refund':{retryVirtualRefunds:async()=>({results:[]})}});
  const denied=await adminRoute.GET(new NextRequest('https://lingxifield.com/api/account/money-admin'));assert.equal(denied.status,403);assert.equal(reads,0);
  let dashboardArgs;const allowedAdmin={rpc:async(name,args)=>{if(name==='operator_dashboard_snapshot')dashboardArgs=args;return{data:name==='operator_dashboard_snapshot'?{order_total:82,orders:[]}:{channels:[]},error:null}},from(){const q={select(){return q},order(){return q},limit(){return q},then(resolve){return Promise.resolve({data:[],error:null}).then(resolve)}};return q}};
