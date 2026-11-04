@@ -511,3 +511,11 @@ html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-toolstrip small,
 html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-sasi span,
 html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-contact>a{color:#c0bbda!important}
 html[data-theme="dark"] .lx-footer-v3 .lx-footer-brand-social a{color:#ded6ff;background:#30294b;border-color:#5a4877}
+
+/* Owner-verified social-channel presentation: compact, accessible, keyboard reachable. */
+.lx-footer-v3 .lx-footer-brand-social{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px!important;max-width:290px}
+.lx-footer-v3 .lx-footer-brand-social a{display:flex!important;flex-direction:column;gap:3px;min-width:0;min-height:51px;align-items:center;justify-content:center;padding:5px 2px!important;line-height:1.1!important}
+.lx-footer-v3 .lx-footer-social-symbol{font-size:19px;font-weight:800;line-height:1.1;color:#7654da}
+.lx-footer-v3 .lx-footer-social-caption{font-size:14px;white-space:nowrap;text-align:center;line-height:1.25}
+.lx-footer-v3 .lx-footer-brand-social a:focus-visible{outline:2px solid #7c3aed;outline-offset:2px}
+@media(max-width:700px){.lx-footer-v3 .lx-footer-brand-social{max-width:310px}}
