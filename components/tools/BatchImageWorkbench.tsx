@@ -19,6 +19,25 @@ const D:Record<LingxiLang,C>={
  pt:{maxW:"Largura máxima px",quality:"Qualidade da imagem",format:"Formato de saída",selected:"Selecionadas",run:"Processar lote",busy:"Processando…",ready:"Resultados prontos. Confira antes de salvar.",error:"Algumas imagens falharam",source:"Tamanho original",size:"Arquivo menor",balanced:"Equilibrada (recomendada)",best:"Qualidade maior",original:"Tamanho original",failed:"Arquivos com falha",privacy:"As imagens são processadas apenas no navegador. Animações não são convertidas silenciosamente em um quadro.",custom:"Largura personalizada (opcional)",success:"Sucesso"},
  ar:{maxW:"أقصى عرض px",quality:"جودة الصورة",format:"صيغة الإخراج",selected:"المحدد",run:"بدء المعالجة الدُفعية",busy:"جارٍ المعالجة…",ready:"النتائج جاهزة. راجعها قبل الحفظ.",error:"تعذرت معالجة بعض الصور",source:"الحجم الأصلي",size:"ملف أصغر",balanced:"متوازن (موصى به)",best:"جودة أعلى",original:"الأبعاد الأصلية",failed:"ملفات فاشلة",privacy:"تُعالج الصور في هذا المتصفح فقط. لا يتم تحويل الصور المتحركة إلى إطار واحد دون علمك.",custom:"عرض مخصص (اختياري)",success:"نجاح"}
 };
+const FAILURE_COPY:Record<LingxiLang,{animated:string;type:string;large:string;invalid:string;broken:string}>={
+ zh:{animated:"这是动图，请使用支持动画的工具处理，避免丢失其他帧。",type:"文件内容不是受支持的 JPG、PNG 或 WebP 静态图片。",large:"图片尺寸太大，建议缩小原图后重试。",invalid:"宽度设置无效，请换一个尺寸。",broken:"无法读取或转换这张图片，请确认文件完好。"},
+ en:{animated:"This is an animated image. Use an animation-aware tool to keep every frame.",type:"This file is not a supported static JPG, PNG or WebP image.",large:"Image dimensions are too large. Reduce the original image and retry.",invalid:"Invalid width. Choose another size.",broken:"Could not read or convert this image. Check the original file."},
+ ja:{animated:"アニメーション画像です。フレームを失わない対応ツールを使用してください。",type:"対応していない画像形式です。静止した JPG、PNG、WebP を選んでください。",large:"画像サイズが大きすぎます。元画像を小さくしてください。",invalid:"幅が正しくありません。",broken:"画像を読み込めません。元ファイルを確認してください。"},
+ ko:{animated:"움직이는 이미지입니다. 모든 프레임을 유지하는 도구를 사용하세요.",type:"지원되지 않는 형식입니다. 정적 JPG, PNG, WebP를 사용하세요.",large:"이미지가 너무 큽니다. 원본 크기를 줄여 주세요.",invalid:"잘못된 너비입니다.",broken:"이미지를 읽거나 변환할 수 없습니다."},
+ fr:{animated:"Image animée : utilisez un outil qui préserve toutes les images de l’animation.",type:"Ce fichier n’est pas une image JPG, PNG ou WebP fixe prise en charge.",large:"Dimensions trop grandes. Réduisez l’image d’origine.",invalid:"Largeur invalide.",broken:"Impossible de lire ou de convertir l’image."},
+ de:{animated:"Animiertes Bild: Verwenden Sie ein Werkzeug, das alle Frames erhält.",type:"Keine unterstützte statische JPG-, PNG- oder WebP-Datei.",large:"Bild zu groß. Originalgröße reduzieren.",invalid:"Ungültige Breite.",broken:"Bild konnte nicht gelesen oder umgewandelt werden."},
+ es:{animated:"Esta imagen es animada. Usa una herramienta que conserve todos los fotogramas.",type:"El archivo no es una imagen estática JPG, PNG o WebP compatible.",large:"Dimensiones demasiado grandes. Reduce el original.",invalid:"Ancho no válido.",broken:"No se pudo leer o convertir la imagen."},
+ pt:{animated:"Imagem animada. Use uma ferramenta que preserve todos os quadros.",type:"O arquivo não é uma imagem estática JPG, PNG ou WebP compatível.",large:"Dimensões muito grandes. Reduza a imagem original.",invalid:"Largura inválida.",broken:"Não foi possível ler ou converter a imagem."},
+ ar:{animated:"هذه صورة متحركة. استخدم أداة تحافظ على جميع الإطارات.",type:"هذا الملف ليس صورة JPG أو PNG أو WebP ثابتة مدعومة.",large:"أبعاد الصورة كبيرة جدًا. قلّل حجم الصورة الأصلية.",invalid:"عرض غير صالح.",broken:"تعذرت قراءة الصورة أو تحويلها."}
+};
+function failureReason(lang:LingxiLang,error:unknown){
+ const code=error instanceof Error?error.message:"";
+ const copy=FAILURE_COPY[lang]||FAILURE_COPY.en;
+ return code==="ANIMATED_IMAGE_UNSUPPORTED"?copy.animated:
+  code==="UNSUPPORTED_IMAGE_BYTES"||code==="IMAGE_MIME_MISMATCH"?copy.type:
+  code==="IMAGE_DIMENSIONS_TOO_LARGE"?copy.large:code==="IMAGE_WIDTH_INVALID"?copy.invalid:copy.broken;
+}
+
 type FailedImage={name:string;reason:string};
 const extensions:Record<BatchImageMime,"jpg"|"png"|"webp">={"image/jpeg":"jpg","image/png":"png","image/webp":"webp"};
 export default function BatchImageWorkbench(){
@@ -42,7 +61,7 @@ export default function BatchImageWorkbench(){
      out.push({name:makeUniqueBatchName(file.name,extensions[opts.type],used),blob,mime:opts.type,size:blob.size});
      originalBytes+=file.size;
     }catch(e){
-     failedItems.push({name:file.name,reason:e instanceof Error?e.message:String(e)});
+     failedItems.push({name:file.name,reason:failureReason(lang,e)});
     }
    }
    if(token===version.current){

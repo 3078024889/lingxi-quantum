@@ -35,6 +35,47 @@ function animatedWebp(bytes:Uint8Array){
  return false;
 }
 
+/** Reject oversized headers before createImageBitmap allocates decoded pixels. */
+function imageSizeHeader(bytes:Uint8Array,type:BatchImageMime):{width:number;height:number}|null{
+ const be=(i:number)=>(bytes[i]*16777216+bytes[i+1]*65536+bytes[i+2]*256+bytes[i+3])>>>0;
+ if(type==="image/png"){
+  if(bytes.length>=24&&String.fromCharCode(...bytes.subarray(12,16))==="IHDR")return{width:be(16),height:be(20)};
+  return null;
+ }
+ if(type==="image/jpeg"){
+  let i=2;
+  while(i+9<bytes.length){
+   if(bytes[i]!==255){i++;continue}
+   let marker=i+1;
+   while(marker<bytes.length&&bytes[marker]===255)marker++;
+   if(marker>=bytes.length)break;
+   const code=bytes[marker];
+   if(code===0xda||code===0xd9)break;
+   if(code===0xd8||code===0x01||(code>=0xd0&&code<=0xd7)){i=marker+1;continue}
+   if(marker+2>=bytes.length)break;
+   const segment=(bytes[marker+1]<<8)|bytes[marker+2];
+   if(segment<2||marker+1+segment>bytes.length)break;
+   if(((code>=0xc0&&code<=0xc3)||(code>=0xc5&&code<=0xc7)||(code>=0xc9&&code<=0xcb)||(code>=0xcd&&code<=0xcf))&&segment>=7){
+    return{height:(bytes[marker+4]<<8)|bytes[marker+5],width:(bytes[marker+6]<<8)|bytes[marker+7]};
+   }
+   i=marker+1+segment;
+  }
+  return null;
+ }
+ if(bytes.length<30)return null;
+ const tag=String.fromCharCode(...bytes.subarray(12,16));
+ if(tag==="VP8X")return{
+  width:1+bytes[24]+(bytes[25]<<8)+(bytes[26]<<16),
+  height:1+bytes[27]+(bytes[28]<<8)+(bytes[29]<<16)
+ };
+ if(tag==="VP8 ")return{width:((bytes[27]&63)<<8)|bytes[26],height:((bytes[29]&63)<<8)|bytes[28]};
+ if(tag==="VP8L"&&bytes[20]===47)return{
+  width:1+bytes[21]+((bytes[22]&63)<<8),
+  height:1+(bytes[22]>>6)+(bytes[23]<<2)+((bytes[24]&15)<<10)
+ };
+ return null;
+}
+
 /** Protect users against animation flattening, including mislabeled file extensions. */
 export async function validateStaticBatchImage(file:File){
  const head=new Uint8Array(await file.slice(0,Math.min(file.size,1024*1024)).arrayBuffer());
@@ -43,6 +84,8 @@ export async function validateStaticBatchImage(file:File){
  if(file.type&&file.type!==found)throw Error("IMAGE_MIME_MISMATCH");
  if(found==="image/png"&&animatedPng(head))throw Error("ANIMATED_IMAGE_UNSUPPORTED");
  if(found==="image/webp"&&animatedWebp(head))throw Error("ANIMATED_IMAGE_UNSUPPORTED");
+ const dimensions=imageSizeHeader(head,found);
+ if(dimensions&&(!dimensions.width||!dimensions.height||dimensions.width>MAX_SIDE||dimensions.height>MAX_SIDE||dimensions.width*dimensions.height>MAX_PIXELS))throw Error("IMAGE_DIMENSIONS_TOO_LARGE");
  return found;
 }
 

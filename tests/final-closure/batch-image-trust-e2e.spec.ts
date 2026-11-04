@@ -83,7 +83,7 @@ test("Animated GIF rejected at upload and spoofed GIF bytes refused even when re
  await input.setInputFiles({name:"fake.png",mimeType:"image/png",buffer:gif});
  await expect(page.getByRole("button",{name:"Process batch",exact:true})).toBeEnabled();
  await page.getByRole("button",{name:"Process batch",exact:true}).click();
- await expect(page.locator('section[aria-label="Failed files"]')).toContainText("UNSUPPORTED_IMAGE_BYTES");
+ await expect(page.locator('section[aria-label="Failed files"]')).toContainText("not a supported static");
  await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
 });
 
@@ -112,4 +112,29 @@ test("Batch processes images after editing custom width and all nine locale titl
   await page.goto("/tools/batch-image?lang="+lang);
   await expect(page.getByRole("heading",{name:label,exact:true})).toBeVisible({timeout:15000});
  }
+});
+
+
+test("Actual animated WebP frames are rejected without silently exporting only one frame",async({page})=>{
+ test.setTimeout(90000);
+ const input=await ready(page);
+ const a=await sharp({create:{width:18,height:18,channels:4,background:"#ff1100"}}).png().toBuffer();
+ const b=await sharp({create:{width:18,height:18,channels:4,background:"#0011ff"}}).png().toBuffer();
+ const animated=await sharp([a,b],{join:{animated:true}}).webp({delay:[100,100],loop:0}).toBuffer();
+ expect((await sharp(animated,{animated:true}).metadata()).pages).toBe(2);
+ await input.setInputFiles({name:"moving.webp",mimeType:"image/webp",buffer:animated});
+ await page.getByRole("button",{name:"Process batch",exact:true}).click();
+ await expect(page.locator('section[aria-label="Failed files"]')).toContainText("animated image");
+ await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
+});
+
+test("Oversized PNG dimensions are rejected from the header before unsafe browser decoding",async({page})=>{
+ test.setTimeout(90000);
+ const input=await ready(page);
+ const png=Buffer.from(await sharp({create:{width:20,height:20,channels:3,background:"#ffffff"}}).png().toBuffer());
+ png.writeUInt32BE(20000,16); // oversized IHDR; decoding this untrusted file must never start
+ await input.setInputFiles({name:"huge.png",mimeType:"image/png",buffer:png});
+ await page.getByRole("button",{name:"Process batch",exact:true}).click();
+ await expect(page.locator('section[aria-label="Failed files"]')).toContainText("dimensions are too large");
+ await expect(page.getByRole("button",{name:"Save file",exact:true})).toHaveCount(0);
 });
