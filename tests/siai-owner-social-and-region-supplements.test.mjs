@@ -43,7 +43,7 @@ test("two QR images preserve original scan targets and existing miniapp QR image
 });
 test("five official region evidence records are localized but not converted to false unrestricted-region claims",()=>{
  for(const id of ["notion-ai","devin-desktop","freepik-ai","synthesia","scite"])assert(overlay.includes('"'+id+'":{'),id);
- assert.equal((overlay.match(/checkedAt:"2026-11-04"/g)||[]).length,5);
+ assert.equal((overlay.match(/,checkedAt:"2026-11-04",scope:/g)||[]).length,5);
  assert.equal((overlay.match(/scope:"(?:official_policy_no_full_country_list|contract_worldwide_not_checkout)"/g)||[]).length,5);
  for(const code of languages){
   const regex=new RegExp("(^|\\s)"+code+":", "gm");
