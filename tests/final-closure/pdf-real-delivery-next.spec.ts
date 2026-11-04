@@ -78,7 +78,11 @@ test("mobile touch drag enlarges PDF image overlay without numeric fields",async
  const x=r!.x+r!.width/2,y=r!.y+r!.height/2;
  const client=await page.context().newCDPSession(page);
  await client.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y,id:1,force:1,radiusX:4,radiusY:4}]});
- for(let i=1;i<=8;i++)await client.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+i*5,y:y+i*2,id:1,force:1,radiusX:4,radiusY:4}]});
+ for(let i=1;i<=8;i++){
+  await client.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+i*5,y:y+i*2,id:1,force:1,radiusX:4,radiusY:4}]});
+  // Pace touch movements to reflect a real finger drag and preserve intermediate pointer events.
+  await page.waitForTimeout(16);
+ }
  await client.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
  await expect.poll(async()=> (await overlay.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(a!.width+5);
  await expect(page.locator('input[type=number]')).toHaveCount(0);

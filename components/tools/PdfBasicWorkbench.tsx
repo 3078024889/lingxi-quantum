@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useRef,useState} from "react";
 import {PDFDocument,degrees} from "pdf-lib";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
@@ -7,19 +7,17 @@ import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import type {ToolResultFile} from "@/lib/tools/types";
 
 function pdfBlob(bytes:Uint8Array){const c=new Uint8Array(bytes.length);c.set(bytes);return new Blob([c.buffer],{type:"application/pdf"});}
-function parsePages(v:string,max:number){
- const set=new Set<number>();
- for(const part of v.split(",")){
-  const p=part.trim();if(!p)continue;
-  if(p.includes("-")){
-   const [a,b]=p.split("-").map(Number);
-   if(!Number.isFinite(a)||!Number.isFinite(b)||a>b)continue;
-   for(let i=Math.max(1,a);i<=Math.min(max,b);i++)set.add(i-1);
-  }else{
-   const n=Number(p);if(Number.isInteger(n)&&n>=1&&n<=max)set.add(n-1);
-  }
+function parsePages(value:string,max:number){
+ if(!Number.isSafeInteger(max)||max<1||!value.trim())return [];
+ const selected=new Set<number>();
+ for(const part of value.split(",")){
+  const match=/^([1-9]\d*)(?:\s*-\s*([1-9]\d*))?$/.exec(part.trim());
+  if(!match)return [];
+  const first=Number(match[1]),last=match[2]?Number(match[2]):first;
+  if(!Number.isSafeInteger(first)||!Number.isSafeInteger(last)||first>last||last>max)return [];
+  for(let index=first;index<=last;index++)selected.add(index-1);
  }
- return [...set].sort((a,b)=>a-b);
+ return [...selected].sort((a,b)=>a-b);
 }
 type C={choose:string;note:string;pages:string;range:string;merge:string;extract:string;rotate:string;busy:string;ready:string;badRange:string;error:string};
 const D:Record<LingxiLang,C>={
@@ -38,12 +36,18 @@ export default function PdfBasicWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
  const[files,setFiles]=useState<File[]>([]),[pages,setPages]=useState(0),[range,setRange]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[results,setResults]=useState<ToolResultFile[]>([]);
  const first=files[0]||null;
+ const fileVersion=useRef(0);
 
  async function syncFiles(next:File[]){
-   setFiles(next);setResults([]);setError("");setPages(0);
+   const revision=++fileVersion.current;
+   setFiles(next);setResults([]);setError("");setPages(0);setRange("");
    if(next[0]){
-     try{const d=await PDFDocument.load(await next[0].arrayBuffer());setPages(d.getPageCount())}
-     catch(e){setError(e instanceof Error?e.message:String(e))}
+     try{
+       const d=await PDFDocument.load(await next[0].arrayBuffer());
+       if(fileVersion.current===revision)setPages(d.getPageCount());
+     }catch(e){
+       if(fileVersion.current===revision)setError(e instanceof Error?e.message:String(e));
+     }
    }
  }
  async function wrap(name:string,fn:()=>Promise<Blob>){
@@ -62,7 +66,7 @@ export default function PdfBasicWorkbench(){
    {pages>0&&<div className="mt-1 text-[var(--lx-ink)]">{c.pages}: {pages}</div>}
   </div>}
   <label className="block text-sm text-[var(--lx-muted)]">{c.range}
-   <input value={range} onChange={e=>setRange(e.target.value)} placeholder="1-3,5,8-10" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
+   <input value={range} onChange={e=>{setRange(e.target.value);setResults([]);setError("")}} placeholder="1-3,5,8-10" className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2.5 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
   </label>
   <div className="flex flex-wrap gap-3">
    <button disabled={files.length<2||busy} onClick={merge} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm text-[var(--lx-bg)] disabled:opacity-40">{busy?c.busy:c.merge}</button>
