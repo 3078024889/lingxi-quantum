@@ -7,7 +7,9 @@ test('global SIAI double horizontal rail and inline details',async({page})=>{
  await bar.evaluate(el=>{el.scrollLeft=300;el.dispatchEvent(new Event('scroll'));});
  await expect.poll(()=>grid.evaluate(el=>el.scrollLeft)).toBeGreaterThan(200);
  await grid.evaluate(el=>{el.scrollTop=360;});
- await expect(page.locator('.siai-home-table thead th').first()).toBeVisible();
+ // The page-sticky floating header is a non-interactive mirror and stays hidden until
+ // the document reaches the ranking. Always assert against the real grid's header.
+ await expect(grid.locator('table.siai-home-table thead th').first()).toBeVisible();
  await expect(page.locator('.siai-home-claim')).toHaveAttribute('href',/\/siai\/claim\?lang=(zh|en|ja|ko|fr|de|es|pt|ar)/);
  const calc=page.locator('.siai-home-cost-accordion');
  await expect(calc).toBeVisible();await calc.locator('summary').click();await expect(calc.locator('.lxCostEstimate')).toBeVisible();
