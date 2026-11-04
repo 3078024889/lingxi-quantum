@@ -91,7 +91,7 @@ export default function Footer(){
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
     <p className="lx-footer-brand-intro">{FOOTER_BRAND_SHORT[lang]}</p>
-    <div className="lx-footer-brand-social">{channels.filter(([label,href])=>href.startsWith("https://")).map(([label,href])=><a href={href} key={label} target="_blank" rel="noopener noreferrer">{label}</a>)}</div>
+    <div className="lx-footer-brand-social">{channels.filter(([label,href])=>href.startsWith("https://")).map(([label,href])=><a href={href} key={label} target="_blank" rel="noopener noreferrer">{lang==="zh"?label:label==="小红书"?"Xiaohongshu":label==="抖音"?"Douyin":label}</a>)}</div>
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
