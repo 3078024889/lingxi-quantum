@@ -18,14 +18,14 @@ test("all nine market discovery descriptions explain features, not unrelated sto
 });
 test("footer describes capabilities once in a full-width panel and avoids duplicate SEO paragraphs",()=>{
  const footer=read("components/Footer.tsx");
- assert.match(footer,/<p className="text-sm leading-6">\{copy\[lang\]\.lead\}<\/p>/);
- assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,1);
+ assert.doesNotMatch(footer,/copy\[lang\]\.lead/);
+ assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,0);
  assert.doesNotMatch(footer,/lx-footer-trio/);
  assert.doesNotMatch(footer,/discovery\.footerNote/);
- assert.match(footer,/!isRankingRoute&&<nav/);
+ assert.match(footer,/<section className="lx-footer-unified"/);
  assert.doesNotMatch(footer,/lang==="zh"&&<p lang="en"/);
  assert.match(read("components/SiaiRankingHome.tsx"),/<SiaiSearchDiscovery variant="ranking"\/>/);
- assert.match(footer,/discovery\.topics\.map\(v=>v\.q\)/);
+ assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
 });
 test("preview rows present clear product information without internal test-state prose or blanket region denials",()=>{
  const component=read("components/SiaiRankingHome.tsx");

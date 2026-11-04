@@ -951,3 +951,53 @@ html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-blue-900{color
  .lx11-desktop-side-toggle:focus-visible{outline:2px solid #2567bd;outline-offset:2px}
 }
 @media(max-width:1023px){.lx11-desktop-side-toggle{display:none}}
+
+/* Unified SI / AI / SIAI footer on every main-site page.
+   The section uses the exact publisher copy for zh and localized copy for 8 other languages. */
+.lx-footer-unified{
+ max-width:1380px;margin:28px auto 30px;padding:clamp(20px,2.3vw,34px);
+ border:1px solid var(--lx-line);border-radius:18px;background:var(--lx-panel);
+ color:var(--lx-ink);min-width:0;
+}
+.lx-footer-unified-head{padding-bottom:20px;border-bottom:1px solid var(--lx-line)}
+.lx-footer-unified-head h2{margin:0!important;font-size:clamp(20px,2vw,26px)!important;line-height:1.4!important;font-weight:800!important;letter-spacing:-.015em}
+.lx-footer-unified-head p{margin:11px 0 0!important;font-size:15px!important;line-height:1.85!important;color:var(--lx-muted)}
+.lx-footer-unified-columns{display:grid;grid-template-columns:minmax(280px,1fr) minmax(360px,1.25fr);gap:24px;padding:23px 0;border-bottom:1px solid var(--lx-line)}
+.lx-footer-market ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.lx-footer-market li{display:flex;align-items:baseline;gap:9px;font-size:14px!important;line-height:1.75!important;min-width:0}
+.lx-footer-market li>span:first-child{flex:none;font-size:13px}
+.lx-footer-market li>span:last-child{min-width:0;overflow-wrap:anywhere}
+.lx-footer-tools{min-width:0}
+.lx-footer-unified h3{font-size:18px!important;font-weight:800!important;line-height:1.5!important;margin:0 0 13px!important}
+.lx-footer-unified h3 a{color:inherit!important;text-decoration:none}
+.lx-footer-unified h3 a:hover{text-decoration:underline;text-underline-offset:4px}
+.lx-footer-tools-list{display:grid;grid-template-columns:1fr;gap:11px}
+.lx-footer-tools-list p{margin:0!important;font-size:14px!important;line-height:1.75!important;overflow-wrap:anywhere}
+.lx-footer-tools-list p>a{display:inline;color:var(--lx-ink);text-decoration:none;margin-right:5px}
+.lx-footer-tools-list strong{font-weight:750}
+.lx-footer-tools-list p>a:hover{text-decoration:underline;text-underline-offset:3px}
+.lx-footer-tools-list p>span{color:var(--lx-muted)}
+.lx-footer-unified-secondary{display:grid;grid-template-columns:minmax(270px,1fr) minmax(280px,1.25fr);gap:24px;padding:22px 0}
+.lx-footer-sasi,.lx-footer-search-list{min-width:0}
+.lx-footer-sasi p{font-size:14px!important;line-height:1.85!important;margin:0!important;color:var(--lx-muted)}
+.lx-footer-search-list ol{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.lx-footer-search-list li{font-size:14px!important;line-height:1.65!important}
+.lx-footer-search-list li a{display:inline-flex;align-items:baseline;gap:1px;min-height:26px;color:var(--lx-ink);text-decoration:none;border-radius:4px}
+.lx-footer-search-list li a:hover,.lx-footer-search-list li a:focus-visible{text-decoration:underline;text-underline-offset:4px}
+.lx-footer-search-number{font-variant-numeric:tabular-nums;color:#487ab1;white-space:pre}
+.lx-footer-unified-close{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 18px;padding:17px 20px;border-radius:12px;background:var(--lx-soft);border:1px solid var(--lx-line)}
+.lx-footer-unified-close h3{margin:0!important;flex:none}
+.lx-footer-unified-close p{margin:0!important;color:var(--lx-muted);font-size:14px!important;line-height:1.7!important;flex:1;min-width:220px}
+.lx-footer-unified :is(a,button):focus-visible{outline:2px solid #2563eb;outline-offset:3px}
+html[data-theme="dark"] .lx-footer-search-number{color:#91bcfa}
+@media(max-width:900px){
+ .lx-footer-unified{margin:22px auto;padding:18px;border-radius:14px}
+ .lx-footer-unified-columns,.lx-footer-unified-secondary{grid-template-columns:1fr;gap:26px}
+ .lx-footer-market ul{gap:9px}
+ .lx-footer-unified-close{padding:16px;gap:8px}
+}
+@media(max-width:560px){
+ .lx-footer-unified-head h2{font-size:20px!important}
+ .lx-footer-unified h3{font-size:17px!important}
+ .lx-footer-tools-list{gap:10px}
+}

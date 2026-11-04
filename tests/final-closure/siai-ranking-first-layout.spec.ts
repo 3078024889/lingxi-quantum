@@ -62,3 +62,86 @@ test('desktop sidebar can collapse and restore; mobile remains drawer-based',asy
  await toggle.click();
  await expect(page.locator('html')).toHaveAttribute('data-lx-sidebar',initial||'open');
 });
+
+test('SIAI restores sourced company facts on every row and preserves original records',async({page})=>{
+ test.setTimeout(90000);
+ await page.goto('/siai');
+ const rows=page.locator('.siai-home-table tbody tr.siai-home-tr');
+ await expect(rows).toHaveCount(62);
+ const first=rows.first();
+ await expect(first.locator('.siai-home-identity')).toContainText('Microsoft');
+ await expect(first.locator('.siai-home-identity dt')).toContainText(['公司名称','主要创始人','是否上市','成立时间','资料更新日期']);
+ await expect(first.locator('.siai-home-identity a.siai-source').first()).toHaveAttribute('href',/^https:\/\//);
+ const table=page.locator('.siai-home-table-flow');
+ await expect(table).toBeVisible();
+ const noInnerVerticalScroll=await table.evaluate((el:HTMLElement)=>el.scrollHeight-el.clientHeight<=3);
+ expect(noInnerVerticalScroll).toBe(true);
+ expect(await table.evaluate((el:HTMLElement)=>getComputedStyle(el).overflowX)).toBe('hidden');
+ expect(await page.evaluate(()=>document.documentElement.scrollHeight>window.innerHeight*2)).toBe(true);
+ await expect(page.getByLabel('每页显示')).toHaveValue('100');
+ await first.getByRole('button',{name:'详情'}).click();
+ const details=page.locator('.siai-detail-modal');
+ await expect(details).toBeVisible();
+ await expect(details.locator('dt')).toContainText(['公司名称','主要创始人','是否上市','成立时间','免费额度','真实价格','地区可用','付款方式','代表模型','商用授权']);
+ await page.keyboard.press('Escape');
+ await expect(details).toHaveCount(0);
+});
+
+test('SIAI supports 20/50/100 per-page pagination without losing original data or row numbering',async({page})=>{
+ test.setTimeout(90000);
+ await page.goto('/siai');
+ const rows=page.locator('.siai-home-table tbody tr.siai-home-tr');
+ const selector=page.getByLabel('每页显示');
+ await selector.selectOption('20');
+ await expect(rows).toHaveCount(20);
+ await expect(page.locator('.siai-page-controls')).toContainText('共 4');
+ await page.getByRole('button',{name:'下一页'}).click();
+ await expect(rows).toHaveCount(20);
+ await expect(rows.first().locator('td').first()).toHaveText('21');
+ await page.getByRole('button',{name:'末页'}).click();
+ await expect(rows).toHaveCount(2);
+ await expect(rows.last().locator('td').first()).toHaveText('62');
+ await selector.selectOption('50');
+ await expect(rows).toHaveCount(50);
+ await selector.selectOption('100');
+ await expect(rows).toHaveCount(62);
+});
+
+test('SIAI resizable panel mode is optional; mouse drag and Escape do not trap document scrolling',async({page})=>{
+ test.setTimeout(90000);
+ await page.goto('/siai');
+ const table=page.locator('.siai-home-table-scroll');
+ const adjust=page.getByRole('button',{name:'可调高度'});
+ await expect(adjust).toBeVisible();
+ await adjust.click();
+ await expect(table).toHaveClass(/siai-home-table-bounded/);
+ const grip=page.getByRole('separator',{name:'拖动调整榜单高度'});
+ await expect(grip).toBeVisible();
+ const before=await table.evaluate((el:HTMLElement)=>el.clientHeight);
+ await grip.evaluate((el:HTMLElement)=>{
+  const r=el.getBoundingClientRect();
+  window.scrollBy({top:r.top-window.innerHeight/2,behavior:'instant'});
+ });
+ const rect=await grip.boundingBox();
+ expect(rect).not.toBeNull();
+ const viewport=page.viewportSize();
+ expect(viewport).not.toBeNull();
+ const centerX=rect!.x+rect!.width/2,centerY=rect!.y+rect!.height/2;
+ expect(centerY+110).toBeLessThan(viewport!.height);
+ expect(centerY).toBeGreaterThan(60);
+ await page.mouse.move(centerX,centerY);
+ await page.mouse.down();
+ await page.mouse.move(centerX,centerY+105,{steps:9});
+ await page.mouse.up();
+ const resized=await table.evaluate((el:HTMLElement)=>({height:el.clientHeight,style:el.style.height,computed:getComputedStyle(el).height}));
+ console.log('SIAI_PANEL_DRAG',resized);
+ await expect.poll(()=>table.evaluate((el:HTMLElement)=>el.clientHeight)).toBeGreaterThan(before+70);
+ await grip.focus();
+ await page.keyboard.press('ArrowUp');
+ await expect.poll(()=>table.evaluate((el:HTMLElement)=>el.clientHeight)).toBeLessThan(before+106);
+ await page.getByRole('button',{name:'整页展开'}).click();
+ await expect(table).toHaveClass(/siai-home-table-flow/);
+ await expect(grip).toHaveCount(0);
+ const flow=await table.evaluate((el:HTMLElement)=>({overflowY:getComputedStyle(el).overflowY,height:el.scrollHeight-el.clientHeight}));
+ expect(flow.height).toBeLessThanOrEqual(3);
+});
