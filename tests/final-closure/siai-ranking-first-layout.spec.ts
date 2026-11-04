@@ -24,7 +24,7 @@ test('SIAI restores valid task filters and copies only public selection paramete
  test.setTimeout(90000);
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(value:string)=>{(window as any).__siaiCopied=value;}}}));
  await page.goto('/siai?lang=zh&task=image&compare=unknown&token=do-not-share');
- await expect(page.getByRole('button',{name:'图片创作',exact:true})).toHaveAttribute('aria-pressed','true');
+ await expect(page.getByRole('button',{name:/^图片生成\\s+\\d+$/})).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('.siai-compare-section')).toHaveCount(0);
  await page.getByRole('button',{name:'分享当前筛选与对比',exact:true}).click();
  await expect(page.getByRole('status').filter({hasText:'链接已复制'})).toBeVisible();
