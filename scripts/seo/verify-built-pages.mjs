@@ -122,6 +122,25 @@ async function run(){
  const privateMeta=await request("/sasi/pricing");
  assert(![301,302,307,308,404,500].includes(privateMeta.status),"Unexpected pricing response");
  assert(/noindex/.test(String(privateMeta.headers["x-robots-tag"]||"")+privateMeta.body),"SASI balance must not be indexable");
+ // Verify runtime headers for guest-visible private and transactional routes.
+ // These probes contain no user data and must not depend on authentication.
+ for(const path of ["/account/orders","/checkout","/sasi/chat","/sasi/pricing",
+                   "/share/seo-private-probe-never-issued",
+                   "/tools/burn-after-read/seo-private-probe-never-issued"]){
+  const res=await request(path);
+  assert(/noindex/i.test(String(res.headers["x-robots-tag"]||"")),
+    "Private route missing X-Robots-Tag noindex: "+path+" (HTTP "+res.status+")");
+ }
+ // Workspaces and vendor claims are intentionally public routes with private workflows.
+ // Their HTML metadata must explicitly prevent indexing even with no signed-in user.
+ for(const path of ["/siai/claim","/sasi/variants","/sasi/series"]){
+  const res=await request(path);
+  assert200(res,path);
+  assert(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i.test(res.body)
+      ||/noindex/i.test(String(res.headers["x-robots-tag"]||"")),
+    "Unindexed workspace metadata missing: "+path);
+ }
+ console.log("SSR PRIVATE PAGE INDEXING PROTECTION PASS",9);
  console.log("PRODUCTION_SSR_SEO_GATE=PASS");
 }
 try{await run()}catch(err){
