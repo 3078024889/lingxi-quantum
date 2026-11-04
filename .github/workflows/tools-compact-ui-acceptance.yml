@@ -1,0 +1,67 @@
+name: LINGXIFIELD Compact Tools UI - Actual Browser Acceptance
+on:
+  pull_request:
+    branches:
+      - main
+      - release/siai-seo-ranking-integrated-20261104
+    paths:
+      - "app/tools/tools-hub-compact.css"
+      - "app/tools/layout.tsx"
+      - "components/tools/ToolsHubV11.tsx"
+      - "components/tools/RecentTools.tsx"
+      - "tests/final-closure/tools-compact-layout.spec.ts"
+      - ".github/workflows/tools-compact-ui-acceptance.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxifield-compact-tools-ui-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  unchanged-content-and-real-browser:
+    name: build-security-seo-and-desktop-mobile-screenshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Checkout candidate - no write permissions
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Install pinned pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependency install
+        run: pnpm install --frozen-lockfile
+      - name: Full source security and product regression gate
+        run: pnpm ci:source
+      - name: Public SEO/GEO is identical in behavior
+        run: pnpm seo:audit:fullsite
+      - name: TypeScript and production build without Vercel
+        env:
+          VERCEL_ENV: production
+        run: pnpm build
+      - name: Lint changed TypeScript source
+        run: pnpm exec eslint components/tools/ToolsHubV11.tsx components/tools/RecentTools.tsx app/tools/layout.tsx tests/final-closure/tools-compact-layout.spec.ts
+      - name: Real Chrome engine for both desktop and mobile
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Complete count/order/content, search, filters, history, 6 widths, 9 languages, light/dark and screenshots
+        env:
+          VERCEL_ENV: production
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/tools-compact-layout.spec.ts
+      - name: Preserve screenshot and test evidence regardless of result
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: tools-compact-ui-before-after-${{ github.sha }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+          if-no-files-found: ignore

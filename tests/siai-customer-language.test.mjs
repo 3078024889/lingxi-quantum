@@ -22,7 +22,7 @@ test("footer describes capabilities once in a full-width panel and avoids duplic
  assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,0);
  assert.doesNotMatch(footer,/lx-footer-trio/);
  assert.doesNotMatch(footer,/discovery\.footerNote/);
- assert.match(footer,/<section className="lx-footer-unified"/);
+ assert.match(footer,/<section className="lx-footer-unified lx-footer-v3-showcase"/);
  assert.doesNotMatch(footer,/lang==="zh"&&<p lang="en"/);
  assert.match(read("components/SiaiRankingHome.tsx"),/<SiaiSearchDiscovery variant="ranking"\/>/);
  assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
@@ -38,6 +38,6 @@ test("preview rows present clear product information without internal test-state
  assert.match(component,/value\?\.trim\(\)!=="尚无可靠资料"/);
  assert.match(component,/!hasFact\(value\)\?"":/);
  assert.doesNotMatch(component,/PREVIEW_FIELD/);
- assert.match(candidate,/region:text\(region\)/);
+ assert(candidate.includes('region:regionSupplement?.localized.zh||text(region)'));
  assert.doesNotMatch(candidate,/并非逐国注册或支付验证/);
 });

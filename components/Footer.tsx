@@ -5,6 +5,17 @@ import{useLingxiLang,LANG_NAMES,type LingxiLang}from"@/lib/lingxi-i18n";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {FOOTER_UNIFIED,FOOTER_TOOL_ICONS,FOOTER_TOOL_LINKS} from "@/lib/footer-unified-copy";
 
+const WECHAT_EXTRA:Record<LingxiLang,{more:string;search:string;ranking:string;miniapps:string}>={
+ zh:{more:"微信搜一搜与排行榜账号",search:"微信搜一搜 · 灵犀场 lingxifield",ranking:"全球 SIAI 排行榜",miniapps:"微信小程序口令（可长按复制）"},
+ en:{more:"WeChat search & rankings",search:"Search WeChat: 灵犀场 lingxifield",ranking:"Global SIAI rankings",miniapps:"WeChat mini-program commands (copy)"},
+ ja:{more:"WeChat検索とランキング",search:"WeChatで「灵犀场 lingxifield」を検索",ranking:"グローバル SIAI ランキング",miniapps:"WeChatミニプログラム用コード"},
+ ko:{more:"WeChat 검색 및 순위",search:"WeChat: 灵犀场 lingxifield 검색",ranking:"글로벌 SIAI 순위",miniapps:"WeChat 미니프로그램 명령어"},
+ fr:{more:"Recherche WeChat et classement",search:"Chercher 灵犀场 lingxifield sur WeChat",ranking:"Classement SIAI mondial",miniapps:"Codes mini-programmes WeChat"},
+ de:{more:"WeChat-Suche und Ranking",search:"WeChat: 灵犀场 lingxifield suchen",ranking:"Globales SIAI-Ranking",miniapps:"WeChat-Miniprogramm-Codes"},
+ es:{more:"Búsqueda WeChat y clasificación",search:"Buscar 灵犀场 lingxifield en WeChat",ranking:"Ranking global SIAI",miniapps:"Códigos de miniaplicación WeChat"},
+ pt:{more:"Pesquisa WeChat e ranking",search:"Buscar 灵犀场 lingxifield no WeChat",ranking:"Ranking global SIAI",miniapps:"Códigos dos miniprogramas WeChat"},
+ ar:{more:"بحث WeChat وترتيب SIAI",search:"ابحث عن 灵犀场 lingxifield في WeChat",ranking:"ترتيب SIAI العالمي",miniapps:"رموز برامج WeChat الصغيرة"}
+};
 const FOOTER_QUESTION_ZH=["全球 AI 行情平台有哪些？","全球 SIAI 排行榜哪个好用？","AI / SI 工具怎么选择？","视频生成、短剧生成费用是多少？","PDF 在线编辑与电子签名怎么操作？","免费 AI 工具有哪些？"] as const;
 const FOOTER_CHIPS:Record<LingxiLang,string[]>={
  zh:["PDF 工具","图片工具","视频工具","音频工具","文档工具","办公工具","开发工具","AI 创作"],
@@ -18,7 +29,19 @@ const FOOTER_CHIPS:Record<LingxiLang,string[]>={
  ar:["أدوات PDF","الصور","الفيديو","الصوت","المستندات","المكتب","التطوير","إنشاء AI"]
 };
 const FOOTER_CHIP_URLS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=音频","/tools?q=文档","/tools?q=办公","/tools?q=开发","/sasi"] as const;
-const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
+/** Owner-supplied public account / share links (2026-11-04). Short-video links are share entries, not verified profile landing URLs. */
+const channels=[
+ {label:"快手",tone:"#ff611a",short:"快手",mark:"快",href:"https://v.kuaishou.com/n71hSlT9",kind:"share"},
+ {label:"抖音",tone:"#17171f",short:"抖音",mark:"抖",href:"https://v.douyin.com/bE0vjWQZ_eY/",kind:"share"},
+ {label:"哔哩哔哩",tone:"#00a1d6",short:"B站",mark:"哔",href:"https://b23.tv/Bmcx90F",kind:"profile"},
+ {label:"小红书",tone:"#e42d32",short:"小红书",mark:"红",href:"https://xhslink.cn/o/5sPTjCC9kWe",kind:"profile"},
+ {label:"X",tone:"#111827",short:"X",mark:"𝕏",href:"https://x.com/lingxifieldsasi",kind:"profile"},
+ {label:"YouTube",tone:"#e62117",short:"YT",mark:"▶",href:"https://youtube.com/@lingxifield",kind:"profile"},
+ {label:"Facebook",tone:"#0866ff",short:"FB",mark:"f",href:"https://www.facebook.com/share/19SgJhdxtL/",kind:"share"},
+ {label:"Instagram",tone:"#c13584",short:"IG",mark:"◎",href:"https://www.instagram.com/lingxifield/",kind:"profile"},
+ {label:"TikTok",tone:"#111827",short:"TK",mark:"♪",href:"https://www.tiktok.com/@lingxifield.com",kind:"profile"},
+ {label:"微博",tone:"#ea232c",short:"微博",mark:"微",href:"https://weibo.com/u/4003799090",kind:"profile"}
+] as const;
 
 type FooterCopy={account:string;orders:string;refunds:string;release:string};
 const copy:Record<LingxiLang,FooterCopy>={
@@ -63,17 +86,40 @@ export default function Footer(){
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
  const discovery=SIAI_DISCOVERY[lang];
  const overview=FOOTER_UNIFIED[lang];
- return <footer className="lx11-footer lx-branded-footer" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
-  <div className="lx11-footer-grid">
+ return <footer className="lx11-footer lx-branded-footer lx-footer-v3" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
+  <section className="lx-footer-unified lx-footer-v3-showcase" lang={lang==="zh"?"zh-CN":lang} aria-label={overview.headline}>
+   <header className="lx-footer-unified-head"><h2>{overview.headline}</h2><p>{overview.intro}</p></header>
+   <div className="lx-footer-unified-columns">
+    <section className="lx-footer-market" aria-label={overview.headline}>
+     <ul>{overview.marketPoints.map(point=><li key={point}><span className="lx-footer-v3-check" aria-hidden="true">✓</span><span>{point}</span></li>)}</ul>
+    </section>
+    <section className="lx-footer-tools">
+     <h3><Link href="/tools">{overview.toolsTitle}</Link></h3>
+     <nav className="lx-footer-tool-chips" aria-label={overview.toolsTitle}>{FOOTER_CHIPS[lang].map((label,i)=><Link href={FOOTER_CHIP_URLS[i]} key={label}><span className="lx-footer-v3-chip-icon" aria-hidden="true">{["📕","🖼️","▶","♫","📄","▣","⌘","✦"][i]}</span><span>{label}</span></Link>)}</nav>
+    </section>
+    <nav className="lx-footer-search-list" aria-label={overview.searchTitle}>
+     <h3>{overview.searchTitle}</h3>
+     <ol>{discovery.topics.map((topic,i)=><li key={topic.q}><Link href={"/siai#siai-search-ranking-"+i}><span className="lx-footer-search-number">{String(i+1).padStart(2,"0")}</span>{lang==="zh"?FOOTER_QUESTION_ZH[i]:topic.q}</Link></li>)}</ol>
+    </nav>
+   </div>
+   <nav className="lx-footer-v3-toolstrip" aria-label={overview.toolsTitle}>
+    {overview.toolCategories.map((item,i)=><Link href={FOOTER_TOOL_LINKS[i]} key={item.title}><span className="lx-footer-v3-toolstrip-icon" aria-hidden="true">{FOOTER_TOOL_ICONS[i]}</span><span><strong>{item.title}</strong><small>{item.description}</small></span></Link>)}
+   </nav>
+  </section>
+  <div className="lx-footer-v3-sasi">
+   <div><strong>✨ {overview.sasiTitle}</strong><span>{overview.sasiDescription}</span></div>
+   <Link href="/sasi">{c.sasi} ↗</Link>
+  </div>
+  <div className="lx11-footer-grid lx-footer-v3-nav">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
     <p className="lx-footer-brand-intro">{FOOTER_BRAND_SHORT[lang]}</p>
-    <div className="lx-footer-brand-social">{channels.filter(([label])=>["小红书","X","YouTube"].includes(label)).map(([label,href])=><a href={href} key={label} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
+    <nav className="lx-footer-brand-social" aria-label={lang==="zh"?"官方社交平台与分享入口":"Official social and sharing links"}>{channels.map(channel=><a href={channel.href} key={channel.label} target="_blank" rel="noopener noreferrer" title={channel.label+(channel.kind==="share"?(lang==="zh"?" · 分享链接":" · shared link"):"")} aria-label={channel.label+(channel.kind==="share"?(lang==="zh"?"作品分享":" shared content"):"")}><span className="lx-footer-social-symbol" style={{color:channel.tone}} aria-hidden="true">{channel.mark}</span><span className="lx-footer-social-caption">{channel.short}</span></a>)}</nav>
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
     <Link href="/siai">{c.rankSub}</Link>
-    {discovery.topics.map((topic,i)=><Link key={topic.q} href={"/siai#siai-search-ranking-"+i}>{topic.q}</Link>)}
+    {discovery.topics.slice(0,4).map((topic,i)=><Link key={topic.q} href={"/siai#siai-search-ranking-"+i}>{topic.q}</Link>)}
     <Link href={"/siai/claim?lang="+lang}>{lang==="zh"?"厂商认领 · 提交 SI/AI 平台":lang==="ja"?"SI/AI製品登録":lang==="ko"?"SI/AI 제품 등록":lang==="fr"?"Proposer un outil SI/IA":lang==="de"?"SI/KI-Produkt einreichen":lang==="es"?"Enviar producto SI/IA":lang==="pt"?"Enviar produto SI/IA":lang==="ar"?"تقديم منتج SI/AI":"Claim or submit SI/AI product"}</Link>
    </nav>
    <nav aria-label={c.sasi}>
@@ -93,48 +139,30 @@ export default function Footer(){
     <Link href="/account/orders">{copy[lang].orders}</Link><Link href="/refunds">{copy[lang].refunds}</Link>
     <Link href="/terms">{c.terms}</Link><Link href="/privacy">{c.privacy}</Link><Link href="/release">{copy[lang].release}</Link>
    </nav>
-  </div>
-  <section className="lx-footer-unified" lang={lang==="zh"?"zh-CN":lang} aria-label={overview.headline}>
-   <header className="lx-footer-unified-head">
-    <h2>{overview.headline}</h2>
-    <p>{overview.intro}</p>
-   </header>
-   <div className="lx-footer-unified-columns">
-    <section className="lx-footer-market" aria-label={overview.headline}>
-     <ul>{overview.marketPoints.map(point=><li key={point}><span aria-hidden="true">🔹</span><span>{point}</span></li>)}</ul>
-    </section>
-    <section className="lx-footer-tools">
-     <h3><Link href="/tools">{overview.toolsTitle}</Link></h3>
-     <nav className="lx-footer-tool-chips" aria-label={overview.toolsTitle}>{FOOTER_CHIPS[lang].map((label,i)=><Link href={FOOTER_CHIP_URLS[i]} key={label}>{label}</Link>)}</nav>
-     <div className="lx-footer-tools-list">
-      {overview.toolCategories.map((item,i)=><p key={item.title}><Link href={FOOTER_TOOL_LINKS[i]}><strong><span aria-hidden="true">{FOOTER_TOOL_ICONS[i]}</span> {item.title}：</strong></Link><span>{item.description}</span></p>)}
+   <section className="lx-footer-v3-contact" aria-label={c.contacts}>
+    <b>{c.contacts}</b>
+    <a href="mailto:business@lingxifield.com">✉ business@lingxifield.com</a>
+    <div className="lx-footer-qr-row">
+     <div><Image src="/images/lingxifield-wechat-service-qr.jpg" alt="WeChat Service" width={76} height={76}/><span>{t("service")}</span></div>
+     <div><Image src="/images/miniapp-qrcode.png" alt="Miniapp" width={76} height={76}/><span>{t("miniapp")}</span></div>
+    </div>
+    <section className="lx-footer-wechat-extra" aria-label={WECHAT_EXTRA[lang].more}>
+     <h4>{WECHAT_EXTRA[lang].more}</h4>
+     <div className="lx-footer-extra-qr-grid">
+      <a href="http://weixin.qq.com/r/mp/_yAoMCzEYnEdrWhT93Xp" target="_blank" rel="noopener noreferrer">
+       <Image unoptimized src="/api/public-social-qr?kind=search" width={115} height={115} alt={WECHAT_EXTRA[lang].search}/>
+       <span>{WECHAT_EXTRA[lang].search}</span>
+      </a>
+      <a href="http://weixin.qq.com/r/mp/oycQCBfEPUpCrVNr93Kx" target="_blank" rel="noopener noreferrer">
+       <Image unoptimized src="/api/public-social-qr?kind=ranking" width={115} height={115} alt={WECHAT_EXTRA[lang].ranking}/>
+       <span>{WECHAT_EXTRA[lang].ranking}</span>
+      </a>
      </div>
+     <strong className="lx-footer-miniapp-label">{WECHAT_EXTRA[lang].miniapps}</strong>
+     <code className="lx-footer-miniapp-code">#小程序://灵犀场/ktKRUjMRoEcPEsE</code>
+     <code className="lx-footer-miniapp-code">#小程序://10临时邮箱/p8AACkYNods09Rl</code>
     </section>
-    <nav className="lx-footer-search-list" aria-label={overview.searchTitle}>
-     <h3>{overview.searchTitle}</h3>
-     <ol>{discovery.topics.map((topic,i)=><li key={topic.q}><Link href={"/siai#siai-search-ranking-"+i}><span className="lx-footer-search-number">{String(i+1).padStart(2,"0")}｜</span>{lang==="zh"?FOOTER_QUESTION_ZH[i]:topic.q}</Link></li>)}</ol>
-    </nav>
-   </div>
-   <div className="lx-footer-unified-secondary">
-    <section className="lx-footer-sasi">
-     <h3><Link href="/sasi">{overview.sasiTitle}</Link></h3>
-     <p>{overview.sasiDescription}</p>
-    </section>
-   </div>
-   <div className="lx-footer-unified-close">
-    <h3>{overview.closingTitle}</h3>
-    <p>{overview.closingDescription}</p>
-   </div>
-  </section>
-  <div className="lx-footer-social-strip">
-   <div><b>{c.contacts}</b><div className="lx11-footer-social">
-     {channels.map(([label,href])=>{const localized=label==="微信服务号"&&lang!=="zh"?"WeChat":label;return href.startsWith("#")?<a key={label} href={href}>{localized}</a>:<a key={label} href={href} target="_blank" rel="noreferrer noopener">{localized} ↗</a>})}
-    <a href="mailto:business@lingxifield.com">business@lingxifield.com</a>
-   </div></div>
-   <div className="lx-footer-qr-row">
-    <div><Image src="/images/lingxifield-wechat-service-qr.jpg" alt="WeChat Service" width={56} height={56}/><span>{t("service")}</span></div>
-    <div><Image src="/images/miniapp-qrcode.png" alt="Miniapp" width={56} height={56}/><span>{t("miniapp")}</span></div>
-   </div>
+   </section>
   </div>
   <div className="lx11-footer-legal"><span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>
    <label className="lx-footer-language"><span aria-hidden="true">🌐</span><select value={lang} aria-label={t("language")} onChange={e=>setLang(e.target.value as LingxiLang)}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(k=><option value={k} key={k}>{LANG_NAMES[k]}</option>)}</select></label>

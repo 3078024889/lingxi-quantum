@@ -11,7 +11,8 @@ const tags=html=>Array.from(html.matchAll(/<link\b[^>]*>/gi),x=>x[0]);
 const attr=(tag,key)=>tag.match(new RegExp(key+'="([^"]+)"','i'))?.[1]||null;
 for(const site of sites){
  const [robots,map,page]=await Promise.all([get(site+"/robots.txt"),get(site+"/sitemap.xml"),get(site+"/siai")]);
- assert(robots.content.includes("Sitemap: "+site+"/sitemap.xml"),site+" robots sitemap mismatch");
+ const observedSitemap=robots.content.match(/^Sitemap:\\s*(\\S+)/im)?.[1]??"(missing)";
+ assert(robots.content.includes("Sitemap: "+site+"/sitemap.xml"),`${site} robots sitemap mismatch: expected ${site}/sitemap.xml, observed ${observedSitemap}`);
  const locs=Array.from(map.content.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g),m=>m[1]);
  assert(locs.includes(site+"/siai"),site+" sitemap misses SIAI");
  assert(locs.every(url=>new URL(url).origin===site),site+" sitemap has cross-host loc");
