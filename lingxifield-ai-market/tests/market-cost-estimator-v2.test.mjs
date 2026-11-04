@@ -64,6 +64,11 @@ test('Mistral, Cohere and MiniMax text prices use verified exact model IDs',()=>
  assert.equal(estimateApiBatchCost(-1,500,10,0.15,0.6),null);
  assert.equal(estimateApiBatchCost(2000,500,2,NaN,0.6),null);
  assert.equal(estimateApiBatchCost(2000,500,2,Infinity,0.6),null);
+ // A single tiny request is billable (the UI must not display its positive fee as zero).
+ assert.ok(Math.abs(estimateApiBatchCost(1,0,1,0.15,0.6)-0.00000015)<1e-16);
+ // Safe per-request integers alone are insufficient if total token volume overflows.
+ assert.equal(estimateApiBatchCost(Number.MAX_SAFE_INTEGER,1,2,0.15,0.6),null);
+ assert.equal(estimateApiBatchCost(1,Number.MAX_SAFE_INTEGER,2,0.15,0.6),null);
 });
 test('Calculator does not prefill unknown provider prices, and long table is optional',()=>{
  const ui=readFileSync(new URL('../app/market-cost-estimator.tsx',import.meta.url),'utf8');
@@ -74,6 +79,9 @@ test('Calculator does not prefill unknown provider prices, and long table is opt
  assert.match(ui,/tx\.calls/);
  assert.match(ui,/tx\.images/);
  assert.match(ui,/tx\.minute/);
+ assert.match(ui,/maximumFractionDigits:n>0&&n<1\?12:6/);
+ assert.match(ui,/USAGE_COPY\[language\]\.videoExtra/);
+ assert.match(ui,/USAGE_COPY\[language\]\.badUsage/);
  for(const l of ['zh','en','ja','ko','fr','de','es','pt','ar'])assert.match(ui,new RegExp('\\b'+l+':\\{calls:'));
 });
 

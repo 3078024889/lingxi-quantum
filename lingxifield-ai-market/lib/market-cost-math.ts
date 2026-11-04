@@ -25,6 +25,8 @@ export function estimateApiBatchCost(inputTokensPerCall:number|null,outputTokens
  if(inputTokensPerCall===null||outputTokensPerCall===null||
     !Number.isSafeInteger(inputTokensPerCall)||!Number.isSafeInteger(outputTokensPerCall)||
     inputTokensPerCall<0||outputTokensPerCall<0)return null;
+ // Total billed token counts must remain representable without integer precision loss.
+ if(!Number.isSafeInteger(inputTokensPerCall*calls)||!Number.isSafeInteger(outputTokensPerCall*calls))return null;
  const perCall=estimateApiUsageCost(inputTokensPerCall,outputTokensPerCall,inputPerMillion,outputPerMillion);
  if(perCall===null)return null;
  const amount=perCall*calls;

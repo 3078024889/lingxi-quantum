@@ -16,6 +16,7 @@ test('desktop/mobile calculate a sourced H3 short film with image and input-vide
  await cost.getByLabel('每段参考图片张数').fill('7');
  await expect(cost.locator('.lxCostResult').first()).toContainText('USD 1.44');
  await expect(cost.locator('.lxCostResult').first()).toContainText('USD 0.64');
+ await expect(cost.locator('.lxCostResult').first()).toContainText('参考视频另按秒计费');
 });
 test('desktop/mobile calculate per-call Mistral price and hide the huge table initially',async({page})=>{
  test.setTimeout(60000);
@@ -33,4 +34,22 @@ test('desktop/mobile calculate per-call Mistral price and hide the huge table in
  await expect(directory).not.toHaveAttribute('open','');
  await directory.locator('summary').click();
  await expect(directory.locator('table')).toBeVisible();
+});
+
+test('desktop/mobile preserve microtoken charges and reject unsafe batch totals',async({page})=>{
+ test.setTimeout(60000);
+ await page.goto('/siai');
+ const d=page.locator('.siai-home-cost-accordion');
+ await expect(d).toBeVisible({timeout:20000});
+ await d.locator('summary').click();
+ const cost=d.locator('.lxCostEstimate');
+ await cost.getByRole('button',{name:'程序接口 API'}).click();
+ await cost.getByLabel('AI 平台').selectOption('mistral');
+ await cost.getByLabel('用户输入量（Token）').fill('1');
+ await cost.getByLabel('AI 输出量（Token）').fill('0');
+ await cost.getByLabel('调用次数').fill('1');
+ await expect(cost.locator('.lxCostResult').first()).toContainText('USD 0.00000015');
+ await cost.getByLabel('用户输入量（Token）').fill('9007199254740991');
+ await cost.getByLabel('调用次数').fill('2');
+ await expect(cost.locator('.lxCostResult').first()).toContainText('不能超出安全计算范围');
 });

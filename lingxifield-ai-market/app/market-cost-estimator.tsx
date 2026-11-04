@@ -18,7 +18,19 @@ const EXTRA:Record<Language,{calls:string;images:string;single:string;minute:str
  ar:{calls:'عدد استدعاءات API',images:'صور مرجعية لكل مقطع',single:'مقطع واحد',minute:'فيلم قصير دقيقة',fiveMinutes:'فيلم قصير 5 دقائق',billable:'مدة الناتج',reference:'تكلفة وسائط المرجع',more:'تفاصيل أسعار كل الشركات',noRate:'تُحسب أسعار واجهات API الموثقة فقط'}
 };
 const NAMED_API_PROVIDERS:readonly string[]=['minimax','mistral','cohere'];
-const fmt=(n:number)=>Number(n.toFixed(6)).toLocaleString('en-US',{maximumFractionDigits:6});
+// Keep micro-billed API usage visible: one input token must not render as USD 0.
+const fmt=(n:number)=>n>0&&n<1e-12?n.toExponential(3):n.toLocaleString('en-US',{maximumFractionDigits:n>0&&n<1?12:6});
+const USAGE_COPY:Record<Language,{videoExtra:string;badUsage:string}>={
+ zh:{videoExtra:'参考视频另按秒计费',badUsage:'请输入有效的调用次数及 Token 数量（不能超出安全计算范围）'},
+ en:{videoExtra:'Reference video billed separately',badUsage:'Enter valid call and token counts within the safe calculation range'},
+ ja:{videoExtra:'参照動画は秒数に応じて別料金',badUsage:'有効な呼び出し回数とトークン数を入力してください'},
+ ko:{videoExtra:'참조 동영상은 초당 별도 과금',badUsage:'올바른 호출 횟수와 토큰 수를 입력하세요'},
+ fr:{videoExtra:'Vidéo source facturée séparément',badUsage:'Saisissez un nombre valide d’appels et de tokens'},
+ de:{videoExtra:'Referenzvideo wird separat berechnet',badUsage:'Gültige Aufruf- und Tokenanzahlen eingeben'},
+ es:{videoExtra:'Vídeo de referencia facturado aparte',badUsage:'Introduce números válidos de llamadas y tokens'},
+ pt:{videoExtra:'Vídeo de referência cobrado à parte',badUsage:'Insira quantidades válidas de chamadas e tokens'},
+ ar:{videoExtra:'تُحسب تكلفة الفيديو المرجعي بشكل منفصل',badUsage:'أدخل عددًا صالحًا من الاستدعاءات والرموز'}
+};
 const positiveInt=(s:string)=>/^\d+$/.test(s)&&Number.isSafeInteger(Number(s))?Number(s):null;
 export default function MarketCostEstimator({language,currency}:{language:Language;currency:Currency}){
  const t=COPY[language]||COPY.zh,tx=EXTRA[language]||EXTRA.zh;
@@ -89,7 +101,7 @@ export default function MarketCostEstimator({language,currency}:{language:Langua
     {rate.promoEnds?<small>{language==='zh'?'活动截止':'Promotion ends'}: {rate.promoEnds}</small>:null}
     {rate.billing==='plan-equivalent'?<small>{language==='zh'?'该金额是官方活动套餐的等效用量价值，实际扣会员积分，不会按秒重新收现金。':'This is the plan-equivalent value; actual usage deducts included credits, not a new per-second cash bill.'}</small>:null}
     {rate.billing==='token-only'?<small>{language==='zh'?'无参考视频':'Without input video'}: {rate.currency} {rate.apiPerMillionNoVideo}/1M Tokens · {language==='zh'?'含参考视频':'With input video'}: {rate.currency} {rate.apiPerMillionWithVideo}/1M Tokens</small>:null}
-    {rate.billing==='per-second'?<small>{t[17]}: {rate.currency} {rate.perSecond} / sec{rate.chargesInputVideo?' · '+t[9]+' included':''}</small>:null}
+    {rate.billing==='per-second'?<small>{t[17]}: {rate.currency} {rate.perSecond} / sec{rate.chargesInputVideo?' · '+USAGE_COPY[language].videoExtra:''}</small>:null}
     {provider==='grok'?<small>{language==='zh'?'Grok 免费账户可先体验；480p 免费一次等具体次数按登录后账户权益确认，API视频另按秒收费。':'Grok can be tried free; the number of free 480p videos varies by account. API video is billed separately.'}</small>:null}
     {calculated?.kind==='credits'&&coveredCredits&&calculated.credits!>coveredCredits?<small>{language==='zh'?'超额积分：'+fmt(calculated.credits!-coveredCredits)+'积分。':'Excess: '+fmt(calculated.credits!-coveredCredits)+' credits. ' }{language==='zh'?'超出会员积分：请通过厂商官方积分购买/升级结算；未核实额外积分包单价前不虚构金额。':'Over plan credits: purchase extras or upgrade on the provider billing page. No invented top-up price.'}</small>:null}
     {rate.outputType==='upscaled'?<small>{t[15]}</small>:rate.outputType==='native'?<small>{t[14]}</small>:null}
@@ -109,7 +121,7 @@ export default function MarketCostEstimator({language,currency}:{language:Langua
    <div className="lxCostResult">
     <strong>{language==='zh'?'开发者接口如何收费':'How developer usage is billed'}</strong>
     <p>{language==='zh'?apiOffer.descriptionZh:apiOffer.descriptionEn}</p>
-    {tokenRate?<><strong>{t[29]}: {apiCost===null?t[12]:tokenRate.currency+' '+fmt(apiCost)}</strong>
+    {tokenRate?<><strong>{t[29]}: {apiCost===null?USAGE_COPY[language].badUsage:tokenRate.currency+' '+fmt(apiCost)}</strong>
       <small>{positiveInt(calls)} × {language==='zh'?'每次输入':'input/request'} {inTokens} · {language==='zh'?'每次输出':'output/request'} {outTokens} · {language==='zh'?'每次预计':'per call'} {apiPerCall===null?'—':tokenRate.currency+' '+fmt(apiPerCall)}</small>
       <small>{tokenRate.currency} {tokenRate.inPerMillion}/1M {t[22]} · {tokenRate.currency} {tokenRate.outPerMillion}/1M {t[23]}</small>
       <small>{language==='zh'?tokenRate.notes:'Official price for this model/context; caching and tools can differ.'}</small>
