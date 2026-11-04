@@ -176,7 +176,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  },[fullscreen]);
  useEffect(()=>{if(!expanded)return;dialogRef.current?.focus();const esc=(e:KeyboardEvent)=>{if(e.key==="Escape")setExpanded(null)};window.addEventListener("keydown",esc);return()=>window.removeEventListener("keydown",esc);},[expanded]);
  const toggleCompare=(id:string)=>setCompareIds(current=>toggleMarketComparison(current,id,rows.map(p=>p.id)));
- const previewValue=(value:string)=>value==="尚无可靠资料"?PREVIEW_MISSING[lang]:lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
+ const previewValue=(value:string)=>value==="尚无可靠资料"||value==="—"?"":lang==="zh"?value:PREVIEW_RAW_LABEL[lang]+value;
+ const hasVisibleFact=(value:string)=>Boolean(value.trim())&&value.trim()!=="—"&&!Object.values(PREVIEW_MISSING).includes(value.trim());
  const displayFact=(p:SiaiHomeRow,scope:"price"|"free"|"models")=>p.recordStatus==="source_preview"?previewValue(p[scope]):localizedCatalogFact(p.id,lang,scope,p[scope]);
  const displayStrength=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.strength):localizedProductSummary(p.id,lang)||p.strength||p.about;
  const displayRegion=(p:SiaiHomeRow)=>p.recordStatus==="source_preview"?previewValue(p.region):lang==="zh"?p.region:globalRegionSummary(p.id,lang);
@@ -273,13 +274,13 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
           </div>
          </div>
         </div></td>
-        <td><strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),100)}</strong></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),100)}</span><Source href={p.freeSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"price")}>{short(displayFact(p,"price"),110)}</span><Source href={p.priceSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayRegion(p)}>{short(displayRegion(p),100)}</span><Source href={p.regionSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayPayment(p)}>{short(displayPayment(p),88)}</span><Source href={p.paymentSource} label={t.source}/></td>
-        <td><span className="siai-cell-preview" title={displayFact(p,"models")}>{short(displayFact(p,"models"),95)}</span></td>
-        <td><span className="siai-cell-preview" title={displayCommercial(p)}>{short(displayCommercial(p),100)}</span><Source href={p.commercialSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayStrength(p))&&<strong className="siai-cell-preview" title={displayStrength(p)}>{short(displayStrength(p),100)}</strong>}</td>
+        <td>{hasVisibleFact(displayFact(p,"free"))&&<span className="siai-cell-preview" title={displayFact(p,"free")}>{short(displayFact(p,"free"),100)}</span>}<Source href={p.freeSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayFact(p,"price"))&&<span className="siai-cell-preview" title={displayFact(p,"price")}>{short(displayFact(p,"price"),110)}</span>}<Source href={p.priceSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayRegion(p))&&<span className="siai-cell-preview" title={displayRegion(p)}>{short(displayRegion(p),100)}</span>}<Source href={p.regionSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayPayment(p))&&<span className="siai-cell-preview" title={displayPayment(p)}>{short(displayPayment(p),88)}</span>}<Source href={p.paymentSource} label={t.source}/></td>
+        <td>{hasVisibleFact(displayFact(p,"models"))&&<span className="siai-cell-preview" title={displayFact(p,"models")}>{short(displayFact(p,"models"),95)}</span>}</td>
+        <td>{hasVisibleFact(displayCommercial(p))&&<span className="siai-cell-preview" title={displayCommercial(p)}>{short(displayCommercial(p),100)}</span>}<Source href={p.commercialSource} label={t.source}/></td>
         <td className="siai-home-actions"><a className="siai-open" href={p.website} target="_blank" rel="noopener noreferrer">{t.official} ↗</a><button type="button" onClick={()=>setExpanded(expanded===p.id?null:p.id)} aria-expanded={expanded===p.id} aria-controls={"siai-detail-"+p.id}>{expanded===p.id?t.close:t.details}</button>
         <button type="button" className={compareIds.includes(p.id)?"siai-compare-selected":""} onClick={()=>toggleCompare(p.id)}
          disabled={!compareIds.includes(p.id)&&compareIds.length>=MAX_COMPARISONS}
