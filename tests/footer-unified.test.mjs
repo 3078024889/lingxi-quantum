@@ -55,7 +55,7 @@ test("home, market, SASI and tools all render one shared footer with original li
  assert.match(footer,/FOOTER_TOOL_ICONS\[i\]/);
  assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
  assert.match(footer,/siai-search-ranking-/);
- for(const marker of ["lx11-footer-grid","lx-footer-v3-nav","lx-footer-brand-social","lx-footer-v3-contact","lx-footer-qr-row","lx-footer-v3-toolstrip","lx11-footer-legal","business@lingxifield.com"])
+ for(const marker of ["lx11-footer-grid","lx-footer-v3-nav","lx-footer-brand-social","lx-footer-v3-contact","lx-footer-v4-qr-grid","lx-footer-v3-toolstrip","lx11-footer-legal","business@lingxifield.com"])
   assert(footer.includes(marker),marker);
  assert.doesNotMatch(footer,/!isRankingRoute|usePathname|copy\[lang\]\.lead/);
  assert.doesNotMatch(footer,/AI 工具先比清楚，再决定用哪一个/);
