@@ -22,7 +22,7 @@ const ZH={
  search:"🔍 大家还会搜：",
  closing:"💎 灵犀场 LINGXIFIELD",
  ending:"全球SIAI工具行情查询、视频与API成本对比、SASI智能创作、100+在线实用工具，一站式使用。"
-};
+} as const;
 type Copy={market:string;intro:string;benefits:string[];tools:string;sasi:string;sasiBody:string;search:string;closing:string;ending:string;privacy:string;daily:string;privacyBody:string;dailyBody:string};
 const localized:Record<Exclude<LingxiLang,"zh">,Copy>={
  en:{market:"🌍 Global SIAI Rankings | Global SI and AI Tools",intro:"Discover global SI/AI companies, models and tools. Search, filter, compare and check regularly updated official sources.",
@@ -61,7 +61,7 @@ export default function UnifiedFooterOverview(){
    <div className="lx-footer-tool-column">
     <h3><Link href="/tools">{d.tools}</Link></h3>
     <div className="lx-footer-tool-cards">{toolList.map(([title,body],i)=><article key={i}>
-     <h4><Link href={TOOL_URLS[i]}>{title}</Link></h4><p>{body}</p>
+     <h4><Link href={TOOL_URLS[i]||"/tools"}>{title}</Link></h4><p>{body}</p>
     </article>)}</div>
     <section className="lx-footer-sasi"><h3><Link href="/sasi">{d.sasi}</Link></h3><p>{d.sasiBody}</p></section>
    </div>
