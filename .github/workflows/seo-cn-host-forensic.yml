@@ -1,0 +1,35 @@
+name: SEO regional host forensic (read-only)
+on:
+  push:
+    branches:
+      - audit/seo-cn-live-headers-20261104
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Read-only production HTTP headers and robots body, bounded
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const origins=["https://lingxifield.com","https://lingxifield.cn",
+            "https://www.lingxifield.com","https://www.lingxifield.cn"];
+          for(const origin of origins){
+            for(const path of ["/robots.txt","/sitemap.xml","/siai"]){
+              const url=origin+path;
+              try {
+                const r=await fetch(url,{
+                  redirect:"manual",
+                  headers:{"User-Agent":"LINGXIFIELD-SEO-Regional-Diagnostic/1.0","Cache-Control":"no-cache"},
+                  signal:AbortSignal.timeout(15000)
+                });
+                const body=(await r.text()).slice(0,path==="/robots.txt"?3000:200);
+                const headers=Object.fromEntries(["content-type","location","x-vercel-id","x-vercel-cache",
+                  "cache-control","x-robots-tag","vary"].map(k=>[k,r.headers.get(k)]));
+                console.log(JSON.stringify({url,status:r.status,finalUrl:r.url,headers,body}));
+              } catch(e){console.log(JSON.stringify({url,error:String(e).slice(0,350)}))}
+            }
+          }
+          NODE
