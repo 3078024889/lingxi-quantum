@@ -6,8 +6,10 @@ import http from "node:http";
 
 const port=31579;
 const origin="http://127.0.0.1:"+port;
+// This read-only local server must simulate the production index gate.
+// Product routes still guard private and unverified vendor data independently.
 const child=spawn("pnpm",["exec","next","start","-H","127.0.0.1","-p",String(port)],{
- cwd:process.cwd(),env:{...process.env,NEXT_TELEMETRY_DISABLED:"1"},stdio:["ignore","pipe","pipe"]
+ cwd:process.cwd(),env:{...process.env,NEXT_TELEMETRY_DISABLED:"1",VERCEL_ENV:"production"},stdio:["ignore","pipe","pipe"]
 });
 let output="";
 for(const stream of [child.stdout,child.stderr])stream.on("data",b=>{output=(output+b.toString()).slice(-8000)});
