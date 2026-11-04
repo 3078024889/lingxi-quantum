@@ -951,3 +951,44 @@ html[data-theme="dark"] .lx-site-content:has(.lx11-sidebar) .text-blue-900{color
  .lx11-desktop-side-toggle:focus-visible{outline:2px solid #2567bd;outline-offset:2px}
 }
 @media(max-width:1023px){.lx11-desktop-side-toggle{display:none}}
+
+
+/* Shared nine-language full footer overview; legal, social and link columns remain unchanged. */
+.lx-footer-showcase{max-width:1420px;margin:0 auto 30px;display:grid;gap:16px}
+.lx-footer-showcase *{box-sizing:border-box}
+.lx-footer-showcase h2,.lx-footer-showcase h3,.lx-footer-showcase h4{margin:0;line-height:1.45;font-weight:800}
+.lx-footer-showcase h2{font-size:clamp(20px,2vw,26px);color:#174a80}
+.lx-footer-showcase h3{font-size:19px;color:#174a80}
+.lx-footer-showcase h4{font-size:16px;color:#285c90}
+.lx-footer-showcase p,.lx-footer-showcase li,.lx-footer-showcase a{font-size:14px;line-height:1.75}
+.lx-footer-showcase a{text-decoration:none;color:inherit}
+.lx-footer-showcase a:hover{text-decoration:underline;text-underline-offset:4px}
+.lx-footer-showcase a:focus-visible{outline:2px solid #2868bb;outline-offset:3px;border-radius:4px}
+.lx-footer-market{padding:24px clamp(16px,3vw,30px);border:1px solid #dce8f7;border-radius:16px;background:linear-gradient(110deg,#f2f7ff,#fff 75%)}
+.lx-footer-market>p{margin:9px 0 16px;color:#486580}
+.lx-footer-benefits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:27px;row-gap:7px;list-style:none;padding:0;margin:0}
+.lx-footer-benefits li{display:flex;gap:9px;align-items:flex-start;color:#365a7e}
+.lx-footer-benefits li>span:first-child{flex:none}
+.lx-footer-showcase-columns{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,.92fr);gap:16px}
+.lx-footer-tool-column,.lx-footer-search{min-width:0;padding:21px;background:#fff;border:1px solid #dce7f4;border-radius:15px}
+.lx-footer-tool-column>h3{margin-bottom:14px}
+.lx-footer-tool-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.lx-footer-tool-cards article{padding:12px 15px;min-width:0;border:1px solid #e7edf4;border-radius:10px;background:#f9fbfd}
+.lx-footer-tool-cards p{margin:6px 0 0;color:#526b83;overflow-wrap:anywhere}
+.lx-footer-sasi{margin-top:15px;padding:16px 19px;background:#f7f8fe;border:1px solid #e5e8f7;border-radius:11px}
+.lx-footer-sasi h3{font-size:17px}
+.lx-footer-sasi p{margin:8px 0 0;color:#405c79}
+.lx-footer-search h3{margin-bottom:15px}
+.lx-footer-search ol{list-style:none;display:grid;gap:8px;margin:0;padding:0}
+.lx-footer-search li a{display:flex;gap:7px;align-items:baseline;padding:10px 12px;border:1px solid #e1eefa;border-radius:9px;background:#f3f8ff;color:#1c588f;font-weight:650;overflow-wrap:anywhere}
+.lx-footer-search li a:hover{background:#e8f3ff;text-decoration:none}
+.lx-footer-search li span{flex:none;color:#6c8faf;font-variant-numeric:tabular-nums}
+.lx-footer-end{display:flex;align-items:center;gap:20px;padding:16px 21px;border:1px solid #e2eaf4;border-radius:11px;background:#f8faff}
+.lx-footer-end h3{white-space:nowrap;font-size:17px}
+.lx-footer-end p{margin:0;color:#385a7b}
+html[data-theme="dark"] .lx-footer-showcase{color:#e7f2ff}
+html[data-theme="dark"] .lx-footer-market,html[data-theme="dark"] .lx-footer-tool-column,html[data-theme="dark"] .lx-footer-search,html[data-theme="dark"] .lx-footer-end{background:#1b222d;border-color:#3d4e65}
+html[data-theme="dark"] .lx-footer-tool-cards article,html[data-theme="dark"] .lx-footer-sasi,html[data-theme="dark"] .lx-footer-search li a{background:#263142;border-color:#3d4e65}
+html[data-theme="dark"] .lx-footer-showcase h2,html[data-theme="dark"] .lx-footer-showcase h3,html[data-theme="dark"] .lx-footer-showcase h4,html[data-theme="dark"] .lx-footer-showcase p,html[data-theme="dark"] .lx-footer-benefits li,html[data-theme="dark"] .lx-footer-search li a{color:#e7f2ff}
+@media(max-width:960px){.lx-footer-showcase-columns{grid-template-columns:1fr}.lx-footer-search ol{grid-template-columns:repeat(2,minmax(0,1fr))}.lx-footer-end{align-items:flex-start;flex-direction:column;gap:6px}}
+@media(max-width:640px){.lx-footer-benefits,.lx-footer-tool-cards,.lx-footer-search ol{grid-template-columns:1fr}.lx-footer-market,.lx-footer-tool-column,.lx-footer-search{padding:15px}.lx-footer-showcase h2{font-size:20px}.lx-footer-showcase h3{font-size:17px}}

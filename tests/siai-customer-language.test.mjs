@@ -18,14 +18,14 @@ test("all nine market discovery descriptions explain features, not unrelated sto
 });
 test("footer describes capabilities once in a full-width panel and avoids duplicate SEO paragraphs",()=>{
  const footer=read("components/Footer.tsx");
- assert.match(footer,/<p className="text-sm leading-6">\{copy\[lang\]\.lead\}<\/p>/);
- assert.equal((footer.match(/PUBLIC_FEATURE_COPY\[lang\]\.description/g)||[]).length,1);
+ assert.match(footer,/<UnifiedFooterOverview\/>/);
+ assert.doesNotMatch(footer,/PUBLIC_FEATURE_COPY\[lang\]\.description/);
  assert.doesNotMatch(footer,/lx-footer-trio/);
  assert.doesNotMatch(footer,/discovery\.footerNote/);
- assert.match(footer,/!isRankingRoute&&<nav/);
+ assert.match(footer,/<UnifiedFooterOverview\/>/);
  assert.doesNotMatch(footer,/lang==="zh"&&<p lang="en"/);
  assert.match(read("components/SiaiRankingHome.tsx"),/<SiaiSearchDiscovery variant="ranking"\/>/);
- assert.match(footer,/discovery\.topics\.map\(v=>v\.q\)/);
+ assert.match(read("components/UnifiedFooterOverview.tsx"),/SIAI_DISCOVERY\[lang\]\.topics/);
 });
 test("preview rows present clear product information without internal test-state prose or blanket region denials",()=>{
  const component=read("components/SiaiRankingHome.tsx");
@@ -38,4 +38,28 @@ test("preview rows present clear product information without internal test-state
  assert.doesNotMatch(component,/PREVIEW_FIELD/);
  assert.match(candidate,/region:text\(region\)/);
  assert.doesNotMatch(candidate,/并非逐国注册或支付验证/);
+});
+
+test("SIAI catalog keeps verified company metadata and never silently promotes draft intake",()=>{
+ const directory=read("app/siai/catalog-data.ts");
+ const home=read("components/SiaiRankingHome.tsx");
+ const preview=read("app/siai/candidate-public.ts");
+ for(const token of [
+  "company:publisher.name","legal:publisher.legalEntity","creator:publisher.creator",
+  "listing:publisher.listingState","year:publisher.year","companySource:publisher.companySource",
+  "listingSource:publisher.ipoFilingSource||publisher.listingSource","yearSource:publisher.yearSource",
+  "checkedAt:fact?marketProductReviewedAt(id):null"
+ ])assert(directory.includes(token),token);
+ for(const token of [
+  "p.creator?.role", "p.creator?.source", "listingFor(p)", "p.listingSource",
+  "p.yearSource", "p.checkedAt", "p.companySource", "visibleRows.map"
+ ])assert(home.includes(token),token);
+ assert.match(directory,/curated\.length!==32\|\|rows\.length!==62/);
+ assert.match(preview,/candidateProducts!==30/);
+ for(let i=1;i<=5;i++){
+  const file=JSON.parse(read("lingxifield-ai-market/data/company-intake/batch-"+String(i).padStart(3,"0")+".json"));
+  assert.equal(file.products.length,10,file.batch);
+  assert.equal(file.visibleToPublic,false,file.batch);
+  assert.equal(file.reviewState,"candidate",file.batch);
+ }
 });

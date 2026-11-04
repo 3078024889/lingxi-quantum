@@ -210,3 +210,28 @@
 .siai-home-four-filters .siai-filter-options>button{flex:none}
 .siai-home-four-filters .siai-sort-label{position:sticky;inset-inline-end:0;background:#f8fbff;padding-inline-start:7px;z-index:2}
 .siai-home-top-track .siai-expand-view{min-height:30px;padding:4px 9px}
+
+/* Horizontal travel is controlled exclusively by the top track.
+   overflow-x:hidden still permits synchronized programmatic scrollLeft. */
+.siai-home-table-scroll.siai-home-table-flow,.siai-home-table-scroll.siai-home-table-bounded{overflow-x:hidden!important}
+/* Market records are read in document flow. No nested vertical scrolling by default. */
+.siai-ranking-data{position:relative;min-width:0;scroll-margin-top:90px}
+.siai-home-table-scroll.siai-home-table-flow,.siai-home-fullscreen .siai-home-table-scroll.siai-home-table-flow{height:auto!important;min-height:0!important;max-height:none!important;overflow-x:auto;overflow-y:visible;scrollbar-gutter:auto}
+.siai-home-table-scroll.siai-home-table-bounded,.siai-home-fullscreen .siai-home-table-scroll.siai-home-table-bounded{height:auto;min-height:280px;max-height:1400px;overflow-x:auto;overflow-y:auto;scrollbar-gutter:stable}
+.siai-home-table-scroll.siai-home-table-flow::-webkit-scrollbar:horizontal,.siai-home-table-scroll.siai-home-table-bounded::-webkit-scrollbar:horizontal{height:0!important}
+.siai-home-table-scroll.siai-home-table-flow{scrollbar-width:none}
+.siai-home-table-scroll.siai-home-table-bounded{scrollbar-width:thin}
+.siai-home-table .siai-cell-preview{-webkit-line-clamp:4;line-clamp:4;max-height:6.2em}
+.siai-home-identity dl{gap:5px!important}
+.siai-home-identity dd .siai-source{margin-top:2px}
+.siai-height-toggle{border:1px solid #b8d0ed;border-radius:7px;background:#fff;color:#1b5796;font-weight:750;font-size:14px;min-height:30px;padding:3px 9px;white-space:nowrap;cursor:pointer}
+.siai-height-grip{height:26px;touch-action:none;user-select:none;display:flex;justify-content:center;align-items:center;gap:8px;cursor:ns-resize;background:#e5f0ff;border:1px solid #cbdff2;border-radius:0 0 9px 9px;color:#245b95;font-size:14px;font-weight:650}
+.siai-height-grip:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+.siai-page-controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:14px 10px;margin-top:4px;background:#fff;border:1px solid #d5e4f5;border-radius:10px;color:#27527c;font-size:14px}
+.siai-page-controls label{display:inline-flex;gap:7px;align-items:center;font-weight:650}
+.siai-page-controls select,.siai-page-controls input{background:#fff;border:1px solid #c9dbee;color:#1b4a79;border-radius:6px;padding:5px 8px;min-height:36px;font-size:14px}
+.siai-page-controls input{width:62px}
+.siai-page-buttons{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.siai-page-buttons button{background:#eef5ff;color:#1759a2;border:1px solid #bdd5ee;border-radius:7px;padding:7px 9px;min-height:36px;font-size:14px;font-weight:650}
+.siai-page-buttons button:disabled{opacity:.35;cursor:not-allowed}
+@media(max-width:900px){.siai-page-controls{justify-content:flex-start}.siai-home-top-track{gap:5px}.siai-height-toggle{padding:3px 6px}}
