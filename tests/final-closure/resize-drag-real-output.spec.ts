@@ -46,6 +46,7 @@ test("dragging a crop on the real preview moves the actual saved pixels and inva
  await expect(preview.locator('img[src^="blob:"]')).toBeVisible({timeout:15000});
  await expect(page.getByText("Drag the image to choose what stays in frame.",{exact:true})).toBeVisible();
  await expect(page.getByText("Fine-tune position (optional)",{exact:true})).toBeVisible();
+ await preview.scrollIntoViewIfNeeded();
  const rect=await preview.boundingBox();if(!rect)throw Error("PREVIEW_NOT_VISIBLE");
  // The viewport, not the natural image dimensions, determines the crop ratio.
  expect(Math.abs(rect.width-rect.height)).toBeLessThan(4);
@@ -60,9 +61,12 @@ test("dragging a crop on the real preview moves the actual saved pixels and inva
  expect(blue.sample[0]).toBeLessThan(30);
  expect(blue.sample[2]).toBeGreaterThan(220);
 
- await page.mouse.move(rect.x+rect.width*.05,y);
+ await preview.scrollIntoViewIfNeeded();
+ const afterDownload=await preview.boundingBox();if(!afterDownload)throw Error("PREVIEW_NOT_VISIBLE_AFTER_DOWNLOAD");
+ const y2=afterDownload.y+afterDownload.height/2;
+ await page.mouse.move(afterDownload.x+afterDownload.width*.05,y2);
  await page.mouse.down();
- await page.mouse.move(rect.x+rect.width*.97,y,{steps:10});
+ await page.mouse.move(afterDownload.x+afterDownload.width*.97,y2,{steps:10});
  await page.mouse.up();
  await expect.poll(async()=>Number(await preview.getAttribute("data-focus-x"))).toBeLessThan(10);
  // The prior blue ZIP/image is no longer available after changing the frame.
