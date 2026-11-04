@@ -39,3 +39,27 @@ test("preview rows present clear product information without internal test-state
  assert.match(candidate,/region:text\(region\)/);
  assert.doesNotMatch(candidate,/并非逐国注册或支付验证/);
 });
+
+test("SIAI catalog keeps verified company metadata and never silently promotes draft intake",()=>{
+ const directory=read("app/siai/catalog-data.ts");
+ const home=read("components/SiaiRankingHome.tsx");
+ const preview=read("app/siai/candidate-public.ts");
+ for(const token of [
+  "company:publisher.name","legal:publisher.legalEntity","creator:publisher.creator",
+  "listing:publisher.listingState","year:publisher.year","companySource:publisher.companySource",
+  "listingSource:publisher.ipoFilingSource||publisher.listingSource","yearSource:publisher.yearSource",
+  "checkedAt:fact?marketProductReviewedAt(id):null"
+ ])assert(directory.includes(token),token);
+ for(const token of [
+  "p.creator?.role", "p.creator?.source", "listingFor(p)", "p.listingSource",
+  "p.yearSource", "p.checkedAt", "p.companySource", "visibleRows.map"
+ ])assert(home.includes(token),token);
+ assert.match(directory,/curated\.length!==32\|\|rows\.length!==62/);
+ assert.match(preview,/candidateProducts!==30/);
+ for(let i=1;i<=5;i++){
+  const file=JSON.parse(read("lingxifield-ai-market/data/company-intake/batch-"+String(i).padStart(3,"0")+".json"));
+  assert.equal(file.products.length,10,file.batch);
+  assert.equal(file.visibleToPublic,false,file.batch);
+  assert.equal(file.reviewState,"candidate",file.batch);
+ }
+});
