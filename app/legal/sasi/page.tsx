@@ -1,6 +1,6 @@
 import type {Metadata} from "next";
 import Nav from "@/components/Nav";import Footer from "@/components/Footer";import Bi from "@/components/Bi";
-export const metadata:Metadata={title:"SASI 法律与规则 · Legal & Rules",description:"灵犀场 SASI 用户服务、隐私、创作、付款、知识产权与内容标识规则。"};
+export const metadata:Metadata={title:"SASI 法律与规则 · Legal & Rules",description:"灵犀场 SASI 用户服务、隐私、创作、付款、知识产权与内容标识规则。",alternates:{canonical:"/legal/sasi"}};
 const sections=[
 ["一、服务范围","1. Service","灵犀场提供资料整理、实用工具、SASI 创作、短剧与构建能力。不同功能会按其实际能力处理，不把尚未完成的结果显示为成功。","LINGXIFIELD provides source workspaces, practical tools, SASI creation, drama and building capabilities. Unfinished work is never presented as successful."],
 ["二、隐私","2. Privacy","平台只在完成任务所需范围内处理账户、订单、上传内容与必要日志。默认自主处理路径不要求用户连接外部生成服务；用户主动开启增强能力时，界面会在执行前说明。","The platform processes account, order, uploaded content and necessary logs only as required. Default autonomous paths do not require an external generation service; optional enhancements are disclosed before use."],
