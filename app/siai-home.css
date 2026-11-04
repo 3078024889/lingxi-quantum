@@ -235,3 +235,78 @@
 .siai-page-buttons button{background:#eef5ff;color:#1759a2;border:1px solid #bdd5ee;border-radius:7px;padding:7px 9px;min-height:36px;font-size:14px;font-weight:650}
 .siai-page-buttons button:disabled{opacity:.35;cursor:not-allowed}
 @media(max-width:900px){.siai-page-controls{justify-content:flex-start}.siai-home-top-track{gap:5px}.siai-height-toggle{padding:3px 6px}}
+
+
+/* V164: dense, evidence-safe financial-terminal table; no fixed blank row heights. */
+.siai-home{background:#f7fbff!important}
+.siai-home-table{min-width:1780px!important;border-spacing:0!important;font-size:14px!important}
+.siai-home-table th{padding:10px 9px!important;background:#e7f1ff!important;color:#153e70!important;line-height:1.45!important;font-size:14px!important}
+.siai-home-table th:nth-child(1){width:42px!important}
+.siai-home-table th:nth-child(2){width:365px!important}
+.siai-home-table th:nth-child(3){width:230px!important}
+.siai-home-table th:nth-child(4){width:155px!important}
+.siai-home-table th:nth-child(5){width:160px!important}
+.siai-home-table th:nth-child(6){width:152px!important}
+.siai-home-table th:nth-child(7){width:150px!important}
+.siai-home-table th:nth-child(8){width:166px!important}
+.siai-home-table th:nth-child(9){width:158px!important}
+.siai-home-table th:nth-child(10){width:116px!important}
+.siai-home-table td{padding:10px 9px!important;line-height:1.55!important;font-size:14px!important;vertical-align:top!important;border-bottom:1px solid #e3edf9!important}
+.siai-home-tr{height:auto!important;min-height:0!important}
+.siai-home-table .siai-cell-preview{font-size:14px!important;line-height:1.55!important;-webkit-line-clamp:2!important;line-clamp:2!important;max-height:3.15em!important}
+.siai-home-identity{width:365px;min-width:365px!important;max-width:365px!important}
+.siai-identity-flex{display:flex;gap:9px;align-items:flex-start;min-width:0}
+.siai-identity-content{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.siai-brand-logo{width:40px;height:40px;flex:0 0 40px;border:1px solid #dce6f3;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden}
+.siai-brand-logo img{object-fit:contain;width:36px;height:36px}
+.siai-brand-monogram{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#ecf4ff;color:#245f9d;font-size:14px;font-weight:800}
+.siai-home-table .siai-brand-name{display:block!important;color:#183e70;font-weight:800!important;font-size:16px!important;line-height:1.35!important;overflow-wrap:anywhere}
+.siai-preview-status{display:inline-flex;align-self:flex-start;color:#496b8b;font-size:14px;line-height:1.2}
+.siai-identity-line{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:9px;row-gap:1px;font-size:14px;line-height:1.45;color:#2c527a}
+.siai-identity-line>span{min-width:0;overflow-wrap:anywhere}
+.siai-identity-line>span+span::before{content:"｜";margin-inline-end:5px;color:#8da9c7}
+.siai-identity-key{color:#617d9a}
+.siai-home-identity .siai-source-compact{display:inline!important;color:#1a63b9!important;margin-inline-start:3px!important;white-space:nowrap;font-size:14px!important;font-weight:800!important;text-decoration:none!important}
+.siai-home-identity .siai-source-compact:hover{text-decoration:underline!important}
+.siai-home-actions{gap:5px!important}
+.siai-home-actions>a,.siai-home-actions>button{min-height:31px!important;padding:4px 5px!important;border-radius:6px!important;font-size:14px!important}
+.siai-home-table td:not(.siai-home-identity) .siai-source{font-size:14px!important;margin-top:4px}
+@media(min-width:960px){
+ .siai-home-table tbody tr.siai-home-tr>td:first-child{inset-inline-start:0!important;width:42px!important;min-width:42px}
+ .siai-home-table tbody tr.siai-home-tr>td:nth-child(2){inset-inline-start:42px!important}
+ .siai-home-table thead tr>th:nth-child(2){inset-inline-start:42px!important}
+}
+/* The two visible tracks are accessible and synchronized with the table's scrollLeft. */
+.siai-home-top-track{position:sticky!important;top:var(--lx-top,58px)!important;z-index:26!important;border:1px solid #cfdef1;background:#eaf3ff!important}
+.siai-home-top-scroll,.siai-home-bottom-scroll{overflow-x:scroll!important;overflow-y:hidden!important;overscroll-behavior-x:contain;scrollbar-width:auto!important;min-width:0}
+.siai-home-top-scroll::-webkit-scrollbar,.siai-home-bottom-scroll::-webkit-scrollbar{height:12px!important}
+.siai-home-bottom-scroll{height:17px;border:1px solid #d9e7f6;border-top:0;border-radius:0 0 8px 8px;background:#f2f7fe}
+.siai-home-bottom-scroll>div{min-width:100%}
+.siai-home-table-scroll.siai-home-table-flow{height:auto!important;max-height:none!important;min-height:0!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-y:auto!important;scrollbar-width:none!important}
+.siai-home-table-scroll.siai-home-table-bounded{min-height:280px!important;max-height:1400px!important;overflow-x:auto!important;overflow-y:auto!important;overscroll-behavior-y:auto!important}
+.siai-home-table-scroll::-webkit-scrollbar:horizontal{height:0!important}
+.siai-home-table-scroll:focus-visible{outline:2px solid #2e6acb;outline-offset:0}
+.siai-home-fullscreen{position:relative!important;inset:auto!important;z-index:auto!important;width:100%!important;min-height:0!important;height:auto!important;max-width:none!important;overflow:visible!important;padding:16px!important;overscroll-behavior:auto!important}
+.siai-home-fullscreen .siai-home-table-scroll.siai-home-table-flow{height:auto!important;max-height:none!important}
+.siai-home-fullscreen .siai-home-table-scroll.siai-home-table-bounded{height:auto;max-height:1400px}
+body.siai-wide-mode{overflow-x:hidden!important;overflow-y:auto!important}
+@media(min-width:1024px){
+ body.siai-wide-mode .lx11-sidebar{display:none!important}
+ body.siai-wide-mode .lx-site-content:has(.lx11-sidebar){margin-left:0!important}
+ body.siai-wide-mode .lx11-topbar{left:0!important}
+}
+@media(max-width:1023px){
+ .siai-home-top-track{top:var(--lx-top,58px)!important}
+ .siai-home-identity{min-width:330px!important;max-width:330px!important}
+ .siai-home-table th:nth-child(2){width:330px!important}
+}
+@media(max-width:600px){
+ .siai-home{padding:14px 8px 32px!important}
+ .siai-home-top-track{gap:4px!important}
+ .siai-home-table{min-width:1750px!important}
+ .siai-home-identity{min-width:315px!important;max-width:315px!important}
+ .siai-home-table th:nth-child(2){width:315px!important}
+ .siai-identity-flex{gap:7px}
+ .siai-brand-logo{width:34px;height:34px;flex-basis:34px}
+ .siai-brand-logo img{width:30px;height:30px}
+}
