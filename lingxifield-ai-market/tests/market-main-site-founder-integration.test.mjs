@@ -7,8 +7,11 @@ test('main SIAI route keeps the compact ranking readable while preserving source
  assert.ok(route.includes('getSiaiDirectoryRows()'));
  assert.ok(catalog.includes('creator:publisher.creator'));
  assert.ok(catalog.includes('companyPresentationFor(id,platform.company)'));
- assert.ok(home.includes('<div><dt>{t.founder}</dt><dd>{p.creator?'));
- assert.ok(!home.includes("p.creator?.role==='founder'"));
+ assert.ok(home.includes('p.creator?.role==="founder"?t.founder'));
+ assert.ok(home.includes('<Source href={p.creator?.source||null} label={t.source}/>'));
+ assert.ok(home.includes('<div><dt>{t.listed}</dt><dd>{listingFor(p)}'));
+ assert.ok(home.includes('<div><dt>{t.founded}</dt><dd>{p.year||"—"}'));
+ assert.ok(home.includes('listingFor(p)'));
  assert.ok(home.includes('p.creator?.source||null'));
  assert.ok(!home.includes('p.kind==="company"?(p.legal||"—")'));
  assert.ok(home.includes('p.legal&&<div>'));
