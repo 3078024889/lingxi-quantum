@@ -1,10 +1,23 @@
 "use client";
 import Image from"next/image";
 import Link from"next/link";
-import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
+import{useLingxiLang,LANG_NAMES,type LingxiLang}from"@/lib/lingxi-i18n";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {FOOTER_UNIFIED,FOOTER_TOOL_ICONS,FOOTER_TOOL_LINKS} from "@/lib/footer-unified-copy";
 
+const FOOTER_QUESTION_ZH=["全球 AI 行情平台有哪些？","全球 SIAI 排行榜哪个好用？","AI / SI 工具怎么选择？","视频生成、短剧生成费用是多少？","PDF 在线编辑与电子签名怎么操作？","免费 AI 工具有哪些？"] as const;
+const FOOTER_CHIPS:Record<LingxiLang,string[]>={
+ zh:["PDF 工具","图片工具","视频工具","音频工具","文档工具","办公工具","开发工具","AI 创作"],
+ en:["PDF tools","Image tools","Video tools","Audio tools","Document tools","Office tools","Developer tools","SI/AI creation"],
+ ja:["PDFツール","画像ツール","動画ツール","音声ツール","文書ツール","オフィスツール","開発ツール","AI創作"],
+ ko:["PDF 도구","이미지 도구","영상 도구","오디오 도구","문서 도구","사무 도구","개발 도구","AI 창작"],
+ fr:["Outils PDF","Images","Vidéo","Audio","Documents","Bureautique","Développement","Création IA"],
+ de:["PDF-Tools","Bild-Tools","Video-Tools","Audio-Tools","Dokumente","Büro","Entwicklung","KI-Kreation"],
+ es:["PDF","Imágenes","Vídeo","Audio","Documentos","Ofimática","Desarrollo","Creación IA"],
+ pt:["PDF","Imagens","Vídeo","Áudio","Documentos","Escritório","Desenvolvimento","Criação IA"],
+ ar:["أدوات PDF","الصور","الفيديو","الصوت","المستندات","المكتب","التطوير","إنشاء AI"]
+};
+const FOOTER_CHIP_URLS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=音频","/tools?q=文档","/tools?q=办公","/tools?q=开发","/sasi"] as const;
 const channels=[["微信服务号","#wechat"],["小红书","https://xhslink.cn/m/8rig9AtdDvK"],["Bilibili","https://b23.tv/VhatqCq"],["抖音","https://v.douyin.com/WG4QmhbliNk"],["X","https://x.com/lingxifield?s=11"],["YouTube","https://youtube.com/@lingxifield?si=fJss8KQIAl8NDS9X"]]as const;
 
 type FooterCopy={account:string;orders:string;refunds:string;release:string};
@@ -46,7 +59,7 @@ const FOOTER_MARKET_DETAIL:Record<LingxiLang,[string,string,string]>={
 };
 
 export default function Footer(){
- const{t,lang}=useLingxiLang();
+ const{t,lang,setLang}=useLingxiLang();
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
  const discovery=SIAI_DISCOVERY[lang];
  const overview=FOOTER_UNIFIED[lang];
@@ -55,6 +68,8 @@ export default function Footer(){
   <div className="lx11-footer-grid">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={46} height={46}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
+    <p className="lx-footer-brand-intro">{overview.intro}</p>
+    <div className="lx-footer-brand-social">{channels.filter(([label])=>["小红书","X","YouTube"].includes(label)).map(([label,href])=><a href={href} key={label} target="_blank" rel="noopener noreferrer">{label} ↗</a>)}</div>
    </section>
    <nav aria-label={c.rankings}>
     <b>{c.rankings}</b>
@@ -93,20 +108,22 @@ export default function Footer(){
     </section>
     <section className="lx-footer-tools">
      <h3><Link href="/tools">{overview.toolsTitle}</Link></h3>
+     <nav className="lx-footer-tool-chips" aria-label={overview.toolsTitle}>{FOOTER_CHIPS[lang].map((label,i)=><Link href={FOOTER_CHIP_URLS[i]} key={label}>{label}</Link>)}</nav>
      <div className="lx-footer-tools-list">
       {overview.toolCategories.map((item,i)=><p key={item.title}><Link href={FOOTER_TOOL_LINKS[i]}><strong><span aria-hidden="true">{FOOTER_TOOL_ICONS[i]}</span> {item.title}：</strong></Link><span>{item.description}</span></p>)}
      </div>
     </section>
+   </div>
+    <nav className="lx-footer-search-list" aria-label={overview.searchTitle}>
+     <h3>{overview.searchTitle}</h3>
+     <ol>{discovery.topics.map((topic,i)=><li key={topic.q}><Link href={"/siai#siai-search-ranking-"+i}><span className="lx-footer-search-number">{String(i+1).padStart(2,"0")}｜</span>{lang==="zh"?FOOTER_QUESTION_ZH[i]:topic.q}</Link></li>)}</ol>
+    </nav>
    </div>
    <div className="lx-footer-unified-secondary">
     <section className="lx-footer-sasi">
      <h3><Link href="/sasi">{overview.sasiTitle}</Link></h3>
      <p>{overview.sasiDescription}</p>
     </section>
-    <nav className="lx-footer-search-list" aria-label={overview.searchTitle}>
-     <h3>{overview.searchTitle}</h3>
-     <ol>{discovery.topics.map((topic,i)=><li key={topic.q}><Link href={"/siai#siai-search-ranking-"+i}><span className="lx-footer-search-number">{String(i+1).padStart(2,"0")}｜</span>{topic.q}</Link></li>)}</ol>
-    </nav>
    </div>
    <div className="lx-footer-unified-close">
     <h3>{overview.closingTitle}</h3>
@@ -124,6 +141,7 @@ export default function Footer(){
    </div>
   </div>
   <div className="lx11-footer-legal"><span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>
+   <label className="lx-footer-language"><span aria-hidden="true">🌐</span><select value={lang} aria-label={t("language")} onChange={e=>setLang(e.target.value as LingxiLang)}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(k=><option value={k} key={k}>{LANG_NAMES[k]}</option>)}</select></label>
    <Link href="/terms">{t("terms")}</Link><Link href="/privacy">{t("privacy")}</Link>
    <Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{t("sasiRules")}</Link>
    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener">湘ICP备2026031465号 ↗</a>
