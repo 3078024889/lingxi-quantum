@@ -31,7 +31,7 @@ test("real Next dynamic robots and sitemap share the forwarded .cn regional orig
  expect(sitemap.status()).toBe(200);
  const xml=await sitemap.text();
  expect(xml).toContain("<urlset");
- const locs=Array.from(xml.matchAll(/<loc>\\s*([^<]+)\\s*<\\/loc>/g),match=>match[1].trim());
+ const locs=Array.from(xml.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g),match=>match[1].trim());
  for(const loc of locs)expect(new URL(loc).origin,loc).toBe("https://lingxifield.cn");
  // The local/CI browser server may deliberately disable SIAI indexing.
  // If there are published entries, the regional SIAI URL must be included.
