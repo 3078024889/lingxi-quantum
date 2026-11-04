@@ -341,7 +341,8 @@ test('V44 searching short video includes known eight products, not only category
 
 test('video resolutions are sourced per model; 2K and 4K are never backfilled from 720p',async()=>{
  const r=await import(pathToFileURL(path.join(ROOT,'lib/market-rate-catalog.ts')).href);
- assert.deepEqual(r.RESOLUTIONS,['360p','480p','720p','1080p','2K','4K']);
+ assert.deepEqual(r.RESOLUTIONS,['360p','480p','720p','768p','1080p','2K','4K']);
+ assert.ok(r.VIDEO_RATES.some(x=>x.platform==='minimax'&&x.resolution==='768p'&&x.billing==='per-second'));
  assert.ok(r.VIDEO_RATES.length>=20);
  const wan720=r.VIDEO_RATES.find(v=>v.platform==='qwen'&&v.region==='北京'&&v.resolution==='720p');
  const wan1080=r.VIDEO_RATES.find(v=>v.platform==='qwen'&&v.region==='北京'&&v.resolution==='1080p');

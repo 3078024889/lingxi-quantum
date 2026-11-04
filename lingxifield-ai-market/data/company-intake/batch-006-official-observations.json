@@ -1,0 +1,475 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B006",
+  "observedOn": "2026-11-04",
+  "disclaimer": "官方公开页面字段级观察；未进行注册、付款、生成、导出实测或审核批准；不进入公开排行榜。",
+  "products": [
+    {
+      "id": "openai-developer-api",
+      "name": "OpenAI Developer API",
+      "officialHosts": [
+        "openai.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "官方 API 价目表根据模型、输入输出及缓存等计费项目展示费用，短上下文与长上下文的适用条件不同。",
+          "source": "https://developers.openai.com/api/docs/pricing",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "官方开发者价目表收录 GPT 系列模型，模型可用性与API权限需要按具体产品核对。",
+          "source": "https://developers.openai.com/api/docs/pricing",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 OpenAI 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://developers.openai.com/api/docs/pricing",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "anthropic-claude-platform-api",
+      "name": "Claude Platform API",
+      "officialHosts": [
+        "anthropic.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的具体价格条件，保留待审核，不进行猜测。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Claude 开发者平台官方文档列出 Claude 模型家族，并提供 Messages、工具调用、视觉输入等 API 开发能力。",
+          "source": "https://docs.anthropic.com/zh-CN/home",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 Anthropic 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://docs.anthropic.com/zh-CN/home",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "perplexity-agent-api",
+      "name": "Perplexity Agent API",
+      "officialHosts": [
+        "perplexity.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的具体价格条件，保留待审核，不进行猜测。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Perplexity 官方 API 平台提供 Agent API、Search API、Embeddings 等开发能力；旧 Sonar 名称应根据官方迁移计划更新。",
+          "source": "https://www.perplexity.ai/api-platform",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 Perplexity 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://www.perplexity.ai/api-platform",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "mistral-studio-developer",
+      "name": "Mistral Studio Developer API",
+      "officialHosts": [
+        "mistral.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的具体价格条件，保留待审核，不进行猜测。"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Studio 官方新手指南提供有限速率的 Free mode，生成开发 API Key 不要求先提供银行卡。",
+          "source": "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Studio 官方文档包含文本生成、Agent工具、文档、语音与RAG API，须按实际接口选择。",
+          "source": "https://docs.mistral.ai/studio",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 Mistral AI 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://docs.mistral.ai/studio",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "xai-grok-developer-api",
+      "name": "xAI Grok Developer API",
+      "officialHosts": [
+        "x.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "官方开发者价目表按模型、输入输出Token及图像视频单位分别计费，部分长上下文请求适用不同费率。",
+          "source": "https://docs.x.ai/developers/pricing",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "xAI 官方 API 价目表分别列出 Grok 文本、Imagine 图像视频与语音接口。",
+          "source": "https://docs.x.ai/developers/pricing",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "observed",
+          "text": "xAI 官方文档区分全球 API 地址 api.x.ai 与美国区域处理端点 us.api.x.ai/v1；美国端点只提供部分文本模型，Token费率高于全球端点。此项仅说明可选处理区域，不代表所有国家均可注册或付款。",
+          "source": "https://docs.x.ai/developers/advanced-api-usage/regions",
+          "checkedAt": "2026-11-04",
+          "scope": "regional_processing_scope"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "xAI 官方计费页支持团队预充值API credits；通过信用卡或银行转账购入，按资格申请月度账单，印度付款卡受特别限制。并不代表支持本地电子钱包。",
+          "source": "https://docs.x.ai/console/billing",
+          "checkedAt": "2026-11-04",
+          "scope": "official_payment_methods"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 xAI 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://docs.x.ai/developers/pricing",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "deepseek-developer-api",
+      "name": "DeepSeek API",
+      "officialHosts": [
+        "deepseek.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的具体价格条件，保留待审核，不进行猜测。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "DeepSeek 官方 API 快速开始列出 deepseek-flash 与 deepseek-v4-pro 等接口标识，并提供兼容 SDK 接入说明。",
+          "source": "https://api-docs.deepseek.com/quick_start/pricing-details-cny/",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 DeepSeek 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://api-docs.deepseek.com/quick_start/pricing-details-cny/",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "kimi-api-open-platform",
+      "name": "Kimi API 开放平台",
+      "officialHosts": [
+        "kimi.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Kimi API 官方帮助中心明确区分 API 按量计费与 Kimi 会员订阅，不可把会员套餐当作 API 价格。",
+          "source": "https://www.kimi.ai/help/kimi-api/api-overview",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Kimi API 官方资料提供文本生成、多轮对话、文档解析和多模态模型接入，实际型号应按当日模型清单。",
+          "source": "https://www.kimi.ai/help/kimi-api/api-overview",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 Moonshot AI 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://www.kimi.ai/help/kimi-api/api-overview",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "zhipu-bigmodel-platform-api",
+      "name": "智谱 BigModel 开放平台 API",
+      "officialHosts": [
+        "bigmodel.cn"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的具体价格条件，保留待审核，不进行猜测。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "智谱官方接口文档列出对话、图像、视频、语音、向量重排、知识库及智能体等 API 类别。",
+          "source": "https://docs.bigmodel.cn/cn/api/introduction",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 智谱 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://docs.bigmodel.cn/cn/api/introduction",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "minimax-open-platform-api",
+      "name": "MiniMax API Platform",
+      "officialHosts": [
+        "minimax.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "MiniMax 官方 API 价目表将语言模型Token、视频时长及语音字符等分开计价；套餐和按量使用不能混为一谈。",
+          "source": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的免费额度条件，保留待审核，不进行猜测。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "MiniMax 官方 API 价格页包含文本、视频、语音等模型和多种计费单位。",
+          "source": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 MiniMax 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://platform.minimax.io/subscribe/token-plan?tab=api-enterprise",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "elevenlabs-developer-api",
+      "name": "ElevenLabs ElevenAPI",
+      "officialHosts": [
+        "elevenlabs.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "ElevenLabs 官方 API 定价按文字字符、音频时长和不同模型分别收费，套餐含量和按量价格需分开显示。",
+          "source": "https://elevenlabs.io/pricing/api",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "ElevenLabs 官方定价页面列出免费使用入口，具体免费使用内容和商用权限需按各套餐核对。",
+          "source": "https://elevenlabs.io/pricing/api",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "ElevenAPI 官方页面同时提供语音合成、语音识别和其他音频模型的计费说明。",
+          "source": "https://elevenlabs.io/pricing/api",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的国家地区可用条件，保留待审核，不进行猜测。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的商用授权范围条件，保留待审核，不进行猜测。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "官方文档未提供可独立核实的可用付款渠道条件，保留待审核，不进行猜测。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "产品由 ElevenLabs 的官方产品或开发者站点发布；并未借此确认法律签约主体、上市状态或全球地区可用性。",
+          "source": "https://elevenlabs.io/pricing/api",
+          "checkedAt": "2026-11-04",
+          "scope": "publisher_brand_only"
+        }
+      }
+    }
+  ]
+}

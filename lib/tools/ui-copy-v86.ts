@@ -120,9 +120,19 @@ L('PDF 加水印','Add PDF watermark','PDFに透かしを追加','PDF 워터마�
 L('PDF 加页码','Add PDF page numbers','PDFにページ番号を追加','PDF 페이지 번호 추가','Numéroter les pages PDF','PDF-Seitennummern hinzufügen','Añadir números de página PDF','Adicionar números de página PDF','إضافة أرقام صفحات PDF'),
 L('PDF 裁边','Crop PDF','PDFをトリミング','PDF 자르기','Rogner le PDF','PDF zuschneiden','Recortar PDF','Cortar PDF','قص PDF'),
 L('PDF 扁平化','Flatten PDF','PDFをフラット化','PDF 병합 평면화','Aplatir le PDF','PDF reduzieren','Aplanar PDF','Achatar PDF','تسطيح PDF'),
+L('比较两份 PDF，快速查看金额、日期和条款差异，并下载对比报告。',
+'Compare two PDFs to find differences in amounts, dates, and clauses, and download a comparison report.',
+'2つのPDFの金額・日付・条項の違いを確認し、比較レポートをダウンロードできます。',
+'두 PDF의 금액, 날짜, 조항 차이를 확인하고 비교 보고서를 다운로드하세요.',
+'Comparez deux PDF pour repérer les différences de montants, dates et clauses, puis téléchargez le rapport.',
+'Vergleichen Sie zwei PDFs auf Unterschiede bei Beträgen, Daten und Vertragsklauseln und laden Sie den Bericht herunter.',
+'Compara dos PDF para ver diferencias en importes, fechas y cláusulas, y descarga el informe.',
+'Compare dois PDFs para encontrar diferenças em valores, datas e cláusulas e baixe o relatório.',
+'قارن ملفي PDF للاطلاع على الاختلافات في المبالغ والتواريخ والبنود، ثم نزّل تقرير المقارنة.'),
 L('PDF 比较','Compare PDFs','PDFを比較','PDF 비교','Comparer des PDF','PDFs vergleichen','Comparar PDF','Comparar PDFs','مقارنة ملفات PDF'),
 L('PDF 转 TXT','PDF to text','PDFからテキスト','PDF를 텍스트로','PDF en texte','PDF zu Text','PDF a texto','PDF para texto','PDF إلى نص'),
 L('PDF 转 Markdown','PDF to Markdown','PDFからMarkdown','PDF를 Markdown으로','PDF en Markdown','PDF zu Markdown','PDF a Markdown','PDF para Markdown','PDF إلى Markdown'),
+L('支持 PDF、JPG、PNG、WebP。GIF 动图不会被误转成单帧图片。','Supports PDF, JPG, PNG and WebP. Animated GIFs are never silently flattened.','PDF、JPG、PNG、WebPに対応。GIFアニメーションを静止画に変換しません。','PDF, JPG, PNG, WebP를 지원합니다. GIF 애니메이션을 정지 이미지로 변환하지 않습니다.','PDF, JPG, PNG et WebP sont pris en charge. Les animations GIF ne sont pas converties en images fixes.','PDF, JPG, PNG und WebP werden unterstützt. GIF-Animationen werden nicht in Standbilder umgewandelt.','Se admiten PDF, JPG, PNG y WebP. Los GIF animados no se convierten en imágenes estáticas.','Suporta PDF, JPG, PNG e WebP. Os GIFs animados não são convertidos em imagens estáticas.','يدعم PDF وJPG وPNG وWebP. لن يتم تحويل صور GIF المتحركة إلى صور ثابتة.'),
 ];
 export const TOOL_COPY_V86:Record<string,Copy>=Object.fromEntries([...rows,...detailCopyRows].map(row=>[row.zh,row]));
 export function extraToolCopy(lang:LingxiLang,source:string):string|undefined{

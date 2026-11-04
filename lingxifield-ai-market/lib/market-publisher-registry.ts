@@ -52,19 +52,19 @@ export const MARKET_COMPANIES=[...companiesMap.values()].map(p=>({...p,productId
 export const MARKET_COMPANY_PRODUCTS=productRows as readonly ProductIndexRow[];
 const byProduct=new Map(productRows.map(x=>[x.id,x]));
 export const MARKET_MODEL_OFFERS:readonly ModelPriceOffer[]=[
- ...API_RATES.map(r=>({
+ ...API_RATES.filter(r=>byProduct.has(r.platform)).map(r=>({
    id:'token:'+r.id,productId:r.platform,companyId:byProduct.get(r.platform)?.companyId||'',
    name:r.model,channel:'token_api' as const,billing:'per_million_tokens',currency:r.currency,
    priceInPerMillion:r.inPerMillion,priceOutPerMillion:r.outPerMillion,
    source:r.source,checkedAt:r.checkedAt
  })),
- ...VIDEO_RATES.map(r=>({
+ ...VIDEO_RATES.filter(r=>byProduct.has(r.platform)).map(r=>({
    id:'video:'+r.id,productId:r.platform,companyId:byProduct.get(r.platform)?.companyId||'',
    name:r.model,channel:'video' as const,billing:r.billing,currency:r.currency,
    pricePerSecond:r.perSecond,region:r.region,resolution:r.resolution,
    source:r.source,checkedAt:r.checkedAt
  })),
- ...API_UNIT_RATES.map(r=>({
+ ...API_UNIT_RATES.filter(r=>byProduct.has(r.platform)).map(r=>({
    id:'api_unit:'+r.id,productId:r.platform,companyId:byProduct.get(r.platform)?.companyId||'',
    name:r.name,channel:'api_unit' as const,billing:'per_unit',currency:r.currency,
    amount:r.price,unit:r.unit,source:r.source,checkedAt:r.checkedAt

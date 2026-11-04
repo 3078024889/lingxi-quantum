@@ -51,7 +51,9 @@ export async function middleware(request:NextRequest){
  }
  if(pathname.startsWith("/api/"))return NextResponse.next({request});
 
+ const localeTag=pathname.match(PUBLIC_LOCALE_PREFIX)?.[0].slice(1)||"zh-CN";
  let response=NextResponse.next({request});
+ response.headers.set("Content-Language",localeTag);
  if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
  if(requestHostname==="lingxifield.cn")response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
 
@@ -68,6 +70,7 @@ export async function middleware(request:NextRequest){
   setAll(cookiesToSet){
    cookiesToSet.forEach(({name,value})=>request.cookies.set(name,value));
    response=NextResponse.next({request});
+   response.headers.set("Content-Language",localeTag);
    if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
    if(requestHostname==="lingxifield.cn")response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
    cookiesToSet.forEach(({name,value,options})=>response.cookies.set(name,value,options));
