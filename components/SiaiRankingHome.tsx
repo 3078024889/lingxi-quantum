@@ -5,6 +5,7 @@ import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
 import {SIAI_ICON_BY_ID} from "@/lib/siai-brand-icon-ids";
 import MarketCostEstimator from "../lingxifield-ai-market/app/market-cost-estimator";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
+import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
 import {capabilityProfile} from "../lingxifield-ai-market/lib/capability-profiles";
 import {productAnswerHeadline} from "../lingxifield-ai-market/lib/market-result-headlines";
@@ -98,6 +99,7 @@ function BrandMark({id,name}:{id:string;name:string}){
 
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang],ui=SIAI_FACET_WORDS[lang];
+ const {currency}=usePreferredCurrency();
  const topRef=useRef<HTMLDivElement>(null),gridRef=useRef<HTMLDivElement>(null),dialogRef=useRef<HTMLDivElement>(null);
  const bottomRef=useRef<HTMLDivElement>(null);
  const [tableWidth,setTableWidth]=useState(1860);
@@ -320,7 +322,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </div>
   </nav>
  </section>
-  <details id="siai-cost-estimator" className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={lang==="zh"?"CNY":"USD"}/></div></details>
+  <details id="siai-cost-estimator" className="siai-home-cost-accordion"><summary>{label("视频／短剧和 API 费用计算器（点击展开）","Video, short-film and API cost estimator")}</summary><div className="siai-home-cost-inner"><MarketCostEstimator language={lang} currency={currency}/></div></details>
   <SiaiSearchDiscovery variant="ranking"/>
    {selectedRow&&<div className="siai-detail-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setExpanded(null);}}><div className="siai-detail-modal" role="dialog" aria-modal="true" aria-label={selectedRow.name+" · "+t.details} tabIndex={-1} ref={dialogRef}>{detailPanel(selectedRow)}</div></div>}
 
