@@ -381,8 +381,12 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   {(["nw","n","ne","e","se","s","sw","w"] as const).map(grip=><button key={grip} type="button" data-testid={"pdf-grip-"+grip}
     aria-label={(RESIZE_LABEL[lang]||RESIZE_LABEL.en)+" "+grip}
     onPointerDown={e=>startGesture(e,o.id,grip)} onTouchStart={e=>startTouchGesture(e,o.id,grip)} onPointerMove={handlePointerMove}
-    className="absolute z-30 h-6 w-6 rounded-full border-2 border-sky-600 bg-white shadow-sm touch-none sm:h-4 sm:w-4"
-    style={{left:grip.includes("w")?"0%":grip.includes("e")?"100%":"50%",top:grip.includes("n")?"0%":grip.includes("s")?"100%":"50%",transform:"translate(-50%,-50%)"}}/>)}
+    className={grip==="se"
+     ?"absolute z-30 flex h-11 w-11 items-center justify-center rounded-full bg-transparent touch-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-700 sm:h-4 sm:w-4 sm:border-2 sm:border-sky-600 sm:bg-white sm:shadow-sm"
+     :"absolute z-30 hidden h-4 w-4 rounded-full border-2 border-sky-600 bg-white shadow-sm touch-none sm:block"}
+    style={{left:grip.includes("w")?"0%":grip.includes("e")?"100%":"50%",top:grip.includes("n")?"0%":grip.includes("s")?"100%":"50%",transform:"translate(-50%,-50%)"}}>
+    {grip==="se"&&<span aria-hidden="true" className="pointer-events-none h-5 w-5 rounded-full border-2 border-sky-600 bg-white shadow-sm sm:hidden"/>}
+   </button>)}
   {!o.nativeImageTarget&&<button type="button" data-testid="pdf-grip-rotate" aria-label={lang==="zh"?"自由旋转":"Rotate freely"}
     onPointerDown={e=>startGesture(e,o.id,"rotate")} onTouchStart={e=>startTouchGesture(e,o.id,"rotate")} onPointerMove={handlePointerMove}
     className="absolute left-1/2 top-0 z-30 flex h-8 w-8 -translate-x-1/2 -translate-y-12 items-center justify-center rounded-full border-2 border-sky-600 bg-white text-sky-800 shadow touch-none">↻</button>}
