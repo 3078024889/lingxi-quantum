@@ -67,7 +67,7 @@ test('production creates a vector PDF from real bytes on both devices without mo
 for(const [site,url] of [
  ['Global SIAI','https://globalsiai.com/'],
  ['Global SIAI www','https://www.globalsiai.com/'],
- ['LINGXIFIELD CN','https://lingxifield.cn/']
+ // CN is tested with an actual Chrome/Pixel7 user agent below, not Playwright APIRequest.
 ] as const){
  test('real production custom domain: '+site,async({request})=>{
   const response=await request.get(url,{timeout:30000,maxRedirects:5});
@@ -75,3 +75,33 @@ for(const [site,url] of [
   expect((await response.text()).length,site+' nonempty HTML').toBeGreaterThan(200);
  });
 }
+
+
+test('CN domain in actual Chrome page versus API client is explicitly distinguished',async({page,request})=>{
+ test.setTimeout(60000);
+ const api=await request.get('https://lingxifield.cn/',{timeout:30000,maxRedirects:5});
+ const browser=await page.goto('https://lingxifield.cn/',{waitUntil:'domcontentloaded',timeout:30000});
+ console.log('CN_DOMAIN_PROBE',JSON.stringify({apiStatus:api.status(),browserStatus:browser?.status()??null,apiServer:api.headers()['server']??null,browserServer:browser?.headers()['server']??null}));
+ expect(browser?.status(),'Chrome/Pixel7 actual user-agent HTTP').toBe(200);
+ expect((await page.locator('body').innerText()).length).toBeGreaterThan(200);
+});
+
+test('all 124 indexed tool routes respond on the real production domain',async({request},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop-chromium','One origin HTTP route census is sufficient');
+ test.setTimeout(360000);
+ const {readFile}=await import('node:fs/promises');
+ const source=await readFile('lib/seo/global-seo.ts','utf8');
+ const start=source.indexOf('export const GLOBAL_TOOL_CATALOG=['),end=source.indexOf('] as const',start);
+ expect(start).toBeGreaterThan(0);expect(end).toBeGreaterThan(start);
+ const slugs=[...source.slice(start,end).matchAll(/\\{slug:"([a-z0-9-]+)"/g)].map(m=>m[1]);
+ expect(slugs.length,'catalogue count').toBe(124);
+ const bad:string[]=[];
+ for(const slug of slugs){
+  try{
+   const response=await request.get('/tools/'+slug+'?lang=en',{timeout:25000,maxRedirects:5});
+   if(response.status()!==200)bad.push(slug+':HTTP '+response.status());
+  }catch(error){bad.push(slug+':'+(error instanceof Error?error.message.slice(0,100):String(error)));}
+ }
+ console.log('PRODUCTION_ROUTE_CENSUS',JSON.stringify({registered:slugs.length,ok:slugs.length-bad.length,failed:bad}));
+ expect(bad,'All registered public tool routes must load').toEqual([]);
+});
