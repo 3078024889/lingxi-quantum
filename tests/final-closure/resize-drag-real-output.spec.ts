@@ -78,14 +78,14 @@ test("changing size, format, fit and output quality hides stale exports; PNG has
  await page.getByRole("button",{name:/^Stretch/}).click();
  const output=page.getByRole("combobox",{name:"Output format",exact:true});
  await output.selectOption("image/png");
- await expect(page.getByText("Quality",{exact:true})).toHaveCount(0);
+ await expect(page.locator("label").filter({hasText:/^Quality\s+\d+%$/})).toHaveCount(0);
  await page.getByRole("button",{name:/^Process 1 image/}).click();
  const save=page.getByRole("button",{name:"Save file",exact:true}).first();
  await expect(save).toBeVisible({timeout:20000});
  await page.getByRole("button",{name:"512×512",exact:true}).click();
  await expect(save).toHaveCount(0);
  await output.selectOption("image/jpeg");
- await expect(page.getByText("Quality",{exact:true})).toBeVisible();
+ await expect(page.locator("label").filter({hasText:/^Quality\s+\d+%$/})).toBeVisible();
  await page.getByRole("button",{name:/^Manual crop/}).click();
  await page.getByLabel("Allow enlargement",{exact:true}).uncheck();
  await expect(save).toHaveCount(0);
