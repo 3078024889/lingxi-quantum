@@ -1,0 +1,280 @@
+{
+  "batch": "B008",
+  "asOf": "2026-11-05",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "reviewNote": "官网入口及用途待编辑逐项核验；价格、额度、支付、地区、商用条款均不得推定或公开",
+  "products": [
+    {
+      "id": "notebooklm",
+      "name": "NotebookLM",
+      "company": "Google",
+      "category": "搜索研究",
+      "website": "https://notebooklm.google.com/",
+      "evidenceUrl": "https://notebooklm.google.com/",
+      "tasks": [
+        "资料研究",
+        "文档分析",
+        "音频概览"
+      ],
+      "keywords": [
+        "NotebookLM AI工具",
+        "NotebookLM价格",
+        "资料研究工具",
+        "文档分析工具",
+        "音频概览工具"
+      ],
+      "publisherGroupId": "google",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://notebooklm.google.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "google-flow",
+      "name": "Google Flow",
+      "company": "Google",
+      "category": "视频生成",
+      "website": "https://labs.google/fx/tools/flow",
+      "evidenceUrl": "https://labs.google/fx/tools/flow",
+      "tasks": [
+        "视频生成",
+        "电影创作",
+        "分镜"
+      ],
+      "keywords": [
+        "Google Flow AI工具",
+        "Google Flow价格",
+        "视频生成工具",
+        "电影创作工具",
+        "分镜工具"
+      ],
+      "publisherGroupId": "google",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://labs.google/fx/tools/flow",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "copilot-studio",
+      "name": "Microsoft Copilot Studio",
+      "company": "Microsoft",
+      "category": "企业智能体",
+      "website": "https://www.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-studio",
+      "evidenceUrl": "https://www.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-studio",
+      "tasks": [
+        "智能体开发",
+        "业务自动化",
+        "工具调用"
+      ],
+      "keywords": [
+        "Microsoft Copilot Studio AI工具",
+        "Microsoft Copilot Studio价格",
+        "智能体开发工具",
+        "业务自动化工具",
+        "工具调用工具"
+      ],
+      "publisherGroupId": "microsoft",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-studio",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "aws-q-developer",
+      "name": "Amazon Q Developer",
+      "company": "AWS",
+      "category": "编程开发",
+      "website": "https://aws.amazon.com/q/developer/",
+      "evidenceUrl": "https://aws.amazon.com/q/developer/",
+      "tasks": [
+        "编程助手",
+        "代码分析",
+        "开发代理"
+      ],
+      "keywords": [
+        "Amazon Q Developer AI工具",
+        "Amazon Q Developer价格",
+        "编程助手工具",
+        "代码分析工具",
+        "开发代理工具"
+      ],
+      "publisherGroupId": "amazon",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://aws.amazon.com/q/developer/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "adobe-express",
+      "name": "Adobe Express",
+      "company": "Adobe",
+      "category": "图片设计",
+      "website": "https://www.adobe.com/express/",
+      "evidenceUrl": "https://www.adobe.com/express/",
+      "tasks": [
+        "图片设计",
+        "营销素材",
+        "视频编辑"
+      ],
+      "keywords": [
+        "Adobe Express AI工具",
+        "Adobe Express价格",
+        "图片设计工具",
+        "营销素材工具",
+        "视频编辑工具"
+      ],
+      "publisherGroupId": "adobe",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.adobe.com/express/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "glean",
+      "name": "Glean",
+      "company": "Glean",
+      "category": "搜索研究",
+      "website": "https://www.glean.com/",
+      "evidenceUrl": "https://www.glean.com/",
+      "tasks": [
+        "企业搜索",
+        "知识库",
+        "智能体"
+      ],
+      "keywords": [
+        "Glean AI工具",
+        "Glean价格",
+        "企业搜索工具",
+        "知识库工具",
+        "智能体工具"
+      ],
+      "publisherGroupId": "glean",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.glean.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "jasper",
+      "name": "Jasper",
+      "company": "Jasper",
+      "category": "写作营销",
+      "website": "https://www.jasper.ai/",
+      "evidenceUrl": "https://www.jasper.ai/",
+      "tasks": [
+        "营销文案",
+        "内容创作",
+        "品牌写作"
+      ],
+      "keywords": [
+        "Jasper AI工具",
+        "Jasper价格",
+        "营销文案工具",
+        "内容创作工具",
+        "品牌写作工具"
+      ],
+      "publisherGroupId": "jasper",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.jasper.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "copy-ai",
+      "name": "Copy.ai",
+      "company": "Copy.ai",
+      "category": "写作营销",
+      "website": "https://www.copy.ai/",
+      "evidenceUrl": "https://www.copy.ai/",
+      "tasks": [
+        "营销写作",
+        "内容创作",
+        "工作流"
+      ],
+      "keywords": [
+        "Copy.ai AI工具",
+        "Copy.ai价格",
+        "营销写作工具",
+        "内容创作工具",
+        "工作流工具"
+      ],
+      "publisherGroupId": "copy-ai",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.copy.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "bolt-new",
+      "name": "Bolt.new",
+      "company": "StackBlitz",
+      "category": "编程开发",
+      "website": "https://bolt.new/",
+      "evidenceUrl": "https://bolt.new/",
+      "tasks": [
+        "编程建站",
+        "应用开发",
+        "网站原型"
+      ],
+      "keywords": [
+        "Bolt.new AI工具",
+        "Bolt.new价格",
+        "编程建站工具",
+        "应用开发工具",
+        "网站原型工具"
+      ],
+      "publisherGroupId": "stackblitz",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://bolt.new/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "vercel-v0",
+      "name": "v0",
+      "company": "Vercel",
+      "category": "编程开发",
+      "website": "https://v0.app/",
+      "evidenceUrl": "https://v0.app/",
+      "tasks": [
+        "网页生成",
+        "界面开发",
+        "编程建站"
+      ],
+      "keywords": [
+        "v0 AI工具",
+        "v0价格",
+        "网页生成工具",
+        "界面开发工具",
+        "编程建站工具"
+      ],
+      "publisherGroupId": "vercel",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://v0.app/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}
