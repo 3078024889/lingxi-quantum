@@ -1,0 +1,196 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LINGXIFIELD Global SIAI Reviewed Directory",
+    "version": "1.0.0",
+    "summary": "Official-source-reviewed SI/AI tool comparisons for partners",
+    "description": "Read-only, public distribution of approved SI/AI platform records. Research-only candidates are excluded. Missing evidence is represented as null. The list order does not imply performance, paid endorsement, or a comparative quality score."
+  },
+  "servers": [
+    {
+      "url": "https://lingxifield.com"
+    }
+  ],
+  "paths": {
+    "/api/public/siai-widget": {
+      "get": {
+        "operationId": "listReviewedSiaiPlatforms",
+        "summary": "Read the approved SIAI directory",
+        "description": "This public feed follows approved catalog updates after production publication. Entries may have null facts when no official source is available.",
+        "responses": {
+          "200": {
+            "description": "Reviewed platforms",
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Directory"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Temporary catalog unavailable"
+          }
+        }
+      }
+    },
+    "/siai/updates.xml": {
+      "get": {
+        "operationId": "getReviewedSiaiUpdates",
+        "summary": "Subscribe to SIAI profile review timestamps",
+        "description": "Review activity is not a declaration that a platform has launched a new product.",
+        "responses": {
+          "200": {
+            "description": "RSS 2.0 document",
+            "content": {
+              "application/rss+xml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Directory": {
+        "type": "object",
+        "required": [
+          "schemaVersion",
+          "publisher",
+          "title",
+          "site",
+          "total",
+          "rows"
+        ],
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "site": {
+            "type": "string",
+            "format": "uri"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Platform"
+            }
+          }
+        }
+      },
+      "Platform": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "website",
+          "reviewedAt",
+          "free",
+          "price",
+          "region",
+          "payment"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "website": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reviewedAt": {
+            "oneOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "free": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "price": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "region": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "payment": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
