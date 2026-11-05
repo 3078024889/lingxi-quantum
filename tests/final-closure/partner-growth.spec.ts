@@ -7,7 +7,7 @@ test("partner network displays embeddable SIAI and QR tools without login",async
  await expect(snippets.first()).toHaveValue(/lingxifield-v1\.js/);
  await expect(snippets.nth(1)).toHaveValue(/data-lx-widget="tools"/);
  await expect(page.locator('a[href="/siai/updates.xml"]')).toBeVisible();
- await expect(page.locator('a[href="/siai"]')).toBeVisible();
+ await expect(page.locator('main a[href="/siai"]').first()).toBeVisible();
 });
 
 test("external SIAI feed exports reviewed profiles and never source previews",async({request})=>{
