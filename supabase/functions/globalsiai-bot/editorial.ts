@@ -1,4 +1,4 @@
-import {QQ_EDITORIAL} from "./qq-editorial.ts";
+import {QQ_EDITORIAL, QQ_WEEKS, QQ_WEEKLY_TASKS} from "./qq-editorial.ts";
 /** Evidence-safe, seven-day rotating publication library. Claims requiring fresh verification must be reviewed before addition. */
 export type TelegramSlot = "discovery" | "tutorial" | "comparison" | "creation" | "community";
 export type PublicChannel = "telegram" | "qq";
@@ -305,11 +305,15 @@ export function buildPost(date:Date,slot:TelegramSlot,channel:PublicChannel,qqGr
  const [title,detail,path,action,question]=channel==="qq"
    ?QQ_EDITORIAL[qqGroup||"1074475201"][slot][idx]
    :data[slot][idx];
+ const activeGroup=qqGroup||"1074475201";
+ const dayNumber=Math.floor((new Date(singaporeDay(date)+"T00:00:00Z").getTime()-Date.UTC(2026,10,5))/86400000);
+ const cycle=Math.floor((((dayNumber%28)+28)%28)/7);
+ const weekNote=channel==="qq"?"\\n【"+QQ_WEEKS[cycle]+"】"+QQ_WEEKLY_TASKS[activeGroup][slot][cycle]:"";
  const prefix=channel==="qq"
    ? (qqGroup==="601549887"?"🌐 全球 SIAI 排行榜｜社区发现":"✨ 灵犀场 LINGXIFIELD｜每日实用技巧")
    : "🌐 全球 SIAI｜"+({discovery:"早间发现",tutorial:"实用教程",comparison:"工具对比",creation:"智能创作",community:"晚间问答"} as const)[slot];
  const campaign=channel==="qq"&&qqGroup?"qq_"+qqGroup+"_"+slot:"siai_"+slot;
- const lines=[prefix,"",`【${title}】`,detail,"",`${action}：`,
+ const lines=[prefix,"",`【${channel==="qq"?QQ_WEEKS[cycle]+" · ":""}${title}】`,detail+weekNote,"",`${action}：`,
    "国际站："+trackedLink(path,campaign,slot,channel),
    "国内站："+trackedCNLink(path,campaign,slot,channel),"",question];
  if(channel==="qq"&&slot==="community") lines.push("","全球 SIAI 交流群：https://t.me/globalsiai");
