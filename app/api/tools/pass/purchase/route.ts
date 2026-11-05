@@ -8,7 +8,7 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 export const runtime="nodejs";
 const NO_STORE={"Cache-Control":"private, no-store, max-age=0"};
 export async function POST(req:NextRequest){
- if(process.env.LINGXIFIELD_TOOL_PASS_ENABLED!=="true"||offers.active!==true)
+ if(process.env.LINGXIFIELD_TOOL_PASS_ENABLED!=="true"||!offers.active)
   return NextResponse.json({error:"TOOL_PASS_NOT_LIVE"},{status:503,headers:NO_STORE});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403,headers:NO_STORE});
  const {data:{user}}=await createClient().auth.getUser();
