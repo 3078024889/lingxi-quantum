@@ -14,6 +14,7 @@ on:
       - 'lib/seo/page-metadata.ts'
       - 'lingxifield-ai-market/app/(default)/layout.tsx'
       - 'lingxifield-ai-market/app/[lang]/platform/[id]/page.tsx'
+      - 'lingxifield-ai-market/app/[lang]/layout.tsx'
       - 'lingxifield-ai-market/lib/share-card.ts'
       - 'miniapp/utils/share.js'
       - 'miniapp/pages/share/index.js'
