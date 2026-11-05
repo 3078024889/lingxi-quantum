@@ -3,7 +3,9 @@ import ToolUiText from "@/components/tools/ToolUiText";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 
 type Field = { any: boolean; values: Set<number> };
 
@@ -114,20 +116,20 @@ export default function CronParserWorkbench() {
   const [expression, setExpression] = useState("0 9 * * 1-5");
   const [count, setCount] = useState(10);
 
-  const parsed = useMemo(() => {
-    try {
-      return {
-        ok: true as const,
-        runs: nextRuns(expression, Math.max(1, Math.min(50, count))),
-        description: describe(expression),
-      };
-    } catch (cause) {
-      return {
-        ok: false as const,
-        error: cause instanceof Error ? cause.message : String(cause),
-      };
-    }
-  }, [expression, count]);
+  const {lang}=useLingxiLang();
+  const [parsed,setParsed]=useState<{ok:true;runs:Date[];description:string}|{ok:false;error:string}|null>(null);
+  const [busy,setBusy]=useState(false);
+  async function run(){
+    if(busy)return;
+    setBusy(true);setParsed(null);
+    try{
+      await claimToolStart("cron-parser",1);
+      const runs=nextRuns(expression,Math.max(1,Math.min(50,count)));
+      setParsed({ok:true,runs,description:describe(expression)});
+    }catch(e){
+      setParsed({ok:false,error:e instanceof ToolAccessError?toolAccessMessage(lang,e.code):e instanceof Error?e.message:String(e)});
+    }finally{setBusy(false)}
+  }
 
   return (
     <div className="space-y-4">
@@ -136,7 +138,7 @@ export default function CronParserWorkbench() {
           <ToolUiText text="Cron 表达式" />
           <input
             value={expression}
-            onChange={(event) => setExpression(event.target.value)}
+            onChange={(event) => {setExpression(event.target.value);setParsed(null)}}
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-3 font-mono"
           />
         </label>
@@ -147,7 +149,7 @@ export default function CronParserWorkbench() {
             min={1}
             max={50}
             value={count}
-            onChange={(event) => setCount(Number(event.target.value) || 10)}
+            onChange={(event) => {setCount(Number(event.target.value) || 10);setParsed(null)}}
             className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-3"
           />
         </label>
@@ -163,7 +165,11 @@ export default function CronParserWorkbench() {
         <ToolUiText text="支持标准 5 段 Cron 的" /> <code>*</code><ToolUiText text="、列表、范围和步长，例如" /> <code>*/15 9-18 * * 1-5</code><ToolUiText text="。结果按浏览器本地时区计算；不把 Quartz 6/7 段语法冒充成已支持。" />
       </p>
 
-      {parsed.ok ? (
+      <button type="button" disabled={busy} onClick={()=>void run()}
+        className="rounded-xl bg-[var(--lx-ink)] px-5 py-3 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">
+        {{zh:"开始解析",en:"Run",ja:"解析する",ko:"실행",fr:"Exécuter",de:"Ausführen",es:"Ejecutar",pt:"Executar",ar:"تنفيذ"}[lang]||"Run"}
+      </button>
+      {parsed?.ok ? (
         <>
           <div className="rounded-xl bg-[var(--lx-soft)] p-4 text-sm">
             <ToolUiText text={parsed.description}/>
@@ -188,11 +194,11 @@ export default function CronParserWorkbench() {
             </p>
           )}
         </>
-      ) : (
+      ) : parsed ? (
         <p className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">
           <ToolUiText text="无法解析：" />{parsed.error}
         </p>
-      )}
+      ) : null}
     </div>
   );
 }
