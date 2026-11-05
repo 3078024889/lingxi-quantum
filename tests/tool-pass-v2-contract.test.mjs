@@ -86,3 +86,21 @@ test("coverage matches all existing main practical-tool registries, including on
  assert(source.has("ocr"),"OCR must be available for first-use policy");
  assert.deepEqual([...covered].sort(),[...source].sort(),"Added/removed real tool ID needs a policy classification");
 });
+
+test("generic file workbench checks entitlement BEFORE processing; export is not the charge boundary",()=>{
+ const code=read("components/tools/ToolWorkbench.tsx");
+ const start=code.indexOf("authorizeToolPassStart(tool.slug,crypto.randomUUID())");
+ const process=code.indexOf("const out = await runFileTool(tool, files, {");
+ assert(start>=0&&process>=0&&start<process,"processing started before first-use entitlement claim");
+ const client=read("lib/tools/commerce/tool-pass-start-client.ts");
+ assert(client.includes('NEXT_PUBLIC_LINGXIFIELD_TOOL_PASS_ENABLED'));
+ assert(client.includes('return {ok:true,reason:"legacy"}'));
+ assert(client.includes('/api/tools/pass/claim'));
+});
+test("all nine public UI languages have pass copy and nonrenewal disclosure",()=>{
+ const i18n=read("lib/tools/commerce/tool-pass-i18n.ts");
+ for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"])
+  assert(i18n.includes(" "+lang+":{"),"missing "+lang+" tool pass UI");
+ for(const key of ["firstFree","useStarts","noAutoRenew","separateCost"])
+  assert(i18n.includes(key+":"),"missing disclosure "+key);
+});
