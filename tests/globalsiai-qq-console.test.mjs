@@ -12,8 +12,9 @@ test("all three group pages now return actual UTF-8 text instead of unsupported 
     const r=await handler(new Request(`https://example.supabase.co/functions/v1/globalsiai-qq-console?group=${id}&day=2026-11-05`));
     assert.equal(r.status,200);
     assert.match(r.headers.get("content-type"),/text\/plain; charset=utf-8/);
-    const body=await r.text();
-    assert.equal(body.codePointAt(0),0xfeff);
+    const raw=new Uint8Array(await r.arrayBuffer());
+    assert.deepEqual(Array.from(raw.slice(0,3)),[0xef,0xbb,0xbf]);
+    const body=new TextDecoder("utf-8").decode(raw);
     assert.match(body,new RegExp(id));
     assert.match(body,/国际站：https:\/\/lingxifield\.com/);
     assert.match(body,/国内站：https:\/\/lingxifield\.cn/);
