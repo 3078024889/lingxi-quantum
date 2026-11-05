@@ -1,4 +1,4 @@
-import {buildPost, singaporeDay, singaporeHour, SLOT_HOURS, type TelegramSlot} from "./editorial.ts";
+import {buildPost, singaporeDay, singaporeHour, SLOT_HOURS, trackedLink, trackedCNLink, type TelegramSlot} from "./editorial.ts";
 
 /**
  * Global SIAI Telegram worker on the existing Supabase Free project.
@@ -76,11 +76,24 @@ function spam(text:string){
  if(!links.length)return false;
  return /稳赚不赔|保证盈利|保本高收益|私聊.{0,12}(?:转账|返利)|(?:助记词|私钥).{0,20}(?:提交|验证|填写)/i.test(text);
 }
+function pairLinks(path:string,campaign:string):string{
+ return [
+  "国际站："+trackedLink(path,campaign,"community","telegram"),
+  "国内站："+trackedCNLink(path,campaign,"community","telegram"),
+ ].join("\n");
+}
 function answer(cmd:string){
  switch(cmd.trim().split(/\s+/)[0]?.toLowerCase().replace(/@globalsiai_officialbot$/,"")){
-  case "/start":case "/help":return "欢迎来到全球 SIAI 排行榜官方社区！\n免费在线工具：https://lingxifield.com/tools?utm_source=telegram&utm_medium=community&utm_campaign=bot_help\n全球工具比较：https://lingxifield.com/siai?utm_source=telegram&utm_medium=community&utm_campaign=bot_help\n官方群组：https://t.me/globalsiai\n请勿发广告、诈骗链接或账号密钥。";
-  case "/tools":return "灵犀场在线工具：https://lingxifield.com/tools?utm_source=telegram&utm_medium=community&utm_campaign=bot_tools";
-  case "/ranking":return "全球 SIAI 排行榜：https://lingxifield.com/siai?utm_source=telegram&utm_medium=community&utm_campaign=bot_ranking";
+  case "/start":case "/help":
+   return [
+    "欢迎来到全球 SIAI 排行榜官方社区！",
+    "📄 灵犀场免费工具：",pairLinks("/tools","bot_help_tools"),
+    "🌐 全球 SIAI 排行榜：",pairLinks("/siai","bot_help_ranking"),
+    "官方群组：https://t.me/globalsiai",
+    "请勿发广告、诈骗链接或账号密钥。",
+   ].join("\n");
+  case "/tools":return "灵犀场在线工具：\n"+pairLinks("/tools","bot_tools");
+  case "/ranking":return "全球 SIAI 排行榜：\n"+pairLinks("/siai","bot_ranking");
   case "/community":return "官方 Telegram 群组：https://t.me/globalsiai";
   default:return null;
  }
@@ -198,7 +211,7 @@ async function webhook(req:Request,ctx:NonNullable<ReturnType<typeof config>>){
   try{
    if(remove)await telegram(ctx.token,"deleteMessage",{chat_id:m.chat.id,message_id:m.message_id});
    else await telegram(ctx.token,"sendMessage",{
-    chat_id:m.chat.id,text:command||"欢迎加入全球 SIAI 社区！\n全球智能工具比较：https://lingxifield.com/siai\n在线工具：https://lingxifield.com/tools\n请文明交流，不发布广告或诈骗信息。",
+    chat_id:m.chat.id,text:command||["欢迎加入全球 SIAI 社区！","全球智能工具比较：",pairLinks("/siai","welcome_ranking"),"在线实用工具：",pairLinks("/tools","welcome_tools"),"请文明交流，不发布广告或诈骗信息。"].join("\n"),
     link_preview_options:{is_disabled:true},
    });
    await status(ctx,key,"delivered");
