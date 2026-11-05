@@ -1,0 +1,63 @@
+name: Verify unified website and WeChat sharing artwork
+
+on:
+  push:
+    branches: ['audit/siai-catalog-scale-20261105']
+    paths:
+      - 'public/og-lingxifield-20261105.jpg'
+      - 'miniapp/assets/share-lingxifield-20261105.jpg'
+      - 'lib/share-image.ts'
+      - 'app/layout.tsx'
+      - 'app/siai/page.tsx'
+      - 'app/[locale]/siai/page.tsx'
+      - 'miniapp/utils/share.js'
+      - 'miniapp/pages/share/index.js'
+      - 'scripts/test-share-metadata.mjs'
+      - 'tests/share-assets-20261105.test.mjs'
+      - '.github/workflows/verify-share-20261105.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-share-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-website-and-miniprogram:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify exact artwork bytes, deleted old images, all clients and paths
+        run: node --test tests/share-assets-20261105.test.mjs
+      - name: Verify mini-program packaging and native share
+        run: pnpm audit:mini-program
+      - name: Build exact commit
+        run: pnpm build
+      - name: Crawl actual Next.js OG and Twitter tags on 7 web routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          pnpm exec next start -p 3042 > /tmp/lingxi-share-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true; tail -60 /tmp/lingxi-share-server.log' EXIT
+          ready=0
+          for attempt in $(seq 1 45); do
+            if curl -fsS -o /dev/null http://127.0.0.1:3042/; then ready=1; break; fi
+            sleep 2
+          done
+          if [ "$ready" -ne 1 ]; then echo 'Next share test server did not start'; exit 1; fi
+          TEST_BASE_URL=http://127.0.0.1:3042 node scripts/test-share-metadata.mjs
