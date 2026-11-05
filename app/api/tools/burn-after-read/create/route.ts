@@ -6,6 +6,7 @@ import {isSameOriginMutation} from '@/lib/sasi/request-security';
 import {createBurnRevealToken} from '@/lib/tools/burn-link-token';
 import {enforceAbuseGuard} from '@/lib/security/abuse-guard';
 import {foodRequestIpHash} from '@/lib/tools/food/request-identity';
+import {toolPassBackendReady} from '@/lib/tools/commerce/tool-server-receipt';
 export const runtime='nodejs';
 const TTL=new Set([10,60,1440,4320,10080]),VIEWS=new Set([1,3,5]),DUR=new Set([5,10,30,60]),MODES=new Set(['once','timed','limited','fast']);
 export async function POST(req:NextRequest){
@@ -20,7 +21,33 @@ export async function POST(req:NextRequest){
  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
  const {data:{user}}=await createClient().auth.getUser(),admin=createAdminClient();
  const fingerprint=createHash('sha256').update(JSON.stringify({ciphertext,iv,ttl,mode,views,duration})).digest('hex');
- const result=await admin.rpc('create_metered_burn_note',{p_id:id,p_user_id:user?.id||null,p_ip_hash:foodRequestIpHash(req),p_fingerprint:fingerprint,p_ciphertext:ciphertext,p_iv:iv,p_ttl_minutes:ttl,p_mode:mode,p_max_views:views,p_duration:duration});
+ let result;
+ if(toolPassBackendReady()){
+  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
+  if(body.accessRequestId){
+   result=await admin.rpc("lingxi_create_pass_burn_note",{
+    p_id:id,p_user_id:user.id,p_access_request_id:body.accessRequestId,
+    p_fingerprint:fingerprint,p_ciphertext:ciphertext,p_iv:iv,
+    p_ttl_minutes:ttl,p_mode:mode,p_max_views:views,p_duration:duration
+   });
+  }else{
+   // Fulfill an existing paid note only. Do not create a fresh legacy export reservation.
+   const {data:legacy,error:legacyError}=await admin.from("tool_export_requests")
+    .select("id").eq("id",id).eq("tool_id","burn-after-read")
+    .eq("user_id",user.id).eq("state","paid").maybeSingle();
+   if(legacyError)return NextResponse.json({error:"CREATE_FAILED"},{status:503});
+   if(!legacy)return NextResponse.json({error:"SINGLE_TOOL_CHECKOUT_RETIRED"},{status:410});
+   result=await admin.rpc("create_metered_burn_note",{
+    p_id:id,p_user_id:user.id,p_ip_hash:foodRequestIpHash(req),p_fingerprint:fingerprint,
+    p_ciphertext:ciphertext,p_iv:iv,p_ttl_minutes:ttl,p_mode:mode,p_max_views:views,p_duration:duration
+   });
+  }
+ }else{
+  result=await admin.rpc("create_metered_burn_note",{
+   p_id:id,p_user_id:user?.id||null,p_ip_hash:foodRequestIpHash(req),p_fingerprint:fingerprint,
+   p_ciphertext:ciphertext,p_iv:iv,p_ttl_minutes:ttl,p_mode:mode,p_max_views:views,p_duration:duration
+  });
+ }
  if(result.error)return NextResponse.json({error:'CREATE_FAILED'},{status:result.error.message?.includes('EXPORT_REQUEST_MISMATCH')?409:503});
  const note=result.data as {state:string;id?:string;expires_at?:string}|null;
  if(note?.state==='payment_required')return NextResponse.json({error:'EXPORT_PAYMENT_REQUIRED'},{status:402});

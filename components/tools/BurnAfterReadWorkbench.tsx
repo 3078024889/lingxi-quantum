@@ -16,7 +16,7 @@ function b64url(bytes:Uint8Array){let s="";bytes.forEach(b=>s+=String.fromCharCo
 type Mode="once"|"timed"|"limited"|"fast";
 type PreparedFile={id:string;name:string;size:number;type:string;uploadUrl:string};
 type TextTask={key:string;body:{ciphertext:string;iv:string;ttlMinutes:number;mode:Mode;maxViews:number;viewDurationSeconds:number|null}};
-type PendingTextTask={id:string;signature:string;blob:Blob;task:TextTask};
+type PendingTextTask={id:string;signature:string;blob:Blob;task:TextTask;accessRequestId?:string};
 
 export default function BurnAfterReadWorkbench(){
  const toolUiCopy=useToolUiCopy();
@@ -51,10 +51,10 @@ export default function BurnAfterReadWorkbench(){
    if(textTask.current?.signature===signature){await deliverText(textTask.current);return}
    setBusy(true);setError('');
    try{
-    await claimToolStart('burn-after-read',1);
+    const ticket=await claimToolStart('burn-after-read',1);
     const enc=await encryptedText();
     const task:TextTask={key:enc.key,body:{ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==='limited'?views:1,viewDurationSeconds:mode==='fast'?duration:null}};
-    const pending={id:crypto.randomUUID(),signature,task,blob:new Blob([JSON.stringify(task)],{type:'application/json'})};textTask.current=pending;
+    const pending:PendingTextTask={id:crypto.randomUUID(),signature,task,blob:new Blob([JSON.stringify(task)],{type:'application/json'}),accessRequestId:ticket.requestId};textTask.current=pending;
     await deliverText(pending);
    }catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):deliveryText(lang,'failed'))}finally{setBusy(false)}
  }
@@ -62,7 +62,7 @@ export default function BurnAfterReadWorkbench(){
    setBusy(true);setError('');setLink('');setRecoverText(pending);
    try{
     await ensureBurnNoteAccess(pending.blob,pending.id);
-    const r=await fetch("/api/tools/burn-after-read/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...pending.task.body,exportRequestId:pending.id})});
+    const r=await fetch("/api/tools/burn-after-read/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...pending.task.body,exportRequestId:pending.id,accessRequestId:pending.accessRequestId})});
     const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
     if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
     setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${pending.task.key}&t=${encodeURIComponent(String(d.token))}`);setText('');textTask.current=null;setRecoverText(null);await deletePaidTaskDraft(pending.id);
