@@ -126,6 +126,8 @@ create table if not exists public.tool_pass_orders_v2 (
   amount_minor bigint not null check (amount_minor>0),
   active_source_minor bigint not null check (active_source_minor>=0),
   legacy_source_minor bigint not null check (legacy_source_minor>=0),
+  active_refundable_source_minor bigint not null check (active_refundable_source_minor>=0 and active_refundable_source_minor<=active_source_minor),
+  legacy_refundable_source_minor bigint not null check (legacy_refundable_source_minor>=0 and legacy_refundable_source_minor<=legacy_source_minor),
   constraint tool_pass_split_matches_charge check(active_source_minor+legacy_source_minor=amount_minor),
   starts_at timestamptz not null,
   ends_at timestamptz not null check (ends_at>starts_at),
@@ -170,6 +172,12 @@ declare
  charge jsonb;
  active_source_minor bigint;
  legacy_source_minor bigint;
+ active_refundable_before bigint;
+ legacy_refundable_before bigint;
+ active_refundable_after bigint;
+ legacy_refundable_after bigint;
+ active_refundable_delta bigint;
+ legacy_refundable_delta bigint;
 begin
  if p_user_id is null or p_request_id is null or p_currency not in ('CNY','USD') then
   return jsonb_build_object('ok',false,'error','INVALID_PURCHASE');end if;
@@ -195,6 +203,17 @@ begin
  select greatest(now(),coalesce(max(ends_at),now())) into t_start
   from public.tool_pass_orders_v2 where user_id=p_user_id and state='active' and ends_at>now();
  t_end:=t_start+make_interval(days=>plan_days);
+ -- Keep exactly the lock order used by charge_sasi_usage_v49, so concurrent
+ -- charges cannot change refundable balances between these snapshots.
+ if p_currency='CNY' then
+  insert into public.sasi_wallets(user_id) values(p_user_id) on conflict do nothing;
+  select refundable_points into active_refundable_before from public.sasi_wallets where user_id=p_user_id for update;
+  select refundable_fen into legacy_refundable_before from public.ai_wallets where user_id=p_user_id for update;
+ else
+  insert into public.sasi_usd_wallets(user_id) values(p_user_id) on conflict do nothing;
+  select refundable_cents into active_refundable_before from public.sasi_usd_wallets where user_id=p_user_id for update;
+  select refundable_cents into legacy_refundable_before from public.ai_usd_wallets where user_id=p_user_id for update;
+ end if;
  charge:=public.charge_sasi_usage_v49(
   p_user_id,p_currency,amount_minor,'toolpass-v2:'||p_request_id::text,
   'tool-pass-purchase',jsonb_build_object('sku',p_sku,'durationDays',plan_days)
@@ -215,8 +234,24 @@ begin
     or active_source_minor+legacy_source_minor<>amount_minor then
   raise exception 'TOOL_PASS_SOURCE_SPLIT_MISMATCH' using errcode='P0001';
  end if;
- insert into public.tool_pass_orders_v2(request_id,user_id,sku,currency,amount_minor,active_source_minor,legacy_source_minor,starts_at,ends_at)
- values (p_request_id,p_user_id,p_sku,p_currency,amount_minor,active_source_minor,legacy_source_minor,t_start,t_end);
+ if p_currency='CNY' then
+  select refundable_points into active_refundable_after from public.sasi_wallets where user_id=p_user_id;
+  select refundable_fen into legacy_refundable_after from public.ai_wallets where user_id=p_user_id;
+ else
+  select refundable_cents into active_refundable_after from public.sasi_usd_wallets where user_id=p_user_id;
+  select refundable_cents into legacy_refundable_after from public.ai_usd_wallets where user_id=p_user_id;
+ end if;
+ active_refundable_delta:=coalesce(active_refundable_before,0)-coalesce(active_refundable_after,0);
+ legacy_refundable_delta:=coalesce(legacy_refundable_before,0)-coalesce(legacy_refundable_after,0);
+ if active_refundable_delta<0 or legacy_refundable_delta<0
+    or active_refundable_delta>active_source_minor
+    or legacy_refundable_delta>legacy_source_minor then
+  raise exception 'TOOL_PASS_REFUNDABLE_SOURCE_MISMATCH' using errcode='P0001';
+ end if;
+ insert into public.tool_pass_orders_v2(request_id,user_id,sku,currency,amount_minor,active_source_minor,legacy_source_minor,
+   active_refundable_source_minor,legacy_refundable_source_minor,starts_at,ends_at)
+ values (p_request_id,p_user_id,p_sku,p_currency,amount_minor,active_source_minor,legacy_source_minor,
+   active_refundable_delta,legacy_refundable_delta,t_start,t_end);
  return jsonb_build_object('ok',true,'alreadyPurchased',false,'requestId',p_request_id,
   'sku',p_sku,'currency',p_currency,'chargedMinor',amount_minor,'startsAt',t_start,'endsAt',t_end);
 end $$;
