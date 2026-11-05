@@ -31,19 +31,20 @@ export default function FoodCalorieWorkbench(){
  async function load(input:File[]){if(input.length>20||input.some(f=>!f.type.startsWith('image/')||f.size>15*1024*1024)){setError(t(lang,'fileError'));return;}const accepted=input.slice(0,mode==='single'?1:20);try{await claimToolStart('food-calorie',accepted.length);startClaimed.current=true;setError('');setFiles(accepted);setRevision(n=>n+1);}catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,'fileError'));}}
  return <section dir={lang==='ar'?'rtl':'ltr'} className="space-y-5"><p className="text-sm leading-7 text-[var(--lx-muted)]">{foodBillingText(lang,'pricing')}</p><RecoveredFoodAnalysis lang={lang}/><nav aria-label={t(lang,'custom')} className="grid grid-cols-3 gap-2">{(['single','batch','custom'] as const).map((m,i)=><button type="button" key={m} disabled={!hydrated} aria-pressed={mode===m} className={mode===m?primary:button} onClick={()=>{setMode(m);startClaimed.current=false;setFiles([]);setRevision(n=>n+1);setError('')}}>{t(lang,['upload','batch','custom'][i])}</button>)}</nav>
  {mode!=='custom'&&<label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();void load(Array.from(e.dataTransfer.files))}} className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-6 text-center"><span aria-hidden="true" className="text-3xl">＋</span><b>{t(lang,'drop')}</b><span className="text-sm text-[var(--lx-muted)]">{t(lang,'confirmed')}</span><input aria-label={t(lang,'upload')} type="file" accept="image/*" multiple={mode==='batch'} className="max-w-full text-sm" onChange={e=>{void load(Array.from(e.target.files||[]));e.target.value=''}}/></label>}
- {error&&<p role="alert">{error}</p>}{(mode==='custom'||files.length>0)&&<MealWorkspace key={`${mode}-${revision}`} lang={lang} files={files} manual={mode==='custom'}/>}
+ {error&&<p role="alert">{error}</p>}{(mode==='custom'||files.length>0)&&<MealWorkspace key={`${mode}-${revision}`} lang={lang} files={files} manual={mode==='custom'} hasUploadClaim={startClaimed.current}/>}
  </section>;
 }
 type Prepared={id:string;quantity:number;mode:'image'|'custom';freeEligible:boolean;completed?:boolean};
 const savedAnalysis='lingxifield:food-analysis:v19';
-function MealWorkspace({lang,files,manual}:{lang:LingxiLang;files:File[];manual:boolean}){
+function MealWorkspace({lang,files,manual,hasUploadClaim}:{lang:LingxiLang;files:File[];manual:boolean;hasUploadClaim:boolean}){
+  const claimed=useRef(hasUploadClaim);
  const[groups,setGroups]=useState<Selection[][]>(()=>Array.from({length:Math.max(1,files.length)},()=>[]));
  const[prepared,setPrepared]=useState<Prepared|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState('');
  const requestId=useRef('');
  const all=groups.flat(),valid=all.length>0&&all.length<=30&&all.every(x=>portionValue(x.grams)!==null)&&groups.every(x=>x.length>0);
- function change(i:number,next:Selection[]){requestId.current='';setGroups(xs=>xs.map((x,j)=>j===i?next:x));setMsg('');}
+ function change(i:number,next:Selection[]){if(manual)claimed.current=false;requestId.current='';setGroups(xs=>xs.map((x,j)=>j===i?next:x));setMsg('');}
  async function prepare(){
-  try{if(!startClaimed.current){await claimToolStart("food-calorie",1);startClaimed.current=true;}}catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,"fileError"));return;}
+  try{if(!claimed.current){await claimToolStart("food-calorie",1);claimed.current=true;}}catch(e){setMsg(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,"fileError"));return;}
   if(!valid||busy)return;setBusy(true);setMsg('');
   try{
    const session=manual?null:await createFoodImageSession(files);
