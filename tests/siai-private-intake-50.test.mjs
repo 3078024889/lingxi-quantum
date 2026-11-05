@@ -79,7 +79,7 @@ test("B006-B010 evidence packs distinguish sourced observations from deliberate 
   assert.equal(observed+missing,70);
   totals.push({observed,missing});
  }
- assert.deepEqual(totals,[{observed:34,missing:36},{observed:41,missing:29},{observed:31,missing:39},{observed:0,missing:70},{observed:0,missing:70}]);
+ assert.deepEqual(totals,[{observed:34,missing:36},{observed:41,missing:29},{observed:31,missing:39},{observed:6,missing:64},{observed:3,missing:67}]);
 });
 
 test("all 32 curated product fact dimensions retain explicit official sources",()=>{
