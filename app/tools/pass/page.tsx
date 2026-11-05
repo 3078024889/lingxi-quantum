@@ -26,11 +26,12 @@ export default function AllToolsPassPage(){
  const [currency,setCurrency]=useState<Currency>("CNY");
  const [expiry,setExpiry]=useState<string|null>(null);
  const [busy,setBusy]=useState(false);
+ const [available,setAvailable]=useState(false);
  const [message,setMessage]=useState("");
  const [request,setRequest]=useState<{sku:AllToolsPassSku;id:string}|null>(null);
  async function refresh(){
   const r=await fetch("/api/tools/pass?currency="+currency,{cache:"no-store"});
-  if(r.ok){const data=await r.json();setExpiry(data.expiresAt||null);}
+  if(r.ok){const data=await r.json();setExpiry(data.expiresAt||null);setAvailable(data.available===true);}else setAvailable(false);
  }
  useEffect(()=>{void refresh()},[currency]);
  async function buy(sku:AllToolsPassSku){
@@ -71,6 +72,7 @@ export default function AllToolsPassPage(){
      className="w-full rounded-xl border border-current px-3 py-3 text-sm font-semibold disabled:opacity-50">{busy?c.processing:c.buy}</button>
    </section>)}
   </div>
+  {!available&&<p role="status" className="mt-5 rounded-xl border p-3 text-sm">{c.unavailable}</p>}
   <p className="mt-5 text-sm">{c.confirmation}</p>
   {message&&<p role="status" className="mt-3 rounded-xl border px-4 py-3 text-sm">{message}</p>}
   <button type="button" onClick={()=>void refresh()} className="mt-4 text-sm underline">{c.refresh}</button>
