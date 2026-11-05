@@ -7,6 +7,7 @@ import {publicToolBySlug} from "@/lib/tools/platform/tool-registry";
 import {trustedClientIp} from "@/lib/security/trusted-client-ip";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -21,6 +22,7 @@ function clientHash(req:NextRequest){
 }
 function validTool(id:string){const simple=getTool(id);return Boolean((simple&&simple.status==="live")||publicToolBySlug(id));}
 export async function POST(req:NextRequest){
+ if(!toolPassBackendReady())return NextResponse.json({error:"TOOL_PASS_BACKEND_NOT_READY"},{status:503});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  if(Number(req.headers.get("content-length")||0)>4096)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
  const {data:{user}}=await createClient().auth.getUser();
@@ -47,6 +49,7 @@ export async function POST(req:NextRequest){
  return NextResponse.json(data,{headers:{"Cache-Control":"private,no-store"}});
 }
 export async function GET(req:NextRequest){
+ if(!toolPassBackendReady())return NextResponse.json({error:"TOOL_PASS_BACKEND_NOT_READY"},{status:503});
  const {data:{user}}=await createClient().auth.getUser();
  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
  const toolSlug=new URL(req.url).searchParams.get("toolSlug")||"";

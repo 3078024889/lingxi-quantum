@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - feature/unified-tool-pass-daily-one-20261105
+      - 'feature/unified-tool-pass-*'
+      - 'feature/toolpass-*'
   workflow_dispatch:
 permissions:
   contents: read

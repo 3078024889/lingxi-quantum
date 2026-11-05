@@ -1,9 +1,9 @@
 "use client";
-type ToolAccessResult={ok:boolean;error?:string;accessKind?:"daily_free"|"pass";alreadyClaimed?:boolean};
+type ToolAccessResult={ok:boolean;error?:string;accessKind?:"daily_free"|"pass";alreadyClaimed?:boolean;requestId?:string};
 export const TOOL_PASS_ENFORCED=process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true";
 export class ToolAccessError extends Error{constructor(public code:string){super(code);this.name="ToolAccessError";}}
 export async function claimToolStart(toolSlug:string,units=1,requestId=crypto.randomUUID()):Promise<ToolAccessResult>{
- if(!TOOL_PASS_ENFORCED)return {ok:true};
+ if(!TOOL_PASS_ENFORCED)return {ok:true,requestId};
  const response=await fetch("/api/tools/access",{
   method:"POST",headers:{"Content-Type":"application/json"},
   credentials:"same-origin",cache:"no-store",
@@ -11,7 +11,7 @@ export async function claimToolStart(toolSlug:string,units=1,requestId=crypto.ra
  });
  const data=await response.json().catch(()=>({}));
  if(!response.ok||!data.ok)throw new ToolAccessError(String(data.error||"TOOL_ACCESS_UNAVAILABLE"));
- return data;
+ return {...data,requestId};
 }
 export const TOOL_ACCESS_MESSAGES:Record<string,Record<string,string>>={
  zh:{LOGIN_REQUIRED:"请先登录后使用免费次数或购买工具通用包。",DAILY_TOOL_FREE_USED:"此工具今天的免费次数已使用完毕。可购买全场通用包继续使用。",TOOL_PASS_REQUIRED:"每个工具每天免费处理一个文件。批量处理请购买通用包。",TOOL_ACCESS_UNAVAILABLE:"暂时无法确认使用权限，请稍后再试。"},
