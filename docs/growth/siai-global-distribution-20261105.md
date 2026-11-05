@@ -45,3 +45,10 @@ Primary KPI: **verified tool completions or verified SIAI compare actions per re
 Secondary: distinct returning visitors, referral conversion, partner install-to-active ratio, per-channel organic search clicks, engaged use, vendor claim approvals.
 Guardrail: no leaked sensitive input, uptime, abuse cost, GDPR/PDPA privacy review, accurate evidence source.
 Experiment: activate 10 genuinely installed partner widgets, compare visitors to an equal pre-period using confidence intervals; scale only when converted visitors and operational cost demonstrate value.
+
+## Direct developer distribution (OpenAPI)
+- Public source-reviewed data feed: `https://lingxifield.com/api/public/siai-widget` (available only after approved production release).
+- Machine-readable contract: `https://lingxifield.com/siai-openapi.json`.
+- RSS review activity: `https://lingxifield.com/siai/updates.xml`.
+- Channel options: documentation links on official project pages, voluntary integrations, open-source browser extension and narrowly scoped WordPress widget.
+- No pay-to-rank claims, no claims about unpublished products, no requests to buy backlinks.
