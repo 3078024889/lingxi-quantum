@@ -9,11 +9,19 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function claimUpdate(id: number): Promise<boolean> {
-  const result = await createAdminClient().from("telegram_community_events")
-    .insert({ event_key: `update:${id}`, event_kind: "webhook", status: "claimed" });
-  if (result.error?.code === "23505") return false;
-  if (result.error) throw new Error("Unable to reserve Telegram update");
-  return true;
+  const admin = createAdminClient();
+  const key = `update:${id}`;
+  const result = await admin.from("telegram_community_events")
+    .insert({ event_key: key, event_kind: "webhook", status: "claimed" });
+  if (!result.error) return true;
+  if (result.error.code !== "23505") throw new Error("Unable to reserve Telegram update");
+  // Telegram retries failed webhooks. Reclaim only failed records, atomically.
+  // Already-claimed or delivered updates never run twice concurrently.
+  const retry = await admin.from("telegram_community_events")
+    .update({ status: "claimed" }).eq("event_key", key).eq("status", "failed")
+    .select("event_key");
+  if (retry.error) throw new Error("Unable to reclaim failed Telegram update");
+  return (retry.data?.length || 0) === 1;
 }
 
 export async function POST(request: Request) {
