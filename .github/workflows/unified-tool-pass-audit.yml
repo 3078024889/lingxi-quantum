@@ -50,6 +50,8 @@ jobs:
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-fixture.sql
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261105193000_one_free_tool_use_and_all_tools_pass.sql
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106010000_tool_pass_execution_receipts.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-receipt-integrity.sql
       - name: Contract tests
         run: node --test tests/unified-tools-pass-static-contract.test.mjs
       - name: Typecheck
