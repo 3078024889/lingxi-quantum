@@ -3,6 +3,7 @@ import {notFound} from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SpendDiagnostic from "@/components/siai/SpendDiagnostic";
+import {getVerifiedSiaiOptions} from "@/lib/siai/verified-spend-options";
 import {DIAGNOSTIC_COPY} from "@/lib/siai/spend-diagnostic-i18n";
 import {SEO_LOCALES,LOCALIZED_LOCALES,isSeoLocale,localePath} from "@/lib/seo/global-seo";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
@@ -21,5 +22,5 @@ export default async function LocalizedSpendDiagnostic({params}:Props){
  const {locale}=await params;
  if(!isSeoLocale(locale)||locale==="zh")notFound();
  const meta=SEO_LOCALES[locale];
- return <><Nav/><div dir={meta.dir} lang={meta.hreflang}><SpendDiagnostic/></div><Footer/></>;
+ return <><Nav/><div dir={meta.dir} lang={meta.hreflang}><SpendDiagnostic candidates={getVerifiedSiaiOptions()}/></div><Footer/></>;
 }
