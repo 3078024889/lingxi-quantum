@@ -57,7 +57,6 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   // never use scripted CSS manipulation as a substitute for dragging.
   const events:Array<{type:string;target:string;x:number;y:number}>=[];
   (window as Window&{__pdfTouchDiagnostics?:typeof events}).__pdfTouchDiagnostics=events;
-  (window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace=[];
   for(const type of ["pointerdown","touchstart","pointermove","touchmove","pointercancel","touchend"]){
    document.addEventListener(type,event=>{
     if(events.length>=45)return;
@@ -69,14 +68,9 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   }
  });
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
- if(mobile){
-  const trace=await page.evaluate(()=>(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace||[]);
-  console.log("PDF_MOBILE_GESTURE_DECISIONS",JSON.stringify({first:trace.slice(0,30),last:trace.slice(-12)}));
- }
  if(mobile&&(await item.boundingBox())!.width<=before!.width+6){
   const diagnostic=await page.evaluate(()=>({events:(window as Window&{__pdfTouchDiagnostics?:unknown[]}).__pdfTouchDiagnostics||[],
-   overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style")||"",
-   gesture:(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace||[]}));
+   overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style")||""}));
   console.log("PDF_MOBILE_GESTURE_TRACE",JSON.stringify(diagnostic));
  }
  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
@@ -91,10 +85,7 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   const x=target!.x+target!.width/2-2,y=target!.y+target!.height/2-2;
   const hit=await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.closest('[data-testid="pdf-overlay"]')?.getAttribute("data-testid")||null,{x,y});
   expect(hit).toBe("pdf-overlay");
-  await page.evaluate(()=>(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace=[]);
   await dragGesture(page,x,y,35,12,true);
-  const trace=await page.evaluate(()=>(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace||[]);
-  console.log("PDF_RETARGETED_TOUCH_DECISIONS",JSON.stringify({first:trace.slice(0,28),last:trace.slice(-8)}));
   await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(widthBeforeRetarget+4);
   await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents=""});
  }
