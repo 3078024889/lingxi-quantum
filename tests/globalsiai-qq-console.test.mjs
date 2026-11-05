@@ -1,11 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import vm from "node:vm";
+let capturedQQConsoleHandler=null;
 
 test("QQ free operations workbench serves readable content for all three QQ groups",async()=>{
  let callback;
  const previous=globalThis.Deno;
- globalThis.Deno={serve:fn=>{callback=fn}};
+ globalThis.Deno={serve:fn=>{callback=fn;capturedQQConsoleHandler=fn}};
  try{
   await import("../supabase/functions/globalsiai-qq-console/index.ts");
   assert.equal(typeof callback,"function");
@@ -40,11 +41,10 @@ test("QQ free operations workbench serves readable content for all three QQ grou
 });
 
 test("QQ workbench rejects writes and does not serve unrecognised group IDs",async()=>{
- let callback;
+ const callback=capturedQQConsoleHandler;
+ assert.equal(typeof callback,"function","first test registered the Edge handler");
  const prev=globalThis.Deno;
- globalThis.Deno={serve:fn=>callback=fn};
  try{
-  await import("../supabase/functions/globalsiai-qq-console/index.ts");
   const denied=await callback(new Request("https://example.supabase.co/functions/v1/globalsiai-qq-console",{method:"POST"}));
   assert.equal(denied.status,405);
   const invalid=await callback(new Request("https://example.supabase.co/functions/v1/globalsiai-qq-console?group=123456789&day=2026-11-05"));
