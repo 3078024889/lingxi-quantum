@@ -31,7 +31,7 @@ const TASK_MATCH:Record<Exclude<TaskFacet,'all'>,RegExp>={
  code:/编程|代码|代码开发|网站构建|建网站|建站|网页设计|网页原型|应用搭建|软件开发|开发代理|程序开发|coding|code completion|website builder/i,
  research:/搜索研究|联网搜索|论文搜索|文献|引文|学术研究|资料研究|深度研究|搜索资料|证据综述|文档搜索|资料提取|research|citation|literature/i,
  audio:/语音|音频|音乐|配音|旁白|歌曲|录音|转录|声音|字幕|speech|voice|audio|music|transcription/i,
- agent:/智能体|编程代理|软件开发代理|自动化|工作流|工具调用|agent|workflow|automation|orchestrat/i,
+ agent:/智能体|编程代理|软件开发代理|自动化|工具调用|agent|automation|orchestrat/i,
  local:/本地|离线|自托管|私有部署|本地模型|离线部署|local|offline|self.host/i
 };
 const PAYMENT_MATCH:Record<Exclude<PaymentFacet,'any'>,RegExp>={
@@ -47,7 +47,7 @@ export function taskMatches(row:FacetRow,task:TaskFacet):boolean{
  if(task==='all')return true;
  // Use only the reviewed catalog category/feature tags; marketing copy is too broad.
  const indexed=[row.category,...row.features].join(' ');
- if(task==='image'&&/^(?:图片|图片生成|图片设计|设计|多模态创作)$/u.test(row.category))return true;
+ if(task==='image'&&/^(?:图片|图片生成|图片设计)$/u.test(row.category))return true;
  return TASK_MATCH[task].test(indexed);
 }
 /** Prove the *offer*, not merely the presence of a "free" token on a pricing page. */
