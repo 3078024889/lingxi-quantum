@@ -64,3 +64,36 @@ test("HTTPS source URLs reject unsafe redirects, credentials, ports and nonpubli
   assert.equal(safeOfficialUrl(unsafe),null,unsafe);
  assert.equal(safeOfficialUrl("https://www.cursor.com/pricing"),"cursor.com");
 });
+
+test("corporate relationships stay separately source-observed, with acquisition and split changes date-scoped",()=>{
+ const lineage=read("lingxifield-ai-market/data/company-intake/publisher-parent-evidence.json");
+ assert.equal(lineage.schema,"lingxifield_publisher_relationship_evidence_v1");
+ assert.equal(lineage.reviewStatus,"source_observed_unapproved");
+ const byId=new Map(batches.flatMap(b=>b.products).map(p=>[p.id,p]));
+ for(const rel of lineage.relations){
+  const p=byId.get(rel.id);assert(p,"unknown product "+rel.id);
+  assert.equal(rel.group,p.publisherGroupId);
+  assert.equal(rel.date.length,10);
+  assert(safeOfficialUrl(rel.source),"missing official source "+rel.id);
+  assert(!/publishApproved|autoPublish|verifyByEmail/i.test(rel.relationship));
+ }
+ assert.equal(lineage.relations.find(p=>p.id==="cursor").group,"spacex");
+ assert.equal(lineage.relations.find(p=>p.id==="leonardo").group,"canva");
+ assert.equal(lineage.relations.find(p=>p.id==="tabnine").group,"tricentis");
+ assert.equal(lineage.relations.find(p=>p.id==="ltx-studio").relationship,"restructuring_review");
+});
+test("private review console indexes all 10 cohorts, 6 evidence batches and future claim pagination",()=>{
+ const source=readFileSync(new URL("../lingxifield-ai-market/lib/market-private-intake-index.ts",import.meta.url),"utf8");
+ const page=readFileSync(new URL("../app/account/siai-review/page.tsx",import.meta.url),"utf8");
+ const api=readFileSync(new URL("../app/api/account/siai-review/route.ts",import.meta.url),"utf8");
+ const ui=readFileSync(new URL("../app/account/siai-review/ReviewWorkbench.tsx",import.meta.url),"utf8");
+ for(let i=1;i<=10;i++)assert(source.includes("batch-"+String(i).padStart(3,"0")+".json"),"missing cohort "+i);
+ for(let i=1;i<=6;i++)assert(source.includes("batch-"+String(i).padStart(3,"0")+"-official-observations.json"),"missing evidence "+i);
+ assert(source.includes('import "server-only"'));
+ assert(source.includes("sourcePreview:previewIds.has(item.id)"));
+ assert(page.includes("reviewer?getPrivateSiaiCandidateIndex():null"));
+ assert(!/batch-006\.json|batch-007\.json/.test(page));
+ assert(api.includes('pageSize')&&api.includes('.range(offset,offset+pageSize-1)'));
+ assert(api.includes('pendingTotal'));
+ assert(ui.includes("candidatePool")&&ui.includes("submissionPage"));
+});
