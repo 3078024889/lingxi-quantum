@@ -1,0 +1,110 @@
+name: LINGXIFIELD Live Production Browser Acceptance
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/live-production-browser-acceptance.yml'
+      - 'tests/final-closure/live-production-acceptance.spec.ts'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: live-production-acceptance-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  production-live:
+    name: real-public-site-and-file-output
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      LINGXIFIELD_E2E_REMOTE: '1'
+      LINGXIFIELD_E2E_BASE_URL: https://lingxifield.com
+      CI: 'true'
+    steps:
+      - name: Checkout exact QA source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Install pinned pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Install pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Chrome
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm exec playwright install --with-deps chrome; then exit 0; fi
+            if [ "$attempt" -eq 3 ]; then exit 1; fi
+            sleep $((attempt * 5))
+          done
+      - name: Test real production HTTP and real browser file output on desktop and mobile
+        run: |
+          pnpm exec playwright test -c playwright.final.config.ts --workers=2 \
+            tests/final-closure/live-production-acceptance.spec.ts \
+            tests/final-closure/pdf-niche-vector-real-output.spec.ts \
+            tests/final-closure/batch-image-trust-e2e.spec.ts \
+            tests/final-closure/siai-footer-unified-real.spec.ts
+      - name: Preserve screenshots, traces and browser evidence
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: production-live-browser-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  release-tools-live:
+    name: production-real-file-privacy-and-PDF-tools
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      LINGXIFIELD_E2E_REMOTE: '1'
+      LINGXIFIELD_E2E_BASE_URL: https://lingxifield.com
+      CI: 'true'
+    steps:
+      - name: Checkout combined production and QA source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Install pinned pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Install pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependencies and real Chrome
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec playwright install --with-deps chrome
+      - name: Test new production PDF and image tools using real input files
+        run: |
+          pnpm exec playwright test -c playwright.final.config.ts --workers=2 \
+            tests/final-closure/screenshot-redaction-real-export.spec.ts \
+            tests/final-closure/resize-drag-real-output.spec.ts \
+            tests/final-closure/pdf-to-image-delivery-ux.spec.ts \
+            tests/final-closure/pdf-merge-split-real-export.spec.ts \
+            tests/final-closure/pdf-page-manager-real-export.spec.ts \
+            tests/final-closure/image-to-pdf-margin-output.spec.ts
+      - name: Save screenshots and browser traces even for a failing test
+        if: ${{ always() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: production-release-real-files-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore
