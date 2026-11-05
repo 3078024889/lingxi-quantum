@@ -3,8 +3,10 @@
  var script=document.currentScript;
  if(!script||!script.parentNode)return;
  var source;
- try{source=new URL(script.src);}catch(_){return;}
- if(source.protocol!=="https:"||!/^(?:www\.)?lingxifield\.(?:com|cn)$/.test(source.hostname))return;
+ // Standalone embeds load this file from LINGXIFIELD. WordPress ships the same
+ // JS locally and provides only a fixed HTTPS API origin, never executable code.
+ try{source=new URL(script.getAttribute("data-api-origin")||script.src);}catch(_){return;}
+ if(source.protocol!=="https:"||source.port||source.username||source.password||!/^(?:www\.)?lingxifield\.(?:com|cn)$/.test(source.hostname))return;
  var base=source.origin;
  var type=script.getAttribute("data-lx-widget")==="tools"?"tools":"siai";
  var vendor=(script.getAttribute("data-vendor")||"").toLowerCase();
