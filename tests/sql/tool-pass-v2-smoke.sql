@@ -43,5 +43,20 @@ begin
  if (y->>'access') IS DISTINCT FROM 'free' then raise exception 'SEPARATE_IP_FREE_BLOCKED %',y;end if;
  y:=public.claim_tool_pass_use_v2(user_c,'e5555555-5555-4555-8555-555555555555','sasi-video-generate',ipb);
  if (y->>'error') IS DISTINCT FROM 'TOOL_NOT_COVERED' then raise exception 'SASI_ACCESS_BYPASS %',y;end if;
+ -- Test revocation behaviour only: this is NOT an actual money refund.
+ update public.tool_pass_orders_v2 set state='refunded' where user_id=user_a;
+ y:=public.purchase_tool_pass_v2(user_a,request_a,'tools_7d','CNY');
+ if (y->>'error') IS DISTINCT FROM 'PASS_NOT_ACTIVE' then
+  raise exception 'REFUNDED_PURCHASE_REPLAY_ACCEPTED %',y;end if;
+ y:=public.claim_tool_pass_use_v2(user_a,'d1111111-1111-4111-8111-111111111111','ocr',ipa);
+ if (y->>'error') IS DISTINCT FROM 'PASS_EXPIRED_OR_REVOKED' then
+  raise exception 'REVOKED_PASS_REPLAY_ACCEPTED %',y;end if;
+ update public.tool_pass_operation_v2 set claimed_at=now()-interval '11 minutes'
+  where operation_id=free1;
+ y:=public.claim_tool_pass_use_v2(user_b,free1,'ocr',ipa);
+ if (y->>'error') IS DISTINCT FROM 'OPERATION_RECEIPT_EXPIRED' then
+  raise exception 'OLD_FREE_RECEIPT_REPLAY_ACCEPTED %',y;end if;
+ if (select count(*) from public.test_toolpass_charges)<>2 then
+  raise exception 'TEST_MUST_NOT_MUTATE_MONEY_RECORDS';end if;
  raise notice 'TOOL_PASS_V2_POSTGRES_EPHEMERAL_ACCEPTANCE_OK';
 end $$;
