@@ -11,16 +11,29 @@ const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 async function owner(){
  try{return await moneyAdministrator();}catch{return null;}
 }
-export async function GET(){
+export async function GET(req:NextRequest){
  const reviewer=await owner();
  if(!reviewer)return NextResponse.json({error:"FORBIDDEN"},{status:403,headers:privateHeaders});
+ const url=new URL(req.url);
+ const pageText=url.searchParams.get("page")||"1";
+ const sizeText=url.searchParams.get("pageSize")||"25";
+ if(!/^[1-9]\\d{0,3}$/.test(pageText)||!["25","50","100"].includes(sizeText))
+  return NextResponse.json({error:"INVALID_PAGINATION"},{status:400,headers:privateHeaders});
+ const page=Number(pageText),pageSize=Number(sizeText),offset=(page-1)*pageSize;
+ if(offset>25000)return NextResponse.json({error:"PAGE_TOO_DEEP"},{status:400,headers:privateHeaders});
  try{
   const admin=createAdminClient();
-  const {data,error,count}=await admin.from("ai_market_vendor_submissions")
-   .select("id,project_id,request_type,product_name,official_site,work_email,submitter_name,description,evidence_url,status,verified_domain,created_at,reviewed_at",{count:"exact"})
-   .order("created_at",{ascending:false}).limit(100);
-  if(error)return NextResponse.json({error:"REVIEW_QUEUE_UNAVAILABLE"},{status:503,headers:privateHeaders});
-  return NextResponse.json({total:count??0,rows:data??[]},{headers:privateHeaders});
+  const [queue,pending]=await Promise.all([
+   admin.from("ai_market_vendor_submissions")
+    .select("id,project_id,request_type,product_name,official_site,work_email,submitter_name,description,evidence_url,status,verified_domain,created_at,reviewed_at",{count:"exact"})
+    .order("created_at",{ascending:false}).order("id",{ascending:false}).range(offset,offset+pageSize-1),
+   admin.from("ai_market_vendor_submissions").select("id",{count:"exact",head:true})
+    .in("status",["pending_identity_check","pending_review"])
+  ]);
+  if(queue.error||pending.error)return NextResponse.json({error:"REVIEW_QUEUE_UNAVAILABLE"},{status:503,headers:privateHeaders});
+  const total=queue.count??0;
+  return NextResponse.json({total,pendingTotal:pending.count??0,page,pageSize,
+   hasPrevious:page>1,hasNext:offset+(queue.data?.length||0)<total,rows:queue.data??[]},{headers:privateHeaders});
  }catch{return NextResponse.json({error:"REVIEW_QUEUE_UNAVAILABLE"},{status:503,headers:privateHeaders});}
 }
 export async function POST(req:NextRequest){
