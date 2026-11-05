@@ -86,7 +86,7 @@ test("owner-submitted public social links and two real WeChat QR destinations ar
 test("owner QQ groups and Telegram link are present only under footer brand social area, with nine-language copy",()=>{
  const footer=read("components/Footer.tsx"),css=read("app/siai-home.css");
  for(const group of ["1072178710","1074475201"])assert(footer.includes(group),"missing QQ group "+group);
- assert(footer.includes("https://t.me/web3dropmoon"));
+ assert(footer.includes("https://t.me/globalsiai"));
  assert(footer.includes("FOOTER_GROUP_COPY[lang].title"));
  assert(footer.includes("FOOTER_QQ_GROUPS.map"));
  assert(footer.includes("copyQQGroup(number)"));
