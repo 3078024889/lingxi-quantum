@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import {useEffect,useMemo,useState,type CSSProperties} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
@@ -78,8 +79,8 @@ export default function PartnerGrowthPortal(){
    <p style={{fontSize:15,color:"#54647d",marginTop:22}}>{t.example}</p>
    <div style={{display:"flex",gap:20,flexWrap:"wrap",padding:"24px 0"}}>
     <a href="/siai/updates.xml" style={{fontSize:16,color:"#1757be"}}>{t.feed}</a>
-    <a href="/siai" style={{fontSize:16,color:"#1757be"}}>{t.update}</a>
-    <a href="/tools" style={{fontSize:16,color:"#1757be"}}>{t.community}</a>
+    <Link href="/siai" style={{fontSize:16,color:"#1757be"}}>{t.update}</Link>
+    <Link href="/tools" style={{fontSize:16,color:"#1757be"}}>{t.community}</Link>
    </div>
    <p style={{fontSize:14,color:"#65728a"}}>{t.rules} · {t.note}</p>
   </div>
