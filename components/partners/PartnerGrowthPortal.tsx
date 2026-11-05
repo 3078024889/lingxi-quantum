@@ -14,16 +14,16 @@ const copy:Record<LingxiLang,{eyebrow:string;title:string;intro:string;partners:
  pt:{eyebrow:"Parceiros globais",title:"Ferramentas para seus visitantes",intro:"Sem cadastro: incorpore o diretório SIAI e um gerador de QR.",partners:"Identificador do parceiro",partnerHint:"Letras, números, _ ou -, até 32 caracteres",siai:"Diretório SIAI",siaiInfo:"Apenas perfis verificados, atualizados após aprovação.",qr:"QR gratuito",qrInfo:"QR para endereços públicos.",copy:"Copiar código",copied:"Copiado",example:"Cole o código no HTML do seu site.",feed:"Acompanhar atualizações",update:"Ranking SIAI",rules:"Testes automatizados identificáveis são excluídos",community:"Ferramentas grátis",note:"Não coletamos e-mails de visitantes."},
  ar:{eyebrow:"الشركاء حول العالم",title:"أدوات مفيدة لزوار موقعك",intro:"بدون تسجيل: أضف دليل SIAI وصانع QR لموقعك.",partners:"معرّف الشريك",partnerHint:"حروف وأرقام و_ و- بحد أقصى 32",siai:"دليل SIAI",siaiInfo:"البيانات العامة التي تم التحقق منها فقط، وتُحدّث عند الاعتماد.",qr:"مولد QR مجاني",qrInfo:"رموز QR للروابط العامة.",copy:"نسخ الكود",copied:"تم النسخ",example:"الصق الكود في HTML لموقعك.",feed:"الاشتراك في التحديثات",update:"ترتيب SIAI",rules:"تُستبعد زيارات الاختبار الآلي التي يمكن تحديدها",community:"الأدوات المجانية",note:"لا نجمع عناوين البريد الإلكتروني للزوار."}
 };
-const vendorCopy:Record<LingxiLang,{title:string;info:string;choose:string}>={
- zh:{title:"单厂商资料卡 · 供厂商分享",info:"只展示已审核的官方资料；适合厂商官网、博客和合作伙伴引用。",choose:"选择已审核厂商"},
- en:{title:"Verified vendor profile card",info:"A shareable card for one reviewed product on vendor and partner websites.",choose:"Choose reviewed vendor"},
- ja:{title:"確認済み企業カード",info:"公式確認済みの企業情報を共有できます。",choose:"企業を選択"},
- ko:{title:"검증된 기업 카드",info:"검토된 기업 정보만 공유합니다.",choose:"기업 선택"},
- fr:{title:"Fiche d'entreprise vérifiée",info:"Fiche publique vérifiée pour les partenaires.",choose:"Choisir une entreprise"},
- de:{title:"Geprüfte Anbieterkarte",info:"Nur bestätigte öffentliche Anbieterinformationen.",choose:"Anbieter wählen"},
- es:{title:"Ficha verificada de empresa",info:"Solo información pública verificada.",choose:"Elegir empresa"},
- pt:{title:"Ficha verificada de empresa",info:"Somente dados públicos verificados.",choose:"Escolher empresa"},
- ar:{title:"بطاقة شركة تم التحقق منها",info:"تُعرض البيانات العامة المعتمدة فقط.",choose:"اختر الشركة"}
+const vendorCopy:Record<LingxiLang,{title:string;info:string;choose:string;claim:string}>={
+ zh:{title:"单厂商资料卡 · 供厂商分享",info:"只展示已审核的官方资料；适合厂商官网、博客和合作伙伴引用。",choose:"选择已审核厂商",claim:"认领或提交你的 SI/AI 平台（审核后公开）"},
+ en:{title:"Verified vendor profile card",info:"A shareable card for one reviewed product on vendor and partner websites.",choose:"Choose reviewed vendor",claim:"Claim or submit your SI/AI platform (review required)"},
+ ja:{title:"確認済み企業カード",info:"公式確認済みの企業情報を共有できます。",choose:"企業を選択",claim:"SI/AI企業情報を申請・更新（審査あり）"},
+ ko:{title:"검증된 기업 카드",info:"검토된 기업 정보만 공유합니다.",choose:"기업 선택",claim:"SI/AI 플랫폼 등록·인증 신청 (검토 필수)"},
+ fr:{title:"Fiche d'entreprise vérifiée",info:"Fiche publique vérifiée pour les partenaires.",choose:"Choisir une entreprise",claim:"Revendiquer une plateforme SI/IA (après vérification)"},
+ de:{title:"Geprüfte Anbieterkarte",info:"Nur bestätigte öffentliche Anbieterinformationen.",choose:"Anbieter wählen",claim:"SI/KI-Plattform beantragen (nach Prüfung)"},
+ es:{title:"Ficha verificada de empresa",info:"Solo información pública verificada.",choose:"Elegir empresa",claim:"Solicitar la ficha de tu plataforma SI/IA (revisión)"},
+ pt:{title:"Ficha verificada de empresa",info:"Somente dados públicos verificados.",choose:"Escolher empresa",claim:"Solicitar perfil da sua plataforma SI/IA (análise)"},
+ ar:{title:"بطاقة شركة تم التحقق منها",info:"تُعرض البيانات العامة المعتمدة فقط.",choose:"اختر الشركة",claim:"قدّم منصة SI/AI للمراجعة"}
 };
 export default function PartnerGrowthPortal(){
  const {lang}=useLingxiLang();const t=copy[lang]||copy.en;
@@ -82,6 +82,7 @@ export default function PartnerGrowthPortal(){
     <a href="/siai-openapi.json" style={{fontSize:16,color:"#1757be"}}>API · OpenAPI</a>
     <Link href="/siai" style={{fontSize:16,color:"#1757be"}}>{t.update}</Link>
     <Link href="/tools" style={{fontSize:16,color:"#1757be"}}>{t.community}</Link>
+    <Link href={vendor?"/siai/claim?product="+encodeURIComponent(vendor)+"&name="+encodeURIComponent(vendors.find(r=>r.id===vendor)?.name||""):"/siai/claim"} style={{fontSize:16,color:"#1757be",fontWeight:700}}>{vc.claim}</Link>
    </div>
    <p style={{fontSize:14,color:"#65728a"}}>{t.rules} · {t.note}</p>
   </div>
