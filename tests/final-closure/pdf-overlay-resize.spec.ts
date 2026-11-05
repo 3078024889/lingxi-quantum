@@ -52,27 +52,7 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
  }
  const before=await item.boundingBox(),r=await grip.boundingBox();
  expect(before).not.toBeNull();expect(r).not.toBeNull();
- if(mobile)await page.evaluate(()=>{
-  // Keep evidence of *real CDP touch events* for failed mobile sessions;
-  // never use scripted CSS manipulation as a substitute for dragging.
-  const events:Array<{type:string;target:string;x:number;y:number}>=[];
-  (window as Window&{__pdfTouchDiagnostics?:typeof events}).__pdfTouchDiagnostics=events;
-  for(const type of ["pointerdown","touchstart","pointermove","touchmove","pointercancel","touchend"]){
-   document.addEventListener(type,event=>{
-    if(events.length>=45)return;
-    const e=event as PointerEvent&TouchEvent;
-    const t=e.changedTouches?.[0];
-    const target=event.target instanceof Element?event.target.closest("[data-testid]"):null;
-    events.push({type,target:target?.getAttribute("data-testid")||"other",x:t?.clientX??e.clientX??-1,y:t?.clientY??e.clientY??-1});
-   },{capture:true,passive:true});
-  }
- });
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
- if(mobile&&(await item.boundingBox())!.width<=before!.width+6){
-  const diagnostic=await page.evaluate(()=>({events:(window as Window&{__pdfTouchDiagnostics?:unknown[]}).__pdfTouchDiagnostics||[],
-   overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style")||""}));
-  console.log("PDF_MOBILE_GESTURE_TRACE",JSON.stringify(diagnostic));
- }
  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
  if(mobile){
   // Adversarial browser hit-test regression: the same finger lands at the
