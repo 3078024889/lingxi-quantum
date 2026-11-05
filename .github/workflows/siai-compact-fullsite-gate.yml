@@ -1,4 +1,5 @@
 name: SIAI compact branch-only fullsite Production Gate
+# source-boundary audit: design prototype and generic node-workflow are not image/agent generators
 
 on:
   push:
