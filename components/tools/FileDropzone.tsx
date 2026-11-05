@@ -67,8 +67,12 @@ export default function FileDropzone({
         try{
           const original=new Map<string,number>();
           for(const f of files){const k=fileIdentity(f);original.set(k,(original.get(k)||0)+1)}
-          let newUnits=0;
-          for(const f of unique){const k=fileIdentity(f);const count=original.get(k)||0;if(count>0)original.set(k,count-1);else newUnits++}
+          // A new picker/drop attempt is a new use even if the same file is selected again.
+          // Append-mode duplicates already present in the batch are ignored.
+          let newUnits=multiple&&append?0:incoming.length;
+          if(multiple&&append){
+            for(const f of unique){const k=fileIdentity(f);const count=original.get(k)||0;if(count>0)original.set(k,count-1);else newUnits++}
+          }
           if(newUnits>0)await claimToolStart(toolSlug,newUnits);
         }catch(e){
           setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"));
