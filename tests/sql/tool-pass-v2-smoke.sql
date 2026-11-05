@@ -49,6 +49,10 @@ begin
  -- Paid operation is distinct from lifetime free use.
  y:=public.claim_tool_pass_use_v2(user_a,'d1111111-1111-4111-8111-111111111111','ocr',ipa);
  if (y->>'access') IS DISTINCT FROM 'pass' then raise exception 'PASS_ACCESS_FAIL %',y;end if;
+ if (y->>'passOrderId') IS DISTINCT FROM request_a::text then
+  raise exception 'PAID_USE_NOT_BOUND_TO_EXACT_ORDER %',y;end if;
+ if (select pass_order_id from public.tool_pass_operation_v2 where operation_id='d1111111-1111-4111-8111-111111111111') is distinct from request_a then
+  raise exception 'PAID_USAGE_PROVENANCE_MISSING';end if;
  y:=public.claim_tool_pass_use_v2(user_b,free1,'ocr',ipa);
  if (y->>'access') IS DISTINCT FROM 'free' then raise exception 'FIRST_FREE_FAIL %',y;end if;
  y:=public.claim_tool_pass_use_v2(user_b,free1,'ocr',ipa);
@@ -62,13 +66,17 @@ begin
  y:=public.claim_tool_pass_use_v2(user_c,'e5555555-5555-4555-8555-555555555555','sasi-video-generate',ipb);
  if (y->>'error') IS DISTINCT FROM 'TOOL_NOT_COVERED' then raise exception 'SASI_ACCESS_BYPASS %',y;end if;
  -- Test revocation behaviour only: this is NOT an actual money refund.
- update public.tool_pass_orders_v2 set state='refunded' where user_id=user_a;
+ update public.tool_pass_orders_v2 set state='refunded' where request_id=request_a;
+ -- Simulate a new, separate purchased pass becoming active while the original
+ -- used pass is refunded. Replaying the old receipt must still be denied.
+ update public.tool_pass_orders_v2 set starts_at=now()-interval '1 minute',
+   ends_at=now()+interval '30 days' where request_id=request_b;
  y:=public.purchase_tool_pass_v2(user_a,request_a,'tools_7d','CNY');
  if (y->>'error') IS DISTINCT FROM 'PASS_NOT_ACTIVE' then
   raise exception 'REFUNDED_PURCHASE_REPLAY_ACCEPTED %',y;end if;
  y:=public.claim_tool_pass_use_v2(user_a,'d1111111-1111-4111-8111-111111111111','ocr',ipa);
  if (y->>'error') IS DISTINCT FROM 'PASS_EXPIRED_OR_REVOKED' then
-  raise exception 'REVOKED_PASS_REPLAY_ACCEPTED %',y;end if;
+  raise exception 'REFUNDED_OLD_RECEIPT_ACCEPTED_VIA_NEW_PASS %',y;end if;
  update public.tool_pass_operation_v2 set claimed_at=now()-interval '11 minutes'
   where operation_id=free1;
  y:=public.claim_tool_pass_use_v2(user_b,free1,'ocr',ipa);
