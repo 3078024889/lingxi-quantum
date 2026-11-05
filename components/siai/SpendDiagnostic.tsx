@@ -2,7 +2,6 @@
 import {useMemo,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import Link from "next/link";
-import {localePath} from "@/lib/seo/global-seo";
 import {DIAGNOSTIC_COPY,DIAGNOSIS_RESULT_COPY} from "@/lib/siai/spend-diagnostic-i18n";
 import {diagnoseAiSpend} from "@/lib/siai/free-spend-diagnostic";
 import type {SpendItem} from "@/lib/siai/free-spend-diagnostic";
@@ -52,7 +51,7 @@ export default function SpendDiagnostic(){
    <div className="mt-4 space-y-2">{calculation.result.findings.map(f=><article className="rounded-xl border border-emerald-100 bg-white p-4" key={f.name}><h3 className="font-semibold">{f.name}</h3><p className="mt-1 text-sm leading-relaxed text-slate-700">{f.status==="review"?r.review:f.status==="downgrade_candidate"?r.downgrade:r.keep}</p><p className="mt-2 text-sm text-slate-600">{r.perUse}: {f.costPerUse===null?"—":money(f.costPerUse)}</p></article>)}</div>
    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-white p-4">
     <p className="max-w-xl text-sm leading-relaxed text-slate-700">{r.disclaimer}</p>
-    <Link href={lang==="zh"?"/siai":localePath(lang,"/siai")} className="inline-flex min-h-11 items-center rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white no-underline hover:bg-emerald-800">{t.compare} →</Link>
+    <Link href={lang==="zh"?"/siai":"/"+lang+"/siai"} className="inline-flex min-h-11 items-center rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white no-underline hover:bg-emerald-800">{t.compare} →</Link>
    </div>
    <button type="button" onClick={share} className="min-h-11 rounded-xl border border-emerald-600 bg-white px-4 text-sm font-semibold text-emerald-800">{t.share}</button>{copyStatus&&<span role="status" className="ms-3 text-sm text-emerald-800">✓</span>}
   </section>:<p role="alert" className="mt-4 rounded-xl bg-red-50 p-4 text-sm text-red-800">{t.error}</p>)}
