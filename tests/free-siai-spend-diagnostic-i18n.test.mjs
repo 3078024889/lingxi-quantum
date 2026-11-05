@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {DIAGNOSTIC_COPY,DIAGNOSIS_RESULT_COPY} from "../lib/siai/spend-diagnostic-i18n.ts";
+import {SPEND_OPTION_COPY} from "../lib/siai/verified-spend-options-i18n.ts";
 const langs=["zh","en","ja","ko","fr","de","es","pt","ar"];
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 
@@ -28,4 +29,21 @@ test("web data remains browser-local, without billing credentials",()=>{
  const ui=read("components/siai/SpendDiagnostic.tsx");
  assert.doesNotMatch(ui,/fetch\(|XMLHttpRequest|localStorage|sessionStorage|document\.cookie/);
  assert.match(ui,/diagnoseAiSpend/);
+});
+
+test("task comparison labels exist in all nine native languages",()=>{
+ assert.deepEqual(Object.keys(SPEND_OPTION_COPY).sort(),[...langs].sort());
+ const master=Object.keys(SPEND_OPTION_COPY.zh).sort();
+ for(const lang of langs){
+  assert.deepEqual(Object.keys(SPEND_OPTION_COPY[lang]).sort(),master,lang);
+  for(const text of Object.values(SPEND_OPTION_COPY[lang]))assert.ok(text.trim(),lang);
+ }
+});
+test("candidate suggestions are curated and source-backed, not research previews",()=>{
+ const source=read("lib/siai/verified-spend-options.ts");
+ assert.match(source,/const \{curated\}=getSiaiDirectoryRows\(\)/);
+ assert.match(source,/priceEvidenceUrl=safeLink\(row\.priceSource\)/);
+ assert.match(source,/if\(!priceEvidenceUrl\)return \[\]/);
+ assert.match(source,/protocol==="https:"/);
+ assert.match(read("components/siai/SpendDiagnostic.tsx"),/option\.priceEvidenceUrl/);
 });
