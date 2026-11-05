@@ -17,7 +17,9 @@ test("publisher identity, listing, years and source links survive UI redesign",(
   "p.yearSource","p.checkedAt","p.companySource","visibleRows.map",
   "setPanelHeight","siai-home-table-flow","siai-home-table-bounded"
  ])assert(home.includes(token),"UI missing "+token);
- assert.match(catalog,/curated\.length!==32\|\|rows\.length!==62/);
+ assert.match(catalog,/curated\.length!==MARKET_API_PRODUCTS\.length/);
+ assert.match(catalog,/curatedIds\.size!==curated\.length/);
+ assert.match(catalog,/getSiaiSourcePreviewRows\(\)\.filter\(r=>!curatedIds\.has\(r\.id\)\)/);
  assert.match(preview,/candidateProducts!==30/);
 });
 test("unreviewed 50 company intake records stay non-public",()=>{
