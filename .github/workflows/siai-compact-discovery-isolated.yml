@@ -9,6 +9,9 @@ on:
       - 'lib/siai-home-facet-labels.ts'
       - 'components/SiaiRankingHome.tsx'
       - 'app/siai-home.css'
+      - 'components/Footer.tsx'
+      - 'tests/footer-unified.test.mjs'
+      - 'tests/final-closure/siai-footer-unified-real.spec.ts'
       - 'tests/siai-compact-facets.test.mjs'
       - 'tests/final-closure/siai-compact-discovery-real.spec.ts'
       - 'tests/final-closure/siai-ranking-first-layout.spec.ts'
@@ -40,7 +43,7 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: node --test tests/siai-compact-facets.test.mjs tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs tests/siai-customer-language.test.mjs
+      - run: node --test tests/siai-compact-facets.test.mjs tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs tests/siai-customer-language.test.mjs tests/footer-unified.test.mjs
       - run: pnpm build
 
   browser:
@@ -67,7 +70,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-compact-discovery-real.spec.ts tests/final-closure/siai-ranking-first-layout.spec.ts
+      - run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-compact-discovery-real.spec.ts tests/final-closure/siai-ranking-first-layout.spec.ts tests/final-closure/siai-footer-unified-real.spec.ts
       - if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
