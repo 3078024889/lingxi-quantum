@@ -4,8 +4,10 @@ on:
     paths:
       - 'lib/telegram/**'
       - 'app/api/telegram/**'
-      - 'app/api/cron/telegram-daily/**'
-      - 'tests/telegram-community.test.mjs'
+      - 'app/api/cron/telegram-*/**'
+      - 'app/community/share-kit/**'
+      - 'vercel.json'
+      - 'tests/telegram-*.test.mjs'
       - 'supabase/migrations/*telegram*'
       - '.github/workflows/telegram-community.yml'
   workflow_dispatch:
@@ -20,4 +22,4 @@ jobs:
         with:
           node-version: '22'
       - name: Test without network or secrets
-        run: node --experimental-strip-types --test tests/telegram-community.test.mjs
+        run: node --experimental-strip-types --test tests/telegram-community.test.mjs tests/telegram-five-daily.test.mjs
