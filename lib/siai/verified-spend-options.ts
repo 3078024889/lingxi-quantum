@@ -1,4 +1,4 @@
-import {getSiaiDirectoryRows} from "@/app/siai/catalog-data";
+import {getPublishedSiaiRows} from "@/app/siai/catalog-data";
 import {taskMatches,type TaskFacet} from "@/lib/siai-home-facets";
 
 export const SPEND_TASKS=["video","image","code","audio","research"] as const;
@@ -11,7 +11,7 @@ export type VerifiedSiaiOptions=Record<SpendTask,VerifiedSiaiOption[]>;
 
 /** Curated, source-backed references—not cheapest, best or even guaranteed compatible. */
 export function getVerifiedSiaiOptions():VerifiedSiaiOptions {
- const {curated}=getSiaiDirectoryRows(); // Never use unpublished research previews.
+ const curated=getPublishedSiaiRows(); // Never use unpublished research previews.
  const safeLink=(s:string|null):string|null=>{
   if(!s)return null;
   try{const u=new URL(s);return u.protocol==="https:"?u.href:null;}catch{return null;}
