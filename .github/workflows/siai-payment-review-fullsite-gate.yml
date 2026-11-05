@@ -14,6 +14,13 @@ on:
       - 'lib/siai-home-facets.ts'
       - 'lib/siai-home-facet-labels.ts'
       - 'components/SiaiRankingHome.tsx'
+      - 'app/api/account/siai-review/route.ts'
+      - 'app/account/siai-review/**'
+      - 'components/MoneyAdminDashboard.tsx'
+      - 'lingxifield-ai-market/data/company-intake/batch-0*.json'
+      - 'tests/siai-intake-50.test.mjs'
+      - 'tests/siai-compact-facets.test.mjs'
+      - 'tests/final-closure/siai-payment-admin-real.spec.ts'
   workflow_dispatch:
 
 permissions:
