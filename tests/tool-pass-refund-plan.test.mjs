@@ -27,7 +27,7 @@ test("no refund plan is available without an explicit source usage-ledger lookup
  assert.equal(plan({order:good,operations:[null]}).error,"UNVERIFIED_USAGE");
 });
 test("deny used, refunded, revoked, misattributed and time-ambiguous terms",()=>{
- assert.equal(without({},[{user_id:good.user_id,access_kind:"pass",claimed_at:"2026-11-08T00:00:00Z"}]).error,"PASS_ALREADY_USED");
+ assert.equal(without({},[{user_id:good.user_id,access_kind:"pass",pass_order_id:good.request_id,claimed_at:"2026-11-08T00:00:00Z"}]).error,"PASS_ALREADY_USED");
  assert.equal(without({state:"refunded"}).error,"NOT_AN_ACTIVE_WALLET_PURCHASE");
  assert.equal(without({state:"revoked"}).error,"NOT_AN_ACTIVE_WALLET_PURCHASE");
  assert.equal(without({currency:"EUR"}).error,"NOT_AN_ACTIVE_WALLET_PURCHASE");
@@ -52,4 +52,23 @@ test("CNY original-wallet provenance is not mixed with the USD record",()=>{
  assert.equal(cny.ok,true);
  assert.equal(cny.currency,"CNY");
  assert.equal(cny.credits[1].amountMinor,900);
+});
+
+test("old pass usage is not misattributed to an unrelated replacement order",()=>{
+ const usedOtherPass=without({},[{
+  user_id:good.user_id,
+  access_kind:"pass",
+  pass_order_id:"b2222222-2222-4222-8222-222222222222",
+  claimed_at:"2026-11-08T00:00:00Z"
+ }]);
+ assert.equal(usedOtherPass.ok,true);
+ const missingOrder=without({},[{
+  user_id:good.user_id,access_kind:"pass",claimed_at:"2026-11-08T00:00:00Z"
+ }]);
+ assert.equal(missingOrder.error,"UNVERIFIED_USAGE");
+ const claimedOutsideTerm=without({},[{
+  user_id:good.user_id,access_kind:"pass",
+  pass_order_id:good.request_id,claimed_at:"2027-01-01T00:00:00Z"
+ }]);
+ assert.equal(claimedOutsideTerm.error,"PASS_ALREADY_USED");
 });
