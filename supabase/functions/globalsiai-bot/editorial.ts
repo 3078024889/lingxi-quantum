@@ -283,13 +283,32 @@ export function trackedLink(path:string,campaign:string,slot:TelegramSlot,channe
  url.searchParams.set("utm_content",slot);
  return url.toString();
 }
-export function buildPost(date:Date,slot:TelegramSlot,channel:PublicChannel):string {
+export const QQ_GROUPS = [
+ {id:"1074475201",focus:"灵犀场免费工具与实用教程"},
+ {id:"1072178710",focus:"灵犀场智能创作与全球 SIAI"},
+ {id:"601549887",focus:"全球 SIAI 排行榜（原 WB3 群转型）"},
+] as const;
+export type QQGroupId = typeof QQ_GROUPS[number]["id"];
+export function trackedCNLink(path:string,campaign:string,slot:TelegramSlot,channel:PublicChannel):string{
+ const cn=new URL(trackedLink(path,campaign,slot,channel));
+ cn.hostname="lingxifield.cn";
+ return cn.toString();
+}
+export function buildGroupPosts(date:Date,groupId:QQGroupId):Array<{slot:TelegramSlot;label:string;text:string}>{
+ return TELEGRAM_SLOTS.map(slot=>({slot,label:SLOT_LABELS[slot],text:buildPost(date,slot,"qq",groupId)}));
+}
+export function buildPost(date:Date,slot:TelegramSlot,channel:PublicChannel,qqGroup?:QQGroupId):string {
  const day=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Singapore",weekday:"short"}).format(date);
  const index=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(day);
  const [title,detail,path,action,question]=data[slot][index<0?0:index];
- const prefix=channel==="qq"?"🌐 灵犀场｜全球 SIAI 排行榜":"🌐 全球 SIAI｜"+({discovery:"早间发现",tutorial:"实用教程",comparison:"工具对比",creation:"智能创作",community:"晚间问答"} as const)[slot];
- const lines=[prefix,"",`【${title}】`,detail,"",`${action}：`,trackedLink(path,"siai_"+slot,slot,channel),"",question];
- if(channel==="qq") lines.push("","官方 Telegram 社区：https://t.me/globalsiai");
+ const prefix=channel==="qq"
+   ? (qqGroup==="601549887"?"🌐 全球 SIAI 排行榜｜社区发现":"✨ 灵犀场 LINGXIFIELD｜每日实用技巧")
+   : "🌐 全球 SIAI｜"+({discovery:"早间发现",tutorial:"实用教程",comparison:"工具对比",creation:"智能创作",community:"晚间问答"} as const)[slot];
+ const campaign=channel==="qq"&&qqGroup?"qq_"+qqGroup+"_"+slot:"siai_"+slot;
+ const lines=[prefix,"",`【${title}】`,detail,"",`${action}：`,
+   "国际站："+trackedLink(path,campaign,slot,channel),
+   "国内站："+trackedCNLink(path,campaign,slot,channel),"",question];
+ if(channel==="qq"&&slot==="community") lines.push("","全球 SIAI 交流群：https://t.me/globalsiai");
  return lines.join("\n");
 }
 export function buildFivePosts(date:Date,channel:PublicChannel):Array<{slot:TelegramSlot,label:string,text:string}> {
