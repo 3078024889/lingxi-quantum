@@ -144,3 +144,32 @@ test("QQ groups publish 420 distinct messages across 28 days; no duplicate betwe
  assert.equal(messages.size,420);
  assert.equal(titles.size,420);
 });
+
+test("all four communities keep 560 different titles and messages for 28 consecutive days",()=>{
+ const seenTitles=new Set(), seenMessages=new Set();
+ for(let offset=0;offset<28;offset++){
+  const date=new Date(Date.UTC(2026,10,5+offset,4));
+  const groups=[
+   {group:"telegram",posts:buildFivePosts(date,"telegram")},
+   ...QQ_GROUPS.map(group=>({group:group.id,posts:buildGroupPosts(date,group.id)})),
+  ];
+  const daily=new Set();
+  for(const group of groups){
+   assert.equal(group.posts.length,5);
+   for(const post of group.posts){
+    const title=post.text.match(/【[^】]+】/)?.[0];
+    assert.ok(title);
+    assert.ok(!daily.has(title),`cross-community duplicate on offset ${offset}: ${title}`);
+    daily.add(title);
+    assert.ok(!seenTitles.has(title),`repeated headline across 28 days: ${title}`);
+    assert.ok(!seenMessages.has(post.text),"repeated full post");
+    seenTitles.add(title);seenMessages.add(post.text);
+    assert.match(post.text,/国际站：https:\/\/lingxifield\.com/);
+    assert.match(post.text,/国内站：https:\/\/lingxifield\.cn/);
+   }
+  }
+  assert.equal(daily.size,20);
+ }
+ assert.equal(seenTitles.size,560);
+ assert.equal(seenMessages.size,560);
+});
