@@ -7,6 +7,8 @@ test("remote URL source cannot bypass authenticated task receipt after activatio
  assert.match(x,/toolPassBackendReady\(\)/);
  assert.match(x,/redeemToolStart\(/);
  assert.match(x,/userId:user\.id/);
+ assert.match(x,/result\.alreadyRedeemed/);
+ assert.match(x,/TOOL_OPERATION_ALREADY_STARTED/);
  const y=r("components/tools/UrlPromotionWorkbench.tsx");
  assert.match(y,/accessRequestId:ticket\.requestId/);
  assert.match(y,/operationId/);

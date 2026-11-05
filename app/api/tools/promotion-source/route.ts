@@ -18,6 +18,8 @@ export async function POST(req:NextRequest){
   const result=await redeemToolStart({userId:user.id,toolSlug:"url-to-video",
     accessRequestId:body.accessRequestId,operationId:String(body.operationId||"")});
   if(!result.ok)return reply({error:result.error},403);
+  // The first redemption owns this remote fetch. Same operation retries must not refetch.
+  if(result.alreadyRedeemed)return reply({error:"TOOL_OPERATION_ALREADY_STARTED"},409);
  }
  try{
   const raw=/^https:\/\//i.test(body.url)?body.url:`https://${body.url}`;
