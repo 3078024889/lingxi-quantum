@@ -1,0 +1,78 @@
+name: Verified global sharing visual release gate
+
+on:
+  push:
+    branches:
+      - 'release/unified-share-visual-20261105'
+    paths:
+      - '.github/workflows/lingxifield-share-release-gate.yml'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'lib/seo/page-metadata.ts'
+      - 'lingxifield-ai-market/app/(default)/layout.tsx'
+      - 'miniapp/utils/share.js'
+      - 'miniapp/pages/share/index.js'
+      - 'miniapp/assets/**'
+      - 'public/og-lingxifield-*'
+      - 'tests/unified-share-image.test.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lingxifield-share-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site-and-miniapp:
+    name: Site production build and WeChat/OG asset contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Exact image, metadata and old-file removal assertions
+        run: node --test tests/unified-share-image.test.mjs
+      - name: All remaining share code uses the same image, never old 20260928
+        run: |
+          set -euo pipefail
+          if git grep -n -E '(og-lingxifield|share-lingxifield)-20260928' -- app lib miniapp lingxifield-ai-market/app; then
+            echo 'Legacy social share references remain'; exit 1
+          fi
+          node --check miniapp/utils/share.js
+          node --check miniapp/pages/share/index.js
+          node --check miniapp/pages/web/index.js
+          node --check miniapp/pages/portal/index.js
+      - name: Next.js production build
+        run: pnpm build
+  independent-market:
+    name: SIAI independent site's social card and production build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci
+      - name: Confirm independent site references common visual
+        run: |
+          node -e "const s=require('node:fs').readFileSync('app/(default)/layout.tsx','utf8'); if(!s.includes('lingxifield.com/og-lingxifield-20261105.jpg')) process.exit(1)"
+      - name: Build independent market Next.js app
+        run: npm run build
