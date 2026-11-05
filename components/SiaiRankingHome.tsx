@@ -135,7 +135,10 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  },[rows,categories]);
  useEffect(()=>{setShareStatus(null);setShareLink('');},[query,category,task,payment,evidence,sort,compareIds,lang]);
  async function shareSelection(){
-  const url=new URL(siaiSharePath({query,category,task,payment,evidence,sort,compareIds},lang),location.origin).href;
+  const outgoing=new URL(siaiSharePath({query,category,task,payment,evidence,sort,compareIds},lang),location.origin);
+  outgoing.searchParams.set("utm_source","siai_share");
+  outgoing.searchParams.set("utm_campaign","siai_compare");
+  const url=outgoing.href;
   setShareLink(url);
   try{await navigator.clipboard.writeText(url);setShareStatus('copied');}
   catch{setShareStatus('fallback');}
