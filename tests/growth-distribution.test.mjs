@@ -91,3 +91,11 @@ test("open developer API is strictly read-only and documents only sourced review
  assert(!JSON.stringify(spec).includes("source_preview"));
  assert.equal(spec.components.schemas.Directory.properties.rows.items.$ref,"#/components/schemas/Platform");
 });
+
+test("vendor applications must pass same-origin and rate-limit gate",()=>{
+ const route=read("app/api/vendor/submit/route.ts");
+ assert.match(route,/isVendorSameOrigin\(req\)/);
+ assert.match(route,/enforceAbuseGuard\(req/);
+ assert.match(route,/ipLimit:30/);
+ assert.match(route,/return verifiedSubmission\(req\)/);
+});
