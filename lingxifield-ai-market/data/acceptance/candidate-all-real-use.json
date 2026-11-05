@@ -1,7 +1,7 @@
 {
   "schema": "candidate_external_use_acceptance_v1",
   "asOf": "2026-11-03",
-  "expected": 50,
+  "expected": 100,
   "evidenceClassification": "NO_AUTHENTICATED_VENDOR_TASK_OR_PAYMENT_VERIFICATION",
   "browserBlocker": "Individual vendor login, live model task, output inspection, export, and real checkout have not been completed. Publisher documentation is only a source observation, not live-use evidence.",
   "items": [
@@ -1773,6 +1773,1806 @@
       "id": "stability-ai-developer-platform",
       "task": "API图像生成",
       "sourceUrl": "https://platform.stability.ai/docs/getting-started",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "vidu",
+      "task": "文生视频",
+      "sourceUrl": "https://www.vidu.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "pixverse",
+      "task": "视频生成",
+      "sourceUrl": "https://pixverse.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "higgsfield",
+      "task": "视频生成",
+      "sourceUrl": "https://higgsfield.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "hedra",
+      "task": "数字人视频",
+      "sourceUrl": "https://www.hedra.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "invideo-ai",
+      "task": "脚本转视频",
+      "sourceUrl": "https://invideo.io/ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "veed",
+      "task": "视频剪辑",
+      "sourceUrl": "https://www.veed.io/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "opusclip",
+      "task": "长视频转短视频",
+      "sourceUrl": "https://www.opus.pro/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "captions",
+      "task": "视频字幕",
+      "sourceUrl": "https://www.captions.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "pictory",
+      "task": "文本转视频",
+      "sourceUrl": "https://pictory.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "ltx-studio",
+      "task": "故事分镜",
+      "sourceUrl": "https://ltx.studio/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "udio",
+      "task": "音乐生成",
+      "sourceUrl": "https://www.udio.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "aiva",
+      "task": "音乐生成",
+      "sourceUrl": "https://www.aiva.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "soundraw",
+      "task": "AI音乐生成",
+      "sourceUrl": "https://soundraw.io/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "mubert",
+      "task": "音乐生成",
+      "sourceUrl": "https://mubert.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "murf",
+      "task": "语音合成",
+      "sourceUrl": "https://murf.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "speechify",
+      "task": "文本转语音",
+      "sourceUrl": "https://speechify.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "rime-ai",
+      "task": "文字转语音",
+      "sourceUrl": "https://www.rime.ai/pricing",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "deepgram",
+      "task": "语音识别",
+      "sourceUrl": "https://deepgram.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "assemblyai",
+      "task": "语音识别",
+      "sourceUrl": "https://www.assemblyai.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "cartesia",
+      "task": "语音合成",
+      "sourceUrl": "https://cartesia.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "notebooklm",
+      "task": "资料研究",
+      "sourceUrl": "https://notebooklm.google.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "google-flow",
+      "task": "视频生成",
+      "sourceUrl": "https://labs.google/fx/tools/flow",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "copilot-studio",
+      "task": "智能体开发",
+      "sourceUrl": "https://www.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-studio",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "aws-q-developer",
+      "task": "编程助手",
+      "sourceUrl": "https://aws.amazon.com/q/developer/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "adobe-express",
+      "task": "图片设计",
+      "sourceUrl": "https://www.adobe.com/express/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "glean",
+      "task": "企业搜索",
+      "sourceUrl": "https://www.glean.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "jasper",
+      "task": "营销文案",
+      "sourceUrl": "https://www.jasper.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "copy-ai",
+      "task": "营销写作",
+      "sourceUrl": "https://www.copy.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "bolt-new",
+      "task": "编程建站",
+      "sourceUrl": "https://bolt.new/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "vercel-v0",
+      "task": "网页生成",
+      "sourceUrl": "https://v0.app/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "coda-ai",
+      "task": "文档助手",
+      "sourceUrl": "https://coda.io/product/ai",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "grammarly-ai",
+      "task": "写作润色",
+      "sourceUrl": "https://www.grammarly.com/ai",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "quillbot",
+      "task": "文本改写",
+      "sourceUrl": "https://quillbot.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "napkin-ai",
+      "task": "文本可视化",
+      "sourceUrl": "https://www.napkin.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "beautiful-ai",
+      "task": "AI演示文稿",
+      "sourceUrl": "https://www.beautiful.ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "miro-ai",
+      "task": "白板协作",
+      "sourceUrl": "https://miro.com/ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "airtable-ai",
+      "task": "数据库自动化",
+      "sourceUrl": "https://www.airtable.com/platform/ai",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "zapier-ai",
+      "task": "自动化",
+      "sourceUrl": "https://zapier.com/ai",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "make-ai",
+      "task": "工作流",
+      "sourceUrl": "https://www.make.com/en/ai-automation",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "pipedream-ai",
+      "task": "API工作流",
+      "sourceUrl": "https://pipedream.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "anthropic-console",
+      "task": "Claude API",
+      "sourceUrl": "https://console.anthropic.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "openai-platform",
+      "task": "模型API",
+      "sourceUrl": "https://platform.openai.com/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "nvidia-nemo",
+      "task": "模型训练",
+      "sourceUrl": "https://developer.nvidia.com/nemo",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "aws-sagemaker",
+      "task": "模型训练",
+      "sourceUrl": "https://aws.amazon.com/sagemaker/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "google-antigravity",
+      "task": "智能体编程",
+      "sourceUrl": "https://antigravity.google/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "cloudflare-workers-ai",
+      "task": "边缘推理",
+      "sourceUrl": "https://developers.cloudflare.com/workers-ai/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "pinecone",
+      "task": "向量搜索",
+      "sourceUrl": "https://www.pinecone.io/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "weaviate-cloud",
+      "task": "向量检索",
+      "sourceUrl": "https://weaviate.io/developers/weaviate/cloud",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "qdrant-cloud",
+      "task": "向量检索",
+      "sourceUrl": "https://qdrant.tech/cloud/",
+      "checks": {
+        "officialPage": {
+          "status": "public_document_review_only",
+          "verifiedHttp200": false,
+          "outputEvidence": null
+        },
+        "signIn": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "runTask": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "inspectOutput": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "exportDownload": {
+          "status": "not_run",
+          "outputEvidence": null
+        },
+        "billingCheckout": {
+          "status": "not_run",
+          "outputEvidence": null
+        }
+      },
+      "endToEndStatus": "not_verified",
+      "reviewer": null,
+      "reviewedAt": null,
+      "productionEligible": false
+    },
+    {
+      "id": "mongodb-atlas-vector-search",
+      "task": "向量搜索",
+      "sourceUrl": "https://www.mongodb.com/products/platform/atlas-vector-search",
       "checks": {
         "officialPage": {
           "status": "public_document_review_only",
