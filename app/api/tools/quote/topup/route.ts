@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 
 export const runtime="nodejs";
 
 function money(n:number){return Number(Math.max(0,n).toFixed(2));}
 
 export async function POST(req:NextRequest){
+ // Preserve already paid grants, but do not initiate fresh single-tool top-up charges.
+ if(toolPassBackendReady())return NextResponse.json({error:'SINGLE_TOOL_TOPUP_RETIRED',destination:'/tools/pass'},{status:410});
   try{
     if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
 

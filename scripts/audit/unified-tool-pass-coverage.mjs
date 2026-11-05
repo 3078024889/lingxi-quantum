@@ -49,15 +49,29 @@ const rows=slugs.map(slug=>{
  return {slug,entry:"dedicated",covered,imports};
 });
 const missing=rows.filter(row=>!row.covered);
-const legacy=[
- "app/api/tools/quote/route.ts",
- "app/api/tools/pay/create/route.ts",
- "app/api/tools/free-export/route.ts",
- "components/tools/PaidExportButton.tsx",
- "components/tools/PaidActionButton.tsx",
-].filter(path=>existsSync(join(root,path)));
+// Migration means NEW invoices are prohibited, not historical payment records deleted.
+// Each old route is retained for paid fulfillment, refunds and reconciliation only.
+const mustContain={
+ "app/api/tools/quote/route.ts":["toolPassBackendReady()","SINGLE_TOOL_CHECKOUT_RETIRED"],
+ "app/api/tools/pay/create/route.ts":["toolPassBackendReady()","SINGLE_TOOL_CHECKOUT_RETIRED",'quote.status==="paid"'],
+ "app/api/tools/free-export/route.ts":["toolPassBackendReady()","SINGLE_TOOL_CHECKOUT_RETIRED","tool_export_requests"],
+ "app/api/tools/pricing/route.ts":["toolPassBackendReady()","SINGLE_TOOL_PRICING_RETIRED"],
+ "app/api/tools/quote/topup/route.ts":["toolPassBackendReady()","SINGLE_TOOL_TOPUP_RETIRED"],
+ "components/tools/PaidExportButton.tsx":["TOOL_PASS_ENFORCED","ToolPassUpgradeLink","legacyResume"],
+ "components/tools/PaidActionButton.tsx":["TOOL_PASS_ENFORCED","ToolPassUpgradeLink","legacyResume"]
+};
+const legacyAudit=Object.entries(mustContain).map(([path,rules])=>{
+ const found=existsSync(join(root,path));
+ const src=found?read(path):"";
+ const missingGuards=rules.filter(rule=>!src.includes(rule));
+ return {path,preservedForHistory:found,protected:found&&missingGuards.length===0,missingGuards};
+});
+const incompleteLegacy=legacyAudit.filter(row=>!row.protected);
 const summary={catalogCount:slugs.length,staticLikelyCovered:rows.length-missing.length,
  unverified:missing.map(x=>({slug:x.slug,entry:x.entry,imports:x.imports||[]})),
- legacyPaymentEntrypoints:legacy,fullyMigrated:missing.length===0&&legacy.length===0};
+ legacyHistoryPreserved:legacyAudit.filter(x=>x.preservedForHistory).map(x=>x.path),
+ legacyUnretiredEntrypoints:incompleteLegacy,
+ staticToolAndLegacyGuardsPassed:missing.length===0&&incompleteLegacy.length===0,
+ note:"Other independent gates: backend API execution coverage, payment/refund browser E2E, production-schema staging. This audit alone cannot authorize deployment."};
 process.stdout.write(JSON.stringify(summary,null,2)+"\n");
-if(!summary.fullyMigrated)process.exitCode=1;
+if(!summary.staticToolAndLegacyGuardsPassed)process.exitCode=1;
