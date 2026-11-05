@@ -3,7 +3,7 @@ export function publicVisitPath(path:unknown):string|null {
  if(typeof path!=="string"||path.length>200||path.includes("?")||path.includes("#"))return null;
  const clean=path.replace(/\/$/,"")||"/";
  if(/^\/(?:en|ja|ko|fr|de|es|pt|ar|zh)$/.test(clean))return clean;
- if(["/","/sasi","/siai","/siai/claim","/tools","/explore","/learn","/privacy","/terms","/products"].includes(clean))return clean;
+ if(["/","/sasi","/siai","/siai/claim","/partners","/tools","/explore","/learn","/privacy","/terms","/products"].includes(clean))return clean;
  // Only the catalog routes have localized equivalents. Do not generalize this
  // to account, creation, payment or private project routes.
  const catalogPath=clean.replace(/^\/(?:en|ja|ko|fr|de|es|pt|ar|zh)(?=\/(?:siai|tools|products)(?:\/|$))/,"");
