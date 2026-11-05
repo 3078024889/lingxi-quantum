@@ -181,6 +181,9 @@ begin
  if found then
   if prev.user_id<>p_user_id or prev.currency<>p_currency or prev.sku<>p_sku then
    return jsonb_build_object('ok',false,'error','IDEMPOTENCY_CONFLICT');end if;
+  -- Revoked/refunded pass never masquerades as an active successful purchase.
+  if prev.state<>'active' then
+   return jsonb_build_object('ok',false,'error','PASS_NOT_ACTIVE','requestId',prev.request_id,'state',prev.state);end if;
   return jsonb_build_object('ok',true,'alreadyPurchased',true,'requestId',prev.request_id,
    'sku',prev.sku,'currency',prev.currency,'startsAt',prev.starts_at,'endsAt',prev.ends_at,'state',prev.state);
  end if;
@@ -228,6 +231,14 @@ begin
  if found then
   if previous.user_id<>p_user_id or previous.tool_id<>p_tool_key or previous.ip_hash<>p_ip_hash then
    return jsonb_build_object('ok',false,'error','IDEMPOTENCY_CONFLICT');end if;
+  -- A previously issued idempotency key must not become an indefinite
+  -- replayable entitlement (including after a pass refund or expiration).
+  if previous.claimed_at<now()-interval '10 minutes' then
+   return jsonb_build_object('ok',false,'error','OPERATION_RECEIPT_EXPIRED');end if;
+  if previous.access_kind='pass' and not exists(
+   select 1 from public.tool_pass_orders_v2
+   where user_id=p_user_id and state='active' and starts_at<=now() and ends_at>now()
+  ) then return jsonb_build_object('ok',false,'error','PASS_EXPIRED_OR_REVOKED');end if;
   return jsonb_build_object('ok',true,'alreadyClaimed',true,'access',previous.access_kind);
  end if;
  select exists(
