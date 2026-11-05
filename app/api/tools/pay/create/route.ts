@@ -9,6 +9,7 @@ import {exchangeCodeForOpenid,wechatOauthConfigured} from "@/lib/wechat-oauth";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {toolRuntimeState} from "@/lib/tools/service-readiness";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 import {parseCurrency,providerAllowedForCurrency} from "@/lib/payments/currency-book";
 
 export const runtime="nodejs";export const maxDuration=30;
@@ -32,6 +33,13 @@ export async function POST(req:NextRequest){
   const qr=await admin.from("tool_payment_quotes").select("*").eq("id",quoteId).eq("user_id",user.id).maybeSingle();quote=qr.data;
   if(!quote)return NextResponse.json({error:"报价不存在"},{status:404});
   if(quote.status==="paid")return NextResponse.json({paid:true});
+  // Preserve old paid-order recovery; do not create new provider charges for retired single tools.
+  if(toolPassBackendReady()&&!String(quote.tool_id||"").startsWith("sasi-")){
+   const {data:old}=await admin.from("orders").select("id,status,provider").eq("user_id",user.id)
+    .eq("product_id",`toolquote:${quote.id}`).in("status",["pending","paid"]).limit(1).maybeSingle();
+   if(old?.status==="paid")return NextResponse.json({paid:true});
+   return NextResponse.json({error:"SINGLE_TOOL_CHECKOUT_RETIRED",destination:"/tools/pass",legacyOrderId:old?.id||null},{status:410});
+  }
   if(new Date(quote.expires_at).getTime()<Date.now())return NextResponse.json({error:"报价已过期，请重新计算"},{status:410});
   if(!toolRuntimeState(String(quote.tool_id||"")).ready)return NextResponse.json({error:"TOOL_RUNTIME_UNAVAILABLE"},{status:503});
   const currency=parseCurrency(quote.currency)||parseCurrency(quote.metadata?.pricing_currency);

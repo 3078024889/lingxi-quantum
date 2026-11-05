@@ -1,5 +1,6 @@
 "use client";
 import {isMeteredTool,isMeteredOperationTool} from './metered-catalog';
+import {TOOL_PASS_ENFORCED} from './tool-start-client';
 export type ExportAccessRequest={id:string;toolId:string;blob:Blob;name:string;units:number;intent:'save'|'share';members?:Blob[];operation?:'burn-note'};
 type Gate=(request:ExportAccessRequest)=>Promise<boolean>;
 type State={id:string;allowed:boolean;toolId?:string;members?:Blob[];units?:number;request?:ExportAccessRequest;parent?:Blob};
@@ -10,17 +11,18 @@ export function registerExportBundle(blob:Blob,members:Blob[]){states.set(blob,{
 export function restoreExportAccess(blob:Blob,id:string,units=1){states.set(blob,{id,allowed:false,units})}
 export async function ensureToolExportAccess(blob:Blob,name:string,intent:'save'|'share'='save'){
  const toolId=location.pathname.match(/\/tools\/([^/?#]+)/)?.[1]||'';
- if(isMeteredOperationTool(toolId))return;
+ if(TOOL_PASS_ENFORCED||isMeteredOperationTool(toolId))return;
  return authorizeExport(blob,name,intent,toolId);
 }
 // Synchronous read: native file sharing must be started in a fresh click handler.
 export function isExportAccessGranted(blob:Blob):boolean{
  const toolId=location.pathname.match(/\/tools\/([^/?#]+)/)?.[1]||'';
- if(isMeteredOperationTool(toolId)||!isMeteredTool(toolId))return true;
+ if(TOOL_PASS_ENFORCED||isMeteredOperationTool(toolId)||!isMeteredTool(toolId))return true;
  const state=states.get(blob);
  return Boolean(state?.allowed&&state.toolId===toolId);
 }
 export async function ensureBurnNoteAccess(blob:Blob,id:string){
+ if(TOOL_PASS_ENFORCED)return;
  if(!states.has(blob))restoreExportAccess(blob,id);
  return authorizeExport(blob,'Private note','save','burn-after-read','burn-note');
 }

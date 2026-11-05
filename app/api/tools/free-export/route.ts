@@ -4,6 +4,7 @@ import {createAdminClient} from '@/lib/supabase/admin';
 import {isSameOriginMutation} from '@/lib/sasi/request-security';
 import {foodRequestIpHash} from '@/lib/tools/food/request-identity';
 import {isMeteredTool} from '@/lib/tools/commerce/metered-catalog';
+import {toolPassBackendReady} from '@/lib/tools/commerce/tool-server-receipt';
 export const runtime='nodejs';
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:'INVALID_REQUEST_ORIGIN'},{status:403});
@@ -13,6 +14,15 @@ export async function POST(req:NextRequest){
  if(toolId==='burn-after-read'&&units!==1)return NextResponse.json({error:'EXPORT_INPUT_INVALID'},{status:400});
  const client=createClient(),{data:{user}}=await client.auth.getUser(),admin=createAdminClient();
  const ipHash=foodRequestIpHash(req);
+ // Historical requests can still complete, but no NEW legacy metered export may be opened.
+ if(toolPassBackendReady()){
+  const {data:existing,error:existingError}=await admin.from("tool_export_requests")
+   .select("id,user_id,ip_hash,tool_id").eq("id",id).maybeSingle();
+  if(existingError)return NextResponse.json({error:"EXPORT_SERVICE_UNAVAILABLE"},{status:503});
+  if(!existing||existing.tool_id!==toolId||
+    (existing.user_id?existing.user_id!==user?.id:existing.ip_hash!==ipHash))
+    return NextResponse.json({error:"SINGLE_TOOL_CHECKOUT_RETIRED",destination:"/tools/pass"},{status:410});
+ }
  const limit=await admin.rpc('rate_limit_check',{p_key:`tool-export:${ipHash}`,p_limit:300,p_window_seconds:3600});
  if(limit.error)return NextResponse.json({error:'EXPORT_SERVICE_UNAVAILABLE'},{status:503});
  if(limit.data!==true)return NextResponse.json({error:'EXPORT_RATE_LIMITED'},{status:429});
