@@ -13,12 +13,17 @@ test('every web, OpenGraph, X and WeChat share path points to the same visual',(
  const url=read('lib/share-image.ts');
  const root=read('app/layout.tsx');
  const page=read('lib/seo/page-metadata.ts');
+ const siai=read('app/siai/page.tsx');
+ const localizedSiai=read('app/[locale]/siai/page.tsx');
  const separate=read('lingxifield-ai-market/app/(default)/layout.tsx');
  const mini=read('miniapp/utils/share.js');
  const minipage=read('miniapp/pages/share/index.js');
  assert(url.includes('/og-lingxifield-20261105.jpg'));
  assert(root.includes('SHARE_IMAGE_URL'));
  assert(page.includes('SHARE_IMAGE_URL'));
+ assert(siai.includes('images:SHARE_IMAGES'));
+ assert(localizedSiai.includes('images:SHARE_IMAGES'));
+ assert(localizedSiai.includes('summary_large_image'));
  assert(separate.includes('https://lingxifield.com/og-lingxifield-20261105.jpg'));
  assert(mini.includes('/assets/share-lingxifield-20261105.jpg'));
  assert(mini.includes('imageUrl: SHARE_IMAGE'));
