@@ -8,11 +8,11 @@ import type {SpendItem} from "@/lib/siai/free-spend-diagnostic";
 type DraftItem={name:string;monthlyPrice:string;usedPerMonth:string;expectedPerMonth:string;monthlyQuota:string;alternativeMonthlyPrice:string;essential:boolean};
 const initial=():DraftItem=>({name:"",monthlyPrice:"",usedPerMonth:"",expectedPerMonth:"",monthlyQuota:"",alternativeMonthlyPrice:"",essential:false});
 const parseMoney=(value:string):number=>{
- if(!/^(?:0|[1-9]\\d*)(?:\\.\\d{1,2})?$/.test(value))throw new Error("INVALID_MONEY");
+ if(!/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(value))throw new Error("INVALID_MONEY");
  return Number(value);
 };
 const parseCount=(value:string):number=>{
- if(!/^(?:0|[1-9]\\d*)$/.test(value))throw new Error("INVALID_COUNT");
+ if(!/^(?:0|[1-9]\d*)$/.test(value))throw new Error("INVALID_COUNT");
  return Number(value);
 };
 const intoItem=(draft:DraftItem):SpendItem=>({
