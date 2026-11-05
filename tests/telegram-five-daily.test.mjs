@@ -70,6 +70,8 @@ test("public QQ workbench is noindex and client uses browser-only clipboard",()=
  const client=readFileSync(new URL("../app/community/share-kit/share-kit-client.tsx",import.meta.url),"utf8");
  assert.match(page,/robots:\{index:false,follow:false\}/);
  assert.match(client,/navigator\.clipboard\.writeText/);
+ assert.match(client,/import Link from "next\/link"/);
+ assert.doesNotMatch(client,/<a href="\/siai"/);
  assert.doesNotMatch(client,/TELEGRAM_BOT_TOKEN|SUPABASE_SERVICE_ROLE_KEY/);
 });
 
