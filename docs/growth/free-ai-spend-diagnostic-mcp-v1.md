@@ -48,3 +48,34 @@ Status: **experimental feature branch**; NOT production released, NOT submitted 
 - Current MCP implementation is an experimental JSON-RPC tool endpoint, **not yet fully verified as MCP 2026 SDK-compatible**. Official TypeScript SDK v2 has become stable; use it as the reference when performing the next protocol conformance upgrade: https://github.com/modelcontextprotocol/typescript-sdk .
 - Pricing computations are not connected to the live 62 curated provider facts yet. End-user prices are manually entered.
 - Tests added: `tests/free-siai-spend-diagnostic.test.mjs` and `tests/free-siai-spend-diagnostic-i18n.test.mjs`. They are committed, not yet proven green through CI.
+
+## V1.2 Official MCP SDK v2 compatibility lab
+
+Source references and license-respecting adoption:
+- https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/serving/http.md
+- https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/clients/connect.md
+- https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/protocol-versions.md
+- https://github.com/modelcontextprotocol/typescript-sdk/blob/main/examples/gateway/server.ts
+- No copied third-party server source. The new integration adapts documented SDK APIs and reuses only our own `diagnoseAiSpend` function.
+
+Isolated folder: `integrations/siai-spend-mcp-v2` (independent pinned npm package; no main pnpm lockfile change). The official SDK handler is `createMcpHandler`; the Node adapter uses `localhostHostValidation`, `localhostOriginValidation` and `toNodeHandler`. The test client validates both the 2026 modern and 2025 legacy protocol via `StreamableHTTPClientTransport`.
+
+To reproduce **locally** with Node 22.19+:
+```bash
+cd integrations/siai-spend-mcp-v2
+npm install --ignore-scripts --no-audit --no-fund
+npm test
+```
+
+Optional local interactive Inspector (not a production endpoint):
+```bash
+ENABLE_LOCAL_SIAI_SPEND_MCP=true npm start
+# In another terminal:
+npx @modelcontextprotocol/inspector --cli --server-url http://127.0.0.1:4309/mcp --transport http --method tools/list
+```
+
+The developer server **only** binds to 127.0.0.1, is not mounted into Next.js, and is opt-in. The existing public-facing `/api/public/siai-spend-mcp` route stays **off** by default. Real external ChatGPT app integration is not complete; it additionally requires approved domain/identity configuration, hosted SDK integration, per-IP/account distributed rate limiting, privacy review, current review/commerce compliance and real client checks. Do not claim listing or public availability.
+
+CI workflow: `.github/workflows/siai-spend-diagnostic-isolated.yml`. Official SDK v2 local protocol proof: GitHub Actions run 42130419870, 3/3 cases passed (modern, legacy, forbidden Origin/large body). Main isolated diagnostic check also passed. No Vercel deployment was triggered as part of this lab.
+
+Privacy: no provider account access, no bank sync, no file upload, no storing subscription details. Amounts and capacity are manually entered; money values are separate by currency. Capacity comparison must use the **same unit of completed task counts** for expected monthly demand and plan capacity, not mix provider credit balances with task counts. Unknown vendor rules remain unknown.
