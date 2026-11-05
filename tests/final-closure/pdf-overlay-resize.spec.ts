@@ -88,7 +88,7 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   const widthBeforeRetarget=(await item.boundingBox())!.width;
   await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents="none"});
   const target=await grip.boundingBox();expect(target).not.toBeNull();
-  const x=target!.x+target!.width/2,y=target!.y+target!.height/2;
+  const x=target!.x+target!.width/2-2,y=target!.y+target!.height/2-2;
   const hit=await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.closest('[data-testid="pdf-overlay"]')?.getAttribute("data-testid")||null,{x,y});
   expect(hit).toBe("pdf-overlay");
   await page.evaluate(()=>(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace=[]);
