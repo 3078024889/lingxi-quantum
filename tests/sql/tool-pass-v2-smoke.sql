@@ -32,6 +32,16 @@ begin
  if (select active_source_minor from public.tool_pass_orders_v2 where request_id=request_b)<>2000
     or (select legacy_source_minor from public.tool_pass_orders_v2 where request_id=request_b)<>7900
  then raise exception 'USD_SOURCE_SPLIT_INCORRECT';end if;
+ -- An original wallet debit is not necessarily fully refundable principal.
+ -- USD uses 7,900 legacy cents, but only 3,000 were refundable.
+ if (select active_refundable_source_minor from public.tool_pass_orders_v2 where request_id=request_a)<>2000
+   or (select legacy_refundable_source_minor from public.tool_pass_orders_v2 where request_id=request_a)<>900
+ then raise exception 'CNY_REFUNDABLE_SNAPSHOT_BAD';end if;
+ if (select active_refundable_source_minor from public.tool_pass_orders_v2 where request_id=request_b)<>2000
+   or (select legacy_refundable_source_minor from public.tool_pass_orders_v2 where request_id=request_b)<>3000
+ then raise exception 'USD_REFUNDABLE_SNAPSHOT_BAD';end if;
+ if (select refundable_cents from public.ai_usd_wallets where user_id=user_a)<>0
+ then raise exception 'USD_REFUNDABLE_ACCOUNTING_BAD';end if;
  y:=public.purchase_tool_pass_v2(user_b,request_a,'tools_7d','USD');
  if (y->>'error') IS DISTINCT FROM 'IDEMPOTENCY_CONFLICT' then raise exception 'CROSS_USER_REPLAY_UNBLOCKED %',y;end if;
  y:=public.purchase_tool_pass_v2(user_b,'a3333333-3333-4333-8333-333333333333','tools_unknown','CNY');
