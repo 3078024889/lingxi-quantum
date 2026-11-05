@@ -22,6 +22,7 @@ import o003 from "../data/siai-source-preview-20261103/batch-003-official-observ
 import o004 from "../data/company-intake/batch-004-official-observations.json";
 import o005 from "../data/company-intake/batch-005-official-observations.json";
 import o006 from "../data/company-intake/batch-006-official-observations.json";
+import o007 from "../data/company-intake/batch-007-official-observations.json";
 
 type Cohort={batch:string;products:readonly {id:string;name:string;company:string;category:string;website:string;
  evidenceUrl:string;publisherGroupId:string;tasks:readonly string[];reviewed:boolean;publishApproved:boolean}[];
@@ -37,7 +38,7 @@ export type PrivateSiaiCandidate={
 const COHORTS:readonly Cohort[]=[b001,b002,b003,b004,b005,b006,b007,b008,b009,b010];
 const EVIDENCE_PACKS:readonly EvidencePack[]=[
  o001 as EvidencePack,o002 as EvidencePack,o003 as EvidencePack,
- o004 as EvidencePack,o005 as EvidencePack,o006 as EvidencePack
+ o004 as EvidencePack,o005 as EvidencePack,o006 as EvidencePack,o007 as EvidencePack
 ];
 const previewIds=new Set(pub.sourcePreviewIds);
 export function getPrivateSiaiCandidateIndex():{rows:PrivateSiaiCandidate[];total:number;
