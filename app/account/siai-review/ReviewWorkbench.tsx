@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
+import {useCallback,useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 
 type Candidate={id:string;name:string;company:string;category:string;website:string;batch:string;publisherGroupId:string;sourcePreview:boolean;newIntake:boolean;tasks:string[];evidenceUrl:string;evidence:{field:string;text:string;source:string}[]};
@@ -15,18 +15,20 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
  const [candidateCategory,setCandidateCategory]=useState("*");
  const [candidatePool,setCandidatePool]=useState<"all"|"new"|"older"|"preview">("all");
  const [sourcedOnly,setSourcedOnly]=useState(false);
- const [rows,setRows]=useState<Submission[]>([]),[total,setTotal]=useState(0);
+ const [rows,setRows]=useState<Submission[]>([]),[total,setTotal]=useState(0),[pendingTotal,setPendingTotal]=useState(0);
+ const [submissionPage,setSubmissionPage]=useState(1),[hasNext,setHasNext]=useState(false);
  const [loading,setLoading]=useState(true),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const [processing,setProcessing]=useState<string|null>(null),[attested,setAttested]=useState<string|null>(null);
- async function load(){
+ const load=useCallback(async(page:number)=>{
   setLoading(true);setError("");
-  try{const response=await fetch("/api/account/siai-review",{credentials:"same-origin",cache:"no-store"});
+  try{const response=await fetch("/api/account/siai-review?page="+page+"&pageSize=25",{credentials:"same-origin",cache:"no-store"});
    if(!response.ok)throw new Error(response.status===403?"仅管理账户可访问审核资料。":"审核数据读取失败。");
    const result=await response.json();setRows(result.rows||[]);setTotal(result.total||0);
+   setPendingTotal(result.pendingTotal||0);setHasNext(Boolean(result.hasNext));
   }catch(e){setError(e instanceof Error?e.message:"审核数据读取失败。");}
   finally{setLoading(false);}
- }
- useEffect(()=>{void load()},[]);
+ },[]);
+ useEffect(()=>{void load(submissionPage)},[submissionPage,load]);
  const candidateCategoryCounts=useMemo(()=>Object.entries(candidates.reduce<Record<string,number>>((totals,p)=>{totals[p.category]=(totals[p.category]||0)+1;return totals;},{})).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),[candidates]);
  const evidenceCount=useMemo(()=>candidates.reduce((total,p)=>total+p.evidence.length,0),[candidates]);
  const newTotal=useMemo(()=>candidates.filter(p=>p.newIntake).length,[candidates]);
@@ -42,7 +44,7 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
    const response=await fetch("/api/account/siai-review",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({id,action,identityVerifiedByHuman:action==="approve"&&attested===id})});
    if(!response.ok)throw new Error("审核提交失败，请核对管理员权限及状态。");
-   setNotice("审核结果已记录；资料不会自动进入公开排行榜。");setAttested(null);await load();
+   setNotice("审核结果已记录；资料不会自动进入公开排行榜。");setAttested(null);await load(submissionPage);
   }catch(e){setNotice(e instanceof Error?e.message:"审核失败。");}
   finally{setProcessing(null);}
  }
@@ -56,14 +58,14 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
   </header>
   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
    <div className="rounded-lg border p-3"><p className="text-sm text-[var(--lx-muted)]">已收厂商申请</p><strong className="text-xl">{total}</strong></div>
-   <div className="rounded-lg border p-3"><p className="text-sm text-[var(--lx-muted)]">待人工核验</p><strong className="text-xl">{rows.filter(p=>p.status.startsWith("pending")).length}</strong></div>
+   <div className="rounded-lg border p-3"><p className="text-sm text-[var(--lx-muted)]">待人工核验</p><strong className="text-xl">{pendingTotal}</strong></div>
    <div className="col-span-2 rounded-lg border p-3 sm:col-span-1"><p className="text-sm text-[var(--lx-muted)]">待核验产品档案（含公开预览）</p><strong className="text-xl">{candidates.length}</strong></div>
   </div>
   <div className="flex flex-wrap items-center gap-2">
    <button type="button" aria-pressed={tab==="submissions"} className="rounded-lg border px-3 py-2 text-sm font-semibold aria-pressed:bg-blue-100" onClick={()=>setTab("submissions")}>厂商认领 / 提交</button>
    <button type="button" aria-pressed={tab==="candidates"} className="rounded-lg border px-3 py-2 text-sm font-semibold aria-pressed:bg-blue-100" onClick={()=>setTab("candidates")}>全部待审核产品 · {candidates.length}</button>
    <input aria-label="搜索厂商与功能" className="ml-auto min-w-[180px] rounded-lg border px-3 py-2 text-sm" value={search} onChange={e=>setSearch(e.target.value)} placeholder="搜厂商、平台、领域或功能"/>
-   <button type="button" className="rounded-lg border px-3 py-2 text-sm" onClick={()=>void load()} disabled={loading}>刷新申请</button>
+   <button type="button" className="rounded-lg border px-3 py-2 text-sm" onClick={()=>void load(submissionPage)} disabled={loading}>刷新申请</button>
   </div>
   {error&&<p role="alert" className="text-sm text-red-700">{error}</p>}
   {notice&&<p role="status" className="rounded-lg border p-3 text-sm">{notice}</p>}
@@ -85,6 +87,11 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
      </div>
     </div>}
    </article>)}
+   <div className="flex items-center justify-end gap-2 pt-2 text-sm" aria-label="厂商申请分页">
+    <span>第 {submissionPage} 页 · 共 {total} 条申请</span>
+    <button type="button" className="rounded-md border px-3 py-2 disabled:opacity-50" disabled={loading||submissionPage<=1} onClick={()=>setSubmissionPage(n=>Math.max(1,n-1))}>上一页</button>
+    <button type="button" className="rounded-md border px-3 py-2 disabled:opacity-50" disabled={loading||!hasNext} onClick={()=>setSubmissionPage(n=>n+1)}>下一页</button>
+   </div>
   </div>:<div className="space-y-2">
    <p className="text-sm">{candidates.length} 项独立产品档案，包含新增 {newTotal} 家、历史候选 {candidates.length-newTotal-previewTotal} 家及公开但未获厂商认证的来源预览 {previewTotal} 家。已记录 {evidenceCount} 条带来源观察；任何未经核实的字段保持未知。</p>
    <nav className="flex flex-wrap gap-2" aria-label="按审核阶段筛选">
