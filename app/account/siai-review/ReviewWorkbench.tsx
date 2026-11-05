@@ -2,7 +2,7 @@
 import {useCallback,useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 
-type Candidate={id:string;name:string;company:string;category:string;website:string;batch:string;publisherGroupId:string;sourcePreview:boolean;newIntake:boolean;tasks:string[];evidenceUrl:string;evidence:{field:string;text:string;source:string;checkedAt:string|null}[]};
+type Candidate={id:string;name:string;company:string;category:string;navigationGroup:string;website:string;batch:string;publisherGroupId:string;sourcePreview:boolean;newIntake:boolean;tasks:string[];evidenceUrl:string;evidence:{field:string;text:string;source:string;checkedAt:string|null}[]};
 type Submission={id:string;project_id:string;request_type:string;product_name:string;official_site:string;
  work_email:string;submitter_name:string;description:string|null;evidence_url:string;
  status:string;verified_domain:boolean;created_at:string;reviewed_at:string|null};
@@ -29,7 +29,7 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
   finally{setLoading(false);}
  },[]);
  useEffect(()=>{void load(submissionPage)},[submissionPage,load]);
- const candidateCategoryCounts=useMemo(()=>Object.entries(candidates.reduce<Record<string,number>>((totals,p)=>{totals[p.category]=(totals[p.category]||0)+1;return totals;},{})).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),[candidates]);
+ const candidateCategoryCounts=useMemo(()=>Object.entries(candidates.reduce<Record<string,number>>((totals,p)=>{totals[p.navigationGroup]=(totals[p.navigationGroup]||0)+1;return totals;},{})).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),[candidates]);
  const evidenceCount=useMemo(()=>candidates.reduce((total,p)=>total+p.evidence.length,0),[candidates]);
  const factCoverage=useMemo(()=>["price","free","models","regions","commercial","payment","company"].map(field=>({
   field,count:candidates.reduce((n,p)=>n+p.evidence.filter(f=>f.field===field).length,0)
@@ -37,7 +37,7 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
  const newTotal=useMemo(()=>candidates.filter(p=>p.newIntake).length,[candidates]);
  const previewTotal=useMemo(()=>candidates.filter(p=>p.sourcePreview).length,[candidates]);
  const reviewedSources=useMemo(()=>candidates.filter(p=>p.evidence.length>0).length,[candidates]);
- const candidatesShown=useMemo(()=>candidates.filter(p=>(candidateCategory==="*"||p.category===candidateCategory)&&(candidatePool==="all"||(candidatePool==="new"&&p.newIntake)||(candidatePool==="older"&&!p.sourcePreview&&!p.newIntake)||(candidatePool==="preview"&&p.sourcePreview))&&(!sourcedOnly||p.evidence.length>0)&&(p.name+" "+p.company+" "+p.category+" "+p.tasks.join(" ")).toLowerCase().includes(search.toLowerCase().trim())),[candidates,search,candidateCategory,candidatePool,sourcedOnly]);
+ const candidatesShown=useMemo(()=>candidates.filter(p=>(candidateCategory==="*"||p.navigationGroup===candidateCategory)&&(candidatePool==="all"||(candidatePool==="new"&&p.newIntake)||(candidatePool==="older"&&!p.sourcePreview&&!p.newIntake)||(candidatePool==="preview"&&p.sourcePreview))&&(!sourcedOnly||p.evidence.length>0)&&(p.name+" "+p.company+" "+p.category+" "+p.tasks.join(" ")).toLowerCase().includes(search.toLowerCase().trim())),[candidates,search,candidateCategory,candidatePool,sourcedOnly]);
  const submissionsShown=useMemo(()=>rows.filter(p=>(p.product_name+" "+p.status+" "+p.official_site).toLowerCase().includes(search.toLowerCase().trim())),[rows,search]);
  async function operate(id:string,action:ReviewAction){
   if(action==="approve"&&attested!==id){setNotice("请先确认已在站外人工核对厂商授权及身份。");return;}
@@ -125,7 +125,7 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
    <div className="max-h-[680px] space-y-2 overflow-y-auto rounded-xl border p-3">
     {candidatesShown.map(p=><article key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-[var(--lx-panel)] p-3">
      <div><strong className="text-sm">{p.name}</strong><p className="text-sm text-[var(--lx-muted)]">
-      {p.company} · {p.category} · {p.tasks.join(" / ")}
+      {p.company} · {p.navigationGroup}（原类别：{p.category}）· {p.tasks.join(" / ")}
      </p><p className="mt-1 text-xs text-[var(--lx-muted)]">
       {p.batch} · 厂商组 {p.publisherGroupId} · {p.sourcePreview?"仅官网来源预览，未经厂商认证":p.newIntake?"新候选，未公开":"旧候选，未公开"}
      </p></div>
