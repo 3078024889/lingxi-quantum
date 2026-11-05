@@ -36,6 +36,18 @@ function compile(file,imports){const m={exports:{}};new Function('require','modu
  }
  const cnRequest=new NextRequest('https://lingxifield.cn/api/analytics/visit',{method:'POST',headers:{origin:'https://lingxifield.cn','content-type':'application/json','user-agent':'Browser'},body:JSON.stringify({...base,path:'/siai'})});
  assert.equal((await track.POST(cnRequest)).status,204);assert.equal(inserts.at(-1).host,'lingxifield.cn');
+ const countBeforeProxy=inserts.length;
+ assert.equal((await track.POST(req({...base,path:'/siai'},{origin:'https://lingxifield.cn','x-lingxi-public-host':'lingxifield.cn','sec-fetch-site':'same-origin'}))).status,204);
+ assert.equal(inserts.at(-1).host,'lingxifield.cn');assert.equal(inserts.length,countBeforeProxy+1);
+ for(const extra of [
+  {origin:'https://lingxifield.cn','x-lingxi-public-host':'lingxifield.cn','sec-fetch-site':'cross-site'},
+  {origin:'https://lingxifield.com','x-lingxi-public-host':'lingxifield.cn','sec-fetch-site':'same-origin'},
+  {origin:'https://lingxifield.cn','x-lingxi-public-host':'evil.invalid','sec-fetch-site':'same-origin'},
+  {origin:'https://lingxifield.cn','x-lingxi-public-host':'lingxifield.cn'}
+ ])assert.equal((await track.POST(req(base,extra))).status,403);
+ assert.equal(inserts.length,countBeforeProxy+1);
+ assert.equal((await track.POST(req(base,{origin:'https://lingxifield.cn','x-lingxi-public-host':'lingxifield.cn','sec-fetch-site':'same-origin',dnt:'1'}))).status,204);
+ assert.equal(inserts.length,countBeforeProxy+1);
  let reads=0;const adminRoute=compile('app/api/account/money-admin/route.ts',{'@/lib/money/operator-settings':{moneyAdministrator:async()=>null},'@/lib/supabase/admin':{createAdminClient:()=>{reads++;throw new Error('Unauthorized read')}},'@/lib/sasi/request-security':origin,'@/lib/money/operator-notifications':{},'@/lib/money/reconcile-worker':{},'@/lib/mini/virtual-refund':{retryVirtualRefunds:async()=>({results:[]})}});
  const denied=await adminRoute.GET(new NextRequest('https://lingxifield.com/api/account/money-admin'));assert.equal(denied.status,403);assert.equal(reads,0);
  let dashboardArgs;const allowedAdmin={rpc:async(name,args)=>{if(name==='operator_dashboard_snapshot')dashboardArgs=args;return{data:name==='operator_dashboard_snapshot'?{order_total:82,orders:[]}:{channels:[]},error:null}},from(){const q={select(){return q},order(){return q},limit(){return q},then(resolve){return Promise.resolve({data:[],error:null}).then(resolve)}};return q}};
