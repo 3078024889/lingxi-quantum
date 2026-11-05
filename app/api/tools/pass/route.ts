@@ -7,7 +7,7 @@ import {ALL_TOOLS_PASS_CATALOG,allToolsPassOffer} from "@/lib/tools/commerce/all
 import {parseCurrency,recommendedCurrency} from "@/lib/payments/currency-book";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
-const COMMERCE_READY=process.env.TOOL_PASS_COMMERCE_READY==="true";
+const COMMERCE_READY=process.env.TOOL_PASS_COMMERCE_READY==="true"&&process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true";
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function GET(req:NextRequest){
  const {data:{user}}=await createClient().auth.getUser();
