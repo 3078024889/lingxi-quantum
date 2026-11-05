@@ -104,3 +104,16 @@ test("all nine public UI languages have pass copy and nonrenewal disclosure",()=
  for(const key of ["firstFree","useStarts","noAutoRenew","separateCost"])
   assert(i18n.includes(key+":"),"missing disclosure "+key);
 });
+
+test("tool pass purchase UI is hidden and noindexed until safety gates are enabled",()=>{
+ const page=read("app/tools/pass/page.tsx");
+ const ui=read("components/tools/ToolPassOffers.tsx");
+ assert(page.includes('notFound()'));
+ assert(page.includes('LINGXIFIELD_TOOL_PASS_ENABLED'));
+ assert(page.includes('!offers.active'));
+ assert(page.includes('index:false'));
+ assert(ui.includes('requestId:crypto.randomUUID()'));
+ assert(ui.includes('credentials:"same-origin"'));
+ assert(ui.includes('aria-live="polite"'));
+ assert(ui.includes('disabled={Boolean(pending)}'));
+});
