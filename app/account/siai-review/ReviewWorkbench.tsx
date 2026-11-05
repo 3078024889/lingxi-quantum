@@ -2,7 +2,7 @@
 import {useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 
-type Candidate={id:string;name:string;company:string;category:string;website:string;tasks:string[];evidenceUrl:string};
+type Candidate={id:string;name:string;company:string;category:string;website:string;tasks:string[];evidenceUrl:string;evidence:{field:string;text:string;source:string}[]};
 type Submission={id:string;project_id:string;request_type:string;product_name:string;official_site:string;
  work_email:string;submitter_name:string;description:string|null;evidence_url:string;
  status:string;verified_domain:boolean;created_at:string;reviewed_at:string|null};
@@ -13,6 +13,7 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
  const [tab,setTab]=useState<"submissions"|"candidates">("submissions");
  const [search,setSearch]=useState("");
  const [candidateCategory,setCandidateCategory]=useState("*");
+ const [sourcedOnly,setSourcedOnly]=useState(false);
  const [rows,setRows]=useState<Submission[]>([]),[total,setTotal]=useState(0);
  const [loading,setLoading]=useState(true),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const [processing,setProcessing]=useState<string|null>(null),[attested,setAttested]=useState<string|null>(null);
@@ -26,7 +27,8 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
  }
  useEffect(()=>{void load()},[]);
  const candidateCategoryCounts=useMemo(()=>Object.entries(candidates.reduce<Record<string,number>>((totals,p)=>{totals[p.category]=(totals[p.category]||0)+1;return totals;},{})).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),[candidates]);
- const candidatesShown=useMemo(()=>candidates.filter(p=>(candidateCategory==="*"||p.category===candidateCategory)&&(p.name+" "+p.company+" "+p.category+" "+p.tasks.join(" ")).toLowerCase().includes(search.toLowerCase().trim())),[candidates,search,candidateCategory]);
+ const evidenceCount=useMemo(()=>candidates.reduce((total,p)=>total+p.evidence.length,0),[candidates]);
+ const candidatesShown=useMemo(()=>candidates.filter(p=>(candidateCategory==="*"||p.category===candidateCategory)&&(!sourcedOnly||p.evidence.length>0)&&(p.name+" "+p.company+" "+p.category+" "+p.tasks.join(" ")).toLowerCase().includes(search.toLowerCase().trim())),[candidates,search,candidateCategory,sourcedOnly]);
  const submissionsShown=useMemo(()=>rows.filter(p=>(p.product_name+" "+p.status+" "+p.official_site).toLowerCase().includes(search.toLowerCase().trim())),[rows,search]);
  async function operate(id:string,action:ReviewAction){
   if(action==="approve"&&attested!==id){setNotice("请先确认已在站外人工核对厂商授权及身份。");return;}
@@ -80,16 +82,25 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
     </div>}
    </article>)}
   </div>:<div className="space-y-2">
-   <p className="text-sm">这些平台仅记录官网入口与待核对用途。价格、免费额度、支付方式、地区与商用授权未经过逐项核证，禁止自动公开或计算排名。</p>
+   <p className="text-sm">这 50 家仍未获编辑上架批准。已完成 {evidenceCount} 条官方来源观察记录，其余未证实字段明确保留未知，不得自动展示为支持或免费。</p>
    <nav className="flex flex-wrap gap-2" aria-label="新增平台按领域筛选">
     <button type="button" aria-pressed={candidateCategory==="*"} className="rounded-md border px-2 py-1.5 text-sm aria-pressed:bg-blue-100" onClick={()=>setCandidateCategory("*")}>全部 {candidates.length}</button>
     {candidateCategoryCounts.map(([category,count])=><button type="button" key={category} aria-pressed={candidateCategory===category} className="rounded-md border px-2 py-1.5 text-sm aria-pressed:bg-blue-100" onClick={()=>setCandidateCategory(category)}>{category} {count}</button>)}
    </nav>
+   <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={sourcedOnly} onChange={e=>setSourcedOnly(e.target.checked)}/>只看已记录官网证据的平台（{candidates.filter(p=>p.evidence.length>0).length} 家）</label>
    <p className="text-sm text-[var(--lx-muted)]">短视频生成的费用另核对模型、分辨率、秒数、积分和套餐，不能用图片创作或视频剪辑的标签代替。未知的结算方式不统计为支持。</p>
    <div className="max-h-[680px] space-y-2 overflow-y-auto rounded-xl border p-3">
     {candidatesShown.map(p=><article key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-[var(--lx-panel)] p-3">
      <div><strong className="text-sm">{p.name}</strong><p className="text-sm text-[var(--lx-muted)]">{p.company} · {p.category} · {p.tasks.join(" / ")}</p></div>
      <a target="_blank" rel="noopener noreferrer nofollow" className="shrink-0 text-sm font-medium text-blue-700 underline" href={p.evidenceUrl}>核对官网 ↗</a>
+     {p.evidence.length>0&&<details className="w-full min-w-0 border-t pt-2 text-sm">
+      <summary className="cursor-pointer font-semibold">官方资料观察 {p.evidence.length} 项 · 点开查看来源</summary>
+      <div className="mt-2 space-y-2">{p.evidence.map(e=><div key={e.field} className="rounded-md bg-[var(--lx-bg)] p-2">
+       <strong>{({price:"价格",free:"免费额度",models:"能力",regions:"地区",commercial:"商用授权",payment:"付款方式",company:"发布品牌"} as Record<string,string>)[e.field]||e.field}：</strong>
+       <span>{e.text}</span>
+       <a className="ml-2 text-blue-700 underline" href={e.source} target="_blank" rel="nofollow noopener noreferrer">核对官方证据 ↗</a>
+      </div>)}</div>
+     </details>}
     </article>)}
    </div>
    <p className="text-sm">显示 {candidatesShown.length}/{candidates.length} 项。候选列表仅管理账户可见，发布须再次审核。</p>
