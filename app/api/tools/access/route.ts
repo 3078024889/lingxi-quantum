@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {getTool} from "@/lib/tools/registry";
+import {publicToolBySlug} from "@/lib/tools/platform/tool-registry";
 import {trustedClientIp} from "@/lib/security/trusted-client-ip";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
@@ -18,7 +19,7 @@ function clientHash(req:NextRequest){
  if(!secret)return null;
  return createHash("sha256").update(secret+":tool-pass:v1:"+ip).digest("hex");
 }
-function validTool(id:string){const tool=getTool(id);return Boolean(tool&&tool.status==="live");}
+function validTool(id:string){const simple=getTool(id);return Boolean((simple&&simple.status==="live")||publicToolBySlug(id));}
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  if(Number(req.headers.get("content-length")||0)>4096)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
