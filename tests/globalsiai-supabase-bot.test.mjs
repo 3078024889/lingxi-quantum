@@ -26,7 +26,8 @@ test("QQ uses separate source attribution and preserves official group invite",(
  assert.equal(list.length,5);
  for(const item of list){
   assert.match(item.text,/utm_source=qq/);
-  assert.match(item.text,/t\.me\/globalsiai/);
+  if(item.slot==="community")assert.match(item.text,/t\.me\/globalsiai/);
+  else assert.doesNotMatch(item.text,/t\.me\/globalsiai/);
  }
  assert.equal(new URL(trackedLink("/tools","test","tutorial","qq")).searchParams.get("utm_source"),"qq");
 });
