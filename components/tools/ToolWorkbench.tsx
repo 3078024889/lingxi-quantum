@@ -82,11 +82,16 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
     let cancelled=false;
     const token=new URL(window.location.href).searchParams.get("handoff");
     if(!token)return;
-    consumeToolHandoff(token).then(payload=>{
+    consumeToolHandoff(token).then(async payload=>{
       if(cancelled||!payload?.files?.length)return;
       const maxFiles=tool.multiple?(tool.maxFiles||payload.files.length):1;
       const accepted=payload.files.slice(0,maxFiles);
-      setFiles(tool.multiple?accepted:accepted.slice(0,1));
+      const incoming=tool.multiple?accepted:accepted.slice(0,1);
+      try { await claimToolStart(tool.slug,incoming.length); }
+      catch(error){if(!cancelled)setAccessError(toolAccessMessage(lang,error instanceof ToolAccessError?error.code:"TOOL_ACCESS_UNAVAILABLE"));return;}
+      if(cancelled)return;
+      setFiles(incoming);
+      accessTicket.current=fileSignature(incoming);
       setResult(null);
       const clean=new URL(window.location.href);
       clean.searchParams.delete("handoff");
