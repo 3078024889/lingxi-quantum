@@ -81,3 +81,13 @@ test("WordPress shortcodes sanitize attributes and return output rather than pri
  assert.match(php,/esc_attr\(/);
  assert(!php.includes("eval("));
 });
+
+test("open developer API is strictly read-only and documents only sourced review facts",()=>{
+ const spec=JSON.parse(read("public/siai-openapi.json"));
+ assert.equal(spec.openapi,"3.1.0");
+ assert(spec.paths["/api/public/siai-widget"]?.get);
+ assert(spec.paths["/siai/updates.xml"]?.get);
+ for(const methods of Object.values(spec.paths))assert.deepEqual(Object.keys(methods),["get"]);
+ assert(!JSON.stringify(spec).includes("source_preview"));
+ assert.equal(spec.components.schemas.Directory.properties.rows.items.$ref,"#/components/schemas/Platform");
+});
