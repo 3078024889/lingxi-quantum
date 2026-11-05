@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {auditCandidateCorpus,safeOfficialUrl} from "../lingxifield-ai-market/lib/market-catalog-scale-audit.mjs";
+import {validateSiaiTaxonomy,canonicalSiaiCategory,NAVIGATION_GROUPS} from "../lingxifield-ai-market/lib/market-category-taxonomy.mjs";
 import {assertSiaiPublicationManifest} from "../app/siai/directory-publication-contract.ts";
 
 const read=path=>JSON.parse(readFileSync(new URL("../"+path,import.meta.url),"utf8"));
@@ -96,4 +97,23 @@ test("private review console indexes all 10 cohorts, 6 evidence batches and futu
  assert(api.includes('pageSize')&&api.includes('.range(offset,offset+pageSize-1)'));
  assert(api.includes('pendingTotal'));
  assert(ui.includes("candidatePool")&&ui.includes("submissionPage"));
+});
+
+test("all 32 historical source labels are normalized to 11 stable user-facing navigation categories",()=>{
+ const list=batches.flatMap(b=>b.products);
+ const audit=validateSiaiTaxonomy(list);
+ assert.equal(audit.total,100);
+ assert.equal(audit.classified,100);
+ assert.deepEqual(audit.unclassified,[]);
+ assert.deepEqual(audit.unknown,[]);
+ assert.equal(NAVIGATION_GROUPS.length,11);
+ assert.equal(audit.groupCount,11);
+ assert.equal(Object.values(audit.groups).reduce((a,b)=>a+b,0),100);
+ assert.equal(canonicalSiaiCategory("图片创作"),"图片设计");
+ assert.equal(canonicalSiaiCategory("图片生成"),"图片设计");
+ assert.equal(canonicalSiaiCategory("短视频生成"),"视频生成");
+ assert.equal(canonicalSiaiCategory("AI视频"),"视频生成");
+ assert.equal(canonicalSiaiCategory("公司股份"),null);
+ // A navigation group never turns a video editor into a video generator.
+ assert.equal(canonicalSiaiCategory("视频剪辑"),"视频剪辑");
 });
