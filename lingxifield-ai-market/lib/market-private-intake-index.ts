@@ -5,6 +5,7 @@
  */
 import "server-only";
 import pub from "@/app/siai/directory-publication-manifest.json";
+import {canonicalSiaiCategory} from "./market-category-taxonomy.mjs";
 import b001 from "../data/company-intake/batch-001.json";
 import b002 from "../data/company-intake/batch-002.json";
 import b003 from "../data/company-intake/batch-003.json";
@@ -29,7 +30,7 @@ type SourceFact={status:string;text?:string;source?:string;checkedAt?:string};
 type Observation={id:string;facts:Record<string,SourceFact>};
 type EvidencePack={batch:string;products:readonly Observation[]};
 export type PrivateSiaiCandidate={
- id:string;name:string;company:string;category:string;website:string;batch:string;
+ id:string;name:string;company:string;category:string;navigationGroup:string;website:string;batch:string;
  publisherGroupId:string;sourcePreview:boolean;newIntake:boolean;tasks:string[];evidenceUrl:string;
  evidence:{field:string;text:string;source:string;checkedAt:string|null}[];
 };
@@ -60,7 +61,9 @@ export function getPrivateSiaiCandidateIndex():{rows:PrivateSiaiCandidate[];tota
    const evidence=Object.entries(raw?.facts||{}).flatMap(([field,fact])=>
     fact.status==="observed"&&fact.source?.startsWith("https://")&&typeof fact.text==="string"?
      [{field,text:fact.text,source:fact.source,checkedAt:fact.checkedAt||null}]:[]);
-   rows.push({id:item.id,name:item.name,company:item.company,category:item.category,
+   const navigationGroup=canonicalSiaiCategory(item.category);
+   if(!navigationGroup)throw Error("SIAI_PRIVATE_UNKNOWN_CATEGORY:"+item.id);
+   rows.push({id:item.id,name:item.name,company:item.company,category:item.category,navigationGroup,
     publisherGroupId:item.publisherGroupId,website:item.website,batch:batch.batch,
     tasks:[...item.tasks],evidenceUrl:item.evidenceUrl,evidence,
     sourcePreview:previewIds.has(item.id),newIntake:Number(batch.batch.slice(1))>=6});
