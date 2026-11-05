@@ -1,0 +1,280 @@
+{
+  "batch": "B010",
+  "asOf": "2026-11-05",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "reviewNote": "因 Firebase Studio 官方处于停用迁移周期，改用 Google Antigravity 作为候选。所有费用、地区、支付与商用条款均待官网证据核验。",
+  "products": [
+    {
+      "id": "anthropic-console",
+      "name": "Anthropic Console",
+      "company": "Anthropic",
+      "category": "模型API",
+      "website": "https://console.anthropic.com/",
+      "evidenceUrl": "https://console.anthropic.com/",
+      "tasks": [
+        "Claude API",
+        "模型开发",
+        "API控制台"
+      ],
+      "keywords": [
+        "Anthropic Console AI工具",
+        "Anthropic Console价格",
+        "Claude API工具",
+        "模型开发工具",
+        "API控制台工具"
+      ],
+      "publisherGroupId": "anthropic",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://console.anthropic.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "openai-platform",
+      "name": "OpenAI Platform",
+      "company": "OpenAI",
+      "category": "模型API",
+      "website": "https://platform.openai.com/",
+      "evidenceUrl": "https://platform.openai.com/",
+      "tasks": [
+        "模型API",
+        "应用开发",
+        "推理API"
+      ],
+      "keywords": [
+        "OpenAI Platform AI工具",
+        "OpenAI Platform价格",
+        "模型API工具",
+        "应用开发工具",
+        "推理API工具"
+      ],
+      "publisherGroupId": "openai",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://platform.openai.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "nvidia-nemo",
+      "name": "NVIDIA NeMo",
+      "company": "NVIDIA",
+      "category": "模型开发",
+      "website": "https://developer.nvidia.com/nemo",
+      "evidenceUrl": "https://developer.nvidia.com/nemo",
+      "tasks": [
+        "模型训练",
+        "模型开发",
+        "企业模型"
+      ],
+      "keywords": [
+        "NVIDIA NeMo AI工具",
+        "NVIDIA NeMo价格",
+        "模型训练工具",
+        "模型开发工具",
+        "企业模型工具"
+      ],
+      "publisherGroupId": "nvidia",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://developer.nvidia.com/nemo",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "aws-sagemaker",
+      "name": "Amazon SageMaker AI",
+      "company": "AWS",
+      "category": "企业模型API",
+      "website": "https://aws.amazon.com/sagemaker/",
+      "evidenceUrl": "https://aws.amazon.com/sagemaker/",
+      "tasks": [
+        "模型训练",
+        "模型部署",
+        "机器学习"
+      ],
+      "keywords": [
+        "Amazon SageMaker AI AI工具",
+        "Amazon SageMaker AI价格",
+        "模型训练工具",
+        "模型部署工具",
+        "机器学习工具"
+      ],
+      "publisherGroupId": "amazon",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://aws.amazon.com/sagemaker/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "google-antigravity",
+      "name": "Google Antigravity",
+      "company": "Google",
+      "category": "编程开发",
+      "website": "https://antigravity.google/",
+      "evidenceUrl": "https://antigravity.google/",
+      "tasks": [
+        "智能体编程",
+        "代码开发",
+        "多代理任务管理"
+      ],
+      "keywords": [
+        "Google Antigravity AI编程",
+        "Antigravity agent IDE",
+        "多智能体编程"
+      ],
+      "publisherGroupId": "google",
+      "aliases": [
+        "Antigravity"
+      ],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://antigravity.google/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "cloudflare-workers-ai",
+      "name": "Cloudflare Workers AI",
+      "company": "Cloudflare",
+      "category": "模型API",
+      "website": "https://developers.cloudflare.com/workers-ai/",
+      "evidenceUrl": "https://developers.cloudflare.com/workers-ai/",
+      "tasks": [
+        "边缘推理",
+        "模型API",
+        "部署"
+      ],
+      "keywords": [
+        "Cloudflare Workers AI AI工具",
+        "Cloudflare Workers AI价格",
+        "边缘推理工具",
+        "模型API工具",
+        "部署工具"
+      ],
+      "publisherGroupId": "cloudflare",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://developers.cloudflare.com/workers-ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "pinecone",
+      "name": "Pinecone",
+      "company": "Pinecone",
+      "category": "搜索研究",
+      "website": "https://www.pinecone.io/",
+      "evidenceUrl": "https://www.pinecone.io/",
+      "tasks": [
+        "向量搜索",
+        "知识库",
+        "检索"
+      ],
+      "keywords": [
+        "Pinecone AI工具",
+        "Pinecone价格",
+        "向量搜索工具",
+        "知识库工具",
+        "检索工具"
+      ],
+      "publisherGroupId": "pinecone",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.pinecone.io/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "weaviate-cloud",
+      "name": "Weaviate Cloud",
+      "company": "Weaviate",
+      "category": "搜索研究",
+      "website": "https://weaviate.io/developers/weaviate/cloud",
+      "evidenceUrl": "https://weaviate.io/developers/weaviate/cloud",
+      "tasks": [
+        "向量检索",
+        "数据库",
+        "知识库"
+      ],
+      "keywords": [
+        "Weaviate Cloud AI工具",
+        "Weaviate Cloud价格",
+        "向量检索工具",
+        "数据库工具",
+        "知识库工具"
+      ],
+      "publisherGroupId": "weaviate",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://weaviate.io/developers/weaviate/cloud",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "qdrant-cloud",
+      "name": "Qdrant Cloud",
+      "company": "Qdrant",
+      "category": "搜索研究",
+      "website": "https://qdrant.tech/cloud/",
+      "evidenceUrl": "https://qdrant.tech/cloud/",
+      "tasks": [
+        "向量检索",
+        "数据库",
+        "模型检索"
+      ],
+      "keywords": [
+        "Qdrant Cloud AI工具",
+        "Qdrant Cloud价格",
+        "向量检索工具",
+        "数据库工具",
+        "模型检索工具"
+      ],
+      "publisherGroupId": "qdrant",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://qdrant.tech/cloud/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "mongodb-atlas-vector-search",
+      "name": "MongoDB Atlas Vector Search",
+      "company": "MongoDB",
+      "category": "搜索研究",
+      "website": "https://www.mongodb.com/products/platform/atlas-vector-search",
+      "evidenceUrl": "https://www.mongodb.com/products/platform/atlas-vector-search",
+      "tasks": [
+        "向量搜索",
+        "数据库检索",
+        "RAG"
+      ],
+      "keywords": [
+        "MongoDB Atlas Vector Search AI工具",
+        "MongoDB Atlas Vector Search价格",
+        "向量搜索工具",
+        "数据库检索工具",
+        "RAG工具"
+      ],
+      "publisherGroupId": "mongodb",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.mongodb.com/products/platform/atlas-vector-search",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}
