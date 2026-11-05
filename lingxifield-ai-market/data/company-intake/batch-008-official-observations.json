@@ -1,0 +1,481 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B008",
+  "observedOn": "2026-11-05",
+  "disclaimer": "官网公开报价/功能证据，未注册、未支付、未执行外部生成。品牌归属、地区结算与商用许可分开审核；该批不公开。",
+  "products": [
+    {
+      "id": "notebooklm",
+      "name": "NotebookLM",
+      "officialHosts": [
+        "notebooklm.google.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "NotebookLM 是 Google 的来源驱动研究与问答工具，可以基于用户上传的文档、链接及资料生成引用与音频概览；不等于开放 API。",
+          "source": "https://notebooklm.google.com/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Google 作为 NotebookLM 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://notebooklm.google.com/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "google-flow",
+      "name": "Google Flow",
+      "officialHosts": [
+        "labs.google"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Flow 官网列 Google AI Plus USD4.99/月、Pro USD19.99/月以及多档 Ultra；这些是 Google AI 订阅参考价格而不是每条视频单价。",
+          "source": "https://labs.google/fx/tools/flow",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_plan"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Google Flow 未订阅账户官网列每日50个 Flow credits，消耗与具体生成模型、视频类型及分辨率有关。",
+          "source": "https://labs.google/fx/tools/flow",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Google Flow 官网列 Veo 3.1、文本生成视频、图片关键帧生成视频、视频延长、视频编辑及图像生成，须按功能分别统计。",
+          "source": "https://labs.google/fx/tools/flow",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Google 作为 Google Flow 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://labs.google/fx/tools/flow",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "copilot-studio",
+      "name": "Microsoft Copilot Studio",
+      "officialHosts": [
+        "microsoft.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Microsoft Copilot Studio 官网列25,000 Copilot Credits 的USD200/月租户套餐；按量计费每 Credit USD0.01，单次操作耗用积分依功能不同。",
+          "source": "https://www.microsoft.com/en-sg/copilot/products/copilot-studio",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_plan"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Copilot Studio 用于构建、管理、部署业务智能体与自动化工作流，按量付费部署需要 Azure 订阅，不能误标为无条件免费。",
+          "source": "https://www.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-studio",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Microsoft 作为 Microsoft Copilot Studio 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://www.microsoft.com/en-us/microsoft-copilot/microsoft-copilot-studio",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "aws-q-developer",
+      "name": "Amazon Q Developer",
+      "officialHosts": [
+        "aws.amazon.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Amazon Q Developer 官网列永久Free及Pro USD19/人/月，费用属于开发者席位订阅，不是模型 API 每百万Token费率。",
+          "source": "https://aws.amazon.com/q/developer/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_plan"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Amazon Q Developer 免费层每月50次 Agent 请求及 Java 升级1000行代码；免费IDE限额与登录身份相关。",
+          "source": "https://aws.amazon.com/q/developer/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Amazon Q Developer 官方提供IDE与CLI中的智能编码、代码解释、代理任务和Java/.NET现代化功能，Pro提高额度。",
+          "source": "https://aws.amazon.com/q/developer/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 AWS 作为 Amazon Q Developer 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://aws.amazon.com/q/developer/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "adobe-express",
+      "name": "Adobe Express",
+      "officialHosts": [
+        "adobe.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Adobe Express Free 官方列有限免费的生成图片、插入删除对象及短视频AI生成功能；Premium 额外包含每月250个生成积分。",
+          "source": "https://www.adobe.com/express/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Adobe Express 官网提供图像编辑、模板、营销素材和视频制作，Firefly生成能力及伙伴模型分别有使用限制。",
+          "source": "https://www.adobe.com/express/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Adobe 作为 Adobe Express 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://www.adobe.com/express/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "glean",
+      "name": "Glean",
+      "officialHosts": [
+        "glean.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Glean 企业AI平台把企业搜索、知识库、关系图谱及权限保护连接为搜索与智能体能力，供组织连接内部系统。",
+          "source": "https://www.glean.com/platform",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Glean 作为 Glean 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://www.glean.com/platform",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "jasper",
+      "name": "Jasper",
+      "officialHosts": [
+        "jasper.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Jasper 官网页面提供以品牌语调为中心的营销内容和企业工作流服务，不能按通用模型API或图片生成厂商计数。",
+          "source": "https://www.jasper.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Jasper 作为 Jasper 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://www.jasper.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "copy-ai",
+      "name": "Copy.ai",
+      "officialHosts": [
+        "copy.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Copy.ai 官网自助 Chat 方案显示USD29/月按月付款、USD24/月按年付款；Growth 席位与工作流积分单独收费。",
+          "source": "https://www.copy.ai/prices",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_plan"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Copy.ai 提供 GTM 销售营销 AI 聊天、模板与可配置自动化工作流；不同方案的席位数、工作流积分独立。",
+          "source": "https://www.copy.ai/prices",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Copy.ai 作为 Copy.ai 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://www.copy.ai/prices",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "bolt-new",
+      "name": "Bolt.new",
+      "officialHosts": [
+        "bolt.new"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Bolt.new 官网显示 Pro 按月USD25/月起、Teams USD30/成员/月；这是应用生成订阅套餐，不等于云部署账单。",
+          "source": "https://bolt.new/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_plan"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Bolt 免费版官网列每天最多300,000 Tokens、每月100万 Tokens，含站点托管限制，免费额度有日/月双重门槛。",
+          "source": "https://bolt.new/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Bolt.new 用自然语言生成并编辑Web应用、部署站点及接入数据库；网站生成模型Token用量与生产托管消耗分别计算。",
+          "source": "https://bolt.new/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 StackBlitz 作为 Bolt.new 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://bolt.new/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    },
+    {
+      "id": "vercel-v0",
+      "name": "v0",
+      "officialHosts": [
+        "v0.app"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "v0 官方现行价格页列 Free USD0、Plus USD30/人/月、Business USD100/人/月；原 Premium USD20 已进入下架周期，不能当作新用户可买套餐。",
+          "source": "https://v0.app/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_plan"
+        },
+        "free": {
+          "status": "observed",
+          "text": "v0 Free 现行官网标示每日7次消息限制；Plus 含每人每月USD30积分，额外消费与模型Token费率独立。",
+          "source": "https://v0.app/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "v0 是Vercel的自然语言应用与页面生成平台，支持GitHub同步、Visual Design Mode及部署至Vercel，非独立的视频生成模型。",
+          "source": "https://v0.app/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_verified_description"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的准确型号、地区、账户结算或许可证条件缺少可独立核对的供应商官方资料；保持未知，不进入公共筛选数量。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该官网将 Vercel 作为 v0 的产品发布品牌。本字段仅确认网站品牌关系，不代表已确认法律注册公司或集团内部财务主体。",
+          "source": "https://v0.app/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_not_legal_entity"
+        }
+      }
+    }
+  ]
+}
