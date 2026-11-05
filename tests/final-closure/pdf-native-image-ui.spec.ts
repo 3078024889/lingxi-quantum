@@ -1,4 +1,4 @@
-import type {Route} from "@playwright/test";
+import type {Route} from "playwright";
 import fs from "node:fs/promises";
 import {PDFDocument} from "pdf-lib";
 import sharp from "sharp";
