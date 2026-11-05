@@ -4,6 +4,12 @@ test("global sourced payment count does not collapse to zero after choosing loca
  const payments=page.locator(".siai-pay-choices");
  const read=async()=>payments.locator("button").allTextContents();
  const before=await read();
+ for(const label of ["支付宝","微信支付","银行卡"]){
+  const button=payments.getByRole("button",{name:new RegExp(label+"\\\\s+\\\\d+")});
+  const content=await button.textContent();
+  const count=Number(content?.match(/\\d+/)?.[0]||"0");
+  expect(count, "source-backed global "+label+" count must not be zero").toBeGreaterThan(0);
+ }
  await page.getByRole("button",{name:/本地部署\s+\d+/}).click();
  await expect(page.locator(".siai-ability-line").getByRole("button",{name:/本地部署/})).toHaveAttribute("aria-pressed","true");
  expect(await read()).toEqual(before);
