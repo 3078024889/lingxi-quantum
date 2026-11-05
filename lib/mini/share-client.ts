@@ -9,7 +9,7 @@ export function publicMiniSharePath(input:string){
    const mode=url.searchParams.get('mode');
    return mode&&['chat','image','drama','website','book','learning','research'].includes(mode)?'/sasi?mode='+mode:'/sasi';
   }
-  return path==='/'||path==='/tools'||/^\/tools\/[a-z0-9-]+$/.test(path)||['/ai-knowledge','/ai-learning','/ai-research'].includes(path)?path:'/';
+  return path==='/'||path==='/siai'||path==='/tools'||/^\/tools\/[a-z0-9-]+$/.test(path)||['/ai-knowledge','/ai-learning','/ai-research'].includes(path)?path:'/';
  }catch{return '/'}
 }
 export async function openMiniShare(title='灵犀场 LINGXIFIELD'){
