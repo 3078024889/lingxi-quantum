@@ -92,7 +92,7 @@ export type TelegramMessage = {
 };
 export type TelegramUpdate = { update_id: number; message?: TelegramMessage };
 
-export async function telegramApi(token: string, method: "sendMessage" | "deleteMessage", payload: Record<string, unknown>): Promise<void> {
+export async function telegramApi(token: string, method: "sendMessage" | "deleteMessage" | "setWebhook", payload: Record<string, unknown>): Promise<void> {
   const response = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
     method: "POST", headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload), signal: AbortSignal.timeout(8000), cache: "no-store",
