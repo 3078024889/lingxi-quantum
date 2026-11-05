@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useState,type CSSProperties} from "react";
+import {useEffect,useMemo,useState,type CSSProperties} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 const copy:Record<LingxiLang,{eyebrow:string;title:string;intro:string;partners:string;partnerHint:string;siai:string;siaiInfo:string;qr:string;qrInfo:string;copy:string;copied:string;example:string;feed:string;update:string;rules:string;community:string;note:string}>={
@@ -13,11 +13,39 @@ const copy:Record<LingxiLang,{eyebrow:string;title:string;intro:string;partners:
  pt:{eyebrow:"Parceiros globais",title:"Ferramentas para seus visitantes",intro:"Sem cadastro: incorpore o diretório SIAI e um gerador de QR.",partners:"Identificador do parceiro",partnerHint:"Letras, números, _ ou -, até 32 caracteres",siai:"Diretório SIAI",siaiInfo:"Apenas perfis verificados, atualizados após aprovação.",qr:"QR gratuito",qrInfo:"QR para endereços públicos.",copy:"Copiar código",copied:"Copiado",example:"Cole o código no HTML do seu site.",feed:"Acompanhar atualizações",update:"Ranking SIAI",rules:"Apenas visitas reais",community:"Ferramentas grátis",note:"Não coletamos e-mails de visitantes."},
  ar:{eyebrow:"الشركاء حول العالم",title:"أدوات مفيدة لزوار موقعك",intro:"بدون تسجيل: أضف دليل SIAI وصانع QR لموقعك.",partners:"معرّف الشريك",partnerHint:"حروف وأرقام و_ و- بحد أقصى 32",siai:"دليل SIAI",siaiInfo:"البيانات العامة التي تم التحقق منها فقط، وتُحدّث عند الاعتماد.",qr:"مولد QR مجاني",qrInfo:"رموز QR للروابط العامة.",copy:"نسخ الكود",copied:"تم النسخ",example:"الصق الكود في HTML لموقعك.",feed:"الاشتراك في التحديثات",update:"ترتيب SIAI",rules:"الزيارات الحقيقية فقط",community:"الأدوات المجانية",note:"لا نجمع عناوين البريد الإلكتروني للزوار."}
 };
+const vendorCopy:Record<LingxiLang,{title:string;info:string;choose:string}>={
+ zh:{title:"单厂商资料卡 · 供厂商分享",info:"只展示已审核的官方资料；适合厂商官网、博客和合作伙伴引用。",choose:"选择已审核厂商"},
+ en:{title:"Verified vendor profile card",info:"A shareable card for one reviewed product on vendor and partner websites.",choose:"Choose reviewed vendor"},
+ ja:{title:"確認済み企業カード",info:"公式確認済みの企業情報を共有できます。",choose:"企業を選択"},
+ ko:{title:"검증된 기업 카드",info:"검토된 기업 정보만 공유합니다.",choose:"기업 선택"},
+ fr:{title:"Fiche d'entreprise vérifiée",info:"Fiche publique vérifiée pour les partenaires.",choose:"Choisir une entreprise"},
+ de:{title:"Geprüfte Anbieterkarte",info:"Nur bestätigte öffentliche Anbieterinformationen.",choose:"Anbieter wählen"},
+ es:{title:"Ficha verificada de empresa",info:"Solo información pública verificada.",choose:"Elegir empresa"},
+ pt:{title:"Ficha verificada de empresa",info:"Somente dados públicos verificados.",choose:"Escolher empresa"},
+ ar:{title:"بطاقة شركة تم التحقق منها",info:"تُعرض البيانات العامة المعتمدة فقط.",choose:"اختر الشركة"}
+};
 export default function PartnerGrowthPortal(){
  const {lang}=useLingxiLang();const t=copy[lang]||copy.en;
  const [partner,setPartner]=useState("community");const [copied,setCopied]=useState<string|null>(null);
+ const [vendors,setVendors]=useState<Array<{id:string;name:string}>>([]);
+ const [vendor,setVendor]=useState("");
+ useEffect(()=>{let active=true;fetch("/api/public/siai-widget",{credentials:"omit"})
+  .then(r=>r.ok?r.json():Promise.reject(Error("feed")))
+  .then(data=>{if(!active||!Array.isArray(data?.rows))return;
+   const choices=data.rows.filter((r:unknown):r is {id:string;name:string}=>Boolean(r&&typeof r==="object"&&typeof (r as {id?:unknown}).id==="string"&&typeof (r as {name?:unknown}).name==="string"))
+    .map((r:{id:string;name:string})=>({id:r.id,name:r.name}));
+   setVendors(choices);setVendor(v=>v||choices[0]?.id||"");
+  }).catch(()=>{});
+  return()=>{active=false};
+ },[]);
+ const vc=vendorCopy[lang]||vendorCopy.en;
  const safe=partner.toLowerCase().replace(/[^a-z0-9_-]/g,"").slice(0,32)||"community";
- const snippets=useMemo(()=>["siai","tools"].map(kind=>'<script defer src="https://lingxifield.com/widgets/lingxifield-v1.js" data-lx-widget="'+kind+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>'),[safe,lang]);
+ const snippets=useMemo(()=>{
+  const source="https://lingxifield.com/widgets/lingxifield-v1.js";
+  const standard=(kind:string)=>'<script defer src="'+source+'" data-lx-widget="'+kind+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>';
+  return [standard("siai"),standard("tools"),
+   '<script defer src="'+source+'" data-lx-widget="siai" data-vendor="'+vendor+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>'];
+ },[safe,lang,vendor]);
  async function copyCode(value:string,key:string){try{await navigator.clipboard.writeText(value);setCopied(key)}catch{setCopied(null)}}
  const box:CSSProperties={padding:22,border:"1px solid #dce4ee",borderRadius:18,background:"#fff",boxShadow:"0 4px 18px rgba(15,23,42,.04)"};
  return <main style={{padding:"44px 20px 70px",background:"#f7f9fe",minHeight:"70vh"}} dir={lang==="ar"?"rtl":"ltr"}>
@@ -29,9 +57,17 @@ export default function PartnerGrowthPortal(){
     <label style={{display:"block",fontSize:16,fontWeight:700,marginBottom:10}} htmlFor="partner-label">{t.partners}</label>
     <input id="partner-label" value={partner} maxLength={32} onChange={e=>setPartner(e.target.value)} style={{padding:12,fontSize:16,border:"1px solid #cdd7e6",borderRadius:10,width:"min(100%,400px)"}}/>
     <p style={{fontSize:14,color:"#65728a"}}>{t.partnerHint}</p>
+    {vendors.length>0?<div style={{marginTop:18}}><label htmlFor="partner-vendor" style={{display:"block",fontSize:16,fontWeight:700,marginBottom:10}}>{vc.choose}</label>
+     <select id="partner-vendor" value={vendor} onChange={e=>setVendor(e.target.value)} style={{padding:12,fontSize:16,border:"1px solid #cdd7e6",borderRadius:10,width:"min(100%,400px)"}}>
+      {vendors.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+     </select></div>:null}
    </div>
    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,340px),1fr))",gap:18}}>
-    {([{id:"siai",title:t.siai,intro:t.siaiInfo},{id:"tools",title:t.qr,intro:t.qrInfo}] as const).map((item,i)=><section key={item.id} style={box}>
+    {[
+     {id:"siai",title:t.siai,intro:t.siaiInfo},
+     {id:"tools",title:t.qr,intro:t.qrInfo},
+     ...(vendors.length?[{id:"vendor",title:vc.title,intro:vc.info}]:[])
+    ].map((item,i)=><section key={item.id} style={box}>
      <h2 style={{fontSize:22,color:"#16213e",margin:"0 0 12px"}}>{item.title}</h2>
      <p style={{color:"#52617b",fontSize:15,minHeight:62,lineHeight:1.7}}>{item.intro}</p>
      <textarea readOnly aria-label={t.copy+" — "+item.title} value={snippets[i]} style={{width:"100%",height:120,border:"1px solid #d0d9e7",borderRadius:11,padding:12,fontSize:14,lineHeight:1.5,resize:"vertical",color:"#233354",background:"#f8faff"}}/>
