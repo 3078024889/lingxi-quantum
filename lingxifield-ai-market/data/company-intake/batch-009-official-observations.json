@@ -1,0 +1,388 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B009",
+  "observedOn": "2026-11-05",
+  "disclaimer": "此文件只记录明确缺失的七项官方字段证据；尚未核实价格、免费额度、地区、支付、商用、模型或运营法人。0项observed，禁止公开和自动审批。",
+  "products": [
+    {
+      "id": "coda-ai",
+      "name": "Coda AI",
+      "officialHosts": [
+        "coda.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "grammarly-ai",
+      "name": "Grammarly AI",
+      "officialHosts": [
+        "www.grammarly.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "quillbot",
+      "name": "QuillBot",
+      "officialHosts": [
+        "quillbot.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "napkin-ai",
+      "name": "Napkin AI",
+      "officialHosts": [
+        "www.napkin.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "beautiful-ai",
+      "name": "Beautiful.ai",
+      "officialHosts": [
+        "www.beautiful.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "miro-ai",
+      "name": "Miro AI",
+      "officialHosts": [
+        "miro.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "airtable-ai",
+      "name": "Airtable AI",
+      "officialHosts": [
+        "www.airtable.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "zapier-ai",
+      "name": "Zapier AI",
+      "officialHosts": [
+        "zapier.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "make-ai",
+      "name": "Make AI",
+      "officialHosts": [
+        "www.make.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    },
+    {
+      "id": "pipedream-ai",
+      "name": "Pipedream AI",
+      "officialHosts": [
+        "pipedream.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "models": {
+          "status": "missing",
+          "reason": "models 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        },
+        "company": {
+          "status": "missing",
+          "reason": "company 尚无与该产品独立适用且可核对的供应商官网字段证据；未验证真实账号、支付、商用与地区，不进入公开筛选或价格比较。"
+        }
+      }
+    }
+  ]
+}
