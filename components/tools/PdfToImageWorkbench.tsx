@@ -1,5 +1,6 @@
 "use client";
 import{useRef,useState}from"react";
+import {claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import{openPdf,renderPdfPage,canvasToBlob}from"@/lib/tools/pdf-render-client";
 import{DOCUMENT_INPUT_ACCEPT,documentIntakeError,documentIntakeText,normalizeDocumentFile,confirmDocumentUpload}from"@/lib/tools/document/intake-client";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
@@ -34,6 +35,7 @@ export default function PdfToImageWorkbench(){
  const [result,setResult]=useState<ToolResultFile[]>([]);
  async function choose(input:File){
   if(!confirmDocumentUpload([input],lang))return;
+  try{await claimToolStart("pdf-to-jpg",1)}catch(e){setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"));return;}
   setBusy(true);setError("");setResult([]);setFile(null);setPages(0);setRange("");
   try{const f=await normalizeDocumentFile(input);setFile(f);const pdf=await openPdf(f);setPages(pdf.numPages);setRange(`1-${pdf.numPages}`);pdf.destroy?.()}
   catch(e){setFile(null);setPages(0);setError(documentIntakeError(lang,e))}
