@@ -54,6 +54,10 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
  expect(before).not.toBeNull();expect(r).not.toBeNull();
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
+ const resized=await item.boundingBox();expect(resized).not.toBeNull();
+ // The southeast handle must resize in-place; an accidental overlay drag is not a pass.
+ expect(Math.abs(resized!.x-before!.x)).toBeLessThan(4);
+ expect(Math.abs(resized!.y-before!.y)).toBeLessThan(4);
  const rotate=page.getByTestId("pdf-grip-rotate");
  await rotate.scrollIntoViewIfNeeded();await expect(rotate).toBeVisible();
  const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
