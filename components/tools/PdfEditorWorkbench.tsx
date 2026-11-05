@@ -334,7 +334,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
   }
   return "move";
  }
- function overlayTouchGrip(host:HTMLElement,target:EventTarget|null,x:number,y:number):Grip|null{
+ function overlayTouchGrip(host:HTMLElement,target:EventTarget|null,x:number,y:number):"se"|"rotate"|null{
   const targetElement=target instanceof Element?target:null;
   const direct=targetElement?.closest('[data-testid^="pdf-grip-"]');
   if(direct&&host.contains(direct)){
