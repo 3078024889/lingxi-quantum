@@ -20,6 +20,20 @@ create table public.orders(
  submission_name text,
  paid_at timestamptz
 );
+create table public.tool_payment_quotes(
+ id uuid primary key default gen_random_uuid(),
+ tool_id text not null,metadata jsonb not null default '{}'::jsonb,status text not null
+);
+create table public.food_calorie_image_sessions_v18(
+ id uuid primary key,consumed_at timestamptz,input_digest text
+);
+create table public.food_analysis_requests_v19(
+ id uuid primary key,account_id uuid,ip_hash text not null,quantity integer not null,
+ mode text not null,free_eligible boolean not null,image_session_id uuid,
+ input_digest text not null,result jsonb not null,
+ expires_at timestamptz not null default now()+interval '1 day',
+ consumed_at timestamptz
+);
 create table public.test_wallets(user_id uuid primary key references auth.users(id),cny_minor bigint not null default 200000,usd_minor bigint not null default 200000);
 create table public.test_charges(reference_id text primary key,user_id uuid not null,currency text not null,amount_minor bigint not null);
 create or replace function public.charge_sasi_usage_v49(

@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
 import PaidActionButton from "@/components/tools/PaidActionButton";
-import {claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
+import {claimToolStart,TOOL_PASS_ENFORCED,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {recognizeFoodImage} from "@/lib/tools/food/image-recognition-local";
 import {foodLabel} from "@/lib/tools/food/vision-labels";
@@ -28,32 +28,34 @@ export default function FoodCalorieWorkbench(){
  const[hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
  const {lang}=useLingxiLang();const[mode,setMode]=useState<'single'|'batch'|'custom'>('single');const[files,setFiles]=useState<File[]>([]);const[revision,setRevision]=useState(0);const[error,setError]=useState('');
  const startClaimed=useRef(false);
- async function load(input:File[]){if(input.length>20||input.some(f=>!f.type.startsWith('image/')||f.size>15*1024*1024)){setError(t(lang,'fileError'));return;}const accepted=input.slice(0,mode==='single'?1:20);try{await claimToolStart('food-calorie',accepted.length);startClaimed.current=true;setError('');setFiles(accepted);setRevision(n=>n+1);}catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,'fileError'));}}
- return <section dir={lang==='ar'?'rtl':'ltr'} className="space-y-5"><p className="text-sm leading-7 text-[var(--lx-muted)]">{foodBillingText(lang,'pricing')}</p><RecoveredFoodAnalysis lang={lang}/><nav aria-label={t(lang,'custom')} className="grid grid-cols-3 gap-2">{(['single','batch','custom'] as const).map((m,i)=><button type="button" key={m} disabled={!hydrated} aria-pressed={mode===m} className={mode===m?primary:button} onClick={()=>{setMode(m);startClaimed.current=false;setFiles([]);setRevision(n=>n+1);setError('')}}>{t(lang,['upload','batch','custom'][i])}</button>)}</nav>
+ const startClaimRequestId=useRef("");
+ async function load(input:File[]){if(input.length>20||input.some(f=>!f.type.startsWith('image/')||f.size>15*1024*1024)){setError(t(lang,'fileError'));return;}const accepted=input.slice(0,mode==='single'?1:20);try{const ticket=await claimToolStart('food-calorie',accepted.length);startClaimRequestId.current=ticket.requestId||"";startClaimed.current=true;setError('');setFiles(accepted);setRevision(n=>n+1);}catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,'fileError'));}}
+ return <section dir={lang==='ar'?'rtl':'ltr'} className="space-y-5"><p className="text-sm leading-7 text-[var(--lx-muted)]">{foodBillingText(lang,'pricing')}</p><RecoveredFoodAnalysis lang={lang}/><nav aria-label={t(lang,'custom')} className="grid grid-cols-3 gap-2">{(['single','batch','custom'] as const).map((m,i)=><button type="button" key={m} disabled={!hydrated} aria-pressed={mode===m} className={mode===m?primary:button} onClick={()=>{setMode(m);startClaimed.current=false;startClaimRequestId.current="";setFiles([]);setRevision(n=>n+1);setError('')}}>{t(lang,['upload','batch','custom'][i])}</button>)}</nav>
  {mode!=='custom'&&<label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();void load(Array.from(e.dataTransfer.files))}} className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-6 text-center"><span aria-hidden="true" className="text-3xl">＋</span><b>{t(lang,'drop')}</b><span className="text-sm text-[var(--lx-muted)]">{t(lang,'confirmed')}</span><input aria-label={t(lang,'upload')} type="file" accept="image/*" multiple={mode==='batch'} className="max-w-full text-sm" onChange={e=>{void load(Array.from(e.target.files||[]));e.target.value=''}}/></label>}
- {error&&<p role="alert">{error}</p>}{(mode==='custom'||files.length>0)&&<MealWorkspace key={`${mode}-${revision}`} lang={lang} files={files} manual={mode==='custom'} hasUploadClaim={startClaimed.current}/>}
+ {error&&<p role="alert">{error}</p>}{(mode==='custom'||files.length>0)&&<MealWorkspace key={`${mode}-${revision}`} lang={lang} files={files} manual={mode==='custom'} hasUploadClaim={startClaimed.current} initialAccessRequestId={startClaimRequestId.current}/>}
  </section>;
 }
-type Prepared={id:string;quantity:number;mode:'image'|'custom';freeEligible:boolean;completed?:boolean};
+type Prepared={id:string;quantity:number;mode:'image'|'custom';freeEligible:boolean;completed?:boolean;accessRequestId?:string};
 const savedAnalysis='lingxifield:food-analysis:v19';
-function MealWorkspace({lang,files,manual,hasUploadClaim}:{lang:LingxiLang;files:File[];manual:boolean;hasUploadClaim:boolean}){
+function MealWorkspace({lang,files,manual,hasUploadClaim,initialAccessRequestId}:{lang:LingxiLang;files:File[];manual:boolean;hasUploadClaim:boolean;initialAccessRequestId:string}){
   const claimed=useRef(hasUploadClaim);
+  const accessRequestId=useRef(initialAccessRequestId);
  const[groups,setGroups]=useState<Selection[][]>(()=>Array.from({length:Math.max(1,files.length)},()=>[]));
  const[prepared,setPrepared]=useState<Prepared|null>(null),[busy,setBusy]=useState(false),[msg,setMsg]=useState('');
  const requestId=useRef('');
  const all=groups.flat(),valid=all.length>0&&all.length<=30&&all.every(x=>portionValue(x.grams)!==null)&&groups.every(x=>x.length>0);
- function change(i:number,next:Selection[]){if(manual)claimed.current=false;requestId.current='';setGroups(xs=>xs.map((x,j)=>j===i?next:x));setMsg('');}
+ function change(i:number,next:Selection[]){if(manual){claimed.current=false;accessRequestId.current="";}requestId.current='';setGroups(xs=>xs.map((x,j)=>j===i?next:x));setMsg('');}
  async function prepare(){
-  try{if(!claimed.current){await claimToolStart("food-calorie",1);claimed.current=true;}}catch(e){setMsg(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,"fileError"));return;}
+  try{if(!claimed.current){const ticket=await claimToolStart("food-calorie",1);accessRequestId.current=ticket.requestId||"";claimed.current=true;}}catch(e){setMsg(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,"fileError"));return;}
   if(!valid||busy)return;setBusy(true);setMsg('');
   try{
    const session=manual?null:await createFoodImageSession(files);
    // Retrying the same immutable request is safe; image sessions are recreated only before preparation.
    const id=crypto.randomUUID();requestId.current=id;
-   const r=await fetch('/api/tools/food/analysis',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({requestId:id,mode:manual?'custom':'image',sessionId:session?.sessionId,groups:groups.map(g=>g.map(x=>({food_id:x.food.food_id,grams:portionValue(x.grams),...(x.food.food_id===0?{label:x.food.name_zh,per100:x.food.per100}:{})})))})});
+   const r=await fetch('/api/tools/food/analysis',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({requestId:id,accessRequestId:accessRequestId.current,mode:manual?'custom':'image',sessionId:session?.sessionId,groups:groups.map(g=>g.map(x=>({food_id:x.food.food_id,grams:portionValue(x.grams),...(x.food.food_id===0?{label:x.food.name_zh,per100:x.food.per100}:{})})))})});
    const d=await r.json();if(!r.ok)throw new Error(d.error);
    try{localStorage.setItem(savedAnalysis,d.id)}catch{}
-   setPrepared(d);
+   setPrepared({...d,accessRequestId:accessRequestId.current});
   }catch{setMsg(t(lang,'failed'))}finally{setBusy(false)}
  }
  return <div className="space-y-5"><div className={files.length>1?'grid gap-4 xl:grid-cols-2':'space-y-4'}>{groups.map((selected,i)=><article key={i} className="min-w-0 rounded-3xl border border-[var(--lx-line)] p-4 sm:p-5"><FoodEntry lang={lang} file={files[i]} selected={selected} setSelected={next=>change(i,next)} disabled={busy||!!prepared}/></article>)}</div>
@@ -71,12 +73,12 @@ function AnalysisCheckout({lang,prepared}:{lang:LingxiLang;prepared:Prepared}){
  async function calculate(quoteId?:string){
   setBusy(true);setMsg('');if(quoteId)lastQuote.current=quoteId;
   try{
-   const r=await fetch(`/api/tools/food/analysis/${prepared.id}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({quoteId})});const d=await r.json();
+   const r=await fetch(`/api/tools/food/analysis/${prepared.id}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({quoteId,accessRequestId:prepared.accessRequestId})});const d=await r.json();
    if(!r.ok){if(d.freeUsed){setFree(false);setMsg(foodBillingText(lang,'used'))}else {if(d.error==='PAYMENT_REQUIRED')setFree(false);setMsg(foodBillingText(lang,d.error==='REQUEST_EXPIRED'?'expired':'unavailable'));}throw new Error('ANALYSIS_FAILED');}
    setResult(d);setFree(false);
   }catch(e){setMsg(current=>current||foodBillingText(lang,'unavailable'));throw e;}finally{setBusy(false)}
  }
- useEffect(()=>{let live=true;void fetch('/api/tools/food/free-status',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(live)setFree(d?.available===true)}).catch(()=>{if(live)setFree(false)});return()=>{live=false}},[]);
+ useEffect(()=>{if(TOOL_PASS_ENFORCED){setFree(true);return;}let live=true;void fetch('/api/tools/food/free-status',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(live)setFree(d?.available===true)}).catch(()=>{if(live)setFree(false)});return()=>{live=false}},[]);
  return <div className="space-y-4" aria-live="polite">{result?<ResultCard lang={lang} result={result}/>:<>
  {prepared.completed?<button type="button" className={primary} disabled={busy} onClick={()=>void calculate().catch(()=>{})}>{foodBillingText(lang,'retry')}</button>:free===null?<p>{t(lang,'working')}</p>:free&&prepared.freeEligible?<button type="button" className={primary} disabled={busy} onClick={()=>void calculate().catch(()=>{})}>{t(lang,busy?'working':'view')} · {foodBillingText(lang,'freeNow')}</button>:<PaidActionButton toolId="food-calorie" quantity={prepared.quantity} metadata={{foodRequestId:prepared.id,mode:prepared.mode}} draftId={prepared.id} onPaid={calculate} label={foodBillingText(lang,'ready')}/>}
  {msg&&<p role="alert">{msg}</p>}{lastQuote.current&&msg&&<button type="button" className={button} disabled={busy} onClick={()=>void calculate(lastQuote.current).catch(()=>{})}>{foodBillingText(lang,'retry')}</button>}

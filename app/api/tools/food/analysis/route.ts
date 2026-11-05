@@ -7,6 +7,7 @@ import {enforceAbuseGuard} from '@/lib/security/abuse-guard';
 import {foodRequestIpHash} from '@/lib/tools/food/request-identity';
 import {parseFoodGroups,foodQuantity} from '@/lib/tools/food/analysis-input';
 import {resolveFoodMeal} from '@/lib/tools/food/analysis-server';
+import {toolPassBackendReady,redeemToolStart} from '@/lib/tools/commerce/tool-server-receipt';
 export const runtime='nodejs';
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
@@ -30,8 +31,13 @@ export async function POST(req:NextRequest){
    const {data:s,error}=await admin.from('food_calorie_image_sessions_v18').select('*').eq('id',sessionId).maybeSingle();
    if(error||!s||s.account_id!==account||s.ip_hash!==ip||s.consumed_at||Date.parse(s.expires_at)<=Date.now()||s.photo_count!==groups.length)throw new Error('IMAGE_SESSION_INVALID');
   }
+  if(toolPassBackendReady()){
+   if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
+   const receipt=await redeemToolStart({userId:user.id,toolSlug:"food-calorie",accessRequestId:body.accessRequestId,operationId:id});
+   if(!receipt.ok)return NextResponse.json({error:receipt.error},{status:403});
+  }
   const result=await resolveFoodMeal(groups.flat());
-  const quantity=foodQuantity(groups,mode),freeEligible=mode==='custom'||quantity===1;
+  const quantity=foodQuantity(groups,mode),freeEligible=toolPassBackendReady()||mode==='custom'||quantity===1;
   const {error}=await admin.from('food_analysis_requests_v19').insert({id,account_id:account,ip_hash:ip,mode,quantity,free_eligible:freeEligible,image_session_id:sessionId,input_digest:digest,result});
   if(error)throw new Error('ANALYSIS_UNAVAILABLE');
   return NextResponse.json({id,quantity,freeEligible,mode},{headers:{'Cache-Control':'private, no-store'}});
