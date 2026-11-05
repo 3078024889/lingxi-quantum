@@ -1,0 +1,271 @@
+{
+  "batch": "B007",
+  "asOf": "2026-11-05",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "reviewNote": "官网重验发现 Resemble 已将原商业语音合成服务归档（参见 docs.resemble.ai/voice-archive），因此换为官方仍在提供实时 TTS 的 Rime；Udio 官方现已禁下载，务必明确用户导出限制。所有候选仍保持未审核、非公开。",
+  "products": [
+    {
+      "id": "udio",
+      "name": "Udio",
+      "company": "Udio",
+      "category": "语音音乐",
+      "website": "https://www.udio.com/",
+      "evidenceUrl": "https://www.udio.com/",
+      "tasks": [
+        "音乐生成",
+        "歌曲创作",
+        "音频"
+      ],
+      "keywords": [
+        "Udio AI工具",
+        "Udio价格",
+        "音乐生成工具",
+        "歌曲创作工具",
+        "音频工具"
+      ],
+      "publisherGroupId": "udio",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.udio.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "aiva",
+      "name": "AIVA",
+      "company": "AIVA",
+      "category": "语音音乐",
+      "website": "https://www.aiva.ai/",
+      "evidenceUrl": "https://www.aiva.ai/",
+      "tasks": [
+        "音乐生成",
+        "配乐创作"
+      ],
+      "keywords": [
+        "AIVA AI工具",
+        "AIVA价格",
+        "音乐生成工具",
+        "配乐创作工具"
+      ],
+      "publisherGroupId": "aiva",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.aiva.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "soundraw",
+      "name": "SOUNDRAW",
+      "company": "SOUNDRAW",
+      "category": "语音音乐",
+      "website": "https://soundraw.io/",
+      "evidenceUrl": "https://soundraw.io/",
+      "tasks": [
+        "AI音乐生成",
+        "背景音乐"
+      ],
+      "keywords": [
+        "SOUNDRAW AI工具",
+        "SOUNDRAW价格",
+        "AI音乐生成工具",
+        "背景音乐工具"
+      ],
+      "publisherGroupId": "soundraw",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://soundraw.io/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "mubert",
+      "name": "Mubert",
+      "company": "Mubert",
+      "category": "语音音乐",
+      "website": "https://mubert.com/",
+      "evidenceUrl": "https://mubert.com/",
+      "tasks": [
+        "音乐生成",
+        "视频配乐",
+        "音频API"
+      ],
+      "keywords": [
+        "Mubert AI音乐",
+        "AI背景音乐",
+        "Mubert API"
+      ],
+      "publisherGroupId": "mubert",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://mubert.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "murf",
+      "name": "Murf AI",
+      "company": "Murf",
+      "category": "语音音乐",
+      "website": "https://murf.ai/",
+      "evidenceUrl": "https://murf.ai/",
+      "tasks": [
+        "语音合成",
+        "配音",
+        "文字转语音"
+      ],
+      "keywords": [
+        "Murf AI AI工具",
+        "Murf AI价格",
+        "语音合成工具",
+        "配音工具",
+        "文字转语音工具"
+      ],
+      "publisherGroupId": "murf",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://murf.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "speechify",
+      "name": "Speechify",
+      "company": "Speechify",
+      "category": "语音音乐",
+      "website": "https://speechify.com/",
+      "evidenceUrl": "https://speechify.com/",
+      "tasks": [
+        "文本转语音",
+        "朗读",
+        "音频"
+      ],
+      "keywords": [
+        "Speechify AI工具",
+        "Speechify价格",
+        "文本转语音工具",
+        "朗读工具",
+        "音频工具"
+      ],
+      "publisherGroupId": "speechify",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://speechify.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "rime-ai",
+      "name": "Rime",
+      "company": "Rime",
+      "category": "语音API",
+      "website": "https://www.rime.ai/",
+      "evidenceUrl": "https://www.rime.ai/pricing",
+      "tasks": [
+        "文字转语音",
+        "实时语音合成",
+        "语音识别"
+      ],
+      "keywords": [
+        "Rime AI语音合成",
+        "Rime Coda和Mist",
+        "实时文字转语音API",
+        "语音识别API"
+      ],
+      "publisherGroupId": "rime",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.rime.ai/pricing",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "deepgram",
+      "name": "Deepgram",
+      "company": "Deepgram",
+      "category": "语音API",
+      "website": "https://deepgram.com/",
+      "evidenceUrl": "https://deepgram.com/",
+      "tasks": [
+        "语音识别",
+        "转录API",
+        "语音合成"
+      ],
+      "keywords": [
+        "Deepgram AI工具",
+        "Deepgram价格",
+        "语音识别工具",
+        "转录API工具",
+        "语音合成工具"
+      ],
+      "publisherGroupId": "deepgram",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://deepgram.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "assemblyai",
+      "name": "AssemblyAI",
+      "company": "AssemblyAI",
+      "category": "语音API",
+      "website": "https://www.assemblyai.com/",
+      "evidenceUrl": "https://www.assemblyai.com/",
+      "tasks": [
+        "语音识别",
+        "转录API",
+        "音频理解"
+      ],
+      "keywords": [
+        "AssemblyAI AI工具",
+        "AssemblyAI价格",
+        "语音识别工具",
+        "转录API工具",
+        "音频理解工具"
+      ],
+      "publisherGroupId": "assemblyai",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.assemblyai.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "cartesia",
+      "name": "Cartesia",
+      "company": "Cartesia",
+      "category": "语音API",
+      "website": "https://cartesia.ai/",
+      "evidenceUrl": "https://cartesia.ai/",
+      "tasks": [
+        "语音合成",
+        "文字转语音",
+        "语音API"
+      ],
+      "keywords": [
+        "Cartesia Sonic",
+        "Cartesia TTS API",
+        "实时语音"
+      ],
+      "publisherGroupId": "cartesia",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://cartesia.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}
