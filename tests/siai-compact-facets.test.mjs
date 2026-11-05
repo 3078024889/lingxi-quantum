@@ -13,7 +13,9 @@ const rows=[
  row('both',{category:'视频生成',features:['文生视频','图片创作'],free:'免费额度每天更新',freeSource:'https://example.com/free',payment:'微信支付',paymentSource:'https://example.com/pay'}),
  row('editor-only',{category:'视频剪辑',features:['视频剪辑','音频转文字']}),
  row('wrong-pay',{category:'图片生成',features:['图片生成'],payment:'不支持微信支付',paymentSource:'https://example.com/pay'}),
- row('card-only',{category:'编程开发',features:['代码开发'],payment:'信用卡',paymentSource:'https://example.com/pay'})
+ row('card-only',{category:'编程开发',features:['代码开发'],payment:'信用卡',paymentSource:'https://example.com/pay'}),
+ row('prototype-only',{category:'设计',features:['AI原型','设计转应用']}),
+ row('node-workflow-only',{category:'编程开发',features:['节点工作流']})
 ];
 const criteria={query:'',category:'*',task:'all',payment:'any',evidence:'all',sort:'catalog'};
 const match=(overrides={})=>filterMarketRows(rows,{...criteria,...overrides}).map(x=>x.id);
@@ -24,6 +26,8 @@ test('image generation and image creation are one capability; image-to-video is 
  assert.deepEqual(match({query:'图片生成'}),['image-only','both','wrong-pay']);
  assert.equal(taskMatches(rows[0],'image'),false);
  assert.equal(taskMatches(rows[3],'video'),false);
+ assert.equal(taskMatches(rows[6],'image'),false);
+ assert.equal(taskMatches(rows[7],'agent'),false);
 });
 test('real user questions AND capabilities and respect sourced free/checkout evidence',()=>{
  assert.deepEqual(match({query:'能同时做图片和视频的平台'}),['both']);
@@ -36,7 +40,7 @@ test('real user questions AND capabilities and respect sourced free/checkout evi
 });
 test('facet counts describe rows not brand marketing strings, and do not sum to 62',()=>{
  const counts=marketFacetCounts(rows,criteria);
- assert.equal(counts.task.all,6);
+ assert.equal(counts.task.all,8);
  assert.equal(counts.task.image,3);
  assert.equal(counts.task.video,2);
  assert.equal(counts.payment.wechat,1);
