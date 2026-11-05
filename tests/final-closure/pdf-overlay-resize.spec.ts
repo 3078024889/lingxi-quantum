@@ -50,23 +50,31 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   });
   expect(target).toBe(true);
  }
+ const stage=page.getByTestId("pdf-stage");
+ const normalizedWidth=async()=>{
+  const [overlay,pageBox]=await Promise.all([item.boundingBox(),stage.boundingBox()]);
+  return overlay&&pageBox&&pageBox.width>0?overlay.width/pageBox.width:0;
+ };
  const before=await item.boundingBox(),r=await grip.boundingBox();
  expect(before).not.toBeNull();expect(r).not.toBeNull();
+ const beforeRelative=await normalizedWidth();
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
- await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
+ // A mobile viewport may relayout while the finger is moving. Verify that
+ // the actual overlay grows relative to the PDF page, not merely its pixels.
+ await expect.poll(normalizedWidth,{timeout:10000}).toBeGreaterThan(beforeRelative+0.02);
  if(mobile){
   // Adversarial browser hit-test regression: the same finger lands at the
   // visible corner, but Chromium selects its ancestor overlay instead of the
   // 44px grip. Only disable hit-testing on the grip for this test, never the
   // user's touch events or the real resize assertion.
-  const widthBeforeRetarget=(await item.boundingBox())!.width;
+  const widthBeforeRetarget=await normalizedWidth();
   await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents="none"});
   const target=await grip.boundingBox();expect(target).not.toBeNull();
   const x=target!.x+target!.width/2-2,y=target!.y+target!.height/2-2;
   const hit=await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.closest('[data-testid="pdf-overlay"]')?.getAttribute("data-testid")||null,{x,y});
   expect(hit).toBe("pdf-overlay");
   await dragGesture(page,x,y,35,12,true);
-  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(widthBeforeRetarget+4);
+  await expect.poll(normalizedWidth,{timeout:10000}).toBeGreaterThan(widthBeforeRetarget+0.012);
   await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents=""});
  }
  const rotate=page.getByTestId("pdf-grip-rotate");
