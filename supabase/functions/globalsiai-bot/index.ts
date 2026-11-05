@@ -116,6 +116,23 @@ async function publish(req:Request,ctx:NonNullable<ReturnType<typeof config>>){
  if(content.length>4096)return respond(413,{error:"TOO_LARGE"});
  let body:{slot?:string; action?:string};
  try{body=JSON.parse(content)}catch{return respond(400,{error:"BAD_JSON"})}
+ if(body.action==="status"){
+  try {
+   const [me,wh,members]=await Promise.all([
+    telegram(ctx.token,"getMe",{}),
+    telegram(ctx.token,"getWebhookInfo",{}),
+    telegram(ctx.token,"getChatMemberCount",{chat_id:GROUP}).catch(()=>null),
+   ]);
+   return respond(200,{
+    ok:true,
+    botUsername:typeof me.username==="string"?me.username:null,
+    webhookUrl:typeof wh.url==="string"?wh.url:null,
+    webhookPending:Number.isSafeInteger(wh.pending_update_count)?wh.pending_update_count:null,
+    webhookLastError:typeof wh.last_error_message==="string"?wh.last_error_message:null,
+    groupMembers:Number.isSafeInteger(members)?members:null,
+   });
+  }catch{return respond(503,{error:"DIAGNOSTICS_UNAVAILABLE"})}
+ }
  if(body.action==="setup"){
   try{await installWebhook(ctx);return respond(200,{ok:true,webhook:"registered"})}
   catch{return respond(503,{error:"WEBHOOK_SETUP_FAILED"})}
