@@ -25,3 +25,23 @@ test("external host can embed reviewed SIAI widget without iframe or cookies",as
  await expect(destination).toHaveAttribute("href",/utm_source=partner_widget/);
  await expect(destination).toHaveAttribute("href",/utm_content=integration-test/);
 });
+
+
+test("WordPress bundled local JS calls only the fixed HTTPS LINGXIFIELD data API",async({page,request})=>{
+ // Simulates a third-party WordPress host whose executable JS is bundled locally.
+ // Cross-origin network access is limited to the read-only first-party JSON API.
+ await page.route("https://blog.example.test/**",async route=>{
+  const js=await request.get("/widgets/lingxifield-v1.js");
+  await route.fulfill({status:js.status(),contentType:"application/javascript",body:await js.body()});
+ });
+ await page.route("https://lingxifield.com/api/public/siai-widget",async route=>{
+  const res=await request.get("/api/public/siai-widget");
+  await route.fulfill({status:res.status(),contentType:"application/json",
+   headers:{"Access-Control-Allow-Origin":"*","Cache-Control":"no-store"},body:await res.body()});
+ });
+ await page.setContent('<!doctype html><html lang="en"><body><script defer src="https://blog.example.test/wp-content/plugins/lingxifield-widgets/assets/lingxifield-v1.js" data-api-origin="https://lingxifield.com" data-lx-widget="siai" data-partner="wordpress-test"></script></body></html>');
+ const host=page.locator('[data-lingxifield-embed="siai"]');
+ await expect(host.locator('input[type="search"]')).toBeVisible();
+ await expect(host.locator(".item").first()).toBeVisible();
+ await expect(host.locator("a.cta")).toHaveAttribute("href",/utm_content=wordpress-test/);
+});
