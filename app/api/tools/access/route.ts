@@ -56,7 +56,7 @@ export async function GET(req:NextRequest){
  const admin=createAdminClient();
  const day=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Shanghai",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
  const [{data:passes,error:pe},{data:used,error:ue}]=await Promise.all([
-  admin.from("lingxi_tool_passes").select("starts_at,expires_at").eq("user_id",user.id).gt("expires_at",new Date().toISOString()).lte("starts_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1),
+  admin.from("lingxi_tool_passes").select("starts_at,expires_at").eq("user_id",user.id).is("revoked_at",null).gt("expires_at",new Date().toISOString()).lte("starts_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1),
   admin.from("lingxi_tool_use_events").select("user_id,ip_hash,units").eq("tool_slug",toolSlug).eq("usage_day",day).eq("access_kind","daily_free").or(`user_id.eq.${user.id},ip_hash.eq.${ipHash}`)
  ]);
  if(pe||ue)return NextResponse.json({error:"TOOL_ACCESS_UNAVAILABLE"},{status:503});
