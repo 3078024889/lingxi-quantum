@@ -5,6 +5,8 @@ import Link from "next/link";
 import {DIAGNOSTIC_COPY,DIAGNOSIS_RESULT_COPY} from "@/lib/siai/spend-diagnostic-i18n";
 import {diagnoseAiSpend} from "@/lib/siai/free-spend-diagnostic";
 import type {SpendItem} from "@/lib/siai/free-spend-diagnostic";
+import type {SpendTask,VerifiedSiaiOptions} from "@/lib/siai/verified-spend-options";
+import {SPEND_OPTION_COPY} from "@/lib/siai/verified-spend-options-i18n";
 type DraftItem={name:string;monthlyPrice:string;usedPerMonth:string;expectedPerMonth:string;monthlyQuota:string;alternativeMonthlyPrice:string;essential:boolean};
 const initial=():DraftItem=>({name:"",monthlyPrice:"",usedPerMonth:"",expectedPerMonth:"",monthlyQuota:"",alternativeMonthlyPrice:"",essential:false});
 const parseMoney=(value:string):number=>{
@@ -23,12 +25,14 @@ const intoItem=(draft:DraftItem):SpendItem=>({
  essential:draft.essential
 });
 const field="mt-1 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 py-3 text-base text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
-export default function SpendDiagnostic(){
+export default function SpendDiagnostic({candidates}:{candidates:VerifiedSiaiOptions}){
  const {lang}=useLingxiLang(),t=DIAGNOSTIC_COPY[lang],r=DIAGNOSIS_RESULT_COPY[lang];
  const [currency,setCurrency]=useState<"CNY"|"USD">("CNY");
  const [items,setItems]=useState<DraftItem[]>([initial()]);
  const [submitted,setSubmitted]=useState(false);
  const [copyStatus,setCopyStatus]=useState(false);
+ const [task,setTask]=useState<SpendTask|"">("");
+ const c=SPEND_OPTION_COPY[lang];
  const money=(n:number)=>new Intl.NumberFormat(lang==="zh"?"zh-CN":lang,{style:"currency",currency}).format(n);
  const update=(i:number,patch:Partial<DraftItem>)=>{setItems(v=>v.map((x,j)=>i===j?{...x,...patch}:x));setSubmitted(false);};
  const calculation=useMemo(()=>{try{return {result:diagnoseAiSpend({currency,items:items.map(intoItem)}),error:""};}catch(e){return {result:null,error:e instanceof Error?e.message:t.error};}},[currency,items,t.error]);
@@ -43,6 +47,12 @@ export default function SpendDiagnostic(){
   </div>
   <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
    <label className="w-48 text-sm font-semibold text-slate-700">{t.currency}<select className={field} value={currency} onChange={e=>{setCurrency(e.target.value as "CNY"|"USD");setSubmitted(false);}}><option value="CNY">CNY ¥</option><option value="USD">USD $</option></select></label>
+   <label className="min-w-0 flex-1 text-sm font-semibold text-slate-700 sm:max-w-xs">{c.prompt}
+    <select value={task} onChange={e=>setTask(e.target.value as SpendTask|"")} className={field}>
+     <option value="">{c.none}</option>
+     {(["video","image","code","audio","research"] as const).map(k=><option value={k} key={k}>{c[k]}</option>)}
+    </select>
+   </label>
    <button type="button" onClick={loadExample} className="min-h-11 rounded-xl border border-emerald-200 bg-white px-4 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">{r.exampleLabel}</button>
   </div>
   <div className="space-y-3">{items.map((item,i)=><section key={i} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
@@ -66,6 +76,20 @@ export default function SpendDiagnostic(){
    <h2 className="text-xl font-bold">{t.outcome}</h2>
    <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">{[[t.current,calculation.result.monthlySpend],[t.potential,calculation.result.potentialMonthlySavings],[t.annual,calculation.result.annualizedPotentialSavings]].map(([k,v])=><div key={String(k)} className="rounded-xl bg-white p-4"><div className="text-sm text-slate-600">{k}</div><div className="mt-1 text-2xl font-bold tabular-nums text-emerald-800">{money(Number(v))}</div></div>)}</div>
    <div className="mt-4 space-y-2">{calculation.result.findings.map(f=><article className="rounded-xl border border-emerald-100 bg-white p-4" key={f.name}><h3 className="font-semibold">{f.name}</h3><p className="mt-1 text-sm leading-relaxed text-slate-700">{f.status==="review"?r.review:f.status==="downgrade_candidate"?r.downgrade:r.keep}</p><p className="mt-2 text-sm text-slate-600">{r.perUse}: {f.costPerUse===null?"—":money(f.costPerUse)}</p>{f.quotaShortfall!==null&&<p className="mt-2 text-sm font-medium text-amber-800">{t.quotaShortfall}: {f.quotaShortfall} · {t.quotaNote}</p>}</article>)}</div>
+   {task&&candidates[task]?.length>0&&<section className="mt-5 rounded-xl border border-sky-200 bg-white p-4" aria-label={c.title}>
+     <h3 className="text-lg font-bold text-slate-900">{c.title}</h3>
+     <p className="mt-2 text-sm leading-relaxed text-slate-600">{c.disclaimer}</p>
+     <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {candidates[task].map(option=><li key={option.id} className="rounded-xl border border-slate-200 p-3">
+       <Link className="text-base font-semibold text-emerald-800 underline underline-offset-2" href={(lang==="zh"?"/siai":"/"+lang+"/siai")+"?q="+encodeURIComponent(option.name)}>{option.name}</Link>
+       <div className="mt-2 flex flex-wrap gap-3 text-sm">
+        <a href={option.priceEvidenceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline underline-offset-2">{c.price}</a>
+        {option.freeEvidenceUrl&&<a href={option.freeEvidenceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline underline-offset-2">{c.free}</a>}
+        {option.regionEvidenceUrl&&<a href={option.regionEvidenceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline underline-offset-2">{c.region}</a>}
+       </div>
+      </li>)}
+     </ul>
+    </section>}
    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-white p-4">
     <p className="max-w-xl text-sm leading-relaxed text-slate-700">{r.disclaimer}</p>
     <Link href={lang==="zh"?"/siai":"/"+lang+"/siai"} className="inline-flex min-h-11 items-center rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white no-underline hover:bg-emerald-800">{t.compare} →</Link>
