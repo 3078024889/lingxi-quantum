@@ -1,6 +1,7 @@
 "use client";
 
 import {useState} from "react";
+import Link from "next/link";
 import type {TelegramSlot} from "@/lib/telegram/editorial";
 
 type Post={slot:TelegramSlot;label:string;text:string};
@@ -21,7 +22,7 @@ export default function ShareKitClient({day,telegram,qq}:Props){
  return <main className="min-h-screen bg-gradient-to-b from-sky-50 via-white to-indigo-50 px-4 py-10 text-slate-900">
    <div className="mx-auto max-w-4xl">
      <header className="mb-8">
-       <a href="/siai" className="text-sm font-semibold text-indigo-700 hover:underline">全球 SIAI 排行榜</a>
+       <Link href="/siai" className="text-sm font-semibold text-indigo-700 hover:underline">全球 SIAI 排行榜</Link>
        <h1 className="mt-4 text-3xl font-bold tracking-tight">每日五条 · 社区运营工作台</h1>
        <p className="mt-2 text-base text-slate-600">{day}｜直接复制到 QQ 群或 Telegram。所有链接附独立来源标记，便于后续核对引流效果。</p>
      </header>
