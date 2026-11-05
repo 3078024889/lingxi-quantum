@@ -14,7 +14,7 @@ function cleanPath(input) {
   const cut = value.search(/[?#]/)
   const pathname = cut === -1 ? value : value.slice(0, cut)
   if (!pathname || pathname.includes('//') || pathname.includes('\\')) return '/'
-  return pathname === '/' || pathname === '/sasi' || pathname === '/tools' || /^\/tools\/[a-z0-9-]+$/.test(pathname) || ['/ai-knowledge', '/ai-learning', '/ai-research'].includes(pathname) ? pathname : '/'
+  return pathname === '/' || pathname === '/siai' || pathname === '/sasi' || pathname === '/tools' || /^\/tools\/[a-z0-9-]+$/.test(pathname) || ['/ai-knowledge', '/ai-learning', '/ai-research'].includes(pathname) ? pathname : '/'
 }
 
 function publicWebPath(input) {
