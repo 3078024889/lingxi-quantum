@@ -87,14 +87,15 @@ function answer(cmd:string){
   case "/start":case "/help":
    return [
     "欢迎来到全球 SIAI 排行榜官方社区！",
-    "📄 灵犀场免费工具：",pairLinks("/tools","bot_help_tools"),
-    "🌐 全球 SIAI 排行榜：",pairLinks("/siai","bot_help_ranking"),
+    "📄 灵犀场工具和全球 SIAI 排行榜：",
+    pairLinks("/","bot_help"),
+    "发送 /tools 查看工具，/ranking 查看排行榜。",
     "官方群组：https://t.me/globalsiai",
     "请勿发广告、诈骗链接或账号密钥。",
    ].join("\n");
   case "/tools":return "灵犀场在线工具：\n"+pairLinks("/tools","bot_tools");
   case "/ranking":return "全球 SIAI 排行榜：\n"+pairLinks("/siai","bot_ranking");
-  case "/community":return "官方 Telegram 群组：https://t.me/globalsiai";
+  case "/community":return "官方 Telegram 群组：https://t.me/globalsiai\n官网：\n"+pairLinks("/","bot_community");
   default:return null;
  }
 }
@@ -211,7 +212,7 @@ async function webhook(req:Request,ctx:NonNullable<ReturnType<typeof config>>){
   try{
    if(remove)await telegram(ctx.token,"deleteMessage",{chat_id:m.chat.id,message_id:m.message_id});
    else await telegram(ctx.token,"sendMessage",{
-    chat_id:m.chat.id,text:command||["欢迎加入全球 SIAI 社区！","全球智能工具比较：",pairLinks("/siai","welcome_ranking"),"在线实用工具：",pairLinks("/tools","welcome_tools"),"请文明交流，不发布广告或诈骗信息。"].join("\n"),
+    chat_id:m.chat.id,text:command||["欢迎加入全球 SIAI 社区！","免费实用工具与全球模型比较：",pairLinks("/","welcome"),"发送 /tools 或 /ranking 获取具体页面。","请文明交流，不发布广告或诈骗信息。"].join("\n"),
     link_preview_options:{is_disabled:true},
    });
    await status(ctx,key,"delivered");
