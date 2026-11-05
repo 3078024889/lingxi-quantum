@@ -41,7 +41,8 @@ test("task comparison labels exist in all nine native languages",()=>{
 });
 test("candidate suggestions are curated and source-backed, not research previews",()=>{
  const source=read("lib/siai/verified-spend-options.ts");
- assert.match(source,/const \{curated\}=getSiaiDirectoryRows\(\)/);
+ assert.match(source,/const curated=getPublishedSiaiRows\(\)/);
+ assert.match(read("app/siai/catalog-data.ts"),/export function getPublishedSiaiRows/);
  assert.match(source,/priceEvidenceUrl=safeLink\(row\.priceSource\)/);
  assert.match(source,/if\(!priceEvidenceUrl\)return \[\]/);
  assert.match(source,/protocol==="https:"/);
