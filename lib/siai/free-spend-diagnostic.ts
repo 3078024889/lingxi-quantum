@@ -3,6 +3,7 @@ export type SpendItem = {
  monthlyPrice: number;
  usedPerMonth: number;
  expectedPerMonth?: number;
+ monthlyQuota?: number;
  alternativeMonthlyPrice?: number;
  essential?: boolean;
 };
@@ -10,6 +11,7 @@ export type SpendInput = {currency:"CNY"|"USD"; items:SpendItem[]};
 export type SpendFinding = {
  name:string; status:"keep"|"review"|"downgrade_candidate";
  monthlyPrice:number; costPerUse:number|null; potentialMonthlySavings:number;
+ quotaShortfall:number|null;
  reason:string;
 };
 export type SpendOutput = {
@@ -29,6 +31,7 @@ export function diagnoseAiSpend(input:SpendInput):SpendOutput {
   if(!finite(item.monthlyPrice)||item.monthlyPrice<0||item.monthlyPrice>1_000_000) throw new Error("月费必须为非负的有效金额");
   if(!Number.isInteger(item.usedPerMonth)||item.usedPerMonth<0||item.usedPerMonth>1_000_000) throw new Error("使用次数必须为非负整数");
   if(item.expectedPerMonth!==undefined&&(!Number.isInteger(item.expectedPerMonth)||item.expectedPerMonth<0||item.expectedPerMonth>1_000_000))throw new Error("预计使用次数必须为非负整数");
+  if(item.monthlyQuota!==undefined&&(!Number.isInteger(item.monthlyQuota)||item.monthlyQuota<0||item.monthlyQuota>1_000_000))throw new Error("额度必须为非负整数");
   if(item.alternativeMonthlyPrice!==undefined&&(!finite(item.alternativeMonthlyPrice)||item.alternativeMonthlyPrice<0||item.alternativeMonthlyPrice>1_000_000))throw new Error("替代套餐金额无效");
   const price=money(item.monthlyPrice), used=item.usedPerMonth, future=item.expectedPerMonth??used;
   let savings=0;
@@ -43,7 +46,8 @@ export function diagnoseAiSpend(input:SpendInput):SpendOutput {
   } else if(!item.essential&&used===0&&price>0) {
    status="review"; reason="本月未使用，但未来使用计划尚不明确；建议核对续费前是否仍有需求。";
   }
-  return {name,status,monthlyPrice:price,costPerUse:used>0?money(price/used):null,potentialMonthlySavings:money(savings),reason};
+  const quotaShortfall=item.monthlyQuota!==undefined&&item.expectedPerMonth!==undefined?Math.max(0,item.expectedPerMonth-item.monthlyQuota):null;
+  return {name,status,monthlyPrice:price,costPerUse:used>0?money(price/used):null,potentialMonthlySavings:money(savings),quotaShortfall,reason};
  });
  const monthlySpend=money(findings.reduce((s,x)=>s+x.monthlyPrice,0));
  const potentialMonthlySavings=money(findings.reduce((s,x)=>s+x.potentialMonthlySavings,0));
@@ -53,5 +57,6 @@ export function diagnoseAiSpend(input:SpendInput):SpendOutput {
  "年度值仅为月度潜在节省乘以12，不包含折扣、退款、汇率和税费。",
  "不同币种必须分开诊断，不会将人民币与美元金额直接相加。",
  "必要工具不会仅因使用频率低而自动建议取消。",
+ "额度缺口仅比较用户输入的下月预计任务次数和套餐月额度，不代表实际模型供应商限制。",
  ]};
 }
