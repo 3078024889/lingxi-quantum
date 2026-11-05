@@ -800,3 +800,8 @@ html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-telegram{
 @media(max-width:380px){
  .lx-footer-v4 .lx-footer-v4-qq-groups{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Source-backed video pricing belongs to the compact ability lane, not a fourth filter row. */
+.siai-home .siai-ability-line .siai-cost-category-link{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;border:1px solid #cadbf4;border-radius:7px;background:#f5f9ff;padding:3px 9px;min-height:31px;line-height:1.3;font-size:14px;color:#2258ab;text-decoration:none}
+.siai-home .siai-ability-line .siai-cost-category-link:hover{background:#e8f1ff}
+.siai-home .siai-ability-line .siai-cost-category-link:focus-visible{outline:2px solid #2767c8;outline-offset:2px}
