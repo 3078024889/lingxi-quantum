@@ -24,8 +24,8 @@ test("SIAI has nine canonical indexable page paths with hreflang, inLanguage and
 });
 test("No duplicate company profiles and no unsourced candidate SEO listing",()=>{
  assert.match(data,/getSiaiSourcePreviewRows\(\)/);
- assert.match(data,/curated\.length!==32/);
- assert.match(data,/rows\.length!==62/);
+ assert.match(data,/curated\.length!==MARKET_API_PRODUCTS\.length/);
+ assert.match(data,/new Set\(rows\.map\(r=>r\.id\)\)\.size!==rows\.length/);
  assert.match(root,/numberOfItems:curated\.length/);
  assert.match(localized,/numberOfItems:curated\.length/);
  assert(!localized.includes("publishApproved:true"));
