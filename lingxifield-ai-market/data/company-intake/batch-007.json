@@ -1,0 +1,272 @@
+{
+  "batch": "B007",
+  "asOf": "2026-11-05",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "reviewNote": "官网入口及用途待编辑逐项核验；价格、额度、支付、地区、商用条款均不得推定或公开",
+  "products": [
+    {
+      "id": "udio",
+      "name": "Udio",
+      "company": "Udio",
+      "category": "语音音乐",
+      "website": "https://www.udio.com/",
+      "evidenceUrl": "https://www.udio.com/",
+      "tasks": [
+        "音乐生成",
+        "歌曲创作",
+        "音频"
+      ],
+      "keywords": [
+        "Udio AI工具",
+        "Udio价格",
+        "音乐生成工具",
+        "歌曲创作工具",
+        "音频工具"
+      ],
+      "publisherGroupId": "udio",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.udio.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "aiva",
+      "name": "AIVA",
+      "company": "AIVA",
+      "category": "语音音乐",
+      "website": "https://www.aiva.ai/",
+      "evidenceUrl": "https://www.aiva.ai/",
+      "tasks": [
+        "音乐生成",
+        "配乐创作"
+      ],
+      "keywords": [
+        "AIVA AI工具",
+        "AIVA价格",
+        "音乐生成工具",
+        "配乐创作工具"
+      ],
+      "publisherGroupId": "aiva",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.aiva.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "soundraw",
+      "name": "SOUNDRAW",
+      "company": "SOUNDRAW",
+      "category": "语音音乐",
+      "website": "https://soundraw.io/",
+      "evidenceUrl": "https://soundraw.io/",
+      "tasks": [
+        "AI音乐生成",
+        "背景音乐"
+      ],
+      "keywords": [
+        "SOUNDRAW AI工具",
+        "SOUNDRAW价格",
+        "AI音乐生成工具",
+        "背景音乐工具"
+      ],
+      "publisherGroupId": "soundraw",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://soundraw.io/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "beatoven",
+      "name": "Beatoven.ai",
+      "company": "Beatoven",
+      "category": "语音音乐",
+      "website": "https://www.beatoven.ai/",
+      "evidenceUrl": "https://www.beatoven.ai/",
+      "tasks": [
+        "背景音乐",
+        "音乐生成"
+      ],
+      "keywords": [
+        "Beatoven.ai AI工具",
+        "Beatoven.ai价格",
+        "背景音乐工具",
+        "音乐生成工具"
+      ],
+      "publisherGroupId": "beatoven",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.beatoven.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "murf",
+      "name": "Murf AI",
+      "company": "Murf",
+      "category": "语音音乐",
+      "website": "https://murf.ai/",
+      "evidenceUrl": "https://murf.ai/",
+      "tasks": [
+        "语音合成",
+        "配音",
+        "文字转语音"
+      ],
+      "keywords": [
+        "Murf AI AI工具",
+        "Murf AI价格",
+        "语音合成工具",
+        "配音工具",
+        "文字转语音工具"
+      ],
+      "publisherGroupId": "murf",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://murf.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "speechify",
+      "name": "Speechify",
+      "company": "Speechify",
+      "category": "语音音乐",
+      "website": "https://speechify.com/",
+      "evidenceUrl": "https://speechify.com/",
+      "tasks": [
+        "文本转语音",
+        "朗读",
+        "音频"
+      ],
+      "keywords": [
+        "Speechify AI工具",
+        "Speechify价格",
+        "文本转语音工具",
+        "朗读工具",
+        "音频工具"
+      ],
+      "publisherGroupId": "speechify",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://speechify.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "resemble-ai",
+      "name": "Resemble AI",
+      "company": "Resemble",
+      "category": "语音音乐",
+      "website": "https://www.resemble.ai/",
+      "evidenceUrl": "https://www.resemble.ai/",
+      "tasks": [
+        "语音生成",
+        "语音合成"
+      ],
+      "keywords": [
+        "Resemble AI AI工具",
+        "Resemble AI价格",
+        "语音生成工具",
+        "语音合成工具"
+      ],
+      "publisherGroupId": "resemble",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.resemble.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "deepgram",
+      "name": "Deepgram",
+      "company": "Deepgram",
+      "category": "语音API",
+      "website": "https://deepgram.com/",
+      "evidenceUrl": "https://deepgram.com/",
+      "tasks": [
+        "语音识别",
+        "转录API",
+        "语音合成"
+      ],
+      "keywords": [
+        "Deepgram AI工具",
+        "Deepgram价格",
+        "语音识别工具",
+        "转录API工具",
+        "语音合成工具"
+      ],
+      "publisherGroupId": "deepgram",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://deepgram.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "assemblyai",
+      "name": "AssemblyAI",
+      "company": "AssemblyAI",
+      "category": "语音API",
+      "website": "https://www.assemblyai.com/",
+      "evidenceUrl": "https://www.assemblyai.com/",
+      "tasks": [
+        "语音识别",
+        "转录API",
+        "音频理解"
+      ],
+      "keywords": [
+        "AssemblyAI AI工具",
+        "AssemblyAI价格",
+        "语音识别工具",
+        "转录API工具",
+        "音频理解工具"
+      ],
+      "publisherGroupId": "assemblyai",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.assemblyai.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "hume-ai",
+      "name": "Hume AI",
+      "company": "Hume AI",
+      "category": "语音API",
+      "website": "https://www.hume.ai/",
+      "evidenceUrl": "https://www.hume.ai/",
+      "tasks": [
+        "语音对话",
+        "声音理解",
+        "语音API"
+      ],
+      "keywords": [
+        "Hume AI AI工具",
+        "Hume AI价格",
+        "语音对话工具",
+        "声音理解工具",
+        "语音API工具"
+      ],
+      "publisherGroupId": "hume-ai",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.hume.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}
