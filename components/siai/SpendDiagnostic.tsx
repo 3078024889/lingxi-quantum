@@ -82,6 +82,7 @@ export default function SpendDiagnostic({candidates}:{candidates:VerifiedSiaiOpt
      <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
       {candidates[task].map(option=><li key={option.id} className="rounded-xl border border-slate-200 p-3">
        <Link className="text-base font-semibold text-emerald-800 underline underline-offset-2" href={(lang==="zh"?"/siai":"/"+lang+"/siai")+"?q="+encodeURIComponent(option.name)}>{option.name}</Link>
+       {option.checkedAt&&/^\\d{4}-\\d{2}-\\d{2}/.test(option.checkedAt)&&<p className="mt-1 text-xs text-slate-500">{c.reviewed}: {option.checkedAt.slice(0,10)}</p>}
        <div className="mt-2 flex flex-wrap gap-3 text-sm">
         <a href={option.priceEvidenceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline underline-offset-2">{c.price}</a>
         {option.freeEvidenceUrl&&<a href={option.freeEvidenceUrl} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline underline-offset-2">{c.free}</a>}
