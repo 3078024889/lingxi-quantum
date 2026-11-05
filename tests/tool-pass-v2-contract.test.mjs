@@ -150,3 +150,17 @@ test("no partial checkout can launch merely by toggling one environment/source f
   assert(route.includes("passContractReady(offers)"),"missing final release gate on "+name);
  }
 });
+
+test("original two-wallet debits and refundable principal are captured before granting purchases",()=>{
+ const sql=read("docs/commerce/tool-pass-v2-unapplied-database-draft.sql");
+ const stub=read("tests/sql/tool-pass-v2-stub.sql");
+ const smoke=read("tests/sql/tool-pass-v2-smoke.sql");
+ for(const name of ["active_source_minor","legacy_source_minor","active_refundable_source_minor","legacy_refundable_source_minor"])
+  assert(sql.includes(name)&&smoke.includes(name),"source wallet metadata missing: "+name);
+ for(const name of ["sasi_wallets","ai_wallets","sasi_usd_wallets","ai_usd_wallets"])
+  assert(sql.includes("public."+name+" where user_id=p_user_id for update"),"purchase does not lock original source: "+name);
+ assert(sql.includes("TOOL_PASS_REFUNDABLE_SOURCE_MISMATCH"));
+ assert(sql.includes("TOOL_PASS_SOURCE_SPLIT_MISMATCH"));
+ assert(stub.includes("refundable_points")&&stub.includes("refundable_fen")&&stub.includes("refundable_cents"));
+ assert(smoke.includes("USD_REFUNDABLE_SNAPSHOT_BAD"));
+});
