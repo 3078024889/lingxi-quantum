@@ -31,7 +31,7 @@ type EvidencePack={batch:string;products:readonly Observation[]};
 export type PrivateSiaiCandidate={
  id:string;name:string;company:string;category:string;website:string;batch:string;
  publisherGroupId:string;sourcePreview:boolean;newIntake:boolean;tasks:string[];evidenceUrl:string;
- evidence:{field:string;text:string;source:string}[];
+ evidence:{field:string;text:string;source:string;checkedAt:string|null}[];
 };
 const COHORTS:readonly Cohort[]=[b001,b002,b003,b004,b005,b006,b007,b008,b009,b010];
 const EVIDENCE_PACKS:readonly EvidencePack[]=[
@@ -59,7 +59,7 @@ export function getPrivateSiaiCandidateIndex():{rows:PrivateSiaiCandidate[];tota
    const raw=sourceRecords.get(item.id);
    const evidence=Object.entries(raw?.facts||{}).flatMap(([field,fact])=>
     fact.status==="observed"&&fact.source?.startsWith("https://")&&typeof fact.text==="string"?
-     [{field,text:fact.text,source:fact.source}]:[]);
+     [{field,text:fact.text,source:fact.source,checkedAt:fact.checkedAt||null}]:[]);
    rows.push({id:item.id,name:item.name,company:item.company,category:item.category,
     publisherGroupId:item.publisherGroupId,website:item.website,batch:batch.batch,
     tasks:[...item.tasks],evidenceUrl:item.evidenceUrl,evidence,
