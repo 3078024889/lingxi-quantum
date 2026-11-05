@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useState} from "react";
+import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {ALL_TOOLS_PASS_CATALOG,type AllToolsPassSku} from "@/lib/tools/commerce/all-tools-pass";
 
@@ -60,7 +61,7 @@ export default function AllToolsPassPage(){
     className="rounded-lg border bg-transparent px-4 py-2 text-base">
     <option value="CNY">CNY (¥)</option><option value="USD">USD ($)</option>
    </select>
-   <a href="/sasi/pricing" className="rounded-lg border px-4 py-2 text-sm underline">{c.wallet}</a>
+   <Link href="/sasi/pricing" className="rounded-lg border px-4 py-2 text-sm underline">{c.wallet}</Link>
   </div>
   {expiry&&<p className="mb-4 text-sm">{c.existing}: {new Date(expiry).toLocaleString(lang==="zh"?"zh-CN":lang)}</p>}
   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
