@@ -15,6 +15,8 @@ on:
       - 'lingxifield-ai-market/data/company-intake/batch-0*.json'
       - 'lingxifield-ai-market/lib/market-catalog-scale-audit.mjs'
       - 'lingxifield-ai-market/lib/market-category-taxonomy.mjs'
+      - 'components/tools/PdfEditorWorkbench.tsx'
+      - 'tests/final-closure/pdf-overlay-resize.spec.ts'
       - 'tests/siai-catalog-scale.test.mjs'
       - '.github/workflows/siai-catalog-scale-audit.yml'
   workflow_dispatch:
@@ -48,3 +50,39 @@ jobs:
         run: node --test tests/siai-catalog-scale.test.mjs tests/siai-search-discovery.test.mjs tests/siai-customer-language.test.mjs tests/siai-intake-50.test.mjs tests/siai-intake-official-006.test.mjs tests/siai-source-preview.test.mjs tests/siai-company-source.test.mjs tests/siai-compact-facets.test.mjs
       - name: Exact Next.js production build
         run: pnpm build
+
+  pdf-mobile-gesture:
+    name: real touch PDF resize and rotate
+    needs: data-contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout audited branch
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build exact commit, no cloud deployment
+        run: pnpm build
+      - name: Install browser runtime
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Mobile touch resize and rotate acceptance
+        run: pnpm exec playwright test -c playwright.final.config.ts tests/final-closure/pdf-overlay-resize.spec.ts --project=mobile-chromium --workers=1
+      - name: Retain failure trace for forensics
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: siai-audit-pdf-mobile-${{ github.sha }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
