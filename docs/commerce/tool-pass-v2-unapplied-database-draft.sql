@@ -53,6 +53,7 @@ insert into public.tool_pass_allowed_v2(tool_id,registry_version) values
  ('merge-pdf','2026-11-05'),
  ('number-base-converter','2026-11-05'),
  ('odt-to-txt','2026-11-05'),
+ ('ocr','2026-11-05'),
  ('pdf-attachments','2026-11-05'),
  ('pdf-bates-numbering','2026-11-05'),
  ('pdf-bookmarks','2026-11-05'),
