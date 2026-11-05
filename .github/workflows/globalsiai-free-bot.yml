@@ -3,9 +3,11 @@ on:
   pull_request:
     paths:
       - "supabase/functions/globalsiai-bot/**"
+      - "supabase/functions/globalsiai-qq-console/**"
       - "supabase/migrations/*telegram*"
       - "supabase/migrations/*globalsiai*"
       - "tests/globalsiai-supabase-bot.test.mjs"
+      - "tests/globalsiai-qq-console.test.mjs"
       - ".github/workflows/globalsiai-free-bot.yml"
   workflow_dispatch:
 permissions:
@@ -19,4 +21,4 @@ jobs:
         with:
           node-version: "22"
       - name: Verify posts, five daily schedules and security gates
-        run: node --experimental-strip-types --test tests/globalsiai-supabase-bot.test.mjs
+        run: node --experimental-strip-types --test tests/globalsiai-supabase-bot.test.mjs tests/globalsiai-qq-console.test.mjs
