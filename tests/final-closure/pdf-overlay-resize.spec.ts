@@ -80,6 +80,24 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   console.log("PDF_MOBILE_GESTURE_TRACE",JSON.stringify(diagnostic));
  }
  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
+ if(mobile){
+  // Adversarial browser hit-test regression: the same finger lands at the
+  // visible corner, but Chromium selects its ancestor overlay instead of the
+  // 44px grip. Only disable hit-testing on the grip for this test, never the
+  // user's touch events or the real resize assertion.
+  const widthBeforeRetarget=(await item.boundingBox())!.width;
+  await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents="none"});
+  const target=await grip.boundingBox();expect(target).not.toBeNull();
+  const x=target!.x+target!.width/2,y=target!.y+target!.height/2;
+  const hit=await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.closest('[data-testid="pdf-overlay"]')?.getAttribute("data-testid")||null,{x,y});
+  expect(hit).toBe("pdf-overlay");
+  await page.evaluate(()=>(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace=[]);
+  await dragGesture(page,x,y,35,12,true);
+  const trace=await page.evaluate(()=>(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace||[]);
+  console.log("PDF_RETARGETED_TOUCH_DECISIONS",JSON.stringify({first:trace.slice(0,28),last:trace.slice(-8)}));
+  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(widthBeforeRetarget+4);
+  await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents=""});
+ }
  const rotate=page.getByTestId("pdf-grip-rotate");
  await rotate.scrollIntoViewIfNeeded();await expect(rotate).toBeVisible();
  const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
