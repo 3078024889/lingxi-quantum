@@ -19,6 +19,8 @@ on:
       - 'components/MoneyAdminDashboard.tsx'
       - 'lingxifield-ai-market/data/company-intake/batch-0*.json'
       - 'tests/siai-intake-50.test.mjs'
+      - 'tests/siai-intake-official-006.test.mjs'
+      - 'lingxifield-ai-market/data/company-intake/batch-006-official-observations.json'
       - 'tests/siai-compact-facets.test.mjs'
       - 'tests/final-closure/siai-payment-admin-real.spec.ts'
   workflow_dispatch:
@@ -71,7 +73,7 @@ jobs:
         run: pnpm ci:source
 
       - name: Source-backed payments, 50 candidates, 62 public rows, 9 languages
-        run: node --test tests/siai-compact-facets.test.mjs tests/siai-intake-50.test.mjs tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs tests/siai-localized-indexing.test.mjs tests/siai-customer-language.test.mjs tests/siai-major-publishers-004.test.mjs tests/siai-company-source.test.mjs tests/footer-unified.test.mjs
+        run: node --test tests/siai-compact-facets.test.mjs tests/siai-intake-50.test.mjs tests/siai-intake-official-006.test.mjs tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs tests/siai-localized-indexing.test.mjs tests/siai-customer-language.test.mjs tests/siai-major-publishers-004.test.mjs tests/siai-company-source.test.mjs tests/footer-unified.test.mjs
 
       - name: Playwright import/dependency contract
         run: pnpm ci:playwright-contract
