@@ -4,7 +4,7 @@
   "reviewState": "candidate",
   "intakePaused": true,
   "visibleToPublic": false,
-  "reviewNote": "官网候选均需编辑核验；Beatoven消费服务已停/Hume EVI-TTS将于2026-11-13停用，两条已替换；不公开无证据价格、支付及授权",
+  "reviewNote": "官网重验发现 Resemble 已将原商业语音合成服务归档（参见 docs.resemble.ai/voice-archive），因此换为官方仍在提供实时 TTS 的 Rime；Udio 官方现已禁下载，务必明确用户导出限制。所有候选仍保持未审核、非公开。",
   "products": [
     {
       "id": "udio",
@@ -163,26 +163,27 @@
       "publishApproved": false
     },
     {
-      "id": "resemble-ai",
-      "name": "Resemble AI",
-      "company": "Resemble",
-      "category": "语音音乐",
-      "website": "https://www.resemble.ai/",
-      "evidenceUrl": "https://www.resemble.ai/",
+      "id": "rime-ai",
+      "name": "Rime",
+      "company": "Rime",
+      "category": "语音API",
+      "website": "https://www.rime.ai/",
+      "evidenceUrl": "https://www.rime.ai/pricing",
       "tasks": [
-        "语音生成",
-        "语音合成"
+        "文字转语音",
+        "实时语音合成",
+        "语音识别"
       ],
       "keywords": [
-        "Resemble AI AI工具",
-        "Resemble AI价格",
-        "语音生成工具",
-        "语音合成工具"
+        "Rime AI语音合成",
+        "Rime Coda和Mist",
+        "实时文字转语音API",
+        "语音识别API"
       ],
-      "publisherGroupId": "resemble",
+      "publisherGroupId": "rime",
       "aliases": [],
       "discoveredAt": "2026-11-05",
-      "discoverySource": "https://www.resemble.ai/",
+      "discoverySource": "https://www.rime.ai/pricing",
       "verifiedFacts": {},
       "reviewed": false,
       "publishApproved": false
