@@ -13,6 +13,7 @@ on:
       - 'docs/audits/2026-11-05-siai-scalability-and-source-audit.md'
       - 'app/siai/directory-publication-*'
       - 'lingxifield-ai-market/data/company-intake/batch-0*.json'
+      - 'tests/siai-intake-official-007.test.mjs'
       - 'lingxifield-ai-market/lib/market-catalog-scale-audit.mjs'
       - 'lingxifield-ai-market/lib/market-category-taxonomy.mjs'
       - 'components/tools/PdfEditorWorkbench.tsx'
@@ -47,7 +48,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Data-quality, index ownership and 62-row publication contract
-        run: node --test tests/siai-catalog-scale.test.mjs tests/siai-search-discovery.test.mjs tests/siai-customer-language.test.mjs tests/siai-intake-50.test.mjs tests/siai-intake-official-006.test.mjs tests/siai-source-preview.test.mjs tests/siai-company-source.test.mjs tests/siai-compact-facets.test.mjs
+        run: node --test tests/siai-catalog-scale.test.mjs tests/siai-search-discovery.test.mjs tests/siai-customer-language.test.mjs tests/siai-intake-50.test.mjs tests/siai-intake-official-006.test.mjs tests/siai-intake-official-007.test.mjs tests/siai-source-preview.test.mjs tests/siai-company-source.test.mjs tests/siai-compact-facets.test.mjs
       - name: Exact Next.js production build
         run: pnpm build
 
