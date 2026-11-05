@@ -14,6 +14,7 @@ on:
       - 'app/siai/directory-publication-*'
       - 'lingxifield-ai-market/data/company-intake/batch-0*.json'
       - 'lingxifield-ai-market/lib/market-catalog-scale-audit.mjs'
+      - 'lingxifield-ai-market/lib/market-category-taxonomy.mjs'
       - 'tests/siai-catalog-scale.test.mjs'
       - '.github/workflows/siai-catalog-scale-audit.yml'
   workflow_dispatch:
