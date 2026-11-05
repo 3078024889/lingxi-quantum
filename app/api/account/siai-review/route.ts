@@ -28,8 +28,11 @@ export async function POST(req:NextRequest){
  const reviewer=await owner();
  if(!reviewer)return NextResponse.json({error:"FORBIDDEN"},{status:403,headers:privateHeaders});
  if(Number(req.headers.get("content-length")||0)>1500)return NextResponse.json({error:"TOO_LARGE"},{status:413,headers:privateHeaders});
- const body=await req.json().catch(()=>null);
- if(!body||!uuid.test(body.id)||!["review","reject","approve"].includes(body.action))
+ const raw=await req.text().catch(()=>"");
+ if(Buffer.byteLength(raw,"utf8")>1500)return NextResponse.json({error:"TOO_LARGE"},{status:413,headers:privateHeaders});
+ let body:Record<string,unknown>|null=null;
+ try{const decoded=JSON.parse(raw);if(decoded&&typeof decoded==="object"&&!Array.isArray(decoded))body=decoded;}catch{}
+ if(!body||typeof body.id!=="string"||!uuid.test(body.id)||!["review","reject","approve"].includes(body.action))
   return NextResponse.json({error:"BAD_REQUEST"},{status:400,headers:privateHeaders});
  if(body.action==="approve"&&body.identityVerifiedByHuman!==true)
   return NextResponse.json({error:"IDENTITY_ATTESTATION_REQUIRED"},{status:422,headers:privateHeaders});
