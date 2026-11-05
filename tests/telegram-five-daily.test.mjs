@@ -91,3 +91,13 @@ test("community join landing is voluntary and searchable",()=>{
  assert.match(page,/无需为入群支付费用/);
  assert.match(page,/index:true,follow:true/);
 });
+
+test("private operations report authenticates before reading the database",()=>{
+ const api=readFileSync(new URL("../app/api/account/telegram-operations/route.ts",import.meta.url),"utf8");
+ const ui=readFileSync(new URL("../app/community/operations/page.tsx",import.meta.url),"utf8");
+ assert.match(api,/if\(!await moneyAdministrator\(\)\)/);
+ assert.ok(api.indexOf("moneyAdministrator()")<api.indexOf("createAdminClient()"));
+ assert.match(api,/private, no-store/);
+ assert.match(ui,/index:false,follow:false/);
+ assert.doesNotMatch(api,/TELEGRAM_BOT_TOKEN|TELEGRAM_WEBHOOK_SECRET/);
+});
