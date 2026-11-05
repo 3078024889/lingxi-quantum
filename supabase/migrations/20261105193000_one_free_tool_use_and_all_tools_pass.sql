@@ -10,6 +10,8 @@ create table if not exists public.lingxi_tool_passes (
  price_minor bigint not null check (price_minor > 0),
  purchase_request_id uuid not null unique,
  order_id uuid unique references public.orders(id),
+ revoked_at timestamptz,
+ revocation_reason text,
  starts_at timestamptz not null,
  expires_at timestamptz not null,
  created_at timestamptz not null default now(),
@@ -64,7 +66,7 @@ begin
    return jsonb_build_object('ok',true,'alreadyClaimed',true,'accessKind',v_existing.access_kind);
  end if;
  select max(expires_at) into v_pass_until from public.lingxi_tool_passes
- where user_id=p_user_id and starts_at <= now() and expires_at > now();
+ where user_id=p_user_id and revoked_at is null and starts_at <= now() and expires_at > now();
  if v_pass_until is not null then
    v_kind:='pass';
  else
@@ -122,7 +124,7 @@ begin
            jsonb_build_object('sku',p_sku,'durationDays',v_days));
  if coalesce((v_paid->>'ok')::boolean,false) is not true then return v_paid; end if;
  select greatest(v_now,coalesce(max(expires_at),v_now)) into v_start
- from public.lingxi_tool_passes where user_id=p_user_id and expires_at>v_now;
+ from public.lingxi_tool_passes where user_id=p_user_id and revoked_at is null and expires_at>v_now;
  v_expiry:=v_start + make_interval(days=>v_days);
  insert into public.orders(user_id,product_id,product_type,amount_rmb,amount_usd,currency,status,provider,submission_name,paid_at)
  values(p_user_id,'toolpass:'||p_request_id::text,'permanent',v_amount/100.0,v_amount/100.0,
