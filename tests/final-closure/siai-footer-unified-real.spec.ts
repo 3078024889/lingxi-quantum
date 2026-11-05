@@ -47,3 +47,44 @@ test('footer search links point to ranked answers; layout has no horizontal over
  expect(state.hasEmoji).toBeTruthy();
  if(isMobile)expect(state.columns.split(' ').length).toBe(1);
 });
+
+
+test('footer QQ groups copy real numbers and Telegram links remain correct on every main surface',async({page,isMobile})=>{
+ test.setTimeout(150000);
+ await page.addInitScript(()=>{
+  (window as any).__footerCopiedQQ=[];
+  Object.defineProperty(navigator,'clipboard',{configurable:true,value:{
+   writeText:async(value:string)=>{(window as any).__footerCopiedQQ.push(value);}
+  }});
+ });
+ for(const route of ['/siai?lang=zh','/sasi?lang=zh','/tools?lang=zh']){
+  await page.goto(route,{waitUntil:'domcontentloaded'});
+  const footer=page.locator('footer.lx11-footer');
+  const brand=footer.locator('.lx11-footer-brand');
+  const groups=brand.locator('.lx-footer-v4-groups');
+  await expect(groups).toBeVisible({timeout:30000});
+  await expect(groups.getByRole('heading',{name:'群组'})).toBeVisible();
+  await expect(groups.getByText('QQ 群',{exact:true})).toBeVisible();
+  for(const number of ['1072178710','1074475201']){
+   const button=groups.getByRole('button',{name:'复制群号 '+number});
+   await expect(button).toBeVisible();
+   await button.click();
+   await expect.poll(()=>page.evaluate(()=>(window as any).__footerCopiedQQ.at(-1))).toBe(number);
+   await expect(button.locator('.lx-footer-v4-group-copy')).toHaveText('✓');
+  }
+  const telegram=groups.getByRole('link',{name:/Telegram.*web3dropmoon/});
+  await expect(telegram).toHaveAttribute('href','https://t.me/web3dropmoon');
+  await expect(telegram).toHaveAttribute('target','_blank');
+  await expect(telegram).toHaveAttribute('rel',/noopener/);
+  await expect(brand.locator('.lx-footer-brand-social a')).toHaveCount(10);
+  await expect(footer.locator('.lx-footer-v4-qr-grid img')).toHaveCount(4);
+  await expect(footer.locator('.lx-footer-v4-miniapp-actions button')).toHaveCount(2);
+  const layout=await groups.evaluate(el=>{
+   const r=el.getBoundingClientRect(),parent=el.closest('.lx11-footer-brand')!.getBoundingClientRect();
+   return {width:r.width,inside:r.left>=parent.left-2&&r.right<=parent.right+2,overflow:el.scrollWidth-el.clientWidth};
+  });
+  expect(layout.inside).toBe(true);
+  expect(layout.overflow).toBeLessThanOrEqual(2);
+  if(isMobile)expect(layout.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+ }
+});
