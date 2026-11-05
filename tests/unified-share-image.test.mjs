@@ -16,6 +16,7 @@ test('every web, OpenGraph, X and WeChat share path points to the same visual',(
  const siai=read('app/siai/page.tsx');
  const localizedSiai=read('app/[locale]/siai/page.tsx');
  const separate=read('lingxifield-ai-market/app/(default)/layout.tsx');
+ const localizedMarket=read('lingxifield-ai-market/app/[lang]/layout.tsx');
  const separateProduct=read('lingxifield-ai-market/app/[lang]/platform/[id]/page.tsx');
  const independentCard=read('lingxifield-ai-market/lib/share-card.ts');
  const mini=read('miniapp/utils/share.js');
@@ -28,6 +29,8 @@ test('every web, OpenGraph, X and WeChat share path points to the same visual',(
  assert(localizedSiai.includes('summary_large_image'));
  assert(independentCard.includes('https://lingxifield.com/og-lingxifield-20261105.jpg'));
  assert(separate.includes('images:MARKET_SHARE_IMAGES'));
+ assert(localizedMarket.includes('images:MARKET_SHARE_IMAGES'));
+ assert(localizedMarket.includes('summary_large_image'));
  assert(separateProduct.includes('images:MARKET_SHARE_IMAGES'));
  assert(separateProduct.includes('summary_large_image'));
  assert(mini.includes('/assets/share-lingxifield-20261105.jpg'));
