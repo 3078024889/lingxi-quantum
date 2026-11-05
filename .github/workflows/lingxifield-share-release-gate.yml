@@ -7,6 +7,9 @@ on:
     paths:
       - '.github/workflows/lingxifield-share-release-gate.yml'
       - 'app/layout.tsx'
+      - 'app/siai/page.tsx'
+      - 'app/[locale]/siai/page.tsx'
+      - 'miniapp/pages/web/index.js'
       - 'lib/share-image.ts'
       - 'lib/seo/page-metadata.ts'
       - 'lingxifield-ai-market/app/(default)/layout.tsx'
