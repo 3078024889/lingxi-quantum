@@ -14,11 +14,11 @@ test.describe("free SI/AI spend diagnosis",()=>{
  });
  test("explicit zero future uses, quota shortage and invalid inputs",async({page})=>{
   await page.goto("/siai/spend-diagnostic");
-  await page.getByPlaceholder("例如：视频工具A").fill("Creator");
+  await page.getByPlaceholder("示例：视频工具A").fill("Creator");
   await page.getByRole("spinbutton",{name:"实际月费"}).fill("29");
   await page.getByRole("spinbutton",{name:"本月使用次数"}).fill("8");
   await page.getByRole("button",{name:/开始诊断/}).click();
-  await expect(page.getByText("¥0.00")).toBeVisible();
+  await expect(page.getByText("¥0.00").first()).toBeVisible();
   await page.getByText(/找替代方案 · 下月预计次数/).click();
   await page.getByRole("spinbutton",{name:"下月预计次数"}).fill("30");
   await page.getByRole("spinbutton",{name:"当前套餐每月额度"}).fill("12");
