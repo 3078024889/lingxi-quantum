@@ -1,6 +1,7 @@
 "use client";
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 import {claimToolStart,TOOL_PASS_ENFORCED,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
+import {toolSlugFromPathname} from "@/lib/tools/commerce/tool-route-slug";
 
 
 import {useCallback,useEffect,useRef,useState} from "react";
@@ -63,7 +64,8 @@ export default function FileDropzone({
     pendingRef.current=true;
     try{
       if(TOOL_PASS_ENFORCED){
-        const toolSlug=location.pathname.match(/^\/tools\/([^/?#]+)/)?.[1]||"";
+        const toolSlug=toolSlugFromPathname(location.pathname);
+        if(!toolSlug)throw new ToolAccessError("INVALID_TOOL_USE");
         if(toolSlug&&toolSlug!=="pay"&&toolSlug!=="pass"){
           setAuthorizing(true);
           const previous=new Map<string,number>();
