@@ -139,3 +139,14 @@ test("refunded entitlements and old operation receipts cannot silently regain pa
  assert(sql.includes("interval '10 minutes'"));
  assert(smoke.includes("update public.tool_pass_orders_v2 set state='refunded'"));
 });
+
+test("no partial checkout can launch merely by toggling one environment/source flag",()=>{
+ assert.equal(passContractReady({...data,active:true}),false);
+ assert.equal(passContractReady({...data,active:true,status:"PRODUCTION_VERIFIED"}),false);
+ assert.equal(passContractReady({...data,active:true,status:"PRODUCTION_VERIFIED",schema_applied_verified:true,refund_verified:true,not_validated:[]}),false);
+ const required=["claim","purchase","quote","status"];
+ for(const name of required){
+  const route=read("app/api/tools/pass/"+name+"/route.ts");
+  assert(route.includes("passContractReady(offers)"),"missing final release gate on "+name);
+ }
+});
