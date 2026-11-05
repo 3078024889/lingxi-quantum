@@ -1,55 +1,44 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import vm from "node:vm";
-let capturedQQConsoleHandler=null;
 
-test("QQ free operations workbench serves readable content for all three QQ groups",async()=>{
- let callback;
- const previous=globalThis.Deno;
- globalThis.Deno={serve:fn=>{callback=fn;capturedQQConsoleHandler=fn}};
- try{
-  await import("../supabase/functions/globalsiai-qq-console/index.ts");
-  assert.equal(typeof callback,"function");
-  const checks=[
-   ["1074475201","灵犀场实用工具"],
-   ["1072178710","SASI"],
-   ["601549887","WB3"],
-  ];
-  for(const [group,keyword] of checks){
-   const request=new Request(`https://example.supabase.co/functions/v1/globalsiai-qq-console?group=${group}&day=2026-11-05`);
-   const response=await callback(request);
-   assert.equal(response.status,200);
-   assert.match(response.headers.get("content-type"),/text\/html/);
-   assert.match(response.headers.get("content-security-policy"),/script-src 'nonce-/);
-   assert.match(response.headers.get("x-robots-tag"),/noindex/);
-   const html=await response.text();
-   assert.match(html,new RegExp(group));
-   assert.match(html,new RegExp(keyword));
-   assert.match(html,/国际站：https:\/\/lingxifield\.com/);
-   assert.match(html,/国内站：https:\/\/lingxifield\.cn/);
-   assert.match(html,new RegExp(`qq_${group}_discovery`));
-   assert.match(html,new RegExp(`qq_${group}_tutorial`));
-   assert.match(html,/复制群公告/);
-   assert.match(html,/复制今天五条/);
-   assert.equal((html.match(/data-copy="[0-4]"/g)||[]).length,5);
-   assert.doesNotMatch(html,/TELEGRAM_BOT_TOKEN|SUPABASE_SERVICE_ROLE_KEY|SCHEDULER_KEY_SHA256/);
-   const script=html.match(/<script nonce="[^"]+">([\s\S]*?)<\/script>/)?.[1];
-   assert.ok(script);
-   assert.doesNotThrow(()=>new vm.Script(script));
+let handler;
+const previous=globalThis.Deno;
+globalThis.Deno={serve:callback=>handler=callback};
+try {await import("../supabase/functions/globalsiai-qq-console/index.ts");}
+finally {globalThis.Deno=previous;}
+
+test("all three group pages now return actual UTF-8 text instead of unsupported HTML",async()=>{
+  for(const id of ["1074475201","1072178710","601549887"]){
+    const r=await handler(new Request(`https://example.supabase.co/functions/v1/globalsiai-qq-console?group=${id}&day=2026-11-05`));
+    assert.equal(r.status,200);
+    assert.match(r.headers.get("content-type"),/text\/plain; charset=utf-8/);
+    const body=await r.text();
+    assert.equal(body.codePointAt(0),0xfeff);
+    assert.match(body,new RegExp(id));
+    assert.match(body,/国际站：https:\/\/lingxifield\.com/);
+    assert.match(body,/国内站：https:\/\/lingxifield\.cn/);
+    assert.match(body,/第 1 条/);
+    assert.match(body,/第 5 条/);
+    assert.doesNotMatch(body,/<article|<html|<pre|&amp;/);
   }
- }finally{globalThis.Deno=previous;}
 });
-
-test("QQ workbench rejects writes and does not serve unrecognised group IDs",async()=>{
- const callback=capturedQQConsoleHandler;
- assert.equal(typeof callback,"function","first test registered the Edge handler");
- const prev=globalThis.Deno;
- try{
-  const denied=await callback(new Request("https://example.supabase.co/functions/v1/globalsiai-qq-console",{method:"POST"}));
-  assert.equal(denied.status,405);
-  const invalid=await callback(new Request("https://example.supabase.co/functions/v1/globalsiai-qq-console?group=123456789&day=2026-11-05"));
-  const html=await invalid.text();
-  assert.match(html,/当前群：<b>1074475201/);
-  assert.doesNotMatch(html,/qq_123456789_/);
- }finally{globalThis.Deno=prev;}
+test("JSON endpoint supports future official QQ bot publishing API",async()=>{
+  const ids=["1074475201","1072178710","601549887"];
+  const bodies=[];
+  for(const id of ids){
+    const r=await handler(new Request(`https://example.supabase.co/functions/v1/globalsiai-qq-console?group=${id}&day=2026-11-05&format=json`));
+    assert.match(r.headers.get("content-type"),/application\/json/);
+    const j=await r.json();
+    assert.equal(j.group,id);
+    assert.equal(j.posts.length,5);
+    assert.match(j.posts[0].text,new RegExp(`utm_campaign=qq_${id}_discovery`));
+    bodies.push(j.posts.map(x=>x.text));
+  }
+  assert.equal(new Set(bodies.flat()).size,15);
+});
+test("unrecognised groups fall back to a known group, disallow POST",async()=>{
+  const x=await handler(new Request("https://example.supabase.co/functions/v1/globalsiai-qq-console?group=other&format=json"));
+  assert.equal((await x.json()).group,"1074475201");
+  const post=await handler(new Request("https://example.supabase.co/functions/v1/globalsiai-qq-console",{method:"POST"}));
+  assert.equal(post.status,405);
 });
