@@ -322,12 +322,6 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  // A touch can land on the overlay's 44px corner target yet dispatch its
  // pointer event to the overlay itself after mobile hit-testing/reflow. Resolve
  // the intended handle from its actual rendered rectangle before choosing move.
- // Temporary browser-gate instrumentation: records gesture decisions only
- // when a Playwright test explicitly creates the debug array.
- function tracePdfGesture(step:string,info:Record<string,unknown>){
-  const w=window as Window&{__pdfGestureTrace?:Array<Record<string,unknown>>};
-  if(w.__pdfGestureTrace&&w.__pdfGestureTrace.length<150)w.__pdfGestureTrace.push({step,...info});
- }
  function overlayDragGrip(host:HTMLElement,target:EventTarget|null,x:number,y:number):Grip|null{
   const targetElement=target instanceof Element?target:null;
   const interactive=targetElement?.closest("button,input,textarea,a");
@@ -360,7 +354,6 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  }
  function beginGesture(id:number,grip:Grip,clientX:number,clientY:number,pointerId:number){
   const stage=stageRef.current,o=overlays.find(v=>v.id===id);
-  tracePdfGesture("begin",{id,grip,clientX,clientY,pointerId,hasStage:!!stage,hasOverlay:!!o,editingTextId,nativeImageDeleted:o?.nativeImageDeleted});
   if(!stage||!o||editingTextId===id||o.nativeImageDeleted||(o.nativeImageTarget&&grip==="rotate"))return;
   setSelectedOverlayId(id);
   const r=stage.getBoundingClientRect(),cx=r.left+(o.x+o.w/2)*r.width/100,cy=r.top+(o.y+o.h/2)*r.height/100;
@@ -388,7 +381,6 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  }
 gestureUpdate.current=(px,py,pid)=>{
  const g=gestureRef.current;
- tracePdfGesture("move",{active:!!g,expected:g?.pointerId,received:pid,grip:g?.grip,px,py});
  if(!g||g.pointerId!==pid)return;
  const o=g.origin,dx=(px-g.startX)/g.rect.width*100,dy=(py-g.startY)/g.rect.height*100;
  const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
@@ -414,7 +406,6 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
  onPointerDownCapture={e=>{
   if(editingTextId===o.id||e.pointerType!=="touch")return;
   const grip=overlayTouchGrip(e.currentTarget,e.target,e.clientX,e.clientY);
-  tracePdfGesture("pointerCapture",{grip,id:o.id,x:e.clientX,y:e.clientY,type:e.pointerType,target:(e.target as HTMLElement)?.getAttribute?.("data-testid")});
   if(!grip)return;
   touchCornerRef.current={id:o.id,grip,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId};
   beginGesture(o.id,grip,e.clientX,e.clientY,e.pointerId);
@@ -424,7 +415,6 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(editingTextId===o.id||e.touches.length!==1)return;
   const t=e.changedTouches[0];if(!t)return;
   const grip=overlayTouchGrip(e.currentTarget,e.target,t.clientX,t.clientY);
-  tracePdfGesture("touchCapture",{grip,id:o.id,x:t.clientX,y:t.clientY,touchId:t.identifier,target:(e.target as HTMLElement)?.getAttribute?.("data-testid")});
   if(!grip)return;
   activeTouchRef.current=t.identifier;
   const prior=gestureRef.current;
