@@ -59,3 +59,8 @@ Experiment: activate 10 genuinely installed partner widgets, compare visitors to
 - Audit finding (2026-11-05): production vendor submissions table contained **zero rows** at query time; do not claim supplier adoption.
 - Same-origin submission protection and hashed-IP rate limiting (30/hour/IP) are applied before the unchanged validated submission handler.
 - The submission RPC is deliberately public but allows only intake. Review status is `pending_identity_check`; permissions and listing approval are not granted.
+
+## Installable WordPress download
+- Build pipeline uses the already installed JSZip library and an explicit four-file allowlist to create `/downloads/lingxifield-siai-wordpress.zip` before `next build`.
+- Partner landing provides nine-language, one-click ZIP download. Verify `PK` archive bytes and upload to a clean WordPress sandbox before directory submission.
+- This is a self-hosted plugin package, **not** an approved WordPress.org listing or third-party installation.
