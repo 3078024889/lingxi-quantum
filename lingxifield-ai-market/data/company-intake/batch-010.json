@@ -106,7 +106,7 @@
         "模型部署工具",
         "机器学习工具"
       ],
-      "publisherGroupId": "aws",
+      "publisherGroupId": "amazon",
       "aliases": [],
       "discoveredAt": "2026-11-05",
       "discoverySource": "https://aws.amazon.com/sagemaker/",
