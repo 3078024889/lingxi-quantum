@@ -40,7 +40,7 @@ const FOOTER_GROUP_COPY:Record<LingxiLang,{title:string;qq:string;copy:string;co
  ar:{title:"المجموعات",qq:"مجموعات QQ",copy:"نسخ رقم المجموعة",copied:"تم النسخ",telegram:"مجموعة Telegram"}
 };
 const FOOTER_QQ_GROUPS=["1072178710","1074475201"] as const;
-const FOOTER_TELEGRAM="https://t.me/web3dropmoon";
+const FOOTER_TELEGRAM="https://t.me/globalsiai";
 const MINIAPP_COMMANDS={
  app:"#小程序://灵犀场/ktKRUjMRoEcPEsE",
  mail:"#小程序://10临时邮箱/p8AACkYNods09Rl"
@@ -163,8 +163,8 @@ export default function Footer(){
        <span className="lx-footer-v4-group-copy" aria-hidden="true">{copiedQQGroup===number?"✓":"⧉"}</span>
       </button>)}
      </div>
-     <a className="lx-footer-v4-telegram" href={FOOTER_TELEGRAM} target="_blank" rel="noopener noreferrer" aria-label={FOOTER_GROUP_COPY[lang].telegram+" web3dropmoon"}>
-      <span aria-hidden="true">➤</span><span>{FOOTER_GROUP_COPY[lang].telegram} · @web3dropmoon</span><span aria-hidden="true">↗</span>
+     <a className="lx-footer-v4-telegram" href={FOOTER_TELEGRAM} target="_blank" rel="noopener noreferrer" aria-label={FOOTER_GROUP_COPY[lang].telegram+" globalsiai"}>
+      <span aria-hidden="true">➤</span><span>{FOOTER_GROUP_COPY[lang].telegram} · @globalsiai</span><span aria-hidden="true">↗</span>
      </a>
     </section>
    </section>
