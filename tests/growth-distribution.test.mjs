@@ -73,6 +73,20 @@ test("Chrome SIAI finder remains limited to one first-party feed and no browsing
  assert(!page.includes("<script src=\"https:"));
 });
 
+
+test("WordPress installer is generated before build from an explicit local allowlist",()=>{
+ const pkg=JSON.parse(read("package.json"));
+ const builder=read("scripts/prepare-wordpress-plugin.cjs");
+ const portal=read("components/partners/PartnerGrowthPortal.tsx");
+ assert.match(pkg.scripts.prebuild,/prepare-wordpress-plugin\.cjs/);
+ assert.match(builder,/require\("jszip"\)/);
+ assert.match(builder,/allowed=\[/);
+ assert.match(builder,/WORDPRESS_WIDGET_SOURCE_MISMATCH/);
+ assert.match(builder,/WORDPRESS_PACKAGE_CONTENTS_MISMATCH/);
+ assert(!builder.includes("process.env"));
+ assert.match(portal,/lingxifield-siai-wordpress\.zip/);
+});
+
 test("WordPress shortcodes sanitize attributes and return output rather than printing",()=>{
  const php=read("integrations/wordpress/lingxifield-widgets/lingxifield-widgets.php");
  assert.match(php,/add_shortcode\('lingxifield_siai'/);
