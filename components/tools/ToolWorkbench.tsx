@@ -61,24 +61,12 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const [busy, setBusy] = useState(false);
   const [accessError,setAccessError]=useState("");
   const accessTicket=useRef("");
-  const accessChecking=useRef(false);
   const fileSignature=(items:File[])=>items.map(f=>`${f.name}:${f.size}:${f.lastModified}`).join("|");
-  async function acceptUploadedFiles(next:File[]){
-    if(accessChecking.current||busy)return;
-    if(!TOOL_PASS_ENFORCED){setFiles(next);setResult(null);return;}
-    const previous=new Map<string,number>();
-    for(const f of files){const k=`${f.name}:${f.size}:${f.lastModified}`;previous.set(k,(previous.get(k)||0)+1)}
-    let added=0;
-    for(const f of next){const k=`${f.name}:${f.size}:${f.lastModified}`;const count=previous.get(k)||0;if(count>0)previous.set(k,count-1);else added++;}
-    if(added===0){setFiles(next);setResult(null);accessTicket.current=fileSignature(next);return;}
-    accessChecking.current=true;setBusy(true);setAccessError("");
-    try{
-      await claimToolStart(tool.slug,added);
-      setFiles(next);setResult(null);accessTicket.current=fileSignature(next);
-    }catch(error){
-      setAccessError(toolAccessMessage(lang,error instanceof ToolAccessError?error.code:"TOOL_ACCESS_UNAVAILABLE"));
-    }finally{accessChecking.current=false;setBusy(false)}
+  // Shared FileDropzone claims usage before accepting the new file(s).
+  function acceptUploadedFiles(next:File[]){
+    setFiles(next);setResult(null);accessTicket.current=fileSignature(next);
   }
+
   const [result, setResult] = useState<ToolRunResult | null>(null);
   const [webpTarget, setWebpTarget] = useState<"image/jpeg" | "image/png">("image/jpeg");
   const [quality, setQuality] = useState(0.8);
