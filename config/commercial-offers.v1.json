@@ -1,0 +1,120 @@
+{
+  "schema": "lingxifield.commercial-offers.v1",
+  "status": "DRAFT_NOT_LIVE",
+  "effective_at": null,
+  "notes": [
+    "Proposal only. Do not bind to checkout without production payment and fulfillment tests.",
+    "Single existing wallet, separate currency-denominated ledger balances.",
+    "No new professional membership or new SASI pricing.",
+    "No false unlimited: normal human use, abuse protection; disclose supplier-billed exceptions before purchase."
+  ],
+  "wallet": {
+    "existing_wallet_only": true,
+    "currencies": [
+      "CNY",
+      "USD"
+    ],
+    "same_account_multi_currency": true,
+    "cross_currency_spend": false,
+    "display_balance_per_currency": true,
+    "fulfillment_policy": "verified_payment_then_idempotent_credit",
+    "checkout_sources": [
+      "wallet",
+      "existing_supported_payment_provider"
+    ]
+  },
+  "free_tools": {
+    "daily_limit_min": 1,
+    "daily_limit_max": 5,
+    "configured_per_tool": true,
+    "unchanged": true
+  },
+  "tool_pass": {
+    "key": "all_tools_pass",
+    "scope": "existing_100_plus_practical_tools",
+    "automatic_renewal": false,
+    "normal_human_use_unmetered": true,
+    "third_party_compute_and_sasi_excluded": true,
+    "plans": [
+      {
+        "sku": "tools_30d",
+        "label_zh": "月包",
+        "duration_days": 30,
+        "prices": {
+          "CNY": 99,
+          "USD": 99
+        }
+      },
+      {
+        "sku": "tools_90d",
+        "label_zh": "季包",
+        "duration_days": 90,
+        "prices": {
+          "CNY": 269,
+          "USD": 269
+        }
+      },
+      {
+        "sku": "tools_365d",
+        "label_zh": "年包",
+        "duration_days": 365,
+        "prices": {
+          "CNY": 899,
+          "USD": 899
+        }
+      }
+    ]
+  },
+  "sasi": {
+    "existing_usage_pricing_only": true,
+    "existing_quote_reserve_settle_release": true,
+    "no_new_membership": true,
+    "pay_from_same_wallet": true
+  },
+  "siai_vendor": {
+    "free": [
+      "basic_listing",
+      "identity_claim",
+      "evidence_submission",
+      "correction_request"
+    ],
+    "proposed_paid": [
+      {
+        "sku": "vendor_verified_localization",
+        "billing": "one_off",
+        "prices_from": {
+          "CNY": 499,
+          "USD": 499
+        },
+        "deliverable": "Evidence-grounded and human-reviewed nine-language vendor information preparation; not a paid ranking",
+        "stage": "proposal_manual_delivery_first"
+      },
+      {
+        "sku": "vendor_sponsored_placement",
+        "billing": "30d",
+        "prices_from": {
+          "CNY": 299,
+          "USD": 299
+        },
+        "deliverable": "Explicitly labeled sponsored placement with factual delivery statistics; organic rank unaffected",
+        "stage": "disabled_until_qualified_traffic"
+      },
+      {
+        "sku": "vendor_data_api",
+        "billing": "custom_quote",
+        "deliverable": "License-cleared data access, versioned changes and evidence",
+        "stage": "disabled_until_contract_and_api_ready"
+      }
+    ]
+  },
+  "guardrails": [
+    "Seller service work must be deliverable before charging.",
+    "No vendor payment alters objective order, evidence, ratings, editorial decisions.",
+    "Public listing free, paid ads visually separate.",
+    "Tool pass and SASI consumption never double-charge the same task.",
+    "Any supplier cost outside the pass needs explicit pre-job quotation and wallet approval.",
+    "Wallet transactions append-only, idempotency enforced, refunds adjust matching currency ledger.",
+    "No CNY/USD conversion implied by numerically identical prices.",
+    "Avoid publishing draft terms as live products."
+  ]
+}
