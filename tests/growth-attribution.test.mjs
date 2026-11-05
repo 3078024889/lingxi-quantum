@@ -58,3 +58,11 @@ test("growth analytics are administrator-only and never expose hashes to client 
  assert(!panel.includes("session_hash"));
  assert.match(parent,/GrowthAttributionPanel days=\{Number\(days\)\}/);
 });
+
+test("voluntary public-tool sharing carries attribution, not private file contents",()=>{
+ const rail=read("components/tools/ToolShareRail.tsx");
+ assert.match(rail,/utm_source:'tool_share'/);
+ assert.match(rail,/utm_campaign:'free_tools'/);
+ assert.match(rail,/!privateSearchPath\(publicPath\)/);
+ assert(!rail.includes("new FormData("));
+});
