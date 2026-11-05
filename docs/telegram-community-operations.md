@@ -14,12 +14,13 @@
    - CRON_SECRET：复用主站现有值，不要重置其它定时任务的口令
 4. 审核并执行新建表迁移 supabase/migrations/20261105090000_telegram_community_events.sql。测试 RLS、匿名用户不可读写、服务端可插入更新。
 5. 独立分支 CI、构建、安全门禁及真实浏览器验收通过后才允许合并，合并前不要触发主站生产部署。
-6. 生产发布后，使用 Telegram Bot API 的 setWebhook（POST）配置：
+6. 正式合并部署后，/api/cron/telegram-daily 会在每天约 09:05（新加坡时间）使用**服务端私有环境变量**自动调用 Telegram setWebhook：
    - url：https://lingxifield.com/api/telegram/webhook
    - secret_token：与 TELEGRAM_WEBHOOK_SECRET 完全相同
    - allowed_updates：["message"]
-   Token 只能用于私密请求的认证。不要把 Token 写进分享链接、日志或群内消息。
-7. 通过 getWebhookInfo 检查生效状态和失败计数。然后私聊机器人 /help、/tools、/ranking，实际测试新成员欢迎与诈骗链接拦截。
+   不需要把 Token 拼入链接或手工复制到聊天。
+7. 首次自动注册后，通过 Telegram Bot API 的 getWebhookInfo 核对实际注册状态与报错，再私聊机器人 /help、/tools、/ranking，实测群内新成员欢迎和反诈骗。
+8. 如果用户想提前激活，必须通过安全的服务器端触发注册；不要从浏览器地址栏提交 Token。
 
 ## 运营范围
 
