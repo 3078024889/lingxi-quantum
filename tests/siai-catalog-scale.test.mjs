@@ -83,13 +83,13 @@ test("corporate relationships stay separately source-observed, with acquisition 
  assert.equal(lineage.relations.find(p=>p.id==="tabnine").group,"tricentis");
  assert.equal(lineage.relations.find(p=>p.id==="ltx-studio").relationship,"restructuring_review");
 });
-test("private review console indexes all 10 cohorts, 6 evidence batches and future claim pagination",()=>{
+test("private review console indexes all 10 cohorts, 7 evidence batches and future claim pagination",()=>{
  const source=readFileSync(new URL("../lingxifield-ai-market/lib/market-private-intake-index.ts",import.meta.url),"utf8");
  const page=readFileSync(new URL("../app/account/siai-review/page.tsx",import.meta.url),"utf8");
  const api=readFileSync(new URL("../app/api/account/siai-review/route.ts",import.meta.url),"utf8");
  const ui=readFileSync(new URL("../app/account/siai-review/ReviewWorkbench.tsx",import.meta.url),"utf8");
  for(let i=1;i<=10;i++)assert(source.includes("batch-"+String(i).padStart(3,"0")+".json"),"missing cohort "+i);
- for(let i=1;i<=6;i++)assert(source.includes("batch-"+String(i).padStart(3,"0")+"-official-observations.json"),"missing evidence "+i);
+ for(let i=1;i<=7;i++)assert(source.includes("batch-"+String(i).padStart(3,"0")+"-official-observations.json"),"missing evidence "+i);
  assert(source.includes('import "server-only"'));
  assert(source.includes("sourcePreview:previewIds.has(item.id)"));
  assert(page.includes("reviewer?getPrivateSiaiCandidateIndex():null"));
