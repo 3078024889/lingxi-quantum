@@ -1,0 +1,43 @@
+name: Unified tool pass audit (no deployment)
+on:
+  push:
+    branches:
+      - feature/unified-tool-pass-daily-one-20261105
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: unified-tool-pass-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Contract tests
+        run: node --test tests/unified-tools-pass-static-contract.test.mjs
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit
+      - name: Coverage and old-charge retirement gate
+        if: always()
+        run: node scripts/audit/unified-tool-pass-coverage.mjs > tool-pass-audit.json
+      - name: Preserve coverage evidence
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: unified-tool-pass-audit
+          path: tool-pass-audit.json
+          retention-days: 14
