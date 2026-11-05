@@ -4,7 +4,7 @@ Audit date: 2026-11-05. Scope: current PR #196 branch, source inspection and lat
 ## Current public/private cohorts
 - 32 curated products plus 30 *source research previews* = 62 visible product records. A product is not the same thing as a legally independent company.
 - B001–B010: 100 private research candidate product IDs across 88 publisher-group keys. B006–B010 adds 50 distinct IDs, all `reviewed=false`, `publishApproved=false`, `visibleToPublic=false`.
-- B006–B010 seven-field evidence: 106 observed first-party source entries, 244 unknown entries, of which B009–B010 have zero observed items and 140 explicit unknown fields.
+- B006–B010 seven-field evidence: 115 observed first-party source entries, 235 unknown entries; B009–B010 have 9 scoped official source observations and 131 unknown fields. These are still nonpublic, unapproved and not payment-verified.
 - `data/acceptance/candidate-all-real-use.json` covers 100 candidate IDs, all with `endToEndStatus=not_verified` and `productionEligible=false`; it does **not** prove a vendor login, actual model run, export, payment or refund.
 
 ## Public text audit, verified inspection
