@@ -14,16 +14,16 @@ const copy:Record<LingxiLang,{eyebrow:string;title:string;intro:string;partners:
  pt:{eyebrow:"Parceiros globais",title:"Ferramentas para seus visitantes",intro:"Sem cadastro: incorpore o diretório SIAI e um gerador de QR.",partners:"Identificador do parceiro",partnerHint:"Letras, números, _ ou -, até 32 caracteres",siai:"Diretório SIAI",siaiInfo:"Apenas perfis verificados, atualizados após aprovação.",qr:"QR gratuito",qrInfo:"QR para endereços públicos.",copy:"Copiar código",copied:"Copiado",example:"Cole o código no HTML do seu site.",feed:"Acompanhar atualizações",update:"Ranking SIAI",rules:"Testes automatizados identificáveis são excluídos",community:"Ferramentas grátis",note:"Não coletamos e-mails de visitantes."},
  ar:{eyebrow:"الشركاء حول العالم",title:"أدوات مفيدة لزوار موقعك",intro:"بدون تسجيل: أضف دليل SIAI وصانع QR لموقعك.",partners:"معرّف الشريك",partnerHint:"حروف وأرقام و_ و- بحد أقصى 32",siai:"دليل SIAI",siaiInfo:"البيانات العامة التي تم التحقق منها فقط، وتُحدّث عند الاعتماد.",qr:"مولد QR مجاني",qrInfo:"رموز QR للروابط العامة.",copy:"نسخ الكود",copied:"تم النسخ",example:"الصق الكود في HTML لموقعك.",feed:"الاشتراك في التحديثات",update:"ترتيب SIAI",rules:"تُستبعد زيارات الاختبار الآلي التي يمكن تحديدها",community:"الأدوات المجانية",note:"لا نجمع عناوين البريد الإلكتروني للزوار."}
 };
-const vendorCopy:Record<LingxiLang,{title:string;info:string;choose:string;claim:string}>={
- zh:{title:"单厂商资料卡 · 供厂商分享",info:"只展示已审核的官方资料；适合厂商官网、博客和合作伙伴引用。",choose:"选择已审核厂商",claim:"认领或提交你的 SI/AI 平台（审核后公开）"},
- en:{title:"Verified vendor profile card",info:"A shareable card for one reviewed product on vendor and partner websites.",choose:"Choose reviewed vendor",claim:"Claim or submit your SI/AI platform (review required)"},
- ja:{title:"確認済み企業カード",info:"公式確認済みの企業情報を共有できます。",choose:"企業を選択",claim:"SI/AI企業情報を申請・更新（審査あり）"},
- ko:{title:"검증된 기업 카드",info:"검토된 기업 정보만 공유합니다.",choose:"기업 선택",claim:"SI/AI 플랫폼 등록·인증 신청 (검토 필수)"},
- fr:{title:"Fiche d'entreprise vérifiée",info:"Fiche publique vérifiée pour les partenaires.",choose:"Choisir une entreprise",claim:"Revendiquer une plateforme SI/IA (après vérification)"},
- de:{title:"Geprüfte Anbieterkarte",info:"Nur bestätigte öffentliche Anbieterinformationen.",choose:"Anbieter wählen",claim:"SI/KI-Plattform beantragen (nach Prüfung)"},
- es:{title:"Ficha verificada de empresa",info:"Solo información pública verificada.",choose:"Elegir empresa",claim:"Solicitar la ficha de tu plataforma SI/IA (revisión)"},
- pt:{title:"Ficha verificada de empresa",info:"Somente dados públicos verificados.",choose:"Escolher empresa",claim:"Solicitar perfil da sua plataforma SI/IA (análise)"},
- ar:{title:"بطاقة شركة تم التحقق منها",info:"تُعرض البيانات العامة المعتمدة فقط.",choose:"اختر الشركة",claim:"قدّم منصة SI/AI للمراجعة"}
+const vendorCopy:Record<LingxiLang,{title:string;info:string;choose:string;claim:string;wordpress:string;wpNote:string}>={
+ zh:{title:"单厂商资料卡 · 供厂商分享",info:"只展示已审核的官方资料；适合厂商官网、博客和合作伙伴引用。",choose:"选择已审核厂商",claim:"认领或提交你的 SI/AI 平台（审核后公开）",wordpress:"下载 WordPress 插件（免费）",wpNote:"一键下载安装包，在 WordPress 插件页面上传，然后用短代码展示工具。无需外部脚本。"},
+ en:{title:"Verified vendor profile card",info:"A shareable card for one reviewed product on vendor and partner websites.",choose:"Choose reviewed vendor",claim:"Claim or submit your SI/AI platform (review required)",wordpress:"Download WordPress plugin (free)",wpNote:"Download the installer ZIP, upload it in WordPress Plugins, then insert a shortcode. Executable code is bundled locally."},
+ ja:{title:"確認済み企業カード",info:"公式確認済みの企業情報を共有できます。",choose:"企業を選択",claim:"SI/AI企業情報を申請・更新（審査あり）",wordpress:"WordPress プラグインを無料ダウンロード",wpNote:"ZIPをWordPressのプラグイン画面からアップロードし、ショートコードを追加してください。"},
+ ko:{title:"검증된 기업 카드",info:"검토된 기업 정보만 공유합니다.",choose:"기업 선택",claim:"SI/AI 플랫폼 등록·인증 신청 (검토 필수)",wordpress:"WordPress 플러그인 무료 다운로드",wpNote:"ZIP을 WordPress 플러그인 화면에 업로드한 다음 단축 코드를 사용하세요."},
+ fr:{title:"Fiche d'entreprise vérifiée",info:"Fiche publique vérifiée pour les partenaires.",choose:"Choisir une entreprise",claim:"Revendiquer une plateforme SI/IA (après vérification)",wordpress:"Télécharger le plugin WordPress gratuit",wpNote:"Importez le ZIP dans les extensions WordPress, puis insérez un shortcode."},
+ de:{title:"Geprüfte Anbieterkarte",info:"Nur bestätigte öffentliche Anbieterinformationen.",choose:"Anbieter wählen",claim:"SI/KI-Plattform beantragen (nach Prüfung)",wordpress:"WordPress-Plugin kostenlos herunterladen",wpNote:"ZIP unter WordPress-Plugins hochladen und einen Shortcode einfügen."},
+ es:{title:"Ficha verificada de empresa",info:"Solo información pública verificada.",choose:"Elegir empresa",claim:"Solicitar la ficha de tu plataforma SI/IA (revisión)",wordpress:"Descargar plugin WordPress gratis",wpNote:"Sube el ZIP en Plugins de WordPress y usa un shortcode."},
+ pt:{title:"Ficha verificada de empresa",info:"Somente dados públicos verificados.",choose:"Escolher empresa",claim:"Solicitar perfil da sua plataforma SI/IA (análise)",wordpress:"Baixar plugin gratuito para WordPress",wpNote:"Envie o ZIP em Plugins do WordPress e adicione um shortcode."},
+ ar:{title:"بطاقة شركة تم التحقق منها",info:"تُعرض البيانات العامة المعتمدة فقط.",choose:"اختر الشركة",claim:"قدّم منصة SI/AI للمراجعة",wordpress:"تنزيل إضافة WordPress مجاناً",wpNote:"ارفع ملف ZIP في إضافات WordPress ثم أضف الرمز المختصر."}
 };
 export default function PartnerGrowthPortal(){
  const {lang}=useLingxiLang();const t=copy[lang]||copy.en;
@@ -76,6 +76,12 @@ export default function PartnerGrowthPortal(){
      <button type="button" onClick={()=>void copyCode(snippets[i],item.id)} style={{border:0,borderRadius:10,padding:"12px 18px",marginTop:11,background:"#245bd5",color:"#fff",fontWeight:700,fontSize:15,cursor:"pointer"}}>{copied===item.id?t.copied:t.copy}</button>
     </section>)}
    </div>
+   <section style={{...box,marginTop:22}}>
+    <h2 style={{fontSize:21,fontWeight:750,color:"#16213e",margin:"0 0 8px"}}>WordPress</h2>
+    <p style={{fontSize:15,lineHeight:1.7,color:"#52617b",margin:"0 0 14px"}}>{vc.wpNote}</p>
+    <a href="/downloads/lingxifield-siai-wordpress.zip" download="lingxifield-siai-wordpress.zip"
+       style={{display:"inline-block",background:"#245bd5",color:"#fff",borderRadius:10,padding:"12px 18px",fontWeight:700,fontSize:15,textDecoration:"none"}}>{vc.wordpress}</a>
+   </section>
    <p style={{fontSize:15,color:"#54647d",marginTop:22}}>{t.example}</p>
    <div style={{display:"flex",gap:20,flexWrap:"wrap",padding:"24px 0"}}>
     <a href="/siai/updates.xml" style={{fontSize:16,color:"#1757be"}}>{t.feed}</a>
