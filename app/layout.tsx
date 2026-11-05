@@ -16,7 +16,7 @@ import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 
 const SITE=PRIMARY_SITE;
-const SHARE_IMAGE=`${SITE}/og-lingxifield-20260928.png`;
+import {SHARE_IMAGE_URL,SHARE_IMAGES} from "@/lib/share-image";
 
 const LINGXIFIELD_HTML_LOCALE_BOOTSTRAP=`(()=>{try{const locales=['en','ja','ko','fr','de','es','pt','ar'];const segments=location.pathname.split('/');const seg=segments[1]||'';const nested=seg==='siai'?segments[2]||'':'';const routeLang=locales.includes(nested)||nested==='zh'?nested:seg;const query=new URLSearchParams(location.search).get('lang');const key=(locales.includes(routeLang)||routeLang==='zh')?routeLang:(locales.includes(query)||query==='zh'?query:'zh');const root=document.documentElement;root.lang=key==='zh'?'zh-CN':key;root.dataset.lang=key;root.dir=key==='ar'?'rtl':'ltr';}catch{}})();`;
 
@@ -42,13 +42,13 @@ export const metadata:Metadata={
   title:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
   description:PUBLIC_FEATURE_COPY.zh.description,
   url:SITE,
-  images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
+  images:SHARE_IMAGES
  },
  twitter:{
   card:"summary_large_image",
   title:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
   description:PUBLIC_FEATURE_COPY.zh.description,
-  images:[SHARE_IMAGE]
+  images:[SHARE_IMAGE_URL]
  },
  robots:{index:true,follow:true,"max-snippet":-1,"max-image-preview":"large","max-video-preview":-1},
  manifest:"/manifest.webmanifest",
