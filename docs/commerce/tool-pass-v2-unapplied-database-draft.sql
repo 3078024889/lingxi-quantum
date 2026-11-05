@@ -124,6 +124,9 @@ create table if not exists public.tool_pass_orders_v2 (
   sku text not null check (sku in ('tools_7d','tools_30d','tools_90d','tools_365d')),
   currency text not null check (currency in ('CNY','USD')),
   amount_minor bigint not null check (amount_minor>0),
+  active_source_minor bigint not null check (active_source_minor>=0),
+  legacy_source_minor bigint not null check (legacy_source_minor>=0),
+  constraint tool_pass_split_matches_charge check(active_source_minor+legacy_source_minor=amount_minor),
   starts_at timestamptz not null,
   ends_at timestamptz not null check (ends_at>starts_at),
   state text not null default 'active' check (state in ('active','refunded','revoked')),
@@ -165,6 +168,8 @@ declare
  t_start timestamptz;
  t_end timestamptz;
  charge jsonb;
+ active_source_minor bigint;
+ legacy_source_minor bigint;
 begin
  if p_user_id is null or p_request_id is null or p_currency not in ('CNY','USD') then
   return jsonb_build_object('ok',false,'error','INVALID_PURCHASE');end if;
@@ -200,8 +205,18 @@ begin
  if coalesce((charge->>'alreadyCharged')::boolean,false) then
   return jsonb_build_object('ok',false,'error','ORPHANED_CHARGE_REFERENCE');
  end if;
- insert into public.tool_pass_orders_v2(request_id,user_id,sku,currency,amount_minor,starts_at,ends_at)
- values (p_request_id,p_user_id,p_sku,p_currency,amount_minor,t_start,t_end);
+ -- Snapshot the two source wallets consumed by charge_sasi_usage_v49.
+ -- An impossible split must throw and rollback the debit atomically.
+ active_source_minor:=(charge->>'activeChargedMinor')::bigint;
+ legacy_source_minor:=(charge->>'legacyChargedMinor')::bigint;
+ if (charge->>'chargedMinor')::bigint is distinct from amount_minor
+    or active_source_minor is null or legacy_source_minor is null
+    or active_source_minor<0 or legacy_source_minor<0
+    or active_source_minor+legacy_source_minor<>amount_minor then
+  raise exception 'TOOL_PASS_SOURCE_SPLIT_MISMATCH' using errcode='P0001';
+ end if;
+ insert into public.tool_pass_orders_v2(request_id,user_id,sku,currency,amount_minor,active_source_minor,legacy_source_minor,starts_at,ends_at)
+ values (p_request_id,p_user_id,p_sku,p_currency,amount_minor,active_source_minor,legacy_source_minor,t_start,t_end);
  return jsonb_build_object('ok',true,'alreadyPurchased',false,'requestId',p_request_id,
   'sku',p_sku,'currency',p_currency,'chargedMinor',amount_minor,'startsAt',t_start,'endsAt',t_end);
 end $$;
