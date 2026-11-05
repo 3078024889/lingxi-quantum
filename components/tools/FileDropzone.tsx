@@ -46,41 +46,61 @@ export default function FileDropzone({
   },[files,kind]);
 
   const apply=useCallback(async(list:FileList|File[])=>{
+    if(pendingRef.current)return;
     const incoming=Array.from(list);if(!incoming.length)return;
     const maxBytes=maxSizeMB*1024*1024;
     const tooBig=incoming.find(file=>file.size>maxBytes);
     if(tooBig){setError(uploadText(lang,"tooLarge",{name:tooBig.name,size:maxSizeMB}));return}
     const unsupported=incoming.find(file=>!fileMatchesAccept(file,effectiveAccept));
     if(unsupported){setError(`${unsupported.name} · ${uploadText(lang,"unsupported")}`);return}
+    // Validate the *raw* upload count before charging and before external conversion.
+    const initial=multiple&&append?[...files,...incoming]:incoming;
+    const distinct=Array.from(new Map(initial.map(file=>[fileIdentity(file),file])).values());
+    if(!multiple&&distinct.length>1){setError(plainText(lang,"oneFile"));return}
+    if(multiple&&distinct.length>maxFiles){setError(plainText(lang,"fileLimit",{count:maxFiles}));return}
     if(pdfDocumentMode&&!confirmDocumentUpload(incoming,lang))return;
-    let prepared=incoming;
-    if(pdfDocumentMode){setNormalizing(true);try{prepared=await Promise.all(incoming.map(async file=>file.type.startsWith("image/")?file:(await normalizeDocumentFiles([file]))[0]))}catch(e){setError(documentIntakeError(lang,e));setNormalizing(false);return}setNormalizing(false)}
-    const merged=multiple&&append?[...files,...prepared]:prepared;
-    const unique=Array.from(new Map(merged.map(file=>[fileIdentity(file),file])).values());
-    if(!multiple&&unique.length>1){setError(plainText(lang,"oneFile"));return}
-    if(multiple&&unique.length>maxFiles){setError(plainText(lang,"fileLimit",{count:maxFiles}));return}
-    if(TOOL_PASS_ENFORCED){
-      const toolSlug=location.pathname.match(/^\/tools\/([^/?#]+)/)?.[1]||"";
-      if(toolSlug&&toolSlug!=="pay"&&toolSlug!=="pass"){
-        if(pendingRef.current)return;
-        pendingRef.current=true;setAuthorizing(true);
-        try{
-          const original=new Map<string,number>();
-          for(const f of files){const k=fileIdentity(f);original.set(k,(original.get(k)||0)+1)}
-          // A new picker/drop attempt is a new use even if the same file is selected again.
-          // Append-mode duplicates already present in the batch are ignored.
+
+    pendingRef.current=true;
+    try{
+      if(TOOL_PASS_ENFORCED){
+        const toolSlug=location.pathname.match(/^\/tools\/([^/?#]+)/)?.[1]||"";
+        if(toolSlug&&toolSlug!=="pay"&&toolSlug!=="pass"){
+          setAuthorizing(true);
+          const previous=new Map<string,number>();
+          for(const f of files){const k=fileIdentity(f);previous.set(k,(previous.get(k)||0)+1)}
+          // Re-selecting the same file to replace it is a NEW use; append duplicates
+          // already represented in the current batch are not counted again.
           let newUnits=multiple&&append?0:incoming.length;
           if(multiple&&append){
-            for(const f of unique){const k=fileIdentity(f);const count=original.get(k)||0;if(count>0)original.set(k,count-1);else newUnits++}
+            for(const f of distinct){const k=fileIdentity(f),n=previous.get(k)||0;
+              if(n>0)previous.set(k,n-1);else newUnits++}
           }
           if(newUnits>0)await claimToolStart(toolSlug,newUnits);
-        }catch(e){
-          setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"));
-          return;
-        }finally{pendingRef.current=false;setAuthorizing(false)}
+          setAuthorizing(false);
+        }
       }
+      let prepared=incoming;
+      if(pdfDocumentMode){
+        setNormalizing(true);
+        prepared=await Promise.all(incoming.map(async file=>
+          file.type.startsWith("image/")?file:(await normalizeDocumentFiles([file]))[0]));
+        setNormalizing(false);
+      }
+      const merged=multiple&&append?[...files,...prepared]:prepared;
+      const unique=Array.from(new Map(merged.map(file=>[fileIdentity(file),file])).values());
+      if(!multiple&&unique.length>1){setError(plainText(lang,"oneFile"));return}
+      if(multiple&&unique.length>maxFiles){setError(plainText(lang,"fileLimit",{count:maxFiles}));return}
+      setError(null);
+      onChange(multiple?unique:unique.slice(0,1));
+    }catch(e){
+      setError(e instanceof ToolAccessError
+        ?toolAccessMessage(lang,e.code)
+        :documentIntakeError(lang,e));
+    }finally{
+      pendingRef.current=false;
+      setNormalizing(false);
+      setAuthorizing(false);
     }
-    setError(null);onChange(multiple?unique:unique.slice(0,1));
   },[append,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode]);
 
   const promptKey=kind==="image"?"dropImagesOrChoose":kind==="media"?"dropMediaOrChoose":kind==="pdf"?"dropPdfOrChoose":kind==="subtitle"?"dropSubtitleOrChoose":"dropOrChoose";

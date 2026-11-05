@@ -61,7 +61,7 @@ jobs:
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106040000_tool_pass_burn_notes.sql
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-burn-integrity.sql
       - name: Contract tests
-        run: node --test tests/unified-tools-pass-static-contract.test.mjs tests/unified-tool-pass-retirement-guards.test.mjs tests/tool-pass-server-http-contract.test.mjs tests/tool-pass-billing-retirement.test.mjs
+        run: node --test tests/unified-tools-pass-static-contract.test.mjs tests/unified-tool-pass-retirement-guards.test.mjs tests/tool-pass-server-http-contract.test.mjs tests/tool-pass-billing-retirement.test.mjs tests/tool-pass-file-upload-order.test.mjs
       - name: Typecheck
         run: pnpm exec tsc --noEmit
       - name: Production Next.js build (no Vercel)
