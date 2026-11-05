@@ -40,12 +40,13 @@ export default function PartnerGrowthPortal(){
  },[]);
  const vc=vendorCopy[lang]||vendorCopy.en;
  const safe=partner.toLowerCase().replace(/[^a-z0-9_-]/g,"").slice(0,32)||"community";
+ const safeVendor=vendor.toLowerCase().replace(/[^a-z0-9-]/g,"").slice(0,64);
  const snippets=useMemo(()=>{
   const source="https://lingxifield.com/widgets/lingxifield-v1.js";
   const standard=(kind:string)=>'<script defer src="'+source+'" data-lx-widget="'+kind+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>';
   return [standard("siai"),standard("tools"),
-   '<script defer src="'+source+'" data-lx-widget="siai" data-vendor="'+vendor+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>'];
- },[safe,lang,vendor]);
+   '<script defer src="'+source+'" data-lx-widget="siai" data-vendor="'+safeVendor+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>'];
+ },[safe,lang,safeVendor]);
  async function copyCode(value:string,key:string){try{await navigator.clipboard.writeText(value);setCopied(key)}catch{setCopied(null)}}
  const box:CSSProperties={padding:22,border:"1px solid #dce4ee",borderRadius:18,background:"#fff",boxShadow:"0 4px 18px rgba(15,23,42,.04)"};
  return <main style={{padding:"44px 20px 70px",background:"#f7f9fe",minHeight:"70vh"}} dir={lang==="ar"?"rtl":"ltr"}>
