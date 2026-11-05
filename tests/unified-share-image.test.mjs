@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
 import sharp from 'sharp';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
 
 const read=(p)=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const imageWeb='public/og-lingxifield-20261105.jpg';
@@ -36,4 +38,14 @@ test('both new assets exist, are sharp readable, and old OG/miniapp versions are
  assert.equal(og.width,1200);assert.equal(og.height,630);
  assert.equal(mini.format,'jpeg');
  assert.equal(mini.width,600);assert.equal(mini.height,480);
+});
+
+test('WeChat forwarding of SIAI leaderboard keeps the public ranking page',()=>{
+ const share=require('../miniapp/utils/share.js');
+ assert.equal(share.publicWebPath('/siai'),'/siai');
+ assert.equal(share.publicWebPath('/siai?evil=1'),'/siai');
+ assert.equal(share.publicWebPath('/account'),'/');
+ const web=read('miniapp/pages/web/index.js');
+ assert(web.includes("const EXACT_ALLOWED=new Set(['/','/siai'"));
+ assert(web.includes("'/siai':'灵犀场 · 全球 SIAI 排行榜'"));
 });
