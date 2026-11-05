@@ -23,7 +23,7 @@ export default function ToolShareRail(){
  const dialog=useRef<HTMLDialogElement>(null);
  const eligible=useMemo(()=>{const publicPath=pathname.replace(/^\/(?:zh|en|ja|ko|fr|de|es|pt|ar)(?=\/|$)/,"")||"/";return publicPath.startsWith("/tools/")&&!privateSearchPath(publicPath)},[pathname]);
  useEffect(()=>{setOpen(false)},[pathname]);
- useEffect(()=>{setCopied(false);setError("");setUrl(location.origin+pathname+'?lang='+lang)},[pathname,lang]);
+ useEffect(()=>{setCopied(false);setError("");const q=new URLSearchParams({lang,utm_source:'tool_share',utm_campaign:'free_tools'});setUrl(location.origin+pathname+'?'+q.toString())},[pathname,lang]);
  useEffect(()=>{if(!open)return;let active=true;setQr("");void import('qrcode').then(m=>m.default.toDataURL(url,{width:320,margin:1,errorCorrectionLevel:"M"})).then(v=>{if(active)setQr(v)}).catch(()=>{});return()=>{active=false}},[open,url]);
  useEffect(()=>{if(open)dialog.current?.showModal();else dialog.current?.close()},[open]);
  async function copy(){try{await navigator.clipboard.writeText(url);setCopied(true);setError("")}catch{setError(deliveryText(lang,'manualCopy'))}}
