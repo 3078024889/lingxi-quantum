@@ -33,6 +33,12 @@ const rows=slugs.map(slug=>{
  const p=join(dedicatedRoot,slug,"page.tsx");
  if(!existsSync(p))return {slug,entry:"generic",covered:fallbackCovered};
  const page=read("app/tools/"+slug+"/page.tsx");
+ const redirect=page.match(/redirect\s*\(\s*["\x27]\/tools\/([a-z0-9-]+)["\x27]\s*\)/);
+ if(redirect){
+  const target=redirect[1];
+  const targetPage=join(dedicatedRoot,target,"page.tsx");
+  return {slug,entry:"redirect",covered:slugs.includes(target)&&!existsSync(targetPage)&&fallbackCovered,redirectTarget:target};
+ }
  const imports=[...page.matchAll(/from\s*["']@\/components\/tools\/([^"']+)["']/g)].map(x=>x[1]);
  const covered=imports.some(x=>checkComponent("components/tools/"+x+".tsx"));
  return {slug,entry:"dedicated",covered,imports};
