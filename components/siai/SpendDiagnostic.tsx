@@ -1,49 +1,54 @@
 "use client";
 import {useMemo,useState} from "react";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {DIAGNOSTIC_COPY,DIAGNOSIS_RESULT_COPY} from "@/lib/siai/spend-diagnostic-i18n";
 import {diagnoseAiSpend} from "@/lib/siai/free-spend-diagnostic";
 import type {SpendItem} from "@/lib/siai/free-spend-diagnostic";
-const field:React.CSSProperties={border:"1px solid #cbd5e1",borderRadius:10,padding:"10px 12px",minWidth:0,width:"100%",fontSize:16,background:"#fff",color:"#14213d"};
-const initial:SpendItem={name:"",monthlyPrice:0,usedPerMonth:0,expectedPerMonth:0,essential:false};
+const initial=():SpendItem=>({name:"",monthlyPrice:0,usedPerMonth:0});
+const field="mt-1 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 py-3 text-base text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
 export default function SpendDiagnostic(){
+ const {lang}=useLingxiLang(),t=DIAGNOSTIC_COPY[lang],r=DIAGNOSIS_RESULT_COPY[lang];
  const [currency,setCurrency]=useState<"CNY"|"USD">("CNY");
- const [items,setItems]=useState<SpendItem[]>([{...initial}]);
+ const [items,setItems]=useState<SpendItem[]>([initial()]);
  const [submitted,setSubmitted]=useState(false);
- const update=(i:number,patch:Partial<SpendItem>)=>{setItems(v=>v.map((x,j)=>j===i?{...x,...patch}:x));setSubmitted(false);};
- const calculation=useMemo(()=>{try{return {result:diagnoseAiSpend({currency,items}),error:""};}catch(e){return {result:null,error:e instanceof Error?e.message:"输入有误"};}},[currency,items]);
- const money=(n:number)=>new Intl.NumberFormat(currency==="CNY"?"zh-CN":"en-US",{style:"currency",currency}).format(n);
- const inputNum=(n:number)=>Number.isFinite(n)?n:0;
- const share=()=>{if(!calculation.result)return;const summary={currency,monthlySpend:calculation.result.monthlySpend,potentialMonthlySavings:calculation.result.potentialMonthlySavings};navigator.clipboard?.writeText("灵犀场 SI/AI 花费诊断（匿名摘要）\n"+JSON.stringify(summary)+"\nhttps://lingxifield.com/siai/spend-diagnostic");};
- return <main style={{maxWidth:960,margin:"0 auto",padding:"32px 16px 72px",color:"#172235"}}>
-  <h1 style={{fontSize:34,fontWeight:750,marginBottom:12}}>免费的 SI/AI 花费诊断</h1>
-  <p style={{fontSize:16,lineHeight:1.8}}>不连接银行、不上传账单、不要求注册。填写正在订阅的工具与真实使用量，查看可能省下多少费用。计算仅在浏览器完成。</p>
-  <div style={{background:"#f0f7f5",borderRadius:16,padding:20,margin:"20px 0"}}>
-   <label style={{fontWeight:650}}>计价币种（不同币种分开计算）</label>
-   <select value={currency} onChange={e=>{setCurrency(e.target.value as "CNY"|"USD");setSubmitted(false);}} style={{...field,marginTop:8,maxWidth:220}}><option value="CNY">人民币 CNY</option><option value="USD">美元 USD</option></select>
+ const [copyStatus,setCopyStatus]=useState(false);
+ const money=(n:number)=>new Intl.NumberFormat(lang==="zh"?"zh-CN":lang,{style:"currency",currency}).format(n);
+ const update=(i:number,patch:Partial<SpendItem>)=>{setItems(v=>v.map((x,j)=>i===j?{...x,...patch}:x));setSubmitted(false);};
+ const calculation=useMemo(()=>{try{return {result:diagnoseAiSpend({currency,items}),error:""};}catch(e){return {result:null,error:e instanceof Error?e.message:t.error};}},[currency,items,t.error]);
+ const digits=(v:string)=>v===""?0:Number(v);
+ const isValid=(v:string)=>v===""||(/^\d*(\.\d{0,2})?$/.test(v)&&Number.isFinite(Number(v)));
+ const loadExample=()=>{setItems([{name:r.exampleName,monthlyPrice:99,usedPerMonth:0,expectedPerMonth:0},{name:"AI B",monthlyPrice:49,usedPerMonth:12,expectedPerMonth:12}]);setSubmitted(true);};
+ const share=async()=>{if(!calculation.result)return;const v=calculation.result;const text=t.title+"\n"+t.current+": "+money(v.monthlySpend)+"\n"+t.potential+": "+money(v.potentialMonthlySavings)+"\n"+r.disclaimer+"\nhttps://lingxifield.com/siai/spend-diagnostic";try{await navigator.clipboard.writeText(text);setCopyStatus(true);}catch{setCopyStatus(false);}};
+ return <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-7 text-slate-900 sm:px-6" dir={lang==="ar"?"rtl":"ltr"} lang={lang==="zh"?"zh-CN":lang}>
+  <div className="mb-6 rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-sky-50 px-5 py-7 shadow-sm sm:px-8">
+   <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-semibold text-emerald-800">{t.eyebrow}</span>
+   <h1 className="mt-3 text-2xl font-bold leading-tight sm:text-3xl">{t.pageTitle}</h1>
+   <p className="mt-3 text-base leading-relaxed text-slate-700">{t.pageIntro}</p>
+   <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-600">{[t.save,t.quota,t.compare].map(x=><span key={x}>✓ {x}</span>)}</div>
   </div>
-  {items.map((item,i)=><section key={i} style={{border:"1px solid #dde6e8",borderRadius:16,padding:18,margin:"14px 0",background:"#fff"}}>
-   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,marginBottom:12}}><h2 style={{fontSize:19,fontWeight:700}}>订阅 {i+1}</h2>{items.length>1&&<button type="button" onClick={()=>{setItems(v=>v.filter((_,j)=>j!==i));setSubmitted(false);}} style={{color:"#a22",padding:8}}>删除</button>}</div>
-   <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(185px,1fr))",gap:12}}>
-    <label>工具名称<input aria-label={"工具名称"+(i+1)} placeholder="例如：某视频AI" style={field} maxLength={100} value={item.name} onChange={e=>update(i,{name:e.target.value})}/></label>
-    <label>每月实际费用<input aria-label={"月费"+(i+1)} type="number" min="0" step="0.01" style={field} value={item.monthlyPrice} onChange={e=>update(i,{monthlyPrice:inputNum(e.target.valueAsNumber)})}/></label>
-    <label>本月使用次数<input aria-label={"使用次数"+(i+1)} type="number" min="0" step="1" style={field} value={item.usedPerMonth} onChange={e=>update(i,{usedPerMonth:inputNum(e.target.valueAsNumber)})}/></label>
-    <label>下月预计次数<input aria-label={"预计次数"+(i+1)} type="number" min="0" step="1" style={field} value={item.expectedPerMonth??item.usedPerMonth} onChange={e=>update(i,{expectedPerMonth:inputNum(e.target.valueAsNumber)})}/></label>
-    <label>已知的替代套餐月费（可选）<input aria-label={"替代价格"+(i+1)} type="number" min="0" step="0.01" placeholder="不确定请留空" style={field} value={item.alternativeMonthlyPrice??""} onChange={e=>update(i,{alternativeMonthlyPrice:e.target.value===""?undefined:inputNum(e.target.valueAsNumber)})}/></label>
-   </div>
-   <label style={{display:"flex",gap:8,alignItems:"center",marginTop:14}}><input type="checkbox" checked={!!item.essential} onChange={e=>update(i,{essential:e.target.checked})}/> 工作必须保留，不能简单取消</label>
-  </section>)}
-  <div style={{display:"flex",gap:12,flexWrap:"wrap",margin:"20px 0"}}>
-   <button type="button" disabled={items.length>=30} onClick={()=>{setItems(v=>[...v,{...initial}]);setSubmitted(false);}} style={{padding:"12px 18px",borderRadius:10,border:"1px solid #8baea1",fontWeight:650}}>增加订阅</button>
-   <button type="button" onClick={()=>setSubmitted(true)} style={{padding:"12px 18px",borderRadius:10,background:"#136c57",color:"#fff",fontWeight:700}}>免费诊断</button>
+  <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+   <label className="w-48 text-sm font-semibold text-slate-700">{t.currency}<select className={field} value={currency} onChange={e=>{setCurrency(e.target.value as "CNY"|"USD");setSubmitted(false);}}><option value="CNY">CNY ¥</option><option value="USD">USD $</option></select></label>
+   <button type="button" onClick={loadExample} className="min-h-11 rounded-xl border border-emerald-200 bg-white px-4 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">{r.exampleLabel}</button>
   </div>
-  {submitted&&(calculation.error?<p role="alert" style={{color:"#ae2525"}}>{calculation.error}</p>:calculation.result&&<section aria-live="polite" style={{padding:22,background:"#edf8f4",borderRadius:16}}>
-   <h2 style={{fontSize:23,fontWeight:700,marginBottom:14}}>诊断结果</h2>
-   <p>每月费用：<strong>{money(calculation.result.monthlySpend)}</strong></p>
-   <p>潜在每月节省：<strong>{money(calculation.result.potentialMonthlySavings)}</strong></p>
-   <p>潜在年度节省（简单乘12）：<strong>{money(calculation.result.annualizedPotentialSavings)}</strong></p>
-   {calculation.result.findings.map((f,i)=><div key={i} style={{padding:"12px 0",borderTop:"1px solid #c9ddd5"}}><strong>{f.name}</strong><p>{f.reason}</p><p>本月每次使用成本：{f.costPerUse===null?"无法计算（0次使用）":money(f.costPerUse)}</p><p>潜在节省：{money(f.potentialMonthlySavings)}</p></div>)}
-   <button type="button" onClick={share} style={{padding:"11px 15px",border:"1px solid #136c57",borderRadius:10}}>复制匿名结果（不含工具名称）</button>
-   <p style={{fontSize:14,marginTop:12}}>这些只是情景计算，不代表任何已验证的套餐推荐。取消前请检查数据导出、续费、退款和商用限制。</p>
-  </section>)}
-  <p style={{fontSize:14,marginTop:22,color:"#536374"}}>隐私：当前版本只在本地浏览器计算，不上传所填订阅信息。不会自动连接AI账号，也不会替你取消订阅。</p>
+  <div className="space-y-3">{items.map((item,i)=><section key={i} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+    <div className="mb-3 flex items-center justify-between gap-3"><h2 className="text-lg font-bold">{i+1}. {t.name}</h2>{items.length>1&&<button type="button" className="rounded-lg px-2 py-2 text-sm text-rose-700 hover:bg-rose-50" onClick={()=>{setItems(v=>v.filter((_,j)=>j!==i));setSubmitted(false);}}>{t.remove}</button>}</div>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+     <label className="text-sm font-medium text-slate-700">{t.name}<input className={field} maxLength={100} value={item.name} placeholder={r.exampleName} onChange={e=>update(i,{name:e.target.value})}/></label>
+     <label className="text-sm font-medium text-slate-700">{t.price}<input className={field} type="number" min="0" max="1000000" step="0.01" value={item.monthlyPrice} onChange={e=>update(i,{monthlyPrice:e.target.valueAsNumber})}/></label>
+     <label className="text-sm font-medium text-slate-700">{t.usage}<input className={field} type="number" min="0" max="1000000" step="1" value={item.usedPerMonth} onChange={e=>update(i,{usedPerMonth:e.target.valueAsNumber})}/></label>
+     <label className="text-sm font-medium text-slate-700">{t.expected}<input className={field} type="number" min="0" max="1000000" step="1" placeholder={String(item.usedPerMonth)} value={item.expectedPerMonth??""} onChange={e=>update(i,{expectedPerMonth:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
+     <label className="text-sm font-medium text-slate-700 sm:col-span-2">{t.alternate}<input className={field} type="number" min="0" max="1000000" step="0.01" placeholder="—" value={item.alternativeMonthlyPrice??""} onChange={e=>update(i,{alternativeMonthlyPrice:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
+    </div>
+    <label className="mt-4 inline-flex min-h-9 items-center gap-3 text-sm text-slate-700"><input type="checkbox" className="h-4 w-4 accent-emerald-700" checked={!!item.essential} onChange={e=>update(i,{essential:e.target.checked})}/>{t.essential}</label>
+   </section>)}</div>
+  <div className="mt-5 flex flex-wrap gap-3"><button type="button" disabled={items.length>=30} onClick={()=>{setItems(v=>[...v,initial()]);setSubmitted(false);}} className="min-h-12 rounded-xl border border-slate-300 bg-white px-5 text-base font-semibold text-slate-800 disabled:opacity-50">+ {t.add}</button><button type="button" onClick={()=>setSubmitted(true)} className="min-h-12 flex-1 rounded-xl bg-emerald-700 px-6 text-base font-bold text-white hover:bg-emerald-800 sm:flex-none">{t.run} →</button></div>
+  {submitted&&(calculation.result?<section className="mt-7 rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5 sm:p-6" aria-live="polite">
+   <h2 className="text-xl font-bold">{t.outcome}</h2>
+   <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">{[[t.current,calculation.result.monthlySpend],[t.potential,calculation.result.potentialMonthlySavings],[t.annual,calculation.result.annualizedPotentialSavings]].map(([k,v])=><div key={String(k)} className="rounded-xl bg-white p-4"><div className="text-sm text-slate-600">{k}</div><div className="mt-1 text-2xl font-bold tabular-nums text-emerald-800">{money(Number(v))}</div></div>)}</div>
+   <div className="mt-4 space-y-2">{calculation.result.findings.map(f=><article className="rounded-xl border border-emerald-100 bg-white p-4" key={f.name}><h3 className="font-semibold">{f.name}</h3><p className="mt-1 text-sm leading-relaxed text-slate-700">{f.status==="review"?r.review:f.status==="downgrade_candidate"?r.downgrade:r.keep}</p><p className="mt-2 text-sm text-slate-600">{r.perUse}: {f.costPerUse===null?"—":money(f.costPerUse)}</p></article>)}</div>
+   <p className="my-4 text-sm leading-relaxed text-slate-600">{r.disclaimer}</p>
+   <button type="button" onClick={share} className="min-h-11 rounded-xl border border-emerald-600 bg-white px-4 text-sm font-semibold text-emerald-800">{t.share}</button>{copyStatus&&<span role="status" className="ms-3 text-sm text-emerald-800">✓</span>}
+  </section>:<p role="alert" className="mt-4 rounded-xl bg-red-50 p-4 text-sm text-red-800">{t.error}</p>)}
+  <p className="mt-6 text-sm leading-relaxed text-slate-500">{t.privacy}</p>
  </main>;
 }
