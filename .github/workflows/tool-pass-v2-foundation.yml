@@ -5,6 +5,7 @@ on:
       - "config/tool-pass-offers.v2.json"
       - "lib/tools/commerce/tool-pass-v2.mjs"
       - "app/api/tools/pass/**"
+      - "lib/tools/commerce/free-entitlement.ts"
       - "docs/commerce/tool-pass-v2-unapplied-database-draft.sql"
       - "tests/tool-pass-v2-contract.test.mjs"
       - ".github/workflows/tool-pass-v2-foundation.yml"
