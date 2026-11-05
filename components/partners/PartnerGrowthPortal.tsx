@@ -79,6 +79,7 @@ export default function PartnerGrowthPortal(){
    <p style={{fontSize:15,color:"#54647d",marginTop:22}}>{t.example}</p>
    <div style={{display:"flex",gap:20,flexWrap:"wrap",padding:"24px 0"}}>
     <a href="/siai/updates.xml" style={{fontSize:16,color:"#1757be"}}>{t.feed}</a>
+    <a href="/siai-openapi.json" style={{fontSize:16,color:"#1757be"}}>API · OpenAPI</a>
     <Link href="/siai" style={{fontSize:16,color:"#1757be"}}>{t.update}</Link>
     <Link href="/tools" style={{fontSize:16,color:"#1757be"}}>{t.community}</Link>
    </div>
