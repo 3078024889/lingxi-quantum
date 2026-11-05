@@ -3,6 +3,7 @@ import Link from 'next/link';
 import {notFound} from 'next/navigation';
 import {findPlatform,searchPlatforms} from '../../../../lib/platform-repository';
 import {marketLocales,mayIndexMarket,marketCanonicalOrigin,indexableMarketLocales} from '../../../../lib/market-index-policy';
+import {MARKET_SHARE_IMAGE,MARKET_SHARE_IMAGES} from '../../../../lib/share-card';
 import {researchedFact,marketProductReviewedAt} from '../../../../lib/market-researched-facts';
 import {companyEvidenceFor,companyPresentationFor} from '../../../../lib/market-company-evidence';
 import MarketPublisherFacts from '../../../market-publisher-facts';
@@ -61,7 +62,8 @@ export async function generateMetadata({params}:PageParams):Promise<Metadata>{
  if(languages.en)languages['x-default']=languages.en;
  return {title,description:label(language,id)+'. '+product.name+' — '+WORDS[language][2]+', '+WORDS[language][1]+', '+WORDS[language][5]+'.',
   robots:{index:robots,follow:robots},alternates:robots?{canonical:marketCanonicalOrigin+'/'+lang+'/platform/'+encodeURIComponent(id),languages}:undefined,
-  openGraph:{title,description:label(language,id),type:'article'}};
+  openGraph:{title,description:label(language,id),type:'article',images:MARKET_SHARE_IMAGES},
+  twitter:{card:'summary_large_image',title,images:[MARKET_SHARE_IMAGE]}};
 }
 export default async function LocalProduct({params}:PageParams){
  const {lang,id}=await params;
