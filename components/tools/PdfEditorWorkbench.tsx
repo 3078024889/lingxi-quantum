@@ -363,7 +363,10 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
   if(grip!=="move")e.preventDefault();e.stopPropagation();
   // Never downgrade an active corner resize to "move" during bubbling.
   const prior=gestureRef.current;
-  if(grip==="move"&&prior?.id===id&&prior.pointerId===e.pointerId&&prior.grip!=="move")return;
+  // Browser touch sends capture and bubble pointerdown for the same finger.
+  // Keep the original corner action and its start point on both passes.
+  if(prior?.id===id&&prior.pointerId===e.pointerId
+      &&prior.grip!=="move"&&(grip==="move"||e.pointerType==="touch"))return;
   beginGesture(id,grip,e.clientX,e.clientY,e.pointerId);
   if(gestureRef.current?.pointerId===e.pointerId)try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
  }
