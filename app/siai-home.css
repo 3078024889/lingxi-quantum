@@ -742,3 +742,61 @@ html[data-theme="dark"] .siai-home .siai-hot-searches button,
 html[data-theme="dark"] .siai-home .siai-filter-compact select{
  background:#243348;color:#d5e7ff;border-color:#485e7a;
 }
+
+
+/* Owner-supplied footer communities, below the existing social icon grid.
+   This block intentionally does not touch QR cards, footer columns or ranking scroll. */
+.lx-footer-v4 .lx11-footer-brand .lx-footer-v4-groups{
+ display:grid;gap:6px;max-width:285px;width:100%;margin-top:13px;
+ padding:10px 11px;border-radius:11px;border:1px solid #e7def8;
+ background:linear-gradient(135deg,#fff,#f8f5ff);
+ color:#3f326f;min-width:0;
+}
+.lx-footer-v4 .lx-footer-v4-groups-title{
+ display:flex;align-items:center;gap:7px;margin:0;
+ font-size:14px;font-weight:800;line-height:1.35;color:#39265f;
+}
+.lx-footer-v4 .lx-footer-v4-groups-title span{
+ color:#8756d5;font-size:15px;line-height:1;
+}
+.lx-footer-v4 .lx-footer-v4-qq-heading{font-size:14px;line-height:1.25;font-weight:650;color:#67548d}
+.lx-footer-v4 .lx-footer-v4-qq-groups{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;min-width:0;
+}
+.lx-footer-v4 .lx-footer-v4-qq-groups button{
+ display:flex;align-items:center;justify-content:space-between;gap:4px;
+ min-width:0;min-height:33px;background:#fff;
+ border:1px solid #d9c9f1;border-radius:7px;
+ padding:5px 7px;color:#4c3a82;cursor:pointer;line-height:1.3;
+ font-size:14px;font-weight:700;
+}
+.lx-footer-v4 .lx-footer-v4-qq-groups button:hover{border-color:#9b74d8;background:#f7f2ff}
+.lx-footer-v4 .lx-footer-v4-group-number{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14px}
+.lx-footer-v4 .lx-footer-v4-group-copy{font-size:16px;color:#8561ba}
+.lx-footer-v4 .lx-footer-v4-telegram{
+ display:flex;align-items:center;gap:7px;max-width:100%;
+ border-radius:7px;border:1px solid #d7e4fc;background:#f4f8ff;
+ padding:7px 8px;min-height:34px;color:#2d65a9;font-size:14px;
+ font-weight:650;line-height:1.35;text-decoration:none;overflow-wrap:anywhere;
+}
+.lx-footer-v4 .lx-footer-v4-telegram span:nth-child(2){min-width:0}
+.lx-footer-v4 .lx-footer-v4-telegram:hover{text-decoration:underline;background:#eaf2ff}
+.lx-footer-v4 .lx-footer-v4-telegram>span:last-child{margin-inline-start:auto}
+.lx-footer-v4 .lx-footer-v4-qq-groups button:focus-visible,
+.lx-footer-v4 .lx-footer-v4-telegram:focus-visible{
+ outline:2px solid #8051d6;outline-offset:2px;
+}
+html[data-theme="dark"] .lx-footer-v4 .lx11-footer-brand .lx-footer-v4-groups{
+ background:#26233f;border-color:#554271;color:#ede5ff;
+}
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-groups-title,
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-qq-heading{color:#e9ddff}
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-qq-groups button{
+ background:#342b4f;color:#f0e8ff;border-color:#614c86;
+}
+html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-telegram{
+ background:#202f4a;color:#dbeaff;border-color:#3e587b;
+}
+@media(max-width:380px){
+ .lx-footer-v4 .lx-footer-v4-qq-groups{grid-template-columns:minmax(0,1fr)}
+}
