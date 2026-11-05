@@ -4,9 +4,17 @@ import type {SpendInput} from "@/lib/siai/free-spend-diagnostic";
 export const runtime="nodejs";
 const MAX_BODY=16000;
 const tools=[{name:"diagnose_ai_spend",description:"免费分析手动填写的SI/AI订阅花费、低使用率及潜在节省。不连接账户，不验证第三方套餐可用性。",inputSchema:{type:"object",additionalProperties:false,required:["currency","items"],properties:{currency:{type:"string",enum:["CNY","USD"]},items:{type:"array",minItems:1,maxItems:30,items:{type:"object",additionalProperties:false,required:["name","monthlyPrice","usedPerMonth"],properties:{name:{type:"string",maxLength:100},monthlyPrice:{type:"number",minimum:0},usedPerMonth:{type:"integer",minimum:0},expectedPerMonth:{type:"integer",minimum:0},alternativeMonthlyPrice:{type:"number",minimum:0},essential:{type:"boolean"}}}}}}}];
-const ok=(body:unknown,status=200)=>NextResponse.json(body,{status,headers:{"Cache-Control":"no-store","Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"content-type,mcp-protocol-version","MCP-Protocol-Version":"2025-06-18"}});
-export async function OPTIONS(){return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"content-type,mcp-protocol-version"}});}
+const allowed=new Set(["https://lingxifield.com","https://lingxifield.cn"]);
+const ok=(body:unknown,status=200)=>NextResponse.json(body,{status,headers:{"Cache-Control":"no-store","Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"content-type,mcp-protocol-version","MCP-Protocol-Version":"2025-06-18"}});
+export async function OPTIONS(request:NextRequest){
+ const origin=request.headers.get("origin");
+ if(!origin||!allowed.has(origin))return new Response(null,{status:403});
+ return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":origin,"Vary":"Origin","Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"content-type,mcp-protocol-version"}});
+}
 export async function POST(request:NextRequest){
+ const origin=request.headers.get("origin");
+ // Native MCP clients generally omit Origin. Block untrusted browser origins.
+ if(origin&&!allowed.has(origin))return ok({error:"forbidden origin"},403);
  const size=Number(request.headers.get("content-length")||"0");
  if(size>MAX_BODY)return ok({error:"request too large"},413);
  let raw="";
