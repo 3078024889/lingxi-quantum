@@ -2,6 +2,7 @@
 
 import {Fragment,useMemo,useRef,useEffect,useState,type PointerEvent as ReactPointerEvent,type CSSProperties} from "react";
 import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
+import SpendDiagnosticEntry from "@/components/siai/SpendDiagnosticEntry";
 import {SIAI_ICON_BY_ID} from "@/lib/siai-brand-icon-ids";
 import MarketCostEstimator from "../lingxifield-ai-market/app/market-cost-estimator";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -278,6 +279,7 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     <button type="button" className="siai-expand-view" onClick={shareSelection}>{SIAI_SHARE_COPY[lang].share}</button>
     <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={toggleWide}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
   </div>
+  <SpendDiagnosticEntry/>
   {shareStatus&&<div className="mb-3 min-w-0 text-sm"><p role="status">{SIAI_SHARE_COPY[lang][shareStatus]}</p>{shareStatus==='fallback'&&<input className="mt-2 w-full min-w-0 rounded border p-2" readOnly value={shareLink} aria-label={SIAI_SHARE_COPY[lang].link} onFocus={e=>e.currentTarget.select()}/>}</div>}
   <div className="siai-home-four-filters siai-filter-compact">
    <nav className="siai-filter-line siai-ability-line" aria-label={ui.task}>
