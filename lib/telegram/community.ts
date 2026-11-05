@@ -101,3 +101,16 @@ export async function telegramApi(token: string, method: "sendMessage" | "delete
   const data: { ok?: boolean } = await response.json();
   if (!data.ok) throw new Error(`Telegram ${method} rejected request`);
 }
+
+/** Returns only an aggregate member count; never collects Telegram user profiles. */
+export async function telegramMemberCount(token:string,chatId:string):Promise<number|null>{
+  try {
+    const res=await fetch(`https://api.telegram.org/bot${token}/getChatMemberCount`,{
+      method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:chatId}),
+      signal:AbortSignal.timeout(8000),cache:"no-store",
+    });
+    if(!res.ok)return null;
+    const response:{ok?:boolean;result?:number}=await res.json();
+    return response.ok && Number.isSafeInteger(response.result) && (response.result||0)>=0 ? response.result! : null;
+  } catch {return null;}
+}
