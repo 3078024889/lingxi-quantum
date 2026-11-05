@@ -72,10 +72,17 @@ jobs:
         run: |
           set -o pipefail
           node scripts/audit/unified-tool-pass-coverage.mjs | tee tool-pass-audit.json
+      - name: Server-side execution coverage gate
+        if: always()
+        run: |
+          set -o pipefail
+          node scripts/audit/unified-tool-pass-server-coverage.mjs | tee tool-pass-server-audit.json
       - name: Preserve coverage evidence
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
           name: unified-tool-pass-audit
-          path: tool-pass-audit.json
+          path: |
+            tool-pass-audit.json
+            tool-pass-server-audit.json
           retention-days: 14
