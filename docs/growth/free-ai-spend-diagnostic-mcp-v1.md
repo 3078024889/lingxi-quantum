@@ -35,3 +35,16 @@ Status: **experimental feature branch**; NOT production released, NOT submitted 
 - Source-backed official pricing and region rules should be read-only from the *published curated SIAI directory*, not pending unverified records.
 - A separate ChatGPT app/plugin package can call the same MCP tool after protocol and review tests.
 - Only later consider Chrome extension when repeated visitor demand justifies its one-time fee and permission review.
+
+## V1.1 visual and internationalization update
+- The SIAI ranking hero now places a compact mint-and-white diagnosis strip after the catalogue quick actions and before filters, matching the requested screenshot red rectangle.
+- The visible entry and diagnosis form use the existing `useLingxiLang` language state and nine native copy sets: zh, en, ja, ko, fr, de, es, pt, ar.
+- Language routes: Chinese `/siai/spend-diagnostic`; other eight `/{locale}/siai/spend-diagnostic`. No hard-coded language selector needed. Chinese on lingxifield.cn is accessible; canonical remains lingxifield.com for the diagnostic until regional SEO review explicitly approves a regional distinct canonical.
+- The form shows only three required fields (name, monthly fee, previous monthly use), with future demand and alternative price hidden under optional detail controls. A sample fills the form and demonstrates outcome without accounts.
+- Results show total monthly expenditure, potential monthly/annual savings, per-tool rationale, and direct navigation to the existing SIAI directory. Advice and headings are localized.
+- Full cancellation savings are only estimated if the user explicitly says they expect zero use next month. Zero historical usage alone is insufficient.
+- No proprietary code from comparator sites was copied. Alignment is based on public SDK, Next.js documentation and established accessibility patterns.
+- Production stays `noindex` and unpromoted until end-to-end and privacy tests pass. No automatic provider recommendations or refund promises.
+- Current MCP implementation is an experimental JSON-RPC tool endpoint, **not yet fully verified as MCP 2026 SDK-compatible**. Official TypeScript SDK v2 has become stable; use it as the reference when performing the next protocol conformance upgrade: https://github.com/modelcontextprotocol/typescript-sdk .
+- Pricing computations are not connected to the live 62 curated provider facts yet. End-user prices are manually entered.
+- Tests added: `tests/free-siai-spend-diagnostic.test.mjs` and `tests/free-siai-spend-diagnostic-i18n.test.mjs`. They are committed, not yet proven green through CI.
