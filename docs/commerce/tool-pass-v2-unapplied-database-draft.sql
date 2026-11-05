@@ -143,6 +143,11 @@ create table if not exists public.tool_pass_operation_v2 (
   tool_id text not null references public.tool_pass_allowed_v2(tool_id),
   ip_hash text not null check (ip_hash ~ '^[0-9a-f]{64}$'),
   access_kind text not null check(access_kind in ('free','pass')),
+  pass_order_id uuid references public.tool_pass_orders_v2(request_id),
+  constraint pass_operation_source_check check(
+    (access_kind='free' and pass_order_id is null) or
+    (access_kind='pass' and pass_order_id is not null)
+  ),
   claimed_at timestamptz not null default now()
 );
 -- Two separate uniqueness constraints prevent new accounts on the same
@@ -154,6 +159,8 @@ create unique index if not exists tool_pass_free_ip_v2
  on public.tool_pass_operation_v2(ip_hash,tool_id) where access_kind='free';
 create index if not exists tool_pass_ops_user_time_v2
  on public.tool_pass_operation_v2(user_id,claimed_at desc);
+create index if not exists tool_pass_ops_order_v2
+ on public.tool_pass_operation_v2(pass_order_id) where access_kind='pass';
 
 alter table public.tool_pass_allowed_v2 enable row level security;
 alter table public.tool_pass_orders_v2 enable row level security;
@@ -262,6 +269,7 @@ create or replace function public.claim_tool_pass_use_v2(
 declare
  previous public.tool_pass_operation_v2%rowtype;
  active_pass boolean;
+ chosen_pass_id uuid;
  already_free boolean;
  decision text;
 begin
@@ -287,14 +295,16 @@ begin
    return jsonb_build_object('ok',false,'error','OPERATION_RECEIPT_EXPIRED');end if;
   if previous.access_kind='pass' and not exists(
    select 1 from public.tool_pass_orders_v2
-   where user_id=p_user_id and state='active' and starts_at<=now() and ends_at>now()
+   where request_id=previous.pass_order_id and user_id=p_user_id
+    and state='active' and starts_at<=now() and ends_at>now()
   ) then return jsonb_build_object('ok',false,'error','PASS_EXPIRED_OR_REVOKED');end if;
-  return jsonb_build_object('ok',true,'alreadyClaimed',true,'access',previous.access_kind);
+  return jsonb_build_object('ok',true,'alreadyClaimed',true,'access',previous.access_kind,
+   'passOrderId',previous.pass_order_id);
  end if;
- select exists(
-  select 1 from public.tool_pass_orders_v2
+ select request_id into chosen_pass_id from public.tool_pass_orders_v2
   where user_id=p_user_id and state='active' and starts_at<=now() and ends_at>now()
- ) into active_pass;
+  order by starts_at asc,created_at asc,request_id asc limit 1;
+ active_pass:=chosen_pass_id is not null;
  if active_pass then
   decision:='pass';
  else
@@ -308,9 +318,9 @@ begin
   end if;
   decision:='free';
  end if;
- insert into public.tool_pass_operation_v2(operation_id,user_id,tool_id,ip_hash,access_kind)
-  values(p_operation_id,p_user_id,p_tool_key,p_ip_hash,decision);
- return jsonb_build_object('ok',true,'alreadyClaimed',false,'access',decision);
+ insert into public.tool_pass_operation_v2(operation_id,user_id,tool_id,ip_hash,access_kind,pass_order_id)
+  values(p_operation_id,p_user_id,p_tool_key,p_ip_hash,decision,chosen_pass_id);
+ return jsonb_build_object('ok',true,'alreadyClaimed',false,'access',decision,'passOrderId',chosen_pass_id);
 end $$;
 
 revoke all on function public.purchase_tool_pass_v2(uuid,uuid,text,text) from public,anon,authenticated;
