@@ -2,7 +2,7 @@
 import {useCallback,useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 
-type Candidate={id:string;name:string;company:string;category:string;website:string;batch:string;publisherGroupId:string;sourcePreview:boolean;newIntake:boolean;tasks:string[];evidenceUrl:string;evidence:{field:string;text:string;source:string}[]};
+type Candidate={id:string;name:string;company:string;category:string;website:string;batch:string;publisherGroupId:string;sourcePreview:boolean;newIntake:boolean;tasks:string[];evidenceUrl:string;evidence:{field:string;text:string;source:string;checkedAt:string|null}[]};
 type Submission={id:string;project_id:string;request_type:string;product_name:string;official_site:string;
  work_email:string;submitter_name:string;description:string|null;evidence_url:string;
  status:string;verified_domain:boolean;created_at:string;reviewed_at:string|null};
@@ -31,6 +31,9 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
  useEffect(()=>{void load(submissionPage)},[submissionPage,load]);
  const candidateCategoryCounts=useMemo(()=>Object.entries(candidates.reduce<Record<string,number>>((totals,p)=>{totals[p.category]=(totals[p.category]||0)+1;return totals;},{})).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),[candidates]);
  const evidenceCount=useMemo(()=>candidates.reduce((total,p)=>total+p.evidence.length,0),[candidates]);
+ const factCoverage=useMemo(()=>["price","free","models","regions","commercial","payment","company"].map(field=>({
+  field,count:candidates.reduce((n,p)=>n+p.evidence.filter(f=>f.field===field).length,0)
+ })),[candidates]);
  const newTotal=useMemo(()=>candidates.filter(p=>p.newIntake).length,[candidates]);
  const previewTotal=useMemo(()=>candidates.filter(p=>p.sourcePreview).length,[candidates]);
  const reviewedSources=useMemo(()=>candidates.filter(p=>p.evidence.length>0).length,[candidates]);
@@ -94,6 +97,17 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
    </div>
   </div>:<div className="space-y-2">
    <p className="text-sm">{candidates.length} 项独立产品档案，包含新增 {newTotal} 家、历史候选 {candidates.length-newTotal-previewTotal} 家及公开但未获厂商认证的来源预览 {previewTotal} 家。已记录 {evidenceCount} 条带来源观察；任何未经核实的字段保持未知。</p>
+   <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+    <div className="rounded-lg border px-3 py-2"><span>官网证据</span><strong className="ml-2">{evidenceCount}/{candidates.length*7}</strong></div>
+    <div className="rounded-lg border px-3 py-2"><span>待核字段</span><strong className="ml-2">{candidates.length*7-evidenceCount}</strong></div>
+    <div className="rounded-lg border px-3 py-2"><span>厂商分组</span><strong className="ml-2">{new Set(candidates.map(p=>p.publisherGroupId)).size}</strong></div>
+    <div className="rounded-lg border px-3 py-2"><span>已附来源的平台</span><strong className="ml-2">{reviewedSources}</strong></div>
+   </div>
+   <div className="flex flex-wrap gap-2 text-xs" aria-label="七项资料来源覆盖">
+    {factCoverage.map(p=><span key={p.field} className="rounded-md border px-2 py-1">
+     {({price:"价格",free:"免费额度",models:"模型能力",regions:"地区",commercial:"商用授权",payment:"付款方式",company:"公司归属"} as Record<string,string>)[p.field]} {p.count}/{candidates.length}
+    </span>)}
+   </div>
    <nav className="flex flex-wrap gap-2" aria-label="按审核阶段筛选">
     {([
       ["all","所有产品",candidates.length],["new","新采集",newTotal],
@@ -121,6 +135,7 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
       <div className="mt-2 space-y-2">{p.evidence.map(e=><div key={e.field} className="rounded-md bg-[var(--lx-bg)] p-2">
        <strong>{({price:"价格",free:"免费额度",models:"能力",regions:"地区",commercial:"商用授权",payment:"付款方式",company:"发布品牌"} as Record<string,string>)[e.field]||e.field}：</strong>
        <span>{e.text}</span>
+       {e.checkedAt&&<span className="ml-2 text-xs text-[var(--lx-muted)]">核验日期 {e.checkedAt}</span>}
        <a className="ml-2 text-blue-700 underline" href={e.source} target="_blank" rel="nofollow noopener noreferrer">核对官方证据 ↗</a>
       </div>)}</div>
      </details>}
