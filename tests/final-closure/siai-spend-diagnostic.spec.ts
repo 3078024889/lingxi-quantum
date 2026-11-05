@@ -7,9 +7,9 @@ test.describe("free SI/AI spend diagnosis",()=>{
   await expect(page.getByText("数据只在此浏览器计算")).toBeVisible();
   await page.getByRole("button",{name:"加载演示"}).click();
   await expect(page.getByRole("heading",{name:"诊断结果"})).toBeVisible();
-  await expect(page.getByText(/148(?:\\.00)?/)).toBeVisible();
-  await expect(page.getByText(/99(?:\\.00)?/)).toBeVisible();
-  await expect(page.getByText(/1,188(?:\\.00)?/)).toBeVisible();
+  await expect(page.getByText(/148(?:\.00)?/)).toBeVisible();
+  await expect(page.getByText(/99(?:\.00)?/)).toBeVisible();
+  await expect(page.getByText(/1,188(?:\.00)?/)).toBeVisible();
   await expect(page.getByRole("link",{name:/找替代方案/})).toBeVisible();
  });
  test("explicit zero future uses, quota shortage and invalid inputs",async({page})=>{
