@@ -114,5 +114,5 @@ test("QQ 3 official groups have separate traceable campaigns and correct content
 test("Telegram /help and welcome render links to both verified domains",()=>{
  assert.match(index,/trackedCNLink/);
  assert.match(index,/pairLinks\("\/siai","bot_ranking"\)/);
- assert.match(index,/pairLinks\("\/tools","welcome_tools"\)/);
+ assert.match(index,/pairLinks\("\/","welcome"\)/);
 });
