@@ -438,8 +438,18 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(t&&gesture?.id===o.id)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
   touchCornerRef.current=null;
  }}
- onPointerDown={e=>{if(editingTextId!==o.id){const grip=overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);if(grip)startGesture(e,o.id,grip)}}}
- onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){const grip=overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);if(grip)startTouchGesture(e,o.id,grip)}}}}
+ onPointerDown={e=>{if(editingTextId!==o.id){
+  // Chromium touch hit-testing can target the overlay rather than its visible
+  // corner button; use the same corner geometry in capture AND bubble phases.
+  const grip=(e.pointerType==="touch"?overlayTouchGrip(e.currentTarget,e.target,e.clientX,e.clientY):null)
+   ||overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);
+  if(grip)startGesture(e,o.id,grip);
+ }}}
+ onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){
+  const grip=overlayTouchGrip(e.currentTarget,e.target,t.clientX,t.clientY)
+   ||overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);
+  if(grip)startTouchGesture(e,o.id,grip);
+ }}}}
  onDoubleClick={e=>{if(o.kind==="text"){e.stopPropagation();setSelectedOverlayId(o.id);setEditingTextId(o.id)}}}
  onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==="Delete"||e.key==="Backspace"){e.preventDefault();if(o.nativeImageTarget)deleteNativeImage(o);else setOverlays(v=>v.filter(x=>x.id!==o.id))}else if(e.key==="Enter"&&o.kind==="text"){e.preventDefault();setEditingTextId(o.id)}}}
  className={"absolute z-[4] select-none border-2 "+(selectedOverlayId===o.id&&editingTextId!==o.id?"border-sky-500":"border-transparent")}
