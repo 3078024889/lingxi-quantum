@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/** Minimal, permission-free embed: scripts are first-party to LINGXIFIELD. */
+/** Bundled local script with a fixed, read-only remote API origin; no external executable code. */
 function lingxifield_widget_shortcode($atts, $widget = 'siai') {
     $atts = shortcode_atts(array(
         'partner' => 'community',
@@ -44,7 +44,9 @@ function lingxifield_widget_shortcode($atts, $widget = 'siai') {
         return '';
     }
 
-    return '<script defer src="https://lingxifield.com/widgets/lingxifield-v1.js"'
+    $local_script = plugins_url('assets/lingxifield-v1.js', __FILE__);
+    return '<script defer src="' . esc_url($local_script) . '"'
+         . ' data-api-origin="https://lingxifield.com"'
          . ' data-lx-widget="' . esc_attr($kind) . '"'
          . ' data-lang="' . esc_attr($lang) . '"'
          . ' data-partner="' . esc_attr($partner) . '"' . $attr . '></script>';
