@@ -308,7 +308,7 @@ export function buildPost(date:Date,slot:TelegramSlot,channel:PublicChannel,qqGr
  const activeGroup=qqGroup||"1074475201";
  const dayNumber=Math.floor((new Date(singaporeDay(date)+"T00:00:00Z").getTime()-Date.UTC(2026,10,5))/86400000);
  const cycle=Math.floor((((dayNumber%28)+28)%28)/7);
- const weekNote=channel==="qq"?"\\n【"+QQ_WEEKS[cycle]+"】"+QQ_WEEKLY_TASKS[activeGroup][slot][cycle]:"";
+ const weekNote=channel==="qq"?"\n【"+QQ_WEEKS[cycle]+"】"+QQ_WEEKLY_TASKS[activeGroup][slot][cycle]:"";
  const prefix=channel==="qq"
    ? (qqGroup==="601549887"?"🌐 全球 SIAI 排行榜｜社区发现":"✨ 灵犀场 LINGXIFIELD｜每日实用技巧")
    : "🌐 全球 SIAI｜"+({discovery:"早间发现",tutorial:"实用教程",comparison:"工具对比",creation:"智能创作",community:"晚间问答"} as const)[slot];
