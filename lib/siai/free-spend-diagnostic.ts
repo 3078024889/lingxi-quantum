@@ -34,7 +34,7 @@ export function diagnoseAiSpend(input:SpendInput):SpendOutput {
   let savings=0;
   let status:SpendFinding["status"]="keep";
   let reason="根据目前提供的使用量，暂无明确降级依据；还需比较功能、免费额度和商用规则。";
-  if(!item.essential&&future===0&&price>0){
+  if(!item.essential&&item.expectedPerMonth===0&&price>0){
    savings=price;status="review";
    reason="预计下月不使用；可考虑在确认取消及数据导出规则后暂停订阅。";
   } else if(item.alternativeMonthlyPrice!==undefined&&item.alternativeMonthlyPrice<price&&future>0){
