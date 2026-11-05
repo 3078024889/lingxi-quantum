@@ -42,4 +42,12 @@ test.describe("free SI/AI spend diagnosis",()=>{
   await expect(page.getByRole("heading",{name:"Your results"})).toBeVisible();
   await expect(page.getByText("Tasks included per month")).not.toBeVisible();
  });
+ test("source-backed related options never claim guaranteed lowest price",async({page})=>{
+  await page.goto("/siai/spend-diagnostic");
+  await page.getByRole("combobox",{name:/你准备做什么/}).selectOption("video");
+  await page.getByRole("button",{name:"加载演示"}).click();
+  await expect(page.getByRole("heading",{name:"可核验的相关工具"})).toBeVisible();
+  await expect(page.getByText(/不代表最便宜、最适合/)).toBeVisible();
+  await expect(page.getByRole("link",{name:"查看官方价格"}).first()).toHaveAttribute("href",/^https:\/\//);
+ });
 });
