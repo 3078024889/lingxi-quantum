@@ -7,6 +7,8 @@ import {companyPresentationFor} from "../../lingxifield-ai-market/lib/market-com
 import {questionForProduct} from "../../lingxifield-ai-market/lib/market-user-task-queries.mjs";
 import {capabilityProfile} from "../../lingxifield-ai-market/lib/capability-profiles";
 import {productAnswerHeadline} from "../../lingxifield-ai-market/lib/market-result-headlines";
+import manifest from "./directory-publication-manifest.json";
+import {assertSiaiPublicationManifest} from "./directory-publication-contract";
 
 function getCuratedRows():SiaiHomeRow[]{
  return MARKET_API_PRODUCTS.flatMap(id=>{
@@ -39,8 +41,10 @@ function getCuratedRows():SiaiHomeRow[]{
 /** Read-only SIAI directory data shared by 9 indexable language routes. */
 export function getSiaiDirectoryRows():{curated:SiaiHomeRow[];rows:SiaiHomeRow[]} {
  const curated=getCuratedRows();
- const rows=[...curated,...getSiaiSourcePreviewRows()];
- if(curated.length!==32||rows.length!==62||new Set(rows.map(r=>r.id)).size!==62)
-  throw Error("SIAI_DIRECTORY_32_CURATED_AND_62_UNIQUE_ROWS_REQUIRED");
+ const preview=getSiaiSourcePreviewRows();
+ // All new public identities need an explicit editorial manifest update.
+ // Source-preview status stays provisional, and unpublished cohorts remain excluded.
+ assertSiaiPublicationManifest(manifest,curated,preview);
+ const rows=[...curated,...preview];
  return {curated,rows};
 }
