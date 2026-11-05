@@ -29,11 +29,11 @@ test("never activate an incomplete commercial offer or market it as live unlimit
  assert.equal(data.free_policy.upload_counts_without_export,true);
  assert.equal(data.renewal,"manual_only");
 });
-test("123 actual practical tool candidates are partitioned; SASI remains separately metered",()=>{
+test("124 actual practical tool candidates are partitioned; SASI remains separately metered",()=>{
  const ok=new Set(data.eligible_candidate_tool_ids),review=new Set(data.further_review_tool_ids);
- assert.equal(ok.size,102);
+ assert.equal(ok.size,103);
  assert.equal(review.size,21);
- assert.equal(ok.size+review.size,123);
+ assert.equal(ok.size+review.size,124);
  for(const id of ok)assert.equal(toolPassClassification(data,id),"locally_eligible");
  for(const id of review)assert.equal(toolPassClassification(data,id),"provider_or_runtime_review");
  for(const id of ok)assert(!review.has(id),"candidate must belong to exactly one group: "+id);
