@@ -1,3 +1,4 @@
+import {QQ_EDITORIAL} from "./qq-editorial.ts";
 /** Evidence-safe, seven-day rotating publication library. Claims requiring fresh verification must be reviewed before addition. */
 export type TelegramSlot = "discovery" | "tutorial" | "comparison" | "creation" | "community";
 export type PublicChannel = "telegram" | "qq";
@@ -300,7 +301,10 @@ export function buildGroupPosts(date:Date,groupId:QQGroupId):Array<{slot:Telegra
 export function buildPost(date:Date,slot:TelegramSlot,channel:PublicChannel,qqGroup?:QQGroupId):string {
  const day=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Singapore",weekday:"short"}).format(date);
  const index=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(day);
- const [title,detail,path,action,question]=data[slot][index<0?0:index];
+ const idx=index<0?0:index;
+ const [title,detail,path,action,question]=channel==="qq"
+   ?QQ_EDITORIAL[qqGroup||"1074475201"][slot][idx]
+   :data[slot][idx];
  const prefix=channel==="qq"
    ? (qqGroup==="601549887"?"🌐 全球 SIAI 排行榜｜社区发现":"✨ 灵犀场 LINGXIFIELD｜每日实用技巧")
    : "🌐 全球 SIAI｜"+({discovery:"早间发现",tutorial:"实用教程",comparison:"工具对比",creation:"智能创作",community:"晚间问答"} as const)[slot];
