@@ -10,6 +10,8 @@ begin
  if p_user_id is null or p_amount_minor<1 then return jsonb_build_object('ok',false,'error','BAD_AMOUNT');end if;
  insert into public.test_toolpass_charges values(p_reference_id,p_user_id,p_currency,p_amount_minor)
  on conflict do nothing;
- if found then return jsonb_build_object('ok',true,'alreadyCharged',false);
- else return jsonb_build_object('ok',true,'alreadyCharged',true); end if;
+ if found then return jsonb_build_object('ok',true,'alreadyCharged',false,
+  'chargedMinor',p_amount_minor,'activeChargedMinor',least(2000,p_amount_minor),
+  'legacyChargedMinor',greatest(0,p_amount_minor-2000));
+ else return jsonb_build_object('ok',true,'alreadyCharged',true,'chargedMinor',p_amount_minor); end if;
 end $$;
