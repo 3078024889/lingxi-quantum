@@ -72,3 +72,20 @@ test("public QQ workbench is noindex and client uses browser-only clipboard",()=
  assert.match(client,/navigator\.clipboard\.writeText/);
  assert.doesNotMatch(client,/TELEGRAM_BOT_TOKEN|SUPABASE_SERVICE_ROLE_KEY/);
 });
+
+test("Telegram and QQ attribution is bounded and respects privacy controls",()=>{
+ const tracker=readFileSync(new URL("../components/SiteVisitTracker.tsx",import.meta.url),"utf8");
+ const api=readFileSync(new URL("../app/api/analytics/visit/route.ts",import.meta.url),"utf8");
+ assert.match(tracker,/utm_source/);
+ assert.match(tracker,/doNotTrack/);
+ assert.match(tracker,/globalPrivacyControl/);
+ assert.match(api,/utm_source:source/);
+ assert.match(api,/source===\"telegram\"\|\|b.source===\"qq\"/);
+ assert.match(api,/isSameOriginMutation/);
+});
+test("community join landing is voluntary and searchable",()=>{
+ const page=readFileSync(new URL("../app/community/page.tsx",import.meta.url),"utf8");
+ assert.match(page,/https:\/\/t\.me\/globalsiai/);
+ assert.match(page,/无需为入群支付费用/);
+ assert.match(page,/index:true,follow:true/);
+});
