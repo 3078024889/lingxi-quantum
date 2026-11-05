@@ -4,6 +4,7 @@ import {Fragment,useMemo,useRef,useEffect,useState,type PointerEvent as ReactPoi
 import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
 import {SIAI_ICON_BY_ID} from "@/lib/siai-brand-icon-ids";
 import MarketCostEstimator from "../lingxifield-ai-market/app/market-cost-estimator";
+import {VIDEO_RATES} from "../lingxifield-ai-market/lib/market-rate-catalog";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {localizedCategory} from "../lingxifield-ai-market/lib/market-home-i18n";
@@ -142,6 +143,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  }
  const localizedRows=useMemo(()=>rows.map(p=>({...p,localizedSummary:localizedProductSummary(p.id,lang)||"",
   localizedCategory:categoryName(p.category)})),[rows,lang]);
+ const pricedVideoVendors=useMemo(()=>new Set(VIDEO_RATES.filter(rate=>/^https:\/\//.test(rate.source)&&['credits','per-second','plan-equivalent','token-only'].includes(rate.billing)).map(rate=>rate.platform)),[]);
+ const pricedVideoCount=useMemo(()=>rows.filter(row=>pricedVideoVendors.has(row.id)).length,[rows,pricedVideoVendors]);
  const facetCounts=useMemo(()=>marketFacetCounts(localizedRows,{query,category,task,payment,evidence,sort},lang),
   [localizedRows,query,category,task,payment,evidence,sort,lang]);
  const shown=useMemo(()=>filterMarketRows(localizedRows,{query,category,task,payment,evidence,sort},lang),
@@ -281,11 +284,12 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     <strong>{ui.task}</strong><div className="siai-filter-options">
      {TASK_FACETS.map(v=><button key={v} type="button" aria-pressed={task===v&&category==="*"} className={task===v&&category==="*"?"selected":""} onClick={()=>{setCategory("*");setTask(v);}}>{ui.taskLabels[v]} <span className="siai-facet-count">{facetCounts.task[v]}</span></button>)}
      {category!=="*"&&<button type="button" className="siai-clear-legacy-filter" onClick={()=>setCategory("*")}>{categoryName(category)} ×</button>}
+      <a className="siai-cost-category-link" href="#siai-cost-estimator" onClick={()=>{const panel=document.getElementById("siai-cost-estimator");if(panel instanceof HTMLDetailsElement)panel.open=true;}}>{lang==="zh"?"短视频成本":lang==="en"?"Video costs":"Video / API"} <span className="siai-facet-count">{pricedVideoCount}</span></a>
     </div>
    </nav>
    <div className="siai-filter-line siai-payment-line">
     <nav className="siai-pay-choices" aria-label={ui.payment}><strong>{ui.payment}</strong><div className="siai-filter-options">
-     {PAYMENT_FACETS.map(v=><button key={v} type="button" aria-pressed={payment===v} className={payment===v?"selected":""} onClick={()=>setPayment(v)}>{ui.paymentLabels[v]}{v!=="any"&&<span className="siai-facet-count">{facetCounts.payment[v]}</span>}</button>)}
+     {PAYMENT_FACETS.map(v=><button key={v} type="button" aria-pressed={payment===v} className={payment===v?"selected":""} onClick={()=>setPayment(v)} title={lang==="zh"?"全榜单已核实付款方式数量":"Sourced full-directory payment counts"}>{ui.paymentLabels[v]}{v!=="any"&&<span className="siai-facet-count">{facetCounts.payment[v]}</span>}</button>)}
     </div></nav>
     <div className="siai-compact-selects">
      <label className="siai-evidence-select">{ui.evidence}<select value={evidence} aria-label={ui.evidence} onChange={e=>setEvidence(e.target.value as EvidenceFacet)}>{EVIDENCE_FACETS.map(v=><option value={v} key={v}>{ui.evidenceLabels[v]}</option>)}</select></label>
