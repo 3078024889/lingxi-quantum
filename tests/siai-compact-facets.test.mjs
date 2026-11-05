@@ -47,7 +47,10 @@ test('facet counts describe rows not brand marketing strings, and do not sum to 
  assert.equal(counts.payment.card,1);
  const narrowed=marketFacetCounts(rows,{...criteria,task:'video'});
  assert.equal(narrowed.payment.wechat,1);
- assert.equal(narrowed.payment.card,0);
+ assert.deepEqual(narrowed.payment,counts.payment);
+ assert.deepEqual(marketFacetCounts(rows,{...criteria,task:'local'}).payment,counts.payment);
+ assert.deepEqual(marketFacetCounts(rows,{...criteria,query:'free video generators'}).payment,counts.payment);
+ assert.equal(narrowed.payment.card,1);
 });
 test('UI never edits 62-row source facts, table pinning or both synchronized scrollers',()=>{
  const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
