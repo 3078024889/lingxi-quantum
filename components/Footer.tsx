@@ -28,6 +28,19 @@ const FOOTER_MINIAPP_ACTIONS:Record<LingxiLang,{one:string;two:string;copied:str
  pt:{one:"Miniapp LINGXIFIELD",two:"10 E-mail temporário",copied:"Copiado",copy:"Copiar código"},
  ar:{one:"تطبيق لينغشي",two:"بريد مؤقت 10",copied:"تم النسخ",copy:"نسخ الرمز"}
 };
+const FOOTER_GROUP_COPY:Record<LingxiLang,{title:string;qq:string;copy:string;copied:string;telegram:string}>={
+ zh:{title:"群组",qq:"QQ 群",copy:"复制群号",copied:"已复制",telegram:"Telegram 群组"},
+ en:{title:"Communities",qq:"QQ groups",copy:"Copy group ID",copied:"Copied",telegram:"Telegram group"},
+ ja:{title:"コミュニティ",qq:"QQグループ",copy:"グループ番号をコピー",copied:"コピー済み",telegram:"Telegramグループ"},
+ ko:{title:"커뮤니티",qq:"QQ 그룹",copy:"그룹 번호 복사",copied:"복사됨",telegram:"Telegram 그룹"},
+ fr:{title:"Communautés",qq:"Groupes QQ",copy:"Copier le numéro",copied:"Copié",telegram:"Groupe Telegram"},
+ de:{title:"Communities",qq:"QQ-Gruppen",copy:"Gruppennummer kopieren",copied:"Kopiert",telegram:"Telegram-Gruppe"},
+ es:{title:"Comunidades",qq:"Grupos QQ",copy:"Copiar número",copied:"Copiado",telegram:"Grupo de Telegram"},
+ pt:{title:"Comunidades",qq:"Grupos QQ",copy:"Copiar número",copied:"Copiado",telegram:"Grupo do Telegram"},
+ ar:{title:"المجموعات",qq:"مجموعات QQ",copy:"نسخ رقم المجموعة",copied:"تم النسخ",telegram:"مجموعة Telegram"}
+};
+const FOOTER_QQ_GROUPS=["1072178710","1074475201"] as const;
+const FOOTER_TELEGRAM="https://t.me/globalsiai";
 const MINIAPP_COMMANDS={
  app:"#小程序://灵犀场/ktKRUjMRoEcPEsE",
  mail:"#小程序://10临时邮箱/p8AACkYNods09Rl"
@@ -103,6 +116,11 @@ export default function Footer(){
  const discovery=SIAI_DISCOVERY[lang];
  const overview=FOOTER_UNIFIED[lang];
  const [copiedMiniapp,setCopiedMiniapp]=useState<"app"|"mail"|null>(null);
+ const [copiedQQGroup,setCopiedQQGroup]=useState<string|null>(null);
+ async function copyQQGroup(number:string){
+  try{await navigator.clipboard.writeText(number);setCopiedQQGroup(number);}
+  catch{window.prompt(FOOTER_GROUP_COPY[lang].copy,number);}
+ }
  async function copyMiniapp(kind:"app"|"mail"){
   try{await navigator.clipboard.writeText(MINIAPP_COMMANDS[kind]);setCopiedMiniapp(kind);}
   catch{window.prompt(WECHAT_EXTRA[lang].miniapps,MINIAPP_COMMANDS[kind]);}
@@ -136,6 +154,19 @@ export default function Footer(){
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={70} height={70}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
     <p className="lx-footer-brand-intro">{FOOTER_BRAND_SHORT[lang]}</p>
     <nav className="lx-footer-brand-social" aria-label={lang==="zh"?"官方社交平台与分享入口":"Official social and sharing links"}>{channels.map(channel=><a href={channel.href} key={channel.label} target="_blank" rel="noopener noreferrer" title={channel.label+(channel.kind==="share"?(lang==="zh"?" · 分享链接":" · shared link"):"")} aria-label={channel.label+(channel.kind==="share"?(lang==="zh"?"作品分享":" shared content"):"")}><span className="lx-footer-social-symbol" style={{color:channel.tone}} aria-hidden="true">{channel.mark}</span><span className="lx-footer-social-caption">{channel.short}</span></a>)}</nav>
+    <section className="lx-footer-v4-groups" aria-label={FOOTER_GROUP_COPY[lang].title}>
+     <h3 className="lx-footer-v4-groups-title"><span aria-hidden="true">◉</span>{FOOTER_GROUP_COPY[lang].title}</h3>
+     <div className="lx-footer-v4-qq-heading">{FOOTER_GROUP_COPY[lang].qq}</div>
+     <div className="lx-footer-v4-qq-groups" role="group" aria-label={FOOTER_GROUP_COPY[lang].qq}>
+      {FOOTER_QQ_GROUPS.map(number=><button key={number} type="button" onClick={()=>void copyQQGroup(number)} title={FOOTER_GROUP_COPY[lang].copy+" "+number} aria-label={FOOTER_GROUP_COPY[lang].copy+" "+number}>
+       <span className="lx-footer-v4-group-number" dir="ltr">{number}</span>
+       <span className="lx-footer-v4-group-copy" aria-hidden="true">{copiedQQGroup===number?"✓":"⧉"}</span>
+      </button>)}
+     </div>
+     <a className="lx-footer-v4-telegram" href={FOOTER_TELEGRAM} target="_blank" rel="noopener noreferrer" aria-label={FOOTER_GROUP_COPY[lang].telegram+" globalsiai"}>
+      <span aria-hidden="true">➤</span><span>{FOOTER_GROUP_COPY[lang].telegram} · @globalsiai</span><span aria-hidden="true">↗</span>
+     </a>
+    </section>
    </section>
    <nav aria-label={c.rankings}>
     <b className="lx-footer-v4-heading"><span aria-hidden="true">◎</span>{c.rankings}</b>

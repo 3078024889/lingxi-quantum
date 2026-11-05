@@ -81,3 +81,25 @@ test("owner-submitted public social links and two real WeChat QR destinations ar
  for(const asset of ["/images/lingxifield-wechat-service-qr.jpg","/images/miniapp-qrcode.png"])
   assert(footer.includes(asset),asset);
 });
+
+
+test("owner QQ groups and Telegram link are present only under footer brand social area, with nine-language copy",()=>{
+ const footer=read("components/Footer.tsx"),css=read("app/siai-home.css");
+ for(const group of ["1072178710","1074475201"])assert(footer.includes(group),"missing QQ group "+group);
+ assert(footer.includes("https://t.me/globalsiai"));
+ assert(footer.includes("FOOTER_GROUP_COPY[lang].title"));
+ assert(footer.includes("FOOTER_QQ_GROUPS.map"));
+ assert(footer.includes("copyQQGroup(number)"));
+ assert.match(footer,/href=\{FOOTER_TELEGRAM\} target="_blank" rel="noopener noreferrer"/);
+ const socials=footer.indexOf('className="lx-footer-brand-social"');
+ const groups=footer.indexOf('className="lx-footer-v4-groups"');
+ const qr=footer.indexOf('className="lx-footer-v4-qr-grid"');
+ assert(socials>0&&groups>socials&&qr>groups,"groups must sit below original socials in first footer column");
+ const declared=footer.slice(footer.indexOf("const FOOTER_GROUP_COPY:"),footer.indexOf("const FOOTER_QQ_GROUPS="));
+ for(const lang of langs)assert(new RegExp("^\\s*"+lang+":\\{", "m").test(declared),"missing group translation: "+lang);
+ for(const marker of [".lx-footer-v4-groups",".lx-footer-v4-qq-groups",".lx-footer-v4-telegram","html[data-theme=\"dark\"] .lx-footer-v4 .lx-footer-v4-telegram"])
+  assert(css.includes(marker),marker);
+ assert.equal((footer.match(/className="lx-footer-v4-qr-grid"/g)||[]).length,1);
+ assert.equal((footer.match(/className="lx-footer-v4-miniapp-actions"/g)||[]).length,1);
+ assert.equal((footer.match(/className="lx-footer-brand-social"/g)||[]).length,1);
+});

@@ -17,7 +17,7 @@ import {commercialEvidence} from "../lingxifield-ai-market/lib/market-commercial
 import {localizedPaymentName} from "../lingxifield-ai-market/lib/market-localized-payment";
 import {SIAI_FACET_WORDS} from "../lib/siai-home-facet-labels";
 import {readSiaiShareState,siaiSharePath,SIAI_SHARE_COPY} from "../lib/siai-share-state";
-import {filterMarketRows,toggleMarketComparison,MAX_COMPARISONS,TASK_FACETS,PAYMENT_FACETS,EVIDENCE_FACETS,SORT_OPTIONS,
+import {filterMarketRows,marketFacetCounts,toggleMarketComparison,MAX_COMPARISONS,TASK_FACETS,PAYMENT_FACETS,EVIDENCE_FACETS,SORT_OPTIONS,
  type TaskFacet,type PaymentFacet,type EvidenceFacet,type MarketOrder} from "../lib/siai-home-facets";
 
 export type SiaiHomeRow={
@@ -142,6 +142,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  }
  const localizedRows=useMemo(()=>rows.map(p=>({...p,localizedSummary:localizedProductSummary(p.id,lang)||"",
   localizedCategory:categoryName(p.category)})),[rows,lang]);
+ const facetCounts=useMemo(()=>marketFacetCounts(localizedRows,{query,category,task,payment,evidence,sort},lang),
+  [localizedRows,query,category,task,payment,evidence,sort,lang]);
  const shown=useMemo(()=>filterMarketRows(localizedRows,{query,category,task,payment,evidence,sort},lang),
   [localizedRows,query,category,task,payment,evidence,sort,lang]);
  const pageCount=Math.max(1,Math.ceil(shown.length/pageSize));
@@ -260,31 +262,36 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
    </section>;
  return <main ref={mainRef} style={fullscreen?({"--siai-wide-offset":wideOffset+"px"} as CSSProperties):undefined} className={fullscreen?"siai-home siai-home-fullscreen":"siai-home"} lang={lang==="zh"?"zh-CN":lang} dir={lang==="ar"?"rtl":"ltr"} id="siai-market">
   <header className="siai-home-head"><p className="siai-kicker">LINGXIFIELD · GLOBAL SI AI</p><h1>{t.title}</h1><p>{t.subtitle}</p></header>
-  <div className="siai-home-controls">
-   <label className="siai-home-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}/></label>
+  <div className="siai-home-controls siai-controls-compact">
+   <div className="siai-discovery-line">
+    <label className="siai-home-search"><span aria-hidden="true">⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t.search} aria-label={t.search}/></label>
+    {(lang==="zh"||lang==="en")&&<nav className="siai-hot-searches" aria-label={lang==="zh"?"热门搜索":"Popular searches"}>
+     <strong>{lang==="zh"?"热门搜索":"Popular"}</strong>
+     {(lang==="zh"?[["微信支付的 AI 工具","微信支付"],["能做图片和视频","能同时做图片和视频的平台"],["免费生成视频","免费生成视频"]]:
+      [["WeChat Pay tools","WeChat Pay"],["Images and video","generate both images and videos"],["Free video tools","free video generators"]]).map(([title,value])=><button key={title} type="button" onClick={()=>{setQuery(value);setTask("all");setCategory("*");}}>{title}</button>)}
+    </nav>}
+   </div>
    <div className="siai-home-quicklinks"><span className="siai-home-count">{label("找到","Results:")} {shown.length} {label("项","")}</span><a className="siai-home-claim" href={claimUrl()}>{label("厂商认领 · 提交 SI/AI 平台","Claim or submit SI/AI platform")} ↗</a>
     <button type="button" className="siai-expand-view" onClick={shareSelection}>{SIAI_SHARE_COPY[lang].share}</button>
     <button type="button" className="siai-expand-view" aria-pressed={fullscreen} onClick={toggleWide}>{fullscreen?VIEW_COPY[lang].exit:VIEW_COPY[lang].expand}</button></div>
   </div>
   {shareStatus&&<div className="mb-3 min-w-0 text-sm"><p role="status">{SIAI_SHARE_COPY[lang][shareStatus]}</p>{shareStatus==='fallback'&&<input className="mt-2 w-full min-w-0 rounded border p-2" readOnly value={shareLink} aria-label={SIAI_SHARE_COPY[lang].link} onFocus={e=>e.currentTarget.select()}/>}</div>}
-  <div className="siai-home-four-filters">
-   <nav className="siai-filter-line" aria-label={ui.category}><strong>{ui.category}</strong><div className="siai-filter-options">
-    <button type="button" aria-pressed={category==="*"} className={category==="*"?"selected":""} onClick={()=>setCategory("*")}>{t.all}</button>
-    {categories.map(c=><button key={c} type="button" aria-pressed={category===c} className={category===c?"selected":""} onClick={()=>setCategory(c)}>{categoryName(c)}</button>)}
-   </div></nav>
-   <nav className="siai-filter-line" aria-label={ui.task}><strong>{ui.task}</strong><div className="siai-filter-options">
-    {TASK_FACETS.map(v=><button key={v} type="button" aria-pressed={task===v} className={task===v?"selected":""} onClick={()=>setTask(v)}>{ui.taskLabels[v]}</button>)}
-   </div></nav>
-   <nav className="siai-filter-line" aria-label={ui.payment}><strong>{ui.payment}</strong><div className="siai-filter-options">
-    {PAYMENT_FACETS.map(v=><button key={v} type="button" aria-pressed={payment===v} className={payment===v?"selected":""} onClick={()=>setPayment(v)}>{ui.paymentLabels[v]}</button>)}
-   </div></nav>
-   <nav className="siai-filter-line" aria-label={ui.evidence}><strong>{ui.evidence}</strong><div className="siai-filter-options">
-    {EVIDENCE_FACETS.map(v=><button key={v} type="button" aria-pressed={evidence===v} className={evidence===v?"selected":""} onClick={()=>setEvidence(v)}>{ui.evidenceLabels[v]}</button>)}
-   </div>
-    <label className="siai-sort-label">{ui.sort}
-     <select aria-label={ui.sort} value={sort} onChange={e=>setSort(e.target.value as MarketOrder)}>{SORT_OPTIONS.map(v=><option value={v} key={v}>{ui.sortLabels[v]}</option>)}</select>
-    </label>
+  <div className="siai-home-four-filters siai-filter-compact">
+   <nav className="siai-filter-line siai-ability-line" aria-label={ui.task}>
+    <strong>{ui.task}</strong><div className="siai-filter-options">
+     {TASK_FACETS.map(v=><button key={v} type="button" aria-pressed={task===v&&category==="*"} className={task===v&&category==="*"?"selected":""} onClick={()=>{setCategory("*");setTask(v);}}>{ui.taskLabels[v]} <span className="siai-facet-count">{facetCounts.task[v]}</span></button>)}
+     {category!=="*"&&<button type="button" className="siai-clear-legacy-filter" onClick={()=>setCategory("*")}>{categoryName(category)} ×</button>}
+    </div>
    </nav>
+   <div className="siai-filter-line siai-payment-line">
+    <nav className="siai-pay-choices" aria-label={ui.payment}><strong>{ui.payment}</strong><div className="siai-filter-options">
+     {PAYMENT_FACETS.map(v=><button key={v} type="button" aria-pressed={payment===v} className={payment===v?"selected":""} onClick={()=>setPayment(v)}>{ui.paymentLabels[v]}{v!=="any"&&<span className="siai-facet-count">{facetCounts.payment[v]}</span>}</button>)}
+    </div></nav>
+    <div className="siai-compact-selects">
+     <label className="siai-evidence-select">{ui.evidence}<select value={evidence} aria-label={ui.evidence} onChange={e=>setEvidence(e.target.value as EvidenceFacet)}>{EVIDENCE_FACETS.map(v=><option value={v} key={v}>{ui.evidenceLabels[v]}</option>)}</select></label>
+     <label className="siai-sort-label">{ui.sort}<select aria-label={ui.sort} value={sort} onChange={e=>setSort(e.target.value as MarketOrder)}>{SORT_OPTIONS.map(v=><option value={v} key={v}>{ui.sortLabels[v]}</option>)}</select></label>
+    </div>
+   </div>
   </div>
    {compareIds.length>0&&<aside className="siai-compare-toolbar" aria-label={ui.selected}>
    <strong>{ui.selected} ({compareIds.length}/{MAX_COMPARISONS})</strong>
