@@ -71,3 +71,18 @@ test("new tool-pass routes are disabled until environment and source flags agree
   assert(code.includes('TOOL_PASS_NOT_LIVE'));
  }
 });
+
+test("coverage matches all existing main practical-tool registries, including one-word OCR",()=>{
+ const advanced=read("lib/tools/advanced-catalog.ts");
+ const metered=read("lib/tools/commerce/metered-catalog.ts");
+ const paid=read("lib/tools/paid-catalog.ts");
+ const advancedIds=[...advanced.matchAll(/href:\s*['"]\/tools\/([^'"?/#]+)[^'"]*['"]/g)].map(m=>m[1]);
+ const meterBlock=metered.match(/export const METERED_TOOL_IDS=\[([\s\S]*?)\] as const/);
+ assert(meterBlock);
+ const meteredIds=[...meterBlock[1].matchAll(/["']([^"']+)["']/g)].map(m=>m[1]);
+ const paidIds=[...paid.matchAll(/^\s*"([^"]+)",/gm)].map(m=>m[1]).filter(id=>!id.startsWith("sasi-")&&id!=="metered-tool-export");
+ const source=new Set([...advancedIds,...meteredIds,...paidIds]);
+ const covered=new Set([...data.eligible_candidate_tool_ids,...data.further_review_tool_ids]);
+ assert(source.has("ocr"),"OCR must be available for first-use policy");
+ assert.deepEqual([...covered].sort(),[...source].sort(),"Added/removed real tool ID needs a policy classification");
+});
