@@ -8,6 +8,14 @@ test("partner network displays embeddable SIAI and QR tools without login",async
  await expect(snippets.nth(1)).toHaveValue(/data-lx-widget="tools"/);
  await expect(page.locator('a[href="/siai/updates.xml"]')).toBeVisible();
  await expect(page.locator('main a[href="/siai"]').first()).toBeVisible();
+ await expect(page.locator('main a[href="/downloads/lingxifield-siai-wordpress.zip"]')).toBeVisible();
+ const installer=await page.request.get("/downloads/lingxifield-siai-wordpress.zip");
+ expect(installer.ok()).toBeTruthy();
+ expect(installer.headers()["content-type"]).toMatch(/zip|octet-stream/);
+ const bytes=await installer.body();
+ expect(bytes.subarray(0,2).toString("utf8")).toBe("PK");
+ expect(bytes.length).toBeGreaterThan(1000);
+ expect(bytes.length).toBeLessThan(300000);
 });
 
 test("external SIAI feed exports reviewed profiles and never source previews",async({request})=>{
