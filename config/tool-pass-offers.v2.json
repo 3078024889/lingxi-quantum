@@ -209,5 +209,8 @@
     "supplier_fulfillment",
     "production_unlimited_cost",
     "all_tools_route_enforcement"
-  ]
+  ],
+  "schema_applied_verified": false,
+  "refund_verified": false,
+  "integration_verified_tool_ids": []
 }
