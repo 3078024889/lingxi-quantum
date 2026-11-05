@@ -4,8 +4,8 @@ test("partner network displays embeddable SIAI and QR tools without login",async
  await page.goto("/partners");
  await expect(page.locator("h1")).toBeVisible();
  const snippets=page.locator("textarea[readonly]");
- await expect(snippets.first()).toContainText("lingxifield-v1.js");
- await expect(snippets.nth(1)).toContainText('data-lx-widget="tools"');
+ await expect(snippets.first()).toHaveValue(/lingxifield-v1\.js/);
+ await expect(snippets.nth(1)).toHaveValue(/data-lx-widget="tools"/);
  await expect(page.locator('a[href="/siai/updates.xml"]')).toBeVisible();
  await expect(page.locator('a[href="/siai"]')).toBeVisible();
 });
