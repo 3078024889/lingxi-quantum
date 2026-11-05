@@ -12,7 +12,21 @@ export async function GET(request: Request) {
   }
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID || "@globalsiai";
-  if (!token) return NextResponse.json({ error: "NOT_CONFIGURED" }, { status: 503 });
+  const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (!token || !webhookSecret || webhookSecret.length < 16)
+    return NextResponse.json({ error: "NOT_CONFIGURED" }, { status: 503 });
+  // Register the Telegram webhook from server-side secrets, never from client URLs.
+  // Repeating setWebhook is safe and also repairs previously missing registrations.
+  try {
+    await telegramApi(token, "setWebhook", {
+      url: "https://lingxifield.com/api/telegram/webhook",
+      secret_token: webhookSecret,
+      allowed_updates: ["message"],
+      drop_pending_updates: false,
+    });
+  } catch {
+    return NextResponse.json({ error: "WEBHOOK_REGISTRATION_FAILED" }, { status: 503 });
+  }
   const date = singaporeDate(new Date());
   const key = `daily:${date}`;
   const admin = createAdminClient();
