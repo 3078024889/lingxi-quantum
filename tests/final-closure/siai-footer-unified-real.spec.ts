@@ -72,8 +72,8 @@ test('footer QQ groups copy real numbers and Telegram links remain correct on ev
    await expect.poll(()=>page.evaluate(()=>(window as any).__footerCopiedQQ.at(-1))).toBe(number);
    await expect(button.locator('.lx-footer-v4-group-copy')).toHaveText('✓');
   }
-  const telegram=groups.getByRole('link',{name:/Telegram.*web3dropmoon/});
-  await expect(telegram).toHaveAttribute('href','https://t.me/web3dropmoon');
+  const telegram=groups.getByRole('link',{name:/Telegram.*globalsiai/});
+  await expect(telegram).toHaveAttribute('href','https://t.me/globalsiai');
   await expect(telegram).toHaveAttribute('target','_blank');
   await expect(telegram).toHaveAttribute('rel',/noopener/);
   await expect(brand.locator('.lx-footer-brand-social a')).toHaveCount(10);
