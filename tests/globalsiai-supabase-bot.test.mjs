@@ -116,3 +116,31 @@ test("Telegram /help and welcome render links to both verified domains",()=>{
  assert.match(index,/pairLinks\("\/siai","bot_ranking"\)/);
  assert.match(index,/pairLinks\("\/","welcome"\)/);
 });
+
+test("QQ groups publish 420 distinct messages across 28 days; no duplicate between groups or consecutive dates",()=>{
+ const messages=new Set();
+ const titles=new Set();
+ for(let day=0;day<28;day++){
+  const date=new Date(Date.UTC(2026,10,5+day,4));
+  const perDay=[];
+  for(const group of QQ_GROUPS){
+   const posts=buildGroupPosts(date,group.id);
+   assert.equal(posts.length,5);
+   for(const p of posts){
+    assert.match(p.text,/国际站：https:\/\/lingxifield\.com/);
+    assert.match(p.text,/国内站：https:\/\/lingxifield\.cn/);
+    assert.match(p.text,new RegExp(`utm_campaign=qq_${group.id}_${p.slot}`));
+    assert.ok(p.text.length<=4096);
+    const headline=p.text.match(/【[^】]+】/)?.[0];
+    assert.ok(headline);
+    perDay.push(headline);
+    messages.add(p.text);
+    titles.add(headline);
+   }
+  }
+  assert.equal(perDay.length,15);
+  assert.equal(new Set(perDay).size,15,"same headline across QQ groups on same day");
+ }
+ assert.equal(messages.size,420);
+ assert.equal(titles.size,420);
+});
