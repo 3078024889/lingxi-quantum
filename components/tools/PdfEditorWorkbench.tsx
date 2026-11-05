@@ -99,6 +99,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  useEffect(()=>()=>recognitionAbort.current?.abort(),[]);
  const gestureRef=useRef<Gesture|null>(null);
  const activeTouchRef=useRef<number|null>(null);
+ const touchCornerRef=useRef<{id:number;grip:"se"|"rotate";startX:number;startY:number;pointerId:number}|null>(null);
  const gestureUpdate=useRef<(x:number,y:number,id:number)=>void>(()=>{});
  useEffect(()=>{
   const move=(e:PointerEvent)=>gestureUpdate.current(e.clientX,e.clientY,e.pointerId);
@@ -341,7 +342,15 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
    return name==="se"||name==="rotate"?name:null;
   }
   const geometric=overlayDragGrip(host,target,x,y);
-  return geometric==="se"||geometric==="rotate"?geometric:null;
+  if(geometric==="se"||geometric==="rotate")return geometric;
+  // Touch hit-testing may choose the much larger overlay instead of a 44px
+  // transparent corner button. The corner geometry is still a resize intent.
+  const corner=host.querySelector<HTMLElement>('[data-testid="pdf-grip-se"]');
+  if(corner&&corner.getClientRects().length){
+   const r=host.getBoundingClientRect();
+   if(x>=r.right-28&&x<=r.right+28&&y>=r.bottom-28&&y<=r.bottom+28)return "se";
+  }
+  return null;
  }
  function beginGesture(id:number,grip:Grip,clientX:number,clientY:number,pointerId:number){
   const stage=stageRef.current,o=overlays.find(v=>v.id===id);
@@ -397,6 +406,7 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(editingTextId===o.id||e.pointerType!=="touch")return;
   const grip=overlayTouchGrip(e.currentTarget,e.target,e.clientX,e.clientY);
   if(!grip)return;
+  touchCornerRef.current={id:o.id,grip,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId};
   beginGesture(o.id,grip,e.clientX,e.clientY,e.pointerId);
   try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
  }}
@@ -407,7 +417,26 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(!grip)return;
   activeTouchRef.current=t.identifier;
   const prior=gestureRef.current;
-  beginGesture(o.id,grip,t.clientX,t.clientY,prior?.id===o.id?prior.pointerId:-1);
+  const pointerId=prior?.id===o.id?prior.pointerId:touchCornerRef.current?.id===o.id?touchCornerRef.current.pointerId:-1;
+  touchCornerRef.current={id:o.id,grip,startX:t.clientX,startY:t.clientY,pointerId};
+  beginGesture(o.id,grip,t.clientX,t.clientY,pointerId);
+ }}
+ onTouchMoveCapture={e=>{
+  const start=touchCornerRef.current,t=e.touches[0];
+  if(!start||start.id!==o.id||!t||activeTouchRef.current!==t.identifier)return;
+  if(e.cancelable)e.preventDefault();
+  const current=gestureRef.current;
+  if(!current||current.id!==o.id||current.grip!==start.grip)
+   beginGesture(o.id,start.grip,start.startX,start.startY,start.pointerId);
+  const gesture=gestureRef.current;
+  if(gesture)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
+ }}
+ onTouchEndCapture={e=>{
+  const start=touchCornerRef.current;
+  if(start?.id!==o.id)return;
+  const t=e.changedTouches[0],gesture=gestureRef.current;
+  if(t&&gesture?.id===o.id)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
+  touchCornerRef.current=null;
  }}
  onPointerDown={e=>{if(editingTextId!==o.id){const grip=overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);if(grip)startGesture(e,o.id,grip)}}}
  onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){const grip=overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);if(grip)startTouchGesture(e,o.id,grip)}}}}
