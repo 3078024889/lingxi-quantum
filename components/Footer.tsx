@@ -156,11 +156,11 @@ export default function Footer(){
     <nav className="lx-footer-brand-social" aria-label={lang==="zh"?"官方社交平台与分享入口":"Official social and sharing links"}>{channels.map(channel=><a href={channel.href} key={channel.label} target="_blank" rel="noopener noreferrer" title={channel.label+(channel.kind==="share"?(lang==="zh"?" · 分享链接":" · shared link"):"")} aria-label={channel.label+(channel.kind==="share"?(lang==="zh"?"作品分享":" shared content"):"")}><span className="lx-footer-social-symbol" style={{color:channel.tone}} aria-hidden="true">{channel.mark}</span><span className="lx-footer-social-caption">{channel.short}</span></a>)}</nav>
     <section className="lx-footer-v4-groups" aria-label={FOOTER_GROUP_COPY[lang].title}>
      <h3 className="lx-footer-v4-groups-title"><span aria-hidden="true">◉</span>{FOOTER_GROUP_COPY[lang].title}</h3>
+     <div className="lx-footer-v4-qq-heading">{FOOTER_GROUP_COPY[lang].qq}</div>
      <div className="lx-footer-v4-qq-groups" role="group" aria-label={FOOTER_GROUP_COPY[lang].qq}>
       {FOOTER_QQ_GROUPS.map(number=><button key={number} type="button" onClick={()=>void copyQQGroup(number)} title={FOOTER_GROUP_COPY[lang].copy+" "+number} aria-label={FOOTER_GROUP_COPY[lang].copy+" "+number}>
-       <span className="lx-footer-v4-group-brand">QQ</span>
        <span className="lx-footer-v4-group-number" dir="ltr">{number}</span>
-       <span className="lx-footer-v4-group-copy">{copiedQQGroup===number?FOOTER_GROUP_COPY[lang].copied:FOOTER_GROUP_COPY[lang].copy}</span>
+       <span className="lx-footer-v4-group-copy" aria-hidden="true">{copiedQQGroup===number?"✓":"⧉"}</span>
       </button>)}
      </div>
      <a className="lx-footer-v4-telegram" href={FOOTER_TELEGRAM} target="_blank" rel="noopener noreferrer" aria-label={FOOTER_GROUP_COPY[lang].telegram+" web3dropmoon"}>
