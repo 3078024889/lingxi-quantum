@@ -22,6 +22,22 @@
     {
       "path": "/api/cron/telegram-daily",
       "schedule": "5 1 * * *"
+    },
+    {
+      "path": "/api/cron/telegram-tutorial",
+      "schedule": "5 3 * * *"
+    },
+    {
+      "path": "/api/cron/telegram-comparison",
+      "schedule": "5 6 * * *"
+    },
+    {
+      "path": "/api/cron/telegram-creation",
+      "schedule": "5 9 * * *"
+    },
+    {
+      "path": "/api/cron/telegram-community",
+      "schedule": "5 12 * * *"
     }
   ]
 }
