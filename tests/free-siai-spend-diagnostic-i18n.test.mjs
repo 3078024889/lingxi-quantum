@@ -20,7 +20,7 @@ test("public diagnostic exists in Chinese + eight existing locale routes",()=>{
  assert.match(read("components/SiaiRankingHome.tsx"),/<SpendDiagnosticEntry\/>/);
 });
 test("localized link uses light client routing and domain policy allowlists host",()=>{
- assert.match(read("components/siai/SpendDiagnosticEntry.tsx"),/lang\+"\\/siai\\/spend-diagnostic"/);
+ assert.ok(read("components/siai/SpendDiagnosticEntry.tsx").includes('"/"+lang+"/siai/spend-diagnostic"'));
  assert.match(read("lib/seo/siai-domain-policy.ts"),/knownHost/);
  assert.match(read("middleware.ts"),/lingxifield\.cn/);
 });
