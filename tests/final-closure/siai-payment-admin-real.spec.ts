@@ -5,9 +5,9 @@ test("global sourced payment count does not collapse to zero after choosing loca
  const read=async()=>payments.locator("button").allTextContents();
  const before=await read();
  for(const label of ["支付宝","微信支付","银行卡"]){
-  const button=payments.getByRole("button",{name:new RegExp(label+"\\\\s+\\\\d+")});
+  const button=payments.locator("button").filter({hasText:label}).first();
   const content=await button.textContent();
-  const count=Number(content?.match(/\\d+/)?.[0]||"0");
+  const count=Number(content?.replace(/[^0-9]/g,"")||"0");
   expect(count, "source-backed global "+label+" count must not be zero").toBeGreaterThan(0);
  }
  await page.getByRole("button",{name:/本地部署\s+\d+/}).click();
