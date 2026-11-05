@@ -7,7 +7,7 @@ import {useCallback,useEffect,useMemo,useRef,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {tempMailText} from "@/lib/temp-mail-i18n";
-import {claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
+import {TOOL_PASS_ENFORCED,claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {normalizeStoredMail} from "@/lib/tools/temp-mail-message.client";
 import {detectMiniPaymentContext} from '@/lib/mini/payment-client';
@@ -104,12 +104,12 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
  async function create(){
   setBusy(true);setError("");
   try{
-   await claimToolStart("temp-mail",1);
-   const r=await fetch("/api/tools/temp-mail/create",{method:"POST"});
+   const ticket=await claimToolStart("temp-mail",1);
+   const r=await fetch("/api/tools/temp-mail/create",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({accessRequestId:ticket.requestId})});
    const d=await r.json().catch(()=>({}));
    if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
    const next={id:d.id,address:d.address,expiresAt:d.expiresAt};
-   setBox(next);setMessages([]);setFreeRemaining(Number(d.freeRemaining));
+   setBox(next);setMessages([]);setFreeRemaining(d.freeRemaining==null?null:Number(d.freeRemaining));
    localStorage.setItem("lingxifield:temp-mail",JSON.stringify(next));
    await loadOwned();
   }catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):friendly(e instanceof Error?e.message:String(e)))}finally{setBusy(false)}
@@ -150,7 +150,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
  }
 
  async function startBatchPayment(){
-  if(!TEMP_MAIL_BATCH_SALES_ENABLED)return;
+  if(!TEMP_MAIL_BATCH_SALES_ENABLED||TOOL_PASS_ENFORCED)return;
   if(batchBusy)return;
   setBatchBusy(true);setError("");
   try{
@@ -302,7 +302,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
    <div className="flex flex-wrap items-end justify-between gap-4">
     <div><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("batchTitle")}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{t("batchLead")}</p><p className="mt-1 text-xs text-[var(--lx-faint)]">{t("paidAfterFree")}</p></div>
     <div className="flex items-center gap-2"><EditableNumberInput type="number" min={11} max={100} value={batchCount} onChange={e=>setBatchCount(Math.max(11,Math.min(100,Number(e.target.value))))} className="w-24 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm"/>
-     <button onClick={startBatchPayment} disabled={batchBusy||!TEMP_MAIL_BATCH_SALES_ENABLED} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{!TEMP_MAIL_BATCH_SALES_ENABLED?t('batchPaused'):batchBusy?t("working"):t("generateCount",{count:batchCount,price})}</button></div>
+     <button onClick={startBatchPayment} disabled={batchBusy||!TEMP_MAIL_BATCH_SALES_ENABLED||TOOL_PASS_ENFORCED} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{!TEMP_MAIL_BATCH_SALES_ENABLED?t('batchPaused'):batchBusy?t("working"):t("generateCount",{count:batchCount,price})}</button></div>
    </div>
    <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{TEMP_MAIL_BATCH_SALES_ENABLED?t("unitPrice"):t('batchPausedBody')}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><ResultFileActions blob={csvFile} name="lingxifield-temp-mail.csv" saveLabel={t("exportCsv")}/></>}</div>
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}

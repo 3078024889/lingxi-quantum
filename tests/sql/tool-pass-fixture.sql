@@ -34,6 +34,11 @@ create table public.food_analysis_requests_v19(
  expires_at timestamptz not null default now()+interval '1 day',
  consumed_at timestamptz
 );
+create table public.temp_mailboxes(
+ id uuid primary key default gen_random_uuid(),
+ local_part text not null,expires_at timestamptz not null,
+ owner_user_id uuid
+);
 create table public.test_wallets(user_id uuid primary key references auth.users(id),cny_minor bigint not null default 200000,usd_minor bigint not null default 200000);
 create table public.test_charges(reference_id text primary key,user_id uuid not null,currency text not null,amount_minor bigint not null);
 create or replace function public.charge_sasi_usage_v49(

@@ -5,6 +5,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import {TEMP_MAIL_FREE_DAILY_LIMIT} from '@/lib/tools/temp-mail-policy';
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import {trustedClientIp} from "@/lib/security/trusted-client-ip";
+import {toolPassBackendReady,redeemToolStart} from "@/lib/tools/commerce/tool-server-receipt";
 import { createMailboxAccessCookie,mailboxTokenHash,randomLocalPart,randomMailboxToken,tempMailConfigured,tempMailAddress,TEMP_MAIL_ACCESS_COOKIE,TEMP_MAIL_TTL_MINUTES } from "@/lib/tools/temp-mail";
 
 export const runtime="nodejs";
@@ -40,6 +41,20 @@ export async function POST(req:NextRequest){
  let userId="";
  try{const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();userId=user?.id||""}catch{}
 
+ const passMode=toolPassBackendReady();
+ let passRequestId:string|null=null;
+ if(passMode){
+  if(!userId)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
+  if(Number(req.headers.get("content-length")||0)>4096)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
+  const input=await req.json().catch(()=>null);
+  passRequestId=String(input?.accessRequestId||"");
+  const redeemed=await redeemToolStart({userId,toolSlug:"temp-mail",accessRequestId:passRequestId,operationId:passRequestId});
+  if(!redeemed.ok)return NextResponse.json({error:redeemed.error},{status:403});
+  const {data:existing,error:lookupError}=await admin.from("temp_mailboxes").select("id")
+   .eq("pass_use_request_id",passRequestId).maybeSingle();
+  if(lookupError)return NextResponse.json({error:"SERVICE_BUSY"},{status:503});
+  if(existing)return NextResponse.json({error:"MAILBOX_ALREADY_CREATED"},{status:409});
+ }
  const deviceHash=sha(`device:${dev.id}`),ipHash=sha(`ip:${ip}`),accountHash=userId?sha(`account:${userId}`):"";
  try{
    const guards=[await rateGuard(admin,`temp-mail:device:${deviceHash}`,60),await rateGuard(admin,`temp-mail:ip:${ipHash}`,120)];
@@ -47,31 +62,37 @@ export async function POST(req:NextRequest){
    if(guards.some(ok=>!ok))return NextResponse.json({error:"TOO_MANY_REQUESTS"},{status:429});
  }catch{return NextResponse.json({error:"SERVICE_BUSY"},{status:503})}
 
- const hashes:string[]=[],limits:number[]=[];
- if(accountHash){hashes.push(accountHash);limits.push(FREE_PER_ACCOUNT)}
- hashes.push(ipHash);limits.push(FREE_PER_IP);
-
- const quota=await admin.rpc("consume_temp_mail_free_quota_multi",{p_identity_hashes:hashes,p_limits:limits});
- if(quota.error){console.error("[temp mail multi quota]",quota.error.code,quota.error.message);return NextResponse.json({error:"SERVICE_BUSY"},{status:503})}
- const q=(quota.data||{}) as {allowed?:boolean;remaining?:number};
- if(q.allowed!==true)return NextResponse.json({error:"FREE_DAILY_LIMIT_REACHED",freeDailyLimit:TEMP_MAIL_FREE_DAILY_LIMIT},{status:429});
+ let q:{allowed?:boolean;remaining?:number|null}={allowed:true,remaining:null};
+ if(!passMode){
+  const hashes:string[]=[],limits:number[]=[];
+  if(accountHash){hashes.push(accountHash);limits.push(FREE_PER_ACCOUNT)}
+  hashes.push(ipHash);limits.push(FREE_PER_IP);
+  const quota=await admin.rpc("consume_temp_mail_free_quota_multi",{p_identity_hashes:hashes,p_limits:limits});
+  if(quota.error){console.error("[temp mail multi quota]",quota.error.code);return NextResponse.json({error:"SERVICE_BUSY"},{status:503})}
+  q=(quota.data||{}) as {allowed?:boolean;remaining?:number};
+  if(q.allowed!==true)return NextResponse.json({error:"FREE_DAILY_LIMIT_REACHED",freeDailyLimit:TEMP_MAIL_FREE_DAILY_LIMIT},{status:429});
+ }
 
  for(let i=0;i<6;i++){
    const localPart=randomLocalPart(),token=randomMailboxToken(),expiresAt=new Date(Date.now()+TEMP_MAIL_TTL_MINUTES*60_000).toISOString();
    const {data,error}=await admin.from("temp_mailboxes").insert({
      local_part:localPart,token_hash:mailboxTokenHash(token),expires_at:expiresAt,
      owner_user_id:userId||null,source_kind:"single",
+     ...(passRequestId?{pass_use_request_id:passRequestId}:{}),
    }).select("id,local_part,expires_at").single();
 
    if(!error&&data){
      const response=NextResponse.json({
        id:data.id,address:tempMailAddress(data.local_part),
        expiresAt:data.expires_at,ttlMinutes:TEMP_MAIL_TTL_MINUTES,
-       freeRemaining:Math.max(0,Number(q.remaining||0)),
+       freeRemaining:passMode?null:Math.max(0,Number(q.remaining||0)),
      });
      if(dev.cookie)response.cookies.set({name:DEVICE_COOKIE,value:dev.cookie,httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/",maxAge:DEVICE_MAX_AGE});
      response.cookies.set({name:TEMP_MAIL_ACCESS_COOKIE,value:createMailboxAccessCookie(data.id,token),httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",path:"/api/tools/temp-mail",maxAge:TEMP_MAIL_TTL_MINUTES*60});
      return response;
+   }
+   if(error?.code==="23505"&&passMode){
+    return NextResponse.json({error:"MAILBOX_ALREADY_CREATED"},{status:409});
    }
    if(error?.code!=="23505"){console.error("[temp mail create]",error?.code,error?.message);return NextResponse.json({error:"CREATE_FAILED"},{status:500})}
  }
