@@ -2,6 +2,9 @@ import {NextResponse} from "next/server";
 import {getSiaiDirectoryRows} from "@/app/siai/catalog-data";
 
 export const dynamic="force-dynamic";
+const safeOfficial=(value:string):string|null=>{
+ try{const u=new URL(value);return u.protocol==="https:"&&!u.username&&!u.password&&!u.port?u.toString():null}catch{return null}
+};
 
 /** Public, read-only distribution feed: verified catalogue only, never candidate previews. */
 export async function GET(){
@@ -10,7 +13,7 @@ export async function GET(){
   id:row.id,
   name:row.name,
   category:row.category,
-  website:/^https:\/\/[^\s]+$/i.test(row.website)?row.website:null,
+  website:safeOfficial(row.website),
   reviewedAt:row.checkedAt,
   free:row.freeSource?row.free:null,
   price:row.priceSource?row.price:null,
