@@ -69,6 +69,10 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   }
  });
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
+ if(mobile){
+  const trace=await page.evaluate(()=>(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace||[]);
+  console.log("PDF_MOBILE_GESTURE_DECISIONS",JSON.stringify({first:trace.slice(0,30),last:trace.slice(-12)}));
+ }
  if(mobile&&(await item.boundingBox())!.width<=before!.width+6){
   const diagnostic=await page.evaluate(()=>({events:(window as Window&{__pdfTouchDiagnostics?:unknown[]}).__pdfTouchDiagnostics||[],
    overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style")||"",
