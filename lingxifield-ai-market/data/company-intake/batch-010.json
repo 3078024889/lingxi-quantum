@@ -4,7 +4,7 @@
   "reviewState": "candidate",
   "intakePaused": true,
   "visibleToPublic": false,
-  "reviewNote": "官网入口及用途待编辑逐项核验；价格、额度、支付、地区、商用条款均不得推定或公开",
+  "reviewNote": "因 Firebase Studio 官方处于停用迁移周期，改用 Google Antigravity 作为候选。所有费用、地区、支付与商用条款均待官网证据核验。",
   "products": [
     {
       "id": "anthropic-console",
@@ -115,28 +115,28 @@
       "publishApproved": false
     },
     {
-      "id": "firebase-studio",
-      "name": "Firebase Studio",
+      "id": "google-antigravity",
+      "name": "Google Antigravity",
       "company": "Google",
       "category": "编程开发",
-      "website": "https://firebase.studio/",
-      "evidenceUrl": "https://firebase.studio/",
+      "website": "https://antigravity.google/",
+      "evidenceUrl": "https://antigravity.google/",
       "tasks": [
-        "网站构建",
-        "应用原型",
-        "代码开发"
+        "智能体编程",
+        "代码开发",
+        "多代理任务管理"
       ],
       "keywords": [
-        "Firebase Studio AI工具",
-        "Firebase Studio价格",
-        "网站构建工具",
-        "应用原型工具",
-        "代码开发工具"
+        "Google Antigravity AI编程",
+        "Antigravity agent IDE",
+        "多智能体编程"
       ],
       "publisherGroupId": "google",
-      "aliases": [],
+      "aliases": [
+        "Antigravity"
+      ],
       "discoveredAt": "2026-11-05",
-      "discoverySource": "https://firebase.studio/",
+      "discoverySource": "https://antigravity.google/",
       "verifiedFacts": {},
       "reviewed": false,
       "publishApproved": false
