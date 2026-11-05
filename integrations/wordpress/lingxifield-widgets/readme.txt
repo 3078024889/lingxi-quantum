@@ -27,9 +27,9 @@ zh, en, ja, ko, fr, de, es, pt, ar.
 = Required external service =
 
 This plugin is a client for the free LINGXIFIELD service at
-https://lingxifield.com/ and loads a widget script from
-https://lingxifield.com/widgets/lingxifield-v1.js only on pages where
-the site owner has inserted a shortcode.
+https://lingxifield.com/. Its executable JavaScript is bundled locally
+in this plugin and is loaded only on pages where the site owner has inserted
+a shortcode. No JavaScript is loaded from the remote service.
 
 The reviewed directory widget requests public profile data from
 https://lingxifield.com/api/public/siai-widget. The QR widget sends
