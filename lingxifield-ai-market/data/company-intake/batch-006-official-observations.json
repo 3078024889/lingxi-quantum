@@ -1,0 +1,490 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B006",
+  "observedOn": "2026-11-05",
+  "disclaimer": "来源观察只覆盖官网公开资料，不代表真实账号试用、付款、企业法务核查或人工上架批准。按秒API与网页订阅不混算，缺失字段仍未知。",
+  "products": [
+    {
+      "id": "vidu",
+      "name": "Vidu",
+      "officialHosts": [
+        "vidu.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Vidu API 的 Q3-pro 720p 文生/图生视频计费为20积分/秒，每积分USD0.005，折合USD0.10/秒；另有离峰价和其他分辨率。",
+          "source": "https://platform.vidu.com/docs/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_api"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Vidu API 官方文档提供文生视频、图生视频、起止帧视频以及图片生成，各种输入模式另有型号与费率。",
+          "source": "https://platform.vidu.com/docs/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“生数科技”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://platform.vidu.com/docs/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "pixverse",
+      "name": "PixVerse",
+      "officialHosts": [
+        "pixverse.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "PixVerse 官方平台开发文档列有文生视频、图生视频、参考图生成视频、视频编辑和延长，各模型参数分别限制。",
+          "source": "https://docs.platform.pixverse.ai/what-is-pixverse-ai-2394981m0",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“PixVerse”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://docs.platform.pixverse.ai/what-is-pixverse-ai-2394981m0",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "higgsfield",
+      "name": "Higgsfield",
+      "officialHosts": [
+        "higgsfield.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Higgsfield API 官方价目页展示多家视频模型按秒报价以及折扣；API 转售费率不代表视频网页会员价。",
+          "source": "https://open.higgsfield.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_api"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Higgsfield API 官方提供视频生成与动作迁移，也展示不同输入方式和视频/图像模型。",
+          "source": "https://open.higgsfield.ai/explore/video",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“Higgsfield”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://open.higgsfield.ai/explore/video",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "hedra",
+      "name": "Hedra",
+      "officialHosts": [
+        "hedra.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Hedra API 官方报价视频生成从每秒USD0.0122起，头像对口型另有计价，起步价不是全部模型的统一结算价。",
+          "source": "https://www.hedra.com/pricing?product=studio",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_api"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Hedra 官方定价页分列视频生成、数字人对口型、图像、声音及修复功能，按各模型或服务分别计价。",
+          "source": "https://www.hedra.com/pricing?product=studio",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“Hedra”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://www.hedra.com/pricing?product=studio",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "invideo-ai",
+      "name": "invideo AI",
+      "officialHosts": [
+        "invideo.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "invideo AI 官方价格页将会员套餐与每月积分分开列出，不能将年付折算月费当作每次视频生成价格。",
+          "source": "https://invideo.io/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_subscription_pricing"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "官方产品页面确认提示词生成视频、脚本、画面、旁白与字幕，并支持文字指令编辑现有视频。",
+          "source": "https://invideo.io/make/AI-VIDEO-GENERATOR/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“invideo”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://invideo.io/make/AI-VIDEO-GENERATOR/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "veed",
+      "name": "VEED",
+      "officialHosts": [
+        "veed.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "VEED API Fabric 1.0 图生视频 720p 报价为USD0.15/秒；该费用不等于 VEED 网页订阅会员费。",
+          "source": "https://www.veed.io/api",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_pricing_api"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "VEED 官网 API 包含图生视频、字幕、对口型和视频背景处理，各功能单位独立。",
+          "source": "https://www.veed.io/api",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "observed",
+          "text": "VEED 网页订阅接受信用卡或借记卡；PayPal、Google Pay 与 Apple Pay 仅在部分国家/地区支持。",
+          "source": "https://www.veed.io/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_checkout_region_limited"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“VEED”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://www.veed.io/api",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "opusclip",
+      "name": "OpusClip",
+      "officialHosts": [
+        "opus.pro"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "OpusClip Starter 官网标示月付USD15并包含150积分/月；Pro 的月付与年付折合价不同，不能误当单次生成成本。",
+          "source": "https://www.opus.pro/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_subscription_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "OpusClip 提供有限免费方案，并允许 Starter 无信用卡试用，不等于无限量永久免费。",
+          "source": "https://www.opus.pro/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "OpusClip 官方主要将长视频裁剪成短片、生成字幕与社交内容，不等于从纯文本直接生成原创视频的模型。",
+          "source": "https://www.opus.pro/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“OpusClip”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://www.opus.pro/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "captions",
+      "name": "Captions",
+      "officialHosts": [
+        "captions.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Captions 官方 Max 方案为USD24.99/月且有每月500积分；页面说明报价适用于iOS，不可代替其他渠道价格。",
+          "source": "https://captions.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_ios_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Captions 官网提供基础免费剪辑功能，但生成式 AI 功能并非全部包含在免费版。",
+          "source": "https://captions.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Captions 官方支持自动字幕、剪辑、AI 演员、数字人和生成式视频，套餐限额须另核对。",
+          "source": "https://captions.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“Captions”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://captions.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "pictory",
+      "name": "Pictory",
+      "officialHosts": [
+        "pictory.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Pictory 官网提供300积分的新用户试用且无需信用卡；该活动不是持续免费额度。",
+          "source": "https://pictory.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_trial_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Pictory 官网支持文本、文章、音频、图片及演示文稿转换为视频，并能调整脚本与分镜。",
+          "source": "https://pictory.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“Pictory”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://pictory.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "ltx-studio",
+      "name": "LTX Studio",
+      "officialHosts": [
+        "ltx.studio"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "LTX Studio 官方 Standard 方案显示月付USD35、年付折合USD28/月、每月28000积分；可用模型与积分消耗依套餐不同。",
+          "source": "https://website.ltx.studio/studio/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_subscription_pricing"
+        },
+        "free": {
+          "status": "observed",
+          "text": "LTX Studio 免费方案提供一次性800积分且只允许个人用途，不能当作免费商用。",
+          "source": "https://website.ltx.studio/studio/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_free_conditions"
+        },
+        "models": {
+          "status": "observed",
+          "text": "LTX Studio 官方套餐包含视频/图像生成、故事分镜、图片生成、视频控制及智能工作流。",
+          "source": "https://website.ltx.studio/studio/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_capabilities"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "LTX Studio 官方 Free 方案限制个人使用，Standard 列有商用授权，仍受其正式协议约束。",
+          "source": "https://website.ltx.studio/studio/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_commercial_license"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment 的完整有效范围与官方可复核来源尚未齐备，保持缺失，人工审核前不公开该字段。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "该产品的官方网站标明发布品牌“Lightricks”，不表示已核实合同主体、公司注册年份或提交者授权身份。",
+          "source": "https://website.ltx.studio/studio/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    }
+  ]
+}
