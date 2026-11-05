@@ -7,6 +7,13 @@ on:
       - 'ui/siai-compact-multicapability-*'
     paths:
       - '.github/workflows/siai-compact-fullsite-gate.yml'
+      - 'components/Footer.tsx'
+      - 'app/siai-home.css'
+      - 'tests/footer-unified.test.mjs'
+      - 'tests/final-closure/siai-footer-unified-real.spec.ts'
+      - 'lib/siai-home-facets.ts'
+      - 'lib/siai-home-facet-labels.ts'
+      - 'components/SiaiRankingHome.tsx'
   workflow_dispatch:
 
 permissions:
