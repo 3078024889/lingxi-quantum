@@ -4,7 +4,7 @@
   "reviewState": "candidate",
   "intakePaused": true,
   "visibleToPublic": false,
-  "reviewNote": "官网入口及用途待编辑逐项核验；价格、额度、支付、地区、商用条款均不得推定或公开",
+  "reviewNote": "官网入口及用途待编辑逐项核验；价格、额度、支付、地区、商用条款均不得推定或公开；修复纯中文厂商名在 ASCII slug 转换后成为“-”的分组错误",
   "products": [
     {
       "id": "vidu",
@@ -25,7 +25,7 @@
         "图生视频工具",
         "视频生成工具"
       ],
-      "publisherGroupId": "-",
+      "publisherGroupId": "shengshu-technology",
       "aliases": [],
       "discoveredAt": "2026-11-05",
       "discoverySource": "https://www.vidu.com/",
