@@ -27,7 +27,7 @@ test("exactly 50 NEW distinct official-entry research candidates in five batches
 });
 test("unreviewed candidates cannot inflate public 62 platform counts or mislabel paid offers",()=>{
  const source=read("app/siai/catalog-data.ts");
- assert.match(source,/curated\.length!==32\|\|rows\.length!==62/);
+ assert.match(source,/assertSiaiPublicationManifest\(manifest,curated,preview\)/);
  assert(!/batch-00[6-9]|batch-010/.test(source));
  const claim=read("app/siai/candidate-public.ts");
  assert(!/batch-00[6-9]|batch-010/.test(claim));
