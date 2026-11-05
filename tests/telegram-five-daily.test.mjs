@@ -101,3 +101,10 @@ test("private operations report authenticates before reading the database",()=>{
  assert.match(ui,/index:false,follow:false/);
  assert.doesNotMatch(api,/TELEGRAM_BOT_TOKEN|TELEGRAM_WEBHOOK_SECRET/);
 });
+
+test("commercial publishing remains explicitly disabled by default",()=>{
+ const publisher=readFileSync(new URL("../lib/telegram/publisher.ts",import.meta.url),"utf8");
+ assert.match(publisher,/TELEGRAM_PUBLISH_ENABLED/);
+ assert.match(publisher,/PUBLISHING_NOT_ENABLED/);
+ assert.ok(publisher.indexOf("TELEGRAM_PUBLISH_ENABLED")<publisher.indexOf('telegramApi(token,"setWebhook"'));
+});
