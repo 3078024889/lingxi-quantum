@@ -50,10 +50,10 @@ test("new batches are intake-paused, never published or silently promoted",()=>{
  const publicApi=read("app/api/public/siai-widget/route.ts");
  assert(!publicApi.includes("company-intake"),"private intake imported by public widget");
 });
-test("B006-B008 evidence packs have seven status-typed scoped facts per candidate",()=>{
+test("B006-B010 evidence packs distinguish sourced observations from deliberate unknowns",()=>{
  const candidateIds=new Set(newRows.map(x=>x.id));
  const totals=[];
- for(let n=6;n<=8;n++){
+ for(let n=6;n<=10;n++){
   const pack=observation(n);
   assert.equal(pack.reviewStatus??"unapproved","unapproved");
   assert.equal(pack.products.length,10);
@@ -79,5 +79,5 @@ test("B006-B008 evidence packs have seven status-typed scoped facts per candidat
   assert.equal(observed+missing,70);
   totals.push({observed,missing});
  }
- assert.deepEqual(totals,[{observed:34,missing:36},{observed:41,missing:29},{observed:31,missing:39}]);
+ assert.deepEqual(totals,[{observed:34,missing:36},{observed:41,missing:29},{observed:31,missing:39},{observed:0,missing:70},{observed:0,missing:70}]);
 });
