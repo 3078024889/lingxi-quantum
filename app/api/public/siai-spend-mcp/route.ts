@@ -12,6 +12,7 @@ export async function OPTIONS(request:NextRequest){
  return new Response(null,{status:204,headers:{"Access-Control-Allow-Origin":origin,"Vary":"Origin","Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"content-type,mcp-protocol-version"}});
 }
 export async function POST(request:NextRequest){
+ if(process.env.ENABLE_PUBLIC_SIAI_SPEND_MCP!=="true")return ok({error:"MCP endpoint is not enabled"},503);
  const origin=request.headers.get("origin");
  // Native MCP clients generally omit Origin. Block untrusted browser origins.
  if(origin&&!allowed.has(origin))return ok({error:"forbidden origin"},403);
