@@ -1,5 +1,5 @@
 ﻿const SITE = 'https://lingxifield.cn'
-const SHARE_IMAGE = "/assets/share-lingxifield-20260928.png"
+const SHARE_IMAGE = "/assets/share-lingxifield-20261105.jpg"
 
 const PRIVATE_PREFIXES = [
   '/account',
