@@ -1,0 +1,61 @@
+name: Import exact user-approved LINGXIFIELD sharing image
+on:
+  push:
+    branches: ['audit/siai-catalog-scale-20261105']
+    paths: ['.github/workflows/import-lingxifield-share-20261105.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: import-share-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  import-user-image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download exact user-supplied original and verify SHA-256
+        shell: bash
+        env:
+          SOURCE_IMAGE: https://d2ol7oe51mr4n9.cloudfront.net/user_38NxBpHJm2Hc77e0h58G97LXEgO/9e388409-2916-4c74-b6d7-f95b36d83ffb.png
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --connect-timeout 12 --max-time 90 --output /tmp/lingxifield-user-share.png "$SOURCE_IMAGE"
+          echo 'ba542c32868a4d3f22c1e6c6f15199589317201b7e25470aefdaa5bbddba5813  /tmp/lingxifield-user-share.png' | sha256sum -c -
+      - name: Prepare exact common Web and WeChat share card
+        run: |
+          python -m pip install Pillow==11.3.0
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          im=Image.open('/tmp/lingxifield-user-share.png').convert('RGB')
+          assert im.size==(1734,907),f'Unexpected image dimensions: {im.size}'
+          im=im.resize((1200,630),Image.Resampling.LANCZOS)
+          p=Path('public/og-lingxifield-20261105.jpg')
+          p.parent.mkdir(parents=True,exist_ok=True)
+          im.save(p,format='JPEG',quality=85,optimize=True,subsampling=0)
+          q=Path('miniapp/assets/share-lingxifield-20261105.jpg')
+          q.parent.mkdir(parents=True,exist_ok=True)
+          q.write_bytes(p.read_bytes())
+          assert q.read_bytes()==p.read_bytes()
+          print('New social card',p.stat().st_size,'bytes, 1200 x 630')
+          PY
+      - name: Commit assets only to this development branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/og-lingxifield-20261105.jpg miniapp/assets/share-lingxifield-20261105.jpg
+          if git diff --cached --quiet; then
+            echo 'Identical verified share artwork already present.'
+            exit 0
+          fi
+          git commit -m "assets(share): import approved 2026-11-05 image for website and miniapps"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
