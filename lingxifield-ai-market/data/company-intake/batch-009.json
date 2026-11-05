@@ -1,0 +1,278 @@
+{
+  "batch": "B009",
+  "asOf": "2026-11-05",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "reviewNote": "官网入口及用途待编辑逐项核验；价格、额度、支付、地区、商用条款均不得推定或公开",
+  "products": [
+    {
+      "id": "coda-ai",
+      "name": "Coda AI",
+      "company": "Coda",
+      "category": "办公工具",
+      "website": "https://coda.io/product/ai",
+      "evidenceUrl": "https://coda.io/product/ai",
+      "tasks": [
+        "文档助手",
+        "团队办公",
+        "数据整理"
+      ],
+      "keywords": [
+        "Coda AI AI工具",
+        "Coda AI价格",
+        "文档助手工具",
+        "团队办公工具",
+        "数据整理工具"
+      ],
+      "publisherGroupId": "coda",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://coda.io/product/ai",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "grammarly-ai",
+      "name": "Grammarly AI",
+      "company": "Grammarly",
+      "category": "写作营销",
+      "website": "https://www.grammarly.com/ai",
+      "evidenceUrl": "https://www.grammarly.com/ai",
+      "tasks": [
+        "写作润色",
+        "语法修改",
+        "商务写作"
+      ],
+      "keywords": [
+        "Grammarly AI AI工具",
+        "Grammarly AI价格",
+        "写作润色工具",
+        "语法修改工具",
+        "商务写作工具"
+      ],
+      "publisherGroupId": "grammarly",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.grammarly.com/ai",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "quillbot",
+      "name": "QuillBot",
+      "company": "QuillBot",
+      "category": "写作营销",
+      "website": "https://quillbot.com/",
+      "evidenceUrl": "https://quillbot.com/",
+      "tasks": [
+        "文本改写",
+        "语法检查",
+        "摘要"
+      ],
+      "keywords": [
+        "QuillBot AI工具",
+        "QuillBot价格",
+        "文本改写工具",
+        "语法检查工具",
+        "摘要工具"
+      ],
+      "publisherGroupId": "quillbot",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://quillbot.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "napkin-ai",
+      "name": "Napkin AI",
+      "company": "Napkin AI",
+      "category": "演示文稿",
+      "website": "https://www.napkin.ai/",
+      "evidenceUrl": "https://www.napkin.ai/",
+      "tasks": [
+        "文本可视化",
+        "信息图",
+        "图表创作"
+      ],
+      "keywords": [
+        "Napkin AI AI工具",
+        "Napkin AI价格",
+        "文本可视化工具",
+        "信息图工具",
+        "图表创作工具"
+      ],
+      "publisherGroupId": "napkin-ai",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.napkin.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "beautiful-ai",
+      "name": "Beautiful.ai",
+      "company": "Beautiful.ai",
+      "category": "演示文稿",
+      "website": "https://www.beautiful.ai/",
+      "evidenceUrl": "https://www.beautiful.ai/",
+      "tasks": [
+        "AI演示文稿",
+        "幻灯片设计"
+      ],
+      "keywords": [
+        "Beautiful.ai AI工具",
+        "Beautiful.ai价格",
+        "AI演示文稿工具",
+        "幻灯片设计工具"
+      ],
+      "publisherGroupId": "beautiful-ai",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.beautiful.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "miro-ai",
+      "name": "Miro AI",
+      "company": "Miro",
+      "category": "办公工具",
+      "website": "https://miro.com/ai/",
+      "evidenceUrl": "https://miro.com/ai/",
+      "tasks": [
+        "白板协作",
+        "团队讨论",
+        "流程图"
+      ],
+      "keywords": [
+        "Miro AI AI工具",
+        "Miro AI价格",
+        "白板协作工具",
+        "团队讨论工具",
+        "流程图工具"
+      ],
+      "publisherGroupId": "miro",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://miro.com/ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "airtable-ai",
+      "name": "Airtable AI",
+      "company": "Airtable",
+      "category": "办公工具",
+      "website": "https://www.airtable.com/platform/ai",
+      "evidenceUrl": "https://www.airtable.com/platform/ai",
+      "tasks": [
+        "数据库自动化",
+        "工作流",
+        "数据整理"
+      ],
+      "keywords": [
+        "Airtable AI AI工具",
+        "Airtable AI价格",
+        "数据库自动化工具",
+        "工作流工具",
+        "数据整理工具"
+      ],
+      "publisherGroupId": "airtable",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.airtable.com/platform/ai",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "zapier-ai",
+      "name": "Zapier AI",
+      "company": "Zapier",
+      "category": "自动化工具",
+      "website": "https://zapier.com/ai",
+      "evidenceUrl": "https://zapier.com/ai",
+      "tasks": [
+        "自动化",
+        "智能体",
+        "工作流"
+      ],
+      "keywords": [
+        "Zapier AI AI工具",
+        "Zapier AI价格",
+        "自动化工具",
+        "智能体工具",
+        "工作流工具"
+      ],
+      "publisherGroupId": "zapier",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://zapier.com/ai",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "make-ai",
+      "name": "Make AI",
+      "company": "Make",
+      "category": "自动化工具",
+      "website": "https://www.make.com/en/ai-automation",
+      "evidenceUrl": "https://www.make.com/en/ai-automation",
+      "tasks": [
+        "工作流",
+        "业务自动化",
+        "AI编排"
+      ],
+      "keywords": [
+        "Make AI AI工具",
+        "Make AI价格",
+        "工作流工具",
+        "业务自动化工具",
+        "AI编排工具"
+      ],
+      "publisherGroupId": "make",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.make.com/en/ai-automation",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "pipedream-ai",
+      "name": "Pipedream AI",
+      "company": "Pipedream",
+      "category": "自动化工具",
+      "website": "https://pipedream.com/",
+      "evidenceUrl": "https://pipedream.com/",
+      "tasks": [
+        "API工作流",
+        "自动化集成",
+        "开发工具"
+      ],
+      "keywords": [
+        "Pipedream AI AI工具",
+        "Pipedream AI价格",
+        "API工作流工具",
+        "自动化集成工具",
+        "开发工具工具"
+      ],
+      "publisherGroupId": "pipedream",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://pipedream.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}
