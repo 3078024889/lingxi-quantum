@@ -12,7 +12,21 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test-only
+          POSTGRES_USER: postgres
+          POSTGRES_DB: tool_pass_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d tool_pass_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
@@ -27,6 +41,15 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: PostgreSQL 17 integration tests (temporary CI database)
+        env:
+          PGPASSWORD: test-only
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-fixture.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261105193000_one_free_tool_use_and_all_tools_pass.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-integrity.sql
       - name: Contract tests
         run: node --test tests/unified-tools-pass-static-contract.test.mjs
       - name: Typecheck
