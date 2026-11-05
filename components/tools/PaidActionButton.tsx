@@ -4,6 +4,8 @@ import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 import {isMiniProgramContext,miniVirtualPaymentAvailable} from "@/lib/mini/payment-client";
 
 import{useEffect,useRef,useState}from"react";
+import {TOOL_PASS_ENFORCED} from "@/lib/tools/commerce/tool-start-client";
+import ToolPassUpgradeLink from "./ToolPassUpgradeLink";
 import{useLingxiLang,type LingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
 import {quoteDisplay} from '@/lib/tools/commerce/quote-display';
@@ -62,7 +64,9 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
 
  async function preparePayment(){try{await beforePayment?.();return true}catch{setMsg(deliveryText(lang,"draftSaveFailed"));return false}}
  async function makeQuote(){
-  if(completed)return;setBusy(true);setMsg("");setLoginRequired(false);
+  if(TOOL_PASS_ENFORCED&&!toolId.startsWith("sasi-")&&!legacyResume)
+  return <ToolPassUpgradeLink/>;
+ if(completed)return;setBusy(true);setMsg("");setLoginRequired(false);
   try{
    if(!await preparePayment())return;
    const r=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId,quantity,currency,metadata:{...(metadata||{}),draftId:draftId||undefined,returnPath:location.pathname}})});
@@ -91,6 +95,8 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   setMsg(t(UI.popupBlocked));
   }finally{setBusy(false)}
  }
+ const [legacyResume,setLegacyResume]=useState(false);
+ useEffect(()=>{const query=new URLSearchParams(location.search);setLegacyResume(Boolean(query.get("resumeQuote")||query.get("quoteId")));},[]);
  const changed=quote&&(Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
  if(completed)return <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{deliveryText(lang,"complete")}</b><p className="mt-1 text-xs text-[var(--lx-muted)]">{deliveryText(lang,"existing")}</p></div>;
  return <div>{!quote||changed

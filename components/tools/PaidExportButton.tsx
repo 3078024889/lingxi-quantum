@@ -4,6 +4,8 @@ import {plainText,plainMessage} from "@/lib/tools/plain-copy";
 import {isMiniProgramContext,miniVirtualPaymentAvailable} from "@/lib/mini/payment-client";
 
 import{useEffect,useRef,useState}from"react";
+import {TOOL_PASS_ENFORCED} from "@/lib/tools/commerce/tool-start-client";
+import ToolPassUpgradeLink from "./ToolPassUpgradeLink";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{usePreferredCurrency}from"@/components/CurrencyPreferenceProvider";
 import type{PaidTaskPhase}from"@/lib/tools/commerce/paid-task-state";
@@ -110,7 +112,11 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
   }catch(e){setPhase("error");setMsg(plainText(lang,"paymentError"))}finally{setBusy(false)}
  }
 
+ const [legacyResume,setLegacyResume]=useState(false);
+ useEffect(()=>{const query=new URLSearchParams(location.search);setLegacyResume(Boolean(query.get("resumeQuote")||query.get("quoteId")));},[]);
  const amount=quote?quoteDisplay(quote,currency).text:'';
+ if(TOOL_PASS_ENFORCED&&!toolId.startsWith("sasi-")&&!legacyResume)
+  return <ToolPassUpgradeLink/>;
  if(phase==="completed")return <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-sm"><b>{tx('complete')}</b><p className="mt-1 text-[var(--lx-muted)]">{msg}</p></div>;
  return <div><button data-testid="paid-export-start" onClick={start} disabled={disabled||busy||!Number.isSafeInteger(quantity)||quantity<=0||phase==="generating"} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?tx('pricing'):paidId?tx('retry'):(label?toolRuntimeText(lang,label,label):tx('confirm'))}</button>{amount&&<span className="ml-3 text-sm text-[var(--lx-muted)]">{amount}</span>}{msg&&<p className="mt-2 text-xs leading-5 text-[var(--lx-muted)]">{msg}</p>}{loginRequired&&<a target="_blank" rel="noopener noreferrer" className="mt-2 inline-block underline" href={`/account?next=${encodeURIComponent(typeof location==="undefined"?"/tools":location.pathname)}`}>{tx("login")}</a>}</div>
 }
