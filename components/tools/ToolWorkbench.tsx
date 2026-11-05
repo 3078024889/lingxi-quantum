@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 import {formatJsonSource} from "@/lib/tools/shared/json-source-format";
 
@@ -166,7 +167,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         kind={tool.category === "image" ? "image" : tool.category === "pdf" ? "pdf" : "file"}
       />
 
-      {accessError&&<div role="alert" className="my-3 rounded-xl border border-red-400 p-3 text-sm">{accessError} <a className="underline" href="/tools/pass">{toolRuntimeText(lang,"查看通用工具包","View all-tools pass")}</a></div>}
+      {accessError&&<div role="alert" className="my-3 rounded-xl border border-red-400 p-3 text-sm">{accessError} <Link className="underline" href="/tools/pass">{toolRuntimeText(lang,"查看通用工具包","View all-tools pass")}</Link></div>}
       {tool.slug === "webp-to-jpg" && (
         <div className="mt-4 flex flex-wrap gap-3 text-sm text-bone-dim">
           <label className="flex items-center gap-2">
