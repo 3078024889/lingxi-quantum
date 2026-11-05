@@ -7,6 +7,8 @@
  if(source.protocol!=="https:"||!/^(?:www\.)?lingxifield\.(?:com|cn)$/.test(source.hostname))return;
  var base=source.origin;
  var type=script.getAttribute("data-lx-widget")==="tools"?"tools":"siai";
+ var vendor=(script.getAttribute("data-vendor")||"").toLowerCase();
+ if(vendor&&!/^[a-z0-9][a-z0-9-]{0,63}$/.test(vendor))vendor="";
  var partner=(script.getAttribute("data-partner")||"community").toLowerCase();
  if(!/^[a-z0-9][a-z0-9_-]{0,31}$/.test(partner))partner="community";
  var browserLang=(script.getAttribute("data-lang")||document.documentElement.lang||navigator.language||"en").slice(0,2).toLowerCase();
@@ -91,7 +93,7 @@
   search.addEventListener("input",draw);
   fetch(base+"/api/public/siai-widget",{credentials:"omit",mode:"cors"})
    .then(function(r){if(!r.ok)throw Error("feed");return r.json();})
-   .then(function(data){if(!data||!Array.isArray(data.rows))throw Error("invalid");rows=data.rows;tag.textContent=t[5]+" "+data.total;draw();})
+   .then(function(data){if(!data||!Array.isArray(data.rows))throw Error("invalid");rows=vendor?data.rows.filter(function(r){return r.id===vendor;}):data.rows;tag.textContent=t[5]+" "+(vendor?rows.length:data.total);draw();})
    .catch(function(){list.replaceChildren(elem("p","note",t[11]));});
  }
 })();
