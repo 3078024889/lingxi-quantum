@@ -130,3 +130,12 @@ test("pass status exposes only the authenticated user's own verified entitlement
  assert(!code.includes('select("*")'));
  assert(!code.includes('service_role'));
 });
+
+test("refunded entitlements and old operation receipts cannot silently regain paid access",()=>{
+ const sql=read("docs/commerce/tool-pass-v2-unapplied-database-draft.sql");
+ const smoke=read("tests/sql/tool-pass-v2-smoke.sql");
+ for(const code of ["PASS_NOT_ACTIVE","PASS_EXPIRED_OR_REVOKED","OPERATION_RECEIPT_EXPIRED"])
+  assert(sql.includes("'"+code+"'")&&smoke.includes("'"+code+"'"),code);
+ assert(sql.includes("interval '10 minutes'"));
+ assert(smoke.includes("update public.tool_pass_orders_v2 set state='refunded'"));
+});
