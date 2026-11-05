@@ -32,7 +32,7 @@ export async function POST(req:NextRequest){
  if(Buffer.byteLength(raw,"utf8")>1500)return NextResponse.json({error:"TOO_LARGE"},{status:413,headers:privateHeaders});
  let body:Record<string,unknown>|null=null;
  try{const decoded=JSON.parse(raw);if(decoded&&typeof decoded==="object"&&!Array.isArray(decoded))body=decoded;}catch{}
- if(!body||typeof body.id!=="string"||!uuid.test(body.id)||!["review","reject","approve"].includes(body.action))
+ if(!body||typeof body.id!=="string"||!uuid.test(body.id)||typeof body.action!=="string"||!["review","reject","approve"].includes(body.action))
   return NextResponse.json({error:"BAD_REQUEST"},{status:400,headers:privateHeaders});
  if(body.action==="approve"&&body.identityVerifiedByHuman!==true)
   return NextResponse.json({error:"IDENTITY_ATTESTATION_REQUIRED"},{status:422,headers:privateHeaders});
