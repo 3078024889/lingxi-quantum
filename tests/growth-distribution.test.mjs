@@ -58,3 +58,26 @@ test("updates feed is sourced from reviewed records, not false new launches",()=
  assert.match(rss,/application\/rss\+xml/);
  assert.match(read("lib/seo/sitemap-build.ts"),/"\/partners"/);
 });
+
+test("Chrome SIAI finder remains limited to one first-party feed and no browsing privileges",()=>{
+ const manifest=JSON.parse(read("integrations/chrome/siai-finder/manifest.json"));
+ const popup=read("integrations/chrome/siai-finder/popup.js");
+ const page=read("integrations/chrome/siai-finder/popup.html");
+ assert.equal(manifest.manifest_version,3);
+ assert.deepEqual(manifest.host_permissions,["https://lingxifield.com/*"]);
+ assert.deepEqual(manifest.permissions||[],[]);
+ assert.doesNotThrow(()=>new Function(popup));
+ assert.match(popup,/api\/public\/siai-widget/);
+ assert(!/chrome\.(tabs|history|webRequest|scripting|cookies)/.test(popup));
+ assert.match(page,/<script src="popup.js" defer><\/script>/);
+ assert(!page.includes("<script src=\"https:"));
+});
+
+test("WordPress shortcodes sanitize attributes and return output rather than printing",()=>{
+ const php=read("integrations/wordpress/lingxifield-widgets/lingxifield-widgets.php");
+ assert.match(php,/add_shortcode\('lingxifield_siai'/);
+ assert.match(php,/add_shortcode\('lingxifield_qr'/);
+ assert.match(php,/add_shortcode\('lingxifield_vendor'/);
+ assert.match(php,/esc_attr\(/);
+ assert(!php.includes("eval("));
+});
