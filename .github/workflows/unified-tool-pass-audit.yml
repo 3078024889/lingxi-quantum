@@ -36,7 +36,9 @@ jobs:
         run: pnpm build
       - name: Coverage and old-charge retirement gate
         if: always()
-        run: node scripts/audit/unified-tool-pass-coverage.mjs | tee tool-pass-audit.json
+        run: |
+          set -o pipefail
+          node scripts/audit/unified-tool-pass-coverage.mjs | tee tool-pass-audit.json
       - name: Preserve coverage evidence
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
