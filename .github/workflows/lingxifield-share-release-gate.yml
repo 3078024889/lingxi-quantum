@@ -13,6 +13,8 @@ on:
       - 'lib/share-image.ts'
       - 'lib/seo/page-metadata.ts'
       - 'lingxifield-ai-market/app/(default)/layout.tsx'
+      - 'lingxifield-ai-market/app/[lang]/platform/[id]/page.tsx'
+      - 'lingxifield-ai-market/lib/share-card.ts'
       - 'miniapp/utils/share.js'
       - 'miniapp/pages/share/index.js'
       - 'miniapp/assets/**'
@@ -76,6 +78,6 @@ jobs:
       - run: npm ci
       - name: Confirm independent site references common visual
         run: |
-          node -e "const s=require('node:fs').readFileSync('app/(default)/layout.tsx','utf8'); if(!s.includes('lingxifield.com/og-lingxifield-20261105.jpg')) process.exit(1)"
+          node -e "const s=require('node:fs').readFileSync('lib/share-card.ts','utf8'); if(!s.includes('lingxifield.com/og-lingxifield-20261105.jpg')) process.exit(1)"
       - name: Build independent market Next.js app
         run: npm run build
