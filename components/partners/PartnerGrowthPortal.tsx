@@ -1,5 +1,5 @@
 "use client";
-import {useMemo,useState} from "react";
+import {useMemo,useState,type CSSProperties} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 const copy:Record<LingxiLang,{eyebrow:string;title:string;intro:string;partners:string;partnerHint:string;siai:string;siaiInfo:string;qr:string;qrInfo:string;copy:string;copied:string;example:string;feed:string;update:string;rules:string;community:string;note:string}>={
@@ -19,7 +19,7 @@ export default function PartnerGrowthPortal(){
  const safe=partner.toLowerCase().replace(/[^a-z0-9_-]/g,"").slice(0,32)||"community";
  const snippets=useMemo(()=>["siai","tools"].map(kind=>'<script defer src="https://lingxifield.com/widgets/lingxifield-v1.js" data-lx-widget="'+kind+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>'),[safe,lang]);
  async function copyCode(value:string,key:string){try{await navigator.clipboard.writeText(value);setCopied(key)}catch{setCopied(null)}}
- const box:React.CSSProperties={padding:22,border:"1px solid #dce4ee",borderRadius:18,background:"#fff",boxShadow:"0 4px 18px rgba(15,23,42,.04)"};
+ const box:CSSProperties={padding:22,border:"1px solid #dce4ee",borderRadius:18,background:"#fff",boxShadow:"0 4px 18px rgba(15,23,42,.04)"};
  return <main style={{padding:"44px 20px 70px",background:"#f7f9fe",minHeight:"70vh"}} dir={lang==="ar"?"rtl":"ltr"}>
   <div style={{maxWidth:1120,margin:"0 auto"}}>
    <div style={{color:"#245bd5",fontSize:15,fontWeight:750}}>{t.eyebrow} · LINGXIFIELD</div>
