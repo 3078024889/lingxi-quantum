@@ -15,10 +15,10 @@ declare
  x jsonb;y jsonb;start_first timestamptz;end_first timestamptz;
 begin
  x:=public.purchase_tool_pass_v2(user_a,request_a,'tools_7d','CNY');
- if x->>'ok'<>'true' or (x->>'chargedMinor')::bigint<>2900 then raise exception 'FIRST_PURCHASE_FAILED %',x;end if;
+ if (x->>'ok') IS DISTINCT FROM 'true' or (x->>'chargedMinor')::bigint<>2900 then raise exception 'FIRST_PURCHASE_FAILED %',x;end if;
  start_first:=(x->>'startsAt')::timestamptz;end_first:=(x->>'endsAt')::timestamptz;
  y:=public.purchase_tool_pass_v2(user_a,request_a,'tools_7d','CNY');
- if y->>'alreadyPurchased'<>'true' then raise exception 'REPLAY_NOT_IDEMPOTENT %',y;end if;
+ if (y->>'alreadyPurchased') IS DISTINCT FROM 'true' then raise exception 'REPLAY_NOT_IDEMPOTENT %',y;end if;
  if (select count(*) from public.test_toolpass_charges)<>1 then raise exception 'DOUBLE_CHARGE';end if;
  y:=public.purchase_tool_pass_v2(user_a,request_b,'tools_30d','USD');
  if (y->>'ok') IS DISTINCT FROM 'true' or (y->>'chargedMinor')::bigint<>9900 then raise exception 'USD_AMOUNT_BAD %',y;end if;
