@@ -66,3 +66,10 @@ test("voluntary public-tool sharing carries attribution, not private file conten
  assert.match(rail,/!privateSearchPath\(publicPath\)/);
  assert(!rail.includes("new FormData("));
 });
+
+test("voluntary SIAI comparison sharing keeps its filters and tracks source without leaking private state",()=>{
+ const home=read("components/SiaiRankingHome.tsx");
+ assert.match(home,/siaiSharePath\(\{query,category,task,payment,evidence,sort,compareIds\},lang\)/);
+ assert.match(home,/outgoing\.searchParams\.set\("utm_source","siai_share"\)/);
+ assert.match(home,/outgoing\.searchParams\.set\("utm_campaign","siai_compare"\)/);
+});
