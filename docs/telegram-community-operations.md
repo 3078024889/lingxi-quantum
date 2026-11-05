@@ -1,46 +1,63 @@
-# 全球 SIAI Telegram 官方群运营部署手册
+# 全球 SIAI｜Telegram 五条/日 + QQ 营销运营手册
 
 群组：https://t.me/globalsiai
 机器人：https://t.me/GlobalSIAI_OfficialBot
+QQ 一键复制工作台：https://lingxifield.com/community/share-kit（正式部署后才可访问）
 
-## 激活前必须完成
+## 自动发布计划（北京时间 / 新加坡时间）
 
-1. 在 BotFather 对此前公开过的旧 Token 发送 /revoke。新密钥只保存于密钥管理平台，不要发聊天、截图或提交到 GitHub。
-2. 核对机器人已加入群组，授予必要权限：删除消息、限制违规成员；不授予添加管理员及修改群信息权限。
-3. Vercel Production 私有环境变量：
-   - TELEGRAM_BOT_TOKEN：更换后的新 Token
-   - TELEGRAM_WEBHOOK_SECRET：32 字节的 URL-safe 随机字符串（A-Z、a-z、0-9、_、-）
-   - TELEGRAM_CHAT_ID：@globalsiai
-   - CRON_SECRET：复用主站现有值，不要重置其它定时任务的口令
-4. 审核并执行新建表迁移 supabase/migrations/20261105090000_telegram_community_events.sql。测试 RLS、匿名用户不可读写、服务端可插入更新。
-5. 独立分支 CI、构建、安全门禁及真实浏览器验收通过后才允许合并，合并前不要触发主站生产部署。
-6. 正式合并部署后，/api/cron/telegram-daily 会在每天约 09:05（新加坡时间）使用**服务端私有环境变量**自动调用 Telegram setWebhook：
-   - url：https://lingxifield.com/api/telegram/webhook
-   - secret_token：与 TELEGRAM_WEBHOOK_SECRET 完全相同
-   - allowed_updates：["message"]
-   不需要把 Token 拼入链接或手工复制到聊天。
-7. 首次自动注册后，通过 Telegram Bot API 的 getWebhookInfo 核对实际注册状态与报错，再私聊机器人 /help、/tools、/ranking，实测群内新成员欢迎和反诈骗。
-8. 如果用户想提前激活，必须通过安全的服务器端触发注册；不要从浏览器地址栏提交 Token。
+| 类别 | 时间窗（Hobby 可能在小时内运行） | UTC Cron | API |
+|---|---|---|---|
+| 早间发现 | 09:00–09:59 | 5 1 * * * | /api/cron/telegram-daily |
+| 实用教程 | 11:00–11:59 | 5 3 * * * | /api/cron/telegram-tutorial |
+| 工具对比 | 14:00–14:59 | 5 6 * * * | /api/cron/telegram-comparison |
+| 智能创作 | 17:00–17:59 | 5 9 * * * | /api/cron/telegram-creation |
+| 晚间问答 | 20:00–20:59 | 5 12 * * * | /api/cron/telegram-community |
 
-## 运营范围
+每个 Vercel Cron 独立运行一次/日，符合 Hobby 计时限制。共 35 条经过编辑的轮换话题；只发布已核实的品牌/功能、教程、问题，不编造最新版本、定价、收益和厂商动态。热点和新版本必须按官方来源人工复核后入库。按日期+栏目去重，外部调用必须持 CRON_SECRET。
 
-- 北京/新加坡时间每天上午约 09:05 发布 1 条经核实的工具教程或功能介绍。Cron 使用 UTC 01:05；免费计划可能在该小时内延迟。
-- 回复 /start、/help、/tools、/ranking、/community；不主动给陌生人群发私信。
-- 新入群成员自动欢迎。普通外部链接可以发送，只有很明显的诈骗诱导和极端刷链接才自动删除。
-- 所有推广链接附加 UTM 来源标记。成交归因仍以网站实际访问和订单数据为准。
-- 事件表仅保存 update ID / 日期和处理状态，不存成员资料、聊天文本或敏感密钥。
-- 出错时记录为 failed 并停止重复推送，由管理员复核后再处理。
+## 当前激活条件
 
-## 真正上线前的验收清单
+- [x] BotFather 已废弃此前泄露的机器人 Token
+- [x] Production 已保存 BOT_TOKEN、WEBHOOK_SECRET、CHAT_ID
+- [x] BOT_TOKEN / WEBHOOK_SECRET 已调整到 Sensitive/Secret
+- [x] public.telegram_community_events 表及 RLS 受限已核查
+- [x] public.telegram_community_daily_metrics 表及 RLS 已核查
+- [x] site_page_views 增加 3 个可选的 UTM 来源列（不采集新增个人身份信息）
+- [ ] 确认 Bot 在群内拥有管理权限
+- [ ] 确认项目可合法用于商业用途（当前 Vercel Hobby 合同仅允许非商业个人用途；选 Pro/企业版或允许商用的托管环境）
+- [ ] 最新 PR 完整 CI、构建、真实浏览器、SEO 与支付/数据门禁通过
+- [ ] PR 合并并部署 Production，最新敏感环境变量随新版本加载
+- [ ] 第一次 Cron setWebhook 后核实 Telegram getWebhookInfo 的地址、pending_update_count 及错误
+- [ ] 群里实际验证 /help、/ranking、/tools、欢迎新成员、删诈骗信息和 5 次定时消息
+- [ ] 用真实浏览器访问复制工作台与各推广链接，并验证 UTM 保存与访问量报表
 
-- [ ] 新 Bot Token 已替换、旧 Token 已失效
-- [ ] Vercel Secret 和 Webhook Secret 已设置
-- [ ] 数据表 RLS/服务端写入经真实验收
-- [ ] Webhook 未授权请求返回 401
-- [ ] 私聊 /help、/tools、/ranking 正常
-- [ ] 群组新成员欢迎正常，其他群不响应
-- [ ] 普通链接不会被误删，诈骗链接能删除
-- [ ] 每天仅发布一次，重复触发不会重复发送
-- [ ] 主站来源流量和真实转化有可靠数据记录
+若生产设备还未授权，保留代码候选，不制造已上线事实，不触发反复 Vercel 部署。
 
-运营原则：不购买假粉、不发送未经同意的私信、不自动邀请陌生人，不发布虚构价格或收益承诺。即时新闻必须核对官方来源之后再发布。
+## 引流与复用
+
+- 官方群聊链接已有 https://t.me/globalsiai；网站页脚保留群组入口。
+- 每天 5 条的 Telegram 与 QQ 文案在一键复制工作台同时展示，QQ 使用 utm_source=qq，TG 使用 utm_source=telegram。
+- 文案始终先给具体问题和做法，再给 /tools、/siai 或 /sasi 的官方入口；不要追求没有需求的假粉。
+- QQ 群只在群规允许的范围内发布；不要批量私信陌生人或把别人强制拉群。
+- 每晚群人数只取聚合数量，保存到 telegram_community_daily_metrics，不保存成员名单。
+- site_page_views 保存准许值的来源标签和设备/页面已有统计信息；尊重 DNT / GPC。
+- 站内未验收的收费入口不得包装成“已经能付款”。成交以真实支付到账、订单交付与退款后的净额核算。
+
+## 首轮营收路径与验证
+
+优先引导实际需求的用户使用工具；已经可以真实交付的 SASI 付费创作服务、合规的厂商合作、透明标注的赞助内容可作为收入来源。正式收费前先检查支付和退款是否闭环，不发布虚假价格。
+
+以月入 ¥5,000 为目标：
+- 若每单实收 ¥99，需要至少 51 笔（未扣除成本）。
+- 若每单实收 ¥199，需要至少 26 笔（未扣除成本）。
+- 若净利润目标 ¥5,000，则应扣除供应商生成成本、支付手续费、服务器成本、退款与税费等。
+该数字是目标测算，不是收入承诺。必须有真实访问 → 可使用的服务 → 可支付订单 → 可交付的完整链路。
+
+### 假设验证数据（非当前真实经营数据）
+
+每周汇报：5 条日更的发送成功率、QQ 人工发布数、Telegram 群成员净变化、Telegram/QQ 标记访问数、关键工具使用完成数、真实付款/退款、当月净收入和每次有效访问成本。
+
+## 安全
+
+机器人不自动给陌生人发私信、不强行拉人进群；删除消息权限仅用于明显诈骗/刷屏。Webhook 必须验证 X-Telegram-Bot-Api-Secret-Token；定时任务必须持 CRON_SECRET。消息文本/成员个人标识不写入统计表。事件日志只存去重键和状态。机密不出现在 URL、用户可见页面或 GitHub。
