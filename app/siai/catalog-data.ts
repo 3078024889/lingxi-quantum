@@ -36,9 +36,18 @@ function getCuratedRows():SiaiHomeRow[]{
 }
 
 
+/** Return only the approved public catalogue; exclude private research previews. */
+export function getPublishedSiaiRows():SiaiHomeRow[]{
+ const rows=getCuratedRows();
+ if(!rows.length||rows.length!==MARKET_API_PRODUCTS.length||new Set(rows.map(r=>r.id)).size!==rows.length){
+  throw Error("SIAI_PUBLISHED_CATALOG_INCONSISTENT");
+ }
+ return rows;
+}
+
 /** Read-only SIAI directory data shared by 9 indexable language routes. */
 export function getSiaiDirectoryRows():{curated:SiaiHomeRow[];rows:SiaiHomeRow[]} {
- const curated=getCuratedRows();
+ const curated=getPublishedSiaiRows();
  const curatedIds=new Set(curated.map(r=>r.id));
  // When a reviewed preview is promoted, retain the approved row and drop its old preview duplicate.
  const preview=getSiaiSourcePreviewRows().filter(r=>!curatedIds.has(r.id));
