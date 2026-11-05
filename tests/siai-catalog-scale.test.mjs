@@ -36,8 +36,8 @@ test("publisher keys and names must be globally unique and stable across batches
  assert(auditCandidateCorpus(broken).issues.some(x=>x.code==="DUPLICATE_PRODUCT_ID"));
  const other=clone(batches);
  other[7].products.find(x=>x.id==="aws-q-developer").publisherGroupId="aws";
- assert(auditCandidateCorpus(other).issues.some(x=>x.code==="INCONSISTENT_PUBLISHER_ID")===false);
- // The same organization may have different brand labels; a trusted group audit pins the parent.
+ assert(auditCandidateCorpus(other).issues.some(x=>x.code==="INCONSISTENT_PUBLISHER_ID"));
+ // Different branded product labels sharing a parent need a pinned publisher group.
  assert.notDeepEqual(auditCandidateCorpus(other).groups.amazon,auditCandidateCorpus(batches).groups.amazon);
 });
 
