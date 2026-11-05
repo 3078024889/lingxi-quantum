@@ -50,14 +50,15 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   });
   expect(target).toBe(true);
  }
+ const beforePlacement=await item.evaluate(el=>({left:(el as HTMLElement).style.left,top:(el as HTMLElement).style.top}));
  const before=await item.boundingBox(),r=await grip.boundingBox();
  expect(before).not.toBeNull();expect(r).not.toBeNull();
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
- const resized=await item.boundingBox();expect(resized).not.toBeNull();
- // The southeast handle must resize in-place; an accidental overlay drag is not a pass.
- expect(Math.abs(resized!.x-before!.x)).toBeLessThan(4);
- expect(Math.abs(resized!.y-before!.y)).toBeLessThan(4);
+ // Browser viewport scroll changes bounding-box y even for an unmoved PDF overlay.
+ // Compare PDF-stage-relative CSS placement, not viewport-relative screen coordinates.
+ const afterPlacement=await item.evaluate(el=>({left:(el as HTMLElement).style.left,top:(el as HTMLElement).style.top}));
+ expect(afterPlacement).toEqual(beforePlacement);
  const rotate=page.getByTestId("pdf-grip-rotate");
  await rotate.scrollIntoViewIfNeeded();await expect(rotate).toBeVisible();
  const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
