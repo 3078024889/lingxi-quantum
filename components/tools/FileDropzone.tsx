@@ -60,7 +60,7 @@ export default function FileDropzone({
     if(!multiple&&unique.length>1){setError(plainText(lang,"oneFile"));return}
     if(multiple&&unique.length>maxFiles){setError(plainText(lang,"fileLimit",{count:maxFiles}));return}
     if(TOOL_PASS_ENFORCED){
-      const toolSlug=location.pathname.match(/^\\/tools\\/([^/?#]+)/)?.[1]||"";
+      const toolSlug=location.pathname.match(/^\/tools\/([^/?#]+)/)?.[1]||"";
       if(toolSlug&&toolSlug!=="pay"&&toolSlug!=="pass"){
         if(pendingRef.current)return;
         pendingRef.current=true;setAuthorizing(true);
