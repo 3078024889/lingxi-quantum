@@ -1,0 +1,511 @@
+{
+  "schema": "lingxifield_candidate_official_observations_v1",
+  "batch": "B007",
+  "observedOn": "2026-11-05",
+  "disclaimer": "官方页面来源观察；未经过真实账号注册、支付、下载或商用合同核验。Udio禁下载；旧Resemble语音API已归档，用Rime替换为候选。所有项目仍不公开且需人工审批。",
+  "products": [
+    {
+      "id": "udio",
+      "name": "Udio",
+      "officialHosts": [
+        "udio.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "missing",
+          "reason": "price在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Udio 官方2026年2月说明，网站继续提供生成音乐与订阅积分，但音频、视频及stem分轨文件下载已关闭；不可宣传为可下载音频的平台。",
+          "source": "https://help.udio.com/en/articles/12683565-changes-associated-with-the-universal-music-group-umg-partnership",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“Udio”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://help.udio.com/en/articles/12683565-changes-associated-with-the-universal-music-group-umg-partnership",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "aiva",
+      "name": "AIVA",
+      "officialHosts": [
+        "aiva.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "AIVA 免费€0，Standard按年结算折合€11/月+VAT，Pro按年结算折合€33/月+VAT；年付折合不能冒充按月随时取消的价格。",
+          "source": "https://www.aiva.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "observed",
+          "text": "AIVA永久免费版仅限非商用、需要署名，每月最多下载3次且每首最长3分钟。",
+          "source": "https://www.aiva.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "models": {
+          "status": "observed",
+          "text": "AIVA 官网支持超过250种曲风，输入MIDI或音频作为灵感、编辑歌曲并导出MP3和MIDI。",
+          "source": "https://www.aiva.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "AIVA 免费版不能变现；Standard仅部分平台有限商用，Pro方明确拥有创作音乐完整版权及全面变现权。",
+          "source": "https://www.aiva.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“AIVA”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://www.aiva.ai/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "soundraw",
+      "name": "SOUNDRAW",
+      "officialHosts": [
+        "soundraw.io"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "SOUNDRAW Creator月付USD16.99、年付折合USD11.04/月；Artist Starter月付USD29.99、Artist Pro月付USD35.99，下载限额和格式不同。",
+          "source": "https://soundraw.io/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "SOUNDRAW 提供生成背景音乐和不同格式下载，Creator和Artist方案用途不同。",
+          "source": "https://soundraw.io/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "SOUNDRAW原始下载曲目不能未经修改直接发行至音乐流媒体或注册Content ID；Artist方案允许创作明显不同的改编歌曲再发行。",
+          "source": "https://soundraw.io/license",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“SOUNDRAW”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://soundraw.io/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "mubert",
+      "name": "Mubert",
+      "officialHosts": [
+        "mubert.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Mubert Render含免费Ambassador，Creator网页月付USD14/月、Pro月付USD39/月、Business月付USD199/月，年付折算另列。",
+          "source": "https://mubert.com/render/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Mubert Ambassador免费版每月25首、5次下载，仅限非商业用途并需注明Mubert来源。",
+          "source": "https://mubert.com/render/faq",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Mubert Render提供生成音乐、编辑音轨及分轨和时长；开发者API需单独取得权限。",
+          "source": "https://mubert.com/render/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Mubert Pro/Business可授权特定商业使用；免费或Creator有限制，不允许原始音乐直接分发到Spotify等音乐服务或注册Content ID。",
+          "source": "https://mubert.com/render/faq",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“Mubert”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://mubert.com/render/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "murf",
+      "name": "Murf AI",
+      "officialHosts": [
+        "murf.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Murf Studio免费USD0；Creator年付折合USD19/月、Business年付折合USD66/月。网页会员价格不等于API价格。",
+          "source": "https://murf.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Murf免费套餐无需信用卡，试用10分钟语音，无下载及商用权限。",
+          "source": "https://murf.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Murf提供文字转语音、配音与发音控制，部分套餐支持转录和AI翻译。",
+          "source": "https://murf.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Murf免费试用不含商用权；Creator包含商业权利，Business另列商务许可。",
+          "source": "https://murf.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“Murf”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://murf.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "speechify",
+      "name": "Speechify",
+      "officialHosts": [
+        "speechify.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Speechify朗读Premium月付USD29或年付USD139；Studio和开发者API是其他独立产品。",
+          "source": "https://speechify.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Speechify普通朗读版提供免费基础计划，包含最多1.5倍速及10种基础声音。",
+          "source": "https://speechify.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Speechify官网列朗读、语音输入和AI摘要问答，Premium与Speechify Studio/API不能混作一个套餐。",
+          "source": "https://speechify.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“Speechify”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://speechify.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "rime-ai",
+      "name": "Rime",
+      "officialHosts": [
+        "rime.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Rime实时语音API Starter 按字符计费：Mist USD0.03/1000字符、Coda USD0.05/1000字符，企业另有定制报价。",
+          "source": "https://www.rime.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Rime官方称新账户Starter包含3000分钟试用，不能假设为长期无限量免费。",
+          "source": "https://www.rime.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Rime官网提供Mist v3、Coda v2实时TTS，云端及本地部署可选，并于2026年10月新增STT。",
+          "source": "https://www.rime.ai/tts-models",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“Rime”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://www.rime.ai/tts-models",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "deepgram",
+      "name": "Deepgram",
+      "officialHosts": [
+        "deepgram.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Deepgram Aura-2 TTS按1000输入字符：Pay As You Go USD0.030，Growth USD0.027；STT及Voice Agent按独立时长或档位计费。",
+          "source": "https://deepgram.com/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "missing",
+          "reason": "free在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Deepgram官网分别列Speech-to-Text、Flux/Aura Text-to-Speech和Voice Agent及音频理解API。",
+          "source": "https://deepgram.com/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“Deepgram”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://deepgram.com/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "assemblyai",
+      "name": "AssemblyAI",
+      "officialHosts": [
+        "assemblyai.com"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "AssemblyAI预录Universal-3.5 Pro USD0.21/小时、Universal-2 USD0.15/小时；附加功能另计。",
+          "source": "https://www.assemblyai.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "observed",
+          "text": "AssemblyAI官方价格页提供无需信用卡的免费入门额度，具体额度和模型适用范围须再核控制台。",
+          "source": "https://www.assemblyai.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "models": {
+          "status": "observed",
+          "text": "AssemblyAI官方提供预录与实时STT、音频理解、Voice Agent和新的文字转语音能力。",
+          "source": "https://www.assemblyai.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "missing",
+          "reason": "commercial在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“AssemblyAI”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://www.assemblyai.com/pricing/",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    },
+    {
+      "id": "cartesia",
+      "name": "Cartesia",
+      "officialHosts": [
+        "cartesia.ai"
+      ],
+      "reviewStatus": "unapproved",
+      "facts": {
+        "price": {
+          "status": "observed",
+          "text": "Cartesia Free USD0/月含20000积分，Pro USD5/月100000积分，Startup USD49/月、Scale USD299/月；不同能力分别消耗额度。",
+          "source": "https://www.cartesia.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_billing_specific"
+        },
+        "free": {
+          "status": "observed",
+          "text": "Cartesia免费版每月20000积分可使用基础TTS/STT；商用授权明确列在Pro以上。",
+          "source": "https://www.cartesia.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "models": {
+          "status": "observed",
+          "text": "Cartesia官网提供Sonic语音合成、Ink转录、Voice Agents和语音克隆，权益与并发随套餐变化。",
+          "source": "https://www.cartesia.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "regions": {
+          "status": "missing",
+          "reason": "regions在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "commercial": {
+          "status": "observed",
+          "text": "Cartesia定价表明确Pro方案含Commercial use license，免费版不应自动视为有商业授权。",
+          "source": "https://www.cartesia.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_public_observation"
+        },
+        "payment": {
+          "status": "missing",
+          "reason": "payment在该地区、产品、渠道或合同主体的完整适用条件尚未由独立官方来源确认；此字段不能自动作为公开支持标签。"
+        },
+        "company": {
+          "status": "observed",
+          "text": "官网公开页面将“Cartesia”标示为产品品牌；此项仅核实品牌，不代表已确认法人注册名称、集团关系或提交者授权身份。",
+          "source": "https://www.cartesia.ai/pricing",
+          "checkedAt": "2026-11-05",
+          "scope": "publisher_brand_only"
+        }
+      }
+    }
+  ]
+}
