@@ -49,9 +49,9 @@ function MealWorkspace({lang,files,manual,hasUploadClaim,initialAccessRequestId}
   try{if(!claimed.current){const ticket=await claimToolStart("food-calorie",1);accessRequestId.current=ticket.requestId||"";claimed.current=true;}}catch(e){setMsg(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):t(lang,"fileError"));return;}
   if(!valid||busy)return;setBusy(true);setMsg('');
   try{
-   const session=manual?null:await createFoodImageSession(files);
-   // Retrying the same immutable request is safe; image sessions are recreated only before preparation.
    const id=crypto.randomUUID();requestId.current=id;
+   const session=manual?null:await createFoodImageSession(files,{accessRequestId:accessRequestId.current,operationId:id});
+   // Retrying the same immutable request is safe; image sessions are recreated only before preparation.
    const r=await fetch('/api/tools/food/analysis',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({requestId:id,accessRequestId:accessRequestId.current,mode:manual?'custom':'image',sessionId:session?.sessionId,groups:groups.map(g=>g.map(x=>({food_id:x.food.food_id,grams:portionValue(x.grams),...(x.food.food_id===0?{label:x.food.name_zh,per100:x.food.per100}:{})})))})});
    const d=await r.json();if(!r.ok)throw new Error(d.error);
    try{localStorage.setItem(savedAnalysis,d.id)}catch{}
