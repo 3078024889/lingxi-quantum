@@ -1,4 +1,4 @@
-import {buildGroupPosts,QQ_GROUPS,singaporeDay,type QQGroupId} from "../globalsiai-bot/editorial.ts";
+import {buildGroupPosts,QQ_GROUPS,singaporeDay,type QQGroupId} from "./editorial.ts";
 
 /** Public read-only QQ copy desk. No bot keys and no QQ session access. */
 const notices:Record<QQGroupId,string>={
