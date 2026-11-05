@@ -1,0 +1,44 @@
+name: SIAI catalog expansion architecture audit
+
+on:
+  push:
+    branches:
+      - 'audit/siai-catalog-scale-*'
+    paths:
+      - 'app/siai/catalog-data.ts'
+      - 'app/siai/directory-publication-*'
+      - 'lingxifield-ai-market/data/company-intake/batch-0*.json'
+      - 'lingxifield-ai-market/lib/market-catalog-scale-audit.mjs'
+      - 'tests/siai-catalog-scale.test.mjs'
+      - '.github/workflows/siai-catalog-scale-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: siai-catalog-scale-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  data-contract:
+    name: publisher-identity-and-100-candidates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Data-quality, index ownership and 62-row publication contract
+        run: node --test tests/siai-catalog-scale.test.mjs tests/siai-intake-50.test.mjs tests/siai-intake-official-006.test.mjs tests/siai-source-preview.test.mjs tests/siai-company-source.test.mjs tests/siai-compact-facets.test.mjs
+      - name: Exact Next.js production build
+        run: pnpm build
