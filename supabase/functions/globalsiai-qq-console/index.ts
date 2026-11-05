@@ -2,9 +2,9 @@ import {buildGroupPosts,QQ_GROUPS,singaporeDay,type QQGroupId} from "../globalsi
 
 /** Public read-only QQ copy desk. No bot keys and no QQ session access. */
 const notices:Record<QQGroupId,string>={
- "1074475201":"欢迎来到灵犀场实用工具交流群！PDF 编辑、图片、视频字幕、OCR 等教程，会用简短步骤介绍。\\n国际站：https://lingxifield.com\\n国内站：https://lingxifield.cn\\n欢迎提出实际问题，禁止广告与诈骗。",
- "1072178710":"欢迎来到灵犀场 SASI 创作与全球 SIAI 交流区！分享脚本、分镜、视频配音及模型比较，价格和免费额度以官方资料为准。\\n国际站：https://lingxifield.com\\n国内站：https://lingxifield.cn\\n不发布夸大收益或虚构功能。",
- "601549887":"【群组转型公告】原 WB3 群计划调整为全球 SIAI 排行榜社区，交流智能模型、全球工具行情、使用地区和创作经验。欢迎老群友提出建议。\\n国际站：https://lingxifield.com/siai\\n国内站：https://lingxifield.cn/siai\\n请勿刷屏、发布诈骗广告。",
+ "1074475201":"欢迎来到灵犀场实用工具交流群！PDF 编辑、图片、视频字幕、OCR 等教程，会用简短步骤介绍。\n国际站：https://lingxifield.com\n国内站：https://lingxifield.cn\n欢迎提出实际问题，禁止广告与诈骗。",
+ "1072178710":"欢迎来到灵犀场 SASI 创作与全球 SIAI 交流区！分享脚本、分镜、视频配音及模型比较，价格和免费额度以官方资料为准。\n国际站：https://lingxifield.com\n国内站：https://lingxifield.cn\n不发布夸大收益或虚构功能。",
+ "601549887":"【群组转型公告】原 WB3 群计划调整为全球 SIAI 排行榜社区，交流智能模型、全球工具行情、使用地区和创作经验。欢迎老群友提出建议。\n国际站：https://lingxifield.com/siai\n国内站：https://lingxifield.cn/siai\n请勿刷屏、发布诈骗广告。",
 };
 function esc(s:string):string{
  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
@@ -29,7 +29,7 @@ Deno.serve((request)=>{
  const jsPosts=JSON.stringify(posts.map(x=>x.text)).replace(/</g,"\\u003c");
  const jsNotice=JSON.stringify(notices[gid]).replace(/</g,"\\u003c");
  const cards=posts.map((p,i)=>`<article class="card"><div class="cardhead"><div><small>第 ${i+1} 条 · ${esc(p.label)}</small><h3>${esc(["全球 SIAI 发现","实用工具教程","模型与价格对比","SASI 智能创作","今晚聊什么？"][i])}</h3></div><button type="button" data-copy="${i}">复制这一条</button></div><pre>${esc(p.text)}</pre></article>`).join("");
- const html=`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+ const html=String.raw`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
  <meta name="robots" content="noindex,nofollow"><title>灵犀场｜三个 QQ 群运营文案</title>
  <style nonce="${nonce}">
  :root{font-family:system-ui,"Microsoft YaHei",sans-serif;color:#14213a;background:#f4f7fc}
@@ -55,13 +55,13 @@ Deno.serve((request)=>{
   <label>选择 QQ 群<select name="group">${QQ_GROUPS.map(g=>`<option value="${g.id}" ${g.id===gid?"selected":""}>${g.id} · ${esc(g.focus)}</option>`).join("")}</select></label>
   <label>选择日期<input type="date" name="day" value="${day}"></label><button type="submit">更新文案</button>
  </form><p>当前群：<b>${gid} · ${esc(group.focus)}</b></p></section>
- <section class="panel"><h2>精简群公告 / 转型说明</h2><pre class="notice">${esc(notices[gid].replaceAll("\\n","\n"))}</pre>
+ <section class="panel"><h2>精简群公告 / 转型说明</h2><pre class="notice">${esc(notices[gid])}</pre>
   <div class="ops"><button data-copy="notice">复制群公告</button><button class="secondary" data-copy="all">复制今天五条</button></div></section>
  <div class="status" role="status" id="status" aria-live="polite"></div>
  <section><h2>${day} · 分时段发布（北京时间/新加坡时间）</h2>${cards}</section>
  <p class="foot">群管理建议：不要每日反复 @全体成员；不要使用挂机号/非官方协议发送广告。QQ 内置「Q群管家」的定时任务必须由拥有对应群权限的人在 QQ 客户端设置。本页面只读，不采集 QQ 登录信息、密钥或成员名单。群内发布效果以实际页面访问和订单为准。</p>
  </main><script nonce="${nonce}">
- const posts=${jsPosts};const notice=${jsNotice}.replaceAll("\\\\n","\n");
+ const posts=${jsPosts};const notice=${jsNotice};
  document.querySelectorAll("[data-copy]").forEach(button=>button.addEventListener("click",async()=>{
   const id=button.getAttribute("data-copy");
   const value=id==="notice"?notice:id==="all"?posts.map((p,i)=>"【第 "+(i+1)+" 条】\n"+p).join("\n\n────────\n\n"):posts[Number(id)];
