@@ -10,7 +10,17 @@ function compile(file,imports){const m={exports:{}};new Function('require','modu
  const track=compile('app/api/analytics/visit/route.ts',{'@/lib/analytics/public-visit':paths,'@/lib/security/bounded-request-json':bounded,'@/lib/sasi/request-security':origin,'@/lib/security/abuse-guard':{enforceAbuseGuard:async()=>{guardCalls++;return guardOk?{ok:true}:{ok:false,status:429,error:'RATE_LIMITED'}}},'@/lib/supabase/admin':{createAdminClient:()=>({from:()=>({insert:async x=>{inserts.push(x);return{error:null}}})})}});
  const base={id:'00000000-0000-4000-8000-000000000001',session:'00000000-0000-4000-8000-000000000002',path:'/tools/food-calorie',referrer:'google.com',device:'desktop'};
  const req=(b=base,extra={})=>new NextRequest('https://lingxifield.com/api/analytics/visit',{method:'POST',headers:{origin:'https://lingxifield.com','content-type':'application/json','user-agent':'Browser',...extra},body:JSON.stringify(b)});
- assert.equal((await track.POST(req())).status,204);assert.equal(inserts.length,1);assert.equal(inserts[0].path,base.path);assert.match(inserts[0].session_hash,/^[0-9a-f]{64}$/);assert(!JSON.stringify(inserts[0]).includes(base.session));assert.deepEqual(Object.keys(inserts[0]).sort(),['device','host','id','path','referrer_host','session_hash']);
+ assert.equal((await track.POST(req())).status,204);assert.equal(inserts.length,1);assert.equal(inserts[0].path,base.path);assert.match(inserts[0].session_hash,/^[0-9a-f]{64}$/);assert(!JSON.stringify(inserts[0]).includes(base.session));assert.deepEqual(Object.keys(inserts[0]).sort(),['device','host','id','path','referrer_host','session_hash','utm_campaign','utm_content','utm_source']);assert.equal(inserts[0].utm_source,null);
+ assert.equal((await track.POST(req({...base,path:'/partners',utm_source:'partner_widget',utm_campaign:'siai_directory',utm_content:'sample_partner'}))).status,204);
+ assert.equal(inserts.at(-1).path,'/partners');
+ assert.equal(inserts.at(-1).utm_source,'partner_widget');
+ assert.equal(inserts.at(-1).utm_campaign,'siai_directory');
+ assert.equal(inserts.at(-1).utm_content,'sample_partner');
+ assert.equal((await track.POST(req({...base,utm_source:'bad@example.com',utm_campaign:'not_provided',utm_content:'name@email.com'}))).status,204);
+ assert.equal(inserts.at(-1).utm_source,null);
+ assert.equal(inserts.at(-1).utm_campaign,null);
+ assert.equal(inserts.at(-1).utm_content,null);
+ inserts.splice(1);
  for(const path of ['/account/money-admin','/sasi/connections','/sasi?prompt=secret','/tools/pay'])assert.equal((await track.POST(req({...base,path}))).status,400);
  assert.equal((await track.POST(req(base,{origin:'https://evil.example'}))).status,403);
  assert.equal((await track.POST(req(base,{origin:'https://lingxifield.cn'}))).status,403);
