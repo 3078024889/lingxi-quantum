@@ -16,7 +16,11 @@ export default function SiteVisitTracker(){
    let session=sessionStorage.getItem(key);
    if(!session){session=crypto.randomUUID();for(let i=sessionStorage.length-1;i>=0;i--){const old=sessionStorage.key(i);if(old?.startsWith("lx-visit:"))sessionStorage.removeItem(old)}sessionStorage.setItem(key,session)}
    let referrer="";try{referrer=document.referrer?new URL(document.referrer).hostname:""}catch{}
-   const body=JSON.stringify({id:crypto.randomUUID(),session,path,referrer,device:matchMedia("(max-width: 700px)").matches?"mobile":"desktop"});
+   const qs=new URLSearchParams(location.search);
+   const source=["qq","telegram"].includes(qs.get("utm_source")||"")?qs.get("utm_source"):null;
+   const campaign=source&&/^[a-z0-9_]{1,64}$/.test(qs.get("utm_campaign")||"")?qs.get("utm_campaign"):null;
+   const content=source&&["discovery","tutorial","comparison","creation","community"].includes(qs.get("utm_content")||"")?qs.get("utm_content"):null;
+   const body=JSON.stringify({id:crypto.randomUUID(),session,path,referrer,device:matchMedia("(max-width: 700px)").matches?"mobile":"desktop",source,campaign,content});
    void fetch("/api/analytics/visit",{method:"POST",headers:{"content-type":"application/json"},body,keepalive:true}).catch(()=>{});
   }catch{/* Browsing works when storage or statistics are disabled. */}
  },[pathname]);
