@@ -5,7 +5,8 @@ import {formatJsonSource} from "@/lib/tools/shared/json-source-format";
 import {plainText} from "@/lib/tools/plain-copy";
 import ResultFileActions from './ResultFileActions';
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {claimToolStart,TOOL_PASS_ENFORCED,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { toolRuntimeText } from "@/lib/tool-runtime-i18n";
 import {workbenchCopy} from "@/lib/tools/workbench-i18n-v1473";
@@ -58,6 +59,26 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const t = (zh: string, en: string) => toolRuntimeText(lang, zh, en);
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
+  const [accessError,setAccessError]=useState("");
+  const accessTicket=useRef("");
+  const accessChecking=useRef(false);
+  const fileSignature=(items:File[])=>items.map(f=>`${f.name}:${f.size}:${f.lastModified}`).join("|");
+  async function acceptUploadedFiles(next:File[]){
+    if(accessChecking.current||busy)return;
+    if(!TOOL_PASS_ENFORCED){setFiles(next);setResult(null);return;}
+    const previous=new Map<string,number>();
+    for(const f of files){const k=`${f.name}:${f.size}:${f.lastModified}`;previous.set(k,(previous.get(k)||0)+1)}
+    let added=0;
+    for(const f of next){const k=`${f.name}:${f.size}:${f.lastModified}`;const count=previous.get(k)||0;if(count>0)previous.set(k,count-1);else added++;}
+    if(added===0){setFiles(next);setResult(null);accessTicket.current=fileSignature(next);return;}
+    accessChecking.current=true;setBusy(true);setAccessError("");
+    try{
+      await claimToolStart(tool.slug,added);
+      setFiles(next);setResult(null);accessTicket.current=fileSignature(next);
+    }catch(error){
+      setAccessError(toolAccessMessage(lang,error instanceof ToolAccessError?error.code:"TOOL_ACCESS_UNAVAILABLE"));
+    }finally{accessChecking.current=false;setBusy(false)}
+  }
   const [result, setResult] = useState<ToolRunResult | null>(null);
   const [webpTarget, setWebpTarget] = useState<"image/jpeg" | "image/png">("image/jpeg");
   const [quality, setQuality] = useState(0.8);
@@ -106,7 +127,12 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   async function run() {
     setBusy(true);
     setResult(null);
+    setAccessError("");
     try {
+      if(TOOL_PASS_ENFORCED&&files.length&&accessTicket.current!==fileSignature(files)){
+        await claimToolStart(tool.slug,files.length);
+        accessTicket.current=fileSignature(files);
+      }
       const out = await runFileTool(tool, files, {
         webpTarget,
         quality,
@@ -117,7 +143,10 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         pdfCompression,
       });
       setResult(out);
-    } catch {
+    } catch (error) {
+      if(error instanceof ToolAccessError){
+        setAccessError(toolAccessMessage(lang,error.code));return;
+      }
       setResult({
         ok: false,
         reasonZh: "这次文件处理没有完成。",
@@ -139,14 +168,12 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         maxFiles={tool.maxFiles || 1}
         maxSizeMB={tool.maxSizeMB || 40}
         files={files}
-        onChange={(f) => {
-          setFiles(f);
-          setResult(null);
-        }}
+        onChange={(f) => {void acceptUploadedFiles(f);}}
         disabled={busy}
         kind={tool.category === "image" ? "image" : tool.category === "pdf" ? "pdf" : "file"}
       />
 
+      {accessError&&<div role="alert" className="my-3 rounded-xl border border-red-400 p-3 text-sm">{accessError} <a className="underline" href="/tools/pass">{toolRuntimeText(lang,"查看通用工具包","View all-tools pass")}</a></div>}
       {tool.slug === "webp-to-jpg" && (
         <div className="mt-4 flex flex-wrap gap-3 text-sm text-bone-dim">
           <label className="flex items-center gap-2">
