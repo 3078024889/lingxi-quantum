@@ -18,6 +18,10 @@
     {
       "path": "/api/cron/sasi-v5-radar",
       "schedule": "27 4 * * *"
+    },
+    {
+      "path": "/api/cron/telegram-daily",
+      "schedule": "5 1 * * *"
     }
   ]
 }
