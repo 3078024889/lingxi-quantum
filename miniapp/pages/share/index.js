@@ -1,5 +1,5 @@
 const SITE='https://lingxifield.cn'
-const {publicWebPath,enableShareMenu}=require('../../utils/share')
+const {publicWebPath,enableShareMenu,SHARE_IMAGE}=require('../../utils/share')
 Page({
  data:{title:'灵犀场 LINGXIFIELD',webPath:'/',webUrl:SITE},
  onLoad(options){
@@ -13,6 +13,6 @@ Page({
  copyLink(){wx.setClipboardData({data:this.data.webUrl})},
  open(){wx.navigateTo({url:'/pages/web/index?path='+encodeURIComponent(this.data.webPath),fail(){wx.showToast({title:'请点底部“前往小程序”打开',icon:'none'})}})},
  back(){if(getCurrentPages().length>1)wx.navigateBack();else wx.reLaunch({url:'/pages/web/index?path=%2Ftools'})},
- onShareAppMessage(){return{title:this.data.title,path:`/pages/web/index?path=${encodeURIComponent(this.data.webPath)}`,imageUrl:"/assets/share-lingxifield-20260928.png"}},
- onShareTimeline(){return{title:this.data.title,query:`path=${encodeURIComponent(this.data.webPath)}`,imageUrl:"/assets/share-lingxifield-20260928.png"}}
+ onShareAppMessage(){return{title:this.data.title,path:`/pages/web/index?path=${encodeURIComponent(this.data.webPath)}`,imageUrl:SHARE_IMAGE}},
+ onShareTimeline(){return{title:this.data.title,query:`path=${encodeURIComponent(this.data.webPath)}`,imageUrl:SHARE_IMAGE}}
 })
