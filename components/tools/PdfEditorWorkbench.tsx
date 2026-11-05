@@ -99,6 +99,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  useEffect(()=>()=>recognitionAbort.current?.abort(),[]);
  const gestureRef=useRef<Gesture|null>(null);
  const activeTouchRef=useRef<number|null>(null);
+ const touchCornerRef=useRef<{id:number;grip:"se"|"rotate";startX:number;startY:number;pointerId:number}|null>(null);
  const gestureUpdate=useRef<(x:number,y:number,id:number)=>void>(()=>{});
  useEffect(()=>{
   const move=(e:PointerEvent)=>gestureUpdate.current(e.clientX,e.clientY,e.pointerId);
@@ -318,6 +319,39 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  async function exportNow(){setBusy(true);setError("");try{const bytes=await build();const result={blob:blobBytes(bytes),name:`lingxifield-${file?.name||"edited.pdf"}`};setOutput(result);pendingDownload.current=result;await savePaidTaskDraft({id:resultKey,toolId:resultKey,file:result.blob,fileName:result.name,fileType:result.blob.type,state:{ready:true}}).catch(()=>{});setDoneNote(deliveryText(lang,"ready"))}catch(e){setError(plainText(lang,"fileError"));throw e}finally{setBusy(false)}}
  async function completeExport(){await resetPaidTask();const result=pendingDownload.current;pendingDownload.current=null;if(result)await downloadBlob(result.blob,result.name);else setDoneNote(deliveryText(lang,"existing"));}
  async function rotateCurrent(){if(!file)return;setBusy(true);try{const d=await PDFDocument.load(await file.arrayBuffer()),p=d.getPage(selectedPage-1);p.setRotation(degrees((p.getRotation().angle+90)%360));const bytes=new Uint8Array(await d.save()),nf=new File([blobBytes(bytes)],file.name,{type:"application/pdf"});setOverlays(v=>v.filter(o=>o.page!==selectedPage));setFile(nf);await renderSourcePage(nf,selectedPage)}catch{setError(plainText(lang,"pdfError"))}finally{setBusy(false)}}
+ // A touch can land on the overlay's 44px corner target yet dispatch its
+ // pointer event to the overlay itself after mobile hit-testing/reflow. Resolve
+ // the intended handle from its actual rendered rectangle before choosing move.
+ function overlayDragGrip(host:HTMLElement,target:EventTarget|null,x:number,y:number):Grip|null{
+  const targetElement=target instanceof Element?target:null;
+  const interactive=targetElement?.closest("button,input,textarea,a");
+  if(interactive&&host.contains(interactive))return null; // Child controls own their gestures.
+  for(const grip of ["rotate","se"] as const){
+   const control=host.querySelector<HTMLElement>('[data-testid="pdf-grip-'+grip+'"]');
+   if(!control)continue;
+   const r=control.getBoundingClientRect();
+   if(r.width>0&&r.height>0&&x>=r.left-2&&x<=r.right+2&&y>=r.top-2&&y<=r.bottom+2)return grip;
+  }
+  return "move";
+ }
+ function overlayTouchGrip(host:HTMLElement,target:EventTarget|null,x:number,y:number):"se"|"rotate"|null{
+  const targetElement=target instanceof Element?target:null;
+  const direct=targetElement?.closest('[data-testid^="pdf-grip-"]');
+  if(direct&&host.contains(direct)){
+   const name=direct.getAttribute("data-testid")?.slice("pdf-grip-".length);
+   return name==="se"||name==="rotate"?name:null;
+  }
+  const geometric=overlayDragGrip(host,target,x,y);
+  if(geometric==="se"||geometric==="rotate")return geometric;
+  // Touch hit-testing may choose the much larger overlay instead of a 44px
+  // transparent corner button. The corner geometry is still a resize intent.
+  const corner=host.querySelector<HTMLElement>('[data-testid="pdf-grip-se"]');
+  if(corner&&corner.getClientRects().length){
+   const r=host.getBoundingClientRect();
+   if(x>=r.right-28&&x<=r.right+28&&y>=r.bottom-28&&y<=r.bottom+28)return "se";
+  }
+  return null;
+ }
  function beginGesture(id:number,grip:Grip,clientX:number,clientY:number,pointerId:number){
   const stage=stageRef.current,o=overlays.find(v=>v.id===id);
   if(!stage||!o||editingTextId===id||o.nativeImageDeleted||(o.nativeImageTarget&&grip==="rotate"))return;
@@ -327,6 +361,9 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  }
  function startGesture(e:React.PointerEvent,id:number,grip:Grip){
   if(grip!=="move")e.preventDefault();e.stopPropagation();
+  // Never downgrade an active corner resize to "move" during bubbling.
+  const prior=gestureRef.current;
+  if(grip==="move"&&prior?.id===id&&prior.pointerId===e.pointerId&&prior.grip!=="move")return;
   beginGesture(id,grip,e.clientX,e.clientY,e.pointerId);
   if(gestureRef.current?.pointerId===e.pointerId)try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
  }
@@ -336,7 +373,11 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
   e.stopPropagation();if(e.cancelable)e.preventDefault();
   activeTouchRef.current=t.identifier;
   // Most browsers start PointerEvents first; touch-only devices can also begin here.
-  if(!gestureRef.current)beginGesture(id,grip,t.clientX,t.clientY,-1);
+  const current=gestureRef.current;
+  // Mobile touchstart is the second opportunity to correct a pointerdown that
+  // was hit-tested against the moving overlay rather than its corner handle.
+  if(!current||current.id!==id||(grip!=="move"&&current.grip==="move"))
+   beginGesture(id,grip,t.clientX,t.clientY,current?.id===id?current.pointerId:-1);
  }
 gestureUpdate.current=(px,py,pid)=>{
  const g=gestureRef.current;if(!g||g.pointerId!==pid)return;
@@ -361,8 +402,44 @@ function stopPointer(e:React.PointerEvent){
 }
 function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=null}
  return <div className="space-y-5">{output&&<section data-testid="paid-export-result" className="rounded-2xl border p-5 space-y-3"><h2 className="font-semibold">{deliveryText(lang,"complete")}</h2><p className="break-all">{output.name}</p><p className="text-sm">{deliveryText(lang,"ready")}</p><div className="flex flex-wrap gap-3"><ResultFileActions blob={output.blob} name={output.name}/><button className="rounded-xl border px-4 py-3" onClick={()=>{setOutput(null);setDoneNote("");void deletePaidTaskDraft(resultKey);void resetPaidTask()}}>{deliveryText(lang,"fresh")}</button></div></section>}{!output&&doneNote&&<div role="status" className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{doneNote}</b></div>}<label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)void load(f)}} className="block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-7 text-center"><input type="file" accept={DOCUMENT_INPUT_ACCEPT} disabled={!hydrated||busy} className="hidden" onChange={e=>{const f=e.target.files?.[0];e.target.value="";if(f)void load(f)}}/><b>{busy&&!file?c.opening:c.upload}</b></label>{file&&<><div className="flex flex-wrap items-center gap-2 text-sm"><span data-testid="pdf-source-page-count" className="rounded-full bg-[var(--lx-soft)] px-3 py-2">{plainText(lang,"pageCount",{count:pages})}</span><button disabled={selectedPage<=1} onClick={()=>{const n=Math.max(1,selectedPage-1);setSelectedPage(n);setSelectedPageInput(String(n))}} className="rounded-full border px-3 py-2">{c.prev}</button><label className="rounded-full border px-3 py-2">{c.page} <input data-testid="pdf-page-number-input" aria-label={c.page} inputMode="numeric" value={selectedPageInput} onChange={e=>setSelectedPageInput(e.target.value)} onBlur={commitPageInput} onKeyDown={e=>{if(e.key==="Enter")commitPageInput()}} className="w-12 bg-transparent text-center"/></label><button disabled={selectedPage>=pages} onClick={()=>{const n=Math.min(pages,selectedPage+1);setSelectedPage(n);setSelectedPageInput(String(n))}} className="rounded-full border px-3 py-2">{c.next}</button><button onClick={()=>void rotateCurrent()} className="rounded-full border px-3 py-2">{c.rotate}</button>{!signingOnly&&<button type="button" disabled={!pageImage||busy||recognizingPage} onClick={()=>void recognizeScannedPage()} className="rounded-full border px-3 py-2 disabled:opacity-40">{recognizingPage?sourceUi.scanning:sourceUi.scan}</button>}</div>{!signingOnly&&sourceTextRegions.length>0&&<p className="text-xs text-[var(--lx-muted)]">{sourceUi.hint} · {nativeCopy.explain}</p>}{recognitionMessage&&<p role="status" className="text-xs text-[var(--lx-muted)]">{recognitionMessage}</p>}<section className="rounded-2xl border bg-[var(--lx-soft)] p-3 sm:p-5"><div className="mb-3"><b>{c.edit}</b><p className="text-xs text-[var(--lx-muted)]">{c.editHint}</p></div><div ref={stageRef} data-testid="pdf-stage" onPointerMove={handlePointerMove} onPointerUp={stopPointer} onPointerCancel={cancelPointer} className="relative mx-auto w-full max-w-[760px] overflow-visible rounded-xl border bg-white shadow-sm touch-none">{pageImage?<img src={pageImage} alt="" className="block h-auto w-full select-none"/>:<div className="aspect-[0.707/1] w-full"/>}{!signingOnly&&sourceTextRegions.filter(r=>!visible.some(o=>o.sourceKey===r.key)).map(region=><button type="button" key={region.key} data-testid="pdf-source-text-region" data-source={region.source} aria-label={sourceUi.hint+": "+region.text} title={region.text} onDoubleClick={e=>{e.stopPropagation();void editExistingVisualText(region)}} className="absolute z-[3] cursor-text border border-transparent bg-transparent hover:border-sky-500 hover:bg-sky-300/10 focus:border-sky-600 focus:outline-none" style={{left:region.x+"%",top:region.y+"%",width:region.w+"%",height:region.h+"%",minHeight:"8px"}}/>)}{visible.filter(o=>o.nativeImageTarget&&o.nativeImageOriginal).map(o=><div key={"mask-"+o.id} data-testid="pdf-native-image-source-mask" aria-hidden="true" className="pointer-events-none absolute z-[1] bg-white" style={{left:o.nativeImageOriginal!.x+"%",top:o.nativeImageOriginal!.y+"%",width:o.nativeImageOriginal!.w+"%",height:o.nativeImageOriginal!.h+"%"}}/>)}{!signingOnly&&sourceImageRegions.filter(region=>!visible.some(o=>o.sourceKey===region.key)).map(region=><button key={region.key} type="button" data-testid="pdf-source-image-region" aria-label={imageCopy.select} title={imageCopy.select} onClick={e=>{e.stopPropagation();void selectNativeImage(region)}} className="absolute z-[1] cursor-pointer border border-transparent bg-transparent hover:border-sky-500 hover:bg-sky-300/10 focus:border-sky-600 focus:outline-none" style={{left:region.x+"%",top:region.y+"%",width:region.w+"%",height:region.h+"%"}}/>)}{visible.filter(o=>!o.nativeImageDeleted).map(o=><div key={o.id} data-testid="pdf-overlay" data-kind={o.kind} data-native={o.nativeTarget?"true":"false"} data-native-image={o.nativeImageTarget?"true":"false"} role="group" tabIndex={0}
- onPointerDown={e=>{if(editingTextId!==o.id)startGesture(e,o.id,"move")}}
- onTouchStart={e=>{if(editingTextId!==o.id)startTouchGesture(e,o.id,"move")}}
+ onPointerDownCapture={e=>{
+  if(editingTextId===o.id||e.pointerType!=="touch")return;
+  const grip=overlayTouchGrip(e.currentTarget,e.target,e.clientX,e.clientY);
+  if(!grip)return;
+  touchCornerRef.current={id:o.id,grip,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId};
+  beginGesture(o.id,grip,e.clientX,e.clientY,e.pointerId);
+  try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
+ }}
+ onTouchStartCapture={e=>{
+  if(editingTextId===o.id||e.touches.length!==1)return;
+  const t=e.changedTouches[0];if(!t)return;
+  const grip=overlayTouchGrip(e.currentTarget,e.target,t.clientX,t.clientY);
+  if(!grip)return;
+  activeTouchRef.current=t.identifier;
+  const prior=gestureRef.current;
+  const pointerId=prior?.id===o.id?prior.pointerId:touchCornerRef.current?.id===o.id?touchCornerRef.current.pointerId:-1;
+  touchCornerRef.current={id:o.id,grip,startX:t.clientX,startY:t.clientY,pointerId};
+  beginGesture(o.id,grip,t.clientX,t.clientY,pointerId);
+ }}
+ onTouchMoveCapture={e=>{
+  const start=touchCornerRef.current,t=e.touches[0];
+  if(!start||start.id!==o.id||!t||activeTouchRef.current!==t.identifier)return;
+  if(e.cancelable)e.preventDefault();
+  const current=gestureRef.current;
+  if(!current||current.id!==o.id||current.grip!==start.grip)
+   beginGesture(o.id,start.grip,start.startX,start.startY,start.pointerId);
+  const gesture=gestureRef.current;
+  if(gesture)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
+ }}
+ onTouchEndCapture={e=>{
+  const start=touchCornerRef.current;
+  if(start?.id!==o.id)return;
+  const t=e.changedTouches[0],gesture=gestureRef.current;
+  if(t&&gesture?.id===o.id)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
+  touchCornerRef.current=null;
+ }}
+ onPointerDown={e=>{if(editingTextId!==o.id){const grip=overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);if(grip)startGesture(e,o.id,grip)}}}
+ onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){const grip=overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);if(grip)startTouchGesture(e,o.id,grip)}}}}
  onDoubleClick={e=>{if(o.kind==="text"){e.stopPropagation();setSelectedOverlayId(o.id);setEditingTextId(o.id)}}}
  onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==="Delete"||e.key==="Backspace"){e.preventDefault();if(o.nativeImageTarget)deleteNativeImage(o);else setOverlays(v=>v.filter(x=>x.id!==o.id))}else if(e.key==="Enter"&&o.kind==="text"){e.preventDefault();setEditingTextId(o.id)}}}
  className={"absolute z-[4] select-none border-2 "+(selectedOverlayId===o.id&&editingTextId!==o.id?"border-sky-500":"border-transparent")}

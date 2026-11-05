@@ -39,6 +39,13 @@ export default function ToolsHubV11(){
    <div className="lx-tools-v124-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>
    <div className="lx-tools-v124-categories" role="group" aria-label={access[3]}>{[false,true].map(value=><button type="button" key={String(value)} className={freeOnly===value?'is-active':''} aria-pressed={freeOnly===value} onClick={()=>setFreeOnly(value)}>{access[value?1:0]}</button>)}</div>
   </section>
+  <p style={{margin:"8px 0 18px",fontSize:15,textAlign:"right"}}><Link href="/partners" style={{color:"#245bd5",fontWeight:700,textDecoration:"underline",textUnderlineOffset:3}}>{({
+   zh:"免费将灵犀场工具嵌入你的网站",en:"Add free LINGXIFIELD tools to your website",
+   ja:"LINGXIFIELDツールをサイトに無料で埋め込む",ko:"LINGXIFIELD 도구를 사이트에 무료로 추가",
+   fr:"Intégrer gratuitement nos outils sur votre site",de:"Unsere Tools kostenlos einbinden",
+   es:"Integra nuestras herramientas gratis en tu web",pt:"Incorpore nossas ferramentas grátis",
+   ar:"أضف أدوات LINGXIFIELD إلى موقعك مجاناً"
+  } as Record<typeof lang,string>)[lang]}</Link></p>
   <RecentTools/>
   <section className="lx11-tool-group"><div className="lx11-tool-grid lx-tools-v124-grid">
    {list.map(item=>{

@@ -40,7 +40,7 @@ test("switching language keeps the public share dialog open and updates its link
  const trigger=page.getByTestId("tool-share-open");await expect(trigger).toBeEnabled();await trigger.click();
  const dialog=page.getByRole("dialog");await expect(dialog).toBeVisible();
  await page.evaluate(()=>window.dispatchEvent(new CustomEvent("lingxi:lang",{detail:"fr"})));
- await expect(dialog).toBeVisible();await expect(dialog.locator("input[readonly]")).toHaveValue(/\?lang=fr$/);
+ await expect(dialog).toBeVisible();await expect(dialog.locator("input[readonly]")).toHaveValue(/\?lang=fr(?:&utm_source=tool_share&utm_campaign=free_tools)?$/);
 });
 
 const headingCopy={"sign":["PDF电子签名与电子签章","PDF e-signatures and seals","PDFの電子署名と印鑑","PDF 전자 서명 및 도장","Signatures et tampons PDF","PDF-Unterschriften und Stempel","Firmas y sellos PDF","Assinaturas e carimbos PDF","توقيعات وأختام PDF"],"edit":["PDF 自由编辑","Edit PDF","PDFを編集","PDF 편집","Modifier un PDF","PDF bearbeiten","Editar PDF","Editar PDF","تحرير PDF"]};

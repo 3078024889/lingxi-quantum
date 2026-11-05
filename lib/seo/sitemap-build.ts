@@ -31,7 +31,7 @@ export function buildSiteSitemap(site:string,siaiIndexable:boolean):MetadataRout
   }
   // Only pages responding with their own public content belong in the XML sitemap.
   // /sasi/drama, /sasi/build and /ai-{knowledge,learning,research} redirect to /sasi.
-  for(const path of ["/sasi","/sasi/image","/about","/privacy","/terms","/refunds","/legal/sasi","/release"])
+  for(const path of ["/sasi","/sasi/image","/about","/privacy","/terms","/refunds","/legal/sasi","/release","/partners"])
     rows.push({url:PRIMARY_SITE+path});
   return rows;
 }

@@ -106,14 +106,53 @@ async function syntheticWatermarkVideo(_page:any){
 async function sampleVideoPixel(page:any,bytes:Buffer,mime:string,x:number,y:number){
  return page.evaluate(async({base64,type,x,y})=>{
   const raw=Uint8Array.from(atob(base64),ch=>ch.charCodeAt(0)),url=URL.createObjectURL(new Blob([raw],{type}));
-  try{
-   const video=document.createElement("video");video.preload="auto";video.src=url;
-   await new Promise<void>((resolve,reject)=>{video.onloadedmetadata=()=>resolve();video.onerror=()=>reject(Error("VIDEO_UNPLAYABLE"));setTimeout(()=>reject(Error("VIDEO_META_TIMEOUT")),15000)});
-   video.currentTime=Math.min(.6,video.duration/2);
-   await new Promise<void>((resolve,reject)=>{video.onseeked=()=>resolve();video.onerror=()=>reject(Error("VIDEO_SEEK_FAILED"))});
-   const canvas=document.createElement("canvas");canvas.width=video.videoWidth;canvas.height=video.videoHeight;const ctx=canvas.getContext("2d")!;ctx.drawImage(video,0,0);
+  const video=document.createElement("video");
+  video.preload="auto";video.muted=true;video.playsInline=true;video.src=url;
+  const readPixel=()=>{
+   const canvas=document.createElement("canvas");canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+   const ctx=canvas.getContext("2d");
+   if(!ctx||canvas.width<=x||canvas.height<=y)throw Error("VIDEO_FRAME_INVALID_DIMENSIONS");
+   ctx.drawImage(video,0,0);
    return Array.from(ctx.getImageData(x,y,1,1).data).slice(0,3);
-  }finally{URL.revokeObjectURL(url)}
+  };
+  try{
+   await new Promise<void>((resolve,reject)=>{
+    const timer=setTimeout(()=>reject(Error("VIDEO_META_TIMEOUT")),15000);
+    video.addEventListener("loadedmetadata",()=>{clearTimeout(timer);resolve()},{once:true});
+    video.addEventListener("error",()=>{clearTimeout(timer);reject(Error("VIDEO_UNPLAYABLE"))},{once:true});
+   });
+   const wanted=Math.min(.6,video.duration/2);
+   // Seeking alone does not guarantee the decoded frame reached Chromium's
+   // compositor. Canvas drawImage may return black before the first presentation.
+   // Wait for actual video frames, never weaken the pixel-change assertions.
+   const sampled=await new Promise<number[]>((resolve,reject)=>{
+    let finished=false;
+    const timer=setTimeout(()=>finish(Error("VIDEO_PRESENTED_FRAME_TIMEOUT")),15000);
+    const finish=(error:Error|null,pixel?:number[])=>{
+     if(finished)return;finished=true;clearTimeout(timer);video.pause();
+     if(error)reject(error);else resolve(pixel!);
+    };
+    if(typeof video.requestVideoFrameCallback==="function"){
+     let frames=0;
+     const sample=()=>{
+      video.requestVideoFrameCallback((_now,meta)=>{
+       if(finished)return;
+       if(meta.mediaTime+0.04<wanted||++frames<2){sample();return;}
+       try{finish(null,readPixel());}catch(e){finish(e instanceof Error?e:Error("VIDEO_PIXEL_READ_FAILED"));}
+      });
+     };
+     sample();
+    }else{
+     video.addEventListener("timeupdate",()=>{
+      if(finished||video.readyState<2||video.currentTime<wanted)return;
+      try{finish(null,readPixel());}catch(e){finish(e instanceof Error?e:Error("VIDEO_PIXEL_READ_FAILED"));}
+     });
+    }
+    video.currentTime=wanted;
+    void video.play().catch(e=>finish(e instanceof Error?e:Error("VIDEO_PLAY_FAILED")));
+   });
+   return sampled;
+  }finally{video.pause();video.removeAttribute("src");video.load();URL.revokeObjectURL(url);}
  },{base64:bytes.toString("base64"),type:mime,x,y}) as Promise<number[]>;
 }
 

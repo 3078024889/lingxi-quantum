@@ -1,7 +1,7 @@
 const SITE='https://lingxifield.cn'
 const {publicWebPath,enableShareMenu,SHARE_IMAGE}=require('../../utils/share')
 Page({
- data:{title:'灵犀场 LINGXIFIELD',webPath:'/',webUrl:SITE},
+ data:{title:'灵犀场 LINGXIFIELD',webPath:'/',webUrl:SITE,shareImage:SHARE_IMAGE},
  onLoad(options){
   let p='/';try{p=decodeURIComponent(options.path||'/')}catch(_){}
   if(!p.startsWith('/')||p.startsWith('//')||p.includes('://'))p='/'

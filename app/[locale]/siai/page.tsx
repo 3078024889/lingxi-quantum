@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {notFound} from "next/navigation";
 import Nav from "@/components/Nav";
+import SiaiPartnerLink from "@/components/SiaiPartnerLink";
 import Footer from "@/components/Footer";
 import SiaiRankingHome from "@/components/SiaiRankingHome";
 import {getSiaiDirectoryRows} from "../../siai/catalog-data";
@@ -44,5 +45,5 @@ export default async function LocalizedSiaiDirectory({params}:Props){
  const faqld={"@context":"https://schema.org","@type":"FAQPage",
   "@id":canonical+"#faq",inLanguage:c.hreflang,
   mainEntity:copy.topics.map(t=>({"@type":"Question",name:t.q,acceptedAnswer:{"@type":"Answer",text:t.rank}}))};
- return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><div lang={c.hreflang} dir={c.dir}><SiaiRankingHome rows={rows}/></div><Footer/></>;
+ return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><SiaiPartnerLink/><div lang={c.hreflang} dir={c.dir}><SiaiRankingHome rows={rows}/></div><Footer/></>;
 }

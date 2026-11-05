@@ -13,7 +13,7 @@ test("PDF hit order: image source < native text OCR < draggable annotation",()=>
  assert.match(image,/className="absolute z-\[1\] cursor-pointer/);
  const at=src.indexOf('data-testid="pdf-overlay"');
  assert(at>0);
- const annotation=src.slice(at,at+1600);
+ const annotation=src.slice(at,at+4000);
  assert.match(annotation,/absolute z-\[4\] select-none/);
  assert.match(annotation,/scrollMarginTop:"160px"/);
 });

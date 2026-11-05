@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'release/unified-share-visual-20261105'
+      - 'fix/share-image-routing-20261105'
     paths:
       - '.github/workflows/lingxifield-share-release-gate.yml'
       - 'app/layout.tsx'
@@ -11,6 +12,10 @@ on:
       - 'app/[locale]/siai/page.tsx'
       - 'miniapp/pages/web/index.js'
       - 'lib/share-image.ts'
+      - 'lib/mini/share-client.ts'
+      - 'miniapp/pages/share/index.wxml'
+      - 'miniapp/pages/share/index.wxss'
+      - 'tests/unified-mini-share-routes.test.mjs'
       - 'lib/seo/page-metadata.ts'
       - 'lingxifield-ai-market/app/(default)/layout.tsx'
       - 'lingxifield-ai-market/app/[lang]/platform/[id]/page.tsx'
@@ -49,7 +54,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Exact image, metadata and old-file removal assertions
-        run: node --test tests/unified-share-image.test.mjs
+        run: node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs
       - name: All remaining share code uses the same image, never old 20260928
         run: |
           set -euo pipefail

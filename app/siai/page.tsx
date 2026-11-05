@@ -1,5 +1,6 @@
 import type {Metadata} from "next";
 import Nav from "@/components/Nav";
+import SiaiPartnerLink from "@/components/SiaiPartnerLink";
 import Footer from "@/components/Footer";
 import SiaiRankingHome from "@/components/SiaiRankingHome";
 import {getSiaiDirectoryRows} from "./catalog-data";
@@ -45,5 +46,5 @@ export default async function Home(){
   mainEntity:{"@type":"ItemList",numberOfItems:curated.length,itemListElement:curated.map((r,i)=>({
    "@type":"ListItem",position:i+1,name:r.name,url:r.website
   }))}};
- return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><SiaiRankingHome rows={rows}/><Footer/></>;
+ return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><SiaiPartnerLink/><SiaiRankingHome rows={rows}/><Footer/></>;
 }
