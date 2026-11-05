@@ -15,8 +15,6 @@ export default function SpendDiagnostic(){
  const money=(n:number)=>new Intl.NumberFormat(lang==="zh"?"zh-CN":lang,{style:"currency",currency}).format(n);
  const update=(i:number,patch:Partial<SpendItem>)=>{setItems(v=>v.map((x,j)=>i===j?{...x,...patch}:x));setSubmitted(false);};
  const calculation=useMemo(()=>{try{return {result:diagnoseAiSpend({currency,items}),error:""};}catch(e){return {result:null,error:e instanceof Error?e.message:t.error};}},[currency,items,t.error]);
- const digits=(v:string)=>v===""?0:Number(v);
- const isValid=(v:string)=>v===""||(/^\d*(\.\d{0,2})?$/.test(v)&&Number.isFinite(Number(v)));
  const loadExample=()=>{setItems([{name:r.exampleName,monthlyPrice:99,usedPerMonth:0,expectedPerMonth:0},{name:"AI B",monthlyPrice:49,usedPerMonth:12,expectedPerMonth:12}]);setSubmitted(true);};
  const share=async()=>{if(!calculation.result)return;const v=calculation.result;const text=t.title+"\n"+t.current+": "+money(v.monthlySpend)+"\n"+t.potential+": "+money(v.potentialMonthlySavings)+"\n"+r.disclaimer+"\nhttps://lingxifield.com/siai/spend-diagnostic";try{await navigator.clipboard.writeText(text);setCopyStatus(true);}catch{setCopyStatus(false);}};
  return <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-7 text-slate-900 sm:px-6" dir={lang==="ar"?"rtl":"ltr"} lang={lang==="zh"?"zh-CN":lang}>
@@ -36,9 +34,13 @@ export default function SpendDiagnostic(){
      <label className="text-sm font-medium text-slate-700">{t.name}<input className={field} maxLength={100} value={item.name} placeholder={r.exampleName} onChange={e=>update(i,{name:e.target.value})}/></label>
      <label className="text-sm font-medium text-slate-700">{t.price}<input className={field} type="number" min="0" max="1000000" step="0.01" value={item.monthlyPrice} onChange={e=>update(i,{monthlyPrice:e.target.valueAsNumber})}/></label>
      <label className="text-sm font-medium text-slate-700">{t.usage}<input className={field} type="number" min="0" max="1000000" step="1" value={item.usedPerMonth} onChange={e=>update(i,{usedPerMonth:e.target.valueAsNumber})}/></label>
-     <label className="text-sm font-medium text-slate-700">{t.expected}<input className={field} type="number" min="0" max="1000000" step="1" placeholder={String(item.usedPerMonth)} value={item.expectedPerMonth??""} onChange={e=>update(i,{expectedPerMonth:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
-     <label className="text-sm font-medium text-slate-700 sm:col-span-2">{t.alternate}<input className={field} type="number" min="0" max="1000000" step="0.01" placeholder="—" value={item.alternativeMonthlyPrice??""} onChange={e=>update(i,{alternativeMonthlyPrice:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
     </div>
+    <details className="mt-3 rounded-xl bg-slate-50 p-3"><summary className="cursor-pointer text-sm font-semibold text-emerald-800">{t.compare} · {t.expected}</summary>
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+       <label className="text-sm font-medium text-slate-700">{t.expected}<input className={field} type="number" min="0" max="1000000" step="1" placeholder={String(item.usedPerMonth)} value={item.expectedPerMonth??""} onChange={e=>update(i,{expectedPerMonth:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
+       <label className="text-sm font-medium text-slate-700">{t.alternate}<input className={field} type="number" min="0" max="1000000" step="0.01" placeholder="—" value={item.alternativeMonthlyPrice??""} onChange={e=>update(i,{alternativeMonthlyPrice:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
+      </div>
+    </details>
     <label className="mt-4 inline-flex min-h-9 items-center gap-3 text-sm text-slate-700"><input type="checkbox" className="h-4 w-4 accent-emerald-700" checked={!!item.essential} onChange={e=>update(i,{essential:e.target.checked})}/>{t.essential}</label>
    </section>)}</div>
   <div className="mt-5 flex flex-wrap gap-3"><button type="button" disabled={items.length>=30} onClick={()=>{setItems(v=>[...v,initial()]);setSubmitted(false);}} className="min-h-12 rounded-xl border border-slate-300 bg-white px-5 text-base font-semibold text-slate-800 disabled:opacity-50">+ {t.add}</button><button type="button" onClick={()=>setSubmitted(true)} className="min-h-12 flex-1 rounded-xl bg-emerald-700 px-6 text-base font-bold text-white hover:bg-emerald-800 sm:flex-none">{t.run} →</button></div>
