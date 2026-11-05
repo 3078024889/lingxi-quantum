@@ -1,5 +1,6 @@
 import {NextResponse} from "next/server";
 import offers from "@/config/tool-pass-offers.v2.json";
+import {passContractReady} from "@/lib/tools/commerce/tool-pass-v2.mjs";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 
@@ -7,7 +8,7 @@ export const runtime="nodejs";
 export const dynamic="force-dynamic";
 const HEADERS={"Cache-Control":"private, no-store, max-age=0"};
 export async function GET(){
- if(process.env.LINGXIFIELD_TOOL_PASS_ENABLED!=="true"||!offers.active)
+ if(process.env.LINGXIFIELD_TOOL_PASS_ENABLED!=="true"||!offers.active||!passContractReady(offers))
   return NextResponse.json({error:"TOOL_PASS_NOT_LIVE"},{status:503,headers:HEADERS});
  const {data:{user},error:authError}=await createClient().auth.getUser();
  if(authError||!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:HEADERS});
