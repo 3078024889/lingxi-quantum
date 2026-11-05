@@ -25,7 +25,13 @@ export async function POST(req:NextRequest){
   const day=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Shanghai"}).format(new Date());
   const session_hash=createHash("sha256").update(day+":"+host+":"+b.session).digest("hex");
   const referrer=typeof b.referrer==="string"&&/^[a-z0-9.-]{1,253}$/i.test(b.referrer)?b.referrer.toLowerCase():"";
-  const {error}=await createAdminClient().from("site_page_views").insert({id:b.id,host,path,session_hash,referrer_host:referrer===host?"":referrer,device:b.device});
+  const source=b.source==="telegram"||b.source==="qq"?b.source:null;
+  const campaign=source&&typeof b.campaign==="string"&&/^[a-z0-9_]{1,64}$/.test(b.campaign)?b.campaign:null;
+  const content=source&&["discovery","tutorial","comparison","creation","community"].includes(String(b.content))?b.content:null;
+  const {error}=await createAdminClient().from("site_page_views").insert({
+    id:b.id,host,path,session_hash,referrer_host:referrer===host?"":referrer,device:b.device,
+    utm_source:source,utm_campaign:campaign,utm_content:content,
+  });
   if(error&&error.code!=="23505")return NextResponse.json({error:"VISITS_UNAVAILABLE"},{status:503});
   return new NextResponse(null,{status:204});
  }catch{return NextResponse.json({error:"INVALID_VISIT"},{status:400});}

@@ -1,0 +1,27 @@
+name: Telegram community unit tests
+on:
+  pull_request:
+    paths:
+      - 'lib/telegram/**'
+      - 'app/api/telegram/**'
+      - 'app/api/cron/telegram-*/**'
+      - 'app/community/**'
+      - 'components/SiteVisitTracker.tsx'
+      - 'app/api/analytics/visit/**'
+      - 'vercel.json'
+      - 'tests/telegram-*.test.mjs'
+      - 'supabase/migrations/*telegram*'
+      - '.github/workflows/telegram-community.yml'
+  workflow_dispatch:
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test without network or secrets
+        run: node --experimental-strip-types --test tests/telegram-community.test.mjs tests/telegram-five-daily.test.mjs
