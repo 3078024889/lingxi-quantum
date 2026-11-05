@@ -103,6 +103,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
  async function create(){
   setBusy(true);setError("");
   try{
+   await claimToolStart("temp-mail",1);
    const r=await fetch("/api/tools/temp-mail/create",{method:"POST"});
    const d=await r.json().catch(()=>({}));
    if(!r.ok)throw new Error(d.error||"CREATE_FAILED");
@@ -110,7 +111,7 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
    setBox(next);setMessages([]);setFreeRemaining(Number(d.freeRemaining));
    localStorage.setItem("lingxifield:temp-mail",JSON.stringify(next));
    await loadOwned();
-  }catch(e){setError(friendly(e instanceof Error?e.message:String(e)))}finally{setBusy(false)}
+  }catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):friendly(e instanceof Error?e.message:String(e)))}finally{setBusy(false)}
  }
 
  async function extend(){
