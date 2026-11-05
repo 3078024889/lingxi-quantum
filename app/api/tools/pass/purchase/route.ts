@@ -1,6 +1,6 @@
 import {NextRequest,NextResponse} from "next/server";
 import offers from "@/config/tool-pass-offers.v2.json";
-import {passQuote,PASS_UUID} from "@/lib/tools/commerce/tool-pass-v2.mjs";
+import {passQuote,PASS_UUID,passContractReady} from "@/lib/tools/commerce/tool-pass-v2.mjs";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
@@ -8,7 +8,7 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 export const runtime="nodejs";
 const NO_STORE={"Cache-Control":"private, no-store, max-age=0"};
 export async function POST(req:NextRequest){
- if(process.env.LINGXIFIELD_TOOL_PASS_ENABLED!=="true"||!offers.active)
+ if(process.env.LINGXIFIELD_TOOL_PASS_ENABLED!=="true"||!offers.active||!passContractReady(offers))
   return NextResponse.json({error:"TOOL_PASS_NOT_LIVE"},{status:503,headers:NO_STORE});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403,headers:NO_STORE});
  const {data:{user}}=await createClient().auth.getUser();
