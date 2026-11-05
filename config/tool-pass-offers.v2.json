@@ -114,6 +114,7 @@
     "md5-sha256",
     "merge-pdf",
     "number-base-converter",
+    "ocr",
     "odt-to-txt",
     "pdf-attachments",
     "pdf-bates-numbering",
