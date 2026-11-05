@@ -52,3 +52,10 @@ Experiment: activate 10 genuinely installed partner widgets, compare visitors to
 - RSS review activity: `https://lingxifield.com/siai/updates.xml`.
 - Channel options: documentation links on official project pages, voluntary integrations, open-source browser extension and narrowly scoped WordPress widget.
 - No pay-to-rank claims, no claims about unpublished products, no requests to buy backlinks.
+
+## Supplier acquisition and safety
+- The public `/siai/claim` intake is a review request, not instant verification or ownership.
+- `/partners` now links to the claim form with an approved vendor selection prefilled when available; verified profile cards can be embedded voluntarily.
+- Audit finding (2026-11-05): production vendor submissions table contained **zero rows** at query time; do not claim supplier adoption.
+- Same-origin submission protection and hashed-IP rate limiting (30/hour/IP) are applied before the unchanged validated submission handler.
+- The submission RPC is deliberately public but allows only intake. Review status is `pending_identity_check`; permissions and listing approval are not granted.
