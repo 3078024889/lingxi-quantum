@@ -40,3 +40,21 @@ test("reject NaN and negative alternative price",()=>{
  assert.throws(()=>diagnoseAiSpend({currency:"CNY",items:[{name:"A",monthlyPrice:NaN,usedPerMonth:1}]}));
  assert.throws(()=>diagnoseAiSpend({currency:"CNY",items:[{name:"A",monthlyPrice:20,usedPerMonth:1,alternativeMonthlyPrice:-1}]}));
 });
+
+test("quota shortage uses only explicit projected demand and monthly quota",()=>{
+ const r=diagnoseAiSpend({currency:"USD",items:[{name:"Video credits",monthlyPrice:30,usedPerMonth:8,expectedPerMonth:30,monthlyQuota:12}]});
+ assert.equal(r.findings[0].quotaShortfall,18);
+ assert.equal(r.potentialMonthlySavings,0);
+});
+test("quota shortage remains unknown when future demand or quota is missing",()=>{
+ const a=diagnoseAiSpend({currency:"CNY",items:[{name:"Video credits",monthlyPrice:30,usedPerMonth:8,monthlyQuota:12}]});
+ const b=diagnoseAiSpend({currency:"CNY",items:[{name:"Video credits",monthlyPrice:30,usedPerMonth:8,expectedPerMonth:30}]});
+ assert.equal(a.findings[0].quotaShortfall,null);
+ assert.equal(b.findings[0].quotaShortfall,null);
+});
+test("zero and invalid quota boundary",()=>{
+ const good=diagnoseAiSpend({currency:"USD",items:[{name:"A",monthlyPrice:20,usedPerMonth:0,expectedPerMonth:0,monthlyQuota:0}]});
+ assert.equal(good.findings[0].quotaShortfall,0);
+ assert.throws(()=>diagnoseAiSpend({currency:"USD",items:[{name:"A",monthlyPrice:20,usedPerMonth:0,monthlyQuota:-1}]}));
+ assert.throws(()=>diagnoseAiSpend({currency:"USD",items:[{name:"A",monthlyPrice:20,usedPerMonth:0,monthlyQuota:1.5}]}));
+});
