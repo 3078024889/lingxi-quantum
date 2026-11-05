@@ -4,7 +4,7 @@
  * The manifest is the only count authority. No hard-coded 32/62 limits are allowed here.
  */
 export type DirectoryPublicationManifest={
- schema:"lingxifield_siai_publication_manifest_v1";
+ schema:string;
  revision:string;
  policy:string;
  curatedIds:readonly string[];
