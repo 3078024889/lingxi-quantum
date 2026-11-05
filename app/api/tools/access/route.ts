@@ -1,5 +1,5 @@
 import {NextRequest,NextResponse} from "next/server";
-import {createHash} from "node:crypto";
+import {createHmac} from "node:crypto";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {getTool} from "@/lib/tools/registry";
@@ -17,7 +17,7 @@ function clientHash(req:NextRequest){
  if(ip==="unknown")return null;
  const secret=process.env.LINGXIFIELD_PRIVACY_HASH_SECRET||process.env.SUPABASE_SERVICE_ROLE_KEY;
  if(!secret)return null;
- return createHash("sha256").update(secret+":tool-pass:v1:"+ip).digest("hex");
+ return createHmac("sha256",secret).update("tool-pass:v1:"+ip).digest("hex");
 }
 function validTool(id:string){const simple=getTool(id);return Boolean((simple&&simple.status==="live")||publicToolBySlug(id));}
 export async function POST(req:NextRequest){
