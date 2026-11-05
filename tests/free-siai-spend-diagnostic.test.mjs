@@ -25,3 +25,18 @@ test("rejects duplicate names, invalid values, and excessive items",()=>{
  assert.throws(()=>diagnoseAiSpend({currency:"USD",items:[{name:"A",monthlyPrice:1,usedPerMonth:1.5}]}));
  assert.throws(()=>diagnoseAiSpend({currency:"USD",items:Array.from({length:31},(_,i)=>({name:String(i),monthlyPrice:1,usedPerMonth:1}))}));
 });
+
+test("no future-use information must not imply cancellation saving",()=>{
+ const r=diagnoseAiSpend({currency:"CNY",items:[{name:"Unused AI",monthlyPrice:199,usedPerMonth:0}]});
+ assert.equal(r.potentialMonthlySavings,0);
+ assert.equal(r.findings[0].status,"review");
+});
+test("separate CNY and USD inputs cannot be merged",()=>{
+ const r=diagnoseAiSpend({currency:"USD",items:[{name:"A",monthlyPrice:9.99,usedPerMonth:1}]});
+ assert.equal(r.currency,"USD");
+ assert.equal(r.monthlySpend,9.99);
+});
+test("reject NaN and negative alternative price",()=>{
+ assert.throws(()=>diagnoseAiSpend({currency:"CNY",items:[{name:"A",monthlyPrice:NaN,usedPerMonth:1}]}));
+ assert.throws(()=>diagnoseAiSpend({currency:"CNY",items:[{name:"A",monthlyPrice:20,usedPerMonth:1,alternativeMonthlyPrice:-1}]}));
+});
