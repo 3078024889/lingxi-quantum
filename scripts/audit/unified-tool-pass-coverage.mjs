@@ -5,7 +5,7 @@
  * authorization point and legacy per-tool charge has been retired.
  * Static coverage is never a substitute for real browser and payment tests.
  */
-import {readFileSync,readdirSync,existsSync} from "node:fs";
+import {readFileSync,existsSync} from "node:fs";
 import {join,resolve} from "node:path";
 const root=resolve(process.cwd());
 const read=path=>readFileSync(join(root,path),"utf8");
@@ -27,6 +27,11 @@ const checkComponent=(file,depth=0,seen=new Set())=>{
  // Note: this only identifies a likely wiring path, never guarantees
  // authorization is placed before the processing side effect.
  const imports=[...code.matchAll(/from\s*["']@\/components\/tools\/([^"']+)["']/g)].map(x=>x[1]);
+ const relatives=code.split("\n").flatMap(line=>{
+  const marker=line.includes("from './")?"from './":line.includes('from "./')?'from "./':"";
+  return marker?[line.split(marker)[1]?.split(marker[5])[0]||""]:[];
+ });
+ imports.push(...relatives.filter(Boolean));
  return imports.some(x=>checkComponent("components/tools/"+x+".tsx",depth+1,seen));
 };
 const rows=slugs.map(slug=>{
