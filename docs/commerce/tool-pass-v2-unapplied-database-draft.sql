@@ -10,7 +10,7 @@ create table if not exists public.tool_pass_allowed_v2 (
   registry_version text not null,
   enabled boolean not null default true,
   created_at timestamptz not null default now(),
-  constraint tool_pass_tool_id_syntax check (tool_id ~ '^[a-z0-9]+(-[a-z0-9]+)*
+  constraint tool_pass_tool_id_syntax check (tool_id ~ '^[a-z0-9]+(-[a-z0-9]+)*$')
 );
 insert into public.tool_pass_allowed_v2(tool_id,registry_version) values
  ('avif-to-jpg','2026-11-05'),
