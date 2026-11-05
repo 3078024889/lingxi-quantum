@@ -55,3 +55,19 @@ test("UUID and unknown tool validation cannot treat freeform client text as an a
  for(const s of ["none","111111","a-b-c","00000000-0000-0000-0000-000000000000"])
   assert(!PASS_UUID.test(s));
 });
+
+test("legacy free-entitlement secret handling fails closed rather than using a public literal",()=>{
+ const code=read("lib/tools/commerce/free-entitlement.ts");
+ assert(code.includes('ENTITLEMENT_HASH_SECRET_MISSING'));
+ assert(code.includes('clientIp==="unknown"'));
+ assert(!code.includes('||"lingxifield"'));
+ assert(!code.includes("||'lingxifield'"));
+});
+test("new tool-pass routes are disabled until environment and source flags agree",()=>{
+ for(const route of ["quote","purchase","claim"]){
+  const code=read("app/api/tools/pass/"+route+"/route.ts");
+  assert(code.includes('LINGXIFIELD_TOOL_PASS_ENABLED'));
+  assert(code.includes('!offers.active'));
+  assert(code.includes('TOOL_PASS_NOT_LIVE'));
+ }
+});
