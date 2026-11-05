@@ -15,7 +15,7 @@ export async function GET(req:NextRequest){
  let expiresAt:null|string=null;
  if(user){
   const {data}=await createAdminClient().from("lingxi_tool_passes").select("starts_at,expires_at")
-   .eq("user_id",user.id).gt("expires_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1);
+   .eq("user_id",user.id).gt("expires_at",new Date().toISOString()).lte("starts_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1);
   expiresAt=data?.find(x=>new Date(x.starts_at).getTime()<=Date.now())?.expires_at||null;
  }
  return NextResponse.json({currency,offers:ALL_TOOLS_PASS_CATALOG,expiresAt,available:COMMERCE_READY},{headers:{"Cache-Control":"private,no-store"}});
