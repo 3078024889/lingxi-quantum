@@ -12,6 +12,7 @@ function format(value:string){const date=new Date(value);return Number.isFinite(
 export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
  const [tab,setTab]=useState<"submissions"|"candidates">("submissions");
  const [search,setSearch]=useState("");
+ const [candidateCategory,setCandidateCategory]=useState("*");
  const [rows,setRows]=useState<Submission[]>([]),[total,setTotal]=useState(0);
  const [loading,setLoading]=useState(true),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const [processing,setProcessing]=useState<string|null>(null),[attested,setAttested]=useState<string|null>(null);
@@ -24,7 +25,8 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
   finally{setLoading(false);}
  }
  useEffect(()=>{void load()},[]);
- const candidatesShown=useMemo(()=>candidates.filter(p=>(p.name+" "+p.company+" "+p.category+" "+p.tasks.join(" ")).toLowerCase().includes(search.toLowerCase().trim())),[candidates,search]);
+ const candidateCategoryCounts=useMemo(()=>Object.entries(candidates.reduce<Record<string,number>>((totals,p)=>{totals[p.category]=(totals[p.category]||0)+1;return totals;},{})).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])),[candidates]);
+ const candidatesShown=useMemo(()=>candidates.filter(p=>(candidateCategory==="*"||p.category===candidateCategory)&&(p.name+" "+p.company+" "+p.category+" "+p.tasks.join(" ")).toLowerCase().includes(search.toLowerCase().trim())),[candidates,search,candidateCategory]);
  const submissionsShown=useMemo(()=>rows.filter(p=>(p.product_name+" "+p.status+" "+p.official_site).toLowerCase().includes(search.toLowerCase().trim())),[rows,search]);
  async function operate(id:string,action:ReviewAction){
   if(action==="approve"&&attested!==id){setNotice("请先确认已在站外人工核对厂商授权及身份。");return;}
@@ -79,6 +81,11 @@ export default function ReviewWorkbench({candidates}:{candidates:Candidate[]}){
    </article>)}
   </div>:<div className="space-y-2">
    <p className="text-sm">这些平台仅记录官网入口与待核对用途。价格、免费额度、支付方式、地区与商用授权未经过逐项核证，禁止自动公开或计算排名。</p>
+   <nav className="flex flex-wrap gap-2" aria-label="新增平台按领域筛选">
+    <button type="button" aria-pressed={candidateCategory==="*"} className="rounded-md border px-2 py-1.5 text-sm aria-pressed:bg-blue-100" onClick={()=>setCandidateCategory("*")}>全部 {candidates.length}</button>
+    {candidateCategoryCounts.map(([category,count])=><button type="button" key={category} aria-pressed={candidateCategory===category} className="rounded-md border px-2 py-1.5 text-sm aria-pressed:bg-blue-100" onClick={()=>setCandidateCategory(category)}>{category} {count}</button>)}
+   </nav>
+   <p className="text-sm text-[var(--lx-muted)]">短视频生成的费用另核对模型、分辨率、秒数、积分和套餐，不能用图片创作或视频剪辑的标签代替。未知的结算方式不统计为支持。</p>
    <div className="max-h-[680px] space-y-2 overflow-y-auto rounded-xl border p-3">
     {candidatesShown.map(p=><article key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-[var(--lx-panel)] p-3">
      <div><strong className="text-sm">{p.name}</strong><p className="text-sm text-[var(--lx-muted)]">{p.company} · {p.category} · {p.tasks.join(" / ")}</p></div>
