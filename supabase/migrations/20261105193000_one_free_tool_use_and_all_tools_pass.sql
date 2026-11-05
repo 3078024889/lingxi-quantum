@@ -42,7 +42,7 @@ grant all on public.lingxi_tool_use_events to service_role;
 -- service role after authenticating user, canonical tool registration and trusted IP hashing.
 create or replace function public.lingxi_claim_tool_use(
  p_request_id uuid,p_user_id uuid,p_ip_hash text,p_tool_slug text,p_units integer
-) returns jsonb language plpgsql security definer set search_path=public,pg_temp as $$
+) returns jsonb language plpgsql security definer set search_path='' as $$
 declare
  v_day date := (now() at time zone 'Asia/Shanghai')::date;
  v_existing public.lingxi_tool_use_events%rowtype;
@@ -90,7 +90,7 @@ grant execute on function public.lingxi_claim_tool_use(uuid,uuid,text,text,integ
 
 create or replace function public.lingxi_purchase_tool_pass(
  p_user_id uuid,p_request_id uuid,p_sku text,p_currency text
-) returns jsonb language plpgsql security definer set search_path=public,pg_temp as $$
+) returns jsonb language plpgsql security definer set search_path='' as $$
 declare
  v_old public.lingxi_tool_passes%rowtype;
  v_amount integer;
@@ -127,7 +127,7 @@ begin
  from public.lingxi_tool_passes where user_id=p_user_id and revoked_at is null and expires_at>v_now;
  v_expiry:=v_start + make_interval(days=>v_days);
  insert into public.orders(user_id,product_id,product_type,amount_rmb,amount_usd,currency,status,provider,submission_name,paid_at)
- values(p_user_id,'toolpass:'||p_request_id::text,'permanent',v_amount/100.0,v_amount/100.0,
+ values(p_user_id,'toolpass:'||p_request_id::text,'tool_pass',v_amount/100.0,v_amount/100.0,
         p_currency,'paid','sasi-balance','全场实用工具通用包 · '||v_days||'天',v_now)
  returning id into v_order;
  insert into public.lingxi_tool_passes(user_id,sku,currency,price_minor,purchase_request_id,order_id,starts_at,expires_at)
