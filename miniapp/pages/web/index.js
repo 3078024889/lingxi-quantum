@@ -1,7 +1,7 @@
 // Web-view needs the registered business domain, not the request API domain.
 const WEB_BASE = 'https://lingxifield.cn'
 const { enableShareMenu, copyWebLink, publicWebPath, appMessage, timeline } = require('../../utils/share')
-const EXACT_ALLOWED=new Set(['/','/sasi','/sasi/drama','/sasi/connections','/tools','/ai-knowledge','/ai-learning','/ai-research','/account','/account/orders','/account/notifications','/ai-wallet','/sasi/pricing','/privacy','/terms','/refunds'])
+const EXACT_ALLOWED=new Set(['/','/siai','/sasi','/sasi/drama','/sasi/connections','/tools','/ai-knowledge','/ai-learning','/ai-research','/account','/account/orders','/account/notifications','/ai-wallet','/sasi/pricing','/privacy','/terms','/refunds'])
 const PREFIX_ALLOWED=['/tools/','/api/wechat/mini/account-link/'],MAX_PATH_LENGTH=2048,CURRENCY_KEY='lx_currency'
 function safeDecode(value){try{return decodeURIComponent(value)}catch(_){return''}}
 function normalizeMiniPath(input){
@@ -15,7 +15,7 @@ function withMiniContext(path){
  const hashAt=path.indexOf('#'),route=hashAt>=0?path.slice(0,hashAt):path,hash=hashAt>=0?path.slice(hashAt):'',separator=route.includes('?')?'&':'?'
  return `${WEB_BASE}${route}${separator}mini=1&ads=0&currency=${preferredCurrency()}${hash}`
 }
-const SHARE_TITLES={'/':'灵犀场 · 一键创造，一念即达','/sasi':'灵犀场 SASI · 创作','/sasi/drama':'灵犀场 · 短剧创作','/sasi/connections':'灵犀场 · 扩展能力','/tools':'灵犀场 · 实用工具','/ai-knowledge':'灵犀场 · 资料变成可用知识','/ai-learning':'灵犀场 · 学习 SASI','/ai-research':'灵犀场 · 科研 SASI'}
+const SHARE_TITLES={'/':'灵犀场 · 一键创造，一念即达','/siai':'灵犀场 · 全球 SIAI 排行榜','/sasi':'灵犀场 SASI · 创作','/sasi/drama':'灵犀场 · 短剧创作','/sasi/connections':'灵犀场 · 扩展能力','/tools':'灵犀场 · 实用工具','/ai-knowledge':'灵犀场 · 资料变成可用知识','/ai-learning':'灵犀场 · 学习 SASI','/ai-research':'灵犀场 · 科研 SASI'}
 function shareTitleFor(path){return SHARE_TITLES[publicWebPath(path)]||'灵犀场 LINGXIFIELD'}
 Page({
  data:{src:'',path:'/',loading:true,failed:false},

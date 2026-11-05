@@ -7,6 +7,7 @@ import SiaiRankingHome from "@/components/SiaiRankingHome";
 import {getSiaiDirectoryRows} from "../../siai/catalog-data";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
+import {SHARE_IMAGE_URL,SHARE_IMAGES} from "@/lib/share-image";
 import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,localePath} from "@/lib/seo/global-seo";
 import {siaiLanguageAlternates} from "@/lib/seo/siai-domain-policy";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
@@ -25,7 +26,8 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
   description:copy.rankIntro+" "+copy.topics.map(t=>t.q).join(" · "),
   keywords:[...copy.topics.map(t=>t.q),...copy.extras,"LINGXIFIELD","SIAI"],
   alternates:{canonical:url,languages},
-  openGraph:{title:copy.rankTitle+" | LINGXIFIELD",description:copy.rankIntro,url},
+  openGraph:{title:copy.rankTitle+" | LINGXIFIELD",description:copy.rankIntro,url,images:SHARE_IMAGES},
+  twitter:{card:"summary_large_image",title:copy.rankTitle+" | LINGXIFIELD",images:[SHARE_IMAGE_URL]},
   robots:{index:siaiLandingShouldIndex(),follow:true}
  };
 }

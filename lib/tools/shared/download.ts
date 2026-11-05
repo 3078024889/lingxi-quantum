@@ -1,3 +1,4 @@
+import {trackToolEvent} from "../analytics-client";
 import {ensureToolExportAccess,isExportAccessGranted} from '../commerce/export-access-client';
 export type DownloadOutcome = "download" | "preview";
 export type FileShareOutcome = "shared" | "cancelled" | "unsupported" | "failed";
@@ -67,6 +68,8 @@ export async function privateMobilePreview(blob: Blob, name: string) {
   return "preview" as const;
 }
 export async function downloadBlob(blob: Blob, filename: string): Promise<DownloadOutcome> {
+  const toolId=typeof location!=="undefined"?location.pathname.match(/\/tools\/([a-z][a-z0-9-]*)/)?.[1]:null;
+  if(toolId)trackToolEvent("export_clicked",toolId);
   await ensureToolExportAccess(blob,filename);
   const file = deliveryFile(blob, filename), url = URL.createObjectURL(file), a = document.createElement("a");
   a.href = url; a.download = file.name; a.rel = "noopener";

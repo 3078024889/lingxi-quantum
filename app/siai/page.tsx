@@ -8,6 +8,7 @@ import {headers} from "next/headers";
 import {seoSiteForRequest,siaiLanguageAlternates} from "@/lib/seo/siai-domain-policy";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
+import {SHARE_IMAGE_URL,SHARE_IMAGES} from "@/lib/share-image";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 
 export const dynamic="force-dynamic";
@@ -17,7 +18,8 @@ const BASE_METADATA:Metadata={
  description:"找全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台、全球SIAI排行榜？灵犀场按用途展示全球AI公司、模型、工具、免费额度、价格、地区和商用条件，并链接官方资料。",
  keywords:[...SIAI_DISCOVERY.zh.topics.map(t=>t.q),...SIAI_DISCOVERY.zh.extras,"灵犀场","LINGXIFIELD","全球AI工具行情","全球AI模型排行榜","AI工具推荐","AI模型API价格","AI视频生成平台","AI公司排行榜"],
  alternates:{canonical:PRIMARY_SITE+"/siai",languages:siaiLanguageAlternates()},
- openGraph:{title:"全球AI排行榜与SIAI行情平台｜灵犀场",description:"全球AI、SI与SIAI工具目录：比较功能、价格、免费额度、地区条件和官方来源。",url:PRIMARY_SITE+"/siai"},
+ openGraph:{title:"全球AI排行榜与SIAI行情平台｜灵犀场",description:"全球AI、SI与SIAI工具目录：比较功能、价格、免费额度、地区条件和官方来源。",url:PRIMARY_SITE+"/siai",images:SHARE_IMAGES},
+ twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL]},
  robots:{index:siaiLandingShouldIndex(),follow:true}
 };
 
