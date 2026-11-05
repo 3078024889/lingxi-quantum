@@ -1,10 +1,13 @@
 "use client";
 import ToolUiText from "@/components/tools/ToolUiText";
+import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import {useMemo,useState} from "react";
 import ResultFileActions from './ResultFileActions';
 type Kind="url"|"wifi"|"vcard"|"email"|"sms"|"tel"|"geo"|"event"|"text";
 function esc(v:string){return v.replace(/([\\;,:\n])/g,"\\$1")}
 export default function QrProWorkbench(){
+ const {lang}=useLingxiLang();
  const[kind,setKind]=useState<Kind>("url"),[a,setA]=useState("https://lingxifield.com"),[b,setB]=useState(""),[c,setC]=useState(""),[dataUrl,setDataUrl]=useState(""),[svg,setSvg]=useState(""),[error,setError]=useState("");
  const payload=useMemo(()=>{
   if(kind==="wifi")return `WIFI:T:${c||"WPA"};S:${esc(a)};P:${esc(b)};;`;
@@ -16,7 +19,7 @@ export default function QrProWorkbench(){
   if(kind==="event")return `BEGIN:VEVENT\nSUMMARY:${a}\nDTSTART:${b}\nDTEND:${c}\nEND:VEVENT`;
   return a;
  },[kind,a,b,c]);
- async function run(){setError("");try{const QR=(await import("qrcode")).default;const options={width:1024,margin:2,errorCorrectionLevel:"M" as const};setDataUrl(await QR.toDataURL(payload,options));setSvg(await QR.toString(payload,{...options,type:"svg"}))}catch(e){setError(String(e))}}
+ async function run(){setError("");try{await claimToolStart("qr-code-generator",1);const QR=(await import("qrcode")).default;const options={width:1024,margin:2,errorCorrectionLevel:"M" as const};setDataUrl(await QR.toDataURL(payload,options));setSvg(await QR.toString(payload,{...options,type:"svg"}))}catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):String(e))}}
  const fields=kind==="wifi"?["Wi‑Fi 名称 SSID","密码","安全类型 WPA/WEP/nopass"]:kind==="vcard"?["姓名","电话","邮箱"]:kind==="email"?["邮箱","主题","正文"]:kind==="sms"?["手机号","短信内容",""]:kind==="tel"?["电话号码","",""]:kind==="geo"?["纬度","经度",""]:kind==="event"?["事件标题","开始时间 20261004T090000","结束时间 20261004T100000"]:[kind==="url"?"网址":"文本","",""];
  const setters=[setA,setB,setC],vals=[a,b,c];
  const pngFile=useMemo(()=>{if(!dataUrl)return null;const bytes=Uint8Array.from(atob(dataUrl.split(',')[1]),c=>c.charCodeAt(0));return new Blob([bytes],{type:'image/png'})},[dataUrl]);
