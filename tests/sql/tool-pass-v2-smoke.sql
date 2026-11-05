@@ -24,6 +24,14 @@ begin
  if (y->>'ok') IS DISTINCT FROM 'true' or (y->>'chargedMinor')::bigint<>9900 then raise exception 'USD_AMOUNT_BAD %',y;end if;
  if (y->>'startsAt')::timestamptz<end_first then raise exception 'OVERLAPPING_PURCHASE_NOT_EXTENDED';end if;
  if (select count(*) from public.test_toolpass_charges)<>2 then raise exception 'EXPECTED_TWO_CHARGES';end if;
+ -- A future wallet reversal can only be approved from its original,
+ -- auditable active-SASI and legacy-AI wallet portions.
+ if (select active_source_minor from public.tool_pass_orders_v2 where request_id=request_a)<>2000
+    or (select legacy_source_minor from public.tool_pass_orders_v2 where request_id=request_a)<>900
+ then raise exception 'CNY_SOURCE_SPLIT_INCORRECT';end if;
+ if (select active_source_minor from public.tool_pass_orders_v2 where request_id=request_b)<>2000
+    or (select legacy_source_minor from public.tool_pass_orders_v2 where request_id=request_b)<>7900
+ then raise exception 'USD_SOURCE_SPLIT_INCORRECT';end if;
  y:=public.purchase_tool_pass_v2(user_b,request_a,'tools_7d','USD');
  if (y->>'error') IS DISTINCT FROM 'IDEMPOTENCY_CONFLICT' then raise exception 'CROSS_USER_REPLAY_UNBLOCKED %',y;end if;
  y:=public.purchase_tool_pass_v2(user_b,'a3333333-3333-4333-8333-333333333333','tools_unknown','CNY');
