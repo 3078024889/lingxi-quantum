@@ -85,7 +85,7 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
  function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
  async function addRemote(file:File){
   try{
-   const toolSlug=location.pathname.match(/^\\/tools\\/([^/?#]+)/)?.[1]||"video-toolkit";
+   const toolSlug=location.pathname.match(/^\/tools\/([^/?#]+)/)?.[1]||"video-toolkit";
    await claimToolStart(toolSlug,1);
    setFiles(v=>[...v,file].slice(0,10));setOutputs([]);setError("");
   }catch(e){setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"))}
