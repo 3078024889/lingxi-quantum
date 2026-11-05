@@ -8,6 +8,40 @@ export const SLOT_LABELS: Record<TelegramSlot,string> = {
 };
 export const SLOT_HOURS: Record<TelegramSlot,number> = {discovery:9,tutorial:11,comparison:14,creation:17,community:20};
 type Entry = readonly [title:string, detail:string, path:string, action:string, question:string];
+const TG_WEEKS=["新手精选","实用进阶","避坑提醒","真实反馈"] as const;
+const TG_WEEKLY_TASKS:Record<TelegramSlot,readonly [string,string,string,string]>={
+  "discovery": [
+    "今日先从实际需求选工具，不按热榜盲目决定；用两条条件筛出候选。",
+    "把一款热门工具的免费额度与使用地区分开核对，记录差异。",
+    "核对官方条款的生效日期与版本，旧信息不要当最新资料传播。",
+    "选一个上周没解决的工具问题，征集实际操作反馈再给建议。"
+  ],
+  "tutorial": [
+    "先找一个不含隐私数据的小样本试操作，完成后检查能否下载。",
+    "换一台手机或另一个浏览器打开输出文件，检验兼容性。",
+    "把最容易失败的一步和页面提示文字记下来，再逐项排查。",
+    "让群友分享成功与失败的操作步骤，形成更容易理解的教程。"
+  ],
+  "comparison": [
+    "尽量用相同任务和输出要求测试，不拿不同条件的结果比较。",
+    "把免费层、订阅、按量付费三种口径拆开后再讨论成本。",
+    "核实厂商的地区、商用与支付限制，不能只比较功能宣传。",
+    "征集一项最想新增的对比字段，有官方证据才进入资料。"
+  ],
+  "creation": [
+    "先明确作品时长、目标观众和情绪，再写三镜分镜。",
+    "同一素材制作两个不同开头，在手机端比较可读性与节奏。",
+    "检查字幕、配音和画面是否一致，特别是转场与音量。",
+    "选一段最满意的成果复做一次，验证流程能否稳定复现。"
+  ],
+  "community": [
+    "问群友最想学的一个动作，下一轮优先出可复现教程。",
+    "请每人分享一个省时工具，说明使用的实际任务而非空泛好评。",
+    "今晚集中收集失效页面与难用流程，描述输入、动作、结果即可。",
+    "整理本周最常问的三个问题，建议优先完善真正高频的操作。"
+  ]
+};
+
 const data: Record<TelegramSlot, readonly Entry[]> = {
   "discovery": [
     [
@@ -308,12 +342,14 @@ export function buildPost(date:Date,slot:TelegramSlot,channel:PublicChannel,qqGr
  const activeGroup=qqGroup||"1074475201";
  const dayNumber=Math.floor((new Date(singaporeDay(date)+"T00:00:00Z").getTime()-Date.UTC(2026,10,5))/86400000);
  const cycle=Math.floor((((dayNumber%28)+28)%28)/7);
- const weekNote=channel==="qq"?"\n【"+QQ_WEEKS[cycle]+"】"+QQ_WEEKLY_TASKS[activeGroup][slot][cycle]:"";
+ const weekNote=channel==="qq"
+  ?"\n【"+QQ_WEEKS[cycle]+"】"+QQ_WEEKLY_TASKS[activeGroup][slot][cycle]
+  :"\n【"+TG_WEEKS[cycle]+"】"+TG_WEEKLY_TASKS[slot][cycle];
  const prefix=channel==="qq"
    ? (qqGroup==="601549887"?"🌐 全球 SIAI 排行榜｜社区发现":"✨ 灵犀场 LINGXIFIELD｜每日实用技巧")
    : "🌐 全球 SIAI｜"+({discovery:"早间发现",tutorial:"实用教程",comparison:"工具对比",creation:"智能创作",community:"晚间问答"} as const)[slot];
  const campaign=channel==="qq"&&qqGroup?"qq_"+qqGroup+"_"+slot:"siai_"+slot;
- const lines=[prefix,"",`【${channel==="qq"?QQ_WEEKS[cycle]+" · ":""}${title}】`,detail+weekNote,"",`${action}：`,
+ const lines=[prefix,"",`【${channel==="qq"?QQ_WEEKS[cycle]:TG_WEEKS[cycle]} · ${title}】`,detail+weekNote,"",`${action}：`,
    "国际站："+trackedLink(path,campaign,slot,channel),
    "国内站："+trackedCNLink(path,campaign,slot,channel),"",question];
  if(channel==="qq"&&slot==="community") lines.push("","全球 SIAI 交流群：https://t.me/globalsiai");
