@@ -8,6 +8,7 @@ on:
       - "lib/tools/commerce/free-entitlement.ts"
       - "docs/commerce/tool-pass-v2-unapplied-database-draft.sql"
       - "tests/tool-pass-v2-contract.test.mjs"
+      - "tests/sql/tool-pass-v2-*.sql"
       - ".github/workflows/tool-pass-v2-foundation.yml"
   workflow_dispatch:
 permissions:
@@ -21,3 +22,32 @@ jobs:
         with:
           persist-credentials: false
       - run: node --version && node --test tests/tool-pass-v2-contract.test.mjs
+
+  ephemeral-postgresql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ephemeral-ci-only
+          POSTGRES_DB: test
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Execute SQL draft and assert atomic behavior in disposable Postgres
+        shell: bash
+        run: |
+          set -euo pipefail
+          PG_CONTAINER="$(docker ps --filter ancestor=postgres:17-alpine --format '{{.ID}}' | head -n 1)"
+          test -n "$PG_CONTAINER"
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < tests/sql/tool-pass-v2-stub.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < docs/commerce/tool-pass-v2-unapplied-database-draft.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < tests/sql/tool-pass-v2-smoke.sql
