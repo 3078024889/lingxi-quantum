@@ -1,11 +1,13 @@
 "use client";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
-import {useMemo,useRef,useState} from "react";
+import {useEffect,useMemo,useRef,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {convertBatchImage,makeUniqueBatchName,type BatchImageMime} from "@/lib/tools/shared/batch-image-client";
 import type {ToolResultFile} from "@/lib/tools/types";
+
+import {trackToolEvent} from "@/lib/tools/analytics-client";
 
 type C={maxW:string;quality:string;format:string;selected:string;run:string;busy:string;ready:string;error:string;source:string;size:string;balanced:string;best:string;original:string;failed:string;privacy:string;custom:string;success:string};
 const D:Record<LingxiLang,C>={
@@ -45,11 +47,13 @@ export default function BatchImageWorkbench(){
  const[files,setFiles]=useState<File[]>([]),[maxW,setMaxW]=useState(1920),[quality,setQuality]=useState(.82),[type,setType]=useState<BatchImageMime>("image/jpeg");
  const[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState("");
  const[results,setResults]=useState<ToolResultFile[]>([]),[failed,setFailed]=useState<FailedImage[]>([]),[sourceBytes,setSourceBytes]=useState(0);
- const version=useRef(0);
+ const version=useRef(0),opened=useRef(false);
+ useEffect(()=>{if(!opened.current){opened.current=true;trackToolEvent("tool_open","batch-image")}},[]);
  function invalidate(){version.current++;setResults([]);setFailed([]);setSourceBytes(0);setError("");}
  async function run(){
   if(!files.length||busy)return;
   const token=++version.current,inputs=[...files],opts={maxW,quality,type};
+  const started=performance.now();trackToolEvent("process_started","batch-image",{file_count:inputs.length});
   setBusy(true);setStage(c.busy);setError("");setResults([]);setFailed([]);setSourceBytes(0);
   const out:ToolResultFile[]=[],failedItems:FailedImage[]=[],used=new Set<string>();let originalBytes=0;
   try{
@@ -65,6 +69,7 @@ export default function BatchImageWorkbench(){
     }
    }
    if(token===version.current){
+    trackToolEvent(out.length?"process_completed":"process_failed","batch-image",{file_count:out.length,failed_count:failedItems.length,duration_ms:performance.now()-started});
     setResults(out);setFailed(failedItems);setSourceBytes(originalBytes);
     if(failedItems.length)setError(c.error);
    }
@@ -73,7 +78,7 @@ export default function BatchImageWorkbench(){
  const total=useMemo(()=>results.reduce((n,x)=>n+x.size,0),[results]);
  return <div className="space-y-4" data-batch-image="true">
   <FileDropzone accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple append maxFiles={50} maxSizeMB={50}
-   files={files} onChange={f=>{invalidate();setFiles(f)}} disabled={busy} kind="image"/>
+   files={files} onChange={f=>{invalidate();setFiles(f);if(f.length)trackToolEvent("file_selected","batch-image",{file_count:f.length})}} disabled={busy} kind="image"/>
   <p className="text-sm leading-6 text-[var(--lx-muted)]">{c.privacy}</p>
   <div className="flex flex-wrap gap-2" aria-label={c.maxW}>
    {([[0,c.original],[1080,"1080 px"],[1920,"1920 px"],[2560,"2560 px"]] as const).map(([value,label])=>

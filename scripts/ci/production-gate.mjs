@@ -72,6 +72,7 @@ const commands=[
  ["node",["scripts/test-money-lifecycle.cjs"]],
  ["node",["scripts/test-money-operations.cjs"]],
  ["node",["scripts/test-admin-dashboard.cjs"]],
+ ["node",["scripts/test-tool-usage.cjs"]],
  ["node",["scripts/test-money-admin-feed.cjs"]],
  ["node",["scripts/test-money-auto-refresh.cjs"]],
  ["node",["scripts/test-money-progress-api.cjs"]],
