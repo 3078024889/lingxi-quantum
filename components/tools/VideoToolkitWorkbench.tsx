@@ -2,6 +2,7 @@
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+import {claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import {useEffect,useRef,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import RemoteMediaImporter from "@/components/tools/RemoteMediaImporter";
@@ -82,7 +83,13 @@ export default function VideoToolkitWorkbench({initialMode="compress",standalone
   }catch(e){try{ff.current?.terminate()}catch{}ff.current=null;setStage("");setError(plainText(lang,"fileError"))}finally{setBusy(false)}
  }
  function cancel(){try{ff.current?.terminate()}catch{}ff.current=null;setBusy(false);setStage(t("已取消处理","Cancelled"))}
- async function addRemote(file:File){setFiles(v=>[...v,file].slice(0,10))}
+ async function addRemote(file:File){
+  try{
+   const toolSlug=location.pathname.match(/^\\/tools\\/([^/?#]+)/)?.[1]||"video-toolkit";
+   await claimToolStart(toolSlug,1);
+   setFiles(v=>[...v,file].slice(0,10));setOutputs([]);setError("");
+  }catch(e){setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"))}
+ }
  const modes:[Mode,string][]=[["compress",t("压缩","Compress")],["trim",t("截取","Trim")],["audio",t("提取 MP3","Extract MP3")],["mute",t("静音","Mute")],["convert",t("转 MP4","Convert MP4")],["rotate",t("旋转","Rotate")],["speed",t("变速","Speed")]];
  return <div data-video-toolkit data-hydrated={hydrated ? "true" : "false"} className="space-y-4">
   <FileDropzone accept="video/*,audio/*" multiple maxFiles={10} maxSizeMB={500} files={files} onChange={f=>{setFiles(f);setOutputs([]);setError("")}} disabled={busy||!hydrated} kind="media"/>
