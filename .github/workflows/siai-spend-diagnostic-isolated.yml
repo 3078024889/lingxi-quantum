@@ -10,6 +10,7 @@ on:
       - "app/[locale]/siai/spend-diagnostic/**"
       - "app/api/public/siai-spend-mcp/**"
       - "tests/free-siai-spend-diagnostic*.test.mjs"
+      - "lib/siai/mcp-bounded-body.ts"
       - "tests/final-closure/siai-spend-diagnostic.spec.ts"
       - "components/SiaiRankingHome.tsx"
       - "integrations/siai-spend-mcp-v2/**"
@@ -26,7 +27,7 @@ jobs:
         with:
           node-version: "22"
       - name: Run deterministic and nine-language tests without deployment
-        run: node --experimental-strip-types --test tests/free-siai-spend-diagnostic.test.mjs tests/free-siai-spend-diagnostic-i18n.test.mjs
+        run: node --experimental-strip-types --test tests/free-siai-spend-diagnostic.test.mjs tests/free-siai-spend-diagnostic-i18n.test.mjs tests/free-siai-spend-diagnostic-stream.test.mjs
 
   official-mcp-v2-lab:
     runs-on: ubuntu-latest
