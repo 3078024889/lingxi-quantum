@@ -1,0 +1,71 @@
+{
+  "schema": "lingxifield_publisher_relationship_evidence_v1",
+  "reviewStatus": "source_observed_unapproved",
+  "asOf": "2026-11-05",
+  "relations": [
+    {
+      "id": "cursor",
+      "group": "spacex",
+      "relationship": "acquired_subsidiary",
+      "source": "https://prod.cursor.com/blog/joining-spacex",
+      "date": "2026-08-14",
+      "note": "Cursor 官方确认 SpaceX 完成收购；合同经营主体 Anysphere 与集团关系需分别展示"
+    },
+    {
+      "id": "leonardo",
+      "group": "canva",
+      "relationship": "acquired_subsidiary",
+      "source": "https://www.canva.com/newsroom/news/leonardo-ai/",
+      "date": "2024-07-30",
+      "note": "Canva 官方确认收购 Leonardo.Ai；不能把 Canva 付款条件当作 Leonardo 付款条件"
+    },
+    {
+      "id": "tabnine",
+      "group": "tricentis",
+      "relationship": "acquired_subsidiary",
+      "source": "https://www.tabnine.com/platform/",
+      "date": "2026-11-05",
+      "note": "Tabnine 官方标示已由 Tricentis 收购，具体结算主体另核"
+    },
+    {
+      "id": "volcengine-ark",
+      "group": "bytedance",
+      "relationship": "publisher_business",
+      "source": "https://www.bytedance.com/products-services",
+      "date": "2026-11-05",
+      "note": "字节跳动官网明确火山引擎是其中国企业技术服务品牌"
+    },
+    {
+      "id": "ltx-studio",
+      "group": "lightricks",
+      "relationship": "restructuring_review",
+      "source": "https://www.lightricks.com/about",
+      "date": "2026-11-05",
+      "note": "Lightricks 当前确认 LTX 正在拆分独立，厂商分组未来可能需要更新，不把在拆分误写为已经完成"
+    },
+    {
+      "id": "amazon-bedrock",
+      "group": "amazon",
+      "relationship": "publisher_business",
+      "source": "https://aws.amazon.com/what-is-aws/",
+      "date": "2026-11-05",
+      "note": "AWS 产品属于 Amazon Web Services 品牌，该目录将 Amazon 作为统一企业集团分组"
+    },
+    {
+      "id": "aws-q-developer",
+      "group": "amazon",
+      "relationship": "publisher_business",
+      "source": "https://aws.amazon.com/q/developer/",
+      "date": "2026-11-05",
+      "note": "归入 Amazon 集团避免同一 AWS 企业因缩写产生多个厂商数"
+    },
+    {
+      "id": "aws-sagemaker",
+      "group": "amazon",
+      "relationship": "publisher_business",
+      "source": "https://aws.amazon.com/sagemaker/",
+      "date": "2026-11-05",
+      "note": "统一 Amazon Web Services 厂商分组，产品仍是独立记录"
+    }
+  ]
+}
