@@ -106,7 +106,7 @@
         "代码分析工具",
         "开发代理工具"
       ],
-      "publisherGroupId": "aws",
+      "publisherGroupId": "amazon",
       "aliases": [],
       "discoveredAt": "2026-11-05",
       "discoverySource": "https://aws.amazon.com/q/developer/",
