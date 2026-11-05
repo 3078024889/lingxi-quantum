@@ -32,7 +32,10 @@ test("unreviewed candidates cannot inflate public 62 platform counts or mislabel
  const claim=read("app/siai/candidate-public.ts");
  assert(!/batch-00[6-9]|batch-010/.test(claim));
  const dashboard=read("app/account/siai-review/page.tsx");
- for(const n of [6,7,8,9,10])assert(dashboard.includes("batch-"+String(n).padStart(3,"0")+".json"));
+ const registry=read("lingxifield-ai-market/lib/market-private-intake-index.ts");
+ assert(dashboard.includes("getPrivateSiaiCandidateIndex()"));
+ for(const n of [6,7,8,9,10])assert(registry.includes("batch-"+String(n).padStart(3,"0")+".json"));
+ assert(registry.includes("sourcePreview:previewIds.has(item.id)"));
 });
 test("vendor intake stays private and only an existing verified money administrator may review",()=>{
  const src=read("app/api/account/siai-review/route.ts"),page=read("app/account/siai-review/page.tsx");
