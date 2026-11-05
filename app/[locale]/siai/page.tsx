@@ -9,6 +9,7 @@ import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,localePath} from "@/lib/seo/global-seo";
 import {siaiLanguageAlternates} from "@/lib/seo/siai-domain-policy";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
+import {SHARE_IMAGES,SHARE_IMAGE_URL} from "@/lib/share-image";
 
 export const dynamic="force-dynamic";
 export const revalidate=0;
@@ -24,7 +25,8 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
   description:copy.rankIntro+" "+copy.topics.map(t=>t.q).join(" · "),
   keywords:[...copy.topics.map(t=>t.q),...copy.extras,"LINGXIFIELD","SIAI"],
   alternates:{canonical:url,languages},
-  openGraph:{title:copy.rankTitle+" | LINGXIFIELD",description:copy.rankIntro,url},
+  openGraph:{title:copy.rankTitle+" | LINGXIFIELD",description:copy.rankIntro,url,images:SHARE_IMAGES},
+  twitter:{card:"summary_large_image",images:[SHARE_IMAGE_URL]},
   robots:{index:siaiLandingShouldIndex(),follow:true}
  };
 }
