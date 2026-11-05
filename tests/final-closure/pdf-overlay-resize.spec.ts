@@ -57,6 +57,7 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   // never use scripted CSS manipulation as a substitute for dragging.
   const events:Array<{type:string;target:string;x:number;y:number}>=[];
   (window as Window&{__pdfTouchDiagnostics?:typeof events}).__pdfTouchDiagnostics=events;
+  (window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace=[];
   for(const type of ["pointerdown","touchstart","pointermove","touchmove","pointercancel","touchend"]){
    document.addEventListener(type,event=>{
     if(events.length>=45)return;
@@ -70,7 +71,8 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
  if(mobile&&(await item.boundingBox())!.width<=before!.width+6){
   const diagnostic=await page.evaluate(()=>({events:(window as Window&{__pdfTouchDiagnostics?:unknown[]}).__pdfTouchDiagnostics||[],
-   overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style")||""}));
+   overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style")||"",
+   gesture:(window as Window&{__pdfGestureTrace?:unknown[]}).__pdfGestureTrace||[]}));
   console.log("PDF_MOBILE_GESTURE_TRACE",JSON.stringify(diagnostic));
  }
  await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
