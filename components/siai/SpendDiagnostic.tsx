@@ -5,18 +5,34 @@ import Link from "next/link";
 import {DIAGNOSTIC_COPY,DIAGNOSIS_RESULT_COPY} from "@/lib/siai/spend-diagnostic-i18n";
 import {diagnoseAiSpend} from "@/lib/siai/free-spend-diagnostic";
 import type {SpendItem} from "@/lib/siai/free-spend-diagnostic";
-const initial=():SpendItem=>({name:"",monthlyPrice:0,usedPerMonth:0});
+type DraftItem={name:string;monthlyPrice:string;usedPerMonth:string;expectedPerMonth:string;monthlyQuota:string;alternativeMonthlyPrice:string;essential:boolean};
+const initial=():DraftItem=>({name:"",monthlyPrice:"",usedPerMonth:"",expectedPerMonth:"",monthlyQuota:"",alternativeMonthlyPrice:"",essential:false});
+const parseMoney=(value:string):number=>{
+ if(!/^(?:0|[1-9]\\d*)(?:\\.\\d{1,2})?$/.test(value))throw new Error("INVALID_MONEY");
+ return Number(value);
+};
+const parseCount=(value:string):number=>{
+ if(!/^(?:0|[1-9]\\d*)$/.test(value))throw new Error("INVALID_COUNT");
+ return Number(value);
+};
+const intoItem=(draft:DraftItem):SpendItem=>({
+ name:draft.name,monthlyPrice:parseMoney(draft.monthlyPrice),usedPerMonth:parseCount(draft.usedPerMonth),
+ ...(draft.expectedPerMonth!==""?{expectedPerMonth:parseCount(draft.expectedPerMonth)}:{}),
+ ...(draft.monthlyQuota!==""?{monthlyQuota:parseCount(draft.monthlyQuota)}:{}),
+ ...(draft.alternativeMonthlyPrice!==""?{alternativeMonthlyPrice:parseMoney(draft.alternativeMonthlyPrice)}:{}),
+ essential:draft.essential
+});
 const field="mt-1 w-full min-w-0 rounded-xl border border-slate-200 bg-white px-3 py-3 text-base text-slate-900 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
 export default function SpendDiagnostic(){
  const {lang}=useLingxiLang(),t=DIAGNOSTIC_COPY[lang],r=DIAGNOSIS_RESULT_COPY[lang];
  const [currency,setCurrency]=useState<"CNY"|"USD">("CNY");
- const [items,setItems]=useState<SpendItem[]>([initial()]);
+ const [items,setItems]=useState<DraftItem[]>([initial()]);
  const [submitted,setSubmitted]=useState(false);
  const [copyStatus,setCopyStatus]=useState(false);
  const money=(n:number)=>new Intl.NumberFormat(lang==="zh"?"zh-CN":lang,{style:"currency",currency}).format(n);
- const update=(i:number,patch:Partial<SpendItem>)=>{setItems(v=>v.map((x,j)=>i===j?{...x,...patch}:x));setSubmitted(false);};
- const calculation=useMemo(()=>{try{return {result:diagnoseAiSpend({currency,items}),error:""};}catch(e){return {result:null,error:e instanceof Error?e.message:t.error};}},[currency,items,t.error]);
- const loadExample=()=>{setItems([{name:r.exampleName,monthlyPrice:99,usedPerMonth:0,expectedPerMonth:0},{name:"AI B",monthlyPrice:49,usedPerMonth:12,expectedPerMonth:12}]);setSubmitted(true);};
+ const update=(i:number,patch:Partial<DraftItem>)=>{setItems(v=>v.map((x,j)=>i===j?{...x,...patch}:x));setSubmitted(false);};
+ const calculation=useMemo(()=>{try{return {result:diagnoseAiSpend({currency,items:items.map(intoItem)}),error:""};}catch(e){return {result:null,error:e instanceof Error?e.message:t.error};}},[currency,items,t.error]);
+ const loadExample=()=>{setItems([{name:r.exampleName,monthlyPrice:"99",usedPerMonth:"0",expectedPerMonth:"0",monthlyQuota:"",alternativeMonthlyPrice:"",essential:false},{name:"AI B",monthlyPrice:"49",usedPerMonth:"12",expectedPerMonth:"12",monthlyQuota:"",alternativeMonthlyPrice:"",essential:false}]);setSubmitted(true);};
  const share=async()=>{if(!calculation.result)return;const v=calculation.result;const text=t.title+"\n"+t.current+": "+money(v.monthlySpend)+"\n"+t.potential+": "+money(v.potentialMonthlySavings)+"\n"+r.disclaimer+"\nhttps://lingxifield.com/siai/spend-diagnostic";try{await navigator.clipboard.writeText(text);setCopyStatus(true);}catch{setCopyStatus(false);}};
  return <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-7 text-slate-900 sm:px-6" dir={lang==="ar"?"rtl":"ltr"} lang={lang==="zh"?"zh-CN":lang}>
   <div className="mb-6 rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-sky-50 px-5 py-7 shadow-sm sm:px-8">
@@ -33,14 +49,14 @@ export default function SpendDiagnostic(){
     <div className="mb-3 flex items-center justify-between gap-3"><h2 className="text-lg font-bold">{i+1}. {t.name}</h2>{items.length>1&&<button type="button" className="rounded-lg px-2 py-2 text-sm text-rose-700 hover:bg-rose-50" onClick={()=>{setItems(v=>v.filter((_,j)=>j!==i));setSubmitted(false);}}>{t.remove}</button>}</div>
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
      <label className="text-sm font-medium text-slate-700">{t.name}<input className={field} maxLength={100} value={item.name} placeholder={r.exampleName} onChange={e=>update(i,{name:e.target.value})}/></label>
-     <label className="text-sm font-medium text-slate-700">{t.price}<input className={field} type="number" min="0" max="1000000" step="0.01" value={item.monthlyPrice} onChange={e=>update(i,{monthlyPrice:e.target.valueAsNumber})}/></label>
-     <label className="text-sm font-medium text-slate-700">{t.usage}<input className={field} type="number" min="0" max="1000000" step="1" value={item.usedPerMonth} onChange={e=>update(i,{usedPerMonth:e.target.valueAsNumber})}/></label>
+     <label className="text-sm font-medium text-slate-700">{t.price}<input className={field} type="number" min="0" max="1000000" step="0.01" value={item.monthlyPrice} onChange={e=>update(i,{monthlyPrice:e.target.value})}/></label>
+     <label className="text-sm font-medium text-slate-700">{t.usage}<input className={field} type="number" min="0" max="1000000" step="1" value={item.usedPerMonth} onChange={e=>update(i,{usedPerMonth:e.target.value})}/></label>
     </div>
     <details className="mt-3 rounded-xl bg-slate-50 p-3"><summary className="cursor-pointer text-sm font-semibold text-emerald-800">{t.compare} · {t.expected}</summary>
       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-       <label className="text-sm font-medium text-slate-700">{t.expected}<input className={field} type="number" min="0" max="1000000" step="1" placeholder={String(item.usedPerMonth)} value={item.expectedPerMonth??""} onChange={e=>update(i,{expectedPerMonth:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
-       <label className="text-sm font-medium text-slate-700">{t.quotaMonthly}<input className={field} type="number" min="0" max="1000000" step="1" placeholder="—" value={item.monthlyQuota??""} onChange={e=>update(i,{monthlyQuota:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
-       <label className="text-sm font-medium text-slate-700">{t.alternate}<input className={field} type="number" min="0" max="1000000" step="0.01" placeholder="—" value={item.alternativeMonthlyPrice??""} onChange={e=>update(i,{alternativeMonthlyPrice:e.target.value===""?undefined:e.target.valueAsNumber})}/></label>
+       <label className="text-sm font-medium text-slate-700">{t.expected}<input className={field} type="number" min="0" max="1000000" step="1" placeholder={item.usedPerMonth} value={item.expectedPerMonth} onChange={e=>update(i,{expectedPerMonth:e.target.value})}/></label>
+       <label className="text-sm font-medium text-slate-700">{t.quotaMonthly}<input className={field} type="number" min="0" max="1000000" step="1" placeholder="—" value={item.monthlyQuota} onChange={e=>update(i,{monthlyQuota:e.target.value})}/></label>
+       <label className="text-sm font-medium text-slate-700">{t.alternate}<input className={field} type="number" min="0" max="1000000" step="0.01" placeholder="—" value={item.alternativeMonthlyPrice} onChange={e=>update(i,{alternativeMonthlyPrice:e.target.value})}/></label>
       </div>
     </details>
     <label className="mt-4 inline-flex min-h-9 items-center gap-3 text-sm text-slate-700"><input type="checkbox" className="h-4 w-4 accent-emerald-700" checked={!!item.essential} onChange={e=>update(i,{essential:e.target.checked})}/>{t.essential}</label>
