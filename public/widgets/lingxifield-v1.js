@@ -14,15 +14,15 @@
  var browserLang=(script.getAttribute("data-lang")||document.documentElement.lang||navigator.language||"en").slice(0,2).toLowerCase();
  var locale=/^(zh|en|ja|ko|fr|de|es|pt|ar)$/.test(browserLang)?browserLang:"en";
  var translations={
-  zh:["全球 SIAI 厂商资料","官方资料核验后更新","搜索厂商或功能","查看完整全球排行榜","官方资料","已核验","免费二维码生成","输入公开网页链接","生成二维码","查看完整工具","仅用于公开链接，请勿输入私人资料","资料暂时不可用","资料核验日期","价格","免费额度","使用须知：二维码链接会提交至 LINGXIFIELD 生成"],
-  en:["Global SIAI directory","Updated after source verification","Search providers or tasks","Explore full rankings","Official website","Reviewed","Free QR generator","Enter a public website URL","Make QR code","Open full tool","Public links only. Do not enter sensitive data","Directory temporarily unavailable","Reviewed","Price","Free tier","The URL is sent to LINGXIFIELD to create the QR image"],
-  ja:["世界の SIAI 企業一覧","公式情報を確認後に更新","企業または機能を検索","ランキング全体を見る","公式サイト","確認済み","無料 QR 作成","公開 URL を入力","QR 作成","ツールを開く","個人情報を入力しないでください","一時的に利用不可","確認日","価格","無料枠","URL は QR 画像作成のために送信されます"],
-  ko:["글로벌 SIAI 디렉터리","공식 출처 확인 후 업데이트","업체 또는 기능 검색","전체 순위 보기","공식 사이트","검토 완료","무료 QR 생성","공개 URL 입력","QR 만들기","전체 도구","민감한 정보를 입력하지 마세요","일시적으로 이용할 수 없음","검토 날짜","가격","무료 한도","QR 생성을 위해 URL이 전송됩니다"],
-  fr:["Annuaire mondial SIAI","Mis à jour après vérification","Rechercher un fournisseur","Voir le classement complet","Site officiel","Vérifiés","Créer un QR gratuit","URL publique","Créer le QR","Ouvrir l’outil","Ne saisissez pas de données privées","Indisponible temporairement","Vérifié le","Prix","Offre gratuite","L’URL est transmise à LINGXIFIELD pour créer le QR"],
-  de:["Globales SIAI-Verzeichnis","Aktualisiert nach Quellenprüfung","Anbieter suchen","Gesamtes Ranking","Offizielle Website","Geprüft","Gratis QR-Code","Öffentliche URL eingeben","QR erstellen","Zum Tool","Keine vertraulichen Daten eingeben","Vorübergehend nicht verfügbar","Geprüft","Preis","Gratis-Kontingent","Die URL wird zur QR-Erstellung übermittelt"],
-  es:["Directorio global SIAI","Actualizado tras verificar fuentes","Buscar proveedores","Ver ranking completo","Sitio oficial","Verificados","Generador QR gratis","URL pública","Crear QR","Abrir herramienta","No introduzcas datos privados","Temporalmente no disponible","Verificado","Precio","Plan gratis","La URL se envía a LINGXIFIELD para generar el QR"],
-  pt:["Diretório global SIAI","Atualizado após checagem das fontes","Buscar plataformas","Ver ranking completo","Site oficial","Verificados","Gerar QR grátis","URL pública","Criar QR","Abrir ferramenta","Não insira dados privados","Indisponível no momento","Verificado","Preço","Plano gratuito","O URL é enviado para gerar o QR"],
-  ar:["دليل SIAI العالمي","يُحدَّث بعد التحقق من المصادر","ابحث عن منصة","عرض الترتيب الكامل","الموقع الرسمي","تم التحقق","إنشاء QR مجاني","رابط موقع عام","إنشاء الرمز","فتح الأداة","لا تدخل بيانات حساسة","غير متاح مؤقتاً","تاريخ المراجعة","السعر","المجاني","يُرسل الرابط لإنشاء رمز QR"]
+  zh:["全球 SIAI 厂商资料","官方资料核验后更新","搜索厂商或功能","查看完整全球排行榜","官方资料","已核验","免费二维码生成","输入公开网页链接","生成二维码","查看完整工具","仅用于公开链接，请勿输入私人资料","资料暂时不可用","资料核验日期","价格","免费额度","使用须知：二维码链接会提交至 LINGXIFIELD 生成","没有找到匹配的已审核平台"],
+  en:["Global SIAI directory","Updated after source verification","Search providers or tasks","Explore full rankings","Official website","Reviewed","Free QR generator","Enter a public website URL","Make QR code","Open full tool","Public links only. Do not enter sensitive data","Directory temporarily unavailable","Reviewed","Price","Free tier","The URL is sent to LINGXIFIELD to create the QR image","No matching approved platforms"],
+  ja:["世界の SIAI 企業一覧","公式情報を確認後に更新","企業または機能を検索","ランキング全体を見る","公式サイト","確認済み","無料 QR 作成","公開 URL を入力","QR 作成","ツールを開く","個人情報を入力しないでください","一時的に利用不可","確認日","価格","無料枠","URL は QR 画像作成のために送信されます","一致する確認済み企業がありません"],
+  ko:["글로벌 SIAI 디렉터리","공식 출처 확인 후 업데이트","업체 또는 기능 검색","전체 순위 보기","공식 사이트","검토 완료","무료 QR 생성","공개 URL 입력","QR 만들기","전체 도구","민감한 정보를 입력하지 마세요","일시적으로 이용할 수 없음","검토 날짜","가격","무료 한도","QR 생성을 위해 URL이 전송됩니다","일치하는 검증된 플랫폼이 없습니다"],
+  fr:["Annuaire mondial SIAI","Mis à jour après vérification","Rechercher un fournisseur","Voir le classement complet","Site officiel","Vérifiés","Créer un QR gratuit","URL publique","Créer le QR","Ouvrir l’outil","Ne saisissez pas de données privées","Indisponible temporairement","Vérifié le","Prix","Offre gratuite","L’URL est transmise à LINGXIFIELD pour créer le QR","Aucune plateforme vérifiée correspondante"],
+  de:["Globales SIAI-Verzeichnis","Aktualisiert nach Quellenprüfung","Anbieter suchen","Gesamtes Ranking","Offizielle Website","Geprüft","Gratis QR-Code","Öffentliche URL eingeben","QR erstellen","Zum Tool","Keine vertraulichen Daten eingeben","Vorübergehend nicht verfügbar","Geprüft","Preis","Gratis-Kontingent","Die URL wird zur QR-Erstellung übermittelt","Keine passenden geprüften Anbieter"],
+  es:["Directorio global SIAI","Actualizado tras verificar fuentes","Buscar proveedores","Ver ranking completo","Sitio oficial","Verificados","Generador QR gratis","URL pública","Crear QR","Abrir herramienta","No introduzcas datos privados","Temporalmente no disponible","Verificado","Precio","Plan gratis","La URL se envía a LINGXIFIELD para generar el QR","Sin plataformas verificadas coincidentes"],
+  pt:["Diretório global SIAI","Atualizado após checagem das fontes","Buscar plataformas","Ver ranking completo","Site oficial","Verificados","Gerar QR grátis","URL pública","Criar QR","Abrir ferramenta","Não insira dados privados","Indisponível no momento","Verificado","Preço","Plano gratuito","O URL é enviado para gerar o QR","Nenhuma plataforma verificada encontrada"],
+  ar:["دليل SIAI العالمي","يُحدَّث بعد التحقق من المصادر","ابحث عن منصة","عرض الترتيب الكامل","الموقع الرسمي","تم التحقق","إنشاء QR مجاني","رابط موقع عام","إنشاء الرمز","فتح الأداة","لا تدخل بيانات حساسة","غير متاح مؤقتاً","تاريخ المراجعة","السعر","المجاني","يُرسل الرابط لإنشاء رمز QR","لا توجد منصات معتمدة مطابقة"]
  };
  var t=translations[locale];
  var destination=base+(type==="siai"?"/siai":"/tools/qr-code-generator");
@@ -71,7 +71,7 @@
  }else{
   var search=elem("input");search.type="search";search.placeholder=t[2];search.setAttribute("aria-label",t[2]);shell.appendChild(search);
   var list=elem("div","list");list.setAttribute("aria-live","polite");shell.appendChild(list);
-  var foot2=elem("div","footer");foot2.appendChild(cta(t[3]));shell.appendChild(foot2);
+  var foot2=elem("div","footer");var more=cta(t[3]);foot2.appendChild(more);shell.appendChild(foot2);
   var rows=[];
   function draw(){
    list.replaceChildren();
@@ -88,12 +88,12 @@
     }
     list.appendChild(item);
    });
-   if(!found.length)list.appendChild(elem("div","note",t[11]));
+   if(!found.length)list.appendChild(elem("div","note",rows.length?t[16]:t[11]));
   }
   search.addEventListener("input",draw);
   fetch(base+"/api/public/siai-widget",{credentials:"omit",mode:"cors"})
    .then(function(r){if(!r.ok)throw Error("feed");return r.json();})
-   .then(function(data){if(!data||!Array.isArray(data.rows))throw Error("invalid");rows=vendor?data.rows.filter(function(r){return r.id===vendor;}):data.rows;tag.textContent=t[5]+" "+(vendor?rows.length:data.total);draw();})
+   .then(function(data){if(!data||!Array.isArray(data.rows))throw Error("invalid");rows=vendor?data.rows.filter(function(r){return r.id===vendor;}):data.rows;tag.textContent=t[5]+" "+(vendor?rows.length:data.total);if(vendor&&rows.length)more.href=destination+"?q="+encodeURIComponent(rows[0].name)+"&utm_source=partner_widget&utm_campaign="+campaign+"&utm_content="+encodeURIComponent(partner);draw();})
    .catch(function(){list.replaceChildren(elem("p","note",t[11]));});
  }
 })();
