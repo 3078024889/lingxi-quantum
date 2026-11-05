@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import {buildFivePosts,slotAtHour, trackedLink, TELEGRAM_SLOTS} from "../supabase/functions/globalsiai-bot/editorial.ts";
+import {buildFivePosts,buildGroupPosts,QQ_GROUPS,slotAtHour,trackedLink,trackedCNLink,TELEGRAM_SLOTS} from "../supabase/functions/globalsiai-bot/editorial.ts";
 
 const index=fs.readFileSync(new URL("../supabase/functions/globalsiai-bot/index.ts",import.meta.url),"utf8");
 const cron=fs.readFileSync(new URL("../supabase/migrations/20261105120000_globalsiai_free_crons.sql",import.meta.url),"utf8");
@@ -73,4 +73,45 @@ test("edge health works, unauthorized posts fail closed without any secret",asyn
   const denied=await callback(new Request("https://example.org/",{method:"POST",headers:{"x-lx-schedule-key":"wrong"},body:'{"slot":"discovery"}'}));
   assert.equal(denied.status,401);
  } finally{globalThis.Deno=prevDeno}
+});
+
+test("all five daily posts contain working paired .com and .cn domains",()=>{
+ for(const channel of ["telegram","qq"]){
+  for(let day=1;day<=7;day++){
+   const posts=buildFivePosts(new Date(`2026-11-${String(day).padStart(2,"0")}T04:00:00Z`),channel);
+   for(const post of posts){
+    assert.match(post.text,/https:\/\/lingxifield\.com\//);
+    assert.match(post.text,/https:\/\/lingxifield\.cn\//);
+    assert.match(post.text,/utm_source=(?:telegram|qq)/);
+    assert.match(post.text,/国际站：/);
+    assert.match(post.text,/国内站：/);
+    assert.ok(post.text.length<4096);
+   }
+  }
+ }
+ const cn=new URL(trackedCNLink("/siai","siai_comparison","comparison","telegram"));
+ assert.equal(cn.hostname,"lingxifield.cn");
+ assert.equal(cn.searchParams.get("utm_source"),"telegram");
+});
+
+test("QQ 3 official groups have separate traceable campaigns and correct content",()=>{
+ assert.deepEqual(QQ_GROUPS.map(x=>x.id),["1074475201","1072178710","601549887"]);
+ const date=new Date("2026-11-05T04:00:00Z");
+ for(const group of QQ_GROUPS){
+  const posts=buildGroupPosts(date,group.id);
+  assert.equal(posts.length,5);
+  for(const post of posts){
+   assert.match(post.text,new RegExp("qq_"+group.id+"_"+post.slot));
+   assert.match(post.text,/lingxifield\.com/);
+   assert.match(post.text,/lingxifield\.cn/);
+   assert.ok(post.text.length<4096);
+  }
+ }
+ assert.match(buildGroupPosts(date,"601549887")[0].text,/全球 SIAI 排行榜/);
+});
+
+test("Telegram /help and welcome render links to both verified domains",()=>{
+ assert.match(index,/trackedCNLink/);
+ assert.match(index,/pairLinks\("\/siai","bot_ranking"\)/);
+ assert.match(index,/pairLinks\("\/tools","welcome_tools"\)/);
 });
