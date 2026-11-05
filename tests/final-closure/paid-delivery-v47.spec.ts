@@ -16,7 +16,12 @@ for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar']){
   await expect(open).toHaveCount(1);
   await open.click();
   const dialog=page.getByRole('dialog');await expect(dialog).toBeVisible();
-  await expect(dialog.locator('input[readonly]')).toHaveValue(new RegExp(`/tools/e-sign-pdf\\?lang=${lang}$`));
+  const publicLink=new URL(await dialog.locator('input[readonly]').inputValue());
+  expect(publicLink.pathname).toBe('/tools/e-sign-pdf');
+  expect(publicLink.searchParams.get('lang')).toBe(lang);
+  expect(publicLink.searchParams.get('utm_source')).toBe('tool_share');
+  expect(publicLink.searchParams.get('utm_campaign')).toBe('free_tools');
+  expect([...publicLink.searchParams.keys()].sort()).toEqual(['lang','utm_campaign','utm_source']);
   await expect(dialog).toContainText(deliveryText(lang,'privateShare'));
   const box=await dialog.boundingBox();expect(box).not.toBeNull();
   expect(box!.x).toBeGreaterThanOrEqual(0);expect(box!.x+box!.width).toBeLessThanOrEqual(page.viewportSize()!.width+1);
