@@ -46,21 +46,9 @@ test("tracking attributes link clicks to the correct community",()=>{
  assert.equal(telegram.searchParams.get("utm_source"),"telegram");
  assert.equal(telegram.searchParams.get("utm_content"),"tutorial");
 });
-test("five independent cron entries are Hobby compatible and preserve existing jobs",()=>{
+test("legacy Vercel Telegram crons are disabled in favour of independent free Supabase cron",()=>{
  const conf=JSON.parse(readFileSync(new URL("../vercel.json",import.meta.url)));
- const wanted=[
-  ["/api/cron/telegram-daily","5 1 * * *"],
-  ["/api/cron/telegram-tutorial","5 3 * * *"],
-  ["/api/cron/telegram-comparison","5 6 * * *"],
-  ["/api/cron/telegram-creation","5 9 * * *"],
-  ["/api/cron/telegram-community","5 12 * * *"],
- ];
- for(const [path,schedule] of wanted){
-   const rows=conf.crons.filter(c=>c.path===path);
-   assert.equal(rows.length,1); assert.equal(rows[0].schedule,schedule);
-   assert.ok(existsSync(new URL(`../app${path}/route.ts`,import.meta.url)));
- }
- assert.equal(conf.crons.filter(c=>c.path.startsWith("/api/cron/telegram-")).length,5);
+ assert.equal(conf.crons.filter(c=>c.path.startsWith("/api/cron/telegram-")).length,0);
  assert.ok(conf.crons.some(c=>c.path==="/api/cron/privacy-cleanup"));
  assert.ok(conf.crons.some(c=>c.path==="/api/cron/withdrawal-reconcile"));
  assert.ok(conf.crons.some(c=>c.path==="/api/cron/sasi-v5-radar"));
