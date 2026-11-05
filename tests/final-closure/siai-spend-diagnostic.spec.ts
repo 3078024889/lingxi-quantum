@@ -21,7 +21,7 @@ test.describe("free SI/AI spend diagnosis",()=>{
   await expect(page.getByText("¥0.00").first()).toBeVisible();
   await page.getByText(/找替代方案 · 下月预计次数/).click();
   await page.getByRole("spinbutton",{name:"下月预计次数"}).fill("30");
-  await page.getByRole("spinbutton",{name:"当前套餐每月额度"}).fill("12");
+  await page.getByRole("spinbutton",{name:"套餐每月可完成次数"}).fill("12");
   await page.getByRole("button",{name:/开始诊断/}).click();
   await expect(page.getByText(/预计额度缺口: 18/)).toBeVisible();
  });
@@ -40,5 +40,6 @@ test.describe("free SI/AI spend diagnosis",()=>{
   await expect(page.getByRole("heading",{name:"Are your AI subscriptions worth it?"})).toBeVisible();
   await page.getByRole("button",{name:"Load sample"}).click();
   await expect(page.getByRole("heading",{name:"Your results"})).toBeVisible();
+  await expect(page.getByText("Tasks included per month")).not.toBeVisible();
  });
 });
