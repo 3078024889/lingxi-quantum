@@ -117,3 +117,16 @@ test("tool pass purchase UI is hidden and noindexed until safety gates are enabl
  assert(ui.includes('aria-live="polite"'));
  assert(ui.includes('disabled={Boolean(pending)}'));
 });
+
+test("pass status exposes only the authenticated user's own verified entitlement state",()=>{
+ const code=read("app/api/tools/pass/status/route.ts");
+ assert(code.includes('LINGXIFIELD_TOOL_PASS_ENABLED'));
+ assert(code.includes('!offers.active'));
+ assert(code.includes('.auth.getUser()'));
+ assert(code.includes('.eq("user_id",user.id)'));
+ assert(code.includes('o.state==="active"'));
+ assert(code.includes('Date.parse(o.ends_at)>now'));
+ assert(code.includes('Cache-Control":"private, no-store'));
+ assert(!code.includes('select("*")'));
+ assert(!code.includes('service_role'));
+});
