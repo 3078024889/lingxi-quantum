@@ -104,6 +104,17 @@ function BrandMark({id,name}:{id:string;name:string}){
  return <span className="siai-brand-mark">{src?<img loading="lazy" decoding="async" src={src} alt={name+" brand logo"} onError={()=>setFailed(true)}/>:<span aria-hidden="true">{name.slice(0,2).toUpperCase()}</span>}</span>;
 }
 
+const VIDEO_COST_COPY:Record<LingxiLang,string>={
+ zh:"短视频成本",en:"Video costs",ja:"動画の費用",ko:"영상 제작 비용",
+ fr:"Coûts vidéo",de:"Videokosten",es:"Coste de vídeo",pt:"Custo de vídeo",ar:"تكلفة الفيديو"
+};
+const FACET_TOTAL_COPY:Record<LingxiLang,string>={
+ zh:"全榜单已核实的付款方式数量",en:"Sourced totals across the full directory",
+ ja:"全件の根拠付き支払い方法数",ko:"전체 목록의 출처 확인 결제수단 수",
+ fr:"Total vérifié pour tout le catalogue",de:"Belegte Gesamtanzahl im gesamten Verzeichnis",
+ es:"Total verificado de todo el catálogo",pt:"Total verificado de todo o diretório",ar:"الإجمالي الموثق في كامل الدليل"
+};
+
 export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  const {lang}=useLingxiLang(),t=labels[lang],ui=SIAI_FACET_WORDS[lang];
  const {currency}=usePreferredCurrency();
@@ -284,12 +295,12 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
     <strong>{ui.task}</strong><div className="siai-filter-options">
      {TASK_FACETS.map(v=><button key={v} type="button" aria-pressed={task===v&&category==="*"} className={task===v&&category==="*"?"selected":""} onClick={()=>{setCategory("*");setTask(v);}}>{ui.taskLabels[v]} <span className="siai-facet-count">{facetCounts.task[v]}</span></button>)}
      {category!=="*"&&<button type="button" className="siai-clear-legacy-filter" onClick={()=>setCategory("*")}>{categoryName(category)} ×</button>}
-      <a className="siai-cost-category-link" href="#siai-cost-estimator" onClick={()=>{const panel=document.getElementById("siai-cost-estimator");if(panel instanceof HTMLDetailsElement)panel.open=true;}}>{lang==="zh"?"短视频成本":lang==="en"?"Video costs":"Video / API"} <span className="siai-facet-count">{pricedVideoCount}</span></a>
+      <a className="siai-cost-category-link" href="#siai-cost-estimator" onClick={()=>{const panel=document.getElementById("siai-cost-estimator");if(panel instanceof HTMLDetailsElement)panel.open=true;}}>{VIDEO_COST_COPY[lang]} <span className="siai-facet-count">{pricedVideoCount}</span></a>
     </div>
    </nav>
    <div className="siai-filter-line siai-payment-line">
     <nav className="siai-pay-choices" aria-label={ui.payment}><strong>{ui.payment}</strong><div className="siai-filter-options">
-     {PAYMENT_FACETS.map(v=><button key={v} type="button" aria-pressed={payment===v} className={payment===v?"selected":""} onClick={()=>setPayment(v)} title={lang==="zh"?"全榜单已核实付款方式数量":"Sourced full-directory payment counts"}>{ui.paymentLabels[v]}{v!=="any"&&<span className="siai-facet-count">{facetCounts.payment[v]}</span>}</button>)}
+     {PAYMENT_FACETS.map(v=><button key={v} type="button" aria-pressed={payment===v} className={payment===v?"selected":""} onClick={()=>setPayment(v)} title={FACET_TOTAL_COPY[lang]}>{ui.paymentLabels[v]}{v!=="any"&&<span className="siai-facet-count">{facetCounts.payment[v]}</span>}</button>)}
     </div></nav>
     <div className="siai-compact-selects">
      <label className="siai-evidence-select">{ui.evidence}<select value={evidence} aria-label={ui.evidence} onChange={e=>setEvidence(e.target.value as EvidenceFacet)}>{EVIDENCE_FACETS.map(v=><option value={v} key={v}>{ui.evidenceLabels[v]}</option>)}</select></label>
