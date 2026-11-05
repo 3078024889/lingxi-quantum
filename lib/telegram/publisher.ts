@@ -12,6 +12,10 @@ export async function publishTelegramSlot(request:Request, slot:TelegramSlot) {
   if (!expected || request.headers.get("authorization")!==`Bearer ${expected}`) {
     return NextResponse.json({error:"UNAUTHORIZED"},{status:401});
   }
+  // Commercial outreach is disabled by default until hosting terms and live bot access are verified.
+  if(process.env.TELEGRAM_PUBLISH_ENABLED!=="true"){
+    return NextResponse.json({error:"PUBLISHING_NOT_ENABLED"},{status:503});
+  }
   const now=new Date();
   // The exact slot, not the caller's query string, chooses what may be published.
   if(singaporeHour(now)!==SLOT_HOURS[slot]) {
