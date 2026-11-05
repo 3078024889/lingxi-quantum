@@ -56,7 +56,7 @@ test('UI never edits 62-row source facts, table pinning or both synchronized scr
  const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
  const component=read('components/SiaiRankingHome.tsx'),css=read('app/siai-home.css');
  const catalog=read('app/siai/catalog-data.ts');
- assert.match(catalog,/curated\.length!==32\|\|rows\.length!==62/);
+ assert.match(catalog,/assertSiaiPublicationManifest\(manifest,curated,preview\)/);
  assert.match(component,/marketFacetCounts\(/);
  assert.match(component,/className="siai-home-four-filters siai-filter-compact"/);
  assert.doesNotMatch(component,/<strong>\{ui\.category\}<\/strong>/);
