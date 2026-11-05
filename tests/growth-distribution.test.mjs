@@ -80,6 +80,12 @@ test("WordPress shortcodes sanitize attributes and return output rather than pri
  assert.match(php,/add_shortcode\('lingxifield_vendor'/);
  assert.match(php,/esc_attr\(/);
  assert(!php.includes("eval("));
+ assert.match(php,/plugins_url\('assets\/lingxifield-v1\.js', __FILE__\)/);
+ assert.match(php,/data-api-origin="https:\/\/lingxifield\.com"/);
+ assert(!php.includes('src="https://lingxifield.com/widgets/'));
+ const bundled=read("integrations/wordpress/lingxifield-widgets/assets/lingxifield-v1.js");
+ assert.equal(bundled,widget,"WordPress executable asset must match the reviewed public widget source");
+ assert.doesNotThrow(()=>new Function(bundled));
 });
 
 test("open developer API is strictly read-only and documents only sourced review facts",()=>{
