@@ -104,7 +104,7 @@ async function syntheticWatermarkVideo(_page:any){
 }
 
 async function sampleVideoPixel(page:any,bytes:Buffer,mime:string,x:number,y:number){
- return page.evaluate(async({base64,type,x,y})=>{
+ return page.evaluate(async({base64,type,x,y}:{base64:string;type:string;x:number;y:number})=>{
   const raw=Uint8Array.from(atob(base64),ch=>ch.charCodeAt(0)),url=URL.createObjectURL(new Blob([raw],{type}));
   const video=document.createElement("video");
   video.preload="auto";video.muted=true;video.playsInline=true;video.src=url;
