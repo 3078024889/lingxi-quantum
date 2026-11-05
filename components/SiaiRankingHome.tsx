@@ -145,8 +145,8 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
   localizedCategory:categoryName(p.category)})),[rows,lang]);
  const pricedVideoVendors=useMemo(()=>new Set(VIDEO_RATES.filter(rate=>/^https:\/\//.test(rate.source)&&['credits','per-second','plan-equivalent','token-only'].includes(rate.billing)).map(rate=>rate.platform)),[]);
  const pricedVideoCount=useMemo(()=>rows.filter(row=>pricedVideoVendors.has(row.id)).length,[rows,pricedVideoVendors]);
- const facetCounts=useMemo(()=>marketFacetCounts(localizedRows,{query,category,task,payment,evidence,sort},lang),
-  [localizedRows,query,category,task,payment,evidence,sort,lang]);
+ const facetCounts=useMemo(()=>marketFacetCounts(localizedRows,{query:"",category:"*",task:"all",payment:"any",evidence:"all",sort:"catalog"},lang),
+  [localizedRows,lang]);
  const shown=useMemo(()=>filterMarketRows(localizedRows,{query,category,task,payment,evidence,sort},lang),
   [localizedRows,query,category,task,payment,evidence,sort,lang]);
  const pageCount=Math.max(1,Math.ceil(shown.length/pageSize));
