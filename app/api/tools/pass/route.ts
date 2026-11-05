@@ -7,6 +7,7 @@ import {ALL_TOOLS_PASS_CATALOG,allToolsPassOffer} from "@/lib/tools/commerce/all
 import {parseCurrency,recommendedCurrency} from "@/lib/payments/currency-book";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
+const COMMERCE_READY=process.env.TOOL_PASS_COMMERCE_READY==="true";
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function GET(req:NextRequest){
  const {data:{user}}=await createClient().auth.getUser();
@@ -17,9 +18,10 @@ export async function GET(req:NextRequest){
    .eq("user_id",user.id).gt("expires_at",new Date().toISOString()).order("expires_at",{ascending:false}).limit(1);
   expiresAt=data?.find(x=>new Date(x.starts_at).getTime()<=Date.now())?.expires_at||null;
  }
- return NextResponse.json({currency,offers:ALL_TOOLS_PASS_CATALOG,expiresAt},{headers:{"Cache-Control":"private,no-store"}});
+ return NextResponse.json({currency,offers:ALL_TOOLS_PASS_CATALOG,expiresAt,available:COMMERCE_READY},{headers:{"Cache-Control":"private,no-store"}});
 }
 export async function POST(req:NextRequest){
+ if(!COMMERCE_READY)return NextResponse.json({error:"PASS_COMMERCE_NOT_READY"},{status:503});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  if(Number(req.headers.get("content-length")||0)>4096)return NextResponse.json({error:"REQUEST_TOO_LARGE"},{status:413});
  const {data:{user}}=await createClient().auth.getUser();
