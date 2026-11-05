@@ -1,5 +1,6 @@
 "use client";
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+import {claimToolStart,TOOL_PASS_ENFORCED,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 
 
 import {useCallback,useEffect,useRef,useState} from "react";
@@ -30,6 +31,8 @@ export default function FileDropzone({
   const[error,setError]=useState<string|null>(null);
   const[previews,setPreviews]=useState<Preview[]>([]);
   const[normalizing,setNormalizing]=useState(false);
+  const[authorizing,setAuthorizing]=useState(false);
+  const pendingRef=useRef(false);
   const pdfDocumentMode=normalizeDocuments&&(accept.toLowerCase().includes(".pdf")||accept.toLowerCase().includes("application/pdf"));
   const effectiveAccept=pdfDocumentMode?Array.from(new Set([...accept.split(","),...DOCUMENT_INPUT_ACCEPT.split(",")])).join(","):accept;
 
@@ -56,25 +59,42 @@ export default function FileDropzone({
     const unique=Array.from(new Map(merged.map(file=>[fileIdentity(file),file])).values());
     if(!multiple&&unique.length>1){setError(plainText(lang,"oneFile"));return}
     if(multiple&&unique.length>maxFiles){setError(plainText(lang,"fileLimit",{count:maxFiles}));return}
+    if(TOOL_PASS_ENFORCED){
+      const toolSlug=location.pathname.match(/^\\/tools\\/([^/?#]+)/)?.[1]||"";
+      if(toolSlug&&toolSlug!=="pay"&&toolSlug!=="pass"){
+        if(pendingRef.current)return;
+        pendingRef.current=true;setAuthorizing(true);
+        try{
+          const original=new Map<string,number>();
+          for(const f of files){const k=fileIdentity(f);original.set(k,(original.get(k)||0)+1)}
+          let newUnits=0;
+          for(const f of unique){const k=fileIdentity(f);const count=original.get(k)||0;if(count>0)original.set(k,count-1);else newUnits++}
+          if(newUnits>0)await claimToolStart(toolSlug,newUnits);
+        }catch(e){
+          setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"));
+          return;
+        }finally{pendingRef.current=false;setAuthorizing(false)}
+      }
+    }
     setError(null);onChange(multiple?unique:unique.slice(0,1));
   },[append,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode]);
 
   const promptKey=kind==="image"?"dropImagesOrChoose":kind==="media"?"dropMediaOrChoose":kind==="pdf"?"dropPdfOrChoose":kind==="subtitle"?"dropSubtitleOrChoose":"dropOrChoose";
 
   return <div>
-    <div role="button" tabIndex={disabled?-1:0} aria-disabled={(disabled||normalizing)||undefined}
-      onKeyDown={e=>{if(!disabled&&!normalizing&&(e.key==="Enter"||e.key===" ")){e.preventDefault();inputRef.current?.click()}}}
-      onClick={()=>!disabled&&!normalizing&&inputRef.current?.click()}
+    <div role="button" tabIndex={disabled?-1:0} aria-disabled={(disabled||normalizing||authorizing)||undefined}
+      onKeyDown={e=>{if(!disabled&&!normalizing&&!authorizing&&(e.key==="Enter"||e.key===" ")){e.preventDefault();inputRef.current?.click()}}}
+      onClick={()=>!disabled&&!normalizing&&!authorizing&&inputRef.current?.click()}
       onDragEnter={e=>{e.preventDefault();if(!disabled)setDrag(true)}}
       onDragOver={e=>{e.preventDefault();if(!disabled)setDrag(true)}}
       onDragLeave={e=>{if(e.currentTarget.contains(e.relatedTarget as Node|null))return;setDrag(false)}}
-      onDrop={e=>{e.preventDefault();setDrag(false);if(!disabled&&!normalizing)void apply(e.dataTransfer.files)}}
+      onDrop={e=>{e.preventDefault();setDrag(false);if(!disabled&&!normalizing&&!authorizing)void apply(e.dataTransfer.files)}}
       className={`cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition ${drag?"border-[var(--lx-line-strong)] bg-[var(--lx-soft)] ring-4 ring-[var(--lx-soft)]":"border-[var(--lx-line)] bg-[var(--lx-soft)] hover:border-[var(--lx-line-strong)]"} ${disabled?"pointer-events-none opacity-50":""}`}>
       <p className="text-base font-medium text-[var(--lx-ink)]">{drag?uploadText(lang,"dragActive"):plainText(lang,"choose")}</p>
       <p className="mt-2 text-xs leading-5 text-[var(--lx-faint)]">
-        {normalizing?documentIntakeText(lang,"busy"):uploadText(lang,"maxFile",{size:maxSizeMB})}{multiple?` · ${uploadText(lang,"maxFiles",{count:maxFiles})}`:""}
+        {normalizing||authorizing?documentIntakeText(lang,"busy"):uploadText(lang,"maxFile",{size:maxSizeMB})}{multiple?` · ${uploadText(lang,"maxFiles",{count:maxFiles})}`:""}
       </p>
-      <input ref={inputRef} type="file" className="hidden" accept={effectiveAccept} multiple={multiple} disabled={disabled||normalizing}
+      <input ref={inputRef} type="file" className="hidden" accept={effectiveAccept} multiple={multiple} disabled={disabled||normalizing||authorizing}
         onChange={e=>{if(e.target.files)void apply(e.target.files);e.target.value=""}}/>
     </div>
 
