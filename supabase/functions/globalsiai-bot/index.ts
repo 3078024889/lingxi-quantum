@@ -114,8 +114,30 @@ async function publish(req:Request,ctx:NonNullable<ReturnType<typeof config>>){
  if(!supplied||supplied.length>128 || await sha256(supplied)!==SCHEDULER_KEY_SHA256)return respond(401,{error:"UNAUTHORIZED"});
  const content=await req.text();
  if(content.length>4096)return respond(413,{error:"TOO_LARGE"});
- let body:{slot?:string};
+ let body:{slot?:string; action?:string};
  try{body=JSON.parse(content)}catch{return respond(400,{error:"BAD_JSON"})}
+ if(body.action==="setup"){
+  try{await installWebhook(ctx);return respond(200,{ok:true,webhook:"registered"})}
+  catch{return respond(503,{error:"WEBHOOK_SETUP_FAILED"})}
+ }
+ if(body.action==="smoke"){
+  const key=`smoke:${singaporeDay(new Date())}`;
+  try{
+   await installWebhook(ctx);
+   if(!(await claim(ctx,key,"webhook")))return respond(200,{ok:true,duplicate:true});
+   try{
+    await telegram(ctx.token,"sendMessage",{
+     chat_id:GROUP,text:"全球 SIAI 官方机器人连接测试成功。每日 5 次精选工具与教程发布已经设置好。\n欢迎交流：https://t.me/globalsiai",
+     link_preview_options:{is_disabled:true},
+    });
+    await status(ctx,key,"delivered");
+    return respond(200,{ok:true,smoke:"delivered"});
+   }catch{
+    await status(ctx,key,"failed");
+    return respond(503,{error:"SMOKE_FAILED"});
+   }
+  }catch{return respond(503,{error:"SMOKE_UNAVAILABLE"})}
+ }
  const slot=body.slot;
  if(!slot||!SLOTS.includes(slot as TelegramSlot))return respond(400,{error:"BAD_SLOT"});
  if(singaporeHour(new Date())!==SLOT_HOURS[slot as TelegramSlot])return respond(409,{error:"OUTSIDE_SLOT"});
