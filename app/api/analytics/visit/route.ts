@@ -7,7 +7,12 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {createAdminClient} from "@/lib/supabase/admin";
 export const runtime="nodejs";
 export async function POST(req:NextRequest){
- const host=req.nextUrl.hostname;
+ const receivingHost=req.nextUrl.hostname;
+ const marker=req.headers.get("x-lingxi-public-host");
+ // ECS preserves its public hostname while the HTTPS upstream remains .com.
+ // This is anonymous visit attribution only, never account authorization.
+ const proxied=receivingHost==="lingxifield.com"&&marker==="lingxifield.cn"&&req.headers.get("sec-fetch-site")==="same-origin";
+ const host=proxied?"lingxifield.cn":receivingHost;
  // Visit events must come from the exact receiving site, not merely another trusted brand domain.
  // Browser requests carry Origin; cross-domain writes should never pollute per-host analytics.
  const origin=req.headers.get("origin");
