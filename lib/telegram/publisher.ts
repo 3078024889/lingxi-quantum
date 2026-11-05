@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {telegramApi} from "@/lib/telegram/community";
+import {telegramApi,telegramMemberCount} from "@/lib/telegram/community";
 import {buildPost, singaporeDay, singaporeHour, SLOT_HOURS, type TelegramSlot} from "@/lib/telegram/editorial";
 
 export const runtime = "nodejs";
@@ -46,6 +46,21 @@ export async function publishTelegramSlot(request:Request, slot:TelegramSlot) {
     const done=await db.from("telegram_community_events")
       .update({status:"delivered"}).eq("event_key",key);
     if(done.error) return NextResponse.json({error:"SENT_BUT_LOG_FAILED",slot},{status:503});
+    if(slot==="community"){
+      const day=singaporeDay(now);
+      const [members,delivered]=await Promise.all([
+        telegramMemberCount(token,group),
+        db.from("telegram_community_events").select("event_key")
+          .eq("event_kind","daily").eq("status","delivered").like("event_key",`post:${day}:%`),
+      ]);
+      // Reporting is best effort and does not block delivery.
+      if(!delivered.error){
+        await db.from("telegram_community_daily_metrics").upsert({
+          snapshot_day:day,member_count:members,
+          posts_delivered:(delivered.data||[]).length,observed_at:now.toISOString(),
+        },{onConflict:"snapshot_day"});
+      }
+    }
     return NextResponse.json({ok:true,slot,date:singaporeDay(now)});
   }catch{
     await db.from("telegram_community_events").update({status:"failed"}).eq("event_key",key);
