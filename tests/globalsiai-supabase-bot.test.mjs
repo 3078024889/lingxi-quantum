@@ -33,7 +33,9 @@ test("QQ uses separate source attribution and preserves official group invite",(
 test("cron schedules map to five non-overlapping Singapore hour windows",()=>{
  const spec={discovery:"5 1 * * *",tutorial:"5 3 * * *",comparison:"5 6 * * *",creation:"5 9 * * *",community:"5 12 * * *"};
  for(const [slot,schedule] of Object.entries(spec)){
-   assert.match(cron,new RegExp(`'globalsiai-${slot}'[\\s\\S]*?'${schedule.replace(/\\*/g,"\\*")}'`));
+   const marker=`'globalsiai-${slot}'`; const at=cron.indexOf(marker);
+   assert.ok(at>=0,`missing cron for ${slot}`);
+   assert.ok(cron.slice(at,at+120).includes(`'${schedule}'`),`wrong schedule for ${slot}`);
  }
  assert.equal((cron.match(/select cron\.schedule\(/g)||[]).length,5);
  assert.match(cron,/vault\.decrypted_secrets/);
