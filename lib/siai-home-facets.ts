@@ -129,12 +129,12 @@ export function toggleMarketComparison(ids:readonly string[],id:string,knownIds:
  return ids.length>=MAX_COMPARISONS?[...ids]:[...ids,id];
 }
 
-/** Facet counts obey current search/evidence/other facet while excluding their own selector.
- * Multi-capability products count once in each applicable facet; never a global total sum. */
+/** Stable whole-directory counts; selection narrows results, never rewrites the badge
+ * numbers. Multi-capability products count once in each matching facet and only sourced
+ * vendor checkout capabilities count as payment methods. */
 export function marketFacetCounts<T extends FacetRow>(rows:readonly T[],criteria:MarketCriteria,locale='zh'){
- const byTask={...criteria,task:'all' as const};
- const byPayment={...criteria,payment:'any' as const};
- const task=Object.fromEntries(TASK_FACETS.map(key=>[key,filterMarketRows(rows,{...byTask,task:key},locale).length])) as Record<TaskFacet,number>;
- const payment=Object.fromEntries(PAYMENT_FACETS.map(key=>[key,filterMarketRows(rows,{...byPayment,payment:key},locale).length])) as Record<PaymentFacet,number>;
+ const baseline:MarketCriteria={query:'',category:'*',task:'all',payment:'any',evidence:'all',sort:'catalog'};
+ const task=Object.fromEntries(TASK_FACETS.map(key=>[key,filterMarketRows(rows,{...baseline,task:key},locale).length])) as Record<TaskFacet,number>;
+ const payment=Object.fromEntries(PAYMENT_FACETS.map(key=>[key,filterMarketRows(rows,{...baseline,payment:key},locale).length])) as Record<PaymentFacet,number>;
  return {task,payment};
 }
