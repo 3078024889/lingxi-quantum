@@ -10,6 +10,7 @@ import Link from "next/link";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {ensureBurnNoteAccess} from '@/lib/tools/commerce/export-access-client';
 import {METERED_EXPORT_TOOL_ID} from '@/lib/tools/commerce/metered-catalog';
+import {claimToolStart,ToolAccessError,toolAccessMessage} from '@/lib/tools/commerce/tool-start-client';
 
 function b64url(bytes:Uint8Array){let s="";bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 type Mode="once"|"timed"|"limited"|"fast";
@@ -27,6 +28,7 @@ export default function BurnAfterReadWorkbench(){
  const {currency}=usePreferredCurrency();
  const [pendingQuote,setPendingQuote]=useState("");
  const [draftId,setDraftId]=useState("");
+ const filesClaimed=useRef(false);
  const processing=useRef(false),finished=useRef(new Set<string>()),pollTimer=useRef<ReturnType<typeof setInterval>|null>(null);
  const textTask=useRef<PendingTextTask|null>(null),[recoverText,setRecoverText]=useState<PendingTextTask|null>(null);
  const stopPoll=()=>{if(pollTimer.current){clearInterval(pollTimer.current);pollTimer.current=null}};
@@ -49,11 +51,12 @@ export default function BurnAfterReadWorkbench(){
    if(textTask.current?.signature===signature){await deliverText(textTask.current);return}
    setBusy(true);setError('');
    try{
+    await claimToolStart('burn-after-read',1);
     const enc=await encryptedText();
     const task:TextTask={key:enc.key,body:{ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==='limited'?views:1,viewDurationSeconds:mode==='fast'?duration:null}};
     const pending={id:crypto.randomUUID(),signature,task,blob:new Blob([JSON.stringify(task)],{type:'application/json'})};textTask.current=pending;
     await deliverText(pending);
-   }catch{setError(deliveryText(lang,'failed'))}finally{setBusy(false)}
+   }catch(e){setError(e instanceof ToolAccessError?toolAccessMessage(lang,e.code):deliveryText(lang,'failed'))}finally{setBusy(false)}
  }
  async function deliverText(pending:PendingTextTask){
    setBusy(true);setError('');setLink('');setRecoverText(pending);
@@ -102,6 +105,7 @@ export default function BurnAfterReadWorkbench(){
    if(!files.length)return;
    setBusy(true);setError("");setLink("");
    try{
+     if(!filesClaimed.current){await claimToolStart("burn-after-read",files.length);filesClaimed.current=true;}
      const taskId=draftId||newPaidTaskDraftId();
      await savePaidTaskDraft({id:taskId,toolId:'burn-after-read-file',files,state:{text,mode,ttl,views,duration,quoteId:pendingQuote}});setDraftId(taskId);
      let id=pendingQuote;
@@ -139,7 +143,7 @@ export default function BurnAfterReadWorkbench(){
   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
    <textarea value={text} onChange={e=>setText(e.target.value)} maxLength={120000} rows={7} placeholder={toolUiCopy("输入要分享的私密内容，也可以只上传文件…")} className="w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
    <div className="mt-4 rounded-2xl border border-dashed border-slate-300 p-4">
-    <label className="cursor-pointer font-medium text-slate-900">{t("addFiles")}<input className="hidden" type="file" multiple onChange={e=>{const x=Array.from(e.target.files||[]).slice(0,20);if(x.reduce((n,f)=>n+f.size,0)<=2*1024*1024*1024)setFiles(x);else setError(t("fileLimit"))}}/></label>
+    <label className="cursor-pointer font-medium text-slate-900">{t("addFiles")}<input className="hidden" type="file" multiple onChange={e=>{const x=Array.from(e.target.files||[]).slice(0,20);e.target.value="";if(x.reduce((n,f)=>n+f.size,0)>2*1024*1024*1024){setError(t("fileLimit"));return;}void (async()=>{try{await claimToolStart("burn-after-read",x.length);filesClaimed.current=true;setFiles(x);setError("");}catch(err){setError(err instanceof ToolAccessError?toolAccessMessage(lang,err.code):deliveryText(lang,"failed"))}})()}}/></label>
     <p className="mt-1 text-xs text-slate-500">{t("fileLimit")} {t("filePaid")}</p>
     {!!files.length&&<div className="mt-3 space-y-1 text-sm text-slate-700">{files.map((f,i)=><div key={`${f.name}-${i}`} className="flex justify-between gap-3"><span className="truncate">{f.name}</span><span>{(f.size/1024/1024).toFixed(1)} MB</span></div>)}</div>}
    </div>
