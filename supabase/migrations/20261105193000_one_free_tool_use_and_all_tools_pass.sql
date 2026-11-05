@@ -49,14 +49,22 @@ declare
  v_pass_until timestamptz;
  v_account_count integer;
  v_ip_count integer;
+ v_account_lock bigint;
+ v_ip_lock bigint;
  v_kind text;
 begin
  if p_request_id is null or p_user_id is null or p_ip_hash !~ '^[a-f0-9]{64}$'
     or p_tool_slug !~ '^[a-z0-9-]{1,96}$' or p_units is null or p_units < 1 or p_units>1000 then
    return jsonb_build_object('ok',false,'error','INVALID_TOOL_USE');
  end if;
- -- The lock covers free counters under account switching, IP switching and parallel requests.
- perform pg_advisory_xact_lock(hashtextextended('lingxi-use:'||p_tool_slug||':'||v_day::text,0));
+ -- Serialize retries of one request ID without serializing all visitors of a tool.
+ perform pg_advisory_xact_lock(hashtextextended('lingxi-request:'||p_request_id::text,0));
+ -- Sorted account/IP pair locks prevent both identity-switching races and lock inversion.
+ -- Unrelated account+IP pairs can execute concurrently.
+ v_account_lock:=hashtextextended('lingxi-account:'||p_tool_slug||':'||v_day::text||':'||p_user_id::text,0);
+ v_ip_lock:=hashtextextended('lingxi-ip:'||p_tool_slug||':'||v_day::text||':'||p_ip_hash,0);
+ perform pg_advisory_xact_lock(least(v_account_lock,v_ip_lock));
+ if v_account_lock<>v_ip_lock then perform pg_advisory_xact_lock(greatest(v_account_lock,v_ip_lock));end if;
  select * into v_existing from public.lingxi_tool_use_events where request_id=p_request_id;
  if found then
    if v_existing.user_id<>p_user_id or v_existing.ip_hash<>p_ip_hash
