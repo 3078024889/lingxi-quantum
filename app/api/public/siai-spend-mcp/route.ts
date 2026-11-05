@@ -1,6 +1,7 @@
 import {NextRequest,NextResponse} from "next/server";
 import {diagnoseAiSpend} from "@/lib/siai/free-spend-diagnostic";
 import type {SpendInput} from "@/lib/siai/free-spend-diagnostic";
+import {readMcpBodyLimited,McpBodyTooLargeError} from "@/lib/siai/mcp-bounded-body";
 export const runtime="nodejs";
 const MAX_BODY=16000;
 const tools=[{name:"diagnose_ai_spend",description:"免费分析手动填写的SI/AI订阅花费、低使用率及潜在节省。不连接账户，不验证第三方套餐可用性。",inputSchema:{type:"object",additionalProperties:false,required:["currency","items"],properties:{currency:{type:"string",enum:["CNY","USD"]},items:{type:"array",minItems:1,maxItems:30,items:{type:"object",additionalProperties:false,required:["name","monthlyPrice","usedPerMonth"],properties:{name:{type:"string",maxLength:100},monthlyPrice:{type:"number",minimum:0},usedPerMonth:{type:"integer",minimum:0},expectedPerMonth:{type:"integer",minimum:0},monthlyQuota:{type:"integer",minimum:0},alternativeMonthlyPrice:{type:"number",minimum:0},essential:{type:"boolean"}}}}}}}];
@@ -19,7 +20,8 @@ export async function POST(request:NextRequest){
  const size=Number(request.headers.get("content-length")||"0");
  if(size>MAX_BODY)return ok({error:"request too large"},413);
  let raw="";
- try{raw=await request.text();if(raw.length>MAX_BODY)return ok({error:"request too large"},413);}catch{return ok({error:"body read failed"},400);}
+ try{raw=await readMcpBodyLimited(request.body,MAX_BODY);}
+ catch(error){return error instanceof McpBodyTooLargeError?ok({error:"request too large"},413):ok({error:"invalid request body"},400);}
  let msg:any;
  try{msg=JSON.parse(raw);}catch{return ok({jsonrpc:"2.0",id:null,error:{code:-32700,message:"Parse error"}},400);}
  if(!msg||msg.jsonrpc!=="2.0"||typeof msg.method!=="string")return ok({jsonrpc:"2.0",id:msg?.id??null,error:{code:-32600,message:"Invalid Request"}},400);
