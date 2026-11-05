@@ -39,11 +39,14 @@ function getCuratedRows():SiaiHomeRow[]{
 /** Read-only SIAI directory data shared by 9 indexable language routes. */
 export function getSiaiDirectoryRows():{curated:SiaiHomeRow[];rows:SiaiHomeRow[]} {
  const curated=getCuratedRows();
- const preview=getSiaiSourcePreviewRows();
+ const curatedIds=new Set(curated.map(r=>r.id));
+ // When a reviewed preview is promoted, retain the approved row and drop its old preview duplicate.
+ const preview=getSiaiSourcePreviewRows().filter(r=>!curatedIds.has(r.id));
  const rows=[...curated,...preview];
  // The approved catalogue may grow daily; ensure no missing IDs or duplicates.
  // Research-only previews must never silently become approved catalogue entries.
  if(!curated.length||curated.length!==MARKET_API_PRODUCTS.length||
+    curatedIds.size!==curated.length||
     rows.length!==curated.length+preview.length||
     new Set(rows.map(r=>r.id)).size!==rows.length)
   throw Error("SIAI_DIRECTORY_MISSING_OR_DUPLICATE_ROWS");
