@@ -1,0 +1,28 @@
+name: SI/AI spend diagnostic isolated checks
+on:
+  pull_request:
+    paths:
+      - "lib/siai/free-spend-diagnostic.ts"
+      - "lib/siai/spend-diagnostic-i18n.ts"
+      - "components/siai/SpendDiagnostic.tsx"
+      - "components/siai/SpendDiagnosticEntry.tsx"
+      - "app/siai/spend-diagnostic/**"
+      - "app/[locale]/siai/spend-diagnostic/**"
+      - "app/api/public/siai-spend-mcp/**"
+      - "tests/free-siai-spend-diagnostic*.test.mjs"
+      - "tests/final-closure/siai-spend-diagnostic.spec.ts"
+      - "components/SiaiRankingHome.tsx"
+      - ".github/workflows/siai-spend-diagnostic-isolated.yml"
+  workflow_dispatch:
+jobs:
+  isolated:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run deterministic and nine-language tests without deployment
+        run: node --experimental-strip-types --test tests/free-siai-spend-diagnostic.test.mjs tests/free-siai-spend-diagnostic-i18n.test.mjs
