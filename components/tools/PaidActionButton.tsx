@@ -96,7 +96,7 @@ export default function PaidActionButton({toolId,quantity,metadata,onPaid,label,
   }finally{setBusy(false)}
  }
  const [legacyResume,setLegacyResume]=useState(false);
- useEffect(()=>{const query=new URLSearchParams(location.search);setLegacyResume(Boolean(query.get("resumeQuote")||query.get("quoteId")));},[]);
+ useEffect(()=>{const query=new URLSearchParams(location.search);let stored=false;try{stored=Boolean(localStorage.getItem(storageKey(toolId)))}catch{}setLegacyResume(Boolean(query.get("resumeQuote")||query.get("quoteId")||stored));},[toolId]);
  const changed=quote&&(Number(quote.quantity)!==Number(quantity)||(quote.currency!==currency&&(toolId!=='food-calorie'||quote.status==='quoted')));
  if(completed)return <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-3 text-sm"><b>{deliveryText(lang,"complete")}</b><p className="mt-1 text-xs text-[var(--lx-muted)]">{deliveryText(lang,"existing")}</p></div>;
  return <div>{!quote||changed

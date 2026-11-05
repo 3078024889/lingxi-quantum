@@ -113,7 +113,7 @@ export default function PaidExportButton({toolId,quantity,onUnlocked,onCompleted
  }
 
  const [legacyResume,setLegacyResume]=useState(false);
- useEffect(()=>{const query=new URLSearchParams(location.search);setLegacyResume(Boolean(query.get("resumeQuote")||query.get("quoteId")));},[]);
+ useEffect(()=>{const query=new URLSearchParams(location.search);let stored=false;try{stored=Boolean(localStorage.getItem(key(toolId)))}catch{}setLegacyResume(Boolean(query.get("resumeQuote")||query.get("quoteId")||stored));},[toolId]);
  const amount=quote?quoteDisplay(quote,currency).text:'';
  if(TOOL_PASS_ENFORCED&&!toolId.startsWith("sasi-")&&!legacyResume)
   return <ToolPassUpgradeLink/>;
