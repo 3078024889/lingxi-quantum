@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "LINGXIFIELD — Global SIAI Finder",
+  "version": "0.1.0",
+  "description": "Compare reviewed SI/AI platforms by task, price, free quota and regional availability.",
+  "action": {
+    "default_title": "Find verified SI/AI platforms",
+    "default_popup": "popup.html"
+  },
+  "host_permissions": [
+    "https://lingxifield.com/*"
+  ]
+}
