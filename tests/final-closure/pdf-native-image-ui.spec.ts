@@ -1,3 +1,4 @@
+import type {Route} from "@playwright/test";
 import fs from "node:fs/promises";
 import {PDFDocument} from "pdf-lib";
 import sharp from "sharp";
@@ -15,14 +16,14 @@ async function twoPageSource(){
 async function paymentMock(page:any){
  let quote:any=null;
  await page.addInitScript(()=>{window.open=()=>({} as Window)});
- await page.route("**/api/tools/quote",route=>{
+ await page.route("**/api/tools/quote",(route:Route)=>{
   const b=route.request().postDataJSON();
   expect(b.toolId).toBe("pdf-editor");
   quote={id:"b4ff2806-b45f-4e22-aea5-acfcaef45b26",tool_id:b.toolId,quantity:b.quantity,unit_name:"file",amount_rmb:1,amount_usd:1,currency:b.currency,display_currency:b.currency,display_amount:1,expires_at:new Date(Date.now()+3600000).toISOString(),metadata:b.metadata};
   return route.fulfill({json:quote});
  });
- await page.route("**/api/tools/pay/status**",route=>route.fulfill({json:{paid:true,quote}}));
- await page.route("**/api/tools/export/consume",route=>route.fulfill({json:{ok:true}}));
+ await page.route("**/api/tools/pay/status**",(route:Route)=>route.fulfill({json:{paid:true,quote}}));
+ await page.route("**/api/tools/export/consume",(route:Route)=>route.fulfill({json:{ok:true}}));
 }
 async function upload(page:any,source:Buffer){
  await page.goto("/tools/pdf-editor?lang=en");
