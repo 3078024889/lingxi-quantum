@@ -43,12 +43,13 @@ const REMOTE_CALL={
  "website-diagnose":"dns.resolve4("
 };
 const SAFE_BLOCKED={
- "temp-mail/batch":'BATCH_PASS_WORKFLOW_NOT_READY',
  "burn-after-read/file/prepare":'BURN_FILE_PASS_WORKFLOW_NOT_READY',
  "mobile-file":'TEMP_FILE_PASS_WORKFLOW_NOT_READY'
 };
 const stageGate=read("lib/tools/commerce/tool-stage-gate.ts");
 const stageSql=read("supabase/migrations/20261106060000_tool_pass_order_bound_stages.sql");
+const passMailSql=read("supabase/migrations/20261106080000_tool_pass_mail_batch_atomic.sql");
+const passMailUi=read("components/tools/TempMailWorkbench.tsx");
 const trustedStageGate=stageGate.includes('toolPassCutoverRequested()')
  && stageGate.includes('.rpc("lingxi_redeem_tool_stage"')
  && stageGate.includes('if(data.alreadyStarted)')
@@ -78,6 +79,19 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
    &&(firstCost<0||start<firstCost))
    return {route,tool,state:"BLOCKED",reason:"PASS_WORKFLOW_NOT_INTEGRATED"};
   return {route,tool,state:"UNSAFE",reason:"BLOCKER_MISSING_OR_AFTER_COST"};
+ }
+ if(route==="temp-mail/batch"){
+  const ok=code.includes('if(toolPassCutoverRequested()&&!quoteId)')
+   &&code.includes('if(!toolPassBackendReady())')
+   &&code.includes('.rpc("lingxi_create_pass_mail_batch"')
+   &&code.includes("accessRequestId")
+   &&passMailSql.includes('v_source.units<>p_count')
+   &&passMailSql.includes("v_source.access_kind<>'pass'")
+   &&passMailSql.includes("PASS_MAIL_DAILY_LIMIT")
+   &&passMailSql.includes("v_stage:=public.lingxi_redeem_tool_stage(")
+   &&passMailSql.includes("primary key references public.lingxi_tool_use_events")
+   &&passMailUi.includes('claimToolStart("temp-mail",batchCount,requestId)');
+  return {route,tool,state:ok?"GUARDED":"UNSAFE",reason:ok?"ATOMIC_PASS_BATCH_AND_LEGACY_DELIVERY":"BATCH_QUOTA_OR_IDEMPOTENCY_UNVERIFIED"};
  }
  if(route==="food/manual-calculate"){
   const retired=code.includes("FOOD_ANALYSIS_REQUIRED")&&code.includes("status:410")

@@ -119,3 +119,23 @@ test("direct Office gateway tickets stay disabled during paid cutover until nonc
  const normal=read("app/api/tools/document/normalize/route.ts");
  assert(normal.indexOf("authorizeToolPassStage(")<normal.indexOf("await convertDocumentToPdf("));
 });
+
+test("batch mailbox pass claims exact mailbox count and creates one atomic idempotent batch",()=>{
+ const code=read("app/api/tools/temp-mail/batch/route.ts");
+ const sql=read("supabase/migrations/20261106080000_tool_pass_mail_batch_atomic.sql");
+ const ui=read("components/tools/TempMailWorkbench.tsx");
+ for(const n of [
+  "p_count integer,p_entries jsonb","v_source.units<>p_count","v_source.access_kind<>'pass'",
+  "PASS_MAIL_DAILY_LIMIT","PASS_MAIL_REQUEST_CONFLICT","PASS_MAIL_PAID_BATCH_REQUIRED",
+  "primary key references public.lingxi_tool_use_events","v_stage:=public.lingxi_redeem_tool_stage",
+  "created_at>=date_trunc"
+ ])assert(sql.includes(n),"missing pass-mail batch security boundary "+n);
+ assert(code.includes('.rpc("lingxi_create_pass_mail_batch"'));
+ assert(code.includes('if(toolPassCutoverRequested()&&!quoteId)'));
+ assert(code.includes('if(!toolPassBackendReady())'));
+ assert(code.includes('if(!quoteId)return NextResponse.json({error:"PAID_BATCH_REQUIRED"'));
+ assert(ui.includes('claimToolStart("temp-mail",batchCount,requestId)'));
+ assert(ui.includes('sessionStorage.setItem(key'));
+ for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"])
+  assert(ui.includes("\n "+lang+":{"),"missing localized batch-pass UI: "+lang);
+});
