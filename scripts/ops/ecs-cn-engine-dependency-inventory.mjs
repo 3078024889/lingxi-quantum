@@ -101,7 +101,7 @@ if(py){
 for(const dir of ["/opt/lingxifield","/tmp"]){
  try{
   const s=statfsSync(dir);
-  safe("DISK_"+(dir==="/tmp"?"TMP":"OPT")+"_FREE_GIB",Number(s.bavail*BigInt(s.bsize)/BigInt(1024**3)));
+  safe("DISK_"+(dir==="/tmp"?"TMP":"OPT")+"_FREE_GIB",Number((BigInt(s.bavail)*BigInt(s.bsize))/BigInt(1024**3)));
  }catch{safe("DISK_INFO","UNKNOWN")}
 }
 safe("RAM_TOTAL_GIB",Math.floor(os.totalmem()/1024**3));
