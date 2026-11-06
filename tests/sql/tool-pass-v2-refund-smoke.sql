@@ -78,5 +78,32 @@ begin
  if has_function_privilege('anon','public.refund_unused_tool_pass_wallet_v2(uuid,uuid,uuid)','EXECUTE')
   or has_function_privilege('authenticated','public.refund_unused_tool_pass_wallet_v2(uuid,uuid,uuid)','EXECUTE')
  then raise exception 'PUBLIC_REFUND_RPC_EXPOSED';end if;
+ -- Stacked subscriptions: refunding the earlier period must not strand the
+ -- later already-paid pass. Deny automatically; refunding the future last pass
+ -- is safe when there are no later dependent purchases.
+ insert into public.sasi_wallets(user_id,available_points,refundable_points)
+ values('b0000000-0000-4000-8000-000000000008',10000,5000);
+ insert into public.ai_wallets(user_id,available_fen,refundable_fen)
+ values('b0000000-0000-4000-8000-000000000008',30000,15000);
+ x:=public.purchase_tool_pass_v2('b0000000-0000-4000-8000-000000000008',
+  'b8111111-1111-4111-8111-111111111111','tools_7d','CNY');
+ if (x->>'ok') IS DISTINCT FROM 'true' then raise exception 'STACK_A_PURCHASE_FAILED';end if;
+ x:=public.purchase_tool_pass_v2('b0000000-0000-4000-8000-000000000008',
+  'b8222222-2222-4222-8222-222222222222','tools_30d','CNY');
+ if (x->>'ok') IS DISTINCT FROM 'true' then raise exception 'STACK_B_PURCHASE_FAILED';end if;
+ x:=public.refund_unused_tool_pass_wallet_v2('b0000000-0000-4000-8000-000000000008',
+  'b8111111-1111-4111-8111-111111111111','b8333333-3333-4333-8333-333333333333');
+ if (x->>'error') IS DISTINCT FROM 'STACKED_PASS_REQUIRES_REVIEW'
+ then raise exception 'STACKED_FIRST_PASS_REFUND_DID_NOT_FAIL %',x;end if;
+ x:=public.refund_unused_tool_pass_wallet_v2('b0000000-0000-4000-8000-000000000008',
+  'b8222222-2222-4222-8222-222222222222','b8444444-4444-4444-8444-444444444444');
+ if (x->>'ok') IS DISTINCT FROM 'true'
+ then raise exception 'UNUSED_FUTURE_LAST_PASS_REFUND_FAILED %',x;end if;
+ if (select state from public.tool_pass_orders_v2
+  where request_id='b8111111-1111-4111-8111-111111111111')<>'active'
+ then raise exception 'CURRENT_PASS_WAS_REVOKED';end if;
+ if (select available_points from public.sasi_wallets
+  where user_id='b0000000-0000-4000-8000-000000000008')<>7100
+ then raise exception 'STACKED_WALLET_CNY_NOT_RECONCILED';end if;
  raise notice 'TOOL_PASS_V2_ORIGINAL_WALLET_REFUND_ACCEPTANCE_OK';
 end $$;
