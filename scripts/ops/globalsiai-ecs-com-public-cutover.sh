@@ -84,6 +84,8 @@ echo GLOBALSIAI_COM_STAGE_DNS_ICP_9LANG_PRECHECK_PASS
 
 echo "=== 2. 仅为 globalsiai.com 建立 HTTP 证书验证入口 ==="
 install -d -m 755 "$WEBROOT/.well-known/acme-challenge"
+# Dedicated ACME directories must be readable by the nginx worker, even with umask 077.
+chmod 755 "$WEBROOT" "$WEBROOT/.well-known" "$WEBROOT/.well-known/acme-challenge"
 cat >"$VHOST" <<EOF
 # LINGXIFIELD globalsiai.com: owned independent virtual host only
 server {
@@ -93,6 +95,7 @@ server {
     root $WEBROOT;
     default_type text/plain;
     try_files \$uri =404;
+    add_header X-Globalsiai-Acme-Vhost $DOMAIN always;
   }
   location / { return 301 https://globalsiai.com\$request_uri; }
 }
@@ -103,12 +106,42 @@ systemctl reload nginx
 PROBE="$WEBROOT/.well-known/acme-challenge/probe-$$"
 printf '%s\n' "GLOBALSIAI-PROBE-$$" >"$PROBE"
 chmod 644 "$PROBE"
-test "$(curl --noproxy '*' -fsS --max-time 10 \
- --resolve "$DOMAIN:80:127.0.0.1" \
- "http://$DOMAIN/.well-known/acme-challenge/$(basename "$PROBE")")" = "GLOBALSIAI-PROBE-$$" || {
- rm -f -- "$PROBE"
- echo GLOBALSIAI_COM_ACME_CHALLENGE_HTTP_FAILED; exit 4;
-}
+# Nginx reload is asynchronous. Poll both SNI/Host names, and distinguish
+# "old default vhost 404" from a path/permission failure inside the new vhost.
+probe_name="$(basename "$PROBE")"
+probe_expected="GLOBALSIAI-PROBE-$$"
+for name in "$DOMAIN" "$WWW"; do
+  confirmed=0
+  for attempt in $(seq 1 18); do
+    code="$(curl --noproxy '*' -sS --max-time 5 -D "$TMP/acme-headers" \
+      -o "$TMP/acme-body" -w '%{http_code}' \
+      --resolve "$name:80:127.0.0.1" \
+      "http://$name/.well-known/acme-challenge/$probe_name" || true)"
+    if [ "$code" = 200 ] && \
+       grep -Fxq "$probe_expected" "$TMP/acme-body" && \
+       grep -Fqi "X-Globalsiai-Acme-Vhost: $DOMAIN" "$TMP/acme-headers"; then
+      confirmed=1
+      echo "GLOBALSIAI_COM_ACME_PROBE_OK_HOST=$name ATTEMPT=$attempt"
+      break
+    fi
+    # Do not retry through redirects or authentication; strict 200 only.
+    if [ "$attempt" -lt 18 ]; then sleep 1; fi
+  done
+  if [ "$confirmed" != 1 ]; then
+    echo "GLOBALSIAI_COM_ACME_HOST_FAILED=$name LAST_HTTP=$code"
+    echo "GLOBALSIAI_COM_ACME_VHOST_SEEN=$(grep -Fqi "X-Globalsiai-Acme-Vhost: $DOMAIN" "$TMP/acme-headers" && echo yes || echo no)"
+    for dir in "$WEBROOT" "$WEBROOT/.well-known" "$WEBROOT/.well-known/acme-challenge"; do
+      stat -c 'ACME_PATH_MODE=%a OWNER=%U GROUP=%G PATH=%n' "$dir" || true
+    done
+    if command -v getenforce >/dev/null 2>&1; then
+      echo "ACME_SELINUX=$(getenforce)"
+    fi
+    nginx -t || true
+    rm -f -- "$PROBE"
+    echo GLOBALSIAI_COM_ACME_CHALLENGE_HTTP_FAILED
+    exit 4
+  fi
+done
 rm -f -- "$PROBE"
 echo GLOBALSIAI_COM_LOCAL_ACME_HTTP_PROBE_PASS
 
