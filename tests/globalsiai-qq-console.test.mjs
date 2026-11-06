@@ -21,6 +21,7 @@ test("all three group pages now return actual UTF-8 text instead of unsupported 
     assert.match(body,/第 1 条/);
     assert.match(body,/第 5 条/);
     assert.doesNotMatch(body,/<article|<html|<pre|&amp;/);
+    assert.doesNotMatch(body,/群友|各位群友|欢迎大家/);
   }
 });
 test("JSON endpoint supports future official QQ bot publishing API",async()=>{
