@@ -9,6 +9,9 @@ function put(root,path,bytes){
  const full=join(root,path);mkdirSync(full.slice(0,full.lastIndexOf("/")),{recursive:true});
  writeFileSync(full,bytes);return full;
 }
+function redirects(manifest){
+ return manifest.items.map(item=>"/"+item.path+" https://assets.lingxifield.com/"+item.path+" 307").join("\\n")+"\\n";
+}
 test("redirects browser-generated overlimit output to verified original R2 key by SHA",()=>{
  const base=mkdtempSync(join(tmpdir(),"cf-built-"));const output=join(base,"out"),backup=join(base,"backup");
  try{
@@ -17,6 +20,7 @@ test("redirects browser-generated overlimit output to verified original R2 key b
   const redirect=put(output,"_redirects","/models/ort.wasm https://assets.lingxifield.com/models/ort.wasm 307\n");
   const manifest={sourceCount:7,items:[{path:"models/ort.wasm",sha256:hash,bytes:2011},
     ...Array.from({length:6},(_,i)=>({path:"test/item"+i,sha256:String(i).repeat(64),bytes:2011}))]};
+  writeFileSync(redirect,redirects(manifest));
   const r=stageBuiltAssets({assetsRoot:output,publicRedirects:redirect,backupRoot:backup,
    sourceManifest:manifest,cdnOrigin:"https://assets.lingxifield.com",limit:1024});
   assert.equal(r.generatedOversizedCount,1);
@@ -33,10 +37,12 @@ test("unmatched transformed WASM receives separate R2 key, not a false original 
   const content=Buffer.alloc(2048,12),h=createHash("sha256").update(content).digest("hex");
   put(dir,"_next/static/media/model.d9.wasm",content);
   const redirect=put(dir,"_redirects","/models/original.wasm https://assets.lingxifield.com/models/original.wasm 307\n");
+  const sourceManifest={sourceCount:7,items:[{path:"models/original.wasm",sha256:"f".repeat(64)},
+    ...Array.from({length:6},(_,i)=>({path:"test/x"+i,sha256:String(i).repeat(64)}))]};
+  writeFileSync(redirect,redirects(sourceManifest));
   const report=stageBuiltAssets({assetsRoot:dir,publicRedirects:redirect,
     backupRoot:join(base,"backup"),cdnOrigin:"https://assets.lingxifield.com",limit:1024,
-    sourceManifest:{sourceCount:7,items:[{path:"models/original.wasm",sha256:"f".repeat(64)},
-    ...Array.from({length:6},(_,i)=>({path:"test/x"+i,sha256:String(i).repeat(64)}))]}});
+    sourceManifest});
   assert.equal(report.additionalR2Objects,1);
   assert.equal(report.artifacts[0].destination,
     "generated-build/"+h+"/_next/static/media/model.d9.wasm");
