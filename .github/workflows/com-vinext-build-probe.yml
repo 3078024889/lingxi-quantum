@@ -43,9 +43,9 @@ jobs:
         run: |
           test -z "${CLOUDFLARE_API_TOKEN:-}"
           test -z "${VERCEL_TOKEN:-}"
-          node --test tests/cloudflare/probe-com-origins.test.mjs
+          node --test tests/cloudflare/probe-com-origins.test.mjs tests/cloudflare/audit-large-assets.test.mjs\n          node scripts/cloudflare/audit-large-assets.mjs --fail-unaccounted
           node scripts/cloudflare/audit-com-readiness.mjs
-      - name: Ephemeral official vinext init (CI runner only)
+      - name: Identify generated media assets over 25 MiB\n        run: |\n          node scripts/prepare-media-runtime.cjs\n          node scripts/cloudflare/audit-large-assets.mjs --json \"$RUNNER_TEMP/com-large-assets.json\" --fail-unaccounted\n      - name: Ephemeral official vinext init (CI runner only)
         run: |
           set -euo pipefail
           npx --yes vinext@1.3.1 init \
