@@ -27,7 +27,7 @@ test("hashes oversized bytes without altering files; unexpected files fail polic
     const second=await auditLargeAssets(base,{limit:1024,expectedPaths:["nested/x.bin"]});
     assert.deepEqual(second.unaccounted,["nested/surprise.bin"]);
     assert.equal(second.largeAssets.length,2);
-    assert.equal(second.largeAssets[0].sha256,first.largeAssets[0].sha256);
+    assert.equal(second.largeAssets.find(item=>item.path==='nested/x.bin').sha256,first.largeAssets[0].sha256);
     assert.deepEqual(await import("node:fs/promises").then(fs=>fs.readFile(file)),bytes);
   } finally {rmSync(base,{recursive:true,force:true});}
 });
