@@ -113,7 +113,7 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           # `deploy --preview` only selects Vite preview mode; it does NOT create a Worker Preview.
           # --skip-build preserves the already-audited 25 MiB asset filtering and redirects.
-          npx --yes @vinext/cloudflare@1.4.3 previews deploy com-public-recovery --skip-build | tee "$RUNNER_TEMP/com-cloudflare-preview-deploy.log"
+          pnpm exec vinext-cloudflare previews deploy com-public-recovery --skip-build | tee "$RUNNER_TEMP/com-cloudflare-preview-deploy.log"
           if ! grep -Eq 'https://[^ ]+\.workers\.dev' "$RUNNER_TEMP/com-cloudflare-preview-deploy.log"; then
             echo "::error::Cloudflare preview did not return a public workers.dev URL."
             exit 1

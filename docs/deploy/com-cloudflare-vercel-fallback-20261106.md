@@ -114,3 +114,10 @@ Official guidance:
 - https://developers.cloudflare.com/r2/buckets/public-buckets/
 - https://developers.cloudflare.com/r2/buckets/cors/
 - https://developers.cloudflare.com/workers/static-assets/migration-guides/vercel-to-workers/nextjs/
+
+### 2026-11-06 · CI minutes control and preview CLI fix
+
+- Source-backed real R2 download proof succeeded for all 7 public objects: HEAD size, HTTP 206 Range, CORS, full streamed SHA-256 (GitHub Actions [42179848366](https://github.com/3078024889/lingxi-quantum/actions/runs/42179848366)). This proves **only public asset delivery**, not paid or authenticated functions.
+- Deploy CLI issue found: npm has `@vinext/cloudflare 1.3.3` installed by `vinext@1.4.3 init`; `@vinext/cloudflare@1.4.3` is an unavailable package version. Use `pnpm exec vinext-cloudflare previews deploy ... --skip-build` to invoke the already installed CLI from the identical CI worktree, without another npm install or recompilation.
+- CI budget: Native Next.js full Production Gate, mobile PDF, desktop PDF, and tool-quota Playwright suites are deliberately **skipped for pull requests whose exact head branch is `infra/com-cloudflare-readiness-20261106`**, while other branches remain unchanged. These suites remain manually runnable with `workflow_dispatch`. A skip is not proof of passing: **run them again on the approved final source SHA and require complete success before any production merge/cutover**. This reduces repeating 4 GitHub-hosted CI jobs per tiny Cloudflare-only commit.
+- No Cloudflare Preview or production deployment means no `lingxifield.com` recovery claim. A public-only Worker Preview will deliberately reply `503` on billing, user accounts and SASI APIs until independently migrated and proven. Vercel remains untouched, not a functioning fallback while its origin returns `402 DEPLOYMENT_DISABLED`; `.cn` remains separate.

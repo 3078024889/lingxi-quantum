@@ -18,6 +18,9 @@ concurrency:
 
 jobs:
   source:
+    # This migration PR runs dedicated Cloudflare smoke per change.
+    # Full native Production Gate MUST be run via workflow_dispatch before merge.
+    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'infra/com-cloudflare-readiness-20261106' }}
     name: source-and-production-build
     runs-on: ubuntu-24.04
     timeout-minutes: 35
