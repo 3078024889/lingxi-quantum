@@ -62,76 +62,8 @@ begin
   where jsonb_typeof(x.item) is distinct from 'object'
     or (x.item->>'local_part') is null
     or (x.item->>'token_hash') is null
-    or (x.item->>'local_part') !~ '^[a-z0-9]{6,32}
- ) then return jsonb_build_object('ok',false,'error','PASS_MAIL_ENTRIES_INVALID');end if;
- -- Hard per-account/day storage cap, including legacy batch mailboxes.
- select count(*) into v_today_count from public.temp_mailboxes
-  where owner_user_id=p_user_id and source_kind='batch'
-   and created_at>=date_trunc('day',now() at time zone 'Asia/Shanghai') at time zone 'Asia/Shanghai';
- if v_today_count+p_count>100 then
-  return jsonb_build_object('ok',false,'error','PASS_MAIL_DAILY_LIMIT');end if;
- -- Receipt is consumed inside the same SQL transaction as all mailboxes.
- -- An insert failure raises and rolls the whole request/stage redemption back.
- v_stage:=public.lingxi_redeem_tool_stage(p_request_id,p_user_id,'temp-mail',p_operation_id,'temp-mail-batch');
- if coalesce((v_stage->>'ok')::boolean,false) is not true then return v_stage;end if;
- if coalesce((v_stage->>'alreadyStarted')::boolean,false) then
-  return jsonb_build_object('ok',false,'error','PASS_MAIL_STAGE_ALREADY_STARTED');end if;
- insert into public.lingxi_tool_pass_mail_batches(request_id,user_id,operation_id,mailbox_count)
- values(p_request_id,p_user_id,p_operation_id,p_count);
- insert into public.temp_mailboxes(
-  local_part,token_hash,expires_at,owner_user_id,source_kind,pass_request_id)
- select x.item->>'local_part',x.item->>'token_hash',now()+interval '10 minutes',
-  p_user_id,'batch',p_request_id
- from jsonb_array_elements(p_entries) as x(item);
- select coalesce(jsonb_agg(jsonb_build_object(
-  'id',m.id,'localPart',m.local_part,'expiresAt',m.expires_at
- ) order by m.created_at,m.id),'[]'::jsonb),count(*)
- into v_rows,v_count from public.temp_mailboxes m
- where m.pass_request_id=p_request_id and m.owner_user_id=p_user_id;
- if v_count<>p_count then raise exception 'PASS_MAIL_ATOMIC_BATCH_INCOMPLETE';end if;
- return jsonb_build_object('ok',true,'recovered',false,'count',v_count,'mailboxes',v_rows);
-end $$;
-revoke all on function public.lingxi_create_pass_mail_batch(uuid,uuid,uuid,integer,jsonb)
- from public,anon,authenticated;
-grant execute on function public.lingxi_create_pass_mail_batch(uuid,uuid,uuid,integer,jsonb)
- to service_role;
-commit;
-
-    or (x.item->>'token_hash') !~ '^[a-f0-9]{64}
- ) then return jsonb_build_object('ok',false,'error','PASS_MAIL_ENTRIES_INVALID');end if;
- -- Hard per-account/day storage cap, including legacy batch mailboxes.
- select count(*) into v_today_count from public.temp_mailboxes
-  where owner_user_id=p_user_id and source_kind='batch'
-   and created_at>=date_trunc('day',now() at time zone 'Asia/Shanghai') at time zone 'Asia/Shanghai';
- if v_today_count+p_count>100 then
-  return jsonb_build_object('ok',false,'error','PASS_MAIL_DAILY_LIMIT');end if;
- -- Receipt is consumed inside the same SQL transaction as all mailboxes.
- -- An insert failure raises and rolls the whole request/stage redemption back.
- v_stage:=public.lingxi_redeem_tool_stage(p_request_id,p_user_id,'temp-mail',p_operation_id,'temp-mail-batch');
- if coalesce((v_stage->>'ok')::boolean,false) is not true then return v_stage;end if;
- if coalesce((v_stage->>'alreadyStarted')::boolean,false) then
-  return jsonb_build_object('ok',false,'error','PASS_MAIL_STAGE_ALREADY_STARTED');end if;
- insert into public.lingxi_tool_pass_mail_batches(request_id,user_id,operation_id,mailbox_count)
- values(p_request_id,p_user_id,p_operation_id,p_count);
- insert into public.temp_mailboxes(
-  local_part,token_hash,expires_at,owner_user_id,source_kind,pass_request_id)
- select x.item->>'local_part',x.item->>'token_hash',now()+interval '10 minutes',
-  p_user_id,'batch',p_request_id
- from jsonb_array_elements(p_entries) as x(item);
- select coalesce(jsonb_agg(jsonb_build_object(
-  'id',m.id,'localPart',m.local_part,'expiresAt',m.expires_at
- ) order by m.created_at,m.id),'[]'::jsonb),count(*)
- into v_rows,v_count from public.temp_mailboxes m
- where m.pass_request_id=p_request_id and m.owner_user_id=p_user_id;
- if v_count<>p_count then raise exception 'PASS_MAIL_ATOMIC_BATCH_INCOMPLETE';end if;
- return jsonb_build_object('ok',true,'recovered',false,'count',v_count,'mailboxes',v_rows);
-end $$;
-revoke all on function public.lingxi_create_pass_mail_batch(uuid,uuid,uuid,integer,jsonb)
- from public,anon,authenticated;
-grant execute on function public.lingxi_create_pass_mail_batch(uuid,uuid,uuid,integer,jsonb)
- to service_role;
-commit;
-
+    or (x.item->>'local_part') !~ '^[a-z0-9]{6,32}$'
+    or (x.item->>'token_hash') !~ '^[a-f0-9]{64}$'
  ) then return jsonb_build_object('ok',false,'error','PASS_MAIL_ENTRIES_INVALID');end if;
  -- Hard per-account/day storage cap, including legacy batch mailboxes.
  select count(*) into v_today_count from public.temp_mailboxes
