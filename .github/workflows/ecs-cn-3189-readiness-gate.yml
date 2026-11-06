@@ -22,6 +22,10 @@ jobs:
           node --check scripts/ops/ecs-cn-runtime-triage.mjs
           bash -n scripts/ops/ecs-cn-stage-r2-reload.sh
           node --check scripts/ops/ecs-cn-real-document-gateway-3189.mjs
+          node --check scripts/ops/ecs-cn-sasi-paid-readiness-3189.mjs
+          test "$(node scripts/ops/ecs-cn-sasi-paid-readiness-3189.mjs || true)" = CN_SASI_READINESS_REQUIRES_READ_ONLY_3189_FLAG
+          grep -Fq 'CN_SASI_PROVIDER_REAL_VIDEO_GENERATION=NOT_TESTED' scripts/ops/ecs-cn-sasi-paid-readiness-3189.mjs
+          grep -Fq 'CN_SASI_PAYMENT_REFUND_AND_WALLET_RECONCILIATION=NOT_TESTED' scripts/ops/ecs-cn-sasi-paid-readiness-3189.mjs
           test "$(node scripts/ops/ecs-cn-real-document-gateway-3189.mjs || true)" = CN_DOCUMENT_REAL_GATE_REQUIRES_EXPLICIT_3189_FLAG
           grep -Fq 'CN_DOC_STAGE_USER_API_REAL_DOCX' scripts/ops/ecs-cn-real-document-gateway-3189.mjs
           grep -Fq 'CN_DOC_GATEWAY_REPLAY_HTTP' scripts/ops/ecs-cn-real-document-gateway-3189.mjs
