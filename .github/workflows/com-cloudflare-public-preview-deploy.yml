@@ -117,7 +117,7 @@ jobs:
             if(!existsSync(item.file)||!item.path||item.path.includes(".."))throw Error("R2_ASSET_MISSING");
             const mime=item.path.endsWith(".wasm")?"application/wasm":item.path.endsWith(".mp4")?"video/mp4":"application/octet-stream";
             const cli=["--yes","wrangler@4.34.0","r2","object","put",process.env.R2_BUCKET+"/"+item.path,
-              "--file",item.file,"--content-type",mime,"--remote","--force"];
+              "--file",item.file,"--content-type",mime,"--remote"];
             const result=spawnSync("npx",cli,{stdio:"inherit",env:process.env});
             if(result.status!==0)throw Error("R2_UPLOAD_FAILED:"+item.path);
           }
