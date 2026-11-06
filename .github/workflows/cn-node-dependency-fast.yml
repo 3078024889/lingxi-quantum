@@ -1,0 +1,53 @@
+name: CN Node dependency closure fast (no deploy)
+on:
+  push:
+    branches: [feature/cn-standalone-package-fix-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dependency-closure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install frozen deps without building site
+        run: pnpm install --frozen-lockfile
+      - name: Package exact runtime deps into isolated minimal standalone fixture
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p .next/standalone
+          printf 'module.exports={};\n' > .next/standalone/server.js
+          node --check scripts/ops/cn-stage-node-deps-pack.mjs
+          node scripts/ops/cn-stage-node-deps-pack.mjs
+          temp="$(mktemp -d)"
+          trap 'rm -rf "$temp"' EXIT
+          cp -a .next/standalone "$temp/release"
+          CN_ISOLATED_STANDALONE="$temp/release" node --input-type=module <<'NODE'
+          import {spawnSync} from 'node:child_process';
+          const root=process.env.CN_ISOLATED_STANDALONE;
+          const mods=['mammoth','exceljs','@mozilla/readability','dompurify','turndown'];
+          let fail=0;
+          for(const name of mods){
+            const code='import('+JSON.stringify(name)+').then(()=>process.exit(0)).catch(e=>{console.error(e.code||"NO_CODE",e.message);process.exit(2)})';
+            const p=spawnSync(process.execPath,['--input-type=module','-e',code],{cwd:root,timeout:15000,encoding:'utf8'});
+            console.log('CN_ISOLATED_'+name+'='+(p.status===0?'PASS':'FAIL'));
+            if(p.status!==0){
+              fail++;
+              console.log('CN_IMPORT_DETAIL_'+name+'='+String(p.stderr).replace(/\/home\/runner\/[^\s:]+/g,'[BUILD_PATH]').slice(0,350));
+            }
+          }
+          if(fail)process.exit(1);
+          console.log('CN_STANDALONE_LIGHTWEIGHT_MODULES_5_OF_5_PASS');
+          NODE

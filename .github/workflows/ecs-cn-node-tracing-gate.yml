@@ -1,7 +1,7 @@
 name: CN standalone dynamic Node dependency trace gate (no deploy)
 on:
   push:
-    branches: [feature/cn-runtime-node-tracing-20261106, feature/cn-standalone-package-fix-20261106]
+    branches: [feature/cn-runtime-node-tracing-20261106]
   workflow_dispatch:
 permissions:
   contents: read
