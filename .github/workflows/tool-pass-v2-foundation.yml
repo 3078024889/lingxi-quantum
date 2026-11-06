@@ -9,6 +9,7 @@ on:
       - "app/api/tools/pass/**"
       - "lib/tools/commerce/free-entitlement.ts"
       - "docs/commerce/tool-pass-v2-unapplied-database-draft.sql"
+      - "docs/commerce/tool-pass-v2-unapplied-wallet-refund.sql"
       - "tests/tool-pass-v2-contract.test.mjs"
       - "tests/sql/tool-pass-v2-*.sql"
       - ".github/workflows/tool-pass-v2-foundation.yml"
@@ -52,4 +53,6 @@ jobs:
           test -n "$PG_CONTAINER"
           docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < tests/sql/tool-pass-v2-stub.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < docs/commerce/tool-pass-v2-unapplied-database-draft.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < docs/commerce/tool-pass-v2-unapplied-wallet-refund.sql
           docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < tests/sql/tool-pass-v2-smoke.sql
+          docker exec -i "$PG_CONTAINER" psql -U postgres -d test -v ON_ERROR_STOP=1 < tests/sql/tool-pass-v2-refund-smoke.sql
