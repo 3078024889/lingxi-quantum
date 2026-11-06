@@ -13,7 +13,7 @@ ENVFILE=/etc/lingxifield/cn-doc-gateway-loopback.env
 STAGE_ENV=/etc/lingxifield/staging.env
 UNIT=/etc/systemd/system/lingxifield-cn-doc-gateway-loopback.service
 STAGE_SCRIPT=/root/cn-six-engine-stage.sh
-BRIDGE_SHA=f8642053d02499a48bea0681ec0ed6fb6b596531
+BRIDGE_SHA=8f3cb866be46bb1c2eeef96d7ab441a8569e3d6e
 STAGE_SHA=45002f8751ff714851ae87ffc1c1411fb52877f4
 
 echo "=== CN 3189 loopback bridge preflight ==="
@@ -34,6 +34,19 @@ if ss -H -lnt '( sport = :3100 )' | grep -q .; then
  echo CN_DOC_BRIDGE_PORT_3100_ALREADY_IN_USE_ABORT
  exit 3
 fi
+
+cleanup(){
+ rc=$?
+ trap - EXIT
+ if [ "$rc" -ne 0 ]; then
+   echo CN_DOC_BRIDGE_STAGE_FAILED_CLEANING_BRIDGE
+   systemctl disable --now lingxifield-cn-doc-gateway-loopback.service >/dev/null 2>&1 || true
+   rm -f "$UNIT" "$TARGET" "$ENVFILE"
+   systemctl daemon-reload || true
+ fi
+ exit "$rc"
+}
+trap cleanup EXIT
 
 echo "=== CN verified operator and gateway bridge source ==="
 "$NODE" - "$STAGE_ENV" "$ENVFILE" <<'NODE'
@@ -68,7 +81,7 @@ if [ "$(blob_sha "$STAGE_SCRIPT")" != "$STAGE_SHA" ]; then
  exit 4
 fi
 if [ "$(blob_sha "$SOURCE" 2>/dev/null || true)" != "$BRIDGE_SHA" ]; then
- URL=https://raw.githubusercontent.com/3078024889/lingxi-quantum/1bffb5b6dcae1a920138788ac708216407459363/scripts/ops/ecs-cn-doc-gateway-loopback.mjs
+ URL=https://raw.githubusercontent.com/3078024889/lingxi-quantum/931d0687ff20f29158bbc5b6374658e4eaa3d57a/scripts/ops/ecs-cn-doc-gateway-loopback.mjs
  if ! curl -4fLsS --retry 3 --max-time 120 -o "$SOURCE" "https://gh-proxy.com/$URL"; then
    curl -4fLsS --retry 3 --max-time 120 -o "$SOURCE" "$URL"
  fi
@@ -105,18 +118,7 @@ RestrictSUIDSGID=true
 WantedBy=multi-user.target
 EOF
 
-cleanup(){
- rc=$?
- trap - EXIT
- if [ "$rc" -ne 0 ]; then
-   echo CN_DOC_BRIDGE_STAGE_FAILED_CLEANING_BRIDGE
-   systemctl disable --now lingxifield-cn-doc-gateway-loopback.service >/dev/null 2>&1 || true
-   rm -f "$UNIT" "$TARGET" "$ENVFILE"
-   systemctl daemon-reload || true
- fi
- exit "$rc"
-}
-trap cleanup EXIT
+
 systemctl daemon-reload
 systemctl enable --now lingxifield-cn-doc-gateway-loopback.service
 for i in 1 2 3 4 5 6 7 8; do
