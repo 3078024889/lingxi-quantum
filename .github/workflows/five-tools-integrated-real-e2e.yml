@@ -41,7 +41,7 @@ jobs:
       - name: Real production build
         run: pnpm build
       - name: Install Chrome desktop and mobile
-        run: pnpm exec playwright install --with-deps chrome
+        run: bash scripts/ci/ensure-chrome.sh
       - name: Real upload and decoded output tests across five tools, Chrome and Pixel7
         run: |
           pnpm exec playwright test -c playwright.final.config.ts --workers=2 \
