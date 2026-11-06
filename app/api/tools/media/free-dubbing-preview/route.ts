@@ -1,3 +1,4 @@
+import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
 import{NextRequest,NextResponse}from"next/server";
 import{createClient}from"@/lib/supabase/server";
 import{isSameOriginMutation}from"@/lib/sasi/request-security";
@@ -11,8 +12,13 @@ export async function POST(req:NextRequest){
   if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
   const fd=await req.formData(),file=fd.get("file"),source=String(fd.get("source")||"auto"),target=String(fd.get("target")||"en");
   if(!(file instanceof File)||file.size<=0||file.size>8*1024*1024)return NextResponse.json({error:"INVALID_PREVIEW_AUDIO"},{status:400});
-  const claim=await claimFreeEntitlement(req,user.id,"video-dubbing-preview");
-  if(!claim.ok)return NextResponse.json({error:claim.error},{status:claim.error==="FREE_ENTITLEMENT_USED"?409:503});
+  const stage=await authorizeToolPassStage({toolSlug:"video-dubbing",stage:"free-dubbing-preview",
+    accessRequestId:fd.get("accessRequestId"),operationId:fd.get("operationId")});
+  if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status});
+  if(stage.mode==="legacy"){
+    const claim=await claimFreeEntitlement(req,user.id,"video-dubbing-preview");
+    if(!claim.ok)return NextResponse.json({error:claim.error},{status:claim.error==="FREE_ENTITLEMENT_USED"?409:503});
+  }
   const original=await transcribeAudioRemote(file);
   const translated=source===target?original:await translateTextRemote({text:original,source,target});
   const audio=await synthesizeRemote(translated,target);

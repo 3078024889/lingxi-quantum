@@ -1,3 +1,4 @@
+import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
 import { NextRequest, NextResponse } from "next/server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
@@ -240,6 +241,9 @@ export async function POST(req: NextRequest) {
     }
 
     const url = new URL(raw);
+    const stage=await authorizeToolPassStage({toolSlug:"media-import",stage:"media-import",
+      accessRequestId:body.accessRequestId,operationId:body.operationId});
+    if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status,headers:{"Cache-Control":"no-store"}});
     const found = await fetchMediaOrResolveShare({
       url,
       kind,
