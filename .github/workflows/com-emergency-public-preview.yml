@@ -9,6 +9,8 @@ on:
       - 'tests/cloudflare/stage-emergency-public.test.mjs'
       - 'scripts/cloudflare/smoke-emergency-local.mjs'
       - 'tests/cloudflare/smoke-emergency-local.test.mjs'
+      - 'scripts/cloudflare/stage-built-assets.mjs'
+      - 'tests/cloudflare/stage-built-assets.test.mjs'
       - '.github/workflows/com-emergency-public-preview.yml'
   workflow_dispatch:
 
@@ -44,7 +46,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Verify staging fail-closed tests
         run: |
-          node --test tests/cloudflare/stage-emergency-public.test.mjs tests/cloudflare/stage-large-assets.test.mjs tests/cloudflare/smoke-emergency-local.test.mjs
+          node --test tests/cloudflare/stage-emergency-public.test.mjs tests/cloudflare/stage-large-assets.test.mjs tests/cloudflare/smoke-emergency-local.test.mjs tests/cloudflare/stage-built-assets.test.mjs
           test -z "${CLOUDFLARE_API_TOKEN:-}"
           test -z "${VERCEL_TOKEN:-}"
       - name: Prepare media and isolate oversized static assets in runner
@@ -80,6 +82,21 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=6144"
         run: |
           pnpm run build:vinext
+      - name: Exclude post-bundle oversized WASM from Cloudflare asset manifest
+        env:
+          CI: "true"
+        run: |
+          test -d .cloudflare/output/v0/workers/default/assets
+          if test ! -f .cloudflare/output/v0/workers/default/assets/_redirects; then
+            cp public/_redirects .cloudflare/output/v0/workers/default/assets/_redirects
+          fi
+          node scripts/cloudflare/stage-built-assets.mjs --ci-stage \
+            --assets .cloudflare/output/v0/workers/default/assets \
+            --redirects .cloudflare/output/v0/workers/default/assets/_redirects \
+            --source-manifest "$RUNNER_TEMP/com-preview-media.json" \
+            --stage "$RUNNER_TEMP/com-postbuild-media" \
+            --cdn https://assets.lingxifield.com \
+            --json "$RUNNER_TEMP/com-postbuild-media.json"
       - name: Smoke actual local Worker pages and disabled private routes
         env:
           CI: "true"
@@ -95,7 +112,7 @@ jobs:
               echo "::error::Preview runtime terminated before its HTTP endpoint opened."
               exit 1
             fi
-            for port in 8787 3000 3001 5173; do
+            for port in 4173 8787 3000 3001 5173; do
               if curl --max-time 2 --silent --output /dev/null "http://127.0.0.1:$port/api/health"; then
                 BASE="http://127.0.0.1:$port"
                 break
