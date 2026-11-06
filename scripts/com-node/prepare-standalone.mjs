@@ -5,7 +5,7 @@
  * original node_modules (a previous false-positive deployment acceptance).
  * CI-only command never deploys or touches production DNS.
  */
-import {cpSync,existsSync,lstatSync,realpathSync,readdirSync,mkdirSync,readFileSync,writeFileSync,rmSync} from "node:fs";
+import {copyFileSync,chmodSync,existsSync,lstatSync,realpathSync,readdirSync,mkdirSync,writeFileSync,rmSync} from "node:fs";
 import {resolve,join,relative,sep,dirname} from "node:path";
 import {pathToFileURL} from "node:url";
 
@@ -27,6 +27,29 @@ function scanSymlinks(root,repoRoot){
  }
  visit(root);
 }
+// Explicit source-driven copy: unlike fs.cpSync, there is NO platform-dependent
+// symlink handling. A source symlink is resolved, verified, then materialized
+// into an actual file or directory at the isolated destination.
+function copyDereferenced(source,dest,repoRoot,ancestors=new Set()){
+ const st=lstatSync(source);
+ if(st.isSymbolicLink()){
+  const target=realpathSync(source);
+  if(!under(repoRoot,target))throw Error("STANDALONE_SYMLINK_ESCAPE");
+  if(ancestors.has(target))throw Error("STANDALONE_SYMLINK_CYCLE");
+  const next=new Set(ancestors);next.add(target);
+  copyDereferenced(target,dest,repoRoot,next);
+  return;
+ }
+ if(st.isDirectory()){
+  mkdirSync(dest,{recursive:true});
+  for(const name of readdirSync(source))
+   copyDereferenced(join(source,name),join(dest,name),repoRoot,ancestors);
+ }else if(st.isFile()){
+  mkdirSync(dirname(dest),{recursive:true});
+  copyFileSync(source,dest);
+  chmodSync(dest,st.mode & 0o777);
+ }else throw Error("STANDALONE_UNSUPPORTED_ENTRY");
+}
 export function prepareNodeBundle({projectRoot,outputRoot,copyPublic=true}){
  const root=realpathSync(resolve(projectRoot)),dest=resolve(outputRoot);
  if(under(root,dest)||under(dest,root))throw Error("STANDALONE_OUTPUT_MUST_BE_ISOLATED");
@@ -40,10 +63,10 @@ export function prepareNodeBundle({projectRoot,outputRoot,copyPublic=true}){
  if(copyPublic)scanSymlinks(pub,root);
  try{
   mkdirSync(dirname(dest),{recursive:true});
-  cpSync(standalone,dest,{recursive:true,dereference:true,force:false,verbatimSymlinks:false});
+  copyDereferenced(standalone,dest,root);
   mkdirSync(join(dest,".next"),{recursive:true});
-  cpSync(assets,join(dest,".next","static"),{recursive:true,dereference:true});
-  if(copyPublic)cpSync(pub,join(dest,"public"),{recursive:true,dereference:true});
+  copyDereferenced(assets,join(dest,".next","static"),root);
+  if(copyPublic)copyDereferenced(pub,join(dest,"public"),root);
   // The runtime must contain only genuine files, not pnpm links back to source.
   function ensureNoLinks(dir){
    for(const item of readdirSync(dir,{withFileTypes:true})){
