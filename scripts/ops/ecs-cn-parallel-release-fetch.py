@@ -65,10 +65,11 @@ def fetch_range(url: str, start: int, end: int, expected_size: int, timeout: int
 def available_sources(sources, total):
     def probe(url):
         t0 = time.monotonic()
+        sample = min(1048576, total)
         try:
-            with fetch_range(url, 0, 1048575, total, timeout=18) as resp:
-                data = resp.read(1048576)
-                if len(data) != 1048576:
+            with fetch_range(url, 0, sample-1, total, timeout=18) as resp:
+                data = resp.read(sample)
+                if len(data) != sample:
                     raise RuntimeError("SHORT_RANGE_PROBE")
             return (url, time.monotonic() - t0, "SUPPORTED")
         except Exception as exc:
