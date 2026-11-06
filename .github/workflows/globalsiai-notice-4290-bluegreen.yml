@@ -18,6 +18,9 @@ jobs:
           for f in scripts/ops/globalsiai-notice-4290-canary.sh scripts/ops/globalsiai-notice-dual-host-cutover.sh; do
             bash -n "$f"
           done
+          bash -n scripts/ops/cn-market-memory-auth-readonly-v2.sh
+          grep -Fq 'AUTH_SYNTHETIC PORT=$port' scripts/ops/cn-market-memory-auth-readonly-v2.sh
+          grep -Fq 'MEMORY_BYTES=$memory' scripts/ops/cn-market-memory-auth-readonly-v2.sh
           c=scripts/ops/globalsiai-notice-4290-canary.sh
           s=scripts/ops/globalsiai-notice-dual-host-cutover.sh
           grep -Fq 'SHA256=bcb466a235f55b4b5cb6d839b10fa16aff956bd255e68de20e1647c5a62f370e' "$c"
