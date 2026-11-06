@@ -1,0 +1,22 @@
+[Unit]
+Description=LINGXIFIELD Next.js on self-managed Alibaba ECS
+Wants=network-online.target
+After=network-online.target
+[Service]
+Type=simple
+User=lingxifield
+Group=lingxifield
+WorkingDirectory=/opt/lingxifield/current
+Environment=NODE_ENV=production
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3187
+Environment=NODE_OPTIONS=--max-old-space-size=1024
+EnvironmentFile=/etc/lingxifield/production.env
+ExecStart=/usr/bin/node /opt/lingxifield/current/server.js
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=25
+NoNewPrivileges=yes
+PrivateTmp=yes
+[Install]
+WantedBy=multi-user.target
