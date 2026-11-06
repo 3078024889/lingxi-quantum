@@ -1,0 +1,62 @@
+name: Global SIAI ZeroSSL failover operator validation (no deploy)
+on:
+  push:
+    branches: [feature/globalsiai-ecs-stage-operator-20261106]
+permissions:
+  contents: read
+jobs:
+  zerossl-failover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Audit fail-closed CA selection, CAA and source integrity
+        run: |
+          set -Eeuo pipefail
+          f=scripts/ops/globalsiai-ecs-cn-zerossl-public-cutover.sh
+          bash -n "$f"
+          test "$(bash "$f" 2>&1 || true)" = 'GLOBALSIAI_CN_PUBLIC_USAGE: bash script --publish-globalsiai-cn-zerossl-only (root)'
+          grep -Fq 'ACME_BLOB=9561ff768478f994ea7992a56411c376e073c7f6' "$f"
+          grep -Fq 'issue[[:space:]]+"sectigo.com"' "$f"
+          grep -Fq 'ACME_SOURCE=$ACME_HOME/acme.sh' "$f"
+          grep -Fq -- '--server zerossl' "$f"
+          grep -Fq 'GLOBALSIAI_CN_ZEROSSL_AUTORENEW_TIMER_ENABLED' "$f"
+          grep -Fq 'GLOBALSIAI_CN_ZEROSSL_PUBLIC_HTTPS_RELEASE_ACCEPTED' "$f"
+          grep -Fq 'GLOBALSIAI_CN_PUBLIC_ROLLBACK_OLD_SITES_UNTOUCHED' "$f"
+          ! grep -Eq 'systemctl (stop|restart|disable) (lingxifield-ecs|lingxifield-cn-stage)' "$f"
+          echo GLOBALSIAI_ZEROSSL_SOURCE_SECURITY_GATE_PASS
+      - name: Render exact independent Nginx vhost with temp trusted paths
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          mkdir -p "$tmp/cert" "$tmp/acme"
+          openssl req -x509 -nodes -newkey rsa:2048 -days 2 -subj '/CN=globalsiai.cn' \
+            -addext 'subjectAltName=DNS:globalsiai.cn,DNS:www.globalsiai.cn' \
+            -keyout "$tmp/cert/privkey.pem" -out "$tmp/cert/fullchain.pem" >/dev/null 2>&1
+          python3 - "$tmp" <<'PY'
+          import pathlib,re,sys
+          t=pathlib.Path(sys.argv[1])
+          s=pathlib.Path('scripts/ops/globalsiai-ecs-cn-zerossl-public-cutover.sh').read_text()
+          blocks=re.findall(r'cat (?:>>|>)"\$VHOST" <<EOF\n(.*?)\nEOF',s,re.S)
+          assert len(blocks)==2,"missing source HTTP + HTTPS vhosts"
+          body='\n'.join(blocks)
+          for key,value in {'$WEBROOT':str(t/'acme'),'$CERTDIR':str(t/'cert'),'$PORT':'4289','$DOMAIN':'globalsiai.cn'}.items():
+            body=body.replace(key,value)
+          body=body.replace('\\$','$')
+          assert body.count('listen 443 ssl;')==2
+          assert 'proxy_pass http://127.0.0.1:4289;' in body
+          assert 'add_header X-Robots-Tag "noindex, nofollow" always;' in body
+          (t/'site.conf').write_text(body)
+          (t/'nginx.conf').write_text('worker_processes 1;\n'
+              f'pid {t}/nginx.pid;\n'
+              f'error_log {t}/error.log info;\n'
+              'events { worker_connections 128; }\n'
+              f'http {{ access_log {t}/access.log; include {t}/site.conf; }}\n')
+          PY
+          sudo nginx -t -c "$tmp/nginx.conf" -p "$tmp/"
+          echo GLOBALSIAI_ZEROSSL_RENDERED_TLS_NGINX_CONFIG_PASS
