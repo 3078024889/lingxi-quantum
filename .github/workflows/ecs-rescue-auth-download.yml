@@ -57,7 +57,7 @@ jobs:
             exit 0
           fi
           gh release create "$tag" lingxifield-ecs-standalone.tar.gz lingxifield-ecs-standalone.sha256 \
-            --repo "$GH_REPO" --target ec4edd7477615523e74db627778bf336dfe0d06e \
+            --repo "$GH_REPO" --target main \
             --prerelease --title 'LINGXIFIELD ECS browser auth repair — staging only' \
             --notes 'Supabase public browser client configured at build time; CI started standalone and checked health/tools. This does not confirm real login, paid operations, R2, model jobs or production availability. No backend secrets in archive.'
           echo "AUTH_RESUME_RELEASE_CREATED"
