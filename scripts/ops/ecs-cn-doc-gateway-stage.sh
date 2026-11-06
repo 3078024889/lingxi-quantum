@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # CN document gateway candidate: source-verified staged apply only, never public switch.
-# Exact GitHub SHA256 pinned. Preserve ALL old public asset paths and sizes.
+# Exact GitHub SHA256 pinned. Compare canonical public assets byte-for-byte, verifying old duplicated public/public files safely.
 set -Eeuo pipefail
 umask 077
 if [ "$(id -u)" -ne 0 ] || [ "$#" -ne 1 ] || [ "$1" != "--apply-doc-gateway-3189" ]; then
@@ -62,30 +62,25 @@ test "$(stat -c %s "$NEW")" -eq "$NEW_SIZE" || { echo CN_NEW_ARCHIVE_SIZE_MISMAT
 printf '%s  %s\n' "$NEW_HASH" "cn-ecs-document-gateway.tar.gz" >"$SUM"
 (cd "$BASE" && sha256sum -c cn-ecs-document-gateway.sha256)
 echo CN_SIGNED_GITHUB_RELEASE_HASH_AND_SIZE_PASS
-python3 - "$OLD" "$NEW" <<'PY'
-import tarfile,sys
-def public_inventory(path):
- with tarfile.open(path,"r:gz") as tf:
-  public={}
-  for m in tf:
-   name=m.name
-   while name.startswith("./"):name=name[2:]
-   if name.startswith("public/") and m.isfile():
-    public[name]=m.size
- return public
-old=public_inventory(sys.argv[1])
-new=public_inventory(sys.argv[2])
-missing=sorted(set(old)-set(new))
-changed=sorted(k for k in old if k in new and old[k]!=new[k])
-print("CN_OLD_PUBLIC_FILES="+str(len(old)))
-print("CN_NEW_PUBLIC_FILES="+str(len(new)))
-print("CN_MISSING_PUBLIC_FILES="+str(len(missing)))
-print("CN_CHANGED_PUBLIC_FILE_SIZES="+str(len(changed)))
-for name in (missing+changed)[:8]:
- print("CN_PUBLIC_ASSET_ISSUE="+name[:180])
-if len(old)<50 or missing or changed:raise SystemExit("CN_PUBLIC_MODEL_OR_ASSET_PRESERVATION_FAILED")
-print("CN_PUBLIC_ASSET_FILES_AND_SIZES_PRESERVED")
+CHECKER="$BASE/verify-public-asset-preservation.py"
+CHECKER_URL=https://raw.githubusercontent.com/3078024889/lingxi-quantum/67799ef7df83bdaa1ebacd7e189c06813394f179/scripts/ops/ecs-cn-verify-public-asset-preservation.py
+if ! curl -4fLsS --retry 3 --connect-timeout 20 --max-time 120 -o "$CHECKER" "https://gh-proxy.com/$CHECKER_URL"; then
+ curl -4fLsS --retry 3 --connect-timeout 20 --max-time 120 -o "$CHECKER" "$CHECKER_URL"
+fi
+python3 - "$CHECKER" <<'PY'
+import hashlib,sys
+from pathlib import Path
+p=Path(sys.argv[1]);b=p.read_bytes()
+sha=hashlib.sha1(b"blob "+str(len(b)).encode()+b"\0"+b).hexdigest()
+if sha!="b311a9ac2b295464da7841980495a79d6977b0ec":
+ raise SystemExit("CN_ASSET_VERIFIER_SOURCE_MISMATCH")
+print("CN_ASSET_VERIFIER_SOURCE_VERIFIED")
 PY
+python3 -m py_compile "$CHECKER"
+if ! python3 "$CHECKER" "$OLD" "$NEW"; then
+ echo CN_PUBLIC_MODEL_OR_ASSET_PRESERVATION_FAILED
+ exit 5
+fi
 systemctl is-active --quiet "$PRODUCTION" || { echo CN_PRODUCTION_UNHEALTHY_ABORT; exit 5; }
 echo CN_STAGE_APPLY_SIGNED_DOCUMENT_GATEWAY_CANDIDATE
 log="$BASE/stage-apply.log"
