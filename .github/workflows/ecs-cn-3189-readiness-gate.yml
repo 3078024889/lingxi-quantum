@@ -21,6 +21,11 @@ jobs:
           node --check scripts/ops/ecs-cn-3189-live-readiness.mjs
           node --check scripts/ops/ecs-cn-runtime-triage.mjs
           bash -n scripts/ops/ecs-cn-stage-r2-reload.sh
+          node --check scripts/ops/ecs-cn-real-document-gateway-3189.mjs
+          test "$(node scripts/ops/ecs-cn-real-document-gateway-3189.mjs || true)" = CN_DOCUMENT_REAL_GATE_REQUIRES_EXPLICIT_3189_FLAG
+          grep -Fq 'CN_DOC_STAGE_USER_API_REAL_DOCX' scripts/ops/ecs-cn-real-document-gateway-3189.mjs
+          grep -Fq 'CN_DOC_GATEWAY_REPLAY_HTTP' scripts/ops/ecs-cn-real-document-gateway-3189.mjs
+          grep -Fq 'CN_REAL_DOCUMENT_GATE_RESULT=' scripts/ops/ecs-cn-real-document-gateway-3189.mjs
           grep -Fq 'CN_3189_R2_ENV_RELOADED_ROUTES_AND_AUTH_PASS_PRODUCTION_3188_UNCHANGED' scripts/ops/ecs-cn-stage-r2-reload.sh
           grep -Fq 'CN_3189_ENV_ISOLATION_ABORT' scripts/ops/ecs-cn-stage-r2-reload.sh
           test "$(node scripts/ops/ecs-cn-runtime-triage.mjs 2>&1 || true)" = CN_TRIAGE_REQUIRES_READ_ONLY_FLAG
