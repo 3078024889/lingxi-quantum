@@ -10,7 +10,7 @@ function put(root,path,bytes){
  writeFileSync(full,bytes);return full;
 }
 function redirects(manifest){
- return manifest.items.map(item=>"/"+item.path+" https://assets.lingxifield.com/"+item.path+" 307").join("\\n")+"\\n";
+ return manifest.items.map(item=>"/"+item.path+" https://assets.lingxifield.com/"+item.path+" 307").join("\n")+"\n";
 }
 test("redirects browser-generated overlimit output to verified original R2 key by SHA",()=>{
  const base=mkdtempSync(join(tmpdir(),"cf-built-"));const output=join(base,"out"),backup=join(base,"backup");
