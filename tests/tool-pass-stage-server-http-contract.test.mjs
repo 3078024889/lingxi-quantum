@@ -84,3 +84,27 @@ test("image session shares the same operation id as food analysis and service re
  assert(server.includes('stage:"food-analysis"'));
  assert(server.indexOf("authorizeToolPassStage(")<server.indexOf("await resolveFoodMeal("));
 });
+
+test("a half-enabled frontend/backend can never initiate new legacy per-tool charges",()=>{
+ const runtime=read("lib/tools/commerce/tool-server-receipt.ts");
+ assert(runtime.includes('export function toolPassCutoverRequested()'));
+ assert(runtime.includes('process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true" ||'));
+ assert(runtime.includes('process.env.TOOL_PASS_BACKEND_READY==="true"'));
+ for(const [path,denial] of [
+  ["app/api/tools/quote/route.ts","SINGLE_TOOL_CHECKOUT_RETIRED"],
+  ["app/api/tools/quote/topup/route.ts","SINGLE_TOOL_TOPUP_RETIRED"],
+  ["app/api/tools/pay/create/route.ts","SINGLE_TOOL_CHECKOUT_RETIRED"],
+  ["app/api/tools/pricing/route.ts","SINGLE_TOOL_PRICING_RETIRED"],
+  ["app/api/tools/free-export/route.ts","SINGLE_TOOL_CHECKOUT_RETIRED"],
+ ]){
+  const code=read(path);
+  assert(code.includes("toolPassCutoverRequested()"),"partial flag bypass in "+path);
+  assert(code.includes(denial),"legacy charging route not retired: "+path);
+ }
+ const paid=read("app/api/tools/pay/create/route.ts");
+ assert(paid.indexOf('if(quote.status==="paid")')<paid.indexOf('if(toolPassCutoverRequested()'),
+  "existing paid user lost receipt recovery");
+ const exports=read("app/api/tools/free-export/route.ts");
+ assert(exports.includes('select("id,user_id,ip_hash,tool_id")'),
+  "historical export reservations cannot be owner checked");
+});
