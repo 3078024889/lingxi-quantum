@@ -6,8 +6,8 @@ on:
       - infra/com-cloudflare-readiness-20261106
     paths:
       - '.github/workflows/com-vinext-build-probe.yml'
-      - 'scripts/cloudflare/**'
-      - 'tests/cloudflare/**'
+      - 'scripts/cloudflare/audit-large-assets.mjs'
+      - 'tests/cloudflare/audit-large-assets.test.mjs'
   workflow_dispatch:
 
 permissions:

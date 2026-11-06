@@ -27,7 +27,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Verify dual-origin probe fail-closed behavior
-        run: node --test tests/cloudflare/probe-com-origins.test.mjs
+        run: node --test tests/cloudflare/*.test.mjs
       - name: Read-only Cloudflare migration audit
         run: |
           node --version

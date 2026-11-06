@@ -78,3 +78,39 @@ Relevant upstream guidance:
 - https://developers.cloudflare.com/workers/platform/limits/
 - https://developers.cloudflare.com/workers/configuration/routing/routes/
 - https://vercel.com/kb/guide/can-i-use-a-proxy-on-top-of-my-vercel-deployment
+
+## 2026-11-06 verified second-stage engineering results
+
+All entries in this section are backed by actual GitHub Actions, not inferred production success.
+
+- Original source assets: six files exceed 25 MiB. Running `scripts/prepare-media-runtime.cjs` creates a **seventh**: `public/media/ffmpeg-0.12.10/ffmpeg-core.wasm`. The read-only asset integrity audit now requires all seven, including the generated file, to be accounted for and SHA-256 hashed.
+- Official Cloudflare `vinext init` successfully executed on a throwaway GitHub runner, with no deployment credentials, DNS or Vercel mutation. It automatically upgraded React 18.3.1 → 19.3.1 and installed vinext 1.4.3 even though the invoked init CLI was pinned to 1.3.1. These are runner-only modifications, **not** an authorized upgrade to main. Pin reviewed dependencies and revalidate existing React/Next behavior before committing any permanent migration.
+- Actual `pnpm run build:vinext` **failed** while bundling `lib/sasi/intelligence/archive-generated-media.ts` because native `sharp` was mapped to a missing `empty-stub.js`. The code also uses Node filesystem/temp files and a spawned video decoder. A fake `sharp` implementation is not an acceptable production fix. Separate actual media validation/archiving into a verified Node processing service and keep light task/auth orchestration in Workers.
+- A separate graph scanner walks transitive literal API imports. From 216 API route entry files, 58 routes have source indicators for native Node file/process/network dependencies; six reach `sharp`. This is a **signal inventory**, not 58 confirmed runtime failures or security vulnerabilities. Dynamic imports, packages and generated code can reveal additional issues.
+- The `.com` project still points to Vercel deployment `19b88763` (READY), while source main was `9ce91400` at review. A READY historical deployment cannot certify the newest candidate. Vercel remains intact as standby.
+
+## Seven public assets: R2 CDN contract, no silent loss
+
+The seven public assets are not private customer data. They are browser-loadable engine/model/video files and can use a separate Cloudflare R2 **public custom domain** after the owner explicitly configures one. Do not enable `r2.dev` for production: it is intended for development, rate-limited and cannot provide normal CDN caching controls.
+
+1. Run `node scripts/prepare-media-runtime.cjs` in an environment with frozen project dependencies.
+2. Generate hashes: `node scripts/cloudflare/audit-large-assets.mjs --json ./com-large-assets.json --fail-unaccounted`. The manifest includes exact relative paths, SHA-256 checksums and file sizes.
+3. Upload the seven **existing verified files**, preserving their paths as R2 object keys. Official CLI example:
+   ```bash
+   npx wrangler r2 object put YOUR_PUBLIC_ASSET_BUCKET/models/Xenova/clip-vit-base-patch32/onnx/vision_model_quantized.onnx --file public/models/Xenova/clip-vit-base-patch32/onnx/vision_model_quantized.onnx --content-type application/octet-stream --remote
+   ```
+   Apply `video/mp4` for the entrance video, `application/wasm` for WASM, and `application/octet-stream` for ONNX. Do not publish user uploads, passwords, receipts or generated private media to this bucket.
+4. Configure a dedicated `*.lingxifield.com` custom hostname for the bucket, with GET/HEAD CORS allowing `https://lingxifield.com`, exposing Content-Length and Content-Range and permitting Range requests. Check CDN caching policy for ONNX/WASM (not reliably cached under default extension rules). Do not edit `.cn` routing.
+5. Only **after** the assets exist at that hostname, run:
+   ```bash
+   node scripts/cloudflare/prove-r2-assets.mjs --cdn https://YOUR-ASSET-SUBDOMAIN.lingxifield.com --manifest ./com-large-assets.json --full
+   ```
+   It rejects wrong length, wrong MIME, missing CORS, broken partial content, and SHA-256 mismatch, and streams data rather than loading whole files into RAM. A header-only check intentionally does not count as asset delivery verified.
+6. Implement and test hostname-specific browser asset routing for `.com` only. Keep the original files in the repo and Vercel until real browser PDF/video/OCR/model tests pass, including a fallback rehearsal.
+7. `siteReleaseReady` remains false after R2 asset validation; all service-level authentication, billing, tool journeys, Cron, worker CPU, and Cloudflare deployment checks are independent.
+
+Official guidance:
+- https://developers.cloudflare.com/r2/reference/wrangler-commands/
+- https://developers.cloudflare.com/r2/buckets/public-buckets/
+- https://developers.cloudflare.com/r2/buckets/cors/
+- https://developers.cloudflare.com/workers/static-assets/migration-guides/vercel-to-workers/nextjs/
