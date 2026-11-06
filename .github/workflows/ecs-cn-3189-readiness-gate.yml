@@ -20,6 +20,9 @@ jobs:
           set -Eeuo pipefail
           node --check scripts/ops/ecs-cn-3189-live-readiness.mjs
           node --check scripts/ops/ecs-cn-runtime-triage.mjs
+          bash -n scripts/ops/ecs-cn-stage-r2-reload.sh
+          grep -Fq 'CN_3189_R2_ENV_RELOADED_ROUTES_AND_AUTH_PASS_PRODUCTION_3188_UNCHANGED' scripts/ops/ecs-cn-stage-r2-reload.sh
+          grep -Fq 'CN_3189_ENV_ISOLATION_ABORT' scripts/ops/ecs-cn-stage-r2-reload.sh
           test "$(node scripts/ops/ecs-cn-runtime-triage.mjs 2>&1 || true)" = CN_TRIAGE_REQUIRES_READ_ONLY_FLAG
           grep -Fq 'CN_R2_ENDPOINT_KIND=' scripts/ops/ecs-cn-runtime-triage.mjs
           grep -Fq 'CN_SIAI_FIRST' scripts/ops/ecs-cn-runtime-triage.mjs
