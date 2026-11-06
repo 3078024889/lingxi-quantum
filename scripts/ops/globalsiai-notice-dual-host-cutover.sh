@@ -72,6 +72,7 @@ PID_3188="$(systemctl show -p MainPID --value lingxifield-ecs)"
 PID_3189="$(systemctl show -p MainPID --value lingxifield-cn-stage)"
 PID_4289="$(systemctl show -p MainPID --value globalsiai-market-stage)"
 echo "=== Move only both Global SIAI Nginx upstreams to 4290 ==="
+changed=1
 python3 - "$VHOST_CN" "$VHOST_COM" <<'PY'
 import pathlib,sys,os,tempfile
 old="proxy_pass http://127.0.0.1:4289;"
@@ -87,7 +88,6 @@ for path in map(pathlib.Path,sys.argv[1:]):
     os.replace(tmp,path)
 print("GLOBALSIAI_BOTH_CONFIGS_PATCHED_TO_4290")
 PY
-changed=1
 nginx -t
 systemctl reload nginx
 echo "=== Real local TLS SNI routes for CN and COM on new 4290 ==="
