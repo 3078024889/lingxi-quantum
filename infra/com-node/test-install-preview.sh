@@ -3,6 +3,7 @@ set -euo pipefail
 dir=$(mktemp -d)
 trap 'rm -rf "$dir"' EXIT
 bash -n infra/com-node/install-preview.sh
+python3 -m py_compile infra/com-node/strict-archive.py
 mkdir -p "$dir/bundle/node_modules/next" "$dir/bundle/.next/static" "$dir/bundle/public"
 printf '%s\n' "console.log('test');" > "$dir/bundle/server.js"
 printf '%s\n' 'x' > "$dir/bundle/.next/static/app.js"
@@ -24,3 +25,28 @@ if bash infra/com-node/install-preview.sh --verify "$dir/bad.tar.gz" "$bad" >/de
  echo "RELEASE_SYMLINK_ACCEPTED" >&2;exit 1
 fi
 echo "COM_NODE_PREVIEW_INSTALLER_SAFE_VERIFY_PASSED"
+
+# Verify that all malicious tar metadata fails before any content is extracted.
+python3 - "$dir" <<'PY'
+import io, os, sys, tarfile
+d=sys.argv[1]
+for case in ("path-escape","symlink","hardlink","duplicate","file-as-parent"):
+ with tarfile.open(os.path.join(d,case+".tar.gz"),"w:gz") as tf:
+  def put(name,typ=tarfile.REGTYPE,link=""):
+   m=tarfile.TarInfo(name);m.type=typ;m.linkname=link
+   m.size=1 if typ==tarfile.REGTYPE else 0;m.mode=0o644
+   tf.addfile(m,io.BytesIO(b"x") if typ==tarfile.REGTYPE else None)
+  if case=="path-escape":put("../escape")
+  elif case=="symlink":put("./escape",tarfile.SYMTYPE,"/etc/passwd")
+  elif case=="hardlink":put("./escape",tarfile.LNKTYPE,"../../escape")
+  elif case=="duplicate":put("./same");put("same")
+  else:put("./parent");put("./parent/child")
+PY
+for case in path-escape symlink hardlink duplicate file-as-parent; do
+ bad_file="$dir/$case.tar.gz"
+ bad_sha=$(sha256sum "$bad_file" | awk '{print $1}')
+ if bash infra/com-node/install-preview.sh --verify "$bad_file" "$bad_sha" >/dev/null 2>&1;then
+  echo "MALICIOUS_ARCHIVE_ACCEPTED:$case" >&2;exit 1
+ fi
+done
+echo "COM_ARCHIVE_TRAVERSAL_LINK_DUPLICATE_REJECTED"

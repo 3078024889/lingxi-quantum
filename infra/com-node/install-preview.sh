@@ -18,11 +18,12 @@ MODE="$1"; ARCHIVE="$2"; EXPECTED="$3"
 ACTUAL=$(sha256sum "$ARCHIVE" | awk '{print $1}')
 [[ "$ACTUAL" == "$EXPECTED" ]] || die "ARCHIVE_HASH_MISMATCH"
 
-# Reject absolute/traversal entry names before tar receives elevated privileges.
-while IFS= read -r entry; do
-  [[ "$entry" != /* && "$entry" != ".." && "$entry" != ../* &&
-     "$entry" != */../* && "$entry" != */.. ]] || die "ARCHIVE_PATH_ESCAPE"
-done < <(tar -tzf "$ARCHIVE")
+# Validate all archive metadata BEFORE unpacking anything, reject all links
+# or special entries, and copy members only to new regular files.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+command -v python3 >/dev/null || die "PYTHON3_REQUIRED"
+[[ -r "$SCRIPT_DIR/strict-archive.py" ]] || die "ARCHIVE_VALIDATOR_REQUIRED"
+unpack(){ python3 "$SCRIPT_DIR/strict-archive.py" "$ARCHIVE" "$1"; }
 
 verify_dir(){
  local where="$1"
@@ -43,7 +44,7 @@ NODE
 if [[ "$MODE" == "--verify" ]]; then
  [[ $# -eq 3 ]] || usage
  TMP=$(mktemp -d);trap 'rm -rf "$TMP"' EXIT
- tar --no-same-owner -xzf "$ARCHIVE" -C "$TMP"
+ unpack "$TMP"
  verify_dir "$TMP"
  echo "COM_NODE_ARCHIVE_VERIFIED; no services or domains changed"
  exit 0
@@ -69,7 +70,7 @@ RELEASE="$ROOT/releases/$SOURCE_SHA"
 mkdir -p "$ROOT/releases" /etc/lingxifield-com-preview
 mkdir -p "$RELEASE"
 trap 'rm -rf "$RELEASE"' ERR
-tar --no-same-owner -xzf "$ARCHIVE" -C "$RELEASE"
+unpack "$RELEASE"
 verify_dir "$RELEASE"
 
 if ! id "$USER_NAME" >/dev/null 2>&1; then
