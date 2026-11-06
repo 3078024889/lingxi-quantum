@@ -63,7 +63,7 @@ printf '%s  %s\n' "$NEW_HASH" "cn-ecs-document-gateway.tar.gz" >"$SUM"
 (cd "$BASE" && sha256sum -c cn-ecs-document-gateway.sha256)
 echo CN_SIGNED_GITHUB_RELEASE_HASH_AND_SIZE_PASS
 CHECKER="$BASE/verify-public-asset-preservation.py"
-CHECKER_URL=https://raw.githubusercontent.com/3078024889/lingxi-quantum/67799ef7df83bdaa1ebacd7e189c06813394f179/scripts/ops/ecs-cn-verify-public-asset-preservation.py
+CHECKER_URL=https://raw.githubusercontent.com/3078024889/lingxi-quantum/a06e58ffee06d8b803dddac4e2bd9e57b207bd7e/scripts/ops/ecs-cn-verify-public-asset-preservation.py
 if ! curl -4fLsS --retry 3 --connect-timeout 20 --max-time 120 -o "$CHECKER" "https://gh-proxy.com/$CHECKER_URL"; then
  curl -4fLsS --retry 3 --connect-timeout 20 --max-time 120 -o "$CHECKER" "$CHECKER_URL"
 fi
@@ -72,7 +72,7 @@ import hashlib,sys
 from pathlib import Path
 p=Path(sys.argv[1]);b=p.read_bytes()
 sha=hashlib.sha1(b"blob "+str(len(b)).encode()+b"\0"+b).hexdigest()
-if sha!="b311a9ac2b295464da7841980495a79d6977b0ec":
+if sha!="a41f12a2baea2c46a5a05b031fa39451353a0280":
  raise SystemExit("CN_ASSET_VERIFIER_SOURCE_MISMATCH")
 print("CN_ASSET_VERIFIER_SOURCE_VERIFIED")
 PY
