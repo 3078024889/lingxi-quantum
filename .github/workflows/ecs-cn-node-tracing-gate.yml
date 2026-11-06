@@ -1,7 +1,7 @@
 name: CN standalone dynamic Node dependency trace gate (no deploy)
 on:
   push:
-    branches: [feature/cn-runtime-node-tracing-20261106]
+    branches: [feature/cn-runtime-node-tracing-20261106, feature/cn-standalone-package-fix-20261106]
   workflow_dispatch:
 permissions:
   contents: read
@@ -91,11 +91,32 @@ jobs:
           for(const mod of modules){
             const proc=spawnSync(process.execPath,[
               "--input-type=module","-e",
-              "import("+JSON.stringify(mod)+").then(()=>process.exit(0)).catch(()=>process.exit(2))"
+              "import("+JSON.stringify(mod)+").then(()=>process.exit(0)).catch(e=>{console.error(e.code||'MODULE_ERROR',e.message);process.exit(2)})"
             ],{cwd:root,encoding:"utf8",timeout:15000});
             console.log("CN_STANDALONE_"+mod+"="+(proc.status===0?"PASS":"FAIL"));
+            if(proc.status!==0)console.log("CN_IMPORT_ERROR_"+mod+"="+String(proc.stderr).replace(/\\/home\\/runner\\/[^\\s:]+/g,"[BUILD_PATH]").slice(0,250));
             if(proc.status!==0)failures++;
           }
           if(failures)process.exit(1);
           console.log("CN_STANDALONE_DYNAMIC_NODE_IMPORTS_5_OF_5_PASS");
           NODE
+      - name: Package verified .cn ECS artifact (no server deploy)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          install -d .next/standalone/.next
+          cp -a .next/static .next/standalone/.next/static
+          cp -a public .next/standalone/public
+          tar --owner=0 --group=0 -C .next/standalone -czf cn-ecs-standalone.tar.gz .
+          sha256sum cn-ecs-standalone.tar.gz > cn-ecs-standalone.sha256
+          test "$(stat -c %s cn-ecs-standalone.tar.gz)" -lt 350000000
+          echo CN_ECS_ARCHIVE_CREATED_NOT_DEPLOYED
+      - name: Upload one-day .cn candidate only after successful build
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: cn-ecs-standalone-${{ github.sha }}
+          path: |
+            cn-ecs-standalone.tar.gz
+            cn-ecs-standalone.sha256
+          retention-days: 1
+          if-no-files-found: error
