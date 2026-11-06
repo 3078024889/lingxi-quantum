@@ -1,3 +1,4 @@
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 import{NextRequest,NextResponse}from"next/server";import{createHash}from"node:crypto";
 import{createClient}from"@/lib/supabase/server";import{createAdminClient}from"@/lib/supabase/admin";import{isSameOriginMutation}from"@/lib/sasi/request-security";import{recoverToolQuotePayment}from"@/lib/tools/payment-recovery";import{foodRequestIpHash}from"@/lib/tools/food/request-identity";
 export const runtime="nodejs";const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -5,6 +6,9 @@ const n=(x:any,k:string)=>{const v=x?.nutrients?.[k];return v==null?null:Number(
 const digest=(items:any[],photoCount:number)=>createHash("sha256").update(JSON.stringify({photoCount,items:items.map(x=>({food_id:x.food_id,grams:Number(x.grams.toFixed(2))}))})).digest("hex");
 function legacyItem(x:any){return{food_id:Number(x.food_id),code:String(x.source_food_id||""),name_zh:String(x.name_zh||x.name_en||""),name_en:String(x.name_en||""),grams:Number(x.grams),kcal:n(x,"energy_kcal"),protein_g:n(x,"protein_g"),carbs_g:n(x,"carbs_g"),fat_g:n(x,"fat_g"),fiber_g:n(x,"fiber_g"),sugar_g:n(x,"sugar_g"),sodium_mg:n(x,"sodium_mg"),nutrients:x.nutrients||{},source:"USDA FoodData Central"}}
 export async function POST(req:NextRequest){
+ // The metered analysis API replaces this retired per-quote calculation.
+ // In unified mode never execute legacy paid RPC from an old cached client.
+ if(toolPassBackendReady())return NextResponse.json({error:"FOOD_ANALYSIS_REQUIRED",reload:true},{status:410,headers:{"Cache-Control":"no-store"}});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:"SIGN_IN_REQUIRED"},{status:401});
  const b=await req.json().catch(()=>null)as any,quoteId=String(b?.quoteId||""),sessionId=String(b?.sessionId||""),photoCount=Number(b?.photoCount);

@@ -1,3 +1,4 @@
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { NextRequest,NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -17,6 +18,7 @@ export async function POST(req:NextRequest){
  const body=await req.json().catch(()=>null) as {count?:number;quoteId?:string}|null;
  const count=Math.floor(Number(body?.count)),quoteId=String(body?.quoteId||"");
  if(!Number.isFinite(count)||count<11||count>100)return NextResponse.json({error:"BATCH_SIZE_INVALID"},{status:400});
+ if(toolPassBackendReady())return NextResponse.json({error:"BATCH_PASS_WORKFLOW_NOT_READY"},{status:503,headers:{"Cache-Control":"no-store"}});
  if(!quoteId)return NextResponse.json({error:"PAID_BATCH_REQUIRED"},{status:402});
 
  const admin=createAdminClient();

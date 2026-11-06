@@ -1,3 +1,4 @@
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
@@ -57,6 +58,9 @@ export async function POST(req:NextRequest){
  });
  if(total>MAX_TOTAL)return NextResponse.json({error:"FILES_TOO_LARGE"},{status:413});
 
+ // The existing file quote and R2 object schema are still keyed by a legacy
+ // paid quote. Do not mint a new upload capability from an unrelated pass.
+ if(toolPassBackendReady())return NextResponse.json({error:"BURN_FILE_PASS_WORKFLOW_NOT_READY"},{status:503,headers:{"Cache-Control":"no-store"}});
  const admin=createAdminClient();
  const {data:q,error:qerr}=await admin.from("tool_payment_quotes").select("id,user_id,tool_id,quantity,status").eq("id",quoteId).eq("user_id",user.id).eq("tool_id","burn-after-read-file").eq("status","paid").maybeSingle();
  if(qerr)return NextResponse.json({error:"SERVICE_BUSY"},{status:503});
