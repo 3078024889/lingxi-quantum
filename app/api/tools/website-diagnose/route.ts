@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import dns from "node:dns/promises";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import {createClient} from "@/lib/supabase/server";
+import {toolPassBackendReady,redeemToolStart} from "@/lib/tools/commerce/tool-server-receipt";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { parsePublicHttpsUrl, pinnedHttpsProbe, pinnedTlsCertificate } from "@/lib/security/public-endpoint";
 
@@ -25,7 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "REQUEST_TOO_LARGE" }, { status: 413 });
   }
 
-  const body = await req.json().catch(() => null) as { url?: unknown } | null;
+  const body = await req.json().catch(() => null) as { url?: unknown; accessRequestId?: unknown; operationId?: unknown } | null;
   const raw = typeof body?.url === "string" ? body.url.trim() : "";
   if (!raw || raw.length > 2048) {
     return NextResponse.json({ error: "INVALID_URL" }, { status: 400 });
@@ -44,6 +46,15 @@ export async function POST(req: NextRequest) {
       "PRIVATE_NETWORK_FORBIDDEN",
     ].includes(code) ? 422 : 400;
     return NextResponse.json({ error: code }, { status });
+  }
+
+  // Require a one-use receipt before costly TLS and HTTP probes.
+  if(toolPassBackendReady()){
+    const {data:{user}}=await createClient().auth.getUser();
+    if(!user)return NextResponse.json({error:'LOGIN_REQUIRED'},{status:401});
+    const receipt=await redeemToolStart({userId:user.id,toolSlug:'website-diagnose',accessRequestId:body?.accessRequestId,operationId:String(body?.operationId||'')});
+    if(!receipt.ok)return NextResponse.json({error:receipt.error},{status:403});
+    if(receipt.alreadyRedeemed)return NextResponse.json({error:'TOOL_OPERATION_ALREADY_STARTED'},{status:409});
   }
 
   const host = url.hostname.toLowerCase();

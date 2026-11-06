@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
+import {createClient} from "@/lib/supabase/server";
+import {toolPassBackendReady,redeemToolStart} from "@/lib/tools/commerce/tool-server-receipt";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import {fetchPublicMedia} from "@/lib/security/public-media-fetch";
 import {boundedRequestJson} from "@/lib/security/bounded-request-json";
@@ -237,6 +239,14 @@ export async function POST(req: NextRequest) {
 
     if (!["video", "audio", "image"].includes(kind)) {
       return NextResponse.json({ error: "MEDIA_KIND_INVALID" }, { status: 400 });
+    }
+
+    if(toolPassBackendReady()){
+      const {data:{user}}=await createClient().auth.getUser();
+      if(!user)return NextResponse.json({error:'LOGIN_REQUIRED'},{status:401});
+      const receipt=await redeemToolStart({userId:user.id,toolSlug:'media-import',accessRequestId:body.accessRequestId,operationId:String(body.operationId||'')});
+      if(!receipt.ok)return NextResponse.json({error:receipt.error},{status:403});
+      if(receipt.alreadyRedeemed)return NextResponse.json({error:'TOOL_OPERATION_ALREADY_STARTED'},{status:409});
     }
 
     const url = new URL(raw);
