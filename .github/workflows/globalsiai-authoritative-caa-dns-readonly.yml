@@ -1,0 +1,29 @@
+name: Global SIAI authoritative CAA repeated DNS integrity (read-only)
+on:
+  push:
+    branches: [diagnostics/globalsiai-caa-authoritative-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  authoritative-caa-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Syntax check and available DNS tools
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/globalsiai-caa-authoritative-readonly.sh
+          if ! command -v dig >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq dnsutils
+          fi
+          grep -Fq 'GLOBALSIAI_AUTH_DNS_READ_ONLY_COMPLETE' scripts/ops/globalsiai-caa-authoritative-readonly.sh
+          echo GLOBALSIAI_AUTH_CAA_SOURCE_GATE_PASS
+      - name: Real direct authoritative NS UDP TCP CAA A checks (never issue certificates)
+        run: |
+          set -Eeuo pipefail
+          bash scripts/ops/globalsiai-caa-authoritative-readonly.sh --read-only
