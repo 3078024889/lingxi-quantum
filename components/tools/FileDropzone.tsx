@@ -16,11 +16,11 @@ function fileMatchesAccept(file:File,accept:string){
   return rules.some(rule=>rule.startsWith(".")?ext===rule:rule.endsWith("/*")?mime.startsWith(rule.slice(0,-1)):mime===rule);
 }
 function fileIdentity(file:File){return`${file.name}\u0000${file.size}\u0000${file.lastModified}`}
-type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;files:File[];onChange:(files:File[])=>void;disabled?:boolean;kind?:"file"|"image"|"media"|"pdf"|"subtitle";append?:boolean;normalizeDocuments?:boolean};
+type Props={accept?:string;multiple?:boolean;maxFiles?:number;maxSizeMB?:number;files:File[];onChange:(files:File[])=>void;disabled?:boolean;kind?:"file"|"image"|"media"|"pdf"|"subtitle";append?:boolean;normalizeDocuments?:boolean;preserveSameNamedFiles?:boolean};
 type Preview={key:string;name:string;url:string};
 
 export default function FileDropzone({
-  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled:disabledProp,kind="file",append=false,normalizeDocuments=true,
+  accept="*/*",multiple=false,maxFiles=1,maxSizeMB=40,files,onChange,disabled:disabledProp,kind="file",append=false,normalizeDocuments=true,preserveSameNamedFiles=false,
 }:Props){
   const[hydrated,setHydrated]=useState(false);useEffect(()=>setHydrated(true),[]);
   const disabled=Boolean(disabledProp||!hydrated);
@@ -53,11 +53,11 @@ export default function FileDropzone({
     let prepared=incoming;
     if(pdfDocumentMode){setNormalizing(true);try{prepared=await Promise.all(incoming.map(async file=>file.type.startsWith("image/")?file:(await normalizeDocumentFiles([file]))[0]))}catch(e){setError(documentIntakeError(lang,e));setNormalizing(false);return}setNormalizing(false)}
     const merged=multiple&&append?[...files,...prepared]:prepared;
-    const unique=Array.from(new Map(merged.map(file=>[fileIdentity(file),file])).values());
+    const unique=preserveSameNamedFiles?merged:Array.from(new Map(merged.map(file=>[fileIdentity(file),file])).values());
     if(!multiple&&unique.length>1){setError(plainText(lang,"oneFile"));return}
     if(multiple&&unique.length>maxFiles){setError(plainText(lang,"fileLimit",{count:maxFiles}));return}
     setError(null);onChange(multiple?unique:unique.slice(0,1));
-  },[append,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode]);
+  },[append,effectiveAccept,files,lang,maxFiles,maxSizeMB,multiple,onChange,pdfDocumentMode,preserveSameNamedFiles]);
 
   const promptKey=kind==="image"?"dropImagesOrChoose":kind==="media"?"dropMediaOrChoose":kind==="pdf"?"dropPdfOrChoose":kind==="subtitle"?"dropSubtitleOrChoose":"dropOrChoose";
 
@@ -92,7 +92,7 @@ export default function FileDropzone({
     </div>}
 
     {files.length>0&&<ul className="mt-4 space-y-2">
-      {files.map(file=><li key={`${file.name}-${file.size}-${file.lastModified}`} className="flex items-center justify-between gap-3 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm text-[var(--lx-muted)]">
+      {files.map((file,index)=><li key={`${index}-${file.name}-${file.size}-${file.lastModified}`} className="flex items-center justify-between gap-3 rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm text-[var(--lx-muted)]">
         <span className="truncate">{file.name} · {(file.size/1024/1024).toFixed(2)} MB</span>
         <button type="button" className="shrink-0 text-xs text-[var(--lx-ink)] hover:underline"
           onClick={e=>{e.stopPropagation();onChange(files.filter(item=>item!==file))}}>{uploadText(lang,"remove")}</button>
