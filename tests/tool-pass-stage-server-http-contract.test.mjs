@@ -108,3 +108,14 @@ test("a half-enabled frontend/backend can never initiate new legacy per-tool cha
  assert(exports.includes('select("id,user_id,ip_hash,tool_id")'),
   "historical export reservations cannot be owner checked");
 });
+
+test("direct Office gateway tickets stay disabled during paid cutover until nonce store is durable",()=>{
+ const ticket=read("app/api/tools/document/ticket/route.ts");
+ const gateway=read("infra/document-converter/gateway/server.mjs");
+ assert(gateway.includes("const usedNonces=new Map()"),"gateway nonce persistence assumption changed; re-audit");
+ assert(ticket.includes("!toolPassCutoverRequested()&&gateway&&secret.length>=32"),
+  "non-durable gateway direct ticket is reachable by unified-paid customers");
+ assert(ticket.includes('await authorizeToolPassStage('),"ticket issuance still must require an authenticated stage");
+ const normal=read("app/api/tools/document/normalize/route.ts");
+ assert(normal.indexOf("authorizeToolPassStage(")<normal.indexOf("await convertDocumentToPdf("));
+});

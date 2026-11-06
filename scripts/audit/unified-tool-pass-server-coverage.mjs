@@ -53,6 +53,10 @@ const trustedStageGate=stageGate.includes('toolPassCutoverRequested()')
  && stageGate.includes('.rpc("lingxi_redeem_tool_stage"')
  && stageGate.includes('if(data.alreadyStarted)')
  && stageGate.includes('return {ok:false,error:"TOOL_STAGE_ALREADY_STARTED"');
+const ticketServer=read("app/api/tools/document/ticket/route.ts");
+const gatewayServer=read("infra/document-converter/gateway/server.mjs");
+const gatewayPaidGuard=ticketServer.includes("!toolPassCutoverRequested()&&gateway&&secret.length>=32")
+ && gatewayServer.includes("const usedNonces=new Map()");
 const stageMigration=stageSql.includes('pass_id uuid references public.lingxi_tool_passes(id)')
  && stageSql.includes('p.id=v_use.pass_id')
  && stageSql.includes('primary key(request_id,stage)')
@@ -96,7 +100,8 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
  if(route in REMOTE_CALL){
   const start=code.indexOf("await authorizeToolPassStage(");
   const cost=code.indexOf(REMOTE_CALL[route]);
-  const okay=trustedStageGate&&stageMigration&&start>=0&&cost>start
+  const okay=trustedStageGate&&stageMigration&&
+   (route!=="document/ticket"||gatewayPaidGuard)&&start>=0&&cost>start
    &&code.slice(start,cost).includes("if(!stage.ok)");
   return {route,tool,state:okay?"GUARDED":"UNSAFE",
    reason:okay?"ONE_TIME_BACKEND_STAGE":"NO_ONE_TIME_STAGE_BEFORE_REMOTE_COST"};
