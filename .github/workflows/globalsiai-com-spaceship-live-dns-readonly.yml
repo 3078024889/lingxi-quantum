@@ -1,0 +1,34 @@
+name: Global SIAI .com Spaceship live DNS propagation check (read only)
+on:
+  push:
+    branches: [feature/globalsiai-ecs-stage-operator-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-spaceship-dns:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Check both authoritative NS and public resolvers without changing DNS
+        shell: bash
+        run: |
+          set -uo pipefail
+          if ! command -v dig >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -qq -y dnsutils
+          fi
+          for ns in launch1.spaceship.net launch2.spaceship.net 1.1.1.1 8.8.8.8; do
+            for host in globalsiai.com www.globalsiai.com; do
+              for rr in A CAA; do
+                reply="$(dig "@$ns" "$host" "$rr" +time=5 +tries=1 +noall +comments +answer 2>&1)" || true
+                status="$(printf '%s\n' "$reply" | sed -n 's/.*status: \([A-Z0-9]*\),.*/\1/p' | head -1)"
+                answer="$(printf '%s\n' "$reply" | awk '$4=="A"||$4=="CAA"{print $0}' | tr '\n' ';' | cut -c 1-250)"
+                if [ -z "$status" ]; then status=NO_REPLY; fi
+                printf 'LIVE_DNS NS=%s NAME=%s TYPE=%s STATUS=%s DATA=%s\n' "$ns" "$host" "$rr" "$status" "${answer:--}"
+              done
+            done
+          done
+          echo GLOBALSIAI_COM_DNS_PROPAGATION_READ_ONLY_COMPLETE

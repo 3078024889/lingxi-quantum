@@ -1,0 +1,27 @@
+name: Global SIAI ACME egress read-only check (no deploy)
+on:
+  push:
+    branches: [feature/globalsiai-ecs-stage-operator-20261106]
+permissions:
+  contents: read
+jobs:
+  ca-egress-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Shell safety and no-action guards
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/globalsiai-acme-egress-readonly.sh
+          test "$(bash scripts/ops/globalsiai-acme-egress-readonly.sh 2>&1 || true)" = 'GLOBALSIAI_ACME_EGRESS_USAGE'
+          ! grep -Eq 'certbot certonly|acme.sh --issue|systemctl (restart|stop|reload)|nginx -s|curl -X POST' scripts/ops/globalsiai-acme-egress-readonly.sh
+          grep -Fq 'GLOBALSIAI_ACME_OUTBOUND_DIAG_READ_ONLY_COMPLETE' scripts/ops/globalsiai-acme-egress-readonly.sh
+          echo GLOBALSIAI_ACME_DIAGNOSTIC_SOURCE_GATE_PASS
+      - name: Probe baseline connectivity of ACME CAs from independent GitHub runner
+        run: |
+          set -Eeuo pipefail
+          bash scripts/ops/globalsiai-acme-egress-readonly.sh --read-only
+          echo GLOBALSIAI_INDEPENDENT_CA_DIRECTORY_GET_COMPLETE

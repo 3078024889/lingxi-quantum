@@ -1,0 +1,28 @@
+name: Global SIAI DNSSEC delegation and public TCP 80 independent check (read only)
+on:
+  push:
+    branches: [feature/globalsiai-ecs-stage-operator-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  internet-diagnostics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Verify parser, fail-closed public response handling, syntax
+        run: |
+          set -Eeuo pipefail
+          python3 -m py_compile scripts/ops/globalsiai-dns-public-readonly.py
+          python3 scripts/ops/globalsiai-dns-public-readonly.py --self-test
+          grep -Fq 'DNSSEC_BOGUS_SUSPECTED' scripts/ops/globalsiai-dns-public-readonly.py
+          grep -Fq 'EXTERNAL_TCP_CONNECTION_IS_SINGLE_VANTAGE_NOT_CA_GLOBAL_PROOF' scripts/ops/globalsiai-dns-public-readonly.py
+          echo GLOBALSIAI_DNS_DIAG_PARSER_SOURCE_PASS
+      - name: Public DNS from two DoH resolvers and real external ECS 80/443 TCP
+        run: |
+          set -Eeuo pipefail
+          python3 scripts/ops/globalsiai-dns-public-readonly.py --external-only
+          echo GLOBALSIAI_INDEPENDENT_PUBLIC_DNS_TCP_DIAG_FINISHED_NOT_A_RELEASE
