@@ -66,9 +66,11 @@ jobs:
           npx --yes vinext@1.3.1 init \
             --platform=cloudflare \
             --name lingxifield-public-preview-only \
-            --cdn-cache=none \
-            --data-cache=none \
+            --cdn-cache=data-cache \
+            --data-cache=kv \
             --image-optimization=none \
+            --no-prerender \
+            --no-warm-cache \
             --skip-check
       - name: Build and stage post-bundle oversized WASM
         env:
