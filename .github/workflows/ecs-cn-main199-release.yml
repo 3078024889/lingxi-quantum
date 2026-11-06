@@ -22,7 +22,8 @@ jobs:
           gh run download 42165531851 --repo "$GH_REPO" --name lingxifield-ecs-standalone-bef1cfafdc3d3f6d23b2d73132c8d085db24e56d --dir /tmp/cn
           cd /tmp/cn
           sha256sum -c lingxifield-ecs-standalone.sha256
-          tar -tzf lingxifield-ecs-standalone.tar.gz | grep -q '^./server.js$'
+          tar -tzf lingxifield-ecs-standalone.tar.gz > /tmp/cn-contents
+          grep -Fxq './server.js' /tmp/cn-contents
       - name: Make verified archive available to ECS operator
         env:
           GH_TOKEN: ${{ github.token }}
