@@ -122,7 +122,11 @@ jobs:
           cp -a public .next/standalone/public
           tar --owner=0 --group=0 -C .next/standalone -czf cn-ecs-standalone.tar.gz .
           sha256sum cn-ecs-standalone.tar.gz > cn-ecs-standalone.sha256
-          test "$(stat -c %s cn-ecs-standalone.tar.gz)" -lt 350000000
+          bytes="$(stat -c %s cn-ecs-standalone.tar.gz)"
+          echo "CN_ECS_ARCHIVE_SIZE_BYTES=$bytes"
+          du -sh .next/standalone public .next/static || true
+          # Preserve working offline ONNX assets. Do not silently delete models.
+          test "$bytes" -lt 1000000000
           echo CN_ECS_ARCHIVE_CREATED_NOT_DEPLOYED
       - name: Upload one-day .cn candidate only after successful build
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
