@@ -25,6 +25,8 @@ hook_installed=0
 completed=0
 acme_created=0
 timer_created=0
+certificate_verified=0
+reuse_existing_cert=0
 rollback(){
  rc=$?
  trap - EXIT
@@ -36,11 +38,14 @@ rollback(){
      rm -f -- "$RENEW_UNIT" "$RENEW_TIMER"
      systemctl daemon-reload || true
    fi
-   if [ "$acme_created" -eq 1 ]; then
+   if [ "$acme_created" -eq 1 ] && [ "$certificate_verified" -ne 1 ]; then
      case "$ACME_HOME" in
        /opt/lingxifield/ops/globalsiai-cn-zerossl-acme)
          rm -rf -- "$ACME_HOME" "$CERTDIR" ;;
      esac
+   elif [ "$certificate_verified" -eq 1 ]; then
+     # A valid CA-issued certificate is precious; preserve across SNI rollback.
+     echo GLOBALSIAI_CN_VERIFIED_CERT_AND_ACME_STATE_PRESERVED
    fi
    if [ "$installed" -eq 1 ]; then
      rm -f -- "$VHOST"
@@ -232,6 +237,7 @@ openssl x509 -in "$CERTDIR/fullchain.pem" -noout -checkhost "$DOMAIN" |
  grep -qi "does match"
 openssl x509 -in "$CERTDIR/fullchain.pem" -noout -checkhost "$WWW" |
  grep -qi "does match"
+certificate_verified=1
 echo GLOBALSIAI_CN_ZEROSSL_CERT_HTTPS_BOTH_HOSTS_PASS
 
 echo "=== 4. 新增专属 HTTPS 反向代理，不碰已有网站 ==="
