@@ -26,3 +26,11 @@ jobs:
           grep -Fq 'CN_PROD_STAGE_PATH_COLLISION_ABORT' scripts/ops/ecs-cn-3189-safe-apply.sh
           grep -Fq 'CN_STAGE_ROLLBACK_DONE_PRODUCTION_UNTOUCHED' scripts/ops/ecs-cn-3189-safe-apply.sh
           echo CN_SAFE_STAGE_INSTALL_STATIC_GATES_PASS
+      - name: Test exact downloader using Python 3.6 with offline local-range server
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 -m py_compile scripts/ops/ecs-cn-parallel-release-fetch.py
+          docker run --rm --network none -v "$PWD:/work:ro" -w /work python:3.6.15-slim \
+            python scripts/ops/test-cn-parallel-release-fetch.py
+
