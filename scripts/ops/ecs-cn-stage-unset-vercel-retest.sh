@@ -28,7 +28,7 @@ flock -n 9 || { echo CN3189_CONCURRENT_STAGE_ACTION_ABORT; exit 3; }
 
 echo "=== 1. 仅限3189，核查资源与原始状态 ==="
 test -x "$NODE" && test -s "$ENVFILE" && test -s "$OPERATOR" && test -s "$ARCHIVE"
-test ! -e "$DROPIN" || { echo CN3189_EXISTING_DROPIN_ABORT; exit 3; }
+[[ ! -e "$DROPIN" && ! -L "$DROPIN" ]] || { echo CN3189_EXISTING_DROPIN_ABORT; exit 3; }
 systemctl is-active --quiet "$PROD"
 systemctl is-active --quiet "$SERVICE"
 test "$(systemctl show --property=WorkingDirectory --value "$SERVICE")" = \
@@ -104,6 +104,11 @@ rollback(){
     systemctl daemon-reload || true
     systemctl restart "$SERVICE" || true
     systemctl is-active --quiet "$PROD" || echo CN3188_PROD_STATUS_NEEDS_CHECK
+    if [ "$(curl --noproxy '*' --silent --max-time 5 -o /dev/null -w '%{http_code}' http://127.0.0.1:3189/api/health || true)" = 200 ]; then
+      echo CN3189_ENV_OVERRIDE_ROLLBACK_HEALTH_PASS
+    else
+      echo CN3189_ENV_OVERRIDE_ROLLBACK_HEALTH_FAILED
+    fi
     echo CN3189_ENV_OVERRIDE_ROLLBACK_DONE
   fi
   exit "$rc"
