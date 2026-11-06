@@ -1,0 +1,26 @@
+name: CN public baseline read-only smoke (does not deploy)
+on:
+  push:
+    branches: [feature/ecs-cn-poststage-probes-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-baseline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify .cn public baseline routes and TLS
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          base=https://lingxifield.cn
+          for route in / /tools /siai /api/health; do
+            code="$(curl --noproxy '*' --proto '=https' --tlsv1.2                 --silent --show-error --location --connect-timeout 10 --max-time 25                 --output /dev/null --write-out '%{http_code}' "$base$route")"
+            printf 'CN_PUBLIC_BASELINE %s HTTP=%s\n' "$route" "$code"
+            test "$code" = 200
+          done
+          code="$(curl --noproxy '*' --proto '=https' --tlsv1.2               --silent --show-error --connect-timeout 10 --max-time 25               --output /dev/null --write-out '%{http_code}' "$base/api/tools/jobs")"
+          printf 'CN_PUBLIC_BASELINE unauthorized jobs HTTP=%s\n' "$code"
+          test "$code" = 401
+          echo CN_PUBLIC_BASELINE_SMOKE_PASSED_NOT_3189_FUNCTIONAL_ACCEPTANCE
