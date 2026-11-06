@@ -48,3 +48,15 @@ test("candidate suggestions are curated and source-backed, not research previews
  assert.match(source,/protocol==="https:"/);
  assert.match(read("components/siai/SpendDiagnostic.tsx"),/option\.priceEvidenceUrl/);
 });
+
+test("free diagnosis pages become indexable only under the existing production SEO gate and publish nine canonical links",()=>{
+ const zh=read("app/siai/spend-diagnostic/page.tsx");
+ const localized=read("app/[locale]/siai/spend-diagnostic/page.tsx");
+ const sitemap=read("lib/seo/sitemap-build.ts");
+ assert.match(zh,/index:siaiLandingShouldIndex\(\)/);
+ assert.match(localized,/index:siaiLandingShouldIndex\(\)/);
+ assert.match(zh,/canonical:PRIMARY_SITE/);
+ assert.match(localized,/alternates:\{canonical:url,languages\}/);
+ assert.match(sitemap,/localePath\(locale,"\/siai\/spend-diagnostic"\)/);
+ assert.match(sitemap,/if\(siaiIndexable\)/);
+});
