@@ -62,8 +62,11 @@ jobs:
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-burn-integrity.sql
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106050000_tool_pass_revocation_guard.sql
           psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-revocation-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-legacy-media-fixture.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106070000_legacy_media_execution_guard.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-legacy-media-integrity.sql
       - name: Contract tests
-        run: node --test tests/unified-tools-pass-static-contract.test.mjs tests/unified-tool-pass-retirement-guards.test.mjs tests/tool-pass-server-http-contract.test.mjs tests/tool-pass-billing-retirement.test.mjs tests/tool-pass-file-upload-order.test.mjs tests/tool-route-slug-nine-locales.test.mjs tests/tool-pass-batch1-server-guard.test.mjs
+        run: node --test tests/unified-tools-pass-static-contract.test.mjs tests/unified-tool-pass-retirement-guards.test.mjs tests/tool-pass-server-http-contract.test.mjs tests/tool-pass-billing-retirement.test.mjs tests/tool-pass-file-upload-order.test.mjs tests/tool-route-slug-nine-locales.test.mjs tests/tool-pass-batch1-server-guard.test.mjs tests/tool-pass-legacy-media-contract.test.mjs
       - name: Typecheck
         run: pnpm exec tsc --noEmit
       - name: Production Next.js build (no Vercel)
