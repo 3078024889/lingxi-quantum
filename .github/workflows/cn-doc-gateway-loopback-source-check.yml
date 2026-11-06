@@ -1,0 +1,30 @@
+name: CN 3189 local document gateway environment regression (no deploy)
+on:
+  push:
+    branches: [fix/cn-doc-gateway-loopback-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  stage-env-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Preserve real 3100 gateway and 3189-only VERCEL correction
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
+          grep -Fq 'UnsetEnvironment=VERCEL' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
+          grep -Fq 'CN3189_RUNNING_VERCEL_PRESENT_CONFIRMED' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
+          grep -Fq 'CN3189_EXISTING_LOOPBACK_DOCUMENT_GATEWAY_REUSED' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
+          grep -Fq 'CN3189_ENV_OVERRIDE_ROLLBACK_HEALTH_PASS' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
+          grep -Fq 'CN3189_SIX_ENGINES_AND_REAL_DOCX_ACCEPTED_NO_PUBLIC_SWITCH' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
+          ! test -e scripts/ops/ecs-cn-doc-gateway-loopback.mjs
+          ! test -e scripts/ops/ecs-cn-doc-gateway-loopback-stage.sh
+          echo CN_STAGE_ENV_SOURCE_GATE_PASS
