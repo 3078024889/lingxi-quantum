@@ -32,5 +32,12 @@ jobs:
             curl -L -sS --connect-timeout 6 --max-time 17 \
               -o /dev/null -w "http=%{http_code} total=%{time_total} ssl=%{ssl_verify_result}\n" \
               "https://${host}/robots.txt"
+            echo "HTTP response diagnostic headers:"
+            curl -sS -D /tmp/site_headers -o /tmp/site_body \
+              --connect-timeout 6 --max-time 15 "https://${host}/" || true
+            grep -Ei '^(HTTP/|server:|x-vercel-error:|x-vercel-id:|x-vercel-mitigated:|cf-ray:|content-type:|location:|retry-after:)' /tmp/site_headers | head -n 18 || true
+            echo "Public error page excerpt:"
+            head -c 320 /tmp/site_body | tr '\n' ' ' | sed -E 's/[[:cntrl:]]/ /g' || true
+            echo
             echo "::endgroup::"
           done
