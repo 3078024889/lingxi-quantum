@@ -44,6 +44,7 @@ check("CN_3188_SYSTEMD_ACTIVE",active("lingxifield-ecs"));
 check("CN_3189_SYSTEMD_ACTIVE",active("lingxifield-cn-stage"));
 check("CN_3189_RELEASE_PATH",show("lingxifield-cn-stage","WorkingDirectory")==="/opt/lingxifield/releases/cn-pr199");
 check("CN_3189_STAGING_ENV_ISOLATED",show("lingxifield-cn-stage","EnvironmentFiles").includes("/etc/lingxifield/staging.env"));
+check("CN_3189_IPV4_PREFERRED",show("lingxifield-cn-stage","Environment").includes("--dns-result-order=ipv4first"));
 check("CN_3189_SERVER_BINARY",fs.existsSync("/opt/lingxifield/releases/cn-pr199/server.js"));
 for(const route of ["/api/health","/","/tools","/siai"]){
  try{const r=await request("GET",3189,route,18000);check("CN_STAGE_HTTP_"+route.replace(/[^a-z0-9]/gi,"_"),r.status===200)}
