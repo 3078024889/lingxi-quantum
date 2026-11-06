@@ -15,11 +15,11 @@ export async function POST(req:NextRequest){
   const stage=await authorizeToolPassStage({toolSlug,stage:"media-tts",
     accessRequestId:b.accessRequestId,operationId:b.operationId});
   if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status});
-  if(stage.mode==="legacy")await requirePaidMediaQuote(quoteId,allowed);
+  if(stage.mode==="legacy")await requirePaidMediaQuote(quoteId,allowed,{stage:"media-tts",characters:text.length,operationId:b.stageCallId});
   const audio=await synthesizeRemote(text,String(b.language||"en"));
   return new NextResponse(new Uint8Array(audio),{headers:{"content-type":"audio/mpeg","cache-control":"private, no-store"}});
  }catch(e){
   const m=e instanceof Error?e.message:String(e);
-  return NextResponse.json({error:m},{status:/LOGIN_REQUIRED/.test(m)?401:/QUOTE/.test(m)?402:/NOT_CONFIGURED/.test(m)?503:500});
+  return NextResponse.json({error:m},{status:/QUOTE_STAGE_ALREADY_STARTED/.test(m)?409:/QUOTE_STAGE_UNAVAILABLE/.test(m)?503:/LOGIN_REQUIRED/.test(m)?401:/LEGACY_MEDIA_PAID_ALLOWANCE_EXHAUSTED|QUOTE|LEGACY_MEDIA_/.test(m)?402:/NOT_CONFIGURED/.test(m)?503:500});
  }
 }
