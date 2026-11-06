@@ -1,4 +1,4 @@
-import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import{NextRequest,NextResponse}from"next/server";import{createHash}from"node:crypto";
 import{createClient}from"@/lib/supabase/server";import{createAdminClient}from"@/lib/supabase/admin";import{isSameOriginMutation}from"@/lib/sasi/request-security";import{recoverToolQuotePayment}from"@/lib/tools/payment-recovery";import{foodRequestIpHash}from"@/lib/tools/food/request-identity";
 export const runtime="nodejs";const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -8,7 +8,7 @@ function legacyItem(x:any){return{food_id:Number(x.food_id),code:String(x.source
 export async function POST(req:NextRequest){
  // The metered analysis API replaces this retired per-quote calculation.
  // In unified mode never execute legacy paid RPC from an old cached client.
- if(toolPassBackendReady())return NextResponse.json({error:"FOOD_ANALYSIS_REQUIRED",reload:true},{status:410,headers:{"Cache-Control":"no-store"}});
+ if(toolPassCutoverRequested())return NextResponse.json({error:"FOOD_ANALYSIS_REQUIRED",reload:true},{status:410,headers:{"Cache-Control":"no-store"}});
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();if(!user)return NextResponse.json({error:"SIGN_IN_REQUIRED"},{status:401});
  const b=await req.json().catch(()=>null)as any,quoteId=String(b?.quoteId||""),sessionId=String(b?.sessionId||""),photoCount=Number(b?.photoCount);

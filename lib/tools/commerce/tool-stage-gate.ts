@@ -1,7 +1,7 @@
 import "server-only";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {toolPassBackendReady,toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 
 type Started={ok:true;mode:"legacy"|"pass"};
 type Denied={ok:false;error:string;status:401|403|409|503};
@@ -20,7 +20,10 @@ const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]
 export async function authorizeToolPassStage(input:{
  toolSlug:string;stage:string;accessRequestId:unknown;operationId:unknown
 }):Promise<Started|Denied>{
- if(!toolPassBackendReady())return {ok:true,mode:"legacy"};
+ if(!toolPassBackendReady()){
+  if(toolPassCutoverRequested())return {ok:false,error:"TOOL_PASS_BACKEND_NOT_READY",status:503};
+  return {ok:true,mode:"legacy"};
+ }
  const {data:{user},error:authError}=await createClient().auth.getUser();
  if(authError||!user)return {ok:false,error:"LOGIN_REQUIRED",status:401};
  const requestId=String(input.accessRequestId||"");

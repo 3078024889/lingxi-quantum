@@ -1,4 +1,4 @@
-import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
@@ -23,7 +23,7 @@ export async function POST(req:NextRequest){
  // This generic storage capability currently lacks a processing output proof.
  // Keep existing legacy file handoff, but fail closed when unified billing
  // activates rather than allowing arbitrary signed R2 uploads for a quota.
- if(toolPassBackendReady())return NextResponse.json({error:"TEMP_FILE_PASS_WORKFLOW_NOT_READY"},{status:503,headers:{"Cache-Control":"no-store"}});
+ if(toolPassCutoverRequested())return NextResponse.json({error:"TEMP_FILE_PASS_WORKFLOW_NOT_READY"},{status:503,headers:{"Cache-Control":"no-store"}});
  const key=newBurnObjectKey(`tool-${user.id}`,name);
  const expiresAt=new Date(Date.now()+20*60*1000).toISOString();
  const admin=createAdminClient();

@@ -1,6 +1,11 @@
 import "server-only";
 import {createAdminClient} from "@/lib/supabase/admin";
 
+/** A partial front/back cutover must not fall into legacy, unmetered execution. */
+export function toolPassCutoverRequested():boolean {
+ return process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true" ||
+        process.env.TOOL_PASS_BACKEND_READY==="true";
+}
 /** Only a full server migration may enable paid tool start accounting. */
 export function toolPassBackendReady():boolean {
  return process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true" &&
