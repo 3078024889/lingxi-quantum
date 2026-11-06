@@ -40,7 +40,7 @@ test.describe("free SI/AI spend diagnosis",()=>{
   await expect(page.getByRole("heading",{name:"Are your AI subscriptions worth it?"})).toBeVisible();
   await page.getByRole("button",{name:"Load sample"}).click();
   await expect(page.getByRole("heading",{name:"Your results"})).toBeVisible();
-  await expect(page.getByText("Tasks included per month")).not.toBeVisible();
+  await expect(page.locator("details").first()).toHaveJSProperty("open",false);
  });
  test("source-backed related options never claim guaranteed lowest price",async({page})=>{
   await page.goto("/siai/spend-diagnostic");
