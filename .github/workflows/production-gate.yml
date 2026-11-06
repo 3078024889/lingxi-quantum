@@ -102,8 +102,28 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build this exact release candidate independently
         run: pnpm build
-      - name: Install Chrome media runtime
-        run: pnpm exec playwright install --with-deps chrome
+      - name: Verify runner Chrome or install with bounded retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          # ubuntu-24.04 GitHub runners already include Google Chrome.
+          # Playwright channel "chrome" uses the installed branded browser.
+          if command -v google-chrome >/dev/null 2>&1 && google-chrome --version; then
+            echo "PLAYWRIGHT_USING_RUNNER_CHROME"
+            exit 0
+          fi
+          echo "::warning::Runner has no Google Chrome; installing with retries."
+          for attempt in 1 2 3; do
+            if PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=120000 pnpm exec playwright install --with-deps chrome; then
+              command -v google-chrome
+              google-chrome --version
+              exit 0
+            fi
+            echo "::warning::Chrome installation attempt ${attempt} failed"
+            sleep $((attempt * 12))
+          done
+          echo "::error::Google Chrome unavailable after three installation attempts"
+          exit 1
       - name: Browser closure for this project and shard
         run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --workers=1
       - name: Upload shard traces and failure evidence
