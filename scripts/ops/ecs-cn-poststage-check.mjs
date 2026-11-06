@@ -4,6 +4,7 @@
 import {readFileSync} from "node:fs";
 import {parseEnv} from "node:util";
 import {createHash,createHmac,randomUUID} from "node:crypto";
+import {lookup} from "node:dns/promises";
 
 const file="/etc/lingxifield/staging.env";
 let env;
@@ -28,13 +29,34 @@ async function call(url,init={}){
  await resp.body?.cancel();
  return status;
 }
+// Report only an allowlisted error code, never a URL, token or error message.
+const SAFE_NETWORK_CODES=new Set([
+ "ENOTFOUND","EAI_AGAIN","ECONNREFUSED","ECONNRESET","ETIMEDOUT",
+ "EHOSTUNREACH","ENETUNREACH","UND_ERR_CONNECT_TIMEOUT","UND_ERR_SOCKET",
+ "UND_ERR_HEADERS_TIMEOUT","CERT_HAS_EXPIRED","UNABLE_TO_VERIFY_LEAF_SIGNATURE",
+ "DEPTH_ZERO_SELF_SIGNED_CERT","ERR_TLS_CERT_ALTNAME_INVALID","ABORT_ERR"
+]);
+function networkErrorCode(error){
+ if(error?.name==="TimeoutError")return "TIMEOUT";
+ let cause=error;
+ for(let i=0;i<5&&cause;i++){
+  if(SAFE_NETWORK_CODES.has(cause.code))return cause.code;
+  cause=cause.cause??(Array.isArray(cause.errors)?cause.errors[0]:null);
+ }
+ return "UNKNOWN";
+}
 async function probe(name,fn){
  try { console.log(name+"="+await fn()); }
- catch { console.log(name+"=REQUEST_ERROR"); }
+ catch(error) { console.log(name+"=REQUEST_ERROR_"+networkErrorCode(error)); }
+}
+async function dnsSummary(url){
+ const host=new URL(url).hostname,addresses=await lookup(host,{all:true});
+ return "RESOLVED_IPV4_"+addresses.filter(x=>x.family===4).length+"_IPV6_"+addresses.filter(x=>x.family===6).length;
 }
 const local="http://127.0.0.1:3189";
 await probe("CN_STAGE_HEALTH_HTTP",()=>call(local+"/api/health"));
 await probe("CN_STAGE_ANON_JOBS_HTTP",()=>call(local+"/api/tools/jobs"));
+await probe("SUPABASE_DNS",()=>dnsSummary(env.NEXT_PUBLIC_SUPABASE_URL));
 await probe("SUPABASE_ANON_AUTH_HTTP",()=>call(env.NEXT_PUBLIC_SUPABASE_URL+"/auth/v1/health",{
  headers:{apikey:env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
 }));
@@ -84,6 +106,14 @@ async function r2HeadMissingObject(){
  const url=ep.origin+uri+"?"+qs+"&X-Amz-Signature="+sig;
  const status=await call(url,{method:"HEAD"});
  return "HTTP_"+status+(status===404?"_EXPECTED_MISSING_OBJECT":"");
+}
+if(!bad(env.R2_ENDPOINT)){
+ await probe("R2_DNS",()=>dnsSummary(env.R2_ENDPOINT));
+ await probe("R2_UNSIGNED_ENDPOINT_HEAD",async()=> {
+  const ep=new URL(env.R2_ENDPOINT);
+  if(ep.protocol!=="https:"||ep.username||ep.password)return "ENDPOINT_INVALID";
+  return "HTTP_"+await call(ep.origin,{method:"HEAD"});
+ });
 }
 await probe("R2_SIGNED_READONLY_HEAD",r2HeadMissingObject);
 if(process.argv.includes("--engines")){
