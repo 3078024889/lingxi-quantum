@@ -53,7 +53,7 @@ def _wordpress_payload_hashes(tar_path):
         if data_file is None:
             raise AssetError("WORDPRESS_ZIP_NOT_READABLE")
         data = data_file.read(300001)
-    if len(data) < 30 or len(data) > 300000 or not data.startswith(b"PK\\x03\\x04"):
+    if len(data) < 30 or len(data) > 300000 or not data.startswith(bytes((80, 75, 3, 4))):
         raise AssetError("WORDPRESS_ZIP_INVALID_FORMAT")
     files = {}
     seen = set()
