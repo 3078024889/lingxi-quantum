@@ -1,0 +1,34 @@
+name: Global SIAI 4290 canary and two-domain rollback source audit (NO deploy)
+on:
+  push:
+    branches: [feature/release-announcement-auth-readiness-20261106]
+permissions:
+  contents: read
+jobs:
+  operator-security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - name: Validate pinned archive, blue-green isolation, fail-closed gates and rollback
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for f in scripts/ops/globalsiai-notice-4290-canary.sh scripts/ops/globalsiai-notice-dual-host-cutover.sh; do
+            bash -n "$f"
+          done
+          c=scripts/ops/globalsiai-notice-4290-canary.sh
+          s=scripts/ops/globalsiai-notice-dual-host-cutover.sh
+          grep -Fq 'SHA256=3b3a3d597a65a2047ddfbc2fa70bf85892c0c193d9a8e74b63bfbf78a4877344' "$c"
+          grep -Fq 'PORT=4290' "$c"
+          grep -Fq 'GLOBALSIAI_NOTICE_4290_ACCEPTED_4289_AND_PUBLIC_NGINX_UNCHANGED' "$c"
+          grep -Fq 'GLOBALSIAI_NOTICE_MAINLAND_ICP_LEAK_TO_COM_ABORT' "$c"
+          grep -Fq 'GLOBALSIAI_BOTH_MARKET_DOMAINS_NOTICE_4290_LIVE_ACCEPTED' "$s"
+          grep -Fq 'GLOBALSIAI_NOTICE_PROMOTION_REVERTED_TO_4289' "$s"
+          grep -Fq 'globalsiai-dual-domain-public.lock' "$s"
+          grep -Fq 'proxy_pass http://127.0.0.1:4289;' "$s"
+          grep -Fq 'proxy_pass http://127.0.0.1:4290;' "$s"
+          grep -Fq 'systemctl is-active --quiet globalsiai-market-notice-canary' "$s"
+          ! grep -Eq 'systemctl (restart|stop|disable) (lingxifield-ecs|lingxifield-cn-stage|globalsiai-market-stage)' "$s"
+          echo GLOBALSIAI_CANARY_AND_DUAL_HOST_ROLLBACK_SOURCE_GATE_PASS

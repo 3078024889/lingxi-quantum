@@ -154,15 +154,16 @@ curl --noproxy '*' -fsS --max-time 12 "http://127.0.0.1:4290/api/site-release-an
   grep -Fq '"enabled":true' || { echo GLOBALSIAI_NOTICE_RUNTIME_GATE_FAILED; exit 6; }
 curl --noproxy '*' -fsS --max-time 12 "http://127.0.0.1:4290/robots.txt" |
   grep -qi 'Disallow: /' || { echo GLOBALSIAI_NOTICE_NOINDEX_GATE_FAILED; exit 6; }
-for domain in globalsiai.cn globalsiai.com; do
- curl --noproxy '*' -fsS --max-time 15 -H "Host: $domain" \
-  "http://127.0.0.1:4290/" >/tmp/globalsiai-announcement-$domain.html
-done
-grep -Fq '湘ICP备2026031465号-4' /tmp/globalsiai-announcement-globalsiai.cn.html
-if grep -Fq '湘ICP备2026031465号-4' /tmp/globalsiai-announcement-globalsiai.com.html; then
+cn_page="$(curl --noproxy '*' -fsS --max-time 15 -H 'Host: globalsiai.cn' \
+  'http://127.0.0.1:4290/')"
+com_page="$(curl --noproxy '*' -fsS --max-time 15 -H 'Host: globalsiai.com' \
+  'http://127.0.0.1:4290/')"
+grep -Fq '湘ICP备2026031465号-4' <<<"$cn_page" ||
+  { echo GLOBALSIAI_NOTICE_CN_ICP_MISSING; exit 6; }
+if grep -Fq '湘ICP备2026031465号-4' <<<"$com_page"; then
   echo GLOBALSIAI_NOTICE_MAINLAND_ICP_LEAK_TO_COM_ABORT; exit 6
 fi
-rm -f /tmp/globalsiai-announcement-globalsiai.cn.html /tmp/globalsiai-announcement-globalsiai.com.html
+unset cn_page com_page
 systemctl is-active --quiet "$OLD"
 systemctl is-active --quiet lingxifield-ecs
 systemctl is-active --quiet lingxifield-cn-stage
