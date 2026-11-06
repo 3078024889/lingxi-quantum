@@ -135,3 +135,12 @@ jobs:
           PY
           sudo nginx -t -c "$tmp/nginx.conf" -p "$tmp/"
           echo GLOBALSIAI_COM_RENDERED_REAL_NGINX_TLS_SYNTAX_PASS
+
+      - name: Prove ACME webroot serves files to both apex and www via real nginx
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/tests/globalsiai-acme-real-nginx.sh
+          bash scripts/ops/tests/globalsiai-acme-real-nginx.sh cn
+          bash scripts/ops/tests/globalsiai-acme-real-nginx.sh com
+          echo GLOBALSIAI_REAL_HTTP_01_BOTH_DOMAIN_PAIRS_PASS
