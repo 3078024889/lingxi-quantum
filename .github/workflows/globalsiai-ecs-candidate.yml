@@ -1,0 +1,82 @@
+name: Global SIAI .com and .cn standalone ECS candidate (no deploy)
+on:
+  push:
+    branches: [feature/globalsiai-dual-domain-ecs-stage-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    env:
+      LINGXI_MARKET_ECS_CANDIDATE: "1"
+      AI_MARKET_INDEX_READY: "0"
+      AI_MARKET_DOMAIN_VERIFIED: "0"
+      CI: "true"
+    steps:
+      - name: Checkout without write credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Node 24.19.0
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+          cache: npm
+          cache-dependency-path: lingxifield-ai-market/package-lock.json
+      - name: Install locked dependencies
+        run: npm ci --no-fund --no-audit
+      - name: Full application evidence, contract, type and production-build gates
+        run: npm run gate
+      - name: Package standalone without changing Vercel or public DNS
+        run: |
+          set -Eeuo pipefail
+          test -s .next/standalone/server.js
+          test -d .next/static
+          mkdir -p .next/standalone/.next
+          cp -a .next/static .next/standalone/.next/static
+          if [ -d public ]; then cp -a public .next/standalone/public; fi
+          tar --owner=0 --group=0 -C .next/standalone -czf globalsiai-ecs-candidate.tar.gz .
+          sha256sum globalsiai-ecs-candidate.tar.gz > globalsiai-ecs-candidate.sha256
+          test "$(stat -c %s globalsiai-ecs-candidate.tar.gz)" -gt 10000
+          echo "GLOBAL_SIAI_STANDALONE_ARCHIVE_BYTES=$(stat -c %s globalsiai-ecs-candidate.tar.gz)"
+      - name: Run real server on loopback and smoke nine locales, read-only API and noindex
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd .next/standalone
+          HOSTNAME=127.0.0.1 PORT=4288 node server.js > /tmp/globalsiai-candidate-test.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 60); do
+            if curl --noproxy '*' -fsS --max-time 4 -o /dev/null http://127.0.0.1:4288/api/v1/health; then ready=1; break; fi
+            if ! kill -0 "$pid" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then
+            echo GLOBAL_SIAI_CANDIDATE_STARTUP_FAILED
+            tail -60 /tmp/globalsiai-candidate-test.log
+            exit 1
+          fi
+          for page in / /zh/ai /en/ai /ja/ai /ko/ai /fr/ai /de/ai /es/ai /pt/ai /ar/ai /api/v1/health /api/v1/data-readiness; do
+            code="$(curl --noproxy '*' --silent --max-time 15 -o /dev/null -w '%{http_code}' "http://127.0.0.1:4288$page")"
+            echo "GLOBAL_SIAI_ROUTE=$page HTTP=$code"
+            test "$code" = 200
+          done
+          curl --noproxy '*' -fsS --max-time 15 http://127.0.0.1:4288/robots.txt |
+            grep -qi "Disallow: /"
+          echo GLOBAL_SIAI_NINE_LOCALES_API_ROBOTS_GATE_PASS
+      - name: Upload short-lived build artifact only after all checks pass
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: globalsiai-ecs-candidate-only
+          path: |
+            lingxifield-ai-market/globalsiai-ecs-candidate.tar.gz
+            lingxifield-ai-market/globalsiai-ecs-candidate.sha256
+          retention-days: 1
+          if-no-files-found: error
