@@ -272,6 +272,36 @@ EOF
 nginx -t >/dev/null
 systemctl reload nginx
 
+echo "=== 4.5 Verify TLS SNI after asynchronous Nginx reload ==="
+# SNI is required for multiple certificates on a shared 443 listener.
+# Do not use insecure (-k); a complete trusted chain is mandatory.
+for host in "$DOMAIN" "$WWW"; do
+  ready=0
+  expected=200
+  if [ "$host" = "$WWW" ]; then expected=301; fi
+  for i in $(seq 1 25); do
+    code="$(curl --noproxy '*' -sS --max-time 5 \
+      --resolve "$host:443:127.0.0.1" \
+      -o /dev/null -w '%{http_code}' "https://$host/" 2>/dev/null)" && rc=0 || rc=$?
+    if [ "$rc" -eq 0 ] && [ "$code" = "$expected" ]; then
+      ready=1
+      echo "GLOBALSIAI_CN_TLS_SNI_READY_HOST=$host ATTEMPT=$i HTTP=$code"
+      break
+    fi
+    if [ "$i" -lt 25 ]; then sleep 1; fi
+  done
+  if [ "$ready" -ne 1 ]; then
+    echo "GLOBALSIAI_CN_TLS_SNI_NOT_READY_HOST=$host HTTP=$code CURL_RC=$rc"
+    echo GLOBALSIAI_CN_TLS_EXPECTED_CERTIFICATE
+    openssl x509 -in "$CERTDIR/fullchain.pem" -noout -subject -ext subjectAltName || true
+    echo GLOBALSIAI_CN_TLS_ACTUAL_SERVED_CERTIFICATE
+    timeout 8 sh -c 'printf "" | openssl s_client -connect 127.0.0.1:443 -servername "$1" 2>/dev/null | openssl x509 -noout -subject -ext subjectAltName' sh "$host" || true
+    echo GLOBALSIAI_CN_TLS_NAME_ROUTING_REQUIRES_REVIEW
+    exit 5
+  fi
+done
+echo GLOBALSIAI_CN_HTTPS_SNI_BOTH_HOSTS_VERIFIED
+
 echo "=== 5. 实际 HTTPS SNI、九语言、备案、301、既有服务验收 ==="
 for path in / /zh/ai /en/ai /ja/ai /ko/ai /fr/ai /de/ai /es/ai /pt/ai /ar/ai /api/v1/health /api/v1/data-readiness; do
  code="$(curl --noproxy '*' --silent --show-error --max-time 25 \
