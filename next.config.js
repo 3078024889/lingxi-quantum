@@ -27,6 +27,8 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  // Self-hosted .cn build only: Vercel must keep its regular output mode.
+  ...(process.env.LINGXI_SELFHOST_BUILD === "1" ? { output: "standalone" } : {}),
   // The ECS .cn standalone process spawns a separate Node process for engine probes.
   // These runtime imports are intentionally dynamic and cannot be discovered by nft.
   // Copy only lightweight document/web dependencies, never heavyweight Python/ML packages.
