@@ -66,9 +66,9 @@ def available_sources(sources, total):
     def probe(url):
         t0 = time.monotonic()
         try:
-            with fetch_range(url, 0, 65535, total, timeout=15) as resp:
-                data = resp.read(65536)
-                if len(data) != 65536:
+            with fetch_range(url, 0, 1048575, total, timeout=18) as resp:
+                data = resp.read(1048576)
+                if len(data) != 1048576:
                     raise RuntimeError("SHORT_RANGE_PROBE")
             return (url, time.monotonic() - t0, "SUPPORTED")
         except Exception as exc:
@@ -77,12 +77,29 @@ def available_sources(sources, total):
     supported = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(sources)) as pool:
         for url, elapsed, status in pool.map(probe, sources):
-            label = "GITHUB_DIRECT" if url == RELEASE else "HTTPS_PROXY"
+            label = (
+                "GITHUB_DIRECT" if url == RELEASE else
+                "GHFAST" if url.startswith("https://ghfast.top/") else
+                "LLKK" if url.startswith("https://gh.llkk.cc/") else
+                "GH_PROXY_ORG" if url.startswith("https://gh-proxy.org/") else
+                "GHPROXY_NET" if url.startswith("https://ghproxy.net/") else "GH_PROXY_COM"
+            )
             print(f"CN_TRANSFER_RANGE_{label}={status}", flush=True)
             if status == "SUPPORTED":
                 supported.append((elapsed, url))
     supported.sort(key=lambda pair: pair[0])
-    return [pair[1] for pair in supported]
+    if not supported:
+        return []
+    # The fastest two reachable range-capable sources only, to avoid slow
+    # GitHub fallback when a good mainland mirror is reachable.
+    fastest = supported[0][0]
+    eligible = [item[1] for item in supported if item[0] <= max(fastest * 2.0, fastest + 2.0)]
+    labels = {"https://ghfast.top/": "GHFAST", "https://gh.llkk.cc/": "LLKK",
+              "https://gh-proxy.org/": "GH_PROXY_ORG", "https://ghproxy.net/": "GHPROXY_NET"}
+    for source in eligible[:2]:
+        label = next((val for prefix, val in labels.items() if source.startswith(prefix)), "GITHUB_OR_EXISTING")
+        print("CN_TRANSFER_SELECTED_SOURCE=" + label, flush=True)
+    return eligible[:2]
 
 
 def run_transfer(*, output: Path, total: int, expected_sha: str, sources, workers=12, period=15):
@@ -210,7 +227,13 @@ def main():
     if os.geteuid() != 0:
         raise RuntimeError("RUN_AS_ROOT_FOR_FIXED_ECS_DEST")
     socket.getaddrinfo = ipv4_only
-    sources = [RELEASE, "https://gh-proxy.com/" + RELEASE]
+    # Third-party mirrors are used only when they serve exact byte ranges;
+    # the immutable official GitHub SHA256 is still mandatory before install.
+    sources = ["https://ghfast.top/" + RELEASE,
+               "https://gh.llkk.cc/" + RELEASE,
+               "https://gh-proxy.org/" + RELEASE,
+               "https://ghproxy.net/" + RELEASE,
+               RELEASE, "https://gh-proxy.com/" + RELEASE]
     run_transfer(output=DEST, total=EXPECTED_SIZE, expected_sha=EXPECTED_SHA256,
                  sources=sources, workers=args.workers)
 
