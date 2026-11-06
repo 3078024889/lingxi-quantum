@@ -11,7 +11,8 @@ test('main LINGXIFIELD homepage exposes SIAI rankings above the long tool catalo
  assert.match(nav,/href: "\/siai", key: "home"/);
  assert.match(route,/getSiaiDirectoryRows\(\)/);
  assert.match(catalog,/getCuratedRows\(\)/);
- assert.match(catalog,/rows\.length!==62/);
+ assert.match(catalog,/rows\.length!==curated\.length\+preview\.length/);
+ assert.match(catalog,/new Set\(rows\.map\(r=>r\.id\)\)\.size!==rows\.length/);
  assert.match(route,/SiaiRankingHome rows=\{rows\}/);
  for(const lang of ['zh','en','ja','ko','fr','de','es','pt','ar'])
   assert.ok(home.includes(lang+':{title:'),lang+' homepage SIAI entry');
