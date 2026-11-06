@@ -10,6 +10,7 @@ import Link from "next/link";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import {isLikelyToolQuery} from "@/lib/tools/search-intents-v44r2.mjs";
+import {resolvePublicSearchIntent} from "@/lib/marketing/public-intent-router.mjs";
 
 type Copy={
  kicker:string;seoTitle:string;seoDesc:string;hero:string;lead:string;placeholder:string;begin:string;startWith:string;
@@ -219,7 +220,7 @@ export default function HomeProblemHub(){
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const direct=resolvePublicSearchIntent(v);if(direct&&direct!=="/sasi"){location.href=`${direct}?lang=${lang}`;return}if(!direct&&isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(direct||hit?.href||"/sasi",location.origin);if(url.pathname.startsWith("/sasi"))url.searchParams.set("intent",v);url.searchParams.set("lang",lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
    <div className="grid items-center gap-8 ">
@@ -242,7 +243,7 @@ export default function HomeProblemHub(){
      <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"SASI 可用于短剧、网站、书本、学习和科研。涉及收费的操作会先展示费用和可用支付方式。":"SASI supports video, websites, books, study and research. Paid steps display prices and available payment methods before confirmation."}</p>
      <p className="mt-1 text-xs text-[var(--lx-muted)]">lingxifield.com · lingxifield.cn</p>
      <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
-     {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
+     {q.trim()&&(hit?.score>0||resolvePublicSearchIntent(q))&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={resolvePublicSearchIntent(q)||hit.href}>{hit?.score>0?hit.label:resolvePublicSearchIntent(q)==="/siai"?market.title:c.tools}</Link></div>}
     </div>
    </div>
   </section>
