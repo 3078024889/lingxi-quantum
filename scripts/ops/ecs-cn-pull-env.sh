@@ -16,17 +16,17 @@ printf '%s\n' '{"orgId":"team_Bn6lqQau6e7MTvJ0JE4q8NkS","projectId":"prj_R2HMsUO
 chmod 600 "$D/.vercel/project.json"
 cd "$D"
 echo "=== Vercel CLI authentication (official account flow) ==="
-if ! npx --yes vercel whoami >/dev/null 2>&1; then
+if ! vercel whoami >/dev/null 2>&1; then
  echo "COMPLETE_VERCEL_ACCOUNT_LOGIN_IN_BROWSER"
- npx --yes vercel login
+ vercel login
 fi
 echo "=== Pulling production environment, credentials never printed ==="
 TMP=$(mktemp /etc/lingxifield/.production.XXXXXXXX)
 trap 'rm -f "$TMP"' EXIT
-npx --yes vercel env pull "$TMP" --environment=production --yes
+vercel env pull "$TMP" --environment=production --yes
 test -s "$TMP" || { echo EMPTY_ENV_ABORT; exit 3; }
 echo "=== Critical variable audit (names only) ==="
-node /root/lingxifield-cn-env-audit.cjs "$TMP"
+node /root/lingxifield-cn-env-audit.cjs --strict "$TMP"
 if [ -e "$ENV" ]; then
  cp -a "$ENV" "/etc/lingxifield/production.env.backup.$(date +%Y%m%d-%H%M%S)"
 fi
