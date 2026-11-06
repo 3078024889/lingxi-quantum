@@ -8,7 +8,7 @@ fi
 command -v dig >/dev/null || { echo GLOBALSIAI_CAA_DIG_MISSING; exit 3; }
 pass=0
 fail=0
-echo GLOBALSIAI_AUTH_CAA_DIAGNOSTIC=20261106
+echo GLOBALSIAI_AUTH_CAA_DIAGNOSTIC=20261106_EXPLICIT_LE_ISSUE_GATE
 for ns in dns1.hichina.com dns2.hichina.com; do
  for proto in udp tcp; do
   for host in globalsiai.cn www.globalsiai.cn; do
@@ -26,7 +26,18 @@ for ns in dns1.hichina.com dns2.hichina.com; do
      answers="$(printf '%s\n' "$result" | awk '$1 !~ /^;/ && $2 ~ /^[0-9]+$/ && $4=="A" {print $5}' | sort -u | paste -sd, -)"
      state=FAIL
      if [ "$status" = NOERROR ] && [ -n "$auth" ]; then
-      if [ "$rr" != A ] || [ "$answers" = 39.104.205.16 ]; then state=PASS; fi
+      if [ "$rr" = A ]; then
+       [ "$answers" = 39.104.205.16 ] && state=PASS
+      elif [ "$host" = globalsiai.cn ]; then
+       if printf '%s\n' "$result" | grep -Fq '0 issue "letsencrypt.org"'; then
+        state=PASS
+       else
+        state=FAIL_CAA_MISSING_OR_STALE
+       fi
+      else
+       # www can inherit apex CAA when it has no local RRset.
+       state=PASS
+      fi
      fi
      if [ "$state" = PASS ]; then pass=$((pass+1)); else fail=$((fail+1)); fi
      if [ -z "$answers" ]; then answers=-; fi
@@ -50,7 +61,7 @@ if [ "$fail" -gt 0 ]; then
  echo GLOBALSIAI_AUTH_DNS_CONSISTENCY=FAIL
  echo GLOBALSIAI_CERTBOT_RETRY=BLOCKED
 else
- echo GLOBALSIAI_AUTH_DNS_CONSISTENCY=PASS_ONE_VANTAGE_ONLY
+ echo GLOBALSIAI_AUTH_CAA_ISSUE_LETSENCRYPT=CONFIRMED_BOTH_NS_TCP_AND_UDP
  echo GLOBALSIAI_CERTBOT_RETRY=NOT_AUTHORIZED_FROM_THIS_TEST_ALONE
 fi
 echo GLOBALSIAI_AUTH_DNS_READ_ONLY_COMPLETE
