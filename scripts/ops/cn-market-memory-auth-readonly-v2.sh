@@ -18,7 +18,7 @@ echo '=== ENV NAME PRESENCE ONLY: MAIN AND CHILD PROCESSES ==='
 python3 - <<'PY'
 import os,subprocess
 for svc in ('lingxifield-ecs','lingxifield-cn-stage'):
-    main=subprocess.run(['systemctl','show',svc,'-p','MainPID','--value'],capture_output=True,text=True).stdout.strip()
+    main=subprocess.run(['systemctl','show',svc,'-p','MainPID','--value'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True).stdout.strip()
     if not main.isdecimal() or main=='0':
         print(f'SERVICE={svc} MAIN_PID_UNAVAILABLE');continue
     todo=[int(main)];seen=set()
