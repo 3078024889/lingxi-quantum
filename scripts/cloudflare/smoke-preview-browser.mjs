@@ -44,8 +44,40 @@ async function run(){
   const result=JSON.parse(await out.inputValue());
   expect(result.hostname==="example.com"&&result.pathname==="/abc","URL_PARSER_BAD_OUTPUT");
   console.log("LIVE_LOCAL_URL_PARSER","PASS");
+  // Expand the actual browser-compute sample without hitting paid or private APIs.
+  const localCases=[
+    {path:"/tools/csv-json",input:"name,age\\nAda,37",assert:(out)=>{
+      const rows=JSON.parse(out);
+      return Array.isArray(rows)&&rows.length===1&&rows[0].name==="Ada";
+    }},
+    {path:"/tools/case-converter",input:"hello world",assert:(out)=>out.trim()==="helloWorld"},
+    {path:"/tools/number-base-converter",input:"255",assert:(out)=>out.trim().toLowerCase()==="ff"},
+    {path:"/tools/xml-formatter",input:"<root><item>ok</item></root>",assert:(out)=>
+      out.includes("<root>")&&out.includes("<item>ok</item>")&&out.includes("</root>")},
+  ];
+  for(const c of localCases){
+    await visit(page,c.path);
+    const w=page.locator("[data-tool-workbench]");
+    await w.locator("textarea:not([readonly])").first().fill(c.input);
+    await w.getByRole("button",{name:/处理|run/i}).first().click({timeout:20000});
+    const output=w.locator("textarea[readonly]").first();
+    await output.waitFor({timeout:18000});
+    expect(c.assert(await output.inputValue()),"LIVE_BROWSER_TOOL_OUTPUT_INVALID:"+c.path);
+    console.log("LIVE_BROWSER_LOCAL_TOOL_OK",c.path);
+  }
+  await visit(page,"/tools/text-diff");
+  const differ=page.locator("[data-tool-workbench]");
+  const inputs=differ.locator("textarea:not([readonly])");
+  await inputs.nth(0).fill("alpha\\nbeta");
+  await inputs.nth(1).fill("alpha\\ngamma");
+  await differ.getByRole("button",{name:/处理|run/i}).first().click({timeout:20000});
+  const diffOutput=differ.locator("textarea[readonly]").first();
+  await diffOutput.waitFor({timeout:18000});
+  const diff=await diffOutput.inputValue();
+  expect(diff.includes("- beta")&&diff.includes("+ gamma"),"LIVE_BROWSER_DIFF_OUTPUT_INVALID");
+  console.log("LIVE_BROWSER_LOCAL_TOOL_OK","/tools/text-diff");
   console.log("BROWSER_PAGE_ERRORS",JSON.stringify(errors.slice(0,8)));
-  console.log("PREVIEW_BROWSER_SAMPLE_OK","3 main pages + 2 real local tools");
+  console.log("PREVIEW_BROWSER_SAMPLE_OK","3 main pages + 7 real local tools");
   console.log("FULL_124_TOOL_PRODUCTION_ACCEPTANCE_NOT_PERFORMED");
  }catch(e){failed=true;console.error("LIVE_PREVIEW_BROWSER_FAILED",e?.stack||e);}
  finally{await browser.close();}
