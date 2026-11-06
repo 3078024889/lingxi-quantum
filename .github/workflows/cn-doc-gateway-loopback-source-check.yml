@@ -1,4 +1,4 @@
-name: CN document gateway loopback bridge source gate (no deploy)
+name: CN 3189 local document gateway environment regression (no deploy)
 on:
   push:
     branches: [fix/cn-doc-gateway-loopback-20261106]
@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 jobs:
-  bridge-contract:
+  stage-env-contract:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
@@ -16,21 +16,15 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24.19.0'
-      - name: Check strict HTTPS origin, loopback-only binding and syntax
+      - name: Preserve real 3100 gateway and 3189-only VERCEL correction
         run: |
           set -Eeuo pipefail
-          node --check scripts/ops/ecs-cn-doc-gateway-loopback.mjs
-          bash -n scripts/ops/ecs-cn-doc-gateway-loopback-stage.sh
           bash -n scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
-          node scripts/ops/ecs-cn-doc-gateway-loopback.mjs --self-test
-          grep -Fq 'LISTEN_HOST = "127.0.0.1"' scripts/ops/ecs-cn-doc-gateway-loopback.mjs
-          grep -Fq 'rejectUnauthorized: true' scripts/ops/ecs-cn-doc-gateway-loopback.mjs
-          grep -Fq 'x-lingxifield-token' scripts/ops/ecs-cn-doc-gateway-loopback.mjs
-          grep -Fq "CN_DOC_BRIDGE_REAL_UPSTREAM_HEALTH_PASS" scripts/ops/ecs-cn-doc-gateway-loopback-stage.sh
-          grep -Fq "CN_DOC_BRIDGE_AND_REAL_STAGE_ACCEPTANCE_PASS_3188_UNCHANGED" scripts/ops/ecs-cn-doc-gateway-loopback-stage.sh
           grep -Fq 'UnsetEnvironment=VERCEL' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
           grep -Fq 'CN3189_RUNNING_VERCEL_PRESENT_CONFIRMED' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
           grep -Fq 'CN3189_EXISTING_LOOPBACK_DOCUMENT_GATEWAY_REUSED' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
           grep -Fq 'CN3189_ENV_OVERRIDE_ROLLBACK_HEALTH_PASS' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
           grep -Fq 'CN3189_SIX_ENGINES_AND_REAL_DOCX_ACCEPTED_NO_PUBLIC_SWITCH' scripts/ops/ecs-cn-stage-unset-vercel-retest.sh
-          echo CN_DOC_BRIDGE_SOURCE_GATE_PASS
+          ! test -e scripts/ops/ecs-cn-doc-gateway-loopback.mjs
+          ! test -e scripts/ops/ecs-cn-doc-gateway-loopback-stage.sh
+          echo CN_STAGE_ENV_SOURCE_GATE_PASS
