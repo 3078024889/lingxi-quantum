@@ -21,6 +21,10 @@ jobs:
           set -Eeuo pipefail
           bash -n scripts/ops/ecs-cn-3189-bootstrap.sh
           bash -n scripts/ops/ecs-cn-3189-safe-apply.sh
+          bash -n scripts/ops/ecs-cn-doc-gateway-stage.sh
+          grep -Fq 'CN_PUBLIC_MODEL_OR_ASSET_PRESERVATION_FAILED' scripts/ops/ecs-cn-doc-gateway-stage.sh
+          grep -Fq 'CN_CANDIDATE_3189_ACCEPTED_3188_UNCHANGED' scripts/ops/ecs-cn-doc-gateway-stage.sh
+          grep -Fq 'CN_DOC_STAGE_ROLLED_BACK_PRODUCTION_3188_UNTOUCHED' scripts/ops/ecs-cn-doc-gateway-stage.sh
           bash -n scripts/ops/ecs-cn-stage-ipv4first.sh
           grep -Fq 'CN_STAGE_IPV4FIRST_APPLIED_3188_UNCHANGED' scripts/ops/ecs-cn-stage-ipv4first.sh
           grep -Fq 'CN_ENVFILE_NODE_OPTIONS_OVERRIDE_ABORT' scripts/ops/ecs-cn-stage-ipv4first.sh
