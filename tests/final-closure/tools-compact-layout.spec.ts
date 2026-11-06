@@ -159,7 +159,24 @@ test("original public production before / branch-built after screenshots for des
  const mobile=testInfo.project.name.includes("mobile");
  await page.setViewportSize(mobile?{width:390,height:844}:{width:1440,height:900});
  const before=await page.goto("https://lingxifield.com/tools",{waitUntil:"domcontentloaded",timeout:30000});
- expect(before?.status()).toBe(200);
+ if(before?.status()!==200){
+  // Do not make a failed production baseline look like a passing visual
+  // comparison. Preserve bounded diagnostic evidence for Vercel/edge triage.
+  const headers=before?.headers()||{};
+  const failure={
+   url:"https://lingxifield.com/tools",status:before?.status()??null,
+   vercelError:headers["x-vercel-error"]||null,
+   vercelId:headers["x-vercel-id"]||null,
+   server:headers["server"]||null,
+   contentType:headers["content-type"]||null,
+   bodyText:(await page.locator("body").innerText().catch(()=>"")).slice(0,450)
+  };
+  await testInfo.attach("live-production-baseline-unavailable",{
+   body:JSON.stringify(failure,null,2),contentType:"application/json"
+  });
+  throw new Error("LIVE_BASELINE_HTTP_"+String(before?.status()??"NO_RESPONSE")+
+   " (see live-production-baseline-unavailable attachment)");
+ }
  await page.locator("main").first().waitFor();
  const outputDir="test-results/tools-compact-screenshots";
  await mkdir(outputDir,{recursive:true});
