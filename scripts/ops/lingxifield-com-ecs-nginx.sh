@@ -9,7 +9,14 @@ CERT=/etc/letsencrypt/live/lingxifield.com/fullchain.pem
 KEY=/etc/letsencrypt/live/lingxifield.com/privkey.pem
 BACKUP="/root/lingxifield-com-nginx-$(date +%Y%m%d-%H%M%S)-$$.bak"
 [[ "$EUID" == 0 ]] || { echo RUN_AS_ROOT; exit 1; }
-case "$MODE" in --status|--stage-http|--activate-https) ;; *) echo "Use --status, --stage-http or --activate-https"; exit 2;; esac
+case "$MODE" in --status|--stage-http|--activate-https) ;; *) echo "Use --status"; exit 2;; esac
+# lingxifield.com has no ICP registration. Do not deploy this public domain
+# to a mainland ECS, even through a CDN reverse proxy. Status remains read-only.
+if [[ "$MODE" != --status ]]; then
+  echo "COM_MAINLAND_ECS_DEPLOYMENT_BLOCKED_NO_ICP"
+  echo "Use a real non-mainland Cloudflare Workers deployment for the .com origin."
+  exit 78
+fi
 if [[ "$MODE" == --status ]]; then
   echo '=== Active origin ==='
   systemctl is-active lingxifield-ecs || true
