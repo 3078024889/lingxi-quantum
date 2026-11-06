@@ -1,0 +1,34 @@
+name: Publish tested CN PR199 ECS archive
+on:
+  push:
+    branches: [feature/ecs-cn-main199-delivery-20261106]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Retrieve and verify successful PR199 build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: 3078024889/lingxi-quantum
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/$GH_REPO/actions/runs/42165531851 --jq .conclusion)" = success
+          test "$(gh api repos/$GH_REPO/actions/runs/42165531851 --jq .head_sha)" = bef1cfafdc3d3f6d23b2d73132c8d085db24e56d
+          mkdir /tmp/cn
+          gh run download 42165531851 --repo "$GH_REPO" --name lingxifield-ecs-standalone-bef1cfafdc3d3f6d23b2d73132c8d085db24e56d --dir /tmp/cn
+          cd /tmp/cn
+          sha256sum -c lingxifield-ecs-standalone.sha256
+          tar -tzf lingxifield-ecs-standalone.tar.gz | grep -q '^./server.js$'
+      - name: Make verified archive available to ECS operator
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: 3078024889/lingxi-quantum
+        run: |
+          cd /tmp/cn
+          tag=ecs-cn-pr199-20261106-bef1cfa
+          if gh release view "$tag" --repo "$GH_REPO" >/dev/null 2>&1; then exit 0; fi
+          gh release create "$tag" lingxifield-ecs-standalone.tar.gz lingxifield-ecs-standalone.sha256 --repo "$GH_REPO" --target main --prerelease --title "CN PR199 ECS auth restored staging archive" --notes "Built and tested from PR199 source; upload not deployed. Verify SHA256 before use. Financial and file-delivery checks remain pending."
