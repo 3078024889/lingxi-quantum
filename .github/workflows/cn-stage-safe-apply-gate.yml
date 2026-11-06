@@ -46,3 +46,12 @@ jobs:
           set -Eeuo pipefail
           python3 -m py_compile scripts/ops/ecs-cn-parallel-release-fetch.py
           docker run --rm --network none -v "$PWD:/work:ro" -w /work python:3.6.15-slim python scripts/ops/test-cn-parallel-release-fetch.py
+      - name: Test actual asset SHA256 preservation against duplicate and corrupt fixtures
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 -m py_compile scripts/ops/ecs-cn-verify-public-asset-preservation.py
+          docker run --rm --network none -v "$PWD:/work:ro" -w /work python:3.6.15-slim \
+            python scripts/ops/ecs-cn-verify-public-asset-preservation.py --self-test
+          grep -Fq 'CN_ASSET_VERIFIER_SOURCE_VERIFIED' scripts/ops/ecs-cn-doc-gateway-stage.sh
+          grep -Fq 'CN_PUBLIC_ASSET_FILES_AND_SHA256_PRESERVED' scripts/ops/ecs-cn-verify-public-asset-preservation.py
