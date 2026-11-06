@@ -49,9 +49,8 @@ test("legacy media receipts are kept for previous purchasers until cutover",()=>
  assert(preview.includes('stage.mode==="legacy"'));
  assert(preview.includes('claimFreeEntitlement('));
 });
-test("unsupported quote-keyed storage features fail closed in new mode, retain old records",()=>{
+test("remaining unsupported R2 storage features fail closed in new mode, retain old records",()=>{
  const cases=[
-  ["temp-mail/batch","BATCH_PASS_WORKFLOW_NOT_READY","claim_temp_mail_batch_quote"],
   ["burn-after-read/file/prepare","BURN_FILE_PASS_WORKFLOW_NOT_READY","newBurnObjectKey("],
   ["mobile-file","TEMP_FILE_PASS_WORKFLOW_NOT_READY","newBurnObjectKey("]
  ];
