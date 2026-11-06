@@ -1,7 +1,7 @@
 name: CN R2 isolated lifecycle probe static validation (no live object)
 on:
   push:
-    branches: [feature/cn-r2-transactional-probe-20261106]
+    branches: [feature/cn-r2-cors-upload-lifecycle-20261106]
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,4 +27,8 @@ jobs:
           grep -q 'timingSafeEqual' scripts/ops/ecs-cn-r2-transactional-probe.mjs
           grep -q 'CN_STAGE_ONLY_PROJECT_GUARD_FAILED' scripts/ops/ecs-cn-r2-transactional-probe.mjs
           grep -q 'R2_PROBE_LIFECYCLE_PASS' scripts/ops/ecs-cn-r2-transactional-probe.mjs
+          grep -q 'R2_PROBE_CORS_PUT_PREFLIGHT' scripts/ops/ecs-cn-r2-transactional-probe.mjs
+          grep -q 'R2_PROBE_CORS_GET' scripts/ops/ecs-cn-r2-transactional-probe.mjs
+          grep -q 'R2_PROBE_CORS_HEAD' scripts/ops/ecs-cn-r2-transactional-probe.mjs
+          grep -q 'WECHAT_MINI_VPAY_TOPUPS_ENABLED' scripts/ops/ecs-cn-r2-transactional-probe.mjs
           echo CN_R2_LIFECYCLE_OFFLINE_GUARD_PASS
