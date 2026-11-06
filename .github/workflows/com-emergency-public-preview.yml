@@ -102,22 +102,19 @@ jobs:
           CI: "true"
         run: |
           set -euo pipefail
-          pnpm run start:vinext > "$RUNNER_TEMP/com-local-preview.log" 2>&1 &
+          pnpm exec vite preview --host 127.0.0.1 --port 4173 > "$RUNNER_TEMP/com-local-preview.log" 2>&1 &
           local_pid=$!
           trap 'kill "$local_pid" 2>/dev/null || true' EXIT
           BASE=""
-          for i in $(seq 1 90); do
+          for i in $(seq 1 30); do
             if ! kill -0 "$local_pid" 2>/dev/null; then
               cat "$RUNNER_TEMP/com-local-preview.log"
               echo "::error::Preview runtime terminated before its HTTP endpoint opened."
               exit 1
             fi
-            for port in 4173 8787 3000 3001 5173; do
-              if curl --max-time 2 --silent --output /dev/null "http://127.0.0.1:$port/api/health"; then
-                BASE="http://127.0.0.1:$port"
-                break
-              fi
-            done
+            if curl --max-time 3 --silent --output /dev/null "http://127.0.0.1:4173/api/health"; then
+              BASE="http://127.0.0.1:4173"
+            fi
             if test -n "$BASE"; then break; fi
             sleep 1
           done
