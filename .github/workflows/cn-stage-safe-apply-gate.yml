@@ -22,6 +22,9 @@ jobs:
           bash -n scripts/ops/ecs-cn-3189-bootstrap.sh
           bash -n scripts/ops/ecs-cn-3189-safe-apply.sh
           bash -n scripts/ops/ecs-cn-doc-gateway-stage.sh
+          node --check scripts/ops/ecs-cn-engine-gap-readonly.mjs
+          test "$(node scripts/ops/ecs-cn-engine-gap-readonly.mjs 2>&1 || true)" = CN_ENGINE_GAP_REQUIRES_READ_ONLY_FLAG
+          grep -Fq 'CN_ENGINE_GAP_DIAGNOSIS_READ_ONLY=PASS' scripts/ops/ecs-cn-engine-gap-readonly.mjs
           grep -Fq 'CN_PUBLIC_MODEL_OR_ASSET_PRESERVATION_FAILED' scripts/ops/ecs-cn-doc-gateway-stage.sh
           grep -Fq 'CN_CANDIDATE_3189_ACCEPTED_3188_UNCHANGED' scripts/ops/ecs-cn-doc-gateway-stage.sh
           grep -Fq 'CN_DOC_STAGE_ROLLED_BACK_PRODUCTION_3188_UNTOUCHED' scripts/ops/ecs-cn-doc-gateway-stage.sh
