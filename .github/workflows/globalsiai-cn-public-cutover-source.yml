@@ -57,6 +57,7 @@ jobs:
           body=body.replace('$WEBROOT',str(tmp/'acme'))
           body=body.replace('$CERTDIR',str(tmp/'letsencrypt'))
           body=body.replace('$PORT','4289')
+          body=body.replace('$DOMAIN','globalsiai.cn')
           body=body.replace('\\$','$')
           assert 'server_name globalsiai.cn;' in body
           assert 'server_name www.globalsiai.cn;' in body or 'server_name globalsiai.cn www.globalsiai.cn;' in body
@@ -119,6 +120,7 @@ jobs:
           body=body.replace('$WEBROOT',str(tmp/'acme'))
           body=body.replace('$CERTDIR',str(tmp/'letsencrypt'))
           body=body.replace('$PORT','4289')
+          body=body.replace('$DOMAIN','globalsiai.com')
           body=body.replace('\\$','$')
           assert 'server_name globalsiai.com;' in body
           assert 'server_name www.globalsiai.com;' in body or 'server_name globalsiai.com www.globalsiai.com;' in body
