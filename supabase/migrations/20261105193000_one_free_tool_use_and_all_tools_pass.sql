@@ -124,6 +124,7 @@ begin
  if found then
   if v_old.user_id<>p_user_id or v_old.sku<>p_sku or v_old.currency<>p_currency
    then return jsonb_build_object('ok',false,'error','IDEMPOTENCY_CONFLICT'); end if;
+  if v_old.revoked_at is not null then return jsonb_build_object('ok',false,'error','PASS_PURCHASE_REVOKED');end if;
   return jsonb_build_object('ok',true,'alreadyPurchased',true,'expiresAt',v_old.expires_at,'orderId',v_old.order_id);
  end if;
  -- Never trust any client-supplied price. Reuse existing unified CNY/USD wallet.
