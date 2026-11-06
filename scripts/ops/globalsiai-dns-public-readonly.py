@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import socket
 import subprocess
 import sys
 from typing import Any
@@ -120,13 +121,11 @@ def local_readonly() -> None:
 
 
 def main() -> int:
-    if sys.argv == ["globalsiai-dns-public-readonly.py", "--self-test"] or (
-        len(sys.argv) == 2 and sys.argv[1] == "--self-test"
-    ):
+    if len(sys.argv) == 2 and sys.argv[1] == "--self-test":
         self_test()
         return 0
-    if len(sys.argv) != 2 or sys.argv[1] != "--read-only":
-        print("GLOBALSIAI_DNS_USAGE: python3 script --read-only")
+    if len(sys.argv) != 2 or sys.argv[1] not in ("--read-only", "--external-only"):
+        print("GLOBALSIAI_DNS_USAGE: python3 script --read-only|--external-only")
         return 2
 
     print("GLOBALSIAI_TLS_DIAG_TARGET=" + DOMAIN)
@@ -186,7 +185,18 @@ def main() -> int:
     if dnssec_suspected:
         failures += 1
     print("DNS_PUBLIC_GATE=" + ("PASS" if failures == 0 else "FAIL"))
-    local_readonly()
+    if sys.argv[1] == "--read-only":
+        local_readonly()
+    else:
+        print("=== Independent external TCP connectivity from GitHub runner ===")
+        for port in (80, 443):
+            try:
+                with socket.create_connection((EXPECTED_IP, port), timeout=6):
+                    print(f"EXTERNAL_TCP_PORT={port} STATUS=CONNECT_PASS")
+            except OSError as e:
+                kind = type(e).__name__
+                print(f"EXTERNAL_TCP_PORT={port} STATUS=CONNECT_FAIL REASON={kind}")
+        print("EXTERNAL_TCP_CONNECTION_IS_SINGLE_VANTAGE_NOT_CA_GLOBAL_PROOF")
     print("GLOBALSIAI_DNS_DIAGNOSIS_READ_ONLY=PASS")
     print("GLOBALSIAI_CERT_REQUEST_PERMITTED=" + ("YES_DNS_ONLY_PORT80_STILL_NEEDS_EXTERNAL_PROBE" if failures == 0 else "NO_FIX_DNS_FIRST"))
     return 0
