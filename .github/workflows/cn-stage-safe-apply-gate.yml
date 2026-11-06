@@ -1,0 +1,24 @@
+name: CN 3189 safe operator release script gate (no deploy)
+on:
+  push:
+    branches: [feature/cn-safe-stage-release-ops-20261106]
+permissions:
+  contents: read
+jobs:
+  syntax:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Verify safe script syntax and independent environment contract
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/ecs-cn-3189-safe-apply.sh
+          grep -Fxq 'EnvironmentFile=/etc/lingxifield/staging.env' infra/selfhost/lingxifield-cn-stage.service
+          grep -Fq 'CN_STAGE_USES_NONISOLATED_ENV_ABORT' scripts/ops/ecs-cn-3189-safe-apply.sh
+          grep -Fq 'CN_PROD_STAGE_PATH_COLLISION_ABORT' scripts/ops/ecs-cn-3189-safe-apply.sh
+          grep -Fq 'CN_STAGE_ROLLBACK_DONE_PRODUCTION_UNTOUCHED' scripts/ops/ecs-cn-3189-safe-apply.sh
+          echo CN_SAFE_STAGE_INSTALL_STATIC_GATES_PASS
