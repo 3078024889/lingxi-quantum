@@ -1,0 +1,27 @@
+name: CN 3189 read-only staging readiness static gate (no deploy)
+on:
+  push:
+    branches: [feature/cn-r2-cors-upload-lifecycle-20261106]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Validate no action unless explicit read-only switch
+        run: |
+          set -Eeuo pipefail
+          node --check scripts/ops/ecs-cn-3189-live-readiness.mjs
+          s="$(node scripts/ops/ecs-cn-3189-live-readiness.mjs || true)"
+          test "$s" = CN_STAGE_READINESS_REQUIRES_EXPLICIT_READ_ONLY_FLAG
+          grep -q 'CN_STAGE_JOBS_NO_AUTH' scripts/ops/ecs-cn-3189-live-readiness.mjs
+          grep -q 'CN_STAGE_PAYMENTS_DISABLED' scripts/ops/ecs-cn-3189-live-readiness.mjs
+          grep -q 'CN_REAL_PROVIDER_GENERATION_AND_PAYMENT_CALLBACKS=NOT_VERIFIED' scripts/ops/ecs-cn-3189-live-readiness.mjs
+          echo CN_READ_ONLY_STAGE_CHECK_SCRIPT_VERIFIED
