@@ -22,6 +22,7 @@ jobs:
           node --check scripts/ops/ecs-cn-runtime-triage.mjs
           bash -n scripts/ops/ecs-cn-stage-r2-reload.sh
           node --check scripts/ops/ecs-cn-real-document-gateway-3189.mjs
+          node --test scripts/ops/test-cn-local-signed-gateway.mjs
           node --check scripts/ops/ecs-cn-sasi-paid-readiness-3189.mjs
           test "$(node scripts/ops/ecs-cn-sasi-paid-readiness-3189.mjs || true)" = CN_SASI_READINESS_REQUIRES_READ_ONLY_3189_FLAG
           grep -Fq 'CN_SASI_PROVIDER_REAL_VIDEO_GENERATION=NOT_TESTED' scripts/ops/ecs-cn-sasi-paid-readiness-3189.mjs

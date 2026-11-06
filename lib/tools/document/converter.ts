@@ -1,4 +1,5 @@
 import "server-only";
+import {localSignedGatewayConfigured,localSignedGatewayResponse} from "./local-signed-gateway";
 
 const COMMON_OFFICE_EXTENSIONS=[
  "doc","docx","docm","dot","dotm","dotx","odt","fodt","ott","rtf","txt",
@@ -20,7 +21,7 @@ async function limitedBody(response:Response,maxBytes=MAX_PDF_BYTES):Promise<Arr
   const result=new Uint8Array(total);let offset=0;for(const chunk of chunks){result.set(chunk,offset);offset+=chunk.byteLength}return result.buffer;
  }finally{reader.releaseLock()}
 }
-type Provider="gotenberg"|"custom"|"convertapi";
+type Provider="local-gateway"|"gotenberg"|"custom"|"convertapi";
 function trim(v?:string){return(v||"").trim()}
 function extOf(name:string){return(name.split(".").pop()||"").toLowerCase()}
 export function isOfficeInputName(name:string){return COMMON_OFFICE_EXTENSIONS.includes(extOf(name) as any)}
@@ -61,7 +62,7 @@ export async function documentConverterReadiness(){
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),1500);
   try{gotenberg=await probeGotenberg(controller.signal)}finally{clearTimeout(timer)}
  }
- return{ready:gotenberg||custom||convertApi,formats:DOCUMENT_INPUT_FORMATS,families:["PDF","Word","PowerPoint","Excel","OpenDocument"],localPdf:true};
+ return{ready:localSignedGatewayConfigured()||gotenberg||custom||convertApi,formats:DOCUMENT_INPUT_FORMATS,families:["PDF","Word","PowerPoint","Excel","OpenDocument"],localPdf:true};
 }
 async function viaGotenberg(file:File,signal:AbortSignal){
  const base=gotenbergBase();if(!base)return null;
@@ -110,14 +111,14 @@ export async function convertDocumentToPdf(file:File){
  const ext=extOf(file.name);
  if(ext==="pdf"||file.type==="application/pdf")return await file.arrayBuffer();
  if(!COMMON_OFFICE_EXTENSIONS.includes(ext as any))throw new Error("DOCUMENT_TYPE_UNSUPPORTED");
- const providers:Provider[]=["gotenberg","custom","convertapi"];
+ const providers:Provider[]=["local-gateway","gotenberg","custom","convertapi"];
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),45_000);
  try{
  let last:Error|null=null;
  for(const provider of providers){
   try{
    if(controller.signal.aborted)throw new Error("DOCUMENT_CONVERSION_TIMEOUT");
-   const bytes=provider==="gotenberg"?await viaGotenberg(file,controller.signal):provider==="custom"?await viaCustom(file,ext,controller.signal):await viaConvertApi(file,ext,controller.signal);
+   const bytes=provider==="local-gateway"?(await localSignedGatewayResponse(file,controller.signal))?.arrayBuffer():provider==="gotenberg"?await viaGotenberg(file,controller.signal):provider==="custom"?await viaCustom(file,ext,controller.signal):await viaConvertApi(file,ext,controller.signal);
    if(!bytes)continue;
    if(!validPdf(bytes))throw new Error("DOCUMENT_CONVERSION_INVALID");
    return bytes;
