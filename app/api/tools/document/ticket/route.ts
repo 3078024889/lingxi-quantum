@@ -1,6 +1,6 @@
 import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
 import{createHmac,randomUUID}from"node:crypto";
-import{NextResponse}from"next/server";
+import{NextRequest,NextResponse}from"next/server";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 export const runtime="nodejs";
 
@@ -25,7 +25,7 @@ function safeGateway(raw:string){
  }catch{return""}
 }
 
-export async function POST(req:Request){
+export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const body=await req.json().catch(()=>null) as null|{
    name?:string;size?:number;type?:string;toolSlug?:string;accessRequestId?:string;operationId?:string
