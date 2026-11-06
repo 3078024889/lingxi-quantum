@@ -1,7 +1,7 @@
 name: CN standalone dynamic Node dependency trace gate (no deploy)
 on:
   push:
-    branches: [feature/cn-runtime-node-tracing-20261106]
+    branches: [feature/cn-runtime-node-tracing-20261106, feature/cn-standalone-package-fix-20261106]
   workflow_dispatch:
 permissions:
   contents: read
@@ -84,6 +84,35 @@ jobs:
           trap 'rm -rf "$isolated"' EXIT
           cp -a .next/standalone "$isolated/release"
           CN_ISOLATED_STANDALONE="$isolated/release" node scripts/ops/cn-stage-node-import-test.mjs
+      - name: Boot exact standalone runtime and check read-only authentication boundaries
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          install -d .next/standalone/.next
+          cp -a .next/static .next/standalone/.next/static
+          cp -a public .next/standalone/public
+          (
+            cd .next/standalone
+            NODE_ENV=production HOSTNAME=127.0.0.1 PORT=3187 node server.js
+          ) > /tmp/cn-standalone-smoke.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 30); do
+            code="$(curl --noproxy '*' --silent --max-time 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:3187/api/health || true)"
+            if [ "$code" = 200 ]; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = 1 || { echo CN_STANDALONE_HEALTH_FAILED; exit 1; }
+          for route in / /tools /siai; do
+            code="$(curl --noproxy '*' --silent --max-time 15 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3187$route")"
+            echo "CN_STANDALONE_ROUTE_$route=$code"
+            test "$code" = 200
+          done
+          code="$(curl --noproxy '*' --silent --max-time 10 -o /dev/null -w '%{http_code}' http://127.0.0.1:3187/api/tools/jobs)"
+          echo "CN_STANDALONE_UNAUTHENTICATED_JOBS_HTTP=$code"
+          test "$code" = 401
+          echo CN_STANDALONE_LOCAL_SMOKE_PASS_NO_DB_WRITE_NO_DEPLOY
       - name: Package verified .cn ECS artifact (no server deploy)
         shell: bash
         run: |

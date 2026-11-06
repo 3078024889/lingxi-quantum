@@ -1,7 +1,7 @@
 name: CN Node dependency closure fast (no deploy)
 on:
   push:
-    branches: [feature/cn-standalone-package-fix-20261106]
+    branches: [feature/cn-closure-fast-disabled-20261106]
   workflow_dispatch:
 permissions:
   contents: read
