@@ -164,3 +164,40 @@ test("original two-wallet debits and refundable principal are captured before gr
  assert(stub.includes("refundable_points")&&stub.includes("refundable_fen")&&stub.includes("refundable_cents"));
  assert(smoke.includes("USD_REFUNDABLE_SNAPSHOT_BAD"));
 });
+
+test("paid operations are bound to a single concrete order even after replacement purchases",()=>{
+ const sql=read("docs/commerce/tool-pass-v2-unapplied-database-draft.sql");
+ const smoke=read("tests/sql/tool-pass-v2-smoke.sql");
+ assert(sql.includes("pass_order_id uuid references public.tool_pass_orders_v2(request_id)"));
+ assert(sql.includes("pass_operation_source_check"));
+ assert(sql.includes("request_id=previous.pass_order_id"));
+ assert(sql.includes("'passOrderId',previous.pass_order_id"));
+ assert(sql.includes("pass_order_id)"));
+ assert(smoke.includes("PAID_USE_NOT_BOUND_TO_EXACT_ORDER"));
+ assert(smoke.includes("REFUNDED_OLD_RECEIPT_ACCEPTED_VIA_NEW_PASS"));
+});
+test("unused-pass wallet refund is an atomic non-public original-source reversal, not a PSP refund",()=>{
+ const sql=read("docs/commerce/tool-pass-v2-unapplied-wallet-refund.sql");
+ const smoke=read("tests/sql/tool-pass-v2-refund-smoke.sql");
+ for(const step of [
+  "public.refund_unused_tool_pass_wallet_v2",
+  "public.sasi_credit_ledger","public.ai_wallet_ledger",
+  "public.sasi_usd_wallet_ledger","public.ai_usd_wallet_ledger",
+  "SOURCE_LEDGER_MISMATCH","PASS_ALREADY_USED",
+  "STACKED_PASS_REQUIRES_REVIEW",
+  "tool_pass_wallet_refunds_v2","pg_advisory_xact_lock",
+  "service_role","original_wallets_only"
+ ])assert(sql.includes(step),"missing refund invariants: "+step);
+ for(const assertion of [
+  "CNY_WALLET_OR_PRINCIPAL_NOT_RESTORED",
+  "USD_WALLET_OR_PRINCIPAL_NOT_RESTORED",
+  "DUPLICATE_REFUND_JOURNAL",
+  "USED_PASS_REFUNDED",
+  "TAMPERED_LEDGER_REFUNDED",
+  "PUBLIC_REFUND_RPC_EXPOSED",
+  "STACKED_FIRST_PASS_REFUND_DID_NOT_FAIL",
+ ])assert(smoke.includes(assertion),"missing refund regression: "+assertion);
+ assert(sql.includes("revoke all on function public.refund_unused_tool_pass_wallet_v2"));
+ assert(!/grant execute on function public\.refund_unused_tool_pass_wallet_v2[\s\S]{0,130}to (anon|authenticated)\s*;/i.test(sql));
+ assert(sql.trim().startsWith("-- Draft only."));
+});
