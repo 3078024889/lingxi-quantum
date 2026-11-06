@@ -7,6 +7,10 @@ test -s /etc/lingxifield/production.env || { echo 'PRODUCTION_ENV_MISSING'; exit
 test -s /opt/lingxifield/runtime/node-24.19.0/bin/node
 id lingxifield >/dev/null 2>&1
 chmod 600 /etc/lingxifield/production.env
+# Fail closed: Vercel Secret values become literal [SENSITIVE] placeholders.
+test -s /root/lingxifield-cn-env-audit.cjs || { echo 'SECURITY_AUDIT_MISSING'; exit 8; }
+/opt/lingxifield/runtime/node-24.19.0/bin/node /root/lingxifield-cn-env-audit.cjs --strict /etc/lingxifield/production.env
+
 install -d -m 750 -o lingxifield -g lingxifield /opt/lingxifield/releases/cn-pr199/.next/cache
 if ss -ltn | grep -qE '127[.]0[.]0[.]1:3189[[:space:]]'; then
  echo 'STAGING_PORT_OCCUPIED'; exit 4
