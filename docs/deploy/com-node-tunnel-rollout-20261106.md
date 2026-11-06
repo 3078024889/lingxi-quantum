@@ -26,3 +26,23 @@
 - Installer checks archive checksum, archive paths, source report and symlink isolation; preserves existing releases and tries to restore previous symlink on failed health.
 - Exposing a preview public hostname without Access gates permits unsolicited access to API endpoints; do not do so before authentication and provider security testing.
 - `sourceSha` and `archiveSha256` must be carried together as release evidence; an archive without matching source audit must not be promoted.
+
+## Signed provenance and private release package
+
+The audited Next standalone GitHub CI now creates a self-contained Node runtime
+artifact only AFTER isolated server startup and 5/5 loopback HTTP checks succeed.
+The release bundle includes the exact 40-digit Git commit SHA, its own SHA-256
+checksum, and a JSON manifest showing that production acceptance is not complete.
+GitHub retains this private Actions artifact for **one day** to limit storage.
+The job declines to upload archives over 1.2 GB; even a successful upload can
+consume GitHub Actions artifact storage capacity.
+
+Download the ZIP from the *exact passing Actions run* (not the branch name);
+unzip and verify the SHA256SUMS entry for the tar.gz locally. The installer
+checks the SHA-256 before extraction and strictly rejects all archive links,
+special files, duplicated paths and traversal. For --install it also verifies
+the internal sourceSha equals the intended commit. Never upload the Node
+package into the publicly readable models/WASM R2 bucket.
+
+This artifact is a **preview candidate**, never a proof of operational login,
+payment settlement/refunds, native GPU video render, or tool entitlements.

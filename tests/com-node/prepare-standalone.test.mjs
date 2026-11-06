@@ -26,7 +26,8 @@ function fixture(){
 test("copies Next standalone with pnpm package links fully dereferenced",()=>{
  const {root,base,dest}=fixture();
  try{
-  const report=prepareNodeBundle({projectRoot:root,outputRoot:dest});
+  const report=prepareNodeBundle({projectRoot:root,outputRoot:dest,sourceSha:"f".repeat(40)});
+  assert.equal(report.sourceSha,"f".repeat(40));
   assert.equal(report.isolation,true);
   assert.equal(report.productionReady,false);
   assert.equal(existsSync(join(dest,"server.js")),true);
@@ -54,4 +55,10 @@ test("rejects output under the original project or a second packaging attempt",(
   prepareNodeBundle({projectRoot:root,outputRoot:dest});
   assert.throws(()=>prepareNodeBundle({projectRoot:root,outputRoot:dest}),/ALREADY_EXISTS/);
  }finally{rmSync(base,{recursive:true,force:true})}
+});
+
+test("rejects a non-commit source name",()=>{
+ const {root,base,dest}=fixture();
+ try{assert.throws(()=>prepareNodeBundle({projectRoot:root,outputRoot:dest,sourceSha:"main"}),/SOURCE_SHA_INVALID/)}
+ finally{rmSync(base,{recursive:true,force:true})}
 });

@@ -104,7 +104,8 @@ function closeNextRuntimeDependencies(projectRoot,dest){
  return copied;
 }
 
-export function prepareNodeBundle({projectRoot,outputRoot,copyPublic=true}){
+export function prepareNodeBundle({projectRoot,outputRoot,copyPublic=true,sourceSha=null}){
+ if(sourceSha!==null&&!/^[0-9a-f]{40}$/.test(sourceSha))throw Error("SOURCE_SHA_INVALID");
  const root=realpathSync(resolve(projectRoot)),dest=resolve(outputRoot);
  if(under(root,dest)||under(dest,root))throw Error("STANDALONE_OUTPUT_MUST_BE_ISOLATED");
  const standalone=resolve(root,".next","standalone"),assets=resolve(root,".next","static"),pub=resolve(root,"public");
@@ -136,7 +137,7 @@ export function prepareNodeBundle({projectRoot,outputRoot,copyPublic=true}){
   const report={mode:"next-standalone-node",isolation:true,publicCopied:copyPublic,
    nodeModulesIncluded:true,hadExternalSymlinks:false,
    runtimeDependenciesMaterialized,
-   originalBuildUnchanged:true,productionReady:false,serverEntry:"server.js"};
+   originalBuildUnchanged:true,productionReady:false,serverEntry:"server.js",sourceSha};
   writeFileSync(join(dest,"lingxi-com-candidate-report.json"),JSON.stringify(report,null,2)+"\n");
   return report;
  }catch(err){rmSync(dest,{recursive:true,force:true});throw err}
@@ -149,7 +150,7 @@ async function main(args=process.argv.slice(2)){
  const output=opt(args,"--output"),project=opt(args,"--project");
  const tmp=realpathSync(process.env.RUNNER_TEMP);
  if(!output||!project||!under(tmp,resolve(output)))throw Error("COM_NODE_OUTPUT_MUST_BE_RUNNER_TEMP");
- const report=prepareNodeBundle({projectRoot:project,outputRoot:output});
+ const report=prepareNodeBundle({projectRoot:project,outputRoot:output,sourceSha:process.env.GITHUB_SHA||null});
  console.log(JSON.stringify(report));
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)

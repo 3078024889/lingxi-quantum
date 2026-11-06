@@ -8,7 +8,7 @@ mkdir -p "$dir/bundle/node_modules/next" "$dir/bundle/.next/static" "$dir/bundle
 printf '%s\n' "console.log('test');" > "$dir/bundle/server.js"
 printf '%s\n' 'x' > "$dir/bundle/.next/static/app.js"
 printf '%s\n' 'x' > "$dir/bundle/public/favicon.ico"
-printf '%s\n' '{"mode":"next-standalone-node","isolation":true,"productionReady":false,"hadExternalSymlinks":false,"nodeModulesIncluded":true,"publicCopied":true}' > "$dir/bundle/lingxi-com-candidate-report.json"
+printf '%s\n' '{"mode":"next-standalone-node","isolation":true,"productionReady":false,"hadExternalSymlinks":false,"nodeModulesIncluded":true,"publicCopied":true,"sourceSha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}' > "$dir/bundle/lingxi-com-candidate-report.json"
 tar -C "$dir/bundle" -czf "$dir/bundle.tar.gz" .
 sha=$(sha256sum "$dir/bundle.tar.gz" | cut -d' ' -f1)
 bash infra/com-node/install-preview.sh --verify "$dir/bundle.tar.gz" "$sha" |

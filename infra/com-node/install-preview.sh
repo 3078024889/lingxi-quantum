@@ -36,7 +36,8 @@ const fs=require("node:fs");
 const r=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
 if(r.mode!=="next-standalone-node"||r.isolation!==true||
    r.productionReady!==false||r.hadExternalSymlinks!==false||
-   r.nodeModulesIncluded!==true||r.publicCopied!==true)
+   r.nodeModulesIncluded!==true||r.publicCopied!==true||
+   !/^[a-f0-9]{40}$/.test(r.sourceSha||""))
   process.exit(1);
 NODE
 }
@@ -72,6 +73,8 @@ mkdir -p "$RELEASE"
 trap 'rm -rf "$RELEASE"' ERR
 unpack "$RELEASE"
 verify_dir "$RELEASE"
+BUNDLE_SHA=$(node -p 'require(process.argv[1]).sourceSha' "$RELEASE/lingxi-com-candidate-report.json")
+[[ "$BUNDLE_SHA" == "$SOURCE_SHA" ]] || die "RELEASE_SOURCE_SHA_MISMATCH"
 
 if ! id "$USER_NAME" >/dev/null 2>&1; then
  useradd --system --home-dir "$ROOT" --shell /usr/sbin/nologin "$USER_NAME"
