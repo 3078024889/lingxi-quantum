@@ -22,6 +22,11 @@ jobs:
           s=scripts/ops/globalsiai-notice-dual-host-cutover.sh
           grep -Fq 'SHA256=bcb466a235f55b4b5cb6d839b10fa16aff956bd255e68de20e1647c5a62f370e' "$c"
           grep -Fq 'PORT=4290' "$c"
+          grep -Fq 'MEM_AVAILABLE_KB=' "$c"
+          grep -Fq 'MemoryHigh=340M' "$c"
+          grep -Fq 'MemoryMax=450M' "$c"
+          grep -Fq 'max-old-space-size=256' "$c"
+          grep -Fq 'GLOBALSIAI_NOTICE_MEMORY_BUDGET_ABORT_NEED_480M_AVAILABLE' "$c"
           grep -Fq 'GLOBALSIAI_NOTICE_4290_ACCEPTED_4289_AND_PUBLIC_NGINX_UNCHANGED' "$c"
           grep -Fq 'GLOBALSIAI_NOTICE_MAINLAND_ICP_LEAK_TO_COM_ABORT' "$c"
           grep -Fq 'GLOBALSIAI_BOTH_MARKET_DOMAINS_NOTICE_4290_LIVE_ACCEPTED' "$s"
