@@ -1,0 +1,77 @@
+name: com vinext production build probe (no deploy)
+
+on:
+  push:
+    branches:
+      - infra/com-cloudflare-readiness-20261106
+    paths:
+      - '.github/workflows/com-vinext-build-probe.yml'
+      - 'scripts/cloudflare/**'
+      - 'tests/cloudflare/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: com-vinext-build-probe
+  cancel-in-progress: true
+
+jobs:
+  build-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout isolated candidate without deployment credentials
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Install project pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Use project Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen original dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Enforce no-credential migration target
+        run: |
+          test -z "${CLOUDFLARE_API_TOKEN:-}"
+          test -z "${VERCEL_TOKEN:-}"
+          node --test tests/cloudflare/probe-com-origins.test.mjs
+          node scripts/cloudflare/audit-com-readiness.mjs
+      - name: Ephemeral official vinext init (CI runner only)
+        run: |
+          set -euo pipefail
+          npx --yes vinext@1.3.1 init \
+            --platform=cloudflare \
+            --name lingxifield-com-probe \
+            --cdn-cache=none \
+            --data-cache=none \
+            --image-optimization=none \
+            --skip-check
+          test -f cloudflare.config.ts
+          test -f vite.config.ts
+          node -e 'const p=require("./package.json");if(!p.scripts["build:vinext"])process.exit(1)'
+      - name: Build actual Cloudflare Worker output without deployment
+        env:
+          NODE_OPTIONS: "--max-old-space-size=6144"
+        run: |
+          set -euo pipefail
+          pnpm run build:vinext
+      - name: Report build outputs for size verification
+        if: always()
+        run: |
+          echo "## .com vinext build probe" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Exact source commit: \`$GITHUB_SHA\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- No credentials, Cloudflare deployment, DNS, Vercel deployment or .cn modification" >> "$GITHUB_STEP_SUMMARY"
+          for p in dist .cloudflare .vinext; do
+            if test -d "$p"; then
+              du -sh "$p" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
