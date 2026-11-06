@@ -26,9 +26,16 @@ jobs:
           ]
           count=0
           for name in files:
-              data=pathlib.Path(name).read_text()
-              for m in re.finditer(r"<<.PY.\\n(.*?)\\nPY",data,re.S):
-                  compile(m.group(1),name+":inline","exec")
+              lines=pathlib.Path(name).read_text().splitlines()
+              for index,line in enumerate(lines):
+                  if not (line.strip().endswith("<<\x27PY\x27") or line.strip().endswith("<<PY")):
+                      continue
+                  end=index+1
+                  while end < len(lines) and lines[end].strip() != "PY":
+                      end+=1
+                  if end == len(lines):
+                      raise SystemExit("UNTERMINATED_PYTHON_HEREDOC")
+                  compile(chr(10).join(lines[index+1:end]),name+":inline","exec")
                   count+=1
           if count < 3:
               raise SystemExit("EXPECTED_INLINE_PYTHON_HEREDOC_MISSING")
