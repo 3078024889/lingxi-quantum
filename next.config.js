@@ -27,7 +27,16 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
-  outputFileTracingIncludes:{'/api/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm'],'/api/internal/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm']},
+  // The ECS .cn standalone process spawns a separate Node process for engine probes.
+  // These runtime imports are intentionally dynamic and cannot be discovered by nft.
+  // Copy only lightweight document/web dependencies, never heavyweight Python/ML packages.
+  outputFileTracingIncludes:{'/api/tools/engine/health':[
+    './node_modules/mammoth/**/*',
+    './node_modules/exceljs/**/*',
+    './node_modules/@mozilla/readability/**/*',
+    './node_modules/dompurify/**/*',
+    './node_modules/turndown/**/*',
+  ],'/api/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm'],'/api/internal/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm']},
   images: {
     formats: ["image/avif", "image/webp"],
   },
