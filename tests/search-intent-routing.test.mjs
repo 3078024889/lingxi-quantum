@@ -56,8 +56,28 @@ test("homepage retains SASI handoff and removes directory detours for high-inten
   assert.match(home,/resolvePublicSearchIntent\(v\)/);
   assert.match(home,/direct&&direct!=="\/sasi"/);
   assert.match(home,/if\(url\.pathname\.startsWith\("\/sasi"\)\)/);
-  for(const href of ["/tools/pdf-merge-split","/tools/ocr","/tools/pdf-compress","/tools/temp-mail"])
+  for(const href of ["/tools/pdf-merge-split","/tools/pdf-ocr","/tools/pdf-compress","/tools/temp-mail"])
     assert(faq.includes('href:"'+href+'"'),"missing deep link "+href);
   // Compare pages remain evidence-based; no invented prices or rankings.
   assert(faq.includes('href:"/siai"'));
+});
+
+test("homepage SIAI discovery replaces duplicate cards with 3 localized, concrete decisions",()=>{
+ const cards=read("components/SiaiSearchDiscovery.tsx");
+ const ranking=read("lib/siai-search-discovery.ts");
+ assert.match(cards,/HOME_TASKS:Record<LingxiLang,HomeCopy>/);
+ assert.match(cards,/homeCopy\.tasks\.map/);
+ assert.match(cards,/copy\.topics\.map/);
+ assert.match(cards,/data-siai-search-intents=\{variant\}/);
+ for(const route of [
+   "/siai?intent=cost#siai-cost-estimator",
+   "/siai#siai-market",
+   "/siai?intent=free#siai-market"
+ ]) assert(cards.includes(route),route);
+ for(const lang of ["zh","en","ja","ko","fr","de","es","pt","ar"])
+   assert(cards.includes("\n "+lang+":{"),"missing translation "+lang);
+ assert.match(ranking,/全球AI行情平台/);
+ const faq=read("components/HomeSeoAnswers.tsx");
+ assert(faq.includes('href:"/siai?intent=cost#siai-cost-estimator"'));
+ assert(faq.includes('href:"/siai?intent=free#siai-market"'));
 });
