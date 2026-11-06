@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""LINGXIFIELD CN staging release downloader. No service, DNS, DB, or config mutation.
+"""LINGXIFIELD CN staging release downloader (Python >=3.6). No service, DNS, DB, or config mutation.
 
 Uses HTTPS byte ranges and safe resumable fixed-size chunks. The ONLY output target is
 /root/lingxifield-cn-candidate-6b391150/cn-ecs-standalone.tar.gz, and it is atomically
 replaced only after its SHA256 matches the immutable GitHub release asset digest.
 """
-from __future__ import annotations
-
 import argparse
 import concurrent.futures
 import hashlib
@@ -42,7 +40,10 @@ def ipv4_only(host, port, *args, **kwargs):
 def hexsha(path: Path):
     hasher = hashlib.sha256()
     with path.open("rb") as stream:
-        while block := stream.read(1024 * 1024):
+        while True:
+            block = stream.read(1024 * 1024)
+            if not block:
+                break
             hasher.update(block)
     return hasher.hexdigest()
 
@@ -153,8 +154,13 @@ def run_transfer(*, output: Path, total: int, expected_sha: str, sources, worker
                             if not data:
                                 break
                             dest.write(data)
-                if part.stat().st_size > span:
+                new_size = part.stat().st_size
+                if new_size > span:
                     raise RuntimeError("SEGMENT_OVERRUN")
+                if new_size == span:
+                    with lock:
+                        done.add(index)
+                    return
             except Exception:
                 # Keep fully written bytes for resume on next attempt or execution.
                 time.sleep(min(2 + attempt, 10))
@@ -173,13 +179,17 @@ def run_transfer(*, output: Path, total: int, expected_sha: str, sources, worker
             for i in range(workers):
                 part = folder / f"part-{i:02d}"
                 with part.open("rb") as src:
-                    while data := src.read(1024 * 1024):
+                    while True:
+                        data = src.read(1024 * 1024)
+                        if not data:
+                            break
                         digest.update(data)
                         dest.write(data)
             dest.flush()
             os.fsync(dest.fileno())
         if assembled.stat().st_size != total or digest.hexdigest().lower() != expected_sha.lower():
-            assembled.unlink(missing_ok=True)
+            if assembled.exists():
+                assembled.unlink()
             raise RuntimeError("OFFICIAL_GITHUB_SHA256_OR_SIZE_MISMATCH_ABORT_NO_INSTALL")
         os.replace(assembled, output)
         shutil.rmtree(folder)
