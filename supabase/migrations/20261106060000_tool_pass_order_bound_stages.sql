@@ -95,7 +95,7 @@ begin
   'document-translate','document-ticket','document-normalize',
   'media-import','media-transcribe','media-translate','media-tts',
   'free-dubbing-preview','website-diagnose','mobile-file',
-  'food-calculate','temp-mail-batch','burn-file-prepare','burn-file-complete'
+  'food-analysis','food-calculate','temp-mail-batch','burn-file-prepare','burn-file-complete'
  ) then return jsonb_build_object('ok',false,'error','INVALID_EXECUTION_STAGE');end if;
  v_receipt:=public.lingxi_redeem_tool_use(
    p_request_id,p_user_id,p_tool_slug,p_operation_id
