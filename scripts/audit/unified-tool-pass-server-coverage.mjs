@@ -31,6 +31,7 @@ const CRITICAL={
  "mobile-file":"mobile-file"
 };
 const REMOTE_CALL={
+ "food/analysis":"await resolveFoodMeal(",
  "document-translate":"await resilientText(",
  "document/normalize":"await convertDocumentToPdf(",
  "document/ticket":"const gateway=safeGateway(",
