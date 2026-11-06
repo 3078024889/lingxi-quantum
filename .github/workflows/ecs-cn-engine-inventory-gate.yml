@@ -1,0 +1,32 @@
+name: CN staging engine inventory safety gate (read only)
+on:
+  push:
+    branches: [feature/ecs-cn-poststage-probes-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  syntax-and-safety:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Validate offline-only non-mutating inventory
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --check scripts/ops/ecs-cn-engine-dependency-inventory.mjs
+          node scripts/ops/ecs-cn-engine-dependency-inventory.mjs >/tmp/cn-inventory-report
+          grep -q 'CN_INVENTORY_READ_ONLY=PASS' /tmp/cn-inventory-report
+          grep -q 'PYTHON_INTERPRETER=' /tmp/cn-inventory-report
+          grep -q 'BINARY_FFMPEG=' /tmp/cn-inventory-report
+          if grep -Eq '(sb_secret_|SUPABASE_SERVICE_ROLE_KEY=|R2_SECRET_ACCESS_KEY=|X-Amz-Signature=)' /tmp/cn-inventory-report; then
+            echo 'SENSITIVE_CONTENT_DETECTED'
+            exit 1
+          fi
+          echo CN_ENGINE_INVENTORY_SYNTAX_AND_OFFLINE_SAFETY_PASS
