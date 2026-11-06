@@ -20,10 +20,20 @@ if(env.NEXT_PUBLIC_SITE_URL!=="https://lingxifield.cn"||
  console.log("CN_STAGE_ONLY_PROJECT_GUARD_FAILED");process.exit(4);
 }
 const ep=new URL(env.R2_ENDPOINT);
-if(ep.protocol!=="https:"||ep.username||ep.password||ep.pathname!=="/"||ep.search||ep.hash
-   ||ep.hostname!==env.R2_ACCOUNT_ID+".r2.cloudflarestorage.com"){
+const id=env.R2_ACCOUNT_ID.trim().toLowerCase();
+const hosts=[id+".r2.cloudflarestorage.com",
+ ...["eu","us","fedramp"].map(region=>id+"."+region+".r2.cloudflarestorage.com")];
+const endpointOk=ep.protocol==="https:"&&!ep.username&&!ep.password&&
+ (!ep.port||ep.port==="443")&&ep.pathname==="/"&&!ep.search&&!ep.hash&&
+ hosts.includes(ep.hostname);
+if(!endpointOk){
+ const hostMatches=hosts.includes(ep.hostname);
+ console.log("R2_ENDPOINT_HOST_ACCOUNT_MATCH="+hostMatches);
+ console.log("R2_ENDPOINT_ORIGIN_FORM_VALID="+
+  (ep.protocol==="https:"&&!ep.username&&!ep.password&&ep.pathname==="/"&&!ep.search&&!ep.hash));
  console.log("R2_ENDPOINT_ACCOUNT_VALIDATION_FAILED");process.exit(5);
 }
+console.log("R2_ENDPOINT_CANONICAL_HOST_VALID=true");
 const bucket=env.R2_BUCKET_PRIVATE_BURN;
 if(!/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(bucket)||bucket.includes("..")){
  console.log("R2_BUCKET_FORMAT_INVALID");process.exit(5);

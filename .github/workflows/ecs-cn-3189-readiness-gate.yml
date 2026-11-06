@@ -19,6 +19,11 @@ jobs:
         run: |
           set -Eeuo pipefail
           node --check scripts/ops/ecs-cn-3189-live-readiness.mjs
+          node --check scripts/ops/ecs-cn-runtime-triage.mjs
+          test "$(node scripts/ops/ecs-cn-runtime-triage.mjs 2>&1 || true)" = CN_TRIAGE_REQUIRES_READ_ONLY_FLAG
+          grep -Fq 'CN_R2_ENDPOINT_KIND=' scripts/ops/ecs-cn-runtime-triage.mjs
+          grep -Fq 'CN_SIAI_FIRST' scripts/ops/ecs-cn-runtime-triage.mjs
+          grep -Fq 'CN_DOC_POST_CONVERT_NO_AUTH' scripts/ops/ecs-cn-runtime-triage.mjs
           s="$(node scripts/ops/ecs-cn-3189-live-readiness.mjs || true)"
           test "$s" = CN_STAGE_READINESS_REQUIRES_EXPLICIT_READ_ONLY_FLAG
           grep -q 'CN_STAGE_JOBS_NO_AUTH' scripts/ops/ecs-cn-3189-live-readiness.mjs
