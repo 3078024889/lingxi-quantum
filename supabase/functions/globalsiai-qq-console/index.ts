@@ -13,7 +13,7 @@ const names:Record<QQGroupId,string>={
 const announcements:Record<QQGroupId,string>={
   "1074475201":"欢迎来到灵犀场实用工具交流群！交流 PDF 编辑、OCR、图片与视频处理。\n国际站：https://lingxifield.com\n国内站：https://lingxifield.cn\n请勿刷屏、索取账户密钥或发布诈骗广告。",
   "1072178710":"欢迎来到 SASI 创作与 SIAI 工具交流群！分享脚本、分镜、配音、视频创作与模型比较。\n国际站：https://lingxifield.com\n国内站：https://lingxifield.cn\n请勿发布虚假价格和收益承诺。",
-  "601549887":"原 WB3 群逐步转型为全球 SIAI 排行榜社区，交流全球 SI/AI 模型、厂商、价格、地区与商用规则。\n国际站：https://lingxifield.com/siai\n国内站：https://lingxifield.cn/siai\n欢迎老群友提出建议。",
+  "601549887":"原 WB3 群逐步转型为全球 SIAI 排行榜社区，交流全球 SI/AI 模型、厂商、价格、地区与商用规则。\n国际站：https://lingxifield.com/siai\n国内站：https://lingxifield.cn/siai\n可以提出资料补充与改进建议。",
 };
 const headings=["今日工具发现","实用教程","能力与限制比较","创作实践","晚间交流"];
 function localDay(query:string|null):string{
