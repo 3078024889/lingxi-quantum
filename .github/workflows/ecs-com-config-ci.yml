@@ -1,0 +1,24 @@
+name: ECS COM nginx staged config static audit
+on:
+  push:
+    branches: [feature/ecs-com-dual-domain-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  script-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Validate staged origin configuration script
+        run: |
+          set -euo pipefail
+          bash -n scripts/ops/lingxifield-com-ecs-nginx.sh
+          grep -q 'COM_CONFIG_ROLLBACK' scripts/ops/lingxifield-com-ecs-nginx.sh
+          grep -q 'LINGXIFIELD_COM_LOCAL_HTTPS_SUCCESS' scripts/ops/lingxifield-com-ecs-nginx.sh
+          grep -q 'proxy_pass http://127.0.0.1:3188;' scripts/ops/lingxifield-com-ecs-nginx.sh
+          grep -q "certbot certonly --webroot" scripts/ops/lingxifield-com-ecs-nginx.sh
+          echo COM_NGINX_STAGING_SYNTAX_AND_GUARDS_OK
