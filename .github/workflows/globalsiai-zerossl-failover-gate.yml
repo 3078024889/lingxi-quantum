@@ -42,7 +42,7 @@ jobs:
           import pathlib,re,sys
           t=pathlib.Path(sys.argv[1])
           s=pathlib.Path('scripts/ops/globalsiai-ecs-cn-zerossl-public-cutover.sh').read_text()
-          blocks=re.findall(r'cat (?:>>|>)"\$VHOST" <<EOF\n(.*?)\nEOF',s,re.S)
+          blocks=re.findall(r'cat\s+>{1,2}\s*"\$VHOST"\s*<<EOF\n(.*?)\nEOF',s,re.S)
           assert len(blocks)==2,"missing source HTTP + HTTPS vhosts"
           body='\n'.join(blocks)
           for key,value in {'$WEBROOT':str(t/'acme'),'$CERTDIR':str(t/'cert'),'$PORT':'4289','$DOMAIN':'globalsiai.cn'}.items():
