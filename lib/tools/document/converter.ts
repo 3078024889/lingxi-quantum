@@ -64,6 +64,10 @@ export async function documentConverterReadiness(){
  }
  return{ready:localSignedGatewayConfigured()||gotenberg||custom||convertApi,formats:DOCUMENT_INPUT_FORMATS,families:["PDF","Word","PowerPoint","Excel","OpenDocument"],localPdf:true};
 }
+async function viaLocalGateway(file:File,signal:AbortSignal){
+ const response=await localSignedGatewayResponse(file,signal);
+ return response?await limitedBody(response):null;
+}
 async function viaGotenberg(file:File,signal:AbortSignal){
  const base=gotenbergBase();if(!base)return null;
  const fd=new FormData();fd.set("files",file,file.name);
@@ -118,7 +122,7 @@ export async function convertDocumentToPdf(file:File){
  for(const provider of providers){
   try{
    if(controller.signal.aborted)throw new Error("DOCUMENT_CONVERSION_TIMEOUT");
-   const bytes=await (provider==="local-gateway"?(async()=>{const response=await localSignedGatewayResponse(file,controller.signal);return response?await limitedBody(response):null})():provider==="gotenberg"?await viaGotenberg(file,controller.signal):provider==="custom"?await viaCustom(file,ext,controller.signal):await viaConvertApi(file,ext,controller.signal););
+   const bytes=provider==="local-gateway"?await viaLocalGateway(file,controller.signal):provider==="gotenberg"?await viaGotenberg(file,controller.signal):provider==="custom"?await viaCustom(file,ext,controller.signal):await viaConvertApi(file,ext,controller.signal);
    if(!bytes)continue;
    if(!validPdf(bytes))throw new Error("DOCUMENT_CONVERSION_INVALID");
    return bytes;
