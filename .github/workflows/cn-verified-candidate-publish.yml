@@ -1,0 +1,52 @@
+name: CN verified ECS candidate publish (no deploy or domain switch)
+on:
+  push:
+    branches: [feature/cn-verified-candidate-release-20261106]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Verify exact successful standalone build and immutable package
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: 3078024889/lingxi-quantum
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          run=42183277533
+          sha=6b3911507707acdad37c03527e4c4013def95760
+          test "$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .conclusion)" = success
+          test "$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .head_sha)" = "$sha"
+          test "$(gh api "repos/$GH_REPO/actions/runs/$run" --jq .head_branch)" = feature/cn-standalone-package-fix-20261106
+          install -d /tmp/cn-verified-release
+          gh run download "$run" --repo "$GH_REPO" --name "cn-ecs-standalone-$sha" --dir /tmp/cn-verified-release
+          cd /tmp/cn-verified-release
+          sha256sum -c cn-ecs-standalone.sha256
+          bytes="$(stat -c %s cn-ecs-standalone.tar.gz)"
+          test "$bytes" -lt 1000000000
+          tar -tzf cn-ecs-standalone.tar.gz > archive-manifest.txt
+          grep -Fxq ./server.js archive-manifest.txt
+          grep -Fxq ./.next/BUILD_ID archive-manifest.txt
+          printf 'CN_PUBLISH_CHECKED_SHA=%s\n' "$sha"
+          printf 'CN_PUBLISH_ARCHIVE_SIZE_BYTES=%s\n' "$bytes"
+          echo CN_ARCHIVE_VERIFIED_NOT_DEPLOYED
+      - name: Publish pinned .cn staging candidate for ECS download
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: 3078024889/lingxi-quantum
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sha=6b3911507707acdad37c03527e4c4013def95760
+          tag=ecs-cn-candidate-20261106-6b391150
+          if gh release view "$tag" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo CN_RELEASE_ALREADY_EXISTS
+            exit 0
+          fi
+          cd /tmp/cn-verified-release
+          gh release create "$tag"             cn-ecs-standalone.tar.gz cn-ecs-standalone.sha256             --repo "$GH_REPO"             --target "$sha"             --prerelease             --title 'LINGXIFIELD CN 3189 staging candidate 6b391150'             --notes 'This immutable artifact passed Linux Next.js standalone build, 5 isolated Node module imports, local HTTP 200 public routes, and HTTP 401 unauthorized jobs. This release is NOT deployed to Aliyun ECS and NOT approved for 3188 production switch. Complete authenticated R2 lifecycle, SASI compute, real tool file delivery, payment/entitlement and rollback gates before cutover.'
+          echo CN_PRERELEASE_ASSET_PUBLISHED_NOT_PRODUCTION
