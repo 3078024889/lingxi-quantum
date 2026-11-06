@@ -48,7 +48,10 @@ function get(port,path,method="GET"){
  return new Promise((resolve,reject)=>{
   const req=http.request({hostname:"127.0.0.1",port,path,method,timeout:15000},res=>{
    const h=res.headers,parts=[];let size=0;
-   res.on("data",chunk=>{size+=chunk.length;if(size>32768){req.destroy(new Error("RESPONSE_TOO_LARGE"));return}parts.push(chunk)});
+   // Large /siai pages must not be flagged as failures or buffered into memory.
+   if(path==="/health"){
+    res.on("data",chunk=>{size+=chunk.length;if(size>32768){req.destroy(new Error("HEALTH_RESPONSE_TOO_LARGE"));return}parts.push(chunk)});
+   }else{res.resume()}
    res.on("end",()=>resolve({status:res.statusCode||0,headers:h,body:Buffer.concat(parts).toString("utf8")}));
    res.on("error",reject);
   });
