@@ -12,7 +12,8 @@ test('main homepage remains SASI and AI tools entry, and SIAI is a separate rout
  assert.match(market,/getSiaiDirectoryRows\(\)/);
  assert.match(catalog,/from "\.\.\/\.\.\/lingxifield-ai-market\//);
  assert.match(catalog,/getSiaiSourcePreviewRows/);
- assert.match(catalog,/curated\.length!==32\|\|rows\.length!==62/);
+ assert.match(catalog,/curatedIds\.size!==curated\.length/);
+ assert.match(catalog,/new Set\(rows\.map\(r=>r\.id\)\)\.size!==rows\.length/);
 });
 test('main SIAI ranking keeps Arabic RTL after removing redundant detail routes',async()=>{
  const [layout,ranking]=await Promise.all([root('app/layout.tsx'),root('components/SiaiRankingHome.tsx')]);

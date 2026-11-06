@@ -363,7 +363,10 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
   if(grip!=="move")e.preventDefault();e.stopPropagation();
   // Never downgrade an active corner resize to "move" during bubbling.
   const prior=gestureRef.current;
-  if(grip==="move"&&prior?.id===id&&prior.pointerId===e.pointerId&&prior.grip!=="move")return;
+  // Browser touch sends capture and bubble pointerdown for the same finger.
+  // Keep the original corner action and its start point on both passes.
+  if(prior?.id===id&&prior.pointerId===e.pointerId
+      &&prior.grip!=="move"&&(grip==="move"||e.pointerType==="touch"))return;
   beginGesture(id,grip,e.clientX,e.clientY,e.pointerId);
   if(gestureRef.current?.pointerId===e.pointerId)try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
  }
@@ -380,7 +383,8 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
    beginGesture(id,grip,t.clientX,t.clientY,current?.id===id?current.pointerId:-1);
  }
 gestureUpdate.current=(px,py,pid)=>{
- const g=gestureRef.current;if(!g||g.pointerId!==pid)return;
+ const g=gestureRef.current;
+ if(!g||g.pointerId!==pid)return;
  const o=g.origin,dx=(px-g.startX)/g.rect.width*100,dy=(py-g.startY)/g.rect.height*100;
  const clamp=(v:number,a:number,b:number)=>Math.max(a,Math.min(b,v));
  if(g.grip==="move"){const a=(o.angle||0)*Math.PI/180,c=Math.abs(Math.cos(a)),sn=Math.abs(Math.sin(a)),bw=c*o.w+sn*o.h*g.rect.height/g.rect.width,bh=sn*o.w*g.rect.width/g.rect.height+c*o.h;const cx=clamp(o.x+o.w/2+dx,bw/2,100-bw/2),cy=clamp(o.y+o.h/2+dy,bh/2,100-bh/2);patch(g.id,{x:cx-o.w/2,y:cy-o.h/2});return}
@@ -438,8 +442,18 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(t&&gesture?.id===o.id)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
   touchCornerRef.current=null;
  }}
- onPointerDown={e=>{if(editingTextId!==o.id){const grip=overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);if(grip)startGesture(e,o.id,grip)}}}
- onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){const grip=overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);if(grip)startTouchGesture(e,o.id,grip)}}}}
+ onPointerDown={e=>{if(editingTextId!==o.id){
+  // Chromium touch hit-testing can target the overlay rather than its visible
+  // corner button; use the same corner geometry in capture AND bubble phases.
+  const grip=(e.pointerType==="touch"?overlayTouchGrip(e.currentTarget,e.target,e.clientX,e.clientY):null)
+   ||overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);
+  if(grip)startGesture(e,o.id,grip);
+ }}}
+ onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){
+  const grip=overlayTouchGrip(e.currentTarget,e.target,t.clientX,t.clientY)
+   ||overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);
+  if(grip)startTouchGesture(e,o.id,grip);
+ }}}}
  onDoubleClick={e=>{if(o.kind==="text"){e.stopPropagation();setSelectedOverlayId(o.id);setEditingTextId(o.id)}}}
  onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==="Delete"||e.key==="Backspace"){e.preventDefault();if(o.nativeImageTarget)deleteNativeImage(o);else setOverlays(v=>v.filter(x=>x.id!==o.id))}else if(e.key==="Enter"&&o.kind==="text"){e.preventDefault();setEditingTextId(o.id)}}}
  className={"absolute z-[4] select-none border-2 "+(selectedOverlayId===o.id&&editingTextId!==o.id?"border-sky-500":"border-transparent")}

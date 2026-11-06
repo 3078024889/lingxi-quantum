@@ -1,0 +1,280 @@
+{
+  "batch": "B006",
+  "asOf": "2026-11-05",
+  "reviewState": "candidate",
+  "intakePaused": true,
+  "visibleToPublic": false,
+  "reviewNote": "官网入口及用途待编辑逐项核验；价格、额度、支付、地区、商用条款均不得推定或公开；修复纯中文厂商名在 ASCII slug 转换后成为“-”的分组错误",
+  "products": [
+    {
+      "id": "vidu",
+      "name": "Vidu",
+      "company": "生数科技",
+      "category": "视频生成",
+      "website": "https://www.vidu.com/",
+      "evidenceUrl": "https://www.vidu.com/",
+      "tasks": [
+        "文生视频",
+        "图生视频",
+        "视频生成"
+      ],
+      "keywords": [
+        "Vidu AI工具",
+        "Vidu价格",
+        "文生视频工具",
+        "图生视频工具",
+        "视频生成工具"
+      ],
+      "publisherGroupId": "shengshu-technology",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.vidu.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "pixverse",
+      "name": "PixVerse",
+      "company": "PixVerse",
+      "category": "视频生成",
+      "website": "https://pixverse.ai/",
+      "evidenceUrl": "https://pixverse.ai/",
+      "tasks": [
+        "视频生成",
+        "图生视频",
+        "AI视频"
+      ],
+      "keywords": [
+        "PixVerse AI工具",
+        "PixVerse价格",
+        "视频生成工具",
+        "图生视频工具",
+        "AI视频工具"
+      ],
+      "publisherGroupId": "pixverse",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://pixverse.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "higgsfield",
+      "name": "Higgsfield",
+      "company": "Higgsfield",
+      "category": "视频生成",
+      "website": "https://higgsfield.ai/",
+      "evidenceUrl": "https://higgsfield.ai/",
+      "tasks": [
+        "视频生成",
+        "视频特效",
+        "视觉创作"
+      ],
+      "keywords": [
+        "Higgsfield AI工具",
+        "Higgsfield价格",
+        "视频生成工具",
+        "视频特效工具",
+        "视觉创作工具"
+      ],
+      "publisherGroupId": "higgsfield",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://higgsfield.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "hedra",
+      "name": "Hedra",
+      "company": "Hedra",
+      "category": "数字人视频",
+      "website": "https://www.hedra.com/",
+      "evidenceUrl": "https://www.hedra.com/",
+      "tasks": [
+        "数字人视频",
+        "角色视频",
+        "视频生成"
+      ],
+      "keywords": [
+        "Hedra AI工具",
+        "Hedra价格",
+        "数字人视频工具",
+        "角色视频工具",
+        "视频生成工具"
+      ],
+      "publisherGroupId": "hedra",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.hedra.com/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "invideo-ai",
+      "name": "invideo AI",
+      "company": "invideo",
+      "category": "视频生成",
+      "website": "https://invideo.io/ai/",
+      "evidenceUrl": "https://invideo.io/ai/",
+      "tasks": [
+        "脚本转视频",
+        "视频生成",
+        "视频剪辑"
+      ],
+      "keywords": [
+        "invideo AI AI工具",
+        "invideo AI价格",
+        "脚本转视频工具",
+        "视频生成工具",
+        "视频剪辑工具"
+      ],
+      "publisherGroupId": "invideo",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://invideo.io/ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "veed",
+      "name": "VEED",
+      "company": "VEED",
+      "category": "视频剪辑",
+      "website": "https://www.veed.io/",
+      "evidenceUrl": "https://www.veed.io/",
+      "tasks": [
+        "视频剪辑",
+        "字幕制作",
+        "视频编辑"
+      ],
+      "keywords": [
+        "VEED AI工具",
+        "VEED价格",
+        "视频剪辑工具",
+        "字幕制作工具",
+        "视频编辑工具"
+      ],
+      "publisherGroupId": "veed",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.veed.io/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "opusclip",
+      "name": "OpusClip",
+      "company": "OpusClip",
+      "category": "视频剪辑",
+      "website": "https://www.opus.pro/",
+      "evidenceUrl": "https://www.opus.pro/",
+      "tasks": [
+        "长视频转短视频",
+        "短视频剪辑",
+        "视频编辑"
+      ],
+      "keywords": [
+        "OpusClip AI工具",
+        "OpusClip价格",
+        "长视频转短视频工具",
+        "短视频剪辑工具",
+        "视频编辑工具"
+      ],
+      "publisherGroupId": "opusclip",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.opus.pro/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "captions",
+      "name": "Captions",
+      "company": "Captions",
+      "category": "视频剪辑",
+      "website": "https://www.captions.ai/",
+      "evidenceUrl": "https://www.captions.ai/",
+      "tasks": [
+        "视频字幕",
+        "视频编辑",
+        "配音"
+      ],
+      "keywords": [
+        "Captions AI工具",
+        "Captions价格",
+        "视频字幕工具",
+        "视频编辑工具",
+        "配音工具"
+      ],
+      "publisherGroupId": "captions",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://www.captions.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "pictory",
+      "name": "Pictory",
+      "company": "Pictory",
+      "category": "视频生成",
+      "website": "https://pictory.ai/",
+      "evidenceUrl": "https://pictory.ai/",
+      "tasks": [
+        "文本转视频",
+        "视频制作",
+        "字幕"
+      ],
+      "keywords": [
+        "Pictory AI工具",
+        "Pictory价格",
+        "文本转视频工具",
+        "视频制作工具",
+        "字幕工具"
+      ],
+      "publisherGroupId": "pictory",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://pictory.ai/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    },
+    {
+      "id": "ltx-studio",
+      "name": "LTX Studio",
+      "company": "Lightricks",
+      "category": "视频生成",
+      "website": "https://ltx.studio/",
+      "evidenceUrl": "https://ltx.studio/",
+      "tasks": [
+        "故事分镜",
+        "视频生成",
+        "角色一致性"
+      ],
+      "keywords": [
+        "LTX Studio AI工具",
+        "LTX Studio价格",
+        "故事分镜工具",
+        "视频生成工具",
+        "角色一致性工具"
+      ],
+      "publisherGroupId": "lightricks",
+      "aliases": [],
+      "discoveredAt": "2026-11-05",
+      "discoverySource": "https://ltx.studio/",
+      "verifiedFacts": {},
+      "reviewed": false,
+      "publishApproved": false
+    }
+  ]
+}

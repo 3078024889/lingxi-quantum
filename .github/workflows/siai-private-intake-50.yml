@@ -1,0 +1,31 @@
+name: SIAI Private 50-Candidate Integrity
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lingxifield-ai-market/data/company-intake/**"
+      - "tests/siai-private-intake-50.test.mjs"
+      - ".github/workflows/siai-private-intake-50.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: unapproved-candidates-and-source-evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+      - name: Audit private intake and published-route isolation
+        run: node --test tests/siai-private-intake-50.test.mjs

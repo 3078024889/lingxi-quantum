@@ -50,30 +50,33 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   });
   expect(target).toBe(true);
  }
+ const stage=page.getByTestId("pdf-stage");
+ const normalizedWidth=async()=>{
+  const [overlay,pageBox]=await Promise.all([item.boundingBox(),stage.boundingBox()]);
+  return overlay&&pageBox&&pageBox.width>0?overlay.width/pageBox.width:0;
+ };
  const before=await item.boundingBox(),r=await grip.boundingBox();
  expect(before).not.toBeNull();expect(r).not.toBeNull();
- if(mobile)await page.evaluate(()=>{
-  // Keep evidence of *real CDP touch events* for failed mobile sessions;
-  // never use scripted CSS manipulation as a substitute for dragging.
-  const events:Array<{type:string;target:string;x:number;y:number}>=[];
-  (window as Window&{__pdfTouchDiagnostics?:typeof events}).__pdfTouchDiagnostics=events;
-  for(const type of ["pointerdown","touchstart","pointermove","touchmove","pointercancel","touchend"]){
-   document.addEventListener(type,event=>{
-    if(events.length>=45)return;
-    const e=event as PointerEvent&TouchEvent;
-    const t=e.changedTouches?.[0];
-    const target=event.target instanceof Element?event.target.closest("[data-testid]"):null;
-    events.push({type,target:target?.getAttribute("data-testid")||"other",x:t?.clientX??e.clientX??-1,y:t?.clientY??e.clientY??-1});
-   },{capture:true,passive:true});
-  }
- });
+ const beforeRelative=await normalizedWidth();
  await dragGesture(page,r!.x+r!.width/2,r!.y+r!.height/2,55,18,mobile);
- if(mobile&&(await item.boundingBox())!.width<=before!.width+6){
-  const diagnostic=await page.evaluate(()=>({events:(window as Window&{__pdfTouchDiagnostics?:unknown[]}).__pdfTouchDiagnostics||[],
-   overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style")||""}));
-  console.log("PDF_MOBILE_GESTURE_TRACE",JSON.stringify(diagnostic));
+ // A mobile viewport may relayout while the finger is moving. Verify that
+ // the actual overlay grows relative to the PDF page, not merely its pixels.
+ await expect.poll(normalizedWidth,{timeout:10000}).toBeGreaterThan(beforeRelative+0.02);
+ if(mobile){
+  // Adversarial browser hit-test regression: the same finger lands at the
+  // visible corner, but Chromium selects its ancestor overlay instead of the
+  // 44px grip. Only disable hit-testing on the grip for this test, never the
+  // user's touch events or the real resize assertion.
+  const widthBeforeRetarget=await normalizedWidth();
+  await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents="none"});
+  const target=await grip.boundingBox();expect(target).not.toBeNull();
+  const x=target!.x+target!.width/2-2,y=target!.y+target!.height/2-2;
+  const hit=await page.evaluate(({x,y})=>document.elementFromPoint(x,y)?.closest('[data-testid="pdf-overlay"]')?.getAttribute("data-testid")||null,{x,y});
+  expect(hit).toBe("pdf-overlay");
+  await dragGesture(page,x,y,35,12,true);
+  await expect.poll(normalizedWidth,{timeout:10000}).toBeGreaterThan(widthBeforeRetarget+0.012);
+  await grip.evaluate(el=>{(el as HTMLElement).style.pointerEvents=""});
  }
- await expect.poll(async()=>(await item.boundingBox())?.width||0,{timeout:10000}).toBeGreaterThan(before!.width+6);
  const rotate=page.getByTestId("pdf-grip-rotate");
  await rotate.scrollIntoViewIfNeeded();await expect(rotate).toBeVisible();
  const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
