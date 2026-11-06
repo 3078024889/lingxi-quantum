@@ -95,6 +95,7 @@ export function main(args=process.argv.slice(2)){
   const flagged=report.routes.filter(r=>r.signals.length);
   console.log(JSON.stringify({apiRoutes:report.apiRoutes,signaledRoutes:report.signaledRoutes,
     counts:report.counts,unresolvedImportCount:report.unresolvedImportCount,
+    nativeSharpRoutes:flagged.filter(r=>r.signals.some(s=>s.kind==='native_sharp')).map(r=>r.route),
     examples:flagged.slice(0,12).map(r=>({route:r.route,kinds:[...new Set(r.signals.map(s=>s.kind))]})),
     releaseReady:report.releaseReady},null,2));
   return args.includes("--require-no-native")&&report.signaledRoutes>0?1:0;
