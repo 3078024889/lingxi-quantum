@@ -1,0 +1,43 @@
+name: ECS CN isolated runtime + secret-safe import audit (no deployment)
+on:
+  push:
+    branches: [feature/ecs-cn-runtime-closure-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  script-safety:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+      - name: Check script syntax and read-only gating
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n scripts/ops/ecs-cn-pull-env.sh
+          bash -n scripts/ops/ecs-cn-stage.sh
+          node --check scripts/ops/ecs-cn-env-audit.cjs
+          grep -Fq 'EnvironmentFile=/etc/lingxifield/production.env' infra/selfhost/lingxifield-cn-stage.service
+          grep -Fq '127.0.0.1:3189' scripts/ops/ecs-cn-stage.sh
+          if grep -E 'systemctl (reload|restart) (nginx|lingxifield-ecs)' scripts/ops/ecs-cn-pull-env.sh scripts/ops/ecs-cn-stage.sh; then
+            echo '::error::Unexpected public production restart'
+            exit 1
+          fi
+          printf '%s\n' 'NEXT_PUBLIC_SUPABASE_URL="https://sxsgdpqojepgbbrxrzlq.supabase.co"' \
+            'NEXT_PUBLIC_SUPABASE_ANON_KEY="dummy_public_key"' \
+            'SUPABASE_SERVICE_ROLE_KEY="dummy_admin_key"' > /tmp/audit-env
+          node scripts/ops/ecs-cn-env-audit.cjs /tmp/audit-env > /tmp/audit-out
+          grep -q 'browserAuth: PRESENT_NOT_FUNCTIONALLY_VERIFIED' /tmp/audit-out
+          grep -q 'databaseAdmin: PRESENT_NOT_FUNCTIONALLY_VERIFIED' /tmp/audit-out
+          grep -q 'privateR2: MISSING' /tmp/audit-out
+          if grep -q 'dummy_admin_key' /tmp/audit-out; then
+            echo '::error::Audit leaked sample key'
+            exit 1
+          fi
+          echo 'CN_RUNTIME_GUARDS_PASS'
