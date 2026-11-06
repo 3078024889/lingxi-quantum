@@ -1,0 +1,27 @@
+name: CN document gateway loopback bridge source gate (no deploy)
+on:
+  push:
+    branches: [fix/cn-doc-gateway-loopback-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bridge-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Check strict HTTPS origin, loopback-only binding and syntax
+        run: |
+          set -Eeuo pipefail
+          node --check scripts/ops/ecs-cn-doc-gateway-loopback.mjs
+          node scripts/ops/ecs-cn-doc-gateway-loopback.mjs --self-test
+          grep -Fq 'LISTEN_HOST = "127.0.0.1"' scripts/ops/ecs-cn-doc-gateway-loopback.mjs
+          grep -Fq 'rejectUnauthorized: true' scripts/ops/ecs-cn-doc-gateway-loopback.mjs
+          grep -Fq 'x-lingxifield-token' scripts/ops/ecs-cn-doc-gateway-loopback.mjs
+          echo CN_DOC_BRIDGE_SOURCE_GATE_PASS
