@@ -5,7 +5,7 @@ on:
     branches:
       - infra/com-cloudflare-readiness-20261106
     paths:
-      - 'scripts/cloudflare/**'
+      - 'scripts/cloudflare/**'\n      - 'tests/cloudflare/**'
       - 'docs/deploy/com-cloudflare-vercel-fallback-20261106.md'
       - '.github/workflows/com-cloudflare-readiness.yml'
   workflow_dispatch:
@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - name: Read-only Cloudflare migration audit
+      - name: Verify dual-origin probe fail-closed behavior\n        run: node --test tests/cloudflare/probe-com-origins.test.mjs\n      - name: Read-only Cloudflare migration audit
         run: |
           node --version
           node scripts/cloudflare/audit-com-readiness.mjs --json "$RUNNER_TEMP/com-audit.json"
