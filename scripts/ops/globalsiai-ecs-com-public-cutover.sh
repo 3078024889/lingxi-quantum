@@ -2,8 +2,8 @@
 # Publish globalsiai.com ONLY after its DNS points to ECS, without modifying .cn.
 set -Eeuo pipefail
 umask 077
-if [ "$#" != 1 ] || [ "$1" != "--publish-globalsiai-cn-only" ] || [ "$(id -u)" != 0 ]; then
-  echo "GLOBALSIAI_COM_PUBLIC_USAGE: bash script --publish-globalsiai-cn-only (root)"
+if [ "$#" != 1 ] || [ "$1" != "--publish-globalsiai-com-only" ] || [ "$(id -u)" != 0 ]; then
+  echo "GLOBALSIAI_COM_PUBLIC_USAGE: bash script --publish-globalsiai-com-only (root)"
   exit 2
 fi
 DOMAIN=globalsiai.com
