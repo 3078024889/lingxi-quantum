@@ -1,25 +1,33 @@
 #!/usr/bin/env bash
-# Operator-authorized 3189-only preproduction installer. No public domain switch.
+# CN 3189 ONLY: install the exact verified GitHub candidate, preserving public 3188.
+# Uses a pinned Python 3.6-compatible parallel downloader. No systemd unit overwrite.
 set -Eeuo pipefail
 umask 077
 if [ "$(id -u)" != 0 ] || [ "$#" != 1 ] || [ "$1" != "--apply-staging-candidate" ]; then
- echo "USE: bash ecs-cn-3189-bootstrap.sh --apply-staging-candidate (root only)"
- exit 2
+  echo "USAGE: bash ecs-cn-3189-bootstrap.sh --apply-staging-candidate (root only)"
+  exit 2
 fi
 NODE=/opt/lingxifield/runtime/node-24.19.0/bin/node
-BASE=https://raw.githubusercontent.com/3078024889/lingxi-quantum/14667c69e7169fc3538c3933cec0e5d493e79c13
-RELEASE=https://github.com/3078024889/lingxi-quantum/releases/download/ecs-cn-candidate-20261106-6b391150
+SCRIPT_URL=https://raw.githubusercontent.com/3078024889/lingxi-quantum/14667c69e7169fc3538c3933cec0e5d493e79c13/scripts/ops/ecs-cn-3189-safe-apply.sh
+DOWNLOAD_URL=https://raw.githubusercontent.com/3078024889/lingxi-quantum/bdd4a22e38b7cb6de8102fc7d9ab7b482c4b3f50/scripts/ops/ecs-cn-parallel-release-fetch.py
 DIR=/root/lingxifield-cn-candidate-6b391150
 INSTALLER="$DIR/ecs-cn-3189-safe-apply.sh"
-UNIT="$DIR/lingxifield-cn-stage.service"
+DOWNLOADER="$DIR/ecs-cn-parallel-release-fetch.py"
 ARCHIVE="$DIR/cn-ecs-standalone.tar.gz"
 CHECKSUM="$DIR/cn-ecs-standalone.sha256"
+HASH=b8dc6a113414eb1617035f40861b85fc99698e8cf44f829d27b7b7521f9bb858
 mkdir -p -m 700 "$DIR"
 test -x "$NODE"
-systemctl is-active --quiet lingxifield-ecs || { echo CN_PROD_INACTIVE_ABORT; exit 3; }
-systemctl is-active --quiet lingxifield-cn-stage || { echo CN_STAGE_INACTIVE_ABORT; exit 3; }
+systemctl is-active --quiet lingxifield-ecs || { echo CN_3188_PRODUCTION_NOT_ACTIVE_ABORT; exit 3; }
+systemctl is-active --quiet lingxifield-cn-stage || { echo CN_3189_STAGE_NOT_ACTIVE_ABORT; exit 3; }
 test -s /etc/lingxifield/staging.env
-# No secret values are printed. Stage financial switches must remain off.
+test "$(systemctl show -p WorkingDirectory --value lingxifield-cn-stage)" = "/opt/lingxifield/releases/cn-pr199" || {
+  echo CN_STAGE_WORKDIR_GUARD_FAILED; exit 3;
+}
+stage_env="$(systemctl show -p EnvironmentFiles --value lingxifield-cn-stage)"
+case "$stage_env" in *"/etc/lingxifield/staging.env"*) ;; *) echo CN_STAGE_ENV_GUARD_FAILED; exit 3;; esac
+stage_exec="$(systemctl show -p ExecStart --value lingxifield-cn-stage)"
+case "$stage_exec" in *"/opt/lingxifield/releases/cn-pr199/server.js"*) ;; *) echo CN_STAGE_EXEC_GUARD_FAILED; exit 3;; esac
 "$NODE" -e '
 const {readFileSync}=require("node:fs");
 const {parseEnv}=require("node:util");
@@ -27,43 +35,48 @@ const e=parseEnv(readFileSync("/etc/lingxifield/staging.env","utf8"));
 if(e.NEXT_PUBLIC_SITE_URL!=="https://lingxifield.cn"||
    e.NEXT_PUBLIC_SUPABASE_URL!=="https://sxsgdpqojepgbbrxrzlq.supabase.co"||
    ["ALIPAY_ENABLED","WECHAT_MINI_VPAY_TOPUPS_ENABLED","WECHAT_MINI_VPAY_TOOLS_ENABLED"].some(k=>e[k]!=="false"))
-  {console.log("CN_STAGING_ISOLATION_OR_PAYMENT_FLAGS_FAILED");process.exit(2)}
+ {console.log("CN_STAGING_ISOLATION_OR_PAYMENT_FLAGS_FAILED");process.exit(2)}
 console.log("CN_STAGING_SITE_SUPABASE_PAYMENT_GATES_PASS");
 '
-get_public(){
- local url="$1" dest="$2" budget="$3"
- if curl -fL --retry 2 --connect-timeout 20 --max-time "$budget" -o "$dest" "$url"; then return 0; fi
- curl -fL --retry 2 --connect-timeout 20 --max-time "$budget" -o "$dest" "https://gh-proxy.com/$url"
+get_small(){
+  local url="$1" dest="$2"
+  if curl -4 -fL --retry 3 --connect-timeout 20 --max-time 120 -o "$dest" "https://gh-proxy.com/$url"; then
+    return 0
+  fi
+  curl -4 -fL --retry 3 --connect-timeout 20 --max-time 120 -o "$dest" "$url"
 }
-echo "=== Download pinned 3189 safety installer ==="
-get_public "$BASE/scripts/ops/ecs-cn-3189-safe-apply.sh" "$INSTALLER" 120
-get_public "$BASE/infra/selfhost/lingxifield-cn-stage.service" "$UNIT" 120
-python3 - "$INSTALLER" "$UNIT" <<'PY'
+get_small "$SCRIPT_URL" "$INSTALLER"
+get_small "$DOWNLOAD_URL" "$DOWNLOADER"
+python3 - "$INSTALLER" "$DOWNLOADER" <<'PY'
 import hashlib,sys
+from pathlib import Path
 expected={
  "ecs-cn-3189-safe-apply.sh":"a5fd79b0a2f8118c36f062c38daf23dbc5123519",
- "lingxifield-cn-stage.service":"391f1f6cfde9b9b7c5c4e3e6d8102f7154e235d3"
+ "ecs-cn-parallel-release-fetch.py":"1691aad9715281da1328c038431bb0331424c7b7"
 }
-from pathlib import Path
-for arg in sys.argv[1:]:
- p=Path(arg); b=p.read_bytes()
- val=hashlib.sha1(b"blob "+str(len(b)).encode()+b"\0"+b).hexdigest()
- if val!=expected[p.name]: raise SystemExit("CN_RELEASE_OPERATOR_SOURCE_MISMATCH")
-print("CN_RELEASE_OPERATOR_SOURCE_VERIFIED")
+for name in sys.argv[1:]:
+ p=Path(name)
+ b=p.read_bytes()
+ sha=hashlib.sha1(b"blob "+str(len(b)).encode()+b"\0"+b).hexdigest()
+ if sha!=expected[p.name]:
+  raise SystemExit("CN_OPERATOR_SOURCE_MISMATCH")
+print("CN_OPERATOR_SOURCES_VERIFIED")
 PY
 bash -n "$INSTALLER"
-echo "=== Download immutable .cn candidate ==="
-get_public "$RELEASE/cn-ecs-standalone.sha256" "$CHECKSUM" 120
-get_public "$RELEASE/cn-ecs-standalone.tar.gz" "$ARCHIVE" 2400
-( cd "$DIR" && sha256sum -c cn-ecs-standalone.sha256 )
-test "$(stat -c %s "$ARCHIVE")" -lt 1000000000
-echo "=== Correct staging unit to independent env (no 3188 restart) ==="
-UNIT_TARGET=/etc/systemd/system/lingxifield-cn-stage.service
-test -s "$UNIT_TARGET" || { echo CN_STAGE_UNIT_NOT_PRESENT; exit 4; }
-cp -a "$UNIT_TARGET" "$DIR/previous-cn-stage-unit.service"
-install -m 644 "$UNIT" "$UNIT_TARGET"
-systemctl daemon-reload
-echo "=== Atomically install and verify 3189; rollback automatically on failure ==="
+python3 -m py_compile "$DOWNLOADER"
+printf '%s  %s\n' "$HASH" "cn-ecs-standalone.tar.gz" > "$CHECKSUM"
+if [ -s "$ARCHIVE" ] && (cd "$DIR" && sha256sum -c --status cn-ecs-standalone.sha256); then
+  echo CN_RELEASE_ARCHIVE_ALREADY_VERIFIED
+else
+  echo CN_RELEASE_PARALLEL_RESUME_STARTED
+  python3 "$DOWNLOADER" --workers 8
+fi
+(
+  cd "$DIR"
+  sha256sum -c cn-ecs-standalone.sha256
+)
+test "$(stat -c %s "$ARCHIVE")" -eq 863193911 || { echo CN_RELEASE_SIZE_MISMATCH; exit 4; }
+systemctl is-active --quiet lingxifield-ecs || { echo CN_PRODUCTION_CHANGED_ABORT; exit 5; }
+echo CN_STAGE_INSTALL_BEGIN_WITHOUT_UNIT_REPLACEMENT
 bash "$INSTALLER" "$ARCHIVE" "$CHECKSUM"
-echo "CN_3189_PACKAGE_APPLIED_FORMAL_3188_UNCHANGED"
-echo "CN_PUBLIC_DOMAIN_STILL_UNPROMOTED"
+echo CN_PUBLIC_DOMAIN_STILL_UNPROMOTED

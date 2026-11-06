@@ -7,30 +7,34 @@ permissions:
 jobs:
   syntax:
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - name: Verify safe script syntax and independent environment contract
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Validate cn-only bootstrap, stage unit and IPv4 preference
         shell: bash
         run: |
           set -Eeuo pipefail
-          bash -n scripts/ops/ecs-cn-3189-safe-apply.sh
           bash -n scripts/ops/ecs-cn-3189-bootstrap.sh
-          grep -Fq 'CN_STAGING_ISOLATION_OR_PAYMENT_FLAGS_FAILED' scripts/ops/ecs-cn-3189-bootstrap.sh
-          grep -Fq 'ALIPAY_ENABLED' scripts/ops/ecs-cn-3189-bootstrap.sh
+          bash -n scripts/ops/ecs-cn-3189-safe-apply.sh
+          ! grep -Fq 'install -m 644 "$UNIT" "$UNIT_TARGET"' scripts/ops/ecs-cn-3189-bootstrap.sh
+          grep -Fq 'CN_STAGE_ENV_GUARD_FAILED' scripts/ops/ecs-cn-3189-bootstrap.sh
+          grep -Fq 'CN_STAGE_EXEC_GUARD_FAILED' scripts/ops/ecs-cn-3189-bootstrap.sh
           grep -Fq 'CN_PUBLIC_DOMAIN_STILL_UNPROMOTED' scripts/ops/ecs-cn-3189-bootstrap.sh
-          grep -Fxq 'EnvironmentFile=/etc/lingxifield/staging.env' infra/selfhost/lingxifield-cn-stage.service
           grep -Fq 'CN_STAGE_USES_NONISOLATED_ENV_ABORT' scripts/ops/ecs-cn-3189-safe-apply.sh
           grep -Fq 'CN_PROD_STAGE_PATH_COLLISION_ABORT' scripts/ops/ecs-cn-3189-safe-apply.sh
           grep -Fq 'CN_STAGE_ROLLBACK_DONE_PRODUCTION_UNTOUCHED' scripts/ops/ecs-cn-3189-safe-apply.sh
-          echo CN_SAFE_STAGE_INSTALL_STATIC_GATES_PASS
-      - name: Test exact downloader using Python 3.6 with offline local-range server
+          grep -Fxq 'EnvironmentFile=/etc/lingxifield/staging.env' infra/selfhost/lingxifield-cn-stage.service
+          grep -Fq -- '--dns-result-order=ipv4first' infra/selfhost/lingxifield-cn-stage.service
+          NODE_OPTIONS='--max-old-space-size=512 --dns-result-order=ipv4first' node -e 'if(require("node:dns").getDefaultResultOrder()!=="ipv4first") process.exit(2)'
+          echo CN_STAGE_ISOLATED_BOOTSTRAP_DNS_ORDER_PASS
+      - name: Exercise resume, integrity and source code on Python 3.6 (offline)
         shell: bash
         run: |
           set -Eeuo pipefail
           python3 -m py_compile scripts/ops/ecs-cn-parallel-release-fetch.py
-          docker run --rm --network none -v "$PWD:/work:ro" -w /work python:3.6.15-slim \
-            python scripts/ops/test-cn-parallel-release-fetch.py
-
+          docker run --rm --network none -v "$PWD:/work:ro" -w /work python:3.6.15-slim python scripts/ops/test-cn-parallel-release-fetch.py
