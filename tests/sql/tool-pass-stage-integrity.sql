@@ -10,6 +10,8 @@ declare
  r2 uuid:='c4444444-4444-4444-8444-444444444444';
  op uuid:='c5555555-5555-4555-8555-555555555555';
  wrong_op uuid:='c6666666-6666-4666-8666-666666666666';
+ food_r uuid:='c7777777-7777-4777-8777-777777777777';
+ food_op uuid:='c8888888-8888-4888-8888-888888888888';
  pass1 uuid;
  pass2 uuid;
  value jsonb;
@@ -50,6 +52,16 @@ begin
  if value->>'error' is distinct from 'INVALID_EXECUTION_STAGE' then raise exception 'ARBITRARY_STAGE_ALLOWED %',value;end if;
  if (select count(*) from public.lingxi_tool_execution_stages where request_id=r2)<>2
   then raise exception 'DUPLICATE_PROCESSING_STAGE_CREATED';end if;
+ -- Image upload can redeem an operation before analysis. Analysis is
+ -- separately one-time and must not run a second remote model request.
+ value:=public.lingxi_claim_tool_use(food_r,a,repeat('c',64),'food-calorie',1);
+ if value->>'ok' is distinct from 'true' then raise exception 'FOOD_CLAIM_FAILED';end if;
+ value:=public.lingxi_redeem_tool_use(food_r,a,'food-calorie',food_op);
+ if value->>'ok' is distinct from 'true' then raise exception 'FOOD_SESSION_START_FAILED';end if;
+ value:=public.lingxi_redeem_tool_stage(food_r,a,'food-calorie',food_op,'food-analysis');
+ if value->>'alreadyStarted' is distinct from 'false' then raise exception 'FOOD_FIRST_ANALYSIS_FAILED %',value;end if;
+ value:=public.lingxi_redeem_tool_stage(food_r,a,'food-calorie',food_op,'food-analysis');
+ if value->>'alreadyStarted' is distinct from 'true' then raise exception 'FOOD_DOUBLE_ANALYSIS_ALLOWED %',value;end if;
 end $$;
 do $$
 begin
