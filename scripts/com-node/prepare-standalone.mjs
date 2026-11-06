@@ -5,7 +5,7 @@
  * original node_modules (a previous false-positive deployment acceptance).
  * CI-only command never deploys or touches production DNS.
  */
-import {copyFileSync,chmodSync,existsSync,lstatSync,realpathSync,readdirSync,mkdirSync,writeFileSync,rmSync} from "node:fs";
+import {copyFileSync,chmodSync,readFileSync,existsSync,lstatSync,realpathSync,readdirSync,mkdirSync,writeFileSync,rmSync} from "node:fs";
 import {resolve,join,relative,sep,dirname} from "node:path";
 import {pathToFileURL} from "node:url";
 import {createRequire} from "node:module";
