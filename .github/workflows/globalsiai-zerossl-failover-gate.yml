@@ -25,6 +25,12 @@ jobs:
           grep -Fq 'GLOBALSIAI_CN_ZEROSSL_AUTORENEW_TIMER_ENABLED' "$f"
           grep -Fq 'GLOBALSIAI_CN_ZEROSSL_PUBLIC_HTTPS_RELEASE_ACCEPTED' "$f"
           grep -Fq 'GLOBALSIAI_CN_PUBLIC_ROLLBACK_OLD_SITES_UNTOUCHED' "$f"
+          grep -Fq 'GLOBALSIAI_CN_HTTPS_SNI_BOTH_HOSTS_VERIFIED' "$f"
+          grep -Fq 'GLOBALSIAI_CN_TLS_ACTUAL_SERVED_CERTIFICATE' "$f"
+          grep -Fq 'GLOBALSIAI_CN_VERIFIED_CERT_AND_ACME_STATE_PRESERVED' "$f"
+          grep -Fq 'GLOBALSIAI_CN_EXISTING_CERT_REUSED_WITHOUT_CA_REISSUE' "$f"
+          grep -Fq 'ReadWritePaths=$ACME_HOME $CERTDIR $WEBROOT' "$f"
+          grep -Fq 'openssl pkey -pubin -outform DER' "$f"
           ! grep -Eq 'systemctl (stop|restart|disable) (lingxifield-ecs|lingxifield-cn-stage)' "$f"
           echo GLOBALSIAI_ZEROSSL_SOURCE_SECURITY_GATE_PASS
       - name: Render exact independent Nginx vhost with temp trusted paths
