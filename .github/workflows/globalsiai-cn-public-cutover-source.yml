@@ -1,0 +1,75 @@
+name: Global SIAI CN Nginx TLS cutover source and rendered config gate (no deploy)
+on:
+  push:
+    branches: [feature/globalsiai-ecs-stage-operator-20261106]
+permissions:
+  contents: read
+jobs:
+  cutover-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Validate shell entry and exact host / rollback contracts
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          f=scripts/ops/globalsiai-ecs-cn-public-cutover.sh
+          bash -n "$f"
+          test "$(bash "$f" 2>&1 || true)" = \
+            "GLOBALSIAI_CN_PUBLIC_USAGE: bash script --publish-globalsiai-cn-only (root)"
+          grep -Fq 'DOMAIN=globalsiai.cn' "$f"
+          grep -Fq 'ECS_IP=39.104.205.16' "$f"
+          grep -Fq 'PORT=4289' "$f"
+          grep -Fq 'certbot certonly --webroot' "$f"
+          grep -Fq 'proxy_pass http://127.0.0.1:$PORT' "$f"
+          grep -Fq 'add_header X-Robots-Tag "noindex, nofollow" always' "$f"
+          grep -Fq 'GLOBALSIAI_CN_PUBLIC_ROLLBACK_OLD_SITES_UNTOUCHED' "$f"
+          grep -Fq 'GLOBALSIAI_CN_PUBLIC_HTTPS_RELEASE_ACCEPTED' "$f"
+          ! grep -Eq '(systemctl (restart|stop|disable) lingxifield-(ecs|cn-stage))' "$f"
+          echo GLOBALSIAI_CN_SHELL_SAFETY_SOURCE_PASS
+      - name: Render actual two Nginx blocks against ephemeral self-signed TLS
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if ! command -v nginx >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx
+          fi
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          mkdir -p "$tmp/letsencrypt" "$tmp/acme"
+          openssl req -x509 -nodes -newkey rsa:2048 -days 2 \
+            -subj '/CN=globalsiai.cn' \
+            -addext 'subjectAltName=DNS:globalsiai.cn,DNS:www.globalsiai.cn' \
+            -keyout "$tmp/letsencrypt/privkey.pem" \
+            -out "$tmp/letsencrypt/fullchain.pem" >/dev/null 2>&1
+          python3 - "$tmp" <<'PY'
+          import pathlib,sys,re
+          tmp=pathlib.Path(sys.argv[1])
+          s=pathlib.Path('scripts/ops/globalsiai-ecs-cn-public-cutover.sh').read_text()
+          a=re.search(r'cat >"\$VHOST" <<EOF\n(.*?)\nEOF',s,re.S)
+          b=re.search(r'cat >> "\$VHOST" <<EOF\n(.*?)\nEOF',s,re.S)
+          assert a and b,"Unable to extract exact Nginx vhost heredocs"
+          body=a.group(1)+'\n'+b.group(1)
+          body=body.replace('$WEBROOT',str(tmp/'acme'))
+          body=body.replace('$CERTDIR',str(tmp/'letsencrypt'))
+          body=body.replace('$PORT','4289')
+          body=body.replace('\\$','$')
+          assert 'server_name globalsiai.cn;' in body
+          assert 'server_name www.globalsiai.cn;' in body or 'server_name globalsiai.cn www.globalsiai.cn;' in body
+          assert 'proxy_pass http://127.0.0.1:4289;' in body
+          assert 'add_header X-Robots-Tag "noindex, nofollow" always;' in body
+          (tmp/'globalsiai.conf').write_text(body)
+          (tmp/'nginx.conf').write_text(
+            'worker_processes 1;\n'
+            f'pid {tmp}/nginx.pid;\n'
+            f'error_log {tmp}/error.log info;\n'
+            'events { worker_connections 128; }\n'
+            f'http {{ include {tmp}/globalsiai.conf; }}\n'
+          )
+          PY
+          nginx -t -c "$tmp/nginx.conf" -p "$tmp/"
+          echo GLOBALSIAI_CN_RENDERED_REAL_NGINX_TLS_SYNTAX_PASS
