@@ -125,7 +125,8 @@ jobs:
           NODE
       - name: Verify all seven public R2 files with Range+CORS+full SHA
         run: |
-          node scripts/cloudflare/prove-r2-assets.mjs --cdn https://assets.lingxifield.com --manifest "$RUNNER_TEMP/com-source-assets.json" --full
+          node scripts/cloudflare/convert-r2-proof-manifest.mjs --input "$RUNNER_TEMP/com-source-assets.json" --output "$RUNNER_TEMP/com-r2-proof.json"
+          node scripts/cloudflare/prove-r2-assets.mjs --cdn https://assets.lingxifield.com --manifest "$RUNNER_TEMP/com-r2-proof.json" --full
           node --input-type=module - <<'NODE'
           import {readFileSync} from "node:fs";
           import {join} from "node:path";
