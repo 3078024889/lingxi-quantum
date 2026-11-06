@@ -1,5 +1,6 @@
 import "server-only";
 
+import { assertNativeComputeInfrastructure } from "./native-readiness.mjs";
 import { createHash, createHmac, randomUUID } from "node:crypto";
 import {
   SASI_COMPUTE_PROTOCOL_VERSION,
@@ -91,6 +92,7 @@ export async function nativeComputeReadiness() {
   });
   if (!response.ok) throw new Error(`SASI_NATIVE_HEALTH_${response.status}`);
   const payload = await response.json().catch(() => ({})) as Record<string, unknown>;
+  assertNativeComputeInfrastructure(payload);
   return payload;
 }
 

@@ -7,6 +7,8 @@ on:
     paths:
       - 'scripts/cloudflare/**'
       - 'tests/cloudflare/**'
+      - 'lib/sasi-kernel/compute/native-client.ts'
+      - 'lib/sasi-kernel/compute/native-readiness.mjs'
       - 'docs/deploy/com-cloudflare-vercel-fallback-20261106.md'
       - '.github/workflows/com-cloudflare-readiness.yml'
   workflow_dispatch:
