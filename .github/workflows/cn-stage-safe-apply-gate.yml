@@ -17,6 +17,10 @@ jobs:
         run: |
           set -Eeuo pipefail
           bash -n scripts/ops/ecs-cn-3189-safe-apply.sh
+          bash -n scripts/ops/ecs-cn-3189-bootstrap.sh
+          grep -Fq 'CN_STAGING_ISOLATION_OR_PAYMENT_FLAGS_FAILED' scripts/ops/ecs-cn-3189-bootstrap.sh
+          grep -Fq 'ALIPAY_ENABLED' scripts/ops/ecs-cn-3189-bootstrap.sh
+          grep -Fq 'CN_PUBLIC_DOMAIN_STILL_UNPROMOTED' scripts/ops/ecs-cn-3189-bootstrap.sh
           grep -Fxq 'EnvironmentFile=/etc/lingxifield/staging.env' infra/selfhost/lingxifield-cn-stage.service
           grep -Fq 'CN_STAGE_USES_NONISOLATED_ENV_ABORT' scripts/ops/ecs-cn-3189-safe-apply.sh
           grep -Fq 'CN_PROD_STAGE_PATH_COLLISION_ABORT' scripts/ops/ecs-cn-3189-safe-apply.sh
