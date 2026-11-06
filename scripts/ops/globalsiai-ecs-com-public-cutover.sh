@@ -38,7 +38,7 @@ rollback(){
  exit "$rc"
 }
 trap rollback EXIT
-exec 9>/run/lock/globalsiai-com-public.lock
+exec 9>/run/lock/globalsiai-dual-domain-public.lock
 flock -n 9 || { echo GLOBALSIAI_COM_CONCURRENT_CUTOVER_ABORT; exit 3; }
 
 echo "=== 1. 私有站与DNS只读发布门禁 ==="
