@@ -20,7 +20,7 @@ jobs:
           done
           c=scripts/ops/globalsiai-notice-4290-canary.sh
           s=scripts/ops/globalsiai-notice-dual-host-cutover.sh
-          grep -Fq 'SHA256=3b3a3d597a65a2047ddfbc2fa70bf85892c0c193d9a8e74b63bfbf78a4877344' "$c"
+          grep -Fq 'SHA256=bcb466a235f55b4b5cb6d839b10fa16aff956bd255e68de20e1647c5a62f370e' "$c"
           grep -Fq 'PORT=4290' "$c"
           grep -Fq 'GLOBALSIAI_NOTICE_4290_ACCEPTED_4289_AND_PUBLIC_NGINX_UNCHANGED' "$c"
           grep -Fq 'GLOBALSIAI_NOTICE_MAINLAND_ICP_LEAK_TO_COM_ABORT' "$c"

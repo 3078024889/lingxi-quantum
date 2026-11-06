@@ -6,9 +6,9 @@ if [ "$#" != 1 ] || [ "$1" != "--install-private-4290" ] || [ "$(id -u)" != 0 ];
   echo GLOBALSIAI_NOTICE_CANARY_USAGE
   exit 2
 fi
-RELEASE_TAG=globalsiai-announcement-candidate-20261106-d754cade
-SHA256=3b3a3d597a65a2047ddfbc2fa70bf85892c0c193d9a8e74b63bfbf78a4877344
-BYTES=28085353
+RELEASE_TAG=globalsiai-announcement-candidate-20261106-1783cdbe
+SHA256=bcb466a235f55b4b5cb6d839b10fa16aff956bd255e68de20e1647c5a62f370e
+BYTES=26001677
 DATA=/root/globalsiai-announcement-candidate-d754cade
 ARCHIVE="$DATA/globalsiai-announcement-candidate.tar.gz"
 ROOT=/opt/lingxifield/releases/globalsiai-market-notice-d754cade
@@ -37,6 +37,10 @@ test ! -e "$ROOT" && test ! -L "$ROOT" || { echo GLOBALSIAI_NOTICE_EXISTING_STAG
 test ! -e "$UNIT" && test ! -L "$UNIT" || { echo GLOBALSIAI_NOTICE_EXISTING_UNIT_ABORT; exit 3; }
 if ss -H -lnt '( sport = :4290 )' | grep -q .; then
  echo GLOBALSIAI_NOTICE_4290_PORT_IN_USE_ABORT; exit 3
+fi
+if [ "$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)" -lt 800000 ]; then
+ echo GLOBALSIAI_NOTICE_MEMORY_BUDGET_ABORT
+ exit 3
 fi
 if [ "$(df -Pk /opt/lingxifield | awk 'NR==2{print $4}')" -lt 500000 ]; then
  echo GLOBALSIAI_NOTICE_FREE_DISK_INSUFFICIENT; exit 3
