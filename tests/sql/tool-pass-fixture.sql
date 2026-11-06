@@ -22,7 +22,8 @@ create table public.orders(
 );
 create table public.tool_payment_quotes(
  id uuid primary key default gen_random_uuid(),
- tool_id text not null,metadata jsonb not null default '{}'::jsonb,status text not null
+ tool_id text not null,metadata jsonb not null default '{}'::jsonb,status text not null,
+ user_id uuid references auth.users(id),quantity numeric not null default 1
 );
 create table public.food_calorie_image_sessions_v18(
  id uuid primary key,consumed_at timestamptz,input_digest text

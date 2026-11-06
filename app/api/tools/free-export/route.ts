@@ -4,7 +4,7 @@ import {createAdminClient} from '@/lib/supabase/admin';
 import {isSameOriginMutation} from '@/lib/sasi/request-security';
 import {foodRequestIpHash} from '@/lib/tools/food/request-identity';
 import {isMeteredTool} from '@/lib/tools/commerce/metered-catalog';
-import {toolPassBackendReady} from '@/lib/tools/commerce/tool-server-receipt';
+import {toolPassCutoverRequested} from '@/lib/tools/commerce/tool-server-receipt';
 export const runtime='nodejs';
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:'INVALID_REQUEST_ORIGIN'},{status:403});
@@ -15,7 +15,7 @@ export async function POST(req:NextRequest){
  const client=createClient(),{data:{user}}=await client.auth.getUser(),admin=createAdminClient();
  const ipHash=foodRequestIpHash(req);
  // Historical requests can still complete, but no NEW legacy metered export may be opened.
- if(toolPassBackendReady()){
+ if(toolPassCutoverRequested()){
   const {data:existing,error:existingError}=await admin.from("tool_export_requests")
    .select("id,user_id,ip_hash,tool_id").eq("id",id).maybeSingle();
   if(existingError)return NextResponse.json({error:"EXPORT_SERVICE_UNAVAILABLE"},{status:503});

@@ -1,3 +1,5 @@
+import {toolPassCutoverRequested,toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import { NextRequest,NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -14,9 +16,66 @@ export async function POST(req:NextRequest){
  if(!tempMailConfigured())return NextResponse.json({error:"SERVICE_UNAVAILABLE"},{status:503});
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();
  if(!user)return NextResponse.json({error:"SIGN_IN_REQUIRED"},{status:401});
- const body=await req.json().catch(()=>null) as {count?:number;quoteId?:string}|null;
- const count=Math.floor(Number(body?.count)),quoteId=String(body?.quoteId||"");
- if(!Number.isFinite(count)||count<11||count>100)return NextResponse.json({error:"BATCH_SIZE_INVALID"},{status:400});
+ const body=await req.json().catch(()=>null) as {
+  count?:number;quoteId?:string;accessRequestId?:string;operationId?:string
+ }|null;
+ const count=Number(body?.count),quoteId=String(body?.quoteId||"");
+ if(!Number.isSafeInteger(count)||count<11||count>100)return NextResponse.json({error:"BATCH_SIZE_INVALID"},{status:400});
+ if(toolPassCutoverRequested()&&!quoteId){
+  if(!toolPassBackendReady())return NextResponse.json({error:"TOOL_PASS_BACKEND_NOT_READY"},{status:503});
+  const requestId=String(body?.accessRequestId||"");
+  const operationId=String(body?.operationId||"");
+  const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if(!uuid.test(requestId)||!uuid.test(operationId))
+   return NextResponse.json({error:"PASS_MAIL_RECEIPT_REQUIRED"},{status:403});
+  const abuse=await enforceAbuseGuard(req,{
+   scope:"tool-pass-temp-mail-batch",userId:user.id,accountLimit:12,ipLimit:40,
+   windowSeconds:3600
+  });
+  if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
+  const admin=createAdminClient();
+  for(let attempt=0;attempt<3;attempt++){
+   const unique=new Set<string>();
+   const entries=[] as {local_part:string;token_hash:string}[];
+   for(let i=0;i<count;i++){
+    let localPart="";
+    for(let n=0;n<6;n++){
+     localPart=randomLocalPart();
+     if(localPart.length>=6&&!unique.has(localPart))break;
+    }
+    if(localPart.length<6||unique.has(localPart))
+     return NextResponse.json({error:"MAILBOX_GENERATION_UNAVAILABLE"},{status:503});
+    unique.add(localPart);
+    entries.push({local_part:localPart,token_hash:mailboxTokenHash(randomMailboxToken())});
+   }
+   const {data,error}=await admin.rpc("lingxi_create_pass_mail_batch",{
+    p_request_id:requestId,p_user_id:user.id,p_operation_id:operationId,
+    p_count:count,p_entries:entries
+   });
+   if(error){
+    // An index collision rolls back the complete PostgreSQL transaction,
+    // including its stage redemption. Retry with freshly generated IDs.
+    if(error.code==="23505"&&attempt<2)continue;
+    console.error("[pass-mail-batch]",error.code);
+    return NextResponse.json({error:"BATCH_CREATE_UNAVAILABLE"},{status:503});
+   }
+   if(!data?.ok){
+    const code=String(data?.error||"BATCH_CREATE_UNAVAILABLE");
+    const status=code==="PASS_MAIL_DAILY_LIMIT"?429:
+     code==="PASS_MAIL_PAID_BATCH_REQUIRED"?402:
+     code==="PASS_MAIL_INPUT_INVALID"?400:409;
+    return NextResponse.json({error:code},{status});
+   }
+   const rows=(Array.isArray(data.mailboxes)?data.mailboxes:[])
+    .map((m:any)=>({id:m.id,address:tempMailAddress(m.localPart),expiresAt:m.expiresAt}));
+   if(rows.length!==count)return NextResponse.json({error:"BATCH_INCOMPLETE"},{status:503});
+   return NextResponse.json({mailboxes:rows,count,recovered:Boolean(data.recovered)},
+    {headers:{"Cache-Control":"private, no-store"}});
+  }
+  return NextResponse.json({error:"BATCH_CREATE_UNAVAILABLE"},{status:503});
+ }
+ // An already PAID legacy quote continues to work during the cutover.
+ // The new quote creation endpoints are retired; no new old-style charge.
  if(!quoteId)return NextResponse.json({error:"PAID_BATCH_REQUIRED"},{status:402});
 
  const admin=createAdminClient();

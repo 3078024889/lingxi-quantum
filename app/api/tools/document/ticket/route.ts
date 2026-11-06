@@ -1,5 +1,8 @@
+import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
+import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import{createHmac,randomUUID}from"node:crypto";
-import{NextResponse}from"next/server";
+import{NextRequest,NextResponse}from"next/server";
+import {isSameOriginMutation} from "@/lib/sasi/request-security";
 export const runtime="nodejs";
 
 const MAX_DIRECT_BYTES=50*1024*1024;
@@ -23,8 +26,11 @@ function safeGateway(raw:string){
  }catch{return""}
 }
 
-export async function POST(req:Request){
- const body=await req.json().catch(()=>null) as null|{name?:string;size?:number;type?:string};
+export async function POST(req:NextRequest){
+ if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
+ const body=await req.json().catch(()=>null) as null|{
+   name?:string;size?:number;type?:string;toolSlug?:string;accessRequestId?:string;operationId?:string
+ };
  const name=String(body?.name||"").slice(0,240);
  const size=Number(body?.size||0);
  const type=String(body?.type||"application/octet-stream").slice(0,160);
@@ -32,9 +38,19 @@ export async function POST(req:Request){
  if(!name||!OFFICE_EXTENSIONS.has(ext))return NextResponse.json({error:"DOCUMENT_TYPE_UNSUPPORTED"},{status:415});
  if(!Number.isSafeInteger(size)||size<1||size>MAX_DIRECT_BYTES)return NextResponse.json({error:"DOCUMENT_SIZE_UNSUPPORTED"},{status:413});
 
+ const toolSlug=String(body?.toolSlug||"pdf-editor");
+ const callers=["pdf-editor","document-translate","document-copy-layout","pptx-to-txt"];
+ if(!callers.includes(toolSlug))return NextResponse.json({error:"INVALID_TOOL"},{status:400});
+ const stage=await authorizeToolPassStage({toolSlug,stage:"document-ticket",
+   accessRequestId:body?.accessRequestId,operationId:body?.operationId});
+ if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status});
  const gateway=safeGateway(str(process.env.LINGXIFIELD_DOCUMENT_GATEWAY_PUBLIC_URL));
  const secret=str(process.env.LINGXIFIELD_DOCUMENT_GATEWAY_SECRET);
- if(gateway&&secret.length>=32){
+ // The direct gateway's nonce replay cache is process-local, not durable.
+ // A restart or second gateway replica could replay a 5-minute signed ticket.
+ // Unified paid mode uses the same-origin one-time conversion stage until
+ // shared durable gateway redemption is implemented and verified.
+ if(!toolPassCutoverRequested()&&gateway&&secret.length>=32){
   const exp=Math.floor(Date.now()/1000)+300;
   const nonce=randomUUID();
   const version="v1";

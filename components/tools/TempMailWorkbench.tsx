@@ -28,6 +28,18 @@ async function openCheckout(payUrl:string){
  const popup=window.open(payUrl,'lingxi-pay','width=620,height=820');if(!popup)location.href=payUrl;
 }
 
+const PASS_MAIL_BATCH_COPY:Record<string,{button:string;detail:string}>={
+ zh:{button:"使用通用包批量创建",detail:"按邮箱数量核验通用包权益，每个账户每天最多创建100个批量邮箱。"},
+ en:{button:"Create with tools pass",detail:"Your tools pass covers the selected mailbox count. Up to 100 batch mailboxes per account each day."},
+ ja:{button:"共通パスで一括作成",detail:"作成数に応じて共通パスを確認します。1アカウントにつき1日最大100件です。"},
+ ko:{button:"도구 이용권으로 일괄 생성",detail:"선택한 메일함 수만큼 이용권을 확인합니다. 계정당 하루 최대 100개입니다."},
+ fr:{button:"Créer avec le forfait",detail:"Le forfait couvre la quantité choisie, jusqu'à 100 boîtes par compte et par jour."},
+ de:{button:"Mit Werkzeugpaket erstellen",detail:"Das Paket gilt für die gewählte Anzahl, maximal 100 Postfächer pro Konto und Tag."},
+ es:{button:"Crear con el paquete",detail:"Se verifica la cantidad elegida con tu paquete, hasta 100 buzones por cuenta al día."},
+ pt:{button:"Criar com o pacote",detail:"A quantidade escolhida é validada no pacote, até 100 caixas por conta por dia."},
+ ar:{button:"إنشاء دفعة بالباقة",detail:"يُتحقق من العدد ضمن الباقة، بحد أقصى 100 صندوق لكل حساب يوميًا."}
+};
+
 export default function TempMailWorkbench(){
  const{lang}=useLingxiLang();
  const t=(key:Parameters<typeof tempMailText>[1],vars:Record<string,string|number>={})=>tempMailText(lang,key,vars);
@@ -190,6 +202,39 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
   }catch(e){setError(friendly(e instanceof Error?e.message:String(e)))}finally{batchProcessing.current=false;setBatchBusy(false)}
  }
 
+ async function createPassBatch(){
+  if(batchProcessing.current||batchBusy)return;
+  batchProcessing.current=true;setBatchBusy(true);setError("");
+  const key="lingxifield:temp-mail-pass-batch";
+  try{
+   let stored:{requestId?:string;operationId?:string;count?:number}|null=null;
+   try{stored=JSON.parse(sessionStorage.getItem(key)||"null")}catch{}
+   const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+   const same=stored?.count===batchCount&&uuid.test(stored.requestId||"")&&uuid.test(stored.operationId||"");
+   const requestId=same?stored!.requestId!:crypto.randomUUID();
+   const operationId=same?stored!.operationId!:crypto.randomUUID();
+   sessionStorage.setItem(key,JSON.stringify({requestId,operationId,count:batchCount}));
+   const claim=await claimToolStart("temp-mail",batchCount,requestId);
+   const response=await fetch("/api/tools/temp-mail/batch",{
+    method:"POST",credentials:"same-origin",
+    headers:{"content-type":"application/json"},
+    body:JSON.stringify({count:batchCount,accessRequestId:claim.requestId||requestId,operationId})
+   });
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok)throw new Error(String(data.error||"BATCH_CREATE_FAILED"));
+   if(!Array.isArray(data.mailboxes)||data.mailboxes.length!==batchCount)
+    throw new Error("BATCH_INCOMPLETE");
+   sessionStorage.removeItem(key);
+   await loadOwned();
+   const first=data.mailboxes[0] as Box|undefined;
+   if(first)await openOwned({...first,messageCount:0,latestSender:"",latestSubject:"",latestAt:"",latestCode:""});
+  }catch(e){
+   const message=e instanceof ToolAccessError?toolAccessMessage(lang,e.code):
+     friendly(e instanceof Error?e.message:String(e));
+   setError(message);
+  }finally{batchProcessing.current=false;setBatchBusy(false)}
+ }
+
  const csvFile=useMemo(()=>new Blob(["email,expires_at,messages\n"+owned.map(x=>`${x.address},${x.expiresAt},${x.messageCount}`).join("\n")],{type:"text/csv;charset=utf-8"}),[owned]);
  const recoverRef=useRef(recover);recoverRef.current=recover;
  const refreshRef=useRef(refresh);refreshRef.current=refresh;
@@ -300,11 +345,11 @@ const remaining=useMemo(()=>box?Math.max(0,new Date(box.expiresAt).getTime()-now
 
   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
    <div className="flex flex-wrap items-end justify-between gap-4">
-    <div><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("batchTitle")}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{t("batchLead")}</p><p className="mt-1 text-xs text-[var(--lx-faint)]">{t("paidAfterFree")}</p></div>
+    <div><h2 className="text-lg font-semibold text-[var(--lx-ink)]">{t("batchTitle")}</h2><p className="mt-2 text-sm text-[var(--lx-muted)]">{TOOL_PASS_ENFORCED?(PASS_MAIL_BATCH_COPY[lang]||PASS_MAIL_BATCH_COPY.en).detail:t("batchLead")}</p>{!TOOL_PASS_ENFORCED&&<p className="mt-1 text-xs text-[var(--lx-faint)]">{t("paidAfterFree")}</p>}</div>
     <div className="flex items-center gap-2"><EditableNumberInput type="number" min={11} max={100} value={batchCount} onChange={e=>setBatchCount(Math.max(11,Math.min(100,Number(e.target.value))))} className="w-24 rounded-full border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2 text-sm"/>
-     <button onClick={startBatchPayment} disabled={batchBusy||!TEMP_MAIL_BATCH_SALES_ENABLED||TOOL_PASS_ENFORCED} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{!TEMP_MAIL_BATCH_SALES_ENABLED?t('batchPaused'):batchBusy?t("working"):t("generateCount",{count:batchCount,price})}</button></div>
+     <button onClick={TOOL_PASS_ENFORCED?()=>void createPassBatch():startBatchPayment} disabled={batchBusy||(!TOOL_PASS_ENFORCED&&!TEMP_MAIL_BATCH_SALES_ENABLED)} className="rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-50">{batchBusy?t("working"):TOOL_PASS_ENFORCED?(PASS_MAIL_BATCH_COPY[lang]||PASS_MAIL_BATCH_COPY.en).button:!TEMP_MAIL_BATCH_SALES_ENABLED?t('batchPaused'):t("generateCount",{count:batchCount,price})}</button></div>
    </div>
-   <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{TEMP_MAIL_BATCH_SALES_ENABLED?t("unitPrice"):t('batchPausedBody')}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><ResultFileActions blob={csvFile} name="lingxifield-temp-mail.csv" saveLabel={t("exportCsv")}/></>}</div>
+   <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-xs text-[var(--lx-faint)]">{TOOL_PASS_ENFORCED?(PASS_MAIL_BATCH_COPY[lang]||PASS_MAIL_BATCH_COPY.en).detail:TEMP_MAIL_BATCH_SALES_ENABLED?t("unitPrice"):t('batchPausedBody')}</span>{owned.length>0&&<><button onClick={()=>void copy(owned.map(x=>x.address).join("\n"),"all")} className="rounded-full border border-[var(--lx-line)] px-4 py-2 text-xs">{copied==="all"?t("copied"):t("copyAll")}</button><ResultFileActions blob={csvFile} name="lingxifield-temp-mail.csv" saveLabel={t("exportCsv")}/></>}</div>
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>
  </div>;

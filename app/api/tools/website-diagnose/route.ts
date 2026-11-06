@@ -1,3 +1,4 @@
+import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
 import { NextRequest, NextResponse } from "next/server";
 import dns from "node:dns/promises";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "REQUEST_TOO_LARGE" }, { status: 413 });
   }
 
-  const body = await req.json().catch(() => null) as { url?: unknown } | null;
+  const body = await req.json().catch(() => null) as { url?: unknown;accessRequestId?:unknown;operationId?:unknown } | null;
   const raw = typeof body?.url === "string" ? body.url.trim() : "";
   if (!raw || raw.length > 2048) {
     return NextResponse.json({ error: "INVALID_URL" }, { status: 400 });
@@ -46,6 +47,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: code }, { status });
   }
 
+  const stage=await authorizeToolPassStage({toolSlug:"website-diagnose",stage:"website-diagnose",
+    accessRequestId:body?.accessRequestId,operationId:body?.operationId});
+  if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status});
   const host = url.hostname.toLowerCase();
   const started = Date.now();
 
