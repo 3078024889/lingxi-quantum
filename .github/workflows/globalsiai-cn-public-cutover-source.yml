@@ -80,7 +80,10 @@ jobs:
           set -Eeuo pipefail
           f=scripts/ops/globalsiai-ecs-com-public-cutover.sh
           bash -n "$f"
+          test "$(bash "$f" 2>&1 || true)" = \
+            "GLOBALSIAI_COM_PUBLIC_USAGE: bash script --publish-globalsiai-com-only (root)"
           grep -Fq 'DOMAIN=globalsiai.com' "$f"
+          grep -Fq -- '--publish-globalsiai-com-only' "$f"
           grep -Fq 'ECS_IP=39.104.205.16' "$f"
           grep -Fq 'PORT=4289' "$f"
           grep -Fq 'certbot certonly --webroot' "$f"
