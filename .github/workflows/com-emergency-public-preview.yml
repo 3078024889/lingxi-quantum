@@ -7,6 +7,8 @@ on:
     paths:
       - 'scripts/cloudflare/stage-emergency-public.mjs'
       - 'tests/cloudflare/stage-emergency-public.test.mjs'
+      - 'scripts/cloudflare/smoke-emergency-local.mjs'
+      - 'tests/cloudflare/smoke-emergency-local.test.mjs'
       - '.github/workflows/com-emergency-public-preview.yml'
   workflow_dispatch:
 
@@ -42,7 +44,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Verify staging fail-closed tests
         run: |
-          node --test tests/cloudflare/stage-emergency-public.test.mjs tests/cloudflare/stage-large-assets.test.mjs
+          node --test tests/cloudflare/stage-emergency-public.test.mjs tests/cloudflare/stage-large-assets.test.mjs tests/cloudflare/smoke-emergency-local.test.mjs
           test -z "${CLOUDFLARE_API_TOKEN:-}"
           test -z "${VERCEL_TOKEN:-}"
       - name: Prepare media and isolate oversized static assets in runner
@@ -78,6 +80,36 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=6144"
         run: |
           pnpm run build:vinext
+      - name: Smoke actual local Worker pages and disabled private routes
+        env:
+          CI: "true"
+        run: |
+          set -euo pipefail
+          pnpm run start:vinext > "$RUNNER_TEMP/com-local-preview.log" 2>&1 &
+          local_pid=$!
+          trap 'kill "$local_pid" 2>/dev/null || true' EXIT
+          BASE=""
+          for i in $(seq 1 90); do
+            if ! kill -0 "$local_pid" 2>/dev/null; then
+              cat "$RUNNER_TEMP/com-local-preview.log"
+              echo "::error::Preview runtime terminated before its HTTP endpoint opened."
+              exit 1
+            fi
+            for port in 8787 3000 3001 5173; do
+              if curl --max-time 2 --silent --output /dev/null "http://127.0.0.1:$port/api/health"; then
+                BASE="http://127.0.0.1:$port"
+                break
+              fi
+            done
+            if test -n "$BASE"; then break; fi
+            sleep 1
+          done
+          if test -z "$BASE"; then
+            tail -n 100 "$RUNNER_TEMP/com-local-preview.log"
+            echo "::error::Local Worker preview never started."
+            exit 1
+          fi
+          node scripts/cloudflare/smoke-emergency-local.mjs "$BASE"
       - name: Report exact status without claiming deployment
         if: always()
         run: |
