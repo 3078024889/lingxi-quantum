@@ -71,5 +71,5 @@ jobs:
             f'http {{ access_log {tmp}/access.log; include {tmp}/globalsiai.conf; }}\n'
           )
           PY
-          nginx -t -c "$tmp/nginx.conf" -p "$tmp/"
+          sudo nginx -t -c "$tmp/nginx.conf" -p "$tmp/"
           echo GLOBALSIAI_CN_RENDERED_REAL_NGINX_TLS_SYNTAX_PASS
