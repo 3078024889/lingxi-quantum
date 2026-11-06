@@ -1,4 +1,5 @@
 import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
+import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import{createHmac,randomUUID}from"node:crypto";
 import{NextRequest,NextResponse}from"next/server";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
@@ -45,7 +46,11 @@ export async function POST(req:NextRequest){
  if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status});
  const gateway=safeGateway(str(process.env.LINGXIFIELD_DOCUMENT_GATEWAY_PUBLIC_URL));
  const secret=str(process.env.LINGXIFIELD_DOCUMENT_GATEWAY_SECRET);
- if(gateway&&secret.length>=32){
+ // The direct gateway's nonce replay cache is process-local, not durable.
+ // A restart or second gateway replica could replay a 5-minute signed ticket.
+ // Unified paid mode uses the same-origin one-time conversion stage until
+ // shared durable gateway redemption is implemented and verified.
+ if(!toolPassCutoverRequested()&&gateway&&secret.length>=32){
   const exp=Math.floor(Date.now()/1000)+300;
   const nonce=randomUUID();
   const version="v1";
