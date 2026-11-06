@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: code }, { status });
   }
 
-  // Require a one-use receipt before DNS, TLS and HTTP probes.
+  // Require a one-use receipt before costly TLS and HTTP probes.
   if(toolPassBackendReady()){
     const {data:{user}}=await createClient().auth.getUser();
     if(!user)return NextResponse.json({error:'LOGIN_REQUIRED'},{status:401});
