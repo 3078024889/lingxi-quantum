@@ -43,13 +43,24 @@ jobs:
         run: |
           test -z "${CLOUDFLARE_API_TOKEN:-}"
           test -z "${VERCEL_TOKEN:-}"
-          node --test tests/cloudflare/probe-com-origins.test.mjs tests/cloudflare/audit-large-assets.test.mjs
+          node --test tests/cloudflare/probe-com-origins.test.mjs tests/cloudflare/audit-large-assets.test.mjs tests/cloudflare/stage-large-assets.test.mjs
           node scripts/cloudflare/audit-large-assets.mjs --fail-unaccounted
           node scripts/cloudflare/audit-com-readiness.mjs
       - name: Identify generated media assets over 25 MiB
         run: |
           node scripts/prepare-media-runtime.cjs
           node scripts/cloudflare/audit-large-assets.mjs --json "$RUNNER_TEMP/com-large-assets.json" --fail-unaccounted
+      - name: Stage seven public assets outside Cloudflare static bundle (ephemeral only)
+        env:
+          CI: "true"
+        run: |
+          node scripts/cloudflare/stage-large-assets.mjs --ci-stage --public public --stage "$RUNNER_TEMP/com-overlimit-staged" --cdn https://assets.lingxifield.com --json "$RUNNER_TEMP/com-staging-report.json"
+          test -f public/_redirects
+          node --input-type=module - "$RUNNER_TEMP/com-staging-report.json" <<'NODE'
+          import {readFileSync} from "node:fs";
+          const report=JSON.parse(readFileSync(process.argv[2],"utf8"));
+          if(report.sourceCount!==7||report.releaseReady!==false||report.assetDeliveryVerified!==false||report.remoteUploaded!==false)throw Error("ASSET_STAGING_NOT_VERIFIED");
+          NODE
       - name: Ephemeral official vinext init (CI runner only)
         run: |
           set -euo pipefail
