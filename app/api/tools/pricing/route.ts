@@ -3,7 +3,7 @@ import {PUBLIC_PAID_TOOL_IDS,isPublicPaidToolId} from "@/lib/tools/paid-catalog"
 import {calculateToolQuote} from "@/lib/tools/pricing-server";
 import {toolRuntimeState} from "@/lib/tools/service-readiness";
 import {parseCurrency,type PaymentCurrency} from "@/lib/payments/currency-book";
-import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -38,7 +38,7 @@ async function one(toolId:string,currency:PaymentCurrency){
 }
 
 export async function GET(req:NextRequest){
- if(toolPassBackendReady())return NextResponse.json({error:'SINGLE_TOOL_PRICING_RETIRED',destination:'/tools/pass'},{status:410,headers:{'Cache-Control':'no-store'}});
+ if(toolPassCutoverRequested())return NextResponse.json({error:'SINGLE_TOOL_PRICING_RETIRED',destination:'/tools/pass'},{status:410,headers:{'Cache-Control':'no-store'}});
   const url=new URL(req.url);
   const currency=parseCurrency(url.searchParams.get("currency"))||"CNY";
   const toolId=(url.searchParams.get("toolId")||"").trim();

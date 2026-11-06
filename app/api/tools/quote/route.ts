@@ -6,7 +6,7 @@ import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 import { toolRuntimeStateLive } from "@/lib/tools/service-readiness";
 import { isPublicPaidToolId } from "@/lib/tools/paid-catalog";
-import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import {foodRequestIpHash} from '@/lib/tools/food/request-identity';
 import {isMeteredTool,METERED_EXPORT_TOOL_ID} from '@/lib/tools/commerce/metered-catalog';
 import {
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const toolId = String(body.toolId || "").trim();
     // No new per-tool invoices after unified pass launch. Old paid quotes stay readable.
-    if(toolPassBackendReady()&&!toolId.startsWith("sasi-"))
+    if(toolPassCutoverRequested()&&!toolId.startsWith("sasi-"))
       return NextResponse.json({error:"SINGLE_TOOL_CHECKOUT_RETIRED",destination:"/tools/pass"},{status:410});
     if (toolId === "sasi-video-generate") return NextResponse.json({ error: "VIDEO_BYOK_REQUIRED", destination: "/sasi/drama" }, { status: 410 });
     if (!isPublicPaidToolId(toolId)) {

@@ -10,7 +10,7 @@ test("no new single tool price/quote/topup when unified backend is ready",()=>{
  ["app/api/tools/pay/create/route.ts","SINGLE_TOOL_CHECKOUT_RETIRED"]
  ]){
   const src=read(path);
-  assert.ok(src.includes("toolPassBackendReady()"),path+": gate missing");
+  assert.ok(src.includes("toolPassCutoverRequested()"),path+": gate missing");
   assert.ok(src.includes(code),path+": 410 retirement missing");
  }
 });
