@@ -24,8 +24,9 @@ const ALLOWED_HEADERS = [
 function validatedOrigin(raw) {
   const url = new URL(raw);
   const host = url.hostname.toLowerCase();
+  const normalizedHost = host.startsWith("[") && host.endsWith("]") ? host.slice(1,-1) : host;
   if (url.protocol !== "https:" || !host || host === "localhost" ||
-      host.endsWith(".localhost") || net.isIP(host) ||
+      host.endsWith(".localhost") || host === "localhost." || net.isIP(normalizedHost) ||
       url.username || url.password || url.search || url.hash ||
       (url.port && url.port !== "443") ||
       (url.pathname !== "/" && url.pathname !== "")) {
