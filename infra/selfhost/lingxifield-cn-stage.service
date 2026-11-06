@@ -1,0 +1,24 @@
+[Unit]
+Description=LINGXIFIELD CN staged auth/runtime check (not public)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=lingxifield
+Group=lingxifield
+WorkingDirectory=/opt/lingxifield/releases/ec4edd
+Environment=NODE_ENV=production
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3189
+Environment=NODE_OPTIONS=--max-old-space-size=512
+EnvironmentFile=/etc/lingxifield/production.env
+ExecStart=/opt/lingxifield/runtime/node-24.19.0/bin/node /opt/lingxifield/releases/ec4edd/server.js
+MemoryMax=750M
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target
