@@ -5,9 +5,9 @@ import {tmpdir} from "node:os";
 import {join} from "node:path";
 import {auditLargeAssets, STATIC_ASSET_LIMIT, TRACKED_LARGE_ASSETS} from "../../scripts/cloudflare/audit-large-assets.mjs";
 
-test("tracks six known source assets but never claims external delivery",()=>{
+test("tracks six source assets and a generated FFmpeg asset without claiming delivery",()=>{
   assert.equal(STATIC_ASSET_LIMIT,25*1024*1024);
-  assert.equal(new Set(TRACKED_LARGE_ASSETS).size,6);
+  assert.equal(new Set(TRACKED_LARGE_ASSETS).size,7);
 });
 test("hashes oversized bytes without altering files; unexpected files fail policy",async()=>{
   const base=mkdtempSync(join(tmpdir(),"cf-assets-"));

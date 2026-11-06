@@ -13,6 +13,7 @@ export const TRACKED_LARGE_ASSETS = Object.freeze([
   "models/onnx-community/swin-finetuned-food101-ONNX/onnx/model_q4f16.onnx",
   "models/onnx-community/whisper-tiny/onnx/decoder_model_merged_quantized.onnx",
   "runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm",
+  "media/ffmpeg-0.12.10/ffmpeg-core.wasm",
 ]);
 
 function enumerate(dir, output = []) {
@@ -49,7 +50,9 @@ export async function auditLargeAssets(publicDir, options = {}) {
   large.sort((a,b)=>a.path.localeCompare(b.path));
   const paths = new Set(large.map(x=>x.path));
   const unaccounted = large.filter(x=>x.kind==="unexpected").map(x=>x.path);
-  const missingTracked = [...expected].filter(x=>!paths.has(x)).sort();
+  const missingTracked = [...expected].filter(x=>!paths.has(x) &&
+    !(options.expectedPaths == null && x === "media/ffmpeg-0.12.10/ffmpeg-core.wasm" &&
+      !existsSync(join(root, x)))).sort();
   return {
     schemaVersion:1, scan:"read-only", publicFiles:files.length,
     staticFileLimitBytes:limit, largeAssets:large, unaccounted, missingTracked,
