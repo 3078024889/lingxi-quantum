@@ -22,6 +22,11 @@ jobs:
           set -Eeuo pipefail
           node --check scripts/ops/ecs-cn-r2-transactional-probe.mjs
           node --check scripts/ops/ecs-cn-r2-account-readonly-repair.mjs
+          node --check scripts/ops/ecs-cn-r2-cors-additive.mjs
+          test "$(node scripts/ops/ecs-cn-r2-cors-additive.mjs || true)" = CN_R2_CORS_REQUIRES_EXPLICIT_MODE
+          grep -Fq 'CN_R2_CORS_CHANGED_DURING_REVIEW_ABORT' scripts/ops/ecs-cn-r2-cors-additive.mjs
+          grep -Fq 'CN_R2_CORS_EXISTING_POLICY_PRESERVED' scripts/ops/ecs-cn-r2-cors-additive.mjs
+          grep -Fq 'CN_R2_CORS_3188_AND_COM_UNTOUCHED' scripts/ops/ecs-cn-r2-cors-additive.mjs
           test "$(node scripts/ops/ecs-cn-r2-account-readonly-repair.mjs || true)" = CN_R2_ACCOUNT_PRECHECK_REQUIRES_EXPLICIT_FLAG
           grep -Fq CN_R2_AUTHENTICATED_BUCKET_PROOF_PASS scripts/ops/ecs-cn-r2-account-readonly-repair.mjs
           grep -Fq CN_R2_PRODUCTION_ENV_AND_3188_UNTOUCHED scripts/ops/ecs-cn-r2-account-readonly-repair.mjs
