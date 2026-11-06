@@ -1,0 +1,26 @@
+name: Global SIAI safe ECS private installer source gate (no deploy)
+on:
+  push:
+    branches: [feature/globalsiai-ecs-stage-operator-20261106]
+permissions:
+  contents: read
+jobs:
+  stage-installer-source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Verify isolated port, archive integrity, staging noindex and rollback controls
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/globalsiai-ecs-private-stage.sh
+          test "$(bash scripts/ops/globalsiai-ecs-private-stage.sh 2>&1 || true)" = 'GLOBALSIAI_STAGE_USAGE: bash script --install-private-stage-only (root)'
+          grep -Fq 'SHA256=c22b9ccb7976dbc174dc529aca9067a0138f5bde5475f57254eb965c279d688c' scripts/ops/globalsiai-ecs-private-stage.sh
+          grep -Fq 'PORT=4289' scripts/ops/globalsiai-ecs-private-stage.sh
+          grep -Fq 'AI_MARKET_INDEX_READY=0' scripts/ops/globalsiai-ecs-private-stage.sh
+          grep -Fq 'GLOBALSIAI_STAGE_INSTALL_ROLLED_BACK_EXISTING_SITES_UNTOUCHED' scripts/ops/globalsiai-ecs-private-stage.sh
+          grep -Fq 'GLOBALSIAI_STAGING_ACCEPTED_NO_NGINX_OR_DNS_OR_PRODUCTION_SWITCH' scripts/ops/globalsiai-ecs-private-stage.sh
+          ! grep -Eq 'systemctl (restart|stop|disable) (lingxifield-ecs|lingxifield-cn-stage)' scripts/ops/globalsiai-ecs-private-stage.sh
+          echo GLOBALSIAI_SAFE_STAGE_SOURCE_GATE_PASS
