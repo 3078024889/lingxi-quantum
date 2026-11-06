@@ -63,6 +63,13 @@ begin
  if exists(select 1 from public.tool_pass_operation_v2
    where pass_order_id=p_order_id and access_kind='pass') then
   return jsonb_build_object('ok',false,'error','PASS_ALREADY_USED');end if;
+ -- Refunding an earlier pass without moving dependent future purchases could
+ -- strand a paid customer's next pass until the cancelled interval expires.
+ -- Require manual calendar reconciliation instead of silently losing access.
+ if exists(select 1 from public.tool_pass_orders_v2
+  where user_id=p_user_id and request_id<>p_order_id and state='active'
+    and starts_at>o.starts_at) then
+  return jsonb_build_object('ok',false,'error','STACKED_PASS_REQUIRES_REVIEW');end if;
  if o.active_source_minor+o.legacy_source_minor<>o.amount_minor or
    o.active_refundable_source_minor>o.active_source_minor or
    o.legacy_refundable_source_minor>o.legacy_source_minor then
