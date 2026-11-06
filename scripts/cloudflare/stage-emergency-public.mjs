@@ -9,6 +9,13 @@ import {createHash} from "node:crypto";
 import {join,resolve,relative,dirname,sep} from "node:path";
 import {pathToFileURL} from "node:url";
 
+export const SAFE_PUBLIC_GET_ROUTES=Object.freeze([
+  "app/api/health/route.ts",
+  "app/api/public/qr-code/route.ts",
+  "app/api/public/siai-widget/route.ts",
+  "app/api/sasi/capabilities/route.ts",
+]);
+const SAFE_ROUTE_SET=new Set(SAFE_PUBLIC_GET_ROUTES);
 const FALLBACK_CODE = `// CLOUD_PREVIEW_ONLY. Fail closed: NO wallet, charge, storage mutation or provider request.
 export const runtime="edge";
 export const dynamic="force-dynamic";
@@ -39,15 +46,24 @@ function listRoutes(path,results=[]){
 }
 const digest=data=>createHash("sha256").update(data).digest("hex");
 export function stageEmergencyPublic({repoRoot,stagingRoot,minRoutes=150,
-  preserve=["app/api/health/route.ts"]}){
+  preserve=SAFE_PUBLIC_GET_ROUTES}){
  const root=resolve(repoRoot),stage=resolve(stagingRoot),api=join(root,"app","api");
  if(!existsSync(api)||!lstatSync(api).isDirectory())throw Error("API_TREE_NOT_FOUND");
  if(stage===root||inside(root,stage)||inside(stage,root))throw Error("STAGING_ROOT_OVERLAP");
  const routes=listRoutes(api).sort();
  if(routes.length<minRoutes)throw Error("ROUTE_COUNT_UNDER_MINIMUM");
+ if(!Array.isArray(preserve)||!preserve.length||preserve.some(p=>!SAFE_ROUTE_SET.has(p)))
+   throw Error("NON_ALLOWLISTED_LIVE_ROUTE");
  const keep=new Set(preserve);
  for(const name of preserve){
   if(!routes.some(x=>relative(root,x).split(sep).join("/")===name))throw Error("PRESERVED_ROUTE_MISSING");
+ }
+ // Fail closed if a reviewed read-only endpoint begins to accept mutations.
+ for(const path of keep){
+  const entry=routes.find(x=>relative(root,x).split(sep).join("/")===path);
+  const source=readFileSync(entry,"utf8");
+  if(/\\bexport\\s+(?:(?:async|const)\\s+)?(?:function\\s+)?(?:POST|PUT|PATCH|DELETE)\\b/.test(source))
+    throw Error("ALLOWED_PUBLIC_ROUTE_BECAME_MUTATING:"+path);
  }
  if(existsSync(stage))throw Error("STAGING_ALREADY_EXISTS");
  const manifest=[];

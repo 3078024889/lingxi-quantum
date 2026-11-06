@@ -6,6 +6,10 @@ on:
       - infra/com-cloudflare-readiness-20261106
     paths:
       - '.github/workflows/com-cloudflare-public-preview-resume.yml'
+      - 'scripts/cloudflare/stage-emergency-public.mjs'
+      - 'tests/cloudflare/stage-emergency-public.test.mjs'
+      - 'scripts/cloudflare/smoke-emergency-preview.mjs'
+      - 'tests/cloudflare/smoke-emergency-preview.test.mjs'
 
 permissions:
   contents: read

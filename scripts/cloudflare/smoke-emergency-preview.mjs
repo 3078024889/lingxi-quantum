@@ -35,6 +35,24 @@ export async function smokePreview(input,{fetcher=fetch}={}){
  }
  for(const [path] of publicRoutes)checks.push({path,ok:await check(path)});
  checks.push({path:"/api/health",ok:await check("/api/health")});
+ // Real source-audited public data endpoints; no mock responses allowed.
+ const feed=await fetcher(new URL("/api/public/siai-widget",origin).toString(),{
+  method:"GET",redirect:"manual",signal:AbortSignal.timeout(18000)});
+ const feedData=await feed.json().catch(()=>null);
+ checks.push({path:"/api/public/siai-widget",
+  ok:feed.status===200&&feedData?.schemaVersion===1&&
+    Array.isArray(feedData?.rows)&&feedData.rows.length>=30&&
+    feedData.rows.every(x=>typeof x.name==="string"&&x.name.length>0)});
+ const qr=await fetcher(new URL("/api/public/qr-code?text="+encodeURIComponent("lingxifield.com"),origin).toString(),{
+  method:"GET",redirect:"manual",signal:AbortSignal.timeout(18000)});
+ const svg=await qr.text();
+ checks.push({path:"/api/public/qr-code",
+  ok:qr.status===200&&(qr.headers.get("content-type")||"").includes("image/svg+xml")&&svg.includes("<svg")});
+ const cap=await fetcher(new URL("/api/sasi/capabilities",origin).toString(),{
+  method:"GET",redirect:"manual",signal:AbortSignal.timeout(18000)});
+ const capData=await cap.json().catch(()=>null);
+ checks.push({path:"/api/sasi/capabilities",
+  ok:cap.status===200&&Number(capData?.stats?.tools)>=100&&Array.isArray(capData?.matches)});
  for(const [method,path] of closedRoutes)checks.push({path,method,ok:await check(path,method)});
  return {origin,checks,status:checks.every(c=>c.ok)?"passed":"failed",publicOnly:true,
    productionReady:false,noDnsChange:true};

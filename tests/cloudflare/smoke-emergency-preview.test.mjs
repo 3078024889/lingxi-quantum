@@ -16,12 +16,15 @@ test("Remote smoke requires 200 public routes and no private payment entry",asyn
  const good=async(url)=>{
   const pathname=new URL(url).pathname;
   if(pathname==="/api/health")return Response.json({ok:true,service:"lingxifield"});
+  if(pathname==="/api/public/siai-widget")return Response.json({schemaVersion:1,rows:Array.from({length:62},(_,i)=>({name:"Platform "+i}))});
+  if(pathname==="/api/public/qr-code")return new Response("<svg></svg>",{headers:{"Content-Type":"image/svg+xml"}});
+  if(pathname==="/api/sasi/capabilities")return Response.json({stats:{tools:124},matches:[]});
   if(pathname.startsWith("/api/"))return Response.json({error:"PUBLIC_PREVIEW_BACKEND_DISABLED"},{
    status:503,headers:{"cache-control":"private, no-store"}});
   return new Response("<html>LINGXIFIELD SIAI PDF</html>",{status:200});
  };
  const ok=await smokePreview(base,{fetcher:good});
- assert.equal(ok.status,"passed");assert.equal(ok.checks.length,8);
+ assert.equal(ok.status,"passed");assert.equal(ok.checks.length,11);
  const weak=await smokePreview(base,{fetcher:async(url,init)=>{
   if(new URL(url).pathname==="/api/pay/create")return Response.json({redirect:"checkout"},{status:200});
   return good(url,init);
