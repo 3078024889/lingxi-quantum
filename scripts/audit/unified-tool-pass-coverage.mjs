@@ -52,11 +52,11 @@ const missing=rows.filter(row=>!row.covered);
 // Migration means NEW invoices are prohibited, not historical payment records deleted.
 // Each old route is retained for paid fulfillment, refunds and reconciliation only.
 const mustContain={
- "app/api/tools/quote/route.ts":["toolPassBackendReady()","SINGLE_TOOL_CHECKOUT_RETIRED"],
- "app/api/tools/pay/create/route.ts":["toolPassBackendReady()","SINGLE_TOOL_CHECKOUT_RETIRED",'quote.status==="paid"'],
- "app/api/tools/free-export/route.ts":["toolPassBackendReady()","SINGLE_TOOL_CHECKOUT_RETIRED","tool_export_requests"],
- "app/api/tools/pricing/route.ts":["toolPassBackendReady()","SINGLE_TOOL_PRICING_RETIRED"],
- "app/api/tools/quote/topup/route.ts":["toolPassBackendReady()","SINGLE_TOOL_TOPUP_RETIRED"],
+ "app/api/tools/quote/route.ts":["toolPassCutoverRequested()","SINGLE_TOOL_CHECKOUT_RETIRED"],
+ "app/api/tools/pay/create/route.ts":["toolPassCutoverRequested()","SINGLE_TOOL_CHECKOUT_RETIRED",'quote.status==="paid"'],
+ "app/api/tools/free-export/route.ts":["toolPassCutoverRequested()","SINGLE_TOOL_CHECKOUT_RETIRED","tool_export_requests"],
+ "app/api/tools/pricing/route.ts":["toolPassCutoverRequested()","SINGLE_TOOL_PRICING_RETIRED"],
+ "app/api/tools/quote/topup/route.ts":["toolPassCutoverRequested()","SINGLE_TOOL_TOPUP_RETIRED"],
  "components/tools/PaidExportButton.tsx":["TOOL_PASS_ENFORCED","ToolPassUpgradeLink","legacyResume"],
  "components/tools/PaidActionButton.tsx":["TOOL_PASS_ENFORCED","ToolPassUpgradeLink","legacyResume"]
 };
