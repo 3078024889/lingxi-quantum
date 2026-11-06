@@ -1,12 +1,12 @@
 import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
-import{NextResponse}from"next/server";
+import{NextRequest,NextResponse}from"next/server";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import{convertDocumentToPdf,documentInputSupported}from"@/lib/tools/document/converter";
 export const runtime="nodejs";
 export const maxDuration=60;
 const MAX_BYTES=process.env.VERCEL?3_500_000:50*1024*1024;
 
-export async function POST(request:Request){
+export async function POST(request:NextRequest){
  if(!isSameOriginMutation(request))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
  const form=await request.formData().catch(()=>null),file=form?.get("file");
  if(!(file instanceof File))return NextResponse.json({error:"FILE_REQUIRED"},{status:400});
