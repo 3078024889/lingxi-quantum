@@ -39,7 +39,7 @@ function corsAllowed(response){
 }
 export async function proveAsset(base,item,{fetcher=fetch,full=false}={}){
   const url=base+"/"+item.path.split("/").map(encodeURIComponent).join("/");
-  const opts={redirect:"manual",headers:{"Origin":"https://lingxifield.com"},signal:AbortSignal.timeout(25000)};
+  const opts={redirect:"manual",headers:{"Origin":"https://lingxifield.com","Accept-Encoding":"identity"},signal:AbortSignal.timeout(25000)};
   const result={path:item.path,bytes:item.bytes,head:false,range:false,cors:false,fullHash:false,ok:false};
   try{
     const h=await fetcher(url,{...opts,method:"HEAD"});

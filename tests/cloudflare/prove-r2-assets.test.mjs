@@ -25,6 +25,7 @@ test("range, CORS and full SHA checks are required; HEAD alone is insufficient",
   const basic={"access-control-allow-origin":"https://lingxifield.com","content-type":"application/octet-stream"};
   const good=async(_url,init)=>{
     assert.equal(init.headers.Origin,"https://lingxifield.com");
+    assert.equal(init.headers["Accept-Encoding"],"identity");
     if(init.method==="HEAD")return new Response(null,{status:200,headers:{...basic,"content-length":String(data.length)}});
     if(init.headers.Range)return new Response(data.subarray(0,32),{status:206,
       headers:{...basic,"content-range":"bytes 0-31/96"}});
