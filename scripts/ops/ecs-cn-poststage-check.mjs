@@ -1,0 +1,97 @@
+#!/usr/bin/env node
+// LINGXIFIELD CN private staging checks (read-only; secrets never printed).
+// Run as root: node scripts/ops/ecs-cn-poststage-check.mjs
+import {readFileSync} from "node:fs";
+import {parseEnv} from "node:util";
+import {createHash,createHmac,randomUUID} from "node:crypto";
+
+const file="/etc/lingxifield/staging.env";
+let env;
+try { env=parseEnv(readFileSync(file,"utf8")); }
+catch { console.log("STAGING_ENV_UNREADABLE");process.exit(2); }
+const bad=v=>!String(v||"").trim() || String(v).trim()==="[SENSITIVE]";
+const required=["NEXT_PUBLIC_SUPABASE_URL","NEXT_PUBLIC_SUPABASE_ANON_KEY","SUPABASE_SERVICE_ROLE_KEY"];
+const missing=required.filter(k=>bad(env[k]));
+if(missing.length){console.log("MISSING_REQUIRED_NAMES="+missing.join(","));process.exit(3);}
+if(env.NEXT_PUBLIC_SUPABASE_URL!=="https://sxsgdpqojepgbbrxrzlq.supabase.co"){
+ console.log("SUPABASE_PROJECT_MISMATCH");process.exit(4);
+}
+if(env.NEXT_PUBLIC_SITE_URL!=="https://lingxifield.cn"){
+ console.log("SITE_URL_MISMATCH");process.exit(4);
+}
+console.log("STAGING_ENV_PROJECT_AND_SITE_NAMES_MATCH");
+
+const budgetMs=12000;
+async function call(url,init={}){
+ const resp=await fetch(url,{...init,redirect:"error",signal:AbortSignal.timeout(budgetMs)});
+ const status=resp.status;
+ await resp.body?.cancel();
+ return status;
+}
+async function probe(name,fn){
+ try { console.log(name+"="+await fn()); }
+ catch { console.log(name+"=REQUEST_ERROR"); }
+}
+const local="http://127.0.0.1:3189";
+await probe("CN_STAGE_HEALTH_HTTP",()=>call(local+"/api/health"));
+await probe("CN_STAGE_ANON_JOBS_HTTP",()=>call(local+"/api/tools/jobs"));
+await probe("SUPABASE_ANON_AUTH_HTTP",()=>call(env.NEXT_PUBLIC_SUPABASE_URL+"/auth/v1/health",{
+ headers:{apikey:env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
+}));
+await probe("SUPABASE_ADMIN_READ_HTTP",()=>call(
+ env.NEXT_PUBLIC_SUPABASE_URL+"/rest/v1/ops_runtime_heartbeats?select=key&limit=0",{
+ headers:{apikey:env.SUPABASE_SERVICE_ROLE_KEY,accept:"application/json"}
+}));
+await probe("DOCUMENT_GATEWAY_LOCAL_HTTP",()=>call("http://127.0.0.1:3100/health"));
+async function sasi(){
+ const r=await fetch(local+"/api/sasi/generation/readiness",{signal:AbortSignal.timeout(18000)});
+ if(r.status!==200){await r.body?.cancel();return "HTTP_"+r.status;}
+ const d=await r.json();
+ const state=String(d?.worker?.status||"UNKNOWN");
+ return state.replace(/[^A-Z0-9_-]/gi,"").slice(0,32);
+}
+await probe("SASI_WORKER_STATUS",sasi);
+console.log("SASI_COMPUTE_URL_CONFIGURED="+(!bad(env.SASI_COMPUTE_WORKER_URL)));
+console.log("SASI_COMPUTE_SECRET_CONFIGURED="+(!bad(env.SASI_COMPUTE_WORKER_SECRET)));
+console.log("R2_CONFIG_PRESENT="+["R2_ENDPOINT","R2_ACCOUNT_ID","R2_ACCESS_KEY_ID","R2_SECRET_ACCESS_KEY","R2_BUCKET_PRIVATE_BURN"].every(k=>!bad(env[k])));
+const enc=v=>encodeURIComponent(v).replace(/[!'()*]/g,ch=>"%"+ch.charCodeAt(0).toString(16).toUpperCase());
+const hash=v=>createHash("sha256").update(v).digest("hex");
+const hmac=(key,value)=>createHmac("sha256",key).update(value).digest();
+async function r2HeadMissingObject(){
+ const names=["R2_ENDPOINT","R2_ACCESS_KEY_ID","R2_SECRET_ACCESS_KEY","R2_BUCKET_PRIVATE_BURN"];
+ if(names.some(x=>bad(env[x])))return "NOT_CONFIGURED";
+ const ep=new URL(env.R2_ENDPOINT);
+ if(ep.protocol!=="https:" || ep.username || ep.password || ep.search)return "ENDPOINT_INVALID";
+ const uri="/"+[env.R2_BUCKET_PRIVATE_BURN,"lingxi-readiness-probe","missing-"+randomUUID()].map(enc).join("/");
+ const now=new Date().toISOString().replace(/[:-]|\.\d{3}/g,"");
+ const day=now.slice(0,8);
+ const scope=day+"/auto/s3/aws4_request";
+ const q={
+  "X-Amz-Algorithm":"AWS4-HMAC-SHA256",
+  "X-Amz-Credential":env.R2_ACCESS_KEY_ID+"/"+scope,
+  "X-Amz-Date":now,
+  "X-Amz-Expires":"45",
+  "X-Amz-SignedHeaders":"host"
+ };
+ const qs=Object.keys(q).sort().map(k=>enc(k)+"="+enc(q[k])).join("&");
+ const canonical=["HEAD",uri,qs,"host:"+ep.host+"\n","host","UNSIGNED-PAYLOAD"].join("\n");
+ const signInput=["AWS4-HMAC-SHA256",now,scope,hash(canonical)].join("\n");
+ const kDate=hmac("AWS4"+env.R2_SECRET_ACCESS_KEY,day);
+ const kRegion=hmac(kDate,"auto");
+ const kService=hmac(kRegion,"s3");
+ const signingKey=hmac(kService,"aws4_request");
+ const sig=createHmac("sha256",signingKey).update(signInput).digest("hex");
+ const url=ep.origin+uri+"?"+qs+"&X-Amz-Signature="+sig;
+ const status=await call(url,{method:"HEAD"});
+ return "HTTP_"+status+(status===404?"_EXPECTED_MISSING_OBJECT":"");
+}
+await probe("R2_SIGNED_READONLY_HEAD",r2HeadMissingObject);
+if(process.argv.includes("--engines")){
+ await probe("TOOL_ENGINE_HEALTH",async()=>{
+  const r=await fetch(local+"/api/tools/engine/health",{signal:AbortSignal.timeout(20000)});
+  if(!r.ok){await r.body?.cancel();return "HTTP_"+r.status;}
+  const j=await r.json();
+  return "AVAILABLE_"+Number(j?.summary?.available||0)+"_CHECKED_"+Number(j?.summary?.checked||0);
+ });
+}
+console.log("CHECKS_FINISHED_NO_DB_WRITE_NO_FILE_MUTATION");

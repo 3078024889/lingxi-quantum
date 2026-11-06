@@ -1,0 +1,25 @@
+name: CN poststage read-only probe safety gate
+on:
+  push:
+    branches: [feature/ecs-cn-poststage-probes-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  syntax:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - run: |
+          set -euo pipefail
+          node --check scripts/ops/ecs-cn-poststage-check.mjs
+          grep -q 'limit=0' scripts/ops/ecs-cn-poststage-check.mjs
+          grep -q 'R2_SIGNED_READONLY_HEAD' scripts/ops/ecs-cn-poststage-check.mjs
+          grep -q 'CHECKS_FINISHED_NO_DB_WRITE_NO_FILE_MUTATION' scripts/ops/ecs-cn-poststage-check.mjs
+          echo CN_POSTSTAGE_SAFE_PROBE_SYNTAX_PASS
