@@ -9,9 +9,9 @@ fi
 RELEASE_TAG=globalsiai-announcement-candidate-20261106-1783cdbe
 SHA256=bcb466a235f55b4b5cb6d839b10fa16aff956bd255e68de20e1647c5a62f370e
 BYTES=26001677
-DATA=/root/globalsiai-announcement-candidate-d754cade
+DATA=/root/globalsiai-announcement-candidate-1783cdbe
 ARCHIVE="$DATA/globalsiai-announcement-candidate.tar.gz"
-ROOT=/opt/lingxifield/releases/globalsiai-market-notice-d754cade
+ROOT=/opt/lingxifield/releases/globalsiai-market-notice-1783cdbe
 UNIT=/etc/systemd/system/globalsiai-market-notice-canary.service
 SERVICE=globalsiai-market-notice-canary
 OLD=globalsiai-market-stage
@@ -38,8 +38,20 @@ test ! -e "$UNIT" && test ! -L "$UNIT" || { echo GLOBALSIAI_NOTICE_EXISTING_UNIT
 if ss -H -lnt '( sport = :4290 )' | grep -q .; then
  echo GLOBALSIAI_NOTICE_4290_PORT_IN_USE_ABORT; exit 3
 fi
-if [ "$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)" -lt 800000 ]; then
- echo GLOBALSIAI_NOTICE_MEMORY_BUDGET_ABORT
+MEM_AVAILABLE_KB="$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)"
+MEM_TOTAL_KB="$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)"
+SWAP_FREE_KB="$(awk '/^SwapFree:/ {print $2}' /proc/meminfo)"
+echo "GLOBALSIAI_NOTICE_RESOURCE_PREFLIGHT_TOTAL_KB=$MEM_TOTAL_KB AVAILABLE_KB=$MEM_AVAILABLE_KB SWAP_FREE_KB=$SWAP_FREE_KB"
+# Run a memory-capped canary only with ample physical headroom; this is not
+# the OOM-prone 800 MiB blanket reservation used in the original script.
+# 480 MiB available keeps 180 MiB above a 300 MiB typical Next.js RSS.
+if [ "$MEM_AVAILABLE_KB" -lt 491520 ]; then
+ echo "GLOBALSIAI_NOTICE_MEMORY_BUDGET_ABORT_NEED_480M_AVAILABLE_ACTUAL_KB=$MEM_AVAILABLE_KB"
+ echo GLOBALSIAI_NOTICE_MEMORY_NEXT_ACTION=READONLY_RESOURCE_DIAGNOSTIC
+ exit 3
+fi
+if [ "$MEM_TOTAL_KB" -lt 1048576 ]; then
+ echo "GLOBALSIAI_NOTICE_MEMORY_BUDGET_ABORT_TOTAL_UNDER_1G_KB=$MEM_TOTAL_KB"
  exit 3
 fi
 if [ "$(df -Pk /opt/lingxifield | awk 'NR==2{print $4}')" -lt 500000 ]; then
@@ -122,10 +134,12 @@ Environment=PORT=4290
 Environment=GLOBALSIAI_RELEASE_NOTICE_ENABLED=1
 Environment=AI_MARKET_INDEX_READY=0
 Environment=AI_MARKET_DOMAIN_VERIFIED=0
-Environment=NODE_OPTIONS=--max-old-space-size=384
+Environment=NODE_OPTIONS=--max-old-space-size=256
 Environment=GLOBALSIAI_CN_ICP_NUMBER=湘ICP备2026031465号-4
 ExecStart=$NODE $ROOT/server.js
-MemoryMax=700M
+MemoryHigh=340M
+MemoryMax=450M
+OOMPolicy=stop
 Restart=on-failure
 RestartSec=4
 NoNewPrivileges=true
