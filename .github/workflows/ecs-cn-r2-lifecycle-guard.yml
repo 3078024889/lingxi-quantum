@@ -21,6 +21,10 @@ jobs:
         run: |
           set -Eeuo pipefail
           node --check scripts/ops/ecs-cn-r2-transactional-probe.mjs
+          node --check scripts/ops/ecs-cn-r2-account-readonly-repair.mjs
+          test "$(node scripts/ops/ecs-cn-r2-account-readonly-repair.mjs || true)" = CN_R2_ACCOUNT_PRECHECK_REQUIRES_EXPLICIT_FLAG
+          grep -Fq CN_R2_AUTHENTICATED_BUCKET_PROOF_PASS scripts/ops/ecs-cn-r2-account-readonly-repair.mjs
+          grep -Fq CN_R2_PRODUCTION_ENV_AND_3188_UNTOUCHED scripts/ops/ecs-cn-r2-account-readonly-repair.mjs
           output="$(node scripts/ops/ecs-cn-r2-transactional-probe.mjs || true)"
           test "$output" = R2_LIFECYCLE_REQUIRES_EXPLICIT_ACK
           grep -q 'family:4' scripts/ops/ecs-cn-r2-transactional-probe.mjs
