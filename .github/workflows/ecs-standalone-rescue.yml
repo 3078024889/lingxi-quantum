@@ -1,7 +1,5 @@
 name: Lingxifield ECS standalone package (no deployment)
 on:
-  push:
-    branches: [feature/ecs-cn-standalone-rescue-20261106]
   workflow_dispatch:
 permissions:
   contents: read
