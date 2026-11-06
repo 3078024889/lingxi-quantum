@@ -36,7 +36,7 @@ for f in (Path("/root/lingxifield-cn-stage.sh"),Path("/root/lingxifield-cn-stage
         raise SystemExit("STAGE_SCRIPT_MISSING")
 
 data = subprocess.run(["curl","-fsSL","--retry","2","--max-time","100",WORKFLOW_URL],
- capture_output=True,check=True).stdout
+ stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True).stdout
 actual_blob = hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
 if actual_blob != WORKFLOW_BLOB:
     raise SystemExit("PUBLIC_WORKFLOW_INTEGRITY_FAILED")
