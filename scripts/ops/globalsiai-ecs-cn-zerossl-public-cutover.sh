@@ -83,12 +83,44 @@ echo GLOBALSIAI_ZEROSSL_PREFLIGHT_SERVICE_AND_COMMANDS_PASS
 test ! -e "$VHOST" && test ! -L "$VHOST" || {
  echo GLOBALSIAI_CN_EXISTING_SITE_CONFIG_ABORT; exit 3;
 }
-for obj in "$ACME_HOME" "$CERTDIR" "$RENEW_UNIT" "$RENEW_TIMER"; do
+for obj in "$RENEW_UNIT" "$RENEW_TIMER"; do
  if [ -e "$obj" ] || [ -L "$obj" ]; then
-   echo GLOBALSIAI_CN_EXISTING_ZEROSSL_RESOURCES_ABORT
+   echo GLOBALSIAI_CN_EXISTING_RENEWAL_RESOURCES_ABORT
    exit 3
  fi
 done
+# Reuse a real, valid issued certificate if a previous Nginx TLS gate rolled back.
+# Explicitly reject symlinks, stale certificates and mismatched private keys.
+if [ -e "$ACME_HOME" ] || [ -e "$CERTDIR" ]; then
+ if [ ! -d "$ACME_HOME" ] || [ ! -d "$CERTDIR" ] ||
+    [ -L "$ACME_HOME" ] || [ -L "$CERTDIR" ] ||
+    [ ! -s "$ACME_SOURCE" ] ||
+    [ ! -s "$CERTDIR/fullchain.pem" ] ||
+    [ ! -s "$CERTDIR/privkey.pem" ]; then
+    echo GLOBALSIAI_CN_PREEXISTING_CERT_INCOMPLETE_ABORT
+    exit 3
+ fi
+ python3 - "$ACME_SOURCE" "$ACME_BLOB" <<'PY'
+import hashlib,sys
+b=open(sys.argv[1],'rb').read()
+actual=hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+assert actual == sys.argv[2], 'GLOBALSIAI_REUSED_ACME_SOURCE_INVALID'
+PY
+ openssl x509 -in "$CERTDIR/fullchain.pem" -noout -checkend 604800 >/dev/null ||
+   { echo GLOBALSIAI_CN_EXISTING_CERT_EXPIRY_ABORT; exit 3; }
+ for host in "$DOMAIN" "$WWW"; do
+   openssl x509 -in "$CERTDIR/fullchain.pem" -noout -checkhost "$host" |
+     grep -qi 'does match' || { echo GLOBALSIAI_CN_EXISTING_CERT_SAN_ABORT; exit 3; }
+ done
+ cert_pub="$(openssl x509 -in "$CERTDIR/fullchain.pem" -pubkey -noout |
+   openssl pkey -pubin -outform DER | sha256sum | awk '{print $1}')"
+ key_pub="$(openssl pkey -in "$CERTDIR/privkey.pem" -pubout -outform DER |
+   sha256sum | awk '{print $1}')"
+ test "$cert_pub" = "$key_pub" || { echo GLOBALSIAI_CN_EXISTING_CERT_KEY_MISMATCH; exit 3; }
+ reuse_existing_cert=1
+ certificate_verified=1
+ echo GLOBALSIAI_CN_EXISTING_CERT_REUSED_WITHOUT_CA_REISSUE
+fi
 # ZeroSSL/Sectigo must be permitted by CAA in addition to Let's Encrypt.
 for ns in dns1.hichina.com dns2.hichina.com; do
   answer="$(dig "@$ns" globalsiai.cn CAA +tcp +time=4 +tries=1 +noall +comments +answer 2>&1)" || true
@@ -193,6 +225,7 @@ done
 rm -f -- "$PROBE"
 echo GLOBALSIAI_CN_LOCAL_ACME_HTTP_PROBE_PASS
 
+if [ "$reuse_existing_cert" -eq 0 ]; then
 echo "=== 3. ZeroSSL via pinned upstream acme.sh v3.1.6 ==="
 # Independent storage; never write into the existing Certbot renewal tree.
 install -d -m 700 "$ACME_HOME"
@@ -239,6 +272,8 @@ openssl x509 -in "$CERTDIR/fullchain.pem" -noout -checkhost "$WWW" |
  grep -qi "does match"
 certificate_verified=1
 echo GLOBALSIAI_CN_ZEROSSL_CERT_HTTPS_BOTH_HOSTS_PASS
+
+fi
 
 echo "=== 4. 新增专属 HTTPS 反向代理，不碰已有网站 ==="
 cat >> "$VHOST" <<EOF
@@ -355,7 +390,7 @@ ExecStart=/usr/bin/sh $ACME_SOURCE --cron --home $ACME_HOME
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
-ReadWritePaths=$ACME_HOME $CERTDIR
+ReadWritePaths=$ACME_HOME $CERTDIR $WEBROOT
 EOF
 cat > "$RENEW_TIMER" <<'EOF'
 [Unit]
