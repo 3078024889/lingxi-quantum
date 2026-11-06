@@ -30,6 +30,26 @@ jobs:
           cache: pnpm
       - name: Install reproducible dependencies
         run: pnpm install --frozen-lockfile
+      - name: Fail closed when client auth config is missing
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${NEXT_PUBLIC_SUPABASE_URL:-}" ]; then
+            echo "::error::Missing GitHub repository variable NEXT_PUBLIC_SUPABASE_URL; a successful Next.js page build is not a working login."
+            exit 1
+          fi
+          if [ -z "${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}" ]; then
+            echo "::error::Missing GitHub repository variable NEXT_PUBLIC_SUPABASE_ANON_KEY; client auth would be broken."
+            exit 1
+          fi
+          if [[ ! "$NEXT_PUBLIC_SUPABASE_URL" =~ ^https://[A-Za-z0-9.-]+$ ]]; then
+            echo "::error::NEXT_PUBLIC_SUPABASE_URL must be an HTTPS origin."
+            exit 1
+          fi
+          echo 'PUBLIC_CLIENT_AUTH_CONFIG_PRESENT_NOT_VERIFIED'
       - name: Build standalone Linux runtime WITHOUT touching production
         env:
           LINGXI_SELFHOST_BUILD: '1'
