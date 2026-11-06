@@ -62,7 +62,7 @@ export function stageEmergencyPublic({repoRoot,stagingRoot,minRoutes=150,
  for(const path of keep){
   const entry=routes.find(x=>relative(root,x).split(sep).join("/")===path);
   const source=readFileSync(entry,"utf8");
-  if(/\\bexport\\s+(?:(?:async|const)\\s+)?(?:function\\s+)?(?:POST|PUT|PATCH|DELETE)\\b/.test(source))
+  if(/\bexport\s+(?:(?:async|const)\s+)?(?:function\s+)?(?:POST|PUT|PATCH|DELETE)\b/.test(source))
     throw Error("ALLOWED_PUBLIC_ROUTE_BECAME_MUTATING:"+path);
  }
  if(existsSync(stage))throw Error("STAGING_ALREADY_EXISTS");
