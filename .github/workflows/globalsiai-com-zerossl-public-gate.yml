@@ -1,0 +1,91 @@
+name: Global SIAI .com ZeroSSL public cutover source and Nginx regression (no deploy)
+on:
+  push:
+    branches: [feature/globalsiai-ecs-stage-operator-20261106]
+permissions:
+  contents: read
+jobs:
+  com-zerossl:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Enforce .com-only domain, Spaceship DNS, Sectigo and strict TLS gates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          f=scripts/ops/globalsiai-ecs-com-zerossl-public-cutover.sh
+          bash -n "$f"
+          test "$(bash "$f" 2>&1 || true)" = \
+            "GLOBALSIAI_COM_PUBLIC_USAGE: bash script --publish-globalsiai-com-zerossl-only (root)"
+          grep -Fq 'DOMAIN=globalsiai.com' "$f"
+          grep -Fq 'WWW=www.globalsiai.com' "$f"
+          grep -Fq 'ECS_IP=39.104.205.16' "$f"
+          grep -Fq 'PORT=4289' "$f"
+          grep -Fq 'WEBROOT=/var/www/globalsiai-com-acme' "$f"
+          grep -Fq 'launch1.spaceship.net launch2.spaceship.net' "$f"
+          grep -Fq 'issue[[:space:]]+"sectigo.com"' "$f"
+          grep -Fq 'server_name globalsiai.com;' "$f"
+          grep -Fq 'server_name www.globalsiai.com;' "$f"
+          grep -Fq 'GLOBALSIAI_COM_HTTPS_SNI_BOTH_HOSTS_VERIFIED' "$f"
+          grep -Fq 'GLOBALSIAI_COM_VERIFIED_CERT_AND_ACME_STATE_PRESERVED' "$f"
+          grep -Fq 'GLOBALSIAI_COM_ZEROSSL_AUTORENEW_TIMER_ENABLED' "$f"
+          grep -Fq 'GLOBALSIAI_COM_ZEROSSL_PUBLIC_HTTPS_RELEASE_ACCEPTED' "$f"
+          grep -Fq 'GLOBALSIAI_COM_ICP_LEAK_ABORT' "$f"
+          grep -Fq 'GLOBALSIAI_COM_PUBLIC_ROLLBACK_OLD_SITES_UNTOUCHED' "$f"
+          grep -Fq 'globalsiai-dual-domain-public.lock' "$f"
+          ! grep -Fq 'server_name globalsiai.cn' "$f"
+          ! grep -Fq 'WEBROOT=/var/www/globalsiai-acme' "$f"
+          ! grep -Eq -- 'curl .* -k|--insecure|rejectUnauthorized: false' "$f"
+          echo GLOBALSIAI_COM_ZEROSSL_SOURCE_GATE_PASS
+      - name: Render .cn existing + new .com Nginx in the same sandbox and test syntax
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if ! command -v nginx >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx
+          fi
+          tmp="$(mktemp -d)"
+          trap 'rm -rf "$tmp"' EXIT
+          mkdir -p "$tmp/letsencrypt-cn" "$tmp/letsencrypt-com" "$tmp/acme-cn" "$tmp/acme-com"
+          for suffix in cn com; do
+            openssl req -x509 -nodes -newkey rsa:2048 -days 2 \
+              -subj "/CN=globalsiai.$suffix" \
+              -addext "subjectAltName=DNS:globalsiai.$suffix,DNS:www.globalsiai.$suffix" \
+              -keyout "$tmp/letsencrypt-$suffix/privkey.pem" \
+              -out "$tmp/letsencrypt-$suffix/fullchain.pem" >/dev/null 2>&1
+          done
+          python3 - "$tmp" <<'PY'
+          import re,sys,pathlib
+          t=pathlib.Path(sys.argv[1])
+          for suffix in ('cn','com'):
+            f=pathlib.Path(f'scripts/ops/globalsiai-ecs-{suffix}-zerossl-public-cutover.sh')
+            source=f.read_text()
+            blocks=re.findall(r'cat\s+>{1,2}\s*"\$VHOST"\s*<<EOF\n(.*?)\nEOF',source,re.S)
+            assert len(blocks)==2, (suffix,len(blocks))
+            body='\n'.join(blocks)
+            for x,y in {
+              '$WEBROOT':str(t/f'acme-{suffix}'),
+              '$CERTDIR':str(t/f'letsencrypt-{suffix}'),
+              '$PORT':'4289','$DOMAIN':f'globalsiai.{suffix}'
+            }.items():
+              body=body.replace(x,y)
+            body=body.replace('\\$','$')
+            assert f'server_name globalsiai.{suffix};' in body
+            assert f'server_name www.globalsiai.{suffix};' in body
+            assert 'proxy_pass http://127.0.0.1:4289;' in body
+            assert 'add_header X-Robots-Tag "noindex, nofollow" always;' in body
+            (t/f'{suffix}.conf').write_text(body)
+          (t/'nginx.conf').write_text(
+            f'pid {t}/nginx.pid;\n'
+            f'error_log {t}/error.log info;\n'
+            'worker_processes 1;\n'
+            'events { worker_connections 128; }\n'
+            f'http {{ access_log {t}/access.log; include {t}/cn.conf; include {t}/com.conf; }}\n'
+          )
+          PY
+          sudo nginx -t -c "$tmp/nginx.conf" -p "$tmp/"
+          echo GLOBALSIAI_DUAL_DOMAIN_NGINX_CERT_AND_VHOST_COMPATIBILITY_PASS
