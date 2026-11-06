@@ -2,12 +2,12 @@
 # Readiness staging: no DNS, Nginx, payments, or 3188 changes.
 set -Eeuo pipefail
 test "$(id -u)" = 0
-test -s /opt/lingxifield/releases/ec4edd/server.js || { echo 'NEW_RELEASE_MISSING'; exit 2; }
+test -s /opt/lingxifield/releases/cn-pr199/server.js || { echo 'NEW_RELEASE_MISSING'; exit 2; }
 test -s /etc/lingxifield/production.env || { echo 'PRODUCTION_ENV_MISSING'; exit 3; }
 test -s /opt/lingxifield/runtime/node-24.19.0/bin/node
 id lingxifield >/dev/null 2>&1
 chmod 600 /etc/lingxifield/production.env
-install -d -m 750 -o lingxifield -g lingxifield /opt/lingxifield/releases/ec4edd/.next/cache
+install -d -m 750 -o lingxifield -g lingxifield /opt/lingxifield/releases/cn-pr199/.next/cache
 if ss -ltn | grep -qE '127[.]0[.]0[.]1:3189[[:space:]]'; then
  echo 'STAGING_PORT_OCCUPIED'; exit 4
 fi

@@ -7,13 +7,13 @@ After=network-online.target
 Type=simple
 User=lingxifield
 Group=lingxifield
-WorkingDirectory=/opt/lingxifield/releases/ec4edd
+WorkingDirectory=/opt/lingxifield/releases/cn-pr199
 Environment=NODE_ENV=production
 Environment=HOSTNAME=127.0.0.1
 Environment=PORT=3189
 Environment=NODE_OPTIONS=--max-old-space-size=512
 EnvironmentFile=/etc/lingxifield/production.env
-ExecStart=/opt/lingxifield/runtime/node-24.19.0/bin/node /opt/lingxifield/releases/ec4edd/server.js
+ExecStart=/opt/lingxifield/runtime/node-24.19.0/bin/node /opt/lingxifield/releases/cn-pr199/server.js
 MemoryMax=750M
 Restart=on-failure
 RestartSec=5
