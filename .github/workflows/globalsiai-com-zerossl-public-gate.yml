@@ -26,9 +26,13 @@ jobs:
           grep -Fq 'PORT=4289' "$f"
           grep -Fq 'WEBROOT=/var/www/globalsiai-com-acme' "$f"
           grep -Fq 'launch1.spaceship.net launch2.spaceship.net' "$f"
-          grep -Fq 'GLOBALSIAI_COM_CAA_DNS_RESPONSE_ERROR_NS=' "$f"
-          grep -Fq 'GLOBALSIAI_COM_CAA_NOT_PROPAGATED_NS=' "$f"
+          grep -Fq 'GLOBALSIAI_COM_CAA_RETRY_NS=' "$f"
+          grep -Fq 'GLOBALSIAI_COM_CAA_NOT_VERIFIED_NS=' "$f"
           grep -Fq 'GLOBALSIAI_COM_CAA_AUTHORITY_PASS_NS=' "$f"
+          grep -Fq 'for transport in tcp udp' "$f"
+          grep -Fq 'for attempt in 1 2 3' "$f"
+          grep -Fq 'flags:.*[; ]aa[; ]' "$f"
+          grep -Fq '+norecurse +time=5 +tries=1' "$f"
           grep -Fq 'sectigo' "$f"
           python3 - <<'PY'
           import re
