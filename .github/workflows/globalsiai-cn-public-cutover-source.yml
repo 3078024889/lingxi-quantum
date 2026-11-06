@@ -68,7 +68,7 @@ jobs:
             f'pid {tmp}/nginx.pid;\n'
             f'error_log {tmp}/error.log info;\n'
             'events { worker_connections 128; }\n'
-            f'http {{ include {tmp}/globalsiai.conf; }}\n'
+            f'http {{ access_log {tmp}/access.log; include {tmp}/globalsiai.conf; }}\n'
           )
           PY
           nginx -t -c "$tmp/nginx.conf" -p "$tmp/"
