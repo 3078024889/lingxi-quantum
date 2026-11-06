@@ -60,12 +60,21 @@ flock -n 9 || { echo GLOBALSIAI_CN_CONCURRENT_CUTOVER_ABORT; exit 3; }
 
 echo "=== 1. 私有站与DNS只读发布门禁 ==="
 for svc in lingxifield-ecs lingxifield-cn-stage globalsiai-market-stage nginx; do
- systemctl is-active --quiet "$svc"
+ if ! systemctl is-active --quiet "$svc"; then
+   echo "GLOBALSIAI_ZEROSSL_PREFLIGHT_SERVICE_NOT_ACTIVE=$svc"
+   exit 3
+ fi
 done
-command -v dig >/dev/null
-command -v sha256sum >/dev/null
-command -v sh >/dev/null
-command -v openssl >/dev/null
+for executable in dig sha256sum sh openssl nginx curl python3 flock getent; do
+ if ! command -v "$executable" >/dev/null 2>&1; then
+   echo "GLOBALSIAI_ZEROSSL_PREFLIGHT_MISSING_COMMAND=$executable"
+   if [ "$executable" = dig ]; then
+     echo "GLOBALSIAI_ZEROSSL_DIG_PACKAGE=bind-utils_OR_dnsutils"
+   fi
+   exit 3
+ fi
+done
+echo GLOBALSIAI_ZEROSSL_PREFLIGHT_SERVICE_AND_COMMANDS_PASS
 test ! -e "$VHOST" && test ! -L "$VHOST" || {
  echo GLOBALSIAI_CN_EXISTING_SITE_CONFIG_ABORT; exit 3;
 }
