@@ -9,7 +9,7 @@ function expect(value,message){if(!value)throw Error(message)}
 async function visit(page,path){
  const r=await page.goto(base+path,{waitUntil:"domcontentloaded",timeout:40000});
  expect(r?.status()===200,"PAGE_NOT_200:"+path+":"+(r?.status()??"null"));
- await page.waitForLoadState("networkidle",{timeout:14000}).catch(()=>{});
+ await page.waitForLoadState("networkidle",{timeout:2500}).catch(()=>{});
  const title=await page.title();
  expect(title.length>3,"EMPTY_TITLE:"+path);
  console.log("LIVE_PUBLIC_PAGE",path,r.status(),title.slice(0,92));
@@ -46,7 +46,7 @@ async function run(){
   console.log("LIVE_LOCAL_URL_PARSER","PASS");
   // Expand the actual browser-compute sample without hitting paid or private APIs.
   const localCases=[
-    {path:"/tools/csv-json",input:"name,age\\nAda,37",assert:(out)=>{
+    {path:"/tools/csv-json",input:"name,age\nAda,37",assert:(out)=>{
       const rows=JSON.parse(out);
       return Array.isArray(rows)&&rows.length===1&&rows[0].name==="Ada";
     }},
@@ -68,8 +68,8 @@ async function run(){
   await visit(page,"/tools/text-diff");
   const differ=page.locator("[data-tool-workbench]");
   const inputs=differ.locator("textarea:not([readonly])");
-  await inputs.nth(0).fill("alpha\\nbeta");
-  await inputs.nth(1).fill("alpha\\ngamma");
+  await inputs.nth(0).fill("alpha\nbeta");
+  await inputs.nth(1).fill("alpha\ngamma");
   await differ.getByRole("button",{name:/处理|run/i}).first().click({timeout:20000});
   const diffOutput=differ.locator("textarea[readonly]").first();
   await diffOutput.waitFor({timeout:18000});
