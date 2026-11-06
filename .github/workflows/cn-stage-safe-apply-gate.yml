@@ -21,6 +21,10 @@ jobs:
           set -Eeuo pipefail
           bash -n scripts/ops/ecs-cn-3189-bootstrap.sh
           bash -n scripts/ops/ecs-cn-3189-safe-apply.sh
+          bash -n scripts/ops/ecs-cn-stage-ipv4first.sh
+          grep -Fq 'CN_STAGE_IPV4FIRST_APPLIED_3188_UNCHANGED' scripts/ops/ecs-cn-stage-ipv4first.sh
+          grep -Fq 'CN_ENVFILE_NODE_OPTIONS_OVERRIDE_ABORT' scripts/ops/ecs-cn-stage-ipv4first.sh
+          grep -Fq 'CN_IPV4_OVERRIDE_ROLLED_BACK_STAGING_ONLY' scripts/ops/ecs-cn-stage-ipv4first.sh
           ! grep -Fq 'install -m 644 "$UNIT" "$UNIT_TARGET"' scripts/ops/ecs-cn-3189-bootstrap.sh
           grep -Fq 'CN_STAGE_ENV_GUARD_FAILED' scripts/ops/ecs-cn-3189-bootstrap.sh
           grep -Fq 'CN_STAGE_EXEC_GUARD_FAILED' scripts/ops/ecs-cn-3189-bootstrap.sh
