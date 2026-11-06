@@ -122,21 +122,35 @@ PY
  echo GLOBALSIAI_COM_EXISTING_CERT_REUSED_WITHOUT_CA_REISSUE
 fi
 # Validate deliberate Sectigo CAA authorization from the actual Spaceship NS.
-# Spaceship UI value has no quotes; DNS presentation may include quotes.
+# Spaceship UI accepts unquoted CAA; DNS presentation may include quotes.
+# ECS connections to one authority's TCP53 can intermittently time out.
+# Both authorities MUST return AA, NOERROR and the correct Sectigo issuer.
 for ns in launch1.spaceship.net launch2.spaceship.net; do
-  answer="$(dig "@$ns" "$DOMAIN" CAA +tcp +norecurse +time=6 +tries=1 +noall +comments +answer 2>&1)" || true
-  rcode="$(printf '%s\n' "$answer" | sed -n 's/.*status: \([A-Z0-9]*\),.*/\1/p' | head -n 1)"
-  if [ "$rcode" != NOERROR ]; then
-    echo "GLOBALSIAI_COM_CAA_DNS_RESPONSE_ERROR_NS=$ns RCODE=$rcode"
+  verified=0
+  last_status=NO_RESPONSE
+  for transport in tcp udp; do
+    for attempt in 1 2 3; do
+      if [ "$transport" = tcp ]; then
+        answer="$(dig "@$ns" "$DOMAIN" CAA +tcp +norecurse +time=5 +tries=1 +noall +comments +answer 2>&1)" || true
+      else
+        answer="$(dig "@$ns" "$DOMAIN" CAA +norecurse +time=5 +tries=1 +noall +comments +answer 2>&1)" || true
+      fi
+      rcode="$(printf '%s\n' "$answer" | sed -n 's/.*status: \([A-Z0-9]*\),.*/\1/p' | head -n 1)"
+      last_status="$rcode"
+      if [ "$rcode" = NOERROR ] &&
+         printf '%s\n' "$answer" | grep -Eq 'flags:.*[; ]aa[; ]' &&
+         printf '%s\n' "$answer" | grep -Eiq 'CAA[[:space:]]+0[[:space:]]+issue[[:space:]]+"?sectigo\.com"?[[:space:]]*$'; then
+        echo "GLOBALSIAI_COM_CAA_AUTHORITY_PASS_NS=$ns PROTOCOL=$transport ATTEMPT=$attempt"
+        verified=1
+        break 2
+      fi
+      echo "GLOBALSIAI_COM_CAA_RETRY_NS=$ns PROTOCOL=$transport ATTEMPT=$attempt RCODE=$rcode"
+    done
+  done
+  if [ "$verified" != 1 ]; then
+    echo "GLOBALSIAI_COM_CAA_NOT_VERIFIED_NS=$ns"
     exit 3
   fi
-  if ! printf '%s\n' "$answer" | grep -Eiq 'CAA[[:space:]]+0[[:space:]]+issue[[:space:]]+"?sectigo\.com"?[[:space:]]*$'; then
-    echo "GLOBALSIAI_COM_CAA_NOT_PROPAGATED_NS=$ns"
-    printf '%s\n' "$answer" | grep -E 'CAA[[:space:]]|status:' | head -n 8 || true
-    echo GLOBALSIAI_COM_CAA_EXPECTED_TAG_ISSUE_VALUE_SECTIGO_COM
-    exit 3
-  fi
-  echo "GLOBALSIAI_COM_CAA_AUTHORITY_PASS_NS=$ns"
 done
 echo GLOBALSIAI_COM_ZEROSSL_CAA_AUTHORIZED_BOTH_SPACESHIP_NS
 nginx -t >/dev/null
