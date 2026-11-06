@@ -163,6 +163,7 @@ test("all four communities keep 560 different titles and messages for 28 consecu
     daily.add(title);
     assert.ok(!seenTitles.has(title),`repeated headline across 28 days: ${title}`);
     assert.ok(!seenMessages.has(post.text),"repeated full post");
+    assert.doesNotMatch(post.text,/群友|各位群友|欢迎大家/,"publish content must not address group members");
     seenTitles.add(title);seenMessages.add(post.text);
     assert.match(post.text,/国际站：https:\/\/lingxifield\.com/);
     assert.match(post.text,/国内站：https:\/\/lingxifield\.cn/);
