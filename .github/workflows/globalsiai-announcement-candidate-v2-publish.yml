@@ -1,0 +1,60 @@
+name: Publish revalidated Global SIAI announcement ECS candidate v2 (NO production deployment)
+on:
+  push:
+    branches: [release/globalsiai-announcement-candidate-v2-20261106]
+permissions:
+  actions: read
+  contents: write
+jobs:
+  prerelease:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_SHA: 1783cdbe1cbac3bd45525c20925a9b6ea7c6e098
+      RUN_ID: "42246996427"
+      ARTIFACT_ID: "13519226848"
+      TAG: globalsiai-announcement-candidate-20261106-1783cdbe
+    steps:
+      - name: Confirm exact successful source build SHA
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          output="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" --jq '.conclusion+" "+.head_sha')"
+          test "$output" = "success $SOURCE_SHA"
+          info="$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID" --jq '.name+" "+(.expired|tostring)')"
+          test "$info" = "globalsiai-one-time-notice-standalone-candidate false"
+          echo GLOBALSIAI_NOTICE_SOURCE_BUILD_VERIFIED
+      - name: Download source artifact and verify internal payload hash
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          curl -fLsS --retry 3 --max-time 180 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID/zip" \
+            -o /tmp/globalsiai-notice-artifact.zip
+          mkdir -p /tmp/globalsiai-release
+          unzip -q /tmp/globalsiai-notice-artifact.zip -d /tmp/globalsiai-release
+          archive="$(find /tmp/globalsiai-release -type f -name globalsiai-announcement-candidate.tar.gz -print -quit)"
+          checksum="$(find /tmp/globalsiai-release -type f -name globalsiai-announcement-candidate.sha256 -print -quit)"
+          test -s "$archive" && test -s "$checksum"
+          test "$(dirname "$archive")" = "$(dirname "$checksum")"
+          (cd "$(dirname "$archive")" && sha256sum -c "$(basename "$checksum")")
+          echo "GLOBALSIAI_NOTICE_CANDIDATE_BYTES=$(stat -c %s "$archive")"
+      - name: Publish immutable pre-production download
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo GLOBALSIAI_NOTICE_RELEASE_EXISTS_REFUSE_OVERWRITE
+            exit 1
+          fi
+          gh release create "$TAG" \
+            /tmp/globalsiai-release/globalsiai-announcement-candidate.tar.gz \
+            /tmp/globalsiai-release/globalsiai-announcement-candidate.sha256 \
+            --repo "$GITHUB_REPOSITORY" --target "$SOURCE_SHA" \
+            --title "Global SIAI one-time release announcement ECS candidate" \
+            --notes "PREPRODUCTION ONLY. Corrected .cn host-specific ICP suffix -4 handling, ensured no .com ICP leakage, verified market 9 locales, data contracts, typechecks, noindex and disabled/enabled runtime announcement gate in GitHub Actions run 42246996427. Install privately and perform blue-green ECS acceptance. No DNS, Nginx, Vercel, Supabase, main site, payment, or login changes. Release popup must remain OFF until approved production acceptance." \
+            --prerelease
+          echo GLOBALSIAI_NOTICE_PRERELEASE_PUBLISHED_NO_DEPLOY
