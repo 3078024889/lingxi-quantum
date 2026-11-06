@@ -1,7 +1,7 @@
 name: CN standalone dynamic Node dependency trace gate (no deploy)
 on:
   push:
-    branches: [feature/cn-runtime-node-tracing-20261106, feature/cn-standalone-package-fix-20261106]
+    branches: [feature/cn-runtime-node-tracing-20261106]
   workflow_dispatch:
 permissions:
   contents: read
@@ -79,27 +79,11 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
+          node --check scripts/ops/cn-stage-node-import-test.mjs
           isolated="$(mktemp -d)"
           trap 'rm -rf "$isolated"' EXIT
           cp -a .next/standalone "$isolated/release"
-          CN_ISOLATED_STANDALONE="$isolated/release" node --input-type=module <<'NODE'
-          import {spawnSync} from "node:child_process";
-          import {resolve} from "node:path";
-          const root=process.env.CN_ISOLATED_STANDALONE;
-          const modules=["mammoth","exceljs","@mozilla/readability","dompurify","turndown"];
-          let failures=0;
-          for(const mod of modules){
-            const proc=spawnSync(process.execPath,[
-              "--input-type=module","-e",
-              "import("+JSON.stringify(mod)+").then(()=>process.exit(0)).catch(e=>{console.error(e.code||'MODULE_ERROR',e.message);process.exit(2)})"
-            ],{cwd:root,encoding:"utf8",timeout:15000});
-            console.log("CN_STANDALONE_"+mod+"="+(proc.status===0?"PASS":"FAIL"));
-            if(proc.status!==0)console.log("CN_IMPORT_ERROR_"+mod+"="+String(proc.stderr).replace(/\\/home\\/runner\\/[^\\s:]+/g,"[BUILD_PATH]").slice(0,250));
-            if(proc.status!==0)failures++;
-          }
-          if(failures)process.exit(1);
-          console.log("CN_STANDALONE_DYNAMIC_NODE_IMPORTS_5_OF_5_PASS");
-          NODE
+          CN_ISOLATED_STANDALONE="$isolated/release" node scripts/ops/cn-stage-node-import-test.mjs
       - name: Package verified .cn ECS artifact (no server deploy)
         shell: bash
         run: |

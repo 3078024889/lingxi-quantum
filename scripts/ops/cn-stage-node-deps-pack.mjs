@@ -49,13 +49,17 @@ function stage(link){
  if(!visited.has(real)){
   visited.add(real);
   if(visited.size>350)throw Error("DEPENDENCY_PACKAGE_BUDGET_EXCEEDED");
+  // Next tracing can leave incomplete real package folders and root directories.
+  // Replace ONLY the package paths inside the generated standalone node_modules.
+  if(!within(dstReal,targetModules))throw Error("TARGET_PACKAGE_PATH_OUTSIDE_STANDALONE");
+  fs.rmSync(dstReal,{recursive:true,force:true});
   copyDir(real,dstReal);
  }
  if(link!==real){
+  if(!within(dstLink,targetModules))throw Error("TARGET_LINK_PATH_OUTSIDE_STANDALONE");
   fs.mkdirSync(path.dirname(dstLink),{recursive:true});
-  let existing=false;
-  try{fs.lstatSync(dstLink);existing=true}catch{}
-  if(!existing)fs.symlinkSync(path.relative(path.dirname(dstLink),dstReal),dstLink,"dir");
+  fs.rmSync(dstLink,{recursive:true,force:true});
+  fs.symlinkSync(path.relative(path.dirname(dstLink),dstReal),dstLink,"dir");
  }
  if(visited.has(real+"::deps"))return;
  visited.add(real+"::deps");

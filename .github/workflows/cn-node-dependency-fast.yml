@@ -1,7 +1,7 @@
 name: CN Node dependency closure fast (no deploy)
 on:
   push:
-    branches: [feature/cn-closure-fast-disabled-20261106]
+    branches: [feature/cn-standalone-package-fix-20261106]
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,27 +27,17 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          mkdir -p .next/standalone
+          mkdir -p .next/standalone/node_modules/mammoth
+          mkdir -p .next/standalone/node_modules/exceljs
+          mkdir -p .next/standalone/node_modules/turndown
+          printf '{"name":"incomplete-next-trace"}\n' > .next/standalone/node_modules/mammoth/package.json
+          printf '{"name":"incomplete-next-trace"}\n' > .next/standalone/node_modules/exceljs/package.json
+          printf '{"name":"incomplete-next-trace"}\n' > .next/standalone/node_modules/turndown/package.json
           printf 'module.exports={};\n' > .next/standalone/server.js
           node --check scripts/ops/cn-stage-node-deps-pack.mjs
+          node --check scripts/ops/cn-stage-node-import-test.mjs
           node scripts/ops/cn-stage-node-deps-pack.mjs
           temp="$(mktemp -d)"
           trap 'rm -rf "$temp"' EXIT
           cp -a .next/standalone "$temp/release"
-          CN_ISOLATED_STANDALONE="$temp/release" node --input-type=module <<'NODE'
-          import {spawnSync} from 'node:child_process';
-          const root=process.env.CN_ISOLATED_STANDALONE;
-          const mods=['mammoth','exceljs','@mozilla/readability','dompurify','turndown'];
-          let fail=0;
-          for(const name of mods){
-            const code='import('+JSON.stringify(name)+').then(()=>process.exit(0)).catch(e=>{console.error(e.code||"NO_CODE",e.message);process.exit(2)})';
-            const p=spawnSync(process.execPath,['--input-type=module','-e',code],{cwd:root,timeout:15000,encoding:'utf8'});
-            console.log('CN_ISOLATED_'+name+'='+(p.status===0?'PASS':'FAIL'));
-            if(p.status!==0){
-              fail++;
-              console.log('CN_IMPORT_DETAIL_'+name+'='+String(p.stderr).replace(/\/home\/runner\/[^\s:]+/g,'[BUILD_PATH]').slice(0,350));
-            }
-          }
-          if(fail)process.exit(1);
-          console.log('CN_STANDALONE_LIGHTWEIGHT_MODULES_5_OF_5_PASS');
-          NODE
+          CN_ISOLATED_STANDALONE="$temp/release" node scripts/ops/cn-stage-node-import-test.mjs
