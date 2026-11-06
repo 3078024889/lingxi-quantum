@@ -49,3 +49,32 @@
 - [ ] CPU and static capacity measurements pass
 - [ ] Vercel fallback routes tested; .cn unchanged
 - [ ] Explicit exact-SHA production approval before .com switch
+
+## Read-only dual-origin checks (new)
+
+The Vercel project MUST remain connected to the original Git repository. Its environment variables, history, custom-domain registration and emergency deployment access remain untouched.
+
+After provisioning a separate Cloudflare *test-only* Worker, run the probes with the exact deployment preview addresses, **not** with secrets or signed URLs:
+
+```bash
+node --test tests/cloudflare/probe-com-origins.test.mjs
+node scripts/cloudflare/probe-com-origins.mjs \
+  --cloudflare https://YOUR-TEST-WORKER.YOUR-SUBDOMAIN.workers.dev \
+  --vercel https://YOUR-VERIFIED-DEPLOYMENT.vercel.app \
+  --require-healthy
+```
+
+An origin passing `/api/health`, `/robots.txt`, and `/siai` is **anonymous smoke only**. Redirects, authentication walls, invalid content types or cacheable health responses fail the check. This deliberately does NOT check or alter payments, personal records, provider tasks or DNS. Build-SHA equality, user sessions, callback URLs, cookies and real functional tests are mandatory separate release evidence.
+
+**Standby caveat.** The project's `lingxi-quantum.vercel.app` alias has been configured to redirect to `lingxifield.com`; a redirecting alias is not an independent fallback proof. Select a directly reachable deployment URL and verify `GET /api/health` without `.com` redirection or deployment-protection challenge. Do not describe `READY` alone as traffic-ready.
+
+**Fail-open is not a generic solution.** Cloudflare Workers route fail-open can bypass a Worker after daily quota exhaustion, but would also bypass any authentication, safety gate or authorization performed *only* by that Worker. Treat payment, permission, private-file access and abuse protection as security-critical and fail closed unless independently equivalent enforcement has been proven at the fallback origin.
+
+**Double proxy trade-off.** Cloudflare Worker Routes can execute before an existing origin, allowing a tested manual route-disable fallback, but Vercel explicitly discourages external reverse proxies because of security visibility and operational complexity. Prefer independent Worker origin testing and an explicit, rehearsed DNS/route switch. Never configure a custom-domain Worker and assume removing it automatically restores an origin that has no healthy DNS record.
+
+**Operational trigger.** Alert at 70% of Cloudflare's daily request budget, evaluate traffic and availability, and initiate a human-reviewed fallback before exhaustion. A 429/1027 event is a trigger to investigate, not a green light to automatically replay mutating requests. DNS TTLs, certificate readiness, payment callback hosts, OAuth redirect URLs, Supabase redirect allowlist and preview-host cookie behavior must all be captured in the signed-off rollback checklist.
+
+Relevant upstream guidance:
+- https://developers.cloudflare.com/workers/platform/limits/
+- https://developers.cloudflare.com/workers/configuration/routing/routes/
+- https://vercel.com/kb/guide/can-i-use-a-proxy-on-top-of-my-vercel-deployment
