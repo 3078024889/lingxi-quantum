@@ -66,9 +66,11 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
   const marker=SAFE_BLOCKED[route];
   const index=code.indexOf(marker);
   const start=code.indexOf('if(toolPassCutoverRequested())');
-  const nextCost=Math.max(code.indexOf('const admin=createAdminClient()',start),code.indexOf('const key=newBurnObjectKey(',start));
-  if(start>=0&&index>start&&code.slice(start,index+marker.length).includes('status:503')
-   &&(nextCost<0||start<nextCost))
+  const firstCost=[code.indexOf('const admin=createAdminClient()',start),
+   code.indexOf('const key=newBurnObjectKey(',start)]
+   .filter(x=>x>=0).sort((a,b)=>a-b)[0]??-1;
+  if(start>=0&&index>start&&code.slice(start,index+240).includes('status:503')
+   &&(firstCost<0||start<firstCost))
    return {route,tool,state:"BLOCKED",reason:"PASS_WORKFLOW_NOT_INTEGRATED"};
   return {route,tool,state:"UNSAFE",reason:"BLOCKER_MISSING_OR_AFTER_COST"};
  }
