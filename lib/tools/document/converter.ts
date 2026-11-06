@@ -118,7 +118,7 @@ export async function convertDocumentToPdf(file:File){
  for(const provider of providers){
   try{
    if(controller.signal.aborted)throw new Error("DOCUMENT_CONVERSION_TIMEOUT");
-   const bytes=provider==="local-gateway"?(await localSignedGatewayResponse(file,controller.signal))?.arrayBuffer():provider==="gotenberg"?await viaGotenberg(file,controller.signal):provider==="custom"?await viaCustom(file,ext,controller.signal):await viaConvertApi(file,ext,controller.signal);
+   const bytes=await (provider==="local-gateway"?(async()=>{const response=await localSignedGatewayResponse(file,controller.signal);return response?await limitedBody(response):null})():provider==="gotenberg"?await viaGotenberg(file,controller.signal):provider==="custom"?await viaCustom(file,ext,controller.signal):await viaConvertApi(file,ext,controller.signal););
    if(!bytes)continue;
    if(!validPdf(bytes))throw new Error("DOCUMENT_CONVERSION_INVALID");
    return bytes;
