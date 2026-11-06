@@ -1,0 +1,63 @@
+name: ECS rescue artifact download link (no deployment)
+on:
+  push:
+    branches: [feature/ecs-cn-standalone-rescue-20261106]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: ecs-rescue-artifact-release
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Download exact previously tested standalone build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: 3078024889/lingxi-quantum
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/lingxifield-rescue
+          gh run download 42145864250 --repo "$GH_REPO" \
+            --name lingxifield-ecs-standalone-26cdd9864582be8262140bab7a6901f9cde238bf \
+            --dir /tmp/lingxifield-rescue
+          cd /tmp/lingxifield-rescue
+          test -s lingxifield-ecs-standalone.tar.gz
+          sha256sum -c lingxifield-ecs-standalone.sha256
+      - name: Reject accidentally included environment and private keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/lingxifield-rescue
+          tar -tzf lingxifield-ecs-standalone.tar.gz > /tmp/lingxi-package-manifest.txt
+          if grep -Ei '(^|/)(\.env($|\.)|id_rsa$|id_ed25519$|.*\.pem$|.*\.p12$|.*\.key$)' /tmp/lingxi-package-manifest.txt ; then
+            echo '::error::Forbidden secret-like files found in runtime archive.'
+            exit 1
+          fi
+          grep -q '^./server.js$' /tmp/lingxi-package-manifest.txt
+          grep -q '^./.next/static/' /tmp/lingxi-package-manifest.txt
+          echo "FILES=$(wc -l < /tmp/lingxi-package-manifest.txt)"
+      - name: Publish opt-in rescue artifact only (does not deploy)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: 3078024889/lingxi-quantum
+        run: |
+          set -euo pipefail
+          cd /tmp/lingxifield-rescue
+          tag=ecs-rescue-20261106-26cdd986
+          if gh release view "$tag" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "Existing immutable rescue release: $tag"
+            exit 0
+          fi
+          gh release create "$tag" \
+            lingxifield-ecs-standalone.tar.gz \
+            lingxifield-ecs-standalone.sha256 \
+            --repo "$GH_REPO" \
+            --target 26cdd9864582be8262140bab7a6901f9cde238bf \
+            --prerelease \
+            --title 'ECS rescue standalone runtime (not deployed)' \
+            --notes 'Previously CI-tested standalone artifact for private ECS installation. Does not modify DNS, nginx, prod secrets, Vercel or live database. SHA256 validation is mandatory. Do not enable payment until E2E.' 
+          gh release view "$tag" --repo "$GH_REPO" --json url,assets \
+            --jq '{url,assets:[.assets[]|{name,size,url}]}'
