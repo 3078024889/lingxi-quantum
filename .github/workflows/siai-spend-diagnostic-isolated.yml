@@ -1,0 +1,46 @@
+name: SI/AI spend diagnostic isolated checks
+on:
+  pull_request:
+    paths:
+      - "lib/siai/free-spend-diagnostic.ts"
+      - "lib/siai/spend-diagnostic-i18n.ts"
+      - "components/siai/SpendDiagnostic.tsx"
+      - "components/siai/SpendDiagnosticEntry.tsx"
+      - "app/siai/spend-diagnostic/**"
+      - "app/[locale]/siai/spend-diagnostic/**"
+      - "app/api/public/siai-spend-mcp/**"
+      - "tests/free-siai-spend-diagnostic*.test.mjs"
+      - "lib/siai/mcp-bounded-body.ts"
+      - "tests/final-closure/siai-spend-diagnostic.spec.ts"
+      - "components/SiaiRankingHome.tsx"
+      - "integrations/siai-spend-mcp-v2/**"
+      - ".github/workflows/siai-spend-diagnostic-isolated.yml"
+  workflow_dispatch:
+jobs:
+  isolated:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run deterministic and nine-language tests without deployment
+        run: node --experimental-strip-types --test tests/free-siai-spend-diagnostic.test.mjs tests/free-siai-spend-diagnostic-i18n.test.mjs tests/free-siai-spend-diagnostic-stream.test.mjs
+
+  official-mcp-v2-lab:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install only isolated MCP SDK v2 lab dependencies
+        working-directory: integrations/siai-spend-mcp-v2
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Modern and legacy protocol, security and formula check
+        working-directory: integrations/siai-spend-mcp-v2
+        run: npm test

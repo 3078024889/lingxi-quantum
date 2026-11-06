@@ -73,7 +73,8 @@
     "seo:submit:indexnow": "node scripts/seo/indexnow-submit-hostmap.mjs",
     "seo:audit:domains": "node scripts/audit-seo-geo-v1579.mjs",
     "seo:check:live": "node scripts/seo/live-postdeploy-check.mjs",
-    "seo:audit:fullsite": "node scripts/audit-seo-geo-v1579.mjs && node --test tests/seo-fullsite-coverage.test.mjs tests/siai-localized-indexing.test.mjs"
+    "seo:audit:fullsite": "node scripts/audit-seo-geo-v1579.mjs && node --test tests/seo-fullsite-coverage.test.mjs tests/siai-localized-indexing.test.mjs",
+    "test:siai:spend": "node --experimental-strip-types --test tests/free-siai-spend-diagnostic.test.mjs tests/free-siai-spend-diagnostic-i18n.test.mjs tests/free-siai-spend-diagnostic-stream.test.mjs"
   },
   "dependencies": {
     "@contentauth/c2pa-web": "0.15.3",

@@ -28,6 +28,9 @@ export function buildSiteSitemap(site:string,siaiIndexable:boolean):MetadataRout
     const languages=siaiLanguageAlternates();
     for(const locale of Object.keys(SEO_LOCALES) as SeoLocale[])
       rows.push({url:PRIMARY_SITE+localePath(locale,"/siai"),alternates:{languages},changeFrequency:"daily",priority:0.9});
+    const diagnosticLanguages=Object.fromEntries((Object.keys(SEO_LOCALES) as SeoLocale[]).map(locale=>[SEO_LOCALES[locale].hreflang,PRIMARY_SITE+localePath(locale,"/siai/spend-diagnostic")]));
+    for(const locale of Object.keys(SEO_LOCALES) as SeoLocale[])
+      rows.push({url:PRIMARY_SITE+localePath(locale,"/siai/spend-diagnostic"),alternates:{languages:diagnosticLanguages},changeFrequency:"weekly",priority:0.8});
   }
   // Only pages responding with their own public content belong in the XML sitemap.
   // /sasi/drama, /sasi/build and /ai-{knowledge,learning,research} redirect to /sasi.
