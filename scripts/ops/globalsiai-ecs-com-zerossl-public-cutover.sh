@@ -11,7 +11,7 @@ WWW=www.globalsiai.com
 ECS_IP=39.104.205.16
 PORT=4289
 VHOST=/etc/nginx/conf.d/98-globalsiai-com-only.conf
-WEBROOT=/var/www/globalsiai-acme
+WEBROOT=/var/www/globalsiai-com-acme
 CERTDIR=/etc/lingxifield/certs/globalsiai.com
 ACME_HOME=/opt/lingxifield/ops/globalsiai-com-zerossl-acme
 ACME_SOURCE=$ACME_HOME/acme.sh
@@ -121,7 +121,7 @@ PY
  certificate_verified=1
  echo GLOBALSIAI_COM_EXISTING_CERT_REUSED_WITHOUT_CA_REISSUE
 fi
-# ZeroSSL/Sectigo must be permitted by CAA in addition to Let's Encrypt.
+# Validate deliberate Sectigo CAA authorization from the actual Spaceship NS.
 for ns in launch1.spaceship.net launch2.spaceship.net; do
   answer="$(dig "@$ns" globalsiai.com CAA +tcp +time=4 +tries=1 +noall +comments +answer 2>&1)" || true
   if ! printf '%s\n' "$answer" | grep -Eq 'CAA[[:space:]]+0[[:space:]]+issue[[:space:]]+"sectigo.com"'; then
@@ -129,10 +129,10 @@ for ns in launch1.spaceship.net launch2.spaceship.net; do
     exit 3
   fi
 done
-echo GLOBALSIAI_COM_ZEROSSL_CAA_AUTHORIZED_BOTH_ALIDNS
+echo GLOBALSIAI_COM_ZEROSSL_CAA_AUTHORIZED_BOTH_SPACESHIP_NS
 nginx -t >/dev/null
 nginx -T > "$TMP/nginx-original" 2>/dev/null
-if grep -Eq 'server_name[[:space:]][^;]*(www\.)?globalsiai\.cn' "$TMP/nginx-original"; then
+if grep -Eq 'server_name[[:space:]][^;]*(www\.)?globalsiai\.com' "$TMP/nginx-original"; then
  echo GLOBALSIAI_COM_SERVERNAME_COLLISION_ABORT; exit 3
 fi
 grep -Eq 'include[[:space:]]+/etc/nginx/conf\.d/\*\.conf' "$TMP/nginx-original" || {
