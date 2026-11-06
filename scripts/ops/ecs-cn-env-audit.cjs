@@ -3,7 +3,7 @@
 const fs = require("node:fs");
 const { parseEnv } = require("node:util");
 const strict = process.argv.includes("--strict");
-const file = process.argv.find(x => x.startsWith("/") && x !== "--strict") || "/etc/lingxifield/production.env";
+const file = process.argv.slice(2).find(x => x.startsWith("/")) || "/etc/lingxifield/production.env";
 if (!fs.existsSync(file)) { console.log("PRODUCTION_ENV_MISSING"); process.exit(2); }
 let env;
 try { env = parseEnv(fs.readFileSync(file, "utf8")); }
