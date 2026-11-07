@@ -32,7 +32,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           script='scripts/cloudflare/com-public-route-cutover-20261107.py'
-          test "$(git hash-object "$script")" = '7c70c775ae29b75866c85636076b042a251d8903'
+          test "$(git hash-object "$script")" = '39aa4b2df5297fa8ae8be8b47c66187192f20f21'
           python3 -m py_compile "$script"
           python3 tests/ops/com-public-route-cutover-test.py
           echo COM_PINNED_PUBLIC_SWITCH_TRANSACTION_AND_ROLLBACK_VERIFIED
