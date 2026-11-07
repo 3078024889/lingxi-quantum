@@ -1,0 +1,38 @@
+name: CN main site production auth recovery - no deploy
+on:
+  push:
+    branches: [fix/cn-main-runtime-supabase-public-env-20261107]
+    paths:
+      - scripts/ops/cn-main-auth-recover-verified.mjs
+      - tests/ops/cn-main-auth-recover-verified.test.mjs
+      - .github/workflows/cn-main-auth-recovery-readonly.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cn-main-auth-runtime-readonly
+  cancel-in-progress: true
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Parse and execute isolated no-network tests
+        run: |
+          set -euo pipefail
+          node --check scripts/ops/cn-main-auth-recover-verified.mjs
+          node --test tests/ops/cn-main-auth-recover-verified.test.mjs
+      - name: Static safeguard checks
+        run: |
+          set -euo pipefail
+          grep -Fq "CN_AUTH_PLAN_READ_ONLY" scripts/ops/cn-main-auth-recover-verified.mjs
+          grep -Fq "CN_AUTH_ROLLBACK_HEALTH" scripts/ops/cn-main-auth-recover-verified.mjs
+          grep -Fq "PRODUCTION_PROJECT_URL_MISMATCH" scripts/ops/cn-main-auth-recover-verified.mjs
+          grep -Fq "NO_CURRENT_ENABLED_PUBLIC_KEY_FOUND" scripts/ops/cn-main-auth-recover-verified.mjs
+          echo "NO_PRODUCTION_DEPLOYMENT_AND_NO_SECRET_MUTATION_PERFORMED"
