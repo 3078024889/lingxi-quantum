@@ -12,7 +12,7 @@ function loadNativePage(path,wx){
     Page:definition=>{page=definition;},
     wx,console,
     require:p=>{
-      if(p.endsWith("share"))return require("../miniapp/utils/share.js");
+      if(p.endsWith("share")){const mod={exports:{}};vm.runInNewContext(read("miniapp/utils/share.js"),{module:mod,exports:mod.exports,wx},{timeout:1500});return mod.exports;}
       if(p.endsWith("app-profile"))return require("../miniapp/utils/app-profile.js");
       throw Error("UNEXPECTED_REQUIRE:"+p);
     }
