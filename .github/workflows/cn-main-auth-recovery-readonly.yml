@@ -5,6 +5,9 @@ on:
     paths:
       - scripts/ops/cn-main-auth-recover-verified.mjs
       - tests/ops/cn-main-auth-recover-verified.test.mjs
+      - lib/supabase/server-runtime-config.ts
+      - lib/supabase/server.ts
+      - tests/ops/server-runtime-supabase-public.test.mjs
       - .github/workflows/cn-main-auth-recovery-readonly.yml
   workflow_dispatch:
 permissions:
@@ -27,7 +30,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check scripts/ops/cn-main-auth-recover-verified.mjs
-          node --test tests/ops/cn-main-auth-recover-verified.test.mjs
+          node --test tests/ops/cn-main-auth-recover-verified.test.mjs tests/ops/server-runtime-supabase-public.test.mjs
       - name: Static safeguard checks
         run: |
           set -euo pipefail
