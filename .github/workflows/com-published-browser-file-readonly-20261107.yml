@@ -1,0 +1,70 @@
+name: COM PUBLIC live desktop/mobile browser and synthetic PDF acceptance (READ ONLY)
+on:
+  push:
+    branches: [audit/com-postcutover-20261107]
+    paths: ['.github/workflows/com-published-browser-file-readonly-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 17
+    env:
+      TARGET: https://lingxifield.com
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 33d3cbd1c7cdbb859f103292ee99c7f1ac47a564
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with: {version: 11.28.0, run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version-file: .nvmrc, cache: pnpm}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Real Chromium desktop/mobile routes, hydration and synthetic PDF intake
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --input-type=module <<'JS'
+          import {chromium} from "playwright";
+          import {PDFDocument} from "pdf-lib";
+          const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+          const pdf=await PDFDocument.create();
+          pdf.addPage([595,842]);
+          pdf.addPage([595,842]);
+          const data=Buffer.from(await pdf.save());
+          const root=process.env.TARGET;
+          if(root!=='https://lingxifield.com')throw Error('EXACT_PUBLIC_APEX_ONLY');
+          try{
+            for(const mode of ['desktop','mobile']){
+              const ctx=await browser.newContext(mode==='mobile'?{viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2}:{viewport:{width:1440,height:900}});
+              const page=await ctx.newPage();
+              const pageErrors=[];
+              page.on('pageerror',e=>pageErrors.push(String(e?.message||e).slice(0,220)));
+              for(const path of ['/','/tools','/siai','/tools/pdf-editor','/tools/e-sign-pdf']){
+                const r=await page.goto(root+path,{waitUntil:'domcontentloaded',timeout:45000});
+                const status=r?.status()??0;
+                const h=await page.locator('body').innerText({timeout:15000});
+                if(status!==200||h.trim().length<30)throw Error('BROWSER_ROUTE_BAD:'+mode+':'+path+':'+status);
+                console.log('COM_REAL_CHROMIUM_ROUTE_PASS',mode,path,status,'text_length='+h.length);
+              }
+              // Only operate on synthetic two-page PDF; no quote/export/payment click.
+              await page.goto(root+'/tools/pdf-editor',{waitUntil:'domcontentloaded',timeout:45000});
+              const input=page.locator('input[type="file"][accept*="pdf"]').first();
+              await input.waitFor({state:'attached',timeout:25000});
+              await input.setInputFiles({name:'browser-smoke-2-pages.pdf',mimeType:'application/pdf',buffer:data});
+              await page.getByTestId('pdf-source-page-count').getByText(/2/).waitFor({state:'visible',timeout:45000}).catch(async ()=>{
+                const txt=await page.getByTestId('pdf-source-page-count').innerText({timeout:10000});
+                if(!/2/.test(txt))throw Error('PDF_PAGE_COUNT_NOT_2:'+mode+':'+txt);
+              });
+              console.log('COM_SYNTHETIC_PDF_INTAKE_PASS',mode,'pages=2');
+              console.log('COM_CHROMIUM_JS_ERRORS',mode,pageErrors.length,pageErrors.slice(0,3));
+              if(pageErrors.some(x=>/Hydration failed|Minified React error|ChunkLoadError/.test(x)))
+                throw Error('PUBLIC_PAGE_HYDRATION_ERROR:'+mode);
+              await ctx.close();
+            }
+          }finally{await browser.close();}
+          console.log('COM_PUBLIC_DOMAIN_REAL_BROWSER_DESKTOP_MOBILE_FILE_INTAKE_PASS');
+          JS
