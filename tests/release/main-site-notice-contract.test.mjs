@@ -50,3 +50,31 @@ test("modal is wired into main layout and rejects unaudited flags",()=>{
  assert(api.includes("no-store"));
  assert(!api.includes('enabled:true'));
 });
+
+test("maintenance notice is a separately approved, deadline-limited state",()=>{
+ const env={
+  LINGXI_MAINTENANCE_NOTICE_ENABLED:"1",
+  LINGXI_MAINTENANCE_NOTICE_APPROVED:"1",
+ };
+ const before=Date.parse("2026-11-07T12:00:00+08:00");
+ const on=mainSiteReleaseNoticeState(env,before);
+ assert.equal(on.enabled,true);
+ assert.equal(on.phase,"maintenance");
+ assert.equal(on.version,"2026-11-dual-site-maintenance");
+ assert.equal(mainSiteReleaseNoticeState({...env,LINGXI_MAINTENANCE_NOTICE_APPROVED:"0"},before).enabled,false);
+ assert.equal(mainSiteReleaseNoticeState(env,Date.parse("2026-11-09T00:00:00+08:00")).enabled,false);
+});
+test("an accepted release always takes precedence over an old maintenance schedule",()=>{
+ const state=mainSiteReleaseNoticeState({
+  ...valid,LINGXI_MAINTENANCE_NOTICE_ENABLED:"1",LINGXI_MAINTENANCE_NOTICE_APPROVED:"1",
+ },Date.parse("2026-11-07T12:00:00+08:00"));
+ assert.equal(state.enabled,true);
+ assert.equal(state.phase,"complete");
+});
+test("the Chinese maintenance copy contains the requested target date without misrepresenting completion",()=>{
+ const source=readFileSync("components/MainSiteReleaseNotice.tsx","utf8");
+ assert(source.includes("预计2026年11月8日前恢复上线"));
+ assert(source.includes("具体以最终功能验收结果为准"));
+ assert(source.includes("全球双站架构升级公告"));
+ assert(source.includes('state.phase==="complete"?<Link'));
+});
