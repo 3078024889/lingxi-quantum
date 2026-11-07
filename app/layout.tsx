@@ -12,6 +12,7 @@ import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
 import SiteStructuredData from "@/components/SiteStructuredData";
 import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
+import MainSiteReleaseNotice from "@/components/MainSiteReleaseNotice";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
 import {SHARE_IMAGE_URL} from "@/lib/share-image";
@@ -75,5 +76,5 @@ import SiteVisitTracker from "@/components/SiteVisitTracker";
 export default function RootLayout({children}:{children:React.ReactNode}){
  return <html lang="zh-CN" dir="ltr" suppressHydrationWarning><head><link rel="describedby" href="/llms.txt" type="text/markdown"/><script dangerouslySetInnerHTML={{__html:LINGXIFIELD_HTML_LOCALE_BOOTSTRAP}}/>
   <SiteStructuredData/>
-  </head><body className="antialiased"><SiteVisitTracker/><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider><LingxifieldFeedback /></body></html>;
+  </head><body className="antialiased"><SiteVisitTracker/><MiniEmbedMode/><AdSenseLoader/><CurrencyPreferenceProvider><div className="lx-site-content">{children}</div></CurrencyPreferenceProvider><LingxifieldFeedback /><MainSiteReleaseNotice /></body></html>;
 }
