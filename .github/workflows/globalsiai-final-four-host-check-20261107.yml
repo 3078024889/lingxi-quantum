@@ -1,0 +1,71 @@
+name: Global SIAI four host public acceptance (READ ONLY)
+on:
+  push:
+    branches: [diagnostics/globalsiai-final-hosts-20261107]
+permissions:
+  contents: read
+jobs:
+  public-acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Verify international Cloudflare custom domains and mainland origin isolation
+        shell: bash
+        run: |
+          set -uo pipefail
+          missing=0
+          for host in globalsiai.com www.globalsiai.com globalsiai.cn www.globalsiai.cn globalsiai-market-global.3078024889.workers.dev; do
+            echo "=== DNS $host ==="
+            for resolver in 1.1.1.1 8.8.8.8; do
+              dig @"$resolver" "$host" A +time=4 +tries=2 +noall +answer || true
+              dig @"$resolver" "$host" AAAA +time=4 +tries=2 +noall +answer || true
+            done
+          done
+          echo '=== Main .com and China .cn full HTTPS routes ==='
+          for host in globalsiai.com globalsiai.cn; do
+            for path in / /zh/ai /en/ai /ja/ai /ko/ai /fr/ai /de/ai /es/ai /pt/ai /ar/ai /api/v1/health /api/v1/data-readiness; do
+              out="$(curl --noproxy '*' -4sS -L --connect-timeout 8 --max-time 25 \
+                -o /tmp/globalsiai-final-body -w '%{http_code} SSL=%{ssl_verify_result} IP=%{remote_ip} URL=%{url_effective}' \
+                "https://$host$path" 2>/tmp/globalsiai-final-err)" && rc=0 || rc=$?
+              echo "HOST=$host PATH=$path RC=$rc RESULT=$out"
+              if [ "$rc" != 0 ] || [ "${out%% *}" != 200 ]; then
+                cat /tmp/globalsiai-final-err; missing=1
+              fi
+              if [ "$host" = globalsiai.com ] && [ "$path" = / ] && grep -Fq '湘ICP备2026031465号-4' /tmp/globalsiai-final-body; then
+                echo GLOBALSIAI_COM_MAINLAND_ICP_LEAK; missing=1
+              fi
+            done
+          done
+          echo '=== WWW canonical redirect must be true 301, not just final 200 ==='
+          for host in www.globalsiai.com www.globalsiai.cn; do
+            output="$(curl --noproxy '*' -4sS -D /tmp/globalsiai-final-headers -o /dev/null \
+              --connect-timeout 8 --max-time 25 \
+              -w '%{http_code} SSL=%{ssl_verify_result} IP=%{remote_ip} URL=%{url_effective}' \
+              "https://$host/en/ai" 2>/tmp/globalsiai-final-err)" && rc=0 || rc=$?
+            echo "WWW=$host RC=$rc RESULT=$output"
+            grep -iE '^(http/|location:|server:|cf-ray:|x-robots-tag:)' /tmp/globalsiai-final-headers | head -n 12 || true
+            if [ "$rc" != 0 ] || [ "${output%% *}" != 301 ]; then
+              cat /tmp/globalsiai-final-err; echo "WWW_NOT_301=$host"; missing=1
+            fi
+            target="$host"
+            if [ "$host" = www.globalsiai.com ]; then target=globalsiai.com; else target=globalsiai.cn; fi
+            grep -Eiq "^location:[[:space:]]*https://$target/en/ai" /tmp/globalsiai-final-headers || {
+              echo "WWW_LOCATION_INVALID=$host"; missing=1
+            }
+          done
+          echo '=== Preview Worker comparison and publication policy ==='
+          for path in / /api/v1/health /robots.txt /api/site-release-announcement; do
+            output="$(curl --noproxy '*' -4sS -L --connect-timeout 8 --max-time 22 \
+              -o /tmp/globalsiai-preview-body -w '%{http_code} SSL=%{ssl_verify_result}' \
+              "https://globalsiai-market-global.3078024889.workers.dev$path" 2>/tmp/globalsiai-final-err)" && rc=0 || rc=$?
+            echo "PREVIEW_PATH=$path RC=$rc RESULT=$output"
+            if [ "$rc" != 0 ] || [ "${output%% *}" != 200 ]; then
+              cat /tmp/globalsiai-final-err; missing=1
+            fi
+            if [ "$path" = /robots.txt ]; then
+              head -c 500 /tmp/globalsiai-preview-body; echo
+            fi
+          done
+          if [ "$missing" = 0 ]; then echo GLOBALSIAI_FOUR_HOSTS_NINE_LANG_TLS_AND_WWW_301_PASS; else
+            echo GLOBALSIAI_PUBLIC_ACCEPTANCE_NOT_YET_PASS; exit 1
+          fi
