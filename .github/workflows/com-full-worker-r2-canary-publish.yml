@@ -1,7 +1,7 @@
 name: Cloudflare COM full main-site canary plus verified eight R2 files (NO DNS CUTOVER)
+# This once-canary Worker now serves live lingxifield.com routes.
+# Keep it intact as the blue/green rollback target; never auto-overwrite it on push.
 on:
-  push:
-    branches: [infra/com-cloudflare-readiness-20261106]
   workflow_dispatch:
 permissions:
   contents: read
