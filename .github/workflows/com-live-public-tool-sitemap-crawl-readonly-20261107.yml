@@ -34,7 +34,7 @@ jobs:
           # Avoid relying on /sitemap.xml, which itself is dynamically SSR'd and can 1102.
           from pathlib import Path
           catalog=Path("lib/seo/global-seo.ts").read_text("utf-8")
-          slugs=list(dict.fromkeys(re.findall(r'\\{\\s*slug:"([a-z0-9-]+)"',catalog)))
+          slugs=list(dict.fromkeys(re.findall(r'\{\s*slug:"([a-z0-9-]+)"',catalog)))
           if len(slugs)!=124:raise SystemExit("PUBLIC_SOURCE_CATALOG_COUNT_CHANGED:"+str(len(slugs)))
           paths=set("/tools/"+slug for slug in slugs)
           print("PINNED_SOURCE_CATALOG_TOOL_COUNT",len(paths))
