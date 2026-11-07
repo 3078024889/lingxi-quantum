@@ -1,0 +1,44 @@
+name: CN public live post-cutover HTTP and notice gate (READ ONLY)
+on:
+  push:
+    branches: [ops/cn-capability-first-cutover-20261107]
+    paths: ['.github/workflows/cn-public-live-post-cutover-readonly.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Verify external HTTPS prod routes, maintenance notice and anonymous auth
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import urllib.request, urllib.error, json, time
+          host="https://lingxifield.cn"
+          routes={"/":200,"/api/health":200,"/tools":200,"/siai":200,"/tools/pdf-editor":200,"/tools/e-sign-pdf":200,"/api/site-release-announcement":200,"/api/sasi/account":401,"/api/tools/jobs":401}
+          def get(url):
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url,headers={"User-Agent":"LINGXIFIELD-live-post-cutover-test/1.0"}),timeout=25) as f:
+                      return f.status,f.read(16384)
+              except urllib.error.HTTPError as e:return e.code,b""
+              except Exception as e:
+                  print("CN_EXTERNAL_NETWORK_ERROR:",type(e).__name__,str(e)[:160])
+                  return 0,b""
+          for path,expect in routes.items():
+              s,body=get(host+path)
+              print("CN_REAL_PUBLIC_GATE",path,s,"expected",expect)
+              if s!=expect:raise SystemExit("CN_PUBLIC_DOMAIN_GATE_FAILED:"+path+":"+str(s))
+              if path=="/api/site-release-announcement":
+                  j=json.loads(body)
+                  print("CN_LIVE_NOTICE_ENABLED",j.get("enabled"),"PHASE",j.get("phase"),"SITE",j.get("site"))
+                  if j.get("enabled") is not True or j.get("phase")!="maintenance":raise SystemExit("CN_PUBLIC_NOTICE_NOT_ENABLED")
+          for host in ["https://lingxifield.cn","https://www.lingxifield.cn"]:
+              s,_=get(host+"/")
+              print("CN_PUBLIC_DOMAIN_HOST",host,s)
+              if s not in (200,301,302,307,308):raise SystemExit("CN_PUBLIC_HOST_FAILURE")
+          print("CN_REAL_EXTERNAL_PUBLIC_NOTICE_AND_AUTH_GATES_PASS")
+          print("CN_LOGIN_PAYMENTS_EXPORT_AND_OPTIONAL_ENGINES_NOT_ATTESTED")
+          PY
