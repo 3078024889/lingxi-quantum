@@ -28,8 +28,8 @@ jobs:
               except Exception as e:return 0,type(e).__name__.encode()
           paths=set()
           # Native published sitemap is evidence of actually discoverable routes.
-          code,body=fetch("https://lingxifield.cn/sitemap.xml")
-          print("CN_SITEMAP",code,len(body))
+          code,body=fetch("https://lingxifield.com/sitemap.xml")
+          print("COM_CANONICAL_SITEMAP",code,len(body))
           def add_or_queue(xml,url,seen,depth=0):
               if depth>3 or url in seen:return
               seen.add(url)
@@ -49,7 +49,7 @@ jobs:
                   childcode,childbody=fetch(child)
                   print("NESTED_SITEMAP",childcode,child,len(childbody))
                   if childcode==200:add_or_queue(childbody,child,seen,depth+1)
-          if code==200:add_or_queue(body,"https://lingxifield.cn/sitemap.xml",set())
+          if code==200:add_or_queue(body,"https://lingxifield.com/sitemap.xml",set())
           # Supplement published sitemap with known critical routes without inventing functionality.
           paths.update(("/tools/pdf-editor","/tools/e-sign-pdf","/tools/pdf-merge-split","/tools/pdf-to-jpg","/tools/food-calorie","/tools/video-transcription","/tools/image-translator","/tools/handwriting-ocr"))
           print("PUBLIC_PUBLISHED_TOOL_COUNT",len(paths))
