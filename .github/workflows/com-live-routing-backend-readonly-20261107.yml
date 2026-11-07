@@ -1,4 +1,4 @@
-name: COM live domain and backend gate (READ ONLY, NO DNS CHANGES)
+name: COM verify saved scoped Cloudflare token and live DNS (READ ONLY)
 on:
   push:
     branches: [infra/com-cloudflare-readiness-20261106]
