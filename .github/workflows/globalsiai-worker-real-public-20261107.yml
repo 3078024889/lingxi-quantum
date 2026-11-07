@@ -1,0 +1,60 @@
+name: Global SIAI Workers real public egress acceptance (READ ONLY)
+on:
+  push:
+    branches: [diagnostics/globalsiai-worker-public-smoke-20261107]
+permissions:
+  contents: read
+jobs:
+  global-worker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: External public DNS and Cloudflare Workers HTTP probe
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          host=globalsiai-market-global.3078024889.workers.dev
+          for dns in 1.1.1.1 8.8.8.8; do
+            echo "DNS_RESOLVER=$dns WORKER_HOST=$host"
+            dig @"$dns" "$host" A +time=4 +tries=2 +noall +answer || true
+            dig @"$dns" "$host" AAAA +time=4 +tries=2 +noall +answer || true
+          done
+          for path in / /zh/ai /en/ai /ja/ai /ko/ai /fr/ai /de/ai /es/ai /pt/ai /ar/ai /api/v1/health /api/v1/data-readiness /api/site-release-announcement /robots.txt; do
+            result="$(curl -4sS --location --retry 1 --retry-delay 1 \
+              --connect-timeout 8 --max-time 22 \
+              -o /tmp/globalsiai-worker-response \
+              -w '%{http_code} %{ssl_verify_result} %{remote_ip} %{url_effective}' \
+              "https://$host$path")" && rc=0 || rc=$?
+            echo "WORKER_PUBLIC_PATH=$path CURL_RC=$rc HTTP_SSL_IP_URL=$result"
+            if [ "$rc" != 0 ] || [ "$(printf '%s\n' "$result" | awk '{print $1}')" != 200 ]; then
+              echo "WORKER_PUBLIC_ROUTE_FAILED=$path"
+              exit 1
+            fi
+            case "$path" in
+              /) if grep -Fq '湘ICP备2026031465号-4' /tmp/globalsiai-worker-response; then
+                   echo WORKER_MAINLAND_ICP_LEAK; exit 1
+                 fi ;;
+              /api/site-release-announcement)
+                grep -Fq '"enabled":false' /tmp/globalsiai-worker-response || {
+                  echo WORKER_NOTICE_PREMATURELY_ON; exit 1
+                } ;;
+              /robots.txt)
+                grep -Eiq 'Disallow:[[:space:]]*/' /tmp/globalsiai-worker-response || {
+                  echo WORKER_ROBOTS_NOT_DISABLED; exit 1
+                } ;;
+            esac
+          done
+          echo GLOBALSIAI_WORKERS_REAL_PUBLIC_9LANG_API_TLS_NOINDEX_PASS
+      - name: Independently verify CN production is still operational
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for host in globalsiai.cn www.globalsiai.cn; do
+            out="$(curl -4sSL --connect-timeout 8 --max-time 20 \
+              -o /tmp/globalsiai-cn-check -w '%{http_code} %{ssl_verify_result} %{remote_ip}' \
+              "https://$host/")" && rc=0 || rc=$?
+            echo "CN_PUBLIC_HOST=$host CURL_RC=$rc HTTP_SSL_IP=$out"
+            test "$rc" = 0
+            test "$(printf '%s\n' "$out" | awk '{print $1}')" = 200
+          done
+          echo GLOBALSIAI_CN_PUBLIC_STILL_OK
