@@ -18,14 +18,15 @@ const mockR2={
   return meta?{size:meta.bytes,httpEtag:'"verified-etag"'}:null;
  }
 };
-test("all six oversized source files are mapped to exact public read-only paths",()=>{
- assert.equal(names.length,6);
+test("all seven directly-named oversized source files are mapped to exact public read-only paths",()=>{
+ assert.equal(names.length,7);
  assert(names.every(path=>largePublicAssets[path].bytes>25*1024*1024));
  assert(names.every(path=>path.startsWith("/models/")||path.startsWith("/images/")||path.startsWith("/runtime/")));
  const cfg=JSON.parse(readFileSync("wrangler.jsonc","utf8"));
  assert.equal(cfg.main,".open-next/offload-worker.mjs");
  assert.equal(cfg.r2_buckets[0].binding,"LINGXI_PUBLIC_LARGE_R2");
- assert.deepEqual(cfg.assets.run_worker_first,names);
+ assert.deepEqual(cfg.assets.run_worker_first.slice(0,7),names);
+ assert.equal(cfg.assets.run_worker_first[7],"/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm");
  assert.equal(cfg.workers_dev,false);
 });
 test("requests outside the exact manifest never access R2",async()=>{
@@ -95,4 +96,30 @@ test("offload stage does not remove originals from public and verifies hashes",(
  assert(!source.includes("await unlink(input)"));
  assert(source.includes("UNEXPECTED_OVERSIZE_ASSETS"));
  assert(source.includes("offload-worker.mjs"));
+});
+
+test("webpack-hashed WASM route only reads an exact generated manifest entry",async()=>{
+ const hashed="/_next/static/media/ort-wasm-simd-threaded.asyncify.ac1bbd7f.wasm";
+ const extra={[hashed]:{bytes:26861777,contentType:"application/wasm"}};
+ const unknown="/_next/static/media/ort-wasm-simd-threaded.asyncify.badcafe0.wasm";
+ mockR2.calls=[];
+ assert.equal(await handleLargePublicAsset(req(unknown),{LINGXI_PUBLIC_LARGE_R2:mockR2},extra),null);
+ const stub={
+  calls:[],
+  async get(key,opts){
+   this.calls.push(key);
+   return {size:26861777,body:makeBody(),httpEtag:'"webpack-wasm"'};
+  }
+ };
+ const r=await handleLargePublicAsset(req(hashed),{LINGXI_PUBLIC_LARGE_R2:stub},extra);
+ assert.equal(r.status,200);
+ assert.equal(r.headers.get("content-type"),"application/wasm");
+ assert.deepEqual(stub.calls,["public"+hashed]);
+});
+test("offload stage validates exactly one webpack-hashed ONNX file and seven source paths",()=>{
+ const src=readFileSync("scripts/cloudflare/stage-large-public-assets.mjs","utf8");
+ assert(src.includes("HASHED_ONNX_WASM_COUNT_MISMATCH"));
+ assert(src.includes("HASHED_ONNX_WASM_SIZE_MISMATCH"));
+ assert(src.includes("generatedAssets[path]=metadata"));
+ assert(src.includes('JSON.stringify(generatedAssets)'));
 });
