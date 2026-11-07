@@ -24,5 +24,6 @@
     "backgroundTextStyle": "dark"
   },
   "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "entryPagePath": "pages/web/index"
 }
