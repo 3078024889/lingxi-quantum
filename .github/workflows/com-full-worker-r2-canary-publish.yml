@@ -49,6 +49,29 @@ jobs:
           pnpm exec opennextjs-cloudflare build
           node scripts/cloudflare/stage-large-public-assets.mjs
           node scripts/cloudflare/stage-r2-public-assets.mjs --audit
+          # Next has already prerendered these three public HTML documents, but
+          # OpenNext currently does not place them into .open-next/assets.
+          # Copy exactly the build outputs so Cloudflare serves HTML asset-first.
+          node --input-type=module <<'JS'
+          import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const files=[['index','/'],['tools','/tools'],['siai','/siai']];
+          for(const [slug,route] of files){
+            const source='.next/server/app/'+slug+'.html';
+            const dest='.open-next/assets/'+slug+'.html';
+            if(!existsSync(source)||existsSync(dest))throw Error('PUBLIC_HTML_BUILD_ASSET_UNEXPECTED:'+route);
+            const data=readFileSync(source);
+            const html=data.toString('utf8');
+            if(data.length<1000||!html.includes('<html')||!html.includes('</html>'))throw Error('PUBLIC_HTML_INVALID:'+route);
+            for(const name of ['SUPABASE_SERVICE_ROLE_KEY','CLOUDFLARE_API_TOKEN','DATABASE_URL='])
+              if(html.includes(name))throw Error('PRIVATE_IDENTIFIER_IN_PUBLIC_HTML:'+route);
+            mkdirSync('.open-next/assets',{recursive:true});
+            writeFileSync(dest,data,{mode:0o644});
+            if(!readFileSync(dest).equals(data))throw Error('HTML_ASSET_COPY_MISMATCH:'+route);
+            console.log('COM_PUBLIC_HTML_ASSET_STAGED',route,data.length,createHash('sha256').update(data).digest('hex').slice(0,16));
+          }
+          console.log('COM_THREE_PUBLIC_STATIC_HTML_ASSETS_READY');
+          JS
           pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/com-canary-dry-run"
           echo 'EXACT_SHA_OPENNEXT_R2_DRY_RUN_PASS'
       - name: Create dedicated PUBLIC R2 bucket only when missing, never touch other buckets
@@ -83,6 +106,17 @@ jobs:
           // Wrangler >=4.150 uploads sourcemaps by default; our OpenNext map exceeds Cloudflare's 60 MiB limit.
           // Disable diagnostics-only map upload while preserving the exact same Worker runtime and R2 assets.
           c.upload_source_maps=false;
+          // Cloudflare serves exact public index/tools/siai HTML as assets
+          // without instantiating the 55 MiB SSR Worker on every navigation.
+          // Nonasset requests (auth, jobs, SASI, R2) retain the original Worker.
+          if(!c.assets?.directory||!Array.isArray(c.assets.run_worker_first))
+            throw Error('PUBLIC_ASSET_ROUTING_BASE_UNEXPECTED');
+          c.assets.html_handling='auto-trailing-slash';
+          c.assets.not_found_handling='none';
+          for(const p of ['/','/tools','/siai']){
+            if(c.assets.run_worker_first.some(x=>x==='*'||x===p))
+              throw Error('PUBLIC_PAGE_FORCED_TO_WORKER:'+p);
+          }
           delete c.route;
           delete c.routes;
           delete c.triggers;
@@ -156,6 +190,20 @@ jobs:
               echo "STATIC_FREE_CANARY_REPEAT:$path:$attempt:$got"
               [ "$got" = 200 ] || { echo "::error::FREE_CANARY_INTERMITTENT_FAILURE:$path:$attempt:$got"; exit 1; }
             done
+          done
+          # Verify actual on-wire HTML is identical to the prerendered files.
+          # A 200 from SSR alone cannot establish that asset-first routing works.
+          for slug in index tools siai; do
+            path="/$slug"
+            [ "$slug" = index ] && path="/"
+            tmp="$(mktemp)"
+            curl --silent --show-error --fail --max-time 35 \
+              -H 'Accept-Encoding: identity' "$HOST$path" -o "$tmp"
+            expected="$(sha256sum ".next/server/app/$slug.html" | awk '{print $1}')"
+            actual="$(sha256sum "$tmp" | awk '{print $1}')"
+            rm -f "$tmp"
+            test "$actual" = "$expected" || { echo "::error::HTML_ASSET_NOT_DIRECTLY_SERVED:$path"; exit 1; }
+            echo "COM_CLOUDFLARE_DIRECT_HTML_ASSET_SHA256_PASS:$path"
           done
           notice="$(curl --silent --show-error --fail --max-time 25 "$HOST/api/site-release-announcement")"
           NOTICE_JSON="$notice" node -e 'const j=JSON.parse(process.env.NOTICE_JSON);if(j.enabled!==true||j.phase!=="maintenance"||j.site!=="main")process.exit(1);console.log("COM_APPROVED_MAINTENANCE_NOTICE_API_PASS")'
