@@ -1,0 +1,44 @@
+name: Global SIAI domain post-deploy DNS and TLS report (READ ONLY)
+on:
+  push:
+    branches: [diagnostics/globalsiai-domain-post-deploy-20261107]
+permissions:
+  contents: read
+jobs:
+  read-only-global:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Check all four hostnames, CAA, certificate, WWW redirect and route health
+        shell: bash
+        run: |
+          set -uo pipefail
+          echo GLOBALSIAI_PUBLIC_READONLY_REPORT_BEGIN
+          for domain in globalsiai.cn www.globalsiai.cn globalsiai.com www.globalsiai.com globalsiai-market-global.3078024889.workers.dev; do
+            echo "HOST=$domain"
+            for resolver in 1.1.1.1 8.8.8.8; do
+              echo "  DNS_RESOLVER=$resolver"
+              dig @"$resolver" "$domain" A +time=4 +tries=1 +noall +answer | tail -n 6 || true
+              dig @"$resolver" "$domain" CNAME +time=4 +tries=1 +noall +answer | tail -n 4 || true
+            done
+            for path in / /api/v1/health; do
+              out="$(curl -4sSL --connect-timeout 8 --max-time 20 -o /tmp/global-domain-page \
+                -w '%{http_code} %{ssl_verify_result} %{remote_ip} %{url_effective}' \
+                "https://$domain$path" 2>/dev/null)" && rc=0 || rc=$?
+              echo "HOST=$domain PATH=$path CURL_RC=$rc HTTP_SSL_IP_URL=$out"
+            done
+          done
+          echo '=== Cloudflare authoritative CAA ==='
+          for dns in lou.ns.cloudflare.com mimi.ns.cloudflare.com; do
+            echo "CF_NS=$dns"
+            dig @"$dns" globalsiai.com CAA +time=5 +tries=1 +noall +answer || true
+          done
+          echo '=== Exact WWW redirect without following ==='
+          for host in www.globalsiai.cn www.globalsiai.com; do
+            out="$(curl -4sS -I --connect-timeout 8 --max-time 18 \
+              -o /tmp/global-headers -w '%{http_code} %{ssl_verify_result} %{remote_ip}' \
+              "https://$host/en/ai" 2>/dev/null)" && rc=0 || rc=$?
+            echo "WWW_HOST=$host CURL_RC=$rc HTTP_SSL_IP=$out"
+            grep -Ei '^(HTTP/|location:|server:|cf-ray:)' /tmp/global-headers | head -n 8 || true
+          done
+          echo GLOBALSIAI_PUBLIC_READONLY_REPORT_COMPLETE
