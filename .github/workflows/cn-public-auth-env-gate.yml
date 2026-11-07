@@ -1,0 +1,82 @@
+name: CN public-only Supabase auth env regression (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn-live-preflight-20261107]
+    paths:
+      - 'scripts/ops/ecs-cn-approved-notice-persistent-canary.sh'
+      - '.github/workflows/cn-public-auth-env-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-public-env:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Shell syntax, no staging private settings and isolated rollback
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/ecs-cn-approved-notice-persistent-canary.sh
+          node --input-type=module <<'JS'
+          import {readFileSync} from "node:fs";
+          const s=readFileSync("scripts/ops/ecs-cn-approved-notice-persistent-canary.sh","utf8");
+          for(const needle of [
+            'EnvironmentFile=$PROD_ENV',
+            'EnvironmentFile=$PUBLIC_ENV',
+            'EnvironmentFile=$OVERRIDE',
+            'SUPABASE_URL=',
+            'SUPABASE_ANON_KEY=',
+            'CN_PUBLIC_SUPABASE_CONFIG_INVALID_BOTH_ENVS',
+            'made_public=1',
+            'if test "$made_public" = 1; then rm -f -- "$PUBLIC_ENV"; fi',
+            'probe /api/sasi/account 401',
+            'CN_PUBLIC_CUTOVER_NOT_DONE=true',
+            'chown -R -h --from='
+          ])if(!s.includes(needle))throw Error('SECURITY_GATE_MISSING:'+needle);
+          if(s.includes('EnvironmentFile=$STAGING_ENV'))throw Error('STAGING_PRIVATE_ENV_LEAK');
+          console.log('CN_AUTH_PUBLIC_ONLY_STATIC_GATES_PASS');
+          JS
+      - name: Execute actual Node 24 public-only env parser against fake staged credentials
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/public-env-test"
+          WORK="$RUNNER_TEMP/public-env-test"
+          cat > "$WORK/prod.env" <<'ENV'
+          SUPABASE_URL=https://sxsgdpqojepgbbrxrzlq.supabase.co
+          SUPABASE_ANON_KEY=WRONG
+          PROD_DATABASE_PRIVATE_KEY=dont-leak-this
+          ENV
+          cat > "$WORK/stage.env" <<'ENV'
+          SUPABASE_URL=https://sxsgdpqojepgbbrxrzlq.supabase.co
+          SUPABASE_ANON_KEY=sb_publishable_Test_Only_Key_123456789
+          SUPABASE_SERVICE_ROLE_KEY=dont-leak
+          ALIPAY_ENABLED=true
+          SASI_WORKER_SECRET=dont-leak-either
+          ENV
+          python3 - "$WORK/public-setup.cjs" <<'PY'
+          import sys
+          from pathlib import Path
+          data=Path('scripts/ops/ecs-cn-approved-notice-persistent-canary.sh').read_text()
+          before='''"$NODE" - "$PROD_ENV" "$STAGING_ENV" "$PUBLIC_ENV" <<'JS'\n'''
+          if data.count(before)!=1: raise SystemExit('PUBLIC_CONFIG_PARSER_NOT_FOUND')
+          code=data.split(before,1)[1].split("\nJS\n",1)[0]
+          Path(sys.argv[1]).write_text(code+'\n')
+          PY
+          node "$WORK/public-setup.cjs" "$WORK/prod.env" "$WORK/stage.env" "$WORK/public.env"
+          node --input-type=module - "$WORK/public.env" <<'JS'
+          import {readFileSync,statSync} from 'node:fs';
+          const s=readFileSync(process.argv[2],'utf8');
+          const lines=s.trim().split('\n');
+          if(lines.length!==2||!lines[0].startsWith('SUPABASE_URL=')||!lines[1].startsWith('SUPABASE_ANON_KEY='))throw Error('PUBLIC_ONLY_FILTER_FAILED');
+          if(s.includes('SERVICE_ROLE')||s.includes('ALIPAY')||s.includes('SASI_WORKER_SECRET')||s.includes('PRIVATE_KEY'))throw Error('PRIVATE_DATA_LEAKED');
+          if((statSync(process.argv[2]).mode&0o777)!==0o600)throw Error('PUBLIC_ENV_MODE_INVALID');
+          console.log('CN_ONLY_SUPABASE_PUBLIC_FIELDS_WRITTEN_0600_PASS');
+          JS
