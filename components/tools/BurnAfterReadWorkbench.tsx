@@ -29,6 +29,8 @@ export default function BurnAfterReadWorkbench(){
  const [pendingQuote,setPendingQuote]=useState("");
  const [draftId,setDraftId]=useState("");
  const filesClaimed=useRef(false);
+ const passReceipt=useRef<string>("");
+ const passEncryption=useRef<{signature:string;value:{key:string;iv:string;ciphertext:string}}|null>(null);
  const processing=useRef(false),finished=useRef(new Set<string>()),pollTimer=useRef<ReturnType<typeof setInterval>|null>(null);
  const textTask=useRef<PendingTextTask|null>(null),[recoverText,setRecoverText]=useState<PendingTextTask|null>(null);
  const stopPoll=()=>{if(pollTimer.current){clearInterval(pollTimer.current);pollTimer.current=null}};
@@ -101,6 +103,56 @@ export default function BurnAfterReadWorkbench(){
    }finally{processing.current=false;setBusy(false)}
  }
 
+ async function uploadPassShare(){
+   if(processing.current||!files.length)return;
+   processing.current=true;setBusy(true);setError("");setLink("");
+   try{
+     let receiptId=passReceipt.current;
+     if(!receiptId){
+       const ticket=await claimToolStart("burn-after-read",files.length);
+       receiptId=String(ticket.requestId||"");
+       if(!receiptId)throw new Error("TOOL_USE_RECEIPT_REQUIRED");
+       passReceipt.current=receiptId;
+       filesClaimed.current=true;
+     }
+     const signature=JSON.stringify({
+       text,ttl,mode,views,duration,
+       files:files.map(f=>({name:f.name,size:f.size,type:f.type}))
+     });
+     let enc=passEncryption.current?.signature===signature?passEncryption.current.value:null;
+     if(!enc){
+       enc=await encryptedText();
+       passEncryption.current={signature,value:enc};
+     }
+     const prepare=await fetch("/api/tools/burn-after-read/file/prepare",{
+       method:"POST",credentials:"same-origin",cache:"no-store",
+       headers:{"content-type":"application/json"},
+       body:JSON.stringify({
+         accessRequestId:receiptId,operationId:receiptId,
+         ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,
+         mode,maxViews:mode==="limited"?views:1,
+         viewDurationSeconds:mode==="fast"?duration:null,
+         files:files.map(f=>({name:f.name,size:f.size,type:f.type||"application/octet-stream"}))
+       })
+     });
+     const d=await prepare.json().catch(()=>({}));
+     if(!prepare.ok)throw new Error(String(d.error||"PREPARE_FAILED"));
+     if(!d.alreadyReady)await uploadPrepared(d.files||[]);
+     const complete=await fetch("/api/tools/burn-after-read/file/complete",{
+       method:"POST",credentials:"same-origin",cache:"no-store",
+       headers:{"content-type":"application/json"},body:JSON.stringify({id:d.id})
+     });
+     if(!complete.ok)throw new Error("UPLOAD_INCOMPLETE");
+     if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
+     setLink(`${location.origin}/tools/burn-after-read/${d.id}#k=${enc.key}&t=${encodeURIComponent(String(d.token))}`);
+     setText("");setFiles([]);filesClaimed.current=false;
+     passReceipt.current="";passEncryption.current=null;
+   }catch(error){
+     setError(error instanceof ToolAccessError?toolAccessMessage(lang,error.code):
+       lang==="zh"?"加密文件暂时未能完成，当前任务可以重试。":"The encrypted file could not be completed. This task can be retried.");
+   }finally{processing.current=false;setBusy(false);}
+ }
+
  async function payAndUpload(){
    if(!files.length)return;
    setBusy(true);setError("");setLink("");
@@ -143,7 +195,7 @@ export default function BurnAfterReadWorkbench(){
   <section className="rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
    <textarea value={text} onChange={e=>setText(e.target.value)} maxLength={120000} rows={7} placeholder={toolUiCopy("输入要分享的私密内容，也可以只上传文件…")} className="w-full rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-4 text-[var(--lx-ink)] outline-none focus:border-[var(--lx-line-strong)]"/>
    <div className="mt-4 rounded-2xl border border-dashed border-slate-300 p-4">
-    <label className="cursor-pointer font-medium text-slate-900">{t("addFiles")}<input className="hidden" type="file" multiple onChange={e=>{const x=Array.from(e.target.files||[]).slice(0,20);e.target.value="";if(x.reduce((n,f)=>n+f.size,0)>2*1024*1024*1024){setError(t("fileLimit"));return;}void (async()=>{try{await claimToolStart("burn-after-read",x.length);filesClaimed.current=true;setFiles(x);setError("");}catch(err){setError(err instanceof ToolAccessError?toolAccessMessage(lang,err.code):deliveryText(lang,"failed"))}})()}}/></label>
+    <label className="cursor-pointer font-medium text-slate-900">{t("addFiles")}<input className="hidden" type="file" multiple onChange={e=>{const x=Array.from(e.target.files||[]).slice(0,20);e.target.value="";if(x.reduce((n,f)=>n+f.size,0)>2*1024*1024*1024){setError(t("fileLimit"));return;}void (async()=>{try{const ticket=await claimToolStart("burn-after-read",x.length);passReceipt.current=String(ticket.requestId||"");passEncryption.current=null;filesClaimed.current=true;setFiles(x);setError("");}catch(err){setError(err instanceof ToolAccessError?toolAccessMessage(lang,err.code):deliveryText(lang,"failed"))}})()}}/></label>
     <p className="mt-1 text-xs text-slate-500">{t("fileLimit")} {t("filePaid")}</p>
     {!!files.length&&<div className="mt-3 space-y-1 text-sm text-slate-700">{files.map((f,i)=><div key={`${f.name}-${i}`} className="flex justify-between gap-3"><span className="truncate">{f.name}</span><span>{(f.size/1024/1024).toFixed(1)} MB</span></div>)}</div>}
    </div>
@@ -153,8 +205,8 @@ export default function BurnAfterReadWorkbench(){
     {mode==="limited"&&<label className="text-xs text-slate-500">{t("views")}<select value={views} onChange={e=>setViews(Number(e.target.value))} className="ml-2 rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-800"><option value={1}>{t("v1")}</option><option value={3}>{t("v3")}</option><option value={5}>{t("v5")}</option></select></label>}
     {mode==="fast"&&<label className="text-xs text-slate-500">{t("timer")}<select value={duration} onChange={e=>setDuration(Number(e.target.value))} className="ml-2 rounded-full border border-slate-200 px-4 py-2 text-sm text-slate-800"><option value={5}>{t("s5")}</option><option value={10}>{t("s10")}</option><option value={30}>{t("s30")}</option><option value={60}>{t("s60")}</option></select></label>}
    </div>
-   <button onClick={files.length?payAndUpload:createText} disabled={busy||(!text.trim()&&!files.length&&!recoverText)} className="mt-4 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("uploading"):(files.length?t("payUpload"):t("generate"))}</button>
-   {files.length>0&&<p className="mt-2 text-xs text-slate-500">{lang==="zh"?`本次共 ${totalMb} MB。确认价格后按你选择的支付币种继续。`:`${totalMb} MB total. Continue in your selected payment currency after confirming the price.`}</p>}
+   <button onClick={files.length?(TOOL_PASS_ENFORCED?uploadPassShare:payAndUpload):createText} disabled={busy||(!text.trim()&&!files.length&&!recoverText)} className="mt-4 rounded-full bg-[var(--lx-ink)] px-5 py-2.5 text-sm font-medium text-[var(--lx-bg)] disabled:opacity-40">{busy?t("uploading"):(files.length?(TOOL_PASS_ENFORCED?t("generate"):t("payUpload")):t("generate"))}</button>
+   {files.length>0&&<p className="mt-2 text-xs text-slate-500">{TOOL_PASS_ENFORCED?(lang==="zh"?`本次共 ${files.length} 个文件，合计 ${totalMb} MB。按工具包或每日免费次数处理。`:`${files.length} files, ${totalMb} MB total. Uses the tools pass or the daily free allowance.`):(lang==="zh"?`本次共 ${totalMb} MB。确认价格后按你选择的支付币种继续。`:`${totalMb} MB total. Continue in your selected payment currency after confirming the price.`)}</p>}
    {link&&<div className="mt-5 rounded-2xl bg-slate-50 p-4"><p className="text-sm font-semibold text-slate-900">{t("ready")}</p><div className="mt-2 break-all rounded-xl bg-white p-3 text-sm text-slate-700">{link}</div><div className="mt-3 flex flex-wrap gap-2"><button onClick={()=>void copy()} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{copied?t("copied"):t("copy")}</button><button onClick={()=>void share()} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{t("share")}</button><button onClick={email} className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm">{t("email")}</button></div></div>}
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>
