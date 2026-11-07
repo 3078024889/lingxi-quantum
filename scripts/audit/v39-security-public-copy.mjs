@@ -2,7 +2,7 @@ import fs from "node:fs";
 const must=(v,m)=>{if(!v)throw new Error(m)};
 const pkg=JSON.parse(fs.readFileSync("package.json","utf8"));
 const nextVersion=String(pkg.dependencies.next||"");
-const nextMatch=/^15\\.5\\.(\\d+)$/.exec(nextVersion);
+const nextMatch=/^15\.5\.(\d+)$/.exec(nextVersion);
 must(nextMatch&&Number(nextMatch[1])>=29,"V39_NEXT_NOT_PATCHED");
 must(pkg.devDependencies["eslint-config-next"]===nextVersion,"V39_ESLINT_NEXT_PATCH_MISMATCH");
 
