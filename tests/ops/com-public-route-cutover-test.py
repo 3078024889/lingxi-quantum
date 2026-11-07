@@ -12,6 +12,7 @@ SCRIPT = Path(__file__).resolve().parents[2] / "scripts/cloudflare/com-public-ro
 spec = importlib.util.spec_from_file_location("lingxifield_com_release", SCRIPT)
 app = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(app)
+ORIGINAL_EDGE_PROBE=app.edge_probe
 B = b"<html><body>LINGXIFIELD" + b"x" * 1500 + b"</body></html>"
 
 class FakeCloudflare:
@@ -101,8 +102,7 @@ exercise("existing-route-protected",conflict=True)
 
 # Test the genuine www canonical-redirect verification, not only the transaction
 # shell. All HTTP responses are isolated fixtures; no real Cloudflare calls.
-original_edge_probe = app.edge_probe if hasattr(app, "edge_probe") else None
-assert original_edge_probe is not None
+original_edge_probe = ORIGINAL_EDGE_PROBE
 app.socket.getaddrinfo = lambda *args, **kw: [
     (socket.AF_INET,socket.SOCK_STREAM,6,"",("172.67.180.71",443))
 ]
