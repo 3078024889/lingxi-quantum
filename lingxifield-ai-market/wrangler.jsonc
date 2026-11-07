@@ -3,7 +3,9 @@
   "name": "globalsiai-market-global",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-11-07",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "workers_dev": true,
   "assets": {
     "directory": ".open-next/assets",
@@ -16,5 +18,15 @@
   },
   "observability": {
     "enabled": false
-  }
+  },
+  "routes": [
+    {
+      "pattern": "globalsiai.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.globalsiai.com",
+      "custom_domain": true
+    }
+  ]
 }
