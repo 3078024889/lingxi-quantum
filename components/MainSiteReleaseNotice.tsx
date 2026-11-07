@@ -7,7 +7,8 @@ import styles from "./MainSiteReleaseNotice.module.css";
 
 type Lang="zh"|"en"|"ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
 type Copy={label:string;title:string;lead:string;body:string;benefit:string;thanks:string;global:string;china:string;action:string;dismiss:string;close:string};
-type Status={enabled:boolean;version:string;site:string};
+type Phase="maintenance"|"complete";
+type Status={enabled:boolean;version:string;site:string;phase:Phase|"pending"};
 
 const copy:Record<Lang,Copy>={
  zh:{
@@ -77,6 +78,55 @@ const copy:Record<Lang,Copy>={
  }
 };
 
+
+const maintenance:Record<Lang,{title:string;body:string;benefit:string}>={
+ zh:{
+  title:"灵犀场｜全球双站架构升级公告",
+  body:"这不是一次简单的服务器维护，而是灵犀场全球服务架构的一次重要升级。2026年11月6日起，灵犀场 LINGXIFIELD 开展服务器架构升级与全球访问线路优化，国际站与国内站进入新版切换阶段，预计2026年11月8日前恢复上线，具体以最终功能验收结果为准。",
+  benefit:"本次升级围绕全球访问链路、服务器运行架构、数据安全防护与服务稳定性展开，为全球 SIAI 排行榜、SASI 智能创作、百余项在线实用工具，以及统一账户和工具包支付提供更坚实的基础设施。"
+ },
+ en:{
+  title:"LINGXIFIELD | Global dual-site upgrade in progress",
+  body:"Since November 6, 2026, LINGXIFIELD has been upgrading international connectivity, server operations, security and reliability. Both sites are expected to resume by November 8, subject to final functional acceptance.",
+  benefit:"The upgrade supports global SIAI rankings, SASI creation, over 100 practical tools, unified accounts and tool-pass payments."
+ },
+ ja:{
+  title:"LINGXIFIELD｜国際・中国サイトの更新のお知らせ",
+  body:"2026年11月6日から接続経路、サーバー、セキュリティを更新しています。両サイトは最終検証を条件として11月8日までの復旧を予定しています。",
+  benefit:"SIAIランキング、SASI制作、100以上のツールとアカウント・決済機能の安定性を改善します。"
+ },
+ ko:{
+  title:"LINGXIFIELD | 글로벌 이중 사이트 업그레이드 안내",
+  body:"2026년 11월 6일부터 국제 접속, 서버 및 보안 환경을 개선하고 있습니다. 최종 기능 검증을 전제로 11월 8일까지 복구할 예정입니다.",
+  benefit:"SIAI 순위, SASI 창작, 100개 이상의 도구와 통합 계정 및 결제의 안정성을 강화합니다."
+ },
+ fr:{
+  title:"LINGXIFIELD | Mise à niveau des deux sites en cours",
+  body:"Depuis le 6 novembre 2026, nous améliorons nos serveurs, nos connexions mondiales et la sécurité. Le rétablissement est prévu d'ici le 8 novembre, sous réserve des vérifications finales.",
+  benefit:"Cette mise à niveau renforce SIAI, SASI, plus de 100 outils et les comptes et paiements unifiés."
+ },
+ de:{
+  title:"LINGXIFIELD | Upgrade beider Websites läuft",
+  body:"Seit dem 6. November 2026 verbessern wir Server, weltweite Zugangswege und Datensicherheit. Die Wiederherstellung ist bis zum 8. November geplant, vorbehaltlich der abschließenden Funktionsprüfung.",
+  benefit:"Die neue Infrastruktur stärkt SIAI, SASI, über 100 Werkzeuge und einheitliche Konten und Zahlungen."
+ },
+ es:{
+  title:"LINGXIFIELD | Actualización de los dos sitios en curso",
+  body:"Desde el 6 de noviembre de 2026 mejoramos los servidores, las conexiones globales y la seguridad. Prevemos restablecer ambos sitios antes del 8 de noviembre, sujeto a las pruebas finales.",
+  benefit:"La mejora refuerza SIAI, SASI, más de 100 herramientas y los servicios de cuentas y pagos integrados."
+ },
+ pt:{
+  title:"LINGXIFIELD | Atualização dos dois sites em andamento",
+  body:"Desde 6 de novembro de 2026, melhoramos servidores, conexões globais e segurança. A recuperação está prevista até 8 de novembro, dependendo dos testes finais.",
+  benefit:"A atualização reforça SIAI, SASI, mais de 100 ferramentas, contas e pagamentos unificados."
+ },
+ ar:{
+  title:"LINGXIFIELD | تحديث الموقعين جارٍ",
+  body:"منذ 6 نوفمبر 2026 نعمل على تحسين الخوادم والاتصال العالمي وأمن البيانات. نتوقع استعادة الموقعين بحلول 8 نوفمبر وفقاً لنتائج التحقق النهائي.",
+  benefit:"تعزز الترقية ترتيب SIAI وإبداع SASI وأكثر من 100 أداة ونظام الحسابات والمدفوعات الموحد."
+ }
+};
+
 const domainHosts=new Set(["lingxifield.com","www.lingxifield.com","lingxifield.cn","www.lingxifield.cn"]);
 const supported=new Set<Lang>(["zh","en","ja","ko","fr","de","es","pt","ar"]);
 function detectLang():Lang{
@@ -87,7 +137,7 @@ function detectLang():Lang{
   return supported.has(lang as Lang)?lang as Lang:"zh";
 }
 export default function MainSiteReleaseNotice(){
-  const [state,setState]=useState<{version:string;lang:Lang}|null>(null);
+  const [state,setState]=useState<{version:string;lang:Lang;phase:Phase}|null>(null);
   const close=useRef<HTMLButtonElement>(null);
   useEffect(()=>{
     // Keep embedded miniapps, account verification and payment forms uninterrupted.
@@ -99,11 +149,13 @@ export default function MainSiteReleaseNotice(){
     fetch("/api/site-release-announcement",{cache:"no-store",credentials:"same-origin",signal:controller.signal})
       .then(async res=>res.ok?await res.json() as Status:null)
       .then(result=>{
-        if(!result||result.enabled!==true||result.site!=="main"||
-           !/^2026-11-dual-site-[a-f0-9]{12}$/.test(result.version))return;
+        if(!result)return;
+        const isMaintenance=result.phase==="maintenance"&&result.version==="2026-11-dual-site-maintenance";
+        const isComplete=result.phase==="complete"&&/^2026-11-dual-site-[a-f0-9]{12}$/.test(result.version);
+        if(!result||result.enabled!==true||result.site!=="main"||(!isMaintenance&&!isComplete))return;
         const key="lx-main-release:"+result.version;
         try{if(localStorage.getItem(key)==="dismissed")return;}catch{}
-        setState({version:result.version,lang:detectLang()});
+        setState({version:result.version,lang:detectLang(),phase:result.phase as Phase});
       }).catch(()=>{});
     return()=>controller.abort();
   },[]);
@@ -137,6 +189,7 @@ export default function MainSiteReleaseNotice(){
   }
   if(!state)return null;
   const t=copy[state.lang];
+  const notice=state.phase==="maintenance"?maintenance[state.lang]:null;
   return <div className={styles.backdrop}>
     <section id="lx-main-upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="lx-main-upgrade-title"
       aria-describedby="lx-main-upgrade-detail" className={styles.card} dir={state.lang==="ar"?"rtl":"ltr"}>
@@ -147,11 +200,11 @@ export default function MainSiteReleaseNotice(){
         <span className={styles.spark} aria-hidden="true">✧</span>
       </div>
       <div className={styles.kicker}>{t.label}</div>
-      <h2 className={styles.title} id="lx-main-upgrade-title">{t.title}</h2>
+      <h2 className={styles.title} id="lx-main-upgrade-title">{notice?.title||t.title}</h2>
       <p className={styles.lead}>{t.lead}</p>
       <div className={styles.waterline} aria-hidden="true"/>
-      <p className={styles.body} id="lx-main-upgrade-detail">{t.body}</p>
-      <p className={styles.body}>{t.benefit}</p>
+      <p className={styles.body} id="lx-main-upgrade-detail">{notice?.body||t.body}</p>
+      <p className={styles.body}>{notice?.benefit||t.benefit}</p>
       <p className={styles.thanks}>{t.thanks}</p>
       <div className={styles.domains}>
         <a href="https://lingxifield.com" target="_blank" rel="noopener noreferrer">
@@ -162,7 +215,7 @@ export default function MainSiteReleaseNotice(){
         </a>
       </div>
       <div className={styles.actions}>
-        <Link href="/tools" className={styles.primary} onClick={dismiss}>{t.action}</Link>
+        {state.phase==="complete"?<Link href="/tools" className={styles.primary} onClick={dismiss}>{t.action}</Link>:null}
         <button type="button" className={styles.secondary} onClick={dismiss}>{t.dismiss}</button>
       </div>
       <div className={styles.signature}>Celestial小仙女</div>
