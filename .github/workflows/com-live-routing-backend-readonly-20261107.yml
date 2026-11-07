@@ -34,6 +34,20 @@ jobs:
               except Exception:
                   return 0,{}
           print("CF_PREVIEW_TOKEN_PRESENT:",bool(token))
+          # User-token verification returns an identifier/status, never a token value.
+          verify_status,verified=cf("/user/tokens/verify")
+          v=verified.get("result",{}) if verified.get("success") else {}
+          token_id=str(v.get("id",""))
+          print("CF_GITHUB_USER_TOKEN_VERIFY_HTTP:",verify_status)
+          print("CF_GITHUB_USER_TOKEN_STATUS:",v.get("status","unavailable"))
+          print("CF_GITHUB_USER_TOKEN_ID_SUFFIX:",token_id[-10:] if token_id else "unavailable")
+          # Account-level tokens use a separate verification endpoint.
+          if verify_status!=200 and os.environ.get("CF_ACCOUNT"):
+              acc_status,acc=cf("/accounts/"+os.environ["CF_ACCOUNT"]+"/tokens/verify")
+              a=acc.get("result",{}) if acc.get("success") else {}
+              print("CF_GITHUB_ACCOUNT_TOKEN_VERIFY_HTTP:",acc_status)
+              print("CF_GITHUB_ACCOUNT_TOKEN_STATUS:",a.get("status","unavailable"))
+              print("CF_GITHUB_ACCOUNT_TOKEN_ID_SUFFIX:",str(a.get("id",""))[-10:] or "unavailable")
           status,zones=cf("/zones?name=lingxifield.com&per_page=5")
           print("CF_ZONE_LIST_STATUS:",status)
           ids=[z["id"] for z in zones.get("result",[]) if z.get("name")=="lingxifield.com" and z.get("status")=="active"] if zones.get("success") else []
