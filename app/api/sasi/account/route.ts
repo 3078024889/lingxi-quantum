@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { CREDIT_PACKS } from "@/lib/sasi/catalog";
-import { sasiRmbBalanceV1Enabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
-import { sasiPublicReadiness } from "@/lib/sasi/readiness";
-import { publicSasiJob, type SasiJobRow } from "@/lib/sasi/production";
-import { readUnifiedBalanceSnapshot } from "@/lib/money/unified-balance";
+import type { SasiJobRow } from "@/lib/sasi/production";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,6 +9,22 @@ export async function GET() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
+  // Load ledger, admin and payment modules ONLY after the user was verified.
+  // This preserves the auth boundary and avoids initializing privileged/native
+  // adapters on anonymous Cloudflare Worker requests.
+  const [
+    { createAdminClient }, { CREDIT_PACKS },
+    { sasiRmbBalanceV1Enabled, sasiTopupProductEnabled },
+    { sasiPublicReadiness }, { publicSasiJob },
+    { readUnifiedBalanceSnapshot },
+  ] = await Promise.all([
+    import("@/lib/supabase/admin"),
+    import("@/lib/sasi/catalog"),
+    import("@/lib/sasi/payment-gate"),
+    import("@/lib/sasi/readiness"),
+    import("@/lib/sasi/production"),
+    import("@/lib/money/unified-balance"),
+  ]);
   const admin = createAdminClient();
   const rmbBalanceV1 = sasiRmbBalanceV1Enabled();
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
