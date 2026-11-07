@@ -4,7 +4,8 @@
 set -Eeuo pipefail
 umask 077
 SHA="c5a9acbc4f0f6d85bfbfa0d9e177a18f26c262ed"
-ZIP_SHA="8dac362921efac399a9cbb20847d50fa3ccbd3ac64ce038bcf083025c7c84305"
+# GitHub Actions artifact 13568433342; verified against GitHub's artifact-digest metadata.
+ZIP_SHA="8ed39d315eccb337d9a4ebf84ff8c5eb981c0cd238ee119a66debe059344ded7"
 BASE="/opt/lingxifield/cn-staged-releases"
 DIR="$BASE/$SHA"
 ENV="/etc/lingxifield/staging.env"
