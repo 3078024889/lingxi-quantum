@@ -29,7 +29,7 @@ begin
    or p_mime is null or length(p_mime)>160
    or p_size is null or p_size<1 or p_size>104857600
    or p_object_key is null or length(p_object_key)>512
-   or p_object_key !~ '^burn/'
+   or p_object_key not like ('burn/tool-'||p_user_id::text||'/%')
  then return jsonb_build_object('ok',false,'error','INVALID_MOBILE_FILE_INPUT');end if;
  -- Serializes all first-creates and retries of the same logical claimed task.
  perform pg_advisory_xact_lock(hashtextextended('lingxi-pass-mobile:'||p_request_id::text,0));
