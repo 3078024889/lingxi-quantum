@@ -61,14 +61,18 @@ jobs:
           for(const [slug,route] of files){
             const source='.next/server/app/'+slug+'.html';
             const dest='.open-next/assets/'+slug+'.html';
-            if(!existsSync(source)||existsSync(dest))throw Error('PUBLIC_HTML_BUILD_ASSET_UNEXPECTED:'+route);
+            if(!existsSync(source))throw Error('PUBLIC_HTML_BUILD_SOURCE_MISSING:'+route);
             const data=readFileSync(source);
             const html=data.toString('utf8');
             if(data.length<1000||!html.includes('<html')||!html.includes('</html>'))throw Error('PUBLIC_HTML_INVALID:'+route);
             for(const name of ['SUPABASE_SERVICE_ROLE_KEY','CLOUDFLARE_API_TOKEN','DATABASE_URL='])
               if(html.includes(name))throw Error('PRIVATE_IDENTIFIER_IN_PUBLIC_HTML:'+route);
             mkdirSync('.open-next/assets',{recursive:true});
-            writeFileSync(dest,data,{mode:0o644});
+            if(existsSync(dest)){
+              if(!readFileSync(dest).equals(data))throw Error('EXISTING_PUBLIC_HTML_DIFFERS:'+route);
+            }else{
+              writeFileSync(dest,data,{mode:0o644});
+            }
             if(!readFileSync(dest).equals(data))throw Error('HTML_ASSET_COPY_MISMATCH:'+route);
             console.log('COM_PUBLIC_HTML_ASSET_STAGED',route,data.length,createHash('sha256').update(data).digest('hex').slice(0,16));
           }
