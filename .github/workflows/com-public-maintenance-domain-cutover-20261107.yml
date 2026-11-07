@@ -4,6 +4,7 @@ on:
     branches: [infra/com-cloudflare-readiness-20261106]
     paths:
       - '.github/workflows/com-public-maintenance-domain-cutover-20261107.yml'
+      - '.github/workflows/com-full-worker-r2-canary-publish.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,6 +14,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   cutover:
+    if: startsWith(github.event.head_commit.message, 'release(com):')
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     environment: cloudflare-com-preview
@@ -23,14 +25,14 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: 05f09bb65b09aefcedb8f318716c06dcba0a1bdf
+          ref: ${{ github.sha }}
           persist-credentials: false
       - name: Verify pinned transaction script and four rollback regressions
         shell: bash
         run: |
           set -Eeuo pipefail
           script='scripts/cloudflare/com-public-route-cutover-20261107.py'
-          test "$(git hash-object "$script")" = 'dc516fe08c7d9cb1e1ff9902c0f6ca343d304f00'
+          test "$(git hash-object "$script")" = '02171eb1a771c6210ed4214b5c14cad622924b3d'
           python3 -m py_compile "$script"
           python3 tests/ops/com-public-route-cutover-test.py
           echo COM_PINNED_PUBLIC_SWITCH_TRANSACTION_AND_ROLLBACK_VERIFIED
