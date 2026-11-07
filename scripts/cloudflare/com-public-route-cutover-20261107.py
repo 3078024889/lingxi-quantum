@@ -186,8 +186,10 @@ def main():
                 stop("ROUTE_CREATED_WITH_WRONG_TARGET:" + hostname)
             new_routes.append(new["id"])
             print("COM_NEW_WORKER_ROUTE_STAGED", hostname, SCRIPT)
-            proxied(zid, dns[hostname], True)
+            # Track the intended DNS change BEFORE the API call; a successful
+            # mutation followed by a lost/malformed response still gets rolled back.
             changed_dns.append(hostname)
+            proxied(zid, dns[hostname], True)
             probe_live(hostname, baseline)
             steady_check(hostname)
         check_routes = cf("/zones/" + zid + "/workers/routes?per_page=100")
