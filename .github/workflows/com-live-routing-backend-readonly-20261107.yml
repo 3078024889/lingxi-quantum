@@ -82,4 +82,5 @@ jobs:
                           print("NOTICE_GATE:",d.get("enabled"),d.get("phase"),d.get("site"))
                       except Exception: print("NOTICE_GATE:UNPARSEABLE")
           print("NO_DNS_WRITE_NO_WORKER_DEPLOY_NO_BACKEND_MUTATION")
+          print("CF_TOKEN_SCOPE_LIVE_RECHECK_AFTER_USER_UPDATE_20261107")
           PY
