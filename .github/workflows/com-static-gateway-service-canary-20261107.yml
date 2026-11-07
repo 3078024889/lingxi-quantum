@@ -206,17 +206,23 @@ jobs:
             'export default {',
             '  async fetch(request,env){',
             '    const url=new URL(request.url);',
+            '    if(url.pathname==="/__lingxi_gateway_probe"){',
+            '      return new Response("LINGXI_GATEWAY_CANARY_V2",{status:200,headers:{"cache-control":"no-store","x-lingxi-gateway":"v2"}});',
+            '    }',
             '    if(url.hostname==="www.lingxifield.com"){',
             '      const dest=new URL(request.url);dest.hostname="lingxifield.com";',
             '      return Response.redirect(dest.toString(),308);',
             '    }',
             '    const isPublicJson=url.pathname==="/api/public/siai-widget"||url.pathname==="/api/public/site-status";',
-            '    const sensitiveApi=url.pathname.startsWith("/api/")&&!isPublicJson;',
-            '    if(!sensitiveApi&&(request.method==="GET"||request.method==="HEAD")){',
+            '    const isDynamicApi=url.pathname.startsWith("/api/")&&!isPublicJson;',
+            '    const safeRead=request.method==="GET"||request.method==="HEAD";',
+            '    if(safeRead&&!isDynamicApi){',
             '      const asset=await env.ASSETS.fetch(request);',
-            '      if(asset.status===200||asset.status===206||asset.status===304||[301,302,307,308].includes(asset.status))return asset;',
+            '      if([200,206,304,301,302,307,308].includes(asset.status))return asset;',
             '    }',
-            '    return env.LEGACY_BACKEND.fetch(request);',
+            '    const backendUrl=new URL(request.url);',
+            '    backendUrl.hostname="lingxifield.com";backendUrl.protocol="https:";backendUrl.port="";',
+            '    return env.LEGACY_BACKEND.fetch(new Request(backendUrl.toString(),request));',
             '  }',
             '};'
           ].join('\n')+'\n';
@@ -234,11 +240,9 @@ jobs:
           delete c.vars;
           c.assets.html_handling='auto-trailing-slash';
           c.assets.not_found_handling='none';
-          c.assets.run_worker_first=[
-            '/api/*','!/api/public/siai-widget','!/api/public/site-status',
-            '/','/tools','/tools/*','/siai','/sasi','/sasi/*',
-            '/runtime/*','/models/*','/media/*','/_next/static/media/ort-*.wasm'
-          ];
+          // Deterministically exercise the 0.5 KiB gateway for both assets and API.
+          // Avoid a silent Cloudflare asset-router 404 on unmatched public paths.
+          c.assets.run_worker_first=true;
           if(c.services.length!==1||c.services[0].service!=='lingxifield-com-full-canary-20261107')
             throw Error('EXACT_BACKEND_SERVICE_GUARD_FAILED');
           writeFileSync('wrangler.canary.jsonc',JSON.stringify(c,null,2)+'\n',{mode:0o600});
@@ -274,6 +278,13 @@ jobs:
         run: |
           set -Eeuo pipefail
           HOST='https://lingxifield-com-static-gateway-canary-20261107.3078024889.workers.dev'
+          tmp_probe="$(mktemp)"; hdr_probe="$(mktemp)"
+          probe_status="$(curl --silent --show-error --max-time 20 -D "$hdr_probe" -o "$tmp_probe" -w '%{http_code}' "$HOST/__lingxi_gateway_probe" || true)"
+          echo "STATIC_GATEWAY_EXACT_SCRIPT_PROBE:$probe_status"
+          cat "$tmp_probe"
+          grep -Fq 'LINGXI_GATEWAY_CANARY_V2' "$tmp_probe" || { echo "::error::GATEWAY_SCRIPT_NOT_REACHED"; cat "$hdr_probe" | head -n 12; exit 1; }
+          [ "$probe_status" = 200 ] || { echo "::error::GATEWAY_HTTP_NOT_200"; exit 1; }
+          rm -f "$tmp_probe" "$hdr_probe"
           code="$(curl --silent --max-time 12 --output /dev/null --write-out '%{http_code}' "$HOST/api/health" || true)"
           echo "STATIC_GATEWAY_BACKEND_HEALTH_SEPARATE_NOT_ATTESTED:$code"
           # No payment/ledger or auth mutation is made. This public-only release
