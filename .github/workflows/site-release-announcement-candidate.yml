@@ -1,0 +1,107 @@
+name: Main & Global SIAI one-time upgrade announcement gate (NO production deploy)
+on:
+  push:
+    branches: [feature/release-announcement-auth-readiness-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  market-announcement:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    env:
+      CI: "true"
+      LINGXI_MARKET_ECS_CANDIDATE: "1"
+      AI_MARKET_INDEX_READY: "0"
+      AI_MARKET_DOMAIN_VERIFIED: "0"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+          cache: npm
+          cache-dependency-path: lingxifield-ai-market/package-lock.json
+      - name: Install dependencies without changing lockfile
+        run: npm ci --no-fund --no-audit
+      - name: Real official data, contract, type check, production build
+        run: npm run gate
+      - name: Generate standalone artifact only, no deployment
+        run: |
+          set -Eeuo pipefail
+          test -s .next/standalone/server.js
+          mkdir -p .next/standalone/.next
+          cp -a .next/static .next/standalone/.next/static
+          if [ -d public ]; then cp -a public .next/standalone/public; fi
+          tar --owner=0 --group=0 -czf globalsiai-announcement-candidate.tar.gz -C .next/standalone .
+          sha256sum globalsiai-announcement-candidate.tar.gz > globalsiai-announcement-candidate.sha256
+          echo MARKET_ANNOUNCEMENT_CANDIDATE_READY
+      - name: Test nine routes, notice off by default, no indexing, notice enabled only after explicit runtime flag
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd .next/standalone
+          PORT=4299 HOSTNAME=127.0.0.1 node server.js >/tmp/market-announcement.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 60); do
+            if curl --noproxy '*' -fsS --max-time 4 http://127.0.0.1:4299/api/v1/health >/dev/null; then break; fi
+            sleep 1
+          done
+          for url in / /zh/ai /en/ai /ja/ai /ko/ai /fr/ai /de/ai /es/ai /pt/ai /ar/ai /api/v1/health /api/v1/data-readiness; do
+            code=$(curl --noproxy '*' -sS --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:4299$url")
+            echo "MARKET_NOTICE_TEST_ROUTE=$url HTTP=$code"
+            test "$code" = 200
+          done
+          curl --noproxy '*' -fsS --max-time 12 http://127.0.0.1:4299/robots.txt | grep -qi 'Disallow: /'
+          curl --noproxy '*' -fsS --max-time 12 http://127.0.0.1:4299/api/site-release-announcement |
+            grep -Fq '"enabled":false'
+          kill "$pid"; wait "$pid" || true
+          trap - EXIT
+          GLOBALSIAI_RELEASE_NOTICE_ENABLED=1 PORT=4299 HOSTNAME=127.0.0.1 node server.js >/tmp/market-announcement-on.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 30); do
+            if curl --noproxy '*' -fsS --max-time 4 http://127.0.0.1:4299/api/site-release-announcement | grep -Fq '"enabled":true'; then break; fi
+            sleep 1
+          done
+          curl --noproxy '*' -fsS --max-time 12 http://127.0.0.1:4299/api/site-release-announcement |
+            grep -Fq '"enabled":true'
+          echo MARKET_NOTICE_RUNTIME_FLAG_AND_9_LANG_GATE_PASS
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: globalsiai-one-time-notice-standalone-candidate
+          path: |
+            lingxifield-ai-market/globalsiai-announcement-candidate.tar.gz
+            lingxifield-ai-market/globalsiai-announcement-candidate.sha256
+          retention-days: 2
+  main-safety:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - name: Verify independent main notice gating, 3188/3189 auth read-only checks and unchanged notifications
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/cn-main-auth-readonly-gate.sh
+          bash -n scripts/ops/cn-main-auth-public-env-repair.sh
+          node --check scripts/ops/cn-auth-key-readonly.mjs
+          node --test tests/ops/cn-auth-key-readonly.test.mjs
+          awk '/^const fs=require\("node:fs"\);/{copy=1} copy && /^NODEJS$/{exit} copy{print;got=1} END{if(!got)exit 1}' scripts/ops/cn-main-auth-public-env-repair.sh | node --check
+          grep -Fq 'CN_AUTH_RUNTIME_PUBLIC_CONFIG_RECOVERED' scripts/ops/cn-main-auth-public-env-repair.sh
+          grep -Fq 'CN_AUTH_BACKUP_PATH=' scripts/ops/cn-main-auth-public-env-repair.sh
+          grep -Fq 'LINGXI_RELEASE_NOTICE_ENABLED==="1"' app/api/site-release-announcement/route.ts
+          grep -Fq 'GLOBALSIAI_RELEASE_NOTICE_ENABLED==="1"' lingxifield-ai-market/app/api/site-release-announcement/route.ts
+          grep -Fq 'lx-release-notice:' components/SiteReleaseAnnouncement.tsx
+          grep -Fq 'lx-release-notice:' lingxifield-ai-market/components/SiteReleaseAnnouncement.tsx
+          grep -Fq 'SiteReleaseAnnouncement site="main"' app/layout.tsx
+          grep -Fq 'SiteReleaseAnnouncement site="market"' 'lingxifield-ai-market/app/(default)/layout.tsx'
+          grep -Fq 'SiteReleaseAnnouncement site="market"' 'lingxifield-ai-market/app/[lang]/layout.tsx'
+          ! grep -Eq 'account/notifications|notifications-seen-at' components/SiteReleaseAnnouncement.tsx
+          grep -Fq 'CN_AUTH_NO_3188_SWITCH_NO_SECRET_OUTPUT_NO_ACCOUNT_MUTATION' scripts/ops/cn-main-auth-readonly-gate.sh
+          echo MAIN_AND_MARKET_NOTICE_FAIL_CLOSED_STATIC_GATE_PASS

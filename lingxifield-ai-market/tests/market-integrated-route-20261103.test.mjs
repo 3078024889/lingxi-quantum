@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 const root=p=>readFile(new URL('../../'+p,import.meta.url),'utf8');
-test('main homepage remains SASI and AI tools entry, and SIAI is a separate route',async()=>{
+test('main homepage contains SASI/tools and links to its independently guarded SIAI route',async()=>{
  const [home,market,nav,catalog]=await Promise.all([root('app/page.tsx'),root('app/siai/page.tsx'),root('components/Nav.tsx'),root('app/siai/catalog-data.ts')]);
  assert.match(home,/HomeProblemHub/);
  assert.match(market,/SiaiRankingHome/);
@@ -12,7 +12,8 @@ test('main homepage remains SASI and AI tools entry, and SIAI is a separate rout
  assert.match(market,/getSiaiDirectoryRows\(\)/);
  assert.match(catalog,/from "\.\.\/\.\.\/lingxifield-ai-market\//);
  assert.match(catalog,/getSiaiSourcePreviewRows/);
- assert.match(catalog,/curated\.length!==32\|\|rows\.length!==62/);
+ assert.match(catalog,/curated\.length!==MARKET_API_PRODUCTS\.length/);
+ assert.match(catalog,/rows\.length!==curated\.length\+preview\.length/);
 });
 test('main SIAI ranking keeps Arabic RTL after removing redundant detail routes',async()=>{
  const [layout,ranking]=await Promise.all([root('app/layout.tsx'),root('components/SiaiRankingHome.tsx')]);
