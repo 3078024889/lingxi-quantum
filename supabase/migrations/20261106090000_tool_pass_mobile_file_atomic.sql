@@ -21,6 +21,7 @@ create or replace function public.lingxi_prepare_pass_mobile_file_v1(
 declare
  v_old public.tool_temp_files%rowtype;
  v_stage jsonb;
+ v_existing_op uuid;
  v_exp timestamptz:=now()+interval '20 minutes';
 begin
  if p_user_id is null or p_request_id is null or p_operation_id is null
@@ -46,10 +47,17 @@ begin
   return jsonb_build_object('ok',true,'recovered',true,'objectKey',v_old.object_key,
     'expiresAt',v_old.expires_at);
  end if;
+ -- A browser-generated file handoff can follow an earlier conversion stage.
+ -- Reuse the original operation_id already bound to this claimed tool use,
+ -- rather than inventing a second task identity that would be rejected.
+ select r.operation_id into v_existing_op
+ from public.lingxi_tool_execution_receipts r
+ where r.request_id=p_request_id;
  -- The stage redemption and new upload session are one SQL transaction.
- -- If the insertion fails, stage redemption rolls back with it.
+ -- If insertion fails, the stage redemption rolls back with it.
  v_stage:=public.lingxi_redeem_tool_stage(
-   p_request_id,p_user_id,p_tool_slug,p_operation_id,'mobile-file');
+   p_request_id,p_user_id,p_tool_slug,
+   coalesce(v_existing_op,p_operation_id),'mobile-file');
  if coalesce((v_stage->>'ok')::boolean,false) is not true then return v_stage;end if;
  if coalesce((v_stage->>'alreadyStarted')::boolean,false) then
   return jsonb_build_object('ok',false,'error','MOBILE_FILE_STAGE_INCONSISTENT');
