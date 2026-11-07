@@ -42,9 +42,7 @@ const REMOTE_CALL={
  "media/free-dubbing-preview":"await transcribeAudioRemote(",
  "website-diagnose":"dns.resolve4("
 };
-const SAFE_BLOCKED={
- "burn-after-read/file/prepare":'BURN_FILE_PASS_WORKFLOW_NOT_READY'
-};
+const SAFE_BLOCKED={};
 const stageGate=read("lib/tools/commerce/tool-stage-gate.ts");
 const stageSql=read("supabase/migrations/20261106060000_tool_pass_order_bound_stages.sql");
 const passMailSql=read("supabase/migrations/20261106080000_tool_pass_mail_batch_atomic.sql");
@@ -78,6 +76,33 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
    &&(firstCost<0||start<firstCost))
    return {route,tool,state:"BLOCKED",reason:"PASS_WORKFLOW_NOT_INTEGRATED"};
   return {route,tool,state:"UNSAFE",reason:"BLOCKER_MISSING_OR_AFTER_COST"};
+ }
+ if(route==="burn-after-read/file/prepare"){
+  const sql=read("supabase/migrations/20261106100000_tool_pass_burn_file_atomic.sql");
+  const tests=read("tests/sql/tool-pass-burn-file-atomic-integrity.sql");
+  const ui=read("components/tools/BurnAfterReadWorkbench.tsx");
+  const complete=read("app/api/tools/burn-after-read/file/complete/route.ts");
+  const ok=code.includes('toolPassBackendReady()')
+   &&code.includes('.rpc("lingxi_prepare_pass_burn_file_v1"')
+   &&code.includes('if(!UUID.test(requestId)')
+   &&code.includes('newBurnObjectKey(noteId')
+   &&code.includes('PASS_BURN_FILE_RESPONSE_INVALID')
+   &&code.includes('quoteId')
+   &&sql.includes('pg_advisory_xact_lock')
+   &&sql.includes('v_use.units<>v_len')
+   &&sql.includes("'burn-file-prepare'")
+   &&sql.includes("PASS_BURN_FILE_REBIND")
+   &&sql.includes("p.input")===false
+   &&sql.includes("revoke all on function public.lingxi_prepare_pass_burn_file_v1")
+   &&ui.includes("uploadPassShare")
+   &&ui.includes('claimToolStart("burn-after-read",x.length)')
+   &&ui.includes('operationId:receiptId')
+   &&complete.includes('note.access_request_id')
+   &&complete.includes('.rpc("lingxi_redeem_tool_use"')
+   &&tests.includes("PASS_BURN_FILE_CROSS_USER_REPLAY")
+   &&tests.includes("PASS_BURN_UNCLAIMED_RECEIPT_ALLOWED");
+  return {route,tool,state:ok?"GUARDED":"UNSAFE",
+   reason:ok?"ATOMIC_ENCRYPTED_FILE_NOTE_AND_RETRYABLE_R2_SESSION":"FILE_NOTE_OR_CLIENT_BINDING_UNVERIFIED"};
  }
  if(route==="mobile-file"){
   const sql=read("supabase/migrations/20261106090000_tool_pass_mobile_file_atomic.sql");
@@ -131,8 +156,10 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
  if(route==="burn-after-read/file/complete"){
   const owner=code.includes('.eq("owner_user_id",user.id)')||code.includes(".eq('owner_user_id',user.id)");
   const ownershipBeforeR2=code.indexOf("owner_user_id")>=0&&code.indexOf("owner_user_id")<code.indexOf("await r2Head(");
-  return {route,tool,state:owner&&ownershipBeforeR2?"CONTINUATION":"UNSAFE",
-   reason:owner&&ownershipBeforeR2?"OWNED_EXISTING_NOTE_ONLY":"UNOWNED_STORAGE_CONTINUATION"};
+  const verified=code.includes('note.access_request_id')&&
+   code.includes('.rpc("lingxi_redeem_tool_use"');
+  return {route,tool,state:owner&&ownershipBeforeR2&&verified?"CONTINUATION":"UNSAFE",
+   reason:owner&&ownershipBeforeR2&&verified?"OWNED_AND_PASS_REVOCATION_CHECKED":"UNVERIFIED_PASS_CONTINUATION"};
  }
  if(route in REMOTE_CALL){
   const start=code.indexOf("await authorizeToolPassStage(");
