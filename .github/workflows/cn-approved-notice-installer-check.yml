@@ -1,0 +1,42 @@
+name: CN approved-notice installer pin and route test (NO DEPLOY)
+on:
+  push:
+    branches: [feature/lingxifield-exact-maintenance-notice-20261107]
+    paths:
+      - 'scripts/ops/lingxi-cn-approved-notice-stage.sh'
+      - '.github/workflows/cn-approved-notice-installer-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-installer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Verify immutable source, signed digest metadata and fail-closed canary
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          SCRIPT=scripts/ops/lingxi-cn-approved-notice-stage.sh
+          bash -n "$SCRIPT"
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const s=readFileSync('scripts/ops/lingxi-cn-approved-notice-stage.sh','utf8');
+          for (const t of [
+            'SHA="86b956c9700ede4a537c021af3a0dc1df825fa9b"',
+            'ZIP_SHA="29ad0aa3fb48b7c65af41277eb7e2dbd18d943d1a09982e131af2a1232097005"',
+            'NOT_PRODUCTION_APPROVED.txt',
+            'Preview package only: no real login, payment, R2 or file roundtrip acceptance.',
+            'probe "/api/site-release-announcement" 200',
+            'probe "/api/sasi/account" 401',
+            'probe "/api/tools/jobs" 401',
+            'PRODUCTION_UNTOUCHED=true',
+            'PORT=3191',
+            'systemctl is-active --quiet lingxifield-ecs'
+          ])if(!s.includes(t))throw Error('PINNED_CANARY_ASSERTION_MISSING: '+t);
+          if(/systemctl (restart|stop) lingxifield-ecs|nginx -s reload|cp .*\/etc\/nginx/.test(s))throw Error('UNSAFE_PRODUCTION_SWITCH');
+          console.log('CN_NOTICE_INSTALLER_SECURITY_AND_HTTP_GATE_PASS');
+          JS
