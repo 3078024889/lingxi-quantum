@@ -78,3 +78,21 @@ test("the Chinese maintenance copy contains the requested target date without mi
  assert(source.includes("全球双站架构升级公告"));
  assert(source.includes('state.phase==="complete"?<Link'));
 });
+
+test("approved Chinese maintenance copy includes the exact service scope and customer message",()=>{
+ const source=readFileSync("components/MainSiteReleaseNotice.tsx","utf8");
+ for(const phrase of [
+   "灵犀场｜全球双站架构升级公告",
+   "双域同行，全球连接。",
+   "2026年11月6日起，灵犀场 LINGXIFIELD 开展服务器架构升级与全球访问线路优化",
+   "预计2026年11月8日前恢复上线",
+   "具体以最终功能验收结果为准",
+   "本次升级重点围绕全球访问链路、服务器运行架构、数据安全防护及服务稳定性展开",
+   "为全球 SIAI 排行榜、SASI 智能创作和百余项在线实用工具提供更坚实的基础设施。",
+   "同时优化统一账户、工具包支付与使用体验，让文件处理、智能创作和全球智能平台比较更加简单、便捷。",
+   "维护期间如出现短暂访问异常，感谢理解与陪伴。",
+   "让智能触手可及，让创造突破边界。",
+ ]) assert(source.includes(phrase),"MISSING_APPROVED_NOTICE_COPY: "+phrase);
+ assert(source.includes("notice?.extra"),"APPROVED_EXTRA_COPY_NOT_RENDERED");
+ assert(source.includes("notice?.thanks"),"APPROVED_CLOSING_COPY_NOT_RENDERED");
+});
