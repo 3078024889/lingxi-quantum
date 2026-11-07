@@ -4,7 +4,7 @@ set -Eeuo pipefail
 umask 077
 die(){ echo "CN_PREPARE_ABORT:$*" >&2; exit 1; }
 test "$(id -u)" -eq 0 || die ROOT_REQUIRED
-for cmd in stat systemctl curl python3 grep awk df; do command -v "$cmd" >/dev/null || die "MISSING_COMMAND:$cmd"; done
+for cmd in stat systemctl systemd-analyze curl python3 grep awk df; do command -v "$cmd" >/dev/null || die "MISSING_COMMAND:$cmd"; done
 SHA=86b956c9700ede4a537c021af3a0dc1df825fa9b
 DIR="/opt/lingxifield/cn-staged-releases/$SHA"
 NODE=/opt/lingxifield/runtime/node-24.19.0/bin/node
@@ -43,9 +43,11 @@ PY
 made_unit=0
 made_override=0
 accepted=0
+TMPJSON=''
 cleanup(){
  rc=$?
  trap - EXIT
+ if test -n "$TMPJSON"; then rm -f -- "$TMPJSON"; fi
  if test "$accepted" != 1; then
   if test "$made_unit" = 1; then
    systemctl stop "$SERVICE" >/dev/null 2>&1 || true
@@ -115,7 +117,6 @@ probe /api/site-release-announcement 200
 probe /api/sasi/account 401
 probe /api/tools/jobs 401
 TMPJSON="$(mktemp)"
-trap 'rm -f -- "$TMPJSON"; cleanup' EXIT
 curl --noproxy '*' -fsS --max-time 15 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' "http://127.0.0.1:$PORT/api/site-release-announcement" -o "$TMPJSON" || die NOTICE_JSON_FAILED
 python3 - "$TMPJSON" <<'PY'
 import sys,json
@@ -125,6 +126,7 @@ if data.get('enabled') is not True or data.get('phase') != 'maintenance' or data
 print('CN_APPROVED_MAINTENANCE_NOTICE_ENABLED')
 PY
 rm -f -- "$TMPJSON"
+TMPJSON=''
 trap cleanup EXIT
 systemctl is-active --quiet "$SERVICE" || die NEW_PERSISTENT_UNIT_INACTIVE
 systemctl is-active --quiet lingxifield-ecs || die OLD_PRODUCTION_INACTIVE
