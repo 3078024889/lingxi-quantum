@@ -1,0 +1,82 @@
+name: COM post-cutover Cloudflare DNS/routes and public HTTPS (READ ONLY)
+on:
+  push:
+    branches: [audit/com-postcutover-20261107]
+    paths: ['.github/workflows/com-postcutover-readonly-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    environment: cloudflare-com-preview
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Exact zone, both proxied Vercel origin DNS targets and exact Worker routes
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import os, urllib.request, urllib.error, urllib.parse, json
+          root="https://api.cloudflare.com/client/v4"
+          token=os.environ["CLOUDFLARE_API_TOKEN"]
+          headers={"Authorization":"Bearer "+token,"User-Agent":"LINGXIFIELD-release-postcheck-readonly/1"}
+          zid="0e9df0e4cf67601f60ce1b73fe011b94"
+          hosts=("lingxifield.com","www.lingxifield.com")
+          worker="lingxifield-com-full-canary-20261107"
+          def get(path):
+              with urllib.request.urlopen(urllib.request.Request(root+path,headers=headers),timeout=30) as f:
+                  j=json.load(f)
+                  if not j.get("success"):raise SystemExit("CF_PUBLIC_POSTCHECK_API_FAILED:"+path)
+                  return j["result"]
+          zones=get("/zones?name=lingxifield.com&per_page=10")
+          assert any(z.get("id")==zid and z.get("status")=="active" for z in zones),"EXACT_ZONE_NOT_ACTIVE"
+          routes=get("/zones/"+zid+"/workers/routes?per_page=100")
+          for host in hosts:
+              rows=get("/zones/"+zid+"/dns_records?"+urllib.parse.urlencode({"name":host,"per_page":100}))
+              rec=[r for r in rows if r.get("name")==host and r.get("type") in ("A","AAAA","CNAME")]
+              assert len(rec)==1,"DNS_RECORD_MISMATCH:"+host
+              r=rec[0]
+              assert r.get("proxied") is True,"CLOUDFLARE_PROXY_NOT_ENABLED:"+host
+              if host==hosts[0]:
+                  assert r["type"]=="A" and r["content"]=="216.198.79.1","ORIGIN_VERCEL_TARGET_CHANGED:"+host
+              else:
+                  assert r["type"]=="CNAME" and r["content"].endswith(".vercel-dns-017.com"),"ORIGIN_VERCEL_TARGET_CHANGED:"+host
+              rs=[x for x in routes if x.get("pattern")==host+"/*"]
+              assert len(rs)==1 and rs[0].get("script")==worker,"WORKER_PUBLIC_ROUTE_NOT_ACTIVE:"+host
+              print("COM_CF_EXACT_PUBLIC_ROUTE_AND_VERCEL_ORIGIN_PRESERVED",host,"proxy=true","route="+rs[0]["pattern"])
+          print("COM_CF_BOTH_HOSTS_CONFIGURED_WITH_ORIGINAL_VERCEL_DNS_TARGETS_PASS")
+          PY
+      - name: Public domain HTTPS and DNS propagation observation (does not write or falsely attest backend)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import urllib.request,urllib.error,json
+          for host in ("lingxifield.com","www.lingxifield.com"):
+              for path in ("/","/tools","/siai","/api/public/site-status"):
+                  req=urllib.request.Request("https://"+host+path,headers={"User-Agent":"LINGXIFIELD-external-readonly-release-observer/1"})
+                  try:
+                      with urllib.request.urlopen(req,timeout=20) as r:
+                          code=r.status
+                          body=r.read(250000)
+                  except urllib.error.HTTPError as e:
+                      code=e.code
+                      body=e.read(300)
+                  except Exception as e:
+                      code=0;body=str(type(e).__name__).encode()
+                  print("COM_REAL_DNS_HTTP",host,path,code)
+                  if code==200:
+                      if path=="/api/public/site-status":
+                          d=json.loads(body)
+                          assert d.get("publicSurface")=="ready" and d.get("dynamicBackend")=="not-attested", "MISREPORTED_BACKEND_HEALTH"
+                      else:
+                          assert b"<html" in body and len(body)>1000,"PUBLIC_HTML_INVALID"
+                  elif code==402:
+                      print("COM_RECURSIVE_DNS_VERCEL_CACHE_STILL_PRESENT",host,path)
+                  else:
+                      print("COM_REAL_DNS_HTTP_PENDING_OR_ANOMALY",host,path,code)
+          print("COM_POSTCUTOVER_EXTERNAL_DNS_OBSERVATION_COMPLETE_NO_MUTATIONS")
+          PY
