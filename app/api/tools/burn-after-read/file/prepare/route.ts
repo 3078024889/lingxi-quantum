@@ -1,4 +1,5 @@
-import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
+import {toolPassCutoverRequested,toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {createHash} from "node:crypto";
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
@@ -44,7 +45,7 @@ export async function POST(req:NextRequest){
  const maxViews=Number(body.maxViews||1);
  const duration=body.viewDurationSeconds==null?null:Number(body.viewDurationSeconds);
 
- if(!quoteId||files.length<1||files.length>MAX_FILES||ciphertext.length>400000||iv.length<8||!TTL.has(ttl)||!MODES.has(mode)||!VIEWS.has(maxViews)||(mode==="fast"&&!DUR.has(Number(duration)))){
+ if((!quoteId&&!toolPassCutoverRequested())||files.length<1||files.length>MAX_FILES||ciphertext.length>400000||iv.length<8||!TTL.has(ttl)||!MODES.has(mode)||!VIEWS.has(maxViews)||(mode==="fast"&&!DUR.has(Number(duration)))){
   return NextResponse.json({error:"INVALID_SHARE"},{status:400});
  }
 
@@ -58,9 +59,61 @@ export async function POST(req:NextRequest){
  });
  if(total>MAX_TOTAL)return NextResponse.json({error:"FILES_TOO_LARGE"},{status:413});
 
- // The existing file quote and R2 object schema are still keyed by a legacy
- // paid quote. Do not mint a new upload capability from an unrelated pass.
- if(toolPassCutoverRequested())return NextResponse.json({error:"BURN_FILE_PASS_WORKFLOW_NOT_READY"},{status:503,headers:{"Cache-Control":"no-store"}});
+ // A new pass-backed file share starts only from its already claimed tool
+ // upload receipt. New and historical old paid quotes remain independent.
+ // No R2 signed upload URL is generated before the atomic SQL entitlement check.
+ if(toolPassCutoverRequested()&&!quoteId){
+  if(!toolPassBackendReady())
+   return NextResponse.json({error:"TOOL_PASS_BACKEND_NOT_READY"},{status:503});
+  const requestId=String(body.accessRequestId||"");
+  const operationId=String(body.operationId||"");
+  const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if(!UUID.test(requestId)||!UUID.test(operationId))
+   return NextResponse.json({error:"TOOL_USE_RECEIPT_REQUIRED"},{status:403});
+  // Stable requestId is also the noteId, so disconnected upload retries
+  // recover precisely the same encrypted note rather than creating copies.
+  const noteId=requestId;
+  const fileSpecs=normalized.map((f:{name:string;size:number;type:string})=>({
+   name:f.name,size:f.size,mime:f.type,
+   objectKey:newBurnObjectKey(noteId,f.name)
+  }));
+  const inputDigest=createHash("sha256").update(JSON.stringify({
+   ciphertext,iv,ttl,mode,maxViews,duration,
+   files:normalized
+  })).digest("hex");
+  const admin=createAdminClient();
+  const {data,error}=await admin.rpc("lingxi_prepare_pass_burn_file_v1",{
+   p_user_id:user.id,p_request_id:requestId,p_operation_id:operationId,p_note_id:noteId,
+   p_ciphertext:ciphertext,p_iv:iv,p_ttl_minutes:ttl,p_mode:mode,
+   p_max_views:maxViews,p_duration:mode==="fast"?duration:null,
+   p_input_digest:inputDigest,p_files:fileSpecs
+  });
+  if(error)return NextResponse.json({error:"PASS_BURN_FILE_PREPARE_UNAVAILABLE"},{status:503});
+  if(!data?.ok){
+   const code=String(data?.error||"PASS_BURN_FILE_UNAVAILABLE");
+   const status=code.includes("GONE")?410:code.includes("REBIND")||code.includes("CONFLICT")?409:403;
+   return NextResponse.json({error:code},{status,headers:{"Cache-Control":"no-store"}});
+  }
+  const expiry=String(data.expiresAt||"");
+  const id=String(data.id||"");
+  const ttlSeconds=Math.floor((Date.parse(expiry)-Date.now())/1000);
+  const rows=Array.isArray(data.files)?data.files:[];
+  if(id!==noteId||rows.length!==normalized.length||!Number.isFinite(ttlSeconds)||ttlSeconds<2 ||
+     rows.some((r:any,i:number)=>!String(r.objectKey||"").startsWith(`burn/${id}/`)||
+       String(r.name)!==normalized[i].name||Number(r.size)!==normalized[i].size))
+   return NextResponse.json({error:"PASS_BURN_FILE_RESPONSE_INVALID"},{status:503});
+  return NextResponse.json({
+   id,expiresAt:expiry,alreadyPrepared:Boolean(data.recovered),
+   alreadyReady:Boolean(data.alreadyReady),
+   token:createBurnRevealToken(id,expiry),
+   files:rows.map((r:any)=>({
+    id:r.id,name:r.name,size:r.size,type:r.type,
+    uploadUrl:data.alreadyReady?null:presignR2("PUT",r.objectKey,Math.min(600,ttlSeconds))
+   }))
+  },{headers:{"Cache-Control":"private, no-store"}});
+ }
+ // Existing settled quote deliveries must keep working after new pass cutover.
+ // New legacy quote creation is disabled in the separate quote route.
  const admin=createAdminClient();
  const {data:q,error:qerr}=await admin.from("tool_payment_quotes").select("id,user_id,tool_id,quantity,status").eq("id",quoteId).eq("user_id",user.id).eq("tool_id","burn-after-read-file").eq("status","paid").maybeSingle();
  if(qerr)return NextResponse.json({error:"SERVICE_BUSY"},{status:503});
