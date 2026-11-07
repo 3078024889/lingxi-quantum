@@ -7,6 +7,9 @@ on:
       - tests/ops/cn-main-auth-recover-verified.test.mjs
       - lib/supabase/server-runtime-config.ts
       - lib/supabase/server.ts
+      - lib/supabase/admin.ts
+      - lib/nutrition/server.ts
+      - middleware.ts
       - tests/ops/server-runtime-supabase-public.test.mjs
       - .github/workflows/cn-main-auth-recovery-readonly.yml
   workflow_dispatch:
@@ -39,3 +42,48 @@ jobs:
           grep -Fq "PRODUCTION_PROJECT_URL_MISMATCH" scripts/ops/cn-main-auth-recover-verified.mjs
           grep -Fq "NO_CURRENT_ENABLED_PUBLIC_KEY_FOUND" scripts/ops/cn-main-auth-recover-verified.mjs
           echo "NO_PRODUCTION_DEPLOYMENT_AND_NO_SECRET_MUTATION_PERFORMED"
+
+  production-build-anonymous-runtime:
+    needs: review
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with: {version: 11.28.0, run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version-file: .nvmrc, cache: pnpm}
+      - name: Clean immutable install and real Next build without public build-time keys
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+      - name: Runtime-only public configuration enables real anonymous protected boundaries
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          # A synthetic public key is sufficient to verify the no-cookie SSR
+          # boundary. It cannot be used for payments, real login, or database reads.
+          export SUPABASE_URL=https://sxsgdpqojepgbbrxrzlq.supabase.co
+          export SUPABASE_PUBLISHABLE_KEY=sb_publishable_1234567890abcdefghijklmnopQRSTUV
+          export PORT=4350
+          export HOSTNAME=127.0.0.1
+          pnpm start -- -p 4350 > "$RUNNER_TEMP/next-auth-smoke.log" 2>&1 &
+          PID=$!
+          trap 'kill "$PID" 2>/dev/null || true' EXIT
+          ready=0
+          for _ in $(seq 1 65); do
+            if curl --noproxy '*' -s -o /dev/null --max-time 3 "http://127.0.0.1:4350/api/health"; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = 1
+          for route in /api/sasi/account /api/tools/jobs; do
+            code="$(curl --noproxy '*' -sS --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:4350$route")"
+            echo "RUNTIME_CONFIG_ANONYMOUS_CHECK:$route:$code"
+            if [ "$code" != 401 ]; then
+              echo "::error::Expected protected 401, got $code"
+              tail -n 25 "$RUNNER_TEMP/next-auth-smoke.log" | sed -E 's/(apikey|token|secret)=[^ ]+/\1=REDACTED/g'
+              exit 1
+            fi
+          done
+          echo "ANONYMOUS_RUNTIME_AUTH_SMOKE_PASS_NOT_A_REAL_LOGIN_OR_PAYMENT_TEST"
