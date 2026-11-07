@@ -43,8 +43,7 @@ const REMOTE_CALL={
  "website-diagnose":"dns.resolve4("
 };
 const SAFE_BLOCKED={
- "burn-after-read/file/prepare":'BURN_FILE_PASS_WORKFLOW_NOT_READY',
- "mobile-file":'TEMP_FILE_PASS_WORKFLOW_NOT_READY'
+ "burn-after-read/file/prepare":'BURN_FILE_PASS_WORKFLOW_NOT_READY'
 };
 const stageGate=read("lib/tools/commerce/tool-stage-gate.ts");
 const stageSql=read("supabase/migrations/20261106060000_tool_pass_order_bound_stages.sql");
@@ -79,6 +78,30 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
    &&(firstCost<0||start<firstCost))
    return {route,tool,state:"BLOCKED",reason:"PASS_WORKFLOW_NOT_INTEGRATED"};
   return {route,tool,state:"UNSAFE",reason:"BLOCKER_MISSING_OR_AFTER_COST"};
+ }
+ if(route==="mobile-file"){
+  const sql=read("supabase/migrations/20261106090000_tool_pass_mobile_file_atomic.sql");
+  const cli=read("lib/tools/shared/download.ts");
+  const claims=read("lib/tools/commerce/tool-start-client.ts");
+  const test=read("tests/sql/tool-pass-mobile-file-atomic-integrity.sql");
+  const ok=code.includes('toolPassBackendReady()')
+   &&code.includes('.rpc("lingxi_prepare_pass_mobile_file_v1"')
+   &&code.includes('if(!UUID.test(requestId)')
+   &&code.includes('newBurnObjectKey(`tool-${user.id}`')
+   &&code.includes('if(!actualKey.startsWith(')
+   &&sql.includes('pg_advisory_xact_lock')
+   &&sql.includes("'mobile-file'")
+   &&sql.includes('MOBILE_FILE_IDEMPOTENCY_CONFLICT')
+   &&sql.includes('MOBILE_FILE_STAGE_INCONSISTENT')
+   &&sql.includes('v_existing_op')
+   &&sql.includes('revoke all on function public.lingxi_prepare_pass_mobile_file_v1')
+   &&cli.includes('latestConfirmedToolClaim(toolSlug)')
+   &&cli.includes('MOBILE_FILE_REQUIRES_PRIOR_TOOL_START')
+   &&claims.includes('lastClaimBySlug.set(')
+   &&test.includes('MOBILE_CROSS_USER_RETRY_LEAK')
+   &&test.includes('UNCREDITED_R2_SESSION_CREATED');
+  return {route,tool,state:ok?"GUARDED":"UNSAFE",
+   reason:ok?"ATOMIC_OWNER_BOUND_SECONDARY_MOBILE_HANDOFF":"MOBILE_SESSION_BINDING_UNVERIFIED"};
  }
  if(route==="temp-mail/batch"){
   const ok=code.includes('if(toolPassCutoverRequested()&&!quoteId)')
