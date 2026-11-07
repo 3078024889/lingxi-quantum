@@ -16,7 +16,9 @@
       "/models/onnx-community/swin-finetuned-food101-ONNX/onnx/model_q4f16.onnx",
       "/models/onnx-community/whisper-tiny/onnx/decoder_model_merged_quantized.onnx",
       "/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm"
-    ]
+    ],
+    "html_handling": "none",
+    "not_found_handling": "none"
   },
   "observability": {
     "enabled": true
