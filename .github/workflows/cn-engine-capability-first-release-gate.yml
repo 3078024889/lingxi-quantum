@@ -1,0 +1,74 @@
+name: CN capability-first release safety regression (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn-capability-first-cutover-20261107]
+    paths:
+      - scripts/ops/ecs-cn-approved-notice-cutover.sh
+      - .github/workflows/cn-engine-capability-first-release-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - name: Strict shell syntax, rollback/permissions and public vs optional engine separation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          SCRIPT=scripts/ops/ecs-cn-approved-notice-cutover.sh
+          bash -n "$SCRIPT"
+          test "$(grep -c 'trap rollback EXIT' "$SCRIPT")" -ge 1
+          grep -Fq 'CN_PUBLIC_ROLLBACK_TO_3188_DONE' "$SCRIPT"
+          grep -Fq 'CN_PUBLIC_NGINX_SWITCH_SUCCESS' "$SCRIPT"
+          grep -Fq 'CN_SHARP_REAL_IMAGE_ROUNDTRIP_PASS' "$SCRIPT"
+          grep -Fq 'CN_SERVER_ENGINE_AVAILABLE=' "$SCRIPT"
+          grep -Fq 'CN_OPTIONAL_SERVER_ENGINES_NOT_DECLARED_READY=true' "$SCRIPT"
+          grep -Fq 'CN_REAL_PAID_EXPORT_AND_SASI_NOT_ATTESTED' "$SCRIPT"
+          grep -Fq 'probe 3191 /api/sasi/account 401' "$SCRIPT"
+          grep -Fq 'probe 3191 /api/tools/jobs 401' "$SCRIPT"
+          grep -Fq 'probe 3191 /api/site-release-announcement 200' "$SCRIPT"
+          grep -Fq 'probe 3191 /tools/pdf-editor 200' "$SCRIPT"
+          grep -Fq 'probe 3191 /tools/e-sign-pdf 200' "$SCRIPT"
+          ! grep -Fq 'NEED_SIX_REAL_DOCUMENT_ENGINES' "$SCRIPT"
+          ! grep -Eq 'systemctl (stop|restart) (lingxifield-ecs|lingxifield-cn-stage)|rm -rf /opt/lingxifield/' "$SCRIPT"
+          if grep -R -lE 'executeServerEngine|executeRequirement' app/api >/dev/null; then
+            echo "::error::PUBLIC_API_UNEXPECTEDLY_DEPENDS_ON_OPTIONAL_EXECUTOR"
+            exit 1
+          fi
+          echo CN_FAIL_CLOSED_CUTOVER_AND_NO_DIRECT_EXECUTOR_API_DEPENDENCY_PASS
+      - name: Fuzz engine evidence against actual 1-of-24 case and corrupted reports
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import pathlib,re,json,subprocess,tempfile,sys
+          src=pathlib.Path("scripts/ops/ecs-cn-approved-notice-cutover.sh").read_text()
+          m=re.search(r"python3 - \"\$ENGINE_REPORT\" <<'PY'\n(.*?)\nPY\n",src,re.S)
+          assert m, "ENGINE_REPORT_READER_NOT_EXTRACTABLE"
+          code=m.group(1)
+          names=["sharp-libvips"] + ["missing_"+str(i) for i in range(23)]
+          def make(enabled={"sharp-libvips"},count=None,duplicate=False):
+            engines=[{"id":n,"available":n in enabled,"runtime":"node-module" if n=="sharp-libvips" else "node-command"} for n in names]
+            if duplicate: engines[-1]["id"]="sharp-libvips"
+            return {"summary":{"available":sum(x["available"] for x in engines) if count is None else count,"checked":len(engines)},"engines":engines}
+          def test(case,good):
+            with tempfile.NamedTemporaryFile(mode="w",suffix=".json") as f:
+              json.dump(case,f);f.flush()
+              run=subprocess.run([sys.executable,"-c",code,f.name],capture_output=True,text=True,timeout=6)
+              assert (run.returncode==0)==good, "BAD_ENGINE_GATE_OUTCOME:"+run.stdout[-400:]+run.stderr[-400:]
+              if good:
+                assert "CN_PUBLIC_ENGINE_CAPABILITY_GATE_PASS" in run.stdout
+                assert "CN_SERVER_ENGINE_AVAILABLE=1/24" in run.stdout
+                assert "CN_OPTIONAL_SERVER_ENGINES_NOT_DECLARED_READY=true" in run.stdout
+          test(make(),True)
+          test(make(set()),False)
+          test(make(count=23),False)
+          test(make(duplicate=True),False)
+          bad=make();bad["engines"]=[]
+          test(bad,False)
+          print("CN_ENGINE_GATE_VALID_REAL_1_OF_24_AND_FOUR_NEGATIVE_FIXTURES_PASS")
+          PY
