@@ -80,6 +80,9 @@ jobs:
           c.name='lingxifield-com-full-canary-20261107';
           c.workers_dev=true;
           c.minify=true;
+          // Wrangler >=4.150 uploads sourcemaps by default; our OpenNext map exceeds Cloudflare's 60 MiB limit.
+          // Disable diagnostics-only map upload while preserving the exact same Worker runtime and R2 assets.
+          c.upload_source_maps=false;
           delete c.route;
           delete c.routes;
           delete c.triggers;
@@ -99,7 +102,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          pnpm exec wrangler deploy --config wrangler.canary.jsonc --minify --dry-run --outdir "$RUNNER_TEMP/size-minified" > "$RUNNER_TEMP/minified-size.log" 2>&1
+          pnpm exec wrangler deploy --config wrangler.canary.jsonc --minify --no-upload-source-maps --dry-run --outdir "$RUNNER_TEMP/size-minified" > "$RUNNER_TEMP/minified-size.log" 2>&1
           node - <<'JS'
           const fs=require('node:fs');
           const s=fs.readFileSync(process.env.RUNNER_TEMP+'/minified-size.log','utf8');
@@ -114,7 +117,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          pnpm exec wrangler deploy --config wrangler.canary.jsonc --minify > "$RUNNER_TEMP/full-canary-publish.log" 2>&1 || {
+          pnpm exec wrangler deploy --config wrangler.canary.jsonc --minify --no-upload-source-maps > "$RUNNER_TEMP/full-canary-publish.log" 2>&1 || {
             echo "::error::CLOUDFLARE_CANARY_PUBLISH_FAILED";
             tail -n 30 "$RUNNER_TEMP/full-canary-publish.log" | sed -E 's/(sb_publishable_|eyJ)[A-Za-z0-9_.-]{20,}/[REDACTED]/g';
             exit 1;
