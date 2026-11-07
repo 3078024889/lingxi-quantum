@@ -11,6 +11,8 @@ async function scenario(mode,status){
   '@/lib/security/abuse-guard':{enforceAbuseGuard:async()=>({ok:true})},
   '@/lib/security/bounded-request-json':{boundedRequestJson:req=>req.json()},
   '@/lib/tools/burn-link-token':{createBurnRevealToken:()=> 'signed'},
+  '@/lib/tools/commerce/tool-server-receipt':{toolPassCutoverRequested:()=>false,toolPassBackendReady:()=>false},
+  'node:crypto':require('node:crypto'),
   '@/lib/r2-private':{r2Ready:()=>true,presignR2:(method,key,ttl)=>{assert.equal(method,'PUT');assert(ttl>0&&ttl<=60);signed++;return 'https://example.test/upload'}},
  };
  const exports={};vm.runInNewContext(source,{exports,require:n=>{if(!imports[n])throw Error(n);return imports[n]},console,Date});
