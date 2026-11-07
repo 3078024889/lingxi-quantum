@@ -1,0 +1,66 @@
+name: Security candidate - Next.js 15.5.29 and lockfile (NO DEPLOY)
+on:
+  push:
+    branches: [security/next-15-5-29-20261107]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: next-15-5-29-security-candidate
+  cancel-in-progress: true
+jobs:
+  patch-security:
+    if: "!contains(github.event.head_commit.message, '[next-security-lockfile]')"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Immutable baseline dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Upgrade audited Next.js 15 LTS patch and matching lint config only
+        run: |
+          set -Eeuo pipefail
+          pnpm add next@15.5.29 --save-exact
+          pnpm add -D eslint-config-next@15.5.29 --save-exact
+          node -e 'const p=require("./package.json"); if(p.dependencies.next!=="15.5.29"||p.devDependencies["eslint-config-next"]!=="15.5.29")process.exit(1)'
+          pnpm install --frozen-lockfile
+      - name: Security-release TypeScript and Next.js build
+        run: |
+          set -Eeuo pipefail
+          pnpm exec tsc --noEmit
+          pnpm build
+          node --test tests/unified-tools-pass-static-contract.test.mjs tests/ops/server-runtime-supabase-public.test.mjs tests/release/main-site-notice-contract.test.mjs
+      - name: Persist only reviewed dependency and lockfile changes to isolated branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -Eeuo pipefail
+          test "$GITHUB_REF_NAME" = "security/next-15-5-29-20261107"
+          git config user.name "LINGXIFIELD security CI"
+          git config user.email "security-ci@users.noreply.github.com"
+          git add -- package.json pnpm-lock.yaml
+          git diff --cached --quiet && { echo "NEXT_SECURITY_PATCH_ALREADY_APPLIED"; exit 0; }
+          test "$(git diff --cached --name-only | wc -l)" -eq 2
+          git commit -m "chore(security): upgrade Next.js 15.5.29 and matching lockfile [next-security-lockfile]"
+          gh auth setup-git
+          git push origin HEAD:refs/heads/security/next-15-5-29-20261107
+          echo "NEXT_SECURITY_PATCH_COMMITTED_TO_ISOLATED_BRANCH_NO_MAIN_OR_DEPLOY"
+      - name: Evidence only
+        if: always()
+        run: |
+          {
+            echo "Security-patched candidate must still pass the exact SHA 4-browser release gate."
+            echo "No Vercel, Aliyun, Cloudflare, production Supabase or domain changes."
+          } >> "$GITHUB_STEP_SUMMARY"
