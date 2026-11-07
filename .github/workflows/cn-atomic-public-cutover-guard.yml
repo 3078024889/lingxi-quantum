@@ -1,0 +1,48 @@
+name: CN exact-host Nginx reversible cutover review (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn-live-preflight-20261107]
+    paths:
+      - 'scripts/ops/ecs-cn-approved-notice-cutover.sh'
+      - '.github/workflows/cn-atomic-public-cutover-guard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Check cutover script explicit intent and auto-rollback gates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/ecs-cn-approved-notice-cutover.sh
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const s=readFileSync('scripts/ops/ecs-cn-approved-notice-cutover.sh','utf8');
+          const required=[
+            '--promote-cn-exact-approved-notice',
+            '86b956c9700ede4a537c021af3a0dc1df825fa9b',
+            'lingxifield-ecs',
+            'lingxifield-cn-stage',
+            'CN_PUBLIC_DOCUMENT_ENGINES=',
+            'NEED_SIX_REAL_DOCUMENT_ENGINES',
+            'proxy_pass http://127.0.0.1:3188;',
+            'proxy_pass http://127.0.0.1:3191;',
+            'CN_NGINX_VHOST_AMBIGUOUS',
+            'nginx -t || die NEW_NGINX_CONFIG_INVALID',
+            'nginx -s reload',
+            'cp -a -- "$BACKUP" "$CONFIG"',
+            'trap rollback EXIT',
+            'CN_PUBLIC_APPROVED_NOTICE_VISIBLE',
+            'CN_OLD_3188_AND_3189_ACTIVE=true',
+            'CN_PAYMENT_AND_REAL_LOGIN_E2E_NOT_ATTESTED=true'
+          ];
+          for(const v of required)if(!s.includes(v))throw Error('CUTOVER_GATE_NOT_FOUND:'+v);
+          if(/systemctl\s+(stop|restart)\s+(lingxifield-ecs|lingxifield-cn-stage)|rm -rf\s+\/opt\//.test(s))throw Error('LEGACY_PRODUCTION_MUTATION_FOUND');
+          console.log('CN_EXACT_VHOST_ROLLBACK_AND_HARD_GATES_SOURCE_PASS');
+          JS
