@@ -128,8 +128,8 @@ jobs:
             '  Content-Type: application/json; charset=utf-8',
             '  Cache-Control: public, max-age=60',
             '  X-Content-Type-Options: nosniff'
-          ].join('\\n');
-          writeFileSync(headerFile,readFileSync(headerFile,'utf8')+'\\n'+statusHeaders+'\\n',{mode:0o644});
+          ].join('\n');
+          writeFileSync(headerFile,readFileSync(headerFile,'utf8')+'\n'+statusHeaders+'\n',{mode:0o644});
           console.log('COM_PUBLIC_ONLY_STATUS_STAGED_NO_BACKEND_CLAIMS');
           JS
           pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/com-canary-dry-run"
