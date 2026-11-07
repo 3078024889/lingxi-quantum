@@ -1,7 +1,7 @@
-name: Cloudflare OpenNext 1.20.16 Next15 main-site compatibility (NO DEPLOY)
+name: Cloudflare COM OpenNext + R2 six large assets compatibility (NO DEPLOY)
 on:
   push:
-    branches: [cloudflare/opennext15-compat-20261107]
+    branches: [cloudflare/com-r2-large-assets-20261107]
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,6 +22,11 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with: {node-version-file: .nvmrc,cache: pnpm}
       - run: pnpm install --frozen-lockfile
+      - name: Test offloaded assets, whitelisted paths and streaming byte ranges
+        run: |
+          node --check scripts/cloudflare/large-public-assets.mjs
+          node --check scripts/cloudflare/stage-large-public-assets.mjs
+          node --test tests/cloudflare-large-public-assets.test.mjs
       - name: Cloudflare compatibility and size inventory
         run: |
           node -e 'if(require("./package.json").dependencies.next!=="15.5.29")process.exit(1)'
@@ -37,10 +42,17 @@ jobs:
           pnpm exec opennextjs-cloudflare build
           test -s .open-next/worker.js
           test -d .open-next/assets
-      - name: Detect capacity and bindings via no-network/no-deploy dry run
+      - name: Stage exactly six hashed files for R2, leave originals in source
+        run: |
+          set -Eeuo pipefail
+          node scripts/cloudflare/stage-large-public-assets.mjs
+          test -s .open-next/offload-worker.mjs
+          test -s cloudflare-offload-report.json
+          node -e 'const r=require("./cloudflare-offload-report.json"); if(r.releaseReady!==false||r.assets.length!==6||r.remainingOversizeCount!==0)process.exit(1)'
+      - name: Detect R2 bindings and size capacity via NO-NETWORK dry run
         run: |
           pnpm exec wrangler deploy --dry-run --outdir "${RUNNER_TEMP}/cloudflare-dry-run"
-          echo "CLOUDFLARE_COMPATIBILITY_DRY_RUN_SUCCESS_NOT_AN_ACTUAL_RUNTIME_TEST"
+          echo "CLOUDFLARE_R2_OFFLOAD_DRY_RUN_SUCCESS_NOT_AN_ACTUAL_RUNTIME_TEST"
       - name: Keep only redacted text readiness reports
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
@@ -49,5 +61,6 @@ jobs:
           path: |
             cloudflare-report.json
             cloudflare-assets.json
+            cloudflare-offload-report.json
           retention-days: 1
           if-no-files-found: ignore
