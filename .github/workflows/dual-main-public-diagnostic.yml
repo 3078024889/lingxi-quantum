@@ -1,0 +1,29 @@
+name: Lingxifield public two-main-site HTTP and DNS diagnostics (NO DEPLOY)
+on:
+  push:
+    branches: [ops/dual-main-public-diagnostic-20261107]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-diagnostics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version: '24.19.0'}
+      - name: Probe two actual main hosts and preview without cookies/secrets
+        shell: bash
+        run: |
+          set -uo pipefail
+          node scripts/ops/dual-main-public-diagnostic.mjs
+      - name: Retain limited redacted HTTP and DNS results
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: public-main-site-diag-${{ github.sha }}
+          path: release-evidence/public-main-probe.json
+          retention-days: 7
+          if-no-files-found: ignore
