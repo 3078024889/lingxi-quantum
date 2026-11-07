@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "globalsiai-market-global",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "AI_MARKET_INDEX_READY": "0",
+    "AI_MARKET_DOMAIN_VERIFIED": "0",
+    "GLOBALSIAI_RELEASE_NOTICE_ENABLED": "0"
+  },
+  "observability": {
+    "enabled": false
+  }
+}

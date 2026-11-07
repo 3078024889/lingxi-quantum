@@ -1,0 +1,108 @@
+name: Global SIAI Cloudflare Workers international candidate (NO deploy)
+on:
+  push:
+    branches: [feature/globalsiai-cloudflare-workers-20261107]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  international-worker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: lingxifield-ai-market
+    env:
+      CI: "true"
+      NEXT_TELEMETRY_DISABLED: "1"
+      AI_MARKET_INDEX_READY: "0"
+      AI_MARKET_DOMAIN_VERIFIED: "0"
+      GLOBALSIAI_RELEASE_NOTICE_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+          cache: npm
+          cache-dependency-path: lingxifield-ai-market/package-lock.json
+      - name: Strict domain isolation and initial safety contract
+        run: |
+          set -Eeuo pipefail
+          node - <<'JS'
+          const fs=require('fs');
+          const x=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8'));
+          if(x.name!=='globalsiai-market-global'||x.compatibility_flags.indexOf('nodejs_compat')<0)throw Error('invalid CF project config');
+          if(x.routes||x.route)throw Error('no public domain bindings before verification');
+          if(x.vars.AI_MARKET_INDEX_READY!=='0'||x.vars.AI_MARKET_DOMAIN_VERIFIED!=='0'||x.vars.GLOBALSIAI_RELEASE_NOTICE_ENABLED!=='0')throw Error('preview fail-closed variables must be disabled');
+          if('GLOBALSIAI_CN_ICP_NUMBER' in x.vars)throw Error('mainland ICP variable leaked to international deployment');
+          console.log('GLOBALSIAI_CF_PREVIEW_DOMAIN_ISOLATION_PASS');
+          JS
+      - name: Install locked Next.js application dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install pinned official Next 15 Cloudflare adapter (CI only, no lockfile mutation)
+        run: |
+          set -Eeuo pipefail
+          npm install --no-save --no-audit --no-fund --package-lock=false \
+            @opennextjs/cloudflare@1.20.16 wrangler@4
+          npx --no-install opennextjs-cloudflare --version
+          npx --no-install wrangler --version
+      - name: Check source, evidence and TypeScript contracts
+        run: |
+          set -Eeuo pipefail
+          npm run validate:data
+          npm run validate:catalog
+          npm run test:contracts
+          npm run typecheck
+      - name: Real Next.js build and Worker adapter transformation
+        run: |
+          set -Eeuo pipefail
+          npx --no-install opennextjs-cloudflare build
+          test -s .open-next/worker.js
+          test -d .open-next/assets
+          echo GLOBALSIAI_CF_WORKER_ADAPTER_BUILD_SUCCESS
+      - name: Cloudflare Workers dry-run bundle and free-limit diagnostics (NO auth / NO deploy)
+        run: |
+          set -Eeuo pipefail
+          npx --no-install wrangler deploy --dry-run --outdir /tmp/globalsiai-worker-dryrun \
+            --config wrangler.jsonc 2>&1 | tee /tmp/globalsiai-worker-dryrun.log
+          test -s /tmp/globalsiai-worker-dryrun/worker.js || {
+            find /tmp/globalsiai-worker-dryrun -maxdepth 2 -type f | head -n 40
+            echo GLOBALSIAI_CF_DRYRUN_OUTPUT_MISSING
+            exit 1
+          }
+          python3 - <<'PY'
+          import pathlib,gzip
+          p=pathlib.Path('/tmp/globalsiai-worker-dryrun/worker.js')
+          data=p.read_bytes()
+          print('GLOBALSIAI_CF_WORKER_RAW_BYTES='+str(len(data)))
+          print('GLOBALSIAI_CF_WORKER_GZIP_BYTES='+str(len(gzip.compress(data))))
+          PY
+          echo GLOBALSIAI_CF_WORKER_DRY_RUN_BUNDLE_PASS
+      - name: Workers local runtime smoke, nine locales and disabled release notice
+        run: |
+          set -Eeuo pipefail
+          npx --no-install wrangler dev --local --port 8788 --config wrangler.jsonc > /tmp/globalsiai-worker-local.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 80); do
+            if curl --noproxy '*' --silent --fail --max-time 4 http://127.0.0.1:8788/api/v1/health >/dev/null; then
+              ready=1; break
+            fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then
+            tail -n 80 /tmp/globalsiai-worker-local.log
+            echo GLOBALSIAI_CF_WORKER_BOOT_FAILED
+            exit 1
+          fi
+          for path in / /zh/ai /en/ai /ja/ai /ko/ai /fr/ai /de/ai /es/ai /pt/ai /ar/ai /api/v1/health /api/v1/data-readiness; do
+            status="$(curl --noproxy '*' --silent --show-error --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:8788$path")"
+            echo "GLOBALSIAI_CF_ROUTE=$path HTTP=$status"
+            test "$status" = 200
+          done
+          curl --noproxy '*' -fsS http://127.0.0.1:8788/api/site-release-announcement | grep -Fq '"enabled":false'
+          curl --noproxy '*' -fsS http://127.0.0.1:8788/robots.txt | grep -qi 'Disallow: /'
+          echo GLOBALSIAI_CF_NINE_LOCALE_API_AND_NOINDEX_PASS
