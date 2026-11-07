@@ -1,0 +1,60 @@
+name: Globalsiai CN-only 4290 promotion safety gate (NO production deployment)
+on:
+  push:
+    branches: [ops/globalsiai-cn-only-notice-4290-20261107]
+permissions:
+  contents: read
+jobs:
+  release-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - name: Test exact 4289 to 4290 and fail-closed rollback design
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          f=scripts/ops/globalsiai-cn-only-4290-cutover.sh
+          bash -n "$f"
+          grep -Fq 'GLOBALSIAI_CN_ONLY_4290_HTTPS_RELEASE_ACCEPTED' "$f"
+          grep -Fq 'GLOBALSIAI_CN_ONLY_ROLLED_BACK_TO_4289' "$f"
+          grep -Fq 'globalsiai-dual-domain-public.lock' "$f"
+          grep -Fq 'sha256sum "$COM"' "$f"
+          grep -Fq "os.replace(tmp,name)" "$f"
+          grep -Fq 'nginx -t' "$f"
+          grep -Fq 'www.globalsiai.cn' "$f"
+          ! grep -Eq 'systemctl (stop|restart|disable) (lingxifield-ecs|lingxifield-cn-stage|globalsiai-market-stage)' "$f"
+          echo GLOBALSIAI_CN_ONLY_FAIL_CLOSED_STATIC_GATE_PASS
+      - name: Compile inline atomic patch under ECS Python 3.6
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --pids-limit 64 --memory 256m \
+            -v "$PWD:/source:ro" -w /source python:3.6.15-slim \
+            python -c '
+          import pathlib
+          x=pathlib.Path("scripts/ops/globalsiai-cn-only-4290-cutover.sh").read_text()
+          start=x.index("<<\\x27PY\\x27")+len("<<\\x27PY\\x27")
+          end=x.index("\\nPY",start)
+          compile(x[start:end],"<ECS python3.6>","exec")
+          print("GLOBALSIAI_CN_ONLY_PYTHON36_SYNTAX_PASS")
+          '
+      - name: Check both independent Nginx proxy vhosts using real Nginx
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y nginx >/dev/null
+          mkdir -p /tmp/globalsiai-only
+          cat > /tmp/globalsiai-only/nginx.conf <<'CONF'
+          events {}
+          http {
+            server { listen 127.0.0.1:8711; server_name globalsiai.cn; location / { proxy_pass http://127.0.0.1:4290; } }
+            server { listen 127.0.0.1:8712; server_name globalsiai.com; location / { proxy_pass http://127.0.0.1:4289; } }
+          }
+          CONF
+          sudo nginx -t -c /tmp/globalsiai-only/nginx.conf
+          grep -Fq 'proxy_pass http://127.0.0.1:4290;' /tmp/globalsiai-only/nginx.conf
+          grep -Fq 'proxy_pass http://127.0.0.1:4289;' /tmp/globalsiai-only/nginx.conf
+          echo GLOBALSIAI_CN_ONLY_NGINX_COEXISTENCE_PASS
