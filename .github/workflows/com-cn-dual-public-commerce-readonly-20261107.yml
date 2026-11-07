@@ -1,0 +1,45 @@
+name: COM CN public and anonymous commerce route differential (READ ONLY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-cn-dual-public-commerce-readonly-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  differential:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 9
+    steps:
+      - name: Audit real .cn and .com public pages and unauthenticated API response classes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.error, json, time
+          roots=("https://lingxifield.cn","https://lingxifield.com")
+          pages=("/", "/tools", "/siai", "/sasi", "/sasi/pricing", "/ai-wallet", "/account", "/account/orders", "/tools/pass", "/tools/pdf-editor", "/tools/e-sign-pdf")
+          apis=("/api/health","/api/pay/providers","/api/sasi/readiness","/api/sasi/account","/api/money/summary","/api/tools/pass","/api/tools/jobs","/api/account/orders","/api/account/wallet-ledger")
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl): return None
+          opener=urllib.request.build_opener(NoRedirect())
+          def check(root,path):
+              req=urllib.request.Request(root+path,headers={"User-Agent":"LINGXIFIELD-independent-readonly-ci/1.0","Cache-Control":"no-cache","Accept":"text/html,application/json;q=0.9,*/*;q=0.8"})
+              try:
+                  with opener.open(req,timeout=14) as f:
+                      return f.status,f.headers.get("Content-Type","").split(";")[0],f.headers.get("Location",""),""
+              except urllib.error.HTTPError as e:
+                  # Only print Cloudflare's known 1101/1102 markers, never sensitive content
+                  sample=e.read(3072).lower()
+                  marker="1102" if b"1102" in sample else "1101" if b"1101" in sample else "http-error"
+                  return e.code,e.headers.get("Content-Type","").split(";")[0],e.headers.get("Location",""),marker
+              except Exception as e: return 0,"","",type(e).__name__
+          table=[]
+          for root in roots:
+              for path in pages+apis:
+                  status,typ,location,kind=check(root,path)
+                  table.append({"site":"CN" if root.endswith(".cn") else "COM","path":path,"status":status,"type":typ,"redirect":location[:130],"failure":kind})
+                  print("DIFF",json.dumps(table[-1],ensure_ascii=False))
+                  time.sleep(0.15)
+          with open("dual-site-readonly.json","w") as f:json.dump(table,f,indent=2,ensure_ascii=False)
+          print("REAL_WORLD_DIFFERENTIAL_END_NO_USER_AUTH_NO_PAYMENT_MUTATIONS")
+          PY

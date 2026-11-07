@@ -27,6 +27,9 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  // Opt-in ONLY for the isolated .com self-hosted Node release candidate.
+  // Vercel production builds and .cn are unchanged unless this explicit flag is set.
+  ...(process.env.LINGXI_COM_STANDALONE_PROBE === "true" ? {output:"standalone"} : {}),
   outputFileTracingIncludes:{'/api/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm'],'/api/internal/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm']},
   images: {
     formats: ["image/avif", "image/webp"],

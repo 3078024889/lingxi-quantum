@@ -1,0 +1,149 @@
+name: com Next standalone isolated Node candidate (no deploy)
+
+on:
+  push:
+    branches:
+      - infra/com-cloudflare-readiness-20261106
+    paths:
+      - '.github/workflows/com-node-standalone-candidate.yml'
+      - 'scripts/com-node/**'
+      - 'tests/com-node/**'
+      - 'next.config.js'
+      - 'infra/com-node/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: com-node-standalone-build-candidate
+  cancel-in-progress: true
+
+jobs:
+  isolated-production-node:
+    name: Node self-hosted candidate without Vercel or prod credentials
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout reviewed source without persisting token
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Setup pnpm pinned
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Setup Node pinned by project
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Isolated runtime packaging guard tests
+        run: node --test tests/com-node/*.test.mjs
+      - name: Install full pinned dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build REAL Next.js Node standalone output
+        env:
+          CI: "true"
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_OPTIONS: "--max-old-space-size=6144"
+          LINGXI_COM_STANDALONE_PROBE: "true"
+        run: |
+          set -euo pipefail
+          pnpm build
+          test -f .next/standalone/server.js
+      - name: Make self-contained Node runtime outside repo, dereference pnpm links
+        env:
+          CI: "true"
+        run: |
+          node scripts/com-node/prepare-standalone.mjs --ci-stage --project . --output "$RUNNER_TEMP/com-node-isolated-runtime"
+          test -f "$RUNNER_TEMP/com-node-isolated-runtime/lingxi-com-candidate-report.json"
+      - name: Start isolated Node server and actually test HTTP routes
+        env:
+          CI: "true"
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_ENV: "production"
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/com-node-isolated-runtime"
+          export NODE_PATH=""
+          export PORT=4187
+          export HOSTNAME=127.0.0.1
+          node server.js > "$RUNNER_TEMP/com-node-server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          BASE=""
+          for i in $(seq 1 60); do
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              tail -n 70 "$RUNNER_TEMP/com-node-server.log"
+              echo "::error::Isolated Node server exited before HTTP healthcheck."
+              exit 1
+            fi
+            if curl -sfS --max-time 3 http://127.0.0.1:4187/api/health > /dev/null 2>&1; then
+              BASE="http://127.0.0.1:4187/"
+              break
+            fi
+            sleep 1
+          done
+          if test -z "$BASE"; then
+            tail -n 70 "$RUNNER_TEMP/com-node-server.log"
+            echo "::error::Isolated Node HTTP healthcheck unavailable."
+            exit 1
+          fi
+          cd "$GITHUB_WORKSPACE"
+          node scripts/com-node/smoke-standalone.mjs "$BASE"
+
+      - name: Create SHA-bound private Node candidate archive after loopback smoke
+        run: |
+          set -euo pipefail
+          stage="$RUNNER_TEMP/com-node-isolated-runtime"
+          mkdir -p "$GITHUB_WORKSPACE/com-node-release"
+          node - "$stage/lingxi-com-candidate-report.json" "$GITHUB_SHA" <<'NODE'
+          const fs=require("node:fs");
+          const r=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+          if(r.sourceSha!==process.argv[3]||r.productionReady!==false)
+            throw Error("RELEASE_MANIFEST_SOURCE_SHA_MISMATCH");
+          console.log("COM_NODE_SOURCE_SHA",r.sourceSha);
+          NODE
+          archive="$GITHUB_WORKSPACE/com-node-release/lingxifield-com-node-$GITHUB_SHA.tar.gz"
+          tar -C "$stage" --numeric-owner --owner=0 --group=0 --hard-dereference -czf "$archive" .
+          sha256sum "$archive" > "$GITHUB_WORKSPACE/com-node-release/SHA256SUMS.txt"
+          size=$(stat -c %s "$archive")
+          echo "COM_NODE_ARCHIVE_BYTES=$size"
+          if test "$size" -gt 1258291200;then
+            echo "::error::Archive above 1.2GB storage budget; skip upload."
+            exit 1
+          fi
+          bash infra/com-node/install-preview.sh --verify "$archive" \
+            "$(sha256sum "$archive" | awk '{print $1}')"
+          node - "$GITHUB_WORKSPACE/com-node-release/release.json" "$GITHUB_SHA" "$size" <<'NODE'
+          const fs=require("node:fs");
+          fs.writeFileSync(process.argv[2],JSON.stringify({
+            service:"lingxifield-com-node-preview",
+            sourceSha:process.argv[3],
+            compressedBytes:Number(process.argv[4]),
+            isolatedNodeHttpChecksPassed:5,
+            publicOnly:false,
+            productionReady:false,
+            productionSecretsIncluded:false,
+            artifactRetentionDays:1
+          },null,2)+"\n");
+          NODE
+      - name: Upload source-pinned Node candidate to private GitHub artifact (1 day)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: lingxifield-com-node-preview
+          path: com-node-release/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+      - name: Record accurate scope
+        if: always()
+        run: |
+          echo "## .com Node self-hosted candidate — NO deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Never read production Secrets, Vercel token or Cloudflare API token" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Standalone process in RUNNER_TEMP; no repo node_modules parent reuse" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Only health/home/SIAI/tools/public data probes, not full production acceptance" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Private release artifact is retained one day only" >> "$GITHUB_STEP_SUMMARY"
+          echo "- No DNS, .cn, payment or Vercel mutations" >> "$GITHUB_STEP_SUMMARY"

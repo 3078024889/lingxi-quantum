@@ -1,0 +1,48 @@
+name: COM production runtime configuration diagnosis (no secret values)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-runtime-config-diagnosis.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    environment: cloudflare-com-preview
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      AUTH_CONFIG_PRESENT: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
+      PAYPAL_ID_PRESENT: ${{ secrets.PAYPAL_CLIENT_ID != '' }}
+      PAYPAL_SECRET_PRESENT: ${{ secrets.PAYPAL_CLIENT_SECRET != '' }}
+      PAYPAL_WEBHOOK_PRESENT: ${{ secrets.PAYPAL_WEBHOOK_ID != '' }}
+    steps:
+      - name: Read binding names and public endpoint readiness only
+        run: |
+          python3 - <<'PY'
+          import urllib.request,urllib.error,os,json
+          def get(url,auth=False):
+            headers={"User-Agent":"LINGXIFIELD-configuration-readiness/1.0","Accept":"application/json","Cache-Control":"no-cache"}
+            if auth: headers["Authorization"]="Bearer "+os.environ["CF_TOKEN"]
+            try:
+              with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=20) as r:
+                body=r.read(200000)
+                try: return r.status,json.loads(body)
+                except ValueError:return r.status,{}
+            except urllib.error.HTTPError as e:return e.code,{}
+            except Exception as e:return 0,{"errorType":type(e).__name__}
+          account=os.environ["CF_ACCOUNT"]
+          if account!="a2f0881406e2477818e14a924c48ed4e":raise SystemExit("ACCOUNT_MISMATCH")
+          for script in ["lingxifield-com-full-canary-20261107","lingxifield-com-static-gateway-canary-20261107"]:
+            status,data=get("https://api.cloudflare.com/client/v4/accounts/"+account+"/workers/scripts/"+script+"/settings",True)
+            settings=data.get("result",{})
+            print("WORKER_CONFIG",script,status,json.dumps({"bindingNames":[{"name":b.get("name"),"type":b.get("type")} for b in settings.get("bindings",[])],"compatibilityFlags":settings.get("compatibility_flags",[])}))
+          print("GITHUB_SECRET_PRESENCE",json.dumps({k:os.environ.get(k) for k in ["AUTH_CONFIG_PRESENT","PAYPAL_ID_PRESENT","PAYPAL_SECRET_PRESENT","PAYPAL_WEBHOOK_PRESENT"]}))
+          for host in ["https://lingxifield.com","https://lingxifield.cn"]:
+            for path in ["/api/health","/api/account/money-admin/access","/api/sasi/account","/api/tools/jobs","/api/pay/providers"]:
+              status,data=get(host+path)
+              safe={k:data[k] for k in ["ok","isAdmin","wechat","alipay","paypal","diagnostics"] if k in data}
+              print("PUBLIC_API_READINESS",host,path,status,json.dumps(safe))
+          PY

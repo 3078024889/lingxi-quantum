@@ -1,0 +1,24 @@
+name: com isolated Node preview installer safety (no deploy)
+on:
+  push:
+    branches:
+      - infra/com-cloudflare-readiness-20261106
+    paths:
+      - 'infra/com-node/**'
+      - '.github/workflows/com-node-installer-safety.yml'
+permissions:
+  contents: read
+jobs:
+  no-host-mutation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run archive verification, checksum and symlink refusal tests only
+        run: bash infra/com-node/test-install-preview.sh
+      - name: Confirm no host changes are performed by the CI verification mode
+        run: |
+          test ! -e /opt/lingxifield-com-preview
+          echo "Installer verified without modifying host or DNS." >> "$GITHUB_STEP_SUMMARY"

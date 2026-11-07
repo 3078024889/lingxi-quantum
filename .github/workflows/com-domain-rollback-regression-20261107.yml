@@ -1,0 +1,26 @@
+name: COM two-host public route cutover rollback regression (NO DEPLOY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths:
+      - 'scripts/cloudflare/com-public-route-cutover-20261107.py'
+      - 'tests/ops/com-public-route-cutover-test.py'
+      - '.github/workflows/com-domain-rollback-regression-20261107.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Python compile and offline Cloudflare state-transition tests
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 -m py_compile scripts/cloudflare/com-public-route-cutover-20261107.py tests/ops/com-public-route-cutover-test.py
+          python3 tests/ops/com-public-route-cutover-test.py
+          echo COM_PUBLIC_DOMAIN_RELEASE_NO_REAL_API_REQUESTS_IN_REGRESSION

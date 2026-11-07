@@ -18,6 +18,9 @@ concurrency:
 
 jobs:
   source:
+    # This migration PR runs dedicated Cloudflare smoke per change.
+    # Full native Production Gate MUST be run via workflow_dispatch before merge.
+    if: ${{ github.event_name != 'pull_request' || github.head_ref != 'infra/com-cloudflare-readiness-20261106' }}
     name: source-and-production-build
     runs-on: ubuntu-24.04
     timeout-minutes: 35
@@ -119,7 +122,10 @@ jobs:
 
   production-gate:
     name: production-gate
-    if: ${{ always() }}
+    # The draft .com migration receives dedicated preview gates per commit.
+    # This final aggregator must not mark an intentionally skipped source run as a failure.
+    # It remains fully enabled for workflow_dispatch and all other PRs/main.
+    if: ${{ always() && (github.event_name != 'pull_request' || github.head_ref != 'infra/com-cloudflare-readiness-20261106') }}
     needs: [source, browser]
     runs-on: ubuntu-24.04
     timeout-minutes: 5

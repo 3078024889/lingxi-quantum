@@ -1,0 +1,64 @@
+name: COM new static gateway 124 tool URL verification (READ ONLY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-gateway-124-public-tools-audit-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 916f44c6746cf8ac6df16b4f8e4b98a2952c79c1
+          persist-credentials: false
+      - name: Verify all 124 public tool paths against the isolated static gateway
+        run: |
+          python3 - <<'PY'
+          import re,json,collections,concurrent.futures,urllib.request,urllib.error,time
+          from pathlib import Path
+          host="https://lingxifield-com-static-gateway-canary-20261107.3078024889.workers.dev"
+          catalog=Path("lib/seo/global-seo.ts").read_text("utf-8")
+          slugs=list(dict.fromkeys(re.findall(r'\{\s*slug:"([a-z0-9-]+)"',catalog)))
+          if len(slugs)!=124:raise SystemExit("EXACT_CATALOG_COUNT_NOT_124:"+str(len(slugs)))
+          print("EXACT_CATALOG_TOOL_COUNT",len(slugs),flush=True)
+          def probe(path):
+              url=host+path
+              req=urllib.request.Request(url,headers={"User-Agent":"LINGXIFIELD-readonly-cf-124-audit/1.0","Accept":"text/html,application/xhtml+xml","Cache-Control":"no-cache"})
+              try:
+                  with urllib.request.urlopen(req,timeout=20) as r:
+                      typ=r.headers.get("content-type","")
+                      first=r.read(4096)
+                      return (path,r.status,typ, bool(b"<html" in first.lower()))
+              except urllib.error.HTTPError as e:
+                  b=e.read(4096)
+                  label="1102" if b"1102" in b else "1101" if b"1101" in b else ""
+                  return (path,e.code,label,False)
+              except Exception as e:return (path,0,type(e).__name__,False)
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+              results=list(pool.map(probe,["/tools/"+slug for slug in slugs]))
+          statuses=dict(collections.Counter(x[1] for x in results))
+          failed=[x for x in results if x[1]!=200 or "html" not in x[2].lower() or not x[3]]
+          print("CANARY_ALL_124_HTTP_STATUS",json.dumps(statuses),flush=True)
+          print("CANARY_ALL_124_FAILURES",json.dumps(failed[:40]),flush=True)
+          extras=[]
+          for path in ("/","/sasi","/sasi/pricing","/tools/pdf-editor","/tools/e-sign-pdf"):
+              for n in range(5):
+                  res=probe(path)
+                  if res[1]!=200 or not res[3]:extras.append((path,n+1,res))
+                  time.sleep(.1)
+          print("CANARY_CRITICAL_STEADY_ERRORS",json.dumps(extras[:20]),flush=True)
+          result={"total":len(slugs),"statusCounts":statuses,"failed":failed,"criticalErrors":extras,"canary":host}
+          Path("com-gateway-124-audit.json").write_text(json.dumps(result,indent=2),encoding="utf-8")
+          if failed or extras:raise SystemExit("COM_STATIC_GATEWAY_ALL_PUBLIC_TOOL_GATE_FAILED")
+          print("COM_STATIC_GATEWAY_ALL_124_PASS_REAL_HTTPS_NO_MUTATIONS")
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: com-static-gateway-124-tool-census
+          path: com-gateway-124-audit.json
+          retention-days: 3

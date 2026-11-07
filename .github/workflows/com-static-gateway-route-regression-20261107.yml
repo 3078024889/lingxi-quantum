@@ -1,0 +1,25 @@
+name: COM exact-route promotion & rollback regression (NO NETWORK)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths:
+      - 'scripts/cloudflare/com-static-gateway-promote-20261107.py'
+      - 'tests/ops/com-static-gateway-promote-test.py'
+      - '.github/workflows/com-static-gateway-route-regression-20261107.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dry-run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Syntax check and mock route switching
+        run: |
+          python3 -m py_compile scripts/cloudflare/com-static-gateway-promote-20261107.py
+          python3 -m py_compile tests/ops/com-static-gateway-promote-test.py
+          python3 tests/ops/com-static-gateway-promote-test.py
+          echo STATIC_GATEWAY_PROMOTION_MOCK_TESTS_PASS_NO_API_CALLS

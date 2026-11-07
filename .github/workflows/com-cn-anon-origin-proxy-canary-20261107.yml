@@ -1,0 +1,75 @@
+name: COM CN anonymous origin proxy feasibility (ISOLATED CANARY ONLY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-cn-anon-origin-proxy-canary-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxifield-com-cn-anon-proxy-canary
+  cancel-in-progress: true
+jobs:
+  canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: cloudflare-com-preview
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 51f4338b3516282c0036cc238572bba1fd7218ed
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version: '24'}
+      - name: Create strictly isolated Cloudflare worker configuration
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [ -n "${CLOUDFLARE_API_TOKEN:-}" ] || { echo "::error::TOKEN_MISSING"; exit 1; }
+          [[ "${CLOUDFLARE_ACCOUNT_ID:-}" =~ ^[a-f0-9]{32}$ ]] || { echo "::error::ACCOUNT_MISSING"; exit 1; }
+          mkdir -p "$RUNNER_TEMP/anon-worker"
+          cp scripts/cloudflare/com-cn-anon-readonly-proxy-canary.mjs "$RUNNER_TEMP/anon-worker/worker.mjs"
+          cat > "$RUNNER_TEMP/anon-worker/wrangler.jsonc" <<'JSON'
+          {
+            "name":"lingxifield-com-cn-anon-proxy-canary",
+            "main":"./worker.mjs",
+            "compatibility_date":"2026-11-06",
+            "workers_dev":true,
+            "routes":[],
+            "observability":{"enabled":true}
+          }
+          JSON
+          node --check "$RUNNER_TEMP/anon-worker/worker.mjs"
+          echo "NO_PRIVATE_SECRETS_NO_PROD_ROUTE_NO_DNS_WRITE"
+      - name: Deploy ONLY workers.dev canary without domain mapping
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$RUNNER_TEMP/anon-worker"
+          npm exec --yes --package wrangler@4.158.0 -- wrangler deploy --config wrangler.jsonc > "$RUNNER_TEMP/anon-proxy-deploy.log" 2>&1 || {
+            echo "::error::ANON_PROXY_WORKER_DEPLOY_FAILED"
+            tail -n 15 "$RUNNER_TEMP/anon-proxy-deploy.log" | sed -E 's/(eyJ|sb_secret_)[A-Za-z0-9_.-]{20,}/[REDACTED]/g'
+            exit 1
+          }
+          echo "ANON_PROXY_ISOLATED_WORKER_DEPLOYED_NO_PRODUCTION_ROUTES"
+      - name: Probe public and anonymous protected responses with no credentials
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          HOST='https://lingxifield-com-cn-anon-proxy-canary.3078024889.workers.dev'
+          for row in '/api/health 200' '/api/pay/providers 200' '/api/sasi/readiness 200' '/api/tools/pass 200' '/api/sasi/account 401' '/api/money/summary 401' '/api/tools/jobs 401' '/sasi/pricing 200' '/account 200'; do
+            path="${row% *}"; expected="${row##* }"
+            got="$(curl --silent --max-time 20 --output /dev/null --write-out '%{http_code}' "$HOST$path" || true)"
+            echo "ANON_PROXY_GET:$path:$got"
+            [ "$got" = "$expected" ] || { echo "::error::ANON_PROXY_BAD_UPSTREAM:$path:$got"; exit 1; }
+          done
+          denied="$(curl --silent --max-time 15 -X POST --output /dev/null --write-out '%{http_code}' "$HOST/api/pay/create" || true)"
+          [ "$denied" = 405 ] || { echo "::error::CANARY_NOT_READ_ONLY"; exit 1; }
+          unknown="$(curl --silent --max-time 15 --output /dev/null --write-out '%{http_code}' "$HOST/api/pay/create" || true)"
+          [ "$unknown" = 404 ] || { echo "::error::DENY_DEFAULT_MISSING"; exit 1; }
+          header="$(curl --silent --head --max-time 15 "$HOST/api/sasi/account")"
+          ! grep -iq '^set-cookie:' <<< "$header" || { echo "::error::COOKIE_LEAK_FROM_ORIGIN"; exit 1; }
+          echo "CN_ANON_PROXY_FEASIBILITY_PASS_NO_PAYMENTS_NO_LOGINS_NO_PRODUCTION"

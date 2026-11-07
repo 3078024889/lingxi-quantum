@@ -1,0 +1,39 @@
+name: com API native dependency graph (audit only)
+
+on:
+  push:
+    branches:
+      - infra/com-cloudflare-readiness-20261106
+    paths:
+      - 'scripts/cloudflare/trace-route-imports.mjs'
+      - 'tests/cloudflare/trace-route-imports.test.mjs'
+      - '.github/workflows/com-import-graph-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  graph:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Verify graph parser behavior
+        run: node --test tests/cloudflare/trace-route-imports.test.mjs
+      - name: Trace real API transitive dependencies
+        run: |
+          node scripts/cloudflare/trace-route-imports.mjs --json "$RUNNER_TEMP/com-import-graph.json"
+          node --input-type=module - "$RUNNER_TEMP/com-import-graph.json" <<'NODE'
+          import {readFileSync,appendFileSync} from "node:fs";
+          const r=JSON.parse(readFileSync(process.argv[2],"utf8"));
+          if(!r.sourceOnly||r.releaseReady!==false||r.apiRoutes<1)
+            throw Error("IMPORT_GRAPH_NOT_VALID");
+          const lines=Object.entries(r.counts).map(([k,v])=>"- "+k+": "+v).join("\n");
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            "## .com transitive API import audit (source evidence only)\n\n"+
+            "Routes: "+r.apiRoutes+"; signaled: "+r.signaledRoutes+"\n\n"+
+            lines+"\n\nNo deployment or DNS changes.\n");
+          NODE
