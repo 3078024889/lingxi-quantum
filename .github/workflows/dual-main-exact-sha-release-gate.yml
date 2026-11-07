@@ -51,6 +51,8 @@ jobs:
 
       - name: Source and product gates
         run: pnpm ci:source
+        env:
+          LINGXI_COLLECT_ALL_CI_FAILURES: '1'
 
       - name: SIAI approved catalog and research-preview provenance gate
         run: node --test tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs tests/siai-localized-indexing.test.mjs tests/siai-customer-language.test.mjs tests/siai-major-publishers-004.test.mjs tests/siai-company-source.test.mjs tests/footer-unified.test.mjs
