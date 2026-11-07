@@ -88,6 +88,9 @@ test("website displays real native-share entry only in mini program public route
  assert(c.includes("openMiniShare(title)"));
  assert(c.includes("PUBLIC_ROUTE"));
  assert(c.includes("mini-native-share-entry"));
+ assert(c.includes("mini-siai-quick-link"));
+ assert(c.includes('isRanking?"/tools":"/siai"'));
+ assert(c.includes("mini=1&ads=0&currency="));
  assert(wrapper.includes("<MiniProgramShareEntry/>"));
  assert(read("lib/mini/share-client.ts").includes("/pages/share/index?path="));
 });
