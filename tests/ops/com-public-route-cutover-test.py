@@ -48,6 +48,8 @@ class FakeCloudflare:
     def page(self,host,path):
         if self.fail_live and not host.startswith(app.CANARY):
             return 503,b"Worker resource limit exceeded"
+        if path=="/api/public/site-status":
+            return 200,b'{"schemaVersion":1,"scope":"public-maintenance-assets-only","publicSurface":"ready","dynamicBackend":"not-attested","payments":"not-attested","sasi":"not-attested"}'
         if path=="/api/site-release-announcement":
             return 200,b'{"enabled":true,"phase":"maintenance","site":"main"}'
         if path in ("/api/sasi/account","/api/tools/jobs"):
