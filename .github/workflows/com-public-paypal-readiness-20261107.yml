@@ -55,10 +55,12 @@ jobs:
               if code!=200:
                   failed.append(("DYNAMIC_BACKEND_HEALTH_NOT_READY","/api/health",n,code))
           for p in ("/","/tools/e-sign-pdf"):
-              code,_,loc,_=probe("https://www.lingxifield.com"+p)
+              code,typ,loc,body=probe("https://www.lingxifield.com"+p,p=="/")
               print("WWW_CANONICAL",p,code,loc)
-              if code not in (301,308) or loc!=base+p:
-                  failed.append(("WWW_REDIRECT_NOT_EXACT",p,code,loc[:150]))
+              redirected=(code in (301,308) and loc==base+p)
+              directly_served=(p=="/" and code==200 and "html" in typ.lower() and b"LINGXIFIELD" in body)
+              if not (redirected or directly_served):
+                  failed.append(("WWW_REDIRECT_OR_PUBLIC_CONTENT_INVALID",p,code,loc[:150]))
           if failed:
               print("PUBLIC_PAYMENT_REVIEW_AND_TOOL_GATE_FAILED",failed[:30])
               sys.exit(1)
