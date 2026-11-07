@@ -71,6 +71,39 @@ jobs:
             console.log('COM_PUBLIC_HTML_ASSET_STAGED',route,data.length,createHash('sha256').update(data).digest('hex').slice(0,16));
           }
           console.log('COM_THREE_PUBLIC_STATIC_HTML_ASSETS_READY');
+          // The verified directory widget is prerendered by Next; OpenNext's
+          // /api/* Worker-first default otherwise risks Cloudflare CPU 1102.
+          const manifest=JSON.parse(readFileSync('.next/prerender-manifest.json','utf8'));
+          if(!manifest.routes?.['/api/public/siai-widget'])throw Error('SIAI_WIDGET_NOT_PRERENDERED');
+          const candidates=[
+            '.next/server/app/api/public/siai-widget/route.body',
+            '.next/server/app/api/public/siai-widget.body',
+            '.next/server/app/api/public/siai-widget/route.json'
+          ];
+          const source=candidates.find(existsSync);
+          if(!source)throw Error('SIAI_WIDGET_STATIC_BODY_NOT_FOUND');
+          const body=readFileSync(source);
+          const info=JSON.parse(body.toString('utf8'));
+          if(info.publisher!=='LINGXIFIELD'||info.schemaVersion!==1||
+             !Array.isArray(info.rows)||info.rows.length<10||info.total!==info.rows.length)
+            throw Error('SIAI_WIDGET_PUBLIC_FEED_INVALID');
+          const target='.open-next/assets/api/public/siai-widget';
+          if(existsSync(target))throw Error('SIAI_WIDGET_ASSET_ALREADY_EXISTS');
+          mkdirSync('.open-next/assets/api/public',{recursive:true});
+          writeFileSync(target,body,{mode:0o644});
+          if(!readFileSync(target).equals(body))throw Error('SIAI_WIDGET_COPY_BYTES_MISMATCH');
+          const headerFile='.open-next/assets/_headers';
+          let prev=existsSync(headerFile)?readFileSync(headerFile,'utf8'):'';
+          if(prev.includes('/api/public/siai-widget'))throw Error('WIDGET_HEADER_RULE_CONFLICT');
+          const headers=[
+            '/api/public/siai-widget',
+            '  Content-Type: application/json; charset=utf-8',
+            '  Access-Control-Allow-Origin: *',
+            '  Cache-Control: public, max-age=300, s-maxage=900, stale-while-revalidate=3600',
+            '  X-Content-Type-Options: nosniff'
+          ].join('\n');
+          writeFileSync(headerFile,prev+'\n'+headers+'\n',{mode:0o644});
+          console.log('COM_PUBLIC_WIDGET_STATIC_JSON_ASSET_STAGED',body.length,info.total,source);
           JS
           pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/com-canary-dry-run"
           echo 'EXACT_SHA_OPENNEXT_R2_DRY_RUN_PASS'
@@ -117,6 +150,11 @@ jobs:
             if(c.assets.run_worker_first.some(x=>x==='*'||x===p))
               throw Error('PUBLIC_PAGE_FORCED_TO_WORKER:'+p);
           }
+          // Negative rules take precedence over /api/*; this one route is
+          // public, immutable and prebuilt, while auth/payment APIs remain gated.
+          if(c.assets.run_worker_first.includes('!/api/public/siai-widget'))
+            throw Error('SIAI_WIDGET_NEGATIVE_PATTERN_CONFLICT');
+          c.assets.run_worker_first.push('!/api/public/siai-widget');
           delete c.route;
           delete c.routes;
           delete c.triggers;
@@ -205,6 +243,26 @@ jobs:
             test "$actual" = "$expected" || { echo "::error::HTML_ASSET_NOT_DIRECTLY_SERVED:$path"; exit 1; }
             echo "COM_CLOUDFLARE_DIRECT_HTML_ASSET_SHA256_PASS:$path"
           done
+          # The public widget MUST be delivered byte-for-byte as static JSON,
+          # even when an /api/* wildcard normally invokes the Worker.
+          tmp_json="$(mktemp)"
+          tmp_hdr="$(mktemp)"
+          curl --silent --show-error --fail --max-time 35 \
+            -H 'Accept-Encoding: identity' -D "$tmp_hdr" \
+            "$HOST/api/public/siai-widget" -o "$tmp_json"
+          src_json="$(find .next/server/app/api/public/siai-widget -maxdepth 2 -name 'route.body' -print -quit)"
+          [ -n "$src_json" ] || { echo "::error::SOURCE_WIDGET_JSON_MISSING"; exit 1; }
+          test "$(sha256sum "$src_json" | awk '{print $1}')" = "$(sha256sum "$tmp_json" | awk '{print $1}')" || {
+            echo "::error::PUBLIC_WIDGET_NOT_DIRECT_ASSET"; exit 1;
+          }
+          grep -Eiq '^content-type: application/json' "$tmp_hdr" || {
+            echo "::error::STATIC_WIDGET_MIME_INVALID"; exit 1;
+          }
+          grep -Eiq '^access-control-allow-origin: \*' "$tmp_hdr" || {
+            echo "::error::STATIC_WIDGET_CORS_MISSING"; exit 1;
+          }
+          rm -f "$tmp_json" "$tmp_hdr"
+          echo COM_PUBLIC_WIDGET_BYTES_AND_JSON_MIME_DIRECT_ASSET_PASS
           notice="$(curl --silent --show-error --fail --max-time 25 "$HOST/api/site-release-announcement")"
           NOTICE_JSON="$notice" node -e 'const j=JSON.parse(process.env.NOTICE_JSON);if(j.enabled!==true||j.phase!=="maintenance"||j.site!=="main")process.exit(1);console.log("COM_APPROVED_MAINTENANCE_NOTICE_API_PASS")'
           echo "FULL_CANARY_PUBLIC_AND_ANONYMOUS_SECURITY_AND_R2_RANGE_PASS"
