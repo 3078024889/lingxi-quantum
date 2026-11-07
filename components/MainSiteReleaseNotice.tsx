@@ -79,11 +79,13 @@ const copy:Record<Lang,Copy>={
 };
 
 
-const maintenance:Record<Lang,{title:string;body:string;benefit:string}>={
+const maintenance:Record<Lang,{title:string;body:string;benefit:string;extra?:string;thanks?:string}>={
  zh:{
   title:"灵犀场｜全球双站架构升级公告",
   body:"这不是一次简单的服务器维护，而是灵犀场全球服务架构的一次重要升级。2026年11月6日起，灵犀场 LINGXIFIELD 开展服务器架构升级与全球访问线路优化，国际站与国内站进入新版切换阶段，预计2026年11月8日前恢复上线，具体以最终功能验收结果为准。",
-  benefit:"本次升级围绕全球访问链路、服务器运行架构、数据安全防护与服务稳定性展开，为全球 SIAI 排行榜、SASI 智能创作、百余项在线实用工具，以及统一账户和工具包支付提供更坚实的基础设施。"
+  benefit:"本次升级重点围绕全球访问链路、服务器运行架构、数据安全防护及服务稳定性展开，为全球 SIAI 排行榜、SASI 智能创作和百余项在线实用工具提供更坚实的基础设施。",
+  extra:"同时优化统一账户、工具包支付与使用体验，让文件处理、智能创作和全球智能平台比较更加简单、便捷。",
+  thanks:"维护期间如出现短暂访问异常，感谢理解与陪伴。灵犀场 LINGXIFIELD · 让智能触手可及，让创造突破边界。"
  },
  en:{
   title:"LINGXIFIELD | Global dual-site upgrade in progress",
@@ -205,7 +207,8 @@ export default function MainSiteReleaseNotice(){
       <div className={styles.waterline} aria-hidden="true"/>
       <p className={styles.body} id="lx-main-upgrade-detail">{notice?.body||t.body}</p>
       <p className={styles.body}>{notice?.benefit||t.benefit}</p>
-      <p className={styles.thanks}>{t.thanks}</p>
+      {notice?.extra?<p className={styles.body}>{notice.extra}</p>:null}
+      <p className={styles.thanks}>{notice?.thanks||t.thanks}</p>
       <div className={styles.domains}>
         <a href="https://lingxifield.com" target="_blank" rel="noopener noreferrer">
           <small>{t.global}</small><strong>lingxifield.com</strong>
