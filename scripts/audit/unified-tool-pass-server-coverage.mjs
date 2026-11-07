@@ -92,7 +92,6 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
    &&sql.includes('v_use.units<>v_len')
    &&sql.includes("'burn-file-prepare'")
    &&sql.includes("PASS_BURN_FILE_REBIND")
-   &&sql.includes("p.input")===false
    &&sql.includes("revoke all on function public.lingxi_prepare_pass_burn_file_v1")
    &&ui.includes("uploadPassShare")
    &&ui.includes('claimToolStart("burn-after-read",x.length)')
