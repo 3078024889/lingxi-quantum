@@ -1,0 +1,49 @@
+name: Miniapp direct tools entry and native share candidate (NO PUBLISH)
+on:
+  push:
+    branches: [feature/miniapp-direct-tools-share-20261107]
+    paths:
+      - 'miniapp/**'
+      - 'components/MiniEmbedMode.tsx'
+      - 'components/MiniProgramShareEntry.*'
+      - 'tests/mini-main-direct-tools-share.test.mjs'
+      - '.github/workflows/miniapp-direct-tools-share-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: miniapp-direct-tools-share
+  cancel-in-progress: true
+jobs:
+  mini-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Native routes, privacy-safe links, WeChat share bridge
+        run: |
+          set -euo pipefail
+          node --test tests/mini-main-direct-tools-share.test.mjs
+          node scripts/test-mini-sharing-v78.cjs
+          node scripts/test-mini-profiles-v80.cjs
+          echo "NO_WECHAT_RELEASE_NO_VERCEL_NO_CLOUDFLARE_DEPLOY"
+  next-build:
+    needs: mini-contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with: {version: 11.28.0, run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version-file: .nvmrc, cache: pnpm}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: echo "MINI_WEB_CLIENT_BUILD_VERIFIED_WITHOUT_DEPLOYMENT"

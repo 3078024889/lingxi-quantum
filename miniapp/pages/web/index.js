@@ -18,8 +18,8 @@ function withMiniContext(path){
 const SHARE_TITLES={'/':'灵犀场 · 一键创造，一念即达','/siai':'灵犀场 · 全球 SIAI 排行榜','/sasi':'灵犀场 SASI · 创作','/sasi/drama':'灵犀场 · 短剧创作','/sasi/connections':'灵犀场 · 扩展能力','/tools':'灵犀场 · 实用工具','/ai-knowledge':'灵犀场 · 资料变成可用知识','/ai-learning':'灵犀场 · 学习 SASI','/ai-research':'灵犀场 · 科研 SASI'}
 function shareTitleFor(path){return SHARE_TITLES[publicWebPath(path)]||'灵犀场 LINGXIFIELD'}
 Page({
- data:{src:'',path:'/',loading:true,failed:false},
- onLoad(options){enableShareMenu();const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
+ data:{src:'',path:'/tools',loading:true,failed:false},
+ onLoad(options){enableShareMenu();const decoded=safeDecode(options.path||'/tools'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
  onShow(){enableShareMenu()},
  onHide(){this.clearPreviousCheckout()},
  onUnload(){this.clearPreviousCheckout()},
