@@ -29,6 +29,9 @@ jobs:
                       body=f.read(200000) if read_body else b""
                       return f.status, f.headers.get("Content-Type",""), f.headers.get("Location",""), body
               except urllib.error.HTTPError as e:
+                  sample=e.read(4096).lower()
+                  markers=[t for t in (b"1101",b"1102",b"worker exceeded",b"cpu time",b"memory",b"origin error") if t in sample]
+                  print("PUBLIC_HTTP_ERROR_DIAGNOSTIC",e.code,"cf_markers",markers,"server",e.headers.get("Server",""))
                   return e.code,e.headers.get("Content-Type",""),e.headers.get("Location",""),b""
               except Exception as e:
                   print("PROBE_TRANSPORT_ERROR",type(e).__name__,str(e)[:150])
