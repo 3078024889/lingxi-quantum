@@ -22,7 +22,7 @@ jobs:
           set -Eeuo pipefail
           git config user.email "lingxifield-ci@users.noreply.github.com"
           git config user.name "LINGXIFIELD CI (local-only)"
-          for ref in             fix/cn-main-runtime-supabase-public-env-20261107             feature/miniapp-direct-tools-share-20261107             feature/main-dual-domain-release-notice-20261107
+          for ref in             feature/toolpass-final-integration-20261107             fix/cn-main-runtime-supabase-public-env-20261107             feature/miniapp-direct-tools-share-20261107             feature/main-dual-domain-release-notice-20261107
           do
             git fetch --no-tags origin "+refs/heads/$ref:refs/remotes/origin/$ref"
             git merge --no-ff --no-edit "refs/remotes/origin/$ref" || {
