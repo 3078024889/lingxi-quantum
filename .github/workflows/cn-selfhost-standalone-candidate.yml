@@ -13,11 +13,16 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
-      - name: Exact GitHub source checkout
+      - name: Checkout exact fully CI-verified release SHA
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
+          ref: 999a7429152e7745114003de52ffe52c5f63e734
           fetch-depth: 1
           persist-credentials: false
+      - name: Verify source SHA is the fully passed dual-site release
+        run: |
+          test "$(git rev-parse HEAD)" = "999a7429152e7745114003de52ffe52c5f63e734"
+          echo "CN_STANDALONE_RELEASE_SOURCE_EXACT"
       - name: Install pinned pnpm
         uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
@@ -123,14 +128,14 @@ jobs:
           tar -C .next/standalone -czf lingxifield-ecs-standalone.tar.gz .
           bytes="$(stat -c%s lingxifield-ecs-standalone.tar.gz)"
           test "$bytes" -lt 1258291200 || { echo "::error::STANDALONE_ARCHIVE_EXCEEDS_1_2GB"; exit 1; }
-          printf '%s\n' "$GITHUB_SHA" > SHA.txt
+          printf '%s\n' "$(git rev-parse HEAD)" > SHA.txt
           printf '%s\n' 'Preview package only: no real login, payment, R2 or file roundtrip acceptance.' > NOT_PRODUCTION_APPROVED.txt
           ls -lh lingxifield-ecs-standalone.tar.gz
           sha256sum lingxifield-ecs-standalone.tar.gz > lingxifield-ecs-standalone.sha256
       - name: Upload artifact to GitHub Actions only
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
-          name: lingxifield-cn-standalone-testonly-${{ github.sha }}
+          name: lingxifield-cn-standalone-exact-999a7429152e7745114003de52ffe52c5f63e734
           path: |
             lingxifield-ecs-standalone.tar.gz
             lingxifield-ecs-standalone.sha256
