@@ -1,6 +1,13 @@
 "use client";
 type ToolAccessResult={ok:boolean;error?:string;accessKind?:"daily_free"|"pass";alreadyClaimed?:boolean;requestId?:string};
 export const TOOL_PASS_ENFORCED=process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true";
+// Memory-only last confirmed receipt. NEVER persist entitlement across users or
+// tabs: the backend re-verifies account, tool slug, pass and stage on every use.
+const lastClaimBySlug=new Map<string,{requestId:string}>();
+export function latestConfirmedToolClaim(toolSlug:string){
+ if(!TOOL_PASS_ENFORCED)return null;
+ return lastClaimBySlug.get(toolSlug)||null;
+}
 export class ToolAccessError extends Error{constructor(public code:string){super(code);this.name="ToolAccessError";}}
 export async function claimToolStart(toolSlug:string,units=1,requestId=crypto.randomUUID()):Promise<ToolAccessResult>{
  if(!TOOL_PASS_ENFORCED)return {ok:true,requestId};
@@ -11,6 +18,8 @@ export async function claimToolStart(toolSlug:string,units=1,requestId=crypto.ra
  });
  const data=await response.json().catch(()=>({}));
  if(!response.ok||!data.ok)throw new ToolAccessError(String(data.error||"TOOL_ACCESS_UNAVAILABLE"));
+ if(data.ok && data.requestId===requestId || data.ok && !data.requestId)
+   lastClaimBySlug.set(toolSlug,{requestId});
  return {...data,requestId};
 }
 export const TOOL_ACCESS_MESSAGES:Record<string,Record<string,string>>={
