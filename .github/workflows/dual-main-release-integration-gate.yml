@@ -1,0 +1,67 @@
+name: Dual Lingxifield main-site integration and build gate (NO DEPLOY)
+on:
+  push:
+    branches: [feature/dual-site-integrated-acceptance-20261107]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dual-main-integration-source
+  cancel-in-progress: true
+jobs:
+  merged-main-site-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout current unified-toolpass candidate with complete history
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {fetch-depth: 0, persist-credentials: false}
+      - name: Merge auth, miniapp, and announcement candidates LOCALLY only
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.email "lingxifield-ci@users.noreply.github.com"
+          git config user.name "LINGXIFIELD CI (local-only)"
+          for ref in             fix/cn-main-runtime-supabase-public-env-20261107             feature/miniapp-direct-tools-share-20261107             feature/main-dual-domain-release-notice-20261107
+          do
+            git fetch --no-tags origin "+refs/heads/$ref:refs/remotes/origin/$ref"
+            git merge --no-ff --no-edit "refs/remotes/origin/$ref" || {
+              echo "::error::MERGE_CONFLICT_$ref"
+              git status --short
+              exit 1
+            }
+          done
+          echo "LOCAL_MERGE_SHA=$(git rev-parse HEAD)"
+          echo "BASE_TOOLPASS_SHA=${GITHUB_SHA}"
+          echo "THIS_JOB_NEVER_PUSHES_OR_DEPLOYS"
+          {
+            echo "### Local merged test version"
+            git log -4 --format='%h %s'
+            echo "No PR merge, Vercel, Cloudflare, Aliyun, Supabase mutation, or DNS operation"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Install Node and pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with: {version: 11.28.0, run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version-file: .nvmrc, cache: pnpm}
+      - name: Immutable dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify dedicated main-site security, announcement, miniapp and toolpass contracts
+        run: |
+          set -Eeuo pipefail
+          node --test             tests/ops/cn-main-auth-recover-verified.test.mjs             tests/ops/server-runtime-supabase-public.test.mjs             tests/ops/require-supabase-browser-build.test.mjs             tests/mini-main-direct-tools-share.test.mjs             tests/release/main-site-notice-contract.test.mjs             tests/unified-tools-pass-static-contract.test.mjs             tests/tool-pass-stage-server-http-contract.test.mjs
+          node scripts/test-mini-sharing-v78.cjs
+          node scripts/test-mini-profiles-v80.cjs
+      - name: Full Next.js type safety and production build
+        run: |
+          set -Eeuo pipefail
+          pnpm exec tsc --noEmit
+          pnpm build
+      - name: Explicit release stop-ship summary
+        if: always()
+        run: |
+          {
+            echo "A green result verifies source integration and offline build only."
+            echo "Pending: real-account login, purchased pass actual debit/refund, all 124 tool deliveries, SASI, international production HTTPS/API/cron, mobile and desktop browser E2E, and authorized operator cutover."
+            echo "This workflow is NOT allowed to deploy or enable the completion notice."
+          } >> "$GITHUB_STEP_SUMMARY"
