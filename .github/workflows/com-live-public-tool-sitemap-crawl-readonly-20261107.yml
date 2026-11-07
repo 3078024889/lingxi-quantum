@@ -11,7 +11,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
-      - name: Check all published public tool detail URLs, not just three smoke paths
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 33d3cbd1c7cdbb859f103292ee99c7f1ac47a564
+          persist-credentials: false
+      - name: Check all 124 source-catalog tool detail URLs, not just three smoke paths
         shell: bash
         run: |
           python3 - <<'PY'
@@ -26,41 +30,21 @@ jobs:
                   b=e.read(2048)
                   return e.code,b
               except Exception as e:return 0,type(e).__name__.encode()
-          paths=set()
-          # Native published sitemap is evidence of actually discoverable routes.
-          code,body=fetch("https://lingxifield.com/sitemap.xml")
-          print("COM_CANONICAL_SITEMAP",code,len(body))
-          def add_or_queue(xml,url,seen,depth=0):
-              if depth>3 or url in seen:return
-              seen.add(url)
-              try: root=ET.fromstring(xml)
-              except Exception as exc:
-                  print("SITEMAP_PARSE_FAILED",url,type(exc).__name__)
-                  return
-              nested=[]
-              for e in root.iter():
-                  if e.tag.rsplit("}",1)[-1]!="loc" or not e.text:continue
-                  parts=urlsplit(e.text.strip())
-                  if parts.hostname not in ("lingxifield.cn","lingxifield.com"):continue
-                  p=parts.path
-                  if re.fullmatch(r"/tools/[a-z0-9-]+/?",p):paths.add(p.rstrip("/"))
-                  elif ("sitemap" in p and p.endswith(".xml")):nested.append(e.text.strip())
-              for child in sorted(set(nested))[:25]:
-                  childcode,childbody=fetch(child)
-                  print("NESTED_SITEMAP",childcode,child,len(childbody))
-                  if childcode==200:add_or_queue(childbody,child,seen,depth+1)
-          if code==200:add_or_queue(body,"https://lingxifield.com/sitemap.xml",set())
-          # Supplement published sitemap with known critical routes without inventing functionality.
-          paths.update(("/tools/pdf-editor","/tools/e-sign-pdf","/tools/pdf-merge-split","/tools/pdf-to-jpg","/tools/food-calorie","/tools/video-transcription","/tools/image-translator","/tools/handwriting-ocr"))
-          print("PUBLIC_PUBLISHED_TOOL_COUNT",len(paths))
-          if len(paths)<40:raise SystemExit("SITEMAP_DISCOVERY_TOO_SMALL_DO_NOT_CALL_COMPLETE")
+          # Pin to the exact, previously verified 124-item source catalog.
+          # Avoid relying on /sitemap.xml, which itself is dynamically SSR'd and can 1102.
+          from pathlib import Path
+          catalog=Path("lib/seo/global-seo.ts").read_text("utf-8")
+          slugs=list(dict.fromkeys(re.findall(r'\\{\\s*slug:"([a-z0-9-]+)"',catalog)))
+          if len(slugs)!=124:raise SystemExit("PUBLIC_SOURCE_CATALOG_COUNT_CHANGED:"+str(len(slugs)))
+          paths=set("/tools/"+slug for slug in slugs)
+          print("PINNED_SOURCE_CATALOG_TOOL_COUNT",len(paths))
           jobs=[(host,path) for host in ("lingxifield.cn","lingxifield.com") for path in sorted(paths)]
           def check(v):
               host,path=v
               status,body=fetch("https://"+host+path)
               marker="1102" if b"1102" in body else "1101" if b"1101" in body else ""
               return (host,path,status,marker)
-          with concurrent.futures.ThreadPoolExecutor(max_workers=7) as pool:
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
               results=list(pool.map(check,jobs))
           summary={}
           for host in ("lingxifield.cn","lingxifield.com"):
