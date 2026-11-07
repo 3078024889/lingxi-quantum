@@ -1,8 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 
+function getAdminRuntimeFallbackUrl() {
+  const env = process.env;
+  return env.NEXT_PUBLIC_SUPABASE_URL;
+}
+
 export function isSupabaseAdminConfigured() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const env = process.env;
+  const url = (env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
+  const key = env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!url || !key || key.length < 20) return false;
   try {
     const parsed = new URL(url);
@@ -18,7 +24,7 @@ export function isSupabaseAdminConfigured() {
 export function createAdminClient() {
   if (!isSupabaseAdminConfigured()) throw new Error("SUPABASE_ADMIN_CONFIG_MISSING");
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    (process.env.SUPABASE_URL || getAdminRuntimeFallbackUrl())!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { persistSession: false } }
   );
