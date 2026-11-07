@@ -30,14 +30,26 @@ jobs:
           # Native published sitemap is evidence of actually discoverable routes.
           code,body=fetch("https://lingxifield.cn/sitemap.xml")
           print("CN_SITEMAP",code,len(body))
-          if code==200:
-              try:
-                  root=ET.fromstring(body)
-                  for e in root.iter():
-                      if e.tag.rsplit("}",1)[-1]=="loc" and e.text:
-                          p=urlsplit(e.text).path
-                          if re.fullmatch(r"/tools/[a-z0-9-]+/?",p):paths.add(p.rstrip("/"))
-              except Exception as exc: print("SITEMAP_PARSE_FAILED",type(exc).__name__)
+          def add_or_queue(xml,url,seen,depth=0):
+              if depth>3 or url in seen:return
+              seen.add(url)
+              try: root=ET.fromstring(xml)
+              except Exception as exc:
+                  print("SITEMAP_PARSE_FAILED",url,type(exc).__name__)
+                  return
+              nested=[]
+              for e in root.iter():
+                  if e.tag.rsplit("}",1)[-1]!="loc" or not e.text:continue
+                  parts=urlsplit(e.text.strip())
+                  if parts.hostname not in ("lingxifield.cn","lingxifield.com"):continue
+                  p=parts.path
+                  if re.fullmatch(r"/tools/[a-z0-9-]+/?",p):paths.add(p.rstrip("/"))
+                  elif ("sitemap" in p and p.endswith(".xml")):nested.append(e.text.strip())
+              for child in sorted(set(nested))[:25]:
+                  childcode,childbody=fetch(child)
+                  print("NESTED_SITEMAP",childcode,child,len(childbody))
+                  if childcode==200:add_or_queue(childbody,child,seen,depth+1)
+          if code==200:add_or_queue(body,"https://lingxifield.cn/sitemap.xml",set())
           # Supplement published sitemap with known critical routes without inventing functionality.
           paths.update(("/tools/pdf-editor","/tools/e-sign-pdf","/tools/pdf-merge-split","/tools/pdf-to-jpg","/tools/food-calorie","/tools/video-transcription","/tools/image-translator","/tools/handwriting-ocr"))
           print("PUBLIC_PUBLISHED_TOOL_COUNT",len(paths))
