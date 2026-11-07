@@ -14,7 +14,10 @@ OVERRIDE=/etc/lingxifield/cn-release-notice-86b956c9700e.env
 PORT=3191
 test -d "$DIR" && test ! -L "$DIR" || die EXACT_RELEASE_DIR_MISSING
 test -s "$DIR/server.js" || die RELEASE_SERVER_MISSING
-test "$(stat -c %u "$DIR")" = "$(id -u lingxifield)" || die RELEASE_OWNER_MISMATCH
+RELEASE_OLD_UID="$(stat -c %u "$DIR")"
+RELEASE_OLD_GID="$(stat -c %g "$DIR")"
+RELEASE_APP_UID="$(id -u lingxifield)"
+RELEASE_APP_GID="$(id -g lingxifield)"
 test -x "$NODE" || die NODE24_BINARY_MISSING
 "$NODE" --check "$DIR/server.js" || die RELEASE_SERVER_SYNTAX_ERROR
 systemctl is-active --quiet lingxifield-ecs || die EXISTING_3188_INACTIVE
@@ -48,6 +51,7 @@ BASE_DIR="$(dirname "$DIR")"
 PREV_BASE_MODE="$(stat -c %a "$BASE_DIR")"
 PREV_BASE_GID="$(stat -c %g "$BASE_DIR")"
 base_permissions_changed=0
+release_ownership_changed=0
 cleanup(){
  rc=$?
  trap - EXIT
@@ -64,11 +68,23 @@ cleanup(){
    chgrp "$PREV_BASE_GID" "$BASE_DIR" || true
    chmod "$PREV_BASE_MODE" "$BASE_DIR" || true
   fi
+  if test "$release_ownership_changed" = 1; then
+   chown -R -h --from="$RELEASE_APP_UID:$RELEASE_APP_GID" "$RELEASE_OLD_UID:$RELEASE_OLD_GID" "$DIR" || true
+  fi
   echo CN_PREPARE_ROLLED_BACK_OLD_SERVICES_UNTOUCHED
  fi
  exit "$rc"
 }
 trap cleanup EXIT
+# The verified archive keeps its original uid/gid (e.g. 1001:1001); align the
+# isolated release files to the existing app service account, without changing
+# file bytes, any old deployment, or any symlink destination.
+if test "$RELEASE_OLD_UID:$RELEASE_OLD_GID" != "$RELEASE_APP_UID:$RELEASE_APP_GID"; then
+  test "$(stat -c %u "$DIR")" = "$RELEASE_OLD_UID" || die RELEASE_OWNERSHIP_CHANGED_DURING_PRECHECK
+  release_ownership_changed=1
+  chown -R -h --from="$RELEASE_OLD_UID:$RELEASE_OLD_GID" "$RELEASE_APP_UID:$RELEASE_APP_GID" "$DIR" || die RELEASE_CHOWN_FAILED
+fi
+test "$(stat -c %u:%g "$DIR")" = "$RELEASE_APP_UID:$RELEASE_APP_GID" || die RELEASE_SERVICE_OWNER_STILL_MISMATCH
 # The immutable archive was extracted by root; the parent is often root:root 0700.
 # Grant group traverse only to the application service user and roll it back if checks fail.
 if ! runuser -u lingxifield -- test -x "$BASE_DIR"; then
