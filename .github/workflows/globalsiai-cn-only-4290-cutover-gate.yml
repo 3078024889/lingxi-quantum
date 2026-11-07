@@ -35,8 +35,9 @@ jobs:
             python -c '
           import pathlib
           x=pathlib.Path("scripts/ops/globalsiai-cn-only-4290-cutover.sh").read_text()
-          start=x.index("<<\\x27PY\\x27")+len("<<\\x27PY\\x27")
-          end=x.index("\\nPY",start)
+          marker="<<"+chr(39)+"PY"+chr(39)
+          start=x.index(marker)+len(marker)
+          end=x.index(chr(10)+"PY",start)
           compile(x[start:end],"<ECS python3.6>","exec")
           print("GLOBALSIAI_CN_ONLY_PYTHON36_SYNTAX_PASS")
           '
