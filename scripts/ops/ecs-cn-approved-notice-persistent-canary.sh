@@ -4,7 +4,7 @@ set -Eeuo pipefail
 umask 077
 die(){ echo "CN_PREPARE_ABORT:$*" >&2; exit 1; }
 test "$(id -u)" -eq 0 || die ROOT_REQUIRED
-for cmd in stat systemctl systemd-analyze curl python3 grep awk df; do command -v "$cmd" >/dev/null || die "MISSING_COMMAND:$cmd"; done
+for cmd in stat systemctl systemd-analyze curl python3 grep awk df runuser chgrp chmod; do command -v "$cmd" >/dev/null || die "MISSING_COMMAND:$cmd"; done
 SHA=86b956c9700ede4a537c021af3a0dc1df825fa9b
 DIR="/opt/lingxifield/cn-staged-releases/$SHA"
 NODE=/opt/lingxifield/runtime/node-24.19.0/bin/node
@@ -44,6 +44,10 @@ made_unit=0
 made_override=0
 accepted=0
 TMPJSON=''
+BASE_DIR="$(dirname "$DIR")"
+PREV_BASE_MODE="$(stat -c %a "$BASE_DIR")"
+PREV_BASE_GID="$(stat -c %g "$BASE_DIR")"
+base_permissions_changed=0
 cleanup(){
  rc=$?
  trap - EXIT
@@ -56,11 +60,25 @@ cleanup(){
    systemctl daemon-reload || true
   fi
   if test "$made_override" = 1; then rm -f -- "$OVERRIDE"; fi
+  if test "$base_permissions_changed" = 1; then
+   chgrp "$PREV_BASE_GID" "$BASE_DIR" || true
+   chmod "$PREV_BASE_MODE" "$BASE_DIR" || true
+  fi
   echo CN_PREPARE_ROLLED_BACK_OLD_SERVICES_UNTOUCHED
  fi
  exit "$rc"
 }
 trap cleanup EXIT
+# The immutable archive was extracted by root; the parent is often root:root 0700.
+# Grant group traverse only to the application service user and roll it back if checks fail.
+if ! runuser -u lingxifield -- test -x "$BASE_DIR"; then
+ test "$(stat -c %u "$BASE_DIR")" = 0 || die RELEASE_PARENT_NOT_ROOT_OWNED
+ chgrp lingxifield "$BASE_DIR"
+ chmod 0710 "$BASE_DIR"
+ base_permissions_changed=1
+fi
+runuser -u lingxifield -- test -r "$DIR/server.js" || die UNPRIVILEGED_RELEASE_NOT_READABLE
+runuser -u lingxifield -- "$NODE" --check "$DIR/server.js" || die UNPRIVILEGED_NODE_EXECUTION_FAILED
 cat > "$OVERRIDE" <<'EOF'
 NODE_ENV=production
 HOSTNAME=127.0.0.1
