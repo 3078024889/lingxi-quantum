@@ -1,8 +1,10 @@
 import fs from "node:fs";
 const must=(v,m)=>{if(!v)throw new Error(m)};
 const pkg=JSON.parse(fs.readFileSync("package.json","utf8"));
-must(pkg.dependencies.next==="15.5.27","V39_NEXT_NOT_PATCHED");
-must(pkg.devDependencies["eslint-config-next"]==="15.5.27","V39_ESLINT_NEXT_NOT_PATCHED");
+const nextVersion=String(pkg.dependencies.next||"");
+const nextMatch=/^15\\.5\\.(\\d+)$/.exec(nextVersion);
+must(nextMatch&&Number(nextMatch[1])>=29,"V39_NEXT_NOT_PATCHED");
+must(pkg.devDependencies["eslint-config-next"]===nextVersion,"V39_ESLINT_NEXT_PATCH_MISMATCH");
 
 const wallet=fs.readFileSync("components/WalletHeroCopy.tsx","utf8");
 const walletPage=fs.readFileSync("app/ai-wallet/page.tsx","utf8");
@@ -26,7 +28,7 @@ must(!i18n.includes('"模型与 API"'),"V39_MODELS_API_LABEL_VISIBLE");
 const indexing=fs.readFileSync("lib/seo/indexing.ts","utf8");
 must(indexing.includes("connections|chat|operator|project-dna"),"V39_CONNECTION_NOINDEX_GUARD_MISSING");
 
-console.log("NEXT_MAINTENANCE_LTS_SECURITY_PATCH=15.5.27");
+console.log("NEXT_MAINTENANCE_LTS_SECURITY_PATCH="+nextVersion);
 console.log("PUBLIC_AI_BALANCE_WORDING=0");
 console.log("PUBLIC_CONNECT_MY_AI_WORDING=0");
 console.log("PUBLIC_MODELS_API_LABEL=0");
