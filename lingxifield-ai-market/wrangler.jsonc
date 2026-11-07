@@ -18,15 +18,5 @@
   },
   "observability": {
     "enabled": false
-  },
-  "routes": [
-    {
-      "pattern": "globalsiai.com",
-      "custom_domain": true
-    },
-    {
-      "pattern": "www.globalsiai.com",
-      "custom_domain": true
-    }
-  ]
+  }
 }
