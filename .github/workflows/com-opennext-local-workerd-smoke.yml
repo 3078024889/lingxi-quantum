@@ -38,8 +38,8 @@ jobs:
         run: pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
       - name: Add TEMPORARY CI-only auth diagnostics (not committed, never deployed)
         run: |
-          mkdir -p app/api/__ci_auth_state
-          cat > app/api/__ci_auth_state/route.ts <<'TS'
+          mkdir -p app/api/ci-ephemeral-auth-state
+          cat > app/api/ci-ephemeral-auth-state/route.ts <<'TS'
           import {NextResponse} from "next/server";
           import {createClient,getServerSupabasePublicConfig} from "@/lib/supabase/server";
           export const runtime="nodejs";
@@ -93,7 +93,7 @@ jobs:
             exit 1
           fi
           echo "CI_AUTH_DIAGNOSTIC_START"
-          curl --noproxy '*' --silent --show-error --max-time 12 'http://127.0.0.1:8787/api/__ci_auth_state' | head -c 2000
+          curl --noproxy '*' --silent --show-error --max-time 12 'http://127.0.0.1:8787/api/ci-ephemeral-auth-state' | head -c 2000
           echo
           echo "CI_AUTH_DIAGNOSTIC_END"
           for pair in '/ 200' '/siai 200' '/api/health 200' '/api/sasi/account 401' '/api/tools/jobs 401'; do
