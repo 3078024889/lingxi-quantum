@@ -9,6 +9,7 @@ for(const value of [[],[{id:'s0',text:'a'},{id:'s0',text:'b'}],[{id:'bad',text:'
 async function main(){
  let authenticated=false,answer=true,calls=0;
  const api=load('app/api/tools/document-translate/route.ts',{
+  '@/lib/tools/commerce/tool-stage-gate':{authorizeToolPassStage:async()=>({ok:true,mode:'legacy'})},
   'next/server':{NextResponse:{json:(body,init={})=>({body,status:init.status||200})}},
   '@/lib/supabase/server':{createClient:()=>({auth:{getUser:async()=>({data:{user:authenticated?{id:'fixture-user'}:null}})}})},
   '@/lib/sasi/request-security':{isSameOriginMutation:()=>true},
