@@ -1,4 +1,4 @@
-name: Cloudflare COM OpenNext + R2 six large assets compatibility (NO DEPLOY)
+name: Cloudflare COM OpenNext + R2 eight large assets compatibility (NO DEPLOY)
 on:
   push:
     branches: [cloudflare/com-r2-large-assets-20261107]
@@ -48,7 +48,7 @@ jobs:
           node scripts/cloudflare/stage-large-public-assets.mjs
           test -s .open-next/offload-worker.mjs
           test -s cloudflare-offload-report.json
-          node -e 'const r=require("./cloudflare-offload-report.json"); if(r.releaseReady!==false||r.assets.length!==6||r.remainingOversizeCount!==0)process.exit(1)'
+          node -e 'const r=require("./cloudflare-offload-report.json"); if(r.releaseReady!==false||r.assets.length!==8||r.remainingOversizeCount!==0)process.exit(1)'
       - name: Detect R2 bindings and size capacity via NO-NETWORK dry run
         run: |
           pnpm exec wrangler deploy --dry-run --outdir "${RUNNER_TEMP}/cloudflare-dry-run"
