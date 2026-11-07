@@ -5,7 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SasiOneSurface from "@/components/SasiOneSurface";
 
-export const dynamic="force-dynamic";
+export const dynamic="force-static";
 const sasiFact=pageGeoFact("sasi","zh");
 export const metadata:Metadata={title:sasiFact.title,description:sasiFact.description,alternates:{canonical:"/sasi"}};
 
