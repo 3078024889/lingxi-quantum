@@ -41,7 +41,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: node --test tests/footer-unified.test.mjs tests/siai-brand-icons.test.mjs
       - run: pnpm build
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: bash scripts/ci/ensure-chrome.sh
       - run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-ranking-first-layout.spec.ts tests/final-closure/siai-footer-unified-real.spec.ts tests/final-closure/siai-design-visual-proof.spec.ts
       - if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4

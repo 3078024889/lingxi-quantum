@@ -33,7 +33,7 @@ jobs:
       - name: Build actual production server
         run: pnpm build
       - name: Install Chrome media runtime
-        run: pnpm exec playwright install --with-deps chrome
+        run: bash scripts/ci/ensure-chrome.sh
       - name: Mobile Chromium real PDF and SIAI smoke
         run: >-
           pnpm exec playwright test -c playwright.final.config.ts

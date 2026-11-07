@@ -1,26 +1,24 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { User } from "@supabase/supabase-js";
+import {getRuntimeSupabasePublicConfig} from "./server-runtime-config";
+
+export function getServerSupabasePublicConfig() {
+  return getRuntimeSupabasePublicConfig();
+}
 
 export function isSupabasePublicConfigured() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
-  if (!url || !key || key.length < 20) return false;
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:" || parsed.protocol === "http:";
-  } catch {
-    return false;
-  }
+  return getServerSupabasePublicConfig() !== null;
 }
 
 // 服务器端 Supabase 客户端（用于读取登录状态）。
 export function createClient() {
-  if (!isSupabasePublicConfigured()) throw new Error("SUPABASE_PUBLIC_CONFIG_MISSING");
+  const config = getServerSupabasePublicConfig();
+  if (!config) throw new Error("SUPABASE_PUBLIC_CONFIG_MISSING");
   const cookieStore = cookies();
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    config.url,
+    config.key,
     {
       cookies: {
         async getAll() {

@@ -100,22 +100,26 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  useEffect(()=>()=>recognitionAbort.current?.abort(),[]);
  const gestureRef=useRef<Gesture|null>(null);
  const activeTouchRef=useRef<number|null>(null);
- const touchCornerRef=useRef<{id:number;grip:"se"|"rotate";startX:number;startY:number;pointerId:number}|null>(null);
+ const touchCornerRef=useRef<{id:number;grip:"se"|"rotate";startX:number;startY:number;pointerId:number;rect:DOMRect;origin:Overlay}|null>(null);
+ const touchCornerUpdate=useRef<(x:number,y:number)=>void>(()=>{});
  const gestureUpdate=useRef<(x:number,y:number,id:number)=>void>(()=>{});
  useEffect(()=>{
-  const move=(e:PointerEvent)=>gestureUpdate.current(e.clientX,e.clientY,e.pointerId);
+  const move=(e:PointerEvent)=>{if(activeTouchRef.current!==null&&touchCornerRef.current)return;gestureUpdate.current(e.clientX,e.clientY,e.pointerId)};
   const up=(e:PointerEvent)=>{if(activeTouchRef.current===null&&gestureRef.current?.pointerId===e.pointerId)gestureRef.current=null};
   // Follow the active finger when mobile PointerEvents are cancelled or coalesced.
   const touchMove=(e:TouchEvent)=>{
-   const finger=activeTouchRef.current,g=gestureRef.current;if(finger===null||!g)return;
+   const finger=activeTouchRef.current;if(finger===null)return;
    const t=Array.from(e.touches).find(item=>item.identifier===finger);if(!t)return;
-   if(e.cancelable)e.preventDefault();gestureUpdate.current(t.clientX,t.clientY,g.pointerId);
+   if(e.cancelable)e.preventDefault();
+   if(touchCornerRef.current){touchCornerUpdate.current(t.clientX,t.clientY);return;}
+   const g=gestureRef.current;if(g)gestureUpdate.current(t.clientX,t.clientY,g.pointerId);
   };
   const touchEnd=(e:TouchEvent)=>{
    const finger=activeTouchRef.current;if(finger===null)return;
    const t=Array.from(e.changedTouches).find(item=>item.identifier===finger);if(!t)return;
-   if(gestureRef.current)gestureUpdate.current(t.clientX,t.clientY,gestureRef.current.pointerId);
-   activeTouchRef.current=null;gestureRef.current=null;
+   if(touchCornerRef.current)touchCornerUpdate.current(t.clientX,t.clientY);
+   else if(gestureRef.current)gestureUpdate.current(t.clientX,t.clientY,gestureRef.current.pointerId);
+   touchCornerRef.current=null;activeTouchRef.current=null;gestureRef.current=null;
   };
   window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);window.addEventListener("pointercancel",up);
   window.addEventListener("touchmove",touchMove,{passive:false});
@@ -394,7 +398,29 @@ gestureUpdate.current=(px,py,pid)=>{
  const x=west?o.x+o.w-w:o.x,y=north?o.y+o.h-h:o.y,size=o.kind==="text"?clamp((o.size||14)*Math.min(w/Math.max(o.w,.7),h/Math.max(o.h,.7)),6,144):o.size;
  patch(g.id,{x:clamp(x,0,100-w),y:clamp(y,0,100-h),w,h,size});
 };
-function handlePointerMove(e:React.PointerEvent){gestureUpdate.current(e.clientX,e.clientY,e.pointerId)}
+// A captured mobile finger may target the overlay instead of its corner button.
+ // Apply the real touch displacement from the original overlay snapshot, avoiding
+ // pointer-id mismatches and accidental replacement by a move gesture.
+ touchCornerUpdate.current=(px,py)=>{
+  const corner=touchCornerRef.current;if(!corner)return;
+  const o=corner.origin,r=corner.rect;
+  if(!r.width||!r.height)return;
+  const clamp=(n:number,a:number,b:number)=>Math.max(a,Math.min(b,n));
+  if(corner.grip==="rotate"){
+   const cx=r.left+(o.x+o.w/2)*r.width/100,cy=r.top+(o.y+o.h/2)*r.height/100;
+   const originalAngle=Math.atan2(corner.startY-cy,corner.startX-cx);
+   patch(corner.id,{angle:Math.round(((o.angle||0)+(Math.atan2(py-cy,px-cx)-originalAngle)*180/Math.PI)*10)/10});
+   return;
+  }
+  const dx=(px-corner.startX)/r.width*100,dy=(py-corner.startY)/r.height*100;
+  let w=Math.max(.7,o.w+dx),h=Math.max(.7,o.h+dy);
+  if(o.kind==="image"&&o.ratio&&o.ratio>0)h=w/(o.ratio*r.height/r.width);
+  const f=Math.min(1,(100-o.x)/w,(100-o.y)/h);
+  w=Math.max(.7,w*f);h=Math.max(.7,h*f);
+  const size=o.kind==="text"?clamp((o.size||14)*Math.min(w/Math.max(o.w,.7),h/Math.max(o.h,.7)),6,144):o.size;
+  patch(corner.id,{w,h,size});
+ };
+function handlePointerMove(e:React.PointerEvent){if(activeTouchRef.current!==null&&touchCornerRef.current)return;gestureUpdate.current(e.clientX,e.clientY,e.pointerId)}
 function stopPointer(e:React.PointerEvent){
  // The last CDP/mobile touch movement can be coalesced into pointerup.
  // Commit the final real pointer position before releasing the gesture.
@@ -407,37 +433,36 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(editingTextId===o.id||e.pointerType!=="touch")return;
   const grip=overlayTouchGrip(e.currentTarget,e.target,e.clientX,e.clientY);
   if(!grip)return;
-  touchCornerRef.current={id:o.id,grip,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId};
+  const rect=stageRef.current?.getBoundingClientRect();if(!rect)return;
+  touchCornerRef.current={id:o.id,grip,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId,rect,origin:{...o}};
   beginGesture(o.id,grip,e.clientX,e.clientY,e.pointerId);
   try{e.currentTarget.setPointerCapture(e.pointerId)}catch{}
  }}
  onTouchStartCapture={e=>{
   if(editingTextId===o.id||e.touches.length!==1)return;
   const t=e.changedTouches[0];if(!t)return;
-  const grip=overlayTouchGrip(e.currentTarget,e.target,t.clientX,t.clientY);
+  const detected=overlayTouchGrip(e.currentTarget,e.target,t.clientX,t.clientY);
+  const grip=detected??(touchCornerRef.current?.id===o.id?touchCornerRef.current.grip:null);
   if(!grip)return;
   activeTouchRef.current=t.identifier;
   const prior=gestureRef.current;
   const pointerId=prior?.id===o.id?prior.pointerId:touchCornerRef.current?.id===o.id?touchCornerRef.current.pointerId:-1;
-  touchCornerRef.current={id:o.id,grip,startX:t.clientX,startY:t.clientY,pointerId};
+  const rect=stageRef.current?.getBoundingClientRect();if(!rect)return;
+  touchCornerRef.current={id:o.id,grip,startX:t.clientX,startY:t.clientY,pointerId,rect,origin:{...o}};
   beginGesture(o.id,grip,t.clientX,t.clientY,pointerId);
  }}
  onTouchMoveCapture={e=>{
   const start=touchCornerRef.current,t=e.touches[0];
   if(!start||start.id!==o.id||!t||activeTouchRef.current!==t.identifier)return;
   if(e.cancelable)e.preventDefault();
-  const current=gestureRef.current;
-  if(!current||current.id!==o.id||current.grip!==start.grip)
-   beginGesture(o.id,start.grip,start.startX,start.startY,start.pointerId);
-  const gesture=gestureRef.current;
-  if(gesture)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
+  touchCornerUpdate.current(t.clientX,t.clientY);
  }}
  onTouchEndCapture={e=>{
   const start=touchCornerRef.current;
   if(start?.id!==o.id)return;
-  const t=e.changedTouches[0],gesture=gestureRef.current;
-  if(t&&gesture?.id===o.id)gestureUpdate.current(t.clientX,t.clientY,gesture.pointerId);
-  touchCornerRef.current=null;
+  const t=e.changedTouches[0];
+  if(t)touchCornerUpdate.current(t.clientX,t.clientY);
+  // Native window touchend cleans the snapshot after the final position is applied.
  }}
  onPointerDown={e=>{if(editingTextId!==o.id){const grip=overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);if(grip)startGesture(e,o.id,grip)}}}
  onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){const grip=overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);if(grip)startTouchGesture(e,o.id,grip)}}}}

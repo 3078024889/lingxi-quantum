@@ -102,8 +102,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build this exact release candidate independently
         run: pnpm build
-      - name: Install Chrome media runtime
-        run: pnpm exec playwright install --with-deps chrome
+      - name: Verify runner Chrome installation
+        run: bash scripts/ci/ensure-chrome.sh
       - name: Browser closure for this project and shard
         run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --workers=1
       - name: Upload shard traces and failure evidence
