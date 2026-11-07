@@ -3,7 +3,7 @@
 // .open-next/assets directory. Originals under public/ are never modified.
 // Confirms exact size and SHA256 before making each object eligible for R2.
 import {createReadStream} from "node:fs";
-import {mkdir,readdir,stat,unlink,writeFile,access} from "node:fs/promises";
+import {mkdir,readdir,stat,unlink,writeFile,copyFile} from "node:fs/promises";
 import {createHash} from "node:crypto";
 import {join,relative,resolve,sep} from "node:path";
 import {largePublicAssets} from "./large-public-assets.mjs";
@@ -54,6 +54,12 @@ for(const filename of generatedNames){
  const size=(await stat(file)).size;
  if(size!==metadata.bytes||size<=limit)throw Error("HASHED_ONNX_WASM_SIZE_MISMATCH");
  const digest=await sha256(file);
+ // Preserve a private local CI upload source for this build-hashed WASM file.
+ // It is outside .open-next/assets and is never deployed as a public static asset.
+ const source=join(root,".open-next","r2-upload-sources","_next","static","media",filename);
+ await mkdir(join(root,".open-next","r2-upload-sources","_next","static","media"),{recursive:true});
+ await copyFile(file,source);
+ if(await sha256(source)!==digest)throw Error("GENERATED_WASM_STAGE_COPY_HASH_MISMATCH");
  await unlink(file);
  generatedAssets[path]=metadata;
  manifest.push({path,bytes:size,sha256:digest,r2Key:"public"+path,contentType:metadata.contentType});
