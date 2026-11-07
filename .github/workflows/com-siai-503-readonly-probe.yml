@@ -1,0 +1,33 @@
+name: COM SIAI route 503 fingerprint (READ ONLY)
+on:
+  push:
+    branches: [ops/com-approved-notice-canary-20261107]
+    paths: ['.github/workflows/com-siai-503-readonly-probe.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Fingerprint HTTPS 503 with response headers, retry and content
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          HOST='https://lingxifield-com-full-canary-20261107.3078024889.workers.dev'
+          for path in /api/health /siai /api/public/siai-widget /tools; do
+            for i in 1 2 3; do
+              tmp="$(mktemp)"
+              hdr="$(mktemp)"
+              code="$(curl --silent --show-error --max-time 25 -H 'Cache-Control: no-cache' -D "$hdr" -o "$tmp" -w '%{http_code}' "$HOST$path?test=read-only-$i" || true)"
+              printf 'CF_PROBE path=%s attempt=%s status=%s size=%s\n' "$path" "$i" "$code" "$(wc -c < "$tmp")"
+              grep -iE '^(content-type|cf-ray|server|retry-after|cf-cache-status|x-powered-by|x-nextjs-cache|location):' "$hdr" | tr -d '\r' | head -12 || true
+              if test "$code" != 200; then
+                head -c 400 "$tmp" | tr '\n' ' ' | sed -E 's/(eyJ|sb_publishable_)[A-Za-z0-9_.-]{20,}/[REDACTED]/g' || true
+                echo
+              fi
+              rm -f -- "$tmp" "$hdr"
+            done
+          done
+          echo COM_READ_ONLY_503_FINGERPRINT_COMPLETE
