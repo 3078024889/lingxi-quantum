@@ -32,7 +32,7 @@ notice="$(curl --noproxy '*' -fsS --max-time 12 -H 'Host: lingxifield.cn' http:/
 printf '%s' "$notice" | python3 -c 'import json,sys; j=json.load(sys.stdin); assert j.get("enabled") is True and j.get("phase")=="maintenance" and j.get("site")=="main", "NOTICE_NOT_ACTIVE"'
 # The actual anonymous document engine health gate must report >=6 working adapters.
 ENGINE_REPORT="$(mktemp)"
-trap 'rm -f -- "$ENGINE_REPORT"' EXIT
+trap 'rc=$?; rm -f -- "$ENGINE_REPORT"; exit "$rc"' EXIT
 curl --noproxy '*' -fsS --max-time 25 -H 'Host: lingxifield.cn' http://127.0.0.1:3191/api/tools/engine/health -o "$ENGINE_REPORT" || die DOCUMENT_ENGINES_NOT_REACHABLE
 python3 - "$ENGINE_REPORT" <<'PY'
 import sys,json
@@ -61,9 +61,11 @@ cp -a -- "$CONFIG" "$BACKUP" || die BACKUP_FAILED
 test -s "$BACKUP" || die BACKUP_EMPTY
 modified=0
 accepted=0
+PUBLIC_JSON=''
 rollback(){
  rc=$?
  trap - EXIT
+ if test -n "$PUBLIC_JSON"; then rm -f -- "$PUBLIC_JSON"; fi
  if test "$modified" = 1 && test "$accepted" != 1; then
   cp -a -- "$BACKUP" "$CONFIG"
   nginx -t && nginx -s reload || true
@@ -94,8 +96,8 @@ PY
 modified=1
 nginx -t || die NEW_NGINX_CONFIG_INVALID
 nginx -s reload || die NEW_NGINX_RELOAD_FAILED
+sleep 2
 PUBLIC_JSON="$(mktemp)"
-trap 'rm -f -- "$PUBLIC_JSON"; rollback' EXIT
 check_public(){
  host="$1"; path="$2"; expected="$3"
  got="$(curl --noproxy '*' --resolve "$host:443:127.0.0.1" -sS --max-time 25 -o /dev/null -w '%{http_code}' "https://$host$path" 2>/dev/null || true)"
@@ -107,7 +109,9 @@ check_public lingxifield.cn /tools 200
 check_public lingxifield.cn /siai 200
 check_public lingxifield.cn /api/site-release-announcement 200
 check_public lingxifield.cn /api/sasi/account 401
-check_public www.lingxifield.cn / 200
+www_status="$(curl --noproxy '*' --resolve 'www.lingxifield.cn:443:127.0.0.1' -sS --max-time 20 -o /dev/null -w '%{http_code}' https://www.lingxifield.cn/ 2>/dev/null || true)"
+echo "CN_NGINX_LIVE_GATE:www.lingxifield.cn:/:$www_status"
+case "$www_status" in 200|301|302|308) ;; *) die WWW_TLS_GATE_FAILED;; esac
 curl --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 -fsS --max-time 15 https://lingxifield.cn/api/site-release-announcement -o "$PUBLIC_JSON" || die PUBLIC_NOTICE_BODY_FAILURE
 python3 - "$PUBLIC_JSON" <<'PY'
 import sys,json
@@ -116,6 +120,7 @@ assert j.get("enabled") is True and j.get("phase")=="maintenance", "LIVE_NOTICE_
 print('CN_PUBLIC_APPROVED_NOTICE_VISIBLE')
 PY
 rm -f -- "$PUBLIC_JSON"
+PUBLIC_JSON=''
 trap rollback EXIT
 for svc in "$SVC" lingxifield-ecs lingxifield-cn-stage; do systemctl is-active --quiet "$svc" || die "POST_CUTOVER_SERVICE_INACTIVE:$svc"; done
 accepted=1
