@@ -1,0 +1,44 @@
+name: Cloudflare eight public R2 objects SHA manifest audit (NO DEPLOY)
+on:
+  push:
+    branches: [cloudflare/com-r2-upload-readiness-20261107]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cloudflare-public-r2-manifest
+  cancel-in-progress: true
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://sxsgdpqojepgbbrxrzlq.supabase.co' }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with: {version: 11.28.0, run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version-file: .nvmrc, cache: pnpm}
+      - run: pnpm install --frozen-lockfile
+      - name: Compile official Cloudflare OpenNext adapter
+        run: |
+          pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
+          pnpm exec opennextjs-cloudflare build
+      - name: SHA256 verify and stage eight complete public objects without uploading
+        run: |
+          set -Eeuo pipefail
+          node scripts/cloudflare/stage-large-public-assets.mjs
+          node scripts/cloudflare/stage-r2-public-assets.mjs --audit
+          pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/wrangler-dry-run"
+          echo "R2_STAGE_PREPARATION_AND_WRANGLER_DRY_RUN_PASS_NO_CLOUD_UPLOAD"
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        if: always()
+        with:
+          name: eight-public-asset-sha256-manifest-only
+          path: cloudflare-offload-report.json
+          retention-days: 3
+          if-no-files-found: ignore

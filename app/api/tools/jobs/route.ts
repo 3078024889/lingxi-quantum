@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import{createUnifiedTask,publicTaskView,transitionUnifiedTask}from"@/lib/tasks/unified-task";
+
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -16,6 +15,11 @@ export async function GET(req:Request){
   const quoteId=new URL(req.url).searchParams.get("quoteId")||"";
   if(!UUID.test(quoteId))return NextResponse.json({error:"INVALID_QUOTE_ID"},{status:400});
 
+  // Avoid initializing billing/admin/task runtimes before authentication.
+  const [{createAdminClient},{createUnifiedTask,publicTaskView,transitionUnifiedTask}]=await Promise.all([
+    import("@/lib/supabase/admin"),
+    import("@/lib/tasks/unified-task")
+  ]);
   const admin=createAdminClient();
   const {data:quote}=await admin.from("tool_payment_quotes")
     .select("id,tool_id,quantity,unit_name,status")

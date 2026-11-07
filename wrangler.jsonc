@@ -1,0 +1,35 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lingxifield-main-global-testonly",
+  "main": ".open-next/offload-worker.mjs",
+  "compatibility_date": "2026-11-06",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/images/entrance/lingxi-opening-desktop-v310.mp4",
+      "/models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx",
+      "/models/Xenova/clip-vit-base-patch32/onnx/vision_model_quantized.onnx",
+      "/models/onnx-community/swin-finetuned-food101-ONNX/onnx/model_q4f16.onnx",
+      "/models/onnx-community/whisper-tiny/onnx/decoder_model_merged_quantized.onnx",
+      "/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm",
+      "/media/ffmpeg-0.12.10/ffmpeg-core.wasm",
+      "/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm"
+    ],
+    "html_handling": "none",
+    "not_found_handling": "none"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "workers_dev": false,
+  "r2_buckets": [
+    {
+      "binding": "LINGXI_PUBLIC_LARGE_R2",
+      "bucket_name": "lingxifield-com-large-public"
+    }
+  ]
+}
