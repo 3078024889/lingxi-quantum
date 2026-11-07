@@ -60,7 +60,7 @@ def page(host, path):
 
 def assert_canary():
     expected = {"/": 200, "/tools": 200, "/siai": 200,
-                "/api/health": 200, "/api/site-release-announcement": 200,
+                "/api/public/site-status": 200, "/api/site-release-announcement": 200,
                 "/api/sasi/account": 401, "/api/tools/jobs": 401,
                 "/api/public/siai-widget": 200}
     baseline = {}
@@ -72,6 +72,15 @@ def assert_canary():
         if path in ("/", "/tools", "/siai"):
             if len(body) < 1000 or b"<html" not in body:
                 stop("CANARY_PUBLIC_HTML_INVALID:" + path)
+            baseline[path] = hashlib.sha256(body).hexdigest()
+        if path == "/api/public/site-status":
+            d = json.loads(body)
+            if (d.get("scope") != "public-maintenance-assets-only"
+                or d.get("publicSurface") != "ready"
+                or d.get("dynamicBackend") != "not-attested"
+                or d.get("payments") != "not-attested"
+                or d.get("sasi") != "not-attested"):
+                stop("PUBLIC_STATUS_INCORRECTLY_CLAIMS_DYNAMIC_READINESS")
             baseline[path] = hashlib.sha256(body).hexdigest()
         if path == "/api/site-release-announcement":
             d = json.loads(body)
@@ -112,7 +121,7 @@ def proxied(zone_id, rec, enable):
 
 def probe_live(hostname, baseline):
     url = "https://" + hostname
-    checks = {"/api/health": 200, "/": 200, "/tools": 200,
+    checks = {"/api/public/site-status": 200, "/": 200, "/tools": 200,
               "/siai": 200, "/api/site-release-announcement": 200,
               "/api/sasi/account": 401, "/api/tools/jobs": 401}
     last = {}
@@ -124,6 +133,15 @@ def probe_live(hostname, baseline):
             if code == wanted and path in baseline:
                 if hashlib.sha256(body).hexdigest() != baseline[path]:
                     results[path] = -1
+            if path == "/api/public/site-status" and code == 200:
+                try:
+                    d = json.loads(body)
+                    if (d.get("scope") != "public-maintenance-assets-only"
+                        or d.get("dynamicBackend") != "not-attested"
+                        or d.get("payments") != "not-attested"):
+                        results[path] = -4
+                except (ValueError, TypeError):
+                    results[path] = -5
             if path == "/api/site-release-announcement" and code == 200:
                 try:
                     d = json.loads(body)
@@ -200,6 +218,7 @@ def main():
         print("COM_VERCEL_PROJECT_AND_DNS_ORIGIN_VALUES_PRESERVED=true")
         print("COM_NAMED_DOMAINS_LIVE=lingxifield.com,www.lingxifield.com")
         print("COM_REAL_LOGIN_PAYMENTS_REFUNDS_SASI_FILE_EXPORT_NOT_ATTESTED=true")
+        print("COM_DYNAMIC_HEALTH_NOT_CLAIMED_BY_STATIC_PUBLIC_MAINTENANCE_GATE=true")
         success = True
     finally:
         if not success:
