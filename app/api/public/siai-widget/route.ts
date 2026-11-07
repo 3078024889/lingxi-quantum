@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import {getSiaiDirectoryRows} from "@/app/siai/catalog-data";
 
-export const dynamic="force-dynamic";
+export const dynamic="force-static";
 const safeOfficial=(value:string):string|null=>{
  try{const u=new URL(value);return u.protocol==="https:"&&!u.username&&!u.password&&!u.port?u.toString():null}catch{return null}
 };
