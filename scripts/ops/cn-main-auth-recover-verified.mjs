@@ -24,12 +24,12 @@ export function activePublicType(key) {
      key.startsWith("sb_secret_")||key.startsWith("sb_service_"))return null;
   return APPROVED[crypto.createHash("sha256").update(key).digest("hex")]||null;
 }
-export function selectPublicPair(prod,stage) {
+export function selectPublicPair(prod,stage,verifyKey=activePublicType) {
   if(prod.NEXT_PUBLIC_SUPABASE_URL && prod.NEXT_PUBLIC_SUPABASE_URL!==PROJECT)
     throw Error("PRODUCTION_PROJECT_URL_MISMATCH");
   if(stage.NEXT_PUBLIC_SUPABASE_URL!==PROJECT)throw Error("STAGING_PROJECT_URL_MISMATCH");
-  const p=activePublicType(prod.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-  const s=activePublicType(stage.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const p=verifyKey(prod.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const s=verifyKey(stage.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   if(!p&&!s)throw Error("NO_CURRENT_ENABLED_PUBLIC_KEY_FOUND");
   return p
     ? {source:"production",kind:p,key:prod.NEXT_PUBLIC_SUPABASE_ANON_KEY,url:PROJECT}
