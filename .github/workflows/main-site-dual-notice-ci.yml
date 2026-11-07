@@ -1,7 +1,7 @@
 name: Lingxifield dual-domain announcement candidate (NO DEPLOY)
 on:
   push:
-    branches: [feature/main-dual-domain-release-notice-20261107]
+    branches: [feature/main-dual-domain-release-notice-20261107, feature/lingxifield-exact-maintenance-notice-20261107]
     paths:
       - 'lib/release/main-site-notice-gate.ts'
       - 'app/api/site-release-announcement/route.ts'
