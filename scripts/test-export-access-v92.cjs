@@ -1,6 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const location={pathname:'/tools/video-toolkit',href:'https://local.test/tools/video-toolkit'};const cache=new Map();
-function load(file){if(cache.has(file))return cache.get(file);const exports={};cache.set(file,exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,location,Blob,crypto,require:n=>load('lib/tools/commerce/'+n.replace('./','')+'.ts')});return exports}
+function load(file){if(cache.has(file))return cache.get(file);const exports={};cache.set(file,exports);vm.runInNewContext(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,location,Blob,crypto,process:{env:{NEXT_PUBLIC_TOOL_PASS_ENFORCED:'false'}},require:n=>load('lib/tools/commerce/'+n.replace('./','')+'.ts')});return exports}
 (async()=>{
  const access=load('lib/tools/commerce/export-access-client.ts'),catalog=load('lib/tools/commerce/metered-catalog.ts');let calls=[],accept=true;
  assert.equal(catalog.DAILY_FREE_EXPORTS,5);assert(!catalog.isMeteredTool('pdf-redact'));assert(!catalog.isMeteredTool('pdf-to-xlsx'));assert(!catalog.isMeteredTool('temp-mail'),'mailbox creation owns its daily limit; an already-paid batch must not be charged again for CSV');
