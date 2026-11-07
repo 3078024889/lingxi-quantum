@@ -16,12 +16,12 @@ jobs:
       - name: Checkout exact fully CI-verified release SHA
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: 365d3d005fe334d1f0834aed9c787bf70dae14d3
+          ref: c5a9acbc4f0f6d85bfbfa0d9e177a18f26c262ed
           fetch-depth: 1
           persist-credentials: false
       - name: Verify source SHA is the fully passed dual-site release
         run: |
-          test "$(git rev-parse HEAD)" = "365d3d005fe334d1f0834aed9c787bf70dae14d3"
+          test "$(git rev-parse HEAD)" = "c5a9acbc4f0f6d85bfbfa0d9e177a18f26c262ed"
           echo "CN_STANDALONE_RELEASE_SOURCE_EXACT"
       - name: Set standalone packaging in ephemeral CI workspace only
         shell: bash
@@ -149,7 +149,7 @@ jobs:
       - name: Upload artifact to GitHub Actions only
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
-          name: lingxifield-cn-standalone-exact-365d3d005fe334d1f0834aed9c787bf70dae14d3
+          name: lingxifield-cn-standalone-exact-c5a9acbc4f0f6d85bfbfa0d9e177a18f26c262ed
           path: |
             lingxifield-ecs-standalone.tar.gz
             lingxifield-ecs-standalone.sha256
