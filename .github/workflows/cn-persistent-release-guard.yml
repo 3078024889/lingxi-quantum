@@ -1,0 +1,46 @@
+name: CN persistent canary static security gate (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn-live-preflight-20261107]
+    paths:
+      - 'scripts/ops/ecs-cn-approved-notice-persistent-canary.sh'
+      - '.github/workflows/cn-persistent-release-guard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Verify production stays untouched and persistent release enforces gates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/ecs-cn-approved-notice-persistent-canary.sh
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const s=readFileSync('scripts/ops/ecs-cn-approved-notice-persistent-canary.sh','utf8');
+          for(const item of [
+            'SHA=86b956c9700ede4a537c021af3a0dc1df825fa9b',
+            'PRODUCTION_ENV_IS_STAGING',
+            'lingxifield-ecs',
+            'lingxifield-cn-stage',
+            'EnvironmentFile=$PROD_ENV',
+            'EnvironmentFile=$OVERRIDE',
+            'PORT=3191',
+            'User=lingxifield',
+            'NoNewPrivileges=true',
+            'CN_APPROVED_MAINTENANCE_NOTICE_ENABLED',
+            'probe /api/site-release-announcement 200',
+            'probe /api/sasi/account 401',
+            'probe /api/tools/jobs 401',
+            'CN_PUBLIC_CUTOVER_NOT_DONE=true',
+            'trap cleanup EXIT'
+          ]) if(!s.includes(item))throw Error('RELEASE_SAFETY_GATE_MISSING:'+item);
+          if(/nginx\s+-s\s+reload|systemctl\s+(stop|restart)\s+lingxifield-ecs|rm\s+-rf\s+\/opt\/lingxifield\/releases/.test(s))throw Error('PRODUCTION_MUTATION_UNAUTHORIZED');
+          console.log('CN_PERSISTENT_PREPARATION_STATIC_SECURITY_PASS');
+          JS
