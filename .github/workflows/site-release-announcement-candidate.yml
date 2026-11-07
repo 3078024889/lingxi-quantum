@@ -89,6 +89,10 @@ jobs:
         run: |
           set -Eeuo pipefail
           bash -n scripts/ops/cn-main-auth-readonly-gate.sh
+          bash -n scripts/ops/cn-main-auth-public-env-repair.sh
+          awk '/^const fs=require\("node:fs"\);/{copy=1} copy && /^NODEJS$/{exit} copy{print;got=1} END{if(!got)exit 1}' scripts/ops/cn-main-auth-public-env-repair.sh | node --check
+          grep -Fq 'CN_AUTH_RUNTIME_PUBLIC_CONFIG_RECOVERED' scripts/ops/cn-main-auth-public-env-repair.sh
+          grep -Fq 'CN_AUTH_BACKUP_PATH=' scripts/ops/cn-main-auth-public-env-repair.sh
           grep -Fq 'LINGXI_RELEASE_NOTICE_ENABLED==="1"' app/api/site-release-announcement/route.ts
           grep -Fq 'GLOBALSIAI_RELEASE_NOTICE_ENABLED==="1"' lingxifield-ai-market/app/api/site-release-announcement/route.ts
           grep -Fq 'lx-release-notice:' components/SiteReleaseAnnouncement.tsx
