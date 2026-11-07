@@ -1,0 +1,40 @@
+name: CN exact-artifact installer integrity regression (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn-artifact-digest-fix-20261107]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  lint-and-sentinel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Verify installer syntax, exact artifact digest and package sentinel
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          SCRIPT=scripts/ops/lingxi-ecs-stage-smoke.sh
+          bash -n "$SCRIPT"
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const script=readFileSync('scripts/ops/lingxi-ecs-stage-smoke.sh','utf8');
+          const digest='8ed39d315eccb337d9a4ebf84ff8c5eb981c0cd238ee119a66debe059344ded7';
+          const sentinel='Preview package only: no real login, payment, R2 or file roundtrip acceptance.';
+          if(!script.includes('ZIP_SHA="'+digest+'"')) throw Error('PINNED_ARTIFACT_DIGEST_MISMATCH');
+          const exact='grep -Fxq "'+sentinel+'" "$TMP/outer/NOT_PRODUCTION_APPROVED.txt"';
+          if(!script.includes(exact)) throw Error('EXACT_SENTINEL_CHECK_MISSING');
+          if(script.includes('grep -Fq "not"')) throw Error('BUGGY_SENTINEL_CHECK_REINTRODUCED');
+          console.log('CN_INSTALLER_SOURCE_SENTINEL_AND_SHA_PIN_PASS');
+          JS
+          printf '%s\n' 'Preview package only: no real login, payment, R2 or file roundtrip acceptance.' > "$RUNNER_TEMP/valid-sentinel"
+          grep -Fxq 'Preview package only: no real login, payment, R2 or file roundtrip acceptance.' "$RUNNER_TEMP/valid-sentinel"
+          printf '%s\n' 'Preview package only: real login, payment and file roundtrip acceptance.' > "$RUNNER_TEMP/invalid-sentinel"
+          if grep -Fxq 'Preview package only: no real login, payment, R2 or file roundtrip acceptance.' "$RUNNER_TEMP/invalid-sentinel"; then
+            echo "::error::INVALID_SENTINEL_WAS_ACCEPTED"
+            exit 1
+          fi
+          echo CN_INSTALLER_SENTINEL_REGRESSION_PASS
