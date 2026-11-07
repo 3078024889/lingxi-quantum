@@ -1,0 +1,53 @@
+name: Lingxifield main sites - anonymous backend reality check
+
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-main-sites-live-reality.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe-public-origin:
+    name: ${{ matrix.site }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - site: lingxifield.com
+            origin: https://lingxifield.com
+          - site: lingxifield.cn
+            origin: https://lingxifield.cn
+          - site: cloudflare-public-only-preview
+            origin: https://com-public-recovery-lingxifield-public-preview-only.3078024889.workers.dev
+    steps:
+      - name: Checkout exact diagnostic source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Use repo Node version
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+      - name: Probe real HTTPS, public APIs and anonymous auth boundaries
+        env:
+          TARGET_ORIGIN: ${{ matrix.origin }}
+          NODE_OPTIONS: --dns-result-order=ipv4first
+        run: |
+          set -o pipefail
+          node scripts/cloudflare/probe-main-backend.mjs --origin "$TARGET_ORIGIN" | tee "$RUNNER_TEMP/anonymous-backend-check.json"
+      - name: Record exact scope
+        if: always()
+        env:
+          TARGET_ORIGIN: ${{ matrix.origin }}
+        run: |
+          {
+            echo "### $TARGET_ORIGIN"
+            echo "Read-only GET checks: home/account/tools/siai, health, public SIAI feed, capabilities, and unauthenticated 401 guards."
+            echo "This check never authenticates, calls payment mutations, deploys, changes DNS, or touches user data."
+            echo "A passing result still does NOT certify payments, SASI output, full 124-tool delivery, actual login, or release readiness."
+          } >> "$GITHUB_STEP_SUMMARY"
