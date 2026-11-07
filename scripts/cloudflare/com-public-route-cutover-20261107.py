@@ -10,6 +10,9 @@ import json
 import os
 import re
 import sys
+import socket
+import subprocess
+import tempfile
 import time
 import urllib.error
 import urllib.parse
@@ -155,6 +158,8 @@ def probe_live(hostname, baseline):
                 print("COM_EXACT_HOST_ASSET_SHA256_PASS", hostname, p)
             return
         last = results
+        if attempt >= 3 and all(x == 402 for x in results.values()):
+            stop("EXACT_HOST_DNS_CACHE_STILL_VERCEL:" + hostname)
         print("COM_EXACT_HOST_STILL_PROPAGATING", hostname, attempt,
               ",".join(p + "=" + str(results.get(p)) for p in checks if results.get(p) != checks[p]))
         time.sleep(5)
@@ -168,6 +173,70 @@ def steady_check(hostname):
             if code != 200:
                 stop("LIVE_PUBLIC_INTERMITTENT_ERROR:" + hostname + ":" + path + ":" + str(code))
         print("COM_LIVE_STEADY_3_ROUTES_PASS", hostname, attempt)
+
+def forced_edge_page(hostname, ip, path):
+    """Verify real Cloudflare TLS/SNI and Worker route despite stale recursive DNS."""
+    with tempfile.NamedTemporaryFile() as tmp:
+        cmd = ["curl", "--silent", "--show-error", "--noproxy", "*",
+               "--connect-timeout", "9", "--max-time", "28",
+               "--resolve", hostname + ":443:" + ip,
+               "-H", "Accept-Encoding: identity",
+               "-o", tmp.name, "-w", "%{http_code}",
+               "https://" + hostname + path]
+        try:
+            process = subprocess.run(cmd, capture_output=True, text=True,
+                                     timeout=32, check=False)
+            status = int(process.stdout.strip() or "0") if process.returncode == 0 else 0
+            tmp.seek(0)
+            return status, tmp.read(200000)
+        except (OSError, ValueError, subprocess.TimeoutExpired):
+            return 0, b""
+
+def edge_probe(hostname, baseline):
+    """Only accept a verified Cloudflare edge, not a fabricated health response."""
+    worker_host = urllib.parse.urlsplit(CANARY).hostname
+    try:
+        answers = socket.getaddrinfo(worker_host, 443, socket.AF_INET,
+                                     socket.SOCK_STREAM)
+    except OSError as exc:
+        stop("CLOUDFLARE_EDGE_DNS_LOOKUP_FAILED:" + type(exc).__name__)
+    ips = list(dict.fromkeys(a[4][0] for a in answers))[:5]
+    if not ips:
+        stop("CLOUDFLARE_ANYCAST_IPS_EMPTY")
+    checks = {"/": 200, "/tools": 200, "/siai": 200,
+              "/api/public/site-status": 200,
+              "/api/site-release-announcement": 200,
+              "/api/sasi/account": 401, "/api/tools/jobs": 401}
+    for ip in ips:
+        for trial in range(1, 6):
+            results = {}
+            for path, wanted in checks.items():
+                status, body = forced_edge_page(hostname, ip, path)
+                if status == wanted and path in baseline:
+                    if hashlib.sha256(body).hexdigest() != baseline[path]:
+                        status = -1
+                if path == "/api/public/site-status" and status == 200:
+                    try:
+                        data = json.loads(body)
+                        if data.get("dynamicBackend") != "not-attested":
+                            status = -2
+                    except (ValueError, TypeError):
+                        status = -3
+                results[path] = status
+            if all(results[p] == wanted for p, wanted in checks.items()):
+                print("COM_CLOUDFLARE_EDGE_ROUTE_AND_TLS_VERIFIED", hostname,
+                      ip, "trial", trial)
+                for _ in range(4):
+                    for p in ("/", "/tools", "/siai", "/api/public/site-status"):
+                        status, body = forced_edge_page(hostname, ip, p)
+                        if status != 200 or hashlib.sha256(body).hexdigest() != baseline[p]:
+                            stop("FORCED_EDGE_STATIC_STEADY_FAILURE:" + hostname + ":" + p)
+                print("COM_CLOUDFLARE_EDGE_PUBLIC_STATIC_STEADY_PASS", hostname)
+                return ip
+            print("COM_CLOUDFLARE_EDGE_PROBE_RETRY", hostname, ip, trial,
+                  ",".join(p + "=" + str(results[p]) for p in checks
+                           if results[p] != checks[p]))
+    stop("CLOUDFLARE_EDGE_WORKER_ROUTE_NOT_VERIFIABLE:" + hostname)
 
 def main():
     if sys.argv[1:] != ["--promote-public-maintenance-only"]:
@@ -195,6 +264,7 @@ def main():
     new_routes = []
     changed_dns = []
     success = False
+    dns_propagation_pending = False
     try:
         for hostname in HOSTS:
             pattern = hostname + "/*"
@@ -208,15 +278,36 @@ def main():
             # mutation followed by a lost/malformed response still gets rolled back.
             changed_dns.append(hostname)
             proxied(zid, dns[hostname], True)
-            probe_live(hostname, baseline)
-            steady_check(hostname)
+            readback_routes = cf("/zones/" + zid + "/workers/routes?per_page=100")
+            if not any(x.get("pattern") == pattern and x.get("script") == SCRIPT
+                       for x in readback_routes):
+                stop("CLOUDFLARE_ROUTE_NOT_VISIBLE_AFTER_WRITE:" + hostname)
+            try:
+                probe_live(hostname, baseline)
+                steady_check(hostname)
+            except RuntimeError as exc:
+                if not (str(exc).startswith("EXACT_HOST_HEALTH_GATE_FAILED:")
+                        or str(exc).startswith("EXACT_HOST_DNS_CACHE_STILL_VERCEL:")):
+                    raise
+                # The old unproxied Vercel A/CNAME may remain in recursive
+                # caches. Confirm true Cloudflare edge routing with TLS/SNI,
+                # and report DNS propagation pending rather than false green.
+                edge_probe(hostname, baseline)
+                dns_propagation_pending = True
+                print("COM_OLD_VERCEL_RECURSIVE_DNS_CACHE_PENDING", hostname)
         check_routes = cf("/zones/" + zid + "/workers/routes?per_page=100")
         for hostname in HOSTS:
             if not any(r.get("pattern") == hostname + "/*" and r.get("script") == SCRIPT for r in check_routes):
                 stop("WORKER_ROUTE_READBACK_MISMATCH:" + hostname)
-        print("COM_PUBLIC_MAINTENANCE_SITE_SWITCH_SUCCESS")
+        if dns_propagation_pending:
+            print("COM_PUBLIC_CLOUDFLARE_EDGE_SWITCH_SUCCESS_DNS_PROPAGATION_PENDING")
+        else:
+            print("COM_PUBLIC_MAINTENANCE_SITE_SWITCH_SUCCESS")
         print("COM_VERCEL_PROJECT_AND_DNS_ORIGIN_VALUES_PRESERVED=true")
-        print("COM_NAMED_DOMAINS_LIVE=lingxifield.com,www.lingxifield.com")
+        if not dns_propagation_pending:
+            print("COM_NAMED_DOMAINS_LIVE=lingxifield.com,www.lingxifield.com")
+        else:
+            print("COM_NAMED_DOMAINS_EDGE_CONFIRMED_RECURSIVE_DNS_NOT_FULLY_PROPAGATED=true")
         print("COM_REAL_LOGIN_PAYMENTS_REFUNDS_SASI_FILE_EXPORT_NOT_ATTESTED=true")
         print("COM_DYNAMIC_HEALTH_NOT_CLAIMED_BY_STATIC_PUBLIC_MAINTENANCE_GATE=true")
         success = True
