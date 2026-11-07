@@ -17,6 +17,8 @@ for(const site of targets) {
   const host=new URL(site.origin).hostname;
   const item={id:site.id,host,ips:[],probes:[]};
   try{item.ips=(await dns.resolve4(host)).slice(0,8)}catch(e){item.dnsError=String(e?.code||"DNS_FAILED")}
+  try{item.authoritativeNs=(await dns.resolveNs(host)).slice(0,8)}catch(e){item.nsError=String(e?.code||"NS_FAILED")}
+  try{item.wwwCname=(await dns.resolveCname("www."+host)).slice(0,8)}catch(e){item.wwwCnameError=String(e?.code||"CNAME_FAILED")}
   for(const path of paths){
     try{
       const response=await fetch(site.origin+path,{
