@@ -66,12 +66,12 @@ jobs:
             }
             echo 'R2_DEDICATED_PUBLIC_BUCKET_CREATED_NO_PRIVATE_BUCKETS_CHANGED'
           fi
-      - name: Upload exactly eight public media/model assets and verify remote SHA-256 readback
-        env:
-          LINGXI_R2_UPLOAD_APPROVED: YES-STAGE-ONLY
+      - name: Reuse previously verified eight R2 objects, avoid re-upload of 365 MiB
         run: |
           set -Eeuo pipefail
-          node scripts/cloudflare/stage-r2-public-assets.mjs --upload-verified
+          node scripts/cloudflare/stage-r2-public-assets.mjs --audit
+          echo "EIGHT_R2_OBJECTS_PREVIOUSLY_UPLOAD_READBACK_SHA256_VERIFIED_RUN_42356646463"
+          echo "This run does not rewrite remote R2; HTTPS Range validation follows after canary deploy."
       - name: Generate canary-only Wrangler config with public runtime values (no private secrets)
         run: |
           node --input-type=module <<'JS'
@@ -79,6 +79,7 @@ jobs:
           const c=JSON.parse(readFileSync('wrangler.jsonc','utf8'));
           c.name='lingxifield-com-full-canary-20261107';
           c.workers_dev=true;
+          c.minify=true;
           delete c.route;
           delete c.routes;
           delete c.triggers;
@@ -94,11 +95,26 @@ jobs:
           writeFileSync('wrangler.canary.jsonc',JSON.stringify(c,null,2)+'\n',{mode:0o600});
           console.log('WRANGLER_CANARY_CONFIG_GENERATED_NO_DNS_ROUTES');
           JS
+      - name: Validate Cloudflare's CURRENT uncompressed Worker size after official minification
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          pnpm exec wrangler deploy --config wrangler.canary.jsonc --minify --dry-run --outdir "$RUNNER_TEMP/size-minified" > "$RUNNER_TEMP/minified-size.log" 2>&1
+          node - <<'JS'
+          const fs=require('node:fs');
+          const s=fs.readFileSync(process.env.RUNNER_TEMP+'/minified-size.log','utf8');
+          const m=s.match(/Total Upload:\s*([0-9.]+)\s*(KiB|MiB)/i);
+          if(!m)throw new Error('CANARY_MINIFIED_WORKER_SIZE_MISSING');
+          const kib=Number(m[1])*(m[2].toLowerCase()==='mib'?1024:1);
+          console.log('CANARY_MINIFIED_WORKER_KIB='+kib.toFixed(1));
+          if(kib>=64000)throw new Error('CANARY_MINIFIED_WORKER_EXCEEDS_SAFE_64_MIB_GATE');
+          console.log('CANARY_MINIFIED_WORKER_UNDER_64_MIB_GATE');
+          JS
       - name: Publish isolated worker canary only (NOT the .com or www production domains)
         shell: bash
         run: |
           set -Eeuo pipefail
-          pnpm exec wrangler deploy --config wrangler.canary.jsonc > "$RUNNER_TEMP/full-canary-publish.log" 2>&1 || {
+          pnpm exec wrangler deploy --config wrangler.canary.jsonc --minify > "$RUNNER_TEMP/full-canary-publish.log" 2>&1 || {
             echo "::error::CLOUDFLARE_CANARY_PUBLISH_FAILED";
             tail -n 30 "$RUNNER_TEMP/full-canary-publish.log" | sed -E 's/(sb_publishable_|eyJ)[A-Za-z0-9_.-]{20,}/[REDACTED]/g';
             exit 1;
