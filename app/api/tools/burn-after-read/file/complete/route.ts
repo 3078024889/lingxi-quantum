@@ -19,10 +19,22 @@ export async function POST(req:NextRequest){
  const id=typeof body?.id==='string'?body.id:'';
  if(!id)return NextResponse.json({error:"SHARE_ID_REQUIRED"},{status:400});
  const admin=createAdminClient();
- const {data:note,error:noteError}=await admin.from("burn_notes").select("id,owner_user_id,ready_at,expires_at,consumed_at").eq("id",String(id)).eq("owner_user_id",user.id).maybeSingle();
+ const {data:note,error:noteError}=await admin.from("burn_notes").select("id,owner_user_id,ready_at,expires_at,consumed_at,access_request_id,operation_id").eq("id",String(id)).eq("owner_user_id",user.id).maybeSingle();
  if(noteError)return NextResponse.json({error:"SERVICE_BUSY"},{status:503});
  if(!note)return NextResponse.json({error:"SHARE_NOT_FOUND"},{status:404});
  if(note.consumed_at||Date.parse(note.expires_at)<=Date.now())return NextResponse.json({error:"SHARE_GONE"},{status:410});
+ // A refunded pass must never finish an uncompleted private file transfer,
+ // even if an upload URL was issued before the refund. Historical paid quotes
+ // (null access_request_id) follow their original settlement lifecycle.
+ if(note.access_request_id){
+  if(!note.operation_id)return NextResponse.json({error:"PASS_BURN_FILE_BINDING_MISSING"},{status:409});
+  const {data:proof,error:proofError}=await admin.rpc("lingxi_redeem_tool_use",{
+   p_request_id:note.access_request_id,p_user_id:user.id,
+   p_tool_slug:"burn-after-read",p_operation_id:note.operation_id
+  });
+  if(proofError)return NextResponse.json({error:"PASS_BURN_FILE_PROOF_UNAVAILABLE"},{status:503});
+  if(!proof?.ok)return NextResponse.json({error:String(proof?.error||"PASS_BURN_FILE_PROOF_REJECTED")},{status:403});
+ }
  if(note.ready_at)return NextResponse.json({ok:true});
  const {data:files,error:filesError}=await admin.from("burn_files").select("object_key,size_bytes").eq("note_id",note.id);
  if(filesError)return NextResponse.json({error:"SERVICE_BUSY"},{status:503});
