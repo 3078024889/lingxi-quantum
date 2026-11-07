@@ -44,7 +44,7 @@ for(const [path,metadata] of Object.entries(largePublicAssets)){
 // pattern and expected size; accept no other over-limit generated bundles.
 const generatedDir=join(assetRoot,"_next","static","media");
 const generatedNames=(await readdir(generatedDir)).filter(x=>
-  /^ort-wasm-simd-threaded\\.asyncify\\.[a-f0-9]{8,64}\\.wasm$/.test(x));
+  /^ort-wasm-simd-threaded\.asyncify\.[a-f0-9]{8,64}\.wasm$/.test(x));
 if(generatedNames.length!==1)throw Error("HASHED_ONNX_WASM_COUNT_MISMATCH:"+generatedNames.length);
 const generatedAssets={};
 for(const filename of generatedNames){
