@@ -24,7 +24,7 @@ jobs:
       - name: Checkout exact SHA that passed all four real browser shards and PG17
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: 86b956c9700ede4a537c021af3a0dc1df825fa9b
+          ref: 33d3cbd1c7cdbb859f103292ee99c7f1ac47a564
           persist-credentials: false
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with: {version: 11.28.0, run_install: false}
@@ -34,7 +34,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          test "$(git rev-parse HEAD)" = '86b956c9700ede4a537c021af3a0dc1df825fa9b'
+          test "$(git rev-parse HEAD)" = '33d3cbd1c7cdbb859f103292ee99c7f1ac47a564'
           test -n "${CLOUDFLARE_API_TOKEN:-}" || { echo "::error::CLOUDFLARE_PREVIEW_TOKEN_UNAVAILABLE"; exit 1; }
           [[ "${CLOUDFLARE_ACCOUNT_ID:-}" =~ ^[a-f0-9]{32}$ ]] || { echo "::error::CLOUDFLARE_ACCOUNT_NOT_SET"; exit 1; }
           test "$NEXT_PUBLIC_SUPABASE_URL" = 'https://sxsgdpqojepgbbrxrzlq.supabase.co'
@@ -148,13 +148,22 @@ jobs:
           curl --silent --max-time 40 --range 0-1023 --dump-header "$header" --output /dev/null "$HOST/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm"
           grep -Eiq '^HTTP/[0-9.]+ 206' "$header" || { echo "::error::CANARY_R2_BYTES_RANGE_NOT_206"; exit 1; }
           grep -Eiq '^content-range: bytes 0-1023/26861777' "$header" || { echo "::error::CANARY_R2_CONTENT_RANGE_INVALID"; exit 1; }
+          # Pin public pages to Next's proven prerendered artifacts. Run repeated HTTP probes
+          # because earlier full Worker releases returned intermittent 1102 (CPU/memory) and 1101.
+          for path in /siai /tools /api/public/siai-widget /api/health; do
+            for attempt in 1 2 3 4; do
+              got="$(curl --silent --show-error --max-time 25 -H 'Cache-Control: no-cache' --output /dev/null --write-out '%{http_code}' "$HOST$path?real-accept=$attempt" || true)"
+              echo "STATIC_FREE_CANARY_REPEAT:$path:$attempt:$got"
+              [ "$got" = 200 ] || { echo "::error::FREE_CANARY_INTERMITTENT_FAILURE:$path:$attempt:$got"; exit 1; }
+            done
+          done
           notice="$(curl --silent --show-error --fail --max-time 25 "$HOST/api/site-release-announcement")"
           NOTICE_JSON="$notice" node -e 'const j=JSON.parse(process.env.NOTICE_JSON);if(j.enabled!==true||j.phase!=="maintenance"||j.site!=="main")process.exit(1);console.log("COM_APPROVED_MAINTENANCE_NOTICE_API_PASS")'
           echo "FULL_CANARY_PUBLIC_AND_ANONYMOUS_SECURITY_AND_R2_RANGE_PASS"
           echo "REAL_USER_PAYMENTS_REFUNDS_SASI_AND_124_TOOLS_NOT_ACCEPTED"
           {
             echo "## Full Cloudflare worker canary (NO production DNS changes)"
-            echo "- Exact source SHA: 86b956c9700ede4a537c021af3a0dc1df825fa9b"
+            echo "- Exact source SHA: 33d3cbd1c7cdbb859f103292ee99c7f1ac47a564"
             echo "- URL: $HOST"
             echo "- Eight R2 public objects full SHA-256 verified"
             echo "- No server-side service-role, payment, refund or private R2 secrets attached"
