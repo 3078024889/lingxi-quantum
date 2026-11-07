@@ -41,13 +41,6 @@ jobs:
           JS
       - name: Install locked Next.js application dependencies
         run: npm ci --no-audit --no-fund
-      - name: Check source, evidence and TypeScript contracts
-        run: |
-          set -Eeuo pipefail
-          npm run validate:data
-          npm run validate:catalog
-          npm run test:contracts
-          npm run typecheck
       - name: Install pinned official Next 15 Cloudflare adapter (CI only, no lockfile mutation)
         run: |
           set -Eeuo pipefail
@@ -55,6 +48,13 @@ jobs:
             @opennextjs/cloudflare@1.20.16 wrangler@4
           npx --no-install opennextjs-cloudflare --version
           npx --no-install wrangler --version
+      - name: Check source, evidence and TypeScript contracts
+        run: |
+          set -Eeuo pipefail
+          npm run validate:data
+          npm run validate:catalog
+          npm run test:contracts
+          npm run typecheck
       - name: Real Next.js build and Worker adapter transformation
         run: |
           set -Eeuo pipefail
