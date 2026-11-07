@@ -79,7 +79,7 @@ jobs:
           const routes=Object.keys(toolManifest.routes||{}).filter(p=>
             /^\/tools\/[a-z0-9-]+$/.test(p)&&!excluded.has(p)
           ).sort();
-          if(routes.length<85||routes.length>120)
+          if(routes.length<120||routes.length>130)
             throw Error('PUBLIC_TOOL_PRERENDER_ROUTE_COUNT_OUT_OF_RANGE:'+routes.length);
           mkdirSync('.open-next/assets/tools',{recursive:true});
           let copied=0,bytes=0;
