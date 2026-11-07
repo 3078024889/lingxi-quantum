@@ -13,8 +13,9 @@ spec.loader.exec_module(app)
 B = b"<html><body>LINGXIFIELD" + b"x" * 1500 + b"</body></html>"
 
 class FakeCloudflare:
-    def __init__(self, fail_live=False, bad_zone=False, conflict=False):
+    def __init__(self, fail_live=False, bad_zone=False, conflict=False, stale_402=False):
         self.fail_live=fail_live
+        self.stale_402=stale_402
         self.bad_zone=bad_zone
         self.routes=[{"id":"preexisting","pattern":"lingxifield.com/*","script":"other"}] if conflict else []
         self.records = {
@@ -46,6 +47,8 @@ class FakeCloudflare:
             return dict(self.records[hostname])
         raise AssertionError("UNEXPECTED_CF_API:"+path+":"+method)
     def page(self,host,path):
+        if self.stale_402 and not host.startswith(app.CANARY):
+            return 402,b'original Vercel DNS still cached'
         if self.fail_live and not host.startswith(app.CANARY):
             return 503,b"Worker resource limit exceeded"
         if path=="/api/public/site-status":
@@ -58,11 +61,18 @@ class FakeCloudflare:
             return 200,B
         return 200,b'{"status":"ok"}'
 
-def exercise(label, *, fail_live=False, bad_zone=False, conflict=False, should_pass=False):
-    fake=FakeCloudflare(fail_live,bad_zone,conflict)
+def exercise(label, *, fail_live=False, bad_zone=False, conflict=False, stale_402=False, edge_ok=False, should_pass=False):
+    fake=FakeCloudflare(fail_live,bad_zone,conflict,stale_402)
     app.cf=fake.cf
     app.page=fake.page
     app.time.sleep=lambda _:None
+    def edge_mock(hostname,baseline):
+        if edge_ok:
+            assert hostname in app.HOSTS and baseline.get("/") and baseline.get("/api/public/site-status")
+            print("MOCK_FORCED_TLS_EDGE_PROBE_PASS",hostname)
+            return "104.16.12.10"
+        raise RuntimeError("MOCK_EDGE_ROUTE_NOT_REACHABLE")
+    app.edge_probe=edge_mock
     os.environ["CLOUDFLARE_API_TOKEN"]="mock-only-no-real-token"
     os.environ["CLOUDFLARE_ACCOUNT_ID"]=app.EXPECTED_ACCOUNT_ID
     sys.argv=["com-public-route-cutover-20261107.py","--promote-public-maintenance-only"]
@@ -82,6 +92,8 @@ def exercise(label, *, fail_live=False, bad_zone=False, conflict=False, should_p
 
 exercise("success",should_pass=True)
 exercise("503-autorestore",fail_live=True)
+exercise("stale-vercel-dns-but-real-tls-edge",stale_402=True,edge_ok=True,should_pass=True)
+exercise("stale-vercel-dns-and-no-cloudflare-route-rollback",stale_402=True,edge_ok=False)
 exercise("zone-id-mismatch",bad_zone=True)
 exercise("existing-route-protected",conflict=True)
 print("COM_PUBLIC_ROUTE_CUTOVER_ROLLBACK_REGRESSION_PASS")
