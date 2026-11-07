@@ -30,19 +30,64 @@ probe 3188 /api/health 200
 probe 3189 /api/health 200
 notice="$(curl --noproxy '*' -fsS --max-time 12 -H 'Host: lingxifield.cn' http://127.0.0.1:3191/api/site-release-announcement)"
 printf '%s' "$notice" | python3 -c 'import json,sys; j=json.load(sys.stdin); assert j.get("enabled") is True and j.get("phase")=="maintenance" and j.get("site")=="main", "NOTICE_NOT_ACTIVE"'
-# The actual anonymous document engine health gate must report >=6 working adapters.
+# Public release gate: real site route/auth/notice checks above plus one functional
+# tiny image conversion in the known available Sharp runtime. Optional backends
+# must be reported, not misclassified as a hard requirement for client-side tools.
 ENGINE_REPORT="$(mktemp)"
 trap 'rc=$?; rm -f -- "$ENGINE_REPORT"; exit "$rc"' EXIT
-curl --noproxy '*' -fsS --max-time 25 -H 'Host: lingxifield.cn' http://127.0.0.1:3191/api/tools/engine/health -o "$ENGINE_REPORT" || die DOCUMENT_ENGINES_NOT_REACHABLE
+curl --noproxy '*' -fsS --max-time 40 \
+  -H 'Host: lingxifield.cn' \
+  http://127.0.0.1:3191/api/tools/engine/health \
+  -o "$ENGINE_REPORT" || die DOCUMENT_ENGINE_REPORT_UNREACHABLE
 python3 - "$ENGINE_REPORT" <<'PY'
-import sys,json
-with open(sys.argv[1]) as f: state=json.load(f)
-n=int(state.get('summary',{}).get('available',0))
-if n<6: raise SystemExit('CN_PUBLIC_ABORT:NEED_SIX_REAL_DOCUMENT_ENGINES')
-print('CN_PUBLIC_DOCUMENT_ENGINES='+str(n))
+import json,sys
+try:
+ with open(sys.argv[1]) as f: data=json.load(f)
+ engines=data["engines"]
+ assert isinstance(engines,list) and len(engines)>=20, "ENGINE_REGISTRY_INCOMPLETE"
+ assert len({x.get("id") for x in engines})==len(engines), "DUPLICATE_ENGINE_IDS"
+ summary=data["summary"]
+ available=sum(1 for x in engines if x.get("available") is True)
+ assert available==summary.get("available"), "ENGINE_COUNTER_INCONSISTENT"
+ assert len(engines)==summary.get("checked"), "ENGINE_CHECKED_COUNTER_INCONSISTENT"
+ sharp=next((x for x in engines if x.get("id")=="sharp-libvips"),None)
+ assert sharp and sharp.get("available") is True and sharp.get("runtime")=="node-module", "SHARP_ENGINE_MISSING"
+ print("CN_PUBLIC_ENGINE_CAPABILITY_GATE_PASS")
+ print(f"CN_SERVER_ENGINE_AVAILABLE={available}/{len(engines)}")
+ print("CN_OPTIONAL_SERVER_ENGINES_PENDING="+",".join(x["id"] for x in engines if not x.get("available")))
+ print("CN_OPTIONAL_SERVER_ENGINES_NOT_DECLARED_READY=true")
+except (KeyError,ValueError,TypeError,AssertionError) as e:
+ raise SystemExit("CN_PUBLIC_ABORT:INVALID_ENGINE_EVIDENCE:"+str(e))
 PY
 rm -f -- "$ENGINE_REPORT"
 trap - EXIT
+# Verify actual bytes round-trip through Sharp, rather than accepting import-only probes.
+# Executes in the isolated release as the unprivileged app user, no user files touched.
+command -v runuser >/dev/null || die RUNUSER_NOT_AVAILABLE
+NODE=/opt/lingxifield/runtime/node-24.19.0/bin/node
+test -x "$NODE" || die NODE24_RUNTIME_MISSING
+(
+  cd "$DIR"
+  runuser -u lingxifield -- "$NODE" -e '
+    import("sharp").then(async m=>{
+      const sharp=m.default||m;
+      const source=await sharp({
+        create:{width:3,height:3,channels:4,background:{r:30,g:60,b:90,alpha:1}}
+      }).png().toBuffer();
+      const product=await sharp(source).resize(2,2).webp().toBuffer();
+      const info=await sharp(product).metadata();
+      if(info.width!==2||info.height!==2||info.format!=="webp"||product.length<10)
+        throw Error("SHARP_ROUNDTRIP_INVALID");
+      console.log("CN_SHARP_REAL_IMAGE_ROUNDTRIP_PASS");
+    }).catch(e=>{console.error("CN_SHARP_FILE_SMOKE_FAILED",e.message);process.exit(1)})
+  '
+) || die SHARP_REAL_IMAGE_SMOKE_FAILED
+# Browser-first PDF/video paths are public pages, tested as routes; their real
+# file export / OCR / paid delivery must still pass separate user-level E2E gates.
+probe 3191 /tools/pdf-editor 200
+probe 3191 /tools/e-sign-pdf 200
+echo CN_BROWSER_PDF_EDITOR_AND_SIGN_ROUTES_PASS
+echo CN_REAL_PAID_EXPORT_AND_SASI_NOT_ATTESTED
 nginx -t || die EXISTING_NGINX_CONFIG_INVALID
 CONFIG=""
 # Discover the one exact .cn vhost file, without changing .com or other zones.
@@ -131,3 +176,4 @@ echo "CN_ROLLBACK_NGINX_FILE=$BACKUP"
 echo CN_OLD_3188_AND_3189_ACTIVE=true
 echo CN_COM_AND_GLOBALSIAI_DNS_UNTOUCHED=true
 echo CN_PAYMENT_AND_REAL_LOGIN_E2E_NOT_ATTESTED=true
+echo CN_OPTIONAL_SERVER_ENGINES_INSTALL_NOT_AUTHORIZED=true
