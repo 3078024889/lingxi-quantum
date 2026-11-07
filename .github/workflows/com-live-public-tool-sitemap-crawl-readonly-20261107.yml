@@ -21,7 +21,7 @@ jobs:
           def fetch(url):
               req=urllib.request.Request(url,headers={"User-Agent":useragent,"Accept":"text/html,application/xml;q=0.9,*/*;q=0.8","Cache-Control":"no-cache"})
               try:
-                  with urllib.request.urlopen(req,timeout=18) as f: return f.status,f.read(1000000) if "/sitemap" in url else b""
+                  with urllib.request.urlopen(req,timeout=18) as f: return f.status,f.read(8000000) if "/sitemap" in url else b""
               except urllib.error.HTTPError as e:
                   b=e.read(2048)
                   return e.code,b
