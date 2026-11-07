@@ -10,7 +10,7 @@ import Link from "next/link";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {ensureBurnNoteAccess} from '@/lib/tools/commerce/export-access-client';
 import {METERED_EXPORT_TOOL_ID} from '@/lib/tools/commerce/metered-catalog';
-import {claimToolStart,ToolAccessError,toolAccessMessage} from '@/lib/tools/commerce/tool-start-client';
+import {claimToolStart,ToolAccessError,toolAccessMessage,TOOL_PASS_ENFORCED} from '@/lib/tools/commerce/tool-start-client';
 
 function b64url(bytes:Uint8Array){let s="";bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 type Mode="once"|"timed"|"limited"|"fast";
