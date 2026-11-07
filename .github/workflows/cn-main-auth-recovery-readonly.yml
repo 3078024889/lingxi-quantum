@@ -68,7 +68,7 @@ jobs:
           export SUPABASE_PUBLISHABLE_KEY=sb_publishable_1234567890abcdefghijklmnopQRSTUV
           export PORT=4350
           export HOSTNAME=127.0.0.1
-          pnpm start -- -p 4350 > "$RUNNER_TEMP/next-auth-smoke.log" 2>&1 &
+          pnpm exec next start --port 4350 --hostname 127.0.0.1 > "$RUNNER_TEMP/next-auth-smoke.log" 2>&1 &
           PID=$!
           trap 'kill "$PID" 2>/dev/null || true' EXIT
           ready=0
@@ -76,7 +76,11 @@ jobs:
             if curl --noproxy '*' -s -o /dev/null --max-time 3 "http://127.0.0.1:4350/api/health"; then ready=1; break; fi
             sleep 1
           done
-          test "$ready" = 1
+          if [ "$ready" != 1 ]; then
+            echo "::error::Local Next.js server never opened the loopback health endpoint"
+            tail -n 25 "$RUNNER_TEMP/next-auth-smoke.log" | sed -E 's/(apikey|token|secret)=[^ ]+/\\1=REDACTED/g'
+            exit 1
+          fi
           for route in /api/sasi/account /api/tools/jobs; do
             code="$(curl --noproxy '*' -sS --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:4350$route")"
             echo "RUNTIME_CONFIG_ANONYMOUS_CHECK:$route:$code"
