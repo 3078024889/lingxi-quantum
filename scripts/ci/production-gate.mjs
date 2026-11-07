@@ -103,11 +103,22 @@ const commands=[
  ["node",["scripts/final-closure/graduation.mjs"]],
 ];
 
+const collectAll = process.env.LINGXI_COLLECT_ALL_CI_FAILURES === "1";
+const failed=[];
 for(const [cmd,args] of commands){
  const label=[cmd,...args].join(" ");
  console.log(`CI_GATE_RUN=${label}`);
  const r=spawnSync(cmd,args,{stdio:"inherit",cwd:root,shell:false});
- if(r.status!==0)throw new Error(`CI_GATE_FAILED:${label}`);
+ if(r.status!==0){
+  if(!collectAll)throw new Error(`CI_GATE_FAILED:${label}`);
+  failed.push({label,exitCode:r.status??null,signal:r.signal??null});
+  console.error(`CI_GATE_FAILED_COLLECTED:${label}`);
+ }
+}
+if(failed.length){
+ console.error("CI_GATE_FAILED_COUNT="+failed.length);
+ for(const x of failed)console.error("CI_GATE_FAILED: "+JSON.stringify(x));
+ throw new Error("CI_GATE_FAILED_COLLECTED_TOTAL="+failed.length);
 }
 
 const required=[
