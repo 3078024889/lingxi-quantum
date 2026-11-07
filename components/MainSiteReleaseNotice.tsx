@@ -1,6 +1,8 @@
 "use client";
 
 import {useEffect,useRef,useState} from "react";
+import Link from "next/link";
+import Image from "next/image";
 import styles from "./MainSiteReleaseNotice.module.css";
 
 type Lang="zh"|"en"|"ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
@@ -140,7 +142,7 @@ export default function MainSiteReleaseNotice(){
       aria-describedby="lx-main-upgrade-detail" className={styles.card} dir={state.lang==="ar"?"rtl":"ltr"}>
       <button ref={close} className={styles.close} aria-label={t.close} onClick={dismiss} type="button">×</button>
       <div className={styles.top}>
-        <img src="/favicon-32x32.png" alt="" className={styles.logo} width="28" height="28"/>
+        <Image src="/favicon-32x32.png" alt="" className={styles.logo} width={28} height={28} unoptimized/>
         <span>LINGXIFIELD</span>
         <span className={styles.spark} aria-hidden="true">✧</span>
       </div>
@@ -160,7 +162,7 @@ export default function MainSiteReleaseNotice(){
         </a>
       </div>
       <div className={styles.actions}>
-        <a href="/tools" className={styles.primary} onClick={dismiss}>{t.action}</a>
+        <Link href="/tools" className={styles.primary} onClick={dismiss}>{t.action}</Link>
         <button type="button" className={styles.secondary} onClick={dismiss}>{t.dismiss}</button>
       </div>
       <div className={styles.signature}>Celestial小仙女</div>
