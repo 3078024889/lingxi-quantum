@@ -49,22 +49,45 @@ test("legacy media receipts are kept for previous purchasers until cutover",()=>
  assert(preview.includes('stage.mode==="legacy"'));
  assert(preview.includes('claimFreeEntitlement('));
 });
-test("remaining unsupported R2 storage features fail closed in new mode, retain old records",()=>{
- const cases=[
-  ["burn-after-read/file/prepare","BURN_FILE_PASS_WORKFLOW_NOT_READY","newBurnObjectKey("],
-  ["mobile-file","TEMP_FILE_PASS_WORKFLOW_NOT_READY","newBurnObjectKey("]
- ];
- for(const [route,denial,remote] of cases){
-  const code=read("app/api/tools/"+route+"/route.ts");
-  const gate=code.indexOf("if(toolPassCutoverRequested())");
-  assert(gate>=0&&code.includes(denial),"pass cutover not safely blocked: "+route);
-  assert(code.indexOf(remote)>gate,"storage created before new-pass denial: "+route);
-  assert(code.slice(gate,gate+250).includes("status:503"),"not fail-closed HTTP 503: "+route);
- }
- const continuation=read("app/api/tools/burn-after-read/file/complete/route.ts");
- assert(continuation.includes('.eq("owner_user_id",user.id)'));
- assert(continuation.indexOf('owner_user_id')<continuation.indexOf("await r2Head("));
+test("mobile and burn-file R2 sessions require atomic receipt-bound creation",()=>{
+ const mobile=read("app/api/tools/mobile-file/route.ts");
+ const burn=read("app/api/tools/burn-after-read/file/prepare/route.ts");
+ const complete=read("app/api/tools/burn-after-read/file/complete/route.ts");
+ const mobileSql=read("supabase/migrations/20261106090000_tool_pass_mobile_file_atomic.sql");
+ const burnSql=read("supabase/migrations/20261106100000_tool_pass_burn_file_atomic.sql");
+ const exportClient=read("lib/tools/shared/download.ts");
+ const burnClient=read("components/tools/BurnAfterReadWorkbench.tsx");
+ assert(mobile.includes('.rpc("lingxi_prepare_pass_mobile_file_v1"'));
+ assert(mobile.includes('if(!toolPassBackendReady())'));
+ assert(mobile.indexOf('.rpc("lingxi_prepare_pass_mobile_file_v1"')<mobile.indexOf('putUrl:presignR2('),
+   "mobile signed upload issued before owner/paid-task receipt");
+ assert(mobileSql.includes("pg_advisory_xact_lock"));
+ assert(mobileSql.includes("'mobile-file'"));
+ assert(mobileSql.includes("MOBILE_FILE_IDEMPOTENCY_CONFLICT"));
+ assert(exportClient.includes("latestConfirmedToolClaim(toolSlug)"));
+ assert(exportClient.includes("MOBILE_FILE_REQUIRES_PRIOR_TOOL_START"));
+ assert(burn.includes('.rpc("lingxi_prepare_pass_burn_file_v1"'));
+ assert(burn.includes('if(!toolPassBackendReady())'));
+ assert(burn.indexOf('.rpc("lingxi_prepare_pass_burn_file_v1"')<burn.indexOf('uploadUrl:data.alreadyReady?null:presignR2('),
+   "private burn-file R2 token minted without atomic claim validation");
+ assert(burnSql.includes("v_use.units<>v_len"));
+ assert(burnSql.includes("pg_advisory_xact_lock"));
+ assert(burnSql.includes("'burn-file-prepare'"));
+ assert(burnSql.includes("PASS_BURN_FILE_REBIND"));
+ assert(burnClient.includes("uploadPassShare"));
+ assert(burnClient.includes('claimToolStart("burn-after-read",x.length)'));
+ assert(complete.includes('.rpc("lingxi_redeem_tool_use"'));
+ assert(complete.includes('note.access_request_id'));
+ assert(complete.includes('.eq("owner_user_id",user.id)'));
+ assert(complete.indexOf("owner_user_id")<complete.indexOf("await r2Head("));
+ const tests=read("tests/sql/tool-pass-burn-file-atomic-integrity.sql");
+ assert(tests.includes("PASS_BURN_FILE_CROSS_USER_REPLAY"));
+ assert(tests.includes("PASS_BURN_UNCLAIMED_RECEIPT_ALLOWED"));
+ const mobileTests=read("tests/sql/tool-pass-mobile-file-atomic-integrity.sql");
+ assert(mobileTests.includes("MOBILE_CROSS_USER_RETRY_LEAK"));
+ assert(mobileTests.includes("UNCREDITED_R2_SESSION_CREATED"));
 });
+
 test("retired per-quote food calculators cannot bypass unified food analysis",()=>{
  const c=read("app/api/tools/food/calculate/route.ts");
  const cutover=c.indexOf("if(toolPassCutoverRequested())");
