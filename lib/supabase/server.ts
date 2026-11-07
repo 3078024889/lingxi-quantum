@@ -1,25 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { User } from "@supabase/supabase-js";
+import {getRuntimeSupabasePublicConfig} from "./server-runtime-config";
 
 export function getServerSupabasePublicConfig() {
-  // Next.js inlines direct process.env.NEXT_PUBLIC_* references at build time.
-  // Read server-side runtime variables through the env object, so a standalone
-  // artifact can use the correct Supabase project after an audited promotion.
-  // These are PUBLIC keys only. Never select service_role or sb_secret_.
-  const env = process.env;
-  const url = (env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
-  const key = (env.SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY ||
-    env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "").trim();
-  if (!url || !key || key.length < 20 ||
-      key.startsWith("sb_secret_") || key.startsWith("sb_service_")) return null;
-  try {
-    const parsed = new URL(url);
-    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return null;
-    return {url, key};
-  } catch {
-    return null;
-  }
+  return getRuntimeSupabasePublicConfig();
 }
 
 export function isSupabasePublicConfigured() {
