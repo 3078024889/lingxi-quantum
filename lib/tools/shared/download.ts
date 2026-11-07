@@ -1,5 +1,7 @@
 import {trackToolEvent} from "../analytics-client";
 import {ensureToolExportAccess,isExportAccessGranted} from '../commerce/export-access-client';
+import {TOOL_PASS_ENFORCED,latestConfirmedToolClaim} from '../commerce/tool-start-client';
+import {toolSlugFromPathname} from '../commerce/tool-route-slug';
 export type DownloadOutcome = "download" | "preview";
 export type FileShareOutcome = "shared" | "cancelled" | "unsupported" | "failed";
 export function miniLikeEnvironment() {
@@ -56,10 +58,29 @@ export function shareFileReady(blob:Blob,filename:string):Promise<FileShareOutco
 }
 // Cloud fallback requires a separate explicit consent click in the UI.
 // Saving and sharing local files never call this upload function automatically.
+const mobileHandoffOperations=new WeakMap<Blob,string>();
 export async function privateMobilePreview(blob: Blob, name: string) {
   await ensureToolExportAccess(blob,name);
   const file = deliveryFile(blob, name);
-  const r = await fetch("/api/tools/mobile-file", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({name: file.name, type: file.type, size: file.size})});
+  const toolSlug=typeof location!=="undefined"?toolSlugFromPathname(location.pathname)||"":""; 
+  const confirmed=TOOL_PASS_ENFORCED?latestConfirmedToolClaim(toolSlug):null;
+  if(TOOL_PASS_ENFORCED && !confirmed)
+    throw new Error("MOBILE_FILE_REQUIRES_PRIOR_TOOL_START");
+  let operationId=mobileHandoffOperations.get(blob);
+  if(TOOL_PASS_ENFORCED && !operationId){
+    operationId=crypto.randomUUID();
+    mobileHandoffOperations.set(blob,operationId);
+  }
+  const r = await fetch("/api/tools/mobile-file", {
+    method:"POST",credentials:"same-origin",cache:"no-store",
+    headers:{"content-type":"application/json"},
+    body:JSON.stringify({
+      name:file.name,type:file.type,size:file.size,
+      ...(TOOL_PASS_ENFORCED?{
+        toolSlug,accessRequestId:confirmed?.requestId,operationId
+      }:{}),
+    })
+  });
   if (!r.ok) throw new Error(r.status === 401 ? "AUTH_REQUIRED" : "TEMP_FILE_SESSION_FAILED");
   const d = await r.json() as {putUrl: string; getUrl: string};
   const put = await fetch(d.putUrl, {method: "PUT", body: file, headers: {"content-type": file.type}});
