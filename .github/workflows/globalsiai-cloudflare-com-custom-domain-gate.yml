@@ -108,11 +108,38 @@ jobs:
           done
           curl --noproxy '*' -fsS http://127.0.0.1:8788/api/site-release-announcement | grep -Fq '"enabled":false'
           curl --noproxy '*' -fsS http://127.0.0.1:8788/robots.txt | grep -qi 'Disallow: /'
-          # www redirect is host-specific, must not redirect workers.dev/local.
-          for path in / /en/ai /zh/ai; do
-            hdr="$(curl --noproxy '*' -sS --max-time 20 -D - -o /dev/null -H 'Host: www.globalsiai.com' "http://127.0.0.1:8788$path")"
-            printf '%s\n' "$hdr" | head -1 | grep -Eq '^HTTP/[0-9.]+ 301' || { echo "WWW_REDIRECT_NOT_301=$path"; printf '%s\n' "$hdr" | head -n 18; exit 1; }
-            printf '%s\n' "$hdr" | grep -Eiq "^location: https://globalsiai.com$path([?]|\r?$)" || { echo "WWW_REDIRECT_LOCATION_INVALID=$path"; printf '%s\n' "$hdr" | head -n 18; exit 1; }
-            echo "GLOBALSIAI_WWW_CANONICAL_REDIRECT=$path STATUS=301"
-          done
+          # Wrangler local dev rewrites request Host to 127.0.0.1, so custom-host
+          # redirect acceptance is tested with real NextRequest below and finally
+          # re-verified via external HTTPS once the custom domain is attached.
           echo GLOBALSIAI_CF_NINE_LOCALE_API_AND_NOINDEX_PASS
+
+      - name: Test canonical www host middleware with real NextRequest on Next.js 15
+        run: |
+          set -Eeuo pipefail
+          node - <<'JS'
+          const assert=require('node:assert/strict');
+          const fs=require('node:fs');
+          const path=require('node:path');
+          const ts=require('typescript');
+          const Module=require('node:module');
+          const file=path.resolve('middleware.ts');
+          const src=fs.readFileSync(file,'utf8');
+          const out=ts.transpileModule(src,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+          const m=new Module(file,module);
+          m.filename=file;m.paths=Module._nodeModulePaths(path.dirname(file));
+          m._compile(out,file);
+          const {NextRequest}=require('next/server');
+          for(const uri of ['https://www.globalsiai.com/','https://www.globalsiai.com/en/ai','https://www.globalsiai.com/ar/ai?x=1']){
+            const u=new URL(uri);
+            const res=m.exports.middleware(new NextRequest(uri,{headers:{host:u.host}}));
+            assert.equal(res.status,301,'redirect status '+uri);
+            assert.equal(res.headers.get('location'), 'https://globalsiai.com'+u.pathname+u.search,'redirect location '+uri);
+            console.log('GLOBALSIAI_COM_WWW_301_PASS='+uri);
+          }
+          for(const host of ['globalsiai.com','globalsiai.cn','globalsiai-market-global.3078024889.workers.dev']){
+            const res=m.exports.middleware(new NextRequest('https://'+host+'/zh/ai',{headers:{host}}));
+            assert.notEqual(res.status,301,'unexpected redirect for '+host);
+            console.log('GLOBALSIAI_COM_NO_CROSS_HOST_REDIRECT='+host);
+          }
+          JS
+          echo GLOBALSIAI_COM_CANONICAL_REDIRECT_UNIT_PASS
