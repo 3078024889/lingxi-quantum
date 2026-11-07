@@ -1,0 +1,26 @@
+.backdrop{position:fixed;inset:0;z-index:2147482000;display:grid;place-items:center;padding:20px;background:rgba(17,37,60,.40);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.card{position:relative;width:min(100%,650px);max-height:min(92dvh,900px);overflow-y:auto;overscroll-behavior:contain;border:1px solid rgba(184,214,217,.75);border-radius:25px;padding:30px clamp(24px,5vw,47px) 26px;color:#243d4c;text-align:start;background:radial-gradient(ellipse at 88% 0%,rgba(207,235,233,.9),transparent 44%),linear-gradient(155deg,#fffefa 6%,#f5faf8 60%,#eff7f9 100%);box-shadow:0 32px 90px rgba(12,48,56,.21),0 5px 20px rgba(26,62,71,.06);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}
+.top{display:flex;align-items:center;gap:9px;color:#3e6371;font-size:11px;letter-spacing:.23em;font-weight:750}
+.logo{width:28px;height:28px;object-fit:contain;border-radius:7px}
+.spark{margin-inline-start:auto;font-size:26px;font-weight:200;color:#80b2b3;line-height:1}
+.close{position:absolute;right:16px;top:15px;display:grid;place-items:center;width:35px;height:35px;border:1px solid #d6e5e4;border-radius:50%;background:rgba(255,255,255,.88);font-size:23px;color:#56767e;cursor:pointer}
+.kicker{color:#578d8f;font-size:12px;letter-spacing:.11em;font-weight:750;margin-top:36px}
+.title{margin:12px 0 10px;font-size:clamp(24px,4.4vw,32px);font-weight:800;line-height:1.34;color:#173b4d;letter-spacing:-.02em}
+.lead{margin:0;color:#3d7a83;font-size:clamp(16px,3vw,18px);font-weight:750;letter-spacing:.09em}
+.waterline{height:52px;margin:13px 0 18px;position:relative;overflow:hidden;border-radius:12px;background:radial-gradient(ellipse 100% 90% at 58% 120%,rgba(138,193,185,.34) 0 39%,transparent 40%),radial-gradient(ellipse 95% 90% at 15% 130%,rgba(170,208,193,.33) 0 39%,transparent 40%),linear-gradient(180deg,rgba(239,250,248,.3),rgba(217,237,234,.5));border-bottom:1px solid rgba(131,180,182,.34)}
+.waterline:after{content:"";position:absolute;inset:auto -20px 9px;height:1px;background:linear-gradient(90deg,transparent,#77aeb3 30%,#bdd8d2 65%,transparent);transform:rotate(-2deg)}
+.body{font-size:14px;line-height:1.95;letter-spacing:.01em;color:#496476;margin:0 0 13px}
+.thanks{margin:14px 0 22px;font-size:13px;line-height:1.85;color:#6b858d}
+.domains{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.domains a{min-width:0;display:flex;flex-direction:column;gap:5px;border:1px solid #d4e6e4;border-radius:13px;background:rgba(255,255,255,.84);color:#2f6475;padding:13px 15px;text-decoration:none;transition:box-shadow .15s,border-color .15s}
+.domains a:hover{border-color:#8ac9c2;box-shadow:0 3px 15px rgba(49,107,112,.08)}
+.domains small{font-size:11px;color:#7e969c}
+.domains strong{font-size:14px;overflow-wrap:anywhere;letter-spacing:.005em}
+.actions{display:flex;gap:11px;margin-top:19px;align-items:center}
+.primary,.secondary{box-sizing:border-box;min-height:45px;display:inline-flex;align-items:center;justify-content:center;padding:11px 17px;border-radius:12px;cursor:pointer;text-decoration:none;font-size:13px;font-weight:750}
+.primary{flex:1;background:#246c75;color:white;border:1px solid #246c75}
+.secondary{background:#fff;color:#456b76;border:1px solid #d0e2e3}
+.signature{font-family:"STKaiti","KaiTi",cursive;margin-top:20px;color:#6b9796;font-size:15px;text-align:right;letter-spacing:.04em}
+.close:focus-visible,.domains a:focus-visible,.primary:focus-visible,.secondary:focus-visible{outline:3px solid #4baeb4;outline-offset:3px}
+@media(max-width:460px){.backdrop{padding:12px}.card{padding:27px 20px 20px;border-radius:19px}.kicker{margin-top:22px}.waterline{height:36px}.body{font-size:13px;line-height:1.85}.domains{grid-template-columns:1fr}.actions{flex-direction:column;align-items:stretch}.primary,.secondary{width:100%}}
+@media(prefers-reduced-motion:reduce){.backdrop{backdrop-filter:none;-webkit-backdrop-filter:none}.domains a{transition:none}}
