@@ -104,6 +104,33 @@ jobs:
           ].join('\n');
           writeFileSync(headerFile,prev+'\n'+headers+'\n',{mode:0o644});
           console.log('COM_PUBLIC_WIDGET_STATIC_JSON_ASSET_STAGED',body.length,info.total,source);
+          // Public availability is a static-asset contract. It explicitly does
+          // NOT claim that login, payment, SASI or the heavyweight Worker is healthy.
+          const publicStatus={
+            schemaVersion:1,
+            service:'lingxifield',
+            site:'https://lingxifield.com',
+            scope:'public-maintenance-assets-only',
+            publicPages:['/','/tools','/siai'],
+            publicSurface:'ready',
+            dynamicBackend:'not-attested',
+            realLogin:'not-attested',
+            payments:'not-attested',
+            sasi:'not-attested',
+            fullFileExport:'not-attested',
+            sourceRevision:process.env.GITHUB_SHA||'unknown'
+          };
+          const statusPath='.open-next/assets/api/public/site-status';
+          if(existsSync(statusPath))throw Error('PUBLIC_STATUS_ASSET_ALREADY_EXISTS');
+          writeFileSync(statusPath,JSON.stringify(publicStatus),{mode:0o644});
+          const statusHeaders=[
+            '/api/public/site-status',
+            '  Content-Type: application/json; charset=utf-8',
+            '  Cache-Control: public, max-age=60',
+            '  X-Content-Type-Options: nosniff'
+          ].join('\\n');
+          writeFileSync(headerFile,readFileSync(headerFile,'utf8')+'\\n'+statusHeaders+'\\n',{mode:0o644});
+          console.log('COM_PUBLIC_ONLY_STATUS_STAGED_NO_BACKEND_CLAIMS');
           JS
           pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/com-canary-dry-run"
           echo 'EXACT_SHA_OPENNEXT_R2_DRY_RUN_PASS'
@@ -155,6 +182,9 @@ jobs:
           if(c.assets.run_worker_first.includes('!/api/public/siai-widget'))
             throw Error('SIAI_WIDGET_NEGATIVE_PATTERN_CONFLICT');
           c.assets.run_worker_first.push('!/api/public/siai-widget');
+          if(c.assets.run_worker_first.includes('!/api/public/site-status'))
+            throw Error('PUBLIC_STATUS_ROUTE_CONFLICT');
+          c.assets.run_worker_first.push('!/api/public/site-status');
           delete c.route;
           delete c.routes;
           delete c.triggers;
@@ -222,7 +252,7 @@ jobs:
           grep -Eiq '^content-range: bytes 0-1023/26861777' "$header" || { echo "::error::CANARY_R2_CONTENT_RANGE_INVALID"; exit 1; }
           # Pin public pages to Next's proven prerendered artifacts. Run repeated HTTP probes
           # because earlier full Worker releases returned intermittent 1102 (CPU/memory) and 1101.
-          for path in /siai /tools /api/public/siai-widget /api/health; do
+          for path in /siai /tools /api/public/siai-widget /api/public/site-status; do
             for attempt in 1 2 3 4; do
               got="$(curl --silent --show-error --max-time 25 -H 'Cache-Control: no-cache' --output /dev/null --write-out '%{http_code}' "$HOST$path?real-accept=$attempt" || true)"
               echo "STATIC_FREE_CANARY_REPEAT:$path:$attempt:$got"
@@ -263,6 +293,33 @@ jobs:
           }
           rm -f "$tmp_json" "$tmp_hdr"
           echo COM_PUBLIC_WIDGET_BYTES_AND_JSON_MIME_DIRECT_ASSET_PASS
+          tmp_status="$(mktemp)"
+          tmp_status_hdr="$(mktemp)"
+          curl --silent --show-error --fail --max-time 35 \
+            -H 'Accept-Encoding: identity' -D "$tmp_status_hdr" \
+            "$HOST/api/public/site-status" -o "$tmp_status"
+          node - "$tmp_status" <<'JS'
+          const fs=require('node:fs');
+          const p=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          if(p.publicSurface!=='ready'||p.scope!=='public-maintenance-assets-only'||
+             p.dynamicBackend!=='not-attested'||p.payments!=='not-attested'||
+             p.sasi!=='not-attested'||p.realLogin!=='not-attested')
+            throw Error('PUBLIC_STATUS_MISREPRESENTS_RUNTIME');
+          console.log('COM_PUBLIC_ONLY_STATUS_NO_DYNAMIC_SUCCESS_CLAIMS_PASS');
+          JS
+          test "$(sha256sum .open-next/assets/api/public/site-status | awk '{print $1}')" = "$(sha256sum "$tmp_status" | awk '{print $1}')" || {
+            echo "::error::PUBLIC_STATUS_NOT_DIRECTLY_SERVED"; exit 1;
+          }
+          grep -Eiq '^content-type: application/json' "$tmp_status_hdr" || {
+            echo "::error::PUBLIC_STATUS_JSON_MIME_MISSING"; exit 1;
+          }
+          rm -f "$tmp_status" "$tmp_status_hdr"
+          echo COM_STATIC_PUBLIC_STATUS_DIRECT_ASSET_SHA256_PASS
+          # Dynamic backend health remains a separate diagnostic and is NOT
+          # treated as successful merely because public assets are available.
+          dyn_status="$(curl --silent --show-error --max-time 20 --output /dev/null --write-out '%{http_code}' "$HOST/api/health" || true)"
+          echo "COM_DYNAMIC_RUNTIME_HEALTH_DIAGNOSTIC_ONLY:$dyn_status"
+          echo COM_DYNAMIC_BACKEND_NOT_ACCEPTED_BY_PUBLIC_ONLY_RELEASE
           notice="$(curl --silent --show-error --fail --max-time 25 "$HOST/api/site-release-announcement")"
           NOTICE_JSON="$notice" node -e 'const j=JSON.parse(process.env.NOTICE_JSON);if(j.enabled!==true||j.phase!=="maintenance"||j.site!=="main")process.exit(1);console.log("COM_APPROVED_MAINTENANCE_NOTICE_API_PASS")'
           echo "FULL_CANARY_PUBLIC_AND_ANONYMOUS_SECURITY_AND_R2_RANGE_PASS"
