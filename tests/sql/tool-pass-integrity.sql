@@ -41,6 +41,16 @@ begin
  v:=public.lingxi_claim_tool_use('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaf',a,repeat('b',64),'pdf-editor',25);
  if v->>'accessKind'<>'pass' then raise exception 'PAID_PASS_NOT_GRANTED %',v;end if;
  if (select count(*) from public.orders where user_id=a and product_type='tool_pass')<>2 then raise exception 'ORDERS_NOT_RECORDED';end if;
+ if not exists(select 1 from public.orders where user_id=a and product_type='tool_pass'
+   and currency='CNY' and amount_rmb=29 and amount_usd=0)
+ then raise exception 'CNY_REVENUE_DUPLICATED';end if;
+ if not exists(select 1 from public.orders where user_id=a and product_type='tool_pass'
+   and currency='USD' and amount_rmb is null and amount_usd=269)
+ then raise exception 'USD_REVENUE_DUPLICATED';end if;
+ if (select count(*) from public.orders where user_id=a and product_type='tool_pass'
+      and ((currency='CNY' and (amount_rmb is null or amount_usd<>0))
+        or (currency='USD' and (amount_rmb is not null or amount_usd<=0))))<>0
+ then raise exception 'CROSS_CURRENCY_ORDER_VALUE';end if;
  -- Funds are already settled; a later refund must explicitly revoke entitlement.
  update public.lingxi_tool_passes set revoked_at=now(),revocation_reason='test_refund'
  where purchase_request_id=p;
