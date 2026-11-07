@@ -56,9 +56,12 @@ export async function middleware(request:NextRequest){
  if(privateSearchPath(pathname))response.headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
  if(needsMirrorCanonical)response.headers.set("Link",`<https://lingxifield.com${pathname}>; rel="canonical"`);
 
- const url=process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
- const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
- if(!url||!key)return response;
+ // Indirect process.env access avoids build-time inlining of NEXT_PUBLIC_.*
+ // in Node-compatible self-hosted and Cloudflare runtime bundles.
+ const env=process.env;
+ const url=(env.SUPABASE_URL||env.NEXT_PUBLIC_SUPABASE_URL||"").trim();
+ const key=(env.SUPABASE_ANON_KEY||env.SUPABASE_PUBLISHABLE_KEY||env.NEXT_PUBLIC_SUPABASE_ANON_KEY||"").trim();
+ if(!url||!key||key.startsWith("sb_secret_")||key.startsWith("sb_service_"))return response;
 
  // A cookie-free visit has no session to refresh. Keep guest and crawler requests
  // out of the auth client; requests with session cookies still undergo verification.
