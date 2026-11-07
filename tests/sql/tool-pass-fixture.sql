@@ -12,7 +12,7 @@ create table public.orders(
  user_id uuid not null references auth.users(id),
  product_id text not null,
  product_type text not null,
- amount_rmb numeric not null,
+ amount_rmb numeric,
  amount_usd numeric not null,
  currency text,
  status text,
