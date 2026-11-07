@@ -181,16 +181,18 @@ def forced_edge_page(hostname, ip, path):
                "--connect-timeout", "9", "--max-time", "28",
                "--resolve", hostname + ":443:" + ip,
                "-H", "Accept-Encoding: identity",
-               "-o", tmp.name, "-w", "%{http_code}",
+               "-o", tmp.name, "-w", "%{http_code}\\n%{redirect_url}",
                "https://" + hostname + path]
         try:
             process = subprocess.run(cmd, capture_output=True, text=True,
                                      timeout=32, check=False)
-            status = int(process.stdout.strip() or "0") if process.returncode == 0 else 0
+            lines = process.stdout.splitlines()
+            status = int(lines[0].strip() or "0") if process.returncode == 0 and lines else 0
+            destination = lines[1].strip() if len(lines) > 1 else ""
             tmp.seek(0)
-            return status, tmp.read(200000)
+            return status, tmp.read(200000), destination
         except (OSError, ValueError, subprocess.TimeoutExpired):
-            return 0, b""
+            return 0, b"", ""
 
 def edge_probe(hostname, baseline):
     """Only accept a verified Cloudflare edge, not a fabricated health response."""
@@ -211,7 +213,33 @@ def edge_probe(hostname, baseline):
         for trial in range(1, 6):
             results = {}
             for path, wanted in checks.items():
-                status, body = forced_edge_page(hostname, ip, path)
+                status, body, destination = forced_edge_page(hostname, ip, path)
+                # Canonical www API redirect is legitimate ONLY when the target
+                # is the exact https apex + identical pathname. Check the apex
+                # response on the SAME Cloudflare edge before accepting 308.
+                redirectable = {"/api/site-release-announcement",
+                                "/api/sasi/account", "/api/tools/jobs"}
+                if hostname == HOSTS[1] and path in redirectable and status == 308:
+                    expected_target = "https://" + HOSTS[0] + path
+                    if destination != expected_target:
+                        status = -6
+                    else:
+                        apex_status, apex_body, _ = forced_edge_page(HOSTS[0], ip, path)
+                        if apex_status != wanted:
+                            status = -7
+                        elif path == "/api/site-release-announcement":
+                            try:
+                                data = json.loads(apex_body)
+                                if data.get("enabled") is not True or data.get("phase") != "maintenance":
+                                    status = -8
+                                else:
+                                    status = wanted
+                            except (ValueError, TypeError):
+                                status = -9
+                        else:
+                            status = wanted
+                        if status == wanted:
+                            print("COM_WWW_EXACT_CANONICAL_REDIRECT_AND_APEX_GUARD_PASS",path)
                 if status == wanted and path in baseline:
                     if hashlib.sha256(body).hexdigest() != baseline[path]:
                         status = -1
@@ -228,7 +256,7 @@ def edge_probe(hostname, baseline):
                       ip, "trial", trial)
                 for _ in range(4):
                     for p in ("/", "/tools", "/siai", "/api/public/site-status"):
-                        status, body = forced_edge_page(hostname, ip, p)
+                        status, body, _ = forced_edge_page(hostname, ip, p)
                         if status != 200 or hashlib.sha256(body).hexdigest() != baseline[p]:
                             stop("FORCED_EDGE_STATIC_STEADY_FAILURE:" + hostname + ":" + p)
                 print("COM_CLOUDFLARE_EDGE_PUBLIC_STATIC_STEADY_PASS", hostname)
