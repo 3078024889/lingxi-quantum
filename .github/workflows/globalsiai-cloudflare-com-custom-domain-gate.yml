@@ -111,8 +111,8 @@ jobs:
           # www redirect is host-specific, must not redirect workers.dev/local.
           for path in / /en/ai /zh/ai; do
             hdr="$(curl --noproxy '*' -sS --max-time 20 -D - -o /dev/null -H 'Host: www.globalsiai.com' "http://127.0.0.1:8788$path")"
-            printf '%s\n' "$hdr" | head -1 | grep -Eq '^HTTP/[0-9.]+ 301' || { echo "WWW_REDIRECT_NOT_301=$path"; exit 1; }
-            printf '%s\n' "$hdr" | grep -Eiq "^location: https://globalsiai.com$path([?]|\r?$)" || { echo "WWW_REDIRECT_LOCATION_INVALID=$path"; exit 1; }
+            printf '%s\n' "$hdr" | head -1 | grep -Eq '^HTTP/[0-9.]+ 301' || { echo "WWW_REDIRECT_NOT_301=$path"; printf '%s\n' "$hdr" | head -n 18; exit 1; }
+            printf '%s\n' "$hdr" | grep -Eiq "^location: https://globalsiai.com$path([?]|\r?$)" || { echo "WWW_REDIRECT_LOCATION_INVALID=$path"; printf '%s\n' "$hdr" | head -n 18; exit 1; }
             echo "GLOBALSIAI_WWW_CANONICAL_REDIRECT=$path STATUS=301"
           done
           echo GLOBALSIAI_CF_NINE_LOCALE_API_AND_NOINDEX_PASS
