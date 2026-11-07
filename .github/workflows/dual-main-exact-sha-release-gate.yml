@@ -1,0 +1,252 @@
+name: Dual Lingxifield exact-SHA release candidate gate (NO DEPLOY)
+
+on:
+  push:
+    branches: [release/lingxifield-main-dual-20261107]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lingxifield-exact-release-${{ github.ref }}
+  cancel-in-progress: true
+
+
+jobs:
+  source:
+    name: source-and-production-build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Show toolchain
+        run: |
+          node --version
+          pnpm --version
+
+      - name: Frozen dependency install
+        run: pnpm install --frozen-lockfile
+
+      - name: Clean baseline audit
+        run: pnpm ci:baseline
+
+      - name: Source and product gates
+        run: pnpm ci:source
+
+      - name: SIAI approved catalog and research-preview provenance gate
+        run: node --test tests/siai-source-preview.test.mjs tests/siai-search-discovery.test.mjs tests/siai-localized-indexing.test.mjs tests/siai-customer-language.test.mjs tests/siai-major-publishers-004.test.mjs tests/siai-company-source.test.mjs tests/footer-unified.test.mjs
+
+      - name: Playwright import/dependency contract
+        run: pnpm ci:playwright-contract
+
+      - name: AI tools search regression
+        run: |
+          node scripts/ci/verify-ai-tool-search.mjs
+          node scripts/ci/verify-ai-media-pricing-policy.mjs
+          node scripts/ci/verify-miniapp-search-index.mjs
+
+      - name: Complete candidate feature and security contracts
+        run: |
+          set -Eeuo pipefail
+          node --test \
+            tests/ops/cn-main-auth-recover-verified.test.mjs \
+            tests/ops/server-runtime-supabase-public.test.mjs \
+            tests/ops/require-supabase-browser-build.test.mjs \
+            tests/mini-main-direct-tools-share.test.mjs \
+            tests/release/main-site-notice-contract.test.mjs \
+            tests/unified-tools-pass-static-contract.test.mjs \
+            tests/unified-tool-pass-retirement-guards.test.mjs \
+            tests/tool-pass-server-http-contract.test.mjs \
+            tests/tool-pass-stage-server-http-contract.test.mjs \
+            tests/tool-pass-legacy-media-stage.test.mjs \
+            tests/tool-pass-billing-retirement.test.mjs \
+            tests/tool-pass-file-upload-order.test.mjs \
+            tests/tool-route-slug-nine-locales.test.mjs
+          node scripts/audit/unified-tool-pass-coverage.mjs
+          node scripts/audit/unified-tool-pass-server-coverage.mjs
+          node scripts/test-mini-sharing-v78.cjs
+          node scripts/test-mini-profiles-v80.cjs
+          node scripts/ci/require-supabase-browser-build.mjs --release >/dev/null 2>&1 && {
+            echo "::error::Non-secret CI build unexpectedly passed release browser-key gate"
+            exit 1
+          } || true
+          echo "PUBLIC_BROWSER_KEY_GATE_EXPECTED_FALSE_CI_IS_NOT_DEPLOYABLE"
+
+      - name: Production build
+        run: pnpm build
+
+
+  browser:
+    name: browser-${{ matrix.project }}-shard-${{ matrix.shard }}-of-2
+    needs: source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop-chromium, mobile-chromium]
+        shard: [1, 2]
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+      - name: Install pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Use pinned Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependency install
+        run: pnpm install --frozen-lockfile
+      - name: Build this exact release candidate independently
+        run: pnpm build
+      - name: Verify runner Chrome installation
+        run: bash scripts/ci/ensure-chrome.sh
+      - name: Browser closure for this project and shard
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --workers=1
+      - name: Upload shard traces and failure evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: lingxifield-e2e-${{ github.sha }}-${{ matrix.project }}-${{ matrix.shard }}-of-2
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore
+
+  postgres:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: test-only
+          POSTGRES_USER: postgres
+          POSTGRES_DB: tool_pass_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d tool_pass_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: PostgreSQL 17 integration tests (temporary CI database)
+        env:
+          PGPASSWORD: test-only
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-fixture.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261105193000_one_free_tool_use_and_all_tools_pass.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106010000_tool_pass_execution_receipts.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-receipt-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106020000_tool_pass_food_consume.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-food-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106030000_tool_pass_mail_receipt.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-mail-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106040000_tool_pass_burn_notes.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-burn-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106050000_tool_pass_revocation_guard.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-revocation-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106060000_tool_pass_order_bound_stages.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-stage-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106070000_tool_legacy_media_paid_stage_caps.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-legacy-media-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106080000_tool_pass_mail_batch_atomic.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-mail-batch-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106090000_tool_pass_mobile_file_atomic.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-mobile-file-atomic-integrity.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f supabase/migrations/20261106100000_tool_pass_burn_file_atomic.sql
+          psql -v ON_ERROR_STOP=1 -h localhost -U postgres -d tool_pass_test -f tests/sql/tool-pass-burn-file-atomic-integrity.sql
+      - name: Contract tests
+        run: node --test tests/unified-tools-pass-static-contract.test.mjs tests/unified-tool-pass-retirement-guards.test.mjs tests/tool-pass-server-http-contract.test.mjs tests/tool-pass-stage-server-http-contract.test.mjs tests/tool-pass-legacy-media-stage.test.mjs tests/tool-pass-billing-retirement.test.mjs tests/tool-pass-file-upload-order.test.mjs tests/tool-route-slug-nine-locales.test.mjs
+      - name: Release PostgreSQL coverage and task ownership gate
+        run: |
+          set -Eeuo pipefail
+          node scripts/audit/unified-tool-pass-coverage.mjs
+          node scripts/audit/unified-tool-pass-server-coverage.mjs
+
+  production-gate:
+    name: production-gate
+    if: ${{ always() }}
+    needs: [source, browser, postgres]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Fail closed unless source plus all four browser shards succeed
+        run: |
+          if [ "${{ needs.source.result }}" != "success" ] || [ "${{ needs.browser.result }}" != "success" ] || [ "${{ needs.postgres.result }}" != "success" ]; then
+            echo "::error::Source/build, PostgreSQL17, or at least one of four browser shards did not pass."
+            exit 1
+          fi
+          echo "EXACT_SHA_SOURCE_SQL_AND_FOUR_BROWSER_SHARDS_PASS_NO_PRODUCTION_DEPLOY"
+
+  release-evidence:
+    name: immutable-test-evidence
+    needs: [production-gate]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with: {persist-credentials: false}
+      - name: Record only source checksums and remaining stop-ship tasks
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p release-evidence
+          sha256sum package.json pnpm-lock.yaml next.config.js > release-evidence/input-sha256.txt
+          printf '%s\n' "${GITHUB_SHA}" > release-evidence/source-sha.txt
+          {
+            echo 'STATUS: SOURCE_AND_OFFLINE_TESTS_ONLY'
+            echo 'Deployment allowed: NO'
+            echo 'Must stage and verify original runtime build and client Supabase public key, all 124 tools, SASI, real wallet/payment/refund callback, Cloudflare/Alibaba DNS and rollback before release.'
+            echo 'No Supabase migration and no production switch were performed.'
+          } > release-evidence/stop-ship.txt
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: dual-main-exact-sha-evidence-${{ github.sha }}
+          path: release-evidence/
+          retention-days: 14
