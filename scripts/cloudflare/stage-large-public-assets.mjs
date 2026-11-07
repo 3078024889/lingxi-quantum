@@ -39,6 +39,25 @@ for(const [path,metadata] of Object.entries(largePublicAssets)){
  await unlink(compiled);
  manifest.push({path,bytes:metadata.bytes,sha256:sourceSha,r2Key:"public"+path,contentType:metadata.contentType});
 }
+// Webpack also emits an ONNX wasm dependency under a content-hashed Next.js
+// URL that does not exist in the checked-in public tree. Lock its filename
+// pattern and expected size; accept no other over-limit generated bundles.
+const generatedDir=join(assetRoot,"_next","static","media");
+const generatedNames=(await readdir(generatedDir)).filter(x=>
+  /^ort-wasm-simd-threaded\\.asyncify\\.[a-f0-9]{8,64}\\.wasm$/.test(x));
+if(generatedNames.length!==1)throw Error("HASHED_ONNX_WASM_COUNT_MISMATCH:"+generatedNames.length);
+const generatedAssets={};
+for(const filename of generatedNames){
+ const path="/_next/static/media/"+filename;
+ const file=join(generatedDir,filename);
+ const metadata={bytes:26861777,contentType:"application/wasm"};
+ const size=(await stat(file)).size;
+ if(size!==metadata.bytes||size<=limit)throw Error("HASHED_ONNX_WASM_SIZE_MISMATCH");
+ const digest=await sha256(file);
+ await unlink(file);
+ generatedAssets[path]=metadata;
+ manifest.push({path,bytes:size,sha256:digest,r2Key:"public"+path,contentType:metadata.contentType});
+}
 const remaining=await walk(assetRoot);
 const stillOversize=[];
 for(const file of remaining){
@@ -48,15 +67,16 @@ for(const file of remaining){
 if(stillOversize.length)throw Error("UNEXPECTED_OVERSIZE_ASSETS:"+JSON.stringify(stillOversize));
 const wrapper=String.raw`import app from "./worker.js";
 import {handleLargePublicAsset} from "../scripts/cloudflare/large-public-assets.mjs";
+const generatedAssets = __GENERATED_ASSETS__;
 if(!app||typeof app.fetch!=="function")throw Error("OPENNEXT_EXPORT_SHAPE_UNSUPPORTED");
 export default {
  ...app,
  async fetch(request,env,ctx){
-  const offloaded=await handleLargePublicAsset(request,env);
+  const offloaded=await handleLargePublicAsset(request,env,generatedAssets);
   return offloaded||app.fetch(request,env,ctx);
  }
 };
-`;
+`.replace("__GENERATED_ASSETS__",JSON.stringify(generatedAssets));
 await writeFile(join(root,".open-next","offload-worker.mjs"),wrapper);
 const summary={schemaVersion:1,sourceSha:process.env.GITHUB_SHA||null,
  bucketBinding:"LINGXI_PUBLIC_LARGE_R2",bucketName:"lingxifield-com-large-public",
