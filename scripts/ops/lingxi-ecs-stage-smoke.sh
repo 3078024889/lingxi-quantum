@@ -52,7 +52,8 @@ for f in lingxifield-ecs-standalone.tar.gz lingxifield-ecs-standalone.sha256 SHA
 done
 unzip -qq "$ZIP" -d "$TMP/outer" || fail "UNZIP_FAILED"
 test "$(tr -d '\r\n' < "$TMP/outer/SHA.txt")" = "$SHA" || fail "SOURCE_SHA_MISMATCH"
-grep -Fq "not" "$TMP/outer/NOT_PRODUCTION_APPROVED.txt" || fail "PRODUCTION_BLOCK_SENTINEL_MISSING"
+# Fail closed against the exact sentinel produced by the verified packaging workflow.
+grep -Fxq "Preview package only: no real login, payment, R2 or file roundtrip acceptance." "$TMP/outer/NOT_PRODUCTION_APPROVED.txt" || fail "PRODUCTION_BLOCK_SENTINEL_MISMATCH"
 (cd "$TMP/outer" && sha256sum -c lingxifield-ecs-standalone.sha256) || fail "INNER_TAR_SHA256_MISMATCH"
 mkdir -p "$TMP/runtime"
 tar -xzf "$TMP/outer/lingxifield-ecs-standalone.tar.gz" -C "$TMP/runtime" || fail "TAR_EXTRACT_FAILED"
