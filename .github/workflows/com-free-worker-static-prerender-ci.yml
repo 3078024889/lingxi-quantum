@@ -1,0 +1,58 @@
+name: COM free Worker public prerender + notice gate (NO DEPLOY)
+on:
+  push:
+    branches: [opt/com-free-worker-static-siai-20261107]
+    paths:
+      - 'app/page.tsx'
+      - 'app/siai/page.tsx'
+      - 'app/api/public/siai-widget/route.ts'
+      - '.github/workflows/com-free-worker-static-prerender-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prerender:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with: {version: 11.28.0, run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version-file: .nvmrc, cache: pnpm}
+      - name: Check public-only route settings, payment isolation and nine-language contract
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const paths=['app/page.tsx','app/siai/page.tsx','app/api/public/siai-widget/route.ts'];
+          for(const path of paths){
+            const s=readFileSync(path,'utf8');
+            if(!s.includes('export const dynamic="force-static"'))throw Error('ROUTE_NOT_STATIC:'+path);
+            if(s.includes('export const dynamic="force-dynamic"'))throw Error('DYNAMIC_RENDER_REGRESSION:'+path);
+          }
+          const banner=readFileSync('components/MainSiteReleaseNotice.tsx','utf8');
+          if(!banner.includes('维护期间如出现短暂访问异常，感谢理解与陪伴'))throw Error('APPROVED_NOTICE_MISSING');
+          console.log('COM_PUBLIC_ONLY_STATIC_CONFIG_AND_NOTICE_PASS');
+          JS
+      - run: pnpm install --frozen-lockfile
+      - name: Actual Next production build and route prerender assertions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          pnpm build
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const m=JSON.parse(readFileSync('.next/prerender-manifest.json','utf8'));
+          const routes=m.routes||{};
+          for(const path of ['/','/siai','/api/public/siai-widget']){
+            if(!Object.hasOwn(routes,path))throw Error('BUILD_DID_NOT_PRERENDER:'+path);
+            console.log('COM_ACTUAL_PRERENDER_PASS:'+path);
+          }
+          console.log('COM_FREE_WORKER_PRERENDER_BUILD_PASS');
+          JS
