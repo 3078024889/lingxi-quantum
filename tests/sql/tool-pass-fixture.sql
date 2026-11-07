@@ -46,6 +46,22 @@ create table public.temp_mailboxes(
  local_part text not null,expires_at timestamptz not null,
  owner_user_id uuid
 );
+-- Legacy private object handoff schema. The migration adds scoped receipt IDs.
+create table public.tool_temp_files(
+ id uuid primary key default gen_random_uuid(),
+ user_id uuid references auth.users(id),
+ object_key text not null,
+ file_name text not null,
+ mime_type text not null,
+ byte_size bigint not null,
+ expires_at timestamptz not null,
+ deleted_at timestamptz,
+ created_at timestamptz not null default now()
+);
+alter table public.tool_temp_files enable row level security;
+revoke all on public.tool_temp_files from public,anon,authenticated;
+grant all on public.tool_temp_files to service_role;
+
 create table public.test_wallets(user_id uuid primary key references auth.users(id),cny_minor bigint not null default 200000,usd_minor bigint not null default 200000);
 create table public.test_charges(reference_id text primary key,user_id uuid not null,currency text not null,amount_minor bigint not null);
 create or replace function public.charge_sasi_usage_v49(
