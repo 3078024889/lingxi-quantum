@@ -90,6 +90,8 @@ jobs:
           set -Eeuo pipefail
           bash -n scripts/ops/cn-main-auth-readonly-gate.sh
           bash -n scripts/ops/cn-main-auth-public-env-repair.sh
+          node --check scripts/ops/cn-auth-key-readonly.mjs
+          node --test tests/ops/cn-auth-key-readonly.test.mjs
           awk '/^const fs=require\("node:fs"\);/{copy=1} copy && /^NODEJS$/{exit} copy{print;got=1} END{if(!got)exit 1}' scripts/ops/cn-main-auth-public-env-repair.sh | node --check
           grep -Fq 'CN_AUTH_RUNTIME_PUBLIC_CONFIG_RECOVERED' scripts/ops/cn-main-auth-public-env-repair.sh
           grep -Fq 'CN_AUTH_BACKUP_PATH=' scripts/ops/cn-main-auth-public-env-repair.sh
