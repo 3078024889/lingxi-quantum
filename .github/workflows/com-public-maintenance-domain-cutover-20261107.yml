@@ -1,0 +1,72 @@
+name: COM exact-domain public maintenance release with auto-rollback
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths:
+      - '.github/workflows/com-public-maintenance-domain-cutover-20261107.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: lingxifield-com-public-maintenance-domain-cutover-20261107
+  cancel-in-progress: false
+jobs:
+  cutover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: cloudflare-com-preview
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 05f09bb65b09aefcedb8f318716c06dcba0a1bdf
+          persist-credentials: false
+      - name: Verify pinned transaction script and four rollback regressions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          script='scripts/cloudflare/com-public-route-cutover-20261107.py'
+          test "$(git hash-object "$script")" = 'dc516fe08c7d9cb1e1ff9902c0f6ca343d304f00'
+          python3 -m py_compile "$script"
+          python3 tests/ops/com-public-route-cutover-test.py
+          echo COM_PINNED_PUBLIC_SWITCH_TRANSACTION_AND_ROLLBACK_VERIFIED
+      - name: Require THIS commit's Cloudflare canary build and R2 validation to succeed
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import os,time,json,urllib.request,urllib.error
+          sha=os.environ['GITHUB_SHA']
+          repo=os.environ['GITHUB_REPOSITORY']
+          head={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','User-Agent':'LINGXIFIELD-cutover-ci-gate'}
+          def runs():
+              req=urllib.request.Request('https://api.github.com/repos/'+repo+'/actions/runs?head_sha='+sha+'&per_page=100',headers=head)
+              with urllib.request.urlopen(req,timeout=20) as res:
+                  return json.load(res)['workflow_runs']
+          for i in range(55):
+              matches=[x for x in runs() if x.get('name')=='Cloudflare COM full main-site canary plus verified eight R2 files (NO DNS CUTOVER)']
+              if matches and any(x.get('conclusion')=='success' for x in matches):
+                  print('COM_MATCHING_COMMIT_CANARY_AND_R2_GATE_SUCCESS',sha)
+                  break
+              if matches and all(x.get('status')=='completed' for x in matches):
+                  raise SystemExit('COM_CANARY_FOR_CURRENT_COMMIT_FAILED_OR_CANCELLED')
+              print('COM_CANARY_PRECONDITION',i+1,'RUNS',[(x.get('id'),x.get('status'),x.get('conclusion')) for x in matches[:2]])
+              time.sleep(12)
+          else:
+              raise SystemExit('COM_CANARY_SAME_COMMIT_NOT_CONFIRMED')
+          PY
+      - name: Execute exact-domain reversible public maintenance route cutover
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 scripts/cloudflare/com-public-route-cutover-20261107.py --promote-public-maintenance-only
+      - name: Public-only milestone, commercial features unverified
+        shell: bash
+        run: |
+          echo COM_PUBLIC_HOMEPAGE_TOOLS_SIAI_MAINTENANCE_LIVE_GATE_SUCCESS
+          echo COM_FULL_USER_LOGIN_PAYMENTS_REFUNDS_SASI_EXPORT_NOT_ATTESTED
+          echo VERCEL_BACKUP_PROJECT_AND_ORIGINAL_DNS_TARGETS_PRESERVED
