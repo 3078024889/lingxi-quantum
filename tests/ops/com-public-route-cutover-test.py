@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Hermetic, network-free regression for the .com domain cutover transaction."""
 import importlib.util
+import hashlib
+import socket
 import os
 from pathlib import Path
 import sys
@@ -96,4 +98,35 @@ exercise("stale-vercel-dns-but-real-tls-edge",stale_402=True,edge_ok=True,should
 exercise("stale-vercel-dns-and-no-cloudflare-route-rollback",stale_402=True,edge_ok=False)
 exercise("zone-id-mismatch",bad_zone=True)
 exercise("existing-route-protected",conflict=True)
+
+# Test the genuine www canonical-redirect verification, not only the transaction
+# shell. All HTTP responses are isolated fixtures; no real Cloudflare calls.
+original_edge_probe = app.edge_probe if hasattr(app, "edge_probe") else None
+assert original_edge_probe is not None
+app.socket.getaddrinfo = lambda *args, **kw: [
+    (socket.AF_INET,socket.SOCK_STREAM,6,"",("172.67.180.71",443))
+]
+fake = FakeCloudflare()
+redirectable={"/api/site-release-announcement","/api/sasi/account","/api/tools/jobs"}
+baseline = {
+    p:hashlib.sha256(fake.page(app.CANARY,p)[1]).hexdigest()
+    for p in ("/","/tools","/siai","/api/public/site-status")
+}
+for bad_target in (False,True):
+    def edge_response(host,ip,path):
+        if host == app.HOSTS[1] and path in redirectable:
+            return 308,b"",("https://evil.example/"+path.lstrip("/") if bad_target else "https://"+app.HOSTS[0]+path)
+        status,body=fake.page(app.CANARY,path)
+        return status,body,""
+    app.forced_edge_page=edge_response
+    try:
+        original_edge_probe("www.lingxifield.com",baseline)
+        assert not bad_target,"UNSAFE_WWW_REDIRECT_WAS_ACCEPTED"
+    except RuntimeError as e:
+        if not bad_target:raise
+        assert str(e).startswith("CLOUDFLARE_EDGE_WORKER_ROUTE_NOT_VERIFIABLE")
+        print("COM_WWW_MALICIOUS_REDIRECT_REJECTED_PASS")
+    else:
+        print("COM_WWW_308_EXACT_HTTPS_CANONICAL_REDIRECT_AND_APEX_CHECK_PASS")
 print("COM_PUBLIC_ROUTE_CUTOVER_ROLLBACK_REGRESSION_PASS")
+
