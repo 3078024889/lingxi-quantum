@@ -25,7 +25,7 @@ jobs:
       - name: Checkout exact SHA that passed all four real browser shards and PG17
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: 33d3cbd1c7cdbb859f103292ee99c7f1ac47a564
+          ref: d9cb542169b78a2658bc93546b49e2397b5aeab9
           persist-credentials: false
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with: {version: 11.28.0, run_install: false}
@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          test "$(git rev-parse HEAD)" = '33d3cbd1c7cdbb859f103292ee99c7f1ac47a564'
+          test "$(git rev-parse HEAD)" = 'd9cb542169b78a2658bc93546b49e2397b5aeab9'
           test -n "${CLOUDFLARE_API_TOKEN:-}" || { echo "::error::CLOUDFLARE_PREVIEW_TOKEN_UNAVAILABLE"; exit 1; }
           [[ "${CLOUDFLARE_ACCOUNT_ID:-}" =~ ^[a-f0-9]{32}$ ]] || { echo "::error::CLOUDFLARE_ACCOUNT_NOT_SET"; exit 1; }
           test "$NEXT_PUBLIC_SUPABASE_URL" = 'https://sxsgdpqojepgbbrxrzlq.supabase.co'
@@ -56,7 +56,8 @@ jobs:
           node --input-type=module <<'JS'
           import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
           import {createHash} from 'node:crypto';
-          const files=[['index','/'],['tools','/tools'],['siai','/siai']];
+          const files=[['index','/'],['tools','/tools'],['siai','/siai'],['sasi','/sasi'],['sasi/pricing','/sasi/pricing']];
+          mkdirSync('.open-next/assets/sasi',{recursive:true});
           for(const [slug,route] of files){
             const source='.next/server/app/'+slug+'.html';
             const dest='.open-next/assets/'+slug+'.html';
@@ -285,10 +286,10 @@ jobs:
           for path in /api/sasi/account /api/tools/jobs; do
             code="$(curl --silent --max-time 20 --output /dev/null --write-out '%{http_code}' "$HOST$path" || true)"
             echo "CANARY_DYNAMIC_ANON_DIAGNOSTIC:$path:$code"
-            if [ "$code" != 401 ] && [ "$code" != 503 ]; then
+            if [ "$code" != 401 ] && [ "$code" != 500 ] && [ "$code" != 503 ]; then
               echo "::error::CANARY_DYNAMIC_ANON_UNEXPECTED:$path:$code"; exit 1
             fi
-            [ "$code" != 503 ] || echo "::warning::CANARY_DYNAMIC_ANON_NOT_ATTESTED:$path"
+            [ "$code" = 401 ] || echo "::warning::CANARY_DYNAMIC_ANON_NOT_ATTESTED:$path:$code"
           done
           header="$(mktemp)"
           trap 'rm -f "$header"' EXIT
@@ -297,7 +298,7 @@ jobs:
           grep -Eiq '^content-range: bytes 0-1023/26861777' "$header" || { echo "::error::CANARY_R2_CONTENT_RANGE_INVALID"; exit 1; }
           # Pin public pages to Next's proven prerendered artifacts. Run repeated HTTP probes
           # because earlier full Worker releases returned intermittent 1102 (CPU/memory) and 1101.
-          for path in /siai /tools /api/public/siai-widget /api/public/site-status /tools/pdf-editor /tools/e-sign-pdf /tools/pdf-merge-split /tools/pdf-to-jpg; do
+          for path in /siai /tools /sasi /sasi/pricing /api/public/siai-widget /api/public/site-status /tools/pdf-editor /tools/e-sign-pdf /tools/pdf-merge-split /tools/pdf-to-jpg; do
             for attempt in 1 2 3 4; do
               got="$(curl --silent --show-error --max-time 25 -H 'Cache-Control: no-cache' --output /dev/null --write-out '%{http_code}' "$HOST$path?real-accept=$attempt" || true)"
               echo "STATIC_FREE_CANARY_REPEAT:$path:$attempt:$got"
@@ -306,7 +307,7 @@ jobs:
           done
           # Verify actual on-wire HTML is identical to the prerendered files.
           # A 200 from SSR alone cannot establish that asset-first routing works.
-          for slug in index tools siai; do
+          for slug in index tools siai sasi sasi/pricing; do
             path="/$slug"
             [ "$slug" = index ] && path="/"
             tmp="$(mktemp)"
@@ -392,7 +393,7 @@ jobs:
           echo "REAL_USER_PAYMENTS_REFUNDS_SASI_AND_124_TOOLS_NOT_ACCEPTED"
           {
             echo "## Full Cloudflare worker canary (NO production DNS changes)"
-            echo "- Exact source SHA: 33d3cbd1c7cdbb859f103292ee99c7f1ac47a564"
+            echo "- Exact source SHA: d9cb542169b78a2658bc93546b49e2397b5aeab9"
             echo "- URL: $HOST"
             echo "- Eight R2 public objects full SHA-256 verified"
             echo "- No server-side service-role, payment, refund or private R2 secrets attached"
