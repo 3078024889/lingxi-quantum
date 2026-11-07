@@ -95,6 +95,26 @@ class PromotionTests(unittest.TestCase):
             self.do_test(h)
         self.assertEqual(h.calls, [])
 
+    def test_only_exact_observed_edge_beacon_is_normalized(self):
+        original = b"<html><body>application</body></html>"
+        edge = original.replace(b"</body>", mod._EDGE_BEACON + b"\n</body>")
+        self.assertEqual(mod.application_bytes(edge), original)
+        self.assertEqual(mod.application_bytes(original), original)
+
+    def test_changed_application_or_unknown_script_still_differs(self):
+        original = b"<html><body>build-one</body></html>"
+        changed = b"<html><body>build-two" + mod._EDGE_BEACON + b"\n</body></html>"
+        self.assertNotEqual(mod.application_bytes(changed), original)
+        unknown = original.replace(b"</body>", b'<script src="https://example.com/other.js"></script></body>')
+        self.assertEqual(mod.application_bytes(unknown), unknown)
+        altered = mod._EDGE_BEACON.replace(b"crossorigin", b"unexpected")
+        modified = original.replace(b"</body>", altered + b"\n</body>")
+        self.assertEqual(mod.application_bytes(modified), modified)
+
+    def test_duplicate_beacons_are_not_normalized(self):
+        body = b"<html><body>" + mod._EDGE_BEACON * 2 + b"\n</body></html>"
+        self.assertEqual(mod.application_bytes(body), body)
+
     def test_explicit_flag_required(self):
         with patch.object(sys, "argv", ["test"]):
             with self.assertRaises(mod.ReleaseError):

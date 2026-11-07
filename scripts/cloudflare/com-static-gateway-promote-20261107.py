@@ -63,6 +63,23 @@ def cf(path, method="GET", data=None):
     return result.get("result")
 
 
+
+# Observed on the production zone, not workers.dev. Cloudflare RUM is injected
+# by the edge after the Worker response; never strip application scripts,
+# build identifiers or arbitrary whitespace. Unknown beacon revisions fail closed.
+# https://developers.cloudflare.com/web-analytics/faq/
+_EDGE_BEACON = b"""<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"2c2d1c862dbf4379a0d5908adbbe3605","r":1,"spa":2}' crossorigin="anonymous"></script>"""
+
+
+def application_bytes(body):
+    if body.count(_EDGE_BEACON) != 1:
+        return body
+    marker = _EDGE_BEACON + b"\n</body>"
+    if marker in body:
+        return body.replace(marker, b"</body>", 1)
+    return body
+
+
 def validate_public(base, *, baseline=None):
     checks = {}
     for path in ASSETS:
@@ -78,7 +95,7 @@ def validate_public(base, *, baseline=None):
                 raise ReleaseError("PUBLIC_STATUS_FALSE_BUSINESS_CLAIM")
         elif b"html" not in headers.get("content-type", "").lower().encode():
             raise ReleaseError("PUBLIC_HTML_TYPE_INVALID:" + path)
-        checks[path] = hashlib.sha256(body).hexdigest()
+        checks[path] = hashlib.sha256(application_bytes(body)).hexdigest()
         if baseline is not None and checks[path] != baseline[path]:
             raise ReleaseError("PUBLIC_ASSET_SHA_CHANGED:" + base + path)
     return checks
