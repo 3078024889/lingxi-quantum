@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: 0d884049703ffdf08b45b696126a30a53aa49c94
+          ref: 9fc8c428faac9d397759f8c00cb013a998873f43
           persist-credentials: false
       - run: python3 tests/ops/com-static-gateway-promote-test.py
   promote-public:
@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          ref: 0d884049703ffdf08b45b696126a30a53aa49c94
+          ref: 9fc8c428faac9d397759f8c00cb013a998873f43
           persist-credentials: false
       - name: Promote verified public gateway with exact-route rollback
         run: python3 scripts/cloudflare/com-static-gateway-promote-20261107.py --promote-public-only
