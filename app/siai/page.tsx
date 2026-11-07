@@ -11,8 +11,8 @@ import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {SHARE_IMAGE_URL,SHARE_IMAGES} from "@/lib/share-image";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 
-export const dynamic="force-dynamic";
-export const revalidate=0;
+export const dynamic="force-static";
+export const revalidate=false;
 const BASE_METADATA:Metadata={
  title:{absolute:"全球AI排行榜与AI行情平台｜全球SI／SIAI排行榜｜灵犀场 LINGXIFIELD"},
  description:"找全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台、全球SIAI排行榜？灵犀场按用途展示全球AI公司、模型、工具、免费额度、价格、地区和商用条件，并链接官方资料。",
