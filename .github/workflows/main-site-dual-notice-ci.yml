@@ -1,0 +1,58 @@
+name: Lingxifield dual-domain announcement candidate (NO DEPLOY)
+on:
+  push:
+    branches: [feature/main-dual-domain-release-notice-20261107]
+    paths:
+      - 'lib/release/main-site-notice-gate.ts'
+      - 'app/api/site-release-announcement/route.ts'
+      - 'components/MainSiteReleaseNotice.tsx'
+      - 'components/MainSiteReleaseNotice.module.css'
+      - 'app/layout.tsx'
+      - 'tests/release/main-site-notice-contract.test.mjs'
+      - '.github/workflows/main-site-dual-notice-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: main-notice-candidate-no-deploy
+  cancel-in-progress: true
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24.19.0'
+      - name: Verify full release gates and exact brand domains
+        run: |
+          set -euo pipefail
+          node --test tests/release/main-site-notice-contract.test.mjs
+          echo "NO_VERCEL_NO_CLOUDFLARE_NO_ALIYUN_DEPLOY"
+  build:
+    needs: contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Immutable install
+        run: pnpm install --frozen-lockfile
+      - name: Production candidate build without cloud deploy
+        run: pnpm build
+      - name: Confirm no accidental announcement enablement
+        run: |
+          test -z "${LINGXI_SITE_NOTICE_ENABLED:-}"
+          echo "CANDIDATE_BUILT_RELEASE_NOTICE_STILL_DISABLED"
