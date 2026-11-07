@@ -39,7 +39,15 @@ create table public.burn_notes(
  id uuid primary key default gen_random_uuid(),ciphertext text not null,iv text not null,
  expires_at timestamptz not null,consumed_at timestamptz,
  mode text not null,max_views integer not null,view_duration_seconds integer,
- owner_user_id uuid
+ owner_user_id uuid,quote_id uuid,has_files boolean not null default false,
+ ready_at timestamptz,created_at timestamptz not null default now()
+);
+create table public.burn_files(
+ id uuid primary key default gen_random_uuid(),
+ note_id uuid not null references public.burn_notes(id),
+ object_key text not null,original_name text not null,
+ size_bytes bigint not null,mime_type text not null,
+ created_at timestamptz not null default now()
 );
 create table public.temp_mailboxes(
  id uuid primary key default gen_random_uuid(),
