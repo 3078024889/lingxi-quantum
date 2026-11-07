@@ -7,6 +7,7 @@ export const largePublicAssets = Object.freeze({
  "/models/onnx-community/swin-finetuned-food101-ONNX/onnx/model_q4f16.onnx": {bytes:52685075,contentType:"application/octet-stream"},
  "/models/onnx-community/whisper-tiny/onnx/decoder_model_merged_quantized.onnx": {bytes:30719241,contentType:"application/octet-stream"},
  "/runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm": {bytes:26861777,contentType:"application/wasm"},
+ "/media/ffmpeg-0.12.10/ffmpeg-core.wasm": {bytes:32232419,contentType:"application/wasm"},
 });
 const unavailable = (error="PUBLIC_LARGE_ASSETS_NOT_READY") =>
  new Response(JSON.stringify({error}),{status:503,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
@@ -28,9 +29,10 @@ function selectRange(raw,total){
  last=Math.min(last,total-1);
  return {offset:first,length:last-first+1,last};
 }
-export async function handleLargePublicAsset(request, env){
+export async function handleLargePublicAsset(request, env, generatedAssets={}){
  const pathname=new URL(request.url).pathname;
- const asset=largePublicAssets[pathname];
+ const asset=Object.prototype.hasOwnProperty.call(largePublicAssets,pathname)?largePublicAssets[pathname]:
+   Object.prototype.hasOwnProperty.call(generatedAssets,pathname)?generatedAssets[pathname]:null;
  if(!asset)return null;
  if(request.method!=="GET"&&request.method!=="HEAD")
    return new Response(null,{status:405,headers:{"allow":"GET, HEAD","cache-control":"no-store"}});
