@@ -11,6 +11,8 @@ NODE=/opt/lingxifield/runtime/node-24.19.0/bin/node
 SERVICE=lingxifield-cn-release-86b956c9700e
 UNIT="/etc/systemd/system/$SERVICE.service"
 OVERRIDE=/etc/lingxifield/cn-release-notice-86b956c9700e.env
+PUBLIC_ENV=/etc/lingxifield/cn-release-public-86b956c9700e.env
+STAGING_ENV=/etc/lingxifield/staging.env
 PORT=3191
 test -d "$DIR" && test ! -L "$DIR" || die EXACT_RELEASE_DIR_MISSING
 test -s "$DIR/server.js" || die RELEASE_SERVER_MISSING
@@ -22,7 +24,7 @@ test -x "$NODE" || die NODE24_BINARY_MISSING
 "$NODE" --check "$DIR/server.js" || die RELEASE_SERVER_SYNTAX_ERROR
 systemctl is-active --quiet lingxifield-ecs || die EXISTING_3188_INACTIVE
 systemctl is-active --quiet lingxifield-cn-stage || die EXISTING_3189_INACTIVE
-test ! -e "$UNIT" && test ! -e "$OVERRIDE" || die RELEASE_UNIT_ALREADY_EXISTS_NO_OVERWRITE
+test ! -e "$UNIT" && test ! -e "$OVERRIDE" && test ! -e "$PUBLIC_ENV" || die RELEASE_UNIT_ALREADY_EXISTS_NO_OVERWRITE
 LIVE_ENV_CONFIG="$(systemctl show lingxifield-ecs -p EnvironmentFiles --value)"
 PROD_ENV="$(printf '%s\n' "$LIVE_ENV_CONFIG" | grep -oE '/etc/lingxifield/[a-zA-Z0-9._-]+[.]env' | head -1 || true)"
 case "$PROD_ENV" in /etc/lingxifield/*.env) ;; *) die PRODUCTION_ENV_FILE_BINDING_UNKNOWN;; esac
@@ -45,6 +47,7 @@ if occupied: raise SystemExit('CN_PREPARE_ABORT:PORT_3191_OCCUPIED')
 PY
 made_unit=0
 made_override=0
+made_public=0
 accepted=0
 TMPJSON=''
 BASE_DIR="$(dirname "$DIR")"
@@ -64,6 +67,7 @@ cleanup(){
    systemctl daemon-reload || true
   fi
   if test "$made_override" = 1; then rm -f -- "$OVERRIDE"; fi
+  if test "$made_public" = 1; then rm -f -- "$PUBLIC_ENV"; fi
   if test "$base_permissions_changed" = 1; then
    chgrp "$PREV_BASE_GID" "$BASE_DIR" || true
    chmod "$PREV_BASE_MODE" "$BASE_DIR" || true
@@ -95,6 +99,44 @@ if ! runuser -u lingxifield -- test -x "$BASE_DIR"; then
 fi
 runuser -u lingxifield -- test -r "$DIR/server.js" || die UNPRIVILEGED_RELEASE_NOT_READABLE
 runuser -u lingxifield -- "$NODE" --check "$DIR/server.js" || die UNPRIVILEGED_NODE_EXECUTION_FAILED
+# Load ONLY public Supabase URL and anon/publishable key from a verified same-project env.
+# Do not copy staging payment flags, service-role secrets, or other runtime settings.
+test -f "$STAGING_ENV" && test ! -L "$STAGING_ENV" || die STAGING_PUBLIC_CONFIG_SOURCE_MISSING
+test "$(stat -c %u "$STAGING_ENV")" = 0 || die STAGING_ENV_NOT_ROOT_OWNED
+made_public=1
+"$NODE" - "$PROD_ENV" "$STAGING_ENV" "$PUBLIC_ENV" <<'JS'
+const fs=require("node:fs");
+const {parseEnv}=require("node:util");
+const [prodPath,stagePath,dest]=process.argv.slice(2);
+const parse=path=>parseEnv(fs.readFileSync(path,"utf8"));
+const prod=parse(prodPath),stage=parse(stagePath);
+const project="sxsgdpqojepgbbrxrzlq";
+const url="https://"+project+".supabase.co";
+function validKey(key){
+ if(typeof key!=="string"||key.length<20)return false;
+ if(/^sb_publishable_[A-Za-z0-9_-]{12,}$/.test(key))return true;
+ const chunks=key.split(".");
+ if(chunks.length!==3||!chunks.every(c=>/^[A-Za-z0-9_-]+$/.test(c)))return false;
+ try{
+   const payload=JSON.parse(Buffer.from(chunks[1],"base64url").toString("utf8"));
+   return payload.role==="anon"&&payload.ref===project&&
+     (typeof payload.exp!=="number"||payload.exp*1000>Date.now());
+ }catch{return false;}
+}
+function candidate(e){
+ const u=e.SUPABASE_URL||e.NEXT_PUBLIC_SUPABASE_URL;
+ const k=e.SUPABASE_ANON_KEY||e.SUPABASE_PUBLISHABLE_KEY||
+   e.NEXT_PUBLIC_SUPABASE_ANON_KEY||e.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+ if(u!==url||!validKey(k))return null;
+ return {u,k};
+}
+const selected=candidate(prod)||candidate(stage);
+if(!selected)throw Error("CN_PUBLIC_SUPABASE_CONFIG_INVALID_BOTH_ENVS");
+if(!/^[A-Za-z0-9._-]+$/.test(selected.k))throw Error("PUBLIC_KEY_INVALID_CHARACTERS");
+fs.writeFileSync(dest,"SUPABASE_URL="+selected.u+"\nSUPABASE_ANON_KEY="+selected.k+"\n",{mode:0o600,flag:"wx"});
+console.log("CN_PUBLIC_SUPABASE_ANON_CONFIG_VERIFIED_NO_PRIVATE_VALUES_EMITTED");
+JS
+test "$(stat -c %a "$PUBLIC_ENV")" = 600 || die PUBLIC_ENV_PERMISSIONS_INSECURE
 cat > "$OVERRIDE" <<'EOF'
 NODE_ENV=production
 HOSTNAME=127.0.0.1
@@ -116,6 +158,7 @@ User=lingxifield
 Group=lingxifield
 WorkingDirectory=$DIR
 EnvironmentFile=$PROD_ENV
+EnvironmentFile=$PUBLIC_ENV
 EnvironmentFile=$OVERRIDE
 ExecStart=$NODE $DIR/server.js
 Restart=on-failure
