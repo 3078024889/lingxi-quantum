@@ -280,7 +280,10 @@ jobs:
           curl --silent --show-error --fail --max-time 35 \
             -H 'Accept-Encoding: identity' -D "$tmp_hdr" \
             "$HOST/api/public/siai-widget" -o "$tmp_json"
-          src_json="$(find .next/server/app/api/public/siai-widget -maxdepth 2 -name 'route.body' -print -quit)"
+          src_json=''
+          for cand in .next/server/app/api/public/siai-widget/route.body .next/server/app/api/public/siai-widget.body .next/server/app/api/public/siai-widget/route.json; do
+            if [ -f "$cand" ]; then src_json="$cand"; break; fi
+          done
           [ -n "$src_json" ] || { echo "::error::SOURCE_WIDGET_JSON_MISSING"; exit 1; }
           test "$(sha256sum "$src_json" | awk '{print $1}')" = "$(sha256sum "$tmp_json" | awk '{print $1}')" || {
             echo "::error::PUBLIC_WIDGET_NOT_DIRECT_ASSET"; exit 1;
