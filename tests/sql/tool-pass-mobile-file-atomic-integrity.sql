@@ -35,7 +35,8 @@ begin
     where request_id=req and stage='mobile-file')<>1
  then raise exception 'MOBILE_STAGE_DUPLICATED';end if;
  result:=public.lingxi_prepare_pass_mobile_file_v1(
-  b,req,mobile_op,'pdf-editor','receipt.pdf','application/pdf',1024,key
+  b,req,mobile_op,'pdf-editor','receipt.pdf','application/pdf',1024,
+  'burn/tool-22222222-2222-4222-8222-222222222222/other-file.pdf'
  );
  if result->>'error'<>'MOBILE_FILE_IDEMPOTENCY_CONFLICT'
  then raise exception 'MOBILE_CROSS_USER_RETRY_LEAK %',result;end if;
