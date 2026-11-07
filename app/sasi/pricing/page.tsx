@@ -4,7 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import SasiPricingCurrencyClient from "@/components/SasiPricingCurrencyClient";
 
-export const dynamic="force-dynamic";
+export const dynamic="force-static";
 const pricingFact=pageGeoFact("sasi-pricing","zh");
 export const metadata:Metadata={robots:{index:false,follow:false},title:pricingFact.title,description:pricingFact.description,alternates:{canonical:"/sasi/pricing"}};
 
