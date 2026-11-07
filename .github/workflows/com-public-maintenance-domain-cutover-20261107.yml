@@ -32,7 +32,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           script='scripts/cloudflare/com-public-route-cutover-20261107.py'
-          test "$(git hash-object "$script")" = '02171eb1a771c6210ed4214b5c14cad622924b3d'
+          test "$(git hash-object "$script")" = '7c70c775ae29b75866c85636076b042a251d8903'
           python3 -m py_compile "$script"
           python3 tests/ops/com-public-route-cutover-test.py
           echo COM_PINNED_PUBLIC_SWITCH_TRANSACTION_AND_ROLLBACK_VERIFIED
@@ -69,6 +69,6 @@ jobs:
       - name: Public-only milestone, commercial features unverified
         shell: bash
         run: |
-          echo COM_PUBLIC_HOMEPAGE_TOOLS_SIAI_MAINTENANCE_LIVE_GATE_SUCCESS
+          echo COM_PUBLIC_EDGE_RELEASE_APPLIED_CHECK_PRIOR_STEP_FOR_DNS_PROPAGATION_STATE
           echo COM_FULL_USER_LOGIN_PAYMENTS_REFUNDS_SASI_EXPORT_NOT_ATTESTED
           echo VERCEL_BACKUP_PROJECT_AND_ORIGINAL_DNS_TARGETS_PRESERVED
