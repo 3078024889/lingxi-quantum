@@ -6,7 +6,7 @@ export type UnifiedNotice={
  id:string;eventKey:string;kind:"announcement"|"payment"|"topup"|"refund"|"withdrawal";
  title:string;body:string;createdAt:string;href?:string|null;read?:boolean;status?:string|null;version?:string;
 };
-type RawNotice={id?:unknown;eventKey?:unknown;kind?:unknown;title?:unknown;body?:unknown;createdAt?:unknown;href?:unknown;read?:unknown};
+type RawNotice={id?:unknown;eventKey?:unknown;kind?:unknown;title?:unknown;body?:unknown;createdAt?:unknown;href?:unknown;read?:unknown;status?:unknown};
 type PublicRow={id?:unknown;titleZh?:unknown;titleEn?:unknown;bodyZh?:unknown;bodyEn?:unknown;publishedAt?:unknown;platform?:unknown};
 const limited=(value:unknown,max=3500)=>typeof value==="string"?value.slice(0,max):"";
 const validDate=(value:unknown)=>typeof value==="string"&&Number.isFinite(Date.parse(value));
