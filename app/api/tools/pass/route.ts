@@ -8,7 +8,7 @@ import {parseCurrency,recommendedCurrency} from "@/lib/payments/currency-book";
 import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
-const commerceReady=()=>toolPassBackendReady()&&process.env.TOOL_PASS_commerceReady()==="true";
+const commerceReady=()=>toolPassBackendReady()&&process.env.TOOL_PASS_COMMERCE_READY==="true";
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function GET(req:NextRequest){
  const {data:{user}}=await createClient().auth.getUser();
