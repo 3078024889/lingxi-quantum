@@ -1,4 +1,4 @@
-name: COM production apex cutover only after exact Cloudflare canary success
+name: COM production apex cutover after verified canary and route propagation guard
 on:
   push:
     branches: [release/com-sasi-full-20261108]
@@ -20,6 +20,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       COM_VERIFIED_CANARY_RUN: '42459483626'
       COM_VERIFIED_CANARY_SHA: '5497ebb8e2baff027864fba2b7be2de3d2ac84e8'
+      COM_CUTOVER_PROPAGATION_GATE: 'consecutive-with-cache-bypass-v2'
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: {persist-credentials: false}
