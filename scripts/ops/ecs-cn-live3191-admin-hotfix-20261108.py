@@ -178,6 +178,22 @@ def baseline():
     check_http("/api/pay/providers", 200)
 
 
+def wait_for_baseline(timeout_seconds=120, interval_seconds=3):
+    """Wait for all four endpoints before declaring a restarted Next.js ready."""
+    deadline = time.monotonic() + timeout_seconds
+    last_error = "NOT_YET_CHECKED"
+    while True:
+        try:
+            baseline()
+            print("CN_3191_POST_RESTART_READINESS_CONFIRMED")
+            return
+        except RuntimeError as exc:
+            last_error = str(exc)
+        if time.monotonic() >= deadline:
+            abort("POST_RESTART_READINESS_TIMEOUT:" + last_error)
+        time.sleep(min(interval_seconds, max(0, deadline - time.monotonic())))
+
+
 def main():
     if len(sys.argv) != 2 or sys.argv[1] not in ("--plan", "--apply"):
         abort("USE_EXPLICIT_--plan_OR_--apply")
@@ -220,7 +236,7 @@ def main():
             run("systemctl", "restart", SERVICE, timeout=50)
             if run("systemctl", "is-active", SERVICE) != "active":
                 abort("POST_RESTART_SYSTEMD_INACTIVE")
-            baseline()
+            wait_for_baseline()
             verify_key(secret)
             print("CN_3191_ADMIN_KEY_ALIAS_APPLIED_VERIFIED_BROWSER_ADMIN_LOGIN_STILL_REQUIRED")
         except Exception:
@@ -228,7 +244,7 @@ def main():
             atomic_write(dest, orig, st)
             try:
                 run("systemctl", "restart", SERVICE, timeout=50)
-                baseline()
+                wait_for_baseline()
                 print("CN_3191_ORIGINAL_ENV_RESTORED")
             except Exception:
                 print("CRITICAL_CN3191_ROLLBACK_HEALTH_FAILURE_CHECK_SYSTEMD", file=sys.stderr)
