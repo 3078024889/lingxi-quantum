@@ -8,7 +8,7 @@ const TYPES:Readonly<Record<string,string>>={
 };
 export type MarketplaceUploadKind="cover"|"detail"|"software";
 const max:Record<MarketplaceUploadKind,number>={cover:1024*1024,detail:1024*1024,software:30*1024*1024};
-export const MARKET_MEDIA_IMAGE_LIMIT=5;
+export const MARKET_MEDIA_IMAGE_LIMIT=8;
 export function marketplaceR2Ready(){return sasiArtifactR2Ready()}
 export function marketplaceUploadLimit(kind:MarketplaceUploadKind){return max[kind];}
 export function marketplaceMime(extension:string){return TYPES[extension.toLowerCase()]||null;}
@@ -39,6 +39,7 @@ export async function marketplaceObjectHead(key:string){
  if(!reply.ok)return null;
  const size=Number(reply.headers.get("content-length")||0);
  const type=reply.headers.get("content-type")||"";
+ const sha256=reply.headers.get("x-amz-meta-sha256")||null;
  if(!Number.isSafeInteger(size)||size<1)return null;
- return {size,contentType:type};
+ return {size,contentType:type,sha256};
 }

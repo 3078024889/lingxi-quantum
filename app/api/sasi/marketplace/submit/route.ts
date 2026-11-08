@@ -4,6 +4,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {marketplaceR2Ready,marketplaceObjectHead,marketplaceOwnedKey,marketplaceUploadLimit} from "@/lib/sasi-marketplace/r2";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
+import {dispatchMarketplaceScan} from "@/lib/sasi-marketplace/dispatch-scan";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -37,6 +38,7 @@ export async function POST(req:NextRequest){
   }).eq("id",listing.id).eq("seller_id",user.id).eq("status","draft")
     .select("id,status").maybeSingle();
   if(savedError||!saved)throw Error("SUBMISSION_CONFLICT");
-  return NextResponse.json({item:saved,message:"QUEUED_FOR_SECURITY_SCAN_AND_HUMAN_REVIEW",published:false},{headers:h});
+  const scanDispatched=await dispatchMarketplaceScan(saved.id);
+  return NextResponse.json({item:saved,scanQueued:scanDispatched,scanDispatched,published:false},{headers:h});
  }catch{return NextResponse.json({error:"SUBMISSION_REQUIRES_MANUAL_REVIEW"},{status:503,headers:h});}
 }

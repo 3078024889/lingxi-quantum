@@ -83,3 +83,50 @@
 .launchStudio{margin-top:16px;border:0;border-radius:12px;padding:12px 21px;background:linear-gradient(105deg,#266deb,#6937cc);color:#fff;font-weight:750;cursor:pointer}
 @media(max-width:960px){.hero{grid-template-columns:1fr}.laptopScene{max-width:470px;width:100%;margin:auto}.benefits,.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:550px){.laptopScene{height:222px}.laptopDisplay{height:150px}.laptopKeyboard{top:165px}.laptopShadow{top:197px}.alienPlant{transform:scale(.85);transform-origin:top left}.crystalCup{transform:scale(.85) rotate(-7deg);transform-origin:top left}.benefits,.steps{grid-template-columns:1fr 1fr;gap:8px}.benefits>div{padding:10px;gap:5px}.benefits strong{font-size:11px}.steps>div{padding:12px}.hero{min-height:0}}
+
+/* Dual-site flagship software storefront: a dark celestial hero and real listings. */
+.main .hero{isolation:isolate;position:relative;min-height:320px;
+ background:radial-gradient(circle at 53% 11%,#e8abff 0 1px,transparent 2px),
+ radial-gradient(circle at 77% 28%,#abceff 0 1px,transparent 2px),
+ radial-gradient(circle at 21% 62%,#b9d9ff 0 1px,transparent 2px),
+ radial-gradient(ellipse at 81% 13%,#783affaa 0%,transparent 44%),
+ radial-gradient(ellipse at 41% 115%,#2756d780 0%,transparent 48%),
+ linear-gradient(112deg,#0b1241 0%,#151348 50%,#111b54 80%,#26104b 100%);
+ border:1px solid #5e4bd677;box-shadow:0 12px 35px #191b6433,inset 0 1px 0 #aebeff5a}
+.main .hero::after{content:"";pointer-events:none;position:absolute;inset:0;z-index:0;
+ background:repeating-linear-gradient(128deg,transparent 0 80px,#90baff0a 82px 85px,transparent 87px 168px)}
+.main .heroCopy{z-index:2}
+.main .hero .eyebrow{color:#c0c7ff}
+.main .hero h1{color:#fff;text-shadow:0 2px 22px #8b6affaa;font-size:clamp(30px,3.9vw,52px)}
+.main .hero p{color:#e4eaff;font-size:15px}
+.main .heroLinks a:first-child{background:linear-gradient(125deg,#248eff,#7c3bdf);
+ border-color:#93baff;color:#fff;box-shadow:0 4px 18px #4780ff66}
+.main .heroLinks button{background:#fff;color:#263a80;border-color:#e1eaff}
+.main .laptopScene{z-index:2;filter:drop-shadow(0 9px 16px #030a2780)}
+.featured{scroll-margin-top:125px;margin-top:32px}
+.featuredBrowse{color:#4a67ca;font-weight:650;font-size:13px;text-decoration:none}
+.featuredBrowse:hover{text-decoration:underline}
+.featuredCard{display:grid;grid-template-columns:minmax(175px,.65fr) minmax(280px,1.3fr) minmax(145px,.48fr);
+ gap:25px;align-items:center;padding:21px;border:1px solid var(--lx-line,#e5ecf3);
+ background:var(--lx-panel,#fff);border-radius:20px;box-shadow:0 8px 25px #203d6710}
+.featuredVisual{height:168px;min-width:0;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;
+ overflow:hidden;border-radius:16px;color:#eaf1ff;background:radial-gradient(circle at 73% 24%,#8b71f5aa,transparent 43%),linear-gradient(132deg,#071c48,#382176 62%,#133779)}
+.featuredVisual>small{position:relative;z-index:1;font-size:10px;letter-spacing:.16em}
+.featuredVisual>strong{position:relative;z-index:1;font-size:44px;letter-spacing:.08em;text-shadow:0 0 20px #93bcff}
+.featuredVisual>span{position:relative;z-index:1;font-size:10px;letter-spacing:.16em}
+.featuredDescription{min-width:0}
+.featuredBadge{display:inline-flex;padding:5px 10px;border-radius:8px;background:#f1edff;color:#5744a2!important;font-size:11px!important;font-weight:700}
+.featuredDescription h3{font-size:21px;line-height:1.45;margin:12px 0}
+.featuredDescription>p:not(.featuredBadge){font-size:13px;line-height:1.8;color:var(--lx-muted,#728394)}
+.featuredChips{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.featuredChips span{border:1px solid var(--lx-line,#e5ecf3);border-radius:6px;padding:5px 7px;color:var(--lx-muted,#728394);font-size:11px}
+.featuredPrice{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.featuredPrice strong{font-size:28px;white-space:nowrap}
+.featuredPrice small{font-size:12px;color:var(--lx-muted,#728394)}
+.featuredAction{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;
+ background:linear-gradient(115deg,#365cf7,#713bdb);color:#fff!important;font-size:13px;font-weight:700;
+ border-radius:10px;padding:12px 15px;margin-top:14px;white-space:nowrap}
+.featuredAction:hover{filter:brightness(1.08)}
+@media(max-width:960px){.featuredCard{grid-template-columns:180px 1fr}.featuredPrice{grid-column:2}}
+@media(max-width:610px){.main .hero{min-height:0}.featuredCard{grid-template-columns:1fr;padding:16px;gap:16px}
+ .featuredVisual{height:156px}.featuredPrice{grid-column:auto}.featuredAction{width:100%}}

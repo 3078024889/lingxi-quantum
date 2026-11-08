@@ -8,6 +8,8 @@ import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {getUsdBalanceProduct} from "@/lib/usd-products";
 import {getProduct} from "@/lib/plans";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {isMarketProductId} from "@/lib/sasi-marketplace/fees";
+import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -30,9 +32,13 @@ export async function POST(req:NextRequest){
     const walletProduct=getUsdBalanceProduct(requestedId);
     const passProduct=getProduct(requestedId);
     const isDirectPass=passProduct?.group==="toolpass";
+    const marketProduct=isMarketProductId(requestedId)?await resolveMarketplaceProduct(requestedId):null;
     const product=walletProduct|| (isDirectPass?{
       id:passProduct!.id,amountUsd:passProduct!.priceUsd,nameEn:passProduct!.nameEn,
       wallet:"toolpass" as const
+    }:null)|| (marketProduct?{
+      id:marketProduct.id,amountUsd:marketProduct.priceUsd,nameEn:marketProduct.nameEn,
+      wallet:"market" as const,sellerId:marketProduct.sellerId
     }:null);
     if(!product)return NextResponse.json({error:"INVALID_USD_PRODUCT"},{status:400});
 
@@ -40,6 +46,8 @@ export async function POST(req:NextRequest){
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
+    if(marketProduct?.sellerId===user.id)
+      return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
 
     const admin=createAdminClient();
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-paypal",userId:user.id,accountLimit:60,ipLimit:180});
@@ -59,7 +67,7 @@ export async function POST(req:NextRequest){
     if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});
 
     const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
-    const fallback=isDirectPass?"/tools/pass":"/sasi/pricing";
+    const fallback=isDirectPass?"/tools/pass":marketProduct?"/account/software":"/sasi/pricing";
     const dest=safeLocalReturnPath(body?.returnPath,fallback);
 
     try{
@@ -68,7 +76,9 @@ export async function POST(req:NextRequest){
         description:product.nameEn,
         referenceId:order.id,
         returnUrl:`${baseUrl}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(dest)}`,
-        cancelUrl:isDirectPass?`${baseUrl}/tools/pass?canceled=1`:`${baseUrl}/checkout-usd?productId=${encodeURIComponent(product.id)}&canceled=1`,
+        cancelUrl:isDirectPass?`${baseUrl}/tools/pass?canceled=1`:
+          marketProduct?`${baseUrl}/sasi/marketplace/${encodeURIComponent(requestedId.slice("sasi-market:".length))}?canceled=1`:
+          `${baseUrl}/checkout-usd?productId=${encodeURIComponent(product.id)}&canceled=1`,
       });
       const linked=await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id).eq("status","pending");
       if(linked.error)throw linked.error;
