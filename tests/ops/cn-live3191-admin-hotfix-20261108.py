@@ -35,6 +35,46 @@ class Live3191KeyTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError,"DUPLICATE_ENV_VARIABLE"):
             target.value(original,"SUPABASE_SECRET_KEY")
 
+    def test_three_environment_files_preserve_systemd_order(self):
+        files="/etc/lingxifield/production.env (ignore_errors=no) /etc/lingxifield/payment.env (ignore_errors=no) /etc/lingxifield/runtime.env (ignore_errors=no)"
+        texts={
+          "/etc/lingxifield/production.env":"SUPABASE_URL=https://sxsgdpqojepgbbrxrzlq.supabase.co\\nSUPABASE_SECRET_KEY=sb_secret_placeholder\\n",
+          "/etc/lingxifield/payment.env":"PAYMENT_API_ENABLED=false\\n",
+          "/etc/lingxifield/runtime.env":"SUPABASE_SERVICE_ROLE_KEY=invalid-legacy\\n"
+        }
+        def run(*args, **kwargs):
+            if args[:2]==("systemctl","is-active"):return "active"
+            if "WorkingDirectory" in args:return "/opt/lingxifield/releases/86b956c9700ede4a537c021af3a0dc1df825fa9b"
+            if "EnvironmentFiles" in args:return files
+            if "Environment" in args:return ""
+            raise AssertionError("unknown systemctl query")
+        def fake_read(p, *args, **kwargs):
+            return texts[str(p)]
+        with mock.patch.object(target,"run",side_effect=run), \\
+             mock.patch.object(target,"assert_secure_file"), \\
+             mock.patch.object(pathlib.Path,"read_text",fake_read):
+            dest=target.effective_file()
+        self.assertEqual(str(dest),"/etc/lingxifield/runtime.env")
+
+    def test_three_environment_files_wrong_project_aborts(self):
+        files="/etc/lingxifield/a.env (ignore_errors=no) /etc/lingxifield/b.env (ignore_errors=no) /etc/lingxifield/c.env (ignore_errors=no)"
+        texts={
+          "/etc/lingxifield/a.env":"SUPABASE_URL=https://wrong-project.supabase.co\\n",
+          "/etc/lingxifield/b.env":"SUPABASE_SERVICE_ROLE_KEY=old\\n",
+          "/etc/lingxifield/c.env":"PAYMENT_READY=false\\n"
+        }
+        def run(*args, **kwargs):
+            if args[:2]==("systemctl","is-active"):return "active"
+            if "WorkingDirectory" in args:return "/opt/lingxifield/86b956c9700ede4a537c021af3a0dc1df825fa9b"
+            if "EnvironmentFiles" in args:return files
+            if "Environment" in args:return ""
+            raise AssertionError("unknown query")
+        with mock.patch.object(target,"run",side_effect=run), \\
+             mock.patch.object(target,"assert_secure_file"), \\
+             mock.patch.object(pathlib.Path,"read_text",lambda p,*a,**k:texts[str(p)]):
+            with self.assertRaisesRegex(RuntimeError,"LIVE_SERVICE_EFFECTIVE_PROJECT_MISMATCH"):
+                target.effective_file()
+
     def test_script_targets_live_3191_not_retired_ports(self):
         self.assertEqual(target.SERVICE,"lingxifield-cn-release-86b956c9700e")
         self.assertIn("86b956c9700ede4a537c021af3a0dc1df825fa9b",target.RELEASE)
