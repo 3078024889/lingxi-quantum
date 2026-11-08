@@ -89,7 +89,7 @@ export default function AllToolsPassPage(){
     if(response.status===401){setMessage(c.login);return;}
     if(!response.ok||!data.url)throw Error("PAYPAL_ORDER_UNAVAILABLE");
     const target=new URL(data.url);
-    if(target.protocol!=="https:"||!/(^|\\.)paypal\\.com$/.test(target.hostname))
+    if(target.protocol!=="https:"||!/(^|\.)paypal\.com$/.test(target.hostname))
      throw Error("UNSAFE_PAYPAL_URL");
     window.location.assign(target.href);
     return;
