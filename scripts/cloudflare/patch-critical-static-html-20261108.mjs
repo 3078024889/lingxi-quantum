@@ -14,6 +14,11 @@ const routes={
  "/announcements":"announcements.html",
  "/en/siai":"en-siai.html",
  "/ja/siai":"ja-siai.html",
+ "/ko/siai":"ko-siai.html",
+ "/fr/siai":"fr-siai.html",
+ "/de/siai":"de-siai.html",
+ "/es/siai":"es-siai.html",
+ "/pt/siai":"pt-siai.html",
  "/ar/siai":"ar-siai.html"
 };
 for(const [route,file] of Object.entries(routes)){
@@ -66,4 +71,4 @@ const replacement=[
  needle
 ].join("\n");
 await writeFile(target,source.replace(needle,replacement));
-console.log("COM_EIGHT_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");
+console.log("COM_FOURTEEN_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");
