@@ -1,0 +1,23 @@
+name: Retired SASI cloud resource inventory (READ ONLY)
+on:
+  push:
+    branches: [cleanup/retired-sasi-field-20261108]
+    paths:
+      - .github/workflows/retired-sasi-cloud-inventory.yml
+      - scripts/cloudflare/retirement-inventory.mjs
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Read worker routes, service bindings and schedules without secret values
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/cloudflare/retirement-inventory.mjs
