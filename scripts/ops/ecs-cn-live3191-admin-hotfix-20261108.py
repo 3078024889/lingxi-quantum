@@ -68,13 +68,40 @@ def effective_file():
     if RELEASE not in wd:
         abort("LIVE_SERVICE_RELEASE_VERSION_MISMATCH")
     envs = run("systemctl", "show", "-p", "EnvironmentFiles", "--value", SERVICE)
-    found = sorted(set(re.findall(r"/etc/lingxifield/[A-Za-z0-9_.-]+\.env", envs)))
-    if len(found) != 1:
-        abort("EXPECTED_ONE_LIVE_ENVFILE_GOT_" + str(len(found)))
+    # Keep systemd declaration order: the LAST EnvironmentFile has precedence
+    # if the same variable occurs in multiple files. Never sort these paths.
+    found = re.findall(r"(/[^\\s()]+\\.env)\\s+\\(ignore_errors=(?:yes|no)\\)", envs)
+    if not found:
+        # Fail closed on a systemd format change rather than guessing.
+        abort("ENVFILE_SYSTEMD_FORMAT_NOT_RECOGNIZED")
+    paths = [pathlib.Path(path) for path in found]
+    if len(paths) < 1 or len(paths) > 6 or len(set(str(p) for p in paths)) != len(paths):
+        abort("ENVFILE_COUNT_OR_DUPLICATE_UNSAFE_" + str(len(paths)))
+    for p in paths:
+        if str(p.parent) != "/etc/lingxifield":
+            abort("ENVFILE_OUTSIDE_APPROVED_DIRECTORY")
+        assert_secure_file(p)
     inline = run("systemctl", "show", "-p", "Environment", "--value", SERVICE)
     if "SUPABASE_SERVICE_ROLE_KEY=" in inline or "SUPABASE_SECRET_KEY=" in inline:
         abort("SYSTEMD_INLINE_ADMIN_KEY_OVERRIDES_FILE")
-    return pathlib.Path(found[0])
+    # Evaluate key locations and the Supabase project without logging values.
+    values = {}
+    for p in paths:
+        body = p.read_text("utf-8")
+        for name in ("SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_URL",
+                     "SUPABASE_SERVICE_ROLE_KEY", "SUPABASE_SECRET_KEY"):
+            v = value(body, name)
+            if v is not None:
+                values[name] = v
+    effective_origin = values.get("SUPABASE_URL") or values.get("NEXT_PUBLIC_SUPABASE_URL")
+    if effective_origin != SUPABASE:
+        abort("LIVE_SERVICE_EFFECTIVE_PROJECT_MISMATCH")
+    # Patch the last file, so a later file cannot override the repaired alias.
+    # The script backs up ONLY that last file and never touches the other two.
+    print("LIVE_ENV_FILES_COUNT", len(paths))
+    print("LIVE_ENV_LAST_FILE", str(paths[-1]))
+    print("LIVE_LEGACY_KEY_PRESENT", bool(values.get("SUPABASE_SERVICE_ROLE_KEY")))
+    return paths[-1]
 
 
 def check_http(path, expected, port=3191):
@@ -171,10 +198,6 @@ def main():
         secret = value(src, "SUPABASE_SECRET_KEY") or ""
         verify_key(secret)
         baseline()
-        if dest != SOURCE:
-            live_origin = value(dest_text, "SUPABASE_URL") or value(dest_text, "NEXT_PUBLIC_SUPABASE_URL")
-            if live_origin != SUPABASE:
-                abort("LIVE_SERVICE_PROJECT_MISMATCH")
         patched = safe_patch(dest_text, secret).encode("utf-8")
         print("ACTIVE_SERVICE", SERVICE, "PORT", 3191)
         print("ACTIVE_ENV_FILE", str(dest))
