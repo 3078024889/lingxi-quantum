@@ -30,8 +30,7 @@ CREATE TABLE IF NOT EXISTS public.sasi_market_listings (
   scan_status text NOT NULL DEFAULT 'unscanned'
     CHECK(scan_status IN ('unscanned','clean','infected','scan_failed')),
   quarantine_path text,
-  delivery_bucket text NOT NULL DEFAULT 'sasi-market-delivery'
-    CHECK(delivery_bucket='sasi-market-delivery'),
+  -- File location is an R2 private object key. No binary data in PostgreSQL/ECS.
   delivery_path text,
   sha256 text CHECK(sha256 IS NULL OR sha256 ~ '^[0-9a-f]{64}$'),
   file_size_bytes bigint CHECK(file_size_bytes IS NULL OR (file_size_bytes BETWEEN 1 AND 31457280)),
@@ -161,18 +160,31 @@ DROP POLICY IF EXISTS sasi_market_payouts_own_select ON public.sasi_market_payou
 CREATE POLICY sasi_market_payouts_own_select ON public.sasi_market_payouts
  FOR SELECT TO authenticated USING(seller_id=(SELECT auth.uid()));
 
--- File buckets remain PRIVATE. Upload URLs are issued by authenticated server
--- endpoints with strict prefix/rate limits; no public upload or download policy.
-INSERT INTO storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
-VALUES
- ('sasi-market-quarantine','sasi-market-quarantine',false,31457280,ARRAY['application/zip','application/x-zip-compressed','application/octet-stream']),
- ('sasi-market-delivery','sasi-market-delivery',false,31457280,ARRAY['application/zip','application/x-zip-compressed','application/octet-stream'])
-ON CONFLICT(id) DO NOTHING;
-DO $$
-BEGIN
- IF EXISTS(SELECT 1 FROM storage.buckets WHERE id IN ('sasi-market-quarantine','sasi-market-delivery') AND public=true)
- THEN RAISE EXCEPTION 'SASI_MARKET_PRIVATE_BUCKET_REQUIRED'; END IF;
-END $$;
+-- Storage is Cloudflare R2 (R2_BUCKET_SASI_ARTIFACTS), using direct
+-- browser-to-R2 presigned PUT; database contains metadata and ownership only.
+-- Bucket must remain PRIVATE; scanner copies verified ZIP from quarantine/
+-- to an approved delivery prefix. Never expose quarantine keys as downloads.
+CREATE TABLE IF NOT EXISTS public.sasi_market_media (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  listing_id uuid NOT NULL REFERENCES public.sasi_market_listings(id) ON DELETE RESTRICT,
+  seller_id uuid NOT NULL REFERENCES public.sasi_market_sellers(user_id) ON DELETE RESTRICT,
+  kind text NOT NULL CHECK(kind IN ('cover','detail')),
+  object_key text NOT NULL UNIQUE CHECK(length(object_key)>16 AND object_key LIKE 'sasi/%/market/%/images/%' AND object_key NOT LIKE '%..%'),
+  declared_mime text NOT NULL CHECK(declared_mime IN ('image/png','image/jpeg','image/webp')),
+  declared_size bigint NOT NULL CHECK(declared_size BETWEEN 1 AND 1048576),
+  verified_size bigint CHECK(verified_size BETWEEN 1 AND 1048576),
+  status text NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','awaiting_review','approved','rejected')),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  reviewed_at timestamptz
+);
+CREATE INDEX IF NOT EXISTS sasi_market_media_listing_idx ON public.sasi_market_media(listing_id,status,kind);
+ALTER TABLE public.sasi_market_media ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON public.sasi_market_media FROM PUBLIC,anon,authenticated;
+GRANT ALL ON public.sasi_market_media TO service_role;
+GRANT SELECT (id,listing_id,seller_id,kind,status,created_at) ON public.sasi_market_media TO authenticated;
+DROP POLICY IF EXISTS sasi_market_media_own_select ON public.sasi_market_media;
+CREATE POLICY sasi_market_media_own_select ON public.sasi_market_media
+ FOR SELECT TO authenticated USING(seller_id=(SELECT auth.uid()));
 
 -- Only a verified merchant callback uses this function through a service_role
 -- endpoint. All order amount, product version and state checks are server-side.
