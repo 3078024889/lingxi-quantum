@@ -105,14 +105,15 @@ export async function POST(req:NextRequest){
   }
   if(action==="listing.publish"){
    const {data:listing,error}=await admin.from("sasi_market_listings")
-    .select("id,seller_id,delivery_path,file_size_bytes,scan_status,status").eq("id",targetId).single();
+    .select("id,seller_id,delivery_path,file_size_bytes,sha256,scan_status,status").eq("id",targetId).single();
    if(error||!listing||listing.status!=="submitted"||listing.scan_status!=="clean"||!listing.delivery_path)
     return respond({error:"VERIFIED_SCAN_REQUIRED"},409);
    const owned=marketplaceOwnedKey(listing.seller_id,listing.id,listing.delivery_path);
    if(!owned.includes("/approved/")||!owned.endsWith(".zip"))
     return respond({error:"APPROVED_OBJECT_REQUIRED"},409);
    const head=await marketplaceObjectHead(owned);
-   if(!head||head.size!==Number(listing.file_size_bytes)||head.size>30*1024*1024)
+   if(!head||head.size!==Number(listing.file_size_bytes)||head.size>30*1024*1024||
+       head.sha256!==listing.sha256)
     return respond({error:"APPROVED_OBJECT_UNAVAILABLE"},409);
   }
   const group=action.split(".")[0];

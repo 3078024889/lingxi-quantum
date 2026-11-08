@@ -102,3 +102,19 @@ test("submitted listings cannot be modified during moderation and review rejects
  assert.match(review,/uploadAge<330_000/);
  assert.match(review,/verified_size,declared_mime,status,created_at/);
 });
+
+test("seller uploads ZIP and photos before submitting, and delivery checks scanned artifact SHA",()=>{
+ const market=file("components/SasiOpenMarketplace.tsx");
+ assert.match(market,/const submitReview=async\(item:Listing\)/);
+ assert.match(market,/onClick=\{\(\)=>void submitReview\(item\)\}/);
+ assert.match(market,/提交商品审核/);
+ const ticket=file("app/api/sasi/marketplace/upload-ticket/route.ts");
+ assert.match(ticket,/marketplaceOwnedKey/);
+ assert.match(ticket,/if\(!listing.quarantine_path\)/);
+ const store=file("lib/sasi-marketplace/r2.ts");
+ assert.match(store,/x-amz-meta-sha256/);
+ const delivery=file("app/api/sasi/marketplace/download/route.ts");
+ assert.match(delivery,/head.sha256!==listing.sha256/);
+ const review=file("app/api/sasi/marketplace/admin/review/route.ts");
+ assert.match(review,/head.sha256!==listing.sha256/);
+});
