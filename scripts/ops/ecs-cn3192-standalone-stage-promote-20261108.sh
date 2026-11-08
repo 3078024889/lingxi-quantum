@@ -113,7 +113,7 @@ if [[ "$MODE" = --verify-stage ]];then
   [[ "$dir" =~ ^/opt/lingxifield/cn-staged-releases/[a-f0-9]{40}$ ]] ||
     { echo "CN3192_STAGED_WORKDIR_NOT_EXPECTED" >&2;exit 1; }
   test -s "$dir/RELEASE_SOURCE_SHA" || { echo "CN3192_SOURCE_SHA_MISSING" >&2;exit 1; }
-  actual="$(tr -d '\\r\\n' < "$dir/RELEASE_SOURCE_SHA")"
+  actual="$(tr -d '\r\n' < "$dir/RELEASE_SOURCE_SHA")"
   [[ "$actual" =~ ^[a-f0-9]{40}$ && "${actual:0:12}" = "$SHORT" && "$dir" = "$BASE/$actual" ]] ||
     { echo "CN3192_SOURCE_SHA_MISMATCH" >&2;exit 1; }
   grep -Fxq "EnvironmentFile=$STAGE_ENV" "$UNIT" ||
