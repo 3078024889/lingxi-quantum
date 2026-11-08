@@ -6,6 +6,7 @@ The main .com Worker must NOT receive a new Supabase service-role key merely to 
 
 Use a **separate tiny Cloudflare Worker**, no secrets, strictly mapped to:
 - `lingxifield.com/api/account/money-admin*`
+- `lingxifield.com/api/site-announcements*` (public verified notices; only after .cn endpoint publishes)
 - `www.lingxifield.com/api/account/money-admin*`
 
 A more-specific route wins over `lingxifield.com/*`. The Worker forwards the same-domain login cookie only to `https://lingxifield.cn` over HTTPS, and .cn performs the existing validated admin email/rights check and returns data. It rejects unrelated API/payment routes, foreign mutation origins, redirects and any Set-Cookie from the upstream. No merchant operations are created by the bridge.
