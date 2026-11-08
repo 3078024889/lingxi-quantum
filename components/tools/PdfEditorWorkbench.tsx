@@ -347,12 +347,12 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
   }
   const geometric=overlayDragGrip(host,target,x,y);
   if(geometric==="se"||geometric==="rotate")return geometric;
-  // Touch hit-testing may choose the much larger overlay instead of a 44px
-  // transparent corner button. The corner geometry is still a resize intent.
+  // Mobile touch may hit the overlay instead of the visible corner after
+  // scrolling. Keep an accessible finger-sized capture zone around the grip.
   const corner=host.querySelector<HTMLElement>('[data-testid="pdf-grip-se"]');
   if(corner&&corner.getClientRects().length){
-   const r=host.getBoundingClientRect();
-   if(x>=r.right-28&&x<=r.right+28&&y>=r.bottom-28&&y<=r.bottom+28)return "se";
+   const r=host.getBoundingClientRect(),radius=40;
+   if(x>=r.right-radius&&x<=r.right+radius&&y>=r.bottom-radius&&y<=r.bottom+radius)return "se";
   }
   return null;
  }
@@ -463,8 +463,20 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(t)touchCornerUpdate.current(t.clientX,t.clientY);
   // Native window touchend cleans the snapshot after the final position is applied.
  }}
- onPointerDown={e=>{if(editingTextId!==o.id){const grip=overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);if(grip)startGesture(e,o.id,grip)}}}
- onTouchStart={e=>{if(editingTextId!==o.id){const t=e.changedTouches[0];if(t){const grip=overlayDragGrip(e.currentTarget,e.target,t.clientX,t.clientY);if(grip)startTouchGesture(e,o.id,grip)}}}}
+ onPointerDown={e=>{
+  if(editingTextId===o.id)return;
+  // The capture phase has resolved the corner from touch geometry.
+  // Bubbling must not replace that immutable drag origin with "move".
+  if(e.pointerType==="touch"&&touchCornerRef.current?.id===o.id)return;
+  const grip=overlayDragGrip(e.currentTarget,e.target,e.clientX,e.clientY);
+  if(grip)startGesture(e,o.id,grip);
+ }}
+ onTouchStart={e=>{
+  if(editingTextId===o.id||touchCornerRef.current?.id===o.id)return;
+  const t=e.changedTouches[0];
+  if(t){const grip=overlayTouchGrip(e.currentTarget,e.target,t.clientX,t.clientY);
+   if(grip)startTouchGesture(e,o.id,grip);}
+ }}
  onDoubleClick={e=>{if(o.kind==="text"){e.stopPropagation();setSelectedOverlayId(o.id);setEditingTextId(o.id)}}}
  onKeyDown={e=>{if(e.target!==e.currentTarget)return;if(e.key==="Delete"||e.key==="Backspace"){e.preventDefault();if(o.nativeImageTarget)deleteNativeImage(o);else setOverlays(v=>v.filter(x=>x.id!==o.id))}else if(e.key==="Enter"&&o.kind==="text"){e.preventDefault();setEditingTextId(o.id)}}}
  className={"absolute z-[4] select-none border-2 "+(selectedOverlayId===o.id&&editingTextId!==o.id?"border-sky-500":"border-transparent")}
