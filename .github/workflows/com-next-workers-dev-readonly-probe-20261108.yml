@@ -1,0 +1,32 @@
+name: COM next Worker workers.dev propagation and public HTTP read-only probe
+on:
+  push:
+    branches: [ui/sasi-hyperdimensional-marketplace-20261108]
+    paths: ['.github/workflows/com-next-workers-dev-readonly-probe-20261108.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - name: Independently confirm workers.dev DNS, TLS and public shell without mutations
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          url='https://lingxifield-com-next-20261108.3078024889.workers.dev'
+          for i in $(seq 1 10);do
+            h="$(mktemp)"
+            code="$(curl -4sS --connect-timeout 7 --max-time 20 -D "$h" -o /dev/null -w '%{http_code}' "$url/" || true)"
+            echo "COM_NEXT_PROPAGATION_PROBE trial=$i root=$code"
+            grep -i -m1 '^server:' "$h" || true
+            if [[ "$code" == 200 ]];then
+              test "$(curl -4sS --connect-timeout 7 --max-time 20 -o /dev/null -w '%{http_code}' "$url/sasi")" = 200
+              test "$(curl -4sS --connect-timeout 7 --max-time 20 -o /dev/null -w '%{http_code}' "$url/tools/pass")" = 200
+              echo COM_NEXT_PUBLIC_HOST_RECOVERED_200
+              exit 0
+            fi
+            rm -f "$h"
+            sleep 8
+          done
+          echo COM_NEXT_HOST_NOT_READY_NO_PROD_CUTOVER
+          exit 1
