@@ -8,7 +8,7 @@ const TYPES:Readonly<Record<string,string>>={
 };
 export type MarketplaceUploadKind="cover"|"detail"|"software";
 const max:Record<MarketplaceUploadKind,number>={cover:1024*1024,detail:1024*1024,software:30*1024*1024};
-export const MARKET_MEDIA_IMAGE_LIMIT=5;
+export const MARKET_MEDIA_IMAGE_LIMIT=8;
 export function marketplaceR2Ready(){return sasiArtifactR2Ready()}
 export function marketplaceUploadLimit(kind:MarketplaceUploadKind){return max[kind];}
 export function marketplaceMime(extension:string){return TYPES[extension.toLowerCase()]||null;}
