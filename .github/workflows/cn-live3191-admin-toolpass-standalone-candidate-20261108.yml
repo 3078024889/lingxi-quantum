@@ -91,7 +91,8 @@ jobs:
           printf '%s\n' "${GITHUB_SHA}" > .next/standalone/RELEASE_SOURCE_SHA
           tar -C .next/standalone -czf cn-20261108-admin-toolpass-standalone.tar.gz .
           sha256sum cn-20261108-admin-toolpass-standalone.tar.gz > cn-20261108-admin-toolpass-standalone.sha256
-          tar -tzf cn-20261108-admin-toolpass-standalone.tar.gz | grep -Fxq './server.js'
+          tar -tzf cn-20261108-admin-toolpass-standalone.tar.gz > cn-20261108-archive-manifest.txt
+          grep -Fxq './server.js' cn-20261108-archive-manifest.txt
           test "$(stat -c '%s' cn-20261108-admin-toolpass-standalone.tar.gz)" -lt 1300000000
           echo "CN_RELEASE_ARCHIVE_BYTES=$(stat -c '%s' cn-20261108-admin-toolpass-standalone.tar.gz)"
           echo "CN_RELEASE_SOURCE_SHA=${GITHUB_SHA}"
