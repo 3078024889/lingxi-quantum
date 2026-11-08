@@ -48,7 +48,8 @@ test("SASI keeps original user high-dimensional imagery and only reviewed real l
  assert.match(artwork,/styles\.originalArtwork/);
  assert.match(style,/hero-original\.webp/);
  assert.match(artwork,/\bsetListings\(values\[0\]\.items\)/);
- assert.match(artwork,/SASI 智能软件/);
+ assert.match(artwork,/SASI<\\/em>/);
+ assert.match(artwork,/智能软件/);
  assert.match(artwork,/开发者作品/);
  assert.match(artwork,/自动交付/);
  assert.match(artwork,/source|源码/i);
