@@ -30,10 +30,10 @@ export async function POST(req:NextRequest){
   const path=`${user.id}/${listing.id}/${randomUUID()}.zip`;
   const {data,error}=await admin.storage.from("sasi-market-quarantine").createSignedUploadUrl(path);
   if(error||!data)throw Error("PRIVATE_UPLOAD_UNAVAILABLE");
-  const {error:updateError}=await admin.from("sasi_market_listings")
+  const {data:reservation,error:updateError}=await admin.from("sasi_market_listings")
     .update({quarantine_path:path}).eq("id",listing.id).eq("seller_id",user.id)
-    .is("quarantine_path",null).eq("status","draft");
-  if(updateError)throw Error("UPLOAD_RESERVATION_FAILED");
+    .is("quarantine_path",null).eq("status","draft").select("id").maybeSingle();
+  if(updateError||!reservation)throw Error("UPLOAD_RESERVATION_FAILED");
   return NextResponse.json({path,token:data.token,bucket:"sasi-market-quarantine",maxBytes:31457280},
     {headers:nocache});
  }catch{return NextResponse.json({error:"PRIVATE_UPLOAD_NOT_READY"},{status:503,headers:nocache});}
