@@ -32,7 +32,7 @@ async function probe(base,phase,attempts=3){
  const routes=["/","/siai","/tools","/sasi","/sasi/marketplace",
    "/announcements","/api/health","/api/pay/providers",
    "/api/sasi/software/catalog","/api/sasi/marketplace/listings"];
- const staticRoutes=new Set(["/","/siai","/tools","/sasi","/sasi/marketplace","/announcements"]);
+ const staticRoutes=new Set(["/","/siai","/tools","/sasi","/sasi/marketplace","/announcements","/api/sasi/software/catalog"]);
  const maxTries=phase==="POSTCUTOVER"?12:attempts;
  for(const path of routes){
   let consecutive=0;
