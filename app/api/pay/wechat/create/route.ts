@@ -13,6 +13,7 @@ import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth
 import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
@@ -78,6 +79,8 @@ export async function POST(req: NextRequest) {
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     }
+    if(product.group==="toolpass"&&!toolPassBackendReady())
+      return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
     if (product.group === "production" && !sasiTopupProductEnabled(product.id)) {
       return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
