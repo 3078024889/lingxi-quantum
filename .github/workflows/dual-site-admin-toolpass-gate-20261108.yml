@@ -1,0 +1,61 @@
+name: Dual-site admin key & all-tools pass source/build gate (NO DEPLOY)
+on:
+  push:
+    branches: [fix/dual-site-commerce-admin-toolpass-20261108]
+    paths:
+      - 'lib/supabase/admin.ts'
+      - 'lib/nutrition/server.ts'
+      - 'lib/sasi/intelligence/archive-generated-media.ts'
+      - 'app/api/tools/access/route.ts'
+      - 'lib/tools/commerce/tool-server-receipt.ts'
+      - 'app/api/tools/pass/route.ts'
+      - 'app/tools/pass/page.tsx'
+      - 'components/Nav.tsx'
+      - 'components/tools/ToolsHubV11.tsx'
+      - 'components/tools/FileDropzone.tsx'
+      - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
+      - 'scripts/ops/ecs-repair-supabase-admin-key.py'
+      - '.github/workflows/dual-site-admin-toolpass-gate-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dual-site-admin-toolpass-nondeploy
+  cancel-in-progress: true
+jobs:
+  no-secret-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Freeze dependency tree
+        run: pnpm install --frozen-lockfile
+      - name: Test server-only admin key migration and purchase CTAs without real credentials
+        run: |
+          node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
+          python3 -m py_compile scripts/ops/ecs-repair-supabase-admin-key.py
+      - name: Static all-tools and backend billing coverage audits
+        run: |
+          node scripts/audit/unified-tool-pass-coverage.mjs
+          node scripts/audit/unified-tool-pass-server-coverage.mjs
+      - name: TypeScript typecheck
+        run: pnpm exec tsc --noEmit
+      - name: Real Next production build - no deployment or payment transaction
+        run: pnpm build
+      - name: Assert compiled toolpass page and packages present
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -e .next/BUILD_ID
+          test -f .next/server/app/tools/pass.html || test -f .next/server/app/tools/pass.rsc || test -f .next/server/app/tools/pass/page.js
+          echo DUAL_SITE_ADMIN_TOOLPASS_CODE_BUILD_PASS_NO_PAYMENT_OR_PRODUCTION_MUTATIONS
