@@ -21,85 +21,174 @@ const COPY:Record<Language,{
  ar:{title:"باقة جميع الأدوات",subtitle:"باقة واحدة لجميع الأدوات الحالية والقادمة.",free:"استخدام مجاني واحد يومياً لكل حساب وعنوان IP وأداة. يُحسب رفع الملف وبدء معالجته حتى دون تصدير.",new:"تشمل الأدوات الجديدة",week:"7 أيام",month:"30 يوماً",quarter:"90 يوماً",year:"365 يوماً",days:"يوم",buy:"الشراء من الرصيد",processing:"جارٍ تأكيد الشراء…",success:"تم الشراء بنجاح",login:"سجّل الدخول أولاً",insufficient:"الرصيد غير كافٍ",unavailable:"الشراء غير متاح الآن",balance:"الرصيد الموحد",currency:"العملة",wallet:"شحن الرصيد",scope:"تشمل أكثر من 100 أداة عملية. تظل مهام SASI مدفوعة على حدة. الاستخدام اليدوي المعتاد غير محدود ويُمنع الاستخدام الآلي المسيء.",existing:"صالحة حتى",refresh:"تحديث الحالة",confirmation:"سيُخصم الرصيد بالعملة المختارة وستُمدد مدة الباقة."}
 };
 type Currency="CNY"|"USD";
+type PaymentChoice="wallet"|"wechat"|"alipay"|"paypal";
+type Offer=(typeof ALL_TOOLS_PASS_CATALOG)[number];
+
 export default function AllToolsPassPage(){
  const {lang}=useLingxiLang();
- const c=COPY[(lang in COPY?lang:"en") as Language],rtl=lang==="ar";
+ const c=COPY[(lang in COPY?lang:"en") as Language],rtl=lang==="ar",zh=lang==="zh";
  const [currency,setCurrency]=useState<Currency>("CNY");
  const [expiry,setExpiry]=useState<string|null>(null);
+ const [selected,setSelected]=useState<Offer|null>(null);
+ const [method,setMethod]=useState<PaymentChoice>("wallet");
  const [busy,setBusy]=useState(false);
  const [available,setAvailable]=useState(false);
- const [paypalReady,setPaypalReady]=useState(false);
- useEffect(()=>{fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>setPaypalReady(d?.paypal===true)).catch(()=>setPaypalReady(false))},[]);
-
+ const [providers,setProviders]=useState({wechat:false,alipay:false,paypal:false});
  const [message,setMessage]=useState("");
  const [request,setRequest]=useState<{sku:AllToolsPassSku;id:string}|null>(null);
+
  async function refresh(){
-  const r=await fetch("/api/tools/pass?currency="+currency,{cache:"no-store"});
-  if(r.ok){const data=await r.json();setExpiry(data.expiresAt||null);setAvailable(data.available===true);}else setAvailable(false);
+  try {
+   const [p,g]=await Promise.all([
+    fetch("/api/tools/pass?currency="+currency,{cache:"no-store",credentials:"same-origin"}),
+    fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin"}),
+   ]);
+   const data=p.ok?await p.json():null,channels=g.ok?await g.json():null;
+   setExpiry(data?.expiresAt||null);
+   setAvailable(data?.available===true);
+   setProviders({
+    wechat:channels?.wechat===true,
+    alipay:channels?.alipay===true,
+    paypal:channels?.paypal===true
+   });
+  }catch{setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});}
  }
  useEffect(()=>{void refresh()},[currency]);
- async function buy(sku:AllToolsPassSku){
-  if(busy)return;
+
+ const choices=(currency==="CNY"?[
+  {id:"wallet" as const,label:zh?"账户余额":"Wallet balance",ready:available},
+  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:providers.wechat},
+  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:providers.alipay}
+ ]:[
+  {id:"wallet" as const,label:zh?"美元余额":"USD balance",ready:available},
+  {id:"paypal" as const,label:"PayPal",ready:providers.paypal}
+ ]);
+ const selectedChoice=choices.find(x=>x.id===method);
+ function openOffer(offer:Offer){
+  setSelected(offer);setMethod("wallet");setMessage("");setRequest(null);
+  void refresh();
+ }
+ async function confirm(){
+  if(!selected||busy)return;
+  if(!selectedChoice?.ready){
+   setMessage(zh?"当前支付方式暂不可用，请选择其他方式。":"This payment option is currently unavailable.");
+   return;
+  }
+  if(method==="wechat"||method==="alipay"){
+   const query=new URLSearchParams({productId:selected.sku,redirect:"/tools/pass",method});
+   window.location.assign("/checkout?"+query.toString());
+   return;
+  }
   setBusy(true);setMessage("");
-  const id=request?.sku===sku?request.id:crypto.randomUUID();
-  setRequest({sku,id});
   try{
-   const r=await fetch("/api/tools/pass",{method:"POST",headers:{"content-type":"application/json"},
-    body:JSON.stringify({sku,currency,requestId:id})});
-   const data=await r.json().catch(()=>({}));
-   if(r.ok&&data.ok){setMessage(c.success);setRequest(null);await refresh();}
-   else if(r.status===401)setMessage(c.login);
-   else if(r.status===402)setMessage(c.insufficient);
-   else setMessage(c.unavailable);
-  }catch{setMessage(c.unavailable)}finally{setBusy(false)}
- }
- async function payUsdDirect(sku:AllToolsPassSku){
-   if(busy||!paypalReady)return;
-   setBusy(true);setMessage("");
-   try{
-    const r=await fetch("/api/pay/create",{method:"POST",headers:{"content-type":"application/json"},
-      credentials:"same-origin",body:JSON.stringify({productId:sku,returnPath:"/tools/pass"})});
-    const data=await r.json().catch(()=>({}));
-    if(r.status===401){setMessage(c.login);return;}
-    if(!r.ok||!data.url)throw Error("PAYPAL_UNAVAILABLE");
+   if(method==="paypal"){
+    const response=await fetch("/api/pay/create",{
+     method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
+     body:JSON.stringify({productId:selected.sku,returnPath:"/tools/pass"})
+    });
+    const data=await response.json().catch(()=>({}));
+    if(response.status===401){setMessage(c.login);return;}
+    if(!response.ok||!data.url)throw Error("PAYPAL_ORDER_UNAVAILABLE");
     const target=new URL(data.url);
-    if(target.protocol!=="https:"||!/(^|\.)paypal\.com$/.test(target.hostname))throw Error("PAYPAL_URL_UNVERIFIED");
+    if(target.protocol!=="https:"||!/(^|\\.)paypal\\.com$/.test(target.hostname))
+     throw Error("UNSAFE_PAYPAL_URL");
     window.location.assign(target.href);
-   }catch{setMessage(c.unavailable)}finally{setBusy(false)}
+    return;
+   }
+   const id=request?.sku===selected.sku?request.id:crypto.randomUUID();
+   setRequest({sku:selected.sku,id});
+   const response=await fetch("/api/tools/pass",{
+    method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
+    body:JSON.stringify({sku:selected.sku,currency,requestId:id})
+   });
+   const data=await response.json().catch(()=>({}));
+   if(response.ok&&data.ok){setMessage(c.success);setRequest(null);await refresh();setSelected(null);}
+   else if(response.status===401)setMessage(c.login);
+   else if(response.status===402)setMessage(c.insufficient);
+   else setMessage(c.unavailable);
+  }catch{setMessage(c.unavailable);}
+  finally{setBusy(false);}
  }
- return <main dir={rtl?"rtl":"ltr"} className="mx-auto max-w-5xl px-4 py-10 text-[var(--lx-ink)]">
-  <h1 className="mb-3 text-3xl font-bold">{c.title}</h1>
-  <p className="mb-3 text-base">{c.subtitle}</p>
-  <p className="mb-6 text-sm">{c.scope}</p>
-  <div className="mb-5 flex flex-wrap items-center gap-3">
-   <label htmlFor="pass-currency" className="text-sm font-semibold">{c.currency}</label>
-   <select id="pass-currency" value={currency} onChange={e=>{setCurrency(e.target.value as Currency);setRequest(null)}}
-    className="rounded-lg border bg-transparent px-4 py-2 text-base">
-    <option value="CNY">CNY (¥)</option><option value="USD">USD ($)</option>
-   </select>
-   <Link href="/sasi/pricing" className="rounded-lg border px-4 py-2 text-sm underline">{c.wallet}</Link>
+ return <main dir={rtl?"rtl":"ltr"} className="mx-auto max-w-6xl px-4 py-10 text-[var(--lx-ink)] md:px-7">
+  <section className="relative overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-6 py-9 shadow-sm md:px-10 md:py-12">
+   <div className="pointer-events-none absolute -right-20 -top-32 h-72 w-72 rounded-full bg-violet-300/20 blur-3xl"/>
+   <p className="text-xs font-semibold tracking-[.18em] text-violet-600">LINGXIFIELD · TOOLPASS</p>
+   <h1 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">{zh?"一个工具包，畅用全场":c.title}</h1>
+   <p className="mt-4 max-w-2xl text-base leading-8 text-[var(--lx-muted)]">{zh?"100+ 实用工具，一次开通，随心使用。后续新增工具也包含在内。":c.subtitle}</p>
+   <div className="mt-6 flex flex-wrap gap-3 text-sm">
+    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{zh?"100+ 实用工具":"100+ tools"}</span>
+    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{c.new}</span>
+    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{zh?"一次开通，全场畅用":"One pass, every tool"}</span>
+   </div>
+  </section>
+  <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+   <div>
+    <h2 className="text-lg font-semibold">{zh?"选择适合的使用时长":"Choose your plan"}</h2>
+    {expiry&&<p className="mt-1 text-xs text-[var(--lx-muted)]">{c.existing}：{new Date(expiry).toLocaleDateString(zh?"zh-CN":lang)}</p>}
+   </div>
+   <label className="flex items-center gap-3 text-sm">
+    <span className="text-[var(--lx-muted)]">{c.currency}</span>
+    <select aria-label={c.currency} value={currency} onChange={e=>{setCurrency(e.target.value as Currency);setSelected(null);setMessage("");}}
+     className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2.5 text-[var(--lx-ink)]">
+     <option value="CNY">CNY ¥</option><option value="USD">USD $</option>
+    </select>
+   </label>
   </div>
-  {expiry&&<p className="mb-4 text-sm">{c.existing}: {new Date(expiry).toLocaleString(lang==="zh"?"zh-CN":lang)}</p>}
-  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-   {ALL_TOOLS_PASS_CATALOG.map((o,i)=><section key={o.sku} className={"rounded-2xl border p-5 "+(i===3?"border-[var(--lx-ink)]":"border-[var(--lx-line)]")}>
-    <h2 className="text-lg font-bold">{[c.week,c.month,c.quarter,c.year][i]}</h2>
-    <p className="my-4 text-3xl font-semibold">{currency==="CNY"?"¥":"$"}{o.price}</p>
-    <p className="mb-4 text-sm">{c.new}</p>
-    {currency==="CNY"?
-      <Link href={`/checkout?productId=${o.sku}&redirect=%2Ftools%2Fpass`}
-       className="block w-full rounded-xl bg-[var(--lx-ink)] px-3 py-3 text-center text-sm font-semibold text-white">
-       {lang==="zh"?"微信／支付宝直接购买":lang==="en"?"Pay CNY directly":c.buy}</Link>
-      :<button type="button" disabled={busy||!paypalReady} onClick={()=>void payUsdDirect(o.sku)}
-       className="w-full rounded-xl border border-current px-3 py-3 text-sm font-semibold disabled:opacity-50">
-       {busy?c.processing:lang==="zh"?"PayPal 直接购买":"Pay directly with PayPal"}</button>}
-     <button type="button" disabled={busy||!available} onClick={()=>void buy(o.sku)}
-      className="mt-2 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2 text-sm disabled:opacity-50">
-       {c.buy}</button>
+  <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+   {ALL_TOOLS_PASS_CATALOG.map((offer,i)=><section key={offer.sku}
+    className={"relative flex min-h-64 flex-col rounded-3xl border bg-[var(--lx-panel)] p-6 shadow-sm transition hover:shadow-md "+(i===1?"border-violet-500 ring-1 ring-violet-300":"border-[var(--lx-line)]")}>
+    {i===1&&<span className="absolute -top-3 right-5 rounded-full bg-violet-600 px-3 py-1 text-xs font-semibold text-white">{zh?"热门选择":"Popular"}</span>}
+    <h3 className="text-xl font-semibold">{[c.week,c.month,c.quarter,c.year][i]}</h3>
+    <p className="mt-5 font-display text-4xl font-bold tracking-tight">{currency==="CNY"?"¥":"$"}{offer.price}</p>
+    <p className="mt-3 text-sm text-[var(--lx-muted)]">{c.new}</p>
+    <div className="mt-auto pt-7">
+     <button type="button" onClick={()=>openOffer(offer)}
+      className={"w-full rounded-xl px-4 py-3 text-sm font-semibold transition "+(i===1?"bg-violet-600 text-white hover:bg-violet-700":"border border-[var(--lx-line)] bg-[var(--lx-soft)] text-[var(--lx-ink)] hover:border-violet-400")}>
+      {zh?"立即开通":c.buy}
+     </button>
+    </div>
    </section>)}
   </div>
-  {!available&&<p role="status" className="mt-5 rounded-xl border p-3 text-sm">{lang==="zh"?"余额购买暂时不可用，可先查看直接支付渠道是否已开放。":c.unavailable}</p>}
-  <p className="mt-5 text-sm">{c.confirmation}</p>
-  {message&&<p role="status" className="mt-3 rounded-xl border px-4 py-3 text-sm">{message}</p>}
-  <button type="button" onClick={()=>void refresh()} className="mt-4 text-sm underline">{c.refresh}</button>
+  <p className="mt-5 text-center text-sm text-[var(--lx-muted)]">{zh?"一次开通，享有期内全场工具使用权益。":"One pass covers all practical tools throughout its term."}</p>
+  {message&&!selected&&<p role="status" className="mt-4 rounded-xl border border-[var(--lx-line)] p-4 text-sm">{message}</p>}
+  {selected&&<div role="presentation" className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/50 p-4" onClick={()=>{if(!busy)setSelected(null)}}>
+   <section role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" dir={rtl?"rtl":"ltr"}
+    onClick={event=>event.stopPropagation()} className="w-full max-w-lg rounded-3xl bg-[var(--lx-panel)] p-6 shadow-2xl md:p-8">
+    <div className="flex items-start justify-between gap-4">
+     <div>
+      <p className="text-xs font-semibold tracking-widest text-violet-600">TOOLPASS</p>
+      <h2 id="toolpass-checkout-title" className="mt-2 text-2xl font-bold">{zh?"确认开通":c.title}</h2>
+     </div>
+     <button type="button" disabled={busy} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}
+      className="rounded-full border border-[var(--lx-line)] px-3 py-1.5 text-lg">×</button>
+    </div>
+    <div className="mt-6 flex items-center justify-between rounded-2xl bg-[var(--lx-soft)] p-4">
+     <div><p className="font-semibold">{zh?"全场工具包 · ":"ToolPass · "}{selected.days}{c.days}</p>
+      <p className="mt-1 text-xs text-[var(--lx-muted)]">{zh?"包含现有及未来新增的实用工具":c.new}</p>
+     </div>
+     <p className="text-2xl font-bold">{currency==="CNY"?"¥":"$"}{selected.price}</p>
+    </div>
+    <p className="mt-6 text-sm font-semibold">{zh?"选择支付方式":"Payment method"}</p>
+    <div className="mt-3 grid gap-2">
+     {choices.map(choice=><button type="button" key={choice.id} disabled={!choice.ready||busy}
+      onClick={()=>{setMethod(choice.id);setMessage("");}}
+      aria-pressed={method===choice.id} className={"flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition "+
+       (method===choice.id&&choice.ready?"border-violet-500 bg-violet-500/10":"border-[var(--lx-line)]")+
+       (!choice.ready?" cursor-not-allowed opacity-50":" hover:border-violet-400")}>
+      <span className="flex items-center gap-3"><span aria-hidden="true" className={"h-4 w-4 rounded-full border-2 "+(method===choice.id&&choice.ready?"border-violet-600 bg-violet-600":"border-slate-300")}/>{choice.label}</span>
+      <span className="text-xs text-[var(--lx-muted)]">{choice.ready?(zh?"可使用":"Available"):(zh?"暂未开放":"Unavailable")}</span>
+     </button>)}
+    </div>
+    {message&&<p role="alert" className="mt-4 text-sm text-amber-700">{message}</p>}
+    <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}
+     className="mt-6 w-full rounded-xl bg-violet-600 px-5 py-3.5 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-40">
+     {busy?c.processing:zh?"确认支付 · "+(currency==="CNY"?"¥":"$")+selected.price:"Continue · "+(currency==="CNY"?"¥":"$")+selected.price}
+    </button>
+    {!choices.some(choice=>choice.ready)&&<p role="status" className="mt-3 text-center text-sm text-[var(--lx-muted)]">
+     {zh?"当前支付方式暂未开放，稍后再来看看。":"Payment options are currently unavailable."}
+    </p>}
+    <div className="mt-4 text-center"><Link href="/ai-wallet" className="text-sm text-[var(--lx-muted)] underline underline-offset-4">{zh?"查看余额与充值":"View balance & top up"}</Link></div>
+   </section>
+  </div>}
  </main>;
 }
