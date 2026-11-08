@@ -74,7 +74,7 @@ mapfile -t LIVE_ENV_FILES < <(
   systemctl show "$SVC" -p EnvironmentFiles --value |
     python3 -c 'import re,sys
 s=sys.stdin.read()
-for p in re.findall(r"(/[^\\s()]+\\.env)\\s+\\(ignore_errors=(?:yes|no)\\)",s):
+for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s):
  print(p)'
 )
 (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 6 )) ||
@@ -136,15 +136,19 @@ out.append("TOOL_PASS_BACKEND_READY=true")
 fd=os.open(dst,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
 with os.fdopen(fd,"w") as f:f.write("\n".join(out)+"\n")
 PY
-  LIVE_ENV_DIRECTIVES=""
-  for src in "${LIVE_ENV_FILES[@]}"; do LIVE_ENV_DIRECTIVES+="EnvironmentFile=$src"
+  {
+    cat <<EOF
+[Unit]
 Description=LINGXIFIELD CN verified 3192 admin/toolpass standalone ($SHORT)
 After=network-online.target
 Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=$DEST
-${LIVE_ENV_DIRECTIVES}EnvironmentFile=$STAGE_ENV
+EOF
+    for src in "${LIVE_ENV_FILES[@]}"; do printf 'EnvironmentFile=%s\n' "$src"; done
+    cat <<EOF
+EnvironmentFile=$STAGE_ENV
 Environment=NODE_ENV=production
 Environment=HOSTNAME=127.0.0.1
 Environment=PORT=3192
@@ -156,6 +160,7 @@ NoNewPrivileges=true
 [Install]
 WantedBy=multi-user.target
 EOF
+  } > "$UNIT"
   chmod 644 "$UNIT"
   systemctl daemon-reload
   systemctl start "$NEW"
