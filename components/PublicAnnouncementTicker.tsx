@@ -25,7 +25,7 @@ export default function PublicAnnouncementTicker(){
     <span className={styles.label}>{lang==="zh"?"公告":"NEWS"}</span>
     <div className={styles.viewport}>
       <div className={styles.track}>
-        {items.map(item=><Link className={styles.item} key={item.id} href="/account/notifications">{item.title}</Link>)}
+        {items.map(item=><Link className={styles.item} key={item.id} href="/announcements">{item.title}</Link>)}
         <div className={styles.repeat} aria-hidden="true">
           {items.map(item=><span className={styles.item} key={item.id}>{item.title}</span>)}
         </div>
