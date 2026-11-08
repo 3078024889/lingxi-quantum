@@ -5,6 +5,7 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {ALL_TOOLS_PASS_CATALOG,allToolsPassOffer} from "@/lib/tools/commerce/all-tools-pass";
 import {parseCurrency,recommendedCurrency} from "@/lib/payments/currency-book";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
 const COMMERCE_READY=process.env.TOOL_PASS_COMMERCE_READY==="true"&&process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true"&&process.env.TOOL_PASS_BACKEND_READY==="true";
