@@ -118,3 +118,27 @@ test("seller uploads ZIP and photos before submitting, and delivery checks scann
  const review=file("app/api/sasi/marketplace/admin/review/route.ts");
  assert.match(review,/head.sha256!==listing.sha256/);
 });
+
+test("marketplace gateway requires a dedicated merchant approval and supports CNY / PayPal USD",()=>{
+ const resolver=file("lib/sasi-marketplace/checkout.ts");
+ assert.match(resolver,/SASI_MARKETPLACE_COMMERCE_READY/);
+ assert.match(resolver,/marketplaceCommerceReady\(\)/);
+ const paypal=file("app/api/pay/create/route.ts");
+ assert.match(paypal,/isMarketProductId/);
+ assert.match(paypal,/resolveMarketplaceProduct/);
+ assert.match(paypal,/SELF_PURCHASE_NOT_ALLOWED/);
+ const endpoint=file("app/api/sasi/marketplace/product/route.ts");
+ assert.match(endpoint,/marketplaceCommerceReady\(\)/);
+ assert.match(endpoint,/req.nextUrl.searchParams.get\("currency"\)===\"USD\"/);
+ const detail=file("components/SasiMarketplaceProductDetail.tsx");
+ assert.match(detail,/usePreferredCurrency/);
+ assert.match(detail,/const payPaypal=async/);
+ assert.match(detail,/PayPal 安全支付/);
+ const migration=file("supabase/migrations/20261108194500_sasi_market_paypal_usd_verified_sale.sql");
+ assert.match(migration,/o.currency='USD' AND o.provider='paypal'/);
+ assert.match(migration,/o.currency='CNY' AND o.provider IN \('wechat','alipay'\)/);
+ assert.match(migration,/gross=round\(o.amount_usd\*100\)::bigint; expected=l.price_usd_minor/);
+ assert.match(migration,/fee=\(gross\*1500\+5000\)\/10000/);
+ assert.match(migration,/SALE_IDEMPOTENCY_CONFLICT/);
+ assert.match(migration,/GRANT EXECUTE ON FUNCTION public.sasi_market_record_verified_sale\(uuid\) TO service_role/);
+});
