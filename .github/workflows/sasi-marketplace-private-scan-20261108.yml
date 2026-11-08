@@ -1,0 +1,62 @@
+name: SASI private software scan and human review gate (NO PRODUCTION DEPLOY)
+on:
+  workflow_dispatch:
+    inputs:
+      listing_id:
+        description: Submitted marketplace listing UUID
+        type: string
+        required: true
+  repository_dispatch:
+    types: [sasi-market-scan]
+permissions:
+  contents: read
+concurrency:
+  group: sasi-market-scan-${{ inputs.listing_id || github.event.client_payload.listing_id || github.run_id }
+  cancel-in-progress: false
+jobs:
+  verify-private-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    environment: sasi-market-scanner
+    env:
+      SASI_SCAN_LISTING_ID: ${{ inputs.listing_id || github.event.client_payload.listing_id }
+      SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }
+      R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }
+      R2_BUCKET_SASI_ARTIFACTS: ${{ secrets.R2_BUCKET_SASI_ARTIFACTS }
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Verify scan policy without private credentials
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 -m py_compile scripts/marketplace/scan-private-zip.py
+          python3 -m unittest discover -s tests/marketplace -p 'test_*.py' -v
+      - name: Validate private runner inputs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          [[ "$SASI_SCAN_LISTING_ID" =~ ^[0-9a-fA-F-]{36}$ ]]
+          test -n "$SUPABASE_URL" && test -n "$SUPABASE_SECRET_KEY"
+          test -n "$R2_ENDPOINT" && test -n "$R2_ACCESS_KEY_ID"
+          test -n "$R2_SECRET_ACCESS_KEY" && test -n "$R2_BUCKET_SASI_ARTIFACTS"
+      - name: Install current antivirus signatures on isolated runner
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends clamav clamav-freshclam
+          sudo systemctl stop clamav-freshclam || true
+          sudo freshclam
+          clamscan --version
+          python3 -m pip install --disable-pip-version-check --no-cache-dir boto3==1.40.59
+      - name: Scan private package and attest approved copy
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 scripts/marketplace/scan-private-zip.py
+          echo SASI_MARKET_SCAN_DONE_PENDING_HUMAN_REVIEW
