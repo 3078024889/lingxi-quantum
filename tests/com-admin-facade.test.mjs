@@ -6,8 +6,6 @@ assert.equal(bad.status,404,"no gateway/payment data through admin facade");
 assert.equal((await worker.fetch(req("/api/account/money-admin",{method:"DELETE"}))).status,405);
 assert.equal((await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://attacker.example","content-type":"application/json"},body:"{}"}))).status,403);
 assert.equal((await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://lingxifield.com","content-type":"text/plain"},body:"x"}))).status,415);
-const cookieSafety=await worker.fetch(req("/api/account/money-admin/access",{headers:{"Cookie":"my-private-token=do-not-proxy"}}));
-assert.ok([200,403,502,503].includes(cookieSafety.status));
 const fetchOriginal=globalThis.fetch;
 const captures=[];
 globalThis.fetch=async(url,options)=>{
@@ -23,10 +21,14 @@ try{
  const write=await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://lingxifield.com","content-type":"application/json","Cookie":"sid=cookie"},body:'{"action":"retry"}'}));
  assert.equal(write.status,200);
  assert.equal(captures[1].options.headers.get("origin"),"https://lingxifield.cn");
- assert.equal(captures[1].options.headers.get("cookie"),"sid=cookie");
+ assert.equal(captures[1].options.headers.get("cookie"),null);
+ const pass=await worker.fetch(req("/api/tools/pass",{headers:{"Cookie":"my-private-token=not-forwarded; sb-project-auth-token=opaque"}}));
+ assert.equal(pass.status,200);
+ assert.equal(captures[2].url,"https://lingxifield.cn/api/tools/pass");
+ assert.equal(captures[2].options.headers.get("cookie"),"sb-project-auth-token=opaque");
  const news=await worker.fetch(req("/api/site-announcements"));
  assert.equal(news.status,200);
- assert.equal(captures[2].url,"https://lingxifield.cn/api/site-announcements");
+ assert.equal(captures[3].url,"https://lingxifield.cn/api/site-announcements");
  const oversized=await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://lingxifield.com","content-type":"application/json"},body:"x".repeat(16385)}));
  assert.equal(oversized.status,413);
 
