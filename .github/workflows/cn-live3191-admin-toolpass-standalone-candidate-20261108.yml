@@ -4,6 +4,9 @@ on:
     branches: [fix/dual-site-commerce-admin-toolpass-20261108]
     paths:
       - '.github/workflows/cn-live3191-admin-toolpass-standalone-candidate-20261108.yml'
+      - 'lib/wechatpay.ts'
+      - 'app/api/pay/wechat/create/route.ts'
+      - 'app/api/pay/providers/route.ts'
   workflow_dispatch:
 permissions:
   contents: write
