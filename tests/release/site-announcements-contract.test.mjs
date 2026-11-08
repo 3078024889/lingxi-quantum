@@ -12,7 +12,7 @@ const fallback=read("lib/release/public-announcements.ts");
 assert.match(feed,/from\('lingxifield_announcements'\)/,"logged-in web messages retain live DB announcements");
 assert.match(mini,/from\("lingxifield_announcements"\)/,"mini-program reads same live announcements");
 assert.match(api,/\.eq\("is_active",true\)/);
-assert.match(api,/\.in\("platform",\["all","web"\]\)/);
+assert.match(api,/\.in\("platform",\["all","web","miniapp"\]\)/);
 assert.match(api,/\.lte\("published_at",now\)/);
 assert.match(api,/\.limit\(8\)/);
 assert.doesNotMatch(api,/admin\.from\("orders"\)/,"public API must not expose payment rows");
