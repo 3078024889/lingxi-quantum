@@ -1,0 +1,37 @@
+name: COM Cloudflare R2 permission and bucket diagnostics (READ ONLY)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths:
+      - '.github/workflows/com-r2-permission-readonly-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  r2-permission:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Cloudflare R2 read-only account and exact bucket diagnostics
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          for path in /workers/scripts /r2/buckets /r2/buckets/lingxifield-com-large-public;do
+            output="$(mktemp)"
+            status="$(curl -sS --connect-timeout 8 --max-time 22 \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -o "$output" -w '%{http_code}' \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID$path" || true)"
+            echo "CLOUDFLARE_READONLY $path HTTP_$status"
+            if command -v jq >/dev/null;then
+              jq -r '[.errors[]?.code // empty]|map(tostring)|join(",")|"ERROR_CODES="+.' "$output" 2>/dev/null || true
+            fi
+            rm -f "$output"
+          done
+          echo 'R2_ACCOUNT_DIAGNOSTICS_COMPLETE_NO_MUTATION'
