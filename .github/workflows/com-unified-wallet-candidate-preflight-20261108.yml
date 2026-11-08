@@ -1,0 +1,42 @@
+name: COM verified wallet and payments candidate preflight (READ ONLY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-unified-wallet-candidate-preflight-20261108.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Verify anonymous wallet and payments remain stable (NO PROD ROUTES)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          base="https://lingxifield-com-unified-20261108.3078024889.workers.dev"
+          for path in /ai-wallet /api/pay/providers /api/health /sasi;do
+            consecutive=0
+            for i in $(seq 1 12);do
+              body="$(mktemp)"
+              h="$(mktemp)"
+              code="$(curl -4sS -L --connect-timeout 7 --max-time 30 -w '%{http_code}' -D "$h" -o "$body" "$base$path" || true)"
+              bytes="$(wc -c < "$body")"
+              echo "COM_PRECUTOVER path=$path attempt=$i status=$code bytes=$bytes"
+              if [[ "$code" == 200 && "$bytes" -gt 35 ]];then
+                if [[ "$path" == /api/pay/providers ]];then
+                  if grep -Eq '(wechat|alipay|paypal|providers)' "$body";then consecutive=$((consecutive+1));else consecutive=0;fi
+                else consecutive=$((consecutive+1));fi
+              else consecutive=0;fi
+              rm -f "$body" "$h"
+              if [[ "$consecutive" -ge 4 ]];then break;fi
+              sleep 3
+            done
+            test "$consecutive" -ge 4 || { echo "COM_PRECUTOVER_ROUTE_UNSTABLE $path";exit 1; }
+          done
+          for path in /api/sasi/marketplace/my-orders /api/sasi/account;do
+            code="$(curl -4sS -o /dev/null -w '%{http_code}' --max-time 20 "$base$path" || true)"
+            echo "COM_PRECUTOVER_PRIVATE path=$path status=$code"
+            test "$code" = 401 || exit 1
+          done
+          echo COM_VERIFIED_WALLET_PAYMENT_PREFLIGHT_PASS
