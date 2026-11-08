@@ -43,7 +43,7 @@ export default function SasiSoftwareOrders(){
  <b>{o.title}</b>
  <p style={{color:"var(--lx-muted)",fontSize:13,margin:"10px 0"}}>订单：{o.orderId} · 已确认付款 · {new Date(o.createdAt).toLocaleString("zh-CN")}</p>
  <button type="button" onClick={()=>void downloadSeller(o)} disabled={busy===o.orderId||o.remaining<1}
- style={{padding:"9px 16px",borderRadius:9,background:"#194f87",color:"#fff",opacity:o.remaining<1?.5:1}}>
+ style={{padding:"9px 16px",borderRadius:9,background:"#194f87",color:"#fff",opacity:o.remaining < 1 ? 0.5 : 1}}>
  {busy===o.orderId?"生成安全链接中…":`立即下载（剩余 ${o.remaining} 次）`}</button>
  </article>)}
  {items.map(o=>{const product=SASI_SOFTWARE_CATALOG.find(p=>p.id===o.productId);return <article key={o.id} style={{padding:22,border:"1px solid var(--lx-line)",borderRadius:14,background:"var(--lx-panel)"}}>
