@@ -176,7 +176,7 @@ export default function Nav() {
       </div>
 
       <div className="lx11-nav-scroll">
-        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{lang==="zh"?"软件商城":"SASI Software"}</span></Link>
+        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{lang==="zh"?"软件作品":"SASI Software"}</span></Link>
 
         {groups.map((group, index) => (
           <section key={index} className="lx11-group">
@@ -197,7 +197,7 @@ export default function Nav() {
           zh:"全场实用工具包",en:"All-tools Pass",ja:"全ツール共通パス",ko:"전체 도구 이용권",fr:"Pass tous outils",de:"Werkzeug-Pass",es:"Pase de herramientas",pt:"Passe de ferramentas",ar:"باقة جميع الأدوات"
         } as Record<typeof lang,string>)[lang]}</span></Link>
         {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
-        {!isMoneyAdmin&&signedIn&&isComHost&&<a href="https://lingxifield.cn/account/money-admin" className="lx11-link" title={lang==="zh"?"海外站尚未完成管理员后端配置，转至共用数据库的国内安全控制台":"Global admin backend pending; open China control plane"}><LingxiMiniIcon name="wallet" size="nav"/><span>{lang==="zh"?"管理后台 · 国内控制台 ↗":"Admin · China control plane ↗"}</span></a>}
+        {!isMoneyAdmin&&signedIn&&isComHost&&<a href="https://lingxifield.cn/account/money-admin" className="lx11-link" title={lang==="zh"?"海外站尚未完成管理员后端配置，转至共用数据库的国内安全控制台":"Global admin backend pending; open China control plane"}><LingxiMiniIcon name="wallet" size="nav"/><span>{lang==="zh"?"管理后台备用入口 ↗":"Admin backup console ↗"}</span></a>}
       </div>
 
       <div style={{padding:"10px 12px 4px"}}>
