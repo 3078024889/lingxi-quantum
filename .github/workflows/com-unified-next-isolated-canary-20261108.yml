@@ -1,0 +1,198 @@
+name: COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - '.github/workflows/com-unified-next-isolated-canary-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: com-unified-sasi-canary-20261108
+  cancel-in-progress: false
+jobs:
+  deploy-isolated:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 58
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+      NEXT_PUBLIC_SUPABASE_URL: https://sxsgdpqojepgbbrxrzlq.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4c2dkcHFvamVwZ2JicnhyemxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTc0ODIsImV4cCI6MjA5Nzk5MzQ4Mn0.x4LNnsCvmHsCiRk2HFIsVjg-0ddbTQlkcKpKQFaAdXE' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CANDIDATE_NAME: lingxifield-com-unified-20261108
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Check token and public authentication input without printing values
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+      - name: Re-run current exact-source safety and type gates
+        run: |
+          set -Eeuo pipefail
+          pnpm install --frozen-lockfile
+          node tests/sasi-marketplace-security-contract.test.mjs
+          node tests/toolpass-direct-fulfillment-20261108.test.mjs
+          node tests/paypal-merchant-idempotency-20261108.test.mjs
+          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
+          node --test tests/sasi-com-closure-20261108.test.mjs tests/com-next-release-safety-20261108.test.mjs
+          pnpm exec tsc --noEmit
+      - name: Build full official Cloudflare runtime and offload oversized assets
+        run: |
+          set -Eeuo pipefail
+          pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
+          pnpm exec opennextjs-cloudflare build
+          node scripts/cloudflare/stage-large-public-assets.mjs
+          node scripts/cloudflare/stage-r2-public-assets.mjs --audit
+      - name: Generate verified anonymous HTML snapshots in real workerd for Cloudflare Free 10ms CPU
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          {
+            printf 'SUPABASE_URL="%s"\n' "$NEXT_PUBLIC_SUPABASE_URL"
+            printf 'SUPABASE_ANON_KEY="%s"\n' "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            printf 'SUPABASE_PUBLISHABLE_KEY="%s"\n' "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            printf 'NEXT_PUBLIC_SUPABASE_URL="%s"\n' "$NEXT_PUBLIC_SUPABASE_URL"
+            printf 'NEXT_PUBLIC_SUPABASE_ANON_KEY="%s"\n' "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+          } > .dev.vars
+          chmod 600 .dev.vars
+          pnpm exec wrangler dev --local --ip 127.0.0.1 --port 8787 --log-level error > "$RUNNER_TEMP/lingxi-render-worker.log" 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true; rm -f .dev.vars' EXIT
+          ready=0
+          for i in $(seq 1 70);do
+            status="$(curl -sS --noproxy '*' --max-time 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:8787/api/health || true)"
+            if [[ "$status" == 200 ]];then ready=1;break;fi
+            sleep 2
+          done
+          test "$ready" = 1
+          mkdir -p .open-next/assets/__lingxi_edge_static__
+          curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/ -o .open-next/assets/__lingxi_edge_static__/landing.html
+          curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/siai -o .open-next/assets/__lingxi_edge_static__/siai.html
+          # Anonymous public pages only; no account, order, payment or admin routes.
+          for mapping in 'tools:tools' 'tools/pass:tools-pass' 'sasi:sasi' 'sasi/marketplace:marketplace' 'announcements:announcements' 'en/siai:en-siai' 'ja/siai:ja-siai' 'ko/siai:ko-siai' 'fr/siai:fr-siai' 'de/siai:de-siai' 'es/siai:es-siai' 'pt/siai:pt-siai' 'ar/siai:ar-siai' 'tools/ico-to-png:tool-ico-to-png' 'tools/number-base-converter:tool-number-base-converter' 'tools/video-watermark-remover:tool-video-watermark-remover';do
+            route="${mapping%%:*}"
+            file="${mapping#*:}"
+            curl --noproxy '*' -fSs --retry 2 --max-time 55 \
+              -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
+              "http://127.0.0.1:8787/$route" \
+              -o ".open-next/assets/__lingxi_edge_static__/$file.html"
+            echo "COM_ANON_HTML_SNAPSHOT route=/$route file=$file"
+          done
+          curl --noproxy '*' -fSs --retry 2 --max-time 40 \
+            -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
+            http://127.0.0.1:8787/api/sasi/software/catalog \
+            -o .open-next/assets/__lingxi_edge_static__/software-catalog.json
+          echo 'COM_PUBLIC_SOFTWARE_CATALOG_JSON_SNAPSHOT_CAPTURED'
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+          trap 'rm -f .dev.vars' EXIT
+          node scripts/cloudflare/patch-critical-static-html-20261108.mjs
+          echo 'COM_STATIC_EDGE_HOT_PATHS_APPLIED_BEFORE_CANARY_DEPLOY'
+      - name: Build isolated candidate config with NO production DNS or Worker routes
+        run: |
+          set -Eeuo pipefail
+          node <<'NODE'
+          const fs=require('node:fs');
+          const j=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8'));
+          if(j.name!=='lingxifield-main-global-testonly')throw Error('SOURCE_WORKER_CONFIG_CHANGED');
+          if((j.r2_buckets||[]).length!==1||j.r2_buckets[0].bucket_name!=='lingxifield-com-large-public')throw Error('R2_BINDING_UNEXPECTED');
+          j.name=process.env.CANDIDATE_NAME;
+          j.workers_dev=true;
+          // The previous public gateway remains an internal API service, not a DNS route.
+          // Cloudflare service binding forwards original Request (auth/session/cookies intact).
+          j.services=[{binding:'LINGXI_COM_LEGACY_GATEWAY',service:'lingxifield-com-static-gateway-canary-20261107'}];
+          // Wrangler >=4.150 uploads maps by default; current minified map is >60MiB.
+          j.upload_source_maps=false;
+          delete j.route;delete j.routes;
+          j.vars={
+            NEXT_PUBLIC_SITE_URL:'https://lingxifield.com',
+            NEXT_PUBLIC_SUPABASE_URL:process.env.NEXT_PUBLIC_SUPABASE_URL,
+            NEXT_PUBLIC_SUPABASE_ANON_KEY:process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            SUPABASE_URL:process.env.NEXT_PUBLIC_SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY:process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            SUPABASE_ANON_KEY:process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+            TOOL_PASS_COMMERCE_READY:'false',
+            SASI_MARKET_SALES_ENABLED:'false',
+            SASI_MARKET_UPLOADS_ENABLED:'false',
+            SASI_MARKET_PAYOUTS_ENABLED:'false',
+            SASI_MARKET_DELIVERY_ENABLED:'false',
+            SOFTWARE_COMMERCE_READY:'false',
+            ALIPAY_ENABLED:'false',
+            PAYPAL_ENABLED:'false',
+            WECHAT_ENABLED:'false'
+          };
+          fs.writeFileSync('wrangler.candidate.jsonc',JSON.stringify(j,null,2));
+          const again=JSON.parse(fs.readFileSync('wrangler.candidate.jsonc','utf8'));
+          if(again.name!==process.env.CANDIDATE_NAME||again.workers_dev!==true||again.routes||again.route)throw Error('UNSAFE_PRODUCTION_ROUTE_CONFIG');
+          if(again.services?.length!==1||again.services[0].service!=='lingxifield-com-static-gateway-canary-20261107')throw Error('COM_LEGACY_API_SERVICE_NOT_PRESERVED');
+          console.log('ISOLATED_CANDIDATE_ROUTES_NONE_PAYMENT_DISABLED');
+          NODE
+          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --minify --dry-run --outdir "$RUNNER_TEMP/cf-candidate-dry-run"
+      - name: Prove canary Worker is not the live apex, www or any protected route
+        run: |
+          set -Eeuo pipefail
+          base="https://api.cloudflare.com/client/v4"
+          tmp="$(mktemp)"
+          trap 'rm -f "$tmp"' EXIT
+          status="$(curl -sS --max-time 25 -o "$tmp" -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$base/zones?name=lingxifield.com")"
+          test "$status" = 200
+          zone="$(jq -r '.result[]|select(.name=="lingxifield.com" and .status=="active")|.id' "$tmp")"
+          test -n "$zone"
+          test "$(wc -l <<< "$zone")" = 1
+          status="$(curl -sS --max-time 25 -o "$tmp" -w '%{http_code}' -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "$base/zones/$zone/workers/routes")"
+          test "$status" = 200
+          jq -e --arg name "$CANDIDATE_NAME" '[.result[]|select(.script==$name)]|length==0' "$tmp"
+          jq -e '[.result[]|select(.pattern=="lingxifield.com/*")]|length==1' "$tmp"
+          jq -e '[.result[]|select(.pattern=="www.lingxifield.com/*")]|length==1' "$tmp"
+          echo "COM_NEXT_CANARY_UNROUTED_VERIFIED"
+
+      - name: Deploy NO ROUTES candidate to isolated workers.dev only
+        run: |
+          set -Eeuo pipefail
+          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --minify --no-upload-source-maps --keep-vars 2>&1 | tee "$RUNNER_TEMP/candidate-deployment.log"
+          echo 'COM_CANDIDATE_CLOUDFLARE_WORKER_DEPLOYED_NO_CUSTOM_DOMAIN_ROUTE'
+      - name: Validate real cloudflare.com candidate HTTP routes, R2 Range and SASI anon security
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          url="https://${CANDIDATE_NAME}.3078024889.workers.dev"
+          test -n "$url"
+          echo "COM_CANARY_URL=$url"
+          for path in / /siai /tools /tools/pass /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
+            count=0
+            for i in 1 2 3;do
+              h="$(mktemp)"
+              status="$(curl -4sS --connect-timeout 9 --max-time 30 -D "$h" -o /dev/null -w '%{http_code}' "$url$path" || true)"
+              echo "COM_CANARY_PAGE path=$path repetition=$i HTTP_$status"
+              test "$status" = 200 || exit 1
+              if [[ "$path" = / || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /tools/pass || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai || "$path" = /ko/siai || "$path" = /fr/siai || "$path" = /de/siai || "$path" = /es/siai || "$path" = /pt/siai || "$path" = /ar/siai ]];then
+                grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
+              fi
+              rm -f "$h"
+              count=$((count+1))
+            done
+            test "$count" = 3
+          done
+          for path in /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
+            status="$(curl -4sS --connect-timeout 9 --max-time 25 -o /dev/null -w '%{http_code}' "$url$path" || true)"
+            echo "COM_CANARY_PRIVATE_ROUTE path=$path HTTP_$status"
+            test "$status" = 401 || exit 1
+          done
+          for asset in /media/ffmpeg-0.12.10/ffmpeg-core.wasm /models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx;do
+            headers="$(mktemp)"
+            status="$(curl -4sS --connect-timeout 9 --max-time 30 -D "$headers" -o /dev/null -w '%{http_code}' -H 'Range: bytes=0-1023' "$url$asset" || true)"
+            echo "COM_CANARY_R2_RANGE path=$asset HTTP_$status"
+            test "$status" = 206 || exit 1
+            grep -iq '^content-range: bytes 0-1023/' "$headers"
+            rm -f "$headers"
+          done
+          echo 'COM_NEXT_ISOLATED_CANARY_SASI_TOOLPASS_STATIC_R2_PASS_NO_PRODUCTION_ROUTE'
