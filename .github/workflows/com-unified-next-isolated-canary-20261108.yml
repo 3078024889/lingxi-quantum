@@ -171,6 +171,16 @@ jobs:
           url="https://${CANDIDATE_NAME}.3078024889.workers.dev"
           test -n "$url"
           echo "COM_CANARY_URL=$url"
+          # Workers.dev deployment propagation may initially return 404.
+          # Wait for a real 200 on the isolated health endpoint, never bypass other probes.
+          propagated=0
+          for attempt in $(seq 1 24);do
+            code="$(curl -4sS --connect-timeout 7 --max-time 18 -o /dev/null -w '%{http_code}' "$url/api/health" || true)"
+            echo "COM_CANARY_PROPAGATION attempt=$attempt HTTP_$code"
+            if [[ "$code" = 200 ]];then propagated=1;break;fi
+            sleep 5
+          done
+          test "$propagated" -eq 1
           for path in / /siai /tools /tools/pass /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
             count=0
             for i in 1 2 3;do
