@@ -1,0 +1,100 @@
+name: COM public R2 8 assets via ephemeral bound Worker (NO DOMAIN ROUTES)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths: ['.github/workflows/com-public-r2-binding-transfer-20261108.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+concurrency:
+  group: com-r2-public-ephemeral-20261108
+  cancel-in-progress: false
+jobs:
+  transfer:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 55
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: 'https://lingxifield.com'
+      NEXT_PUBLIC_SUPABASE_URL: 'https://sxsgdpqojepgbbrxrzlq.supabase.co'
+      RELAY_NAME: lingxifield-com-public-r2-relay-20261108
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Build source, verify SHA-256 manifest and prepare sealed private relay
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          pnpm install --frozen-lockfile
+          node --check workers/com-public-r2-transfer-20261108/src/index.mjs
+          pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
+          pnpm exec opennextjs-cloudflare build
+          node scripts/cloudflare/stage-large-public-assets.mjs
+          node scripts/cloudflare/stage-r2-public-assets.mjs --audit
+          node <<'NODE'
+          const fs=require('fs');
+          const m=JSON.parse(fs.readFileSync('cloudflare-offload-report.json','utf8'));
+          if(m.assets?.length!==8||m.bucketName!=='lingxifield-com-large-public'||m.releaseReady!==false)throw Error('UNVERIFIED_PUBLIC_MANIFEST');
+          const rows=m.assets.map(x=>({path:x.path,bytes:x.bytes,sha256:x.sha256,contentType:x.contentType,
+            source:(x.path.startsWith('/_next/static/media/')?'.open-next/r2-upload-sources/':'public/')+x.path.slice(1)}));
+          if(new Set(rows.map(r=>r.path)).size!==8||rows.some(r=>r.bytes<1||r.bytes>100000000||!/^[a-f0-9]{64}$/.test(r.sha256)||r.path.includes('..')))throw Error('UNSAFE_PUBLIC_LIST');
+          const config={name:process.env.RELAY_NAME,main:'workers/com-public-r2-transfer-20261108/src/index.mjs',workers_dev:true,compatibility_date:'2026-11-08',upload_source_maps:false,
+             r2_buckets:[{binding:'PUBLIC_LARGE_R2',bucket_name:'lingxifield-com-large-public'}],
+             vars:{ASSET_ALLOWLIST:JSON.stringify(rows.map(({path,bytes,sha256,contentType})=>({path,bytes,sha256,contentType}))),EXPIRES_AT_MS:String(Date.now()+35*60*1000)}};
+          fs.writeFileSync('.r2-relay-config.jsonc',JSON.stringify(config));
+          fs.writeFileSync('.r2-relay-objects.json',JSON.stringify(rows));
+          console.log('PUBLIC_R2_EIGHT_LOCAL_SHA_VERIFIED_BOUND_RELAY_READY');
+          NODE
+      - name: Require unused isolated relay name
+        run: |
+          status="$(curl -sS --max-time 22 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -o /dev/null -w '%{http_code}' "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$RELAY_NAME")"
+          echo "R2_RELAY_EXISTS_HTTP_$status"
+          test "$status" = 404
+      - name: Deploy short-lived public asset relay with NO production routes
+        run: pnpm exec wrangler deploy --config .r2-relay-config.jsonc --minify --no-upload-source-maps
+      - name: Set randomly generated private bearer token with Wrangler secret (never log token)
+        run: |
+          set -Eeuo pipefail
+          tok="$(openssl rand -hex 32)"
+          printf '%s' "$tok" | pnpm exec wrangler secret put UPLOAD_SECRET --config .r2-relay-config.jsonc > /dev/null
+          printf '%s' "$tok" > /tmp/r2-relay-token
+          chmod 600 /tmp/r2-relay-token
+          echo 'R2_TEMPORARY_SECRET_INSTALLED'
+      - name: Transfer only 8 hashed public assets and SHA-check remote GET readback
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          token="$(cat /tmp/r2-relay-token)"
+          url="https://$RELAY_NAME.3078024889.workers.dev"
+          node -e 'const a=require("./.r2-relay-objects.json");for(let i=0;i<a.length;i++)console.log(i+" "+a[i].source+" "+a[i].bytes+" "+a[i].sha256)' > /tmp/verified-r2-objects
+          while read -r id file size sha; do
+            test "$(stat -c %s "$file")" -eq "$size"
+            printf '%s  %s\n' "$sha" "$file" | sha256sum -c --status
+            echo "R2_PUBLIC_ASSET_UPLOAD_$id"
+            curl -fLSs --connect-timeout 20 --max-time 360 --retry 2 \
+              -X PUT -H "Authorization: Bearer $token" -H "x-verified-sha256: $sha" -H 'Expect:' \
+              --data-binary "@$file" "$url/transfer?i=$id" > /tmp/r2-put.json
+            jq -e '.ok==true' /tmp/r2-put.json >/dev/null
+            dest="$(mktemp)"
+            curl -fLSs --connect-timeout 20 --max-time 360 --retry 2 \
+              -H "Authorization: Bearer $token" -o "$dest" "$url/transfer?i=$id"
+            printf '%s  %s\n' "$sha" "$dest" | sha256sum -c --status || { rm -f "$dest";exit 1; }
+            rm -f "$dest"
+            echo "R2_PUBLIC_OBJECT_SHA256_REMOTE_VERIFIED_$id"
+          done < /tmp/verified-r2-objects
+          echo 'R2_PUBLIC_EIGHT_OBJECTS_SHA256_VERIFIED_IN_REAL_BUCKET'
+      - name: Delete temporary uploader Worker and its secret
+        if: always()
+        continue-on-error: true
+        run: |
+          rm -f /tmp/r2-relay-token
+          pnpm exec wrangler delete --name "$RELAY_NAME" --force || true
+          echo 'EPHEMERAL_RELAY_CLEANUP_ATTEMPTED'
