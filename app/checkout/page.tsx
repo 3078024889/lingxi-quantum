@@ -81,6 +81,8 @@ function CheckoutInner() {
   const [buyerEmail, setBuyerEmail] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("wechat");
   const [alipayAvailable, setAlipayAvailable] = useState(false);
+  const [wechatAvailable, setWechatAvailable] = useState(false);
+  const [providersLoaded, setProvidersLoaded] = useState(false);
 const orderIdRef = useRef<string | null>(null);
   const codeUrlRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -139,6 +141,17 @@ const orderIdRef = useRef<string | null>(null);
     supabase.auth.getUser().then(({ data }) => {
       setBuyerEmail(data.user?.email ?? "");
     });
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/pay/providers", {cache:"no-store",credentials:"same-origin"})
+      .then(r=>r.ok?r.json():null)
+      .then((data:{wechat?:boolean;alipay?:boolean}|null)=>{
+        const wx=data?.wechat===true,ali=data?.alipay===true;
+        setWechatAvailable(wx);setAlipayAvailable(ali);
+        if(!wx&&ali)setPaymentMethod("alipay");
+        setProvidersLoaded(true);
+      }).catch(()=>{setWechatAvailable(false);setAlipayAvailable(false);setProvidersLoaded(true)});
   }, []);
 
   useEffect(() => {
@@ -303,6 +316,10 @@ const orderIdRef = useRef<string | null>(null);
   // 微信原生收银台，不展示二维码（微信不允许在自己的浏览器里弹码给
   // 自己扫）；其它场景保持原来的Native扫码。
   const payNow = async () => {
+    if (!providersLoaded || (paymentMethod==="wechat"&&!wechatAvailable) || (paymentMethod==="alipay"&&!alipayAvailable)){
+      setError(t("所选支付渠道尚未开放，请返回查看可用支付方式。","This payment provider is not yet available."));
+      return;
+    }
     if (paymentMethod === "alipay") {
       await createAlipayOrder();
       return;
@@ -450,11 +467,13 @@ const orderIdRef = useRef<string | null>(null);
             <div className="mt-3 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setPaymentMethod("wechat")}
+                onClick={() => {if(wechatAvailable)setPaymentMethod("wechat")}}
+                disabled={!wechatAvailable}
                 aria-pressed={paymentMethod === "wechat"}
-                className={`rounded-sm border p-4 text-center transition ${paymentMethod === "wechat" ? "border-[var(--lx-line-strong)] bg-[var(--lx-soft)] text-[var(--lx-ink)]" : "border-[var(--lx-line)] text-[var(--lx-muted)] hover:border-white/25"}`}
+                className={`rounded-sm border p-4 text-center transition ${!wechatAvailable?"cursor-not-allowed opacity-60":paymentMethod === "wechat" ? "border-[var(--lx-line-strong)] bg-[var(--lx-soft)] text-[var(--lx-ink)]" : "border-[var(--lx-line)] text-[var(--lx-muted)] hover:border-white/25"}`}
               >
-                <p className="font-display text-sm">{paymentMethod === "wechat" ? "✓ " : ""}{uiCopy(lang, "微信支付", "WeChat Pay")}</p>
+                <p className="font-display text-sm">{wechatAvailable&&paymentMethod === "wechat" ? "✓ " : ""}{uiCopy(lang, "微信支付", "WeChat Pay")}</p>
+                {!wechatAvailable&&<p className="mt-1 text-[10px]">{uiCopy(lang,"暂未开放","Not yet available")}</p>}
               </button>
               <button
                 type="button"
@@ -473,6 +492,7 @@ const orderIdRef = useRef<string | null>(null);
 
           {status === "review" && (
             <button
+              disabled={!providersLoaded || (paymentMethod==="wechat"&&!wechatAvailable) || (paymentMethod==="alipay"&&!alipayAvailable)}
               onClick={payNow}
               className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
             >
