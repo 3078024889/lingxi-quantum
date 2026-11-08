@@ -93,8 +93,17 @@ export default function SasiOpenMarketplace(){
    });
    const put=await fetch(ticket.uploadUrl,{method:"PUT",headers:{"Content-Type":"application/zip"},body:file});
    if(!put.ok)throw Error("PRIVATE_R2_UPLOAD_FAILED_"+put.status);
-   await post("/api/sasi/marketplace/submit",{listingId:item.id});
-   setStatus(zh?"文件已进入隔离扫描和人工审核队列，不会直接公开下载。":"Package submitted for quarantine scanning and review. It is not publicly downloadable.");
+   setStatus(zh?"软件包已上传。添加主图与详情图后，再点击提交审核。":"Package uploaded. Add cover and detail photos before submitting for review.");
+   await refresh();
+  }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
+ };
+ const submitReview=async(item:Listing)=>{
+  setBusy("submit-"+item.id);setError("");setStatus("");
+  try{
+   const result=await post("/api/sasi/marketplace/submit",{listingId:item.id});
+   setStatus(result?.scanDispatched?
+    (zh?"已提交审核，软件包正在安全检查。":"Submitted for review; security scanning is in progress."):
+    (zh?"已提交审核，等待平台启动安全检查。":"Submitted for review; security scanning is pending."));
    await refresh();
   }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
  };
@@ -232,9 +241,12 @@ export default function SasiOpenMarketplace(){
      <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传详情图":"Add detail photo"}
        <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"detail")}}/>
      </label>
-     <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":zh?"上传 ZIP 并提交审核":"Upload ZIP"}
+     <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":zh?"上传软件 ZIP 包":"Upload software ZIP"}
        <input type="file" accept=".zip,application/zip" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void upload(item,f)}}/>
      </label>
+     <button type="button" disabled={busy!==""} onClick={()=>void submitReview(item)} className={styles.launchStudio}>
+      {busy==="submit-"+item.id?"…":zh?"提交商品审核":"Submit for review"}
+     </button>
    </>}
     {item.status==="published"&&<button onClick={()=>void share(item)}>{zh?"分享商品":"Share"}</button>}
    </div>)}</div>}
