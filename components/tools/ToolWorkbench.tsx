@@ -97,6 +97,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       if(cancelled)return;
       setFiles(incoming);
       accessTicket.current=fileSignature(incoming);
+      processedFileSignature.current="";
       setResult(null);
       const clean=new URL(window.location.href);
       clean.searchParams.delete("handoff");
