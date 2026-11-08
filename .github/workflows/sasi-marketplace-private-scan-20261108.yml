@@ -11,7 +11,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: sasi-market-scan-${{ inputs.listing_id || github.event.client_payload.listing_id || github.run_id }
+  group: sasi-market-scan-${{ inputs.listing_id || github.event.client_payload.listing_id || github.run_id }}
   cancel-in-progress: false
 jobs:
   verify-private-package:
@@ -19,13 +19,13 @@ jobs:
     timeout-minutes: 45
     environment: sasi-market-scanner
     env:
-      SASI_SCAN_LISTING_ID: ${{ inputs.listing_id || github.event.client_payload.listing_id }
-      SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }
-      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }
-      R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }
-      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }
-      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }
-      R2_BUCKET_SASI_ARTIFACTS: ${{ secrets.R2_BUCKET_SASI_ARTIFACTS }
+      SASI_SCAN_LISTING_ID: ${{ inputs.listing_id || github.event.client_payload.listing_id }}
+      SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      R2_BUCKET_SASI_ARTIFACTS: ${{ secrets.R2_BUCKET_SASI_ARTIFACTS }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
