@@ -8,6 +8,9 @@ on:
       - 'components/SasiMarketplaceReviewConsole.tsx'
       - 'components/SasiOpenMarketplace.tsx'
       - 'components/SasiOpenMarketplace.module.css'
+      - 'components/PublicAnnouncementTicker.tsx'
+      - 'components/PublicAnnouncementsPage.tsx'
+      - 'tests/public-announcements-deeplink-20261108.test.mjs'
       - 'app/sasi/page.tsx'
       - 'lib/sasi-marketplace/**'
       - 'scripts/marketplace/**'
@@ -44,6 +47,7 @@ jobs:
       - name: Contract tests including auth and verified fulfillment
         run: |
           node --test tests/sasi-marketplace-review-security-20261108.test.mjs
+          node --test tests/public-announcements-deeplink-20261108.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
           node --test tests/sasi-com-closure-20261108.test.mjs
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
