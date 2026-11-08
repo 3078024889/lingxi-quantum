@@ -1,3 +1,4 @@
+# Unified toolpass purchase CTA contract audited at exact source SHA.
 name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEPLOY)
 # A 450 MB candidate should only be built after the independent source/build
 # and browser gates succeed on the exact SHA. Avoid per-commit quota burn.

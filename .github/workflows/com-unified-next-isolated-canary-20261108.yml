@@ -1,3 +1,4 @@
+# Unified ToolPass purchase CTA contract audited at exact source SHA.
 name: COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)
 on:
   push:
