@@ -1,5 +1,6 @@
 name: COM static public gateway exact-route promotion with automatic rollback
 # Re-run 2026-11-08: regex parser correction and exact 124-route mock regression validated.
+# Re-run 2026-11-08: canonical image-to-pdf-pro redirect exact-location regression PASSED.
 on:
   push:
     branches: [infra/com-cloudflare-readiness-20261106]
