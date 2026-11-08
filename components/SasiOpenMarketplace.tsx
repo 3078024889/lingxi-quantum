@@ -11,6 +11,7 @@ function format(value:number){return (value/100).toLocaleString("en-US",{minimum
 export default function SasiOpenMarketplace(){
  const {lang}=useLingxiLang();const zh=lang==="zh";
  const [listings,setListings]=useState<Listing[]>([]);
+ const [images,setImages]=useState<Record<string,Array<{id:string;kind:string;url:string}>>>({});
  const [mine,setMine]=useState<Listing[]>([]);
  const [seller,setSeller]=useState<Seller|null>(null);
  const [payments,setPayments]=useState<Payout|null>(null);
@@ -30,6 +31,14 @@ export default function SasiOpenMarketplace(){
   if(values[3]?.balances)setPayments(values[3]);
  },[]);
  useEffect(()=>{void refresh()},[refresh]);
+ useEffect(()=>{
+  if(!listings.length){setImages({});return;}
+  let current=true;
+  fetch("/api/sasi/marketplace/images?listingIds="+listings.map(x=>x.id).join(","),{cache:"no-store"})
+   .then(r=>r.ok?r.json():null).then(v=>{if(current&&v?.items)setImages(v.items)})
+   .catch(()=>{});
+  return()=>{current=false};
+ },[listings]);
  const visible=useMemo(()=>listings.filter(x=>(filter==="all"||x.category===filter)&&
  (x.title+" "+x.description).toLowerCase().includes(search.trim().toLowerCase())),[listings,filter,search]);
  const post=async(url:string,payload:unknown)=>{
@@ -126,7 +135,9 @@ export default function SasiOpenMarketplace(){
    <div className={styles.find}><input aria-label={zh?"搜索软件":"Search software"} placeholder={zh?"搜索 EA、指标、应用…":"Find EAs and software…"} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{zh?"全部":"All"}</button>{CATEGORIES.map(([key,label])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{label}</button>)}</div>
    <div className={styles.products}>{visible.map((item,i)=><article className={styles.card} key={item.id}>
-    <div className={styles.tile} data-tone={i%3}><span>{item.category==="mt5-ea"?"EA":item.category==="mt5-indicator"?"SI":"SASI"}</span></div>
+    <div className={styles.tile} data-tone={i%3}>{images[item.id]?.[0]?.url?
+    <img src={images[item.id][0].url} alt={item.title} loading="lazy" referrerPolicy="no-referrer" className={styles.cover}/>
+    :<span>{item.category==="mt5-ea"?"EA":item.category==="mt5-indicator"?"SI":"SASI"}</span>}</div>
     <div className={styles.cardContent}><div className={styles.category}>{CATEGORIES.find(([x])=>x===item.category)?.[1]||"Software"}</div>
     <h3>{item.title}</h3><p>{item.description}</p><div className={styles.cardBottom}><strong>¥{format(item.price_cny_minor)}</strong><span>USD ${format(item.price_usd_minor)}</span></div>
     <div className={styles.cardActions}><Link href={"/sasi/marketplace/"+item.id}>{zh?"查看详情":"Details"} ↗</Link><button onClick={()=>void share(item)}>{zh?"分享":"Share"} ↗</button></div>
@@ -155,7 +166,10 @@ export default function SasiOpenMarketplace(){
    </div>
    {mine.length>0&&<div className={styles.drafts}><h3>{zh?"我的软件草稿与审核进度":"My submissions"}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{item.status} · {item.scan_status}</small></div>
     {item.status==="draft"&&<>
-     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传封面 / 详情图":"Add product image"}
+     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传封面图":"Add cover"}
+       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"cover")}}/>
+     </label>
+     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传详情图":"Add detail photo"}
        <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"detail")}}/>
      </label>
      <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":zh?"上传 ZIP 并提交审核":"Upload ZIP"}
