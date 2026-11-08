@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { alipayEnabled, alipayMissingVars } from "@/lib/alipay";
-import { wechatPayConfigured, wechatPayMissingVars } from "@/lib/wechatpay";
+import { wechatPayConfigured, wechatPayEnabled, wechatPayMissingVars } from "@/lib/wechatpay";
 
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
@@ -12,14 +12,15 @@ function paypalEnabled(){
  return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&paypalConfigured();
 }
 export async function GET(){
- const wechat=wechatPayConfigured();
+ const wechatConfigured=wechatPayConfigured();
+ const wechat=wechatPayEnabled();
  const alipayConfigured=alipayMissingVars().length===0;
  const alipay=alipayEnabled();
  const paypal=paypalEnabled();
  return NextResponse.json({
   wechat,alipay,paypal,
   diagnostics:{
-   wechat:{configured:wechat,missingCount:wechat?0:wechatPayMissingVars().length},
+   wechat:{configured:wechatConfigured,enabled:wechat,missingCount:wechatConfigured?0:wechatPayMissingVars().length},
    alipay:{configured:alipayConfigured,enabled:alipay,missingCount:alipayConfigured?0:alipayMissingVars().length},
    paypal:{configured:paypalConfigured(),enabled:paypal,missingCount:paypalConfigured()?0:1}
   }
