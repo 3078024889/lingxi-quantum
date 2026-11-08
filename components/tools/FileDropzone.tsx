@@ -134,7 +134,7 @@ export default function FileDropzone({
       ja:"全ツール共通パスを見る",ko:"전체 도구 이용권 보기",fr:"Voir les forfaits outils",
       de:"Werkzeug-Pässe ansehen",es:"Ver los pases de herramientas",
       pt:"Ver os passes de ferramentas",ar:"عرض باقات جميع الأدوات"
-    } as Record<typeof lang,string>)[lang]}</Link>
+    } as Record<typeof lang,string>)[lang]}</Link>}
 
     {previews.length>0&&<div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
       {previews.map(item=><figure key={item.key} className="overflow-hidden rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)]">
