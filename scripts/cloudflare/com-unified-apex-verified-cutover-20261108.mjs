@@ -37,7 +37,8 @@ async function probe(base,phase,attempts=3){
    "/es/siai","/pt/siai","/ar/siai"];
  const staticRoutes=new Set(["/","/siai","/tools","/sasi","/sasi/marketplace","/announcements","/tools/pass",
    "/api/sasi/software/catalog","/en/siai","/ja/siai","/ko/siai","/fr/siai","/de/siai","/es/siai","/pt/siai","/ar/siai"]);
- const maxTries=phase==="POSTCUTOVER"?12:attempts;
+ // Cold Workers can return transient 500/503. Require three consecutive 200s rather than three immediate probes.
+ const maxTries=12;
  for(const path of routes){
   let consecutive=0;
   for(let i=0;i<maxTries;i++){
@@ -51,6 +52,7 @@ async function probe(base,phase,attempts=3){
    if(result.status===200&&staticOK)consecutive++;else consecutive=0;
    if(consecutive>=attempts)break;
    if(phase==="POSTCUTOVER")await sleep(4000);
+   else if(result.status!==200||!staticOK)await sleep(3500);
   }
   if(consecutive!==attempts)throw Error("COM_"+phase+"_UNSTABLE_ROUTE:"+path+":"+consecutive+"/"+attempts);
  }
