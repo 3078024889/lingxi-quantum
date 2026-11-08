@@ -60,6 +60,8 @@ jobs:
           if((j.r2_buckets||[]).length!==1||j.r2_buckets[0].bucket_name!=='lingxifield-com-large-public')throw Error('R2_BINDING_UNEXPECTED');
           j.name=process.env.CANDIDATE_NAME;
           j.workers_dev=true;
+          // Wrangler >=4.150 uploads maps by default; current minified map is >60MiB.
+          j.upload_source_maps=false;
           delete j.route;delete j.routes;
           j.vars={
             NEXT_PUBLIC_SITE_URL:'https://lingxifield.com',
@@ -95,7 +97,7 @@ jobs:
       - name: Deploy NO ROUTES candidate to isolated workers.dev only
         run: |
           set -Eeuo pipefail
-          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --minify --keep-vars 2>&1 | tee "$RUNNER_TEMP/candidate-deployment.log"
+          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --minify --no-upload-source-maps --keep-vars 2>&1 | tee "$RUNNER_TEMP/candidate-deployment.log"
           echo 'COM_CANDIDATE_CLOUDFLARE_WORKER_DEPLOYED_NO_CUSTOM_DOMAIN_ROUTE'
       - name: Verify actual Cloudflare remote candidate public endpoints
         run: |
