@@ -41,6 +41,9 @@ jobs:
           node scripts/audit/unified-tool-pass-server-coverage.mjs
           node tests/sasi-marketplace-fee.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
+          node --test tests/sasi-software-public-branding-20261108.test.mjs
+          node --test tests/public-announcements-deeplink-20261108.test.mjs
+          node --test tests/sasi-marketplace-review-security-20261108.test.mjs
           node tests/toolpass-direct-fulfillment-20261108.test.mjs
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
           node tests/sasi-com-closure-20261108.test.mjs
