@@ -51,7 +51,12 @@ export async function createPaypalOrder(params: {
   const token = await getPaypalAccessToken();
   const res = await fetchWithTimeout(`${paypalBaseUrl()}/v2/checkout/orders`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      // Stable order UUID prevents repeated PSP orders on network retries.
+      "PayPal-Request-Id": params.referenceId,
+    },
     body: JSON.stringify({
       intent: "CAPTURE",
       purchase_units: [{
@@ -97,7 +102,12 @@ export async function capturePaypalOrder(
   const token = await getPaypalAccessToken();
   const res = await fetchWithTimeout(`${paypalBaseUrl()}/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      // Different idempotency namespace from order creation; stable across retries.
+      "PayPal-Request-Id": `capture-${orderId}`,
+    },
   });
   const data = await res.json();
   if (!res.ok) {
