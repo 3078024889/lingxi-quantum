@@ -24,6 +24,9 @@ on:
       - 'components/Nav.tsx'
       - 'components/tools/ToolsHubV11.tsx'
       - 'components/tools/FileDropzone.tsx'
+      - 'components/tools/ToolWorkbench.tsx'
+      - 'lib/tools/commerce/tool-repeat-meter.ts'
+      - 'tests/tool-pass-repeat-run.test.mjs'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
       - 'scripts/ops/ecs-repair-supabase-admin-key.py'
       - '.github/workflows/dual-site-admin-toolpass-gate-20261108.yml'
@@ -76,6 +79,8 @@ jobs:
           NODE
       - name: Verify truthful release notices and RSS human-readable UI
         run: node tests/release/site-announcements-contract.test.mjs
+      - name: Verify same-image repeat operation quota without double-charging upload
+        run: node tests/tool-pass-repeat-run.test.mjs
       - name: TypeScript typecheck
         run: pnpm exec tsc --noEmit
       - name: Real Next production build - no deployment or payment transaction
