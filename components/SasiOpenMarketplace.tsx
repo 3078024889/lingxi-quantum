@@ -2,6 +2,7 @@
 import {useCallback,useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
 import styles from "./SasiOpenMarketplace.module.css";
 type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
@@ -11,6 +12,8 @@ function format(value:number){return (value/100).toLocaleString("en-US",{minimum
 export default function SasiOpenMarketplace(){
  const {lang}=useLingxiLang();const zh=lang==="zh";
  const [listings,setListings]=useState<Listing[]>([]);
+ const featured=SASI_SOFTWARE_CATALOG[0];
+ const [featuredReady,setFeaturedReady]=useState(false);
  const [images,setImages]=useState<Record<string,Array<{id:string;kind:string;url:string}>>>({});
  const [mine,setMine]=useState<Listing[]>([]);
  const [seller,setSeller]=useState<Seller|null>(null);
@@ -32,6 +35,19 @@ export default function SasiOpenMarketplace(){
   if(values[3]?.balances)setPayments(values[3]);
  },[]);
  useEffect(()=>{void refresh()},[refresh]);
+ useEffect(()=>{
+  let live=true;
+  fetch("/api/sasi/software/catalog",{cache:"no-store"})
+    .then(r=>r.ok?r.json():null)
+    .then(j=>{if(live)setFeaturedReady(j?.products?.[featured.id]?.available===true)})
+    .catch(()=>{if(live)setFeaturedReady(false)});
+  return()=>{live=false};
+ },[featured.id]);
+ useEffect(()=>{
+  if(!showStudio)return;
+  const frame=requestAnimationFrame(()=>document.getElementById("sasi-seller-studio")?.scrollIntoView({block:"start",behavior:"smooth"}));
+  return()=>cancelAnimationFrame(frame);
+ },[showStudio]);
  useEffect(()=>{
   if(!listings.length){setImages({});return;}
   let current=true;
@@ -125,7 +141,7 @@ export default function SasiOpenMarketplace(){
       <span className={styles.eyebrow}>LINGXIFIELD / SASI</span>
       <h1>{zh?"SASI 智能软件市场":"SASI Software Marketplace"}</h1>
       <p>{zh?"源码授权 · 开发者发布 · 安全交付":"Source licenses · Developer publishing · Secure delivery"}</p>
-      <div className={styles.heroLinks}><a href="#products">{zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>{zh?"发布产品":"Publish software"}</button></div>
+      <div className={styles.heroLinks}><a href="#featured">{zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>{zh?"发布产品":"Publish software"}</button></div>
     </div>
     <div className={styles.laptopScene} aria-hidden="true">
       <div className={styles.alienPlant}><i/><i/><i/><i/><i/><b/></div>
@@ -145,6 +161,25 @@ export default function SasiOpenMarketplace(){
     <div><span>▣</span><strong>{zh?"私有文件交付":"Private delivery"}</strong></div>
     <div><span>✓</span><strong>{zh?"订单授权记录":"Order & licenses"}</strong></div>
   </div>
+  <section id="featured" className={styles.featured}>
+   <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{zh?"精选软件":"Featured software"}</h2></div>
+    <a href="#products" className={styles.featuredBrowse}>{zh?"浏览开发者作品":"Browse creator software"}</a></div>
+   <article className={styles.featuredCard}>
+    <div className={styles.featuredVisual} aria-hidden="true"><small>MT5 · SOURCE</small><strong>SI 9.5</strong><span>CODE · LICENSE</span></div>
+    <div className={styles.featuredDescription}>
+     <p className={styles.featuredBadge}>{zh?"仅售源码授权版":"Source code license only"}</p>
+     <h3>{zh?featured.titleZh:featured.titleEn}</h3>
+     <p>{zh?featured.featureZh:featured.featureEn}</p>
+     <div className={styles.featuredChips}><span>MT5</span><span>{zh?"源码交付":"Source delivery"}</span><span>{zh?"使用说明":"Documentation"}</span><span>{zh?"只读观察":"Read-only observation"}</span></div>
+    </div>
+    <div className={styles.featuredPrice}>
+     <strong>¥{featured.priceCny.toLocaleString("en-US")}</strong>
+     <small>USD {"$"}{featured.priceUsd.toLocaleString("en-US")}</small>
+     <Link href={featuredReady?"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware":"/sasi/delivery"}
+      className={styles.featuredAction}>{featuredReady?(zh?"查看购买方式":"Choose payment"):(zh?"查看软件详情":"View details")}</Link>
+    </div>
+   </article>
+  </section>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / COMMUNITY</small><h2>{zh?"软件作品与卖家服务":"Software & seller services"}</h2></div>
    <div className={styles.find}><input aria-label={zh?"搜索软件":"Search software"} placeholder={zh?"搜索 EA、指标、应用…":"Find EAs and software…"} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{zh?"全部":"All"}</button>{CATEGORIES.map(([key,label])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{label}</button>)}</div>
