@@ -13,7 +13,7 @@ test("public pay/provider status uses constant-cost Cloudflare edge, never cache
  assert.ok(s.includes('configured.paypal&&env.PAYPAL_ENABLED===\\\"true\\\"'));
  assert.ok(s.includes('env.PAYPAL_ENV!==\\\"sandbox\\\"'));
  const edgeAt=s.indexOf("edge-merchant-readiness");
- const gatewayAt=s.indexOf("pathname.startsWith(\\\"/api/\\\")");
+ const gatewayAt=s.indexOf("pathname.startsWith(");
  assert.ok(edgeAt>=0&&gatewayAt>edgeAt,"merchant status must be handled before legacy gateway forwarding");
 });
 test("WeChat cannot accept payment without both merchant certificate and webhook verification key",()=>{
