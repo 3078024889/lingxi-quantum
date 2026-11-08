@@ -85,6 +85,11 @@ jobs:
               -o ".open-next/assets/__lingxi_edge_static__/$file.html"
             echo "COM_ANON_HTML_SNAPSHOT route=/$route file=$file"
           done
+          curl --noproxy '*' -fSs --retry 2 --max-time 40 \
+            -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
+            http://127.0.0.1:8787/api/sasi/software/catalog \
+            -o .open-next/assets/__lingxi_edge_static__/software-catalog.json
+          echo 'COM_PUBLIC_SOFTWARE_CATALOG_JSON_SNAPSHOT_CAPTURED'
           kill "$pid" 2>/dev/null || true
           wait "$pid" 2>/dev/null || true
           trap 'rm -f .dev.vars' EXIT
@@ -153,7 +158,7 @@ jobs:
               status="$(curl -4sS --connect-timeout 9 --max-time 30 -D "$h" -o /dev/null -w '%{http_code}' "$url$path" || true)"
               echo "COM_CANARY_PAGE path=$path repetition=$i HTTP_$status"
               test "$status" = 200 || exit 1
-              if [[ "$path" = / || "$path" = /siai || "$path" = /tools || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai ]];then
+              if [[ "$path" = / || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai ]];then
                 grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
               fi
               rm -f "$h"
