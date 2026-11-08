@@ -18,6 +18,7 @@ UNIT="/etc/systemd/system/${NEW}.service"
 NGINX=/etc/nginx/conf.d/lingxifield.conf
 BASE=/opt/lingxifield/cn-staged-releases
 STAGE_ENV="/etc/lingxifield/staging-3192-${SHORT}.env"
+PROD_FLAGS="/etc/lingxifield/tool-pass-3192-${SHORT}.env"
 FILE="cn-20261108-admin-toolpass-standalone.tar.gz"
 CHECK="cn-20261108-admin-toolpass-standalone.sha256"
 TAGURL="https://github.com/3078024889/lingxi-quantum/releases/download/${TAG}"
@@ -53,8 +54,13 @@ probe(){
   code /tools/pass 200
   code /api/sasi/account 401
   code /api/tools/jobs 401
+  # The anonymous boundary must run through enabled backend accounting (401), not a disabled 503.
+  code '/api/tools/access?toolSlug=compress-image' 401
   code /api/account/money-admin/access 200
   code /api/pay/providers 200
+  code /api/site-announcements 200
+  code /sasi/marketplace 200
+  code /announcements 200
   curl --noproxy '*' -fsS --max-time 12 -H 'Host: lingxifield.cn' \
    http://127.0.0.1:3192/api/tools/pass | "$NODE" -e '
 let data="";process.stdin.on("data",x=>data+=x).on("end",()=>{
@@ -197,7 +203,7 @@ done
 }
 systemctl is-active --quiet "$NEW" || { echo "CN3192_STAGE_NOT_ACTIVE" >&2; exit 1; }
 probe || { echo "CN3192_PREPROMOTION_GATE_FAILED" >&2; exit 1; }
-[[ ! -e "$UNIT.rollback-$SHORT" ]] || { echo "PROMOTION_ROLLBACK_UNIT_ALREADY_EXISTS" >&2; exit 1; }
+[[ ! -e "$UNIT.rollback-$SHORT" && ! -e "$PROD_FLAGS" ]] || { echo "PROMOTION_ROLLBACK_OR_FLAGS_ALREADY_EXIST" >&2; exit 1; }
 PRODUCTION_ORIGINAL="$NGINX.before-cn3192-$SHORT-$(date -u +%Y%m%dT%H%M%SZ)"
 [[ ! -e "$PRODUCTION_ORIGINAL" ]] || { echo "PROMOTION_NGINX_BACKUP_EXISTS" >&2; exit 1; }
 # Unknown or shared Nginx layouts fail closed instead of changing other virtual hosts.
@@ -215,11 +221,23 @@ rollback() {
   cp -a "$PRODUCTION_ORIGINAL" "$NGINX" || true
   nginx -t && systemctl reload nginx || true
   cp -a "$UNIT.rollback-$SHORT" "$UNIT" || true
+  rm -f "$PROD_FLAGS" || true
   systemctl daemon-reload || true
   systemctl restart "$NEW" || true
 }
-# Change only the isolated candidate to use the already validated production env.
-sed -i "\\|^EnvironmentFile=$STAGE_ENV$|d" "$UNIT"
+# Preserve the original three environment files. The last narrow override
+# enforces daily use and leaves collection disabled until real PSP confirmation.
+# This prevents an apparently healthy production release silently retaining a 503 quota API.
+(
+  umask 077
+  : > "$PROD_FLAGS"
+  printf '%s\\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' \
+    'TOOL_PASS_BACKEND_READY=true' \
+    'TOOL_PASS_COMMERCE_READY=false' > "$PROD_FLAGS"
+)
+chmod 600 "$PROD_FLAGS"
+sed -i "s|^EnvironmentFile=$STAGE_ENV$|EnvironmentFile=$PROD_FLAGS|" "$UNIT"
+grep -Fxq "EnvironmentFile=$PROD_FLAGS" "$UNIT" || { rollback; exit 1; }
 if grep -Fxq "EnvironmentFile=$STAGE_ENV" "$UNIT";then rollback;exit 1;fi
 for src in "${LIVE_ENV_FILES[@]}"; do
   grep -Fxq "EnvironmentFile=$src" "$UNIT" || { rollback;exit 1; }
