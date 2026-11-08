@@ -16,7 +16,7 @@ jobs:
           base='https://lingxifield-com-main-20261108.3078024889.workers.dev'
           failures=0
           for path in /siai /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai \
-             /tools/pdf-compress /tools/image-compress /tools/video-compress;do
+             /tools/pdf-compress /tools/image-to-pdf-pro /tools/video-toolkit;do
             ok=0
             for i in 1 2;do
               st="$(curl -4sS --connect-timeout 10 --max-time 30 -o /dev/null -w '%{http_code}' "$base$path" || true)"
