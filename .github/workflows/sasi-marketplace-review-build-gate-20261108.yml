@@ -12,6 +12,7 @@ on:
       - 'lib/sasi-marketplace/**'
       - 'scripts/marketplace/**'
       - 'supabase/migrations/20261108193000_sasi_market_scanner_and_admin_review.sql'
+      - 'supabase/migrations/20261108194500_sasi_market_paypal_usd_verified_sale.sql'
       - 'tests/marketplace/**'
       - 'tests/sasi-marketplace-review-security-20261108.test.mjs'
       - '.github/workflows/sasi-marketplace-review-build-gate-20261108.yml'
