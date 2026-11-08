@@ -39,6 +39,6 @@
 .earnings{display:grid;grid-template-columns:1fr 1fr;gap:14px}.payoutForm{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:end;margin-top:14px;max-width:610px}.payoutForm input,.payoutForm select{margin-top:0}.payoutForm button{margin:0}
 @media(max-width:880px){.hero{grid-template-columns:1fr}.heroRate{display:none}.products{grid-template-columns:repeat(2,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.main{padding:16px 11px 50px}.hero{padding:23px 19px;border-radius:17px}.hero h1{font-size:28px}.products,.workspace{grid-template-columns:1fr}.section{margin-top:30px}.sectionHeading h2{font-size:21px}.find{min-width:100%;width:100%}.metrics>div{padding:15px}.metrics strong{font-size:22px}.formCard{padding:19px}.payoutForm{grid-template-columns:110px 1fr}.payoutForm button{grid-column:1/-1}.earnings>div{padding:14px 15px}.earnings strong{font-size:19px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.main *, .main *:before, .main *:after{animation:none!important;transition:none!important}}
 
 .cover{display:block;width:100%;height:100%;max-height:115px;object-fit:cover}
