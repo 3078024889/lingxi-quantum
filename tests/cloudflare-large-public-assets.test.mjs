@@ -18,15 +18,16 @@ const mockR2={
   return meta?{size:meta.bytes,httpEtag:'"verified-etag"'}:null;
  }
 };
-test("all seven directly-named oversized source files are mapped to exact public read-only paths",()=>{
- assert.equal(names.length,7);
+test("remaining oversized tool runtime files are mapped without retired field video",()=>{
+ assert.equal(names.length,6);
+ assert(!names.includes("/images/entrance/lingxi-opening-desktop-v310.mp4"));
  assert(names.every(path=>largePublicAssets[path].bytes>25*1024*1024));
  assert(names.every(path=>path.startsWith("/models/")||path.startsWith("/images/")||path.startsWith("/runtime/")||path.startsWith("/media/ffmpeg-0.12.10/")));
  const cfg=JSON.parse(readFileSync("wrangler.jsonc","utf8"));
  assert.equal(cfg.main,".open-next/offload-worker.mjs");
  assert.equal(cfg.r2_buckets[0].binding,"LINGXI_PUBLIC_LARGE_R2");
- assert.deepEqual(cfg.assets.run_worker_first.slice(0,7),names);
- assert.equal(cfg.assets.run_worker_first[7],"/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm");
+ assert.deepEqual(cfg.assets.run_worker_first.slice(0,names.length),names);
+ assert.equal(cfg.assets.run_worker_first[names.length],"/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm");
  assert.equal(cfg.workers_dev,false);
 });
 test("requests outside the exact manifest never access R2",async()=>{

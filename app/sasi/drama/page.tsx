@@ -1,2 +1,2 @@
 import {redirect} from "next/navigation";
-export default function Page(){redirect("/sasi?mode=drama")}
+export default function Page(){redirect("/sasi");}

@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/sasi-software-commerce-com-admin-20261108
+      - cleanup/retired-sasi-field-20261108
     paths:
       - 'app/sasi/**'
       - 'app/account/software/**'
@@ -61,6 +62,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Commission and revenue invariants
         run: node tests/sasi-marketplace-fee.test.mjs
+      - name: Retired creation endpoints and remaining Cloudflare tool assets
+        run: node --test tests/legacy-sasi-retirement.test.mjs tests/cloudflare-large-public-assets.test.mjs
       - name: Seller, private storage, buyer entitlements and payouts
         run: node tests/sasi-marketplace-security-contract.test.mjs
       - name: Direct four-tier toolpass merchant fulfillment regression
