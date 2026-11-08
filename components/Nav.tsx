@@ -1,7 +1,6 @@
 "use client";
 
 import NextImage from "next/image";
-import {imageCreationLabel} from '@/lib/sasi/entry-copy';
 import {openMiniShare} from '@/lib/mini/share-client';
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
@@ -40,11 +39,12 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   ],
 ]
 
+const softwareNavNames:Record<LingxiLang,string>={zh:"SASI 智能软件",en:"SASI Software",ja:"SASI ソフトウェア",ko:"SASI 소프트웨어",fr:"Logiciels SASI",de:"SASI Software",es:"Software SASI",pt:"Software SASI",ar:"برمجيات SASI"};
 const marketNavNames:Record<LingxiLang,string>={zh:"全球 SIAI 排行榜",en:"Global SIAI Rankings",ja:"世界の SIAI ランキング",ko:"글로벌 SIAI 순위",fr:"Classement mondial SIAI",de:"Globales SIAI-Ranking",es:"Ranking mundial SIAI",pt:"Ranking global SIAI",ar:"ترتيب SIAI العالمي"};
 
 function active(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
-  if (pathname === "/sasi/pricing") return href === "/ai-wallet";
+  if (pathname === "/sasi/pricing") return href === "/sasi";
   if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/");
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -83,6 +83,8 @@ export default function Nav() {
   const [query, setQuery] = useState("");
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [isMoneyAdmin,setIsMoneyAdmin]=useState(false);
+ const [isComHost,setIsComHost]=useState(false);
+ useEffect(()=>{setIsComHost(["lingxifield.com","www.lingxifield.com"].includes(window.location.hostname.toLowerCase()))},[]);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [miniRecharge, setMiniRecharge] = useState(false);
@@ -173,7 +175,7 @@ export default function Nav() {
       </div>
 
       <div className="lx11-nav-scroll">
-        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{t("newTask")}</span></Link>
+        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{lang==="zh"?"软件商城":"SASI Software"}</span></Link>
 
         {groups.map((group, index) => (
           <section key={index} className="lx11-group">
@@ -185,7 +187,7 @@ export default function Nav() {
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
                 <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{item.href==="/siai"?marketNavNames[lang]:t(item.key)}</span>
+                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:t(item.key)}</span>
               </Link>
             ))}
           </section>
@@ -194,6 +196,7 @@ export default function Nav() {
           zh:"全场实用工具包",en:"All-tools Pass",ja:"全ツール共通パス",ko:"전체 도구 이용권",fr:"Pass tous outils",de:"Werkzeug-Pass",es:"Pase de herramientas",pt:"Passe de ferramentas",ar:"باقة جميع الأدوات"
         } as Record<typeof lang,string>)[lang]}</span></Link>
         {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
+        {!isMoneyAdmin&&signedIn&&isComHost&&<a href="https://lingxifield.cn/account/money-admin" className="lx11-link" title={lang==="zh"?"海外站尚未完成管理员后端配置，转至共用数据库的国内安全控制台":"Global admin backend pending; open China control plane"}><LingxiMiniIcon name="wallet" size="nav"/><span>{lang==="zh"?"管理后台 · 国内控制台 ↗":"Admin · China control plane ↗"}</span></a>}
       </div>
 
       <div style={{padding:"10px 12px 4px"}}>
@@ -233,8 +236,8 @@ export default function Nav() {
         </form>
 
         <div className="lx11-top-actions">
-          <Link href="/sasi" className="lx11-top-link">✨ ＋ {t("create")}</Link>
-          <Link href="/sasi?mode=image" className="lx11-top-link">{imageCreationLabel(lang)}</Link>
+          <Link href="/sasi" className="lx11-top-link">{softwareNavNames[lang]}</Link>
+          <Link href="/account/software" className="lx11-top-link">{lang==="zh"?"我的软件":"My Software"}</Link>
 
           <CurrencySelector compact />
 
