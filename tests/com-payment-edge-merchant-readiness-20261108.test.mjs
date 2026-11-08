@@ -16,6 +16,13 @@ test("public pay/provider status uses constant-cost Cloudflare edge, never cache
  const gatewayAt=s.indexOf("pathname.startsWith(");
  assert.ok(edgeAt>=0&&gatewayAt>edgeAt,"merchant status must be handled before legacy gateway forwarding");
 });
+test("scoped health endpoint is lightweight and never implies payment readiness",()=>{
+ const s=read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
+ assert.ok(s.includes('pathname===\\\"/api/health\\\"'));
+ assert.ok(s.includes('x-lingxi-health-scope'));
+ assert.ok(s.includes('scope:\\"edge-liveness\\"'));
+ assert.ok(s.indexOf('x-lingxi-health-scope')<s.indexOf('edge-merchant-readiness'));
+});
 test("WeChat cannot accept payment without both merchant certificate and webhook verification key",()=>{
  const wechat=read("lib/wechatpay.ts");
  assert.match(wechat,/export function wechatPayEnabled/);
