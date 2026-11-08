@@ -7,7 +7,6 @@ import {pathToFileURL} from "node:url";
 
 export const STATIC_ASSET_LIMIT = 25 * 1024 * 1024;
 export const TRACKED_LARGE_ASSETS = Object.freeze([
-  "images/entrance/lingxi-opening-desktop-v310.mp4",
   "models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx",
   "models/Xenova/clip-vit-base-patch32/onnx/vision_model_quantized.onnx",
   "models/onnx-community/swin-finetuned-food101-ONNX/onnx/model_q4f16.onnx",
