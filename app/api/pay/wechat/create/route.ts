@@ -12,6 +12,7 @@ import {
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
 import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
+import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest) {
       }
       cookieStore.delete("lingxi_wechat_oauth_state");
     }
-    const product = getProduct(productId);
+    const product = getProduct(productId) || await resolveMarketplaceProduct(productId);
     if (!product) {
       return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     }
@@ -92,6 +93,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });
     }
 
+    if(product.group==="market"&&product.sellerId===user.id)
+      return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
     const admin = createAdminClient();
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-wechat",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
@@ -104,6 +107,7 @@ export async function POST(req: NextRequest) {
         product_type: product.type,
         amount_usd: product.priceUsd,
         amount_rmb: product.priceRmb,
+        currency: "CNY",
         status: "pending",
         provider: "wechat",
       })
