@@ -30,8 +30,8 @@ export async function POST(req:NextRequest){
   const {data:info,error:infoError}=await admin.storage.from("sasi-market-quarantine").info(path);
   if(infoError||!info||!info.size||info.size>31457280)
    return NextResponse.json({error:"FILE_MISSING_OR_TOO_LARGE"},{status:400,headers:h});
-  if(!["application/zip","application/x-zip-compressed","application/octet-stream"].includes(info.mimetype||""))
-   return NextResponse.json({error:"NOT_A_SOFTWARE_ZIP"},{status:400,headers:h});
+  // Storage metadata is not proof of ZIP format. Keep this file quarantined
+  // until the independent content-signature and malware scan pass.
   const {data:saved,error:savedError}=await admin.from("sasi_market_listings").update({
    status:"submitted",file_size_bytes:info.size,scan_status:"unscanned"
   }).eq("id",listing.id).eq("seller_id",user.id).eq("status","draft")
