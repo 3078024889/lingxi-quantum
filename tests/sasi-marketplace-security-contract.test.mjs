@@ -25,7 +25,7 @@ assert.match(listings,/isSameOriginMutation/);
 assert.match(listings,/enforceAbuseGuard/);
 assert.match(listings,/\.eq\("seller_id",user\.id\)/);
 const uploader=read("app/api/sasi/marketplace/upload-ticket/route.ts");
-assert.match(uploader,/SASI_MARKET_UPLOADS_ENABLED!=="true"/);
+assert.match(uploader,/!marketplaceR2Ready\(\)/);
 assert.match(uploader,/profile\?\.status!=="approved"/);
 assert.match(uploader,/signedMarketplaceUpload/);
 assert.match(uploader,/newMarketplaceObjectKey/);
@@ -55,6 +55,8 @@ for(const content of [wx,ali]){
 const fulfill=read("lib/fulfill-order.ts");
 assert.match(fulfill,/isMarketProductId/);
 assert.match(fulfill,/sasi_market_record_verified_sale/);
+assert.match(fulfill,/PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
+assert.match(read("lib/sasi-marketplace/checkout.ts"),/wechatPayEnabled\(\)\|\|alipayEnabled\(\)/);
 const checkout=read("app/checkout/page.tsx");
 assert.match(checkout,/marketProductCanBuy/);
 assert.match(checkout,/isMarketProductId/);
