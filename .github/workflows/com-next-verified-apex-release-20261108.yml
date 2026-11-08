@@ -20,6 +20,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       COM_VERIFIED_CANARY_RUN: '42466934312'
       COM_VERIFIED_CANARY_SHA: '47291c88edef993fedbdfe5763df73ccff77c20b'
+      # Live route read-only audit 42468436728: announcements use a dedicated public Worker.
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: {persist-credentials: false}

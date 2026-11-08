@@ -86,12 +86,18 @@ const target=routes.filter(x=>x.pattern===oldPattern);
 if(target.length!==1||target[0].script!==prev)throw Error("PRODUCTION_APEX_WILDCARD_NOT_EXPECTED");
 const www=routes.filter(x=>x.pattern==="www.lingxifield.com/*");
 if(www.length!==1||www[0].script!==wwwPrev)throw Error("WWW_WILDCARD_CHANGED_STOP");
-for(const pattern of ["lingxifield.com/api/account/money-admin*",
- "lingxifield.com/api/tools/pass*","lingxifield.com/api/site-announcements*"]){
+const specialized={
+ "lingxifield.com/api/account/money-admin*":"lingxifield-com-admin-facade",
+ "lingxifield.com/api/tools/pass*":"lingxifield-com-admin-facade",
+ "lingxifield.com/api/site-announcements*":"lingxifield-com-public-announcements-20261108"
+};
+for(const [pattern,expectedWorker] of Object.entries(specialized)){
  const matched=routes.filter(x=>x.pattern===pattern);
- if(matched.length!==1||matched[0].script!=="lingxifield-com-admin-facade")
-  throw Error("SPECIAL_ADMIN_ROUTE_CHANGED_STOP:"+pattern);
+ if(matched.length!==1||matched[0].script!==expectedWorker)
+  throw Error("SPECIAL_PRODUCTION_ROUTE_CHANGED_STOP:"+pattern);
 }
+const publicFeed=await status("https://lingxifield.com/api/site-announcements");
+if(publicFeed.status!==200)throw Error("COM_PUBLIC_ANNOUNCEMENT_WORKER_NOT_READY");
 const routeEndpoint="/zones/"+zone+"/workers/routes/"+target[0].id;
 console.log("COM_APEX_ROUTE_GUARD_ALL_FIVE_PASSED");
 let changed=false, success=false;
@@ -104,6 +110,8 @@ try{
  changed=true;
  console.log("COM_APEX_ROUTE_UPDATED_NEXT_ONLY");
  await probe("https://lingxifield.com","POSTCUTOVER",2);
+ const feedAfter=await status("https://lingxifield.com/api/site-announcements");
+ if(feedAfter.status!==200)throw Error("COM_PUBLIC_ANNOUNCEMENTS_POSTCUTOVER_FAILED");
  const oldWww=await status("https://www.lingxifield.com/siai");
  console.log("COM_WWW_CANONICAL_HTTP_"+oldWww.status);
  if(oldWww.status!==308)throw Error("WWW_CANONICAL_REDIRECT_CHANGED");
