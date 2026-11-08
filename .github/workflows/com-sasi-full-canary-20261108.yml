@@ -105,6 +105,9 @@ jobs:
           if((j.r2_buckets||[]).length!==1||j.r2_buckets[0].bucket_name!=='lingxifield-com-large-public')throw Error('R2_BINDING_UNEXPECTED');
           j.name=process.env.CANDIDATE_NAME;
           j.workers_dev=true;
+          // The previous public gateway remains an internal API service, not a DNS route.
+          // Cloudflare service binding forwards original Request (auth/session/cookies intact).
+          j.services=[{binding:'LINGXI_COM_LEGACY_GATEWAY',service:'lingxifield-com-static-gateway-canary-20261107'}];
           // Wrangler >=4.150 uploads maps by default; current minified map is >60MiB.
           j.upload_source_maps=false;
           delete j.route;delete j.routes;
@@ -128,6 +131,7 @@ jobs:
           fs.writeFileSync('wrangler.candidate.jsonc',JSON.stringify(j,null,2));
           const again=JSON.parse(fs.readFileSync('wrangler.candidate.jsonc','utf8'));
           if(again.name!==process.env.CANDIDATE_NAME||again.workers_dev!==true||again.routes||again.route)throw Error('UNSAFE_PRODUCTION_ROUTE_CONFIG');
+          if(again.services?.length!==1||again.services[0].service!=='lingxifield-com-static-gateway-canary-20261107')throw Error('COM_LEGACY_API_SERVICE_NOT_PRESERVED');
           console.log('ISOLATED_CANDIDATE_ROUTES_NONE_PAYMENT_DISABLED');
           NODE
           pnpm exec wrangler deploy --config wrangler.candidate.jsonc --minify --dry-run --outdir "$RUNNER_TEMP/cf-candidate-dry-run"
