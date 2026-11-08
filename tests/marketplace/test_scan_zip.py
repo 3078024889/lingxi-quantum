@@ -25,6 +25,11 @@ class MarketScannerPolicyTest(unittest.TestCase):
     def test_valid_source_zip(self):
         x=self.inspect(make([("source/robot.mq5",b"// code"),("docs/readme.txt",b"guide")]))
         self.assertEqual(x["files"],2)
+    def test_opaque_secret_keys_do_not_use_bearer(self):
+        source=Path(scanner_path).read_text()
+        self.assertIn('if not secret.startswith("sb_secret_"):',source)
+        self.assertIn('headers["Authorization"] = "Bearer " + secret',source)
+
     def test_reject_traversal(self):
         with self.assertRaisesRegex(ValueError,"UNSAFE_ZIP_PATH"):
             self.inspect(make([("../escape.txt",b"bad")]))
