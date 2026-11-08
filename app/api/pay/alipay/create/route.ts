@@ -6,6 +6,7 @@ import { alipayEnabled, alipaySiteUrl, createAlipayPaymentUrl } from "@/lib/alip
 import { safeLocalReturnPath, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
@@ -27,6 +28,8 @@ export async function POST(req: NextRequest) {
     const { productId, returnPath } = await req.json();
 const product = getProduct(productId) || await resolveMarketplaceProduct(productId);
     if (!product) return NextResponse.json({ error: "无效的项目" }, { status: 400 });
+    if(product.group==="toolpass"&&!toolPassBackendReady())
+      return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
     if (product.group === "production" && !sasiTopupProductEnabled(product.id)) return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     if(product.group==="software"&&!await softwareCheckoutReady(product.id))
       return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
@@ -63,7 +66,7 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
       const paymentUrl = createAlipayPaymentUrl({
         outTradeNo,
         amountRmb: product.priceRmb,
-        subject: `灵犀场余额-${product.name}`,
+        subject: `灵犀场-${product.name}`,
         notifyUrl: `${baseUrl}/api/pay/alipay/notify`,
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,
