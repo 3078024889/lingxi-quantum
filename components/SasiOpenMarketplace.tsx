@@ -152,19 +152,11 @@ export default function SasiOpenMarketplace(){
        <p>{zh?"源码授权 · 开发者发布 · 自动交付 · 安全可靠":"Source licenses · Developer publishing · Verified digital delivery"}</p>
        <div className={styles.heroLinks}><a href="#products">◇ {zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {zh?"发布产品":"Publish software"}</button></div>
      </div>
-     <div className={styles.laptopScene} aria-hidden="true"><span className={styles.originalArtwork}/>
-      <div className={styles.alienPlant}><i/><i/><i/><i/><i/><b/></div>
-      <div className={styles.crystalCup}><span>SASI</span></div>
-      <div className={styles.laptopDisplay}>
-        <div className={styles.laptopTop}><span/><span/><span/><i>SASI / CODE</i></div>
-        <div className={styles.laptopEditor}><div className={styles.editorNumbers}>01<br/>02<br/>03<br/>04<br/>05<br/>06</div>
-          <div className={styles.editorCode}><i className={styles.code1}/><i className={styles.code2}/><i className={styles.code3}/><i className={styles.code4}/><i className={styles.code5}/><i className={styles.code6}/></div>
-        </div>
-      </div>
-      <div className={styles.laptopKeyboard}/><div className={styles.laptopShadow}/>
-    </div>
+     <div className={styles.laptopScene} aria-hidden="true">
+      <img src="/images/sasi/hero-original.webp" className={styles.originalArtwork} alt="" loading="eager" decoding="async" draggable={false}/>
+     </div>
   </div>
-  <div className={styles.benefits}>
+    <div className={styles.benefits}>
      <div><span>⬡</span><div><strong>{zh?"源码授权":"Source licensing"}</strong><small>{zh?"仅售源码 · 权属清晰":"Clear license and ownership"}</small></div></div>
      <div><span>ϟ</span><div><strong>{zh?"自动交付":"Digital delivery"}</strong><small>{zh?"付款验证后获取":"After verified payment"}</small></div></div>
      <div><span>◇</span><div><strong>{zh?"安全可靠":"Secure by design"}</strong><small>{zh?"私有 R2 存储":"Private R2 storage"}</small></div></div>
