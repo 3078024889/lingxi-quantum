@@ -45,10 +45,14 @@ def rest(method: str, route: str, payload=None, query=None):
     data = None if payload is None else json.dumps(payload, separators=(",", ":")).encode()
     headers = {
         "apikey": secret,
-        "Authorization": "Bearer " + secret,
         "Accept": "application/json",
         "Content-Type": "application/json",
     }
+    # New Supabase sb_secret_ keys are opaque API keys, NOT JWTs. Sending
+    # them in Authorization: Bearer is rejected by the REST gateway.
+    # Legacy service_role JWTs require the Authorization header.
+    if not secret.startswith("sb_secret_"):
+        headers["Authorization"] = "Bearer " + secret
     request = urllib.request.Request(url, data=data, method=method, headers=headers)
     with urllib.request.urlopen(request, timeout=25) as resp:
         body = resp.read(128 * 1024)
