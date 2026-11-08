@@ -56,6 +56,7 @@ jobs:
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
           node --test tests/sasi-com-closure-20261108.test.mjs tests/com-next-release-safety-20261108.test.mjs
           node --test tests/com-wallet-static-session-contract-20261108.test.mjs
+          node --test tests/com-payment-edge-merchant-readiness-20261108.test.mjs
           pnpm exec tsc --noEmit
       - name: Build full official Cloudflare runtime and offload oversized assets
         run: |
