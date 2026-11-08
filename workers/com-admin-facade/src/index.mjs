@@ -6,10 +6,28 @@
  * Cloudflare Route must be /api/account/money-admin* (most-specific route)
  * after separate CI/Cloudflare cutover and authenticated admin browser acceptance.
  */
-const ALLOWED=new Set(["/api/account/money-admin","/api/account/money-admin/access"]);
+const ALLOWED=new Set(["/api/account/money-admin","/api/account/money-admin/access","/api/site-announcements"]);
 const SITES=new Set(["lingxifield.com","www.lingxifield.com"]);
 const UPSTREAM="https://lingxifield.cn";
 function json(obj,status){return new Response(JSON.stringify(obj),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"private, no-store","x-content-type-options":"nosniff"}})}
+async function readSmallRequestBody(request,maxBytes=16384){
+ if(!request.body)return new Uint8Array();
+ const reader=request.body.getReader();
+ const chunks=[];let size=0;
+ try{
+  for(;;){
+   const {value,done}=await reader.read();
+   if(done)break;
+   size+=value.byteLength;
+   if(size>maxBytes){await reader.cancel();return null}
+   chunks.push(value);
+  }
+ }finally{try{reader.releaseLock()}catch{}}
+ const bytes=new Uint8Array(size);let offset=0;
+ for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength}
+ return bytes;
+}
+
 export default {
  async fetch(request){
   const url=new URL(request.url);
@@ -26,6 +44,8 @@ export default {
    if(!/^application\/json\b/i.test(request.headers.get("content-type")||""))
      return json({error:"JSON_REQUIRED"},415);
   }
+  const body=request.method==="POST"?await readSmallRequestBody(request):undefined;
+  if(body===null)return json({error:"REQUEST_TOO_LARGE"},413);
   const upstream=new URL(url.pathname+url.search,UPSTREAM);
   const headers=new Headers();
   const cookie=request.headers.get("cookie");if(cookie)headers.set("cookie",cookie);
@@ -37,9 +57,8 @@ export default {
   }
   const options={method:request.method,headers,redirect:"manual",cache:"no-store"};
   if(request.method==="POST"){
-   // Stream without buffering large body; <=16KB must be enforced by frontend
-   // and rechecked at the .cn API entrypoint.
-   options.body=request.body;
+   // Bound read at 16 KiB even when Content-Length is missing.
+   options.body=body;
   }
   try{
    const result=await fetch(upstream.toString(),options);
