@@ -42,3 +42,5 @@ jobs:
           print("CURRENT_ZONE_SCRIPT_NAMES",json.dumps(scripts))
           print("READ_ONLY_VERIFIED_NO_CF_MUTATIONS")
           PY
+
+# Read-only resnapshot after 2026-11-08 cutover blocked by changed live route ownership.
