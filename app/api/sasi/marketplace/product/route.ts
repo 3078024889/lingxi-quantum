@@ -18,8 +18,9 @@ export async function GET(req:NextRequest){
    id:"sasi-market:"+r.id,name:r.title,nameEn:r.title,priceRmb:r.price_cny_minor/100,
    priceUsd:r.price_usd_minor/100,type:"permanent",group:"market",note:r.description,noteEn:r.description
   },available:marketplaceCommerceReady()&&
-     (wechatPayEnabled()||alipayEnabled()||
-      (process.env.PAYPAL_ENABLED==="true"&&Boolean(process.env.PAYPAL_CLIENT_ID&&process.env.PAYPAL_CLIENT_SECRET&&process.env.PAYPAL_WEBHOOK_ID)))
+     (req.nextUrl.searchParams.get("currency")==="USD"?
+      process.env.PAYPAL_ENABLED==="true"&&Boolean(process.env.PAYPAL_CLIENT_ID&&process.env.PAYPAL_CLIENT_SECRET&&process.env.PAYPAL_WEBHOOK_ID):
+      (wechatPayEnabled()||alipayEnabled()))
   },{headers:{"Cache-Control":"private,no-store"}});
  }catch{return NextResponse.json({error:"MARKET_UNAVAILABLE"},{status:503,headers:{"Cache-Control":"no-store"}});}
 }
