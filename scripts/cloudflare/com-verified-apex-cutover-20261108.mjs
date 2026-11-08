@@ -27,22 +27,28 @@ async function status(url,opts={}){
   return {status:res.status,headers:res.headers};
  }catch{return {status:0,headers:new Headers()}}
 }
+async function sleep(ms){await new Promise(resolve=>setTimeout(resolve,ms))}
 async function probe(base,phase,attempts=3){
  const routes=["/","/siai","/tools","/sasi","/sasi/marketplace",
    "/announcements","/api/health","/api/pay/providers",
    "/api/sasi/software/catalog","/api/sasi/marketplace/listings"];
  const staticRoutes=new Set(["/","/siai","/tools","/sasi","/sasi/marketplace","/announcements"]);
+ const maxTries=phase==="POSTCUTOVER"?12:attempts;
  for(const path of routes){
-  let good=0;
-  for(let i=0;i<attempts;i++){
-   const result=await status(base+path);
+  let consecutive=0;
+  for(let i=0;i<maxTries;i++){
+   // Unique query bypasses old cached anonymous HTML while the route propagates.
+   const url=base+path+(phase==="POSTCUTOVER"?"?__lx_com_release_gate="+i:"");
+   const result=await status(url);
    const staticOK=!staticRoutes.has(path)||
     result.headers.get("x-lingxi-render-mode")==="static-edge-verified";
    console.log("COM_"+phase+"_PAGE path="+path+" attempt="+(i+1)+
      " http="+result.status+" static="+staticOK);
-   if(result.status===200&&staticOK)good++;
+   if(result.status===200&&staticOK)consecutive++;else consecutive=0;
+   if(consecutive>=attempts)break;
+   if(phase==="POSTCUTOVER")await sleep(4000);
   }
-  if(good!==attempts)throw Error("COM_"+phase+"_UNSTABLE_ROUTE:"+path+":"+good+"/"+attempts);
+  if(consecutive!==attempts)throw Error("COM_"+phase+"_UNSTABLE_ROUTE:"+path+":"+consecutive+"/"+attempts);
  }
  for(const path of ["/api/sasi/marketplace/seller","/api/sasi/marketplace/my-orders"]){
   const x=await status(base+path);
