@@ -11,6 +11,9 @@ on:
       - 'app/api/pay/wechat/create/route.ts'
       - 'app/api/pay/alipay/create/route.ts'
       - 'app/checkout/page.tsx'
+      - 'app/tools/pass/page.tsx'
+      - 'app/api/pay/create/route.ts'
+      - 'app/api/pay/**/notify/route.ts'
       - 'lib/plans.ts'
       - 'lib/fulfill-order.ts'
       - 'lib/sasi-marketplace/**'
@@ -20,6 +23,8 @@ on:
       - 'components/PublicAnnouncementTicker*'
       - 'docs/operations/sasi-marketplace-15pct-private-seller-market-20261108.sql'
       - 'tests/sasi-marketplace-*'
+      - 'tests/toolpass-direct-fulfillment-20261108.test.mjs'
+      - 'docs/operations/tool-pass-direct-payment-fulfillment-20261108.sql'
       - '.github/workflows/sasi-marketplace-seller-release-gate-20261108.yml'
   workflow_dispatch:
 permissions:
@@ -56,6 +61,8 @@ jobs:
         run: node tests/sasi-marketplace-fee.test.mjs
       - name: Seller, private storage, buyer entitlements and payouts
         run: node tests/sasi-marketplace-security-contract.test.mjs
+      - name: Direct four-tier toolpass merchant fulfillment regression
+        run: node tests/toolpass-direct-fulfillment-20261108.test.mjs
       - name: TypeScript check
         run: pnpm exec tsc --noEmit
       - name: Next.js production build (no deploy)
@@ -66,4 +73,4 @@ jobs:
           set -Eeuo pipefail
           test -f .next/BUILD_ID
           test -f .next/server/app/sasi/marketplace/page.js || test -f .next/server/app/sasi/marketplace.html || test -f .next/server/app/sasi/marketplace.rsc
-          echo SASI_MARKET_SOURCE_BUILD_READY_FLAGS_OFF_NO_DEPLOY
+          echo SASI_SELLER_TOOLPASS_SOURCE_BUILD_READY_NO_DEPLOY
