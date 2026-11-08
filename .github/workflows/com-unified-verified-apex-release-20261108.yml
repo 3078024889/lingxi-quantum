@@ -1,0 +1,55 @@
+name: COM verified unified SASI apex release (exact canary and rollback)
+on:
+  pull_request:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - '.github/workflows/com-unified-verified-apex-release-20261108.yml'
+      - 'scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs'
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-unified-verified-apex-release-20261108.yml']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: lingxifield-com-apex-one-time-release
+  cancel-in-progress: false
+jobs:
+  source:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Pin exact verified candidate and check safe script
+        run: |
+          set -Eeuo pipefail
+          node --check scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
+          grep -Fq 'const prev="lingxifield-com-next-20261108"' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
+          grep -Fq 'const next="lingxifield-com-unified-20261108"' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
+          grep -Fq 'COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
+          echo COM_UNIFIED_ROUTE_SCRIPT_SOURCE_GATE_PASS
+  release:
+    if: github.event_name == 'push'
+    needs: source
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 38
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      GH_TOKEN: ${{ github.token }}
+      COM_VERIFIED_CANARY_RUN: '42481477020'
+      COM_VERIFIED_CANARY_SHA: '8729bf958a565ec1dbd2776082416c83170b1d73'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Verify immutable canary and atomically switch apex with rollback
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID" && test -n "$GH_TOKEN"
+          node scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
