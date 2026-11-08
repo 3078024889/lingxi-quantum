@@ -23,7 +23,7 @@ test("plan choice always leads to an explicit payment choice and preserved conse
  const provider=read("app/api/pay/providers/route.ts");
  assert.match(page,/method===\"wechat\"\|\|method===\"alipay\"/);
  assert.match(page,/method===\"paypal\"/);
- assert.match(page,/method===\"wallet\"/);
+ assert.match(page,/id:"wallet" as const/);
  assert.match(page,/selectedChoice\?\.ready/);
  assert.match(page,/role="dialog" aria-modal="true"/);
  assert.match(page,/credentials:"same-origin"/);
