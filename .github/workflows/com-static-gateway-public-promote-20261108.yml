@@ -1,4 +1,5 @@
 name: COM static public gateway exact-route promotion with automatic rollback
+# Re-run 2026-11-08: regex parser correction and exact 124-route mock regression validated.
 on:
   push:
     branches: [infra/com-cloudflare-readiness-20261106]
