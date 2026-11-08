@@ -25,7 +25,7 @@ jobs:
           from pathlib import Path
           code=Path("scripts/ops/ecs-cn3192-standalone-stage-promote-20261108.sh").read_text()
           tokens=[
-            "--plan|--stage|--promote",
+            "--plan|--stage|--verify-stage|--promote",
             "systemctl show \"$SVC\" -p EnvironmentFiles --value",
             'mapfile -t LIVE_ENV_FILES',
             'for src in "${LIVE_ENV_FILES[@]}"; do printf',
@@ -38,6 +38,11 @@ jobs:
             'CN3192_STAGING_PASS_PRODUCTION_3191_UNCHANGED',
             'CN_NEW_3192_NGINX_PROMOTION_PASS_ROLLBACK_FILE',
             'sha256sum -c',
+            'CN3192_STAGED_FILES_NOT_PRESENT',
+            'code /sasi/pricing 307',
+            "code '/api/tools/access?toolSlug=compress-image' 401",
+            'EnvironmentFile=$PROD_FLAGS',
+            "TOOL_PASS_BACKEND_READY=true",
             'CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT'
           ]
           missing=[x for x in tokens if x not in code]
