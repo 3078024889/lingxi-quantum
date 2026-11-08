@@ -60,7 +60,7 @@ assert.match(read("lib/sasi-marketplace/checkout.ts"),/wechatPayEnabled\(\)\|\|a
 const checkout=read("app/checkout/page.tsx");
 assert.match(checkout,/marketProductCanBuy/);
 assert.match(checkout,/isMarketProductId/);
-assert.match(read("app/sasi/page.tsx"),/SasiSoftwareMarket/);
+assert.match(read("app/sasi/page.tsx"),/SasiOpenMarketplace/);
 assert.match(read("app/sasi/marketplace/page.tsx"),/SasiOpenMarketplace/);
 assert.match(read("components/SasiOpenMarketplace.tsx"),/fetch\(ticket\.uploadUrl/);
 assert.match(read("components/SasiOpenMarketplace.tsx"),/image-confirm/);
