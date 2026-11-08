@@ -98,7 +98,7 @@ export default function WalletLivePanel(){
       className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-4 text-center text-lg font-semibold transition hover:border-[var(--lx-line-strong)]">¥{amount}</Link>)}
    </div>
   </section>
-  <section className="mt-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+  <section id="withdrawals" className="mt-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
    <h2 className="text-xl font-semibold"><LxText zh="退款与提现记录" en="Refund and withdrawal history"/></h2>
    {withdrawals.length? <div className="mt-4 divide-y divide-[var(--lx-line)]">
     {withdrawals.map((r,i)=><div key={r.id||i} className="flex items-center justify-between gap-3 py-3 text-sm">
