@@ -3,12 +3,12 @@ on:
   push:
     branches: [release/com-sasi-full-20261108]
     paths:
-      - ''.github/workflows/com-unified-next-isolated-canary-20261108.yml'
+      - '.github/workflows/com-unified-next-isolated-canary-20261108.yml'
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: com-next-sasi-canary-20261108
+  group: com-unified-sasi-canary-20261108
   cancel-in-progress: false
 jobs:
   deploy-isolated:
