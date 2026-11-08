@@ -1,0 +1,28 @@
+name: CN live 3191 admin key bridge safety gate (NO DEPLOY)
+on:
+  push:
+    branches: [fix/dual-site-commerce-admin-toolpass-20261108]
+    paths:
+      - 'scripts/ops/ecs-cn-live3191-admin-hotfix-20261108.py'
+      - 'tests/ops/cn-live3191-admin-hotfix-20261108.py'
+      - '.github/workflows/cn-live3191-admin-hotfix-safety-gate-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Run offline tests on ECS-compatible Python 3.6
+        run: |
+          set -Eeuo pipefail
+          docker run --rm --network none -v "$PWD:/work:ro" -w /work python:3.6.15-slim \
+            python3 tests/ops/cn-live3191-admin-hotfix-20261108.py
+          python3 -m py_compile scripts/ops/ecs-cn-live3191-admin-hotfix-20261108.py
+          grep -q 'CN_3191_ADMIN_KEY_PLAN_READ_ONLY_NO_RESTART' scripts/ops/ecs-cn-live3191-admin-hotfix-20261108.py
+          grep -q 'CN_3191_ORIGINAL_ENV_RESTORED' scripts/ops/ecs-cn-live3191-admin-hotfix-20261108.py
+          echo "CN_3191_ADMIN_KEY_BRIDGE_OFFLINE_SAFETY_PASS_NO_ECS_MUTATIONS"
