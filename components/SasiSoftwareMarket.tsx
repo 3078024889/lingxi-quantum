@@ -19,7 +19,7 @@ export default function SasiSoftwareMarket(){
    <small>{c.eyebrow}</small><h1>{c.title}</h1><p>{c.subtitle}</p>
    <div className={styles.links}><Link href="/siai">SIAI Rankings ↗</Link><Link href="/tools/pass">100+ Tools ↗</Link><Link href="/account/orders">{c.legacy} ↗</Link></div>
   </div><div className={styles.heroViz} aria-hidden="true"><span>SASI</span><strong>SOFTWARE</strong><i>MT5 · SYSTEMS · TOOLS</i><div className={styles.orbits}></div></div></section>
-  <div className={styles.sectionTitle}><div><span>01 / SASI SOFTWARE</span><h2>{lang==="zh"?"产品与授权":"Products & licensing"}</h2></div><span className={styles.state}>{c.status}</span></div>
+  <div id="products" className={styles.sectionTitle}><div><span>01 / SASI SOFTWARE</span><h2>{lang==="zh"?"产品与授权":"Products & licensing"}</h2></div><span className={styles.state}>{c.status}</span></div>
   <div className={styles.products}>{SASI_SOFTWARE_CATALOG.map((p,i)=>{
    const available=state?.products?.[p.id]?.available===true;
    return <article className={styles.product} key={p.id}><div className={styles.top}><span className={styles.symbol}>{i===0?"SI":"</>"}</span><span className={styles.tag}>{lang==="zh"?p.tagZh:p.tagEn}</span></div>
