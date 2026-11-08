@@ -12,7 +12,7 @@ function paypalEnabled(){
  return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&paypalConfigured();
 }
 export async function GET(){
- const wechatConfigured=wechatPayConfigured();
+ const wechatConfigured=wechatPayConfigured()&&Boolean(process.env.WECHAT_PLATFORM_PUBLIC_KEY?.trim()&&process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID?.trim());
  const wechat=wechatPayEnabled();
  const alipayConfigured=alipayMissingVars().length===0;
  const alipay=alipayEnabled();
