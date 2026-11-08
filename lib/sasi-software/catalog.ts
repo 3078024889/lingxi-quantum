@@ -1,7 +1,12 @@
-/** Public product facts; prices are fixed by currency, never FX-converted. */
+/** Only one first-party source-code license. The compiled-only offer was retired.
+ * Currency values are independent list prices, not exchange-rate conversions.
+ * Historical orders remain in the order/fulfillment tables, not in this storefront list.
+ */
 export const SASI_SOFTWARE_CATALOG=Object.freeze([
- {id:"sasi-copernicus-si95-mt5",titleZh:"哥白尼 SI 9.5 · MT5 自动交易软件",titleEn:"Copernicus SI 9.5 · MT5 Trading Software",kind:"binary" as const,priceCny:2888,priceUsd:2888,featureZh:"成品软件授权 · MT5 安装包 · 参数说明 · 模拟账户只读观察",featureEn:"Compiled MT5 EA · installation guide · read-only demo observation",tagZh:"成品软件",tagEn:"Compiled software"},
- {id:"sasi-copernicus-si95-source",titleZh:"哥白尼 SI 9.5 · MT5 源码授权版",titleEn:"Copernicus SI 9.5 · Source License",kind:"source" as const,priceCny:6900,priceUsd:6900,featureZh:"含成品软件与源码许可 · 交付条款独立列明",featureEn:"Compiled software and source-code license · separate license terms",tagZh:"含源码",tagEn:"Source included"}
+ {id:"sasi-copernicus-si95-source",titleZh:"哥白尼 SI9.5 · MT5 源码授权版",titleEn:"Copernicus SI9.5 · MT5 Source Code License",kind:"source" as const,priceCny:6900,priceUsd:6900,
+ featureZh:"MT5 源码包 · 安装与编译说明 · 版本及许可范围 · 模拟账户只读观察",
+ featureEn:"MT5 source package · installation and build guide · license terms · read-only demo access",
+ tagZh:"仅售源码授权",tagEn:"Source license only"}
 ] as const);
 export type SasiSoftwareId=(typeof SASI_SOFTWARE_CATALOG)[number]["id"];
 export function softwareOffer(id:string){return SASI_SOFTWARE_CATALOG.find(x=>x.id===id)||null;}
