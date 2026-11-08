@@ -1,6 +1,8 @@
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {marketProductUuid} from "@/lib/sasi-marketplace/fees";
+import {wechatPayEnabled} from "@/lib/wechatpay";
+import {alipayEnabled} from "@/lib/alipay";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 export async function GET(req:NextRequest){
  const id=marketProductUuid(req.nextUrl.searchParams.get("id")||"");
@@ -14,6 +16,9 @@ export async function GET(req:NextRequest){
   return NextResponse.json({product:{
    id:"sasi-market:"+r.id,name:r.title,nameEn:r.title,priceRmb:r.price_cny_minor/100,
    priceUsd:r.price_usd_minor/100,type:"permanent",group:"market",note:r.description,noteEn:r.description
-  }},{headers:{"Cache-Control":"public,max-age=10,s-maxage=30"}});
+  },available:process.env.SASI_MARKET_SALES_ENABLED==="true"&&
+     process.env.SASI_MARKET_DELIVERY_ENABLED==="true"&&
+     (wechatPayEnabled()||alipayEnabled())
+  },{headers:{"Cache-Control":"private,no-store"}});
  }catch{return NextResponse.json({error:"MARKET_UNAVAILABLE"},{status:503,headers:{"Cache-Control":"no-store"}});}
 }
