@@ -131,7 +131,7 @@ export default function SasiOpenMarketplace(){
    <div><span>{zh?"提现处理目标":"Payout handling target"}</span><strong>15 <small>min</small></strong></div>
   </div>
   <p className={styles.note}>{zh?"提现目标为可提现资金申请后的平台审核及向支付机构提交时间，不承诺银行或微信、支付宝的最终到账时间。销售款设有七天风险结算期。":"The 15-minute target covers eligible payout review and provider submission, not guaranteed recipient arrival. Seller revenue has a seven-day risk hold."}</p>
-  <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / COMMUNITY</small><h2>{zh?"创作者软件市场":"Community software market"}</h2></div>
+  <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / COMMUNITY</small><h2>{zh?"软件作品与卖家服务":"Software & seller services"}</h2></div>
    <div className={styles.find}><input aria-label={zh?"搜索软件":"Search software"} placeholder={zh?"搜索 EA、指标、应用…":"Find EAs and software…"} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{zh?"全部":"All"}</button>{CATEGORIES.map(([key,label])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{label}</button>)}</div>
    <div className={styles.products}>{visible.map((item,i)=><article className={styles.card} key={item.id}>
@@ -142,7 +142,7 @@ export default function SasiOpenMarketplace(){
     <h3>{item.title}</h3><p>{item.description}</p><div className={styles.cardBottom}><strong>¥{format(item.price_cny_minor)}</strong><span>USD ${format(item.price_usd_minor)}</span></div>
     <div className={styles.cardActions}><Link href={"/sasi/marketplace/"+item.id}>{zh?"查看详情":"Details"} ↗</Link><button onClick={()=>void share(item)}>{zh?"分享":"Share"} ↗</button></div>
     </div></article>)}</div>
-   {visible.length===0&&<div className={styles.empty}>{zh?"开放市场正在准备首批经过安全审核的软件作品。":"The first security-reviewed community listings are being prepared."}</div>}
+   {visible.length===0&&<div className={styles.empty}>{zh?"首批经过安全审核的软件作品正在准备中。":"The first security-reviewed software listings are being prepared."}</div>}
   </section>
   <section id="sell" className={styles.section}><div className={styles.sectionHeading}><div><small>02 / SELLER STUDIO</small><h2>{zh?"卖家工作台":"Seller workspace"}</h2></div><Link href="/account/software">{zh?"已购买的软件":"Purchased software"} ↗</Link></div>
    <div className={styles.workspace}>
