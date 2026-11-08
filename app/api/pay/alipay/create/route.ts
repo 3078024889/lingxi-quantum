@@ -5,6 +5,7 @@ import { getProduct } from "@/lib/plans";
 import { alipayEnabled, alipaySiteUrl, createAlipayPaymentUrl } from "@/lib/alipay";
 import { safeLocalReturnPath, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
+import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "支付宝正在完成上线审核，请暂时使用微信支付。" }, { status: 503 });
     }
     const { productId, returnPath } = await req.json();
-const product = getProduct(productId);
+const product = getProduct(productId) || await resolveMarketplaceProduct(productId);
     if (!product) return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     if (product.group === "production" && !sasiTopupProductEnabled(product.id)) return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     if(product.group==="software"&&!await softwareCheckoutReady(product.id))
@@ -35,6 +36,8 @@ const product = getProduct(productId);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
 
+    if(product.group==="market"&&product.sellerId===user.id)
+      return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
     const admin = createAdminClient();
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-alipay",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
