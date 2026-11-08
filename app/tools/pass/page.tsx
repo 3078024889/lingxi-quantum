@@ -4,6 +4,7 @@ import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {ALL_TOOLS_PASS_CATALOG,type AllToolsPassSku} from "@/lib/tools/commerce/all-tools-pass";
+import premium from "./ToolPassPremium.module.css";
 
 type Language="zh"|"en"|"ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
 const COPY:Record<Language,{
@@ -111,47 +112,50 @@ export default function AllToolsPassPage(){
   }catch{setMessage(c.unavailable);}
   finally{setBusy(false);}
  }
- return <main dir={rtl?"rtl":"ltr"} className="mx-auto max-w-6xl px-4 py-10 text-[var(--lx-ink)] md:px-7">
-  <section className="relative overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-6 py-9 shadow-sm md:px-10 md:py-12">
-   <div className="pointer-events-none absolute -right-20 -top-32 h-72 w-72 rounded-full bg-violet-300/20 blur-3xl"/>
-   <p className="text-xs font-semibold tracking-[.18em] text-violet-600">LINGXIFIELD · TOOLPASS</p>
-   <h1 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">{zh?"一个工具包，畅用全场":c.title}</h1>
-   <p className="mt-4 max-w-2xl text-base leading-8 text-[var(--lx-muted)]">{zh?"100+ 实用工具，一次开通，随心使用。后续新增工具也包含在内。":c.subtitle}</p>
-   <div className="mt-6 flex flex-wrap gap-3 text-sm">
-    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{zh?"100+ 实用工具":"100+ tools"}</span>
-    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{c.new}</span>
-    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{zh?"一次开通，全场畅用":"One pass, every tool"}</span>
-   </div>
-  </section>
-  <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-   <div>
-    <h2 className="text-lg font-semibold">{zh?"选择适合的使用时长":"Choose your plan"}</h2>
-    {expiry&&<p className="mt-1 text-xs text-[var(--lx-muted)]">{c.existing}：{new Date(expiry).toLocaleDateString(zh?"zh-CN":lang)}</p>}
-   </div>
-   <label className="flex items-center gap-3 text-sm">
-    <span className="text-[var(--lx-muted)]">{c.currency}</span>
-    <select aria-label={c.currency} value={currency} onChange={e=>{const next=e.target.value as Currency;setCurrency(next);setPreferredCurrency(next);setSelected(null);setMessage("");}}
-     className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2.5 text-[var(--lx-ink)]">
-     <option value="CNY">CNY ¥</option><option value="USD">USD $</option>
-    </select>
-   </label>
-  </div>
-  <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-   {ALL_TOOLS_PASS_CATALOG.map((offer,i)=><section key={offer.sku}
-    className={"relative flex min-h-64 flex-col rounded-3xl border bg-[var(--lx-panel)] p-6 shadow-sm transition hover:shadow-md "+(i===1?"border-violet-500 ring-1 ring-violet-300":"border-[var(--lx-line)]")}>
-    {i===1&&<span className="absolute -top-3 right-5 rounded-full bg-violet-600 px-3 py-1 text-xs font-semibold text-white">{zh?"热门选择":"Popular"}</span>}
-    <h3 className="text-xl font-semibold">{[c.week,c.month,c.quarter,c.year][i]}</h3>
-    <p className="mt-5 font-display text-4xl font-bold tracking-tight">{currency==="CNY"?"¥":"$"}{offer.price}</p>
-    <p className="mt-3 text-sm text-[var(--lx-muted)]">{c.new}</p>
-    <div className="mt-auto pt-7">
-     <button type="button" onClick={()=>openOffer(offer)}
-      className={"w-full rounded-xl px-4 py-3 text-sm font-semibold transition "+(i===1?"bg-violet-600 text-white hover:bg-violet-700":"border border-[var(--lx-line)] bg-[var(--lx-soft)] text-[var(--lx-ink)] hover:border-violet-400")}>
-      {zh?"立即开通":c.buy}
-     </button>
+ return <main dir={rtl?"rtl":"ltr"} className={premium.root}>
+  <div className={premium.frame}>
+   <section className={premium.hero} aria-labelledby="toolpass-membership-title">
+    <div className={premium.heroCopy}>
+     <p className={premium.eyebrow}>LINGXIFIELD · TOOLPASS</p>
+     <h1 className={premium.title} id="toolpass-membership-title">{zh?"工具包会员":c.title}<span>ToolPass</span></h1>
+     <p className={premium.lead}>{zh?"畅享 100+ 实用工具，划算又高效":"Unlock 100+ practical tools. One membership, more possibilities."}</p>
+     <ul className={premium.benefits}>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"全站 100+ 工具":"100+ practical tools"}</b><span>{zh?"一站畅用":"All in one place"}</span></li>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"持续更新":"Always evolving"}</b><span>{zh?"新工具同步加入":"New tools included"}</span></li>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"高性价比":"More value"}</b><span>{zh?"创作、办公与日常处理都适用":"Built for work and everyday tasks"}</span></li>
+     </ul>
     </div>
-   </section>)}
+    <div className={premium.art} aria-hidden="true">
+     <span className={premium.tool+" "+premium.toolPhoto}>▧</span>
+     <span className={premium.tool+" "+premium.toolCut}>✂</span>
+     <span className={premium.tool+" "+premium.toolPdf}>PDF</span>
+     <span className={premium.tool+" "+premium.toolVideo}>▶</span>
+     <div className={premium.box}><span className={premium.boxCrown}>♛</span><span className={premium.boxLabel}>100+ {zh?"工具":"tools"}</span></div>
+    </div>
+   </section>
+   <div className={premium.toolbar}>
+    <div>{expiry&&<p>{c.existing}：{new Date(expiry).toLocaleDateString(zh?"zh-CN":lang)}</p>}</div>
+    <label className="flex items-center gap-2 text-sm"><span className="text-[var(--lx-muted)]">{c.currency}</span>
+     <select aria-label={c.currency} value={currency} onChange={e=>{const next=e.target.value as Currency;setCurrency(next);setPreferredCurrency(next);setSelected(null);setMessage("");}}>
+      <option value="CNY">CNY ¥</option><option value="USD">USD $</option>
+     </select>
+    </label>
+   </div>
+   <div className={premium.plans} aria-label={zh?"工具包会员方案":"ToolPass plans"}>
+    {ALL_TOOLS_PASS_CATALOG.map((offer,i)=><section key={offer.sku} className={premium.plan+" "+(i===1?premium.planFeatured:"")}>
+     {i===1&&<span className={premium.planBadge}>{zh?"♛ 热门推荐":"♛ Most popular"}</span>}
+     <h2 className={premium.planDuration}>{i===0&&zh?"7 天体验":[c.week,c.month,c.quarter,c.year][i]}</h2>
+     <strong className={premium.planPrice}>{currency==="CNY"?"¥":"$"}{offer.price}</strong>
+     <p className={premium.planDesc}>{zh?["短期使用 · 轻松上手","畅享全站工具","更优惠 · 更省心","长期使用 · 超值之选"][i]:["Try it for a week","Access all tools","Even better value","Ideal for long-term use"][i]}</p>
+     <button type="button" onClick={()=>openOffer(offer)} className={premium.planBuy+" "+(i===1?premium.planBuyFeatured:"")}>{zh?"立即购买":c.buy}</button>
+    </section>)}
+   </div>
+   <div className={premium.subFooter}>
+    <span><b>∞</b>{zh?"100+ 实用工具随心用":"100+ practical tools"}</span>
+    <span><b>⟳</b>{zh?"新增工具持续更新":"New tools always included"}</span>
+    <span><b>ϟ</b>{zh?"即买即用 · 高效省心":"Instant access after verified purchase"}</span>
+   </div>
   </div>
-  <p className="mt-5 text-center text-sm text-[var(--lx-muted)]">{zh?"一次开通，享有期内全场工具使用权益。":"One pass covers all practical tools throughout its term."}</p>
   {message&&!selected&&<p role="status" className="mt-4 rounded-xl border border-[var(--lx-line)] p-4 text-sm">{message}</p>}
   {selected&&<div role="presentation" className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/50 p-4" onClick={()=>{if(!busy)setSelected(null)}}>
    <section role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" dir={rtl?"rtl":"ltr"}
