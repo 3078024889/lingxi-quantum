@@ -1,4 +1,3 @@
-import {publicNoticeItems} from '@/lib/release/public-announcements';
 import {accountMoneyFeed} from "@/lib/notifications/money-feed";
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
@@ -11,11 +10,8 @@ export const dynamic="force-dynamic";
 export async function GET(req:NextRequest){
  const supabase=createClient();const{data:{user}}=await supabase.auth.getUser();
  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
- const lang=req.nextUrl.searchParams.get('lang')||'zh';
- const feed=await accountMoneyFeed(user.id,lang,req.nextUrl.searchParams.get('platform')||'web');
- const notices=publicNoticeItems(lang).map(n=>({...n,read:feed.seen.has(n.eventKey)}));
- const items=[...feed.items,...notices].sort((a,b)=>Date.parse(b.createdAt)-Date.parse(a.createdAt));
- return NextResponse.json({items,partial:feed.partial,readAvailable:feed.readAvailable,unread:items.filter(x=>!x.read).length},{headers:{"Cache-Control":"private, no-store"}});
+ const feed=await accountMoneyFeed(user.id,req.nextUrl.searchParams.get('lang')||'zh',req.nextUrl.searchParams.get('platform')||'web');
+ return NextResponse.json({items:feed.items,partial:feed.partial,readAvailable:feed.readAvailable,unread:feed.items.filter(x=>!x.read).length},{headers:{"Cache-Control":"private, no-store"}});
 }
 
 export async function POST(req:NextRequest){
