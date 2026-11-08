@@ -16,7 +16,7 @@ jobs:
           set -Eeuo pipefail
           for host in lingxifield.cn lingxifield.com; do
             echo "SITE $host"
-            for p in /api/health /api/account/money-admin/access /api/account/money-admin /api/pay/providers /api/tools/pass /api/tools/access?toolSlug=compress-image /api/sasi/software/catalog; do
+            for p in / /account/money-admin /ai-wallet /account/orders /tools/pass /sasi/marketplace /api/health /api/account/money-admin/access /api/account/money-admin /api/pay/providers /api/tools/pass /api/site-announcements /api/tools/access?toolSlug=compress-image /api/sasi/software/catalog /api/sasi/marketplace/catalog; do
               tmp="$(mktemp)"
               status="$(curl -sS -4 --max-time 22 --connect-timeout 8 --retry 1 -o "$tmp" -w '%{http_code}' "https://$host$p" || true)"
               echo "ROUTE $host $p HTTP ${status:-000}"
@@ -35,3 +35,4 @@ jobs:
             done
           done
           echo 'READ_ONLY_PROBE_DONE_NO_LOGIN_NO_PAYMENT'
+          echo 'HTTP_200_PUBLIC_PAGES_ARE_NOT_PROOF_OF_AUTHENTICATED_PAYMENT_OR_ADMIN_RIGHTS'
