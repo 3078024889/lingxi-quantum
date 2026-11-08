@@ -1,4 +1,4 @@
-name: COM production apex release with static SASI catalog and safe rollback
+name: COM prod full-SASI nine-language release with original API preservation
 on:
   push:
     branches: [release/com-sasi-full-20261108]
@@ -18,8 +18,8 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       GH_TOKEN: ${{ github.token }}
-      COM_VERIFIED_CANARY_RUN: '42460070226'
-      COM_VERIFIED_CANARY_SHA: 'da95e6a3362442a55b676db2e68d55609972afa4'
+      COM_VERIFIED_CANARY_RUN: '42460812556'
+      COM_VERIFIED_CANARY_SHA: 'a613488cf2092b970505dee17ae52a0ae0661cbf'
       COM_CUTOVER_PROPAGATION_GATE: 'consecutive-with-cache-bypass-v2'
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
