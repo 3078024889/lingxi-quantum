@@ -30,6 +30,7 @@ jobs:
           grep -Fq 'const prev="lingxifield-com-next-20261108"' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
           grep -Fq 'const next="lingxifield-com-unified-20261108"' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
           grep -Fq 'COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
+          grep -Fq 'const maxTries=12' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
           echo COM_UNIFIED_ROUTE_SCRIPT_SOURCE_GATE_PASS
   release:
     if: github.event_name == 'push'
