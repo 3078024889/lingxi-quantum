@@ -21,6 +21,7 @@ export default function SasiOpenMarketplace(){
  const [title,setTitle]=useState(""),[description,setDescription]=useState("");
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
+ const [showStudio,setShowStudio]=useState(false);
  const [requestedAmount,setRequestedAmount]=useState(""),[requestCurrency,setRequestCurrency]=useState<"CNY"|"USD">("CNY");
  const refresh=useCallback(async()=>{
   const paths=["/api/sasi/marketplace/listings","/api/sasi/marketplace/listings?mode=mine","/api/sasi/marketplace/seller","/api/sasi/marketplace/payouts"];
@@ -119,18 +120,29 @@ export default function SasiOpenMarketplace(){
   }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
  };
  return <main className={styles.main}><div className={styles.container}>
-  <div className={styles.hero}><div><span className={styles.eyebrow}>SASI / OPEN SOFTWARE MARKETPLACE</span>
-   <h1>{zh?"分享创造力，让软件被世界看见":"Share your software with the world"}</h1>
-   <p>{zh?"开发者可以发布 EA、指标、自动化脚本和成品软件。零保证金、零上架费，只有成交后平台收取 15% 服务费。":"Publish EAs, indicators, scripts and software. No deposit or listing fee. SASI earns 15% only from completed sales."}</p>
-   <div className={styles.heroLinks}><a href="#products">{zh?"探索软件":"Explore software"}</a><a href="#sell">{zh?"成为卖家":"Become a seller"}</a><Link href="/sasi">SASI SOFTWARE ↗</Link></div>
-  </div><div className={styles.heroRate}><small>SELLER REVENUE</small><strong>85<span>%</span></strong><div>{zh?"卖家收入占比":"Seller's share"}</div><p>15% SASI SERVICE FEE</p></div></div>
-  <div className={styles.metrics}>
-   <div><span>{zh?"入驻保证金":"Seller deposit"}</span><strong>¥0</strong></div>
-   <div><span>{zh?"上架费用":"Listing fee"}</span><strong>¥0</strong></div>
-   <div><span>{zh?"成交佣金":"Sale fee"}</span><strong>15%</strong></div>
-   <div><span>{zh?"提现处理目标":"Payout handling target"}</span><strong>15 <small>min</small></strong></div>
+  <div className={styles.hero}>
+    <div className={styles.heroCopy}>
+      <span className={styles.eyebrow}>LINGXIFIELD / SASI</span>
+      <h1>{zh?"SASI 智能软件市场":"SASI Software Marketplace"}</h1>
+      <p>{zh?"源码授权 · 开发者发布 · 安全交付":"Source licenses · Developer publishing · Secure delivery"}</p>
+      <div className={styles.heroLinks}><a href="#products">{zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>{zh?"发布产品":"Publish software"}</button></div>
+    </div>
+    <div className={styles.laptopScene} aria-hidden="true">
+      <div className={styles.laptopDisplay}>
+        <div className={styles.laptopTop}><span/><span/><span/><i>SASI / CODE</i></div>
+        <div className={styles.laptopEditor}><div className={styles.editorNumbers}>01<br/>02<br/>03<br/>04<br/>05<br/>06</div>
+          <div className={styles.editorCode}><i className={styles.code1}/><i className={styles.code2}/><i className={styles.code3}/><i className={styles.code4}/><i className={styles.code5}/><i className={styles.code6}/></div>
+        </div>
+      </div>
+      <div className={styles.laptopKeyboard}/><div className={styles.laptopShadow}/>
+    </div>
   </div>
-  <p className={styles.note}>{zh?"提现目标为可提现资金申请后的平台审核及向支付机构提交时间，不承诺银行或微信、支付宝的最终到账时间。销售款设有七天风险结算期。":"The 15-minute target covers eligible payout review and provider submission, not guaranteed recipient arrival. Seller revenue has a seven-day risk hold."}</p>
+  <div className={styles.benefits}>
+    <div><span>◇</span><strong>{zh?"源码与软件授权":"Software licensing"}</strong></div>
+    <div><span>↥</span><strong>{zh?"开发者自行发布":"Creator publishing"}</strong></div>
+    <div><span>▣</span><strong>{zh?"私有文件交付":"Private delivery"}</strong></div>
+    <div><span>✓</span><strong>{zh?"订单授权记录":"Order & licenses"}</strong></div>
+  </div>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / COMMUNITY</small><h2>{zh?"软件作品与卖家服务":"Software & seller services"}</h2></div>
    <div className={styles.find}><input aria-label={zh?"搜索软件":"Search software"} placeholder={zh?"搜索 EA、指标、应用…":"Find EAs and software…"} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{zh?"全部":"All"}</button>{CATEGORIES.map(([key,label])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{label}</button>)}</div>
@@ -142,26 +154,36 @@ export default function SasiOpenMarketplace(){
     <h3>{item.title}</h3><p>{item.description}</p><div className={styles.cardBottom}><strong>¥{format(item.price_cny_minor)}</strong><span>USD ${format(item.price_usd_minor)}</span></div>
     <div className={styles.cardActions}><Link href={"/sasi/marketplace/"+item.id}>{zh?"查看详情":"Details"} ↗</Link><button onClick={()=>void share(item)}>{zh?"分享":"Share"} ↗</button></div>
     </div></article>)}</div>
-   {visible.length===0&&<div className={styles.empty}>{zh?"首批经过安全审核的软件作品正在准备中。":"The first security-reviewed software listings are being prepared."}</div>}
+   {visible.length===0&&<div className={styles.empty}>{zh?"目前没有符合条件的已审核软件。发布产品后可在这里展示。":"No reviewed and published software matches this search."}</div>}
   </section>
-  <section id="sell" className={styles.section}><div className={styles.sectionHeading}><div><small>02 / SELLER STUDIO</small><h2>{zh?"卖家工作台":"Seller workspace"}</h2></div><Link href="/account/software">{zh?"已购买的软件":"Purchased software"} ↗</Link></div>
+  <section className={styles.section} aria-label={zh?"软件发布与交付步骤":"Software publishing steps"}>
+    <div className={styles.sectionHeading}><div><small>02 / PUBLISH & DELIVERY</small><h2>{zh?"卖家发布与交付":"Publish and deliver"}</h2></div></div>
+    <div className={styles.steps}>
+      <div><b>01</b><strong>{zh?"填写商品资料":"Product details"}</strong><span>{zh?"名称、许可、价格":"Name, license, price"}</span></div>
+      <div><b>02</b><strong>{zh?"上传私有源码包":"Upload private ZIP"}</strong><span>{zh?"文件与图片安全审核":"File and image review"}</span></div>
+      <div><b>03</b><strong>{zh?"审核通过后发布":"Publish after review"}</strong><span>{zh?"审核完成后公开展示":"Only reviewed listings appear"}</span></div>
+      <div><b>04</b><strong>{zh?"付款确认后交付":"Verified payment & delivery"}</strong><span>{zh?"授权用户限时下载":"Entitled time-limited access"}</span></div>
+    </div>
+    <button type="button" className={styles.launchStudio} onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio} aria-controls="sasi-seller-studio">{showStudio?(zh?"收起工作台":"Close workspace"):(zh?"发布软件":"Publish software")}</button>
+  </section>
+  {showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{zh?"卖家工作台":"Seller workspace"}</h2></div><Link href="/account/software">{zh?"已购买的软件":"Purchased software"} ↗</Link></div>
    <div className={styles.workspace}>
     <div className={styles.formCard}><h3>{seller?(zh?"卖家资料":"Seller profile"):(zh?"零费用申请入驻":"Apply to sell for free")}</h3>
     {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{zh?"审核状态":"Review status"}: {seller.status}</p><p>KYC: {seller.kyc_status}</p><p>{zh?"完成身份和收款方式审核后才能提现。":"Identity and payout verification are required before cash-out."}</p></div>:<>
      <label>{zh?"展示名称":"Display name"}<input value={displayName} onChange={e=>setDisplayName(e.target.value)} maxLength={60} placeholder={zh?"软件开发者 / 工作室":"Developer / studio"}/></label>
      <label className={styles.check}><input type="checkbox" checked={adult} onChange={e=>setAdult(e.target.checked)}/>{zh?"确认已满 18 周岁":"I am at least 18 years old"}</label>
-     <label className={styles.check}><input type="checkbox" checked={terms} onChange={e=>setTerms(e.target.checked)}/>{zh?"同意软件版权、安全审核、15% 服务费及结算规则":"I agree to the IP, security, 15% fee and settlement terms"}</label>
+     <label className={styles.check}><input type="checkbox" checked={terms} onChange={e=>setTerms(e.target.checked)}/>{zh?"已阅读并同意版权、安全审核与结算规则；知悉成交后平台收取 15% 服务费，卖家获得 85%":"I accept the IP and settlement terms; 15% platform fee after sale, 85% to seller"}</label>
      <button disabled={busy!==""||!adult||!terms||displayName.trim().length<2} onClick={()=>void apply()}>{busy==="seller"?"…":zh?"申请成为卖家":"Apply as seller"}</button>
      <p>{zh?"须先登录且验证邮箱，平台不收取保证金。":"Sign-in and verified email are required. No seller deposit."} <Link href="/account?mode=signin">{zh?"账户登录":"Sign in"} ↗</Link></p>
     </>}</div>
     <div className={styles.formCard}><h3>{zh?"发布新软件":"Create a software listing"}</h3>
-      <label>{zh?"软件名称":"Product name"}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder="Copernicus / MT5 Expert Advisor"/></label>
+      <label>{zh?"软件名称":"Product name"}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={zh?"软件名称、版本、授权类型":"Software name, version, license"}/></label>
       <label>{zh?"分类":"Category"}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
       <label>{zh?"软件介绍":"Description"}<textarea rows={3} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={zh?"功能、适用平台、系统要求、版本与许可说明":"Features, requirements, version and licensing"}/></label>
       <div className={styles.priceFields}><label>{zh?"人民币标价":"CNY price"}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{zh?"美元标价":"USD price"}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
       <button disabled={busy!==""||!seller} onClick={()=>void makeDraft()}>{busy==="draft"?"…":zh?"保存商品草稿":"Save product draft"}</button>
-      <p>{zh?"软件包 ZIP 限 30 MB；支持最多五张 PNG/JPG/WebP 图片，每张限 1 MB。软件和图片均须审核。":"ZIP software up to 30 MB and five PNG/JPG/WebP photos up to 1 MB each. Security review is mandatory."}</p>
+      <p>{zh?"上传 ZIP 源码包与商品图片后进入安全审核。私有文件不会生成公开下载地址。":"ZIP packages and product images undergo review; private packages are not served publicly."}</p>
     </div>
    </div>
    {mine.length>0&&<div className={styles.drafts}><h3>{zh?"我的软件草稿与审核进度":"My submissions"}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{item.status} · {item.scan_status}</small></div>
@@ -179,14 +201,14 @@ export default function SasiOpenMarketplace(){
     {item.status==="published"&&<button onClick={()=>void share(item)}>{zh?"分享商品":"Share"}</button>}
    </div>)}</div>}
    {error&&<p className={styles.error} role="alert">{error}</p>}{status&&<p className={styles.success} role="status">{status}</p>}
-  </section>
-  <section className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER EARNINGS</small><h2>{zh?"销售收入与提现":"Seller earnings & payouts"}</h2></div></div>
+  </section>}
+  {showStudio&&seller&&<section className={styles.section}><div className={styles.sectionHeading}><div><small>04 / SELLER EARNINGS</small><h2>{zh?"销售收入与提现":"Seller earnings & payouts"}</h2></div></div>
    <div className={styles.earnings}><div><span>{zh?"人民币可提现":"CNY available"}</span><strong>¥{format(payments?.balances?.CNY?.availableMinor??0)}</strong></div>
    <div><span>{zh?"美元可提现":"USD available"}</span><strong>${format(payments?.balances?.USD?.availableMinor??0)}</strong></div></div>
    <div className={styles.payoutForm}><select value={requestCurrency} onChange={e=>setRequestCurrency(e.target.value as "CNY"|"USD")}><option value="CNY">CNY</option><option value="USD">USD</option></select>
     <input type="number" min="0.01" step="0.01" placeholder={zh?"提现金额":"Withdrawal amount"} value={requestedAmount} onChange={e=>setRequestedAmount(e.target.value)}/>
     <button disabled={busy!==""||!payments?.payoutsOpen||!seller||seller.kyc_status!=="verified"} onClick={()=>void payout()}>{zh?"申请提现":"Request payout"}</button></div>
    <p className={styles.note}>{payments?.payoutsOpen?(zh?"平台将在受理后核对付款状态并提交支付机构；不代表已到账。":"Payout requests are checked and submitted to the provider; submission does not confirm arrival."):(zh?"自动转账渠道正在接入和验收，暂不开放提现申请。":"Automated provider payouts are in integration testing and are not open.")}</p>
-  </section>
+  </section>}
  </div></main>
 }
