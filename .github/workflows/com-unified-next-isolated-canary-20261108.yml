@@ -1,4 +1,4 @@
-# Wallet auth contract follows the dynamic balance API and anonymous static shell.
+# Wallet and provider reads use the current runtime, not the retired backend.
 name: COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)
 on:
   push:
@@ -40,6 +40,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
+          node --test tests/com-current-runtime-routing-20261108.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
           node --test tests/sasi-software-public-branding-20261108.test.mjs
           node --test tests/public-announcements-deeplink-20261108.test.mjs
@@ -183,7 +184,7 @@ jobs:
             sleep 5
           done
           test "$propagated" -eq 1
-          for path in / /siai /tools /tools/pass /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
+          for path in / /siai /tools /tools/pass /ai-wallet /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
             count=0
             for i in 1 2 3;do
               h="$(mktemp)"
@@ -198,7 +199,7 @@ jobs:
             done
             test "$count" = 3
           done
-          for path in /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
+          for path in /api/money/summary /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
             status="$(curl -4sS --connect-timeout 9 --max-time 25 -o /dev/null -w '%{http_code}' "$url$path" || true)"
             echo "COM_CANARY_PRIVATE_ROUTE path=$path HTTP_$status"
             test "$status" = 401 || exit 1

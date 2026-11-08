@@ -62,6 +62,7 @@ const replacement=[
 '  }',
  '  if(pathname.startsWith("/api/")&&',
  '     pathname!=="/api/sasi/software/catalog"&&',
+ '     pathname!=="/api/pay/providers"&&pathname!=="/api/money/summary"&&',
  '     !pathname.startsWith("/api/sasi/marketplace/")&&',
  '     !pathname.startsWith("/api/sasi/software/")&&env.LINGXI_COM_LEGACY_GATEWAY){',
  '    return env.LINGXI_COM_LEGACY_GATEWAY.fetch(request);',
