@@ -19,7 +19,10 @@ const routes={
  "/de/siai":"de-siai.html",
  "/es/siai":"es-siai.html",
  "/pt/siai":"pt-siai.html",
- "/ar/siai":"ar-siai.html"
+ "/ar/siai":"ar-siai.html",
+ "/tools/ico-to-png":"tool-ico-to-png.html",
+ "/tools/number-base-converter":"tool-number-base-converter.html",
+ "/tools/video-watermark-remover":"tool-video-watermark-remover.html"
 };
 for(const [route,file] of Object.entries(routes)){
  const html=await readFile(join(assetRoot,file),"utf8");
@@ -77,4 +80,4 @@ const replacement=[
  needle
 ].join("\n");
 await writeFile(target,source.replace(needle,replacement));
-console.log("COM_FOURTEEN_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");
+console.log("COM_SEVENTEEN_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");
