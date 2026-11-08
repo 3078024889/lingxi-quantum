@@ -106,7 +106,7 @@ def validate_public(base, *, baseline=None):
 
 def validate_all_tools(base):
     source = pathlib.Path("lib/seo/global-seo.ts").read_text("utf-8")
-    slugs = list(dict.fromkeys(re.findall(r'\\{\\s*slug:"([a-z0-9-]+)"', source)))
+    slugs = list(dict.fromkeys(re.findall(r'\{\s*slug:"([a-z0-9-]+)"', source)))
     if len(slugs) != 124:
         raise ReleaseError("PINNED_124_CATALOG_COUNT_CHANGED:" + str(len(slugs)))
     for slug in slugs:
