@@ -6,7 +6,8 @@
  "workers_dev": false,
  "routes": [
    {"pattern":"lingxifield.com/api/account/money-admin*","zone_name":"lingxifield.com"},
-   {"pattern":"lingxifield.com/api/site-announcements*","zone_name":"lingxifield.com"}
+   {"pattern":"lingxifield.com/api/site-announcements*","zone_name":"lingxifield.com"},
+   {"pattern":"lingxifield.com/api/tools/pass*","zone_name":"lingxifield.com"}
  ],
  "observability": {"enabled": true}
 }
