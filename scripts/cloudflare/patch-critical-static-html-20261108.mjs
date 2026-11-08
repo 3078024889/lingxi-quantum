@@ -26,12 +26,30 @@ for(const [route,file] of Object.entries(routes)){
   throw Error("LANDING_BRANDING_MISSING");
  console.log("PUBLIC_STATIC_HTML_VALIDATED:"+route+":"+Buffer.byteLength(html));
 }
+const softwareCatalog=JSON.parse(await readFile(join(assetRoot,"software-catalog.json"),"utf8"));
+const productIds=Object.keys(softwareCatalog.products||{}).sort();
+if(JSON.stringify(productIds)!==JSON.stringify(["sasi-copernicus-si95-mt5","sasi-copernicus-si95-source"].sort())||
+  productIds.some(id=>softwareCatalog.products[id]?.available!==false)||
+  !softwareCatalog.payment||Object.values(softwareCatalog.payment).some(Boolean))
+ throw Error("COM_ANON_SOFTWARE_CATALOG_NOT_SAFELY_DISABLED");
+console.log("COM_PUBLIC_SOFTWARE_CATALOG_SNAPSHOT_VERIFIED");
 const target=join(root,"offload-worker.mjs");
 const source=await readFile(target,"utf8");
 const needle="  return offloaded||app.fetch(request,env,ctx);";
 if(source.split(needle).length!==2)throw Error("UNEXPECTED_OPENNEXT_WRAPPER_BODY");
 const replacement=[
  '  const pathname=new URL(request.url).pathname;',
+'  if(pathname==="/api/sasi/software/catalog"&&(request.method==="GET"||request.method==="HEAD")&&',
+'     env.SOFTWARE_COMMERCE_READY!=="true"&&env.ALIPAY_ENABLED!=="true"&&env.WECHAT_ENABLED!=="true"&&env.PAYPAL_ENABLED!=="true"){',
+'    const staticUrl=new URL("/__lingxi_edge_static__/software-catalog.json",request.url);',
+'    const reply=await env.ASSETS.fetch(new Request(staticUrl.toString(),{method:request.method}));',
+'    if(reply.status!==200)return new Response("PUBLIC_CATALOG_ASSET_UNAVAILABLE",{status:503});',
+'    const h=new Headers(reply.headers);',
+'    h.set("content-type","application/json; charset=utf-8");',
+'    h.set("cache-control","public, max-age=60");',
+'    h.set("x-lingxi-render-mode","static-edge-verified");',
+'    return new Response(request.method==="HEAD"?null:reply.body,{status:200,headers:h});',
+'  }',
  '  const verifiedAnonymousPages='+JSON.stringify(routes)+';',
  '  const edgeFile=verifiedAnonymousPages[pathname];',
  '  if((request.method==="GET"||request.method==="HEAD")&&edgeFile){',
