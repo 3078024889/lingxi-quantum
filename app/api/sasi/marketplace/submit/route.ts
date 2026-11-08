@@ -1,6 +1,7 @@
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
+import {marketplaceR2Ready,marketplaceObjectHead,marketplaceOwnedKey,marketplaceUploadLimit} from "@/lib/sasi-marketplace/r2";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 export const runtime="nodejs";export const dynamic="force-dynamic";
@@ -8,7 +9,7 @@ const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} 
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:h});
- if(process.env.SASI_MARKET_UPLOADS_ENABLED!=="true")
+ if(process.env.SASI_MARKET_UPLOADS_ENABLED!=="true"||!marketplaceR2Ready())
   return NextResponse.json({error:"UPLOAD_SCANNING_NOT_READY"},{status:503,headers:h});
  const {data:{user}}=await createClient().auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
@@ -24,14 +25,13 @@ export async function POST(req:NextRequest){
    .select("id,status,quarantine_path").eq("id",body.listingId).eq("seller_id",user.id).single();
   if(!listing||listing.status!=="draft"||!listing.quarantine_path)
    return NextResponse.json({error:"UPLOAD_TOKEN_REQUIRED"},{status:409,headers:h});
-  const path=String(listing.quarantine_path);
-  if(!path.startsWith(user.id+"/"+listing.id+"/")||!path.endsWith(".zip"))
-   throw Error("INVALID_PRIVATE_OBJECT_PATH");
-  const {data:info,error:infoError}=await admin.storage.from("sasi-market-quarantine").info(path);
-  if(infoError||!info||!info.size||info.size>31457280)
+  const path=marketplaceOwnedKey(user.id,listing.id,String(listing.quarantine_path));
+  if(!path.includes("/quarantine/")||!path.endsWith(".zip"))throw Error("NOT_A_PRIVATE_ZIP");
+  const info=await marketplaceObjectHead(path);
+  if(!info||info.size>marketplaceUploadLimit("software"))
    return NextResponse.json({error:"FILE_MISSING_OR_TOO_LARGE"},{status:400,headers:h});
-  // Storage metadata is not proof of ZIP format. Keep this file quarantined
-  // until the independent content-signature and malware scan pass.
+  // HEAD MIME/extension is not a trust decision. Independent scanning and
+  // validated object hash must succeed before an admin can approve delivery.
   const {data:saved,error:savedError}=await admin.from("sasi_market_listings").update({
    status:"submitted",file_size_bytes:info.size,scan_status:"unscanned"
   }).eq("id",listing.id).eq("seller_id",user.id).eq("status","draft")
