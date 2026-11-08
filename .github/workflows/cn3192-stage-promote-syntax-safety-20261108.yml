@@ -22,6 +22,15 @@ jobs:
           set -Eeuo pipefail
           f=scripts/ops/ecs-cn3192-standalone-stage-promote-20261108.sh
           bash -n "$f"
+          # An older candidate contained two Nginx promotions and an unterminated quote.
+          # They must never return silently even if a future edit passes bash -n.
+          test "$(grep -Fc 'PRODUCTION_ORIGINAL=' "$f")" -eq 1
+          test "$(grep -Fc 'CN_NEW_3192_NGINX_PROMOTION_PASS_' "$f")" -eq 1
+          grep -Fq 'CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT' "$f"
+          grep -Fq 'CN_TOOLPASS_PAYMENT_GATE_MUST_REMAIN_CLOSED_BEFORE_PROMOTION' "$f"
+          grep -Fq 'CN_NGINX_EXACTLY_ONE_3191_UPSTREAM_REQUIRED' "$f"
+          grep -Fq 'CN3192_PREPROMOTION_GATE_FAILED' "$f"
+          grep -Fq 'systemctl daemon-reload' "$f"
           grep -Fq -- '--stage|--promote' "$f"
           grep -Fq 'sha256sum -c' "$f"
           grep -Fq 'CN3192_STAGE_GATE_FAILED_PRODUCTION_3191_UNCHANGED' "$f"
