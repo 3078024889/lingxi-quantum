@@ -128,6 +128,8 @@ export default function SasiOpenMarketplace(){
       <div className={styles.heroLinks}><a href="#products">{zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>{zh?"发布产品":"Publish software"}</button></div>
     </div>
     <div className={styles.laptopScene} aria-hidden="true">
+      <div className={styles.alienPlant}><i/><i/><i/><i/><i/><b/></div>
+      <div className={styles.crystalCup}><span>SASI</span></div>
       <div className={styles.laptopDisplay}>
         <div className={styles.laptopTop}><span/><span/><span/><i>SASI / CODE</i></div>
         <div className={styles.laptopEditor}><div className={styles.editorNumbers}>01<br/>02<br/>03<br/>04<br/>05<br/>06</div>

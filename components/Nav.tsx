@@ -237,8 +237,6 @@ export default function Nav() {
         </form>
 
         <div className="lx11-top-actions">
-          <Link href="/sasi" className="lx11-top-link">{softwareNavNames[lang]}</Link>
-          <Link href="/account/software" className="lx11-top-link">{lang==="zh"?"我的软件":"My Software"}</Link>
 
           <CurrencySelector compact />
 

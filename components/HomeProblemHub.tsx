@@ -24,14 +24,14 @@ const copy:Record<LingxiLang,Copy>={
  zh:{
   kicker:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能创作 · 免费在线实用工具",
   seoTitle:"灵犀场 LINGXIFIELD｜全球AI工具排行榜、SASI创作与在线实用工具",
-  seoDesc:"全球AI工具太多，不知道哪个好用？灵犀场全球SIAI排行榜帮助比较AI公司、模型、功能、价格、免费额度、地区可用性和使用条件。还能使用SASI生成AI短剧、构建网站、开展智能问答，以及100+在线实用工具，每日免费体验。",hero:"全球 AI 工具太多，不知道哪个好用？",
+  seoDesc:"全球AI工具太多，不知道哪个好用？灵犀场全球SIAI排行榜帮助比较AI公司、模型、功能、价格、免费额度、地区可用性和使用条件。SASI软件市场支持开发者发布与源码授权，另有100+在线实用工具。",hero:"全球 AI 工具太多，不知道哪个好用？",
   lead:"灵犀场全球 SIAI 排行榜帮你找答案。汇聚全球 AI 公司、模型与工具，比较能做什么、真实价格、免费额度、地区和使用体验。少花钱、少踩坑，找到适合自己任务的智能 SI 或 AI 伙伴。",
   placeholder:"告诉灵犀场：你现在最想解决什么？",begin:"开始处理",startWith:"可以直接从",
   taskTitle:"你现在要完成什么？",taskLead:"选一个任务，就能看到对应工具和下一步操作。",start:"开始",
   why:"不知道从哪开始？按问题直接找答案",finishNow:"PDF 改不了怎么办？图片太大怎么压？",finishNowBody:"按文件类型找到工具：合并 PDF、压缩图片、转换格式、制作字幕或处理表格。上传前看清格式要求，完成后核对结果。",
-  important:"AI 太多怎么选？短剧和网站怎么做？",importantBody:"先到全球 SIAI 排行榜比较工具的功能、价格与免费额度；确定创作目标后，转到 SASI 开始短剧、网站、书本问答等任务。",
+  important:"AI 太多怎么选？软件怎么发布？",importantBody:"先到全球 SIAI 排行榜比较工具的功能、价格与免费额度；发布软件可进入 SASI 开发者工作台，浏览软件可查看授权与交付说明。",
   tools:"实用工具",toolsDesc:"PDF、图片、视频、音频、表格和隐私文件，按任务选工具。",
-  sasi:"SASI 创作",sasiDesc:"写短剧、生成画面、制作网站，或围绕书本与资料持续提问。",
+  sasi:"SASI 智能软件",sasiDesc:"浏览源码软件与开发者作品，核验授权及安全交付。",
   book:"书本 SASI",bookDesc:"让一本书、一篇论文或一组资料变成可以持续追问、引用和回看的智能体。",
   learning:"学习 SASI",learningDesc:"把教材和笔记整理成真正能复习、追问并回到原文的学习空间。",
   research:"科研 SASI",researchDesc:"让问题、证据、比较和结论留在同一条研究脉络里。",
@@ -48,7 +48,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Why start here",finishNow:"Finish the thing in front of you",finishNowBody:"PDFs, images, video, subtitles, tables and private files should not require jumping between apps. Open the right tool and take the finished result.",
   important:"Then move the important work forward",importantBody:"Organize sources, find passages, ask questions and continue studying.",
   tools:"Practical Tools",toolsDesc:"Handle PDFs, images, video, subtitles, tables and private files.",
-  sasi:"SASI Creation",sasiDesc:"Organize sources, find passages, ask questions and continue studying.",
+  sasi:"SASI Software",sasiDesc:"Browse source software, developer listings and verified delivery.",
   book:"Book SASI",bookDesc:"Turn books, papers and sources into an intelligence you can keep questioning and citing.",
   learning:"Learning SASI",learningDesc:"Turn study material into a space you can review, question and trace back to sources.",
   research:"Research SASI",researchDesc:"Keep questions, evidence, comparison and conclusions in one research thread.",
@@ -65,7 +65,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"ここから始める理由",finishNow:"まず目の前の作業を終える",finishNowBody:"PDF、画像、動画、字幕、表、プライベートファイルを複数のアプリに分ける必要はありません。対応ツールを開き、そのまま結果を受け取れます。",
   important:"次に、大切な仕事を前へ進める",importantBody:"資料を整理し、原文を確認して質問や学習を続けられます。",
   tools:"実用ツール",toolsDesc:"PDF、画像、動画、字幕、表、ウェブ内容、プライベートファイルを処理します。",
-  sasi:"SASI 制作",sasiDesc:"資料を整理し、原文を確認して質問や学習を続けられます。",
+  sasi:"SASI ソフトウェア",sasiDesc:"ソフトウェアとソースライセンス、安全な納品を確認。",
   book:"Book SASI",bookDesc:"本、論文、資料を、継続して質問・引用できる知的エージェントへ。",
   learning:"学習 SASI",learningDesc:"教材とノートを、復習・質問・原文確認ができる学習空間へ。",
   research:"研究 SASI",researchDesc:"問い、証拠、比較、結論を一つの研究の流れに保ちます。",
@@ -82,7 +82,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"여기서 시작하는 이유",finishNow:"먼저 눈앞의 일을 끝내기",finishNowBody:"PDF, 이미지, 영상, 자막, 표, 개인 파일을 여러 앱 사이에서 옮길 필요가 없습니다. 필요한 도구를 열고 결과를 바로 받으세요.",
   important:"그다음 중요한 일을 계속 진행하기",importantBody:"자료를 정리하고 원문을 확인하며 질문과 학습을 이어가세요.",
   tools:"실용 도구",toolsDesc:"PDF, 이미지, 영상, 자막, 표와 개인 파일을 처리합니다.",
-  sasi:"SASI 창작",sasiDesc:"자료를 정리하고 원문을 확인하며 질문과 학습을 이어가세요.",
+  sasi:"SASI 소프트웨어",sasiDesc:"소스 라이선스와 개발자 소프트웨어, 안전한 전달을 확인하세요.",
   book:"Book SASI",bookDesc:"책, 논문, 자료를 계속 질문하고 인용할 수 있는 지능형 에이전트로 바꿉니다.",
   learning:"학습 SASI",learningDesc:"교재와 노트를 복습하고 질문하며 원문으로 돌아갈 수 있는 학습 공간으로 만듭니다.",
   research:"연구 SASI",researchDesc:"질문, 근거, 비교, 결론을 하나의 연구 흐름에 유지합니다.",
@@ -99,7 +99,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Pourquoi commencer ici",finishNow:"Terminer d’abord la tâche immédiate",finishNowBody:"PDF, images, vidéos, sous-titres, tableaux et fichiers privés peuvent être traités sans passer d’une application à l’autre.",
   important:"Puis faire avancer le travail important",importantBody:"Organisez vos sources, retrouvez les passages, posez des questions et poursuivez votre étude.",
   tools:"Outils pratiques",toolsDesc:"Traitez PDF, images, vidéo, sous-titres, tableaux et fichiers privés.",
-  sasi:"Création SASI",sasiDesc:"Organisez vos sources, retrouvez les passages, posez des questions et poursuivez votre étude.",
+  sasi:"Logiciels SASI",sasiDesc:"Découvrez les logiciels, les licences source et la livraison vérifiée.",
   book:"Book SASI",bookDesc:"Transformez livres, articles et sources en intelligence interrogeable et traçable.",
   learning:"SASI Études",learningDesc:"Transformez vos supports en espace de révision, de questions et de retour aux sources.",
   research:"SASI Recherche",researchDesc:"Gardez questions, preuves, comparaisons et conclusions dans un même fil de recherche.",
@@ -116,7 +116,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Warum hier beginnen",finishNow:"Zuerst die aktuelle Aufgabe erledigen",finishNowBody:"PDFs, Bilder, Videos, Untertitel, Tabellen und private Dateien lassen sich ohne ständigen App-Wechsel bearbeiten.",
   important:"Dann wichtige Arbeit weiterführen",importantBody:"Ordne Quellen, finde Textstellen, stelle Fragen und lerne weiter.",
   tools:"Praktische Werkzeuge",toolsDesc:"PDFs, Bilder, Video, Untertitel, Tabellen und private Dateien bearbeiten.",
-  sasi:"SASI Creation",sasiDesc:"Ordne Quellen, finde Textstellen, stelle Fragen und lerne weiter.",
+  sasi:"SASI Software",sasiDesc:"Entdecken Sie Software, Quellcode-Lizenzen und geprüfte Lieferung.",
   book:"Book SASI",bookDesc:"Bücher, Papers und Quellen in eine weiter befragbare und zitierbare Intelligenz verwandeln.",
   learning:"Lern-SASI",learningDesc:"Lernmaterial in einen Raum für Wiederholung, Fragen und Quellenrückgriff verwandeln.",
   research:"Forschungs-SASI",researchDesc:"Fragen, Belege, Vergleiche und Schlussfolgerungen in einem Forschungsfaden halten.",
@@ -133,7 +133,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Por qué empezar aquí",finishNow:"Resuelve primero la tarea inmediata",finishNowBody:"PDF, imágenes, vídeo, subtítulos, tablas y archivos privados sin saltar entre múltiples aplicaciones.",
   important:"Después, lleva adelante el trabajo importante",importantBody:"Organiza fuentes, busca pasajes, haz preguntas y sigue estudiando.",
   tools:"Herramientas prácticas",toolsDesc:"Procesa PDF, imágenes, vídeo, subtítulos, tablas y archivos privados.",
-  sasi:"Creación SASI",sasiDesc:"Organiza fuentes, busca pasajes, haz preguntas y sigue estudiando.",
+  sasi:"Software SASI",sasiDesc:"Explora software, licencias de código fuente y entrega verificada.",
   book:"Book SASI",bookDesc:"Convierte libros, artículos y fuentes en una inteligencia que puedas consultar y citar.",
   learning:"SASI Aprendizaje",learningDesc:"Convierte materiales de estudio en un espacio para repasar, preguntar y volver a las fuentes.",
   research:"SASI Investigación",researchDesc:"Mantén preguntas, evidencia, comparación y conclusiones en un mismo hilo.",
@@ -150,7 +150,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Por que começar aqui",finishNow:"Resolva primeiro a tarefa imediata",finishNowBody:"PDFs, imagens, vídeos, legendas, tabelas e arquivos privados sem ficar alternando entre aplicativos.",
   important:"Depois, avance o trabalho importante",importantBody:"Organize fontes, encontre trechos, faça perguntas e continue estudando.",
   tools:"Ferramentas práticas",toolsDesc:"Processe PDFs, imagens, vídeo, legendas, tabelas e arquivos privados.",
-  sasi:"Criação SASI",sasiDesc:"Organize fontes, encontre trechos, faça perguntas e continue estudando.",
+  sasi:"Software SASI",sasiDesc:"Explore softwares, licenças de código-fonte e entrega verificada.",
   book:"Book SASI",bookDesc:"Transforme livros, artigos e fontes em uma inteligência que você possa consultar e citar.",
   learning:"SASI Aprendizagem",learningDesc:"Transforme materiais de estudo em espaço para revisar, perguntar e voltar às fontes.",
   research:"SASI Pesquisa",researchDesc:"Mantenha perguntas, evidências, comparações e conclusões no mesmo fluxo.",
@@ -167,7 +167,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"لماذا تبدأ من هنا",finishNow:"أنهِ المهمة الحالية أولًا",finishNowBody:"تعامل مع PDF والصور والفيديو والترجمة والجداول والملفات الخاصة دون التنقل بين عدة تطبيقات.",
   important:"ثم واصل العمل المهم",importantBody:"نظّم المصادر وابحث في النصوص واطرح الأسئلة وتابع الدراسة.",
   tools:"أدوات عملية",toolsDesc:"عالج PDF والصور والفيديو والترجمة والجداول والملفات الخاصة.",
-  sasi:"إنشاء SASI",sasiDesc:"نظّم المصادر وابحث في النصوص واطرح الأسئلة وتابع الدراسة.",
+  sasi:"برمجيات SASI",sasiDesc:"تصفح البرامج وتراخيص الشيفرة وطرق التسليم الآمن.",
   book:"Book SASI",bookDesc:"حوّل الكتب والأبحاث والمصادر إلى ذكاء يمكنك سؤاله والاستشهاد به.",
   learning:"SASI للتعلّم",learningDesc:"حوّل مواد الدراسة إلى مساحة للمراجعة والسؤال والرجوع إلى المصدر.",
   research:"SASI للبحث",researchDesc:"احتفظ بالأسئلة والأدلة والمقارنات والاستنتاجات في مسار بحث واحد.",
@@ -208,10 +208,10 @@ export default function HomeProblemHub(){
   {words:["pdf","合并","压缩","拆分","ocr","签名","盖章"],href:"/tools",label:"PDF"},
   {words:["图片","照片","jpg","png","webp","水印","放大"],href:"/tools",label:c.img},
   {words:["视频","字幕","音频","配音","转文字"],href:"/tools",label:c.video},
-  {words:["书","教材","论文","笔记","资料"],href:"/sasi?mode=book",label:c.book},
-  {words:["学习","复习","知识"],href:"/sasi?mode=learning",label:c.learning},
-  {words:["科研","研究","证据"],href:"/sasi?mode=research",label:c.research},
-  {words:["短剧","剧本","广告","mv","cg","创作"],href:"/sasi",label:c.sasi},
+  {words:["书","教材","论文","笔记","资料"],href:"/ai-knowledge",label:c.book},
+  {words:["学习","复习","知识"],href:"/ai-learning",label:c.learning},
+  {words:["科研","研究","证据"],href:"/ai-research",label:c.research},
+  {words:["ea","mt5","源码","软件","授权","开发者"],href:"/sasi",label:c.sasi},
  ],[c,market.title]);
  const hit=useMemo(()=>{const s=q.toLowerCase().replace(/\s+/g,"");return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
@@ -239,7 +239,7 @@ export default function HomeProblemHub(){
        {FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong className="text-[var(--lx-ink)]">{category.title}：</strong>{category.body}</p>)}
       </div>
      </details>
-     <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"SASI 可用于短剧、网站、书本、学习和科研。涉及收费的操作会先展示费用和可用支付方式。":"SASI supports video, websites, books, study and research. Paid steps display prices and available payment methods before confirmation."}</p>
+     <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"SASI 现为智能软件市场；按商品说明提供源码授权、开发者发布和安全交付。付款前展示费用与可用支付方式。":"SASI is now a software marketplace for developer products and source licenses. Prices and available payment methods appear before payment confirmation."}</p>
      <p className="mt-1 text-xs text-[var(--lx-muted)]">lingxifield.com · lingxifield.cn</p>
      <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
      {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}

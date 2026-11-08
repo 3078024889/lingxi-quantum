@@ -25,7 +25,7 @@ const HOME_STRUCTURED_DATA=[
   inLanguage:"zh-CN",
   hasPart:[
    {"@type":"CollectionPage",name:"全球 SIAI 排行榜",url:homeFact.com+"siai"},
-   {"@type":"WebPage",name:"SASI 智能创作",url:homeFact.com+"sasi"},
+   {"@type":"WebPage",name:"SASI 智能软件市场",url:homeFact.com+"sasi"},
    {"@type":"CollectionPage",name:"免费在线实用工具",url:homeFact.com+"tools"}
   ]
  },
@@ -39,11 +39,10 @@ const HOME_STRUCTURED_DATA=[
   description:PUBLIC_FEATURE_COPY.zh.description,
   featureList:[
    "全球 SIAI 排行榜：AI 公司、模型、功能、价格和免费额度对比",
-   "SASI多模型智能创作",
-   "AI短剧生成",
-   "网站构建",
-   "书本问答",
-   "学习与科研",
+   "SASI 智能软件市场与开发者发布",
+   "MT5 EA与源码授权",
+   "私有数字软件交付",
+   "软件订单与授权管理",
    "100+在线实用工具，每日免费体验",
    "PDF、图片、视频音频、文件表格、开发者与隐私工具"
   ]
