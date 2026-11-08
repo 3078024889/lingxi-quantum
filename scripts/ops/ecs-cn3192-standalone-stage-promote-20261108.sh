@@ -132,6 +132,55 @@ EOF
   echo "CN3192_STAGING_PASS_PRODUCTION_3191_UNCHANGED SOURCE_SHA=$SHA"
   exit 0
 fi
+# Do not switch the IP/account quota runtime until a stable HMAC key is present.
+# The old service_role key is intentionally NOT used as a fallback in the new release.
+grep -Eq '^LINGXIFIELD_PRIVACY_HASH_SECRET=.{32,} && ! -L "$UNIT" && -f "$STAGE_ENV" ]] || { echo "CN3192_STAGE_NOT_PREPARED" >&2;exit 1; }
+systemctl is-active --quiet "$NEW" || { echo "CN3192_STAGE_NOT_ACTIVE" >&2;exit 1; }
+PRODUCTION_ORIGINAL="$NGINX.before-cn3192-$SHORT-$(date -u +%Y%m%dT%H%M%SZ)"
+grep -Fq '127.0.0.1:3191' "$NGINX" || { echo "CN_NGINX_UPSTREAM_CHANGED_ABORT" >&2;exit 1; }
+cp -a "$NGINX" "$PRODUCTION_ORIGINAL"
+cp -a "$UNIT" "$UNIT.rollback-$SHORT"
+# Promote the candidate to use production env, with its already-validated sb_secret.
+sed -i "s@EnvironmentFile=$STAGE_ENV@EnvironmentFile=$ENV@" "$UNIT"
+grep -Fxq "EnvironmentFile=$ENV" "$UNIT" || { echo "SERVICE_PROMOTION_ENV_FAILED" >&2;exit 1; }
+systemctl daemon-reload
+systemctl restart "$NEW"
+if ! probe;then
+  echo "CN3192_PRODUCTION_ENV_GATE_FAILED_ROLLING_BACK" >&2
+  cp -a "$UNIT.rollback-$SHORT" "$UNIT"
+  systemctl daemon-reload
+  systemctl restart "$NEW" || true
+  exit 1
+fi
+python3 - "$NGINX" <<'PY'
+import os,sys,tempfile
+path=sys.argv[1];old=open(path,"rb").read()
+if b"lingxifield.cn" not in old:raise SystemExit("CN_CONFIG_UNEXPECTED")
+if old.count(b"127.0.0.1:3191")<1:raise SystemExit("CN_UPSTREAM_CHANGED")
+next=old.replace(b"127.0.0.1:3191",b"127.0.0.1:3192")
+fd,p=tempfile.mkstemp(prefix=".cn3192-",dir=os.path.dirname(path))
+os.fchmod(fd,0o644)
+with os.fdopen(fd,"wb") as f:f.write(next)
+os.replace(p,path)
+PY
+rollback(){
+  echo "CN_NGINX_POSTCUTOVER_FAILED_RESTORING_3191" >&2
+  cp -a "$PRODUCTION_ORIGINAL" "$NGINX"
+  nginx -t && systemctl reload nginx || true
+}
+if ! nginx -t || ! systemctl reload nginx;then rollback; exit 1;fi
+for path in / /tools /siai /sasi/pricing /tools/pass;do
+  result="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 \
+    --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
+  echo "CN_PUBLIC_NGINX_ROUTE:$path:$result"
+  [[ "$result" = 200 ]] || { rollback;exit 1; }
+done
+systemctl enable "$NEW" >/dev/null
+echo "CN_NEW_3192_NGINX_PROMOTION_PASS_ROLLBACK_FILE=$PRODUCTION_ORIGINAL"
+echo "ADMIN_AUTHENTICATED_SESSION_AND_REAL_PAYMENT_CONFIRMATIONS_STILL_REQUIRED"
+ "$ENV" || {
+  echo "CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT" >&2; exit 1;
+}
 # Only promote after stage has been created and running.
 [[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" ]] || { echo "CN3192_STAGE_NOT_PREPARED" >&2;exit 1; }
 systemctl is-active --quiet "$NEW" || { echo "CN3192_STAGE_NOT_ACTIVE" >&2;exit 1; }
