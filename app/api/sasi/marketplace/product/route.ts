@@ -3,7 +3,7 @@ import {createClient} from "@/lib/supabase/server";
 import {marketProductUuid} from "@/lib/sasi-marketplace/fees";
 import {wechatPayEnabled} from "@/lib/wechatpay";
 import {alipayEnabled} from "@/lib/alipay";
-import {marketplaceR2Ready} from "@/lib/sasi-marketplace/r2";
+import {marketplaceCommerceReady} from "@/lib/sasi-marketplace/checkout";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 export async function GET(req:NextRequest){
  const id=marketProductUuid(req.nextUrl.searchParams.get("id")||"");
@@ -17,8 +17,9 @@ export async function GET(req:NextRequest){
   return NextResponse.json({product:{
    id:"sasi-market:"+r.id,name:r.title,nameEn:r.title,priceRmb:r.price_cny_minor/100,
    priceUsd:r.price_usd_minor/100,type:"permanent",group:"market",note:r.description,noteEn:r.description
-  },available:marketplaceR2Ready()&&
-     (wechatPayEnabled()||alipayEnabled())
+  },available:marketplaceCommerceReady()&&
+     (wechatPayEnabled()||alipayEnabled()||
+      (process.env.PAYPAL_ENABLED==="true"&&Boolean(process.env.PAYPAL_CLIENT_ID&&process.env.PAYPAL_CLIENT_SECRET&&process.env.PAYPAL_WEBHOOK_ID)))
   },{headers:{"Cache-Control":"private,no-store"}});
  }catch{return NextResponse.json({error:"MARKET_UNAVAILABLE"},{status:503,headers:{"Cache-Control":"no-store"}});}
 }
