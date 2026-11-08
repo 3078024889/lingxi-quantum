@@ -76,7 +76,7 @@ jobs:
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/ -o .open-next/assets/__lingxi_edge_static__/landing.html
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/siai -o .open-next/assets/__lingxi_edge_static__/siai.html
           # Anonymous public pages only; no account, order, payment or admin routes.
-          for mapping in 'tools:tools' 'sasi:sasi' 'sasi/marketplace:marketplace' 'announcements:announcements' 'en/siai:en-siai' 'ja/siai:ja-siai';do
+          for mapping in 'tools:tools' 'sasi:sasi' 'sasi/marketplace:marketplace' 'announcements:announcements' 'en/siai:en-siai' 'ja/siai:ja-siai' 'ko/siai:ko-siai' 'fr/siai:fr-siai' 'de/siai:de-siai' 'es/siai:es-siai' 'pt/siai:pt-siai' 'ar/siai:ar-siai';do
             route="${mapping%%:*}"
             file="${mapping#*:}"
             curl --noproxy '*' -fSs --retry 2 --max-time 55 \
@@ -151,14 +151,14 @@ jobs:
           url="https://${CANDIDATE_NAME}.3078024889.workers.dev"
           test -n "$url"
           echo "COM_CANARY_URL=$url"
-          for path in / /siai /tools /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai;do
+          for path in / /siai /tools /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
             count=0
             for i in 1 2 3;do
               h="$(mktemp)"
               status="$(curl -4sS --connect-timeout 9 --max-time 30 -D "$h" -o /dev/null -w '%{http_code}' "$url$path" || true)"
               echo "COM_CANARY_PAGE path=$path repetition=$i HTTP_$status"
               test "$status" = 200 || exit 1
-              if [[ "$path" = / || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai ]];then
+              if [[ "$path" = / || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai || "$path" = /ko/siai || "$path" = /fr/siai || "$path" = /de/siai || "$path" = /es/siai || "$path" = /pt/siai || "$path" = /ar/siai ]];then
                 grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
               fi
               rm -f "$h"
