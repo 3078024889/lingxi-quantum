@@ -8,6 +8,8 @@ Use only after the isolated gateway canary has passed. No secrets are logged.
 import hashlib
 import json
 import os
+import re
+import pathlib
 import sys
 import time
 import urllib.error
@@ -101,6 +103,20 @@ def validate_public(base, *, baseline=None):
     return checks
 
 
+
+def validate_all_tools(base):
+    source = pathlib.Path("lib/seo/global-seo.ts").read_text("utf-8")
+    slugs = list(dict.fromkeys(re.findall(r'\\{\\s*slug:"([a-z0-9-]+)"', source)))
+    if len(slugs) != 124:
+        raise ReleaseError("PINNED_124_CATALOG_COUNT_CHANGED:" + str(len(slugs)))
+    for slug in slugs:
+        path = "/tools/" + slug
+        status, headers, body = request(base + path)
+        if status != 200 or "html" not in headers.get("Content-Type", "").lower() or b"<html" not in body[:5000].lower():
+            raise ReleaseError("CATALOG_PAGE_FAILED:" + path + ":" + str(status))
+    print("ALL_124_PUBLIC_TOOL_PAGES_PASS", base, flush=True)
+
+
 def snapshot():
     zones = cf("/zones?name=lingxifield.com&per_page=5")
     found = [z for z in zones if z.get("name") == "lingxifield.com"
@@ -160,6 +176,7 @@ def main():
     if status != 200 or body != b"LINGXI_GATEWAY_CANARY_V2" or headers.get("x-lingxi-gateway") != "v2":
         raise ReleaseError("GATEWAY_SCRIPT_NOT_REACHED")
     baseline = validate_public(CANARY)
+    validate_all_tools(CANARY)
     for i in range(4):
         validate_public(CANARY, baseline=baseline)
         print("CANARY_STATIC_STABLE", i + 1)
@@ -184,6 +201,10 @@ def main():
                 time.sleep(3)
         if last is not None:
             raise ReleaseError("POST_ROUTE_ACCEPTANCE_FAILED:" + last)
+        validate_all_tools("https://lingxifield.com")
+        # Repeat page checks before declaring stable live delivery.
+        for _ in range(3):
+            validate_public("https://lingxifield.com", baseline=baseline)
         routes = cf("/zones/" + ZONE + "/workers/routes?per_page=100")
         for pattern in PATTERNS:
             current = [r for r in routes if r.get("pattern") == pattern]
