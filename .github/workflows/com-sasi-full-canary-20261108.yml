@@ -133,7 +133,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          url="$(grep -Eo 'https://[a-zA-Z0-9.-]+\\.workers\\.dev' "$RUNNER_TEMP/candidate-deployment.log" | head -1)"
+          url="https://${CANDIDATE_NAME}.3078024889.workers.dev"
           test -n "$url"
           echo "COM_CANARY_URL=$url"
           for path in / /siai /tools /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai;do
