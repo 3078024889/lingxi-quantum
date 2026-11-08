@@ -55,6 +55,19 @@ jobs:
           test -n "$CLOUDFLARE_API_TOKEN"
           test -n "$CLOUDFLARE_ACCOUNT_ID"
           node tests/com-admin-facade.test.mjs
+          node - <<'NODE'
+          const fs=require("node:fs");
+          const config=JSON.parse(fs.readFileSync("workers/com-admin-facade/wrangler.jsonc","utf8"));
+          const expected=[
+            "lingxifield.com/api/account/money-admin*",
+            "lingxifield.com/api/site-announcements*",
+            "lingxifield.com/api/tools/pass*"
+          ].sort();
+          const actual=(config.routes||[]).map(x=>x.pattern).sort();
+          if(config.name!=="lingxifield-com-admin-facade"||JSON.stringify(actual)!==JSON.stringify(expected))
+           throw Error("WIDE_CLOUDFLARE_ROUTE_REJECTED");
+          console.log("CLOUDFLARE_NARROW_DEPLOY_ROUTES_VERIFIED");
+          NODE
       - name: Deploy narrow independent admin Worker only; preserve original global gateway
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
