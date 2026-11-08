@@ -11,6 +11,9 @@ on:
       - 'app/api/tools/pass/route.ts'
       - 'app/tools/pass/page.tsx'
       - 'app/checkout/page.tsx'
+      - 'lib/wechatpay.ts'
+      - 'app/api/pay/wechat/create/route.ts'
+      - 'app/api/pay/providers/route.ts'
       - 'components/Nav.tsx'
       - 'components/tools/ToolsHubV11.tsx'
       - 'components/tools/FileDropzone.tsx'
@@ -49,6 +52,21 @@ jobs:
         run: |
           node scripts/audit/unified-tool-pass-coverage.mjs
           node scripts/audit/unified-tool-pass-server-coverage.mjs
+      - name: Fail-closed WeChat checkout contract (no merchant API calls)
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs=require('node:fs'), assert=require('node:assert/strict');
+          const lib=fs.readFileSync('lib/wechatpay.ts','utf8');
+          const create=fs.readFileSync('app/api/pay/wechat/create/route.ts','utf8');
+          const providers=fs.readFileSync('app/api/pay/providers/route.ts','utf8');
+          assert.match(lib,/export function wechatPayEnabled\(\): boolean/);
+          assert.match(lib,/process\.env\.WECHAT_ENABLED\?\.trim\(\)\.toLowerCase\(\) === "true" && wechatPayConfigured\(\)/);
+          assert.match(create,/if \(!wechatPayEnabled\(\)\)/);
+          assert.match(providers,/const wechat=wechatPayEnabled\(\)/);
+          assert.match(providers,/wechat:\{configured:wechatConfigured,enabled:wechat/);
+          console.log('WECHAT_EXPLICIT_ENABLE_AND_UI_GATE_PASS_NO_CHARGE');
+          NODE
       - name: TypeScript typecheck
         run: pnpm exec tsc --noEmit
       - name: Real Next production build - no deployment or payment transaction
