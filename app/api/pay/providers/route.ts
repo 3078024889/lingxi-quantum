@@ -9,10 +9,10 @@ function paypalConfigured(){
  return Boolean(process.env.PAYPAL_CLIENT_ID?.trim()&&process.env.PAYPAL_CLIENT_SECRET?.trim()&&process.env.PAYPAL_WEBHOOK_ID?.trim());
 }
 function paypalEnabled(){
- return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&paypalConfigured();
+ return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&paypalConfigured()&&process.env.PAYPAL_ENV!=="sandbox";
 }
 export async function GET(){
- const wechatConfigured=wechatPayConfigured();
+ const wechatConfigured=wechatPayConfigured()&&Boolean(process.env.WECHAT_PLATFORM_PUBLIC_KEY?.trim()&&process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID?.trim());
  const wechat=wechatPayEnabled();
  const alipayConfigured=alipayMissingVars().length===0;
  const alipay=alipayEnabled();
@@ -20,7 +20,7 @@ export async function GET(){
  return NextResponse.json({
   wechat,alipay,paypal,
   diagnostics:{
-   wechat:{configured:wechatConfigured,enabled:wechat,missingCount:wechatConfigured?0:wechatPayMissingVars().length},
+   wechat:{configured:wechatConfigured,enabled:wechat,missingCount:wechatPayMissingVars().length+Number(!process.env.WECHAT_PLATFORM_PUBLIC_KEY?.trim())+Number(!process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID?.trim())},
    alipay:{configured:alipayConfigured,enabled:alipay,missingCount:alipayConfigured?0:alipayMissingVars().length},
    paypal:{configured:paypalConfigured(),enabled:paypal,missingCount:paypalConfigured()?0:1}
   }

@@ -34,7 +34,7 @@ export function wechatPayConfigured(): boolean {
 
 /** Only explicitly approved merchants may create NEW chargeable orders. */
 export function wechatPayEnabled(): boolean {
-  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayConfigured();
+  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayConfigured() && Boolean(PLATFORM_PUBLIC_KEY?.trim() && PLATFORM_PUBLIC_KEY_ID?.trim());
 }
 
 // 具体缺了哪几个——之前那个 wechatPayConfigured() 只回答"配没配全"，

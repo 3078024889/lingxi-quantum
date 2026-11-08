@@ -1,0 +1,47 @@
+name: COM payment runtime and merchant readiness contract (NO DEPLOY)
+on:
+  push:
+    branches: [fix/com-payment-runtime-readiness-20261108]
+    paths:
+      - '.github/workflows/com-payment-runtime-contract-20261108.yml'
+      - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
+      - 'lib/wechatpay.ts'
+      - 'lib/sasi/readiness.ts'
+      - 'app/api/pay/providers/route.ts'
+      - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
+  pull_request:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - '.github/workflows/com-payment-runtime-contract-20261108.yml'
+      - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
+      - 'lib/wechatpay.ts'
+      - 'lib/sasi/readiness.ts'
+      - 'app/api/pay/providers/route.ts'
+      - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
+permissions: {contents: read}
+concurrency:
+  group: com-merchant-runtime-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install pinned dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify Cloudflare payment fast path and PSP settlement contract
+        run: |
+          node --check scripts/cloudflare/patch-critical-static-html-20261108.mjs
+          node --test tests/com-payment-edge-merchant-readiness-20261108.test.mjs
+          node --check scripts/cloudflare/com-provision-merchant-secrets-20261108.mjs
+          node --test tests/com-merchant-secret-provision-contract-20261108.test.mjs
+          node tests/sasi-marketplace-security-contract.test.mjs
+          node tests/paypal-merchant-idempotency-20261108.test.mjs
+      - name: TypeScript all routes
+        run: pnpm exec tsc --noEmit
