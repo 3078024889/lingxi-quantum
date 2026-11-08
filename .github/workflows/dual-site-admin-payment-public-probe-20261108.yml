@@ -1,0 +1,37 @@
+name: Dual-site admin and checkout anonymous readiness (NO DEPLOY)
+on:
+  push:
+    branches: [feature/sasi-software-commerce-com-admin-20261108]
+    paths:
+      - '.github/workflows/dual-site-admin-payment-public-probe-20261108.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  anonymous-read-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Probe health, manager access gate and payment providers without accounts
+        run: |
+          set -Eeuo pipefail
+          for host in lingxifield.cn lingxifield.com; do
+            echo "SITE $host"
+            for p in /api/health /api/account/money-admin/access /api/account/money-admin /api/pay/providers /api/tools/pass /api/tools/access?toolSlug=compress-image /api/sasi/software/catalog; do
+              tmp="$(mktemp)"
+              status="$(curl -sS -4 --max-time 22 --connect-timeout 8 --retry 1 -o "$tmp" -w '%{http_code}' "https://$host$p" || true)"
+              echo "ROUTE $host $p HTTP ${status:-000}"
+              if [[ "$p" = /api/pay/providers && "$status" = 200 ]]; then
+                node - "$tmp" <<'NODE'
+          const fs=require('node:fs');
+          try{
+            const j=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+            for(const k of ['wechat','alipay','paypal'])console.log('CHANNEL',k,
+              'configured='+String(j.diagnostics?.[k]?.configured===true),
+              'enabled='+String(j[k]===true));
+          }catch{console.log('PROVIDERS_NON_JSON')}
+          NODE
+              fi
+              rm -f "$tmp"
+            done
+          done
+          echo 'READ_ONLY_PROBE_DONE_NO_LOGIN_NO_PAYMENT'
