@@ -5,6 +5,7 @@ import LxText from "@/components/LxText";
 import {createClient,getServerUser,isSupabasePublicConfigured} from "@/lib/supabase/server";
 import {readUnifiedBalanceSnapshot} from "@/lib/money/unified-balance";
 import {formatMinor} from "@/lib/money/invariants";
+import {normalizeWithdrawalStatus} from "@/lib/money/refund-state";
 import {BALANCE_TOPUP_AMOUNTS} from "@/lib/balance-topups";
 import {wechatPayEnabled} from "@/lib/wechatpay";
 import {alipayEnabled} from "@/lib/alipay";
@@ -20,12 +21,20 @@ export default async function WalletPage(){
  const user=supabase?await getServerUser(supabase):null;
  let balances:Awaited<ReturnType<typeof readUnifiedBalanceSnapshot>>|null=null;
  let readFailed=false;
+ type WithdrawalRow={id:string;currency:string;amount_minor:number;status:string;provider_status:string|null;created_at:string};
+ let withdrawals:WithdrawalRow[]|null=null;
+ let withdrawalsFailed=false;
  if(user&&supabase){
   try{
    balances=await readUnifiedBalanceSnapshot(supabase,user.id);
   }catch{
    readFailed=true;
   }
+  const {data,error}=await supabase.from("balance_withdrawals")
+   .select("id,currency,amount_minor,status,provider_status,created_at")
+   .eq("user_id",user.id).order("created_at",{ascending:false}).limit(20);
+  if(error)withdrawalsFailed=true;
+  else withdrawals=(data??[]) as WithdrawalRow[];
  }
  const wechat=wechatPayEnabled();
  const alipay=alipayEnabled();
@@ -93,6 +102,32 @@ export default async function WalletPage(){
        {!anyPayment&&<p className="mt-4 text-xs text-[var(--lx-muted)]">
         <LxText zh="金额可点击查看支付确认页。支付通道关闭时不会扣款，也不会自动创建订单。" en="You can review the checkout page. No charge or order is created while payment providers are disabled."/>
        </p>}
+      </section>
+      <section id="withdrawals" className="mt-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
+       <h2 className="text-xl font-semibold text-[var(--lx-ink)]"><LxText zh="退款与提现记录" en="Refund & withdrawal history"/></h2>
+       {withdrawalsFailed ? (
+        <p role="alert" className="mt-4 text-sm text-[var(--lx-muted)]"><LxText zh="记录暂无法加载，请稍后刷新。" en="History is temporarily unavailable. Please retry."/></p>
+       ) : withdrawals?.length ? (
+        <div className="mt-4 divide-y divide-[var(--lx-line)]">
+         {withdrawals.map(row=>{
+          const stage=normalizeWithdrawalStatus(row.status,row.provider_status);
+          const labels:Record<string,string>={requested:"已申请",processing:"处理中",provider_pending:"渠道处理中",succeeded:"已完成",failed:"失败",cancelled:"已取消"};
+          const currency=row.currency==="USD"?"USD":"CNY";
+          return <div key={row.id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
+           <div>
+            <p className="font-semibold text-[var(--lx-ink)]">{formatMinor(currency,Number(row.amount_minor))}</p>
+            <p className="mt-1 text-xs text-[var(--lx-muted)]">{new Date(row.created_at).toLocaleDateString()}</p>
+           </div>
+           <p className="text-[var(--lx-muted)]"><LxText zh={labels[stage]??stage} en={stage}/></p>
+          </div>;
+         })}
+        </div>
+       ) : (
+        <p className="mt-4 text-sm text-[var(--lx-muted)]"><LxText zh="主账本暂无退款或提现记录。" en="No refund or withdrawal records in the main ledger."/></p>
+       )}
+       <Link href="/account/support" className="mt-4 inline-block text-sm font-semibold text-[var(--lx-ink)] underline underline-offset-4">
+        <LxText zh="退款问题与处理进度" en="Refund questions and support"/>
+       </Link>
       </section>
       <div className="mt-6 flex flex-wrap gap-3 text-sm">
        <Link href="/account/orders" className="rounded-xl border border-[var(--lx-line)] px-5 py-3 text-[var(--lx-ink)]">
