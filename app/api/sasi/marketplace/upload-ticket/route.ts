@@ -1,5 +1,5 @@
 import {NextRequest,NextResponse} from "next/server";
-import {randomUUID} from "node:crypto";
+import {newMarketplaceObjectKey,signedMarketplaceUpload,marketplaceR2Ready} from "@/lib/sasi-marketplace/r2";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
@@ -9,7 +9,7 @@ const nocache={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosn
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:nocache});
- if(process.env.SASI_MARKET_UPLOADS_ENABLED!=="true")
+ if(process.env.SASI_MARKET_UPLOADS_ENABLED!=="true"||!marketplaceR2Ready())
   return NextResponse.json({error:"UPLOAD_SCANNING_NOT_READY"},{status:503,headers:nocache});
  const {data:{user}}=await createClient().auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:nocache});
@@ -27,14 +27,13 @@ export async function POST(req:NextRequest){
    .select("id,quarantine_path,status").eq("id",body.listingId).eq("seller_id",user.id).single();
   if(!listing||listing.status!=="draft"||listing.quarantine_path)
    return NextResponse.json({error:"NEW_DRAFT_REQUIRED"},{status:409,headers:nocache});
-  const path=`${user.id}/${listing.id}/${randomUUID()}.zip`;
-  const {data,error}=await admin.storage.from("sasi-market-quarantine").createSignedUploadUrl(path);
-  if(error||!data)throw Error("PRIVATE_UPLOAD_UNAVAILABLE");
+  const path=newMarketplaceObjectKey(user.id,listing.id,"software","zip");
+  const uploadUrl=signedMarketplaceUpload(path,180);
   const {data:reservation,error:updateError}=await admin.from("sasi_market_listings")
     .update({quarantine_path:path}).eq("id",listing.id).eq("seller_id",user.id)
     .is("quarantine_path",null).eq("status","draft").select("id").maybeSingle();
   if(updateError||!reservation)throw Error("UPLOAD_RESERVATION_FAILED");
-  return NextResponse.json({path,token:data.token,bucket:"sasi-market-quarantine",maxBytes:31457280},
+  return NextResponse.json({path,uploadUrl,contentType:"application/zip",expiresInSeconds:180,maxBytes:31457280},
     {headers:nocache});
  }catch{return NextResponse.json({error:"PRIVATE_UPLOAD_NOT_READY"},{status:503,headers:nocache});}
 }
