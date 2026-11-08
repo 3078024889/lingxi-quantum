@@ -40,7 +40,7 @@ export async function GET(req: Request) {
       // 成功了，才会告诉前端可以跳转；解锁失败的话，返回一个具体的
       // 错误原因，前端能看到、场域入口"待确认订单"里也还能重新点
       // 查询重试，不会假装成功。
-      const result = await fulfillPaidOrder(orderId);
+      const result = await fulfillPaidOrder(orderId,true);
       if (!result.ok) {
         console.error("[wechat query] 微信确认已支付，但解锁写入失败:", result.error, "order id:", orderId);
         return NextResponse.json({ paid: false, unlockError: result.error || "解锁写入失败，请稍后重试或联系我们" });
