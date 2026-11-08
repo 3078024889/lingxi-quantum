@@ -72,6 +72,7 @@ class PromotionTests(unittest.TestCase):
              patch.object(mod, "cf", harness.cf), \
              patch.object(mod, "request", harness.request), \
              patch.object(mod, "validate_public", harness.validate), \
+             patch.object(mod, "validate_all_tools", lambda base: None), \
              patch.object(mod, "check_www", harness.www), \
              patch.object(mod.time, "sleep", lambda _: None):
             mod.main()
