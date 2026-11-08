@@ -1,14 +1,10 @@
 import type {Metadata} from "next";
-import {pageGeoFact} from "@/lib/seo/site-facts";
-import {Suspense} from "react";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import SasiOneSurface from "@/components/SasiOneSurface";
-
-export const dynamic="force-dynamic";
-const sasiFact=pageGeoFact("sasi","zh");
-export const metadata:Metadata={title:sasiFact.title,description:sasiFact.description,alternates:{canonical:"/sasi"}};
-
-export default function Page(){
- return <><Nav/><Suspense fallback={<main className="lx11-page"/>}><SasiOneSurface/></Suspense><Footer/></>;
-}
+import SasiSoftwareMarket from "@/components/SasiSoftwareMarket";
+export const metadata:Metadata={
+  title:"SASI 智能软件商城｜灵犀场 LINGXIFIELD",
+  description:"SASI 智能软件品牌。哥白尼 SI 9.5 MT5 自动交易软件、源码授权、模拟账户只读观察及可核验的数字软件交付。",
+  alternates:{canonical:"/sasi"}
+};
+export default function Page(){return <><Nav/><SasiSoftwareMarket/><Footer/></>;}
