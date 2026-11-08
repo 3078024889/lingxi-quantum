@@ -10,7 +10,7 @@ const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} 
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:h});
- if(process.env.SASI_MARKET_UPLOADS_ENABLED!=="true"||!marketplaceR2Ready())
+ if(!marketplaceR2Ready())
   return NextResponse.json({error:"IMAGE_STORAGE_NOT_READY"},{status:503,headers:h});
  const db=createClient(),{data:{user}}=await db.auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"VERIFIED_ACCOUNT_REQUIRED"},{status:401,headers:h});
