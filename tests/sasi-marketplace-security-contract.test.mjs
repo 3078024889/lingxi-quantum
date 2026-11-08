@@ -9,7 +9,7 @@ assert.match(sql,/REVOKE ALL ON public\.sasi_market_sellers/);
 assert.match(sql,/REVOKE ALL ON FUNCTION public\.sasi_market_record_verified_sale\(uuid\) FROM PUBLIC,anon,authenticated/);
 assert.match(sql,/sasi_market_request_payout/);
 assert.match(sql,/GRANT EXECUTE ON FUNCTION public\.sasi_market_request_payout\(bigint,text,uuid\) TO authenticated,service_role/);
-assert.match(sql,/available_at.*7 days/);
+assert.match(sql,/now\(\)\+interval '7 days'/);
 assert.match(sql,/submission_target_at.*15 minutes/);
 assert.match(sql,/CREATE POLICY sasi_market_listings_public/);
 assert.match(sql,/status='published' AND scan_status='clean'/);
