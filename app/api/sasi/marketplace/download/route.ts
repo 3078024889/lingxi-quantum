@@ -3,12 +3,13 @@ import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
+import {marketplaceR2Ready,signedMarketplaceDownload,marketplaceObjectHead} from "@/lib/sasi-marketplace/r2";
 export const dynamic="force-dynamic";export const runtime="nodejs";
 const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:h});
- if(process.env.SASI_MARKET_DELIVERY_ENABLED!=="true")
+ if(process.env.SASI_MARKET_DELIVERY_ENABLED!=="true"||!marketplaceR2Ready())
   return NextResponse.json({error:"DELIVERY_NOT_OPEN"},{status:503,headers:h});
  const db=createClient(),{data:{user}}=await db.auth.getUser();
  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
@@ -25,17 +26,20 @@ export async function POST(req:NextRequest){
   const {data:order}=await admin.from("orders").select("status").eq("id",sale.order_id).eq("user_id",user.id).single();
   if(order?.status!=="paid")return NextResponse.json({error:"PAYMENT_NOT_VERIFIED"},{status:403,headers:h});
   const {data:listing,error:listingError}=await admin.from("sasi_market_listings")
-   .select("delivery_bucket,delivery_path,sha256,scan_status")
+   .select("seller_id,delivery_path,sha256,scan_status,status")
    .eq("id",sale.listing_id).single();
-  if(listingError||listing?.delivery_bucket!=="sasi-market-delivery"||listing.scan_status!=="clean"||
-    !listing.delivery_path||!listing.sha256)throw Error("FILE_NOT_CLEARED");
-  const {data:url,error:urlError}=await admin.storage.from(listing.delivery_bucket)
-   .createSignedUrl(listing.delivery_path,60);
-  if(urlError||!url?.signedUrl)throw Error("SIGNED_URL_UNAVAILABLE");
+  if(listingError||listing?.scan_status!=="clean"||!listing.delivery_path||
+   !listing.sha256||listing.status!=="published")throw Error("FILE_NOT_CLEARED");
+  const prefix=`sasi/${listing.seller_id}/market/${sale.listing_id}/approved/`;
+  if(!listing.delivery_path.startsWith(prefix)||!listing.delivery_path.endsWith(".zip"))
+   throw Error("UNAPPROVED_FILE_PATH");
+  const head=await marketplaceObjectHead(listing.delivery_path);
+  if(!head||head.size>30*1024*1024)throw Error("FILE_UNAVAILABLE");
+  const downloadUrl=signedMarketplaceDownload(listing.delivery_path,60);
   const {data:grant,error:grantError}=await db.rpc("sasi_market_claim_download",{p_order_id:sale.order_id});
   if(grantError)throw Error("DOWNLOAD_AUTH_NOT_READY");
   if(!grant?.ok)return NextResponse.json({error:grant?.error||"DOWNLOAD_LIMIT"},{status:403,headers:h});
-  return NextResponse.json({downloadUrl:url.signedUrl,sha256:listing.sha256,
+  return NextResponse.json({downloadUrl,sha256:listing.sha256,
     expiresInSeconds:60,remaining:grant.remaining},{headers:h});
  }catch{return NextResponse.json({error:"DOWNLOAD_NOT_READY"},{status:503,headers:h});}
 }
