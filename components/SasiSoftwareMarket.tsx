@@ -17,7 +17,7 @@ export default function SasiSoftwareMarket(){
  return <main className={styles.main}><div className={styles.wrap}>
   <section className={styles.hero}><div className={styles.heroCopy}>
    <small>{c.eyebrow}</small><h1>{c.title}</h1><p>{c.subtitle}</p>
-   <div className={styles.links}><Link href="/siai">SIAI Rankings ↗</Link><Link href="/tools/pass">100+ Tools ↗</Link><Link href="/sasi/marketplace">{lang==="zh"?"开放市场 · 分享软件":"Community marketplace" } ↗</Link><Link href="/account/software">{lang==="zh"?"我的软件":"My software"} ↗</Link></div>
+   <div className={styles.links}><Link href="/siai">SIAI Rankings ↗</Link><Link href="/tools/pass">100+ Tools ↗</Link><Link href="/sasi/marketplace">{lang==="zh"?"软件作品 · 卖家服务":"Software & sellers" } ↗</Link><Link href="/account/software">{lang==="zh"?"我的软件":"My software"} ↗</Link></div>
   </div><div className={styles.heroViz} aria-hidden="true"><span>SASI</span><strong>SOFTWARE</strong><i>MT5 · SYSTEMS · TOOLS</i><div className={styles.orbits}></div></div></section>
   <div id="products" className={styles.sectionTitle}><div><span>01 / SASI SOFTWARE</span><h2>{lang==="zh"?"产品与授权":"Products & licensing"}</h2></div><span className={styles.state}>{c.status}</span></div>
   <div className={styles.products}>{SASI_SOFTWARE_CATALOG.map((p,i)=>{
