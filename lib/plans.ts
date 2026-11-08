@@ -3,7 +3,7 @@
 export type Product = {
   id:string;name:string;nameEn:string;priceUsd:number;priceRmb:number;
   type:"permanent"|"subscription";days?:number;note:string;noteEn:string;highlight?:boolean;
-  group:"production"|"software";sasiAmountFen?:number;
+  group:"production"|"software"|"market";sasiAmountFen?:number;
 };
 
 import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
