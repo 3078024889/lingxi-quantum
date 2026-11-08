@@ -7,7 +7,7 @@ import {
   createWechatNativeOrder,
   createWechatJsapiOrder,
   buildJsapiInvokeParams,
-  wechatPayConfigured,
+  wechatPayEnabled,
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
 import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     if(Number.isFinite(contentLength)&&contentLength>512*1024){
       return NextResponse.json({error:"PAYMENT_REQUEST_TOO_LARGE"},{status:413});
     }
-    if (!wechatPayConfigured()) {
+    if (!wechatPayEnabled()) {
       return NextResponse.json(
         { error: "微信支付暂不可用，请稍后再试。" },
         { status: 503 }
