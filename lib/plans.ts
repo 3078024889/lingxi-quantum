@@ -3,9 +3,10 @@
 export type Product = {
   id:string;name:string;nameEn:string;priceUsd:number;priceRmb:number;
   type:"permanent"|"subscription";days?:number;note:string;noteEn:string;highlight?:boolean;
-  group:"production";sasiAmountFen?:number;
+  group:"production"|"software";sasiAmountFen?:number;
 };
 
+import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
 import { BALANCE_TOPUP_AMOUNTS, customTopupAmount, customTopupMinor } from "@/lib/balance-topups";
 const RMB_TOPUPS=BALANCE_TOPUP_AMOUNTS;
 export const sasiProductionProducts:Product[]=RMB_TOPUPS.map(amount=>({
@@ -15,7 +16,11 @@ export const sasiProductionProducts:Product[]=RMB_TOPUPS.map(amount=>({
   noteEn:"One balance works across all SASI. Connected intelligence services bill the user directly.",
 }));
 
-export const allProducts=[...sasiProductionProducts];
+export const softwareProducts:Product[]=SASI_SOFTWARE_CATALOG.map(p=>({
+  id:p.id,name:p.titleZh,nameEn:p.titleEn,priceRmb:p.priceCny,priceUsd:p.priceUsd,
+  type:"permanent",group:"software",note:p.featureZh,noteEn:p.featureEn
+}));
+export const allProducts=[...sasiProductionProducts,...softwareProducts];
 export function getProduct(id:string){
   const configured=allProducts.find(p=>p.id===id);if(configured)return configured;
   // Preserve fulfillment of orders created before the displayed packs changed.
