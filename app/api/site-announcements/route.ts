@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {createAdminClient} from "@/lib/supabase/admin";
+import {createClient} from "@/lib/supabase/server";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -8,7 +8,7 @@ export const dynamic="force-dynamic";
 export async function GET(){
  try{
   const now=new Date().toISOString();
-  const {data,error}=await createAdminClient()
+  const {data,error}=await createClient()
     .from("lingxifield_announcements")
     .select("id,version_label,title_zh,title_en,published_at,expires_at")
     .eq("is_active",true)
