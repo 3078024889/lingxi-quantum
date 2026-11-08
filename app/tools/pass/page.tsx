@@ -39,6 +39,7 @@ export default function AllToolsPassPage(){
  const [available,setAvailable]=useState(false);
  const [providers,setProviders]=useState({wechat:false,alipay:false,paypal:false});
  const [message,setMessage]=useState("");
+ const [walletBalanceMinor,setWalletBalanceMinor]=useState<number|null>(null);
  const [request,setRequest]=useState<{sku:AllToolsPassSku;id:string}|null>(null);
 
  async function refresh(){
@@ -55,7 +56,12 @@ export default function AllToolsPassPage(){
     alipay:channels?.alipay===true,
     paypal:channels?.paypal===true
    });
-  }catch{setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});}
+   // Never display a sample balance. Authenticated snapshots only; unavailable means no amount.
+   const wallet=await fetch("/api/money/summary",{cache:"no-store",credentials:"same-origin"}).catch(()=>null);
+   const account=wallet?.ok?await wallet.json().catch(()=>null):null;
+   const actual=account?.balances?.[currency]?.availableMinor;
+   setWalletBalanceMinor(typeof actual==="number"&&Number.isSafeInteger(actual)&&actual>=0?actual:null);
+  }catch{setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});setWalletBalanceMinor(null);}
  }
  useEffect(()=>{void refresh()},[currency]);
 
@@ -157,43 +163,44 @@ export default function AllToolsPassPage(){
    </div>
   </div>
   {message&&!selected&&<p role="status" className="mt-4 rounded-xl border border-[var(--lx-line)] p-4 text-sm">{message}</p>}
-  {selected&&<div role="presentation" className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/50 p-4" onClick={()=>{if(!busy)setSelected(null)}}>
-   <section role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" dir={rtl?"rtl":"ltr"}
-    onClick={event=>event.stopPropagation()} className="w-full max-w-lg rounded-3xl bg-[var(--lx-panel)] p-6 shadow-2xl md:p-8">
-    <div className="flex items-start justify-between gap-4">
-     <div>
-      <p className="text-xs font-semibold tracking-widest text-violet-600">TOOLPASS</p>
-      <h2 id="toolpass-checkout-title" className="mt-2 text-2xl font-bold">{zh?"确认开通":c.title}</h2>
-     </div>
-     <button type="button" disabled={busy} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}
-      className="rounded-full border border-[var(--lx-line)] px-3 py-1.5 text-lg">×</button>
+  {selected&&<div role="presentation" className={premium.overlay} onClick={()=>{if(!busy)setSelected(null)}}>
+   <section role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" dir={rtl?"rtl":"ltr"} className={premium.modal} onClick={event=>event.stopPropagation()}>
+    <div className={premium.modalTop}>
+     <div><p className={premium.modalEyebrow}>TOOLPASS</p><h2 id="toolpass-checkout-title" className={premium.modalTitle}>{zh?"确认购买":"Confirm purchase"}</h2></div>
+     <button type="button" disabled={busy} className={premium.close} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}>×</button>
     </div>
-    <div className="mt-6 flex items-center justify-between rounded-2xl bg-[var(--lx-soft)] p-4">
-     <div><p className="font-semibold">{zh?"全场工具包 · ":"ToolPass · "}{[c.week,c.month,c.quarter,c.year][ALL_TOOLS_PASS_CATALOG.findIndex(o=>o.sku===selected.sku)]}</p>
-      <p className="mt-1 text-xs text-[var(--lx-muted)]">{zh?"包含现有及未来新增的实用工具":c.new}</p>
+    <div className={premium.summary}>
+     <div className={premium.summaryIcon} aria-hidden="true">♛</div>
+     <div className={premium.summaryInfo}>
+      <strong>{zh?"工具包会员":"ToolPass membership"} · {[c.week,c.month,c.quarter,c.year][ALL_TOOLS_PASS_CATALOG.findIndex(o=>o.sku===selected.sku)]}</strong>
+      <p>{zh?"解锁全场 100+ 实用工具（含后续新增）":"All 100+ practical tools and new additions"}</p>
      </div>
-     <p className="text-2xl font-bold">{currency==="CNY"?"¥":"$"}{selected.price}</p>
+     <strong className={premium.summaryPrice}>{currency==="CNY"?"¥":"$"}{selected.price}</strong>
     </div>
-    <p className="mt-6 text-sm font-semibold">{zh?"选择支付方式":"Payment method"}</p>
-    <div className="mt-3 grid gap-2">
-     {choices.map(choice=><button type="button" key={choice.id} disabled={!choice.ready||busy}
-      onClick={()=>{setMethod(choice.id);setMessage("");}}
-      aria-pressed={method===choice.id} className={"flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition "+
-       (method===choice.id&&choice.ready?"border-violet-500 bg-violet-500/10":"border-[var(--lx-line)]")+
-       (!choice.ready?" cursor-not-allowed opacity-50":" hover:border-violet-400")}>
-      <span className="flex items-center gap-3"><span aria-hidden="true" className={"h-4 w-4 rounded-full border-2 "+(method===choice.id&&choice.ready?"border-violet-600 bg-violet-600":"border-slate-300")}/>{choice.label}</span>
-      <span className="text-xs text-[var(--lx-muted)]">{choice.ready?(zh?"可使用":"Available"):(zh?"暂未开放":"Unavailable")}</span>
+    <h3 className={premium.methodTitle}>{zh?"选择支付方式":"Choose payment method"}</h3>
+    <div>
+     {choices.map(choice=><button type="button" key={choice.id} aria-pressed={method===choice.id} disabled={!choice.ready||busy}
+      className={premium.payMethod} onClick={()=>{setMethod(choice.id);setMessage("");}}>
+      <span aria-hidden="true" className={premium.radio}/>
+      <span className={premium.payIcon} aria-hidden="true">{choice.id==="wallet"?"▣":choice.id==="wechat"?"微":choice.id==="alipay"?"支":"P"}</span>
+      <span className={premium.payLabel}>{choice.label}{choice.id==="wallet"&&walletBalanceMinor!==null?
+       <small className="block text-xs text-[var(--lx-muted)]">{zh?"当前余额":"Balance"}：{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</small>:null}</span>
+      <span className={premium.payStatus}>{choice.ready?(zh?"可使用":"Available"):(zh?"暂未开放":"Unavailable")}</span>
      </button>)}
+     {currency==="CNY"&&<button type="button" className={premium.payMethod} disabled={busy}
+      onClick={()=>{setCurrency("USD");setPreferredCurrency("USD");setMethod("paypal");setMessage("");}}>
+      <span aria-hidden="true" className={premium.radio}/><span className={premium.payIcon}>P</span>
+      <span className={premium.payLabel}>PayPal <small className="block text-xs text-[var(--lx-muted)]">USD</small></span>
+      <span className={premium.payStatus}>{providers.paypal&&available?(zh?"切换美元支付":"Pay in USD"):(zh?"暂未开放":"Unavailable")}</span>
+     </button>}
     </div>
-    {message&&<p role="alert" className="mt-4 text-sm text-amber-700">{message}</p>}
-    <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}
-     className="mt-6 w-full rounded-xl bg-violet-600 px-5 py-3.5 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-40">
-     {busy?c.processing:zh?"确认支付 · "+(currency==="CNY"?"¥":"$")+selected.price:"Continue · "+(currency==="CNY"?"¥":"$")+selected.price}
-    </button>
-    {!choices.some(choice=>choice.ready)&&<p role="status" className="mt-3 text-center text-sm text-[var(--lx-muted)]">
-     {zh?"当前支付方式暂未开放，稍后再来看看。":"Payment options are currently unavailable."}
-    </p>}
-    <div className="mt-4 text-center"><Link href="/ai-wallet" className="text-sm text-[var(--lx-muted)] underline underline-offset-4">{zh?"查看余额与充值":"View balance & top up"}</Link></div>
+    {message&&<p role="alert" className="mt-3 text-sm text-amber-700">{message}</p>}
+    <div className={premium.payFooter}>
+     <div><span className="block text-xs text-[var(--lx-muted)]">{zh?"应付金额":"Total"}</span><strong>{currency==="CNY"?"¥":"$"}{selected.price}</strong></div>
+     <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}>{busy?c.processing:zh?"立即支付":"Pay now"}</button>
+    </div>
+    {!choices.some(choice=>choice.ready)&&<p role="status" className={premium.modalNote}>{zh?"当前支付方式暂未开放，完成商户验证后可使用。":"Payment methods open after merchant verification."}</p>}
+    <p className={premium.modalNote}><Link href="/ai-wallet" className="underline underline-offset-4">{zh?"查看余额与充值":"View balance & top up"}</Link></p>
    </section>
   </div>}
  </main>;
