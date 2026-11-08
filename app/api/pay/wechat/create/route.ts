@@ -11,6 +11,7 @@ import {
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
 import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
+import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 
@@ -79,6 +80,8 @@ export async function POST(req: NextRequest) {
     if (product.group === "production" && !sasiTopupProductEnabled(product.id)) {
       return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
+    if(product.group==="software"&&!await softwareCheckoutReady(product.id))
+      return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });
 
     const supabase = createClient();
