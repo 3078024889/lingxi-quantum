@@ -16,6 +16,8 @@ on:
       - 'app/api/pay/**/notify/route.ts'
       - 'lib/plans.ts'
       - 'lib/fulfill-order.ts'
+      - 'lib/paypal.ts'
+      - 'tests/paypal-merchant-idempotency-20261108.test.mjs'
       - 'lib/sasi-marketplace/**'
       - 'lib/sasi-software/**'
       - 'components/Sasi*'
@@ -63,6 +65,8 @@ jobs:
         run: node tests/sasi-marketplace-security-contract.test.mjs
       - name: Direct four-tier toolpass merchant fulfillment regression
         run: node tests/toolpass-direct-fulfillment-20261108.test.mjs
+      - name: PayPal order/capture idempotency regression
+        run: node tests/paypal-merchant-idempotency-20261108.test.mjs
       - name: TypeScript check
         run: pnpm exec tsc --noEmit
       - name: Next.js production build (no deploy)
