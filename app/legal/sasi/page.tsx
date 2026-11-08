@@ -1,12 +1,10 @@
 import type {Metadata} from "next";
-import Nav from "@/components/Nav";import Footer from "@/components/Footer";import Bi from "@/components/Bi";
-export const metadata:Metadata={title:"SASI 法律与规则 · Legal & Rules",description:"灵犀场 SASI 用户服务、隐私、创作、付款、知识产权与内容标识规则。",alternates:{canonical:"/legal/sasi"}};
-const sections=[
-["一、服务范围","1. Service","灵犀场提供资料整理、实用工具、SASI 创作、短剧与构建能力。不同功能会按其实际能力处理，不把尚未完成的结果显示为成功。","LINGXIFIELD provides source workspaces, practical tools, SASI creation, drama and building capabilities. Unfinished work is never presented as successful."],
-["二、隐私","2. Privacy","平台只在完成任务所需范围内处理账户、订单、上传内容与必要日志。默认自主处理路径不要求用户连接外部生成服务；用户主动开启增强能力时，界面会在执行前说明。","The platform processes account, order, uploaded content and necessary logs only as required. Default autonomous paths do not require an external generation service; optional enhancements are disclosed before use."],
-["三、创作与权利","3. Creation & Rights","用户应拥有上传文字、图片、声音、视频、代码与资料的合法权利。不得利用平台侵犯著作权、商标权、肖像权、隐私或商业秘密。","Users must have lawful rights to uploaded text, images, voices, video, code and sources. The platform may not be used to infringe copyright, trademarks, likeness, privacy or trade secrets."],
-["四、付款与退还","4. Payments & Returns","需要付费的功能会先显示本次价格和支付方式。用户确认后才进入支付；失败且未形成有效结果时，按对应退款规则处理。","Paid capabilities show the price and payment method before checkout. Work begins only after confirmation; failed work without a valid result follows the applicable refund rules."],
-["五、可选增强能力","5. Optional Enhancements","部分专业用户可主动开启额外生成能力。它们不是使用灵犀场基础功能的前提，启用前会单独说明数据范围、价格与结果边界。","Professional users may optionally enable extra generation capabilities. They are not required for core LINGXIFIELD use, and their data scope, price and result boundaries are disclosed separately."],
-["六、知识产权与标识","6. IP & Labels","用户保留其依法拥有的输入内容权利。生成、合成或自动处理的作品在适用法律和目标平台要求下，应保留必要标识。","Users retain lawful rights in their inputs. Generated, synthesized or automated outputs should carry required disclosures under applicable law and destination-platform rules."]
-];
-export default function Page(){return <><Nav/><main className="px-6 pb-28 pt-28"><article className="mx-auto max-w-4xl"><p className="text-xs tracking-[.22em]">LINGXIFIELD SASI</p><h1 className="mt-4 text-4xl"><Bi zh="法律与规则" en="Legal & Rules"/></h1><p className="mt-6 leading-8 text-[var(--lx-muted)]"><Bi zh="以下规则围绕用户实际使用结果、隐私、付款、权利与可选增强能力展开。" en="These rules cover actual service results, privacy, payments, rights and optional enhancements."/></p><div className="mt-12 space-y-5">{sections.map(([zh,en,bz,be])=><section key={en} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7"><h2 className="text-2xl"><Bi zh={zh} en={en}/></h2><p className="mt-4 leading-8 text-[var(--lx-muted)]"><Bi zh={bz} en={be}/></p></section>)}</div></article></main><Footer/></>};
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import SasiLegalBody from "@/components/SasiLegalBody";
+export const metadata:Metadata={
+ title:"SASI 软件市场条款与系统声明｜灵犀场 LINGXIFIELD",
+ description:"SASI 软件市场的服务范围、数字软件授权、付款交付、数据保护及交易软件风险说明。",
+ alternates:{canonical:"/legal/sasi"}
+};
+export default function Page(){return <><Nav/><SasiLegalBody/><Footer/></>;}

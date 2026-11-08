@@ -1,0 +1,33 @@
+name: SASI software and unified notifications regression (NO DEPLOY)
+on:
+  pull_request:
+    paths:
+      - 'components/Nav.tsx'
+      - 'components/Sasi*'
+      - 'components/NotificationBell.tsx'
+      - 'components/AccountNotificationsPanel.tsx'
+      - 'lib/notifications/**'
+      - 'app/sasi/**'
+      - 'app/legal/sasi/**'
+      - 'tests/sasi-com-closure-20261108.test.mjs'
+      - '.github/workflows/sasi-com-closure-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24
+      - name: Verify seller policy, announcement delivery, old routes and legal locales
+        run: node --test tests/sasi-com-closure-20261108.test.mjs
+      - name: Guard against accidental production release
+        run: |
+          test ! -f .github/workflows/sasi-com-closure-20261108-deploy.yml
+          echo "SASI_STATIC_REGRESSION_COMPLETE_NO_DEPLOY"
