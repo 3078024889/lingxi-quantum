@@ -61,6 +61,7 @@ CREATE TABLE IF NOT EXISTS public.sasi_market_sales (
   gross_minor bigint NOT NULL CHECK(gross_minor>0),
   platform_fee_minor bigint NOT NULL CHECK(platform_fee_minor>=0),
   seller_net_minor bigint NOT NULL CHECK(seller_net_minor>=0),
+  download_count integer NOT NULL DEFAULT 0 CHECK(download_count BETWEEN 0 AND 10),
   provider_payment_id text NOT NULL,
   status text NOT NULL DEFAULT 'held'
     CHECK(status IN ('held','available','refunded','chargeback','frozen')),
@@ -215,12 +216,34 @@ RETURNS integer LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp
 DECLARE n integer;
 BEGIN
  UPDATE public.sasi_market_sales SET status='available',updated_at=now()
- WHERE status='held' AND available_at<=now();
+ WHERE status='held' AND available_at<=now()
+ AND EXISTS (SELECT 1 FROM public.orders o WHERE o.id=order_id AND o.status='paid');
  GET DIAGNOSTICS n=ROW_COUNT;
  RETURN n;
 END $$;
 REVOKE ALL ON FUNCTION public.sasi_market_release_due_sales() FROM PUBLIC,anon,authenticated;
 GRANT EXECUTE ON FUNCTION public.sasi_market_release_due_sales() TO service_role;
+
+-- Buyer-only download access. Never grants a seller access to other buyers' files.
+CREATE OR REPLACE FUNCTION public.sasi_market_claim_download(p_order_id uuid)
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $
+DECLARE uid uuid; sale public.sasi_market_sales%ROWTYPE; current_order_status text;
+BEGIN
+ uid=auth.uid();
+ IF uid IS NULL THEN RETURN jsonb_build_object('ok',false,'error','LOGIN_REQUIRED'); END IF;
+ SELECT * INTO sale FROM public.sasi_market_sales WHERE order_id=p_order_id AND buyer_id=uid FOR UPDATE;
+ IF NOT FOUND OR sale.status NOT IN ('held','available') THEN
+   RETURN jsonb_build_object('ok',false,'error','NOT_ENTITLED'); END IF;
+ SELECT status INTO current_order_status FROM public.orders WHERE id=p_order_id AND user_id=uid;
+ IF current_order_status IS DISTINCT FROM 'paid' THEN
+   RETURN jsonb_build_object('ok',false,'error','PAYMENT_UNVERIFIED'); END IF;
+ IF sale.download_count>=10 THEN
+   RETURN jsonb_build_object('ok',false,'error','DOWNLOAD_LIMIT_REACHED'); END IF;
+ UPDATE public.sasi_market_sales SET download_count=download_count+1 WHERE order_id=p_order_id;
+ RETURN jsonb_build_object('ok',true,'remaining',9-sale.download_count);
+END $;
+REVOKE ALL ON FUNCTION public.sasi_market_claim_download(uuid) FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.sasi_market_claim_download(uuid) TO authenticated,service_role;
 
 -- Seller may REQUEST a payout only after identity/provider verification.
 -- Does not initiate a payment: adapter must separately reconcile provider outcome.
@@ -242,8 +265,9 @@ BEGIN
  IF (SELECT count(*) FROM public.sasi_market_payouts WHERE seller_id=uid AND requested_at>now()-interval '1 day')>=6
  THEN RETURN jsonb_build_object('ok',false,'error','PAYOUT_RATE_LIMITED'); END IF;
  SELECT COALESCE(sum(seller_net_minor),0)::bigint INTO paid
- FROM public.sasi_market_sales WHERE seller_id=uid AND currency=p_currency
- AND status='available' AND available_at<=now();
+ FROM public.sasi_market_sales s JOIN public.orders o ON o.id=s.order_id
+ WHERE s.seller_id=uid AND s.currency=p_currency
+ AND s.status='available' AND s.available_at<=now() AND o.status='paid';
  SELECT COALESCE(sum(amount_minor),0)::bigint INTO held
  FROM public.sasi_market_payouts WHERE seller_id=uid AND currency=p_currency
  AND status IN ('requested','processing','submitted','paid');
