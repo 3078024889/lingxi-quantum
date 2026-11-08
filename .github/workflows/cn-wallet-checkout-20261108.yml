@@ -28,8 +28,10 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Wallet and payment regression contracts
         run: |
-          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs
+          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
           node --test tests/com-admin-facade.test.mjs tests/tool-pass-server-http-contract.test.mjs
+          node --test tests/unified-tools-pass-static-contract.test.mjs
+          node --test tests/release/site-announcements-contract.test.mjs
       - name: Typecheck
         run: pnpm exec tsc --noEmit
       - name: Compile Next.js standalone candidate (no publish)
