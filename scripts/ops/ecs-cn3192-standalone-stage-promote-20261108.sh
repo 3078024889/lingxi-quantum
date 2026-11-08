@@ -132,97 +132,81 @@ EOF
   echo "CN3192_STAGING_PASS_PRODUCTION_3191_UNCHANGED SOURCE_SHA=$SHA"
   exit 0
 fi
-# Do not switch the IP/account quota runtime until a stable HMAC key is present.
-# The old service_role key is intentionally NOT used as a fallback in the new release.
-grep -Eq '^LINGXIFIELD_PRIVACY_HASH_SECRET=.{32,} && ! -L "$UNIT" && -f "$STAGE_ENV" ]] || { echo "CN3192_STAGE_NOT_PREPARED" >&2;exit 1; }
-systemctl is-active --quiet "$NEW" || { echo "CN3192_STAGE_NOT_ACTIVE" >&2;exit 1; }
+# Do not change the production quota ledger with a new rotating hash key.
+# Exact key contents are never printed. Payment remains disabled until real callback tests.
+python3 - "$ENV" <<'PY'
+import sys
+p=sys.argv[1]
+v={}
+with open(p, encoding="utf-8") as f:
+    for line in f:
+        if not line.strip() or line.lstrip().startswith("#") or "=" not in line: continue
+        k,x=line.strip().split("=",1)
+        if k in v: raise SystemExit("CN_DUPLICATE_PRODUCTION_SETTING:"+k)
+        v[k]=x.strip().strip('"').strip("'")
+secret=v.get("LINGXIFIELD_PRIVACY_HASH_SECRET","")
+if len(secret)<32: raise SystemExit("CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT")
+if v.get("TOOL_PASS_COMMERCE_READY","false").lower() in ("true","1"):
+    raise SystemExit("CN_TOOLPASS_PAYMENT_GATE_MUST_REMAIN_CLOSED_BEFORE_PROMOTION")
+print("CN3192_PRIVACY_HASH_AND_PAYMENT_GATE_VERIFIED")
+PY
+# Only promote after isolated 3192 has passed its full read-only smoke tests.
+[[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] || {
+  echo "CN3192_STAGE_NOT_PREPARED" >&2; exit 1;
+}
+systemctl is-active --quiet "$NEW" || { echo "CN3192_STAGE_NOT_ACTIVE" >&2; exit 1; }
+probe || { echo "CN3192_PREPROMOTION_GATE_FAILED" >&2; exit 1; }
+[[ ! -e "$UNIT.rollback-$SHORT" ]] || { echo "PROMOTION_ROLLBACK_UNIT_ALREADY_EXISTS" >&2; exit 1; }
 PRODUCTION_ORIGINAL="$NGINX.before-cn3192-$SHORT-$(date -u +%Y%m%dT%H%M%SZ)"
-grep -Fq '127.0.0.1:3191' "$NGINX" || { echo "CN_NGINX_UPSTREAM_CHANGED_ABORT" >&2;exit 1; }
+[[ ! -e "$PRODUCTION_ORIGINAL" ]] || { echo "PROMOTION_NGINX_BACKUP_EXISTS" >&2; exit 1; }
+# Unknown or shared Nginx layouts fail closed instead of changing other virtual hosts.
+python3 - "$NGINX" <<'PY'
+import sys
+body=open(sys.argv[1],"rb").read()
+if b"lingxifield.cn" not in body: raise SystemExit("CN_NGINX_DOMAIN_NOT_FOUND")
+if body.count(b"127.0.0.1:3191")!=1:
+    raise SystemExit("CN_NGINX_EXACTLY_ONE_3191_UPSTREAM_REQUIRED")
+PY
 cp -a "$NGINX" "$PRODUCTION_ORIGINAL"
 cp -a "$UNIT" "$UNIT.rollback-$SHORT"
-# Promote the candidate to use production env, with its already-validated sb_secret.
-sed -i "s@EnvironmentFile=$STAGE_ENV@EnvironmentFile=$ENV@" "$UNIT"
-grep -Fxq "EnvironmentFile=$ENV" "$UNIT" || { echo "SERVICE_PROMOTION_ENV_FAILED" >&2;exit 1; }
-systemctl daemon-reload
-systemctl restart "$NEW"
-if ! probe;then
-  echo "CN3192_PRODUCTION_ENV_GATE_FAILED_ROLLING_BACK" >&2
-  cp -a "$UNIT.rollback-$SHORT" "$UNIT"
-  systemctl daemon-reload
+rollback() {
+  echo "CN_NGINX_POSTCUTOVER_FAILED_RESTORING_3191" >&2
+  cp -a "$PRODUCTION_ORIGINAL" "$NGINX" || true
+  nginx -t && systemctl reload nginx || true
+  cp -a "$UNIT.rollback-$SHORT" "$UNIT" || true
+  systemctl daemon-reload || true
   systemctl restart "$NEW" || true
-  exit 1
-fi
+}
+# Change only the isolated candidate to use the already validated production env.
+sed -i "s@EnvironmentFile=$STAGE_ENV@EnvironmentFile=$ENV@" "$UNIT"
+grep -Fxq "EnvironmentFile=$ENV" "$UNIT" || { rollback; exit 1; }
+systemctl daemon-reload
+systemctl restart "$NEW" || { rollback; exit 1; }
+probe || { rollback; exit 1; }
 python3 - "$NGINX" <<'PY'
 import os,sys,tempfile
-path=sys.argv[1];old=open(path,"rb").read()
-if b"lingxifield.cn" not in old:raise SystemExit("CN_CONFIG_UNEXPECTED")
-if old.count(b"127.0.0.1:3191")<1:raise SystemExit("CN_UPSTREAM_CHANGED")
-next=old.replace(b"127.0.0.1:3191",b"127.0.0.1:3192")
-fd,p=tempfile.mkstemp(prefix=".cn3192-",dir=os.path.dirname(path))
-os.fchmod(fd,0o644)
-with os.fdopen(fd,"wb") as f:f.write(next)
-os.replace(p,path)
+path=sys.argv[1]
+old=open(path,"rb").read()
+if old.count(b"127.0.0.1:3191")!=1: raise SystemExit("CN_UPSTREAM_CHANGED_ABORT")
+new=old.replace(b"127.0.0.1:3191", b"127.0.0.1:3192",1)
+st=os.stat(path)
+fd,tmp=tempfile.mkstemp(prefix=".cn3192-",dir=os.path.dirname(path))
+try:
+    os.fchmod(fd,st.st_mode & 0o777)
+    os.fchown(fd,st.st_uid,st.st_gid)
+    with os.fdopen(fd,"wb") as f:
+        f.write(new); f.flush();os.fsync(f.fileno())
+    os.replace(tmp,path)
+finally:
+    if os.path.exists(tmp): os.unlink(tmp)
 PY
-rollback(){
-  echo "CN_NGINX_POSTCUTOVER_FAILED_RESTORING_3191" >&2
-  cp -a "$PRODUCTION_ORIGINAL" "$NGINX"
-  nginx -t && systemctl reload nginx || true
-}
-if ! nginx -t || ! systemctl reload nginx;then rollback; exit 1;fi
-for path in / /tools /siai /sasi/pricing /tools/pass;do
+if ! nginx -t || ! systemctl reload nginx; then rollback; exit 1; fi
+for route in / /tools /siai /sasi/pricing /tools/pass; do
   result="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 \
-    --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
-  echo "CN_PUBLIC_NGINX_ROUTE:$path:$result"
-  [[ "$result" = 200 ]] || { rollback;exit 1; }
+    --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$route" || true)"
+  echo "CN_PUBLIC_NGINX_ROUTE:$route:$result"
+  [[ "$result" = 200 ]] || { rollback; exit 1; }
 done
-systemctl enable "$NEW" >/dev/null
-echo "CN_NEW_3192_NGINX_PROMOTION_PASS_ROLLBACK_FILE=$PRODUCTION_ORIGINAL"
-echo "ADMIN_AUTHENTICATED_SESSION_AND_REAL_PAYMENT_CONFIRMATIONS_STILL_REQUIRED"
- "$ENV" || {
-  echo "CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT" >&2; exit 1;
-}
-# Only promote after stage has been created and running.
-[[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" ]] || { echo "CN3192_STAGE_NOT_PREPARED" >&2;exit 1; }
-systemctl is-active --quiet "$NEW" || { echo "CN3192_STAGE_NOT_ACTIVE" >&2;exit 1; }
-PRODUCTION_ORIGINAL="$NGINX.before-cn3192-$SHORT-$(date -u +%Y%m%dT%H%M%SZ)"
-grep -Fq '127.0.0.1:3191' "$NGINX" || { echo "CN_NGINX_UPSTREAM_CHANGED_ABORT" >&2;exit 1; }
-cp -a "$NGINX" "$PRODUCTION_ORIGINAL"
-cp -a "$UNIT" "$UNIT.rollback-$SHORT"
-# Promote the candidate to use production env, with its already-validated sb_secret.
-sed -i "s@EnvironmentFile=$STAGE_ENV@EnvironmentFile=$ENV@" "$UNIT"
-grep -Fxq "EnvironmentFile=$ENV" "$UNIT" || { echo "SERVICE_PROMOTION_ENV_FAILED" >&2;exit 1; }
-systemctl daemon-reload
-systemctl restart "$NEW"
-if ! probe;then
-  echo "CN3192_PRODUCTION_ENV_GATE_FAILED_ROLLING_BACK" >&2
-  cp -a "$UNIT.rollback-$SHORT" "$UNIT"
-  systemctl daemon-reload
-  systemctl restart "$NEW" || true
-  exit 1
-fi
-python3 - "$NGINX" <<'PY'
-import os,sys,tempfile
-path=sys.argv[1];old=open(path,"rb").read()
-if b"lingxifield.cn" not in old:raise SystemExit("CN_CONFIG_UNEXPECTED")
-if old.count(b"127.0.0.1:3191")<1:raise SystemExit("CN_UPSTREAM_CHANGED")
-next=old.replace(b"127.0.0.1:3191",b"127.0.0.1:3192")
-fd,p=tempfile.mkstemp(prefix=".cn3192-",dir=os.path.dirname(path))
-os.fchmod(fd,0o644)
-with os.fdopen(fd,"wb") as f:f.write(next)
-os.replace(p,path)
-PY
-rollback(){
-  echo "CN_NGINX_POSTCUTOVER_FAILED_RESTORING_3191" >&2
-  cp -a "$PRODUCTION_ORIGINAL" "$NGINX"
-  nginx -t && systemctl reload nginx || true
-}
-if ! nginx -t || ! systemctl reload nginx;then rollback; exit 1;fi
-for path in / /tools /siai /sasi/pricing /tools/pass;do
-  result="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 \
-    --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
-  echo "CN_PUBLIC_NGINX_ROUTE:$path:$result"
-  [[ "$result" = 200 ]] || { rollback;exit 1; }
-done
-systemctl enable "$NEW" >/dev/null
+systemctl enable "$NEW" >/dev/null || { rollback; exit 1; }
 echo "CN_NEW_3192_NGINX_PROMOTION_PASS_ROLLBACK_FILE=$PRODUCTION_ORIGINAL"
 echo "ADMIN_AUTHENTICATED_SESSION_AND_REAL_PAYMENT_CONFIRMATIONS_STILL_REQUIRED"
