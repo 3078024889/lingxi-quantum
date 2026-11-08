@@ -2,7 +2,6 @@
 import {useCallback,useEffect,useMemo,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {createClient} from "@/lib/supabase/client";
 import styles from "./SasiOpenMarketplace.module.css";
 type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
@@ -66,13 +65,29 @@ export default function SasiOpenMarketplace(){
    const ticket=await post("/api/sasi/marketplace/upload-ticket",{
     listingId:item.id,extension:"zip",fileSize:file.size
    });
-   const sb=createClient();
-   const {error}=await sb.storage.from(ticket.bucket).uploadToSignedUrl(
-    ticket.path,ticket.token,file,{contentType:"application/zip",upsert:false}
-   );
-   if(error)throw Error("PRIVATE_UPLOAD_FAILED");
+   const put=await fetch(ticket.uploadUrl,{method:"PUT",headers:{"Content-Type":"application/zip"},body:file});
+   if(!put.ok)throw Error("PRIVATE_R2_UPLOAD_FAILED_"+put.status);
    await post("/api/sasi/marketplace/submit",{listingId:item.id});
    setStatus(zh?"文件已进入隔离扫描和人工审核队列，不会直接公开下载。":"Package submitted for quarantine scanning and review. It is not publicly downloadable.");
+   await refresh();
+  }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
+ };
+ const uploadImage=async(item:Listing,file:File,kind:"cover"|"detail")=>{
+  setBusy("image-"+item.id);setError("");setStatus("");
+  try{
+   const ext=file.name.split(".").pop()?.toLowerCase();
+   const extension=ext==="jpeg"?"jpg":ext;
+   const allowed:{[k:string]:string}={png:"image/png",jpg:"image/jpeg",webp:"image/webp"};
+   if(!extension||!allowed[extension]||file.size<1||file.size>1024*1024)
+    throw Error("PNG_JPG_WEBP_MAX_1MB");
+   const ticket=await post("/api/sasi/marketplace/image-ticket",{
+     listingId:item.id,kind,extension,fileSize:file.size
+   });
+   const put=await fetch(ticket.uploadUrl,{method:"PUT",
+     headers:{"Content-Type":ticket.contentType},body:file});
+   if(!put.ok)throw Error("PRIVATE_IMAGE_UPLOAD_FAILED_"+put.status);
+   await post("/api/sasi/marketplace/image-confirm",{imageId:ticket.imageId});
+   setStatus(zh?"商品图片已上传并等待审核，最多支持五张。":"Image uploaded, awaiting review. Up to five images per listing.");
    await refresh();
   }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
  };
@@ -135,11 +150,18 @@ export default function SasiOpenMarketplace(){
       <div className={styles.priceFields}><label>{zh?"人民币标价":"CNY price"}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{zh?"美元标价":"USD price"}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
       <button disabled={busy!==""||!seller} onClick={()=>void makeDraft()}>{busy==="draft"?"…":zh?"保存商品草稿":"Save product draft"}</button>
-      <p>{zh?"软件包为 ZIP，限 30 MB；上传后必须通过恶意软件扫描和人工复核。":"ZIP packages only, up to 30 MB. Malware scanning and review are mandatory."}</p>
+      <p>{zh?"软件包 ZIP 限 30 MB；支持最多五张 PNG/JPG/WebP 图片，每张限 1 MB。软件和图片均须审核。":"ZIP software up to 30 MB and five PNG/JPG/WebP photos up to 1 MB each. Security review is mandatory."}</p>
     </div>
    </div>
    {mine.length>0&&<div className={styles.drafts}><h3>{zh?"我的软件草稿与审核进度":"My submissions"}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{item.status} · {item.scan_status}</small></div>
-    {item.status==="draft"&&<label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":zh?"上传 ZIP 并提交审核":"Upload ZIP"}<input type="file" accept=".zip,application/zip" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void upload(item,f)}}/></label>}
+    {item.status==="draft"&&<>
+     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传封面 / 详情图":"Add product image"}
+       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"detail")}}/>
+     </label>
+     <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":zh?"上传 ZIP 并提交审核":"Upload ZIP"}
+       <input type="file" accept=".zip,application/zip" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void upload(item,f)}}/>
+     </label>
+   </>}
     {item.status==="published"&&<button onClick={()=>void share(item)}>{zh?"分享商品":"Share"}</button>}
    </div>)}</div>}
    {error&&<p className={styles.error} role="alert">{error}</p>}{status&&<p className={styles.success} role="status">{status}</p>}
