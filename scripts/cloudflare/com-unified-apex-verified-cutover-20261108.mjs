@@ -9,6 +9,8 @@ const expectedSha=process.env.COM_VERIFIED_CANARY_SHA;
 const prev="lingxifield-com-next-20261108";
 const wwwPrev="lingxifield-com-static-gateway-canary-20261107";
 const next="lingxifield-com-unified-20261108";
+const walletBridge="lingxifield-com-static-gateway-canary-20261107";
+const walletPattern="lingxifield.com/ai-wallet*";
 const oldPattern="lingxifield.com/*";
 if(!account||!token||!githubToken||!runId||!/^[0-9a-f]{40}$/.test(expectedSha||""))
  throw Error("CLOUDFLARE_OR_CANARY_GATE_NOT_CONFIGURED");
@@ -40,6 +42,7 @@ async function probe(base,phase,attempts=3){
  // Cold Workers can return transient 500/503. Require three consecutive 200s rather than three immediate probes.
  const maxTries=12;
  for(const path of routes){
+  if(phase==="CANARY"&&path==="/ai-wallet")continue; // gated by independent real legacy runtime probe, never omit postcutover wallet
   let consecutive=0;
   for(let i=0;i<maxTries;i++){
    // Unique query bypasses old cached anonymous HTML while the route propagates.
@@ -79,6 +82,15 @@ if(run.head_sha!==expectedSha||run.status!=="completed"||run.conclusion!=="succe
  throw Error("EXACT_COM_CANARY_CI_NOT_SUCCESS");
 console.log("COM_PINNED_SOURCE_CI_SUCCESS:"+runId);
 await probe("https://"+next+".3078024889.workers.dev","CANARY");
+let walletHealthy=0;
+for(let i=0;i<12&&walletHealthy<3;i++){
+ const target="https://"+walletBridge+".3078024889.workers.dev/ai-wallet?__lx_wallet_preflight="+i;
+ const reply=await status(target);
+ console.log("COM_LEGACY_WALLET_PREFLIGHT attempt="+(i+1)+" http="+reply.status);
+ walletHealthy=reply.status===200?walletHealthy+1:0;
+ if(walletHealthy<3)await sleep(2800);
+}
+if(walletHealthy<3)throw Error("COM_LEGACY_WALLET_BRIDGE_UNSTABLE");
 const zones=await cf("/zones?name=lingxifield.com");
 const matches=zones.filter(z=>z.name==="lingxifield.com"&&z.status==="active");
 if(matches.length!==1)throw Error("CLOUDFLARE_ZONE_NOT_UNAMBIGUOUS");
@@ -100,14 +112,25 @@ for(const [pattern,expectedWorker] of Object.entries(specialized)){
 }
 const publicFeed=await status("https://lingxifield.com/api/site-announcements");
 if(publicFeed.status!==200)throw Error("COM_PUBLIC_ANNOUNCEMENT_WORKER_NOT_READY");
+const walletBefore=routes.filter(x=>x.pattern===walletPattern);
+if(walletBefore.length>1||(walletBefore.length===1&&walletBefore[0].script!==walletBridge))
+ throw Error("COM_WALLET_ROUTE_CHANGED_STOP");
+const walletRouteAlreadyCorrect=walletBefore.length===1;
 const routeEndpoint="/zones/"+zone+"/workers/routes/"+target[0].id;
 console.log("COM_APEX_ROUTE_GUARD_ALL_FIVE_PASSED");
-let changed=false, success=false;
+let changed=false, success=false, walletRouteAdded=false, walletRouteId=null;
 async function update(script){
  const result=await cf(routeEndpoint,{method:"PUT",body:JSON.stringify({pattern:oldPattern,script})});
  if(result.script!==script)throw Error("ROUTE_WRITE_DID_NOT_MATCH_EXPECTED_SCRIPT");
 }
 try{
+ if(!walletRouteAlreadyCorrect){
+  const created=await cf("/zones/"+zone+"/workers/routes",{
+   method:"POST",body:JSON.stringify({pattern:walletPattern,script:walletBridge})});
+  if(!created?.id||created.script!==walletBridge||created.pattern!==walletPattern)
+   throw Error("COM_WALLET_BRIDGE_ROUTE_CREATE_FAILED");
+  walletRouteAdded=true;walletRouteId=created.id;
+ }
  await update(next);
  changed=true;
  console.log("COM_APEX_ROUTE_UPDATED_NEXT_ONLY");
@@ -120,15 +143,22 @@ try{
  const postRoutes=await cf("/zones/"+zone+"/workers/routes");
  if(postRoutes.filter(x=>x.pattern===oldPattern&&x.script===next).length!==1)
   throw Error("PRODUCTION_WORKER_ROUTE_NOT_PERSISTENT");
+ if(postRoutes.filter(x=>x.pattern===walletPattern&&x.script===walletBridge).length!==1)
+  throw Error("COM_WALLET_BRIDGE_ROUTE_NOT_PERSISTENT");
  success=true;
  console.log("COM_UNIFIED_SASI_WALLET_TOOLPASS_APEX_RELEASE_VERIFIED");
  console.log("COM_PAYMENT_PRIVATE_R2_AND_SELLER_PAYOUTS_REMAIN_FEATURE_GATED");
 }finally{
- if(changed&&!success){
-  console.log("COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN");
-  try{await update(prev);console.log("COM_ROUTE_ROLLBACK_CONFIRMED")}catch(e){
+ if(!success){
+  if(changed)console.log("COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN");
+  if(changed)try{await update(prev);console.log("COM_ROUTE_ROLLBACK_CONFIRMED")}catch(e){
    console.error("COM_ROUTE_ROLLBACK_FAILED_MANUAL_ACTION_REQUIRED:"+String(e));
    process.exitCode=1;
+  }
+  if(walletRouteAdded&&walletRouteId){
+   try{await cf("/zones/"+zone+"/workers/routes/"+walletRouteId,{method:"DELETE"});
+       console.log("COM_WALLET_BRIDGE_ROLLBACK_CONFIRMED");}
+   catch(e){console.error("COM_WALLET_BRIDGE_ROLLBACK_FAILED:"+String(e));process.exitCode=1;}
   }
  }
 }
