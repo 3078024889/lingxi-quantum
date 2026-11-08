@@ -50,7 +50,7 @@ probe(){
   code /api/health 200
   code /tools 200
   code /siai 200
-  code /sasi/pricing 200
+  code /sasi 200
   code /tools/pass 200
   code /api/sasi/account 401
   code /api/tools/jobs 401
@@ -109,8 +109,35 @@ if [[ "$MODE" = --stage ]];then
   }
   TEMP="$(mktemp -d "$BASE/.cn3192-XXXXXXXX")"
   trap 'rm -rf "$TEMP"' EXIT
-  curl -4fLsS --retry 3 --max-time 900 -o "$TEMP/$FILE" "$TAGURL/$FILE"
-  curl -4fLsS --retry 3 --max-time 90 -o "$TEMP/$CHECK" "$TAGURL/$CHECK"
+  # Keep partial downloads across interruption; never reuse an unchecked archive.
+  CACHE="$BASE/.download-$TAG"
+  [[ ! -L "$CACHE" ]] || { echo "DOWNLOAD_CACHE_SYMLINK_REJECTED" >&2;exit 1; }
+  mkdir -p "$CACHE"
+  [[ "$(stat -c %u "$CACHE")" = 0 ]] || { echo "DOWNLOAD_CACHE_OWNER_INVALID" >&2;exit 1; }
+  chmod 700 "$CACHE"
+  for name in "$FILE" "$CHECK"; do
+    [[ ! -L "$CACHE/$name" && ( ! -e "$CACHE/$name" || -f "$CACHE/$name" ) ]] || {
+      echo "DOWNLOAD_CACHE_FILE_UNSAFE" >&2;exit 1;
+    }
+  done
+  echo "CN3192_FETCH_CHECKSUM_CONNECT_TIMEOUT_15S"
+  curl -4fL --progress-bar --connect-timeout 15 --max-time 60 \
+    -o "$CACHE/$CHECK" "$TAGURL/$CHECK"
+  # A checksum file may name only the exact expected archive, never another path.
+  awk -v file="$FILE" 'NF!=2 || $1 !~ /^[a-fA-F0-9]+$/ || length($1)!=64 || ($2!=file && $2!="*"file) {bad=1} END {exit (bad || NR!=1)}' "$CACHE/$CHECK" || {
+    echo "CHECKSUM_MANIFEST_INVALID" >&2;exit 1;
+  }
+  if ! (cd "$CACHE" && sha256sum --status -c "$CHECK") 2>/dev/null;then
+    echo "CN3192_DOWNLOAD_RESUMABLE_MAX_180S_RETRY_STAGE_IF_TIMEOUT"
+    curl -4fL --progress-bar --connect-timeout 15 --speed-time 30 --speed-limit 1024 \
+      --max-time 180 --continue-at - -o "$CACHE/$FILE" "$TAGURL/$FILE"
+  else
+    echo "CN3192_REUSING_VERIFIED_DOWNLOAD"
+  fi
+  (cd "$CACHE" && sha256sum -c "$CHECK")
+  cp -l "$CACHE/$FILE" "$TEMP/$FILE"
+  cp "$CACHE/$CHECK" "$TEMP/$CHECK"
+  echo "CN3192_DOWNLOAD_VERIFIED_STARTING_ARCHIVE_CHECK"
   (cd "$TEMP" && sha256sum -c "$CHECK")
   bytes="$(stat -c %s "$TEMP/$FILE")"
   (( bytes>100000 && bytes<1300000000 )) || { echo "ARCHIVE_SIZE_INVALID" >&2;exit 1; }
@@ -231,7 +258,7 @@ rollback() {
 (
   umask 077
   : > "$PROD_FLAGS"
-  printf '%s\\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' \
+  printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' \
     'TOOL_PASS_BACKEND_READY=true' \
     'TOOL_PASS_COMMERCE_READY=false' > "$PROD_FLAGS"
 )
@@ -263,7 +290,7 @@ finally:
     if os.path.exists(tmp): os.unlink(tmp)
 PY
 if ! nginx -t || ! systemctl reload nginx; then rollback; exit 1; fi
-for route in / /tools /siai /sasi/pricing /tools/pass; do
+for route in / /tools /siai /sasi /tools/pass; do
   result="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 \
     --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$route" || true)"
   echo "CN_PUBLIC_NGINX_ROUTE:$route:$result"
