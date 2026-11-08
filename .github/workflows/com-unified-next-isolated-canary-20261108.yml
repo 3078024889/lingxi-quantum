@@ -5,6 +5,11 @@ on:
     branches: [release/com-sasi-full-20261108]
     paths:
       - '.github/workflows/com-unified-next-isolated-canary-20261108.yml'
+      - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
+      - 'app/api/pay/providers/route.ts'
+      - 'lib/wechatpay.ts'
+      - 'lib/sasi/readiness.ts'
+      - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
