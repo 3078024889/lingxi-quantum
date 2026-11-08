@@ -39,6 +39,6 @@ export async function POST(req:NextRequest){
     .select("id,status").maybeSingle();
   if(savedError||!saved)throw Error("SUBMISSION_CONFLICT");
   const scanDispatched=await dispatchMarketplaceScan(saved.id);
-  return NextResponse.json({item:saved,scanQueued:true,scanDispatched,published:false},{headers:h});
+  return NextResponse.json({item:saved,scanQueued:scanDispatched,scanDispatched,published:false},{headers:h});
  }catch{return NextResponse.json({error:"SUBMISSION_REQUIRES_MANUAL_REVIEW"},{status:503,headers:h});}
 }
