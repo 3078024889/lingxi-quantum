@@ -82,6 +82,20 @@ const TABLE:Record<string,readonly string[]> = Object.freeze({
  "Withdrawal amount": ["出金額","출금 금액","Montant du retrait","Auszahlungsbetrag","Importe de retiro","Valor do saque","مبلغ السحب"],
  "Payout requests are checked and submitted to the provider; submission does not confirm arrival.": ["出金申請は確認後に送金先へ送られます。申請完了は着金を意味しません。","출금 요청은 확인 후 지급 기관에 전달됩니다. 접수는 입금 완료를 뜻하지 않습니다.","Les demandes sont vérifiées puis transmises au prestataire ; leur envoi ne garantit pas la réception.","Auszahlungen werden geprüft und an den Anbieter übermittelt; das bestätigt keinen Geldeingang.","Las solicitudes se revisan y envían al proveedor; el envío no confirma la recepción.","Os pedidos são verificados e enviados ao provedor; o envio não confirma o recebimento.","تُراجع طلبات السحب وتُرسل إلى المزود ولا يُعد إرسالها إثباتاً لوصول الأموال."],
  "Automated provider payouts are in integration testing and are not open.": ["自動送金は検証中のため現在利用できません。","자동 지급은 검증 중이며 아직 이용할 수 없습니다.","Les virements automatiques sont en validation et ne sont pas ouverts.","Automatische Auszahlungen werden geprüft und sind noch nicht verfügbar.","Los pagos automáticos siguen en pruebas y no están disponibles.","Pagamentos automáticos ainda estão em teste e indisponíveis.","المدفوعات الآلية قيد الاختبار وليست متاحة حالياً."],
+ "MT5 indicator": ["MT5 インジケーター","MT5 지표","Indicateur MT5","MT5-Indikator","Indicador MT5","Indicador MT5","مؤشر MT5"],
+ "Automation software": ["自動化ソフトウェア","자동화 소프트웨어","Logiciel d’automatisation","Automatisierungssoftware","Software de automatización","Software de automação","برامج الأتمتة"],
+ "Desktop application": ["デスクトップアプリ","데스크톱 앱","Application de bureau","Desktop-Anwendung","Aplicación de escritorio","Aplicativo para desktop","تطبيق سطح المكتب"],
+ "Developer tools": ["開発ツール","개발 도구","Outils de développement","Entwicklerwerkzeuge","Herramientas para desarrolladores","Ferramentas de desenvolvimento","أدوات المطورين"],
+ "Other software": ["その他のソフトウェア","기타 소프트웨어","Autres logiciels","Weitere Software","Otro software","Outros softwares","برامج أخرى"],
+ "Draft": ["下書き","초안","Brouillon","Entwurf","Borrador","Rascunho","مسودة"],
+ "In review": ["審査中","심사 중","En cours de validation","In Prüfung","En revisión","Em revisão","قيد المراجعة"],
+ "Published": ["公開済み","게시됨","Publié","Veröffentlicht","Publicado","Publicado","منشور"],
+ "Changes required": ["修正が必要","수정 필요","Modifications nécessaires","Änderungen erforderlich","Se requieren cambios","Alterações necessárias","تعديلات مطلوبة"],
+ "Unlisted": ["非公開","비공개","Retiré de la liste","Nicht gelistet","No publicado","Não listado","غير مدرج"],
+ "Security check pending": ["安全確認待ち","보안 검사 대기","Analyse de sécurité en attente","Sicherheitsprüfung ausstehend","Análisis de seguridad pendiente","Verificação de segurança pendente","بانتظار الفحص الأمني"],
+ "Security checked": ["安全確認完了","보안 검사 완료","Sécurité validée","Sicherheitsprüfung abgeschlossen","Seguridad verificada","Segurança verificada","اكتمل الفحص الأمني"],
+ "File risk detected": ["危険なファイルを検出","위험 파일 감지","Fichier à risque détecté","Riskante Datei erkannt","Archivo de riesgo detectado","Arquivo de risco detectado","تم اكتشاف ملف خطر"],
+ "Security check failed": ["安全確認に失敗","보안 검사 실패","Échec du contrôle de sécurité","Sicherheitsprüfung fehlgeschlagen","Error de análisis de seguridad","Falha na verificação de segurança","فشل الفحص الأمني"],
 });
 const index:Record<SasiUiLocale,number>={ja:0,ko:1,fr:2,de:3,es:4,pt:5,ar:6};
 export function sasiSoftwareUiText(lang:string,zh:string,en:string):string{

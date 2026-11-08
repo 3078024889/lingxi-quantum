@@ -8,7 +8,11 @@ import styles from "./SasiOpenMarketplace.module.css";
 type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
 type Payout={balances:Record<string,{grossMinor:number;platformFeeMinor:number;availableMinor:number}>;payouts:Array<{id:string;currency:string;amount_minor:number;status:string;requested_at:string}>;payoutsOpen:boolean;submissionTargetMinutes:number};
-const CATEGORIES=[["mt5-ea","MT5 EA"],["mt5-indicator","MT5 指标"],["automation","自动化软件"],["desktop-app","桌面程序"],["developer-tool","开发工具"],["software","其他软件"]] as const;
+const CATEGORIES=[["mt5-ea","MT5 EA","MT5 EA"],["mt5-indicator","MT5 指标","MT5 indicator"],["automation","自动化软件","Automation software"],["desktop-app","桌面程序","Desktop application"],["developer-tool","开发工具","Developer tools"],["software","其他软件","Other software"]] as const;
+const STATUS_LABELS:Record<string,readonly [string,string]>={draft:["草稿","Draft"],submitted:["审核中","In review"],published:["已发布","Published"],rejected:["需修改","Changes required"],archived:["已下架","Unlisted"]};
+const SCAN_LABELS:Record<string,readonly [string,string]>={unscanned:["等待安全检查","Security check pending"],clean:["安全检查通过","Security checked"],infected:["文件存在风险","File risk detected"],scan_failed:["安全检查未通过","Security check failed"]};
+function visibleStatus(lang:string,code:string,scan:boolean){const pair=(scan?SCAN_LABELS:STATUS_LABELS)[code];return pair?sasiSoftwareUiText(lang,pair[0],pair[1]):"—"}
+function categoryLabel(lang:string,key:string){const c=CATEGORIES.find(([id])=>id===key);return c?sasiSoftwareUiText(lang,c[1],c[2]):sasiSoftwareUiText(lang,"其他软件","Other software")}
 function format(value:number){return (value/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
 export default function SasiOpenMarketplace(){
  const {lang}=useLingxiLang();
@@ -192,12 +196,12 @@ export default function SasiOpenMarketplace(){
   </section>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / COMMUNITY</small><h2>{sasiSoftwareUiText(lang,"软件作品与卖家服务","Software & seller services")}</h2></div>
    <div className={styles.find}><input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
-   <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key,label])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{label}</button>)}</div>
+   <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)}</button>)}</div>
    <div className={styles.products}>{visible.map((item,i)=><article className={styles.card} key={item.id}>
     <div className={styles.tile} data-tone={i%3}>{images[item.id]?.[0]?.url?
     <img src={images[item.id][0].url} alt={item.title} loading="lazy" referrerPolicy="no-referrer" className={styles.cover}/>
     :<span>{item.category==="mt5-ea"?"EA":item.category==="mt5-indicator"?"SI":"SASI"}</span>}</div>
-    <div className={styles.cardContent}><div className={styles.category}>{CATEGORIES.find(([x])=>x===item.category)?.[1]||"Software"}</div>
+    <div className={styles.cardContent}><div className={styles.category}>{categoryLabel(lang,item.category)}</div>
     <h3>{item.title}</h3><p>{item.description}</p><div className={styles.cardBottom}><strong>¥{format(item.price_cny_minor)}</strong><span>USD ${format(item.price_usd_minor)}</span></div>
     <div className={styles.cardActions}><Link href={"/sasi/marketplace/"+item.id}>{sasiSoftwareUiText(lang,"查看详情","Details")} ↗</Link><button onClick={()=>void share(item)}>{sasiSoftwareUiText(lang,"分享","Share")} ↗</button></div>
     </div></article>)}</div>
@@ -226,7 +230,7 @@ export default function SasiOpenMarketplace(){
     </>}</div>
     <div className={styles.formCard}><h3>{sasiSoftwareUiText(lang,"发布新软件","Create a software listing")}</h3>
       <label>{sasiSoftwareUiText(lang,"软件名称","Product name")}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={sasiSoftwareUiText(lang,"软件名称、版本、授权类型","Software name, version, license")}/></label>
-      <label>{sasiSoftwareUiText(lang,"分类","Category")}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
+      <label>{sasiSoftwareUiText(lang,"分类","Category")}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id])=><option key={id} value={id}>{categoryLabel(lang,id)}</option>)}</select></label>
       <label>{sasiSoftwareUiText(lang,"软件介绍","Description")}<textarea rows={3} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={sasiSoftwareUiText(lang,"功能、适用平台、系统要求、版本与许可说明","Features, requirements, version and licensing")}/></label>
       <div className={styles.priceFields}><label>{sasiSoftwareUiText(lang,"人民币标价","CNY price")}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{sasiSoftwareUiText(lang,"美元标价","USD price")}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
@@ -234,7 +238,7 @@ export default function SasiOpenMarketplace(){
       <p>{sasiSoftwareUiText(lang,"上传 ZIP 源码包与商品图片后进入安全审核。私有文件不会生成公开下载地址。","ZIP packages and product images undergo review; private packages are not served publicly.")}</p>
     </div>
    </div>
-   {mine.length>0&&<div className={styles.drafts}><h3>{sasiSoftwareUiText(lang,"我的软件草稿与审核进度","My submissions")}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{item.status} · {item.scan_status}</small></div>
+   {mine.length>0&&<div className={styles.drafts}><h3>{sasiSoftwareUiText(lang,"我的软件草稿与审核进度","My submissions")}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{visibleStatus(lang,item.status,false)} · {visibleStatus(lang,item.scan_status,true)}</small></div>
     {item.status==="draft"&&<>
      <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":sasiSoftwareUiText(lang,"上传封面图","Add cover")}
        <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"cover")}}/>
