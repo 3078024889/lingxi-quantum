@@ -36,7 +36,7 @@ for(const [route,file] of Object.entries(routes)){
 }
 const softwareCatalog=JSON.parse(await readFile(join(assetRoot,"software-catalog.json"),"utf8"));
 const productIds=Object.keys(softwareCatalog.products||{}).sort();
-if(JSON.stringify(productIds)!==JSON.stringify(["sasi-copernicus-si95-mt5","sasi-copernicus-si95-source"].sort())||
+if(JSON.stringify(productIds)!==JSON.stringify(["sasi-copernicus-si95-source"])||
   productIds.some(id=>softwareCatalog.products[id]?.available!==false)||
   !softwareCatalog.payment||Object.values(softwareCatalog.payment).some(Boolean))
  throw Error("COM_ANON_SOFTWARE_CATALOG_NOT_SAFELY_DISABLED");
