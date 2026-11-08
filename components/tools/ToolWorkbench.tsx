@@ -8,6 +8,7 @@ import ResultFileActions from './ResultFileActions';
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {claimToolStart,TOOL_PASS_ENFORCED,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
+import {shouldClaimToolRun} from "@/lib/tools/commerce/tool-repeat-meter";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { toolRuntimeText } from "@/lib/tool-runtime-i18n";
 import {workbenchCopy} from "@/lib/tools/workbench-i18n-v1473";
@@ -130,7 +131,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         const signature=fileSignature(files);
         // Repeatedly clicking Process (e.g. changing compression quality) cannot
         // reuse an already consumed upload receipt. Count again even without reupload.
-        if(accessTicket.current!==signature||processedFileSignature.current===signature){
+        if(shouldClaimToolRun(accessTicket.current,processedFileSignature.current,signature)){
           await claimToolStart(tool.slug,files.length);
           accessTicket.current=signature;
         }
