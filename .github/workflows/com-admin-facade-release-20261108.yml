@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: {persist-credentials: false}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dcba9c38
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version: '24'}
       - name: Assert same-origin checks, narrow routes and no merchant mutation
         run: node tests/com-admin-facade.test.mjs
@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: {persist-credentials: false}
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dcba9c38
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version: '24'}
       - name: Verify deployment token is configured and route is still narrow
         env:
