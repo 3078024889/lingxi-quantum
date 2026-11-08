@@ -4,7 +4,7 @@
 # Never touch .com/Cloudflare/Vercel/globalsiai, money or Supabase rows.
 set -Eeuo pipefail
 MODE="${1:-}"; TAG="${2:-}"
-case "$MODE" in --plan|--stage|--promote) ;; *) echo "USAGE: $0 --plan|--stage|--promote ecs-cn-admin-toolpass-20261108-<sha12>" >&2;exit 2;; esac
+case "$MODE" in --plan|--stage|--verify-stage|--promote) ;; *) echo "USAGE: $0 --plan|--stage|--verify-stage|--promote ecs-cn-admin-toolpass-20261108-<sha12>" >&2;exit 2;; esac
 [[ "$TAG" =~ ^ecs-cn-admin-toolpass-20261108-([a-f0-9]{12})$ ]] || { echo "INVALID_RELEASE_TAG" >&2;exit 2; }
 SHORT="${BASH_REMATCH[1]}"
 [[ "$EUID" = 0 ]] || { echo "ROOT_REQUIRED" >&2;exit 2; }
@@ -101,6 +101,30 @@ if [[ "$MODE" = --plan ]];then
   echo "CN3192_DISK_AVAILABLE_BYTES=$(df -PB1 "$BASE" 2>/dev/null | awk 'END{print $4}')"
   free -h
   echo "CN3192_PLAN_READ_ONLY_NO_SERVICE_CHANGES"
+  exit 0
+fi
+# A previous 3192 stage may have stopped only because the old health gate
+# expected HTTP 200 from the deliberately redirected /sasi/pricing (actual 307).
+# Resume the EXACT installed artifact without downloading/extracting it again.
+if [[ "$MODE" = --verify-stage ]];then
+  [[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] ||
+    { echo "CN3192_STAGED_FILES_NOT_PRESENT" >&2;exit 1; }
+  dir="$(systemctl show "$NEW" -p WorkingDirectory --value)"
+  [[ "$dir" =~ ^/opt/lingxifield/cn-staged-releases/[a-f0-9]{40}$ ]] ||
+    { echo "CN3192_STAGED_WORKDIR_NOT_EXPECTED" >&2;exit 1; }
+  test -s "$dir/RELEASE_SOURCE_SHA" || { echo "CN3192_SOURCE_SHA_MISSING" >&2;exit 1; }
+  actual="$(tr -d '\\r\\n' < "$dir/RELEASE_SOURCE_SHA")"
+  [[ "$actual" =~ ^[a-f0-9]{40}$ && "${actual:0:12}" = "$SHORT" && "$dir" = "$BASE/$actual" ]] ||
+    { echo "CN3192_SOURCE_SHA_MISMATCH" >&2;exit 1; }
+  grep -Fxq "EnvironmentFile=$STAGE_ENV" "$UNIT" ||
+    { echo "CN3192_STAGE_ENV_NOT_LAST" >&2;exit 1; }
+  for src in "${LIVE_ENV_FILES[@]}";do
+    grep -Fxq "EnvironmentFile=$src" "$UNIT" ||
+      { echo "CN3192_SOURCE_ENV_MISSING" >&2;exit 1; }
+  done
+  if ! systemctl is-active --quiet "$NEW";then systemctl start "$NEW";fi
+  probe || { echo "CN3192_VERIFY_FAILED_PRODUCTION_3191_UNCHANGED" >&2;systemctl stop "$NEW" || true;exit 1; }
+  echo "CN3192_STAGING_PASS_PRODUCTION_3191_UNCHANGED SOURCE_SHA=$actual"
   exit 0
 fi
 mkdir -p "$BASE"
