@@ -12,6 +12,7 @@ import re
 import pathlib
 import sys
 import time
+import urllib.parse
 import urllib.error
 import urllib.request
 
@@ -109,12 +110,33 @@ def validate_all_tools(base):
     slugs = list(dict.fromkeys(re.findall(r'\{\s*slug:"([a-z0-9-]+)"', source)))
     if len(slugs) != 124:
         raise ReleaseError("PINNED_124_CATALOG_COUNT_CHANGED:" + str(len(slugs)))
+    aliases = {"image-to-pdf-pro": "/tools/image-to-pdf"}
+    alias_source = pathlib.Path("app/tools/image-to-pdf-pro/page.tsx").read_text("utf-8")
+    if 'redirect("/tools/image-to-pdf")' not in alias_source:
+        raise ReleaseError("IMAGE_TO_PDF_ALIAS_SOURCE_CHANGED")
+    if "image-to-pdf" not in slugs or "image-to-pdf-pro" not in slugs:
+        raise ReleaseError("CANONICAL_AND_ALIAS_MUST_BE_IN_SOURCE")
+    direct = 0
+    alias_count = 0
     for slug in slugs:
         path = "/tools/" + slug
         status, headers, body = request(base + path)
+        if slug in aliases and status in (307, 308):
+            target = urllib.parse.urlsplit(headers.get("Location", ""))
+            origin = urllib.parse.urlsplit(base)
+            if (target.scheme not in ("", "https") or
+                target.netloc not in ("", origin.netloc) or
+                target.path != aliases[slug] or target.query or target.fragment):
+                raise ReleaseError("TOOL_ALIAS_UNEXPECTED_REDIRECT:" + path)
+            alias_count += 1
+            continue
         if status != 200 or "html" not in headers.get("Content-Type", "").lower() or b"<html" not in body[:5000].lower():
             raise ReleaseError("CATALOG_PAGE_FAILED:" + path + ":" + str(status))
-    print("ALL_124_PUBLIC_TOOL_PAGES_PASS", base, flush=True)
+        if slug in aliases: alias_count += 1
+        else: direct += 1
+    if direct != 123 or alias_count != 1:
+        raise ReleaseError("PUBLISHED_TOOL_COUNTS_INVALID:" + str(direct) + ":" + str(alias_count))
+    print("ALL_123_PUBLIC_TOOL_PAGES_PLUS_ONE_CANONICAL_ALIAS_PASS", base, flush=True)
 
 
 def snapshot():
