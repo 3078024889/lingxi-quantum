@@ -35,7 +35,7 @@ export async function POST(req:NextRequest){
   const {count,error:countError}=await admin.from("sasi_market_media").select("id",{count:"exact",head:true})
     .eq("listing_id",listingId).neq("status","rejected");
   if(countError)throw Error("MEDIA_COUNT_FAILED");
-  if((count||0)>=MARKET_MEDIA_IMAGE_LIMIT)return NextResponse.json({error:"FIVE_IMAGES_MAX"},{status:409,headers:h});
+  if((count||0)>=MARKET_MEDIA_IMAGE_LIMIT)return NextResponse.json({error:"EIGHT_IMAGES_MAX"},{status:409,headers:h});
   const key=newMarketplaceObjectKey(user.id,listingId,kind,extension);
   const {data:reservation,error:saveError}=await admin.from("sasi_market_media").insert({
    listing_id:listingId,seller_id:user.id,kind,object_key:key,declared_mime:mime,declared_size:size
