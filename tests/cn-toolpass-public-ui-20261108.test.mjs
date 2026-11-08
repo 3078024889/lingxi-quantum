@@ -66,3 +66,24 @@ test("upgrade popup, ticker and archive use one published announcement feed",()=
  assert.match(api,/\.eq\("is_active",true\)/);
  assert.match(layout,/<PublicUpgradeAnnouncementModal \/>/);
 });
+
+test("all direct tool-pass gateways obey the explicit commerce gate",()=>{
+ const page=read("app/tools/pass/page.tsx");
+ const server=read("lib/tools/commerce/tool-server-receipt.ts");
+ const paths=[
+  "app/api/pay/create/route.ts",
+  "app/api/pay/wechat/create/route.ts",
+  "app/api/pay/alipay/create/route.ts"
+ ];
+ assert.match(page,/ready:available&&providers\.wechat/);
+ assert.match(page,/ready:available&&providers\.alipay/);
+ assert.match(page,/ready:available&&providers\.paypal/);
+ assert.match(server,/toolPassCommerceReady\(\)/);
+ assert.match(server,/TOOL_PASS_COMMERCE_READY/);
+ for(const path of paths){
+  const source=read(path);
+  assert.match(source,/import \{toolPassCommerceReady\}/);
+  assert.match(source,/!toolPassCommerceReady\(\)/);
+  assert.doesNotMatch(source,/!toolPassBackendReady\(\)/);
+ }
+});

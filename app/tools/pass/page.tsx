@@ -60,10 +60,10 @@ export default function AllToolsPassPage(){
 
  const choices=(currency==="CNY"?[
   {id:"wallet" as const,label:zh?"账户余额":"Wallet balance",ready:available},
-  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:providers.wechat},
-  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:providers.alipay}
+  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:available&&providers.wechat},
+  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:available&&providers.alipay}
  ]:[
-  {id:"paypal" as const,label:"PayPal",ready:providers.paypal}
+  {id:"paypal" as const,label:"PayPal",ready:available&&providers.paypal}
  ]);
  const selectedChoice=choices.find(x=>x.id===method);
  function openOffer(offer:Offer){
