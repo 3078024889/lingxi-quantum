@@ -60,12 +60,11 @@ export default function AllToolsPassPage(){
   {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:providers.wechat},
   {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:providers.alipay}
  ]:[
-  {id:"wallet" as const,label:zh?"美元余额":"USD balance",ready:available},
   {id:"paypal" as const,label:"PayPal",ready:providers.paypal}
  ]);
  const selectedChoice=choices.find(x=>x.id===method);
  function openOffer(offer:Offer){
-  setSelected(offer);setMethod("wallet");setMessage("");setRequest(null);
+  setSelected(offer);setMethod(currency==="USD"?"paypal":"wallet");setMessage("");setRequest(null);
   void refresh();
  }
  async function confirm(){
