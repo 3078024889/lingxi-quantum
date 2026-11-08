@@ -103,7 +103,7 @@ export default function PdfEditorWorkbench({signingOnly=false}:{signingOnly?:boo
  const touchCornerUpdate=useRef<(x:number,y:number)=>void>(()=>{});
  const gestureUpdate=useRef<(x:number,y:number,id:number)=>void>(()=>{});
  useEffect(()=>{
-  const move=(e:PointerEvent)=>{if(activeTouchRef.current!==null&&touchCornerRef.current)return;gestureUpdate.current(e.clientX,e.clientY,e.pointerId)};
+  const move=(e:PointerEvent)=>{const corner=touchCornerRef.current;if(corner?.pointerId===e.pointerId){touchCornerUpdate.current(e.clientX,e.clientY);return}if(activeTouchRef.current!==null&&corner)return;gestureUpdate.current(e.clientX,e.clientY,e.pointerId)};
   const up=(e:PointerEvent)=>{if(activeTouchRef.current===null&&gestureRef.current?.pointerId===e.pointerId)gestureRef.current=null};
   // Follow the active finger when mobile PointerEvents are cancelled or coalesced.
   const touchMove=(e:TouchEvent)=>{
@@ -419,7 +419,7 @@ gestureUpdate.current=(px,py,pid)=>{
   const size=o.kind==="text"?clamp((o.size||14)*Math.min(w/Math.max(o.w,.7),h/Math.max(o.h,.7)),6,144):o.size;
   patch(corner.id,{w,h,size});
  };
-function handlePointerMove(e:React.PointerEvent){if(activeTouchRef.current!==null&&touchCornerRef.current)return;gestureUpdate.current(e.clientX,e.clientY,e.pointerId)}
+function handlePointerMove(e:React.PointerEvent){const corner=touchCornerRef.current;if(corner?.pointerId===e.pointerId){touchCornerUpdate.current(e.clientX,e.clientY);return}if(activeTouchRef.current!==null&&corner)return;gestureUpdate.current(e.clientX,e.clientY,e.pointerId)}
 function stopPointer(e:React.PointerEvent){
  // The last CDP/mobile touch movement can be coalesced into pointerup.
  // Commit the final real pointer position before releasing the gesture.
