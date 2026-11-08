@@ -188,7 +188,7 @@ export default function Nav() {
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
                 <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/marketplace"?(lang==="zh"?"开放软件市场":"Software Marketplace"):t(item.key)}</span>
+                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/marketplace"?(lang==="zh"?"卖家服务":"Seller services"):t(item.key)}</span>
               </Link>
             ))}
           </section>
