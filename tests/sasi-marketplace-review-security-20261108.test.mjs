@@ -73,3 +73,20 @@ test("digital delivery stays verified-payment buyer-only and time-limited",()=>{
  assert.match(purchase,/if\(!verifiedPayment\)return \{ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"\}/);
  assert.match(purchase,/sasi_market_record_verified_sale/);
 });
+
+test("SASI storefront has one real featured source-license product and seller upload workbench",()=>{
+ const page=file("app/sasi/page.tsx");
+ const market=file("components/SasiOpenMarketplace.tsx");
+ const catalog=file("lib/sasi-software/catalog.ts");
+ const css=file("components/SasiOpenMarketplace.module.css");
+ assert.match(page,/SasiOpenMarketplace/);
+ assert.doesNotMatch(page,/SasiSoftwareMarket/);
+ assert.match(market,/SASI_SOFTWARE_CATALOG\[0\]/);
+ assert.match(market,/featured\.priceCny/);
+ assert.match(market,/featuredReady/);
+ assert.match(market,/source.*|sasi-seller-studio/);
+ assert.match(catalog,/sasi-copernicus-si95-source/);
+ assert.doesNotMatch(catalog,/sasi-copernicus-si95-mt5/);
+ assert.match(css,/\.featuredCard/);
+ assert.match(css,/\.laptopScene/);
+});
