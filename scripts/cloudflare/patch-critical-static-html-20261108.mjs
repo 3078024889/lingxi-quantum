@@ -49,6 +49,13 @@ const needle="  return offloaded||app.fetch(request,env,ctx);";
 if(source.split(needle).length!==2)throw Error("UNEXPECTED_OPENNEXT_WRAPPER_BODY");
 const replacement=[
  '  const pathname=new URL(request.url).pathname;',
+ "  // Worker liveness only. Payment, auth and entitlement readiness have separate hard gates.",
+ "  if(pathname===\"/api/health\"&&(request.method===\"GET\"||request.method===\"HEAD\")){",
+ "    const headers={\"content-type\":\"application/json; charset=utf-8\",\"cache-control\":\"no-store, max-age=0\",",
+ "      \"x-lingxi-health-scope\":\"edge-liveness\",\"x-content-type-options\":\"nosniff\"};",
+ "    return new Response(request.method===\"HEAD\"?null:JSON.stringify({ok:true,service:\"lingxifield\",scope:\"edge-liveness\"}),",
+ "      {status:200,headers});",
+ "  }",
  "  // Public merchant readiness is account-neutral; avoid intermittent 10ms Worker SSR 500.",
  "  if(pathname===\"/api/pay/providers\"&&(request.method===\"GET\"||request.method===\"HEAD\")){",
  "    const present=(name)=>typeof env[name]===\"string\"&&env[name].trim().length>0;",
