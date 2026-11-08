@@ -62,10 +62,13 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const [busy, setBusy] = useState(false);
   const [accessError,setAccessError]=useState("");
   const accessTicket=useRef("");
+  // First process uses the upload receipt; each subsequent process is a NEW use.
+  const processedFileSignature=useRef("");
   const fileSignature=(items:File[])=>items.map(f=>`${f.name}:${f.size}:${f.lastModified}`).join("|");
   // Shared FileDropzone claims usage before accepting the new file(s).
   function acceptUploadedFiles(next:File[]){
     setFiles(next);setResult(null);accessTicket.current=fileSignature(next);
+    processedFileSignature.current="";
   }
 
   const [result, setResult] = useState<ToolRunResult | null>(null);
@@ -123,9 +126,15 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
     setResult(null);
     setAccessError("");
     try {
-      if(TOOL_PASS_ENFORCED&&files.length&&accessTicket.current!==fileSignature(files)){
-        await claimToolStart(tool.slug,files.length);
-        accessTicket.current=fileSignature(files);
+      if(TOOL_PASS_ENFORCED&&files.length){
+        const signature=fileSignature(files);
+        // Repeatedly clicking Process (e.g. changing compression quality) cannot
+        // reuse an already consumed upload receipt. Count again even without reupload.
+        if(accessTicket.current!==signature||processedFileSignature.current===signature){
+          await claimToolStart(tool.slug,files.length);
+          accessTicket.current=signature;
+        }
+        processedFileSignature.current=signature;
       }
       const out = await runFileTool(tool, files, {
         webpTarget,
