@@ -1,6 +1,14 @@
 -- Private software marketplace: verified scan evidence + atomic human review.
 -- No live payment flags, orders, seller payouts, or historical rights are modified.
 BEGIN;
+-- Once a seller submits a package, freeze its price, title and description.
+-- Only the server-side submission endpoint may transition draft to submitted.
+DROP POLICY IF EXISTS sasi_market_listings_draft_update ON public.sasi_market_listings;
+CREATE POLICY sasi_market_listings_draft_update ON public.sasi_market_listings
+ FOR UPDATE TO authenticated
+ USING(seller_id=(SELECT auth.uid()) AND status='draft')
+ WITH CHECK(seller_id=(SELECT auth.uid()) AND status='draft'
+  AND scan_status='unscanned' AND delivery_path IS NULL AND published_at IS NULL);
 CREATE TABLE IF NOT EXISTS public.sasi_market_scan_reports (
   listing_id uuid PRIMARY KEY REFERENCES public.sasi_market_listings(id) ON DELETE RESTRICT,
   quarantine_path text NOT NULL,

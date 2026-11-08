@@ -90,3 +90,15 @@ test("SASI storefront has one real featured source-license product and seller up
  assert.match(css,/\.featuredCard/);
  assert.match(css,/\.laptopScene/);
 });
+
+test("submitted listings cannot be modified during moderation and review rejects live upload signatures",()=>{
+ const sql=file("supabase/migrations/20261108193000_sasi_market_scanner_and_admin_review.sql");
+ assert.match(sql,/CREATE POLICY sasi_market_listings_draft_update/);
+ assert.match(sql,/FOR UPDATE TO authenticated/);
+ assert.match(sql,/USING\(seller_id=\(SELECT auth\.uid\(\)\) AND status='draft'\)/);
+ assert.match(sql,/WITH CHECK\(seller_id=\(SELECT auth\.uid\(\)\) AND status='draft'/);
+ const review=file("app/api/sasi/marketplace/admin/review/route.ts");
+ assert.match(review,/IMAGE_UPLOAD_LINK_STILL_VALID/);
+ assert.match(review,/uploadAge<330_000/);
+ assert.match(review,/verified_size,declared_mime,status,created_at/);
+});

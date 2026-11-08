@@ -78,9 +78,14 @@ export async function POST(req:NextRequest){
   }
   if(action==="media.approve"){
    const {data:media,error}=await admin.from("sasi_market_media")
-    .select("id,listing_id,seller_id,object_key,verified_size,declared_mime,status")
+    .select("id,listing_id,seller_id,object_key,verified_size,declared_mime,status,created_at")
     .eq("id",targetId).single();
    if(error||!media||media.status!=="awaiting_review")return respond({error:"MEDIA_NOT_READY"},409);
+   // Seller upload signatures live for 180s. Wait for expiration before review,
+   // so the original signed PUT cannot replace an approved image afterward.
+   const uploadAge=Date.now()-new Date(media.created_at).getTime();
+   if(!Number.isFinite(uploadAge)||uploadAge<330_000)
+    return respond({error:"IMAGE_UPLOAD_LINK_STILL_VALID"},409);
    const key=marketplaceOwnedKey(media.seller_id,media.listing_id,media.object_key);
    if(!key.includes("/images/"))return respond({error:"IMAGE_PATH_INVALID"},409);
    const remote=await fetch(signedMarketplaceDownload(key,45),{
