@@ -99,7 +99,7 @@ function CheckoutInner() {
   const [error, setError] = useState("");
   const [checkingNow, setCheckingNow] = useState(false);
   const [buyerEmail, setBuyerEmail] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("wechat");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(params.get("method")==="alipay"?"alipay":"wechat");
   const [alipayAvailable, setAlipayAvailable] = useState(false);
   const [wechatAvailable, setWechatAvailable] = useState(false);
   const [providersLoaded, setProvidersLoaded] = useState(false);
