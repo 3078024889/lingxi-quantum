@@ -11,7 +11,7 @@ const deploys = branch => Object.entries(rules).some(([pattern, enabled]) => ena
   !Object.keys(rules).some(pattern => match(branch, pattern));
 assert.equal(deploys('main'), true);
 for (const branch of ['dev', 'feat/r33-tools', 'codex/fix', 'audit/check', 'release/v6']) assert.equal(deploys(branch), false);
-assert.deepEqual(config.crons.map(row => row.path), ['/api/cron/privacy-cleanup', '/api/cron/withdrawal-reconcile', '/api/cron/sasi-v5-radar']);
+assert.deepEqual(config.crons.map(row => row.path), ['/api/cron/privacy-cleanup', '/api/cron/withdrawal-reconcile']);
 
 let authCalls = 0;
 const exports = {};
