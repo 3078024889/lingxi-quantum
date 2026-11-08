@@ -15,6 +15,7 @@ on:
       - 'supabase/migrations/20261108194500_sasi_market_paypal_usd_verified_sale.sql'
       - 'tests/marketplace/**'
       - 'tests/sasi-marketplace-review-security-20261108.test.mjs'
+      - 'tests/sasi-marketplace-security-contract.test.mjs'
       - '.github/workflows/sasi-marketplace-review-build-gate-20261108.yml'
   workflow_dispatch:
 permissions:
