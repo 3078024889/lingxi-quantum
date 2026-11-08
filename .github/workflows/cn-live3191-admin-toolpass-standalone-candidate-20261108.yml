@@ -1,12 +1,8 @@
 name: CN 2026-11-08 admin and toolpass standalone candidate (NO ECS DEPLOY)
+# A 450 MB candidate should only be built after the independent source/build
+# and browser gates succeed on the exact SHA. Avoid per-commit quota burn.
+# The operator must explicitly dispatch this workflow for the reviewed branch.
 on:
-  push:
-    branches: [fix/dual-site-commerce-admin-toolpass-20261108]
-    paths:
-      - '.github/workflows/cn-live3191-admin-toolpass-standalone-candidate-20261108.yml'
-      - 'lib/wechatpay.ts'
-      - 'app/api/pay/wechat/create/route.ts'
-      - 'app/api/pay/providers/route.ts'
   workflow_dispatch:
 permissions:
   contents: write
