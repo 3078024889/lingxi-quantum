@@ -14,6 +14,13 @@ on:
       - 'lib/wechatpay.ts'
       - 'app/api/pay/wechat/create/route.ts'
       - 'app/api/pay/providers/route.ts'
+      - 'lib/release/public-announcements.ts'
+      - 'components/PublicAnnouncementTicker.tsx'
+      - 'components/PublicAnnouncementTicker.module.css'
+      - 'app/api/site-announcements/route.ts'
+      - 'app/siai/updates/page.tsx'
+      - 'components/SiaiPartnerLink.tsx'
+      - 'tests/release/site-announcements-contract.test.mjs'
       - 'components/Nav.tsx'
       - 'components/tools/ToolsHubV11.tsx'
       - 'components/tools/FileDropzone.tsx'
@@ -67,6 +74,8 @@ jobs:
           assert.match(providers,/wechat:\{configured:wechatConfigured,enabled:wechat/);
           console.log('WECHAT_EXPLICIT_ENABLE_AND_UI_GATE_PASS_NO_CHARGE');
           NODE
+      - name: Verify truthful release notices and RSS human-readable UI
+        run: node tests/release/site-announcements-contract.test.mjs
       - name: TypeScript typecheck
         run: pnpm exec tsc --noEmit
       - name: Real Next production build - no deployment or payment transaction
