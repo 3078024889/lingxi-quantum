@@ -226,7 +226,7 @@ GRANT EXECUTE ON FUNCTION public.sasi_market_release_due_sales() TO service_role
 
 -- Buyer-only download access. Never grants a seller access to other buyers' files.
 CREATE OR REPLACE FUNCTION public.sasi_market_claim_download(p_order_id uuid)
-RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $
+RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
 DECLARE uid uuid; sale public.sasi_market_sales%ROWTYPE; current_order_status text;
 BEGIN
  uid=auth.uid();
@@ -241,7 +241,7 @@ BEGIN
    RETURN jsonb_build_object('ok',false,'error','DOWNLOAD_LIMIT_REACHED'); END IF;
  UPDATE public.sasi_market_sales SET download_count=download_count+1 WHERE order_id=p_order_id;
  RETURN jsonb_build_object('ok',true,'remaining',9-sale.download_count);
-END $;
+END $$;
 REVOKE ALL ON FUNCTION public.sasi_market_claim_download(uuid) FROM PUBLIC,anon;
 GRANT EXECUTE ON FUNCTION public.sasi_market_claim_download(uuid) TO authenticated,service_role;
 
