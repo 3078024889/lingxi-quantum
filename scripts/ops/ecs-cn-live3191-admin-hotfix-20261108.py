@@ -37,7 +37,7 @@ def abort(message):
 
 
 def run(*args, timeout=20):
-    result = subprocess.run(args, text=True, capture_output=True, timeout=timeout, check=False)
+    result = subprocess.run(args, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout, check=False)
     if result.returncode != 0:
         abort("COMMAND_FAILED:" + args[0] + ":" + args[1] if len(args)>1 else args[0])
     return result.stdout.strip()
