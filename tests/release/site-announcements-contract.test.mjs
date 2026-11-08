@@ -23,7 +23,7 @@ assert.doesNotMatch(partner,/href="\/siai\/updates\.xml"/);
 assert.match(updates,/href="\/siai\/updates\.xml"/,"RSS stays available only as explicit reader feed");
 assert.match(updates,/getSiaiDirectoryRows/);
 assert.match(updates,/checkedAt/);
-assert.match(fallback,/正在验收/);
+assert.match(fallback,/正在进行生产验证|仍在验收/);
 assert.match(fallback,/支付/);
 assert.match(fallback,/小程序/);
 console.log("SITE_ANNOUNCEMENTS_SHARED_DB_MINI_TICKER_RSS_UI_CONTRACT_PASS_NO_DEPLOY");
