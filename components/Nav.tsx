@@ -189,6 +189,9 @@ export default function Nav() {
             ))}
           </section>
         ))}
+        <Link href="/tools/pass" className={`lx11-link ${pathname==="/tools/pass"?"is-active":""}`}><LingxiMiniIcon name="tools" size="nav" className="lx11-nav-icon"/><span>{({
+          zh:"全场实用工具包",en:"All-tools Pass",ja:"全ツール共通パス",ko:"전체 도구 이용권",fr:"Pass tous outils",de:"Werkzeug-Pass",es:"Pase de herramientas",pt:"Passe de ferramentas",ar:"باقة جميع الأدوات"
+        } as Record<typeof lang,string>)[lang]}</span></Link>
         {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
       </div>
 
