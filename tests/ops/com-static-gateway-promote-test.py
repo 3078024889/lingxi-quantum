@@ -116,6 +116,23 @@ class PromotionTests(unittest.TestCase):
         body = b"<html><body>" + mod._EDGE_BEACON * 2 + b"\n</body></html>"
         self.assertEqual(mod.application_bytes(body), body)
 
+    def test_single_known_tool_alias_accepts_only_exact_canonical_redirect(self):
+        def mock_public(url, *args, **kwargs):
+            if url.endswith("/tools/image-to-pdf-pro"):
+                return 308, {"Location": "/tools/image-to-pdf"}, b""
+            return 200, {"Content-Type": "text/html; charset=utf-8"}, b"<html>LINGXIFIELD</html>"
+        with patch.object(mod, "request", mock_public):
+            mod.validate_all_tools(mod.CANARY)
+
+    def test_malicious_alias_redirect_fails(self):
+        def mock_public(url, *args, **kwargs):
+            if url.endswith("/tools/image-to-pdf-pro"):
+                return 308, {"Location": "https://example.invalid/tools/image-to-pdf"}, b""
+            return 200, {"Content-Type": "text/html"}, b"<html>LINGXIFIELD</html>"
+        with patch.object(mod, "request", mock_public):
+            with self.assertRaisesRegex(mod.ReleaseError, "TOOL_ALIAS_UNEXPECTED_REDIRECT"):
+                mod.validate_all_tools(mod.CANARY)
+
     def test_explicit_flag_required(self):
         with patch.object(sys, "argv", ["test"]):
             with self.assertRaises(mod.ReleaseError):
