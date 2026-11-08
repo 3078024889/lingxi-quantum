@@ -6,7 +6,7 @@
  * Cloudflare Route must be /api/account/money-admin* (most-specific route)
  * after separate CI/Cloudflare cutover and authenticated admin browser acceptance.
  */
-const ALLOWED=new Set(["/api/account/money-admin","/api/account/money-admin/access","/api/site-announcements"]);
+const ALLOWED=new Set(["/api/account/money-admin","/api/account/money-admin/access","/api/site-announcements","/api/tools/pass"]);
 const SITES=new Set(["lingxifield.com","www.lingxifield.com"]);
 const UPSTREAM="https://lingxifield.cn";
 function json(obj,status){return new Response(JSON.stringify(obj),{status,headers:{"content-type":"application/json; charset=utf-8","cache-control":"private, no-store","x-content-type-options":"nosniff"}})}
@@ -34,7 +34,7 @@ export default {
   if(url.protocol!=="https:"||!SITES.has(url.hostname.toLowerCase()))return json({error:"INVALID_SITE"},403);
   if(!ALLOWED.has(url.pathname))return json({error:"ROUTE_NOT_ALLOWED"},404);
   if(!["GET","POST"].includes(request.method))return json({error:"METHOD_NOT_ALLOWED"},405);
-  if(request.method==="POST"&&url.pathname!=="/api/account/money-admin")return json({error:"METHOD_NOT_ALLOWED"},405);
+  if(request.method==="POST"&&!["/api/account/money-admin","/api/tools/pass"].includes(url.pathname))return json({error:"METHOD_NOT_ALLOWED"},405);
   if(url.search.length>1024)return json({error:"QUERY_TOO_LONG"},413);
   if(request.method==="POST"){
    const origin=request.headers.get("origin")||"";
@@ -48,7 +48,11 @@ export default {
   if(body===null)return json({error:"REQUEST_TOO_LARGE"},413);
   const upstream=new URL(url.pathname+url.search,UPSTREAM);
   const headers=new Headers();
-  const cookie=request.headers.get("cookie");if(cookie)headers.set("cookie",cookie);
+  // Forward ONLY Supabase session cookies to the operator's existing .cn control plane.
+  // Never forward unrelated merchant/site cookies from the international domain.
+  const cookies=(request.headers.get("cookie")||"").split(";").map(x=>x.trim())
+    .filter(x=>/^sb-[a-z0-9]+-auth-token(?:\.[0-9]+)?=/i.test(x));
+  if(cookies.length)headers.set("cookie",cookies.join("; "));
   headers.set("accept","application/json");
   if(request.method==="POST"){
    headers.set("content-type","application/json");
