@@ -1,0 +1,11 @@
+/* Top editorial announcement ribbon, all main-site routes and 9 locales. */
+:root{--lx-news-height:34px}
+@media (min-width:1024px){
+ .lx11-topbar{top:var(--lx-news-height)!important}
+ .lx11-sidebar:not(.lx11-drawer){top:var(--lx-news-height)!important}
+ .lx-site-content:has(.lx11-sidebar){padding-top:calc(var(--lx-top) + var(--lx-news-height))!important}
+}
+@media(max-width:1023px){
+ .lx11-mobile{top:var(--lx-news-height)!important}
+ .lx-site-content:has(.lx11-mobile){padding-top:calc(58px + var(--lx-news-height))!important}
+}
