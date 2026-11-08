@@ -14,6 +14,11 @@ test("wallet resolves to authenticated real balances, not legacy pricing redirec
  assert.match(wallet, /\/account\/withdrawals/);
  assert.match(wallet, /\/account\/orders/);
  assert.match(wallet, /BALANCE_TOPUP_AMOUNTS/);
+ assert.match(wallet, /normalizeWithdrawalStatus/);
+ assert.match(wallet, /balance_withdrawals/);
+ const withdrawals=read("app/account/withdrawals/page.tsx");
+ assert.match(withdrawals, /redirect\("\/ai-wallet#withdrawals"\)/);
+ assert.doesNotMatch(withdrawals, /\/sasi\/pricing/);
 });
 
 test("account links open the real wallet and withdrawal routes", () => {
