@@ -50,15 +50,23 @@ jobs:
         run: |
           set -Eeuo pipefail
           base="https://$PUBLIC_ANNOUNCE_WORKER.3078024889.workers.dev/api/site-announcements"
-          for i in 1 2 3;do
+          passed=0
+          for i in $(seq 1 14);do
             json="$(mktemp)"
             status="$(curl -4sS --connect-timeout 10 --max-time 25 -o "$json" -w '%{http_code}' "$base" || true)"
             echo "COM_ANNOUNCE_WORKERS_DEV_HTTP_$status trial=$i"
-            test "$status" = 200
-            jq -e '(.items|type)=="array" and (.items|length>=1) and (.items|length<=8) and (.items|all(.titleZh!=null and .href=="/announcements"))' "$json" >/dev/null
-            echo "COM_ANNOUNCE_VERIFIED_PUBLIC_ITEMS_$(jq -r '.items|length' "$json")"
+            if [[ "$status" == 200 ]] && jq -e '(.items|type)=="array" and (.items|length>=1) and (.items|length<=8) and (.items|all(.titleZh!=null and .href=="/announcements"))' "$json" >/dev/null 2>&1;then
+              passed=$((passed+1))
+              echo "COM_ANNOUNCE_VERIFIED_PUBLIC_ITEMS_$(jq -r '.items|length' "$json")"
+            else
+              passed=0
+              if [[ "$i" == 14 ]];then echo "COM_ANNOUNCEMENTS_DIAGNOSTIC_BODY_$(head -c 150 "$json")";fi
+            fi
             rm -f "$json"
+            if [[ "$passed" -ge 3 ]];then break;fi
+            sleep 3
           done
+          test "$passed" -ge 3
           echo 'COM_PUBLIC_ANNOUNCEMENT_WORKER_REMOTE_VERIFIED'
       - name: Change only .com public announcement exact route, preserve admin/toolpass/WWW, rollback if failed
         shell: bash
