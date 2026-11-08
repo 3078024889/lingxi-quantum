@@ -68,4 +68,7 @@ const nextConfig = {
   },
 };
 
+// Opt in only for the isolated Aliyun standalone artifact job. Normal Next/Cloudflare builds remain unchanged.
+if (process.env.LINGXI_SELFHOST_BUILD === "1") nextConfig.output = "standalone";
+
 module.exports = nextConfig;
