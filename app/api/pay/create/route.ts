@@ -7,6 +7,7 @@ import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {getUsdBalanceProduct} from "@/lib/usd-products";
 import {getProduct} from "@/lib/plans";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -35,6 +36,7 @@ export async function POST(req:NextRequest){
     }:null);
     if(!product)return NextResponse.json({error:"INVALID_USD_PRODUCT"},{status:400});
 
+    if(isDirectPass&&!toolPassBackendReady())return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
