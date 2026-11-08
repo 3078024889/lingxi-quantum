@@ -1,31 +1,65 @@
+import "server-only";
 import { createClient } from "@supabase/supabase-js";
 
-function getAdminRuntimeFallbackUrl() {
-  const env = process.env;
-  return env.NEXT_PUBLIC_SUPABASE_URL;
-}
-
-export function isSupabaseAdminConfigured() {
+/**
+ * Supabase supports both the new server-only sb_secret_* key and the legacy
+ * service_role JWT. Prefer the new credential, so a stale legacy value cannot
+ * shadow a corrected SUPABASE_SECRET_KEY.
+ *
+ * Never use a publishable key, anon JWT, or user-editable metadata for an
+ * administrator client. Never expose the selected key in logs or responses.
+ */
+function adminRuntimeConfig() {
   const env = process.env;
   const url = (env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
-  const key = env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  if (!url || !key || key.length < 20) return false;
+  const key = (env.SUPABASE_SECRET_KEY || env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+  if (!url || !key) return null;
+
   try {
     const parsed = new URL(url);
-    return parsed.protocol === "https:" || parsed.protocol === "http:";
+    const validOrigin = parsed.protocol === "https:" ||
+      (parsed.protocol === "http:" && ["localhost", "127.0.0.1"].includes(parsed.hostname));
+    if (!validOrigin || parsed.username || parsed.password) return null;
   } catch {
-    return false;
+    return null;
+  }
+
+  if (key.startsWith("sb_secret_")) {
+    if (!/^sb_secret_[A-Za-z0-9_-]{12,}$/.test(key)) return null;
+    return { url, key };
+  }
+
+  // Legacy service_role JWTs are still supported during the phased migration.
+  const parts = key.split(".");
+  if (parts.length !== 3) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(parts[1], "base64url").toString("utf8")) as {
+      role?: unknown; exp?: unknown;
+    };
+    if (payload.role !== "service_role") return null;
+    if (typeof payload.exp === "number" && payload.exp * 1000 <= Date.now()) return null;
+    return { url, key };
+  } catch {
+    return null;
   }
 }
 
-// 后台管理客户端：使用 service_role 密钥，拥有写入会员/订单的权限。
-// 仅在服务器端（API 路由）使用，绝不暴露给浏览器。
-// 密钥存放在 Vercel 环境变量 SUPABASE_SERVICE_ROLE_KEY 中。
+export function isSupabaseAdminConfigured() {
+  return adminRuntimeConfig() !== null;
+}
+
+/**
+ * This client bypasses RLS. Instantiate only inside authenticated server
+ * handlers that independently verify the operator's authorization.
+ */
 export function createAdminClient() {
-  if (!isSupabaseAdminConfigured()) throw new Error("SUPABASE_ADMIN_CONFIG_MISSING");
-  return createClient(
-    (process.env.SUPABASE_URL || getAdminRuntimeFallbackUrl())!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { persistSession: false } }
-  );
+  const config = adminRuntimeConfig();
+  if (!config) throw new Error("SUPABASE_ADMIN_CONFIG_MISSING");
+  return createClient(config.url, config.key, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  });
 }
