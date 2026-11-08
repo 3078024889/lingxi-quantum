@@ -2,9 +2,8 @@ name: COM admin facade isolated release gate (NO AUTOMATIC DEPLOY)
 on:
   push:
     branches: [feature/sasi-software-commerce-com-admin-20261108]
+    # One-time deploy request. Future source changes require an explicit dispatch.
     paths:
-      - 'workers/com-admin-facade/**'
-      - 'tests/com-admin-facade.test.mjs'
       - '.github/workflows/com-admin-facade-release-20261108.yml'
   workflow_dispatch:
     inputs:
@@ -37,7 +36,7 @@ jobs:
           test "$status" = 403
           echo CN_MONEY_ADMIN_UPSTREAM_READY_NO_AUTH_DATA_RETURNED
   deploy:
-    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'deploy'
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'deploy')
     needs: safety
     runs-on: ubuntu-24.04
     environment: cloudflare-production
@@ -72,3 +71,9 @@ jobs:
           done
           echo "::error::International admin facade not confirmed. Remove only the narrow admin route to roll back."
           exit 1
+      - name: Verify .com tool-pass public catalog over minimal worker
+        run: |
+          set -Eeuo pipefail
+          code="$(curl -sS -4 --max-time 18 -o /dev/null -w '%{http_code}' https://lingxifield.com/api/tools/pass || true)"
+          echo "COM_TOOLPASS_HTTP_STATUS=$code"
+          test "$code" = "200"
