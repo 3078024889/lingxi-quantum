@@ -16,6 +16,10 @@ on:
       - 'app/legal/sasi/**'
       - 'tests/sasi-com-closure-20261108.test.mjs'
       - 'tests/notification-projection-20261108.test.mjs'
+      - 'tests/com-next-release-safety-20261108.test.mjs'
+      - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
+      - 'scripts/cloudflare/com-next-apex-verified-cutover-20261108.mjs'
+      - '.github/workflows/com-sasi-next-isolated-canary-20261108.yml'
       - '.github/workflows/sasi-com-closure-20261108.yml'
   workflow_dispatch:
 permissions:
@@ -35,6 +39,9 @@ jobs:
         run: |
           node --test tests/sasi-com-closure-20261108.test.mjs
           node --experimental-strip-types --test tests/notification-projection-20261108.test.mjs
+          node --test tests/com-next-release-safety-20261108.test.mjs
+          node --check scripts/cloudflare/patch-critical-static-html-20261108.mjs
+          node --check scripts/cloudflare/com-next-apex-verified-cutover-20261108.mjs
       - name: Guard against accidental production release
         run: |
           test ! -f .github/workflows/sasi-com-closure-20261108-deploy.yml
