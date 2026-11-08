@@ -83,7 +83,7 @@ jobs:
           if(again.name!==process.env.CANDIDATE_NAME||again.workers_dev!==true||again.routes||again.route)throw Error('UNSAFE_PRODUCTION_ROUTE_CONFIG');
           console.log('ISOLATED_CANDIDATE_ROUTES_NONE_PAYMENT_DISABLED');
           NODE
-          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --dry-run --outdir "$RUNNER_TEMP/cf-candidate-dry-run"
+          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --minify --dry-run --outdir "$RUNNER_TEMP/cf-candidate-dry-run"
       - name: Verify not overwriting an existing Cloudflare Worker
         run: |
           set -Eeuo pipefail
@@ -95,7 +95,7 @@ jobs:
       - name: Deploy NO ROUTES candidate to isolated workers.dev only
         run: |
           set -Eeuo pipefail
-          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --keep-vars 2>&1 | tee "$RUNNER_TEMP/candidate-deployment.log"
+          pnpm exec wrangler deploy --config wrangler.candidate.jsonc --minify --keep-vars 2>&1 | tee "$RUNNER_TEMP/candidate-deployment.log"
           echo 'COM_CANDIDATE_CLOUDFLARE_WORKER_DEPLOYED_NO_CUSTOM_DOMAIN_ROUTE'
       - name: Verify actual Cloudflare remote candidate public endpoints
         run: |
