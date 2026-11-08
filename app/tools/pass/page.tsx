@@ -40,6 +40,11 @@ export default function AllToolsPassPage(){
  const [providers,setProviders]=useState({wechat:false,alipay:false,paypal:false});
  const [message,setMessage]=useState("");
  const [walletBalanceMinor,setWalletBalanceMinor]=useState<number|null>(null);
+ const [notices,setNotices]=useState<Array<{id:string;titleZh:string;titleEn:string;publishedAt:string}>>([]);
+ useEffect(()=>{let alive=true;fetch("/api/site-announcements",{cache:"no-store"})
+  .then(r=>r.ok?r.json():null).then(data=>{if(!alive||!Array.isArray(data?.items))return;
+   setNotices(data.items.filter((item:unknown)=>Boolean(item&&typeof item==="object"&&typeof (item as {id?:unknown}).id==="string")).slice(0,3));
+  }).catch(()=>{});return()=>{alive=false};},[]);
  const [request,setRequest]=useState<{sku:AllToolsPassSku;id:string}|null>(null);
 
  async function refresh(){
@@ -162,6 +167,33 @@ export default function AllToolsPassPage(){
     <span><b>ϟ</b>{zh?"即买即用 · 高效省心":"Instant access after verified purchase"}</span>
    </div>
   </div>
+  <section className={premium.lowerPanels} aria-label={zh?"会员账户与更新":"Membership and updates"}>
+   <div className={premium.lowerCard}>
+    <div className={premium.lowerHeading}><div><span className={premium.lowerIcon} aria-hidden="true">▣</span>
+     <div><h2>{zh?"余额与充值":"Balance & top up"}</h2><p>{zh?"用于购买工具包与平台服务":"Use your verified account funds for eligible purchases"}</p></div>
+     </div><Link className={premium.lowerLink} href="/ai-wallet">{zh?"充值与明细":"Top up & details"} ↗</Link></div>
+    <div className={premium.balanceBody}>
+     <div><small>{zh?"账户余额":"Account balance"} · {currency}</small>
+      {walletBalanceMinor===null?<p className={premium.balanceUnavailable}>{zh?"登录后查看实际余额":"Sign in to view your actual balance"}</p>:
+       <strong>{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>}</div>
+     <Link href="/ai-wallet" className={premium.rechargeAction}>{zh?"充值":"Top up"}</Link>
+     <Link href="/account/orders" className={premium.ordersAction}>{zh?"订单记录":"Orders"}</Link>
+    </div>
+    <p className={premium.lowerFootnote}>{zh?"充值到账、账户明细与历史权益均以真实账户记录为准。":"All funds, receipts and entitlements reflect verified account records."}</p>
+   </div>
+   <div className={premium.lowerCard}>
+    <div className={premium.lowerHeading}><div><span className={premium.lowerIcon} aria-hidden="true">♧</span>
+     <div><h2>{zh?"公告中心":"Announcements"}</h2><p>{zh?"平台更新、工具上新与服务资讯":"Updates, new tools and service notices"}</p></div>
+     </div><Link className={premium.lowerLink} href="/announcements">{zh?"查看全部":"View all"} ↗</Link></div>
+    <div className={premium.noticeList}>
+     {notices.length>0?notices.map(item=><Link key={item.id} href={"/announcements#"+encodeURIComponent(item.id)} className={premium.noticeRow}>
+      <span className={premium.noticeBadge}>{zh?"更新":"NEWS"}</span>
+      <span className={premium.noticeTitle}>{zh?item.titleZh:item.titleEn||item.titleZh}</span>
+      <time>{item.publishedAt&&Number.isFinite(Date.parse(item.publishedAt))?new Date(item.publishedAt).toLocaleDateString(zh?"zh-CN":"en-US"):""}</time>
+     </Link>):<p className={premium.lowerFootnote}>{zh?"最新公告可在公告中心查看。":"Visit announcements for platform updates."}</p>}
+    </div>
+   </div>
+  </section>
   {message&&!selected&&<p role="status" className="mt-4 rounded-xl border border-[var(--lx-line)] p-4 text-sm">{message}</p>}
   {selected&&<div role="presentation" className={premium.overlay} onClick={()=>{if(!busy)setSelected(null)}}>
    <section role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" dir={rtl?"rtl":"ltr"} className={premium.modal} onClick={event=>event.stopPropagation()}>
