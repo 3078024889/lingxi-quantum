@@ -1,0 +1,50 @@
+name: SASI nine-language public software safety and build gate (NO DEPLOY)
+on:
+  push:
+    branches: [feat/sasi-nine-language-20261108]
+    paths:
+      - 'components/SasiOpenMarketplace.tsx'
+      - 'lib/sasi-software/ui-copy.ts'
+      - 'tests/sasi-software-nine-languages-20261108.test.mjs'
+      - '.github/workflows/sasi-software-nine-language-build-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      LINGXI_SELFHOST_BUILD: '1'
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.cn
+      NEXT_PUBLIC_TOOL_PASS_ENFORCED: 'true'
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://sxsgdpqojepgbbrxrzlq.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Localization, branding, payment gates and seller contract
+        run: |
+          node --test tests/sasi-software-nine-languages-20261108.test.mjs
+          node --test tests/sasi-software-public-branding-20261108.test.mjs
+          node tests/sasi-marketplace-security-contract.test.mjs
+          node --test tests/sasi-marketplace-review-security-20261108.test.mjs
+      - name: TypeScript safety gate
+        run: pnpm exec tsc --noEmit
+      - name: Standalone production compilation only
+        run: |
+          pnpm build
+          test -s .next/standalone/server.js
+          echo SASI_NINE_LANGUAGE_SOURCE_BUILD_VERIFIED_NO_DEPLOY
