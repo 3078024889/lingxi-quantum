@@ -113,7 +113,7 @@ export default function SasiOpenMarketplace(){
      headers:{"Content-Type":ticket.contentType},body:file});
    if(!put.ok)throw Error("PRIVATE_IMAGE_UPLOAD_FAILED_"+put.status);
    await post("/api/sasi/marketplace/image-confirm",{imageId:ticket.imageId});
-   setStatus(zh?"商品图片已上传并等待审核，最多支持五张。":"Image uploaded, awaiting review. Up to five images per listing.");
+   setStatus(zh?"商品图片已上传并等待审核，每个商品可上传4张主图、4张详情图。":"Image uploaded, awaiting review. Up to four cover images and four detail images.");
    await refresh();
   }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
  };
@@ -206,10 +206,11 @@ export default function SasiOpenMarketplace(){
   {showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{zh?"卖家工作台":"Seller workspace"}</h2></div><Link href="/account/software">{zh?"已购买的软件":"Purchased software"} ↗</Link></div>
    <div className={styles.workspace}>
     <div className={styles.formCard}><h3>{seller?(zh?"卖家资料":"Seller profile"):(zh?"零费用申请入驻":"Apply to sell for free")}</h3>
-    {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{zh?"审核状态":"Review status"}: {seller.status}</p><p>KYC: {seller.kyc_status}</p><p>{zh?"完成身份和收款方式审核后才能提现。":"Identity and payout verification are required before cash-out."}</p></div>:<>
+    {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{zh?"审核状态":"Review status"}: {seller.status}</p><p>{zh?"身份核验":"Identity verification"}: {seller.kyc_status==="verified"?(zh?"已完成":"Verified"):(zh?"待完成":"Pending")}</p><p>{zh?"完成身份和收款方式审核后才能提现。":"Identity and payout verification are required before cash-out."}</p></div>:<>
      <label>{zh?"展示名称":"Display name"}<input value={displayName} onChange={e=>setDisplayName(e.target.value)} maxLength={60} placeholder={zh?"软件开发者 / 工作室":"Developer / studio"}/></label>
      <label className={styles.check}><input type="checkbox" checked={adult} onChange={e=>setAdult(e.target.checked)}/>{zh?"确认已满 18 周岁":"I am at least 18 years old"}</label>
-     <label className={styles.check}><input type="checkbox" checked={terms} onChange={e=>setTerms(e.target.checked)}/>{zh?"已阅读并同意版权、安全审核与结算规则；知悉成交后平台收取 15% 服务费，卖家获得 85%":"I accept the IP and settlement terms; 15% platform fee after sale, 85% to seller"}</label>
+     <label className={styles.check}><input type="checkbox" checked={terms} onChange={e=>setTerms(e.target.checked)}/>{zh?"同意 SASI 卖家协议与结算规则":"I accept the SASI seller and settlement terms"}</label>
+     {terms&&<p className="mt-2 text-sm leading-relaxed text-[var(--lx-muted)]">{zh?"仅在实际交易完成后，卖家获得商品净销售金额的 85%，平台收取 15% 服务费。具体结算与退货规则以卖家协议为准。":"After a completed eligible sale, the seller receives 85% and the platform charges a 15% service fee. Settlement and refund rules follow the seller agreement."}</p>}
      <button disabled={busy!==""||!adult||!terms||displayName.trim().length<2} onClick={()=>void apply()}>{busy==="seller"?"…":zh?"申请成为卖家":"Apply as seller"}</button>
      <p>{zh?"须先登录且验证邮箱，平台不收取保证金。":"Sign-in and verified email are required. No seller deposit."} <Link href="/account?mode=signin">{zh?"账户登录":"Sign in"} ↗</Link></p>
     </>}</div>
