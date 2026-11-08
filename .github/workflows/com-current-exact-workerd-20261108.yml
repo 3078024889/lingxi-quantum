@@ -1,0 +1,80 @@
+name: COM latest exact-SHA OpenNext and workerd release gate (NO DEPLOY)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths:
+      - '.github/workflows/com-current-exact-workerd-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: com-exact-workerd-20261108
+  cancel-in-progress: true
+jobs:
+  current-head:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+      NEXT_PUBLIC_SUPABASE_URL: https://sxsgdpqojepgbbrxrzlq.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # pinned v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # pinned v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # pinned v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Prove public browser configuration exists (do not print value)
+        run: test -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+      - name: Frozen dependency installation and core release security contracts
+        run: |
+          set -Eeuo pipefail
+          pnpm install --frozen-lockfile
+          node tests/sasi-marketplace-security-contract.test.mjs
+          node tests/toolpass-direct-fulfillment-20261108.test.mjs
+          node tests/paypal-merchant-idempotency-20261108.test.mjs
+          pnpm exec tsc --noEmit
+      - name: Install previously validated Cloudflare adapter in disposable runner only
+        run: pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
+      - name: Build latest exact source for real Cloudflare workerd
+        run: |
+          set -Eeuo pipefail
+          pnpm exec opennextjs-cloudflare build
+          node scripts/cloudflare/stage-large-public-assets.mjs
+          node scripts/cloudflare/stage-r2-public-assets.mjs --audit
+          test -s .open-next/offload-worker.mjs
+          pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/wrangler-dry-run"
+          echo "COM_EXACT_WORKER_BUILD_AND_R2_OFFLOAD_DRY_RUN_PASS"
+      - name: Start local Cloudflare workerd and verify new public pages, auth and tool-pass
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          pnpm exec wrangler dev --local --ip 127.0.0.1 --port 8787 --log-level error > "$RUNNER_TEMP/workerd-current.log" 2>&1 &
+          worker_pid=$!
+          trap 'kill "$worker_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 75); do
+            code="$(curl -sS --noproxy '*' --max-time 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:8787/api/health || true)"
+            if [[ "$code" == 200 ]]; then ready=1;break;fi
+            kill -0 "$worker_pid" || { echo "WORKERD_PROCESS_EXITED";break; }
+            sleep 2
+          done
+          test "$ready" = 1 || { echo "WORKERD_HEALTH_NOT_READY"; exit 1; }
+          for route in / /tools /siai /sasi /sasi/marketplace /tools/pass /announcements /api/tools/pass /api/health; do
+            code="$(curl -sS --noproxy '*' --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:8787$route" || true)"
+            echo "CURRENT_WORKERD_PUBLIC $route $code"
+            test "$code" = 200
+          done
+          for route in /api/sasi/account /api/tools/jobs; do
+            code="$(curl -sS --noproxy '*' --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:8787$route" || true)"
+            echo "CURRENT_WORKERD_ANONYMOUS $route $code"
+            test "$code" = 401
+          done
+          echo "COM_CURRENT_EXACT_SHA_LOCAL_WORKERD_ACCEPTED_NO_DEPLOY"
