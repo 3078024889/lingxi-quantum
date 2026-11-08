@@ -147,12 +147,12 @@ export default function SasiOpenMarketplace(){
  return <main className={styles.main}><div className={styles.container}>
   <div className={styles.hero}>
     <div className={styles.heroCopy}>
-      <span className={styles.eyebrow}>LINGXIFIELD / SASI</span>
-      <h1>{zh?"SASI 智能软件":"SASI Intelligent Software"}</h1>
-      <p>{zh?"源码授权 · 开发者发布 · 安全交付":"Source licenses · Developer publishing · Secure delivery"}</p>
-      <div className={styles.heroLinks}><a href="#featured">{zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>{zh?"发布产品":"Publish software"}</button></div>
-    </div>
-    <div className={styles.laptopScene} aria-hidden="true">
+      <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
+       <h1><em>SASI</em> {zh?"智能软件":"Intelligent Software"}</h1>
+       <p>{zh?"源码授权 · 开发者发布 · 自动交付 · 安全可靠":"Source licenses · Developer publishing · Verified digital delivery"}</p>
+       <div className={styles.heroLinks}><a href="#products">◇ {zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {zh?"发布产品":"Publish software"}</button></div>
+     </div>
+     <div className={styles.laptopScene} aria-hidden="true"><span className={styles.originalArtwork}/>
       <div className={styles.alienPlant}><i/><i/><i/><i/><i/><b/></div>
       <div className={styles.crystalCup}><span>SASI</span></div>
       <div className={styles.laptopDisplay}>
@@ -165,12 +165,13 @@ export default function SasiOpenMarketplace(){
     </div>
   </div>
   <div className={styles.benefits}>
-    <div><span>◇</span><strong>{zh?"源码与软件授权":"Software licensing"}</strong></div>
-    <div><span>↥</span><strong>{zh?"开发者自行发布":"Creator publishing"}</strong></div>
-    <div><span>▣</span><strong>{zh?"私有文件交付":"Private delivery"}</strong></div>
-    <div><span>✓</span><strong>{zh?"订单授权记录":"Order & licenses"}</strong></div>
-  </div>
-  <section id="featured" className={styles.featured}>
+     <div><span>⬡</span><div><strong>{zh?"源码授权":"Source licensing"}</strong><small>{zh?"仅售源码 · 权属清晰":"Clear license and ownership"}</small></div></div>
+     <div><span>ϟ</span><div><strong>{zh?"自动交付":"Digital delivery"}</strong><small>{zh?"付款验证后获取":"After verified payment"}</small></div></div>
+     <div><span>◇</span><div><strong>{zh?"安全可靠":"Secure by design"}</strong><small>{zh?"私有 R2 存储":"Private R2 storage"}</small></div></div>
+     <div><span>◎</span><div><strong>{zh?"全球可用":"Global access"}</strong><small>{zh?"多语言 · 多地区":"Multilingual access"}</small></div></div>
+     <div><span>♧</span><div><strong>{zh?"开发者支持":"Creator support"}</strong><small>{zh?"发布 · 审核 · 结算":"Publish, review and settle"}</small></div></div>
+   </div>
+   <section id="featured" className={styles.featured}>
    <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{zh?"精选软件":"Featured software"}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{zh?"浏览开发者作品":"Browse creator software"}</a></div>
    <article className={styles.featuredCard}>
@@ -189,7 +190,7 @@ export default function SasiOpenMarketplace(){
     </div>
    </article>
   </section>
-  <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / COMMUNITY</small><h2>{zh?"软件作品与卖家服务":"Software & seller services"}</h2></div>
+  <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / SOFTWARE</small><h2>{zh?"开发者作品":"Software & seller services"}</h2></div>
    <div className={styles.find}><input aria-label={zh?"搜索软件":"Search software"} placeholder={zh?"搜索 EA、指标、应用…":"Find EAs and software…"} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{zh?"全部":"All"}</button>{CATEGORIES.map(([key,label])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{label}</button>)}</div>
    <div className={styles.products}>{visible.map((item,i)=><article className={styles.card} key={item.id}>
@@ -200,19 +201,19 @@ export default function SasiOpenMarketplace(){
     <h3>{item.title}</h3><p>{item.description}</p><div className={styles.cardBottom}><strong>¥{format(item.price_cny_minor)}</strong><span>USD ${format(item.price_usd_minor)}</span></div>
     <div className={styles.cardActions}><Link href={"/sasi/marketplace/"+item.id}>{zh?"查看详情":"Details"} ↗</Link><button onClick={()=>void share(item)}>{zh?"分享":"Share"} ↗</button></div>
     </div></article>)}</div>
-   {visible.length===0&&<div className={styles.empty}>{zh?"目前没有符合条件的已审核软件。发布产品后可在这里展示。":"No reviewed and published software matches this search."}</div>}
+   {visible.length===0&&<div className={styles.empty}>{zh?"已审核的软件将在这里展示；欢迎开发者发布原创作品。":"No reviewed and published software matches this search."}</div>}
   </section>
   <section className={styles.section} aria-label={zh?"软件发布与交付步骤":"Software publishing steps"}>
-    <div className={styles.sectionHeading}><div><small>02 / PUBLISH & DELIVERY</small><h2>{zh?"卖家发布与交付":"Publish and deliver"}</h2></div></div>
+    <div className={styles.sectionHeading}><div><small>02 / PUBLISH & DELIVERY</small><h2>{zh?"卖家发布与自动交付":"Publish and deliver"}</h2></div></div>
     <div className={styles.steps}>
-      <div><b>01</b><strong>{zh?"填写商品资料":"Product details"}</strong><span>{zh?"名称、许可、价格":"Name, license, price"}</span></div>
-      <div><b>02</b><strong>{zh?"上传私有源码包":"Upload private ZIP"}</strong><span>{zh?"文件与图片安全审核":"File and image review"}</span></div>
-      <div><b>03</b><strong>{zh?"审核通过后发布":"Publish after review"}</strong><span>{zh?"审核完成后公开展示":"Only reviewed listings appear"}</span></div>
-      <div><b>04</b><strong>{zh?"付款确认后交付":"Verified payment & delivery"}</strong><span>{zh?"授权用户限时下载":"Entitled time-limited access"}</span></div>
-    </div>
-    <button type="button" className={styles.launchStudio} onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio} aria-controls="sasi-seller-studio">{showStudio?(zh?"收起工作台":"Close workspace"):(zh?"发布软件":"Publish software")}</button>
-  </section>
-  {showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{zh?"卖家工作台":"Seller workspace"}</h2></div><Link href="/account/software">{zh?"已购买的软件":"Purchased software"} ↗</Link></div>
+       <div><b>01</b><strong>{zh?"填写商品资料":"Product details"}</strong><span>{zh?"名称 · 介绍 · 价格":"Name, description, price"}</span></div>
+       <div><b>02</b><strong>{zh?"上传源码":"Upload source ZIP"}</strong><span>{zh?"私有源码包与文档":"Private ZIP and documentation"}</span></div>
+       <div><b>03</b><strong>{zh?"审核发布":"Review and publish"}</strong><span>{zh?"安全审核后公开展示":"Listed after security review"}</span></div>
+       <div><b>04</b><strong>{zh?"自动交付":"Automatic delivery"}</strong><span>{zh?"付款验证后限时获取":"Download after verified payment"}</span></div>
+       <button type="button" className={styles.launchStudio} onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio} aria-controls="sasi-seller-studio">{showStudio?(zh?"收起工作台":"Close workspace"):(zh?"立即发布软件":"Publish software")}</button>
+     </div>
+   </section>
+   {showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{zh?"卖家工作台":"Seller workspace"}</h2></div><Link href="/account/software">{zh?"已购买的软件":"Purchased software"} ↗</Link></div>
    <div className={styles.workspace}>
     <div className={styles.formCard}><h3>{seller?(zh?"卖家资料":"Seller profile"):(zh?"零费用申请入驻":"Apply to sell for free")}</h3>
     {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{zh?"审核状态":"Review status"}: {seller.status}</p><p>{zh?"身份核验":"Identity verification"}: {seller.kyc_status==="verified"?(zh?"已完成":"Verified"):(zh?"待完成":"Pending")}</p><p>{zh?"完成身份和收款方式审核后才能提现。":"Identity and payout verification are required before cash-out."}</p></div>:<>
