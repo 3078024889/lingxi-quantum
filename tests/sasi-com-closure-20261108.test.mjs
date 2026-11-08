@@ -46,3 +46,16 @@ test("Real software checkout and tool passes remain fail-closed",()=>{
  const imagery=read("components/SasiOpenMarketplace.module.css");
  assert.match(imagery,/\.crystalCup/);assert.match(imagery,/\.alienPlant/);
 });
+
+test("All retired creation pages are noindexed redirects, with valid market SEO",()=>{
+ for(const name of ["assemble","director","series","variants","build","chat","project-dna"]){
+  const source=read("app/sasi/"+name+"/page.tsx");
+  assert.match(source,/redirect\("\/sasi"\)/);
+  assert.match(source,/index:false/);
+ }
+ assert.doesNotMatch(read("components/Footer.tsx"),/href="\/sasi\/(?:drama|build)"/);
+ assert.doesNotMatch(read("app/page.tsx"),/"AI短剧生成"/);
+ assert.doesNotMatch(read("lib/public-feature-copy.ts"),/Create SI\/AI short dramas with SASI/);
+ const hub=read("components/HomeProblemHub.tsx");
+ assert.doesNotMatch(hub,/words:\["短剧","剧本"/);
+});
