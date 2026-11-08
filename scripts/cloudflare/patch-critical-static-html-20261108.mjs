@@ -10,6 +10,7 @@ const routes={
  "/siai":"siai.html",
  "/tools":"tools.html",
  "/tools/pass":"tools-pass.html",
+ "/ai-wallet":"ai-wallet.html",
  "/sasi":"sasi.html",
  "/sasi/marketplace":"marketplace.html",
  "/announcements":"announcements.html",
