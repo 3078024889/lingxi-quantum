@@ -76,7 +76,7 @@ console.log("CN3193_FOUR_TOOLPASS_OFFERS_PASS");
 }
 safe_env; live_old
 [[ -x "$NODE" ]] || { echo "NODE24_RUNTIME_NOT_FOUND" >&2;exit 1; }
-# The current live 3192 unit retains its root-owned ordered EnvironmentFiles.
+# The live 3192 service retains all of its ordered root-owned EnvironmentFiles.
 # Retain every effective source file, including the late admin-key alias.
 # Reading these file paths never prints or alters secrets.
 mapfile -t LIVE_ENV_FILES < <(
@@ -138,7 +138,7 @@ if [[ "$MODE" = --stage || "$MODE" = --stage-local ]];then
   trap 'rm -rf "$TEMP"' EXIT
   if [[ "$MODE" = --stage-local ]];then
     # Offline staging of a previously verified exact GitHub Release asset.
-    # The local archive and independent SHA256 manifest must be transferred through private R2 as root.
+    # The local archive and independent SHA256 manifest must arrive via private R2.
     LOCAL="$BASE/.download-$TAG/$FILE"
     [[ -f "$LOCAL" && ! -L "$LOCAL" && "$(stat -c %u "$LOCAL")" = 0 ]] || {
       echo "CN3193_LOCAL_ARCHIVE_MISSING_OR_UNSAFE";exit 1;
@@ -150,182 +150,7 @@ if [[ "$MODE" = --stage || "$MODE" = --stage-local ]];then
     [[ "$(wc -l < "$LOCAL_CHECK")" = 1 ]] || {
       echo "CN3193_LOCAL_SHA256_LINE_COUNT_INVALID";exit 1;
     }
-    grep -Eq '^[a-f0-9]{64}  cn-20261108-unified-standalone\.tar\.gz
-    echo "CN3193_LOCAL_ASSET_VERIFICATION_START"
-  else
-    curl -4fLsS --retry 3 --max-time 900 -o "$TEMP/$FILE" "$TAGURL/$FILE"
-    curl -4fLsS --retry 3 --max-time 90 -o "$TEMP/$CHECK" "$TAGURL/$CHECK"
-  fi
-  (cd "$TEMP" && sha256sum -c "$CHECK")
-  bytes="$(stat -c %s "$TEMP/$FILE")"
-  (( bytes>100000 && bytes<1300000000 )) || { echo "ARCHIVE_SIZE_INVALID" >&2;exit 1; }
-  tar -tzf "$TEMP/$FILE" > "$TEMP/manifest"
-  grep -Fxq './server.js' "$TEMP/manifest"
-  grep -Fxq './RELEASE_SOURCE_SHA' "$TEMP/manifest"
-  if grep -Eq '^/|(^|/)\.\.(/|$)' "$TEMP/manifest";then echo "UNSAFE_ARCHIVE_PATH" >&2;exit 1;fi
-  SHA="$(tar -xOzf "$TEMP/$FILE" ./RELEASE_SOURCE_SHA | tr -d '\r\n')"
-  [[ "$SHA" =~ ^[a-f0-9]{40}$ && "${SHA:0:12}" = "$SHORT" ]] || {
-    echo "ARTIFACT_SOURCE_SHA_MISMATCH" >&2;exit 1;
-  }
-  DEST="$BASE/$SHA"
-  [[ ! -e "$DEST" ]] || { echo "DESTINATION_ALREADY_EXISTS" >&2;exit 1; }
-  mkdir -p "$TEMP/unpack"
-  tar -xzf "$TEMP/$FILE" -C "$TEMP/unpack"
-  test -s "$TEMP/unpack/server.js"
-  mv "$TEMP/unpack" "$DEST"
-  chmod -R go-w "$DEST"
-  python3 - "$ENV" "$STAGE_ENV" <<'PY'
-import os,sys
-src,dst=sys.argv[1:3]
-lines=open(src).read().splitlines()
-disabled={"TOOL_PASS_COMMERCE_READY","ALIPAY_ENABLED","PAYPAL_ENABLED","WECHAT_ENABLED",
- "SASI_RMB_BALANCE_V1_ENABLED","SASI_MARKET_SALES_ENABLED","SASI_MARKET_UPLOADS_ENABLED",
- "SASI_MARKET_DELIVERY_ENABLED","SASI_MARKET_PAYOUTS_ENABLED","SOFTWARE_COMMERCE_READY"}
-overrides=disabled|{"TOOL_PASS_BACKEND_READY","NEXT_PUBLIC_TOOL_PASS_ENFORCED","PORT","HOSTNAME"}
-out=[ln for ln in lines if ln.split("=",1)[0] not in overrides]
-out.extend(k+"=false" for k in sorted(disabled))
-out.extend(["TOOL_PASS_BACKEND_READY=true","NEXT_PUBLIC_TOOL_PASS_ENFORCED=true",
- "PORT=3193","HOSTNAME=127.0.0.1"])
-fd=os.open(dst,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
-with os.fdopen(fd,"w") as f:f.write("\n".join(out)+"\n")
-PY
-  {
-    cat <<EOF
-[Unit]
-Description=LINGXIFIELD CN verified 3193 admin/toolpass standalone ($SHORT)
-After=network-online.target
-Wants=network-online.target
-[Service]
-Type=simple
-WorkingDirectory=$DEST
-EOF
-    for src in "${LIVE_ENV_FILES[@]}"; do printf 'EnvironmentFile=%s\n' "$src"; done
-    cat <<EOF
-EnvironmentFile=$STAGE_ENV
-Environment=NODE_ENV=production
-Environment=HOSTNAME=127.0.0.1
-Environment=PORT=3193
-Environment=NODE_OPTIONS=--max-old-space-size=500
-ExecStart=$NODE server.js
-Restart=on-failure
-RestartSec=2
-NoNewPrivileges=true
-[Install]
-WantedBy=multi-user.target
-EOF
-  } > "$UNIT"
-  chmod 644 "$UNIT"
-  systemctl daemon-reload
-  systemctl start "$NEW"
-  probe || { echo "CN3193_STAGE_GATE_FAILED_PRODUCTION_3192_UNCHANGED" >&2;systemctl stop "$NEW" || true;exit 1; }
-  echo "CN3193_STAGING_PASS_PRODUCTION_3192_UNCHANGED SOURCE_SHA=$SHA"
-  exit 0
-fi
-# Do not change the production quota ledger with a new rotating hash key.
-# Exact key contents are never printed. Payment remains disabled until real callback tests.
-python3 - "$ENV" <<'PY'
-import sys
-p=sys.argv[1]
-v={}
-with open(p, encoding="utf-8") as f:
-    for line in f:
-        if not line.strip() or line.lstrip().startswith("#") or "=" not in line: continue
-        k,x=line.strip().split("=",1)
-        if k in v: raise SystemExit("CN_DUPLICATE_PRODUCTION_SETTING:"+k)
-        v[k]=x.strip().strip('"').strip("'")
-secret=v.get("LINGXIFIELD_PRIVACY_HASH_SECRET","")
-if len(secret)<32: raise SystemExit("CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT")
-if v.get("TOOL_PASS_COMMERCE_READY","false").lower() in ("true","1"):
-    raise SystemExit("CN_TOOLPASS_PAYMENT_GATE_MUST_REMAIN_CLOSED_BEFORE_PROMOTION")
-print("CN3193_PRIVACY_HASH_AND_PAYMENT_GATE_VERIFIED")
-PY
-# Only promote after isolated 3193 has passed its full read-only smoke tests.
-# Every one of the originally active 3192 environment files must still be present.
-for src in "${LIVE_ENV_FILES[@]}"; do
-  grep -Fxq "EnvironmentFile=$src" "$UNIT" ||
-    { echo "CN3193_ORIGINAL_ENVFILE_MISSING" >&2;exit 1; }
-done
-[[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] || {
-  echo "CN3193_STAGE_NOT_PREPARED" >&2; exit 1;
-}
-systemctl is-active --quiet "$NEW" || { echo "CN3193_STAGE_NOT_ACTIVE" >&2; exit 1; }
-probe || { echo "CN3193_PREPROMOTION_GATE_FAILED" >&2; exit 1; }
-[[ ! -e "$UNIT.rollback-$SHORT" && ! -e "$PROD_FLAGS" ]] || { echo "PROMOTION_ROLLBACK_OR_FLAGS_ALREADY_EXIST" >&2; exit 1; }
-PRODUCTION_ORIGINAL="$NGINX.before-cn3193-$SHORT-$(date -u +%Y%m%dT%H%M%SZ)"
-[[ ! -e "$PRODUCTION_ORIGINAL" ]] || { echo "PROMOTION_NGINX_BACKUP_EXISTS" >&2; exit 1; }
-# Unknown or shared Nginx layouts fail closed instead of changing other virtual hosts.
-python3 - "$NGINX" <<'PY'
-import sys
-body=open(sys.argv[1],"rb").read()
-if b"lingxifield.cn" not in body: raise SystemExit("CN_NGINX_DOMAIN_NOT_FOUND")
-if body.count(b"127.0.0.1:3192")!=1:
-    raise SystemExit("CN_NGINX_EXACTLY_ONE_3192_UPSTREAM_REQUIRED")
-PY
-cp -a "$NGINX" "$PRODUCTION_ORIGINAL"
-cp -a "$UNIT" "$UNIT.rollback-$SHORT"
-rollback() {
-  echo "CN_NGINX_POSTCUTOVER_FAILED_RESTORING_3192" >&2
-  cp -a "$PRODUCTION_ORIGINAL" "$NGINX" || true
-  nginx -t && systemctl reload nginx || true
-  cp -a "$UNIT.rollback-$SHORT" "$UNIT" || true
-  rm -f "$PROD_FLAGS" || true
-  systemctl daemon-reload || true
-  systemctl restart "$NEW" || true
-}
-# Preserve the original three environment files. The last narrow override
-# enforces daily use and leaves collection disabled until real PSP confirmation.
-# This prevents an apparently healthy production release silently retaining a 503 quota API.
-(
-  umask 077
-  : > "$PROD_FLAGS"
-  printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' \
-    'TOOL_PASS_BACKEND_READY=true' \
-    'TOOL_PASS_COMMERCE_READY=false' \
-    'WECHAT_ENABLED=false' 'ALIPAY_ENABLED=false' 'PAYPAL_ENABLED=false' \
-    'SASI_RMB_BALANCE_V1_ENABLED=false' \
-    'SASI_MARKET_SALES_ENABLED=false' 'SASI_MARKET_UPLOADS_ENABLED=false' \
-    'SASI_MARKET_DELIVERY_ENABLED=false' 'SASI_MARKET_PAYOUTS_ENABLED=false' \
-    'SOFTWARE_COMMERCE_READY=false' \
-    'PORT=3193' 'HOSTNAME=127.0.0.1' > "$PROD_FLAGS"
-)
-chmod 600 "$PROD_FLAGS"
-sed -i "s|^EnvironmentFile=$STAGE_ENV$|EnvironmentFile=$PROD_FLAGS|" "$UNIT"
-grep -Fxq "EnvironmentFile=$PROD_FLAGS" "$UNIT" || { rollback; exit 1; }
-if grep -Fxq "EnvironmentFile=$STAGE_ENV" "$UNIT";then rollback;exit 1;fi
-for src in "${LIVE_ENV_FILES[@]}"; do
-  grep -Fxq "EnvironmentFile=$src" "$UNIT" || { rollback;exit 1; }
-done
-systemctl daemon-reload
-systemctl restart "$NEW" || { rollback; exit 1; }
-probe || { rollback; exit 1; }
-python3 - "$NGINX" <<'PY'
-import os,sys,tempfile
-path=sys.argv[1]
-old=open(path,"rb").read()
-if old.count(b"127.0.0.1:3192")!=1: raise SystemExit("CN_UPSTREAM_CHANGED_ABORT")
-new=old.replace(b"127.0.0.1:3192", b"127.0.0.1:3193",1)
-st=os.stat(path)
-fd,tmp=tempfile.mkstemp(prefix=".cn3193-",dir=os.path.dirname(path))
-try:
-    os.fchmod(fd,st.st_mode & 0o777)
-    os.fchown(fd,st.st_uid,st.st_gid)
-    with os.fdopen(fd,"wb") as f:
-        f.write(new); f.flush();os.fsync(f.fileno())
-    os.replace(tmp,path)
-finally:
-    if os.path.exists(tmp): os.unlink(tmp)
-PY
-if ! nginx -t || ! systemctl reload nginx; then rollback; exit 1; fi
-for route in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass; do
-  result="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 \
-    --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$route" || true)"
-  echo "CN_PUBLIC_NGINX_ROUTE:$route:$result"
-  [[ "$result" = 200 ]] || { rollback; exit 1; }
-done
-systemctl enable "$NEW" >/dev/null || { rollback; exit 1; }
-echo "CN_NEW_3193_NGINX_PROMOTION_PASS_ROLLBACK_FILE=$PRODUCTION_ORIGINAL"
-echo "ADMIN_AUTHENTICATED_SESSION_AND_REAL_PAYMENT_CONFIRMATIONS_STILL_REQUIRED"
- "$LOCAL_CHECK" || {
+    grep -Eq '^[a-f0-9]{64}  cn-20261108-unified-standalone\.tar\.gz$' "$LOCAL_CHECK" || {
       echo "CN3193_LOCAL_SHA256_FORMAT_INVALID";exit 1;
     }
     cp -- "$LOCAL" "$TEMP/$FILE"
