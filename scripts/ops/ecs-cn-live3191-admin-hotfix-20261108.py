@@ -70,7 +70,7 @@ def effective_file():
     envs = run("systemctl", "show", "-p", "EnvironmentFiles", "--value", SERVICE)
     # Keep systemd declaration order: the LAST EnvironmentFile has precedence
     # if the same variable occurs in multiple files. Never sort these paths.
-    found = re.findall(r"(/[^\\s()]+\\.env)\\s+\\(ignore_errors=(?:yes|no)\\)", envs)
+    found = re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)", envs)
     if not found:
         # Fail closed on a systemd format change rather than guessing.
         abort("ENVFILE_SYSTEMD_FORMAT_NOT_RECOGNIZED")
