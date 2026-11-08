@@ -12,6 +12,7 @@ import { productCatalogText } from "@/lib/product-catalog-i18n";
 import { brandText } from "@/lib/brand-system-i18n";
 import {moneyText} from "@/lib/notifications/money-copy";
 import NotificationBell from "@/components/NotificationBell";
+import PublicAnnouncementTicker from "@/components/PublicAnnouncementTicker";
 import CurrencySelector from "@/components/CurrencySelector";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import {supportCopy} from "@/lib/support-ui-copy";
@@ -328,6 +329,7 @@ export default function Nav() {
         )}
       </header>
 
+      <PublicAnnouncementTicker/>
       <MobileBottomNav/>
       {open && <button className="lx11-backdrop" onClick={() => setOpen(false)} />}
       <aside className={`lx11-sidebar lx11-drawer ${open ? "is-open" : ""}`}>{side}</aside>
