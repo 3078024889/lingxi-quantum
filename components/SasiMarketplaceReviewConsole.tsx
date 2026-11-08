@@ -97,6 +97,7 @@ export default function SasiMarketplaceReviewConsole(){
     <p className="mt-3 text-xs text-[var(--lx-muted)]">交付文件：{l.approvedArtifactReady?"已准备":"未完成安全扫描"}</p>
     <div className="mt-4">{reasonField(l.id)}</div>
     <div className="mt-4 flex flex-wrap gap-2">
+     {l.scan_status==="unscanned"&&actionButton(l.id,"listing.rescan","启动安全扫描")}
      {actionButton(l.id,"listing.publish","审核通过并发布",l.scan_status!=="clean"||!l.approvedArtifactReady)}
      {actionButton(l.id,"listing.reject","退回修改")}
     </div>
