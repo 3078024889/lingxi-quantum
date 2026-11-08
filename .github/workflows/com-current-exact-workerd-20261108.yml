@@ -56,9 +56,18 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
+          # Only PUBLIC Supabase client settings; no privileged credentials are injected.
+          {
+            printf 'SUPABASE_URL="%s"\n' "$NEXT_PUBLIC_SUPABASE_URL"
+            printf 'SUPABASE_ANON_KEY="%s"\n' "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            printf 'SUPABASE_PUBLISHABLE_KEY="%s"\n' "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+            printf 'NEXT_PUBLIC_SUPABASE_URL="%s"\n' "$NEXT_PUBLIC_SUPABASE_URL"
+            printf 'NEXT_PUBLIC_SUPABASE_ANON_KEY="%s"\n' "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+          } > .dev.vars
+          chmod 600 .dev.vars
           pnpm exec wrangler dev --local --ip 127.0.0.1 --port 8787 --log-level error > "$RUNNER_TEMP/workerd-current.log" 2>&1 &
           worker_pid=$!
-          trap 'kill "$worker_pid" 2>/dev/null || true' EXIT
+          trap 'kill "$worker_pid" 2>/dev/null || true; rm -f .dev.vars' EXIT
           ready=0
           for i in $(seq 1 75); do
             code="$(curl -sS --noproxy '*' --max-time 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:8787/api/health || true)"
