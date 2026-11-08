@@ -41,6 +41,10 @@ jobs:
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
           node tests/sasi-marketplace-security-contract.test.mjs
+          node --test tests/sasi-software-public-branding-20261108.test.mjs
+          node --test tests/public-announcements-deeplink-20261108.test.mjs
+          node --test tests/sasi-marketplace-review-security-20261108.test.mjs
+          node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
           node tests/toolpass-direct-fulfillment-20261108.test.mjs
           node tests/paypal-merchant-idempotency-20261108.test.mjs
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
@@ -168,6 +172,16 @@ jobs:
           url="https://${CANDIDATE_NAME}.3078024889.workers.dev"
           test -n "$url"
           echo "COM_CANARY_URL=$url"
+          # Workers.dev deployment propagation may initially return 404.
+          # Wait for a real 200 on the isolated health endpoint, never bypass other probes.
+          propagated=0
+          for attempt in $(seq 1 24);do
+            code="$(curl -4sS --connect-timeout 7 --max-time 18 -o /dev/null -w '%{http_code}' "$url/api/health" || true)"
+            echo "COM_CANARY_PROPAGATION attempt=$attempt HTTP_$code"
+            if [[ "$code" = 200 ]];then propagated=1;break;fi
+            sleep 5
+          done
+          test "$propagated" -eq 1
           for path in / /siai /tools /tools/pass /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
             count=0
             for i in 1 2 3;do
