@@ -1,0 +1,46 @@
+name: COM isolated candidate HTTP and workers.dev route forensic probe (READ ONLY)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths:
+      - '.github/workflows/com-candidate-remote-readonly-diagnosis-20261108.yml'
+  workflow_dispatch:
+permissions: { contents: read }
+jobs:
+  diagnose:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Compare isolated candidate public paths, no auth, no modifications
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          base=https://lingxifield-com-main-20261108.3078024889.workers.dev
+          for route in / /api/health /siai /tools /sasi/marketplace /announcements /robots.txt /favicon.ico;do
+            header="$(mktemp)"
+            status="$(curl -4sS --connect-timeout 8 --max-time 20 -D "$header" -o /dev/null -w '%{http_code}' "$base$route" || true)"
+            echo "COM_CANDIDATE_READONLY_PATH $route HTTP_$status"
+            grep -Ei '^(server|cf-ray|content-type|location|x-powered-by|cf-cache-status|cache-control|x-robots-tag):' "$header" | tr -d '\r' | head -8 || true
+            rm -f "$header"
+          done
+      - name: Read Cloudflare Worker and workers.dev script route status
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          for suffix in /workers/scripts/lingxifield-com-main-20261108 /workers/scripts/lingxifield-com-main-20261108/subdomain /workers/subdomain;do
+            tmp="$(mktemp)"
+            code="$(curl -sS --connect-timeout 8 --max-time 20 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -o "$tmp" -w '%{http_code}' "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID$suffix" || true)"
+            echo "CLOUDFLARE_ROUTING_READONLY $suffix HTTP_$code"
+            if [[ "$code" == 200 ]];then
+              jq -c '{success, subdomain:.result.subdomain, enabled:.result.enabled, previews_enabled:.result.previews_enabled, name:.result.id}' "$tmp" 2>/dev/null || true
+            else
+              jq -c '{success, error_codes:[.errors[]?.code]}' "$tmp" 2>/dev/null || true
+            fi
+            rm -f "$tmp"
+          done
