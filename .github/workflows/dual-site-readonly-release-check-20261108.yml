@@ -13,6 +13,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   production-readonly:
+    environment: cloudflare-production
     runs-on: ubuntu-24.04
     timeout-minutes: 6
     steps:
