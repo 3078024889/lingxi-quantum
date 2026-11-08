@@ -5,12 +5,13 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {marketplaceObjectHead,marketplaceOwnedKey,signedMarketplaceDownload} from "@/lib/sasi-marketplace/r2";
+import {dispatchMarketplaceScan} from "@/lib/sasi-marketplace/dispatch-scan";
 
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
 const headers={"Cache-Control":"private, no-store","X-Content-Type-Options":"nosniff"} as const;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-type Action="seller.approve"|"seller.suspend"|"media.approve"|"media.reject"|"listing.publish"|"listing.reject";
+type Action="seller.approve"|"seller.suspend"|"media.approve"|"media.reject"|"listing.publish"|"listing.reject"|"listing.rescan";
 function respond(value:unknown,status=200){return NextResponse.json(value,{status,headers});}
 
 async function reviewer(){
@@ -60,13 +61,21 @@ export async function POST(req:NextRequest){
  const targetId=String(b?.targetId??"");
  const reason=typeof b?.reason==="string"?b.reason.trim():"";
  if(!UUID.test(targetId)||reason.length>500||
- !["seller.approve","seller.suspend","media.approve","media.reject","listing.publish","listing.reject"].includes(action))
+ !["seller.approve","seller.suspend","media.approve","media.reject","listing.publish","listing.reject","listing.rescan"].includes(action))
    return respond({error:"INVALID_REVIEW"},400);
  if(action.endsWith(".reject")||action==="seller.suspend"){
   if(reason.length<8)return respond({error:"REVIEW_REASON_REQUIRED"},400);
  }
  try{
   const admin=createAdminClient();
+  if(action==="listing.rescan"){
+   const {data:listing}=await admin.from("sasi_market_listings")
+    .select("id,status,scan_status").eq("id",targetId).single();
+   if(!listing||listing.status!=="submitted"||listing.scan_status!=="unscanned")
+    return respond({error:"SCAN_NOT_PENDING"},409);
+   const dispatched=await dispatchMarketplaceScan(targetId);
+   return dispatched?respond({ok:true,status:"queued"}):respond({error:"SCANNER_DISPATCH_NOT_CONFIGURED"},503);
+  }
   if(action==="media.approve"){
    const {data:media,error}=await admin.from("sasi_market_media")
     .select("id,listing_id,seller_id,object_key,verified_size,declared_mime,status")
