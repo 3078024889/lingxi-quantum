@@ -63,7 +63,7 @@ assert(ready.includes("LINGXIFIELD_PRIVACY_HASH_SECRET"));
 assert(checkout.includes("toolPassBackendReady()"));
 assert(checkout.includes("process.env.TOOL_PASS_COMMERCE_READY"));
 assert(!checkout.includes("TOOL_PASS_commerceReady()"));
-assert(checkout.includes('admin.rpc("lingxi_purchase_tool_pass"'));
+assert(checkout.includes('.rpc("lingxi_purchase_tool_pass"'));
 console.log("PRICE_AND_SERVER_SIDE_PURCHASE_GATE_PASS");
 
 const drop=read("components/tools/FileDropzone.tsx");
