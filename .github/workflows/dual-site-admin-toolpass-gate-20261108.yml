@@ -10,6 +10,7 @@ on:
       - 'lib/tools/commerce/tool-server-receipt.ts'
       - 'app/api/tools/pass/route.ts'
       - 'app/tools/pass/page.tsx'
+      - 'app/checkout/page.tsx'
       - 'components/Nav.tsx'
       - 'components/tools/ToolsHubV11.tsx'
       - 'components/tools/FileDropzone.tsx'
