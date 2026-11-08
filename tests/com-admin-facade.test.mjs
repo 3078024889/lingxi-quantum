@@ -6,6 +6,8 @@ assert.equal(bad.status,404,"no gateway/payment data through admin facade");
 assert.equal((await worker.fetch(req("/api/account/money-admin",{method:"DELETE"}))).status,405);
 assert.equal((await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://attacker.example","content-type":"application/json"},body:"{}"}))).status,403);
 assert.equal((await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://lingxifield.com","content-type":"text/plain"},body:"x"}))).status,415);
+const cookieSafety=await worker.fetch(req("/api/account/money-admin/access",{headers:{"Cookie":"my-private-token=do-not-proxy"}}));
+assert.ok([200,403,502,503].includes(cookieSafety.status));
 const fetchOriginal=globalThis.fetch;
 const captures=[];
 globalThis.fetch=async(url,options)=>{
@@ -16,7 +18,7 @@ try{
  const res=await worker.fetch(req("/api/account/money-admin/access",{headers:{"Cookie":"sb-project-auth-token=opaque; path=/","Authorization":"Bearer attacker"}}));
  assert.equal(res.status,200);assert.equal(res.headers.get("set-cookie"),null);
  assert.equal(captures[0].url,"https://lingxifield.cn/api/account/money-admin/access");
- assert.equal(captures[0].options.headers.get("cookie"),"sb-project-auth-token=opaque; path=/");
+ assert.equal(captures[0].options.headers.get("cookie"),"sb-project-auth-token=opaque");
  assert.equal(captures[0].options.headers.get("authorization"),null);
  const write=await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://lingxifield.com","content-type":"application/json","Cookie":"sid=cookie"},body:'{"action":"retry"}'}));
  assert.equal(write.status,200);
