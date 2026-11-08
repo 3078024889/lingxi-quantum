@@ -50,7 +50,9 @@ probe(){
   code /api/health 200
   code /tools 200
   code /siai 200
-  code /sasi/pricing 200
+  code /sasi 200
+  # Legacy SASI video pricing now intentionally redirects to the software page.
+  code /sasi/pricing 307
   code /tools/pass 200
   code /api/sasi/account 401
   code /api/tools/jobs 401
@@ -231,7 +233,7 @@ rollback() {
 (
   umask 077
   : > "$PROD_FLAGS"
-  printf '%s\\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' \
+  printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' \
     'TOOL_PASS_BACKEND_READY=true' \
     'TOOL_PASS_COMMERCE_READY=false' > "$PROD_FLAGS"
 )
@@ -263,7 +265,7 @@ finally:
     if os.path.exists(tmp): os.unlink(tmp)
 PY
 if ! nginx -t || ! systemctl reload nginx; then rollback; exit 1; fi
-for route in / /tools /siai /sasi/pricing /tools/pass; do
+for route in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass; do
   result="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 \
     --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$route" || true)"
   echo "CN_PUBLIC_NGINX_ROUTE:$route:$result"
