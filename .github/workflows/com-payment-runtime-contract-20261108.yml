@@ -1,7 +1,7 @@
 name: COM payment runtime and merchant readiness contract (NO DEPLOY)
 on:
   push:
-    branches: [fix/com-payment-runtime-readiness-20261108]
+    branches: [fix/com-payment-runtime-readiness-20261108, fix/com-public-provider-private-route-contract-20261108]
     paths:
       - '.github/workflows/com-payment-runtime-contract-20261108.yml'
       - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
@@ -9,6 +9,7 @@ on:
       - 'lib/sasi/readiness.ts'
       - 'app/api/pay/providers/route.ts'
       - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
+      - 'tests/com-current-runtime-routing-20261108.test.mjs'
   pull_request:
     branches: [release/com-sasi-full-20261108]
     paths:
@@ -18,6 +19,7 @@ on:
       - 'lib/sasi/readiness.ts'
       - 'app/api/pay/providers/route.ts'
       - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
+      - 'tests/com-current-runtime-routing-20261108.test.mjs'
 permissions: {contents: read}
 concurrency:
   group: com-merchant-runtime-${{ github.ref }}
@@ -39,6 +41,7 @@ jobs:
         run: |
           node --check scripts/cloudflare/patch-critical-static-html-20261108.mjs
           node --test tests/com-payment-edge-merchant-readiness-20261108.test.mjs
+          node --test tests/com-current-runtime-routing-20261108.test.mjs
           node --check scripts/cloudflare/com-provision-merchant-secrets-20261108.mjs
           node --test tests/com-merchant-secret-provision-contract-20261108.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
