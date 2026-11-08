@@ -22,5 +22,11 @@ try{
  assert.equal(write.status,200);
  assert.equal(captures[1].options.headers.get("origin"),"https://lingxifield.cn");
  assert.equal(captures[1].options.headers.get("cookie"),"sid=cookie");
+ const news=await worker.fetch(req("/api/site-announcements"));
+ assert.equal(news.status,200);
+ assert.equal(captures[2].url,"https://lingxifield.cn/api/site-announcements");
+ const oversized=await worker.fetch(req("/api/account/money-admin",{method:"POST",headers:{"origin":"https://lingxifield.com","content-type":"application/json"},body:"x".repeat(16385)}));
+ assert.equal(oversized.status,413);
+
 }finally{globalThis.fetch=fetchOriginal}
 console.log("COM_MONEY_ADMIN_SAME_ORIGIN_COOKIE_PROXY_SECURITY_CONTRACT_PASS");
