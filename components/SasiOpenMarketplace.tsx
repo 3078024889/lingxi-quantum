@@ -148,7 +148,7 @@ export default function SasiOpenMarketplace(){
   <div className={styles.hero}>
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD / SASI</span>
-      <h1>{zh?"SASI 智能软件市场":"SASI Software Marketplace"}</h1>
+      <h1>{zh?"SASI 智能软件":"SASI Intelligent Software"}</h1>
       <p>{zh?"源码授权 · 开发者发布 · 安全交付":"Source licenses · Developer publishing · Secure delivery"}</p>
       <div className={styles.heroLinks}><a href="#featured">{zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>{zh?"发布产品":"Publish software"}</button></div>
     </div>

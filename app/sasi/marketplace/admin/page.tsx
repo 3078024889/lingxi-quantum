@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import SasiMarketplaceReviewConsole from "@/components/SasiMarketplaceReviewConsole";
 import {moneyAdministrator} from "@/lib/money/operator-settings";
 export const dynamic="force-dynamic";
-export const metadata={title:"SASI 软件商品审核台 | 灵犀场",robots:{index:false,follow:false}};
+export const metadata={title:"SASI 智能软件 · 审核管理 | 灵犀场",robots:{index:false,follow:false}};
 export default async function MarketplaceAdminPage(){
  const reviewer=await moneyAdministrator().catch(()=>null);
  if(!reviewer)notFound();

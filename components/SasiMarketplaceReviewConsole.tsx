@@ -59,7 +59,7 @@ export default function SasiMarketplaceReviewConsole(){
    className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm font-semibold text-[var(--lx-ink)] disabled:cursor-not-allowed disabled:opacity-40 hover:border-violet-500">{busy===id?"处理中…":label}</button>;
  return <main className="lx11-page mx-auto max-w-6xl px-4 py-10 text-[var(--lx-ink)] md:px-8">
   <header className="flex flex-wrap items-center justify-between gap-4">
-   <div><p className="text-xs font-bold tracking-[.2em] text-violet-600">SASI · REVIEW</p><h1 className="mt-3 text-3xl font-bold">软件商品审核台</h1>
+   <div><p className="text-xs font-bold tracking-[.2em] text-violet-600">SASI · REVIEW</p><h1 className="mt-3 text-3xl font-bold">SASI 智能软件审核管理</h1>
    <p className="mt-2 text-sm text-[var(--lx-muted)]">卖家申请、软件安全、商品图片与发布审核集中处理。付款及发货由订单系统独立管理。</p></div>
    <button type="button" onClick={()=>void reload()} disabled={loading} className="rounded-xl border border-[var(--lx-line)] px-4 py-2.5 text-sm">刷新审核列表</button>
   </header>

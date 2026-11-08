@@ -57,7 +57,7 @@ export default function SasiMarketplaceProductDetail(){
    else{await navigator.clipboard.writeText(link);setShared(true)}}catch{}
  };
  return <main className="lx11-page" style={{minHeight:"75vh"}}><div style={{maxWidth:1000,margin:"0 auto",padding:"35px 14px 70px"}}>
- <Link href="/sasi/marketplace" style={{color:"#2b66a0",fontSize:13}}>← {zh?"返回软件作品":"Back to software"}</Link>
+ <Link href="/sasi" style={{color:"#2b66a0",fontSize:13}}>← {zh?"返回软件作品":"Back to software"}</Link>
  {loading?<p style={{marginTop:45}}>{zh?"加载商品中…":"Loading..."}</p>:!product?<h1 style={{fontSize:25,marginTop:38}}>{zh?"商品尚未公开或正在审核":"Listing is not public yet"}</h1>:
  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:22,marginTop:30}}>
  <div style={{minHeight:270,background:"linear-gradient(135deg,#eaf7ff,#a8d6f6)",borderRadius:23,padding:30,display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column",color:"#1b5b8e"}}>
