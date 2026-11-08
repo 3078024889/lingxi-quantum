@@ -85,6 +85,29 @@ class Live3191KeyTests(unittest.TestCase):
         self.assertEqual(check.call_count,4)
         self.assertTrue(all(x[0][1] in (200,401) for x in check.call_args_list))
 
+    def test_readiness_waits_for_delayed_nextjs_start(self):
+        now=[0]
+        attempts=[0]
+        def delayed_baseline():
+            attempts[0]+=1
+            if attempts[0]<4:
+                raise RuntimeError("LOOPBACK_HEALTH_FAILED:/api/health:0")
+        with mock.patch.object(target,"baseline",side_effect=delayed_baseline):
+            with mock.patch.object(target.time,"monotonic",side_effect=lambda:now[0]):
+                with mock.patch.object(target.time,"sleep",side_effect=lambda n:now.__setitem__(0,now[0]+n)):
+                    target.wait_for_baseline(timeout_seconds=30,interval_seconds=3)
+        self.assertEqual(attempts[0],4)
+        self.assertEqual(now[0],9)
+
+    def test_readiness_bounded_timeout_preserves_fail_closed(self):
+        now=[0]
+        with mock.patch.object(target,"baseline",side_effect=RuntimeError("LOOPBACK_HEALTH_FAILED:/api/health:0")):
+            with mock.patch.object(target.time,"monotonic",side_effect=lambda:now[0]):
+                with mock.patch.object(target.time,"sleep",side_effect=lambda n:now.__setitem__(0,now[0]+n)):
+                    with self.assertRaisesRegex(RuntimeError,"POST_RESTART_READINESS_TIMEOUT"):
+                        target.wait_for_baseline(timeout_seconds=9,interval_seconds=3)
+        self.assertEqual(now[0],9)
+
     def test_plan_is_not_mutating(self):
         with mock.patch.object(target,"effective_file",side_effect=RuntimeError("PRECHECK_STOP")):
             with mock.patch.object(target,"atomic_write") as write:
