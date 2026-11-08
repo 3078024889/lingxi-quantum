@@ -78,7 +78,8 @@ def inspect_zip(data: bytes, tmpdir: Path):
                 raise ValueError("DUPLICATE_ZIP_PATH")
             seen.add(normalized)
             mode = (member.external_attr >> 16) & 0xFFFF
-            if stat.S_ISLNK(mode) or (mode and not (stat.S_ISREG(mode) or stat.S_ISDIR(mode))):
+            file_type = stat.S_IFMT(mode)
+            if file_type not in (0, stat.S_IFREG, stat.S_IFDIR):
                 raise ValueError("ZIP_LINK_OR_SPECIAL_FILE")
             if member.is_dir():
                 continue
