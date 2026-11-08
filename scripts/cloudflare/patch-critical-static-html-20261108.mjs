@@ -9,6 +9,7 @@ const routes={
  "/":"landing.html",
  "/siai":"siai.html",
  "/tools":"tools.html",
+ "/tools/pass":"tools-pass.html",
  "/sasi":"sasi.html",
  "/sasi/marketplace":"marketplace.html",
  "/announcements":"announcements.html",
@@ -80,4 +81,4 @@ const replacement=[
  needle
 ].join("\n");
 await writeFile(target,source.replace(needle,replacement));
-console.log("COM_SEVENTEEN_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");
+console.log("COM_EIGHTEEN_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");
