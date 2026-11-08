@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS public.sasi_market_listings (
     (scan_status='clean' AND delivery_path IS NOT NULL AND sha256 IS NOT NULL
      AND reviewed_at IS NOT NULL AND published_at IS NOT NULL)),
   CONSTRAINT market_path_guard CHECK(
-    delivery_path IS NULL OR (length(delivery_path)>10 AND delivery_path NOT LIKE '/%'
+    delivery_path IS NULL OR (delivery_path LIKE 'sasi/%/market/%/approved/%.zip'
       AND delivery_path NOT LIKE '%..%'))
 );
 CREATE INDEX IF NOT EXISTS sasi_market_listings_public_idx
@@ -182,6 +182,12 @@ ALTER TABLE public.sasi_market_media ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON public.sasi_market_media FROM PUBLIC,anon,authenticated;
 GRANT ALL ON public.sasi_market_media TO service_role;
 GRANT SELECT (id,listing_id,seller_id,kind,status,created_at) ON public.sasi_market_media TO authenticated;
+GRANT SELECT (id,listing_id,kind,object_key,status) ON public.sasi_market_media TO anon,authenticated;
+DROP POLICY IF EXISTS sasi_market_media_published ON public.sasi_market_media;
+CREATE POLICY sasi_market_media_published ON public.sasi_market_media
+ FOR SELECT TO anon,authenticated USING(status='approved' AND EXISTS (
+  SELECT 1 FROM public.sasi_market_listings l
+  WHERE l.id=listing_id AND l.status='published' AND l.scan_status='clean'));
 DROP POLICY IF EXISTS sasi_market_media_own_select ON public.sasi_market_media;
 CREATE POLICY sasi_market_media_own_select ON public.sasi_market_media
  FOR SELECT TO authenticated USING(seller_id=(SELECT auth.uid()));
