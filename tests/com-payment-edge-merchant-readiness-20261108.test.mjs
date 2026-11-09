@@ -45,3 +45,22 @@ test("PayPal settlement requires signed webhooks and server-side completion veri
  assert.ok(market.includes("marketplaceR2Ready()"));
  assert.ok(market.includes("SASI_MARKETPLACE_COMMERCE_READY"));
 });
+
+test("isolated international candidate contains the same premium ToolPass and SASI verified UI",()=>{
+ const toolpass=read("app/tools/pass/page.tsx");
+ const sasi=read("components/SasiOpenMarketplace.tsx");
+ const detail=read("components/SasiMarketplaceProductDetail.tsx");
+ const ticket=read("app/api/sasi/marketplace/image-ticket/route.ts");
+ const media=read("app/api/sasi/marketplace/my-media/route.ts");
+ const manifest=read("supabase/migrations/20261109030000_sasi_market_one_cover_four_details.sql");
+ for(const feature of ["premium.hero","premium.modal","premium.lowerPanels","/api/money/summary"])
+  assert.ok(toolpass.includes(feature),"ToolPass: "+feature);
+ for(const feature of ["hero-original.webp","styles.quickPreview","mediaCounts","主图"])
+  assert.ok(sasi.includes(feature),"SASI: "+feature);
+ assert.ok(detail.includes("aria-expanded={descriptionOpen}"));
+ assert.ok(detail.includes('p.kind==="cover"'));
+ assert.ok(detail.includes('p.kind==="detail"'));
+ assert.ok(ticket.includes("ONE_COVER_MAX")&&ticket.includes("FOUR_DETAILS_MAX"));
+ assert.ok(media.includes('.eq("seller_id",user.id)'));
+ assert.ok(manifest.includes("pg_advisory_xact_lock"));
+});
