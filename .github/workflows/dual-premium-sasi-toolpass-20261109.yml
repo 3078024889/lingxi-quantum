@@ -10,6 +10,13 @@ on:
       - 'components/SasiOpenMarketplace.module.css'
       - 'public/images/sasi/hero-original.webp'
       - 'tests/dual-premium-sasi-toolpass-20261109.test.mjs'
+      - 'tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs'
+      - 'components/SasiMarketplaceProductDetail.tsx'
+      - 'components/SasiMarketplaceProductDetail.module.css'
+      - 'app/api/sasi/marketplace/image-ticket/route.ts'
+      - 'app/api/sasi/marketplace/my-media/route.ts'
+      - 'lib/sasi-marketplace/r2.ts'
+      - 'supabase/migrations/20261109030000_sasi_market_one_cover_four_details.sql'
       - '.github/workflows/dual-premium-sasi-toolpass-20261109.yml'
 permissions:
   contents: read
@@ -32,6 +39,8 @@ jobs:
       - name: Genuine artwork and real-commerce UI contracts
         run: |
           node --test tests/dual-premium-sasi-toolpass-20261109.test.mjs
+          node --test tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs
+          node --test tests/sasi-marketplace-review-security-20261108.test.mjs
           node --test tests/public-announcements-deeplink-20261108.test.mjs
           node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
