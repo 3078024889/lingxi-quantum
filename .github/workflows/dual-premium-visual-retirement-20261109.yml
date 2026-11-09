@@ -13,6 +13,7 @@ on:
       - 'app/lingxifield-premium-20261109.css'
       - 'app/layout.tsx'
       - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
+      - 'tests/final-closure/dual-premium-new-visual.spec.ts'
       - '.github/workflows/dual-premium-visual-retirement-20261109.yml'
 permissions: {contents: read}
 concurrency:
@@ -70,3 +71,17 @@ jobs:
           pnpm build
           test -s .next/standalone/server.js
           echo LINGXIFIELD_NEW_VISUAL_BUILD_PASS_LEGACY_NOT_PROMOTED
+      - name: Install real Chrome for mobile and desktop visual smoke
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Run current premium visual smoke in real Chrome
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts
+      - name: Preserve premium visual screenshots if tests fail
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: lingxi-premium-visual-${{ github.sha }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14
+          if-no-files-found: ignore
