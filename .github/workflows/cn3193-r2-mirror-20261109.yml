@@ -1,0 +1,128 @@
+name: CN3193 exact release to private R2 mirror (8 verified parts, NO ECS DEPLOY)
+on:
+  push:
+    branches: [ops/cn3193-r2-mirror-20261109]
+    paths:
+      - '.github/workflows/cn3193-r2-mirror-20261109.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cn3193-r2-mirror-5054d6f492c1
+  cancel-in-progress: false
+jobs:
+  mirror:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: 'false'
+      SOURCE_SHA: 5054d6f492c14c7f476acbfb3152a28b1a308a30
+      RELEASE_TAG: ecs-cn-unified-20261108-5054d6f492c1
+      R2_BUCKET: lingxi-cn3192-transfer
+      R2_PREFIX: cn3193/ecs-cn-unified-20261108-5054d6f492c1
+    steps:
+      - name: Checkout ops workflow only
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Validate credentials and R2 bucket without exposing secrets
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npm install --global wrangler@4.158.0
+          wrangler --version
+          wrangler r2 bucket list | tee "$RUNNER_TEMP/r2-buckets.txt"
+          grep -Fq "$R2_BUCKET" "$RUNNER_TEMP/r2-buckets.txt"
+          echo CN3193_PRIVATE_R2_BUCKET_ACCESS_CONFIRMED
+      - name: Download immutable GitHub release and verify exact source SHA
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/cn3193-source"
+          gh release download "$RELEASE_TAG" --repo "$GH_REPO" \
+            --pattern 'cn-20261108-unified-standalone.tar.gz' \
+            --pattern 'cn-20261108-unified-standalone.sha256' \
+            --dir "$RUNNER_TEMP/cn3193-source"
+          cd "$RUNNER_TEMP/cn3193-source"
+          sha256sum -c cn-20261108-unified-standalone.sha256
+          actual_source="$(tar -xOzf cn-20261108-unified-standalone.tar.gz ./RELEASE_SOURCE_SHA | tr -d '\r\n')"
+          test "$actual_source" = "$SOURCE_SHA"
+          test "$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)" -gt 400000000
+          echo "CN3193_RELEASE_EXACT_SHA_VERIFIED=$actual_source"
+      - name: Split into eight immutable R2 objects and create SHA-256 manifest
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$RUNNER_TEMP/cn3193-source"
+          python3 - <<'PY'
+          import hashlib,json,math,os
+          from pathlib import Path
+          src=Path("cn-20261108-unified-standalone.tar.gz")
+          total=src.stat().st_size
+          count=8
+          part_size=math.ceil(total/count)
+          parts=[]
+          with src.open("rb") as f:
+              for i in range(count):
+                  data=f.read(part_size)
+                  if not data: break
+                  name=f"cn-20261108-unified-standalone.tar.gz.part-{i:02d}"
+                  Path(name).write_bytes(data)
+                  parts.append({"name":name,"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()})
+          if len(parts)!=8 or sum(p["bytes"] for p in parts)!=total:
+              raise SystemExit("CN3193_EIGHT_PART_SPLIT_INVALID")
+          archive_hash=hashlib.sha256(src.read_bytes()).hexdigest()
+          manifest={
+              "source_sha":os.environ["SOURCE_SHA"],
+              "release_tag":os.environ["RELEASE_TAG"],
+              "archive":"cn-20261108-unified-standalone.tar.gz",
+              "archive_bytes":total,
+              "archive_sha256":archive_hash,
+              "part_count":len(parts),
+              "parts":parts
+          }
+          Path("eight-parts.sha256").write_text(
+              "".join(p["sha256"]+"  "+p["name"]+"\n" for p in parts),encoding="utf-8")
+          Path("eight-parts.json").write_text(
+              json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print("CN3193_SPLIT_PARTS=8")
+          print("CN3193_ARCHIVE_BYTES="+str(total))
+          print("CN3193_ARCHIVE_SHA256="+archive_hash)
+          for p in parts: print("CN3193_PART_READY="+p["name"]+":"+str(p["bytes"])+":"+p["sha256"])
+          PY
+      - name: Upload each sub-315MB object and verify R2 read-back SHA-256
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$RUNNER_TEMP/cn3193-source"
+          mkdir -p "$RUNNER_TEMP/cn3193-r2-readback"
+          for i in 00 01 02 03 04 05 06 07; do
+            name="cn-20261108-unified-standalone.tar.gz.part-$i"
+            key="$R2_PREFIX/$name"
+            expected="$(awk -v n="$name" '$2==n {print $1}' eight-parts.sha256)"
+            test -n "$expected"
+            object="$R2_BUCKET/$key"
+            readback="$RUNNER_TEMP/cn3193-r2-readback/$name"
+            wrangler r2 object put "$object" --file "$name" --remote --content-type application/octet-stream
+            wrangler r2 object get "$object" --file "$readback" --remote
+            actual="$(sha256sum "$readback" | awk '{print $1}')"
+            test "$actual" = "$expected"
+            echo "CN3193_R2_PART_VERIFIED=$i/8"
+          done
+          for name in eight-parts.sha256 eight-parts.json; do
+            wrangler r2 object put "$R2_BUCKET/$R2_PREFIX/$name" --file "$name" --remote \
+              --content-type "$( [[ "$name" == *.json ]] && echo application/json || echo text/plain )"
+            wrangler r2 object get "$R2_BUCKET/$R2_PREFIX/$name" \
+              --file "$RUNNER_TEMP/cn3193-r2-readback/$name" --remote
+            cmp -s "$name" "$RUNNER_TEMP/cn3193-r2-readback/$name"
+            echo "CN3193_R2_MANIFEST_VERIFIED=$name"
+          done
+          echo "CN3193_PRIVATE_R2_MIRROR_PASS_PREFIX=$R2_PREFIX"
+          echo "NO_ECS_NGINX_DNS_WORKER_OR_PAYMENT_CONFIGURATION_CHANGED"
