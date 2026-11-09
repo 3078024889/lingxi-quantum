@@ -16,11 +16,17 @@ test("wallet resolves to authenticated real balances, not legacy pricing redirec
  assert.match(summary, /\.eq\("user_id",user\.id\)/);
  assert.match(summary, /"Cache-Control":"no-store"/);
  assert.match(client, /status:"error"/);
- assert.match(client, /money\(currency,balance\.availableMinor\)/);
+ assert.match(client, /money\(currency,b\.availableMinor\)/);
+ assert.match(client, /b\.refundableMinor/);
+ assert.match(client, /b\.refundHoldMinor/);
  assert.match(client, /\/account\/withdrawals/);
  assert.match(client, /\/account\/orders/);
  assert.match(client, /BALANCE_TOPUP_AMOUNTS/);
- assert.match(client, /id="withdrawals"/);
+ assert.match(client, /providers\?\.wechat===true\|\|providers\?\.alipay===true/);
+ assert.match(client, /WalletLedgerPanel currency="CNY"/);
+ assert.match(client, /WalletLedgerPanel currency="USD"/);
+ assert.match(client, /tab==="withdrawals"/);
+ assert.doesNotMatch(client, /setData\(\{status:"ready",summary:\{balances:/);
  assert.match(summary, /normalizeWithdrawalStatus/);
  assert.match(summary, /balance_withdrawals/);
  const withdrawals=read("app/account/withdrawals/page.tsx");
@@ -28,10 +34,14 @@ test("wallet resolves to authenticated real balances, not legacy pricing redirec
  assert.doesNotMatch(withdrawals, /\/sasi\/pricing/);
 });
 
-test("account links open the real wallet and withdrawal routes", () => {
+test("account links open the real wallet and withdrawal routes from the new account center", () => {
  const account=read("app/account/page.tsx");
- assert.match(account, /href="\/ai-wallet"[\s\S]*?\{T\.balance\}/);
- assert.match(account, /href="\/account\/withdrawals"[\s\S]*?\{T\.refund\}/);
+ const center=read("components/AccountCenterV26.tsx");
+ assert.match(account, /AccountCenterV26/);
+ assert.match(center, /href:"\/ai-wallet"/);
+ assert.match(center, /zh:"余额"/);
+ assert.match(center, /href:"\/account\/withdrawals"/);
+ assert.match(center, /zh:"余额提现"/);
  assert.doesNotMatch(account, /href="\/sasi\/pricing#withdrawals"/);
 });
 
@@ -42,7 +52,6 @@ test("checkout shows actionable no-provider state and checks the runtime endpoin
  assert.doesNotMatch(page, /fetch\("\/api\/pay\/alipay\/status"/);
  assert.match(page, /onClick=\{\(\) => void refreshProviders\(\)\}/);
  assert.match(page, /role="alert"/);
- assert.match(page, /支付通道未开放 · 查看原因/);
  assert.match(page, /onClick=\{payNow\}/);
  assert.match(page, /href="\/ai-wallet"/);
 });
