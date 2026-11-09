@@ -14,6 +14,7 @@ on:
       - 'app/layout.tsx'
       - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
       - 'tests/final-closure/dual-premium-new-visual.spec.ts'
+      - 'tests/com-static-balance-deferred-contract-20261109.test.mjs'
       - '.github/workflows/dual-premium-visual-retirement-20261109.yml'
 permissions: {contents: read}
 concurrency:
@@ -59,6 +60,7 @@ jobs:
       - name: New design, legacy decommission and commercial safety contract
         run: |
           node --test tests/dual-premium-visual-no-legacy-20261109.test.mjs
+          node --test tests/com-static-balance-deferred-contract-20261109.test.mjs
           node --test tests/sasi-com-closure-20261108.test.mjs
           node --test tests/sasi-software-public-branding-20261108.test.mjs
           node --test tests/com-wallet-static-session-contract-20261108.test.mjs
