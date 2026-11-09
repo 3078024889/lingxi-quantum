@@ -25,7 +25,7 @@ const T={
  paid:<LxText zh="已支付订单" en="Paid orders" ja="支払い済み注文" ko="결제 완료 주문" fr="Commandes payées" de="Bezahlte Bestellungen" es="Pedidos pagados" pt="Pedidos pagos" ar="الطلبات المدفوعة"/>,
  balance:<LxText zh="余额" en="Balance" ja="残高" ko="잔액" fr="Solde" de="Guthaben" es="Saldo" pt="Saldo" ar="الرصيد"/>,
  balanceDesc:<LxText zh="查看余额，需要时再充值" en="View your balance and top up when needed." ja="残高を確認し、必要なときにチャージできます。" ko="잔액을 확인하고 필요할 때 충전하세요." fr="Consultez votre solde et rechargez si nécessaire." de="Guthaben prüfen und bei Bedarf aufladen." es="Consulta tu saldo y recarga cuando lo necesites." pt="Veja seu saldo e recarregue quando precisar." ar="اطّلع على رصيدك واشحن عند الحاجة."/>,
- sasiDesc:<LxText zh="继续短剧、网站、书本、学习和科研" en="Continue drama, websites, books, learning and research." ja="短編ドラマ、サイト、書籍、学習、研究を続ける。" ko="숏드라마, 웹사이트, 책, 학습 및 연구를 계속하세요." fr="Poursuivez les dramas, sites, livres, études et recherches." de="Drama, Websites, Bücher, Lernen und Forschung fortsetzen." es="Continúa con dramas, sitios, libros, aprendizaje e investigación." pt="Continue dramas, sites, livros, estudos e pesquisa." ar="واصل الدراما والمواقع والكتب والتعلم والبحث."/>,
+ sasiDesc:<LxText zh="发现、管理与发布智能软件" en="Discover, manage and publish SASI software." ja="短編ドラマ、サイト、書籍、学習、研究を続ける。" ko="숏드라마, 웹사이트, 책, 학습 및 연구를 계속하세요." fr="Poursuivez les dramas, sites, livres, études et recherches." de="Drama, Websites, Bücher, Lernen und Forschung fortsetzen." es="Continúa con dramas, sitios, libros, aprendizaje e investigación." pt="Continue dramas, sites, livros, estudos e pesquisa." ar="واصل الدراما والمواقع والكتب والتعلم والبحث."/>,
  refund:<LxText zh="余额提现" en="Balance withdrawal" ja="残高返金" ko="잔액 환불" fr="Remboursement du solde" de="Guthabenrückerstattung" es="Reembolso de saldo" pt="Reembolso de saldo" ar="استرداد الرصيد"/>,
  refundDesc:<LxText zh="将未使用的可提现余额退回原支付方式" en="Unused paid principal can return to the original payment method." ja="未使用の実入金元本は元の支払い方法へ返金申請できます。" ko="사용하지 않은 실제 충전 원금은 원 결제수단으로 환불할 수 있습니다." fr="Le principal payé et non utilisé peut revenir vers le moyen de paiement d’origine." de="Nicht genutztes eingezahltes Kapital kann über die ursprüngliche Zahlungsart zurückerstattet werden." es="El principal pagado y no utilizado puede devolverse al método de pago original." pt="O principal pago e não utilizado pode voltar ao método de pagamento original." ar="يمكن إعادة أصل المبلغ المدفوع وغير المستخدم إلى وسيلة الدفع الأصلية."/>,
  signKicker:<LxText zh="账户" en="Account" ja="アカウント" ko="계정" fr="Compte" de="Konto" es="Cuenta" pt="Conta" ar="الحساب"/>,
@@ -63,17 +63,14 @@ export default async function AccountPage(
   return <>
     <Nav/>
     <main className="lx11-page">
-      <section className="mx-auto max-w-3xl px-6 py-20">
+      <section className="lx-cel-account-page mx-auto max-w-6xl px-5 py-10 md:px-8">
         {user ? <>
           {miniLink && <MiniAccountLinkPanel ticket={miniLink} accountLabel={user.email || user.phone || ""} />}
+          <header className="lx-cel-account-heading"><h1>{T.account}</h1><p><LxText zh="管理账户信息、订单、余额及平台服务" en="Manage your profile, orders, balances and services."/></p></header>
           <AccountProfileCard email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} />
-          <div className="mt-6 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7">
-            <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]">{T.account}</p>
-            <h1 className="mt-3 font-display text-3xl text-[var(--lx-ink)]">{T.welcome}</h1>
-            <p className="mt-3 text-sm text-[var(--lx-muted)]">{user.email}</p>
-          </div>
+          <div className="lx-cel-account-welcome"><span className="lx-cel-account-accent" aria-hidden="true"/><h2>{T.welcome}</h2></div>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="lx-cel-account-links">
             <Link href="/products" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="products" size="title"/><b>{T.products}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.productsDesc}</p></Link>
             <Link href="/account/orders" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="orders" size="title"/><b>{T.orders}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.paid}: {paidOrderCount ?? "—"}</p></Link>
             <Link href="/ai-wallet" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="wallet" size="title"/><b>{T.balance}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.balanceDesc}</p></Link>
@@ -88,7 +85,7 @@ export default async function AccountPage(
             </Link>
           </div>
 
-          <div className="mt-8 space-y-3">
+          <div className="lx-cel-account-security">
             <ChangePasswordForm/>
             <SwitchAccountButton/>
             <SignOutButton/>
