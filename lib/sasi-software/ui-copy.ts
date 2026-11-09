@@ -592,12 +592,50 @@ const PREMIUM_COPY:Record<string,readonly string[]> = Object.freeze({
   "عرض المزيد · الوصف والصور"
  ]
 });
+const ADDITIONAL_COPY:Record<string,readonly string[]> = Object.freeze({
+ "Please sign in, verify your email and complete seller approval.": [
+  "ログイン、メール認証、販売者承認を完了してください。",
+  "로그인, 이메일 인증 및 판매자 승인을 완료하세요.",
+  "Connectez-vous et validez l’e-mail ainsi que le profil vendeur.",
+  "Bitte anmelden, E-Mail bestätigen und Verkäuferfreigabe abschließen.",
+  "Inicie sesión, verifique el correo y complete la aprobación como vendedor.",
+  "Entre, verifique o e-mail e conclua a aprovação de vendedor.",
+  "يرجى تسجيل الدخول وتأكيد البريد وإتمام اعتماد البائع."
+ ],
+ "The action could not be completed. Please try again or contact support.": [
+  "処理を完了できませんでした。再試行するかサポートにお問い合わせください。",
+  "작업을 완료하지 못했습니다. 다시 시도하거나 지원팀에 문의하세요.",
+  "Opération non terminée. Réessayez ou contactez l’assistance.",
+  "Vorgang nicht abgeschlossen. Erneut versuchen oder Support kontaktieren.",
+  "No se pudo completar. Inténtelo de nuevo o contacte con soporte.",
+  "Não foi possível concluir. Tente novamente ou contate o suporte.",
+  "تعذر إكمال العملية. يرجى المحاولة مجدداً أو التواصل مع الدعم."
+ ],
+ "Your payout request status has been updated.": [
+  "出金申請の状況を更新しました。",
+  "출금 요청 상태가 업데이트되었습니다.",
+  "Statut de la demande de versement mis à jour.",
+  "Auszahlungsstatus aktualisiert.",
+  "Se actualizó el estado de la solicitud de retiro.",
+  "Status da solicitação de saque atualizado.",
+  "تم تحديث حالة طلب السحب."
+ ],
+ "Private storage and dependable downloads": [
+  "非公開保管と安心のダウンロード",
+  "비공개 저장과 안정적인 다운로드",
+  "Stockage privé et téléchargements fiables",
+  "Privater Speicher und zuverlässige Downloads",
+  "Almacenamiento privado y descargas seguras",
+  "Armazenamento privado e downloads confiáveis",
+  "تخزين خاص وتنزيل موثوق"
+ ]
+});
 const index:Record<SasiUiLocale,number>={ja:0,ko:1,fr:2,de:3,es:4,pt:5,ar:6};
 export function sasiSoftwareUiText(lang:string,zh:string,en:string):string{
  if(lang==="zh")return zh;
  if(lang==="en")return en;
  const indexOf=index[lang as SasiUiLocale];
- const value=(PREMIUM_COPY[en]||TABLE[en])?.[indexOf];
+ const value=(ADDITIONAL_COPY[en]||PREMIUM_COPY[en]||TABLE[en])?.[indexOf];
  return typeof value==="string"&&value.trim()?value:en;
 }
-export const SASI_SOFTWARE_TRANSLATION_KEYS=Object.freeze([...Object.keys(TABLE),...Object.keys(PREMIUM_COPY)]);
+export const SASI_SOFTWARE_TRANSLATION_KEYS=Object.freeze([...Object.keys(TABLE),...Object.keys(PREMIUM_COPY),...Object.keys(ADDITIONAL_COPY)]);
