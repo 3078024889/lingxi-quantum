@@ -10,6 +10,7 @@ on:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
       - 'scripts/ops/cn-payment-signed-live-probe-20261109.mjs'
+      - 'scripts/ops/cn-payment-activate-20261109.sh'
       - 'scripts/ops/ecs-cn3193-unified-standalone-stage-20261108.sh'
       - 'tests/cn-payment-activation-20261109.test.mjs'
   workflow_dispatch:
@@ -77,6 +78,8 @@ jobs:
           cp -a public .next/standalone/public
           cp .next/BUILD_ID .next/standalone/.next/BUILD_ID
           cp scripts/ops/cn-payment-signed-live-probe-20261109.mjs .next/standalone/cn-payment-signed-live-probe.mjs
+          cp scripts/ops/cn-payment-activate-20261109.sh .next/standalone/cn-payment-activate.sh
+          test -s .next/standalone/cn-payment-activate.sh
           test -s .next/standalone/cn-payment-signed-live-probe.mjs
           echo 'CN_SELFHOST_EXACT_SHA_STANDALONE_BUILD_PASS'
       - name: Real loopback standalone smoke with ZERO finance mutations
@@ -121,6 +124,7 @@ jobs:
           tar -tzf cn-20261108-unified-standalone.tar.gz > cn-20261108-archive-manifest.txt
           grep -Fxq './server.js' cn-20261108-archive-manifest.txt
           grep -Fxq './cn-payment-signed-live-probe.mjs' cn-20261108-archive-manifest.txt
+          grep -Fxq './cn-payment-activate.sh' cn-20261108-archive-manifest.txt
           test "$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)" -lt 1300000000
           echo "CN_RELEASE_ARCHIVE_BYTES=$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)"
           echo "CN_RELEASE_SOURCE_SHA=${GITHUB_SHA}"
