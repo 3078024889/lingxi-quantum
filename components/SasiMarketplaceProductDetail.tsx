@@ -3,6 +3,7 @@ import {useEffect,useState} from "react";
 import Link from "next/link";
 import {useParams} from "next/navigation";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {sasiSoftwareUiText} from "@/lib/sasi-software/ui-copy";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import styles from "./SasiMarketplaceProductDetail.module.css";
 type Product={id:string;name:string;nameEn:string;priceRmb:number;priceUsd:number;note:string;noteEn:string;};
@@ -57,7 +58,7 @@ export default function SasiMarketplaceProductDetail(){
    if(target.protocol!=="https:"||!/(^|\.)paypal\.com$/.test(target.hostname))
     throw Error("INVALID_PAYPAL_REDIRECT");
    window.location.assign(target.href);
-  }catch{setPayError(zh?"当前无法连接 PayPal，请稍后再试。":"PayPal is currently unavailable.");setPayBusy(false)}
+  }catch{setPayError(sasiSoftwareUiText(lang,"当前无法连接 PayPal，请稍后再试。","PayPal is currently unavailable."));setPayBusy(false)}
  };
  const share=async()=>{
   try{
@@ -65,18 +66,18 @@ export default function SasiMarketplaceProductDetail(){
    else{await navigator.clipboard.writeText(window.location.href);setShared(true)}
   }catch{}
  };
- return <main className={styles.root}><div className={styles.container}>
-  <Link className={styles.back} href="/sasi">{zh?"← 返回 SASI 智能软件":"← Back to SASI Intelligent Software"}</Link>
-  {loading?<p role="status" className={styles.empty}>{zh?"正在加载软件详情…":"Loading software details…"}</p>:!product?
-   <h1 className={styles.empty}>{zh?"软件尚未公开或正在审核":"This software is not published yet"}</h1>:
+ return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.root}><div className={styles.container}>
+  <Link className={styles.back} href="/sasi">{sasiSoftwareUiText(lang,"← 返回 SASI 智能软件","← Back to SASI Intelligent Software")}</Link>
+  {loading?<p role="status" className={styles.empty}>{sasiSoftwareUiText(lang,"正在加载软件详情…","Loading software details…")}</p>:!product?
+   <h1 className={styles.empty}>{sasiSoftwareUiText(lang,"软件尚未公开或正在审核","This software is not published yet")}</h1>:
    <>
     <div className={styles.intro}>
-     <section className={styles.gallery} aria-label={zh?"软件主图":"Software main image"}>
+     <section className={styles.gallery} aria-label={sasiSoftwareUiText(lang,"软件主图","Software main image")}>
       <div className={styles.mainImage}>
        {cover?<img src={cover.url} alt={product.name} loading="eager" referrerPolicy="no-referrer"/>:
         <div className={styles.fallback}><strong>SASI</strong><small>INTELLIGENT SOFTWARE</small></div>}
       </div>
-      <p className={styles.galleryCount}>{zh?"每件软件展示1张主图；详情图可选":"One main image per listing; detail images are optional"}</p>
+      <p className={styles.galleryCount}>{sasiSoftwareUiText(lang,"每件软件展示1张主图；详情图可选","One main image per listing; detail images are optional")}</p>
      </section>
      <section className={styles.purchase}>
       <small>SASI / VERIFIED SOFTWARE</small>
@@ -88,34 +89,34 @@ export default function SasiMarketplaceProductDetail(){
       </div>
       {ready?(currency==="USD"?
        <button type="button" onClick={()=>void payPaypal()} disabled={payBusy} className={styles.buy}>
-        {payBusy?(zh?"正在连接…":"Connecting…"):(zh?"PayPal 安全支付":"Pay securely with PayPal")}
+        {payBusy?(sasiSoftwareUiText(lang,"正在连接…","Connecting…")):(sasiSoftwareUiText(lang,"PayPal 安全支付","Pay securely with PayPal"))}
        </button>:
        <Link className={styles.buy} href={"/checkout?productId="+encodeURIComponent(product.id)+"&redirect=%2Faccount%2Fsoftware"}>
-        {zh?"购买并安全交付":"Buy and receive securely"}
+        {sasiSoftwareUiText(lang,"购买并安全交付","Buy and receive securely")}
        </Link>):
-       <p className={styles.disabled}>{zh?"支付渠道尚未完成商户验证，暂未开放购买。":"Checkout opens after merchant verification."}</p>}
+       <p className={styles.disabled}>{sasiSoftwareUiText(lang,"支付渠道尚未完成商户验证，暂未开放购买。","Checkout opens after merchant verification.")}</p>}
       {payError&&<p role="alert" className={styles.error}>{payError}</p>}
-      <button type="button" onClick={()=>void share()} className={styles.share}>{shared?(zh?"链接已复制":"Link copied"):(zh?"分享此软件":"Share software")} ↗</button>
-      <div className={styles.deliveryInfo}><h3>{zh?"授权与交付":"Licensing and delivery"}</h3>
+      <button type="button" onClick={()=>void share()} className={styles.share}>{shared?(sasiSoftwareUiText(lang,"链接已复制","Link copied")):(sasiSoftwareUiText(lang,"分享此软件","Share software"))} ↗</button>
+      <div className={styles.deliveryInfo}><h3>{sasiSoftwareUiText(lang,"授权与交付","Licensing and delivery")}</h3>
        <ul>
-        <li>{zh?"仅展示已通过审核的软件":"Only reviewed and published software is listed"}</li>
-        <li>{zh?"真实付款验证后，按订单授权下载":"Downloads require confirmed payment and purchase authorization"}</li>
-        <li>{zh?"软件更新与售后以商品说明及订单条款为准":"Updates and support follow the listing and order terms"}</li>
+        <li>{sasiSoftwareUiText(lang,"仅展示已通过审核的软件","Only reviewed and published software is listed")}</li>
+        <li>{sasiSoftwareUiText(lang,"真实付款验证后，按订单授权下载","Downloads require confirmed payment and purchase authorization")}</li>
+        <li>{sasiSoftwareUiText(lang,"软件更新与售后以商品说明及订单条款为准","Updates and support follow the listing and order terms")}</li>
        </ul>
       </div>
      </section>
     </div>
     <section className={styles.details} aria-labelledby="sasi-product-full-details">
-     <h2 id="sasi-product-full-details">{zh?"软件详情":"Software details"}</h2>
+     <h2 id="sasi-product-full-details">{sasiSoftwareUiText(lang,"软件详情","Software details")}</h2>
      <div id="sasi-product-expanded" className={styles.description}><p>{descriptionOpen?fullDescription:excerpt}</p></div>
-     {descriptionOpen&&details.length>0&&<div className={styles.detailGrid} aria-label={zh?"详情图片":"Detail images"}>
+     {descriptionOpen&&details.length>0&&<div className={styles.detailGrid} aria-label={sasiSoftwareUiText(lang,"详情图片","Detail images")}>
        {details.map((photo,index)=><div key={photo.id} className={styles.detailImage}>
         <img src={photo.url} alt={zh?"软件详情图 "+(index+1):"Software detail "+(index+1)} loading="lazy" referrerPolicy="no-referrer"/>
        </div>)}
       </div>}
      {hasMore&&<button type="button" className={styles.expand} aria-expanded={descriptionOpen}
       aria-controls="sasi-product-expanded" onClick={()=>setDescriptionOpen(v=>!v)}>
-       {descriptionOpen?(zh?"收起详情":"Show less"):(zh?"展开更多 · 查看完整图文":"Show more · Full description and images")}
+       {descriptionOpen?(sasiSoftwareUiText(lang,"收起详情","Show less")):(sasiSoftwareUiText(lang,"展开更多 · 查看完整图文","Show more · Full description and images"))}
       </button>}
 
     </section>
