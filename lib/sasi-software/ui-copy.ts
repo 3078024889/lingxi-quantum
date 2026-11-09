@@ -285,14 +285,14 @@ const PREMIUM_COPY:Record<string,readonly string[]> = Object.freeze({
   "Download temporário após pagamento verificado",
   "تنزيل مؤقت بعد التحقق من الدفع"
  ],
- "Full software description (up to 100,000 characters)": [
-  "ソフトウェア詳細（最大10万文字）",
-  "소프트웨어 전체 설명(최대 100,000자)",
-  "Description complète (jusqu’à 100 000 caractères)",
-  "Vollständige Beschreibung (bis 100.000 Zeichen)",
-  "Descripción completa (hasta 100.000 caracteres)",
-  "Descrição completa (até 100.000 caracteres)",
-  "الوصف الكامل (حتى 100,000 حرف)"
+ "Full software description (up to 5,000 characters)": [
+  "ソフトウェア詳細（最大5,000文字）",
+  "소프트웨어 전체 설명(최대 5,000자)",
+  "Description complète (jusqu’à 5 000 caractères)",
+  "Vollständige Beschreibung (bis 5.000 Zeichen)",
+  "Descripción completa (hasta 5.000 caracteres)",
+  "Descrição completa (até 5.000 caracteres)",
+  "الوصف الكامل (حتى 5,000 حرف)"
  ],
  "Explain features, uses, requirements, version and licensing. Paragraph breaks are preserved.": [
   "機能、用途、要件、バージョン、ライセンスを記載。改行は保持されます。",

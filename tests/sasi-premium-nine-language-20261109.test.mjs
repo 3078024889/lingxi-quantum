@@ -13,7 +13,7 @@ test("all nine locales are wired into the premium original SASI marketplace and 
  }
  for(const locale of ["ja","ko","fr","de","es","pt","ar"])assert.match(copy,new RegExp("\\b"+locale+":"));
  assert.match(copy,/PREMIUM_COPY/);
- for(const label of ["Software Market","Full software description (up to 100,000 characters)","One main image per listing; detail images are optional","Pay securely with PayPal"]){
+ for(const label of ["Software Market","Full software description (up to 5,000 characters)","One main image per listing; detail images are optional","Pay securely with PayPal"]){
   assert.ok(copy.includes(JSON.stringify(label)),"nine-language key "+label);
  }
  assert.match(home,/hero-original\.webp/);

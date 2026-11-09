@@ -1,4 +1,4 @@
-name: SASI premium 9-language, 100k details and media invariants (NO DEPLOY)
+name: SASI premium 9-language, 5k details and media invariants (NO DEPLOY)
 on:
   push:
     branches: [feat/sasi-premium-nine-language-20261109]
