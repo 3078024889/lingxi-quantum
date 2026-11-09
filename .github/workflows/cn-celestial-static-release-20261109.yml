@@ -1,0 +1,148 @@
+name: CN Celestial new SHA release to immutable Cloudflare assets (NO PROD ROUTES)
+on:
+  push:
+    branches: [ops/cn-celestial-static-assets-20261109]
+    paths: ['.github/workflows/cn-celestial-static-release-20261109.yml']
+permissions: {contents: read}
+concurrency:
+  group: cn-static-celestial-release-20261109
+  cancel-in-progress: false
+jobs:
+  stage-new-immutable-assets:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: 3078024889/lingxi-quantum
+      TAG: ecs-cn-unified-20261108-5054d6f492c1
+      SOURCE_SHA: 5054d6f492c14c7f476acbfb3152a28b1a308a30
+      ARCHIVE: cn-20261108-unified-standalone.tar.gz
+      ARCHIVE_SHA: 4368bd5956dd2f68f6aa46a564ffeef5751fb68d78903182f754831d352602ea
+      ARCHIVE_BYTES: '454674344'
+      MANIFEST_SHA: 3a58b76d52b9e0d6d773f26b5776296d712768a3fe55961c3514965f2abc8bc1
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Check exact immutable source and retrieve official release internally
+        run: |
+          set -Eeuo pipefail
+          test -n "$CF_ACCOUNT" && test -n "$CF_TOKEN"
+          mkdir -p original public-assets
+          actual="$(gh release view "$TAG" --repo "$GH_REPO" --json targetCommitish --jq .targetCommitish)"
+          test "$actual" = "$SOURCE_SHA" || { echo SOURCE_SHA_MISMATCH;exit 1; }
+          gh release download "$TAG" --repo "$GH_REPO" --dir original --pattern "$ARCHIVE" --pattern cn-20261108-unified-standalone.sha256
+          test "$(stat -c '%s' "original/$ARCHIVE")" = "$ARCHIVE_BYTES"
+          printf '%s  %s\n' "$ARCHIVE_SHA" "original/$ARCHIVE" | sha256sum -c -
+          printf '%s  %s\n' "$MANIFEST_SHA" original/cn-20261108-unified-standalone.sha256 | sha256sum -c -
+          gh api "repos/$GH_REPO/contents/scripts/ops/ecs-cn3193-unified-standalone-stage-20261108.sh?ref=$SOURCE_SHA" --jq .content | base64 -d > original/ecs-cn3193-unified-standalone-stage-20261108.sh
+          python3 - <<'PY'
+          import pathlib,hashlib
+          b=pathlib.Path("original/ecs-cn3193-unified-standalone-stage-20261108.sh").read_bytes()
+          sha=hashlib.sha1(b"blob "+str(len(b)).encode()+b"\0"+b).hexdigest()
+          if sha!="5950978bed667dc4d52c66de2d29065313f79c44":raise SystemExit("RELEASE_STAGE_SCRIPT_BLOB_INVALID")
+          print("CN_STAGE_SCRIPT_BLOB_VERIFIED")
+          PY
+          bash -n original/ecs-cn3193-unified-standalone-stage-20261108.sh
+      - name: Produce 56 reusable 8MiB assets and new SHA-pinned bootstrap
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import hashlib,pathlib,re
+          src=pathlib.Path("original/cn-20261108-unified-standalone.tar.gz")
+          out=pathlib.Path("public-assets")
+          size=src.stat().st_size
+          part=(size+7)//8
+          blocksize=8*1024*1024
+          old=[],[]
+          partlist=[];blocklist=[]
+          with src.open("rb") as f:
+           for i in range(8):
+            pname=src.name+f".part-{i:02d}"
+            partsize=min(part,size-i*part)
+            digest=hashlib.sha256()
+            for b in range(7):
+             n=min(blocksize,partsize-b*blocksize)
+             if n<=0:raise SystemExit("PART_SIZE_OR_COUNT_INVALID")
+             chunk=f.read(n)
+             if len(chunk)!=n:raise SystemExit("ARCHIVE_EOF")
+             filename=pname+f".block-{b:02d}"
+             (out/filename).write_bytes(chunk)
+             digest.update(chunk)
+             blocklist.append((hashlib.sha256(chunk).hexdigest(),filename))
+            partlist.append((digest.hexdigest(),pname))
+          if len(blocklist)!=56:raise SystemExit("BLOCK_COUNT_NOT_56")
+          def manifest(name,items):
+           p=out/name
+           p.write_text("".join(h+"  "+n+"\n" for h,n in items))
+           return hashlib.sha256(p.read_bytes()).hexdigest()
+          eight=manifest("eight-parts.sha256",partlist)
+          micro=manifest("all-micro-parts.sha256",blocklist)
+          for fn in ["cn-20261108-unified-standalone.sha256","ecs-cn3193-unified-standalone-stage-20261108.sh"]:
+           (out/fn).write_bytes((pathlib.Path("original")/fn).read_bytes())
+          deploysha=hashlib.sha256((out/"ecs-cn3193-unified-standalone-stage-20261108.sh").read_bytes()).hexdigest()
+          boot=pathlib.Path("scripts/ops/cn3193-static-deploy-20261109.sh").read_text()
+          required={
+           "ecs-cn-unified-20261108-5308e015b06b":"ecs-cn-unified-20261108-5054d6f492c1",
+           "5308e015b06bc6d6720450bf41280aa606fec0f3":"5054d6f492c14c7f476acbfb3152a28b1a308a30",
+           "a76120af69d599bd4a02b679eaedf3ca3c96ecc63abba0ea85f54ce98bc222b3":"4368bd5956dd2f68f6aa46a564ffeef5751fb68d78903182f754831d352602ea",
+           "454655321":"454674344",
+           "aa852ca0888b5d427557306d109d9136bc9299f501da340d22211110a9177d23":eight,
+           "4462ae8bb979d5436aa2fd9955815e75d0880d33e37ccab17e1396788359e834":micro,
+           "b779e13ca3ba10eaefb71d05a9d66c6c33c7cf45eae9867ad1c5ea61bafa566f":"3a58b76d52b9e0d6d773f26b5776296d712768a3fe55961c3514965f2abc8bc1",
+           "f19f63ca022f2644de9f74bd0f4bc287f597d8fc243d943a941d0f3e66744e13":deploysha,
+           "lingxifield-cn-static-release-5308e015-20261109.3078024889.workers.dev":"lingxifield-cn-static-celestial-20261109.3078024889.workers.dev"
+          }
+          for a,b in required.items():
+           if boot.count(a)!=1:raise SystemExit("BOOTSTRAP_PIN_MISSING_OR_DUPLICATED_"+a[:12])
+           boot=boot.replace(a,b)
+          (out/"cn3193-static-deploy-20261109.sh").write_text(boot)
+          bootsha=hashlib.sha256(boot.encode()).hexdigest()
+          print("CN_56_BLOCKS_VALIDATED_NEW_MANIFEST_SHA="+micro)
+          print("CN_EIGHT_MANIFEST_SHA="+eight)
+          print("CN_STANDALONE_CELESTIAL_BOOTSTRAP_SHA256="+bootsha)
+          PY
+          (cd public-assets && sha256sum -c all-micro-parts.sha256 >/dev/null)
+          bash -n public-assets/cn3193-static-deploy-20261109.sh
+          node --check workers/cn-immutable-static-release/index.mjs
+          node --input-type=module <<'JS'
+          import {writeFileSync} from "node:fs";
+          writeFileSync("wrangler.cn-celestial.json",JSON.stringify({
+           name:"lingxifield-cn-static-celestial-20261109",
+           main:"workers/cn-immutable-static-release/index.mjs",
+           compatibility_date:"2026-11-01",workers_dev:true,
+           assets:{directory:"./public-assets",binding:"ASSETS",run_worker_first:true}
+          }));
+          JS
+      - name: Upload all new SHA verified public release objects to isolated Cloudflare Static Assets
+        run: |
+          set -Eeuo pipefail
+          npm install -g wrangler@4.158.0 >/dev/null
+          CLOUDFLARE_ACCOUNT_ID="$CF_ACCOUNT" CLOUDFLARE_API_TOKEN="$CF_TOKEN" wrangler deploy --config wrangler.cn-celestial.json --no-upload-source-maps
+      - name: Validate real Cloudflare bytes, integrity and restricted paths
+        run: |
+          set -Eeuo pipefail
+          base=https://lingxifield-cn-static-celestial-20261109.3078024889.workers.dev
+          ready=0
+          for i in $(seq 1 18);do
+           code="$(curl -4sS --connect-timeout 8 --max-time 28 -o "$RUNNER_TEMP/manifest" -w '%{http_code}' "$base/all-micro-parts.sha256" || true)"
+           echo "CN_NEW_STATIC_PROPAGATION attempt=$i http=$code"
+           [[ "$code" = 200 ]] && { ready=1;break; }
+           sleep 3
+          done
+          test "$ready" -eq 1
+          cmp public-assets/all-micro-parts.sha256 "$RUNNER_TEMP/manifest"
+          for name in cn-20261108-unified-standalone.tar.gz.part-01.block-01 cn-20261108-unified-standalone.tar.gz.part-07.block-06;do
+           curl -4fsS --retry 4 --connect-timeout 10 --max-time 80 -o "$RUNNER_TEMP/$name" "$base/$name"
+           sha="$(awk -v n="$name" '$2==n{print $1}' public-assets/all-micro-parts.sha256)"
+           printf '%s  %s\n' "$sha" "$RUNNER_TEMP/$name" | sha256sum -c -
+          done
+          curl -4fsS --max-time 22 -o "$RUNNER_TEMP/bootstrap" "$base/cn3193-static-deploy-20261109.sh"
+          cmp "$RUNNER_TEMP/bootstrap" public-assets/cn3193-static-deploy-20261109.sh
+          blocked="$(curl -4sS --max-time 12 -o /dev/null -w '%{http_code}' "$base/private/keys")"
+          test "$blocked" = 404
+          echo CN_CELESTIAL_56_ASSETS_AND_BOOTSTRAP_EDGE_PASS_NO_PROD_CHANGED
