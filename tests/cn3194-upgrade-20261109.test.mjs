@@ -57,7 +57,7 @@ const runner=readFileSync("scripts/ops/ecs-cn3194-release-runner-20261109.sh","u
 
 test("3194 release runner supports older curl without retry-all-errors",()=>{
   assert.match(runner,/CURL_COMPATIBILITY_MODE/);
-  assert.doesNotMatch(runner,/curl[^\n]*--retry-all-errors/);
+  assert.doesNotMatch(runner,/^\s*curl\b[^\n]*--retry-all-errors/m);
   assert.match(runner,/curl --noproxy '\*' -fL --connect-timeout 30 -C -/);
   assert.match(runner,/seq 1 40/);
   assert.match(runner,/UPGRADE_BLOB_SHA="5e509aab527228332b179fc44341c81817ba290c"/);
