@@ -16,6 +16,7 @@ export default function SasiOpenMarketplace(){
  const [featuredReady,setFeaturedReady]=useState(false);
  const [images,setImages]=useState<Record<string,Array<{id:string;kind:string;url:string}>>>({});
  const [mine,setMine]=useState<Listing[]>([]);
+ const [mediaCounts,setMediaCounts]=useState<Record<string,{cover:number;detail:number}>>({});
  const [seller,setSeller]=useState<Seller|null>(null);
  const [payments,setPayments]=useState<Payout|null>(null);
  const [filter,setFilter]=useState("all"),[search,setSearch]=useState("");
@@ -35,6 +36,15 @@ export default function SasiOpenMarketplace(){
   if(values[3]?.balances)setPayments(values[3]);
  },[]);
  useEffect(()=>{void refresh()},[refresh]);
+ useEffect(()=>{
+  const ids=mine.map(item=>item.id).filter(Boolean);
+  if(!ids.length){setMediaCounts({});return;}
+  let live=true;
+  fetch("/api/sasi/marketplace/my-media?listingIds="+ids.join(","),{cache:"no-store",credentials:"same-origin"})
+   .then(r=>r.ok?r.json():null).then(v=>{if(live&&v?.counts)setMediaCounts(v.counts)})
+   .catch(()=>{});
+  return()=>{live=false};
+ },[mine]);
  useEffect(()=>{
   let live=true;
   fetch("/api/sasi/software/catalog",{cache:"no-store"})
@@ -93,7 +103,7 @@ export default function SasiOpenMarketplace(){
    });
    const put=await fetch(ticket.uploadUrl,{method:"PUT",headers:{"Content-Type":"application/zip"},body:file});
    if(!put.ok)throw Error("PRIVATE_R2_UPLOAD_FAILED_"+put.status);
-   setStatus(zh?"软件包已上传。添加主图与详情图后，再点击提交审核。":"Package uploaded. Add cover and detail photos before submitting for review.");
+   setStatus(zh?"软件包已上传。上传1张主图即可提交审核；详情图最多4张，可不上传。":"Package uploaded. Add one main image; up to four detail images are optional.");
    await refresh();
   }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
  };
@@ -122,7 +132,7 @@ export default function SasiOpenMarketplace(){
      headers:{"Content-Type":ticket.contentType},body:file});
    if(!put.ok)throw Error("PRIVATE_IMAGE_UPLOAD_FAILED_"+put.status);
    await post("/api/sasi/marketplace/image-confirm",{imageId:ticket.imageId});
-   setStatus(zh?"商品图片已上传并等待审核，每个商品可上传4张主图、4张详情图。":"Image uploaded, awaiting review. Up to four cover images and four detail images.");
+   setStatus(zh?"图片已上传并等待审核。每款软件1张主图，最多4张可选详情图。":"Image awaiting review. One main image; up to four optional detail images.");
    await refresh();
   }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
  };
@@ -186,13 +196,18 @@ export default function SasiOpenMarketplace(){
    <div className={styles.find}><input aria-label={zh?"搜索软件":"Search software"} placeholder={zh?"搜索 EA、指标、应用…":"Find EAs and software…"} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{zh?"全部":"All"}</button>{CATEGORIES.map(([key,label])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{label}</button>)}</div>
    <div className={styles.products}>{visible.map((item,i)=><article className={styles.card} key={item.id}>
-    <div className={styles.tile} data-tone={i%3}>{images[item.id]?.[0]?.url?
-    <img src={images[item.id][0].url} alt={item.title} loading="lazy" referrerPolicy="no-referrer" className={styles.cover}/>
+    <div className={styles.tile} data-tone={i%3}>{images[item.id]?.find(photo=>photo.kind==="cover")?.url?
+    <img src={images[item.id].find(photo=>photo.kind==="cover")!.url} alt={item.title} loading="lazy" referrerPolicy="no-referrer" className={styles.cover}/>
     :<span>{item.category==="mt5-ea"?"EA":item.category==="mt5-indicator"?"SI":"SASI"}</span>}</div>
     <div className={styles.cardContent}><div className={styles.category}>{CATEGORIES.find(([x])=>x===item.category)?.[1]||"Software"}</div>
     <h3>{item.title}</h3><p>{item.description}</p><div className={styles.cardBottom}><strong>¥{format(item.price_cny_minor)}</strong><span>USD ${format(item.price_usd_minor)}</span></div>
     <div className={styles.cardActions}><Link href={"/sasi/marketplace/"+item.id}>{zh?"查看详情":"Details"} ↗</Link><button onClick={()=>void share(item)}>{zh?"分享":"Share"} ↗</button></div>
-    </div></article>)}</div>
+    </div><aside className={styles.quickPreview} aria-label={zh?"软件详情预览":"Software quick preview"}>
+      <small>{CATEGORIES.find(([x])=>x===item.category)?.[1]||"SASI"}</small>
+      <strong>{item.title}</strong>
+      <p>{item.description.trim().slice(0,260)}{item.description.length>260?"…":""}</p>
+      <Link href={"/sasi/marketplace/"+item.id}>{zh?"查看完整介绍":"View full details"} →</Link>
+    </aside></article>)}</div>
    {visible.length===0&&<div className={styles.empty}>{zh?"已审核的软件将在这里展示；欢迎开发者发布原创作品。":"No reviewed and published software matches this search."}</div>}
   </section>
   <section className={styles.section} aria-label={zh?"软件发布与交付步骤":"Software publishing steps"}>
@@ -219,21 +234,22 @@ export default function SasiOpenMarketplace(){
     <div className={styles.formCard}><h3>{zh?"发布新软件":"Create a software listing"}</h3>
       <label>{zh?"软件名称":"Product name"}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={zh?"软件名称、版本、授权类型":"Software name, version, license"}/></label>
       <label>{zh?"分类":"Category"}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
-      <label>{zh?"软件介绍":"Description"}<textarea rows={3} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={zh?"功能、适用平台、系统要求、版本与许可说明":"Features, requirements, version and licensing"}/></label>
+      <label>{zh?"软件详情文案（支持分段）":"Full description (paragraphs supported)"}<textarea rows={6} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={zh?"介绍核心功能、适用场景、安装要求、版本和授权范围。长文可在详情页展开。":"Features, use cases, requirements, version and licensing. Long text is collapsible."}/></label>
       <div className={styles.priceFields}><label>{zh?"人民币标价":"CNY price"}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{zh?"美元标价":"USD price"}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
       <button disabled={busy!==""||!seller} onClick={()=>void makeDraft()}>{busy==="draft"?"…":zh?"保存商品草稿":"Save product draft"}</button>
-      <p>{zh?"上传 ZIP 源码包与商品图片后进入安全审核。私有文件不会生成公开下载地址。":"ZIP packages and product images undergo review; private packages are not served publicly."}</p>
+      <p>{zh?"主图仅1张；详情图最多4张，可全部不上传。源码 ZIP 与图片通过审核后展示，私有文件不会公开。":"One main image and up to four optional detail images. Source ZIPs remain private and undergo review."}</p>
     </div>
    </div>
    {mine.length>0&&<div className={styles.drafts}><h3>{zh?"我的软件草稿与审核进度":"My submissions"}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{item.status} · {item.scan_status}</small></div>
     {item.status==="draft"&&<>
-     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传封面图":"Add cover"}
-       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"cover")}}/>
+     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传主图（仅1张）":"Main image (one only)"}
+       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""||(mediaCounts[item.id]?.cover??0)>=1} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"cover")}}/>
      </label>
-     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传详情图":"Add detail photo"}
-       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"detail")}}/>
+     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":zh?"上传详情图（可选，最多4张）":"Detail image (optional, max 4)"}
+       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""||(mediaCounts[item.id]?.detail??0)>=4} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"detail")}}/>
      </label>
+     <span className={styles.mediaCounter}>{zh?"图片数量":"Images"}：{mediaCounts[item.id]?.cover??0}/1 {zh?"主图":"main"} · {mediaCounts[item.id]?.detail??0}/4 {zh?"详情图（可选）":"optional details"}</span>
      <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":zh?"上传软件 ZIP 包":"Upload software ZIP"}
        <input type="file" accept=".zip,application/zip" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void upload(item,f)}}/>
      </label>
