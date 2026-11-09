@@ -1,0 +1,46 @@
+name: COM verified public catalog failover and release safety (NO DEPLOY)
+on:
+  push:
+    branches: [fix/com-public-catalog-cn-verified-fallback-20261109]
+  pull_request:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - 'scripts/cloudflare/public-market-listings.mjs'
+      - 'tests/com-public-market-edge.test.mjs'
+      - '.github/workflows/com-public-market-fallback-20261109.yml'
+permissions: {contents: read}
+concurrency:
+  group: com-public-market-fallback-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-public-fallback:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      LINGXI_SELFHOST_BUILD: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+      NEXT_PUBLIC_SUPABASE_URL: https://sxsgdpqojepgbbrxrzlq.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install locked dependency set
+        run: pnpm install --frozen-lockfile
+      - name: Validate fail closed, anonymous cards only and no private data leakage
+        run: |
+          node --check scripts/cloudflare/public-market-listings.mjs
+          node --test tests/com-public-market-edge.test.mjs
+          node --test tests/com-paypal-live-review-20261109.test.mjs
+          node --test tests/sasi-marketplace-long-description-20261109.test.mjs
+          node tests/sasi-marketplace-security-contract.test.mjs
+      - name: TypeScript and production build
+        run: |
+          pnpm exec tsc --noEmit
+          pnpm build
+          test -s .next/standalone/server.js
+          echo COM_PUBLIC_CATALOG_FALLBACK_SECURITY_AND_BUILD_PASS_NO_DEPLOY
