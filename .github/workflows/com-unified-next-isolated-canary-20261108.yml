@@ -129,6 +129,13 @@ jobs:
             sleep 2
           done
           test "$ready" = 1
+          for path in /api/money/summary /api/sasi/account /api/sasi/marketplace/my-orders;do
+            body="$(mktemp)"
+            status="$(curl -sS --noproxy '*' --max-time 18 -o "$body" -w '%{http_code}' "http://127.0.0.1:8787$path" || true)"
+            error="$(jq -r '.error // "none"' "$body" 2>/dev/null || echo invalid-json)"
+            echo "COM_LOCAL_WORKER_PRIVATE path=$path HTTP_$status error=$error"
+            rm -f "$body"
+          done
           mkdir -p .open-next/assets/__lingxi_edge_static__
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/ -o .open-next/assets/__lingxi_edge_static__/landing.html
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/siai -o .open-next/assets/__lingxi_edge_static__/siai.html
