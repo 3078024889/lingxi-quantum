@@ -17,7 +17,7 @@ test('retired endpoints cannot create provider jobs or run the radar',async()=>{
 });
 test('software marketplace and historical delivery remain available in source',()=>{
  for(const file of ['app/sasi/page.tsx','app/sasi/delivery/page.tsx','app/api/sasi/software/download/route.ts','app/api/sasi/marketplace/download/route.ts','app/api/internal/sasi/market/release-due/route.ts'])assert(existsSync(file),file);
- assert(readFileSync('app/sasi/page.tsx','utf8').includes('SasiSoftwareMarket'));
+ assert(readFileSync('app/sasi/page.tsx','utf8').includes('SasiOpenMarketplace'));
  const config=JSON.parse(readFileSync('vercel.json','utf8'));
  assert(!config.crons.some(x=>x.path==='/api/cron/sasi-v5-radar'));
  assert(config.crons.some(x=>x.path==='/api/cron/privacy-cleanup'));
