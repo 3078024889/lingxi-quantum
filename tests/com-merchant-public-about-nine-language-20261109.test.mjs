@@ -16,3 +16,14 @@ test("PayPal merchant review About page shows real products in all nine language
  assert.match(page,/metadata:Metadata/);
  assert.match(page,/AboutBusinessClient/);
 });
+
+test("About page is an audited Cloudflare public static route before apex promotion",()=>{
+ const build=read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
+ const candidate=read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
+ const cutover=read("scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs");
+ assert.ok(build.includes('"/about":"about.html"'));
+ assert.ok(candidate.includes("'about:about'"));
+ assert.ok(candidate.includes('"/about"')||candidate.includes("/about /announcements"));
+ assert.match(cutover,/\/about/);
+ assert.match(cutover,/COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN/);
+});
