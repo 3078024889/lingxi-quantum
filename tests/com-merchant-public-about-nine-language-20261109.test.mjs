@@ -6,7 +6,7 @@ test("PayPal merchant review About page shows real products in all nine language
  const page=read("app/about/page.tsx");
  const about=read("components/AboutBusinessClient.tsx");
  for(const locale of ["zh","en","ja","ko","fr","de","es","pt","ar"])
-  assert.match(about,new RegExp('\\b'+locale+':\\s*\\{'));
+  assert.ok(about.includes('"'+locale+'": {'),"missing locale "+locale);
  for(const route of ["/tools/pass","/sasi/marketplace","/siai","/terms","/refunds","/privacy"])
   assert.ok(about.includes(route),"missing public business route "+route);
  assert.ok(about.includes("support@lingxifield.com"));
