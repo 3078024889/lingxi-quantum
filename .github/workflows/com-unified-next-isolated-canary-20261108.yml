@@ -276,6 +276,9 @@ jobs:
             done
             test "$count" = 3
           done
+          account_status="$(curl -4sS --connect-timeout 9 --max-time 25 -o /dev/null -w '%{http_code}' "$url/account" || true)"
+          echo "COM_CANARY_ACCOUNT_ROUTE HTTP_$account_status"
+          test "$account_status" = 200
           for path in /api/money/summary /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
             body="$(mktemp)"
             status="$(curl -4sS --connect-timeout 9 --max-time 25 -o "$body" -w '%{http_code}' "$url$path" || true)"
