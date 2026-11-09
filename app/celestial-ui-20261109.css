@@ -25,7 +25,7 @@ html[lang]:not([lang="zh-CN"]) .lx-cel-wallet-assets:before{content:"Balances"}
 .lx-cel-wallet-topup>div{margin-top:20px}.lx-cel-wallet-amount{display:flex;align-items:center;justify-content:center;min-height:82px;background:linear-gradient(130deg,#fafaff,#edf0ff);border:1px solid #d4d8ed;border-radius:16px;font-size:clamp(20px,2.3vw,29px);color:#232149;font-weight:800;box-shadow:inset 0 1px 1px #fff,0 5px 14px #8b8bd40d;transition:transform .16s,border-color .16s,box-shadow .16s}
 .lx-cel-wallet-amount:is(:hover,:focus-visible){border-color:#9d85f5;box-shadow:0 6px 18px #9d85f52b;transform:translateY(-1px)}
 .lx-cel-wallet-history{margin:0}.lx-cel-wallet-tabs{margin-top:18px;display:flex;gap:25px;border-bottom:1px solid #d9dcef;font-size:14px;font-weight:650;color:#647092}
-.lx-cel-wallet-tabs>*{padding:0 12px 14px}.lx-cel-wallet-tabs>[aria-selected="true"]{border-bottom:3px solid #8252ee;color:#6d40e5}
+.lx-cel-wallet-tabs>*{padding:0 12px 14px}.lx-cel-wallet-tabs>[aria-current="page"]{border-bottom:3px solid #8252ee;color:#6d40e5}
 .lx-cel-wallet-shortcuts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;font-size:13px}
 .lx-cel-wallet-shortcuts a{display:inline-flex;align-items:center;border:1px solid #d5dcf6;border-radius:13px;padding:10px 16px;background:#fff;color:#52489e}
 .lx-cel-wallet-ledgers{grid-column:1/-1;display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -48,7 +48,7 @@ html[lang]:not([lang="zh-CN"]) .lx-cel-wallet-assets:before{content:"Balances"}
 .lx-cel-account-links .lx-account-entry>p{grid-column:2;color:#727b93;margin:0;font-size:12px;align-self:start}
 .lx-cel-account-links .lx-account-entry:after{content:"›";grid-column:3;grid-row:1/3;font-size:28px;font-weight:300;color:#394463}
 .lx-cel-account-security{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:23px}
-.lx-cel-account-security>div{min-width:0}.lx-cel-account-security button{height:50px;border-radius:14px!important;background:linear-gradient(125deg,#fdfdff,#f0f2ff)!important;color:#283253!important;border:1px solid #bfc9e6!important;letter-spacing:0!important;font:600 13px/1.4 inherit!important;padding:10px!important}
+.lx-cel-account-security>div{min-width:0}.lx-cel-account-security button{height:50px;border-radius:14px!important;background:linear-gradient(125deg,#fdfdff,#f0f2ff)!important;color:#283253!important;border:1px solid #bfc9e6!important;letter-spacing:0!important;font-size:13px!important;font-weight:600!important;line-height:1.4!important;padding:10px!important}
 .lx-cel-account-security button:hover{border-color:#9883e6!important;background:#f0edff!important}
 .lx-cel-tools-page{background:linear-gradient(135deg,#fcfcff,#f8f9ff 54%,#f8fbff)}
 .lx-cel-tools-page .lx11-wrap{max-width:1500px}
