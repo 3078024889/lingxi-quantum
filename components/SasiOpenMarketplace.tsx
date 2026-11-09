@@ -184,7 +184,7 @@ export default function SasiOpenMarketplace(){
     <div className={styles.benefits}>
      <div><span>⬡</span><div><strong>{sasiSoftwareUiText(lang,"源码授权","Source licensing")}</strong><small>{sasiSoftwareUiText(lang,"仅售源码 · 权属清晰","Clear license and ownership")}</small></div></div>
      <div><span>ϟ</span><div><strong>{sasiSoftwareUiText(lang,"自动交付","Digital delivery")}</strong><small>{sasiSoftwareUiText(lang,"付款验证后获取","After verified payment")}</small></div></div>
-     <div><span>◇</span><div><strong>{sasiSoftwareUiText(lang,"安全可靠","Secure by design")}</strong><small>{sasiSoftwareUiText(lang,"私有 R2 存储","Private R2 storage")}</small></div></div>
+     <div><span>◇</span><div><strong>{sasiSoftwareUiText(lang,"安全可靠","Secure by design")}</strong><small>{sasiSoftwareUiText(lang,"私密存储 · 安心下载","Private storage and dependable downloads")}</small></div></div>
      <div><span>◎</span><div><strong>{sasiSoftwareUiText(lang,"全球可用","Global access")}</strong><small>{sasiSoftwareUiText(lang,"多语言 · 多地区","Multilingual access")}</small></div></div>
      <div><span>♧</span><div><strong>{sasiSoftwareUiText(lang,"开发者支持","Creator support")}</strong><small>{sasiSoftwareUiText(lang,"发布 · 审核 · 结算","Publish, review and settle")}</small></div></div>
    </div>
