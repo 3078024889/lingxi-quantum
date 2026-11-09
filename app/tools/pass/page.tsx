@@ -1,5 +1,5 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
@@ -40,6 +40,8 @@ export default function AllToolsPassPage(){
  const [providers,setProviders]=useState({wechat:false,alipay:false,paypal:false});
  const [message,setMessage]=useState("");
  const [walletBalanceMinor,setWalletBalanceMinor]=useState<number|null>(null);
+ const [verifiedCurrency,setVerifiedCurrency]=useState<Currency|null>(null);
+ const latestRefresh=useRef(0);
  const [notices,setNotices]=useState<Array<{id:string;titleZh:string;titleEn:string;publishedAt:string}>>([]);
  useEffect(()=>{let alive=true;fetch("/api/site-announcements",{cache:"no-store"})
   .then(r=>r.ok?r.json():null).then(data=>{if(!alive||!Array.isArray(data?.items))return;
@@ -48,34 +50,35 @@ export default function AllToolsPassPage(){
  const [request,setRequest]=useState<{sku:AllToolsPassSku;id:string}|null>(null);
 
  async function refresh(){
+  const ticket=++latestRefresh.current;
+  setAvailable(false);setVerifiedCurrency(null);setWalletBalanceMinor(null);
   try {
    const [p,g]=await Promise.all([
     fetch("/api/tools/pass?currency="+currency,{cache:"no-store",credentials:"same-origin"}),
     fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin"}),
    ]);
    const data=p.ok?await p.json():null,channels=g.ok?await g.json():null;
-   setExpiry(data?.expiresAt||null);
-   setAvailable(data?.available===true);
-   setProviders({
-    wechat:channels?.wechat===true,
-    alipay:channels?.alipay===true,
-    paypal:channels?.paypal===true
-   });
-   // Never display a sample balance. Authenticated snapshots only; unavailable means no amount.
+   // Only authenticated account data can supply a balance, never a client-side placeholder.
    const wallet=await fetch("/api/money/summary",{cache:"no-store",credentials:"same-origin"}).catch(()=>null);
    const account=wallet?.ok?await wallet.json().catch(()=>null):null;
    const actual=account?.balances?.[currency]?.availableMinor;
+   if(ticket!==latestRefresh.current)return;
+   setExpiry(data?.expiresAt||null);
+   setAvailable(data?.available===true);
+   setProviders({wechat:channels?.wechat===true,alipay:channels?.alipay===true,paypal:channels?.paypal===true});
    setWalletBalanceMinor(typeof actual==="number"&&Number.isSafeInteger(actual)&&actual>=0?actual:null);
-  }catch{setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});setWalletBalanceMinor(null);}
+   setVerifiedCurrency(currency);
+  }catch{if(ticket!==latestRefresh.current)return;setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});setWalletBalanceMinor(null);setVerifiedCurrency(null);}
  }
  useEffect(()=>{void refresh()},[currency]);
 
+ const paymentReady=available&&verifiedCurrency===currency;
  const choices=(currency==="CNY"?[
-  {id:"wallet" as const,label:zh?"账户余额":"Wallet balance",ready:available},
-  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:available&&providers.wechat},
-  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:available&&providers.alipay}
+  {id:"wallet" as const,label:zh?"账户余额":"Wallet balance",ready:paymentReady},
+  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:paymentReady&&providers.wechat},
+  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:paymentReady&&providers.alipay}
  ]:[
-  {id:"paypal" as const,label:"PayPal",ready:available&&providers.paypal}
+  {id:"paypal" as const,label:"PayPal",ready:paymentReady&&providers.paypal}
  ]);
  const selectedChoice=choices.find(x=>x.id===method);
  function openOffer(offer:Offer){
@@ -174,7 +177,7 @@ export default function AllToolsPassPage(){
      </div><Link className={premium.lowerLink} href="/ai-wallet">{zh?"充值与明细":"Top up & details"} ↗</Link></div>
     <div className={premium.balanceBody}>
      <div><small>{zh?"账户余额":"Account balance"} · {currency}</small>
-      {walletBalanceMinor===null?<p className={premium.balanceUnavailable}>{zh?"登录后查看实际余额":"Sign in to view your actual balance"}</p>:
+      {verifiedCurrency!==currency||walletBalanceMinor===null?<p className={premium.balanceUnavailable}>{zh?"登录后查看实际余额":"Sign in to view your actual balance"}</p>:
        <strong>{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>}</div>
      <Link href="/ai-wallet" className={premium.rechargeAction}>{zh?"充值":"Top up"}</Link>
      <Link href="/account/orders" className={premium.ordersAction}>{zh?"订单记录":"Orders"}</Link>
@@ -215,7 +218,7 @@ export default function AllToolsPassPage(){
       className={premium.payMethod} onClick={()=>{setMethod(choice.id);setMessage("");}}>
       <span aria-hidden="true" className={premium.radio}/>
       <span className={premium.payIcon} aria-hidden="true">{choice.id==="wallet"?"▣":choice.id==="wechat"?"微":choice.id==="alipay"?"支":"P"}</span>
-      <span className={premium.payLabel}>{choice.label}{choice.id==="wallet"&&walletBalanceMinor!==null?
+      <span className={premium.payLabel}>{choice.label}{choice.id==="wallet"&&verifiedCurrency===currency&&walletBalanceMinor!==null?
        <small className="block text-xs text-[var(--lx-muted)]">{zh?"当前余额":"Balance"}：{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</small>:null}</span>
       <span className={premium.payStatus}>{choice.ready?(zh?"可使用":"Available"):(zh?"暂未开放":"Unavailable")}</span>
      </button>)}
@@ -223,7 +226,7 @@ export default function AllToolsPassPage(){
       onClick={()=>{setCurrency("USD");setPreferredCurrency("USD");setMethod("paypal");setMessage("");}}>
       <span aria-hidden="true" className={premium.radio}/><span className={premium.payIcon}>P</span>
       <span className={premium.payLabel}>PayPal <small className="block text-xs text-[var(--lx-muted)]">USD</small></span>
-      <span className={premium.payStatus}>{providers.paypal&&available?(zh?"切换美元支付":"Pay in USD"):(zh?"暂未开放":"Unavailable")}</span>
+      <span className={premium.payStatus}>{providers.paypal&&paymentReady?(zh?"切换美元支付":"Pay in USD"):(zh?"暂未开放":"Unavailable")}</span>
      </button>}
     </div>
     {message&&<p role="alert" className="mt-3 text-sm text-amber-700">{message}</p>}
