@@ -2,6 +2,7 @@
 import {useEffect,useRef,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
+import {toolPassUiText} from "@/lib/tools/commerce/toolpass-premium-copy";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {ALL_TOOLS_PASS_CATALOG,type AllToolsPassSku} from "@/lib/tools/commerce/all-tools-pass";
 import premium from "./ToolPassPremium.module.css";
@@ -29,6 +30,7 @@ type Offer=(typeof ALL_TOOLS_PASS_CATALOG)[number];
 export default function AllToolsPassPage(){
  const {lang}=useLingxiLang();
  const c=COPY[(lang in COPY?lang:"en") as Language],rtl=lang==="ar",zh=lang==="zh";
+ const dateLocale=({zh:"zh-CN",en:"en-US",ja:"ja-JP",ko:"ko-KR",fr:"fr-FR",de:"de-DE",es:"es-ES",pt:"pt-BR",ar:"ar-SA"} as Record<Language,string>)[lang as Language]||"en-US";
  const {currency:preferredCurrency,ready:currencyReady,setCurrency:setPreferredCurrency}=usePreferredCurrency();
  const [currency,setCurrency]=useState<Currency>("CNY");
  useEffect(()=>{if(currencyReady)setCurrency(preferredCurrency)},[currencyReady,preferredCurrency]);
@@ -101,9 +103,9 @@ export default function AllToolsPassPage(){
 
  const paymentReady=available&&verifiedCurrency===currency;
  const choices=(currency==="CNY"?[
-  {id:"wallet" as const,label:zh?"账户余额":"Wallet balance",ready:paymentReady},
-  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:paymentReady&&providers.wechat},
-  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:paymentReady&&providers.alipay}
+  {id:"wallet" as const,label:toolPassUiText(lang,"账户余额","Wallet balance"),ready:paymentReady},
+  {id:"wechat" as const,label:toolPassUiText(lang,"微信支付","WeChat Pay"),ready:paymentReady&&providers.wechat},
+  {id:"alipay" as const,label:toolPassUiText(lang,"支付宝","Alipay"),ready:paymentReady&&providers.alipay}
  ]:[
   {id:"paypal" as const,label:"PayPal",ready:paymentReady&&providers.paypal}
  ]);
@@ -115,7 +117,7 @@ export default function AllToolsPassPage(){
  async function confirm(){
   if(!selected||busy)return;
   if(!selectedChoice?.ready){
-   setMessage(zh?"当前支付方式暂不可用，请选择其他方式。":"This payment option is currently unavailable.");
+   setMessage(toolPassUiText(lang,"当前支付方式暂不可用，请选择其他方式。","This payment option is currently unavailable."));
    return;
   }
   if(method==="wechat"||method==="alipay"){
@@ -159,11 +161,11 @@ export default function AllToolsPassPage(){
     <div className={premium.heroCopy}>
      <p className={premium.eyebrow}>LINGXIFIELD · TOOLPASS</p>
      <h1 className={premium.title} id="toolpass-membership-title">{zh?"工具包会员":c.title}<span>ToolPass</span></h1>
-     <p className={premium.lead}>{zh?"畅享 100+ 实用工具，划算又高效":"Unlock 100+ practical tools. One membership, more possibilities."}</p>
+     <p className={premium.lead}>{toolPassUiText(lang,"畅享 100+ 实用工具，划算又高效","Unlock 100+ practical tools. One membership, more possibilities.")}</p>
      <ul className={premium.benefits}>
-      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"全站 100+ 工具":"100+ practical tools"}</b><span>{zh?"一站畅用":"All in one place"}</span></li>
-      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"持续更新":"Always evolving"}</b><span>{zh?"新工具同步加入":"New tools included"}</span></li>
-      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"高性价比":"More value"}</b><span>{zh?"创作、办公与日常处理都适用":"Built for work and everyday tasks"}</span></li>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{toolPassUiText(lang,"全站 100+ 工具","100+ practical tools")}</b><span>{toolPassUiText(lang,"一站畅用","All in one place")}</span></li>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{toolPassUiText(lang,"持续更新","Always evolving")}</b><span>{toolPassUiText(lang,"新工具同步加入","New tools included")}</span></li>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{toolPassUiText(lang,"高性价比","More value")}</b><span>{toolPassUiText(lang,"创作、办公与日常处理都适用","Built for work and everyday tasks")}</span></li>
      </ul>
     </div>
     <div className={premium.art} aria-hidden="true">
@@ -171,7 +173,7 @@ export default function AllToolsPassPage(){
      <span className={premium.tool+" "+premium.toolCut}>✂</span>
      <span className={premium.tool+" "+premium.toolPdf}>PDF</span>
      <span className={premium.tool+" "+premium.toolVideo}>▶</span>
-     <div className={premium.box}><span className={premium.boxCrown}>♛</span><span className={premium.boxLabel}>100+ {zh?"工具":"tools"}</span></div>
+     <div className={premium.box}><span className={premium.boxCrown}>♛</span><span className={premium.boxLabel}>100+ {toolPassUiText(lang,"工具","tools")}</span></div>
     </div>
    </section>
    <div className={premium.toolbar}>
@@ -182,45 +184,45 @@ export default function AllToolsPassPage(){
      </select>
     </label>
    </div>
-   <div className={premium.plans} aria-label={zh?"工具包会员方案":"ToolPass plans"}>
+   <div className={premium.plans} aria-label={toolPassUiText(lang,"工具包会员方案","ToolPass plans")}>
     {ALL_TOOLS_PASS_CATALOG.map((offer,i)=><section key={offer.sku} className={premium.plan+" "+(i===1?premium.planFeatured:"")}>
-     {i===1&&<span className={premium.planBadge}>{zh?"♛ 热门推荐":"♛ Most popular"}</span>}
+     {i===1&&<span className={premium.planBadge}>{toolPassUiText(lang,"♛ 热门推荐","♛ Most popular")}</span>}
      <h2 className={premium.planDuration}>{i===0&&zh?"7 天体验":[c.week,c.month,c.quarter,c.year][i]}</h2>
      <strong className={premium.planPrice}>{currency==="CNY"?"¥":"$"}{offer.price}</strong>
-     <p className={premium.planDesc}>{zh?["短期使用 · 轻松上手","畅享全站工具","更优惠 · 更省心","长期使用 · 超值之选"][i]:["Try it for a week","Access all tools","Even better value","Ideal for long-term use"][i]}</p>
+     <p className={premium.planDesc}>{[toolPassUiText(lang,"短期使用 · 轻松上手","Try it for a week"),toolPassUiText(lang,"畅享全站工具","Access all tools"),toolPassUiText(lang,"更优惠 · 更省心","Even better value"),toolPassUiText(lang,"长期使用 · 超值之选","Ideal for long-term use")][i]}</p>
      <button type="button" onClick={()=>openOffer(offer)} className={premium.planBuy+" "+(i===1?premium.planBuyFeatured:"")}>{zh?"立即购买":c.buy}</button>
     </section>)}
    </div>
    <div className={premium.subFooter}>
-    <span><b>∞</b>{zh?"100+ 实用工具随心用":"100+ practical tools"}</span>
-    <span><b>⟳</b>{zh?"新增工具持续更新":"New tools always included"}</span>
-    <span><b>ϟ</b>{zh?"即买即用 · 高效省心":"Instant access after verified purchase"}</span>
+    <span><b>∞</b>{toolPassUiText(lang,"100+ 实用工具随心用","100+ practical tools")}</span>
+    <span><b>⟳</b>{toolPassUiText(lang,"新增工具持续更新","New tools always included")}</span>
+    <span><b>ϟ</b>{toolPassUiText(lang,"即买即用 · 高效省心","Instant access after verified purchase")}</span>
    </div>
   </div>
-  <section className={premium.lowerPanels} aria-label={zh?"会员账户与更新":"Membership and updates"}>
+  <section className={premium.lowerPanels} aria-label={toolPassUiText(lang,"会员账户与更新","Membership and updates")}>
    <div className={premium.lowerCard}>
     <div className={premium.lowerHeading}><div><span className={premium.lowerIcon} aria-hidden="true">▣</span>
-     <div><h2>{zh?"余额与充值":"Balance & top up"}</h2><p>{zh?"用于购买工具包与平台服务":"Use your verified account funds for eligible purchases"}</p></div>
-     </div><Link className={premium.lowerLink} href="/ai-wallet">{zh?"充值与明细":"Top up & details"} ↗</Link></div>
+     <div><h2>{toolPassUiText(lang,"余额与充值","Balance & top up")}</h2><p>{toolPassUiText(lang,"用于购买工具包与平台服务","Use your verified account funds for eligible purchases")}</p></div>
+     </div><Link className={premium.lowerLink} href="/ai-wallet">{toolPassUiText(lang,"充值与明细","Top up & details")} ↗</Link></div>
     <div className={premium.balanceBody}>
-     <div><small>{zh?"账户余额":"Account balance"} · {currency}</small>
-      {verifiedCurrency!==currency||walletBalanceMinor===null?<p className={premium.balanceUnavailable}>{zh?"登录后查看实际余额":"Sign in to view your actual balance"}</p>:
+     <div><small>{toolPassUiText(lang,"账户余额","Account balance")} · {currency}</small>
+      {verifiedCurrency!==currency||walletBalanceMinor===null?<p className={premium.balanceUnavailable}>{toolPassUiText(lang,"登录后查看实际余额","Sign in to view your actual balance")}</p>:
        <strong>{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>}</div>
-     <Link href="/ai-wallet" className={premium.rechargeAction}>{zh?"充值":"Top up"}</Link>
-     <Link href="/account/orders" className={premium.ordersAction}>{zh?"订单记录":"Orders"}</Link>
+     <Link href="/ai-wallet" className={premium.rechargeAction}>{toolPassUiText(lang,"充值","Top up")}</Link>
+     <Link href="/account/orders" className={premium.ordersAction}>{toolPassUiText(lang,"订单记录","Orders")}</Link>
     </div>
-    <p className={premium.lowerFootnote}>{zh?"充值到账、账户明细与历史权益均以真实账户记录为准。":"All funds, receipts and entitlements reflect verified account records."}</p>
+    <p className={premium.lowerFootnote}>{toolPassUiText(lang,"充值到账、账户明细与历史权益均以真实账户记录为准。","All funds, receipts and entitlements reflect verified account records.")}</p>
    </div>
    <div className={premium.lowerCard}>
     <div className={premium.lowerHeading}><div><span className={premium.lowerIcon} aria-hidden="true">♧</span>
-     <div><h2>{zh?"公告中心":"Announcements"}</h2><p>{zh?"平台更新、工具上新与服务资讯":"Updates, new tools and service notices"}</p></div>
-     </div><Link className={premium.lowerLink} href="/announcements">{zh?"查看全部":"View all"} ↗</Link></div>
+     <div><h2>{toolPassUiText(lang,"公告中心","Announcements")}</h2><p>{toolPassUiText(lang,"平台更新、工具上新与服务资讯","Updates, new tools and service notices")}</p></div>
+     </div><Link className={premium.lowerLink} href="/announcements">{toolPassUiText(lang,"查看全部","View all")} ↗</Link></div>
     <div className={premium.noticeList}>
      {notices.length>0?notices.map(item=><Link key={item.id} href={"/announcements#"+encodeURIComponent(item.id)} className={premium.noticeRow}>
-      <span className={premium.noticeBadge}>{zh?"更新":"NEWS"}</span>
+      <span className={premium.noticeBadge}>{toolPassUiText(lang,"更新","NEWS")}</span>
       <span className={premium.noticeTitle}>{zh?item.titleZh:item.titleEn||item.titleZh}</span>
-      <time>{item.publishedAt&&Number.isFinite(Date.parse(item.publishedAt))?new Date(item.publishedAt).toLocaleDateString(zh?"zh-CN":"en-US"):""}</time>
-     </Link>):<p className={premium.lowerFootnote}>{zh?"最新公告可在公告中心查看。":"Visit announcements for platform updates."}</p>}
+      <time>{item.publishedAt&&Number.isFinite(Date.parse(item.publishedAt))?new Date(item.publishedAt).toLocaleDateString(dateLocale):""}</time>
+     </Link>):<p className={premium.lowerFootnote}>{toolPassUiText(lang,"最新公告可在公告中心查看。","Visit announcements for platform updates.")}</p>}
     </div>
    </div>
   </section>
@@ -228,41 +230,41 @@ export default function AllToolsPassPage(){
   {selected&&<div role="presentation" className={premium.overlay} onClick={()=>{if(!busy)setSelected(null)}}>
    <section ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" aria-describedby="toolpass-checkout-desc" dir={rtl?"rtl":"ltr"} className={premium.modal} onClick={event=>event.stopPropagation()}>
     <div className={premium.modalTop}>
-     <div><p className={premium.modalEyebrow}>TOOLPASS</p><h2 id="toolpass-checkout-title" className={premium.modalTitle}>{zh?"确认购买":"Confirm purchase"}</h2></div>
-     <button ref={closeRef} type="button" disabled={busy} className={premium.close} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}>×</button>
+     <div><p className={premium.modalEyebrow}>TOOLPASS</p><h2 id="toolpass-checkout-title" className={premium.modalTitle}>{toolPassUiText(lang,"确认购买","Confirm purchase")}</h2></div>
+     <button ref={closeRef} type="button" disabled={busy} className={premium.close} aria-label={toolPassUiText(lang,"关闭","Close")} onClick={()=>setSelected(null)}>×</button>
     </div>
     <div className={premium.summary}>
      <div className={premium.summaryIcon} aria-hidden="true">♛</div>
      <div className={premium.summaryInfo}>
-      <strong>{zh?"工具包会员":"ToolPass membership"} · {[c.week,c.month,c.quarter,c.year][ALL_TOOLS_PASS_CATALOG.findIndex(o=>o.sku===selected.sku)]}</strong>
-      <p id="toolpass-checkout-desc">{zh?"解锁全场 100+ 实用工具（含后续新增）":"All 100+ practical tools and new additions"}</p>
+      <strong>{toolPassUiText(lang,"工具包会员","ToolPass membership")} · {[c.week,c.month,c.quarter,c.year][ALL_TOOLS_PASS_CATALOG.findIndex(o=>o.sku===selected.sku)]}</strong>
+      <p id="toolpass-checkout-desc">{toolPassUiText(lang,"解锁全场 100+ 实用工具（含后续新增）","All 100+ practical tools and new additions")}</p>
      </div>
      <strong className={premium.summaryPrice}>{currency==="CNY"?"¥":"$"}{selected.price}</strong>
     </div>
-    <h3 className={premium.methodTitle}>{zh?"选择支付方式":"Choose payment method"}</h3>
+    <h3 className={premium.methodTitle}>{toolPassUiText(lang,"选择支付方式","Choose payment method")}</h3>
     <div>
      {choices.map(choice=><button type="button" key={choice.id} aria-pressed={method===choice.id} disabled={!choice.ready||busy}
       className={premium.payMethod} onClick={()=>{setMethod(choice.id);setMessage("");}}>
       <span aria-hidden="true" className={premium.radio}/>
       <span className={premium.payIcon} aria-hidden="true">{choice.id==="wallet"?"▣":choice.id==="wechat"?"微":choice.id==="alipay"?"支":"P"}</span>
       <span className={premium.payLabel}>{choice.label}{choice.id==="wallet"&&verifiedCurrency===currency&&walletBalanceMinor!==null?
-       <small className="block text-xs text-[var(--lx-muted)]">{zh?"当前余额":"Balance"}：{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</small>:null}</span>
-      <span className={premium.payStatus}>{choice.ready?(zh?"可使用":"Available"):(zh?"暂未开放":"Unavailable")}</span>
+       <small className="block text-xs text-[var(--lx-muted)]">{toolPassUiText(lang,"当前余额","Balance")}：{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</small>:null}</span>
+      <span className={premium.payStatus}>{choice.ready?(toolPassUiText(lang,"可使用","Available")):(toolPassUiText(lang,"暂未开放","Unavailable"))}</span>
      </button>)}
      {currency==="CNY"&&<button type="button" className={premium.payMethod} disabled={busy}
       onClick={()=>{setCurrency("USD");setPreferredCurrency("USD");setMethod("paypal");setMessage("");}}>
       <span aria-hidden="true" className={premium.radio}/><span className={premium.payIcon}>P</span>
       <span className={premium.payLabel}>PayPal <small className="block text-xs text-[var(--lx-muted)]">USD</small></span>
-      <span className={premium.payStatus}>{providers.paypal&&paymentReady?(zh?"切换美元支付":"Pay in USD"):(zh?"暂未开放":"Unavailable")}</span>
+      <span className={premium.payStatus}>{providers.paypal&&paymentReady?(toolPassUiText(lang,"切换美元支付","Pay in USD")):(toolPassUiText(lang,"暂未开放","Unavailable"))}</span>
      </button>}
     </div>
     {message&&<p role="alert" className="mt-3 text-sm text-amber-700">{message}</p>}
     <div className={premium.payFooter}>
-     <div><span className="block text-xs text-[var(--lx-muted)]">{zh?"应付金额":"Total"}</span><strong>{currency==="CNY"?"¥":"$"}{selected.price}</strong></div>
-     <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}>{busy?c.processing:zh?"立即支付":"Pay now"}</button>
+     <div><span className="block text-xs text-[var(--lx-muted)]">{toolPassUiText(lang,"应付金额","Total")}</span><strong>{currency==="CNY"?"¥":"$"}{selected.price}</strong></div>
+     <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}>{busy?c.processing:toolPassUiText(lang,"立即支付","Pay now")}</button>
     </div>
-    {!choices.some(choice=>choice.ready)&&<p role="status" className={premium.modalNote}>{zh?"当前支付方式暂未开放，完成商户验证后可使用。":"Payment methods open after merchant verification."}</p>}
-    <p className={premium.modalNote}><Link href="/ai-wallet" className="underline underline-offset-4">{zh?"查看余额与充值":"View balance & top up"}</Link></p>
+    {!choices.some(choice=>choice.ready)&&<p role="status" className={premium.modalNote}>{toolPassUiText(lang,"当前支付方式暂未开放，完成商户验证后可使用。","Payment methods open after merchant verification.")}</p>}
+    <p className={premium.modalNote}><Link href="/ai-wallet" className="underline underline-offset-4">{toolPassUiText(lang,"查看余额与充值","View balance & top up")}</Link></p>
    </section>
   </div>}
  </main>;
