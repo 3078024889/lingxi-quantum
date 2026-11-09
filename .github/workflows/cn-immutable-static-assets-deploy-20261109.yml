@@ -40,11 +40,21 @@ jobs:
           commit="$(gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json targetCommitish --jq .targetCommitish)"
           test "$commit" = "$SOURCE_SHA"
           gh release download "$RELEASE_TAG" --repo "$GH_REPO" --dir downloaded \
-            --pattern "$ARCHIVE" --pattern eight-parts.sha256 --pattern micro-parts.sha256
+            --pattern "$ARCHIVE" --pattern eight-parts.sha256 --pattern micro-parts.sha256 --pattern cn-20261108-unified-standalone.sha256
           test "$(stat -c '%s' "downloaded/$ARCHIVE")" = "$ARCHIVE_BYTES"
           printf '%s  %s\n' "$ARCHIVE_SHA" "downloaded/$ARCHIVE" | sha256sum -c -
           printf '%s  %s\n' "$ORIGINAL_EIGHT_MANIFEST_SHA" downloaded/eight-parts.sha256 | sha256sum -c -
           printf '%s  %s\n' "$OLD_49_MANIFEST_SHA" downloaded/micro-parts.sha256 | sha256sum -c -
+          printf '%s  %s\n' b779e13ca3ba10eaefb71d05a9d66c6c33c7cf45eae9867ad1c5ea61bafa566f downloaded/cn-20261108-unified-standalone.sha256 | sha256sum -c -
+          gh api "repos/$GH_REPO/contents/scripts/ops/ecs-cn3193-unified-standalone-stage-20261108.sh?ref=$SOURCE_SHA" --jq .content | base64 -d > downloaded/ecs-cn3193-unified-standalone-stage-20261108.sh
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          script=Path("downloaded/ecs-cn3193-unified-standalone-stage-20261108.sh").read_bytes()
+          blob=hashlib.sha1(b"blob "+str(len(script)).encode()+b"\\0"+script).hexdigest()
+          if blob!="5950978bed667dc4d52c66de2d29065313f79c44":raise SystemExit("DEPLOY_SCRIPT_SOURCE_BLOB_INVALID")
+          print("CN_IMMUTABLE_DEPLOY_SCRIPT_SHA256="+hashlib.sha256(script).hexdigest())
+          PY
           echo "CN_ORIGINAL_IMMUTABLE_SOURCE_AND_SHA256_PASS"
       - name: Create 56 public 8MiB binary assets and cross-check original eight part hashes
         run: |
@@ -90,7 +100,9 @@ jobs:
           (asset/"all-micro-parts.sha256").write_text(
               "".join(f"{h}  {name}\n" for h,name in manifest))
           (asset/"eight-parts.sha256").write_bytes((root/"eight-parts.sha256").read_bytes())
-          print("CN_CF_STATIC_ASSETS_VERIFIED 56 blocks bytes="+str(total))
+          for name in ("cn-20261108-unified-standalone.sha256","ecs-cn3193-unified-standalone-stage-20261108.sh"):
+              (asset/name).write_bytes((root/name).read_bytes())
+          print("CN_CF_STATIC_ASSETS_VERIFIED 56 blocks plus 4 manifests/script bytes="+str(total))
           print("CN_CF_ALL_MICRO_MANIFEST_SHA="+hashlib.sha256((asset/"all-micro-parts.sha256").read_bytes()).hexdigest())
           PY
           (cd release-assets && sha256sum -c all-micro-parts.sha256 >/dev/null)
