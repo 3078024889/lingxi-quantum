@@ -1,0 +1,58 @@
+name: COM exact public catalog function in isolated Worker (NO PROD ROUTES)
+on:
+  push:
+    branches: [probe/com-catalog-functional-edge-20261109]
+    paths:
+      - 'workers/com-catalog-functional-edge/index.mjs'
+      - '.github/workflows/com-catalog-functional-edge-20261109.yml'
+permissions: {contents: read}
+concurrency:
+  group: com-catalog-functional-edge
+  cancel-in-progress: true
+jobs:
+  repro:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 12
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Verify isolated public-only source
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID" && test -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY"
+          node --check workers/com-catalog-functional-edge/index.mjs
+          node --check scripts/cloudflare/public-market-listings.mjs
+          node --test tests/com-public-market-edge.test.mjs
+          node - <<'NODE'
+          const fs=require('fs');
+          const config={name:'lingxifield-com-catalog-functional-20261109',
+            main:'workers/com-catalog-functional-edge/index.mjs',
+            compatibility_date:'2026-11-01',workers_dev:true,
+            vars:{NEXT_PUBLIC_SUPABASE_URL:'https://sxsgdpqojepgbbrxrzlq.supabase.co'}};
+          fs.writeFileSync('wrangler.catalog-probe.json',JSON.stringify(config));
+          NODE
+          npm install -g wrangler@4.158.0 >/dev/null
+      - name: Deploy un-routed public-catalog executable only
+        run: wrangler deploy --config wrangler.catalog-probe.json --no-upload-source-maps
+      - name: Bind public anonymous key securely and wait for propagation
+        run: |
+          set -Eeuo pipefail
+          printf '%s' "$NEXT_PUBLIC_SUPABASE_ANON_KEY" | wrangler secret put NEXT_PUBLIC_SUPABASE_ANON_KEY --name lingxifield-com-catalog-functional-20261109
+          url=https://lingxifield-com-catalog-functional-20261109.3078024889.workers.dev/market
+          success=0
+          for i in $(seq 1 24);do
+            status="$(curl -4sS --connect-timeout 8 --max-time 35 -D "$RUNNER_TEMP/cat.headers" -o "$RUNNER_TEMP/cat.body" -w '%{http_code}' "$url" || true)"
+            code="$(grep -i '^x-lingxi-catalog-diagnostic:' "$RUNNER_TEMP/cat.headers" | tr -d '\r' | cut -d ' ' -f2 || true)"
+            echo "COM_FUNCTIONAL_CATALOG_ATTEMPT=$i HTTP=$status DIAGNOSTIC=${code:-none}"
+            if [[ "$status" = "200" ]];then success=1;break;fi
+            sleep 4
+          done
+          test "$success" -eq 1
+          echo 'COM_CATALOG_PUBLIC_FUNCTION_PASS_NO_PRODUCTION_ROUTE'
