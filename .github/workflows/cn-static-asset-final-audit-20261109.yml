@@ -26,7 +26,7 @@ jobs:
           curl -4fsS --retry 5 --connect-timeout 10 --max-time 30 -o "$RUNNER_TEMP/check" "$base/cn-20261108-unified-standalone.sha256"
           printf '%s  %s\n' b779e13ca3ba10eaefb71d05a9d66c6c33c7cf45eae9867ad1c5ea61bafa566f "$RUNNER_TEMP/check" | sha256sum -c -
           python3 - "$RUNNER_TEMP/all-micro" "$base" <<'PY'
-          import concurrent.futures, urllib.request, sys, re
+          import concurrent.futures, subprocess, sys, re
           path,base=sys.argv[1:]
           entries=[]
           for line in open(path):
@@ -36,11 +36,13 @@ jobs:
               entries.append(name)
           if len(entries)!=56 or len(set(entries))!=56:raise SystemExit("INVALID_STATIC_MANIFEST_COUNT")
           def check(name):
-              request=urllib.request.Request(base+"/"+name,method="HEAD")
-              with urllib.request.urlopen(request,timeout=18) as res:
-                  size=int(res.headers.get("Content-Length","-1"))
-                  if res.status!=200 or size<1000000 or size>8388608:
-                      raise ValueError("INVALID_STATIC_ASSET_HTTP_OR_SIZE:"+name)
+              res=subprocess.run(["curl","-4fsSI","--connect-timeout","10","--max-time","25",base+"/"+name],capture_output=True,text=True)
+              headers=res.stdout.lower()
+              if res.returncode!=0 or "http/2 200" not in headers and "http/1.1 200" not in headers:
+                  raise ValueError("INVALID_STATIC_ASSET_HTTP:"+name)
+              lines=[x.strip().split(":",1)[1].strip() for x in headers.splitlines() if x.startswith("content-length:")]
+              if not lines or not (1000000<=int(lines[-1])<=8388608):
+                  raise ValueError("INVALID_STATIC_ASSET_SIZE:"+name)
               return name
           with concurrent.futures.ThreadPoolExecutor(max_workers=7) as pool:
               list(pool.map(check,entries))
