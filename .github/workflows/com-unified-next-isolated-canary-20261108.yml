@@ -25,6 +25,14 @@ on:
       - 'lib/sasi-software/ui-copy.ts'
       - 'app/api/sasi/marketplace/listings/route.ts'
       - 'app/tools/pass/page.tsx'
+      - 'app/account/page.tsx'
+      - 'app/ai-wallet/page.tsx'
+      - 'app/lingxifield-premium-20261109.css'
+      - 'app/layout.tsx'
+      - 'components/AccountCenterV26.tsx'
+      - 'components/WalletLivePanel.tsx'
+      - 'components/tools/ToolsHubV11.tsx'
+      - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
       - 'lib/tools/commerce/toolpass-premium-copy.ts'
       - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
       - 'tests/sasi-premium-nine-language-20261109.test.mjs'
@@ -83,6 +91,7 @@ jobs:
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
           node --test tests/sasi-com-closure-20261108.test.mjs tests/com-next-release-safety-20261108.test.mjs
           node --test tests/com-wallet-static-session-contract-20261108.test.mjs
+          node --test tests/dual-premium-visual-no-legacy-20261109.test.mjs
           node --test tests/com-payment-edge-merchant-readiness-20261108.test.mjs
           pnpm exec tsc --noEmit
       - name: Diagnose anonymous database catalog from GitHub runner without payment changes

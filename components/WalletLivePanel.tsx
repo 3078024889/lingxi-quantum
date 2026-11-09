@@ -26,6 +26,7 @@ function validSummary(value:unknown):value is Summary{
 }
 export default function WalletLivePanel(){
  const [data,setData]=useState<State>({status:"loading"});
+ const [tab,setTab]=useState<"ledger"|"withdrawals">("ledger");
  const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean}|null>(null);
  useEffect(()=>{
   const controller=new AbortController();
@@ -73,48 +74,52 @@ export default function WalletLivePanel(){
  </section>;
  const {balances,withdrawals}=data.summary;
  const payReady=providers?.wechat===true||providers?.alipay===true;
- return <>
-  <div className="grid gap-4 sm:grid-cols-2">
-   {(["CNY","USD"] as const).map(currency=>{
-    const balance=balances[currency];
-    return <section key={currency} className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6 shadow-sm">
-     <p className="text-sm text-[var(--lx-muted)]">{currency==="CNY"?<LxText zh="人民币余额" en="CNY balance"/>:<LxText zh="美元余额" en="USD balance"/>}</p>
-     <p className="mt-4 font-display text-3xl font-semibold text-[var(--lx-ink)]">{money(currency,balance.availableMinor)}</p>
-     <div className="mt-6 grid grid-cols-2 gap-3 border-t border-[var(--lx-line)] pt-4 text-xs text-[var(--lx-muted)]">
-      <div><p><LxText zh="可退金额" en="Refundable"/></p><p className="mt-2 font-semibold">{money(currency,balance.refundableMinor)}</p></div>
-      <div><p><LxText zh="退款占用" en="Refund hold"/></p><p className="mt-2 font-semibold">{money(currency,balance.refundHoldMinor)}</p></div>
-     </div>
-    </section>;
-   })}
-  </div>
-  <section className="mt-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-   <h2 className="text-xl font-semibold"><LxText zh="人民币余额充值" en="Top up CNY balance"/></h2>
-   <p className="mt-2 text-sm text-[var(--lx-muted)]"><LxText zh="仅在支付回调完成服务端验证后入账。" en="Credit is added only after verified payment."/></p>
-   <p role="status" className="mt-3 text-sm text-[var(--lx-muted)]">{payReady?
-    <LxText zh="当前存在可用支付通道" en="Payment provider available"/>:
-    <LxText zh="支付通道未开放时不会扣款或创建收费订单" en="No charge or paid order is created while providers are disabled"/>}</p>
-   <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
-    {BALANCE_TOPUP_AMOUNTS.map(amount=><Link key={amount} href={`/checkout?productId=sasi-balance-${amount}&redirect=%2Fai-wallet`}
-      className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] px-4 py-4 text-center text-lg font-semibold transition hover:border-[var(--lx-line-strong)]">¥{amount}</Link>)}
+ return <div className="lx26-wallet">
+  <section className="lx26-wallet-overview">
+   <h2 className="lx26-section-title"><span className="lx26-wallet-symbol">◇</span><LxText zh="资产总览" en="Balance overview" ja="資産概要" ko="잔액 개요" fr="Vue d'ensemble" de="Guthabenübersicht" es="Resumen de saldo" pt="Resumo do saldo" ar="نظرة عامة"/></h2>
+   <div className="lx26-balance-grid">
+    {(["CNY","USD"] as const).map(currency=>{
+      const b=balances[currency];
+      return <section key={currency} className={"lx26-balance-card "+(currency==="CNY"?"is-cny":"is-usd")} aria-label={currency}>
+       <div className="lx26-balance-primary">
+        <span className="lx26-currency-symbol" aria-hidden="true">{currency==="CNY"?"¥":"$"}</span>
+        <span><small>{currency==="CNY"?<LxText zh="人民币余额" en="CNY balance"/>:<LxText zh="美元余额" en="USD balance"/>}</small><strong>{money(currency,b.availableMinor)}</strong></span>
+       </div>
+       <div className="lx26-balance-metrics">
+        <span><small><LxText zh="可退金额" en="Refundable"/></small><b>{money(currency,b.refundableMinor)}</b></span>
+        <span><small><LxText zh="退款占用" en="Refund hold"/></small><b>{money(currency,b.refundHoldMinor)}</b></span>
+       </div>
+      </section>;
+    })}
    </div>
   </section>
-  <section id="withdrawals" className="mt-8 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-6">
-   <h2 className="text-xl font-semibold"><LxText zh="退款与提现记录" en="Refund and withdrawal history"/></h2>
-   {withdrawals.length? <div className="mt-4 divide-y divide-[var(--lx-line)]">
-    {withdrawals.map((r,i)=><div key={r.id||i} className="flex items-center justify-between gap-3 py-3 text-sm">
-     <div><p className="font-semibold">{money(r.currency==="USD"?"USD":"CNY",Number(r.amount_minor))}</p>
-      <p className="mt-1 text-xs text-[var(--lx-muted)]">{new Date(r.created_at).toLocaleDateString()}</p></div>
-     <span className="text-[var(--lx-muted)]">{String(r.normalized_status||"—")}</span>
-    </div>)}
-   </div>:<p className="mt-4 text-sm text-[var(--lx-muted)]"><LxText zh="暂无退款或提现记录。" en="No refunds or withdrawals recorded."/></p>}
-   <Link href="/account/support" className="mt-4 inline-block text-sm underline"><LxText zh="退款问题与处理进度" en="Refund support"/></Link>
+  <section className="lx26-wallet-topup">
+   <div className="lx26-topup-selector">
+    <h2 className="lx26-section-title"><span aria-hidden="true">▣</span><LxText zh="人民币充值" en="CNY top-up"/></h2>
+    <p><LxText zh="选择充值金额" en="Choose an amount"/></p>
+    <div className="lx26-topup-amounts">
+     {BALANCE_TOPUP_AMOUNTS.map(amount=>payReady?
+      <Link key={amount} href={`/checkout?productId=sasi-balance-${amount}&redirect=%2Fai-wallet`} className="lx26-topup-choice">¥{amount}</Link>:
+      <span key={amount} className="lx26-topup-choice is-unavailable" aria-disabled="true">¥{amount}</span>)}
+    </div>
+   </div>
+   <div className="lx26-wallet-quicklinks">
+    <h2 className="lx26-section-title"><span aria-hidden="true">✧</span><LxText zh="账户服务" en="Account services"/></h2>
+    <Link href="/account/orders"><LxText zh="订单与使用记录" en="Orders & history"/><span aria-hidden="true">›</span></Link>
+    <Link href="/account/withdrawals"><LxText zh="退款与提现" en="Refunds & withdrawals"/><span aria-hidden="true">›</span></Link>
+    <Link href="/account/support"><LxText zh="处理进度" en="Support progress"/><span aria-hidden="true">›</span></Link>
+   </div>
   </section>
-  <div className="mt-6 flex flex-wrap gap-3 text-sm">
-   <Link href="/account/orders" className="rounded-xl border px-5 py-3"><LxText zh="订单与充值记录" en="Orders & top-up history"/></Link>
-   <Link href="/account/withdrawals" className="rounded-xl border px-5 py-3"><LxText zh="退款与提现" en="Refunds & withdrawals"/></Link>
-   <Link href="/account" className="rounded-xl border px-5 py-3"><LxText zh="账户信息" en="Account"/></Link>
-  </div>
-  <WalletLedgerPanel currency="CNY"/>
-  <WalletLedgerPanel currency="USD"/>
- </>;
+  <section className="lx26-wallet-history">
+   <div className="lx26-wallet-history-tabs" role="tablist" aria-label="Wallet history">
+    <button type="button" role="tab" aria-selected={tab==="ledger"} className={tab==="ledger"?"is-active":""} onClick={()=>setTab("ledger")}><LxText zh="充值与余额流水" en="Wallet activity"/></button>
+    <button type="button" role="tab" aria-selected={tab==="withdrawals"} className={tab==="withdrawals"?"is-active":""} onClick={()=>setTab("withdrawals")}><LxText zh="退款与提现" en="Refunds & withdrawals"/></button>
+   </div>
+   {tab==="ledger"?<div role="tabpanel" className="lx26-wallet-ledgers"><WalletLedgerPanel currency="CNY"/><WalletLedgerPanel currency="USD"/></div>:
+    <div role="tabpanel" className="lx26-wallet-withdrawals">
+      {withdrawals.length?withdrawals.map(r=><div className="lx26-withdrawal-row" key={r.id}><span><strong>{money(r.currency==="USD"?"USD":"CNY",Number(r.amount_minor))}</strong><small>{new Date(r.created_at).toLocaleDateString()}</small></span><span>{String(r.normalized_status||"—")}</span></div>):
+       <div className="lx26-wallet-empty"><span aria-hidden="true">▤</span><h3><LxText zh="暂无记录" en="No records yet"/></h3><p><LxText zh="当前暂无退款或提现记录。" en="No refunds or withdrawals recorded."/></p></div>}
+    </div>}
+  </section>
+ </div>;
 }
