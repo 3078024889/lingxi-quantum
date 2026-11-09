@@ -107,7 +107,7 @@ export default function SasiMarketplaceProductDetail(){
     </div>
     <section className={styles.details} aria-labelledby="sasi-product-full-details">
      <h2 id="sasi-product-full-details">{zh?"软件详情":"Software details"}</h2>
-     <div className={styles.description}><p>{descriptionOpen?fullDescription:excerpt}</p></div>
+     <div id="sasi-product-expanded" className={styles.description}><p>{descriptionOpen?fullDescription:excerpt}</p></div>
      {descriptionOpen&&details.length>0&&<div className={styles.detailGrid} aria-label={zh?"详情图片":"Detail images"}>
        {details.map((photo,index)=><div key={photo.id} className={styles.detailImage}>
         <img src={photo.url} alt={zh?"软件详情图 "+(index+1):"Software detail "+(index+1)} loading="lazy" referrerPolicy="no-referrer"/>
@@ -117,7 +117,7 @@ export default function SasiMarketplaceProductDetail(){
       aria-controls="sasi-product-expanded" onClick={()=>setDescriptionOpen(v=>!v)}>
        {descriptionOpen?(zh?"收起详情":"Show less"):(zh?"展开更多 · 查看完整图文":"Show more · Full description and images")}
       </button>}
-     <div id="sasi-product-expanded" hidden={!descriptionOpen} className={styles.expandState} aria-hidden="true"/>
+
     </section>
    </>}
  </div></main>;
