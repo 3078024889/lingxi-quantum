@@ -3,7 +3,7 @@
 // or credentials are included. No production routes, no upload/mutation methods.
 const prefix="cn-20261108-unified-standalone.tar.gz.part-";
 function allowed(name){
- if(["eight-parts.sha256","all-micro-parts.sha256","cn-20261108-unified-standalone.sha256","ecs-cn3193-unified-standalone-stage-20261108.sh","cn3193-static-deploy-20261109.sh"].includes(name))return true;
+ if(["eight-parts.sha256","all-micro-parts.sha256","cn-20261108-unified-standalone.sha256","ecs-cn3193-unified-standalone-stage-20261108.sh","cn3193-static-deploy-20261109.sh","cn3194-static-deploy-20261109.sh","ecs-cn3194-unified-standalone-upgrade-20261109.sh","cn-payment-activate-3194-20261109.sh"].includes(name))return true;
  return /^cn-20261108-unified-standalone\.tar\.gz\.part-0[0-7]\.block-0[0-6]$/.test(name);
 }
 export default {

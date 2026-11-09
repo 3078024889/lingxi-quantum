@@ -21,6 +21,9 @@ jobs:
       ARCHIVE_SHA: 4368bd5956dd2f68f6aa46a564ffeef5751fb68d78903182f754831d352602ea
       ARCHIVE_BYTES: '454674344'
       MANIFEST_SHA: 3a58b76d52b9e0d6d773f26b5776296d712768a3fe55961c3514965f2abc8bc1
+      CN3194_SOURCE_REF: 1079b8f69b6622563951664ef960532b61c0fac1
+      CN3194_UPGRADE_BLOB_SHA: 5e509aab527228332b179fc44341c81817ba290c
+      CN3194_PAYMENT_BLOB_SHA: 897a38e8b90c93168396181555a7a008e01c0e24
       CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
@@ -48,6 +51,22 @@ jobs:
           print("CN_STAGE_SCRIPT_BLOB_VERIFIED")
           PY
           bash -n original/ecs-cn3193-unified-standalone-stage-20261108.sh
+          gh api "repos/$GH_REPO/contents/scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261109.sh?ref=$CN3194_SOURCE_REF" --jq .content | base64 -d > original/ecs-cn3194-unified-standalone-upgrade-20261109.sh
+          gh api "repos/$GH_REPO/contents/scripts/ops/cn-payment-activate-3194-20261109.sh?ref=$CN3194_SOURCE_REF" --jq .content | base64 -d > original/cn-payment-activate-3194-20261109.sh
+          python3 - <<'PY'
+          import hashlib,pathlib
+          files=[
+           ("original/ecs-cn3194-unified-standalone-upgrade-20261109.sh","5e509aab527228332b179fc44341c81817ba290c"),
+           ("original/cn-payment-activate-3194-20261109.sh","897a38e8b90c93168396181555a7a008e01c0e24"),
+          ]
+          for name,expected in files:
+           data=pathlib.Path(name).read_bytes()
+           actual=hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+           if actual!=expected:raise SystemExit("CN3194_CONTROLLER_GIT_BLOB_MISMATCH:"+name)
+           print("CN3194_CONTROLLER_GIT_BLOB_PASS:"+name)
+          PY
+          bash -n original/ecs-cn3194-unified-standalone-upgrade-20261109.sh
+          bash -n original/cn-payment-activate-3194-20261109.sh
       - name: Produce 56 reusable 8MiB assets and new SHA-pinned bootstrap
         run: |
           set -Eeuo pipefail
@@ -84,6 +103,11 @@ jobs:
           micro=manifest("all-micro-parts.sha256",blocklist)
           for fn in ["cn-20261108-unified-standalone.sha256","ecs-cn3193-unified-standalone-stage-20261108.sh"]:
            (out/fn).write_bytes((pathlib.Path("original")/fn).read_bytes())
+          for fn in ["ecs-cn3194-unified-standalone-upgrade-20261109.sh","cn-payment-activate-3194-20261109.sh"]:
+           (out/fn).write_bytes((pathlib.Path("original")/fn).read_bytes())
+          bootstrap3194=pathlib.Path("scripts/ops/cn3194-static-deploy-20261109.sh").read_bytes()
+          (out/"cn3194-static-deploy-20261109.sh").write_bytes(bootstrap3194)
+          print("CN3194_STATIC_BOOTSTRAP_SHA256="+hashlib.sha256(bootstrap3194).hexdigest())
           deploysha=hashlib.sha256((out/"ecs-cn3193-unified-standalone-stage-20261108.sh").read_bytes()).hexdigest()
           boot=pathlib.Path("scripts/ops/cn3193-static-deploy-20261109.sh").read_text()
           required={
@@ -109,6 +133,10 @@ jobs:
           (cd public-assets && sha256sum -c all-micro-parts.sha256 >/dev/null)
           bash -n public-assets/cn3193-static-deploy-20261109.sh
           node --check workers/cn-immutable-static-release/index.mjs
+          bash -n public-assets/cn3194-static-deploy-20261109.sh
+          bash -n public-assets/ecs-cn3194-unified-standalone-upgrade-20261109.sh
+          bash -n public-assets/cn-payment-activate-3194-20261109.sh
+          node --test tests/cn3194-static-deploy-20261109.test.mjs
           node --input-type=module <<'JS'
           import {writeFileSync} from "node:fs";
           writeFileSync("wrangler.cn-celestial.json",JSON.stringify({
@@ -143,6 +171,10 @@ jobs:
           done
           curl -4fsS --max-time 22 -o "$RUNNER_TEMP/bootstrap" "$base/cn3193-static-deploy-20261109.sh"
           cmp "$RUNNER_TEMP/bootstrap" public-assets/cn3193-static-deploy-20261109.sh
+          for name in cn3194-static-deploy-20261109.sh ecs-cn3194-unified-standalone-upgrade-20261109.sh cn-payment-activate-3194-20261109.sh;do
+           curl -4fsS --retry 4 --connect-timeout 10 --max-time 80 -o "$RUNNER_TEMP/$name" "$base/$name"
+           cmp "$RUNNER_TEMP/$name" "public-assets/$name"
+          done
           blocked="$(curl -4sS --max-time 12 -o /dev/null -w '%{http_code}' "$base/private/keys")"
           test "$blocked" = 404
-          echo CN_CELESTIAL_56_ASSETS_AND_BOOTSTRAP_EDGE_PASS_NO_PROD_CHANGED
+          echo CN3194_STATIC_ASSETS_AND_BOOTSTRAP_PASS
