@@ -30,6 +30,8 @@ test("new wallet and tools layouts are part of the live 3194 probe",()=>{
   assert.match(stage,/lx26-tools-page/);
   assert.match(stage,/CN3194_FOUR_TOOLPASS_OFFERS_PASS/);
   assert.match(stage,/api\/sasi\/account 401/);
+  assert.match(stage,/api\/sasi\/generation\/submit 410/);
+  assert.match(stage,/api\/cron\/sasi-v5-radar 410/);
 });
 
 test("promotion remains fail-closed for payment and marketplace until signed audit",()=>{
