@@ -58,7 +58,7 @@ jobs:
           size=src.stat().st_size
           part=(size+7)//8
           blocksize=8*1024*1024
-          old=[],[]
+          # Exact full SHA and asset boundaries are independently checked below.
           partlist=[];blocklist=[]
           with src.open("rb") as f:
            for i in range(8):
