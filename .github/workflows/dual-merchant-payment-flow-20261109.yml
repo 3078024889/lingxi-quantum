@@ -1,0 +1,44 @@
+name: Dual-site live payment endpoint & delivery safety audit (NO CHARGE)
+on:
+  push:
+    branches: [audit/dual-merchant-payment-flow-20261109]
+    paths: ['.github/workflows/dual-merchant-payment-flow-20261109.yml']
+permissions: {contents: read}
+jobs:
+  public-checkout:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Inspect real provider flags, unauthorized order and signed webhooks without creating orders
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for host in lingxifield.cn lingxifield.com; do
+            echo "MERCHANT_HOST=$host"
+            url="https://$host"
+            providers="$(curl -4fsS --connect-timeout 10 --max-time 28 "$url/api/pay/providers")"
+            printf '%s' "$providers" | jq -c '{wechat,alipay,paypal,configured:{wechat:.diagnostics.wechat.configured,alipay:.diagnostics.alipay.configured,paypal:.diagnostics.paypal.configured}}' | sed "s/^/MERCHANT_PROVIDER_STATUS host=$host /"
+            for path in /api/pay/create /api/pay/alipay/create /api/pay/wechat/create; do
+              status="$(curl -4sS --connect-timeout 10 --max-time 24 -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' --data '{}' "$url$path" || true)"
+              echo "MERCHANT_UNAUTHENTICATED_POST host=$host path=$path HTTP=$status"
+              case "$status" in
+                200|201|202) echo "UNAUTHENTICATED_ORDER_ACCEPTED" >&2; exit 1;;
+              esac
+            done
+            for provider in paypal alipay wechat; do
+              path="/api/pay/$provider/$( [[ "$provider" == "wechat" ]] && printf notify || printf webhook )"
+              if [[ "$provider" == "alipay" ]];then path="/api/pay/alipay/notify";fi
+              status="$(curl -4sS --connect-timeout 10 --max-time 24 -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' --data '{}' "$url$path" || true)"
+              echo "MERCHANT_UNTRUSTED_WEBHOOK host=$host path=$path HTTP=$status"
+              if [[ "$status" =~ ^2[0-9][0-9]$ ]];then
+                echo "UNTRUSTED_WEBHOOK_ACCEPTED" >&2; exit 1
+              fi
+            done
+            for path in /api/money/summary /api/sasi/marketplace/my-orders;do
+              status="$(curl -4sS --connect-timeout 10 --max-time 24 -o /dev/null -w '%{http_code}' "$url$path" || true)"
+              echo "MERCHANT_PRIVATE_PROTECTED host=$host path=$path HTTP=$status"
+              [[ "$status" = "401" ]] || { echo "PRIVATE_AUTH_GATE_NOT_READY" >&2;exit 1; }
+            done
+            echo "MERCHANT_HOST_AUDITED=$host"
+          done
+          echo "DUAL_MERCHANT_NO_CHARGE_AUDIT_COMPLETE"
