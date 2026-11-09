@@ -31,5 +31,34 @@ export async function publicMarketListings(request,env,fetcher=fetch){
    if(attempt===1)break;
   }
  }
+ // A network failure at the edge is not a failed merchant approval. The domestic site
+ // reads the same RLS-restricted published catalog and is a verified public-only fallback.
+ // Never use it for 401/403, private 'mine', mutations or invalid upstream rows.
+ if(["upstream-network-error","upstream-timeout","upstream-502","upstream-503","upstream-504"].includes(reason)){
+  try{
+   const fallback=await fetcher("https://lingxifield.cn/api/sasi/marketplace/listings",{
+    method:"GET",headers:{accept:"application/json"},redirect:"error",signal:AbortSignal.timeout(9000)
+   });
+   if(fallback.status===200){
+    const payload=await fallback.json();
+    const rows=payload?.items;
+    const valid=Array.isArray(rows)&&rows.length<=36&&rows.every(row=>
+     row&&typeof row.id==="string"&&typeof row.title==="string"&&
+     typeof row.description==="string"&&typeof row.category==="string"&&
+     Number.isSafeInteger(row.price_cny_minor)&&Number.isSafeInteger(row.price_usd_minor)&&
+     row.status==="published"&&row.scan_status==="clean");
+    if(valid){
+     const keys=["id","seller_id","title","description","category","price_cny_minor","price_usd_minor","status","scan_status","published_at","created_at"];
+     const items=rows.map(row=>{
+      const safe={};
+      for(const key of keys)safe[key]=row[key]??null;
+      safe.description=row.description.slice(0,800);
+      return safe;
+     });
+     return reply({items},200,"cn-verified-public-fallback");
+    }
+   }
+  }catch{}
+ }
  return reply({items:[],error:"MARKET_LISTINGS_UNAVAILABLE"},503,reason);
 }
