@@ -1,0 +1,43 @@
+name: LINGXIFIELD Cloudflare legacy route inventory (READ ONLY)
+on:
+  push:
+    branches: [feat/dual-visual-wallet-account-tools-20261109]
+    paths: ['.github/workflows/dual-legacy-cloudflare-route-inventory-20261109.yml']
+permissions: {contents: read}
+jobs:
+  observe:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Read exact live Cloudflare scripts and routes without touching binding or deployment
+        run: |
+          node --input-type=module <<'JS'
+          const api="https://api.cloudflare.com/client/v4";
+          const account=process.env.CF_ACCOUNT,token=process.env.CF_TOKEN;
+          if(!account||!token)throw Error("CLOUDFLARE_READ_ONLY_CREDENTIALS_MISSING");
+          async function get(path){
+           const r=await fetch(api+path,{headers:{Authorization:"Bearer "+token},signal:AbortSignal.timeout(20000)});
+           const j=await r.json().catch(()=>null);
+           if(!r.ok||j?.success!==true)throw Error("CLOUDFLARE_READ_ONLY_HTTP_"+r.status);
+           return j.result;
+          }
+          const zones=await get("/zones?name=lingxifield.com");
+          const zone=zones.filter(z=>z.name==="lingxifield.com"&&z.status==="active");
+          if(zone.length!==1)throw Error("CLOUDFLARE_ZONE_NOT_UNIQUE");
+          const routes=await get("/zones/"+zone[0].id+"/workers/routes");
+          const scripts=await get("/accounts/"+account+"/workers/scripts");
+          const routemap=new Map();
+          for(const r of routes){if(!r.script)continue;const arr=routemap.get(r.script)||[];arr.push(r.pattern);routemap.set(r.script,arr)}
+          for(const name of [...scripts].map(x=>x.id||x.script||x.name).filter(Boolean).sort()){
+           if(!/(lingxi|sasi|siai|global)/i.test(name))continue;
+           const active=routemap.get(name)||[];
+           const state=active.length?"LIVE_ROUTE_REF":"NO_ZONE_ROUTE_REF";
+           console.log("CLOUDFLARE_WORKER_INVENTORY "+JSON.stringify({script:name,state,routeCount:active.length}));
+          }
+          for(const r of routes.filter(x=>/lingxifield\.com/.test(x.pattern)))console.log("CLOUDFLARE_ACTIVE_ROUTE "+JSON.stringify({pattern:r.pattern,script:r.script||null}));
+          console.log("CLOUDFLARE_READ_ONLY_LEGACY_INVENTORY_PASS");
+          JS
