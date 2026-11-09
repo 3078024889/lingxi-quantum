@@ -40,7 +40,9 @@ export default function ToolsHubV11(){
     <p>{toolHubCopy(lang,"subtitle")}</p>
     <div className="lx-cel-tools-main-search"><span aria-hidden="true">⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")} aria-label={toolHubCopy(lang,"search")}/><kbd>⌘ K</kbd></div>
    </div>
-   <aside className="lx-cel-tools-side"><RecentTools/><Link href="/tools/pass" className="lx-cel-tools-pass-link"><span className="lx-cel-tools-pass-icon">◈</span><span><b>{lang==="zh"?"全场 100+ 实用工具包":"100+ Tools Pass"}</b><small>{lang==="zh"?"一个通用包，覆盖现有及新增工具":"Current and future practical tools"}</small></span><span aria-hidden="true">→</span></Link></aside>
+   <aside className="lx-cel-tools-side"><RecentTools/>
+   <div className="lx-cel-tools-starters"><h2>{lang==="zh"?"快速开始":"Quick access"}</h2><div>{tools.slice(0,2).map(item=><Link key={item.href} href={item.href}><ToolGlyph kind={item.kind} slug={item.slug}/><span>{toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn)}</span><b aria-hidden="true">→</b></Link>)}</div></div>
+   <Link href="/tools/pass" className="lx-cel-tools-pass-link"><span className="lx-cel-tools-pass-icon">◈</span><span><b>{lang==="zh"?"全场 100+ 实用工具包":"100+ Tools Pass"}</b><small>{lang==="zh"?"一个通用包，覆盖现有及新增工具":"Current and future practical tools"}</small></span><span aria-hidden="true">→</span></Link></aside>
   </section>
   <section className="lx11-tool-searchbar lx-tools-v124-search">
    <div className="lx-tools-v124-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>
