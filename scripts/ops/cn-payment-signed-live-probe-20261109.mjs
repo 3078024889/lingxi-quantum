@@ -71,7 +71,7 @@ async function alipay(cfg){
   app_id:app,method:"alipay.trade.query",format:"JSON",charset:"utf-8",sign_type:"RSA2",
   timestamp:now(),version:"1.0",biz_content:JSON.stringify({out_trade_no:outTradeNo})
  };
- const canonical=Object.entries(params).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>k+"="+v).join("&");
+ const canonical=Object.entries(params).sort(([a],[b])=>a<b?-1:a>b?1:0).map(([k,v])=>k+"="+v).join("&");
  const signer=createSign("RSA-SHA256");signer.update(canonical,"utf8");signer.end();
  params.sign=signer.sign(privateKey,"base64");
  const response=await fetch("https://openapi.alipay.com/gateway.do",{
