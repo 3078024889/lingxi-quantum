@@ -51,7 +51,7 @@ jobs:
           from pathlib import Path
           import hashlib
           script=Path("downloaded/ecs-cn3193-unified-standalone-stage-20261108.sh").read_bytes()
-          blob=hashlib.sha1(b"blob "+str(len(script)).encode()+b"\\0"+script).hexdigest()
+          blob=hashlib.sha1(b"blob "+str(len(script)).encode()+b"\0"+script).hexdigest()
           if blob!="5950978bed667dc4d52c66de2d29065313f79c44":raise SystemExit("DEPLOY_SCRIPT_SOURCE_BLOB_INVALID")
           print("CN_IMMUTABLE_DEPLOY_SCRIPT_SHA256="+hashlib.sha256(script).hexdigest())
           PY
