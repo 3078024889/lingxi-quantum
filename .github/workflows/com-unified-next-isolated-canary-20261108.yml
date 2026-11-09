@@ -252,8 +252,14 @@ jobs:
             test "$count" = 3
           done
           for path in /api/money/summary /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
-            status="$(curl -4sS --connect-timeout 9 --max-time 25 -o /dev/null -w '%{http_code}' "$url$path" || true)"
-            echo "COM_CANARY_PRIVATE_ROUTE path=$path HTTP_$status"
+            body="$(mktemp)"
+            status="$(curl -4sS --connect-timeout 9 --max-time 25 -o "$body" -w '%{http_code}' "$url$path" || true)"
+            reason="UNKNOWN"
+            if grep -q 'SERVICE_UNAVAILABLE' "$body";then reason="SERVICE_UNAVAILABLE";fi
+            if grep -q 'MONEY_SUMMARY_UNAVAILABLE' "$body";then reason="MONEY_SUMMARY_UNAVAILABLE";fi
+            if grep -q 'UNAUTHORIZED' "$body";then reason="UNAUTHORIZED";fi
+            echo "COM_CANARY_PRIVATE_ROUTE path=$path HTTP_$status reason=$reason"
+            rm -f "$body"
             test "$status" = 401 || exit 1
           done
           for asset in /media/ffmpeg-0.12.10/ffmpeg-core.wasm /models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx;do
