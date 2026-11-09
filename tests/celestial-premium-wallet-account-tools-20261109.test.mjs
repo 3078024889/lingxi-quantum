@@ -6,7 +6,7 @@ const wallet=read("components/WalletLivePanel.tsx");
 const walletPage=read("app/ai-wallet/page.tsx");
 const account=read("app/account/page.tsx");
 const tools=read("components/tools/ToolsHubV11.tsx");
-const css=read("app/celestial-ui-20261109.css");
+const css=read("app/lingxifield-premium-20261109.css");
 const shell=read("app/layout.tsx");
 test("wallet shows real CNY/USD balances from authenticated summary, never hardcodes amounts or changes money endpoints",()=>{
  assert.match(wallet,/fetch\("\/api\/money\/summary"/);
@@ -14,9 +14,9 @@ test("wallet shows real CNY/USD balances from authenticated summary, never hardc
  assert.match(wallet,/if\(!validSummary\(result\)\)/);
  assert.match(wallet,/status:"error"/);
  assert.match(wallet,/balances\[currency\]/);
- assert.match(wallet,/balance\.availableMinor/);
- assert.match(wallet,/balance\.refundableMinor/);
- assert.match(wallet,/balance\.refundHoldMinor/);
+ assert.match(wallet,/b\.availableMinor/);
+ assert.match(wallet,/b\.refundableMinor/);
+ assert.match(wallet,/b\.refundHoldMinor/);
  assert.match(wallet,/new Intl\.NumberFormat/);
  assert.match(wallet,/BALANCE_TOPUP_AMOUNTS\.map/);
  assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
@@ -24,41 +24,44 @@ test("wallet shows real CNY/USD balances from authenticated summary, never hardc
  assert.match(wallet,/WalletLedgerPanel currency="USD"/);
  assert.doesNotMatch(wallet,/支付通道暂未开放|充值说明/);
  assert.doesNotMatch(wallet,/setData\(\{status:"ready",summary:\{balances:/);
- assert.match(walletPage,/className="lx-cel-wallet-page/);
+ assert.match(walletPage,/className="lx26-wallet-page/);
 });
 test("account matches approved references without losing authentication, profile or destructive action confirmation",()=>{
  assert.match(account,/getServerUser\(supabase\)/);
- assert.match(account,/AccountProfileCard/);
- assert.match(account,/lx-cel-account-heading/);
- assert.match(account,/lx-cel-account-welcome/);
- assert.match(account,/lx-cel-account-links/);
+ assert.match(account,/AccountCenterV26/);
+ const center=read("components/AccountCenterV26.tsx");
+ assert.match(center,/AccountProfileCard/);
+ assert.match(account,/lx26-account-page/);
+ assert.match(center,/lx26-account-welcome/);
+ assert.match(center,/lx26-account-services/);
  assert.match(account,/\/account\/orders/);
  assert.match(account,/\/ai-wallet/);
  assert.match(account,/\/account\/notifications/);
  assert.match(account,/\/account\/settings/);
- assert.match(account,/ChangePasswordForm/);
- assert.match(account,/SwitchAccountButton/);
- assert.match(account,/SignOutButton/);
- assert.match(account,/DeleteAccountButton/);
+ assert.match(center,/ChangePasswordForm/);
+ assert.match(center,/SwitchAccountButton/);
+ assert.match(center,/SignOutButton/);
+ assert.match(center,/DeleteAccountButton/);
  assert.doesNotMatch(account,/继续短剧、网站、书本、学习和科研/);
- assert.match(account,/zh="发现、管理与发布智能软件"/);
+ assert.match(center,/zh="发现、管理与发布原创软件"/);
 });
 test("tools hero keeps every tool and searchable category; no duplicate recent work or retired tools",()=>{
  assert.match(tools,/publicToolSurface\(\)/);
  assert.match(tools,/searchToolItems/);
  assert.match(tools,/TOOL_DISPLAY_CATEGORIES\.map/);
  assert.match(tools,/data-tool-slug=\{item\.slug\}/);
- assert.match(tools,/className="lx-cel-tools-main-search"/);
- assert.match(tools,/className="lx-cel-tools-side"/);
+ assert.match(tools,/className="lx11-tool-searchbox lx26-tools-search"/);
+ assert.match(tools,/className="lx26-tools-aside"/);
  assert.match(tools,/href="\/tools\/pass"/);
  assert.equal((tools.match(/<RecentTools\/>/g)||[]).length,1);
  assert.doesNotMatch(tools,/SasiDrama|ShortDrama/);
 });
 test("responsive isolated celestial styles never replace global shell or payment toggles",()=>{
  assert.match(shell,/import "\.\/celestial-ui-20261109\.css";/);
- for(const selector of [".lx-cel-wallet-assets",".lx-cel-wallet-topup",".lx-cel-account-links",".lx-cel-tools-hero",".lx-cel-tools-side"])
+ assert.match(shell,/import "\.\/lingxifield-premium-20261109\.css";/);
+ for(const selector of [".lx26-balance-grid",".lx26-wallet-topup",".lx26-account-services",".lx26-tools-stage",".lx26-tools-aside"])
   assert.ok(css.includes(selector),selector);
- assert.match(css,/@media\(max-width:720px\)/);
+ assert.match(css,/@media\(max-width:700px\)/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
  assert.doesNotMatch(css,/PAYPAL_ENABLED|WECHAT_ENABLED|ALIPAY_ENABLED|TOOL_PASS_COMMERCE_READY/);
 });
