@@ -19,8 +19,8 @@ export default {
     }
     result[name]={status:response.status,contract};
    }catch(error){
-    const name=String(error?.name||"Error").replace(/[^a-z]/gi,"").slice(0,30);
-    result[name==="cn"?"cn":"supabase"]={status:0,errorName:name};
+    const errorName=String(error?.name||"Error").replace(/[^a-z]/gi,"").slice(0,30);
+    result[name]={status:0,errorName};
    }
   }
   return Response.json(result,{headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
