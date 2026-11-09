@@ -1,0 +1,38 @@
+name: LINGXIFIELD both domains post-cutover public + payment readiness (READ ONLY)
+on:
+  push:
+    branches: [ops/dual-live-postcutover-audit-20261109]
+    paths: ['.github/workflows/dual-live-postcutover-20261109.yml']
+permissions: {contents: read}
+jobs:
+  public-readonly:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Audit both production domains anonymously without any data mutation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for host in lingxifield.com lingxifield.cn;do
+            echo "LIVE_HOST_START=$host"
+            for path in / /siai /tools /tools/pass /sasi /sasi/marketplace /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings;do
+              headers="$(mktemp)"
+              http="$(curl -4sS --connect-timeout 9 --max-time 30 -D "$headers" -o /dev/null -w '%{http_code}' "https://$host$path?__lx_audit=20261109" || true)"
+              edge="$(grep -i '^x-lingxi-render-mode:' "$headers" | cut -d ' ' -f 2 | tr -d '\r' || true)"
+              catalog="$(grep -i '^x-lingxi-catalog-diagnostic:' "$headers" | cut -d ' ' -f 2 | tr -d '\r' || true)"
+              echo "LIVE_PUBLIC host=$host path=$path HTTP=$http edge=${edge:-none} catalog=${catalog:-none}"
+              rm -f "$headers"
+              if [[ "$host" == "lingxifield.com" && "$http" != "200" ]];then exit 1;fi
+            done
+            body="$(curl -4fsS --connect-timeout 9 --max-time 25 "https://$host/api/pay/providers" || true)"
+            if [[ -n "$body" ]];then
+              printf '%s' "$body" | jq -cr '{wechat:(.wechat//false),alipay:(.alipay//false),paypal:(.paypal//false),configured:{wechat:(.diagnostics.wechat.configured//false),alipay:(.diagnostics.alipay.configured//false),paypal:(.diagnostics.paypal.configured//false)}}' | sed "s/^/LIVE_PAYMENT_FLAGS host=$host /"
+            fi
+            for path in /api/money/summary /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders;do
+              http="$(curl -4sS --connect-timeout 9 --max-time 25 -o /dev/null -w '%{http_code}' "https://$host$path" || true)"
+              echo "LIVE_PRIVATE host=$host path=$path HTTP=$http"
+              if [[ "$host" == "lingxifield.com" && "$http" != "401" ]];then exit 1;fi
+            done
+            echo "LIVE_HOST_END=$host"
+          done
+          echo "DUAL_PUBLIC_POSTCUTOVER_AUDIT_COMPLETE_NO_AUTH_OR_PAYMENT_MUTATION"
