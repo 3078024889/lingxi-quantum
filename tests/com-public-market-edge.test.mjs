@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {publicMarketListings} from '../scripts/cloudflare/public-market-listings.mjs';
 const env={NEXT_PUBLIC_SUPABASE_URL:'https://sxsgdpqojepgbbrxrzlq.supabase.co',NEXT_PUBLIC_SUPABASE_ANON_KEY:'public-test-key',SUPABASE_SERVICE_ROLE_KEY:'must-not-use'};
 const request=p=>new Request('https://lingxifield.com'+p);
@@ -55,4 +56,21 @@ test('domestic fallback never publishes draft, unscanned or malformed items',asy
  });
  assert.equal(reply.status,503);
  assert.equal((await reply.json()).error,"MARKET_LISTINGS_UNAVAILABLE");
+});
+
+test('Cloudflare redirect mode is supported and rejects provider redirects without following them',async()=>{
+ let outbound=0;
+ const response=await publicMarketListings(request('/api/sasi/marketplace/listings'),env,async(_url,opts)=>{
+  outbound++;
+  assert.equal(opts.redirect,'manual','Cloudflare Workers does not implement redirect:error');
+  return new Response(null,{status:302,headers:{location:'https://example.invalid/steal'}});
+ });
+ assert.equal(outbound,1,'redirect must never cause automatic retries or cross-domain fallback');
+ assert.equal(response.status,503);
+ assert.equal(response.headers.get('x-lingxi-catalog-diagnostic'),'upstream-302');
+});
+test('both anonymous catalog network paths use manual redirects in the actual bundled source',()=>{
+ const source=readFileSync(new URL('../scripts/cloudflare/public-market-listings.mjs',import.meta.url),'utf8');
+ assert.equal((source.match(/redirect:"manual"/g)||[]).length,2);
+ assert.doesNotMatch(source,/redirect:"error"/);
 });
