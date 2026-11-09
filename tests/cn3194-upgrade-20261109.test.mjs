@@ -75,8 +75,8 @@ test("3194 runner verifies pinned scripts and release before staging",()=>{
   assert.ok(runner.indexOf("EXACT_SOURCE_SHA_PASS") < runner.indexOf('--stage-local'));
 });
 
-test("3194 runner gates payment activation behind signed audit",()=>{
-  assert.ok(runner.indexOf('if bash "$PAYMENT" --audit "$TAG"; then') >= 0);
-  assert.ok(runner.indexOf('bash "$PAYMENT" --enable "$TAG"') > runner.indexOf('if bash "$PAYMENT" --audit "$TAG"; then'));
-  assert.match(runner,/PAYMENT_REMAINS_CLOSED_SIGNED_MERCHANT_VALIDATION_REQUIRED/);
+test("static-only 3194 release never enables payments or commerce",()=>{
+  assert.ok(runner.includes('bash "$PAYMENT" --audit "$TAG"'));
+  assert.match(runner,/PAYMENT_REMAINS_CLOSED_DYNAMIC_GO_LIVE_DEFERRED_TO_TOMORROW/);
+  assert.doesNotMatch(runner,/--enable "$TAG"/);
 });
