@@ -26,7 +26,8 @@ jobs:
           const workers=[
             "lingxifield-com-unified-20261108",
             "lingxifield-com-static-gateway-canary-20261107",
-            "lingxifield-com-next-20261108"
+            "lingxifield-com-next-20261108",
+            "lingxifield-com-full-canary-20261107"
           ];
           const expected=["PAYPAL_CLIENT_ID","PAYPAL_CLIENT_SECRET","PAYPAL_WEBHOOK_ID"];
           for(const name of workers){
