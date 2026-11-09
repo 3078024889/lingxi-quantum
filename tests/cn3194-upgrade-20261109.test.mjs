@@ -70,6 +70,9 @@ test("3194 runner verifies pinned scripts and release before staging",()=>{
   assert.match(runner,/GITHUB_SCRIPT_BLOB_MISMATCH/);
   assert.match(runner,/ARCHIVE_SHA="d757c0d6697679443531af574fa07481fa864c8d0719431f3984059961bf0927"/);
   assert.match(runner,/ARCHIVE_BYTES="454789546"/);
+  assert.match(runner,/TAG="ecs-cn-unified-20261108-2b48fb09bdcc"/);
+  assert.match(runner,/SOURCE_SHA="2b48fb09bdcc5b48ba11f3ec9bb0b0473dc173de"/);
+  assert.match(runner,/SOURCE_REF="0857ae60c84654425cb13a1ecdc750b23c44eace"/);
   assert.match(runner,/EXACT_SOURCE_SHA_PASS/);
   assert.ok(runner.indexOf("sha256sum -c") < runner.indexOf('--stage-local'));
   assert.ok(runner.indexOf("EXACT_SOURCE_SHA_PASS") < runner.indexOf('--stage-local'));
