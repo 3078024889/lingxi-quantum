@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - 'scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261109.sh'
+      - 'scripts/ops/ecs-cn3194-release-runner-20261109.sh'
       - 'scripts/ops/cn-payment-activate-3194-20261109.sh'
       - 'tests/cn3194-upgrade-20261109.test.mjs'
       - '.github/workflows/cn3194-upgrade-20261109.yml'
