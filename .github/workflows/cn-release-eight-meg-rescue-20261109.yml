@@ -1,0 +1,79 @@
+name: CN GitHub 8MiB subpart rescue for regional 504 (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn-release-tiny-chunks-20261109]
+    paths:
+      - '.github/workflows/cn-release-eight-meg-rescue-20261109.yml'
+permissions: {contents: write}
+concurrency:
+  group: cn-8m-subpart-rescue-5308e015b06b
+  cancel-in-progress: false
+jobs:
+  publish-small-blocks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: 3078024889/lingxi-quantum
+      TAG: ecs-cn-unified-20261108-5308e015b06b
+      ARCHIVE: cn-20261108-unified-standalone.tar.gz
+      ORIGINAL_SHA: a76120af69d599bd4a02b679eaedf3ca3c96ecc63abba0ea85f54ce98bc222b3
+      ORIGINAL_SIZE: '454655321'
+      MANIFEST_SHA: aa852ca0888b5d427557306d109d9136bc9299f501da340d22211110a9177d23
+      SOURCE_SHA: 5308e015b06bc6d6720450bf41280aa606fec0f3
+    steps:
+      - name: Retrieve SHA-pinned source and existing 8-part manifest within GitHub
+        run: |
+          set -Eeuo pipefail
+          mkdir -p original tiny
+          source="$(gh release view "$TAG" --repo "$GH_REPO" --json targetCommitish --jq '.targetCommitish')"
+          test "$source" = "$SOURCE_SHA"
+          gh release download "$TAG" --repo "$GH_REPO" --dir original --pattern "$ARCHIVE" --pattern eight-parts.sha256
+          test "$(stat -c '%s' "original/$ARCHIVE")" = "$ORIGINAL_SIZE"
+          printf '%s  %s\n' "$ORIGINAL_SHA" "original/$ARCHIVE" | sha256sum -c -
+          printf '%s  %s\n' "$MANIFEST_SHA" original/eight-parts.sha256 | sha256sum -c -
+      - name: Produce <=8MiB blocks for original parts 01–07, with per-block SHA256
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          base=Path("original/cn-20261108-unified-standalone.tar.gz")
+          chunk_size=(base.stat().st_size+7)//8
+          block_size=8*1024*1024
+          ref={}
+          for line in Path("original/eight-parts.sha256").read_text().splitlines():
+              digest,name=line.split("  ")
+              ref[name]=digest
+          out=Path("tiny")
+          items=[]
+          with base.open("rb") as source:
+              for part_index in range(1,8):
+                  old_name=f"{base.name}.part-{part_index:02d}"
+                  source.seek(part_index*chunk_size)
+                  to_read=min(chunk_size,base.stat().st_size-part_index*chunk_size)
+                  recombine=hashlib.sha256()
+                  part_block=0
+                  while to_read:
+                      block=source.read(min(block_size,to_read))
+                      if not block:raise SystemExit("UNEXPECTED_EOF")
+                      name=old_name+f".block-{part_block:02d}"
+                      (out/name).write_bytes(block)
+                      items.append((hashlib.sha256(block).hexdigest(),name))
+                      recombine.update(block)
+                      to_read-=len(block)
+                      part_block+=1
+                  if recombine.hexdigest()!=ref[old_name]:raise SystemExit("ORIGINAL_PART_SHA_MISMATCH")
+          (out/"micro-parts.sha256").write_text("".join(f"{h}  {name}\n" for h,name in items))
+          if len(items)!=49:raise SystemExit(f"EXPECTED_49_SMALL_BLOCKS_GOT_{len(items)}")
+          print("CN_GITHUB_MICRO_PARTS_49_VERIFIED_WITH_PREVIOUS_8PART_MANIFEST")
+          PY
+          (cd tiny && sha256sum -c micro-parts.sha256)
+      - name: Publish new tiny, immutable, independently retriable release assets
+        run: |
+          set -Eeuo pipefail
+          gh release upload "$TAG" --repo "$GH_REPO" tiny/*.block-* tiny/micro-parts.sha256 --clobber
+          actual="$(gh release view "$TAG" --repo "$GH_REPO" --json assets --jq '[.assets[].name|select(contains(".block-"))]|length')"
+          test "$actual" -eq 49
+          gh release view "$TAG" --repo "$GH_REPO" --json assets --jq '.assets[].name' | grep -Fxq micro-parts.sha256
+          echo "CN_GITHUB_8M_RESUE_RELEASE_49_PARTS_PUBLISHED"
