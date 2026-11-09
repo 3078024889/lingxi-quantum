@@ -54,11 +54,20 @@ async function probe(base,phase,attempts=3){
   }
   if(consecutive!==attempts)throw Error("COM_"+phase+"_UNSTABLE_ROUTE:"+path+":"+consecutive+"/"+attempts);
  }
- for(const path of ["/api/sasi/marketplace/seller","/api/sasi/marketplace/my-orders"]){
+ for(const path of ["/api/sasi/account","/api/money/summary","/api/sasi/marketplace/seller","/api/sasi/marketplace/my-orders"]){
   const x=await status(base+path);
   console.log("COM_"+phase+"_PRIVATE "+path+" HTTP_"+x.status);
   if(x.status!==401)throw Error("COM_"+phase+"_PRIVATE_AUTH_FAILURE:"+path);
  }
+ const providers=await fetch(base+"/api/pay/providers",{redirect:"manual",signal:AbortSignal.timeout(20000)});
+ const providerJson=await providers.json().catch(()=>null);
+ console.log("COM_"+phase+"_PAYMENT_PROVIDER_FLAGS HTTP_"+providers.status+
+  " alipay="+String(providerJson?.alipay)+" wechat="+String(providerJson?.wechat)+" paypal="+String(providerJson?.paypal));
+ if(providers.status!==200||typeof providerJson?.alipay!=="boolean"||
+    typeof providerJson?.wechat!=="boolean"||typeof providerJson?.paypal!=="boolean")
+  throw Error("COM_"+phase+"_PAYMENT_PROVIDER_DIAGNOSTICS_INVALID");
+ if(phase==="CANARY"&&(providerJson.alipay||providerJson.wechat||providerJson.paypal))
+  throw Error("COM_CANARY_PAYMENT_PROVIDER_MUST_REMAIN_DISABLED");
  const wasm=await status(base+"/media/ffmpeg-0.12.10/ffmpeg-core.wasm",
   {headers:{range:"bytes=0-1023"}});
  console.log("COM_"+phase+"_R2_206 http="+wasm.status);

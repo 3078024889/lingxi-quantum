@@ -5,9 +5,12 @@ on:
     paths:
       - '.github/workflows/com-unified-verified-apex-release-20261108.yml'
       - 'scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs'
+      - 'scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs'
   push:
     branches: [release/com-sasi-full-20261108]
-    paths: ['.github/workflows/com-unified-verified-apex-release-20261108.yml']
+    paths:
+      - '.github/workflows/com-unified-verified-apex-release-20261108.yml'
+      - 'scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs'
 permissions:
   contents: read
   actions: read
@@ -26,13 +29,14 @@ jobs:
       - name: Pin exact verified candidate and check safe script
         run: |
           set -Eeuo pipefail
-          node --check scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
-          grep -Fq 'const prev="lingxifield-com-next-20261108"' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
-          grep -Fq 'const next="lingxifield-com-unified-20261108"' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
-          grep -Fq 'COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
-          grep -Fq 'const maxTries=phase==="POSTCUTOVER"?12:attempts' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
-          grep -Fq '"/ai-wallet"' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
-          if grep -Fq 'COM_LEGACY_WALLET_PREFLIGHT' scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs; then exit 1; fi
+          node --check scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'const prev="lingxifield-com-unified-20261108"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'const next="lingxifield-com-celestial-20261109"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'const maxTries=phase==="POSTCUTOVER"?12:attempts' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq '"/api/sasi/account"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq '"/ai-wallet"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          if grep -Fq 'COM_LEGACY_WALLET_PREFLIGHT' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs; then exit 1; fi
           echo COM_UNIFIED_ROUTE_SCRIPT_SOURCE_GATE_PASS
   release:
     # Only an explicitly pinned later commit may trigger production cutover.
@@ -45,15 +49,47 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       GH_TOKEN: ${{ github.token }}
-      COM_VERIFIED_CANARY_RUN: '42562532833'
-      COM_VERIFIED_CANARY_SHA: '877cdf4abaac4c6a8b3ac3baf14777824e4a1136'
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: {persist-credentials: false}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version: '24'}
-      - name: Verify immutable canary and atomically switch apex with rollback
+      - name: Resolve exact successful isolated canary for the previous release commit
+        id: canary
+        env:
+          EXPECTED_SHA: ${{ github.event.before }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          node <<'NODE'
+          const fs=require("node:fs");
+          (async()=>{
+            const url="https://api.github.com/repos/"+process.env.GH_REPO+
+              "/actions/workflows/com-unified-next-isolated-canary-20261108.yml/runs?branch=release/com-sasi-full-20261108&status=success&per_page=100";
+            const response=await fetch(url,{headers:{
+              authorization:"Bearer "+process.env.GH_TOKEN,
+              accept:"application/vnd.github+json",
+              "user-agent":"lingxifield-exact-canary-gate"
+            }});
+            if(!response.ok)throw Error("CANARY_RUN_LIST_HTTP_"+response.status);
+            const body=await response.json();
+            const matches=(body.workflow_runs||[]).filter(x=>
+              x.head_sha===process.env.EXPECTED_SHA &&
+              x.head_branch==="release/com-sasi-full-20261108" &&
+              x.name==="COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)" &&
+              x.status==="completed" && x.conclusion==="success"
+            ).sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
+            if(!matches.length)throw Error("NO_SUCCESSFUL_CANARY_FOR_PREVIOUS_COMMIT:"+process.env.EXPECTED_SHA);
+            const run=matches[0];
+            fs.appendFileSync(process.env.GITHUB_OUTPUT,"run_id="+run.id+"\nsha="+run.head_sha+"\n");
+            console.log("EXACT_CANARY_PINNED run_id="+run.id+" sha="+run.head_sha);
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Verify exact canary and atomically switch apex with rollback
+        env:
+          COM_VERIFIED_CANARY_RUN: ${{ steps.canary.outputs.run_id }}
+          COM_VERIFIED_CANARY_SHA: ${{ steps.canary.outputs.sha }}
         run: |
           set -Eeuo pipefail
           test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID" && test -n "$GH_TOKEN"
-          node scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs
+          test -n "$COM_VERIFIED_CANARY_RUN" && test -n "$COM_VERIFIED_CANARY_SHA"
+          node scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
