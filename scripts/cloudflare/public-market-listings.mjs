@@ -15,7 +15,7 @@ export async function publicMarketListings(request,env,fetcher=fetch){
  let reason="upstream-unavailable";
  for(let attempt=0;attempt<2;attempt++){
   try{
-   const res=await fetcher(query.toString(),{headers:{apikey:key,Authorization:"Bearer "+key},redirect:"error",signal:AbortSignal.timeout(8000)});
+   const res=await fetcher(query.toString(),{headers:{apikey:key,Authorization:"Bearer "+key},redirect:"manual",signal:AbortSignal.timeout(8000)});
    if(!res.ok){
     reason="upstream-"+(Number.isInteger(res.status)&&res.status>=400&&res.status<=599?String(res.status):"error");
     if([502,503,504].includes(res.status)&&attempt===0)continue;
@@ -37,7 +37,7 @@ export async function publicMarketListings(request,env,fetcher=fetch){
  if(["upstream-network-error","upstream-timeout","upstream-502","upstream-503","upstream-504"].includes(reason)){
   try{
    const fallback=await fetcher("https://lingxifield.cn/api/sasi/marketplace/listings",{
-    method:"GET",headers:{accept:"application/json"},redirect:"error",signal:AbortSignal.timeout(9000)
+    method:"GET",headers:{accept:"application/json"},redirect:"manual",signal:AbortSignal.timeout(9000)
    });
    if(fallback.status===200){
     const payload=await fallback.json();
