@@ -32,10 +32,17 @@ export default function ToolsHubV11(){
   ].filter(Boolean).join(" ")
  ),[tools,q,category,lang,freeOnly]);
 
- return <main className="lx11-page lx11-tools-page lx-tools-v124 lx-tools-compact"><div className="lx11-wrap">
-  <section className="lx11-tools-hero"><div><span>{toolHubCopy(lang,"kicker")}</span><h1>{toolHubCopy(lang,"title")}</h1><p>{toolHubCopy(lang,"subtitle")}</p></div></section>
+ return <main className="lx11-page lx11-tools-page lx-tools-v124 lx-tools-compact lx-cel-tools-page"><div className="lx11-wrap">
+  <section className="lx11-tools-hero lx-cel-tools-hero">
+   <div className="lx-cel-tools-intro">
+    <span className="lx-cel-tools-eyebrow">{toolHubCopy(lang,"kicker")}</span>
+    <h1>{toolHubCopy(lang,"title")}</h1>
+    <p>{toolHubCopy(lang,"subtitle")}</p>
+    <div className="lx-cel-tools-main-search"><span aria-hidden="true">⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")} aria-label={toolHubCopy(lang,"search")}/><kbd>⌘ K</kbd></div>
+   </div>
+   <aside className="lx-cel-tools-side"><RecentTools/><Link href="/tools/pass" className="lx-cel-tools-pass-link"><span className="lx-cel-tools-pass-icon">◈</span><span><b>{lang==="zh"?"全场 100+ 实用工具包":"100+ Tools Pass"}</b><small>{lang==="zh"?"一个通用包，覆盖现有及新增工具":"Current and future practical tools"}</small></span><span aria-hidden="true">→</span></Link></aside>
+  </section>
   <section className="lx11-tool-searchbar lx-tools-v124-search">
-   <div className="lx11-tool-searchbox"><span>⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")}/></div>
    <div className="lx-tools-v124-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>
    <div className="lx-tools-v124-categories" role="group" aria-label={access[3]}>{[false,true].map(value=><button type="button" key={String(value)} className={freeOnly===value?'is-active':''} aria-pressed={freeOnly===value} onClick={()=>setFreeOnly(value)}>{access[value?1:0]}</button>)}</div>
   </section>
@@ -53,7 +60,6 @@ export default function ToolsHubV11(){
    es:"Integra nuestras herramientas gratis en tu web",pt:"Incorpore nossas ferramentas grátis",
    ar:"أضف أدوات LINGXIFIELD إلى موقعك مجاناً"
   } as Record<typeof lang,string>)[lang]}</Link></p>
-  <RecentTools/>
   <section className="lx11-tool-group"><div className="lx11-tool-grid lx-tools-v124-grid">
    {list.map(item=>{
     const title=toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn);
