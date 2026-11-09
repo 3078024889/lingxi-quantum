@@ -41,7 +41,7 @@ fi
 grep -Fxq "EnvironmentFile=$FLAGS" "/etc/systemd/system/$SVC.service" || { echo PRODUCTION_FLAG_FILE_NOT_ACTIVE;exit 1; }
 [[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo NGINX_CONFIG_NOT_REGULAR;exit 1; }
 [[ "$(grep -Fc '127.0.0.1:3194' "$NGINX")" == 1 ]] || { echo NGINX_NOT_USING_3194;exit 1; }
-if grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
+if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
 # Require invalid merchant notifications to fail closed, without placing orders.
 for method in alipay wechat;do
   if [[ "$method" == alipay ]];then
