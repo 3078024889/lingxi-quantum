@@ -1,0 +1,74 @@
+/* LINGXIFIELD Celestial UI 2026-11-09
+   CSS-scoped to the three new surfaces only; retired layouts are NOT re-enabled.
+   Accessible, keyboard-ready responsive layout with existing account & wallet data. */
+.lx-cel-wallet-page,.lx-cel-account-page,.lx-cel-tools-page{color:#1b2546}
+.lx-cel-wallet-page{position:relative;isolation:isolate}
+.lx-cel-wallet-page:before{content:"";z-index:-1;position:absolute;pointer-events:none;top:-60px;right:0;width:100%;height:260px;background:radial-gradient(ellipse at 77% 10%,#a7b9ff82,transparent 43%),radial-gradient(ellipse at 48% 15%,#ede5ff,transparent 55%),radial-gradient(ellipse at 87% 15%,#a8e7f65e,transparent 45%);border-radius:30px}
+.lx-cel-wallet-head{min-height:112px;display:flex;flex-direction:column;justify-content:center;gap:3px;padding-left:80px;position:relative}
+.lx-cel-wallet-head:before{content:"◈";position:absolute;left:9px;top:21px;width:54px;height:54px;border-radius:17px;display:grid;place-items:center;font-size:32px;color:#7653ef;background:linear-gradient(135deg,#f9f4ff,#c9b5ff 56%,#bde5ff);box-shadow:0 13px 26px #7d69d533,inset 0 1px 3px #fff}
+.lx-cel-wallet-head h1{font-family:inherit;font-weight:800;letter-spacing:-.035em;font-size:clamp(27px,2.7vw,38px)}
+.lx-cel-wallet-head p:first-child{font-size:10px;letter-spacing:.18em;color:#8972d6}
+.lx-cel-wallet-live{display:grid;grid-template-columns:1.15fr 1fr;gap:20px}
+.lx-cel-wallet-assets{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:24px;border:1px solid #c9c9fc;border-radius:25px;background:linear-gradient(135deg,#e8e7ffcc,#f5f4ffdd 45%,#cfe9ffb0);box-shadow:0 10px 36px #697ccc19,inset 0 1px 2px white}
+.lx-cel-wallet-assets:before{content:"资产总览";grid-column:1/-1;font-size:20px;line-height:1.1;color:#242457;font-weight:800;letter-spacing:.02em}
+html[lang]:not([lang="zh-CN"]) .lx-cel-wallet-assets:before{content:"Balances"}
+.lx-cel-wallet-asset{display:flex;align-items:center;gap:16px;padding:23px 22px;min-width:0;border:1px solid #fff;border-radius:21px;background:linear-gradient(130deg,#ffffffaa,#ede7ffc9);box-shadow:0 6px 22px #7662c424,inset 0 1px 2px #fff}
+.lx-cel-wallet-asset-usd{background:linear-gradient(130deg,#ffffffbd,#d8e8ffde)}
+.lx-cel-asset-icon{display:grid;place-items:center;flex:0 0 53px;width:53px;height:53px;border-radius:15px;background:linear-gradient(145deg,#ad8fff,#724ce6);box-shadow:0 8px 18px #8457df50;color:white;font-weight:900;font-size:30px}
+.lx-cel-wallet-asset-usd .lx-cel-asset-icon{background:linear-gradient(145deg,#a5ccff,#457df4)}
+.lx-cel-asset-main{min-width:0;flex:1}.lx-cel-asset-main>p:first-child{font-size:13px;font-weight:700;color:#535477}
+.lx-cel-asset-amount{font-size:clamp(27px,2.9vw,39px);font-weight:840;color:#202346;letter-spacing:-.055em;line-height:1.6}
+.lx-cel-asset-details{min-width:136px;border-left:1px solid #b5afe1;padding-left:17px;display:grid;gap:10px;font-size:12px}
+.lx-cel-asset-details p:first-child{color:#5b6486}.lx-cel-asset-details p:last-child{margin-top:2px;color:#28264b;font-size:15px;font-weight:720}
+.lx-cel-wallet-topup,.lx-cel-wallet-history,.lx-cel-wallet-ledgers>section{background:linear-gradient(145deg,#ffffffeb,#f7f8ffed 80%,#e7edffb5);border:1px solid #d6ddf6;box-shadow:0 8px 26px #5767b617;border-radius:23px;padding:27px;min-width:0}
+.lx-cel-wallet-topup{margin:0}.lx-cel-wallet-topup h2,.lx-cel-wallet-history h2{font-size:20px;font-weight:800;color:#222451}
+.lx-cel-wallet-topup>div{margin-top:20px}.lx-cel-wallet-amount{display:flex;align-items:center;justify-content:center;min-height:82px;background:linear-gradient(130deg,#fafaff,#edf0ff);border:1px solid #d4d8ed;border-radius:16px;font-size:clamp(20px,2.3vw,29px);color:#232149;font-weight:800;box-shadow:inset 0 1px 1px #fff,0 5px 14px #8b8bd40d;transition:transform .16s,border-color .16s,box-shadow .16s}
+.lx-cel-wallet-amount:is(:hover,:focus-visible){border-color:#9d85f5;box-shadow:0 6px 18px #9d85f52b;transform:translateY(-1px)}
+.lx-cel-wallet-history{margin:0}.lx-cel-wallet-tabs{margin-top:18px;display:flex;gap:25px;border-bottom:1px solid #d9dcef;font-size:14px;font-weight:650;color:#647092}
+.lx-cel-wallet-tabs>*{padding:0 12px 14px}.lx-cel-wallet-tabs>[aria-selected="true"]{border-bottom:3px solid #8252ee;color:#6d40e5}
+.lx-cel-wallet-shortcuts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;font-size:13px}
+.lx-cel-wallet-shortcuts a{display:inline-flex;align-items:center;border:1px solid #d5dcf6;border-radius:13px;padding:10px 16px;background:#fff;color:#52489e}
+.lx-cel-wallet-ledgers{grid-column:1/-1;display:grid;gap:18px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.lx-cel-wallet-ledgers>section{margin:0}.lx-cel-wallet-ledgers table{white-space:nowrap}
+.lx-cel-account-page{max-width:1250px}
+.lx-cel-account-heading{margin-bottom:22px}
+.lx-cel-account-heading h1{font-size:clamp(28px,3vw,39px);font-weight:820;line-height:1.3;letter-spacing:-.04em;color:#1e2449}
+.lx-cel-account-heading p{font-size:15px;color:#6c718d;margin-top:3px}
+.lx-cel-account-page .lx-account-profile{background:radial-gradient(ellipse at 62% 8%,#e2d9ff7f,transparent 55%),linear-gradient(125deg,#fbfcff,#e9efff);border:1px solid #cdd2f3;border-radius:23px;padding:24px 28px;box-shadow:0 10px 27px #607bc21c}
+.lx-cel-account-page .lx-account-avatar{border-radius:20px;background:linear-gradient(130deg,#c2e8f7,#c5b6ff,#fff0d9);box-shadow:0 6px 20px #8575bb30}
+.lx-cel-account-page .lx-account-name-edit input{border-radius:12px;background:#ffffffc9}
+.lx-cel-account-page .lx-account-name-edit button{border-radius:11px;background:#232544;color:white}
+.lx-cel-account-welcome{display:flex;align-items:center;gap:14px;margin:22px 0 14px;padding:19px 26px;min-height:68px;border:1px solid #d7ddf6;border-radius:18px;background:linear-gradient(110deg,#fbfaff,#e7e9ff 85%,#f8faff);box-shadow:0 8px 20px #7287bb13}
+.lx-cel-account-welcome h2{font-size:23px;font-weight:800;color:#252348}.lx-cel-account-accent{display:block;width:5px;height:28px;border-radius:5px;background:linear-gradient(#9863ff,#6550e8)}
+.lx-cel-account-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.lx-cel-account-links .lx-account-entry{display:grid;grid-template-columns:62px 1fr auto;align-items:center;column-gap:16px;min-height:90px;padding:17px 20px;border:1px solid #d4dcf4;background:linear-gradient(120deg,#fff,#f4f6ff);box-shadow:0 7px 18px #6c79a515;border-radius:18px;transition:transform .16s,box-shadow .16s,border-color .16s}
+.lx-cel-account-links .lx-account-entry:is(:hover,:focus-visible){transform:translateY(-2px);border-color:#a9a0ec;box-shadow:0 9px 24px #8174c72a}
+.lx-cel-account-links .lx-account-entry>.lx-mini-icon,.lx-cel-account-links .lx-account-entry>span:first-child{grid-row:1/3;align-self:center}
+.lx-cel-account-links .lx-account-entry>b{font-size:17px;color:#232446;grid-column:2;align-self:end}
+.lx-cel-account-links .lx-account-entry>p{grid-column:2;color:#727b93;margin:0;font-size:12px;align-self:start}
+.lx-cel-account-links .lx-account-entry:after{content:"›";grid-column:3;grid-row:1/3;font-size:28px;font-weight:300;color:#394463}
+.lx-cel-account-security{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:23px}
+.lx-cel-account-security>div{min-width:0}.lx-cel-account-security button{height:50px;border-radius:14px!important;background:linear-gradient(125deg,#fdfdff,#f0f2ff)!important;color:#283253!important;border:1px solid #bfc9e6!important;letter-spacing:0!important;font:600 13px/1.4 inherit!important;padding:10px!important}
+.lx-cel-account-security button:hover{border-color:#9883e6!important;background:#f0edff!important}
+.lx-cel-tools-page{background:linear-gradient(135deg,#fcfcff,#f8f9ff 54%,#f8fbff)}
+.lx-cel-tools-page .lx11-wrap{max-width:1500px}
+.lx-cel-tools-hero{display:grid!important;grid-template-columns:minmax(0,1.6fr) minmax(260px,.85fr);gap:22px;align-items:stretch;padding:23px 24px!important;min-height:238px!important;background:radial-gradient(ellipse at 54% 10%,#d9ceff75,transparent 53%),linear-gradient(115deg,#f5f5ff,#eaefff 68%,#e0e8ff)!important;border:1px solid #d9ddfa;border-radius:23px;box-shadow:0 12px 29px #6b7cd91c}
+.lx-cel-tools-intro{min-width:0}.lx-cel-tools-eyebrow{display:inline-flex;border-radius:99px;background:#e2d3ff;color:#623bc2;padding:4px 12px;font-size:12px!important;font-weight:780}
+.lx-cel-tools-intro h1{margin:12px 0 5px!important;font-size:clamp(30px,3vw,44px)!important;color:#202245!important;line-height:1.15!important;letter-spacing:-.04em;font-weight:840}
+.lx-cel-tools-intro>p{font-size:14px!important;color:#515f7f!important;margin:0 0 18px!important}
+.lx-cel-tools-main-search{height:49px;border-radius:25px;background:#fff;border:1px solid #bdb3fa;display:flex;align-items:center;gap:12px;padding:0 15px;box-shadow:0 4px 15px #8c80d01b}
+.lx-cel-tools-main-search>span{font-size:25px;color:#5d46cc}.lx-cel-tools-main-search input{width:100%;min-width:0;outline:0;border:0;background:transparent;color:#202345;font-size:13px}.lx-cel-tools-main-search kbd{flex-shrink:0;font-size:11px;background:#f5f2ff;border-radius:7px;padding:4px 8px;color:#766ba1}
+.lx-cel-tools-side{min-width:0;display:flex;flex-direction:column;gap:10px;border:1px solid #e2def9;background:#ffffffa8;border-radius:20px;padding:13px 15px;box-shadow:0 7px 17px #737cc315}
+.lx-cel-tools-side .lx-tools-compact-recent{padding:0;border:0;box-shadow:none;margin:0;background:transparent}
+.lx-cel-tools-side .lx-tools-compact-recent-head p{display:none}
+.lx-cel-tools-side .lx-tools-compact-recent-list{margin-top:8px}
+.lx-cel-tools-side .lx-tools-compact-recent-item{min-width:180px;flex:1}
+.lx-cel-tools-pass-link{display:flex;align-items:center;gap:13px;padding:13px 7px;border-top:1px solid #e2ddf5;color:#292950!important}
+.lx-cel-tools-pass-link>span:nth-child(2){display:flex;flex-direction:column;gap:3px;flex:1}
+.lx-cel-tools-pass-link b{font-size:14px}.lx-cel-tools-pass-link small{font-size:11px;color:#777b92}.lx-cel-tools-pass-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#e8dfff;color:#7250d5;font-size:25px}
+.lx-cel-tools-page .lx11-tool-searchbar{padding-top:15px;padding-bottom:7px}
+.lx-cel-tools-page .lx-tools-v124-categories{display:flex;gap:7px;flex-wrap:wrap}
+.lx-cel-tools-page .lx-tools-v124-categories button{border-radius:99px;min-height:32px}
+@media(max-width:1100px){.lx-cel-asset-details{min-width:90px}.lx-cel-wallet-asset{flex-wrap:wrap}.lx-cel-asset-details{border-left:0;border-top:1px solid #c5c7e2;flex-basis:100%;display:flex;justify-content:space-between;padding:12px 0 0}.lx-cel-tools-hero{grid-template-columns:1fr}}
+@media(max-width:720px){.lx-cel-wallet-live{display:block}.lx-cel-wallet-assets{padding:15px;grid-template-columns:1fr;gap:11px}.lx-cel-wallet-asset{padding:16px}.lx-cel-wallet-topup,.lx-cel-wallet-history{margin-top:15px}.lx-cel-wallet-ledgers{grid-template-columns:1fr;margin-top:15px}.lx-cel-wallet-shortcuts{margin:15px 0}.lx-cel-account-links{grid-template-columns:1fr}.lx-cel-account-security{grid-template-columns:repeat(2,minmax(0,1fr))}.lx-cel-tools-hero{padding:16px!important}.lx-cel-wallet-head{padding-left:68px}.lx-cel-wallet-head:before{width:46px;height:46px}}
+@media(prefers-reduced-motion:reduce){.lx-cel-wallet-amount,.lx-cel-account-links .lx-account-entry{transition:none}}
