@@ -31,7 +31,7 @@ async function status(url,opts={}){
 async function sleep(ms){await new Promise(resolve=>setTimeout(resolve,ms))}
 async function probe(base,phase,attempts=3){
  const routes=["/","/siai","/tools","/sasi","/sasi/marketplace",
-   "/announcements","/tools/pass","/ai-wallet","/api/health","/api/pay/providers",
+   "/about","/about","/announcements","/tools/pass","/ai-wallet","/api/health","/api/pay/providers",
    "/api/sasi/software/catalog","/api/sasi/marketplace/listings",
    "/en/siai","/ja/siai","/ko/siai","/fr/siai","/de/siai",
    "/es/siai","/pt/siai","/ar/siai"];
