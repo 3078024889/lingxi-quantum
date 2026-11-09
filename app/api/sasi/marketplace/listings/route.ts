@@ -10,7 +10,7 @@ export async function GET(req:NextRequest){
  try{
   const db=createClient();
   const mode=req.nextUrl.searchParams.get("mode")==="mine"?"mine":"public";
-  let query=db.from("sasi_market_listings").select("id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at")
+  let query=db.from(mode==="public"?"sasi_market_public_cards":"sasi_market_listings").select("id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at")
     .order("created_at",{ascending:false}).limit(36);
   if(mode==="mine"){
    const {data:{user}}=await db.auth.getUser();
