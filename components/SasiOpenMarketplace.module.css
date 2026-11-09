@@ -204,3 +204,5 @@
 .mediaEntries span{font-size:12px;word-break:break-word;color:var(--lx-muted,#64708b)}
 .mediaEntries button{border:0;background:transparent;color:#6740c1;font-size:12px;text-decoration:underline;cursor:pointer;white-space:nowrap}
 .mediaEntries button:disabled{opacity:.4;cursor:not-allowed}
+
+.descriptionCount{display:block;margin-top:7px;text-align:right;font-size:11px;color:var(--lx-muted,#74899a);font-variant-numeric:tabular-nums}
