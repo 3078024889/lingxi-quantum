@@ -33,6 +33,24 @@ test("ToolPass modal is connected to verified real order and user balance, never
  assert.match(pass,/PayPal/);
  assert.doesNotMatch(pass,/120\.00|1,268|\b532\b|模拟订单|sample balance/i);
 });
+test("fast currency switching cannot mix wallet balances or reuse stale merchant readiness",()=>{
+ assert.match(pass,/latestRefresh=useRef\(0\)/);
+ assert.match(pass,/const ticket=\+\+latestRefresh\.current/);
+ assert.match(pass,/if\(ticket!==latestRefresh\.current\)return/);
+ assert.match(pass,/setVerifiedCurrency\(currency\)/);
+ assert.match(pass,/available&&verifiedCurrency===currency/);
+ assert.match(pass,/verifiedCurrency!==currency\|\|walletBalanceMinor===null/);
+ assert.match(pass,/cache:"no-store"/);
+});
+test("purchase dialog is keyboard accessible and restores focus",()=>{
+ assert.match(pass,/aria-modal="true"/);
+ assert.match(pass,/aria-describedby="toolpass-checkout-desc"/);
+ assert.match(pass,/ref=\{modalRef\}/);
+ assert.match(pass,/ref=\{closeRef\}/);
+ assert.match(pass,/event\.key==="Escape"/);
+ assert.match(pass,/event\.key!=="Tab"/);
+ assert.match(pass,/prior\?\.focus\(\)/);
+});
 test("announcements show actual published API items and deep-links to individual messages",()=>{
  assert.match(pass,/fetch\("\/api\/site-announcements"/);
  assert.match(pass,/encodeURIComponent\(item\.id\)/);
