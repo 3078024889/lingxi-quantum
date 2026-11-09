@@ -14,6 +14,7 @@ const routes={
  "/ai-wallet":"ai-wallet.html",
  "/sasi":"sasi.html",
  "/sasi/marketplace":"marketplace.html",
+ "/about":"about.html",
  "/announcements":"announcements.html",
  "/en/siai":"en-siai.html",
  "/ja/siai":"ja-siai.html",
