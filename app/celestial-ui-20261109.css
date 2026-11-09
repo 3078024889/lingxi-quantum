@@ -72,3 +72,11 @@ html[lang]:not([lang="zh-CN"]) .lx-cel-wallet-assets:before{content:"Balances"}
 @media(max-width:1100px){.lx-cel-asset-details{min-width:90px}.lx-cel-wallet-asset{flex-wrap:wrap}.lx-cel-asset-details{border-left:0;border-top:1px solid #c5c7e2;flex-basis:100%;display:flex;justify-content:space-between;padding:12px 0 0}.lx-cel-tools-hero{grid-template-columns:1fr}}
 @media(max-width:720px){.lx-cel-wallet-live{display:block}.lx-cel-wallet-assets{padding:15px;grid-template-columns:1fr;gap:11px}.lx-cel-wallet-asset{padding:16px}.lx-cel-wallet-topup,.lx-cel-wallet-history{margin-top:15px}.lx-cel-wallet-ledgers{grid-template-columns:1fr;margin-top:15px}.lx-cel-wallet-shortcuts{margin:15px 0}.lx-cel-account-links{grid-template-columns:1fr}.lx-cel-account-security{grid-template-columns:repeat(2,minmax(0,1fr))}.lx-cel-tools-hero{padding:16px!important}.lx-cel-wallet-head{padding-left:68px}.lx-cel-wallet-head:before{width:46px;height:46px}}
 @media(prefers-reduced-motion:reduce){.lx-cel-wallet-amount,.lx-cel-account-links .lx-account-entry{transition:none}}
+
+.lx-cel-tools-starters h2{font-size:13px;font-weight:800;color:#313054;margin:0 0 8px}
+.lx-cel-tools-starters>div{display:grid;gap:7px}
+.lx-cel-tools-starters a{display:flex;align-items:center;gap:10px;min-height:43px;border:1px solid #e2ddf3;background:#fdfcff;border-radius:13px;padding:5px 10px;font-size:12px;color:#363155}
+.lx-cel-tools-starters a:hover{border-color:#a597ea;background:#f6f1ff}
+.lx-cel-tools-starters a span:nth-child(2){flex:1;font-weight:650}
+.lx-cel-tools-starters a b{font-size:17px;color:#7956da}
+.lx-cel-tools-starters a :is(svg,img){max-width:27px;max-height:27px}
