@@ -43,7 +43,7 @@ jobs:
               else echo "PAYMENT_PROVIDER_RESPONSE_INVALID site=$host";failures=$((failures+1));fi
             else echo "PAYMENT_PROVIDER_ENDPOINT_UNAVAILABLE site=$host";failures=$((failures+1));fi
             if curl -4fSs --connect-timeout 8 --max-time 22 "$base/api/tools/pass?currency=CNY" -o "$pass";then
-              if jq -e '(.offers|type=="array" and length==4) and (.available|type=="boolean")' "$pass" >/dev/null;then
+              if jq -e '(.offers|type=="array") and (.offers|length==4) and (.available|type=="boolean")' "$pass" >/dev/null;then
                 jq -r --arg host "$host" '"TOOLPASS_READINESS site="+$host+" commerceEnabled="+(.available|tostring)+" offers="+(.offers|length|tostring)' "$pass"
               else echo "TOOLPASS_PUBLIC_CONTRACT_INVALID site=$host";failures=$((failures+1));fi
             else echo "TOOLPASS_PUBLIC_API_UNAVAILABLE site=$host";failures=$((failures+1));fi
