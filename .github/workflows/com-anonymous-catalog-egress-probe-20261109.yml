@@ -1,0 +1,54 @@
+name: COM anonymous catalog Cloudflare egress isolation (NO PROD ROUTES)
+on:
+  push:
+    branches: [probe/com-public-catalog-egress-20261109]
+    paths:
+      - 'workers/com-public-catalog-egress-probe/index.mjs'
+      - '.github/workflows/com-anonymous-catalog-egress-probe-20261109.yml'
+permissions: {contents: read}
+concurrency:
+  group: com-public-egress-probe
+  cancel-in-progress: true
+jobs:
+  isolated-worker-network:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Verify no privileged requests and create un-routed diagnostic worker config
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          node --check workers/com-public-catalog-egress-probe/index.mjs
+          node - <<'NODE'
+          const fs=require('fs');
+          const src=fs.readFileSync('workers/com-public-catalog-egress-probe/index.mjs','utf8');
+          if(src.includes('PAYPAL_CLIENT_SECRET')||src.includes('service_role')||src.includes('POST'))throw Error('UNSAFE_EGRESS_TEST');
+          const config={
+           name:'lingxifield-com-catalog-egress-probe-20261109',
+           main:'workers/com-public-catalog-egress-probe/index.mjs',
+           compatibility_date:'2026-11-01',workers_dev:true,
+           upload_source_maps:false
+          };
+          fs.writeFileSync('wrangler.egress-probe.json',JSON.stringify(config));
+          console.log('NO_PRODUCTION_ROUTES_NO_PAYMENT_SECRETS');
+          NODE
+          npm install -g wrangler@4.158.0 >/dev/null
+      - name: Deploy only un-routed workers.dev network diagnostic
+        run: |
+          wrangler deploy --config wrangler.egress-probe.json --no-upload-source-maps
+      - name: Inspect public egress status only
+        run: |
+          set -Eeuo pipefail
+          url=https://lingxifield-com-catalog-egress-probe-20261109.3078024889.workers.dev/check
+          curl -4fSs --connect-timeout 8 --max-time 35 "$url" | tee "$RUNNER_TEMP/egress-result.json"
+          jq -e 'has("supabase") and has("cn") and (.supabase.status|type=="number") and (.cn.status|type=="number")' "$RUNNER_TEMP/egress-result.json"
+          echo COM_CLOUDFLARE_EGRESS_DIAGNOSIS_READONLY_COMPLETE
