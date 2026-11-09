@@ -75,9 +75,10 @@ test("all direct tool-pass gateways obey the explicit commerce gate",()=>{
   "app/api/pay/wechat/create/route.ts",
   "app/api/pay/alipay/create/route.ts"
  ];
- assert.match(page,/ready:available&&providers\.wechat/);
- assert.match(page,/ready:available&&providers\.alipay/);
- assert.match(page,/ready:available&&providers\.paypal/);
+ assert.match(page,/const paymentReady=available&&verifiedCurrency===currency/);
+ assert.match(page,/ready:paymentReady&&providers\.wechat/);
+ assert.match(page,/ready:paymentReady&&providers\.alipay/);
+ assert.match(page,/ready:paymentReady&&providers\.paypal/);
  assert.match(server,/toolPassCommerceReady\(\)/);
  assert.match(server,/TOOL_PASS_COMMERCE_READY/);
  for(const path of paths){
