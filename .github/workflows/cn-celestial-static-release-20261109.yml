@@ -2,7 +2,11 @@ name: CN Celestial new SHA release to immutable Cloudflare assets (NO PROD ROUTE
 on:
   push:
     branches: [ops/cn-celestial-static-assets-20261109]
-    paths: ['.github/workflows/cn-celestial-static-release-20261109.yml']
+    paths:
+      - '.github/workflows/cn-celestial-static-release-20261109.yml'
+      - 'scripts/ops/cn3194-static-deploy-20261109.sh'
+      - 'tests/cn3194-static-deploy-20261109.test.mjs'
+      - 'workers/cn-immutable-static-release/index.mjs'
 permissions: {contents: read}
 concurrency:
   group: cn-static-celestial-release-20261109

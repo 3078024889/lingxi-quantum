@@ -28,8 +28,10 @@ test("3194 stage gates precede promotion and 3193 remains rollback baseline",()=
  assert.ok(script.indexOf('bash "$UPGRADE" --verify-stage "$TAG"')<script.indexOf('bash "$UPGRADE" --promote "$TAG"'));
  assert.match(script,/OLD_3193_SERVICE_RETAINED_FOR_ROLLBACK/);
 });
-test("CNY channels require signed no-charge merchant preflight; PayPal remains off on CN",()=>{
- assert.ok(script.indexOf('if bash "$PAYMENT" --audit "$TAG"; then')<script.indexOf('bash "$PAYMENT" --enable "$TAG"'));
+test("read-only merchant audit never activates charges; PayPal remains off on CN",()=>{
+ assert.match(script,/if bash "\$PAYMENT" --audit "\$TAG"; then/);
+ assert.doesNotMatch(script,/bash "\$PAYMENT" --enable/);
+ assert.match(script,/CN3194_PAYMENT_REMAINS_CLOSED_AFTER_READ_ONLY_AUDIT/);
  assert.match(script,/CN3194_CNY_PAYMENT_REMAINS_CLOSED_MERCHANT_SIGNATURE_NOT_VERIFIED/);
  assert.match(script,/PAYPAL_REMAINS_DISABLED_ON_CN/);
 });
