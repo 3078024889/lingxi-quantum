@@ -1,0 +1,59 @@
+name: Dual-site live 9-language, merchant and delivery read-only acceptance (NO DEPLOY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108,ops/dual-site-production-readonly-20261109]
+    paths:
+      - '.github/workflows/dual-site-production-readonly-20261109.yml'
+  pull_request:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - '.github/workflows/dual-site-production-readonly-20261109.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+concurrency:
+  group: dual-site-public-readonly-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  anonymous-production-readiness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Domain TLS, public routes, nine-language pages and non-invasive financial readiness
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          failures=0
+          for host in lingxifield.cn lingxifield.com;do
+            echo "::group::PUBLIC_READONLY_SITE_$host"
+            base="https://$host"
+            for route in / /siai /tools /tools/pass /sasi /sasi/marketplace /ai-wallet /announcements /api/health /api/pay/providers /api/tools/pass /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /images/sasi/hero-original.webp;do
+              status="$(curl -4sS -L --connect-timeout 8 --max-time 22 -o /dev/null -w '%{http_code}' "$base$route" || true)"
+              echo "PUBLIC_HTTP site=$host route=$route status=$status"
+              if [[ "$status" != "200" ]];then failures=$((failures+1));fi
+            done
+            for route in /api/money/summary /api/sasi/account /api/sasi/marketplace/my-orders;do
+              status="$(curl -4sS --connect-timeout 8 --max-time 22 -o /dev/null -w '%{http_code}' "$base$route" || true)"
+              echo "ANONYMOUS_SECURITY_HTTP site=$host route=$route status=$status"
+              if [[ "$status" != "401" ]];then failures=$((failures+1));fi
+            done
+            providers="$(mktemp)" ; pass="$(mktemp)" ; listings="$(mktemp)"
+            if curl -4fSs --connect-timeout 8 --max-time 22 "$base/api/pay/providers" -o "$providers";then
+              if jq -e '(.wechat|type=="boolean") and (.alipay|type=="boolean") and (.paypal|type=="boolean") and (.diagnostics|type=="object")' "$providers" >/dev/null;then
+                jq -r --arg host "$host" '"PAYMENT_READINESS site="+$host+" wechat="+(.wechat|tostring)+" alipay="+(.alipay|tostring)+" paypal="+(.paypal|tostring)+" wechatMissing="+(.diagnostics.wechat.missingCount|tostring)+" alipayMissing="+(.diagnostics.alipay.missingCount|tostring)+" paypalMissing="+(.diagnostics.paypal.missingCount|tostring)' "$providers"
+              else echo "PAYMENT_PROVIDER_RESPONSE_INVALID site=$host";failures=$((failures+1));fi
+            else echo "PAYMENT_PROVIDER_ENDPOINT_UNAVAILABLE site=$host";failures=$((failures+1));fi
+            if curl -4fSs --connect-timeout 8 --max-time 22 "$base/api/tools/pass?currency=CNY" -o "$pass";then
+              if jq -e '(.offers|type=="array" and length==4) and (.available|type=="boolean")' "$pass" >/dev/null;then
+                jq -r --arg host "$host" '"TOOLPASS_READINESS site="+$host+" commerceEnabled="+(.available|tostring)+" offers="+(.offers|length|tostring)' "$pass"
+              else echo "TOOLPASS_PUBLIC_CONTRACT_INVALID site=$host";failures=$((failures+1));fi
+            else echo "TOOLPASS_PUBLIC_API_UNAVAILABLE site=$host";failures=$((failures+1));fi
+            if curl -4fSs --connect-timeout 8 --max-time 22 "$base/api/sasi/marketplace/listings" -o "$listings";then
+              if jq -e '.items|type=="array"' "$listings" >/dev/null;then echo "SASI_PUBLIC_LISTINGS_OK site=$host"
+              else echo "SASI_LISTING_RESPONSE_INVALID site=$host";failures=$((failures+1));fi
+            else echo "SASI_LISTINGS_UNAVAILABLE site=$host";failures=$((failures+1));fi
+            rm -f "$providers" "$pass" "$listings"
+            echo "::endgroup::"
+          done
+          echo "DUAL_SITE_PUBLIC_FAILED_CHECKS=$failures"
+          test "$failures" -eq 0
+          echo "DUAL_SITE_PUBLIC_ACCEPTANCE_PASS_NO_REAL_PAYMENT_ATTEMPT"
