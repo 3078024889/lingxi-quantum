@@ -1,0 +1,74 @@
+name: CN source-verified 8 x 57MB GitHub release chunks (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn-release-eight-chunks-20261109]
+    paths:
+      - '.github/workflows/cn-release-eight-chunk-rescue-20261109.yml'
+permissions: {contents: write}
+concurrency:
+  group: cn-release-8-chunks-5308e015b06b
+  cancel-in-progress: false
+jobs:
+  publish-eight-chunks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 32
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: 3078024889/lingxi-quantum
+      RELEASE_TAG: ecs-cn-unified-20261108-5308e015b06b
+      FULL_SHA: a76120af69d599bd4a02b679eaedf3ca3c96ecc63abba0ea85f54ce98bc222b3
+      SOURCE_SHA: 5308e015b06bc6d6720450bf41280aa606fec0f3
+      ARCHIVE: cn-20261108-unified-standalone.tar.gz
+    steps:
+      - name: Verify immutable source and retrieve exact released archive inside GitHub
+        run: |
+          set -Eeuo pipefail
+          mkdir -p release-files
+          expected="$(gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json targetCommitish --jq .targetCommitish)"
+          [[ "$expected" = "$SOURCE_SHA" ]] || { echo "RELEASE_SOURCE_MISMATCH";exit 1; }
+          gh release download "$RELEASE_TAG" --repo "$GH_REPO" --pattern "$ARCHIVE" --dir release-files
+          [[ "$(stat -c '%s' "release-files/$ARCHIVE")" = "454655321" ]] || { echo "FULL_ARCHIVE_LENGTH_MISMATCH";exit 1; }
+          printf '%s  %s\n' "$FULL_SHA" "release-files/$ARCHIVE" | sha256sum -c -
+          echo "ORIGINAL_IMMUTABLE_GITHUB_RELEASE_SHA256_PASS"
+      - name: Cut exactly eight verified 56MB files, each with SHA256 manifest
+        run: |
+          set -Eeuo pipefail
+          mkdir -p chunks
+          python3 - <<'PY'
+          import hashlib, pathlib
+          source=pathlib.Path("release-files/cn-20261108-unified-standalone.tar.gz")
+          size=source.stat().st_size
+          chunk=(size+7)//8
+          names=[]
+          with source.open("rb") as src:
+              for i in range(8):
+                  path=pathlib.Path("chunks")/(source.name+f".part-{i:02}")
+                  with path.open("wb") as dst:
+                      left=min(chunk,size-i*chunk)
+                      digest=hashlib.sha256()
+                      while left:
+                          data=src.read(min(1024*1024,left))
+                          if not data:raise SystemExit("UNEXPECTED_EOF")
+                          dst.write(data)
+                          digest.update(data)
+                          left-=len(data)
+                  names.append((digest.hexdigest(),path.name))
+          lines=[f"{digest}  {name}" for digest,name in names]
+          (pathlib.Path("chunks")/"eight-parts.sha256").write_text("\n".join(lines)+"\n")
+          assert sum((pathlib.Path("chunks")/name).stat().st_size for _,name in names)==size
+          print("GITHUB_EIGHT_CHUNKS_GENERATED count=8")
+          PY
+          (cd chunks && sha256sum --check eight-parts.sha256)
+          cat chunks/"$ARCHIVE".part-{00..07} | sha256sum | awk -v expected="$FULL_SHA" '{if($1!=expected)exit 1}'
+          echo "GITHUB_EIGHT_CHUNKS_FULL_REASSEMBLY_PASS"
+      - name: Publish immutable 8-part rescue assets alongside original release
+        run: |
+          set -Eeuo pipefail
+          gh release upload "$RELEASE_TAG" --repo "$GH_REPO" chunks/"$ARCHIVE".part-{00..07} chunks/eight-parts.sha256 --clobber
+          for i in {00..07};do
+            name="$ARCHIVE.part-$i"
+            present="$(gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json assets --jq '.assets[].name' | grep -Fxc "$name")"
+            [[ "$present" = 1 ]] || { echo "MISSING_RELEASE_PART_$i";exit 1; }
+          done
+          gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json assets --jq '.assets[].name' | grep -Fxq eight-parts.sha256
+          echo "EIGHT_CHUNKS_PUBLISHED_FOR_WINDOWS_8PART_R2_TRANSFER"
