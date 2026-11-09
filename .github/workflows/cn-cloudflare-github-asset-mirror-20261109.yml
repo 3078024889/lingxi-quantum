@@ -59,5 +59,7 @@ jobs:
           echo "CN_CLOUDFLARE_MIRROR_8MB_HTTP=$status"
           [[ "$status" = 200 ]] || exit 1
           printf '%s  %s\n' 147ce390563faf29f6e7a02c7ad40eb0c05fb2251117bf8d80223013b1daf35a "$RUNNER_TEMP/micro-part" | sha256sum -c -
-          curl -4fsS --max-time 15 -o /dev/null -w 'CN_MIRROR_UNAUTHORIZED_PATH_HTTP=%{http_code}\n' "$base/https://example.com/private"
+          blocked="$(curl -4sS --max-time 15 -o /dev/null -w '%{http_code}' "$base/https://example.com/private")"
+          echo "CN_MIRROR_UNAUTHORIZED_PATH_HTTP=$blocked"
+          [[ "$blocked" = 404 ]] || exit 1
           echo "CN_IMMUTABLE_MIRROR_MANIFEST_AND_REAL_8MB_BLOCK_PASS"
