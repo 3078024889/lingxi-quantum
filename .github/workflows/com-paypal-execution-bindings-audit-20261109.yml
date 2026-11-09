@@ -1,0 +1,48 @@
+name: COM PayPal actual executor and merchant bindings audit (READ ONLY)
+on:
+  push:
+    branches: [audit/com-paypal-execution-bindings-20261109]
+  workflow_dispatch:
+permissions: {contents: read}
+concurrency:
+  group: com-paypal-executor-audit
+  cancel-in-progress: true
+jobs:
+  inspect-only:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Read Worker binding metadata only — no secrets, purchases, routes or releases
+        run: |
+          node --input-type=module <<'JS'
+          const acct=process.env.CF_ACCOUNT,token=process.env.CF_TOKEN;
+          if(!acct||!token)throw Error("READ_ONLY_CLOUDFLARE_AUDIT_ACCESS_MISSING");
+          const workers=[
+            "lingxifield-com-unified-20261108",
+            "lingxifield-com-static-gateway-canary-20261107",
+            "lingxifield-com-next-20261108"
+          ];
+          const expected=["PAYPAL_CLIENT_ID","PAYPAL_CLIENT_SECRET","PAYPAL_WEBHOOK_ID"];
+          for(const name of workers){
+            const endpoint="https://api.cloudflare.com/client/v4/accounts/"+encodeURIComponent(acct)+"/workers/scripts/"+name+"/settings";
+            const res=await fetch(endpoint,{headers:{authorization:"Bearer "+token},signal:AbortSignal.timeout(20000)});
+            const payload=await res.json().catch(()=>null);
+            if(!res.ok||payload?.success!==true)throw Error("WORKER_BINDING_READ_FAILED_"+name+"_HTTP_"+res.status);
+            const bindings=payload.result?.bindings||[];
+            const bmap=new Map(bindings.map(item=>[item.name,item]));
+            const missing=expected.filter(key=>!bmap.has(key));
+            const paymentEnabled=bmap.get("PAYPAL_ENABLED")?.text==="true";
+            const admin=!!(bmap.get("SUPABASE_SECRET_KEY")||bmap.get("SUPABASE_SERVICE_ROLE_KEY"));
+            const service=bindings.filter(x=>x.type==="service").map(x=>x.service).join(",")||"none";
+            console.log("COM_WORKER_EXECUTOR name="+name+" paypalBindings="+(missing.length===0)+" missingKeys="+missing.join(",")+" paypalFlag="+paymentEnabled+" adminBinding="+admin+" serviceTargets="+service);
+            if(name==="lingxifield-com-unified-20261108"&&service!=="lingxifield-com-static-gateway-canary-20261107")
+              throw Error("COM_CURRENT_PAYPAL_EXECUTION_PATH_UNVERIFIED");
+          }
+          console.log("COM_PAYPAL_LIVE_EXECUTOR_BINDINGS_AUDIT_PASS_READ_ONLY");
+          JS
