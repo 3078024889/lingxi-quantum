@@ -95,6 +95,8 @@ probe(){
   code /siai 200
   code /sasi 200
   code /sasi/pricing 307
+  code /api/sasi/generation/submit 410
+  code /api/cron/sasi-v5-radar 410
   code /tools/pass 200
   code /ai-wallet 200
   code /account 200
@@ -108,9 +110,9 @@ probe(){
   code /announcements 200
   local wallet_html tools_html
   wallet_html="$(curl --noproxy '*' -fsS --max-time 25 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' "http://127.0.0.1:$PORT/ai-wallet")"
-  grep -Fq 'lx-cel-wallet-page' <<<"$wallet_html" || { echo "CN3194_NEW_WALLET_UI_MISSING" >&2;return 1; }
+  grep -Fq 'lx26-wallet-page' <<<"$wallet_html" || { echo "CN3194_NEW_WALLET_UI_MISSING" >&2;return 1; }
   tools_html="$(curl --noproxy '*' -fsS --max-time 25 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' "http://127.0.0.1:$PORT/tools")"
-  grep -Fq 'lx-cel-tools-page' <<<"$tools_html" || { echo "CN3194_NEW_TOOLS_UI_MISSING" >&2;return 1; }
+  grep -Fq 'lx26-tools-page' <<<"$tools_html" || { echo "CN3194_NEW_TOOLS_UI_MISSING" >&2;return 1; }
   curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' "http://127.0.0.1:$PORT/api/tools/pass" |
     "$NODE" -e '
 let s="";process.stdin.on("data",x=>s+=x).on("end",()=>{
