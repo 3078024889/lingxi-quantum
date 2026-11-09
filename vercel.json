@@ -14,10 +14,6 @@
     {
       "path": "/api/cron/withdrawal-reconcile",
       "schedule": "47 3 * * *"
-    },
-    {
-      "path": "/api/cron/sasi-v5-radar",
-      "schedule": "27 4 * * *"
     }
   ]
 }
