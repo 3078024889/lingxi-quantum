@@ -6,7 +6,7 @@ import {join,resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
 
-test('generated edge wrapper keeps authenticated balance and provider reads on the current runtime',async()=>{
+test('generated edge wrapper serves public merchant status without exposing authenticated balance',async()=>{
  const dir=await mkdtemp(join(tmpdir(),'lingxi-routing-'));
  try{
   const script=resolve('scripts/cloudflare/patch-critical-static-html-20261108.mjs');
@@ -22,12 +22,19 @@ test('generated edge wrapper keeps authenticated balance and provider reads on t
   const {default:worker}=await import(pathToFileURL(wrapper).href);
   let currentCalls=0,legacyCalls=0;
   const env={current:{fetch:async request=>{currentCalls++;assert.equal(request.headers.get('cookie'),'session=test');return new Response('current',{status:401});}},LINGXI_COM_LEGACY_GATEWAY:{fetch:async()=>{legacyCalls++;return new Response('legacy');}}};
-  for(const path of ['/api/pay/providers','/api/money/summary']){
-   const response=await worker.fetch(new Request('https://lingxifield.com'+path,{headers:{cookie:'session=test'}}),env,{});
-   assert.equal(response.status,401,'wrapper preserves the real runtime response');
-   assert.equal(await response.text(),'current');
-  }
-  assert.equal(currentCalls,2);assert.equal(legacyCalls,0);
+  // Provider status is public, account-neutral and never redirects to the legacy backend.
+  const providers=await worker.fetch(new Request('https://lingxifield.com/api/pay/providers',{headers:{cookie:'session=test'}}),env,{});
+  assert.equal(providers.status,200);
+  assert.equal(providers.headers.get('cache-control'),'no-store, max-age=0');
+  assert.equal(providers.headers.get('x-lingxi-render-mode'),'edge-merchant-readiness');
+  const readiness=await providers.json();
+  assert.deepEqual([readiness.wechat,readiness.alipay,readiness.paypal],[false,false,false]);
+  assert.deepEqual(Object.keys(readiness).sort(),['alipay','diagnostics','paypal','wechat']);
+  // Privileged balance queries must still be served by the real authenticated runtime.
+  const money=await worker.fetch(new Request('https://lingxifield.com/api/money/summary',{headers:{cookie:'session=test'}}),env,{});
+  assert.equal(money.status,401);
+  assert.equal(await money.text(),'current');
+  assert.equal(currentCalls,1);assert.equal(legacyCalls,0);
   const payment=await worker.fetch(new Request('https://lingxifield.com/api/pay/paypal/create',{method:'POST'}),env,{});
   assert.equal(await payment.text(),'legacy');assert.equal(legacyCalls,1);
  }finally{await rm(dir,{recursive:true,force:true});}
