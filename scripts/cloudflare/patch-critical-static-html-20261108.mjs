@@ -3,6 +3,7 @@
 // Authenticated accounts, checkout, orders, upload/delivery and admin APIs stay dynamic.
 import {readFile,writeFile} from "node:fs/promises";
 import {join} from "node:path";
+import {publicMarketListings} from "./public-market-listings.mjs";
 const root=".open-next";
 const assetRoot=join(root,"assets","__lingxi_edge_static__");
 const routes={
@@ -48,6 +49,8 @@ const source=await readFile(target,"utf8");
 const needle="  return offloaded||app.fetch(request,env,ctx);";
 if(source.split(needle).length!==2)throw Error("UNEXPECTED_OPENNEXT_WRAPPER_BODY");
 const replacement=[
+ '  const publicCatalog=await ('+publicMarketListings.toString()+')(request,env);',
+ '  if(publicCatalog)return publicCatalog;',
  '  const pathname=new URL(request.url).pathname;',
  "  // Worker liveness only. Payment, auth and entitlement readiness have separate hard gates.",
  "  if(pathname===\"/api/health\"&&(request.method===\"GET\"||request.method===\"HEAD\")){",

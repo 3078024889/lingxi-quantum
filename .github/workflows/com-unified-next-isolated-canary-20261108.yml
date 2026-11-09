@@ -1,5 +1,5 @@
 # Wallet and provider reads use the current runtime, not the retired backend.
-# Edge liveness and private authenticated API health are verified separately.
+# Public catalog uses bounded anonymous REST; private reads remain authenticated.
 name: COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)
 on:
   push:
@@ -59,6 +59,7 @@ jobs:
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
           node --test tests/com-current-runtime-routing-20261108.test.mjs
+          node --test tests/com-public-market-edge.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
           node --test tests/sasi-software-public-branding-20261108.test.mjs
           node --test tests/sasi-marketplace-long-description-20261109.test.mjs
