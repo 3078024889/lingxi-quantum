@@ -1,0 +1,63 @@
+name: CN immutable GitHub Release Cloudflare downloader mirror (NO PROD ROUTES)
+on:
+  push:
+    branches: [ops/cn-release-cloudflare-asset-mirror-20261109]
+    paths:
+      - 'workers/cn-release-github-mirror/index.mjs'
+      - '.github/workflows/cn-cloudflare-github-asset-mirror-20261109.yml'
+permissions: {contents: read}
+concurrency:
+  group: cn-cloudflare-github-assets-mirror-20261109
+  cancel-in-progress: true
+jobs:
+  deploy-isolated:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Verify no Cloudflare production route or dynamic proxy
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID"
+          node --check workers/cn-release-github-mirror/index.mjs
+          node --input-type=module <<'JS'
+          import {readFileSync,writeFileSync} from 'node:fs';
+          const src=readFileSync('workers/cn-release-github-mirror/index.mjs','utf8');
+          for(const forbidden of ['R2_BUCKET','CLOUDFLARE_API_TOKEN','createPaypalOrder','request.body','PUT','POST'])
+           if(src.includes(forbidden))throw Error('UNEXPECTED_MIRROR_CAPABILITY_'+forbidden);
+          const config={name:'lingxifield-cn-release-mirror-20261109',
+            main:'workers/cn-release-github-mirror/index.mjs',
+            compatibility_date:'2026-11-01',workers_dev:true,
+            upload_source_maps:false};
+          writeFileSync('wrangler.cn-release-mirror.json',JSON.stringify(config));
+          console.log('CN_MIRROR_NO_MUTATIONS_NO_PROD_ROUTES');
+          JS
+          npm install -g wrangler@4.158.0 >/dev/null
+      - name: Deploy only no-route workers.dev release mirror
+        run: wrangler deploy --config wrangler.cn-release-mirror.json --no-upload-source-maps
+      - name: Validate same immutable SHA256 manifest and a small real release block
+        run: |
+          set -Eeuo pipefail
+          base=https://lingxifield-cn-release-mirror-20261109.3078024889.workers.dev
+          status=0
+          for i in $(seq 1 16);do
+            status="$(curl -4sS --connect-timeout 8 --max-time 45 -o "$RUNNER_TEMP/manifest" -w '%{http_code}' "$base/eight-parts.sha256" || true)"
+            echo "CN_PUBLIC_MIRROR_PROPAGATION attempt=$i http=$status"
+            [[ "$status" = 200 ]] && break
+            sleep 3
+          done
+          [[ "$status" = 200 ]] || exit 1
+          printf '%s  %s\n' aa852ca0888b5d427557306d109d9136bc9299f501da340d22211110a9177d23 "$RUNNER_TEMP/manifest" | sha256sum -c -
+          status="$(curl -4sS --connect-timeout 8 --max-time 90 -o "$RUNNER_TEMP/micro-part" -w '%{http_code}' "$base/cn-20261108-unified-standalone.tar.gz.part-01.block-01" || true)"
+          echo "CN_CLOUDFLARE_MIRROR_8MB_HTTP=$status"
+          [[ "$status" = 200 ]] || exit 1
+          printf '%s  %s\n' 147ce390563faf29f6e7a02c7ad40eb0c05fb2251117bf8d80223013b1daf35a "$RUNNER_TEMP/micro-part" | sha256sum -c -
+          curl -4fsS --max-time 15 -o /dev/null -w 'CN_MIRROR_UNAUTHORIZED_PATH_HTTP=%{http_code}\n' "$base/https://example.com/private"
+          echo "CN_IMMUTABLE_MIRROR_MANIFEST_AND_REAL_8MB_BLOCK_PASS"
