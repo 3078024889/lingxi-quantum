@@ -67,7 +67,7 @@ test('Cloudflare redirect mode is supported and rejects provider redirects witho
  });
  assert.equal(outbound,1,'redirect must never cause automatic retries or cross-domain fallback');
  assert.equal(response.status,503);
- assert.equal(response.headers.get('x-lingxi-catalog-diagnostic'),'upstream-302');
+ assert.equal(response.headers.get('x-lingxi-catalog-diagnostic'),'upstream-error');
 });
 test('both anonymous catalog network paths use manual redirects in the actual bundled source',()=>{
  const source=readFileSync(new URL('../scripts/cloudflare/public-market-listings.mjs',import.meta.url),'utf8');
