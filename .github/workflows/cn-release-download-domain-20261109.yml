@@ -1,59 +1,60 @@
-name: CN release dedicated download hostname
+name: CN release dedicated download path
 on:
   push:
     branches: [ops/cn-celestial-static-assets-20261109]
     paths: ['.github/workflows/cn-release-download-domain-20261109.yml']
 permissions: {contents: read}
-concurrency:
-  group: cn-release-download-hostname
-  cancel-in-progress: false
 jobs:
   attach:
     runs-on: ubuntu-24.04
     environment: cloudflare-production
-    timeout-minutes: 8
+    timeout-minutes: 10
     env:
-      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version: '24'}
-      - name: Attach only unused download hostname and verify pinned bootstrap
+      - name: Deploy narrow read-only release path
         run: |
+          cat > gateway.mjs <<'JS'
+          export default {async fetch(request,env){
+            const url=new URL(request.url),prefix='/__cn-release-5054/';
+            if(!['GET','HEAD'].includes(request.method))return new Response('Method not allowed',{status:405});
+            if(!url.pathname.startsWith(prefix))return new Response('Not found',{status:404});
+            const name=url.pathname.slice(prefix.length);
+            if(!/^[a-zA-Z0-9.-]+$/.test(name))return new Response('Not found',{status:404});
+            return env.STATIC_RELEASE.fetch(new Request('https://lingxifield-cn-static-celestial-20261109.3078024889.workers.dev/'+name,{method:request.method}));
+          }};
+          JS
+          node --check gateway.mjs
+          echo '{"name":"lingxifield-cn-release-download-5054","main":"gateway.mjs","compatibility_date":"2026-11-01","workers_dev":true,"services":[{"binding":"STATIC_RELEASE","service":"lingxifield-cn-static-celestial-20261109"}]}' > wrangler.json
+          npm install -g wrangler@4.158.0 >/dev/null
+          wrangler deploy --config wrangler.json --no-upload-source-maps
           node --input-type=module <<'JS'
           import {createHash} from 'node:crypto';
-          const host='cn-release.lingxifield.com';
-          const service='lingxifield-cn-static-celestial-20261109';
-          const zone='0e9df0e4cf67601f60ce1b73fe011b94';
-          const base='https://api.cloudflare.com/client/v4';
+          const pattern='lingxifield.com/__cn-release-5054/*',script='lingxifield-cn-release-download-5054';
+          const endpoint='/zones/0e9df0e4cf67601f60ce1b73fe011b94/workers/routes';
           async function cf(path,options={}) {
-            const r=await fetch(base+path,{...options,headers:{authorization:'Bearer '+process.env.CF_TOKEN,'content-type':'application/json'},signal:AbortSignal.timeout(25000)});
+            const r=await fetch('https://api.cloudflare.com/client/v4'+path,{...options,headers:{authorization:'Bearer '+process.env.CLOUDFLARE_API_TOKEN,'content-type':'application/json'},signal:AbortSignal.timeout(25000)});
             const j=await r.json();
             if(!r.ok||!j.success)throw Error('CF_HTTP_'+r.status+':'+JSON.stringify((j.errors||[]).map(x=>x.code)));
             return j.result;
           }
-          if(!process.env.CF_TOKEN||!process.env.CF_ACCOUNT)throw Error('AUTH_MISSING');
-          const endpoint='/accounts/'+process.env.CF_ACCOUNT+'/workers/domains';
-          const domains=await cf(endpoint);
-          const existing=domains.filter(x=>x.hostname===host);
-          if(existing.some(x=>x.service!==service))throw Error('HOST_ALREADY_USED');
-          if(!existing.length) {
-            const dns=await cf('/zones/'+zone+'/dns_records?name='+host);
-            if(dns.length)throw Error('DNS_ALREADY_USED');
-            const result=await cf(endpoint,{method:'PUT',body:JSON.stringify({hostname:host,service,environment:'production',zone_id:zone})});
-            if(result.hostname!==host||result.service!==service)throw Error('DOMAIN_RESULT_MISMATCH');
-          }
-          console.log('CN_DOWNLOAD_HOST_ATTACHED '+host);
+          const existing=(await cf(endpoint)).filter(x=>x.pattern===pattern);
+          if(existing.some(x=>x.script!==script))throw Error('PATH_ALREADY_USED');
+          if(!existing.length)await cf(endpoint,{method:'POST',body:JSON.stringify({pattern,script})});
+          console.log('CN_DOWNLOAD_PATH_ATTACHED');
           let ok=false;
-          for(let i=0;i<24;i++){
+          for(let i=0;i<20;i++){
             try{
-              const r=await fetch('https://'+host+'/cn3194-static-deploy-20261109.sh',{signal:AbortSignal.timeout(10000)});
+              const r=await fetch('https://lingxifield.com/__cn-release-5054/cn3194-static-deploy-20261109.sh',{signal:AbortSignal.timeout(15000)});
               const data=Buffer.from(await r.arrayBuffer());
               if(r.ok&&createHash('sha256').update(data).digest('hex')==='8817917331de75f803f0af72c2f44993bf0aa258fa20da88b24c0190954068b6'){ok=true;break;}
-              console.log('CN_DOWNLOAD_TLS_PENDING attempt='+i+' http='+r.status);
-            }catch{console.log('CN_DOWNLOAD_TLS_PENDING attempt='+i);}
-            await new Promise(r=>setTimeout(r,5000));
+              console.log('PENDING attempt='+i+' http='+r.status);
+            }catch{console.log('PENDING attempt='+i);}
+            await new Promise(r=>setTimeout(r,3000));
           }
-          if(!ok)throw Error('CUSTOM_HOST_BOOTSTRAP_NOT_READY');
-          console.log('CN_DOWNLOAD_CUSTOM_DOMAIN_BOOTSTRAP_SHA_PASS');
+          if(!ok)throw Error('RELEASE_PATH_NOT_READY');
+          console.log('CN_DOWNLOAD_PATH_BOOTSTRAP_SHA_PASS');
           JS
