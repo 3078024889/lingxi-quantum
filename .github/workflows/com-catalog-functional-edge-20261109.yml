@@ -4,6 +4,7 @@ on:
     branches: [probe/com-catalog-functional-edge-20261109]
     paths:
       - 'workers/com-catalog-functional-edge/index.mjs'
+      - 'scripts/cloudflare/public-market-listings.mjs'
       - '.github/workflows/com-catalog-functional-edge-20261109.yml'
 permissions: {contents: read}
 concurrency:
