@@ -3,16 +3,16 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const read = path => readFileSync(path,"utf8");
 
-test("seller editor, server input and database all permit 100,000 characters",()=>{
+test("seller editor, server input and database all cap descriptions at 5,000 characters",()=>{
  const ui=read("components/SasiOpenMarketplace.tsx");
  const api=read("app/api/sasi/marketplace/listings/route.ts");
- const migration=read("supabase/migrations/20261109094500_sasi_market_description_100k.sql");
- assert.match(ui,/maxLength=\{100000\}/);
+ const migration=read("supabase/migrations/20261109110500_sasi_market_description_5000.sql");
+ assert.match(ui,/maxLength=\{5000\}/);
  assert.match(ui,/description\.length\.toLocaleString/);
- assert.match(api,/description\.length>100000/);
- assert.match(migration,/CHECK \(char_length\(description\) <= 100000\)/);
- assert.doesNotMatch(api,/description\.length>5000/);
- assert.doesNotMatch(ui,/maxLength=\{5000\}/);
+ assert.match(api,/description\.length>5000/);
+ assert.match(migration,/CHECK \(char_length\(description\) <= 5000\)/);
+ assert.doesNotMatch(api,/description\.length>100000/);
+ assert.doesNotMatch(ui,/maxLength=\{100000\}/);
  assert.doesNotMatch(migration,/DELETE\s+FROM|TRUNCATE\s+TABLE|DROP\s+TABLE/i);
 });
 
