@@ -8,6 +8,7 @@ import "./v40-mobile.css";
 import "./v43-product-visuals.css";
 import "./brand-home-v2.css";
 import "./site-news-ribbon.css";
+import "./celestial-ui-20261109.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
