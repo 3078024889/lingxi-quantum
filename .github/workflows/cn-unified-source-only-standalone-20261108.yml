@@ -5,7 +5,7 @@ name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEP
 # The operator must explicitly dispatch this workflow for the reviewed branch.
 on:
   push:
-    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, fix/cn-payment-live-activation-gates-20261109]
+    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109]
     paths:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
@@ -20,6 +20,25 @@ on:
       - 'app/layout.tsx'
       - 'app/celestial-ui-20261109.css'
       - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
+      - 'app/lingxifield-premium-20261109.css'
+      - 'components/AccountCenterV26.tsx'
+      - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
+      - 'tests/final-closure/dual-premium-new-visual.spec.ts'
+      - 'tests/legacy-sasi-retirement.test.mjs'
+      - 'docs/operations/legacy-sasi-retirement-20261108.json'
+      - 'app/api/sasi/generation/submit/route.ts'
+      - 'app/api/cron/sasi-v5-radar/route.ts'
+      - 'vercel.json'
+      - 'app/sasi/VideoAssembler.tsx'
+      - 'components/SasiAutonomyEntrances.tsx'
+      - 'components/SasiByokImageStudio.tsx'
+      - 'components/SasiMultiEpisodeWorkspace.tsx'
+      - 'components/SasiNativeCreatePanel.tsx'
+      - 'components/SasiOneSurface.tsx'
+      - 'components/SasiProjectDNAEditor.tsx'
+      - 'components/SasiSeriesStudio.tsx'
+      - 'components/SasiVariantWorkbench.tsx'
+      - '.github/workflows/cn3194-upgrade-20261109.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -51,6 +70,8 @@ jobs:
           node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
           node --test tests/cn-payment-activation-20261109.test.mjs
           node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs
+          node --test tests/dual-premium-visual-no-legacy-20261109.test.mjs
+          node --test tests/legacy-sasi-retirement.test.mjs
           node scripts/audit/unified-tool-pass-coverage.mjs
           node scripts/audit/unified-tool-pass-server-coverage.mjs
           node tests/sasi-marketplace-fee.test.mjs
@@ -122,6 +143,12 @@ jobs:
           code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' 'http://127.0.0.1:3319/api/tools/pass' || true)"
           [ "$code" = 200 ] || exit 1
           echo 'CN_STANDALONE_STATIC_AND_ANON_ACCESS_ACCEPTED_NO_PAYMENT'
+      - name: Real desktop and mobile Chrome visual gate for new account wallet and tools
+        run: |
+          set -Eeuo pipefail
+          pnpm exec playwright install --with-deps chrome
+          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts
+          echo 'CN3194_NEW_VISUAL_DESKTOP_MOBILE_CHROME_PASS'
       - name: Package immutable SHA-256-checked artifact
         shell: bash
         run: |
