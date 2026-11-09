@@ -4,6 +4,7 @@ on:
     branches: [ops/cn-immutable-static-assets-20261109]
     paths:
       - 'workers/cn-immutable-static-release/index.mjs'
+      - 'scripts/ops/cn3193-static-deploy-20261109.sh'
       - '.github/workflows/cn-immutable-static-assets-deploy-20261109.yml'
 permissions: {contents: read}
 concurrency:
@@ -55,6 +56,8 @@ jobs:
           if blob!="5950978bed667dc4d52c66de2d29065313f79c44":raise SystemExit("DEPLOY_SCRIPT_SOURCE_BLOB_INVALID")
           print("CN_IMMUTABLE_DEPLOY_SCRIPT_SHA256="+hashlib.sha256(script).hexdigest())
           PY
+          bash -n scripts/ops/cn3193-static-deploy-20261109.sh
+          echo "CN_STATIC_BOOTSTRAP_SHA256=$(sha256sum scripts/ops/cn3193-static-deploy-20261109.sh | awk '{print $1}')"
           echo "CN_ORIGINAL_IMMUTABLE_SOURCE_AND_SHA256_PASS"
       - name: Create 56 public 8MiB binary assets and cross-check original eight part hashes
         run: |
@@ -102,6 +105,8 @@ jobs:
           (asset/"eight-parts.sha256").write_bytes((root/"eight-parts.sha256").read_bytes())
           for name in ("cn-20261108-unified-standalone.sha256","ecs-cn3193-unified-standalone-stage-20261108.sh"):
               (asset/name).write_bytes((root/name).read_bytes())
+          (asset/"cn3193-static-deploy-20261109.sh").write_bytes(
+              Path("scripts/ops/cn3193-static-deploy-20261109.sh").read_bytes())
           print("CN_CF_STATIC_ASSETS_VERIFIED 56 blocks plus 4 manifests/script bytes="+str(total))
           print("CN_CF_ALL_MICRO_MANIFEST_SHA="+hashlib.sha256((asset/"all-micro-parts.sha256").read_bytes()).hexdigest())
           PY
