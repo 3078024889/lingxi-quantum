@@ -1,17 +1,11 @@
 export const dynamic = "force-dynamic";
 
-import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import LoginForm from "./LoginForm";
-import SignOutButton from "./SignOutButton";
-import SwitchAccountButton from "./SwitchAccountButton";
-import ChangePasswordForm from "./ChangePasswordForm";
-import DeleteAccountButton from "./DeleteAccountButton";
 import MiniAccountLinkPanel from "./MiniAccountLinkPanel";
-import AccountProfileCard from "@/components/AccountProfileCard";
+import AccountCenterV26 from "@/components/AccountCenterV26";
 import LxText from "@/components/LxText";
-import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import { createClient, getServerUser, isSupabasePublicConfigured } from "@/lib/supabase/server";
 
 export const metadata = { title: "我的账户 | 灵犀场 LINGXIFIELD" };
@@ -25,7 +19,6 @@ const T={
  paid:<LxText zh="已支付订单" en="Paid orders" ja="支払い済み注文" ko="결제 완료 주문" fr="Commandes payées" de="Bezahlte Bestellungen" es="Pedidos pagados" pt="Pedidos pagos" ar="الطلبات المدفوعة"/>,
  balance:<LxText zh="余额" en="Balance" ja="残高" ko="잔액" fr="Solde" de="Guthaben" es="Saldo" pt="Saldo" ar="الرصيد"/>,
  balanceDesc:<LxText zh="查看余额，需要时再充值" en="View your balance and top up when needed." ja="残高を確認し、必要なときにチャージできます。" ko="잔액을 확인하고 필요할 때 충전하세요." fr="Consultez votre solde et rechargez si nécessaire." de="Guthaben prüfen und bei Bedarf aufladen." es="Consulta tu saldo y recarga cuando lo necesites." pt="Veja seu saldo e recarregue quando precisar." ar="اطّلع على رصيدك واشحن عند الحاجة."/>,
- sasiDesc:<LxText zh="继续短剧、网站、书本、学习和科研" en="Continue drama, websites, books, learning and research." ja="短編ドラマ、サイト、書籍、学習、研究を続ける。" ko="숏드라마, 웹사이트, 책, 학습 및 연구를 계속하세요." fr="Poursuivez les dramas, sites, livres, études et recherches." de="Drama, Websites, Bücher, Lernen und Forschung fortsetzen." es="Continúa con dramas, sitios, libros, aprendizaje e investigación." pt="Continue dramas, sites, livros, estudos e pesquisa." ar="واصل الدراما والمواقع والكتب والتعلم والبحث."/>,
  refund:<LxText zh="余额提现" en="Balance withdrawal" ja="残高返金" ko="잔액 환불" fr="Remboursement du solde" de="Guthabenrückerstattung" es="Reembolso de saldo" pt="Reembolso de saldo" ar="استرداد الرصيد"/>,
  refundDesc:<LxText zh="将未使用的可提现余额退回原支付方式" en="Unused paid principal can return to the original payment method." ja="未使用の実入金元本は元の支払い方法へ返金申請できます。" ko="사용하지 않은 실제 충전 원금은 원 결제수단으로 환불할 수 있습니다." fr="Le principal payé et non utilisé peut revenir vers le moyen de paiement d’origine." de="Nicht genutztes eingezahltes Kapital kann über die ursprüngliche Zahlungsart zurückerstattet werden." es="El principal pagado y no utilizado puede devolverse al método de pago original." pt="O principal pago e não utilizado pode voltar ao método de pagamento original." ar="يمكن إعادة أصل المبلغ المدفوع وغير المستخدم إلى وسيلة الدفع الأصلية."/>,
  signKicker:<LxText zh="账户" en="Account" ja="アカウント" ko="계정" fr="Compte" de="Konto" es="Cuenta" pt="Conta" ar="الحساب"/>,
@@ -63,37 +56,10 @@ export default async function AccountPage(
   return <>
     <Nav/>
     <main className="lx11-page">
-      <section className="mx-auto max-w-3xl px-6 py-20">
+      <section className={user?"lx26-account-page mx-auto max-w-6xl px-4 py-8 md:px-8 md:py-10":"mx-auto max-w-3xl px-6 py-20"}>
         {user ? <>
           {miniLink && <MiniAccountLinkPanel ticket={miniLink} accountLabel={user.email || user.phone || ""} />}
-          <AccountProfileCard email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} />
-          <div className="mt-6 rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7">
-            <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]">{T.account}</p>
-            <h1 className="mt-3 font-display text-3xl text-[var(--lx-ink)]">{T.welcome}</h1>
-            <p className="mt-3 text-sm text-[var(--lx-muted)]">{user.email}</p>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <Link href="/products" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="products" size="title"/><b>{T.products}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.productsDesc}</p></Link>
-            <Link href="/account/orders" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="orders" size="title"/><b>{T.orders}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.paid}: {paidOrderCount ?? "—"}</p></Link>
-            <Link href="/ai-wallet" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="wallet" size="title"/><b>{T.balance}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.balanceDesc}</p></Link>
-            <Link href="/sasi" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="sasi" size="title"/><b>SASI</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.sasiDesc}</p></Link>
-            <Link href="/account/withdrawals" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="refund" size="title"/><b>{T.refund}</b><p className="mt-2 text-sm text-[var(--lx-muted)]">{T.refundDesc}</p></Link>
-            <Link href="/account/support" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="account" size="title"/><b>我的问题</b><p className="mt-2 text-sm text-[var(--lx-muted)]">查看已提交的问题、截图和处理进度</p></Link>
-            <Link href="/account/notifications" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5"><LingxiMiniIcon name="orders" size="title"/><b><LxText zh="消息与公告" en="Notifications & updates" ja="通知と更新" ko="알림 및 업데이트" fr="Notifications et mises à jour" de="Mitteilungen & Updates" es="Notificaciones y novedades" pt="Notificações e novidades" ar="الإشعارات والتحديثات"/></b><p className="mt-2 text-sm text-[var(--lx-muted)]"><LxText zh="查看充值到账、提现进度、退款结果和版本更新" en="See top-ups, withdrawal progress, refund results and product updates." ja="入金、返金進捗、結果、更新情報を確認" ko="충전, 환불 진행, 결과 및 업데이트 확인" fr="Suivez paiements, remboursements et mises à jour." de="Aufladungen, Erstattungen und Updates ansehen." es="Consulta recargas, reembolsos y novedades." pt="Veja recargas, reembolsos e novidades." ar="راجع الشحن والاسترداد والتحديثات."/></p></Link>
-            <Link href="/account/settings" className="lx-account-entry rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-5">
-              <span className="text-2xl">⚙</span>
-              <b><LxText zh="设置" en="Settings" ja="設定" ko="설정" fr="Paramètres" de="Einstellungen" es="Ajustes" pt="Configurações" ar="الإعدادات"/></b>
-              <p className="mt-2 text-sm text-[var(--lx-muted)]"><LxText zh="语言、币种、显示与常用账户入口" en="Language, currency, appearance and account shortcuts." ja="言語、通貨、表示、アカウントの入口" ko="언어, 통화, 화면 및 계정 바로가기" fr="Langue, devise, apparence et raccourcis." de="Sprache, Währung, Darstellung und Kontozugänge." es="Idioma, moneda, apariencia y accesos." pt="Idioma, moeda, aparência e atalhos." ar="اللغة والعملة والمظهر وروابط الحساب."/></p>
-            </Link>
-          </div>
-
-          <div className="mt-8 space-y-3">
-            <ChangePasswordForm/>
-            <SwitchAccountButton/>
-            <SignOutButton/>
-            <DeleteAccountButton/>
-          </div>
+          <AccountCenterV26 email={user.email || ""} initialName={String(user.user_metadata?.display_name || user.email?.split("@")[0] || "LINGXI")} paidOrderCount={paidOrderCount}/>
         </> : <div className="mx-auto max-w-md rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-7 text-center">
           <p className="text-xs uppercase tracking-[.2em] text-[var(--lx-faint)]">{T.signKicker}</p>
           <h1 className="mt-4 font-display text-3xl text-[var(--lx-ink)]">{T.signTitle}</h1>
