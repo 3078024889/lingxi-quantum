@@ -185,11 +185,12 @@ lines=open(src).read().splitlines()
 disabled={"TOOL_PASS_COMMERCE_READY","ALIPAY_ENABLED","PAYPAL_ENABLED","WECHAT_ENABLED",
  "SASI_RMB_BALANCE_V1_ENABLED","SASI_MARKET_SALES_ENABLED","SASI_MARKET_UPLOADS_ENABLED",
  "SASI_MARKET_DELIVERY_ENABLED","SASI_MARKET_PAYOUTS_ENABLED","SOFTWARE_COMMERCE_READY"}
-overrides=disabled|{"TOOL_PASS_BACKEND_READY","NEXT_PUBLIC_TOOL_PASS_ENFORCED","PORT","HOSTNAME"}
+overrides=disabled|{"TOOL_PASS_BACKEND_READY","NEXT_PUBLIC_TOOL_PASS_ENFORCED","NEXT_PUBLIC_SITE_URL","ALIPAY_SITE_URL","PORT","HOSTNAME"}
 out=[ln for ln in lines if ln.split("=",1)[0] not in overrides]
 out.extend(k+"=false" for k in sorted(disabled))
 out.extend(["TOOL_PASS_BACKEND_READY=true","NEXT_PUBLIC_TOOL_PASS_ENFORCED=true",
- "PORT=3193","HOSTNAME=127.0.0.1"])
+ "NEXT_PUBLIC_SITE_URL=https://lingxifield.cn","ALIPAY_SITE_URL=https://lingxifield.cn",
+  "PORT=3193","HOSTNAME=127.0.0.1"])
 fd=os.open(dst,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
 with os.fdopen(fd,"w") as f:f.write("\n".join(out)+"\n")
 PY
@@ -290,6 +291,8 @@ rollback() {
     'SASI_MARKET_SALES_ENABLED=false' 'SASI_MARKET_UPLOADS_ENABLED=false' \
     'SASI_MARKET_DELIVERY_ENABLED=false' 'SASI_MARKET_PAYOUTS_ENABLED=false' \
     'SOFTWARE_COMMERCE_READY=false' \
+    'NEXT_PUBLIC_SITE_URL=https://lingxifield.cn' \
+    'ALIPAY_SITE_URL=https://lingxifield.cn' \
     'PORT=3193' 'HOSTNAME=127.0.0.1' > "$PROD_FLAGS"
 )
 chmod 600 "$PROD_FLAGS"
