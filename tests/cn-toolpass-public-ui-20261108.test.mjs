@@ -9,7 +9,7 @@ test("four priced offers with one buyer entry per card",()=>{
  assert.match(page,/ALL_TOOLS_PASS_CATALOG\.map\(\(offer,i\)/);
  assert.match(page,/onClick=\{\(\)=>openOffer\(offer\)\}/);
  assert.doesNotMatch(page,/微信／支付宝直接购买|PayPal 直接购买/);
- assert.match(page,/100\+ 实用工具，一次开通/);
+ assert.match(page,/畅享 100\+ 实用工具，划算又高效/);
  for(const [days,price] of [[7,29],[30,99],[90,269],[365,899]]){
   assert.match(catalog,new RegExp("days:"+days+",price:"+price));
  }
@@ -75,9 +75,10 @@ test("all direct tool-pass gateways obey the explicit commerce gate",()=>{
   "app/api/pay/wechat/create/route.ts",
   "app/api/pay/alipay/create/route.ts"
  ];
- assert.match(page,/ready:available&&providers\.wechat/);
- assert.match(page,/ready:available&&providers\.alipay/);
- assert.match(page,/ready:available&&providers\.paypal/);
+ assert.match(page,/const paymentReady=available&&verifiedCurrency===currency/);
+ assert.match(page,/ready:paymentReady&&providers\.wechat/);
+ assert.match(page,/ready:paymentReady&&providers\.alipay/);
+ assert.match(page,/ready:paymentReady&&providers\.paypal/);
  assert.match(server,/toolPassCommerceReady\(\)/);
  assert.match(server,/TOOL_PASS_COMMERCE_READY/);
  for(const path of paths){
