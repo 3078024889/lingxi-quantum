@@ -8,6 +8,7 @@ on:
     branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109]
     paths:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
+      - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
   workflow_dispatch:
 permissions:
   contents: write
