@@ -28,6 +28,7 @@ on:
       - 'app/api/cron/sasi-v5-radar/route.ts'
       - 'vercel.json'
       - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
+      - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
       - 'tests/final-closure/dual-premium-new-visual.spec.ts'
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'docs/operations/legacy-sasi-retirement-20261108.json'
