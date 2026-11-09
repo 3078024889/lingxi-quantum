@@ -5,7 +5,7 @@ name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEP
 # The operator must explicitly dispatch this workflow for the reviewed branch.
 on:
   push:
-    branches: [release/com-sasi-full-20261108]
+    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109]
     paths:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
   workflow_dispatch:
@@ -42,6 +42,11 @@ jobs:
           node tests/sasi-marketplace-fee.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
           node --test tests/sasi-software-public-branding-20261108.test.mjs
+          node --test tests/sasi-marketplace-long-description-20261109.test.mjs
+          node --test tests/sasi-premium-nine-language-20261109.test.mjs
+          node --test tests/toolpass-premium-nine-language-20261109.test.mjs
+          node --test tests/com-merchant-public-about-nine-language-20261109.test.mjs
+          node --test tests/com-public-market-edge.test.mjs
           node --test tests/public-announcements-deeplink-20261108.test.mjs
           node --test tests/sasi-marketplace-review-security-20261108.test.mjs
           node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
@@ -86,7 +91,7 @@ jobs:
             sleep 1
           done
           [ "$ready" = 1 ] || { echo "::error::STANDALONE_HEALTH_NOT_READY"; exit 1; }
-          for path in / /tools /siai /sasi /sasi/marketplace /account/software /announcements /tools/pass /ai-wallet; do
+          for path in / /tools /siai /sasi /sasi/marketplace /about /account/software /announcements /tools/pass /ai-wallet; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "PUBLIC_LOCAL_ROUTE:$path:$code"
             [ "$code" = 200 ] || exit 1
