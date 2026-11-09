@@ -1,0 +1,50 @@
+name: SASI five-thousand-character media and localization gate (NO DEPLOY)
+on:
+  push:
+    branches: [fix/sasi-description-5000-20261109]
+  pull_request:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - 'components/SasiOpenMarketplace.tsx'
+      - 'app/api/sasi/marketplace/listings/route.ts'
+      - 'lib/sasi-software/ui-copy.ts'
+      - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
+      - 'tests/sasi-premium-nine-language-20261109.test.mjs'
+      - 'supabase/migrations/20261109110500_sasi_market_description_5000.sql'
+      - '.github/workflows/sasi-description-5000-20261109.yml'
+permissions: {contents: read}
+concurrency:
+  group: sasi-description-5000-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  storefront-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      LINGXI_SELFHOST_BUILD: '1'
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.cn
+      NEXT_PUBLIC_SUPABASE_URL: https://sxsgdpqojepgbbrxrzlq.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install pinned packages
+        run: pnpm install --frozen-lockfile
+      - name: Check five-thousand-character contract, nine languages and private delivery
+        run: |
+          node --test tests/sasi-marketplace-long-description-20261109.test.mjs
+          node --test tests/sasi-premium-nine-language-20261109.test.mjs
+          node --test tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs
+          node --test tests/sasi-software-public-branding-20261108.test.mjs
+          node tests/sasi-marketplace-security-contract.test.mjs
+      - name: TypeScript and exact-branch build
+        run: |
+          pnpm exec tsc --noEmit
+          pnpm build
+          test -s .next/standalone/server.js
+          echo SASI_5000_9_LANGUAGES_MEDIA_CHECK_PASS_NO_DEPLOY
