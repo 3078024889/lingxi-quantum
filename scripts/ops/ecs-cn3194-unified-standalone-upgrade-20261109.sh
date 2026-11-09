@@ -38,15 +38,15 @@ safe_env(){
 }
 old_live(){
   systemctl is-active --quiet "$OLD_SVC" || { echo "ORIGINAL_3193_SERVICE_NOT_ACTIVE" >&2;exit 1; }
-  local old_dir
+  local old_dir old_sha
   old_dir="$(systemctl show "$OLD_SVC" -p WorkingDirectory --value)"
-  [[ "$old_dir" == "$BASE/8729bf958a565ec1dbd2776082416c831b1b51877b48b0a72" ]] || {
-    # The release directory is pinned below using the service's own RELEASE_SOURCE_SHA.
-    [[ "$old_dir" =~ ^$BASE/[a-f0-9]{40}$ ]] || { echo "ORIGINAL_3193_WORKDIR_INVALID" >&2;exit 1; }
-    test -s "$old_dir/RELEASE_SOURCE_SHA" || { echo "ORIGINAL_3193_SOURCE_SHA_MISSING" >&2;exit 1; }
-    [[ "$(tr -d '\r\n' < "$old_dir/RELEASE_SOURCE_SHA")" == "8729bf958a565ec1dbd2776082416c83170b1d73" ]] || {
-      echo "ORIGINAL_3193_SOURCE_SHA_MISMATCH" >&2;exit 1;
-    }
+  [[ "$old_dir" =~ ^/opt/lingxifield/cn-staged-releases/[a-f0-9]{40}$ ]] || {
+    echo "ORIGINAL_3193_WORKDIR_INVALID" >&2;exit 1;
+  }
+  test -s "$old_dir/RELEASE_SOURCE_SHA" || { echo "ORIGINAL_3193_SOURCE_SHA_MISSING" >&2;exit 1; }
+  old_sha="$(tr -d '\r\n' < "$old_dir/RELEASE_SOURCE_SHA")"
+  [[ "$old_sha" == "8729bf958a565ec1dbd2776082416c83170b1d73" ]] || {
+    echo "ORIGINAL_3193_SOURCE_SHA_MISMATCH" >&2;exit 1;
   }
   [[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo "NGINX_CONFIG_NOT_REGULAR" >&2;exit 1; }
   python3 - "$NGINX" <<'PY'
@@ -120,10 +120,9 @@ console.log("CN3194_FOUR_TOOLPASS_OFFERS_PASS");
 });'
 }
 safe_env
-old_live
-load_env_files
 
 if [[ "$MODE" == "--rollback" ]];then
+  systemctl is-active --quiet "$OLD_SVC" || { echo "ORIGINAL_3193_SERVICE_NOT_ACTIVE" >&2;exit 1; }
   [[ -f "$NGINX_BACKUP" && ! -L "$NGINX_BACKUP" ]] || { echo "CN3194_NGINX_ROLLBACK_FILE_MISSING" >&2;exit 1; }
   [[ -f "$UNIT_BACKUP" && ! -L "$UNIT_BACKUP" ]] || { echo "CN3194_UNIT_ROLLBACK_FILE_MISSING" >&2;exit 1; }
   cp -a "$NGINX_BACKUP" "$NGINX"
@@ -141,6 +140,8 @@ if [[ "$MODE" == "--rollback" ]];then
   exit 0
 fi
 
+old_live
+load_env_files
 [[ -x "$NODE" ]] || { echo "NODE24_RUNTIME_NOT_FOUND" >&2;exit 1; }
 if [[ "$MODE" == "--plan" ]];then
   [[ "$(curl -s --noproxy '*' --max-time 10 -o /dev/null -w '%{http_code}' -H 'Host: lingxifield.cn' "http://127.0.0.1:3193/api/health" || true)" == 200 ]] ||
@@ -205,6 +206,7 @@ if [[ "$MODE" == "--stage-local" ]];then
   if grep -Eq '^/|(^|/)\.\.(/|$)' "$BASE/.cn3194-manifest-$SHORT";then
     echo "CN3194_UNSAFE_ARCHIVE_PATH" >&2;exit 1;
   fi
+  [[ ! -e "$BASE/$EXPECTED_SHA" ]] || { echo "CN3194_DESTINATION_ALREADY_EXISTS_NO_OVERWRITE" >&2;exit 1; }
   TEMP="$(mktemp -d "$BASE/.cn3194-XXXXXXXX")"
   trap 'rm -rf "$TEMP"' EXIT
   mkdir -p "$TEMP/unpack"
