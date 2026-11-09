@@ -40,6 +40,7 @@ on:
       - 'components/WalletLivePanel.tsx'
       - 'components/tools/ToolsHubV11.tsx'
       - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
+      - 'wrangler.jsonc'
   workflow_dispatch:
 permissions:
   contents: read
