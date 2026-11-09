@@ -1,4 +1,5 @@
 # Wallet and provider reads use the current runtime, not the retired backend.
+# Health probes must execute the deployed candidate, not the retired legacy service.
 name: COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)
 on:
   push:

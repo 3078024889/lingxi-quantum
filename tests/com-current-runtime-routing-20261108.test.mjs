@@ -35,6 +35,10 @@ test('generated edge wrapper serves public merchant status without exposing auth
   assert.equal(money.status,401);
   assert.equal(await money.text(),'current');
   assert.equal(currentCalls,1);assert.equal(legacyCalls,0);
+  const health=await worker.fetch(new Request('https://lingxifield.com/api/health',{headers:{cookie:'session=test'}}),env,{});
+  assert.equal(health.status,401,'health preserves the current app response instead of fabricating success');
+  assert.equal(await health.text(),'current');
+  assert.equal(currentCalls,2);assert.equal(legacyCalls,0);
   const payment=await worker.fetch(new Request('https://lingxifield.com/api/pay/paypal/create',{method:'POST'}),env,{});
   assert.equal(await payment.text(),'legacy');assert.equal(legacyCalls,1);
  }finally{await rm(dir,{recursive:true,force:true});}
