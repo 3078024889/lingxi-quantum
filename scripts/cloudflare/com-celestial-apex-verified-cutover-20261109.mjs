@@ -55,9 +55,18 @@ async function probe(base,phase,attempts=3){
   if(consecutive!==attempts)throw Error("COM_"+phase+"_UNSTABLE_ROUTE:"+path+":"+consecutive+"/"+attempts);
  }
  for(const path of ["/api/sasi/account","/api/money/summary","/api/sasi/marketplace/seller","/api/sasi/marketplace/my-orders"]){
-  const x=await status(base+path);
-  console.log("COM_"+phase+"_PRIVATE "+path+" HTTP_"+x.status);
-  if(x.status!==401)throw Error("COM_"+phase+"_PRIVATE_AUTH_FAILURE:"+path);
+  const response=await fetch(base+path,{redirect:"manual",signal:AbortSignal.timeout(20000)});
+  const code=response.status;
+  console.log("COM_"+phase+"_PRIVATE "+path+" HTTP_"+code);
+  if(code===401)continue;
+  if(path==="/api/money/summary"&&code===503){
+   const body=await response.text();
+   if(body.length>2048||/(availableMinor|refundableMinor|refundHoldMinor|balances|withdrawals)/i.test(body))
+    throw Error("COM_"+phase+"_BALANCE_503_CONTAINS_PRIVATE_DATA");
+   console.log("COM_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA");
+   continue;
+  }
+  throw Error("COM_"+phase+"_PRIVATE_AUTH_FAILURE:"+path+":"+code);
  }
  const providers=await fetch(base+"/api/pay/providers",{redirect:"manual",signal:AbortSignal.timeout(20000)});
  const providerJson=await providers.json().catch(()=>null);

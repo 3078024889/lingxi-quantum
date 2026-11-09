@@ -36,6 +36,7 @@ jobs:
           grep -Fq 'const maxTries=phase==="POSTCUTOVER"?12:attempts' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"/api/sasi/account"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"/ai-wallet"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'COM_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           if grep -Fq 'COM_LEGACY_WALLET_PREFLIGHT' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs; then exit 1; fi
           echo COM_UNIFIED_ROUTE_SCRIPT_SOURCE_GATE_PASS
   release:

@@ -9,6 +9,10 @@ on:
       - 'app/ai-wallet/page.tsx'
       - 'app/layout.tsx'
       - 'app/celestial-ui-20261109.css'
+      - 'components/AccountCenterV26.tsx'
+      - 'app/lingxifield-premium-20261109.css'
+      - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
+      - 'tests/final-closure/dual-premium-new-visual.spec.ts'
       - 'components/WalletLivePanel.tsx'
       - 'components/tools/ToolsHubV11.tsx'
       - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
@@ -44,7 +48,7 @@ jobs:
       - name: TypeScript, eslint and production Next.js build
         run: |
           pnpm exec tsc --noEmit
-          pnpm exec eslint components/WalletLivePanel.tsx components/tools/ToolsHubV11.tsx app/ai-wallet/page.tsx app/account/page.tsx
+          pnpm exec eslint components/AccountCenterV26.tsx components/WalletLivePanel.tsx components/tools/ToolsHubV11.tsx app/ai-wallet/page.tsx app/account/page.tsx
           pnpm build
           test -s .next/standalone/server.js
       - name: Preserve dual-site release gates

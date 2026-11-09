@@ -40,6 +40,24 @@ on:
       - 'components/WalletLivePanel.tsx'
       - 'components/tools/ToolsHubV11.tsx'
       - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
+      - 'app/lingxifield-premium-20261109.css'
+      - 'components/AccountCenterV26.tsx'
+      - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
+      - 'tests/final-closure/dual-premium-new-visual.spec.ts'
+      - '.github/workflows/dual-premium-visual-retirement-20261109.yml'
+      - 'app/layout.tsx'
+      - 'app/api/sasi/generation/submit/route.ts'
+      - 'app/api/cron/sasi-v5-radar/route.ts'
+      - 'vercel.json'
+      - 'app/sasi/VideoAssembler.tsx'
+      - 'components/SasiAutonomyEntrances.tsx'
+      - 'components/SasiByokImageStudio.tsx'
+      - 'components/SasiMultiEpisodeWorkspace.tsx'
+      - 'components/SasiNativeCreatePanel.tsx'
+      - 'components/SasiOneSurface.tsx'
+      - 'components/SasiProjectDNAEditor.tsx'
+      - 'components/SasiSeriesStudio.tsx'
+      - 'components/SasiVariantWorkbench.tsx'
       - 'wrangler.jsonc'
   workflow_dispatch:
 permissions:
@@ -266,8 +284,17 @@ jobs:
             if grep -q 'MONEY_SUMMARY_UNAVAILABLE' "$body";then reason="MONEY_SUMMARY_UNAVAILABLE";fi
             if grep -q 'UNAUTHORIZED' "$body";then reason="UNAUTHORIZED";fi
             echo "COM_CANARY_PRIVATE_ROUTE path=$path HTTP_$status reason=$reason"
+            if [[ "$path" == "/api/money/summary" && "$status" == "503" ]];then
+              bytes="$(wc -c < "$body")"
+              if [[ "$bytes" -gt 2048 ]] || grep -Eiq 'availableMinor|refundableMinor|refundHoldMinor|balances|withdrawals' "$body";then
+                echo "COM_CANARY_BALANCE_503_PRIVATE_PAYLOAD_REJECTED"
+                rm -f "$body";exit 1
+              fi
+              echo "COM_CANARY_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA"
+            else
+              [[ "$status" == "401" ]] || { rm -f "$body";exit 1; }
+            fi
             rm -f "$body"
-            test "$status" = 401 || exit 1
           done
           for asset in /media/ffmpeg-0.12.10/ffmpeg-core.wasm /models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx;do
             headers="$(mktemp)"
