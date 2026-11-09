@@ -9,7 +9,7 @@ test("four priced offers with one buyer entry per card",()=>{
  assert.match(page,/ALL_TOOLS_PASS_CATALOG\.map\(\(offer,i\)/);
  assert.match(page,/onClick=\{\(\)=>openOffer\(offer\)\}/);
  assert.doesNotMatch(page,/微信／支付宝直接购买|PayPal 直接购买/);
- assert.match(page,/100\+ 实用工具，一次开通/);
+ assert.match(page,/畅享 100\+ 实用工具，划算又高效/);
  for(const [days,price] of [[7,29],[30,99],[90,269],[365,899]]){
   assert.match(catalog,new RegExp("days:"+days+",price:"+price));
  }
