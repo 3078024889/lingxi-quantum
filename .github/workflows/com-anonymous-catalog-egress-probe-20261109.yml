@@ -49,6 +49,14 @@ jobs:
         run: |
           set -Eeuo pipefail
           url=https://lingxifield-com-catalog-egress-probe-20261109.3078024889.workers.dev/check
-          curl -4fSs --connect-timeout 8 --max-time 35 "$url" | tee "$RUNNER_TEMP/egress-result.json"
+          propagated=0
+          for attempt in $(seq 1 24);do
+            status="$(curl -4sS --connect-timeout 8 --max-time 35 -o "$RUNNER_TEMP/egress-result.json" -w '%{http_code}' "$url" || true)"
+            echo "COM_EGRESS_PROBE_PROPAGATION attempt=$attempt status=$status"
+            if [[ "$status" = "200" ]];then propagated=1;break;fi
+            sleep 3
+          done
+          test "$propagated" -eq 1
+          cat "$RUNNER_TEMP/egress-result.json"
           jq -e 'has("supabase") and has("cn") and (.supabase.status|type=="number") and (.cn.status|type=="number")' "$RUNNER_TEMP/egress-result.json"
           echo COM_CLOUDFLARE_EGRESS_DIAGNOSIS_READONLY_COMPLETE
