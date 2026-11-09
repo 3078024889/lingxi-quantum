@@ -43,6 +43,8 @@ test("scoped visual layer loaded last and retired SASI pages cannot become publi
   assert.match(src,/redirect\("\/sasi"\)/);
   assert.match(src,/index:false/);
  }
+ const deleted=["SasiAutonomyEntrances","SasiByokImageStudio","SasiMultiEpisodeWorkspace","SasiNativeCreatePanel","SasiOneSurface","SasiProjectDNAEditor","SasiSeriesStudio","SasiVariantWorkbench"];
+ for(const name of deleted)assert.equal(existsSync(new URL("../components/"+name+".tsx",import.meta.url)),false,"retired source unexpectedly restored: "+name);
  const nav=read("components/Nav.tsx");
  assert.doesNotMatch(nav,/href="\/sasi\/(?:drama|image|director|series|build|chat)"/);
 });
