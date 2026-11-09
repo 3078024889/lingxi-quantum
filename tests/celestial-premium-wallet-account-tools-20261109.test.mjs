@@ -34,10 +34,10 @@ test("account matches approved references without losing authentication, profile
  assert.match(account,/lx26-account-page/);
  assert.match(center,/lx26-account-welcome/);
  assert.match(center,/lx26-account-services/);
- assert.match(account,/\/account\/orders/);
- assert.match(account,/\/ai-wallet/);
- assert.match(account,/\/account\/notifications/);
- assert.match(account,/\/account\/settings/);
+ assert.match(center,/\/account\/orders/);
+ assert.match(center,/\/ai-wallet/);
+ assert.match(center,/\/account\/notifications/);
+ assert.match(center,/\/account\/settings/);
  assert.match(center,/ChangePasswordForm/);
  assert.match(center,/SwitchAccountButton/);
  assert.match(center,/SignOutButton/);
