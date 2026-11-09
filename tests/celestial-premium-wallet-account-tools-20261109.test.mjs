@@ -43,7 +43,7 @@ test("account matches approved references without losing authentication, profile
  assert.match(center,/SignOutButton/);
  assert.match(center,/DeleteAccountButton/);
  assert.doesNotMatch(account,/继续短剧、网站、书本、学习和科研/);
- assert.match(center,/zh="发现、管理与发布原创软件"/);
+ assert.match(center,/subZh:"发现、管理与发布原创软件"/);
 });
 test("tools hero keeps every tool and searchable category; no duplicate recent work or retired tools",()=>{
  assert.match(tools,/publicToolSurface\(\)/);
