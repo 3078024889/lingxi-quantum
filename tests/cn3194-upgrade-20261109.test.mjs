@@ -26,8 +26,8 @@ test("stage and rollback preserve the old 3193 service",()=>{
 });
 
 test("new wallet and tools layouts are part of the live 3194 probe",()=>{
-  assert.match(stage,/lx-cel-wallet-page/);
-  assert.match(stage,/lx-cel-tools-page/);
+  assert.match(stage,/lx26-wallet-page/);
+  assert.match(stage,/lx26-tools-page/);
   assert.match(stage,/CN3194_FOUR_TOOLPASS_OFFERS_PASS/);
   assert.match(stage,/api\/sasi\/account 401/);
 });
