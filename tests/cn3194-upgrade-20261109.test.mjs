@@ -51,3 +51,30 @@ test("CNY activation requires signed no-charge probe and keeps PayPal off",()=>{
   assert.match(activate,/FIRST_REAL_ORDER_WEBHOOK_AND_DELIVERY_ACCEPTANCE_REMAINS_REQUIRED/);
   assert.doesNotMatch(activate,/PAYPAL_ENABLED":"true"/);
 });
+
+
+const runner=readFileSync("scripts/ops/ecs-cn3194-release-runner-20261109.sh","utf8");
+
+test("3194 release runner supports older curl without retry-all-errors",()=>{
+  assert.match(runner,/CURL_COMPATIBILITY_MODE/);
+  assert.doesNotMatch(runner,/curl[^\n]*--retry-all-errors/);
+  assert.match(runner,/curl --noproxy '\*' -fL --connect-timeout 30 -C -/);
+  assert.match(runner,/seq 1 40/);
+  assert.match(runner,/UPGRADE_BLOB_SHA="5e509aab527228332b179fc44341c81817ba290c"/);
+  assert.match(runner,/PAYMENT_BLOB_SHA="897a38e8b90c93168396181555a7a008e01c0e24"/);
+});
+
+test("3194 runner verifies pinned scripts and release before staging",()=>{
+  assert.match(runner,/GITHUB_SCRIPT_BLOB_MISMATCH/);
+  assert.match(runner,/ARCHIVE_SHA="4368bd5956dd2f68f6aa46a564ffeef5751fb68d78903182f754831d352602ea"/);
+  assert.match(runner,/ARCHIVE_BYTES="454674344"/);
+  assert.match(runner,/EXACT_SOURCE_SHA_PASS/);
+  assert.ok(runner.indexOf("sha256sum -c") < runner.indexOf('--stage-local'));
+  assert.ok(runner.indexOf("EXACT_SOURCE_SHA_PASS") < runner.indexOf('--stage-local'));
+});
+
+test("3194 runner gates payment activation behind signed audit",()=>{
+  assert.ok(runner.indexOf('if bash "$PAYMENT" --audit "$TAG"; then') >= 0);
+  assert.ok(runner.indexOf('bash "$PAYMENT" --enable "$TAG"') > runner.indexOf('if bash "$PAYMENT" --audit "$TAG"; then'));
+  assert.match(runner,/PAYMENT_REMAINS_CLOSED_SIGNED_MERCHANT_VALIDATION_REQUIRED/);
+});
