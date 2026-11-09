@@ -110,7 +110,7 @@
 .lx26-tools-aside .lx-tools-compact-recent-head h2{font-size:15px;font-weight:800;color:#252c53}
 .lx26-tools-aside .lx-tools-compact-recent-head p{display:none}
 .lx26-tools-aside .lx-tools-compact-recent-list{margin-top:7px!important;padding-bottom:0!important;gap:4px}
-.lx26-tools-aside .lx-tools-compact-recent-item{min-width:180px!important;padding:10px 11px!important;background:#fffbd;border-color:#e6e6f7;border-radius:12px}
+.lx26-tools-aside .lx-tools-compact-recent-item{min-width:180px!important;padding:10px 11px!important;background:rgba(255,255,255,.74);border-color:#e6e6f7;border-radius:12px}
 .lx26-tools-pass-link{display:flex;align-items:center;gap:11px;margin-top:auto;padding:12px 10px;border-top:1px solid #dedffa}
 .lx26-tools-pass-link .lx26-pass-glyph{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;background:linear-gradient(140deg,#a4a0fd,#6961e8);color:#fff;font-size:22px;border-radius:11px}
 .lx26-tools-pass-link>span:nth-child(2){display:grid;gap:3px;flex:1;min-width:0}
