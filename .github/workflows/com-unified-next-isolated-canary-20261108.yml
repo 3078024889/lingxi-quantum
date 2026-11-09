@@ -31,6 +31,12 @@ on:
       - 'tests/toolpass-premium-nine-language-20261109.test.mjs'
       - 'tests/cn-toolpass-public-ui-20261108.test.mjs'
       - 'tests/cn-wallet-checkout-entry-20261108.test.mjs'
+      - 'app/account/page.tsx'
+      - 'app/ai-wallet/page.tsx'
+      - 'app/celestial-ui-20261109.css'
+      - 'components/WalletLivePanel.tsx'
+      - 'components/tools/ToolsHubV11.tsx'
+      - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -80,7 +86,8 @@ jobs:
           node tests/toolpass-direct-fulfillment-20261108.test.mjs
           node tests/paypal-merchant-idempotency-20261108.test.mjs
           node --test tests/com-paypal-live-review-20261109.test.mjs
-          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
+          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs
+          node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
           node --test tests/sasi-com-closure-20261108.test.mjs tests/com-next-release-safety-20261108.test.mjs
           node --test tests/com-wallet-static-session-contract-20261108.test.mjs
           node --test tests/com-payment-edge-merchant-readiness-20261108.test.mjs
