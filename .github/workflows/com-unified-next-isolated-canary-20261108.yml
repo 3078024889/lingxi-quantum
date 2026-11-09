@@ -11,6 +11,15 @@ on:
       - 'lib/sasi/readiness.ts'
       - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
       - 'tests/com-current-runtime-routing-20261108.test.mjs'
+      - 'components/SasiOpenMarketplace.tsx'
+      - 'components/SasiMarketplaceProductDetail.tsx'
+      - 'lib/sasi-software/ui-copy.ts'
+      - 'app/api/sasi/marketplace/listings/route.ts'
+      - 'app/tools/pass/page.tsx'
+      - 'lib/tools/commerce/toolpass-premium-copy.ts'
+      - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
+      - 'tests/sasi-premium-nine-language-20261109.test.mjs'
+      - 'tests/toolpass-premium-nine-language-20261109.test.mjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -49,6 +58,9 @@ jobs:
           node --test tests/com-current-runtime-routing-20261108.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
           node --test tests/sasi-software-public-branding-20261108.test.mjs
+          node --test tests/sasi-marketplace-long-description-20261109.test.mjs
+          node --test tests/sasi-premium-nine-language-20261109.test.mjs
+          node --test tests/toolpass-premium-nine-language-20261109.test.mjs
           node --test tests/public-announcements-deeplink-20261108.test.mjs
           node --test tests/sasi-marketplace-review-security-20261108.test.mjs
           node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
