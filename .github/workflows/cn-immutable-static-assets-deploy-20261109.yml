@@ -1,0 +1,138 @@
+name: CN GitHub Archive -> Cloudflare immutable static assets (NO PROD ROUTES)
+on:
+  push:
+    branches: [ops/cn-immutable-static-assets-20261109]
+    paths:
+      - 'workers/cn-immutable-static-release/index.mjs'
+      - '.github/workflows/cn-immutable-static-assets-deploy-20261109.yml'
+permissions: {contents: read}
+concurrency:
+  group: cn-immutable-static-release-5308e015b06b
+  cancel-in-progress: false
+jobs:
+  deploy-public-immutable-assets:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      GH_TOKEN: ${{ github.token }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      GH_REPO: 3078024889/lingxi-quantum
+      RELEASE_TAG: ecs-cn-unified-20261108-5308e015b06b
+      SOURCE_SHA: 5308e015b06bc6d6720450bf41280aa606fec0f3
+      ARCHIVE: cn-20261108-unified-standalone.tar.gz
+      ARCHIVE_SHA: a76120af69d599bd4a02b679eaedf3ca3c96ecc63abba0ea85f54ce98bc222b3
+      ARCHIVE_BYTES: '454655321'
+      ORIGINAL_EIGHT_MANIFEST_SHA: aa852ca0888b5d427557306d109d9136bc9299f501da340d22211110a9177d23
+      OLD_49_MANIFEST_SHA: 5b503dfc970b109995d4162de69c13218588403819d061640b162115e6fc489a
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Retrieve exact GitHub artifact and original signed manifests within GitHub CI
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" && test -n "$CLOUDFLARE_ACCOUNT_ID"
+          mkdir -p downloaded release-assets
+          commit="$(gh release view "$RELEASE_TAG" --repo "$GH_REPO" --json targetCommitish --jq .targetCommitish)"
+          test "$commit" = "$SOURCE_SHA"
+          gh release download "$RELEASE_TAG" --repo "$GH_REPO" --dir downloaded \
+            --pattern "$ARCHIVE" --pattern eight-parts.sha256 --pattern micro-parts.sha256
+          test "$(stat -c '%s' "downloaded/$ARCHIVE")" = "$ARCHIVE_BYTES"
+          printf '%s  %s\n' "$ARCHIVE_SHA" "downloaded/$ARCHIVE" | sha256sum -c -
+          printf '%s  %s\n' "$ORIGINAL_EIGHT_MANIFEST_SHA" downloaded/eight-parts.sha256 | sha256sum -c -
+          printf '%s  %s\n' "$OLD_49_MANIFEST_SHA" downloaded/micro-parts.sha256 | sha256sum -c -
+          echo "CN_ORIGINAL_IMMUTABLE_SOURCE_AND_SHA256_PASS"
+      - name: Create 56 public 8MiB binary assets and cross-check original eight part hashes
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          root=Path("downloaded")
+          source=root/"cn-20261108-unified-standalone.tar.gz"
+          asset=Path("release-assets")
+          total=source.stat().st_size
+          partsize=(total+7)//8
+          maxblock=8*1024*1024
+          original={}
+          for line in (root/"eight-parts.sha256").read_text().splitlines():
+              digest,name=line.split("  ")
+              original[name]=digest
+          old_micro={}
+          for line in (root/"micro-parts.sha256").read_text().splitlines():
+              digest,name=line.split("  ")
+              old_micro[name]=digest
+          manifest=[]
+          with source.open("rb") as data:
+              for i in range(8):
+                  partname=source.name+f".part-{i:02d}"
+                  size=min(partsize,total-i*partsize)
+                  part_digest=hashlib.sha256()
+                  for block_i in range(7):
+                      count=min(maxblock,size-block_i*maxblock)
+                      if count<=0:raise SystemExit("EMPTY_BINARY_ASSET")
+                      block=data.read(count)
+                      if len(block)!=count:raise SystemExit("UNEXPECTED_ARCHIVE_EOF")
+                      block_name=partname+f".block-{block_i:02d}"
+                      block_digest=hashlib.sha256(block).hexdigest()
+                      part_digest.update(block)
+                      if block_name in old_micro and old_micro[block_name]!=block_digest:
+                          raise SystemExit("EXISTING_8MB_CACHE_SHA_MISMATCH")
+                      (asset/block_name).write_bytes(block)
+                      manifest.append((block_digest,block_name))
+                  if part_digest.hexdigest()!=original[partname]:
+                      raise SystemExit("ORIGINAL_57MB_PART_SHA_MISMATCH")
+          if len(manifest)!=56 or len(old_micro)!=49:raise SystemExit("MANIFEST_ASSET_COUNT_MISMATCH")
+          (asset/"all-micro-parts.sha256").write_text(
+              "".join(f"{h}  {name}\n" for h,name in manifest))
+          (asset/"eight-parts.sha256").write_bytes((root/"eight-parts.sha256").read_bytes())
+          print("CN_CF_STATIC_ASSETS_VERIFIED 56 blocks bytes="+str(total))
+          print("CN_CF_ALL_MICRO_MANIFEST_SHA="+hashlib.sha256((asset/"all-micro-parts.sha256").read_bytes()).hexdigest())
+          PY
+          (cd release-assets && sha256sum -c all-micro-parts.sha256 >/dev/null)
+          node --check workers/cn-immutable-static-release/index.mjs
+          node --input-type=module <<'JS'
+          import {writeFileSync} from "node:fs";
+          const config={
+            name:"lingxifield-cn-static-release-5308e015-20261109",
+            main:"workers/cn-immutable-static-release/index.mjs",
+            compatibility_date:"2026-11-01",
+            workers_dev:true,
+            upload_source_maps:false,
+            assets:{directory:"./release-assets",binding:"ASSETS",run_worker_first:true}
+          };
+          writeFileSync("wrangler.cn-static.json",JSON.stringify(config));
+          console.log("CN_CF_STATIC_NO_DOMAIN_ROUTE_NO_GITHUB_FETCH");
+          JS
+      - name: Deploy static binary files once to Cloudflare Static Assets, no runtime GitHub fetch
+        run: |
+          set -Eeuo pipefail
+          npm install -g wrangler@4.158.0 >/dev/null
+          wrangler deploy --config wrangler.cn-static.json --no-upload-source-maps
+      - name: Check real Cloudflare bytes and all manifests before announcing ready
+        run: |
+          set -Eeuo pipefail
+          base="https://lingxifield-cn-static-release-5308e015-20261109.3078024889.workers.dev"
+          ready=0
+          for i in $(seq 1 24);do
+            code="$(curl -4sS --connect-timeout 8 --max-time 25 -o "$RUNNER_TEMP/manifest" -w '%{http_code}' "$base/all-micro-parts.sha256" || true)"
+            echo "CN_CF_STATIC_DEPLOY_PROPAGATION attempt=$i http=$code"
+            if [[ "$code" = 200 ]];then ready=1;break;fi
+            sleep 3
+          done
+          test "$ready" = 1
+          cmp release-assets/all-micro-parts.sha256 "$RUNNER_TEMP/manifest"
+          curl -4fsS --retry 5 --connect-timeout 8 --max-time 100 \
+            -o "$RUNNER_TEMP/block-01" "$base/cn-20261108-unified-standalone.tar.gz.part-01.block-01"
+          printf '%s  %s\n' 147ce390563faf29f6e7a02c7ad40eb0c05fb2251117bf8d80223013b1daf35a "$RUNNER_TEMP/block-01" | sha256sum -c -
+          curl -4fsS --retry 5 --connect-timeout 8 --max-time 100 \
+            -o "$RUNNER_TEMP/block-00" "$base/cn-20261108-unified-standalone.tar.gz.part-00.block-00"
+          manifesthash="$(awk '$2=="cn-20261108-unified-standalone.tar.gz.part-00.block-00"{print $1}' release-assets/all-micro-parts.sha256)"
+          printf '%s  %s\n' "$manifesthash" "$RUNNER_TEMP/block-00" | sha256sum -c -
+          denied="$(curl -4sS --max-time 12 -o /dev/null -w '%{http_code}' "$base/private/anything" || true)"
+          test "$denied" = 404
+          echo "CN_CF_STATIC_ASSETS_REAL_8MB_TEST_SHA256_PASS_NO_GITHUB_ORIGIN"
