@@ -42,6 +42,9 @@ export default function AllToolsPassPage(){
  const [walletBalanceMinor,setWalletBalanceMinor]=useState<number|null>(null);
  const [verifiedCurrency,setVerifiedCurrency]=useState<Currency|null>(null);
  const latestRefresh=useRef(0);
+ const modalRef=useRef<HTMLElement|null>(null);
+ const closeRef=useRef<HTMLButtonElement|null>(null);
+ const paymentBusyRef=useRef(false);
  const [notices,setNotices]=useState<Array<{id:string;titleZh:string;titleEn:string;publishedAt:string}>>([]);
  useEffect(()=>{let alive=true;fetch("/api/site-announcements",{cache:"no-store"})
   .then(r=>r.ok?r.json():null).then(data=>{if(!alive||!Array.isArray(data?.items))return;
@@ -71,6 +74,30 @@ export default function AllToolsPassPage(){
   }catch{if(ticket!==latestRefresh.current)return;setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});setWalletBalanceMinor(null);setVerifiedCurrency(null);}
  }
  useEffect(()=>{void refresh()},[currency]);
+ useEffect(()=>{paymentBusyRef.current=busy},[busy]);
+ useEffect(()=>{
+  if(!selected)return;
+  const prior=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  closeRef.current?.focus();
+  const handleKeys=(event:KeyboardEvent)=>{
+   if(event.key==="Escape"){
+    if(!paymentBusyRef.current){event.preventDefault();setSelected(null)}
+    return;
+   }
+   if(event.key!=="Tab")return;
+   const scope=modalRef.current;
+   if(!scope)return;
+   const focusable=Array.from(scope.querySelectorAll<HTMLElement>(
+    'a[href],button:not([disabled]),select:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex="-1"])'
+   )).filter(element=>element.getClientRects().length>0);
+   if(focusable.length===0){event.preventDefault();return}
+   const first=focusable[0],last=focusable[focusable.length-1];
+   if(event.shiftKey&&(document.activeElement===first||!scope.contains(document.activeElement))){event.preventDefault();last.focus()}
+   else if(!event.shiftKey&&(document.activeElement===last||!scope.contains(document.activeElement))){event.preventDefault();first.focus()}
+  };
+  document.addEventListener("keydown",handleKeys);
+  return()=>{document.removeEventListener("keydown",handleKeys);prior?.focus()};
+ },[selected?.sku]);
 
  const paymentReady=available&&verifiedCurrency===currency;
  const choices=(currency==="CNY"?[
@@ -199,16 +226,16 @@ export default function AllToolsPassPage(){
   </section>
   {message&&!selected&&<p role="status" className="mt-4 rounded-xl border border-[var(--lx-line)] p-4 text-sm">{message}</p>}
   {selected&&<div role="presentation" className={premium.overlay} onClick={()=>{if(!busy)setSelected(null)}}>
-   <section role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" dir={rtl?"rtl":"ltr"} className={premium.modal} onClick={event=>event.stopPropagation()}>
+   <section ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" aria-describedby="toolpass-checkout-desc" dir={rtl?"rtl":"ltr"} className={premium.modal} onClick={event=>event.stopPropagation()}>
     <div className={premium.modalTop}>
      <div><p className={premium.modalEyebrow}>TOOLPASS</p><h2 id="toolpass-checkout-title" className={premium.modalTitle}>{zh?"确认购买":"Confirm purchase"}</h2></div>
-     <button type="button" disabled={busy} className={premium.close} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}>×</button>
+     <button ref={closeRef} type="button" disabled={busy} className={premium.close} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}>×</button>
     </div>
     <div className={premium.summary}>
      <div className={premium.summaryIcon} aria-hidden="true">♛</div>
      <div className={premium.summaryInfo}>
       <strong>{zh?"工具包会员":"ToolPass membership"} · {[c.week,c.month,c.quarter,c.year][ALL_TOOLS_PASS_CATALOG.findIndex(o=>o.sku===selected.sku)]}</strong>
-      <p>{zh?"解锁全场 100+ 实用工具（含后续新增）":"All 100+ practical tools and new additions"}</p>
+      <p id="toolpass-checkout-desc">{zh?"解锁全场 100+ 实用工具（含后续新增）":"All 100+ practical tools and new additions"}</p>
      </div>
      <strong className={premium.summaryPrice}>{currency==="CNY"?"¥":"$"}{selected.price}</strong>
     </div>
