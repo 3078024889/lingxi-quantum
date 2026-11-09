@@ -6,9 +6,9 @@ const stage=readFileSync("scripts/ops/ecs-cn3194-unified-standalone-upgrade-2026
 const activate=readFileSync("scripts/ops/cn-payment-activate-3194-20261109.sh","utf8");
 
 test("3194 upgrade is pinned to the exact new artifact and prior 3193 baseline",()=>{
-  assert.match(stage,/EXPECTED_SHA="5054d6f492c14c7f476acbfb3152a28b1a308a30"/);
-  assert.match(stage,/EXPECTED_ARCHIVE_SHA="4368bd5956dd2f68f6aa46a564ffeef5751fb68d78903182f754831d352602ea"/);
-  assert.match(stage,/EXPECTED_ARCHIVE_BYTES="454674344"/);
+  assert.match(stage,/EXPECTED_SHA="2b48fb09bdcc5b48ba11f3ec9bb0b0473dc173de"/);
+  assert.match(stage,/EXPECTED_ARCHIVE_SHA="d757c0d6697679443531af574fa07481fa864c8d0719431f3984059961bf0927"/);
+  assert.match(stage,/EXPECTED_ARCHIVE_BYTES="454789546"/);
   assert.match(stage,/OLD_SVC=lingxifield-cn-release-20261108-8729bf958a56/);
   assert.match(stage,/old_sha.*8729bf958a565ec1dbd2776082416c83170b1d73/s);
   assert.match(stage,/PORT=3194/);
@@ -62,14 +62,14 @@ test("3194 release runner supports older curl without retry-all-errors",()=>{
   assert.doesNotMatch(runner,/^\s*curl\b[^\n]*--retry-all-errors/m);
   assert.match(runner,/curl --noproxy '\*' -fL --connect-timeout 30 -C -/);
   assert.match(runner,/seq 1 40/);
-  assert.match(runner,/UPGRADE_BLOB_SHA="5e509aab527228332b179fc44341c81817ba290c"/);
+  assert.match(runner,/UPGRADE_BLOB_SHA="37aab5fb96a824bf603474c463cbc255e67a3282"/);
   assert.match(runner,/PAYMENT_BLOB_SHA="897a38e8b90c93168396181555a7a008e01c0e24"/);
 });
 
 test("3194 runner verifies pinned scripts and release before staging",()=>{
   assert.match(runner,/GITHUB_SCRIPT_BLOB_MISMATCH/);
-  assert.match(runner,/ARCHIVE_SHA="4368bd5956dd2f68f6aa46a564ffeef5751fb68d78903182f754831d352602ea"/);
-  assert.match(runner,/ARCHIVE_BYTES="454674344"/);
+  assert.match(runner,/ARCHIVE_SHA="d757c0d6697679443531af574fa07481fa864c8d0719431f3984059961bf0927"/);
+  assert.match(runner,/ARCHIVE_BYTES="454789546"/);
   assert.match(runner,/EXACT_SOURCE_SHA_PASS/);
   assert.ok(runner.indexOf("sha256sum -c") < runner.indexOf('--stage-local'));
   assert.ok(runner.indexOf("EXACT_SOURCE_SHA_PASS") < runner.indexOf('--stage-local'));
