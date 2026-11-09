@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import {useEffect,useMemo,useState}from"react";
+import {useEffect,useMemo,useRef,useState}from"react";
 import ToolGlyph from "./ToolGlyph";
 import {publicToolSurface,type PublicToolSurfaceItem}from"@/lib/tools/public-surface";
 import {useLingxiLang}from"@/lib/lingxi-i18n";
@@ -14,6 +14,8 @@ import {isAnonymousLocalTool,localFreeCopy} from '@/lib/tools/local-free-tools';
 export default function ToolsHubV11(){
  const{lang,t}=useLingxiLang();
  const[q,setQ]=useState("");
+ const searchRef=useRef<HTMLInputElement>(null);
+ useEffect(()=>{const shortcut=(event:KeyboardEvent)=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();searchRef.current?.focus();}};window.addEventListener("keydown",shortcut);return()=>window.removeEventListener("keydown",shortcut)},[]);
  const[category,setCategory]=useState<ToolDisplayCategory>("all");
  const[freeOnly,setFreeOnly]=useState(false);const access=localFreeCopy(lang);
  useEffect(()=>{try{
@@ -38,7 +40,7 @@ export default function ToolsHubV11(){
     <span className="lx-cel-tools-eyebrow">{toolHubCopy(lang,"kicker")}</span>
     <h1>{toolHubCopy(lang,"title")}</h1>
     <p>{toolHubCopy(lang,"subtitle")}</p>
-    <div className="lx-cel-tools-main-search"><span aria-hidden="true">⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")} aria-label={toolHubCopy(lang,"search")}/><kbd>⌘ K</kbd></div>
+    <div className="lx-cel-tools-main-search"><span aria-hidden="true">⌕</span><input ref={searchRef} value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")} aria-label={toolHubCopy(lang,"search")}/><kbd>Ctrl K</kbd></div>
    </div>
    <aside className="lx-cel-tools-side"><RecentTools/>
    <div className="lx-cel-tools-starters"><h2>{lang==="zh"?"快速开始":"Quick access"}</h2><div>{tools.slice(0,2).map(item=><Link key={item.href} href={item.href}><ToolGlyph kind={item.kind} slug={item.slug}/><span>{toolTitle(lang,item.slug,lang==="zh"?item.titleZh:item.titleEn)}</span><b aria-hidden="true">→</b></Link>)}</div></div>
