@@ -17,6 +17,7 @@ export default function SasiOpenMarketplace(){
  const [images,setImages]=useState<Record<string,Array<{id:string;kind:string;url:string}>>>({});
  const [mine,setMine]=useState<Listing[]>([]);
  const [mediaCounts,setMediaCounts]=useState<Record<string,{cover:number;detail:number}>>({});
+ const [mediaEntries,setMediaEntries]=useState<Record<string,Array<{id:string;kind:string;status:string}>>>({});
  const [seller,setSeller]=useState<Seller|null>(null);
  const [payments,setPayments]=useState<Payout|null>(null);
  const [filter,setFilter]=useState("all"),[search,setSearch]=useState("");
@@ -38,10 +39,10 @@ export default function SasiOpenMarketplace(){
  useEffect(()=>{void refresh()},[refresh]);
  useEffect(()=>{
   const ids=mine.map(item=>item.id).filter(Boolean);
-  if(!ids.length){setMediaCounts({});return;}
+  if(!ids.length){setMediaCounts({});setMediaEntries({});return;}
   let live=true;
   fetch("/api/sasi/marketplace/my-media?listingIds="+ids.join(","),{cache:"no-store",credentials:"same-origin"})
-   .then(r=>r.ok?r.json():null).then(v=>{if(live&&v?.counts)setMediaCounts(v.counts)})
+   .then(r=>r.ok?r.json():null).then(v=>{if(live&&v?.counts){setMediaCounts(v.counts);setMediaEntries(v.items||{})}})
    .catch(()=>{});
   return()=>{live=false};
  },[mine]);
@@ -133,6 +134,14 @@ export default function SasiOpenMarketplace(){
    if(!put.ok)throw Error("PRIVATE_IMAGE_UPLOAD_FAILED_"+put.status);
    await post("/api/sasi/marketplace/image-confirm",{imageId:ticket.imageId});
    setStatus(zh?"图片已上传并等待审核。每款软件1张主图，最多4张可选详情图。":"Image awaiting review. One main image; up to four optional detail images.");
+   await refresh();
+  }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
+ };
+ const removeMedia=async(item:Listing,imageId:string)=>{
+  setBusy("remove-"+item.id);setError("");setStatus("");
+  try{
+   await post("/api/sasi/marketplace/my-media",{action:"withdraw",imageId});
+   setStatus(zh?"图片已移除，现可重新上传。":"Image removed. You may now upload another.");
    await refresh();
   }catch(e){setError(String(e instanceof Error?e.message:e))}finally{setBusy("")}
  };
@@ -250,6 +259,12 @@ export default function SasiOpenMarketplace(){
        <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""||(mediaCounts[item.id]?.detail??0)>=4} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"detail")}}/>
      </label>
      <span className={styles.mediaCounter}>{zh?"图片数量":"Images"}：{mediaCounts[item.id]?.cover??0}/1 {zh?"主图":"main"} · {mediaCounts[item.id]?.detail??0}/4 {zh?"详情图（可选）":"optional details"}</span>
+     {(mediaEntries[item.id]||[]).length>0&&<div className={styles.mediaEntries}>
+       {(mediaEntries[item.id]||[]).map((photo,index)=><div key={photo.id}>
+        <span>{photo.kind==="cover"?(zh?"主图":"Main image"):(zh?"详情图":"Detail image")+" "+(index+1)} · {photo.status}</span>
+        <button type="button" disabled={busy!==""} onClick={()=>void removeMedia(item,photo.id)}>{zh?"移除并更换":"Remove / replace"}</button>
+       </div>)}
+      </div>}
      <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":zh?"上传软件 ZIP 包":"Upload software ZIP"}
        <input type="file" accept=".zip,application/zip" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void upload(item,f)}}/>
      </label>
