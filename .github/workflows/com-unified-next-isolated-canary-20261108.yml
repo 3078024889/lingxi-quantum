@@ -18,6 +18,9 @@ on:
       - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
       - 'tests/com-current-runtime-routing-20261108.test.mjs'
       - 'components/SasiOpenMarketplace.tsx'
+      - 'components/AboutBusinessClient.tsx'
+      - 'app/about/page.tsx'
+      - 'tests/com-merchant-public-about-nine-language-20261109.test.mjs'
       - 'components/SasiMarketplaceProductDetail.tsx'
       - 'lib/sasi-software/ui-copy.ts'
       - 'app/api/sasi/marketplace/listings/route.ts'
@@ -67,6 +70,7 @@ jobs:
           node --test tests/com-public-market-edge.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
           node --test tests/sasi-software-public-branding-20261108.test.mjs
+          node --test tests/com-merchant-public-about-nine-language-20261109.test.mjs
           node --test tests/sasi-marketplace-long-description-20261109.test.mjs
           node --test tests/sasi-premium-nine-language-20261109.test.mjs
           node --test tests/toolpass-premium-nine-language-20261109.test.mjs
@@ -117,7 +121,7 @@ jobs:
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/ -o .open-next/assets/__lingxi_edge_static__/landing.html
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/siai -o .open-next/assets/__lingxi_edge_static__/siai.html
           # Anonymous public pages only; no account, order, payment or admin routes.
-          for mapping in 'tools:tools' 'tools/pass:tools-pass' 'ai-wallet:ai-wallet' 'sasi:sasi' 'sasi/marketplace:marketplace' 'announcements:announcements' 'en/siai:en-siai' 'ja/siai:ja-siai' 'ko/siai:ko-siai' 'fr/siai:fr-siai' 'de/siai:de-siai' 'es/siai:es-siai' 'pt/siai:pt-siai' 'ar/siai:ar-siai' 'tools/ico-to-png:tool-ico-to-png' 'tools/number-base-converter:tool-number-base-converter' 'tools/video-watermark-remover:tool-video-watermark-remover';do
+          for mapping in 'tools:tools' 'tools/pass:tools-pass' 'ai-wallet:ai-wallet' 'sasi:sasi' 'sasi/marketplace:marketplace' 'about:about' 'announcements:announcements' 'en/siai:en-siai' 'ja/siai:ja-siai' 'ko/siai:ko-siai' 'fr/siai:fr-siai' 'de/siai:de-siai' 'es/siai:es-siai' 'pt/siai:pt-siai' 'ar/siai:ar-siai' 'tools/ico-to-png:tool-ico-to-png' 'tools/number-base-converter:tool-number-base-converter' 'tools/video-watermark-remover:tool-video-watermark-remover';do
             route="${mapping%%:*}"
             file="${mapping#*:}"
             curl --noproxy '*' -fSs --retry 2 --max-time 55 \
@@ -216,7 +220,7 @@ jobs:
             sleep 5
           done
           test "$propagated" -eq 1
-          for path in / /siai /tools /tools/pass /ai-wallet /sasi /sasi/marketplace /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
+          for path in / /siai /tools /tools/pass /ai-wallet /sasi /sasi/marketplace /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
             count=0
             for i in 1 2 3;do
               h="$(mktemp)"
@@ -227,7 +231,7 @@ jobs:
                 echo "COM_CANARY_CATALOG_STATUS ${diagnostic:-no-edge-diagnostic}"
               fi
               test "$status" = 200 || exit 1
-              if [[ "$path" = / || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /tools/pass || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai || "$path" = /ko/siai || "$path" = /fr/siai || "$path" = /de/siai || "$path" = /es/siai || "$path" = /pt/siai || "$path" = /ar/siai ]];then
+              if [[ "$path" = / || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /tools/pass || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /about || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai || "$path" = /ko/siai || "$path" = /fr/siai || "$path" = /de/siai || "$path" = /es/siai || "$path" = /pt/siai || "$path" = /ar/siai ]];then
                 grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
               fi
               rm -f "$h"
