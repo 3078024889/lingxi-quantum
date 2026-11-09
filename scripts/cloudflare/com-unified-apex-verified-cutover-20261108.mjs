@@ -31,11 +31,11 @@ async function status(url,opts={}){
 async function sleep(ms){await new Promise(resolve=>setTimeout(resolve,ms))}
 async function probe(base,phase,attempts=3){
  const routes=["/","/siai","/tools","/sasi","/sasi/marketplace",
-   "/about","/about","/announcements","/tools/pass","/ai-wallet","/api/health","/api/pay/providers",
+   "/about","/announcements","/tools/pass","/ai-wallet","/api/health","/api/pay/providers",
    "/api/sasi/software/catalog","/api/sasi/marketplace/listings",
    "/en/siai","/ja/siai","/ko/siai","/fr/siai","/de/siai",
    "/es/siai","/pt/siai","/ar/siai"];
- const staticRoutes=new Set(["/","/siai","/tools","/sasi","/sasi/marketplace","/announcements","/tools/pass","/ai-wallet",
+ const staticRoutes=new Set(["/","/siai","/tools","/sasi","/sasi/marketplace","/about","/announcements","/tools/pass","/ai-wallet",
    "/api/sasi/software/catalog","/en/siai","/ja/siai","/ko/siai","/fr/siai","/de/siai","/es/siai","/pt/siai","/ar/siai"]);
  const maxTries=phase==="POSTCUTOVER"?12:attempts;
  for(const path of routes){
