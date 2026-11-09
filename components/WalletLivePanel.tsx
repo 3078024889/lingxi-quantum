@@ -26,7 +26,7 @@ function validSummary(value:unknown):value is Summary{
 }
 export default function WalletLivePanel(){
  const [data,setData]=useState<State>({status:"loading"});
- const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean}|null>(null);
+ 
  useEffect(()=>{
   const controller=new AbortController();
   const load=async()=>{
@@ -44,15 +44,7 @@ export default function WalletLivePanel(){
     if(!controller.signal.aborted)setData({status:"error"});
    }
   };
-  const loadProviders=async()=>{
-   try{
-    const response=await fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin",signal:controller.signal});
-    if(!response.ok)return;
-    const p=await response.json();
-    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true});
-   }catch{}
-  };
-  void load();void loadProviders();
+  void load();
   return()=>controller.abort();
  },[]);
  if(data.status==="loading")return <div role="status" aria-live="polite" className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-8">
@@ -96,8 +88,8 @@ export default function WalletLivePanel(){
    </div>
   </section>
   <section id="withdrawals" className="lx-cel-wallet-history">
-   <h2 className="text-xl font-semibold"><LxText zh="交易记录" en="Transaction history"/></h2>
-   <div className="lx-cel-wallet-tabs" role="tablist" aria-label="Wallet records"><span role="tab" aria-selected="true"><LxText zh="充值记录" en="Top-ups"/></span><Link href="/account/withdrawals" role="tab" aria-selected="false"><LxText zh="退款与提现" en="Refunds"/></Link></div>
+   <h2 className="text-xl font-semibold"><LxText zh="退款与提现记录" en="Refund and withdrawal history"/></h2>
+   <div className="lx-cel-wallet-tabs" aria-label="Wallet records"><Link href="#wallet-ledgers"><LxText zh="充值与资金流水" en="Wallet activity"/></Link><span aria-current="page"><LxText zh="退款与提现" en="Refunds"/></span></div>
    {withdrawals.length? <div className="mt-4 divide-y divide-[var(--lx-line)]">
     {withdrawals.map((r,i)=><div key={r.id||i} className="flex items-center justify-between gap-3 py-3 text-sm">
      <div><p className="font-semibold">{money(r.currency==="USD"?"USD":"CNY",Number(r.amount_minor))}</p>
@@ -112,6 +104,6 @@ export default function WalletLivePanel(){
    <Link href="/account/withdrawals" className="rounded-xl border px-5 py-3"><LxText zh="退款与提现" en="Refunds & withdrawals"/></Link>
    <Link href="/account" className="rounded-xl border px-5 py-3"><LxText zh="账户信息" en="Account"/></Link>
   </div>
-  <div className="lx-cel-wallet-ledgers"><WalletLedgerPanel currency="CNY"/><WalletLedgerPanel currency="USD"/></div>
+  <div id="wallet-ledgers" className="lx-cel-wallet-ledgers"><WalletLedgerPanel currency="CNY"/><WalletLedgerPanel currency="USD"/></div>
  </div>;
 }
