@@ -13,6 +13,13 @@ on:
       - 'scripts/ops/cn-payment-activate-20261109.sh'
       - 'scripts/ops/ecs-cn3193-unified-standalone-stage-20261108.sh'
       - 'tests/cn-payment-activation-20261109.test.mjs'
+      - 'app/account/page.tsx'
+      - 'app/ai-wallet/page.tsx'
+      - 'components/WalletLivePanel.tsx'
+      - 'components/tools/ToolsHubV11.tsx'
+      - 'app/layout.tsx'
+      - 'app/celestial-ui-20261109.css'
+      - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
   workflow_dispatch:
 permissions:
   contents: write
@@ -43,6 +50,7 @@ jobs:
           pnpm install --frozen-lockfile
           node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
           node --test tests/cn-payment-activation-20261109.test.mjs
+          node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs
           node scripts/audit/unified-tool-pass-coverage.mjs
           node scripts/audit/unified-tool-pass-server-coverage.mjs
           node tests/sasi-marketplace-fee.test.mjs
