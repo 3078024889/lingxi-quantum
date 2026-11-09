@@ -45,5 +45,14 @@ jobs:
             if(name==="lingxifield-com-unified-20261108"&&service!=="lingxifield-com-static-gateway-canary-20261107")
               throw Error("COM_CURRENT_PAYPAL_EXECUTION_PATH_UNVERIFIED");
           }
+          for(const name of workers){
+            try{
+              const endpoint="https://"+name+".3078024889.workers.dev/api/pay/create";
+              const response=await fetch(endpoint,{method:"GET",redirect:"manual",signal:AbortSignal.timeout(18000)});
+              console.log("COM_PAYMENT_EXECUTOR_READONLY_HTTP worker="+name+" route=/api/pay/create GET="+response.status);
+            }catch{
+              console.log("COM_PAYMENT_EXECUTOR_READONLY_HTTP worker="+name+" GET=UNAVAILABLE");
+            }
+          }
           console.log("COM_PAYPAL_LIVE_EXECUTOR_BINDINGS_AUDIT_PASS_READ_ONLY");
           JS
