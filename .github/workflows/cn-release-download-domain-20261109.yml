@@ -1,0 +1,59 @@
+name: CN release dedicated download hostname
+on:
+  push:
+    branches: [ops/cn-celestial-static-assets-20261109]
+    paths: ['.github/workflows/cn-release-download-domain-20261109.yml']
+permissions: {contents: read}
+concurrency:
+  group: cn-release-download-hostname
+  cancel-in-progress: false
+jobs:
+  attach:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 8
+    env:
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Attach only unused download hostname and verify pinned bootstrap
+        run: |
+          node --input-type=module <<'JS'
+          import {createHash} from 'node:crypto';
+          const host='cn-release.lingxifield.com';
+          const service='lingxifield-cn-static-celestial-20261109';
+          const zone='0e9df0e4cf67601f60ce1b73fe011b94';
+          const base='https://api.cloudflare.com/client/v4';
+          async function cf(path,options={}) {
+            const r=await fetch(base+path,{...options,headers:{authorization:'Bearer '+process.env.CF_TOKEN,'content-type':'application/json'},signal:AbortSignal.timeout(25000)});
+            const j=await r.json();
+            if(!r.ok||!j.success)throw Error('CF_HTTP_'+r.status+':'+JSON.stringify((j.errors||[]).map(x=>x.code)));
+            return j.result;
+          }
+          if(!process.env.CF_TOKEN||!process.env.CF_ACCOUNT)throw Error('AUTH_MISSING');
+          const endpoint='/accounts/'+process.env.CF_ACCOUNT+'/workers/domains';
+          const domains=await cf(endpoint);
+          const existing=domains.filter(x=>x.hostname===host);
+          if(existing.some(x=>x.service!==service))throw Error('HOST_ALREADY_USED');
+          if(!existing.length) {
+            const dns=await cf('/zones/'+zone+'/dns_records?name='+host);
+            if(dns.length)throw Error('DNS_ALREADY_USED');
+            const result=await cf(endpoint,{method:'PUT',body:JSON.stringify({hostname:host,service,environment:'production',zone_id:zone})});
+            if(result.hostname!==host||result.service!==service)throw Error('DOMAIN_RESULT_MISMATCH');
+          }
+          console.log('CN_DOWNLOAD_HOST_ATTACHED '+host);
+          let ok=false;
+          for(let i=0;i<24;i++){
+            try{
+              const r=await fetch('https://'+host+'/cn3194-static-deploy-20261109.sh',{signal:AbortSignal.timeout(10000)});
+              const data=Buffer.from(await r.arrayBuffer());
+              if(r.ok&&createHash('sha256').update(data).digest('hex')==='8817917331de75f803f0af72c2f44993bf0aa258fa20da88b24c0190954068b6'){ok=true;break;}
+              console.log('CN_DOWNLOAD_TLS_PENDING attempt='+i+' http='+r.status);
+            }catch{console.log('CN_DOWNLOAD_TLS_PENDING attempt='+i);}
+            await new Promise(r=>setTimeout(r,5000));
+          }
+          if(!ok)throw Error('CUSTOM_HOST_BOOTSTRAP_NOT_READY');
+          console.log('CN_DOWNLOAD_CUSTOM_DOMAIN_BOOTSTRAP_SHA_PASS');
+          JS
