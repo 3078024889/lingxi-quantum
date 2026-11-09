@@ -5,9 +5,10 @@ const read=(p)=>readFileSync(p,"utf8");
 test("public brand is SASI intelligent software and old shopping labels are retired",()=>{
  for(const p of ["components/SasiOpenMarketplace.tsx","app/sasi/page.tsx","app/sasi/marketplace/page.tsx","app/sasi/marketplace/[id]/page.tsx"]){
   const src=read(p);
-  assert.doesNotMatch(src,/软件商城|智能软件市场|SASI Software Marketplace|SASI Marketplace/);
+  assert.doesNotMatch(src,/软件商城|SASI Software Marketplace|SASI Marketplace/);
  }
- assert.match(read("components/SasiOpenMarketplace.tsx"),/SASI 智能软件/);
+ const page=read("components/SasiOpenMarketplace.tsx");
+ assert.ok(page.includes('<h1><em>SASI</em> {zh?"智能软件市场"'),"SASI software market heading matches reference artwork");
  assert.match(read("app/sasi/marketplace/page.tsx"),/canonical:"\/sasi"/);
 });
 test("Copernicus SI9.5 only offers the source-code license across catalogue and delivery copy",()=>{

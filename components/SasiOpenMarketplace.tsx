@@ -167,7 +167,7 @@ export default function SasiOpenMarketplace(){
   <div className={styles.hero}>
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
-       <h1><em>SASI</em> {zh?"智能软件":"Intelligent Software"}</h1>
+       <h1><em>SASI</em> {zh?"智能软件市场":"Software Market"}</h1>
        <p>{zh?"源码授权 · 开发者发布 · 自动交付 · 安全可靠":"Source licenses · Developer publishing · Verified digital delivery"}</p>
        <div className={styles.heroLinks}><a href="#products">◇ {zh?"浏览软件":"Explore software"}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {zh?"发布产品":"Publish software"}</button></div>
      </div>
@@ -243,7 +243,7 @@ export default function SasiOpenMarketplace(){
     <div className={styles.formCard}><h3>{zh?"发布新软件":"Create a software listing"}</h3>
       <label>{zh?"软件名称":"Product name"}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={zh?"软件名称、版本、授权类型":"Software name, version, license"}/></label>
       <label>{zh?"分类":"Category"}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>
-      <label>{zh?"软件详情文案（支持分段）":"Full description (paragraphs supported)"}<textarea rows={6} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={zh?"介绍核心功能、适用场景、安装要求、版本和授权范围。长文可在详情页展开。":"Features, use cases, requirements, version and licensing. Long text is collapsible."}/></label>
+      <label>{zh?"完整软件介绍（最多10万字）":"Full software description (up to 100,000 characters)"}<textarea rows={7} value={description} maxLength={100000} onChange={e=>setDescription(e.target.value)} placeholder={zh?"介绍核心功能、适用场景、安装要求、版本与授权范围。支持换行分段，详情页可完整展开。":"Explain features, uses, requirements, version and licensing. Paragraph breaks are preserved."}/><span className={styles.descriptionCount} aria-live="polite">{description.length.toLocaleString("en-US")} / 100,000</span></label>
       <div className={styles.priceFields}><label>{zh?"人民币标价":"CNY price"}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{zh?"美元标价":"USD price"}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
       <button disabled={busy!==""||!seller} onClick={()=>void makeDraft()}>{busy==="draft"?"…":zh?"保存商品草稿":"Save product draft"}</button>

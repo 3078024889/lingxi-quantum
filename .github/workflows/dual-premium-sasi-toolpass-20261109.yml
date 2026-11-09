@@ -7,6 +7,10 @@ on:
     paths:
       - 'app/tools/pass/**'
       - 'components/SasiOpenMarketplace.tsx'
+      - 'app/api/sasi/marketplace/listings/route.ts'
+      - 'supabase/migrations/20261109094500_sasi_market_description_100k.sql'
+      - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
+      - 'tests/sasi-software-public-branding-20261108.test.mjs'
       - 'components/SasiOpenMarketplace.module.css'
       - 'public/images/sasi/hero-original.webp'
       - 'tests/dual-premium-sasi-toolpass-20261109.test.mjs'
@@ -39,6 +43,8 @@ jobs:
       - name: Genuine artwork and real-commerce UI contracts
         run: |
           node --test tests/dual-premium-sasi-toolpass-20261109.test.mjs
+          node --test tests/sasi-marketplace-long-description-20261109.test.mjs
+          node --test tests/sasi-software-public-branding-20261108.test.mjs
           node --test tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs
           node --test tests/sasi-marketplace-review-security-20261108.test.mjs
           node --test tests/public-announcements-deeplink-20261108.test.mjs

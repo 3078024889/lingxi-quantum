@@ -19,7 +19,10 @@ export async function GET(req:NextRequest){
   }else query=query.eq("status","published").eq("scan_status","clean");
   const {data,error}=await query;
   if(error)throw Error("LISTINGS_QUERY_FAILED");
-  return NextResponse.json({items:data||[]},{headers:nocache});
+  // Public cards and hover previews are excerpts; the product endpoint serves the full long description.
+  // Keep the public JSON compact even when a seller writes a 100,000-character description.
+  const items=mode==="public"?(data||[]).map(item=>({...item,description:item.description.slice(0,800)})):data||[];
+  return NextResponse.json({items},{headers:nocache});
  }catch{return NextResponse.json({items:[],error:"MARKET_LISTINGS_UNAVAILABLE"},{status:503,headers:nocache});}
 }
 export async function POST(req:NextRequest){
@@ -33,7 +36,7 @@ export async function POST(req:NextRequest){
  const title=typeof body.title==="string"?body.title.trim():"";
  const description=typeof body.description==="string"?body.description.trim():"";
  const category=typeof body.category==="string"?body.category:"software";
- if(title.length<4||title.length>120||description.length>5000||
+ if(title.length<4||title.length>120||description.length>100000||
  !CATEGORIES.includes(category as typeof CATEGORIES[number])||
  !validMinor(body.priceCnyMinor)||!validMinor(body.priceUsdMinor))
   return NextResponse.json({error:"INVALID_LISTING"},{status:400,headers:nocache});

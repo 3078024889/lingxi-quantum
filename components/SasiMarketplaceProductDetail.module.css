@@ -47,3 +47,6 @@
 .expand:focus-visible,.buy:focus-visible,.share:focus-visible{outline:3px solid #9982fa;outline-offset:3px}
 @media(max-width:850px){.intro{grid-template-columns:1fr}.gallery{max-width:100%}.mainImage{min-height:260px}.details{margin-top:20px}}
 @media(max-width:520px){.root{padding:12px 10px 48px}.purchase{padding:18px}.mainImage{min-height:206px}.detailGrid{grid-template-columns:1fr}.purchase h1{font-size:25px}}
+
+/* Preserve seller-authored paragraphs, including descriptions up to 100,000 characters. */
+.description p{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
