@@ -9,6 +9,9 @@ on:
       - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
       - 'app/api/pay/providers/route.ts'
       - 'app/api/pay/create/route.ts'
+      - 'app/api/sasi/account/route.ts'
+      - 'scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs'
+      - 'tests/com-sasi-account-anon-401-20261109.test.mjs'
       - 'lib/paypal.ts'
       - 'scripts/cloudflare/public-market-listings.mjs'
       - 'scripts/ops/probe-sasi-anonymous-rest-20261109.mjs'
@@ -86,6 +89,7 @@ jobs:
           node tests/toolpass-direct-fulfillment-20261108.test.mjs
           node tests/paypal-merchant-idempotency-20261108.test.mjs
           node --test tests/com-paypal-live-review-20261109.test.mjs
+          node --test tests/com-sasi-account-anon-401-20261109.test.mjs
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs
           node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
           node --test tests/sasi-com-closure-20261108.test.mjs tests/com-next-release-safety-20261108.test.mjs
