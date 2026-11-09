@@ -1,9 +1,10 @@
 "use client";
-import {useEffect,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {ALL_TOOLS_PASS_CATALOG,type AllToolsPassSku} from "@/lib/tools/commerce/all-tools-pass";
+import premium from "./ToolPassPremium.module.css";
 
 type Language="zh"|"en"|"ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
 const COPY:Record<Language,{
@@ -38,32 +39,73 @@ export default function AllToolsPassPage(){
  const [available,setAvailable]=useState(false);
  const [providers,setProviders]=useState({wechat:false,alipay:false,paypal:false});
  const [message,setMessage]=useState("");
+ const [walletBalanceMinor,setWalletBalanceMinor]=useState<number|null>(null);
+ const [verifiedCurrency,setVerifiedCurrency]=useState<Currency|null>(null);
+ const latestRefresh=useRef(0);
+ const modalRef=useRef<HTMLElement|null>(null);
+ const closeRef=useRef<HTMLButtonElement|null>(null);
+ const paymentBusyRef=useRef(false);
+ const [notices,setNotices]=useState<Array<{id:string;titleZh:string;titleEn:string;publishedAt:string}>>([]);
+ useEffect(()=>{let alive=true;fetch("/api/site-announcements",{cache:"no-store"})
+  .then(r=>r.ok?r.json():null).then(data=>{if(!alive||!Array.isArray(data?.items))return;
+   setNotices(data.items.filter((item:unknown)=>Boolean(item&&typeof item==="object"&&typeof (item as {id?:unknown}).id==="string")).slice(0,3));
+  }).catch(()=>{});return()=>{alive=false};},[]);
  const [request,setRequest]=useState<{sku:AllToolsPassSku;id:string}|null>(null);
 
  async function refresh(){
+  const ticket=++latestRefresh.current;
+  setAvailable(false);setVerifiedCurrency(null);setWalletBalanceMinor(null);
   try {
    const [p,g]=await Promise.all([
     fetch("/api/tools/pass?currency="+currency,{cache:"no-store",credentials:"same-origin"}),
     fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin"}),
    ]);
    const data=p.ok?await p.json():null,channels=g.ok?await g.json():null;
+   // Only authenticated account data can supply a balance, never a client-side placeholder.
+   const wallet=await fetch("/api/money/summary",{cache:"no-store",credentials:"same-origin"}).catch(()=>null);
+   const account=wallet?.ok?await wallet.json().catch(()=>null):null;
+   const actual=account?.balances?.[currency]?.availableMinor;
+   if(ticket!==latestRefresh.current)return;
    setExpiry(data?.expiresAt||null);
    setAvailable(data?.available===true);
-   setProviders({
-    wechat:channels?.wechat===true,
-    alipay:channels?.alipay===true,
-    paypal:channels?.paypal===true
-   });
-  }catch{setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});}
+   setProviders({wechat:channels?.wechat===true,alipay:channels?.alipay===true,paypal:channels?.paypal===true});
+   setWalletBalanceMinor(typeof actual==="number"&&Number.isSafeInteger(actual)&&actual>=0?actual:null);
+   setVerifiedCurrency(currency);
+  }catch{if(ticket!==latestRefresh.current)return;setAvailable(false);setProviders({wechat:false,alipay:false,paypal:false});setWalletBalanceMinor(null);setVerifiedCurrency(null);}
  }
  useEffect(()=>{void refresh()},[currency]);
+ useEffect(()=>{paymentBusyRef.current=busy},[busy]);
+ useEffect(()=>{
+  if(!selected)return;
+  const prior=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  closeRef.current?.focus();
+  const handleKeys=(event:KeyboardEvent)=>{
+   if(event.key==="Escape"){
+    if(!paymentBusyRef.current){event.preventDefault();setSelected(null)}
+    return;
+   }
+   if(event.key!=="Tab")return;
+   const scope=modalRef.current;
+   if(!scope)return;
+   const focusable=Array.from(scope.querySelectorAll<HTMLElement>(
+    'a[href],button:not([disabled]),select:not([disabled]),input:not([disabled]),[tabindex]:not([tabindex="-1"])'
+   )).filter(element=>element.getClientRects().length>0);
+   if(focusable.length===0){event.preventDefault();return}
+   const first=focusable[0],last=focusable[focusable.length-1];
+   if(event.shiftKey&&(document.activeElement===first||!scope.contains(document.activeElement))){event.preventDefault();last.focus()}
+   else if(!event.shiftKey&&(document.activeElement===last||!scope.contains(document.activeElement))){event.preventDefault();first.focus()}
+  };
+  document.addEventListener("keydown",handleKeys);
+  return()=>{document.removeEventListener("keydown",handleKeys);prior?.focus()};
+ },[selected?.sku]);
 
+ const paymentReady=available&&verifiedCurrency===currency;
  const choices=(currency==="CNY"?[
-  {id:"wallet" as const,label:zh?"账户余额":"Wallet balance",ready:available},
-  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:available&&providers.wechat},
-  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:available&&providers.alipay}
+  {id:"wallet" as const,label:zh?"账户余额":"Wallet balance",ready:paymentReady},
+  {id:"wechat" as const,label:zh?"微信支付":"WeChat Pay",ready:paymentReady&&providers.wechat},
+  {id:"alipay" as const,label:zh?"支付宝":"Alipay",ready:paymentReady&&providers.alipay}
  ]:[
-  {id:"paypal" as const,label:"PayPal",ready:available&&providers.paypal}
+  {id:"paypal" as const,label:"PayPal",ready:paymentReady&&providers.paypal}
  ]);
  const selectedChoice=choices.find(x=>x.id===method);
  function openOffer(offer:Offer){
@@ -111,85 +153,116 @@ export default function AllToolsPassPage(){
   }catch{setMessage(c.unavailable);}
   finally{setBusy(false);}
  }
- return <main dir={rtl?"rtl":"ltr"} className="mx-auto max-w-6xl px-4 py-10 text-[var(--lx-ink)] md:px-7">
-  <section className="relative overflow-hidden rounded-3xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-6 py-9 shadow-sm md:px-10 md:py-12">
-   <div className="pointer-events-none absolute -right-20 -top-32 h-72 w-72 rounded-full bg-violet-300/20 blur-3xl"/>
-   <p className="text-xs font-semibold tracking-[.18em] text-violet-600">LINGXIFIELD · TOOLPASS</p>
-   <h1 className="mt-4 font-display text-3xl font-bold tracking-tight md:text-4xl">{zh?"一个工具包，畅用全场":c.title}</h1>
-   <p className="mt-4 max-w-2xl text-base leading-8 text-[var(--lx-muted)]">{zh?"100+ 实用工具，一次开通，随心使用。后续新增工具也包含在内。":c.subtitle}</p>
-   <div className="mt-6 flex flex-wrap gap-3 text-sm">
-    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{zh?"100+ 实用工具":"100+ tools"}</span>
-    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{c.new}</span>
-    <span className="rounded-full border border-[var(--lx-line)] px-4 py-2">{zh?"一次开通，全场畅用":"One pass, every tool"}</span>
+ return <main dir={rtl?"rtl":"ltr"} className={premium.root}>
+  <div className={premium.frame}>
+   <section className={premium.hero} aria-labelledby="toolpass-membership-title">
+    <div className={premium.heroCopy}>
+     <p className={premium.eyebrow}>LINGXIFIELD · TOOLPASS</p>
+     <h1 className={premium.title} id="toolpass-membership-title">{zh?"工具包会员":c.title}<span>ToolPass</span></h1>
+     <p className={premium.lead}>{zh?"畅享 100+ 实用工具，划算又高效":"Unlock 100+ practical tools. One membership, more possibilities."}</p>
+     <ul className={premium.benefits}>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"全站 100+ 工具":"100+ practical tools"}</b><span>{zh?"一站畅用":"All in one place"}</span></li>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"持续更新":"Always evolving"}</b><span>{zh?"新工具同步加入":"New tools included"}</span></li>
+      <li><span className={premium.check} aria-hidden="true">✓</span><b>{zh?"高性价比":"More value"}</b><span>{zh?"创作、办公与日常处理都适用":"Built for work and everyday tasks"}</span></li>
+     </ul>
+    </div>
+    <div className={premium.art} aria-hidden="true">
+     <span className={premium.tool+" "+premium.toolPhoto}>▧</span>
+     <span className={premium.tool+" "+premium.toolCut}>✂</span>
+     <span className={premium.tool+" "+premium.toolPdf}>PDF</span>
+     <span className={premium.tool+" "+premium.toolVideo}>▶</span>
+     <div className={premium.box}><span className={premium.boxCrown}>♛</span><span className={premium.boxLabel}>100+ {zh?"工具":"tools"}</span></div>
+    </div>
+   </section>
+   <div className={premium.toolbar}>
+    <div>{expiry&&<p>{c.existing}：{new Date(expiry).toLocaleDateString(zh?"zh-CN":lang)}</p>}</div>
+    <label className="flex items-center gap-2 text-sm"><span className="text-[var(--lx-muted)]">{c.currency}</span>
+     <select aria-label={c.currency} value={currency} onChange={e=>{const next=e.target.value as Currency;setCurrency(next);setPreferredCurrency(next);setSelected(null);setMessage("");}}>
+      <option value="CNY">CNY ¥</option><option value="USD">USD $</option>
+     </select>
+    </label>
+   </div>
+   <div className={premium.plans} aria-label={zh?"工具包会员方案":"ToolPass plans"}>
+    {ALL_TOOLS_PASS_CATALOG.map((offer,i)=><section key={offer.sku} className={premium.plan+" "+(i===1?premium.planFeatured:"")}>
+     {i===1&&<span className={premium.planBadge}>{zh?"♛ 热门推荐":"♛ Most popular"}</span>}
+     <h2 className={premium.planDuration}>{i===0&&zh?"7 天体验":[c.week,c.month,c.quarter,c.year][i]}</h2>
+     <strong className={premium.planPrice}>{currency==="CNY"?"¥":"$"}{offer.price}</strong>
+     <p className={premium.planDesc}>{zh?["短期使用 · 轻松上手","畅享全站工具","更优惠 · 更省心","长期使用 · 超值之选"][i]:["Try it for a week","Access all tools","Even better value","Ideal for long-term use"][i]}</p>
+     <button type="button" onClick={()=>openOffer(offer)} className={premium.planBuy+" "+(i===1?premium.planBuyFeatured:"")}>{zh?"立即购买":c.buy}</button>
+    </section>)}
+   </div>
+   <div className={premium.subFooter}>
+    <span><b>∞</b>{zh?"100+ 实用工具随心用":"100+ practical tools"}</span>
+    <span><b>⟳</b>{zh?"新增工具持续更新":"New tools always included"}</span>
+    <span><b>ϟ</b>{zh?"即买即用 · 高效省心":"Instant access after verified purchase"}</span>
+   </div>
+  </div>
+  <section className={premium.lowerPanels} aria-label={zh?"会员账户与更新":"Membership and updates"}>
+   <div className={premium.lowerCard}>
+    <div className={premium.lowerHeading}><div><span className={premium.lowerIcon} aria-hidden="true">▣</span>
+     <div><h2>{zh?"余额与充值":"Balance & top up"}</h2><p>{zh?"用于购买工具包与平台服务":"Use your verified account funds for eligible purchases"}</p></div>
+     </div><Link className={premium.lowerLink} href="/ai-wallet">{zh?"充值与明细":"Top up & details"} ↗</Link></div>
+    <div className={premium.balanceBody}>
+     <div><small>{zh?"账户余额":"Account balance"} · {currency}</small>
+      {verifiedCurrency!==currency||walletBalanceMinor===null?<p className={premium.balanceUnavailable}>{zh?"登录后查看实际余额":"Sign in to view your actual balance"}</p>:
+       <strong>{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>}</div>
+     <Link href="/ai-wallet" className={premium.rechargeAction}>{zh?"充值":"Top up"}</Link>
+     <Link href="/account/orders" className={premium.ordersAction}>{zh?"订单记录":"Orders"}</Link>
+    </div>
+    <p className={premium.lowerFootnote}>{zh?"充值到账、账户明细与历史权益均以真实账户记录为准。":"All funds, receipts and entitlements reflect verified account records."}</p>
+   </div>
+   <div className={premium.lowerCard}>
+    <div className={premium.lowerHeading}><div><span className={premium.lowerIcon} aria-hidden="true">♧</span>
+     <div><h2>{zh?"公告中心":"Announcements"}</h2><p>{zh?"平台更新、工具上新与服务资讯":"Updates, new tools and service notices"}</p></div>
+     </div><Link className={premium.lowerLink} href="/announcements">{zh?"查看全部":"View all"} ↗</Link></div>
+    <div className={premium.noticeList}>
+     {notices.length>0?notices.map(item=><Link key={item.id} href={"/announcements#"+encodeURIComponent(item.id)} className={premium.noticeRow}>
+      <span className={premium.noticeBadge}>{zh?"更新":"NEWS"}</span>
+      <span className={premium.noticeTitle}>{zh?item.titleZh:item.titleEn||item.titleZh}</span>
+      <time>{item.publishedAt&&Number.isFinite(Date.parse(item.publishedAt))?new Date(item.publishedAt).toLocaleDateString(zh?"zh-CN":"en-US"):""}</time>
+     </Link>):<p className={premium.lowerFootnote}>{zh?"最新公告可在公告中心查看。":"Visit announcements for platform updates."}</p>}
+    </div>
    </div>
   </section>
-  <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-   <div>
-    <h2 className="text-lg font-semibold">{zh?"选择适合的使用时长":"Choose your plan"}</h2>
-    {expiry&&<p className="mt-1 text-xs text-[var(--lx-muted)]">{c.existing}：{new Date(expiry).toLocaleDateString(zh?"zh-CN":lang)}</p>}
-   </div>
-   <label className="flex items-center gap-3 text-sm">
-    <span className="text-[var(--lx-muted)]">{c.currency}</span>
-    <select aria-label={c.currency} value={currency} onChange={e=>{const next=e.target.value as Currency;setCurrency(next);setPreferredCurrency(next);setSelected(null);setMessage("");}}
-     className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-4 py-2.5 text-[var(--lx-ink)]">
-     <option value="CNY">CNY ¥</option><option value="USD">USD $</option>
-    </select>
-   </label>
-  </div>
-  <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-   {ALL_TOOLS_PASS_CATALOG.map((offer,i)=><section key={offer.sku}
-    className={"relative flex min-h-64 flex-col rounded-3xl border bg-[var(--lx-panel)] p-6 shadow-sm transition hover:shadow-md "+(i===1?"border-violet-500 ring-1 ring-violet-300":"border-[var(--lx-line)]")}>
-    {i===1&&<span className="absolute -top-3 right-5 rounded-full bg-violet-600 px-3 py-1 text-xs font-semibold text-white">{zh?"热门选择":"Popular"}</span>}
-    <h3 className="text-xl font-semibold">{[c.week,c.month,c.quarter,c.year][i]}</h3>
-    <p className="mt-5 font-display text-4xl font-bold tracking-tight">{currency==="CNY"?"¥":"$"}{offer.price}</p>
-    <p className="mt-3 text-sm text-[var(--lx-muted)]">{c.new}</p>
-    <div className="mt-auto pt-7">
-     <button type="button" onClick={()=>openOffer(offer)}
-      className={"w-full rounded-xl px-4 py-3 text-sm font-semibold transition "+(i===1?"bg-violet-600 text-white hover:bg-violet-700":"border border-[var(--lx-line)] bg-[var(--lx-soft)] text-[var(--lx-ink)] hover:border-violet-400")}>
-      {zh?"立即开通":c.buy}
-     </button>
-    </div>
-   </section>)}
-  </div>
-  <p className="mt-5 text-center text-sm text-[var(--lx-muted)]">{zh?"一次开通，享有期内全场工具使用权益。":"One pass covers all practical tools throughout its term."}</p>
   {message&&!selected&&<p role="status" className="mt-4 rounded-xl border border-[var(--lx-line)] p-4 text-sm">{message}</p>}
-  {selected&&<div role="presentation" className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/50 p-4" onClick={()=>{if(!busy)setSelected(null)}}>
-   <section role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" dir={rtl?"rtl":"ltr"}
-    onClick={event=>event.stopPropagation()} className="w-full max-w-lg rounded-3xl bg-[var(--lx-panel)] p-6 shadow-2xl md:p-8">
-    <div className="flex items-start justify-between gap-4">
-     <div>
-      <p className="text-xs font-semibold tracking-widest text-violet-600">TOOLPASS</p>
-      <h2 id="toolpass-checkout-title" className="mt-2 text-2xl font-bold">{zh?"确认开通":c.title}</h2>
-     </div>
-     <button type="button" disabled={busy} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}
-      className="rounded-full border border-[var(--lx-line)] px-3 py-1.5 text-lg">×</button>
+  {selected&&<div role="presentation" className={premium.overlay} onClick={()=>{if(!busy)setSelected(null)}}>
+   <section ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="toolpass-checkout-title" aria-describedby="toolpass-checkout-desc" dir={rtl?"rtl":"ltr"} className={premium.modal} onClick={event=>event.stopPropagation()}>
+    <div className={premium.modalTop}>
+     <div><p className={premium.modalEyebrow}>TOOLPASS</p><h2 id="toolpass-checkout-title" className={premium.modalTitle}>{zh?"确认购买":"Confirm purchase"}</h2></div>
+     <button ref={closeRef} type="button" disabled={busy} className={premium.close} aria-label={zh?"关闭":"Close"} onClick={()=>setSelected(null)}>×</button>
     </div>
-    <div className="mt-6 flex items-center justify-between rounded-2xl bg-[var(--lx-soft)] p-4">
-     <div><p className="font-semibold">{zh?"全场工具包 · ":"ToolPass · "}{[c.week,c.month,c.quarter,c.year][ALL_TOOLS_PASS_CATALOG.findIndex(o=>o.sku===selected.sku)]}</p>
-      <p className="mt-1 text-xs text-[var(--lx-muted)]">{zh?"包含现有及未来新增的实用工具":c.new}</p>
+    <div className={premium.summary}>
+     <div className={premium.summaryIcon} aria-hidden="true">♛</div>
+     <div className={premium.summaryInfo}>
+      <strong>{zh?"工具包会员":"ToolPass membership"} · {[c.week,c.month,c.quarter,c.year][ALL_TOOLS_PASS_CATALOG.findIndex(o=>o.sku===selected.sku)]}</strong>
+      <p id="toolpass-checkout-desc">{zh?"解锁全场 100+ 实用工具（含后续新增）":"All 100+ practical tools and new additions"}</p>
      </div>
-     <p className="text-2xl font-bold">{currency==="CNY"?"¥":"$"}{selected.price}</p>
+     <strong className={premium.summaryPrice}>{currency==="CNY"?"¥":"$"}{selected.price}</strong>
     </div>
-    <p className="mt-6 text-sm font-semibold">{zh?"选择支付方式":"Payment method"}</p>
-    <div className="mt-3 grid gap-2">
-     {choices.map(choice=><button type="button" key={choice.id} disabled={!choice.ready||busy}
-      onClick={()=>{setMethod(choice.id);setMessage("");}}
-      aria-pressed={method===choice.id} className={"flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition "+
-       (method===choice.id&&choice.ready?"border-violet-500 bg-violet-500/10":"border-[var(--lx-line)]")+
-       (!choice.ready?" cursor-not-allowed opacity-50":" hover:border-violet-400")}>
-      <span className="flex items-center gap-3"><span aria-hidden="true" className={"h-4 w-4 rounded-full border-2 "+(method===choice.id&&choice.ready?"border-violet-600 bg-violet-600":"border-slate-300")}/>{choice.label}</span>
-      <span className="text-xs text-[var(--lx-muted)]">{choice.ready?(zh?"可使用":"Available"):(zh?"暂未开放":"Unavailable")}</span>
+    <h3 className={premium.methodTitle}>{zh?"选择支付方式":"Choose payment method"}</h3>
+    <div>
+     {choices.map(choice=><button type="button" key={choice.id} aria-pressed={method===choice.id} disabled={!choice.ready||busy}
+      className={premium.payMethod} onClick={()=>{setMethod(choice.id);setMessage("");}}>
+      <span aria-hidden="true" className={premium.radio}/>
+      <span className={premium.payIcon} aria-hidden="true">{choice.id==="wallet"?"▣":choice.id==="wechat"?"微":choice.id==="alipay"?"支":"P"}</span>
+      <span className={premium.payLabel}>{choice.label}{choice.id==="wallet"&&verifiedCurrency===currency&&walletBalanceMinor!==null?
+       <small className="block text-xs text-[var(--lx-muted)]">{zh?"当前余额":"Balance"}：{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</small>:null}</span>
+      <span className={premium.payStatus}>{choice.ready?(zh?"可使用":"Available"):(zh?"暂未开放":"Unavailable")}</span>
      </button>)}
+     {currency==="CNY"&&<button type="button" className={premium.payMethod} disabled={busy}
+      onClick={()=>{setCurrency("USD");setPreferredCurrency("USD");setMethod("paypal");setMessage("");}}>
+      <span aria-hidden="true" className={premium.radio}/><span className={premium.payIcon}>P</span>
+      <span className={premium.payLabel}>PayPal <small className="block text-xs text-[var(--lx-muted)]">USD</small></span>
+      <span className={premium.payStatus}>{providers.paypal&&paymentReady?(zh?"切换美元支付":"Pay in USD"):(zh?"暂未开放":"Unavailable")}</span>
+     </button>}
     </div>
-    {message&&<p role="alert" className="mt-4 text-sm text-amber-700">{message}</p>}
-    <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}
-     className="mt-6 w-full rounded-xl bg-violet-600 px-5 py-3.5 font-semibold text-white transition hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-40">
-     {busy?c.processing:zh?"确认支付 · "+(currency==="CNY"?"¥":"$")+selected.price:"Continue · "+(currency==="CNY"?"¥":"$")+selected.price}
-    </button>
-    {!choices.some(choice=>choice.ready)&&<p role="status" className="mt-3 text-center text-sm text-[var(--lx-muted)]">
-     {zh?"当前支付方式暂未开放，稍后再来看看。":"Payment options are currently unavailable."}
-    </p>}
-    <div className="mt-4 text-center"><Link href="/ai-wallet" className="text-sm text-[var(--lx-muted)] underline underline-offset-4">{zh?"查看余额与充值":"View balance & top up"}</Link></div>
+    {message&&<p role="alert" className="mt-3 text-sm text-amber-700">{message}</p>}
+    <div className={premium.payFooter}>
+     <div><span className="block text-xs text-[var(--lx-muted)]">{zh?"应付金额":"Total"}</span><strong>{currency==="CNY"?"¥":"$"}{selected.price}</strong></div>
+     <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}>{busy?c.processing:zh?"立即支付":"Pay now"}</button>
+    </div>
+    {!choices.some(choice=>choice.ready)&&<p role="status" className={premium.modalNote}>{zh?"当前支付方式暂未开放，完成商户验证后可使用。":"Payment methods open after merchant verification."}</p>}
+    <p className={premium.modalNote}><Link href="/ai-wallet" className="underline underline-offset-4">{zh?"查看余额与充值":"View balance & top up"}</Link></p>
    </section>
   </div>}
  </main>;

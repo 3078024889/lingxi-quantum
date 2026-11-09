@@ -1,0 +1,55 @@
+name: Dual-site premium ToolPass and SASI real-commerce UI (NO DEPLOY)
+on:
+  push:
+    branches: [feat/dual-premium-sasi-toolpass-20261109]
+  pull_request:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - 'app/tools/pass/**'
+      - 'components/SasiOpenMarketplace.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'public/images/sasi/hero-original.webp'
+      - 'tests/dual-premium-sasi-toolpass-20261109.test.mjs'
+      - 'tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs'
+      - 'components/SasiMarketplaceProductDetail.tsx'
+      - 'components/SasiMarketplaceProductDetail.module.css'
+      - 'app/api/sasi/marketplace/image-ticket/route.ts'
+      - 'app/api/sasi/marketplace/my-media/route.ts'
+      - 'lib/sasi-marketplace/r2.ts'
+      - 'supabase/migrations/20261109030000_sasi_market_one_cover_four_details.sql'
+      - '.github/workflows/dual-premium-sasi-toolpass-20261109.yml'
+permissions:
+  contents: read
+concurrency:
+  group: dual-premium-sasi-toolpass-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  visual-and-transaction-invariants:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install pinned dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Genuine artwork and real-commerce UI contracts
+        run: |
+          node --test tests/dual-premium-sasi-toolpass-20261109.test.mjs
+          node --test tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs
+          node --test tests/sasi-marketplace-review-security-20261108.test.mjs
+          node --test tests/public-announcements-deeplink-20261108.test.mjs
+          node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
+          node tests/sasi-marketplace-security-contract.test.mjs
+      - name: Verify TypeScript
+        run: pnpm exec tsc --noEmit
+      - name: Production Next.js build without live release
+        run: pnpm build
+      - name: Confirm no production cutover or secrets
+        run: |
+          git status --short
+          test -s public/images/sasi/hero-original.webp
+          echo DUAL_PREMIUM_UI_BUILD_PASS_NO_PROD_DEPLOY

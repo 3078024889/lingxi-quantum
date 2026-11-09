@@ -4,89 +4,121 @@ import Link from "next/link";
 import {useParams} from "next/navigation";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
+import styles from "./SasiMarketplaceProductDetail.module.css";
 type Product={id:string;name:string;nameEn:string;priceRmb:number;priceUsd:number;note:string;noteEn:string;};
+type Photo={id:string;kind:string;url:string};
+const EXCERPT_LIMIT=320;
 export default function SasiMarketplaceProductDetail(){
- const p=useParams(),id=typeof p?.id==="string"?p.id:"";
+ const params=useParams(),id=typeof params?.id==="string"?params.id:"";
  const {lang}=useLingxiLang(),zh=lang==="zh";
  const {currency}=usePreferredCurrency();
- const [payBusy,setPayBusy]=useState(false),[payError,setPayError]=useState("");
  const [product,setProduct]=useState<Product|null>(null),[ready,setReady]=useState(false),[loading,setLoading]=useState(true);
- const [shared,setShared]=useState(false);
- const [photos,setPhotos]=useState<Array<{id:string;kind:string;url:string}>>([]);
+ const [photos,setPhotos]=useState<Photo[]>([]);
+ const [descriptionOpen,setDescriptionOpen]=useState(false);
+ const [payBusy,setPayBusy]=useState(false),[payError,setPayError]=useState(""),[shared,setShared]=useState(false);
  useEffect(()=>{
-  if(!id){setLoading(false);return;}
-  fetch("/api/sasi/marketplace/product?id="+encodeURIComponent("sasi-market:"+id)+"&currency="+currency,{cache:"no-store"})
-  .then(r=>r.ok?r.json():null).then(x=>{setProduct(x?.product||null);setReady(x?.available===true)}).catch(()=>{})
-  .finally(()=>setLoading(false));
+  if(!id){setLoading(false);return}
+  const controller=new AbortController();setLoading(true);setProduct(null);setReady(false);setPhotos([]);setDescriptionOpen(false);
+  fetch("/api/sasi/marketplace/product?id="+encodeURIComponent("sasi-market:"+id)+"&currency="+currency,
+   {cache:"no-store",signal:controller.signal})
+   .then(r=>r.ok?r.json():null)
+   .then(data=>{if(controller.signal.aborted)return;setProduct(data?.product||null);setReady(data?.available===true)})
+   .catch(()=>{})
+   .finally(()=>{if(!controller.signal.aborted)setLoading(false)});
+  return()=>controller.abort();
  },[id,currency]);
  useEffect(()=>{
   if(!id||!product)return;
-  let current=true;
-  fetch("/api/sasi/marketplace/images?listingId="+encodeURIComponent(id),{cache:"no-store"})
+  const controller=new AbortController();
+  fetch("/api/sasi/marketplace/images?listingId="+encodeURIComponent(id),
+   {cache:"no-store",signal:controller.signal})
    .then(r=>r.ok?r.json():null)
-   .then(x=>{if(current)setPhotos(x?.items?.[id]||[])})
+   .then(data=>{if(!controller.signal.aborted)setPhotos(Array.isArray(data?.items?.[id])?data.items[id]:[])})
    .catch(()=>{});
-  return()=>{current=false};
+  return()=>controller.abort();
  },[id,product]);
+ const cover=photos.find(p=>p.kind==="cover")||null;
+ const details=photos.filter(p=>p.kind==="detail").slice(0,4);
+ const fullDescription=(zh?product?.note:product?.noteEn||product?.note)||"";
+ const hasMore=fullDescription.length>EXCERPT_LIMIT||details.length>0;
+ const excerpt=fullDescription.length>EXCERPT_LIMIT?fullDescription.slice(0,EXCERPT_LIMIT).trimEnd()+"…":fullDescription;
  const payPaypal=async()=>{
   if(!product||!ready||payBusy)return;
   setPayBusy(true);setPayError("");
   try{
-   const response=await fetch("/api/pay/create",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    credentials:"same-origin",
+   const res=await fetch("/api/pay/create",{
+    method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
     body:JSON.stringify({productId:product.id,returnPath:"/account/software"})
    });
-   const result=await response.json().catch(()=>({}));
-   if(response.status===401){
-    window.location.assign("/account?next="+encodeURIComponent(window.location.pathname));
-    return;
-   }
-   if(!response.ok||typeof result.url!=="string")throw Error("MARKET_PAYPAL_UNAVAILABLE");
-   const target=new URL(result.url);
+   const data=await res.json().catch(()=>({}));
+   if(res.status===401){window.location.assign("/account?next="+encodeURIComponent(window.location.pathname));return}
+   if(!res.ok||typeof data.url!=="string")throw Error("MARKET_PAYPAL_UNAVAILABLE");
+   const target=new URL(data.url);
    if(target.protocol!=="https:"||!/(^|\.)paypal\.com$/.test(target.hostname))
     throw Error("INVALID_PAYPAL_REDIRECT");
    window.location.assign(target.href);
-  }catch{
-   setPayError(zh?"当前暂无法连接 PayPal，请稍后再试。":"Unable to connect to PayPal right now.");
-   setPayBusy(false);
-  }
+  }catch{setPayError(zh?"当前无法连接 PayPal，请稍后再试。":"PayPal is currently unavailable.");setPayBusy(false)}
  };
- const share=async()=>{const link=window.location.href;
-  try{if(navigator.share)await navigator.share({title:product?.name||"SASI Software",url:link});
-   else{await navigator.clipboard.writeText(link);setShared(true)}}catch{}
+ const share=async()=>{
+  try{
+   if(typeof navigator.share==="function")await navigator.share({title:product?.name||"SASI",url:window.location.href});
+   else{await navigator.clipboard.writeText(window.location.href);setShared(true)}
+  }catch{}
  };
- return <main className="lx11-page" style={{minHeight:"75vh"}}><div style={{maxWidth:1000,margin:"0 auto",padding:"35px 14px 70px"}}>
- <Link href="/sasi" style={{color:"#2b66a0",fontSize:13}}>← {zh?"返回软件作品":"Back to software"}</Link>
- {loading?<p style={{marginTop:45}}>{zh?"加载商品中…":"Loading..."}</p>:!product?<h1 style={{fontSize:25,marginTop:38}}>{zh?"商品尚未公开或正在审核":"Listing is not public yet"}</h1>:
- <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:22,marginTop:30}}>
- <div style={{minHeight:270,background:"linear-gradient(135deg,#eaf7ff,#a8d6f6)",borderRadius:23,padding:30,display:"flex",justifyContent:"center",alignItems:"center",flexDirection:"column",color:"#1b5b8e"}}>
- {photos.length>0?
-   <img src={photos[0].url} alt={product.name} referrerPolicy="no-referrer" style={{width:"100%",maxHeight:300,objectFit:"contain",borderRadius:14}}/>
-   :<><span style={{fontWeight:850,fontSize:70,letterSpacing:".2em"}}>SASI</span>
-     <span style={{fontSize:12,letterSpacing:".2em"}}>SOFTWARE</span></>}
-  </div>
- <section style={{background:"var(--lx-panel)",border:"1px solid var(--lx-line)",borderRadius:20,padding:28}}>
- <small style={{color:"#396d98",fontWeight:700,letterSpacing:".14em"}}>SASI / VERIFIED SOFTWARE</small>
- <h1 style={{fontSize:28,margin:"16px 0"}}>{product.name}</h1>
- <p style={{fontSize:13,color:"var(--lx-muted)",lineHeight:1.9,minHeight:65}}>{product.note}</p>
- <div style={{display:"flex",alignItems:"baseline",gap:20,flexWrap:"wrap",margin:"24px 0"}}>
-  <strong style={{fontSize:31}}>{currency==="USD"?"$":"¥"}{(currency==="USD"?product.priceUsd:product.priceRmb).toLocaleString()}</strong>
-  <span style={{color:"var(--lx-muted)",fontSize:13}}>{currency==="USD"?"¥"+product.priceRmb.toLocaleString():"USD $"+product.priceUsd.toLocaleString()}</span>
- </div>
- {ready?(currency==="USD"?
- <button type="button" onClick={()=>void payPaypal()} disabled={payBusy}
-  style={{display:"inline-flex",padding:"12px 23px",background:"#225c90",color:"#fff",borderRadius:10,fontSize:13,opacity:payBusy?.65:1}}>
-  {payBusy?(zh?"正在连接…":"Connecting…"):(zh?"PayPal 安全支付":"Pay securely with PayPal")}
- </button>:
- <Link href={"/checkout?productId="+encodeURIComponent(product.id)+"&redirect=%2Faccount%2Fsoftware"}
-  style={{display:"inline-flex",padding:"12px 23px",background:"#225c90",color:"#fff",borderRadius:10,fontSize:13}}>
-  {zh?"购买并安全交付":"Buy & download"}</Link>):
- <span style={{display:"inline-flex",padding:"12px 16px",background:"#eff5fb",borderRadius:10,color:"#3f6887",fontSize:12}}>
-  {zh?"当前支付方式暂未开放":"This payment method is not yet available"}</span>}
- {payError&&<p role="alert" style={{marginTop:10,color:"#b45309",fontSize:13}}>{payError}</p>}
- <button type="button" onClick={()=>void share()} style={{display:"block",marginTop:19,fontSize:13,textDecoration:"underline",color:"#286fa4"}}>{shared?(zh?"链接已复制":"Link copied"):(zh?"分享此商品":"Share this product")} ↗</button>
- </section>
- </div>}
+ return <main className={styles.root}><div className={styles.container}>
+  <Link className={styles.back} href="/sasi">{zh?"← 返回 SASI 智能软件":"← Back to SASI Intelligent Software"}</Link>
+  {loading?<p role="status" className={styles.empty}>{zh?"正在加载软件详情…":"Loading software details…"}</p>:!product?
+   <h1 className={styles.empty}>{zh?"软件尚未公开或正在审核":"This software is not published yet"}</h1>:
+   <>
+    <div className={styles.intro}>
+     <section className={styles.gallery} aria-label={zh?"软件主图":"Software main image"}>
+      <div className={styles.mainImage}>
+       {cover?<img src={cover.url} alt={product.name} loading="eager" referrerPolicy="no-referrer"/>:
+        <div className={styles.fallback}><strong>SASI</strong><small>INTELLIGENT SOFTWARE</small></div>}
+      </div>
+      <p className={styles.galleryCount}>{zh?"每件软件展示1张主图；详情图可选":"One main image per listing; detail images are optional"}</p>
+     </section>
+     <section className={styles.purchase}>
+      <small>SASI / VERIFIED SOFTWARE</small>
+      <h1>{product.name}</h1>
+      <p className={styles.headline}>{excerpt.slice(0,145)}</p>
+      <div className={styles.prices}>
+       <strong>{currency==="USD"?"$":"¥"}{(currency==="USD"?product.priceUsd:product.priceRmb).toLocaleString()}</strong>
+       <span>{currency==="USD"?"¥"+product.priceRmb.toLocaleString():"USD $"+product.priceUsd.toLocaleString()}</span>
+      </div>
+      {ready?(currency==="USD"?
+       <button type="button" onClick={()=>void payPaypal()} disabled={payBusy} className={styles.buy}>
+        {payBusy?(zh?"正在连接…":"Connecting…"):(zh?"PayPal 安全支付":"Pay securely with PayPal")}
+       </button>:
+       <Link className={styles.buy} href={"/checkout?productId="+encodeURIComponent(product.id)+"&redirect=%2Faccount%2Fsoftware"}>
+        {zh?"购买并安全交付":"Buy and receive securely"}
+       </Link>):
+       <p className={styles.disabled}>{zh?"支付渠道尚未完成商户验证，暂未开放购买。":"Checkout opens after merchant verification."}</p>}
+      {payError&&<p role="alert" className={styles.error}>{payError}</p>}
+      <button type="button" onClick={()=>void share()} className={styles.share}>{shared?(zh?"链接已复制":"Link copied"):(zh?"分享此软件":"Share software")} ↗</button>
+      <div className={styles.deliveryInfo}><h3>{zh?"授权与交付":"Licensing and delivery"}</h3>
+       <ul>
+        <li>{zh?"仅展示已通过审核的软件":"Only reviewed and published software is listed"}</li>
+        <li>{zh?"真实付款验证后，按订单授权下载":"Downloads require confirmed payment and purchase authorization"}</li>
+        <li>{zh?"软件更新与售后以商品说明及订单条款为准":"Updates and support follow the listing and order terms"}</li>
+       </ul>
+      </div>
+     </section>
+    </div>
+    <section className={styles.details} aria-labelledby="sasi-product-full-details">
+     <h2 id="sasi-product-full-details">{zh?"软件详情":"Software details"}</h2>
+     <div id="sasi-product-expanded" className={styles.description}><p>{descriptionOpen?fullDescription:excerpt}</p></div>
+     {descriptionOpen&&details.length>0&&<div className={styles.detailGrid} aria-label={zh?"详情图片":"Detail images"}>
+       {details.map((photo,index)=><div key={photo.id} className={styles.detailImage}>
+        <img src={photo.url} alt={zh?"软件详情图 "+(index+1):"Software detail "+(index+1)} loading="lazy" referrerPolicy="no-referrer"/>
+       </div>)}
+      </div>}
+     {hasMore&&<button type="button" className={styles.expand} aria-expanded={descriptionOpen}
+      aria-controls="sasi-product-expanded" onClick={()=>setDescriptionOpen(v=>!v)}>
+       {descriptionOpen?(zh?"收起详情":"Show less"):(zh?"展开更多 · 查看完整图文":"Show more · Full description and images")}
+      </button>}
+
+    </section>
+   </>}
  </div></main>;
 }

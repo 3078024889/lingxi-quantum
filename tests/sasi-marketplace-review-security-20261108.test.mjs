@@ -50,7 +50,7 @@ test("private software scanner uses ClamAV, controlled unpacking and SHA256 atte
  assert.match(workflow,/python3 scripts\/marketplace\/scan-private-zip\.py/);
  assert.doesNotMatch(workflow,/cloudflare\/.*deploy|wrangler deploy/);
 });
-test("seller submission queues optional scanning fail-closed, with eight main/detail images",()=>{
+test("seller submission queues scanning fail-closed, with one main and four optional detail images",()=>{
  const submit=file("app/api/sasi/marketplace/submit/route.ts");
  const dispatch=file("lib/sasi-marketplace/dispatch-scan.ts");
  const media=file("lib/sasi-marketplace/r2.ts");
@@ -60,7 +60,9 @@ test("seller submission queues optional scanning fail-closed, with eight main/de
  assert.match(submit,/published:false/);
  assert.match(dispatch,/repository_dispatch/);
  assert.match(dispatch,/if\(!token/);
- assert.match(media,/MARKET_MEDIA_IMAGE_LIMIT=8/);
+ assert.match(media,/MARKET_MEDIA_COVER_LIMIT=1/);
+ assert.match(media,/MARKET_MEDIA_DETAIL_LIMIT=4/);
+ assert.match(media,/MARKET_MEDIA_IMAGE_LIMIT=MARKET_MEDIA_COVER_LIMIT\+MARKET_MEDIA_DETAIL_LIMIT/);
  assert.match(upload,/private|quarantine|signedMarketplaceUpload/);
 });
 test("digital delivery stays verified-payment buyer-only and time-limited",()=>{
