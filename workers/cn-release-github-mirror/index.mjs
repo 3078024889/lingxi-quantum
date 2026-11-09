@@ -18,7 +18,7 @@ export default {
   const headers=new Headers({accept:"application/octet-stream"});
   const range=request.headers.get("range");
   if(range){
-   if(!/^bytes=\\d+-\\d*$/.test(range)||range.length>54)return new Response("Bad range",{status:416});
+   if(!/^bytes=\d+-\d*$/.test(range)||range.length>54)return new Response("Bad range",{status:416});
    headers.set("range",range);
   }
   let upstream;
