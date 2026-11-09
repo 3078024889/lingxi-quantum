@@ -36,7 +36,7 @@ export async function getPaypalAccessToken(): Promise<string> {
     body: "grant_type=client_credentials",
   });
   const data = await res.json();
-  if (!res.ok || !data.access_token) throw new Error(`PayPal 换取 access token 失败：${JSON.stringify(data)}`);
+  if (!res.ok || !data.access_token) throw new Error("PAYPAL_OAUTH_TOKEN_HTTP_"+res.status);
   cachedToken = { token: data.access_token, expiresAt: Date.now() + (data.expires_in ?? 3000) * 1000 };
   return data.access_token;
 }
@@ -74,7 +74,7 @@ export async function createPaypalOrder(params: {
     }),
   });
   const data = await res.json();
-  if (!res.ok || !data.id) throw new Error(`PayPal 创建订单失败：${JSON.stringify(data)}`);
+  if (!res.ok || !data.id) throw new Error("PAYPAL_CREATE_ORDER_HTTP_"+res.status);
   const approveUrl = (data.links as { rel: string; href: string }[])?.find((l) => l.rel === "approve")?.href;
   if (!approveUrl) throw new Error("PayPal 返回里没找到 approve 链接");
   return { id: data.id, approveUrl };
@@ -112,7 +112,7 @@ export async function capturePaypalOrder(
   const data = await res.json();
   if (!res.ok) {
     if (data?.details?.[0]?.issue === "ORDER_ALREADY_CAPTURED") return { status: "ALREADY_CAPTURED", raw: data };
-    throw new Error(`PayPal 扣款失败：${JSON.stringify(data)}`);
+    throw new Error("PAYPAL_CAPTURE_HTTP_"+res.status);
   }
 
   const unit = data.purchase_units?.[0];
@@ -136,7 +136,7 @@ export async function queryPaypalOrder(
     { method: "GET", headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, cache: "no-store" }
   );
   const data = await res.json();
-  if (!res.ok) throw new Error(`PayPal 查询订单失败：${JSON.stringify(data)}`);
+  if (!res.ok) throw new Error("PAYPAL_QUERY_HTTP_"+res.status);
   const unit = data.purchase_units?.[0];
   verifyMoney(unit?.amount, expectedAmountUsd);
   verifyReference(unit, expectedReferenceId);
