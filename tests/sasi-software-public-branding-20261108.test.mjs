@@ -7,7 +7,8 @@ test("public brand is SASI intelligent software and old shopping labels are reti
   const src=read(p);
   assert.doesNotMatch(src,/软件商城|SASI Software Marketplace|SASI Marketplace/);
  }
- assert.match(read("components/SasiOpenMarketplace.tsx"),/<h1><em>SASI<\\/em> \\{zh\\?"智能软件市场"/);
+ const page=read("components/SasiOpenMarketplace.tsx");
+ assert.ok(page.includes('<h1><em>SASI</em> {zh?"智能软件市场"'),"SASI software market heading matches reference artwork");
  assert.match(read("app/sasi/marketplace/page.tsx"),/canonical:"\/sasi"/);
 });
 test("Copernicus SI9.5 only offers the source-code license across catalogue and delivery copy",()=>{
