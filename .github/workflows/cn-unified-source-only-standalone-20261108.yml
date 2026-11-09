@@ -20,6 +20,7 @@ on:
       - 'app/layout.tsx'
       - 'app/celestial-ui-20261109.css'
       - 'tests/celestial-premium-wallet-account-tools-20261109.test.mjs'
+      - 'tests/cn-wallet-checkout-entry-20261108.test.mjs'
       - 'app/lingxifield-premium-20261109.css'
       - 'components/AccountCenterV26.tsx'
       - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
