@@ -1,0 +1,28 @@
+name: CN direct GitHub to existing private R2 transfer bucket (READ ONLY PREFLIGHT)
+on:
+  push:
+    branches: [ops/cn-direct-r2-20261109]
+    paths: ['.github/workflows/cn-direct-r2-bucket-access-audit-20261109.yml']
+permissions: {contents: read}
+jobs:
+  verify-bucket:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 6
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Read permission of original CN transfer bucket without mutation or secret logging
+        run: |
+          node --input-type=module <<'JS'
+          const account=process.env.CLOUDFLARE_ACCOUNT_ID,token=process.env.CLOUDFLARE_API_TOKEN;
+          if(!account||!token)throw Error("CLOUDFLARE_TOKEN_OR_ACCOUNT_MISSING");
+          const endpoint="https://api.cloudflare.com/client/v4/accounts/"+account+"/r2/buckets/lingxi-cn3192-transfer";
+          const res=await fetch(endpoint,{headers:{Authorization:"Bearer "+token,Accept:"application/json"},signal:AbortSignal.timeout(18000)});
+          const data=await res.json().catch(()=>null);
+          console.log("CN_ORIGINAL_R2_BUCKET_LOOKUP_STATUS="+res.status);
+          if(res.ok&&data?.success===true&&data?.result?.name==="lingxi-cn3192-transfer")
+           console.log("CN_ORIGINAL_R2_BUCKET_READ_OK");
+          else throw Error("CLOUDFLARE_TOKEN_CANNOT_READ_CN_ORIGINAL_R2_BUCKET");
+          JS
