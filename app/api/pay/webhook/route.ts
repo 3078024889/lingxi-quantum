@@ -22,12 +22,13 @@ export async function POST(req:Request){
 
   const admin=createAdminClient();
   const {data:order}=await admin.from("orders")
-    .select("id,amount_usd,provider,status")
+    .select("id,amount_usd,currency,provider,status")
     .eq("provider_payment_id",paypalOrderId)
     .maybeSingle();
 
   if(!order)return NextResponse.json({ok:true});
   if(order.provider!=="paypal")return NextResponse.json({error:"PROVIDER_MISMATCH"},{status:422});
+  if(order.currency!=="USD")return NextResponse.json({error:"CURRENCY_MISMATCH"},{status:422});
 
   if(type==="PAYMENT.CAPTURE.DENIED"){
     await admin.from("orders").update({status:"failed"}).eq("id",order.id).neq("status","paid");
