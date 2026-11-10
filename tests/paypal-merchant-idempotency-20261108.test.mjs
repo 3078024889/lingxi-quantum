@@ -9,7 +9,7 @@ const fulfill=readFileSync("lib/fulfill-order.ts","utf8");
 assert.match(paypal,/export async function createPaypalOrder[\s\S]*?"PayPal-Request-Id": params\.referenceId/);
 assert.match(paypal,/export async function capturePaypalOrder[\s\S]*?"PayPal-Request-Id": `capture-\$\{orderId\}`/);
 assert.match(paypal,/verifyMoney\(capture\.amount, expectedAmountUsd\)/);
-assert.match(paypal,/verifyPaypalWebhook[\s\S]*?verification_status === "SUCCESS"/);
+assert.match(paypal,/verifyPaypalWebhook[\s\S]*?paypalCrc32\(Buffer.from\(rawBody/);\nassert.match(paypal,/verifier.verify\(certificate,signature,"base64"\)/);\nassert.doesNotMatch(paypal,/verify-webhook-signature/);
 assert.match(checkout,/referenceId:order\.id/);
 assert.match(verify,/if\(!\(await verifyPaypalWebhook\(req\.headers,raw\)\)\)/);
 assert.match(verify,/await verifyPaypalCompletedOrder\(providerId,Number\(order\.amount_usd\),order\.id\)/);
