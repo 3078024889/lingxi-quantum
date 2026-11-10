@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION public.sasi_grant_software_delivery(p_order_id uuid)
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path=public,pg_temp
+SET search_path TO ''
 AS $$
 DECLARE
  o public.orders%ROWTYPE;
@@ -125,7 +125,7 @@ CREATE OR REPLACE FUNCTION public.sasi_claim_software_download(p_order_id uuid,p
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path=public,pg_temp
+SET search_path TO ''
 AS $$
 DECLARE ent public.sasi_software_entitlements%ROWTYPE;
 BEGIN
