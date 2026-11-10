@@ -142,13 +142,13 @@ done
 
 run_env_node(){
  local suffix="$1";shift
- local unit="cn-pay-audit-$SHORT-$suffix-$"
+ local unit="cn-pay-audit-$SHORT-$suffix-$$"
  local -a env_props=()
  for f in "${LIVE_ENV_FILES[@]}";do
   [[ "$f" == "$FLAGS" ]] || env_props+=(--property="EnvironmentFile=$f")
  done
  env_props+=(--property="EnvironmentFile=$FLAGS")
- systemd-run --quiet --wait --pipe --collect --unit="$unit" "${env_props[@]}" \\
+ systemd-run --quiet --wait --pipe --collect --unit="$unit" "${env_props[@]}" \
   --property="WorkingDirectory=$DIR" "$NODE" "$@"
 }
 
@@ -201,7 +201,7 @@ fi
 
 [[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo NGINX_CONFIG_NOT_REGULAR;exit 1; }
 [[ "$(grep -Fc '127.0.0.1:3195' "$NGINX")" == 1 ]] || { echo NGINX_NOT_USING_3195;exit 1; }
-if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
+if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3194' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
 
 BACKUP="$(mktemp /etc/lingxifield/.cn-payment-backup-XXXXXX)"
 chmod 600 "$BACKUP"
