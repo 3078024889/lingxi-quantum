@@ -7,7 +7,9 @@ import {paypalEnabled} from "@/lib/paypal";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 export async function GET(){
  const values=await Promise.all(SASI_SOFTWARE_CATALOG.map(async p=>[p.id,{
-  available:Boolean((wechatPayEnabled()||alipayEnabled()||paypalEnabled())&&await softwareCheckoutReady(p.id))
+  available:Boolean((wechatPayEnabled()||alipayEnabled()||paypalEnabled())&&await softwareCheckoutReady(p.id)),
+  availableCny:Boolean((wechatPayEnabled()||alipayEnabled())&&await softwareCheckoutReady(p.id)),
+  availableUsd:Boolean(paypalEnabled()&&await softwareCheckoutReady(p.id))
  }] as const));
  return NextResponse.json({products:Object.fromEntries(values),
   payment:{wechat:wechatPayEnabled(),alipay:alipayEnabled(),paypal:paypalEnabled()},
