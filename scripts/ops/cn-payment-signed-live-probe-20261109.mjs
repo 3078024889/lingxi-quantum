@@ -62,6 +62,8 @@ async function alipay(cfg){
  const app=cfg.ALIPAY_APP_ID;
  if(!/^\d{12,32}$/.test(app||""))throw Error("ALIPAY_APP_ID_INVALID");
  if(cfg.ALIPAY_GATEWAY&&cfg.ALIPAY_GATEWAY!=="https://openapi.alipay.com/gateway.do")throw Error("ALIPAY_GATEWAY_NOT_LIVE");
+ if(!cfg.ALIPAY_SELLER_ID)throw Error("ALIPAY_SELLER_ID_MISSING");
+ if(cfg.NEXT_PUBLIC_SITE_URL!=="https://lingxifield.cn")throw Error("ALIPAY_CALLBACK_DOMAIN_MISMATCH");
  if(cfg.ALIPAY_SITE_URL&&cfg.ALIPAY_SITE_URL!=="https://lingxifield.cn")throw Error("ALIPAY_CALLBACK_DOMAIN_MISMATCH");
  const privateKey=createPrivateKey(pem(cfg.ALIPAY_PRIVATE_KEY,"PRIVATE KEY"));
  const publicKey=createPublicKey(pem(cfg.ALIPAY_PUBLIC_KEY,"PUBLIC KEY"));
@@ -108,7 +110,19 @@ async function wechat(cfg){
  const signature=signer.sign(key,"base64");
  const authorization='WECHATPAY2-SHA256-RSA2048 mchid="'+cfg.WECHAT_MCH_ID+'",nonce_str="'+nonce+'",timestamp="'+timestamp+'",serial_no="'+cfg.WECHAT_CERT_SERIAL_NO+'",signature="'+signature+'"';
  const response=await fetch("https://api.mch.weixin.qq.com"+path,{method:"GET",headers:{Authorization:authorization,Accept:"application/json"},redirect:"manual",signal:AbortSignal.timeout(16000)});
- const body=await response.json().catch(()=>null);
+ const raw=await response.text();
+ if(Buffer.byteLength(raw,"utf8")>80000)throw Error("WECHAT_RESPONSE_TOO_LARGE");
+ const responseTimestamp=response.headers.get("Wechatpay-Timestamp")||"";
+ const responseNonce=response.headers.get("Wechatpay-Nonce")||"";
+ const responseSignature=response.headers.get("Wechatpay-Signature")||"";
+ const responseSerial=response.headers.get("Wechatpay-Serial")||"";
+ if(responseSerial!==cfg.WECHAT_PLATFORM_PUBLIC_KEY_ID)throw Error("WECHAT_RESPONSE_SERIAL_MISMATCH");
+ const responseEpoch=Number(responseTimestamp);
+ if(!Number.isFinite(responseEpoch)||Math.abs(Math.floor(Date.now()/1000)-responseEpoch)>300)throw Error("WECHAT_RESPONSE_TIMESTAMP_INVALID");
+ const responseVerifier=createVerify("RSA-SHA256");
+ responseVerifier.update(responseTimestamp+"\\n"+responseNonce+"\\n"+raw+"\\n","utf8");responseVerifier.end();
+ if(!responseVerifier.verify(pub,responseSignature,"base64"))throw Error("WECHAT_RESPONSE_SIGNATURE_INVALID");
+ const body=JSON.parse(raw);
  if(response.status!==404||body?.code!=="ORDER_NOT_EXIST")throw Error("WECHAT_LIVE_MERCHANT_NOT_READY_HTTP_"+response.status+"_CODE_"+String(body?.code||"UNKNOWN").replace(/[^A-Z0-9_]/g,"").slice(0,30));
  return true;
 }
