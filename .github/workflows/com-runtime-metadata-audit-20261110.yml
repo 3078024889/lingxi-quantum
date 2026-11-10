@@ -1,0 +1,28 @@
+name: COM runtime binding names audit
+on:
+  push:
+    branches: [ops/cn-celestial-static-assets-20261109]
+    paths: ['.github/workflows/com-runtime-metadata-audit-20261110.yml']
+permissions: {contents: read}
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 4
+    env:
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Report names only
+        run: |
+          node --input-type=module <<'JS'
+          for(const name of ['lingxifield-com-unified-20261108','lingxifield-com-celestial-20261109']){
+            const r=await fetch('https://api.cloudflare.com/client/v4/accounts/'+process.env.CF_ACCOUNT+'/workers/scripts/'+name+'/settings',{headers:{authorization:'Bearer '+process.env.CF_TOKEN},signal:AbortSignal.timeout(20000)});
+            const j=await r.json();
+            if(!r.ok||!j.success)throw Error('READ_HTTP_'+r.status);
+            const bindings=j.result.bindings||[];
+            console.log(JSON.stringify({worker:name,bindings:bindings.filter(b=>/^(SUPABASE|PAYPAL|WECHAT|ALIPAY|R2_|SASI_|TOOL_PASS|SOFTWARE_|LINGXI_)/.test(b.name)).map(b=>({name:b.name,type:b.type})),flags:bindings.filter(b=>/_ENABLED$|_READY$/.test(b.name)&&b.type==='plain_text').map(b=>({name:b.name,enabled:b.text==='true'}))}));
+          }
+          JS
