@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Safe in-place CN upgrade: keep live 3193, stage exact 5054 on 3194, then switch Nginx with rollback.
+# Safe in-place CN upgrade: keep live 3193, stage exact 9230bcba6a24 on 3194, then switch Nginx with rollback.
 # No DNS, Cloudflare, Vercel, Supabase rows, orders, balances or payment flags are changed by staging.
 set -Eeuo pipefail
 MODE="${1:-}"; TAG="${2:-}"
-case "$MODE" in --plan|--stage-local|--verify-stage|--promote|--rollback) ;; *) echo "USAGE: $0 --plan|--stage-local|--verify-stage|--promote|--rollback ecs-cn-unified-20261108-2b48fb09bdcc" >&2;exit 2;; esac
-[[ "$TAG" == "ecs-cn-unified-20261108-2b48fb09bdcc" ]] || { echo "EXACT_RELEASE_TAG_REQUIRED" >&2;exit 2; }
-SHORT="2b48fb09bdcc"
-EXPECTED_SHA="2b48fb09bdcc5b48ba11f3ec9bb0b0473dc173de"
-EXPECTED_ARCHIVE_SHA="d757c0d6697679443531af574fa07481fa864c8d0719431f3984059961bf0927"
-EXPECTED_ARCHIVE_BYTES="454789546"
+case "$MODE" in --plan|--stage-local|--verify-stage|--promote|--rollback) ;; *) echo "USAGE: $0 --plan|--stage-local|--verify-stage|--promote|--rollback ecs-cn-unified-20261108-9230bcba6a24" >&2;exit 2;; esac
+[[ "$TAG" == "ecs-cn-unified-20261108-9230bcba6a24" ]] || { echo "EXACT_RELEASE_TAG_REQUIRED" >&2;exit 2; }
+SHORT="9230bcba6a24"
+EXPECTED_SHA="9230bcba6a24cce408b56eee78108561b2b573ca"
+EXPECTED_ARCHIVE_SHA="9d007903bc1996c273ed37013c934e4d002d7c536e059c56cc011d8928df56ab"
+EXPECTED_ARCHIVE_BYTES="454770678"
 [[ "$EUID" == 0 ]] || { echo "ROOT_REQUIRED" >&2;exit 1; }
 exec 9>/run/lock/lingxifield-cn-standalone-release.lock
 flock -n 9 || { echo "ANOTHER_CN_RELEASE_IS_RUNNING" >&2;exit 1; }
