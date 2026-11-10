@@ -48,3 +48,12 @@ test("scoped visual layer loaded last and retired SASI pages cannot become publi
  const nav=read("components/Nav.tsx");
  assert.doesNotMatch(nav,/href="\/sasi\/(?:drama|image|director|series|build|chat)"/);
 });
+
+test("CN premium visual shell excludes the retired legacy UI override and keeps keyboard search",()=>{
+ const layout=read("app/layout.tsx"),tools=read("components/tools/ToolsHubV11.tsx");
+ assert.doesNotMatch(layout,/import ["']\.\/celestial-ui-20261109\.css["']/);
+ assert.match(layout,/import ["']\.\/lingxifield-premium-20261109\.css["']/);
+ assert.match(tools,/const searchRef=useRef<HTMLInputElement>\(null\)/);
+ assert.match(tools,/window\.addEventListener\(["']keydown["']/);
+ assert.match(tools,/ref=\{searchRef\}/);
+});
