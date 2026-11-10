@@ -56,11 +56,12 @@ export async function POST(req:Request){
   if(!providerId)return NextResponse.json({ok:true,ignored:true});
   const admin=createAdminClient();
   const{data:order}=await admin.from("orders")
-   .select("id,amount_usd,status,provider,provider_payment_id")
+   .select("id,amount_usd,currency,status,provider,provider_payment_id")
    .eq("provider","paypal")
    .eq("provider_payment_id",providerId)
    .maybeSingle();
   if(!order)return NextResponse.json({ok:true,ignored:true});
+  if(order.currency!=="USD")return NextResponse.json({error:"CURRENCY_MISMATCH"},{status:422});
   if(order.status==="paid")return NextResponse.json({ok:true,alreadyPaid:true});
 
   await verifyPaypalCompletedOrder(providerId,Number(order.amount_usd),order.id);
