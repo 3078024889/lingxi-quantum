@@ -26,12 +26,13 @@ export async function POST(req: Request) {
       console.error("[alipay notify] invalid signature");
       return text("failure", 401);
     }
-    if (params.app_id !== alipayAppId()) {
+    const expectedAppId = alipayAppId();
+    if (!expectedAppId || params.app_id !== expectedAppId) {
       console.error("[alipay notify] app_id mismatch");
       return text("failure", 422);
     }
     const expectedSeller = alipaySellerId();
-    if (expectedSeller && params.seller_id !== expectedSeller) {
+    if (!expectedSeller || params.seller_id !== expectedSeller) {
       console.error("[alipay notify] seller_id mismatch");
       return text("failure", 422);
     }

@@ -1,6 +1,6 @@
 export function paypalPayEnabled(): boolean {
   return process.env.PAYPAL_ENABLED?.trim().toLowerCase() === "true"
-    && process.env.PAYPAL_ENV?.trim().toLowerCase() !== "sandbox"
+    && process.env.PAYPAL_ENV?.trim().toLowerCase() === "live"
     && Boolean(
       process.env.PAYPAL_CLIENT_ID?.trim()
       && process.env.PAYPAL_CLIENT_SECRET?.trim()
@@ -191,6 +191,12 @@ export async function verifyPaypalCompletedOrder(
 export async function verifyPaypalWebhook(headers: Headers, rawBody: string): Promise<boolean> {
   const webhookId = process.env.PAYPAL_WEBHOOK_ID;
   if (!webhookId) return false;
+  for (const name of ["paypal-transmission-id", "paypal-transmission-time", "paypal-cert-url", "paypal-auth-algo", "paypal-transmission-sig"]) {
+    if (!headers.get(name)?.trim()) return false;
+  }
+  let event: unknown;
+  try { event = JSON.parse(rawBody); } catch { return false; }
+  if (!event || typeof event !== "object" || Array.isArray(event)) return false;
   const token = await getPaypalAccessToken();
   const res = await fetchWithTimeout(`${paypalBaseUrl()}/v1/notifications/verify-webhook-signature`, {
     method: "POST",
@@ -202,7 +208,7 @@ export async function verifyPaypalWebhook(headers: Headers, rawBody: string): Pr
       auth_algo: headers.get("paypal-auth-algo"),
       transmission_sig: headers.get("paypal-transmission-sig"),
       webhook_id: webhookId,
-      webhook_event: JSON.parse(rawBody),
+      webhook_event: event,
     }),
   });
   const data = await res.json();

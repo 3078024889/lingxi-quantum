@@ -53,7 +53,7 @@ function canonical(params: Record<string, string>, excludeSignType = false): str
 }
 
 export function alipayMissingVars(): string[] {
-  return ["ALIPAY_APP_ID", "ALIPAY_PRIVATE_KEY", "ALIPAY_PUBLIC_KEY"].filter((name) => !env(name));
+  return ["ALIPAY_APP_ID", "ALIPAY_PRIVATE_KEY", "ALIPAY_PUBLIC_KEY", "ALIPAY_SELLER_ID"].filter((name) => !env(name));
 }
 
 export function alipayConfigured(): boolean {
