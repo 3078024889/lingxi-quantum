@@ -1,6 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fulfillPaidOrder } from "@/lib/fulfill-order";
-import { alipayAppId, alipaySellerId, verifyAlipayNotification } from "@/lib/alipay";
+import { alipayAppId, alipaySellerId, parseCnyMinorUnits, verifyAlipayNotification } from "@/lib/alipay";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -34,9 +34,9 @@ export async function POST(req: Request) {
       .select("id, amount_rmb, provider")
       .eq("provider_payment_id", params.out_trade_no)
       .single();
-    const expectedFen = Math.round(Number(order?.amount_rmb) * 100);
-    const receivedFen = Math.round(Number(params.total_amount) * 100);
-    if (!order || order.provider !== "alipay" || !Number.isFinite(receivedFen) || receivedFen !== expectedFen) {
+    const expectedFen = parseCnyMinorUnits(order?.amount_rmb);
+    const receivedFen = parseCnyMinorUnits(params.total_amount);
+    if (!order || order.provider !== "alipay" || expectedFen === null || receivedFen === null || receivedFen !== expectedFen) {
       console.error("[alipay notify] payment did not match local order", { outTradeNo: params.out_trade_no });
       return text("failure", 422);
     }
