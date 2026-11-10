@@ -7,6 +7,7 @@ const verify=readFileSync("app/api/pay/paypal/webhook/route.ts","utf8");
 const fulfill=readFileSync("lib/fulfill-order.ts","utf8");
 
 assert.match(paypal,/export async function createPaypalOrder[\s\S]*?"PayPal-Request-Id": params\.referenceId/);
+assert.match(paypal,/export async function createPaypalOrder[\s\S]*?if\(!paypalEnabled\(\)\)/);
 assert.match(paypal,/export async function capturePaypalOrder[\s\S]*?"PayPal-Request-Id": `capture-\$\{orderId\}`/);
 assert.match(paypal,/verifyMoney\(capture\.amount, expectedAmountUsd\)/);
 assert.match(paypal,/verifyPaypalWebhook[\s\S]*?paypalCrc32\(Buffer.from\(rawBody/);
