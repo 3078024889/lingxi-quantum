@@ -166,6 +166,27 @@ probe(){
   "$NODE" -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>{const j=JSON.parse(s),p=j.offers||[];if(p.length!==4||p.map(x=>x.price).join(",")!=="29,99,269,899")process.exit(3);console.log("CN3195_FOUR_TOOLPASS_OFFERS_PASS")})'
 }
 
+
+rollback_to_3193(){
+ local reason="$1" health path status
+ FALLBACK_SVC="$(find_service_for_port 3193 || true)"
+ [[ -n "$FALLBACK_SVC" ]] || { echo CN3193_AUTOMATIC_ROLLBACK_SERVICE_NOT_FOUND >&2;return 1; }
+ systemctl is-active --quiet "$FALLBACK_SVC" || { echo CN3193_AUTOMATIC_ROLLBACK_SERVICE_NOT_ACTIVE >&2;return 1; }
+ health="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 12 -o /dev/null -w '%{http_code}' -H 'Host: lingxifield.cn' http://127.0.0.1:3193/api/health || true)"
+ [[ "$health" == 200 ]] || { echo "CN3193_AUTOMATIC_ROLLBACK_HEALTH_FAILED:$health" >&2;return 1; }
+ set_nginx_upstream 3193 || { echo CN3193_AUTOMATIC_ROLLBACK_NGINX_SWITCH_FAILED >&2;return 1; }
+ for path in / /tools /siai /sasi /sasi/marketplace /tools/pass /ai-wallet /api/health;do
+  status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
+  echo "CN3193_AUTOMATIC_ROLLBACK_PUBLIC:$path:$status"
+  [[ "$status" == 200 ]] || { echo CN3193_AUTOMATIC_ROLLBACK_PUBLIC_CHECK_FAILED >&2;return 1; }
+ done
+ systemctl stop "$FINAL_SVC" 2>/dev/null || true
+ systemctl disable "$FINAL_SVC" 2>/dev/null || true
+ systemctl stop "$NEW_SVC" 2>/dev/null || true
+ systemctl disable "$NEW_SVC" 2>/dev/null || true
+ echo "CN3193_AUTOMATIC_ROLLBACK_PASS reason=$reason service=$FALLBACK_SVC"
+}
+
 safe_env
 if [[ "$MODE" == --rollback ]];then
  FALLBACK_SVC="$(find_service_for_port 3193)" || { echo CN3193_ROLLBACK_BASELINE_SERVICE_NOT_ACTIVE >&2;exit 1; }
@@ -181,7 +202,7 @@ if [[ "$MODE" == --rollback ]];then
  OLD_3194_SVC="$(find_service_for_port 3194 || true)"
  if [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]];then
   if systemctl is-enabled --quiet "$OLD_3194_SVC";then systemctl disable "$OLD_3194_SVC" >/dev/null || { echo CN3194_OLD_SERVICE_DISABLE_FAILED_DURING_ROLLBACK >&2;exit 1; };fi
-  systemctl stop "$OLD_3194_SVC" || { echo CN3194_OLD_SERVICE_STOP_FAILED_DURING_ROLLBACK >&2;exit 1; }
+  systemctl stop "$OLD_3194_SVC" || { set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3194_OLD_SERVICE_STOP_FAILED_OLD_UPSTREAM_RESTORED >&2;exit 1; } || { echo CN3194_OLD_SERVICE_STOP_FAILED_DURING_ROLLBACK >&2;exit 1; }
  fi
  systemctl stop "$FINAL_SVC" 2>/dev/null || true
  systemctl disable "$FINAL_SVC" 2>/dev/null || true
@@ -382,30 +403,28 @@ EOF
   if [[ "$status" != 200 ]];then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_ROUTE_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
  done
 
- if systemctl is-enabled --quiet "$OLD_3194_SVC";then systemctl disable "$OLD_3194_SVC" >/dev/null || { echo CN3194_OLD_SERVICE_DISABLE_FAILED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1; };fi
+ if systemctl is-enabled --quiet "$OLD_3194_SVC";then systemctl disable "$OLD_3194_SVC" >/dev/null || { set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3194_OLD_SERVICE_DISABLE_FAILED_OLD_UPSTREAM_RESTORED >&2;exit 1; };fi
  systemctl stop "$OLD_3194_SVC"
- if ss -lnt | grep -Eq '^LISTEN.*:3194[[:space:]]';then echo CN3194_PORT_NOT_RELEASED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1;fi
+ if ss -lnt | grep -Eq '^LISTEN.*:3194[[:space:]]';then rollback_to_3193 "CN3194_PORT_NOT_RELEASED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
 
- systemctl start "$FINAL_SVC" || { echo CN3194_FINAL_SERVICE_START_FAILED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1; }
+ systemctl start "$FINAL_SVC" || { rollback_to_3193 "CN3194_FINAL_SERVICE_START_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1; }
  PORT=3194
  if ! probe;then
   systemctl stop "$FINAL_SVC" || true
-  echo CN3194_FINAL_PORT_PROBE_FAILED_NEW_CODE_STILL_SERVING_ON_3195 >&2
+  rollback_to_3193 "CN3194_FINAL_PORT_PROBE_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2
   exit 1
  fi
 
- if ! set_nginx_upstream 3194;then set_nginx_upstream 3195 || true;systemctl stop "$FINAL_SVC" || true;echo CN3194_FINAL_UPSTREAM_SWITCH_FAILED_NEW_CODE_RETAINED_ON_3195 >&2;exit 1;fi
+ if ! set_nginx_upstream 3194;then rollback_to_3193 "CN3194_FINAL_UPSTREAM_SWITCH_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
   echo "CN3194_PUBLIC_NGINX_ROUTE:$path:$status"
   if [[ "$status" != 200 ]];then
-   set_nginx_upstream 3195 || true
-   systemctl stop "$FINAL_SVC" || true
-   echo CN3194_PUBLIC_ROUTE_FAILED_NEW_CODE_RETAINED_ON_3195 >&2
+   rollback_to_3193 "CN3194_PUBLIC_ROUTE_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2
    exit 1
   fi
  done
- systemctl enable "$FINAL_SVC" >/dev/null || { set_nginx_upstream 3195 || true;systemctl stop "$FINAL_SVC" || true;echo CN3194_FINAL_SERVICE_ENABLE_FAILED_NEW_CODE_RETAINED_ON_3195 >&2;exit 1; }
+ systemctl enable "$FINAL_SVC" >/dev/null || { rollback_to_3193 "CN3194_FINAL_SERVICE_ENABLE_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1; }
  systemctl stop "$NEW_SVC" || true
  systemctl disable "$NEW_SVC" >/dev/null 2>&1 || true
  echo "CN3194_NGINX_PROMOTION_PASS FINAL_SERVICE=$FINAL_SVC"
