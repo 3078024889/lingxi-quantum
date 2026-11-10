@@ -1,0 +1,42 @@
+name: CN isolated public R2 release connectivity
+on:
+  push:
+    branches: [ops/cn-celestial-static-assets-20261109]
+    paths: ['.github/workflows/cn-r2-connectivity-20261110.yml']
+permissions: {contents: read}
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 5
+    env:
+      CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Upload only verified public bootstrap to a fresh dedicated release bucket
+        run: |
+          node --input-type=module <<'JS'
+          import {createHash} from 'node:crypto';
+          const bucket='lingxi-cn-public-5054-20261110-a';
+          const root='/accounts/'+process.env.CF_ACCOUNT+'/r2/buckets';
+          async function cf(path,init={}){
+            const r=await fetch('https://api.cloudflare.com/client/v4'+path,{...init,headers:{authorization:'Bearer '+process.env.CF_TOKEN,'content-type':'application/json',...(init.headers||{})},signal:AbortSignal.timeout(30000)});
+            const j=await r.json();
+            if(!r.ok||!j.success)throw Error('CF_HTTP_'+r.status+':'+JSON.stringify((j.errors||[]).map(x=>x.code)));
+            return j.result;
+          }
+          const list=await cf(root);
+          if((list.buckets||[]).some(x=>x.name===bucket))throw Error('BUCKET_EXISTS_STOP_NO_PUBLIC_ACCESS_CHANGE');
+          const source=await fetch('https://lingxifield.com/__cn-release-5054/cn3194-static-deploy-20261109.sh',{signal:AbortSignal.timeout(25000)});
+          if(!source.ok)throw Error('SOURCE_HTTP_'+source.status);
+          const bytes=Buffer.from(await source.arrayBuffer());
+          if(createHash('sha256').update(bytes).digest('hex')!=='8817917331de75f803f0af72c2f44993bf0aa258fa20da88b24c0190954068b6')throw Error('SOURCE_HASH_FAILED');
+          await cf(root,{method:'POST',body:JSON.stringify({name:bucket})});
+          await cf(root+'/'+bucket+'/objects/cn3194-static-deploy-20261109.sh',{method:'PUT',headers:{'content-type':'application/octet-stream'},body:bytes});
+          const domain=await cf(root+'/'+bucket+'/domains/managed',{method:'PUT',body:JSON.stringify({enabled:true})});
+          if(!domain.enabled||!domain.domain)throw Error('PUBLIC_RELEASE_DOMAIN_NOT_READY');
+          console.log('PUBLIC_RELEASE_PROBE_URL=https://'+domain.domain+'/cn3194-static-deploy-20261109.sh');
+          console.log('Only the pinned public bootstrap was uploaded. No private bucket was modified.');
+          JS
