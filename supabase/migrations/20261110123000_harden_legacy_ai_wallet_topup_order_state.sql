@@ -120,8 +120,8 @@ begin
  if coalesce(o.status,'') not in ('pending','paid') then
    return pg_catalog.jsonb_build_object('ok',false,'error','ORDER_NOT_PAYABLE');
  end if;
- if o.provider<>'paypal' then return pg_catalog.jsonb_build_object('ok',false,'error','USD_REQUIRES_PAYPAL'); end if;
- if o.product_id !~ '^ai-usd-balance-(10|20|50|100|300|500|1000|2000|10000)$' then return pg_catalog.jsonb_build_object('ok',false,'error','INVALID_USD_TOPUP'); end if;
+ if o.provider is distinct from 'paypal' then return pg_catalog.jsonb_build_object('ok',false,'error','USD_REQUIRES_PAYPAL'); end if;
+ if coalesce(o.product_id,'') !~ '^ai-usd-balance-(10|20|50|100|300|500|1000|2000|10000)$' then return pg_catalog.jsonb_build_object('ok',false,'error','INVALID_USD_TOPUP'); end if;
  expected_usd:=substring(o.product_id from '([0-9]+)$')::numeric;
  amount_cents:=(expected_usd*100)::bigint;
  if o.amount_usd is null or round(o.amount_usd,2)<>round(expected_usd,2) then return pg_catalog.jsonb_build_object('ok',false,'error','AMOUNT_MISMATCH'); end if;
