@@ -1,0 +1,76 @@
+name: COM verified free business origin release
+on:
+  push:
+    branches: [ops/cn-celestial-static-assets-20261109]
+    paths: ['.github/workflows/com-business-origin-release-20261110.yml']
+permissions: {contents: read, actions: read}
+concurrency:
+  group: lingxifield-com-business-origin-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 10
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Exact no-charge canary gate, scoped API routing and rollback
+        run: |
+          node --input-type=module <<'JS'
+          const gate=await fetch('https://api.github.com/repos/3078024889/lingxi-quantum/actions/runs/42761252323',{headers:{authorization:'Bearer '+process.env.GH_TOKEN,accept:'application/vnd.github+json','user-agent':'lingxifield-business-release'}});
+          const run=await gate.json();
+          if(!gate.ok||run.conclusion!=='success'||run.head_sha!=='19c7c5ba4251f96ca1bc234680595f7d8adde753'||run.name!=='COM business origin isolated canary no routes')throw Error('EXACT_BUSINESS_CANARY_NOT_SUCCESS');
+          const endpoint='/zones/0e9df0e4cf67601f60ce1b73fe011b94/workers/routes';
+          const script='lingxifield-com-business-origin-20261110';
+          const patterns=['lingxifield.com/api/*','lingxifield.com/account/auth'];
+          async function cf(path,init={}){
+            const r=await fetch('https://api.cloudflare.com/client/v4'+path,{...init,headers:{authorization:'Bearer '+process.env.CF_TOKEN,'content-type':'application/json'},signal:AbortSignal.timeout(25000)});
+            const j=await r.json();
+            if(!r.ok||!j.success)throw Error('CF_HTTP_'+r.status+':'+JSON.stringify((j.errors||[]).map(x=>x.code)));
+            return j.result;
+          }
+          const routes=await cf(endpoint);
+          for(const pattern of patterns){
+            const entries=routes.filter(x=>x.pattern===pattern);
+            if(entries.length>1||entries.some(x=>x.script!==script))throw Error('EXISTING_ROUTE_NOT_EXPECTED');
+          }
+          const created=[];let success=false;
+          try{
+            for(const pattern of patterns){
+              if(!routes.some(x=>x.pattern===pattern)){
+                const r=await cf(endpoint,{method:'POST',body:JSON.stringify({pattern,script})});
+                if(!r.id)throw Error('ROUTE_CREATE_NO_ID');created.push(r.id);
+              }
+            }
+            for(const [path,expected] of [['/api/health',200],['/api/money/summary',401],['/api/sasi/account',401],['/api/sasi/marketplace/seller',401],['/api/sasi/marketplace/my-orders',401],['/api/sasi/marketplace/listings',200],['/api/pay/providers',200],['/account/auth',405]]){
+              let pass=0;
+              for(let i=0;i<12;i++){
+                const r=await fetch('https://lingxifield.com'+path,{redirect:'manual',signal:AbortSignal.timeout(30000)});
+                const fromEcs=r.headers.get('x-lingxi-business-origin')==='ecs';
+                console.log('COM_BUSINESS_PROD path='+path+' http='+r.status+' ecs='+fromEcs);
+                if(r.status===expected&&fromEcs){
+                  if(path==='/api/pay/providers'){
+                    const j=await r.json();
+                    console.log(JSON.stringify({providers:{paypal:j.paypal,wechat:j.wechat,alipay:j.alipay},diagnostics:j.diagnostics}));
+                    if(['paypal','wechat','alipay'].some(k=>j.diagnostics?.[k]?.configured!==true))throw Error('MERCHANT_CONFIG_MISSING');
+                  }
+                  pass++;if(pass===2)break;
+                }else pass=0;
+                await new Promise(r=>setTimeout(r,3000));
+              }
+              if(pass!==2)throw Error('PRODUCTION_API_NOT_READY:'+path);
+            }
+            const after=await cf(endpoint);
+            for(const pattern of patterns)if(after.filter(x=>x.pattern===pattern&&x.script===script).length!==1)throw Error('ROUTE_NOT_PERSISTENT');
+            for(const old of routes.filter(x=>!patterns.includes(x.pattern)))if(!after.some(x=>x.id===old.id&&x.script===old.script&&x.pattern===old.pattern))throw Error('UNRELATED_ROUTE_CHANGED');
+            success=true;
+            console.log('COM_FREE_ECS_BUSINESS_APIS_RELEASE_PASS');
+            console.log('NO_MERCHANT_FLAGS_CHANGED_NO_CHARGE_NO_PRIVATE_KEY_TRANSFER');
+          }finally{
+            if(!success){for(const id of created.reverse())await cf(endpoint+'/'+id,{method:'DELETE'});console.log('COM_BUSINESS_ROUTE_ROLLBACK_COMPLETE');}
+          }
+          JS
