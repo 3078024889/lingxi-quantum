@@ -82,7 +82,7 @@ export async function createPaypalOrder(params: {
   return { id: data.id, approveUrl };
 }
 
-function parseUsdCents(value: unknown): number | null {
+export function parseUsdCents(value: unknown): number | null {
   if (typeof value !== "string" && typeof value !== "number") return null;
   if (typeof value === "number" && !Number.isFinite(value)) return null;
   const raw = String(value);
