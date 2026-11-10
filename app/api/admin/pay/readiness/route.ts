@@ -39,7 +39,7 @@ export async function GET(req:Request){
    ];
    const missingEvents=selected?requiredEvents.filter(name=>!selected.events.includes(name)):requiredEvents;
    const expectedUrl=trustedSiteOrigin(req)+"/api/pay/paypal/webhook";
-   const normalize=(value:string)=>value.replace(/\\/$/,"");
+   const normalize=(value:string)=>value.replace(/\/$/,"");
    paypalWebhook={
     registered:Boolean(selected),
     urlMatches:Boolean(selected&&normalize(selected.url)===normalize(expectedUrl)),
