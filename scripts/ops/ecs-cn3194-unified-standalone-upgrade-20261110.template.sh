@@ -378,6 +378,7 @@ EOF
  done
 
  systemctl stop "$OLD_3194_SVC"
+ systemctl disable "$OLD_3194_SVC" >/dev/null || { echo CN3194_OLD_SERVICE_DISABLE_FAILED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1; }
  if ss -lnt | grep -Eq '^LISTEN.*:3194[[:space:]]';then echo CN3194_PORT_NOT_RELEASED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1;fi
 
  systemctl start "$FINAL_SVC" || { echo CN3194_FINAL_SERVICE_START_FAILED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1; }
