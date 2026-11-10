@@ -12,6 +12,7 @@ const alipayNotify=read("app/api/pay/alipay/notify/route.ts");
 const wechat=read("lib/wechatpay.ts");
 const wechatNotify=read("app/api/pay/wechat/notify/route.ts");
 const walletMigration=read("supabase/migrations/20261110050414_harden_legacy_ai_wallet_topup_order_state.sql");
+const releaseWorkflow=read(".github/workflows/cn3194-payment-release-20261110.yml");
 
 test("payment activation is pinned to final 3194; 3195 is temporary staging only",()=>{
  assert.match(script,/TAG" =~ \^ecs-cn-unified-20261110-/);
@@ -91,6 +92,12 @@ test("Alipay and WeChat signed probe accepts the final service identity and neve
  assert.match(signed,/responseVerifier\.update\(responseTimestamp\+"\\n"\+responseNonce\+"\\n"\+raw\+"\\n"/);
  assert.doesNotMatch(signed,/console\.log\([^\n]*(PRIVATE_KEY|API_V3_KEY|access_token)/i);
  execFileSync(process.execPath,["--check","scripts/ops/cn-payment-signed-live-probe-20261109.mjs"]);
+});
+
+test("release checksum is relocatable between GitHub artifacts, Windows transfer and ECS",()=>{
+ assert.match(releaseWorkflow,/printf '%s  %s\\n' "\$ARCHIVE_SHA" "\$FILE" > "\$DIST\/\$CHECK"/);
+ assert.match(releaseWorkflow,/sha256sum -c "\$CHECK_FILE"/);
+ assert.doesNotMatch(releaseWorkflow,/sha256sum "\$DIST\/\$FILE" > "\$DIST\/\$CHECK"/);
 });
 
 test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rollback",()=>{
