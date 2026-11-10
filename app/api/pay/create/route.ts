@@ -28,6 +28,9 @@ export async function POST(req:NextRequest){
  try{
   const body=await req.json().catch(()=>null) as {productId?:unknown;returnPath?:unknown}|null;
   const requestedId=String(body?.productId||"");
+  const supabase=createClient();
+  const {data:{user}}=await supabase.auth.getUser();
+  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
   const walletProduct=getUsdBalanceProduct(requestedId);
   const catalog=getProduct(requestedId)||await resolveMarketplaceProduct(requestedId);
   const isCatalogPayable=Boolean(catalog&&["toolpass","software","market"].includes(catalog.group));
@@ -45,9 +48,6 @@ export async function POST(req:NextRequest){
   if(product.group==="software"&&!await softwareCheckoutReady(product.id))
    return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
 
-  const supabase=createClient();
-  const {data:{user}}=await supabase.auth.getUser();
-  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
   if(product.group==="market"&&product.sellerId===user.id)
    return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
 
