@@ -13,7 +13,7 @@ assert.match(paypal,/verifyPaypalWebhook[\s\S]*?paypalCrc32\(Buffer.from\(rawBod
 assert.match(paypal,/verifier.verify\(certificate,signature,"base64"\)/);
 assert.doesNotMatch(paypal,/verify-webhook-signature/);
 assert.match(checkout,/referenceId:order\.id/);
-assert.match(checkout,/product\.group==="wallet"&&process\.env\.USD_BALANCE_TOPUP_ENABLED!=="true"/);
+assert.match(checkout,/product\.group==="wallet"&&\(process\.env\.USD_BALANCE_TOPUP_ENABLED!=="true"\|\|process\.env\.SASI_REFUND_FLOW_TESTED!=="true"\)/);
 assert.match(verify,/if\(!\(await verifyPaypalWebhook\(req\.headers,raw\)\)\)/);
 assert.match(verify,/await verifyPaypalCompletedOrder\(providerId,Number\(order\.amount_usd\),order\.id\)/);
 assert.match(fulfill,/if\(!verifiedPayment\)return/);
