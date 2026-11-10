@@ -160,8 +160,8 @@ export async function createWechatNativeOrder(params: {
   amountFen: number; // 金额，单位是"分"，不是"元"——1元=100分，这是微信支付的强制要求
   notifyUrl: string;
 }): Promise<{ codeUrl: string }> {
-  if (!wechatPayConfigured()) {
-    throw new Error("微信支付尚未配置完整的环境变量，无法创建订单");
+  if (!wechatPayEnabled()) {
+    throw new Error("微信支付未启用或商户密钥验签材料未通过检查，无法创建订单");
   }
   const data = await wechatRequest("POST", "/v3/pay/transactions/native", {
     appid: APP_ID,
@@ -188,8 +188,8 @@ export async function createWechatJsapiOrder(params: {
   notifyUrl: string;
   openid: string;
 }): Promise<{ prepayId: string }> {
-  if (!wechatPayConfigured()) {
-    throw new Error("微信支付尚未配置完整的环境变量，无法创建订单");
+  if (!wechatPayEnabled()) {
+    throw new Error("微信支付未启用或商户密钥验签材料未通过检查，无法创建订单");
   }
   const data = await wechatRequest("POST", "/v3/pay/transactions/jsapi", {
     appid: APP_ID,
