@@ -40,6 +40,11 @@ export async function loadToolStaticRoutes() {
       if (error?.code === "ENOENT") continue;
       throw error;
     }
+    // Redirect-only aliases must stay Worker-first; snapshotting their redirect HTML would shadow Next redirects.
+    if (/\\b(?:redirect|permanentRedirect)\\s*\\(/.test(pageSource)) {
+      console.log("TOOL_STATIC_ROUTE_SKIPPED_REDIRECT_ONLY:" + slug);
+      continue;
+    }
     if (/(?:cookies\s*\(|headers\s*\(|searchParams|force-dynamic|getServerUser|createServerClient|createAdminClient|SUPABASE_SERVICE_ROLE)/.test(pageSource)) {
       throw Error("TOOL_PAGE_NOT_STATIC_SAFE:" + slug);
     }
