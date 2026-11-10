@@ -1,3 +1,4 @@
+import "server-only";
 import {createVerify} from "node:crypto";
 
 export function paypalConfigured():boolean {
