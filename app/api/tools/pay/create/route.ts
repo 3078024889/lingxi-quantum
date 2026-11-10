@@ -2,7 +2,7 @@ import {NextRequest,NextResponse} from "next/server";
 import {cookies} from "next/headers";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {createPaypalOrder} from "@/lib/paypal";
+import {createPaypalOrder,paypalEnabled} from "@/lib/paypal";
 import {alipayEnabled,alipaySiteUrl,createAlipayPaymentUrl} from "@/lib/alipay";
 import {createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,wechatPayConfigured} from "@/lib/wechatpay";
 import {exchangeCodeForOpenid,wechatOauthConfigured} from "@/lib/wechat-oauth";
@@ -55,10 +55,7 @@ export async function POST(req:NextRequest){
 
   // Complete every provider/OAuth precondition before creating a local order.
   const useJsapi=p==="wechat"&&Boolean(code);
-  if(p==="paypal"){
-   const ready=process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&Boolean(process.env.PAYPAL_CLIENT_ID?.trim()&&process.env.PAYPAL_CLIENT_SECRET?.trim()&&process.env.PAYPAL_WEBHOOK_ID?.trim());
-   if(!ready)return NextResponse.json({error:"PayPal 暂未开放"},{status:503});
-  }
+  if(p==="paypal"&&!paypalEnabled())return NextResponse.json({error:"PayPal 暂未开放"},{status:503});
   if(p==="alipay"&&!alipayEnabled())return NextResponse.json({error:"支付宝当前不可用"},{status:503});
   if(p==="wechat"&&!wechatPayConfigured())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
   if(useJsapi){
