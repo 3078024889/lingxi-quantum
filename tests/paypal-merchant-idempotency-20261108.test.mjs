@@ -44,3 +44,10 @@ assert.match(toolPay,/paypalEnabled\(\)/);
 assert.match(toolPay,/trustedSiteOrigin\(req\)/);
 const returnRoute=readFileSync("app/api/pay/paypal/return/route.ts","utf8");
 assert.match(returnRoute,/trustedSiteOrigin\(req\)/);
+
+const wxCreate=readFileSync("app/api/pay/wechat/create/route.ts","utf8");
+const aliCreate=readFileSync("app/api/pay/alipay/create/route.ts","utf8");
+const aliReturn=readFileSync("app/api/pay/alipay/return/route.ts","utf8");
+assert.match(wxCreate,/trustedSiteOrigin\(req\)/);
+assert.match(aliCreate,/trustedSiteOrigin\(req\)/);
+assert.match(aliReturn,/trustedSiteOrigin\(req\)/);
