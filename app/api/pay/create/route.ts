@@ -67,7 +67,7 @@ export async function POST(req:NextRequest){
     if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});
 
     const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
-    const fallback=isDirectPass?"/tools/pass":marketProduct?"/account/software":"/sasi/pricing";
+    const fallback=walletProduct?"/ai-wallet":isDirectPass?"/tools/pass":marketProduct?"/account/software":"/ai-wallet";
     const dest=safeLocalReturnPath(body?.returnPath,fallback);
 
     try{
