@@ -86,7 +86,7 @@ function parseUsdCents(value: unknown): number | null {
   if (typeof value !== "string" && typeof value !== "number") return null;
   if (typeof value === "number" && !Number.isFinite(value)) return null;
   const raw = String(value);
-  if (!/^(?:0|[1-9]\\d*)(?:\\.\\d{1,2})?$/.test(raw)) return null;
+  if (!/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(raw)) return null;
   const [whole, fraction = ""] = raw.split(".");
   const cents = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
   return Number.isSafeInteger(cents) ? cents : null;
