@@ -12,14 +12,15 @@ exec 9>/run/lock/lingxifield-cn-standalone-release.lock
 flock -n 9 || { echo CN_RELEASE_BUSY;exit 2; }
 
 NODE=/opt/lingxifield/runtime/node-24.19.0/bin/node
-SVC="lingxifield-cn-release-20261108-$SHORT"
-FLAGS="/etc/lingxifield/tool-pass-3194-$SHORT.env"
+SVC="lingxifield-cn-release-20261110-$SHORT"
+FLAGS="/etc/lingxifield/tool-pass-3195-$SHORT.env"
+PORT=3195
 NGINX=/etc/nginx/conf.d/lingxifield.conf
 PROBE="/run/cn-payment-live-probe-$SHORT.mjs"
 PROBE_SHA="2aec891d25ea78769d9c12b8ae9a89016d4425a9"
 
 [[ -x "$NODE" ]] || { echo NODE_NOT_READY;exit 1; }
-systemctl is-active --quiet "$SVC" || { echo CN3194_NOT_RUNNING;exit 1; }
+systemctl is-active --quiet "$SVC" || { echo CN3195_NOT_RUNNING;exit 1; }
 DIR="$(systemctl show "$SVC" -p WorkingDirectory --value)"
 [[ "$DIR" =~ ^/opt/lingxifield/cn-staged-releases/[a-f0-9]{40}$ ]] || { echo SOURCE_PATH_INVALID;exit 1; }
 test -s "$DIR/RELEASE_SOURCE_SHA" || { echo RELEASE_SOURCE_SHA_MISSING;exit 1; }
@@ -126,12 +127,29 @@ chmod 600 "$PROBE"
 "$NODE" --check "$PROBE"
 "$NODE" --check "$VERIFIER"
 
+mapfile -t LIVE_ENV_FILES < <(
+ systemctl show "$SVC" -p EnvironmentFiles --value |
+  python3 -c 'import re,sys
+s=sys.stdin.read()
+for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s): print(p)'
+)
+(( ${#LIVE_ENV_FILES[@]} >= 2 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN_PAYMENT_ENVFILE_COUNT_INVALID;exit 1; }
+for f in "${LIVE_ENV_FILES[@]}";do
+ [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {
+  echo CN_PAYMENT_ENVFILE_UNSAFE;exit 1;
+ }
+done
+
 run_env_node(){
  local suffix="$1";shift
  local unit="cn-pay-audit-$SHORT-$suffix-$$"
- systemd-run --quiet --wait --pipe --collect --unit="$unit" \
-  --property="EnvironmentFile=$FLAGS" --property="WorkingDirectory=$DIR" \
-  "$NODE" "$@"
+ local -a env_props=()
+ for f in "${LIVE_ENV_FILES[@]}";do
+  [[ "$f" == "$FLAGS" ]] || env_props+=(--property="EnvironmentFile=$f")
+ done
+ env_props+=(--property="EnvironmentFile=$FLAGS")
+ systemd-run --quiet --wait --pipe --collect --unit="$unit" "${env_props[@]}" \
+  --property="WorkingDirectory=$DIR" "$NODE" "$@"
 }
 
 echo "STEP_1_SIGNED_ALIPAY_AND_WECHAT_LIVE_PROBES"
@@ -164,7 +182,7 @@ for item in "alipay|/api/pay/alipay/notify|application/x-www-form-urlencoded|out
             "paypal|/api/pay/paypal/webhook|application/json|{}";do
  IFS='|' read -r name path mime body <<<"$item"
  status="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 17 -o /dev/null -w '%{http_code}' \
-  -X POST -H 'Host: lingxifield.cn' -H "Content-Type: $mime" --data "$body" "http://127.0.0.1:3194$path" || true)"
+  -X POST -H 'Host: lingxifield.cn' -H "Content-Type: $mime" --data "$body" "http://127.0.0.1:3195$path" || true)"
  echo "CN_UNSIGNED_WEBHOOK_$name HTTP=$status"
  [[ "$status" == 401 ]] || { echo "UNSIGNED_WEBHOOK_REJECTION_FAILED:$name";exit 1; }
 done
@@ -175,15 +193,15 @@ if [[ "$ALIPAY" != true || "$WECHAT" != true || "$PAYPAL" != true || "$TOOLPASS_
  exit 1
 fi
 if [[ "$MODE" == --audit ]];then
- echo CN3194_ALL_THREE_LIVE_MERCHANTS_AND_TOOLPASS_BACKEND_AUDIT_PASS_FLAGS_UNCHANGED
+ echo CN3195_ALL_THREE_LIVE_MERCHANTS_AND_TOOLPASS_BACKEND_AUDIT_PASS_FLAGS_UNCHANGED
  [[ "$CNY_REFUND_GATE" == true ]] || echo CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED
  [[ "$USD_REFUND_GATE" == true ]] || echo CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED
  exit 0
 fi
 
 [[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo NGINX_CONFIG_NOT_REGULAR;exit 1; }
-[[ "$(grep -Fc '127.0.0.1:3194' "$NGINX")" == 1 ]] || { echo NGINX_NOT_USING_3194;exit 1; }
-if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
+[[ "$(grep -Fc '127.0.0.1:3195' "$NGINX")" == 1 ]] || { echo NGINX_NOT_USING_3195;exit 1; }
+if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3194' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
 
 BACKUP="$(mktemp /etc/lingxifield/.cn-payment-backup-XXXXXX)"
 chmod 600 "$BACKUP"
@@ -223,16 +241,21 @@ finally:
 PY
 
 if ! systemctl restart "$SVC";then rollback;exit 1;fi
-health="$(curl -sS --noproxy '*' --max-time 20 -H 'Host: lingxifield.cn' -o /dev/null -w '%{http_code}' http://127.0.0.1:3194/api/health || true)"
+health="$(curl -sS --noproxy '*' --max-time 20 -H 'Host: lingxifield.cn' -o /dev/null -w '%{http_code}' http://127.0.0.1:3195/api/health || true)"
 [[ "$health" == 200 ]] || { rollback;exit 1; }
 
-if ! curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' http://127.0.0.1:3194/api/pay/providers >"$TMP/providers.json";then rollback;exit 1;fi
+if ! curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' http://127.0.0.1:3195/api/pay/providers >"$TMP/providers.json";then rollback;exit 1;fi
 if ! "$NODE" -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>{const j=JSON.parse(s);if(j.alipay!==true||j.wechat!==true||j.paypal!==true)process.exit(4);console.log("CN_ALL_THREE_PAYMENT_PROVIDERS_ENABLED")})' <"$TMP/providers.json";then rollback;exit 1;fi
 
-if ! curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' http://127.0.0.1:3194/api/tools/pass >"$TMP/toolpass.json";then rollback;exit 1;fi
+if ! curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' http://127.0.0.1:3195/api/tools/pass >"$TMP/toolpass.json";then rollback;exit 1;fi
 if ! "$NODE" -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>{const j=JSON.parse(s);if(j.available!==true||j.offers?.length!==4)process.exit(4);console.log("CN_TOOLPASS_COMMERCE_READY_WITH_FOUR_PLANS")})' <"$TMP/toolpass.json";then rollback;exit 1;fi
 
-echo "CN_VERIFIED_CNY_AND_PAYPAL_LIVE_PROVIDERS_ENABLED"
+echo "CN_VERIFIED_WECHAT_ALIPAY_PAYPAL_LIVE_PROVIDERS_ENABLED"
+for path in /api/health /api/pay/providers /api/tools/pass;do
+ status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 20 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
+ echo "CN3195_PUBLIC_PAYMENT_ROUTE:$path:$status"
+ [[ "$status" == 200 ]] || { rollback;exit 1; }
+done
 if [[ "$CNY_REFUND_GATE" == true ]];then echo CN_CNY_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
 if [[ "$USD_REFUND_GATE" == true ]];then echo CN_USD_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
 echo "SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION"

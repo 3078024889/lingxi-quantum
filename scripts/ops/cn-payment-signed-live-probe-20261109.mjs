@@ -7,7 +7,7 @@ import {lstatSync,readFileSync} from "node:fs";
 
 const allowed=/^\/etc\/lingxifield\/[a-zA-Z0-9_.-]+\.env$/;
 function systemdEnv(unit){
- if(!/^lingxifield-cn-release-20261108-[a-f0-9]{12}$/.test(unit))throw Error("CN_PAYMENT_UNIT_NOT_APPROVED");
+ if(!/^lingxifield-cn-release-20261110-[a-f0-9]{12}$/.test(unit))throw Error("CN_PAYMENT_UNIT_NOT_APPROVED");
  const data=execFileSync("systemctl",["show",unit,"-p","EnvironmentFiles","--value"],{encoding:"utf8"});
  const files=[...data.matchAll(/(\/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)/g)].map(m=>m[1]);
  if(files.length<2||files.length>8)throw Error("CN_PAYMENT_ENV_FILES_INVALID");

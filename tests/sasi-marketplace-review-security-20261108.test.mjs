@@ -85,7 +85,10 @@ test("SASI storefront has one real featured source-license product and seller up
  assert.doesNotMatch(page,/SasiSoftwareMarket/);
  assert.match(market,/SASI_SOFTWARE_CATALOG\[0\]/);
  assert.match(market,/featured\.priceCny/);
- assert.match(market,/featuredReady/);
+ assert.match(market,/featuredPayment/);
+ assert.match(market,/availableCny===true/);
+ assert.match(market,/availableUsd===true/);
+ assert.match(market,/checkout-usd\?productId=/);
  assert.match(market,/source.*|sasi-seller-studio/);
  assert.match(catalog,/sasi-copernicus-si95-source/);
  assert.doesNotMatch(catalog,/sasi-copernicus-si95-mt5/);
@@ -126,7 +129,8 @@ test("marketplace gateway requires a dedicated merchant approval and supports CN
  assert.match(resolver,/SASI_MARKETPLACE_COMMERCE_READY/);
  assert.match(resolver,/marketplaceCommerceReady\(\)/);
  const paypal=file("app/api/pay/create/route.ts");
- assert.match(paypal,/isMarketProductId/);
+ assert.match(paypal,/const catalog=getProduct\(requestedId\)\|\|await resolveMarketplaceProduct\(requestedId\)/);
+ assert.match(paypal,/product\.group==="market"&&product\.sellerId===user\.id/);
  assert.match(paypal,/resolveMarketplaceProduct/);
  assert.match(paypal,/SELF_PURCHASE_NOT_ALLOWED/);
  const endpoint=file("app/api/sasi/marketplace/product/route.ts");
