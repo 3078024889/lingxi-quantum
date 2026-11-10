@@ -7,6 +7,8 @@ on:
       - 'tests/dual-payment-verified-enable-20261110.test.mjs'
       - 'tests/paypal-unsigned-webhook-20261110.test.mjs'
       - 'lib/paypal.ts'
+      - 'scripts/ops/wechat-restore-ecs-20261110.mjs'
+      - 'tests/wechat-restore-ecs-20261110.test.mjs'
       - '.github/workflows/dual-payment-verified-enable-20261110.yml'
   workflow_dispatch:
 permissions:
@@ -23,4 +25,6 @@ jobs:
       - name: Validate operator script and payment security behavior
         run: |
           node --check scripts/ops/dual-payment-verified-enable-20261110.mjs
+          node --check scripts/ops/wechat-restore-ecs-20261110.mjs
+          node --test tests/wechat-restore-ecs-20261110.test.mjs
           node --test tests/dual-payment-verified-enable-20261110.test.mjs tests/paypal-unsigned-webhook-20261110.test.mjs tests/paypal-merchant-idempotency-20261108.test.mjs tests/toolpass-direct-fulfillment-20261108.test.mjs tests/sasi-software-verified-fulfillment-20261108.test.mjs
