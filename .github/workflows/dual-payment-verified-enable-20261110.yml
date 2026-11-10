@@ -1,0 +1,26 @@
+name: Dual payment merchant activation safety checks
+on:
+  push:
+    branches: [fix/dual-payment-verified-enable-20261110]
+    paths:
+      - 'scripts/ops/dual-payment-verified-enable-20261110.mjs'
+      - 'tests/dual-payment-verified-enable-20261110.test.mjs'
+      - 'tests/paypal-unsigned-webhook-20261110.test.mjs'
+      - 'lib/paypal.ts'
+      - '.github/workflows/dual-payment-verified-enable-20261110.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate operator script and payment security behavior
+        run: |
+          node --check scripts/ops/dual-payment-verified-enable-20261110.mjs
+          node --test tests/dual-payment-verified-enable-20261110.test.mjs tests/paypal-unsigned-webhook-20261110.test.mjs tests/paypal-merchant-idempotency-20261108.test.mjs tests/toolpass-direct-fulfillment-20261108.test.mjs tests/sasi-software-verified-fulfillment-20261108.test.mjs
