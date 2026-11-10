@@ -1,5 +1,5 @@
 import {NextRequest,NextResponse} from "next/server";
-import {newMarketplaceObjectKey,marketplaceOwnedKey,signedMarketplaceUpload,marketplaceR2Ready} from "@/lib/sasi-marketplace/r2";
+import {newMarketplaceObjectKey,marketplaceOwnedKey,signedMarketplaceUpload,marketplaceUploadReady} from "@/lib/sasi-marketplace/r2";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
@@ -9,7 +9,7 @@ const nocache={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosn
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:nocache});
- if(!marketplaceR2Ready())
+ if(!marketplaceUploadReady())
   return NextResponse.json({error:"UPLOAD_SCANNING_NOT_READY"},{status:503,headers:nocache});
  const {data:{user}}=await createClient().auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:nocache});

@@ -7,9 +7,11 @@ import {alipayEnabled} from "@/lib/alipay";
 import {paypalEnabled} from "@/lib/paypal";
 import type {Product} from "@/lib/plans";
 
+export function marketplaceCommerceReady():boolean{return process.env.SASI_MARKET_SALES_ENABLED==="true"&&process.env.SASI_MARKETPLACE_COMMERCE_READY==="true"&&marketplaceR2Ready()&&(wechatPayEnabled()||alipayEnabled()||paypalEnabled())}
+
 export async function resolveMarketplaceProduct(productId:string):Promise<(Product&{sellerId:string})|null>{
  const id=marketProductUuid(productId);
- if(!id||!marketplaceR2Ready()||!(wechatPayEnabled()||alipayEnabled()||paypalEnabled()))return null;
+ if(!id||!marketplaceCommerceReady())return null;
  try{
   const db=createAdminClient();
   const {data:item,error}=await db.from("sasi_market_listings")

@@ -6,7 +6,8 @@ import{alipayEnabled,alipayKeyMaterialReady,alipayMissingVars}from"@/lib/alipay"
 import{toolPassBackendReady,toolPassCommerceReady}from"@/lib/tools/commerce/tool-server-receipt";
 import{SASI_SOFTWARE_CATALOG}from"@/lib/sasi-software/catalog";
 import{softwareCheckoutReady}from"@/lib/sasi-software/readiness";
-import{marketplaceR2Ready}from"@/lib/sasi-marketplace/r2";
+import{marketplaceR2Ready,marketplaceUploadReady}from"@/lib/sasi-marketplace/r2";
+import{marketplaceCommerceReady}from"@/lib/sasi-marketplace/checkout";
 import{trustedSiteOrigin}from"@/lib/sasi/site-origin";
 import{wechatOauthConfigured}from"@/lib/wechat-oauth";
 
@@ -29,7 +30,7 @@ export async function GET(req:Request){
  let paypalTokenTest:"PASS"|"FAIL"|"SKIPPED"="SKIPPED";
  let paypalWebhook:{registered:boolean;urlMatches:boolean;missingEvents:string[]}|null=null;
  const requiredEvents=[
-  "CHECKOUT.ORDER.APPROVED","CHECKOUT.PAYMENT-APPROVAL.REVERSED",
+  "CHECKOUT.ORDER.APPROVED","CHECKOUT.ORDER.COMPLETED","CHECKOUT.PAYMENT-APPROVAL.REVERSED",
   "PAYMENT.CAPTURE.PENDING","PAYMENT.CAPTURE.COMPLETED",
   "PAYMENT.CAPTURE.DENIED","PAYMENT.CAPTURE.REFUNDED"
  ];
@@ -80,7 +81,7 @@ export async function GET(req:Request){
    },
    softwareCommerceFlag:process.env.SOFTWARE_COMMERCE_READY==="true",
    softwarePackages:software,
-   marketplaceR2:marketplaceR2Ready()
+   marketplace:{r2Ready:marketplaceR2Ready(),scanDispatchConfigured:Boolean(process.env.GITHUB_MARKET_SCAN_DISPATCH_TOKEN?.trim()),uploadsEnabled:process.env.SASI_MARKET_UPLOADS_ENABLED==="true",uploadsReady:marketplaceUploadReady(),salesEnabled:process.env.SASI_MARKET_SALES_ENABLED==="true",commerceEnabled:process.env.SASI_MARKETPLACE_COMMERCE_READY==="true",salesReady:marketplaceCommerceReady(),payoutsEnabled:process.env.SASI_MARKET_PAYOUTS_ENABLED==="true"}
   }
  },{headers:{"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"}});
 }
