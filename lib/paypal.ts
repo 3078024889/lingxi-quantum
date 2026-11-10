@@ -242,6 +242,7 @@ export async function createPaypalRefund(input:{
   amountCents:number;
 }):Promise<{refundId:string;status:string;raw:any}>{
   if(!Number.isSafeInteger(input.amountCents)||input.amountCents<=0)throw new Error("PAYPAL_REFUND_AMOUNT_INVALID");
+  if(!paypalEnabled())throw new Error("PAYPAL_NOT_ENABLED_OR_LIVE_NOT_READY");
   const token=await getPaypalAccessToken();
   const res=await fetchWithTimeout(paypalBaseUrl()+"/v2/payments/captures/"+encodeURIComponent(input.captureId)+"/refund",{
     method:"POST",
