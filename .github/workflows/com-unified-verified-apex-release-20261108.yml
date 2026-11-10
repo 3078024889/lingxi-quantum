@@ -61,6 +61,7 @@ jobs:
           grep -Fq 'const candidateWorkerPrefix = "lingxifield-com-canary-"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_PAYMENT_BASELINE' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_VERSION_ROLLBACK_CONFIRMED' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'COM_PRODUCTION_BINDING_PREFLIGHT_PASS' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"--keep-vars"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"/api/sasi/account"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"/ai-wallet"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
