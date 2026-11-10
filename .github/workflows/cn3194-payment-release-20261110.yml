@@ -1,0 +1,266 @@
+name: CN3194 payment-integrated standalone release (R2 staging only; NO PROD DEPLOY)
+on:
+  pull_request:
+    branches: [ci/cn3194-payment-base-20261110]
+    paths:
+      - 'scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh'
+      - 'scripts/ops/cn-payment-activate-3194-20261110.sh'
+      - 'lib/sasi-marketplace/checkout.ts'
+      - 'app/api/pay/**'
+      - 'app/api/tools/pay/**'
+      - 'lib/alipay.ts'
+      - 'lib/wechatpay.ts'
+      - 'lib/paypal.ts'
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: cn3194-standalone-release-${{ github.event.pull_request.head.ref || github.ref }}
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    outputs:
+      source_sha: ${{ steps.package.outputs.source_sha }}
+      tag: ${{ steps.package.outputs.tag }}
+      archive_file: ${{ steps.package.outputs.archive_file }}
+      check_file: ${{ steps.package.outputs.check_file }}
+      stage_file: ${{ steps.package.outputs.stage_file }}
+      payment_file: ${{ steps.package.outputs.payment_file }}
+      manifest_file: ${{ steps.package.outputs.manifest_file }}
+    env:
+      LINGXI_SELFHOST_BUILD: '1'
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.cn
+      NEXT_PUBLIC_TOOL_PASS_ENFORCED: "true"
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://sxsgdpqojepgbbrxrzlq.supabase.co' }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4c2dkcHFvamVwZ2JicnhyemxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTc0ODIsImV4cCI6MjA5Nzk5MzQ4Mn0.x4LNnsCvmHsCiRk2HFIsVjg-0ddbTQlkcKpKQFaAdXE' }}
+    steps:
+      - name: Checkout exact reviewed PR head
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 10.22.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependencies and full payment/software contracts
+        run: |
+          set -Eeuo pipefail
+          pnpm install --frozen-lockfile
+          node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
+          node --test \
+            tests/cn-payment-activation-3194-20261110.test.mjs \
+            tests/cn-wallet-checkout-entry-20261108.test.mjs \
+            tests/cn-toolpass-public-ui-20261108.test.mjs \
+            tests/paypal-merchant-idempotency-20261108.test.mjs \
+            tests/sasi-marketplace-security-contract.test.mjs \
+            tests/sasi-software-paypal-fulfillment-contract.test.mjs \
+            tests/cn3194-source-only-software-catalog.test.mjs \
+            tests/cn3194-marketplace-readiness-gates.test.mjs \
+            tests/tool-pass-server-http-contract.test.mjs \
+            tests/unified-tools-pass-static-contract.test.mjs
+          node scripts/audit/unified-tool-pass-coverage.mjs
+          node scripts/audit/unified-tool-pass-server-coverage.mjs
+          node tests/sasi-marketplace-fee.test.mjs
+          node --test tests/sasi-marketplace-review-security-20261108.test.mjs
+          node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
+          node --test tests/sasi-marketplace-long-description-20261109.test.mjs
+          node --test tests/sasi-premium-nine-language-20261109.test.mjs
+          node --test tests/toolpass-premium-nine-language-20261109.test.mjs
+          node --test tests/com-public-market-edge.test.mjs
+          node --test tests/public-announcements-deeplink-20261108.test.mjs
+          pnpm exec tsc --noEmit
+      - name: Build exact CN3194 standalone
+        run: |
+          set -Eeuo pipefail
+          pnpm build
+          test -s .next/standalone/server.js
+          test -s .next/BUILD_ID
+          install -d .next/standalone/.next
+          cp -a .next/static .next/standalone/.next/static
+          cp -a public .next/standalone/public
+          cp .next/BUILD_ID .next/standalone/.next/BUILD_ID
+          cp scripts/ops/cn-payment-signed-live-probe-20261109.mjs .next/standalone/cn-payment-signed-live-probe.mjs
+          cp scripts/ops/cn-payment-activate-3194-20261110.sh .next/standalone/cn-payment-activate.sh
+          chmod 600 .next/standalone/cn-payment-signed-live-probe.mjs .next/standalone/cn-payment-activate.sh
+          test -s .next/standalone/cn-payment-activate.sh
+          test -s .next/standalone/cn-payment-signed-live-probe.mjs
+          echo CN3194_PAYMENT_INTEGRATED_STANDALONE_BUILD_PASS
+      - name: Real loopback smoke with zero finance mutations
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd .next/standalone
+          HOSTNAME=127.0.0.1 PORT=3319 NODE_ENV=production node server.js > "$RUNNER_TEMP/cn3319.log" 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          ready=0
+          for n in $(seq 1 55); do
+            if curl --noproxy '*' --silent --max-time 2 -o /dev/null -w '%{http_code}' http://127.0.0.1:3319/api/health | grep -qx 200; then ready=1;break;fi
+            sleep 1
+          done
+          [ "$ready" = 1 ] || { cat "$RUNNER_TEMP/cn3319.log";exit 1; }
+          for path in / /tools /siai /sasi /sasi/marketplace /about /account/software /announcements /tools/pass /ai-wallet; do
+            code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
+            echo "PUBLIC_LOCAL_ROUTE:$path:$code"
+            [ "$code" = 200 ] || exit 1
+          done
+          for path in /api/sasi/account /api/tools/jobs; do
+            code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
+            echo "ANON_AUTH_BOUNDARY:$path:$code"
+            [ "$code" = 401 ] || exit 1
+          done
+          for item in "/api/sasi/generation/submit:410" "/api/cron/sasi-v5-radar:410" "/api/admin/pay/readiness:404"; do
+            path="$(printf '%s' "$item" | cut -d: -f1)"
+            expected="$(printf '%s' "$item" | cut -d: -f2)"
+            code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
+            echo "PRIVATE_OR_RETIRED_ROUTE:$path:$code"
+            [ "$code" = "$expected" ] || exit 1
+          done
+          code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' 'http://127.0.0.1:3319/api/tools/pass' || true)"
+          [ "$code" = 200 ] || exit 1
+          echo CN3194_LOOPBACK_STATIC_AND_AUTH_BOUNDARIES_PASS_NO_PAYMENT
+      - name: Desktop and mobile Chrome visual gate
+        run: |
+          set -Eeuo pipefail
+          pnpm exec playwright install --with-deps chrome
+          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts
+          echo CN3194_NEW_VISUAL_DESKTOP_MOBILE_CHROME_PASS
+      - name: Package archive, render pinned stage script and write manifest
+        id: package
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          SOURCE_SHA="${{ github.event.pull_request.head.sha }}"
+          SHORT="$(printf '%s' "$SOURCE_SHA" | cut -c1-12)"
+          TAG="ecs-cn-unified-20261110-$SHORT"
+          DIST="$GITHUB_WORKSPACE/dist/cn3194"
+          FILE="cn-20261110-unified-standalone.tar.gz"
+          CHECK="cn-20261110-unified-standalone.sha256"
+          STAGE="ecs-cn3194-unified-standalone-upgrade-20261110.sh"
+          PAYMENT="cn-payment-activate-3194-20261110.sh"
+          MANIFEST="cn3194-release-manifest.env"
+          mkdir -p "$DIST/standalone"
+          cp -a .next/standalone/. "$DIST/standalone/"
+          printf '%s\n' "$SOURCE_SHA" > "$DIST/standalone/RELEASE_SOURCE_SHA"
+          tar --sort=name --mtime='UTC 2026-01-01' --owner=0 --group=0 --numeric-owner -C "$DIST/standalone" -czf "$DIST/$FILE" .
+          sha256sum "$DIST/$FILE" > "$DIST/$CHECK"
+          ARCHIVE_SHA="$(sha256sum "$DIST/$FILE" | awk '{print $1}')"
+          ARCHIVE_BYTES="$(stat -c '%s' "$DIST/$FILE")"
+          TEMPLATE="scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh"
+          python3 - "$TEMPLATE" "$DIST/$STAGE" "$TAG" "$SHORT" "$SOURCE_SHA" "$ARCHIVE_SHA" "$ARCHIVE_BYTES" "$FILE" "$CHECK" <<'PY'
+          from pathlib import Path
+          import sys
+          template,out,tag,short,source,archive_sha,archive_bytes,file_name,check_name=sys.argv[1:]
+          content=Path(template).read_text()
+          replacements={
+              "__TAG__":tag,"__SHORT__":short,"__SOURCE_SHA__":source,
+              "__ARCHIVE_SHA__":archive_sha,"__ARCHIVE_BYTES__":archive_bytes,
+              "__ARCHIVE_FILE__":file_name,"__CHECK_FILE__":check_name,
+          }
+          for old,new in replacements.items(): content=content.replace(old,new)
+          remaining=[key for key in replacements if key in content]
+          if remaining: raise SystemExit("UNRENDERED_STAGE_TEMPLATE:"+",".join(remaining))
+          Path(out).write_text(content)
+          PY
+          cp scripts/ops/cn-payment-activate-3194-20261110.sh "$DIST/$PAYMENT"
+          chmod 700 "$DIST/$STAGE"
+          chmod 600 "$DIST/$PAYMENT"
+          bash -n "$DIST/$STAGE"
+          bash -n "$DIST/$PAYMENT"
+          STAGE_BLOB="$(git hash-object --no-filters "$DIST/$STAGE")"
+          PAYMENT_BLOB="$(git hash-object --no-filters "$DIST/$PAYMENT")"
+          CHECK_SHA="$(sha256sum "$DIST/$CHECK" | awk '{print $1}')"
+          cat > "$DIST/$MANIFEST" <<EOF
+          SOURCE_SHA=$SOURCE_SHA
+          TAG=$TAG
+          SHORT=$SHORT
+          ARCHIVE_FILE=$FILE
+          ARCHIVE_BYTES=$ARCHIVE_BYTES
+          ARCHIVE_SHA256=$ARCHIVE_SHA
+          CHECK_FILE=$CHECK
+          CHECK_SHA256=$CHECK_SHA
+          STAGE_FILE=$STAGE
+          STAGE_BLOB_SHA1=$STAGE_BLOB
+          PAYMENT_FILE=$PAYMENT
+          PAYMENT_BLOB_SHA1=$PAYMENT_BLOB
+          EOF
+          {
+            echo "source_sha=$SOURCE_SHA"
+            echo "tag=$TAG"
+            echo "archive_file=$FILE"
+            echo "check_file=$CHECK"
+            echo "stage_file=$STAGE"
+            echo "payment_file=$PAYMENT"
+            echo "manifest_file=$MANIFEST"
+          } >> "$GITHUB_OUTPUT"
+          tar -tzf "$DIST/$FILE" > "$DIST/archive-manifest.txt"
+          grep -Fxq './server.js' "$DIST/archive-manifest.txt"
+          grep -Fxq './RELEASE_SOURCE_SHA' "$DIST/archive-manifest.txt"
+          grep -Fxq './cn-payment-signed-live-probe.mjs' "$DIST/archive-manifest.txt"
+          grep -Fxq './cn-payment-activate.sh' "$DIST/archive-manifest.txt"
+          test "$ARCHIVE_BYTES" -lt 1300000000
+          echo "CN3194_RELEASE_SOURCE_SHA=$SOURCE_SHA"
+          echo "CN3194_RELEASE_ARCHIVE_BYTES=$ARCHIVE_BYTES"
+          echo "CN3194_RELEASE_ARCHIVE_SHA256=$ARCHIVE_SHA"
+          echo "CN3194_STAGE_SCRIPT_BLOB_SHA1=$STAGE_BLOB"
+          echo "CN3194_PAYMENT_SCRIPT_BLOB_SHA1=$PAYMENT_BLOB"
+      - name: Upload exact package and pinned promotion scripts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cn3194-release-${{ steps.package.outputs.source_sha }}
+          path: dist/cn3194/*
+          retention-days: 14
+          if-no-files-found: error
+  publish:
+    needs: build
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+      TAG: ${{ needs.build.outputs.tag }}
+      ARCHIVE_FILE: ${{ needs.build.outputs.archive_file }}
+      CHECK_FILE: ${{ needs.build.outputs.check_file }}
+      STAGE_FILE: ${{ needs.build.outputs.stage_file }}
+      PAYMENT_FILE: ${{ needs.build.outputs.payment_file }}
+      MANIFEST_FILE: ${{ needs.build.outputs.manifest_file }}
+    steps:
+      - name: Download exact package
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p "$RUNNER_TEMP/cn3194-release"
+          gh run download "$GITHUB_RUN_ID" --repo "$GH_REPO" --name "cn3194-release-$SOURCE_SHA" --dir "$RUNNER_TEMP/cn3194-release"
+      - name: Publish GitHub prerelease (no ECS, Nginx or DNS changes)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cd "$RUNNER_TEMP/cn3194-release"
+          SHORT="$(printf '%s' "$SOURCE_SHA" | cut -c1-12)"
+          sha256sum -c "$CHECK_FILE"
+          grep -Fxq "SOURCE_SHA=$SOURCE_SHA" "$MANIFEST_FILE"
+          grep -Fxq "TAG=$TAG" "$MANIFEST_FILE"
+          grep -Fxq "ARCHIVE_FILE=$ARCHIVE_FILE" "$MANIFEST_FILE"
+          if gh release view "$TAG" --repo "$GH_REPO" >/dev/null 2>&1; then
+            echo "::error::EXACT_RELEASE_TAG_ALREADY_EXISTS"
+            exit 1
+          fi
+          gh release create "$TAG" "$ARCHIVE_FILE" "$CHECK_FILE" "$STAGE_FILE" "$PAYMENT_FILE" "$MANIFEST_FILE" \
+            --repo "$GH_REPO" --target "$SOURCE_SHA" --prerelease \
+            --title "LINGXIFIELD CN3194 payment-integrated standalone $SHORT - STAGING ONLY" \
+            --notes "Exact-source candidate only. No ECS deployment, R2 upload, Nginx switch, DNS change or payment flag activation occurred. Transfer via the existing cn3192r2 R2 remote to a new cn3194/$SHORT prefix. Stage on 3194 with 3193 retained for rollback. Run the signed no-charge merchant audit before enabling WeChat, Alipay, PayPal and ToolPass. CNY/USD wallet top-ups remain gated by the refund-flow test. First-party SASI software sales remain gated until a real private ZIP is scanned and verified. Third-party marketplace sales remain gated until seller payout settlement is ready."
+          echo "CN3194_PRERELEASE_PUBLISHED_NOT_DEPLOYED:$TAG"
