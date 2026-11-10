@@ -9,7 +9,6 @@ import { loadToolStaticRoutes } from "./tool-static-route-manifest-20261110.mjs"
 
 export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   { route: "/", source: "landing.html", target: "index.html" },
-  { route: "/siai", source: "siai.html", target: "siai.html" },
   { route: "/tools", source: "tools.html", target: "tools.html" },
   { route: "/tools/pass", source: "tools-pass.html", target: "tools/pass.html" },
   { route: "/ai-wallet", source: "ai-wallet.html", target: "ai-wallet.html" },
@@ -18,14 +17,6 @@ export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   { route: "/sasi/marketplace", source: "marketplace.html", target: "sasi/marketplace.html" },
   { route: "/about", source: "about.html", target: "about.html" },
   { route: "/announcements", source: "announcements.html", target: "announcements.html" },
-  { route: "/en/siai", source: "en-siai.html", target: "en/siai.html" },
-  { route: "/ja/siai", source: "ja-siai.html", target: "ja/siai.html" },
-  { route: "/ko/siai", source: "ko-siai.html", target: "ko/siai.html" },
-  { route: "/fr/siai", source: "fr-siai.html", target: "fr/siai.html" },
-  { route: "/de/siai", source: "de-siai.html", target: "de/siai.html" },
-  { route: "/es/siai", source: "es-siai.html", target: "es/siai.html" },
-  { route: "/pt/siai", source: "pt-siai.html", target: "pt/siai.html" },
-  { route: "/ar/siai", source: "ar-siai.html", target: "ar/siai.html" },
 ]);
 
 const HEADER_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";

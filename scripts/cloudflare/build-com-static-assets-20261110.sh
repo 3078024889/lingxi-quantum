@@ -52,10 +52,6 @@ curl --noproxy '*' -fSs --retry 2 --max-time 45 \
   -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
   http://127.0.0.1:8787/ \
   -o .open-next/assets/__lingxi_edge_static__/landing.html
-curl --noproxy '*' -fSs --retry 2 --max-time 45 \
-  -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
-  http://127.0.0.1:8787/siai \
-  -o .open-next/assets/__lingxi_edge_static__/siai.html
 
 for mapping in \
   'tools:tools' \
@@ -66,14 +62,6 @@ for mapping in \
   'sasi/marketplace:marketplace' \
   'about:about' \
   'announcements:announcements' \
-  'en/siai:en-siai' \
-  'ja/siai:ja-siai' \
-  'ko/siai:ko-siai' \
-  'fr/siai:fr-siai' \
-  'de/siai:de-siai' \
-  'es/siai:es-siai' \
-  'pt/siai:pt-siai' \
-  'ar/siai:ar-siai'; do
   route="${mapping%%:*}"
   file="${mapping#*:}"
   curl --noproxy '*' -fSs --retry 2 --max-time 55 \
