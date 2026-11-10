@@ -196,21 +196,21 @@ grep -Fxq './RELEASE_SOURCE_SHA' "$DIR/archive.manifest"
 grep -Fxq './cn-payment-signed-live-probe.mjs' "$DIR/archive.manifest"
 if grep -Eq '(^/|(^|/)\.\.(/|$))' "$DIR/archive.manifest";then echo UNSAFE_ARCHIVE_PATH_BLOCKED;exit 1;fi
 bash -n "$STAGE";bash -n "$PAYMENT"
-echo 'CN3195_EXACT_ARCHIVE_AND_SCRIPT_HASHES_PASS'
+echo 'CN3194_EXACT_ARCHIVE_AND_SCRIPT_HASHES_PASS'
 echo 'STEP 2/6: READ-ONLY PLAN — CURRENT NGINX UPSTREAM REMAINS ACTIVE'
 bash "$STAGE" --plan "$TAG"
 echo 'STEP 3/6: STAGE EXACT RELEASE ON ISOLATED PORT 3195'
 bash "$STAGE" --stage-local "$TAG"
 echo 'STEP 4/6: VERIFY 3195 ROUTES AND AUTH BOUNDARIES'
 bash "$STAGE" --verify-stage "$TAG"
-echo 'STEP 5/6: PROMOTE 3195 WITH AUTOMATIC PREVIOUS-UPSTREAM ROLLBACK'
+echo 'STEP 5/6: PROMOTE CN3194 (3195 TEMPORARY STAGE; 3193 ROLLBACK BASELINE)'
 bash "$STAGE" --promote "$TAG"
 echo 'STEP 6/6: SIGNED MERCHANT AUDIT; ENABLE ONLY WHEN ALL PROVIDERS PASS'
 bash "$PAYMENT" --audit "$TAG"
 bash "$PAYMENT" --enable "$TAG"
-echo 'CN3195_PAYMENT_AND_TOOLPASS_LIVE_FLAGS_ENABLED'
+echo 'CN3194_PAYMENT_AND_TOOLPASS_LIVE_FLAGS_ENABLED'
 echo 'SASI_SOFTWARE_SALES_REMAINS_CLOSED_UNTIL_REAL_SOURCE_ZIP_IS_UPLOADED_AND_HASH_VERIFIED'
-echo 'PREVIOUS_UPSTREAM_SERVICE_RETAINED_FOR_ROLLBACK'
+echo 'CN3193_ROLLBACK_BASELINE_RETAINED'
 '@
 $Map=@{
  '__TAG__'=$Tag;'__SOURCE_SHA__'=$Manifest.SOURCE_SHA;'__ARCHIVE_SHA__'=$ArchiveSha;'__ARCHIVE_BYTES__'=[string]$ArchiveBytes;
@@ -220,7 +220,7 @@ $Map=@{
  '__ARCHIVE_URL__'=$ArchiveUrl;'__CHECK_URL__'=$CheckUrl;'__STAGE_URL__'=$StageUrl;'__PAYMENT_URL__'=$PaymentUrl
 }
 foreach($k in $Map.Keys){$Ecs=$Ecs.Replace($k,[string]$Map[$k])}
-$EcsPath=Join-Path $Root "PASTE-IN-ALIYUN-CN3195-$Short.sh"
+$EcsPath=Join-Path $Root "PASTE-IN-ALIYUN-CN3194-$Short.sh"
 [IO.File]::WriteAllText($EcsPath,$Ecs,(New-Object Text.UTF8Encoding($false)))
 try{Set-Clipboard -Value $Ecs;Write-Host 'ECS_SCRIPT_COPIED_TO_CLIPBOARD'}catch{Write-Host 'OPEN_THE_GENERATED_ECS_SCRIPT_FILE'}
 Write-Host "R2_RELEASE_UPLOAD_COMPLETE: $RemoteRoot"
