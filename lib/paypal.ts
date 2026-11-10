@@ -6,7 +6,9 @@ export function paypalConfigured():boolean {
   );
 }
 export function paypalEnabled():boolean {
-  return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true" && paypalConfigured();
+  return process.env.PAYPAL_ENV?.trim().toLowerCase()==="live"
+    && process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"
+    && paypalConfigured();
 }
 
 export function paypalBaseUrl() {
