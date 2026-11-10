@@ -44,6 +44,8 @@ export async function POST(req:NextRequest){
 
   if(!product||!Number.isFinite(product.amountUsd)||product.amountUsd<=0)
    return NextResponse.json({error:"INVALID_USD_PRODUCT"},{status:400});
+  if(product.group==="wallet"&&process.env.USD_BALANCE_TOPUP_ENABLED!=="true")
+   return NextResponse.json({error:"USD_BALANCE_TOPUP_NOT_ENABLED"},{status:503});
   if(product.group==="toolpass"&&!toolPassCommerceReady())
    return NextResponse.json({error:"TOOLPASS_COMMERCE_NOT_READY"},{status:503});
   if(product.group==="software"&&!await softwareCheckoutReady(product.id))
