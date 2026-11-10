@@ -1,9 +1,10 @@
 "use client";
-import {useCallback,useEffect,useMemo,useState} from "react";
+import {useCallback,useEffect,useMemo,useRef,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {sasiSoftwareUiText} from "@/lib/sasi-software/ui-copy";
 import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
+import {parseMarketplacePayoutMinorUnits} from "@/lib/sasi-marketplace/fees";
 import styles from "./SasiOpenMarketplace.module.css";
 type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;rejection_reason?:string|null;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
@@ -35,6 +36,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
  const [showStudio,setShowStudio]=useState(sellerOnly);
  const [requestedAmount,setRequestedAmount]=useState(""),[requestCurrency,setRequestCurrency]=useState<"CNY"|"USD">("CNY");
+ const payoutAttemptRef=useRef<{amountMinor:number;currency:"CNY"|"USD";key:string}|null>(null);
  const refresh=useCallback(async()=>{
   const paths=["/api/sasi/marketplace/listings","/api/sasi/marketplace/listings?mode=mine","/api/sasi/marketplace/seller","/api/sasi/marketplace/payouts"];
   const values=await Promise.all(paths.map(p=>fetch(p,{cache:"no-store"}).then(async r=>r.ok?r.json():null).catch(()=>null)));
@@ -79,7 +81,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const post=async(url:string,payload:unknown,method:"POST"|"PATCH"="POST")=>{
   const r=await fetch(url,{method,headers:{"content-type":"application/json"},body:JSON.stringify(payload),credentials:"same-origin"});
   const result=await r.json().catch(()=>null);
-  if(!r.ok)throw Error(typeof result?.error==="string"?result.error:"REQUEST_FAILED_"+r.status);
+  if(!r.ok){const error=Error(typeof result?.error==="string"?result.error:"REQUEST_FAILED_"+r.status) as Error&{status:number};error.status=r.status;throw error;}
   return result;
  };
  const apply=async()=>{
@@ -168,13 +170,22 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const payout=async()=>{
   setBusy("payout");setError("");setStatus("");
   try{
-   const amountMinor=Math.round(Number(requestedAmount)*100);
-   if(!Number.isSafeInteger(amountMinor)||amountMinor<1)throw Error("INVALID_AMOUNT");
-   const key=crypto.randomUUID();
-   const result=await post("/api/sasi/marketplace/payouts",{amountMinor,currency:requestCurrency,idempotencyKey:key});
+   const amountMinor=parseMarketplacePayoutMinorUnits(requestedAmount);
+   if(amountMinor===null||amountMinor<1)throw Error("INVALID_AMOUNT");
+   let attempt=payoutAttemptRef.current;
+   if(!attempt||attempt.amountMinor!==amountMinor||attempt.currency!==requestCurrency){
+    attempt={amountMinor,currency:requestCurrency,key:crypto.randomUUID()};
+    payoutAttemptRef.current=attempt;
+   }
+   const result=await post("/api/sasi/marketplace/payouts",{amountMinor,currency:requestCurrency,idempotencyKey:attempt.key});
+   payoutAttemptRef.current=null;
    setStatus(result.status==="requested"?(sasiSoftwareUiText(lang,"提现申请已提交，平台将核实并向收款机构发起转账；到账以渠道回执为准。","Payout requested. Provider submission and arrival are separately verified.")):sasiSoftwareUiText(lang,"提现申请状态已更新。","Your payout request status has been updated."));
    await refresh();
-  }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
+  }catch(e){
+   const statusCode=(e as Error&{status?:number}).status;
+   if(statusCode&&[400,401,403,409].includes(statusCode))payoutAttemptRef.current=null;
+   setError(friendlyError(e,lang));
+  }finally{setBusy("")}
  };
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container}>
   {!sellerOnly&&<>
