@@ -39,8 +39,8 @@ test("payment audit inherits original secret env files and enables only after si
  assert.ok(payment.includes("CN_TOOLPASS_BACKEND_READINESS=PASS"));
  assert.ok(payment.includes("CN_UNSIGNED_WEBHOOK_"));
  assert.ok(payment.includes("CN3195_ALL_THREE_LIVE_MERCHANTS_AND_TOOLPASS_BACKEND_AUDIT_PASS_FLAGS_UNCHANGED"));
- assert.ok(payment.includes("CN3195_ALL_THREE_PAYMENT_PROVIDERS_ENABLED"));
- assert.ok(payment.includes("CN3195_TOOLPASS_COMMERCE_READY_WITH_FOUR_PLANS"));
+ assert.ok(payment.includes("CN_ALL_THREE_PAYMENT_PROVIDERS_ENABLED"));
+ assert.ok(payment.includes("CN_TOOLPASS_COMMERCE_READY_WITH_FOUR_PLANS"));
  assert.ok(payment.includes("SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION"));
  assert.ok(!/SASI_MARKET_SALES_ENABLED[" ]*[:=][" ]*true/.test(payment));
 });
@@ -57,7 +57,7 @@ test("R2 handoff verifies hashes and keeps temporary signed URLs out of console 
  assert.ok(ps.includes("D:\\LINGXIFIELDCN3192\\rclone.conf"));
  assert.ok(ps.includes("cn3192r2:lingxi-cn3192-transfer/cn3195/"));
  assert.ok(ps.includes("Get-FileHash"));
- assert.ok(ps.includes("rclone link"));
+ assert.ok(ps.includes("& $Rclone link"));
  assert.ok(ps.includes("SIGNED_URLS_EXPIRE_IN_6_HOURS_AND_ARE_NOT_PRINTED"));
  assert.ok(ps.includes('bash "$PAYMENT" --audit "$TAG"'));
  assert.ok(ps.includes('bash "$PAYMENT" --enable "$TAG"'));
