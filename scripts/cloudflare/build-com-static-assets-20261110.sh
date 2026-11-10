@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-: "\${NEXT_PUBLIC_SUPABASE_URL:?NEXT_PUBLIC_SUPABASE_URL is required}"
-: "\${NEXT_PUBLIC_SUPABASE_ANON_KEY:?NEXT_PUBLIC_SUPABASE_ANON_KEY is required}"
-RUNNER_TEMP="\${RUNNER_TEMP:-\${TMPDIR:-/tmp}}"
+: "${NEXT_PUBLIC_SUPABASE_URL:?NEXT_PUBLIC_SUPABASE_URL is required}"
+: "${NEXT_PUBLIC_SUPABASE_ANON_KEY:?NEXT_PUBLIC_SUPABASE_ANON_KEY is required}"
+RUNNER_TEMP="${RUNNER_TEMP:-${TMPDIR:-/tmp}}"
 
 pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
 pnpm exec opennextjs-cloudflare build
@@ -11,11 +11,11 @@ node scripts/cloudflare/stage-large-public-assets.mjs
 node scripts/cloudflare/stage-r2-public-assets.mjs --audit
 
 cat > .dev.vars <<EOF
-SUPABASE_URL="\${NEXT_PUBLIC_SUPABASE_URL}"
-SUPABASE_ANON_KEY="\${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
-SUPABASE_PUBLISHABLE_KEY="\${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
-NEXT_PUBLIC_SUPABASE_URL="\${NEXT_PUBLIC_SUPABASE_URL}"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="\${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
+SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL}"
+SUPABASE_ANON_KEY="${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
+SUPABASE_PUBLISHABLE_KEY="${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
+NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL}"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="${NEXT_PUBLIC_SUPABASE_ANON_KEY}"
 EOF
 chmod 600 .dev.vars
 
@@ -77,8 +77,8 @@ for mapping in \
   'tools/ico-to-png:tool-ico-to-png' \
   'tools/number-base-converter:tool-number-base-converter' \
   'tools/video-watermark-remover:tool-video-watermark-remover'; do
-  route="\${mapping%%:*}"
-  file="\${mapping#*:}"
+  route="${mapping%%:*}"
+  file="${mapping#*:}"
   curl --noproxy '*' -fSs --retry 2 --max-time 55 \
     -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
     "http://127.0.0.1:8787/$route" \
