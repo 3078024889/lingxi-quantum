@@ -99,5 +99,7 @@ assert.match(adminDiagnostics,/urlMatches/);
 assert.match(adminDiagnostics,/USD_BALANCE_TOPUP_ENABLED/);
 assert.match(adminDiagnostics,/SASI_REFUND_FLOW_TESTED/);
 assert.match(adminDiagnostics,/wechatOauthConfigured/);
+assert.match(adminDiagnostics,/wechatPayKeyMaterialReady/);
+assert.match(adminDiagnostics,/alipayKeyMaterialReady/);
 assert.match(adminDiagnostics,/toolPassBackendReady/);
 assert.match(adminDiagnostics,/Cache-Control/);
