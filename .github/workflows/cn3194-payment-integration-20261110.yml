@@ -31,7 +31,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Wallet and payment regression contracts
         run: |
-          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs tests/sasi-software-paypal-fulfillment-contract.test.mjs tests/paypal-merchant-idempotency-20261108.test.mjs tests/sasi-marketplace-security-contract.test.mjs
+          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs tests/sasi-software-paypal-fulfillment-contract.test.mjs tests/paypal-merchant-idempotency-20261108.test.mjs tests/sasi-marketplace-security-contract.test.mjs tests/cn3194-source-only-software-catalog.test.mjs
           python3 -m py_compile scripts/marketplace/scan-private-zip.py
           python3 -m unittest discover -s tests/marketplace -p 'test_*.py' -v
           node --test tests/com-admin-facade.test.mjs tests/tool-pass-server-http-contract.test.mjs

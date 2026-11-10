@@ -19,7 +19,7 @@ export default function SasiOpenMarketplace(){
  const {lang}=useLingxiLang();const zh=lang==="zh";
  const [listings,setListings]=useState<Listing[]>([]);
  const featured=SASI_SOFTWARE_CATALOG[0];
- const [featuredReady,setFeaturedReady]=useState(false);
+ const [featuredPayment,setFeaturedPayment]=useState({cny:false,usd:false});
  const [images,setImages]=useState<Record<string,Array<{id:string;kind:string;url:string}>>>({});
  const [mine,setMine]=useState<Listing[]>([]);
  const [mediaCounts,setMediaCounts]=useState<Record<string,{cover:number;detail:number}>>({});
@@ -56,8 +56,8 @@ export default function SasiOpenMarketplace(){
   let live=true;
   fetch("/api/sasi/software/catalog",{cache:"no-store"})
     .then(r=>r.ok?r.json():null)
-    .then(j=>{if(live)setFeaturedReady(j?.products?.[featured.id]?.available===true)})
-    .catch(()=>{if(live)setFeaturedReady(false)});
+    .then(j=>{if(live){const p=j?.products?.[featured.id];setFeaturedPayment({cny:p?.availableCny===true,usd:p?.availableUsd===true})}})
+    .catch(()=>{if(live)setFeaturedPayment({cny:false,usd:false})});
   return()=>{live=false};
  },[featured.id]);
  useEffect(()=>{
@@ -202,8 +202,9 @@ export default function SasiOpenMarketplace(){
     <div className={styles.featuredPrice}>
      <strong>¥{featured.priceCny.toLocaleString("en-US")}</strong>
      <small>USD {"$"}{featured.priceUsd.toLocaleString("en-US")}</small>
-     <Link href={featuredReady?"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware":"/sasi/delivery"}
-      className={styles.featuredAction}>{featuredReady?(sasiSoftwareUiText(lang,"查看购买方式","Choose payment")):(sasiSoftwareUiText(lang,"查看软件详情","View details"))}</Link>
+     {featuredPayment.cny&&<Link href={"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware"} className={styles.featuredAction}>{sasiSoftwareUiText(lang,"微信 / 支付宝 · CNY","WeChat / Alipay · CNY")}</Link>}
+     {featuredPayment.usd&&<Link href={"/checkout-usd?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware"} className={styles.featuredAction}>PayPal · USD</Link>}
+     {!featuredPayment.cny&&!featuredPayment.usd&&<Link href="/sasi/delivery" className={styles.featuredAction}>{sasiSoftwareUiText(lang,"查看软件详情","View details")}</Link>}
     </div>
    </article>
   </section>
