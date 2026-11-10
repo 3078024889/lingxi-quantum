@@ -184,6 +184,9 @@ rollback_to_3193(){
  systemctl disable "$FINAL_SVC" 2>/dev/null || true
  systemctl stop "$NEW_SVC" 2>/dev/null || true
  systemctl disable "$NEW_SVC" 2>/dev/null || true
+ if systemctl is-active --quiet "$FINAL_SVC" || systemctl is-active --quiet "$NEW_SVC" || ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then
+  echo CN3193_AUTOMATIC_ROLLBACK_CANDIDATE_STOP_FAILED >&2;return 1
+ fi
  echo "CN3193_AUTOMATIC_ROLLBACK_PASS reason=$reason service=$FALLBACK_SVC"
 }
 
@@ -425,8 +428,9 @@ EOF
   fi
  done
  systemctl enable "$FINAL_SVC" >/dev/null || { rollback_to_3193 "CN3194_FINAL_SERVICE_ENABLE_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1; }
- systemctl stop "$NEW_SVC" || true
- systemctl disable "$NEW_SVC" >/dev/null 2>&1 || true
+ systemctl stop "$NEW_SVC" || { rollback_to_3193 "CN3195_STAGE_STOP_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1; }
+ systemctl disable "$NEW_SVC" >/dev/null || { rollback_to_3193 "CN3195_STAGE_DISABLE_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1; }
+ if ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then rollback_to_3193 "CN3195_STAGE_PORT_STILL_LISTENING" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
  echo "CN3194_NGINX_PROMOTION_PASS FINAL_SERVICE=$FINAL_SVC"
  echo "CN3193_ROLLBACK_BASELINE_RETAINED service=$FALLBACK_SVC"
  echo "3195_ISOLATED_STAGE_STOPPED_AFTER_3194_PUBLIC_ACCEPTANCE"
