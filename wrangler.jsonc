@@ -20,7 +20,7 @@
       "/media/ffmpeg-0.12.10/ffmpeg-core.wasm",
       "/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm"
     ],
-    "html_handling": "none",
+    "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
   },
   "observability": {
