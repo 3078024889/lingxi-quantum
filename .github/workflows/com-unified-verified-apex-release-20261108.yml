@@ -31,6 +31,7 @@ on:
       - 'tests/com-account-static-client-auth-20261110.test.mjs'
       - 'wrangler.jsonc'
       - 'scripts/cloudflare/build-com-static-assets-20261110.sh'
+      - 'scripts/cloudflare/tool-static-route-manifest-20261110.mjs'
       - 'tests/com-static-assets-first-20261110.test.mjs'
       - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
       - 'tests/com-celestial-release-safety-20261110.test.mjs'
