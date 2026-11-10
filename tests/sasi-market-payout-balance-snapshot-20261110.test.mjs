@@ -46,3 +46,11 @@ test("seller payout UI rejects over-precision and reuses one idempotency key for
  assert.match(component,/idempotencyKey:attempt\.key/);
  assert.match(component,/attempt\.amountMinor!==amountMinor\|\|attempt\.currency!==requestCurrency/);
 });
+
+test("seller transfers cannot be opened by environment flag until a real worker exists",()=>{
+ const route=read("app/api/sasi/marketplace/payouts/route.ts");
+ assert.match(route,/const MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY=false/);
+ assert.match(route,/SASI_MARKET_PAYOUTS_ENABLED==="true"&&MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY/);
+ assert.match(route,/SASI_MARKET_PAYOUTS_ENABLED!=="true"\|\|!MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY/);
+ assert.match(route,/Provider transfer is NOT implemented here/);
+});
