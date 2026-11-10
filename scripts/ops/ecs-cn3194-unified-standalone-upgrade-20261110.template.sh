@@ -178,6 +178,11 @@ if [[ "$MODE" == --rollback ]];then
   echo "CN3193_ROLLBACK_PUBLIC:$path:$status"
   [[ "$status" == 200 ]] || { echo CN3193_ROLLBACK_PUBLIC_CHECK_FAILED >&2;exit 1; }
  done
+ OLD_3194_SVC="$(find_service_for_port 3194 || true)"
+ if [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]];then
+  if systemctl is-enabled --quiet "$OLD_3194_SVC";then systemctl disable "$OLD_3194_SVC" >/dev/null || { echo CN3194_OLD_SERVICE_DISABLE_FAILED_DURING_ROLLBACK >&2;exit 1; };fi
+  systemctl stop "$OLD_3194_SVC" || { echo CN3194_OLD_SERVICE_STOP_FAILED_DURING_ROLLBACK >&2;exit 1; }
+ fi
  systemctl stop "$FINAL_SVC" 2>/dev/null || true
  systemctl disable "$FINAL_SVC" 2>/dev/null || true
  systemctl stop "$NEW_SVC" 2>/dev/null || true
