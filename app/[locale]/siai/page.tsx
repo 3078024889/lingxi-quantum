@@ -12,8 +12,7 @@ import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,localePath} from "@/lib/seo/gl
 import {siaiLanguageAlternates} from "@/lib/seo/siai-domain-policy";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 
-export const dynamic="force-dynamic";
-export const revalidate=0;
+export const dynamicParams=false;
 type Props={params:Promise<{locale:string}>};
 export function generateStaticParams(){return LOCALIZED_LOCALES.map(locale=>({locale}))}
 const languages=siaiLanguageAlternates();
