@@ -65,3 +65,23 @@ const verifyEnd=paypal.indexOf("export async function createPaypalRefund",verify
 const verifier=paypal.slice(verifyStart,verifyEnd);
 assert.doesNotMatch(verifier,/JSON\.parse\(rawBody\)/);
 assert.doesNotMatch(verifier,/verify-webhook-signature/);
+
+
+const fulfillmentSource=read("lib/fulfill-order.ts");
+assert.match(fulfillmentSource,/toolquote:[\s\S]*?PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
+assert.match(fulfillmentSource,/getUsdBalanceProduct\(productId\)[\s\S]*?PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
+assert.match(fulfillmentSource,/credit_sasi_topup[\s\S]*?PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
+for(const path of [
+ "app/api/pay/alipay/notify/route.ts",
+ "app/api/pay/wechat/notify/route.ts",
+ "app/api/pay/wechat/query/route.ts",
+ "app/api/pay/paypal/return/route.ts",
+ "app/api/pay/paypal/webhook/route.ts",
+ "app/api/pay/webhook/route.ts",
+ "lib/tools/payment-recovery.ts",
+ "lib/mini/virtual-fulfillment.ts"
+]){
+ const source=read(path);
+ assert.match(source,/fulfillPaidOrder\([^)]*,true\)/,"provider-verified fulfillment missing in "+path);
+}
+console.log("ALL_PROVIDER_PAYMENT_FULFILLMENT_REQUIRES_VERIFICATION_PASS");
