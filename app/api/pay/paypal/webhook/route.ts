@@ -1,6 +1,6 @@
 import{NextResponse}from"next/server";
 import{createAdminClient}from"@/lib/supabase/admin";
-import{verifyPaypalWebhook,verifyPaypalCompletedOrder}from"@/lib/paypal";
+import{capturePaypalOrder,verifyPaypalWebhook,verifyPaypalCompletedOrder}from"@/lib/paypal";
 import{fulfillPaidOrder}from"@/lib/fulfill-order";
 import{enqueueMoneyWebhookEvent,payloadSha256}from"@/lib/money/webhook-inbox";
 
@@ -48,7 +48,25 @@ export async function POST(req:Request){
    return NextResponse.json({ok:true,queued:true});
   }
 
-  if(!["PAYMENT.CAPTURE.COMPLETED","CHECKOUT.ORDER.COMPLETED"].includes(eventType)){
+  if(eventType==="PAYMENT.CAPTURE.PENDING"){
+   return NextResponse.json({ok:true,pending:true});
+  }
+
+  if(["PAYMENT.CAPTURE.DENIED","CHECKOUT.PAYMENT-APPROVAL.REVERSED"].includes(eventType)){
+   const providerId=paypalOrderId(event);
+   if(providerId){
+    const admin=createAdminClient();
+    await admin.from("orders").update({status:"failed"})
+     .eq("provider","paypal").eq("provider_payment_id",providerId).eq("status","pending");
+   }
+   return NextResponse.json({ok:true,failed:true});
+  }
+
+  if(![
+   "CHECKOUT.ORDER.APPROVED",
+   "CHECKOUT.ORDER.COMPLETED",
+   "PAYMENT.CAPTURE.COMPLETED"
+  ].includes(eventType)){
    return NextResponse.json({ok:true,ignored:true});
   }
 
@@ -63,6 +81,9 @@ export async function POST(req:Request){
   if(!order)return NextResponse.json({ok:true,ignored:true});
   if(order.status==="paid")return NextResponse.json({ok:true,alreadyPaid:true});
 
+  if(eventType==="CHECKOUT.ORDER.APPROVED"){
+   await capturePaypalOrder(providerId,Number(order.amount_usd),order.id);
+  }
   await verifyPaypalCompletedOrder(providerId,Number(order.amount_usd),order.id);
   const fulfilled=await fulfillPaidOrder(order.id,true);
   if(!fulfilled.ok)return NextResponse.json({error:"FULFILLMENT_PENDING"},{status:500});
