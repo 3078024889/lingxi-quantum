@@ -27,7 +27,7 @@ test("first-party SASI source license can use PayPal USD only after private-pack
  assert.match(callback,/fulfillPaidOrder\(orderId,true\)/);
  assert.match(market,/featuredPayment\.paypal/);
  assert.match(market,/\/api\/pay\/create/);
- assert.match(market,/paypal\.com/);
+ assert.ok(market.includes("paypal\\.com"),"the redirect host is pinned to paypal.com");
  assert.match(market,/美元支付 · PayPal/);
 });
 
