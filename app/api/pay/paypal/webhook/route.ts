@@ -18,7 +18,10 @@ function paypalOrderId(event:any){
 }
 
 export async function POST(req:Request){
+ const declared=Number(req.headers.get("content-length")||0);
+ if(Number.isFinite(declared)&&declared>1024*1024)return NextResponse.json({error:"WEBHOOK_BODY_TOO_LARGE"},{status:413});
  const raw=await req.text();
+ if(Buffer.byteLength(raw,"utf8")>1024*1024)return NextResponse.json({error:"WEBHOOK_BODY_TOO_LARGE"},{status:413});
  if(!(await verifyPaypalWebhook(req.headers,raw))){
   return NextResponse.json({error:"INVALID_PAYPAL_SIGNATURE"},{status:401});
  }
