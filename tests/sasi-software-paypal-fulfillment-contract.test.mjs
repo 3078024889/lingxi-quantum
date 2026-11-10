@@ -25,6 +25,7 @@ assert.match(catalog,/const wx=wechatPayEnabled\(\),ali=alipayEnabled\(\),paypal
 assert.match(catalog,/payment:\{wechat:wx,alipay:ali,paypal\}/);
 
 const webhook=read("app/api/pay/paypal/webhook/route.ts");
+assert.match(webhook,/WEBHOOK_BODY_TOO_LARGE/);
 assert.match(webhook,/verifyPaypalWebhook/);
 assert.match(webhook,/verifyPaypalCompletedOrder/);
 assert.match(webhook,/CHECKOUT\.ORDER\.APPROVED/);
