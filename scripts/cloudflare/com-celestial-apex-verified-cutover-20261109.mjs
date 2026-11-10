@@ -74,11 +74,25 @@ async function readProviderFlags(base) {
     signal: AbortSignal.timeout(20000)
   });
   const json = await response.json().catch(() => null);
-  if (response.status !== 200 || typeof json?.alipay !== "boolean" ||
-      typeof json?.wechat !== "boolean" || typeof json?.paypal !== "boolean") {
+  const names = ["alipay", "wechat", "paypal"];
+  if (response.status !== 200 || names.some(name =>
+      typeof json?.[name] !== "boolean" ||
+      typeof json?.diagnostics?.[name]?.configured !== "boolean" ||
+      typeof json?.diagnostics?.[name]?.enabled !== "boolean" ||
+      typeof json?.diagnostics?.[name]?.missingCount !== "number" ||
+      json.diagnostics[name].enabled !== json[name])) {
     throw Error("COM_PAYMENT_PROVIDER_DIAGNOSTICS_INVALID:" + response.status);
   }
-  return { alipay: json.alipay, wechat: json.wechat, paypal: json.paypal };
+  return {
+    alipay: json.alipay,
+    wechat: json.wechat,
+    paypal: json.paypal,
+    diagnostics: Object.fromEntries(names.map(name => [name, {
+      configured: json.diagnostics[name].configured,
+      enabled: json.diagnostics[name].enabled,
+      missingCount: json.diagnostics[name].missingCount
+    }]))
+  };
 }
 
 async function probe(base, phase, attempts = 3, expectedProviders = null) {
@@ -149,15 +163,11 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
   }
 
   const providers = await readProviderFlags(base);
-  console.log("COM_" + phase + "_PAYMENT_PROVIDER_FLAGS alipay=" + providers.alipay +
-    " wechat=" + providers.wechat + " paypal=" + providers.paypal);
+  console.log("COM_" + phase + "_PAYMENT_PROVIDER_FLAGS " + JSON.stringify(providers));
   if (phase === "CANARY" && (providers.alipay || providers.wechat || providers.paypal)) {
     throw Error("COM_CANARY_PAYMENT_PROVIDER_MUST_REMAIN_DISABLED");
   }
-  if (expectedProviders &&
-      (providers.alipay !== expectedProviders.alipay ||
-       providers.wechat !== expectedProviders.wechat ||
-       providers.paypal !== expectedProviders.paypal)) {
+  if (expectedProviders && JSON.stringify(providers) !== JSON.stringify(expectedProviders)) {
     throw Error("COM_PRODUCTION_PAYMENT_FLAGS_CHANGED_DURING_RELEASE");
   }
 
@@ -247,8 +257,7 @@ const publicFeed = await status("https://lingxifield.com/api/site-announcements"
 if (publicFeed.status !== 200) throw Error("COM_PUBLIC_ANNOUNCEMENT_WORKER_NOT_READY");
 
 const baselineProviders = await readProviderFlags("https://lingxifield.com");
-console.log("COM_PRODUCTION_PAYMENT_BASELINE alipay=" + baselineProviders.alipay +
-  " wechat=" + baselineProviders.wechat + " paypal=" + baselineProviders.paypal);
+console.log("COM_PRODUCTION_PAYMENT_BASELINE " + JSON.stringify(baselineProviders));
 
 const previousVersion = await getActiveVersion();
 console.log("COM_PRODUCTION_PREVIOUS_VERSION_PINNED=" + previousVersion);
