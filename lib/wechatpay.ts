@@ -33,8 +33,17 @@ export function wechatPayConfigured(): boolean {
 }
 
 /** Only explicitly approved merchants may create NEW chargeable orders. */
+export function wechatPayKeyMaterialReady():boolean {
+  if(!wechatPayConfigured())return false;
+  try{
+    crypto.createPrivateKey(normalizePemKey(PRIVATE_KEY!,"WECHAT_PRIVATE_KEY"));
+    crypto.createPublicKey(normalizePemKey(PLATFORM_PUBLIC_KEY!,"WECHAT_PLATFORM_PUBLIC_KEY"));
+    return Buffer.byteLength(API_V3_KEY!,"utf8")===32;
+  }catch{return false;}
+}
+
 export function wechatPayEnabled(): boolean {
-  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayConfigured();
+  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayKeyMaterialReady();
 }
 
 // 具体缺了哪几个——之前那个 wechatPayConfigured() 只回答"配没配全"，
