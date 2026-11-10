@@ -368,11 +368,11 @@ EOF
 
  # First move traffic to the verified new code on the isolated stage port.
  # This keeps old 3194 free for the final 3194 process without exposing 3193 pages.
- set_nginx_upstream 3195
+ if ! set_nginx_upstream 3195;then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_UPSTREAM_SWITCH_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
   echo "CN3195_TEMPORARY_NEW_RELEASE_ROUTE:$path:$status"
-  [[ "$status" == 200 ]] || { echo CN3195_TEMPORARY_ROUTE_FAILED_OLD_SERVICE_RETAINED >&2;exit 1; }
+  if [[ "$status" != 200 ]];then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_ROUTE_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
  done
 
  OLD_3194_SVC="$(find_service_for_port 3194 || true)"
@@ -388,7 +388,7 @@ EOF
   exit 1
  fi
 
- set_nginx_upstream 3194
+ if ! set_nginx_upstream 3194;then set_nginx_upstream 3195 || true;systemctl stop "$FINAL_SVC" || true;echo CN3194_FINAL_UPSTREAM_SWITCH_FAILED_NEW_CODE_RETAINED_ON_3195 >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
   echo "CN3194_PUBLIC_NGINX_ROUTE:$path:$status"
