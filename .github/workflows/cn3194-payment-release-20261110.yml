@@ -1,4 +1,4 @@
-name: CN3194 payment-integrated standalone release (R2 staging only; NO PROD DEPLOY)
+name: CN3194 payment-integrated standalone prerelease (local R2 transfer; NO PROD DEPLOY)
 on:
   pull_request:
     branches: [ci/cn3194-payment-base-20261110]
@@ -213,7 +213,7 @@ jobs:
           echo "CN3194_RELEASE_ARCHIVE_SHA256=$ARCHIVE_SHA"
           echo "CN3194_STAGE_SCRIPT_BLOB_SHA1=$STAGE_BLOB"
           echo "CN3194_PAYMENT_SCRIPT_BLOB_SHA1=$PAYMENT_BLOB"
-      - name: Upload exact package and pinned promotion scripts
+      - name: Attach exact package and pinned promotion scripts as GitHub artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: cn3194-release-${{ steps.package.outputs.source_sha }}
@@ -261,6 +261,6 @@ jobs:
           fi
           gh release create "$TAG" "$ARCHIVE_FILE" "$CHECK_FILE" "$STAGE_FILE" "$PAYMENT_FILE" "$MANIFEST_FILE" \
             --repo "$GH_REPO" --target "$SOURCE_SHA" --prerelease \
-            --title "LINGXIFIELD CN3194 payment-integrated standalone $SHORT - STAGING ONLY" \
-            --notes "Exact-source candidate only. No ECS deployment, R2 upload, Nginx switch, DNS change or payment flag activation occurred. Transfer via the existing cn3192r2 R2 remote to a new cn3194/$SHORT prefix. Stage on 3194 with 3193 retained for rollback. Run the signed no-charge merchant audit before enabling WeChat, Alipay, PayPal and ToolPass. CNY/USD wallet top-ups remain gated by the refund-flow test. First-party SASI software sales remain gated until a real private ZIP is scanned and verified. Third-party marketplace sales remain gated until seller payout settlement is ready."
+            --title "LINGXIFIELD CN3194 payment-integrated standalone $SHORT - EXACT-SOURCE PRERELEASE" \
+            --notes "Exact-source candidate only. GitHub Actions did not upload to R2 and did not deploy to ECS, switch Nginx, change DNS or activate payment flags. Run the local R2 transfer helper to upload verified assets under the temporary cn3195/$SHORT staging prefix. The final production release and Nginx upstream are CN3194: route briefly to verified 3195 staging, free the old 3194 listener, start and verify the same source SHA on final 3194, then route Nginx to 3194. Keep 3193 as the explicit rollback baseline. Run the signed no-charge merchant audit before enabling WeChat, Alipay, PayPal and ToolPass. CNY/USD wallet top-ups remain gated by the refund-flow test. First-party SASI software sales remain gated until the private source ZIP is uploaded, scanned and verified. Third-party marketplace sales and payouts remain gated until seller, scanner and payout settlement are ready."
           echo "CN3194_PRERELEASE_PUBLISHED_NOT_DEPLOYED:$TAG"
