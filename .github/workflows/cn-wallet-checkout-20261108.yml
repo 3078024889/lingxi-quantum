@@ -36,6 +36,8 @@ jobs:
           python3 -m unittest discover -s tests/marketplace -p 'test_*.py' -v
           node --test tests/com-admin-facade.test.mjs tests/tool-pass-server-http-contract.test.mjs
           node --test tests/unified-tools-pass-static-contract.test.mjs
+          node scripts/test-money-reconcile-results.cjs
+          node scripts/test-money-progress-api.cjs
           node --test tests/release/site-announcements-contract.test.mjs
       - name: Typecheck
         run: pnpm exec tsc --noEmit
