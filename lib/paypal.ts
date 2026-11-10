@@ -198,7 +198,7 @@ async function paypalWebhookCertificate(certUrl:string):Promise<string>{
  const cached=paypalCertCache.get(certUrl);
  if(cached&&cached.expiresAt>Date.now())return cached.certificate;
  const parsed=new URL(certUrl);
- const allowedHosts=new Set(["api.paypal.com","api-m.paypal.com","api-m.sandbox.paypal.com"]);
+ const allowedHosts=new Set(["api.paypal.com","api-m.paypal.com","api.sandbox.paypal.com","api-m.sandbox.paypal.com"]);
  if(parsed.protocol!=="https:"||!allowedHosts.has(parsed.hostname)
    ||!/^\/v1\/notifications\/certs\/[A-Za-z0-9_-]+$/.test(parsed.pathname)
    ||parsed.search||parsed.hash)throw new Error("PAYPAL_CERT_URL_REJECTED");
