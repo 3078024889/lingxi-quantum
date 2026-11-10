@@ -38,7 +38,7 @@ assert.match(fulfillment,/sasi_market_record_verified_sale/);
 
 const readiness=read("lib/sasi-software/readiness.ts");
 assert.match(readiness,/admin\.storage\.from\(data\.bucket\)\.list/);
-assert.match(readiness,/data\.sale_ready/);
+assert.match(readiness,/data\?\.sale_ready/);
 const hardening=read("supabase/migrations/20261110120000_harden_sasi_software_fulfillment_search_path.sql");
 assert.match(hardening,/sasi_grant_software_delivery\(uuid\) SET search_path TO ''/);
 assert.match(hardening,/sasi_claim_software_download\(uuid,uuid\) SET search_path TO ''/);
