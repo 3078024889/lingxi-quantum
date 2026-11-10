@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const catalog=readFileSync("lib/sasi-software/catalog.ts","utf8");
+const market=readFileSync("components/SasiOpenMarketplace.tsx","utf8");
+assert.match(catalog,/sasi-copernicus-si95-source/);
+assert.match(catalog,/priceCny:6900/);
+assert.match(catalog,/priceUsd:6900/);
+assert.doesNotMatch(catalog,/sasi-copernicus-si95-mt5/);
+assert.match(market,/仅售源码授权版/);
+assert.match(market,/availableCny===true/);
+assert.match(market,/availableUsd===true/);
+assert.match(market,/checkout\?productId=/);
+assert.match(market,/checkout-usd\?productId=/);
+assert.doesNotMatch(market,/模拟订单|内部模拟订单|fake order/i);
+console.log("CN3194_FIRST_PARTY_SOURCE_ONLY_6900_AND_DUAL_CURRENCY_CHECKOUT_CONTRACT_PASS");

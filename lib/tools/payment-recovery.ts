@@ -48,7 +48,7 @@ async function repairAlreadyPaidOrder(orderId: string) {
     const result = repair.data as { ok?: boolean; error?: string } | null;
     return { ok: result?.ok === true, error: result?.error ?? null, method: "repair-rpc" as const };
   }
-  const fallback = await fulfillPaidOrder(orderId);
+  const fallback = await fulfillPaidOrder(orderId,true);
   return { ok: fallback.ok, error: fallback.error ?? null, method: "normal-fulfillment" as const };
 }
 
@@ -103,7 +103,7 @@ export async function recoverToolQuotePayment(input: { userId: string; quoteId: 
         }
       }
       if (!confirmed) continue;
-      const fulfilled = await fulfillPaidOrder(order.id);
+      const fulfilled = await fulfillPaidOrder(order.id,true);
       if (!fulfilled.ok) return {ok:false as const,paid:false,quote:meta,error:"PAYMENT_CONFIRMED_FULFILLMENT_PENDING",detail:fulfilled.error??detail,orderId:order.id};
       const grant = await grantFor(input.userId, input.quoteId);
       if (grant) return { ok: true as const, paid: true, grant, quote:meta, recovery: detail, orderId: order.id };

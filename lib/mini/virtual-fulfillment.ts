@@ -54,7 +54,7 @@ export async function reconcileVirtualToolOrder(orderId: string, ownerId?: strin
     return { paid: false, status: order.status, providerConfirmedUnpaid };
   }
   if (!["pending", "paid"].includes(order.status)) throw new Error("MINI_ORDER_REQUIRES_REVIEW");
-  const result = await fulfillPaidOrder(order.id);
+  const result = await fulfillPaidOrder(order.id,true);
   if (!result.ok) throw new Error("MINI_FULFILLMENT_FAILED");
   // A platform delivery acknowledgement cannot undo a committed wallet credit.
   // Persist the retry before attempting delivery, so subsequent owner checks can retry.

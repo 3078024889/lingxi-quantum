@@ -1,7 +1,7 @@
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {marketplaceR2Ready,marketplaceObjectHead,marketplaceOwnedKey,marketplaceUploadLimit} from "@/lib/sasi-marketplace/r2";
+import {marketplaceUploadReady,marketplaceObjectHead,marketplaceOwnedKey,marketplaceUploadLimit} from "@/lib/sasi-marketplace/r2";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {dispatchMarketplaceScan} from "@/lib/sasi-marketplace/dispatch-scan";
@@ -10,7 +10,7 @@ const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} 
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:h});
- if(!marketplaceR2Ready())
+ if(!marketplaceUploadReady())
   return NextResponse.json({error:"UPLOAD_SCANNING_NOT_READY"},{status:503,headers:h});
  const {data:{user}}=await createClient().auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
