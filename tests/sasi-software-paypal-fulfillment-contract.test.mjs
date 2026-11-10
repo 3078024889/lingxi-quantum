@@ -92,4 +92,8 @@ assert.match(adminDiagnostics,/getPaypalAccessToken/);
 assert.match(adminDiagnostics,/if\(!user\)/);
 assert.match(adminDiagnostics,/if\(!isAdmin\(user\.email\)\)/);
 assert.match(adminDiagnostics,/tokenTest:paypalTokenTest/);
+assert.match(adminDiagnostics,/listPaypalWebhooks/);
+assert.match(adminDiagnostics,/CHECKOUT\.ORDER\.APPROVED/);
+assert.match(adminDiagnostics,/PAYMENT\.CAPTURE\.REFUNDED/);
+assert.match(adminDiagnostics,/urlMatches/);
 assert.match(adminDiagnostics,/Cache-Control/);
