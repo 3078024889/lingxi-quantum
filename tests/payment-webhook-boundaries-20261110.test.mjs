@@ -10,7 +10,7 @@ test("provider webhooks enforce bounded request bodies before parsing",()=>{
  const paypal=read("app/api/pay/paypal/webhook/route.ts");
  const paypalLegacy=read("app/api/pay/webhook/route.ts");
  assert.ok(alipay.includes("application\\/x-www-form-urlencoded"));
- assert.match(alipay,/Buffer\.byteLength\(rawBody,"utf8"\)>64\s*\*\s*1024/);
+ assert.match(alipay,/Buffer\.byteLength\(rawBody,\s*"utf8"\)\s*>\s*64\s*\*\s*1024/);
  assert.match(alipay,/hasOwnProperty\.call\(params,key\)/);
  for(const route of [wechat,wechatRefund,paypal,paypalLegacy]){
   assert.match(route,/Buffer\.byteLength\(/);
