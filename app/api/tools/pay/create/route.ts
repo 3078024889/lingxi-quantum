@@ -3,8 +3,8 @@ import {cookies} from "next/headers";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {createPaypalOrder,paypalEnabled} from "@/lib/paypal";
-import {alipayEnabled,alipaySiteUrl,createAlipayPaymentUrl} from "@/lib/alipay";
-import {createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,wechatPayConfigured} from "@/lib/wechatpay";
+import {alipayEnabled,createAlipayPaymentUrl} from "@/lib/alipay";
+import {createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,wechatPayEnabled} from "@/lib/wechatpay";
 import {exchangeCodeForOpenid,wechatOauthConfigured} from "@/lib/wechat-oauth";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
@@ -58,7 +58,7 @@ export async function POST(req:NextRequest){
   const useJsapi=p==="wechat"&&Boolean(code);
   if(p==="paypal"&&!paypalEnabled())return NextResponse.json({error:"PayPal 暂未开放"},{status:503});
   if(p==="alipay"&&!alipayEnabled())return NextResponse.json({error:"支付宝当前不可用"},{status:503});
-  if(p==="wechat"&&!wechatPayConfigured())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
+  if(p==="wechat"&&!wechatPayEnabled())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
   if(useJsapi){
    const expected=(await cookies()).get("lingxi_wechat_oauth_state")?.value;
    if(!expected||state!==expected)return NextResponse.json({error:"微信授权状态已失效，请重新打开支付页。",code:"WECHAT_OAUTH_STATE_EXPIRED"},{status:400});
@@ -84,7 +84,7 @@ export async function POST(req:NextRequest){
   }
   if(p==="alipay"){
    const outTradeNo=`LX${order.id.replace(/-/g,"")}`.slice(0,64),mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(req.headers.get("user-agent")||"");
-   const paymentUrl=createAlipayPaymentUrl({outTradeNo,amountRmb:Number(quote.amount_rmb),subject:`灵犀场工具-${String(quote.tool_id).slice(0,40)}`,notifyUrl:`${alipaySiteUrl()}/api/pay/alipay/notify`,returnUrl:`${alipaySiteUrl()}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(`/tools/pay?quoteId=${quote.id}&paid=1`)}`,mobile});
+   const paymentUrl=createAlipayPaymentUrl({outTradeNo,amountRmb:Number(quote.amount_rmb),subject:`灵犀场工具-${String(quote.tool_id).slice(0,40)}`,notifyUrl:`${base}/api/pay/alipay/notify`,returnUrl:`${base}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(`/tools/pay?quoteId=${quote.id}&paid=1`)}`,mobile});
    await admin.from("orders").update({provider_payment_id:outTradeNo}).eq("id",order.id);return NextResponse.json({orderId:order.id,url:paymentUrl});
   }
   if(useJsapi){
