@@ -3,7 +3,7 @@ import Link from "next/link";
 import type {SeoLocale} from "@/lib/seo/global-seo";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 
-type Question = {q:string;a:string;href:string;link:string};
+type Question = {q:string;a:string;href:string;link:string};,
 type Content = {eyebrow:string;title:string;intro:string;questions:Question[];explore:string;create:string;tools:string};
 const FAQ:Record<SeoLocale,Content>={
  zh:{
@@ -24,7 +24,7 @@ const FAQ:Record<SeoLocale,Content>={
 {q:"购买软件后如何获取源码和授权？",a:"支付渠道完成回调验签、订单状态和金额核验后，系统按订单授权发放交付权益。下载方式、源码范围、版本与售后条件以商品详情和订单交付说明为准。",href:"/sasi/delivery",link:"查看软件授权与交付规则"},
    {q:"PDF 太大，怎么压缩后还能看清？",a:"先确认文件主要是文字还是扫描图片。进入 PDF 压缩工具选择文件并处理；下载后检查页数、表格和细小文字，再决定是否需要调整压缩强度。",href:"/tools?q=PDF压缩",link:"使用 PDF 压缩工具"},
    {q:"临时邮箱和阅后即焚分别能做什么？",a:"临时邮箱适合不想暴露常用邮箱的临时场景；阅后即焚适合限时查看信息。不要用临时邮箱接收重要账号的恢复邮件，也不要把一次性分享当作无法截屏的保密保证。",href:"/tools?q=临时邮箱",link:"查看隐私工具"},
-   {q:"AI 工具价格、免费额度和商用条件在哪里比较？",a:"进入全球 SIAI 排行榜，按任务查看不同工具的功能、套餐价格、免费额度、可用地区和商用条件，并可直接访问厂商官网。",href:"/siai",link:"比较 AI 工具价格与功能"}
+   {q:"AI 工具价格、免费额度和商用条件在哪里比较？",a:"进入全球 SIAI 排行榜，按任务查看不同工具的功能、套餐价格、免费额度、可用地区和商用条件，并可直接访问厂商官网。",href:"/siai",link:"比较 AI 工具价格与功能"},
   ],explore:"去全球 SIAI 排行榜选 AI",create:"浏览 SASI 软件市场",tools:"打开免费在线实用工具"
  },
  en:{
@@ -33,8 +33,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"How do I choose the right AI tool?",a:"Start with your task: research, coding, images, video or local models. Compare capabilities, prices, free limits, regional access and payment options.",href:"/siai",link:"Compare AI tools by task"},
    {q:"Which AI tools have a free plan?",a:"Free tiers may limit usage, resolution, models or commercial rights. Compare each offer and its limits before paying.",href:"/siai",link:"Compare free plans and prices"},
-{q:"Where can I browse software and source-code licenses?",a:"SASI is a marketplace for finished software, MT5 EAs, trading indicators, automation tools and source licenses. Product pages define versions, compatibility, prices and license scope.",href:"/sasi",link:"Browse SASI software"}
-   {q:"Can I edit PDFs, convert images or transcribe video online?",a:"Browse online utilities by file type or task to find PDF, OCR, media, subtitle and privacy tools.",href:"/tools",link:"Browse online tools"}
+{q:"Where can I browse software and source-code licenses?",a:"SASI is a marketplace for finished software, MT5 EAs, trading indicators, automation tools and source licenses. Product pages define versions, compatibility, prices and license scope.",href:"/sasi",link:"Browse SASI software"},
+   {q:"Can I edit PDFs, convert images or transcribe video online?",a:"Browse online utilities by file type or task to find PDF, OCR, media, subtitle and privacy tools.",href:"/tools",link:"Browse online tools"},
   ],explore:"Explore SIAI rankings",create:"Browse SASI software",tools:"Use online tools"
  },
  ja:{
@@ -43,8 +43,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"自分に合うAIツールはどう選ぶ？",a:"文章・研究・コード・画像・動画など用途を決め、機能と料金、無料枠、地域を比較します。",href:"/siai",link:"AIツールを比較"},
    {q:"無料で試せるAIツールは？",a:"無料枠には回数・画質・モデル・商用条件の制限があります。各プランを比較してください。",href:"/siai",link:"無料枠と料金"},
-{q:"ソフトウェアやソースライセンスはどこで確認できますか？",a:"SASIでは完成ソフト、MT5 EA、取引インジケーター、自動化ツール、ソースライセンスを閲覧できます。対応環境、価格、バージョン、権利範囲は商品ページで確認できます。",href:"/sasi",link:"SASIソフトウェア市場を見る"}
-   {q:"PDF編集や画像変換、動画文字起こしは？",a:"オンラインツールをファイル形式や用途で検索できます。",href:"/tools",link:"オンラインツール"}
+{q:"ソフトウェアやソースライセンスはどこで確認できますか？",a:"SASIでは完成ソフト、MT5 EA、取引インジケーター、自動化ツール、ソースライセンスを閲覧できます。対応環境、価格、バージョン、権利範囲は商品ページで確認できます。",href:"/sasi",link:"SASIソフトウェア市場を見る"},
+   {q:"PDF編集や画像変換、動画文字起こしは？",a:"オンラインツールをファイル形式や用途で検索できます。",href:"/tools",link:"オンラインツール"},
   ],explore:"SIAIランキング",create:"SASIソフトウェア市場を見る",tools:"ツールを使う"
  },
  ko:{
@@ -53,8 +53,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"나에게 맞는 AI 도구는 어떻게 고르나요?",a:"글쓰기, 연구, 코딩, 이미지, 영상 등 작업별로 기능과 비용, 무료 한도, 지원 지역을 비교하세요.",href:"/siai",link:"AI 도구 비교"},
    {q:"무료로 써볼 수 있는 AI가 있나요?",a:"무료 플랜은 횟수, 해상도, 모델 또는 상업적 이용에 제한이 있을 수 있습니다.",href:"/siai",link:"무료 한도와 가격"},
-{q:"소프트웨어와 소스 라이선스는 어디서 확인할 수 있나요?",a:"SASI에서 완성형 소프트웨어, MT5 EA, 거래 지표, 자동화 도구와 소스 라이선스를 살펴볼 수 있습니다. 버전, 호환 환경, 가격과 권한 범위는 상품 페이지에 표시됩니다.",href:"/sasi",link:"SASI 소프트웨어 마켓 보기"}
-   {q:"PDF, 이미지, 영상 자막 도구는 어디 있나요?",a:"온라인 도구에서 파일 유형 또는 작업으로 검색하세요.",href:"/tools",link:"온라인 도구"}
+{q:"소프트웨어와 소스 라이선스는 어디서 확인할 수 있나요?",a:"SASI에서 완성형 소프트웨어, MT5 EA, 거래 지표, 자동화 도구와 소스 라이선스를 살펴볼 수 있습니다. 버전, 호환 환경, 가격과 권한 범위는 상품 페이지에 표시됩니다.",href:"/sasi",link:"SASI 소프트웨어 마켓 보기"},
+   {q:"PDF, 이미지, 영상 자막 도구는 어디 있나요?",a:"온라인 도구에서 파일 유형 또는 작업으로 검색하세요.",href:"/tools",link:"온라인 도구"},
   ],explore:"SIAI 순위",create:"SASI 소프트웨어 마켓 보기",tools:"온라인 도구"
  },
  fr:{
@@ -63,8 +63,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"Comment choisir le bon outil IA ?",a:"Comparez les fonctions, les prix, les offres gratuites et la disponibilité selon votre besoin.",href:"/siai",link:"Comparer les outils IA"},
    {q:"Quels outils IA proposent un accès gratuit ?",a:"Les offres gratuites peuvent limiter les usages, la qualité, les modèles ou les droits commerciaux.",href:"/siai",link:"Comparer les offres"},
-{q:"Où consulter des logiciels et des licences de code source ?",a:"SASI propose des logiciels prêts à l’emploi, des EA MT5, des indicateurs, des outils d’automatisation et des licences source. Les versions, prix, compatibilités et droits sont précisés sur chaque fiche.",href:"/sasi",link:"Parcourir le marché SASI"}
-   {q:"Où modifier des PDF ou convertir des images ?",a:"Recherchez les outils PDF, OCR, vidéo et audio par tâche.",href:"/tools",link:"Outils en ligne"}
+{q:"Où consulter des logiciels et des licences de code source ?",a:"SASI propose des logiciels prêts à l’emploi, des EA MT5, des indicateurs, des outils d’automatisation et des licences source. Les versions, prix, compatibilités et droits sont précisés sur chaque fiche.",href:"/sasi",link:"Parcourir le marché SASI"},
+   {q:"Où modifier des PDF ou convertir des images ?",a:"Recherchez les outils PDF, OCR, vidéo et audio par tâche.",href:"/tools",link:"Outils en ligne"},
   ],explore:"Classement SIAI",create:"Parcourir le marché SASI",tools:"Outils en ligne"
  },
  de:{
@@ -73,8 +73,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"Welches KI-Tool passt zu mir?",a:"Vergleiche Funktionen, Kosten, Gratis-Kontingente und regionale Verfügbarkeit nach Aufgabe.",href:"/siai",link:"KI-Tools vergleichen"},
    {q:"Welche KI-Tools kann man kostenlos testen?",a:"Gratis-Tarife können Nutzung, Auflösung, Modelle oder kommerzielle Rechte begrenzen.",href:"/siai",link:"Gratis-Tarife vergleichen"},
-{q:"Wo finde ich Software und Quellcode-Lizenzen?",a:"SASI bietet fertige Software, MT5-EAs, Handelsindikatoren, Automatisierungstools und Quellcode-Lizenzen. Versionen, Kompatibilität, Preise und Rechte stehen in den jeweiligen Produktdetails.",href:"/sasi",link:"SASI-Softwaremarkt öffnen"}
-   {q:"Wo kann ich PDFs oder Bilder bearbeiten?",a:"Suche Online-Werkzeuge nach Dateityp und Aufgabe.",href:"/tools",link:"Online-Tools"}
+{q:"Wo finde ich Software und Quellcode-Lizenzen?",a:"SASI bietet fertige Software, MT5-EAs, Handelsindikatoren, Automatisierungstools und Quellcode-Lizenzen. Versionen, Kompatibilität, Preise und Rechte stehen in den jeweiligen Produktdetails.",href:"/sasi",link:"SASI-Softwaremarkt öffnen"},
+   {q:"Wo kann ich PDFs oder Bilder bearbeiten?",a:"Suche Online-Werkzeuge nach Dateityp und Aufgabe.",href:"/tools",link:"Online-Tools"},
   ],explore:"SIAI-Ranking",create:"SASI-Softwaremarkt öffnen",tools:"Online-Tools"
  },
  es:{
@@ -83,8 +83,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"¿Cómo elegir la herramienta IA adecuada?",a:"Compara funciones, precios, planes gratuitos y regiones según tu objetivo.",href:"/siai",link:"Comparar herramientas IA"},
    {q:"¿Qué herramientas IA tienen plan gratuito?",a:"Los planes gratis pueden limitar usos, resolución, modelos o derechos comerciales.",href:"/siai",link:"Comparar planes gratis"},
-{q:"¿Dónde puedo consultar software y licencias de código fuente?",a:"SASI reúne software terminado, EA de MT5, indicadores, herramientas de automatización y licencias de código fuente. Cada ficha detalla versiones, compatibilidad, precios y alcance de la licencia.",href:"/sasi",link:"Explorar el mercado SASI"}
-   {q:"¿Dónde editar PDF o convertir imágenes?",a:"Busca utilidades PDF, OCR, vídeo y audio por tarea.",href:"/tools",link:"Herramientas online"}
+{q:"¿Dónde puedo consultar software y licencias de código fuente?",a:"SASI reúne software terminado, EA de MT5, indicadores, herramientas de automatización y licencias de código fuente. Cada ficha detalla versiones, compatibilidad, precios y alcance de la licencia.",href:"/sasi",link:"Explorar el mercado SASI"},
+   {q:"¿Dónde editar PDF o convertir imágenes?",a:"Busca utilidades PDF, OCR, vídeo y audio por tarea.",href:"/tools",link:"Herramientas online"},
   ],explore:"Ranking SIAI",create:"Explorar el mercado SASI",tools:"Herramientas online"
  },
  pt:{
@@ -93,8 +93,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"Como escolher a ferramenta de IA certa?",a:"Compare recursos, preços, opções grátis e disponibilidade por tarefa.",href:"/siai",link:"Comparar ferramentas IA"},
    {q:"Quais ferramentas de IA têm plano grátis?",a:"Planos gratuitos podem limitar uso, resolução, modelos ou direitos comerciais.",href:"/siai",link:"Comparar opções grátis"},
-{q:"Onde posso consultar software e licenças de código-fonte?",a:"O SASI reúne software pronto, EAs MT5, indicadores, ferramentas de automação e licenças de código-fonte. Cada página informa versões, compatibilidade, preços e escopo da licença.",href:"/sasi",link:"Explorar o mercado SASI"}
-   {q:"Onde editar PDFs ou converter imagens?",a:"Busque utilitários de PDF, OCR, vídeo e áudio por tarefa.",href:"/tools",link:"Ferramentas online"}
+{q:"Onde posso consultar software e licenças de código-fonte?",a:"O SASI reúne software pronto, EAs MT5, indicadores, ferramentas de automação e licenças de código-fonte. Cada página informa versões, compatibilidade, preços e escopo da licença.",href:"/sasi",link:"Explorar o mercado SASI"},
+   {q:"Onde editar PDFs ou converter imagens?",a:"Busque utilitários de PDF, OCR, vídeo e áudio por tarefa.",href:"/tools",link:"Ferramentas online"},
   ],explore:"Ranking SIAI",create:"Explorar o mercado SASI",tools:"Ferramentas online"
  },
  ar:{
@@ -103,8 +103,8 @@ const FAQ:Record<SeoLocale,Content>={
   questions:[
    {q:"كيف أختار أداة الذكاء الاصطناعي المناسبة؟",a:"قارن الوظائف والأسعار والخطط المجانية والمناطق وفق المهمة التي تريد إنجازها.",href:"/siai",link:"مقارنة أدوات الذكاء الاصطناعي"},
    {q:"ما الأدوات التي توفر تجربة مجانية؟",a:"قد تقيّد الخطط المجانية عدد الاستخدامات أو الدقة أو النماذج أو الحقوق التجارية.",href:"/siai",link:"مقارنة الخطط المجانية"},
-{q:"أين يمكن استعراض البرامج وتراخيص الشيفرة المصدرية؟",a:"يوفر SASI برامج جاهزة ومستشاري MT5 ومؤشرات تداول وأدوات أتمتة وتراخيص للشيفرة المصدرية. توضح صفحة كل منتج الإصدارات والتوافق والسعر ونطاق الترخيص.",href:"/sasi",link:"استعرض سوق برامج SASI"}
-   {q:"أين يمكن تعديل PDF أو تحويل الصور؟",a:"ابحث عن أدوات PDF والصور والفيديو والصوت حسب المهمة.",href:"/tools",link:"الأدوات عبر الإنترنت"}
+{q:"أين يمكن استعراض البرامج وتراخيص الشيفرة المصدرية؟",a:"يوفر SASI برامج جاهزة ومستشاري MT5 ومؤشرات تداول وأدوات أتمتة وتراخيص للشيفرة المصدرية. توضح صفحة كل منتج الإصدارات والتوافق والسعر ونطاق الترخيص.",href:"/sasi",link:"استعرض سوق برامج SASI"},
+   {q:"أين يمكن تعديل PDF أو تحويل الصور؟",a:"ابحث عن أدوات PDF والصور والفيديو والصوت حسب المهمة.",href:"/tools",link:"الأدوات عبر الإنترنت"},
   ],explore:"تصنيف SIAI",create:"استعرض سوق برامج SASI",tools:"الأدوات عبر الإنترنت"
  }
 };

@@ -40,7 +40,8 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   ],
 ]
 
-const softwareNavNames:Record<LingxiLang,string>={zh:"SASI 智能软件",en:"SASI Software",ja:"SASI ソフトウェア",ko:"SASI 소프트웨어",fr:"Logiciels SASI",de:"SASI Software",es:"Software SASI",pt:"Software SASI",ar:"برمجيات SASI"};
+const softwareNavNames:Record<LingxiLang,string>={zh:"SASI 软件市场",en:"SASI Software Market",ja:"SASIソフトウェア市場",ko:"SASI 소프트웨어 마켓",fr:"Marché logiciel SASI",de:"SASI-Softwaremarkt",es:"Mercado de software SASI",pt:"Mercado de software SASI",ar:"سوق برامج SASI"};
+const sellerNavNames:Record<LingxiLang,string>={zh:"卖家服务",en:"Seller services",ja:"出品者サービス",ko:"판매자 서비스",fr:"Services vendeurs",de:"Verkäuferbereich",es:"Servicios para vendedores",pt:"Serviços para vendedores",ar:"خدمات البائعين"};
 const marketNavNames:Record<LingxiLang,string>={zh:"全球 SIAI 排行榜",en:"Global SIAI Rankings",ja:"世界の SIAI ランキング",ko:"글로벌 SIAI 순위",fr:"Classement mondial SIAI",de:"Globales SIAI-Ranking",es:"Ranking mundial SIAI",pt:"Ranking global SIAI",ar:"ترتيب SIAI العالمي"};
 
 function active(pathname: string, href: string) {
@@ -178,7 +179,7 @@ export default function Nav() {
       </div>
 
       <div className="lx11-nav-scroll">
-        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{lang==="zh"?"软件作品":"SASI Software"}</span></Link>
+        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{softwareNavNames[lang]}</span></Link>
 
         {groups.map((group, index) => (
           <section key={index} className="lx11-group">
@@ -190,7 +191,7 @@ export default function Nav() {
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
                 <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/seller"?(lang==="zh"?"卖家服务":"Seller services"):t(item.key)}</span>
+                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/seller"?sellerNavNames[lang]:t(item.key)}</span>
               </Link>
             ))}
           </section>
