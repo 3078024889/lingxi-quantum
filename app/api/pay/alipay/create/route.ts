@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
-import { alipayEnabled, alipaySiteUrl, createAlipayPaymentUrl } from "@/lib/alipay";
+import { alipayEnabled, createAlipayPaymentUrl } from "@/lib/alipay";
+import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
 import { safeLocalReturnPath, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
@@ -58,7 +59,7 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
     if (error || !order) return NextResponse.json({ error: "创建订单失败" }, { status: 500 });
 
     const outTradeNo = `LX${order.id.replace(/-/g, "")}`.slice(0, 64);
-    const baseUrl = alipaySiteUrl();
+    const baseUrl = trustedSiteOrigin(req);
     const destination = safeLocalReturnPath(returnPath, "/account/orders");
     try {
       const userAgent = req.headers.get("user-agent") ?? "";
