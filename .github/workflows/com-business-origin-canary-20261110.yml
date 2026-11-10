@@ -1,0 +1,46 @@
+name: COM business origin isolated canary no routes
+on:
+  push:
+    branches: [ops/cn-celestial-static-assets-20261109]
+    paths: ['.github/workflows/com-business-origin-canary-20261110.yml']
+permissions: {contents: read}
+jobs:
+  canary:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 8
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          ref: 70fbec53e15918a87eee17bf3e32a45906489653
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Verify credential boundaries, raw signatures and login redirects
+        run: node --test tests/com-business-origin-20261110.test.mjs
+      - name: Deploy isolated thin business worker without routes
+        run: |
+          echo '{"name":"lingxifield-com-business-origin-20261110","main":"workers/com-business-origin/index.mjs","compatibility_date":"2026-11-01","workers_dev":true}' > wrangler.business.json
+          npm install -g wrangler@4.158.0 >/dev/null
+          wrangler deploy --config wrangler.business.json --no-upload-source-maps
+      - name: Verify real upstream without charge, upload or order mutations
+        run: |
+          node --input-type=module <<'JS'
+          const base='https://lingxifield-com-business-origin-20261110.3078024889.workers.dev';
+          for(const [path,status] of [['/api/health',200],['/api/pay/providers',200],['/api/money/summary',401],['/api/sasi/account',401],['/api/sasi/marketplace/seller',401],['/api/sasi/marketplace/my-orders',401],['/api/sasi/marketplace/listings',200]]){
+            for(let i=0;i<3;i++){
+              const r=await fetch(base+path,{signal:AbortSignal.timeout(30000)});
+              console.log('BUSINESS_CANARY path='+path+' http='+r.status);
+              if(r.status!==status||r.headers.get('x-lingxi-business-origin')!=='ecs')throw Error('UPSTREAM_CONTRACT_FAILED');
+              if(path==='/api/pay/providers'){
+                const j=await r.json();
+                console.log(JSON.stringify({providers:{paypal:j.paypal,wechat:j.wechat,alipay:j.alipay},diagnostics:j.diagnostics}));
+                if(['paypal','wechat','alipay'].some(k=>typeof j[k]!=='boolean'||j.diagnostics?.[k]?.configured!==true))throw Error('MERCHANT_CONFIG_NOT_INSTALLED_ON_ECS');
+              }
+            }
+          }
+          console.log('COM_BUSINESS_ORIGIN_NO_CHARGE_CANARY_PASS_NO_ROUTES');
+          JS
