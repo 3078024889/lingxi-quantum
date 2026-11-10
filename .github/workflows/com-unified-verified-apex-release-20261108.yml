@@ -15,6 +15,7 @@ on:
       - 'wrangler.jsonc'
       - 'scripts/cloudflare/build-com-static-assets-20261110.sh'
       - 'tests/com-static-assets-first-20261110.test.mjs'
+      - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
       - 'tests/com-celestial-release-safety-20261110.test.mjs'
   push:
     branches: [release/com-sasi-full-20261108]
@@ -30,6 +31,7 @@ on:
       - 'wrangler.jsonc'
       - 'scripts/cloudflare/build-com-static-assets-20261110.sh'
       - 'tests/com-static-assets-first-20261110.test.mjs'
+      - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
       - 'tests/com-celestial-release-safety-20261110.test.mjs'
 permissions:
   contents: read
