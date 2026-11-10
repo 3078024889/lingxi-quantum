@@ -7,7 +7,10 @@ export const runtime="nodejs";
 export const maxDuration=30;
 
 export async function POST(req:Request){
+  const contentLength=Number(req.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>512*1024)return NextResponse.json({error:"WEBHOOK_TOO_LARGE"},{status:413});
   const raw=await req.text();
+  if(Buffer.byteLength(raw,"utf8")>512*1024)return NextResponse.json({error:"WEBHOOK_TOO_LARGE"},{status:413});
   if(!await verifyPaypalWebhook(req.headers,raw)){
     return NextResponse.json({error:"INVALID_WEBHOOK_SIGNATURE"},{status:401});
   }
