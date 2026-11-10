@@ -25,7 +25,7 @@ assert.match(listings,/isSameOriginMutation/);
 assert.match(listings,/enforceAbuseGuard/);
 assert.match(listings,/\.eq\("seller_id",user\.id\)/);
 const uploader=read("app/api/sasi/marketplace/upload-ticket/route.ts");
-assert.match(uploader,/!marketplaceR2Ready\(\)/);
+assert.match(uploader,/!marketplaceCommerceReady\(\)/);
 assert.match(uploader,/profile\?\.status!=="approved"/);
 assert.match(uploader,/signedMarketplaceUpload/);
 assert.match(uploader,/newMarketplaceObjectKey/);
