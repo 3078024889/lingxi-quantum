@@ -7,6 +7,7 @@ const read = path => readFileSync(path, "utf8");
 test("isolated candidate is a different Worker from the current production apex", () => {
   const workflow = read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
   assert.ok(workflow.includes("CANDIDATE_NAME=lingxifield-com-canary-${GITHUB_SHA:0:12}"));
+  assert.ok("lingxifield-com-canary-".length + 12 <= 63, "source-scoped Worker names must remain within Cloudflare limits");
   assert.ok(workflow.includes('jq -e --arg production "lingxifield-com-celestial-20261109"'));
   assert.ok(workflow.includes('pattern=="lingxifield.com/*" and .script==$production'));
   assert.ok(workflow.includes("x-lingxi-static-delivery: workers-static-assets"));
