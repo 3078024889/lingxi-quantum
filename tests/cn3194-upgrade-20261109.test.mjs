@@ -92,6 +92,9 @@ test("20261110 runner uses isolated temp files, bounded resumable downloads and 
   assert.ok(runner20261110.includes('tmp="${dest}.part"'));
   assert.ok(!runner20261110.includes('tmp="2.part"'));
   assert.ok(runner20261110.includes("--max-time 900 -C -"));
+  assert.ok(runner20261110.includes("curl --noproxy '*' -4 -fL --connect-timeout 30 --max-time 180"));
+  assert.ok(runner20261110.includes("curl --noproxy '*' -4 -fL --connect-timeout 30 --max-time 900 -C -"));
+  assert.ok(runner20261110.includes("curl --noproxy '*' -4 -fL --connect-timeout 30 --max-time 900 \"$url\" -o \"$dest\""));
   assert.ok(runner20261110.includes('--max-time 900 "$url" -o "$dest"'));
   assert.ok(runner20261110.includes('SOURCE_REF="6160c1eb9251409e9fbdf3f478787c49f2318357"'));
   assert.ok(runner20261110.includes('UPGRADE_BLOB_SHA="41b7248f672c94a84a447a340568d378c9debf3a"'));

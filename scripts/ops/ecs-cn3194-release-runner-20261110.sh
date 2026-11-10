@@ -40,7 +40,7 @@ download_small_pinned() {
   local attempt
   for attempt in $(seq 1 12); do
     rm -f "$tmp"
-    if curl --noproxy '*' -fL --connect-timeout 30 --max-time 180 "$url" -o "$tmp"; then
+    if curl --noproxy '*' -4 -fL --connect-timeout 30 --max-time 180 "$url" -o "$tmp"; then
       if python3 - "$tmp" "$expected_blob" <<'PY'
 import hashlib,sys
 path,expected=sys.argv[1:3]
@@ -91,13 +91,13 @@ download_release_resumable() {
     fi
 
     if (( have > 0 )); then
-      if curl --noproxy '*' -fL --connect-timeout 30 --max-time 900 -C - "$url" -o "$dest"; then
+      if curl --noproxy '*' -4 -fL --connect-timeout 30 --max-time 900 -C - "$url" -o "$dest"; then
         rc=0
       else
         rc=$?
       fi
     else
-      if curl --noproxy '*' -fL --connect-timeout 30 --max-time 900 "$url" -o "$dest"; then
+      if curl --noproxy '*' -4 -fL --connect-timeout 30 --max-time 900 "$url" -o "$dest"; then
         rc=0
       else
         rc=$?
