@@ -308,17 +308,23 @@ const productionConfig = {
   services: [{
     binding: "LINGXI_COM_LEGACY_GATEWAY",
     service: wwwWorker
+  }],
+  routes: [{
+    pattern: apexPattern,
+    zone_name: "lingxifield.com"
   }]
 };
 delete productionConfig.vars;
 delete productionConfig.route;
-delete productionConfig.routes;
 await writeFile("wrangler.production.jsonc", JSON.stringify(productionConfig, null, 2) + "\n", "utf8");
 const checkedConfig = JSON.parse(await readFile("wrangler.production.jsonc", "utf8"));
 if (checkedConfig.name !== productionWorker ||
     checkedConfig.workers_dev !== false ||
     checkedConfig.vars ||
-    checkedConfig.routes ||
+    !Array.isArray(checkedConfig.routes) ||
+    checkedConfig.routes.length !== 1 ||
+    checkedConfig.routes[0].pattern !== apexPattern ||
+    checkedConfig.routes[0].zone_name !== "lingxifield.com" ||
     checkedConfig.route ||
     checkedConfig.keep_vars !== true ||
     checkedConfig.services?.[0]?.service !== wwwWorker) {
