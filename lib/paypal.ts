@@ -267,3 +267,20 @@ export async function queryPaypalRefund(refundId:string):Promise<{refundId:strin
   if(!res.ok)throw new Error("PAYPAL_REFUND_QUERY_HTTP_"+res.status);
   return{refundId:String(data.id||refundId),status:String(data.status||"PENDING"),raw:data};
 }
+
+export async function listPaypalWebhooks():Promise<Array<{id:string;url:string;events:string[]}>>{
+ const token=await getPaypalAccessToken();
+ const response=await fetchWithTimeout(`${paypalBaseUrl()}/v1/notifications/webhooks?page_size=20`,{
+  method:"GET",
+  headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json"},
+  cache:"no-store"
+ });
+ const data=await response.json();
+ if(!response.ok)throw new Error("PAYPAL_WEBHOOK_LIST_FAILED");
+ const rows=Array.isArray(data?.webhooks)?data.webhooks:[];
+ return rows.map((item:any)=>({
+  id:String(item?.id||""),
+  url:String(item?.url||""),
+  events:Array.isArray(item?.event_types)?item.event_types.map((x:any)=>String(x?.name||"")).filter(Boolean):[]
+ })).filter((item:any)=>item.id&&item.url);
+}
