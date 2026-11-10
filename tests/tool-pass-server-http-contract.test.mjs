@@ -13,8 +13,22 @@ test("remote URL source cannot bypass authenticated task receipt after activatio
  assert.match(y,/accessRequestId:ticket\.requestId/);
  assert.match(y,/operationId/);
 });
-test("public release of new checkout needs both frontend and backend explicitly ready",()=>{
+test("public release of new checkout requires unified backend readiness and commerce approval",()=>{
  const x=r("app/api/tools/pass/route.ts");
- assert.match(x,/TOOL_PASS_BACKEND_READY/);
+ const server=r("lib/tools/commerce/tool-server-receipt.ts");
+ assert.match(x,/toolPassBackendReady\(\)/);
  assert.match(x,/TOOL_PASS_COMMERCE_READY/);
+ assert.match(server,/NEXT_PUBLIC_TOOL_PASS_ENFORCED/);
+ assert.match(server,/TOOL_PASS_BACKEND_READY/);
+ assert.match(server,/LINGXIFIELD_PRIVACY_HASH_SECRET/);
+});
+
+test("tool checkout requires explicitly enabled payment providers and same-site callbacks",()=>{
+ const x=r("app/api/tools/pay/create/route.ts");
+ assert.match(x,/paypalEnabled\(\)/);
+ assert.match(x,/alipayEnabled\(\)/);
+ assert.match(x,/wechatPayEnabled\(\)/);
+ assert.doesNotMatch(x,/wechatPayConfigured\(\)/);
+ assert.match(x,/trustedSiteOrigin\(req\)/);
+ assert.match(x,/notifyUrl:\x60\$\{base\}\/api\/pay\/alipay\/notify/);
 });

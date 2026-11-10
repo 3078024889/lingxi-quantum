@@ -1,3 +1,19 @@
+import "server-only";
+import {createVerify} from "node:crypto";
+
+export function paypalConfigured():boolean {
+  return Boolean(
+    process.env.PAYPAL_CLIENT_ID?.trim()
+    && process.env.PAYPAL_CLIENT_SECRET?.trim()
+    && process.env.PAYPAL_WEBHOOK_ID?.trim()
+  );
+}
+export function paypalEnabled():boolean {
+  return process.env.PAYPAL_ENV?.trim().toLowerCase()==="live"
+    && process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"
+    && paypalConfigured();
+}
+
 export function paypalBaseUrl() {
   return process.env.PAYPAL_ENV === "sandbox"
     ? "https://api-m.sandbox.paypal.com"
@@ -161,25 +177,63 @@ export async function verifyPaypalCompletedOrder(
   return { captureId: String(capture.id), raw: queried.raw };
 }
 
-export async function verifyPaypalWebhook(headers: Headers, rawBody: string): Promise<boolean> {
-  const webhookId = process.env.PAYPAL_WEBHOOK_ID;
-  if (!webhookId) return false;
-  const token = await getPaypalAccessToken();
-  const res = await fetchWithTimeout(`${paypalBaseUrl()}/v1/notifications/verify-webhook-signature`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      transmission_id: headers.get("paypal-transmission-id"),
-      transmission_time: headers.get("paypal-transmission-time"),
-      cert_url: headers.get("paypal-cert-url"),
-      auth_algo: headers.get("paypal-auth-algo"),
-      transmission_sig: headers.get("paypal-transmission-sig"),
-      webhook_id: webhookId,
-      webhook_event: JSON.parse(rawBody),
-    }),
-  });
-  const data = await res.json();
-  return data.verification_status === "SUCCESS";
+let paypalCrcTable:Uint32Array|null=null;
+function paypalCrc32(input:Buffer):number{
+ if(!paypalCrcTable){
+  const table=new Uint32Array(256);
+  for(let n=0;n<256;n++){
+   let value=n;
+   for(let bit=0;bit<8;bit++)value=(value&1)?(0xedb88320^(value>>>1)):(value>>>1);
+   table[n]=value>>>0;
+  }
+  paypalCrcTable=table;
+ }
+ let crc=0xffffffff;
+ for(const byte of input)crc=paypalCrcTable[(crc^byte)&0xff]^(crc>>>8);
+ return (crc^0xffffffff)>>>0;
+}
+
+const paypalCertCache=new Map<string,{certificate:string;expiresAt:number}>();
+async function paypalWebhookCertificate(certUrl:string):Promise<string>{
+ const cached=paypalCertCache.get(certUrl);
+ if(cached&&cached.expiresAt>Date.now())return cached.certificate;
+ const parsed=new URL(certUrl);
+ const allowedHosts=new Set(["api.paypal.com","api-m.paypal.com","api.sandbox.paypal.com","api-m.sandbox.paypal.com"]);
+ if(parsed.protocol!=="https:"||!allowedHosts.has(parsed.hostname)
+   ||!/^\/v1\/notifications\/certs\/[A-Za-z0-9_-]+$/.test(parsed.pathname)
+   ||parsed.search||parsed.hash)throw new Error("PAYPAL_CERT_URL_REJECTED");
+ const response=await fetchWithTimeout(parsed.toString(),{method:"GET",cache:"no-store",redirect:"error"});
+ if(!response.ok)throw new Error("PAYPAL_CERT_FETCH_FAILED");
+ const certificate=await response.text();
+ if(certificate.length>65536||!certificate.includes("-----BEGIN CERTIFICATE-----")
+   ||!certificate.includes("-----END CERTIFICATE-----"))throw new Error("PAYPAL_CERT_INVALID");
+ if(paypalCertCache.size>=10)paypalCertCache.clear();
+ paypalCertCache.set(certUrl,{certificate,expiresAt:Date.now()+6*60*60*1000});
+ return certificate;
+}
+
+export async function verifyPaypalWebhook(headers:Headers,rawBody:string):Promise<boolean>{
+ try{
+  const webhookId=process.env.PAYPAL_WEBHOOK_ID?.trim();
+  const transmissionId=headers.get("paypal-transmission-id")?.trim();
+  const transmissionTime=headers.get("paypal-transmission-time")?.trim();
+  const certUrl=headers.get("paypal-cert-url")?.trim();
+  const authAlgo=headers.get("paypal-auth-algo")?.trim();
+  const signature=headers.get("paypal-transmission-sig")?.trim();
+  if(!webhookId||!transmissionId||!transmissionTime||!certUrl||!signature||authAlgo!=="SHA256withRSA")return false;
+  const sentAt=Date.parse(transmissionTime);
+  if(!Number.isFinite(sentAt)||sentAt>Date.now()+5*60*1000||Date.now()-sentAt>4*24*60*60*1000)return false;
+  const certificate=await paypalWebhookCertificate(certUrl);
+  const crc=paypalCrc32(Buffer.from(rawBody,"utf8"));
+  const signedMessage=`${transmissionId}|${transmissionTime}|${webhookId}|${crc}`;
+  const verifier=createVerify("RSA-SHA256");
+  verifier.update(signedMessage,"utf8");
+  verifier.end();
+  return verifier.verify(certificate,signature,"base64");
+ }catch(error){
+  console.error("[paypal webhook] signature verification failed",error instanceof Error?error.message:"VERIFY_FAILED");
+  return false;
+ }
 }
 
 export async function createPaypalRefund(input:{
@@ -188,6 +242,7 @@ export async function createPaypalRefund(input:{
   amountCents:number;
 }):Promise<{refundId:string;status:string;raw:any}>{
   if(!Number.isSafeInteger(input.amountCents)||input.amountCents<=0)throw new Error("PAYPAL_REFUND_AMOUNT_INVALID");
+  if(!paypalEnabled())throw new Error("PAYPAL_NOT_ENABLED_OR_LIVE_NOT_READY");
   const token=await getPaypalAccessToken();
   const res=await fetchWithTimeout(paypalBaseUrl()+"/v2/payments/captures/"+encodeURIComponent(input.captureId)+"/refund",{
     method:"POST",
@@ -212,4 +267,21 @@ export async function queryPaypalRefund(refundId:string):Promise<{refundId:strin
   const data=await res.json();
   if(!res.ok)throw new Error("PAYPAL_REFUND_QUERY_HTTP_"+res.status);
   return{refundId:String(data.id||refundId),status:String(data.status||"PENDING"),raw:data};
+}
+
+export async function listPaypalWebhooks():Promise<Array<{id:string;url:string;events:string[]}>>{
+ const token=await getPaypalAccessToken();
+ const response=await fetchWithTimeout(`${paypalBaseUrl()}/v1/notifications/webhooks?page_size=20`,{
+  method:"GET",
+  headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json"},
+  cache:"no-store"
+ });
+ const data=await response.json();
+ if(!response.ok)throw new Error("PAYPAL_WEBHOOK_LIST_FAILED");
+ const rows=Array.isArray(data?.webhooks)?data.webhooks:[];
+ return rows.map((item:any)=>({
+  id:String(item?.id||""),
+  url:String(item?.url||""),
+  events:Array.isArray(item?.event_types)?item.event_types.map((x:any)=>String(x?.name||"")).filter(Boolean):[]
+ })).filter((item:any)=>item.id&&item.url);
 }

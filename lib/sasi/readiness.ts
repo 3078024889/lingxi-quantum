@@ -1,26 +1,18 @@
 import "server-only";
 import { alipayEnabled } from "@/lib/alipay";
-import { wechatPayConfigured } from "@/lib/wechatpay";
+import { wechatPayEnabled } from "@/lib/wechatpay";
+import { paypalEnabled } from "@/lib/paypal";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
 import { autonomousCoreReadiness } from "@/lib/sasi-kernel/policy/capability-graph";
-
-function paypalConfigured() {
-  return Boolean(
-    process.env.PAYPAL_ENABLED?.trim().toLowerCase() === "true"
-    && process.env.PAYPAL_CLIENT_ID?.trim()
-    && process.env.PAYPAL_CLIENT_SECRET?.trim()
-    && process.env.PAYPAL_WEBHOOK_ID?.trim()
-  );
-}
 
 export function sasiReadiness() {
   const autonomousCore = autonomousCoreReadiness();
   const video = sasiVideoProviderReadiness();
   const paymentChannels = {
     alipay: alipayEnabled(),
-    wechat: wechatPayConfigured(),
-    paypal: paypalConfigured(),
+    wechat: wechatPayEnabled(),
+    paypal: paypalEnabled(),
   };
   const paymentConfigured = Object.values(paymentChannels).some(Boolean);
   const billingFlag = process.env.SASI_BILLING_ENABLED === "true";

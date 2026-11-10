@@ -1,16 +1,11 @@
 import { NextResponse } from "next/server";
 import { alipayEnabled, alipayMissingVars } from "@/lib/alipay";
 import { wechatPayConfigured, wechatPayEnabled, wechatPayMissingVars } from "@/lib/wechatpay";
+import { paypalConfigured, paypalEnabled } from "@/lib/paypal";
 
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
 
-function paypalConfigured(){
- return Boolean(process.env.PAYPAL_CLIENT_ID?.trim()&&process.env.PAYPAL_CLIENT_SECRET?.trim()&&process.env.PAYPAL_WEBHOOK_ID?.trim());
-}
-function paypalEnabled(){
- return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&paypalConfigured();
-}
 export async function GET(){
  const wechatConfigured=wechatPayConfigured();
  const wechat=wechatPayEnabled();

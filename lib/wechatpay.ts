@@ -29,12 +29,21 @@ const PLATFORM_PUBLIC_KEY = process.env.WECHAT_PLATFORM_PUBLIC_KEY;
 const PLATFORM_PUBLIC_KEY_ID = process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID;
 
 export function wechatPayConfigured(): boolean {
-  return !!(APP_ID && MCH_ID && API_V3_KEY && PRIVATE_KEY && CERT_SERIAL_NO);
+  return wechatPayMissingVars().length === 0;
 }
 
 /** Only explicitly approved merchants may create NEW chargeable orders. */
+export function wechatPayKeyMaterialReady():boolean {
+  if(!wechatPayConfigured())return false;
+  try{
+    crypto.createPrivateKey(normalizePemKey(PRIVATE_KEY!,"WECHAT_PRIVATE_KEY"));
+    crypto.createPublicKey(normalizePemKey(PLATFORM_PUBLIC_KEY!,"WECHAT_PLATFORM_PUBLIC_KEY"));
+    return Buffer.byteLength(API_V3_KEY!,"utf8")===32;
+  }catch{return false;}
+}
+
 export function wechatPayEnabled(): boolean {
-  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayConfigured();
+  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayKeyMaterialReady();
 }
 
 // 具体缺了哪几个——之前那个 wechatPayConfigured() 只回答"配没配全"，
@@ -47,6 +56,10 @@ export function wechatPayMissingVars(): string[] {
   if (!API_V3_KEY) missing.push("WECHAT_API_V3_KEY");
   if (!PRIVATE_KEY) missing.push("WECHAT_PRIVATE_KEY");
   if (!CERT_SERIAL_NO) missing.push("WECHAT_CERT_SERIAL_NO");
+  // Checkout must not open unless the callback can authenticate the current
+  // WeChat platform key serial as well as decrypt the APIv3 resource.
+  if (!PLATFORM_PUBLIC_KEY) missing.push("WECHAT_PLATFORM_PUBLIC_KEY");
+  if (!PLATFORM_PUBLIC_KEY_ID) missing.push("WECHAT_PLATFORM_PUBLIC_KEY_ID");
   return missing;
 }
 
@@ -147,8 +160,8 @@ export async function createWechatNativeOrder(params: {
   amountFen: number; // 金额，单位是"分"，不是"元"——1元=100分，这是微信支付的强制要求
   notifyUrl: string;
 }): Promise<{ codeUrl: string }> {
-  if (!wechatPayConfigured()) {
-    throw new Error("微信支付尚未配置完整的环境变量，无法创建订单");
+  if (!wechatPayEnabled()) {
+    throw new Error("微信支付未启用或商户密钥验签材料未通过检查，无法创建订单");
   }
   const data = await wechatRequest("POST", "/v3/pay/transactions/native", {
     appid: APP_ID,
@@ -175,8 +188,8 @@ export async function createWechatJsapiOrder(params: {
   notifyUrl: string;
   openid: string;
 }): Promise<{ prepayId: string }> {
-  if (!wechatPayConfigured()) {
-    throw new Error("微信支付尚未配置完整的环境变量，无法创建订单");
+  if (!wechatPayEnabled()) {
+    throw new Error("微信支付未启用或商户密钥验签材料未通过检查，无法创建订单");
   }
   const data = await wechatRequest("POST", "/v3/pay/transactions/jsapi", {
     appid: APP_ID,

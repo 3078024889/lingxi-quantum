@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       return text("failure", 422);
     }
     const expectedSeller = alipaySellerId();
-    if (expectedSeller && params.seller_id !== expectedSeller) {
+    if (!expectedSeller || params.seller_id !== expectedSeller) {
       console.error("[alipay notify] seller_id mismatch");
       return text("failure", 422);
     }

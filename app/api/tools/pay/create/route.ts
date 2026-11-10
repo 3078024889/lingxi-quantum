@@ -2,19 +2,20 @@ import {NextRequest,NextResponse} from "next/server";
 import {cookies} from "next/headers";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {createPaypalOrder} from "@/lib/paypal";
-import {alipayEnabled,alipaySiteUrl,createAlipayPaymentUrl} from "@/lib/alipay";
-import {createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,wechatPayConfigured} from "@/lib/wechatpay";
+import {createPaypalOrder,paypalEnabled} from "@/lib/paypal";
+import {alipayEnabled,createAlipayPaymentUrl} from "@/lib/alipay";
+import {createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,wechatPayEnabled} from "@/lib/wechatpay";
 import {exchangeCodeForOpenid,wechatOauthConfigured} from "@/lib/wechat-oauth";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {toolRuntimeState} from "@/lib/tools/service-readiness";
 import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import {parseCurrency,providerAllowedForCurrency} from "@/lib/payments/currency-book";
+import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
 
 export const runtime="nodejs";export const maxDuration=30;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const baseFor=(currency:"CNY"|"USD")=>currency==="CNY"?(process.env.NEXT_PUBLIC_CN_SITE_URL||"https://lingxifield.cn"):(process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com");
+const baseFor=(req:Request)=>trustedSiteOrigin(req);
 
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
@@ -55,12 +56,9 @@ export async function POST(req:NextRequest){
 
   // Complete every provider/OAuth precondition before creating a local order.
   const useJsapi=p==="wechat"&&Boolean(code);
-  if(p==="paypal"){
-   const ready=process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&Boolean(process.env.PAYPAL_CLIENT_ID?.trim()&&process.env.PAYPAL_CLIENT_SECRET?.trim()&&process.env.PAYPAL_WEBHOOK_ID?.trim());
-   if(!ready)return NextResponse.json({error:"PayPal 暂未开放"},{status:503});
-  }
+  if(p==="paypal"&&!paypalEnabled())return NextResponse.json({error:"PayPal 暂未开放"},{status:503});
   if(p==="alipay"&&!alipayEnabled())return NextResponse.json({error:"支付宝当前不可用"},{status:503});
-  if(p==="wechat"&&!wechatPayConfigured())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
+  if(p==="wechat"&&!wechatPayEnabled())return NextResponse.json({error:"微信支付当前不可用"},{status:503});
   if(useJsapi){
    const expected=(await cookies()).get("lingxi_wechat_oauth_state")?.value;
    if(!expected||state!==expected)return NextResponse.json({error:"微信授权状态已失效，请重新打开支付页。",code:"WECHAT_OAUTH_STATE_EXPIRED"},{status:400});
@@ -79,14 +77,14 @@ export async function POST(req:NextRequest){
   order=inserted.data;
   if(inserted.error||!order){await admin.from("tool_payment_quotes").update({status:"quoted"}).eq("id",quote.id).eq("status","ordered");return NextResponse.json({error:"创建订单失败"},{status:500});}
 
-  const base=baseFor(currency);
+  const base=baseFor(req);
   if(p==="paypal"){
    const out=await createPaypalOrder({amountUsd:Number(quote.amount_usd),description:`Lingxifield Tool · ${quote.tool_id}`,referenceId:order.id,returnUrl:`${base}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(`/tools/pay?quoteId=${quote.id}&paid=1`)}`,cancelUrl:`${base}/tools/pay?quoteId=${quote.id}&canceled=1`});
    await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id);return NextResponse.json({orderId:order.id,url:out.approveUrl});
   }
   if(p==="alipay"){
    const outTradeNo=`LX${order.id.replace(/-/g,"")}`.slice(0,64),mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(req.headers.get("user-agent")||"");
-   const paymentUrl=createAlipayPaymentUrl({outTradeNo,amountRmb:Number(quote.amount_rmb),subject:`灵犀场工具-${String(quote.tool_id).slice(0,40)}`,notifyUrl:`${alipaySiteUrl()}/api/pay/alipay/notify`,returnUrl:`${alipaySiteUrl()}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(`/tools/pay?quoteId=${quote.id}&paid=1`)}`,mobile});
+   const paymentUrl=createAlipayPaymentUrl({outTradeNo,amountRmb:Number(quote.amount_rmb),subject:`灵犀场工具-${String(quote.tool_id).slice(0,40)}`,notifyUrl:`${base}/api/pay/alipay/notify`,returnUrl:`${base}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(`/tools/pay?quoteId=${quote.id}&paid=1`)}`,mobile});
    await admin.from("orders").update({provider_payment_id:outTradeNo}).eq("id",order.id);return NextResponse.json({orderId:order.id,url:paymentUrl});
   }
   if(useJsapi){
