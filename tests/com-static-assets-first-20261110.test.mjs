@@ -32,7 +32,6 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       assert.ok(headers.includes(entry.route + "\n  X-Lingxi-Render-Mode: static-edge-verified"), entry.route + " must receive the static marker");
     }
     assert.ok(headers.includes("/tools/*\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets"));
-    assert.ok(headers.includes("/tools/*.html\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets"));
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), true);
     assert.ok(headers.includes("/account\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\n  X-Robots-Tag: noindex, nofollow"));
 

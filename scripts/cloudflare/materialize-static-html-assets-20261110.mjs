@@ -149,10 +149,6 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
     "  X-Lingxi-Render-Mode: static-edge-verified",
     "  X-Lingxi-Static-Delivery: workers-static-assets",
     "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
-    "/tools/*.html",
-    "  X-Lingxi-Render-Mode: static-edge-verified",
-    "  X-Lingxi-Static-Delivery: workers-static-assets",
-    "  Cache-Control: public, max-age=300, stale-while-revalidate=120"
   ];
 
   const managedHeaders = [
@@ -186,8 +182,7 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
       }
     }
   }
-  if (!verifiedHeaders.includes("/tools/*\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets") ||
-      !verifiedHeaders.includes("/tools/*.html\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets")) {
+  if (!verifiedHeaders.includes("/tools/*\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets")) {
     throw new Error("STATIC_TOOL_ASSET_DELIVERY_HEADER_MISSING");
   }
 
