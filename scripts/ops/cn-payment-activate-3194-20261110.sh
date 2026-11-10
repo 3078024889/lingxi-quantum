@@ -204,7 +204,7 @@ fi
 
 [[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo NGINX_CONFIG_NOT_REGULAR;exit 1; }
 [[ "$(grep -Fc '127.0.0.1:3194' "$NGINX")" == 1 ]] || { echo NGINX_NOT_USING_3194;exit 1; }
-if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3194' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
+if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3195' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo OLD_UPSTREAM_STILL_PRESENT;exit 1;fi
 
 BACKUP="$(mktemp /etc/lingxifield/.cn-payment-backup-XXXXXX)"
 chmod 600 "$BACKUP"
