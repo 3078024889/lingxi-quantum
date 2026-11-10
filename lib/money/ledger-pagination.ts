@@ -55,7 +55,7 @@ export function walletLedgerAfterFilter(position:WalletLedgerPosition):string{
  return `created_at.lt.${position.createdAt},and(created_at.eq.${position.createdAt},id.lt.${position.id})`;
 }
 
-export function mergeWalletLedgerRows<T extends WalletLedgerSortableRow>(sasiRows:readonly T[],aiRows:readonly T[]):T[]{
+export function mergeWalletLedgerRows<TS extends WalletLedgerSortableRow,TA extends WalletLedgerSortableRow>(sasiRows:readonly TS[],aiRows:readonly TA[]):(TS|TA)[]{
  return [...sasiRows,...aiRows].sort((a,b)=>{
   const time=Date.parse(b.created_at)-Date.parse(a.created_at);
   if(time!==0)return time;
