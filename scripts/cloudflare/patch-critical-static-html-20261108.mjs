@@ -9,7 +9,6 @@ const root=".open-next";
 const assetRoot=join(root,"assets","__lingxi_edge_static__");
 const routes={
  "/":"landing.html",
- "/siai":"siai.html",
  "/tools":"tools.html",
  "/tools/pass":"tools-pass.html",
  "/ai-wallet":"ai-wallet.html",
@@ -18,14 +17,6 @@ const routes={
  "/sasi/marketplace":"marketplace.html",
  "/about":"about.html",
  "/announcements":"announcements.html",
- "/en/siai":"en-siai.html",
- "/ja/siai":"ja-siai.html",
- "/ko/siai":"ko-siai.html",
- "/fr/siai":"fr-siai.html",
- "/de/siai":"de-siai.html",
- "/es/siai":"es-siai.html",
- "/pt/siai":"pt-siai.html",
- "/ar/siai":"ar-siai.html",
  "/tools/ico-to-png":"tool-ico-to-png.html",
  "/tools/number-base-converter":"tool-number-base-converter.html",
  "/tools/video-watermark-remover":"tool-video-watermark-remover.html"
@@ -35,7 +26,6 @@ for(const [route,file] of Object.entries(routes)){
  if(Buffer.byteLength(html)<4500||!/<html[\s>]/i.test(html)||!/<head[\s>]/i.test(html)||
   !/<body[\s>]/i.test(html)||/INTERNAL_SERVER_ERROR|WORKERD_HEALTH_NOT_READY/.test(html))
   throw Error("BAD_PRE_RENDERED_HTML:"+route);
- if(route==="/siai"&&!html.includes("SIAI"))throw Error("RANKING_MISSING_FROM_SNAPSHOT");
  if(route==="/"&&!html.includes("LINGXIFIELD")&&!html.includes("灵犀场"))
   throw Error("LANDING_BRANDING_MISSING");
  console.log("PUBLIC_STATIC_HTML_VALIDATED:"+route+":"+Buffer.byteLength(html));
@@ -124,4 +114,4 @@ const replacement=[
  needle
 ].join("\n");
 await writeFile(target,source.replace(needle,replacement));
-console.log("COM_EIGHTEEN_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");
+console.log("COM_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED");

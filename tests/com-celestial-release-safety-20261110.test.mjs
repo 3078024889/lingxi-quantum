@@ -43,6 +43,9 @@ test("static assets use explicit proxy mappings and do not depend on automatic H
   assert.equal(config.assets.html_handling, "none");
   assert.equal(config.assets.not_found_handling, "none");
   const materializer = read("scripts/cloudflare/materialize-static-html-assets-20261110.mjs");
+  const patcher = read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
+  assert.doesNotMatch(patcher, /"\/(?:en\/|ja\/|ko\/|fr\/|de\/|es\/|pt\/|ar\/)?siai"/);
+  assert.ok(patcher.includes("COM_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED"));
   const manifest = read("scripts/cloudflare/tool-static-route-manifest-20261110.mjs");
   assert.ok(manifest.includes('new Set(["admin", "pay", "pass"])') || manifest.includes('new Set(["admin","pay","pass"])'));
   assert.ok(manifest.includes('new URL("../../app/tools/", import.meta.url)'));
@@ -62,6 +65,7 @@ test("static assets use explicit proxy mappings and do not depend on automatic H
   assert.ok(build.includes("tool-static-route-manifest-20261110.mjs --slugs"));
   assert.ok(build.includes("opennextjs-cloudflare build"));
   assert.ok(build.includes("materialize-static-html-assets-20261110.mjs"));
+  assert.ok(build.includes("'announcements:announcements'; do"));
 });
 
 test("release workflow rebuilds the pinned source and only promotes after exact canary success", () => {

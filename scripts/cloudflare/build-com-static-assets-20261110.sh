@@ -61,7 +61,7 @@ for mapping in \
   'sasi:sasi' \
   'sasi/marketplace:marketplace' \
   'about:about' \
-  'announcements:announcements' \
+  'announcements:announcements'; do
   route="${mapping%%:*}"
   file="${mapping#*:}"
   curl --noproxy '*' -fSs --retry 2 --max-time 55 \
