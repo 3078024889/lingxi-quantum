@@ -9,7 +9,7 @@ function paypalConfigured(){
  return Boolean(process.env.PAYPAL_CLIENT_ID?.trim()&&process.env.PAYPAL_CLIENT_SECRET?.trim()&&process.env.PAYPAL_WEBHOOK_ID?.trim());
 }
 function paypalEnabled(){
- return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&paypalConfigured()&&process.env.PAYPAL_ENV!=="sandbox";
+ return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&paypalConfigured()&&process.env.PAYPAL_ENV?.trim().toLowerCase()!=="sandbox";
 }
 export async function GET(){
  const wechatConfigured=wechatPayConfigured()&&Boolean(process.env.WECHAT_PLATFORM_PUBLIC_KEY?.trim()&&process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID?.trim());
