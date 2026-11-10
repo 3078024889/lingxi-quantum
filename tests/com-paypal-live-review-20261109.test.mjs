@@ -12,7 +12,7 @@ test("PayPal Live checkout uses prior approved Orders v2 redirect and safe serve
  const callback=read("app/api/pay/paypal/return/route.ts");
  const webhook=read("app/api/pay/paypal/webhook/route.ts");
  const ui=read("app/tools/pass/page.tsx");
- assert.match(lib,/PAYPAL_ENV\?\.trim\(\)\.toLowerCase\(\)\s*!==\s*"sandbox"/);
+ assert.match(lib,/PAYPAL_ENV\?\.trim\(\)\.toLowerCase\(\)\s*===\s*"live"/);
  assert.match(lib,/PAYPAL_CLIENT_ID/);
  assert.match(lib,/PAYPAL_CLIENT_SECRET/);
  assert.match(lib,/PAYPAL_WEBHOOK_ID/);
