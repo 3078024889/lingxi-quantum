@@ -62,7 +62,7 @@ test("3194 release runner supports older curl without retry-all-errors",()=>{
   assert.doesNotMatch(runner,/^\s*curl\b[^\n]*--retry-all-errors/m);
   assert.match(runner,/curl --noproxy '\*' -fL --connect-timeout 30 -C -/);
   assert.match(runner,/seq 1 40/);
-  assert.match(runner,/UPGRADE_BLOB_SHA="37aab5fb96a824bf603474c463cbc255e67a3282"/);
+  assert.match(runner,/UPGRADE_BLOB_SHA="41b7248f672c94a84a447a340568d378c9debf3a"/);
   assert.match(runner,/PAYMENT_BLOB_SHA="897a38e8b90c93168396181555a7a008e01c0e24"/);
 });
 
@@ -70,9 +70,9 @@ test("3194 runner verifies pinned scripts and release before staging",()=>{
   assert.match(runner,/GITHUB_SCRIPT_BLOB_MISMATCH/);
   assert.match(runner,/ARCHIVE_SHA="9d007903bc1996c273ed37013c934e4d002d7c536e059c56cc011d8928df56ab"/);
   assert.match(runner,/ARCHIVE_BYTES="454770678"/);
-  assert.match(runner,/TAG="ecs-cn-unified-20261108-2b48fb09bdcc"/);
+  assert.match(runner,/TAG="ecs-cn-unified-20261108-9230bcba6a24"/);
   assert.match(runner,/SOURCE_SHA="9230bcba6a24cce408b56eee78108561b2b573ca"/);
-  assert.match(runner,/SOURCE_REF="0857ae60c84654425cb13a1ecdc750b23c44eace"/);
+  assert.match(runner,/SOURCE_REF="0ee8f55e04f24e4a2505cf35d8855235dfc6357e"/);
   assert.match(runner,/EXACT_SOURCE_SHA_PASS/);
   assert.ok(runner.indexOf("sha256sum -c") < runner.indexOf('--stage-local'));
   assert.ok(runner.indexOf("EXACT_SOURCE_SHA_PASS") < runner.indexOf('--stage-local'));
