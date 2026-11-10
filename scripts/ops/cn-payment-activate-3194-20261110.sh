@@ -28,6 +28,9 @@ SHA="$(tr -d '\r\n' < "$DIR/RELEASE_SOURCE_SHA")"
 [[ "$SHA" =~ ^[a-f0-9]{40}$ && "$DIR" == "/opt/lingxifield/cn-staged-releases/$SHA" && "$(printf '%s' "$SHA" | cut -c1-12)" == "$SHORT" ]] || { echo SOURCE_MISMATCH;exit 1; }
 [[ -f "$FLAGS" && ! -L "$FLAGS" && "$(stat -c '%u:%a' "$FLAGS")" == 0:600 ]] || { echo UNSAFE_PAYMENT_FLAG_FILE;exit 1; }
 systemctl cat "$SVC" | grep -Fq "EnvironmentFile=$FLAGS" || { echo SERVICE_ENVIRONMENT_FILE_MISMATCH;exit 1; }
+[[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo NGINX_CONFIG_NOT_REGULAR;exit 1; }
+[[ "$(grep -Fc '127.0.0.1:3194' "$NGINX")" == 1 ]] || { echo CN3194_NGINX_UPSTREAM_NOT_ACTIVE;exit 1; }
+if grep -Fq '127.0.0.1:3193' "$NGINX" || grep -Fq '127.0.0.1:3195' "$NGINX" || grep -Fq '127.0.0.1:3192' "$NGINX";then echo CN3194_NGINX_UPSTREAM_MISMATCH;exit 1;fi
 
 VERIFIER="$DIR/cn-payment-signed-live-probe.mjs"
 [[ -f "$VERIFIER" && ! -L "$VERIFIER" ]] || { echo SIGNED_MERCHANT_VERIFIER_MISSING;exit 1; }
