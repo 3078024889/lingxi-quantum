@@ -211,6 +211,9 @@ if [[ "$MODE" == --rollback ]];then
  systemctl disable "$FINAL_SVC" 2>/dev/null || true
  systemctl stop "$NEW_SVC" 2>/dev/null || true
  systemctl disable "$NEW_SVC" 2>/dev/null || true
+ if systemctl is-active --quiet "$FINAL_SVC" || systemctl is-active --quiet "$NEW_SVC" || systemctl is-enabled --quiet "$FINAL_SVC" || systemctl is-enabled --quiet "$NEW_SVC" || ss -lnt | grep -Eq '^LISTEN.*:(3194|3195)[[:space:]]';then
+  echo CN3193_ROLLBACK_CANDIDATE_STOP_FAILED >&2;exit 1
+ fi
  echo "CN3193_ROLLBACK_BASELINE_ACTIVE service=$FALLBACK_SVC"
  echo "3194_CANDIDATE_STOPPED_FLAGS_AND_HISTORICAL_DATA_PRESERVED"
  exit 0
