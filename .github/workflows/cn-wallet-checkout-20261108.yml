@@ -28,7 +28,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Wallet and payment regression contracts
         run: |
-          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
+          node --test tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs tests/sasi-software-paypal-fulfillment-contract.test.mjs tests/paypal-merchant-idempotency-20261108.test.mjs tests/sasi-marketplace-security-contract.test.mjs
           node --test tests/com-admin-facade.test.mjs tests/tool-pass-server-http-contract.test.mjs
           node --test tests/unified-tools-pass-static-contract.test.mjs
           node --test tests/release/site-announcements-contract.test.mjs
