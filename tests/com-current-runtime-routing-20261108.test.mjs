@@ -42,5 +42,14 @@ test('generated edge wrapper serves public merchant status without exposing auth
   assert.equal(currentCalls,1);assert.equal(legacyCalls,0);
   const payment=await worker.fetch(new Request('https://lingxifield.com/api/pay/paypal/create',{method:'POST'}),env,{});
   assert.equal(await payment.text(),'legacy');assert.equal(legacyCalls,1);
+  let assetCalls=0;
+  env.ASSETS={fetch:async()=>{assetCalls++;return new Response('anonymous-login-shell');}};
+  const login=await worker.fetch(new Request('https://lingxifield.com/account'),env,{});
+  assert.equal(await login.text(),'anonymous-login-shell');assert.equal(assetCalls,1);
+  const signed=await worker.fetch(new Request('https://lingxifield.com/account',{headers:{cookie:'sb-example-auth-token=test'}}),env,{});
+  assert.equal(await signed.text(),'current');assert.equal(assetCalls,1);
+  env.current={fetch:async request=>{assert.equal(new URL(request.url).search,'?mode=verify&email=test%40example.com');return new Response('verification-form');}};
+  const verify=await worker.fetch(new Request('https://lingxifield.com/account?mode=verify&email=test%40example.com'),env,{});
+  assert.equal(await verify.text(),'verification-form');assert.equal(assetCalls,1);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
