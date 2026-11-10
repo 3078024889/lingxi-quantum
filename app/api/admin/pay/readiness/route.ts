@@ -3,11 +3,12 @@ import{createClient}from"@/lib/supabase/server";
 import{getPaypalAccessToken,listPaypalWebhooks,paypalConfigured,paypalEnabled}from"@/lib/paypal";
 import{wechatPayConfigured,wechatPayEnabled,wechatPayMissingVars}from"@/lib/wechatpay";
 import{alipayEnabled,alipayMissingVars}from"@/lib/alipay";
-import{toolPassCommerceReady}from"@/lib/tools/commerce/tool-server-receipt";
+import{toolPassBackendReady,toolPassCommerceReady}from"@/lib/tools/commerce/tool-server-receipt";
 import{SASI_SOFTWARE_CATALOG}from"@/lib/sasi-software/catalog";
 import{softwareCheckoutReady}from"@/lib/sasi-software/readiness";
 import{marketplaceR2Ready}from"@/lib/sasi-marketplace/r2";
 import{trustedSiteOrigin}from"@/lib/sasi/site-origin";
+import{wechatOauthConfigured}from"@/lib/wechat-oauth";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -59,12 +60,23 @@ export async function GET(req:Request){
  const wechatMissing=wechatPayMissingVars();
  return NextResponse.json({
   payments:{
-   wechat:{configured:wechatPayConfigured(),enabled:wechatPayEnabled(),missing:wechatMissing},
+   wechat:{configured:wechatPayConfigured(),enabled:wechatPayEnabled(),oauthConfigured:wechatOauthConfigured(),missing:wechatMissing},
    alipay:{configured:alipayMissing.length===0,enabled:alipayEnabled(),missing:alipayMissing},
    paypal:{environment:paypalLive?"live":"not-live",configured:paypalConfigured(),enabled:paypalEnabled(),tokenTest:paypalTokenTest,webhook:paypalWebhook}
   },
   commerce:{
-   toolPass:toolPassCommerceReady(),
+   wallet:{
+    cnyBalanceV1:process.env.SASI_RMB_BALANCE_V1_ENABLED==="true",
+    usdBalanceTopup:process.env.USD_BALANCE_TOPUP_ENABLED==="true",
+    refundFlowTested:process.env.SASI_REFUND_FLOW_TESTED==="true",
+    usageSettlementTested:process.env.SASI_USAGE_SETTLEMENT_TESTED==="true"
+   },
+   toolPass:{
+    backendReady:toolPassBackendReady(),
+    commerceEnabled:process.env.TOOL_PASS_COMMERCE_READY==="true",
+    privacyHashSecretPresent:Boolean(process.env.LINGXIFIELD_PRIVACY_HASH_SECRET&&process.env.LINGXIFIELD_PRIVACY_HASH_SECRET.length>=32),
+    ready:toolPassCommerceReady()
+   },
    softwareCommerceFlag:process.env.SOFTWARE_COMMERCE_READY==="true",
    softwarePackages:software,
    marketplaceR2:marketplaceR2Ready()
