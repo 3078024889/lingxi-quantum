@@ -4,7 +4,7 @@
 set -Eeuo pipefail
 MODE="${1:-}"; TAG="${2:-}"
 [[ "$MODE" == --audit || "$MODE" == --enable ]] || { echo MODE_INVALID;exit 2; }
-[[ "$TAG" =~ ^ecs-cn-unified-20261108-[a-f0-9]{12}$ ]] || { echo TAG_INVALID;exit 2; }
+[[ "$TAG" =~ ^ecs-cn-unified-20261110-[a-f0-9]{12}$ ]] || { echo TAG_INVALID;exit 2; }
 SHORT="${TAG##*-}"
 [[ "$EUID" == 0 ]] || { echo ROOT_REQUIRED;exit 2; }
 
@@ -110,6 +110,13 @@ async function main(){
   console.log("CN_TOOLPASS_BACKEND_READINESS=PASS");
  else
   console.log("CN_TOOLPASS_BACKEND_READINESS=FAIL");
+ if(env.SASI_REFUND_FLOW_TESTED==="true"){
+  console.log("CN_CNY_WALLET_REFUND_GATE=PASS");
+  console.log("CN_USD_WALLET_REFUND_GATE=PASS");
+ }else{
+  console.log("CN_CNY_WALLET_REFUND_GATE=FAIL");
+  console.log("CN_USD_WALLET_REFUND_GATE=FAIL");
+ }
 }
 await main().catch(()=>fail("UNEXPECTED"));
 PAYPAL_PROBE
@@ -145,9 +152,10 @@ if ! run_env_node paypal "$PROBE" >"$TMP/paypal.log" 2>&1;then
  exit 1
 fi
 grep '^CN_' "$TMP/paypal.log" || true
-PAYPAL=false;TOOLPASS_BACKEND=false;USD_REFUND_GATE=false
+PAYPAL=false;TOOLPASS_BACKEND=false;CNY_REFUND_GATE=false;USD_REFUND_GATE=false
 grep -Fxq 'CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS' "$TMP/paypal.log" && PAYPAL=true || true
 grep -Fxq 'CN_TOOLPASS_BACKEND_READINESS=PASS' "$TMP/paypal.log" && TOOLPASS_BACKEND=true || true
+grep -Fxq 'CN_CNY_WALLET_REFUND_GATE=PASS' "$TMP/paypal.log" && CNY_REFUND_GATE=true || true
 grep -Fxq 'CN_USD_WALLET_REFUND_GATE=PASS' "$TMP/paypal.log" && USD_REFUND_GATE=true || true
 
 echo "STEP_3_UNSIGNED_WEBHOOKS_MUST_FAIL_CLOSED"
@@ -168,6 +176,7 @@ if [[ "$ALIPAY" != true || "$WECHAT" != true || "$PAYPAL" != true || "$TOOLPASS_
 fi
 if [[ "$MODE" == --audit ]];then
  echo CN3194_ALL_THREE_LIVE_MERCHANTS_AND_TOOLPASS_BACKEND_AUDIT_PASS_FLAGS_UNCHANGED
+ [[ "$CNY_REFUND_GATE" == true ]] || echo CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED
  [[ "$USD_REFUND_GATE" == true ]] || echo CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED
  exit 0
 fi
@@ -186,15 +195,15 @@ rollback(){
 }
 trap 'rm -rf "$TMP";rm -f "$PROBE";rm -f "$BACKUP"' EXIT
 
-python3 - "$FLAGS" "$USD_REFUND_GATE" <<'PY'
+python3 - "$FLAGS" "$CNY_REFUND_GATE" "$USD_REFUND_GATE" <<'PY'
 import os,sys,tempfile
-path,usd_refund_gate=sys.argv[1:]
+path,cny_refund_gate,usd_refund_gate=sys.argv[1:]
 values={
  "ALIPAY_ENABLED":"true",
  "WECHAT_ENABLED":"true",
  "PAYPAL_ENABLED":"true",
  "TOOL_PASS_COMMERCE_READY":"true",
- "SASI_RMB_BALANCE_V1_ENABLED":"true",
+ "SASI_RMB_BALANCE_V1_ENABLED":"true" if cny_refund_gate=="true" else "false",
 }
 # USD top-ups stay closed unless the separate refund lifecycle test flag is true.
 values["USD_BALANCE_TOPUP_ENABLED"]="true" if usd_refund_gate=="true" else "false"
@@ -224,6 +233,7 @@ if ! curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' http://127.
 if ! "$NODE" -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>{const j=JSON.parse(s);if(j.available!==true||j.offers?.length!==4)process.exit(4);console.log("CN_TOOLPASS_COMMERCE_READY_WITH_FOUR_PLANS")})' <"$TMP/toolpass.json";then rollback;exit 1;fi
 
 echo "CN_VERIFIED_CNY_AND_PAYPAL_LIVE_PROVIDERS_ENABLED"
+if [[ "$CNY_REFUND_GATE" == true ]];then echo CN_CNY_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
 if [[ "$USD_REFUND_GATE" == true ]];then echo CN_USD_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
 echo "SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION"
 echo "NO_REAL_CHARGE_NO_ORDER_NO_WALLET_MUTATION_NO_HISTORICAL_DATA_CHANGE"

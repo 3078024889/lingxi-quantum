@@ -12,6 +12,7 @@ for(const token of [
  "CN_MERCHANT_WECHAT_SIGNED_LIVE_PROBE=PASS",
  "CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS",
  "CN_TOOLPASS_BACKEND_READINESS=PASS",
+ "CN_CNY_WALLET_REFUND_GATE=PASS",
  "CN_USD_WALLET_REFUND_GATE=PASS"
 ])assert.ok(script.includes(token),token);
 assert.match(script,/for item in "alipay\|\/api\/pay\/alipay\/notify/);
@@ -20,6 +21,9 @@ assert.match(script,/UNSIGNED_WEBHOOK_REJECTION_FAILED/);
 assert.match(script,/cp -a "\$FLAGS" "\$BACKUP"/);
 assert.match(script,/CN_PAYMENT_ACTIVATION_FAILED_ROLLBACK/);
 assert.match(script,/PAYPAL_ENABLED/);
+assert.match(script,/SASI_RMB_BALANCE_V1_ENABLED/);
+assert.match(script,/CNY_REFUND_GATE/);
+assert.match(script,/CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED/);
 assert.match(script,/TOOL_PASS_COMMERCE_READY/);
 assert.match(script,/SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION/);
 assert.doesNotMatch(script,/SASI_MARKET_PAYOUTS_ENABLED.*true/);
