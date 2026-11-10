@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { decryptWechatNotifyResource, isWechatNotifyTimestampFresh, verifyWechatNotifySignature } from "@/lib/wechatpay";
+import { decryptWechatNotifyResource, isWechatNotifyTimestampFresh, verifyWechatNotifySignature, wechatAppId, wechatMerchantId } from "@/lib/wechatpay";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -41,6 +41,9 @@ export async function POST(req: Request) {
     }
 
     const decrypted = decryptWechatNotifyResource(resource);
+    if(String(decrypted.appid??"")!==wechatAppId()||String(decrypted.mchid??"")!==wechatMerchantId()){
+      return NextResponse.json({code:"FAIL",message:"商户身份校验失败"},{status:422});
+    }
     if (decrypted.trade_state !== "SUCCESS") {
       // 不是"支付成功"这个状态，直接确认收到，不处理（微信支付也会推送
       // 关闭、退款这些状态的通知）。
