@@ -4,6 +4,7 @@ import { mkdtemp, mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
+import { loadToolStaticRoutes } from "../scripts/cloudflare/tool-static-route-manifest-20261110.mjs";
 
 const html = "<!doctype html><html><head><title>LINGXIFIELD</title></head><body>" + "x".repeat(5000) + "</body></html>";
 
@@ -11,15 +12,18 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
   const root = await mkdtemp(join(tmpdir(), "lingxi-static-assets-"));
   try {
     const snapshotRoot = join(root, "__lingxi_edge_static__");
+    const toolRoutes = await loadToolStaticRoutes();
+    const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
+    assert.ok(toolRoutes.length >= 80, "the registry should expose the complete static tool detail set");
     await mkdir(snapshotRoot, { recursive: true });
-    for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
+    for (const entry of allRoutes) {
       await writeFile(join(snapshotRoot, entry.source), html + entry.route, "utf8");
     }
 
     const result = await materializeStaticHtmlAssets(root);
-    assert.equal(result.materialized, PUBLIC_STATIC_HTML_ROUTES.length);
+    assert.equal(result.materialized, allRoutes.length);
 
-    for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
+    for (const entry of allRoutes) {
       assert.equal(await readFile(join(root, entry.target), "utf8"), html + entry.route);
     }
 
@@ -63,7 +67,8 @@ test("wrangler serves direct HTML assets before the Worker and keeps range paths
   assert.equal(config.assets.html_handling, "none");
   assert.equal(config.assets.not_found_handling, "none");
   const workerFirst = new Set(config.assets.run_worker_first);
-  for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
+  const toolRoutes = await loadToolStaticRoutes();
+  for (const entry of [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes]) {
     assert.equal(workerFirst.has(entry.route), false, entry.route + " must remain asset-first");
   }
   assert.ok(workerFirst.has("/*/"), "trailing-slash requests must reach middleware for permanent 308 canonicalization");
