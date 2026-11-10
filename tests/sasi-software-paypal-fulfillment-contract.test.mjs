@@ -70,7 +70,7 @@ assert.doesNotMatch(verifier,/verify-webhook-signature/);
 const fulfillmentSource=read("lib/fulfill-order.ts");
 assert.match(fulfillmentSource,/toolquote:[\s\S]*?PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
 assert.match(fulfillmentSource,/getUsdBalanceProduct\(productId\)[\s\S]*?PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
-assert.match(fulfillmentSource,/credit_sasi_topup[\s\S]*?PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
+assert.match(fulfillmentSource,/if\(!verifiedPayment\)return\{ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"\};[\s\S]*?credit_sasi_topup/);
 for(const path of [
  "app/api/pay/alipay/notify/route.ts",
  "app/api/pay/wechat/notify/route.ts",
