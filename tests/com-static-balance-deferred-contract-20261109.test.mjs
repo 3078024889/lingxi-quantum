@@ -13,7 +13,8 @@ test("only the private balance summary may defer as 503 for static UI release",(
  assert.ok(canary.includes('if [[ "$path" == "/api/money/summary" && "$status" == "503" ]];then'));
  assert.ok(canary.includes("COM_CANARY_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA"));
  assert.ok(canary.includes("availableMinor|refundableMinor|refundHoldMinor|balances|withdrawals"));
- assert.ok(release.includes("COM_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA"));
+ assert.ok(release.includes("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs"));
+ assert.match(release,/node scripts\/cloudflare\/com-celestial-apex-verified-cutover-20261109\.mjs/);
 });
 
 test("all other private routes remain strict anonymous 401 and payments stay disabled",()=>{
