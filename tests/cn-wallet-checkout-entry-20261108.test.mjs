@@ -53,3 +53,16 @@ test("server still refuses disabled payments and authenticates charge creation",
  assert.match(notify, /verifyWechatNotifySignature/);
  assert.match(notify, /paymentAmount\.total/);
 });
+
+
+test("provider readiness requires verifiable merchant callback identity", () => {
+ const wechat=read("lib/wechatpay.ts");
+ assert.match(wechat,/WECHAT_PLATFORM_PUBLIC_KEY/);
+ assert.match(wechat,/WECHAT_PLATFORM_PUBLIC_KEY_ID/);
+ assert.match(wechat,/return wechatPayMissingVars\(\)\.length === 0/);
+ const alipay=read("lib/alipay.ts");
+ assert.match(alipay,/ALIPAY_SELLER_ID/);
+ assert.match(alipay,/params\.sign_type !== "RSA2"/);
+ const notify=read("app/api/pay/alipay/notify/route.ts");
+ assert.match(notify,/if \(!expectedSeller \|\| params\.seller_id !== expectedSeller\)/);
+});
