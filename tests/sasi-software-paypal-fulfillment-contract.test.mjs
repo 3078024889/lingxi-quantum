@@ -96,4 +96,8 @@ assert.match(adminDiagnostics,/listPaypalWebhooks/);
 assert.match(adminDiagnostics,/CHECKOUT\.ORDER\.APPROVED/);
 assert.match(adminDiagnostics,/PAYMENT\.CAPTURE\.REFUNDED/);
 assert.match(adminDiagnostics,/urlMatches/);
+assert.match(adminDiagnostics,/USD_BALANCE_TOPUP_ENABLED/);
+assert.match(adminDiagnostics,/SASI_REFUND_FLOW_TESTED/);
+assert.match(adminDiagnostics,/wechatOauthConfigured/);
+assert.match(adminDiagnostics,/toolPassBackendReady/);
 assert.match(adminDiagnostics,/Cache-Control/);
