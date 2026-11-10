@@ -4,7 +4,7 @@ on:
     branches: [ops/cn-celestial-static-assets-20261109]
     paths: ['.github/workflows/cn-v26-standalone-20261110.yml']
 env:
-  CN_SOURCE_SHA: 9179b850d8d25aede4936055b3acfa1a7b2cff55
+  CN_SOURCE_SHA: 9b9bc72033087e37e19bc60cb066b4a6753232e5
 permissions:
   contents: write
   actions: read
@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-          ref: 9179b850d8d25aede4936055b3acfa1a7b2cff55
+          ref: 9b9bc72033087e37e19bc60cb066b4a6753232e5
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: 11.28.0
@@ -112,7 +112,7 @@ jobs:
       - name: Upload package for immutable prerelease promotion
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: cn-unified-9179b850d8d25aede4936055b3acfa1a7b2cff55
+          name: cn-unified-9b9bc72033087e37e19bc60cb066b4a6753232e5
           path: |
             cn-20261108-unified-standalone.tar.gz
             cn-20261108-unified-standalone.sha256
