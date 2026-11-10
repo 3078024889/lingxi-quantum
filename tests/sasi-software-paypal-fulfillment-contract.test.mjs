@@ -86,3 +86,10 @@ for(const path of [
  assert.match(source,/fulfillPaidOrder\([^)]*,true\)/,"provider-verified fulfillment missing in "+path);
 }
 console.log("ALL_PROVIDER_PAYMENT_FULFILLMENT_REQUIRES_VERIFICATION_PASS");
+
+const adminDiagnostics=read("app/api/admin/pay/readiness/route.ts");
+assert.match(adminDiagnostics,/getPaypalAccessToken/);
+assert.match(adminDiagnostics,/if\(!user\)/);
+assert.match(adminDiagnostics,/if\(!isAdmin\(user\.email\)\)/);
+assert.match(adminDiagnostics,/tokenTest:paypalTokenTest/);
+assert.match(adminDiagnostics,/Cache-Control/);
