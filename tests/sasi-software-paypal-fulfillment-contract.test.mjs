@@ -55,3 +55,13 @@ for(const token of [
 assert.match(migration,/GRANT EXECUTE ON FUNCTION public\.sasi_grant_software_delivery\(uuid\) TO service_role/);
 assert.match(migration,/GRANT EXECUTE ON FUNCTION public\.sasi_claim_software_download\(uuid,uuid\) TO service_role/);
 console.log("SASI_SOFTWARE_PAYPAL_PRIVATE_FULFILLMENT_CONTRACT_PASS");
+
+assert.match(paypal,/paypalCrc32\(Buffer\.from\(rawBody,"utf8"\)\)/);
+assert.match(paypal,/transmissionId\}\|\$\{transmissionTime\}\|\$\{webhookId\}\|\$\{crc\}/);
+assert.match(paypal,/api\.paypal\.com/);
+assert.match(paypal,/PAYPAL_CERT_URL_REJECTED/);
+const verifyStart=paypal.indexOf("export async function verifyPaypalWebhook");
+const verifyEnd=paypal.indexOf("export async function createPaypalRefund",verifyStart);
+const verifier=paypal.slice(verifyStart,verifyEnd);
+assert.doesNotMatch(verifier,/JSON\.parse\(rawBody\)/);
+assert.doesNotMatch(verifier,/verify-webhook-signature/);
