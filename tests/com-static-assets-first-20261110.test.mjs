@@ -58,6 +58,7 @@ test("wrangler serves direct HTML assets before the Worker and keeps range paths
   for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
     assert.equal(workerFirst.has(entry.route), false, entry.route + " must remain asset-first");
   }
+  assert.ok(workerFirst.has("/*/"), "trailing-slash requests must reach middleware for permanent 308 canonicalization");
   assert.ok(workerFirst.has("/media/ffmpeg-0.12.10/ffmpeg-core.wasm"));
   assert.ok(workerFirst.has("/models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx"));
 });
