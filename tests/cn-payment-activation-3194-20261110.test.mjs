@@ -134,6 +134,10 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
  assert.match(upgrade,/rollback_to_3193\(\)/);
  assert.match(promotion,/rollback_to_3193 "CN3194_FINAL_SERVICE_START_FAILED"/);
  assert.match(promotion,/rollback_to_3193 "CN3194_FINAL_PORT_PROBE_FAILED"/);
+ assert.match(promotion,/CN3195_STAGE_STOP_FAILED/);
+ assert.match(promotion,/CN3195_STAGE_PORT_STILL_LISTENING/);
+ assert.match(upgrade,/CN3193_AUTOMATIC_ROLLBACK_CANDIDATE_STOP_FAILED/);
+ assert.match(upgrade,/CN3193_ROLLBACK_CANDIDATE_STOP_FAILED/);
  assert.doesNotMatch(promotion,/NEW_CODE_STILL_SERVING_ON_3195|NEW_CODE_RETAINED_ON_3195/);
  const rollback=upgrade.slice(0,upgrade.indexOf(String.fromCharCode(10)+"old_live"+String.fromCharCode(10)+"load_env_files"));
  assert.ok(rollback.indexOf("set_nginx_upstream 3193")<rollback.indexOf('systemctl stop "$FINAL_SVC"'));
