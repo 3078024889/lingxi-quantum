@@ -3,7 +3,7 @@ import Link from "next/link";
 import type {SeoLocale} from "@/lib/seo/global-seo";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 
-type Question = {q:string;a:string;href:string;link:string};,
+type Question = {q:string;a:string;href:string;link:string};
 type Content = {eyebrow:string;title:string;intro:string;questions:Question[];explore:string;create:string;tools:string};
 const FAQ:Record<SeoLocale,Content>={
  zh:{
