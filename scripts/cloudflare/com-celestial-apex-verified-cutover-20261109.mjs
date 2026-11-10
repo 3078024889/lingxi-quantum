@@ -267,7 +267,10 @@ console.log("COM_PRODUCTION_PREVIOUS_VERSION_PINNED=" + previousVersion);
 const currentSettings = await cf(
   "/accounts/" + account + "/workers/scripts/" + productionWorker + "/settings"
 );
-const currentBindings = currentSettings.bindings || [];
+if (!Array.isArray(currentSettings.bindings)) {
+  throw Error("PRODUCTION_WORKER_BINDINGS_UNREADABLE");
+}
+const currentBindings = currentSettings.bindings;
 const preservedValueTypes = new Set(["plain_text", "secret_text", "secret_key"]);
 const unknownBindings = currentBindings.filter(binding => {
   if (preservedValueTypes.has(binding.type)) return false;

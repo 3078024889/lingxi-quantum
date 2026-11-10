@@ -27,6 +27,7 @@ test("production promotion updates the existing Worker in-place and preserves cu
   assert.ok(script.includes("COM_PRODUCTION_CONFIG_PRESERVES_DASHBOARD_VARS_SECRETS_AND_SERVICE_BINDING"));
   assert.ok(script.includes("COM_PRODUCTION_BINDING_PREFLIGHT_PASS"));
   assert.ok(script.includes("PRODUCTION_WORKER_HAS_UNMAPPED_BINDINGS"));
+  assert.ok(script.includes("PRODUCTION_WORKER_BINDINGS_UNREADABLE"));
   assert.ok(script.includes('"rollback"'));
   assert.ok(script.includes("previousVersion"));
   assert.ok(script.includes("COM_PRODUCTION_VERSION_ROLLBACK_CONFIRMED"));
