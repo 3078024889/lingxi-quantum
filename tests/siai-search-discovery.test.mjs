@@ -42,7 +42,8 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(read("public/llms-full.txt"),/Global AI \/ SI \/ SIAI rankings/);
  assert.match(page,/const \{curated,rows\}=getSiaiDirectoryRows\(\)/);
  assert.match(page,/itemListElement:curated\.map/);
- assert.match(page,/alternates:\{canonical:PRIMARY_SITE\+"\/siai",languages:/);
+ assert.match(page,/const SITE=seoSiteForBuild\(process\.env\.NEXT_PUBLIC_SITE_URL\)/);
+ assert.match(page,/alternates:\{canonical:SITE\+"\/siai",languages:/);
  assert.doesNotMatch(page,/index:false/);
 });
 test("eight sourced corporate-history entries remain honest about parent/launch differences",()=>{
@@ -74,4 +75,7 @@ test("nine-language FAQ body follows the language selection and spaced keywords 
  assert.match(faq,/lang\|\|initialLocale/);
  assert.match(home,/replace\(\/\\s\+\/g,""\)/);
  assert.match(home,/"ai视频"/);
+ assert.match(home,/url\.searchParams\.set\("q",v\)/);
+ assert.match(rank,/params\.get\("q"\)/);
+ assert.match(rank,/setQuery\(incomingQuery\.trim\(\)\)/);
 });

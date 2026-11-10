@@ -40,8 +40,10 @@ test("the user-supplied global footer copy is complete in nine languages",()=>{
  const zh=get(node.initializer,"zh");
  assert.equal(literal(get(zh,"headline")),"🌍 全球SIAI排行榜｜全球SI AI工具行情平台");
  assert.equal(literal(get(zh,"intro")),"持续收录全球SI、AI公司、模型与工具，支持搜索、分类筛选、横向对比，持续更新官方资料。");
- assert.equal(literal(get(zh,"sasiTitle")),"✨ SASI全球多模型智能创作");
- assert.equal(literal(get(zh,"closingDescription")),"全球SIAI工具行情查询、视频与API成本对比、SASI智能创作、100+在线实用工具，一站式使用。");
+ assert.equal(literal(get(zh,"sasiTitle")),"✨ SASI 智能软件市场与开发者生态");
+ assert.equal(literal(get(zh,"closingDescription")),"全球 SIAI 排行榜、模型价格与免费额度比较、SASI 智能软件市场、MT5 EA 源码与成品软件、100+ 在线实用工具，一站式查询与使用。");
+ assert.match(raw,/SASI 智能软件市场/);
+ assert.doesNotMatch(raw,/SASI智能创作|SASI全球多模型智能创作/);
  for(const word of ["阅后即焚","食物卡路里识别","API Token调用费用估算与模型成本对比","视频、短剧制作成本及积分费用计算"])
   assert(raw.includes(word),word);
 });

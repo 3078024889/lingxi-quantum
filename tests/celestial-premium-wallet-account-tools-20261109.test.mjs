@@ -20,8 +20,12 @@ test("wallet shows real CNY/USD balances from authenticated summary, never hardc
  assert.match(wallet,/new Intl\.NumberFormat/);
  assert.match(wallet,/BALANCE_TOPUP_AMOUNTS\.map/);
  assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
- assert.match(wallet,/WalletLedgerPanel currency="CNY"/);
- assert.match(wallet,/WalletLedgerPanel currency="USD"/);
+ assert.match(wallet,/WalletLedgerPanel showCurrencyTabs/);
+ const ledger=read("components/WalletLedgerPanel.tsx");
+ assert.match(ledger,/showCurrencyTabs&&/);
+ assert.match(ledger,/wallet-ledger-currency-CNY/);
+ assert.match(ledger,/wallet-ledger-currency-USD/);
+ assert.match(ledger,/new URLSearchParams\(\{currency\}\)/);
  assert.doesNotMatch(wallet,/支付通道暂未开放|充值说明/);
  assert.doesNotMatch(wallet,/setData\(\{status:"ready",summary:\{balances:/);
  assert.match(walletPage,/className="lx26-wallet-page/);
