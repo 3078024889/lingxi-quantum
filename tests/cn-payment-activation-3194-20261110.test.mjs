@@ -102,6 +102,9 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
  assert.match(upgrade,/set_nginx_upstream 3193/);
  assert.match(upgrade,/CN3194_NGINX_PROMOTION_PASS/);
  assert.match(upgrade,/CN3193_ROLLBACK_BASELINE_ACTIVE/);
+ assert.match(upgrade,/CN3194_OLD_SERVICE_DISABLE_FAILED_NEW_CODE_STILL_SERVING_ON_3195/);
+ assert.match(upgrade,/CN3194_OLD_SERVICE_DISABLE_FAILED_DURING_ROLLBACK/);
+ assert.match(upgrade,/systemctl disable "\$OLD_3194_SVC"/);
  assert.doesNotMatch(upgrade,/CN3195_NGINX_PROMOTION_PASS/);
  assert.match(upgrade,/NGINX_BACKUP/);
  assert.match(upgrade,/TOOL_PASS_COMMERCE_READY=false/);
