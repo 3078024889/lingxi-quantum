@@ -113,6 +113,15 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
  assert.match(upgrade,/PAYPAL_ENABLED=false/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
+ const promotion=upgrade.slice(upgrade.indexOf('if [[ "$MODE" == --promote ]];then'));
+ const stageRoute=promotion.indexOf("set_nginx_upstream 3195");
+ const stopOld=promotion.indexOf('systemctl stop "$OLD_3194_SVC"');
+ const startFinal=promotion.indexOf('systemctl start "$FINAL_SVC"');
+ const finalRoute=promotion.indexOf("set_nginx_upstream 3194");
+ const stopStage=promotion.indexOf('systemctl stop "$NEW_SVC"');
+ assert.ok(stageRoute>=0&&stageRoute<stopOld&&stopOld<startFinal&&startFinal<finalRoute&&finalRoute<stopStage);
+ const rollback=upgrade.slice(0,upgrade.indexOf("\\nold_live\\nload_env_files"));
+ assert.ok(rollback.indexOf("set_nginx_upstream 3193")<rollback.indexOf('systemctl stop "$FINAL_SVC"'));
  execFileSync("bash",["-n","scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh"]);
  execFileSync("bash",["-n","scripts/ops/cn-payment-activate-3194-20261110.sh"]);
 });
