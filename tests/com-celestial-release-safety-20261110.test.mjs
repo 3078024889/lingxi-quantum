@@ -53,6 +53,9 @@ test("static assets use explicit proxy mappings and do not depend on automatic H
   assert.ok(materializer.includes("Content-Security-Policy:"));
   assert.ok(materializer.includes("Strict-Transport-Security:"));
   assert.ok(materializer.includes("loadToolStaticRoutes"));
+  assert.doesNotMatch(materializer, /route: "\/(?:en\/|ja\/|ko\/|fr\/|de\/|es\/|pt\/|ar\/)?siai"/);
+  const staticRoutes = read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs").split("const staticRoutes = new Set([")[1].split("]);")[0];
+  assert.doesNotMatch(staticRoutes, /\/siai/);
   assert.ok(materializer.includes('"/tools/*"'));
   assert.ok(manifest.includes("TOOL_STATIC_SLUG_DUPLICATE"));
   const build = read("scripts/cloudflare/build-com-static-assets-20261110.sh");
