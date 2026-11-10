@@ -10,9 +10,10 @@ const githubToken = process.env.GH_TOKEN;
 const runId = process.env.COM_VERIFIED_CANARY_RUN;
 const expectedSha = process.env.COM_VERIFIED_CANARY_SHA;
 const productionWorker = "lingxifield-com-celestial-20261109";
-const candidateWorker = "lingxifield-com-static-canary-20261110";
+const candidateWorkerPrefix = "lingxifield-com-canary-";
 const wwwWorker = "lingxifield-com-static-gateway-canary-20261107";
 const apexPattern = "lingxifield.com/*";
+const candidateWorker = candidateWorkerPrefix + (expectedSha || "").slice(0, 12);
 
 if (!account || !token || !githubToken || !runId || !/^[0-9a-f]{40}$/.test(expectedSha || "")) {
   throw Error("CLOUDFLARE_OR_CANARY_GATE_NOT_CONFIGURED");
