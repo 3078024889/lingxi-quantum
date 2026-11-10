@@ -7,7 +7,7 @@ const canary=readFileSync(".github/workflows/com-unified-next-isolated-canary-20
 const release=readFileSync(".github/workflows/com-unified-verified-apex-release-20261108.yml","utf8");
 
 test("only the private balance summary may defer as 503 for static UI release",()=>{
- assert.ok(cutover.includes('if(path==="/api/money/summary"&&code===503){'));
+ assert.match(cutover,/if\s*\(\s*path\s*===\s*"\/api\/money\/summary"\s*&&\s*code\s*===\s*503\s*\)\s*\{/);
  assert.ok(cutover.includes("COM_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA"));
  assert.ok(cutover.includes("availableMinor|refundableMinor|refundHoldMinor|balances|withdrawals"));
  assert.ok(canary.includes('if [[ "$path" == "/api/money/summary" && "$status" == "503" ]];then'));
