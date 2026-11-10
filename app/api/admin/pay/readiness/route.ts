@@ -68,6 +68,7 @@ export async function GET(req:Request){
    wallet:{
     cnyBalanceV1:process.env.SASI_RMB_BALANCE_V1_ENABLED==="true",
     usdBalanceTopup:process.env.USD_BALANCE_TOPUP_ENABLED==="true",
+    usdBalanceTopupReady:process.env.USD_BALANCE_TOPUP_ENABLED==="true"&&process.env.SASI_REFUND_FLOW_TESTED==="true",
     refundFlowTested:process.env.SASI_REFUND_FLOW_TESTED==="true",
     usageSettlementTested:process.env.SASI_USAGE_SETTLEMENT_TESTED==="true"
    },
