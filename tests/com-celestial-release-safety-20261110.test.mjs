@@ -44,7 +44,7 @@ test("static assets use explicit proxy mappings and do not depend on automatic H
   assert.equal(config.assets.not_found_handling, "none");
   const materializer = read("scripts/cloudflare/materialize-static-html-assets-20261110.mjs");
   const patcher = read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
-  assert.doesNotMatch(patcher, /"\/(?:en\/|ja\/|ko\/|fr\/|de\/|es\/|pt\/|ar\/)?siai"/);
+  assert.match(patcher, /"\/siai":"siai.html"/);
   assert.ok(patcher.includes("COM_PUBLIC_ANONYMOUS_EDGE_ROUTES_ENABLED"));
   const manifest = read("scripts/cloudflare/tool-static-route-manifest-20261110.mjs");
   assert.ok(manifest.includes('new Set(["admin", "pay", "pass"])') || manifest.includes('new Set(["admin","pay","pass"])'));
@@ -56,9 +56,9 @@ test("static assets use explicit proxy mappings and do not depend on automatic H
   assert.ok(materializer.includes("Content-Security-Policy:"));
   assert.ok(materializer.includes("Strict-Transport-Security:"));
   assert.ok(materializer.includes("loadToolStaticRoutes"));
-  assert.doesNotMatch(materializer, /route: "\/(?:en\/|ja\/|ko\/|fr\/|de\/|es\/|pt\/|ar\/)?siai"/);
+  assert.match(materializer, /route: "\/siai", source: "siai.html"/);
   const staticRoutes = read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs").split("const staticRoutes = new Set([")[1].split("]);")[0];
-  assert.doesNotMatch(staticRoutes, /\/siai/);
+  assert.match(staticRoutes, /\/siai/);
   assert.ok(materializer.includes('"/tools/*"'));
   assert.ok(manifest.includes("TOOL_STATIC_SLUG_DUPLICATE"));
   const build = read("scripts/cloudflare/build-com-static-assets-20261110.sh");

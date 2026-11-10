@@ -8,6 +8,12 @@ import { pathToFileURL } from "node:url";
 import { loadToolStaticRoutes } from "./tool-static-route-manifest-20261110.mjs";
 
 export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
+  // The reviewed catalogue is sourced from this commit, not a per-request feed.
+  // Rebuilds publish the current catalogue to all nine language routes together.
+  { route: "/siai", source: "siai.html", target: "siai.html" },
+  ...["en","ja","ko","fr","de","es","pt","ar"].map(locale=>({
+    route:`/${locale}/siai`,source:`${locale}-siai.html`,target:`${locale}/siai.html`
+  })),
   { route: "/", source: "landing.html", target: "index.html" },
   { route: "/tools", source: "tools.html", target: "tools.html" },
   { route: "/tools/pass", source: "tools-pass.html", target: "tools/pass.html" },

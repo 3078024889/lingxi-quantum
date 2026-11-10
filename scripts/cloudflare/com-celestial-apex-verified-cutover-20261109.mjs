@@ -107,6 +107,8 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     "/tools/png-to-jpg", "/tools/compress-image", "/tools/merge-pdf", "/tools/json-formatter"
   ];
   const staticRoutes = new Set([
+    "/siai", "/en/siai", "/ja/siai", "/ko/siai", "/fr/siai",
+    "/de/siai", "/es/siai", "/pt/siai", "/ar/siai",
     "/", "/tools", "/tools/pass", "/ai-wallet", "/account",
     "/sasi", "/sasi/marketplace", "/about", "/announcements",
     "/tools/ico-to-png", "/tools/number-base-converter", "/tools/video-watermark-remover",

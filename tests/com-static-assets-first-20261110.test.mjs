@@ -15,8 +15,8 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const toolRoutes = await loadToolStaticRoutes();
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
     for (const slug of ["siai", "en/siai", "ja/siai", "ko/siai", "fr/siai", "de/siai", "es/siai", "pt/siai", "ar/siai"]) {
-      assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/" + slug), false,
-        "live SIAI ranking pages must remain dynamic: /" + slug);
+      assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/" + slug), true,
+        "reviewed source catalogue must be delivered without per-request SSR: /" + slug);
     }
     assert.ok(toolRoutes.length >= 119, "the static manifest must include all dedicated tool pages plus non-overlapping registry-backed generic pages");
     const appTools = await readdir(new URL("../app/tools/", import.meta.url), { withFileTypes: true });

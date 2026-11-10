@@ -8,6 +8,15 @@ import {anonymousPrivateApi} from "./anonymous-private-api.mjs";
 const root=".open-next";
 const assetRoot=join(root,"assets","__lingxi_edge_static__");
 const routes={
+ "/siai":"siai.html",
+ "/en/siai":"en-siai.html",
+ "/ja/siai":"ja-siai.html",
+ "/ko/siai":"ko-siai.html",
+ "/fr/siai":"fr-siai.html",
+ "/de/siai":"de-siai.html",
+ "/es/siai":"es-siai.html",
+ "/pt/siai":"pt-siai.html",
+ "/ar/siai":"ar-siai.html",
  "/":"landing.html",
  "/tools":"tools.html",
  "/tools/pass":"tools-pass.html",

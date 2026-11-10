@@ -54,6 +54,15 @@ curl --noproxy '*' -fSs --retry 2 --max-time 45 \
   -o .open-next/assets/__lingxi_edge_static__/landing.html
 
 for mapping in \
+  'siai:siai' \
+  'en/siai:en-siai' \
+  'ja/siai:ja-siai' \
+  'ko/siai:ko-siai' \
+  'fr/siai:fr-siai' \
+  'de/siai:de-siai' \
+  'es/siai:es-siai' \
+  'pt/siai:pt-siai' \
+  'ar/siai:ar-siai' \
   'tools:tools' \
   'tools/pass:tools-pass' \
   'ai-wallet:ai-wallet' \
