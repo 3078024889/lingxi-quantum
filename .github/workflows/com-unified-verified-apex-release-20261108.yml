@@ -59,7 +59,7 @@ jobs:
           node --test tests/com-static-assets-first-20261110.test.mjs
           node --test tests/com-account-static-client-auth-20261110.test.mjs
           grep -Fq 'const productionWorker = "lingxifield-com-celestial-20261109"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
-          grep -Fq 'const candidateWorker = "lingxifield-com-static-canary-20261110"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'const candidateWorkerPrefix = "lingxifield-com-canary-"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_PAYMENT_BASELINE' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_VERSION_ROLLBACK_CONFIRMED' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"--keep-vars"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs

@@ -6,18 +6,18 @@ const read = path => readFileSync(path, "utf8");
 
 test("isolated candidate is a different Worker from the current production apex", () => {
   const workflow = read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
-  assert.ok(workflow.includes("CANDIDATE_NAME: lingxifield-com-static-canary-20261110"));
+  assert.ok(workflow.includes("CANDIDATE_NAME=lingxifield-com-canary-${GITHUB_SHA:0:12}"));
   assert.ok(workflow.includes('jq -e --arg production "lingxifield-com-celestial-20261109"'));
   assert.ok(workflow.includes('pattern=="lingxifield.com/*" and .script==$production'));
   assert.ok(workflow.includes("x-lingxi-static-delivery: workers-static-assets"));
-  assert.ok(workflow.includes("COM_CANARY_PAYMENT_PROVIDER_MUST_REMAIN_DISABLED"));
+  assert.ok(read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs").includes("COM_CANARY_PAYMENT_PROVIDER_MUST_REMAIN_DISABLED"));
   assert.doesNotMatch(workflow, /CANDIDATE_NAME: lingxifield-com-celestial-20261109/);
 });
 
 test("production promotion updates the existing Worker in-place and preserves current vars and secrets", () => {
   const script = read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs");
   assert.ok(script.includes('const productionWorker = "lingxifield-com-celestial-20261109"'));
-  assert.ok(script.includes('const candidateWorker = "lingxifield-com-static-canary-20261110"'));
+  assert.ok(script.includes('const candidateWorkerPrefix = "lingxifield-com-canary-"'));
   assert.ok(script.includes("COM_PRODUCTION_PAYMENT_BASELINE"));
   assert.ok(script.includes("COM_PRODUCTION_PAYMENT_FLAGS_CHANGED_DURING_RELEASE"));
   assert.ok(script.includes('"--keep-vars"'));
