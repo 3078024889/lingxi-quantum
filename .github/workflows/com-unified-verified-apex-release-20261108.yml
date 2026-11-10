@@ -7,6 +7,11 @@ on:
       - 'scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs'
       - 'scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs'
       - 'scripts/cloudflare/materialize-static-html-assets-20261110.mjs'
+      - 'app/account/page.tsx'
+      - 'app/account/AccountClientShell.tsx'
+      - 'components/AccountCenterV26.tsx'
+      - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
+      - 'tests/com-account-static-client-auth-20261110.test.mjs'
       - 'wrangler.jsonc'
   push:
     branches: [release/com-sasi-full-20261108]
@@ -14,6 +19,11 @@ on:
       - '.github/workflows/com-unified-verified-apex-release-20261108.yml'
       - 'scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs'
       - 'scripts/cloudflare/materialize-static-html-assets-20261110.mjs'
+      - 'app/account/page.tsx'
+      - 'app/account/AccountClientShell.tsx'
+      - 'components/AccountCenterV26.tsx'
+      - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
+      - 'tests/com-account-static-client-auth-20261110.test.mjs'
       - 'wrangler.jsonc'
 permissions:
   contents: read
@@ -36,6 +46,7 @@ jobs:
           node --check scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           node --check scripts/cloudflare/materialize-static-html-assets-20261110.mjs
           node --test tests/com-static-assets-first-20261110.test.mjs
+          node --test tests/com-account-static-client-auth-20261110.test.mjs
           grep -Fq 'const prev="lingxifield-com-unified-20261108"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'const next="lingxifield-com-celestial-20261109"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs

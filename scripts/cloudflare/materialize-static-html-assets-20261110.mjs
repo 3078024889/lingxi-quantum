@@ -12,6 +12,7 @@ export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   { route: "/tools", source: "tools.html", target: "tools.html" },
   { route: "/tools/pass", source: "tools-pass.html", target: "tools/pass.html" },
   { route: "/ai-wallet", source: "ai-wallet.html", target: "ai-wallet.html" },
+  { route: "/account", source: "account-login.html", target: "account.html" },
   { route: "/sasi", source: "sasi.html", target: "sasi.html" },
   { route: "/sasi/marketplace", source: "marketplace.html", target: "sasi/marketplace.html" },
   { route: "/about", source: "about.html", target: "about.html" },
@@ -98,7 +99,8 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
     ...PUBLIC_STATIC_HTML_ROUTES.flatMap(({ route }) => [
       route,
       "  X-Lingxi-Render-Mode: static-edge-verified",
-      "  X-Content-Type-Options: nosniff"
+      "  X-Content-Type-Options: nosniff",
+      ...(route === "/account" ? ["  Referrer-Policy: no-referrer"] : [])
     ]),
     HEADER_END
   ].join("\n");

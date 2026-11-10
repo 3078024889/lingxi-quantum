@@ -37,6 +37,8 @@ on:
       - 'tests/cn-toolpass-public-ui-20261108.test.mjs'
       - 'tests/cn-wallet-checkout-entry-20261108.test.mjs'
       - 'app/account/page.tsx'
+      - 'app/account/AccountClientShell.tsx'
+      - 'tests/com-account-static-client-auth-20261110.test.mjs'
       - 'app/ai-wallet/page.tsx'
       - 'app/celestial-ui-20261109.css'
       - 'components/WalletLivePanel.tsx'
@@ -115,6 +117,7 @@ jobs:
           node tests/paypal-merchant-idempotency-20261108.test.mjs
           node --test tests/com-paypal-live-review-20261109.test.mjs
           node --test tests/com-sasi-account-anon-401-20261109.test.mjs
+          node --test tests/com-account-static-client-auth-20261110.test.mjs
           node --test tests/com-anonymous-private-edge-20261110.test.mjs
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs
           node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
@@ -164,7 +167,7 @@ jobs:
           mkdir -p .open-next/assets/__lingxi_edge_static__
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/ -o .open-next/assets/__lingxi_edge_static__/landing.html
           curl --noproxy '*' -fSs --retry 2 --max-time 45 -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' http://127.0.0.1:8787/siai -o .open-next/assets/__lingxi_edge_static__/siai.html
-          # Public shells only; account snapshot is login-only, without cookies or query parameters.
+          # Account is a generic client-auth shell; no private user data is serialized into the snapshot.
           for mapping in 'tools:tools' 'tools/pass:tools-pass' 'ai-wallet:ai-wallet' 'account:account-login' 'sasi:sasi' 'sasi/marketplace:marketplace' 'about:about' 'announcements:announcements' 'en/siai:en-siai' 'ja/siai:ja-siai' 'ko/siai:ko-siai' 'fr/siai:fr-siai' 'de/siai:de-siai' 'es/siai:es-siai' 'pt/siai:pt-siai' 'ar/siai:ar-siai' 'tools/ico-to-png:tool-ico-to-png' 'tools/number-base-converter:tool-number-base-converter' 'tools/video-watermark-remover:tool-video-watermark-remover';do
             route="${mapping%%:*}"
             file="${mapping#*:}"
@@ -265,7 +268,7 @@ jobs:
             sleep 5
           done
           test "$propagated" -eq 1
-          for path in / /siai /tools /tools/pass /ai-wallet /sasi /sasi/marketplace /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
+          for path in / /siai /tools /tools/pass /ai-wallet /account /sasi /sasi/marketplace /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
             count=0
             for i in 1 2 3;do
               h="$(mktemp)"
@@ -276,7 +279,7 @@ jobs:
                 echo "COM_CANARY_CATALOG_STATUS ${diagnostic:-no-edge-diagnostic}"
               fi
               test "$status" = 200 || exit 1
-              if [[ "$path" = / || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /tools/pass || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /about || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai || "$path" = /ko/siai || "$path" = /fr/siai || "$path" = /de/siai || "$path" = /es/siai || "$path" = /pt/siai || "$path" = /ar/siai ]];then
+              if [[ "$path" = / || "$path" = /account || "$path" = /api/sasi/software/catalog || "$path" = /siai || "$path" = /tools || "$path" = /tools/pass || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /about || "$path" = /announcements || "$path" = /en/siai || "$path" = /ja/siai || "$path" = /ko/siai || "$path" = /fr/siai || "$path" = /de/siai || "$path" = /es/siai || "$path" = /pt/siai || "$path" = /ar/siai ]];then
                 grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
               fi
               rm -f "$h"

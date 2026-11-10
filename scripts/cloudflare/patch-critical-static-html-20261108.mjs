@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Cloudflare Free 10ms CPU: cache only verified, anonymous, public page shells.
-// Authenticated accounts, checkout, orders, upload/delivery and admin APIs stay dynamic.
+// Account HTML is a generic client-auth shell; private account data remains behind authenticated APIs.
 import {readFile,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {publicMarketListings} from "./public-market-listings.mjs";
@@ -108,8 +108,8 @@ const replacement=[
  '    return env.LINGXI_COM_LEGACY_GATEWAY.fetch(request);',
  '  }',
  '  const verifiedAnonymousPages='+JSON.stringify(routes)+';',
- '  const accountIsDynamic=pathname==="/account"&&(new URL(request.url).search!==""||request.headers.has("authorization")||/(?:^|;\\s*)sb-[a-z0-9]+-auth-token(?:\\.\\d+)?=/i.test(request.headers.get("cookie")||""));',
- '  const edgeFile=accountIsDynamic?null:verifiedAnonymousPages[pathname];',
+ '  const accountIsDynamic=false;',
+ '  const edgeFile=verifiedAnonymousPages[pathname];',
  '  if((request.method==="GET"||request.method==="HEAD")&&edgeFile){',
  '    const assetUrl=new URL("/__lingxi_edge_static__/"+edgeFile,request.url);',
  '    const staticResponse=await env.ASSETS.fetch(new Request(assetUrl.toString(),{method:request.method}));',
