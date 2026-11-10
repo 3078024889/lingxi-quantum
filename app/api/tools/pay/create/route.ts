@@ -11,10 +11,11 @@ import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {toolRuntimeState} from "@/lib/tools/service-readiness";
 import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import {parseCurrency,providerAllowedForCurrency} from "@/lib/payments/currency-book";
+import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
 
 export const runtime="nodejs";export const maxDuration=30;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const baseFor=(currency:"CNY"|"USD")=>currency==="CNY"?(process.env.NEXT_PUBLIC_CN_SITE_URL||"https://lingxifield.cn"):(process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com");
+const baseFor=(req:Request)=>trustedSiteOrigin(req);
 
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
@@ -76,7 +77,7 @@ export async function POST(req:NextRequest){
   order=inserted.data;
   if(inserted.error||!order){await admin.from("tool_payment_quotes").update({status:"quoted"}).eq("id",quote.id).eq("status","ordered");return NextResponse.json({error:"创建订单失败"},{status:500});}
 
-  const base=baseFor(currency);
+  const base=baseFor(req);
   if(p==="paypal"){
    const out=await createPaypalOrder({amountUsd:Number(quote.amount_usd),description:`Lingxifield Tool · ${quote.tool_id}`,referenceId:order.id,returnUrl:`${base}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(`/tools/pay?quoteId=${quote.id}&paid=1`)}`,cancelUrl:`${base}/tools/pay?quoteId=${quote.id}&canceled=1`});
    await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id);return NextResponse.json({orderId:order.id,url:out.approveUrl});
