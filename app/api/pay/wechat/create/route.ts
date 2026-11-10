@@ -63,6 +63,9 @@ export async function POST(req: NextRequest) {
     }
 
     const { productId, code, state } = await req.json();
+    const supabase = createClient();
+    const {data:{user}}=await supabase.auth.getUser();
+    if(!user)return NextResponse.json({error:"请先登录"},{status:401});
 // code存在，说明前端是在微信内置浏览器里、已经走完静默授权拿到了
     // 微信的一次性code——这种场景走JSAPI（直接在微信里弹收银台），
     // 不再是Native扫码（微信自己的内置浏览器不允许自己弹二维码给自己
@@ -88,14 +91,6 @@ export async function POST(req: NextRequest) {
     if(product.group==="software"&&!await softwareCheckoutReady(product.id))
       return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需支付。" }, { status: 400 });
-
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "请先登录" }, { status: 401 });
-    }
 
     if(product.group==="market"&&product.sellerId===user.id)
       return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
