@@ -149,6 +149,7 @@ if [[ "$MODE" == --rollback ]];then
  rm -f "$PROD_FLAGS"
  systemctl daemon-reload
  systemctl restart "$NEW_SVC" || true
+ old_live
  for path in / /tools /siai /sasi /sasi/marketplace /tools/pass /ai-wallet;do
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
   echo "CN3195_ROLLBACK_PUBLIC:$path:$status"
@@ -174,6 +175,7 @@ fi
 
 if [[ "$MODE" == --verify-stage ]];then
  [[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] || { echo CN3195_STAGE_FILES_MISSING >&2;exit 1; }
+ grep -Fxq "Environment=PORT=3195" "$UNIT" || { echo CN3195_STAGE_PORT_MISMATCH >&2;exit 1; }
  dir="$(systemctl show "$NEW_SVC" -p WorkingDirectory --value)"
  [[ "$dir" == "$BASE/$EXPECTED_SHA" ]] || { echo CN3195_STAGE_WORKDIR_MISMATCH >&2;exit 1; }
  test -s "$dir/RELEASE_SOURCE_SHA" || { echo CN3195_SOURCE_SHA_MISSING >&2;exit 1; }
@@ -188,6 +190,7 @@ fi
 
 if [[ "$MODE" == --stage-local ]];then
  [[ ! -e "$UNIT" && ! -e "$STAGE_ENV" && ! -e "$PROD_FLAGS" ]] || { echo CN3195_CANDIDATE_ALREADY_EXISTS_NO_OVERWRITE >&2;exit 1; }
+ if ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then echo CN3195_PORT_ALREADY_IN_USE >&2;exit 1;fi
  test "$(df -PB1 "$BASE" | awk 'END{print $4}')" -gt 2500000000 || { echo CN3195_INSUFFICIENT_FREE_DISK >&2;exit 1; }
  LOCAL="$BASE/.download-$TAG/$FILE"
  LOCAL_CHECK="$BASE/.download-$TAG/$CHECK"
@@ -270,6 +273,7 @@ fi
 
 if [[ "$MODE" == --promote ]];then
  [[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] || { echo CN3195_STAGE_NOT_PREPARED >&2;exit 1; }
+ grep -Fxq "Environment=PORT=3195" "$UNIT" || { echo CN3195_STAGE_PORT_MISMATCH >&2;exit 1; }
  systemctl is-active --quiet "$NEW_SVC" || { echo CN3195_STAGE_NOT_ACTIVE >&2;exit 1; }
  probe || { echo CN3195_PREPROMOTION_GATE_FAILED >&2;exit 1; }
  python3 - "$ENV" <<'PY'
