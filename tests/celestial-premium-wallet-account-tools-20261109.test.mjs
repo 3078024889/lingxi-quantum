@@ -56,8 +56,8 @@ test("tools hero keeps every tool and searchable category; no duplicate recent w
  assert.equal((tools.match(/<RecentTools\/>/g)||[]).length,1);
  assert.doesNotMatch(tools,/SasiDrama|ShortDrama/);
 });
-test("responsive isolated celestial styles never replace global shell or payment toggles",()=>{
- assert.match(shell,/import "\.\/celestial-ui-20261109\.css";/);
+test("responsive premium styles never restore the retired legacy override or alter payment toggles",()=>{
+ assert.doesNotMatch(shell,/import "\.\/celestial-ui-20261109\.css";/);
  assert.match(shell,/import "\.\/lingxifield-premium-20261109\.css";/);
  for(const selector of [".lx26-balance-grid",".lx26-wallet-topup",".lx26-account-services",".lx26-tools-stage",".lx26-tools-aside"])
   assert.ok(css.includes(selector),selector);
