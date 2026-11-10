@@ -31,6 +31,9 @@ const fulfillment=read("lib/fulfill-order.ts");
 assert.match(fulfillment,/sasi_grant_software_delivery/);
 assert.match(fulfillment,/sasi_market_record_verified_sale/);
 
+const readiness=read("lib/sasi-software/readiness.ts");
+assert.match(readiness,/admin\.storage\.from\(data\.bucket\)\.list/);
+assert.match(readiness,/data\.sale_ready/);
 const migration=read("supabase/migrations/20261110100000_sasi_software_private_fulfillment.sql");
 for(const token of [
  "sasi-software-delivery","public=false","sasi_software_packages",
