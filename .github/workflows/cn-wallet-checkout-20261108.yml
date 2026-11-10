@@ -3,6 +3,9 @@ on:
   push:
     branches: [fix/cn-wallet-checkout-20261108]
   workflow_dispatch:
+  pull_request:
+    branches: [feature/sasi-software-commerce-com-admin-20261108]
+    types: [opened, synchronize, reopened, ready_for_review]
 permissions:
   contents: read
 concurrency:
