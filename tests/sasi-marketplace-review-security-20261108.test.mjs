@@ -135,7 +135,9 @@ test("marketplace gateway requires a dedicated merchant approval and supports CN
  assert.match(paypal,/SELF_PURCHASE_NOT_ALLOWED/);
  const endpoint=file("app/api/sasi/marketplace/product/route.ts");
  assert.match(endpoint,/marketplaceCommerceReady\(\)/);
- assert.match(endpoint,/req.nextUrl.searchParams.get\("currency"\)===\"USD\"/);
+ assert.match(endpoint,/availableCny:saleReady&&\(wechatPayEnabled\(\)\|\|alipayEnabled\(\)\)/);
+ assert.match(endpoint,/availableUsd:saleReady&&paypalEnabled\(\)/);
+ assert.doesNotMatch(endpoint,/searchParams.get\("currency"\)/);
  const detail=file("components/SasiMarketplaceProductDetail.tsx");
  assert.match(detail,/usePreferredCurrency/);
  assert.match(detail,/const payPaypal=async/);
