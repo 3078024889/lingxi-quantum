@@ -26,7 +26,7 @@ assert.match(usdCheckout,/getProduct\(productId\)/);
 assert.match(usdCheckout,/isMarketProductId\(productId\)/);
 assert.match(usdCheckout,/availableUsd===true/);
 assert.match(usdCheckout,/fetch\("\/api\/pay\/create"/);
-assert.match(softwareCatalog,/availableUsd:Boolean\(paypalEnabled\(\)/);
+assert.match(softwareCatalog,/availableUsd:Boolean\(packageReady&&paypal\)/);
 assert.match(marketProduct,/availableUsd:marketplaceR2Ready\(\)&&paypalEnabled\(\)/);
 assert.match(softwareCard,/checkout-usd\?productId=/);
 assert.match(marketDetail,/checkout-usd\?productId=/);
