@@ -13,6 +13,7 @@ assert.match(upload,/marketplaceUploadReady/);
 assert.match(submit,/marketplaceUploadReady/);
 assert.match(checkout,/SASI_MARKET_SALES_ENABLED/);
 assert.match(checkout,/SASI_MARKETPLACE_COMMERCE_READY/);
+assert.match(checkout,/SASI_MARKET_PAYOUTS_ENABLED/);
 assert.match(product,/marketplaceCommerceReady/);
 assert.match(admin,/scanDispatchConfigured/);
 assert.match(admin,/SASI_MARKET_PAYOUTS_ENABLED/);
