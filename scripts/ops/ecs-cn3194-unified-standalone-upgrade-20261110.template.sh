@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# CN3195 blue/green standalone release. The currently routed 3193 or 3194 stays live
-# while the exact candidate is staged on 3195. No payment flags are opened here.
+# CN3194 production release. Port 3195 is temporary blue/green staging only;
+# final production and payment activation stay on 3194; 3193 remains rollback baseline.
 set -Eeuo pipefail
 MODE="${1:-}"; TAG="${2:-}"
 case "$MODE" in --plan|--stage-local|--verify-stage|--promote|--rollback) ;; *) echo "USAGE: $0 --plan|--stage-local|--verify-stage|--promote|--rollback __TAG__" >&2;exit 2;; esac
@@ -18,13 +18,16 @@ ENV=/etc/lingxifield/production.env
 NGINX=/etc/nginx/conf.d/lingxifield.conf
 BASE=/opt/lingxifield/cn-staged-releases
 PORT=3195
+FINAL_PORT=3194
 FILE="__ARCHIVE_FILE__"
 CHECK="__CHECK_FILE__"
 NEW_SVC="lingxifield-cn-release-20261110-$SHORT"
 UNIT="/etc/systemd/system/$NEW_SVC.service"
+FINAL_SVC="${NEW_SVC}-final"
+FINAL_UNIT="/etc/systemd/system/$FINAL_SVC.service"
 STAGE_ENV="/etc/lingxifield/staging-3195-$SHORT.env"
-PROD_FLAGS="/etc/lingxifield/tool-pass-3195-$SHORT.env"
-NGINX_BACKUP="$NGINX.before-cn3195-$SHORT"
+PROD_FLAGS="/etc/lingxifield/tool-pass-3194-$SHORT.env"
+NGINX_BACKUP="$NGINX.before-cn3194-$SHORT"
 UNIT_BACKUP="$UNIT.rollback-$SHORT"
 ACTIVE_PORT=""
 OLD_SVC=""
@@ -46,6 +49,29 @@ u=set(p)
 if len(p)!=1 or len(u)!=1: raise SystemExit("CN_ACTIVE_NGINX_UPSTREAM_NOT_EXACTLY_ONE_3193_OR_3194")
 print(next(iter(u)).decode())
 PY
+}
+
+set_nginx_upstream(){
+ local target="$1"
+ python3 - "$NGINX" "$target" <<'PY'
+import os,re,sys,tempfile
+path,target=sys.argv[1:3]
+if target not in ("3193","3194","3195"):raise SystemExit("CN_NGINX_TARGET_PORT_INVALID")
+old=open(path,"rb").read()
+matches=list(re.finditer(rb'(?m)^\s*(?:proxy_pass\s+http://|server\s+)127\.0\.0\.1:(3193|3194|3195)(?:;|\s)',old))
+if len(matches)!=1:raise SystemExit("CN_NGINX_UPSTREAM_NOT_EXACTLY_ONE")
+old_port=matches[0].group(1)
+new=old.replace(b"127.0.0.1:"+old_port,b"127.0.0.1:"+target.encode(),1)
+st=os.stat(path)
+fd,tmp=tempfile.mkstemp(prefix=".cn3194-upstream-",dir=os.path.dirname(path))
+try:
+ os.fchmod(fd,st.st_mode&0o777);os.fchown(fd,st.st_uid,st.st_gid)
+ with os.fdopen(fd,"wb") as f:f.write(new);f.flush();os.fsync(f.fileno())
+ os.replace(tmp,path)
+finally:
+ if os.path.exists(tmp):os.unlink(tmp)
+PY
+ nginx -t && systemctl reload nginx
 }
 
 find_service_for_port(){
@@ -82,19 +108,21 @@ old_live(){
 }
 
 load_env_files(){
+ SOURCE_ENV_SVC="$(find_service_for_port 3194 || true)"
+ [[ -n "$SOURCE_ENV_SVC" ]] || { echo CN3194_SOURCE_SERVICE_NOT_ACTIVE >&2;exit 1; }
  mapfile -t LIVE_ENV_FILES < <(
-  systemctl show "$OLD_SVC" -p EnvironmentFiles --value |
+  systemctl show "$SOURCE_ENV_SVC" -p EnvironmentFiles --value |
    python3 -c 'import re,sys
 s=sys.stdin.read()
 for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s): print(p)'
  )
- (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo ACTIVE_OLD_ENVFILE_COUNT_INVALID >&2;exit 1; }
+ (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }
  for f in "${LIVE_ENV_FILES[@]}";do
   [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {
-   echo ACTIVE_OLD_ENVFILE_UNSAFE >&2;exit 1;
+   echo CN3194_SOURCE_ENVFILE_UNSAFE >&2;exit 1;
   }
  done
- echo "CN3195_ACTIVE_ENVFILES_COUNT=${#LIVE_ENV_FILES[@]}"
+ echo "CN3194_SOURCE_ENVFILES_COUNT=${#LIVE_ENV_FILES[@]} SOURCE_SERVICE=$SOURCE_ENV_SVC"
 }
 
 code(){
@@ -140,35 +168,38 @@ probe(){
 
 safe_env
 if [[ "$MODE" == --rollback ]];then
- [[ -f "$NGINX_BACKUP" && ! -L "$NGINX_BACKUP" ]] || { echo CN3195_NGINX_ROLLBACK_FILE_MISSING >&2;exit 1; }
- [[ -f "$UNIT_BACKUP" && ! -L "$UNIT_BACKUP" ]] || { echo CN3195_UNIT_ROLLBACK_FILE_MISSING >&2;exit 1; }
- cp -a "$NGINX_BACKUP" "$NGINX"
- nginx -t && systemctl reload nginx
- cp -a "$UNIT_BACKUP" "$UNIT"
- rm -f "$PROD_FLAGS"
- systemctl daemon-reload
- systemctl restart "$NEW_SVC" || true
- old_live
- for path in / /tools /siai /sasi /sasi/marketplace /tools/pass /ai-wallet;do
+ FALLBACK_SVC="$(find_service_for_port 3193)" || { echo CN3193_ROLLBACK_BASELINE_SERVICE_NOT_ACTIVE >&2;exit 1; }
+ systemctl is-active --quiet "$FALLBACK_SVC" || { echo CN3193_ROLLBACK_BASELINE_NOT_ACTIVE >&2;exit 1; }
+ health="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 12 -o /dev/null -w '%{http_code}' -H 'Host: lingxifield.cn' http://127.0.0.1:3193/api/health || true)"
+ [[ "$health" == 200 ]] || { echo "CN3193_ROLLBACK_BASELINE_HEALTH_FAILED:$health" >&2;exit 1; }
+ set_nginx_upstream 3193
+ for path in / /tools /siai /sasi /sasi/marketplace /tools/pass /ai-wallet /api/health;do
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
-  echo "CN3195_ROLLBACK_PUBLIC:$path:$status"
-  [[ "$status" == 200 ]] || { echo CN3195_ROLLBACK_PUBLIC_CHECK_FAILED >&2;exit 1; }
+  echo "CN3193_ROLLBACK_PUBLIC:$path:$status"
+  [[ "$status" == 200 ]] || { echo CN3193_ROLLBACK_PUBLIC_CHECK_FAILED >&2;exit 1; }
  done
- echo CN3195_ROLLBACK_TO_PREVIOUS_UPSTREAM_PASS_OLD_SERVICE_RETAINED
+ systemctl stop "$FINAL_SVC" 2>/dev/null || true
+ systemctl disable "$FINAL_SVC" 2>/dev/null || true
+ systemctl stop "$NEW_SVC" 2>/dev/null || true
+ systemctl disable "$NEW_SVC" 2>/dev/null || true
+ echo "CN3193_ROLLBACK_BASELINE_ACTIVE service=$FALLBACK_SVC"
+ echo "3194_CANDIDATE_STOPPED_FLAGS_AND_HISTORICAL_DATA_PRESERVED"
  exit 0
 fi
-
 old_live
 load_env_files
 [[ -x "$NODE" ]] || { echo NODE24_RUNTIME_NOT_FOUND >&2;exit 1; }
 
 if [[ "$MODE" == --plan ]];then
- if ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then echo CN3195_PORT_ALREADY_IN_USE >&2;exit 1;fi
- [[ ! -e "$UNIT" && ! -e "$STAGE_ENV" && ! -e "$PROD_FLAGS" ]] || { echo CN3195_CANDIDATE_ALREADY_EXISTS_NO_OVERWRITE >&2;exit 1; }
- echo "CN3195_DISK_AVAILABLE_BYTES=$(df -PB1 "$BASE" 2>/dev/null | awk 'END{print $4}')"
+ FALLBACK_SVC="$(find_service_for_port 3193)" || { echo CN3193_ROLLBACK_BASELINE_SERVICE_NOT_ACTIVE >&2;exit 1; }
+ fallback_health="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 12 -o /dev/null -w '%{http_code}' -H 'Host: lingxifield.cn' http://127.0.0.1:3193/api/health || true)"
+ [[ "$fallback_health" == 200 ]] || { echo CN3193_ROLLBACK_BASELINE_HEALTH_FAILED >&2;exit 1; }
+ if ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then echo CN3195_STAGE_PORT_ALREADY_IN_USE >&2;exit 1;fi
+ [[ ! -e "$UNIT" && ! -e "$FINAL_UNIT" && ! -e "$STAGE_ENV" && ! -e "$PROD_FLAGS" ]] || { echo CN3194_CANDIDATE_ALREADY_EXISTS_NO_OVERWRITE >&2;exit 1; }
+ echo "CN3194_DISK_AVAILABLE_BYTES=$(df -PB1 "$BASE" 2>/dev/null | awk 'END{print $4}')"
  free -h
- test "$(df -PB1 "$BASE" | awk 'END{print $4}')" -gt 2500000000 || { echo CN3195_INSUFFICIENT_FREE_DISK >&2;exit 1; }
- echo "CN3195_PLAN_READ_ONLY_ACTIVE_PORT=$ACTIVE_PORT ACTIVE_SERVICE=$OLD_SVC"
+ test "$(df -PB1 "$BASE" | awk 'END{print $4}')" -gt 2500000000 || { echo CN3194_INSUFFICIENT_FREE_DISK >&2;exit 1; }
+ echo "CN3194_PLAN_READ_ONLY_ACTIVE_PORT=$ACTIVE_PORT ACTIVE_SERVICE=$OLD_SVC SOURCE_3194_SERVICE=$SOURCE_ENV_SVC FALLBACK_3193_SERVICE=$FALLBACK_SVC"
  exit 0
 fi
 
@@ -188,7 +219,7 @@ if [[ "$MODE" == --verify-stage ]];then
 fi
 
 if [[ "$MODE" == --stage-local ]];then
- [[ ! -e "$UNIT" && ! -e "$STAGE_ENV" && ! -e "$PROD_FLAGS" ]] || { echo CN3195_CANDIDATE_ALREADY_EXISTS_NO_OVERWRITE >&2;exit 1; }
+ [[ ! -e "$UNIT" && ! -e "$FINAL_UNIT" && ! -e "$STAGE_ENV" && ! -e "$PROD_FLAGS" ]] || { echo CN3194_CANDIDATE_ALREADY_EXISTS_NO_OVERWRITE >&2;exit 1; }
  if ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then echo CN3195_PORT_ALREADY_IN_USE >&2;exit 1;fi
  test "$(df -PB1 "$BASE" | awk 'END{print $4}')" -gt 2500000000 || { echo CN3195_INSUFFICIENT_FREE_DISK >&2;exit 1; }
  LOCAL="$BASE/.download-$TAG/$FILE"
@@ -271,9 +302,14 @@ fi
 
 if [[ "$MODE" == --promote ]];then
  [[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] || { echo CN3195_STAGE_NOT_PREPARED >&2;exit 1; }
+ [[ ! -e "$FINAL_UNIT" && ! -e "$PROD_FLAGS" ]] || { echo CN3194_FINAL_CANDIDATE_ALREADY_EXISTS_NO_OVERWRITE >&2;exit 1; }
  grep -Fxq "Environment=PORT=3195" "$UNIT" || { echo CN3195_STAGE_PORT_MISMATCH >&2;exit 1; }
  systemctl is-active --quiet "$NEW_SVC" || { echo CN3195_STAGE_NOT_ACTIVE >&2;exit 1; }
+ PORT=3195
  probe || { echo CN3195_PREPROMOTION_GATE_FAILED >&2;exit 1; }
+ FALLBACK_SVC="$(find_service_for_port 3193)" || { echo CN3193_ROLLBACK_BASELINE_SERVICE_NOT_ACTIVE >&2;exit 1; }
+ fallback_health="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 12 -o /dev/null -w '%{http_code}' -H 'Host: lingxifield.cn' http://127.0.0.1:3193/api/health || true)"
+ [[ "$fallback_health" == 200 ]] || { echo CN3193_ROLLBACK_BASELINE_HEALTH_FAILED >&2;exit 1; }
  python3 - "$ENV" <<'PY'
 import sys
 v={}
@@ -285,20 +321,11 @@ for line in open(sys.argv[1],encoding="utf8"):
  v[k]=x.strip().strip('"').strip("'")
 if len(v.get("LINGXIFIELD_PRIVACY_HASH_SECRET",""))<32:raise SystemExit("CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT")
 if v.get("TOOL_PASS_COMMERCE_READY","false").lower() in ("true","1"):raise SystemExit("CN_TOOLPASS_PAYMENT_GATE_MUST_REMAIN_CLOSED_BEFORE_PROMOTION")
-print("CN3195_PRIVACY_HASH_AND_PAYMENT_GATE_VERIFIED")
+print("CN3194_PRIVACY_HASH_AND_PAYMENT_GATE_VERIFIED")
 PY
- [[ ! -e "$NGINX_BACKUP" && ! -e "$UNIT_BACKUP" && ! -e "$PROD_FLAGS" ]] || { echo CN3195_ROLLBACK_OR_FLAGS_ALREADY_EXIST >&2;exit 1; }
+ [[ ! -e "$NGINX_BACKUP" && ! -e "$UNIT_BACKUP" ]] || { echo CN3194_ROLLBACK_BACKUP_ALREADY_EXISTS >&2;exit 1; }
  cp -a "$NGINX" "$NGINX_BACKUP"
  cp -a "$UNIT" "$UNIT_BACKUP"
- rollback(){
-  echo CN3195_PROMOTION_FAILED_RESTORING_PREVIOUS_UPSTREAM >&2
-  cp -a "$NGINX_BACKUP" "$NGINX" || true
-  nginx -t && systemctl reload nginx || true
-  cp -a "$UNIT_BACKUP" "$UNIT" || true
-  rm -f "$PROD_FLAGS" || true
-  systemctl daemon-reload || true
-  systemctl restart "$NEW_SVC" || true
- }
  (
   umask 077
   printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' 'TOOL_PASS_BACKEND_READY=true' \
@@ -308,41 +335,76 @@ PY
    'SASI_MARKET_UPLOADS_ENABLED=false' 'SASI_MARKET_DELIVERY_ENABLED=false' \
    'SASI_MARKET_PAYOUTS_ENABLED=false' 'SASI_MARKETPLACE_COMMERCE_READY=false' \
    'SOFTWARE_COMMERCE_READY=false' 'NEXT_PUBLIC_SITE_URL=https://lingxifield.cn' \
-   'ALIPAY_SITE_URL=https://lingxifield.cn' 'PORT=3195' 'HOSTNAME=127.0.0.1' > "$PROD_FLAGS"
+   'ALIPAY_SITE_URL=https://lingxifield.cn' 'PORT=3194' 'HOSTNAME=127.0.0.1' > "$PROD_FLAGS"
  )
  chmod 600 "$PROD_FLAGS"
- sed -i "s|^EnvironmentFile=$STAGE_ENV$|EnvironmentFile=$PROD_FLAGS|" "$UNIT"
- grep -Fxq "EnvironmentFile=$PROD_FLAGS" "$UNIT" || { rollback;exit 1; }
- if grep -Fxq "EnvironmentFile=$STAGE_ENV" "$UNIT";then rollback;exit 1;fi
- for src in "${LIVE_ENV_FILES[@]}";do grep -Fxq "EnvironmentFile=$src" "$UNIT" || { rollback;exit 1;};done
+ {
+  cat <<EOF
+[Unit]
+Description=LINGXIFIELD CN exact verified 3194 release ($SHORT), 3193 retained as rollback
+After=network-online.target
+Wants=network-online.target
+[Service]
+Type=simple
+WorkingDirectory=$BASE/$EXPECTED_SHA
+EOF
+  for src in "${LIVE_ENV_FILES[@]}";do printf 'EnvironmentFile=%s\n' "$src";done
+  cat <<EOF
+EnvironmentFile=$PROD_FLAGS
+Environment=NODE_ENV=production
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3194
+Environment=NODE_OPTIONS=--max-old-space-size=500
+ExecStart=$NODE server.js
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+[Install]
+WantedBy=multi-user.target
+EOF
+ } > "$FINAL_UNIT"
+ chmod 644 "$FINAL_UNIT"
  systemctl daemon-reload
- systemctl restart "$NEW_SVC" || { rollback;exit 1; }
- probe || { rollback;exit 1; }
- python3 - "$NGINX" "$ACTIVE_PORT" <<'PY'
-import os,sys,tempfile
-path,old_port=sys.argv[1:3]
-old=open(path,"rb").read()
-needle=("127.0.0.1:"+old_port).encode()
-if old.count(needle)!=1 or b"127.0.0.1:3195" in old:raise SystemExit("CN3195_NGINX_UPSTREAM_CHANGED_ABORT")
-new=old.replace(needle,b"127.0.0.1:3195",1)
-st=os.stat(path)
-fd,tmp=tempfile.mkstemp(prefix=".cn3195-",dir=os.path.dirname(path))
-try:
- os.fchmod(fd,st.st_mode&0o777);os.fchown(fd,st.st_uid,st.st_gid)
- with os.fdopen(fd,"wb") as f:f.write(new);f.flush();os.fsync(f.fileno())
- os.replace(tmp,path)
-finally:
- if os.path.exists(tmp):os.unlink(tmp)
-PY
- if ! nginx -t || ! systemctl reload nginx;then rollback;exit 1;fi
+
+ # First move traffic to the verified new code on the isolated stage port.
+ # This keeps old 3194 free for the final 3194 process without exposing 3193 pages.
+ set_nginx_upstream 3195
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
-  echo "CN3195_PUBLIC_NGINX_ROUTE:$path:$status"
-  [[ "$status" == 200 ]] || { rollback;exit 1; }
+  echo "CN3195_TEMPORARY_NEW_RELEASE_ROUTE:$path:$status"
+  [[ "$status" == 200 ]] || { echo CN3195_TEMPORARY_ROUTE_FAILED_OLD_SERVICE_RETAINED >&2;exit 1; }
  done
- systemctl enable "$NEW_SVC" >/dev/null || { rollback;exit 1; }
- echo "CN3195_NGINX_PROMOTION_PASS ROLLBACK_FILE=$NGINX_BACKUP"
- echo "PREVIOUS_UPSTREAM_REMAINS_ACTIVE_FOR_ROLLBACK port=$ACTIVE_PORT service=$OLD_SVC"
+
+ OLD_3194_SVC="$(find_service_for_port 3194 || true)"
+ [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]] || { echo CN3194_OLD_SERVICE_NOT_FOUND_FOR_SAFE_REBIND >&2;exit 1; }
+ systemctl stop "$OLD_3194_SVC"
+ if ss -lnt | grep -Eq '^LISTEN.*:3194[[:space:]]';then echo CN3194_PORT_NOT_RELEASED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1;fi
+
+ systemctl start "$FINAL_SVC" || { echo CN3194_FINAL_SERVICE_START_FAILED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1; }
+ PORT=3194
+ if ! probe;then
+  systemctl stop "$FINAL_SVC" || true
+  echo CN3194_FINAL_PORT_PROBE_FAILED_NEW_CODE_STILL_SERVING_ON_3195 >&2
+  exit 1
+ fi
+
+ set_nginx_upstream 3194
+ for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
+  status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
+  echo "CN3194_PUBLIC_NGINX_ROUTE:$path:$status"
+  if [[ "$status" != 200 ]];then
+   set_nginx_upstream 3195 || true
+   systemctl stop "$FINAL_SVC" || true
+   echo CN3194_PUBLIC_ROUTE_FAILED_NEW_CODE_RETAINED_ON_3195 >&2
+   exit 1
+  fi
+ done
+ systemctl enable "$FINAL_SVC" >/dev/null || { set_nginx_upstream 3195 || true;exit 1; }
+ systemctl stop "$NEW_SVC" || true
+ systemctl disable "$NEW_SVC" >/dev/null 2>&1 || true
+ echo "CN3194_NGINX_PROMOTION_PASS FINAL_SERVICE=$FINAL_SVC"
+ echo "CN3193_ROLLBACK_BASELINE_RETAINED service=$FALLBACK_SVC"
+ echo "3195_ISOLATED_STAGE_STOPPED_AFTER_3194_PUBLIC_ACCEPTANCE"
  echo "PAYMENT_FLAGS_REMAIN_CLOSED_UNTIL_SIGNED_MERCHANT_AUDIT"
  exit 0
 fi
