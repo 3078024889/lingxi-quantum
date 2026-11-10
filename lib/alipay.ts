@@ -37,7 +37,7 @@ function canonical(params: Record<string, string>, excludeSignType = false): str
 }
 
 export function alipayMissingVars(): string[] {
-  return ["ALIPAY_APP_ID", "ALIPAY_PRIVATE_KEY", "ALIPAY_PUBLIC_KEY"].filter((name) => !env(name));
+  return ["ALIPAY_APP_ID", "ALIPAY_PRIVATE_KEY", "ALIPAY_PUBLIC_KEY", "ALIPAY_SELLER_ID"].filter((name) => !env(name));
 }
 
 export function alipayConfigured(): boolean {
@@ -91,7 +91,7 @@ export function createAlipayPaymentUrl(input: {
 }
 
 export function verifyAlipayNotification(params: Record<string, string>): boolean {
-  if (!env("ALIPAY_PUBLIC_KEY") || !params.sign) return false;
+  if (params.sign_type !== "RSA2" || !env("ALIPAY_PUBLIC_KEY") || !params.sign) return false;
   try {
     const verifier = createVerify("RSA-SHA256");
     // 支付宝异步通知验签时 sign 和 sign_type 都不参与待验签内容拼接。
