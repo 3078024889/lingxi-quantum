@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const { data: order } = await admin
       .from("orders")
-      .select("id, amount_rmb, provider")
+      .select("id, amount_rmb, currency, provider")
       .eq("provider_payment_id", outTradeNo)
       .single();
     if (!order) {
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
     const paymentAmount = decrypted.amount as { total: number; currency: string } | undefined
     const expectedFen = Math.round(Number(order.amount_rmb) * 100)
-    if (order.provider !== "wechat" || !paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {
+    if (order.provider !== "wechat" || order.currency !== "CNY" || !paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {
       console.error("[wechat notify] payment did not match local order", { orderId: order.id })
       return NextResponse.json({ code: "FAIL", message: "订单校验失败" }, { status: 422 })
     }
