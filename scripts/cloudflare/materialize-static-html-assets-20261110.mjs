@@ -132,6 +132,7 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
       path,
       "  X-Lingxi-Render-Mode: static-edge-verified",
       "  X-Lingxi-Static-Delivery: workers-static-assets",
+      "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
       ...(route === "/account" ? ["  X-Robots-Tag: noindex, nofollow"] : [])
     ]);
   });
