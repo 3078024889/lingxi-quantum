@@ -114,3 +114,10 @@ const alipay=read("lib/alipay.ts");
 assert.match(alipay,/alipayKeyMaterialReady/);
 assert.match(alipay,/createPublicKey\(privateKey\)/);
 assert.match(alipay,/Buffer\.from\(derived\)\.equals\(Buffer\.from\(configured\)\)/);
+
+const wxOrderCreator=wechatPay.slice(wechatPay.indexOf("export async function createWechatNativeOrder"),wechatPay.indexOf("export function buildJsapiInvokeParams"));
+assert.match(wxOrderCreator,/if \(!wechatPayEnabled\(\)\)/);
+const wxJsapi=wechatPay.slice(wechatPay.indexOf("export async function createWechatJsapiOrder"),wechatPay.indexOf("export function buildJsapiInvokeParams"));
+assert.match(wxJsapi,/if \(!wechatPayEnabled\(\)\)/);
+const alipayCreator=alipay.slice(alipay.indexOf("export function createAlipayPaymentUrl"),alipay.indexOf("export function verifyAlipayNotification"));
+assert.match(alipayCreator,/if \(!alipayEnabled\(\)\)/);
