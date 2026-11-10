@@ -21,9 +21,9 @@ test('generated edge wrapper serves public merchant status without exposing auth
   execFileSync(process.execPath,[script],{cwd:dir,stdio:'pipe'});
   const {default:worker}=await import(pathToFileURL(wrapper).href);
   let currentCalls=0,legacyCalls=0;
-  const env={current:{fetch:async request=>{currentCalls++;assert.equal(request.headers.get('cookie'),'session=test');return new Response('current',{status:401});}},LINGXI_COM_LEGACY_GATEWAY:{fetch:async()=>{legacyCalls++;return new Response('legacy');}}};
+  const env={current:{fetch:async request=>{currentCalls++;assert.equal(request.headers.get('cookie'),'sb-example-auth-token=test');return new Response('current',{status:401});}},LINGXI_COM_LEGACY_GATEWAY:{fetch:async()=>{legacyCalls++;return new Response('legacy');}}};
   // Provider status is public, account-neutral and never redirects to the legacy backend.
-  const providers=await worker.fetch(new Request('https://lingxifield.com/api/pay/providers',{headers:{cookie:'session=test'}}),env,{});
+  const providers=await worker.fetch(new Request('https://lingxifield.com/api/pay/providers',{headers:{cookie:'sb-example-auth-token=test'}}),env,{});
   assert.equal(providers.status,200);
   assert.equal(providers.headers.get('cache-control'),'no-store, max-age=0');
   assert.equal(providers.headers.get('x-lingxi-render-mode'),'edge-merchant-readiness');
@@ -31,11 +31,11 @@ test('generated edge wrapper serves public merchant status without exposing auth
   assert.deepEqual([readiness.wechat,readiness.alipay,readiness.paypal],[false,false,false]);
   assert.deepEqual(Object.keys(readiness).sort(),['alipay','diagnostics','paypal','wechat']);
   // Privileged balance queries must still be served by the real authenticated runtime.
-  const money=await worker.fetch(new Request('https://lingxifield.com/api/money/summary',{headers:{cookie:'session=test'}}),env,{});
+  const money=await worker.fetch(new Request('https://lingxifield.com/api/money/summary',{headers:{cookie:'sb-example-auth-token=test'}}),env,{});
   assert.equal(money.status,401);
   assert.equal(await money.text(),'current');
   assert.equal(currentCalls,1);assert.equal(legacyCalls,0);
-  const health=await worker.fetch(new Request('https://lingxifield.com/api/health',{headers:{cookie:'session=test'}}),env,{});
+  const health=await worker.fetch(new Request('https://lingxifield.com/api/health',{headers:{cookie:'sb-example-auth-token=test'}}),env,{});
   assert.equal(health.status,200);
   assert.equal(health.headers.get('x-lingxi-health-scope'),'edge-liveness');
   assert.deepEqual(await health.json(),{ok:true,service:'lingxifield',scope:'edge-liveness'});
