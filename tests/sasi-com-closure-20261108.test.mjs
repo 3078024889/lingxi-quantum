@@ -50,14 +50,14 @@ test("Real software checkout and tool passes remain fail-closed",()=>{
 test("All retired creation pages are noindexed redirects, with valid market SEO",()=>{
  for(const name of ["assemble","director","series","variants","build","chat","project-dna","drama","image","connections"]){
   const source=read("app/sasi/"+name+"/page.tsx");
-  assert.match(source,/redirect\("\/sasi"\)/);
+  assert.ok(source.includes('permanentRedirect("/sasi")'));
   assert.match(source,/index:false/);
  }
  const footer=read("components/Footer.tsx");
- assert.doesNotMatch(footer,/href="\\/(?:ai-knowledge|ai-learning|ai-research)"/);
- assert.doesNotMatch(footer,/书本智能问答|学习智能体|科研智能体|SI\\/AI 短剧生成/);
- assert.match(footer,/href="\\/sasi\\/seller"/);
- assert.match(footer,/href="\\/sasi\\/delivery"/);
+ assert.ok(!footer.includes('href="/ai-knowledge"')&&!footer.includes('href="/ai-learning"')&&!footer.includes('href="/ai-research"'));
+ assert.doesNotMatch(footer,/书本智能问答|学习智能体|科研智能体|SI\/AI 短剧生成/);
+ assert.ok(footer.includes('href="/sasi/seller"'));
+ assert.ok(footer.includes('href="/sasi/delivery"'));
  assert.doesNotMatch(read("app/page.tsx"),/"AI短剧生成"/);
  assert.doesNotMatch(read("lib/public-feature-copy.ts"),/Create SI\/AI short dramas with SASI/);
  const hub=read("components/HomeProblemHub.tsx");
