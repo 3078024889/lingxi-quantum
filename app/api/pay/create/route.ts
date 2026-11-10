@@ -10,6 +10,7 @@ import {getProduct} from "@/lib/plans";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
+import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -68,7 +69,7 @@ export async function POST(req:NextRequest){
   }).select("id").single();
   if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});
 
-  const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
+  const baseUrl=trustedSiteOrigin(req);
   const fallback=product.group==="toolpass"?"/tools/pass"
    :product.group==="software"?"/account/software"
    :product.group==="market"?"/sasi/marketplace"
