@@ -202,7 +202,7 @@ if [[ "$MODE" == --rollback ]];then
  OLD_3194_SVC="$(find_service_for_port 3194 || true)"
  if [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]];then
   if systemctl is-enabled --quiet "$OLD_3194_SVC";then systemctl disable "$OLD_3194_SVC" >/dev/null || { echo CN3194_OLD_SERVICE_DISABLE_FAILED_DURING_ROLLBACK >&2;exit 1; };fi
-  systemctl stop "$OLD_3194_SVC" || { set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3194_OLD_SERVICE_STOP_FAILED_OLD_UPSTREAM_RESTORED >&2;exit 1; } || { echo CN3194_OLD_SERVICE_STOP_FAILED_DURING_ROLLBACK >&2;exit 1; }
+  systemctl stop "$OLD_3194_SVC" || { echo CN3194_OLD_SERVICE_STOP_FAILED_DURING_ROLLBACK >&2;exit 1; }
  fi
  systemctl stop "$FINAL_SVC" 2>/dev/null || true
  systemctl disable "$FINAL_SVC" 2>/dev/null || true
@@ -404,7 +404,7 @@ EOF
  done
 
  if systemctl is-enabled --quiet "$OLD_3194_SVC";then systemctl disable "$OLD_3194_SVC" >/dev/null || { set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3194_OLD_SERVICE_DISABLE_FAILED_OLD_UPSTREAM_RESTORED >&2;exit 1; };fi
- systemctl stop "$OLD_3194_SVC"
+ systemctl stop "$OLD_3194_SVC" || { set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3194_OLD_SERVICE_STOP_FAILED_OLD_UPSTREAM_RESTORED >&2;exit 1; }
  if ss -lnt | grep -Eq '^LISTEN.*:3194[[:space:]]';then rollback_to_3193 "CN3194_PORT_NOT_RELEASED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
 
  systemctl start "$FINAL_SVC" || { rollback_to_3193 "CN3194_FINAL_SERVICE_START_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1; }
