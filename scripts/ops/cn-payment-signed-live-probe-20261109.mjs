@@ -7,7 +7,7 @@ import {lstatSync,readFileSync} from "node:fs";
 
 const allowed=/^\/etc\/lingxifield\/[a-zA-Z0-9_.-]+\.env$/;
 function systemdEnv(unit){
- if(!/^lingxifield-cn-release-20261110-[a-f0-9]{12}$/.test(unit))throw Error("CN_PAYMENT_UNIT_NOT_APPROVED");
+ if(!/^lingxifield-cn-release-20261110-[a-f0-9]{12}-final$/.test(unit))throw Error("CN_PAYMENT_UNIT_NOT_APPROVED");
  const data=execFileSync("systemctl",["show",unit,"-p","EnvironmentFiles","--value"],{encoding:"utf8"});
  const files=[...data.matchAll(/(\/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)/g)].map(m=>m[1]);
  if(files.length<2||files.length>8)throw Error("CN_PAYMENT_ENV_FILES_INVALID");
@@ -120,7 +120,7 @@ async function wechat(cfg){
  const responseEpoch=Number(responseTimestamp);
  if(!Number.isFinite(responseEpoch)||Math.abs(Math.floor(Date.now()/1000)-responseEpoch)>300)throw Error("WECHAT_RESPONSE_TIMESTAMP_INVALID");
  const responseVerifier=createVerify("RSA-SHA256");
- responseVerifier.update(responseTimestamp+"\\n"+responseNonce+"\\n"+raw+"\\n","utf8");responseVerifier.end();
+ responseVerifier.update(responseTimestamp+"\n"+responseNonce+"\n"+raw+"\n","utf8");responseVerifier.end();
  if(!responseVerifier.verify(pub,responseSignature,"base64"))throw Error("WECHAT_RESPONSE_SIGNATURE_INVALID");
  const body=JSON.parse(raw);
  if(response.status!==404||body?.code!=="ORDER_NOT_EXIST")throw Error("WECHAT_LIVE_MERCHANT_NOT_READY_HTTP_"+response.status+"_CODE_"+String(body?.code||"UNKNOWN").replace(/[^A-Z0-9_]/g,"").slice(0,30));
