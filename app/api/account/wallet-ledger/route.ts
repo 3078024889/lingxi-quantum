@@ -63,7 +63,7 @@ export async function GET(req:NextRequest){
   reference_id:r.reference_id?String(r.reference_id):null,created_at:String(r.created_at),source:"AI",sourceKey:"ai" as const
  }));
 
- const merged=mergeWalletLedgerRows(sasiRows,aiRows);
+ const merged=mergeWalletLedgerRows<(typeof sasiRows)[number],(typeof aiRows)[number]>(sasiRows,aiRows);
  const visible=merged.slice(0,PAGE_SIZE);
  const hasMore=merged.length>PAGE_SIZE;
  const nextCursor=hasMore?encodeWalletLedgerCursor(advanceWalletLedgerCursor(cursor,visible)):null;
