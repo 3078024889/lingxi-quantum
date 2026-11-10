@@ -103,3 +103,14 @@ assert.match(adminDiagnostics,/wechatPayKeyMaterialReady/);
 assert.match(adminDiagnostics,/alipayKeyMaterialReady/);
 assert.match(adminDiagnostics,/toolPassBackendReady/);
 assert.match(adminDiagnostics,/Cache-Control/);
+
+const wechatPay=read("lib/wechatpay.ts");
+assert.match(wechatPay,/wechatPayKeyMaterialReady/);
+assert.match(wechatPay,/createPrivateKey\(normalizePemKey\(PRIVATE_KEY/);
+assert.match(wechatPay,/createPublicKey\(normalizePemKey\(PLATFORM_PUBLIC_KEY/);
+assert.match(wechatPay,/Buffer\.byteLength\(API_V3_KEY!,"utf8"\)===32/);
+assert.match(wechatPay,/WECHAT_ENABLED\?\.trim\(\)\.toLowerCase\(\) === "true" && wechatPayKeyMaterialReady/);
+const alipay=read("lib/alipay.ts");
+assert.match(alipay,/alipayKeyMaterialReady/);
+assert.match(alipay,/createPublicKey\(privateKey\)/);
+assert.match(alipay,/Buffer\.from\(derived\)\.equals\(Buffer\.from\(configured\)\)/);
