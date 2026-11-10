@@ -21,6 +21,7 @@ test("production promotion updates the existing Worker in-place and preserves cu
   assert.ok(script.includes('const candidateWorkerPrefix = "lingxifield-com-canary-"'));
   assert.ok(script.includes("COM_PRODUCTION_PAYMENT_BASELINE"));
   assert.ok(script.includes("COM_PRODUCTION_PAYMENT_FLAGS_CHANGED_DURING_RELEASE"));
+  assert.ok(script.includes("json.diagnostics[name].missingCount"));
   assert.ok(script.includes('"--keep-vars"'));
   assert.ok(script.includes("COM_PRODUCTION_CONFIG_PRESERVES_DASHBOARD_VARS_SECRETS_AND_SERVICE_BINDING"));
   assert.ok(script.includes("COM_PRODUCTION_BINDING_PREFLIGHT_PASS"));
