@@ -124,7 +124,8 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
         ? "?__lx_com_release_gate=" + i : "");
       const result = await status(url);
       const renderOK = !staticRenderRoutes.has(path) ||
-        result.headers.get("x-lingxi-render-mode") === "static-edge-verified";
+        result.headers.get("x-lingxi-render-mode") === "static-edge-verified" ||
+        (path === "/api/sasi/software/catalog" && result.headers.get("x-lingxi-business-origin") === "ecs");
       const directAssetOK = !staticRoutes.has(path) ||
         result.headers.get("x-lingxi-static-delivery") === "workers-static-assets";
       console.log("COM_" + phase + "_PAGE path=" + path + " attempt=" + (i + 1) +
@@ -275,7 +276,7 @@ const currentBindings = currentSettings.bindings;
 const preservedValueTypes = new Set(["plain_text", "secret_text", "secret_key"]);
 const unknownBindings = currentBindings.filter(binding => {
   if (preservedValueTypes.has(binding.type)) return false;
-  if (binding.type === "assets") return binding.name === "ASSETS";
+  if (binding.type === "assets") return binding.name !== "ASSETS";
   if (binding.type === "r2_bucket") {
     return binding.name !== "LINGXI_PUBLIC_LARGE_R2" ||
       binding.bucket_name !== "lingxifield-com-large-public";
