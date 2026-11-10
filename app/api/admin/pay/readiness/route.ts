@@ -1,8 +1,8 @@
 import{NextResponse}from"next/server";
 import{createClient}from"@/lib/supabase/server";
 import{getPaypalAccessToken,listPaypalWebhooks,paypalConfigured,paypalEnabled}from"@/lib/paypal";
-import{wechatPayConfigured,wechatPayEnabled,wechatPayMissingVars}from"@/lib/wechatpay";
-import{alipayEnabled,alipayMissingVars}from"@/lib/alipay";
+import{wechatPayConfigured,wechatPayEnabled,wechatPayKeyMaterialReady,wechatPayMissingVars}from"@/lib/wechatpay";
+import{alipayEnabled,alipayKeyMaterialReady,alipayMissingVars}from"@/lib/alipay";
 import{toolPassBackendReady,toolPassCommerceReady}from"@/lib/tools/commerce/tool-server-receipt";
 import{SASI_SOFTWARE_CATALOG}from"@/lib/sasi-software/catalog";
 import{softwareCheckoutReady}from"@/lib/sasi-software/readiness";
@@ -60,8 +60,8 @@ export async function GET(req:Request){
  const wechatMissing=wechatPayMissingVars();
  return NextResponse.json({
   payments:{
-   wechat:{configured:wechatPayConfigured(),enabled:wechatPayEnabled(),oauthConfigured:wechatOauthConfigured(),missing:wechatMissing},
-   alipay:{configured:alipayMissing.length===0,enabled:alipayEnabled(),missing:alipayMissing},
+   wechat:{configured:wechatPayConfigured(),keyMaterialValid:wechatPayKeyMaterialReady(),enabled:wechatPayEnabled(),oauthConfigured:wechatOauthConfigured(),missing:wechatMissing},
+   alipay:{configured:alipayMissing.length===0,keyMaterialValid:alipayKeyMaterialReady(),enabled:alipayEnabled(),missing:alipayMissing},
    paypal:{environment:paypalLive?"live":"not-live",configured:paypalConfigured(),enabled:paypalEnabled(),tokenTest:paypalTokenTest,webhook:paypalWebhook}
   },
   commerce:{
