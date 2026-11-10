@@ -8,6 +8,7 @@ const script=read("scripts/ops/cn-payment-activate-3194-20261110.sh");
 const paypal=read("scripts/ops/cn-payment-live-probe-3194-20261110.mjs");
 const signed=read("scripts/ops/cn-payment-signed-live-probe-20261109.mjs");
 const upgrade=read("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh");
+const alipayNotify=read("app/api/pay/alipay/notify/route.ts");
 const wechat=read("lib/wechatpay.ts");
 const wechatNotify=read("app/api/pay/wechat/notify/route.ts");
 const walletMigration=read("supabase/migrations/20261110050414_harden_legacy_ai_wallet_topup_order_state.sql");
@@ -75,6 +76,9 @@ test("WeChat verifies signed API responses and binds callback merchant identity"
  assert.match(wechat,/verifyWechatApiResponseSignature\(res\.headers, raw\)/);
  assert.match(wechatNotify,/wechatAppId\(\)/);
  assert.match(wechatNotify,/wechatMerchantId\(\)/);
+ assert.match(wechatNotify,/1024 \* 1024/);
+ assert.match(alipayNotify,/64 \* 1024/);
+ assert.match(alipayNotify,/duplicateKey/);
 });
 
 test("Alipay and WeChat signed probe accepts the final service identity and never logs keys",()=>{
