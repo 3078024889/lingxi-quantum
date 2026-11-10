@@ -32,3 +32,15 @@ assert.match(softwareCard,/checkout-usd\?productId=/);
 assert.match(marketDetail,/checkout-usd\?productId=/);
 assert.match(fulfill,/if\(!verifiedPayment\)return \{ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"\};[\s\S]*?sasi_grant_software_delivery/);
 console.log("PAYPAL_SOFTWARE_AND_MARKETPLACE_USD_CHECKOUT_UI_CONTRACT_PASS");
+
+
+const origin=readFileSync("lib/sasi/site-origin.ts","utf8");
+assert.match(origin,/TRUSTED_HOSTS/);
+assert.match(origin,/lingxifield\.cn/);
+assert.match(origin,/lingxifield\.com/);
+assert.match(checkout,/trustedSiteOrigin\(req\)/);
+const toolPay=readFileSync("app/api/tools/pay/create/route.ts","utf8");
+assert.match(toolPay,/paypalEnabled\(\)/);
+assert.match(toolPay,/trustedSiteOrigin\(req\)/);
+const returnRoute=readFileSync("app/api/pay/paypal/return/route.ts","utf8");
+assert.match(returnRoute,/trustedSiteOrigin\(req\)/);
