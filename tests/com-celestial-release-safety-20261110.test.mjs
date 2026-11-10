@@ -46,6 +46,7 @@ test("static assets use explicit proxy mappings and do not depend on automatic H
   const manifest = read("scripts/cloudflare/tool-static-route-manifest-20261110.mjs");
   assert.ok(manifest.includes('new Set(["admin", "pay", "pass"])') || manifest.includes('new Set(["admin","pay","pass"])'));
   assert.ok(manifest.includes('new URL("../../app/tools/", import.meta.url)'));
+  assert.ok(manifest.includes("registryRoutesOverriddenByDedicatedPages"));
   assert.ok(materializer.includes("LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS"));
   assert.ok(materializer.includes('route + " /" + target + " 200'));
   assert.ok(materializer.includes("X-Lingxi-Static-Delivery: workers-static-assets"));

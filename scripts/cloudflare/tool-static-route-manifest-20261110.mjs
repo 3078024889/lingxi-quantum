@@ -49,10 +49,10 @@ export async function loadToolStaticRoutes() {
   if (declaredDedicatedSlugs.some(slug => !directSlugs.includes(slug))) {
     throw Error("DEDICATED_TOOL_PAGE_MISSING_FROM_APP_ROUTE");
   }
-  if (directSlugs.some(slug => genericSlugs.includes(slug))) {
-    throw Error("TOOL_STATIC_ROUTE_REGISTRY_COLLISION");
-  }
-  const slugs = [...genericSlugs, ...directSlugs].sort();
+  const directSlugSet = new Set(directSlugs);
+  const registryRoutesOverriddenByDedicatedPages = genericSlugs.filter(slug => directSlugSet.has(slug));
+  const genericOnlySlugs = genericSlugs.filter(slug => !directSlugSet.has(slug));
+  const slugs = [...genericOnlySlugs, ...directSlugs].sort();
   if (slugs.some(slug => typeof slug !== "string" || !/^[a-z0-9-]+$/.test(slug))) {
     throw Error("TOOL_STATIC_SLUG_INVALID");
   }

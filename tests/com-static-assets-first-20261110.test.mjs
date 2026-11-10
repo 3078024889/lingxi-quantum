@@ -14,7 +14,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const snapshotRoot = join(root, "__lingxi_edge_static__");
     const toolRoutes = await loadToolStaticRoutes();
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
-    assert.ok(toolRoutes.length >= 120, "the static manifest must include every dedicated tool page plus registry-backed generic pages");
+    assert.ok(toolRoutes.length >= 119, "the static manifest must include all dedicated tool pages plus non-overlapping registry-backed generic pages");
     const appTools = await readdir(new URL("../app/tools/", import.meta.url), { withFileTypes: true });
     for (const entry of appTools.filter(item => item.isDirectory() &&
       !["admin", "pay", "pass"].includes(item.name) && !item.name.startsWith("["))) {
