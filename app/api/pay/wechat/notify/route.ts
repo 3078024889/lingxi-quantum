@@ -16,7 +16,10 @@ import { fulfillPaidOrder } from "@/lib/fulfill-order";
 // 弱验证。
 export async function POST(req: Request) {
   try {
+    const contentLength = Number(req.headers.get("content-length") ?? 0);
+    if (Number.isFinite(contentLength) && contentLength > 512 * 1024) return NextResponse.json({ code: "FAIL", message: "通知体过大" }, { status: 413 });
     const rawBody = await req.text();
+    if (Buffer.byteLength(rawBody, "utf8") > 512 * 1024) return NextResponse.json({ code: "FAIL", message: "通知体过大" }, { status: 413 });
     const timestamp = req.headers.get("Wechatpay-Timestamp") ?? "";
     const nonce = req.headers.get("Wechatpay-Nonce") ?? "";
     const signature = req.headers.get("Wechatpay-Signature") ?? "";
