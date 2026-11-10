@@ -73,6 +73,15 @@ for mapping in \
   'announcements:announcements'; do
   route="${mapping%%:*}"
   file="${mapping#*:}"
+  if [[ "$route" == siai || "$route" == */siai ]]; then
+    # Next has already generated these exact locale pages during the build.
+    # OpenNext's local dynamic-parameter router can 404 an existing SSG page;
+    # copy the generated HTML directly, with no HTTP fallback or stale snapshot.
+    test -s ".next/server/app/$route.html"
+    cp ".next/server/app/$route.html" ".open-next/assets/__lingxi_edge_static__/$file.html"
+    echo "COM_BUILD_GENERATED_SIAI_HTML route=/$route file=$file"
+    continue
+  fi
   curl --noproxy '*' -fSs --retry 2 --max-time 55 \
     -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
     "http://127.0.0.1:8787/$route" \
