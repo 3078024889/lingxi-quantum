@@ -111,7 +111,8 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     "/sasi", "/sasi/marketplace", "/about", "/announcements",
     "/en/siai", "/ja/siai", "/ko/siai", "/fr/siai", "/de/siai",
     "/es/siai", "/pt/siai", "/ar/siai",
-    "/tools/ico-to-png", "/tools/number-base-converter", "/tools/video-watermark-remover"
+    "/tools/ico-to-png", "/tools/number-base-converter", "/tools/video-watermark-remover",
+    "/tools/png-to-jpg", "/tools/compress-image", "/tools/merge-pdf", "/tools/json-formatter"
   ]);
   const staticRenderRoutes = new Set([...staticRoutes, "/api/sasi/software/catalog"]);
   const maxTries = phase === "POSTCUTOVER" || phase === "ROLLBACK" ? 12 : attempts;
