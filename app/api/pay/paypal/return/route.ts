@@ -3,6 +3,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {capturePaypalOrder,verifyPaypalCompletedOrder} from "@/lib/paypal";
 import {fulfillPaidOrder} from "@/lib/fulfill-order";
 import {safeLocalReturnPath} from "@/lib/sasi/payment-gate";
+import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -16,7 +17,7 @@ export async function GET(req:Request){
   const orderId=searchParams.get("orderId");
   const paypalToken=searchParams.get("token");
   const dest=safeLocalReturnPath(searchParams.get("dest"),"/account");
-  const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
+  const baseUrl=trustedSiteOrigin(req);
   if(!orderId)return NextResponse.redirect(paymentCenter(baseUrl,"error"));
 
   const admin=createAdminClient();
