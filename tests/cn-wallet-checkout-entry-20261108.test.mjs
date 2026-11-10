@@ -37,7 +37,9 @@ test("wallet resolves to authenticated real balances, not legacy pricing redirec
 test("account links open the real wallet and withdrawal routes from the new account center", () => {
  const account=read("app/account/page.tsx");
  const center=read("components/AccountCenterV26.tsx");
- assert.match(account, /AccountCenterV26/);
+ const accountClient=read("app/account/AccountClientShell.tsx");
+ assert.match(account, /AccountClientShell/);
+ assert.match(accountClient, /AccountCenterV26/);
  assert.match(center, /href:"\/ai-wallet"/);
  assert.match(center, /zh:"余额"/);
  assert.match(center, /href:"\/account\/withdrawals"/);
