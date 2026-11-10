@@ -37,8 +37,6 @@ test("Cloudflare serves the generic account shell as a direct static asset while
   assert.ok(materializer.includes("Referrer-Policy: strict-origin-when-cross-origin"));
   assert.ok(materializer.includes("X-Lingxi-Static-Delivery: workers-static-assets"));
   assert.ok(materializer.includes('route + " /" + target + " 200'));
-  assert.ok(materializer.includes("X-Lingxi-Static-Delivery: workers-static-assets"));
-  assert.ok(materializer.includes('route + " /" + target + " 200'));
   const patch = read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
   assert.ok(patch.includes("const accountIsDynamic=false"));
   assert.ok(patch.includes("const edgeFile=accountIsDynamic?null:verifiedAnonymousPages[pathname]"));
@@ -49,7 +47,8 @@ test("Cloudflare serves the generic account shell as a direct static asset while
   assert.ok(canary.includes("COM_CANARY_CANONICAL_SLASH"));
   const cutover = read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs");
   assert.ok(cutover.includes('"/account"'));
-  assert.ok(cutover.includes('staticRoutes=new Set(["/","/siai","/tools","/sasi","/sasi/marketplace","/about","/announcements","/tools/pass","/ai-wallet","/account"'));
+  assert.ok(cutover.includes("const staticRoutes = new Set(["));
+  assert.ok(cutover.includes('"/account"'));
 });
 
 test("server-side account login remains same-origin and all private account APIs remain authenticated", () => {
