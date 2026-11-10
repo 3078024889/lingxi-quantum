@@ -73,7 +73,7 @@ permissions:
   contents: read
 concurrency:
   group: com-unified-sasi-canary-20261108
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   deploy-isolated:
     environment: cloudflare-production
