@@ -34,6 +34,13 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     await materializeStaticHtmlAssets(root);
     const after = await readFile(join(root, "_headers"), "utf8");
     assert.equal(after.split("# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS").length - 1, 1);
+    const redirects = await readFile(join(root, "_redirects"), "utf8");
+    for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
+      assert.ok(redirects.split(/\\r?\\n/).includes(entry.route + " /" + entry.target + " 200"), entry.route + " must proxy to its exact HTML asset");
+    }
+    await materializeStaticHtmlAssets(root);
+    const redirectsAfter = await readFile(join(root, "_redirects"), "utf8");
+    assert.equal(redirectsAfter.split("# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS").length - 1, 1);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -53,7 +60,7 @@ test("invalid HTML snapshots fail closed", async () => {
 
 test("wrangler serves direct HTML assets before the Worker and keeps range paths worker-first", async () => {
   const config = JSON.parse(await readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"));
-  assert.equal(config.assets.html_handling, "auto-trailing-slash");
+  assert.equal(config.assets.html_handling, "none");
   assert.equal(config.assets.not_found_handling, "none");
   const workerFirst = new Set(config.assets.run_worker_first);
   for (const entry of PUBLIC_STATIC_HTML_ROUTES) {

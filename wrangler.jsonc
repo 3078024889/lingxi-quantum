@@ -21,7 +21,7 @@
       "/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm",
       "/*/"
     ],
-    "html_handling": "auto-trailing-slash",
+    "html_handling": "none",
     "not_found_handling": "none"
   },
   "observability": {

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Materialize verified public HTML snapshots at their canonical asset paths.
-// Matching requests are served by Workers Static Assets before the Worker runs.
+// Materialize verified public HTML snapshots at canonical URLs using static-asset proxy rules.
+// Matching pages are served by Workers Static Assets before the Worker runs.
 // /account is a generic client-auth shell; no user-specific data is serialized into its HTML.
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -32,19 +32,33 @@ export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
 
 const HEADER_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
 const HEADER_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
+const REDIRECT_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
+const REDIRECT_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
 
-function replaceManagedHeaderBlock(existing, block) {
-  const start = existing.indexOf(HEADER_BEGIN);
-  const end = existing.indexOf(HEADER_END);
-  if ((start >= 0) !== (end >= 0) || (start >= 0 && end < start)) {
-    throw new Error("STATIC_HEADERS_MANAGED_BLOCK_MALFORMED");
+function stripManagedBlock(existing, begin, end) {
+  const start = existing.indexOf(begin);
+  const finish = existing.indexOf(end);
+  if ((start >= 0) !== (finish >= 0) || (start >= 0 && finish < start)) {
+    throw new Error("STATIC_MANAGED_BLOCK_MALFORMED");
   }
-  let preserved = existing;
-  if (start >= 0) {
-    const after = end + HEADER_END.length;
-    preserved = existing.slice(0, start) + existing.slice(after);
-  }
+  if (start < 0) return existing;
+  return existing.slice(0, start) + existing.slice(finish + end.length);
+}
+
+function replaceManagedBlock(existing, block, begin, end) {
+  const preserved = stripManagedBlock(existing, begin, end);
   return [preserved.trim(), block].filter(Boolean).join("\n\n") + "\n";
+}
+
+function assertNoRedirectConflicts(existing, routes) {
+  const preserved = stripManagedBlock(existing, REDIRECT_BEGIN, REDIRECT_END);
+  const sources = new Set(routes.map(({ route }) => route));
+  for (const line of preserved.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const source = trimmed.split(/\s+/)[0];
+    if (sources.has(source)) throw new Error("STATIC_REDIRECT_ROUTE_CONFLICT:" + source);
+  }
 }
 
 export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets") {
@@ -94,34 +108,96 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
     if (error?.code !== "ENOENT") throw error;
   }
 
-  const managedRules = [
-    HEADER_BEGIN,
-    ...PUBLIC_STATIC_HTML_ROUTES.flatMap(({ route }) => [
-      route,
+  const reportOnlyCsp = [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.googlesyndication.com",
+    "script-src-attr 'none'",
+    "worker-src 'self' blob:",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    "img-src 'self' data: blob: https:",
+    "media-src 'self' blob: https:",
+    "connect-src 'self' https: wss:",
+    "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://open.weixin.qq.com https://*.google.com https://*.doubleclick.net https://*.googlesyndication.com https://*.adtrafficquality.google",
+    "upgrade-insecure-requests"
+  ].join("; ");
+
+  const routeHeaderRules = PUBLIC_STATIC_HTML_ROUTES.flatMap(({ route, target }) => {
+    const paths = [...new Set([route, "/" + target])];
+    return paths.flatMap(path => [
+      path,
       "  X-Lingxi-Render-Mode: static-edge-verified",
-      "  X-Content-Type-Options: nosniff",
-      ...(route === "/account" ? ["  Referrer-Policy: no-referrer"] : [])
-    ]),
+      "  X-Lingxi-Static-Delivery: workers-static-assets",
+      ...(route === "/account" ? ["  X-Robots-Tag: noindex, nofollow"] : [])
+    ]);
+  });
+
+  const managedHeaders = [
+    HEADER_BEGIN,
+    "/*",
+    "  Content-Security-Policy: base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src-attr 'none'; upgrade-insecure-requests",
+    "  Content-Security-Policy-Report-Only: " + reportOnlyCsp,
+    "  Cross-Origin-Opener-Policy: same-origin-allow-popups",
+    "  Origin-Agent-Cluster: ?1",
+    "  X-DNS-Prefetch-Control: off",
+    "  X-Frame-Options: SAMEORIGIN",
+    "  X-Content-Type-Options: nosniff",
+    "  Referrer-Policy: strict-origin-when-cross-origin",
+    "  Permissions-Policy: camera=(), microphone=(), geolocation=()",
+    "https://lingxifield.com/*",
+    "  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload",
+    ...routeHeaderRules,
     HEADER_END
   ].join("\n");
 
-  const headers = replaceManagedHeaderBlock(existingHeaders, managedRules);
+  const headers = replaceManagedBlock(existingHeaders, managedHeaders, HEADER_BEGIN, HEADER_END);
   await writeFile(headerPath, headers, "utf8");
   const verifiedHeaders = await readFile(headerPath, "utf8");
 
-  for (const { route } of PUBLIC_STATIC_HTML_ROUTES) {
-    if (!verifiedHeaders.includes("\n" + route + "\n") &&
-        !(route === "/" && verifiedHeaders.startsWith("/\n"))) {
-      throw new Error("STATIC_HEADER_ROUTE_MISSING:" + route);
+  for (const { route, target } of PUBLIC_STATIC_HTML_ROUTES) {
+    for (const path of new Set([route, "/" + target])) {
+      if (!verifiedHeaders.includes("\n" + path + "\n") &&
+          !(path === "/" && verifiedHeaders.startsWith("/\n"))) {
+        throw new Error("STATIC_HEADER_ROUTE_MISSING:" + path);
+      }
     }
   }
-  if (!PUBLIC_STATIC_HTML_ROUTES.some(({ route }) => route === "/account")) {
-    throw new Error("STATIC_ACCOUNT_CLIENT_AUTH_SHELL_MISSING");
+  if (!verifiedHeaders.includes("X-Lingxi-Static-Delivery: workers-static-assets")) {
+    throw new Error("STATIC_ASSET_DELIVERY_HEADER_MISSING");
+  }
+
+  const redirectPath = join(assetRoot, "_redirects");
+  let existingRedirects = "";
+  try {
+    existingRedirects = await readFile(redirectPath, "utf8");
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
+  assertNoRedirectConflicts(existingRedirects, PUBLIC_STATIC_HTML_ROUTES);
+  const managedRedirects = [
+    REDIRECT_BEGIN,
+    ...PUBLIC_STATIC_HTML_ROUTES.map(({ route, target }) => route + " /" + target + " 200"),
+    REDIRECT_END
+  ].join("\n");
+  const redirects = replaceManagedBlock(existingRedirects, managedRedirects, REDIRECT_BEGIN, REDIRECT_END);
+  await writeFile(redirectPath, redirects, "utf8");
+  const verifiedRedirects = await readFile(redirectPath, "utf8");
+
+  for (const { route, target } of PUBLIC_STATIC_HTML_ROUTES) {
+    if (!verifiedRedirects.split(/\r?\n/).includes(route + " /" + target + " 200")) {
+      throw new Error("STATIC_PROXY_RULE_MISSING:" + route);
+    }
   }
 
   console.log("COM_STATIC_ASSET_FIRST_ROUTES_PASS=" + materialized);
+  console.log("COM_STATIC_ASSET_DIRECT_PROXY_RULES_PASS=" + PUBLIC_STATIC_HTML_ROUTES.length);
+  console.log("COM_STATIC_ASSET_SECURITY_HEADERS_PASS");
   console.log("COM_STATIC_ASSET_ACCOUNT_CLIENT_AUTH_SHELL");
-  return { materialized, headerPath };
+  return { materialized, headerPath, redirectPath };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

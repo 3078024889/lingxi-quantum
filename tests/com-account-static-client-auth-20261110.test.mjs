@@ -34,7 +34,9 @@ test("browser shell authenticates through the public Supabase client and keeps p
 test("Cloudflare serves the generic account shell as a direct static asset while preserving authenticated APIs", () => {
   const materializer = read("scripts/cloudflare/materialize-static-html-assets-20261110.mjs");
   assert.ok(materializer.includes('route: "/account", source: "account-login.html", target: "account.html"'));
-  assert.ok(materializer.includes("Referrer-Policy: no-referrer"));
+  assert.ok(materializer.includes("Referrer-Policy: strict-origin-when-cross-origin"));
+  assert.ok(materializer.includes("X-Lingxi-Static-Delivery: workers-static-assets"));
+  assert.ok(materializer.includes('route + " /" + target + " 200'));
   const patch = read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
   assert.ok(patch.includes("const accountIsDynamic=false"));
   assert.ok(patch.includes("const edgeFile=accountIsDynamic?null:verifiedAnonymousPages[pathname]"));
