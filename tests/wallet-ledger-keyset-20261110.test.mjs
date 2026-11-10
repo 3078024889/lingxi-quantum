@@ -60,3 +60,15 @@ test("PostgREST keyset filter uses the descending (created_at, id) tuple",()=>{
  assert.match(route,/sourceKey:"sasi"/);
  assert.match(route,/sourceKey:"ai"/);
 });
+
+test("cursor rejects loose dates, impossible calendar dates and PostgREST filter syntax",()=>{
+ const looseSnapshot={...cursor,snapshotAt:"Nov 10, 2026"};
+ const impossible={...cursor,snapshotAt:"2026-02-30T08:00:00.000Z"};
+ const injected={...cursor,sasiAfter:{createdAt:"2026-11-10T08:00:00.000Z,and(id.eq."+id(2)+")",id:id(1)}};
+ for(const value of [looseSnapshot,impossible,injected]){
+  const encoded=Buffer.from(JSON.stringify(value)).toString("base64url");
+  assert.equal(decodeWalletLedgerCursor(encoded,"CNY"),null);
+ }
+ assert.throws(()=>walletLedgerAfterFilter({createdAt:"Nov 10, 2026",id:id(1)}),/INVALID_LEDGER_CURSOR_POSITION/);
+ assert.throws(()=>walletLedgerAfterFilter({createdAt:"2026-11-10T08:00:00.000Z",id:"not-a-uuid"}),/INVALID_LEDGER_CURSOR_POSITION/);
+});
