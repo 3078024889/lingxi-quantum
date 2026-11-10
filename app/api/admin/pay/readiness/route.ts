@@ -27,25 +27,30 @@ export async function GET(req:Request){
  const paypalLive=process.env.PAYPAL_ENV?.trim().toLowerCase()==="live";
  let paypalTokenTest:"PASS"|"FAIL"|"SKIPPED"="SKIPPED";
  let paypalWebhook:{registered:boolean;urlMatches:boolean;missingEvents:string[]}|null=null;
+ const requiredEvents=[
+  "CHECKOUT.ORDER.APPROVED","CHECKOUT.PAYMENT-APPROVAL.REVERSED",
+  "PAYMENT.CAPTURE.PENDING","PAYMENT.CAPTURE.COMPLETED",
+  "PAYMENT.CAPTURE.DENIED","PAYMENT.CAPTURE.REFUNDED"
+ ];
  if(paypalLive&&paypalConfigured()){
-  try{
-   await getPaypalAccessToken();paypalTokenTest="PASS";
-   const rows=await listPaypalWebhooks();
-   const selected=rows.find(item=>item.id===process.env.PAYPAL_WEBHOOK_ID?.trim());
-   const requiredEvents=[
-    "CHECKOUT.ORDER.APPROVED","CHECKOUT.PAYMENT-APPROVAL.REVERSED",
-    "PAYMENT.CAPTURE.PENDING","PAYMENT.CAPTURE.COMPLETED",
-    "PAYMENT.CAPTURE.DENIED","PAYMENT.CAPTURE.REFUNDED"
-   ];
-   const missingEvents=selected?requiredEvents.filter(name=>!selected.events.includes(name)):requiredEvents;
-   const expectedUrl=trustedSiteOrigin(req)+"/api/pay/paypal/webhook";
-   const normalize=(value:string)=>value.replace(/\/$/,"");
-   paypalWebhook={
-    registered:Boolean(selected),
-    urlMatches:Boolean(selected&&normalize(selected.url)===normalize(expectedUrl)),
-    missingEvents
-   };
-  }catch{paypalTokenTest="FAIL";}
+  try{await getPaypalAccessToken();paypalTokenTest="PASS";}
+  catch{paypalTokenTest="FAIL";}
+  if(paypalTokenTest==="PASS"){
+   try{
+    const rows=await listPaypalWebhooks();
+    const selected=rows.find(item=>item.id===process.env.PAYPAL_WEBHOOK_ID?.trim());
+    const missingEvents=selected?requiredEvents.filter(name=>!selected.events.includes(name)):requiredEvents;
+    const expectedUrl=trustedSiteOrigin(req)+"/api/pay/paypal/webhook";
+    const normalize=(value:string)=>value.replace(/\/$/,"");
+    paypalWebhook={
+     registered:Boolean(selected),
+     urlMatches:Boolean(selected&&normalize(selected.url)===normalize(expectedUrl)),
+     missingEvents
+    };
+   }catch{
+    paypalWebhook={registered:false,urlMatches:false,missingEvents:requiredEvents};
+   }
+  }
  }
  const software=await Promise.all(SASI_SOFTWARE_CATALOG.map(async item=>({
   productId:item.id,ready:await softwareCheckoutReady(item.id)
