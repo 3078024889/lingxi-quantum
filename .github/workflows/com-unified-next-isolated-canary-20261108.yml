@@ -254,10 +254,21 @@ jobs:
           for path in /api/money/summary /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
             body="$(mktemp)"
             status="$(curl -4sS --connect-timeout 9 --max-time 25 -o "$body" -w '%{http_code}' "$url$path" || true)"
-            reason="UNAUTHORIZED"
+            reason="UNKNOWN"
             if grep -q "SERVICE_UNAVAILABLE" "$body";then reason="SERVICE_UNAVAILABLE";fi
             if grep -q "MONEY_SUMMARY_UNAVAILABLE" "$body";then reason="MONEY_SUMMARY_UNAVAILABLE";fi
+            if grep -q "UNAUTHORIZED" "$body";then reason="UNAUTHORIZED";fi
             echo "COM_CANARY_PRIVATE_ROUTE path=$path HTTP_$status reason=$reason"
+            if [[ "$path" == "/api/money/summary" && "$status" == "503" ]];then
+              bytes="$(wc -c < "$body")"
+              if [[ "$bytes" -gt 2048 ]] || grep -Eiq 'availableMinor|refundableMinor|refundHoldMinor|balances|withdrawals' "$body";then
+                echo "COM_CANARY_BALANCE_503_PRIVATE_PAYLOAD_REJECTED"
+                rm -f "$body";exit 1
+              fi
+              echo "COM_CANARY_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA"
+            else
+              [[ "$status" == "401" ]] || { rm -f "$body";exit 1; }
+            fi
             [[ "$status" == "401" ]] || { rm -f "$body";exit 1; }
                 rm -f "$body";exit 1
               fi
