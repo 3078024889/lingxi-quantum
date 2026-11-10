@@ -23,9 +23,11 @@ test("Cloudflare static wallet is an anonymous asset while private API stays dyn
  assert.match(patch,/"\/ai-wallet":"ai-wallet.html"/);
  assert.match(patch,/pathname\.startsWith\("\/api\/"\)/);
  const wf=read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
- assert.match(wf,/ai-wallet:ai-wallet/);
+ assert.match(wf,/build-com-static-assets-20261110\.sh/);
  assert.match(wf,/\$path" = \/ai-wallet/);
- const cutover=read("scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs");
+ const snapshotBuild=read("scripts/cloudflare/build-com-static-assets-20261110.sh");
+ assert.match(snapshotBuild,/'ai-wallet:ai-wallet'/);
+ const cutover=read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs");
  assert.match(cutover,/"\/ai-wallet"/);
  assert.doesNotMatch(cutover,/COM_LEGACY_WALLET_PREFLIGHT|walletBridge/);
  assert.match(cutover,/COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN/);
