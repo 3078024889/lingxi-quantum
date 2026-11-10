@@ -12,8 +12,7 @@ export async function GET(req:NextRequest){
  try{
   const db=createClient();
   const mode=req.nextUrl.searchParams.get("mode")==="mine"?"mine":"public";
-  const fields="id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at";
-  let query=db.from("sasi_market_listings").select(mode==="mine"?fields+",rejection_reason":fields)
+  let query=db.from("sasi_market_listings").select("id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at,rejection_reason")
     .order("created_at",{ascending:false}).limit(36);
   if(mode==="mine"){
    const {data:{user}}=await db.auth.getUser();
@@ -24,7 +23,7 @@ export async function GET(req:NextRequest){
   if(error)throw Error("LISTINGS_QUERY_FAILED");
   // Public cards and hover previews are excerpts; the product endpoint serves the full long description.
   // Keep the public JSON compact even when a seller writes a 5,000-character description.
-  const items=mode==="public"?(data||[]).map(item=>({...item,description:item.description.slice(0,800)})):data||[];
+  const items=mode==="public"?(data||[]).map(({rejection_reason,...item})=>({...item,description:item.description.slice(0,800)})):data||[];
   return NextResponse.json({items},{headers:nocache});
  }catch{return NextResponse.json({items:[],error:"MARKET_LISTINGS_UNAVAILABLE"},{status:503,headers:nocache});}
 }
