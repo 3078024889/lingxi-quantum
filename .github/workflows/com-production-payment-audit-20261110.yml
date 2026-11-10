@@ -49,7 +49,8 @@ jobs:
           const present = value => typeof value === "string" && value.trim().length > 0;
           const emit = (key, value) => console.log(key + "=" + String(value));
           if (!present(account) || !present(token)) throw Error("CLOUDFLARE_READ_ONLY_AUDIT_CREDENTIALS_MISSING");
-          const base = "https://api.cloudflare.com/client/v4/accounts/" + encodeURIComponent(account) + "/workers/scripts/" + worker;
+          const scriptBase = "https://api.cloudflare.com/client/v4/accounts/" + encodeURIComponent(account) + "/workers/scripts/";
+          const base = scriptBase + worker;
           const response = await fetch(base + "/settings", {
             headers: { authorization: "Bearer " + token },
             signal: AbortSignal.timeout(25000)
@@ -90,6 +91,33 @@ jobs:
           }
           const paypalEnv = byName.get("PAYPAL_ENV");
           emit("COM_WORKER_PAYPAL_ENV", paypalEnv?.type === "plain_text" ? paypalEnv.text : "MISSING_OR_NOT_PLAIN_TEXT");
+          // Locate any credentials the owner may have installed on a retired/alternate Worker.
+          // Read only binding names and boolean flags; never read or emit secret values.
+          for (const legacyWorker of [
+            "lingxifield-com-unified-20261108",
+            "lingxifield-com-static-gateway-canary-20261107",
+            "lingxifield-com-main-20261108",
+            "lingxifield-com-public-r2-relay-20261108"
+          ]) {
+            const legacyResponse = await fetch(scriptBase + legacyWorker + "/settings", {
+              headers: { authorization: "Bearer " + token },
+              signal: AbortSignal.timeout(20000)
+            });
+            const legacyJson = await legacyResponse.json().catch(() => null);
+            emit("COM_ALT_WORKER_" + legacyWorker + "_HTTP", legacyResponse.status);
+            if (!legacyResponse.ok || legacyJson?.success !== true || !Array.isArray(legacyJson.result?.bindings)) continue;
+            const legacyBindings = legacyJson.result.bindings;
+            const legacyNames = new Set(legacyBindings.map(binding => binding.name));
+            for (const [group, names] of Object.entries(secretGroups)) {
+              emit("COM_ALT_WORKER_" + legacyWorker + "_" + group + "_SECRETS_PRESENT",
+                names.every(name => legacyNames.has(name)));
+            }
+            for (const flag of ["PAYPAL_ENABLED", "ALIPAY_ENABLED", "WECHAT_ENABLED", "TOOL_PASS_COMMERCE_READY", "SOFTWARE_COMMERCE_READY"]) {
+              const binding = legacyBindings.find(item => item.name === flag);
+              emit("COM_ALT_WORKER_" + legacyWorker + "_FLAG_" + flag,
+                binding?.type === "plain_text" && binding.text === "true");
+            }
+          }
           const publicStatus = await fetch("https://lingxifield.com/api/pay/providers?__audit=" + Date.now(), {
             cache: "no-store",
             headers: { accept: "application/json" },
