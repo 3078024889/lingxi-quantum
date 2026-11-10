@@ -23,6 +23,7 @@ export async function fulfillPaidOrder(orderId:string,verifiedPayment=false):Pro
   const result=rpc.data as FulfillmentResult|null;
   return result?.ok?result:{ok:false,error:result?.error||"商品交付验证未完成。"};
  }
+ // Only a provider-verified callback may grant a first-party software entitlement; a return URL alone is not proof of payment.
  if(softwareOffer(productId)){
   if(!verifiedPayment)return {ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"};
   const rpc=await admin.rpc("sasi_grant_software_delivery",{p_order_id:orderId});

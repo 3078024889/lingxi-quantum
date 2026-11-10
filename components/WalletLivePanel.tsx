@@ -116,7 +116,7 @@ export default function WalletLivePanel(){
      <label htmlFor="wallet-custom-amount"><LxText zh="自定义金额" en="Custom amount" ja="任意金額" ko="직접 입력" fr="Montant personnalisé" de="Eigener Betrag" es="Importe personalizado" pt="Valor personalizado" ar="مبلغ مخصص"/></label>
      <div className="lx26-topup-custom-row">
       <span aria-hidden="true">{topupSymbol}</span>
-      <input id="wallet-custom-amount" type="text" inputMode="decimal" autoComplete="off" maxLength={8} value={customAmount} onChange={e=>setCustomAmount(e.target.value)} placeholder="0.00" aria-describedby="wallet-custom-hint"/>
+      <input id="wallet-custom-amount" data-testid="wallet-custom-amount-input" type="text" inputMode="decimal" autoComplete="off" maxLength={8} value={customAmount} onChange={e=>setCustomAmount(e.target.value)} placeholder="0.00" aria-describedby="wallet-custom-hint"/>
       {customValue!==null&&topupPayReady?<Link data-testid="wallet-custom-topup" href={customHref} className="lx26-topup-custom-action"><LxText zh="继续充值" en="Continue" ja="チャージへ進む" ko="충전 계속" fr="Continuer" de="Weiter" es="Continuar" pt="Continuar" ar="متابعة"/></Link>:<button type="button" disabled className="lx26-topup-custom-action is-disabled"><LxText zh="继续充值" en="Continue" ja="チャージへ進む" ko="충전 계속" fr="Continuer" de="Weiter" es="Continuar" pt="Continuar" ar="متابعة"/></button>}
      </div>
      <p id="wallet-custom-hint"><LxText zh={"金额范围："+MIN_CUSTOM_TOPUP.toFixed(2)+"–"+MAX_CUSTOM_TOPUP.toLocaleString("en-US")+"，最多两位小数。"} en="Amount range: 0.01–10,000, up to 2 decimal places." ja="0.01～10,000、少数第2位まで入力できます。" ko="0.01~10,000, 소수점 둘째 자리까지 입력할 수 있습니다." fr="De 0,01 à 10 000, avec deux décimales maximum." de="0,01 bis 10.000, maximal zwei Nachkommastellen." es="De 0,01 a 10.000, con hasta dos decimales." pt="De 0,01 a 10.000, com até duas casas decimais." ar="من 0.01 إلى 10,000 وبحد أقصى منزلتين عشريتين."/></p>
@@ -131,7 +131,7 @@ export default function WalletLivePanel(){
     <Link href="/account/support"><LxText zh="处理进度" en="Support progress"/><span aria-hidden="true">›</span></Link>
    </div>
   </section>
-  <section className="lx26-wallet-history">
+  <section className="lx26-wallet-history" data-testid="wallet-history-panel">
    <div className="lx26-wallet-history-tabs" role="tablist" aria-label="Wallet history">
     <button type="button" role="tab" aria-selected={tab==="ledger"} className={tab==="ledger"?"is-active":""} onClick={()=>setTab("ledger")}><LxText zh="资金记录" en="Funds activity"/></button>
     <button type="button" role="tab" aria-selected={tab==="withdrawals"} className={tab==="withdrawals"?"is-active":""} onClick={()=>setTab("withdrawals")}><LxText zh="退款与提现" en="Refunds & withdrawals"/></button>

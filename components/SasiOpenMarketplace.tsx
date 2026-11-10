@@ -254,7 +254,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
      </button>}
      {featuredPaypalError&&<small role="alert" className={styles.featuredPaypalError}>{featuredPaypalError}</small>}
      {!featuredReady?
-      <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"商品文件与 SHA256 正在核验，暂不可购买","Product files and SHA-256 are being verified; purchases are disabled.")}</span>:
+      <span role="status" aria-live="polite" className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"商品文件与 SHA256 正在核验，暂不可购买","Product files and SHA-256 are being verified; purchases are disabled.")}</span>:
       !featuredPayment.wechat&&!featuredPayment.alipay&&!featuredPayment.paypal?
       <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"当前没有可用的支付方式","No payment method is currently available")}</span>:null}
     </div>

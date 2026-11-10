@@ -210,7 +210,7 @@ export default function HomeProblemHub(){
      </details>
      <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"SASI 现为智能软件市场；按商品说明提供源码授权、开发者发布和安全交付。付款前展示费用与可用支付方式。":"SASI is now a software marketplace for developer products and source licenses. Prices and available payment methods appear before payment confirmation."}</p>
      <p className="mt-1 text-xs text-[var(--lx-muted)]">lingxifield.com · lingxifield.cn</p>
-     <form onSubmit={submit} className="lx11-prompt"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
+     <form onSubmit={submit} className="lx11-prompt" data-testid="home-task-search"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
      {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
     </div>
    </div>

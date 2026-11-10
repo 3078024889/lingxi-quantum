@@ -19,6 +19,11 @@ test("wallet shows real CNY/USD balances from authenticated summary, never hardc
  assert.match(wallet,/b\.refundHoldMinor/);
  assert.match(wallet,/new Intl\.NumberFormat/);
  assert.match(wallet,/BALANCE_TOPUP_AMOUNTS\.map/);
+ assert.match(wallet,/customTopupAmount\(customAmount\.trim\(\)\)/);
+ assert.match(wallet,/wallet-custom-amount/);
+ assert.match(wallet,/wallet-custom-amount-input/);
+ assert.match(wallet,/checkout-usd\?productId=sasi-usd-balance-custom-/);
+ assert.match(wallet,/wallet-history-panel/);
  assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
  assert.match(wallet,/WalletLedgerPanel showCurrencyTabs/);
  const ledger=read("components/WalletLedgerPanel.tsx");

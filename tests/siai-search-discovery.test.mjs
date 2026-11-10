@@ -76,6 +76,7 @@ test("nine-language FAQ body follows the language selection and spaced keywords 
  assert.match(home,/replace\(\/\\s\+\/g,""\)/);
  assert.match(home,/"ai视频"/);
  assert.match(home,/url\.searchParams\.set\("q",v\)/);
+ assert.match(home,/data-testid="home-task-search"/);
  assert.match(rank,/params\.get\("q"\)/);
  assert.match(rank,/setQuery\(incomingQuery\.trim\(\)\)/);
 });
