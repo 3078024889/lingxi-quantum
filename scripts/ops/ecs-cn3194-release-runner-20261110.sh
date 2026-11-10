@@ -36,7 +36,7 @@ echo "CURL_COMPATIBILITY_MODE: manual bounded retry; no --retry-all-errors"
 curl --version | head -n 1
 
 download_small_pinned() {
-  local url="$1" dest="$2" expected_blob="$3" tmp="2.part"
+  local url="$1" dest="$2" expected_blob="$3" tmp="${dest}.part"
   local attempt
   for attempt in $(seq 1 12); do
     rm -f "$tmp"
@@ -91,13 +91,13 @@ download_release_resumable() {
     fi
 
     if (( have > 0 )); then
-      if curl --noproxy '*' -fL --connect-timeout 30 -C - "$url" -o "$dest"; then
+      if curl --noproxy '*' -fL --connect-timeout 30 --max-time 900 -C - "$url" -o "$dest"; then
         rc=0
       else
         rc=$?
       fi
     else
-      if curl --noproxy '*' -fL --connect-timeout 30 "$url" -o "$dest"; then
+      if curl --noproxy '*' -fL --connect-timeout 30 --max-time 900 "$url" -o "$dest"; then
         rc=0
       else
         rc=$?

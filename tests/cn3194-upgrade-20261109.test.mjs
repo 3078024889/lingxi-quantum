@@ -83,3 +83,46 @@ test("static-only 3194 release never enables payments or commerce",()=>{
   assert.match(runner,/PAYMENT_REMAINS_CLOSED_DYNAMIC_GO_LIVE_DEFERRED_TO_TOMORROW/);
   assert.doesNotMatch(runner,/--enable "$TAG"/);
 });
+
+
+const runner20261110=readFileSync("scripts/ops/ecs-cn3194-release-runner-20261110.sh","utf8");
+const stage20261110=readFileSync("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.sh","utf8");
+
+test("20261110 runner uses isolated temp files, bounded resumable downloads and exact immutable pins",()=>{
+  assert.ok(runner20261110.includes('tmp="${dest}.part"'));
+  assert.ok(!runner20261110.includes('tmp="2.part"'));
+  assert.ok(runner20261110.includes("--max-time 900 -C -"));
+  assert.ok(runner20261110.includes('--max-time 900 "$url" -o "$dest"'));
+  assert.ok(runner20261110.includes('SOURCE_REF="6160c1eb9251409e9fbdf3f478787c49f2318357"'));
+  assert.ok(runner20261110.includes('UPGRADE_BLOB_SHA="41b7248f672c94a84a447a340568d378c9debf3a"'));
+  assert.ok(runner20261110.includes('PAYMENT_BLOB_SHA="897a38e8b90c93168396181555a7a008e01c0e24"'));
+  assert.ok(runner20261110.includes('ARCHIVE_SHA="9d007903bc1996c273ed37013c934e4d002d7c536e059c56cc011d8928df56ab"'));
+  assert.ok(runner20261110.includes('ARCHIVE_BYTES="454770678"'));
+  for(const mode of ["--plan","--stage-local","--verify-stage","--promote"])
+    assert.ok(runner20261110.includes('bash "$UPGRADE" '+mode));
+  assert.ok(runner20261110.includes('bash "$PAYMENT" --audit "$TAG"'));
+  assert.ok(runner20261110.includes("PAYMENT_REMAINS_CLOSED_DYNAMIC_GO_LIVE_DEFERRED_TO_TOMORROW"));
+  assert.ok(!runner20261110.includes('--enable "$TAG"'));
+});
+
+test("20261110 stage keeps 3193 rollback, verifies the new UI and keeps commerce disabled",()=>{
+  assert.ok(stage20261110.includes('EXPECTED_SHA="9230bcba6a24cce408b56eee78108561b2b573ca"'));
+  assert.ok(stage20261110.includes('OLD_SVC=lingxifield-cn-release-20261108-8729bf958a56'));
+  assert.ok(stage20261110.includes('PORT=3194'));
+  assert.ok(stage20261110.includes('CN3194_STAGE_GATE_FAILED_3193_UNCHANGED'));
+  assert.ok(stage20261110.includes('CN3194_NGINX_PROMOTION_PASS'));
+  assert.ok(stage20261110.includes('OLD_3193_SERVICE_RETAINED_ACTIVE_FOR_ROLLBACK'));
+  assert.ok(stage20261110.includes('PAYMENT_FLAGS_REMAIN_CLOSED_UNTIL_SIGNED_MERCHANT_AUDIT'));
+  for(const flag of [
+    "TOOL_PASS_COMMERCE_READY=false","WECHAT_ENABLED=false","ALIPAY_ENABLED=false",
+    "PAYPAL_ENABLED=false","SASI_MARKET_SALES_ENABLED=false","SASI_MARKET_UPLOADS_ENABLED=false",
+    "SASI_MARKET_DELIVERY_ENABLED=false","SASI_MARKET_PAYOUTS_ENABLED=false",
+    "SASI_MARKETPLACE_COMMERCE_READY=false","SOFTWARE_COMMERCE_READY=false"
+  ]) assert.ok(stage20261110.includes(flag),flag);
+  assert.ok(stage20261110.includes("lx26-wallet-page"));
+  assert.ok(stage20261110.includes("lx26-tools-page"));
+  assert.ok(stage20261110.includes("code /api/sasi/generation/submit 410"));
+  assert.ok(stage20261110.includes("code /api/sasi/account 401"));
+  assert.ok(!stage20261110.includes('systemctl stop "$OLD_SVC"'));
+  assert.ok(!stage20261110.includes('systemctl disable "$OLD_SVC"'));
+});

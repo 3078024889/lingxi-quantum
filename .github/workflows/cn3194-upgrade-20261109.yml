@@ -6,6 +6,8 @@ on:
       - 'scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261109.sh'
       - 'scripts/ops/cn-payment-activate-3194-20261109.sh'
       - 'scripts/ops/ecs-cn3194-release-runner-20261109.sh'
+      - 'scripts/ops/ecs-cn3194-release-runner-20261110.sh'
+      - 'scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.sh'
       - 'tests/cn3194-upgrade-20261109.test.mjs'
       - '.github/workflows/cn3194-upgrade-20261109.yml'
       - 'app/account/page.tsx'
@@ -36,6 +38,8 @@ on:
     paths:
       - 'scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261109.sh'
       - 'scripts/ops/ecs-cn3194-release-runner-20261109.sh'
+      - 'scripts/ops/ecs-cn3194-release-runner-20261110.sh'
+      - 'scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.sh'
       - 'scripts/ops/cn-payment-activate-3194-20261109.sh'
       - 'tests/cn3194-upgrade-20261109.test.mjs'
       - '.github/workflows/cn3194-upgrade-20261109.yml'
@@ -81,6 +85,8 @@ jobs:
           bash -n scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261109.sh
           bash -n scripts/ops/cn-payment-activate-3194-20261109.sh
           bash -n scripts/ops/ecs-cn3194-release-runner-20261109.sh
+          bash -n scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.sh
+          bash -n scripts/ops/ecs-cn3194-release-runner-20261110.sh
       - name: Upgrade, rollback and payment safety contracts
         run: node --test tests/cn3194-upgrade-20261109.test.mjs
       - name: No production actions
