@@ -3,10 +3,14 @@ import assert from "node:assert/strict";
 import {readFileSync,existsSync} from "node:fs";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 test("account center is current and preserves real user authentication & orders",()=>{
- const account=read("app/account/page.tsx"),panel=read("components/AccountCenterV26.tsx");
- assert.match(account,/getServerUser\(supabase\)/);
- assert.match(account,/paidOrderCount/);
- assert.match(account,/AccountCenterV26/);
+ const account=read("app/account/page.tsx"),client=read("app/account/AccountClientShell.tsx"),panel=read("components/AccountCenterV26.tsx");
+ assert.match(account,/export const dynamic = "force-static"/);
+ assert.match(account,/<AccountClientShell \/>/);
+ assert.doesNotMatch(account,/getServerUser|paidOrderCount|createClient/);
+ assert.match(client,/supabase\.auth\.getUser\(\)/);
+ assert.match(client,/supabase\.auth\.onAuthStateChange/);
+ assert.match(client,/paidOrderCount/);
+ assert.match(client,/AccountCenterV26/);
  assert.doesNotMatch(account,/继续短剧、网站、书本、学习和科研/);
  for(const p of ["/products","/account/orders","/ai-wallet","/sasi","/account/withdrawals","/account/support","/account/notifications","/account/settings"])
   assert.ok(panel.includes(p),"missing account link "+p);

@@ -72,11 +72,12 @@ export default function AccountClientShell() {
     const loadPaidOrderCount = (userId: string) => {
       if (countedUserId === userId) return;
       countedUserId = userId;
-      void supabase
+      const query = supabase
         .from("orders")
         .select("id", { count: "exact", head: true })
         .eq("user_id", userId)
-        .eq("status", "paid")
+        .eq("status", "paid");
+      void Promise.resolve(query)
         .then(({ count, error }) => {
           if (active) setPaidOrderCount(!error && typeof count === "number" ? count : null);
         })
