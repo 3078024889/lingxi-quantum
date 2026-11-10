@@ -6,6 +6,21 @@ function env(name: string): string {
   return process.env[name]?.trim() ?? "";
 }
 
+/** Parse CNY values as exact minor units; never round provider input through binary floats. */
+export function parseCnyMinorUnits(value: unknown): number | null {
+  if (typeof value !== "string" && typeof value !== "number") return null;
+  const raw = typeof value === "number" && Number.isFinite(value) ? String(value) : String(value);
+  if (!/^(?:0|[1-9]\\d*)(?:\\.\\d{1,2})?$/.test(raw)) return null;
+  const [whole, fraction = ""] = raw.split(".");
+  const minor = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
+  return Number.isSafeInteger(minor) ? minor : null;
+}
+
+function formatCnyMinorUnits(minor: number): string {
+  if (!Number.isSafeInteger(minor) || minor < 0) throw new Error("ALIPAY_AMOUNT_MINOR_INVALID");
+  return `${Math.floor(minor / 100)}.${String(minor % 100).padStart(2, "0")}`;
+}
+
 function asPem(value: string, label: "PRIVATE KEY" | "PUBLIC KEY"): string {
   if (value.includes("-----BEGIN")) return value.replace(/\\n/g, "\n");
   const body = value.replace(/\\s+/g, "");
@@ -58,12 +73,12 @@ export function createAlipayPaymentUrl(input: {
 }): string {
   if (!alipayConfigured()) throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);
   if (!/^LX[A-Za-z0-9]{1,62}$/.test(input.outTradeNo)) throw new Error("Invalid Alipay out_trade_no");
-  if (!Number.isFinite(input.amountRmb) || input.amountRmb <= 0) throw new Error("Invalid Alipay amount");
+  const amountMinor = parseCnyMinorUnits(input.amountRmb);\n  if (amountMinor === null || amountMinor <= 0) throw new Error("Invalid Alipay amount");
 
   const method = input.mobile ? "alipay.trade.wap.pay" : "alipay.trade.page.pay";
   const bizContent = JSON.stringify({
     out_trade_no: input.outTradeNo,
-    total_amount: input.amountRmb.toFixed(2),
+    total_amount: formatCnyMinorUnits(amountMinor),
     subject: input.subject.slice(0, 128),
     product_code: input.mobile ? "QUICK_WAP_WAY" : "FAST_INSTANT_TRADE_PAY",
     timeout_express: "30m",
@@ -136,7 +151,7 @@ function extractAlipayResponseNode(raw: string, key: string): string {
   throw new Error("ALIPAY_QUERY_RESPONSE_TRUNCATED");
 }
 export async function queryAlipayTrade(input:{outTradeNo:string;expectedAmountRmb:number}):Promise<{paid:boolean;tradeStatus:string;tradeNo?:string}>{
- if(!alipayConfigured())throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);
+ if(!alipayConfigured())throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);\n const expectedFen=parseCnyMinorUnits(input.expectedAmountRmb);\n if(expectedFen===null||expectedFen<=0)throw new Error("ALIPAY_QUERY_EXPECTED_AMOUNT_INVALID");
  const params:Record<string,string>={app_id:env("ALIPAY_APP_ID"),method:"alipay.trade.query",format:"JSON",charset:"utf-8",sign_type:"RSA2",timestamp:timestamp(),version:"1.0",biz_content:JSON.stringify({out_trade_no:input.outTradeNo})};
  const signer=createSign("RSA-SHA256");signer.update(canonical(params),"utf8");signer.end();
  params.sign=signer.sign(asPem(env("ALIPAY_PRIVATE_KEY"),"PRIVATE KEY"),"base64");
@@ -154,8 +169,7 @@ export async function queryAlipayTrade(input:{outTradeNo:string;expectedAmountRm
    throw new Error(`ALIPAY_QUERY_${sub.slice(0,100)}`);
  }
  if(String(data.out_trade_no??"")!==input.outTradeNo)throw new Error("ALIPAY_QUERY_ORDER_MISMATCH");
- const totalFen=Math.round(Number(data.total_amount)*100),expectedFen=Math.round(input.expectedAmountRmb*100),tradeStatus=String(data.trade_status??"");
- if(new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus)&&totalFen!==expectedFen)throw new Error("ALIPAY_QUERY_AMOUNT_MISMATCH");
+ const totalFen=parseCnyMinorUnits(data.total_amount),tradeStatus=String(data.trade_status??"");\n if(new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus)&&(totalFen===null||totalFen!==expectedFen))throw new Error("ALIPAY_QUERY_AMOUNT_MISMATCH");
  return{paid:new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus),tradeStatus,tradeNo:typeof data.trade_no==="string"?data.trade_no:undefined};
 }
 
