@@ -16,6 +16,7 @@ import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
+import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"
@@ -123,7 +124,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com";
+    const baseUrl = trustedSiteOrigin(req);
     // 微信支付要求商户订单号只能是数字、大小写字母、下划线，用我们自己的
     // order.id（uuid）会带短横线，不符合要求，这里做一个安全的转换。
     const outTradeNo = `LX${order.id.replace(/-/g, "")}`.slice(0, 32);
