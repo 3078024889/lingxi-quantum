@@ -118,7 +118,7 @@ jobs:
             echo "ANON_AUTH_BOUNDARY:$path:$code"
             [ "$code" = 401 ] || exit 1
           done
-          for item in "/api/sasi/generation/submit:410" "/api/cron/sasi-v5-radar:410" "/api/admin/pay/readiness:404"; do
+          for item in "/api/sasi/generation/submit:410" "/api/cron/sasi-v5-radar:410" "/api/admin/pay/readiness:401"; do
             path="$(printf '%s' "$item" | cut -d: -f1)"
             expected="$(printf '%s' "$item" | cut -d: -f2)"
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
