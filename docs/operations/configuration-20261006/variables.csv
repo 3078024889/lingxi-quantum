@@ -198,6 +198,7 @@
 "PAYPAL_WEBHOOK_ID","支付退款","仅服务端","仅启用对应功能时配置","",".env.example; app/api/pay/create/route.ts; app/api/pay/providers/route.ts; app/api/tools/pay/create/route.ts; lib/paypal.ts; lib/sasi/readiness.ts"
 "SASI_REFUND_FLOW_TESTED","支付退款","仅服务端","仅启用对应功能时配置","false",".env.example; lib/sasi/payment-gate.ts; lib/sasi/readiness.ts"
 "USD_BALANCE_TOPUP_ENABLED","支付退款","仅服务端","仅启用对应功能时配置","false",".env.example"
+"WECHAT_ENABLED","支付退款","仅服务端","商户密钥与平台公钥验签验收后启用","false",".env.example; lib/wechatpay.ts; app/api/pay/providers/route.ts"
 "WECHAT_API_V3_KEY","支付退款","仅服务端","仅启用对应功能时配置","",".env.example; lib/wechatpay.ts"
 "WECHAT_APP_ID","支付退款","仅服务端","仅启用对应功能时配置","",".env.example; lib/wechat-oauth.ts; lib/wechatpay.ts"
 "WECHAT_APP_SECRET","支付退款","仅服务端","仅启用对应功能时配置","",".env.example; lib/wechat-oauth.ts"
