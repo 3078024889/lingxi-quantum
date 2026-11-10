@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import {useEffect,useMemo,useState}from"react";
+import {useEffect,useMemo,useRef,useState}from"react";
 import ToolGlyph from "./ToolGlyph";
 import {publicToolSurface,type PublicToolSurfaceItem}from"@/lib/tools/public-surface";
 import {useLingxiLang}from"@/lib/lingxi-i18n";
@@ -14,6 +14,8 @@ import {isAnonymousLocalTool,localFreeCopy} from '@/lib/tools/local-free-tools';
 export default function ToolsHubV11(){
  const{lang,t}=useLingxiLang();
  const[q,setQ]=useState("");
+ const searchRef=useRef<HTMLInputElement>(null);
+ useEffect(()=>{const shortcut=(event:KeyboardEvent)=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();searchRef.current?.focus();}};window.addEventListener("keydown",shortcut);return()=>window.removeEventListener("keydown",shortcut)},[]);
  const[category,setCategory]=useState<ToolDisplayCategory>("all");
  const[freeOnly,setFreeOnly]=useState(false);const access=localFreeCopy(lang);
  useEffect(()=>{try{
@@ -38,7 +40,7 @@ export default function ToolsHubV11(){
    <div className="lx26-tools-command">
     <span className="lx26-overline">{toolHubCopy(lang,"kicker")}</span>
     <div className="lx26-tools-heading"><h1>{toolHubCopy(lang,"title")}</h1><p>{toolHubCopy(lang,"subtitle")}</p></div>
-    <div className="lx11-tool-searchbox lx26-tools-search"><span aria-hidden="true">⌕</span><input value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")} aria-label={toolHubCopy(lang,"search")}/><kbd>⌘ K</kbd></div>
+    <div className="lx11-tool-searchbox lx26-tools-search"><span aria-hidden="true">⌕</span><input ref={searchRef} value={q} onChange={e=>setQ(e.target.value)} placeholder={toolHubCopy(lang,"search")} aria-label={toolHubCopy(lang,"search")}/><kbd>⌘ K</kbd></div>
     <div className="lx-tools-v124-categories lx26-tools-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>
     <div className="lx26-tools-filters">
      <div className="lx-tools-v124-categories" role="group" aria-label={access[3]}>{[false,true].map(value=><button type="button" key={String(value)} className={freeOnly===value?'is-active':''} aria-pressed={freeOnly===value} onClick={()=>setFreeOnly(value)}>{access[value?1:0]}</button>)}</div>
