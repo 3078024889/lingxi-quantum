@@ -5,6 +5,9 @@ import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+// No verified seller-transfer adapter or settlement worker exists in this branch yet.
+// Keep this code-level gate closed even if an operator accidentally flips the env flag.
+const MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY=false;
 export async function GET(){
  const db=createClient(),{data:{user}}=await db.auth.getUser();
  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
@@ -28,7 +31,7 @@ export async function GET(){
     sales:salesRows.slice(0,150),
     payouts:payoutRows.slice(0,150),
     seller:seller.data,
-    payoutsOpen:process.env.SASI_MARKET_PAYOUTS_ENABLED==="true",
+    payoutsOpen:process.env.SASI_MARKET_PAYOUTS_ENABLED==="true"&&MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY,
     submissionTargetMinutes:15,
     providerArrivalGuaranteed:false,
     reportTruncated:salesTruncated||payoutsTruncated,
@@ -38,7 +41,7 @@ export async function GET(){
 }
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:h});
- if(process.env.SASI_MARKET_PAYOUTS_ENABLED!=="true")
+ if(process.env.SASI_MARKET_PAYOUTS_ENABLED!=="true"||!MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY)
   return NextResponse.json({error:"PAYOUT_PROVIDER_NOT_VERIFIED"},{status:503,headers:h});
  const db=createClient(),{data:{user}}=await db.auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
@@ -53,8 +56,8 @@ export async function POST(req:NextRequest){
  });
  if(error)return NextResponse.json({error:"PAYOUT_REQUEST_NOT_READY"},{status:503,headers:h});
  if(!data?.ok)return NextResponse.json({error:data?.error||"PAYOUT_NOT_APPROVED"},{status:409,headers:h});
- // Provider transfer happens asynchronously via a separately verified worker;
- // "requested" NEVER means "paid" or "sent to bank".
+ // This path records a request only. Provider transfer is NOT implemented here;
+ // never report a request as submitted, paid or sent to a bank account.
  return NextResponse.json({id:data.id,status:data.status,submissionTargetMinutes:15,
   providerArrivalGuaranteed:false},{status:202,headers:h});
 }
