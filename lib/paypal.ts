@@ -202,7 +202,7 @@ async function paypalWebhookCertificate(certUrl:string):Promise<string>{
  if(parsed.protocol!=="https:"||!allowedHosts.has(parsed.hostname)
    ||!/^\/v1\/notifications\/certs\/[A-Za-z0-9_-]+$/.test(parsed.pathname)
    ||parsed.search||parsed.hash)throw new Error("PAYPAL_CERT_URL_REJECTED");
- const response=await fetchWithTimeout(parsed.toString(),{method:"GET",cache:"no-store"});
+ const response=await fetchWithTimeout(parsed.toString(),{method:"GET",cache:"no-store",redirect:"error"});
  if(!response.ok)throw new Error("PAYPAL_CERT_FETCH_FAILED");
  const certificate=await response.text();
  if(certificate.length>65536||!certificate.includes("-----BEGIN CERTIFICATE-----")
