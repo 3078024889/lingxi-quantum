@@ -37,6 +37,8 @@ test("Cloudflare serves the generic account shell as a direct static asset while
   assert.ok(materializer.includes("Referrer-Policy: strict-origin-when-cross-origin"));
   assert.ok(materializer.includes("X-Lingxi-Static-Delivery: workers-static-assets"));
   assert.ok(materializer.includes('route + " /" + target + " 200'));
+  assert.ok(materializer.includes("X-Lingxi-Static-Delivery: workers-static-assets"));
+  assert.ok(materializer.includes('route + " /" + target + " 200'));
   const patch = read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
   assert.ok(patch.includes("const accountIsDynamic=false"));
   assert.ok(patch.includes("const edgeFile=accountIsDynamic?null:verifiedAnonymousPages[pathname]"));

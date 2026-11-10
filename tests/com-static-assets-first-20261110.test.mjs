@@ -28,7 +28,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       assert.ok(headers.includes(entry.route + "\n  X-Lingxi-Render-Mode: static-edge-verified"), entry.route + " must receive the static marker");
     }
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), true);
-    assert.ok(headers.includes("/account\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer"));
+    assert.ok(headers.includes("/account\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets\n  X-Robots-Tag: noindex, nofollow"));
 
     // Re-running the materializer is idempotent and does not duplicate its managed header block.
     await materializeStaticHtmlAssets(root);
@@ -36,7 +36,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     assert.equal(after.split("# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS").length - 1, 1);
     const redirects = await readFile(join(root, "_redirects"), "utf8");
     for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
-      assert.ok(redirects.split(/\\r?\\n/).includes(entry.route + " /" + entry.target + " 200"), entry.route + " must proxy to its exact HTML asset");
+      assert.ok(redirects.split(/\r?\n/).includes(entry.route + " /" + entry.target + " 200"), entry.route + " must proxy to its exact HTML asset");
     }
     await materializeStaticHtmlAssets(root);
     const redirectsAfter = await readFile(join(root, "_redirects"), "utf8");
