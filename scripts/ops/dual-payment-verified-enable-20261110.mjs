@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Live merchant handshake. Read-only: NEVER creates a charge, an order, a refund or a DB row.
+// No charges/orders/refunds. --repair-and-enable may register a webhook and enable verified channels.
 // Never prints tokens, key material, buyer data, merchant IDs or complete gateway responses.
 import {createSign,createVerify,createPrivateKey,createPublicKey,randomBytes} from "node:crypto";
 import {execFileSync} from "node:child_process";
@@ -71,8 +71,8 @@ async function alipay(cfg){
 async function wechat(cfg){
  const required=["WECHAT_APP_ID","WECHAT_MCH_ID","WECHAT_API_V3_KEY","WECHAT_PRIVATE_KEY","WECHAT_CERT_SERIAL_NO","WECHAT_PLATFORM_PUBLIC_KEY","WECHAT_PLATFORM_PUBLIC_KEY_ID"];
  if(required.some(k=>!cfg[k]))throw Error("WECHAT_LIVE_MERCHANT_CONFIG_MISSING");
- if(!/^\d{8,15}$/.test(cfg.WECHAT_MCH_ID)||!/^wx[a-z0-9]{10,}$/i.test(cfg.WECHAT_APP_ID))
-  throw Error("WECHAT_MERCHANT_ID_INVALID");
+ if(!/^\d{1,32}$/.test(cfg.WECHAT_MCH_ID))throw Error("WECHAT_MCH_ID_NOT_NUMERIC_OR_TOO_LONG");
+ if(!/^wx[a-z0-9]{1,30}$/i.test(cfg.WECHAT_APP_ID))throw Error("WECHAT_APP_ID_FORMAT_INVALID");
  if(Buffer.byteLength(cfg.WECHAT_API_V3_KEY)!==32)throw Error("WECHAT_API_V3_KEY_INVALID");
  const key=createPrivateKey(pem(cfg.WECHAT_PRIVATE_KEY,"PRIVATE KEY"));
  const pub=createPublicKey(pem(cfg.WECHAT_PLATFORM_PUBLIC_KEY,"PUBLIC KEY"));
@@ -113,18 +113,57 @@ export function verifyPaypalWebhookConfig(webhook){
  if(!names.has("*")&&(!names.has("PAYMENT.CAPTURE.COMPLETED")||!names.has("PAYMENT.CAPTURE.REFUNDED")))
   throw Error("PAYPAL_WEBHOOK_EVENTS_INCOMPLETE");
 }
-async function paypal(cfg){
+async function paypalToken(cfg,request=fetch){
  if((cfg.PAYPAL_ENV||"").trim()!=="live")throw Error("PAYPAL_ENV_NOT_EXPLICIT_LIVE");
- if(["PAYPAL_CLIENT_ID","PAYPAL_CLIENT_SECRET","PAYPAL_WEBHOOK_ID"].some(k=>!cfg[k]?.trim()))
+ if(["PAYPAL_CLIENT_ID","PAYPAL_CLIENT_SECRET"].some(k=>!cfg[k]?.trim()))
   throw Error("PAYPAL_CONFIG_MISSING");
- const response=await fetch("https://api-m.paypal.com/v1/oauth2/token",{
+ const response=await request("https://api-m.paypal.com/v1/oauth2/token",{
   method:"POST",headers:{Authorization:"Basic "+Buffer.from(cfg.PAYPAL_CLIENT_ID+":"+cfg.PAYPAL_CLIENT_SECRET).toString("base64"),"Content-Type":"application/x-www-form-urlencoded"},
   body:"grant_type=client_credentials",redirect:"error",signal:AbortSignal.timeout(18000)
  });
  const data=await response.json().catch(()=>({}));
  if(!response.ok||!data.access_token)throw Error("PAYPAL_LIVE_OAUTH_HTTP_"+response.status);
+ return data.access_token;
+}
+export async function repairPaypalWebhook(cfg,request=fetch){
+ const token=await paypalToken(cfg,request);
+ async function api(path,options={}){
+  const r=await request("https://api-m.paypal.com/v1/notifications/"+path,{
+   ...options,headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+   redirect:"error",signal:AbortSignal.timeout(18000)
+  });
+  if(!r.ok)throw Error("PAYPAL_WEBHOOK_REPAIR_HTTP_"+r.status);
+  return r.status===204?null:r.json();
+ }
+ const existing=await api("webhooks");
+ if(!Array.isArray(existing.webhooks))throw Error("PAYPAL_WEBHOOK_LIST_INVALID");
+ const urls=["https://lingxifield.cn/api/pay/paypal/webhook","https://lingxifield.com/api/pay/paypal/webhook"];
+ let webhook;
+ for(const url of urls){
+  const candidates=existing.webhooks.filter(x=>x.url===url);
+  if(candidates.length>1)throw Error("PAYPAL_DUPLICATE_WEBHOOKS_REQUIRE_REVIEW");
+  if(candidates.length){webhook=candidates[0];break;}
+ }
+ const required=["PAYMENT.CAPTURE.COMPLETED","CHECKOUT.ORDER.COMPLETED","PAYMENT.CAPTURE.REFUNDED"];
+ if(!webhook){
+  webhook=await api("webhooks",{method:"POST",body:JSON.stringify({url:urls[0],event_types:required.map(name=>({name}))})});
+ }else{
+  const names=new Set((webhook.event_types||[]).map(x=>x.name));
+  if(!names.has("*")&&required.some(name=>!names.has(name))){
+   required.forEach(name=>names.add(name));
+   await api("webhooks/"+encodeURIComponent(webhook.id),{method:"PATCH",body:JSON.stringify([{op:"replace",path:"/event_types",value:[...names].map(name=>({name}))}])});
+  }
+ }
+ if(!/^[A-Za-z0-9_-]{1,100}$/.test(webhook.id||""))throw Error("PAYPAL_WEBHOOK_ID_INVALID");
+ webhook=await api("webhooks/"+encodeURIComponent(webhook.id));
+ verifyPaypalWebhookConfig(webhook);
+ return webhook.id;
+}
+async function paypal(cfg){
+ if(!cfg.PAYPAL_WEBHOOK_ID?.trim())throw Error("PAYPAL_WEBHOOK_ID_MISSING");
+ const token=await paypalToken(cfg);
  const r=await fetch("https://api-m.paypal.com/v1/notifications/webhooks/"+encodeURIComponent(cfg.PAYPAL_WEBHOOK_ID),{
-  headers:{Authorization:"Bearer "+data.access_token},redirect:"error",signal:AbortSignal.timeout(18000)
+  headers:{Authorization:"Bearer "+token},redirect:"error",signal:AbortSignal.timeout(18000)
  });
  if(!r.ok)throw Error("PAYPAL_WEBHOOK_LOOKUP_HTTP_"+r.status);
  verifyPaypalWebhookConfig(await r.json());
@@ -154,7 +193,21 @@ async function waitHealthy(){
  }
  throw Error("PRODUCTION_HEALTH_CHECK_FAILED");
 }
-async function activate(unit,ready,original){
+async function toolpassReady(cfg){
+ if(cfg.NEXT_PUBLIC_TOOL_PASS_ENFORCED!=="true"||cfg.TOOL_PASS_BACKEND_READY!=="true"||
+  (cfg.LINGXIFIELD_PRIVACY_HASH_SECRET||"").length<32)throw Error("TOOLPASS_BACKEND_OR_IP_HASH_NOT_READY");
+ const url=(cfg.SUPABASE_URL||cfg.NEXT_PUBLIC_SUPABASE_URL||"").trim().replace(/\/$/,"");
+ const key=(cfg.SUPABASE_SECRET_KEY||cfg.SUPABASE_SERVICE_ROLE_KEY||"").trim();
+ if(url!=="https://sxsgdpqojepgbbrxrzlq.supabase.co"||!key)throw Error("TOOLPASS_DB_CONFIGURATION_INVALID");
+ const headers={apikey:key,"Content-Type":"application/json"};
+ if(!key.startsWith("sb_secret_"))headers.Authorization="Bearer "+key;
+ const r=await fetch(url+"/rest/v1/rpc/lingxi_fulfill_paid_tool_pass",{
+  method:"POST",headers,body:JSON.stringify({p_order_id:null}),redirect:"error",signal:AbortSignal.timeout(15000)
+ });
+ const data=await r.json().catch(()=>null);
+ if(!r.ok||data?.error!=="INVALID_ORDER"||data?.ok!==false)throw Error("TOOLPASS_TRUSTED_FULFILLMENT_RPC_UNAVAILABLE");
+}
+async function activate(unit,ready,original,updates={}){
  for(const name of Object.keys(ready))if(original[name.toUpperCase()+"_ENABLED"]?.trim().toLowerCase()==="true"&&!ready[name])
   throw Error("PREEXISTING_ENABLED_CHANNEL_FAILED_RECHECK");
  const base="/etc/lingxifield/dual-payment-verified-20261110.env";
@@ -168,7 +221,10 @@ async function activate(unit,ready,original){
  const backup=files.map(file=>existsSync(file)?readFileSync(file):null);
  const stamp=Date.now();
  files.forEach((file,i)=>{if(backup[i])copyFileSync(file,file+".backup-"+stamp)});
- const text=Object.entries(ready).map(([name,ok])=>name.toUpperCase()+"_ENABLED="+String(ok||original[name.toUpperCase()+"_ENABLED"]?.trim().toLowerCase()==="true")).join("\n")+"\n";
+ const extra={PAYPAL_WEBHOOK_ID:updates.PAYPAL_WEBHOOK_ID||original.PAYPAL_WEBHOOK_ID,TOOL_PASS_COMMERCE_READY:updates.TOOL_PASS_COMMERCE_READY||original.TOOL_PASS_COMMERCE_READY};
+ if(extra.PAYPAL_WEBHOOK_ID&&!/^[A-Za-z0-9_-]{1,100}$/.test(extra.PAYPAL_WEBHOOK_ID))throw Error("PAYPAL_WEBHOOK_ID_INVALID");
+ if(extra.TOOL_PASS_COMMERCE_READY&&!/^(true|false)$/.test(extra.TOOL_PASS_COMMERCE_READY))throw Error("TOOLPASS_FLAG_INVALID");
+ const text=Object.entries(ready).map(([name,ok])=>name.toUpperCase()+"_ENABLED="+String(ok||original[name.toUpperCase()+"_ENABLED"]?.trim().toLowerCase()==="true")).concat(Object.entries(extra).filter(([,v])=>v!==undefined&&v!=="").map(([k,v])=>k+"="+v)).join("\n")+"\n";
  try{
   mkdirSync(dir,{recursive:true,mode:0o755});
   writeFileSync(base,text,{mode:0o600});
@@ -177,6 +233,7 @@ async function activate(unit,ready,original){
   execFileSync("systemctl",["restart",unit]);
   await waitHealthy();
   const actual=runtimeConfig(unit);
+  for(const [k,v] of Object.entries(extra))if(v&&actual[k]!==v)throw Error("PAYMENT_EXTRA_CONFIGURATION_NOT_EFFECTIVE");
   const providers=await(await localFetch("/api/pay/providers")).json();
   for(const [name,ok] of Object.entries(ready)){
    const expected=ok||original[name.toUpperCase()+"_ENABLED"]?.trim().toLowerCase()==="true";
@@ -184,6 +241,7 @@ async function activate(unit,ready,original){
     throw Error("PAYMENT_FLAG_NOT_EFFECTIVE");
   }
   console.log("PAYMENT_ENABLED_STATUS="+JSON.stringify(Object.fromEntries(Object.keys(ready).map(k=>[k,providers[k]]))));
+  console.log("TOOLPASS_COMMERCE_ENABLED="+(actual.TOOL_PASS_COMMERCE_READY==="true"));
   console.log("PAYMENT_VERIFIED_CHANNELS_ACTIVATED_REAL_PURCHASE_STILL_REQUIRES_ACCEPTANCE");
  }catch{
   files.forEach((file,i)=>{if(backup[i])writeFileSync(file,backup[i]);else if(existsSync(file))unlinkSync(file)});
@@ -196,12 +254,20 @@ async function activate(unit,ready,original){
 async function main(){
  const unit="lingxifield-cn-release-20261108-9230bcba6a24.service";
  const mode=process.argv[2];
- if(!["--audit","--enable-verified"].includes(mode))throw Error("USE_AUDIT_OR_ENABLE_VERIFIED");
+ if(!["--audit","--enable-verified","--repair-and-enable"].includes(mode))throw Error("USE_AUDIT_OR_ENABLE_VERIFIED");
  if(process.getuid?.()!==0)throw Error("ROOT_REQUIRED");
- const cfg=runtimeConfig(unit);
+ const original=runtimeConfig(unit),cfg={...original},updates={};
  if(cfg.NEXT_PUBLIC_SITE_URL&&cfg.NEXT_PUBLIC_SITE_URL!=="https://lingxifield.cn")throw Error("CN_PAYMENT_SITE_ORIGIN_MISMATCH");
  const health=await localFetch("/api/health");
  if(health.status!==200)throw Error("BASELINE_HEALTH_FAILED");
+ console.log("WECHAT_IDENTITY_FORMAT="+JSON.stringify({mchidNumeric:/^\d{1,32}$/.test(cfg.WECHAT_MCH_ID||""),mchidLength:(cfg.WECHAT_MCH_ID||"").length,appidFormat:/^wx[a-z0-9]{1,30}$/i.test(cfg.WECHAT_APP_ID||""),appidLength:(cfg.WECHAT_APP_ID||"").length}));
+ if(mode==="--repair-and-enable"){
+  try{
+   cfg.PAYPAL_WEBHOOK_ID=await repairPaypalWebhook(cfg);
+   updates.PAYPAL_WEBHOOK_ID=cfg.PAYPAL_WEBHOOK_ID;
+   console.log("PAYPAL_CURRENT_LIVE_APPLICATION_WEBHOOK_RECONCILED");
+  }catch(e){console.log("PAYPAL_WEBHOOK_REPAIR_BLOCKED="+(/^[A-Z0-9_]{1,100}$/.test(e.message||"")?e.message:"PROVIDER_REQUEST_FAILED"));}
+ }
  const ready={alipay:false,wechat:false,paypal:false};
  await Promise.all(Object.entries({alipay,wechat,paypal}).map(async([name,probe])=>{
   try{await probe(cfg);await rejectUnsigned(name);ready[name]=true;console.log("MERCHANT_"+name.toUpperCase()+"_LIVE_HANDSHAKE_AND_UNSIGNED_REJECTION=PASS")}
@@ -213,9 +279,14 @@ async function main(){
  console.log("VERIFIED_CHANNELS="+JSON.stringify(ready));
  console.log("TOOLPASS_GATES="+JSON.stringify(Object.fromEntries(["NEXT_PUBLIC_TOOL_PASS_ENFORCED","TOOL_PASS_BACKEND_READY","TOOL_PASS_COMMERCE_READY"].map(k=>[k,cfg[k]==="true"]))));
  if(!Object.values(ready).some(Boolean)){console.log("NO_VERIFIED_CHANNEL_NO_SERVICE_CHANGES");process.exitCode=2;return;}
- if(mode==="--enable-verified"){
-  if(JSON.stringify(runtimeConfig(unit))!==JSON.stringify(cfg))throw Error("SERVICE_CONFIGURATION_CHANGED_DURING_PROBE");
-  await activate(unit,ready,cfg);
+ if(mode!=="--audit"){
+  if(mode==="--repair-and-enable"){
+   try{await toolpassReady(cfg);updates.TOOL_PASS_COMMERCE_READY="true";console.log("TOOLPASS_BACKEND_AND_TRUSTED_RPC_PASS")}
+   catch(e){console.log("TOOLPASS_ENABLE_BLOCKED="+(/^[A-Z0-9_]{1,100}$/.test(e.message||"")?e.message:"DB_CHECK_FAILED"));}
+  }
+  if(JSON.stringify(runtimeConfig(unit))!==JSON.stringify(original))throw Error("SERVICE_CONFIGURATION_CHANGED_DURING_PROBE");
+  if(!ready.paypal)delete updates.PAYPAL_WEBHOOK_ID;
+  await activate(unit,ready,original,updates);
  }
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
