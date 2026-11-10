@@ -10,6 +10,7 @@ const signed=read("scripts/ops/cn-payment-signed-live-probe-20261109.mjs");
 const upgrade=read("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh");
 const wechat=read("lib/wechatpay.ts");
 const wechatNotify=read("app/api/pay/wechat/notify/route.ts");
+const walletMigration=read("supabase/migrations/20261110123000_harden_legacy_ai_wallet_topup_order_state.sql");
 
 test("payment activation is pinned to final 3194; 3195 is temporary staging only",()=>{
  assert.match(script,/TAG" =~ \^ecs-cn-unified-20261110-/);
@@ -56,6 +57,17 @@ test("PayPal Live no-charge probe verifies OAuth, webhook identity and refund ev
  assert.match(paypal,/https:\/\/lingxifield\.cn\/api\/pay\/paypal\/webhook/);
  assert.match(paypal,/PAYMENT\.CAPTURE\.REFUNDED/);
  assert.match(paypal,/CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS/);
+});
+
+test("legacy AI wallet topups reject failed/refunded orders and remain service-role only",()=>{
+ assert.equal((walletMigration.match(/if coalesce\(o\.status,''\) not in \('pending','paid'\)/g)||[]).length,2);
+ assert.equal((walletMigration.match(/SET search_path TO ''/g)||[]).length,2);
+ assert.match(walletMigration,/REVOKE EXECUTE ON FUNCTION public\.credit_ai_topup\(uuid\) FROM PUBLIC, anon, authenticated/);
+ assert.match(walletMigration,/REVOKE EXECUTE ON FUNCTION public\.credit_ai_usd_topup\(uuid\) FROM PUBLIC, anon, authenticated/);
+ assert.match(walletMigration,/GRANT EXECUTE ON FUNCTION public\.credit_ai_topup\(uuid\) TO service_role/);
+ assert.match(walletMigration,/GRANT EXECUTE ON FUNCTION public\.credit_ai_usd_topup\(uuid\) TO service_role/);
+ assert.match(walletMigration,/o\.amount_usd is null/);
+ assert.doesNotMatch(walletMigration,/^\s*(DELETE|TRUNCATE)\s/m);
 });
 
 test("WeChat verifies signed API responses and binds callback merchant identity",()=>{
