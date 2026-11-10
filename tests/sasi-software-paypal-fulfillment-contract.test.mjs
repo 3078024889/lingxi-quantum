@@ -6,6 +6,7 @@ const paypal=read("lib/paypal.ts");
 assert.match(paypal,/export function paypalConfigured\(\)/);
 assert.match(paypal,/export function paypalEnabled\(\)/);
 assert.match(paypal,/PAYPAL_ENABLED\?\.trim\(\)\.toLowerCase\(\)==="true"/);
+assert.match(paypal,/PAYPAL_ENV\?\.trim\(\)\.toLowerCase\(\)==="live"/);
 
 const checkout=read("app/api/pay/create/route.ts");
 for(const token of [
