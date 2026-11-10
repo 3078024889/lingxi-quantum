@@ -56,7 +56,7 @@ const fulfill=read("lib/fulfill-order.ts");
 assert.match(fulfill,/isMarketProductId/);
 assert.match(fulfill,/sasi_market_record_verified_sale/);
 assert.match(fulfill,/PROVIDER_PAYMENT_VERIFICATION_REQUIRED/);
-assert.match(read("lib/sasi-marketplace/checkout.ts"),/wechatPayEnabled\(\)\|\|alipayEnabled\(\)/);
+assert.match(read("lib/sasi-marketplace/checkout.ts"),/wechatPayEnabled\(\)\|\|alipayEnabled\(\)\|\|paypalEnabled\(\)/);
 const checkout=read("app/checkout/page.tsx");
 assert.match(checkout,/marketProductCanBuy/);
 assert.match(checkout,/isMarketProductId/);
