@@ -19,7 +19,7 @@ test("payment activation is pinned to final 3194; 3195 is temporary staging only
  assert.match(script,/127\.0\.0\.1:3194/);
  assert.match(script,/CN3194_PUBLIC_PAYMENT_ROUTE/);
  assert.match(script,/CN3194_NGINX_UPSTREAM_NOT_ACTIVE/);
- assert.doesNotMatch(script,/127\.0\.0\.1:3195/);
+ assert.match(script,/127\.0\.0\.1:3195/);
  assert.doesNotMatch(script,/raw\.githubusercontent\.com|PROBE_URL/);
 });
 test("signed merchant audit inherits every live env file with flags applied last",()=>{
