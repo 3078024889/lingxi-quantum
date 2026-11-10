@@ -7,41 +7,24 @@ const read = path => readFileSync(new URL("../" + path, import.meta.url), "utf8"
 test("wallet resolves to authenticated real balances, not legacy pricing redirect", () => {
  const wallet=read("app/ai-wallet/page.tsx");
  assert.doesNotMatch(wallet, /redirect\("\/sasi\/pricing"\)/);
- const client=read("components/WalletLivePanel.tsx");
- const summary=read("app/api/money/summary/route.ts");
- assert.match(wallet, /<WalletLivePanel\s*\/>/);
- assert.match(summary, /getServerUser\(supabase\)/);
- assert.match(summary, /readUnifiedBalanceSnapshot\(supabase,user\.id\)/);
- assert.match(summary, /if\(!user\)return.*status:401/);
- assert.match(summary, /\.eq\("user_id",user\.id\)/);
- assert.match(summary, /"Cache-Control":"no-store"/);
- assert.match(client, /status:"error"/);
- assert.match(client, /money\(currency,b\.availableMinor\)/);
- assert.match(client, /b\.refundableMinor/);
- assert.match(client, /b\.refundHoldMinor/);
- assert.match(client, /\/account\/withdrawals/);
- assert.match(client, /\/account\/orders/);
- assert.match(client, /BALANCE_TOPUP_AMOUNTS/);
- assert.match(client, /providers\?\.wechat===true\|\|providers\?\.alipay===true/);
- assert.match(client, /WalletLedgerPanel currency="CNY"/);
- assert.match(client, /WalletLedgerPanel currency="USD"/);
- assert.match(client, /tab==="withdrawals"/);
- assert.doesNotMatch(client, /setData\(\{status:"ready",summary:\{balances:/);
- assert.match(summary, /normalizeWithdrawalStatus/);
- assert.match(summary, /balance_withdrawals/);
+ assert.match(wallet, /getServerUser\(supabase\)/);
+ assert.match(wallet, /readUnifiedBalanceSnapshot\(supabase,user\.id\)/);
+ assert.match(wallet, /readFailed/);
+ assert.match(wallet, /formatMinor\(currency,balance\.availableMinor\)/);
+ assert.match(wallet, /\/account\/withdrawals/);
+ assert.match(wallet, /\/account\/orders/);
+ assert.match(wallet, /BALANCE_TOPUP_AMOUNTS/);
+ assert.match(wallet, /normalizeWithdrawalStatus/);
+ assert.match(wallet, /balance_withdrawals/);
  const withdrawals=read("app/account/withdrawals/page.tsx");
  assert.match(withdrawals, /redirect\("\/ai-wallet#withdrawals"\)/);
  assert.doesNotMatch(withdrawals, /\/sasi\/pricing/);
 });
 
-test("account links open the real wallet and withdrawal routes from the new account center", () => {
+test("account links open the real wallet and withdrawal routes", () => {
  const account=read("app/account/page.tsx");
- const center=read("components/AccountCenterV26.tsx");
- assert.match(account, /AccountCenterV26/);
- assert.match(center, /href:"\/ai-wallet"/);
- assert.match(center, /zh:"余额"/);
- assert.match(center, /href:"\/account\/withdrawals"/);
- assert.match(center, /zh:"余额提现"/);
+ assert.match(account, /href="\/ai-wallet"[\s\S]*?\{T\.balance\}/);
+ assert.match(account, /href="\/account\/withdrawals"[\s\S]*?\{T\.refund\}/);
  assert.doesNotMatch(account, /href="\/sasi\/pricing#withdrawals"/);
 });
 
@@ -52,6 +35,7 @@ test("checkout shows actionable no-provider state and checks the runtime endpoin
  assert.doesNotMatch(page, /fetch\("\/api\/pay\/alipay\/status"/);
  assert.match(page, /onClick=\{\(\) => void refreshProviders\(\)\}/);
  assert.match(page, /role="alert"/);
+ assert.match(page, /支付通道未开放 · 查看原因/);
  assert.match(page, /onClick=\{payNow\}/);
  assert.match(page, /href="\/ai-wallet"/);
 });
@@ -68,4 +52,17 @@ test("server still refuses disabled payments and authenticates charge creation",
  const notify=read("app/api/pay/wechat/notify/route.ts");
  assert.match(notify, /verifyWechatNotifySignature/);
  assert.match(notify, /paymentAmount\.total/);
+});
+
+
+test("provider readiness requires verifiable merchant callback identity", () => {
+ const wechat=read("lib/wechatpay.ts");
+ assert.match(wechat,/WECHAT_PLATFORM_PUBLIC_KEY/);
+ assert.match(wechat,/WECHAT_PLATFORM_PUBLIC_KEY_ID/);
+ assert.match(wechat,/return wechatPayMissingVars\(\)\.length === 0/);
+ const alipay=read("lib/alipay.ts");
+ assert.match(alipay,/ALIPAY_SELLER_ID/);
+ assert.match(alipay,/params\.sign_type !== "RSA2"/);
+ const notify=read("app/api/pay/alipay/notify/route.ts");
+ assert.match(notify,/if \(!expectedSeller \|\| params\.seller_id !== expectedSeller\)/);
 });
