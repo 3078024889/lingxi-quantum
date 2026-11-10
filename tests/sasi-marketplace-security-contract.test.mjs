@@ -62,7 +62,7 @@ assert.match(marketplaceGate,/marketplaceR2Ready\(\)/);
 assert.match(marketplaceGate,/\.eq\("status","published"\)\.eq\("scan_status","clean"\)/);
 assert.match(wx,/if \(!wechatPayEnabled\(\)\)/);
 assert.match(ali,/if \(!alipayEnabled\(\)\)/);
-assert.match(read("app/api/pay/create/route.ts"),/if\(!paypalReady\(\)\)/);
+assert.match(read("app/api/pay/create/route.ts"),/if\(!paypalPayEnabled\(\)\)/);
 const checkout=read("app/checkout/page.tsx");
 assert.match(checkout,/marketProductCanBuy/);
 assert.match(checkout,/isMarketProductId/);
