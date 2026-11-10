@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { alipaySiteUrl } from "@/lib/alipay";
+import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
 
 export const runtime = "nodejs";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const baseUrl = alipaySiteUrl();
+  const baseUrl = trustedSiteOrigin(req);
   const destination = url.searchParams.get("dest");
   const safeDestination = destination?.startsWith("/") && !destination.startsWith("//")
     ? destination
