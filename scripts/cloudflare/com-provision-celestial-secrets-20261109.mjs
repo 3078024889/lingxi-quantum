@@ -51,6 +51,11 @@ if(mode==="audit"){
     const ready=name==="supabase"?expected.some(k=>installed.has(k)):expected.every(k=>installed.has(k));
     console.log("COM_CANDIDATE_SECRET_GROUP_"+name.toUpperCase()+"_INSTALLED="+ready);
   }
+  for(const name of flags){
+    const value=bindings.find(b=>b.name===name)?.text;
+    const state=value==="true"?"true":value==="false"?"false":value===undefined?"missing":"non_boolean";
+    console.log("COM_CANDIDATE_FLAG_"+name+"="+state);
+  }
   console.log("COM_CANDIDATE_SECRET_READ_ONLY_AUDIT_PASS");
   process.exit(0);
 }
