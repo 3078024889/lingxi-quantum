@@ -42,12 +42,16 @@ concurrency:
 jobs:
   source:
     runs-on: ubuntu-24.04
-    timeout-minutes: 6
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
-        with: {node-version: '24'}
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install exact locked source-test dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Pin exact verified candidate and check safe script
         run: |
           set -Eeuo pipefail
