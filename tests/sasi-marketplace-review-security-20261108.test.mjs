@@ -88,7 +88,7 @@ test("SASI storefront has one real featured source-license product and seller up
  assert.match(market,/featuredPayment/);
  assert.match(market,/availableCny===true/);
  assert.match(market,/availableUsd===true/);
- assert.match(market,/checkout-usd\\?productId=/);
+ assert.match(market,/checkout-usd\?productId=/);
  assert.match(market,/source.*|sasi-seller-studio/);
  assert.match(catalog,/sasi-copernicus-si95-source/);
  assert.doesNotMatch(catalog,/sasi-copernicus-si95-mt5/);

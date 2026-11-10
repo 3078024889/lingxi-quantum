@@ -14,6 +14,7 @@ test("payment activation is pinned to the exact 20261110 service on isolated por
  assert.match(script,/FLAGS="\/etc\/lingxifield\/tool-pass-3195-\$SHORT\.env"/);
  assert.match(script,/PORT=3195/);
  assert.match(script,/127\.0\.0\.1:3195/);
+ assert.match(script,/CN3195_PUBLIC_PAYMENT_ROUTE/);
  assert.doesNotMatch(script,/raw\.githubusercontent\.com|PROBE_URL/);
 });
 

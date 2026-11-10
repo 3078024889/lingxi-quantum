@@ -250,7 +250,12 @@ if ! "$NODE" -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>{const j
 if ! curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' http://127.0.0.1:3195/api/tools/pass >"$TMP/toolpass.json";then rollback;exit 1;fi
 if ! "$NODE" -e 'let s="";process.stdin.on("data",x=>s+=x).on("end",()=>{const j=JSON.parse(s);if(j.available!==true||j.offers?.length!==4)process.exit(4);console.log("CN_TOOLPASS_COMMERCE_READY_WITH_FOUR_PLANS")})' <"$TMP/toolpass.json";then rollback;exit 1;fi
 
-echo "CN_VERIFIED_CNY_AND_PAYPAL_LIVE_PROVIDERS_ENABLED"
+echo "CN_VERIFIED_WECHAT_ALIPAY_PAYPAL_LIVE_PROVIDERS_ENABLED"
+for path in /api/health /api/pay/providers /api/tools/pass;do
+ status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 20 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
+ echo "CN3195_PUBLIC_PAYMENT_ROUTE:$path:$status"
+ [[ "$status" == 200 ]] || { rollback;exit 1; }
+done
 if [[ "$CNY_REFUND_GATE" == true ]];then echo CN_CNY_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
 if [[ "$USD_REFUND_GATE" == true ]];then echo CN_USD_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
 echo "SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION"
