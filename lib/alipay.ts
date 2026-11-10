@@ -74,7 +74,8 @@ export function createAlipayPaymentUrl(input: {
 }): string {
   if (!alipayConfigured()) throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);
   if (!/^LX[A-Za-z0-9]{1,62}$/.test(input.outTradeNo)) throw new Error("Invalid Alipay out_trade_no");
-  const amountMinor = parseCnyMinorUnits(input.amountRmb);\n  if (amountMinor === null || amountMinor <= 0) throw new Error("Invalid Alipay amount");
+  const amountMinor = parseCnyMinorUnits(input.amountRmb);
+  if (amountMinor === null || amountMinor <= 0) throw new Error("Invalid Alipay amount");
 
   const method = input.mobile ? "alipay.trade.wap.pay" : "alipay.trade.page.pay";
   const bizContent = JSON.stringify({
