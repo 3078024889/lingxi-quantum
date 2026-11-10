@@ -1,3 +1,14 @@
+export function paypalConfigured():boolean {
+  return Boolean(
+    process.env.PAYPAL_CLIENT_ID?.trim()
+    && process.env.PAYPAL_CLIENT_SECRET?.trim()
+    && process.env.PAYPAL_WEBHOOK_ID?.trim()
+  );
+}
+export function paypalEnabled():boolean {
+  return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true" && paypalConfigured();
+}
+
 export function paypalBaseUrl() {
   return process.env.PAYPAL_ENV === "sandbox"
     ? "https://api-m.sandbox.paypal.com"
