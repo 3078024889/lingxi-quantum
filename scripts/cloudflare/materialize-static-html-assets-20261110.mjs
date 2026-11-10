@@ -58,9 +58,9 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
 
     if (
       bytes < 4500 ||
-      !/<html[\\s>]/i.test(html) ||
-      !/<head[\\s>]/i.test(html) ||
-      !/<body[\\s>]/i.test(html) ||
+      !/<html/i.test(html) ||
+      !/<head/i.test(html) ||
+      !/<body/i.test(html) ||
       /INTERNAL_SERVER_ERROR|WORKERD_HEALTH_NOT_READY/.test(html)
     ) {
       throw new Error("BAD_PUBLIC_STATIC_SNAPSHOT:" + entry.route);

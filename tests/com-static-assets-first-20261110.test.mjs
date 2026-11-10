@@ -25,7 +25,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
 
     const headers = await readFile(join(root, "_headers"), "utf8");
     for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
-      assert.match(headers, new RegExp(entry.route.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\n  X-Lingxi-Render-Mode: static-edge-verified"));
+      assert.ok(headers.includes(entry.route + "\n  X-Lingxi-Render-Mode: static-edge-verified"), entry.route + " must receive the static marker");
     }
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), false);
 
