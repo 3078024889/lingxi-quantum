@@ -257,20 +257,22 @@ const currentSettings = await cf(
   "/accounts/" + account + "/workers/scripts/" + productionWorker + "/settings"
 );
 const currentBindings = currentSettings.bindings || [];
-const allowedBindingTypes = new Set(["plain_text", "secret_text", "secret_key", "r2_bucket", "service", "assets"]);
-const unknownBindings = currentBindings.filter(binding => !allowedBindingTypes.has(binding.type));
+const preservedValueTypes = new Set(["plain_text", "secret_text", "secret_key"]);
+const unknownBindings = currentBindings.filter(binding => {
+  if (preservedValueTypes.has(binding.type)) return false;
+  if (binding.type === "assets") return binding.name === "ASSETS";
+  if (binding.type === "r2_bucket") {
+    return binding.name !== "LINGXI_PUBLIC_LARGE_R2" ||
+      binding.bucket_name !== "lingxifield-com-large-public";
+  }
+  if (binding.type === "service") {
+    return binding.name !== "LINGXI_COM_LEGACY_GATEWAY" || binding.service !== wwwWorker;
+  }
+  return true;
+});
 if (unknownBindings.length) {
   throw Error("PRODUCTION_WORKER_HAS_UNMAPPED_BINDINGS:" +
     unknownBindings.map(binding => binding.name + ":" + binding.type).join(","));
-}
-const currentR2 = currentBindings.find(binding => binding.name === "LINGXI_PUBLIC_LARGE_R2");
-if (currentR2 && (currentR2.type !== "r2_bucket" ||
-    currentR2.bucket_name !== "lingxifield-com-large-public")) {
-  throw Error("PRODUCTION_R2_BINDING_MISMATCH");
-}
-const currentService = currentBindings.find(binding => binding.name === "LINGXI_COM_LEGACY_GATEWAY");
-if (currentService && (currentService.type !== "service" || currentService.service !== wwwWorker)) {
-  throw Error("PRODUCTION_LEGACY_SERVICE_BINDING_MISMATCH");
 }
 console.log("COM_PRODUCTION_BINDING_PREFLIGHT_PASS=" +
   currentBindings.map(binding => binding.name + ":" + binding.type).join(","));
