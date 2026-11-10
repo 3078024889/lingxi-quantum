@@ -1,12 +1,13 @@
 import{NextResponse}from"next/server";
 import{createClient}from"@/lib/supabase/server";
-import{getPaypalAccessToken,paypalConfigured,paypalEnabled}from"@/lib/paypal";
+import{getPaypalAccessToken,listPaypalWebhooks,paypalConfigured,paypalEnabled}from"@/lib/paypal";
 import{wechatPayConfigured,wechatPayEnabled,wechatPayMissingVars}from"@/lib/wechatpay";
 import{alipayEnabled,alipayMissingVars}from"@/lib/alipay";
 import{toolPassCommerceReady}from"@/lib/tools/commerce/tool-server-receipt";
 import{SASI_SOFTWARE_CATALOG}from"@/lib/sasi-software/catalog";
 import{softwareCheckoutReady}from"@/lib/sasi-software/readiness";
 import{marketplaceR2Ready}from"@/lib/sasi-marketplace/r2";
+import{trustedSiteOrigin}from"@/lib/sasi/site-origin";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -17,7 +18,7 @@ function isAdmin(email:string|null|undefined){
  return Boolean(email&&allow.includes(email.toLowerCase()));
 }
 
-export async function GET(){
+export async function GET(req:Request){
  const supabase=createClient();
  const{data:{user}}=await supabase.auth.getUser();
  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
@@ -25,9 +26,26 @@ export async function GET(){
 
  const paypalLive=process.env.PAYPAL_ENV?.trim().toLowerCase()==="live";
  let paypalTokenTest:"PASS"|"FAIL"|"SKIPPED"="SKIPPED";
+ let paypalWebhook:{registered:boolean;urlMatches:boolean;missingEvents:string[]}|null=null;
  if(paypalLive&&paypalConfigured()){
-  try{await getPaypalAccessToken();paypalTokenTest="PASS";}
-  catch{paypalTokenTest="FAIL";}
+  try{
+   await getPaypalAccessToken();paypalTokenTest="PASS";
+   const rows=await listPaypalWebhooks();
+   const selected=rows.find(item=>item.id===process.env.PAYPAL_WEBHOOK_ID?.trim());
+   const requiredEvents=[
+    "CHECKOUT.ORDER.APPROVED","CHECKOUT.PAYMENT-APPROVAL.REVERSED",
+    "PAYMENT.CAPTURE.PENDING","PAYMENT.CAPTURE.COMPLETED",
+    "PAYMENT.CAPTURE.DENIED","PAYMENT.CAPTURE.REFUNDED"
+   ];
+   const missingEvents=selected?requiredEvents.filter(name=>!selected.events.includes(name)):requiredEvents;
+   const expectedUrl=trustedSiteOrigin(req)+"/api/pay/paypal/webhook";
+   const normalize=(value:string)=>value.replace(/\\/$/,"");
+   paypalWebhook={
+    registered:Boolean(selected),
+    urlMatches:Boolean(selected&&normalize(selected.url)===normalize(expectedUrl)),
+    missingEvents
+   };
+  }catch{paypalTokenTest="FAIL";}
  }
  const software=await Promise.all(SASI_SOFTWARE_CATALOG.map(async item=>({
   productId:item.id,ready:await softwareCheckoutReady(item.id)
@@ -38,7 +56,7 @@ export async function GET(){
   payments:{
    wechat:{configured:wechatPayConfigured(),enabled:wechatPayEnabled(),missing:wechatMissing},
    alipay:{configured:alipayMissing.length===0,enabled:alipayEnabled(),missing:alipayMissing},
-   paypal:{environment:paypalLive?"live":"not-live",configured:paypalConfigured(),enabled:paypalEnabled(),tokenTest:paypalTokenTest}
+   paypal:{environment:paypalLive?"live":"not-live",configured:paypalConfigured(),enabled:paypalEnabled(),tokenTest:paypalTokenTest,webhook:paypalWebhook}
   },
   commerce:{
    toolPass:toolPassCommerceReady(),
