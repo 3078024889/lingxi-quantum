@@ -27,7 +27,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "支付宝正在完成上线审核，请暂时使用微信支付。" }, { status: 503 });
     }
     const { productId, returnPath } = await req.json();
-const product = getProduct(productId) || await resolveMarketplaceProduct(productId);
+    const supabase=createClient();
+    const {data:{user}}=await supabase.auth.getUser();
+    if(!user)return NextResponse.json({error:"请先登录"},{status:401});
+    const product = getProduct(productId) || await resolveMarketplaceProduct(productId);
     if (!product) return NextResponse.json({ error: "无效的项目" }, { status: 400 });
     if(product.group==="toolpass"&&!toolPassCommerceReady())
       return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
@@ -35,10 +38,6 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
     if(product.group==="software"&&!await softwareCheckoutReady(product.id))
       return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
     if (product.priceRmb <= 0) return NextResponse.json({ error: "该内容已免费开放，无需创建支付订单。" }, { status: 400 });
-
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "请先登录" }, { status: 401 });
 
     if(product.group==="market"&&product.sellerId===user.id)
       return NextResponse.json({error:"SELF_PURCHASE_NOT_ALLOWED"},{status:403});
