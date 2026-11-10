@@ -1,4 +1,4 @@
-import { createSign, createVerify } from "node:crypto";
+import { createSign, createVerify, createPrivateKey, createPublicKey } from "node:crypto";
 
 const DEFAULT_GATEWAY = "https://openapi.alipay.com/gateway.do";
 
@@ -44,8 +44,19 @@ export function alipayConfigured(): boolean {
   return alipayMissingVars().length === 0;
 }
 
+export function alipayKeyMaterialReady():boolean {
+  if(!alipayConfigured())return false;
+  try{
+    const privateKey=createPrivateKey(asPem(env("ALIPAY_PRIVATE_KEY"),"PRIVATE KEY"));
+    const publicKey=createPublicKey(asPem(env("ALIPAY_PUBLIC_KEY"),"PUBLIC KEY"));
+    const derived=createPublicKey(privateKey).export({type:"spki",format:"der"});
+    const configured=publicKey.export({type:"spki",format:"der"});
+    return Buffer.from(derived).equals(Buffer.from(configured));
+  }catch{return false;}
+}
+
 export function alipayEnabled(): boolean {
-  return process.env.ALIPAY_ENABLED?.trim().toLowerCase() === "true" && alipayConfigured();
+  return process.env.ALIPAY_ENABLED?.trim().toLowerCase() === "true" && alipayKeyMaterialReady();
 }
 
 export function createAlipayPaymentUrl(input: {
