@@ -184,7 +184,7 @@ rollback_to_3193(){
  systemctl disable "$FINAL_SVC" 2>/dev/null || true
  systemctl stop "$NEW_SVC" 2>/dev/null || true
  systemctl disable "$NEW_SVC" 2>/dev/null || true
- if systemctl is-active --quiet "$FINAL_SVC" || systemctl is-active --quiet "$NEW_SVC" || ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then
+ if systemctl is-active --quiet "$FINAL_SVC" || systemctl is-active --quiet "$NEW_SVC" || systemctl is-enabled --quiet "$FINAL_SVC" || systemctl is-enabled --quiet "$NEW_SVC" || ss -lnt | grep -Eq '^LISTEN.*:3195[[:space:]]';then
   echo CN3193_AUTOMATIC_ROLLBACK_CANDIDATE_STOP_FAILED >&2;return 1
  fi
  echo "CN3193_AUTOMATIC_ROLLBACK_PASS reason=$reason service=$FALLBACK_SVC"
