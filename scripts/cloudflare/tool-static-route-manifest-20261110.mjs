@@ -41,7 +41,7 @@ export async function loadToolStaticRoutes() {
       throw error;
     }
     // Redirect-only aliases must stay Worker-first; snapshotting their redirect HTML would shadow Next redirects.
-    if (/\\b(?:redirect|permanentRedirect)\\s*\\(/.test(pageSource)) {
+    if (pageSource.includes("redirect(") || pageSource.includes("permanentRedirect(")) {
       console.log("TOOL_STATIC_ROUTE_SKIPPED_REDIRECT_ONLY:" + slug);
       continue;
     }

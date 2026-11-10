@@ -24,7 +24,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       !["admin", "pay", "pass"].includes(item.name) && !item.name.startsWith("["))) {
       try {
         const pageSource = await readFile(new URL("../app/tools/" + entry.name + "/page.tsx", import.meta.url), "utf8");
-        const redirectOnly = /\\b(?:redirect|permanentRedirect)\\s*\\(/.test(pageSource);
+        const redirectOnly = pageSource.includes("redirect(") || pageSource.includes("permanentRedirect(");
         assert.equal(toolRoutes.some(route => route.route === "/tools/" + entry.name), !redirectOnly,
           redirectOnly
             ? "redirect-only aliases must remain Worker-handled: " + entry.name
@@ -34,7 +34,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       }
     }
     const imagePdfAlias = await readFile(new URL("../app/tools/image-to-pdf-pro/page.tsx", import.meta.url), "utf8");
-    assert.match(imagePdfAlias, /redirect\\(["']\\/tools\\/image-to-pdf["']\\)/);
+    assert.ok(imagePdfAlias.includes('redirect("/tools/image-to-pdf")'));
     assert.equal(toolRoutes.some(route => route.route === "/tools/image-to-pdf-pro"), false,
       "redirect-only image-to-pdf alias must not be shadowed by a static HTML asset");
     assert.equal(toolRoutes.some(route => route.route === "/tools/admin"), false);
