@@ -86,6 +86,17 @@ for mapping in \
   echo "COM_ANON_HTML_SNAPSHOT route=/$route file=$file"
 done
 
+node scripts/cloudflare/tool-static-route-manifest-20261110.mjs --slugs |
+  xargs -r -P 6 -I{} bash -c '
+    slug="$1"
+    curl --noproxy "*" -fSs --retry 2 --max-time 55 \
+      -H "Host: lingxifield.com" -H "X-Forwarded-Proto: https" \
+      "http://127.0.0.1:8787/tools/$slug" \
+      -o ".open-next/assets/__lingxi_edge_static__/tool-$slug.html"
+    echo "COM_TOOL_DETAIL_SNAPSHOT route=/tools/$slug"
+  ' _ {}
+echo "COM_TOOL_STATIC_SNAPSHOTS_CAPTURED"
+
 curl --noproxy '*' -fSs --retry 2 --max-time 40 \
   -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
   http://127.0.0.1:8787/api/sasi/software/catalog \
