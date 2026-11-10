@@ -152,7 +152,9 @@ function extractAlipayResponseNode(raw: string, key: string): string {
   throw new Error("ALIPAY_QUERY_RESPONSE_TRUNCATED");
 }
 export async function queryAlipayTrade(input:{outTradeNo:string;expectedAmountRmb:number}):Promise<{paid:boolean;tradeStatus:string;tradeNo?:string}>{
- if(!alipayConfigured())throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);\n const expectedFen=parseCnyMinorUnits(input.expectedAmountRmb);\n if(expectedFen===null||expectedFen<=0)throw new Error("ALIPAY_QUERY_EXPECTED_AMOUNT_INVALID");
+ if(!alipayConfigured())throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);
+ const expectedFen=parseCnyMinorUnits(input.expectedAmountRmb);
+ if(expectedFen===null||expectedFen<=0)throw new Error("ALIPAY_QUERY_EXPECTED_AMOUNT_INVALID");
  const params:Record<string,string>={app_id:env("ALIPAY_APP_ID"),method:"alipay.trade.query",format:"JSON",charset:"utf-8",sign_type:"RSA2",timestamp:timestamp(),version:"1.0",biz_content:JSON.stringify({out_trade_no:input.outTradeNo})};
  const signer=createSign("RSA-SHA256");signer.update(canonical(params),"utf8");signer.end();
  params.sign=signer.sign(asPem(env("ALIPAY_PRIVATE_KEY"),"PRIVATE KEY"),"base64");
@@ -170,10 +172,10 @@ export async function queryAlipayTrade(input:{outTradeNo:string;expectedAmountRm
    throw new Error(`ALIPAY_QUERY_${sub.slice(0,100)}`);
  }
  if(String(data.out_trade_no??"")!==input.outTradeNo)throw new Error("ALIPAY_QUERY_ORDER_MISMATCH");
- const totalFen=parseCnyMinorUnits(data.total_amount),tradeStatus=String(data.trade_status??"");\n if(new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus)&&(totalFen===null||totalFen!==expectedFen))throw new Error("ALIPAY_QUERY_AMOUNT_MISMATCH");
+ const totalFen=parseCnyMinorUnits(data.total_amount),tradeStatus=String(data.trade_status??"");
+ if(new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus)&&(totalFen===null||totalFen!==expectedFen))throw new Error("ALIPAY_QUERY_AMOUNT_MISMATCH");
  return{paid:new Set(["TRADE_SUCCESS","TRADE_FINISHED"]).has(tradeStatus),tradeStatus,tradeNo:typeof data.trade_no==="string"?data.trade_no:undefined};
 }
-
 async function callAlipayJson(method:string,biz:Record<string,unknown>,responseKey:string){
   if(!alipayConfigured())throw new Error("Missing Alipay configuration: "+alipayMissingVars().join(", "));
   const params:Record<string,string>={
