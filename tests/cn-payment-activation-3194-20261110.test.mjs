@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {execFileSync} from "node:child_process";
+import {execFileSync} from "node:child_process";
 const script=readFileSync("scripts/ops/cn-payment-activate-3194-20261110.sh","utf8");
 const probe=readFileSync("scripts/ops/cn-payment-live-probe-3194-20261110.mjs","utf8");
+const signed=readFileSync("scripts/ops/cn-payment-signed-live-probe-20261109.mjs","utf8");
+const upgrade=readFileSync("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh","utf8");
 const signed=readFileSync("scripts/ops/cn-payment-signed-live-probe-20261109.mjs","utf8");
 const upgrade=readFileSync("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh","utf8");
 assert.match(script,/PROBE_SHA="2aec891d25ea78769d9c12b8ae9a89016d4425a9"/);
