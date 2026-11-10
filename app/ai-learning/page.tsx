@@ -1,2 +1,2 @@
-import {redirect} from "next/navigation";
-export default function Page(){redirect("/sasi?mode=learning")}
+import {permanentRedirect} from "next/navigation";
+export default function Page(){permanentRedirect("/sasi");}
