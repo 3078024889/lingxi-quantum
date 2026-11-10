@@ -15,3 +15,20 @@ assert.match(verify,/if\(!\(await verifyPaypalWebhook\(req\.headers,raw\)\)\)/);
 assert.match(verify,/await verifyPaypalCompletedOrder\(providerId,Number\(order\.amount_usd\),order\.id\)/);
 assert.match(fulfill,/if\(!verifiedPayment\)return/);
 console.log("PAYPAL_ORDER_CREATE_AND_CAPTURE_IDEMPOTENCY_SECURITY_CONTRACT_PASS");
+
+
+const usdCheckout=readFileSync("app/checkout-usd/page.tsx","utf8");
+const softwareCatalog=readFileSync("app/api/sasi/software/catalog/route.ts","utf8");
+const marketProduct=readFileSync("app/api/sasi/marketplace/product/route.ts","utf8");
+const softwareCard=readFileSync("components/SasiSoftwareMarket.tsx","utf8");
+const marketDetail=readFileSync("components/SasiMarketplaceProductDetail.tsx","utf8");
+assert.match(usdCheckout,/getProduct\(productId\)/);
+assert.match(usdCheckout,/isMarketProductId\(productId\)/);
+assert.match(usdCheckout,/availableUsd===true/);
+assert.match(usdCheckout,/fetch\("\/api\/pay\/create"/);
+assert.match(softwareCatalog,/availableUsd:Boolean\(paypalEnabled\(\)/);
+assert.match(marketProduct,/availableUsd:marketplaceR2Ready\(\)&&paypalEnabled\(\)/);
+assert.match(softwareCard,/checkout-usd\?productId=/);
+assert.match(marketDetail,/checkout-usd\?productId=/);
+assert.match(fulfill,/if\(!verifiedPayment\)return \{ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"\};[\s\S]*?sasi_grant_software_delivery/);
+console.log("PAYPAL_SOFTWARE_AND_MARKETPLACE_USD_CHECKOUT_UI_CONTRACT_PASS");
