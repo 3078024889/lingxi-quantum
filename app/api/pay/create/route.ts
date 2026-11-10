@@ -1,7 +1,7 @@
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {createPaypalOrder} from "@/lib/paypal";
+import {createPaypalOrder,paypalPayEnabled} from "@/lib/paypal";
 import {safeLocalReturnPath} from "@/lib/sasi/payment-gate";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
@@ -10,21 +10,14 @@ import {getProduct} from "@/lib/plans";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import {isMarketProductId} from "@/lib/sasi-marketplace/fees";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
+import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 
 export const runtime="nodejs";
 export const maxDuration=30;
 
-function paypalReady(){
-  return process.env.PAYPAL_ENABLED?.trim().toLowerCase()==="true"&&process.env.PAYPAL_ENV?.trim().toLowerCase()!=="sandbox"&&Boolean(
-    process.env.PAYPAL_CLIENT_ID?.trim()
-    &&process.env.PAYPAL_CLIENT_SECRET?.trim()
-    &&process.env.PAYPAL_WEBHOOK_ID?.trim()
-  );
-}
-
 export async function POST(req:NextRequest){
   if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_REQUEST_ORIGIN"},{status:403});
-  if(!paypalReady())return NextResponse.json({error:"PAYPAL_NOT_READY"},{status:503});
+  if(!paypalPayEnabled())return NextResponse.json({error:"PAYPAL_NOT_READY"},{status:503});
 
   try{
     const body=await req.json().catch(()=>null) as {productId?:unknown;returnPath?:unknown}|null;
@@ -32,10 +25,14 @@ export async function POST(req:NextRequest){
     const walletProduct=getUsdBalanceProduct(requestedId);
     const passProduct=getProduct(requestedId);
     const isDirectPass=passProduct?.group==="toolpass";
+    const isSoftware=passProduct?.group==="software";
     const marketProduct=isMarketProductId(requestedId)?await resolveMarketplaceProduct(requestedId):null;
     const product=walletProduct|| (isDirectPass?{
       id:passProduct!.id,amountUsd:passProduct!.priceUsd,nameEn:passProduct!.nameEn,
       wallet:"toolpass" as const
+    }:null)|| (isSoftware?{
+      id:passProduct!.id,amountUsd:passProduct!.priceUsd,nameEn:passProduct!.nameEn,
+      wallet:"software" as const
     }:null)|| (marketProduct?{
       id:marketProduct.id,amountUsd:marketProduct.priceUsd,nameEn:marketProduct.nameEn,
       wallet:"market" as const,sellerId:marketProduct.sellerId
@@ -43,6 +40,7 @@ export async function POST(req:NextRequest){
     if(!product)return NextResponse.json({error:"INVALID_USD_PRODUCT"},{status:400});
 
     if(isDirectPass&&!toolPassCommerceReady())return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
+    if(isSoftware&&!await softwareCheckoutReady(requestedId))return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
@@ -67,7 +65,7 @@ export async function POST(req:NextRequest){
     if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});
 
     const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
-    const fallback=walletProduct?"/ai-wallet":isDirectPass?"/tools/pass":marketProduct?"/account/software":"/ai-wallet";
+    const fallback=walletProduct?"/ai-wallet":isDirectPass?"/tools/pass":(marketProduct||isSoftware)?"/account/software":"/ai-wallet";
     const dest=safeLocalReturnPath(body?.returnPath,fallback);
 
     try{
@@ -78,6 +76,7 @@ export async function POST(req:NextRequest){
         returnUrl:`${baseUrl}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(dest)}`,
         cancelUrl:isDirectPass?`${baseUrl}/tools/pass?canceled=1`:
           marketProduct?`${baseUrl}/sasi/marketplace/${encodeURIComponent(requestedId.slice("sasi-market:".length))}?canceled=1`:
+          isSoftware?`${baseUrl}/sasi?canceled=1`:
           `${baseUrl}/checkout-usd?productId=${encodeURIComponent(product.id)}&canceled=1`,
       });
       const linked=await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id).eq("status","pending");

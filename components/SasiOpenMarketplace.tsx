@@ -21,6 +21,9 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const [listings,setListings]=useState<Listing[]>([]);
  const featured=SASI_SOFTWARE_CATALOG[0];
  const [featuredReady,setFeaturedReady]=useState(false);
+ const [featuredPayment,setFeaturedPayment]=useState({wechat:false,alipay:false,paypal:false});
+ const [featuredPaypalBusy,setFeaturedPaypalBusy]=useState(false);
+ const [featuredPaypalError,setFeaturedPaypalError]=useState("");
  const [images,setImages]=useState<Record<string,Array<{id:string;kind:string;url:string}>>>({});
  const [mine,setMine]=useState<Listing[]>([]);
  const [mediaCounts,setMediaCounts]=useState<Record<string,{cover:number;detail:number}>>({});
@@ -59,8 +62,11 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   let live=true;
   fetch("/api/sasi/software/catalog",{cache:"no-store"})
     .then(r=>r.ok?r.json():null)
-    .then(j=>{if(live)setFeaturedReady(j?.products?.[featured.id]?.available===true)})
-    .catch(()=>{if(live)setFeaturedReady(false)});
+    .then(j=>{if(live){
+      setFeaturedReady(j?.products?.[featured.id]?.available===true);
+      setFeaturedPayment({wechat:j?.payment?.wechat===true,alipay:j?.payment?.alipay===true,paypal:j?.payment?.paypal===true});
+    }})
+    .catch(()=>{if(live){setFeaturedReady(false);setFeaturedPayment({wechat:false,alipay:false,paypal:false})}});
   return()=>{live=false};
  },[featured.id]);
  useEffect(()=>{
@@ -167,6 +173,25 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    else {await navigator.clipboard.writeText(url);setStatus(sasiSoftwareUiText(lang,"商品分享链接已复制。","Product link copied."));}
   }catch{}
  };
+ const payFeaturedPaypal=async()=>{
+  if(!featuredReady||!featuredPayment.paypal||featuredPaypalBusy)return;
+  setFeaturedPaypalBusy(true);setFeaturedPaypalError("");
+  try{
+   const res=await fetch("/api/pay/create",{
+    method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
+    body:JSON.stringify({productId:featured.id,returnPath:"/account/software"})
+   });
+   const data=await res.json().catch(()=>({}));
+   if(res.status===401){window.location.assign("/account?next="+encodeURIComponent("/sasi"));return;}
+   if(!res.ok||typeof data.url!=="string")throw Error("PAYPAL_SOFTWARE_CHECKOUT_UNAVAILABLE");
+   const target=new URL(data.url);
+   if(target.protocol!=="https:"||!/(^|\.)paypal\.com$/.test(target.hostname))
+    throw Error("INVALID_PAYPAL_REDIRECT");
+   window.location.assign(target.href);
+  }catch{
+   setFeaturedPaypalError(sasiSoftwareUiText(lang,"PayPal 暂时无法创建订单，请稍后重试。","PayPal checkout is temporarily unavailable. Please try again."));
+  }finally{setFeaturedPaypalBusy(false);}
+ };
  const payout=async()=>{
   setBusy("payout");setError("");setStatus("");
   try{
@@ -221,8 +246,15 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     <div className={styles.featuredPrice}>
      <strong>¥{featured.priceCny.toLocaleString("en-US")}</strong>
      <small>USD {"$"}{featured.priceUsd.toLocaleString("en-US")}</small>
-     <Link href={featuredReady?"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware":"/sasi/delivery"}
-      className={styles.featuredAction}>{featuredReady?(sasiSoftwareUiText(lang,"查看购买方式","Choose payment")):(sasiSoftwareUiText(lang,"查看软件详情","View details"))}</Link>
+     {(featuredPayment.wechat||featuredPayment.alipay)&&<Link href={"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware"}
+      className={styles.featuredAction}>{sasiSoftwareUiText(lang,"人民币支付 · 微信 / 支付宝","Pay in CNY · WeChat / Alipay")}</Link>}
+     {featuredPayment.paypal&&<button type="button" disabled={featuredPaypalBusy} onClick={()=>void payFeaturedPaypal()}
+      className={styles.featuredAction+" "+styles.featuredPaypalAction}>
+      {featuredPaypalBusy?sasiSoftwareUiText(lang,"正在连接 PayPal…","Connecting to PayPal…"):sasiSoftwareUiText(lang,"美元支付 · PayPal","Pay in USD · PayPal")}
+     </button>}
+     {featuredPaypalError&&<small role="alert" className={styles.featuredPaypalError}>{featuredPaypalError}</small>}
+     {!featuredPayment.wechat&&!featuredPayment.alipay&&!featuredPayment.paypal&&
+      <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"支付通道暂未开放","Checkout is not available yet")}</span>}
     </div>
    </article>
   </section>}

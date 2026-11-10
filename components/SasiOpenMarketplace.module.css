@@ -105,6 +105,10 @@
  background:linear-gradient(115deg,#365cf7,#713bdb);color:#fff!important;font-size:13px;font-weight:700;
  border-radius:10px;padding:12px 15px;margin-top:14px;white-space:nowrap}
 .featuredAction:hover{filter:brightness(1.08)}
+button.featuredAction{border:0;cursor:pointer;font-family:inherit}
+button.featuredAction:disabled{cursor:wait;opacity:.65}
+.featuredPaypalError{display:block;max-width:220px;color:#b54747;font-size:11px;line-height:1.5}
+.featuredUnavailable{display:block;margin-top:14px;color:var(--lx-muted,#728394);font-size:12px}
 @media(max-width:960px){.featuredCard{grid-template-columns:180px 1fr}.featuredPrice{grid-column:2}}
 @media(max-width:610px){.main .hero{min-height:0}.featuredCard{grid-template-columns:1fr;padding:16px;gap:16px}
  .featuredVisual{height:156px}.featuredPrice{grid-column:auto}.featuredAction{width:100%}}
