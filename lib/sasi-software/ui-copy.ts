@@ -630,12 +630,21 @@ const ADDITIONAL_COPY:Record<string,readonly string[]> = Object.freeze({
   "تخزين خاص وتنزيل موثوق"
  ]
 });
+const PUBLISHING_COPY:Record<string,readonly string[]>={
+ "Software and source licenses · Developer publishing · Delivery after payment":["製品・ソースのライセンス · 開発者公開 · 支払い後の配信","완성 소프트웨어·소스 라이선스 · 개발자 게시 · 결제 후 전달","Logiciels et licences de code · Publication · Livraison après paiement","Software- und Quellcode-Lizenzen · Veröffentlichung · Lieferung nach Zahlung","Software y licencias de código · Publicación · Entrega tras el pago","Software e licenças de código · Publicação · Entrega após pagamento","تراخيص البرامج والمصدر · نشر المطورين · التسليم بعد الدفع"],
+ "Finished software and source code":["完成ソフトウェアとソースコード","완성 소프트웨어와 소스 코드","Logiciels finis et code source","Fertige Software und Quellcode","Software terminado y código fuente","Software pronto e código-fonte","البرامج الجاهزة والشيفرة المصدرية"],
+ "Software or source, documentation and license":["ソフトまたはソース、説明書とライセンス","소프트웨어 또는 소스, 설명서 및 라이선스","Logiciel ou source, documentation et licence","Software oder Quellcode, Dokumentation und Lizenz","Software o código, documentación y licencia","Software ou código, documentação e licença","برنامج أو مصدر، توثيق وترخيص"],
+ "Edit listing":["商品情報を編集","상품 정보 수정","Modifier la fiche","Angebot bearbeiten","Editar producto","Editar produto","تعديل المنتج"],
+ "Save changes":["変更を保存","변경 사항 저장","Enregistrer","Änderungen speichern","Guardar cambios","Salvar alterações","حفظ التعديلات"],
+ "Cancel editing":["編集を取り消す","수정 취소","Annuler","Bearbeitung abbrechen","Cancelar edición","Cancelar edição","إلغاء التعديل"],
+ "One main image and up to four detail images. Upload finished software or source with installation and license documents in a ZIP. Security checks and administrator approval are required.":["主画像1枚、詳細画像は最大4枚。製品またはソース、導入説明書とライセンスをZIPで提出してください。安全検査と管理者審査が必要です。","대표 이미지 1장, 상세 이미지 최대 4장. 완성 소프트웨어 또는 소스에 설치 안내와 라이선스를 포함해 ZIP으로 제출하세요. 보안 검사와 관리자 승인이 필요합니다.","Une image principale et quatre images détaillées maximum. Fournissez le logiciel ou le source avec les instructions et la licence en ZIP. Contrôle de sécurité et validation administrateur requis.","Ein Hauptbild und bis zu vier Detailbilder. Software oder Quellcode mit Installationsanleitung und Lizenz als ZIP einreichen. Sicherheitsprüfung und Administratorfreigabe erforderlich.","Una imagen principal y hasta cuatro imágenes de detalle. Envíe software o código con instrucciones y licencia en ZIP. Se requieren revisión de seguridad y aprobación del administrador.","Uma imagem principal e até quatro imagens detalhadas. Envie software ou código com instruções e licença em ZIP. Exige verificação de segurança e aprovação do administrador.","صورة رئيسية واحدة وأربع صور تفصيلية كحد أقصى. ارفع البرنامج أو المصدر مع تعليمات التثبيت والترخيص في ZIP. يلزم فحص الأمان وموافقة الإدارة."]
+};
 const index:Record<SasiUiLocale,number>={ja:0,ko:1,fr:2,de:3,es:4,pt:5,ar:6};
 export function sasiSoftwareUiText(lang:string,zh:string,en:string):string{
  if(lang==="zh")return zh;
  if(lang==="en")return en;
  const indexOf=index[lang as SasiUiLocale];
- const value=(ADDITIONAL_COPY[en]||PREMIUM_COPY[en]||TABLE[en])?.[indexOf];
+ const value=(PUBLISHING_COPY[en]||ADDITIONAL_COPY[en]||PREMIUM_COPY[en]||TABLE[en])?.[indexOf];
  return typeof value==="string"&&value.trim()?value:en;
 }
-export const SASI_SOFTWARE_TRANSLATION_KEYS=Object.freeze([...Object.keys(TABLE),...Object.keys(PREMIUM_COPY),...Object.keys(ADDITIONAL_COPY)]);
+export const SASI_SOFTWARE_TRANSLATION_KEYS=Object.freeze([...Object.keys(TABLE),...Object.keys(PREMIUM_COPY),...Object.keys(ADDITIONAL_COPY),...Object.keys(PUBLISHING_COPY)]);

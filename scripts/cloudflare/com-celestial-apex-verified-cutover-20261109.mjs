@@ -181,7 +181,8 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     const location = result.headers.get("location");
     console.log("COM_" + phase + "_CANONICAL_SLASH path=" + path +
       " http=" + result.status + " location=" + location);
-    if (result.status !== 308 || location !== expected) {
+    const resolvedLocation=location?new URL(location,base).href:"";
+    if (result.status !== 308 || resolvedLocation !== expected) {
       throw Error("COM_" + phase + "_CANONICAL_SLASH_FAILURE:" + path);
     }
   }

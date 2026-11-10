@@ -5,7 +5,7 @@ import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {sasiSoftwareUiText} from "@/lib/sasi-software/ui-copy";
 import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
 import styles from "./SasiOpenMarketplace.module.css";
-type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;};
+type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;rejection_reason?:string|null;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
 type Payout={balances:Record<string,{grossMinor:number;platformFeeMinor:number;availableMinor:number}>;payouts:Array<{id:string;currency:string;amount_minor:number;status:string;requested_at:string}>;payoutsOpen:boolean;submissionTargetMinutes:number};
 const CATEGORIES=[["mt5-ea","MT5 EA","MT5 EA"],["mt5-indicator","MT5 指标","MT5 indicator"],["automation","自动化软件","Automation software"],["desktop-app","桌面程序","Desktop application"],["developer-tool","开发工具","Developer tools"],["software","其他软件","Other software"]] as const;
@@ -30,6 +30,7 @@ export default function SasiOpenMarketplace(){
  const [displayName,setDisplayName]=useState("");
  const [adult,setAdult]=useState(false),[terms,setTerms]=useState(false);
  const [title,setTitle]=useState(""),[description,setDescription]=useState("");
+ const [editingId,setEditingId]=useState<string|null>(null);
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
  const [showStudio,setShowStudio]=useState(false);
@@ -75,8 +76,8 @@ export default function SasiOpenMarketplace(){
  },[listings]);
  const visible=useMemo(()=>listings.filter(x=>(filter==="all"||x.category===filter)&&
  (x.title+" "+x.description).toLowerCase().includes(search.trim().toLowerCase())),[listings,filter,search]);
- const post=async(url:string,payload:unknown)=>{
-  const r=await fetch(url,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload),credentials:"same-origin"});
+ const post=async(url:string,payload:unknown,method:"POST"|"PATCH"="POST")=>{
+  const r=await fetch(url,{method,headers:{"content-type":"application/json"},body:JSON.stringify(payload),credentials:"same-origin"});
   const result=await r.json().catch(()=>null);
   if(!r.ok)throw Error(typeof result?.error==="string"?result.error:"REQUEST_FAILED_"+r.status);
   return result;
@@ -94,11 +95,17 @@ export default function SasiOpenMarketplace(){
   try{
    const minor=(n:string)=>Math.round(Number(n)*100);
    await post("/api/sasi/marketplace/listings",{
-    title,description,category,priceCnyMinor:minor(rmb),priceUsdMinor:minor(usd)
-   });
+    title,description,category,priceCnyMinor:minor(rmb),priceUsdMinor:minor(usd),
+    ...(editingId?{listingId:editingId}:{})
+   },editingId?"PATCH":"POST");
    setStatus(sasiSoftwareUiText(lang,"商品草稿已保存，可继续上传安装包。","Draft saved. You can now upload its package."));
-   setTitle("");setDescription("");await refresh();
+   setTitle("");setDescription("");setEditingId(null);await refresh();
   }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
+ };
+ const editDraft=(item:Listing)=>{
+  setEditingId(item.id);setTitle(item.title);setDescription(item.description);setCategory(item.category);
+  setRmb((item.price_cny_minor/100).toFixed(2));setUsd((item.price_usd_minor/100).toFixed(2));setShowStudio(true);
+  requestAnimationFrame(()=>document.getElementById("listing-editor")?.scrollIntoView({block:"start"}));
  };
  const upload=async(item:Listing,file:File)=>{
   setBusy("upload-"+item.id);setStatus("");setError("");
@@ -174,7 +181,7 @@ export default function SasiOpenMarketplace(){
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
        <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")}</h1>
-       <p>{sasiSoftwareUiText(lang,"源码授权 · 开发者发布 · 自动交付 · 安全可靠","Source licenses · Developer publishing · Verified digital delivery")}</p>
+       <p>{sasiSoftwareUiText(lang,"成品软件与源码授权 · 开发者发布 · 付款后自动交付","Software and source licenses · Developer publishing · Delivery after payment")}</p>
        <div className={styles.heroLinks}><a href="#products">◇ {sasiSoftwareUiText(lang,"浏览软件","Explore software")}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</button></div>
      </div>
      <div className={styles.laptopScene} aria-hidden="true">
@@ -182,13 +189,13 @@ export default function SasiOpenMarketplace(){
      </div>
   </div>
     <div className={styles.benefits}>
-     <div><span>⬡</span><div><strong>{sasiSoftwareUiText(lang,"源码授权","Source licensing")}</strong><small>{sasiSoftwareUiText(lang,"仅售源码 · 权属清晰","Clear license and ownership")}</small></div></div>
+     <div><span>⬡</span><div><strong>{sasiSoftwareUiText(lang,"软件授权","Software licensing")}</strong><small>{sasiSoftwareUiText(lang,"成品与源码 · 权属清晰","Finished software and source code")}</small></div></div>
      <div><span>ϟ</span><div><strong>{sasiSoftwareUiText(lang,"自动交付","Digital delivery")}</strong><small>{sasiSoftwareUiText(lang,"付款验证后获取","After verified payment")}</small></div></div>
      <div><span>◇</span><div><strong>{sasiSoftwareUiText(lang,"安全可靠","Secure by design")}</strong><small>{sasiSoftwareUiText(lang,"私密存储 · 安心下载","Private storage and dependable downloads")}</small></div></div>
      <div><span>◎</span><div><strong>{sasiSoftwareUiText(lang,"全球可用","Global access")}</strong><small>{sasiSoftwareUiText(lang,"多语言 · 多地区","Multilingual access")}</small></div></div>
      <div><span>♧</span><div><strong>{sasiSoftwareUiText(lang,"开发者支持","Creator support")}</strong><small>{sasiSoftwareUiText(lang,"发布 · 审核 · 结算","Publish, review and settle")}</small></div></div>
    </div>
-   <section id="featured" className={styles.featured}>
+   {featuredReady&&<section id="featured" className={styles.featured}>
    <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{sasiSoftwareUiText(lang,"浏览开发者作品","Browse creator software")}</a></div>
    <article className={styles.featuredCard}>
@@ -206,7 +213,7 @@ export default function SasiOpenMarketplace(){
       className={styles.featuredAction}>{featuredReady?(sasiSoftwareUiText(lang,"查看购买方式","Choose payment")):(sasiSoftwareUiText(lang,"查看软件详情","View details"))}</Link>
     </div>
    </article>
-  </section>
+  </section>}
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / SOFTWARE</small><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
    <div className={styles.find}><input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)}</button>)}</div>
@@ -229,7 +236,7 @@ export default function SasiOpenMarketplace(){
     <div className={styles.sectionHeading}><div><small>02 / PUBLISH & DELIVERY</small><h2>{sasiSoftwareUiText(lang,"卖家发布与自动交付","Publish and deliver")}</h2></div></div>
     <div className={styles.steps}>
        <div><b>01</b><strong>{sasiSoftwareUiText(lang,"填写商品资料","Product details")}</strong><span>{sasiSoftwareUiText(lang,"名称 · 介绍 · 价格","Name, description, price")}</span></div>
-       <div><b>02</b><strong>{sasiSoftwareUiText(lang,"上传源码","Upload source ZIP")}</strong><span>{sasiSoftwareUiText(lang,"私有源码包与文档","Private ZIP and documentation")}</span></div>
+       <div><b>02</b><strong>{sasiSoftwareUiText(lang,"上传软件包","Upload software ZIP")}</strong><span>{sasiSoftwareUiText(lang,"成品或源码、说明与授权","Software or source, documentation and license")}</span></div>
        <div><b>03</b><strong>{sasiSoftwareUiText(lang,"审核发布","Review and publish")}</strong><span>{sasiSoftwareUiText(lang,"安全审核后公开展示","Listed after security review")}</span></div>
        <div><b>04</b><strong>{sasiSoftwareUiText(lang,"自动交付","Automatic delivery")}</strong><span>{sasiSoftwareUiText(lang,"付款验证后限时获取","Download after verified payment")}</span></div>
        <button type="button" className={styles.launchStudio} onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio} aria-controls="sasi-seller-studio">{showStudio?(sasiSoftwareUiText(lang,"收起工作台","Close workspace")):(sasiSoftwareUiText(lang,"立即发布软件","Publish software"))}</button>
@@ -246,17 +253,20 @@ export default function SasiOpenMarketplace(){
      <button disabled={busy!==""||!adult||!terms||displayName.trim().length<2} onClick={()=>void apply()}>{busy==="seller"?"…":sasiSoftwareUiText(lang,"申请成为卖家","Apply as seller")}</button>
      <p>{sasiSoftwareUiText(lang,"须先登录且验证邮箱，平台不收取保证金。","Sign-in and verified email are required. No seller deposit.")} <Link href="/account?mode=signin">{sasiSoftwareUiText(lang,"账户登录","Sign in")} ↗</Link></p>
     </>}</div>
-    <div className={styles.formCard}><h3>{sasiSoftwareUiText(lang,"发布新软件","Create a software listing")}</h3>
+    <div id="listing-editor" className={styles.formCard}><h3>{editingId?sasiSoftwareUiText(lang,"修改商品资料","Edit listing"):sasiSoftwareUiText(lang,"发布新软件","Create a software listing")}</h3>
       <label>{sasiSoftwareUiText(lang,"软件名称","Product name")}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={sasiSoftwareUiText(lang,"软件名称、版本、授权类型","Software name, version, license")}/></label>
       <label>{sasiSoftwareUiText(lang,"分类","Category")}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id])=><option key={id} value={id}>{categoryLabel(lang,id)}</option>)}</select></label>
       <label>{sasiSoftwareUiText(lang,"完整软件介绍（最多5,000字）","Full software description (up to 5,000 characters)")}<textarea rows={7} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={sasiSoftwareUiText(lang,"介绍核心功能、适用场景、安装要求、版本与授权范围。支持换行分段，详情页可完整展开。","Explain features, uses, requirements, version and licensing. Paragraph breaks are preserved.")}/><span className={styles.descriptionCount} aria-live="polite">{description.length.toLocaleString("en-US")} / 5,000</span></label>
       <div className={styles.priceFields}><label>{sasiSoftwareUiText(lang,"人民币标价","CNY price")}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{sasiSoftwareUiText(lang,"美元标价","USD price")}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
-      <button disabled={busy!==""||!seller} onClick={()=>void makeDraft()}>{busy==="draft"?"…":sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
-      <p>{sasiSoftwareUiText(lang,"主图仅1张；详情图最多4张，可全部不上传。源码 ZIP 与图片通过审核后展示，私有文件不会公开。","One main image and up to four optional detail images. Source ZIPs remain private and undergo review.")}</p>
+      <button disabled={busy!==""||seller?.status!=="approved"} onClick={()=>void makeDraft()}>{busy==="draft"?"…":editingId?sasiSoftwareUiText(lang,"保存修改","Save changes"):sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
+      {editingId&&<button type="button" disabled={busy!==""} onClick={()=>{setEditingId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"取消修改","Cancel editing")}</button>}
+      <p>{sasiSoftwareUiText(lang,"主图1张，详情图最多4张。软件 ZIP 可包含成品或源码，以及安装说明与授权文件；通过安全检查及管理员审核后上架。","One main image and up to four detail images. Upload finished software or source with installation and license documents in a ZIP. Security checks and administrator approval are required.")}</p>
     </div>
    </div>
    {mine.length>0&&<div className={styles.drafts}><h3>{sasiSoftwareUiText(lang,"我的软件草稿与审核进度","My submissions")}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{translatedStatus(lang,item.status)} · {translatedStatus(lang,item.scan_status,true)}</small></div>
+    {item.status==="rejected"&&item.rejection_reason&&<p role="status">{item.rejection_reason}</p>}
+    {["draft","rejected"].includes(item.status)&&<button type="button" disabled={busy!==""} onClick={()=>editDraft(item)}>{sasiSoftwareUiText(lang,"修改商品资料","Edit listing")}</button>}
     {item.status==="draft"&&<>
      <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":sasiSoftwareUiText(lang,"上传主图（仅1张）","Main image (one only)")}
        <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""||(mediaCounts[item.id]?.cover??0)>=1} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"cover")}}/>
@@ -274,7 +284,7 @@ export default function SasiOpenMarketplace(){
      <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":sasiSoftwareUiText(lang,"上传软件 ZIP 包","Upload software ZIP")}
        <input type="file" accept=".zip,application/zip" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void upload(item,f)}}/>
      </label>
-     <button type="button" disabled={busy!==""} onClick={()=>void submitReview(item)} className={styles.launchStudio}>
+     <button type="button" disabled={busy!==""||(mediaCounts[item.id]?.cover??0)!==1} onClick={()=>void submitReview(item)} className={styles.launchStudio}>
       {busy==="submit-"+item.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}
      </button>
    </>}

@@ -26,6 +26,11 @@ export async function POST(req:NextRequest){
    .select("id,status,quarantine_path").eq("id",body.listingId).eq("seller_id",user.id).single();
   if(!listing||listing.status!=="draft"||!listing.quarantine_path)
    return NextResponse.json({error:"UPLOAD_TOKEN_REQUIRED"},{status:409,headers:h});
+  const {count:coverCount,error:coverError}=await admin.from("sasi_market_media")
+   .select("id",{count:"exact",head:true}).eq("listing_id",listing.id)
+   .eq("seller_id",user.id).eq("kind","cover").in("status",["awaiting_review","approved"]);
+  if(coverError)throw Error("MAIN_IMAGE_CHECK_FAILED");
+  if(coverCount!==1)return NextResponse.json({error:"ONE_CONFIRMED_MAIN_IMAGE_REQUIRED"},{status:409,headers:h});
   const path=marketplaceOwnedKey(user.id,listing.id,String(listing.quarantine_path));
   if(!path.includes("/quarantine/")||!path.endsWith(".zip"))throw Error("NOT_A_PRIVATE_ZIP");
   const info=await marketplaceObjectHead(path);

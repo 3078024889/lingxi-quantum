@@ -16,6 +16,9 @@ on:
       - 'app/api/pay/providers/route.ts'
       - 'app/api/pay/create/route.ts'
       - 'app/api/sasi/account/route.ts'
+      - 'app/api/sasi/marketplace/**'
+      - 'lib/sasi-marketplace/listing-draft.ts'
+      - 'tests/sasi-marketplace-draft-revision-20261110.test.mjs'
       - 'scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs'
       - 'tests/com-sasi-account-anon-401-20261109.test.mjs'
       - 'lib/paypal.ts'
@@ -134,6 +137,7 @@ jobs:
           node --test tests/com-sasi-account-anon-401-20261109.test.mjs
           node --test tests/com-account-static-client-auth-20261110.test.mjs
           node --test tests/com-anonymous-private-edge-20261110.test.mjs
+          node --test tests/sasi-marketplace-draft-revision-20261110.test.mjs
           node --test tests/cn-wallet-checkout-entry-20261108.test.mjs
           node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs
           node --test tests/sasi-com-closure-20261108.test.mjs tests/com-next-release-safety-20261108.test.mjs
@@ -256,7 +260,7 @@ jobs:
             expected="$url${path%/}"
             echo "COM_CANARY_CANONICAL_SLASH path=$path HTTP_$status location=$location"
             test "$status" = 308
-            test "$location" = "$expected"
+            [[ "$location" == "$expected" || "$location" == "${path%/}" ]]
             rm -f "$headers"
           done
           account_status="$(curl -4sS --connect-timeout 9 --max-time 25 -o /dev/null -w '%{http_code}' "$url/account" || true)"

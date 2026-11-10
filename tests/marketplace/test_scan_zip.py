@@ -25,6 +25,11 @@ class MarketScannerPolicyTest(unittest.TestCase):
     def test_valid_source_zip(self):
         x=self.inspect(make([("source/robot.mq5",b"// code"),("docs/readme.txt",b"guide")]))
         self.assertEqual(x["files"],2)
+    def test_finished_software_package_is_inspected_without_execution(self):
+        x=self.inspect(make([("app/program.ex5",b"opaque-binary-test-fixture"),
+                             ("docs/LICENSE.txt",b"Example distribution license"),
+                             ("docs/INSTALL.txt",b"Installation instructions")]))
+        self.assertEqual(x["files"],3)
     def test_opaque_secret_keys_do_not_use_bearer(self):
         source=Path(scanner_path).read_text()
         self.assertIn('if not secret.startswith("sb_secret_"):',source)
