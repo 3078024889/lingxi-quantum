@@ -59,31 +59,46 @@ export default function AccountClientShell() {
       miniLink
     });
 
-    const supabase = createClient();
+    let supabase: ReturnType<typeof createClient>;
+    try {
+      supabase = createClient();
+    } catch {
+      setView("error");
+      return;
+    }
     let active = true;
     let initialResolved = false;
-    const countRequested = new Set<string>();
+    let countedUserId = "";
     const loadPaidOrderCount = (userId: string) => {
-      if (countRequested.has(userId)) return;
-      countRequested.add(userId);
+      if (countedUserId === userId) return;
+      countedUserId = userId;
       void supabase
         .from("orders")
         .select("id", { count: "exact", head: true })
         .eq("user_id", userId)
         .eq("status", "paid")
         .then(({ count, error }) => {
-          if (active && !error) setPaidOrderCount(typeof count === "number" ? count : null);
+          if (active) setPaidOrderCount(!error && typeof count === "number" ? count : null);
+        })
+        .catch(() => {
+          if (active) setPaidOrderCount(null);
         });
+    };
+    const applyUser = (nextUser: AccountUser | null) => {
+      setUser(nextUser);
+      setView(nextUser ? "account" : "login");
+      if (nextUser) loadPaidOrderCount(nextUser.id);
+      else {
+        countedUserId = "";
+        setPaidOrderCount(null);
+      }
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!active) return;
       if (event === "INITIAL_SESSION" && !initialResolved) return;
       const nextUser = (session?.user ?? null) as AccountUser | null;
-      setUser(nextUser);
-      setView(nextUser ? "account" : "login");
-      if (nextUser) loadPaidOrderCount(nextUser.id);
-      else setPaidOrderCount(null);
+      applyUser(nextUser);
     });
 
     void supabase.auth.getUser().then(({ data, error }) => {
@@ -94,10 +109,7 @@ export default function AccountClientShell() {
         return;
       }
       const nextUser = (data.user ?? null) as AccountUser | null;
-      setUser(nextUser);
-      setView(nextUser ? "account" : "login");
-      if (nextUser) loadPaidOrderCount(nextUser.id);
-      else setPaidOrderCount(null);
+      applyUser(nextUser);
     }).catch(() => {
       if (!active) return;
       initialResolved = true;

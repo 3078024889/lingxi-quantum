@@ -37,7 +37,7 @@ test("Cloudflare serves the generic account shell as a direct static asset while
   assert.ok(materializer.includes("Referrer-Policy: no-referrer"));
   const patch = read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
   assert.ok(patch.includes("const accountIsDynamic=false"));
-  assert.ok(patch.includes("const edgeFile=verifiedAnonymousPages[pathname]"));
+  assert.ok(patch.includes("const edgeFile=accountIsDynamic?null:verifiedAnonymousPages[pathname]"));
   const canary = read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
   assert.ok(canary.includes("account:account-login"));
   assert.ok(canary.includes("COM_CANARY_CANONICAL_SLASH"));
