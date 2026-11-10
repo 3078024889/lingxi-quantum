@@ -37,3 +37,12 @@ test("payout creation remains serialized, idempotent and closed while the transf
  assert.match(schema,/INSUFFICIENT_SETTLED_BALANCE/);
  assert.match(schema,/status IN \('requested','processing','submitted','paid'\)/);
 });
+
+test("seller payout UI rejects over-precision and reuses one idempotency key for retries",()=>{
+ const component=read("components/SasiOpenMarketplace.tsx");
+ assert.match(component,/parseMarketplacePayoutMinorUnits\(requestedAmount\)/);
+ assert.doesNotMatch(component,/Math\.round\(Number\(requestedAmount\)\*100\)/);
+ assert.match(component,/payoutAttemptRef\.current/);
+ assert.match(component,/idempotencyKey:attempt\.key/);
+ assert.match(component,/attempt\.amountMinor!==amountMinor\|\|attempt\.currency!==requestCurrency/);
+});
