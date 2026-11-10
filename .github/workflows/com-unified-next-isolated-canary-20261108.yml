@@ -6,6 +6,10 @@ on:
     branches: [release/com-sasi-full-20261108]
     paths:
       - '.github/workflows/com-unified-next-isolated-canary-20261108.yml'
+      - 'app/siai/page.tsx'
+      - 'app/[locale]/siai/page.tsx'
+      - 'lib/seo/siai-domain-policy.ts'
+      - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
       - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
       - 'scripts/cloudflare/anonymous-private-api.mjs'
       - 'tests/com-anonymous-private-edge-20261110.test.mjs'
