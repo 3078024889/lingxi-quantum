@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, readFile, writeFile, rm } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, writeFile, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
@@ -14,7 +14,22 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const snapshotRoot = join(root, "__lingxi_edge_static__");
     const toolRoutes = await loadToolStaticRoutes();
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
-    assert.ok(toolRoutes.length >= 80, "the registry should expose the complete static tool detail set");
+    assert.ok(toolRoutes.length >= 120, "the static manifest must include every dedicated tool page plus registry-backed generic pages");
+    const appTools = await readdir(new URL("../app/tools/", import.meta.url), { withFileTypes: true });
+    for (const entry of appTools.filter(item => item.isDirectory() &&
+      !["admin", "pay", "pass"].includes(item.name) && !item.name.startsWith("["))) {
+      try {
+        await readFile(new URL("../app/tools/" + entry.name + "/page.tsx", import.meta.url), "utf8");
+        assert.ok(toolRoutes.some(route => route.route === "/tools/" + entry.name),
+          "dedicated tool page must be asset-first: " + entry.name);
+      } catch (error) {
+        if (error?.code !== "ENOENT") throw error;
+      }
+    }
+    assert.equal(toolRoutes.some(route => route.route === "/tools/admin"), false);
+    assert.equal(toolRoutes.some(route => route.route === "/tools/pay"), false);
+    assert.equal(toolRoutes.some(route => route.route === "/tools/pass"), false);
+    assert.ok(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/tools/pass"));
     await mkdir(snapshotRoot, { recursive: true });
     for (const entry of allRoutes) {
       await writeFile(join(snapshotRoot, entry.source), html + entry.route, "utf8");

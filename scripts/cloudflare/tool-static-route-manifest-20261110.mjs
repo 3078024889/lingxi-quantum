@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import ts from "typescript";
 
@@ -18,9 +18,41 @@ export async function loadToolStaticRoutes() {
   const registry = await import(moduleUrl);
   if (!Array.isArray(registry.TOOLS)) throw Error("TOOL_REGISTRY_EXPORT_MISSING");
 
-  const slugs = registry.TOOLS
+  const genericSlugs = registry.TOOLS
     .filter(tool => !tool.dedicatedRoute)
     .map(tool => tool.slug);
+  const declaredDedicatedSlugs = registry.TOOLS
+    .filter(tool => tool.dedicatedRoute)
+    .map(tool => tool.slug);
+  const toolsRoot = new URL("../../app/tools/", import.meta.url);
+  const excludedDirectories = new Set(["admin", "pay", "pass"]);
+  const directSlugs = [];
+
+  for (const entry of await readdir(toolsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory() || entry.name.startsWith("[") ||
+        excludedDirectories.has(entry.name)) continue;
+    const slug = entry.name;
+    if (!/^[a-z0-9-]+$/.test(slug)) throw Error("TOOL_STATIC_SLUG_INVALID:" + slug);
+    let pageSource;
+    try {
+      pageSource = await readFile(new URL(slug + "/page.tsx", toolsRoot), "utf8");
+    } catch (error) {
+      if (error?.code === "ENOENT") continue;
+      throw error;
+    }
+    if (/(?:cookies\\s*\\(|headers\\s*\\(|searchParams|force-dynamic|getServerUser|createServerClient|createAdminClient|SUPABASE_SERVICE_ROLE)/.test(pageSource)) {
+      throw Error("TOOL_PAGE_NOT_STATIC_SAFE:" + slug);
+    }
+    directSlugs.push(slug);
+  }
+
+  if (declaredDedicatedSlugs.some(slug => !directSlugs.includes(slug))) {
+    throw Error("DEDICATED_TOOL_PAGE_MISSING_FROM_APP_ROUTE");
+  }
+  if (directSlugs.some(slug => genericSlugs.includes(slug))) {
+    throw Error("TOOL_STATIC_ROUTE_REGISTRY_COLLISION");
+  }
+  const slugs = [...genericSlugs, ...directSlugs].sort();
   if (slugs.some(slug => typeof slug !== "string" || !/^[a-z0-9-]+$/.test(slug))) {
     throw Error("TOOL_STATIC_SLUG_INVALID");
   }

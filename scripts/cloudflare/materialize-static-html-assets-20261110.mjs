@@ -26,9 +26,6 @@ export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   { route: "/es/siai", source: "es-siai.html", target: "es/siai.html" },
   { route: "/pt/siai", source: "pt-siai.html", target: "pt/siai.html" },
   { route: "/ar/siai", source: "ar-siai.html", target: "ar/siai.html" },
-  { route: "/tools/ico-to-png", source: "tool-ico-to-png.html", target: "tools/ico-to-png.html" },
-  { route: "/tools/number-base-converter", source: "tool-number-base-converter.html", target: "tools/number-base-converter.html" },
-  { route: "/tools/video-watermark-remover", source: "tool-video-watermark-remover.html", target: "tools/video-watermark-remover.html" }
 ]);
 
 const HEADER_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";

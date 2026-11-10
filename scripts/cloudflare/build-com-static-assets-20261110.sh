@@ -74,9 +74,6 @@ for mapping in \
   'es/siai:es-siai' \
   'pt/siai:pt-siai' \
   'ar/siai:ar-siai' \
-  'tools/ico-to-png:tool-ico-to-png' \
-  'tools/number-base-converter:tool-number-base-converter' \
-  'tools/video-watermark-remover:tool-video-watermark-remover'; do
   route="${mapping%%:*}"
   file="${mapping#*:}"
   curl --noproxy '*' -fSs --retry 2 --max-time 55 \
