@@ -28,9 +28,11 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     }
 
     const headers = await readFile(join(root, "_headers"), "utf8");
-    for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
+    for (const entry of PUBLIC_STATIC_HTML_ROUTES.filter(entry => !entry.route.startsWith("/tools/"))) {
       assert.ok(headers.includes(entry.route + "\n  X-Lingxi-Render-Mode: static-edge-verified"), entry.route + " must receive the static marker");
     }
+    assert.ok(headers.includes("/tools/*\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets"));
+    assert.ok(headers.includes("/tools/*.html\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets"));
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), true);
     assert.ok(headers.includes("/account\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\n  X-Robots-Tag: noindex, nofollow"));
 
@@ -39,7 +41,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const after = await readFile(join(root, "_headers"), "utf8");
     assert.equal(after.split("# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS").length - 1, 1);
     const redirects = await readFile(join(root, "_redirects"), "utf8");
-    for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
+    for (const entry of allRoutes) {
       assert.ok(redirects.split(/\r?\n/).includes(entry.route + " /" + entry.target + " 200"), entry.route + " must proxy to its exact HTML asset");
     }
     await materializeStaticHtmlAssets(root);
