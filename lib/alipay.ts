@@ -67,7 +67,7 @@ export function createAlipayPaymentUrl(input: {
   notifyUrl: string;
   mobile: boolean;
 }): string {
-  if (!alipayConfigured()) throw new Error(`Missing Alipay configuration: ${alipayMissingVars().join(", ")}`);
+  if (!alipayEnabled()) throw new Error("ALIPAY_NOT_ENABLED_OR_KEYPAIR_INVALID");
   if (!/^LX[A-Za-z0-9]{1,62}$/.test(input.outTradeNo)) throw new Error("Invalid Alipay out_trade_no");
   if (!Number.isFinite(input.amountRmb) || input.amountRmb <= 0) throw new Error("Invalid Alipay amount");
 
