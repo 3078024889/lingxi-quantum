@@ -217,8 +217,8 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
 <div className={styles.hero}>
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
-       <h1><em>SASI</em> {sasiSoftwareUiText(lang,"软件市场","Software Market")}</h1>
-       <p>{sasiSoftwareUiText(lang,"成品软件与源码授权 · 开发者发布 · 付款后自动交付","Software and source licenses · Developer publishing · Delivery after payment")}</p>
+       <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")}</h1>
+       <p>{sasiSoftwareUiText(lang,"成品软件、MT5 EA与源码授权 · 安装教程 · 开发者发布 · 付款核验后自动交付","Finished software, MT5 EAs and source licenses · Installation guides · Developer publishing · Delivery after verified payment")}</p>
        <div className={styles.heroLinks}><a href="#products">◇ {sasiSoftwareUiText(lang,"浏览软件","Explore software")}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</button></div>
      </div>
      <div className={styles.laptopScene} aria-hidden="true">
@@ -232,7 +232,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
      <div><span>◎</span><div><strong>{sasiSoftwareUiText(lang,"全球可用","Global access")}</strong><small>{sasiSoftwareUiText(lang,"多语言 · 多地区","Multilingual access")}</small></div></div>
      <div><span>♧</span><div><strong>{sasiSoftwareUiText(lang,"开发者支持","Creator support")}</strong><small>{sasiSoftwareUiText(lang,"发布 · 审核 · 结算","Publish, review and settle")}</small></div></div>
    </div>
-   {featuredReady&&<section id="featured" className={styles.featured}>
+   <section id="featured" className={styles.featured} data-testid="featured-copernicus-source">
    <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{sasiSoftwareUiText(lang,"浏览开发者作品","Browse creator software")}</a></div>
    <article className={styles.featuredCard}>
@@ -241,23 +241,25 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
      <p className={styles.featuredBadge}>{sasiSoftwareUiText(lang,"仅售源码授权版","Source code license only")}</p>
      <h3>{zh?featured.titleZh:featured.titleEn}</h3>
      <p>{zh?featured.featureZh:featured.featureEn}</p>
-     <div className={styles.featuredChips}><span>MT5</span><span>{sasiSoftwareUiText(lang,"源码交付","Source delivery")}</span><span>{sasiSoftwareUiText(lang,"使用说明","Documentation")}</span><span>{sasiSoftwareUiText(lang,"只读观察","Read-only observation")}</span></div>
+     <div className={styles.featuredChips}><span>MT5</span><span>{sasiSoftwareUiText(lang,"源码交付","Source delivery")}</span><span>{sasiSoftwareUiText(lang,"安装与使用教程","Installation and user guide")}</span><span>{sasiSoftwareUiText(lang,"只读观察","Read-only observation")}</span></div>
     </div>
     <div className={styles.featuredPrice}>
      <strong>¥{featured.priceCny.toLocaleString("en-US")}</strong>
      <small>USD {"$"}{featured.priceUsd.toLocaleString("en-US")}</small>
-     {(featuredPayment.wechat||featuredPayment.alipay)&&<Link href={"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware"}
+     {featuredReady&&(featuredPayment.wechat||featuredPayment.alipay)&&<Link href={"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware"}
       className={styles.featuredAction}>{sasiSoftwareUiText(lang,"人民币支付 · 微信 / 支付宝","Pay in CNY · WeChat / Alipay")}</Link>}
-     {featuredPayment.paypal&&<button type="button" disabled={featuredPaypalBusy} onClick={()=>void payFeaturedPaypal()}
+     {featuredReady&&featuredPayment.paypal&&<button type="button" disabled={featuredPaypalBusy} onClick={()=>void payFeaturedPaypal()}
       className={styles.featuredAction+" "+styles.featuredPaypalAction}>
       {featuredPaypalBusy?sasiSoftwareUiText(lang,"正在连接 PayPal…","Connecting to PayPal…"):sasiSoftwareUiText(lang,"美元支付 · PayPal","Pay in USD · PayPal")}
      </button>}
      {featuredPaypalError&&<small role="alert" className={styles.featuredPaypalError}>{featuredPaypalError}</small>}
-     {!featuredPayment.wechat&&!featuredPayment.alipay&&!featuredPayment.paypal&&
-      <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"支付通道暂未开放","Checkout is not available yet")}</span>}
+     {!featuredReady?
+      <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"商品文件与 SHA256 正在核验，暂不可购买","Product files and SHA-256 are being verified; purchases are disabled.")}</span>:
+      !featuredPayment.wechat&&!featuredPayment.alipay&&!featuredPayment.paypal?
+      <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"当前没有可用的支付方式","No payment method is currently available")}</span>:null}
     </div>
    </article>
-  </section>}
+  </section>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / SOFTWARE</small><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
    <div className={styles.find}><input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)}</button>)}</div>

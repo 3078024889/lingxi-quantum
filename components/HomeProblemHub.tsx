@@ -30,7 +30,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"不知道从哪开始？按问题直接找答案",finishNow:"PDF 改不了怎么办？图片太大怎么压？",finishNowBody:"按文件类型找到工具：合并 PDF、压缩图片、转换格式、制作字幕或处理表格。上传前看清格式要求，完成后核对结果。",
   important:"AI 太多怎么选？软件怎么发布？",importantBody:"先在全球 SIAI 排行榜比较功能、价格和免费额度；购买软件可查看商品授权与交付规则，开发者可进入卖家服务发布软件。",
   tools:"实用工具",toolsDesc:"PDF、图片、视频、音频、表格和隐私文件，按任务选工具。",
-  sasi:"SASI 软件市场",sasiDesc:"浏览经过审核的成品软件、MT5 EA、交易指标与源码授权，查看版本、价格和安全交付。",
+  sasi:"SASI 智能软件市场",sasiDesc:"浏览经过审核的 MT5 EA、量化交易源码、成品软件与源码授权，查看安装教程、版本、价格和自动交付规则。",
   all:"全部入口",allDesc:"不知道从哪里开始时，在这里查看当前真正可以使用的能力。",
   img:"图片工具",video:"视频与音频"
  },
@@ -44,7 +44,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Why start here",finishNow:"Finish the thing in front of you",finishNowBody:"PDFs, images, video, subtitles, tables and private files should not require jumping between apps. Open the right tool and take the finished result.",
   important:"Then move the important work forward",importantBody:"Compare features, prices and free allowances in Global SIAI Rankings. Browse software and delivery terms in SASI, or apply through Seller Services to publish products.",
   tools:"Practical Tools",toolsDesc:"Handle PDFs, images, video, subtitles, tables and private files.",
-  sasi:"SASI Software Marketplace",sasiDesc:"Browse reviewed software, MT5 EAs, trading indicators and source licenses, with clear pricing and secure delivery.",
+  sasi:"SASI Intelligent Software Marketplace",sasiDesc:"Browse reviewed MT5 EAs, trading source code, finished software and source licenses, with installation guides, clear pricing and verified delivery.",
   all:"All Entrances",allDesc:"See what is actually available when you are not sure where to begin.",
   img:"Image tools",video:"Video & audio"
  },
@@ -58,7 +58,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"ここから始める理由",finishNow:"まず目の前の作業を終える",finishNowBody:"PDF、画像、動画、字幕、表、プライベートファイルを複数のアプリに分ける必要はありません。対応ツールを開き、そのまま結果を受け取れます。",
   important:"次に、大切な仕事を前へ進める",importantBody:"世界のSIAIランキングで機能・価格・無料枠を比較。SASIでソフトウェアの権利と納品条件を確認し、開発者は販売者サービスから出品できます。",
   tools:"実用ツール",toolsDesc:"PDF、画像、動画、字幕、表、ウェブ内容、プライベートファイルを処理します。",
-  sasi:"SASIソフトウェア市場",sasiDesc:"審査済みソフトウェア、MT5 EA、取引インジケーター、ソースライセンス、価格と安全な納品を確認できます。",
+  sasi:"SASIインテリジェントソフトウェア市場",sasiDesc:"審査済みMT5 EA、取引ソースコード、完成ソフトウェア、ソースライセンス、導入ガイドと安全な納品を確認できます。",
   all:"すべての入口",allDesc:"どこから始めるか迷ったら、現在使える機能をここで確認できます。",
   img:"画像ツール",video:"動画・音声"
  },
@@ -72,7 +72,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"여기서 시작하는 이유",finishNow:"먼저 눈앞의 일을 끝내기",finishNowBody:"PDF, 이미지, 영상, 자막, 표, 개인 파일을 여러 앱 사이에서 옮길 필요가 없습니다. 필요한 도구를 열고 결과를 바로 받으세요.",
   important:"그다음 중요한 일을 계속 진행하기",importantBody:"글로벌 SIAI 순위에서 기능·가격·무료 한도를 비교하세요. SASI에서 소프트웨어 권한과 전달 조건을 확인하고 개발자는 판매자 서비스에서 상품을 등록할 수 있습니다.",
   tools:"실용 도구",toolsDesc:"PDF, 이미지, 영상, 자막, 표와 개인 파일을 처리합니다.",
-  sasi:"SASI 소프트웨어 마켓",sasiDesc:"검토된 완성형 소프트웨어, MT5 EA, 거래 지표, 소스 라이선스와 안전한 전달을 확인하세요.",
+  sasi:"SASI 지능형 소프트웨어 마켓",sasiDesc:"검토된 MT5 EA, 거래 소스 코드, 완성형 소프트웨어, 소스 라이선스, 설치 안내와 안전한 전달을 확인하세요.",
   all:"전체 입구",allDesc:"어디서 시작할지 모르겠다면 현재 사용할 수 있는 기능을 확인하세요.",
   img:"이미지 도구",video:"영상·오디오"
  },
@@ -86,7 +86,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Pourquoi commencer ici",finishNow:"Terminer d’abord la tâche immédiate",finishNowBody:"PDF, images, vidéos, sous-titres, tableaux et fichiers privés peuvent être traités sans passer d’une application à l’autre.",
   important:"Puis faire avancer le travail important",importantBody:"Comparez fonctions, prix et quotas gratuits dans le classement SIAI. Consultez les licences et la livraison sur SASI ; les développeurs peuvent publier via les services vendeurs.",
   tools:"Outils pratiques",toolsDesc:"Traitez PDF, images, vidéo, sous-titres, tableaux et fichiers privés.",
-  sasi:"Marché logiciel SASI",sasiDesc:"Découvrez les logiciels vérifiés, EA MT5, indicateurs, licences source et modalités de livraison sécurisée.",
+  sasi:"Marché de logiciels intelligents SASI",sasiDesc:"Découvrez les EA MT5 vérifiés, codes sources de trading, logiciels finis, licences, guides d’installation et livraison sécurisée.",
   all:"Tous les accès",allDesc:"Voyez les capacités réellement disponibles si vous ne savez pas par où commencer.",
   img:"Outils image",video:"Vidéo et audio"
  },
@@ -100,7 +100,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Warum hier beginnen",finishNow:"Zuerst die aktuelle Aufgabe erledigen",finishNowBody:"PDFs, Bilder, Videos, Untertitel, Tabellen und private Dateien lassen sich ohne ständigen App-Wechsel bearbeiten.",
   important:"Dann wichtige Arbeit weiterführen",importantBody:"Vergleiche Funktionen, Preise und Gratis-Kontingente im SIAI-Ranking. Prüfe Softwarelizenzen und Lieferung bei SASI; Entwickler können Produkte über den Verkäuferbereich veröffentlichen.",
   tools:"Praktische Werkzeuge",toolsDesc:"PDFs, Bilder, Video, Untertitel, Tabellen und private Dateien bearbeiten.",
-  sasi:"SASI-Softwaremarkt",sasiDesc:"Entdecke geprüfte Software, MT5-EAs, Handelsindikatoren, Quellcode-Lizenzen und sichere Lieferung.",
+  sasi:"SASI-Markt für intelligente Software",sasiDesc:"Entdecke geprüfte MT5-EAs, Trading-Quellcode, fertige Software, Quellcode-Lizenzen, Installationsanleitungen und sichere Lieferung.",
   all:"Alle Einstiege",allDesc:"Sehen Sie die aktuell verfügbaren Funktionen, wenn Sie nicht wissen, wo Sie anfangen sollen.",
   img:"Bildwerkzeuge",video:"Video & Audio"
  },
@@ -114,7 +114,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Por qué empezar aquí",finishNow:"Resuelve primero la tarea inmediata",finishNowBody:"PDF, imágenes, vídeo, subtítulos, tablas y archivos privados sin saltar entre múltiples aplicaciones.",
   important:"Después, lleva adelante el trabajo importante",importantBody:"Compara funciones, precios y límites gratuitos en el ranking SIAI. Consulta licencias y entrega en SASI; los desarrolladores pueden publicar desde los servicios para vendedores.",
   tools:"Herramientas prácticas",toolsDesc:"Procesa PDF, imágenes, vídeo, subtítulos, tablas y archivos privados.",
-  sasi:"Mercado de software SASI",sasiDesc:"Explora software revisado, EA de MT5, indicadores, licencias de código fuente y entrega segura.",
+  sasi:"Mercado de software inteligente SASI",sasiDesc:"Explora EA de MT5 revisados, código fuente de trading, software terminado, licencias, guías de instalación y entrega segura.",
   all:"Todos los accesos",allDesc:"Consulta las capacidades disponibles si no sabes por dónde empezar.",
   img:"Herramientas de imagen",video:"Vídeo y audio"
  },
@@ -128,7 +128,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"Por que começar aqui",finishNow:"Resolva primeiro a tarefa imediata",finishNowBody:"PDFs, imagens, vídeos, legendas, tabelas e arquivos privados sem ficar alternando entre aplicativos.",
   important:"Depois, avance o trabalho importante",importantBody:"Compare recursos, preços e limites gratuitos no ranking SIAI. Consulte licenças e entrega no SASI; desenvolvedores podem publicar produtos pelos serviços de vendedor.",
   tools:"Ferramentas práticas",toolsDesc:"Processe PDFs, imagens, vídeo, legendas, tabelas e arquivos privados.",
-  sasi:"Mercado de software SASI",sasiDesc:"Explore software revisado, EAs MT5, indicadores, licenças de código-fonte e entrega segura.",
+  sasi:"Mercado de software inteligente SASI",sasiDesc:"Explore EAs MT5 revisados, código-fonte de trading, software pronto, licenças, guias de instalação e entrega segura.",
   all:"Todos os acessos",allDesc:"Veja o que está realmente disponível se não souber por onde começar.",
   img:"Ferramentas de imagem",video:"Vídeo e áudio"
  },
@@ -142,7 +142,7 @@ const copy:Record<LingxiLang,Copy>={
   why:"لماذا تبدأ من هنا",finishNow:"أنهِ المهمة الحالية أولًا",finishNowBody:"تعامل مع PDF والصور والفيديو والترجمة والجداول والملفات الخاصة دون التنقل بين عدة تطبيقات.",
   important:"ثم واصل العمل المهم",importantBody:"قارن الوظائف والأسعار والحصص المجانية في تصنيف SIAI. راجع تراخيص البرامج والتسليم في SASI، ويمكن للمطورين نشر منتجاتهم عبر خدمات البائعين.",
   tools:"أدوات عملية",toolsDesc:"عالج PDF والصور والفيديو والترجمة والجداول والملفات الخاصة.",
-  sasi:"سوق برامج SASI",sasiDesc:"تصفح البرامج المعتمدة ومستشاري MT5 ومؤشرات التداول وتراخيص المصدر والتسليم الآمن.",
+  sasi:"سوق برامج SASI الذكية",sasiDesc:"استعرض مستشاري MT5 المعتمدين وشيفرات التداول والبرامج الجاهزة وتراخيص المصدر وأدلة التثبيت والتسليم الآمن.",
   all:"كل المداخل",allDesc:"اطّلع على الإمكانات المتاحة فعليًا عندما لا تعرف من أين تبدأ.",
   img:"أدوات الصور",video:"الفيديو والصوت"
  }
@@ -176,6 +176,7 @@ export default function HomeProblemHub(){
  const{lang}=useLingxiLang();const c=copy[lang]??copy.en;const market=SIAI_HOME_ENTRY[lang]??SIAI_HOME_ENTRY.en;
  const[q,setQ]=useState("");
  const intents=useMemo(()=>[
+   {words:["ai视频","视频生成","文生视频","图生视频","ai短剧","短剧生成"],href:"/siai",label:market.title},
    {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格"],href:"/tools",label:c.tools},
    {words:["ai","模型","排行榜","免费额度","api","价格","模型能力"],href:"/siai",label:market.title},
    {words:["ea","mt5","源码","软件","授权","成品","商品","市场"],href:"/sasi",label:c.sasi},
@@ -187,7 +188,7 @@ export default function HomeProblemHub(){
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(/(?:ai视频|视频生成|文生视频|图生视频|ai短剧|短剧生成|aivideo|texttovideo|imagetovideo)/i.test(normalized)){const url=new URL("/siai",location.origin);url.searchParams.set("q",v);url.searchParams.set("lang",lang);location.href=url.pathname+url.search;return}if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
    <div className="grid items-center gap-8 ">

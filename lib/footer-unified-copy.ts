@@ -41,11 +41,11 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"隐私工具",description:"临时邮箱、阅后即焚、隐私清理、文件加密。"},
    {title:"日常工具",description:"食物卡路里识别、二维码及更多实用功能。"}
   ],
-  sasiTitle:"✨ SASI 软件市场与开发者生态",
-  sasiDescription:"浏览经过审核的成品软件、MT5 EA、交易指标与源码授权；开发者可申请入驻发布软件，商品付款核验后按订单安全交付。",
+  sasiTitle:"✨ SASI 智能软件市场与开发者生态",
+  sasiDescription:"浏览经过审核的成品软件、MT5 EA、交易指标与源码授权；开发者可申请入驻，提交软件包、安装教程和许可文件，商品通过安全审核并完成付款核验后按订单自动交付。",
   searchTitle:"🔍 大家还会搜：",
   closingTitle:"💎 灵犀场 LINGXIFIELD",
-  closingDescription:"全球 SIAI 排行榜、模型价格与免费额度比较、SASI 软件市场、100+ 在线实用工具，一站式查询与使用。"
+  closingDescription:"全球 SIAI 排行榜、模型价格与免费额度比较、SASI 智能软件市场、MT5 EA 源码与成品软件、100+ 在线实用工具，一站式查询与使用。"
  },
  en:{
   headline:"🌍 Global SIAI Rankings | Global SI AI Tools Directory",
@@ -68,11 +68,11 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"Privacy tools",description:"Temporary email, self-destructing messages, privacy cleanup and file encryption."},
    {title:"Everyday tools",description:"Food calorie recognition, QR codes and more practical utilities."}
   ],
-  sasiTitle:"✨ SASI Software Marketplace & Developer Network",
-  sasiDescription:"Browse reviewed software, MT5 EAs, trading indicators and source-code licenses. Developers can apply to publish; orders are delivered after verified payment.",
+  sasiTitle:"✨ SASI Intelligent Software Marketplace & Developer Network",
+  sasiDescription:"Browse reviewed finished software, MT5 EAs, trading indicators and source-code licenses. Developers can submit packages, installation guides and license files; approved orders are delivered after verified payment.",
   searchTitle:"🔍 More searches:",
   closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"Global SIAI rankings, model pricing and free-tier comparisons, the SASI software marketplace and 100+ online utilities in one place."
+  closingDescription:"Global SIAI rankings, model pricing and free-tier comparisons, the SASI intelligent software marketplace, MT5 EA source code, finished software and 100+ online utilities in one place."
  },
  ja:{
   headline:"🌍 世界のSIAIランキング｜SI・AIツール情報",
@@ -87,10 +87,10 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"プライバシー",description:"一時メール、自動消去メッセージ、プライバシー整理、暗号化。"},
    {title:"日常ツール",description:"食事のカロリー認識、QRコードなど。"}
   ],
-  sasiTitle:"✨ SASI ソフトウェア市場と開発者エコシステム",
-  sasiDescription:"審査済みソフトウェア、MT5 EA、取引インジケーター、ソースライセンスを掲載。開発者は出品を申請でき、決済確認後に注文に基づいて安全に納品します。",
+  sasiTitle:"✨ SASI インテリジェントソフトウェア市場と開発者エコシステム",
+  sasiDescription:"審査済みの完成ソフトウェア、MT5 EA、取引インジケーター、ソースライセンスを掲載。開発者はソフトウェア、導入ガイド、ライセンスを提出でき、審査と決済確認後に安全に納品します。",
   searchTitle:"🔍 よく検索される内容：",closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"世界のSIAIランキング、モデル価格と無料枠の比較、SASIソフトウェア市場、100以上のオンラインツールを一か所で。"
+  closingDescription:"世界のSIAIランキング、モデル価格と無料枠の比較、SASIインテリジェントソフトウェア市場、MT5 EAソースコード、完成ソフトウェア、100以上のオンラインツールを一か所で。"
  },
  ko:{
   headline:"🌍 글로벌 SIAI 순위｜SI AI 도구 정보",
@@ -105,10 +105,10 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"개인정보 도구",description:"임시 이메일, 자동 삭제 메시지, 개인정보 정리, 파일 암호화."},
    {title:"일상 도구",description:"음식 칼로리 인식, QR코드 등."}
   ],
-  sasiTitle:"✨ SASI 소프트웨어 마켓과 개발자 생태계",
-  sasiDescription:"검토된 완성형 소프트웨어, MT5 EA, 거래 지표와 소스 라이선스를 제공합니다. 개발자는 상품 등록을 신청할 수 있으며 결제 검증 후 주문에 따라 안전하게 전달됩니다.",
+  sasiTitle:"✨ SASI 지능형 소프트웨어 마켓과 개발자 생태계",
+  sasiDescription:"검토된 완성형 소프트웨어, MT5 EA, 거래 지표와 소스 라이선스를 제공합니다. 개발자는 소프트웨어 패키지, 설치 안내와 라이선스를 제출할 수 있으며 보안 심사 및 결제 확인 후 주문에 따라 전달됩니다.",
   searchTitle:"🔍 많이 찾는 검색어:",closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"글로벌 SIAI 순위, 모델 가격과 무료 한도 비교, SASI 소프트웨어 마켓 및 100개 이상의 온라인 도구를 한곳에서."
+  closingDescription:"글로벌 SIAI 순위, 모델 가격과 무료 한도 비교, SASI 지능형 소프트웨어 마켓, MT5 EA 소스 코드, 완성형 소프트웨어 및 100개 이상의 온라인 도구를 한곳에서."
  },
  fr:{
   headline:"🌍 Classement mondial SIAI｜Outils SI et IA",
@@ -123,9 +123,9 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"Confidentialité",description:"Courriel temporaire, messages éphémères, nettoyage des données privées, chiffrement."},
    {title:"Au quotidien",description:"Reconnaissance des calories alimentaires, QR codes et autres outils."}
   ],
-  sasiTitle:"✨ Marché logiciel SASI et réseau de développeurs",sasiDescription:"Parcourez des logiciels vérifiés, EA MT5, indicateurs et licences source. Les développeurs peuvent demander à publier ; les commandes sont livrées après vérification du paiement.",
+  sasiTitle:"✨ Marché de logiciels intelligents SASI et réseau de développeurs",sasiDescription:"Parcourez des logiciels finis vérifiés, EA MT5, indicateurs et licences source. Les développeurs peuvent soumettre des logiciels, guides d’installation et licences ; les commandes sont livrées après contrôle de sécurité et vérification du paiement.",
   searchTitle:"🔍 Recherches fréquentes :",closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"Classement SIAI mondial, comparaison des prix et quotas gratuits, marché logiciel SASI et plus de 100 outils en ligne au même endroit."
+  closingDescription:"Classement SIAI mondial, comparaison des prix et quotas gratuits, marché de logiciels intelligents SASI, sources MT5 EA, logiciels finis et plus de 100 outils en ligne au même endroit."
  },
  de:{
   headline:"🌍 Globales SIAI-Ranking｜SI- und KI-Tools",
@@ -140,9 +140,9 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"Datenschutz",description:"Temporäre E-Mail, selbstlöschende Nachrichten, Datenbereinigung, Dateiverschlüsselung."},
    {title:"Alltag",description:"Kalorienerkennung für Speisen, QR-Codes und weitere Werkzeuge."}
   ],
-  sasiTitle:"✨ SASI-Softwaremarkt und Entwicklernetzwerk",sasiDescription:"Entdecke geprüfte Software, MT5-EAs, Handelsindikatoren und Quellcode-Lizenzen. Entwickler können Produkte einreichen; die Lieferung erfolgt nach bestätigter Zahlung.",
+  sasiTitle:"✨ SASI-Markt für intelligente Software und Entwicklernetzwerk",sasiDescription:"Entdecke geprüfte fertige Software, MT5-EAs, Handelsindikatoren und Quellcode-Lizenzen. Entwickler können Softwarepakete, Installationsanleitungen und Lizenzen einreichen; die Lieferung erfolgt nach Sicherheitsprüfung und bestätigter Zahlung.",
   searchTitle:"🔍 Häufige Suchanfragen:",closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"Globales SIAI-Ranking, Vergleich von Modellpreisen und Gratis-Kontingenten, SASI-Softwaremarkt und über 100 Online-Tools an einem Ort."
+  closingDescription:"Globales SIAI-Ranking, Modellpreise und Gratis-Kontingente, der SASI-Markt für intelligente Software, MT5-EA-Quellcode, fertige Software und über 100 Online-Tools an einem Ort."
  },
  es:{
   headline:"🌍 Ranking mundial SIAI｜Herramientas SI e IA",
@@ -157,9 +157,9 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"Privacidad",description:"Correo temporal, mensajes efímeros, limpieza de privacidad y cifrado."},
    {title:"Uso diario",description:"Reconocimiento de calorías, códigos QR y más."}
   ],
-  sasiTitle:"✨ Mercado de software SASI y red de desarrolladores",sasiDescription:"Explora software revisado, EA de MT5, indicadores y licencias de código fuente. Los desarrolladores pueden solicitar publicar; los pedidos se entregan tras verificar el pago.",
+  sasiTitle:"✨ Mercado de software inteligente SASI y red de desarrolladores",sasiDescription:"Explora software terminado revisado, EA de MT5, indicadores y licencias de código fuente. Los desarrolladores pueden enviar paquetes, guías de instalación y licencias; los pedidos se entregan tras la revisión de seguridad y la verificación del pago.",
   searchTitle:"🔍 También se busca:",closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"Ranking SIAI global, comparación de precios y límites gratuitos, mercado de software SASI y más de 100 herramientas online en un solo lugar."
+  closingDescription:"Ranking SIAI global, comparación de precios y límites gratuitos, mercado de software inteligente SASI, código fuente MT5 EA, software terminado y más de 100 herramientas online en un solo lugar."
  },
  pt:{
   headline:"🌍 Ranking global SIAI｜Ferramentas SI e IA",
@@ -174,9 +174,9 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"Privacidade",description:"E-mail temporário, mensagens que desaparecem, limpeza de privacidade e criptografia."},
    {title:"Cotidiano",description:"Reconhecimento de calorias em alimentos, QR codes e mais."}
   ],
-  sasiTitle:"✨ Mercado de software SASI e rede de desenvolvedores",sasiDescription:"Explore software revisado, EAs MT5, indicadores e licenças de código-fonte. Desenvolvedores podem solicitar publicação; os pedidos são entregues após a validação do pagamento.",
+  sasiTitle:"✨ Mercado de software inteligente SASI e rede de desenvolvedores",sasiDescription:"Explore software pronto revisado, EAs MT5, indicadores e licenças de código-fonte. Desenvolvedores podem enviar pacotes, guias de instalação e licenças; os pedidos são entregues após análise de segurança e validação do pagamento.",
   searchTitle:"🔍 Mais pesquisas:",closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"Ranking SIAI global, comparação de preços e limites gratuitos, mercado SASI e mais de 100 ferramentas online num só lugar."
+  closingDescription:"Ranking SIAI global, comparação de preços e limites gratuitos, mercado de software inteligente SASI, código-fonte MT5 EA, software pronto e mais de 100 ferramentas online num só lugar."
  },
  ar:{
   headline:"🌍 تصنيف SIAI العالمي｜دليل أدوات SI وAI",
@@ -191,8 +191,8 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    {title:"الخصوصية",description:"بريد مؤقت ورسائل ذاتية الحذف وتنظيف البيانات وتشفير الملفات."},
    {title:"أدوات يومية",description:"التعرف على سعرات الطعام ورموز QR والمزيد."}
   ],
-  sasiTitle:"✨ سوق برامج SASI وشبكة المطورين",sasiDescription:"استعرض البرامج المعتمدة ومستشاري MT5 ومؤشرات التداول وتراخيص الشيفرة المصدرية. يمكن للمطورين طلب النشر، ويتم التسليم بعد التحقق من الدفع.",
+  sasiTitle:"✨ سوق برامج SASI الذكية وشبكة المطورين",sasiDescription:"استعرض البرامج الجاهزة المعتمدة ومستشاري MT5 ومؤشرات التداول وتراخيص الشيفرة المصدرية. يمكن للمطورين تقديم حزم البرامج وأدلة التثبيت والتراخيص؛ ويتم التسليم بعد فحص الأمان والتحقق من الدفع.",
   searchTitle:"🔍 عمليات بحث شائعة:",closingTitle:"💎 LINGXIFIELD",
-  closingDescription:"تصنيف SIAI العالمي ومقارنة الأسعار والحصص المجانية وسوق برامج SASI وأكثر من 100 أداة عبر الإنترنت في مكان واحد."
+  closingDescription:"تصنيف SIAI العالمي ومقارنة الأسعار والحصص المجانية وسوق برامج SASI الذكية وشيفرات MT5 EA والبرامج الجاهزة وأكثر من 100 أداة عبر الإنترنت في مكان واحد."
  }
 };
