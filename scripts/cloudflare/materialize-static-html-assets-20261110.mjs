@@ -5,6 +5,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { loadToolStaticRoutes } from "./tool-static-route-manifest-20261110.mjs";
 
 export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   { route: "/", source: "landing.html", target: "index.html" },
@@ -63,9 +64,14 @@ function assertNoRedirectConflicts(existing, routes) {
 
 export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets") {
   const snapshotRoot = join(assetRoot, "__lingxi_edge_static__");
+  const toolRoutes = await loadToolStaticRoutes();
+  const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
+  if (new Set(allRoutes.map(route => route.route)).size !== allRoutes.length) {
+    throw new Error("PUBLIC_STATIC_ROUTE_DUPLICATE");
+  }
   let materialized = 0;
 
-  for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
+  for (const entry of allRoutes) {
     const sourcePath = join(snapshotRoot, entry.source);
     const targetPath = join(assetRoot, entry.target);
     const html = await readFile(sourcePath, "utf8");
@@ -126,16 +132,28 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
     "upgrade-insecure-requests"
   ].join("; ");
 
-  const routeHeaderRules = PUBLIC_STATIC_HTML_ROUTES.flatMap(({ route, target }) => {
-    const paths = [...new Set([route, "/" + target])];
-    return paths.flatMap(path => [
-      path,
-      "  X-Lingxi-Render-Mode: static-edge-verified",
-      "  X-Lingxi-Static-Delivery: workers-static-assets",
-      "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
-      ...(route === "/account" ? ["  X-Robots-Tag: noindex, nofollow"] : [])
-    ]);
-  });
+  const routeHeaderRules = [
+    ...PUBLIC_STATIC_HTML_ROUTES
+      .filter(({ route }) => !route.startsWith("/tools/"))
+      .flatMap(({ route, target }) => {
+        const paths = [...new Set([route, "/" + target])];
+        return paths.flatMap(path => [
+          path,
+          "  X-Lingxi-Render-Mode: static-edge-verified",
+          "  X-Lingxi-Static-Delivery: workers-static-assets",
+          "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
+          ...(route === "/account" ? ["  X-Robots-Tag: noindex, nofollow"] : [])
+        ]);
+      }),
+    "/tools/*",
+    "  X-Lingxi-Render-Mode: static-edge-verified",
+    "  X-Lingxi-Static-Delivery: workers-static-assets",
+    "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
+    "/tools/*.html",
+    "  X-Lingxi-Render-Mode: static-edge-verified",
+    "  X-Lingxi-Static-Delivery: workers-static-assets",
+    "  Cache-Control: public, max-age=300, stale-while-revalidate=120"
+  ];
 
   const managedHeaders = [
     HEADER_BEGIN,
@@ -159,7 +177,8 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   await writeFile(headerPath, headers, "utf8");
   const verifiedHeaders = await readFile(headerPath, "utf8");
 
-  for (const { route, target } of PUBLIC_STATIC_HTML_ROUTES) {
+  for (const { route, target } of allRoutes) {
+    if (route.startsWith("/tools/")) continue;
     for (const path of new Set([route, "/" + target])) {
       if (!verifiedHeaders.includes("\n" + path + "\n") &&
           !(path === "/" && verifiedHeaders.startsWith("/\n"))) {
@@ -167,8 +186,9 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
       }
     }
   }
-  if (!verifiedHeaders.includes("X-Lingxi-Static-Delivery: workers-static-assets")) {
-    throw new Error("STATIC_ASSET_DELIVERY_HEADER_MISSING");
+  if (!verifiedHeaders.includes("/tools/*\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets") ||
+      !verifiedHeaders.includes("/tools/*.html\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets")) {
+    throw new Error("STATIC_TOOL_ASSET_DELIVERY_HEADER_MISSING");
   }
 
   const redirectPath = join(assetRoot, "_redirects");
@@ -178,24 +198,25 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   } catch (error) {
     if (error?.code !== "ENOENT") throw error;
   }
-  assertNoRedirectConflicts(existingRedirects, PUBLIC_STATIC_HTML_ROUTES);
+  assertNoRedirectConflicts(existingRedirects, allRoutes);
   const managedRedirects = [
     REDIRECT_BEGIN,
-    ...PUBLIC_STATIC_HTML_ROUTES.map(({ route, target }) => route + " /" + target + " 200"),
+    ...allRoutes.map(({ route, target }) => route + " /" + target + " 200"),
     REDIRECT_END
   ].join("\n");
   const redirects = replaceManagedBlock(existingRedirects, managedRedirects, REDIRECT_BEGIN, REDIRECT_END);
   await writeFile(redirectPath, redirects, "utf8");
   const verifiedRedirects = await readFile(redirectPath, "utf8");
 
-  for (const { route, target } of PUBLIC_STATIC_HTML_ROUTES) {
+  for (const { route, target } of allRoutes) {
     if (!verifiedRedirects.split(/\r?\n/).includes(route + " /" + target + " 200")) {
       throw new Error("STATIC_PROXY_RULE_MISSING:" + route);
     }
   }
 
   console.log("COM_STATIC_ASSET_FIRST_ROUTES_PASS=" + materialized);
-  console.log("COM_STATIC_ASSET_DIRECT_PROXY_RULES_PASS=" + PUBLIC_STATIC_HTML_ROUTES.length);
+  console.log("COM_STATIC_TOOL_DETAIL_STATIC_ROUTES_PASS=" + toolRoutes.length);
+  console.log("COM_STATIC_ASSET_DIRECT_PROXY_RULES_PASS=" + allRoutes.length);
   console.log("COM_STATIC_ASSET_SECURITY_HEADERS_PASS");
   console.log("COM_STATIC_ASSET_ACCOUNT_CLIENT_AUTH_SHELL");
   return { materialized, headerPath, redirectPath };
