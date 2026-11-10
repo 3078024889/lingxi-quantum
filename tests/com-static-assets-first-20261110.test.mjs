@@ -27,7 +27,8 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     for (const entry of PUBLIC_STATIC_HTML_ROUTES) {
       assert.ok(headers.includes(entry.route + "\n  X-Lingxi-Render-Mode: static-edge-verified"), entry.route + " must receive the static marker");
     }
-    assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), false);
+    assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), true);
+    assert.ok(headers.includes("/account\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer"));
 
     // Re-running the materializer is idempotent and does not duplicate its managed header block.
     await materializeStaticHtmlAssets(root);

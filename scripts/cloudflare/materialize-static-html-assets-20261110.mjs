@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Materialize verified public HTML snapshots at their canonical asset paths.
 // Matching requests are served by Workers Static Assets before the Worker runs.
-// /account is deliberately excluded because it currently performs session-aware SSR.
+// /account is a generic client-auth shell; no user-specific data is serialized into its HTML.
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -115,12 +115,12 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
       throw new Error("STATIC_HEADER_ROUTE_MISSING:" + route);
     }
   }
-  if (PUBLIC_STATIC_HTML_ROUTES.some(({ route }) => route === "/account")) {
-    throw new Error("SESSION_AWARE_ACCOUNT_MUST_NOT_BE_STATIC");
+  if (!PUBLIC_STATIC_HTML_ROUTES.some(({ route }) => route === "/account")) {
+    throw new Error("STATIC_ACCOUNT_CLIENT_AUTH_SHELL_MISSING");
   }
 
   console.log("COM_STATIC_ASSET_FIRST_ROUTES_PASS=" + materialized);
-  console.log("COM_STATIC_ASSET_ACCOUNT_SESSION_BOUNDARY_PRESERVED");
+  console.log("COM_STATIC_ASSET_ACCOUNT_CLIENT_AUTH_SHELL");
   return { materialized, headerPath };
 }
 

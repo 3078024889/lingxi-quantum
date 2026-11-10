@@ -33,11 +33,11 @@ test("account matches approved references without losing authentication, profile
  const accountShell=read("app/account/AccountClientShell.tsx");
  assert.match(accountShell,/supabase\.auth\.getUser\(\)/);
  assert.match(accountShell,/supabase\.auth\.onAuthStateChange/);
- assert.match(account,/AccountCenterV26/);
+ assert.match(accountShell,/AccountCenterV26/);
  const center=read("components/AccountCenterV26.tsx");
  assert.match(center,/^"use client";/);
  assert.match(center,/AccountProfileCard/);
- assert.match(account,/lx26-account-page/);
+ assert.match(accountShell,/lx26-account-page/);
  assert.match(center,/lx26-account-welcome/);
  assert.match(center,/lx26-account-services/);
  assert.match(center,/\/account\/orders/);

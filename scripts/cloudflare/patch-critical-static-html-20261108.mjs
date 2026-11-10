@@ -109,7 +109,7 @@ const replacement=[
  '  }',
  '  const verifiedAnonymousPages='+JSON.stringify(routes)+';',
  '  const accountIsDynamic=false;',
- '  const edgeFile=verifiedAnonymousPages[pathname];',
+ '  const edgeFile=accountIsDynamic?null:verifiedAnonymousPages[pathname];',
  '  if((request.method==="GET"||request.method==="HEAD")&&edgeFile){',
  '    const assetUrl=new URL("/__lingxi_edge_static__/"+edgeFile,request.url);',
  '    const staticResponse=await env.ASSETS.fetch(new Request(assetUrl.toString(),{method:request.method}));',
