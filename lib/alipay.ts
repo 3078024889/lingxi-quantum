@@ -9,8 +9,9 @@ function env(name: string): string {
 /** Parse CNY values as exact minor units; never round provider input through binary floats. */
 export function parseCnyMinorUnits(value: unknown): number | null {
   if (typeof value !== "string" && typeof value !== "number") return null;
-  const raw = typeof value === "number" && Number.isFinite(value) ? String(value) : String(value);
-  if (!/^(?:0|[1-9]\\d*)(?:\\.\\d{1,2})?$/.test(raw)) return null;
+  if (typeof value === "number" && !Number.isFinite(value)) return null;
+  const raw = String(value);
+  if (!/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(raw)) return null;
   const [whole, fraction = ""] = raw.split(".");
   const minor = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
   return Number.isSafeInteger(minor) ? minor : null;
