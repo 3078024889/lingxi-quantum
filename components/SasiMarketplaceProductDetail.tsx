@@ -7,13 +7,13 @@ type Product={id:string;name:string;nameEn:string;priceRmb:number;priceUsd:numbe
 export default function SasiMarketplaceProductDetail(){
  const p=useParams(),id=typeof p?.id==="string"?p.id:"";
  const {lang}=useLingxiLang(),zh=lang==="zh";
- const [product,setProduct]=useState<Product|null>(null),[ready,setReady]=useState(false),[loading,setLoading]=useState(true);
+ const [product,setProduct]=useState<Product|null>(null),[readyCny,setReadyCny]=useState(false),[readyUsd,setReadyUsd]=useState(false),[loading,setLoading]=useState(true);
  const [shared,setShared]=useState(false);
  const [photos,setPhotos]=useState<Array<{id:string;kind:string;url:string}>>([]);
  useEffect(()=>{
   if(!id){setLoading(false);return;}
   fetch("/api/sasi/marketplace/product?id="+encodeURIComponent("sasi-market:"+id),{cache:"no-store"})
-  .then(r=>r.ok?r.json():null).then(x=>{setProduct(x?.product||null);setReady(x?.available===true)}).catch(()=>{})
+  .then(r=>r.ok?r.json():null).then(x=>{setProduct(x?.product||null);setReadyCny(x?.availableCny===true);setReadyUsd(x?.availableUsd===true)}).catch(()=>{})
   .finally(()=>setLoading(false));
  },[id]);
  useEffect(()=>{
@@ -44,8 +44,11 @@ export default function SasiMarketplaceProductDetail(){
  <h1 style={{fontSize:28,margin:"16px 0"}}>{product.name}</h1>
  <p style={{fontSize:13,color:"var(--lx-muted)",lineHeight:1.9,minHeight:65}}>{product.note}</p>
  <div style={{display:"flex",alignItems:"baseline",gap:20,flexWrap:"wrap",margin:"24px 0"}}><strong style={{fontSize:31}}>¥{product.priceRmb.toLocaleString()}</strong><span style={{color:"var(--lx-muted)",fontSize:13}}>USD ${product.priceUsd.toLocaleString()}</span></div>
- {ready?<Link href={"/checkout?productId="+encodeURIComponent(product.id)+"&redirect=%2Faccount%2Fsoftware"} style={{display:"inline-flex",padding:"12px 23px",background:"#225c90",color:"#fff",borderRadius:10,fontSize:13}}>
- {zh?"购买并安全交付":"Buy & download"}</Link>:<span style={{display:"inline-flex",padding:"12px 16px",background:"#eff5fb",borderRadius:10,color:"#3f6887",fontSize:12}}>{zh?"等待支付与文件交付验收":"Payment and delivery under verification"}</span>}
+ <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+ {readyCny&&<Link href={"/checkout?productId="+encodeURIComponent(product.id)+"&redirect=%2Faccount%2Fsoftware"} style={{display:"inline-flex",padding:"12px 18px",background:"#225c90",color:"#fff",borderRadius:10,fontSize:13}}>{zh?"微信 / 支付宝 · CNY":"WeChat / Alipay · CNY"}</Link>}
+ {readyUsd&&<Link href={"/checkout-usd?productId="+encodeURIComponent(product.id)+"&redirect=%2Faccount%2Fsoftware"} style={{display:"inline-flex",padding:"12px 18px",background:"#0070ba",color:"#fff",borderRadius:10,fontSize:13}}>PayPal · USD</Link>}
+ {!readyCny&&!readyUsd&&<span style={{display:"inline-flex",padding:"12px 16px",background:"#eff5fb",borderRadius:10,color:"#3f6887",fontSize:12}}>{zh?"等待支付与文件交付验收":"Payment and delivery under verification"}</span>}
+ </div>
  <button type="button" onClick={()=>void share()} style={{display:"block",marginTop:19,fontSize:13,textDecoration:"underline",color:"#286fa4"}}>{shared?(zh?"链接已复制":"Link copied"):(zh?"分享此商品":"Share this product")} ↗</button>
  </section>
  </div>}
