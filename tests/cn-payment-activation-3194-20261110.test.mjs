@@ -14,9 +14,8 @@ for(const token of [
  "CN_TOOLPASS_BACKEND_READINESS=PASS",
  "CN_USD_WALLET_REFUND_GATE=PASS"
 ])assert.ok(script.includes(token),token);
-assert.match(script,/CN_UNSIGNED_WEBHOOK_alipay HTTP=/);
-assert.match(script,/CN_UNSIGNED_WEBHOOK_wechat HTTP=/);
-assert.match(script,/CN_UNSIGNED_WEBHOOK_paypal HTTP=/);
+assert.match(script,/for method in alipay wechat paypal/);
+assert.match(script,/CN_UNSIGNED_WEBHOOK_\\$method HTTP=\\$status/);
 assert.match(script,/UNSIGNED_WEBHOOK_REJECTION_FAILED/);
 assert.match(script,/cp -a "\$FLAGS" "\$BACKUP"/);
 assert.match(script,/CN_PAYMENT_ACTIVATION_FAILED_ROLLBACK/);
