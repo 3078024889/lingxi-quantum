@@ -253,6 +253,28 @@ console.log("COM_PRODUCTION_PAYMENT_BASELINE alipay=" + baselineProviders.alipay
 const previousVersion = await getActiveVersion();
 console.log("COM_PRODUCTION_PREVIOUS_VERSION_PINNED=" + previousVersion);
 
+const currentSettings = await cf(
+  "/accounts/" + account + "/workers/scripts/" + productionWorker + "/settings"
+);
+const currentBindings = currentSettings.bindings || [];
+const allowedBindingTypes = new Set(["plain_text", "secret_text", "secret_key", "r2_bucket", "service", "assets"]);
+const unknownBindings = currentBindings.filter(binding => !allowedBindingTypes.has(binding.type));
+if (unknownBindings.length) {
+  throw Error("PRODUCTION_WORKER_HAS_UNMAPPED_BINDINGS:" +
+    unknownBindings.map(binding => binding.name + ":" + binding.type).join(","));
+}
+const currentR2 = currentBindings.find(binding => binding.name === "LINGXI_PUBLIC_LARGE_R2");
+if (currentR2 && (currentR2.type !== "r2_bucket" ||
+    currentR2.bucket_name !== "lingxifield-com-large-public")) {
+  throw Error("PRODUCTION_R2_BINDING_MISMATCH");
+}
+const currentService = currentBindings.find(binding => binding.name === "LINGXI_COM_LEGACY_GATEWAY");
+if (currentService && (currentService.type !== "service" || currentService.service !== wwwWorker)) {
+  throw Error("PRODUCTION_LEGACY_SERVICE_BINDING_MISMATCH");
+}
+console.log("COM_PRODUCTION_BINDING_PREFLIGHT_PASS=" +
+  currentBindings.map(binding => binding.name + ":" + binding.type).join(","));
+
 const baseConfig = JSON.parse(await readFile("wrangler.jsonc", "utf8"));
 if (baseConfig.name !== "lingxifield-main-global-testonly") {
   throw Error("SOURCE_WORKER_CONFIG_CHANGED");
