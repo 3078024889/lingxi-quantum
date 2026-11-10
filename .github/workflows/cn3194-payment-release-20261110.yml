@@ -152,8 +152,8 @@ jobs:
           cp -a .next/standalone/. "$DIST/standalone/"
           printf '%s\n' "$SOURCE_SHA" > "$DIST/standalone/RELEASE_SOURCE_SHA"
           tar --sort=name --mtime='UTC 2026-01-01' --owner=0 --group=0 --numeric-owner -C "$DIST/standalone" -czf "$DIST/$FILE" .
-          sha256sum "$DIST/$FILE" > "$DIST/$CHECK"
           ARCHIVE_SHA="$(sha256sum "$DIST/$FILE" | awk '{print $1}')"
+          printf '%s  %s\n' "$ARCHIVE_SHA" "$FILE" > "$DIST/$CHECK"
           ARCHIVE_BYTES="$(stat -c '%s' "$DIST/$FILE")"
           TEMPLATE="scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh"
           python3 - "$TEMPLATE" "$DIST/$STAGE" "$TAG" "$SHORT" "$SOURCE_SHA" "$ARCHIVE_SHA" "$ARCHIVE_BYTES" "$FILE" "$CHECK" <<'PY'
