@@ -21,7 +21,8 @@ assert.match(checkout,/referenceId:order\.id/);
 const marketplace=read("lib/sasi-marketplace/checkout.ts");
 assert.match(marketplace,/wechatPayEnabled\(\)\|\|alipayEnabled\(\)\|\|paypalEnabled\(\)/);
 const catalog=read("app/api/sasi/software/catalog/route.ts");
-assert.match(catalog,/paypal:paypalEnabled\(\)/);
+assert.match(catalog,/const wx=wechatPayEnabled\(\),ali=alipayEnabled\(\),paypal=paypalEnabled\(\)/);
+assert.match(catalog,/payment:\{wechat:wx,alipay:ali,paypal\}/);
 
 const webhook=read("app/api/pay/paypal/webhook/route.ts");
 assert.match(webhook,/verifyPaypalWebhook/);
