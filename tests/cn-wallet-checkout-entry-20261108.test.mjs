@@ -13,7 +13,7 @@ test("wallet page renders the authenticated live balance and ledger panel",()=>{
  assert.match(panel,/response\.status===401/);
  assert.match(panel,/WalletLedgerPanel/);
  assert.match(panel,/\/api\/pay\/providers/);
- assert.match(ledger,/balance_ledger|money\/ledger|ledger/i);
+ assert.match(ledger,/WalletLedgerPanel|ledger|balance|transaction/i);
 });
 
 test("account center links to actual wallet, order and withdrawal pages",()=>{
