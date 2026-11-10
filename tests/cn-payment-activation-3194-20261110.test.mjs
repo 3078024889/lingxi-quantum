@@ -10,7 +10,7 @@ const signed=read("scripts/ops/cn-payment-signed-live-probe-20261109.mjs");
 const upgrade=read("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh");
 const wechat=read("lib/wechatpay.ts");
 const wechatNotify=read("app/api/pay/wechat/notify/route.ts");
-const walletMigration=read("supabase/migrations/20261110043000_harden_legacy_ai_wallet_topup_order_state.sql");
+const walletMigration=read("supabase/migrations/20261110050414_harden_legacy_ai_wallet_topup_order_state.sql");
 
 test("payment activation is pinned to final 3194; 3195 is temporary staging only",()=>{
  assert.match(script,/TAG" =~ \^ecs-cn-unified-20261110-/);
