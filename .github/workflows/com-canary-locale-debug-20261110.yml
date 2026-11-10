@@ -1,0 +1,31 @@
+name: COM isolated canary localized route diagnosis (READ ONLY)
+on:
+  push:
+    branches: [ops/com-production-payment-audit-20261110]
+    paths:
+      - '.github/workflows/com-canary-locale-debug-20261110.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Inspect isolated candidate locale pages without changing production
+        shell: bash
+        run: |
+          set -u
+          BASE='https://lingxifield-com-canary-fe10461517a8.3078024889.workers.dev'
+          for path in /siai /en/siai /ja/siai /fr/siai /ko/siai; do
+            h="$(mktemp)"
+            b="$(mktemp)"
+            code="$(curl -4sS --connect-timeout 8 --max-time 25 -D "$h" -o "$b" -w '%{http_code}' "$BASE$path" || true)"
+            echo "COM_LOCALE_DIAG path=$path HTTP_$code"
+            grep -Ei '^(HTTP/|content-type:|server:|cf-ray:|location:|x-lingxi-|cache-control:|content-length:)' "$h" || true
+            echo "COM_LOCALE_BODY_BEGIN path=$path"
+            head -c 1400 "$b" | tr '\r\n' '  '
+            echo
+            echo "COM_LOCALE_BODY_END path=$path"
+            rm -f "$h" "$b"
+          done
