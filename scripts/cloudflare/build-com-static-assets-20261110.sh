@@ -73,7 +73,7 @@ for mapping in \
   'de/siai:de-siai' \
   'es/siai:es-siai' \
   'pt/siai:pt-siai' \
-  'ar/siai:ar-siai' \
+  'ar/siai:ar-siai'; do
   route="${mapping%%:*}"
   file="${mapping#*:}"
   curl --noproxy '*' -fSs --retry 2 --max-time 55 \

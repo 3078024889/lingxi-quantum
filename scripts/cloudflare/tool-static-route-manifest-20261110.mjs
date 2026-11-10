@@ -40,7 +40,7 @@ export async function loadToolStaticRoutes() {
       if (error?.code === "ENOENT") continue;
       throw error;
     }
-    if (/(?:cookies\\s*\\(|headers\\s*\\(|searchParams|force-dynamic|getServerUser|createServerClient|createAdminClient|SUPABASE_SERVICE_ROLE)/.test(pageSource)) {
+    if (/(?:cookies\s*\(|headers\s*\(|searchParams|force-dynamic|getServerUser|createServerClient|createAdminClient|SUPABASE_SERVICE_ROLE)/.test(pageSource)) {
       throw Error("TOOL_PAGE_NOT_STATIC_SAFE:" + slug);
     }
     directSlugs.push(slug);
