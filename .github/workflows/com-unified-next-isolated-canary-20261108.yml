@@ -269,13 +269,6 @@ jobs:
             else
               [[ "$status" == "401" ]] || { rm -f "$body";exit 1; }
             fi
-            [[ "$status" == "401" ]] || { rm -f "$body";exit 1; }
-                rm -f "$body";exit 1
-              fi
-              echo "COM_CANARY_BALANCE_DYNAMIC_DEFERRED_503_NO_DATA"
-            else
-              [[ "$status" == "401" ]] || { rm -f "$body";exit 1; }
-            fi
             rm -f "$body"
           done
           for asset in /media/ffmpeg-0.12.10/ffmpeg-core.wasm /models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx;do
