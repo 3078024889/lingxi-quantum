@@ -31,12 +31,12 @@ export async function POST(req: Request) {
 
     const admin = createAdminClient();
     const { data: order } = await admin.from("orders")
-      .select("id, amount_rmb, provider")
+      .select("id, amount_rmb, currency, provider")
       .eq("provider_payment_id", params.out_trade_no)
       .single();
     const expectedFen = parseCnyMinorUnits(order?.amount_rmb);
     const receivedFen = parseCnyMinorUnits(params.total_amount);
-    if (!order || order.provider !== "alipay" || expectedFen === null || receivedFen === null || receivedFen !== expectedFen) {
+    if (!order || order.provider !== "alipay" || order.currency !== "CNY" || expectedFen === null || receivedFen === null || receivedFen !== expectedFen) {
       console.error("[alipay notify] payment did not match local order", { outTradeNo: params.out_trade_no });
       return text("failure", 422);
     }
