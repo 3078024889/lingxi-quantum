@@ -368,6 +368,8 @@ EOF
 
  # First move traffic to the verified new code on the isolated stage port.
  # This keeps old 3194 free for the final 3194 process without exposing 3193 pages.
+ OLD_3194_SVC="$(find_service_for_port 3194 || true)"
+ [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]] || { echo CN3194_OLD_SERVICE_NOT_FOUND_FOR_SAFE_REBIND >&2;exit 1; }
  if ! set_nginx_upstream 3195;then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_UPSTREAM_SWITCH_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
@@ -375,8 +377,6 @@ EOF
   if [[ "$status" != 200 ]];then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_ROUTE_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
  done
 
- OLD_3194_SVC="$(find_service_for_port 3194 || true)"
- [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]] || { echo CN3194_OLD_SERVICE_NOT_FOUND_FOR_SAFE_REBIND >&2;exit 1; }
  systemctl stop "$OLD_3194_SVC"
  if ss -lnt | grep -Eq '^LISTEN.*:3194[[:space:]]';then echo CN3194_PORT_NOT_RELEASED_NEW_CODE_STILL_SERVING_ON_3195 >&2;exit 1;fi
 
@@ -399,7 +399,7 @@ EOF
    exit 1
   fi
  done
- systemctl enable "$FINAL_SVC" >/dev/null || { set_nginx_upstream 3195 || true;exit 1; }
+ systemctl enable "$FINAL_SVC" >/dev/null || { set_nginx_upstream 3195 || true;systemctl stop "$FINAL_SVC" || true;echo CN3194_FINAL_SERVICE_ENABLE_FAILED_NEW_CODE_RETAINED_ON_3195 >&2;exit 1; }
  systemctl stop "$NEW_SVC" || true
  systemctl disable "$NEW_SVC" >/dev/null 2>&1 || true
  echo "CN3194_NGINX_PROMOTION_PASS FINAL_SERVICE=$FINAL_SVC"
