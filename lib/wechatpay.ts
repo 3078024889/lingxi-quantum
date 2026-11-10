@@ -29,7 +29,7 @@ const PLATFORM_PUBLIC_KEY = process.env.WECHAT_PLATFORM_PUBLIC_KEY;
 const PLATFORM_PUBLIC_KEY_ID = process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID;
 
 export function wechatPayConfigured(): boolean {
-  return !!(APP_ID && MCH_ID && API_V3_KEY && PRIVATE_KEY && CERT_SERIAL_NO);
+  return wechatPayMissingVars().length === 0;
 }
 
 /** Only explicitly approved merchants may create NEW chargeable orders. */
@@ -47,6 +47,10 @@ export function wechatPayMissingVars(): string[] {
   if (!API_V3_KEY) missing.push("WECHAT_API_V3_KEY");
   if (!PRIVATE_KEY) missing.push("WECHAT_PRIVATE_KEY");
   if (!CERT_SERIAL_NO) missing.push("WECHAT_CERT_SERIAL_NO");
+  // Checkout must not open unless the callback can authenticate the current
+  // WeChat platform key serial as well as decrypt the APIv3 resource.
+  if (!PLATFORM_PUBLIC_KEY) missing.push("WECHAT_PLATFORM_PUBLIC_KEY");
+  if (!PLATFORM_PUBLIC_KEY_ID) missing.push("WECHAT_PLATFORM_PUBLIC_KEY_ID");
   return missing;
 }
 
