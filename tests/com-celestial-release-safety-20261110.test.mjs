@@ -54,7 +54,6 @@ test("static assets use explicit proxy mappings and do not depend on automatic H
   assert.ok(materializer.includes("Strict-Transport-Security:"));
   assert.ok(materializer.includes("loadToolStaticRoutes"));
   assert.ok(materializer.includes('"/tools/*"'));
-  const manifest = read("scripts/cloudflare/tool-static-route-manifest-20261110.mjs");
   assert.ok(manifest.includes("TOOL_STATIC_SLUG_DUPLICATE"));
   const build = read("scripts/cloudflare/build-com-static-assets-20261110.sh");
   assert.ok(build.includes("tool-static-route-manifest-20261110.mjs --slugs"));
