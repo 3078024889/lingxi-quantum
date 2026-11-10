@@ -4,6 +4,7 @@
 import {readFile,writeFile} from "node:fs/promises";
 import {join} from "node:path";
 import {publicMarketListings} from "./public-market-listings.mjs";
+import {anonymousPrivateApi} from "./anonymous-private-api.mjs";
 const root=".open-next";
 const assetRoot=join(root,"assets","__lingxi_edge_static__");
 const routes={
@@ -50,6 +51,8 @@ const source=await readFile(target,"utf8");
 const needle="  return offloaded||app.fetch(request,env,ctx);";
 if(source.split(needle).length!==2)throw Error("UNEXPECTED_OPENNEXT_WRAPPER_BODY");
 const replacement=[
+ '  const anonymousDenied=('+anonymousPrivateApi.toString()+')(request);',
+ '  if(anonymousDenied)return anonymousDenied;',
  '  const publicCatalog=await ('+publicMarketListings.toString()+')(request,env);',
  '  if(publicCatalog)return publicCatalog;',
  '  const pathname=new URL(request.url).pathname;',
