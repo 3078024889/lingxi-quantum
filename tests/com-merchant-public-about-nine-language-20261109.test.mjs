@@ -19,11 +19,15 @@ test("PayPal merchant review About page shows real products in all nine language
 
 test("About page is an audited Cloudflare public static route before apex promotion",()=>{
  const build=read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
- const candidate=read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
- const cutover=read("scripts/cloudflare/com-unified-apex-verified-cutover-20261108.mjs");
+ const canary=read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
+ const snapshotBuild=read("scripts/cloudflare/build-com-static-assets-20261110.sh");
+ const materializer=read("scripts/cloudflare/materialize-static-html-assets-20261110.mjs");
+ const cutover=read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs");
  assert.ok(build.includes('"/about":"about.html"'));
- assert.ok(candidate.includes("'about:about'"));
- assert.ok(candidate.includes('"/about"')||candidate.includes("/about /announcements"));
+ assert.ok(canary.includes("build-com-static-assets-20261110.sh"));
+ assert.ok(snapshotBuild.includes("'about:about'"));
+ assert.ok(materializer.includes('route: "/about", source: "about.html", target: "about.html"'));
  assert.match(cutover,/\/about/);
  assert.match(cutover,/COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN/);
+ assert.match(cutover,/COM_PRODUCTION_VERSION_ROLLBACK_CONFIRMED/);
 });
