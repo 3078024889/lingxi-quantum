@@ -3,6 +3,8 @@
 -- The migration creates a PRIVATE bucket and keeps all placeholder packages sale_ready=false.
 -- SASI private software delivery and verified payment fulfillment.
 -- Additive only: existing orders, balance ledgers, refunds and market sales remain untouched.
+-- SASI private software delivery and verified payment fulfillment.
+-- Additive only: existing orders, balance ledgers, refunds and market sales remain untouched.
 BEGIN;
 
 INSERT INTO storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
@@ -66,7 +68,7 @@ CREATE OR REPLACE FUNCTION public.sasi_grant_software_delivery(p_order_id uuid)
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path=public,pg_temp
+SET search_path TO ''
 AS $$
 DECLARE
  o public.orders%ROWTYPE;
@@ -128,7 +130,7 @@ CREATE OR REPLACE FUNCTION public.sasi_claim_software_download(p_order_id uuid,p
 RETURNS jsonb
 LANGUAGE plpgsql
 SECURITY DEFINER
-SET search_path=public,pg_temp
+SET search_path TO ''
 AS $$
 DECLARE ent public.sasi_software_entitlements%ROWTYPE;
 BEGIN
