@@ -15,8 +15,8 @@ function translatedStatus(lang:string,key:string,scan=false){const pair=(scan?SC
 function categoryLabel(lang:string,key:string){const c=CATEGORIES.find(([id])=>id===key);return c?sasiSoftwareUiText(lang,c[1],c[2]):sasiSoftwareUiText(lang,"其他软件","Other software")}
 function friendlyError(error:unknown,lang:string){const raw=error instanceof Error?error.message:String(error);return /login|account|VERIFIED_ACCOUNT_REQUIRED|SELLER_NOT_APPROVED|401|403/i.test(raw)?sasiSoftwareUiText(lang,"请先完成登录、邮箱验证或卖家审核。","Please sign in, verify your email and complete seller approval."):sasiSoftwareUiText(lang,"操作暂未完成，请稍后重试或联系平台支持。","The action could not be completed. Please try again or contact support.")}
 function format(value:number){return (value/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
-export default function SasiOpenMarketplace(){
- const {lang}=useLingxiLang();const zh=lang==="zh";
+export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketplace"|"seller"}){
+ const {lang}=useLingxiLang();const zh=lang==="zh";const sellerOnly=view==="seller";
  const [listings,setListings]=useState<Listing[]>([]);
  const featured=SASI_SOFTWARE_CATALOG[0];
  const [featuredReady,setFeaturedReady]=useState(false);
@@ -33,7 +33,7 @@ export default function SasiOpenMarketplace(){
  const [editingId,setEditingId]=useState<string|null>(null);
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
- const [showStudio,setShowStudio]=useState(false);
+ const [showStudio,setShowStudio]=useState(sellerOnly);
  const [requestedAmount,setRequestedAmount]=useState(""),[requestCurrency,setRequestCurrency]=useState<"CNY"|"USD">("CNY");
  const refresh=useCallback(async()=>{
   const paths=["/api/sasi/marketplace/listings","/api/sasi/marketplace/listings?mode=mine","/api/sasi/marketplace/seller","/api/sasi/marketplace/payouts"];
@@ -177,7 +177,8 @@ export default function SasiOpenMarketplace(){
   }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
  };
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container}>
-  <div className={styles.hero}>
+  {!sellerOnly&&<>
+<div className={styles.hero}>
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
        <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")}</h1>
@@ -242,7 +243,10 @@ export default function SasiOpenMarketplace(){
        <button type="button" className={styles.launchStudio} onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio} aria-controls="sasi-seller-studio">{showStudio?(sasiSoftwareUiText(lang,"收起工作台","Close workspace")):(sasiSoftwareUiText(lang,"立即发布软件","Publish software"))}</button>
      </div>
    </section>
-   {showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
+   
+</>}
+{sellerOnly&&<section className={styles.section}><div className={styles.sectionHeading}><div><small>SELLER CENTER</small><h2>{sasiSoftwareUiText(lang,"卖家服务与发布工作台","Seller services and publishing workspace")}</h2><p>{sasiSoftwareUiText(lang,"申请入驻、发布软件商品、上传安装包并查看审核进度。","Apply to sell, publish software, upload packages and track review status.")}</p></div><Link href="/sasi">{sasiSoftwareUiText(lang,"返回软件市场","Back to software market")} ↗</Link></div></section>}
+{showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
    <div className={styles.workspace}>
     <div className={styles.formCard}><h3>{seller?(sasiSoftwareUiText(lang,"卖家资料","Seller profile")):(sasiSoftwareUiText(lang,"零费用申请入驻","Apply to sell for free"))}</h3>
     {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{sasiSoftwareUiText(lang,"审核状态","Review status")}: {translatedStatus(lang,seller.status)}</p><p>{sasiSoftwareUiText(lang,"身份核验","Identity verification")}: {seller.kyc_status==="verified"?(sasiSoftwareUiText(lang,"已完成","Verified")):(sasiSoftwareUiText(lang,"待完成","Pending"))}</p><p>{sasiSoftwareUiText(lang,"完成身份和收款方式审核后才能提现。","Identity and payout verification are required before cash-out.")}</p></div>:<>

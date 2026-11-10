@@ -32,7 +32,7 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
   ],
   [
     { href: "/sasi", key: "studio", icon: "sasi" },
-    { href: "/sasi/marketplace", key: "studio", icon: "sasi" },
+    { href: "/sasi/seller", key: "studio", icon: "sasi" },
   ],
   [
     { href: "/ai-wallet", key: "wallet", icon: "wallet" },
@@ -46,6 +46,8 @@ const marketNavNames:Record<LingxiLang,string>={zh:"全球 SIAI 排行榜",en:"G
 function active(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   if (pathname === "/sasi/pricing") return href === "/sasi";
+  if (href === "/sasi") return pathname === "/sasi" || pathname === "/sasi/delivery" || pathname.startsWith("/sasi/marketplace/");
+  if (href === "/sasi/seller") return pathname === "/sasi/seller" || pathname.startsWith("/sasi/seller/");
   if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/");
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -188,7 +190,7 @@ export default function Nav() {
                 className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
               >
                 <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/marketplace"?(lang==="zh"?"卖家服务":"Seller services"):t(item.key)}</span>
+                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/seller"?(lang==="zh"?"卖家服务":"Seller services"):t(item.key)}</span>
               </Link>
             ))}
           </section>
