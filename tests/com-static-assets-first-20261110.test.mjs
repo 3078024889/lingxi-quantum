@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES, GEO_STATIC_TOPICS, GEO_STATIC_LOCALES, STATIC_HEADER_PATTERNS, staticHeaderPatternMatches } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
+import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES, PUBLIC_STATIC_REDIRECTS, GEO_STATIC_TOPICS, GEO_STATIC_LOCALES, STATIC_HEADER_PATTERNS, staticHeaderPatternMatches } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
 import { loadToolStaticRoutes } from "../scripts/cloudflare/tool-static-route-manifest-20261110.mjs";
 
 const html = "<!doctype html><html><head><title>LINGXIFIELD</title></head><body>" + "x".repeat(5000) + "</body></html>";
@@ -19,6 +19,13 @@ test("robots static capture command is one valid continued curl invocation", () 
   assert.ok(buildScript.includes("COM_ROBOTS_STATIC_ASSET_CAPTURED"));
 });
 
+test("sitemap is captured from the exact public host and materialized as a static asset", () => {
+  assert.match(buildScript, /http:\/\/127\.0\.0\.1:8787\/sitemap\.xml -o "\$sitemap_snapshot"/);
+  assert.match(buildScript, /COM_SITEMAP_STATIC_ASSET_CAPTURED/);
+  assert.match(buildScript, /COM_SITEMAP_TOPIC_MISSING/);
+  assert.match(buildScript, /COM_SITEMAP_RETIRED_TOPIC_PRESENT/);
+});
+
 
 test("public page snapshots are materialized at canonical asset-first URLs", async () => {
   const root = await mkdtemp(join(tmpdir(), "lingxi-static-assets-"));
@@ -27,7 +34,10 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const toolRoutes = await loadToolStaticRoutes();
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/sasi/marketplace"), false,
-      "redirect-only marketplace alias must remain Worker-handled");
+      "redirect-only marketplace alias must not be snapshotted as HTML");
+    assert.deepEqual(PUBLIC_STATIC_REDIRECTS, [
+      { route: "/sasi/marketplace", destination: "/sasi", status: 308 }
+    ], "legacy marketplace alias must be an explicit static permanent redirect");
     for (const topic of GEO_STATIC_TOPICS) {
       for (const locale of GEO_STATIC_LOCALES) {
         const route = locale === "zh" ? `/discover/${topic}` : `/${locale}/discover/${topic}`;
@@ -99,6 +109,17 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       "Host: " + robotsSite,
       ""
     ].join("\n"), "utf8");
+    const sitemapUrls = robotsSite.endsWith(".cn")
+      ? [robotsSite + "/siai"]
+      : [
+          robotsSite + "/discover/sasi-software-marketplace",
+          robotsSite + "/discover/mt5-ea-source-code",
+          robotsSite + "/discover/software-licensing-delivery",
+          robotsSite + "/discover/developer-software-publishing"
+        ];
+    await writeFile(join(root, "sitemap.xml"),
+      '<?xml version="1.0"?><urlset>' + sitemapUrls.map(url => '<url><loc>' + url + '</loc></url>').join("") + '</urlset>',
+      "utf8");
 
     const result = await materializeStaticHtmlAssets(root);
     assert.equal(result.materialized, allRoutes.length);
@@ -138,6 +159,13 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     assert.ok(headers.includes(accountHeaderBlock));
     assert.ok(headers.includes(accountHtmlHeaderBlock));
     assert.ok(STATIC_HEADER_PATTERNS.includes("/robots.txt"), "robots.txt must have a bounded static header rule");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/sitemap.xml"), "sitemap.xml must have a bounded static header rule");
+    assert.ok(headers.includes([
+      "/sitemap.xml",
+      "  X-Lingxi-Render-Mode: static-edge-verified",
+      "  X-Lingxi-Static-Delivery: workers-static-assets",
+      "  Cache-Control: public, max-age=300, stale-while-revalidate=120"
+    ].join(newline)), "sitemap.xml must be delivered by the static asset layer");
     assert.ok(headers.includes([
       "/robots.txt",
       "  X-Lingxi-Render-Mode: static-edge-verified",
@@ -171,6 +199,8 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     for (const entry of allRoutes) {
       assert.ok(redirects.split(/\r?\n/).includes(entry.route + " /" + entry.target + " 200"), entry.route + " must proxy to its exact HTML asset");
     }
+    assert.ok(redirects.split(/\r?\n/).includes("/sasi/marketplace /sasi 308"),
+      "legacy marketplace alias must return a static 308 to /sasi");
     await materializeStaticHtmlAssets(root);
     const redirectsAfter = await readFile(join(root, "_redirects"), "utf8");
     assert.equal(redirectsAfter.split("# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS").length - 1, 1);
@@ -193,6 +223,17 @@ test("invalid HTML snapshots fail closed", async () => {
       "Host: " + robotsSite,
       ""
     ].join("\n"), "utf8");
+    const sitemapUrls = robotsSite.endsWith(".cn")
+      ? [robotsSite + "/siai"]
+      : [
+          robotsSite + "/discover/sasi-software-marketplace",
+          robotsSite + "/discover/mt5-ea-source-code",
+          robotsSite + "/discover/software-licensing-delivery",
+          robotsSite + "/discover/developer-software-publishing"
+        ];
+    await writeFile(join(root, "sitemap.xml"),
+      '<?xml version="1.0"?><urlset>' + sitemapUrls.map(url => '<url><loc>' + url + '</loc></url>').join("") + '</urlset>',
+      "utf8");
     await writeFile(join(snapshotRoot, PUBLIC_STATIC_HTML_ROUTES[0].source), "<html>INTERNAL_SERVER_ERROR</html>", "utf8");
     await assert.rejects(() => materializeStaticHtmlAssets(root), /BAD_PUBLIC_STATIC_SNAPSHOT/);
   } finally {
@@ -210,7 +251,7 @@ test("wrangler serves direct HTML assets before the Worker and keeps range paths
     assert.equal(workerFirst.has(entry.route), false, entry.route + " must remain asset-first");
   }
   assert.ok(workerFirst.has("/*/"), "trailing-slash requests must reach middleware for permanent 308 canonicalization");
-  assert.ok(workerFirst.has("/sasi/marketplace"), "legacy marketplace alias must reach the Worker for a real 308 redirect");
+  assert.equal(workerFirst.has("/sasi/marketplace"), false, "legacy marketplace alias must use the explicit static 308 redirect");
   assert.ok(workerFirst.has("/media/ffmpeg-0.12.10/ffmpeg-core.wasm"));
   assert.ok(workerFirst.has("/models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx"));
 });

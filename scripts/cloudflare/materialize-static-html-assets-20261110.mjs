@@ -14,6 +14,9 @@ export const GEO_STATIC_TOPICS = Object.freeze([
   "developer-software-publishing"
 ]);
 export const GEO_STATIC_LOCALES = Object.freeze(["zh","en","ja","ko","fr","de","es","pt","ar"]);
+export const PUBLIC_STATIC_REDIRECTS = Object.freeze([
+  { route: "/sasi/marketplace", destination: "/sasi", status: 308 }
+]);
 const GEO_STATIC_ROUTES = GEO_STATIC_TOPICS.flatMap(topic => [
   { route: `/discover/${topic}`, source: `geo-zh-${topic}.html`, target: `discover/${topic}.html` },
   ...GEO_STATIC_LOCALES.filter(locale => locale !== "zh").map(locale => ({
@@ -65,7 +68,7 @@ export const STATIC_HEADER_PATTERNS = Object.freeze([
   "/sasi", "/sasi.html",
   "/about", "/about.html",
   "/announcements", "/announcements.html",
-  "/robots.txt"
+  "/robots.txt", "/sitemap.xml"
 ]);
 
 export function staticHeaderPatternMatches(pattern, path) {
@@ -88,9 +91,12 @@ function replaceManagedBlock(existing, block, begin, end) {
   return [preserved.trim(), block].filter(Boolean).join("\n\n") + "\n";
 }
 
-function assertNoRedirectConflicts(existing, routes) {
+function assertNoRedirectConflicts(existing, routes, redirects) {
   const preserved = stripManagedBlock(existing, REDIRECT_BEGIN, REDIRECT_END);
-  const sources = new Set(routes.map(({ route }) => route));
+  const sources = new Set([
+    ...routes.map(({ route }) => route),
+    ...redirects.map(({ route }) => route)
+  ]);
   for (const line of preserved.split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
@@ -104,6 +110,7 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   const toolRoutes = await loadToolStaticRoutes();
   const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
   const robotsText = await readFile(join(assetRoot, "robots.txt"), "utf8");
+  const sitemapText = await readFile(join(assetRoot, "sitemap.xml"), "utf8");
   const buildHost = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com").hostname.toLowerCase().replace(/^www\./, "");
   if (buildHost !== "lingxifield.com" && buildHost !== "lingxifield.cn") {
     throw new Error("STATIC_ROBOTS_UNTRUSTED_BUILD_ORIGIN:" + buildHost);
@@ -111,6 +118,33 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   const buildSite = "https://" + buildHost;
   if (!robotsText.includes("Sitemap: " + buildSite + "/sitemap.xml") || !robotsText.includes("Disallow: /api/")) {
     throw new Error("STATIC_ROBOTS_ASSET_CONTENT_INVALID:" + buildSite);
+  }
+  if (!/<urlset\b/i.test(sitemapText) || !sitemapText.includes(buildSite)) {
+    throw new Error("STATIC_SITEMAP_ASSET_CONTENT_INVALID:" + buildSite);
+  }
+  const requiredSitemapPaths = buildHost === "lingxifield.cn"
+    ? ["/siai"]
+    : [
+        "/discover/sasi-software-marketplace",
+        "/discover/mt5-ea-source-code",
+        "/discover/software-licensing-delivery",
+        "/discover/developer-software-publishing"
+      ];
+  for (const path of requiredSitemapPaths) {
+    if (!sitemapText.includes(buildSite + path)) {
+      throw new Error("STATIC_SITEMAP_REQUIRED_PATH_MISSING:" + path);
+    }
+  }
+  if (buildHost === "lingxifield.cn" && sitemapText.includes("https://lingxifield.cn/discover/")) {
+    throw new Error("STATIC_CN_SITEMAP_MUST_REMAIN_REGIONAL");
+  }
+  for (const retired of [
+    "ai-short-drama-generator", "book-to-ai-agent", "document-ai-agent",
+    "learning-ai-agent", "research-ai-agent", "ai-website-builder"
+  ]) {
+    if (sitemapText.includes("/discover/" + retired)) {
+      throw new Error("STATIC_SITEMAP_RETIRED_TOPIC_PRESENT:" + retired);
+    }
   }
   if (new Set(allRoutes.map(route => route.route)).size !== allRoutes.length) {
     throw new Error("PUBLIC_STATIC_ROUTE_DUPLICATE");
@@ -238,10 +272,11 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   } catch (error) {
     if (error?.code !== "ENOENT") throw error;
   }
-  assertNoRedirectConflicts(existingRedirects, allRoutes);
+  assertNoRedirectConflicts(existingRedirects, allRoutes, PUBLIC_STATIC_REDIRECTS);
   const managedRedirects = [
     REDIRECT_BEGIN,
     ...allRoutes.map(({ route, target }) => route + " /" + target + " 200"),
+    ...PUBLIC_STATIC_REDIRECTS.map(({ route, destination, status }) => route + " " + destination + " " + status),
     REDIRECT_END
   ].join("\n");
   const redirects = replaceManagedBlock(existingRedirects, managedRedirects, REDIRECT_BEGIN, REDIRECT_END);
@@ -253,6 +288,12 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
       throw new Error("STATIC_PROXY_RULE_MISSING:" + route);
     }
   }
+  for (const { route, destination, status } of PUBLIC_STATIC_REDIRECTS) {
+    if (!verifiedRedirects.split(/\r?\n/).includes(route + " " + destination + " " + status)) {
+      throw new Error("STATIC_REDIRECT_RULE_MISSING:" + route);
+    }
+  }
+  console.log("COM_STATIC_LEGACY_REDIRECTS_PASS=" + PUBLIC_STATIC_REDIRECTS.length);
 
   console.log("COM_STATIC_ASSET_FIRST_ROUTES_PASS=" + materialized);
   console.log("COM_STATIC_TOOL_DETAIL_STATIC_ROUTES_PASS=" + toolRoutes.length);
