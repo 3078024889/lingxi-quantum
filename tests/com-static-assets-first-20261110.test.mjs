@@ -96,7 +96,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), true);
     assert.ok(headers.includes("/account\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets\\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\\n  X-Robots-Tag: noindex, nofollow"));
     assert.ok(headers.includes("/account.html\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets\\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\\n  X-Robots-Tag: noindex, nofollow"));
-    const headerRuleCount=headers.split(/\\r?\\n/).filter(line=>line.trim()&&!line.trim().startsWith("#")&&!line.startsWith(" ")).length;
+    const headerRuleCount=headers.split("\\n").filter(line=>line.trim()&&!line.trim().startsWith("#")&&!line.startsWith(" ")).length;
     assert.ok(headerRuleCount<=100,"Cloudflare _headers rule count must stay at or below 100, got "+headerRuleCount);
 
     // Re-running the materializer is idempotent and does not duplicate its managed header block.

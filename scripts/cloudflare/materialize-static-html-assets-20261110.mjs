@@ -59,16 +59,8 @@ export const STATIC_HEADER_PATTERNS = Object.freeze([
   "/announcements", "/announcements.html"
 ]);
 
-function escapeRegex(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\const HEADER_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
-const HEADER_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
-const REDIRECT_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
-const REDIRECT_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
-");
-}
-
 export function staticHeaderPatternMatches(pattern, path) {
-  const expression = "^" + pattern.split("*").map(escapeRegex).join(".*") + "$";
+  const expression = "^" + pattern.replaceAll(".", "\\.").replaceAll("*", ".*") + "$";
   return new RegExp(expression).test(path);
 }
 
@@ -208,7 +200,7 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   if (!verifiedHeaders.includes("/tools/*\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets")) {
     throw new Error("STATIC_TOOL_ASSET_DELIVERY_HEADER_MISSING");
   }
-  const headerRuleCount = verifiedHeaders.split(/\\r?\\n/)
+  const headerRuleCount = verifiedHeaders.split("\\n")
     .filter(line => line.trim() && !line.trim().startsWith("#") && !line.startsWith(" ")).length;
   if (headerRuleCount > 100) {
     throw new Error("CLOUDFLARE_STATIC_HEADERS_RULE_LIMIT_EXCEEDED:" + headerRuleCount);
