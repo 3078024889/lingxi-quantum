@@ -262,7 +262,7 @@ jobs:
                 echo "COM_CANARY_CATALOG_STATUS ${diagnostic:-no-edge-diagnostic}"
               fi
               test "$status" = 200 || exit 1
-              if [[ "$path" = / || "$path" = /account || "$path" = /api/sasi/software/catalog || "$path" = /tools || "$path" = /tools/pass || "$path" = /tools/png-to-jpg || "$path" = /tools/compress-image || "$path" = /tools/merge-pdf || "$path" = /tools/json-formatter || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /about || "$path" = /announcements ]];then
+              if [[ "$path" = / || "$path" = /account || "$path" = /api/sasi/software/catalog || "$path" = /tools || "$path" = /tools/pass || "$path" = /tools/png-to-jpg || "$path" = /tools/compress-image || "$path" = /tools/merge-pdf || "$path" = /tools/json-formatter || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /about || "$path" = /announcements || "$path" == */discover/* ]];then
                 grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
                 if [[ "$path" != "/api/sasi/software/catalog" ]];then
                   grep -iq '^x-lingxi-static-delivery: workers-static-assets' "$h"
