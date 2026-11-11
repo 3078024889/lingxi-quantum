@@ -123,15 +123,15 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
  assert.match(upgrade,/systemctl disable "\$OLD_3194_SVC"/);
  assert.doesNotMatch(upgrade,/CN3195_NGINX_PROMOTION_PASS/);
  assert.match(upgrade,/NGINX_BACKUP/);
- const stageStart=upgrade.indexOf('python3 - "$ENV" "$STAGE_ENV" <<' + String.fromCharCode(39) + 'PY' + String.fromCharCode(39) + '); 
+ const stageStart=upgrade.indexOf('python3 - "$ENV" "$STAGE_ENV"');
  const stageEnd=upgrade.indexOf("\nPY",stageStart);
  assert.ok(stageStart>=0&&stageEnd>stageStart,"isolated 3195 environment builder must exist");
  const stageEnv=upgrade.slice(stageStart,stageEnd);
  for(const flag of ["TOOL_PASS_COMMERCE_READY","WECHAT_ENABLED","ALIPAY_ENABLED","PAYPAL_ENABLED","SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SOFTWARE_COMMERCE_READY"])
   assert.ok(stageEnv.includes('"'+flag+'"'),"missing isolated-stage gate: "+flag);
- assert.match(stageEnv,/out\\.extend\\(k\\+"=false" for k in sorted\\(disabled\\)\\)/);
+ assert.match(stageEnv,/out\.extend\(k\+"=false" for k in sorted\(disabled\)\)/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
- assert.match(upgrade,/EnvironmentFile=\\$PROD_FLAGS/);
+ assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
  const promotion=upgrade.slice(upgrade.indexOf('if [[ "$MODE" == --promote ]];then'));
  const stageRoute=promotion.indexOf("set_nginx_upstream 3195");
