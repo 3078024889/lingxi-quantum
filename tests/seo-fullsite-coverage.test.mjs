@@ -5,6 +5,7 @@ const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const sitemap=read("lib/seo/sitemap-build.ts");
 const seoCatalog=read("lib/seo/global-seo.ts");
 const llms=read("app/llms.txt/route.ts");
+const publicLlms=read("public/llms.txt");
 const main=read("app/sitemap.ts");
 const metadata=read("lib/seo/search-tool-metadata.ts");
 const guide=read("components/seo/ToolFacts.tsx");
@@ -70,4 +71,17 @@ test("search FAQs never claim unverified search demand",()=>{
  const content=read("lib/seo/search-intent-faq.ts");
  assert.match(content,/具体操作和可用功能请以当前页面为准/);
  assert(!content.includes("这些问题来自当前公开搜索结果中反复出现的真实搜索表达"));
+});
+
+
+test("static public LLM index describes the current software marketplace and excludes retired SASI creation modules",()=>{
+  assert.match(publicLlms,/SASI Software Marketplace/);
+  assert.match(publicLlms,/MT5 EA Source Code & Trading Software/);
+  assert.match(publicLlms,/Software Licensing & Automatic Delivery/);
+  assert.match(publicLlms,/Developer Software Publishing & Seller Services/);
+  for(const slug of ["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"])
+    assert(publicLlms.includes("/discover/"+slug),slug);
+  assert.doesNotMatch(publicLlms,/AI 短剧|AI Short Drama Generator|网站构建|书本、学习与科研创作/);
+  for(const locale of ["en","ja","ko","fr","de","es","pt","ar"])
+    assert(publicLlms.includes("https://lingxifield.com/"+locale+"/tools"),locale);
 });
