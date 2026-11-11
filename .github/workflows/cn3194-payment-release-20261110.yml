@@ -84,6 +84,7 @@ jobs:
           node --test tests/toolpass-premium-nine-language-20261109.test.mjs
           node --test tests/com-public-market-edge.test.mjs
           node --test tests/public-announcements-deeplink-20261108.test.mjs
+          node scripts/seo/audit-global.cjs
           pnpm exec tsc --noEmit
       - name: Build exact CN3194 standalone
         run: |
