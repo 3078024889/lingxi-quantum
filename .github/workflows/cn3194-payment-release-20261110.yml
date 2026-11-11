@@ -115,11 +115,12 @@ jobs:
             sleep 1
           done
           [ "$ready" = 1 ] || { cat "$RUNNER_TEMP/cn3319.log";exit 1; }
-          for path in / /tools /siai /sasi /sasi/marketplace /about /account/software /announcements /tools/pass /ai-wallet; do
+          for path in / /tools /siai /sasi /about /account/software /announcements /tools/pass /ai-wallet; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "PUBLIC_LOCAL_ROUTE:$path:$code"
             [ "$code" = 200 ] || exit 1
           done
+          node -e 'const url="http://127.0.0.1:3319/sasi/marketplace";fetch(url,{redirect:"manual"}).then(r=>{const target=new URL(r.headers.get("location")||"",url);if(r.status!==308||target.pathname!=="/sasi")process.exit(1);console.log("CN3194_LEGACY_MARKET_REDIRECT_PASS")}).catch(()=>process.exit(1))'
           for path in /api/sasi/account /api/tools/jobs; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "ANON_AUTH_BOUNDARY:$path:$code"
