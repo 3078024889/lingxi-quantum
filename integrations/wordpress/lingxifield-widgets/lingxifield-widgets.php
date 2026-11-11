@@ -3,7 +3,7 @@
  * Plugin Name: LINGXIFIELD — SIAI & Free Widgets
  * Plugin URI: https://lingxifield.com/partners
  * Description: Embed a verified global SIAI directory, a vendor profile, or a QR widget using shortcodes.
- * Version: 0.1.0
+ * Version: 0.2.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: LINGXIFIELD

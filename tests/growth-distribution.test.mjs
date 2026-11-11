@@ -4,6 +4,8 @@ import test from "node:test";
 
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const feed=read("app/api/public/siai-widget/route.ts");
+const freeToolsFeed=read("app/api/public/free-tools-widget/route.ts");
+const localFree=read("lib/tools/local-free-tools.ts");
 const qr=read("app/api/public/qr-code/route.ts");
 const rss=read("app/siai/updates.xml/route.ts");
 const widget=read("public/widgets/lingxifield-v1.js");
@@ -16,11 +18,25 @@ test("partner JS is syntactically valid and can run without framing the origin",
  assert.doesNotThrow(()=>new Function(widget));
  assert.match(widget,/attachShadow\(\{mode:"open"\}\)/);
  assert.match(widget,/data-lx-widget/);
+ assert.match(widget,/api\\/public\\/free-tools-widget/);
+ assert.match(widget,/data\.rows\.filter/);
+ assert.match(widget,/r\.execution==="local"/);
  assert.match(widget,/credentials:"omit"/);
  assert.match(widget,/textContent/);
  assert(!widget.includes("innerHTML="));
  assert(!widget.includes("document.write("));
  assert(!widget.includes("localStorage"));
+});
+
+test("free tools distribution includes only anonymous local and non-paid catalogue tools",()=>{
+ assert.match(freeToolsFeed,/publicToolSurface\(\)/);
+ assert.match(freeToolsFeed,/isAnonymousLocalTool/);
+ assert.match(freeToolsFeed,/Access-Control-Allow-Origin/);
+ assert.match(freeToolsFeed,/Cache-Control/);
+ assert.match(freeToolsFeed,/execution:"local"/);
+ assert.match(freeToolsFeed,/access:"anonymous"/);
+ assert.match(localFree,/isPublicPaidToolId/);
+ assert.match(localFree,/tool\.localOnly/);
 });
 
 test("SIAI distribution excludes research-only candidate records",()=>{
@@ -44,6 +60,8 @@ test("QR endpoint is bounded and widget forbids private query strings",()=>{
 
 test("growth links are attributed but automated browsing and private routes are excluded",()=>{
  assert.match(portal,/data-lx-widget/);
+ assert.match(portal,/standard\("free-tools"\)/);
+ assert.match(portal,/freeToolsInfo/);
  assert.match(portal,/data-partner/);
  assert.match(tracking,/navigator\.webdriver===true/);
  assert.match(tracking,/utm_source/);
@@ -91,6 +109,8 @@ test("WordPress shortcodes sanitize attributes and return output rather than pri
  const php=read("integrations/wordpress/lingxifield-widgets/lingxifield-widgets.php");
  assert.match(php,/add_shortcode\('lingxifield_siai'/);
  assert.match(php,/add_shortcode\('lingxifield_qr'/);
+ assert.match(php,/add_shortcode\('lingxifield_tools'/);
+ assert.match(php,/free-tools/);
  assert.match(php,/add_shortcode\('lingxifield_vendor'/);
  assert.match(php,/esc_attr\(/);
  assert(!php.includes("eval("));
@@ -106,6 +126,8 @@ test("open developer API is strictly read-only and documents only sourced review
  const spec=JSON.parse(read("public/siai-openapi.json"));
  assert.equal(spec.openapi,"3.1.0");
  assert(spec.paths["/api/public/siai-widget"]?.get);
+ assert(spec.paths["/api/public/free-tools-widget"]?.get);
+ assert.equal(spec.components.schemas.FreeToolsDirectory.properties.rows.items.$ref,"#/components/schemas/FreeLocalTool");
  assert(spec.paths["/siai/updates.xml"]?.get);
  for(const methods of Object.values(spec.paths))assert.deepEqual(Object.keys(methods),["get"]);
  assert(!JSON.stringify(spec).includes("source_preview"));
