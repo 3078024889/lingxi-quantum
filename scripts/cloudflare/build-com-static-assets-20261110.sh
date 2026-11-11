@@ -68,7 +68,6 @@ for mapping in \
   'ai-wallet:ai-wallet' \
   'account:account-login' \
   'sasi:sasi' \
-  'sasi/marketplace:marketplace' \
   'about:about' \
   'announcements:announcements'; do
   route="${mapping%%:*}"
