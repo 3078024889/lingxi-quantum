@@ -103,6 +103,15 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   const snapshotRoot = join(assetRoot, "__lingxi_edge_static__");
   const toolRoutes = await loadToolStaticRoutes();
   const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
+  const robotsText = await readFile(join(assetRoot, "robots.txt"), "utf8");
+  const buildHost = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com").hostname.toLowerCase().replace(/^www\\./, "");
+  if (buildHost !== "lingxifield.com" && buildHost !== "lingxifield.cn") {
+    throw new Error("STATIC_ROBOTS_UNTRUSTED_BUILD_ORIGIN:" + buildHost);
+  }
+  const buildSite = "https://" + buildHost;
+  if (!robotsText.includes("Sitemap: " + buildSite + "/sitemap.xml") || !robotsText.includes("Disallow: /api/")) {
+    throw new Error("STATIC_ROBOTS_ASSET_CONTENT_INVALID:" + buildSite);
+  }
   if (new Set(allRoutes.map(route => route.route)).size !== allRoutes.length) {
     throw new Error("PUBLIC_STATIC_ROUTE_DUPLICATE");
   }
