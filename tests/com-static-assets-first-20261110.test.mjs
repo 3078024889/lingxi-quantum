@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES, GEO_STATIC_TOPICS, GEO_STATIC_LOCALES, STATIC_HEADER_PATTERNS, staticHeaderPatternMatches } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
+import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES, PUBLIC_STATIC_REDIRECTS, GEO_STATIC_TOPICS, GEO_STATIC_LOCALES, STATIC_HEADER_PATTERNS, staticHeaderPatternMatches } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
 import { loadToolStaticRoutes } from "../scripts/cloudflare/tool-static-route-manifest-20261110.mjs";
 
 const html = "<!doctype html><html><head><title>LINGXIFIELD</title></head><body>" + "x".repeat(5000) + "</body></html>";
@@ -34,7 +34,10 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const toolRoutes = await loadToolStaticRoutes();
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/sasi/marketplace"), false,
-      "redirect-only marketplace alias must remain Worker-handled");
+      "redirect-only marketplace alias must not be snapshotted as HTML");
+    assert.deepEqual(PUBLIC_STATIC_REDIRECTS, [
+      { route: "/sasi/marketplace", destination: "/sasi", status: 308 }
+    ], "legacy marketplace alias must be an explicit static permanent redirect");
     for (const topic of GEO_STATIC_TOPICS) {
       for (const locale of GEO_STATIC_LOCALES) {
         const route = locale === "zh" ? `/discover/${topic}` : `/${locale}/discover/${topic}`;
@@ -196,6 +199,8 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     for (const entry of allRoutes) {
       assert.ok(redirects.split(/\r?\n/).includes(entry.route + " /" + entry.target + " 200"), entry.route + " must proxy to its exact HTML asset");
     }
+    assert.ok(redirects.split(/\r?\n/).includes("/sasi/marketplace /sasi 308"),
+      "legacy marketplace alias must return a static 308 to /sasi");
     await materializeStaticHtmlAssets(root);
     const redirectsAfter = await readFile(join(root, "_redirects"), "utf8");
     assert.equal(redirectsAfter.split("# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS").length - 1, 1);
@@ -246,7 +251,7 @@ test("wrangler serves direct HTML assets before the Worker and keeps range paths
     assert.equal(workerFirst.has(entry.route), false, entry.route + " must remain asset-first");
   }
   assert.ok(workerFirst.has("/*/"), "trailing-slash requests must reach middleware for permanent 308 canonicalization");
-  assert.ok(workerFirst.has("/sasi/marketplace"), "legacy marketplace alias must reach the Worker for a real 308 redirect");
+  assert.equal(workerFirst.has("/sasi/marketplace"), false, "legacy marketplace alias must use the explicit static 308 redirect");
   assert.ok(workerFirst.has("/media/ffmpeg-0.12.10/ffmpeg-core.wasm"));
   assert.ok(workerFirst.has("/models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx"));
 });
