@@ -132,6 +132,17 @@ code(){
  [[ "$found" == "$expected" ]]
 }
 
+redirect(){
+ local path="$1" expected="$2" target="$3" headers status location
+ headers="$(mktemp /run/cn3195-redirect-XXXXXX)"
+ status="$(curl -sS --noproxy '*' --max-time 18 -D "$headers" -o /dev/null -w '%{http_code}' \
+  -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' "http://127.0.0.1:$PORT$path" || true)"
+ location="$(awk 'tolower($1)=="location:" {sub(/\r$/,"");sub(/^[^:]*:[[:space:]]*/,"");print}' "$headers" | tail -n1)"
+ rm -f "$headers"
+ echo "CN3195_REDIRECT_CHECK $path $status $location"
+ [[ "$status" == "$expected" && "$location" == "$target" ]]
+}
+
 probe(){
  local ready=0
  for i in $(seq 1 25);do
@@ -144,7 +155,7 @@ probe(){
  code /tools 200
  code /siai 200
  code /sasi 200
- code /sasi/marketplace 200
+ redirect /sasi/marketplace 308 /sasi
  code /sasi/pricing 307
  code /api/sasi/generation/submit 410
  code /api/cron/sasi-v5-radar 410
@@ -176,7 +187,7 @@ rollback_to_3193(){
  [[ "$health" == 200 ]] || { echo "CN3193_AUTOMATIC_ROLLBACK_HEALTH_FAILED:$health" >&2;return 1; }
  set_nginx_upstream 3193 || { echo CN3193_AUTOMATIC_ROLLBACK_NGINX_SWITCH_FAILED >&2;return 1; }
  for path in / /tools /siai /sasi /sasi/marketplace /tools/pass /ai-wallet /api/health;do
-  status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
+  status="$(curl -kfsSL --max-redirs 3 --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
   echo "CN3193_AUTOMATIC_ROLLBACK_PUBLIC:$path:$status"
   [[ "$status" == 200 ]] || { echo CN3193_AUTOMATIC_ROLLBACK_PUBLIC_CHECK_FAILED >&2;return 1; }
  done
@@ -198,7 +209,7 @@ if [[ "$MODE" == --rollback ]];then
  [[ "$health" == 200 ]] || { echo "CN3193_ROLLBACK_BASELINE_HEALTH_FAILED:$health" >&2;exit 1; }
  set_nginx_upstream 3193
  for path in / /tools /siai /sasi /sasi/marketplace /tools/pass /ai-wallet /api/health;do
-  status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
+  status="$(curl -kfsSL --max-redirs 3 --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
   echo "CN3193_ROLLBACK_PUBLIC:$path:$status"
   [[ "$status" == 200 ]] || { echo CN3193_ROLLBACK_PUBLIC_CHECK_FAILED >&2;exit 1; }
  done
@@ -402,9 +413,11 @@ EOF
  [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]] || { echo CN3194_OLD_SERVICE_NOT_FOUND_FOR_SAFE_REBIND >&2;exit 1; }
  if ! set_nginx_upstream 3195;then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_UPSTREAM_SWITCH_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
+  expected=200
+  [[ "$path" == "/sasi/marketplace" ]] && expected=308
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
-  echo "CN3195_TEMPORARY_NEW_RELEASE_ROUTE:$path:$status"
-  if [[ "$status" != 200 ]];then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_ROUTE_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
+  echo "CN3195_TEMPORARY_NEW_RELEASE_ROUTE:$path:$status expected=$expected"
+  if [[ "$status" != "$expected" ]];then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_ROUTE_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
  done
 
  if systemctl is-enabled --quiet "$OLD_3194_SVC";then systemctl disable "$OLD_3194_SVC" >/dev/null || { set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3194_OLD_SERVICE_DISABLE_FAILED_OLD_UPSTREAM_RESTORED >&2;exit 1; };fi
@@ -421,9 +434,11 @@ EOF
 
  if ! set_nginx_upstream 3194;then rollback_to_3193 "CN3194_FINAL_UPSTREAM_SWITCH_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
+  expected=200
+  [[ "$path" == "/sasi/marketplace" ]] && expected=308
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
-  echo "CN3194_PUBLIC_NGINX_ROUTE:$path:$status"
-  if [[ "$status" != 200 ]];then
+  echo "CN3194_PUBLIC_NGINX_ROUTE:$path:$status expected=$expected"
+  if [[ "$status" != "$expected" ]];then
    rollback_to_3193 "CN3194_PUBLIC_ROUTE_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2
    exit 1
   fi
