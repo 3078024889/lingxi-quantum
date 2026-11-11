@@ -11,6 +11,10 @@ on:
       - 'lib/alipay.ts'
       - 'lib/wechatpay.ts'
       - 'lib/paypal.ts'
+      - 'lib/siai-seo-policy.ts'
+      - 'scripts/seo/audit-global.cjs'
+      - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'tests/cn-payment-activation-3194-20261110.test.mjs'
 permissions:
   contents: read
   actions: read
