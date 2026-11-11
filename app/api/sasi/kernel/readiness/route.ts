@@ -1,4 +1,8 @@
-import {NextResponse} from "next/server";
-import {sasiKernelReadiness} from "@/lib/sasi-kernel/readiness";
-export const runtime="nodejs";export const dynamic="force-dynamic";
-export async function GET(){return NextResponse.json({ok:true,readiness:sasiKernelReadiness()},{headers:{"Cache-Control":"no-store"}});}
+import { sasiCreationRetired } from "@/lib/sasi/retired-route";
+
+export const dynamic = "force-dynamic";
+export const GET = sasiCreationRetired;
+export const POST = sasiCreationRetired;
+export const PUT = sasiCreationRetired;
+export const PATCH = sasiCreationRetired;
+export const DELETE = sasiCreationRetired;
