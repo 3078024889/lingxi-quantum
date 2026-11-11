@@ -19,6 +19,13 @@ const ALLOWED_EXTENSIONS=new Set([".mq5",".mqh",".ex5",".set",".pdf",".md",".txt
 const HEADERS={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const reply=(body:unknown,status=200)=>NextResponse.json(body,{status,headers:HEADERS});
 async function reviewer(){try{return await moneyAdministrator()}catch{return null}}
+async function privateBucketReady(admin:ReturnType<typeof createAdminClient>){
+ try{
+  const {data,error}=await admin.storage.getBucket(BUCKET);
+  return !error&&data?.public===false&&Number(data.file_size_limit)>=MAX_FILE_BYTES&&
+   Array.isArray(data.allowed_mime_types)&&data.allowed_mime_types.includes("application/zip");
+ }catch{return false}
+}
 
 type ZipEntryMeta={unsafeOriginalName?:string;unixPermissions?:number|string;_data?:{uncompressedSize?:number}};
 
@@ -40,7 +47,7 @@ async function inspectPackage(bytes:Buffer){
   const normalized=name.replace(/\\/g,"/");
   const parts=normalized.split("/");
   if(!name||name.length>240||normalized.startsWith("/")||parts.some(x=>x===".."||x==="")||
-    normalized.includes("\\0")||normalized.startsWith("__MACOSX/")||normalized.endsWith("/.DS_Store"))
+    normalized.includes(String.fromCharCode(0))||normalized.startsWith("__MACOSX/")||normalized.endsWith("/.DS_Store"))
    return {ok:false as const,error:"ZIP_PATH_INVALID"};
   const folded=normalized.toLowerCase();
   if(names.has(folded))return {ok:false as const,error:"ZIP_DUPLICATE_PATH"};
@@ -61,10 +68,10 @@ async function inspectPackage(bytes:Buffer){
  const source=sources[0];
  if(source.size<100||source.size>5*1024*1024)return {ok:false as const,error:"SOURCE_SIZE_INVALID"};
  let sourceText="";
- try{sourceText=(await source.entry.async("nodebuffer")).toString("utf8").replace(/^\\uFEFF/,"")}
+ try{sourceText=(await source.entry.async("nodebuffer")).toString("utf8").replace(/^﻿/,"")}
  catch{return {ok:false as const,error:"SOURCE_READ_FAILED"}}
- if(!/#property\\s+version\\s+["']9\\.50["']/i.test(sourceText)||
-   !/\\bOnTick\\s*\\(/.test(sourceText))
+ if(!/#property\s+version\s+["']9\.50["']/i.test(sourceText)||
+   !/\bOnTick\s*\(/.test(sourceText))
   return {ok:false as const,error:"COPERNICUS_9_5_SOURCE_MISMATCH"};
  const guide=guides.sort((a,b)=>b.size-a.size)[0];
  if(!guide||guide.size<160||guide.size>512*1024)return {ok:false as const,error:"INSTALL_GUIDE_REQUIRED"};
@@ -81,6 +88,7 @@ export async function GET(){
  if(!user)return reply({error:"NOT_FOUND"},404);
  try{
   const admin=createAdminClient();
+  const bucketReady=await privateBucketReady(admin);
   const ids=SASI_SOFTWARE_CATALOG.map(x=>x.id);
   const {data,error}=await admin.from("sasi_software_packages")
    .select("product_id,price_cny,price_usd,bucket,sale_ready,verified_at,sha256")
@@ -93,7 +101,7 @@ export async function GET(){
     exists:Boolean(row),saleReady:Boolean(row?.sale_ready),verifiedAt:row?.verified_at||null,
     sha256Prefix:row?.sha256&&row.sha256!=="0".repeat(64)?String(row.sha256).slice(0,12):null,
     priceMatches:Boolean(row&&Number(row.price_cny)===product.priceCny&&Number(row.price_usd)===product.priceUsd),
-    privateBucket:row?.bucket===BUCKET};
+    privateBucket:row?.bucket===BUCKET&&bucketReady};
   })});
  }catch{return reply({error:"PACKAGE_STATUS_UNAVAILABLE"},503)}
 }
@@ -135,6 +143,7 @@ export async function POST(req:NextRequest){
   if(record.bucket!==BUCKET||Number(record.price_cny)!==product.priceCny||Number(record.price_usd)!==product.priceUsd)
    return reply({error:"PACKAGE_PRICE_OR_BUCKET_MISMATCH"},409);
   if(record.sale_ready)return reply({error:"PACKAGE_ALREADY_ACTIVE"},409);
+  if(!await privateBucketReady(admin))return reply({error:"PRIVATE_BUCKET_CONFIG_INVALID"},503);
 
   const storage=admin.storage.from(BUCKET);
   let stored=await storage.download(objectPath);

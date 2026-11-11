@@ -22,6 +22,9 @@ test("only a single Copernicus SI 9.5 MQ5 and installation/compile guide can act
  assert.match(route,/ZIP_SYMLINK_FORBIDDEN/);
  assert.match(route,/ZIP_UNPACKED_SIZE_LIMIT/);
  assert.match(route,/ZIP_FILE_TYPE_FORBIDDEN/);
+ assert.match(route,/privateBucketReady\(admin\)/);
+ assert.match(route,/data\?\.public===false/);
+ assert.match(route,/allowed_mime_types\.includes\("application\/zip"\)/);
 });
 
 test("sale readiness follows immutable private upload and byte-for-byte SHA256 readback",()=>{

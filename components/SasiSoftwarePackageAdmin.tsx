@@ -64,7 +64,7 @@ export default function SasiSoftwarePackageAdmin(){
       <div className="mt-4 space-y-3">
        <input type="file" accept=".zip,application/zip" disabled={Boolean(busy)} onChange={e=>setFiles(current=>({...current,[product.productId]:e.target.files?.[0]||null}))}
         className="block w-full text-sm text-[var(--lx-ink)] file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--lx-soft)] file:px-3 file:py-2"/>
-       <p className="text-xs leading-5 text-[var(--lx-muted)]">ZIP 最大 30MB；必须且仅有一个 9.5 MQ5 源文件，并包含 README/安装编译说明。禁止脚本、可执行文件和路径穿越。</p>
+       <p className="text-xs leading-5 text-[var(--lx-muted)]">ZIP 最大 30MB；必须且仅有一个 9.5 MQ5 源文件，并包含 README/安装编译说明。禁止通用脚本、安装程序、DLL及路径穿越；仅允许 MT5 文件、说明文档与图片。</p>
        <button type="button" disabled={!files[product.productId]||Boolean(busy)} onClick={()=>void upload(product)}
         className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">{busy===product.productId?"正在上传与核验…":"上传并核验源码包"}</button>
       </div>}
