@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
+import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES, GEO_STATIC_TOPICS, GEO_STATIC_LOCALES } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
 import { loadToolStaticRoutes } from "../scripts/cloudflare/tool-static-route-manifest-20261110.mjs";
 
 const html = "<!doctype html><html><head><title>LINGXIFIELD</title></head><body>" + "x".repeat(5000) + "</body></html>";
@@ -16,6 +16,20 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/sasi/marketplace"), false,
       "redirect-only marketplace alias must remain Worker-handled");
+    for (const topic of GEO_STATIC_TOPICS) {
+      for (const locale of GEO_STATIC_LOCALES) {
+        const route = locale === "zh" ? `/discover/${topic}` : `/${locale}/discover/${topic}`;
+        assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === route), true,
+          "every localized SASI GEO page must be snapshotted asset-first: " + route);
+      }
+    }
+    for (const retiredTopic of [
+      "ai-short-drama-generator", "book-to-ai-agent", "document-ai-agent",
+      "learning-ai-agent", "research-ai-agent", "ai-website-builder"
+    ]) {
+      assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route.includes(retiredTopic)), false,
+        "retired GEO topics must never be published as static assets: " + retiredTopic);
+    }
     for (const retired of [
       "/sasi/assemble", "/sasi/build", "/sasi/chat", "/sasi/connections",
       "/sasi/director", "/sasi/drama", "/sasi/image", "/sasi/operator",
