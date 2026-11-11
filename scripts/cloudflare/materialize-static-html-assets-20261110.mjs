@@ -104,7 +104,7 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   const toolRoutes = await loadToolStaticRoutes();
   const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
   const robotsText = await readFile(join(assetRoot, "robots.txt"), "utf8");
-  const buildHost = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com").hostname.toLowerCase().replace(/^www\\./, "");
+  const buildHost = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com").hostname.toLowerCase().replace(/^www\./, "");
   if (buildHost !== "lingxifield.com" && buildHost !== "lingxifield.cn") {
     throw new Error("STATIC_ROBOTS_UNTRUSTED_BUILD_ORIGIN:" + buildHost);
   }
