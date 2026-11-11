@@ -1,6 +1,8 @@
--- Exact seller balance snapshots must be aggregated in PostgreSQL.
--- The API history lists are intentionally bounded; balances are never derived from those pages.
+-- Restored verbatim from production migration history.
+-- Version 20261110124412 is already applied to the production Supabase project.
+-- This file mirrors that exact applied migration; it must not be replayed manually.
 BEGIN;
+
 CREATE OR REPLACE FUNCTION public.sasi_market_seller_balance_snapshot()
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -72,4 +74,8 @@ $$;
 
 REVOKE ALL ON FUNCTION public.sasi_market_seller_balance_snapshot() FROM PUBLIC,anon;
 GRANT EXECUTE ON FUNCTION public.sasi_market_seller_balance_snapshot() TO authenticated,service_role;
+
+ALTER FUNCTION public.sasi_market_request_payout(bigint,text,uuid) SET search_path='';
+REVOKE ALL ON FUNCTION public.sasi_market_request_payout(bigint,text,uuid) FROM PUBLIC,anon,authenticated,service_role;
+
 COMMIT;
