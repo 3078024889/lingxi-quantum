@@ -397,7 +397,7 @@ PY
  cp -a "$UNIT" "$UNIT_BACKUP"
  (
   umask 077
-  # Preserve all live payment, wallet and marketplace sale/upload/delivery flags.
+  # Preserve merchant and wallet flags from the existing live EnvironmentFiles.
   # Keep first-party software sales fail-closed until a package has a verified digest, scan and sale-ready record.
   # Keep seller payouts fail-closed until the payout transfer worker is independently verified.
   printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' 'TOOL_PASS_BACKEND_READY=true' \

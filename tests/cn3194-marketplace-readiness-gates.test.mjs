@@ -29,7 +29,7 @@ console.log("CN3194_MARKETPLACE_PRIVATE_R2_UPLOAD_SCAN_SALES_AND_PAYOUT_GATES_EN
 
 
 const releaseTemplate=read("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh");
-const productionStart=releaseTemplate.indexOf("# Preserve all live payment");
+const productionStart=releaseTemplate.indexOf("# Preserve merchant and wallet flags from the existing live EnvironmentFiles.");
 const productionEnd=releaseTemplate.indexOf('> "$PROD_FLAGS"',productionStart);
 assert(productionStart>=0&&productionEnd>productionStart,"production flag block must be present");
 const productionFlags=releaseTemplate.slice(productionStart,productionEnd);
