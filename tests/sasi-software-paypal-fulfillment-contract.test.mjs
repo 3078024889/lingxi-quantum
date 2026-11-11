@@ -24,7 +24,7 @@ assert.match(marketplace,/marketplaceR2Ready\(\)/);
 const catalog=read("app/api/sasi/software/catalog/route.ts");
 assert.match(catalog,/const wechat=wechatPayEnabled\(\)/);
 assert.match(catalog,/const alipay=alipayEnabled\(\)/);
-assert.match(catalog,/const paypal=paypalPayEnabled\(\)/);
+assert.match(catalog,/const paypal=paypal(?:Pay)?Enabled\(\)/);
 assert.match(catalog,/available:Boolean\(\(wechat\|\|alipay\|\|paypal\)&&await softwareCheckoutReady\(p\.id\)\)/);
 assert.match(catalog,/payment:\{wechat,alipay,paypal\}/);
 
