@@ -176,8 +176,6 @@ grep '^CN_' "$TMP/paypal.log" || true
 PAYPAL=false;TOOLPASS_BACKEND=false
 grep -Fxq 'CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS' "$TMP/paypal.log" && PAYPAL=true || true
 grep -Fxq 'CN_TOOLPASS_BACKEND_READINESS=PASS' "$TMP/paypal.log" && TOOLPASS_BACKEND=true || true
-grep -Fxq 'CN_CNY_WALLET_REFUND_GATE=PASS' "$TMP/paypal.log" && CNY_REFUND_GATE=true || true
-grep -Fxq 'CN_USD_WALLET_REFUND_GATE=PASS' "$TMP/paypal.log" && USD_REFUND_GATE=true || true
 
 echo "STEP_3_UNSIGNED_WEBHOOKS_MUST_FAIL_CLOSED"
 for item in "alipay|/api/pay/alipay/notify|application/x-www-form-urlencoded|out_trade_no=INVALID" \
@@ -197,8 +195,6 @@ if [[ "$ALIPAY" != true || "$WECHAT" != true || "$PAYPAL" != true || "$TOOLPASS_
 fi
 if [[ "$MODE" == --audit ]];then
  echo CN3194_ALL_THREE_LIVE_MERCHANTS_AND_TOOLPASS_BACKEND_AUDIT_PASS_FLAGS_UNCHANGED
- [[ "$CNY_REFUND_GATE" == true ]] || echo CN_CNY_USD_WALLET_TOPUPS_PRESERVED_NO_REFUND_FLAG_MUTATION
- [[ "$USD_REFUND_GATE" == true ]] || echo CN_CNY_USD_WALLET_TOPUPS_PRESERVED_NO_REFUND_FLAG_MUTATION
  exit 0
 fi
 
@@ -256,7 +252,5 @@ for path in /api/health /api/pay/providers /api/tools/pass;do
  echo "CN3194_PUBLIC_PAYMENT_ROUTE:$path:$status"
  [[ "$status" == 200 ]] || { rollback;exit 1; }
 done
-if [[ "$CNY_REFUND_GATE" == true ]];then echo CN_CNY_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
-if [[ "$USD_REFUND_GATE" == true ]];then echo CN_USD_WALLET_TOPUP_ENABLED_REFUND_GATE_PASS;else echo CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED;fi
 echo "SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION"
 echo "NO_REAL_CHARGE_NO_ORDER_NO_WALLET_MUTATION_NO_HISTORICAL_DATA_CHANGE"

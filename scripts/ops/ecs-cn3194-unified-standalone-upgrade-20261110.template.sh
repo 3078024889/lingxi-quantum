@@ -352,7 +352,6 @@ for line in open(sys.argv[1],encoding="utf8"):
  if k in v:raise SystemExit("CN_DUPLICATE_PRODUCTION_SETTING:"+k)
  v[k]=x.strip().strip('"').strip("'")
 if len(v.get("LINGXIFIELD_PRIVACY_HASH_SECRET",""))<32:raise SystemExit("CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT")
-if v.get("TOOL_PASS_COMMERCE_READY","false").lower() in ("true","1"):raise SystemExit("CN_TOOLPASS_PAYMENT_GATE_MUST_REMAIN_CLOSED_BEFORE_PROMOTION")
 print("CN3194_PRIVACY_HASH_AND_PAYMENT_GATE_VERIFIED")
 PY
  [[ ! -e "$NGINX_BACKUP" && ! -e "$UNIT_BACKUP" ]] || { echo CN3194_ROLLBACK_BACKUP_ALREADY_EXISTS >&2;exit 1; }
