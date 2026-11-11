@@ -107,6 +107,8 @@ test("release checksum is relocatable between GitHub artifacts, Windows transfer
 
 test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rollback",()=>{
  assert.match(upgrade,/PORT=3195/);
+ assert.match(upgrade,/redirect \/sasi\/marketplace 308 \/sasi/);
+ assert.match(releaseWorkflow,/CN3194_LEGACY_MARKET_REDIRECT_PASS/);
  assert.match(upgrade,/3193\|3194/);
  assert.match(upgrade,/find_service_for_port/);
  assert.match(upgrade,/CN3195_ACTIVE_BASELINE_PASS/);
