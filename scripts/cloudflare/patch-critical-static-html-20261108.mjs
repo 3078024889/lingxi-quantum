@@ -23,7 +23,6 @@ const routes={
  "/ai-wallet":"ai-wallet.html",
  "/account":"account-login.html",
  "/sasi":"sasi.html",
- "/sasi/marketplace":"marketplace.html",
  "/about":"about.html",
  "/announcements":"announcements.html",
  "/tools/ico-to-png":"tool-ico-to-png.html",
