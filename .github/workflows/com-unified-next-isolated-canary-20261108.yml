@@ -9,6 +9,9 @@ on:
       - 'app/siai/page.tsx'
       - 'app/[locale]/siai/page.tsx'
       - 'lib/seo/siai-domain-policy.ts'
+      - 'lib/siai-seo-policy.ts'
+      - 'scripts/seo/audit-global.cjs'
+      - 'tests/seo-fullsite-coverage.test.mjs'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
       - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
       - 'scripts/cloudflare/anonymous-private-api.mjs'
@@ -131,6 +134,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
+          node scripts/seo/audit-global.cjs
           node --test tests/com-current-runtime-routing-20261108.test.mjs
           node --check scripts/cloudflare/materialize-static-html-assets-20261110.mjs
           node --check scripts/cloudflare/tool-static-route-manifest-20261110.mjs
