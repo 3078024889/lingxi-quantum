@@ -22,12 +22,14 @@ EOF
 chmod 600 .dev.vars
 
 worker_pid=""
+robots_snapshot=""
 cleanup() {
   if [[ -n "$worker_pid" ]]; then
     kill "$worker_pid" 2>/dev/null || true
     wait "$worker_pid" 2>/dev/null || true
   fi
   rm -f .dev.vars
+  if [[ -n "$robots_snapshot" ]]; then rm -f "$robots_snapshot"; fi
 }
 trap cleanup EXIT
 
@@ -40,6 +42,23 @@ for i in $(seq 1 70); do
   sleep 2
 done
 test "$ready" = 1
+
+# Capture the exact build-domain robots response and materialize it as a direct static asset.
+# This prevents /robots.txt from falling through to the dynamic Worker route at runtime.
+robots_snapshot="$(mktemp "$RUNNER_TEMP/lingxi-com-robots.XXXXXX")"
+curl --noproxy '*' -fSs --retry 2 --max-time 30 \\
+  -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \\
+  http://127.0.0.1:8787/robots.txt -o "$robots_snapshot"
+grep -Fq 'Sitemap: https://lingxifield.com/sitemap.xml' "$robots_snapshot"
+grep -Fq 'Disallow: /api/' "$robots_snapshot"
+if [[ -s .open-next/assets/robots.txt ]]; then
+  cmp -s "$robots_snapshot" .open-next/assets/robots.txt || { echo 'COM_ROBOTS_STATIC_ASSET_COLLISION'; exit 1; }
+else
+  cp "$robots_snapshot" .open-next/assets/robots.txt
+fi
+rm -f "$robots_snapshot"
+robots_snapshot=""
+echo 'COM_ROBOTS_STATIC_ASSET_CAPTURED'
 
 for path in /api/money/summary /api/sasi/account /api/sasi/marketplace/my-orders; do
   body="$(mktemp)"
