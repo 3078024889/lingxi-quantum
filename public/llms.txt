@@ -1,44 +1,58 @@
 # 灵犀场 LINGXIFIELD
 
-> 灵犀场提供 100+ 在线实用工具与 SASI 智能服务，重点解决 PDF、图片、视频音频、文件表格、隐私和常见数字处理问题。主站为 https://lingxifield.com ，中文镜像域名为 https://lingxifield.cn 。
+> 灵犀场提供全球 SIAI 厂商、模型与工具信息目录、100+ 在线实用工具，以及 SASI 智能软件市场。国际主站为 https://lingxifield.com；中国区中文 SIAI 入口为 https://lingxifield.cn/siai。
 
 ## 核心入口
 
-- [在线实用工具](https://lingxifield.com/tools): PDF、图片、视频音频、文件、表格、二维码与通用工具。
-- [SASI 智能服务](https://lingxifield.com/sasi): AI 短剧、网站构建、书本、学习与科研创作。
-- [全部产品](https://lingxifield.com/products): 灵犀场公开产品入口。
+- [全球 SIAI 排行榜](https://lingxifield.com/siai): 全球 SI / AI 厂商、模型、工具、价格、免费额度、地区可用性与商用信息。
+- [中国区 SIAI 入口](https://lingxifield.cn/siai): 中文区域入口。
+- [在线工具大厅](https://lingxifield.com/tools): PDF、图片、视频音频、文件、表格、开发与隐私处理工具。
+- [SASI 智能软件市场](https://lingxifield.com/sasi): 成品软件、MT5 EA 源码授权、软件许可与自动交付。
+- [SASI Software Marketplace](https://lingxifield.com/discover/sasi-software-marketplace): 软件市场、产品目录与卖家服务。
+- [全部公开产品](https://lingxifield.com/products): 灵犀场公开产品入口。
+
+## SASI 软件与开发者服务
+
+- [SASI Software Marketplace](https://lingxifield.com/discover/sasi-software-marketplace): 软件市场与成品软件目录。
+- [MT5 EA Source Code & Trading Software](https://lingxifield.com/discover/mt5-ea-source-code): MT5 EA 源码与交易软件。
+- [Software Licensing & Automatic Delivery](https://lingxifield.com/discover/software-licensing-delivery): 软件授权、订单权益与自动交付。
+- [Developer Software Publishing & Seller Services](https://lingxifield.com/discover/developer-software-publishing): 开发者发布、商品管理与卖家服务。
+- [SASI 软件交付说明](https://lingxifield.com/sasi/delivery): 订单授权、文件校验与下载流程。
 
 ## 高频工具
 
-- [PDF 压缩](https://lingxifield.com/tools/pdf-compress): 减小 PDF 文件体积，适合图片型和扫描件 PDF。
-- [PDF 合并](https://lingxifield.com/tools/merge-pdf): 将多个 PDF 按顺序合并成一个文件。
-- [PDF 电子签名 / 电子签章](https://lingxifield.com/tools/e-sign-pdf): 添加手写签名、印章并导出 PDF。
-- [PDF 转 Word](https://lingxifield.com/tools/pdf-to-word): 将 PDF 转为可编辑 Word，并检查转换后的版式。
-- [PDF 转 Excel](https://lingxifield.com/tools/pdf-to-xlsx): 从带文字层的 PDF 中提取表格到 XLSX。
-- [PDF 转 JPG](https://lingxifield.com/tools/pdf-to-jpg): 将 PDF 页面导出为独立 JPG 图片。
-- [图片 OCR](https://lingxifield.com/tools/ocr): 从照片、截图和扫描图片中提取文字。
+- [PDF 重建压缩](https://lingxifield.com/tools/compress-pdf): 优化 PDF 文件体积。
+- [PDF 合并](https://lingxifield.com/tools/merge-pdf): 按顺序合并多个 PDF。
+- [PDF 电子签名 / 电子签章](https://lingxifield.com/tools/e-sign-pdf): 添加签名与印章。
+- [PDF 转 Word](https://lingxifield.com/tools/pdf-to-word): 将 PDF 转换为可编辑 Word。
+- [PDF 转 Excel](https://lingxifield.com/tools/pdf-to-xlsx): 从 PDF 提取表格。
+- [PDF 转 JPG](https://lingxifield.com/tools/pdf-to-jpg): 导出 PDF 页面图像。
+- [图片 OCR](https://lingxifield.com/tools/ocr): 从照片、截图和扫描件提取文字。
 - [图片压缩](https://lingxifield.com/tools/compress-image): 减小图片文件体积。
-- [图片压缩到 100KB](https://lingxifield.com/tools/compress-image-to-100kb): 以 100KB 为目标压缩图片。
-- [HEIC 转 JPG](https://lingxifield.com/tools/heic-to-jpg): 将 iPhone 常见 HEIC / HEIF 图片转换为 JPG。
-- [视频转文字](https://lingxifield.com/tools/video-transcription): 将视频语音转换为文字。
-- [音频转文字](https://lingxifield.com/tools/audio-transcription): 将录音和音频转换为文字。
-- [临时邮箱](https://lingxifield.com/tools/temp-mail): 用于短期接收验证码和一次性通知。
-- [清除图片 EXIF](https://lingxifield.com/tools/remove-exif): 清理图片中的常见 EXIF / 元数据。
-- [文件真实格式检测](https://lingxifield.com/tools/file-type-detector): 检查文件内容类型是否与扩展名一致。
-- [AI 图片检测](https://lingxifield.com/tools/ai-image-check): 分析图片中的可能 AI 生成特征，并结合来源信息判断。
-- [AI 视频与音频检测](https://lingxifield.com/tools/ai-video-audio-check): 分析视频画面或音频中的可能 AI 合成特征。
+- [图片压缩到 100KB](https://lingxifield.com/tools/compress-image-to-100kb): 按目标体积压缩图片。
+- [HEIC 转 JPG](https://lingxifield.com/tools/heic-to-jpg): 转换 HEIC / HEIF 图片。
+- [视频转文字](https://lingxifield.com/tools/video-transcription): 提取视频语音文字。
+- [音频转文字](https://lingxifield.com/tools/audio-transcription): 转录录音与音频。
+- [临时邮箱](https://lingxifield.com/tools/temp-mail): 短期接收验证码与一次性通知。
+- [清除图片 EXIF](https://lingxifield.com/tools/remove-exif): 清理图片元数据。
+- [文件真实格式检测](https://lingxifield.com/tools/file-type-detector): 检查文件内容类型与扩展名是否一致。
 
-## 语言
+## 九种语言
 
-- [English](https://lingxifield.com/en/tools): English tool pages.
-- [日本語](https://lingxifield.com/ja/tools): Japanese tool pages.
-- [한국어](https://lingxifield.com/ko/tools): Korean tool pages.
-- [Français](https://lingxifield.com/fr/tools): French tool pages.
-- [Deutsch](https://lingxifield.com/de/tools): German tool pages.
-- [Español](https://lingxifield.com/es/tools): Spanish tool pages.
-- [Português](https://lingxifield.com/pt/tools): Portuguese tool pages.
-- [العربية](https://lingxifield.com/ar/tools): Arabic tool pages.
+- [中文工具](https://lingxifield.com/tools)
+- [English](https://lingxifield.com/en/tools)
+- [日本語](https://lingxifield.com/ja/tools)
+- [한국어](https://lingxifield.com/ko/tools)
+- [Français](https://lingxifield.com/fr/tools)
+- [Deutsch](https://lingxifield.com/de/tools)
+- [Español](https://lingxifield.com/es/tools)
+- [Português](https://lingxifield.com/pt/tools)
+- [العربية](https://lingxifield.com/ar/tools)
 
-## 说明
+## 索引与访问规则
 
-这是一个精简的机器可读入口，不替代 sitemap.xml。页面中的工具说明、搜索问题与处理方式以实际工具页面为准。
+- Sitemap: https://lingxifield.com/sitemap.xml
+- Robots: https://lingxifield.com/robots.txt
+- LLM full index: https://lingxifield.com/llms-full.txt
+- 本文件仅描述公开页面，不列出账户、结算、管理、订单私有数据或用户文件链接。
+- 工具能力、价格、免费额度、地区限制与商用许可，以对应公开页面的实时说明为准。

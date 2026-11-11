@@ -397,12 +397,10 @@ PY
  cp -a "$UNIT" "$UNIT_BACKUP"
  (
   umask 077
-  # Preserve merchant and wallet flags from the existing live EnvironmentFiles.
-   # Only site metadata and not-yet-released marketplace features are overridden.
-   printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' 'TOOL_PASS_BACKEND_READY=true' \
-    'SASI_MARKET_SALES_ENABLED=false' 'SASI_MARKET_UPLOADS_ENABLED=false' 'SASI_MARKET_DELIVERY_ENABLED=false' \
-    'SASI_MARKET_PAYOUTS_ENABLED=false' 'SASI_MARKETPLACE_COMMERCE_READY=false' \
-    'SOFTWARE_COMMERCE_READY=false' 'NEXT_PUBLIC_SITE_URL=https://lingxifield.cn' \
+  # Preserve all live payment, wallet, marketplace sale/upload/delivery and software readiness flags.
+  # Keep seller payouts fail-closed until the payout transfer worker is independently verified.
+  printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' 'TOOL_PASS_BACKEND_READY=true' \
+    'SASI_MARKET_PAYOUTS_ENABLED=false' 'NEXT_PUBLIC_SITE_URL=https://lingxifield.cn' \
     'ALIPAY_SITE_URL=https://lingxifield.cn' 'PORT=3194' 'HOSTNAME=127.0.0.1' > "$PROD_FLAGS"
  )
  chmod 600 "$PROD_FLAGS"

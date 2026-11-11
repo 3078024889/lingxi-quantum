@@ -14,6 +14,9 @@ on:
       - 'lib/siai-seo-policy.ts'
       - 'scripts/seo/audit-global.cjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'public/llms.txt'
+      - 'scripts/seo/growth/**'
+      - 'tests/cn3194-marketplace-readiness-gates.test.mjs'
       - 'tests/cn-payment-activation-3194-20261110.test.mjs'
 permissions:
   contents: read
@@ -59,6 +62,8 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
+          pnpm seo:growth:generate
+          pnpm seo:growth:audit
           node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
           node --test \
             tests/cn-payment-activation-3194-20261110.test.mjs \
