@@ -116,6 +116,26 @@ test("release checksum is relocatable between GitHub artifacts, Windows transfer
 test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rollback",()=>{
  assert.match(upgrade,/PORT=3195/);
  assert.match(upgrade,/redirect \/sasi\/marketplace 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/assemble 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/build 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/chat 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/connections 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/director 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/drama 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/image 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/operator 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/operator\/v5 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/project-dna 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/series 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/variants 308 \/sasi/);
+ assert.match(upgrade,/redirect \/ai-knowledge 308 \/sasi/);
+ assert.match(upgrade,/redirect \/ai-learning 308 \/sasi/);
+ assert.match(upgrade,/redirect \/ai-research 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/pricing 308 \/ai-wallet/);
+ assert.match(upgrade,/code \/discover\/sasi-software-marketplace 200/);
+ assert.match(upgrade,/code \/llms\.txt 200/);
+ assert.match(releaseWorkflow,/CN3194_ALL_RETIRED_ALIASES_PASS/);
+ assert.match(releaseWorkflow,/CN3194_SASI_GEO_SITEMAP_LLMS_PASS/);
  assert.match(releaseWorkflow,/CN3194_LEGACY_MARKET_REDIRECT_PASS/);
  assert.match(upgrade,/3193\|3194/);
  assert.match(upgrade,/find_service_for_port/);
