@@ -47,7 +47,7 @@ test "$ready" = 1
 # This prevents /robots.txt from falling through to the dynamic Worker route at runtime.
 robots_snapshot="$(mktemp "$RUNNER_TEMP/lingxi-com-robots.XXXXXX")"
 curl --noproxy '*' -fSs --retry 2 --max-time 30 \
-  -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \\
+  -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
   http://127.0.0.1:8787/robots.txt -o "$robots_snapshot"
 grep -Fq 'Sitemap: https://lingxifield.com/sitemap.xml' "$robots_snapshot"
 grep -Fq 'Disallow: /api/' "$robots_snapshot"
