@@ -19,10 +19,14 @@ assert.match(checkout,/\[\"toolpass\",\"software\",\"market\"\]/);
 assert.match(checkout,/referenceId:order\.id/);
 
 const marketplace=read("lib/sasi-marketplace/checkout.ts");
-assert.match(marketplace,/wechatPayEnabled\(\)\|\|alipayEnabled\(\)\|\|paypalEnabled\(\)/);
+assert.match(marketplace,/process\.env\.SASI_MARKETPLACE_COMMERCE_READY==="true"/);
+assert.match(marketplace,/marketplaceR2Ready\(\)/);
 const catalog=read("app/api/sasi/software/catalog/route.ts");
-assert.match(catalog,/const wx=wechatPayEnabled\(\),ali=alipayEnabled\(\),paypal=paypalEnabled\(\)/);
-assert.match(catalog,/payment:\{wechat:wx,alipay:ali,paypal\}/);
+assert.match(catalog,/const wechat=wechatPayEnabled\(\)/);
+assert.match(catalog,/const alipay=alipayEnabled\(\)/);
+assert.match(catalog,/const paypal=paypal(?:Pay)?Enabled\(\)/);
+assert.match(catalog,/available:Boolean\(\(wechat\|\|alipay\|\|paypal\)&&await softwareCheckoutReady\(p\.id\)\)/);
+assert.match(catalog,/payment:\{wechat,alipay,paypal\}/);
 
 const webhook=read("app/api/pay/paypal/webhook/route.ts");
 assert.match(webhook,/WEBHOOK_BODY_TOO_LARGE/);
@@ -38,7 +42,12 @@ assert.match(fulfillment,/sasi_grant_software_delivery/);
 assert.match(fulfillment,/sasi_market_record_verified_sale/);
 
 const readiness=read("lib/sasi-software/readiness.ts");
-assert.match(readiness,/admin\.storage\.from\(data\.bucket\)\.list/);
+assert.match(readiness,/from\("sasi_software_packages"\)/);
+assert.match(readiness,/sale_ready/);
+assert.match(readiness,/verified_at/);
+assert.match(readiness,/sha256/);
+assert.match(readiness,/price_cny/);
+assert.match(readiness,/price_usd/);
 assert.match(readiness,/data\?\.sale_ready/);
 const hardening=read("supabase/migrations/20261110120000_harden_sasi_software_fulfillment_search_path.sql");
 assert.match(hardening,/sasi_grant_software_delivery\(uuid\) SET search_path TO ''/);

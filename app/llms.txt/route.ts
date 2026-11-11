@@ -22,7 +22,7 @@ export function GET(){
  const lines=[
   '# 灵犀场 LINGXIFIELD',
   '',
-  `> LINGXIFIELD's globally canonical public tool and guide URLs are on https://lingxifield.com. The Chinese regional ranking entry is https://lingxifield.cn/siai; other .cn mirror paths are not separate canonical pages. Free tools that run in the browser do not upload files. Paid tools are labeled paid. SASI charges by usage after price confirmation. Short drama and website generation are not available yet. Chinese pages have no language prefix; en, ja, ko, fr, de, es and pt and ar prefixes exist for localized public pages. This file does not grant access to private account data.`,
+  `> LINGXIFIELD's globally canonical public tool and guide URLs are on https://lingxifield.com. The Chinese regional ranking entry is https://lingxifield.cn/siai; other .cn mirror paths are not separate canonical pages. Free tools that run in the browser do not upload files. Paid tools are labeled paid. SASI (SASI Software Marketplace) is the intelligent marketplace for reviewed finished software, MT5 EAs, trading source code, source licenses and installation guides. Developers submit packages for security review; paid orders are delivered only after verified payment. Legacy creation-era routes permanently redirect to the software marketplace. Chinese pages have no language prefix; en, ja, ko, fr, de, es and pt and ar prefixes exist for localized public pages. This file does not grant access to private account data.`,
   '',
   '## Public pages',
   ...pages,

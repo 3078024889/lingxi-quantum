@@ -28,6 +28,9 @@ const CERT_SERIAL_NO = process.env.WECHAT_CERT_SERIAL_NO;
 const PLATFORM_PUBLIC_KEY = process.env.WECHAT_PLATFORM_PUBLIC_KEY;
 const PLATFORM_PUBLIC_KEY_ID = process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID;
 
+export function wechatAppId():string{return APP_ID??"";}
+export function wechatMerchantId():string{return MCH_ID??"";}
+
 export function wechatPayConfigured(): boolean {
   return wechatPayMissingVars().length === 0;
 }
@@ -143,11 +146,18 @@ export async function wechatRequest(method: "GET" | "POST", path: string, body?:
   } finally {
     clearTimeout(timeoutId);
   }
-  const data = await res.json();
+  const raw = await res.text();
+  if (Buffer.byteLength(raw, "utf8") > 1_048_576) throw new Error("WECHAT_RESPONSE_TOO_LARGE");
+  if (!verifyWechatApiResponseSignature(res.headers, raw)) throw new Error("WECHAT_RESPONSE_SIGNATURE_INVALID");
+  let data:any = {};
+  if (raw) {
+    try { data = JSON.parse(raw); }
+    catch { throw new Error("WECHAT_RESPONSE_JSON_INVALID"); }
+  }
   if (!res.ok) {
-    const providerCode=String(data?.code||"ERROR").slice(0,80);
+    const providerCode=String(data?.code||"ERROR").replace(/[^A-Z0-9_]/gi,"").slice(0,80);
     if(path.startsWith("/v3/refund/"))throw new Error(`WECHAT_REFUND_${res.status}:${providerCode}`);
-    throw new Error(`微信支付接口返回错误 ${res.status}: ${JSON.stringify(data)}`);
+    throw new Error(`WECHAT_API_${res.status}:${providerCode}`);
   }
   return data;
 }
@@ -266,6 +276,15 @@ export function verifyWechatNotifySignature(params: {
     console.error("[wechatpay] 验签过程出错:", e);
     return false;
   }
+}
+
+export function verifyWechatApiResponseSignature(headers:Headers,body:string):boolean{
+  const timestamp=headers.get("Wechatpay-Timestamp")??"";
+  const nonce=headers.get("Wechatpay-Nonce")??"";
+  const signature=headers.get("Wechatpay-Signature")??"";
+  const serial=headers.get("Wechatpay-Serial")??"";
+  if(!isWechatNotifyTimestampFresh(timestamp,300))return false;
+  return verifyWechatNotifySignature({timestamp,nonce,body,signature,serial});
 }
 
 // 主动查询一笔订单的支付状态——前端轮询用，用户扫码付款之后，页面每隔

@@ -12,7 +12,7 @@ test("Nine language legal notice and actual software offering",()=>{
 });
 test("Old drama/image generation is not an active entrypoint",()=>{
  for(const path of ["app/sasi/image/page.tsx","app/sasi/drama/page.tsx"]){
-  const s=read(path);assert.match(s,/redirect\("\/sasi"\)/);assert.match(s,/index:false/);
+  const s=read(path);assert.match(s,/permanentRedirect\("\/sasi"\)/);assert.match(s,/index:false/);
  }
  const nav=read("components/Nav.tsx");
  assert.doesNotMatch(nav,/href="\/sasi" className="lx11-top-link"/);
@@ -50,7 +50,7 @@ test("Real software checkout and tool passes remain fail-closed",()=>{
 test("All retired creation pages are noindexed redirects, with valid market SEO",()=>{
  for(const name of ["assemble","director","series","variants","build","chat","project-dna"]){
   const source=read("app/sasi/"+name+"/page.tsx");
-  assert.match(source,/redirect\("\/sasi"\)/);
+  assert.match(source,/permanentRedirect\("\/sasi"\)/);
   assert.match(source,/index:false/);
  }
  assert.doesNotMatch(read("components/Footer.tsx"),/href="\/sasi\/(?:drama|build)"/);

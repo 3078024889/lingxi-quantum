@@ -1,4 +1,4 @@
-name: CN3194 payment-integrated standalone release (R2 staging only; NO PROD DEPLOY)
+name: CN3194 payment-integrated standalone prerelease (local R2 transfer; NO PROD DEPLOY)
 on:
   pull_request:
     branches: [ci/cn3194-payment-base-20261110]
@@ -11,6 +11,13 @@ on:
       - 'lib/alipay.ts'
       - 'lib/wechatpay.ts'
       - 'lib/paypal.ts'
+      - 'lib/siai-seo-policy.ts'
+      - 'scripts/seo/audit-global.cjs'
+      - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'public/llms.txt'
+      - 'scripts/seo/growth/**'
+      - 'tests/cn3194-marketplace-readiness-gates.test.mjs'
+      - 'tests/cn-payment-activation-3194-20261110.test.mjs'
 permissions:
   contents: read
   actions: read
@@ -55,12 +62,15 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
+          pnpm seo:growth:generate
+          pnpm seo:growth:audit
           node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
           node --test \
             tests/cn-payment-activation-3194-20261110.test.mjs \
             tests/cn-wallet-checkout-entry-20261108.test.mjs \
             tests/cn-toolpass-public-ui-20261108.test.mjs \
             tests/paypal-merchant-idempotency-20261108.test.mjs \
+            tests/wallet-topup-live-contract-20261111.test.mjs \
             tests/sasi-marketplace-security-contract.test.mjs \
             tests/sasi-software-paypal-fulfillment-contract.test.mjs \
             tests/cn3194-source-only-software-catalog.test.mjs \
@@ -71,12 +81,19 @@ jobs:
           node scripts/audit/unified-tool-pass-server-coverage.mjs
           node tests/sasi-marketplace-fee.test.mjs
           node --test tests/sasi-marketplace-review-security-20261108.test.mjs
+          node --test tests/wallet-ledger-keyset-20261110.test.mjs
+          node --test tests/sasi-first-party-package-upload-20261111.test.mjs tests/sasi-market-payout-balance-snapshot-20261110.test.mjs
+          node --test tests/legacy-sasi-retirement.test.mjs
+          node --test tests/footer-unified.test.mjs tests/growth-distribution.test.mjs tests/seo-fullsite-coverage.test.mjs tests/siai-search-discovery.test.mjs
+          node --test tests/supabase-applied-migration-parity-20261111.test.mjs
+          node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs tests/dual-premium-sasi-toolpass-20261109.test.mjs tests/dual-premium-visual-no-legacy-20261109.test.mjs
           node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
           node --test tests/sasi-marketplace-long-description-20261109.test.mjs
           node --test tests/sasi-premium-nine-language-20261109.test.mjs
           node --test tests/toolpass-premium-nine-language-20261109.test.mjs
           node --test tests/com-public-market-edge.test.mjs
           node --test tests/public-announcements-deeplink-20261108.test.mjs
+          node scripts/seo/audit-global.cjs
           pnpm exec tsc --noEmit
       - name: Build exact CN3194 standalone
         run: |
@@ -108,17 +125,20 @@ jobs:
             sleep 1
           done
           [ "$ready" = 1 ] || { cat "$RUNNER_TEMP/cn3319.log";exit 1; }
-          for path in / /tools /siai /sasi /sasi/marketplace /about /account/software /announcements /tools/pass /ai-wallet; do
+          for path in / /tools /siai /sasi /about /account/software /announcements /tools/pass /ai-wallet /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "PUBLIC_LOCAL_ROUTE:$path:$code"
             [ "$code" = 200 ] || exit 1
           done
+          node -e 'const url="http://127.0.0.1:3319/sasi/marketplace";fetch(url,{redirect:"manual"}).then(r=>{const target=new URL(r.headers.get("location")||"",url);if(r.status!==308||target.pathname!=="/sasi")process.exit(1);console.log("CN3194_LEGACY_MARKET_REDIRECT_PASS")}).catch(()=>process.exit(1))'
+          node -e 'const base="http://127.0.0.1:3319";const aliases=["/sasi/assemble","/sasi/build","/sasi/chat","/sasi/connections","/sasi/director","/sasi/drama","/sasi/image","/sasi/operator","/sasi/operator/v5","/sasi/project-dna","/sasi/series","/sasi/variants","/ai-knowledge","/ai-learning","/ai-research"];(async()=>{for(const path of aliases){const r=await fetch(base+path,{redirect:"manual"});const t=new URL(r.headers.get("location")||"",base);if(r.status!==308||t.pathname!=="/sasi")throw Error("LEGACY_ALIAS_FAILED:"+path)}const p=await fetch(base+"/sasi/pricing",{redirect:"manual"});if(p.status!==308||new URL(p.headers.get("location")||"",base).pathname!=="/ai-wallet")throw Error("LEGACY_PRICING_ALIAS_FAILED");console.log("CN3194_ALL_RETIRED_ALIASES_PASS")})().catch(e=>{console.error(e);process.exit(1)})'
+          node -e 'const base="http://127.0.0.1:3319";(async()=>{const page=await fetch(base+"/discover/sasi-software-marketplace");const html=await page.text();if(page.status!==200||!html.includes("SASI 智能软件市场")||!html.includes("https://lingxifield.com/discover/sasi-software-marketplace"))throw Error("SASI_GEO_LANDING_CANONICAL_FAILED");const cnSitemap=await (await fetch(base+"/sitemap.xml",{headers:{"x-lingxi-public-host":"lingxifield.cn"}})).text();if(!cnSitemap.includes("https://lingxifield.cn/siai")||cnSitemap.includes("https://lingxifield.cn/discover/"))throw Error("CN_SITEMAP_MUST_REMAIN_SIAI_ONLY");const comSitemap=await (await fetch(base+"/sitemap.xml",{headers:{"x-lingxi-public-host":"lingxifield.com"}})).text();for(const t of ["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"])if(!comSitemap.includes("https://lingxifield.com/discover/"+t))throw Error("COM_GEO_TOPIC_MISSING:"+t);for(const t of ["ai-short-drama-generator","book-to-ai-agent","document-ai-agent","learning-ai-agent","research-ai-agent","ai-website-builder"])if(comSitemap.includes("/discover/"+t))throw Error("RETIRED_TOPIC_IN_SITEMAP:"+t);const llms=await (await fetch(base+"/llms.txt")).text();if(!llms.includes("SASI Software Marketplace")||llms.includes("AI Short Drama Generator"))throw Error("LLMS_TOPIC_MISMATCH");console.log("CN3194_SASI_GEO_SITEMAP_LLMS_PASS")})().catch(e=>{console.error(e);process.exit(1)})'
           for path in /api/sasi/account /api/tools/jobs; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "ANON_AUTH_BOUNDARY:$path:$code"
             [ "$code" = 401 ] || exit 1
           done
-          for item in "/api/sasi/generation/submit:410" "/api/cron/sasi-v5-radar:410" "/api/admin/pay/readiness:404"; do
+          for item in "/api/sasi/generation/submit:410" "/api/cron/sasi-v5-radar:410" "/api/admin/pay/readiness:401"; do
             path="$(printf '%s' "$item" | cut -d: -f1)"
             expected="$(printf '%s' "$item" | cut -d: -f2)"
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
@@ -152,8 +172,8 @@ jobs:
           cp -a .next/standalone/. "$DIST/standalone/"
           printf '%s\n' "$SOURCE_SHA" > "$DIST/standalone/RELEASE_SOURCE_SHA"
           tar --sort=name --mtime='UTC 2026-01-01' --owner=0 --group=0 --numeric-owner -C "$DIST/standalone" -czf "$DIST/$FILE" .
-          sha256sum "$DIST/$FILE" > "$DIST/$CHECK"
           ARCHIVE_SHA="$(sha256sum "$DIST/$FILE" | awk '{print $1}')"
+          printf '%s  %s\n' "$ARCHIVE_SHA" "$FILE" > "$DIST/$CHECK"
           ARCHIVE_BYTES="$(stat -c '%s' "$DIST/$FILE")"
           TEMPLATE="scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh"
           python3 - "$TEMPLATE" "$DIST/$STAGE" "$TAG" "$SHORT" "$SOURCE_SHA" "$ARCHIVE_SHA" "$ARCHIVE_BYTES" "$FILE" "$CHECK" <<'PY'
@@ -213,7 +233,7 @@ jobs:
           echo "CN3194_RELEASE_ARCHIVE_SHA256=$ARCHIVE_SHA"
           echo "CN3194_STAGE_SCRIPT_BLOB_SHA1=$STAGE_BLOB"
           echo "CN3194_PAYMENT_SCRIPT_BLOB_SHA1=$PAYMENT_BLOB"
-      - name: Upload exact package and pinned promotion scripts
+      - name: Attach exact package and pinned promotion scripts as GitHub artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: cn3194-release-${{ steps.package.outputs.source_sha }}
@@ -261,6 +281,6 @@ jobs:
           fi
           gh release create "$TAG" "$ARCHIVE_FILE" "$CHECK_FILE" "$STAGE_FILE" "$PAYMENT_FILE" "$MANIFEST_FILE" \
             --repo "$GH_REPO" --target "$SOURCE_SHA" --prerelease \
-            --title "LINGXIFIELD CN3194 payment-integrated standalone $SHORT - STAGING ONLY" \
-            --notes "Exact-source candidate only. No ECS deployment, R2 upload, Nginx switch, DNS change or payment flag activation occurred. Transfer via the existing cn3192r2 R2 remote to a new cn3194/$SHORT prefix. Stage on 3194 with 3193 retained for rollback. Run the signed no-charge merchant audit before enabling WeChat, Alipay, PayPal and ToolPass. CNY/USD wallet top-ups remain gated by the refund-flow test. First-party SASI software sales remain gated until a real private ZIP is scanned and verified. Third-party marketplace sales remain gated until seller payout settlement is ready."
+            --title "LINGXIFIELD CN3194 payment-integrated standalone $SHORT - EXACT-SOURCE PRERELEASE" \
+            --notes "Exact-source candidate only. GitHub Actions did not upload to R2 and did not deploy to ECS, switch Nginx, change DNS or activate payment flags. Run the local R2 transfer helper to upload verified assets under the temporary cn3195/$SHORT staging prefix. The final production release and Nginx upstream are CN3194: route briefly to verified 3195 staging, free the old 3194 listener, start and verify the same source SHA on final 3194, then route Nginx to 3194. Keep 3193 as the explicit rollback baseline. Preserve the existing production payment-provider and CNY/USD wallet top-up flags. The isolated 3195 stage uses non-chargeable test flags only; final 3194 promotion inherits the existing live EnvironmentFiles. Run the signed no-charge merchant audit after promotion before any explicit provider-flag change; if existing providers are already enabled, leave them enabled. Refund lifecycle verification is separate and does not disable existing top-ups. First-party SASI software sales remain gated until the private source ZIP is uploaded, scanned and verified. Third-party marketplace sales and payouts remain gated until seller, scanner and payout settlement are ready."
           echo "CN3194_PRERELEASE_PUBLISHED_NOT_DEPLOYED:$TAG"

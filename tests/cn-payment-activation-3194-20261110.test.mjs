@@ -1,33 +1,189 @@
+import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-const script=readFileSync("scripts/ops/cn-payment-activate-3194-20261110.sh","utf8");
-const probe=readFileSync("scripts/ops/cn-payment-live-probe-3194-20261110.mjs","utf8");
-assert.match(script,/PROBE_SHA="2aec891d25ea78769d9c12b8ae9a89016d4425a9"/);
-assert.match(script,/cat > "\$PROBE\.part" <<'PAYPAL_PROBE'/);
-assert.doesNotMatch(script,/raw\.githubusercontent\.com|PROBE_URL/);
-assert.match(script,/git_blob_check "\$PROBE\.part" "\$PROBE_SHA"/);
-assert.match(script,/cn-payment-signed-live-probe\.mjs/);
-for(const token of [
- "CN_MERCHANT_ALIPAY_SIGNED_LIVE_PROBE=PASS",
- "CN_MERCHANT_WECHAT_SIGNED_LIVE_PROBE=PASS",
- "CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS",
- "CN_TOOLPASS_BACKEND_READINESS=PASS",
- "CN_CNY_WALLET_REFUND_GATE=PASS",
- "CN_USD_WALLET_REFUND_GATE=PASS"
-])assert.ok(script.includes(token),token);
-assert.match(script,/for item in "alipay\|\/api\/pay\/alipay\/notify/);
-assert.ok(script.includes('echo "CN_UNSIGNED_WEBHOOK_$name HTTP=$status"'));
-assert.match(script,/UNSIGNED_WEBHOOK_REJECTION_FAILED/);
-assert.match(script,/cp -a "\$FLAGS" "\$BACKUP"/);
-assert.match(script,/CN_PAYMENT_ACTIVATION_FAILED_ROLLBACK/);
-assert.match(script,/PAYPAL_ENABLED/);
-assert.match(script,/SASI_RMB_BALANCE_V1_ENABLED/);
-assert.match(script,/CNY_REFUND_GATE/);
-assert.match(script,/CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED/);
-assert.match(script,/TOOL_PASS_COMMERCE_READY/);
-assert.match(script,/SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION/);
-assert.doesNotMatch(script,/SASI_MARKET_PAYOUTS_ENABLED.*true/);
-assert.match(probe,/https:\/\/api-m\.paypal\.com\/v1\/oauth2\/token/);
-assert.match(probe,/https:\/\/lingxifield\.cn\/api\/pay\/paypal\/webhook/);
-assert.match(probe,/PAYMENT\.CAPTURE\.REFUNDED/);
-console.log("CN3194_SIGNED_LIVE_ACTIVATION_NO_RAW_GITHUB_FAIL_CLOSED_CONTRACT_PASS");
+import {execFileSync} from "node:child_process";
+
+const read=p=>readFileSync(p,"utf8");
+const script=read("scripts/ops/cn-payment-activate-3194-20261110.sh");
+const paypal=read("scripts/ops/cn-payment-live-probe-3194-20261110.mjs");
+const signed=read("scripts/ops/cn-payment-signed-live-probe-20261109.mjs");
+const upgrade=read("scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh");
+const alipayNotify=read("app/api/pay/alipay/notify/route.ts");
+const wechat=read("lib/wechatpay.ts");
+const wechatNotify=read("app/api/pay/wechat/notify/route.ts");
+const walletMigration=read("supabase/migrations/20261110050414_harden_legacy_ai_wallet_topup_order_state.sql");
+const releaseWorkflow=read(".github/workflows/cn3194-payment-release-20261110.yml");
+const transfer=read("scripts/ops/R2-CN3195-Transfer-20261110.ps1");
+
+test("payment activation is pinned to final 3194; 3195 is temporary staging only",()=>{
+ assert.match(script,/TAG" =~ \^ecs-cn-unified-20261110-/);
+ assert.match(script,/SVC="lingxifield-cn-release-20261110-\$SHORT-final"/);
+ assert.match(script,/FLAGS="\/etc\/lingxifield\/tool-pass-3194-\$SHORT\.env"/);
+ assert.match(script,/PORT=3194/);
+ assert.match(script,/127\.0\.0\.1:3194/);
+ assert.match(script,/CN3194_PUBLIC_PAYMENT_ROUTE/);
+ assert.match(script,/CN3194_NGINX_UPSTREAM_NOT_ACTIVE/);
+ assert.match(script,/127\.0\.0\.1:3195/);
+ assert.doesNotMatch(script,/raw\.githubusercontent\.com|PROBE_URL/);
+});
+test("signed merchant audit inherits every live env file with flags applied last",()=>{
+ assert.match(script,/mapfile -t LIVE_ENV_FILES/);
+ assert.match(script,/env_props\+=\(--property="EnvironmentFile=\$f"\)/);
+ assert.match(script,/env_props\+=\(--property="EnvironmentFile=\$FLAGS"\)/);
+ assert.match(script,/systemd-run --quiet --wait --pipe --collect --unit="\$unit" "\$\{env_props\[@\]\}"/);
+ assert.match(script,/CN_MERCHANT_ALIPAY_SIGNED_LIVE_PROBE=PASS/);
+ assert.match(script,/CN_MERCHANT_WECHAT_SIGNED_LIVE_PROBE=PASS/);
+ assert.match(script,/CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS/);
+ assert.match(script,/CN_TOOLPASS_BACKEND_READINESS=PASS/);
+ assert.match(script,/CN3194_ALL_THREE_LIVE_MERCHANTS_AND_TOOLPASS_BACKEND_AUDIT_PASS_FLAGS_UNCHANGED/);
+ assert.match(script,/CN_ALL_THREE_PAYMENT_PROVIDERS_ENABLED/);
+ assert.match(script,/CN_TOOLPASS_COMMERCE_READY_WITH_FOUR_PLANS/);
+ assert.match(script,/CN_UNSIGNED_WEBHOOK_/);
+ assert.match(script,/UNSIGNED_WEBHOOK_REJECTION_FAILED/);
+});
+
+test("release preserves existing live wallet top-ups and payment flags",()=>{
+ assert.match(script,/cp -a "\$FLAGS" "\$BACKUP"/);
+ assert.match(script,/CN_PAYMENT_ACTIVATION_FAILED_ROLLBACK/);
+ assert.doesNotMatch(script,/SASI_RMB_BALANCE_V1_ENABLED/);
+ assert.doesNotMatch(script,/USD_BALANCE_TOPUP_ENABLED/);
+ assert.match(script,/CN_CNY_USD_WALLET_TOPUPS_PRESERVED_NO_REFUND_FLAG_MUTATION/);
+ assert.match(upgrade,/Preserve merchant and wallet flags from the existing live EnvironmentFiles/);
+ const finalFlags=upgrade.slice(upgrade.indexOf("# Preserve merchant and wallet flags"),upgrade.indexOf('> "$PROD_FLAGS"'));
+ assert.doesNotMatch(finalFlags,/SASI_RMB_BALANCE_V1_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/USD_BALANCE_TOPUP_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/WECHAT_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/ALIPAY_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/PAYPAL_ENABLED=false/);
+ assert.match(script,/SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION/);
+ assert.doesNotMatch(script,/SASI_MARKET_SALES_ENABLED[" ]*[:=][" ]*true/);
+ assert.doesNotMatch(script,/SASI_MARKET_PAYOUTS_ENABLED[" ]*[:=][" ]*true/);
+});
+
+test("PayPal Live no-charge probe verifies OAuth, webhook identity and refund events",()=>{
+ assert.match(paypal,/https:\/\/api-m\.paypal\.com\/v1\/oauth2\/token/);
+ assert.match(paypal,/https:\/\/lingxifield\.cn\/api\/pay\/paypal\/webhook/);
+ assert.match(paypal,/PAYMENT\.CAPTURE\.REFUNDED/);
+ assert.match(paypal,/CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS/);
+});
+
+test("legacy AI wallet topups reject failed/refunded orders and remain service-role only",()=>{
+ assert.equal((walletMigration.match(/if coalesce\(o\.status,''\) not in \('pending','paid'\)/g)||[]).length,2);
+ assert.equal((walletMigration.match(/SET search_path TO ''/g)||[]).length,2);
+ assert.match(walletMigration,/REVOKE EXECUTE ON FUNCTION public\.credit_ai_topup\(uuid\) FROM PUBLIC, anon, authenticated/);
+ assert.match(walletMigration,/REVOKE EXECUTE ON FUNCTION public\.credit_ai_usd_topup\(uuid\) FROM PUBLIC, anon, authenticated/);
+ assert.match(walletMigration,/GRANT EXECUTE ON FUNCTION public\.credit_ai_topup\(uuid\) TO service_role/);
+ assert.match(walletMigration,/GRANT EXECUTE ON FUNCTION public\.credit_ai_usd_topup\(uuid\) TO service_role/);
+ assert.match(walletMigration,/o\.amount_usd is null/);
+ assert.doesNotMatch(walletMigration,/^\s*(DELETE|TRUNCATE)\s/m);
+});
+
+test("WeChat verifies signed API responses and binds callback merchant identity",()=>{
+ assert.match(wechat,/verifyWechatApiResponseSignature/);
+ assert.match(wechat,/verifyWechatApiResponseSignature\(res\.headers, raw\)/);
+ assert.match(wechatNotify,/wechatAppId\(\)/);
+ assert.match(wechatNotify,/wechatMerchantId\(\)/);
+ assert.match(wechatNotify,/1024 \* 1024/);
+ assert.match(alipayNotify,/64 \* 1024/);
+ assert.match(alipayNotify,/duplicateKey/);
+});
+
+test("Alipay and WeChat signed probe accepts the final service identity and never logs keys",()=>{
+ assert.match(signed,/lingxifield-cn-release-20261110-\[a-f0-9\]\{12\}-final/);
+ assert.match(signed,/ALIPAY_PRIVATE_KEY/);
+ assert.match(signed,/WECHAT_PLATFORM_PUBLIC_KEY_ID/);
+ assert.match(signed,/CN_MERCHANT_PUBLIC_READY_JSON/);
+ assert.match(signed,/WECHAT_RESPONSE_SIGNATURE_INVALID/);
+ assert.match(signed,/WECHAT_RESPONSE_SERIAL_MISMATCH/);
+ assert.match(signed,/responseVerifier\.update\(responseTimestamp\+"\\n"\+responseNonce\+"\\n"\+raw\+"\\n"/);
+ assert.doesNotMatch(signed,/console\.log\([^\n]*(PRIVATE_KEY|API_V3_KEY|access_token)/i);
+ execFileSync(process.execPath,["--check","scripts/ops/cn-payment-signed-live-probe-20261109.mjs"]);
+});
+
+test("ECS promotion audits merchants but never mutates existing payment or wallet flags",()=>{
+ assert.match(transfer,/bash "\$PAYMENT" --audit "\$TAG"/);
+ assert.doesNotMatch(transfer,/bash "\$PAYMENT" --enable/);
+ assert.doesNotMatch(transfer,/CN3194_PAYMENT_AND_TOOLPASS_LIVE_FLAGS_ENABLED/);
+ assert.match(transfer,/CN3194_SIGNED_MERCHANT_AUDIT_PASS_EXISTING_FLAGS_PRESERVED/);
+ assert.match(transfer,/CN3194_NO_PAYMENT_OR_WALLET_FLAG_MUTATION/);
+});
+test("release checksum is relocatable between GitHub artifacts, Windows transfer and ECS",()=>{
+ assert.match(releaseWorkflow,/printf '%s  %s\\n' "\$ARCHIVE_SHA" "\$FILE" > "\$DIST\/\$CHECK"/);
+ assert.match(releaseWorkflow,/sha256sum -c "\$CHECK_FILE"/);
+ assert.doesNotMatch(releaseWorkflow,/sha256sum "\$DIST\/\$FILE" > "\$DIST\/\$CHECK"/);
+});
+
+test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rollback",()=>{
+ assert.match(upgrade,/PORT=3195/);
+ assert.match(upgrade,/redirect \/sasi\/marketplace 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/assemble 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/build 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/chat 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/connections 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/director 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/drama 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/image 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/operator 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/operator\/v5 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/project-dna 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/series 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/variants 308 \/sasi/);
+ assert.match(upgrade,/redirect \/ai-knowledge 308 \/sasi/);
+ assert.match(upgrade,/redirect \/ai-learning 308 \/sasi/);
+ assert.match(upgrade,/redirect \/ai-research 308 \/sasi/);
+ assert.match(upgrade,/redirect \/sasi\/pricing 308 \/ai-wallet/);
+ assert.match(upgrade,/code \/discover\/sasi-software-marketplace 200/);
+ assert.match(upgrade,/code \/llms\.txt 200/);
+ assert.match(releaseWorkflow,/CN3194_ALL_RETIRED_ALIASES_PASS/);
+ assert.match(releaseWorkflow,/CN3194_SASI_GEO_SITEMAP_LLMS_PASS/);
+ assert.match(releaseWorkflow,/x-lingxi-public-host/);
+ assert.match(releaseWorkflow,/CN_SITEMAP_MUST_REMAIN_SIAI_ONLY/);
+ assert.match(releaseWorkflow,/COM_GEO_TOPIC_MISSING/);
+ assert.match(releaseWorkflow,/SASI_GEO_LANDING_CANONICAL_FAILED/);
+ assert.match(releaseWorkflow,/CN3194_LEGACY_MARKET_REDIRECT_PASS/);
+ assert.match(upgrade,/3193\|3194/);
+ assert.match(upgrade,/find_service_for_port/);
+ assert.match(upgrade,/CN3195_ACTIVE_BASELINE_PASS/);
+ assert.match(upgrade,/CN3195_STAGE_GATE_FAILED_PREVIOUS_UPSTREAM_UNCHANGED/);
+ assert.match(upgrade,/FINAL_PORT=3194/);
+ assert.match(upgrade,/FINAL_SVC=.*-final/);
+ assert.match(upgrade,/set_nginx_upstream 3195/);
+ assert.match(upgrade,/set_nginx_upstream 3194/);
+ assert.match(upgrade,/set_nginx_upstream 3193/);
+ assert.match(upgrade,/CN3194_NGINX_PROMOTION_PASS/);
+ assert.match(upgrade,/CN3193_ROLLBACK_BASELINE_ACTIVE/);
+ assert.match(upgrade,/CN3194_OLD_SERVICE_DISABLE_FAILED_OLD_UPSTREAM_RESTORED/);
+ assert.match(upgrade,/CN3194_OLD_SERVICE_DISABLE_FAILED_DURING_ROLLBACK/);
+ assert.match(upgrade,/systemctl disable "\$OLD_3194_SVC"/);
+ assert.doesNotMatch(upgrade,/CN3195_NGINX_PROMOTION_PASS/);
+ assert.match(upgrade,/NGINX_BACKUP/);
+ const stageStart=upgrade.indexOf('python3 - "$ENV" "$STAGE_ENV"');
+ const stageEnd=upgrade.indexOf("\nPY",stageStart);
+ assert.ok(stageStart>=0&&stageEnd>stageStart,"isolated 3195 environment builder must exist");
+ const stageEnv=upgrade.slice(stageStart,stageEnd);
+ for(const flag of ["TOOL_PASS_COMMERCE_READY","WECHAT_ENABLED","ALIPAY_ENABLED","PAYPAL_ENABLED","SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SOFTWARE_COMMERCE_READY"])
+  assert.ok(stageEnv.includes('"'+flag+'"'),"missing isolated-stage gate: "+flag);
+ assert.match(stageEnv,/out\.extend\(k\+"=false" for k in sorted\(disabled\)\)/);
+ assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
+ assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
+ assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
+ const promotion=upgrade.slice(upgrade.indexOf('if [[ "$MODE" == --promote ]];then'));
+ const stageRoute=promotion.indexOf("set_nginx_upstream 3195");
+ const stopOld=promotion.indexOf('systemctl stop "$OLD_3194_SVC"');
+ const startFinal=promotion.indexOf('systemctl start "$FINAL_SVC"');
+ const finalRoute=promotion.indexOf("set_nginx_upstream 3194");
+ const stopStage=promotion.indexOf('systemctl stop "$NEW_SVC"');
+ assert.ok(stageRoute>=0&&stageRoute<stopOld&&stopOld<startFinal&&startFinal<finalRoute&&finalRoute<stopStage);
+ assert.match(upgrade,/rollback_to_3193\(\)/);
+ assert.match(promotion,/rollback_to_3193 "CN3194_FINAL_SERVICE_START_FAILED"/);
+ assert.match(promotion,/rollback_to_3193 "CN3194_FINAL_PORT_PROBE_FAILED"/);
+ assert.match(promotion,/CN3195_STAGE_STOP_FAILED/);
+ assert.match(promotion,/CN3195_STAGE_PORT_STILL_LISTENING/);
+ assert.match(upgrade,/CN3193_AUTOMATIC_ROLLBACK_CANDIDATE_STOP_FAILED/);
+ assert.match(upgrade,/CN3193_ROLLBACK_CANDIDATE_STOP_FAILED/);
+ assert.doesNotMatch(promotion,/NEW_CODE_STILL_SERVING_ON_3195|NEW_CODE_RETAINED_ON_3195/);
+ const rollback=upgrade.slice(0,upgrade.indexOf(String.fromCharCode(10)+"old_live"+String.fromCharCode(10)+"load_env_files"));
+ assert.ok(rollback.indexOf("set_nginx_upstream 3193")<rollback.indexOf('systemctl stop "$FINAL_SVC"'));
+ execFileSync("bash",["-n","scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh"]);
+ execFileSync("bash",["-n","scripts/ops/cn-payment-activate-3194-20261110.sh"]);
+});

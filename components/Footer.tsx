@@ -47,15 +47,15 @@ const MINIAPP_COMMANDS={
 } as const;
 const FOOTER_QUESTION_ZH=["全球 AI 行情平台有哪些？","全球 SIAI 排行榜哪个好用？","AI / SI 工具怎么选择？","全球 AI 视频模型如何比较价格与免费额度？","PDF 在线编辑与电子签名怎么操作？","免费 AI 工具有哪些？"] as const;
 const FOOTER_CHIPS:Record<LingxiLang,string[]>={
- zh:["PDF 工具","图片工具","视频工具","音频工具","文档工具","办公工具","开发工具","SASI 软件"],
- en:["PDF tools","Image tools","Video tools","Audio tools","Document tools","Office tools","Developer tools","SASI software"],
- ja:["PDFツール","画像ツール","動画ツール","音声ツール","文書ツール","オフィスツール","開発ツール","SASIソフトウェア"],
- ko:["PDF 도구","이미지 도구","영상 도구","오디오 도구","문서 도구","사무 도구","개발 도구","SASI 소프트웨어"],
- fr:["Outils PDF","Images","Vidéo","Audio","Documents","Bureautique","Développement","Logiciels SASI"],
- de:["PDF-Tools","Bild-Tools","Video-Tools","Audio-Tools","Dokumente","Büro","Entwicklung","SASI Software"],
- es:["PDF","Imágenes","Vídeo","Audio","Documentos","Ofimática","Desarrollo","Software SASI"],
- pt:["PDF","Imagens","Vídeo","Áudio","Documentos","Escritório","Desenvolvimento","Software SASI"],
- ar:["أدوات PDF","الصور","الفيديو","الصوت","المستندات","المكتب","التطوير","برمجيات SASI"]
+ zh:["PDF 工具","图片工具","视频工具","音频工具","文档工具","办公工具","开发工具","SASI 软件市场"],
+ en:["PDF tools","Image tools","Video tools","Audio tools","Document tools","Office tools","Developer tools","SASI software market"],
+ ja:["PDFツール","画像ツール","動画ツール","音声ツール","文書ツール","オフィスツール","開発ツール","SASIソフトウェア市場"],
+ ko:["PDF 도구","이미지 도구","영상 도구","오디오 도구","문서 도구","사무 도구","개발 도구","SASI 소프트웨어 마켓"],
+ fr:["Outils PDF","Images","Vidéo","Audio","Documents","Bureautique","Développement","Marché logiciel SASI"],
+ de:["PDF-Tools","Bild-Tools","Video-Tools","Audio-Tools","Dokumente","Büro","Entwicklung","SASI-Softwaremarkt"],
+ es:["PDF","Imágenes","Vídeo","Audio","Documentos","Ofimática","Desarrollo","Mercado de software SASI"],
+ pt:["PDF","Imagens","Vídeo","Áudio","Documentos","Escritório","Desenvolvimento","Mercado de software SASI"],
+ ar:["أدوات PDF","الصور","الفيديو","الصوت","المستندات","المكتب","التطوير","سوق برامج SASI"]
 };
 const FOOTER_CHIP_URLS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=音频","/tools?q=文档","/tools?q=办公","/tools?q=开发","/sasi"] as const;
 /** Owner-supplied public account / share links (2026-11-04). Short-video links are share entries, not verified profile landing URLs. */
@@ -85,29 +85,28 @@ const copy:Record<LingxiLang,FooterCopy>={
  ar:{account:"حسابي",orders:"الطلبات والمهام",refunds:"الاسترداد",release:"التحديثات"}
 };
 
-type LinkLabels={rankings:string;rankSub:string;sasi:string;tools:string;account:string;terms:string;privacy:string;about:string;free:string;contacts:string;drama:string;website:string;books:string;learning:string;research:string;pdf:string;ocr:string;video:string;temp:string;all:string;brandLead:string};
+type LinkLabels={rankings:string;rankSub:string;sasi:string;seller:string;delivery:string;tools:string;account:string;terms:string;privacy:string;about:string;free:string;contacts:string;pdf:string;ocr:string;video:string;temp:string;all:string;brandLead:string};
 const FOOTER_LINKS:Record<LingxiLang,LinkLabels>={
- zh:{rankings:"发现全球 SI/AI",rankSub:"全球 SIAI 排行榜",sasi:"SASI 智能软件",tools:"免费在线工具",account:"平台与账户",terms:"使用条款",privacy:"隐私政策",about:"关于灵犀场",free:"每日免费体验",contacts:"关注与联系",drama:"SI/AI 短剧生成",website:"AI 网站构建",books:"书本智能问答",learning:"学习智能体",research:"科研智能体",pdf:"PDF 编辑与签名",ocr:"图片与 OCR 识别",video:"视频字幕与音频",temp:"临时邮箱与隐私",all:"全部在线工具",brandLead:"AI 工具哪个好用？这里比功能、免费额度与价格；需要创作或处理文件，继续用 SASI 和在线工具。"},
- en:{rankings:"Discover AI",rankSub:"Global AI rankings",sasi:"SASI software",tools:"Free online tools",account:"About & account",terms:"Terms",privacy:"Privacy",about:"About us",free:"Daily free trial",contacts:"Stay connected",drama:"AI short dramas",website:"Website builder",books:"Book Q&A",learning:"Learning SASI",research:"Research SASI",pdf:"PDF editor & signatures",ocr:"Images & OCR",video:"Video & audio",temp:"Temporary email & privacy",all:"All online tools",brandLead:"Global AI tool rankings · SASI software · Free online utilities"},
- ja:{rankings:"世界のAIを探す",rankSub:"AIツールランキング",sasi:"SASIソフトウェア",tools:"無料オンラインツール",account:"会社・アカウント",terms:"利用規約",privacy:"プライバシー",about:"LINGXIFIELDについて",free:"毎日の無料体験",contacts:"お問い合わせ",drama:"AI短編ドラマ",website:"Webサイト作成",books:"書籍への質問",learning:"学習SASI",research:"研究SASI",pdf:"PDF編集と署名",ocr:"画像とOCR",video:"動画・音声",temp:"一時メールとプライバシー",all:"すべてのツール",brandLead:"世界のAIツール比較 · SASIソフトウェア · 無料オンラインツール"},
- ko:{rankings:"글로벌 AI 발견",rankSub:"AI 도구 순위",sasi:"SASI 소프트웨어",tools:"무료 온라인 도구",account:"소개 및 계정",terms:"약관",privacy:"개인정보",about:"소개",free:"매일 무료 체험",contacts:"연락처",drama:"AI 숏드라마",website:"웹사이트 제작",books:"책 질문",learning:"학습 SASI",research:"연구 SASI",pdf:"PDF 편집과 서명",ocr:"이미지와 OCR",video:"영상 및 오디오",temp:"임시 이메일 및 개인정보",all:"전체 도구",brandLead:"글로벌 AI 도구 비교 · SASI 소프트웨어 · 무료 온라인 도구"},
- fr:{rankings:"Découvrir l'IA",rankSub:"Classement IA",sasi:"Logiciels SASI",tools:"Outils gratuits",account:"À propos et compte",terms:"Conditions",privacy:"Confidentialité",about:"À propos",free:"Essai gratuit quotidien",contacts:"Nous suivre",drama:"Mini-séries IA",website:"Créer un site",books:"Questions sur les livres",learning:"SASI Études",research:"SASI Recherche",pdf:"PDF et signatures",ocr:"Images et OCR",video:"Vidéo et audio",temp:"E-mail temporaire",all:"Tous les outils",brandLead:"Classement mondial IA · Logiciels SASI · Outils gratuits en ligne"},
- de:{rankings:"KI entdecken",rankSub:"KI-Tool-Rankings",sasi:"SASI Software",tools:"Kostenlose Online-Tools",account:"Info und Konto",terms:"AGB",privacy:"Datenschutz",about:"Über uns",free:"Täglich gratis testen",contacts:"Kontakt",drama:"KI-Kurzdramen",website:"Website erstellen",books:"Bücher befragen",learning:"Lern-SASI",research:"Forschungs-SASI",pdf:"PDF und Signaturen",ocr:"Bilder und OCR",video:"Video und Audio",temp:"Temporäre E-Mail",all:"Alle Online-Tools",brandLead:"Globale KI-Tool-Vergleiche · SASI Software · Kostenlose Online-Tools"},
- es:{rankings:"Descubrir IA",rankSub:"Ranking de herramientas",sasi:"Software SASI",tools:"Herramientas gratis",account:"Información y cuenta",terms:"Términos",privacy:"Privacidad",about:"Acerca de",free:"Prueba gratis diaria",contacts:"Contacto",drama:"Minidramas IA",website:"Crear sitios",books:"Preguntas sobre libros",learning:"SASI Aprendizaje",research:"SASI Investigación",pdf:"PDF y firmas",ocr:"Imágenes y OCR",video:"Vídeo y audio",temp:"Correo temporal",all:"Todas las herramientas",brandLead:"Ranking global IA · Software SASI · Herramientas online gratis"},
- pt:{rankings:"Descobrir IA",rankSub:"Ranking de ferramentas",sasi:"Software SASI",tools:"Ferramentas grátis",account:"Sobre e conta",terms:"Termos",privacy:"Privacidade",about:"Sobre nós",free:"Teste diário grátis",contacts:"Contato",drama:"Minidramas IA",website:"Criar sites",books:"Perguntas sobre livros",learning:"SASI Aprendizagem",research:"SASI Pesquisa",pdf:"PDF e assinaturas",ocr:"Imagens e OCR",video:"Vídeo e áudio",temp:"E-mail temporário",all:"Todas as ferramentas",brandLead:"Ranking global IA · Software SASI · Ferramentas online grátis"},
- ar:{rankings:"اكتشف أدوات الذكاء",rankSub:"تصنيف أدوات الذكاء",sasi:"برمجيات SASI",tools:"أدوات مجانية",account:"عن الموقع والحساب",terms:"الشروط",privacy:"الخصوصية",about:"من نحن",free:"تجربة مجانية يومية",contacts:"تواصل معنا",drama:"دراما قصيرة",website:"إنشاء المواقع",books:"أسئلة الكتب",learning:"SASI للتعلّم",research:"SASI للبحث",pdf:"PDF والتوقيع",ocr:"الصور وOCR",video:"الفيديو والصوت",temp:"بريد مؤقت",all:"كل الأدوات",brandLead:"مقارنة أدوات الذكاء · برمجيات SASI · أدوات مجانية"}
+ zh:{rankings:"发现全球 SI/AI",rankSub:"全球 SIAI 排行榜",sasi:"SASI 软件市场",seller:"开发者卖家服务",delivery:"软件授权与交付",tools:"免费在线工具",account:"平台与账户",terms:"使用条款",privacy:"隐私政策",about:"关于灵犀场",free:"每日免费体验",contacts:"关注与联系",pdf:"PDF 编辑与签名",ocr:"图片与 OCR 识别",video:"视频字幕与音频",temp:"临时邮箱与隐私",all:"全部在线工具",brandLead:"比较全球 SI/AI 模型、价格与免费额度；浏览 SASI 软件商品和源码授权，或使用在线工具处理文件。"},
+ en:{rankings:"Discover AI",rankSub:"Global AI rankings",sasi:"SASI Software Marketplace",seller:"Seller services",delivery:"Licensing & delivery",tools:"Free online tools",account:"About & account",terms:"Terms",privacy:"Privacy",about:"About us",free:"Daily free trial",contacts:"Stay connected",pdf:"PDF editor & signatures",ocr:"Images & OCR",video:"Video & audio",temp:"Temporary email & privacy",all:"All online tools",brandLead:"Compare global SI/AI models, prices and free allowances. Browse SASI software and source licenses, or process files with online tools."},
+ ja:{rankings:"世界のAIを探す",rankSub:"AIツールランキング",sasi:"SASIソフトウェア市場",seller:"出品者サービス",delivery:"ライセンスと納品",tools:"無料オンラインツール",account:"会社・アカウント",terms:"利用規約",privacy:"プライバシー",about:"LINGXIFIELDについて",free:"毎日の無料体験",contacts:"お問い合わせ",pdf:"PDF編集と署名",ocr:"画像とOCR",video:"動画・音声",temp:"一時メールとプライバシー",all:"すべてのツール",brandLead:"世界のSI/AIモデル、価格、無料枠を比較。SASIでソフトウェアとソースライセンスを確認し、オンラインツールでファイルを処理できます。"},
+ ko:{rankings:"글로벌 AI 발견",rankSub:"AI 도구 순위",sasi:"SASI 소프트웨어 마켓",seller:"판매자 서비스",delivery:"라이선스 및 전달",tools:"무료 온라인 도구",account:"소개 및 계정",terms:"약관",privacy:"개인정보",about:"소개",free:"매일 무료 체험",contacts:"연락처",pdf:"PDF 편집과 서명",ocr:"이미지와 OCR",video:"영상 및 오디오",temp:"임시 이메일 및 개인정보",all:"전체 도구",brandLead:"글로벌 SI/AI 모델, 가격과 무료 한도를 비교하세요. SASI에서 소프트웨어와 소스 라이선스를 확인하고 온라인 도구로 파일을 처리할 수 있습니다."},
+ fr:{rankings:"Découvrir l'IA",rankSub:"Classement IA",sasi:"Marché logiciel SASI",seller:"Services vendeurs",delivery:"Licences et livraison",tools:"Outils gratuits",account:"À propos et compte",terms:"Conditions",privacy:"Confidentialité",about:"À propos",free:"Essai gratuit quotidien",contacts:"Nous suivre",pdf:"PDF et signatures",ocr:"Images et OCR",video:"Vidéo et audio",temp:"E-mail temporaire",all:"Tous les outils",brandLead:"Comparez modèles SI/IA, prix et quotas gratuits. Parcourez les logiciels et licences source SASI ou traitez vos fichiers avec les outils en ligne."},
+ de:{rankings:"KI entdecken",rankSub:"KI-Tool-Rankings",sasi:"SASI-Softwaremarkt",seller:"Verkäuferbereich",delivery:"Lizenzen und Lieferung",tools:"Kostenlose Online-Tools",account:"Info und Konto",terms:"AGB",privacy:"Datenschutz",about:"Über uns",free:"Täglich gratis testen",contacts:"Kontakt",pdf:"PDF und Signaturen",ocr:"Bilder und OCR",video:"Video und Audio",temp:"Temporäre E-Mail",all:"Alle Online-Tools",brandLead:"Vergleiche SI/KI-Modelle, Preise und Gratis-Kontingente. Entdecke SASI-Software und Quellcode-Lizenzen oder bearbeite Dateien mit Online-Tools."},
+ es:{rankings:"Descubrir IA",rankSub:"Ranking de herramientas",sasi:"Mercado de software SASI",seller:"Servicios para vendedores",delivery:"Licencias y entrega",tools:"Herramientas gratis",account:"Información y cuenta",terms:"Términos",privacy:"Privacidad",about:"Acerca de",free:"Prueba gratis diaria",contacts:"Contacto",pdf:"PDF y firmas",ocr:"Imágenes y OCR",video:"Vídeo y audio",temp:"Correo temporal",all:"Todas las herramientas",brandLead:"Compara modelos SI/IA, precios y límites gratuitos. Explora software y licencias SASI o procesa archivos con herramientas online."},
+ pt:{rankings:"Descobrir IA",rankSub:"Ranking de ferramentas",sasi:"Mercado de software SASI",seller:"Serviços para vendedores",delivery:"Licenças e entrega",tools:"Ferramentas grátis",account:"Sobre e conta",terms:"Termos",privacy:"Privacidade",about:"Sobre nós",free:"Teste diário grátis",contacts:"Contato",pdf:"PDF e assinaturas",ocr:"Imagens e OCR",video:"Vídeo e áudio",temp:"E-mail temporário",all:"Todas as ferramentas",brandLead:"Compare modelos SI/IA, preços e limites gratuitos. Explore software e licenças SASI ou processe arquivos com ferramentas online."},
+ ar:{rankings:"اكتشف أدوات الذكاء",rankSub:"تصنيف أدوات الذكاء",sasi:"سوق برامج SASI",seller:"خدمات البائعين",delivery:"التراخيص والتسليم",tools:"أدوات مجانية",account:"عن الموقع والحساب",terms:"الشروط",privacy:"الخصوصية",about:"من نحن",free:"تجربة مجانية يومية",contacts:"تواصل معنا",pdf:"PDF والتوقيع",ocr:"الصور وOCR",video:"الفيديو والصوت",temp:"بريد مؤقت",all:"كل الأدوات",brandLead:"قارن نماذج SI/AI والأسعار والحصص المجانية. استعرض برامج SASI وتراخيص المصدر أو عالج الملفات باستخدام الأدوات عبر الإنترنت."}
 };
-
 const FOOTER_BRAND_SHORT:Record<LingxiLang,string>={
- zh:"全球 SI / AI / SIAI 工具行情、排行榜、SASI 智能软件与 100+ 在线实用工具。",
- en:"Global SI / AI / SIAI rankings, SASI software and 100+ online utilities.",
- ja:"世界のSI・AI・SIAIランキング、SASIソフトウェア、100以上のオンラインツール。",
- ko:"글로벌 SI / AI / SIAI 순위, SASI 소프트웨어과 100개 이상의 온라인 도구.",
- fr:"Classements mondiaux SI/IA/SIAI, création SASI et plus de 100 outils en ligne.",
- de:"Globale SI/KI/SIAI-Rankings, SASI Software und über 100 Online-Tools.",
- es:"Ranking mundial SI/IA/SIAI, creación SASI y más de 100 herramientas en línea.",
- pt:"Ranking global SI/IA/SIAI, criação SASI e mais de 100 ferramentas online.",
- ar:"تصنيفات SI وAI وSIAI العالمية وبرمجيات SASI وأكثر من 100 أداة عبر الإنترنت."
+  zh:"全球 SI / AI / SIAI 排行榜、SASI 软件市场与 100+ 在线实用工具。",
+  en:"Global SI / AI / SIAI rankings, the SASI software marketplace and 100+ online utilities.",
+  ja:"世界のSI・AI・SIAIランキング、SASIソフトウェア市場、100以上のオンラインツール。",
+  ko:"글로벌 SI / AI / SIAI 순위, SASI 소프트웨어 마켓 및 100개 이상의 온라인 도구.",
+  fr:"Classements mondiaux SI/IA/SIAI, marché logiciel SASI et plus de 100 outils en ligne.",
+  de:"Globale SI/KI/SIAI-Rankings, SASI-Softwaremarkt und über 100 Online-Tools.",
+  es:"Ranking mundial SI/IA/SIAI, mercado de software SASI y más de 100 herramientas en línea.",
+  pt:"Ranking global SI/IA/SIAI, mercado de software SASI e mais de 100 ferramentas online.",
+  ar:"تصنيفات SI وAI وSIAI العالمية وسوق برامج SASI وأكثر من 100 أداة عبر الإنترنت."
 };
 
 export default function Footer(){
@@ -176,8 +175,7 @@ export default function Footer(){
    </nav>
    <nav aria-label={c.sasi}>
     <b className="lx-footer-v4-heading"><span aria-hidden="true">✦</span>{c.sasi}</b>
-    <Link href="/sasi">{c.sasi}</Link><Link href="/sasi/marketplace">{lang==="zh"?"卖家服务":lang==="ja"?"出品者サービス":lang==="ko"?"판매자 서비스":lang==="fr"?"Services vendeurs":lang==="de"?"Verkäuferbereich":lang==="es"?"Servicios para vendedores":lang==="pt"?"Serviços para vendedores":lang==="ar"?"خدمات البائعين":"Seller services"}</Link><Link href="/account/software">{lang==="zh"?"我的软件":lang==="ja"?"購入済みソフト":lang==="ko"?"내 소프트웨어":lang==="fr"?"Mes logiciels":lang==="de"?"Meine Software":lang==="es"?"Mi software":lang==="pt"?"Meus softwares":lang==="ar"?"برامجي":"My software"}</Link>
-    <Link href="/ai-knowledge">{c.books}</Link><Link href="/ai-learning">{c.learning}</Link><Link href="/ai-research">{c.research}</Link>
+     <Link href="/sasi">{c.sasi}</Link><Link href="/sasi/seller">{c.seller}</Link><Link href="/account/software">{lang==="zh"?"我的软件":lang==="ja"?"購入済みソフト":lang==="ko"?"내 소프트웨어":lang==="fr"?"Mes logiciels":lang==="de"?"Meine Software":lang==="es"?"Mi software":lang==="pt"?"Meus softwares":lang==="ar"?"برامجي":"My software"}</Link><Link href="/sasi/delivery">{c.delivery}</Link>
    </nav>
    <nav aria-label={c.tools}>
     <b className="lx-footer-v4-heading"><span aria-hidden="true">◇</span>{c.tools}</b>

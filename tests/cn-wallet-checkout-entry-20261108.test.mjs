@@ -19,7 +19,9 @@ test("wallet page renders the authenticated live balance and ledger panel",()=>{
 test("account center links to actual wallet, order and withdrawal pages",()=>{
  const page=read("app/account/page.tsx");
  const center=read("components/AccountCenterV26.tsx");
- assert.match(page,/AccountCenterV26/);
+ assert.match(page,/<AccountClientShell \/>/);
+ const shell=read("app/account/AccountClientShell.tsx");
+ assert.match(shell,/AccountCenterV26/);
  assert.match(center,/href:"\/ai-wallet"/);
  assert.match(center,/href:"\/account\/orders"/);
  assert.match(center,/href:"\/account\/withdrawals"/);

@@ -81,5 +81,8 @@ test("SASI seller revenue split is shown only upon consent, never in public prod
  assert.match(artwork,/15%/);
  assert.match(artwork,/if\(!put\.ok\)/);
  assert.match(artwork,/submitReview/);
- assert.match(artwork,/href=\{featuredReady\?/);
+ assert.match(artwork,/<section id="featured" className=\{styles\.featured\}/);
+ assert.match(artwork,/featuredReady&&\(featuredPayment\.wechat/);
+ assert.match(artwork,/Product files and SHA-256 are being verified/);
+ assert.match(artwork,/role="status" aria-live="polite"/);
 });

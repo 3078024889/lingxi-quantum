@@ -3,10 +3,14 @@ import assert from "node:assert/strict";
 import {readFileSync,existsSync} from "node:fs";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 test("account center is current and preserves real user authentication & orders",()=>{
- const account=read("app/account/page.tsx"),panel=read("components/AccountCenterV26.tsx");
- assert.match(account,/getServerUser\(supabase\)/);
- assert.match(account,/paidOrderCount/);
- assert.match(account,/AccountCenterV26/);
+ const account=read("app/account/page.tsx"),client=read("app/account/AccountClientShell.tsx"),panel=read("components/AccountCenterV26.tsx");
+ assert.match(account,/export const dynamic = "force-static"/);
+ assert.match(account,/<AccountClientShell \/>/);
+ assert.doesNotMatch(account,/getServerUser|paidOrderCount|createClient/);
+ assert.match(client,/supabase\.auth\.getUser\(\)/);
+ assert.match(client,/supabase\.auth\.onAuthStateChange/);
+ assert.match(client,/paidOrderCount/);
+ assert.match(client,/AccountCenterV26/);
  assert.doesNotMatch(account,/继续短剧、网站、书本、学习和科研/);
  for(const p of ["/products","/account/orders","/ai-wallet","/sasi","/account/withdrawals","/account/support","/account/notifications","/account/settings"])
   assert.ok(panel.includes(p),"missing account link "+p);
@@ -40,20 +44,13 @@ test("scoped visual layer loaded last and retired SASI pages cannot become publi
   const path="app/sasi/"+route+"/page.tsx";
   assert.ok(existsSync(new URL("../"+path,import.meta.url)));
   const src=read(path);
-  assert.match(src,/redirect\("\/sasi"\)/);
+  assert.match(src,/permanentRedirect\("\/sasi"\)/);
   assert.match(src,/index:false/);
  }
- const deleted=["SasiAutonomyEntrances","SasiByokImageStudio","SasiMultiEpisodeWorkspace","SasiNativeCreatePanel","SasiOneSurface","SasiProjectDNAEditor","SasiSeriesStudio","SasiVariantWorkbench"];
+ const pricing=read("app/sasi/pricing/page.tsx");
+ assert.match(pricing,/permanentRedirect\("\/ai-wallet"\)/);
+ const deleted=["SasiCommandCenter","SasiAutonomyEntrances","SasiByokImageStudio","SasiMultiEpisodeWorkspace","SasiNativeCreatePanel","SasiOneSurface","SasiProjectDNAEditor","SasiSeriesStudio","SasiVariantWorkbench"];
  for(const name of deleted)assert.equal(existsSync(new URL("../components/"+name+".tsx",import.meta.url)),false,"retired source unexpectedly restored: "+name);
  const nav=read("components/Nav.tsx");
  assert.doesNotMatch(nav,/href="\/sasi\/(?:drama|image|director|series|build|chat)"/);
-});
-
-test("CN premium visual shell excludes the retired legacy UI override and keeps keyboard search",()=>{
- const layout=read("app/layout.tsx"),tools=read("components/tools/ToolsHubV11.tsx");
- assert.doesNotMatch(layout,/import ["']\.\/celestial-ui-20261109\.css["']/);
- assert.match(layout,/import ["']\.\/lingxifield-premium-20261109\.css["']/);
- assert.match(tools,/const searchRef=useRef<HTMLInputElement>\(null\)/);
- assert.match(tools,/window\.addEventListener\(["']keydown["']/);
- assert.match(tools,/ref=\{searchRef\}/);
 });

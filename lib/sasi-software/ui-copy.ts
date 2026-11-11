@@ -2,6 +2,10 @@
 export type SasiUiLocale="ja"|"ko"|"fr"|"de"|"es"|"pt"|"ar";
 const TABLE:Record<string,readonly string[]> = Object.freeze({
  "SASI Intelligent Software": ["SASI インテリジェントソフトウェア","SASI 지능형 소프트웨어","Logiciels intelligents SASI","SASI Intelligente Software","Software inteligente SASI","Software inteligente SASI","برمجيات SASI الذكية"],
+ "Software Market": ["ソフトウェア市場","소프트웨어 마켓","Marché logiciel","Softwaremarkt","Mercado de software","Mercado de software","سوق البرمجيات"],
+ "Finished software, MT5 EAs and source licenses · Installation guides · Developer publishing · Delivery after verified payment": ["完成ソフトウェア・MT5 EA・ソースライセンス · 導入ガイド · 開発者公開 · 決済確認後に納品","완성 소프트웨어·MT5 EA·소스 라이선스 · 설치 안내 · 개발자 게시 · 결제 확인 후 전달","Logiciels finis, EA MT5 et licences source · Guides d’installation · Publication développeur · Livraison après paiement vérifié","Fertige Software, MT5-EAs und Quellcode-Lizenzen · Installationsanleitungen · Entwicklerveröffentlichung · Lieferung nach bestätigter Zahlung","Software terminado, EA de MT5 y licencias de código · Guías de instalación · Publicación de desarrolladores · Entrega tras verificar el pago","Software pronto, EAs MT5 e licenças de código · Guias de instalação · Publicação por desenvolvedores · Entrega após pagamento verificado","برامج جاهزة ومستشارو MT5 وتراخيص المصدر · أدلة التثبيت · نشر المطورين · التسليم بعد التحقق من الدفع"],
+ "Product files and SHA-256 are being verified; purchases are disabled.": ["ファイルとSHA-256を確認中です。購入は一時停止しています。","파일과 SHA-256을 확인 중입니다. 구매는 비활성화되어 있습니다.","Les fichiers et SHA-256 sont en cours de vérification ; les achats sont désactivés.","Dateien und SHA-256 werden geprüft; Käufe sind deaktiviert.","Se están verificando los archivos y SHA-256; las compras están desactivadas.","Os arquivos e o SHA-256 estão em verificação; as compras estão desativadas.","يجري التحقق من الملفات وبصمة SHA-256؛ الشراء معطل."],
+ "No payment method is currently available": ["現在利用できる支払い方法はありません","현재 사용할 수 있는 결제 수단이 없습니다","Aucun moyen de paiement n’est disponible actuellement","Derzeit ist keine Zahlungsmethode verfügbar","No hay ningún método de pago disponible actualmente","Nenhum método de pagamento está disponível no momento","لا توجد وسيلة دفع متاحة حاليًا"],
  "Source licenses · Developer publishing · Secure delivery": ["ソースライセンス · 開発者による公開 · 安全な配信","소스 라이선스 · 개발자 게시 · 안전한 전달","Licences source · Publication · Livraison sécurisée","Quellcode-Lizenzen · Veröffentlichung · Sichere Lieferung","Licencias de código · Publicación · Entrega segura","Licenças de código · Publicação · Entrega segura","ترخيص المصدر · نشر المطورين · تسليم آمن"],
  "Explore software": ["ソフトウェアを見る","소프트웨어 살펴보기","Explorer les logiciels","Software entdecken","Explorar software","Explorar software","استعراض البرامج"],
  "Publish software": ["ソフトウェアを公開","소프트웨어 게시","Publier un logiciel","Software veröffentlichen","Publicar software","Publicar software","نشر برنامج"],
@@ -27,6 +31,7 @@ const TABLE:Record<string,readonly string[]> = Object.freeze({
  "Software publishing steps": ["ソフトウェア公開手順","소프트웨어 게시 단계","Étapes de publication","Schritte zur Veröffentlichung","Pasos de publicación","Etapas de publicação","خطوات نشر البرامج"],
  "Publish and deliver": ["公開と配信","게시 및 전달","Publier et livrer","Veröffentlichen und liefern","Publicar y entregar","Publicar e entregar","النشر والتسليم"],
  "Product details": ["商品情報","상품 정보","Détails du produit","Produktdetails","Detalles del producto","Dados do produto","تفاصيل المنتج"],
+ "Installation and user guide": ["インストールと操作ガイド","설치 및 사용 안내","Guide d’installation et d’utilisation","Installations- und Benutzerhandbuch","Guía de instalación y uso","Guia de instalação e uso","دليل التثبيت والاستخدام"],
  "Name, license, price": ["名前・ライセンス・価格","이름·라이선스·가격","Nom, licence, prix","Name, Lizenz, Preis","Nombre, licencia, precio","Nome, licença, preço","الاسم والترخيص والسعر"],
  "Upload private ZIP": ["非公開 ZIP をアップロード","비공개 ZIP 업로드","Importer le ZIP privé","Privates ZIP hochladen","Subir ZIP privado","Enviar ZIP privado","رفع ملف ZIP خاص"],
  "File and image review": ["ファイル・画像の審査","파일 및 이미지 심사","Vérification des fichiers et images","Datei- und Bildprüfung","Revisión de archivos e imágenes","Revisão de arquivos e imagens","فحص الملفات والصور"],
@@ -630,12 +635,21 @@ const ADDITIONAL_COPY:Record<string,readonly string[]> = Object.freeze({
   "تخزين خاص وتنزيل موثوق"
  ]
 });
+const PUBLISHING_COPY:Record<string,readonly string[]>={
+ "Software and source licenses · Developer publishing · Delivery after payment":["製品・ソースのライセンス · 開発者公開 · 支払い後の配信","완성 소프트웨어·소스 라이선스 · 개발자 게시 · 결제 후 전달","Logiciels et licences de code · Publication · Livraison après paiement","Software- und Quellcode-Lizenzen · Veröffentlichung · Lieferung nach Zahlung","Software y licencias de código · Publicación · Entrega tras el pago","Software e licenças de código · Publicação · Entrega após pagamento","تراخيص البرامج والمصدر · نشر المطورين · التسليم بعد الدفع"],
+ "Finished software and source code":["完成ソフトウェアとソースコード","완성 소프트웨어와 소스 코드","Logiciels finis et code source","Fertige Software und Quellcode","Software terminado y código fuente","Software pronto e código-fonte","البرامج الجاهزة والشيفرة المصدرية"],
+ "Software or source, documentation and license":["ソフトまたはソース、説明書とライセンス","소프트웨어 또는 소스, 설명서 및 라이선스","Logiciel ou source, documentation et licence","Software oder Quellcode, Dokumentation und Lizenz","Software o código, documentación y licencia","Software ou código, documentação e licença","برنامج أو مصدر، توثيق وترخيص"],
+ "Edit listing":["商品情報を編集","상품 정보 수정","Modifier la fiche","Angebot bearbeiten","Editar producto","Editar produto","تعديل المنتج"],
+ "Save changes":["変更を保存","변경 사항 저장","Enregistrer","Änderungen speichern","Guardar cambios","Salvar alterações","حفظ التعديلات"],
+ "Cancel editing":["編集を取り消す","수정 취소","Annuler","Bearbeitung abbrechen","Cancelar edición","Cancelar edição","إلغاء التعديل"],
+ "One main image and up to four detail images. Upload finished software or source with installation and license documents in a ZIP. Security checks and administrator approval are required.":["主画像1枚、詳細画像は最大4枚。製品またはソース、導入説明書とライセンスをZIPで提出してください。安全検査と管理者審査が必要です。","대표 이미지 1장, 상세 이미지 최대 4장. 완성 소프트웨어 또는 소스에 설치 안내와 라이선스를 포함해 ZIP으로 제출하세요. 보안 검사와 관리자 승인이 필요합니다.","Une image principale et quatre images détaillées maximum. Fournissez le logiciel ou le source avec les instructions et la licence en ZIP. Contrôle de sécurité et validation administrateur requis.","Ein Hauptbild und bis zu vier Detailbilder. Software oder Quellcode mit Installationsanleitung und Lizenz als ZIP einreichen. Sicherheitsprüfung und Administratorfreigabe erforderlich.","Una imagen principal y hasta cuatro imágenes de detalle. Envíe software o código con instrucciones y licencia en ZIP. Se requieren revisión de seguridad y aprobación del administrador.","Uma imagem principal e até quatro imagens detalhadas. Envie software ou código com instruções e licença em ZIP. Exige verificação de segurança e aprovação do administrador.","صورة رئيسية واحدة وأربع صور تفصيلية كحد أقصى. ارفع البرنامج أو المصدر مع تعليمات التثبيت والترخيص في ZIP. يلزم فحص الأمان وموافقة الإدارة."]
+};
 const index:Record<SasiUiLocale,number>={ja:0,ko:1,fr:2,de:3,es:4,pt:5,ar:6};
 export function sasiSoftwareUiText(lang:string,zh:string,en:string):string{
  if(lang==="zh")return zh;
  if(lang==="en")return en;
  const indexOf=index[lang as SasiUiLocale];
- const value=(ADDITIONAL_COPY[en]||PREMIUM_COPY[en]||TABLE[en])?.[indexOf];
+ const value=(PUBLISHING_COPY[en]||ADDITIONAL_COPY[en]||PREMIUM_COPY[en]||TABLE[en])?.[indexOf];
  return typeof value==="string"&&value.trim()?value:en;
 }
-export const SASI_SOFTWARE_TRANSLATION_KEYS=Object.freeze([...Object.keys(TABLE),...Object.keys(PREMIUM_COPY),...Object.keys(ADDITIONAL_COPY)]);
+export const SASI_SOFTWARE_TRANSLATION_KEYS=Object.freeze([...Object.keys(TABLE),...Object.keys(PREMIUM_COPY),...Object.keys(ADDITIONAL_COPY),...Object.keys(PUBLISHING_COPY)]);

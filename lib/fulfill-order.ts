@@ -23,6 +23,7 @@ export async function fulfillPaidOrder(orderId:string,verifiedPayment=false):Pro
   const result=rpc.data as FulfillmentResult|null;
   return result?.ok?result:{ok:false,error:result?.error||"商品交付验证未完成。"};
  }
+ // Only a provider-verified callback may grant a first-party software entitlement; a return URL alone is not proof of payment.
  if(softwareOffer(productId)){
   if(!verifiedPayment)return {ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"};
   const rpc=await admin.rpc("sasi_grant_software_delivery",{p_order_id:orderId});
@@ -32,6 +33,5 @@ export async function fulfillPaidOrder(orderId:string,verifiedPayment=false):Pro
  }
  const usd=getUsdBalanceProduct(productId);if(usd){if(!verifiedPayment)return{ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"};const rpc=await admin.rpc("credit_sasi_usd_topup",{p_order_id:orderId});if(rpc.error)return{ok:false,error:"美元余额入账暂未完成，请稍后重试。"};const result=rpc.data as FulfillmentResult|null;return result?.ok?result:{ok:false,error:result?.error??"美元余额入账暂未完成。"};}
  const product=getProduct(productId);if(!product||!product.sasiAmountFen)return{ok:false,error:"订单产品配置无效。"};
- if(!verifiedPayment)return{ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"};
- const rpc=await admin.rpc("credit_sasi_topup",{p_order_id:orderId});if(rpc.error)return{ok:false,error:"余额入账暂未完成，请稍后重试。"};const result=rpc.data as FulfillmentResult|null;return result?.ok?result:{ok:false,error:result?.error??"余额入账暂未完成。"};
+ if(!verifiedPayment)return{ok:false,error:"PROVIDER_PAYMENT_VERIFICATION_REQUIRED"};const rpc=await admin.rpc("credit_sasi_topup",{p_order_id:orderId});if(rpc.error)return{ok:false,error:"余额入账暂未完成，请稍后重试。"};const result=rpc.data as FulfillmentResult|null;return result?.ok?result:{ok:false,error:result?.error??"余额入账暂未完成。"};
 }

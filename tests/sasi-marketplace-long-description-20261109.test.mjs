@@ -31,5 +31,8 @@ test("software branding uses the supplied reference and avoids obsolete shopping
  const landing=read("components/SasiOpenMarketplace.tsx");
  assert.ok(landing.includes('<h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")'));
  assert.ok(landing.includes("/images/sasi/hero-original.webp"));
+ assert.match(landing,/<section id="featured" className=\{styles\.featured\}/);
+ assert.doesNotMatch(landing,/\{featuredReady&&<section id="featured"/);
+ assert.match(landing,/featuredReady&&\(featuredPayment\.wechat/);
  assert.doesNotMatch(landing,/软件商城/);
 });

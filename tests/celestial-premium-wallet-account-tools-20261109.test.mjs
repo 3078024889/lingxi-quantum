@@ -19,19 +19,34 @@ test("wallet shows real CNY/USD balances from authenticated summary, never hardc
  assert.match(wallet,/b\.refundHoldMinor/);
  assert.match(wallet,/new Intl\.NumberFormat/);
  assert.match(wallet,/BALANCE_TOPUP_AMOUNTS\.map/);
+ assert.match(wallet,/customTopupAmount\(customAmount\.trim\(\)\)/);
+ assert.match(wallet,/wallet-custom-amount/);
+ assert.match(wallet,/wallet-custom-amount-input/);
+ assert.match(wallet,/checkout-usd\?productId=sasi-usd-balance-custom-/);
+ assert.match(wallet,/wallet-history-panel/);
  assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
- assert.match(wallet,/WalletLedgerPanel currency="CNY"/);
- assert.match(wallet,/WalletLedgerPanel currency="USD"/);
+ assert.match(wallet,/WalletLedgerPanel showCurrencyTabs/);
+ const ledger=read("components/WalletLedgerPanel.tsx");
+ assert.match(ledger,/showCurrencyTabs&&/);
+ assert.match(ledger,/wallet-ledger-currency-CNY/);
+ assert.match(ledger,/wallet-ledger-currency-USD/);
+ assert.match(ledger,/new URLSearchParams\(\{currency\}\)/);
  assert.doesNotMatch(wallet,/支付通道暂未开放|充值说明/);
  assert.doesNotMatch(wallet,/setData\(\{status:"ready",summary:\{balances:/);
  assert.match(walletPage,/className="lx26-wallet-page/);
 });
 test("account matches approved references without losing authentication, profile or destructive action confirmation",()=>{
- assert.match(account,/getServerUser\(supabase\)/);
- assert.match(account,/AccountCenterV26/);
+ assert.match(account,/export const dynamic = "force-static"/);
+ assert.match(account,/<AccountClientShell \/>/);
+ assert.doesNotMatch(account,/getServerUser|createClient|searchParams|lib\/supabase\/server/);
+ const accountShell=read("app/account/AccountClientShell.tsx");
+ assert.match(accountShell,/supabase\.auth\.getUser\(\)/);
+ assert.match(accountShell,/supabase\.auth\.onAuthStateChange/);
+ assert.match(accountShell,/AccountCenterV26/);
  const center=read("components/AccountCenterV26.tsx");
+ assert.match(center,/^"use client";/);
  assert.match(center,/AccountProfileCard/);
- assert.match(account,/lx26-account-page/);
+ assert.match(accountShell,/lx26-account-page/);
  assert.match(center,/lx26-account-welcome/);
  assert.match(center,/lx26-account-services/);
  assert.match(center,/\/account\/orders/);
@@ -56,8 +71,8 @@ test("tools hero keeps every tool and searchable category; no duplicate recent w
  assert.equal((tools.match(/<RecentTools\/>/g)||[]).length,1);
  assert.doesNotMatch(tools,/SasiDrama|ShortDrama/);
 });
-test("responsive premium styles never restore the retired legacy override or alter payment toggles",()=>{
- assert.doesNotMatch(shell,/import "\.\/celestial-ui-20261109\.css";/);
+test("responsive isolated celestial styles never replace global shell or payment toggles",()=>{
+ assert.match(shell,/import "\.\/celestial-ui-20261109\.css";/);
  assert.match(shell,/import "\.\/lingxifield-premium-20261109\.css";/);
  for(const selector of [".lx26-balance-grid",".lx26-wallet-topup",".lx26-account-services",".lx26-tools-stage",".lx26-tools-aside"])
   assert.ok(css.includes(selector),selector);

@@ -12,12 +12,12 @@
     "临时邮箱",
     "阅后即焚",
     "图片OCR",
-    "AI短剧生成",
+    "SASI智能软件市场",
     "AI视频生成",
-    "书本智能体",
-    "科研智能体",
-    "学习智能体",
-    "AI网站生成"
+    "MT5 EA源码",
+    "软件安装教程",
+    "成品软件自动交付",
+    "开发者软件发布"
   ],
   "en": [
     "free online tools",
@@ -32,12 +32,12 @@
     "temporary email",
     "burn after reading",
     "image OCR",
-    "AI short drama generator",
+    "SASI intelligent software marketplace",
     "AI video generator",
-    "book to AI agent",
-    "AI research assistant",
-    "AI study assistant",
-    "AI website builder"
+    "MT5 EA source code",
+    "software installation guide",
+    "finished software automatic delivery",
+    "developer software publishing"
   ],
   "ja": [
     "無料オンラインツール",
@@ -52,11 +52,11 @@
     "捨てメアド",
     "OCR",
     "AI 動画生成",
-    "AI ショートドラマ",
-    "書籍 AI",
-    "研究 AI",
-    "学習 AI",
-    "AI Webサイト作成"
+    "SASIインテリジェントソフトウェア市場",
+    "MT5 EAソースコード",
+    "ソフトウェア導入ガイド",
+    "完成ソフトウェア自動納品",
+    "開発者ソフトウェア公開"
   ],
   "ko": [
     "무료 온라인 도구",
@@ -71,11 +71,11 @@
     "임시 이메일",
     "OCR",
     "AI 영상 생성",
-    "AI 숏폼 드라마",
-    "책 AI 에이전트",
-    "AI 연구 도우미",
-    "AI 학습 도우미",
-    "AI 웹사이트 만들기"
+    "SASI 지능형 소프트웨어 마켓",
+    "MT5 EA 소스 코드",
+    "소프트웨어 설치 안내",
+    "완성 소프트웨어 자동 전달",
+    "개발자 소프트웨어 게시"
   ],
   "fr": [
     "outils en ligne gratuits",
@@ -90,11 +90,11 @@
     "email temporaire",
     "OCR",
     "générateur vidéo IA",
-    "mini-série IA",
-    "livre agent IA",
-    "assistant recherche IA",
-    "assistant étude IA",
-    "créateur site IA"
+    "marché de logiciels intelligents SASI",
+    "code source MT5 EA",
+    "guide d’installation de logiciel",
+    "livraison automatique de logiciels finis",
+    "publication de logiciels développeurs"
   ],
   "de": [
     "kostenlose Online-Tools",
@@ -109,11 +109,11 @@
     "temporäre E-Mail",
     "OCR",
     "KI Video Generator",
-    "KI Kurzdrama",
-    "Buch KI Agent",
-    "KI Forschungsassistent",
-    "KI Lernassistent",
-    "KI Website erstellen"
+    "SASI-Markt für intelligente Software",
+    "MT5-EA-Quellcode",
+    "Software-Installationsanleitung",
+    "Automatische Lieferung fertiger Software",
+    "Softwareveröffentlichung für Entwickler"
   ],
   "es": [
     "herramientas online gratis",
@@ -128,11 +128,11 @@
     "correo temporal",
     "OCR",
     "generador de videos IA",
-    "minidrama IA",
-    "libro a agente IA",
-    "asistente investigación IA",
-    "asistente estudio IA",
-    "crear sitio web con IA"
+    "mercado de software inteligente SASI",
+    "código fuente MT5 EA",
+    "guía de instalación de software",
+    "entrega automática de software terminado",
+    "publicación de software para desarrolladores"
   ],
   "pt": [
     "ferramentas online grátis",
@@ -147,11 +147,11 @@
     "email temporário",
     "OCR",
     "gerador de vídeo IA",
-    "minidrama IA",
-    "livro para agente IA",
-    "assistente pesquisa IA",
-    "assistente estudo IA",
-    "criar site com IA"
+    "mercado de software inteligente SASI",
+    "código-fonte MT5 EA",
+    "guia de instalação de software",
+    "entrega automática de software pronto",
+    "publicação de software para desenvolvedores"
   ],
   "ar": [
     "أدوات مجانية اون لاين",
@@ -166,10 +166,10 @@
     "بريد مؤقت",
     "OCR",
     "مولد فيديو بالذكاء الاصطناعي",
-    "دراما قصيرة بالذكاء الاصطناعي",
-    "كتاب إلى وكيل ذكاء اصطناعي",
-    "مساعد بحث بالذكاء الاصطناعي",
-    "مساعد دراسة بالذكاء الاصطناعي",
-    "إنشاء موقع بالذكاء الاصطناعي"
+    "سوق برامج SASI الذكية",
+    "الشيفرة المصدرية MT5 EA",
+    "دليل تثبيت البرامج",
+    "التسليم التلقائي للبرامج الجاهزة",
+    "نشر البرامج للمطورين"
   ]
 }

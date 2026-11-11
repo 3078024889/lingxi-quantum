@@ -5,6 +5,7 @@ const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const sitemap=read("lib/seo/sitemap-build.ts");
 const seoCatalog=read("lib/seo/global-seo.ts");
 const llms=read("app/llms.txt/route.ts");
+const publicLlms=read("public/llms.txt");
 const main=read("app/sitemap.ts");
 const metadata=read("lib/seo/search-tool-metadata.ts");
 const guide=read("components/seo/ToolFacts.tsx");
@@ -24,8 +25,11 @@ test("redirected and private pages do not masquerade as sitemap content",()=>{
  assert.match(sitemap,/image-to-pdf-pro/);
  const redirectCfg=read("next.config.js");
  assert.match(redirectCfg,/source: "\/tools\/image-to-pdf-pro"/);
- assert(active.includes('"/sasi/image"'));
- for(const redirected of ['"/sasi/drama"','"/sasi/build"','"/ai-knowledge"','"/ai-learning"','"/ai-research"'])
+ assert(active.includes('"/sasi/delivery"'));
+ assert(!active.includes('"/sasi/image"'),"retired SASI image route must not be indexed");
+ assert(!active.includes('"/sasi/marketplace"'),"legacy marketplace root redirects to /sasi");
+ assert(!active.includes('"/sasi/seller"'),"seller workspace is not an SEO landing page");
+ for(const redirected of ['"/sasi/drama"','"/sasi/build"','"/sasi/connections"','"/sasi/image"','"/ai-knowledge"','"/ai-learning"','"/ai-research"'])
    assert(!active.includes(redirected),redirected+" is a redirect");
  for(const privatePath of ["/account","/checkout","/admin","/share"])
    assert(!active.includes('"'+privatePath+'"'),privatePath+" is private");
@@ -67,4 +71,17 @@ test("search FAQs never claim unverified search demand",()=>{
  const content=read("lib/seo/search-intent-faq.ts");
  assert.match(content,/具体操作和可用功能请以当前页面为准/);
  assert(!content.includes("这些问题来自当前公开搜索结果中反复出现的真实搜索表达"));
+});
+
+
+test("static public LLM index describes the current software marketplace and excludes retired SASI creation modules",()=>{
+  assert.match(publicLlms,/SASI Software Marketplace/);
+  assert.match(publicLlms,/MT5 EA Source Code & Trading Software/);
+  assert.match(publicLlms,/Software Licensing & Automatic Delivery/);
+  assert.match(publicLlms,/Developer Software Publishing & Seller Services/);
+  for(const slug of ["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"])
+    assert(publicLlms.includes("/discover/"+slug),slug);
+  assert.doesNotMatch(publicLlms,/AI 短剧|AI Short Drama Generator|网站构建|书本、学习与科研创作/);
+  for(const locale of ["en","ja","ko","fr","de","es","pt","ar"])
+    assert(publicLlms.includes("https://lingxifield.com/"+locale+"/tools"),locale);
 });
