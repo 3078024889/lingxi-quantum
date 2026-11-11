@@ -1,4 +1,4 @@
-=== LINGXIFIELD SIAI and QR Widgets ===
+=== LINGXIFIELD SIAI, Free Tools and QR Widgets ===
 Tags: ai tools, directory, qr code, shortcode, comparison
 Requires at least: 6.0
 Requires PHP: 7.4
@@ -10,8 +10,8 @@ Embed the reviewed Global SIAI directory, the anonymous free local-tools directo
 
 == Description ==
 
-LINGXIFIELD widgets provide a compact, searchable list of reviewed public SI/AI tools
-and an optional QR generator for public URLs. A WordPress editor chooses where to
+LINGXIFIELD widgets provide a compact, searchable list of reviewed public SI/AI platforms,
+an anonymous local-tools directory and an optional QR generator for public URLs. A WordPress editor chooses where to
 display the widgets by inserting a shortcode. This plugin does not automatically
 insert links, advertisements, trackers or widgets into pages.
 
