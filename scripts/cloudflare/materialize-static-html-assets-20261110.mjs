@@ -64,7 +64,8 @@ export const STATIC_HEADER_PATTERNS = Object.freeze([
   "/account", "/account.html",
   "/sasi", "/sasi.html",
   "/about", "/about.html",
-  "/announcements", "/announcements.html"
+  "/announcements", "/announcements.html",
+  "/robots.txt"
 ]);
 
 export function staticHeaderPatternMatches(pattern, path) {

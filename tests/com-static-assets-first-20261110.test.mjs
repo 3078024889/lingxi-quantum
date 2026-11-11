@@ -115,6 +115,13 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     ].join(newline);
     assert.ok(headers.includes(accountHeaderBlock));
     assert.ok(headers.includes(accountHtmlHeaderBlock));
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/robots.txt"), "robots.txt must have a bounded static header rule");
+    assert.ok(headers.includes([
+      "/robots.txt",
+      "  X-Lingxi-Render-Mode: static-edge-verified",
+      "  X-Lingxi-Static-Delivery: workers-static-assets",
+      "  Cache-Control: public, max-age=300, stale-while-revalidate=120"
+    ].join(newline)), "robots.txt must be delivered by the static asset layer");
     const headerRuleCount=headers.split(newline).filter(line=>line.trim()&&!line.trim().startsWith("#")&&!line.startsWith(" ")).length;
     assert.ok(headerRuleCount<=100,"Cloudflare _headers rule count must stay at or below 100, got "+headerRuleCount);
     assert.ok(STATIC_HEADER_PATTERNS.includes("/en/discover/*"), "en GEO route must have an explicit Cloudflare header pattern");

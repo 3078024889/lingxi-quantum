@@ -123,6 +123,8 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     "/sasi", "/about", "/announcements",
     "/tools/ico-to-png", "/tools/number-base-converter", "/tools/video-watermark-remover",
     "/tools/png-to-jpg", "/tools/compress-image", "/tools/merge-pdf", "/tools/json-formatter"
+,
+    "/robots.txt"
   ]);
   const staticRenderRoutes = new Set([...staticRoutes, "/api/sasi/software/catalog"]);
   const maxTries = phase === "POSTCUTOVER" || phase === "ROLLBACK" ? 12 : attempts;
