@@ -13,12 +13,12 @@ export async function GET(req:NextRequest){
   const db=createClient();
   const mode=req.nextUrl.searchParams.get("mode")==="mine"?"mine":"public";
   let query=db.from("sasi_market_listings").select("id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at,rejection_reason")
-    .order("created_at",{ascending:false}).limit(36);
+    .limit(36);
   if(mode==="mine"){
    const {data:{user}}=await db.auth.getUser();
    if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:nocache});
-   query=query.eq("seller_id",user.id);
-  }else query=query.eq("status","published").eq("scan_status","clean");
+   query=query.eq("seller_id",user.id).order("created_at",{ascending:false});
+  }else query=query.eq("status","published").eq("scan_status","clean").order("published_at",{ascending:false});
   const {data,error}=await query;
   if(error)throw Error("LISTINGS_QUERY_FAILED");
   // Public cards and hover previews are excerpts; the product endpoint serves the full long description.
