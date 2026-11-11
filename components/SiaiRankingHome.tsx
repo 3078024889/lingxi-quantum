@@ -160,7 +160,10 @@ export default function SiaiRankingHome({rows}:{rows:SiaiHomeRow[]}){
  useEffect(()=>{setPageDraft(String(safePage));},[safePage]);
  useEffect(()=>{setPage(1);},[query,category,task,payment,evidence,sort,pageSize]);
  useEffect(()=>{
-  const intent=new URLSearchParams(window.location.search).get("intent");
+  const params=new URLSearchParams(window.location.search);
+  const incomingQuery=params.get("q");
+  if(incomingQuery?.trim())setQuery(incomingQuery.trim());
+  const intent=params.get("intent");
   if(intent==="free")setEvidence("verified_free");
   if(intent==="company")setEvidence("company");
   if(intent==="video")setTask("video");

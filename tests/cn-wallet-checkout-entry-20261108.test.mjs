@@ -23,8 +23,12 @@ test("wallet resolves to authenticated real balances, not legacy pricing redirec
  assert.match(client, /\/account\/orders/);
  assert.match(client, /BALANCE_TOPUP_AMOUNTS/);
  assert.match(client, /providers\?\.wechat===true\|\|providers\?\.alipay===true/);
- assert.match(client, /WalletLedgerPanel currency="CNY"/);
- assert.match(client, /WalletLedgerPanel currency="USD"/);
+ assert.match(client, /WalletLedgerPanel showCurrencyTabs/);
+ const ledger=read("components/WalletLedgerPanel.tsx");
+ assert.match(ledger,/showCurrencyTabs&&/);
+ assert.match(ledger,/wallet-ledger-currency-CNY/);
+ assert.match(ledger,/wallet-ledger-currency-USD/);
+ assert.match(ledger,/new URLSearchParams\(\{currency\}\)/);
  assert.match(client, /tab==="withdrawals"/);
  assert.doesNotMatch(client, /setData\(\{status:"ready",summary:\{balances:/);
  assert.match(summary, /normalizeWithdrawalStatus/);

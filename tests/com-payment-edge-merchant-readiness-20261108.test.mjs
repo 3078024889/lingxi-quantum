@@ -26,7 +26,13 @@ test("scoped health endpoint is lightweight and never implies payment readiness"
 test("WeChat cannot accept payment without both merchant certificate and webhook verification key",()=>{
  const wechat=read("lib/wechatpay.ts");
  assert.match(wechat,/export function wechatPayEnabled/);
- assert.match(wechat,/PLATFORM_PUBLIC_KEY\?\.trim\(\) && PLATFORM_PUBLIC_KEY_ID\?\.trim\(\)/);
+ assert.match(wechat,/export function wechatPayKeyMaterialReady/);
+ assert.match(wechat,/crypto\.createPrivateKey\(normalizePemKey\(PRIVATE_KEY!/);
+ assert.match(wechat,/crypto\.createPublicKey\(normalizePemKey\(PLATFORM_PUBLIC_KEY!/);
+ assert.match(wechat,/Buffer\.byteLength\(API_V3_KEY!, "utf8"\) === 32/);
+ assert.match(wechat,/return process\.env\.WECHAT_ENABLED\?\.trim\(\)\.toLowerCase\(\) === "true" && wechatPayKeyMaterialReady\(\)/);
+ assert.match(wechat,/if \(!PLATFORM_PUBLIC_KEY \|\| !PLATFORM_PUBLIC_KEY_ID\)/);
+ assert.match(wechat,/params\.serial !== PLATFORM_PUBLIC_KEY_ID/);
  const providers=read("app/api/pay/providers/route.ts");
  assert.ok(providers.includes("WECHAT_PLATFORM_PUBLIC_KEY"));
  assert.ok(providers.includes("WECHAT_PLATFORM_PUBLIC_KEY_ID"));

@@ -2,8 +2,8 @@
 /**
  * Plugin Name: LINGXIFIELD — SIAI & Free Widgets
  * Plugin URI: https://lingxifield.com/partners
- * Description: Embed a verified global SIAI directory, a vendor profile, or a QR widget using shortcodes.
- * Version: 0.1.0
+ * Description: Embed a verified SIAI directory, anonymous free local tools, a vendor profile, or a public QR widget.
+ * Version: 0.2.0
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Author: LINGXIFIELD
@@ -38,7 +38,7 @@ function lingxifield_widget_shortcode($atts, $widget = 'siai') {
         return '';
     }
 
-    $kind = $widget === 'qr' ? 'tools' : 'siai';
+    $kind = $widget === 'qr' ? 'tools' : ($widget === 'free-tools' ? 'free-tools' : 'siai');
     $attr = $widget === 'vendor' ? ' data-vendor="' . esc_attr($vendor) . '"' : '';
     if ($widget === 'vendor' && $vendor === '') {
         return '';
@@ -53,6 +53,9 @@ function lingxifield_widget_shortcode($atts, $widget = 'siai') {
 }
 add_shortcode('lingxifield_siai', function($atts) {
     return lingxifield_widget_shortcode($atts, 'siai');
+});
+add_shortcode('lingxifield_tools', function($atts) {
+    return lingxifield_widget_shortcode($atts, 'free-tools');
 });
 add_shortcode('lingxifield_qr', function($atts) {
     return lingxifield_widget_shortcode($atts, 'qr');

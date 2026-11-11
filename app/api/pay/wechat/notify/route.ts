@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { decryptWechatNotifyResource, isWechatNotifyTimestampFresh, verifyWechatNotifySignature } from "@/lib/wechatpay";
+import { decryptWechatNotifyResource, isWechatNotifyTimestampFresh, verifyWechatNotifySignature, wechatAppId, wechatMerchantId } from "@/lib/wechatpay";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -16,7 +16,10 @@ import { fulfillPaidOrder } from "@/lib/fulfill-order";
 // 弱验证。
 export async function POST(req: Request) {
   try {
+    const contentLength = Number(req.headers.get("content-length") ?? 0);
+    if (Number.isFinite(contentLength) && contentLength > 512 * 1024) return NextResponse.json({ code: "FAIL", message: "通知体过大" }, { status: 413 });
     const rawBody = await req.text();
+    if (Buffer.byteLength(rawBody, "utf8") > 512 * 1024) return NextResponse.json({ code: "FAIL", message: "通知体过大" }, { status: 413 });
     const timestamp = req.headers.get("Wechatpay-Timestamp") ?? "";
     const nonce = req.headers.get("Wechatpay-Nonce") ?? "";
     const signature = req.headers.get("Wechatpay-Signature") ?? "";
@@ -41,6 +44,13 @@ export async function POST(req: Request) {
     }
 
     const decrypted = decryptWechatNotifyResource(resource);
+    const expectedAppId = wechatAppId();
+    const expectedMerchantId = wechatMerchantId();
+    if (!expectedAppId || !expectedMerchantId ||
+        String(decrypted.appid ?? "") !== expectedAppId ||
+        String(decrypted.mchid ?? "") !== expectedMerchantId) {
+      return NextResponse.json({ code: "FAIL", message: "商户身份校验失败" }, { status: 422 });
+    }
     if (decrypted.trade_state !== "SUCCESS") {
       // 不是"支付成功"这个状态，直接确认收到，不处理（微信支付也会推送
       // 关闭、退款这些状态的通知）。
@@ -51,7 +61,7 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const { data: order } = await admin
       .from("orders")
-      .select("id, amount_rmb, provider")
+      .select("id, amount_rmb, currency, provider")
       .eq("provider_payment_id", outTradeNo)
       .single();
     if (!order) {
@@ -61,7 +71,7 @@ export async function POST(req: Request) {
 
     const paymentAmount = decrypted.amount as { total: number; currency: string } | undefined
     const expectedFen = Math.round(Number(order.amount_rmb) * 100)
-    if (order.provider !== "wechat" || !paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {
+    if (order.provider !== "wechat" || order.currency !== "CNY" || !paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {
       console.error("[wechat notify] payment did not match local order", { orderId: order.id })
       return NextResponse.json({ code: "FAIL", message: "订单校验失败" }, { status: 422 })
     }

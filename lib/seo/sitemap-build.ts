@@ -33,8 +33,8 @@ export function buildSiteSitemap(site:string,siaiIndexable:boolean):MetadataRout
       rows.push({url:PRIMARY_SITE+localePath(locale,"/siai/spend-diagnostic"),alternates:{languages:diagnosticLanguages},changeFrequency:"weekly",priority:0.8});
   }
   // Only pages responding with their own public content belong in the XML sitemap.
-  // /sasi/drama, /sasi/build and /ai-{knowledge,learning,research} redirect to /sasi.
-  for(const path of ["/sasi","/sasi/image","/about","/privacy","/terms","/refunds","/legal/sasi","/release","/partners"])
+  // Retired SASI creation routes and the old marketplace root redirect; only canonical public pages are listed.
+  for(const path of ["/sasi","/sasi/delivery","/about","/privacy","/terms","/refunds","/legal/sasi","/release","/partners"])
     rows.push({url:PRIMARY_SITE+path});
   return rows;
 }

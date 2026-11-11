@@ -20,7 +20,6 @@ export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   { route: "/ai-wallet", source: "ai-wallet.html", target: "ai-wallet.html" },
   { route: "/account", source: "account-login.html", target: "account.html" },
   { route: "/sasi", source: "sasi.html", target: "sasi.html" },
-  { route: "/sasi/marketplace", source: "marketplace.html", target: "sasi/marketplace.html" },
   { route: "/about", source: "about.html", target: "about.html" },
   { route: "/announcements", source: "announcements.html", target: "announcements.html" },
 ]);

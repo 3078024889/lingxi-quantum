@@ -12,7 +12,7 @@ test("Nine language legal notice and actual software offering",()=>{
 });
 test("Old drama/image generation is not an active entrypoint",()=>{
  for(const path of ["app/sasi/image/page.tsx","app/sasi/drama/page.tsx"]){
-  const s=read(path);assert.match(s,/redirect\("\/sasi"\)/);assert.match(s,/index:false/);
+  const s=read(path);assert.match(s,/permanentRedirect\("\/sasi"\)/);assert.match(s,/index:false/);
  }
  const nav=read("components/Nav.tsx");
  assert.doesNotMatch(nav,/href="\/sasi" className="lx11-top-link"/);
@@ -36,6 +36,8 @@ test("Seller revenue split only in agreement, never public hero",()=>{
  assert.match(market,/平台收取 15% 服务费/);
  const meta=read("app/sasi/marketplace/page.tsx");
  assert.doesNotMatch(meta,/成交佣金15%/);
+ assert.match(meta,/permanentRedirect\("\/sasi"\)/);
+ assert.match(meta,/index:false/);
 });
 test("Real software checkout and tool passes remain fail-closed",()=>{
  const pass=read("app/api/tools/pass/route.ts");
@@ -48,12 +50,16 @@ test("Real software checkout and tool passes remain fail-closed",()=>{
 });
 
 test("All retired creation pages are noindexed redirects, with valid market SEO",()=>{
- for(const name of ["assemble","director","series","variants","build","chat","project-dna"]){
+ for(const name of ["assemble","director","series","variants","build","chat","project-dna","drama","image","connections"]){
   const source=read("app/sasi/"+name+"/page.tsx");
-  assert.match(source,/redirect\("\/sasi"\)/);
+  assert.ok(source.includes('permanentRedirect("/sasi")'));
   assert.match(source,/index:false/);
  }
- assert.doesNotMatch(read("components/Footer.tsx"),/href="\/sasi\/(?:drama|build)"/);
+ const footer=read("components/Footer.tsx");
+ assert.ok(!footer.includes('href="/ai-knowledge"')&&!footer.includes('href="/ai-learning"')&&!footer.includes('href="/ai-research"'));
+ assert.doesNotMatch(footer,/书本智能问答|学习智能体|科研智能体|SI\/AI 短剧生成/);
+ assert.ok(footer.includes('href="/sasi/seller"'));
+ assert.ok(footer.includes('href="/sasi/delivery"'));
  assert.doesNotMatch(read("app/page.tsx"),/"AI短剧生成"/);
  assert.doesNotMatch(read("lib/public-feature-copy.ts"),/Create SI\/AI short dramas with SASI/);
  const hub=read("components/HomeProblemHub.tsx");

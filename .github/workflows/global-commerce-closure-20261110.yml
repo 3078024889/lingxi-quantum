@@ -1,0 +1,59 @@
+name: Global commerce closure gate (NO DEPLOY)
+on:
+  push:
+    branches: [feat/com-wallet-sasi-market-seo-20261110]
+  pull_request:
+    branches: [release/com-sasi-full-20261108]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: global-commerce-closure-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      LINGXI_SELFHOST_BUILD: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+      NEXT_PUBLIC_SUPABASE_URL: https://sxsgdpqojepgbbrxrzlq.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Wallet, marketplace, payment and SEO contracts
+        run: |
+          node --test tests/wallet-ledger-keyset-20261110.test.mjs tests/sasi-market-payout-balance-snapshot-20261110.test.mjs
+          node --test tests/wallet-topup-live-contract-20261111.test.mjs
+          node --test tests/supabase-applied-migration-parity-20261111.test.mjs
+          node --test tests/sasi-marketplace-security-contract.test.mjs tests/sasi-marketplace-draft-revision-20261110.test.mjs
+          node --test tests/sasi-com-closure-20261108.test.mjs tests/sasi-software-public-branding-20261108.test.mjs tests/sasi-software-verified-fulfillment-20261108.test.mjs tests/sasi-software-paypal-checkout-20261110.test.mjs
+          node --test tests/sasi-first-party-package-upload-20261111.test.mjs
+          node --test tests/growth-distribution.test.mjs
+          node --test tests/paypal-merchant-idempotency-20261108.test.mjs tests/com-paypal-live-review-20261109.test.mjs tests/alipay-amount-precision-20261110.test.mjs tests/alipay-return-verification-20261110.test.mjs tests/paypal-amount-precision-20261110.test.mjs tests/payment-webhook-boundaries-20261110.test.mjs tests/paypal-unsigned-webhook-20261110.test.mjs tests/payment-provider-hardening-20261110.test.mjs tests/seo-fullsite-coverage.test.mjs
+      - name: TypeScript and focused lint
+        run: |
+          pnpm exec tsc --noEmit
+          pnpm exec eslint app/api/sasi/marketplace/payouts/route.ts app/api/account/wallet-ledger/route.ts lib/money/ledger-pagination.ts lib/paypal.ts lib/wechatpay.ts lib/alipay.ts components/WalletLedgerPanel.tsx
+      - name: Production build only
+        run: |
+          pnpm build
+          test -s .next/standalone/server.js
+      - name: Assert this workflow is not a production deployment
+        run: |
+          ! grep -Eiq 'wrangler deploy|vercel deploy|cloudflare.*publish|production.*promote' .github/workflows/global-commerce-closure-20261110.yml
+          echo GLOBAL_COMMERCE_BUILD_AND_TEST_PASS_NO_DEPLOY

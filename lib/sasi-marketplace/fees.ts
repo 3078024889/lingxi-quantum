@@ -15,3 +15,13 @@ export function isMarketProductId(id:string){
  return /^sasi-market:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
 }
 export function marketProductUuid(id:string){return isMarketProductId(id)?id.slice("sasi-market:".length):null;}
+
+/** Parse seller-entered payout amounts without floating-point rounding. */
+export function parseMarketplacePayoutMinorUnits(value:unknown):number|null{
+ if(typeof value!=="string")return null;
+ const raw=value.trim();
+ if(!/^(?:0|[1-9]\d*)(?:\.\d{1,2})?$/.test(raw))return null;
+ const [whole,fraction=""]=raw.split(".");
+ const minor=Number(whole)*100+Number((fraction+"00").slice(0,2));
+ return Number.isSafeInteger(minor)?minor:null;
+}

@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   if (order.status === "paid") {
     return NextResponse.json({ paid: true });
   }
-  if (order.provider !== "wechat" || !order.provider_payment_id) {
+  if (order.provider !== "wechat" || order.currency !== "CNY" || !order.provider_payment_id) {
     return NextResponse.json({ paid: false });
   }
 

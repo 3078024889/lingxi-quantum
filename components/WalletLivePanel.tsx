@@ -3,7 +3,7 @@ import {useEffect,useState} from "react";
 import Link from "next/link";
 import LxText from "@/components/LxText";
 import WalletLedgerPanel from "@/components/WalletLedgerPanel";
-import {BALANCE_TOPUP_AMOUNTS} from "@/lib/balance-topups";
+import {BALANCE_TOPUP_AMOUNTS,customTopupAmount,MIN_CUSTOM_TOPUP,MAX_CUSTOM_TOPUP} from "@/lib/balance-topups";
 
 type Currency="CNY"|"USD";
 type Balance={availableMinor:number;refundableMinor:number;refundHoldMinor:number};
@@ -27,7 +27,9 @@ function validSummary(value:unknown):value is Summary{
 export default function WalletLivePanel(){
  const [data,setData]=useState<State>({status:"loading"});
  const [tab,setTab]=useState<"ledger"|"withdrawals">("ledger");
- const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean}|null>(null);
+ const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean;paypal:boolean}|null>(null);
+ const [topupCurrency,setTopupCurrency]=useState<Currency>("CNY");
+ const [customAmount,setCustomAmount]=useState("");
  useEffect(()=>{
   const controller=new AbortController();
   const load=async()=>{
@@ -50,7 +52,7 @@ export default function WalletLivePanel(){
     const response=await fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin",signal:controller.signal});
     if(!response.ok)return;
     const p=await response.json();
-    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true});
+    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true,paypal:p.paypal===true});
    }catch{}
   };
   void load();void loadProviders();
@@ -73,7 +75,11 @@ export default function WalletLivePanel(){
   <Link href="/account/orders" className="ml-4 underline"><LxText zh="订单记录" en="Orders"/></Link>
  </section>;
  const {balances,withdrawals}=data.summary;
- const payReady=providers?.wechat===true||providers?.alipay===true;
+ const topupPayReady=topupCurrency==="CNY"?(providers?.wechat===true||providers?.alipay===true):providers?.paypal===true;
+ const customValue=customTopupAmount(customAmount.trim());
+ const customValueText=customValue===null?"":customValue.toFixed(2);
+ const topupSymbol=topupCurrency==="CNY"?"¥":"$";
+ const customHref=topupCurrency==="CNY"?"/checkout?productId=sasi-balance-custom-"+customValueText+"&redirect=%2Fai-wallet":"/checkout-usd?productId=sasi-usd-balance-custom-"+customValueText+"&returnPath=%2Fai-wallet";
  return <div className="lx26-wallet">
   <section className="lx26-wallet-overview">
    <h2 className="lx26-section-title"><span className="lx26-wallet-symbol">◇</span><LxText zh="资产总览" en="Balance overview" ja="資産概要" ko="잔액 개요" fr="Vue d'ensemble" de="Guthabenübersicht" es="Resumen de saldo" pt="Resumo do saldo" ar="نظرة عامة"/></h2>
@@ -95,13 +101,28 @@ export default function WalletLivePanel(){
   </section>
   <section className="lx26-wallet-topup">
    <div className="lx26-topup-selector">
-    <h2 className="lx26-section-title"><span aria-hidden="true">▣</span><LxText zh="人民币充值" en="CNY top-up"/></h2>
-    <p><LxText zh="选择充值金额" en="Choose an amount"/></p>
-    <div className="lx26-topup-amounts">
-     {BALANCE_TOPUP_AMOUNTS.map(amount=>payReady?
-      <Link key={amount} href={`/checkout?productId=sasi-balance-${amount}&redirect=%2Fai-wallet`} className="lx26-topup-choice">¥{amount}</Link>:
-      <span key={amount} className="lx26-topup-choice is-unavailable" aria-disabled="true">¥{amount}</span>)}
+    <h2 className="lx26-section-title"><span aria-hidden="true">▣</span><LxText zh="余额充值" en="Top up balance" ja="残高チャージ" ko="잔액 충전" fr="Recharger le solde" de="Guthaben aufladen" es="Recargar saldo" pt="Recarregar saldo" ar="شحن الرصيد"/></h2>
+    <p><LxText zh="选择币种和充值金额" en="Choose a currency and amount" ja="通貨と金額を選択" ko="통화와 금액 선택" fr="Choisissez une devise et un montant" de="Währung und Betrag wählen" es="Elige moneda e importe" pt="Escolha a moeda e o valor" ar="اختر العملة والمبلغ"/></p>
+    <div className="lx26-topup-currency" role="tablist" aria-label="Top-up currency">
+     <button type="button" role="tab" aria-selected={topupCurrency==="CNY"} className={topupCurrency==="CNY"?"is-active":""} onClick={()=>{setTopupCurrency("CNY");setCustomAmount("");}}><LxText zh="人民币 CNY" en="Chinese yuan · CNY" ja="人民元 · CNY" ko="중국 위안 · CNY" fr="Yuan chinois · CNY" de="Chinesischer Yuan · CNY" es="Yuan chino · CNY" pt="Yuan chinês · CNY" ar="اليوان الصيني · CNY"/></button>
+     <button type="button" role="tab" aria-selected={topupCurrency==="USD"} className={topupCurrency==="USD"?"is-active":""} onClick={()=>{setTopupCurrency("USD");setCustomAmount("");}}><LxText zh="美元 USD" en="US dollar · USD" ja="米ドル · USD" ko="미국 달러 · USD" fr="Dollar américain · USD" de="US-Dollar · USD" es="Dólar estadounidense · USD" pt="Dólar americano · USD" ar="الدولار الأمريكي · USD"/></button>
     </div>
+    <div className="lx26-topup-amounts">
+     {BALANCE_TOPUP_AMOUNTS.map(amount=>topupPayReady?
+      <Link key={amount} href={topupCurrency==="CNY"?"/checkout?productId=sasi-balance-"+amount+"&redirect=%2Fai-wallet":"/checkout-usd?productId=sasi-usd-balance-"+amount+"&returnPath=%2Fai-wallet"} className="lx26-topup-choice">{topupSymbol}{amount}</Link>:
+      <span key={amount} className="lx26-topup-choice is-unavailable" aria-disabled="true">{topupSymbol}{amount}</span>)}
+    </div>
+    <div className="lx26-topup-custom">
+     <label htmlFor="wallet-custom-amount"><LxText zh="自定义金额" en="Custom amount" ja="任意金額" ko="직접 입력" fr="Montant personnalisé" de="Eigener Betrag" es="Importe personalizado" pt="Valor personalizado" ar="مبلغ مخصص"/></label>
+     <div className="lx26-topup-custom-row">
+      <span aria-hidden="true">{topupSymbol}</span>
+      <input id="wallet-custom-amount" data-testid="wallet-custom-amount-input" type="text" inputMode="decimal" autoComplete="off" maxLength={8} value={customAmount} onChange={e=>setCustomAmount(e.target.value)} placeholder="0.00" aria-describedby="wallet-custom-hint"/>
+      {customValue!==null&&topupPayReady?<Link data-testid="wallet-custom-topup" href={customHref} className="lx26-topup-custom-action"><LxText zh="继续充值" en="Continue" ja="チャージへ進む" ko="충전 계속" fr="Continuer" de="Weiter" es="Continuar" pt="Continuar" ar="متابعة"/></Link>:<button type="button" disabled className="lx26-topup-custom-action is-disabled"><LxText zh="继续充值" en="Continue" ja="チャージへ進む" ko="충전 계속" fr="Continuer" de="Weiter" es="Continuar" pt="Continuar" ar="متابعة"/></button>}
+     </div>
+     <p id="wallet-custom-hint"><LxText zh={"金额范围："+MIN_CUSTOM_TOPUP.toFixed(2)+"–"+MAX_CUSTOM_TOPUP.toLocaleString("en-US")+"，最多两位小数。"} en="Amount range: 0.01–10,000, up to 2 decimal places." ja="0.01～10,000、少数第2位まで入力できます。" ko="0.01~10,000, 소수점 둘째 자리까지 입력할 수 있습니다." fr="De 0,01 à 10 000, avec deux décimales maximum." de="0,01 bis 10.000, maximal zwei Nachkommastellen." es="De 0,01 a 10.000, con hasta dos decimales." pt="De 0,01 a 10.000, com até duas casas decimais." ar="من 0.01 إلى 10,000 وبحد أقصى منزلتين عشريتين."/></p>
+    </div>
+    <p className="lx26-topup-provider"><LxText zh={topupCurrency==="CNY"?"支付方式：微信支付或支付宝":"支付方式：PayPal"} en={topupCurrency==="CNY"?"Payment methods: WeChat Pay or Alipay":"Payment method: PayPal"} ja={topupCurrency==="CNY"?"支払い方法：WeChat Pay / Alipay":"支払い方法：PayPal"} ko={topupCurrency==="CNY"?"결제 수단: WeChat Pay 또는 Alipay":"결제 수단: PayPal"} fr={topupCurrency==="CNY"?"Paiement : WeChat Pay ou Alipay":"Paiement : PayPal"} de={topupCurrency==="CNY"?"Zahlung: WeChat Pay oder Alipay":"Zahlung: PayPal"} es={topupCurrency==="CNY"?"Pago: WeChat Pay o Alipay":"Pago: PayPal"} pt={topupCurrency==="CNY"?"Pagamento: WeChat Pay ou Alipay":"Pagamento: PayPal"} ar={topupCurrency==="CNY"?"طريقة الدفع: WeChat Pay أو Alipay":"طريقة الدفع: PayPal"}/></p>
+    {!topupPayReady&&<p role="status" className="lx26-topup-unavailable"><LxText zh={topupCurrency==="CNY"?"人民币支付暂不可用，请稍后再试。":"美元 PayPal 充值暂不可用，请稍后再试。"} en={topupCurrency==="CNY"?"CNY payment is temporarily unavailable.":"USD PayPal top-ups are temporarily unavailable."} ja={topupCurrency==="CNY"?"人民元決済は一時的に利用できません。":"USDのPayPalチャージは一時的に利用できません。"} ko={topupCurrency==="CNY"?"CNY 결제를 일시적으로 사용할 수 없습니다.":"USD PayPal 충전을 일시적으로 사용할 수 없습니다."} fr={topupCurrency==="CNY"?"Le paiement CNY est temporairement indisponible.":"Les recharges USD via PayPal sont temporairement indisponibles."} de={topupCurrency==="CNY"?"CNY-Zahlung ist vorübergehend nicht verfügbar.":"USD-Aufladungen über PayPal sind vorübergehend nicht verfügbar."} es={topupCurrency==="CNY"?"El pago en CNY no está disponible temporalmente.":"Las recargas USD con PayPal no están disponibles temporalmente."} pt={topupCurrency==="CNY"?"O pagamento em CNY está temporariamente indisponível.":"As recargas USD via PayPal estão temporariamente indisponíveis."} ar={topupCurrency==="CNY"?"الدفع بعملة CNY غير متاح مؤقتًا.":"شحن USD عبر PayPal غير متاح مؤقتًا."}/></p>}
    </div>
    <div className="lx26-wallet-quicklinks">
     <h2 className="lx26-section-title"><span aria-hidden="true">✧</span><LxText zh="账户服务" en="Account services"/></h2>
@@ -110,12 +131,12 @@ export default function WalletLivePanel(){
     <Link href="/account/support"><LxText zh="处理进度" en="Support progress"/><span aria-hidden="true">›</span></Link>
    </div>
   </section>
-  <section className="lx26-wallet-history">
+  <section className="lx26-wallet-history" data-testid="wallet-history-panel">
    <div className="lx26-wallet-history-tabs" role="tablist" aria-label="Wallet history">
-    <button type="button" role="tab" aria-selected={tab==="ledger"} className={tab==="ledger"?"is-active":""} onClick={()=>setTab("ledger")}><LxText zh="充值与余额流水" en="Wallet activity"/></button>
+    <button type="button" role="tab" aria-selected={tab==="ledger"} className={tab==="ledger"?"is-active":""} onClick={()=>setTab("ledger")}><LxText zh="资金记录" en="Funds activity"/></button>
     <button type="button" role="tab" aria-selected={tab==="withdrawals"} className={tab==="withdrawals"?"is-active":""} onClick={()=>setTab("withdrawals")}><LxText zh="退款与提现" en="Refunds & withdrawals"/></button>
    </div>
-   {tab==="ledger"?<div role="tabpanel" className="lx26-wallet-ledgers"><WalletLedgerPanel currency="CNY"/><WalletLedgerPanel currency="USD"/></div>:
+   {tab==="ledger"?<div role="tabpanel" className="lx26-wallet-ledgers lx26-wallet-ledgers-single"><WalletLedgerPanel showCurrencyTabs/></div>:
     <div role="tabpanel" className="lx26-wallet-withdrawals">
       {withdrawals.length?withdrawals.map(r=><div className="lx26-withdrawal-row" key={r.id}><span><strong>{money(r.currency==="USD"?"USD":"CNY",Number(r.amount_minor))}</strong><small>{new Date(r.created_at).toLocaleDateString()}</small></span><span>{String(r.normalized_status||"—")}</span></div>):
        <div className="lx26-wallet-empty"><span aria-hidden="true">▤</span><h3><LxText zh="暂无记录" en="No records yet"/></h3><p><LxText zh="当前暂无退款或提现记录。" en="No refunds or withdrawals recorded."/></p></div>}

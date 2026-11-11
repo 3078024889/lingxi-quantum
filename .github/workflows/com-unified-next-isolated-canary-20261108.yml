@@ -22,6 +22,9 @@ on:
       - 'scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs'
       - 'tests/com-sasi-account-anon-401-20261109.test.mjs'
       - 'lib/paypal.ts'
+      - 'lib/alipay.ts'
+      - 'app/api/pay/alipay/notify/route.ts'
+      - 'app/api/pay/wechat/notify/route.ts'
       - 'scripts/cloudflare/public-market-listings.mjs'
       - 'scripts/ops/probe-sasi-anonymous-rest-20261109.mjs'
       - 'tests/com-paypal-live-review-20261109.test.mjs'
@@ -231,7 +234,7 @@ jobs:
             sleep 5
           done
           test "$propagated" -eq 1
-          for path in / /siai /tools /tools/pass /tools/png-to-jpg /tools/compress-image /tools/merge-pdf /tools/json-formatter /ai-wallet /account /sasi /sasi/marketplace /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
+          for path in / /siai /tools /tools/pass /tools/png-to-jpg /tools/compress-image /tools/merge-pdf /tools/json-formatter /ai-wallet /account /sasi /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
             count=0
             for i in 1 2 3;do
               h="$(mktemp)"
@@ -242,7 +245,7 @@ jobs:
                 echo "COM_CANARY_CATALOG_STATUS ${diagnostic:-no-edge-diagnostic}"
               fi
               test "$status" = 200 || exit 1
-              if [[ "$path" = / || "$path" = /account || "$path" = /api/sasi/software/catalog || "$path" = /tools || "$path" = /tools/pass || "$path" = /tools/png-to-jpg || "$path" = /tools/compress-image || "$path" = /tools/merge-pdf || "$path" = /tools/json-formatter || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /sasi/marketplace || "$path" = /about || "$path" = /announcements ]];then
+              if [[ "$path" = / || "$path" = /account || "$path" = /api/sasi/software/catalog || "$path" = /tools || "$path" = /tools/pass || "$path" = /tools/png-to-jpg || "$path" = /tools/compress-image || "$path" = /tools/merge-pdf || "$path" = /tools/json-formatter || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /about || "$path" = /announcements ]];then
                 grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
                 if [[ "$path" != "/api/sasi/software/catalog" ]];then
                   grep -iq '^x-lingxi-static-delivery: workers-static-assets' "$h"
@@ -253,6 +256,7 @@ jobs:
             done
             test "$count" = 3
           done
+           node -e 'const u=process.argv[1];fetch(u,{redirect:"manual"}).then(r=>{const t=new URL(r.headers.get("location")||"",u);console.log("COM_CANARY_LEGACY_MARKET_REDIRECT HTTP_"+r.status+" location="+r.headers.get("location"));if(r.status!==308||t.pathname!=="/sasi")process.exit(1)}).catch(e=>{console.error(e);process.exit(1)})' "$url/sasi/marketplace"
           for path in /siai/ /tools/ /tools/pass/ /sasi/ /sasi/marketplace/ /en/siai/;do
             headers="$(mktemp)"
             status="$(curl -4sS --connect-timeout 9 --max-time 25 -D "$headers" -o /dev/null -w '%{http_code}' "$url$path" || true)"

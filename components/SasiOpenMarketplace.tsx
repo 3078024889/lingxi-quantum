@@ -1,9 +1,10 @@
 "use client";
-import {useCallback,useEffect,useMemo,useState} from "react";
+import {useCallback,useEffect,useMemo,useRef,useState} from "react";
 import Link from "next/link";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {sasiSoftwareUiText} from "@/lib/sasi-software/ui-copy";
 import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
+import {parseMarketplacePayoutMinorUnits} from "@/lib/sasi-marketplace/fees";
 import styles from "./SasiOpenMarketplace.module.css";
 type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;rejection_reason?:string|null;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
@@ -15,11 +16,14 @@ function translatedStatus(lang:string,key:string,scan=false){const pair=(scan?SC
 function categoryLabel(lang:string,key:string){const c=CATEGORIES.find(([id])=>id===key);return c?sasiSoftwareUiText(lang,c[1],c[2]):sasiSoftwareUiText(lang,"其他软件","Other software")}
 function friendlyError(error:unknown,lang:string){const raw=error instanceof Error?error.message:String(error);return /login|account|VERIFIED_ACCOUNT_REQUIRED|SELLER_NOT_APPROVED|401|403/i.test(raw)?sasiSoftwareUiText(lang,"请先完成登录、邮箱验证或卖家审核。","Please sign in, verify your email and complete seller approval."):sasiSoftwareUiText(lang,"操作暂未完成，请稍后重试或联系平台支持。","The action could not be completed. Please try again or contact support.")}
 function format(value:number){return (value/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
-export default function SasiOpenMarketplace(){
- const {lang}=useLingxiLang();const zh=lang==="zh";
+export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketplace"|"seller"}){
+ const {lang}=useLingxiLang();const zh=lang==="zh";const sellerOnly=view==="seller";
  const [listings,setListings]=useState<Listing[]>([]);
  const featured=SASI_SOFTWARE_CATALOG[0];
  const [featuredReady,setFeaturedReady]=useState(false);
+ const [featuredPayment,setFeaturedPayment]=useState({wechat:false,alipay:false,paypal:false});
+ const [featuredPaypalBusy,setFeaturedPaypalBusy]=useState(false);
+ const [featuredPaypalError,setFeaturedPaypalError]=useState("");
  const [images,setImages]=useState<Record<string,Array<{id:string;kind:string;url:string}>>>({});
  const [mine,setMine]=useState<Listing[]>([]);
  const [mediaCounts,setMediaCounts]=useState<Record<string,{cover:number;detail:number}>>({});
@@ -33,8 +37,9 @@ export default function SasiOpenMarketplace(){
  const [editingId,setEditingId]=useState<string|null>(null);
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
- const [showStudio,setShowStudio]=useState(false);
+ const [showStudio,setShowStudio]=useState(sellerOnly);
  const [requestedAmount,setRequestedAmount]=useState(""),[requestCurrency,setRequestCurrency]=useState<"CNY"|"USD">("CNY");
+ const payoutAttemptRef=useRef<{amountMinor:number;currency:"CNY"|"USD";key:string}|null>(null);
  const refresh=useCallback(async()=>{
   const paths=["/api/sasi/marketplace/listings","/api/sasi/marketplace/listings?mode=mine","/api/sasi/marketplace/seller","/api/sasi/marketplace/payouts"];
   const values=await Promise.all(paths.map(p=>fetch(p,{cache:"no-store"}).then(async r=>r.ok?r.json():null).catch(()=>null)));
@@ -57,8 +62,11 @@ export default function SasiOpenMarketplace(){
   let live=true;
   fetch("/api/sasi/software/catalog",{cache:"no-store"})
     .then(r=>r.ok?r.json():null)
-    .then(j=>{if(live)setFeaturedReady(j?.products?.[featured.id]?.available===true)})
-    .catch(()=>{if(live)setFeaturedReady(false)});
+    .then(j=>{if(live){
+      setFeaturedReady(j?.products?.[featured.id]?.available===true);
+      setFeaturedPayment({wechat:j?.payment?.wechat===true,alipay:j?.payment?.alipay===true,paypal:j?.payment?.paypal===true});
+    }})
+    .catch(()=>{if(live){setFeaturedReady(false);setFeaturedPayment({wechat:false,alipay:false,paypal:false})}});
   return()=>{live=false};
  },[featured.id]);
  useEffect(()=>{
@@ -79,7 +87,7 @@ export default function SasiOpenMarketplace(){
  const post=async(url:string,payload:unknown,method:"POST"|"PATCH"="POST")=>{
   const r=await fetch(url,{method,headers:{"content-type":"application/json"},body:JSON.stringify(payload),credentials:"same-origin"});
   const result=await r.json().catch(()=>null);
-  if(!r.ok)throw Error(typeof result?.error==="string"?result.error:"REQUEST_FAILED_"+r.status);
+  if(!r.ok){const error=Error(typeof result?.error==="string"?result.error:"REQUEST_FAILED_"+r.status) as Error&{status:number};error.status=r.status;throw error;}
   return result;
  };
  const apply=async()=>{
@@ -165,23 +173,52 @@ export default function SasiOpenMarketplace(){
    else {await navigator.clipboard.writeText(url);setStatus(sasiSoftwareUiText(lang,"商品分享链接已复制。","Product link copied."));}
   }catch{}
  };
+ const payFeaturedPaypal=async()=>{
+  if(!featuredReady||!featuredPayment.paypal||featuredPaypalBusy)return;
+  setFeaturedPaypalBusy(true);setFeaturedPaypalError("");
+  try{
+   const res=await fetch("/api/pay/create",{
+    method:"POST",headers:{"Content-Type":"application/json"},credentials:"same-origin",
+    body:JSON.stringify({productId:featured.id,returnPath:"/account/software"})
+   });
+   const data=await res.json().catch(()=>({}));
+   if(res.status===401){window.location.assign("/account?next="+encodeURIComponent("/sasi"));return;}
+   if(!res.ok||typeof data.url!=="string")throw Error("PAYPAL_SOFTWARE_CHECKOUT_UNAVAILABLE");
+   const target=new URL(data.url);
+   if(target.protocol!=="https:"||!/(^|\.)paypal\.com$/.test(target.hostname))
+    throw Error("INVALID_PAYPAL_REDIRECT");
+   window.location.assign(target.href);
+  }catch{
+   setFeaturedPaypalError(sasiSoftwareUiText(lang,"PayPal 暂时无法创建订单，请稍后重试。","PayPal checkout is temporarily unavailable. Please try again."));
+  }finally{setFeaturedPaypalBusy(false);}
+ };
  const payout=async()=>{
   setBusy("payout");setError("");setStatus("");
   try{
-   const amountMinor=Math.round(Number(requestedAmount)*100);
-   if(!Number.isSafeInteger(amountMinor)||amountMinor<1)throw Error("INVALID_AMOUNT");
-   const key=crypto.randomUUID();
-   const result=await post("/api/sasi/marketplace/payouts",{amountMinor,currency:requestCurrency,idempotencyKey:key});
+   const amountMinor=parseMarketplacePayoutMinorUnits(requestedAmount);
+   if(amountMinor===null||amountMinor<1)throw Error("INVALID_AMOUNT");
+   let attempt=payoutAttemptRef.current;
+   if(!attempt||attempt.amountMinor!==amountMinor||attempt.currency!==requestCurrency){
+    attempt={amountMinor,currency:requestCurrency,key:crypto.randomUUID()};
+    payoutAttemptRef.current=attempt;
+   }
+   const result=await post("/api/sasi/marketplace/payouts",{amountMinor,currency:requestCurrency,idempotencyKey:attempt.key});
+   payoutAttemptRef.current=null;
    setStatus(result.status==="requested"?(sasiSoftwareUiText(lang,"提现申请已提交，平台将核实并向收款机构发起转账；到账以渠道回执为准。","Payout requested. Provider submission and arrival are separately verified.")):sasiSoftwareUiText(lang,"提现申请状态已更新。","Your payout request status has been updated."));
    await refresh();
-  }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
+  }catch(e){
+   const statusCode=(e as Error&{status?:number}).status;
+   if(statusCode&&[400,401,403,409].includes(statusCode))payoutAttemptRef.current=null;
+   setError(friendlyError(e,lang));
+  }finally{setBusy("")}
  };
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container}>
-  <div className={styles.hero}>
+  {!sellerOnly&&<>
+<div className={styles.hero}>
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
        <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")}</h1>
-       <p>{sasiSoftwareUiText(lang,"成品软件与源码授权 · 开发者发布 · 付款后自动交付","Software and source licenses · Developer publishing · Delivery after payment")}</p>
+       <p>{sasiSoftwareUiText(lang,"成品软件、MT5 EA与源码授权 · 安装教程 · 开发者发布 · 付款核验后自动交付","Finished software, MT5 EAs and source licenses · Installation guides · Developer publishing · Delivery after verified payment")}</p>
        <div className={styles.heroLinks}><a href="#products">◇ {sasiSoftwareUiText(lang,"浏览软件","Explore software")}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</button></div>
      </div>
      <div className={styles.laptopScene} aria-hidden="true">
@@ -195,7 +232,7 @@ export default function SasiOpenMarketplace(){
      <div><span>◎</span><div><strong>{sasiSoftwareUiText(lang,"全球可用","Global access")}</strong><small>{sasiSoftwareUiText(lang,"多语言 · 多地区","Multilingual access")}</small></div></div>
      <div><span>♧</span><div><strong>{sasiSoftwareUiText(lang,"开发者支持","Creator support")}</strong><small>{sasiSoftwareUiText(lang,"发布 · 审核 · 结算","Publish, review and settle")}</small></div></div>
    </div>
-   {featuredReady&&<section id="featured" className={styles.featured}>
+   <section id="featured" className={styles.featured} data-testid="featured-copernicus-source">
    <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{sasiSoftwareUiText(lang,"浏览开发者作品","Browse creator software")}</a></div>
    <article className={styles.featuredCard}>
@@ -204,16 +241,25 @@ export default function SasiOpenMarketplace(){
      <p className={styles.featuredBadge}>{sasiSoftwareUiText(lang,"仅售源码授权版","Source code license only")}</p>
      <h3>{zh?featured.titleZh:featured.titleEn}</h3>
      <p>{zh?featured.featureZh:featured.featureEn}</p>
-     <div className={styles.featuredChips}><span>MT5</span><span>{sasiSoftwareUiText(lang,"源码交付","Source delivery")}</span><span>{sasiSoftwareUiText(lang,"使用说明","Documentation")}</span><span>{sasiSoftwareUiText(lang,"只读观察","Read-only observation")}</span></div>
+     <div className={styles.featuredChips}><span>MT5</span><span>{sasiSoftwareUiText(lang,"源码交付","Source delivery")}</span><span>{sasiSoftwareUiText(lang,"安装与使用教程","Installation and user guide")}</span><span>{sasiSoftwareUiText(lang,"只读观察","Read-only observation")}</span></div>
     </div>
     <div className={styles.featuredPrice}>
      <strong>¥{featured.priceCny.toLocaleString("en-US")}</strong>
      <small>USD {"$"}{featured.priceUsd.toLocaleString("en-US")}</small>
-     <Link href={featuredReady?"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware":"/sasi/delivery"}
-      className={styles.featuredAction}>{featuredReady?(sasiSoftwareUiText(lang,"查看购买方式","Choose payment")):(sasiSoftwareUiText(lang,"查看软件详情","View details"))}</Link>
+     {featuredReady&&(featuredPayment.wechat||featuredPayment.alipay)&&<Link href={"/checkout?productId="+encodeURIComponent(featured.id)+"&redirect=%2Faccount%2Fsoftware"}
+      className={styles.featuredAction}>{sasiSoftwareUiText(lang,"人民币支付 · 微信 / 支付宝","Pay in CNY · WeChat / Alipay")}</Link>}
+     {featuredReady&&featuredPayment.paypal&&<button type="button" disabled={featuredPaypalBusy} onClick={()=>void payFeaturedPaypal()}
+      className={styles.featuredAction+" "+styles.featuredPaypalAction}>
+      {featuredPaypalBusy?sasiSoftwareUiText(lang,"正在连接 PayPal…","Connecting to PayPal…"):sasiSoftwareUiText(lang,"美元支付 · PayPal","Pay in USD · PayPal")}
+     </button>}
+     {featuredPaypalError&&<small role="alert" className={styles.featuredPaypalError}>{featuredPaypalError}</small>}
+     {!featuredReady?
+      <span role="status" aria-live="polite" className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"商品文件与 SHA256 正在核验，暂不可购买","Product files and SHA-256 are being verified; purchases are disabled.")}</span>:
+      !featuredPayment.wechat&&!featuredPayment.alipay&&!featuredPayment.paypal?
+      <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"当前没有可用的支付方式","No payment method is currently available")}</span>:null}
     </div>
    </article>
-  </section>}
+  </section>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / SOFTWARE</small><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
    <div className={styles.find}><input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)}</button>)}</div>
@@ -242,7 +288,10 @@ export default function SasiOpenMarketplace(){
        <button type="button" className={styles.launchStudio} onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio} aria-controls="sasi-seller-studio">{showStudio?(sasiSoftwareUiText(lang,"收起工作台","Close workspace")):(sasiSoftwareUiText(lang,"立即发布软件","Publish software"))}</button>
      </div>
    </section>
-   {showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
+   
+</>}
+{sellerOnly&&<section className={styles.section}><div className={styles.sectionHeading}><div><small>SELLER CENTER</small><h2>{sasiSoftwareUiText(lang,"卖家服务与发布工作台","Seller services and publishing workspace")}</h2><p>{sasiSoftwareUiText(lang,"申请入驻、发布软件商品、上传安装包并查看审核进度。","Apply to sell, publish software, upload packages and track review status.")}</p></div><Link href="/sasi">{sasiSoftwareUiText(lang,"返回软件市场","Back to software market")} ↗</Link></div></section>}
+{showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
    <div className={styles.workspace}>
     <div className={styles.formCard}><h3>{seller?(sasiSoftwareUiText(lang,"卖家资料","Seller profile")):(sasiSoftwareUiText(lang,"零费用申请入驻","Apply to sell for free"))}</h3>
     {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{sasiSoftwareUiText(lang,"审核状态","Review status")}: {translatedStatus(lang,seller.status)}</p><p>{sasiSoftwareUiText(lang,"身份核验","Identity verification")}: {seller.kyc_status==="verified"?(sasiSoftwareUiText(lang,"已完成","Verified")):(sasiSoftwareUiText(lang,"待完成","Pending"))}</p><p>{sasiSoftwareUiText(lang,"完成身份和收款方式审核后才能提现。","Identity and payout verification are required before cash-out.")}</p></div>:<>

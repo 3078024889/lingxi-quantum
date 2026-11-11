@@ -14,6 +14,10 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const snapshotRoot = join(root, "__lingxi_edge_static__");
     const toolRoutes = await loadToolStaticRoutes();
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
+    assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/sasi/marketplace"), false,
+      "redirect-only marketplace alias must remain Worker-handled");
+    const legacyMarket = await readFile(new URL("../app/sasi/marketplace/page.tsx", import.meta.url), "utf8");
+    assert.match(legacyMarket, /permanentRedirect\("\/sasi"\)/);
     for (const slug of ["siai", "en/siai", "ja/siai", "ko/siai", "fr/siai", "de/siai", "es/siai", "pt/siai", "ar/siai"]) {
       assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/" + slug), true,
         "reviewed source catalogue must be delivered without per-request SSR: /" + slug);

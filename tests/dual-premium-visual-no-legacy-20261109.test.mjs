@@ -44,10 +44,12 @@ test("scoped visual layer loaded last and retired SASI pages cannot become publi
   const path="app/sasi/"+route+"/page.tsx";
   assert.ok(existsSync(new URL("../"+path,import.meta.url)));
   const src=read(path);
-  assert.match(src,/redirect\("\/sasi"\)/);
+  assert.match(src,/permanentRedirect\("\/sasi"\)/);
   assert.match(src,/index:false/);
  }
- const deleted=["SasiAutonomyEntrances","SasiByokImageStudio","SasiMultiEpisodeWorkspace","SasiNativeCreatePanel","SasiOneSurface","SasiProjectDNAEditor","SasiSeriesStudio","SasiVariantWorkbench"];
+ const pricing=read("app/sasi/pricing/page.tsx");
+ assert.match(pricing,/permanentRedirect\("\/ai-wallet"\)/);
+ const deleted=["SasiCommandCenter","SasiAutonomyEntrances","SasiByokImageStudio","SasiMultiEpisodeWorkspace","SasiNativeCreatePanel","SasiOneSurface","SasiProjectDNAEditor","SasiSeriesStudio","SasiVariantWorkbench"];
  for(const name of deleted)assert.equal(existsSync(new URL("../components/"+name+".tsx",import.meta.url)),false,"retired source unexpectedly restored: "+name);
  const nav=read("components/Nav.tsx");
  assert.doesNotMatch(nav,/href="\/sasi\/(?:drama|image|director|series|build|chat)"/);

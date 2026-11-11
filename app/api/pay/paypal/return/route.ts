@@ -21,7 +21,7 @@ export async function GET(req:Request){
 
   const admin=createAdminClient();
   const {data:order}=await admin.from("orders").select("*").eq("id",orderId).single();
-  if(!order||order.provider!=="paypal"||!order.provider_payment_id||paypalToken!==order.provider_payment_id){
+  if(!order||order.provider!=="paypal"||order.currency!=="USD"||!order.provider_payment_id||paypalToken!==order.provider_payment_id){
     return NextResponse.redirect(paymentCenter(baseUrl,"error"));
   }
   if(order.status==="paid")return NextResponse.redirect(`${baseUrl}${dest}`);
