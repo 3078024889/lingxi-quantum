@@ -23,6 +23,7 @@ chmod 600 .dev.vars
 
 worker_pid=""
 robots_snapshot=""
+sitemap_snapshot=""
 cleanup() {
   if [[ -n "$worker_pid" ]]; then
     kill "$worker_pid" 2>/dev/null || true
@@ -30,6 +31,7 @@ cleanup() {
   fi
   rm -f .dev.vars
   if [[ -n "$robots_snapshot" ]]; then rm -f "$robots_snapshot"; fi
+  if [[ -n "$sitemap_snapshot" ]]; then rm -f "$sitemap_snapshot"; fi
 }
 trap cleanup EXIT
 
@@ -59,6 +61,29 @@ fi
 rm -f "$robots_snapshot"
 robots_snapshot=""
 echo 'COM_ROBOTS_STATIC_ASSET_CAPTURED'
+
+# The sitemap is domain-specific and must be served from the verified static asset layer.
+# Capture it with the exact .com Host so workers.dev never executes the dynamic route.
+sitemap_snapshot="$(mktemp "$RUNNER_TEMP/lingxi-com-sitemap.XXXXXX")"
+curl --noproxy '*' -fSs --retry 2 --max-time 30 \
+  -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
+  http://127.0.0.1:8787/sitemap.xml -o "$sitemap_snapshot"
+for topic in sasi-software-marketplace mt5-ea-source-code software-licensing-delivery developer-software-publishing; do
+  grep -Fq "https://lingxifield.com/discover/$topic" "$sitemap_snapshot" || { echo "COM_SITEMAP_TOPIC_MISSING:$topic"; exit 1; }
+done
+if grep -Eq 'ai-short-drama-generator|book-to-ai-agent|document-ai-agent|learning-ai-agent|research-ai-agent|ai-website-builder' "$sitemap_snapshot"; then
+  echo 'COM_SITEMAP_RETIRED_TOPIC_PRESENT'
+  exit 1
+fi
+if [[ -s .open-next/assets/sitemap.xml ]]; then
+  cmp -s "$sitemap_snapshot" .open-next/assets/sitemap.xml || { echo 'COM_SITEMAP_STATIC_ASSET_COLLISION'; exit 1; }
+else
+  cp "$sitemap_snapshot" .open-next/assets/sitemap.xml
+fi
+test -s .open-next/assets/sitemap.xml
+rm -f "$sitemap_snapshot"
+sitemap_snapshot=""
+echo 'COM_SITEMAP_STATIC_ASSET_CAPTURED'
 
 for path in /api/money/summary /api/sasi/account /api/sasi/marketplace/my-orders; do
   body="$(mktemp)"
