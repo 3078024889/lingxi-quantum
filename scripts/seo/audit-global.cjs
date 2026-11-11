@@ -19,7 +19,7 @@ const indexing=load('lib/seo/indexing.ts');
 const {buildSiteSitemap}=load('lib/seo/sitemap-build.ts');
 const {seoSiteForRequest,siaiLanguageAlternates}=load('lib/seo/siai-domain-policy.ts');
 const siaiPolicy=load('lib/siai-seo-policy.ts');
-const llmsSource=readFileSync('app/llms.txt/route.ts','utf8');
+const llmsSource=fs.readFileSync('app/llms.txt/route.ts','utf8');
 assert.match(llmsSource,/SASI Software Marketplace/,'llms.txt must describe the live software marketplace');
 assert.doesNotMatch(llmsSource,/Retired short-drama|website-generation and knowledge-agent/,'llms.txt must not promote retired creation-era product names');
 const sitemap=buildSiteSitemap(seo.SITE,true);
