@@ -1,9 +1,19 @@
 import type {MetadataRoute} from "next";
-import {headers} from "next/headers";
-import {seoSiteForRequest} from "@/lib/seo/siai-domain-policy";
+import {seoSiteForBuild} from "@/lib/seo/siai-domain-policy";
 
-export default async function robots():Promise<MetadataRoute.Robots>{
-  const h=await headers();
-  const site=seoSiteForRequest(h.get("host"),h.get("x-forwarded-host"),h.get("x-lingxi-public-host"));
-  return {rules:[{userAgent:"*",allow:"/",disallow:["/api/","/admin","/tools/admin","/tools/burn-after-read/","/share/"]}],sitemap:site+"/sitemap.xml",host:site};
+// robots.txt is build-static: each domain build supplies its own allowlisted origin.
+// Avoid request-time headers() so the edge or standalone server can serve it as a static asset.
+export const dynamic = "force-static";
+
+export default function robots():MetadataRoute.Robots{
+  const site=seoSiteForBuild(process.env.NEXT_PUBLIC_SITE_URL);
+  return {
+    rules:[{
+      userAgent:"*",
+      allow:"/",
+      disallow:["/api/","/admin","/tools/admin","/tools/burn-after-read/","/share/"]
+    }],
+    sitemap:site+"/sitemap.xml",
+    host:site
+  };
 }

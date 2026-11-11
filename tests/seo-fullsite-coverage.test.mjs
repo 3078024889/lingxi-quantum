@@ -7,6 +7,8 @@ const seoCatalog=read("lib/seo/global-seo.ts");
 const llms=read("app/llms.txt/route.ts");
 const publicLlms=read("public/llms.txt");
 const main=read("app/sitemap.ts");
+const robots=read("app/robots.ts");
+const domainPolicy=read("lib/seo/siai-domain-policy.ts");
 const metadata=read("lib/seo/search-tool-metadata.ts");
 const guide=read("components/seo/ToolFacts.tsx");
 const tools=read("components/tools/ToolsHubV11.tsx");
@@ -84,4 +86,15 @@ test("static public LLM index describes the current software marketplace and exc
   assert.doesNotMatch(publicLlms,/AI 短剧|AI Short Drama Generator|网站构建|书本、学习与科研创作/);
   for(const locale of ["en","ja","ko","fr","de","es","pt","ar"])
     assert(publicLlms.includes("https://lingxifield.com/"+locale+"/tools"),locale);
+});
+
+test("robots.txt is build-static and selects only the configured allowlisted site origin",()=>{
+ assert.ok(robots.includes('export const dynamic = "force-static"'));
+ assert.ok(robots.includes("seoSiteForBuild(process.env.NEXT_PUBLIC_SITE_URL)"));
+ assert.ok(!robots.includes('from "next/headers"'));
+ assert.ok(!robots.includes("await headers()"));
+ assert.ok(robots.includes('sitemap:site+"/sitemap.xml"'));
+ assert.ok(robots.includes('disallow:["/api/","/admin","/tools/admin","/tools/burn-after-read/","/share/"]'));
+ assert.ok(domainPolicy.includes("export function seoSiteForBuild"));
+ assert.ok(domainPolicy.includes("CHINA_SITE:PRIMARY_SITE"));
 });

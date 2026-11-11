@@ -16,6 +16,12 @@ export function seoSiteForRequest(host:string|null|undefined,forwardedHost?:stri
   const trusted=regional||knownHost(forwardedHost)||knownHost(host);
   return trusted===CHINA_HOST?CHINA_SITE:PRIMARY_SITE;
 }
+/** Resolve the SEO origin from the build's explicit public URL, using the same host allowlist. */
+export function seoSiteForBuild(publicSiteUrl?:string):string {
+  if(!publicSiteUrl)return PRIMARY_SITE;
+  try { return seoSiteForRequest(null,null,new URL(publicSiteUrl).host); }
+  catch { return PRIMARY_SITE; }
+}
 /** /siai is the verified China-language regional entry; other languages stay on .com. */
 export function siaiLanguageAlternates():Record<string,string> {
   const alternatives=languageAlternates("/siai");
