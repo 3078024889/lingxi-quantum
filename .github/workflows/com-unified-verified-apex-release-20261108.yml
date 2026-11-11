@@ -187,4 +187,4 @@ jobs:
           test -n "$COM_VERIFIED_CANARY_RUN" && test -n "$COM_VERIFIED_CANARY_SHA"
           node scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
 
-# COM_PINNED_SASI_RELEASE_TRIGGER_MARKER_20261110: exact previous SHA is guarded by the isolated canary workflow.
+# COM_PINNED_SASI_RELEASE_TRIGGER_MARKER_20261111: exact previous SHA is guarded by the isolated canary workflow.
