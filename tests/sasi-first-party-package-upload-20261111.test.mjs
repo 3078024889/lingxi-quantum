@@ -11,6 +11,8 @@ test("first-party source package upload is restricted to the configured marketpl
  assert.match(route,/isSameOriginMutation\(req\)/);
  assert.match(route,/enforceAbuseGuard\(req/);
  assert.match(route,/SOURCE_PRODUCT_ONLY/);
+ assert.match(route,/SOURCE_PRODUCT_ID="sasi-copernicus-si95-source"/);
+ assert.match(route,/x\.kind==="source"/);
  assert.match(route,/SASI_SOFTWARE_CATALOG\.find/);
 });
 
@@ -24,22 +26,29 @@ test("complete Copernicus SI 9.5 source, EX5, whitepaper and guide bundle is req
  assert.match(route,/READ_ONLY_DEMO_ACCESS_DETAILS_REQUIRED/);
  assert.match(route,/INSTALL_COMPILE_F7_AND_LICENSE_GUIDE_REQUIRED/);
  assert.match(route,/WHITEPAPER_FORMAT_INVALID/);
- assert.match(route,/INSTALL_COMPILE_AND_LICENSE_GUIDE_REQUIRED/);
+ assert.match(route,/INSTALL_COMPILE_F7_AND_LICENSE_GUIDE_REQUIRED/);
  assert.match(route,/ZIP_PATH_INVALID/);
  assert.match(route,/ZIP_SYMLINK_FORBIDDEN/);
  assert.match(route,/ZIP_UNPACKED_SIZE_LIMIT/);
  assert.match(route,/ZIP_FILE_TYPE_FORBIDDEN/);
+ assert.match(route,/checkCRC32:true/);
+ assert.ok(route.includes('catch{return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_READ_FAILED"}}'));
  assert.match(route,/privateBucketReady\(admin\)/);
  assert.match(route,/data\?\.public===false/);
  assert.match(route,/allowed_mime_types\.includes\("application\/zip"\)/);
 });
 
-test("sale readiness follows immutable private upload and byte-for-byte SHA256 readback",()=>{
+test("upload verification and manual activation are separate operations",()=>{
  const upload=route.indexOf("storage.upload(objectPath,bytes");
  const readback=route.indexOf("storage.download(objectPath)",upload);
  const hash=route.indexOf("verifiedHash!==sha256",readback);
- const ready=route.indexOf("sale_ready:true",hash);
- assert.ok(upload>=0&&readback>upload&&hash>readback&&ready>hash);
+ const pending=route.indexOf("sale_ready:false",hash);
+ const activate=route.indexOf('if(action==="activate")');
+ const ready=route.indexOf("sale_ready:true",activate);
+ assert.ok(upload>=0&&readback>upload&&hash>readback&&pending>hash&&activate>0&&ready>activate);
+ assert.match(route,/verifyStoredPackage\(admin,product,record as PackageRow\)/);
+ assert.match(panel,/确认审核并开放销售/);
+ assert.match(panel,/这一步不会自动开放销售/);
  assert.match(route,/upsert:false/);
  assert.match(route,/sasi-software-delivery/);
  assert.ok(route.includes('first-party/'));
