@@ -113,7 +113,7 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   if (!robotsText.includes("Sitemap: " + buildSite + "/sitemap.xml") || !robotsText.includes("Disallow: /api/")) {
     throw new Error("STATIC_ROBOTS_ASSET_CONTENT_INVALID:" + buildSite);
   }
-  if (!/<urlset\\b/i.test(sitemapText) || !sitemapText.includes(buildSite)) {
+  if (!/<urlset\b/i.test(sitemapText) || !sitemapText.includes(buildSite)) {
     throw new Error("STATIC_SITEMAP_ASSET_CONTENT_INVALID:" + buildSite);
   }
   const requiredSitemapPaths = buildHost === "lingxifield.cn"
