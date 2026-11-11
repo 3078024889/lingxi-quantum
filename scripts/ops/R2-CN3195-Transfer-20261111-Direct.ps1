@@ -2,7 +2,7 @@ param([string]$Tag)
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue'
 $Config='D:\LINGXIFIELDCN3192\rclone.conf'
-$Root='D:\30780\lingxi-quantum'
+$Root='D:\30780\CN3195Transfer\20261111'
 $RemoteBase='cn3192r2:lingxi-cn3192-transfer/cn3195'
 $ManifestName='cn3194-release-manifest.env'
 if(!(Test-Path -LiteralPath $Config -PathType Leaf)){throw "R2_CONFIG_NOT_FOUND: $Config"}
