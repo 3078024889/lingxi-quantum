@@ -76,7 +76,11 @@ test("release workflow rebuilds the pinned source and only promotes after exact 
   assert.ok(workflow.includes("build-com-static-assets-20261110.sh"));
   assert.ok(workflow.includes("com-celestial-apex-verified-cutover-20261109.mjs"));
   const canary=read(".github/workflows/com-unified-next-isolated-canary-20261108.yml");
-  assert.ok(canary.includes('const base=process.argv[1];(async()=>{const robots=await fetch(base+"/robots.txt")'));
+  assert.ok(canary.includes('async function getText(path)'));
+  assert.ok(canary.includes('SEO_ENDPOINT_EXHAUSTED'));
+  assert.ok(canary.includes('COM_CANARY_ROUTE_EXHAUSTED'));
+  assert.ok(canary.includes('RETIRED_ALIAS_EXHAUSTED'));
+  assert.ok(canary.includes('COM_CANARY_CANONICAL_EXHAUSTED'));
   assert.ok(canary.includes("COM_CANARY_ROBOTS_STATIC_ORIGIN_PASS"));
   assert.ok(workflow.includes("pnpm install --frozen-lockfile"));
 });
