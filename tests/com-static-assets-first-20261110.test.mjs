@@ -117,6 +117,22 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     assert.ok(headers.includes(accountHtmlHeaderBlock));
     const headerRuleCount=headers.split(newline).filter(line=>line.trim()&&!line.trim().startsWith("#")&&!line.startsWith(" ")).length;
     assert.ok(headerRuleCount<=100,"Cloudflare _headers rule count must stay at or below 100, got "+headerRuleCount);
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/en/discover/*"), "en GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/en/discover/*.html"), "en GEO asset must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/ja/discover/*"), "ja GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/ja/discover/*.html"), "ja GEO asset must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/ko/discover/*"), "ko GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/ko/discover/*.html"), "ko GEO asset must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/fr/discover/*"), "fr GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/fr/discover/*.html"), "fr GEO asset must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/de/discover/*"), "de GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/de/discover/*.html"), "de GEO asset must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/es/discover/*"), "es GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/es/discover/*.html"), "es GEO asset must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/pt/discover/*"), "pt GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/pt/discover/*.html"), "pt GEO asset must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/ar/discover/*"), "ar GEO route must have an explicit Cloudflare header pattern");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/ar/discover/*.html"), "ar GEO asset must have an explicit Cloudflare header pattern");
 
     // Re-running the materializer is idempotent and does not duplicate its managed header block.
     await materializeStaticHtmlAssets(root);
