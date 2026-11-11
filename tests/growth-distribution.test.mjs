@@ -18,7 +18,7 @@ test("partner JS is syntactically valid and can run without framing the origin",
  assert.doesNotThrow(()=>new Function(widget));
  assert.match(widget,/attachShadow\(\{mode:"open"\}\)/);
  assert.match(widget,/data-lx-widget/);
- assert.match(widget,/api\\/public\\/free-tools-widget/);
+ assert.match(widget,/api\/public\/free-tools-widget/);
  assert.match(widget,/data\.rows\.filter/);
  assert.match(widget,/r\.execution==="local"/);
  assert.match(widget,/credentials:"omit"/);
