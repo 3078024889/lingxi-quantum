@@ -17,7 +17,11 @@ test("first-party source package upload is restricted to the configured marketpl
 test("only a single Copernicus SI 9.5 MQ5 and installation/compile guide can activate the source SKU",()=>{
  assert.match(route,/ONE_9_5_SOURCE_REQUIRED/);
  assert.ok(route.includes('#property\\\\s+version\\\\s+'));
- assert.match(route,/INSTALL_AND_COMPILE_GUIDE_REQUIRED/);
+ assert.match(route,/MATCHING_EX5_REQUIRED/);
+ assert.match(route,/EX5_SOURCE_BASENAME_MISMATCH/);
+ assert.match(route,/WHITEPAPER_PDF_REQUIRED/);
+ assert.match(route,/WHITEPAPER_FORMAT_INVALID/);
+ assert.match(route,/INSTALL_COMPILE_AND_LICENSE_GUIDE_REQUIRED/);
  assert.match(route,/ZIP_PATH_INVALID/);
  assert.match(route,/ZIP_SYMLINK_FORBIDDEN/);
  assert.match(route,/ZIP_UNPACKED_SIZE_LIMIT/);
