@@ -11,7 +11,7 @@ import {readMp4DurationSeconds} from '@/lib/sasi/mp4-duration';
 import {presignSasiArtifact,sasiArtifactBucket,sasiArtifactR2Ready} from '@/lib/sasi-kernel/artifact-store/r2';
 
 let active=0;
-export function generatedArchiveReady(){return sasiArtifactR2Ready()||Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY&&process.env.NEXT_PUBLIC_SUPABASE_URL)}
+export function generatedArchiveReady(){return sasiArtifactR2Ready()||Boolean((process.env.SUPABASE_SECRET_KEY||process.env.SUPABASE_SERVICE_ROLE_KEY)&&(process.env.SUPABASE_URL||process.env.NEXT_PUBLIC_SUPABASE_URL))}
 function inspectContainer(bytes:Buffer){
  if(bytes.length<12||bytes.toString('ascii',4,8)!=='ftyp')throw Error('VIDEO_FORMAT_INVALID');
  let boxes=0,moov=false,mdat=false,width=0,height=0;

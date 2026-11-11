@@ -32,6 +32,11 @@ export function wechatPayConfigured(): boolean {
   return !!(APP_ID && MCH_ID && API_V3_KEY && PRIVATE_KEY && CERT_SERIAL_NO);
 }
 
+/** Only explicitly approved merchants may create NEW chargeable orders. */
+export function wechatPayEnabled(): boolean {
+  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayConfigured();
+}
+
 // 具体缺了哪几个——之前那个 wechatPayConfigured() 只回答"配没配全"，
 // 缺一个就整体报"没配置完整"，容易让人误以为已经配好的那几个也没
 // 生效。这个函数明确列出到底缺哪几个，错误提示更有用。

@@ -1,0 +1,42 @@
+name: Dual-site real-public-network anonymous release gate (READ ONLY)
+on:
+  push:
+    branches: [fix/dual-site-commerce-admin-toolpass-20261108]
+    paths: ['.github/workflows/dual-site-production-anonymous-observability-20261108.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  anonymous-public:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Check real production hosts without cookies, payment or mutations
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          failures=0
+          probe() {
+            local host="$1" route="$2" allow="$3" status
+            status="$(curl -4 -sS --retry 1 --retry-delay 2 --connect-timeout 8 --max-time 28 \
+              -o /dev/null -w '%{http_code}' \
+              -H 'Cache-Control: no-cache' \
+              -A 'LINGXIFIELD-public-readonly-gate/1.0' \
+              "https://${host}${route}")" || status=000
+            echo "PUBLIC_PROBE ${host}${route} HTTP_${status} EXPECT=${allow}"
+            case ",${allow}," in *",${status},"*) ;; *) failures=$((failures+1));; esac
+          }
+          for host in lingxifield.cn lingxifield.com; do
+            probe "$host" "/" "200"
+            probe "$host" "/tools" "200"
+            probe "$host" "/siai" "200"
+            probe "$host" "/api/health" "200"
+            probe "$host" "/api/pay/providers" "200"
+            probe "$host" "/api/tools/jobs" "401,403"
+            probe "$host" "/api/sasi/account" "401,403"
+            probe "$host" "/ai-wallet" "200,301,302,303,307,308,401,403"
+            probe "$host" "/account/orders" "200,301,302,303,307,308,401,403"
+          done
+          echo "PRODUCTION_ANONYMOUS_PROBE_FAILURES=$failures"
+          test "$failures" -eq 0
+# READONLY_OBSERVABILITY_REFRESH_20261111

@@ -1,5 +1,6 @@
 "use client";
 import {plainText,plainMessage} from "@/lib/tools/plain-copy";
+import Link from "next/link";
 import {claimToolStart,TOOL_PASS_ENFORCED,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import {toolSlugFromPathname} from "@/lib/tools/commerce/tool-route-slug";
 
@@ -30,6 +31,7 @@ export default function FileDropzone({
   const inputRef=useRef<HTMLInputElement>(null);
   const[drag,setDrag]=useState(false);
   const[error,setError]=useState<string|null>(null);
+  const[passRequired,setPassRequired]=useState(false);
   const[previews,setPreviews]=useState<Preview[]>([]);
   const[normalizing,setNormalizing]=useState(false);
   const[authorizing,setAuthorizing]=useState(false);
@@ -49,6 +51,7 @@ export default function FileDropzone({
   const apply=useCallback(async(list:FileList|File[])=>{
     if(pendingRef.current)return;
     const incoming=Array.from(list);if(!incoming.length)return;
+    setPassRequired(false);
     const maxBytes=maxSizeMB*1024*1024;
     const tooBig=incoming.find(file=>file.size>maxBytes);
     if(tooBig){setError(uploadText(lang,"tooLarge",{name:tooBig.name,size:maxSizeMB}));return}
@@ -95,6 +98,7 @@ export default function FileDropzone({
       setError(null);
       onChange(multiple?unique:unique.slice(0,1));
     }catch(e){
+      setPassRequired(e instanceof ToolAccessError&&["DAILY_TOOL_FREE_USED","TOOL_PASS_REQUIRED"].includes(e.code));
       setError(e instanceof ToolAccessError
         ?toolAccessMessage(lang,e.code)
         :documentIntakeError(lang,e));
@@ -125,6 +129,12 @@ export default function FileDropzone({
     </div>
 
     {error&&<p role="alert" className="mt-3 text-sm text-[var(--lx-danger)]">{error}</p>}
+    {passRequired&&<Link href="/tools/pass" className="mt-3 inline-flex rounded-xl border border-[var(--lx-line)] px-4 py-2 text-sm font-semibold text-[var(--lx-ink)] underline underline-offset-4">{({
+      zh:"查看7天、月、季、年全场工具包",en:"View 7-day, monthly, quarterly and annual tools passes",
+      ja:"全ツール共通パスを見る",ko:"전체 도구 이용권 보기",fr:"Voir les forfaits outils",
+      de:"Werkzeug-Pässe ansehen",es:"Ver los pases de herramientas",
+      pt:"Ver os passes de ferramentas",ar:"عرض باقات جميع الأدوات"
+    } as Record<typeof lang,string>)[lang]}</Link>}
 
     {previews.length>0&&<div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
       {previews.map(item=><figure key={item.key} className="overflow-hidden rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)]">

@@ -53,7 +53,6 @@ export default function AllToolsPassPage(){
  return <main dir={rtl?"rtl":"ltr"} className="mx-auto max-w-5xl px-4 py-10 text-[var(--lx-ink)]">
   <h1 className="mb-3 text-3xl font-bold">{c.title}</h1>
   <p className="mb-3 text-base">{c.subtitle}</p>
-  <p className="mb-5 text-sm">{c.free}</p>
   <p className="mb-6 text-sm">{c.scope}</p>
   <div className="mb-5 flex flex-wrap items-center gap-3">
    <label htmlFor="pass-currency" className="text-sm font-semibold">{c.currency}</label>
@@ -69,7 +68,7 @@ export default function AllToolsPassPage(){
     <h2 className="text-lg font-bold">{[c.week,c.month,c.quarter,c.year][i]}</h2>
     <p className="my-4 text-3xl font-semibold">{currency==="CNY"?"¥":"$"}{o.price}</p>
     <p className="mb-4 text-sm">{c.new}</p>
-    <button type="button" disabled={busy} onClick={()=>void buy(o.sku)}
+    <button type="button" disabled={busy||!available} onClick={()=>void buy(o.sku)}
      className="w-full rounded-xl border border-current px-3 py-3 text-sm font-semibold disabled:opacity-50">{busy?c.processing:c.buy}</button>
    </section>)}
   </div>

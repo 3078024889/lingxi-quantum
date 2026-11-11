@@ -9,7 +9,8 @@ export function toolPassCutoverRequested():boolean {
 /** Only a full server migration may enable paid tool start accounting. */
 export function toolPassBackendReady():boolean {
  return process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true" &&
-        process.env.TOOL_PASS_BACKEND_READY==="true";
+        process.env.TOOL_PASS_BACKEND_READY==="true" &&
+        Boolean(process.env.LINGXIFIELD_PRIVACY_HASH_SECRET?.length && process.env.LINGXIFIELD_PRIVACY_HASH_SECRET.length>=32);
 }
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export type ToolReceiptResult={ok:true;alreadyRedeemed:boolean}|{ok:false;error:string};

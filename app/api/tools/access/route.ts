@@ -16,8 +16,9 @@ function clientHash(req:NextRequest){
  const ip=trustedClientIp(req);
  // Unknown IP must not silently grant every visitor the same free pool.
  if(ip==="unknown")return null;
- const secret=process.env.LINGXIFIELD_PRIVACY_HASH_SECRET||process.env.SUPABASE_SERVICE_ROLE_KEY;
- if(!secret)return null;
+ const secret=process.env.LINGXIFIELD_PRIVACY_HASH_SECRET;
+ // Stable HMAC salt is independent from key rotation, preventing a daily IP quota reset.
+ if(!secret||secret.length<32)return null;
  return createHmac("sha256",secret).update("tool-pass:v1:"+ip).digest("hex");
 }
 function validTool(id:string){const simple=getTool(id);return Boolean((simple&&simple.status==="live")||publicToolBySlug(id));}

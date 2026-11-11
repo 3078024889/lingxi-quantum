@@ -1,0 +1,56 @@
+name: Dual-site payment providers and tool quota public readiness (READ ONLY)
+on:
+  push:
+    branches: [fix/dual-site-commerce-admin-toolpass-20261108]
+    paths:
+      - '.github/workflows/dual-site-pay-provider-anonymous-probe-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Anonymous GET probes only; no order creation or merchant secrets
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for host in lingxifield.cn lingxifield.com; do
+            echo "== PUBLIC READINESS: ${host} =="
+            for path in /api/health /api/pay/providers /api/pay/alipay/status /api/tools/pass '/api/tools/access?toolSlug=compress-image'; do
+              tmp="$(mktemp)"
+              code="$(curl -4 -sS -L --retry 1 --connect-timeout 8 --max-time 25 -o "$tmp" -w '%{http_code}' "https://${host}${path}" || true)"
+              echo "PUBLIC_PROBE host=${host} route=${path} HTTP=${code:-000}"
+              if [[ "$path" == '/api/pay/providers' && "$code" == 200 ]]; then
+                node - "$tmp" "$host" <<'NODE'
+          const fs=require('node:fs');
+          const [file,host]=process.argv.slice(2);
+          try{
+            const x=JSON.parse(fs.readFileSync(file,'utf8'));
+            const yes=(v)=>v===true?'YES':'NO';
+            console.log('PROVIDER_READINESS',host,
+              'wechatConfigured='+yes(x.diagnostics?.wechat?.configured),
+              'wechatEnabled='+yes(x.wechat),
+              'alipayConfigured='+yes(x.diagnostics?.alipay?.configured),
+              'alipayEnabled='+yes(x.alipay),
+              'paypalConfigured='+yes(x.diagnostics?.paypal?.configured),
+              'paypalEnabled='+yes(x.paypal));
+          }catch{console.log('PROVIDER_JSON_INVALID',host)}
+          NODE
+              fi
+              if [[ "$path" == '/api/tools/pass' && "$code" == 200 ]]; then
+                node - "$tmp" "$host" <<'NODE'
+          const fs=require('node:fs');
+          const [file,host]=process.argv.slice(2);
+          try{
+            const x=JSON.parse(fs.readFileSync(file,'utf8'));
+            console.log('TOOLPASS_PUBLIC',host,'offers='+Number(x.offers?.length||0),'commerceAvailable='+(x.available===true));
+          }catch{console.log('TOOLPASS_JSON_INVALID',host)}
+          NODE
+              fi
+              rm -f "$tmp"
+            done
+          done
+          echo 'ANONYMOUS_PAYMENT_DIAG_FINISHED_NO_ORDERS_CREATED'
+# READONLY_AUDIT_REFRESH_20261111

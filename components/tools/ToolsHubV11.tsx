@@ -39,6 +39,13 @@ export default function ToolsHubV11(){
    <div className="lx-tools-v124-categories">{TOOL_DISPLAY_CATEGORIES.map(id=><button type="button" key={id} className={category===id?"is-active":""} onClick={()=>setCategory(id)} aria-pressed={category===id}>{toolCategoryLabel(lang,id)}</button>)}</div>
    <div className="lx-tools-v124-categories" role="group" aria-label={access[3]}>{[false,true].map(value=><button type="button" key={String(value)} className={freeOnly===value?'is-active':''} aria-pressed={freeOnly===value} onClick={()=>setFreeOnly(value)}>{access[value?1:0]}</button>)}</div>
   </section>
+  <p style={{margin:"8px 0 8px",fontSize:15,textAlign:"right"}}><Link href="/tools/pass" style={{color:"#1658a9",fontWeight:700,textDecoration:"underline",textUnderlineOffset:3}}>{({
+   zh:"全场100+实用工具包 · 7天 / 月 / 季 / 年",en:"All-tools pass · 7 days / month / quarter / year",
+   ja:"全ツール共通パス · 7日 / 月 / 四半期 / 年",ko:"모든 도구 이용권 · 7일 / 월 / 분기 / 년",
+   fr:"Pass tous outils · 7 jours / mois / trimestre / an",de:"Alle Werkzeuge · 7 Tage / Monat / Quartal / Jahr",
+   es:"Pase de herramientas · 7 días / mes / trimestre / año",pt:"Passe ferramentas · 7 dias / mês / trimestre / ano",
+   ar:"باقة الأدوات · 7 أيام / شهر / ربع سنة / سنة"
+  } as Record<typeof lang,string>)[lang]}</Link></p>
   <p style={{margin:"8px 0 18px",fontSize:15,textAlign:"right"}}><Link href="/partners" style={{color:"#245bd5",fontWeight:700,textDecoration:"underline",textUnderlineOffset:3}}>{({
    zh:"免费将灵犀场工具嵌入你的网站",en:"Add free LINGXIFIELD tools to your website",
    ja:"LINGXIFIELDツールをサイトに無料で埋め込む",ko:"LINGXIFIELD 도구를 사이트에 무료로 추가",

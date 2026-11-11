@@ -1,0 +1,42 @@
+name: CN 3192 staged promotion syntax and rollback gate (NO DEPLOY)
+on:
+  push:
+    branches: [fix/dual-site-commerce-admin-toolpass-20261108]
+    paths:
+      - 'scripts/ops/ecs-cn3192-standalone-stage-promote-20261108.sh'
+      - '.github/workflows/cn3192-stage-promote-syntax-safety-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  script-security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Parse deployment script and enforce staging + rollback contract
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          f=scripts/ops/ecs-cn3192-standalone-stage-promote-20261108.sh
+          bash -n "$f"
+          # An older candidate contained two Nginx promotions and an unterminated quote.
+          # They must never return silently even if a future edit passes bash -n.
+          test "$(grep -Fc 'PRODUCTION_ORIGINAL=' "$f")" -eq 1
+          test "$(grep -Fc 'CN_NEW_3192_NGINX_PROMOTION_PASS_' "$f")" -eq 1
+          grep -Fq 'CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT' "$f"
+          grep -Fq 'CN_TOOLPASS_PAYMENT_GATE_MUST_REMAIN_CLOSED_BEFORE_PROMOTION' "$f"
+          grep -Fq 'CN_NGINX_EXACTLY_ONE_3191_UPSTREAM_REQUIRED' "$f"
+          grep -Fq 'CN3192_PREPROMOTION_GATE_FAILED' "$f"
+          grep -Fq 'systemctl daemon-reload' "$f"
+          grep -Fq -- '--stage|--promote' "$f"
+          grep -Fq 'sha256sum -c' "$f"
+          grep -Fq 'CN3192_STAGE_GATE_FAILED_PRODUCTION_3191_UNCHANGED' "$f"
+          grep -Fq 'CN_NGINX_POSTCUTOVER_FAILED_RESTORING_3191' "$f"
+          grep -Fq 'lingxifield-cn-release-86b956c9700e' "$f"
+          grep -Fq "systemctl reload nginx" "$f"
+          grep -Fq 'SUPABASE_SECRET_KEY=sb_secret_' "$f"
+          ! grep -Eq 'curl.+ -X POST|DELETE FROM|TRUNCATE|DROP TABLE|CLOUDFLARE_API_TOKEN' "$f"
+          echo CN3192_OFFLINE_DEPLOY_SCRIPT_SAFETY_PASS_NO_SERVER_MUTATIONS

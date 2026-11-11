@@ -7,7 +7,7 @@ import {
   createWechatNativeOrder,
   createWechatJsapiOrder,
   buildJsapiInvokeParams,
-  wechatPayConfigured,
+  wechatPayEnabled,
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
 import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
@@ -21,6 +21,27 @@ import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
+/** Only emit merchant status and documented code; do not log orders, signatures or payment payloads. */
+function safeWechatFailure(error:unknown){
+  const message=error instanceof Error?error.message:"";
+  const match=message.match(/微信支付接口返回错误\s+(\d{3}):\s*(\{[\s\S]*\})/);
+  if(match){
+    let code="UNKNOWN";
+    try{
+      const body=JSON.parse(match[2]) as {code?:unknown};
+      if(typeof body.code==="string")code=body.code.replace(/[^A-Z0-9_]/g,"").slice(0,64)||"UNKNOWN";
+    }catch{}
+    return {kind:"GATEWAY_RESPONSE",httpStatus:Number(match[1]),providerCode:code};
+  }
+  if(message.includes("超时")||message.includes("AbortError"))
+    return {kind:"GATEWAY_TIMEOUT"};
+  if(message.includes("私钥")||message.includes("PEM"))
+    return {kind:"MERCHANT_PRIVATE_KEY_FORMAT"};
+  if(message.includes("SSL")||message.includes("ECONN")||message.includes("fetch failed"))
+    return {kind:"GATEWAY_NETWORK"};
+  return {kind:"UNKNOWN_MERCHANT_FAILURE"};
+}
+
 export async function POST(req: NextRequest) {
   try {
     if (!isSameOriginMutation(req)) {
@@ -30,7 +51,7 @@ export async function POST(req: NextRequest) {
     if(Number.isFinite(contentLength)&&contentLength>512*1024){
       return NextResponse.json({error:"PAYMENT_REQUEST_TOO_LARGE"},{status:413});
     }
-    if (!wechatPayConfigured()) {
+    if (!wechatPayEnabled()) {
       return NextResponse.json(
         { error: "微信支付暂不可用，请稍后再试。" },
         { status: 503 }
@@ -135,6 +156,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ orderId: order.id, codeUrl, outTradeNo });
     } catch (e) {
+      console.error("[wechat-create-gateway]",safeWechatFailure(e));
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
       return NextResponse.json(
         { error: useJsapi ? "微信网页授权或JSAPI下单失败" : "微信支付网关返回异常"},

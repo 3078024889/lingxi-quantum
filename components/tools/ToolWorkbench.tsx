@@ -8,6 +8,7 @@ import ResultFileActions from './ResultFileActions';
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {claimToolStart,TOOL_PASS_ENFORCED,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
+import {shouldClaimToolRun} from "@/lib/tools/commerce/tool-repeat-meter";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { toolRuntimeText } from "@/lib/tool-runtime-i18n";
 import {workbenchCopy} from "@/lib/tools/workbench-i18n-v1473";
@@ -62,10 +63,13 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
   const [busy, setBusy] = useState(false);
   const [accessError,setAccessError]=useState("");
   const accessTicket=useRef("");
+  // First process uses the upload receipt; each subsequent process is a NEW use.
+  const processedFileSignature=useRef("");
   const fileSignature=(items:File[])=>items.map(f=>`${f.name}:${f.size}:${f.lastModified}`).join("|");
   // Shared FileDropzone claims usage before accepting the new file(s).
   function acceptUploadedFiles(next:File[]){
     setFiles(next);setResult(null);accessTicket.current=fileSignature(next);
+    processedFileSignature.current="";
   }
 
   const [result, setResult] = useState<ToolRunResult | null>(null);
@@ -93,6 +97,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       if(cancelled)return;
       setFiles(incoming);
       accessTicket.current=fileSignature(incoming);
+      processedFileSignature.current="";
       setResult(null);
       const clean=new URL(window.location.href);
       clean.searchParams.delete("handoff");
@@ -123,9 +128,15 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
     setResult(null);
     setAccessError("");
     try {
-      if(TOOL_PASS_ENFORCED&&files.length&&accessTicket.current!==fileSignature(files)){
-        await claimToolStart(tool.slug,files.length);
-        accessTicket.current=fileSignature(files);
+      if(TOOL_PASS_ENFORCED&&files.length){
+        const signature=fileSignature(files);
+        // Repeatedly clicking Process (e.g. changing compression quality) cannot
+        // reuse an already consumed upload receipt. Count again even without reupload.
+        if(shouldClaimToolRun(accessTicket.current,processedFileSignature.current,signature)){
+          await claimToolStart(tool.slug,files.length);
+          accessTicket.current=signature;
+        }
+        processedFileSignature.current=signature;
       }
       const out = await runFileTool(tool, files, {
         webpTarget,

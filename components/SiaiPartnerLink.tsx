@@ -22,7 +22,7 @@ const updates:Record<LingxiLang,string>={
 export default function SiaiPartnerLink(){
  const {lang}=useLingxiLang();
  return <div style={{maxWidth:1180,margin:"12px auto 0",padding:"4px 18px",display:"flex",gap:18,justifyContent:"flex-end",flexWrap:"wrap"}}>
-  <Link href="/siai/updates.xml" style={{fontSize:15,color:"#2359c7",textDecoration:"underline",textUnderlineOffset:3}}>{updates[lang]||updates.en}</Link>
+  <Link href="/siai/updates" style={{fontSize:15,color:"#2359c7",textDecoration:"underline",textUnderlineOffset:3}}>{updates[lang]||updates.en}</Link>
   <Link href="/partners" style={{fontSize:15,color:"#2359c7",fontWeight:700,textDecoration:"underline",textUnderlineOffset:3}}>
    {copy[lang]||copy.en}
   </Link>
