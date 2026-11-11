@@ -98,7 +98,7 @@ async function readProviderFlags(base) {
 async function probe(base, phase, attempts = 3, expectedProviders = null) {
   const routes = [
     "/", "/siai", "/tools", "/tools/pass", "/ai-wallet", "/account",
-    "/sasi", "/sasi/marketplace", "/about", "/announcements",
+    "/sasi", "/about", "/announcements",
     "/api/health", "/api/pay/providers", "/api/sasi/marketplace/listings",
     "/api/sasi/software/catalog",
     "/en/siai", "/ja/siai", "/ko/siai", "/fr/siai", "/de/siai",
@@ -110,7 +110,7 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     "/siai", "/en/siai", "/ja/siai", "/ko/siai", "/fr/siai",
     "/de/siai", "/es/siai", "/pt/siai", "/ar/siai",
     "/", "/tools", "/tools/pass", "/ai-wallet", "/account",
-    "/sasi", "/sasi/marketplace", "/about", "/announcements",
+    "/sasi", "/about", "/announcements",
     "/tools/ico-to-png", "/tools/number-base-converter", "/tools/video-watermark-remover",
     "/tools/png-to-jpg", "/tools/compress-image", "/tools/merge-pdf", "/tools/json-formatter"
   ]);
@@ -138,6 +138,20 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     if (consecutive !== attempts) {
       throw Error("COM_" + phase + "_UNSTABLE_ROUTE:" + path + ":" + consecutive + "/" + attempts);
     }
+  }
+
+  const legacyMarketUrl = base + "/sasi/marketplace";
+  const legacyMarket = await fetch(legacyMarketUrl, {
+    redirect: "manual",
+    signal: AbortSignal.timeout(20000)
+  });
+  const legacyLocation = legacyMarket.headers.get("location");
+  const legacyTarget = legacyLocation ? new URL(legacyLocation, base) : null;
+  console.log("COM_" + phase + "_LEGACY_MARKET_REDIRECT http=" + legacyMarket.status +
+    " location=" + (legacyLocation || "none"));
+  if (legacyMarket.status !== 308 || !legacyTarget ||
+      legacyTarget.origin !== new URL(base).origin || legacyTarget.pathname !== "/sasi") {
+    throw Error("COM_" + phase + "_LEGACY_MARKET_REDIRECT_FAILED");
   }
 
   for (const path of [
