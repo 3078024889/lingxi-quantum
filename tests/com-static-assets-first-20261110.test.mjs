@@ -269,7 +269,9 @@ test("wrangler serves direct HTML assets before the Worker and keeps range paths
     assert.equal(workerFirst.has(entry.route), false, entry.route + " must remain asset-first");
   }
   assert.ok(workerFirst.has("/*/"), "trailing-slash requests must reach middleware for permanent 308 canonicalization");
-  assert.equal(workerFirst.has("/sasi/marketplace"), false, "legacy marketplace alias must use the explicit static 308 redirect");
+  for (const { route } of PUBLIC_STATIC_REDIRECTS) {
+    assert.equal(workerFirst.has(route), false, route + " must not be routed Worker-first");
+  }
   assert.ok(workerFirst.has("/media/ffmpeg-0.12.10/ffmpeg-core.wasm"));
   assert.ok(workerFirst.has("/models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx"));
 });
