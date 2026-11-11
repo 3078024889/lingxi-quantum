@@ -155,8 +155,35 @@ probe(){
  code /tools 200
  code /siai 200
  code /sasi 200
+ code /discover/sasi-software-marketplace 200
+ code /en/discover/mt5-ea-source-code 200
+ code /ja/discover/software-licensing-delivery 200
+ code /ko/discover/developer-software-publishing 200
+ code /fr/discover/sasi-software-marketplace 200
+ code /de/discover/mt5-ea-source-code 200
+ code /es/discover/software-licensing-delivery 200
+ code /pt/discover/developer-software-publishing 200
+ code /ar/discover/sasi-software-marketplace 200
+ code /llms.txt 200
+ code /sitemap.xml 200
+ code /robots.txt 200
  redirect /sasi/marketplace 308 /sasi
- code /sasi/pricing 307
+ redirect /sasi/assemble 308 /sasi
+ redirect /sasi/build 308 /sasi
+ redirect /sasi/chat 308 /sasi
+ redirect /sasi/connections 308 /sasi
+ redirect /sasi/director 308 /sasi
+ redirect /sasi/drama 308 /sasi
+ redirect /sasi/image 308 /sasi
+ redirect /sasi/operator 308 /sasi
+ redirect /sasi/operator/v5 308 /sasi
+ redirect /sasi/project-dna 308 /sasi
+ redirect /sasi/series 308 /sasi
+ redirect /sasi/variants 308 /sasi
+ redirect /ai-knowledge 308 /sasi
+ redirect /ai-learning 308 /sasi
+ redirect /ai-research 308 /sasi
+ redirect /sasi/pricing 308 /ai-wallet
  code /api/sasi/generation/submit 410
  code /api/cron/sasi-v5-radar 410
  code /tools/pass 200
@@ -412,7 +439,7 @@ EOF
  OLD_3194_SVC="$(find_service_for_port 3194 || true)"
  [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]] || { echo CN3194_OLD_SERVICE_NOT_FOUND_FOR_SAFE_REBIND >&2;exit 1; }
  if ! set_nginx_upstream 3195;then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_UPSTREAM_SWITCH_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
- for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
+ for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
   expected=200
   [[ "$path" == "/sasi/marketplace" ]] && expected=308
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
@@ -433,7 +460,7 @@ EOF
  fi
 
  if ! set_nginx_upstream 3194;then rollback_to_3193 "CN3194_FINAL_UPSTREAM_SWITCH_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
- for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health;do
+ for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
   expected=200
   [[ "$path" == "/sasi/marketplace" ]] && expected=308
   status="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 18 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$path" || true)"
