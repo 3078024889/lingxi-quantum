@@ -136,6 +136,10 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
  assert.match(upgrade,/code \/llms\.txt 200/);
  assert.match(releaseWorkflow,/CN3194_ALL_RETIRED_ALIASES_PASS/);
  assert.match(releaseWorkflow,/CN3194_SASI_GEO_SITEMAP_LLMS_PASS/);
+ assert.match(releaseWorkflow,/x-lingxi-public-host/);
+ assert.match(releaseWorkflow,/CN_SITEMAP_MUST_REMAIN_SIAI_ONLY/);
+ assert.match(releaseWorkflow,/COM_GEO_TOPIC_MISSING/);
+ assert.match(releaseWorkflow,/SASI_GEO_LANDING_CANONICAL_FAILED/);
  assert.match(releaseWorkflow,/CN3194_LEGACY_MARKET_REDIRECT_PASS/);
  assert.match(upgrade,/3193\|3194/);
  assert.match(upgrade,/find_service_for_port/);
