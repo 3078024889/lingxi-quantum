@@ -172,6 +172,15 @@ test("invalid HTML snapshots fail closed", async () => {
   try {
     const snapshotRoot = join(root, "__lingxi_edge_static__");
     await mkdir(snapshotRoot, { recursive: true });
+    const robotsSite = process.env.NEXT_PUBLIC_SITE_URL === "https://lingxifield.cn" ? "https://lingxifield.cn" : "https://lingxifield.com";
+    await writeFile(join(root, "robots.txt"), [
+      "User-agent: *",
+      "Allow: /",
+      "Disallow: /api/",
+      "Sitemap: " + robotsSite + "/sitemap.xml",
+      "Host: " + robotsSite,
+      ""
+    ].join("\n"), "utf8");
     await writeFile(join(snapshotRoot, PUBLIC_STATIC_HTML_ROUTES[0].source), "<html>INTERNAL_SERVER_ERROR</html>", "utf8");
     await assert.rejects(() => materializeStaticHtmlAssets(root), /BAD_PUBLIC_STATIC_SNAPSHOT/);
   } finally {
