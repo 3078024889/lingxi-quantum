@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
-import { createProjectProposal } from "@/lib/sasi/project-proposal";
+import { sasiCreationRetired } from "@/lib/sasi/retired-route";
 
-export async function POST(request: Request) {
-  let body: Record<string, unknown>;
-  try { body = await request.json(); } catch { return NextResponse.json({ error: "INVALID_JSON" }, { status: 400 }); }
-  const result = createProjectProposal(body);
-  if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
-  return NextResponse.json({ kind: result.kind, status: "prepared", stages: result.stages, ...result.proposal });
-}
+export const dynamic = "force-dynamic";
+export const GET = sasiCreationRetired;
+export const POST = sasiCreationRetired;
+export const PUT = sasiCreationRetired;
+export const PATCH = sasiCreationRetired;
+export const DELETE = sasiCreationRetired;
