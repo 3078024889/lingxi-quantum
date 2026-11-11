@@ -126,7 +126,9 @@ test("marketplace gateway requires a dedicated merchant approval and supports CN
  assert.match(resolver,/SASI_MARKETPLACE_COMMERCE_READY/);
  assert.match(resolver,/marketplaceCommerceReady\(\)/);
  const paypal=file("app/api/pay/create/route.ts");
- assert.match(paypal,/isMarketProductId/);
+ assert.match(paypal,/getUsdBalanceProduct\(requestedId\)/);
+  assert.match(resolver,/marketProductUuid\(productId\)/);
+  assert.match(resolver,/seller\?\.status!=="approved"/);
  assert.match(paypal,/resolveMarketplaceProduct/);
  assert.match(paypal,/SELF_PURCHASE_NOT_ALLOWED/);
  const endpoint=file("app/api/sasi/marketplace/product/route.ts");
