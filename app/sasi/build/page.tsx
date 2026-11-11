@@ -1,4 +1,4 @@
-import {redirect} from "next/navigation";
+import {permanentRedirect} from "next/navigation";
 export const metadata={robots:{index:false,follow:false}};
-/** Retire new SASI creation. Historical paid orders and files remain stored. */
-export default function Page(){redirect("/sasi");}
+/** Retired SASI creation or provider-connection route. Historical orders and files remain preserved. */
+export default function Page(){permanentRedirect("/sasi");}

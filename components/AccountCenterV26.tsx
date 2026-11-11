@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import LxText from "@/components/LxText";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";

@@ -79,6 +79,7 @@
 .lx26-wallet-history-tabs button{height:53px;padding:0 10px;border:0;border-bottom:3px solid transparent;background:transparent;font-size:16px;color:#767d9a;font-weight:650}
 .lx26-wallet-history-tabs button.is-active{border-bottom-color:#8353ee;color:#6541df}
 .lx26-wallet-ledgers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lx26-wallet-ledgers-single{grid-template-columns:minmax(0,1fr)!important}
 .lx26-wallet-ledgers>section{margin-top:16px;border:1px solid #e8eaf6;border-radius:17px;background:#fff9;overflow:auto}
 .lx26-wallet-withdrawals{min-height:174px}
 .lx26-wallet-empty{text-align:center;margin:26px auto;color:#70779a}
@@ -144,3 +145,27 @@
  .lx26-tools-filters{flex-wrap:wrap}
 }
 @media(prefers-reduced-motion:reduce){.lx26-account-tile,.lx26-topup-choice{transition:none!important}}
+
+.lx26-ledger-currency-tabs,.lx26-topup-currency{display:flex;flex-wrap:wrap;gap:6px;padding:4px;border:1px solid #e1e3f4;border-radius:14px;background:#f7f7ff}
+.lx26-ledger-currency-tabs button,.lx26-topup-currency button{min-height:38px;padding:8px 14px;border:0;border-radius:10px;background:transparent;color:#64708f;font-size:12px;font-weight:700}
+.lx26-ledger-currency-tabs button.is-active,.lx26-topup-currency button.is-active{background:linear-gradient(120deg,#8052ee,#5b49dc);color:#fff;box-shadow:0 5px 12px #7155e633}
+.lx26-wallet-ledger-panel{min-width:0;background:linear-gradient(125deg,#fff,#fafaff);border-color:#e0e3f5;box-shadow:0 7px 20px #4753a00a}
+.lx26-topup-currency{margin:-4px 0 16px}
+.lx26-topup-custom{display:grid;gap:8px;margin-top:17px}
+.lx26-topup-custom>label{font-size:13px;font-weight:750;color:#3b4567}
+.lx26-topup-custom-row{display:flex;align-items:center;gap:9px;min-height:52px;padding:5px 7px 5px 13px;border:1px solid #d9def1;border-radius:13px;background:#fff}
+.lx26-topup-custom-row>span{font-size:18px;font-weight:800;color:#7056cf}
+.lx26-topup-custom-row input{min-width:0;flex:1;border:0;outline:none;background:transparent;color:#20284c;font-size:16px;font-weight:700}
+.lx26-topup-custom-action{display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:8px 14px;border:0;border-radius:10px;background:linear-gradient(120deg,#272a52,#11182c);color:#fff;font-size:12px;font-weight:750;white-space:nowrap}
+.lx26-topup-custom-action.is-disabled{opacity:.42;cursor:not-allowed}
+.lx26-topup-custom>p,.lx26-topup-provider,.lx26-topup-unavailable{font-size:11px;line-height:1.6;color:#78819d}
+.lx26-topup-provider{margin-top:12px}
+.lx26-topup-unavailable{margin-top:6px;color:#9a6a25}
+@media(max-width:700px){
+ .lx26-wallet-ledgers-single{grid-template-columns:minmax(0,1fr)!important}
+ .lx26-ledger-currency-tabs{width:100%}
+ .lx26-ledger-currency-tabs button{flex:1}
+ .lx26-topup-currency button{flex:1}
+ .lx26-topup-custom-row{flex-wrap:wrap}
+ .lx26-topup-custom-action{flex:0 0 auto}
+}

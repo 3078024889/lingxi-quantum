@@ -1,4 +1,4 @@
-import {redirect} from "next/navigation";
+import {permanentRedirect} from "next/navigation";
 export const metadata={robots:{index:false,follow:false}};
-/** Keep legacy links valid; no more new video/image-generation pricing. */
-export default function Page(){redirect("/sasi#products");}
+/** Legacy SASI creation pricing now resolves to the current account balance. */
+export default function Page(){permanentRedirect("/ai-wallet");}

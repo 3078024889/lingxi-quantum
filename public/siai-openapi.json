@@ -1,10 +1,10 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "LINGXIFIELD Global SIAI Reviewed Directory",
-    "version": "1.0.0",
-    "summary": "Official-source-reviewed SI/AI tool comparisons for partners",
-    "description": "Read-only, public distribution of approved SI/AI platform records. Research-only candidates are excluded. Missing evidence is represented as null. The list order does not imply performance, paid endorsement, or a comparative quality score."
+    "title": "LINGXIFIELD Global SIAI and Free Local Tools",
+    "version": "1.1.0",
+    "summary": "Official-source-reviewed SI/AI directory and anonymous local tools",
+    "description": "Read-only public distribution of approved SI/AI platform records and anonymous browser-local utilities. Research-only candidates and paid or server-metered tools are excluded."
   },
   "servers": [
     {
@@ -56,6 +56,28 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/public/free-tools-widget": {
+      "get": {
+        "operationId": "listAnonymousFreeLocalTools",
+        "summary": "Read the anonymous free local-tools directory",
+        "description": "Returns only tools marked local-only and excluded from the public paid-tool catalogue. No account, API key or visitor data is required.",
+        "responses": {
+          "200": {
+            "description": "Anonymous local tools",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FreeToolsDirectory"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Temporary directory unavailable"
           }
         }
       }
@@ -188,6 +210,116 @@
                 "type": "null"
               }
             ]
+          }
+        }
+      },
+      "FreeToolsDirectory": {
+        "type": "object",
+        "required": [
+          "schemaVersion",
+          "publisher",
+          "title",
+          "site",
+          "total",
+          "rows"
+        ],
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "site": {
+            "type": "string",
+            "format": "uri"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FreeLocalTool"
+            }
+          }
+        }
+      },
+      "FreeLocalTool": {
+        "type": "object",
+        "required": [
+          "slug",
+          "titleZh",
+          "titleEn",
+          "descZh",
+          "descEn",
+          "href",
+          "category",
+          "kind",
+          "access",
+          "execution"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]{1,80}$"
+          },
+          "titleZh": {
+            "type": "string"
+          },
+          "titleEn": {
+            "type": "string"
+          },
+          "descZh": {
+            "type": "string"
+          },
+          "descEn": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string",
+            "pattern": "^/tools/[a-z0-9-]{1,80}$"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "pdf",
+              "image",
+              "media",
+              "subtitle",
+              "table",
+              "privacy",
+              "recognition",
+              "text",
+              "file",
+              "other"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "image",
+              "document",
+              "video",
+              "audio",
+              "privacy",
+              "utility",
+              "ai",
+              "qr"
+            ]
+          },
+          "access": {
+            "type": "string",
+            "const": "anonymous"
+          },
+          "execution": {
+            "type": "string",
+            "const": "local"
           }
         }
       }

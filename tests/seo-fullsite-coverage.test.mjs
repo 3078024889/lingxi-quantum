@@ -24,8 +24,11 @@ test("redirected and private pages do not masquerade as sitemap content",()=>{
  assert.match(sitemap,/image-to-pdf-pro/);
  const redirectCfg=read("next.config.js");
  assert.match(redirectCfg,/source: "\/tools\/image-to-pdf-pro"/);
- assert(active.includes('"/sasi/image"'));
- for(const redirected of ['"/sasi/drama"','"/sasi/build"','"/ai-knowledge"','"/ai-learning"','"/ai-research"'])
+ assert(active.includes('"/sasi/delivery"'));
+ assert(!active.includes('"/sasi/image"'),"retired SASI image route must not be indexed");
+ assert(!active.includes('"/sasi/marketplace"'),"legacy marketplace root redirects to /sasi");
+ assert(!active.includes('"/sasi/seller"'),"seller workspace is not an SEO landing page");
+ for(const redirected of ['"/sasi/drama"','"/sasi/build"','"/sasi/connections"','"/sasi/image"','"/ai-knowledge"','"/ai-learning"','"/ai-research"'])
    assert(!active.includes(redirected),redirected+" is a redirect");
  for(const privatePath of ["/account","/checkout","/admin","/share"])
    assert(!active.includes('"'+privatePath+'"'),privatePath+" is private");
