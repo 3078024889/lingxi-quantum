@@ -13,6 +13,7 @@ const wechat=read("lib/wechatpay.ts");
 const wechatNotify=read("app/api/pay/wechat/notify/route.ts");
 const walletMigration=read("supabase/migrations/20261110050414_harden_legacy_ai_wallet_topup_order_state.sql");
 const releaseWorkflow=read(".github/workflows/cn3194-payment-release-20261110.yml");
+const transfer=read("scripts/ops/R2-CN3195-Transfer-20261110.ps1");
 
 test("payment activation is pinned to final 3194; 3195 is temporary staging only",()=>{
  assert.match(script,/TAG" =~ \^ecs-cn-unified-20261110-/);
@@ -99,6 +100,13 @@ test("Alipay and WeChat signed probe accepts the final service identity and neve
  execFileSync(process.execPath,["--check","scripts/ops/cn-payment-signed-live-probe-20261109.mjs"]);
 });
 
+test("ECS promotion audits merchants but never mutates existing payment or wallet flags",()=>{
+ assert.match(transfer,/bash "\$PAYMENT" --audit "\$TAG"/);
+ assert.doesNotMatch(transfer,/bash "\$PAYMENT" --enable/);
+ assert.doesNotMatch(transfer,/CN3194_PAYMENT_AND_TOOLPASS_LIVE_FLAGS_ENABLED/);
+ assert.match(transfer,/CN3194_SIGNED_MERCHANT_AUDIT_PASS_EXISTING_FLAGS_PRESERVED/);
+ assert.match(transfer,/CN3194_NO_PAYMENT_OR_WALLET_FLAG_MUTATION/);
+});
 test("release checksum is relocatable between GitHub artifacts, Windows transfer and ECS",()=>{
  assert.match(releaseWorkflow,/printf '%s  %s\\n' "\$ARCHIVE_SHA" "\$FILE" > "\$DIST\/\$CHECK"/);
  assert.match(releaseWorkflow,/sha256sum -c "\$CHECK_FILE"/);
