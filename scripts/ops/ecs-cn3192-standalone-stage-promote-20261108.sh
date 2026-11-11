@@ -4,7 +4,7 @@
 # Never touch .com/Cloudflare/Vercel/globalsiai, money or Supabase rows.
 set -Eeuo pipefail
 MODE="${1:-}"; TAG="${2:-}"
-case "$MODE" in --stage|--promote) ;; *) echo "USAGE: $0 --stage|--promote ecs-cn-admin-toolpass-20261108-<sha12>" >&2;exit 2;; esac
+case "$MODE" in --plan|--stage|--verify-stage|--promote) ;; *) echo "USAGE: $0 --plan|--stage|--verify-stage|--promote ecs-cn-admin-toolpass-20261108-<sha12>" >&2;exit 2;; esac
 [[ "$TAG" =~ ^ecs-cn-admin-toolpass-20261108-([a-f0-9]{12})$ ]] || { echo "INVALID_RELEASE_TAG" >&2;exit 2; }
 SHORT="${BASH_REMATCH[1]}"
 [[ "$EUID" = 0 ]] || { echo "ROOT_REQUIRED" >&2;exit 2; }
@@ -18,6 +18,7 @@ UNIT="/etc/systemd/system/${NEW}.service"
 NGINX=/etc/nginx/conf.d/lingxifield.conf
 BASE=/opt/lingxifield/cn-staged-releases
 STAGE_ENV="/etc/lingxifield/staging-3192-${SHORT}.env"
+PROD_FLAGS="/etc/lingxifield/tool-pass-3192-${SHORT}.env"
 FILE="cn-20261108-admin-toolpass-standalone.tar.gz"
 CHECK="cn-20261108-admin-toolpass-standalone.sha256"
 TAGURL="https://github.com/3078024889/lingxi-quantum/releases/download/${TAG}"
@@ -49,12 +50,19 @@ probe(){
   code /api/health 200
   code /tools 200
   code /siai 200
-  code /sasi/pricing 200
+  code /sasi 200
+  # Legacy SASI video pricing now intentionally redirects to the software page.
+  code /sasi/pricing 307
   code /tools/pass 200
   code /api/sasi/account 401
   code /api/tools/jobs 401
+  # The anonymous boundary must run through enabled backend accounting (401), not a disabled 503.
+  code '/api/tools/access?toolSlug=compress-image' 401
   code /api/account/money-admin/access 200
   code /api/pay/providers 200
+  code /api/site-announcements 200
+  code /sasi/marketplace 200
+  code /announcements 200
   curl --noproxy '*' -fsS --max-time 12 -H 'Host: lingxifield.cn' \
    http://127.0.0.1:3192/api/tools/pass | "$NODE" -e '
 let data="";process.stdin.on("data",x=>data+=x).on("end",()=>{
@@ -67,6 +75,58 @@ console.log("CN3192_FOUR_TOOLPASS_OFFERS_PASS");
 }
 safe_env; live_old
 [[ -x "$NODE" ]] || { echo "NODE24_RUNTIME_NOT_FOUND" >&2;exit 1; }
+# The live 3191 systemd unit uses THREE ordered EnvironmentFiles.
+# Retain every effective source file, including the late admin-key alias.
+# Reading these file paths never prints or alters secrets.
+mapfile -t LIVE_ENV_FILES < <(
+  systemctl show "$SVC" -p EnvironmentFiles --value |
+    python3 -c 'import re,sys
+s=sys.stdin.read()
+for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s):
+ print(p)'
+)
+(( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 6 )) ||
+  { echo "LIVE_ENVFILE_COUNT_UNEXPECTED" >&2;exit 1; }
+for f in "${LIVE_ENV_FILES[@]}"; do
+  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" &&
+     "$(stat -c %u "$f")" = 0 ]] || { echo "LIVE_ENVFILE_UNSAFE" >&2;exit 1; }
+done
+printf 'CN3192_ORIGINAL_ENVFILES_COUNT=%s\n' "${#LIVE_ENV_FILES[@]}"
+if [[ "$MODE" = --plan ]];then
+  [[ "$(curl -s --noproxy '*' --max-time 8 -o /dev/null -w '%{http_code}' -H 'Host: lingxifield.cn' 'http://127.0.0.1:3191/api/health' || true)" = 200 ]] ||
+    { echo "CN3191_BASELINE_HEALTH_UNAVAILABLE" >&2;exit 1; }
+  if ss -lnt | grep -Eq '^LISTEN.*:3192[[:space:]]';then
+    echo "CN3192_STAGING_PORT_ALREADY_IN_USE";exit 1
+  fi
+  echo "CN3192_DISK_AVAILABLE_BYTES=$(df -PB1 "$BASE" 2>/dev/null | awk 'END{print $4}')"
+  free -h
+  echo "CN3192_PLAN_READ_ONLY_NO_SERVICE_CHANGES"
+  exit 0
+fi
+# A previous 3192 stage may have stopped only because the old health gate
+# expected HTTP 200 from the deliberately redirected /sasi/pricing (actual 307).
+# Resume the EXACT installed artifact without downloading/extracting it again.
+if [[ "$MODE" = --verify-stage ]];then
+  [[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] ||
+    { echo "CN3192_STAGED_FILES_NOT_PRESENT" >&2;exit 1; }
+  dir="$(systemctl show "$NEW" -p WorkingDirectory --value)"
+  [[ "$dir" =~ ^/opt/lingxifield/cn-staged-releases/[a-f0-9]{40}$ ]] ||
+    { echo "CN3192_STAGED_WORKDIR_NOT_EXPECTED" >&2;exit 1; }
+  test -s "$dir/RELEASE_SOURCE_SHA" || { echo "CN3192_SOURCE_SHA_MISSING" >&2;exit 1; }
+  actual="$(tr -d '\r\n' < "$dir/RELEASE_SOURCE_SHA")"
+  [[ "$actual" =~ ^[a-f0-9]{40}$ && "${actual:0:12}" = "$SHORT" && "$dir" = "$BASE/$actual" ]] ||
+    { echo "CN3192_SOURCE_SHA_MISMATCH" >&2;exit 1; }
+  grep -Fxq "EnvironmentFile=$STAGE_ENV" "$UNIT" ||
+    { echo "CN3192_STAGE_ENV_NOT_LAST" >&2;exit 1; }
+  for src in "${LIVE_ENV_FILES[@]}";do
+    grep -Fxq "EnvironmentFile=$src" "$UNIT" ||
+      { echo "CN3192_SOURCE_ENV_MISSING" >&2;exit 1; }
+  done
+  if ! systemctl is-active --quiet "$NEW";then systemctl start "$NEW";fi
+  probe || { echo "CN3192_VERIFY_FAILED_PRODUCTION_3191_UNCHANGED" >&2;systemctl stop "$NEW" || true;exit 1; }
+  echo "CN3192_STAGING_PASS_PRODUCTION_3191_UNCHANGED SOURCE_SHA=$actual"
+  exit 0
+fi
 mkdir -p "$BASE"
 if [[ "$MODE" = --stage ]];then
   [[ ! -e "$UNIT" && ! -e "$STAGE_ENV" ]] || { echo "CANDIDATE_ALREADY_PREPARED_NO_OVERWRITE" >&2;exit 1; }
@@ -102,10 +162,14 @@ lines=open(src).read().splitlines()
 disabled={"TOOL_PASS_COMMERCE_READY","ALIPAY_ENABLED","PAYPAL_ENABLED","WECHAT_ENABLED"}
 out=[ln for ln in lines if ln.split("=",1)[0] not in disabled]
 out.extend(k+"=false" for k in sorted(disabled))
+# Isolated staging must enforce the new server-side use ledger but collect no payments.
+out=[line for line in out if not line.startswith("TOOL_PASS_BACKEND_READY=")]
+out.append("TOOL_PASS_BACKEND_READY=true")
 fd=os.open(dst,os.O_CREAT|os.O_EXCL|os.O_WRONLY,0o600)
 with os.fdopen(fd,"w") as f:f.write("\n".join(out)+"\n")
 PY
-  cat > "$UNIT" <<EOF
+  {
+    cat <<EOF
 [Unit]
 Description=LINGXIFIELD CN verified 3192 admin/toolpass standalone ($SHORT)
 After=network-online.target
@@ -113,6 +177,9 @@ Wants=network-online.target
 [Service]
 Type=simple
 WorkingDirectory=$DEST
+EOF
+    for src in "${LIVE_ENV_FILES[@]}"; do printf 'EnvironmentFile=%s\n' "$src"; done
+    cat <<EOF
 EnvironmentFile=$STAGE_ENV
 Environment=NODE_ENV=production
 Environment=HOSTNAME=127.0.0.1
@@ -125,6 +192,7 @@ NoNewPrivileges=true
 [Install]
 WantedBy=multi-user.target
 EOF
+  } > "$UNIT"
   chmod 644 "$UNIT"
   systemctl daemon-reload
   systemctl start "$NEW"
@@ -151,12 +219,17 @@ if v.get("TOOL_PASS_COMMERCE_READY","false").lower() in ("true","1"):
 print("CN3192_PRIVACY_HASH_AND_PAYMENT_GATE_VERIFIED")
 PY
 # Only promote after isolated 3192 has passed its full read-only smoke tests.
+# Every one of the originally active 3191 environment files must still be present.
+for src in "${LIVE_ENV_FILES[@]}"; do
+  grep -Fxq "EnvironmentFile=$src" "$UNIT" ||
+    { echo "CN3192_ORIGINAL_ENVFILE_MISSING" >&2;exit 1; }
+done
 [[ -f "$UNIT" && ! -L "$UNIT" && -f "$STAGE_ENV" && ! -L "$STAGE_ENV" ]] || {
   echo "CN3192_STAGE_NOT_PREPARED" >&2; exit 1;
 }
 systemctl is-active --quiet "$NEW" || { echo "CN3192_STAGE_NOT_ACTIVE" >&2; exit 1; }
 probe || { echo "CN3192_PREPROMOTION_GATE_FAILED" >&2; exit 1; }
-[[ ! -e "$UNIT.rollback-$SHORT" ]] || { echo "PROMOTION_ROLLBACK_UNIT_ALREADY_EXISTS" >&2; exit 1; }
+[[ ! -e "$UNIT.rollback-$SHORT" && ! -e "$PROD_FLAGS" ]] || { echo "PROMOTION_ROLLBACK_OR_FLAGS_ALREADY_EXIST" >&2; exit 1; }
 PRODUCTION_ORIGINAL="$NGINX.before-cn3192-$SHORT-$(date -u +%Y%m%dT%H%M%SZ)"
 [[ ! -e "$PRODUCTION_ORIGINAL" ]] || { echo "PROMOTION_NGINX_BACKUP_EXISTS" >&2; exit 1; }
 # Unknown or shared Nginx layouts fail closed instead of changing other virtual hosts.
@@ -174,12 +247,27 @@ rollback() {
   cp -a "$PRODUCTION_ORIGINAL" "$NGINX" || true
   nginx -t && systemctl reload nginx || true
   cp -a "$UNIT.rollback-$SHORT" "$UNIT" || true
+  rm -f "$PROD_FLAGS" || true
   systemctl daemon-reload || true
   systemctl restart "$NEW" || true
 }
-# Change only the isolated candidate to use the already validated production env.
-sed -i "s@EnvironmentFile=$STAGE_ENV@EnvironmentFile=$ENV@" "$UNIT"
-grep -Fxq "EnvironmentFile=$ENV" "$UNIT" || { rollback; exit 1; }
+# Preserve the original three environment files. The last narrow override
+# enforces daily use and leaves collection disabled until real PSP confirmation.
+# This prevents an apparently healthy production release silently retaining a 503 quota API.
+(
+  umask 077
+  : > "$PROD_FLAGS"
+  printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' \
+    'TOOL_PASS_BACKEND_READY=true' \
+    'TOOL_PASS_COMMERCE_READY=false' > "$PROD_FLAGS"
+)
+chmod 600 "$PROD_FLAGS"
+sed -i "s|^EnvironmentFile=$STAGE_ENV$|EnvironmentFile=$PROD_FLAGS|" "$UNIT"
+grep -Fxq "EnvironmentFile=$PROD_FLAGS" "$UNIT" || { rollback; exit 1; }
+if grep -Fxq "EnvironmentFile=$STAGE_ENV" "$UNIT";then rollback;exit 1;fi
+for src in "${LIVE_ENV_FILES[@]}"; do
+  grep -Fxq "EnvironmentFile=$src" "$UNIT" || { rollback;exit 1; }
+done
 systemctl daemon-reload
 systemctl restart "$NEW" || { rollback; exit 1; }
 probe || { rollback; exit 1; }
@@ -201,7 +289,7 @@ finally:
     if os.path.exists(tmp): os.unlink(tmp)
 PY
 if ! nginx -t || ! systemctl reload nginx; then rollback; exit 1; fi
-for route in / /tools /siai /sasi/pricing /tools/pass; do
+for route in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass; do
   result="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 \
     --max-time 15 -o /dev/null -w '%{http_code}' "https://lingxifield.cn$route" || true)"
   echo "CN_PUBLIC_NGINX_ROUTE:$route:$result"

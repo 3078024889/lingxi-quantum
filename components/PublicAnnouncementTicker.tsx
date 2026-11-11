@@ -25,12 +25,13 @@ export default function PublicAnnouncementTicker(){
     <span className={styles.label}>{lang==="zh"?"公告":"NEWS"}</span>
     <div className={styles.viewport}>
       <div className={styles.track}>
-        {items.map(item=><Link className={styles.item} key={item.id} href="/account/notifications">{item.title}</Link>)}
+        {items.map(item=><Link className={styles.item} key={item.id} href="/announcements">{item.title}</Link>)}
         <div className={styles.repeat} aria-hidden="true">
           {items.map(item=><span className={styles.item} key={item.id}>{item.title}</span>)}
         </div>
       </div>
     </div>
-    <Link href="/account/notifications" className={styles.more}>{lang==="zh"?"全部公告":"All updates"} →</Link>
+    <Link href="/ai-wallet" className={styles.recharge}>{lang==="zh"?"余额 · 充值":"Balance / Top up"}</Link>
+    <Link href="/announcements" className={styles.more}>{lang==="zh"?"全部公告":"All updates"} →</Link>
   </div>;
 }

@@ -28,6 +28,9 @@ export default function AllToolsPassPage(){
  const [expiry,setExpiry]=useState<string|null>(null);
  const [busy,setBusy]=useState(false);
  const [available,setAvailable]=useState(false);
+ const [paypalReady,setPaypalReady]=useState(false);
+ useEffect(()=>{fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>setPaypalReady(d?.paypal===true)).catch(()=>setPaypalReady(false))},[]);
+
  const [message,setMessage]=useState("");
  const [request,setRequest]=useState<{sku:AllToolsPassSku;id:string}|null>(null);
  async function refresh(){
@@ -50,6 +53,20 @@ export default function AllToolsPassPage(){
    else setMessage(c.unavailable);
   }catch{setMessage(c.unavailable)}finally{setBusy(false)}
  }
+ async function payUsdDirect(sku:AllToolsPassSku){
+   if(busy||!paypalReady)return;
+   setBusy(true);setMessage("");
+   try{
+    const r=await fetch("/api/pay/create",{method:"POST",headers:{"content-type":"application/json"},
+      credentials:"same-origin",body:JSON.stringify({productId:sku,returnPath:"/tools/pass"})});
+    const data=await r.json().catch(()=>({}));
+    if(r.status===401){setMessage(c.login);return;}
+    if(!r.ok||!data.url)throw Error("PAYPAL_UNAVAILABLE");
+    const target=new URL(data.url);
+    if(target.protocol!=="https:"||!/(^|\.)paypal\.com$/.test(target.hostname))throw Error("PAYPAL_URL_UNVERIFIED");
+    window.location.assign(target.href);
+   }catch{setMessage(c.unavailable)}finally{setBusy(false)}
+ }
  return <main dir={rtl?"rtl":"ltr"} className="mx-auto max-w-5xl px-4 py-10 text-[var(--lx-ink)]">
   <h1 className="mb-3 text-3xl font-bold">{c.title}</h1>
   <p className="mb-3 text-base">{c.subtitle}</p>
@@ -68,11 +85,19 @@ export default function AllToolsPassPage(){
     <h2 className="text-lg font-bold">{[c.week,c.month,c.quarter,c.year][i]}</h2>
     <p className="my-4 text-3xl font-semibold">{currency==="CNY"?"¥":"$"}{o.price}</p>
     <p className="mb-4 text-sm">{c.new}</p>
-    <button type="button" disabled={busy||!available} onClick={()=>void buy(o.sku)}
-     className="w-full rounded-xl border border-current px-3 py-3 text-sm font-semibold disabled:opacity-50">{busy?c.processing:c.buy}</button>
+    {currency==="CNY"?
+      <Link href={`/checkout?productId=${o.sku}&redirect=%2Ftools%2Fpass`}
+       className="block w-full rounded-xl bg-[var(--lx-ink)] px-3 py-3 text-center text-sm font-semibold text-white">
+       {lang==="zh"?"微信／支付宝直接购买":lang==="en"?"Pay CNY directly":c.buy}</Link>
+      :<button type="button" disabled={busy||!paypalReady} onClick={()=>void payUsdDirect(o.sku)}
+       className="w-full rounded-xl border border-current px-3 py-3 text-sm font-semibold disabled:opacity-50">
+       {busy?c.processing:lang==="zh"?"PayPal 直接购买":"Pay directly with PayPal"}</button>}
+     <button type="button" disabled={busy||!available} onClick={()=>void buy(o.sku)}
+      className="mt-2 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2 text-sm disabled:opacity-50">
+       {c.buy}</button>
    </section>)}
   </div>
-  {!available&&<p role="status" className="mt-5 rounded-xl border p-3 text-sm">{c.unavailable}</p>}
+  {!available&&<p role="status" className="mt-5 rounded-xl border p-3 text-sm">{lang==="zh"?"余额购买暂时不可用，可先查看直接支付渠道是否已开放。":c.unavailable}</p>}
   <p className="mt-5 text-sm">{c.confirmation}</p>
   {message&&<p role="status" className="mt-3 rounded-xl border px-4 py-3 text-sm">{message}</p>}
   <button type="button" onClick={()=>void refresh()} className="mt-4 text-sm underline">{c.refresh}</button>

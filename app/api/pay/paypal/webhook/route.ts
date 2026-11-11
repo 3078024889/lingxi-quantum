@@ -64,7 +64,7 @@ export async function POST(req:Request){
   if(order.status==="paid")return NextResponse.json({ok:true,alreadyPaid:true});
 
   await verifyPaypalCompletedOrder(providerId,Number(order.amount_usd),order.id);
-  const fulfilled=await fulfillPaidOrder(order.id);
+  const fulfilled=await fulfillPaidOrder(order.id,true);
   if(!fulfilled.ok)return NextResponse.json({error:"FULFILLMENT_PENDING"},{status:500});
   return NextResponse.json({ok:true});
  }catch(error){

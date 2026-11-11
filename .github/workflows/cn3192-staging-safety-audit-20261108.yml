@@ -1,0 +1,57 @@
+name: CN 3192 multi-env staging safety and syntax audit (NO DEPLOY)
+on:
+  push:
+    branches: [feature/sasi-software-commerce-com-admin-20261108]
+    paths:
+      - 'scripts/ops/ecs-cn3192-standalone-stage-promote-20261108.sh'
+      - '.github/workflows/cn3192-staging-safety-audit-20261108.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  syntax-security-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - name: Bash parse
+        run: bash -n scripts/ops/ecs-cn3192-standalone-stage-promote-20261108.sh
+      - name: Multi-env and rollback invariants
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          code=Path("scripts/ops/ecs-cn3192-standalone-stage-promote-20261108.sh").read_text()
+          tokens=[
+            "--plan|--stage|--verify-stage|--promote",
+            "systemctl show \"$SVC\" -p EnvironmentFiles --value",
+            'mapfile -t LIVE_ENV_FILES',
+            'for src in "${LIVE_ENV_FILES[@]}"; do printf',
+            'EnvironmentFile=$STAGE_ENV',
+            'TOOL_PASS_COMMERCE_READY',
+            'ALIPAY_ENABLED',
+            'PAYPAL_ENABLED',
+            'WECHAT_ENABLED',
+            'CN3192_PLAN_READ_ONLY_NO_SERVICE_CHANGES',
+            'CN3192_STAGING_PASS_PRODUCTION_3191_UNCHANGED',
+            'CN_NEW_3192_NGINX_PROMOTION_PASS_ROLLBACK_FILE',
+            'sha256sum -c',
+            'CN3192_STAGED_FILES_NOT_PRESENT',
+            'code /sasi/pricing 307',
+            "code '/api/tools/access?toolSlug=compress-image' 401",
+            'EnvironmentFile=$PROD_FLAGS',
+            "TOOL_PASS_BACKEND_READY=true",
+            'CN_TOOLPASS_STABLE_HMAC_KEY_MISSING_PROMOTION_ABORT'
+          ]
+          missing=[x for x in tokens if x not in code]
+          if missing: raise SystemExit("CONTRACT_MARKERS_MISSING:"+repr(missing))
+          samples="/etc/lingxifield/production.env (ignore_errors=no) /etc/lingxifield/cn-env.env (ignore_errors=no) /etc/lingxifield/cn-release-notice-86b956c9700e.env (ignore_errors=no)"
+          found=re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",samples)
+          assert len(found)==3,found
+          assert found[-1].endswith("cn-release-notice-86b956c9700e.env")
+          assert not any("../" in x for x in found)
+          assert code.find('if [[ "$MODE" = --plan ]]')<code.find('mkdir -p "$BASE"')
+          print("CN3192_THREE_ENV_FILES_SAFE_PLAN_ROLLBACK_SCRIPT_AUDIT_PASS")
+          PY

@@ -10,6 +10,8 @@ import Footer from "@/components/Footer";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import Bi from "@/components/Bi";
 import { getProduct } from "@/lib/plans";
+import type {Product} from "@/lib/plans";
+import {isMarketProductId} from "@/lib/sasi-marketplace/fees";
 import { useLingxiLang } from "@/lib/lingxi-i18n";
 import { uiCopy, validForCopy } from "@/lib/ui-copy";
 import { createClient } from "@/lib/supabase/client";
@@ -71,8 +73,26 @@ function CheckoutInner() {
   const productId = params.get("productId") ?? "";
   const submissionId = params.get("submissionId") ?? undefined;
   const contentName = params.get("name") ?? "";
-  const redirectTo = params.get("redirect") ?? "/account/orders";
-  const product = getProduct(productId);
+  const redirectParam=params.get("redirect")??"/account/orders";
+  // Local-only post-checkout navigation (defends against malicious redirect parameters).
+  const redirectTo=redirectParam.startsWith("/")&&!redirectParam.startsWith("//")&&!redirectParam.includes("\\")&&redirectParam.length<=512?redirectParam:"/account/orders";
+  const [remoteMarketProduct,setRemoteMarketProduct]=useState<Product|null>(null);
+  const [marketProductLoading,setMarketProductLoading]=useState(isMarketProductId(productId));
+  const [marketProductCanBuy,setMarketProductCanBuy]=useState(false);
+  const product = getProduct(productId) || remoteMarketProduct;
+  useEffect(()=>{
+    if(!isMarketProductId(productId)){setRemoteMarketProduct(null);setMarketProductLoading(false);setMarketProductCanBuy(false);return;}
+    let active=true;setMarketProductLoading(true);setMarketProductCanBuy(false);
+    fetch("/api/sasi/marketplace/product?id="+encodeURIComponent(productId),{cache:"no-store"})
+      .then(r=>r.ok?r.json():null)
+      .then(x=>{
+        if(!active)return;
+        setRemoteMarketProduct(x?.product||null);
+        setMarketProductCanBuy(x?.available===true);
+      }).catch(()=>{if(active)setRemoteMarketProduct(null)})
+      .finally(()=>{if(active)setMarketProductLoading(false)});
+    return()=>{active=false};
+  },[productId]);
 
   const [status, setStatus] = useState<PayStatus>("loading");
   const [qrDataUrl, setQrDataUrl] = useState("");
@@ -83,6 +103,15 @@ function CheckoutInner() {
   const [alipayAvailable, setAlipayAvailable] = useState(false);
   const [wechatAvailable, setWechatAvailable] = useState(false);
   const [providersLoaded, setProvidersLoaded] = useState(false);
+  const [softwareAvailable,setSoftwareAvailable]=useState(false);
+  useEffect(()=>{
+    if(product?.group!=="software")return;
+    let alive=true;
+    fetch("/api/sasi/software/catalog",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(v=>{
+      if(alive)setSoftwareAvailable(v?.products?.[product.id]?.available===true);
+    }).catch(()=>{});
+    return()=>{alive=false};
+  },[product?.id,product?.group]);
 const orderIdRef = useRef<string | null>(null);
   const codeUrlRef = useRef<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -316,6 +345,10 @@ const orderIdRef = useRef<string | null>(null);
   // 微信原生收银台，不展示二维码（微信不允许在自己的浏览器里弹码给
   // 自己扫）；其它场景保持原来的Native扫码。
   const payNow = async () => {
+    if(product?.group==="market"&&!marketProductCanBuy){
+      setError(t("该商品尚未完成支付及交付验收。","This listing is not yet approved for payment and delivery."));return;
+    }
+    if(product?.group==="software"&&!softwareAvailable){setError(t("软件交付与支付尚未完成上线验收。","Software delivery and payment are not yet approved."));return;}
     if (!providersLoaded || (paymentMethod==="wechat"&&!wechatAvailable) || (paymentMethod==="alipay"&&!alipayAvailable)){
       setError(t("所选支付渠道尚未开放，请返回查看可用支付方式。","This payment provider is not yet available."));
       return;
@@ -361,6 +394,7 @@ const orderIdRef = useRef<string | null>(null);
   }, []);
 
   if (!product) {
+    if(marketProductLoading)return <p role="status" style={{padding:40,textAlign:"center"}}>{t("正在查询商品与购买权限…","Checking product availability…")}</p>;
     return (
       <div className="mx-auto max-w-xl px-6 py-24 text-center">
         <p className="text-[var(--lx-muted)]"><Bi zh="找不到这个产品，请返回重试。" en="Product not found — please go back and try again." /></p>
@@ -490,9 +524,15 @@ const orderIdRef = useRef<string | null>(null);
             </div>
           </div>
 
+          {providersLoaded&&!wechatAvailable&&!alipayAvailable&&<div style={{padding:"14px 16px",border:"1px solid var(--lx-line)",borderRadius:12,marginTop:18,fontSize:13,lineHeight:1.8}}>
+            <p>{t("国际站付款渠道暂未恢复，不会自动创建付费订单。可切换到国内站确认当前可用的支付方式。","Payment providers are unavailable on this site. No order will be created automatically. You may review available methods on the China site.")}</p>
+            {!isWechatCanonicalDomain&&<a href={cnSwitchUrl} style={{display:"inline-block",marginTop:8,color:"#285eb5",textDecoration:"underline"}}>{t("前往国内站查看支付方式 →","View payment options on China site →")}</a>}
+          </div>}
+          {product.group==="market"&&!marketProductCanBuy&&<p role="status" style={{color:"#a45634",marginTop:14,fontSize:13}}>{t("此卖家商品尚未开放支付与交付。","This seller listing is not currently available for purchase.")}</p>}
+          {product.group==="software"&&!softwareAvailable&&<p role="status" style={{color:"#a45634",marginTop:14,fontSize:13}}>{t("此数字软件仍在进行文件与自动交付验收，尚未开售。","This software has not been released for sale. Delivery testing is in progress.")}</p>}
           {status === "review" && (
             <button
-              disabled={!providersLoaded || (paymentMethod==="wechat"&&!wechatAvailable) || (paymentMethod==="alipay"&&!alipayAvailable)}
+              disabled={!providersLoaded || (product.group==="market"&&!marketProductCanBuy) || (product.group==="software"&&!softwareAvailable) || (paymentMethod==="wechat"&&!wechatAvailable) || (paymentMethod==="alipay"&&!alipayAvailable)}
               onClick={payNow}
               className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
             >
@@ -562,7 +602,7 @@ const orderIdRef = useRef<string | null>(null);
       {status === "error" && (
         <div className="mt-10 text-center">
           <p className="text-sm text-rose">{error}</p>
-          {isWechatBrowser && !isWechatCanonicalDomain ? (
+          {!isWechatCanonicalDomain ? (
             <a
               href={cnSwitchUrl}
               className="mt-4 inline-block bg-lattice px-6 py-2 text-xs uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"

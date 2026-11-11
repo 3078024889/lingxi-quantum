@@ -30,7 +30,7 @@ export async function GET(req:Request){
     const result=await capturePaypalOrder(order.provider_payment_id,Number(order.amount_usd),order.id);
     if(result.status==="COMPLETED"||result.status==="ALREADY_CAPTURED"){
       await verifyPaypalCompletedOrder(order.provider_payment_id,Number(order.amount_usd),order.id);
-      const fulfillment=await fulfillPaidOrder(orderId);
+      const fulfillment=await fulfillPaidOrder(orderId,true);
       if(!fulfillment.ok)return NextResponse.redirect(paymentCenter(baseUrl,"pending"));
       return NextResponse.redirect(`${baseUrl}${dest}`);
     }

@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       return text("failure", 422);
     }
 
-    const fulfillment = await fulfillPaidOrder(order.id);
+    const fulfillment = await fulfillPaidOrder(order.id,true);
     if (!fulfillment.ok) {
       console.error("[alipay notify] fulfillment failed", { orderId: order.id, error: fulfillment.error });
       return text("failure", 500);

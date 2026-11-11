@@ -15,7 +15,7 @@ const copy:Record<Lang,Copy>={
   label:"LINGXIFIELD · 全球服务升级",title:"灵犀场｜全球双站架构升级完成",
   lead:"双域同行，全球连接。",
   body:"这不是一次简单的服务器维护，而是灵犀场全球服务架构的一次重要升级。自2026年11月6日起，我们全面优化全球访问链路、国内外服务器运行架构、数据安全防护与系统稳定性。",
-  benefit:"国际站与国内站完成验收后，为全球 SIAI 排行榜、SASI 智能创作、百余项在线实用工具，以及统一账户、工具包与支付体验提供更稳定、更流畅的服务。",
+  benefit:"国际站与国内站完成验收后，为全球 SIAI 排行榜、SASI 智能软件、百余项在线实用工具，以及统一账户、工具包与支付体验提供更稳定、更流畅的服务。",
   thanks:"感谢升级期间的理解与陪伴。让智能触手可及，让创造突破边界。",
   global:"国际站",china:"国内站",action:"开启新版体验",dismiss:"我知道了",close:"关闭公告"
  },
@@ -23,7 +23,7 @@ const copy:Record<Lang,Copy>={
   label:"LINGXIFIELD · GLOBAL UPGRADE",title:"LINGXIFIELD | Global dual-site upgrade",
   lead:"Two domains. One global connection.",
   body:"This is more than routine maintenance. Since November 6, 2026, LINGXIFIELD has upgraded international access routes, server operations, security protections, and service reliability.",
-  benefit:"Once both sites pass acceptance, the upgraded infrastructure supports the global SIAI rankings, SASI creation, over 100 practical tools, and a unified account and tool-pass payment experience.",
+  benefit:"Once both sites pass acceptance, the upgraded infrastructure supports the global SIAI rankings, SASI software, over 100 practical tools, and a unified account and tool-pass payment experience.",
   thanks:"Thank you for your understanding during the upgrade. Make intelligence accessible. Create without limits.",
   global:"International site",china:"China site",action:"Explore the new site",dismiss:"Got it",close:"Close"
  },
@@ -31,28 +31,28 @@ const copy:Record<Lang,Copy>={
   label:"LINGXIFIELD · グローバル更新",title:"LINGXIFIELD｜日中・国際サイトの基盤更新",
   lead:"二つのドメインで、世界とつながる。",
   body:"2026年11月6日から、世界各地のアクセス経路、サーバー基盤、データ保護、安定性の向上に取り組みました。通常の保守を超えたサービス基盤の更新です。",
-  benefit:"両サイトの検証完了後、世界のSIAIランキング、SASI制作、100以上のツール、統一アカウントと決済をより安定した環境で提供します。",
+  benefit:"両サイトの検証完了後、世界のSIAIランキング、SASI ソフトウェア、100以上のツール、統一アカウントと決済をより安定した環境で提供します。",
   thanks:"ご理解とご協力に感謝します。",global:"国際サイト",china:"中国サイト",action:"新しいサイトを見る",dismiss:"確認しました",close:"閉じる"
  },
  ko:{
   label:"LINGXIFIELD · 글로벌 업그레이드",title:"LINGXIFIELD | 글로벌 이중 사이트 업그레이드",
   lead:"두 도메인, 하나의 글로벌 연결.",
   body:"2026년 11월 6일부터 글로벌 접속 경로, 서버 구조, 데이터 보안 및 서비스 안정성을 개선했습니다. 단순한 서버 점검 이상의 업그레이드입니다.",
-  benefit:"양쪽 사이트의 검증이 완료되면 글로벌 SIAI 순위, SASI 창작, 100개 이상의 도구와 통합 계정 및 결제 서비스를 더 안정적으로 제공합니다.",
+  benefit:"양쪽 사이트의 검증이 완료되면 글로벌 SIAI 순위, SASI 소프트웨어, 100개 이상의 도구와 통합 계정 및 결제 서비스를 더 안정적으로 제공합니다.",
   thanks:"업그레이드 기간의 이해와 협조에 감사드립니다.",global:"국제 사이트",china:"중국 사이트",action:"새 사이트 둘러보기",dismiss:"확인",close:"닫기"
  },
  fr:{
   label:"LINGXIFIELD · MISE À NIVEAU",title:"LINGXIFIELD | Nouvelle architecture mondiale",
   lead:"Deux domaines, une connexion mondiale.",
   body:"Depuis le 6 novembre 2026, nous avons amélioré les accès internationaux, les serveurs, la protection des données et la fiabilité de nos services.",
-  benefit:"Après validation des deux sites, cette infrastructure renforcée prend en charge le classement SIAI, la création SASI, plus de 100 outils ainsi que les comptes et paiements unifiés.",
+  benefit:"Après validation des deux sites, cette infrastructure renforcée prend en charge le classement SIAI, la logiciels SASI, plus de 100 outils ainsi que les comptes et paiements unifiés.",
   thanks:"Merci de votre compréhension pendant cette transition.",global:"Site international",china:"Site chinois",action:"Découvrir la nouvelle version",dismiss:"Compris",close:"Fermer"
  },
  de:{
   label:"LINGXIFIELD · GLOBALES UPDATE",title:"LINGXIFIELD | Upgrade der globalen Plattform",
   lead:"Zwei Domains, weltweit verbunden.",
   body:"Seit dem 6. November 2026 verbessern wir internationale Zugangswege, Serverarchitektur, Datenschutz und Zuverlässigkeit.",
-  benefit:"Nach erfolgreicher Abnahme beider Websites unterstützt die neue Infrastruktur das SIAI-Ranking, SASI-Kreation, über 100 Werkzeuge sowie einheitliche Konten und Zahlungen.",
+  benefit:"Nach erfolgreicher Abnahme beider Websites unterstützt die neue Infrastruktur das SIAI-Ranking, SASI Software, über 100 Werkzeuge sowie einheitliche Konten und Zahlungen.",
   thanks:"Vielen Dank für Ihr Verständnis während der Umstellung.",global:"Internationale Website",china:"Website für China",action:"Neue Version entdecken",dismiss:"Verstanden",close:"Schließen"
  },
  es:{
@@ -66,14 +66,14 @@ const copy:Record<Lang,Copy>={
   label:"LINGXIFIELD · ATUALIZAÇÃO GLOBAL",title:"LINGXIFIELD | Nova infraestrutura global",
   lead:"Dois domínios, conexão global.",
   body:"Desde 6 de novembro de 2026, melhoramos as rotas globais, os servidores, a proteção dos dados e a estabilidade dos serviços.",
-  benefit:"Após validar ambos os sites, a infraestrutura atenderá ao ranking SIAI, criação SASI, mais de 100 ferramentas e contas e pagamentos integrados.",
+  benefit:"Após validar ambos os sites, a infraestrutura atenderá ao ranking SIAI, software SASI, mais de 100 ferramentas e contas e pagamentos integrados.",
   thanks:"Agradecemos a compreensão durante a atualização.",global:"Site internacional",china:"Site para China",action:"Explorar a nova versão",dismiss:"Entendi",close:"Fechar"
  },
  ar:{
   label:"LINGXIFIELD · ترقية عالمية",title:"LINGXIFIELD | بنية جديدة للموقعين",
   lead:"نطاقان واتصال عالمي واحد.",
   body:"منذ 6 نوفمبر 2026 عملنا على تحسين مسارات الوصول العالمية والبنية التشغيلية للخوادم وحماية البيانات واستقرار الخدمة.",
-  benefit:"بعد اجتياز الموقعين اختبارات القبول، تدعم البنية الجديدة تصنيف SIAI العالمي وإبداع SASI وأكثر من 100 أداة وحسابات ومدفوعات موحدة.",
+  benefit:"بعد اجتياز الموقعين اختبارات القبول، تدعم البنية الجديدة تصنيف SIAI العالمي وبرمجيات SASI وأكثر من 100 أداة وحسابات ومدفوعات موحدة.",
   thanks:"شكراً لتفهمكم خلال الترقية.",global:"الموقع الدولي",china:"الموقع الصيني",action:"استكشف الموقع الجديد",dismiss:"فهمت",close:"إغلاق"
  }
 };
@@ -83,22 +83,22 @@ const maintenance:Record<Lang,{title:string;body:string;benefit:string}>={
  zh:{
   title:"灵犀场｜全球双站架构升级公告",
   body:"这不是一次简单的服务器维护，而是灵犀场全球服务架构的一次重要升级。2026年11月6日起，灵犀场 LINGXIFIELD 开展服务器架构升级与全球访问线路优化，国际站与国内站进入新版切换阶段，预计2026年11月8日前恢复上线，具体以最终功能验收结果为准。",
-  benefit:"本次升级围绕全球访问链路、服务器运行架构、数据安全防护与服务稳定性展开，为全球 SIAI 排行榜、SASI 智能创作、百余项在线实用工具，以及统一账户和工具包支付提供更坚实的基础设施。"
+  benefit:"本次升级围绕全球访问链路、服务器运行架构、数据安全防护与服务稳定性展开，为全球 SIAI 排行榜、SASI 智能软件、百余项在线实用工具，以及统一账户和工具包支付提供更坚实的基础设施。"
  },
  en:{
   title:"LINGXIFIELD | Global dual-site upgrade in progress",
   body:"Since November 6, 2026, LINGXIFIELD has been upgrading international connectivity, server operations, security and reliability. Both sites are expected to resume by November 8, subject to final functional acceptance.",
-  benefit:"The upgrade supports global SIAI rankings, SASI creation, over 100 practical tools, unified accounts and tool-pass payments."
+  benefit:"The upgrade supports global SIAI rankings, SASI software, over 100 practical tools, unified accounts and tool-pass payments."
  },
  ja:{
   title:"LINGXIFIELD｜国際・中国サイトの更新のお知らせ",
   body:"2026年11月6日から接続経路、サーバー、セキュリティを更新しています。両サイトは最終検証を条件として11月8日までの復旧を予定しています。",
-  benefit:"SIAIランキング、SASI制作、100以上のツールとアカウント・決済機能の安定性を改善します。"
+  benefit:"SIAIランキング、SASI ソフトウェア、100以上のツールとアカウント・決済機能の安定性を改善します。"
  },
  ko:{
   title:"LINGXIFIELD | 글로벌 이중 사이트 업그레이드 안내",
   body:"2026년 11월 6일부터 국제 접속, 서버 및 보안 환경을 개선하고 있습니다. 최종 기능 검증을 전제로 11월 8일까지 복구할 예정입니다.",
-  benefit:"SIAI 순위, SASI 창작, 100개 이상의 도구와 통합 계정 및 결제의 안정성을 강화합니다."
+  benefit:"SIAI 순위, SASI 소프트웨어, 100개 이상의 도구와 통합 계정 및 결제의 안정성을 강화합니다."
  },
  fr:{
   title:"LINGXIFIELD | Mise à niveau des deux sites en cours",
@@ -123,7 +123,7 @@ const maintenance:Record<Lang,{title:string;body:string;benefit:string}>={
  ar:{
   title:"LINGXIFIELD | تحديث الموقعين جارٍ",
   body:"منذ 6 نوفمبر 2026 نعمل على تحسين الخوادم والاتصال العالمي وأمن البيانات. نتوقع استعادة الموقعين بحلول 8 نوفمبر وفقاً لنتائج التحقق النهائي.",
-  benefit:"تعزز الترقية ترتيب SIAI وإبداع SASI وأكثر من 100 أداة ونظام الحسابات والمدفوعات الموحد."
+  benefit:"تعزز الترقية ترتيب SIAI وبرمجيات SASI وأكثر من 100 أداة ونظام الحسابات والمدفوعات الموحد."
  }
 };
 

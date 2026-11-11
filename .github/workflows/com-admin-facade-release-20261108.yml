@@ -1,0 +1,92 @@
+name: COM admin facade isolated release gate (NO AUTOMATIC DEPLOY)
+on:
+  push:
+    branches: [feature/sasi-software-commerce-com-admin-20261108]
+    # One-time deploy request. Future source changes require an explicit dispatch.
+    paths:
+      - '.github/workflows/com-admin-facade-release-20261108.yml'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Build only or explicitly deploy narrow Cloudflare route after approvals"
+        required: true
+        type: choice
+        options: [test, deploy]
+        default: test
+permissions:
+  contents: read
+jobs:
+  safety:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Assert same-origin checks, narrow routes and no merchant mutation
+        run: node tests/com-admin-facade.test.mjs
+      - name: Verify existing CN control plane (anonymous access is 200, dashboard 403)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          status="$(curl -sS -4 -L --max-time 25 -o /dev/null -w '%{http_code}' https://lingxifield.cn/api/account/money-admin/access)"
+          test "$status" = 200
+          status="$(curl -sS -4 --max-time 25 -o /dev/null -w '%{http_code}' https://lingxifield.cn/api/account/money-admin)"
+          test "$status" = 403
+          echo CN_MONEY_ADMIN_UPSTREAM_READY_NO_AUTH_DATA_RETURNED
+  deploy:
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'deploy')
+    needs: safety
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: '24'}
+      - name: Verify deployment token is configured and route is still narrow
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          node tests/com-admin-facade.test.mjs
+          node - <<'NODE'
+          const fs=require("node:fs");
+          const config=JSON.parse(fs.readFileSync("workers/com-admin-facade/wrangler.jsonc","utf8"));
+          const expected=[
+            "lingxifield.com/api/account/money-admin*",
+            "lingxifield.com/api/site-announcements*",
+            "lingxifield.com/api/tools/pass*"
+          ].sort();
+          const actual=(config.routes||[]).map(x=>x.pattern).sort();
+          if(config.name!=="lingxifield-com-admin-facade"||JSON.stringify(actual)!==JSON.stringify(expected))
+           throw Error("WIDE_CLOUDFLARE_ROUTE_REJECTED");
+          console.log("CLOUDFLARE_NARROW_DEPLOY_ROUTES_VERIFIED");
+          NODE
+      - name: Deploy narrow independent admin Worker only; preserve original global gateway
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4.158.0 deploy --config workers/com-admin-facade/wrangler.jsonc
+      - name: Anonymous runtime assertions against international host
+        run: |
+          set -Eeuo pipefail
+          for i in 1 2 3 4 5; do
+            code="$(curl -4 -sS --max-time 12 -o /dev/null -w '%{http_code}' https://lingxifield.com/api/account/money-admin/access || true)"
+            if [[ "$code" == 200 ]]; then echo COM_ADMIN_FACADE_ANONYMOUS_ACCESS_OK; exit 0; fi
+            sleep 3
+          done
+          echo "::error::International admin facade not confirmed. Remove only the narrow admin route to roll back."
+          exit 1
+      - name: Verify .com tool-pass public catalog over minimal worker
+        run: |
+          set -Eeuo pipefail
+          code="$(curl -sS -4 --max-time 18 -o /dev/null -w '%{http_code}' https://lingxifield.com/api/tools/pass || true)"
+          echo "COM_TOOLPASS_HTTP_STATUS=$code"
+          test "$code" = "200"

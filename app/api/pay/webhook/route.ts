@@ -41,7 +41,7 @@ export async function POST(req:Request){
   if(type==="PAYMENT.CAPTURE.COMPLETED"){
     try{
       await verifyPaypalCompletedOrder(paypalOrderId,Number(order.amount_usd),order.id);
-      const result=await fulfillPaidOrder(order.id);
+      const result=await fulfillPaidOrder(order.id,true);
       if(!result.ok)return NextResponse.json({error:"FULFILLMENT_PENDING"},{status:500});
     }catch(e){
       console.error("[paypal webhook verify]",e instanceof Error?e.message:String(e));

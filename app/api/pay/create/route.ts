@@ -6,6 +6,8 @@ import {safeLocalReturnPath} from "@/lib/sasi/payment-gate";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {getUsdBalanceProduct} from "@/lib/usd-products";
+import {getProduct} from "@/lib/plans";
+import {toolPassBackendReady} from "@/lib/tools/commerce/tool-server-receipt";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -24,9 +26,17 @@ export async function POST(req:NextRequest){
 
   try{
     const body=await req.json().catch(()=>null) as {productId?:unknown;returnPath?:unknown}|null;
-    const product=getUsdBalanceProduct(String(body?.productId||""));
-    if(!product)return NextResponse.json({error:"INVALID_USD_BALANCE_PRODUCT"},{status:400});
+    const requestedId=String(body?.productId||"");
+    const walletProduct=getUsdBalanceProduct(requestedId);
+    const passProduct=getProduct(requestedId);
+    const isDirectPass=passProduct?.group==="toolpass";
+    const product=walletProduct|| (isDirectPass?{
+      id:passProduct!.id,amountUsd:passProduct!.priceUsd,nameEn:passProduct!.nameEn,
+      wallet:"toolpass" as const
+    }:null);
+    if(!product)return NextResponse.json({error:"INVALID_USD_PRODUCT"},{status:400});
 
+    if(isDirectPass&&!toolPassBackendReady())return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
     const supabase=createClient();
     const {data:{user}}=await supabase.auth.getUser();
     if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
@@ -38,7 +48,7 @@ export async function POST(req:NextRequest){
     const {data:order,error}=await admin.from("orders").insert({
       user_id:user.id,
       product_id:product.id,
-      product_type:"permanent",
+      product_type:isDirectPass?"subscription":"permanent",
       amount_usd:product.amountUsd,
       amount_rmb:null,
       status:"pending",
@@ -49,7 +59,7 @@ export async function POST(req:NextRequest){
     if(error||!order)return NextResponse.json({error:"ORDER_CREATE_FAILED"},{status:500});
 
     const baseUrl=process.env.NEXT_PUBLIC_SITE_URL||"https://lingxifield.com";
-    const fallback="/sasi/pricing";
+    const fallback=isDirectPass?"/tools/pass":"/sasi/pricing";
     const dest=safeLocalReturnPath(body?.returnPath,fallback);
 
     try{
@@ -58,7 +68,7 @@ export async function POST(req:NextRequest){
         description:product.nameEn,
         referenceId:order.id,
         returnUrl:`${baseUrl}/api/pay/paypal/return?orderId=${order.id}&dest=${encodeURIComponent(dest)}`,
-        cancelUrl:`${baseUrl}/checkout-usd?productId=${encodeURIComponent(product.id)}&canceled=1`,
+        cancelUrl:isDirectPass?`${baseUrl}/tools/pass?canceled=1`:`${baseUrl}/checkout-usd?productId=${encodeURIComponent(product.id)}&canceled=1`,
       });
       const linked=await admin.from("orders").update({provider_payment_id:out.id}).eq("id",order.id).eq("status","pending");
       if(linked.error)throw linked.error;

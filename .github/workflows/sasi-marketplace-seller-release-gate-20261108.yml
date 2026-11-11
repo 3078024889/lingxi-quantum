@@ -1,0 +1,80 @@
+name: SASI community marketplace seller + private delivery production build gate (NO DEPLOY)
+on:
+  push:
+    branches:
+      - feature/sasi-software-commerce-com-admin-20261108
+    paths:
+      - 'app/sasi/**'
+      - 'app/account/software/**'
+      - 'app/api/sasi/marketplace/**'
+      - 'app/api/sasi/software/**'
+      - 'app/api/pay/wechat/create/route.ts'
+      - 'app/api/pay/alipay/create/route.ts'
+      - 'app/checkout/page.tsx'
+      - 'app/tools/pass/page.tsx'
+      - 'app/api/pay/create/route.ts'
+      - 'app/api/pay/**/notify/route.ts'
+      - 'lib/plans.ts'
+      - 'lib/fulfill-order.ts'
+      - 'lib/paypal.ts'
+      - 'tests/paypal-merchant-idempotency-20261108.test.mjs'
+      - 'lib/sasi-marketplace/**'
+      - 'lib/sasi-software/**'
+      - 'components/Sasi*'
+      - 'components/Nav.tsx'
+      - 'components/PublicAnnouncementTicker*'
+      - 'docs/operations/sasi-marketplace-15pct-private-seller-market-20261108.sql'
+      - 'tests/sasi-marketplace-*'
+      - 'tests/toolpass-direct-fulfillment-20261108.test.mjs'
+      - 'docs/operations/tool-pass-direct-payment-fulfillment-20261108.sql'
+      - '.github/workflows/sasi-marketplace-seller-release-gate-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sasi-marketplace-security-nondeploy-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test-and-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      SASI_MARKET_SALES_ENABLED: 'false'
+      SASI_MARKET_UPLOADS_ENABLED: 'false'
+      SASI_MARKET_PAYOUTS_ENABLED: 'false'
+      SASI_MARKET_DELIVERY_ENABLED: 'false'
+      SOFTWARE_COMMERCE_READY: 'false'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Frozen dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Commission and revenue invariants
+        run: node tests/sasi-marketplace-fee.test.mjs
+      - name: Seller, private storage, buyer entitlements and payouts
+        run: node tests/sasi-marketplace-security-contract.test.mjs
+      - name: Direct four-tier toolpass merchant fulfillment regression
+        run: node tests/toolpass-direct-fulfillment-20261108.test.mjs
+      - name: PayPal order/capture idempotency regression
+        run: node tests/paypal-merchant-idempotency-20261108.test.mjs
+      - name: TypeScript check
+        run: pnpm exec tsc --noEmit
+      - name: Next.js production build (no deploy)
+        run: pnpm build
+      - name: Assert new pages are included
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -f .next/BUILD_ID
+          test -f .next/server/app/sasi/marketplace/page.js || test -f .next/server/app/sasi/marketplace.html || test -f .next/server/app/sasi/marketplace.rsc
+          echo SASI_SELLER_TOOLPASS_SOURCE_BUILD_READY_NO_DEPLOY

@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       console.error("[wechat notify] payment did not match local order", { orderId: order.id })
       return NextResponse.json({ code: "FAIL", message: "订单校验失败" }, { status: 422 })
     }
-    const result = await fulfillPaidOrder(order.id)
+    const result = await fulfillPaidOrder(order.id,true)
     if (!result.ok) {
       console.error("[wechat notify] fulfillment failed", { orderId: order.id, error: result.error })
       return NextResponse.json({ code: "FAIL", message: "权益开通待重试" }, { status: 500 })

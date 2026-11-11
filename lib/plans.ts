@@ -3,9 +3,11 @@
 export type Product = {
   id:string;name:string;nameEn:string;priceUsd:number;priceRmb:number;
   type:"permanent"|"subscription";days?:number;note:string;noteEn:string;highlight?:boolean;
-  group:"production";sasiAmountFen?:number;
+  group:"production"|"software"|"market"|"toolpass";sasiAmountFen?:number;sellerId?:string;
 };
 
+import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
+import {ALL_TOOLS_PASS_CATALOG} from "@/lib/tools/commerce/all-tools-pass";
 import { BALANCE_TOPUP_AMOUNTS, customTopupAmount, customTopupMinor } from "@/lib/balance-topups";
 const RMB_TOPUPS=BALANCE_TOPUP_AMOUNTS;
 export const sasiProductionProducts:Product[]=RMB_TOPUPS.map(amount=>({
@@ -15,7 +17,17 @@ export const sasiProductionProducts:Product[]=RMB_TOPUPS.map(amount=>({
   noteEn:"One balance works across all SASI. Connected intelligence services bill the user directly.",
 }));
 
-export const allProducts=[...sasiProductionProducts];
+export const softwareProducts:Product[]=SASI_SOFTWARE_CATALOG.map(p=>({
+  id:p.id,name:p.titleZh,nameEn:p.titleEn,priceRmb:p.priceCny,priceUsd:p.priceUsd,
+  type:"permanent",group:"software",note:p.featureZh,noteEn:p.featureEn
+}));
+export const toolPassProducts:Product[]=ALL_TOOLS_PASS_CATALOG.map(o=>({
+ id:o.sku,name:`全场实用工具通用包 · ${o.days} 天`,nameEn:`All practical tools · ${o.days} days`,
+ priceUsd:o.price,priceRmb:o.price,type:"subscription",days:o.days,group:"toolpass",
+ note:"全场100+实用工具通用；付款核验后自动开通，可与现有有效期顺延叠加。",
+ noteEn:"All practical tools. Automatically activates after verified payment; extends an existing active pass."
+}));
+export const allProducts=[...sasiProductionProducts,...softwareProducts,...toolPassProducts];
 export function getProduct(id:string){
   const configured=allProducts.find(p=>p.id===id);if(configured)return configured;
   // Preserve fulfillment of orders created before the displayed packs changed.
