@@ -11,6 +11,8 @@ on:
       - 'lib/seo/siai-domain-policy.ts'
       - 'lib/siai-seo-policy.ts'
       - 'scripts/seo/audit-global.cjs'
+      - 'public/llms.txt'
+      - 'scripts/seo/growth/**'
       - 'tests/seo-fullsite-coverage.test.mjs'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
       - 'scripts/cloudflare/patch-critical-static-html-20261108.mjs'
@@ -89,6 +91,8 @@ on:
       - 'lib/seo/service-facts.ts'
       - 'lib/seo/sitemap-build.ts'
       - 'scripts/seo/audit-global.cjs'
+      - 'public/llms.txt'
+      - 'scripts/seo/growth/**'
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
       - 'components/HomeSeoAnswers.tsx'
@@ -134,6 +138,8 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
+          pnpm seo:growth:generate
+          pnpm seo:growth:audit
           node scripts/seo/audit-global.cjs
           node --test tests/com-current-runtime-routing-20261108.test.mjs
           node --check scripts/cloudflare/materialize-static-html-assets-20261110.mjs

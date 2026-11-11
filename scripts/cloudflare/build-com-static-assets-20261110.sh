@@ -6,6 +6,8 @@ set -Eeuo pipefail
 RUNNER_TEMP="${RUNNER_TEMP:-${TMPDIR:-/tmp}}"
 
 pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
+pnpm seo:growth:generate
+pnpm seo:growth:audit
 pnpm exec opennextjs-cloudflare build
 node scripts/cloudflare/stage-large-public-assets.mjs
 node scripts/cloudflare/stage-r2-public-assets.mjs --audit

@@ -82,9 +82,29 @@ const lines = [
   "- https://lingxifield.com/tools",
   "- https://lingxifield.com/sasi",
   "- https://lingxifield.com/products",
+  "- https://lingxifield.com/siai",
+  "- https://lingxifield.cn/siai",
   "",
   "## Tool index"
 ];
+
+
+const topicStart = globalSeo.indexOf("export const SEO_TOPICS={");
+const topicEnd = globalSeo.indexOf("} as const", topicStart);
+if (topicStart < 0 || topicEnd < 0) throw new Error("SEO_TOPICS_NOT_FOUND");
+const sasiTopics = [...globalSeo.slice(topicStart, topicEnd).matchAll(/"([^"]+)":\\{zh:"([^"]+)",en:"([^"]+)"/g)]
+  .map(m => ({slug:m[1],zh:m[2],en:m[3]}));
+if (sasiTopics.length !== 4) throw new Error("SASI_SEO_TOPIC_COUNT_MISMATCH");
+const topicIndex = lines.indexOf("## Tool index");
+const topicLines = [];
+for (const topic of sasiTopics) {
+  topicLines.push(`- ${topic.en} | ${topic.zh}: https://lingxifield.com/discover/${topic.slug}`);
+  for (const [locale] of localeMeta) {
+    if (locale === "zh") continue;
+    topicLines.push(`  - ${locale}: https://lingxifield.com/${locale}/discover/${topic.slug}`);
+  }
+}
+lines.splice(topicIndex,0,"","## Global AI / SI / SIAI rankings","- Global SIAI directory: https://lingxifield.com/siai","- China regional SIAI entry: https://lingxifield.cn/siai","","## SASI Software Marketplace",...topicLines);
 
 for (const tool of unique) {
   lines.push(`- ${tool.slug} | ${tool.zh} | ${tool.en} | ${tool.mode}`);

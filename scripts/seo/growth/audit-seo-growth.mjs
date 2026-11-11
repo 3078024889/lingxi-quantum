@@ -53,6 +53,15 @@ const llmsFull = path.join(root, "public/llms-full.txt");
 const index = path.join(root, "public/search-intent-index.json");
 exists("public/llms-full.txt") ? pass("public/llms-full.txt") : fail("public/llms-full.txt missing");
 exists("public/search-intent-index.json") ? pass("public/search-intent-index.json") : fail("public/search-intent-index.json missing");
+if (exists("public/llms-full.txt")) {
+  const full = read("public/llms-full.txt");
+  if (full.includes("Global AI / SI / SIAI rankings")) pass("SIAI directory included in full LLM index");
+  else fail("SIAI directory missing from full LLM index");
+  for (const slug of ["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"]) {
+    if (full.includes("/discover/" + slug)) pass("SASI GEO topic indexed: " + slug);
+    else fail("SASI GEO topic missing: " + slug);
+  }
+}
 
 if (exists("public/search-intent-index.json")) {
   try {

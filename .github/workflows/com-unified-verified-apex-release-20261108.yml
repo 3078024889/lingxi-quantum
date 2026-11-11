@@ -32,6 +32,8 @@ on:
       - 'scripts/seo/audit-global.cjs'
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'public/llms.txt'
+      - 'scripts/seo/growth/**'
       - 'components/HomeSeoAnswers.tsx'
       - 'components/Footer.tsx'
       - 'components/Nav.tsx'
@@ -64,6 +66,8 @@ on:
       - 'scripts/seo/audit-global.cjs'
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'public/llms.txt'
+      - 'scripts/seo/growth/**'
       - 'components/HomeSeoAnswers.tsx'
       - 'components/Footer.tsx'
       - 'components/Nav.tsx'
@@ -89,7 +93,7 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version-file: .nvmrc,cache: pnpm}
       - name: Install exact locked source-test dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts && node scripts/seo/audit-global.cjs
+        run: pnpm install --frozen-lockfile --ignore-scripts && pnpm seo:growth:generate && pnpm seo:growth:audit && node scripts/seo/audit-global.cjs
       - name: Pin exact verified candidate and check safe script
         run: |
           set -Eeuo pipefail
