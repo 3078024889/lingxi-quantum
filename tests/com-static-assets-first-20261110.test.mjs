@@ -20,7 +20,7 @@ test("robots static capture command is one valid continued curl invocation", () 
 });
 
 test("sitemap is captured from the exact public host and materialized as a static asset", () => {
-  assert.match(buildScript, /http:\/\/127\\.0\\.0\\.1:8787\/sitemap\\.xml -o "\$sitemap_snapshot"/);
+  assert.match(buildScript, /http:\/\/127\.0\.0\.1:8787\/sitemap\.xml -o "\$sitemap_snapshot"/);
   assert.match(buildScript, /COM_SITEMAP_STATIC_ASSET_CAPTURED/);
   assert.match(buildScript, /COM_SITEMAP_TOPIC_MISSING/);
   assert.match(buildScript, /COM_SITEMAP_RETIRED_TOPIC_PRESENT/);
