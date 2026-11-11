@@ -206,6 +206,31 @@ echo 'STEP 5/6: PROMOTE CN3194 (3195 TEMPORARY STAGE; 3193 ROLLBACK BASELINE)'
 bash "$STAGE" --promote "$TAG"
 echo 'STEP 6/6: SIGNED MERCHANT AUDIT ONLY; PRESERVE EXISTING PROVIDER AND WALLET FLAGS'
 bash "$PAYMENT" --audit "$TAG"
+# Read-only confirmation of the three existing provider flags after promotion.
+# Never enable or rewrite provider flags in this transfer script.
+PROVIDERS="$DIR/providers.json"
+if curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' \
+  http://127.0.0.1:3194/api/pay/providers > "$PROVIDERS"; then
+  if python3 - "$PROVIDERS" <<'PY'
+import json,sys
+with open(sys.argv[1],encoding="utf-8") as f:
+    data=json.load(f)
+names=("wechat","alipay","paypal")
+for name in names:
+    state=data.get(name) is True
+    print("CN3194_PROVIDER_FLAG_"+name.upper()+"="+("ENABLED" if state else "DISABLED"))
+if any(data.get(name) is not True for name in names):
+    raise SystemExit(1)
+PY
+  then
+    echo 'CN3194_ALL_THREE_EXISTING_PAYMENT_FLAGS_ENABLED_PASS'
+  else
+    echo 'CN3194_PAYMENT_FLAGS_NOT_ALL_ENABLED_NO_FLAGS_CHANGED'
+  fi
+else
+  echo 'CN3194_PAYMENT_FLAGS_READ_FAILED_NO_FLAGS_CHANGED'
+fi
+rm -f "$PROVIDERS"
 echo 'CN3194_SIGNED_MERCHANT_AUDIT_PASS_EXISTING_FLAGS_PRESERVED'
 echo 'CN3194_NO_PAYMENT_OR_WALLET_FLAG_MUTATION'
 echo 'SASI_SOFTWARE_SALES_REMAINS_CLOSED_UNTIL_REAL_SOURCE_ZIP_IS_UPLOADED_AND_HASH_VERIFIED'
