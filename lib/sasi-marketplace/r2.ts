@@ -12,6 +12,11 @@ export const MARKET_MEDIA_COVER_LIMIT=1;
 export const MARKET_MEDIA_DETAIL_LIMIT=4;
 export const MARKET_MEDIA_IMAGE_LIMIT=MARKET_MEDIA_COVER_LIMIT+MARKET_MEDIA_DETAIL_LIMIT;
 export function marketplaceR2Ready(){return sasiArtifactR2Ready()}
+export function marketplaceUploadReady(){
+ return marketplaceR2Ready()
+  && process.env.SASI_MARKET_UPLOADS_ENABLED==="true"
+  && Boolean(process.env.GITHUB_MARKET_SCAN_DISPATCH_TOKEN?.trim());
+}
 export function marketplaceUploadLimit(kind:MarketplaceUploadKind){return max[kind];}
 export function marketplaceMime(extension:string){return TYPES[extension.toLowerCase()]||null;}
 
