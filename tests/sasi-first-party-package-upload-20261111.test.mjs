@@ -19,7 +19,10 @@ test("complete Copernicus SI 9.5 source, EX5, whitepaper and guide bundle is req
  assert.ok(route.includes(String.raw`#property\s+version\s+`));
  assert.match(route,/MATCHING_EX5_REQUIRED/);
  assert.match(route,/EX5_SOURCE_BASENAME_MISMATCH/);
- assert.match(route,/WHITEPAPER_PDF_REQUIRED/);
+ assert.match(route,/ONE_WHITEPAPER_PDF_REQUIRED/);
+ assert.match(route,/PRIVATE_DEMO_ACCESS_FILE_REQUIRED/);
+ assert.match(route,/READ_ONLY_DEMO_ACCESS_DETAILS_REQUIRED/);
+ assert.match(route,/INSTALL_COMPILE_F7_AND_LICENSE_GUIDE_REQUIRED/);
  assert.match(route,/WHITEPAPER_FORMAT_INVALID/);
  assert.match(route,/INSTALL_COMPILE_AND_LICENSE_GUIDE_REQUIRED/);
  assert.match(route,/ZIP_PATH_INVALID/);

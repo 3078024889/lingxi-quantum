@@ -43,6 +43,7 @@ async function inspectPackage(bytes:Buffer){
  const guides:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
  const compiled:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
  const whitepapers:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
+ const demoAccessFiles:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
  for(const [key,entry] of entries){
   const meta=entry as unknown as ZipEntryMeta;
   const name=String(meta.unsafeOriginalName||key);
@@ -67,10 +68,13 @@ async function inspectPackage(bytes:Buffer){
   if(ext===".pdf")whitepapers.push({name:normalized,entry,size});
   if((ext===".md"||ext===".txt")&&/(readme|install|guide|manual|说明|教程)/i.test(normalized))
    guides.push({name:normalized,entry,size});
+  if((ext===".md"||ext===".txt")&&/(demo|模拟|观察|只读)/i.test(normalized))
+   demoAccessFiles.push({name:normalized,entry,size});
  }
  if(sources.length!==1)return {ok:false as const,error:"ONE_9_5_SOURCE_REQUIRED"};
  if(compiled.length!==1)return {ok:false as const,error:"MATCHING_EX5_REQUIRED"};
- if(whitepapers.length<1)return {ok:false as const,error:"WHITEPAPER_PDF_REQUIRED"};
+ if(whitepapers.length!==1)return {ok:false as const,error:"ONE_WHITEPAPER_PDF_REQUIRED"};
+ if(demoAccessFiles.length!==1)return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_REQUIRED"};
  const source=sources[0];
  const binary=compiled[0];
  const sourceStem=source.name.slice(0,source.name.lastIndexOf(".")).toLowerCase().replace(/[^a-z0-9]/g,"");
@@ -95,9 +99,16 @@ async function inspectPackage(bytes:Buffer){
  let guideText="";
  try{guideText=(await guide.entry.async("nodebuffer")).toString("utf8")}
  catch{return {ok:false as const,error:"INSTALL_GUIDE_READ_FAILED"}}
- if(!/(安装|install)/i.test(guideText)||!/(编译|compile)/i.test(guideText)||!/(授权|许可|license)/i.test(guideText))
-  return {ok:false as const,error:"INSTALL_COMPILE_AND_LICENSE_GUIDE_REQUIRED"};
- return {ok:true as const,sourceName:source.name,compiledName:binary.name,whitepaperName:whitepaper.name,guideName:guide.name,entryCount:entries.length,unpackedBytes:unpacked};
+ if(!/(安装|install)/i.test(guideText)||!/(编译|compile)/i.test(guideText)||!/(授权|许可|license)/i.test(guideText)||!/(F7|参数)/i.test(guideText))
+  return {ok:false as const,error:"INSTALL_COMPILE_F7_AND_LICENSE_GUIDE_REQUIRED"};
+ const demoFile=demoAccessFiles[0];
+ if(demoFile.size<80||demoFile.size>128*1024)return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_SIZE_INVALID"};
+ let demoText="";
+ try{demoText=(await demoFile.entry.async("nodebuffer")).toString("utf8")}
+ catch{return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_READ_FAILED"}
+ if(!/(服务器|server)/i.test(demoText)||!/(账号|账户|login)/i.test(demoText)||!/(密码|password)/i.test(demoText)||!/(只读|投资者|investor|read.?only)/i.test(demoText))
+  return {ok:false as const,error:"READ_ONLY_DEMO_ACCESS_DETAILS_REQUIRED"};
+ return {ok:true as const,sourceName:source.name,compiledName:binary.name,whitepaperName:whitepaper.name,guideName:guide.name,demoAccessName:demoFile.name,entryCount:entries.length,unpackedBytes:unpacked};
 }
 
 export async function GET(){
@@ -183,6 +194,6 @@ export async function POST(req:NextRequest){
    .select("product_id,sale_ready,verified_at,sha256").maybeSingle();
   if(updateError||!updated)return reply({error:"PACKAGE_READY_STATE_UPDATE_FAILED"},409);
   return reply({ok:true,productId:product.id,sha256,sizeBytes:bytes.length,verifiedAt:updated.verified_at,
-   saleReady:true,sourceName:inspected.sourceName,compiledName:inspected.compiledName,whitepaperName:inspected.whitepaperName,guideName:inspected.guideName});
+   saleReady:true,sourceName:inspected.sourceName,compiledName:inspected.compiledName,whitepaperName:inspected.whitepaperName,guideName:inspected.guideName,demoAccessName:inspected.demoAccessName});
  }catch{return reply({error:"PACKAGE_UPLOAD_NOT_READY"},503)}
 }
