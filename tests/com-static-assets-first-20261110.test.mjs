@@ -19,6 +19,13 @@ test("robots static capture command is one valid continued curl invocation", () 
   assert.ok(buildScript.includes("COM_ROBOTS_STATIC_ASSET_CAPTURED"));
 });
 
+test("sitemap is captured from the exact public host and materialized as a static asset", () => {
+  assert.match(buildScript, /http:\/\/127\\.0\\.0\\.1:8787\/sitemap\\.xml -o "\$sitemap_snapshot"/);
+  assert.match(buildScript, /COM_SITEMAP_STATIC_ASSET_CAPTURED/);
+  assert.match(buildScript, /COM_SITEMAP_TOPIC_MISSING/);
+  assert.match(buildScript, /COM_SITEMAP_RETIRED_TOPIC_PRESENT/);
+});
+
 
 test("public page snapshots are materialized at canonical asset-first URLs", async () => {
   const root = await mkdtemp(join(tmpdir(), "lingxi-static-assets-"));
@@ -99,6 +106,17 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       "Host: " + robotsSite,
       ""
     ].join("\n"), "utf8");
+    const sitemapUrls = robotsSite.endsWith(".cn")
+      ? [robotsSite + "/siai"]
+      : [
+          robotsSite + "/discover/sasi-software-marketplace",
+          robotsSite + "/discover/mt5-ea-source-code",
+          robotsSite + "/discover/software-licensing-delivery",
+          robotsSite + "/discover/developer-software-publishing"
+        ];
+    await writeFile(join(root, "sitemap.xml"),
+      '<?xml version="1.0"?><urlset>' + sitemapUrls.map(url => '<url><loc>' + url + '</loc></url>').join("") + '</urlset>',
+      "utf8");
 
     const result = await materializeStaticHtmlAssets(root);
     assert.equal(result.materialized, allRoutes.length);
@@ -138,6 +156,13 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     assert.ok(headers.includes(accountHeaderBlock));
     assert.ok(headers.includes(accountHtmlHeaderBlock));
     assert.ok(STATIC_HEADER_PATTERNS.includes("/robots.txt"), "robots.txt must have a bounded static header rule");
+    assert.ok(STATIC_HEADER_PATTERNS.includes("/sitemap.xml"), "sitemap.xml must have a bounded static header rule");
+    assert.ok(headers.includes([
+      "/sitemap.xml",
+      "  X-Lingxi-Render-Mode: static-edge-verified",
+      "  X-Lingxi-Static-Delivery: workers-static-assets",
+      "  Cache-Control: public, max-age=300, stale-while-revalidate=120"
+    ].join(newline)), "sitemap.xml must be delivered by the static asset layer");
     assert.ok(headers.includes([
       "/robots.txt",
       "  X-Lingxi-Render-Mode: static-edge-verified",
@@ -193,6 +218,17 @@ test("invalid HTML snapshots fail closed", async () => {
       "Host: " + robotsSite,
       ""
     ].join("\n"), "utf8");
+    const sitemapUrls = robotsSite.endsWith(".cn")
+      ? [robotsSite + "/siai"]
+      : [
+          robotsSite + "/discover/sasi-software-marketplace",
+          robotsSite + "/discover/mt5-ea-source-code",
+          robotsSite + "/discover/software-licensing-delivery",
+          robotsSite + "/discover/developer-software-publishing"
+        ];
+    await writeFile(join(root, "sitemap.xml"),
+      '<?xml version="1.0"?><urlset>' + sitemapUrls.map(url => '<url><loc>' + url + '</loc></url>').join("") + '</urlset>',
+      "utf8");
     await writeFile(join(snapshotRoot, PUBLIC_STATIC_HTML_ROUTES[0].source), "<html>INTERNAL_SERVER_ERROR</html>", "utf8");
     await assert.rejects(() => materializeStaticHtmlAssets(root), /BAD_PUBLIC_STATIC_SNAPSHOT/);
   } finally {
