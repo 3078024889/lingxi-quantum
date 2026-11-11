@@ -65,7 +65,7 @@ export const STATIC_HEADER_PATTERNS = Object.freeze([
   "/sasi", "/sasi.html",
   "/about", "/about.html",
   "/announcements", "/announcements.html",
-  "/robots.txt"
+  "/robots.txt", "/sitemap.xml"
 ]);
 
 export function staticHeaderPatternMatches(pattern, path) {
@@ -104,6 +104,7 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   const toolRoutes = await loadToolStaticRoutes();
   const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
   const robotsText = await readFile(join(assetRoot, "robots.txt"), "utf8");
+  const sitemapText = await readFile(join(assetRoot, "sitemap.xml"), "utf8");
   const buildHost = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://lingxifield.com").hostname.toLowerCase().replace(/^www\./, "");
   if (buildHost !== "lingxifield.com" && buildHost !== "lingxifield.cn") {
     throw new Error("STATIC_ROBOTS_UNTRUSTED_BUILD_ORIGIN:" + buildHost);
@@ -111,6 +112,33 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   const buildSite = "https://" + buildHost;
   if (!robotsText.includes("Sitemap: " + buildSite + "/sitemap.xml") || !robotsText.includes("Disallow: /api/")) {
     throw new Error("STATIC_ROBOTS_ASSET_CONTENT_INVALID:" + buildSite);
+  }
+  if (!/<urlset\\b/i.test(sitemapText) || !sitemapText.includes(buildSite)) {
+    throw new Error("STATIC_SITEMAP_ASSET_CONTENT_INVALID:" + buildSite);
+  }
+  const requiredSitemapPaths = buildHost === "lingxifield.cn"
+    ? ["/siai"]
+    : [
+        "/discover/sasi-software-marketplace",
+        "/discover/mt5-ea-source-code",
+        "/discover/software-licensing-delivery",
+        "/discover/developer-software-publishing"
+      ];
+  for (const path of requiredSitemapPaths) {
+    if (!sitemapText.includes(buildSite + path)) {
+      throw new Error("STATIC_SITEMAP_REQUIRED_PATH_MISSING:" + path);
+    }
+  }
+  if (buildHost === "lingxifield.cn" && sitemapText.includes("https://lingxifield.cn/discover/")) {
+    throw new Error("STATIC_CN_SITEMAP_MUST_REMAIN_REGIONAL");
+  }
+  for (const retired of [
+    "ai-short-drama-generator", "book-to-ai-agent", "document-ai-agent",
+    "learning-ai-agent", "research-ai-agent", "ai-website-builder"
+  ]) {
+    if (sitemapText.includes("/discover/" + retired)) {
+      throw new Error("STATIC_SITEMAP_RETIRED_TOPIC_PRESENT:" + retired);
+    }
   }
   if (new Set(allRoutes.map(route => route.route)).size !== allRoutes.length) {
     throw new Error("PUBLIC_STATIC_ROUTE_DUPLICATE");
