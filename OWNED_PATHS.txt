@@ -2,8 +2,6 @@ app/api/cron/withdrawal-reconcile/route.ts
 app/api/health/route.ts
 app/api/internal/ops/readiness/route.ts
 app/globals.css
-components/KnowledgeWorkspace.tsx
-components/SasiChatCreationStudio.tsx
 lib/ops/runtime-heartbeat.ts
 lib/security/redact-operational-error.ts
 middleware.ts
