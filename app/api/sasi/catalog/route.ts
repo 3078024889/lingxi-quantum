@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
-import { CREDIT_PACKS, SASI_CAPABILITIES, SASI_QUALITY_TIERS, SASI_SKILLS } from "@/lib/sasi/catalog";
+import { sasiCreationRetired } from "@/lib/sasi/retired-route";
 
-export function GET() {
-  return NextResponse.json({ creditPacks: CREDIT_PACKS, qualityTiers: SASI_QUALITY_TIERS, capabilities: SASI_CAPABILITIES, skills: SASI_SKILLS });
-}
+export const dynamic = "force-dynamic";
+export const GET = sasiCreationRetired;
+export const POST = sasiCreationRetired;
+export const PUT = sasiCreationRetired;
+export const PATCH = sasiCreationRetired;
+export const DELETE = sasiCreationRetired;
