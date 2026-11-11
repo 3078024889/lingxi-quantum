@@ -397,10 +397,11 @@ PY
  cp -a "$UNIT" "$UNIT_BACKUP"
  (
   umask 077
-  # Preserve all live payment, wallet, marketplace sale/upload/delivery and software readiness flags.
+  # Preserve all live payment, wallet and marketplace sale/upload/delivery flags.
+  # Keep first-party software sales fail-closed until a package has a verified digest, scan and sale-ready record.
   # Keep seller payouts fail-closed until the payout transfer worker is independently verified.
   printf '%s\n' 'NEXT_PUBLIC_TOOL_PASS_ENFORCED=true' 'TOOL_PASS_BACKEND_READY=true' \
-    'SASI_MARKET_PAYOUTS_ENABLED=false' 'NEXT_PUBLIC_SITE_URL=https://lingxifield.cn' \
+    'SASI_MARKET_PAYOUTS_ENABLED=false' 'SOFTWARE_COMMERCE_READY=false' 'NEXT_PUBLIC_SITE_URL=https://lingxifield.cn' \
     'ALIPAY_SITE_URL=https://lingxifield.cn' 'PORT=3194' 'HOSTNAME=127.0.0.1' > "$PROD_FLAGS"
  )
  chmod 600 "$PROD_FLAGS"
