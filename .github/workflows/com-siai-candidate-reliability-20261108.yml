@@ -1,0 +1,32 @@
+name: COM candidate SIAI 503 repeatability and public endpoints (READ ONLY)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths: ['.github/workflows/com-siai-candidate-reliability-20261108.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  public-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - name: Repeat isolated Worker GETs with no auth and no writes
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          base='https://lingxifield-com-main-20261108.3078024889.workers.dev'
+          for p in / /siai /api/health /sasi/marketplace /announcements /tools /en/siai /ja/siai; do
+            pass=0
+            fail=0
+            for i in 1 2 3; do
+              tmp="$(mktemp)"
+              st="$(curl -4sS --connect-timeout 10 --max-time 28 -D "$tmp" -o /dev/null -w '%{http_code}' "$base$p" || true)"
+              echo "SIAI_EDGE_CANDIDATE route=$p try=$i status=$st"
+              [[ "$st" == 200 ]] && pass=$((pass+1)) || fail=$((fail+1))
+              grep -iE '^cf-ray:|^content-type:|^location:|^server:' "$tmp" | tr -d '\r' || true
+              rm -f "$tmp"
+              sleep 1
+            done
+            echo "SIAI_ROUTE_RELIABILITY route=$p ok=$pass failed=$fail"
+          done
+          echo 'READONLY_ANONYMOUS_HTTP_REPEAT_PROBE_DONE'

@@ -1,0 +1,38 @@
+name: Dual LINGXIFIELD release readiness (READ ONLY, NO DEPLOY)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths:
+      - 'scripts/ops/dual-site-readonly-release-check-20261108.sh'
+      - '.github/workflows/dual-site-readonly-release-check-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: dual-site-readonly-20261108
+  cancel-in-progress: true
+jobs:
+  production-readonly:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Verify immutable audit-only command contract
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          f=scripts/ops/dual-site-readonly-release-check-20261108.sh
+          bash -n "$f"
+          test "$(grep -c 'curl -4' "$f")" -eq 1
+          ! grep -Eq 'curl.+-X[[:space:]]*(POST|PUT|PATCH|DELETE)|wrangler[[:space:]]+deploy|systemctl|kubectl|gh[[:space:]]+api[[:space:]]+-X' "$f"
+          echo "DUAL_AUDIT_SCRIPT_SYNTAX_AND_READONLY_CONTRACT_PASS"
+      - name: Probe both production hosts and Cloudflare inventory without any mutation
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: bash scripts/ops/dual-site-readonly-release-check-20261108.sh
+# READONLY_DUAL_RELEASE_REFRESH_20261111

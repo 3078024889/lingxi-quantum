@@ -1,0 +1,66 @@
+name: COM candidate Cloudflare runtime failure classifier (READ ONLY)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths: ['.github/workflows/com-worker-503-tail-diagnostic-20261108.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  candidate-tail:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 6
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Prepare pinned official Wrangler without app rebuild
+        run: |
+          set -Eeuo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          npm install -g wrangler@4.158.0 >/dev/null
+          wrangler --version
+      - name: Capture only sanitized invocations from isolated workers.dev candidate
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          export FILE="$(mktemp)"
+          export ERRFILE="$(mktemp)"
+          timeout 80s wrangler tail lingxifield-com-main-20261108 --format json --status error > "$FILE" 2> "$ERRFILE" &
+          pid=$!
+          sleep 12
+          for route in / /siai;do
+            for i in 1 2 3 4 5;do
+              code="$(curl -sS --connect-timeout 7 --max-time 20 -o /dev/null -w '%{http_code}' "https://lingxifield-com-main-20261108.3078024889.workers.dev$route" || true)"
+              echo "DIAGNOSTIC_REQUEST $route HTTP_$code"
+              sleep 1
+            done
+          done
+          sleep 10
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+          node <<'NODE'
+          const fs=require('fs');
+          const lines=fs.readFileSync(process.env.FILE,'utf8').split(/\r?\n/);
+          let n=0;
+          for(const line of lines){
+            let j;try{j=JSON.parse(line)}catch{continue}
+            if(Array.isArray(j)){for(const e of j) emit(e)}else emit(j);
+          }
+          function emit(o){
+            if(!o||typeof o!=='object')return;
+            let pathname='unknown';
+            try{pathname=new URL(o.event?.request?.url).pathname}catch{}
+            if(!['/','/siai'].includes(pathname))return;
+            n++;
+            const exceptions=Array.isArray(o.exceptions)?o.exceptions.map(e=>String(e.name||'Error').slice(0,60)):[];
+            console.log(JSON.stringify({tail_path:pathname,outcome:o.outcome||'not-reported',cpuTime:o.cpuTime??null,wallTime:o.wallTime??null,exception_names:exceptions}));
+          }
+          console.log('CANDIDATE_ERROR_TAIL_EVENTS='+n);
+          NODE
+          if ! grep -q 'Connected to' "$ERRFILE" && ! grep -q 'Connected to' "$FILE";then
+            echo "TAIL_CONNECTION_UNCONFIRMED_OR_INSUFFICIENT_PERMISSION"
+          fi
+          rm -f "$FILE" "$ERRFILE"
+          echo 'COM_CANDIDATE_TAIL_READONLY_COMPLETE'

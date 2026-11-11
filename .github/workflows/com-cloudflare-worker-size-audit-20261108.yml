@@ -1,0 +1,69 @@
+name: COM Cloudflare actual Worker bundle forensic size audit (NO DEPLOY)
+on:
+  push:
+    branches: [ops/dual-site-readonly-20261108]
+    paths:
+      - '.github/workflows/com-cloudflare-worker-size-audit-20261108.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+      NEXT_PUBLIC_SUPABASE_URL: https://sxsgdpqojepgbbrxrzlq.supabase.co
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with: {version: 11.28.0,run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .nvmrc,cache: pnpm}
+      - run: |
+          set -Eeuo pipefail
+          pnpm install --frozen-lockfile
+          pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
+          pnpm exec opennextjs-cloudflare build
+      - name: Print biggest source dependencies by actual esbuild output contribution
+        run: |
+          set -Eeuo pipefail
+          node <<'NODE'
+          const fs=require('node:fs'),path=require('node:path');
+          const root='.open-next';
+          const handler=path.join(root,'server-functions/default/handler.mjs');
+          console.log('WORKER_HANDLER_BYTES='+(fs.existsSync(handler)?fs.statSync(handler).size:-1));
+          const files=[];
+          function walk(dir){
+           for(const e of fs.readdirSync(dir,{withFileTypes:true})){
+            const p=path.join(dir,e.name);
+            if(e.isDirectory())walk(p);
+            else if(e.isFile()&&e.name.endsWith('.meta.json'))files.push(p);
+           }
+          }
+          walk(root);
+          console.log('METAFILES='+JSON.stringify(files));
+          const aggregate=new Map();
+          for(const p of files){
+           let j;try{j=JSON.parse(fs.readFileSync(p,'utf8'));}catch{continue}
+           console.log('METAFILE_SHAPE '+p+' output_count='+Object.keys(j.outputs||{}).length);
+           for(const [file,metadata] of Object.entries(j.outputs||{})){
+            if(!metadata.inputs)continue;
+            for(const [name,entry] of Object.entries(metadata.inputs)){
+              const bytes=entry.bytesInOutput||0;
+              if(bytes>0)aggregate.set(name,(aggregate.get(name)||0)+bytes);
+            }
+           }
+          }
+          const sorted=[...aggregate].sort((a,b)=>b[1]-a[1]).slice(0,80);
+          for(const [key,n] of sorted)console.log('BUNDLE_INPUT '+n+' '+key);
+          if(!sorted.length){
+           const s=fs.readFileSync(handler,'utf8');
+           const deps=[...s.matchAll(/node_modules\/(?:\.pnpm\/)?([a-zA-Z0-9_@.\/-]{4,100})/g)].map(m=>m[1]);
+           const counts={};for(const x of deps)counts[x]=(counts[x]||0)+1;
+           for(const [k,v] of Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,55))console.log('BUNDLE_STRING '+v+' '+k);
+          }
+          NODE
+          echo 'WORKER_SIZE_AUDIT_DONE_NO_PRODUCTION_CHANGE'
