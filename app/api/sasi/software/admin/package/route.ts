@@ -12,6 +12,8 @@ export const runtime="nodejs";
 export const dynamic="force-dynamic";
 
 const BUCKET="sasi-software-delivery";
+const SOURCE_PRODUCT_ID="sasi-copernicus-si95-source";
+const ZERO_SHA256="0".repeat(64);
 const MAX_FILE_BYTES=30*1024*1024;
 const MAX_UNPACKED_BYTES=60*1024*1024;
 const MAX_ENTRIES=100;
@@ -33,7 +35,7 @@ async function inspectPackage(bytes:Buffer){
  if(bytes.length<100||bytes.subarray(0,4).toString("hex")!=="504b0304")
   return {ok:false as const,error:"ZIP_SIGNATURE_INVALID"};
  let zip:JSZip;
- try{zip=await JSZip.loadAsync(bytes,{checkCRC32:false,createFolders:false})}
+ try{zip=await JSZip.loadAsync(bytes,{checkCRC32:true,createFolders:false})}
  catch{return {ok:false as const,error:"ZIP_ARCHIVE_INVALID"}}
  const entries=Object.entries(zip.files).filter(([,entry])=>!entry.dir);
  if(entries.length<2||entries.length>MAX_ENTRIES)return {ok:false as const,error:"ZIP_ENTRY_COUNT_INVALID"};
@@ -105,10 +107,29 @@ async function inspectPackage(bytes:Buffer){
  if(demoFile.size<80||demoFile.size>128*1024)return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_SIZE_INVALID"};
  let demoText="";
  try{demoText=(await demoFile.entry.async("nodebuffer")).toString("utf8")}
- catch{return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_READ_FAILED"}
+ catch{return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_READ_FAILED"}}
  if(!/(服务器|server)/i.test(demoText)||!/(账号|账户|login)/i.test(demoText)||!/(密码|password)/i.test(demoText)||!/(只读|投资者|investor|read.?only)/i.test(demoText))
   return {ok:false as const,error:"READ_ONLY_DEMO_ACCESS_DETAILS_REQUIRED"};
  return {ok:true as const,sourceName:source.name,compiledName:binary.name,whitepaperName:whitepaper.name,guideName:guide.name,demoAccessName:demoFile.name,entryCount:entries.length,unpackedBytes:unpacked};
+}
+
+
+type PackageRow={product_id:string;price_cny:number|string;price_usd:number|string;bucket:string;sale_ready:boolean;verified_at:string|null;sha256:string|null;object_path:string|null};
+async function verifyStoredPackage(admin:ReturnType<typeof createAdminClient>,product:typeof SASI_SOFTWARE_CATALOG[number],row:PackageRow){
+ if(!row.verified_at||!row.sha256||row.sha256===ZERO_SHA256||! /^[a-f0-9]{64}$/.test(row.sha256))return null;
+ const expectedPath="first-party/"+product.id+"/"+row.sha256+".zip";
+ if(row.object_path!==expectedPath||row.bucket!==BUCKET)return null;
+ try{
+  const {data,error}=await admin.storage.from(BUCKET).download(expectedPath);
+  if(error||!data)return null;
+  const bytes=Buffer.from(await data.arrayBuffer());
+  const actualHash=createHash("sha256").update(bytes).digest("hex");
+  if(actualHash!==row.sha256)return null;
+  const inspected=await inspectPackage(bytes);
+  if(!inspected.ok)return null;
+  return {sizeBytes:bytes.length,sourceName:inspected.sourceName,compiledName:inspected.compiledName,
+   whitepaperName:inspected.whitepaperName,guideName:inspected.guideName,demoAccessName:inspected.demoAccessName};
+ }catch{return null}
 }
 
 export async function GET(){
@@ -119,18 +140,22 @@ export async function GET(){
   const bucketReady=await privateBucketReady(admin);
   const ids=SASI_SOFTWARE_CATALOG.map(x=>x.id);
   const {data,error}=await admin.from("sasi_software_packages")
-   .select("product_id,price_cny,price_usd,bucket,sale_ready,verified_at,sha256")
+   .select("product_id,price_cny,price_usd,bucket,sale_ready,verified_at,sha256,object_path")
    .in("product_id",ids);
   if(error)return reply({error:"PACKAGE_STATUS_UNAVAILABLE"},503);
   const rows=new Map((data||[]).map(x=>[x.product_id,x]));
-  return reply({products:SASI_SOFTWARE_CATALOG.map(product=>{
-   const row=rows.get(product.id);
-   return {productId:product.id,title:product.titleZh,priceCny:product.priceCny,priceUsd:product.priceUsd,
+  const products=[];
+  for(const product of SASI_SOFTWARE_CATALOG){
+   const row=rows.get(product.id) as PackageRow|undefined;
+   const priceMatches=Boolean(row&&Number(row.price_cny)===product.priceCny&&Number(row.price_usd)===product.priceUsd);
+   const integrity=row&&bucketReady&&priceMatches?await verifyStoredPackage(admin,product,row):null;
+   products.push({productId:product.id,title:product.titleZh,priceCny:product.priceCny,priceUsd:product.priceUsd,
     exists:Boolean(row),saleReady:Boolean(row?.sale_ready),verifiedAt:row?.verified_at||null,
-    sha256Prefix:row?.sha256&&row.sha256!=="0".repeat(64)?String(row.sha256).slice(0,12):null,
-    priceMatches:Boolean(row&&Number(row.price_cny)===product.priceCny&&Number(row.price_usd)===product.priceUsd),
-    privateBucket:row?.bucket===BUCKET&&bucketReady};
-  })});
+    sha256Prefix:row?.sha256&&row.sha256!==ZERO_SHA256?String(row.sha256).slice(0,12):null,
+    priceMatches,privateBucket:row?.bucket===BUCKET&&bucketReady,
+    packageVerified:Boolean(integrity),integrityOk:Boolean(integrity),sizeBytes:integrity?.sizeBytes||null});
+  }
+  return reply({products});
  }catch{return reply({error:"PACKAGE_STATUS_UNAVAILABLE"},503)}
 }
 
@@ -145,10 +170,11 @@ export async function POST(req:NextRequest){
   return reply({error:"PACKAGE_TOO_LARGE"},413);
  const form=await req.formData().catch(()=>null);
  if(!form)return reply({error:"MULTIPART_REQUIRED"},400);
+ const action=String(form.get("action")||"upload");
  const productId=String(form.get("productId")||"");
- const product=SASI_SOFTWARE_CATALOG.find(x=>x.id===productId);
- const candidate=form.get("package");
+ const product=SASI_SOFTWARE_CATALOG.find(x=>x.id===productId&&x.id===SOURCE_PRODUCT_ID&&x.kind==="source");
  if(!product)return reply({error:"SOURCE_PRODUCT_ONLY"},400);
+ if(action!=="upload"&&action!=="activate")return reply({error:"ACTION_NOT_SUPPORTED"},400);
  if(!candidate||typeof candidate==="string"||typeof (candidate as File).arrayBuffer!=="function")
   return reply({error:"PACKAGE_FILE_REQUIRED"},400);
  const file=candidate as File;
@@ -165,15 +191,42 @@ export async function POST(req:NextRequest){
  try{
   const admin=createAdminClient();
   const {data:record,error:recordError}=await admin.from("sasi_software_packages")
-   .select("product_id,price_cny,price_usd,bucket,sale_ready")
+   .select("product_id,price_cny,price_usd,bucket,sale_ready,verified_at,sha256,object_path")
    .eq("product_id",product.id).maybeSingle();
   if(recordError||!record)return reply({error:"PACKAGE_RECORD_MISSING"},503);
   if(record.bucket!==BUCKET||Number(record.price_cny)!==product.priceCny||Number(record.price_usd)!==product.priceUsd)
    return reply({error:"PACKAGE_PRICE_OR_BUCKET_MISMATCH"},409);
   if(record.sale_ready)return reply({error:"PACKAGE_ALREADY_ACTIVE"},409);
   if(!await privateBucketReady(admin))return reply({error:"PRIVATE_BUCKET_CONFIG_INVALID"},503);
-
-  const storage=admin.storage.from(BUCKET);
+  if(action==="activate"){
+   const verified=await verifyStoredPackage(admin,product,record as PackageRow);
+   if(!verified)return reply({error:"PRIVATE_PACKAGE_INTEGRITY_CHECK_FAILED"},409);
+   const activatedAt=new Date().toISOString();
+   const {data:activated,error:activateError}=await admin.from("sasi_software_packages")
+    .update({sale_ready:true,updated_at:activatedAt})
+    .eq("product_id",product.id).eq("sale_ready",false)
+    .eq("sha256",record.sha256).eq("object_path",record.object_path).eq("verified_at",record.verified_at)
+    .select("product_id,sale_ready,verified_at,sha256").maybeSingle();
+   if(activateError||!activated)return reply({error:"PACKAGE_ACTIVATION_CONFLICT"},409);
+   return reply({ok:true,productId:product.id,sha256:activated.sha256,verifiedAt:activated.verified_at,
+    packageVerified:true,saleReady:true,sizeBytes:verified.sizeBytes});
+  }
+  if(record.verified_at||record.sha256!==ZERO_SHA256||String(record.object_path||"").startsWith("first-party/"))
+   return reply({error:"PACKAGE_ALREADY_VERIFIED"},409);
+  const candidate=form.get("package");
+  if(!candidate||typeof candidate==="string"||typeof (candidate as File).arrayBuffer!=="function")
+   return reply({error:"PACKAGE_FILE_REQUIRED"},400);
+  const file=candidate as File;
+  if(!file.name.toLowerCase().endsWith(".zip")||file.size<100||file.size>MAX_FILE_BYTES)
+   return reply({error:"ZIP_REQUIRED_MAX_30MB"},400);
+  let bytes:Buffer;
+  try{bytes=Buffer.from(await file.arrayBuffer())}
+  catch{return reply({error:"PACKAGE_READ_FAILED"},400)}
+  if(bytes.length!==file.size)return reply({error:"PACKAGE_SIZE_MISMATCH"},400);
+  const inspected=await inspectPackage(bytes);
+  if(!inspected.ok)return reply({error:inspected.error},422);
+  const sha256=createHash("sha256").update(bytes).digest("hex");
+  const objectPath="first-party/"+product.id+"/"+sha256+".zip";
   let stored=await storage.download(objectPath);
   if(stored.error){
    const uploaded=await storage.upload(objectPath,bytes,{contentType:"application/zip",cacheControl:"0",upsert:false});
@@ -188,12 +241,13 @@ export async function POST(req:NextRequest){
 
   const verifiedAt=new Date().toISOString();
   const {data:updated,error:updateError}=await admin.from("sasi_software_packages")
-   .update({object_path:objectPath,sha256,sale_ready:true,verified_at:verifiedAt,updated_at:verifiedAt})
-   .eq("product_id",product.id).eq("sale_ready",false)
+   .update({object_path:objectPath,sha256,sale_ready:false,verified_at:verifiedAt,updated_at:verifiedAt})
+   .eq("product_id",product.id).eq("sale_ready",false).eq("sha256",ZERO_SHA256)
+   .is("verified_at",null).eq("object_path",record.object_path)
    .eq("price_cny",product.priceCny).eq("price_usd",product.priceUsd)
    .select("product_id,sale_ready,verified_at,sha256").maybeSingle();
   if(updateError||!updated)return reply({error:"PACKAGE_READY_STATE_UPDATE_FAILED"},409);
   return reply({ok:true,productId:product.id,sha256,sizeBytes:bytes.length,verifiedAt:updated.verified_at,
-   saleReady:true,sourceName:inspected.sourceName,compiledName:inspected.compiledName,whitepaperName:inspected.whitepaperName,guideName:inspected.guideName,demoAccessName:inspected.demoAccessName});
+   packageVerified:true,reviewRequired:true,saleReady:false,sourceName:inspected.sourceName,compiledName:inspected.compiledName,whitepaperName:inspected.whitepaperName,guideName:inspected.guideName,demoAccessName:inspected.demoAccessName});
  }catch{return reply({error:"PACKAGE_UPLOAD_NOT_READY"},503)}
 }
