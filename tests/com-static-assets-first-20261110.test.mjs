@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtemp, mkdir, readFile, writeFile, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES, GEO_STATIC_TOPICS, GEO_STATIC_LOCALES } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
+import { materializeStaticHtmlAssets, PUBLIC_STATIC_HTML_ROUTES, GEO_STATIC_TOPICS, GEO_STATIC_LOCALES, STATIC_HEADER_PATTERNS, staticHeaderPatternMatches } from "../scripts/cloudflare/materialize-static-html-assets-20261110.mjs";
 import { loadToolStaticRoutes } from "../scripts/cloudflare/tool-static-route-manifest-20261110.mjs";
 
 const html = "<!doctype html><html><head><title>LINGXIFIELD</title></head><body>" + "x".repeat(5000) + "</body></html>";
@@ -86,12 +86,18 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     }
 
     const headers = await readFile(join(root, "_headers"), "utf8");
-    for (const entry of PUBLIC_STATIC_HTML_ROUTES.filter(entry => !entry.route.startsWith("/tools/"))) {
-      assert.ok(headers.includes(entry.route + "\n  X-Lingxi-Render-Mode: static-edge-verified"), entry.route + " must receive the static marker");
+    for (const entry of allRoutes) {
+      for (const path of new Set([entry.route, "/" + entry.target])) {
+        assert.ok(STATIC_HEADER_PATTERNS.some(pattern => staticHeaderPatternMatches(pattern, path)),
+          path + " must be covered by a grouped static header pattern");
+      }
     }
-    assert.ok(headers.includes("/tools/*\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets"));
+    assert.ok(headers.includes("/tools/*\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets"));
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), true);
-    assert.ok(headers.includes("/account\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\n  X-Robots-Tag: noindex, nofollow"));
+    assert.ok(headers.includes("/account\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets\\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\\n  X-Robots-Tag: noindex, nofollow"));
+    assert.ok(headers.includes("/account.html\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets\\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\\n  X-Robots-Tag: noindex, nofollow"));
+    const headerRuleCount=headers.split(/\\r?\\n/).filter(line=>line.trim()&&!line.trim().startsWith("#")&&!line.startsWith(" ")).length;
+    assert.ok(headerRuleCount<=100,"Cloudflare _headers rule count must stay at or below 100, got "+headerRuleCount);
 
     // Re-running the materializer is idempotent and does not duplicate its managed header block.
     await materializeStaticHtmlAssets(root);

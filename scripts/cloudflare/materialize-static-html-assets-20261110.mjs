@@ -45,6 +45,33 @@ const HEADER_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
 const REDIRECT_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
 const REDIRECT_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
 
+// Cloudflare Workers Static Assets permits at most 100 _headers rules.
+// Group page routes so adding localized GEO pages never adds one rule per page.
+export const STATIC_HEADER_PATTERNS = Object.freeze([
+  "/", "/index.html",
+  "/siai", "/*/siai", "/siai.html", "/*/siai.html",
+  "/discover/*", "/*/discover/*", "/discover/*.html", "/*/discover/*.html",
+  "/tools", "/tools/*", "/tools.html", "/tools/*.html",
+  "/ai-wallet", "/ai-wallet.html",
+  "/account", "/account.html",
+  "/sasi", "/sasi.html",
+  "/about", "/about.html",
+  "/announcements", "/announcements.html"
+]);
+
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\const HEADER_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
+const HEADER_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
+const REDIRECT_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
+const REDIRECT_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
+");
+}
+
+export function staticHeaderPatternMatches(pattern, path) {
+  const expression = "^" + pattern.split("*").map(escapeRegex).join(".*") + "$";
+  return new RegExp(expression).test(path);
+}
+
 function stripManagedBlock(existing, begin, end) {
   const start = existing.indexOf(begin);
   const finish = existing.indexOf(end);
@@ -141,24 +168,13 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
     "upgrade-insecure-requests"
   ].join("; ");
 
-  const routeHeaderRules = [
-    ...PUBLIC_STATIC_HTML_ROUTES
-      .filter(({ route }) => !route.startsWith("/tools/"))
-      .flatMap(({ route, target }) => {
-        const paths = [...new Set([route, "/" + target])];
-        return paths.flatMap(path => [
-          path,
-          "  X-Lingxi-Render-Mode: static-edge-verified",
-          "  X-Lingxi-Static-Delivery: workers-static-assets",
-          "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
-          ...(route === "/account" ? ["  X-Robots-Tag: noindex, nofollow"] : [])
-        ]);
-      }),
-    "/tools/*",
+  const routeHeaderRules = STATIC_HEADER_PATTERNS.flatMap(path => [
+    path,
     "  X-Lingxi-Render-Mode: static-edge-verified",
     "  X-Lingxi-Static-Delivery: workers-static-assets",
     "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
-  ];
+    ...(path === "/account" || path === "/account.html" ? ["  X-Robots-Tag: noindex, nofollow"] : [])
+  ]);
 
   const managedHeaders = [
     HEADER_BEGIN,
@@ -183,17 +199,21 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   const verifiedHeaders = await readFile(headerPath, "utf8");
 
   for (const { route, target } of allRoutes) {
-    if (route.startsWith("/tools/")) continue;
     for (const path of new Set([route, "/" + target])) {
-      if (!verifiedHeaders.includes("\n" + path + "\n") &&
-          !(path === "/" && verifiedHeaders.startsWith("/\n"))) {
-        throw new Error("STATIC_HEADER_ROUTE_MISSING:" + path);
+      if (!STATIC_HEADER_PATTERNS.some(pattern => staticHeaderPatternMatches(pattern, path))) {
+        throw new Error("STATIC_HEADER_PATTERN_MISSING:" + path);
       }
     }
   }
-  if (!verifiedHeaders.includes("/tools/*\n  X-Lingxi-Render-Mode: static-edge-verified\n  X-Lingxi-Static-Delivery: workers-static-assets")) {
+  if (!verifiedHeaders.includes("/tools/*\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets")) {
     throw new Error("STATIC_TOOL_ASSET_DELIVERY_HEADER_MISSING");
   }
+  const headerRuleCount = verifiedHeaders.split(/\\r?\\n/)
+    .filter(line => line.trim() && !line.trim().startsWith("#") && !line.startsWith(" ")).length;
+  if (headerRuleCount > 100) {
+    throw new Error("CLOUDFLARE_STATIC_HEADERS_RULE_LIMIT_EXCEEDED:" + headerRuleCount);
+  }
+  console.log("COM_STATIC_HEADER_RULE_COUNT=" + headerRuleCount);
 
   const redirectPath = join(assetRoot, "_redirects");
   let existingRedirects = "";
