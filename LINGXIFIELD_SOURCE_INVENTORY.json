@@ -975,10 +975,6 @@
       "bytes": 14252
     },
     {
-      "path": "app/sasi/ConnectionCenter.tsx",
-      "bytes": 20233
-    },
-    {
       "path": "app/sasi/page.tsx",
       "bytes": 1260
     },
@@ -989,10 +985,6 @@
     {
       "path": "app/sasi/SeedanceStudio.tsx",
       "bytes": 1986
-    },
-    {
-      "path": "app/sasi/VideoAssembler.tsx",
-      "bytes": 6440
     },
     {
       "path": "app/sasi/assemble/page.tsx",
@@ -1411,10 +1403,6 @@
       "bytes": 7543
     },
     {
-      "path": "components/BookSasiBalanceBar.tsx",
-      "bytes": 857
-    },
-    {
       "path": "components/ClickRipple.tsx",
       "bytes": 2832
     },
@@ -1467,10 +1455,6 @@
       "bytes": 20688
     },
     {
-      "path": "components/KnowledgeWorkspace.tsx",
-      "bytes": 52793
-    },
-    {
       "path": "components/LangToggle.tsx",
       "bytes": 1013
     },
@@ -1519,10 +1503,6 @@
       "bytes": 2664
     },
     {
-      "path": "components/SasiAutonomousChat.tsx",
-      "bytes": 3954
-    },
-    {
       "path": "components/SasiAutonomousImageStudio.tsx",
       "bytes": 4537
     },
@@ -1531,36 +1511,12 @@
       "bytes": 2233
     },
     {
-      "path": "components/SasiByokImageStudio.tsx",
-      "bytes": 3697
-    },
-    {
-      "path": "components/SasiByokTextWorkbench.tsx",
-      "bytes": 5947
-    },
-    {
       "path": "components/SasiByokVideoStudio.tsx",
       "bytes": 8915
     },
     {
-      "path": "components/SasiChatCreationStudio.module.css",
-      "bytes": 2044
-    },
-    {
-      "path": "components/SasiChatCreationStudio.tsx",
-      "bytes": 29393
-    },
-    {
       "path": "components/SasiCommandCenter.tsx",
       "bytes": 15232
-    },
-    {
-      "path": "components/SasiConnectionsClient.tsx",
-      "bytes": 886
-    },
-    {
-      "path": "components/SasiFunctionMenu.tsx",
-      "bytes": 4320
     },
     {
       "path": "components/SasiMultiEpisodeWorkspace.tsx",
@@ -1617,26 +1573,6 @@
     {
       "path": "components/diagrams/BreathDiagram.tsx",
       "bytes": 7148
-    },
-    {
-      "path": "components/gates/GateDestiny.tsx",
-      "bytes": 2542
-    },
-    {
-      "path": "components/gates/GateHealth.tsx",
-      "bytes": 2121
-    },
-    {
-      "path": "components/gates/GateMind.tsx",
-      "bytes": 2170
-    },
-    {
-      "path": "components/gates/GateOrigin.tsx",
-      "bytes": 2608
-    },
-    {
-      "path": "components/gates/GateRelation.tsx",
-      "bytes": 2573
     },
     {
       "path": "components/seo/GlobalSeoJsonLd.tsx",
@@ -11075,14 +11011,6 @@
       "bytes": 2574
     },
     {
-      "path": "lib/gate-tone.ts",
-      "bytes": 4638
-    },
-    {
-      "path": "lib/gates.ts",
-      "bytes": 10522
-    },
-    {
       "path": "lib/human-design-calc.ts",
       "bytes": 8216
     },
@@ -13571,30 +13499,6 @@
       "bytes": 4260
     },
     {
-      "path": "public/images/9d-field-navigation-v317.png",
-      "bytes": 2981604
-    },
-    {
-      "path": "public/images/breath-cycle.jpeg",
-      "bytes": 16326
-    },
-    {
-      "path": "public/images/breath-rhythm.jpeg",
-      "bytes": 13990
-    },
-    {
-      "path": "public/images/breath-structure.png",
-      "bytes": 80713
-    },
-    {
-      "path": "public/images/cosmos-bg.png",
-      "bytes": 2873476
-    },
-    {
-      "path": "public/images/hero-lightbody.jpg",
-      "bytes": 397434
-    },
-    {
       "path": "public/images/lingxifield-logo.png",
       "bytes": 119504
     },
@@ -13617,18 +13521,6 @@
     {
       "path": "public/images/console/sasi-home-hero-v2.png",
       "bytes": 2257274
-    },
-    {
-      "path": "public/images/entrance/lingxi-opening-desktop-v310.mp4",
-      "bytes": 42282372
-    },
-    {
-      "path": "public/images/entrance/lingxi-opening-mobile.mp4",
-      "bytes": 6627495
-    },
-    {
-      "path": "public/images/entrance/lingxi-opening-poster-mobile.jpg",
-      "bytes": 104321
     },
     {
       "path": "public/images/pay/alipay.jpg",
@@ -13697,18 +13589,6 @@
     {
       "path": "public/images/sasi/drama/ai-drama-studio-hero-v1.png",
       "bytes": 1976515
-    },
-    {
-      "path": "public/images/sky/aurora-hero-poster.jpg",
-      "bytes": 77196
-    },
-    {
-      "path": "public/images/sky/aurora-hero.mp4",
-      "bytes": 5134794
-    },
-    {
-      "path": "public/images/sky/aurora-hero.webm",
-      "bytes": 2788085
     },
     {
       "path": "public/images/tool-stories/burn-after-read/burn-after-read-01.webp",
@@ -13785,10 +13665,6 @@
     {
       "path": "public/images/tool-stories/temp-mail/temp-mail-09.webp",
       "bytes": 179724
-    },
-    {
-      "path": "public/media/lingxifield-9d-field-structure-v320.mp4",
-      "bytes": 14829530
     },
     {
       "path": "public/media/ffmpeg-0.12.10/ffmpeg-core.js",
@@ -14281,10 +14157,6 @@
     {
       "path": "scripts/check-sasi-creation-readiness.cjs",
       "bytes": 2013
-    },
-    {
-      "path": "scripts/check-v320-video.mjs",
-      "bytes": 1420
     },
     {
       "path": "scripts/cleanup-dead-legacy-v1581.mjs",
