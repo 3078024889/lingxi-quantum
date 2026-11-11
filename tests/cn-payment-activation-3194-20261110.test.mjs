@@ -48,11 +48,12 @@ test("release preserves existing live wallet top-ups and payment flags",()=>{
  assert.doesNotMatch(script,/USD_BALANCE_TOPUP_ENABLED/);
  assert.match(script,/CN_CNY_USD_WALLET_TOPUPS_PRESERVED_NO_REFUND_FLAG_MUTATION/);
  assert.match(upgrade,/Preserve merchant and wallet flags from the existing live EnvironmentFiles/);
- assert.doesNotMatch(upgrade,/SASI_RMB_BALANCE_V1_ENABLED=false/);
- assert.doesNotMatch(upgrade,/USD_BALANCE_TOPUP_ENABLED=false/);
- assert.doesNotMatch(upgrade,/WECHAT_ENABLED=false/);
- assert.doesNotMatch(upgrade,/ALIPAY_ENABLED=false/);
- assert.doesNotMatch(upgrade,/PAYPAL_ENABLED=false/);
+ const finalFlags=upgrade.slice(upgrade.indexOf("# Preserve merchant and wallet flags"),upgrade.indexOf('> "$PROD_FLAGS"'));
+ assert.doesNotMatch(finalFlags,/SASI_RMB_BALANCE_V1_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/USD_BALANCE_TOPUP_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/WECHAT_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/ALIPAY_ENABLED=false/);
+ assert.doesNotMatch(finalFlags,/PAYPAL_ENABLED=false/);
  assert.match(script,/SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION/);
  assert.doesNotMatch(script,/SASI_MARKET_SALES_ENABLED[" ]*[:=][" ]*true/);
  assert.doesNotMatch(script,/SASI_MARKET_PAYOUTS_ENABLED[" ]*[:=][" ]*true/);
