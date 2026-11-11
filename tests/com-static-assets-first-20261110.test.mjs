@@ -18,6 +18,11 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       "redirect-only marketplace alias must remain Worker-handled");
     const legacyMarket = await readFile(new URL("../app/sasi/marketplace/page.tsx", import.meta.url), "utf8");
     assert.match(legacyMarket, /permanentRedirect\("\/sasi"\)/);
+    assert.match(legacyMarket, /index:false/);
+    const criticalStaticPatcher = await readFile(new URL("../scripts/cloudflare/patch-critical-static-html-20261108.mjs", import.meta.url), "utf8");
+    assert.doesNotMatch(criticalStaticPatcher, /["']\/sasi\/marketplace["']\s*:/,
+      "legacy marketplace redirect must not be intercepted by the critical static page map");
+    assert.doesNotMatch(criticalStaticPatcher, /marketplace\.html/);
     for (const slug of ["siai", "en/siai", "ja/siai", "ko/siai", "fr/siai", "de/siai", "es/siai", "pt/siai", "ar/siai"]) {
       assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/" + slug), true,
         "reviewed source catalogue must be delivered without per-request SSR: /" + slug);
@@ -103,6 +108,7 @@ test("wrangler serves direct HTML assets before the Worker and keeps range paths
     assert.equal(workerFirst.has(entry.route), false, entry.route + " must remain asset-first");
   }
   assert.ok(workerFirst.has("/*/"), "trailing-slash requests must reach middleware for permanent 308 canonicalization");
+  assert.ok(workerFirst.has("/sasi/marketplace"), "legacy marketplace alias must reach the Worker for a real 308 redirect");
   assert.ok(workerFirst.has("/media/ffmpeg-0.12.10/ffmpeg-core.wasm"));
   assert.ok(workerFirst.has("/models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx"));
 });
