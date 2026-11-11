@@ -78,3 +78,22 @@ assert.match(read("components/SasiOpenMarketplace.tsx"),/image-confirm/);
 assert.match(read("app/api/sasi/marketplace/images/route.ts"),/signedMarketplaceDownload/);
 assert.match(read("components/SasiOpenMarketplace.tsx"),/navigator\.share/);
 console.log("SASI_MARKET_SELLER_RLS_PRIVATE_UPLOAD_VERIFIED_PAYMENT_AND_PAYOUT_CONTRACT_PASS");
+
+const perf=read("supabase/migrations/20261111110000_sasi_market_rls_query_performance.sql");
+for(const policy of [
+ "sasi_v5_route_owner_read","sasi_v5_signal_owner_read","sasi_v5_dna_owner_read",
+ "sasi_v5_assets_owner_read","sasi_v5_validation_owner_read","sasi_v5_assignment_owner_read",
+ "sasi_intelligence_runs_select_own","nutrition_history_own_select","nutrition_history_own_insert",
+ '"own sasi tasks read"','"own sasi task nodes read"','"own sasi task events read"',
+ '"own sasi artifacts read"','"own sasi capability runs read"',"sasi_native_runs_owner_read"
+])assert.ok(perf.includes("ALTER POLICY "+policy),"RLS initplan optimization missing: "+policy);
+for(const index of [
+ "sasi_market_sales_buyer_created_idx","sasi_market_sales_listing_created_idx",
+ "sasi_market_sales_seller_created_idx","sasi_market_media_seller_created_idx",
+ "sasi_market_review_events_actor_created_idx","sasi_market_payouts_seller_requested_idx"
+])assert.ok(perf.includes("CREATE INDEX IF NOT EXISTS "+index),"query index missing: "+index);
+assert.ok(perf.includes("CREATE POLICY sasi_market_listings_visible_read"));
+assert.ok(perf.includes("CREATE POLICY sasi_market_media_visible_read"));
+assert.doesNotMatch(perf,/DROP TABLE|TRUNCATE|DELETE FROM|UPDATE public\.(?:orders|sasi_market_sales|sasi_market_payouts)/i);
+assert.match(listings,/query=query\.eq\("seller_id",user\.id\)\.order\("created_at"/);
+assert.match(listings,/query=query\.eq\("status","published"\)\.eq\("scan_status","clean"\)\.order\("published_at"/);
