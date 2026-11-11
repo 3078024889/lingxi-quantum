@@ -15,8 +15,6 @@ export function sasiRmbBalanceV1Enabled() {
 }
 
 export function sasiTopupProductEnabled(productId: string) {
-  // CNY wallet credits stay closed until the refund lifecycle is explicitly verified.
-  if (process.env.SASI_RMB_BALANCE_V1_ENABLED !== "true" || process.env.SASI_REFUND_FLOW_TESTED !== "true") return false;
   if (SASI_TOPUP_PRODUCTS.has(productId)) return true;
   const custom = SASI_CUSTOM_TOPUP.exec(productId);
   if (!custom) return false;
