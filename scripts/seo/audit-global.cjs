@@ -31,7 +31,7 @@ assert.equal(siaiLanguageAlternates()['zh-CN'],'https://lingxifield.cn/siai');
 assert.equal(siaiLanguageAlternates()['zh'],'https://lingxifield.com/siai');
 assert.equal(siaiLanguageAlternates()['x-default'],'https://lingxifield.com/siai');
 const urls=new Set(sitemap.map(x=>x.url));assert.equal(urls.size,sitemap.length,'duplicate canonical URLs');
-const redirectedLegacy=['/tools/image-to-pdf-pro','/sasi/drama','/sasi/build','/ai-knowledge','/ai-learning','/ai-research'];
+const redirectedLegacy=['/tools/image-to-pdf-pro','/sasi/drama','/sasi/build','/sasi/assemble','/sasi/chat','/sasi/connections','/sasi/director','/sasi/image','/sasi/marketplace','/sasi/operator','/sasi/operator/v5','/sasi/project-dna','/sasi/series','/sasi/variants','/ai-knowledge','/ai-learning','/ai-research'];
 for(const p of redirectedLegacy)assert(!urls.has(seo.SITE+p),`redirected URL in sitemap: ${p}`);
 for(const p of ['/sasi','/sasi/image','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])
   assert(urls.has(seo.SITE+p),`indexable public route absent: ${p}`);
@@ -70,5 +70,9 @@ for(const [topic,value] of Object.entries(facts.SERVICE_FACTS)){
  assert(fs.existsSync(path.join(root,'app',value.target,'page.tsx')),`missing service: ${topic}`);
  for(const locale of Object.keys(seo.SEO_LOCALES))assert(value.description[locale]?.length>30,`${topic}:${locale}`);
 }
-assert.equal(facts.SERVICE_FACTS['ai-website-builder'].target,'/sasi/build');
+assert.equal(facts.SERVICE_FACTS['sasi-software-marketplace'].target,'/sasi');
+assert.equal(facts.SERVICE_FACTS['mt5-ea-source-code'].target,'/sasi');
+assert.equal(facts.SERVICE_FACTS['software-licensing-delivery'].target,'/sasi/delivery');
+assert.equal(facts.SERVICE_FACTS['developer-software-publishing'].target,'/sasi/seller');
+for(const retired of ['ai-short-drama-generator','book-to-ai-agent','document-ai-agent','learning-ai-agent','research-ai-agent','ai-website-builder'])assert(!(retired in seo.SEO_TOPICS),`retired SASI topic still indexed: ${retired}`);
 console.log(`PASS: canonical-only sitemap and GEO guide with 2 domains (.com global + .cn SIAI), ${seo.GLOBAL_TOOL_CATALOG.length} tools, ${Object.keys(facts.SERVICE_FACTS).length} SASI product guides, 9 languages, ${urls.size} canonical URLs, reciprocal sitemap alternates, real entry routes and private-page exclusions.`);
