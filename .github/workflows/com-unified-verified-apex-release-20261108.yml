@@ -1,5 +1,4 @@
 name: COM verified unified SASI apex release (exact canary and rollback)
-# Explicit release request: the job below validates the exact previous SHA's isolated canary before touching production.
 on:
   pull_request:
     branches: [release/com-sasi-full-20261108]
@@ -26,6 +25,19 @@ on:
       - 'tests/com-static-assets-first-20261110.test.mjs'
       - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
       - 'tests/com-celestial-release-safety-20261110.test.mjs'
+      - 'lib/seo/global-seo.ts'
+      - 'lib/seo/service-facts.ts'
+      - 'lib/seo/sitemap-build.ts'
+      - 'scripts/seo/audit-global.cjs'
+      - 'tests/legacy-sasi-retirement.test.mjs'
+      - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/Footer.tsx'
+      - 'components/Nav.tsx'
+      - 'app/sasi/**/page.tsx'
+      - 'app/ai-knowledge/page.tsx'
+      - 'app/ai-learning/page.tsx'
+      - 'app/ai-research/page.tsx'
   push:
     branches: [release/com-sasi-full-20261108]
     paths:
@@ -44,6 +56,19 @@ on:
       - 'tests/com-static-assets-first-20261110.test.mjs'
       - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
       - 'tests/com-celestial-release-safety-20261110.test.mjs'
+      - 'lib/seo/global-seo.ts'
+      - 'lib/seo/service-facts.ts'
+      - 'lib/seo/sitemap-build.ts'
+      - 'scripts/seo/audit-global.cjs'
+      - 'tests/legacy-sasi-retirement.test.mjs'
+      - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/Footer.tsx'
+      - 'components/Nav.tsx'
+      - 'app/sasi/**/page.tsx'
+      - 'app/ai-knowledge/page.tsx'
+      - 'app/ai-learning/page.tsx'
+      - 'app/ai-research/page.tsx'
 permissions:
   contents: read
   actions: read
@@ -74,6 +99,8 @@ jobs:
           node --test tests/com-account-static-client-auth-20261110.test.mjs
           node --test tests/com-celestial-release-safety-20261110.test.mjs
           node --test tests/com-preserved-binding-inventory-20261110.test.mjs
+          node scripts/seo/audit-global.cjs
+          node --test tests/legacy-sasi-retirement.test.mjs tests/seo-fullsite-coverage.test.mjs
           grep -Fq 'const productionWorker = "lingxifield-com-celestial-20261109"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'const candidateWorkerPrefix = "lingxifield-com-canary-"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_PAYMENT_BASELINE' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs

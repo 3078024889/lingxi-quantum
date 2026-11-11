@@ -82,6 +82,19 @@ on:
       - '.github/workflows/com-unified-verified-apex-release-20261108.yml'
       - 'tests/com-static-assets-first-20261110.test.mjs'
       - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
+      - 'lib/seo/global-seo.ts'
+      - 'lib/seo/service-facts.ts'
+      - 'lib/seo/sitemap-build.ts'
+      - 'scripts/seo/audit-global.cjs'
+      - 'tests/legacy-sasi-retirement.test.mjs'
+      - 'tests/seo-fullsite-coverage.test.mjs'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/Footer.tsx'
+      - 'components/Nav.tsx'
+      - 'app/sasi/**/page.tsx'
+      - 'app/ai-knowledge/page.tsx'
+      - 'app/ai-learning/page.tsx'
+      - 'app/ai-research/page.tsx'
   workflow_dispatch:
 permissions:
   contents: read
@@ -234,7 +247,7 @@ jobs:
             sleep 5
           done
           test "$propagated" -eq 1
-          for path in / /siai /tools /tools/pass /tools/png-to-jpg /tools/compress-image /tools/merge-pdf /tools/json-formatter /ai-wallet /account /sasi /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
+          for path in / /siai /tools /tools/pass /tools/png-to-jpg /tools/compress-image /tools/merge-pdf /tools/json-formatter /ai-wallet /account /sasi /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
             count=0
             for i in 1 2 3;do
               h="$(mktemp)"
@@ -257,6 +270,8 @@ jobs:
             test "$count" = 3
           done
            node -e 'const u=process.argv[1];fetch(u,{redirect:"manual"}).then(r=>{const t=new URL(r.headers.get("location")||"",u);console.log("COM_CANARY_LEGACY_MARKET_REDIRECT HTTP_"+r.status+" location="+r.headers.get("location"));if(r.status!==308||t.pathname!=="/sasi")process.exit(1)}).catch(e=>{console.error(e);process.exit(1)})' "$url/sasi/marketplace"
+           node -e 'const base=process.argv[1];const aliases=["/sasi/marketplace","/sasi/assemble","/sasi/build","/sasi/chat","/sasi/connections","/sasi/director","/sasi/drama","/sasi/image","/sasi/operator","/sasi/operator/v5","/sasi/project-dna","/sasi/series","/sasi/variants","/ai-knowledge","/ai-learning","/ai-research"];(async()=>{for(const path of aliases){const r=await fetch(base+path,{redirect:"manual"});const u=new URL(r.headers.get("location")||"",base);console.log("COM_CANARY_RETIRED_ALIAS "+path+" HTTP_"+r.status+" "+u.pathname);if(r.status!==308||u.origin!==new URL(base).origin||u.pathname!=="/sasi")throw Error("RETIRED_ALIAS_FAILED:"+path)}const p=await fetch(base+"/sasi/pricing",{redirect:"manual"});const t=new URL(p.headers.get("location")||"",base);if(p.status!==308||t.pathname!=="/ai-wallet")throw Error("RETIRED_PRICING_ALIAS_FAILED");console.log("COM_CANARY_ALL_RETIRED_ALIASES_PASS")})().catch(e=>{console.error(e);process.exit(1)})' "$url"
+           node -e 'const base=process.argv[1];const topics=["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"];(async()=>{const page=await fetch(base+"/discover/sasi-software-marketplace");const html=await page.text();if(page.status!==200||!html.includes("SASI 智能软件市场")||!html.includes("canonical"))throw Error("SASI_GEO_LANDING_FAILED");const sitemap=await (await fetch(base+"/sitemap.xml")).text();for(const topic of topics)if(!sitemap.includes("/discover/"+topic))throw Error("SITEMAP_TOPIC_MISSING:"+topic);for(const old of ["ai-short-drama-generator","book-to-ai-agent","document-ai-agent","learning-ai-agent","research-ai-agent","ai-website-builder"])if(sitemap.includes("/discover/"+old))throw Error("RETIRED_GEO_TOPIC_IN_SITEMAP:"+old);const llms=await (await fetch(base+"/llms.txt")).text();if(!llms.includes("SASI Software Marketplace")||llms.includes("AI Short Drama Generator"))throw Error("LLMS_GEO_TOPIC_MISMATCH");console.log("COM_CANARY_SASI_GEO_SITEMAP_LLMS_PASS")})().catch(e=>{console.error(e);process.exit(1)})' "$url"
           for path in /siai/ /tools/ /tools/pass/ /sasi/ /sasi/marketplace/ /en/siai/;do
             headers="$(mktemp)"
             status="$(curl -4sS --connect-timeout 9 --max-time 25 -D "$headers" -o /dev/null -w '%{http_code}' "$url$path" || true)"

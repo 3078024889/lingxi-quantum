@@ -101,6 +101,16 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     "/sasi", "/about", "/announcements",
     "/api/health", "/api/pay/providers", "/api/sasi/marketplace/listings",
     "/api/sasi/software/catalog",
+    "/discover/sasi-software-marketplace",
+    "/en/discover/mt5-ea-source-code",
+    "/ja/discover/software-licensing-delivery",
+    "/ko/discover/developer-software-publishing",
+    "/fr/discover/sasi-software-marketplace",
+    "/de/discover/mt5-ea-source-code",
+    "/es/discover/software-licensing-delivery",
+    "/pt/discover/developer-software-publishing",
+    "/ar/discover/sasi-software-marketplace",
+    "/llms.txt", "/sitemap.xml", "/robots.txt",
     "/en/siai", "/ja/siai", "/ko/siai", "/fr/siai", "/de/siai",
     "/es/siai", "/pt/siai", "/ar/siai",
     "/tools/ico-to-png", "/tools/number-base-converter", "/tools/video-watermark-remover",
@@ -152,6 +162,34 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
   if (legacyMarket.status !== 308 || !legacyTarget ||
       legacyTarget.origin !== new URL(base).origin || legacyTarget.pathname !== "/sasi") {
     throw Error("COM_" + phase + "_LEGACY_MARKET_REDIRECT_FAILED");
+  }
+  const legacyAliases = [
+    "/sasi/assemble", "/sasi/build", "/sasi/chat", "/sasi/connections",
+    "/sasi/director", "/sasi/drama", "/sasi/image", "/sasi/operator",
+    "/sasi/operator/v5", "/sasi/project-dna", "/sasi/series", "/sasi/variants",
+    "/ai-knowledge", "/ai-learning", "/ai-research"
+  ];
+  for (const path of legacyAliases) {
+    const response = await fetch(base + path, {
+      redirect: "manual",
+      signal: AbortSignal.timeout(20000)
+    });
+    const location = response.headers.get("location");
+    const target = location ? new URL(location, base) : null;
+    console.log("COM_" + phase + "_RETIRED_ALIAS " + path + " HTTP_" + response.status +
+      " location=" + (location || "none"));
+    if (response.status !== 308 || !target || target.origin !== new URL(base).origin ||
+        target.pathname !== "/sasi") throw Error("COM_" + phase + "_RETIRED_ALIAS_FAILED:" + path);
+  }
+  const pricingAlias = await fetch(base + "/sasi/pricing", {
+    redirect: "manual",
+    signal: AbortSignal.timeout(20000)
+  });
+  const pricingLocation = pricingAlias.headers.get("location");
+  const pricingTarget = pricingLocation ? new URL(pricingLocation, base) : null;
+  if (pricingAlias.status !== 308 || !pricingTarget ||
+      pricingTarget.origin !== new URL(base).origin || pricingTarget.pathname !== "/ai-wallet") {
+    throw Error("COM_" + phase + "_RETIRED_PRICING_ALIAS_FAILED");
   }
 
   for (const path of [

@@ -16,6 +16,15 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     const allRoutes = [...PUBLIC_STATIC_HTML_ROUTES, ...toolRoutes];
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/sasi/marketplace"), false,
       "redirect-only marketplace alias must remain Worker-handled");
+    for (const retired of [
+      "/sasi/assemble", "/sasi/build", "/sasi/chat", "/sasi/connections",
+      "/sasi/director", "/sasi/drama", "/sasi/image", "/sasi/operator",
+      "/sasi/operator/v5", "/sasi/project-dna", "/sasi/series", "/sasi/variants",
+      "/ai-knowledge", "/ai-learning", "/ai-research"
+    ]) {
+      assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === retired), false,
+        "retired SASI creation route must never be snapshotted: " + retired);
+    }
     const legacyMarket = await readFile(new URL("../app/sasi/marketplace/page.tsx", import.meta.url), "utf8");
     assert.match(legacyMarket, /permanentRedirect\("\/sasi"\)/);
     assert.match(legacyMarket, /index:false/);

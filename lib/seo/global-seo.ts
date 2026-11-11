@@ -10,72 +10,72 @@ export const SEO_LOCALES={  "zh":{
     brand:"灵犀场 LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.zh.title,homeDesc:PUBLIC_FEATURE_COPY.zh.description,
     toolsTitle:"在线实用工具｜PDF、图片、视频与文件",toolsDesc:"选择 PDF、图片、视频或文字工具，按步骤处理并保存文件。处理方式和费用请查看工具页面。",
     open:"打开工具",allTools:"查看全部工具",how:"怎么使用",what:"能做什么",privacy:"隐私与文件保存",
-    local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"SASI 可以用于短剧、网站、书本、学习和科研创作。需要付费的步骤会在真正执行前显示费用；需要智能生成时可连接自己的智能服务。",
-    searchTerms:["灵犀场SASI","LINGXIFIELD SASI","灵犀场实用工具","SASI资料问答","PDF压缩","PDF合并","PDF拆分","图片压缩","图片格式转换","视频转文字","音频转文字","字幕翻译","临时邮箱","阅后即焚","图片OCR","书本智能体","科研智能体","学习智能体"]
+    local:"这项工具优先在你的设备中完成处理。",online:"这项工具需要在线处理；如产生费用，会在真正执行前说明。",topicIntro:"SASI 是成品软件与数字产品市场，涵盖 MT5 EA、交易指标、自动化程序、桌面软件及源码授权。商品版本、兼容环境、价格和交付范围以商品详情为准。",
+    searchTerms:["灵犀场 SASI 智能软件市场","SASI 软件商城","MT5 EA 源码","外汇量化交易软件","成品软件自动发货","软件源码授权","交易指标","软件安装教程","开发者软件发布","PDF 压缩","PDF 合并","图片 OCR","视频转文字","临时邮箱"]
   },
   "en":{
     hreflang:"en",name:"English",dir:"ltr",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.en.title,homeDesc:PUBLIC_FEATURE_COPY.en.description,
     toolsTitle:"Online tools for PDF, images, video and files",toolsDesc:"Choose a PDF, image, video or text tool, follow the steps and save your file. See each tool for processing details and prices.",
     open:"Open tool",allTools:"Browse all tools",how:"How to use it",what:"What it does",privacy:"Processing",
-    local:"This tool is designed to run on your device whenever possible.",online:"This tool uses online processing. Any charge is shown before paid execution.",topicIntro:"SASI supports drama, website, book, learning and research workflows. Paid steps show the price before execution; connect your own intelligence service when intelligent generation is needed.",
-    searchTerms:["PDF compressor","merge PDF","split PDF","image compressor","image converter","video transcription","audio to text","subtitle translator","temporary email","burn after reading","image OCR","book to AI agent","AI research assistant","AI study assistant"]
+    local:"This tool is designed to run on your device whenever possible.",online:"This tool uses online processing. Any charge is shown before paid execution.",topicIntro:"SASI is a marketplace for finished software and digital products, including MT5 EAs, trading indicators, automation tools, desktop software and source-code licenses. Product pages define versions, compatibility, prices and delivery scope.",
+    searchTerms:["SASI software marketplace","MT5 EA source code","forex trading software","finished software delivery","software source license","trading indicators","software installation guide","developer software publishing","PDF compressor","merge PDF","image OCR","video transcription","temporary email"]
   },
   "ja":{
     hreflang:"ja",name:"日本語",dir:"ltr",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.ja.title,homeDesc:PUBLIC_FEATURE_COPY.ja.description,
     toolsTitle:"PDF・画像・動画・ファイルの実用ツール",toolsDesc:"PDF・画像・動画・テキストのツールを選び、手順に沿って処理して保存します。処理方法と料金は各ツールで確認できます。",
     open:"ツールを開く",allTools:"すべてのツール",how:"使い方",what:"できること",privacy:"処理方法",
-    local:"可能な処理は端末内で実行します。",online:"オンライン処理を使います。有料の場合は実行前に料金を表示します。",topicIntro:"SASIは短編ドラマ、Webサイト、本、学習、研究に利用できます。有料の工程は実行前に料金を表示し、智能生成が必要な場合は自分のAIサービスを接続できます。",
-    searchTerms:["PDF 圧縮","PDF 結合","PDF 分割","画像 圧縮","画像 変換","動画 文字起こし","音声 文字起こし","字幕 翻訳","捨てメアド","OCR","書籍 AI","研究 AI","学習 AI"]
+    local:"可能な処理は端末内で実行します。",online:"オンライン処理を使います。有料の場合は実行前に料金を表示します。",topicIntro:"SASIはMT5 EA、取引インジケーター、自動化ツール、デスクトップソフト、ソースコードライセンスを扱う完成ソフトウェア市場です。バージョン、対応環境、価格、納品範囲は各商品ページで確認できます。",
+    searchTerms:["SASIソフトウェア市場","MT5 EAソースコード","FX取引ソフトウェア","完成ソフト自動納品","ソースコードライセンス","取引インジケーター","ソフトウェア導入ガイド","開発者向けソフト公開","PDF圧縮","PDF結合","画像OCR","動画文字起こし"]
   },
   "ko":{
     hreflang:"ko",name:"한국어",dir:"ltr",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.ko.title,homeDesc:PUBLIC_FEATURE_COPY.ko.description,
     toolsTitle:"PDF, 이미지, 영상, 파일 실용 도구",toolsDesc:"PDF·이미지·영상·텍스트 도구를 선택하고 안내에 따라 처리한 뒤 저장하세요. 처리 방식과 요금은 각 도구에서 확인하세요.",
     open:"도구 열기",allTools:"모든 도구 보기",how:"사용 방법",what:"할 수 있는 일",privacy:"처리 방식",
-    local:"가능한 작업은 기기에서 직접 처리합니다.",online:"온라인 처리를 사용합니다. 유료 작업은 실행 전에 비용을 표시합니다.",topicIntro:"SASI는 숏드라마, 웹사이트, 책, 학습, 연구 작업에 사용할 수 있습니다. 유료 단계는 실행 전에 요금을 표시하며 지능형 생성이 필요할 때 자신의 서비스를 연결할 수 있습니다.",
-    searchTerms:["PDF 압축","PDF 합치기","PDF 분할","이미지 압축","이미지 변환","영상 텍스트 변환","음성 텍스트 변환","자막 번역","임시 이메일","OCR","책 AI 에이전트","AI 연구 도우미","AI 학습 도우미"]
+    local:"가능한 작업은 기기에서 직접 처리합니다.",online:"온라인 처리를 사용합니다. 유료 작업은 실행 전에 비용을 표시합니다.",topicIntro:"SASI는 MT5 EA, 거래 지표, 자동화 도구, 데스크톱 소프트웨어와 소스 코드 라이선스를 제공하는 완성형 소프트웨어 마켓입니다. 버전, 호환 환경, 가격과 전달 범위는 각 상품 페이지에서 확인할 수 있습니다.",
+    searchTerms:["SASI 소프트웨어 마켓","MT5 EA 소스 코드","외환 거래 소프트웨어","완성 소프트웨어 자동 전달","소스 코드 라이선스","거래 지표","소프트웨어 설치 안내","개발자 소프트웨어 게시","PDF 압축","PDF 합치기","이미지 OCR","영상 텍스트 변환"]
   },
   "fr":{
     hreflang:"fr",name:"Français",dir:"ltr",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.fr.title,homeDesc:PUBLIC_FEATURE_COPY.fr.description,
     toolsTitle:"Outils en ligne pour PDF, images, vidéo et fichiers",toolsDesc:"Choisissez un outil PDF, image, vidéo ou texte, suivez les étapes et enregistrez votre fichier. Consultez les modalités et tarifs sur sa page.",
     open:"Ouvrir l’outil",allTools:"Voir tous les outils",how:"Comment l’utiliser",what:"Ce que l’outil fait",privacy:"Traitement",
-    local:"Lorsque c’est possible, le traitement reste sur votre appareil.",online:"Cet outil utilise un traitement en ligne. Tout coût est indiqué avant l’exécution payante.",topicIntro:"SASI prend en charge les flux de mini-séries, sites, livres, apprentissage et recherche. Les étapes payantes affichent le tarif avant exécution ; connectez votre service d’IA lorsque la génération intelligente est nécessaire.",
-    searchTerms:["compresser PDF","fusionner PDF","diviser PDF","compresser image","convertir image","transcription vidéo","audio en texte","traduction sous-titres","email temporaire","OCR","livre agent IA","assistant recherche IA","assistant étude IA"]
+    local:"Lorsque c’est possible, le traitement reste sur votre appareil.",online:"Cet outil utilise un traitement en ligne. Tout coût est indiqué avant l’exécution payante.",topicIntro:"SASI est une place de marché de logiciels prêts à l’emploi : EA MT5, indicateurs de trading, outils d’automatisation, logiciels de bureau et licences de code source. Les versions, compatibilités, prix et modalités de livraison figurent sur chaque fiche produit.",
+    searchTerms:["marché de logiciels SASI","code source MT5 EA","logiciel de trading forex","livraison automatique de logiciels","licence de code source","indicateurs de trading","guide d’installation logiciel","publication de logiciels développeurs","compresser PDF","fusionner PDF","OCR image","transcription vidéo"]
   },
   "de":{
     hreflang:"de",name:"Deutsch",dir:"ltr",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.de.title,homeDesc:PUBLIC_FEATURE_COPY.de.description,
     toolsTitle:"Online-Tools für PDF, Bilder, Video und Dateien",toolsDesc:"Wähle ein Tool für PDF, Bilder, Video oder Text, folge den Schritten und speichere die Datei. Verarbeitung und Preise stehen auf der Tool-Seite.",
     open:"Tool öffnen",allTools:"Alle Tools",how:"So funktioniert es",what:"Was das Tool macht",privacy:"Verarbeitung",
-    local:"Wo möglich, wird die Verarbeitung direkt auf deinem Gerät ausgeführt.",online:"Dieses Tool nutzt Online-Verarbeitung. Kosten werden vor einer kostenpflichtigen Ausführung angezeigt.",topicIntro:"SASI unterstützt Kurzdrama-, Website-, Buch-, Lern- und Forschungsabläufe. Kostenpflichtige Schritte zeigen den Preis vor der Ausführung; bei Bedarf kannst du deinen eigenen KI-Dienst verbinden.",
-    searchTerms:["PDF komprimieren","PDF zusammenfügen","PDF teilen","Bild komprimieren","Bild konvertieren","Video transkribieren","Audio in Text","Untertitel übersetzen","temporäre E-Mail","OCR","Buch KI Agent","KI Forschungsassistent","KI Lernassistent"]
+    local:"Wo möglich, wird die Verarbeitung direkt auf deinem Gerät ausgeführt.",online:"Dieses Tool nutzt Online-Verarbeitung. Kosten werden vor einer kostenpflichtigen Ausführung angezeigt.",topicIntro:"SASI ist ein Marktplatz für fertige Software: MT5-EAs, Handelsindikatoren, Automatisierungstools, Desktop-Software und Quellcode-Lizenzen. Versionen, Kompatibilität, Preise und Lieferumfang stehen in den jeweiligen Produktdetails.",
+    searchTerms:["SASI-Softwaremarkt","MT5-EA-Quellcode","Forex-Handelssoftware","automatische Softwarelieferung","Quellcode-Lizenz","Handelsindikatoren","Software-Installationsanleitung","Softwareveröffentlichung für Entwickler","PDF komprimieren","PDF zusammenfügen","Bild-OCR","Video transkribieren"]
   },
   "es":{
     hreflang:"es",name:"Español",dir:"ltr",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.es.title,homeDesc:PUBLIC_FEATURE_COPY.es.description,
     toolsTitle:"Herramientas online para PDF, imágenes, vídeo y archivos",toolsDesc:"Elige una herramienta para PDF, imágenes, vídeo o texto, sigue los pasos y guarda el archivo. Consulta los detalles y precios en cada herramienta.",
     open:"Abrir herramienta",allTools:"Ver todas las herramientas",how:"Cómo usarla",what:"Qué hace",privacy:"Procesamiento",
-    local:"Siempre que sea posible, el procesamiento se realiza en tu dispositivo.",online:"Esta herramienta usa procesamiento online. Cualquier coste se muestra antes de ejecutar una acción de pago.",topicIntro:"SASI admite flujos de minidramas, sitios web, libros, aprendizaje e investigación. Los pasos de pago muestran el precio antes de ejecutarse; conecta tu propio servicio de IA cuando haga falta generación inteligente.",
-    searchTerms:["comprimir PDF","unir PDF","dividir PDF","comprimir imagen","convertir imagen","transcribir video","audio a texto","traducir subtítulos","correo temporal","OCR","libro a agente IA","asistente investigación IA","asistente estudio IA"]
+    local:"Siempre que sea posible, el procesamiento se realiza en tu dispositivo.",online:"Esta herramienta usa procesamiento online. Cualquier coste se muestra antes de ejecutar una acción de pago.",topicIntro:"SASI es un mercado de software terminado: EA de MT5, indicadores de trading, herramientas de automatización, software de escritorio y licencias de código fuente. Las fichas de producto indican versiones, compatibilidad, precios y alcance de la entrega.",
+    searchTerms:["mercado de software SASI","código fuente MT5 EA","software de trading forex","entrega automática de software","licencia de código fuente","indicadores de trading","guía de instalación de software","publicación de software para desarrolladores","comprimir PDF","unir PDF","OCR de imágenes","transcribir video"]
   },
   "pt":{
     hreflang:"pt",name:"Português",dir:"ltr",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.pt.title,homeDesc:PUBLIC_FEATURE_COPY.pt.description,
     toolsTitle:"Ferramentas online para PDF, imagens, vídeo e arquivos",toolsDesc:"Escolha uma ferramenta para PDF, imagens, vídeo ou texto, siga as etapas e salve o arquivo. Consulte os detalhes e preços na página da ferramenta.",
     open:"Abrir ferramenta",allTools:"Ver todas as ferramentas",how:"Como usar",what:"O que faz",privacy:"Processamento",
-    local:"Sempre que possível, o processamento acontece no seu dispositivo.",online:"Esta ferramenta usa processamento online. Qualquer custo é mostrado antes de uma execução paga.",topicIntro:"O SASI oferece fluxos de minidramas, sites, livros, estudo e pesquisa. Etapas pagas mostram o preço antes da execução; conecte seu próprio serviço de IA quando a geração inteligente for necessária.",
-    searchTerms:["comprimir PDF","juntar PDF","dividir PDF","comprimir imagem","converter imagem","transcrever vídeo","áudio para texto","traduzir legendas","email temporário","OCR","livro para agente IA","assistente pesquisa IA","assistente estudo IA"]
+    local:"Sempre que possível, o processamento acontece no seu dispositivo.",online:"Esta ferramenta usa processamento online. Qualquer custo é mostrado antes de uma execução paga.",topicIntro:"O SASI é um mercado de software pronto: EAs MT5, indicadores de negociação, ferramentas de automação, software para desktop e licenças de código-fonte. As páginas dos produtos informam versões, compatibilidade, preços e escopo da entrega.",
+    searchTerms:["mercado de software SASI","código-fonte MT5 EA","software de trading forex","entrega automática de software","licença de código-fonte","indicadores de negociação","guia de instalação de software","publicação de software para desenvolvedores","comprimir PDF","juntar PDF","OCR de imagem","transcrever vídeo"]
   },
   "ar":{
     hreflang:"ar",name:"العربية",dir:"rtl",
     brand:"LINGXIFIELD",homeTitle:BRAND_PUBLIC_COPY.ar.title,homeDesc:PUBLIC_FEATURE_COPY.ar.description,
     toolsTitle:"أدوات أونلاين لملفات PDF والصور والفيديو",toolsDesc:"اختر أداة لملفات PDF أو الصور أو الفيديو أو النصوص، واتبع الخطوات واحفظ الملف. راجع طريقة المعالجة والأسعار في صفحة الأداة.",
     open:"فتح الأداة",allTools:"عرض كل الأدوات",how:"طريقة الاستخدام",what:"ما الذي تفعله",privacy:"طريقة المعالجة",
-    local:"تتم المعالجة على جهازك كلما كان ذلك ممكناً.",online:"تستخدم هذه الأداة معالجة عبر الإنترنت. تظهر أي تكلفة قبل التنفيذ المدفوع.",topicIntro:"يدعم SASI مسارات الدراما القصيرة والمواقع والكتب والتعلم والبحث. تعرض الخطوات المدفوعة السعر قبل التنفيذ، ويمكن ربط خدمة الذكاء الخاصة بك عند الحاجة إلى التوليد الذكي.",
-    searchTerms:["ضغط PDF","دمج PDF","تقسيم PDF","ضغط الصور","تحويل الصور","تحويل الفيديو إلى نص","تحويل الصوت إلى نص","ترجمة الترجمة النصية","بريد مؤقت","OCR","كتاب إلى وكيل ذكاء اصطناعي","مساعد بحث بالذكاء الاصطناعي","مساعد دراسة بالذكاء الاصطناعي"]
+    local:"تتم المعالجة على جهازك كلما كان ذلك ممكناً.",online:"تستخدم هذه الأداة معالجة عبر الإنترنت. تظهر أي تكلفة قبل التنفيذ المدفوع.",topicIntro:"SASI سوق للبرامج الجاهزة، بما في ذلك MT5 EA ومؤشرات التداول وأدوات الأتمتة وبرامج سطح المكتب وتراخيص الشيفرة المصدرية. توضح صفحات المنتجات الإصدارات والتوافق والأسعار ونطاق التسليم.",
+    searchTerms:["سوق برامج SASI","الشيفرة المصدرية MT5 EA","برامج تداول الفوركس","التسليم التلقائي للبرامج","ترخيص الشيفرة المصدرية","مؤشرات التداول","دليل تثبيت البرامج","نشر البرامج للمطورين","ضغط PDF","دمج PDF","OCR الصور","تحويل الفيديو إلى نص"]
   }} as const;
 export type SeoLocale=keyof typeof SEO_LOCALES;
 export const LOCALIZED_LOCALES=(Object.keys(SEO_LOCALES) as SeoLocale[]).filter(x=>x!=="zh");
@@ -215,12 +215,12 @@ export const GLOBAL_TOOL_CATALOG=[
 export type GlobalTool=(typeof GLOBAL_TOOL_CATALOG)[number];
 export function getGlobalTool(slug:string){return GLOBAL_TOOL_CATALOG.find(t=>t.slug===slug)}
 
-export const SEO_TOPICS={  "ai-short-drama-generator":{"zh":"AI 短剧生成","en":"AI Short Drama Generator","ja":"AI ショートドラマ生成","ko":"AI 숏폼 드라마 생성","fr":"Générateur de mini-séries IA","de":"KI-Kurzdrama Generator","es":"Generador de minidramas con IA","pt":"Gerador de minidramas com IA","ar":"مولد الدراما القصيرة بالذكاء الاصطناعي"},
-  "book-to-ai-agent":{"zh":"书本变成可追问的 SASI","en":"Turn a Book into an AI Agent","ja":"本を質問できるAIエージェントに","ko":"책을 질문 가능한 AI 에이전트로","fr":"Transformer un livre en agent IA","de":"Buch in einen KI-Agenten verwandeln","es":"Convertir un libro en agente de IA","pt":"Transformar livro em agente de IA","ar":"تحويل كتاب إلى وكيل ذكاء اصطناعي"},
-  "document-ai-agent":{"zh":"资料与文档活化为智能体","en":"Turn Documents into an AI Agent","ja":"文書をAIエージェント化","ko":"문서를 AI 에이전트로","fr":"Transformer des documents en agent IA","de":"Dokumente in einen KI-Agenten verwandeln","es":"Convertir documentos en agente de IA","pt":"Transformar documentos em agente de IA","ar":"تحويل المستندات إلى وكيل ذكاء اصطناعي"},
-  "learning-ai-agent":{"zh":"学习 SASI","en":"AI Study Assistant","ja":"AI 学習アシスタント","ko":"AI 학습 도우미","fr":"Assistant d'étude IA","de":"KI-Lernassistent","es":"Asistente de estudio con IA","pt":"Assistente de estudo com IA","ar":"مساعد دراسة بالذكاء الاصطناعي"},
-  "research-ai-agent":{"zh":"科研 SASI","en":"AI Research Assistant","ja":"AI 研究アシスタント","ko":"AI 연구 도우미","fr":"Assistant de recherche IA","de":"KI-Forschungsassistent","es":"Asistente de investigación con IA","pt":"Assistente de pesquisa com IA","ar":"مساعد بحث بالذكاء الاصطناعي"},
-  "ai-website-builder":{"zh":"AI 网站与应用构建","en":"AI Website & App Builder","ja":"AI Webサイト・アプリ構築","ko":"AI 웹사이트·앱 제작","fr":"Créateur de sites et apps IA","de":"KI Website- & App-Builder","es":"Creador de sitios y apps con IA","pt":"Criador de sites e apps com IA","ar":"بناء المواقع والتطبيقات بالذكاء الاصطناعي"}} as const;
+export const SEO_TOPICS={
+  "sasi-software-marketplace":{zh:"SASI 智能软件市场",en:"SASI Software Marketplace",ja:"SASIソフトウェア市場",ko:"SASI 소프트웨어 마켓",fr:"Marché de logiciels SASI",de:"SASI-Softwaremarkt",es:"Mercado de software SASI",pt:"Mercado de software SASI",ar:"سوق برامج SASI"},
+  "mt5-ea-source-code":{zh:"MT5 EA 源码与交易软件",en:"MT5 EA Source Code & Trading Software",ja:"MT5 EAソースコードと取引ソフト",ko:"MT5 EA 소스 코드 및 거래 소프트웨어",fr:"Code source MT5 EA et logiciels de trading",de:"MT5-EA-Quellcode und Trading-Software",es:"Código fuente MT5 EA y software de trading",pt:"Código-fonte MT5 EA e software de trading",ar:"مصدر MT5 EA وبرامج التداول"},
+  "software-licensing-delivery":{zh:"软件授权与自动交付",en:"Software Licensing & Automatic Delivery",ja:"ソフトウェアライセンスと自動納品",ko:"소프트웨어 라이선스 및 자동 전달",fr:"Licences logicielles et livraison automatique",de:"Softwarelizenzen und automatische Lieferung",es:"Licencias de software y entrega automática",pt:"Licenças de software e entrega automática",ar:"تراخيص البرامج والتسليم التلقائي"},
+  "developer-software-publishing":{zh:"开发者软件发布与卖家服务",en:"Developer Software Publishing & Seller Services",ja:"開発者向けソフト公開と販売者サービス",ko:"개발자 소프트웨어 등록 및 판매자 서비스",fr:"Publication de logiciels et services vendeurs",de:"Softwareveröffentlichung und Verkäuferdienste",es:"Publicación de software y servicios para vendedores",pt:"Publicação de software e serviços para vendedores",ar:"نشر البرامج وخدمات البائعين"},
+} as const;
 export type SeoTopic=keyof typeof SEO_TOPICS;
 export function isSeoTopic(v:string):v is SeoTopic{return Object.prototype.hasOwnProperty.call(SEO_TOPICS,v)}
 
