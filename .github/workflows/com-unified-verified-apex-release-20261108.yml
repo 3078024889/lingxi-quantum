@@ -1,4 +1,5 @@
 name: COM verified unified SASI apex release (exact canary and rollback)
+# Explicit release request: the job below validates the exact previous SHA's isolated canary before touching production.
 on:
   pull_request:
     branches: [release/com-sasi-full-20261108]
