@@ -14,6 +14,9 @@ export const GEO_STATIC_TOPICS = Object.freeze([
   "developer-software-publishing"
 ]);
 export const GEO_STATIC_LOCALES = Object.freeze(["zh","en","ja","ko","fr","de","es","pt","ar"]);
+export const PUBLIC_STATIC_REDIRECTS = Object.freeze([
+  { route: "/sasi/marketplace", destination: "/sasi", status: 308 }
+]);
 const GEO_STATIC_ROUTES = GEO_STATIC_TOPICS.flatMap(topic => [
   { route: `/discover/${topic}`, source: `geo-zh-${topic}.html`, target: `discover/${topic}.html` },
   ...GEO_STATIC_LOCALES.filter(locale => locale !== "zh").map(locale => ({
@@ -88,9 +91,12 @@ function replaceManagedBlock(existing, block, begin, end) {
   return [preserved.trim(), block].filter(Boolean).join("\n\n") + "\n";
 }
 
-function assertNoRedirectConflicts(existing, routes) {
+function assertNoRedirectConflicts(existing, routes, redirects) {
   const preserved = stripManagedBlock(existing, REDIRECT_BEGIN, REDIRECT_END);
-  const sources = new Set(routes.map(({ route }) => route));
+  const sources = new Set([
+    ...routes.map(({ route }) => route),
+    ...redirects.map(({ route }) => route)
+  ]);
   for (const line of preserved.split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
@@ -266,10 +272,11 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   } catch (error) {
     if (error?.code !== "ENOENT") throw error;
   }
-  assertNoRedirectConflicts(existingRedirects, allRoutes);
+  assertNoRedirectConflicts(existingRedirects, allRoutes, PUBLIC_STATIC_REDIRECTS);
   const managedRedirects = [
     REDIRECT_BEGIN,
     ...allRoutes.map(({ route, target }) => route + " /" + target + " 200"),
+    ...PUBLIC_STATIC_REDIRECTS.map(({ route, destination, status }) => route + " " + destination + " " + status),
     REDIRECT_END
   ].join("\n");
   const redirects = replaceManagedBlock(existingRedirects, managedRedirects, REDIRECT_BEGIN, REDIRECT_END);
@@ -281,6 +288,12 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
       throw new Error("STATIC_PROXY_RULE_MISSING:" + route);
     }
   }
+  for (const { route, destination, status } of PUBLIC_STATIC_REDIRECTS) {
+    if (!verifiedRedirects.split(/\r?\n/).includes(route + " " + destination + " " + status)) {
+      throw new Error("STATIC_REDIRECT_RULE_MISSING:" + route);
+    }
+  }
+  console.log("COM_STATIC_LEGACY_REDIRECTS_PASS=" + PUBLIC_STATIC_REDIRECTS.length);
 
   console.log("COM_STATIC_ASSET_FIRST_ROUTES_PASS=" + materialized);
   console.log("COM_STATIC_TOOL_DETAIL_STATIC_ROUTES_PASS=" + toolRoutes.length);
