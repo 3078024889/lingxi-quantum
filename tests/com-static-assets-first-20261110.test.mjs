@@ -10,12 +10,12 @@ const html = "<!doctype html><html><head><title>LINGXIFIELD</title></head><body>
 const buildScript = await readFile(new URL("../scripts/cloudflare/build-com-static-assets-20261110.sh", import.meta.url), "utf8");
 
 test("robots static capture command is one valid continued curl invocation", () => {
-  const lines = buildScript.split("\\n");
+  const lines = buildScript.split("\n");
   const headerIndex = lines.findIndex(line => line.includes("-H 'X-Forwarded-Proto: https'"));
   assert.ok(headerIndex >= 0, "robots request must include the verified public host");
-  assert.ok(lines[headerIndex].endsWith("\\\\"), "robots curl header line must continue exactly once");
-  assert.ok(!lines[headerIndex].endsWith("\\\\\\\\"), "robots curl header line must not escape its own continuation");
-  assert.match(lines[headerIndex + 1] || "", /^\\s*http:\\/\\/127\\.0\\.0\\.1:8787\\/robots\\.txt/);
+  assert.ok(lines[headerIndex].endsWith("\\"), "robots curl header line must continue exactly once");
+  assert.ok(!lines[headerIndex].endsWith("\\\\"), "robots curl header line must not escape its own continuation");
+  assert.match(lines[headerIndex + 1] || "", /^\s*http:\/\/127\.0\.0\.1:8787\/robots\.txt/);
   assert.ok(buildScript.includes("COM_ROBOTS_STATIC_ASSET_CAPTURED"));
 });
 
