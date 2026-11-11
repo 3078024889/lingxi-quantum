@@ -41,14 +41,18 @@ test("signed merchant audit inherits every live env file with flags applied last
  assert.match(script,/UNSIGNED_WEBHOOK_REJECTION_FAILED/);
 });
 
-test("payment rollback and wallet refund gates remain fail-closed",()=>{
+test("release preserves existing live wallet top-ups and payment flags",()=>{
  assert.match(script,/cp -a "\$FLAGS" "\$BACKUP"/);
  assert.match(script,/CN_PAYMENT_ACTIVATION_FAILED_ROLLBACK/);
- assert.match(script,/SASI_RMB_BALANCE_V1_ENABLED/);
- assert.match(script,/CNY_REFUND_GATE/);
- assert.match(script,/USD_REFUND_GATE/);
- assert.match(script,/CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED/);
- assert.match(script,/CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED/);
+ assert.doesNotMatch(script,/SASI_RMB_BALANCE_V1_ENABLED/);
+ assert.doesNotMatch(script,/USD_BALANCE_TOPUP_ENABLED/);
+ assert.match(script,/CN_CNY_USD_WALLET_TOPUPS_PRESERVED_NO_REFUND_FLAG_MUTATION/);
+ assert.match(upgrade,/Preserve merchant and wallet flags from the existing live EnvironmentFiles/);
+ assert.doesNotMatch(upgrade,/SASI_RMB_BALANCE_V1_ENABLED=false/);
+ assert.doesNotMatch(upgrade,/USD_BALANCE_TOPUP_ENABLED=false/);
+ assert.doesNotMatch(upgrade,/WECHAT_ENABLED=false/);
+ assert.doesNotMatch(upgrade,/ALIPAY_ENABLED=false/);
+ assert.doesNotMatch(upgrade,/PAYPAL_ENABLED=false/);
  assert.match(script,/SOFTWARE_COMMERCE_REMAINS_GATED_UNTIL_PRIVATE_PACKAGE_SCAN_AND_VERIFICATION/);
  assert.doesNotMatch(script,/SASI_MARKET_SALES_ENABLED[" ]*[:=][" ]*true/);
  assert.doesNotMatch(script,/SASI_MARKET_PAYOUTS_ENABLED[" ]*[:=][" ]*true/);

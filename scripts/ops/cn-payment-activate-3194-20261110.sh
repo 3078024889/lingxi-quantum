@@ -173,7 +173,7 @@ if ! run_env_node paypal "$PROBE" >"$TMP/paypal.log" 2>&1;then
  exit 1
 fi
 grep '^CN_' "$TMP/paypal.log" || true
-PAYPAL=false;TOOLPASS_BACKEND=false;CNY_REFUND_GATE=false;USD_REFUND_GATE=false
+PAYPAL=false;TOOLPASS_BACKEND=false
 grep -Fxq 'CN_MERCHANT_PAYPAL_LIVE_PROBE=PASS' "$TMP/paypal.log" && PAYPAL=true || true
 grep -Fxq 'CN_TOOLPASS_BACKEND_READINESS=PASS' "$TMP/paypal.log" && TOOLPASS_BACKEND=true || true
 grep -Fxq 'CN_CNY_WALLET_REFUND_GATE=PASS' "$TMP/paypal.log" && CNY_REFUND_GATE=true || true
@@ -197,8 +197,8 @@ if [[ "$ALIPAY" != true || "$WECHAT" != true || "$PAYPAL" != true || "$TOOLPASS_
 fi
 if [[ "$MODE" == --audit ]];then
  echo CN3194_ALL_THREE_LIVE_MERCHANTS_AND_TOOLPASS_BACKEND_AUDIT_PASS_FLAGS_UNCHANGED
- [[ "$CNY_REFUND_GATE" == true ]] || echo CN_CNY_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED
- [[ "$USD_REFUND_GATE" == true ]] || echo CN_USD_WALLET_TOPUP_REMAINS_CLOSED_REFUND_FLOW_NOT_TESTED
+ [[ "$CNY_REFUND_GATE" == true ]] || echo CN_CNY_USD_WALLET_TOPUPS_PRESERVED_NO_REFUND_FLAG_MUTATION
+ [[ "$USD_REFUND_GATE" == true ]] || echo CN_CNY_USD_WALLET_TOPUPS_PRESERVED_NO_REFUND_FLAG_MUTATION
  exit 0
 fi
 
@@ -216,18 +216,15 @@ rollback(){
 }
 trap 'rm -rf "$TMP";rm -f "$PROBE";rm -f "$BACKUP"' EXIT
 
-python3 - "$FLAGS" "$CNY_REFUND_GATE" "$USD_REFUND_GATE" <<'PY'
+python3 - "$FLAGS" <<'PY'
 import os,sys,tempfile
-path,cny_refund_gate,usd_refund_gate=sys.argv[1:]
+path=sys.argv[1]
 values={
  "ALIPAY_ENABLED":"true",
  "WECHAT_ENABLED":"true",
  "PAYPAL_ENABLED":"true",
  "TOOL_PASS_COMMERCE_READY":"true",
- "SASI_RMB_BALANCE_V1_ENABLED":"true" if cny_refund_gate=="true" else "false",
 }
-# USD top-ups stay closed unless the separate refund lifecycle test flag is true.
-values["USD_BALANCE_TOPUP_ENABLED"]="true" if usd_refund_gate=="true" else "false"
 lines=[]
 for line in open(path,encoding="utf8").read().splitlines():
  key=line.split("=",1)[0]
