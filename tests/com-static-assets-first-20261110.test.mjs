@@ -36,8 +36,24 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(route => route.route === "/sasi/marketplace"), false,
       "redirect-only marketplace alias must not be snapshotted as HTML");
     assert.deepEqual(PUBLIC_STATIC_REDIRECTS, [
-      { route: "/sasi/marketplace", destination: "/sasi", status: 308 }
-    ], "legacy marketplace alias must be an explicit static permanent redirect");
+      { route: "/sasi/marketplace", destination: "/sasi", status: 308 },
+      { route: "/sasi/assemble", destination: "/sasi", status: 308 },
+      { route: "/sasi/build", destination: "/sasi", status: 308 },
+      { route: "/sasi/chat", destination: "/sasi", status: 308 },
+      { route: "/sasi/connections", destination: "/sasi", status: 308 },
+      { route: "/sasi/director", destination: "/sasi", status: 308 },
+      { route: "/sasi/drama", destination: "/sasi", status: 308 },
+      { route: "/sasi/image", destination: "/sasi", status: 308 },
+      { route: "/sasi/operator", destination: "/sasi", status: 308 },
+      { route: "/sasi/operator/v5", destination: "/sasi", status: 308 },
+      { route: "/sasi/project-dna", destination: "/sasi", status: 308 },
+      { route: "/sasi/series", destination: "/sasi", status: 308 },
+      { route: "/sasi/variants", destination: "/sasi", status: 308 },
+      { route: "/ai-knowledge", destination: "/sasi", status: 308 },
+      { route: "/ai-learning", destination: "/sasi", status: 308 },
+      { route: "/ai-research", destination: "/sasi", status: 308 },
+      { route: "/sasi/pricing", destination: "/ai-wallet", status: 308 }
+    ], "every retired SASI entry must have an explicit static permanent redirect");
     for (const topic of GEO_STATIC_TOPICS) {
       for (const locale of GEO_STATIC_LOCALES) {
         const route = locale === "zh" ? `/discover/${topic}` : `/${locale}/discover/${topic}`;
@@ -199,8 +215,10 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
     for (const entry of allRoutes) {
       assert.ok(redirects.split(/\r?\n/).includes(entry.route + " /" + entry.target + " 200"), entry.route + " must proxy to its exact HTML asset");
     }
-    assert.ok(redirects.split(/\r?\n/).includes("/sasi/marketplace /sasi 308"),
-      "legacy marketplace alias must return a static 308 to /sasi");
+    for (const { route, destination, status } of PUBLIC_STATIC_REDIRECTS) {
+      assert.ok(redirects.split(/\r?\n/).includes(route + " " + destination + " " + status),
+        route + " must return its explicit static permanent redirect");
+    }
     await materializeStaticHtmlAssets(root);
     const redirectsAfter = await readFile(join(root, "_redirects"), "utf8");
     assert.equal(redirectsAfter.split("# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS").length - 1, 1);
