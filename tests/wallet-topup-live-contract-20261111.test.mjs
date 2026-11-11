@@ -6,7 +6,8 @@ test("CNY preset and custom wallet top-ups remain open without the SASI generati
  const gate=read("lib/sasi/payment-gate.ts");
  assert.match(gate,/SASI_TOPUP_PRODUCTS\.has\(productId\)/);
  assert.match(gate,/customTopupAmount\(custom\[1\]\) !== null/);
- assert.doesNotMatch(gate,/SASI_REFUND_FLOW_TESTED/);
+ const topupGate=gate.slice(gate.indexOf("export function sasiTopupProductEnabled"),gate.indexOf("export function sasiPaidProductionEnabled"));
+ assert.doesNotMatch(topupGate,/SASI_REFUND_FLOW_TESTED/);
  for(const path of ["app/api/pay/alipay/create/route.ts","app/api/pay/wechat/create/route.ts"])
   assert.match(read(path),/sasiTopupProductEnabled/);
  const wallet=read("components/WalletLivePanel.tsx");
