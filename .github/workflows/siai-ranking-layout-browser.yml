@@ -14,6 +14,11 @@ on:
       - 'app/unified-shell.css'
       - 'tests/final-closure/siai-ranking-first-layout.spec.ts'
       - 'tests/final-closure/siai-design-visual-proof.spec.ts'
+      - 'public/widgets/lingxifield-v1.js'
+      - 'integrations/wordpress/lingxifield-widgets/**'
+      - 'components/partners/PartnerGrowthPortal.tsx'
+      - 'app/api/public/free-tools-widget/route.ts'
+      - 'tests/final-closure/partner-widget-embed.spec.ts'
       - 'lib/siai-brand-icon-ids.ts'
       - 'public/siai-brand-icons/**'
       - 'tests/siai-brand-icons.test.mjs'
@@ -42,7 +47,7 @@ jobs:
       - run: node --test tests/footer-unified.test.mjs tests/siai-brand-icons.test.mjs
       - run: pnpm build
       - run: bash scripts/ci/ensure-chrome.sh
-      - run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-ranking-first-layout.spec.ts tests/final-closure/siai-footer-unified-real.spec.ts tests/final-closure/siai-design-visual-proof.spec.ts
+      - run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-ranking-first-layout.spec.ts tests/final-closure/siai-footer-unified-real.spec.ts tests/final-closure/siai-design-visual-proof.spec.ts tests/final-closure/partner-widget-embed.spec.ts
       - if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
         with:
