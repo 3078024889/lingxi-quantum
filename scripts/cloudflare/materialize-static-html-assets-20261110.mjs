@@ -40,6 +40,18 @@ export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   { route: "/announcements", source: "announcements.html", target: "announcements.html" },
 ]);
 
+export const STATIC_HEADER_PATTERNS = Object.freeze([
+  "/", "/index.html",
+  "/siai", "/siai.html", "/*/siai", "/*/siai.html",
+  "/discover/*", "/*/discover/*",
+  "/tools", "/tools.html", "/tools/*",
+  "/ai-wallet", "/ai-wallet.html",
+  "/account", "/account.html",
+  "/sasi", "/sasi.html",
+  "/about", "/about.html",
+  "/announcements", "/announcements.html"
+]);
+
 const HEADER_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
 const HEADER_END = "# END LINGXIFIELD DIRECT STATIC SNAPSHOT HEADERS";
 const REDIRECT_BEGIN = "# BEGIN LINGXIFIELD DIRECT STATIC SNAPSHOT REDIRECTS";
@@ -141,24 +153,15 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
     "upgrade-insecure-requests"
   ].join("; ");
 
-  const routeHeaderRules = [
-    ...PUBLIC_STATIC_HTML_ROUTES
-      .filter(({ route }) => !route.startsWith("/tools/"))
-      .flatMap(({ route, target }) => {
-        const paths = [...new Set([route, "/" + target])];
-        return paths.flatMap(path => [
-          path,
-          "  X-Lingxi-Render-Mode: static-edge-verified",
-          "  X-Lingxi-Static-Delivery: workers-static-assets",
-          "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
-          ...(route === "/account" ? ["  X-Robots-Tag: noindex, nofollow"] : [])
-        ]);
-      }),
-    "/tools/*",
+  const routeHeaderRules = STATIC_HEADER_PATTERNS.flatMap(pattern => [
+    pattern,
     "  X-Lingxi-Render-Mode: static-edge-verified",
     "  X-Lingxi-Static-Delivery: workers-static-assets",
     "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
-  ];
+    ...(pattern === "/account" || pattern === "/account.html"
+      ? ["  X-Robots-Tag: noindex, nofollow"]
+      : [])
+  ]);
 
   const managedHeaders = [
     HEADER_BEGIN,
@@ -182,11 +185,19 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
   await writeFile(headerPath, headers, "utf8");
   const verifiedHeaders = await readFile(headerPath, "utf8");
 
+  const headerPatternMatches = (pattern, path) =>
+    new RegExp("^" + pattern.replaceAll("*", ".*") + "$").test(path);
+  if (STATIC_HEADER_PATTERNS.length >= 100) {
+    throw new Error("STATIC_HEADER_RULE_LIMIT_EXCEEDED:" + STATIC_HEADER_PATTERNS.length);
+  }
+  for (const pattern of STATIC_HEADER_PATTERNS) {
+    if (!verifiedHeaders.includes("\\n" + pattern + "\\n")) {
+      throw new Error("STATIC_HEADER_RULE_MISSING:" + pattern);
+    }
+  }
   for (const { route, target } of allRoutes) {
-    if (route.startsWith("/tools/")) continue;
     for (const path of new Set([route, "/" + target])) {
-      if (!verifiedHeaders.includes("\n" + path + "\n") &&
-          !(path === "/" && verifiedHeaders.startsWith("/\n"))) {
+      if (!STATIC_HEADER_PATTERNS.some(pattern => headerPatternMatches(pattern, path))) {
         throw new Error("STATIC_HEADER_ROUTE_MISSING:" + path);
       }
     }
