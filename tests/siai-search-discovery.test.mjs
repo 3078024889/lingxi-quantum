@@ -42,8 +42,11 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(read("public/llms-full.txt"),/Global AI \/ SI \/ SIAI rankings/);
  assert.match(page,/const \{curated,rows\}=getSiaiDirectoryRows\(\)/);
  assert.match(page,/itemListElement:curated\.map/);
- assert.match(page,/const SITE=seoSiteForBuild\(process\.env\.NEXT_PUBLIC_SITE_URL\)/);
- assert.match(page,/alternates:\{canonical:SITE\+"\/siai",languages:/);
+ assert.match(page,/seoSiteForRequest/);
+ assert.match(page,/const h=await headers\(\)/);
+ assert.match(page,/const site=seoSiteForRequest\(h\.get\("host"\),h\.get\("x-forwarded-host"\),h\.get\("x-lingxi-public-host"\)\)/);
+ assert.match(page,/alternates:\{canonical:site\+"\/siai",languages:/);
+ assert.match(page,/const canonical=site\+"\/siai"/);
  assert.doesNotMatch(page,/index:false/);
 });
 test("eight sourced corporate-history entries remain honest about parent/launch differences",()=>{

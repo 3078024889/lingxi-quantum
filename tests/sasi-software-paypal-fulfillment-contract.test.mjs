@@ -19,10 +19,14 @@ assert.match(checkout,/\[\"toolpass\",\"software\",\"market\"\]/);
 assert.match(checkout,/referenceId:order\.id/);
 
 const marketplace=read("lib/sasi-marketplace/checkout.ts");
-assert.match(marketplace,/wechatPayEnabled\(\)\|\|alipayEnabled\(\)\|\|paypalEnabled\(\)/);
+assert.match(marketplace,/process\.env\.SASI_MARKETPLACE_COMMERCE_READY==="true"/);
+assert.match(marketplace,/marketplaceR2Ready\(\)/);
 const catalog=read("app/api/sasi/software/catalog/route.ts");
-assert.match(catalog,/const wx=wechatPayEnabled\(\),ali=alipayEnabled\(\),paypal=paypalEnabled\(\)/);
-assert.match(catalog,/payment:\{wechat:wx,alipay:ali,paypal\}/);
+assert.match(catalog,/const wechat=wechatPayEnabled\(\)/);
+assert.match(catalog,/const alipay=alipayEnabled\(\)/);
+assert.match(catalog,/const paypal=paypalPayEnabled\(\)/);
+assert.match(catalog,/available:Boolean\(\(wechat\|\|alipay\|\|paypal\)&&await softwareCheckoutReady\(p\.id\)\)/);
+assert.match(catalog,/payment:\{wechat,alipay,paypal\}/);
 
 const webhook=read("app/api/pay/paypal/webhook/route.ts");
 assert.match(webhook,/WEBHOOK_BODY_TOO_LARGE/);
