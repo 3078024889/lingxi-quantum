@@ -20,7 +20,6 @@
       "/media/ffmpeg-0.12.10/ffmpeg-core.wasm",
       "/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm",
       "/*/",
-      "/sasi/marketplace"
     ],
     "html_handling": "none",
     "not_found_handling": "none"
