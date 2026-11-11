@@ -13,6 +13,7 @@ const portal=read("components/partners/PartnerGrowthPortal.tsx");
 const tracking=read("components/SiteVisitTracker.tsx");
 const analytics=read("app/api/analytics/visit/route.ts");
 const catalog=read("app/siai/catalog-data.ts");
+const partnersPage=read("app/partners/page.tsx");
 
 test("partner JS is syntactically valid and can run without framing the origin",()=>{
  assert.doesNotThrow(()=>new Function(widget));
@@ -62,6 +63,8 @@ test("growth links are attributed but automated browsing and private routes are 
  assert.match(portal,/data-lx-widget/);
  assert.match(portal,/standard\("free-tools"\)/);
  assert.match(portal,/freeToolsInfo/);
+ assert.match(partnersPage,/anonymous free local-tools directory/);
+ assert.match(partnersPage,/SIAI, Free Local Tools & QR Widgets/);
  assert.match(portal,/data-partner/);
  assert.match(tracking,/navigator\.webdriver===true/);
  assert.match(tracking,/utm_source/);
