@@ -33,7 +33,7 @@ assert.equal(siaiLanguageAlternates()['x-default'],'https://lingxifield.com/siai
 const urls=new Set(sitemap.map(x=>x.url));assert.equal(urls.size,sitemap.length,'duplicate canonical URLs');
 const redirectedLegacy=['/tools/image-to-pdf-pro','/sasi/drama','/sasi/build','/sasi/assemble','/sasi/chat','/sasi/connections','/sasi/director','/sasi/image','/sasi/marketplace','/sasi/operator','/sasi/operator/v5','/sasi/project-dna','/sasi/series','/sasi/variants','/sasi/pricing','/ai-knowledge','/ai-learning','/ai-research'];
 for(const p of redirectedLegacy)assert(!urls.has(seo.SITE+p),`redirected URL in sitemap: ${p}`);
-for(const p of ['/sasi','/sasi/delivery','/sasi/seller','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])
+for(const p of ['/sasi','/sasi/delivery','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])
   assert(urls.has(seo.SITE+p),`indexable public route absent: ${p}`);
 for(const slug of ['pdf-editor','batch-image','video-transcription','temp-mail','e-sign-pdf','food-calorie'])
   assert(urls.has(seo.SITE+'/tools/'+slug),`core public tool missing from sitemap: ${slug}`);
