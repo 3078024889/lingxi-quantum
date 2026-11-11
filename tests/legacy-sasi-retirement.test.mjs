@@ -15,6 +15,23 @@ test('retired endpoints cannot create provider jobs or run the radar',async()=>{
   }
  }
 });
+test('retired SASI pages are permanent redirects and never render creation modules',()=>{
+ const pages=[
+  'app/sasi/assemble/page.tsx','app/sasi/build/page.tsx','app/sasi/chat/page.tsx',
+  'app/sasi/connections/page.tsx','app/sasi/director/page.tsx','app/sasi/drama/page.tsx',
+  'app/sasi/image/page.tsx','app/sasi/marketplace/page.tsx','app/sasi/operator/page.tsx',
+  'app/sasi/operator/v5/page.tsx','app/sasi/project-dna/page.tsx','app/sasi/series/page.tsx',
+  'app/sasi/variants/page.tsx','app/ai-knowledge/page.tsx','app/ai-learning/page.tsx','app/ai-research/page.tsx'
+ ];
+ for(const file of pages){
+  const source=readFileSync(file,'utf8');
+  assert.match(source,/permanentRedirect\(/,file+' must use a server-side permanent redirect');
+  assert.match(source,/robots:\s*\{index:false,follow:false\}/,file+' must not be indexed');
+  assert.doesNotMatch(source,/Sasi(?:OneSurface|UnifiedLauncher|MultiEpisodeWorkspace|SeriesStudio|ChatCreationStudio|VideoAssembler)/,file+' must not import retired creation UI');
+ }
+ const pricing=readFileSync('app/sasi/pricing/page.tsx','utf8');
+ assert.match(pricing,/permanentRedirect\("\/ai-wallet"\)/);
+});
 test('software marketplace and historical delivery remain available in source',()=>{
  for(const file of ['app/sasi/page.tsx','app/sasi/delivery/page.tsx','app/api/sasi/software/download/route.ts','app/api/sasi/marketplace/download/route.ts','app/api/internal/sasi/market/release-due/route.ts'])assert(existsSync(file),file);
  assert(readFileSync('app/sasi/page.tsx','utf8').includes('SasiOpenMarketplace'));
