@@ -175,21 +175,9 @@ export async function POST(req:NextRequest){
  const product=SASI_SOFTWARE_CATALOG.find(x=>x.id===productId&&x.id===SOURCE_PRODUCT_ID&&x.kind==="source");
  if(!product)return reply({error:"SOURCE_PRODUCT_ONLY"},400);
  if(action!=="upload"&&action!=="activate")return reply({error:"ACTION_NOT_SUPPORTED"},400);
- if(!candidate||typeof candidate==="string"||typeof (candidate as File).arrayBuffer!=="function")
-  return reply({error:"PACKAGE_FILE_REQUIRED"},400);
- const file=candidate as File;
- if(!file.name.toLowerCase().endsWith(".zip")||file.size<100||file.size>MAX_FILE_BYTES)
-  return reply({error:"ZIP_REQUIRED_MAX_30MB"},400);
- let bytes:Buffer;
- try{bytes=Buffer.from(await file.arrayBuffer())}
- catch{return reply({error:"PACKAGE_READ_FAILED"},400)}
- if(bytes.length!==file.size)return reply({error:"PACKAGE_SIZE_MISMATCH"},400);
- const inspected=await inspectPackage(bytes);
- if(!inspected.ok)return reply({error:inspected.error},422);
- const sha256=createHash("sha256").update(bytes).digest("hex");
- const objectPath=`first-party/${product.id}/${sha256}.zip`;
  try{
   const admin=createAdminClient();
+  if(!await privateBucketReady(admin))return reply({error:"PRIVATE_BUCKET_CONFIG_INVALID"},503);
   const {data:record,error:recordError}=await admin.from("sasi_software_packages")
    .select("product_id,price_cny,price_usd,bucket,sale_ready,verified_at,sha256,object_path")
    .eq("product_id",product.id).maybeSingle();
@@ -197,7 +185,7 @@ export async function POST(req:NextRequest){
   if(record.bucket!==BUCKET||Number(record.price_cny)!==product.priceCny||Number(record.price_usd)!==product.priceUsd)
    return reply({error:"PACKAGE_PRICE_OR_BUCKET_MISMATCH"},409);
   if(record.sale_ready)return reply({error:"PACKAGE_ALREADY_ACTIVE"},409);
-  if(!await privateBucketReady(admin))return reply({error:"PRIVATE_BUCKET_CONFIG_INVALID"},503);
+
   if(action==="activate"){
    const verified=await verifyStoredPackage(admin,product,record as PackageRow);
    if(!verified)return reply({error:"PRIVATE_PACKAGE_INTEGRITY_CHECK_FAILED"},409);
@@ -211,6 +199,7 @@ export async function POST(req:NextRequest){
    return reply({ok:true,productId:product.id,sha256:activated.sha256,verifiedAt:activated.verified_at,
     packageVerified:true,saleReady:true,sizeBytes:verified.sizeBytes});
   }
+
   if(record.verified_at||record.sha256!==ZERO_SHA256||String(record.object_path||"").startsWith("first-party/"))
    return reply({error:"PACKAGE_ALREADY_VERIFIED"},409);
   const candidate=form.get("package");
@@ -227,17 +216,24 @@ export async function POST(req:NextRequest){
   if(!inspected.ok)return reply({error:inspected.error},422);
   const sha256=createHash("sha256").update(bytes).digest("hex");
   const objectPath="first-party/"+product.id+"/"+sha256+".zip";
+  const storage=admin.storage.from(BUCKET);
   let stored=await storage.download(objectPath);
   if(stored.error){
    const uploaded=await storage.upload(objectPath,bytes,{contentType:"application/zip",cacheControl:"0",upsert:false});
-   if(uploaded.error)return reply({error:"PRIVATE_PACKAGE_UPLOAD_FAILED"},502);
-   stored=await storage.download(objectPath);
+   if(uploaded.error){
+    stored=await storage.download(objectPath);
+    if(stored.error)return reply({error:"PRIVATE_PACKAGE_UPLOAD_FAILED"},502);
+   }else{
+    stored=await storage.download(objectPath);
+   }
   }
   if(stored.error||!stored.data)return reply({error:"PRIVATE_PACKAGE_READBACK_FAILED"},502);
   const readback=Buffer.from(await stored.data.arrayBuffer());
   const verifiedHash=createHash("sha256").update(readback).digest("hex");
   if(readback.length!==bytes.length||verifiedHash!==sha256)
    return reply({error:"PRIVATE_PACKAGE_HASH_MISMATCH"},502);
+  const readbackInspection=await inspectPackage(readback);
+  if(!readbackInspection.ok)return reply({error:"PRIVATE_PACKAGE_CONTENT_CHECK_FAILED"},502);
 
   const verifiedAt=new Date().toISOString();
   const {data:updated,error:updateError}=await admin.from("sasi_software_packages")
@@ -248,6 +244,8 @@ export async function POST(req:NextRequest){
    .select("product_id,sale_ready,verified_at,sha256").maybeSingle();
   if(updateError||!updated)return reply({error:"PACKAGE_READY_STATE_UPDATE_FAILED"},409);
   return reply({ok:true,productId:product.id,sha256,sizeBytes:bytes.length,verifiedAt:updated.verified_at,
-   packageVerified:true,reviewRequired:true,saleReady:false,sourceName:inspected.sourceName,compiledName:inspected.compiledName,whitepaperName:inspected.whitepaperName,guideName:inspected.guideName,demoAccessName:inspected.demoAccessName});
+   packageVerified:true,reviewRequired:true,saleReady:false,sourceName:readbackInspection.sourceName,
+   compiledName:readbackInspection.compiledName,whitepaperName:readbackInspection.whitepaperName,
+   guideName:readbackInspection.guideName,demoAccessName:readbackInspection.demoAccessName});
  }catch{return reply({error:"PACKAGE_UPLOAD_NOT_READY"},503)}
 }
