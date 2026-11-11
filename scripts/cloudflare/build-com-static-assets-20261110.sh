@@ -99,6 +99,33 @@ node scripts/cloudflare/tool-static-route-manifest-20261110.mjs --slugs |
   ' _ {}
 echo "COM_TOOL_STATIC_SNAPSHOTS_CAPTURED"
 
+# The discover pages are generateStaticParams() output. Copy the exact build HTML,
+# just like SIAI, rather than relying on the OpenNext dynamic-parameter router.
+node <<'NODE'
+const fs = require("node:fs");
+const topics = [
+  "sasi-software-marketplace",
+  "mt5-ea-source-code",
+  "software-licensing-delivery",
+  "developer-software-publishing"
+];
+const locales = ["zh","en","ja","ko","fr","de","es","pt","ar"];
+for (const locale of locales) {
+  for (const topic of topics) {
+    const route = locale === "zh" ? `discover/${topic}` : `${locale}/discover/${topic}`;
+    const source = `.next/server/app/${route}.html`;
+    const target = `.open-next/assets/__lingxi_edge_static__/geo-${locale}-${topic}.html`;
+    if (!fs.existsSync(source)) throw new Error("COM_GEO_GENERATED_HTML_MISSING:" + route);
+    const stat = fs.statSync(source);
+    if (stat.size < 4500) throw new Error("COM_GEO_GENERATED_HTML_TOO_SMALL:" + route + ":" + stat.size);
+    fs.copyFileSync(source, target);
+    console.log("COM_GEO_STATIC_SNAPSHOT route=/" + route + " bytes=" + stat.size);
+  }
+}
+NODE
+
+echo "COM_GEO_STATIC_SNAPSHOTS_CAPTURED"
+
 curl --noproxy '*' -fSs --retry 2 --max-time 40 \
   -H 'Host: lingxifield.com' -H 'X-Forwarded-Proto: https' \
   http://127.0.0.1:8787/api/sasi/software/catalog \
