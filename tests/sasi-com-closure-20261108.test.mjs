@@ -36,6 +36,8 @@ test("Seller revenue split only in agreement, never public hero",()=>{
  assert.match(market,/平台收取 15% 服务费/);
  const meta=read("app/sasi/marketplace/page.tsx");
  assert.doesNotMatch(meta,/成交佣金15%/);
+ assert.match(meta,/permanentRedirect\("\/sasi"\)/);
+ assert.match(meta,/index:false/);
 });
 test("Real software checkout and tool passes remain fail-closed",()=>{
  const pass=read("app/api/tools/pass/route.ts");
