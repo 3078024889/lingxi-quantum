@@ -86,7 +86,7 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       "Sitemap: " + robotsSite + "/sitemap.xml",
       "Host: " + robotsSite,
       ""
-    ].join("\\n"), "utf8");
+    ].join("\n"), "utf8");
 
     const result = await materializeStaticHtmlAssets(root);
     assert.equal(result.materialized, allRoutes.length);
