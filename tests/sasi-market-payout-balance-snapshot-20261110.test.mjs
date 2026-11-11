@@ -5,7 +5,7 @@ const read=p=>readFileSync(p,"utf8");
 
 test("seller wallet totals come from complete database aggregates, not the bounded activity feed",()=>{
  const route=read("app/api/sasi/marketplace/payouts/route.ts");
- const sql=read("supabase/migrations/20261110121500_sasi_market_seller_balance_snapshot.sql");
+ const sql=read("supabase/migrations/20261110124412_sasi_market_balance_snapshot_and_payout_lock_20261110.sql");
  assert.match(route,/rpc\("sasi_market_seller_balance_snapshot"\)/);
  assert.match(route,/\.limit\(151\)/);
  assert.match(route,/salesRows\.slice\(0,150\)/);
@@ -25,6 +25,8 @@ test("seller wallet totals come from complete database aggregates, not the bound
  assert.match(sql,/balanceDeficitMinor/);
  assert.match(sql,/REVOKE ALL ON FUNCTION public\.sasi_market_seller_balance_snapshot\(\) FROM PUBLIC,anon/);
  assert.match(sql,/GRANT EXECUTE ON FUNCTION public\.sasi_market_seller_balance_snapshot\(\) TO authenticated,service_role/);
+ assert.match(sql,/ALTER FUNCTION public\.sasi_market_request_payout\(bigint,text,uuid\) SET search_path=''/);
+ assert.match(sql,/REVOKE ALL ON FUNCTION public\.sasi_market_request_payout\(bigint,text,uuid\) FROM PUBLIC,anon,authenticated,service_role/);
 });
 
 test("payout creation remains serialized, idempotent and closed while the transfer provider is unverified",()=>{
