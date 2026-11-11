@@ -7,10 +7,26 @@ import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { loadToolStaticRoutes } from "./tool-static-route-manifest-20261110.mjs";
 
+export const GEO_STATIC_TOPICS = Object.freeze([
+  "sasi-software-marketplace",
+  "mt5-ea-source-code",
+  "software-licensing-delivery",
+  "developer-software-publishing"
+]);
+export const GEO_STATIC_LOCALES = Object.freeze(["zh","en","ja","ko","fr","de","es","pt","ar"]);
+const GEO_STATIC_ROUTES = GEO_STATIC_TOPICS.flatMap(topic => [
+  { route: `/discover/${topic}`, source: `geo-zh-${topic}.html`, target: `discover/${topic}.html` },
+  ...GEO_STATIC_LOCALES.filter(locale => locale !== "zh").map(locale => ({
+    route: `/${locale}/discover/${topic}`,
+    source: `geo-${locale}-${topic}.html`,
+    target: `${locale}/discover/${topic}.html`
+  }))
+]);
 export const PUBLIC_STATIC_HTML_ROUTES = Object.freeze([
   // The reviewed catalogue is sourced from this commit, not a per-request feed.
   // Rebuilds publish the current catalogue to all nine language routes together.
   { route: "/siai", source: "siai.html", target: "siai.html" },
+  ...GEO_STATIC_ROUTES,
   ...["en","ja","ko","fr","de","es","pt","ar"].map(locale=>({
     route:`/${locale}/siai`,source:`${locale}-siai.html`,target:`${locale}/siai.html`
   })),
