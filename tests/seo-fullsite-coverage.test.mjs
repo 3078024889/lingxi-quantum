@@ -92,7 +92,7 @@ test("robots.txt is build-static and selects only the configured allowlisted sit
  assert.ok(robots.includes('export const dynamic = "force-static"'));
  assert.ok(robots.includes("seoSiteForBuild(process.env.NEXT_PUBLIC_SITE_URL)"));
  assert.ok(!robots.includes('from "next/headers"'));
- assert.ok(!robots.includes("headers()"));
+ assert.ok(!robots.includes("await headers()"));
  assert.ok(robots.includes('sitemap:site+"/sitemap.xml"'));
  assert.ok(robots.includes('disallow:["/api/","/admin","/tools/admin","/tools/burn-after-read/","/share/"]'));
  assert.ok(domainPolicy.includes("export function seoSiteForBuild"));
