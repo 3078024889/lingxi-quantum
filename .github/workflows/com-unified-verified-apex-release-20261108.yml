@@ -26,6 +26,7 @@ on:
       - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
       - 'tests/com-celestial-release-safety-20261110.test.mjs'
       - 'lib/seo/global-seo.ts'
+      - 'lib/siai-seo-policy.ts'
       - 'lib/seo/service-facts.ts'
       - 'lib/seo/sitemap-build.ts'
       - 'scripts/seo/audit-global.cjs'
@@ -57,6 +58,7 @@ on:
       - 'tests/com-wallet-static-session-contract-20261108.test.mjs'
       - 'tests/com-celestial-release-safety-20261110.test.mjs'
       - 'lib/seo/global-seo.ts'
+      - 'lib/siai-seo-policy.ts'
       - 'lib/seo/service-facts.ts'
       - 'lib/seo/sitemap-build.ts'
       - 'scripts/seo/audit-global.cjs'
@@ -87,7 +89,7 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version-file: .nvmrc,cache: pnpm}
       - name: Install exact locked source-test dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts && node scripts/seo/audit-global.cjs
       - name: Pin exact verified candidate and check safe script
         run: |
           set -Eeuo pipefail
