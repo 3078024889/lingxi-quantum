@@ -197,10 +197,16 @@ export async function materializeStaticHtmlAssets(assetRoot = ".open-next/assets
       }
     }
   }
-  if (!verifiedHeaders.includes("/tools/*\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets")) {
+  const newline = String.fromCharCode(10);
+  const toolHeaderBlock = [
+    "/tools/*",
+    "  X-Lingxi-Render-Mode: static-edge-verified",
+    "  X-Lingxi-Static-Delivery: workers-static-assets"
+  ].join(newline);
+  if (!verifiedHeaders.includes(toolHeaderBlock)) {
     throw new Error("STATIC_TOOL_ASSET_DELIVERY_HEADER_MISSING");
   }
-  const headerRuleCount = verifiedHeaders.split("\\n")
+  const headerRuleCount = verifiedHeaders.split(newline)
     .filter(line => line.trim() && !line.trim().startsWith("#") && !line.startsWith(" ")).length;
   if (headerRuleCount > 100) {
     throw new Error("CLOUDFLARE_STATIC_HEADERS_RULE_LIMIT_EXCEEDED:" + headerRuleCount);

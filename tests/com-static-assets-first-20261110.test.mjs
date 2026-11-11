@@ -92,11 +92,30 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
           path + " must be covered by a grouped static header pattern");
       }
     }
-    assert.ok(headers.includes("/tools/*\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets"));
+    const newline=String.fromCharCode(10);
+    assert.ok(headers.includes([
+      "/tools/*",
+      "  X-Lingxi-Render-Mode: static-edge-verified",
+      "  X-Lingxi-Static-Delivery: workers-static-assets"
+    ].join(newline)));
     assert.equal(PUBLIC_STATIC_HTML_ROUTES.some(entry => entry.route === "/account"), true);
-    assert.ok(headers.includes("/account\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets\\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\\n  X-Robots-Tag: noindex, nofollow"));
-    assert.ok(headers.includes("/account.html\\n  X-Lingxi-Render-Mode: static-edge-verified\\n  X-Lingxi-Static-Delivery: workers-static-assets\\n  Cache-Control: public, max-age=300, stale-while-revalidate=120\\n  X-Robots-Tag: noindex, nofollow"));
-    const headerRuleCount=headers.split("\\n").filter(line=>line.trim()&&!line.trim().startsWith("#")&&!line.startsWith(" ")).length;
+    const accountHeaderBlock=[
+      "/account",
+      "  X-Lingxi-Render-Mode: static-edge-verified",
+      "  X-Lingxi-Static-Delivery: workers-static-assets",
+      "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
+      "  X-Robots-Tag: noindex, nofollow"
+    ].join(newline);
+    const accountHtmlHeaderBlock=[
+      "/account.html",
+      "  X-Lingxi-Render-Mode: static-edge-verified",
+      "  X-Lingxi-Static-Delivery: workers-static-assets",
+      "  Cache-Control: public, max-age=300, stale-while-revalidate=120",
+      "  X-Robots-Tag: noindex, nofollow"
+    ].join(newline);
+    assert.ok(headers.includes(accountHeaderBlock));
+    assert.ok(headers.includes(accountHtmlHeaderBlock));
+    const headerRuleCount=headers.split(newline).filter(line=>line.trim()&&!line.trim().startsWith("#")&&!line.startsWith(" ")).length;
     assert.ok(headerRuleCount<=100,"Cloudflare _headers rule count must stay at or below 100, got "+headerRuleCount);
 
     // Re-running the materializer is idempotent and does not duplicate its managed header block.
