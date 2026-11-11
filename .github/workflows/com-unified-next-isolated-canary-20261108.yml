@@ -9,6 +9,7 @@ on:
       - 'app/siai/page.tsx'
       - 'app/[locale]/siai/page.tsx'
       - 'lib/seo/siai-domain-policy.ts'
+      - 'app/robots.ts'
       - 'lib/siai-seo-policy.ts'
       - 'scripts/seo/audit-global.cjs'
       - 'public/llms.txt'
