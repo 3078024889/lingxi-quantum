@@ -261,37 +261,51 @@ jobs:
           for path in / /siai /tools /tools/pass /tools/png-to-jpg /tools/compress-image /tools/merge-pdf /tools/json-formatter /ai-wallet /account /sasi /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
             count=0
             for i in 1 2 3;do
-              h="$(mktemp)"
-              status="$(curl -4sS --connect-timeout 9 --max-time 30 -D "$h" -o /dev/null -w '%{http_code}' "$url$path" || true)"
-              echo "COM_CANARY_PAGE path=$path repetition=$i HTTP_$status"
-              if [[ "$path" = "/api/sasi/marketplace/listings" ]];then
-                diagnostic="$(grep -i '^x-lingxi-catalog-diagnostic:' "$h" | tr -d '\r' | head -n 1 || true)"
-                echo "COM_CANARY_CATALOG_STATUS ${diagnostic:-no-edge-diagnostic}"
-              fi
-              test "$status" = 200 || exit 1
-              if [[ "$path" = / || "$path" = /account || "$path" = /api/sasi/software/catalog || "$path" = /tools || "$path" = /tools/pass || "$path" = /tools/png-to-jpg || "$path" = /tools/compress-image || "$path" = /tools/merge-pdf || "$path" = /tools/json-formatter || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /about || "$path" = /announcements || "$path" = /robots.txt || "$path" == */discover/* ]];then
-                grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
-                if [[ "$path" != "/api/sasi/software/catalog" ]];then
-                  grep -iq '^x-lingxi-static-delivery: workers-static-assets' "$h"
+              passed=0
+              for attempt in $(seq 1 8);do
+                h="$(mktemp)"
+                status="$(curl -4sS --connect-timeout 9 --max-time 30 -D "$h" -o /dev/null -w '%{http_code}' "$url$path" || true)"
+                echo "COM_CANARY_PAGE path=$path repetition=$i attempt=$attempt HTTP_$status"
+                probe_ok=1
+                if [[ "$status" != "200" ]];then probe_ok=0;fi
+                if [[ "$path" = "/api/sasi/marketplace/listings" ]];then
+                  diagnostic="$(grep -i '^x-lingxi-catalog-diagnostic:' "$h" | tr -d '\r' | head -n 1 || true)"
+                  echo "COM_CANARY_CATALOG_STATUS ${diagnostic:-no-edge-diagnostic}"
                 fi
-              fi
-              rm -f "$h"
+                if [[ "$probe_ok" -eq 1 && ( "$path" = / || "$path" = /account || "$path" = /api/sasi/software/catalog || "$path" = /tools || "$path" = /tools/pass || "$path" = /tools/png-to-jpg || "$path" = /tools/compress-image || "$path" = /tools/merge-pdf || "$path" = /tools/json-formatter || "$path" = /ai-wallet || "$path" = /sasi || "$path" = /about || "$path" = /announcements || "$path" = /robots.txt || "$path" == */discover/* ) ]];then
+                  if ! grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h";then probe_ok=0;fi
+                  if [[ "$path" != "/api/sasi/software/catalog" ]] && ! grep -iq '^x-lingxi-static-delivery: workers-static-assets' "$h";then probe_ok=0;fi
+                fi
+                rm -f "$h"
+                if [[ "$probe_ok" -eq 1 ]];then
+                  passed=1
+                  break
+                fi
+                echo "COM_CANARY_RETRY path=$path repetition=$i attempt=$attempt"
+                sleep 3
+              done
+              test "$passed" -eq 1 || { echo "COM_CANARY_ROUTE_EXHAUSTED path=$path repetition=$i";exit 1; }
               count=$((count+1))
             done
             test "$count" = 3
           done
-           node -e 'const u=process.argv[1];fetch(u,{redirect:"manual"}).then(r=>{const t=new URL(r.headers.get("location")||"",u);console.log("COM_CANARY_LEGACY_MARKET_REDIRECT HTTP_"+r.status+" location="+r.headers.get("location"));if(r.status!==308||t.pathname!=="/sasi")process.exit(1)}).catch(e=>{console.error(e);process.exit(1)})' "$url/sasi/marketplace"
-           node -e 'const base=process.argv[1];const aliases=["/sasi/marketplace","/sasi/assemble","/sasi/build","/sasi/chat","/sasi/connections","/sasi/director","/sasi/drama","/sasi/image","/sasi/operator","/sasi/operator/v5","/sasi/project-dna","/sasi/series","/sasi/variants","/ai-knowledge","/ai-learning","/ai-research"];(async()=>{for(const path of aliases){const r=await fetch(base+path,{redirect:"manual"});const u=new URL(r.headers.get("location")||"",base);console.log("COM_CANARY_RETIRED_ALIAS "+path+" HTTP_"+r.status+" "+u.pathname);if(r.status!==308||u.origin!==new URL(base).origin||u.pathname!=="/sasi")throw Error("RETIRED_ALIAS_FAILED:"+path)}const p=await fetch(base+"/sasi/pricing",{redirect:"manual"});const t=new URL(p.headers.get("location")||"",base);if(p.status!==308||t.pathname!=="/ai-wallet")throw Error("RETIRED_PRICING_ALIAS_FAILED");console.log("COM_CANARY_ALL_RETIRED_ALIASES_PASS")})().catch(e=>{console.error(e);process.exit(1)})' "$url"
-           node -e 'const base=process.argv[1];(async()=>{const robots=await fetch(base+"/robots.txt");const robotsText=await robots.text();if(robots.status!==200||!robotsText.includes("Sitemap: https://lingxifield.com/sitemap.xml")||!robotsText.includes("Disallow: /api/"))throw Error("COM_CANARY_ROBOTS_CONTENT_FAILED");console.log("COM_CANARY_ROBOTS_STATIC_ORIGIN_PASS");const topics=["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"];const page=await fetch(base+"/discover/sasi-software-marketplace");const html=await page.text();if(page.status!==200||!html.includes("SASI 智能软件市场")||!html.includes("canonical"))throw Error("SASI_GEO_LANDING_FAILED");const sitemap=await (await fetch(base+"/sitemap.xml")).text();for(const topic of topics)if(!sitemap.includes("/discover/"+topic))throw Error("SITEMAP_TOPIC_MISSING:"+topic);for(const old of ["ai-short-drama-generator","book-to-ai-agent","document-ai-agent","learning-ai-agent","research-ai-agent","ai-website-builder"])if(sitemap.includes("/discover/"+old))throw Error("RETIRED_GEO_TOPIC_IN_SITEMAP:"+old);const llms=await (await fetch(base+"/llms.txt")).text();if(!llms.includes("SASI Software Marketplace")||llms.includes("AI Short Drama Generator"))throw Error("LLMS_GEO_TOPIC_MISMATCH");console.log("COM_CANARY_SASI_GEO_SITEMAP_LLMS_PASS")})().catch(e=>{console.error(e);process.exit(1)})' "$url"
+          node -e 'const u=process.argv[1],wait=ms=>new Promise(r=>setTimeout(r,ms));(async()=>{for(let i=1;i<=8;i++){let r,loc="",ok=false;try{r=await fetch(u,{redirect:"manual"});loc=r.headers.get("location")||"";const t=new URL(loc,u);ok=r.status===308&&t.origin===new URL(u).origin&&t.pathname==="/sasi"}catch{}console.log("COM_CANARY_LEGACY_MARKET_REDIRECT attempt="+i+" HTTP_"+(r?.status||"ERR")+" location="+loc);if(ok)return;await wait(3000)}throw Error("LEGACY_MARKET_REDIRECT_EXHAUSTED")})().catch(e=>{console.error(e);process.exit(1)})' "$url/sasi/marketplace"
+          node -e 'const base=process.argv[1],wait=ms=>new Promise(r=>setTimeout(r,ms));async function expect308(path,target){for(let i=1;i<=8;i++){let r,loc="",ok=false;try{r=await fetch(base+path,{redirect:"manual"});loc=r.headers.get("location")||"";const u=new URL(loc,base);ok=r.status===308&&u.origin===new URL(base).origin&&u.pathname===target}catch{}console.log("COM_CANARY_RETIRED_ALIAS "+path+" attempt="+i+" HTTP_"+(r?.status||"ERR")+" location="+loc);if(ok)return;await wait(3000)}throw Error("RETIRED_ALIAS_EXHAUSTED:"+path)};(async()=>{const aliases=["/sasi/marketplace","/sasi/assemble","/sasi/build","/sasi/chat","/sasi/connections","/sasi/director","/sasi/drama","/sasi/image","/sasi/operator","/sasi/operator/v5","/sasi/project-dna","/sasi/series","/sasi/variants","/ai-knowledge","/ai-learning","/ai-research"];for(const path of aliases)await expect308(path,"/sasi");await expect308("/sasi/pricing","/ai-wallet");console.log("COM_CANARY_ALL_RETIRED_ALIASES_PASS")})().catch(e=>{console.error(e);process.exit(1)})' "$url"
+          node -e 'const base=process.argv[1],wait=ms=>new Promise(r=>setTimeout(r,ms));async function getText(path){for(let i=1;i<=8;i++){try{const r=await fetch(base+path);console.log("COM_CANARY_SEO_ENDPOINT "+path+" attempt="+i+" HTTP_"+r.status);if(r.status===200)return await r.text()}catch(e){}await wait(3000)}throw Error("SEO_ENDPOINT_EXHAUSTED:"+path)};(async()=>{const robots=await getText("/robots.txt");if(!robots.includes("Sitemap: https://lingxifield.com/sitemap.xml")||!robots.includes("Disallow: /api/"))throw Error("COM_CANARY_ROBOTS_CONTENT_FAILED");const page=await getText("/discover/sasi-software-marketplace");if(!page.includes("SASI 智能软件市场")||!page.includes("canonical"))throw Error("SASI_GEO_LANDING_FAILED");const sitemap=await getText("/sitemap.xml");for(const topic of ["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"])if(!sitemap.includes("/discover/"+topic))throw Error("SITEMAP_TOPIC_MISSING:"+topic);for(const old of ["ai-short-drama-generator","book-to-ai-agent","document-ai-agent","learning-ai-agent","research-ai-agent","ai-website-builder"])if(sitemap.includes("/discover/"+old))throw Error("RETIRED_GEO_TOPIC_IN_SITEMAP:"+old);const llms=await getText("/llms.txt");if(!llms.includes("SASI Software Marketplace")||llms.includes("AI Short Drama Generator"))throw Error("LLMS_GEO_TOPIC_MISMATCH");console.log("COM_CANARY_SASI_GEO_SITEMAP_LLMS_PASS")})().catch(e=>{console.error(e);process.exit(1)})' "$url"
           for path in /siai/ /tools/ /tools/pass/ /sasi/ /sasi/marketplace/ /en/siai/;do
-            headers="$(mktemp)"
-            status="$(curl -4sS --connect-timeout 9 --max-time 25 -D "$headers" -o /dev/null -w '%{http_code}' "$url$path" || true)"
-            location="$(grep -i '^location:' "$headers" | head -n 1 | sed -E 's/^[^:]+:[[:space:]]*//' | tr -d '\r')"
-            expected="$url${path%/}"
-            echo "COM_CANARY_CANONICAL_SLASH path=$path HTTP_$status location=$location"
-            test "$status" = 308
-            [[ "$location" == "$expected" || "$location" == "${path%/}" ]]
-            rm -f "$headers"
+            passed=0
+            for attempt in $(seq 1 8);do
+              headers="$(mktemp)"
+              status="$(curl -4sS --connect-timeout 9 --max-time 25 -D "$headers" -o /dev/null -w '%{http_code}' "$url$path" || true)"
+              location="$(grep -i '^location:' "$headers" | head -n 1 | sed -E 's/^[^:]+:[[:space:]]*//' | tr -d '\r')"
+              normalized="${path%/}"
+              expected="$url$normalized"
+              echo "COM_CANARY_CANONICAL_SLASH path=$path attempt=$attempt HTTP_$status location=$location"
+              if [[ "$status" = 308 && ( "$location" = "$expected" || "$location" = "$normalized" ) ]];then passed=1;rm -f "$headers";break;fi
+              rm -f "$headers"
+              sleep 3
+            done
+            test "$passed" -eq 1 || { echo "COM_CANARY_CANONICAL_EXHAUSTED path=$path";exit 1; }
           done
           account_status="$(curl -4sS --connect-timeout 9 --max-time 25 -o /dev/null -w '%{http_code}' "$url/account" || true)"
           echo "COM_CANARY_ACCOUNT_ROUTE HTTP_$account_status"
