@@ -38,7 +38,7 @@ assert.match(marketProduct,/PAYPAL_ENABLED==="true"/);
 assert.match(marketProduct,/wechatPayEnabled\(\)\|\|alipayEnabled\(\)/);
 assert.match(softwareCard,/featuredReady&&featuredPayment\.paypal/);
 assert.match(softwareCard,/payFeaturedPaypal/);
-assert.match(softwareCard,/availableUsd===true/);
+assert.match(softwareCard,/featuredPayment\.paypal/);
 assert.match(marketDetail,/payPaypal/);
 assert.match(marketDetail,/\/api\/pay\/create/);
 assert.match(marketDetail,/paypal\\.com/);
