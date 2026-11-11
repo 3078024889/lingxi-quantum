@@ -78,6 +78,16 @@ test("public page snapshots are materialized at canonical asset-first URLs", asy
       await writeFile(join(snapshotRoot, entry.source), html + entry.route, "utf8");
     }
 
+    const robotsSite = process.env.NEXT_PUBLIC_SITE_URL === "https://lingxifield.cn" ? "https://lingxifield.cn" : "https://lingxifield.com";
+    await writeFile(join(root, "robots.txt"), [
+      "User-agent: *",
+      "Allow: /",
+      "Disallow: /api/",
+      "Sitemap: " + robotsSite + "/sitemap.xml",
+      "Host: " + robotsSite,
+      ""
+    ].join("\\n"), "utf8");
+
     const result = await materializeStaticHtmlAssets(root);
     assert.equal(result.materialized, allRoutes.length);
 
