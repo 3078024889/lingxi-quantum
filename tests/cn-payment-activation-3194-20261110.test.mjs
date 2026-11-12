@@ -186,6 +186,8 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.doesNotMatch(stageTransferGate,/21367c6fb8d4067f23f9982256eacffc1c540d5c|455835233|26779/);
   assert.match(stageTransferGate,/Download-ReleaseAsset \$StageFile \$StageOriginalPath 0/);
   assert.match(stageTransferGate,/Download-ReleaseAsset \$PaymentFile \$PaymentPath 0/);
+  assert.match(stageTransferGate,/if\(\$Sha -and \(\$Bytes -eq 0/);
+  assert.doesNotMatch(stageTransferGate,/!\$Sha/);
   assert.match(stagedTransfer,/CN_PROMOTION_SOURCE_SHA_NOT_APPROVED/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
