@@ -5,7 +5,7 @@
  * Build/stage first; --audit is read-only. Upload only on explicit operator action
  * with Cloudflare credentials for the dedicated eight-object public R2 bucket.
  */
-import {createReadStream} from "node:fs";
+import {createReadStream,existsSync} from "node:fs";
 import {readFile,stat,mkdtemp,rm} from "node:fs/promises";
 import {createHash} from "node:crypto";
 import {join,resolve} from "node:path";
@@ -39,7 +39,9 @@ for(const asset of assets){
  if(!expected||asset.bytes!==expected.bytes||asset.contentType!==expected.contentType||
  asset.r2Key!=="public"+p||!/^[a-f0-9]{64}$/.test(String(asset.sha256||"")))
   throw Error("INVALID_PUBLIC_R2_OBJECT_MANIFEST:"+p);
- const path=hashed?join(root,".open-next","r2-upload-sources",p.slice(1)):join(root,"public",p.slice(1));
+ const publicPath=join(root,"public",p.slice(1));
+ const baselinePath=join(root,".open-next","r2-upload-sources",p.slice(1));
+ const path=hashed?baselinePath:(existsSync(publicPath)?publicPath:baselinePath);
  const st=await stat(path);
  if(!st.isFile()||st.size!==asset.bytes)throw Error("PUBLIC_R2_SOURCE_NOT_IDENTICAL:"+p);
  if(await digest(path)!==asset.sha256)throw Error("PUBLIC_R2_SOURCE_SHA256_MISMATCH:"+p);
@@ -52,7 +54,7 @@ const total=entries.reduce((n,e)=>n+e.bytes,0);
 console.log("R2_EIGHT_SOURCE_FILES_SHA256_VERIFIED");
 console.log("R2_PUBLIC_BYTES="+total);
 if(process.argv[2]==="--audit"){
- console.log("R2_AUDIT_ONLY_NO_REMOTE_CALLS");
+ console.log("R2_AUDIT_ONLY_NO_REMOTE_WRITES");
  process.exit(0);
 }
 if(process.argv[2]!=="--upload-verified")throw Error("USAGE: --audit OR --upload-verified");
