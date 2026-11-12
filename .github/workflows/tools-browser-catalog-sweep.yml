@@ -1,0 +1,49 @@
+name: Full tool browser catalog sweep
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "app/tools/**"
+      - "components/tools/**"
+      - "lib/tools/**"
+      - "tests/catalog-sweep/**"
+      - "playwright.catalog.config.ts"
+      - ".github/workflows/tools-browser-catalog-sweep.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: tools-browser-catalog-sweep-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  real-browser-catalog:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chrome
+      - name: Open all registered routes and mobile locale samples in Chromium
+        run: pnpm exec playwright test -c playwright.catalog.config.ts --reporter=list,json
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/tool-catalog.json
+      - name: Attach failed-page traces and full catalog results
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: all-tools-browser-catalog-evidence
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
