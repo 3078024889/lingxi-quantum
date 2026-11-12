@@ -114,7 +114,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
  .featuredVisual{height:156px}.featuredPrice{grid-column:auto}.featuredAction{width:100%}}
 
 /* 2026 flagship: match the supplied high-dimensional SASI direction.
- * A first-party original artwork layer may be supplied at /images/sasi/hero-original.webp;
+ * A first-party original artwork layer may be supplied at /images/sasi/hero-art-20261112.avif;
  * the existing CSS plant/cup/terminal remains a complete fallback until published. */
 .main{background:transparent;padding:12px clamp(12px,1.7vw,25px) 68px}
 .main .container{max-width:1560px;margin:auto}

@@ -12,7 +12,7 @@ on:
       - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
       - 'tests/sasi-software-public-branding-20261108.test.mjs'
       - 'components/SasiOpenMarketplace.module.css'
-      - 'public/images/sasi/hero-original.webp'
+      - 'public/images/sasi/hero-art-20261112.avif'
       - 'tests/dual-premium-sasi-toolpass-20261109.test.mjs'
       - 'tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs'
       - 'components/SasiMarketplaceProductDetail.tsx'
@@ -57,5 +57,5 @@ jobs:
       - name: Confirm no production cutover or secrets
         run: |
           git status --short
-          test -s public/images/sasi/hero-original.webp
+          test -s public/images/sasi/hero-art-20261112.avif
           echo DUAL_PREMIUM_UI_BUILD_PASS_NO_PROD_DEPLOY

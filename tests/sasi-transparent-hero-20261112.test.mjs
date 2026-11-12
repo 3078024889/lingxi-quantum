@@ -15,6 +15,7 @@ test('SASI hero uses the supplied transparent scene asset without an enclosing c
  assert.ok(asset.toString('latin1').includes('auxC'),'AVIF alpha auxiliary item missing');
  const assetSha256=createHash('sha256').update(asset).digest('hex');
  console.log('SASI_HERO_ASSET_SHA256='+assetSha256);
+ assert.equal(assetSha256,'6fa696ecc33502b9047b208d82d035aa2d344df503e9185f57a8b61d167add58','transparent SASI hero asset SHA256 mismatch');
  assert.match(assetSha256,/^[a-f0-9]{64}$/);
  const retiredAssetName=['hero','original.webp'].join('-');
  assert.equal(existsSync(new URL('../public/images/sasi/'+retiredAssetName,import.meta.url)),false,'retired hero asset must not ship');
