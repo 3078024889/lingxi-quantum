@@ -153,7 +153,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
  position:relative;inset:auto;display:block;width:100%;height:auto;
  aspect-ratio:1024 / 341;object-fit:contain;object-position:center;
  margin:0;padding:0;border:0;border-radius:0;box-shadow:none;
- background:transparent!important;filter:none!important;opacity:1;
+ background:transparent!important;opacity:1;
  mix-blend-mode:normal;pointer-events:none;
 }
 .main .browseHotspot,.main .publishHotspot{
