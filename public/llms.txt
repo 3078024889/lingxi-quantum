@@ -17,6 +17,7 @@
 - [MT5 EA Source Code & Trading Software](https://lingxifield.com/discover/mt5-ea-source-code): MT5 EA 源码与交易软件。
 - [Software Licensing & Automatic Delivery](https://lingxifield.com/discover/software-licensing-delivery): 软件授权、订单权益与自动交付。
 - [Developer Software Publishing & Seller Services](https://lingxifield.com/discover/developer-software-publishing): 开发者发布、商品管理与卖家服务。
+- [SASI 卖家工作台](https://lingxifield.com/sasi/seller): 开发者入驻、商品草稿、私有软件包上传、安全审核进度、销售记录与结算入口；需要卖家权限。
 - [SASI 软件交付说明](https://lingxifield.com/sasi/delivery): 订单授权、文件校验与下载流程。
 
 ## 高频工具
