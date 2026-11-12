@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import {createHash} from "node:crypto";
 
 const file=(path)=>fs.readFileSync(path,"utf8");
 const pass=file("app/tools/pass/page.tsx");
@@ -58,27 +59,33 @@ test("announcements show actual published API items and deep-links to individual
  assert.match(pass,/premium\.noticeRow/);
  assert.match(pass,/premium\.balanceBody/);
 });
-test("SASI keeps original user high-dimensional imagery and only reviewed real listings",()=>{
- const img=fs.readFileSync("public/images/sasi/hero-art-20261112.avif");
- assert.equal(img.toString("ascii",4,8),"ftyp");
- assert.ok(img.toString("latin1").includes("auxC"));
- assert.ok(img.byteLength>8000);
- assert.match(artwork,/data-testid="sasi-transparent-hero"/);
- assert.match(artwork,/src="\/images\/sasi\/hero-art-20261112\.avif"/);
- assert.match(artwork,/styles\.heroArtwork/);
- assert.doesNotMatch(artwork,/styles\.laptopScene/);
- assert.match(style,/\.main \.heroArtwork\{[^}]*width:100%;height:100%/);
- assert.match(style,/aspect-ratio:3\/1/);
- assert.match(style,/2026-11-12: open, transparent SASI hero/);
- assert.match(artwork,/\bsetListings\(values\[0\]\.items\)/);
- assert.ok(artwork.includes("<em>SASI</em>"),"headline uses original SASI wordmark");
- assert.match(artwork,/智能软件/);
- assert.match(artwork,/开发者作品/);
- assert.match(artwork,/自动交付/);
- assert.match(artwork,/source|源码/i);
- assert.match(style,/\.main \.benefits\{grid-template-columns:repeat\(5/);
- assert.match(style,/\.main \.steps\{grid-template-columns:repeat\(4/);
- assert.doesNotMatch(artwork,/¥2,888|2,888|非源码版本|1,268|4\.9\s*\(/);
+test("SASI uses the exact user-supplied transparent marketplace artwork and reviewed real listings",()=>{
+ const img=fs.readFileSync("public/images/sasi/sasi-market-hero-lingxifield.png");
+ assert.deepEqual([...img.subarray(0,8)],[137,80,78,71,13,10,26,10]);
+ assert.equal(img.readUInt32BE(16),1024);
+ assert.equal(img.readUInt32BE(20),341);
+ assert.equal(img[25],6);
+ assert.equal(createHash("sha256").update(img).digest("hex"),"d718ed0c5a4115b7eb4e47ba3a940ceeee2623fade73fe4beccefce1cc73d9cc");
+ assert.ok(artwork.includes('data-testid="sasi-transparent-hero"'));
+ assert.ok(artwork.includes('data-hero-asset="sasi-market-hero-lingxifield.png"'));
+ assert.ok(artwork.includes('src="/images/sasi/sasi-market-hero-lingxifield.png"'));
+ assert.ok(artwork.includes("styles.heroArtwork"));
+ assert.ok(artwork.includes("styles.browseHotspot"));
+ assert.ok(artwork.includes("styles.publishHotspot"));
+ assert.ok(!artwork.includes("styles.laptopScene"));
+ assert.ok(!artwork.includes("styles.heroCopy"));
+ assert.ok(!artwork.includes("styles.benefits"));
+ assert.ok(style.includes(".main .heroArtwork{"));
+ assert.ok(style.includes("width:100%;height:auto;"));
+ assert.ok(style.includes("aspect-ratio:1024 / 341"));
+ assert.ok(style.includes("Exact user-supplied SASI marketplace hero"));
+ assert.ok(artwork.includes("setListings(values[0].items)"));
+ assert.ok(artwork.includes("灵犀场 SASI 智能软件市场"));
+ assert.ok(artwork.includes("开发者作品"));
+ assert.ok(/source|源码/i.test(artwork));
+ assert.ok(!style.includes(".main .benefits"),"the artwork already contains its five-feature strip");
+ assert.ok(style.includes(".steps{display:grid;grid-template-columns:repeat(4"));
+ for(const retired of ["¥2,888","2,888","非源码版本","1,268","4.9 ("])assert.ok(!artwork.includes(retired));
 });
 test("SASI seller revenue split is shown only upon consent, never in public product tiles",()=>{
  assert.match(artwork,/\{terms&&<p/);
