@@ -23,7 +23,7 @@ export default function SasiSoftwarePackageAdmin(){
  async function upload(product:ProductStatus){
   const file=files[product.productId];
   if(!file||busy)return;
-  if(!window.confirm("确认上传哥白尼 SI 9.5 源码 ZIP？系统将检查 MQ5、同名 EX5、PDF 白皮书、安装编译/F7/授权说明和只读观察账号资料，并在私有存储回读 SHA256 一致后标记为已核验、待人工发布。这一步不会自动开放销售。"))return;
+  if(!window.confirm("确认上传哥白尼 SI 9.5 源码 ZIP？系统将检查单一 9.5 MQ5 源码、PDF 白皮书和安装编译/F7/授权说明，并在私有存储回读 SHA256 一致后标记为已核验、待人工发布。禁止上传 EX5 编译文件和模拟账户密码。这一步不会自动开放销售。"))return;
   setBusy(product.productId);setError("");setSuccess("");
   try{
    const form=new FormData();
@@ -42,7 +42,7 @@ export default function SasiSoftwarePackageAdmin(){
 
  async function activate(product:ProductStatus){
   if(busy||!product.packageVerified||product.saleReady)return;
-  if(!window.confirm("确认已人工检查商品内容、源码授权范围、白皮书、F7 教程、只读观察账号和 ¥6,900 / USD 6,900 售价，并立即开放该源码商品销售？"))return;
+  if(!window.confirm("确认已人工检查源码内容、授权范围、白皮书、F7 教程和 ¥6,900 / USD 6,900 售价，并立即开放该源码商品销售？"))return;
   setBusy(product.productId);setError("");setSuccess("");
   try{
    const form=new FormData();
@@ -62,7 +62,7 @@ export default function SasiSoftwarePackageAdmin(){
    <div className="flex flex-wrap items-start justify-between gap-3">
     <div><p className="text-xs font-bold tracking-[.18em] text-violet-600">FIRST-PARTY SOURCE DELIVERY</p>
      <h2 className="mt-2 text-xl font-bold text-[var(--lx-ink)]">自营源码商品交付核验</h2>
-     <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--lx-muted)]">仅销售源码授权版。系统检查 9.5 MQ5、同名 EX5、白皮书、安装编译/F7/授权说明及只读观察资料；核验后须经管理员二次确认才开放销售。不会修改历史订单。</p>
+     <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--lx-muted)]">仅销售源码授权版。系统只接受 9.5 MQ5 源码、PDF 白皮书和安装编译/F7/授权说明；禁止 EX5 编译文件与模拟账户密码。核验后须经管理员二次确认才开放销售。不会修改历史订单。</p>
     </div>
     <button type="button" onClick={()=>void reload()} disabled={loading||Boolean(busy)} className="rounded-xl border border-[var(--lx-line)] px-4 py-2 text-sm text-[var(--lx-ink)] disabled:opacity-50">刷新状态</button>
    </div>
@@ -89,7 +89,7 @@ export default function SasiSoftwarePackageAdmin(){
       <div className="mt-4 space-y-3">
        <input type="file" accept=".zip,application/zip" disabled={Boolean(busy)} onChange={e=>setFiles(current=>({...current,[product.productId]:e.target.files?.[0]||null}))}
         className="block w-full text-sm text-[var(--lx-ink)] file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--lx-soft)] file:px-3 file:py-2"/>
-       <p className="text-xs leading-5 text-[var(--lx-muted)]">ZIP 最大 30MB；必须包含一个 9.5 MQ5、同名 EX5、PDF 白皮书、含安装/编译/F7/授权范围的 README，以及 DEMO_ACCESS.txt（服务器、账号、投资者只读密码）。该文件保存在私有交付包内，不进入公开页面。禁止通用脚本、安装程序、DLL及路径穿越。</p>
+       <p className="text-xs leading-5 text-[var(--lx-muted)]">ZIP 最大 30MB；必须包含一个 9.5 MQ5 源码、一个 PDF 白皮书，以及含安装/编译/F7/授权范围的 README。禁止 EX5 编译文件、模拟账户密码、通用脚本、安装程序、DLL 及路径穿越。</p>
        <button type="button" disabled={!files[product.productId]||Boolean(busy)} onClick={()=>void upload(product)}
         className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40">{busy===product.productId?"正在上传与核验…":"上传并核验源码包"}</button>
       </div>}
