@@ -96,6 +96,8 @@ test("offload stage does not remove originals from public and verifies hashes",(
  assert(!source.includes("await unlink(input)"));
  assert(source.includes("UNEXPECTED_OVERSIZE_ASSETS"));
  assert(source.includes("offload-worker.mjs"));
+ assert(source.includes('const publicBucket="lingxifield-com-large-public"'));
+ assert(source.includes("bucketName:publicBucket"));
  assert(!source.includes("fetchR2Baseline"));
  assert(!source.includes("R2_BASELINE_ASSET_NOT_AVAILABLE"));
  assert(!source.includes("r2-baseline"));
