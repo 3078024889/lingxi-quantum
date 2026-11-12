@@ -14,25 +14,17 @@ if($rc){$Rclone=$rc.Source}else{
  $Rclone=@('D:\LINGXIFIELD\rclone\rclone.exe','D:\LINGXIFIELD\rclone.exe','D:\rclone\rclone.exe')|Where-Object{Test-Path -LiteralPath $_}|Select-Object -First 1
 }
 if(!$Rclone){throw 'RCLONE_NOT_FOUND'}
-$Headers=@{'User-Agent'='LINGXIFIELD-CN3195-release-transfer';'Accept'='application/vnd.github+json'}
-$Releases=Invoke-RestMethod -Method Get -Uri 'https://api.github.com/repos/3078024889/lingxi-quantum/releases?per_page=30' -Headers $Headers
-if([string]::IsNullOrWhiteSpace($Tag)){
- $Release=@($Releases|Where-Object{$_.prerelease -and $_.tag_name -match '^ecs-cn-unified-20261110-[a-f0-9]{12}$' -and $_.name -like 'LINGXIFIELD CN3194 payment-integrated standalone*'}|Sort-Object created_at -Descending|Select-Object -First 1)
- if($Release.Count -ne 1){throw 'CN3195_STAGING_RELEASE_NOT_FOUND'}
- $Release=$Release[0]
-}else{
- $Release=@($Releases|Where-Object{$_.tag_name -ceq $Tag}|Select-Object -First 1)
- if($Release.Count -ne 1){throw "EXACT_RELEASE_TAG_NOT_FOUND: $Tag"}
- $Release=$Release[0]
-}
-$Tag=[string]$Release.tag_name
-if(!$Release.prerelease -or $Release.name -notlike 'LINGXIFIELD CN3194 payment-integrated standalone*'){throw 'RELEASE_IDENTITY_OR_PRERELEASE_CHECK_FAILED'}
+$ExpectedTag='ecs-cn-unified-20261110-ef30fe26a136'
+$ExpectedSourceSha='ef30fe26a136c9879ef480767a7abf66c3e3509c'
+$ManifestBytes=[Int64]621
+$ManifestSha='68ea42dca6890fbe4a16dfe722ed07e6b6ec6e8477858df4bcddd06f5ac85941'
+if([string]::IsNullOrWhiteSpace($Tag)){$Tag=$ExpectedTag}
+if($Tag -cne $ExpectedTag){throw "UNAPPROVED_EXACT_RELEASE_TAG: $Tag"}
 $Short=$Tag.Substring($Tag.Length-12)
-$ReleaseAssets=@{}
-foreach($a in $Release.assets){$ReleaseAssets[[string]$a.name]=$a.browser_download_url}
-if(!$ReleaseAssets.ContainsKey($ManifestName)){throw 'RELEASE_MANIFEST_ASSET_MISSING'}
+$ReleaseBase="https://github.com/3078024889/lingxi-quantum/releases/download/$Tag"
 function Download-ReleaseAsset([string]$Name,[string]$Path,[Int64]$Bytes,[string]$Sha){
- if(!$ReleaseAssets.ContainsKey($Name)){throw "RELEASE_ASSET_MISSING: $Name"}
+ if($Name -notmatch '^[A-Za-z0-9._-]+$'){throw "RELEASE_ASSET_NAME_INVALID: $Name"}
+ $Uri="$ReleaseBase/$Name"
  if(Test-Path -LiteralPath $Path -PathType Leaf){
   $item=Get-Item -LiteralPath $Path
   if(($Bytes -eq 0 -or $item.Length -eq $Bytes) -and (!$Sha -or (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() -eq $Sha)){
@@ -41,14 +33,14 @@ function Download-ReleaseAsset([string]$Name,[string]$Path,[Int64]$Bytes,[string
  }
  $tmp="$Path.downloading"
  Write-Host "DOWNLOAD_RELEASE_ASSET: $Name"
- & curl.exe --fail --location --retry 8 --retry-delay 4 --connect-timeout 25 --max-time 3600 --output $tmp $ReleaseAssets[$Name]
+ & curl.exe --fail --location --retry 8 --retry-delay 4 --connect-timeout 25 --max-time 3600 --output $tmp $Uri
  if($LASTEXITCODE -ne 0){throw "RELEASE_ASSET_DOWNLOAD_FAILED: $Name"}
  if($Bytes -gt 0 -and (Get-Item -LiteralPath $tmp).Length -ne $Bytes){throw "RELEASE_ASSET_LENGTH_MISMATCH: $Name"}
  if($Sha -and (Get-FileHash -LiteralPath $tmp -Algorithm SHA256).Hash.ToLowerInvariant() -ne $Sha){throw "RELEASE_ASSET_SHA256_MISMATCH: $Name"}
  Move-Item -LiteralPath $tmp -Destination $Path -Force
 }
 $ManifestPath=Join-Path $Root $ManifestName
-Download-ReleaseAsset $ManifestName $ManifestPath 0 ''
+Download-ReleaseAsset $ManifestName $ManifestPath $ManifestBytes $ManifestSha
 $Manifest=@{}
 foreach($line in Get-Content -LiteralPath $ManifestPath){
  if($line -match '^([A-Z][A-Z0-9_]*)=(.*)$'){$Manifest[$Matches[1]]=$Matches[2]}
@@ -56,7 +48,7 @@ foreach($line in Get-Content -LiteralPath $ManifestPath){
 foreach($key in @('SOURCE_SHA','TAG','SHORT','ARCHIVE_FILE','ARCHIVE_BYTES','ARCHIVE_SHA256','CHECK_FILE','CHECK_SHA256','STAGE_FILE','STAGE_BLOB_SHA1','PAYMENT_FILE','PAYMENT_BLOB_SHA1')){
  if(!$Manifest.ContainsKey($key) -or [string]::IsNullOrWhiteSpace([string]$Manifest[$key])){throw "RELEASE_MANIFEST_FIELD_MISSING: $key"}
 }
-if($Manifest.TAG -cne $Tag -or $Manifest.SHORT -cne $Short -or $Manifest.SOURCE_SHA -notmatch '^[a-f0-9]{40}$'){throw 'RELEASE_MANIFEST_IDENTITY_MISMATCH'}
+if($Manifest.TAG -cne $Tag -or $Manifest.SHORT -cne $Short -or $Manifest.SOURCE_SHA -cne $ExpectedSourceSha){throw 'RELEASE_MANIFEST_IDENTITY_MISMATCH'}
 $ArchiveFile=[string]$Manifest.ARCHIVE_FILE
 $CheckFile=[string]$Manifest.CHECK_FILE
 $StageFile=[string]$Manifest.STAGE_FILE
