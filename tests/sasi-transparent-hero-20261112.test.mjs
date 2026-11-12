@@ -8,6 +8,7 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
  const component=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
  const css=readFileSync('components/SasiOpenMarketplace.module.css','utf8');
  const assetPath='public/images/sasi/sasi-market-hero-lingxifield.png';
+ const retiredAssetName=['hero-art-20261112','avif'].join('.');
  const asset=readFileSync(assetPath);
  assert.deepEqual([...asset.subarray(0,8)],[137,80,78,71,13,10,26,10],'PNG signature mismatch');
  assert.equal(asset.readUInt32BE(16),1024,'original width changed');
@@ -25,8 +26,8 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
  assert.ok(component.includes('onClick={()=>setShowStudio(true)}'));
  assert.ok(!component.includes('className={styles.heroCopy}'),'baked-in title and copy must not be duplicated');
  assert.ok(!component.includes('className={styles.benefits}'),'baked-in feature strip must not be duplicated');
- assert.ok(!component.includes('hero-art-20261112.avif'));
- assert.equal(existsSync('public/images/sasi/hero-art-20261112.avif'),false,'obsolete generated hero must be removed');
+ assert.ok(!component.includes(retiredAssetName));
+ assert.equal(existsSync(path.join('public/images/sasi',retiredAssetName)),false,'obsolete generated hero must be removed');
  const heroCss=css.slice(css.lastIndexOf('Exact user-supplied SASI marketplace hero'));
  for(const required of [
   'aspect-ratio:1024 / 341','object-fit:contain','height:auto',
@@ -36,7 +37,6 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
   '@media(max-width:620px)'
  ])assert.ok(heroCss.includes(required),'missing exact-hero CSS invariant: '+required);
  assert.doesNotMatch(heroCss,/linear-gradient|radial-gradient|mask-image|filter:/,'no overlay, mask or filter may alter the source artwork');
- const retiredAssetName=['hero-art-20261112','avif'].join('.');
  const oldConsoleHero=['sasi-home-hero-v2','png'].join('.');
  assert.equal(existsSync('public/images/console/'+oldConsoleHero),false,'obsolete console hero must not ship');
  const scanExtensions=new Set(['.ts','.tsx','.js','.mjs','.cjs','.json','.css','.md','.yml','.yaml','.sh','.ps1','.txt']);
