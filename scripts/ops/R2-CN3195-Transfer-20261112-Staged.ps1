@@ -343,8 +343,12 @@ if ! bash "$PAYMENT" --audit "$TAG";then
 fi
 PROVIDERS="$(mktemp /run/cn3194-providers-XXXXXX)"
 trap 'rm -f "$PROVIDERS"' EXIT
-curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' \
-  http://127.0.0.1:3194/api/pay/providers > "$PROVIDERS"
+if ! curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' \
+  http://127.0.0.1:3194/api/pay/providers > "$PROVIDERS";then
+ echo 'CN3194_PROVIDER_ENDPOINT_POSTCHECK_FAILED_ROLLBACK_TO_3193'
+ bash "$STAGE" --rollback "$TAG" || { echo CN3194_PROVIDER_ENDPOINT_ROLLBACK_FAILED_MANUAL_REVIEW_REQUIRED >&2;exit 1; }
+ exit 1
+fi
 if ! python3 - "$PROVIDERS" <<'PY'
 import json,sys
 with open(sys.argv[1],encoding="utf-8") as f:
