@@ -136,9 +136,10 @@ mapfile -t LIVE_ENV_FILES < <(
 s=sys.stdin.read()
 for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s): print(p)'
 )
-(( ${#LIVE_ENV_FILES[@]} >= 2 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN_PAYMENT_ENVFILE_COUNT_INVALID;exit 1; }
+(( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 16 )) || { echo CN_PAYMENT_ENVFILE_COUNT_INVALID;exit 1; }
+[[ "${#LIVE_ENV_FILES[@]}" -eq "$(printf '%s\n' "${LIVE_ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN_PAYMENT_ENVFILE_DUPLICATE;exit 1; }
 for f in "${LIVE_ENV_FILES[@]}";do
- [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {
+ [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {
   echo CN_PAYMENT_ENVFILE_UNSAFE;exit 1;
  }
 done
