@@ -28,7 +28,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    "免费额度、真实价格、套餐限制",
    "地区可用、付款方式、商用授权",
    "厂商资料、官方证据与信息更新",
-   "视频、短剧制作成本及积分费用计算",
+   "视频生成模型价格、免费额度与积分成本估算",
    "API Token调用费用估算与模型成本对比",
    "按领域、任务、免费方案及付款方式筛选"
   ],
@@ -55,7 +55,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
    "Free allowances, published prices and plan limits",
    "Regional availability, payment methods and commercial rights",
    "Publisher information, official evidence and updates",
-   "Video and short-film production and credit cost estimates",
+   "Video-generation model pricing, free allowances and credit cost estimates",
    "API token usage estimates and model cost comparisons",
    "Filters for domain, task, free plans and payment methods"
   ],
@@ -77,7 +77,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
  ja:{
   headline:"🌍 世界のSIAIランキング｜SI・AIツール情報",
   intro:"世界のSI・AI企業、モデル、ツールを継続収録。検索・分類・比較と公式情報の更新に対応。",
-  marketPoints:["主要機能、モデル能力、得意分野","無料枠、実際の料金、プラン制限","利用地域、決済方法、商用利用条件","提供企業、公式根拠、情報更新","動画・短編制作とクレジット費用の試算","APIトークン費用とモデル別コスト比較","分野、用途、無料プラン、支払い方法で絞り込み"],
+  marketPoints:["主要機能、モデル能力、得意分野","無料枠、実際の料金、プラン制限","利用地域、決済方法、商用利用条件","提供企業、公式根拠、情報更新","動画生成モデルの料金、無料枠、クレジット費用の試算","APIトークン費用とモデル別コスト比較","分野、用途、無料プラン、支払い方法で絞り込み"],
   toolsTitle:"🧰 100以上のオンラインツール",
   toolCategories:[
    {title:"PDF",description:"編集・結合・分割・圧縮・OCR・電子署名・押印・墨消し・形式変換。"},
@@ -95,7 +95,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
  ko:{
   headline:"🌍 글로벌 SIAI 순위｜SI AI 도구 정보",
   intro:"전 세계 SI·AI 기업, 모델과 도구를 지속적으로 수록하며 검색, 분류, 비교 및 공식 출처 업데이트를 제공합니다.",
-  marketPoints:["주요 기능, 모델 역량 및 강점","무료 한도, 실제 가격, 요금제 제한","지역별 이용, 결제 방식, 상업적 이용","공급사 정보, 공식 근거와 업데이트","영상·단편 제작 및 크레딧 비용 계산","API 토큰 이용료 및 모델 비용 비교","분야, 작업, 무료 플랜, 결제 수단별 필터"],
+  marketPoints:["주요 기능, 모델 역량 및 강점","무료 한도, 실제 가격, 요금제 제한","지역별 이용, 결제 방식, 상업적 이용","공급사 정보, 공식 근거와 업데이트","영상 생성 모델 가격, 무료 한도 및 크레딧 비용 계산","API 토큰 이용료 및 모델 비용 비교","분야, 작업, 무료 플랜, 결제 수단별 필터"],
   toolsTitle:"🧰 100개 이상의 온라인 실용 도구",
   toolCategories:[
    {title:"PDF",description:"편집, 병합, 분할, 압축, OCR, 전자서명, 도장, 가림 처리, 형식 변환."},
@@ -113,7 +113,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
  fr:{
   headline:"🌍 Classement mondial SIAI｜Outils SI et IA",
   intro:"Recensement continu des entreprises, modèles et outils SI/IA. Recherche, filtres, comparaisons et sources officielles mises à jour.",
-  marketPoints:["Fonctions principales, capacités et spécialités des modèles","Quotas gratuits, prix réels et limites des forfaits","Disponibilité régionale, paiements et droits commerciaux","Éditeurs, preuves officielles et mises à jour","Estimation des coûts vidéo, courts-métrages et crédits","Estimation des jetons API et comparaison des modèles","Filtres par domaine, tâche, offre gratuite et paiement"],
+  marketPoints:["Fonctions principales, capacités et spécialités des modèles","Quotas gratuits, prix réels et limites des forfaits","Disponibilité régionale, paiements et droits commerciaux","Éditeurs, preuves officielles et mises à jour","Estimation des prix des modèles vidéo, quotas gratuits et crédits","Estimation des jetons API et comparaison des modèles","Filtres par domaine, tâche, offre gratuite et paiement"],
   toolsTitle:"🧰 Plus de 100 outils en ligne",
   toolCategories:[
    {title:"PDF",description:"Modifier, fusionner, diviser, compresser, OCR, signer, tamponner, caviarder et convertir."},
@@ -130,7 +130,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
  de:{
   headline:"🌍 Globales SIAI-Ranking｜SI- und KI-Tools",
   intro:"Weltweite SI-/KI-Unternehmen, Modelle und Tools mit Suche, Filtern, Vergleichen und laufend aktualisierten offiziellen Quellen.",
-  marketPoints:["Kernfunktionen, Modellfähigkeiten und Stärken","Gratis-Kontingente, tatsächliche Preise, Tarifgrenzen","Regionale Verfügbarkeit, Zahlungsarten, gewerbliche Nutzung","Anbieterinformationen, amtliche Quellen und Aktualisierungen","Video-, Kurzfilm- und Credit-Kostenschätzung","API-Token-Kosten und Modellvergleich","Filter nach Bereich, Aufgabe, Gratis-Tarif und Zahlung"],
+  marketPoints:["Kernfunktionen, Modellfähigkeiten und Stärken","Gratis-Kontingente, tatsächliche Preise, Tarifgrenzen","Regionale Verfügbarkeit, Zahlungsarten, gewerbliche Nutzung","Anbieterinformationen, amtliche Quellen und Aktualisierungen","Preis-, Gratis-Kontingent- und Credit-Schätzung für Videomodelle","API-Token-Kosten und Modellvergleich","Filter nach Bereich, Aufgabe, Gratis-Tarif und Zahlung"],
   toolsTitle:"🧰 Über 100 Online-Werkzeuge",
   toolCategories:[
    {title:"PDF",description:"Bearbeiten, verbinden, teilen, komprimieren, OCR, e-Signatur, stempeln, schwärzen und konvertieren."},
@@ -147,7 +147,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
  es:{
   headline:"🌍 Ranking mundial SIAI｜Herramientas SI e IA",
   intro:"Catálogo mundial en actualización de empresas, modelos y herramientas SI/IA, con búsqueda, filtros, comparación y fuentes oficiales.",
-  marketPoints:["Funciones, capacidad de modelos y especialidades","Límites gratuitos, precios reales y restricciones de planes","Disponibilidad regional, pagos y uso comercial","Información de proveedores, pruebas oficiales y cambios","Cálculo de costes de vídeo, cortos y créditos","Estimación de tokens API y comparativa de modelos","Filtros por sector, tarea, plan gratis y método de pago"],
+  marketPoints:["Funciones, capacidad de modelos y especialidades","Límites gratuitos, precios reales y restricciones de planes","Disponibilidad regional, pagos y uso comercial","Información de proveedores, pruebas oficiales y cambios","Precios de modelos de vídeo, cuotas gratuitas y estimación de créditos","Estimación de tokens API y comparativa de modelos","Filtros por sector, tarea, plan gratis y método de pago"],
   toolsTitle:"🧰 Más de 100 herramientas en línea",
   toolCategories:[
    {title:"PDF",description:"Editar, unir, dividir, comprimir, OCR, firmar, sellar, ocultar datos y convertir."},
@@ -164,7 +164,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
  pt:{
   headline:"🌍 Ranking global SIAI｜Ferramentas SI e IA",
   intro:"Catálogo mundial de empresas, modelos e ferramentas SI/IA, com pesquisa, filtros, comparação e fontes oficiais atualizadas.",
-  marketPoints:["Funções, capacidades dos modelos e especialidades","Cotas gratuitas, preços reais e limites dos planos","Disponibilidade regional, pagamentos e uso comercial","Informações dos fornecedores, provas oficiais e atualizações","Estimativas de vídeo, curtas-metragens e créditos","Custo de tokens API e comparação entre modelos","Filtros por área, tarefa, planos grátis e pagamento"],
+  marketPoints:["Funções, capacidades dos modelos e especialidades","Cotas gratuitas, preços reais e limites dos planos","Disponibilidade regional, pagamentos e uso comercial","Informações dos fornecedores, provas oficiais e atualizações","Preços de modelos de vídeo, cotas gratuitas e estimativas de créditos","Custo de tokens API e comparação entre modelos","Filtros por área, tarefa, planos grátis e pagamento"],
   toolsTitle:"🧰 Mais de 100 ferramentas online",
   toolCategories:[
    {title:"PDF",description:"Editar, juntar, dividir, comprimir, OCR, assinar, carimbar, ocultar dados e converter."},
@@ -181,7 +181,7 @@ export const FOOTER_UNIFIED:Record<LingxiLang,FooterUnifiedCopy>={
  ar:{
   headline:"🌍 تصنيف SIAI العالمي｜دليل أدوات SI وAI",
   intro:"فهرس متجدد لشركات ونماذج وأدوات SI وAI حول العالم مع البحث والتصفية والمقارنة ومراجع رسمية محدثة.",
-  marketPoints:["الوظائف الأساسية وقدرات النماذج ومجالات التميز","الحصص المجانية والأسعار الحقيقية وحدود الباقات","المناطق المدعومة وطرق الدفع والترخيص التجاري","بيانات الشركات والأدلة الرسمية والتحديثات","تقديرات تكاليف الفيديو والأفلام القصيرة والأرصدة","تقدير تكاليف رموز API ومقارنة النماذج","التصفية حسب المجال والمهمة والخطة المجانية والدفع"],
+  marketPoints:["الوظائف الأساسية وقدرات النماذج ومجالات التميز","الحصص المجانية والأسعار الحقيقية وحدود الباقات","المناطق المدعومة وطرق الدفع والترخيص التجاري","بيانات الشركات والأدلة الرسمية والتحديثات","أسعار نماذج الفيديو والحصص المجانية وتقدير تكلفة الأرصدة","تقدير تكاليف رموز API ومقارنة النماذج","التصفية حسب المجال والمهمة والخطة المجانية والدفع"],
   toolsTitle:"🧰 أكثر من 100 أداة عملية عبر الإنترنت",
   toolCategories:[
    {title:"PDF",description:"التحرير والدمج والتقسيم والضغط وOCR والتوقيع والختم وحجب البيانات والتحويل."},
