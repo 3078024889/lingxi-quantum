@@ -33,7 +33,31 @@ const retired=[
  "tests/final-closure/language-stability-v12.spec.ts",
  "tests/final-closure/language-stability-v13.spec.ts",
  "public/vendor/transformers",
- "public/onnxruntime"
+ "public/onnxruntime",
+ "app/sasi/VideoAssembler.tsx",
+ "components/SasiByokImageStudio.tsx",
+ "components/gates/GateDestiny.tsx",
+ "components/gates/GateHealth.tsx",
+ "components/gates/GateMind.tsx",
+ "components/gates/GateOrigin.tsx",
+ "components/gates/GateRelation.tsx",
+ "lib/gates.ts",
+ "lib/gate-tone.ts",
+ "scripts/check-v320-video.mjs",
+ "public/images/9d-field-navigation-v317.png",
+ "public/images/breath-cycle.jpeg",
+ "public/images/breath-rhythm.jpeg",
+ "public/images/breath-structure.png",
+ "public/images/cosmos-bg.png",
+ "public/images/hero-lightbody.jpg",
+ "public/images/entrance/lingxi-opening-desktop-v310.mp4",
+ "public/images/entrance/lingxi-opening-mobile.mp4",
+ "public/images/entrance/lingxi-opening-poster-mobile.jpg",
+ "public/images/sky/aurora-hero-poster.jpg",
+ "public/images/sky/aurora-hero.mp4",
+ "public/images/sky/aurora-hero.webm",
+ "public/media/lingxifield-9d-field-structure-v320.mp4",
+ "docs/LINGXIFIELD-P1-ACTUAL-SOURCE-20260923-203431.zip"
 ];
 const remains=retired.filter(p=>fs.existsSync(p));
 if(fs.existsSync("lib/tools/platform/platform"))throw new Error("NESTED_PLATFORM_DIRECTORY_REMAINS");
