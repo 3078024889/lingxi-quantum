@@ -10,6 +10,7 @@ import Link from "next/link";
 import LingxiMiniIcon from "@/components/LingxiMiniIcon";
 import {ensureBurnNoteAccess} from '@/lib/tools/commerce/export-access-client';
 import {METERED_EXPORT_TOOL_ID} from '@/lib/tools/commerce/metered-catalog';
+import {BURN_ENCRYPTED_MIME,burnEncryptedSize,encryptBurnFile} from '@/lib/tools/burn/file-crypto';
 
 function b64url(bytes:Uint8Array){let s="";bytes.forEach(b=>s+=String.fromCharCode(b));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
 type Mode="once"|"timed"|"limited"|"fast";
@@ -23,6 +24,7 @@ export default function BurnAfterReadWorkbench(){
  const[text,setText]=useState(""),[mode,setMode]=useState<Mode>("once"),[ttl,setTtl]=useState(1440),[views,setViews]=useState(1),[duration,setDuration]=useState(30);
  const[files,setFiles]=useState<File[]>([]),[link,setLink]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[copied,setCopied]=useState(false);
  const total=useMemo(()=>files.reduce((n,f)=>n+f.size,0),[files]);
+ const encryptedTotal=useMemo(()=>{try{return files.reduce((n,f)=>n+burnEncryptedSize(f.size),0)}catch{return 0}},[files]);
  const totalMb=Math.max(1,Math.ceil(total/1024/1024));
  const {currency}=usePreferredCurrency();
  const [pendingQuote,setPendingQuote]=useState("");
@@ -67,10 +69,15 @@ export default function BurnAfterReadWorkbench(){
    finally{setBusy(false)}
  }
 
- async function uploadPrepared(items:PreparedFile[]){
+ async function uploadPrepared(items:PreparedFile[],secretPart:string){
+   if(items.length!==files.length||!secretPart)throw Error("UPLOAD_MANIFEST_MISMATCH");
    for(let i=0;i<items.length;i++){
      const meta=items[i],file=files[i];
-     const r=await fetch(meta.uploadUrl,{method:"PUT",headers:{"content-type":file.type||"application/octet-stream"},body:file});
+     if(!meta?.uploadUrl||meta.type!==BURN_ENCRYPTED_MIME)throw Error("ENCRYPTED_UPLOAD_REQUIRED");
+     // The only bytes sent to object storage are authenticated ciphertext.
+     const cipher=await encryptBurnFile(file,secretPart);
+     if(cipher.size!==meta.size)throw Error("UPLOAD_MANIFEST_MISMATCH");
+     const r=await fetch(meta.uploadUrl,{method:"PUT",headers:{"content-type":"application/octet-stream"},body:cipher,cache:"no-store"});
      if(!r.ok)throw new Error("UPLOAD_FAILED");
    }
  }
@@ -84,10 +91,10 @@ export default function BurnAfterReadWorkbench(){
    sessionStorage.setItem(`lingxifield:burn-encryption:${quoteId}`,JSON.stringify(enc));
    const r=await fetch("/api/tools/burn-after-read/file/prepare",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({
      quoteId,ciphertext:enc.ciphertext,iv:enc.iv,ttlMinutes:ttl,mode,maxViews:mode==="limited"?views:1,viewDurationSeconds:mode==="fast"?duration:null,
-     files:files.map(f=>({name:f.name,size:f.size,type:f.type||"application/octet-stream"}))
+     files:files.map(f=>({name:f.name,size:burnEncryptedSize(f.size),originalSize:f.size,type:BURN_ENCRYPTED_MIME}))
    })});
    const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"PREPARE_FAILED");
-   if(!d.alreadyReady)await uploadPrepared(d.files||[]);
+   if(!d.alreadyReady)await uploadPrepared(d.files||[],enc.key);
    const done=await fetch("/api/tools/burn-after-read/file/complete",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:d.id})});
    if(!done.ok)throw new Error("UPLOAD_INCOMPLETE");
    if(!d.token)throw new Error("REVEAL_TOKEN_MISSING");
@@ -100,6 +107,7 @@ export default function BurnAfterReadWorkbench(){
 
  async function payAndUpload(){
    if(!files.length)return;
+   if(!encryptedTotal){setError(deliveryText(lang,"failed"));return}
    setBusy(true);setError("");setLink("");
    try{
      const taskId=draftId||newPaidTaskDraftId();
@@ -107,7 +115,7 @@ export default function BurnAfterReadWorkbench(){
      let id=pendingQuote;
      if(id){const status=await fetch(`/api/tools/pay/status?quoteId=${encodeURIComponent(id)}`,{cache:"no-store"});const state=await status.json();if(!status.ok)throw new Error("PAYMENT_STATUS_UNAVAILABLE");if(state.paid){await preparePaidShare(id);return}}
      else{
-      const q=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId:"burn-after-read-file",quantity:totalMb,currency,metadata:{bytes:total,fileCount:files.length,draftId:taskId}})});
+      const q=await fetch("/api/tools/quote",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({toolId:"burn-after-read-file",quantity:totalMb,currency,metadata:{bytes:total,encryptedBytes:encryptedTotal,fileCount:files.length,draftId:taskId,encryptedFiles:true}})});
       const result=await q.json().catch(()=>({}));
       if(!q.ok)throw new Error(result.error||"QUOTE_FAILED");
       id=result.id;setPendingQuote(id);

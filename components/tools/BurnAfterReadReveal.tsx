@@ -1,7 +1,8 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
-import {downloadUrl} from "@/lib/tools/shared/download";
+import {downloadUrl,downloadBlob} from "@/lib/tools/shared/download";
+import {BURN_ENCRYPTED_MIME,burnMimeFromName,decryptBurnFile} from "@/lib/tools/burn/file-crypto";
 import {privacyText} from "@/lib/privacy-tools-i18n";
 function bytes(s:string){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s);return Uint8Array.from(b,c=>c.charCodeAt(0))}
 type Item={id:string;name:string;size:number;type:string;url:string};
@@ -10,8 +11,27 @@ export default function BurnAfterReadReveal({id}:{id:string}){
  const{lang}=useLingxiLang();const t=(k:string)=>privacyText(lang,k);
  const[value,setValue]=useState(""),[files,setFiles]=useState<Item[]>([]),[status,setStatus]=useState<"idle"|"busy"|"shown"|"gone"|"missing"|"blocked"|"error">("idle"),[seconds,setSeconds]=useState<number|null>(null);
  const pending=useRef<{viewId:string;decoded:string;duration:number|null}|null>(null);
+ const [downloading,setDownloading]=useState<string|null>(null),[downloadError,setDownloadError]=useState(false);
  const opening=useRef(false);
 
+ async function downloadPrivateFile(f:Item){
+  if(downloading)return;
+  setDownloading(f.id);setDownloadError(false);
+  try{
+   if(f.type!==BURN_ENCRYPTED_MIME){ // Legacy shares predate end-to-end file encryption.
+    await downloadUrl(f.url,f.name);return;
+   }
+   const key=new URLSearchParams(location.hash.slice(1)).get("k");
+   if(!key)throw Error("MISSING_DECRYPTION_KEY");
+   const r=await fetch(f.url,{credentials:"omit",cache:"no-store"});
+   if(!r.ok)throw Error("PRIVATE_FILE_UNAVAILABLE");
+   const encrypted=await r.blob();
+   if(encrypted.size!==f.size)throw Error("PRIVATE_FILE_SIZE_MISMATCH");
+   const plain=await decryptBurnFile(encrypted,key,burnMimeFromName(f.name));
+   await downloadBlob(plain,f.name);
+  }catch{setDownloadError(true)}
+  finally{setDownloading(null)}
+ }
  async function reveal(){
   if(opening.current)return;
   const parts=new URLSearchParams(location.hash.slice(1));
@@ -62,8 +82,9 @@ export default function BurnAfterReadReveal({id}:{id:string}){
   {status==="shown"&&<div className="mt-5 space-y-4">
    {seconds!=null&&<div className="text-sm font-semibold text-[var(--lx-danger)]">{seconds}s · {t("left")}</div>}
    {value&&<div className="rounded-2xl bg-[var(--lx-soft)] p-5"><pre className="whitespace-pre-wrap break-words text-sm leading-6 text-[var(--lx-ink)]">{value}</pre></div>}
-   {!!files.length&&<div className="rounded-2xl border border-[var(--lx-line)] p-4"><b className="text-sm text-[var(--lx-ink)]">{t("files")}</b><div className="mt-3 space-y-2">{files.map(f=><button key={f.id} type="button" onClick={()=>void downloadUrl(f.url,f.name)} className="flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-ink)]"><span className="truncate">{f.name}</span><span className="shrink-0 text-[var(--lx-faint)]">{t("download")} · {(f.size/1024/1024).toFixed(1)} MB</span></button>)}</div></div>}
+   {!!files.length&&<div className="rounded-2xl border border-[var(--lx-line)] p-4"><b className="text-sm text-[var(--lx-ink)]">{t("files")}</b><div className="mt-3 space-y-2">{files.map(f=><button key={f.id} type="button" onClick={()=>void downloadPrivateFile(f)} disabled={Boolean(downloading)} className="flex items-center justify-between gap-3 rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-ink)]"><span className="truncate">{f.name}</span><span className="shrink-0 text-[var(--lx-faint)]">{downloading===f.id?t("opening"):t("download")} · {(f.size/1024/1024).toFixed(1)} MB</span></button>)}</div></div>}
   </div>}
+  {downloadError&&<p role="alert" className="mt-3 text-sm text-[var(--lx-danger)]">{t("openErr")}</p>}
   {status==="gone"&&<p className="mt-5 text-sm text-[var(--lx-muted)]">{t("gone")}</p>}
   {status==="missing"&&<p className="mt-5 text-sm text-[var(--lx-danger)]">{t("openMissing")}</p>}
   {status==="blocked"&&<p className="mt-5 text-sm text-[var(--lx-danger)]">{t("openBlocked")}</p>}
