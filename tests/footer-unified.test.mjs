@@ -44,7 +44,7 @@ test("the user-supplied global footer copy is complete in nine languages",()=>{
  assert.equal(literal(get(zh,"closingDescription")),"全球 SIAI 排行榜、模型价格与免费额度比较、SASI 智能软件市场、MT5 EA 源码与成品软件、100+ 在线实用工具，一站式查询与使用。");
  assert.match(raw,/SASI 智能软件市场/);
  assert.doesNotMatch(raw,/SASI智能创作|SASI全球多模型智能创作/);
- for(const word of ["阅后即焚","食物卡路里识别","API Token调用费用估算与模型成本对比","视频、短剧制作成本及积分费用计算"])
+ for(const word of ["阅后即焚","食物卡路里识别","API Token调用费用估算与模型成本对比","视频生成模型价格、免费额度与积分成本估算"])
   assert(raw.includes(word),word);
 });
 
