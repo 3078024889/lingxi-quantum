@@ -15,7 +15,23 @@ export const GEO_STATIC_TOPICS = Object.freeze([
 ]);
 export const GEO_STATIC_LOCALES = Object.freeze(["zh","en","ja","ko","fr","de","es","pt","ar"]);
 export const PUBLIC_STATIC_REDIRECTS = Object.freeze([
-  { route: "/sasi/marketplace", destination: "/sasi", status: 308 }
+  { route: "/sasi/marketplace", destination: "/sasi", status: 308 },
+  { route: "/sasi/assemble", destination: "/sasi", status: 308 },
+  { route: "/sasi/build", destination: "/sasi", status: 308 },
+  { route: "/sasi/chat", destination: "/sasi", status: 308 },
+  { route: "/sasi/connections", destination: "/sasi", status: 308 },
+  { route: "/sasi/director", destination: "/sasi", status: 308 },
+  { route: "/sasi/drama", destination: "/sasi", status: 308 },
+  { route: "/sasi/image", destination: "/sasi", status: 308 },
+  { route: "/sasi/operator", destination: "/sasi", status: 308 },
+  { route: "/sasi/operator/v5", destination: "/sasi", status: 308 },
+  { route: "/sasi/project-dna", destination: "/sasi", status: 308 },
+  { route: "/sasi/series", destination: "/sasi", status: 308 },
+  { route: "/sasi/variants", destination: "/sasi", status: 308 },
+  { route: "/ai-knowledge", destination: "/sasi", status: 308 },
+  { route: "/ai-learning", destination: "/sasi", status: 308 },
+  { route: "/ai-research", destination: "/sasi", status: 308 },
+  { route: "/sasi/pricing", destination: "/ai-wallet", status: 308 }
 ]);
 const GEO_STATIC_ROUTES = GEO_STATIC_TOPICS.flatMap(topic => [
   { route: `/discover/${topic}`, source: `geo-zh-${topic}.html`, target: `discover/${topic}.html` },
