@@ -130,9 +130,16 @@ foreach($u in $Uploads){
  Write-Host "R2_REMOTE_SIZE_VERIFIED: $($u.Name) $($u.Size)"
 }
 Write-Host 'R2_CONTENT_CHECK_DOWNLOAD_VERIFY_START'
-& $Rclone check $Root $RemoteRoot --one-way --download
-if($LASTEXITCODE -ne 0){throw 'R2_REMOTE_CONTENT_CHECK_FAILED'}
-Write-Host 'R2_REMOTE_CONTENT_CHECK_DOWNLOAD_VERIFY_PASS'
+$VerifyRoot=Join-Path $Root ('.r2-verify-'+[guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Force -Path $VerifyRoot | Out-Null
+try{
+ foreach($u in $Uploads){Copy-Item -LiteralPath $u.Local -Destination (Join-Path $VerifyRoot $u.Name) -Force}
+ & $Rclone check $VerifyRoot $RemoteRoot --one-way --download
+ if($LASTEXITCODE -ne 0){throw 'R2_REMOTE_CONTENT_CHECK_FAILED'}
+ Write-Host 'R2_REMOTE_CONTENT_CHECK_DOWNLOAD_VERIFY_PASS_EXACT_FIVE_ASSETS'
+}finally{
+ Remove-Item -LiteralPath $VerifyRoot -Recurse -Force -ErrorAction SilentlyContinue
+}
 function Get-SignedLink([string]$Name){
  $out=@(& $Rclone link "$RemoteRoot/$Name" --expire 6h 2>&1)
  if($LASTEXITCODE -ne 0){throw "R2_SIGNED_LINK_FAILED: $Name"}
