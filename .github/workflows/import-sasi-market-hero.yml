@@ -26,7 +26,7 @@ jobs:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
 
-      - name: Download and verify the exact supplied PNG
+      - name: Download and verify the exact supplied PNG by its immutable SHA256
         shell: bash
         run: |
           set -euo pipefail
