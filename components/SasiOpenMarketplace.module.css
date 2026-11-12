@@ -38,7 +38,7 @@
 .steps>div{display:flex;flex-direction:column;gap:9px;padding:18px 16px;border-radius:14px;background:var(--lx-panel,#fff);border:1px solid var(--lx-line,#dae6f5)}
 .steps b{color:#2e70eb;font-size:21px}.steps strong{font-size:14px}.steps span{font-size:12px;color:var(--lx-muted,#73849a);line-height:1.6}
 .launchStudio{margin-top:16px;border:0;border-radius:12px;padding:12px 21px;background:linear-gradient(105deg,#266deb,#6937cc);color:#fff;font-weight:750;cursor:pointer}
-@media(max-width:550px){.laptopDisplay{height:150px}.laptopKeyboard{top:165px}.laptopShadow{top:197px}.alienPlant{transform:scale(.85);transform-origin:top left}.crystalCup{transform:scale(.85) rotate(-7deg);transform-origin:top left}.steps>div{padding:12px}}
+@media(max-width:550px){.steps>div{padding:12px}}
 .featured{scroll-margin-top:125px;margin-top:32px}
 .featuredBrowse{color:#4a67ca;font-weight:650;font-size:13px;text-decoration:none}
 .featuredBrowse:hover{text-decoration:underline}
@@ -140,6 +140,28 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .descriptionCount{display:block;margin-top:7px;text-align:right;font-size:11px;color:var(--lx-muted,#74899a);font-variant-numeric:tabular-nums}
 
 
+
+.main .marketplaceContainer{width:100%;max-width:1600px;margin-inline:auto}
+.main .browseHotspot,.main .publishHotspot{
+ position:absolute;z-index:2;display:block;top:50.4%;height:12.2%;
+ min-height:44px;margin:0;padding:0;border:0;border-radius:999px;
+ background:transparent!important;box-shadow:none!important;cursor:pointer;
+ outline-offset:3px;-webkit-tap-highlight-color:transparent;
+}
+.main .browseHotspot{left:6.7%;width:16.2%}
+.main .publishHotspot{left:23.8%;width:13.2%}
+.main .browseHotspot:focus-visible,.main .publishHotspot:focus-visible{
+ outline:2px solid #5f8cff;outline-offset:3px;
+}
+@media(max-width:620px){
+ .main{padding-top:12px}
+ .main .marketplaceContainer{max-width:none}
+ .main .browseHotspot,.main .publishHotspot{top:44%;height:34%;min-height:44px}
+ .main .browseHotspot{left:6.5%;width:17.5%}
+ .main .publishHotspot{left:23%;width:15.5%}
+}
+
+
 /* Exact user-supplied SASI marketplace hero: source pixels remain untouched. */
 .main .marketplaceContainer{width:100%;max-width:1600px;margin-inline:auto}
 .main .hero{
@@ -153,8 +175,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
  position:relative;inset:auto;display:block;width:100%;height:auto;
  aspect-ratio:1024 / 341;object-fit:contain;object-position:center;
  margin:0;padding:0;border:0;border-radius:0;box-shadow:none;
- background:transparent!important;opacity:1;
- mix-blend-mode:normal;pointer-events:none;
+ background:transparent!important;opacity:1;mix-blend-mode:normal;pointer-events:none;
 }
 .main .browseHotspot,.main .publishHotspot{
  position:absolute;z-index:2;display:block;top:50.4%;height:12.2%;
