@@ -16,26 +16,27 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
  const assetSha256=createHash('sha256').update(asset).digest('hex');
  assert.equal(assetSha256,'d718ed0c5a4115b7eb4e47ba3a940ceeee2623fade73fe4beccefce1cc73d9cc','user-supplied PNG bytes changed');
  console.log('SASI_MARKET_HERO_SHA256='+assetSha256);
- assert.match(component,/data-testid="sasi-transparent-hero"/);
- assert.match(component,/data-hero-asset="sasi-market-hero-lingxifield\.png"/);
- assert.match(component,/src="\\/images\\/sasi\\/sasi-market-hero-lingxifield\\.png"/);
- assert.match(component,/className=\\{styles\\.browseHotspot\\}[\\s\\S]*?href="#products"/);
- assert.match(component,/className=\\{styles\\.publishHotspot\\}[\\s\\S]*?onClick=\\{\\(\\)=>setShowStudio\\(true\\)\\}/);
- assert.doesNotMatch(component,/className=\\{styles\\.(?:heroCopy|benefits)\\}/,'do not duplicate baked-in text or feature strip');
- assert.doesNotMatch(component,/hero-art-20261112\\.avif/);
+ assert.ok(component.includes('data-testid="sasi-transparent-hero"'));
+ assert.ok(component.includes('data-hero-asset="sasi-market-hero-lingxifield.png"'));
+ assert.ok(component.includes('src="/images/sasi/sasi-market-hero-lingxifield.png"'));
+ assert.ok(component.includes('className={styles.browseHotspot}'));
+ assert.ok(component.includes('href="#products"'));
+ assert.ok(component.includes('className={styles.publishHotspot}'));
+ assert.ok(component.includes('onClick={()=>setShowStudio(true)}'));
+ assert.ok(!component.includes('className={styles.heroCopy}'),'baked-in title and copy must not be duplicated');
+ assert.ok(!component.includes('className={styles.benefits}'),'baked-in feature strip must not be duplicated');
+ assert.ok(!component.includes('hero-art-20261112.avif'));
  assert.equal(existsSync('public/images/sasi/hero-art-20261112.avif'),false,'obsolete generated hero must be removed');
  const heroCss=css.slice(css.lastIndexOf('Exact user-supplied SASI marketplace hero'));
- assert.match(heroCss,/aspect-ratio:1024 \/ 341/);
- assert.match(heroCss,/object-fit:contain/);
- assert.match(heroCss,/height:auto/);
- assert.match(heroCss,/background:transparent!important/);
- assert.match(heroCss,/border:0!important/);
- assert.match(heroCss,/box-shadow:none!important/);
+ for(const required of [
+  'aspect-ratio:1024 / 341','object-fit:contain','height:auto',
+  'background:transparent!important','border:0!important','box-shadow:none!important',
+  '.main .browseHotspot{left:6.7%;width:16.2%}',
+  '.main .publishHotspot{left:23.8%;width:13.2%}',
+  '@media(max-width:620px)'
+ ])assert.ok(heroCss.includes(required),'missing exact-hero CSS invariant: '+required);
  assert.doesNotMatch(heroCss,/linear-gradient|radial-gradient|mask-image|filter:/,'no overlay, mask or filter may alter the source artwork');
- assert.match(heroCss,/\.main \.browseHotspot\\{left:6\\.7%;width:16\\.2%\\}/);
- assert.match(heroCss,/\.main \.publishHotspot\\{left:23\\.8%;width:13\\.2%\\}/);
- assert.match(heroCss,/@media\\(max-width:620px\\)/);
- const retiredAssetName=['hero-art','20261112','avif'].join('.');
+ const retiredAssetName=['hero-art-20261112','avif'].join('.');
  const oldConsoleHero=['sasi-home-hero-v2','png'].join('.');
  assert.equal(existsSync('public/images/console/'+oldConsoleHero),false,'obsolete console hero must not ship');
  const scanExtensions=new Set(['.ts','.tsx','.js','.mjs','.cjs','.json','.css','.md','.yml','.yaml','.sh','.ps1','.txt']);
@@ -46,7 +47,8 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
    const full=path.join(dir,entry.name);
    if(entry.isDirectory()){if(!['.git','node_modules','.next'].includes(entry.name))scanDirectory(full);continue;}
    if(!entry.isFile()||!scanExtensions.has(path.extname(entry.name).toLowerCase()))continue;
-   if(readFileSync(full,'utf8').includes(retiredAssetName)||readFileSync(full,'utf8').includes(oldConsoleHero))staleReferences.push(full);
+   const text=readFileSync(full,'utf8');
+   if(text.includes(retiredAssetName)||text.includes(oldConsoleHero))staleReferences.push(full);
   }
  }
  for(const root of ['app','components','lib','scripts','.github','tests','public'])scanDirectory(root);
