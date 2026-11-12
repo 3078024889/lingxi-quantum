@@ -177,6 +177,16 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.match(stagedTransfer,/STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT/);
   assert.match(stagedTransfer,/cn3195-staged-20261112-envfile16-minimal-overlay/);
   assert.match(stagedTransfer,/PATCH=CN3195_STAGE_ENV_MINIMAL_OVERLAY_NO_PRODUCTION_ENV_COPY/);
+  const stageTransferGate=stagedTransfer.slice(0,stagedTransfer.indexOf("$PromoteEcs=@'"));
+  assert.match(stageTransferGate,/CN_RELEASE_TAG_FORMAT_INVALID/);
+  assert.match(stageTransferGate,/commits\/\$Tag/);
+  assert.match(stageTransferGate,/RELEASE_TAG_TARGET_SHA_MISMATCH/);
+  assert.match(stageTransferGate,/RELEASE_MANIFEST_DUPLICATE_KEY/);
+  assert.match(stageTransferGate,/RELEASE_MANIFEST_FIELD_COUNT_INVALID/);
+  assert.doesNotMatch(stageTransferGate,/21367c6fb8d4067f23f9982256eacffc1c540d5c|455835233|26779/);
+  assert.match(stageTransferGate,/Download-ReleaseAsset \$StageFile \$StageOriginalPath 0/);
+  assert.match(stageTransferGate,/Download-ReleaseAsset \$PaymentFile \$PaymentPath 0/);
+  assert.match(stagedTransfer,/CN_PROMOTION_SOURCE_SHA_NOT_APPROVED/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
