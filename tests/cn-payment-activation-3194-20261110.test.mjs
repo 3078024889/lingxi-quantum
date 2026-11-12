@@ -221,7 +221,8 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.match(stagedTransfer,/CN3194_PROMOTION_CANCELLED/);
   assert.match(promoteTransfer,/CN3194_POST_PROMOTION_AUDIT_FAILED_ROLLBACK_TO_3193/);
   assert.match(promoteTransfer,/CN3194_PROVIDER_FLAGS_POSTCHECK_FAILED_ROLLBACK_TO_3193/);
-  assert.equal((promoteTransfer.match(/bash "\$STAGE" --rollback "\$TAG"/g)||[]).length,2);
+  assert.match(promoteTransfer,/CN3194_PROVIDER_ENDPOINT_POSTCHECK_FAILED_ROLLBACK_TO_3193/);
+  assert.equal((promoteTransfer.match(/bash "\$STAGE" --rollback "\$TAG"/g)||[]).length,3);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
