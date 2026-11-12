@@ -199,7 +199,9 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.equal((stageTransferGate.match(/foreach\(\$key in @\('SOURCE_SHA'/g)||[]).length,1);
   assert.equal((stageTransferGate.match(/RELEASE_ARCHIVE_MANIFEST_INVALID/g)||[]).length,1);
   assert.equal((stagedTransfer.match(/PATCH=CN3194_SOURCE_ENVFILES_REQUIRE_ROOT_MODE_600/g)||[]).length,1);
-  assert.match(stagedTransfer,/CN_PROMOTION_SOURCE_SHA_NOT_APPROVED/);
+  assert.match(stagedTransfer,/CN_PROMOTION_SOURCE_TAG_BINDING_PASS/);
+  assert.doesNotMatch(stagedTransfer,/21367c6fb8d4067f23f9982256eacffc1c540d5c/);
+  assert.match(stagedTransfer,/PROMOTE-CN3194-\$SHORT/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
