@@ -21,7 +21,7 @@ if(manifest.releaseReady!==false||manifest.bucketName!==bucket||
  cfg.r2_buckets[0]?.binding!=="LINGXI_PUBLIC_LARGE_R2")
  throw Error("UNVERIFIED_PUBLIC_R2_BUCKET_BINDING");
 const assets=manifest.assets||[];
-if(assets.length!==7)throw Error("R2_OBJECT_COUNT_MUST_BE_EIGHT");
+if(assets.length!==7)throw Error("R2_OBJECT_COUNT_MUST_BE_SEVEN");
 const entries=[];
 const seen=new Set();
 async function digest(file){
@@ -81,7 +81,7 @@ try{
   const size=(await stat(returned)).size;
   if(size!==e.bytes||await digest(returned)!==e.sha256)
    throw Error("R2_UPLOADED_OBJECT_READBACK_FAILED:"+i);
-  console.log("R2_REMOTE_UPLOADED_AND_HASH_VERIFIED:"+i+":of:8");
+  console.log("R2_REMOTE_UPLOADED_AND_HASH_VERIFIED:"+i+":of:7");
  }
  console.log("R2_SEVEN_PUBLIC_OBJECTS_STAGED_AND_VERIFIED_NOT_SITE_DEPLOYED");
 }finally{
