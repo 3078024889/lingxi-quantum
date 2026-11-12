@@ -68,7 +68,7 @@ test("SASI keeps original user high-dimensional imagery and only reviewed real l
  assert.match(artwork,/styles\.heroArtwork/);
  assert.doesNotMatch(artwork,/styles\.laptopScene/);
  assert.match(style,/\.main \.heroArtwork\{[^}]*width:100%;height:100%/);
- assert.match(style,/aspect-ratio:3\.94\/1/);
+ assert.match(style,/aspect-ratio:3\/1/);
  assert.match(style,/2026-11-12: open, transparent SASI hero/);
  assert.match(artwork,/\bsetListings\(values\[0\]\.items\)/);
  assert.ok(artwork.includes("<em>SASI</em>"),"headline uses original SASI wordmark");
