@@ -336,12 +336,16 @@ read -r ANSWER
 echo 'CN3194_EXPLICIT_PROMOTION_CONFIRMATION_ACCEPTED'
 bash "$STAGE" --promote "$TAG"
 echo 'CN3194_POST_PROMOTION_SIGNED_MERCHANT_AUDIT_NO_CHARGE'
-bash "$PAYMENT" --audit "$TAG"
+if ! bash "$PAYMENT" --audit "$TAG";then
+ echo 'CN3194_POST_PROMOTION_AUDIT_FAILED_ROLLBACK_TO_3193'
+ bash "$STAGE" --rollback "$TAG" || { echo CN3194_POST_PROMOTION_AUDIT_ROLLBACK_FAILED_MANUAL_REVIEW_REQUIRED >&2;exit 1; }
+ exit 1
+fi
 PROVIDERS="$(mktemp /run/cn3194-providers-XXXXXX)"
 trap 'rm -f "$PROVIDERS"' EXIT
 curl --noproxy '*' -fsS --max-time 20 -H 'Host: lingxifield.cn' \
   http://127.0.0.1:3194/api/pay/providers > "$PROVIDERS"
-python3 - "$PROVIDERS" <<'PY'
+if ! python3 - "$PROVIDERS" <<'PY'
 import json,sys
 with open(sys.argv[1],encoding="utf-8") as f:
     data=json.load(f)
@@ -350,6 +354,11 @@ for name in ("wechat","alipay","paypal"):
     print("CN3194_PROVIDER_FLAG_"+name.upper()+"="+("ENABLED" if enabled else "DISABLED"))
     if not enabled: raise SystemExit("EXISTING_PROVIDER_FLAG_NOT_ENABLED:"+name)
 PY
+then
+ echo 'CN3194_PROVIDER_FLAGS_POSTCHECK_FAILED_ROLLBACK_TO_3193'
+ bash "$STAGE" --rollback "$TAG" || { echo CN3194_PROVIDER_FLAGS_ROLLBACK_FAILED_MANUAL_REVIEW_REQUIRED >&2;exit 1; }
+ exit 1
+fi
 echo 'CN3194_PROMOTION_AND_SIGNED_AUDIT_PASS'
 echo 'CN3194_NO_PAYMENT_OR_WALLET_FLAG_MUTATION'
 echo 'SASI_SOFTWARE_SALES_REMAINS_CLOSED_UNTIL_REAL_SOURCE_ZIP_IS_UPLOADED_AND_HASH_VERIFIED'
