@@ -79,6 +79,8 @@ test("SASI uses the exact user-supplied transparent marketplace artwork and revi
  assert.ok(style.includes("width:100%;height:auto;"));
  assert.ok(style.includes("aspect-ratio:1024 / 341"));
  assert.ok(style.includes("Exact user-supplied SASI marketplace hero"));
+ for(const retiredSelector of [".laptopScene",".laptopDisplay",".laptopKeyboard",".laptopShadow",".alienPlant",".crystalCup"])
+  assert.ok(!style.includes(retiredSelector),"retired laptop-scene CSS remains: "+retiredSelector);
  assert.ok(artwork.includes("setListings(values[0].items)"));
  assert.ok(artwork.includes("灵犀场 SASI 智能软件市场"));
  assert.ok(artwork.includes("开发者作品"));
