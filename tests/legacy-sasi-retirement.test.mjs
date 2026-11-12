@@ -40,3 +40,13 @@ test('software marketplace and historical delivery remain available in source',(
  assert(config.crons.some(x=>x.path==='/api/cron/privacy-cleanup'));
  assert(config.crons.some(x=>x.path==='/api/cron/withdrawal-reconcile'));
 });
+
+
+test('retired legacy source files and media are absent from the repository and source manifests',()=>{
+ for(const file of report.removed)assert.equal(existsSync(file),false,'retired source remains: '+file);
+ for(const name of ['LINGXIFIELD_PROTECTED_MANIFEST.json','LINGXIFIELD_SOURCE_INVENTORY.json']){
+  const manifest=JSON.parse(readFileSync(name,'utf8'));
+  const stale=(manifest.files||[]).filter(row=>report.removed.includes(row.path));
+  assert.equal(stale.length,0,name+' still lists retired files: '+stale.map(x=>x.path).join(','));
+ }
+});
