@@ -5,6 +5,9 @@ import { aiMarketPreview } from '@/lib/ai-market-preview';
 import AiMarketReviewFeedback from '@/components/ai-market/AiMarketReviewFeedback';
 import AiMarketCandidates from '@/components/ai-market/AiMarketCandidates';
 import { aiMarketEngineeringStatus } from '@/lib/ai-market-engineering-status';
+import {headers} from 'next/headers';
+import {createClient} from '@/lib/supabase/server';
+import {mayViewLocalReview} from '@/lib/ai-market/local-review-access.mjs';
 
 export const dynamic = 'force-dynamic';
 export const metadata = {
@@ -34,7 +37,16 @@ function vettedPreview(input: string | undefined): string | null {
 
 export default async function AiMarketReview() {
   let admin = null;
+  let localReadOnly = false;
   try { admin = await moneyAdministrator(); } catch { admin = null; }
+  if(!admin){
+    try{
+      const {data:{user}}=await createClient().auth.getUser();
+      const h=await headers();
+      localReadOnly=mayViewLocalReview({user,host:h.get('host'),forwardedHost:h.get('x-forwarded-host'),origin:process.env.LINGXIFIELD_LOCAL_AUTH_ORIGIN,emails:process.env.LINGXIFIELD_LOCAL_REVIEW_EMAILS,expiresAt:process.env.LINGXIFIELD_LOCAL_REVIEW_EXPIRES_AT});
+      if(localReadOnly)admin=user;
+    }catch{admin=null;}
+  }
   if (!admin) redirect('/account?next=%2Faccount%2Fai-market-review');
 
   const preview = vettedPreview(process.env.LINGXIFIELD_AI_MARKET_PREVIEW_URL || aiMarketPreview.url);
@@ -42,8 +54,10 @@ export default async function AiMarketReview() {
   return <main style={{maxWidth:1180,margin:'36px auto',padding:'0 20px 80px',fontFamily:'system-ui',color:'#10223f'}}>
     <p style={{fontSize:12,letterSpacing:1.1,color:'#2861c9'}}>LINGXIFIELD · AI MARKET · ADMIN REVIEW</p>
     <h1 style={{fontSize:'clamp(26px,4vw,36px)',margin:'8px 0'}}>全球 AI 行情管理审查台</h1>
+    {localReadOnly&&<p role="status">本机只读预览：可以查看页面与验收进度；暂不开放审核保存、支付或发布操作。</p>}
     <p style={{color:'#63758f'}}>仅限已认证管理员。审查版不修改线上排行榜、不触发支付，也不会自动合并或部署。</p>
     <div style={{display:'flex',gap:10,flexWrap:'wrap',margin:'22px 0 24px'}}>
+      <Link href="/ai-market" style={{display:'inline-flex',padding:'12px 18px',background:'#155eef',borderRadius:10,color:'#fff'}}>打开当前版本 AI 行情</Link>
       {preview ? <a href={preview} target="_blank" rel="noopener noreferrer" style={{display:'inline-flex',alignItems:'center',padding:'12px 18px',background:'#155eef',borderRadius:10,color:'#fff',textDecoration:'none',fontWeight:650}}>打开新版云端预览 ↗</a> :
         <span style={{padding:'12px 18px',borderRadius:10,background:'#edf2fa',color:'#4d637f'}}>预览地址尚未配置</span>}
       <Link href="/account" style={{display:'inline-flex',padding:'12px 18px',border:'1px solid #cbd5e1',borderRadius:10,color:'#193154',textDecoration:'none'}}>返回账户</Link>
@@ -78,8 +92,7 @@ export default async function AiMarketReview() {
         </article>)}
       </div>
     </section>
-    <AiMarketCandidates />
-    <AiMarketReviewFeedback revision={aiMarketPreview.revision} />
+    {!localReadOnly&&<><AiMarketCandidates /><AiMarketReviewFeedback revision={aiMarketPreview.revision} /></>}
     <section style={{marginTop:18,padding:20,borderRadius:14,background:'#eef4ff',fontSize:13,color:'#405577',lineHeight:1.8}}>
       <strong>当前审查基线</strong>
       <div>Codex V2.9 预览记录：{aiMarketPreview.reviewedOn} · 修订 {aiMarketPreview.revision.slice(0,12)}</div>

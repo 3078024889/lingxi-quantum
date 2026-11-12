@@ -26,7 +26,7 @@ export default function AiMarketSearch({labels,locale='zh'}:{labels?:Labels;loca
    <input aria-label="描述你要解决的问题" placeholder={labels?.placeholder||"例如：如何给视频自动添加字幕？"} value={query} onChange={e=>setQuery(e.target.value)} maxLength={200} style={{flex:'1 1 260px',fontSize:17,padding:'15px 16px',border:'1px solid #b8c7df',borderRadius:12,minWidth:0}}/>
    <button type="submit" disabled={busy||query.trim().length<2} style={{padding:'14px 28px',background:'#155eef',color:'white',fontWeight:700,border:0,borderRadius:12,cursor:'pointer',opacity:busy?.6:1}}>{busy?t.searching:(labels?.search||'立即寻找')}</button>
   </form>
-  {answer?.error?<div role="status" style={{padding:20,background:'#f1f5fb',borderRadius:12}}>{t.unavailable} ({answer.error})</div>:null}
+  {answer?.error?<div role="status" style={{padding:20,background:'#f1f5fb',borderRadius:12}}>{t.unavailable}</div>:null}
   {answer&&!answer.error&&(!answer.results||answer.results.length===0)?<div role="status" style={{padding:20,background:'#f1f5fb',borderRadius:12}}>{t.none}</div>:null}
   {answer?.results?.length?<section aria-label="匹配工具" style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(min(100%,300px),1fr))',gap:14}}>
     {answer.results.map(item=><article key={item.id} style={{padding:22,border:'1px solid #d9e3f2',background:'white',borderRadius:18,boxShadow:'0 8px 26px #152f5a0a'}}>

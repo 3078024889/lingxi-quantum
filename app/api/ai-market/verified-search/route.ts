@@ -8,9 +8,9 @@ const unavailable=()=>NextResponse.json({error:'VERIFIED_DATA_UNAVAILABLE',resul
 export async function GET(req:NextRequest){
  const q=req.nextUrl.searchParams.get('q')||'';
  if(q.trim().length<2||q.length>200)return NextResponse.json({error:'INVALID_QUESTION'},{status:400,headers:{'Cache-Control':'no-store'}});
+ if(!isSupabaseAdminConfigured())return unavailable();
  if(!await checkRateLimit('ai-market-verified-search:public',120,60))
   return NextResponse.json({error:'RATE_LIMITED'},{status:429,headers:{'Cache-Control':'no-store'}});
- if(!isSupabaseAdminConfigured())return unavailable();
  try{
   const db=createAdminClient();
   const [entityResponse,capabilityResponse]=await Promise.all([

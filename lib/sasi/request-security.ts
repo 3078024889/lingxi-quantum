@@ -19,7 +19,8 @@ function trustedUrl(value:string|null){
 }
 
 function localDevelopmentOrigin(request:NextRequest, origin:string|null, referer:string|null){
-  if(process.env.NODE_ENV!=="development")return false;
+  const configured=process.env.LINGXIFIELD_LOCAL_AUTH_ORIGIN?.trim();
+  if(process.env.NODE_ENV!=="development"&&!configured)return false;
   const host=request.headers.get("host")?.toLowerCase().trim()||"";
   if(!/^localhost:[0-9]{1,5}$/.test(host)&&!/^127[.]0[.]0[.]1:[0-9]{1,5}$/.test(host))return false;
   const source=origin||referer;
@@ -27,6 +28,10 @@ function localDevelopmentOrigin(request:NextRequest, origin:string|null, referer
   try{
     const url=new URL(source);
     const requested=new URL("http://"+host);
+    // Production-mode local acceptance is opt-in for one exact loopback origin.
+    // Never infer this exception from a forwarded host or a public site URL.
+    if(process.env.NODE_ENV!=="development"&&configured!==requested.origin)return false;
+    if(!["localhost","127.0.0.1"].includes(request.nextUrl.hostname.toLowerCase()))return false;
     if(url.protocol!=="http:"||url.host!==requested.host||url.username||url.password)return false;
     const forwarded=request.headers.get("x-forwarded-host")?.toLowerCase().trim();
     if(forwarded&&forwarded!==host)return false;
