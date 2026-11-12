@@ -98,7 +98,7 @@ assert.doesNotMatch(perf,/DROP TABLE|TRUNCATE|DELETE FROM|UPDATE public\.(?:orde
 // Public listing reads must never request private moderation columns omitted from anon/authenticated grants.
 assert.match(listings,/const PUBLIC_LISTING_COLUMNS="id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at"/);
 assert.match(listings,/\.select\(PUBLIC_LISTING_COLUMNS\)/);
-assert.doesNotMatch(listings,/PUBLIC_LISTING_COLUMNS[^\\n]*rejection_reason/);
+assert.doesNotMatch(listings,/const PUBLIC_LISTING_COLUMNS=[^;]*rejection_reason/);
 // Seller-only rejection details are returned through a server-side owner-scoped read after auth.getUser().
 assert.match(listings,/const SELLER_LISTING_COLUMNS=PUBLIC_LISTING_COLUMNS\+",rejection_reason"/);
 assert.match(listings,/\.select\(SELLER_LISTING_COLUMNS\)/);
