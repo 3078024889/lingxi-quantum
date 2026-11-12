@@ -8,9 +8,17 @@ test("public brand is SASI intelligent software and old shopping labels are reti
   assert.doesNotMatch(src,/软件商城|SASI Marketplace/);
  }
  const page=read("components/SasiOpenMarketplace.tsx");
- assert.ok(page.includes('<h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")'),"SASI software market heading matches reference artwork");
+ assert.ok(page.includes('<h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Intelligent Software Marketplace")'),"SASI software market heading matches reference artwork");
  assert.match(read("app/sasi/page.tsx"),/canonical:"\/sasi"/);
  assert.match(read("app/sasi/marketplace/page.tsx"),/permanentRedirect\("\/sasi"\)/);
+ const nav=read("components/Nav.tsx"),footer=read("lib/footer-unified-copy.ts");
+ assert.match(nav,/SASI 智能软件市场/);assert.match(nav,/SASI Intelligent Software Marketplace/);
+ assert.doesNotMatch(footer,/短剧制作成本|short-film production|短編制作|단편 제작|courts-métrages|Kurzfilm|cortos y créditos|curtas-metragens|الأفلام القصيرة/);
+ const llms=read("app/llms.txt/route.ts"),staticLlms=read("public/llms.txt");
+ for(const source of [llms,staticLlms]){assert.match(source,/SASI Software Marketplace/);assert.doesNotMatch(source,/AI Short Drama Generator|book-to-ai-agent|learning-ai-agent|research-ai-agent|ai-website-builder/);}
+ for(const path of ["docs/R6_GROWTH_SEO_GEO_BLUEPRINT.md","docs/R8_GLOBAL_GROWTH_SASI_STRATEGY.md","docs/SASI-PLATFORM-STRATEGY.md"]){
+  const source=read(path);assert.doesNotMatch(source,/短剧创作|短剧制作|书本智能体|学习智能体|科研智能体|short drama|short-film production|book-to-ai-agent|learning-ai-agent|research-ai-agent|ai-website-builder/);
+ }
 });
 test("Copernicus SI9.5 only offers the source-code license across catalogue and delivery copy",()=>{
  const cat=read("lib/sasi-software/catalog.ts"),delivery=read("app/sasi/delivery/page.tsx");
