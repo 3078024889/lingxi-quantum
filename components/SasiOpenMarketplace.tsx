@@ -212,7 +212,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    setError(friendlyError(e,lang));
   }finally{setBusy("")}
  };
- return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container}>
+ return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container + (sellerOnly ? "" : " " + styles.marketplaceContainer)}>
   {!sellerOnly&&<>
   <div className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="sasi-market-hero-lingxifield.png">
     <img
