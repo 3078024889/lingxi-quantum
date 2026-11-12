@@ -26,7 +26,7 @@ function Download-ReleaseAsset([string]$Name,[string]$Path,[Int64]$Bytes,[string
  if(!$ReleaseAssets.ContainsKey($Name)){throw "RELEASE_ASSET_MISSING: $Name"}
  if(Test-Path -LiteralPath $Path -PathType Leaf){
   $item=Get-Item -LiteralPath $Path
-  if(($Bytes -eq 0 -or $item.Length -eq $Bytes) -and (!$Sha -or (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() -eq $Sha)){
+  if($Sha -and ($Bytes -eq 0 -or $item.Length -eq $Bytes) -and (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() -eq $Sha){
    Write-Host "REUSE_VERIFIED: $Name";return
   }
  }
