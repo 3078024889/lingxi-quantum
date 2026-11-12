@@ -100,6 +100,10 @@ $OldEnvSafetyLine='   [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "
 $NewEnvSafetyLine='   [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {'
 if($StageText.Split($OldEnvSafetyLine,[StringSplitOptions]::None).Length -ne 2){throw 'STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT'}
 $StageText=$StageText.Replace($OldEnvSafetyLine,$NewEnvSafetyLine)
+$OldEnvSafetyLine='   [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {'
+$NewEnvSafetyLine='   [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {'
+if($StageText.Split($OldEnvSafetyLine,[StringSplitOptions]::None).Length -ne 2){throw 'STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT'}
+$StageText=$StageText.Replace($OldEnvSafetyLine,$NewEnvSafetyLine)
 $StageStartMarker='python3 - "$ENV" "$STAGE_ENV" <<''PY'''
 $StageEndMarker="`nPY"
 $StageStart=$StageText.IndexOf($StageStartMarker,[StringComparison]::Ordinal)
@@ -151,6 +155,7 @@ $OverlayContent=@(
  'PATCH=CN3194_SOURCE_ENVFILE_LIMIT_8_TO_16'
  'PATCH=CN3194_SOURCE_ENVFILE_DUPLICATE_PATH_GUARD'
  'PATCH=CN3195_STAGE_ENV_MINIMAL_OVERLAY_NO_PRODUCTION_ENV_COPY'
+ 'PATCH=CN3194_SOURCE_ENVFILES_REQUIRE_ROOT_MODE_600'
  'PATCH=CN3194_SOURCE_ENVFILES_REQUIRE_ROOT_MODE_600'
 ) -join "`n"
 [IO.File]::WriteAllText($OverlayPath,$OverlayContent+"`n",(New-Object Text.UTF8Encoding($false)))
