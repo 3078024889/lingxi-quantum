@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,existsSync,readdirSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import path from 'node:path';
 
 test('SASI hero uses the supplied transparent scene asset without an enclosing card',()=>{
  const component=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
