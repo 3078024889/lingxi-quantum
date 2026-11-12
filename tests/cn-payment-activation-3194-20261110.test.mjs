@@ -180,6 +180,7 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.match(stagedTransfer,/STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT/);
   assert.match(stagedTransfer,/cn3195-staged-20261112-envfile16-minimal-overlay/);
   assert.match(stagedTransfer,/PATCH=CN3195_STAGE_ENV_MINIMAL_OVERLAY_NO_PRODUCTION_ENV_COPY/);
+  assert.match(stagedTransfer,/PATCH=CN_PAYMENT_AUDIT_ENVFILE_LIMIT_8_TO_16/);
   const stageTransferGate=stagedTransfer.slice(0,stagedTransfer.indexOf("$PromoteEcs=@'"));
   assert.match(stageTransferGate,/CN_RELEASE_TAG_FORMAT_INVALID/);
   assert.match(stageTransferGate,/commits\/\$Tag/);
