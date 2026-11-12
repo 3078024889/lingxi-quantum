@@ -18,6 +18,12 @@ on:
       - 'public/llms.txt'
       - 'scripts/seo/growth/**'
       - 'tests/cn3194-marketplace-readiness-gates.test.mjs'
+      - 'app/api/sasi/software/admin/package/route.ts'
+      - 'components/SasiSoftwarePackageAdmin.tsx'
+      - 'lib/sasi-software/catalog.ts'
+      - 'tests/sasi-first-party-package-upload-20261111.test.mjs'
+      - 'supabase/migrations/20261111110000_sasi_market_rls_query_performance.sql'
+      - '.github/workflows/cn3194-payment-release-20261110.yml'
       - 'tests/cn-payment-activation-3194-20261110.test.mjs'
 permissions:
   contents: read
