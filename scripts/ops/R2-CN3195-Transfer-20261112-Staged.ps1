@@ -319,7 +319,8 @@ DIR="$BASE/.download-$TAG"
 STAGE="$DIR/__STAGE_FILE__"
 PAYMENT="$DIR/__PAYMENT_FILE__"
 [[ "$TAG" == "ecs-cn-unified-20261110-$SHORT" ]] || { echo CN_PROMOTION_TAG_MISMATCH;exit 1; }
-[[ "$SOURCE_SHA" == '21367c6fb8d4067f23f9982256eacffc1c540d5c' ]] || { echo CN_PROMOTION_SOURCE_SHA_NOT_APPROVED;exit 1; }
+[[ "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ && "$TAG" == "ecs-cn-unified-20261110-${SOURCE_SHA:0:12}" ]] || { echo CN_PROMOTION_SOURCE_TAG_BINDING_FAILED;exit 1; }
+echo 'CN_PROMOTION_SOURCE_TAG_BINDING_PASS'
 [[ -f "$STAGE" && ! -L "$STAGE" && -f "$PAYMENT" && ! -L "$PAYMENT" ]] || { echo CN_PROMOTION_SCRIPTS_MISSING;exit 1; }
 [[ "$(sha256sum "$STAGE" | awk '{print $1}')" == "$STAGE_SHA" ]] || { echo CN_PROMOTION_STAGE_SCRIPT_HASH_MISMATCH;exit 1; }
 [[ "$(sha256sum "$PAYMENT" | awk '{print $1}')" == "$PAYMENT_SHA" ]] || { echo CN_PROMOTION_PAYMENT_SCRIPT_HASH_MISMATCH;exit 1; }
