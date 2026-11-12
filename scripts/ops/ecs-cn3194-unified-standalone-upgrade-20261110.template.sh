@@ -314,23 +314,21 @@ if [[ "$MODE" == --stage-local ]];then
  test -s "$TEMP/unpack/server.js"
  mv "$TEMP/unpack" "$BASE/$EXPECTED_SHA"
  chmod -R go-w "$BASE/$EXPECTED_SHA"
- python3 - "$ENV" "$STAGE_ENV" <<'PY'
+ python3 - "$STAGE_ENV" <<'PY'
 import os,sys,tempfile
-src,dst=sys.argv[1:3]
-lines=open(src,encoding="utf8").read().splitlines()
+dst=sys.argv[1]
 disabled={
  "TOOL_PASS_COMMERCE_READY","ALIPAY_ENABLED","PAYPAL_ENABLED","WECHAT_ENABLED",
  "SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SASI_REFUND_FLOW_TESTED",
  "SASI_MARKET_SALES_ENABLED","SASI_MARKET_UPLOADS_ENABLED","SASI_MARKET_DELIVERY_ENABLED",
  "SASI_MARKET_PAYOUTS_ENABLED","SASI_MARKETPLACE_COMMERCE_READY","SOFTWARE_COMMERCE_READY"
 }
-overrides=disabled|{"TOOL_PASS_BACKEND_READY","NEXT_PUBLIC_TOOL_PASS_ENFORCED","NEXT_PUBLIC_SITE_URL","ALIPAY_SITE_URL","PORT","HOSTNAME"}
-out=[ln for ln in lines if ln.split("=",1)[0] not in overrides]
-out.extend(k+"=false" for k in sorted(disabled))
+out=[k+"=false" for k in sorted(disabled)]
 out.extend(["TOOL_PASS_BACKEND_READY=true","NEXT_PUBLIC_TOOL_PASS_ENFORCED=true",
  "NEXT_PUBLIC_SITE_URL=https://lingxifield.cn","ALIPAY_SITE_URL=https://lingxifield.cn",
+ "NODE_ENV=production","NODE_OPTIONS=--max-old-space-size=500",
  "PORT=3195","HOSTNAME=127.0.0.1"])
-fd,tmp=tempfile.mkstemp(prefix=".cn3195-stage-",dir=os.path.dirname(dst))
+fd,tmp=tempfile.mkstemp(prefix=".cn3195-stage-",dir=os.path.dirname(dst) or ".")
 try:
  os.fchmod(fd,0o600)
  with os.fdopen(fd,"w",encoding="utf8") as f:f.write("\n".join(out)+"\n");f.flush();os.fsync(f.fileno())
