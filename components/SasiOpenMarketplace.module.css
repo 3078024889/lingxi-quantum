@@ -215,3 +215,68 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .mediaEntries button:disabled{opacity:.4;cursor:not-allowed}
 
 .descriptionCount{display:block;margin-top:7px;text-align:right;font-size:11px;color:var(--lx-muted,#74899a);font-variant-numeric:tabular-nums}
+
+
+/* 2026-11-12: open, transparent SASI hero. Artwork is a cropped scene from the supplied horizontal visual;
+   copy, actions and capability labels remain semantic, responsive HTML. */
+.main .hero{
+ position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);
+ align-items:center;min-height:300px;padding:16px clamp(6px,1vw,16px) 0!important;
+ background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;gap:12px
+}
+.main .hero::before{
+ content:"";position:absolute;z-index:0;pointer-events:none;left:-5%;top:-9%;bottom:-7%;width:59%;
+ background:radial-gradient(ellipse at 36% 48%,rgba(16,29,112,.96) 0%,rgba(24,35,125,.76) 43%,rgba(61,42,151,.22) 73%,transparent 100%);filter:blur(10px)
+}
+.main .hero::after{display:none!important}
+.main .heroCopy{position:relative;z-index:3;max-width:680px;padding-left:clamp(8px,1.6vw,26px)}
+.main .hero .eyebrow{color:#cbd4ff;font-size:12px;letter-spacing:.16em;font-weight:800}
+.main .hero h1{color:#fff;font-size:clamp(34px,3.8vw,56px);line-height:1.12;letter-spacing:-.035em;white-space:normal;text-shadow:0 2px 22px #6f66ff9c}
+.main .hero p{color:#f0f2ff;font-size:clamp(14px,1.3vw,18px);line-height:1.75;max-width:650px}
+.main .heroLinks{display:flex;flex-wrap:wrap;gap:12px;margin-top:21px}
+.main .heroLinks a,.main .heroLinks button{min-height:44px;min-width:150px;padding:11px 19px;border-radius:999px;font-size:14px;font-weight:780}
+.main .heroLinks a:first-child{background:linear-gradient(110deg,#159bff,#7535e7);border:1px solid #77d7ff;color:#fff;box-shadow:0 0 20px #398dff6b}
+.main .heroLinks button{background:#fff;border:1px solid #e7eaff;color:#1e2c76;box-shadow:0 8px 24px #111c5a30}
+.main .laptopScene{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;height:clamp(230px,22vw,315px);width:100%;max-width:none;min-width:0;margin:0;filter:none;overflow:visible}
+.main .originalArtwork{position:relative;inset:auto;width:100%;height:100%;object-fit:contain;object-position:center;filter:drop-shadow(0 8px 20px #161b6c40);mix-blend-mode:normal;pointer-events:none}
+.main .benefits{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:0;padding:8px 0 4px!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+.main .benefits>div{display:flex;align-items:center;gap:10px;min-width:0;padding:9px clamp(6px,1.2vw,18px);background:transparent!important;border:0;border-right:1px solid rgba(91,111,177,.28);border-radius:0}
+.main .benefits>div:last-child{border-right:0}
+.main .benefits>div>span{color:#6850e8;font-size:25px;flex:none;filter:drop-shadow(0 0 6px #8d7cff50)}
+.main .benefits>div>div{min-width:0;display:flex;flex-direction:column;gap:3px}
+.main .benefits strong{color:#17284a;font-size:clamp(11px,1.05vw,15px);line-height:1.4;white-space:nowrap}
+.main .benefits small{color:#68728e;font-size:11px;line-height:1.45}
+@media(max-width:1180px){
+ .main .hero{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);min-height:260px}
+ .main .hero h1{font-size:clamp(32px,3.8vw,46px)}
+ .main .laptopScene{height:245px}
+ .main .benefits{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media(max-width:960px){
+ .main .hero{grid-template-columns:1fr;min-height:0;padding:12px 0 0!important;gap:0}
+ .main .hero::before{left:0;top:-4%;bottom:28%;width:100%;background:radial-gradient(ellipse at 50% 42%,rgba(16,29,112,.95),rgba(24,35,125,.65) 56%,transparent 100%)}
+ .main .heroCopy{text-align:center;max-width:780px;margin:0 auto;padding:0 12px}
+ .main .heroLinks{justify-content:center}
+ .main .laptopScene{height:235px;max-width:780px;margin:0 auto}
+ .main .benefits{grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+ .main .benefits>div:nth-child(3){border-right:0}
+}
+@media(max-width:770px){
+ .main .hero{grid-template-columns:1fr;min-height:0;padding:9px 0 0!important;border-radius:0!important}
+ .main .hero h1{font-size:clamp(30px,7vw,38px);white-space:normal}
+ .main .hero p{font-size:14px}
+ .main .laptopScene{height:clamp(170px,48vw,205px);width:100%;margin:0 auto}
+ .main .benefits{grid-template-columns:repeat(2,minmax(0,1fr));padding:7px 0!important}
+ .main .benefits>div{border-right:0;border-bottom:1px solid rgba(91,111,177,.2);padding:9px 7px;gap:7px}
+ .main .benefits>div:nth-child(odd){border-right:1px solid rgba(91,111,177,.2)}
+ .main .benefits>div:last-child{grid-column:1/-1;justify-content:center;border-right:0;border-bottom:0}
+ .main .benefits>div>span{font-size:21px}
+ .main .benefits strong{font-size:12px}
+ .main .benefits small{font-size:10px}
+}
+@media(max-width:490px){
+ .main .hero h1{font-size:30px}
+ .main .heroLinks a,.main .heroLinks button{min-width:0;flex:1;padding:10px 12px}
+ .main .laptopScene{height:175px}
+ .main .benefits small{display:block}
+}
