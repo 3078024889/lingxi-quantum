@@ -30,7 +30,7 @@ test("long descriptions remain complete on detail pages but public listing respo
 test("software branding uses the supplied reference and avoids obsolete shopping language",()=>{
  const landing=read("components/SasiOpenMarketplace.tsx");
  assert.ok(landing.includes('<h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Intelligent Software Marketplace")'));
- assert.ok(landing.includes("/images/sasi/hero-original.webp"));
+ assert.ok(landing.includes("/images/sasi/hero-art-20261112.avif"));
  assert.match(landing,/<section id="featured" className=\{styles\.featured\}/);
  assert.doesNotMatch(landing,/\{featuredReady&&<section id="featured"/);
  assert.match(landing,/featuredReady&&\(featuredPayment\.wechat/);
