@@ -18,15 +18,15 @@ const mockR2={
   return meta?{size:meta.bytes,httpEtag:'"verified-etag"'}:null;
  }
 };
-test("all seven directly-named oversized source files are mapped to exact public read-only paths",()=>{
- assert.equal(names.length,7);
+test("all six directly-named oversized source files are mapped to exact public read-only paths",()=>{
+ assert.equal(names.length,6);
  assert(names.every(path=>largePublicAssets[path].bytes>25*1024*1024));
  assert(names.every(path=>path.startsWith("/models/")||path.startsWith("/images/")||path.startsWith("/runtime/")||path.startsWith("/media/ffmpeg-0.12.10/")));
  const cfg=JSON.parse(readFileSync("wrangler.jsonc","utf8"));
  assert.equal(cfg.main,".open-next/offload-worker.mjs");
  assert.equal(cfg.r2_buckets[0].binding,"LINGXI_PUBLIC_LARGE_R2");
- assert.deepEqual(cfg.assets.run_worker_first.slice(0,7),names);
- assert.equal(cfg.assets.run_worker_first[7],"/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm");
+ assert.deepEqual(cfg.assets.run_worker_first.slice(0,6),names);
+ assert.equal(cfg.assets.run_worker_first[6],"/_next/static/media/ort-wasm-simd-threaded.asyncify.*.wasm");
  assert.equal(cfg.workers_dev,false);
 });
 test("requests outside the exact manifest never access R2",async()=>{
@@ -96,19 +96,19 @@ test("offload stage does not remove originals from public and verifies hashes",(
  assert(!source.includes("await unlink(input)"));
  assert(source.includes("UNEXPECTED_OVERSIZE_ASSETS"));
  assert(source.includes("offload-worker.mjs"));
- assert(source.includes('metadata.source!=="r2-baseline"'));
- assert(source.includes("R2_BASELINE_ASSET_NOT_AVAILABLE"));
- assert(source.includes('publicBucket+"/public"+path'));
- assert(source.includes("R2_BASELINE_ASSET_REUSED"));
+ assert(!source.includes("fetchR2Baseline"));
+ assert(!source.includes("R2_BASELINE_ASSET_NOT_AVAILABLE"));
+ assert(!source.includes("r2-baseline"));
  const audit=readFileSync("scripts/cloudflare/stage-r2-public-assets.mjs","utf8");
- assert(audit.includes("baselinePath"));
+ assert(audit.includes("assets.length!==7"));
+ assert(audit.includes("entries.length!==7"));
+ assert(audit.includes("R2_SEVEN_SOURCE_FILES_SHA256_VERIFIED"));
  assert(audit.includes("R2_AUDIT_ONLY_NO_REMOTE_WRITES"));
 });
-test("the 42 MB desktop entrance video is explicitly sourced from the existing public R2 baseline",()=>{
- const video=largePublicAssets["/images/entrance/lingxi-opening-desktop-v310.mp4"];
- assert.equal(video.bytes,42282372);
- assert.equal(video.contentType,"video/mp4");
- assert.equal(video.source,"r2-baseline");
+test("retired desktop entrance video is not in the public R2 manifest or Worker route list",()=>{
+ assert.equal(largePublicAssets["/images/entrance/lingxi-opening-desktop-v310.mp4"],undefined);
+ const cfg=JSON.parse(readFileSync("wrangler.jsonc","utf8"));
+ assert(!cfg.assets.run_worker_first.includes("/images/entrance/lingxi-opening-desktop-v310.mp4"));
 });
 
 test("webpack-hashed WASM route only reads an exact generated manifest entry",async()=>{
@@ -129,7 +129,7 @@ test("webpack-hashed WASM route only reads an exact generated manifest entry",as
  assert.equal(r.headers.get("content-type"),"application/wasm");
  assert.deepEqual(stub.calls,["public"+hashed]);
 });
-test("offload stage validates exactly one webpack-hashed ONNX file and seven source paths",()=>{
+test("offload stage validates exactly one webpack-hashed ONNX file and six source paths",()=>{
  const src=readFileSync("scripts/cloudflare/stage-large-public-assets.mjs","utf8");
  assert(src.includes("HASHED_ONNX_WASM_COUNT_MISMATCH"));
  assert(src.includes("HASHED_ONNX_WASM_SIZE_MISMATCH"));

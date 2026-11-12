@@ -6,13 +6,11 @@
 import {createReadStream} from "node:fs";
 import {mkdir,readdir,stat,unlink,writeFile,copyFile} from "node:fs/promises";
 import {createHash} from "node:crypto";
-import {spawnSync} from "node:child_process";
 import {dirname,join,relative,resolve,sep} from "node:path";
 import {largePublicAssets} from "./large-public-assets.mjs";
 const root=resolve(".");
 const assetRoot=join(root,".open-next","assets");
 const limit=25*1024*1024;
-const publicBucket="lingxifield-com-large-public";
 async function sha256(file){
  const hash=createHash("sha256");
  for await(const chunk of createReadStream(file))hash.update(chunk);
@@ -20,14 +18,6 @@ async function sha256(file){
 }
 async function optionalStat(file){
  try{return await stat(file)}catch(error){if(error?.code==="ENOENT")return null;throw error}
-}
-function fetchR2Baseline(object,destination){
- if(!process.env.CLOUDFLARE_API_TOKEN||!process.env.CLOUDFLARE_ACCOUNT_ID)
-  throw Error("R2_BASELINE_ASSET_CREDENTIALS_MISSING");
- const result=spawnSync("pnpm",["exec","wrangler","r2","object","get",object,"--remote","--file",destination],{
-  cwd:root,env:process.env,stdio:"ignore",timeout:10*60*1000
- });
- if(result.error||result.status!==0)throw Error("R2_BASELINE_ASSET_NOT_AVAILABLE:"+object);
 }
 async function walk(dir){
  const entries=await readdir(dir,{withFileTypes:true});
@@ -46,31 +36,7 @@ for(const [path,metadata] of Object.entries(largePublicAssets)){
  const input=join(root,"public",relativeName);
  const compiled=join(assetRoot,relativeName);
  const [orig,generated]=await Promise.all([optionalStat(input),optionalStat(compiled)]);
- if(!orig){
-  if(metadata.source!=="r2-baseline")throw Error("OVERSIZE_FILE_SOURCE_MISSING:"+relativeName);
-  const source=join(root,".open-next","r2-upload-sources",relativeName);
-  await mkdir(dirname(source),{recursive:true});
-  try{await unlink(source)}catch(error){if(error?.code!=="ENOENT")throw error}
-  const object=publicBucket+"/public"+path;
-  fetchR2Baseline(object,source);
-  const staged=await stat(source);
-  if(!staged.isFile()||staged.size!==metadata.bytes||staged.size<=limit)
-   throw Error("R2_BASELINE_ASSET_SIZE_MISMATCH:"+relativeName);
-  const sourceSha=await sha256(source);
-  if(metadata.sha256&&sourceSha!==metadata.sha256)
-   throw Error("R2_BASELINE_ASSET_HASH_MISMATCH:"+relativeName);
-  if(generated){
-   if(!generated.isFile()||generated.size!==metadata.bytes||generated.size<=limit)
-    throw Error("R2_BASELINE_COMPILED_COPY_SIZE_MISMATCH:"+relativeName);
-   if(await sha256(compiled)!==sourceSha)
-    throw Error("R2_BASELINE_COMPILED_COPY_HASH_MISMATCH:"+relativeName);
-   await unlink(compiled);
-  }
-  manifest.push({path,bytes:metadata.bytes,sha256:sourceSha,r2Key:"public"+path,contentType:metadata.contentType,source:"r2-baseline"});
-  console.log("R2_BASELINE_ASSET_REUSED:"+relativeName+":"+sourceSha);
-  continue;
- }
- if(!orig.isFile()||!generated||!generated.isFile()||orig.size!==metadata.bytes||generated.size!==metadata.bytes||generated.size<=limit)
+ if(!orig||!orig.isFile()||!generated||!generated.isFile()||orig.size!==metadata.bytes||generated.size!==metadata.bytes||generated.size<=limit)
   throw Error("OVERSIZE_FILE_SHAPE_MISMATCH:"+relativeName);
  const [sourceSha,copySha]=await Promise.all([sha256(input),sha256(compiled)]);
  if(sourceSha!==copySha)throw Error("OVERSIZE_FILE_HASH_CHANGED:"+relativeName);
