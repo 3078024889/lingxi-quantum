@@ -202,6 +202,11 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.match(stagedTransfer,/CN_PROMOTION_SOURCE_TAG_BINDING_PASS/);
   assert.doesNotMatch(stagedTransfer,/21367c6fb8d4067f23f9982256eacffc1c540d5c/);
   assert.match(stagedTransfer,/PROMOTE-CN3194-\$SHORT/);
+  const promoteTransfer=stagedTransfer.slice(stagedTransfer.indexOf("$PromoteEcs=@'"));
+  assert.ok(promoteTransfer.indexOf('bash "$STAGE" --verify-stage "$TAG"') < promoteTransfer.indexOf("read -r ANSWER"));
+  assert.ok(promoteTransfer.indexOf("read -r ANSWER") < promoteTransfer.indexOf('bash "$STAGE" --promote "$TAG"'));
+  assert.match(stagedTransfer,/CN3195_STAGE_ONLY_PASS SOURCE_SHA/);
+  assert.match(stagedTransfer,/CN3194_PROMOTION_CANCELLED/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
