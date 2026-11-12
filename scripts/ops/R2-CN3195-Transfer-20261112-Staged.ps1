@@ -176,7 +176,8 @@ STAGE="$DIR/__STAGE_FILE__"
 PAYMENT="$DIR/__PAYMENT_FILE__"
 mkdir -p "$DIR";chmod 700 "$DIR"
 fetch_exact(){
- local url="$1" dest="$2" bytes="$3" sha="$4" tmp="$dest.part" got attempt
+ local url="$1" dest="$2" bytes="$3" sha="$4" got attempt
+ local tmp="${dest}.part"
  if [[ -f "$dest" && ! -L "$dest" ]] && [[ "$(stat -c %s "$dest")" == "$bytes" ]] && [[ "$(sha256sum "$dest"|awk '{print $1}')" == "$sha" ]];then
   echo "R2_REUSE_VERIFIED: $(basename "$dest")";return 0
  fi
