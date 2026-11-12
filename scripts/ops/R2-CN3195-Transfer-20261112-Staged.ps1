@@ -173,6 +173,7 @@ $OverlayContent=@(
  'PATCH=CN3194_SOURCE_ENVFILE_DUPLICATE_PATH_GUARD'
  'PATCH=CN3195_STAGE_ENV_MINIMAL_OVERLAY_NO_PRODUCTION_ENV_COPY'
  'PATCH=CN3194_SOURCE_ENVFILES_REQUIRE_ROOT_MODE_600'
+ 'PATCH=CN_PAYMENT_AUDIT_ENVFILE_LIMIT_8_TO_16'
 ) -join "`n"
 [IO.File]::WriteAllText($OverlayPath,$OverlayContent+"`n",(New-Object Text.UTF8Encoding($false)))
 $PaymentBytes=(Get-Item -LiteralPath $PaymentPath).Length
