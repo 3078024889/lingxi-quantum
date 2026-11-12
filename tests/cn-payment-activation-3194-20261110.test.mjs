@@ -195,6 +195,8 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.match(stageTransferGate,/Get-ReleaseAssetSha256 \$PaymentFile/);
   assert.match(stageTransferGate,/RELEASE_MANIFEST_DUPLICATE_KEY/);
   assert.match(stageTransferGate,/RELEASE_MANIFEST_FIELD_COUNT_INVALID/);
+  assert.match(stageTransferGate,/RELEASE_MANIFEST_ASSET_NAMES_INVALID/);
+  assert.match(stageTransferGate,/RELEASE_MANIFEST_ASSET_METADATA_INVALID/);
   assert.doesNotMatch(stageTransferGate,/21367c6fb8d4067f23f9982256eacffc1c540d5c|455835233|26779/);
   assert.match(stageTransferGate,/Download-ReleaseAsset \$StageFile \$StageOriginalPath 0/);
   assert.match(stageTransferGate,/Download-ReleaseAsset \$PaymentFile \$PaymentPath 0/);
