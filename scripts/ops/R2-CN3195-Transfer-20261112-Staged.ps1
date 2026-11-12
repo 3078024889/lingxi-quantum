@@ -89,15 +89,15 @@ function Get-GitBlobSha1([string]$Path){
 }
 if((Get-GitBlobSha1 $StageOriginalPath) -cne $StageBlob){throw 'STAGE_GIT_BLOB_SHA1_MISMATCH'}
 $StageText=[IO.File]::ReadAllText($StageOriginalPath)
-$OldEnvLine='  (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
-$NewEnvLine1='  (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 16 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
-$NewEnvLine2='  [[ "${#LIVE_ENV_FILES[@]}" -eq "$(printf ''%s\n'' "${LIVE_ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3194_SOURCE_ENVFILE_DUPLICATE >&2;exit 1; }'
+$OldEnvLine=' (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
+$NewEnvLine1=' (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 16 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
+$NewEnvLine2=' [[ "${#LIVE_ENV_FILES[@]}" -eq "$(printf ''%s\n'' "${LIVE_ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3194_SOURCE_ENVFILE_DUPLICATE >&2;exit 1; }'
 $First=$StageText.IndexOf($OldEnvLine,[StringComparison]::Ordinal)
 if($First -lt 0 -or $First -ne $StageText.LastIndexOf($OldEnvLine,[StringComparison]::Ordinal)){throw 'STAGE_ENVFILE_PATCH_SOURCE_NOT_EXACT'}
 $StageText=$StageText.Replace($OldEnvLine,$NewEnvLine1+"`n"+$NewEnvLine2)
 if($StageText.Contains($OldEnvLine) -or !$StageText.Contains('CN3194_SOURCE_ENVFILE_DUPLICATE')){throw 'STAGE_ENVFILE_PATCH_VERIFY_FAILED'}
-$OldEnvSafetyLine='   [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {'
-$NewEnvSafetyLine='   [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {'
+$OldEnvSafetyLine='  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {'
+$NewEnvSafetyLine='  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {'
 if($StageText.Split($OldEnvSafetyLine,[StringSplitOptions]::None).Length -ne 2){throw 'STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT'}
 $StageText=$StageText.Replace($OldEnvSafetyLine,$NewEnvSafetyLine)
 $StageStartMarker='python3 - "$ENV" "$STAGE_ENV" <<''PY'''
