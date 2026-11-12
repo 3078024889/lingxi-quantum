@@ -41,16 +41,27 @@ for(const rule of ["/test-results/","/playwright-report/","/audit-output/","/bui
 
 const protectedManifest=JSON.parse(fs.readFileSync("LINGXIFIELD_PROTECTED_MANIFEST.json","utf8"));
 const protectedPaths=new Set((protectedManifest.files||[]).map(x=>x.path));
-const assets=[
+const retiredAssets=[
  "public/images/9d-field-navigation-v317.png",
  "public/media/lingxifield-9d-field-structure-v320.mp4",
  "public/images/breath-structure.png",
  "public/images/cosmos-bg.png",
- "public/images/sasi/cards/models-api-v1.png"
+ "public/images/breath-cycle.jpeg",
+ "public/images/breath-rhythm.jpeg",
+ "public/images/hero-lightbody.jpg",
+ "public/images/entrance/lingxi-opening-desktop-v310.mp4",
+ "public/images/entrance/lingxi-opening-mobile.mp4",
+ "public/images/entrance/lingxi-opening-poster-mobile.jpg",
+ "public/images/sky/aurora-hero-poster.jpg",
+ "public/images/sky/aurora-hero.mp4",
+ "public/images/sky/aurora-hero.webm"
 ];
-for(const p of assets){
-  if(protectedPaths.has(p))must(fs.existsSync(p),`V38R2_PROTECTED_ASSET_MISSING:${p}`);
+for(const p of retiredAssets){
+ must(!protectedPaths.has(p),`V38R2_RETIRED_ASSET_STILL_PROTECTED:${p}`);
+ must(!fs.existsSync(p),`V38R2_RETIRED_ASSET_STILL_PRESENT:${p}`);
 }
+const activeAssets=["public/images/sasi/cards/models-api-v1.png"];
+for(const p of activeAssets)if(protectedPaths.has(p))must(fs.existsSync(p),`V38R2_ACTIVE_ASSET_MISSING:${p}`);
 
 const ci=fs.readFileSync("scripts/ci/production-gate.mjs","utf8");
 must(ci.includes("v38r2-repository-hardening.mjs")||ci.includes("v38r1-repository-hardening.mjs"),"V38R2_CI_GATE_NOT_REGISTERED");
@@ -59,7 +70,8 @@ console.log("CANONICAL_PACKAGE_MANAGER=pnpm@11.28.0");
 console.log("PACKAGE_LOCK_PRESERVED=YES");
 console.log("GENERATED_ARTIFACTS_TRACKED=0");
 console.log("GENERATED_ARTIFACT_IGNORE_RULES=PASS");
-console.log("PROTECTED_RETIRED_ASSETS_PRESERVED=5");
+console.log("RETIRED_LEGACY_ASSETS=0");
+console.log("ACTIVE_SASI_PROTECTED_ASSETS=1");
 console.log("GITHUB_ACTIONS_FULL_SHA_PINNED=PASS");
 console.log("GITIGNORE_NORMALIZED=PASS");
 console.log("FOOD_CALORIE_CHANGED=NO");
