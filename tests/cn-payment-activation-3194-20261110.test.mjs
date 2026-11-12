@@ -14,6 +14,7 @@ const wechatNotify=read("app/api/pay/wechat/notify/route.ts");
 const walletMigration=read("supabase/migrations/20261110050414_harden_legacy_ai_wallet_topup_order_state.sql");
 const releaseWorkflow=read(".github/workflows/cn3194-payment-release-20261110.yml");
 const transfer=read("scripts/ops/R2-CN3195-Transfer-20261110.ps1");
+const stagedTransfer=read("scripts/ops/R2-CN3195-Transfer-20261112-Staged.ps1");
 
 test("payment activation is pinned to final 3194; 3195 is temporary staging only",()=>{
  assert.match(script,/TAG" =~ \^ecs-cn-unified-20261110-/);
@@ -171,6 +172,11 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.match(upgrade,/LIVE_ENV_FILES\[@\].*<= 16/);
   assert.match(upgrade,/CN3194_SOURCE_ENVFILE_DUPLICATE/);
   assert.match(upgrade,/stat -c %a "\$f"/);
+  assert.match(stagedTransfer,/Get-GitBlobSha1 \$StageOriginalPath/);
+  assert.match(stagedTransfer,/CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1/);
+  assert.match(stagedTransfer,/STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT/);
+  assert.match(stagedTransfer,/cn3195-staged-20261112-envfile16-minimal-overlay/);
+  assert.match(stagedTransfer,/PATCH=CN3195_STAGE_ENV_MINIMAL_OVERLAY_NO_PRODUCTION_ENV_COPY/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
