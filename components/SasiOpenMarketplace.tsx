@@ -214,7 +214,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  };
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container}>
   {!sellerOnly&&<>
-<div className={styles.hero}>
+<div className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="hero-art-20261112.avif">
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
        <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Intelligent Software Marketplace")}</h1>
@@ -222,7 +222,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
        <div className={styles.heroLinks}><a href="#products">◇ {sasiSoftwareUiText(lang,"浏览软件","Explore software")}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</button></div>
      </div>
      <div className={styles.laptopScene} aria-hidden="true">
-      <img src="/images/sasi/hero-original.webp" className={styles.originalArtwork} alt="" loading="eager" decoding="async" draggable={false}/>
+      <img src="/images/sasi/hero-art-20261112.avif" className={styles.originalArtwork} alt="" loading="eager" decoding="async" draggable={false}/>
      </div>
   </div>
     <div className={styles.benefits}>

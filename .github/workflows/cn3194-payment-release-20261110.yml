@@ -16,6 +16,12 @@ on:
       - 'scripts/seo/audit-global.cjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
       - 'public/llms.txt'
+      - 'components/SasiOpenMarketplace.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'public/images/sasi/hero-art-20261112.avif'
+      - 'lib/seo/site-facts.ts'
+      - 'app/llms.txt/route.ts'
+      - 'tests/sasi-transparent-hero-20261112.test.mjs'
       - 'scripts/seo/growth/**'
       - 'tests/cn3194-marketplace-readiness-gates.test.mjs'
       - 'app/api/sasi/software/admin/package/route.ts'
@@ -91,6 +97,7 @@ jobs:
           node --test tests/wallet-ledger-keyset-20261110.test.mjs
           node --test tests/sasi-first-party-package-upload-20261111.test.mjs tests/sasi-market-payout-balance-snapshot-20261110.test.mjs
           node --test tests/legacy-sasi-retirement.test.mjs
+          node --test tests/sasi-transparent-hero-20261112.test.mjs
           node --test tests/footer-unified.test.mjs tests/growth-distribution.test.mjs tests/seo-fullsite-coverage.test.mjs tests/siai-search-discovery.test.mjs
           node --test tests/supabase-applied-migration-parity-20261111.test.mjs
           node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs tests/dual-premium-sasi-toolpass-20261109.test.mjs tests/dual-premium-visual-no-legacy-20261109.test.mjs
