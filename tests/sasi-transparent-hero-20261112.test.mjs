@@ -16,6 +16,19 @@ test('SASI hero uses the supplied transparent scene asset without an enclosing c
  assert.match(assetSha256,/^[a-f0-9]{64}$/);
  const retiredAssetName=['hero','original.webp'].join('-');
  assert.equal(existsSync(new URL('../public/images/sasi/'+retiredAssetName,import.meta.url)),false,'retired hero asset must not ship');
+ const scanExtensions=new Set(['.ts','.tsx','.js','.mjs','.cjs','.json','.css','.md','.yml','.yaml','.sh','.ps1','.txt']);
+ const staleReferences=[];
+ function scanDirectory(dir){
+  for(const entry of readdirSync(dir,{withFileTypes:true})){
+   const full=path.join(dir,entry.name);
+   if(entry.isDirectory()){if(!['.git','node_modules','.next'].includes(entry.name))scanDirectory(full);continue;}
+   if(!entry.isFile()||!scanExtensions.has(path.extname(entry.name).toLowerCase()))continue;
+   if(readFileSync(full,'utf8').includes(retiredAssetName))staleReferences.push(full);
+  }
+ }
+ for(const root of ['app','components','lib','scripts','.github','tests','public'])scanDirectory(root);
+ assert.deepEqual(staleReferences,[],'retired hero path must have no remaining source or test references');
+
  const override=css.slice(css.lastIndexOf('2026-11-12: open, transparent SASI hero'));
  assert.match(override,/\.main \.hero\{[^}]*background:transparent!important/);
  assert.match(override,/\.main \.hero\{[^}]*border:0!important/);

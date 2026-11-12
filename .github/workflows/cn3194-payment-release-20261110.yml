@@ -25,6 +25,8 @@ on:
       - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
       - 'tests/com-paypal-live-review-20261109.test.mjs'
       - 'tests/sasi-premium-nine-language-20261109.test.mjs'
+      - 'tests/dual-premium-sasi-toolpass-20261109.test.mjs'
+      - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
       - 'scripts/seo/growth/**'
       - 'tests/cn3194-marketplace-readiness-gates.test.mjs'
       - 'app/api/sasi/software/admin/package/route.ts'
