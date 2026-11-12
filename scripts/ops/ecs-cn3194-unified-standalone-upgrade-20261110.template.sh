@@ -116,9 +116,10 @@ load_env_files(){
 s=sys.stdin.read()
 for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s): print(p)'
  )
- (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }
+ (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 16 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }
+ [[ "${#LIVE_ENV_FILES[@]}" -eq "$(printf '%s\n' "${LIVE_ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3194_SOURCE_ENVFILE_DUPLICATE >&2;exit 1; }
  for f in "${LIVE_ENV_FILES[@]}";do
-  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {
+  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {
    echo CN3194_SOURCE_ENVFILE_UNSAFE >&2;exit 1;
   }
  done
@@ -313,23 +314,22 @@ if [[ "$MODE" == --stage-local ]];then
  test -s "$TEMP/unpack/server.js"
  mv "$TEMP/unpack" "$BASE/$EXPECTED_SHA"
  chmod -R go-w "$BASE/$EXPECTED_SHA"
- python3 - "$ENV" "$STAGE_ENV" <<'PY'
+ echo 'CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1'
+ python3 - "$STAGE_ENV" <<'PY'
 import os,sys,tempfile
-src,dst=sys.argv[1:3]
-lines=open(src,encoding="utf8").read().splitlines()
+dst=sys.argv[1]
 disabled={
  "TOOL_PASS_COMMERCE_READY","ALIPAY_ENABLED","PAYPAL_ENABLED","WECHAT_ENABLED",
  "SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SASI_REFUND_FLOW_TESTED",
  "SASI_MARKET_SALES_ENABLED","SASI_MARKET_UPLOADS_ENABLED","SASI_MARKET_DELIVERY_ENABLED",
  "SASI_MARKET_PAYOUTS_ENABLED","SASI_MARKETPLACE_COMMERCE_READY","SOFTWARE_COMMERCE_READY"
 }
-overrides=disabled|{"TOOL_PASS_BACKEND_READY","NEXT_PUBLIC_TOOL_PASS_ENFORCED","NEXT_PUBLIC_SITE_URL","ALIPAY_SITE_URL","PORT","HOSTNAME"}
-out=[ln for ln in lines if ln.split("=",1)[0] not in overrides]
-out.extend(k+"=false" for k in sorted(disabled))
+out=[k+"=false" for k in sorted(disabled)]
 out.extend(["TOOL_PASS_BACKEND_READY=true","NEXT_PUBLIC_TOOL_PASS_ENFORCED=true",
  "NEXT_PUBLIC_SITE_URL=https://lingxifield.cn","ALIPAY_SITE_URL=https://lingxifield.cn",
+ "NODE_ENV=production","NODE_OPTIONS=--max-old-space-size=500",
  "PORT=3195","HOSTNAME=127.0.0.1"])
-fd,tmp=tempfile.mkstemp(prefix=".cn3195-stage-",dir=os.path.dirname(dst))
+fd,tmp=tempfile.mkstemp(prefix=".cn3195-stage-",dir=os.path.dirname(dst) or ".")
 try:
  os.fchmod(fd,0o600)
  with os.fdopen(fd,"w",encoding="utf8") as f:f.write("\n".join(out)+"\n");f.flush();os.fsync(f.fileno())
