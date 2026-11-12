@@ -29,6 +29,9 @@ test("payment activation is pinned to final 3194; 3195 is temporary staging only
 });
 test("signed merchant audit inherits every live env file with flags applied last",()=>{
  assert.match(script,/mapfile -t LIVE_ENV_FILES/);
+ assert.match(script,/LIVE_ENV_FILES\[@\].*<= 16/);
+ assert.match(script,/CN_PAYMENT_ENVFILE_DUPLICATE/);
+ assert.match(script,/stat -c %a "\$f"/);
  assert.match(script,/env_props\+=\(--property="EnvironmentFile=\$f"\)/);
  assert.match(script,/env_props\+=\(--property="EnvironmentFile=\$FLAGS"\)/);
  assert.match(script,/systemd-run --quiet --wait --pipe --collect --unit="\$unit" "\$\{env_props\[@\]\}"/);
