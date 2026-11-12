@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Removes only compiled copies of large PUBLIC assets from a throwaway
 // .open-next/assets directory. Tracked public originals are never modified.
-// One explicitly declared R2-baseline asset may be read back from the same
-// dedicated public bucket when its 42 MB source is intentionally not in Git.
+// Every active source asset must exist in the tracked public tree and pass
+// exact size/SHA validation before the offload manifest is written.
 import {createReadStream} from "node:fs";
 import {mkdir,readdir,stat,unlink,writeFile,copyFile} from "node:fs/promises";
 import {createHash} from "node:crypto";
@@ -11,6 +11,8 @@ import {largePublicAssets} from "./large-public-assets.mjs";
 const root=resolve(".");
 const assetRoot=join(root,".open-next","assets");
 const limit=25*1024*1024;
+// Used only as release-report metadata; this stage performs no R2 reads/writes.
+const publicBucket="lingxifield-com-large-public";
 async function sha256(file){
  const hash=createHash("sha256");
  for await(const chunk of createReadStream(file))hash.update(chunk);
