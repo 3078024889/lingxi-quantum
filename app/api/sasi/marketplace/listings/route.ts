@@ -18,8 +18,8 @@ function validMinor(v:unknown){return typeof v==="number"&&Number.isSafeInteger(
 export async function GET(req:NextRequest){
  const mode=req.nextUrl.searchParams.get("mode")==="mine"?"mine":"public";
  try{
-  let data:MarketplaceListingRow[]|null=null;
-  let queryError:{code?:string}|null=null;
+  let data:unknown[]=[];
+  let queryError:unknown=null;
   if(mode==="mine"){
    const sessionDb=createClient();
    const {data:{user}}=await sessionDb.auth.getUser();
@@ -32,7 +32,7 @@ export async function GET(req:NextRequest){
     .eq("seller_id",user.id)
     .order("created_at",{ascending:false})
     .limit(36);
-   data=result.data;
+   data=result.data??[];
    queryError=result.error;
   }else{
    // Public reads use only the explicitly granted public columns. Private moderation fields are never selected.
@@ -42,13 +42,13 @@ export async function GET(req:NextRequest){
     .eq("scan_status","clean")
     .order("published_at",{ascending:false})
     .limit(36);
-   data=result.data;
+   data=result.data??[];
    queryError=result.error;
   }
   if(queryError)throw queryError;
   // Public cards and hover previews are excerpts; the product endpoint serves the full long description.
   // Keep the public JSON compact even when a seller writes a 5,000-character description.
-  const items=mode==="public"?(data||[]).map(item=>({...item,description:item.description.slice(0,800)})):data||[];
+  const items=mode==="public"?data.map(value=>{const item=value as MarketplaceListingRow;return {...item,description:item.description.slice(0,800)}}):data;
   return NextResponse.json({items},{headers:nocache});
  }catch(error){
   const code=typeof error==="object"&&error!==null&&"code" in error?String(error.code).slice(0,32):"UNKNOWN";
