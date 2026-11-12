@@ -1,18 +1,16 @@
 #!/usr/bin/env node
 // Removes only compiled copies of large PUBLIC assets from a throwaway
 // .open-next/assets directory. Tracked public originals are never modified.
-// One explicitly declared R2-baseline asset may be read back from the same
-// dedicated public bucket when its 42 MB source is intentionally not in Git.
+// The desktop entrance video is an immutable R2 baseline: it is not tracked
+// in Git and is verified through production/canary Worker R2 bindings at runtime.
 import {createReadStream} from "node:fs";
 import {mkdir,readdir,stat,unlink,writeFile,copyFile} from "node:fs/promises";
 import {createHash} from "node:crypto";
-import {spawnSync} from "node:child_process";
 import {dirname,join,relative,resolve,sep} from "node:path";
 import {largePublicAssets} from "./large-public-assets.mjs";
 const root=resolve(".");
 const assetRoot=join(root,".open-next","assets");
 const limit=25*1024*1024;
-const publicBucket="lingxifield-com-large-public";
 async function sha256(file){
  const hash=createHash("sha256");
  for await(const chunk of createReadStream(file))hash.update(chunk);
@@ -20,14 +18,6 @@ async function sha256(file){
 }
 async function optionalStat(file){
  try{return await stat(file)}catch(error){if(error?.code==="ENOENT")return null;throw error}
-}
-function fetchR2Baseline(object,destination){
- if(!process.env.CLOUDFLARE_API_TOKEN||!process.env.CLOUDFLARE_ACCOUNT_ID)
-  throw Error("R2_BASELINE_ASSET_CREDENTIALS_MISSING");
- const result=spawnSync("pnpm",["exec","wrangler","r2","object","get",object,"--remote","--file",destination],{
-  cwd:root,env:process.env,stdio:"ignore",timeout:10*60*1000
- });
- if(result.error||result.status!==0)throw Error("R2_BASELINE_ASSET_NOT_AVAILABLE:"+object);
 }
 async function walk(dir){
  const entries=await readdir(dir,{withFileTypes:true});
@@ -48,26 +38,9 @@ for(const [path,metadata] of Object.entries(largePublicAssets)){
  const [orig,generated]=await Promise.all([optionalStat(input),optionalStat(compiled)]);
  if(!orig){
   if(metadata.source!=="r2-baseline")throw Error("OVERSIZE_FILE_SOURCE_MISSING:"+relativeName);
-  const source=join(root,".open-next","r2-upload-sources",relativeName);
-  await mkdir(dirname(source),{recursive:true});
-  try{await unlink(source)}catch(error){if(error?.code!=="ENOENT")throw error}
-  const object=publicBucket+"/public"+path;
-  fetchR2Baseline(object,source);
-  const staged=await stat(source);
-  if(!staged.isFile()||staged.size!==metadata.bytes||staged.size<=limit)
-   throw Error("R2_BASELINE_ASSET_SIZE_MISMATCH:"+relativeName);
-  const sourceSha=await sha256(source);
-  if(metadata.sha256&&sourceSha!==metadata.sha256)
-   throw Error("R2_BASELINE_ASSET_HASH_MISMATCH:"+relativeName);
-  if(generated){
-   if(!generated.isFile()||generated.size!==metadata.bytes||generated.size<=limit)
-    throw Error("R2_BASELINE_COMPILED_COPY_SIZE_MISMATCH:"+relativeName);
-   if(await sha256(compiled)!==sourceSha)
-    throw Error("R2_BASELINE_COMPILED_COPY_HASH_MISMATCH:"+relativeName);
-   await unlink(compiled);
-  }
-  manifest.push({path,bytes:metadata.bytes,sha256:sourceSha,r2Key:"public"+path,contentType:metadata.contentType,source:"r2-baseline"});
-  console.log("R2_BASELINE_ASSET_REUSED:"+relativeName+":"+sourceSha);
+  if(generated)throw Error("R2_BASELINE_COMPILED_COPY_WITHOUT_TRACKED_SOURCE:"+relativeName);
+  manifest.push({path,bytes:metadata.bytes,sha256:null,r2Key:"public"+path,contentType:metadata.contentType,source:"r2-baseline"});
+  console.log("R2_BASELINE_ASSET_DEFERRED_TO_RUNTIME:"+relativeName);
   continue;
  }
  if(!orig.isFile()||!generated||!generated.isFile()||orig.size!==metadata.bytes||generated.size!==metadata.bytes||generated.size<=limit)
@@ -123,7 +96,7 @@ const wrapper=[
 ].join("\n");
 await writeFile(join(root,".open-next","offload-worker.mjs"),wrapper);
 const summary={schemaVersion:1,sourceSha:process.env.GITHUB_SHA||null,
- bucketBinding:"LINGXI_PUBLIC_LARGE_R2",bucketName:publicBucket,
+ bucketBinding:"LINGXI_PUBLIC_LARGE_R2",bucketName:"lingxifield-com-large-public",
  releaseReady:false,remainingOversizeCount:0,assets:manifest};
 await writeFile(join(root,"cloudflare-offload-report.json"),JSON.stringify(summary,null,2)+"\n");
-console.log(JSON.stringify({OFFLOADED_LARGE_FILES:manifest.length,assetBytes:manifest.reduce((s,x)=>s+x.bytes,0),remainingOversizeCount:0,WORKER_R2_NOT_VALIDATED:true}));
+console.log(JSON.stringify({OFFLOADED_LARGE_FILES:manifest.length,assetBytes:manifest.reduce((s,x)=>s+x.bytes,0),remainingOversizeCount:0,WORKER_R2_RUNTIME_BASELINE_REQUIRED:true}));
