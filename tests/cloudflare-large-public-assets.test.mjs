@@ -96,6 +96,19 @@ test("offload stage does not remove originals from public and verifies hashes",(
  assert(!source.includes("await unlink(input)"));
  assert(source.includes("UNEXPECTED_OVERSIZE_ASSETS"));
  assert(source.includes("offload-worker.mjs"));
+ assert(source.includes('metadata.source!=="r2-baseline"'));
+ assert(source.includes("R2_BASELINE_ASSET_NOT_AVAILABLE"));
+ assert(source.includes('publicBucket+"/public"+path'));
+ assert(source.includes("R2_BASELINE_ASSET_REUSED"));
+ const audit=readFileSync("scripts/cloudflare/stage-r2-public-assets.mjs","utf8");
+ assert(audit.includes("baselinePath"));
+ assert(audit.includes("R2_AUDIT_ONLY_NO_REMOTE_WRITES"));
+});
+test("the 42 MB desktop entrance video is explicitly sourced from the existing public R2 baseline",()=>{
+ const video=largePublicAssets["/images/entrance/lingxi-opening-desktop-v310.mp4"];
+ assert.equal(video.bytes,42282372);
+ assert.equal(video.contentType,"video/mp4");
+ assert.equal(video.source,"r2-baseline");
 });
 
 test("webpack-hashed WASM route only reads an exact generated manifest entry",async()=>{
