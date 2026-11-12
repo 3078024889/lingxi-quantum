@@ -48,7 +48,8 @@ test("Real software checkout and tool passes remain fail-closed",()=>{
  assert.match(imagery,/\.main \.browseHotspot/);
  assert.match(imagery,/\.main \.publishHotspot/);
  assert.doesNotMatch(imagery,/\.crystalCup|\.alienPlant|\.laptopDisplay|\.laptopKeyboard|\.laptopShadow/);
- assert.match(market,/sasi-market-hero-lingxifield\.png/);
+ const market=read("components/SasiOpenMarketplace.tsx");
+  assert.match(market,/sasi-market-hero-lingxifield\.png/);
 });
 
 test("All retired creation pages are noindexed redirects, with valid market SEO",()=>{
