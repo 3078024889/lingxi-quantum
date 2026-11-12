@@ -157,13 +157,20 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
  assert.match(upgrade,/systemctl disable "\$OLD_3194_SVC"/);
  assert.doesNotMatch(upgrade,/CN3195_NGINX_PROMOTION_PASS/);
  assert.match(upgrade,/NGINX_BACKUP/);
- const stageStart=upgrade.indexOf('python3 - "$ENV" "$STAGE_ENV"');
- const stageEnd=upgrade.indexOf("\nPY",stageStart);
- assert.ok(stageStart>=0&&stageEnd>stageStart,"isolated 3195 environment builder must exist");
- const stageEnv=upgrade.slice(stageStart,stageEnd);
- for(const flag of ["TOOL_PASS_COMMERCE_READY","WECHAT_ENABLED","ALIPAY_ENABLED","PAYPAL_ENABLED","SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SOFTWARE_COMMERCE_READY"])
-  assert.ok(stageEnv.includes('"'+flag+'"'),"missing isolated-stage gate: "+flag);
- assert.match(stageEnv,/out\.extend\(k\+"=false" for k in sorted\(disabled\)\)/);
+  const stageStart=upgrade.indexOf('python3 - "$STAGE_ENV"');
+  const stageEnd=upgrade.indexOf("\nPY",stageStart);
+  assert.ok(stageStart>=0&&stageEnd>stageStart,"isolated 3195 minimal environment overlay must exist");
+  const stageEnv=upgrade.slice(stageStart,stageEnd);
+  assert.match(upgrade,/CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1/);
+  assert.doesNotMatch(upgrade,/python3 - "\$ENV" "\$STAGE_ENV"/);
+  assert.doesNotMatch(stageEnv,/lines=open\(src,encoding="utf8"\)\.read\(\)\.splitlines\(\)/);
+  for(const flag of ["TOOL_PASS_COMMERCE_READY","WECHAT_ENABLED","ALIPAY_ENABLED","PAYPAL_ENABLED","SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SOFTWARE_COMMERCE_READY"])
+   assert.ok(stageEnv.includes('"'+flag+'"'),"missing isolated-stage gate: "+flag);
+  assert.match(stageEnv,/out=\[k\+"=false" for k in sorted\(disabled\)\]/);
+  assert.match(stageEnv,/NODE_OPTIONS=--max-old-space-size=500/);
+  assert.match(upgrade,/LIVE_ENV_FILES\[@\].*<= 16/);
+  assert.match(upgrade,/CN3194_SOURCE_ENVFILE_DUPLICATE/);
+  assert.match(upgrade,/stat -c %a "\$f"/);
  assert.match(upgrade,/SOFTWARE_COMMERCE_READY=false/);
  assert.match(upgrade,/EnvironmentFile=\$PROD_FLAGS/);
  assert.doesNotMatch(upgrade,/__CHECK_SHA__|EXPECTED_CHECK_SHA/);
