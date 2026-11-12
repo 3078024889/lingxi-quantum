@@ -40,7 +40,7 @@ test('SASI hero uses the full-width transparent horizontal artwork without an en
  assert.match(override,/\.main \.benefits\{[^}]*background:transparent!important/);
  assert.match(override,/@media\(max-width:770px\)/);
  assert.match(css,/\.main \.heroArtwork\{[\s\S]*?width:100%;height:100%;[\s\S]*?object-fit:cover/);
- assert.match(css,/aspect-ratio:3\.94\/1/);
+ assert.match(css,/aspect-ratio:3\/1/);
 });
 
 test('SASI GEO facts describe software products and SIAI video pricing only',()=>{
