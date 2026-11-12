@@ -61,7 +61,7 @@ test("isolated international candidate contains the same premium ToolPass and SA
  const manifest=read("supabase/migrations/20261109030000_sasi_market_one_cover_four_details.sql");
  for(const feature of ["premium.hero","premium.modal","premium.lowerPanels","/api/money/summary"])
   assert.ok(toolpass.includes(feature),"ToolPass: "+feature);
- for(const feature of ["hero-art-20261112.avif","styles.quickPreview","mediaCounts","主图"])
+ for(const feature of ["sasi-market-hero-lingxifield.png","styles.quickPreview","mediaCounts","主图"])
   assert.ok(sasi.includes(feature),"SASI: "+feature);
  assert.ok(detail.includes("aria-expanded={descriptionOpen}"));
  assert.ok(detail.includes('p.kind==="cover"'));
