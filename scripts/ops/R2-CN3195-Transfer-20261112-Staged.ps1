@@ -108,7 +108,7 @@ $StageEnd=if($StageStart -ge 0){$StageText.IndexOf($StageEndMarker,$StageStart,[
 if($StageStart -lt 0 -or $StageEnd -lt 0 -or $StageText.IndexOf($StageStartMarker,$StageStart+1,[StringComparison]::Ordinal) -ge 0){throw 'STAGE_ENV_OVERLAY_SOURCE_NOT_EXACT'}
 $MinimalStageBlock=@'
 echo 'CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1'
-python3 - "$STAGE_ENV" <<'PY'
+ python3 - "$STAGE_ENV" <<'PY'
 import os,sys,tempfile
 dst=sys.argv[1]
 disabled={
