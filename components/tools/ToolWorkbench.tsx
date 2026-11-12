@@ -137,6 +137,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
         multiple={!!tool.multiple}
         append={!!tool.multiple}
         maxFiles={tool.maxFiles || 1}
+        preserveSameNamedFiles={tool.slug === "file-compare"}
         maxSizeMB={tool.maxSizeMB || 40}
         files={files}
         onChange={(f) => {
@@ -647,7 +648,9 @@ function TimestampWorkbench() {
   const [mode, setMode] = useState<"sec" | "ms">("sec");
 
   const parsed = useMemo(() => {
-    const n = Number(input.trim());
+    const normalized = input.trim();
+    if (!normalized) return null;
+    const n = Number(normalized);
     if (!Number.isFinite(n)) return null;
     const ms = mode === "sec" ? n * 1000 : n;
     const d = new Date(ms);
