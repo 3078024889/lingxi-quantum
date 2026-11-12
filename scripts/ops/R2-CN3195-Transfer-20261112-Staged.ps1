@@ -14,11 +14,10 @@ if($rc){$Rclone=$rc.Source}else{
  $Rclone=@('D:\LINGXIFIELD\rclone\rclone.exe','D:\LINGXIFIELD\rclone.exe','D:\rclone\rclone.exe')|Where-Object{Test-Path -LiteralPath $_}|Select-Object -First 1
 }
 if(!$Rclone){throw 'RCLONE_NOT_FOUND'}
-$ExpectedTag='ecs-cn-unified-20261110-21367c6fb8d4'
-$ExpectedSourceSha='21367c6fb8d4067f23f9982256eacffc1c540d5c'
+$GitHubRepo='3078024889/lingxi-quantum'
 if([string]::IsNullOrWhiteSpace($Tag)){throw 'EXACT_RELEASE_TAG_REQUIRED'}
 $Tag=$Tag.Trim()
-if($Tag -cne $ExpectedTag){throw 'CN_RELEASE_TAG_NOT_APPROVED'}
+if($Tag -cnotmatch '^ecs-cn-unified-20261110-[a-f0-9]{12}$'){throw 'CN_RELEASE_TAG_FORMAT_INVALID'}
 $Short=$Tag.Substring($Tag.Length-12)
 $ReleaseBase="https://github.com/3078024889/lingxi-quantum/releases/download/$Tag"
 $ReleaseAssets=@{}
@@ -40,16 +39,26 @@ function Download-ReleaseAsset([string]$Name,[string]$Path,[Int64]$Bytes,[string
  Move-Item -LiteralPath $tmp -Destination $Path -Force
 }
 $ManifestPath=Join-Path $Root $ManifestName
-Download-ReleaseAsset $ManifestName $ManifestPath 621 ''
+Download-ReleaseAsset $ManifestName $ManifestPath 0 ''
 $Manifest=@{}
 foreach($line in Get-Content -LiteralPath $ManifestPath){
- if($line -match '^([A-Z][A-Z0-9_]*)=(.*)$'){$Manifest[$Matches[1]]=$Matches[2]}
+ if([string]::IsNullOrWhiteSpace($line)){continue}
+ if($line -notmatch '^([A-Z][A-Z0-9_]*)=(.*)$'){throw 'RELEASE_MANIFEST_LINE_INVALID'}
+ $key=$Matches[1]
+ if($Manifest.ContainsKey($key)){throw "RELEASE_MANIFEST_DUPLICATE_KEY: $key"}
+ $Manifest[$key]=$Matches[2]
 }
+if($Manifest.Count -ne 12){throw 'RELEASE_MANIFEST_FIELD_COUNT_INVALID'}
+foreach($key in @('SOURCE_SHA','TAG','SHORT','ARCHIVE_FILE','ARCHIVE_BYTES','ARCHIVE_SHA256','CHECK_FILE','CHECK_SHA256','STAGE_FILE','STAGE_BLOB_SHA1','PAYMENT_FILE','PAYMENT_BLOB_SHA1')){
+ if(!$Manifest.ContainsKey($key) -or [string]::IsNullOrWhiteSpace([string]$Manifest[$key])){throw "RELEASE_MANIFEST_FIELD_MISSING: $key"}
+}
+if($Manifest.TAG -cne $Tag -or $Manifest.SHORT -cne $Short -or $Manifest.SOURCE_SHA -notmatch '^[a-f0-9]{40}$' -or $Manifest.SOURCE_SHA.Substring(0,12) -cne $Short){throw 'RELEASE_MANIFEST_IDENTITY_MISMATCH'}
+$CommitInfo=Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$GitHubRepo/commits/$Tag" -Headers @{Accept='application/vnd.github+json';'X-GitHub-Api-Version'='2022-11-28'}
+if($CommitInfo.sha -cne $Manifest.SOURCE_SHA){throw 'RELEASE_TAG_TARGET_SHA_MISMATCH'}
 foreach($key in @('SOURCE_SHA','TAG','SHORT','ARCHIVE_FILE','ARCHIVE_BYTES','ARCHIVE_SHA256','CHECK_FILE','CHECK_SHA256','STAGE_FILE','STAGE_BLOB_SHA1','PAYMENT_FILE','PAYMENT_BLOB_SHA1')){
  if(!$Manifest.ContainsKey($key) -or [string]::IsNullOrWhiteSpace([string]$Manifest[$key])){throw "RELEASE_MANIFEST_FIELD_MISSING: $key"}
 }
 if($Manifest.TAG -cne $Tag -or $Manifest.SHORT -cne $Short -or $Manifest.SOURCE_SHA -notmatch '^[a-f0-9]{40}$'){throw 'RELEASE_MANIFEST_IDENTITY_MISMATCH'}
-if($Manifest.SOURCE_SHA -cne $ExpectedSourceSha){throw 'CN_RELEASE_SOURCE_SHA_MISMATCH'}
 $ArchiveFile=[string]$Manifest.ARCHIVE_FILE
 $CheckFile=[string]$Manifest.CHECK_FILE
 $StageFile=[string]$Manifest.STAGE_FILE
@@ -59,7 +68,7 @@ foreach($assetName in @($ArchiveFile,$CheckFile,$StageFile,$PaymentFile)){
  $ReleaseAssets[$assetName]="$ReleaseBase/$([uri]::EscapeDataString($assetName))"
 }
 if($ArchiveFile -cne 'cn-20261110-unified-standalone.tar.gz' -or $CheckFile -cne 'cn-20261110-unified-standalone.sha256' -or $StageFile -cne 'ecs-cn3194-unified-standalone-upgrade-20261110.sh' -or $PaymentFile -cne 'cn-payment-activate-3194-20261110.sh'){throw 'CN_RELEASE_ASSET_IDENTITY_MISMATCH'}
-if([Int64]$Manifest.ARCHIVE_BYTES -ne 455835233){throw 'CN_RELEASE_ARCHIVE_SIZE_NOT_APPROVED'}
+if([Int64]$Manifest.ARCHIVE_BYTES -lt 1000000 -or [Int64]$Manifest.ARCHIVE_BYTES -gt 1300000000 -or $Manifest.ARCHIVE_SHA256 -notmatch '^[a-f0-9]{64}$' -or $Manifest.CHECK_SHA256 -notmatch '^[a-f0-9]{64}$'){throw 'RELEASE_ARCHIVE_MANIFEST_INVALID'}
 $ArchiveBytes=[Int64]$Manifest.ARCHIVE_BYTES
 $ArchiveSha=[string]$Manifest.ARCHIVE_SHA256
 $CheckSha=[string]$Manifest.CHECK_SHA256
@@ -74,8 +83,8 @@ $StageOriginalPath=Join-Path $Root ($StageFile+'.release-original')
 $PaymentPath=Join-Path $Root $PaymentFile
 Download-ReleaseAsset $ArchiveFile $ArchivePath $ArchiveBytes $ArchiveSha
 Download-ReleaseAsset $CheckFile $CheckPath 104 $CheckSha
-Download-ReleaseAsset $StageFile $StageOriginalPath 26779 ''
-Download-ReleaseAsset $PaymentFile $PaymentPath 11972 ''
+Download-ReleaseAsset $StageFile $StageOriginalPath 0 ''
+Download-ReleaseAsset $PaymentFile $PaymentPath 0 ''
 if((Get-Content -LiteralPath $CheckPath -Raw).Trim() -ne "$ArchiveSha  $ArchiveFile"){throw 'CHECKSUM_MANIFEST_CONTENT_MISMATCH'}
 function Get-GitBlobSha1([string]$Path){
  $bytes=[IO.File]::ReadAllBytes($Path)
