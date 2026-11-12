@@ -105,4 +105,4 @@ assert.match(listings,/\.select\(SELLER_LISTING_COLUMNS\)/);
 assert.match(listings,/\.eq\("seller_id",user\.id\)/);
 assert.match(listings,/const sessionDb=createClient\(\)/);
 assert.ok(listings.indexOf('if(!user)')<listings.indexOf('createAdminClient().from("sasi_market_listings")'));
-assert.match(listings,/mode==="public"\?\(data\|\|\[\]\)\.map/);
+assert.match(listings,/mode==="public"\?data\.map/);
