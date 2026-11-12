@@ -98,7 +98,8 @@ $StageText=$StageText.Replace($OldEnvLine,$NewEnvLine1+"`n"+$NewEnvLine2)
 if($StageText.Contains($OldEnvLine) -or !$StageText.Contains('CN3194_SOURCE_ENVFILE_DUPLICATE')){throw 'STAGE_ENVFILE_PATCH_VERIFY_FAILED'}
 $OldEnvSafetyLine='  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {'
 $NewEnvSafetyLine='  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {'
-if($StageText.Split($OldEnvSafetyLine,[StringSplitOptions]::None).Length -ne 2){throw 'STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT'}
+$SafetyFirst=$StageText.IndexOf($OldEnvSafetyLine,[StringComparison]::Ordinal)
+if($SafetyFirst -lt 0 -or $SafetyFirst -ne $StageText.LastIndexOf($OldEnvSafetyLine,[StringComparison]::Ordinal)){throw 'STAGE_ENVFILE_SAFETY_SOURCE_NOT_EXACT'}
 $StageText=$StageText.Replace($OldEnvSafetyLine,$NewEnvSafetyLine)
 $StageStartMarker='python3 - "$ENV" "$STAGE_ENV" <<''PY'''
 $StageEndMarker="`nPY"
@@ -130,7 +131,7 @@ finally:
  if os.path.exists(tmp):os.unlink(tmp)
 PY
 '@
-$StageText=$StageText.Substring(0,$StageStart)+$MinimalStageBlock.TrimEnd("`r","`n")+$StageText.Substring($StageEnd+3)
+$StageText=$StageText.Substring(0,$StageStart)+$MinimalStageBlock.TrimEnd([char[]]@([char]13,[char]10))+$StageText.Substring($StageEnd+3)
 if($StageText.Contains('python3 - "$ENV" "$STAGE_ENV"') -or !$StageText.Contains('CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1') -or $StageText.Contains('lines=open(src,encoding="utf8").read().splitlines()')){throw 'STAGE_ENV_OVERLAY_PATCH_VERIFY_FAILED'}
 [IO.File]::WriteAllText($StagePath,$StageText,(New-Object Text.UTF8Encoding($false)))
 $PatchedStageBlob=Get-GitBlobSha1 $StagePath
