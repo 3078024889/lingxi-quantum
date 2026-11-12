@@ -119,7 +119,7 @@ for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s): print
  (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 16 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }
  [[ "${#LIVE_ENV_FILES[@]}" -eq "$(printf '%s\n' "${LIVE_ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3194_SOURCE_ENVFILE_DUPLICATE >&2;exit 1; }
  for f in "${LIVE_ENV_FILES[@]}";do
-  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 ]] || {
+  [[ "$f" =~ ^/etc/lingxifield/[a-zA-Z0-9_.-]+\.env$ && -f "$f" && ! -L "$f" && "$(stat -c %u "$f")" == 0 && "$(stat -c %a "$f")" == 600 ]] || {
    echo CN3194_SOURCE_ENVFILE_UNSAFE >&2;exit 1;
   }
  done
@@ -314,6 +314,7 @@ if [[ "$MODE" == --stage-local ]];then
  test -s "$TEMP/unpack/server.js"
  mv "$TEMP/unpack" "$BASE/$EXPECTED_SHA"
  chmod -R go-w "$BASE/$EXPECTED_SHA"
+ echo 'CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1'
  python3 - "$STAGE_ENV" <<'PY'
 import os,sys,tempfile
 dst=sys.argv[1]
