@@ -39,7 +39,18 @@ function Download-ReleaseAsset([string]$Name,[string]$Path,[Int64]$Bytes,[string
  Move-Item -LiteralPath $tmp -Destination $Path -Force
 }
 $ManifestPath=Join-Path $Root $ManifestName
-Download-ReleaseAsset $ManifestName $ManifestPath 0 ''
+$ReleaseInfo=Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$GitHubRepo/releases/tags/$Tag" -Headers @{Accept='application/vnd.github+json';'X-GitHub-Api-Version'='2022-11-28'}
+if($ReleaseInfo.tag_name -cne $Tag -or $ReleaseInfo.draft -or !$ReleaseInfo.prerelease){throw 'CN_RELEASE_NOT_PRERELEASE'}
+if(@($ReleaseInfo.assets).Count -ne 5){throw 'CN_RELEASE_ASSET_COUNT_INVALID'}
+function Get-ReleaseAssetSha256([string]$Name){
+ $assets=@($ReleaseInfo.assets|Where-Object{[string]$_.name -ceq $Name})
+ if($assets.Count -ne 1){throw "RELEASE_ASSET_IDENTITY_INVALID: $Name"}
+ $digest=[string]$assets[0].digest
+ if($digest -notmatch '^sha256:[a-f0-9]{64}$'){throw "RELEASE_ASSET_DIGEST_INVALID: $Name"}
+ return $digest.Substring(7)
+}
+$ManifestSha=Get-ReleaseAssetSha256 $ManifestName
+Download-ReleaseAsset $ManifestName $ManifestPath 0 $ManifestSha
 $Manifest=@{}
 foreach($line in Get-Content -LiteralPath $ManifestPath){
  if([string]::IsNullOrWhiteSpace($line)){continue}
@@ -55,6 +66,7 @@ foreach($key in @('SOURCE_SHA','TAG','SHORT','ARCHIVE_FILE','ARCHIVE_BYTES','ARC
 if($Manifest.TAG -cne $Tag -or $Manifest.SHORT -cne $Short -or $Manifest.SOURCE_SHA -notmatch '^[a-f0-9]{40}$' -or $Manifest.SOURCE_SHA.Substring(0,12) -cne $Short){throw 'RELEASE_MANIFEST_IDENTITY_MISMATCH'}
 $CommitInfo=Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$GitHubRepo/commits/$Tag" -Headers @{Accept='application/vnd.github+json';'X-GitHub-Api-Version'='2022-11-28'}
 if($CommitInfo.sha -cne $Manifest.SOURCE_SHA){throw 'RELEASE_TAG_TARGET_SHA_MISMATCH'}
+if($ReleaseInfo.target_commitish -cne $Manifest.SOURCE_SHA){throw 'RELEASE_TARGET_COMMIT_MISMATCH'}
 $ArchiveFile=[string]$Manifest.ARCHIVE_FILE
 $CheckFile=[string]$Manifest.CHECK_FILE
 $StageFile=[string]$Manifest.STAGE_FILE
@@ -65,6 +77,10 @@ foreach($assetName in @($ArchiveFile,$CheckFile,$StageFile,$PaymentFile)){
 }
 if($ArchiveFile -cne 'cn-20261110-unified-standalone.tar.gz' -or $CheckFile -cne 'cn-20261110-unified-standalone.sha256' -or $StageFile -cne 'ecs-cn3194-unified-standalone-upgrade-20261110.sh' -or $PaymentFile -cne 'cn-payment-activate-3194-20261110.sh'){throw 'CN_RELEASE_ASSET_IDENTITY_MISMATCH'}
 if([Int64]$Manifest.ARCHIVE_BYTES -lt 1000000 -or [Int64]$Manifest.ARCHIVE_BYTES -gt 1300000000 -or $Manifest.ARCHIVE_SHA256 -notmatch '^[a-f0-9]{64}$' -or $Manifest.CHECK_SHA256 -notmatch '^[a-f0-9]{64}$'){throw 'RELEASE_ARCHIVE_MANIFEST_INVALID'}
+if((Get-ReleaseAssetSha256 $ArchiveFile) -cne $Manifest.ARCHIVE_SHA256){throw 'RELEASE_ARCHIVE_API_DIGEST_MISMATCH'}
+if((Get-ReleaseAssetSha256 $CheckFile) -cne $Manifest.CHECK_SHA256){throw 'RELEASE_CHECK_API_DIGEST_MISMATCH'}
+$StageAssetSha=Get-ReleaseAssetSha256 $StageFile
+$PaymentAssetSha=Get-ReleaseAssetSha256 $PaymentFile
 $ArchiveBytes=[Int64]$Manifest.ARCHIVE_BYTES
 $ArchiveSha=[string]$Manifest.ARCHIVE_SHA256
 $CheckSha=[string]$Manifest.CHECK_SHA256
@@ -78,8 +94,8 @@ $StageOriginalPath=Join-Path $Root ($StageFile+'.release-original')
 $PaymentPath=Join-Path $Root $PaymentFile
 Download-ReleaseAsset $ArchiveFile $ArchivePath $ArchiveBytes $ArchiveSha
 Download-ReleaseAsset $CheckFile $CheckPath 104 $CheckSha
-Download-ReleaseAsset $StageFile $StageOriginalPath 0 ''
-Download-ReleaseAsset $PaymentFile $PaymentPath 0 ''
+Download-ReleaseAsset $StageFile $StageOriginalPath 0 $StageAssetSha
+Download-ReleaseAsset $PaymentFile $PaymentPath 0 $PaymentAssetSha
 if((Get-Content -LiteralPath $CheckPath -Raw).Trim() -ne "$ArchiveSha  $ArchiveFile"){throw 'CHECKSUM_MANIFEST_CONTENT_MISMATCH'}
 function Get-GitBlobSha1([string]$Path){
  $bytes=[IO.File]::ReadAllBytes($Path)
