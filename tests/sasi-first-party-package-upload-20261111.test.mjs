@@ -16,23 +16,18 @@ test("first-party source package upload is restricted to the configured marketpl
  assert.match(route,/SASI_SOFTWARE_CATALOG\.find/);
 });
 
-test("complete Copernicus SI 9.5 source, EX5, whitepaper and guide bundle is required",()=>{
+test("first-party Copernicus SI 9.5 delivery is strictly source-only with PDF and guide",()=>{
  assert.match(route,/ONE_9_5_SOURCE_REQUIRED/);
  assert.ok(route.includes(String.raw`#property\s+version\s+`));
- assert.match(route,/MATCHING_EX5_REQUIRED/);
- assert.match(route,/EX5_SOURCE_BASENAME_MISMATCH/);
  assert.match(route,/ONE_WHITEPAPER_PDF_REQUIRED/);
- assert.match(route,/PRIVATE_DEMO_ACCESS_FILE_REQUIRED/);
- assert.match(route,/READ_ONLY_DEMO_ACCESS_DETAILS_REQUIRED/);
  assert.match(route,/INSTALL_COMPILE_F7_AND_LICENSE_GUIDE_REQUIRED/);
  assert.match(route,/WHITEPAPER_FORMAT_INVALID/);
- assert.match(route,/INSTALL_COMPILE_F7_AND_LICENSE_GUIDE_REQUIRED/);
  assert.match(route,/ZIP_PATH_INVALID/);
  assert.match(route,/ZIP_SYMLINK_FORBIDDEN/);
  assert.match(route,/ZIP_UNPACKED_SIZE_LIMIT/);
  assert.match(route,/ZIP_FILE_TYPE_FORBIDDEN/);
  assert.match(route,/checkCRC32:true/);
- assert.ok(route.includes('catch{return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_READ_FAILED"}}'));
+ assert.doesNotMatch(route,/\.ex5|MATCHING_EX5_REQUIRED|EX5_SOURCE_BASENAME_MISMATCH|demoAccessFiles|DEMO_ACCESS/);
  assert.match(route,/privateBucketReady\(admin\)/);
  assert.match(route,/data\?\.public===false/);
  assert.match(route,/allowed_mime_types\.includes\("application\/zip"\)/);

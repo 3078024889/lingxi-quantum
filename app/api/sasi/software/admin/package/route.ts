@@ -17,7 +17,7 @@ const ZERO_SHA256="0".repeat(64);
 const MAX_FILE_BYTES=30*1024*1024;
 const MAX_UNPACKED_BYTES=60*1024*1024;
 const MAX_ENTRIES=100;
-const ALLOWED_EXTENSIONS=new Set([".mq5",".mqh",".ex5",".set",".pdf",".md",".txt",".json",".csv",".ini",".png",".jpg",".jpeg",".webp"]);
+const ALLOWED_EXTENSIONS=new Set([".mq5",".mqh",".set",".pdf",".md",".txt"]);
 const HEADERS={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const reply=(body:unknown,status=200)=>NextResponse.json(body,{status,headers:HEADERS});
 async function reviewer(){try{return await moneyAdministrator()}catch{return null}}
@@ -43,9 +43,7 @@ async function inspectPackage(bytes:Buffer){
  let unpacked=0;
  const sources:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
  const guides:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
- const compiled:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
  const whitepapers:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
- const demoAccessFiles:Array<{name:string;entry:JSZip.JSZipObject;size:number}>=[];
  for(const [key,entry] of entries){
   const meta=entry as unknown as ZipEntryMeta;
   const name=String(meta.unsafeOriginalName||key);
@@ -66,23 +64,13 @@ async function inspectPackage(bytes:Buffer){
   unpacked+=size;
   if(unpacked>MAX_UNPACKED_BYTES)return {ok:false as const,error:"ZIP_UNPACKED_SIZE_LIMIT"};
   if(ext===".mq5")sources.push({name:normalized,entry,size});
-  if(ext===".ex5")compiled.push({name:normalized,entry,size});
   if(ext===".pdf")whitepapers.push({name:normalized,entry,size});
   if((ext===".md"||ext===".txt")&&/(readme|install|guide|manual|说明|教程)/i.test(normalized))
    guides.push({name:normalized,entry,size});
-  if((ext===".md"||ext===".txt")&&/(demo|模拟|观察|只读)/i.test(normalized))
-   demoAccessFiles.push({name:normalized,entry,size});
  }
  if(sources.length!==1)return {ok:false as const,error:"ONE_9_5_SOURCE_REQUIRED"};
- if(compiled.length!==1)return {ok:false as const,error:"MATCHING_EX5_REQUIRED"};
  if(whitepapers.length!==1)return {ok:false as const,error:"ONE_WHITEPAPER_PDF_REQUIRED"};
- if(demoAccessFiles.length!==1)return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_REQUIRED"};
  const source=sources[0];
- const binary=compiled[0];
- const sourceStem=source.name.slice(0,source.name.lastIndexOf(".")).toLowerCase().replace(/[^a-z0-9]/g,"");
- const binaryStem=binary.name.slice(0,binary.name.lastIndexOf(".")).toLowerCase().replace(/[^a-z0-9]/g,"");
- if(!sourceStem||sourceStem!==binaryStem)return {ok:false as const,error:"EX5_SOURCE_BASENAME_MISMATCH"};
- if(binary.size<100||binary.size>20*1024*1024)return {ok:false as const,error:"EX5_SIZE_INVALID"};
  const whitepaper=whitepapers[0];
  if(whitepaper.size<256||whitepaper.size>20*1024*1024)return {ok:false as const,error:"WHITEPAPER_SIZE_INVALID"};
  let pdfHeader:Buffer;
@@ -103,14 +91,7 @@ async function inspectPackage(bytes:Buffer){
  catch{return {ok:false as const,error:"INSTALL_GUIDE_READ_FAILED"}}
  if(!/(安装|install)/i.test(guideText)||!/(编译|compile)/i.test(guideText)||!/(授权|许可|license)/i.test(guideText)||!/(F7|参数)/i.test(guideText))
   return {ok:false as const,error:"INSTALL_COMPILE_F7_AND_LICENSE_GUIDE_REQUIRED"};
- const demoFile=demoAccessFiles[0];
- if(demoFile.size<80||demoFile.size>128*1024)return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_SIZE_INVALID"};
- let demoText="";
- try{demoText=(await demoFile.entry.async("nodebuffer")).toString("utf8")}
- catch{return {ok:false as const,error:"PRIVATE_DEMO_ACCESS_FILE_READ_FAILED"}}
- if(!/(服务器|server)/i.test(demoText)||!/(账号|账户|login)/i.test(demoText)||!/(密码|password)/i.test(demoText)||!/(只读|投资者|investor|read.?only)/i.test(demoText))
-  return {ok:false as const,error:"READ_ONLY_DEMO_ACCESS_DETAILS_REQUIRED"};
- return {ok:true as const,sourceName:source.name,compiledName:binary.name,whitepaperName:whitepaper.name,guideName:guide.name,demoAccessName:demoFile.name,entryCount:entries.length,unpackedBytes:unpacked};
+ return {ok:true as const,sourceName:source.name,whitepaperName:whitepaper.name,guideName:guide.name,entryCount:entries.length,unpackedBytes:unpacked};
 }
 
 
@@ -127,8 +108,8 @@ async function verifyStoredPackage(admin:ReturnType<typeof createAdminClient>,pr
   if(actualHash!==row.sha256)return null;
   const inspected=await inspectPackage(bytes);
   if(!inspected.ok)return null;
-  return {sizeBytes:bytes.length,sourceName:inspected.sourceName,compiledName:inspected.compiledName,
-   whitepaperName:inspected.whitepaperName,guideName:inspected.guideName,demoAccessName:inspected.demoAccessName};
+  return {sizeBytes:bytes.length,sourceName:inspected.sourceName,
+   whitepaperName:inspected.whitepaperName,guideName:inspected.guideName,};
  }catch{return null}
 }
 
@@ -245,7 +226,7 @@ export async function POST(req:NextRequest){
   if(updateError||!updated)return reply({error:"PACKAGE_READY_STATE_UPDATE_FAILED"},409);
   return reply({ok:true,productId:product.id,sha256,sizeBytes:bytes.length,verifiedAt:updated.verified_at,
    packageVerified:true,reviewRequired:true,saleReady:false,sourceName:readbackInspection.sourceName,
-   compiledName:readbackInspection.compiledName,whitepaperName:readbackInspection.whitepaperName,
-   guideName:readbackInspection.guideName,demoAccessName:readbackInspection.demoAccessName});
+    whitepaperName:readbackInspection.whitepaperName,
+   guideName:readbackInspection.guideName,});
  }catch{return reply({error:"PACKAGE_UPLOAD_NOT_READY"},503)}
 }
