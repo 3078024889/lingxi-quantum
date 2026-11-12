@@ -141,7 +141,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 
 
 /* Exact user-supplied SASI marketplace hero: source pixels remain untouched. */
-.main .container{width:100%;max-width:1600px;margin-inline:auto}
+.main .marketplaceContainer{width:100%;max-width:1600px;margin-inline:auto}
 .main .hero{
  position:relative;isolation:isolate;display:block;width:100%;
  aspect-ratio:1024 / 341;min-height:0!important;max-height:none!important;
@@ -169,7 +169,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 }
 @media(max-width:620px){
  .main{padding-top:12px}
- .main .container{max-width:none}
+ .main .marketplaceContainer{max-width:none}
  .main .hero{width:100%;aspect-ratio:1024 / 341;margin-bottom:14px}
  .main .browseHotspot,.main .publishHotspot{top:44%;height:34%;min-height:44px}
  .main .browseHotspot{left:6.5%;width:17.5%}
