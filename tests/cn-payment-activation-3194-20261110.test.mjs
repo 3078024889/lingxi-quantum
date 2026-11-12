@@ -207,12 +207,12 @@ test("upgrade script stages on 3195 but promotes final 3194 and retains 3193 rol
   assert.doesNotMatch(stagedTransfer,/21367c6fb8d4067f23f9982256eacffc1c540d5c/);
   assert.match(stagedTransfer,/PROMOTE-CN3194-\$SHORT/);
   const promoteTransfer=stagedTransfer.slice(stagedTransfer.indexOf("$PromoteEcs=@'"));
-  const stageTemplateStart=stagedTransfer.indexOf("$Ecs=@'\\n");
-  const stageTemplateEnd=stagedTransfer.indexOf("\\n'@",stageTemplateStart);
+  const stageTemplateStart=stagedTransfer.indexOf("$Ecs=@'\n");
+  const stageTemplateEnd=stagedTransfer.indexOf("\n'@",stageTemplateStart);
   assert.ok(stageTemplateStart>=0&&stageTemplateEnd>stageTemplateStart,"stage shell template must be extractable");
   execFileSync("bash",["-n"],{input:stagedTransfer.slice(stageTemplateStart+8,stageTemplateEnd)});
-  const promoteTemplateStart=stagedTransfer.indexOf("$PromoteEcs=@'\\n");
-  const promoteTemplateEnd=stagedTransfer.indexOf("\\n'@",promoteTemplateStart);
+  const promoteTemplateStart=stagedTransfer.indexOf("$PromoteEcs=@'\n");
+  const promoteTemplateEnd=stagedTransfer.indexOf("\n'@",promoteTemplateStart);
   assert.ok(promoteTemplateStart>=0&&promoteTemplateEnd>promoteTemplateStart,"promotion shell template must be extractable");
   execFileSync("bash",["-n"],{input:stagedTransfer.slice(promoteTemplateStart+15,promoteTemplateEnd)});
   assert.ok(promoteTransfer.indexOf('bash "$STAGE" --verify-stage "$TAG"') < promoteTransfer.indexOf("read -r ANSWER"));
