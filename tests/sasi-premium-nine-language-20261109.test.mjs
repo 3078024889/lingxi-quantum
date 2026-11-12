@@ -16,7 +16,7 @@ test("all nine locales are wired into the premium original SASI marketplace and 
  for(const label of ["Software Market","Full software description (up to 5,000 characters)","One main image per listing; detail images are optional","Pay securely with PayPal"]){
   assert.ok(copy.includes(JSON.stringify(label)),"nine-language key "+label);
  }
- assert.match(home,/hero-original\.webp/);
+ assert.match(home,/hero-art-20261112\.avif/);
  assert.match(home,/friendlyError\(e,lang\)/);
  assert.match(home,/translatedStatus\(lang,item\.status\)/);
  assert.match(home,/categoryLabel\(lang,item\.category\)/);
