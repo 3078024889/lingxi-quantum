@@ -24,6 +24,15 @@ const listings=read("app/api/sasi/marketplace/listings/route.ts");
 assert.match(listings,/isSameOriginMutation/);
 assert.match(listings,/enforceAbuseGuard/);
 assert.match(listings,/\.eq\("seller_id",user\.id\)/);
+// Public listing reads use only explicitly granted columns; private rejection reasons remain seller-only.
+assert.match(listings,/const PUBLIC_LISTING_COLUMNS="id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at"/);
+assert.match(listings,/\.select\(PUBLIC_LISTING_COLUMNS\)/);
+assert.doesNotMatch(listings,/const PUBLIC_LISTING_COLUMNS=[^;]*rejection_reason/);
+assert.match(listings,/const SELLER_LISTING_COLUMNS=PUBLIC_LISTING_COLUMNS\+",rejection_reason"/);
+assert.match(listings,/\.select\(SELLER_LISTING_COLUMNS\)/);
+assert.match(listings,/const sessionDb=createClient\(\)/);
+assert.ok(listings.indexOf('if(!user)')<listings.indexOf('createAdminClient().from("sasi_market_listings")'));
+assert.match(listings,/mode==="public"\?data\.map/);
 const uploader=read("app/api/sasi/marketplace/upload-ticket/route.ts");
 assert.match(uploader,/!marketplaceUploadReady\(\)/);
 assert.match(uploader,/profile\?\.status!=="approved"/);
