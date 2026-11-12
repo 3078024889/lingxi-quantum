@@ -214,18 +214,24 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  };
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container}>
   {!sellerOnly&&<>
-<div className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="hero-art-20261112.avif">
+  <div className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="hero-art-20261112.avif">
+    <img
+      src="/images/sasi/hero-art-20261112.avif"
+      className={styles.heroArtwork}
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="async"
+      draggable={false}
+    />
     <div className={styles.heroCopy}>
-      <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
-       <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Intelligent Software Marketplace")}</h1>
-       <p>{sasiSoftwareUiText(lang,"成品软件、MT5 EA与源码授权 · 安装教程 · 开发者发布 · 付款核验后自动交付","Finished software, MT5 EAs and source licenses · Installation guides · Developer publishing · Delivery after verified payment")}</p>
-       <div className={styles.heroLinks}><a href="#products">◇ {sasiSoftwareUiText(lang,"浏览软件","Explore software")}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</button></div>
-     </div>
-     <div className={styles.laptopScene} aria-hidden="true">
-      <img src="/images/sasi/hero-art-20261112.avif" className={styles.originalArtwork} alt="" loading="eager" decoding="async" draggable={false}/>
-     </div>
-  </div>
-    <div className={styles.benefits}>
+          <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
+           <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Intelligent Software Marketplace")}</h1>
+           <p>{sasiSoftwareUiText(lang,"成品软件、MT5 EA与源码授权 · 安装教程 · 开发者发布 · 付款核验后自动交付","Finished software, MT5 EAs and source licenses · Installation guides · Developer publishing · Delivery after verified payment")}</p>
+           <div className={styles.heroLinks}><a href="#products">◇ {sasiSoftwareUiText(lang,"浏览软件","Explore software")}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</button></div>
+         </div>
+           </div>
+<div className={styles.benefits}>
      <div><span>⬡</span><div><strong>{sasiSoftwareUiText(lang,"软件授权","Software licensing")}</strong><small>{sasiSoftwareUiText(lang,"成品与源码 · 权属清晰","Finished software and source code")}</small></div></div>
      <div><span>ϟ</span><div><strong>{sasiSoftwareUiText(lang,"自动交付","Digital delivery")}</strong><small>{sasiSoftwareUiText(lang,"付款验证后获取","After verified payment")}</small></div></div>
      <div><span>◇</span><div><strong>{sasiSoftwareUiText(lang,"安全可靠","Secure by design")}</strong><small>{sasiSoftwareUiText(lang,"私密存储 · 安心下载","Private storage and dependable downloads")}</small></div></div>
