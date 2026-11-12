@@ -34,6 +34,17 @@ on:
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
       - 'public/llms.txt'
+      - 'components/SasiOpenMarketplace.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'public/images/sasi/hero-art-20261112.avif'
+      - 'lib/seo/site-facts.ts'
+      - 'app/llms.txt/route.ts'
+      - 'tests/sasi-transparent-hero-20261112.test.mjs'
+      - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
+      - 'tests/com-paypal-live-review-20261109.test.mjs'
+      - 'tests/sasi-premium-nine-language-20261109.test.mjs'
+      - 'tests/dual-premium-sasi-toolpass-20261109.test.mjs'
+      - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
       - 'scripts/seo/growth/**'
       - 'components/HomeSeoAnswers.tsx'
       - 'components/Footer.tsx'
@@ -69,6 +80,17 @@ on:
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
       - 'public/llms.txt'
+      - 'components/SasiOpenMarketplace.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'public/images/sasi/hero-art-20261112.avif'
+      - 'lib/seo/site-facts.ts'
+      - 'app/llms.txt/route.ts'
+      - 'tests/sasi-transparent-hero-20261112.test.mjs'
+      - 'tests/sasi-marketplace-long-description-20261109.test.mjs'
+      - 'tests/com-paypal-live-review-20261109.test.mjs'
+      - 'tests/sasi-premium-nine-language-20261109.test.mjs'
+      - 'tests/dual-premium-sasi-toolpass-20261109.test.mjs'
+      - 'tests/com-payment-edge-merchant-readiness-20261108.test.mjs'
       - 'scripts/seo/growth/**'
       - 'components/HomeSeoAnswers.tsx'
       - 'components/Footer.tsx'
@@ -108,7 +130,7 @@ jobs:
           node --test tests/com-celestial-release-safety-20261110.test.mjs
           node --test tests/com-preserved-binding-inventory-20261110.test.mjs
           node scripts/seo/audit-global.cjs
-          node --test tests/legacy-sasi-retirement.test.mjs tests/seo-fullsite-coverage.test.mjs
+          node --test tests/legacy-sasi-retirement.test.mjs tests/seo-fullsite-coverage.test.mjs tests/sasi-transparent-hero-20261112.test.mjs
           grep -Fq 'const productionWorker = "lingxifield-com-celestial-20261109"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'const candidateWorkerPrefix = "lingxifield-com-canary-"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_PAYMENT_BASELINE' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
