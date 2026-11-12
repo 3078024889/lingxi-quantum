@@ -37,6 +37,8 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
   '@media(max-width:620px)'
  ])assert.ok(heroCss.includes(required),'missing exact-hero CSS invariant: '+required);
  assert.doesNotMatch(heroCss,/linear-gradient|radial-gradient|mask-image|filter:/,'no overlay, mask or filter may alter the source artwork');
+ for(const retiredSelector of [".laptopScene",".laptopDisplay",".laptopKeyboard",".laptopShadow",".alienPlant",".crystalCup",".heroCopy",".benefits"])
+  assert.ok(!css.includes(retiredSelector),"retired hero panel selector remains: "+retiredSelector);
  const oldConsoleHero=['sasi-home-hero-v2','png'].join('.');
  assert.equal(existsSync('public/images/console/'+oldConsoleHero),false,'obsolete console hero must not ship');
  const scanExtensions=new Set(['.ts','.tsx','.js','.mjs','.cjs','.json','.css','.md','.yml','.yaml','.sh','.ps1','.txt']);
