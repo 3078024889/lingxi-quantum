@@ -2,8 +2,8 @@ param([string]$Tag)
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue'
 $Config='D:\LINGXIFIELDCN3192\rclone.conf'
-$Root='D:\30780\CN3195Transfer\20261112'
-$RemoteBase='cn3192r2:lingxi-cn3192-transfer/cn3195-staged-20261112'
+$Root='D:\30780\CN3195Transfer\20261112-envfile16'
+$RemoteBase='cn3192r2:lingxi-cn3192-transfer/cn3195-staged-20261112-envfile16'
 $ManifestName='cn3194-release-manifest.env'
 if(!(Test-Path -LiteralPath $Config -PathType Leaf)){throw "R2_CONFIG_NOT_FOUND: $Config"}
 if(!(Select-String -LiteralPath $Config -Pattern '^\s*\[cn3192r2\]\s*$' -Quiet)){throw 'R2_REMOTE_SECTION_MISSING'}
@@ -70,10 +70,11 @@ if($StageBlob -notmatch '^[a-f0-9]{40}$' -or $PaymentBlob -notmatch '^[a-f0-9]{4
 $ArchivePath=Join-Path $Root $ArchiveFile
 $CheckPath=Join-Path $Root $CheckFile
 $StagePath=Join-Path $Root $StageFile
+$StageOriginalPath=Join-Path $Root ($StageFile+'.release-original')
 $PaymentPath=Join-Path $Root $PaymentFile
 Download-ReleaseAsset $ArchiveFile $ArchivePath $ArchiveBytes $ArchiveSha
 Download-ReleaseAsset $CheckFile $CheckPath 104 $CheckSha
-Download-ReleaseAsset $StageFile $StagePath 26779 ''
+Download-ReleaseAsset $StageFile $StageOriginalPath 26779 ''
 Download-ReleaseAsset $PaymentFile $PaymentPath 11972 ''
 if((Get-Content -LiteralPath $CheckPath -Raw).Trim() -ne "$ArchiveSha  $ArchiveFile"){throw 'CHECKSUM_MANIFEST_CONTENT_MISMATCH'}
 function Get-GitBlobSha1([string]$Path){
@@ -86,11 +87,35 @@ function Get-GitBlobSha1([string]$Path){
  $sha=[Security.Cryptography.SHA1]::Create()
  try{return ([BitConverter]::ToString($sha.ComputeHash($all))).Replace('-','').ToLowerInvariant()}finally{$sha.Dispose()}
 }
-if((Get-GitBlobSha1 $StagePath) -cne $StageBlob){throw 'STAGE_GIT_BLOB_SHA1_MISMATCH'}
+if((Get-GitBlobSha1 $StageOriginalPath) -cne $StageBlob){throw 'STAGE_GIT_BLOB_SHA1_MISMATCH'}
+$StageText=[IO.File]::ReadAllText($StageOriginalPath)
+$OldEnvLine=' (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
+$NewEnvLine1=' (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 16 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
+$NewEnvLine2=' [[ "${#LIVE_ENV_FILES[@]}" -eq "$(printf ''%s\n'' "${LIVE_ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3194_SOURCE_ENVFILE_DUPLICATE >&2;exit 1; }'
+$First=$StageText.IndexOf($OldEnvLine,[StringComparison]::Ordinal)
+if($First -lt 0 -or $First -ne $StageText.LastIndexOf($OldEnvLine,[StringComparison]::Ordinal)){throw 'STAGE_ENVFILE_PATCH_SOURCE_NOT_EXACT'}
+$StageText=$StageText.Replace($OldEnvLine,$NewEnvLine1+"`n"+$NewEnvLine2)
+if($StageText.Contains($OldEnvLine) -or !$StageText.Contains('CN3194_SOURCE_ENVFILE_DUPLICATE')){throw 'STAGE_ENVFILE_PATCH_VERIFY_FAILED'}
+[IO.File]::WriteAllText($StagePath,$StageText,(New-Object Text.UTF8Encoding($false)))
+$PatchedStageBlob=Get-GitBlobSha1 $StagePath
+Write-Host "STAGE_OVERLAY_PATCH_PASS: ENVFILE_LIMIT=16 PATCHED_GIT_BLOB=$PatchedStageBlob"
 if((Get-GitBlobSha1 $PaymentPath) -cne $PaymentBlob){throw 'PAYMENT_GIT_BLOB_SHA1_MISMATCH'}
 $StageSha=(Get-FileHash -LiteralPath $StagePath -Algorithm SHA256).Hash.ToLowerInvariant()
 $PaymentSha=(Get-FileHash -LiteralPath $PaymentPath -Algorithm SHA256).Hash.ToLowerInvariant()
 $StageBytes=(Get-Item -LiteralPath $StagePath).Length
+$OverlayPath=Join-Path $Root 'cn3195-stage-overlay.env'
+$OverlayContent=@(
+ 'FORMAT=CN3195_STAGE_OVERLAY_V1'
+ "TAG=$Tag"
+ "SOURCE_SHA=$($Manifest.SOURCE_SHA)"
+ "UPSTREAM_STAGE_GIT_BLOB_SHA1=$StageBlob"
+ "PATCHED_STAGE_GIT_BLOB_SHA1=$PatchedStageBlob"
+ "PATCHED_STAGE_SHA256=$StageSha"
+ "PATCHED_STAGE_BYTES=$StageBytes"
+ 'PATCH=CN3194_SOURCE_ENVFILE_LIMIT_8_TO_16'
+ 'PATCH=CN3194_SOURCE_ENVFILE_DUPLICATE_PATH_GUARD'
+) -join "`n"
+[IO.File]::WriteAllText($OverlayPath,$OverlayContent+"`n",(New-Object Text.UTF8Encoding($false)))
 $PaymentBytes=(Get-Item -LiteralPath $PaymentPath).Length
 & $Rclone lsd 'cn3192r2:lingxi-cn3192-transfer' | Out-Null
 if($LASTEXITCODE -ne 0){throw 'R2_REMOTE_NOT_ACCESSIBLE'}
@@ -109,7 +134,8 @@ $Uploads=@(
  @{Local=$CheckPath;Name=$CheckFile;Size=[Int64]104},
  @{Local=$StagePath;Name=$StageFile;Size=$StageBytes},
  @{Local=$PaymentPath;Name=$PaymentFile;Size=$PaymentBytes},
- @{Local=$ManifestPath;Name=$ManifestName;Size=(Get-Item -LiteralPath $ManifestPath).Length}
+ @{Local=$ManifestPath;Name=$ManifestName;Size=(Get-Item -LiteralPath $ManifestPath).Length},
+  @{Local=$OverlayPath;Name='cn3195-stage-overlay.env';Size=(Get-Item -LiteralPath $OverlayPath).Length}
 )
 $Remote=Get-R2ObjectList
 foreach($u in $Uploads){
@@ -136,7 +162,7 @@ try{
  foreach($u in $Uploads){Copy-Item -LiteralPath $u.Local -Destination (Join-Path $VerifyRoot $u.Name) -Force}
  & $Rclone check $VerifyRoot $RemoteRoot --one-way --download
  if($LASTEXITCODE -ne 0){throw 'R2_REMOTE_CONTENT_CHECK_FAILED'}
- Write-Host 'R2_REMOTE_CONTENT_CHECK_DOWNLOAD_VERIFY_PASS_EXACT_FIVE_ASSETS'
+ Write-Host 'R2_REMOTE_CONTENT_CHECK_DOWNLOAD_VERIFY_PASS_EXACT_SIX_ASSETS'
 }finally{
  Remove-Item -LiteralPath $VerifyRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
