@@ -4,11 +4,13 @@ import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 
-test('SASI hero uses the supplied transparent scene asset without an enclosing card',()=>{
+test('SASI hero uses the full-width transparent horizontal artwork without an enclosing card',()=>{
  const component=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
  const css=readFileSync('components/SasiOpenMarketplace.module.css','utf8');
  const asset=readFileSync('public/images/sasi/hero-art-20261112.avif');
  assert.match(component,/data-testid="sasi-transparent-hero"/);
+ assert.match(component,/className=\{styles\.heroArtwork\}/);
+ assert.doesNotMatch(component,/className=\{styles\.laptopScene\}/);
  assert.match(component,/src="\/images\/sasi\/hero-art-20261112\.avif"/);
  assert.equal(asset.toString('ascii',4,8),'ftyp');
  assert.ok(asset.length>8000);
@@ -37,6 +39,8 @@ test('SASI hero uses the supplied transparent scene asset without an enclosing c
  assert.match(override,/\.main \.hero\{[^}]*border:0!important/);
  assert.match(override,/\.main \.benefits\{[^}]*background:transparent!important/);
  assert.match(override,/@media\(max-width:770px\)/);
+ assert.match(css,/\.main \.heroArtwork\{[\s\S]*?width:100%;height:100%;[\s\S]*?object-fit:cover/);
+ assert.match(css,/aspect-ratio:3\.94\/1/);
 });
 
 test('SASI GEO facts describe software products and SIAI video pricing only',()=>{
