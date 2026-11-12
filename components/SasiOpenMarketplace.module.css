@@ -282,12 +282,12 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 }
 
 
-/* 2026-11-12: full-width horizontal transparent SASI artwork.
+/* 2026-11-12: open, transparent SASI hero — full-width horizontal artwork.
    HTML remains the accessible, translated title and action layer; the lower feature
    strip is semantic HTML rather than duplicated baked-in artwork text. */
 .main .hero{
  display:flex;align-items:center;position:relative;isolation:isolate;width:100%;
- aspect-ratio:3.94/1;min-height:250px;max-height:480px;
+ aspect-ratio:3/1;min-height:250px;max-height:480px;
  padding:16px clamp(14px,2.4vw,38px) 0!important;gap:0;
  background:transparent!important;border:0!important;border-radius:0!important;
  box-shadow:none!important;overflow:visible!important;
@@ -302,6 +302,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
  rgba(18,30,111,.76) 46%,rgba(18,30,111,.12) 59%,transparent 68%);
 }
 .main .hero::after{display:none!important}
+.main .benefits{background:transparent!important;border:0!important;box-shadow:none!important}
 .main .heroCopy{
  position:relative;z-index:2;width:min(51%,690px);max-width:690px;
  padding-left:clamp(8px,1.5vw,25px);
@@ -324,7 +325,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
  .main .heroCopy{order:1;width:100%;max-width:720px;margin:0 auto;padding:0 12px;text-align:center}
  .main .heroLinks{justify-content:center}
  .main .heroArtwork{
-  position:relative;inset:auto;order:2;width:100%;height:clamp(100px,25.4vw,195px);
+  position:relative;inset:auto;order:2;width:100%;height:auto;aspect-ratio:3/1;
   margin-top:8px;object-fit:cover;object-position:center top;
   -webkit-mask-image:linear-gradient(90deg,transparent 0%,transparent 30%,#000 44%,#000 100%);
   mask-image:linear-gradient(90deg,transparent 0%,transparent 30%,#000 44%,#000 100%);
