@@ -90,7 +90,12 @@ test("SASI storefront has one real featured source-license product and seller up
  assert.match(catalog,/sasi-copernicus-si95-source/);
  assert.doesNotMatch(catalog,/sasi-copernicus-si95-mt5/);
  assert.match(css,/\.featuredCard/);
- assert.match(css,/\.laptopScene/);
+ assert.match(css,/\.main \.heroArtwork/);
+ assert.match(css,/\.main \.browseHotspot/);
+ assert.match(css,/\.main \.publishHotspot/);
+ assert.match(css,/\.main \.browseHotspot/);
+ assert.match(css,/\.main \.publishHotspot/);
+ assert.doesNotMatch(css,/\.laptopScene/);
 });
 
 test("submitted listings cannot be modified during moderation and review rejects live upload signatures",()=>{

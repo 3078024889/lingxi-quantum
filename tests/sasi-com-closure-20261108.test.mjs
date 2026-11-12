@@ -46,7 +46,12 @@ test("Real software checkout and tool passes remain fail-closed",()=>{
  const software=read("components/SasiSoftwareMarket.tsx");
  assert.match(software,/available===true/);
  const imagery=read("components/SasiOpenMarketplace.module.css");
- assert.match(imagery,/\.crystalCup/);assert.match(imagery,/\.alienPlant/);
+ assert.match(imagery,/\.main \.heroArtwork/);
+ assert.match(imagery,/\.main \.browseHotspot/);
+ assert.match(imagery,/\.main \.publishHotspot/);
+ assert.doesNotMatch(imagery,/\.crystalCup|\.alienPlant|\.laptopDisplay|\.laptopKeyboard|\.laptopShadow/);
+ const market=read("components/SasiOpenMarketplace.tsx");
+  assert.match(market,/sasi-market-hero-lingxifield\.png/);
 });
 
 test("All retired creation pages are noindexed redirects, with valid market SEO",()=>{
