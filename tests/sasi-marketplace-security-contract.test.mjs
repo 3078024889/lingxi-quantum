@@ -95,5 +95,14 @@ for(const index of [
 assert.ok(perf.includes("CREATE POLICY sasi_market_listings_visible_read"));
 assert.ok(perf.includes("CREATE POLICY sasi_market_media_visible_read"));
 assert.doesNotMatch(perf,/DROP TABLE|TRUNCATE|DELETE FROM|UPDATE public\.(?:orders|sasi_market_sales|sasi_market_payouts)/i);
-assert.match(listings,/query=query\.eq\("seller_id",user\.id\)\.order\("created_at"/);
-assert.match(listings,/query=query\.eq\("status","published"\)\.eq\("scan_status","clean"\)\.order\("published_at"/);
+// Public listing reads must never request private moderation columns omitted from anon/authenticated grants.
+assert.match(listings,/const PUBLIC_LISTING_COLUMNS="id,seller_id,title,description,category,price_cny_minor,price_usd_minor,status,scan_status,published_at,created_at"/);
+assert.match(listings,/\.select\(PUBLIC_LISTING_COLUMNS\)/);
+assert.doesNotMatch(listings,/const PUBLIC_LISTING_COLUMNS=[^;]*rejection_reason/);
+// Seller-only rejection details are returned through a server-side owner-scoped read after auth.getUser().
+assert.match(listings,/const SELLER_LISTING_COLUMNS=PUBLIC_LISTING_COLUMNS\+",rejection_reason"/);
+assert.match(listings,/\.select\(SELLER_LISTING_COLUMNS\)/);
+assert.match(listings,/\.eq\("seller_id",user\.id\)/);
+assert.match(listings,/const sessionDb=createClient\(\)/);
+assert.ok(listings.indexOf('if(!user)')<listings.indexOf('createAdminClient().from("sasi_market_listings")'));
+assert.match(listings,/mode==="public"\?data\.map/);
