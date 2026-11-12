@@ -2,8 +2,8 @@ param([string]$Tag)
 $ErrorActionPreference='Stop'
 $ProgressPreference='SilentlyContinue'
 $Config='D:\LINGXIFIELDCN3192\rclone.conf'
-$Root='D:\30780\CN3195Transfer\20261112-envfile16'
-$RemoteBase='cn3192r2:lingxi-cn3192-transfer/cn3195-staged-20261112-envfile16'
+$Root='D:\30780\CN3195Transfer\20261112-envfile16-minimal-overlay'
+$RemoteBase='cn3192r2:lingxi-cn3192-transfer/cn3195-staged-20261112-envfile16-minimal-overlay'
 $ManifestName='cn3194-release-manifest.env'
 if(!(Test-Path -LiteralPath $Config -PathType Leaf)){throw "R2_CONFIG_NOT_FOUND: $Config"}
 if(!(Select-String -LiteralPath $Config -Pattern '^\s*\[cn3192r2\]\s*$' -Quiet)){throw 'R2_REMOTE_SECTION_MISSING'}
@@ -96,9 +96,41 @@ $First=$StageText.IndexOf($OldEnvLine,[StringComparison]::Ordinal)
 if($First -lt 0 -or $First -ne $StageText.LastIndexOf($OldEnvLine,[StringComparison]::Ordinal)){throw 'STAGE_ENVFILE_PATCH_SOURCE_NOT_EXACT'}
 $StageText=$StageText.Replace($OldEnvLine,$NewEnvLine1+"`n"+$NewEnvLine2)
 if($StageText.Contains($OldEnvLine) -or !$StageText.Contains('CN3194_SOURCE_ENVFILE_DUPLICATE')){throw 'STAGE_ENVFILE_PATCH_VERIFY_FAILED'}
+$StageStartMarker='python3 - "$ENV" "$STAGE_ENV" <<''PY'''
+$StageEndMarker="`nPY"
+$StageStart=$StageText.IndexOf($StageStartMarker,[StringComparison]::Ordinal)
+$StageEnd=if($StageStart -ge 0){$StageText.IndexOf($StageEndMarker,$StageStart,[StringComparison]::Ordinal)}else{-1}
+if($StageStart -lt 0 -or $StageEnd -lt 0 -or $StageText.IndexOf($StageStartMarker,$StageStart+1,[StringComparison]::Ordinal) -ge 0){throw 'STAGE_ENV_OVERLAY_SOURCE_NOT_EXACT'}
+$MinimalStageBlock=@'
+echo 'CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1'
+python3 - "$STAGE_ENV" <<'PY'
+import os,sys,tempfile
+dst=sys.argv[1]
+disabled={
+ "TOOL_PASS_COMMERCE_READY","ALIPAY_ENABLED","PAYPAL_ENABLED","WECHAT_ENABLED",
+ "SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SASI_REFUND_FLOW_TESTED",
+ "SASI_MARKET_SALES_ENABLED","SASI_MARKET_UPLOADS_ENABLED","SASI_MARKET_DELIVERY_ENABLED",
+ "SASI_MARKET_PAYOUTS_ENABLED","SASI_MARKETPLACE_COMMERCE_READY","SOFTWARE_COMMERCE_READY"
+}
+out=[k+"=false" for k in sorted(disabled)]
+out.extend(["TOOL_PASS_BACKEND_READY=true","NEXT_PUBLIC_TOOL_PASS_ENFORCED=true",
+ "NEXT_PUBLIC_SITE_URL=https://lingxifield.cn","ALIPAY_SITE_URL=https://lingxifield.cn",
+ "NODE_ENV=production","NODE_OPTIONS=--max-old-space-size=500",
+ "PORT=3195","HOSTNAME=127.0.0.1"])
+fd,tmp=tempfile.mkstemp(prefix=".cn3195-stage-",dir=os.path.dirname(dst) or ".")
+try:
+ os.fchmod(fd,0o600)
+ with os.fdopen(fd,"w",encoding="utf8") as f:f.write("\n".join(out)+"\n");f.flush();os.fsync(f.fileno())
+ os.replace(tmp,dst)
+finally:
+ if os.path.exists(tmp):os.unlink(tmp)
+PY
+'@
+$StageText=$StageText.Substring(0,$StageStart)+$MinimalStageBlock.TrimEnd("`r","`n")+$StageText.Substring($StageEnd+3)
+if($StageText.Contains('python3 - "$ENV" "$STAGE_ENV"') -or !$StageText.Contains('CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1') -or $StageText.Contains('lines=open(src,encoding="utf8").read().splitlines()')){throw 'STAGE_ENV_OVERLAY_PATCH_VERIFY_FAILED'}
 [IO.File]::WriteAllText($StagePath,$StageText,(New-Object Text.UTF8Encoding($false)))
 $PatchedStageBlob=Get-GitBlobSha1 $StagePath
-Write-Host "STAGE_OVERLAY_PATCH_PASS: ENVFILE_LIMIT=16 PATCHED_GIT_BLOB=$PatchedStageBlob"
+Write-Host "STAGE_OVERLAY_PATCH_PASS: ENVFILE_LIMIT=16 MINIMAL_ENV=PASS PATCHED_GIT_BLOB=$PatchedStageBlob"
 if((Get-GitBlobSha1 $PaymentPath) -cne $PaymentBlob){throw 'PAYMENT_GIT_BLOB_SHA1_MISMATCH'}
 $StageSha=(Get-FileHash -LiteralPath $StagePath -Algorithm SHA256).Hash.ToLowerInvariant()
 $PaymentSha=(Get-FileHash -LiteralPath $PaymentPath -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -114,6 +146,7 @@ $OverlayContent=@(
  "PATCHED_STAGE_BYTES=$StageBytes"
  'PATCH=CN3194_SOURCE_ENVFILE_LIMIT_8_TO_16'
  'PATCH=CN3194_SOURCE_ENVFILE_DUPLICATE_PATH_GUARD'
+ 'PATCH=CN3195_STAGE_ENV_MINIMAL_OVERLAY_NO_PRODUCTION_ENV_COPY'
 ) -join "`n"
 [IO.File]::WriteAllText($OverlayPath,$OverlayContent+"`n",(New-Object Text.UTF8Encoding($false)))
 $PaymentBytes=(Get-Item -LiteralPath $PaymentPath).Length
