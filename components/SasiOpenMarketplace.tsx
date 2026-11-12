@@ -217,7 +217,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
 <div className={styles.hero}>
     <div className={styles.heroCopy}>
       <span className={styles.eyebrow}>LINGXIFIELD · SASI</span>
-       <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")}</h1>
+       <h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Intelligent Software Marketplace")}</h1>
        <p>{sasiSoftwareUiText(lang,"成品软件、MT5 EA与源码授权 · 安装教程 · 开发者发布 · 付款核验后自动交付","Finished software, MT5 EAs and source licenses · Installation guides · Developer publishing · Delivery after verified payment")}</p>
        <div className={styles.heroLinks}><a href="#products">◇ {sasiSoftwareUiText(lang,"浏览软件","Explore software")}</a><button type="button" onClick={()=>setShowStudio(v=>!v)} aria-expanded={showStudio}>＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</button></div>
      </div>
