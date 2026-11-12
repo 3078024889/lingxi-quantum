@@ -55,10 +55,6 @@ foreach($key in @('SOURCE_SHA','TAG','SHORT','ARCHIVE_FILE','ARCHIVE_BYTES','ARC
 if($Manifest.TAG -cne $Tag -or $Manifest.SHORT -cne $Short -or $Manifest.SOURCE_SHA -notmatch '^[a-f0-9]{40}$' -or $Manifest.SOURCE_SHA.Substring(0,12) -cne $Short){throw 'RELEASE_MANIFEST_IDENTITY_MISMATCH'}
 $CommitInfo=Invoke-RestMethod -Method Get -Uri "https://api.github.com/repos/$GitHubRepo/commits/$Tag" -Headers @{Accept='application/vnd.github+json';'X-GitHub-Api-Version'='2022-11-28'}
 if($CommitInfo.sha -cne $Manifest.SOURCE_SHA){throw 'RELEASE_TAG_TARGET_SHA_MISMATCH'}
-foreach($key in @('SOURCE_SHA','TAG','SHORT','ARCHIVE_FILE','ARCHIVE_BYTES','ARCHIVE_SHA256','CHECK_FILE','CHECK_SHA256','STAGE_FILE','STAGE_BLOB_SHA1','PAYMENT_FILE','PAYMENT_BLOB_SHA1')){
- if(!$Manifest.ContainsKey($key) -or [string]::IsNullOrWhiteSpace([string]$Manifest[$key])){throw "RELEASE_MANIFEST_FIELD_MISSING: $key"}
-}
-if($Manifest.TAG -cne $Tag -or $Manifest.SHORT -cne $Short -or $Manifest.SOURCE_SHA -notmatch '^[a-f0-9]{40}$'){throw 'RELEASE_MANIFEST_IDENTITY_MISMATCH'}
 $ArchiveFile=[string]$Manifest.ARCHIVE_FILE
 $CheckFile=[string]$Manifest.CHECK_FILE
 $StageFile=[string]$Manifest.STAGE_FILE
@@ -74,7 +70,6 @@ $ArchiveSha=[string]$Manifest.ARCHIVE_SHA256
 $CheckSha=[string]$Manifest.CHECK_SHA256
 $StageBlob=[string]$Manifest.STAGE_BLOB_SHA1
 $PaymentBlob=[string]$Manifest.PAYMENT_BLOB_SHA1
-if($ArchiveBytes -lt 1000000 -or $ArchiveBytes -gt 1300000000 -or $ArchiveSha -notmatch '^[a-f0-9]{64}$' -or $CheckSha -notmatch '^[a-f0-9]{64}$'){throw 'RELEASE_ARCHIVE_MANIFEST_INVALID'}
 if($StageBlob -notmatch '^[a-f0-9]{40}$' -or $PaymentBlob -notmatch '^[a-f0-9]{40}$'){throw 'RELEASE_SCRIPT_BLOB_HASH_INVALID'}
 $ArchivePath=Join-Path $Root $ArchiveFile
 $CheckPath=Join-Path $Root $CheckFile
@@ -161,7 +156,6 @@ $OverlayContent=@(
  'PATCH=CN3194_SOURCE_ENVFILE_LIMIT_8_TO_16'
  'PATCH=CN3194_SOURCE_ENVFILE_DUPLICATE_PATH_GUARD'
  'PATCH=CN3195_STAGE_ENV_MINIMAL_OVERLAY_NO_PRODUCTION_ENV_COPY'
- 'PATCH=CN3194_SOURCE_ENVFILES_REQUIRE_ROOT_MODE_600'
  'PATCH=CN3194_SOURCE_ENVFILES_REQUIRE_ROOT_MODE_600'
 ) -join "`n"
 [IO.File]::WriteAllText($OverlayPath,$OverlayContent+"`n",(New-Object Text.UTF8Encoding($false)))
