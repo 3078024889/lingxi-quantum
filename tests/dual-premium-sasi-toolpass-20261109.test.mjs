@@ -59,12 +59,14 @@ test("announcements show actual published API items and deep-links to individual
  assert.match(pass,/premium\.balanceBody/);
 });
 test("SASI keeps original user high-dimensional imagery and only reviewed real listings",()=>{
- const img=fs.readFileSync("public/images/sasi/hero-original.webp");
- assert.equal(img.toString("ascii",0,4),"RIFF");
- assert.equal(img.toString("ascii",8,12),"WEBP");
- assert.ok(img.byteLength>3000);
+ const img=fs.readFileSync("public/images/sasi/hero-art-20261112.avif");
+ assert.equal(img.toString("ascii",4,8),"ftyp");
+ assert.ok(img.toString("latin1").includes("auxC"));
+ assert.ok(img.byteLength>8000);
+ assert.match(artwork,/data-testid="sasi-transparent-hero"/);
+ assert.match(artwork,/src="\/images\/sasi\/hero-art-20261112\.avif"/);
  assert.match(artwork,/styles\.originalArtwork/);
- assert.match(style,/hero-original\.webp/);
+ assert.match(style,/2026-11-12: open, transparent SASI hero/);
  assert.match(artwork,/\bsetListings\(values\[0\]\.items\)/);
  assert.ok(artwork.includes("<em>SASI</em>"),"headline uses original SASI wordmark");
  assert.match(artwork,/智能软件/);
