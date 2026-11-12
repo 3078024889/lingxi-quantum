@@ -8,7 +8,7 @@ test("public brand is SASI intelligent software and old shopping labels are reti
   assert.doesNotMatch(src,/软件商城|SASI Marketplace/);
  }
  const page=read("components/SasiOpenMarketplace.tsx");
- assert.ok(page.includes('<h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Software Market")'),"SASI software market heading matches reference artwork");
+ assert.ok(page.includes('<h1><em>SASI</em> {sasiSoftwareUiText(lang,"智能软件市场","Intelligent Software Marketplace")'),"SASI software market heading matches reference artwork");
  assert.match(read("app/sasi/page.tsx"),/canonical:"\/sasi"/);
  assert.match(read("app/sasi/marketplace/page.tsx"),/permanentRedirect\("\/sasi"\)/);
 });
