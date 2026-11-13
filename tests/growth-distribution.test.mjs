@@ -174,8 +174,8 @@ test("R6/R8 homepage growth engines are real routes, value-first and aligned wit
  const css=read("app/growth-pages.css");
  assert.match(growth,/tag:"STORIES"[^\n]*href:"\/discoveries"/);
  assert.match(growth,/Before \/ After/);
- assert.match(growth,/href:"\/sasi\/seller"/);
- assert.match(growth,/href:"\/sasi\/delivery"/);
+ assert.ok(growth.includes('"href":"/sasi/seller"')||growth.includes('href:"/sasi/seller"'));
+ assert.ok(growth.includes('"href":"/sasi/delivery"')||growth.includes('href:"/sasi/delivery"'));
  assert.match(growth,/export function HomeToolPassMembership/);
  assert.match(growth,/passValueLead/);
  assert.match(problem,/伏尼契/);
