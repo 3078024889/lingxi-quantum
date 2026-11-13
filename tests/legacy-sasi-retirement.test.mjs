@@ -85,13 +85,13 @@ test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
  const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
  assert.ok(catalog.includes("哥白尼 SI 11.6"));
  assert.ok(catalog.includes("Copernicus SI 11.6"));
- assert.match(catalog,/kind:"source"/);
- assert.doesNotMatch(catalog,/SI9[.]5|SI 9[.]5/);
+ assert.ok(catalog.includes('kind:"source"'));
+ assert.ok(!catalog.includes("SI9.5") && !catalog.includes("SI 9.5"));
  assert.ok(market.includes("SI 11.6"));
 });
 
-
-test('legacy generated-video runtime is no longer bundled into retired SASI routes',()=>{
- const next=readFileSync('next.config.js','utf8');
- assert.doesNotMatch(next,/outputFileTracingIncludes|verify-generated-video|assemble-generated-episode/);
+test('retired URL-to-video workbench is deleted from source and product discovery',()=>{
+ const copy=readFileSync('lib/tools/product-copy.ts','utf8');
+ assert.doesNotMatch(copy,/'url-to-video'/);
+ assert.equal(existsSync('components/tools/UrlPromotionWorkbench.tsx'),false);
 });

@@ -42,3 +42,5 @@ assert.doesNotMatch(legalCopy,/short drama|Kurzdrama|s√©ries courtes|dramas y v√
 assert.ok(legalCopy.includes("SI 11.6"));
 const firstPartyCatalog=readFileSync("lib/sasi-software/catalog.ts","utf8");
 assert.ok(firstPartyCatalog.includes("Copernicus SI 11.6"));
+const productCopy=readFileSync("lib/tools/product-copy.ts","utf8");
+assert.doesNotMatch(productCopy,/'url-to-video'/);

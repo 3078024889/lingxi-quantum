@@ -1,5 +1,5 @@
 {
-  "source_commit": "c912d2661523eee93775422faa71a6ce461e23d3",
+  "source_commit": "770c4cb008a381933bca7ce0c2881fba43d2d428",
   "basis": "COM cleanup candidate derived from source tree 07546849537f5af6e2b247fdb7b7576754a845d4; retired SASI modules removed by the COM-specific manifest.",
   "files": [
     {
@@ -9824,7 +9824,7 @@
     },
     {
       "path": "docs/operations/legacy-sasi-retirement-20261108.json",
-      "bytes": 29207
+      "bytes": 29257
     },
     {
       "path": "docs/PRE-SUBMIT-MANIFEST-V1181.txt",
@@ -15564,11 +15564,11 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 6075
+      "bytes": 6130
     },
     {
       "path": "tests/retired-sasi-public-copy-20261113.test.mjs",
-      "bytes": 3095
+      "bytes": 3214
     },
     {
       "path": "tsconfig.json",
