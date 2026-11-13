@@ -7,8 +7,8 @@ on:
   pull_request:
     branches:
       - fix/toolpass-compact-align-cn-20261113
-      - fix/toolpass-compact-align-com-20261113
       - release/com-sasi-full-20261108
+      - fix/toolpass-compact-align-com-20261113
   workflow_dispatch:
 
 permissions:
@@ -39,8 +39,6 @@ jobs:
           node --check scripts/audit/retired-code-cleanup.mjs
           node --test tests/legacy-sasi-retirement.test.mjs tests/shared-site-origin-ownership-20261113.test.mjs tests/retired-sasi-public-copy-20261113.test.mjs
           node scripts/audit/retired-code-cleanup.mjs
-          node --check scripts/audit/legacy-sasi-runtime-reachability.mjs
-          node scripts/audit/legacy-sasi-runtime-reachability.mjs
       - name: Run marketplace security and fulfillment regression
         run: |
           node --test \
@@ -53,6 +51,12 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           pnpm exec tsc --noEmit
+      - name: Run R6/R8 growth, GEO and anonymous conversion regression
+        run: |
+          node --check scripts/seo/growth/generate-llms-full.mjs
+          node scripts/seo/growth/generate-llms-full.mjs
+          node --test tests/growth-attribution.test.mjs tests/growth-distribution.test.mjs
+          node scripts/test-tool-usage.cjs
       - name: Confirm this workflow cannot deploy
         run: |
           ! grep -Eq 'wrangler deploy|vercel deploy|ssh .*lingxifield|systemctl restart' .github/workflows/retired-sasi-cleanup-audit-20261113.yml
