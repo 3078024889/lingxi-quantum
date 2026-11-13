@@ -13,6 +13,9 @@ const productionWorker = "lingxifield-com-celestial-20261109";
 const candidateWorkerPrefix = "lingxifield-com-canary-";
 const wwwWorker = "lingxifield-com-static-gateway-canary-20261107";
 const apexPattern = "lingxifield.com/*";
+const businessApiPattern = "lingxifield.com/api/*";
+const businessApiWorker = "lingxifield-com-business-origin-20261110";
+const marketplaceApiPattern = "lingxifield.com/api/sasi/marketplace/*";
 const candidateWorker = candidateWorkerPrefix + (expectedSha || "").slice(0, 12);
 
 if (!account || !token || !githubToken || !runId || !/^[0-9a-f]{40}$/.test(expectedSha || "")) {
@@ -298,6 +301,15 @@ const www = routes.filter(route => route.pattern === "www.lingxifield.com/*");
 if (www.length !== 1 || www[0].script !== wwwWorker) {
   throw Error("WWW_WILDCARD_CHANGED_STOP");
 }
+const businessApiRoutes = routes.filter(route => route.pattern === businessApiPattern);
+if (businessApiRoutes.length !== 1 || businessApiRoutes[0].script !== businessApiWorker) {
+  throw Error("COM_BUSINESS_API_CATCHALL_CHANGED_STOP");
+}
+const existingMarketplaceApiRoutes = routes.filter(route => route.pattern === marketplaceApiPattern);
+if (existingMarketplaceApiRoutes.length > 1 ||
+    (existingMarketplaceApiRoutes.length === 1 && existingMarketplaceApiRoutes[0].script !== productionWorker)) {
+  throw Error("COM_MARKETPLACE_API_ROUTE_CONFLICT_STOP");
+}
 
 const specialized = {
   "lingxifield.com/api/account/money-admin*": "lingxifield-com-admin-facade",
@@ -390,6 +402,8 @@ console.log("COM_PRODUCTION_CONFIG_PRESERVES_DASHBOARD_VARS_SECRETS_AND_SERVICE_
 
 let deploymentChanged = false;
 let success = false;
+let marketplaceApiRouteCreated = false;
+let marketplaceApiRouteId = null;
 try {
   run("pnpm", [
     "exec", "wrangler", "deploy",
@@ -414,6 +428,46 @@ try {
     throw Error("WWW_ROUTE_NOT_PRESERVED");
   }
 
+  // The legacy catch-all remains responsible for payment and other business APIs.
+  // Only SASI marketplace endpoints move to the newly deployed main Worker.
+  const marketplaceApiMatches = routesAfter.filter(route => route.pattern === marketplaceApiPattern);
+  if (marketplaceApiMatches.length === 0) {
+    const createdRoute = await cf("/zones/" + zone + "/workers/routes", {
+      method: "POST",
+      body: JSON.stringify({ pattern: marketplaceApiPattern, script: productionWorker })
+    });
+    if (!createdRoute?.id || createdRoute.pattern !== marketplaceApiPattern ||
+        createdRoute.script !== productionWorker) {
+      throw Error("COM_MARKETPLACE_API_ROUTE_CREATE_UNVERIFIED");
+    }
+    marketplaceApiRouteId = createdRoute.id;
+    marketplaceApiRouteCreated = true;
+    console.log("COM_MARKETPLACE_API_ROUTE_CREATED=" + marketplaceApiPattern + "->" + productionWorker);
+  } else if (marketplaceApiMatches.length === 1 && marketplaceApiMatches[0].script === productionWorker) {
+    marketplaceApiRouteId = marketplaceApiMatches[0].id;
+    console.log("COM_MARKETPLACE_API_ROUTE_ALREADY_CORRECT=" + marketplaceApiPattern);
+  } else {
+    throw Error("COM_MARKETPLACE_API_ROUTE_CONFLICT_AFTER_DEPLOY");
+  }
+
+  const verifiedRoutes = await cf("/zones/" + zone + "/workers/routes");
+  const marketplaceApiVerified = verifiedRoutes.filter(route => route.pattern === marketplaceApiPattern);
+  const businessApiVerified = verifiedRoutes.filter(route => route.pattern === businessApiPattern);
+  if (marketplaceApiVerified.length !== 1 || marketplaceApiVerified[0].script !== productionWorker) {
+    throw Error("COM_MARKETPLACE_API_ROUTE_NOT_BOUND_TO_MAIN_WORKER");
+  }
+  if (businessApiVerified.length !== 1 || businessApiVerified[0].script !== businessApiWorker) {
+    throw Error("COM_BUSINESS_API_CATCHALL_NOT_PRESERVED");
+  }
+  for (const [pattern, expectedWorker] of Object.entries(specialized)) {
+    const matched = verifiedRoutes.filter(route => route.pattern === pattern);
+    if (matched.length !== 1 || matched[0].script !== expectedWorker) {
+      throw Error("SPECIAL_PRODUCTION_ROUTE_NOT_PRESERVED:" + pattern);
+    }
+  }
+  console.log("COM_MARKETPLACE_API_ROUTE_VERIFIED=" + marketplaceApiPattern + "->" + productionWorker);
+  console.log("COM_PAYMENT_AND_ANNOUNCEMENT_API_ROUTES_PRESERVED");
+
   await probe("https://lingxifield.com", "POSTCUTOVER", 2, baselineProviders);
   const feedAfter = await status("https://lingxifield.com/api/site-announcements");
   if (feedAfter.status !== 200) throw Error("COM_PUBLIC_ANNOUNCEMENTS_POSTCUTOVER_FAILED");
@@ -437,6 +491,15 @@ try {
   }
   if (deploymentChanged && !success) {
     console.log("COM_POSTCUTOVER_HEALTH_FAIL_ROLLBACK_BEGIN");
+    if (marketplaceApiRouteCreated && marketplaceApiRouteId) {
+      try {
+        await cf("/zones/" + zone + "/workers/routes/" + marketplaceApiRouteId, { method: "DELETE" });
+        console.log("COM_MARKETPLACE_API_ROUTE_REMOVED_DURING_ROLLBACK");
+      } catch (routeRollbackError) {
+        console.error("COM_MARKETPLACE_API_ROUTE_ROLLBACK_FAILED_MANUAL_ACTION_REQUIRED:" + String(routeRollbackError));
+        process.exitCode = 2;
+      }
+    }
     try {
       run("pnpm", [
         "exec", "wrangler", "rollback", previousVersion,
