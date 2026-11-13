@@ -87,7 +87,9 @@ test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
  assert.ok(catalog.includes("Copernicus SI 11.6"));
  assert.match(catalog,/kind:"source"/);
  assert.doesNotMatch(catalog,/SI9[.]5|SI 9[.]5/);
- assert.ok(market.includes("SI 11.6"));
+ assert.ok(market.includes("featuredVisualTitle"));
+ assert.ok(market.includes("featured.titleZh"));
+ assert.ok(market.includes("<strong>{featuredVisualTitle}</strong>"));
 });
 
 
