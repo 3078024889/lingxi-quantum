@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {readFileSync} from "node:fs";
+import {readFileSync,existsSync} from "node:fs";
 import test from "node:test";
 
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
@@ -143,4 +143,136 @@ test("vendor applications must pass same-origin and rate-limit gate",()=>{
  assert.match(route,/enforceAbuseGuard\(req/);
  assert.match(route,/ipLimit:30/);
  assert.match(route,/return verifiedSubmission\(req\)/);
+});
+
+test("growth distribution documentation matches implemented widget boundaries and release status",()=>{
+ const guide=read("docs/growth/siai-global-distribution-20261105.md");
+ const globalSeo=read("lib/seo/global-seo.ts");
+ const toolHub=read("lib/tools/advanced-catalog.ts");
+ const config=read("next.config.js");
+ assert.match(guide,/data-lx-widget="siai"/);
+ assert.ok(!globalSeo.includes('slug:"url-to-video"'));
+ assert.ok(!toolHub.includes("/tools/url-to-video"));
+ assert.match(guide,/data-lx-widget="tools"/);
+ assert.match(guide,/Tool processing does not run inside the partner page/);
+ assert.match(guide,/source and build implemented; clean sandbox install pending/);
+ assert.match(guide,/prototype\/source and regression tests exist; store submission pending/);
+ assert.match(guide,/Local MCP v2 diagnostic server/);
+ assert.match(guide,/public route remains disabled\/noindex/);
+ assert.match(guide,/Do not claim ChatGPT integration/);
+ assert.match(guide,/not an approved WordPress\.org listing/);
+ assert.match(config,/frame-ancestors 'self'/);
+ assert.match(config,/key: "X-Frame-Options", value: "SAMEORIGIN"/);
+});
+
+
+test("homepage growth engines are integrated into the problem hub and aligned with the site rail",()=>{
+ const growth=read("components/HomeGlobalGrowth.tsx");
+ const problem=read("components/HomeProblemHub.tsx");
+ const home=read("app/page.tsx");
+ const localizedHome=read("app/[locale]/page.tsx");
+ const css=read("app/growth-pages.css");
+ assert.match(growth,/tag:"STORIES"[^\n]*href:"\/discoveries"/);
+ assert.match(growth,/Before \/ After/);
+ assert.ok(growth.includes('"href":"/sasi/seller"')||growth.includes('href:"/sasi/seller"'));
+ assert.ok(growth.includes('"href":"/sasi/delivery"')||growth.includes('href:"/sasi/delivery"'));
+ assert.match(growth,/export function HomeToolPassMembership/);
+ assert.match(growth,/passValueLead/);
+ assert.match(problem,/伏尼契/);
+ assert.match(problem,/<HomeHeroVisual\/>/);
+ assert.match(problem,/<HomeGlobalGrowth lang=\{lang\}\/>/);
+ assert.match(problem,/href:"\/discoveries"/);
+ assert.match(problem,/hit\?\.score>0\?hit\.href:'\/tools'/);
+ assert.match(home,/HomeProblemHub\/><HomeSeoAnswers locale="zh"\/><HomeToolPassMembership\/><Footer/);
+ assert.match(localizedHome,/HomeProblemHub\/><HomeSeoAnswers locale=\{locale\}\/><HomeToolPassMembership\/><Footer/);
+ assert.match(css,/--lx-home-gutter/);
+ assert.match(css,/\.lx-home-toolpass-wrap/);
+ assert.match(css,/\.lx11-footer\.lx-branded-footer\{padding-left:var\(--lx-home-gutter\)/);
+});
+
+test("discoveries content is localized, evidence-led and connected to actual file workflows",()=>{
+ const hub=read("components/seo/DiscoveriesHub.tsx");
+ const zh=read("app/discoveries/page.tsx");
+ const localized=read("app/[locale]/discoveries/page.tsx");
+ assert.match(hub,/Record<SeoLocale,DiscoveryCopy>/);
+ assert.match(hub,/beinecke\.library\.yale\.edu/);
+ assert.match(hub,/science\.nasa\.gov\/uap/);
+ assert.match(hub,/AARO_Historical_Record_Report_Volume_1_2024\.pdf/);
+ assert.match(hub,/unknown writing system/);
+ assert.match(hub,/tools\/pdf-compare/);
+ assert.match(hub,/id="use-cases"/);
+ assert.match(hub,/id="before-after"/);
+ assert.match(hub,/DiscoveryShareAction/);
+ assert.match(read("components/seo/DiscoveryShareAction.tsx"),/utm_source","discovery_share"/);
+ assert.match(read("components/seo/DiscoveryShareAction.tsx"),/utm_campaign","field_notes"/);
+ assert.match(zh,/publicPageMetadata\("zh","\/discoveries"/);
+ assert.match(localized,/LOCALIZED_LOCALES/);
+ assert.match(localized,/publicPageMetadata\(language,"\/discoveries"/);
+});
+
+test("discoveries are included in SEO, GEO, sitemap, public analytics and LLM indexes",()=>{
+ const geo=read("lib/seo/site-facts.ts");
+ const sitemap=read("lib/seo/sitemap-build.ts");
+ const visits=read("lib/analytics/public-visit.ts");
+ const llmsRoute=read("app/llms.txt/route.ts");
+ const full=read("public/llms-full.txt");
+ const publicIndex=read("public/llms.txt");
+ const index=JSON.parse(read("public/search-intent-index.json"));
+ assert.match(geo,/discoveries/);
+ assert.match(sitemap,/\/discoveries/);
+ assert.match(visits,/siai\|tools\|products\|discoveries/);
+ assert.match(llmsRoute,/Evidence-led discoveries and content/);
+ assert.match(llmsRoute,/Partner distribution and integrations/);
+ for(const stale of ["short-drama","storyboard","research-workflow","website-generation","旧短剧","剧本/分镜","科研工作流"]){
+  assert(!llmsRoute.includes(stale),`dynamic llms.txt contains retired module label: ${stale}`);
+  assert(!publicIndex.includes(stale),`static llms.txt contains retired module label: ${stale}`);
+  assert(!full.includes(stale),`llms-full.txt contains retired module label: ${stale}`);
+ }
+ assert.match(full,/Tool entry points: 124/);
+ assert.match(full,/\/discoveries/);
+ assert(!full.includes("url-to-video"));
+ assert.equal(index.tools,123);
+ assert.equal(index.toolEntryPoints,124);
+ assert.equal(index.records.length,123*9);
+ assert(!JSON.stringify(index).includes("url-to-video"));
+});
+
+test("SASI public guide no longer hardcodes a retired Copernicus version or price",()=>{
+ const guide=read("app/sasi/delivery/page.tsx");
+ assert.match(guide,/哥白尼 SI 当前仅提供源码授权版/);
+ assert(!guide.includes("9.5"));
+ assert(!guide.includes("6,900"));
+ assert.match(guide,/商品详情页会展示购买时的有效版本、价格/);
+});
+
+test("result sharing strips private query and hash and carries bounded source attribution",()=>{
+ const share=read("components/growth/ResultGrowthActions.tsx");
+ assert.match(share,/publicVisitPath\(location\.pathname\)/);
+ assert.match(share,/utm_source","result_share"/);
+ assert.match(share,/utm_campaign","tool_result"/);
+ assert(!share.includes("url:location.href"));
+ assert(!share.includes("writeText(location.href)"));
+});
+
+
+test("retired creation and knowledge endpoints are closed while marketplace settlement remains",()=>{
+ const middleware=read("middleware.ts");
+ const knowledgePath="app/api/knowledge/[[...legacy]]/route.ts";
+ if(existsSync(knowledgePath)){
+  const knowledge=read(knowledgePath);
+  assert.match(knowledge,/status:\s*410/);assert.match(knowledge,/KNOWLEDGE_MODULE_RETIRED/);
+  assert.match(knowledge,/export const GET = retired/);assert.match(knowledge,/export const POST = retired/);
+ }else{
+  assert.equal(existsSync("app/api/knowledge/ask/route.ts"),false);
+  assert.equal(existsSync("app/api/knowledge/pricing/route.ts"),false);
+ }
+ const provider=read("app/api/internal/sasi/provider-smoke/route.ts");
+ const worker=read("app/api/internal/sasi/worker/configure/route.ts");
+ const reconcile=read("app/api/internal/sasi/reconcile/route.ts");
+ const payout=read("app/api/internal/sasi/market/release-due/route.ts");
+ assert.match(middleware,/全球 SIAI 排行榜、SASI 智能软件市场与 100\+ 在线实用工具/);
+ assert(!middleware.includes("SASI全球多模型智能创作平台"));
+ for(const route of [provider,worker]){assert.match(route,/status:410/);assert.match(route,/SASI_CREATION_RETIRED/);}
+ assert.match(reconcile,/refreshSasiJob/); // preserve reconciliation for historical in-flight jobs
+ assert.match(payout,/sasi_market_release_due_sales/); // preserve current seller settlement
 });

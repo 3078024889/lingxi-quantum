@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
 import { alipayEnabled, createAlipayPaymentUrl } from "@/lib/alipay";
-import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
+import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 import { safeLocalReturnPath, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";

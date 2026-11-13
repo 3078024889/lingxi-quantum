@@ -24,7 +24,6 @@ const GUIDE_GROUP_BY_SLUG:Record<string,GuideGroup>={
  "ocr":"ocr","pdf-ocr":"ocr",
  "privacy-cleaner":"privacy","burn-after-read":"privacy","temp-mail":"privacy",
  "document-translate":"translate","image-translator":"translate","subtitle-translate":"translate","video-translate":"translate",
- "url-to-video":"web"
 };
 const TASK_GUIDES:Record<SeoLocale,Record<GuideGroup,readonly [string,string,string]>>={
  zh:{

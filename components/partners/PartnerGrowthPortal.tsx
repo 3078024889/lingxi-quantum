@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import {useEffect,useMemo,useState,type CSSProperties} from "react";
+import {useEffect,useMemo,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 const copy:Record<LingxiLang,{eyebrow:string;title:string;intro:string;partners:string;partnerHint:string;siai:string;siaiInfo:string;qr:string;qrInfo:string;freeTools:string;freeToolsInfo:string;copy:string;copied:string;example:string;feed:string;update:string;rules:string;community:string;note:string}>={
@@ -49,49 +49,49 @@ export default function PartnerGrowthPortal(){
    '<script defer src="'+source+'" data-lx-widget="siai" data-vendor="'+safeVendor+'" data-lang="'+lang+'" data-partner="'+safe+'"></script>'];
  },[safe,lang,safeVendor]);
  async function copyCode(value:string,key:string){try{await navigator.clipboard.writeText(value);setCopied(key)}catch{setCopied(null)}}
- const box:CSSProperties={padding:22,border:"1px solid #dce4ee",borderRadius:18,background:"#fff",boxShadow:"0 4px 18px rgba(15,23,42,.04)"};
- return <main style={{padding:"44px 20px 70px",background:"#f7f9fe",minHeight:"70vh"}} dir={lang==="ar"?"rtl":"ltr"}>
-  <div style={{maxWidth:1120,margin:"0 auto"}}>
-   <div style={{color:"#245bd5",fontSize:15,fontWeight:750}}>{t.eyebrow} · LINGXIFIELD</div>
-   <h1 style={{fontSize:"clamp(28px,4vw,43px)",lineHeight:1.25,margin:"14px 0",color:"#14213e",fontWeight:800}}>{t.title}</h1>
-   <p style={{fontSize:17,lineHeight:1.8,maxWidth:790,color:"#52617b"}}>{t.intro}</p>
-   <div style={{...box,margin:"26px 0"}}>
-    <label style={{display:"block",fontSize:16,fontWeight:700,marginBottom:10}} htmlFor="partner-label">{t.partners}</label>
-    <input id="partner-label" value={partner} maxLength={32} onChange={e=>setPartner(e.target.value)} style={{padding:12,fontSize:16,border:"1px solid #cdd7e6",borderRadius:10,width:"min(100%,400px)"}}/>
-    <p style={{fontSize:14,color:"#65728a"}}>{t.partnerHint}</p>
-    {vendors.length>0?<div style={{marginTop:18}}><label htmlFor="partner-vendor" style={{display:"block",fontSize:16,fontWeight:700,marginBottom:10}}>{vc.choose}</label>
-     <select id="partner-vendor" value={vendor} onChange={e=>setVendor(e.target.value)} style={{padding:12,fontSize:16,border:"1px solid #cdd7e6",borderRadius:10,width:"min(100%,400px)"}}>
+
+ return <main className="lx-growth-partner-page" dir={lang==="ar"?"rtl":"ltr"}>
+  <div className="lx-growth-partner-container">
+   <div className="lx-growth-partner-eyebrow">{t.eyebrow} · LINGXIFIELD</div>
+   <h1 className="lx-growth-partner-title">{t.title}</h1>
+   <p className="lx-growth-partner-intro">{t.intro}</p>
+   <div className="lx-growth-partner-card lx-growth-partner-settings">
+    <label className="lx-growth-partner-label" htmlFor="partner-label">{t.partners}</label>
+    <input className="lx-growth-partner-field" id="partner-label" value={partner} maxLength={32} onChange={e=>setPartner(e.target.value)}/>
+    <p className="lx-growth-partner-note">{t.partnerHint}</p>
+    {vendors.length>0?<div className="lx-growth-partner-vendor"><label className="lx-growth-partner-label" htmlFor="partner-vendor">{vc.choose}</label>
+     <select className="lx-growth-partner-select" id="partner-vendor" value={vendor} onChange={e=>setVendor(e.target.value)}>
       {vendors.map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
      </select></div>:null}
    </div>
-   <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(min(100%,340px),1fr))",gap:18}}>
+   <div className="lx-growth-partner-grid">
     {[
      {id:"siai",title:t.siai,intro:t.siaiInfo},
      {id:"tools",title:t.qr,intro:t.qrInfo},
      {id:"free-tools",title:t.freeTools,intro:t.freeToolsInfo},
      ...(vendors.length?[{id:"vendor",title:vc.title,intro:vc.info}]:[])
-    ].map((item,i)=><section key={item.id} style={box}>
-     <h2 style={{fontSize:22,color:"#16213e",margin:"0 0 12px"}}>{item.title}</h2>
-     <p style={{color:"#52617b",fontSize:15,minHeight:62,lineHeight:1.7}}>{item.intro}</p>
-     <textarea readOnly aria-label={t.copy+" — "+item.title} value={snippets[i]} style={{width:"100%",height:120,border:"1px solid #d0d9e7",borderRadius:11,padding:12,fontSize:14,lineHeight:1.5,resize:"vertical",color:"#233354",background:"#f8faff"}}/>
-     <button type="button" onClick={()=>void copyCode(snippets[i],item.id)} style={{border:0,borderRadius:10,padding:"12px 18px",marginTop:11,background:"#245bd5",color:"#fff",fontWeight:700,fontSize:15,cursor:"pointer"}}>{copied===item.id?t.copied:t.copy}</button>
+    ].map((item,i)=><section key={item.id} className="lx-growth-partner-card">
+     <h2 className="lx-growth-partner-card-title">{item.title}</h2>
+     <p className="lx-growth-partner-card-copy">{item.intro}</p>
+     <textarea className="lx-growth-partner-snippet" readOnly aria-label={t.copy+" — "+item.title} value={snippets[i]}/>
+     <button className="lx-growth-partner-button" type="button" onClick={()=>void copyCode(snippets[i],item.id)}>{copied===item.id?t.copied:t.copy}</button>
     </section>)}
    </div>
-   <section style={{...box,marginTop:22}}>
-    <h2 style={{fontSize:21,fontWeight:750,color:"#16213e",margin:"0 0 8px"}}>WordPress</h2>
-    <p style={{fontSize:15,lineHeight:1.7,color:"#52617b",margin:"0 0 14px"}}>{vc.wpNote}</p>
+   <section className="lx-growth-partner-card lx-growth-partner-wordpress">
+    <h2 className="lx-growth-partner-card-title">WordPress</h2>
+    <p className="lx-growth-partner-card-copy">{vc.wpNote}</p>
     <a href="/downloads/lingxifield-siai-wordpress.zip" download="lingxifield-siai-wordpress.zip"
-       style={{display:"inline-block",background:"#245bd5",color:"#fff",borderRadius:10,padding:"12px 18px",fontWeight:700,fontSize:15,textDecoration:"none"}}>{vc.wordpress}</a>
+       className="lx-growth-partner-action">{vc.wordpress}</a>
    </section>
-   <p style={{fontSize:15,color:"#54647d",marginTop:22}}>{t.example}</p>
-   <div style={{display:"flex",gap:20,flexWrap:"wrap",padding:"24px 0"}}>
+   <p className="lx-growth-partner-example">{t.example}</p>
+   <div className="lx-growth-partner-links">
     <a href="/siai/updates.xml" style={{fontSize:16,color:"#1757be"}}>{t.feed}</a>
     <a href="/siai-openapi.json" style={{fontSize:16,color:"#1757be"}}>API · OpenAPI</a>
     <Link href="/siai" style={{fontSize:16,color:"#1757be"}}>{t.update}</Link>
     <Link href="/tools" style={{fontSize:16,color:"#1757be"}}>{t.community}</Link>
     <Link href={vendor?"/siai/claim?product="+encodeURIComponent(vendor)+"&name="+encodeURIComponent(vendors.find(r=>r.id===vendor)?.name||""):"/siai/claim"} style={{fontSize:16,color:"#1757be",fontWeight:700}}>{vc.claim}</Link>
    </div>
-   <p style={{fontSize:14,color:"#65728a"}}>{t.rules} · {t.note}</p>
+   <p className="lx-growth-partner-note">{t.rules} · {t.note}</p>
   </div>
  </main>;
 }

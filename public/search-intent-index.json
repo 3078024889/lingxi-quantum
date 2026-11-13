@@ -1,8 +1,9 @@
 {
-  "generatedAt": "2026-10-16T03:31:38.324Z",
+  "generatedAt": "2026-11-13T07:59:21.250Z",
   "source": "LINGXIFIELD SEO search-intent catalog",
   "note": "Generic questions describe common task intent. Curated FAQ pages are manually authored; this file does not claim private search-volume data.",
-  "tools": 121,
+  "tools": 123,
+  "toolEntryPoints": 124,
   "locales": 9,
   "records": [
     {
@@ -159,159 +160,6 @@
       "hreflang": "ar"
     },
     {
-      "slug": "url-to-video",
-      "locale": "zh",
-      "language": "中文",
-      "mode": "online",
-      "name": "网址生成推广视频",
-      "url": "https://lingxifield.com/tools/url-to-video",
-      "canonical": "https://lingxifield.com/tools/url-to-video",
-      "searchIntentQuestions": [
-        "网址生成推广视频怎么用？",
-        "网址生成推广视频手机可以用吗？",
-        "网址生成推广视频免费吗？",
-        "网址生成推广视频处理安全吗？"
-      ],
-      "curatedFaq": false,
-      "hreflang": "zh-CN"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "en",
-      "language": "English",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/en/tools/url-to-video",
-      "canonical": "https://lingxifield.com/en/tools/url-to-video",
-      "searchIntentQuestions": [
-        "How do I use URL to Promotional Video?",
-        "Can I use URL to Promotional Video on my phone?",
-        "Is URL to Promotional Video free?",
-        "Is URL to Promotional Video safe to use?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "en"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "ja",
-      "language": "日本語",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/ja/tools/url-to-video",
-      "canonical": "https://lingxifield.com/ja/tools/url-to-video",
-      "searchIntentQuestions": [
-        "URL to Promotional Videoの使い方は？",
-        "URL to Promotional Videoはスマホで使えますか？",
-        "URL to Promotional Videoは無料ですか？",
-        "URL to Promotional Videoは安全ですか？"
-      ],
-      "curatedFaq": false,
-      "hreflang": "ja"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "ko",
-      "language": "한국어",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/ko/tools/url-to-video",
-      "canonical": "https://lingxifield.com/ko/tools/url-to-video",
-      "searchIntentQuestions": [
-        "URL to Promotional Video 사용 방법은?",
-        "휴대폰에서 URL to Promotional Video을 사용할 수 있나요?",
-        "URL to Promotional Video은 무료인가요?",
-        "URL to Promotional Video은 안전한가요?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "ko"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "fr",
-      "language": "Français",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/fr/tools/url-to-video",
-      "canonical": "https://lingxifield.com/fr/tools/url-to-video",
-      "searchIntentQuestions": [
-        "Comment utiliser URL to Promotional Video ?",
-        "Puis-je utiliser URL to Promotional Video sur mobile ?",
-        "URL to Promotional Video est-il gratuit ?",
-        "URL to Promotional Video est-il sûr ?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "fr"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "de",
-      "language": "Deutsch",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/de/tools/url-to-video",
-      "canonical": "https://lingxifield.com/de/tools/url-to-video",
-      "searchIntentQuestions": [
-        "Wie benutzt man URL to Promotional Video?",
-        "Kann ich URL to Promotional Video auf dem Handy nutzen?",
-        "Ist URL to Promotional Video kostenlos?",
-        "Ist URL to Promotional Video sicher?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "de"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "es",
-      "language": "Español",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/es/tools/url-to-video",
-      "canonical": "https://lingxifield.com/es/tools/url-to-video",
-      "searchIntentQuestions": [
-        "¿Cómo se usa URL to Promotional Video?",
-        "¿Puedo usar URL to Promotional Video en el móvil?",
-        "¿URL to Promotional Video es gratis?",
-        "¿Es seguro usar URL to Promotional Video?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "es"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "pt",
-      "language": "Português",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/pt/tools/url-to-video",
-      "canonical": "https://lingxifield.com/pt/tools/url-to-video",
-      "searchIntentQuestions": [
-        "Como usar URL to Promotional Video?",
-        "Posso usar URL to Promotional Video no celular?",
-        "URL to Promotional Video é gratuito?",
-        "URL to Promotional Video é seguro?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "pt"
-    },
-    {
-      "slug": "url-to-video",
-      "locale": "ar",
-      "language": "العربية",
-      "mode": "online",
-      "name": "URL to Promotional Video",
-      "url": "https://lingxifield.com/ar/tools/url-to-video",
-      "canonical": "https://lingxifield.com/ar/tools/url-to-video",
-      "searchIntentQuestions": [
-        "كيف أستخدم URL to Promotional Video؟",
-        "هل يمكن استخدام URL to Promotional Video على الهاتف؟",
-        "هل URL to Promotional Video مجاني؟",
-        "هل استخدام URL to Promotional Video آمن؟"
-      ],
-      "curatedFaq": false,
-      "hreflang": "ar"
-    },
-    {
       "slug": "audio-transcription",
       "locale": "zh",
       "language": "中文",
@@ -460,6 +308,159 @@
         "هل يمكن استخدام Audio Transcription على الهاتف؟",
         "هل Audio Transcription مجاني؟",
         "هل استخدام Audio Transcription آمن؟"
+      ],
+      "curatedFaq": true,
+      "hreflang": "ar"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "zh",
+      "language": "中文",
+      "mode": "local",
+      "name": "AI 视频音频检测",
+      "url": "https://lingxifield.com/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "AI 视频音频检测怎么用？",
+        "AI 视频音频检测手机可以用吗？",
+        "AI 视频音频检测免费吗？",
+        "AI 视频音频检测处理安全吗？"
+      ],
+      "curatedFaq": true,
+      "hreflang": "zh-CN"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "en",
+      "language": "English",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/en/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/en/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "How do I use AI Video & Audio Detection?",
+        "Can I use AI Video & Audio Detection on my phone?",
+        "Is AI Video & Audio Detection free?",
+        "Is AI Video & Audio Detection safe to use?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "en"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "ja",
+      "language": "日本語",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/ja/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/ja/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "AI Video & Audio Detectionの使い方は？",
+        "AI Video & Audio Detectionはスマホで使えますか？",
+        "AI Video & Audio Detectionは無料ですか？",
+        "AI Video & Audio Detectionは安全ですか？"
+      ],
+      "curatedFaq": true,
+      "hreflang": "ja"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "ko",
+      "language": "한국어",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/ko/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/ko/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "AI Video & Audio Detection 사용 방법은?",
+        "휴대폰에서 AI Video & Audio Detection을 사용할 수 있나요?",
+        "AI Video & Audio Detection은 무료인가요?",
+        "AI Video & Audio Detection은 안전한가요?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "ko"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "fr",
+      "language": "Français",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/fr/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/fr/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "Comment utiliser AI Video & Audio Detection ?",
+        "Puis-je utiliser AI Video & Audio Detection sur mobile ?",
+        "AI Video & Audio Detection est-il gratuit ?",
+        "AI Video & Audio Detection est-il sûr ?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "fr"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "de",
+      "language": "Deutsch",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/de/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/de/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "Wie benutzt man AI Video & Audio Detection?",
+        "Kann ich AI Video & Audio Detection auf dem Handy nutzen?",
+        "Ist AI Video & Audio Detection kostenlos?",
+        "Ist AI Video & Audio Detection sicher?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "de"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "es",
+      "language": "Español",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/es/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/es/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "¿Cómo se usa AI Video & Audio Detection?",
+        "¿Puedo usar AI Video & Audio Detection en el móvil?",
+        "¿AI Video & Audio Detection es gratis?",
+        "¿Es seguro usar AI Video & Audio Detection?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "es"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "pt",
+      "language": "Português",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/pt/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/pt/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "Como usar AI Video & Audio Detection?",
+        "Posso usar AI Video & Audio Detection no celular?",
+        "AI Video & Audio Detection é gratuito?",
+        "AI Video & Audio Detection é seguro?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "pt"
+    },
+    {
+      "slug": "ai-video-audio-check",
+      "locale": "ar",
+      "language": "العربية",
+      "mode": "local",
+      "name": "AI Video & Audio Detection",
+      "url": "https://lingxifield.com/ar/tools/ai-video-audio-check",
+      "canonical": "https://lingxifield.com/ar/tools/ai-video-audio-check",
+      "searchIntentQuestions": [
+        "كيف أستخدم AI Video & Audio Detection؟",
+        "هل يمكن استخدام AI Video & Audio Detection على الهاتف؟",
+        "هل AI Video & Audio Detection مجاني؟",
+        "هل استخدام AI Video & Audio Detection آمن؟"
       ],
       "curatedFaq": true,
       "hreflang": "ar"
@@ -4440,6 +4441,159 @@
         "هل استخدام Image Watermark Cleanup آمن؟"
       ],
       "curatedFaq": false,
+      "hreflang": "ar"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "zh",
+      "language": "中文",
+      "mode": "local",
+      "name": "AI 图片检测",
+      "url": "https://lingxifield.com/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "AI 图片检测怎么用？",
+        "AI 图片检测手机可以用吗？",
+        "AI 图片检测免费吗？",
+        "AI 图片检测处理安全吗？"
+      ],
+      "curatedFaq": true,
+      "hreflang": "zh-CN"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "en",
+      "language": "English",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/en/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/en/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "How do I use AI Image Detection?",
+        "Can I use AI Image Detection on my phone?",
+        "Is AI Image Detection free?",
+        "Is AI Image Detection safe to use?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "en"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "ja",
+      "language": "日本語",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/ja/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/ja/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "AI Image Detectionの使い方は？",
+        "AI Image Detectionはスマホで使えますか？",
+        "AI Image Detectionは無料ですか？",
+        "AI Image Detectionは安全ですか？"
+      ],
+      "curatedFaq": true,
+      "hreflang": "ja"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "ko",
+      "language": "한국어",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/ko/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/ko/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "AI Image Detection 사용 방법은?",
+        "휴대폰에서 AI Image Detection을 사용할 수 있나요?",
+        "AI Image Detection은 무료인가요?",
+        "AI Image Detection은 안전한가요?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "ko"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "fr",
+      "language": "Français",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/fr/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/fr/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "Comment utiliser AI Image Detection ?",
+        "Puis-je utiliser AI Image Detection sur mobile ?",
+        "AI Image Detection est-il gratuit ?",
+        "AI Image Detection est-il sûr ?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "fr"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "de",
+      "language": "Deutsch",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/de/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/de/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "Wie benutzt man AI Image Detection?",
+        "Kann ich AI Image Detection auf dem Handy nutzen?",
+        "Ist AI Image Detection kostenlos?",
+        "Ist AI Image Detection sicher?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "de"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "es",
+      "language": "Español",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/es/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/es/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "¿Cómo se usa AI Image Detection?",
+        "¿Puedo usar AI Image Detection en el móvil?",
+        "¿AI Image Detection es gratis?",
+        "¿Es seguro usar AI Image Detection?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "es"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "pt",
+      "language": "Português",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/pt/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/pt/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "Como usar AI Image Detection?",
+        "Posso usar AI Image Detection no celular?",
+        "AI Image Detection é gratuito?",
+        "AI Image Detection é seguro?"
+      ],
+      "curatedFaq": true,
+      "hreflang": "pt"
+    },
+    {
+      "slug": "ai-image-check",
+      "locale": "ar",
+      "language": "العربية",
+      "mode": "local",
+      "name": "AI Image Detection",
+      "url": "https://lingxifield.com/ar/tools/ai-image-check",
+      "canonical": "https://lingxifield.com/ar/tools/ai-image-check",
+      "searchIntentQuestions": [
+        "كيف أستخدم AI Image Detection؟",
+        "هل يمكن استخدام AI Image Detection على الهاتف؟",
+        "هل AI Image Detection مجاني؟",
+        "هل استخدام AI Image Detection آمن؟"
+      ],
+      "curatedFaq": true,
       "hreflang": "ar"
     },
     {
@@ -9946,6 +10100,159 @@
         "هل يمكن استخدام Search PDFs على الهاتف؟",
         "هل Search PDFs مجاني؟",
         "هل استخدام Search PDFs آمن؟"
+      ],
+      "curatedFaq": false,
+      "hreflang": "ar"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "zh",
+      "language": "中文",
+      "mode": "local",
+      "name": "视频旋转",
+      "url": "https://lingxifield.com/tools/rotate-video",
+      "canonical": "https://lingxifield.com/tools/rotate-video",
+      "searchIntentQuestions": [
+        "视频旋转怎么用？",
+        "视频旋转手机可以用吗？",
+        "视频旋转免费吗？",
+        "视频旋转处理安全吗？"
+      ],
+      "curatedFaq": false,
+      "hreflang": "zh-CN"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "en",
+      "language": "English",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/en/tools/rotate-video",
+      "canonical": "https://lingxifield.com/en/tools/rotate-video",
+      "searchIntentQuestions": [
+        "How do I use Rotate Video?",
+        "Can I use Rotate Video on my phone?",
+        "Is Rotate Video free?",
+        "Is Rotate Video safe to use?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "en"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "ja",
+      "language": "日本語",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/ja/tools/rotate-video",
+      "canonical": "https://lingxifield.com/ja/tools/rotate-video",
+      "searchIntentQuestions": [
+        "Rotate Videoの使い方は？",
+        "Rotate Videoはスマホで使えますか？",
+        "Rotate Videoは無料ですか？",
+        "Rotate Videoは安全ですか？"
+      ],
+      "curatedFaq": false,
+      "hreflang": "ja"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "ko",
+      "language": "한국어",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/ko/tools/rotate-video",
+      "canonical": "https://lingxifield.com/ko/tools/rotate-video",
+      "searchIntentQuestions": [
+        "Rotate Video 사용 방법은?",
+        "휴대폰에서 Rotate Video을 사용할 수 있나요?",
+        "Rotate Video은 무료인가요?",
+        "Rotate Video은 안전한가요?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "ko"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "fr",
+      "language": "Français",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/fr/tools/rotate-video",
+      "canonical": "https://lingxifield.com/fr/tools/rotate-video",
+      "searchIntentQuestions": [
+        "Comment utiliser Rotate Video ?",
+        "Puis-je utiliser Rotate Video sur mobile ?",
+        "Rotate Video est-il gratuit ?",
+        "Rotate Video est-il sûr ?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "fr"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "de",
+      "language": "Deutsch",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/de/tools/rotate-video",
+      "canonical": "https://lingxifield.com/de/tools/rotate-video",
+      "searchIntentQuestions": [
+        "Wie benutzt man Rotate Video?",
+        "Kann ich Rotate Video auf dem Handy nutzen?",
+        "Ist Rotate Video kostenlos?",
+        "Ist Rotate Video sicher?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "de"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "es",
+      "language": "Español",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/es/tools/rotate-video",
+      "canonical": "https://lingxifield.com/es/tools/rotate-video",
+      "searchIntentQuestions": [
+        "¿Cómo se usa Rotate Video?",
+        "¿Puedo usar Rotate Video en el móvil?",
+        "¿Rotate Video es gratis?",
+        "¿Es seguro usar Rotate Video?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "es"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "pt",
+      "language": "Português",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/pt/tools/rotate-video",
+      "canonical": "https://lingxifield.com/pt/tools/rotate-video",
+      "searchIntentQuestions": [
+        "Como usar Rotate Video?",
+        "Posso usar Rotate Video no celular?",
+        "Rotate Video é gratuito?",
+        "Rotate Video é seguro?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "pt"
+    },
+    {
+      "slug": "rotate-video",
+      "locale": "ar",
+      "language": "العربية",
+      "mode": "local",
+      "name": "Rotate Video",
+      "url": "https://lingxifield.com/ar/tools/rotate-video",
+      "canonical": "https://lingxifield.com/ar/tools/rotate-video",
+      "searchIntentQuestions": [
+        "كيف أستخدم Rotate Video؟",
+        "هل يمكن استخدام Rotate Video على الهاتف؟",
+        "هل Rotate Video مجاني؟",
+        "هل استخدام Rotate Video آمن؟"
       ],
       "curatedFaq": false,
       "hreflang": "ar"

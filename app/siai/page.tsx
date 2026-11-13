@@ -46,5 +46,5 @@ export default async function Home(){
   mainEntity:{"@type":"ItemList",numberOfItems:curated.length,itemListElement:curated.map((r,i)=>({
    "@type":"ListItem",position:i+1,name:r.name,url:r.website
   }))}};
- return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><SiaiPartnerLink/><SiaiRankingHome rows={rows}/><Footer/></>;
+ return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><SiaiPartnerLink/><div className="lx-growth-siai-page"><SiaiRankingHome rows={rows}/></div><Footer/></>;
 }

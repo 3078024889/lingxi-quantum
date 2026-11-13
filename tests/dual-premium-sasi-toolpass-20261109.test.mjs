@@ -21,6 +21,14 @@ test("premium ToolPass four-price catalog stays authoritative and does not fabri
  assert.match(pass,/premium\.payFooter/);
  assert.match(passStyle,/\.planFeatured/);
  assert.match(passStyle,/\.overlay/);
+ assert.match(passStyle, /\.root\{[^}]*width:100%;max-width:1500px/);
+ assert.match(passStyle, /\.plans\{[^}]*margin:14px 0 0[^}]*gap:12px/);
+ assert.match(passStyle, /\.plan\{[^}]*min-height:164px/);
+ assert.match(passStyle, /\.lowerPanels\{[^}]*gap:14px;margin-top:14px/);
+ const footerStyle=file("app/siai-home.css");
+ assert.match(footerStyle, /\.lx-footer-v3 \.lx-footer-v3-showcase\{\s*max-width:1500px/);
+ assert.match(footerStyle, /\.lx-footer-v3 \.lx-footer-v3-sasi\{max-width:1500px/);
+ assert.match(footerStyle, /\.lx-footer-v3 \.lx-footer-v3-nav\{\s*max-width:1500px/);
  assert.match(passStyle,/@media\(max-width:700px\)/);
 });
 test("ToolPass modal is connected to verified real order and user balance, never hard-coded funds",()=>{
@@ -99,4 +107,20 @@ test("SASI seller revenue split is shown only upon consent, never in public prod
  assert.match(artwork,/featuredReady&&\(featuredPayment\.wechat/);
  assert.match(artwork,/Product files and SHA-256 are being verified/);
  assert.match(artwork,/role="status" aria-live="polite"/);
+});
+
+
+test("homepage, SEO/GEO, ToolPass and footer use one transparent celestial surface system",()=>{
+ const growth=file("app/growth-pages.css");
+ const footer=file("app/siai-home.css");
+ assert.match(growth,/--lx-growth-max:1500px/);
+ assert.match(growth,/\.lx-home-v143-grid \.lx11-home-card[^}]*background:transparent!important/);
+ assert.match(growth,/\.lx-growth-panel[^}]*background:transparent!important/);
+ assert.match(growth,/\.lx-seo-question[^}]*background:transparent!important/);
+ assert.match(passStyle,/container-type:inline-size;container-name:toolpass/);
+ assert.match(passStyle,/\.frame\{[^}]*background:transparent!important/);
+ assert.match(passStyle,/\.plan\{[^}]*background:transparent!important/);
+ assert.match(passStyle,/\.lowerCard\{[^}]*background:transparent!important/);
+ assert.match(footer,/\.lx-footer-v3 \.lx-footer-v3-showcase\{[^}]*background:transparent!important/);
+ assert.match(footer,/\.lx11-footer\.lx-branded-footer\.lx-footer-v3[^}]*background:transparent!important/);
 });

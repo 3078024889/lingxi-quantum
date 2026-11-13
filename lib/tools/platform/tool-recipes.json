@@ -1511,18 +1511,6 @@
     "privacyMode": "local-first"
   },
   {
-    "slug": "url-to-video",
-    "capabilities": [
-      "web.promotion"
-    ],
-    "contractVersion": 1,
-    "requiresNineLanguage": true,
-    "requiresDesktop": true,
-    "requiresMobile": true,
-    "requiresRealFixture": true,
-    "privacyMode": "optional-external"
-  },
-  {
     "slug": "uuid-generator",
     "capabilities": [
       "text.transform"

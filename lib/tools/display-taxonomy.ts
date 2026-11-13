@@ -19,7 +19,6 @@ const TABLE=new Set([
  "xlsx-to-csv","csv-to-xlsx","csv-json","ics-to-csv","vcf-to-csv","json-formatter"
 ]);
 const MEDIA=new Set([
- "url-to-video",
  "video-toolkit","rotate-video","video-watermark-remover","reverse-video","loop-video","stop-motion-video","audio-cleanup","ai-video-audio-check"
 ]);
 const TEXT=new Set([

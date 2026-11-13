@@ -27,7 +27,7 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
-  outputFileTracingIncludes:{'/api/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm'],'/api/internal/sasi/**':['./scripts/runtime/verify-generated-video.cjs','./scripts/runtime/assemble-generated-episode.cjs','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js','./node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm']},
+
   images: {
     formats: ["image/avif", "image/webp"],
   },
@@ -58,6 +58,8 @@ const nextConfig = {
     return [
       { source: "/siai/:lang/:id", destination: "/siai", permanent: true },
       { source: "/tools/image-to-pdf-pro", destination: "/tools/image-to-pdf", permanent: true },
+      { source: "/tools/url-to-video", destination: "/tools", permanent: true },
+      { source: "/:lang(en|ja|ko|fr|de|es|pt|ar)/tools/url-to-video", destination: "/:lang/tools", permanent: true },
       { source: "/:lang(en|ja|ko|fr|de|es|pt|ar)/tools/image-to-pdf-pro", destination: "/:lang/tools/image-to-pdf", permanent: true },
       { source: "/tools/pdf-sign", destination: "/tools/e-sign-pdf", permanent: true },
       { source: "/tools/pdf-signature", destination: "/tools/e-sign-pdf", permanent: true },
