@@ -85,4 +85,4 @@ Experiment: activate 10 genuinely installed partner widgets, compare visitors to
 - scripts/prepare-wordpress-plugin.cjs uses the installed JSZip dependency and an explicit four-file allowlist to generate /downloads/lingxifield-siai-wordpress.zip during prebuild.
 - The builder verifies that the bundled JS exactly matches public/widgets/lingxifield-v1.js, checks package members and enforces size bounds.
 - Automated tests verify the shortcode contract, source parity, ZIP builder allowlist and public download signature. A clean third-party WordPress sandbox installation remains a separate acceptance gate.
-- This is a self-hosted plugin package, **not** an approved WordPress.org listing or proof of third-party installation.
+- This is a self-hosted plugin package; it is not an approved WordPress.org listing or proof of third-party installation.
