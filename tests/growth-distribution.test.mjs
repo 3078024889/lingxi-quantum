@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {readFileSync} from "node:fs";
+import {readFileSync,existsSync} from "node:fs";
 import test from "node:test";
 
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
@@ -166,7 +166,7 @@ test("growth distribution documentation matches implemented widget boundaries an
 });
 
 
-test("R6/R8 homepage growth engines are real routes, value-first and aligned with the site rail",()=>{
+test("homepage growth engines are integrated into the problem hub and aligned with the site rail",()=>{
  const growth=read("components/HomeGlobalGrowth.tsx");
  const problem=read("components/HomeProblemHub.tsx");
  const home=read("app/page.tsx");
@@ -179,10 +179,12 @@ test("R6/R8 homepage growth engines are real routes, value-first and aligned wit
  assert.match(growth,/export function HomeToolPassMembership/);
  assert.match(growth,/passValueLead/);
  assert.match(problem,/伏尼契/);
+ assert.match(problem,/<HomeHeroVisual\/>/);
+ assert.match(problem,/<HomeGlobalGrowth lang=\{lang\}\/>/);
  assert.match(problem,/href:"\/discoveries"/);
  assert.match(problem,/hit\?\.score>0\?hit\.href:'\/tools'/);
- assert.match(home,/HomeProblemHub\/><HomeGlobalGrowth lang="zh"\/><HomeSeoAnswers locale="zh"\/><HomeToolPassMembership\/><Footer/);
- assert.match(localizedHome,/HomeProblemHub\/><HomeGlobalGrowth lang=\{locale\}\/><HomeSeoAnswers locale=\{locale\}\/><HomeToolPassMembership\/><Footer/);
+ assert.match(home,/HomeProblemHub\/><HomeSeoAnswers locale="zh"\/><HomeToolPassMembership\/><Footer/);
+ assert.match(localizedHome,/HomeProblemHub\/><HomeSeoAnswers locale=\{locale\}\/><HomeToolPassMembership\/><Footer/);
  assert.match(css,/--lx-home-gutter/);
  assert.match(css,/\.lx-home-toolpass-wrap/);
  assert.match(css,/\.lx11-footer\.lx-branded-footer\{padding-left:var\(--lx-home-gutter\)/);
@@ -255,15 +257,17 @@ test("result sharing strips private query and hash and carries bounded source at
 
 test("retired creation and knowledge endpoints are closed while marketplace settlement remains",()=>{
  const middleware=read("middleware.ts");
- const knowledge=read("app/api/knowledge/ask/route.ts");
- const pricing=read("app/api/knowledge/pricing/route.ts");
+ const knowledge=read("app/api/knowledge/[[...legacy]]/route.ts");
+ assert.equal(existsSync("app/api/knowledge/ask/route.ts"),false);
+ assert.equal(existsSync("app/api/knowledge/pricing/route.ts"),false);
  const provider=read("app/api/internal/sasi/provider-smoke/route.ts");
  const worker=read("app/api/internal/sasi/worker/configure/route.ts");
  const reconcile=read("app/api/internal/sasi/reconcile/route.ts");
  const payout=read("app/api/internal/sasi/market/release-due/route.ts");
  assert.match(middleware,/全球 SIAI 排行榜、SASI 智能软件市场与 100\+ 在线实用工具/);
  assert(!middleware.includes("SASI全球多模型智能创作平台"));
- for(const route of [knowledge,pricing]){assert.match(route,/status:410/);assert.match(route,/LEGACY_KNOWLEDGE_API_RETIRED/);}
+ assert.match(knowledge,/status:410/);assert.match(knowledge,/KNOWLEDGE_MODULE_RETIRED/);
+ assert.match(knowledge,/export const GET = retired/);assert.match(knowledge,/export const POST = retired/);
  for(const route of [provider,worker]){assert.match(route,/status:410/);assert.match(route,/SASI_CREATION_RETIRED/);}
  assert.match(reconcile,/refreshSasiJob/); // preserve reconciliation for historical in-flight jobs
  assert.match(payout,/sasi_market_release_due_sales/); // preserve current seller settlement

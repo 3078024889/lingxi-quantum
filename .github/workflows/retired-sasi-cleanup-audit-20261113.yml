@@ -54,7 +54,7 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm exec tsc --noEmit
           node --test tests/unified-share-image.test.mjs
-      - name: Run R6/R8 growth, GEO and anonymous conversion regression
+      - name: Run global growth, GEO and anonymous conversion regression
         run: |
           node --check scripts/seo/growth/generate-llms-full.mjs
           node scripts/seo/growth/generate-llms-full.mjs
