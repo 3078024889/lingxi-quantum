@@ -17,7 +17,13 @@
     "MT5 EA源码",
     "软件安装教程",
     "成品软件自动交付",
-    "开发者软件发布"
+    "开发者软件发布",
+    "全球SIAI排行榜",
+    "全球AI行情平台",
+    "全球AI排行榜",
+    "全球SI排行榜",
+    "全球SI行情平台",
+    "全球SIAI行情平台"
   ],
   "en": [
     "free online tools",
@@ -37,7 +43,13 @@
     "MT5 EA source code",
     "software installation guide",
     "finished software automatic delivery",
-    "developer software publishing"
+    "developer software publishing",
+    "Global SIAI rankings",
+    "Global AI market platform",
+    "Global AI rankings",
+    "Global SI rankings",
+    "Global SI market platform",
+    "Global SIAI market platform"
   ],
   "ja": [
     "無料オンラインツール",
@@ -56,7 +68,13 @@
     "MT5 EAソースコード",
     "ソフトウェア導入ガイド",
     "完成ソフトウェア自動納品",
-    "開発者ソフトウェア公開"
+    "開発者ソフトウェア公開",
+    "グローバルSIAIランキング",
+    "グローバルAI市場プラットフォーム",
+    "グローバルAIランキング",
+    "グローバルSIランキング",
+    "グローバルSI市場プラットフォーム",
+    "グローバルSIAI市場プラットフォーム"
   ],
   "ko": [
     "무료 온라인 도구",
@@ -75,7 +93,13 @@
     "MT5 EA 소스 코드",
     "소프트웨어 설치 안내",
     "완성 소프트웨어 자동 전달",
-    "개발자 소프트웨어 게시"
+    "개발자 소프트웨어 게시",
+    "글로벌 SIAI 순위",
+    "글로벌 AI 시장 플랫폼",
+    "글로벌 AI 순위",
+    "글로벌 SI 순위",
+    "글로벌 SI 시장 플랫폼",
+    "글로벌 SIAI 시장 플랫폼"
   ],
   "fr": [
     "outils en ligne gratuits",
@@ -94,7 +118,13 @@
     "code source MT5 EA",
     "guide d’installation de logiciel",
     "livraison automatique de logiciels finis",
-    "publication de logiciels développeurs"
+    "publication de logiciels développeurs",
+    "classement SIAI mondial",
+    "plateforme mondiale du marché IA",
+    "classement IA mondial",
+    "classement SI mondial",
+    "plateforme mondiale du marché SI",
+    "plateforme mondiale du marché SIAI"
   ],
   "de": [
     "kostenlose Online-Tools",
@@ -113,7 +143,13 @@
     "MT5-EA-Quellcode",
     "Software-Installationsanleitung",
     "Automatische Lieferung fertiger Software",
-    "Softwareveröffentlichung für Entwickler"
+    "Softwareveröffentlichung für Entwickler",
+    "globales SIAI-Ranking",
+    "globaler KI-Marktplatz",
+    "globales KI-Ranking",
+    "globales SI-Ranking",
+    "globaler SI-Marktplatz",
+    "globaler SIAI-Marktplatz"
   ],
   "es": [
     "herramientas online gratis",
@@ -132,7 +168,13 @@
     "código fuente MT5 EA",
     "guía de instalación de software",
     "entrega automática de software terminado",
-    "publicación de software para desarrolladores"
+    "publicación de software para desarrolladores",
+    "ranking SIAI global",
+    "plataforma global del mercado de IA",
+    "ranking global de IA",
+    "ranking global de SI",
+    "plataforma global del mercado SI",
+    "plataforma global del mercado SIAI"
   ],
   "pt": [
     "ferramentas online grátis",
@@ -151,7 +193,13 @@
     "código-fonte MT5 EA",
     "guia de instalação de software",
     "entrega automática de software pronto",
-    "publicação de software para desenvolvedores"
+    "publicação de software para desenvolvedores",
+    "ranking SIAI global",
+    "plataforma global do mercado de IA",
+    "ranking global de IA",
+    "ranking global de SI",
+    "plataforma global do mercado SI",
+    "plataforma global do mercado SIAI"
   ],
   "ar": [
     "أدوات مجانية اون لاين",
@@ -170,6 +218,12 @@
     "الشيفرة المصدرية MT5 EA",
     "دليل تثبيت البرامج",
     "التسليم التلقائي للبرامج الجاهزة",
-    "نشر البرامج للمطورين"
+    "نشر البرامج للمطورين",
+    "تصنيف SIAI العالمي",
+    "منصة سوق الذكاء الاصطناعي العالمية",
+    "تصنيف الذكاء الاصطناعي العالمي",
+    "تصنيف SI العالمي",
+    "منصة سوق SI العالمية",
+    "منصة سوق SIAI العالمية"
   ]
 }

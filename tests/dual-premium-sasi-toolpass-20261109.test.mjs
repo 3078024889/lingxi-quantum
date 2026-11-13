@@ -108,3 +108,19 @@ test("SASI seller revenue split is shown only upon consent, never in public prod
  assert.match(artwork,/Product files and SHA-256 are being verified/);
  assert.match(artwork,/role="status" aria-live="polite"/);
 });
+
+
+test("homepage, SEO/GEO, ToolPass and footer use one transparent celestial surface system",()=>{
+ const growth=file("app/growth-pages.css");
+ const footer=file("app/siai-home.css");
+ assert.match(growth,/--lx-growth-max:1500px/);
+ assert.match(growth,/\.lx-home-v143-grid \.lx11-home-card[^}]*background:transparent!important/);
+ assert.match(growth,/\.lx-growth-panel[^}]*background:transparent!important/);
+ assert.match(growth,/\.lx-seo-question[^}]*background:transparent!important/);
+ assert.match(passStyle,/container-type:inline-size;container-name:toolpass/);
+ assert.match(passStyle,/\.frame\{[^}]*background:transparent!important/);
+ assert.match(passStyle,/\.plan\{[^}]*background:transparent!important/);
+ assert.match(passStyle,/\.lowerCard\{[^}]*background:transparent!important/);
+ assert.match(footer,/\.lx-footer-v3 \.lx-footer-v3-showcase\{[^}]*background:transparent!important/);
+ assert.match(footer,/\.lx11-footer\.lx-branded-footer\.lx-footer-v3[^}]*background:transparent!important/);
+});
