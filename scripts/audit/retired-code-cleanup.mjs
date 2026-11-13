@@ -106,6 +106,10 @@ const unexpectedSasiApiFiles=sasiApiFiles.filter(file=>
  !file.startsWith("app/api/sasi/software/")
 );
 if(unexpectedSasiApiFiles.length)throw new Error("LEGACY_SASI_API_REMAINS:"+unexpectedSasiApiFiles.join(","));
+const knowledgeApiFiles=listFiles("app/api/knowledge").filter(file=>file.endsWith("/route.ts"));
+const unexpectedKnowledgeApiFiles=knowledgeApiFiles.filter(file=>file!=="app/api/knowledge/[[...legacy]]/route.ts");
+if(unexpectedKnowledgeApiFiles.length)throw new Error("LEGACY_KNOWLEDGE_API_REMAINS:"+unexpectedKnowledgeApiFiles.join(","));
+console.log("LEGACY_KNOWLEDGE_API_IMPLEMENTATIONS=0");
 console.log("LEGACY_SASI_API_IMPLEMENTATIONS=0");
 console.log("LEGACY_SASI_LIBRARY_FILES=0");
 

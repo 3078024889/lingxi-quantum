@@ -187,7 +187,7 @@
     },
     {
       "path": "app/api/cron/sasi-v5-radar/route.ts",
-      "bytes": 843
+      "bytes": 236
     },
     {
       "path": "app/api/cron/withdrawal-reconcile/route.ts",
@@ -206,16 +206,8 @@
       "bytes": 1653
     },
     {
-      "path": "app/api/internal/sasi/worker/tick/route.ts",
-      "bytes": 476
-    },
-    {
-      "path": "app/api/knowledge/ask/route.ts",
-      "bytes": 4648
-    },
-    {
-      "path": "app/api/knowledge/pricing/route.ts",
-      "bytes": 361
+      "path": "app/api/knowledge/[[...legacy]]/route.ts",
+      "bytes": 509
     },
     {
       "path": "app/api/lingxi/route.ts",
@@ -306,12 +298,8 @@
       "bytes": 2384
     },
     {
-      "path": "app/api/sasi/[[...legacy]]/route.ts",
-      "bytes": 476
-    },
-    {
       "path": "app/api/sasi/account/route.ts",
-      "bytes": 4354
+      "bytes": 3243
     },
     {
       "path": "app/api/sasi/byok/image/route.ts",
@@ -567,7 +555,7 @@
     },
     {
       "path": "app/globals.css",
-      "bytes": 235129
+      "bytes": 128576
     },
     {
       "path": "app/layout.tsx",
@@ -1103,7 +1091,7 @@
     },
     {
       "path": "components/HomeProblemHub.tsx",
-      "bytes": 20688
+      "bytes": 27210
     },
     {
       "path": "components/KnowledgeWorkspace.tsx",
@@ -9634,10 +9622,6 @@
       "bytes": 13400
     },
     {
-      "path": "docs/operations/legacy-sasi-retirement-20261108.json",
-      "bytes": 25203
-    },
-    {
       "path": "knowledge/_shared/avoid-words.json",
       "bytes": 421
     },
@@ -9767,7 +9751,7 @@
     },
     {
       "path": "lib/lingxi-i18n.ts",
-      "bytes": 55571
+      "bytes": 57969
     },
     {
       "path": "lib/membership-content.ts",
@@ -10235,11 +10219,11 @@
     },
     {
       "path": "lib/sasi/aigc-label.ts",
-      "bytes": 2697
+      "bytes": 2767
     },
     {
       "path": "lib/sasi/ark-text.ts",
-      "bytes": 4086
+      "bytes": 4130
     },
     {
       "path": "lib/sasi/autonomy/index.ts",
@@ -10247,143 +10231,43 @@
     },
     {
       "path": "lib/sasi/byok-text-profile.ts",
-      "bytes": 1016
+      "bytes": 1025
     },
     {
       "path": "lib/sasi/catalog.ts",
-      "bytes": 8930
-    },
-    {
-      "path": "lib/sasi/core/intake-contract.ts",
-      "bytes": 2596
-    },
-    {
-      "path": "lib/sasi/core/platform-identity.ts",
-      "bytes": 6473
+      "bytes": 9792
     },
     {
       "path": "lib/sasi/credential-vault.ts",
-      "bytes": 2370
+      "bytes": 2735
     },
     {
       "path": "lib/sasi/director-plan.ts",
-      "bytes": 3882
-    },
-    {
-      "path": "lib/sasi/durable/orchestrator.ts",
-      "bytes": 3108
-    },
-    {
-      "path": "lib/sasi/durable/public-event-codec.ts",
-      "bytes": 2293
-    },
-    {
-      "path": "lib/sasi/durable/public-event-store.ts",
-      "bytes": 2458
-    },
-    {
-      "path": "lib/sasi/durable/run-store.ts",
-      "bytes": 2275
-    },
-    {
-      "path": "lib/sasi/durable/runtime-capability.ts",
-      "bytes": 647
-    },
-    {
-      "path": "lib/sasi/durable/step-store.ts",
-      "bytes": 4318
-    },
-    {
-      "path": "lib/sasi/durable/trace.ts",
-      "bytes": 899
-    },
-    {
-      "path": "lib/sasi/durable/unified-task-view.ts",
-      "bytes": 2423
-    },
-    {
-      "path": "lib/sasi/experience/canary.ts",
-      "bytes": 356
-    },
-    {
-      "path": "lib/sasi/experience/daily-budget.ts",
-      "bytes": 2174
-    },
-    {
-      "path": "lib/sasi/experience/free-provider-config.ts",
-      "bytes": 8299
-    },
-    {
-      "path": "lib/sasi/experience/free-text-router.ts",
-      "bytes": 11547
-    },
-    {
-      "path": "lib/sasi/experience/provider-state.ts",
-      "bytes": 3215
-    },
-    {
-      "path": "lib/sasi/experience/request-coalescer.ts",
-      "bytes": 917
-    },
-    {
-      "path": "lib/sasi/experience/resilient-text.ts",
-      "bytes": 3269
-    },
-    {
-      "path": "lib/sasi/experience/session-affinity.ts",
-      "bytes": 1383
+      "bytes": 3925
     },
     {
       "path": "lib/sasi/gateway/ssrf-guard.ts",
       "bytes": 616
     },
     {
-      "path": "lib/sasi/intelligence/provider-defaults.ts",
-      "bytes": 3113
-    },
-    {
-      "path": "lib/sasi/intelligence/runtime-health.ts",
-      "bytes": 2055
-    },
-    {
-      "path": "lib/sasi/intelligence/telemetry.ts",
-      "bytes": 1140
-    },
-    {
-      "path": "lib/sasi/intelligence/user-text.ts",
-      "bytes": 10135
-    },
-    {
-      "path": "lib/sasi/knowledge/durable-knowledge.ts",
-      "bytes": 2541
-    },
-    {
       "path": "lib/sasi/mp4-duration.ts",
-      "bytes": 3649
+      "bytes": 3773
     },
     {
       "path": "lib/sasi/payment-gate.ts",
-      "bytes": 1674
-    },
-    {
-      "path": "lib/sasi/pricing-v49.ts",
-      "bytes": 2031
+      "bytes": 1711
     },
     {
       "path": "lib/sasi/production.ts",
-      "bytes": 10941
-    },
-    {
-      "path": "lib/sasi/promotion-brief.ts",
-      "bytes": 7894
+      "bytes": 12003
     },
     {
       "path": "lib/sasi/provider.ts",
-      "bytes": 11845
+      "bytes": 14647
     },
     {
       "path": "lib/sasi/readiness.ts",
-      "bytes": 2820
+      "bytes": 2951
     },
     {
       "path": "lib/sasi/request-security.ts",
@@ -10391,35 +10275,15 @@
     },
     {
       "path": "lib/sasi/skill-runtime.ts",
-      "bytes": 3273
-    },
-    {
-      "path": "lib/sasi/skills/catalog.ts",
-      "bytes": 14274
-    },
-    {
-      "path": "lib/sasi/skills/router.ts",
-      "bytes": 2646
-    },
-    {
-      "path": "lib/sasi/skills/types.ts",
-      "bytes": 1008
-    },
-    {
-      "path": "lib/sasi/skills/ui.ts",
-      "bytes": 20286
+      "bytes": 4552
     },
     {
       "path": "lib/sasi/sovereign-generation/worker-client.ts",
       "bytes": 472
     },
     {
-      "path": "lib/sasi/unified-balance.ts",
-      "bytes": 2018
-    },
-    {
       "path": "lib/sasi/video-pricing.ts",
-      "bytes": 3802
+      "bytes": 3862
     },
     {
       "path": "lib/security/abuse-guard.ts",
@@ -11079,7 +10943,7 @@
     },
     {
       "path": "miniapp/README.md",
-      "bytes": 2377
+      "bytes": 2499
     },
     {
       "path": "miniapp/share.wxss",
@@ -11178,58 +11042,6 @@
       "bytes": 137900
     },
     {
-      "path": "public/images/sasi/build/sasi-build-deploy-hero-v1.png",
-      "bytes": 1825603
-    },
-    {
-      "path": "public/images/sasi/cards/account-security-v1.png",
-      "bytes": 2193953
-    },
-    {
-      "path": "public/images/sasi/cards/balance-usage-v1.png",
-      "bytes": 2188670
-    },
-    {
-      "path": "public/images/sasi/cards/build-deploy-v1.png",
-      "bytes": 2517137
-    },
-    {
-      "path": "public/images/sasi/cards/cangxuan-director-v1.png",
-      "bytes": 2545552
-    },
-    {
-      "path": "public/images/sasi/cards/models-api-v1.png",
-      "bytes": 2399192
-    },
-    {
-      "path": "public/images/sasi/cards/skills-marketplace-v1.png",
-      "bytes": 2458996
-    },
-    {
-      "path": "public/images/sasi/cards/works-library-v1.png",
-      "bytes": 2566741
-    },
-    {
-      "path": "public/images/sasi/director/cangxuan-director-hero-v1.png",
-      "bytes": 2168983
-    },
-    {
-      "path": "public/images/sasi/director/modes/advertising-director-v1.png",
-      "bytes": 2218264
-    },
-    {
-      "path": "public/images/sasi/director/modes/film-director-v1.png",
-      "bytes": 1835324
-    },
-    {
-      "path": "public/images/sasi/director/modes/game-cg-director-v1.png",
-      "bytes": 2633001
-    },
-    {
-      "path": "public/images/sasi/director/modes/music-video-director-v1.png",
-      "bytes": 2363984
-    },
-    {
       "path": "public/images/sasi/drama/ai-drama-studio-hero-v1.png",
       "bytes": 1976515
     },
@@ -11315,7 +11127,7 @@
     },
     {
       "path": "public/llms.txt",
-      "bytes": 1167
+      "bytes": 4404
     },
     {
       "path": "public/manifest.webmanifest",
@@ -11443,7 +11255,7 @@
     },
     {
       "path": "public/seo-keywords-9lang.json",
-      "bytes": 4260
+      "bytes": 6244
     },
     {
       "path": "public/vendor/transformers/e34a2307c15be978b153.mjs",
@@ -11679,7 +11491,7 @@
     },
     {
       "path": "scripts/audit-release-inventory.mjs",
-      "bytes": 2958
+      "bytes": 2940
     },
     {
       "path": "scripts/audit-sasi-platform-kernel-v180.mjs",
@@ -11842,8 +11654,8 @@
       "bytes": 3829
     },
     {
-      "path": "scripts/audit/retired-code-cleanup.mjs",
-      "bytes": 6221
+      "path": "scripts/audit/legacy-sasi-runtime-reachability.mjs",
+      "bytes": 4382
     },
     {
       "path": "scripts/audit/tool-graph-coverage-v1593.mjs",
@@ -12792,10 +12604,6 @@
     {
       "path": "supabase/schema.sql",
       "bytes": 30933
-    },
-    {
-      "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 4977
     },
     {
       "path": "workers/sasi-compute-v19/__pycache__/download_models.cpython-313.pyc",

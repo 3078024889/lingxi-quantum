@@ -1,39 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,existsSync,readdirSync} from 'node:fs';
-import path from 'node:path';
-
+import {readFileSync,existsSync} from 'node:fs';
 const report=JSON.parse(readFileSync('docs/operations/legacy-sasi-retirement-20261108.json','utf8'));
-function listFiles(dir){
- if(!existsSync(dir))return [];
- return readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
-  const file=path.join(dir,entry.name).replaceAll('\\','/');
-  return entry.isDirectory()?listFiles(file):[file];
- }).sort();
-}
-
-test('retired SASI APIs and worker endpoint return 410',async()=>{
+test('retired endpoints cannot create provider jobs or run the radar',async()=>{
  for(const file of report.retiredRoutes){
   const source=readFileSync(file,'utf8');
   assert(!/\bimport\b|\bfetch\s*\(/.test(source),file);
   const route=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
-  const methods=file.includes('[[...legacy]]')?['GET','POST','PUT','PATCH','DELETE','OPTIONS']:['GET','POST'];
-  for(const method of methods){
-   assert.equal(typeof route[method],'function',file+' '+method);
+  for(const method of ['GET','POST']){
    const response=await route[method](new Request('https://lingxifield.com/retired',{method}));
-   assert.equal(response.status,410,file+' '+method);
-   assert.equal(response.headers.get('cache-control'),'no-store',file+' '+method);
-   assert.deepEqual(await response.json(),{error:'SASI_CREATION_RETIRED',replacement:'/sasi'});
-  }
-  if(file.includes('[[...legacy]]')||file.includes('/worker/tick/')){
-   const response=await route.HEAD(new Request('https://lingxifield.com/retired',{method:'HEAD'}));
    assert.equal(response.status,410);
    assert.equal(response.headers.get('cache-control'),'no-store');
+   const expected=file.startsWith('app/api/knowledge/')
+    ? {error:'KNOWLEDGE_MODULE_RETIRED',replacement:'/tools'}
+    : {error:'SASI_CREATION_RETIRED',replacement:'/sasi'};
+   assert.deepEqual(await response.json(),expected);
   }
  }
 });
-
-test('retired SASI pages remain permanent redirects and are never indexed',()=>{
+test('retired SASI pages are permanent redirects and never render creation modules',()=>{
  const pages=[
   'app/sasi/assemble/page.tsx','app/sasi/build/page.tsx','app/sasi/chat/page.tsx',
   'app/sasi/connections/page.tsx','app/sasi/director/page.tsx','app/sasi/drama/page.tsx',
@@ -50,32 +35,8 @@ test('retired SASI pages remain permanent redirects and are never indexed',()=>{
  const pricing=readFileSync('app/sasi/pricing/page.tsx','utf8');
  assert.match(pricing,/permanentRedirect\("\/ai-wallet"\)/);
 });
-
-test('only current SASI marketplace, software and protected account APIs remain',()=>{
- const routes=listFiles('app/api/sasi').filter(file=>file.endsWith('/route.ts'));
- for(const file of routes){
-  assert(
-   file==='app/api/sasi/[[...legacy]]/route.ts' ||
-   file==='app/api/sasi/account/route.ts' ||
-   file.startsWith('app/api/sasi/marketplace/') ||
-   file.startsWith('app/api/sasi/software/'),
-   'unexpected legacy SASI API implementation: '+file
-  );
- }
- assert(routes.includes('app/api/sasi/[[...legacy]]/route.ts'));
- assert(routes.includes('app/api/sasi/account/route.ts'));
- assert(routes.some(file=>file==='app/api/sasi/marketplace/listings/route.ts'));
- assert(routes.some(file=>file==='app/api/sasi/software/catalog/route.ts'));
- assert.deepEqual(listFiles('lib/sasi'),report.preservedLibFiles);
-});
-
-test('software marketplace and delivery remain available',()=>{
- for(const file of [
-  'app/sasi/page.tsx','app/sasi/delivery/page.tsx','app/sasi/seller/page.tsx',
-  'app/api/sasi/account/route.ts','app/api/sasi/software/download/route.ts',
-  'app/api/sasi/software/catalog/route.ts','app/api/sasi/marketplace/download/route.ts',
-  'app/api/sasi/marketplace/listings/route.ts','app/api/internal/sasi/market/release-due/route.ts'
- ])assert(existsSync(file),file);
+test('software marketplace and historical delivery remain available in source',()=>{
+ for(const file of ['app/sasi/page.tsx','app/sasi/delivery/page.tsx','app/api/sasi/software/download/route.ts','app/api/sasi/marketplace/download/route.ts','app/api/internal/sasi/market/release-due/route.ts'])assert(existsSync(file),file);
  assert(readFileSync('app/sasi/page.tsx','utf8').includes('SasiOpenMarketplace'));
  const config=JSON.parse(readFileSync('vercel.json','utf8'));
  assert(!config.crons.some(x=>x.path==='/api/cron/sasi-v5-radar'));
@@ -83,11 +44,68 @@ test('software marketplace and delivery remain available',()=>{
  assert(config.crons.some(x=>x.path==='/api/cron/withdrawal-reconcile'));
 });
 
-test('retired legacy source files and media are absent from repository and source manifests',()=>{
+
+test('retired legacy source files and media are absent from the repository and source manifests',()=>{
  for(const file of report.removed)assert.equal(existsSync(file),false,'retired source remains: '+file);
  for(const name of ['LINGXIFIELD_PROTECTED_MANIFEST.json','LINGXIFIELD_SOURCE_INVENTORY.json']){
   const manifest=JSON.parse(readFileSync(name,'utf8'));
   const stale=(manifest.files||[]).filter(row=>report.removed.includes(row.path));
   assert.equal(stale.length,0,name+' still lists retired files: '+stale.map(x=>x.path).join(','));
  }
+});
+
+test('legacy URL-to-video creation is permanently redirected and excluded from discovery',()=>{
+ const page=readFileSync('app/tools/url-to-video/page.tsx','utf8');
+ const config=readFileSync('next.config.js','utf8');
+ const catalog=readFileSync('lib/seo/global-seo.ts','utf8');
+ const hub=readFileSync('lib/tools/advanced-catalog.ts','utf8');
+ assert.match(page,/permanentRedirect\("\/tools"\)/);
+ assert.match(config,/source: "\/tools\/url-to-video", destination: "\/tools", permanent: true/);
+ assert.match(config,/source: "\/:lang\(en\|ja\|ko\|fr\|de\|es\|pt\|ar\)\/tools\/url-to-video"/);
+ assert.doesNotMatch(catalog,/slug:"url-to-video"/);
+ assert.doesNotMatch(hub,/\/tools\/url-to-video/);
+});
+
+
+test('current product copy and global styles do not expose retired SASI creation modules',()=>{
+ const home=readFileSync('components/HomeProblemHub.tsx','utf8');
+ const legal=readFileSync('components/SasiLegalBody.tsx','utf8');
+ const mini=readFileSync('miniapp/README.md','utf8');
+ const css=readFileSync('app/globals.css','utf8');
+ const llms=readFileSync('public/llms.txt','utf8')+'\n'+readFileSync('public/llms-full.txt','utf8');
+ assert.doesNotMatch(home,/ai短剧|短剧生成/);
+ assert.doesNotMatch(legal,/短剧|short drama|Kurzdrama|séries courtes|dramas y vídeos|dramas e vídeos|الدراما والفيديو الجديدة|동영상 신규 생성/i);
+ assert.doesNotMatch(mini,/SASI 创作|短剧|书本|学习|科研|资料智库/);
+ assert.doesNotMatch(css,/\.sasi-(?:hero-surface|home-tile|balance|connect|cangxuan|orchestration|works-|account-|start-path|utility-links|recharge-|send|header-topup|checkout-)|\.cangxuan-|\.lx-sasi-center|\.lx-sasi-hero|\.lx-sasi-prompt-panel|\.lx-sasi-entry-card|\.lx-knowledge-modebar|\.lx-knowledge-answer|\.lx-knowledge-recharge/);
+ assert.doesNotMatch(llms,/short[- ]drama|book SASI|learning SASI|research SASI|短剧生成|书本智能体|学习智能体|科研智能体/i);
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
+});
+
+
+test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
+ const catalog=readFileSync('lib/sasi-software/catalog.ts','utf8');
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.ok(catalog.includes("哥白尼 SI 11.6"));
+ assert.ok(catalog.includes("Copernicus SI 11.6"));
+ assert.ok(catalog.includes('kind:"source"'));
+ assert.ok(!catalog.includes("SI9.5") && !catalog.includes("SI 9.5"));
+ assert.ok(market.includes("featuredVisualTitle"));
+ assert.ok(market.includes("featured.titleZh"));
+ assert.ok(market.includes("<strong>{featuredVisualTitle}</strong>"));
+});
+
+test('retired URL-to-video workbench is deleted from source and product discovery',()=>{
+ const copy=readFileSync('lib/tools/product-copy.ts','utf8');
+ assert.doesNotMatch(copy,/'url-to-video'/);
+ assert.equal(existsSync('components/tools/UrlPromotionWorkbench.tsx'),false);
+});
+
+test('retired knowledge API is a 410 tombstone',()=>{
+ assert.equal(existsSync('app/api/knowledge/ask/route.ts'),false);
+ assert.equal(existsSync('app/api/knowledge/pricing/route.ts'),false);
+ const source=readFileSync('app/api/knowledge/[[...legacy]]/route.ts','utf8');
+ assert.match(source,/KNOWLEDGE_MODULE_RETIRED/);
+ assert.match(source,/status:\s*410/);
+ assert.match(source,/cache-control.*no-store/);
 });

@@ -800,3 +800,11 @@ html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-telegram{
 @media(max-width:380px){
  .lx-footer-v4 .lx-footer-v4-qq-groups{grid-template-columns:minmax(0,1fr)}
 }
+
+/* 2026-11-13 transparent footer: keep the site's white/black canvas visible. */
+.lx11-footer.lx-branded-footer.lx-footer-v3,.lx11-footer.lx-footer-v4{background:transparent!important;background-image:none!important}
+.lx-footer-v3 .lx-footer-v3-showcase{background:transparent!important;border-color:var(--lx-line)!important;box-shadow:none!important}
+.lx-footer-v3 .lx-footer-v3-sasi,.lx-footer-v3 .lx-footer-tool-chips a,.lx-footer-v3 .lx-footer-v3-toolstrip,.lx-footer-v4 .lx-footer-v4-qr-card,.lx-footer-v4 .lx-footer-v4-groups,.lx-footer-v4 .lx-footer-v4-qq-groups{background:transparent!important;box-shadow:none!important}
+.lx-footer-v3 .lx-footer-tool-chips a:hover{background:transparent!important}
+html[data-theme="dark"] .lx11-footer.lx-branded-footer.lx-footer-v3,html[data-theme="dark"] .lx11-footer.lx-footer-v4{background:transparent!important;background-image:none!important}
+html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-showcase,html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-sasi,html[data-theme="dark"] .lx-footer-v3 .lx-footer-tool-chips a,html[data-theme="dark"] .lx-footer-v3 .lx-footer-v3-toolstrip,html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-qr-card,html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-groups,html[data-theme="dark"] .lx-footer-v4 .lx-footer-v4-qq-groups{background:transparent!important;box-shadow:none!important}

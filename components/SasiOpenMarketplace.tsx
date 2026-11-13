@@ -9,6 +9,13 @@ import styles from "./SasiOpenMarketplace.module.css";
 type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;rejection_reason?:string|null;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
 type Payout={balances:Record<string,{grossMinor:number;platformFeeMinor:number;availableMinor:number}>;payouts:Array<{id:string;currency:string;amount_minor:number;status:string;requested_at:string}>;payoutsOpen:boolean;submissionTargetMinutes:number};
+const MARKET_FEATURES=[
+ {icon:"◈",zh:"软件授权",en:"Software licensing",zhDesc:"成品与源码 · 权限清晰",enDesc:"Finished software & source · clear rights"},
+ {icon:"↗",zh:"自动交付",en:"Automatic delivery",zhDesc:"付款验证后获取",enDesc:"Available after payment verification"},
+ {icon:"◇",zh:"安全可靠",en:"Secure & reliable",zhDesc:"私密存储 · 安心下载",enDesc:"Private storage · secure downloads"},
+ {icon:"◎",zh:"全球可用",en:"Global availability",zhDesc:"多语言 · 多地区",enDesc:"Multiple languages · regions"},
+ {icon:"⌘",zh:"开发者支持",en:"Developer support",zhDesc:"发布 · 审核 · 结算",enDesc:"Publishing · review · settlement"}
+] as const;
 const CATEGORIES=[["mt5-ea","MT5 EA","MT5 EA"],["mt5-indicator","MT5 指标","MT5 indicator"],["automation","自动化软件","Automation software"],["desktop-app","桌面程序","Desktop application"],["developer-tool","开发工具","Developer tools"],["software","其他软件","Other software"]] as const;
 const STATUS_LABELS:Record<string,readonly [string,string]>={draft:["草稿","Draft"],submitted:["审核中","In review"],published:["已发布","Published"],rejected:["需修改","Changes required"],archived:["已下架","Unlisted"]};
 const SCAN_LABELS:Record<string,readonly [string,string]>={unscanned:["等待安全检查","Security check pending"],clean:["安全检查通过","Security checked"],infected:["文件存在风险","File risk detected"],scan_failed:["安全检查未通过","Security check failed"]};
@@ -38,6 +45,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
  const [showStudio,setShowStudio]=useState(sellerOnly);
+ const studioMountedRef=useRef(false);
  const [requestedAmount,setRequestedAmount]=useState(""),[requestCurrency,setRequestCurrency]=useState<"CNY"|"USD">("CNY");
  const payoutAttemptRef=useRef<{amountMinor:number;currency:"CNY"|"USD";key:string}|null>(null);
  const refresh=useCallback(async()=>{
@@ -70,6 +78,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   return()=>{live=false};
  },[featured.id]);
  useEffect(()=>{
+  if(!studioMountedRef.current){studioMountedRef.current=true;return;}
   if(!showStudio)return;
   const frame=requestAnimationFrame(()=>document.getElementById("sasi-seller-studio")?.scrollIntoView({block:"start",behavior:"smooth"}));
   return()=>cancelAnimationFrame(frame);
@@ -84,6 +93,11 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  },[listings]);
  const visible=useMemo(()=>listings.filter(x=>(filter==="all"||x.category===filter)&&
  (x.title+" "+x.description).toLowerCase().includes(search.trim().toLowerCase())),[listings,filter,search]);
+ const publishedCount=mine.filter(item=>item.status==="published").length;
+ const pendingCount=mine.filter(item=>item.status==="submitted").length;
+ const cnyGross=payments?.balances?.CNY?.grossMinor??0;
+ const usdGross=payments?.balances?.USD?.grossMinor??0;
+ const featuredVisualTitle=(zh?featured.titleZh:featured.titleEn).match(/SI\s*[\d.]+/i)?.[0]??"MT5 EA";
  const post=async(url:string,payload:unknown,method:"POST"|"PATCH"="POST")=>{
   const r=await fetch(url,{method,headers:{"content-type":"application/json"},body:JSON.stringify(payload),credentials:"same-origin"});
   const result=await r.json().catch(()=>null);
@@ -242,11 +256,17 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       aria-controls="sasi-seller-studio"
     />
   </div>
+  <div className={styles.marketFeatures} aria-label={sasiSoftwareUiText(lang,"软件市场服务能力","Marketplace capabilities")}>
+   {MARKET_FEATURES.map(item=><div className={styles.marketFeature} key={item.zh}>
+    <span className={styles.marketFeatureIcon} aria-hidden="true">{item.icon}</span>
+    <span><strong>{sasiSoftwareUiText(lang,item.zh,item.en)}</strong><small>{sasiSoftwareUiText(lang,item.zhDesc,item.enDesc)}</small></span>
+   </div>)}
+  </div>
    <section id="featured" className={styles.featured} data-testid="featured-copernicus-source">
    <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{sasiSoftwareUiText(lang,"浏览开发者作品","Browse creator software")}</a></div>
    <article className={styles.featuredCard}>
-    <div className={styles.featuredVisual} aria-hidden="true"><small>MT5 · SOURCE</small><strong>SI 9.5</strong><span>CODE · LICENSE</span></div>
+    <div className={styles.featuredVisual} aria-hidden="true"><small>MT5 · SOURCE</small><strong>{featuredVisualTitle}</strong><span>CODE · LICENSE</span></div>
     <div className={styles.featuredDescription}>
      <p className={styles.featuredBadge}>{sasiSoftwareUiText(lang,"仅售源码授权版","Source code license only")}</p>
      <h3>{zh?featured.titleZh:featured.titleEn}</h3>
@@ -300,9 +320,26 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    </section>
    
 </>}
-{sellerOnly&&<section className={styles.section}><div className={styles.sectionHeading}><div><small>SELLER CENTER</small><h2>{sasiSoftwareUiText(lang,"卖家服务与发布工作台","Seller services and publishing workspace")}</h2><p>{sasiSoftwareUiText(lang,"申请入驻、发布软件商品、上传安装包并查看审核进度。","Apply to sell, publish software, upload packages and track review status.")}</p></div><Link href="/sasi">{sasiSoftwareUiText(lang,"返回软件市场","Back to software market")} ↗</Link></div></section>}
-{showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
-   <div className={styles.workspace}>
+{sellerOnly&&<>
+ <section className={styles.sellerHero}>
+  <div className={styles.sellerHeroCopy}>
+   <small>SASI · SELLER CENTER</small>
+   <h1>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h1>
+   <p>{sasiSoftwareUiText(lang,"在 SASI 发布软件，触达全球用户，享受自动交付与安全结算。","Publish software on SASI, reach global users and manage verified delivery and settlement.")}</p>
+   <Link href="/sasi" className={styles.sellerBack}>{sasiSoftwareUiText(lang,"返回软件市场","Back to software market")} ↗</Link>
+  </div>
+  <div className={styles.sellerHeroArt} aria-hidden="true"><span className={styles.sellerHeroOrbit}/><div className={styles.sellerHeroTrophy}>SASI</div><div className={styles.sellerHeroScreen}><b>SOFTWARE MARKET</b><i/><i/><i/></div></div>
+ </section>
+ <div className={styles.metrics} aria-label={sasiSoftwareUiText(lang,"卖家经营数据","Seller activity")}>
+  <div><span>{sasiSoftwareUiText(lang,"已发布软件","Published software")}</span><strong>{publishedCount}</strong><small>{sasiSoftwareUiText(lang,"当前公开展示","Currently listed")}</small></div>
+  <div><span>{sasiSoftwareUiText(lang,"待审核","Pending review")}</span><strong>{pendingCount}</strong><small>{sasiSoftwareUiText(lang,"等待平台审核","Awaiting review")}</small></div>
+  <div><span>{sasiSoftwareUiText(lang,"总销售额","Gross sales")}</span><strong>{payments?"¥"+format(cnyGross):"—"}</strong><small>{payments?"USD $ "+format(usdGross):sasiSoftwareUiText(lang,"等待真实结算数据","Waiting for verified settlement data")}</small></div>
+  <div><span>{sasiSoftwareUiText(lang,"自动交付成功率","Automatic delivery success")}</span><strong>—</strong><small>{sasiSoftwareUiText(lang,"等待真实订单统计，不展示估算值","Shown after verified order data is available")}</small></div>
+ </div>
+</>}
+{showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{sellerOnly?sasiSoftwareUiText(lang,"发布新软件","Publish new software"):sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
+   <div className={styles.sellerWorkspaceGrid}>
+    <aside className={styles.sellerJoinColumn}>
     <div className={styles.formCard}><h3>{seller?(sasiSoftwareUiText(lang,"卖家资料","Seller profile")):(sasiSoftwareUiText(lang,"零费用申请入驻","Apply to sell for free"))}</h3>
     {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{sasiSoftwareUiText(lang,"审核状态","Review status")}: {translatedStatus(lang,seller.status)}</p><p>{sasiSoftwareUiText(lang,"身份核验","Identity verification")}: {seller.kyc_status==="verified"?(sasiSoftwareUiText(lang,"已完成","Verified")):(sasiSoftwareUiText(lang,"待完成","Pending"))}</p><p>{sasiSoftwareUiText(lang,"完成身份和收款方式审核后才能提现。","Identity and payout verification are required before cash-out.")}</p></div>:<>
      <label>{sasiSoftwareUiText(lang,"展示名称","Display name")}<input value={displayName} onChange={e=>setDisplayName(e.target.value)} maxLength={60} placeholder={sasiSoftwareUiText(lang,"软件开发者 / 工作室","Developer / studio")}/></label>
@@ -312,6 +349,13 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
      <button disabled={busy!==""||!adult||!terms||displayName.trim().length<2} onClick={()=>void apply()}>{busy==="seller"?"…":sasiSoftwareUiText(lang,"申请成为卖家","Apply as seller")}</button>
      <p>{sasiSoftwareUiText(lang,"须先登录且验证邮箱，平台不收取保证金。","Sign-in and verified email are required. No seller deposit.")} <Link href="/account?mode=signin">{sasiSoftwareUiText(lang,"账户登录","Sign in")} ↗</Link></p>
     </>}</div>
+     <div className={styles.sellerBenefits}>
+      <div><span>✓</span><strong>{sasiSoftwareUiText(lang,"平台审核","Platform review")}</strong><small>{sasiSoftwareUiText(lang,"资料清晰可核验","Clear, reviewable listings")}</small></div>
+      <div><span>↗</span><strong>{sasiSoftwareUiText(lang,"自动交付","Automatic delivery")}</strong><small>{sasiSoftwareUiText(lang,"付款验证后发放","Released after payment verification")}</small></div>
+      <div><span>¥</span><strong>{sasiSoftwareUiText(lang,"收益结算","Payout settlement")}</strong><small>{sasiSoftwareUiText(lang,"多币种账户支持","Multi-currency account")}</small></div>
+     </div>
+    </aside>
+    <div className={styles.sellerMainColumn}>
     <div id="listing-editor" className={styles.formCard}><h3>{editingId?sasiSoftwareUiText(lang,"修改商品资料","Edit listing"):sasiSoftwareUiText(lang,"发布新软件","Create a software listing")}</h3>
       <label>{sasiSoftwareUiText(lang,"软件名称","Product name")}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={sasiSoftwareUiText(lang,"软件名称、版本、授权类型","Software name, version, license")}/></label>
       <label>{sasiSoftwareUiText(lang,"分类","Category")}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id])=><option key={id} value={id}>{categoryLabel(lang,id)}</option>)}</select></label>
@@ -322,7 +366,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       {editingId&&<button type="button" disabled={busy!==""} onClick={()=>{setEditingId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"取消修改","Cancel editing")}</button>}
       <p>{sasiSoftwareUiText(lang,"主图1张，详情图最多4张。软件 ZIP 可包含成品或源码，以及安装说明与授权文件；通过安全检查及管理员审核后上架。","One main image and up to four detail images. Upload finished software or source with installation and license documents in a ZIP. Security checks and administrator approval are required.")}</p>
     </div>
-   </div>
+
    {mine.length>0&&<div className={styles.drafts}><h3>{sasiSoftwareUiText(lang,"我的软件草稿与审核进度","My submissions")}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{translatedStatus(lang,item.status)} · {translatedStatus(lang,item.scan_status,true)}</small></div>
     {item.status==="rejected"&&item.rejection_reason&&<p role="status">{item.rejection_reason}</p>}
     {["draft","rejected"].includes(item.status)&&<button type="button" disabled={busy!==""} onClick={()=>editDraft(item)}>{sasiSoftwareUiText(lang,"修改商品资料","Edit listing")}</button>}
@@ -350,6 +394,22 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     {item.status==="published"&&<button onClick={()=>void share(item)}>{sasiSoftwareUiText(lang,"分享商品","Share")}</button>}
    </div>)}</div>}
    {error&&<p className={styles.error} role="alert">{error}</p>}{status&&<p className={styles.success} role="status">{status}</p>}
+    </div>
+    <aside className={styles.sellerGuideColumn}>
+     <article className={styles.sellerGuideCard}>
+      <h3><span className={styles.sellerGuideMark}>01</span>{sasiSoftwareUiText(lang,"发布流程","Publishing steps")}</h3>
+      <ol className={styles.sellerGuideSteps}>
+       <li><b>1</b><span><strong>{sasiSoftwareUiText(lang,"入驻","Apply")}</strong><small>{sasiSoftwareUiText(lang,"申请成为卖家","Become a seller")}</small></span></li>
+       <li><b>2</b><span><strong>{sasiSoftwareUiText(lang,"上传","Upload")}</strong><small>{sasiSoftwareUiText(lang,"填写资料并上传 ZIP","Add details and ZIP")}</small></span></li>
+       <li><b>3</b><span><strong>{sasiSoftwareUiText(lang,"审核","Review")}</strong><small>{sasiSoftwareUiText(lang,"安全检查与平台审核","Security and platform review")}</small></span></li>
+       <li><b>4</b><span><strong>{sasiSoftwareUiText(lang,"自动交付","Delivery")}</strong><small>{sasiSoftwareUiText(lang,"付款核验后自动发放","Released after payment verification")}</small></span></li>
+      </ol>
+     </article>
+     <article className={styles.sellerGuideCard}><h3><span className={styles.sellerGuideMark}>02</span>{sasiSoftwareUiText(lang,"结算说明","Settlement")}</h3><p>{sasiSoftwareUiText(lang,"销售收入按实际成交、退款及卖家协议计算。结算与提现状态可在账户中查看。","Sales are calculated from completed orders, refunds and the seller agreement. View settlement and payout status in the account.")}</p></article>
+     <article className={styles.sellerGuideCard}><h3><span className={styles.sellerGuideMark}>03</span>{sasiSoftwareUiText(lang,"安全校验","Security checks")}</h3><p>{sasiSoftwareUiText(lang,"软件包进入私密存储，提交后进行安全检查与管理员审核；未通过的文件不会公开交付。","Packages use private storage and undergo security scanning and administrator review. Rejected files are not made available for delivery.")}</p></article>
+     <article className={styles.sellerGuideCard}><h3><span className={styles.sellerGuideMark}>04</span>{sasiSoftwareUiText(lang,"授权范围","License scope")}</h3><p>{sasiSoftwareUiText(lang,"请写清成品或源码、设备数量、授权期限与商用范围。授权或许可文件可放入 ZIP 软件包。","Specify finished software or source, device limits, license duration and commercial scope. Include license documents in the ZIP package.")}</p></article>
+    </aside>
+   </div>
   </section>}
   {showStudio&&seller&&<section className={styles.section}><div className={styles.sectionHeading}><div><small>04 / SELLER EARNINGS</small><h2>{sasiSoftwareUiText(lang,"销售收入与提现","Seller earnings & payouts")}</h2></div></div>
    <div className={styles.earnings}><div><span>{sasiSoftwareUiText(lang,"人民币可提现","CNY available")}</span><strong>¥{format(payments?.balances?.CNY?.availableMinor??0)}</strong></div>

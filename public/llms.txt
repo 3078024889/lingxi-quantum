@@ -1,59 +1,66 @@
 # 灵犀场 LINGXIFIELD
 
-> 灵犀场提供全球 SIAI 厂商、模型与工具信息目录、100+ 在线实用工具，以及 SASI 智能软件市场。国际主站为 https://lingxifield.com；中国区中文 SIAI 入口为 https://lingxifield.cn/siai。
+## 核心搜索主题
+全球SIAI排行榜；全球AI行情平台；全球AI排行榜；全球SI排行榜；全球SI行情平台；全球SIAI行情平台
 
-## 核心入口
+> 灵犀场提供全球 SIAI 厂商、模型与工具资料、124 个工具入口（工具总目录与工具页）、以及 SASI 智能软件市场。国际主站为 https://lingxifield.com；中国区中文 SIAI 入口为 https://lingxifield.cn/siai。
 
-- [全球 SIAI 排行榜](https://lingxifield.com/siai): 全球 SI / AI 厂商、模型、工具、价格、免费额度、地区可用性与商用信息。
-- [中国区 SIAI 入口](https://lingxifield.cn/siai): 中文区域入口。
-- [在线工具大厅](https://lingxifield.com/tools): PDF、图片、视频音频、文件、表格、开发与隐私处理工具。
-- [SASI 智能软件市场](https://lingxifield.com/sasi): 成品软件、MT5 EA 源码授权、软件许可与自动交付。
-- [SASI Software Marketplace](https://lingxifield.com/discover/sasi-software-marketplace): 软件市场、产品目录与卖家服务。
-- [全部公开产品](https://lingxifield.com/products): 灵犀场公开产品入口。
+## 三大产品入口
+- [全球 SIAI 排行榜](https://lingxifield.com/siai)：比较厂商、模型与工具的能力、官方价格、免费额度、地区、付款方式及商业授权。
+- [SASI 智能软件市场](https://lingxifield.com/sasi)：MT5 EA、量化交易源码、其他成品软件、产品教程、授权说明、开发者发布与验证支付后的自动交付。
+- [100+ 在线实用工具](https://lingxifield.com/tools)：PDF、图片、OCR、视频、音频、文档、表格、隐私与日常文件处理。工具总目录与 123 个工具条目形成 124 个公开入口。
 
-## SASI 软件与开发者服务
+## 搜索与 AI 搜索入口
+- 九语言工具目录：中文、English、日本語、한국어、Français、Deutsch、Español、Português、العربية。
+- [en tools](https://lingxifield.com/en/tools)
+- [ja tools](https://lingxifield.com/ja/tools)
+- [ko tools](https://lingxifield.com/ko/tools)
+- [fr tools](https://lingxifield.com/fr/tools)
+- [de tools](https://lingxifield.com/de/tools)
+- [es tools](https://lingxifield.com/es/tools)
+- [pt tools](https://lingxifield.com/pt/tools)
+- [ar tools](https://lingxifield.com/ar/tools)
+- 问题型落地页围绕真实任务、格式兼容、文件处理、转换、OCR、压缩与文档比较。
+- [奇闻发现与资料核验](https://lingxifield.com/discoveries)：伏尼契手稿、NASA/AARO UAP 公开资料；区分已确认记录、未解问题与推测。
+- [LLM / AI 搜索完整索引](https://lingxifield.com/llms-full.txt)：公开工具目录、九语言入口与任务问题索引。
 
-- [SASI Software Marketplace](https://lingxifield.com/discover/sasi-software-marketplace): 软件市场与成品软件目录。
-- [MT5 EA Source Code & Trading Software](https://lingxifield.com/discover/mt5-ea-source-code): MT5 EA 源码与交易软件。
-- [Software Licensing & Automatic Delivery](https://lingxifield.com/discover/software-licensing-delivery): 软件授权、订单权益与自动交付。
-- [Developer Software Publishing & Seller Services](https://lingxifield.com/discover/developer-software-publishing): 开发者发布、商品管理与卖家服务。
-- [SASI 卖家工作台](https://lingxifield.com/sasi/seller): 开发者申请、商品草稿、私有软件包上传、安全审核、销售记录与结算；卖家权限通过后开放。
-- [SASI 软件交付说明](https://lingxifield.com/sasi/delivery): 订单授权、文件校验与下载流程。
+## SASI 软件市场 GEO 专题入口
+- [SASI 智能软件市场 / SASI Software Marketplace](https://lingxifield.com/discover/sasi-software-marketplace)：成品软件、MT5 EA、量化交易源码与市场规则。
+- [MT5 EA 与量化交易源码 / MT5 EA Source Code](https://lingxifield.com/discover/mt5-ea-source-code)：源码授权、交易软件产品信息与适用范围。
+- [软件授权与自动交付 / Software Licensing & Automatic Delivery](https://lingxifield.com/discover/software-licensing-delivery)：订单验证、授权权益、文件完整性与安全交付。
+- [开发者软件发布 / Developer Software Publishing](https://lingxifield.com/discover/developer-software-publishing)：卖家申请、商品审核、软件包上传与发布流程。
+
+## 全球分发与合作伙伴网络
+- [合作伙伴门户](https://lingxifield.com/partners)：SIAI、在线工具、二维码、嵌入代码与来源归因。
+- [JavaScript Widget](https://lingxifield.com/widgets/lingxifield-v1.js)：供外部网站嵌入公开 SIAI、二维码和工具入口。
+- [WordPress 官方插件](https://lingxifield.com/downloads/lingxifield-siai-wordpress.zip)。
+- [只读 SIAI OpenAPI](https://lingxifield.com/siai-openapi.json)。
+- [SIAI 更新 RSS](https://lingxifield.com/siai/updates.xml)。
+- 工具结果分享只传播公开入口与有限来源标签，不在链接中暴露私人文件、提示词或账户标识。
+
+## SASI 买家与开发者教程
+- [SASI 卖家工作台](https://lingxifield.com/sasi/seller)：开发者入驻、商品草稿、软件包上传与审核。
+- [SASI 软件交付说明](https://lingxifield.com/sasi/delivery)：订单授权、支付验证、文件完整性检查与安全下载。
+- 产品版本、授权范围、交付格式和价格以每个商品详情及下单页面为准。哥白尼 SI 当前仅提供源码版。
 
 ## 高频工具
+- [PDF 转 TXT](https://lingxifield.com/tools/pdf-to-text)
+- [PDF 比较](https://lingxifield.com/tools/pdf-compare)
+- [PDF 重建压缩](https://lingxifield.com/tools/compress-pdf)
+- [PDF 合并](https://lingxifield.com/tools/merge-pdf)
+- [PDF 电子签名 / 电子签章](https://lingxifield.com/tools/e-sign-pdf)
+- [图片 OCR](https://lingxifield.com/tools/ocr)
+- [图片压缩](https://lingxifield.com/tools/compress-image)
+- [文档翻译](https://lingxifield.com/tools/document-translate)
+- [视频转文字](https://lingxifield.com/tools/video-transcription)
+- [音频转文字](https://lingxifield.com/tools/audio-transcription)
+- [临时邮箱](https://lingxifield.com/tools/temp-mail)
+- [清除图片 EXIF](https://lingxifield.com/tools/remove-exif)
 
-- [PDF 重建压缩](https://lingxifield.com/tools/compress-pdf): 优化 PDF 文件体积。
-- [PDF 合并](https://lingxifield.com/tools/merge-pdf): 按顺序合并多个 PDF。
-- [PDF 电子签名 / 电子签章](https://lingxifield.com/tools/e-sign-pdf): 添加签名与印章。
-- [PDF 转 Word](https://lingxifield.com/tools/pdf-to-word): 将 PDF 转换为可编辑 Word。
-- [PDF 转 Excel](https://lingxifield.com/tools/pdf-to-xlsx): 从 PDF 提取表格。
-- [PDF 转 JPG](https://lingxifield.com/tools/pdf-to-jpg): 导出 PDF 页面图像。
-- [图片 OCR](https://lingxifield.com/tools/ocr): 从照片、截图和扫描件提取文字。
-- [图片压缩](https://lingxifield.com/tools/compress-image): 减小图片文件体积。
-- [图片压缩到 100KB](https://lingxifield.com/tools/compress-image-to-100kb): 按目标体积压缩图片。
-- [HEIC 转 JPG](https://lingxifield.com/tools/heic-to-jpg): 转换 HEIC / HEIF 图片。
-- [视频转文字](https://lingxifield.com/tools/video-transcription): 提取视频语音文字。
-- [音频转文字](https://lingxifield.com/tools/audio-transcription): 转录录音与音频。
-- [临时邮箱](https://lingxifield.com/tools/temp-mail): 短期接收验证码与一次性通知。
-- [清除图片 EXIF](https://lingxifield.com/tools/remove-exif): 清理图片元数据。
-- [文件真实格式检测](https://lingxifield.com/tools/file-type-detector): 检查文件内容类型与扩展名是否一致。
-
-## 九种语言
-
-- [中文工具](https://lingxifield.com/tools)
-- [English](https://lingxifield.com/en/tools)
-- [日本語](https://lingxifield.com/ja/tools)
-- [한국어](https://lingxifield.com/ko/tools)
-- [Français](https://lingxifield.com/fr/tools)
-- [Deutsch](https://lingxifield.com/de/tools)
-- [Español](https://lingxifield.com/es/tools)
-- [Português](https://lingxifield.com/pt/tools)
-- [العربية](https://lingxifield.com/ar/tools)
-
-## 索引与访问规则
-
+## 访问与内容规则
 - Sitemap: https://lingxifield.com/sitemap.xml
 - Robots: https://lingxifield.com/robots.txt
-- LLM full index: https://lingxifield.com/llms-full.txt
-- 本文件仅描述公开页面，不列出账户、结算、管理、订单私有数据或用户文件链接。
-- 工具能力、价格、免费额度、地区限制与商用许可，以对应公开页面的实时说明为准。
+- 公开内容不包含账户、结算、管理、订单私有数据或用户文件链接。
+- 工具能力、价格、免费额度、地区限制与商用许可，以对应公开页面为准。
+- 先完成免费工具任务，再根据持续使用与批量需求选择 ToolPass。
+- 平台不补贴不可预测的第三方模型 Token 成本；任何付费处理费用应在执行前展示。
