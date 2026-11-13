@@ -74,7 +74,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 
 .main{background:transparent;padding:12px clamp(12px,1.7vw,25px) 68px}
 .main .container{max-width:1560px;margin:auto}
-.main .section{margin-top:29px}.main .sectionHeading h2{font-size:clamp(23px,2.2vw,30px);color:#10182d}
+.main .section{margin-top:29px}.main .sectionHeading h2{font-size:clamp(23px,2.2vw,30px);color:var(--lx-ink,#10182d)}
 .main .sectionHeading small{color:#6c54d3}.main .sectionHeading:before{content:"";height:19px;width:5px;transform:skew(-20deg);border-radius:6px;background:linear-gradient(#d85ce8,#6341f9);margin-right:8px}
 .main .sectionHeading{justify-content:flex-start}.main .sectionHeading .find{margin-left:auto}
 .main .filters button{border-radius:12px;background:#f8f9ff;color:#384467;font-size:13px;padding:10px 17px;box-shadow:0 3px 9px #1d2e6512}
