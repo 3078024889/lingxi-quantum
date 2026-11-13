@@ -1,0 +1,35 @@
+name: Global SIAI four-host external HTTPS vs forced ECS diagnostic (read only)
+on:
+  push:
+    branches: [feature/release-announcement-auth-readiness-20261106]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  external-http:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - name: Check DNS A and public vs forced-ECS HTTPS TLS trust
+        shell: bash
+        run: |
+          set -uo pipefail
+          echo GLOBALSIAI_PUBLIC_VS_ECS_HTTPS_READONLY_BEGIN
+          for host in globalsiai.cn www.globalsiai.cn globalsiai.com www.globalsiai.com; do
+            a="$(dig @1.1.1.1 "$host" A +short +time=5 +tries=1 | tr '\n' ',' | cut -c 1-250)"
+            echo "DNS_CLOUDFLARE_A_HOST=$host ADDR=$a"
+            v="$(curl -4sS -L --retry 0 --connect-timeout 7 --max-time 18 -o /dev/null \
+              -w '%{http_code},%{ssl_verify_result},%{remote_ip},%{url_effective}' \
+              "https://$host/" 2>/dev/null)" && rc=0 || rc=$?
+            echo "PUBLIC_HTTPS_HOST=$host CURL_RC=$rc HTTP_SSL_IP_URL=$v"
+            v="$(curl -4sS -L --noproxy '*' --connect-timeout 7 --max-time 18 \
+              --resolve 'globalsiai.cn:443:39.104.205.16' \
+              --resolve 'www.globalsiai.cn:443:39.104.205.16' \
+              --resolve 'globalsiai.com:443:39.104.205.16' \
+              --resolve 'www.globalsiai.com:443:39.104.205.16' \
+              -o /dev/null \
+              -w '%{http_code},%{ssl_verify_result},%{remote_ip},%{url_effective}' \
+              "https://$host/" 2>/dev/null)" && rc=0 || rc=$?
+            echo "FORCED_ECS_HTTPS_HOST=$host CURL_RC=$rc HTTP_SSL_IP_URL=$v"
+          done
+          echo GLOBALSIAI_PUBLIC_VS_ECS_HTTPS_READONLY_COMPLETE

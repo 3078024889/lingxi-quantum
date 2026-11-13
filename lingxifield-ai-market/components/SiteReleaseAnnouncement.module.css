@@ -1,0 +1,29 @@
+.shade{
+ position:fixed;inset:0;z-index:2147482000;
+ display:grid;place-items:center;padding:18px;
+ background:rgba(16,32,57,.48);backdrop-filter:blur(6px);
+}
+.dialog{
+ position:relative;width:min(100%,560px);max-height:min(90vh,720px);overflow:auto;
+ border:1px solid rgba(145,181,222,.45);border-radius:24px;
+ padding:34px clamp(22px,5vw,42px) 28px;
+ box-shadow:0 30px 90px rgba(22,48,89,.22);
+ color:#1e385b;background:radial-gradient(circle at 85% 6%,rgba(210,232,255,.96),transparent 38%),linear-gradient(145deg,#fff 0%,#f2f8ff 60%,#eef7fc 100%);
+ font-family:system-ui,-apple-system,"Microsoft YaHei",Arial,sans-serif;
+ text-align:start;
+}
+.eyebrow{display:inline-block;color:#567caa;font-size:14px;font-weight:750;letter-spacing:.08em}
+.orb{float:right;font-size:54px;line-height:1;color:#99bfe9;font-weight:300;filter:drop-shadow(0 3px 18px rgba(56,127,212,.23))}
+.title{margin:22px 0 14px;font-size:clamp(24px,4.8vw,33px);font-weight:800;line-height:1.35;letter-spacing:-.025em;color:#153c66}
+.description{font-size:15px;line-height:1.9;color:#4c627f;margin:0}
+.domainRow{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 25px}
+.domainRow span{border:1px solid #d4e3f5;background:rgba(255,255,255,.82);padding:9px 12px;border-radius:12px;color:#3a6a9e;font-size:14px;font-weight:650}
+.close{position:absolute;top:14px;right:15px;border:0;border-radius:50%;background:#e5effb;color:#385d81;width:38px;height:38px;font-size:25px;line-height:1;display:grid;place-items:center;cursor:pointer}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.primary,.secondary{display:inline-flex;justify-content:center;align-items:center;min-height:46px;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:750;text-decoration:none;cursor:pointer}
+.primary{background:#236bd0;border:1px solid #236bd0;color:white}
+.secondary{border:1px solid #cedff2;background:white;color:#456b9a}
+.credit{display:block;margin-top:22px;font-family:cursive;font-size:14px;color:#8aa6c6;text-align:right}
+.close:focus-visible,.primary:focus-visible,.secondary:focus-visible{outline:3px solid #67b1fd;outline-offset:3px}
+@media(max-width:420px){.dialog{padding:28px 20px 23px;border-radius:19px}.orb{font-size:39px}.actions{flex-direction:column;align-items:stretch}.primary,.secondary{width:100%}}
+@media(prefers-reduced-motion:reduce){.shade{backdrop-filter:none}}
