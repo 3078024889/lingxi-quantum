@@ -1,0 +1,24 @@
+name: Global SIAI Free Telegram Bot Checks
+on:
+  pull_request:
+    paths:
+      - "supabase/functions/globalsiai-bot/**"
+      - "supabase/functions/globalsiai-qq-console/**"
+      - "supabase/migrations/*telegram*"
+      - "supabase/migrations/*globalsiai*"
+      - "tests/globalsiai-supabase-bot.test.mjs"
+      - "tests/globalsiai-qq-console.test.mjs"
+      - ".github/workflows/globalsiai-free-bot.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  free-worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify posts, five daily schedules and security gates
+        run: node --experimental-strip-types --test tests/globalsiai-supabase-bot.test.mjs tests/globalsiai-qq-console.test.mjs
