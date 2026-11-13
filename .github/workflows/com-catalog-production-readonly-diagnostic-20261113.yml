@@ -130,5 +130,26 @@ jobs:
             }
           }
           JS
+          for(const host of ["https://lingxifield.com","https://lingxifield.cn"]){
+            const hostname=new URL(host).hostname;
+            try{
+              const asset=await fetch(host+"/images/sasi/sasi-market-hero-lingxifield.png",{redirect:"manual",signal:AbortSignal.timeout(20000)});
+              console.log("SASI_HERO_ASSET",hostname,"HTTP="+asset.status,"TYPE="+(asset.headers.get("content-type")||"none"),"LENGTH="+(asset.headers.get("content-length")||"unknown"));
+              const page=await fetch(host+"/sasi",{redirect:"manual",signal:AbortSignal.timeout(20000)});
+              const html=await page.text();
+              console.log("SASI_MARKET_PAGE",hostname,"HTTP="+page.status,"HERO_REFERENCED="+html.includes("sasi-market-hero-lingxifield.png"));
+              const llms=await fetch(host+"/llms.txt",{redirect:"manual",signal:AbortSignal.timeout(20000)});
+              const llmsText=await llms.text();
+              const legacy=/AI短剧|短剧、网站|短剧创作|书本、学习|学习与科研创作|drama workflows|book, learning and research/i.test(llmsText);
+              console.log("SEO_GEO_LLM",hostname,"HTTP="+llms.status,"SASI_MARKET="+llmsText.includes("SASI 智能软件市场"),"MT5_EA="+/MT5 EA/i.test(llmsText),"LEGACY_SASI_TEXT="+legacy);
+              const sitemap=await fetch(host+"/sitemap.xml",{redirect:"manual",signal:AbortSignal.timeout(20000)});
+              const sitemapText=await sitemap.text();
+              const retired=(sitemapText.match(/\/sasi\/(?:drama|build|assemble|connections|director|image|operator|series|variants|pricing)/g)||[]).length;
+              console.log("SEO_GEO_SITEMAP",hostname,"HTTP="+sitemap.status,"RETIRED_SASI_URL_COUNT="+retired);
+            }catch(e){
+              console.log("SASI_STATIC_SEO",hostname,"REQUEST_ERROR="+(e?.name||"unknown"));
+            }
+          }
+          JS
 
 # Re-run after the 2026-11-13 CN3194 promotion; diagnostic remains read-only.
