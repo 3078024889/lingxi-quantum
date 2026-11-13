@@ -1,5 +1,5 @@
 {
-  "source_commit": "299d89e48b19749eb04c104cc2c0d340a9c2d10e",
+  "source_commit": "bd1af7f3162bc6b63b0f0b9c3b69ab71161eaa14",
   "basis": "CN source snapshot at b1930b25875710d2b3eb261b96162ffc55624a70 reconciled with the canonical retired-SASI manifest; active marketplace and account paths preserved",
   "files": [
     {
@@ -11976,7 +11976,7 @@
     },
     {
       "path": "next.config.js",
-      "bytes": 2941
+      "bytes": 3917
     },
     {
       "path": "package-lock.json",
@@ -15540,7 +15540,7 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 5822
+      "bytes": 6075
     },
     {
       "path": "tests/retired-sasi-public-copy-20261113.test.mjs",

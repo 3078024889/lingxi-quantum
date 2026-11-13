@@ -488,6 +488,8 @@
     "scripts/drama-pipeline/skill-teach/continuity-canon-compiler-index.json",
     "scripts/drama-pipeline/skill-teach/priority-compiler-index.json",
     "scripts/drama-pipeline/skill-teach/wave2-compiler-index.json",
+    "scripts/runtime/assemble-generated-episode.cjs",
+    "scripts/runtime/verify-generated-video.cjs",
     "skills/devoured-2026-09-18/wave1/ai-short-drama-skill/README.md",
     "skills/devoured-2026-09-18/wave1/ai-short-drama-skill/SKILL.md",
     "skills/devoured-2026-09-18/wave1/ai-video-storyboard-skill/README.md",
@@ -613,5 +615,7 @@
   ],
   "preservedApiRoutes": [
     "app/api/sasi/account/route.ts"
-  ]
+  ],
+  "removed_file_count": null,
+  "source_commit": "bd1af7f3162bc6b63b0f0b9c3b69ab71161eaa14"
 }
