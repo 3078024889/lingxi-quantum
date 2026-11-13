@@ -82,6 +82,7 @@ export const LOCALIZED_LOCALES=(Object.keys(SEO_LOCALES) as SeoLocale[]).filter(
 export function isSeoLocale(v:string):v is SeoLocale{return Object.prototype.hasOwnProperty.call(SEO_LOCALES,v)}
 
 export const GLOBAL_TOOL_CATALOG=[
+  {slug:"password-generator",zh:"密码生成器",en:"Password Generator",mode:"local" as const},
   {slug:"document-translate",zh:"PDF / 文档翻译",en:"PDF / Document Translation",mode:"online" as const},
   {slug:"audio-transcription",zh:"音频转文字",en:"Audio Transcription",mode:"online" as const},
   {slug:"ai-video-audio-check",zh:"AI 视频音频检测",en:"AI Video & Audio Detection",mode:"local" as const},

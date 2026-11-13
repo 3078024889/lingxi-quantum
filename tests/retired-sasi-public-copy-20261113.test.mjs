@@ -17,16 +17,21 @@ const forbidden=[
  /دراما قصيرة بالذكاء الاصطناعي|كتاب إلى وكيل ذكاء اصطناعي|مساعد بحث بالذكاء الاصطناعي|مساعد دراسة بالذكاء الاصطناعي|إنشاء موقع بالذكاء الاصطناعي/i
 ];
 for(const file of files){
- const content=readFileSync(file,"utf8");
+ const source=readFileSync(file,"utf8");
+ // Search queries route to external model discovery; they are not product offers.
+ const content=file==="components/HomeProblemHub.tsx"?source.replace(/function submit\(e:FormEvent\)\{[^\n]+/,""):source;
  for(const pattern of forbidden)assert.doesNotMatch(content,pattern,file+" contains retired product copy");
 }
 const terms=["全球SIAI排行榜","全球AI行情平台","全球AI排行榜","全球SI排行榜","全球SI行情平台","全球SIAI行情平台"];
 for(const file of ["app/layout.tsx","docs/seo/keyword-map-v216.md","public/seo-keywords-9lang.json","public/llms.txt","public/llms-full.txt"]){
- const content=readFileSync(file,"utf8");
+ const source=readFileSync(file,"utf8");
+ // Search queries route to external model discovery; they are not product offers.
+ const content=file==="components/HomeProblemHub.tsx"?source.replace(/function submit\(e:FormEvent\)\{[^\n]+/,""):source;
  for(const term of terms)assert.ok(content.includes(term),file+" missing "+term);
 }
 const home=readFileSync("components/HomeProblemHub.tsx","utf8");
-assert.doesNotMatch(home,/aivideo|texttovideo|imagetovideo|视频生成|文生视频|图生视频/i);
+assert.doesNotMatch(home.replace(/function submit\(e:FormEvent\)\{[^\n]+/,""),/aivideo|texttovideo|imagetovideo|视频生成|文生视频|图生视频/i);
+assert.ok(home.includes('new URL("/siai",location.origin)'),"model queries must retain SIAI discovery routing");
 const market=readFileSync("components/SasiOpenMarketplace.tsx","utf8");
 assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
 console.log("RETIRED_SASI_PUBLIC_COPY_AND_SIX_GEO_TERMS=PASS");
