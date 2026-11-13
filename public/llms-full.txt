@@ -1,5 +1,8 @@
 # LINGXIFIELD LLM / AI SEARCH INDEX
 
+## 核心搜索主题
+全球SIAI排行榜；全球AI行情平台；全球AI排行榜；全球SI排行榜；全球SI行情平台；全球SIAI行情平台
+
 Generated: 2026-10-16T03:31:38.324Z
 Tools: 121
 Locales: 9

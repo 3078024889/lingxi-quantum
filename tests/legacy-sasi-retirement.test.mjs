@@ -50,3 +50,31 @@ test('retired legacy source files and media are absent from the repository and s
   assert.equal(stale.length,0,name+' still lists retired files: '+stale.map(x=>x.path).join(','));
  }
 });
+
+test('legacy URL-to-video creation is permanently redirected and excluded from discovery',()=>{
+ const page=readFileSync('app/tools/url-to-video/page.tsx','utf8');
+ const config=readFileSync('next.config.js','utf8');
+ const catalog=readFileSync('lib/seo/global-seo.ts','utf8');
+ const hub=readFileSync('lib/tools/advanced-catalog.ts','utf8');
+ assert.match(page,/permanentRedirect\("\/tools"\)/);
+ assert.match(config,/source: "\/tools\/url-to-video", destination: "\/tools", permanent: true/);
+ assert.match(config,/source: "\/:lang\(en\|ja\|ko\|fr\|de\|es\|pt\|ar\)\/tools\/url-to-video"/);
+ assert.doesNotMatch(catalog,/slug:"url-to-video"/);
+ assert.doesNotMatch(hub,/\/tools\/url-to-video/);
+});
+
+
+test('current product copy and global styles do not expose retired SASI creation modules',()=>{
+ const home=readFileSync('components/HomeProblemHub.tsx','utf8');
+ const legal=readFileSync('components/SasiLegalBody.tsx','utf8');
+ const mini=readFileSync('miniapp/README.md','utf8');
+ const css=readFileSync('app/globals.css','utf8');
+ const llms=readFileSync('public/llms.txt','utf8')+'\n'+readFileSync('public/llms-full.txt','utf8');
+ assert.doesNotMatch(home,/ai短剧|短剧生成/);
+ assert.doesNotMatch(legal,/短剧|short drama|Kurzdrama|séries courtes|dramas y vídeos|dramas e vídeos|الدراما والفيديو الجديدة|동영상 신규 생성/i);
+ assert.doesNotMatch(mini,/SASI 创作|短剧|书本|学习|科研|资料智库/);
+ assert.doesNotMatch(css,/\.sasi-(?:hero-surface|home-tile|balance|connect|cangxuan|orchestration|works-|account-|start-path|utility-links|recharge-|send|header-topup|checkout-)|\.cangxuan-|\.lx-sasi-center|\.lx-sasi-hero|\.lx-sasi-prompt-panel|\.lx-sasi-entry-card|\.lx-knowledge-modebar|\.lx-knowledge-answer|\.lx-knowledge-recharge/);
+ assert.doesNotMatch(llms,/short[- ]drama|book SASI|learning SASI|research SASI|短剧生成|书本智能体|学习智能体|科研智能体/i);
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
+});
