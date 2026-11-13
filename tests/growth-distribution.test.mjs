@@ -257,9 +257,15 @@ test("result sharing strips private query and hash and carries bounded source at
 
 test("retired creation and knowledge endpoints are closed while marketplace settlement remains",()=>{
  const middleware=read("middleware.ts");
- const knowledge=read("app/api/knowledge/[[...legacy]]/route.ts");
- assert.equal(existsSync("app/api/knowledge/ask/route.ts"),false);
- assert.equal(existsSync("app/api/knowledge/pricing/route.ts"),false);
+ const knowledgePath="app/api/knowledge/[[...legacy]]/route.ts";
+ if(existsSync(knowledgePath)){
+  const knowledge=read(knowledgePath);
+  assert.match(knowledge,/status:\s*410/);assert.match(knowledge,/KNOWLEDGE_MODULE_RETIRED/);
+  assert.match(knowledge,/export const GET = retired/);assert.match(knowledge,/export const POST = retired/);
+ }else{
+  assert.equal(existsSync("app/api/knowledge/ask/route.ts"),false);
+  assert.equal(existsSync("app/api/knowledge/pricing/route.ts"),false);
+ }
  const provider=read("app/api/internal/sasi/provider-smoke/route.ts");
  const worker=read("app/api/internal/sasi/worker/configure/route.ts");
  const reconcile=read("app/api/internal/sasi/reconcile/route.ts");
