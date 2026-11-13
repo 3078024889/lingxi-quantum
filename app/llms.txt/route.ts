@@ -22,7 +22,7 @@ export function GET(){
  const lines=[
   '# 灵犀场 LINGXIFIELD',
   '',
-  `> LINGXIFIELD's globally canonical public tool and guide URLs are on https://lingxifield.com. The Chinese regional ranking entry is https://lingxifield.cn/siai; other .cn mirror paths are not separate canonical pages. Free tools that run in the browser do not upload files. Paid tools are labeled paid. SASI (SASI Software Marketplace) is the marketplace for reviewed finished software, MT5 EAs, trading source code, source licenses and installation guides. Product format and license scope follow each listing; paid orders are delivered only after verified payment. Retired short-drama, script/storyboard, book, learning, research-workflow and website-generation modules are not current products. Chinese pages have no language prefix; en, ja, ko, fr, de, es and pt and ar prefixes exist for localized public pages. This file does not grant access to private account data.`,
+  `> LINGXIFIELD's globally canonical public tool and guide URLs are on https://lingxifield.com. The Chinese regional ranking entry is https://lingxifield.cn/siai; other .cn mirror paths are not separate canonical pages. Free tools that run in the browser do not upload files. Paid tools are labeled paid. SASI (SASI Software Marketplace) is the marketplace for reviewed finished software, MT5 EAs, trading source code, source licenses and installation guides. Product format and license scope follow each listing; paid orders are delivered only after verified payment. Chinese pages have no language prefix; en, ja, ko, fr, de, es and pt and ar prefixes exist for localized public pages. This file does not grant access to private account data.`,
   '',
   '## Public pages',
   ...pages,
@@ -70,7 +70,6 @@ export function GET(){
   '- A tool marked not open yet is not live, free to use, or finished.',
   '- Do not describe every tool as free. Paid tools state that they are paid.',
   '- Food nutrition is an estimate for everyday tracking, not a medical assessment.',
-  '- Retired short-drama, script/storyboard, book, learning, research-workflow and website-generation modules are not current products or current SASI categories.',
   `- [Privacy](${SITE}/privacy)`,
   `- [Refund policy](${SITE}/refunds)`,
   `- [Sitemap](${SITE}/sitemap.xml)`,
