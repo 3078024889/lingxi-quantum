@@ -107,6 +107,7 @@ test("homepage, localized SEO/GEO pages and partner distribution share the compa
  const homepage=read("components/HomeProblemHub.tsx");
  const homeAnswers=read("components/HomeSeoAnswers.tsx");
  const partner=read("components/partners/PartnerGrowthPortal.tsx");
+ const sasiMarketCss=read("components/SasiOpenMarketplace.module.css");
  assert.ok(layout.includes('import "./growth-pages.css";'));
  assert.ok(layout.includes('import "./lingxifield-premium-20261109.css";\nimport "./growth-pages.css";'));
  assert.ok(growthShell.includes('className="lx-growth-page"'));
@@ -119,6 +120,7 @@ test("homepage, localized SEO/GEO pages and partner distribution share the compa
   "app/[locale]/products/page.tsx"
  ]) assert.ok(read(route).includes("GrowthPageShell"),route);
  assert.ok(growthCss.includes("--lx-growth-max:1500px"));
+ assert.ok(sasiMarketCss.includes(".container{max-width:1500px;margin:auto}"));
  assert.ok(growthCss.includes(".lx11-page .lx11-wrap"));
  assert.ok(growthCss.includes(".lx-growth-hero"));
  assert.ok(growthCss.includes(".lx-growth-tool-grid"));
