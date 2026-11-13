@@ -181,8 +181,8 @@ test("R6/R8 homepage growth engines are real routes, value-first and aligned wit
  assert.match(problem,/伏尼契/);
  assert.match(problem,/href:"\/discoveries"/);
  assert.match(problem,/hit\?\.score>0\?hit\.href:'\/tools'/);
- assert.match(home,/HomeSeoAnswers locale="zh"\/><HomeToolPassMembership\/><Footer/);
- assert.match(localizedHome,/HomeSeoAnswers locale=\{locale\}\/><HomeToolPassMembership\/><Footer/);
+ assert.match(home,/HomeProblemHub\/><HomeGlobalGrowth lang="zh"\/><HomeSeoAnswers locale="zh"\/><HomeToolPassMembership\/><Footer/);
+ assert.match(localizedHome,/HomeProblemHub\/><HomeGlobalGrowth lang=\{locale\}\/><HomeSeoAnswers locale=\{locale\}\/><HomeToolPassMembership\/><Footer/);
  assert.match(css,/--lx-home-gutter/);
  assert.match(css,/\.lx-home-toolpass-wrap/);
  assert.match(css,/\.lx11-footer\.lx-branded-footer\{padding-left:var\(--lx-home-gutter\)/);
