@@ -41,7 +41,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"从发现到分享，让每次体验都有下一步",
   flywheel:["发现","搜索","体验","结果","分享","再回来"],
-  passTitle:"ToolPass 工具包会员",passLead:"一站畅用 100+ 实用工具，持续处理文件与日常任务更高效。",passValueLead:"先免费完成一项任务；需要持续处理、多文件批量工作时，再选择合适的工具包周期。"
+  passTitle:"ToolPass 工具包会员",passLead:"一站畅用 100+ 实用工具，持续处理文件与日常任务更高效。",passValueLead:"先免费完成一项任务；需要持续处理、多文件批量工作时，再选择合适的工具包周期。",
   passBenefits:["全场 100+ 工具 · 无限使用","多文件批量处理 · 提升效率","持续更新新工具 · 覆盖更多场景","一个账户 · 双站可用（.com / .cn）"],
   planDays:["7 天体验","30 天","90 天","365 天"],
   planDescriptions:["短期使用 · 轻松上手","畅享全站工具","更优惠 · 更省心","长期使用 · 超值之选"],
@@ -72,7 +72,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"From discovery to sharing, every useful result creates a next step",
   flywheel:["Discover","Search","Try","Result","Share","Return"],
-  passTitle:"ToolPass Membership",passLead:"Use 100+ practical tools in one place and handle everyday files more efficiently.",passValueLead:"Start with a free task. Choose a pass when you need ongoing work or batch processing."
+  passTitle:"ToolPass Membership",passLead:"Use 100+ practical tools in one place and handle everyday files more efficiently.",passValueLead:"Start with a free task. Choose a pass when you need ongoing work or batch processing.",
   passBenefits:["100+ practical tools · unlimited use","Batch file workflows · save time","New tools added continuously","One account · .com and .cn"],
   planDays:["7-day trial","30 days","90 days","365 days"],
   planDescriptions:["A simple way to start","Access all practical tools","Better value over time","Best for long-term use"],
@@ -103,7 +103,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"発見から共有まで、役立つ体験を次につなぐ",
   flywheel:["発見","検索","体験","結果","共有","再訪"],
-  passTitle:"ToolPass ツール会員",passLead:"100以上の実用ツールを一か所で利用し、日常のファイル作業を効率化。",passValueLead:"まず無料で一つの作業を完了。継続利用や複数ファイルの一括処理が必要になったらプランを選べます。"
+  passTitle:"ToolPass ツール会員",passLead:"100以上の実用ツールを一か所で利用し、日常のファイル作業を効率化。",passValueLead:"まず無料で一つの作業を完了。継続利用や複数ファイルの一括処理が必要になったらプランを選べます。",
   passBenefits:["100以上のツール · 無制限利用","複数ファイル処理 · 効率向上","新しいツールを継続追加","1アカウント · .com / .cn"],
   planDays:["7日体験","30日","90日","365日"],
   planDescriptions:["まずは気軽に","全ツールを利用","長期利用でお得","長期利用に最適"],
@@ -134,7 +134,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"발견에서 공유까지, 유용한 경험을 다음 단계로 연결",
   flywheel:["발견","검색","체험","결과","공유","재방문"],
-  passTitle:"ToolPass 도구 멤버십",passLead:"100개 이상의 실용 도구를 한곳에서 사용하고 파일 작업을 효율적으로 처리하세요.",passValueLead:"먼저 무료로 작업을 완료하세요. 지속 사용이나 여러 파일의 일괄 처리가 필요할 때 패스를 선택하세요."
+  passTitle:"ToolPass 도구 멤버십",passLead:"100개 이상의 실용 도구를 한곳에서 사용하고 파일 작업을 효율적으로 처리하세요.",passValueLead:"먼저 무료로 작업을 완료하세요. 지속 사용이나 여러 파일의 일괄 처리가 필요할 때 패스를 선택하세요.",
   passBenefits:["실용 도구 100+ · 무제한 사용","여러 파일 일괄 처리 · 효율 향상","새 도구 지속 추가","하나의 계정 · .com / .cn"],
   planDays:["7일 체험","30일","90일","365일"],
   planDescriptions:["가볍게 시작","전체 도구 이용","더 경제적인 선택","장기 이용에 적합"],
@@ -165,7 +165,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"De la découverte au partage, chaque résultat ouvre une suite",
   flywheel:["Découvrir","Rechercher","Essayer","Résultat","Partager","Revenir"],
-  passTitle:"Abonnement ToolPass",passLead:"Plus de 100 outils pratiques au même endroit pour traiter les fichiers plus efficacement.",passValueLead:"Commencez par une tâche gratuite. Choisissez un pass lorsque vous avez besoin d’un usage continu ou du traitement par lots."
+  passTitle:"Abonnement ToolPass",passLead:"Plus de 100 outils pratiques au même endroit pour traiter les fichiers plus efficacement.",passValueLead:"Commencez par une tâche gratuite. Choisissez un pass lorsque vous avez besoin d’un usage continu ou du traitement par lots.",
   passBenefits:["100+ outils · utilisation illimitée","Traitement par lots · gain de temps","Nouveaux outils ajoutés en continu","Un compte · .com et .cn"],
   planDays:["Essai 7 jours","30 jours","90 jours","365 jours"],
   planDescriptions:["Pour commencer","Tous les outils","Plus avantageux","Idéal à long terme"],
@@ -196,7 +196,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"Von der Entdeckung zum Teilen: jedes Ergebnis führt weiter",
   flywheel:["Entdecken","Suchen","Testen","Ergebnis","Teilen","Zurückkehren"],
-  passTitle:"ToolPass-Mitgliedschaft",passLead:"Mehr als 100 praktische Tools an einem Ort für effiziente Datei- und Alltagsarbeit.",passValueLead:"Erledige zuerst eine Aufgabe kostenlos. Wähle einen Pass erst bei regelmäßigem Bedarf oder Stapelverarbeitung."
+  passTitle:"ToolPass-Mitgliedschaft",passLead:"Mehr als 100 praktische Tools an einem Ort für effiziente Datei- und Alltagsarbeit.",passValueLead:"Erledige zuerst eine Aufgabe kostenlos. Wähle einen Pass erst bei regelmäßigem Bedarf oder Stapelverarbeitung.",
   passBenefits:["100+ Tools · unbegrenzte Nutzung","Stapelverarbeitung · Zeit sparen","Neue Tools kommen laufend hinzu","Ein Konto · .com und .cn"],
   planDays:["7-Tage-Test","30 Tage","90 Tage","365 Tage"],
   planDescriptions:["Einfach starten","Alle Tools nutzen","Mehr Preisvorteil","Für langfristige Nutzung"],
@@ -227,7 +227,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"De descubrir a compartir: cada resultado abre el siguiente paso",
   flywheel:["Descubrir","Buscar","Probar","Resultado","Compartir","Volver"],
-  passTitle:"Membresía ToolPass",passLead:"Más de 100 herramientas prácticas en un solo lugar para procesar archivos con mayor eficiencia.",passValueLead:"Empieza con una tarea gratuita. Elige un pase cuando necesites uso continuo o procesamiento por lotes."
+  passTitle:"Membresía ToolPass",passLead:"Más de 100 herramientas prácticas en un solo lugar para procesar archivos con mayor eficiencia.",passValueLead:"Empieza con una tarea gratuita. Elige un pase cuando necesites uso continuo o procesamiento por lotes.",
   passBenefits:["100+ herramientas · uso ilimitado","Procesamiento por lotes · más eficiencia","Nuevas herramientas continuamente","Una cuenta · .com y .cn"],
   planDays:["Prueba 7 días","30 días","90 días","365 días"],
   planDescriptions:["Para empezar","Todas las herramientas","Más ahorro","Ideal a largo plazo"],
@@ -258,7 +258,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"Da descoberta ao compartilhamento, cada resultado abre o próximo passo",
   flywheel:["Descobrir","Buscar","Testar","Resultado","Compartilhar","Voltar"],
-  passTitle:"Assinatura ToolPass",passLead:"Mais de 100 ferramentas práticas em um só lugar para lidar com arquivos com eficiência.",passValueLead:"Comece com uma tarefa gratuita. Escolha um passe quando precisar de uso contínuo ou processamento em lote."
+  passTitle:"Assinatura ToolPass",passLead:"Mais de 100 ferramentas práticas em um só lugar para lidar com arquivos com eficiência.",passValueLead:"Comece com uma tarefa gratuita. Escolha um passe quando precisar de uso contínuo ou processamento em lote.",
   passBenefits:["100+ ferramentas · uso ilimitado","Processamento em lote · mais eficiência","Novas ferramentas adicionadas sempre","Uma conta · .com e .cn"],
   planDays:["Teste de 7 dias","30 dias","90 dias","365 dias"],
   planDescriptions:["Para começar","Todas as ferramentas","Mais economia","Ideal para longo prazo"],
@@ -289,7 +289,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
   ],
   flywheelTitle:"من الاكتشاف إلى المشاركة، كل نتيجة تفتح خطوة جديدة",
   flywheel:["اكتشاف","بحث","تجربة","نتيجة","مشاركة","عودة"],
-  passTitle:"عضوية ToolPass",passLead:"أكثر من 100 أداة عملية في مكان واحد لإنجاز الملفات والمهام اليومية بكفاءة.",passValueLead:"ابدأ بمهمة مجانية. اختر الباقة عندما تحتاج إلى استخدام مستمر أو معالجة الملفات دفعة واحدة."
+  passTitle:"عضوية ToolPass",passLead:"أكثر من 100 أداة عملية في مكان واحد لإنجاز الملفات والمهام اليومية بكفاءة.",passValueLead:"ابدأ بمهمة مجانية. اختر الباقة عندما تحتاج إلى استخدام مستمر أو معالجة الملفات دفعة واحدة.",
   passBenefits:["أكثر من 100 أداة · استخدام غير محدود","معالجة ملفات متعددة · كفاءة أعلى","إضافة أدوات جديدة باستمرار","حساب واحد · .com و.cn"],
   planDays:["تجربة 7 أيام","30 يوماً","90 يوماً","365 يوماً"],
   planDescriptions:["للبداية","جميع الأدوات","قيمة أفضل","للاستخدام الطويل"],
