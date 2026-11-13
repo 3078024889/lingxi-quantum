@@ -107,6 +107,8 @@ test("homepage, localized SEO/GEO pages and partner distribution share the compa
  const homepage=read("components/HomeProblemHub.tsx");
  const homeAnswers=read("components/HomeSeoAnswers.tsx");
  const partner=read("components/partners/PartnerGrowthPortal.tsx");
+ const zhProducts=read("app/products/page.tsx");
+ const zhDiscover=read("app/discover/[topic]/page.tsx");
  const sasiMarketCss=read("components/SasiOpenMarketplace.module.css");
  assert.ok(layout.includes('import "./growth-pages.css";'));
  assert.ok(layout.includes('import "./lingxifield-premium-20261109.css";\nimport "./growth-pages.css";'));
@@ -128,6 +130,11 @@ test("homepage, localized SEO/GEO pages and partner distribution share the compa
  assert.ok(growthCss.includes("@media(max-width:760px)"));
  assert.ok(homepage.includes("SASI 软件市场"));
  assert.ok(homepage.includes("100+ 在线工具"));
+ assert.ok(zhProducts.includes("GrowthPageShell"));
+ assert.ok(zhProducts.includes("ProductDirectory"));
+ assert.ok(!zhProducts.includes("ProductCatalogClient"));
+ assert.ok(zhDiscover.includes("GrowthPageShell"));
+ assert.ok(zhDiscover.includes("TopicSeoJsonLd"));
  assert.ok(homeAnswers.includes("SASI 软件市场"));
  assert.ok(partner.includes("lx-growth-partner-page"));
  assert.ok(partner.includes('standard("free-tools")'));
