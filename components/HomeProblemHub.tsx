@@ -191,7 +191,7 @@ export default function HomeProblemHub(){
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/tools',location.origin);if(hit?.score>0)url.searchParams.set('intent',v);else url.searchParams.set('q',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(["ai视频","ai模型","ai生成视频","ai视频生成","视频生成模型"].some(term=>normalized.includes(term))){const url=new URL("/siai",location.origin);url.searchParams.set("q",v);url.searchParams.set("lang",lang);location.href=url.pathname+url.search;return}if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/tools',location.origin);if(hit?.score>0)url.searchParams.set('intent',v);else url.searchParams.set('q',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
    <div className="lx-home-hero-grid">

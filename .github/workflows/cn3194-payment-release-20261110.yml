@@ -201,7 +201,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm exec playwright install --with-deps chrome
-          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts
+          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts
           echo CN3194_NEW_VISUAL_DESKTOP_MOBILE_CHROME_PASS
       - name: Package archive, render pinned stage script and write manifest
         id: package

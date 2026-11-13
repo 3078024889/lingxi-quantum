@@ -1,11 +1,164 @@
 {
-  "generatedAt": "2026-11-13T07:59:21.250Z",
+  "generatedAt": "2026-11-13T12:03:35.968Z",
   "source": "LINGXIFIELD SEO search-intent catalog",
   "note": "Generic questions describe common task intent. Curated FAQ pages are manually authored; this file does not claim private search-volume data.",
   "tools": 123,
   "toolEntryPoints": 124,
   "locales": 9,
   "records": [
+    {
+      "slug": "password-generator",
+      "locale": "zh",
+      "language": "中文",
+      "mode": "local",
+      "name": "密码生成器",
+      "url": "https://lingxifield.com/tools/password-generator",
+      "canonical": "https://lingxifield.com/tools/password-generator",
+      "searchIntentQuestions": [
+        "密码生成器怎么用？",
+        "密码生成器手机可以用吗？",
+        "密码生成器免费吗？",
+        "密码生成器处理安全吗？"
+      ],
+      "curatedFaq": false,
+      "hreflang": "zh-CN"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "en",
+      "language": "English",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/en/tools/password-generator",
+      "canonical": "https://lingxifield.com/en/tools/password-generator",
+      "searchIntentQuestions": [
+        "How do I use Password Generator?",
+        "Can I use Password Generator on my phone?",
+        "Is Password Generator free?",
+        "Is Password Generator safe to use?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "en"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "ja",
+      "language": "日本語",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/ja/tools/password-generator",
+      "canonical": "https://lingxifield.com/ja/tools/password-generator",
+      "searchIntentQuestions": [
+        "Password Generatorの使い方は？",
+        "Password Generatorはスマホで使えますか？",
+        "Password Generatorは無料ですか？",
+        "Password Generatorは安全ですか？"
+      ],
+      "curatedFaq": false,
+      "hreflang": "ja"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "ko",
+      "language": "한국어",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/ko/tools/password-generator",
+      "canonical": "https://lingxifield.com/ko/tools/password-generator",
+      "searchIntentQuestions": [
+        "Password Generator 사용 방법은?",
+        "휴대폰에서 Password Generator을 사용할 수 있나요?",
+        "Password Generator은 무료인가요?",
+        "Password Generator은 안전한가요?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "ko"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "fr",
+      "language": "Français",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/fr/tools/password-generator",
+      "canonical": "https://lingxifield.com/fr/tools/password-generator",
+      "searchIntentQuestions": [
+        "Comment utiliser Password Generator ?",
+        "Puis-je utiliser Password Generator sur mobile ?",
+        "Password Generator est-il gratuit ?",
+        "Password Generator est-il sûr ?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "fr"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "de",
+      "language": "Deutsch",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/de/tools/password-generator",
+      "canonical": "https://lingxifield.com/de/tools/password-generator",
+      "searchIntentQuestions": [
+        "Wie benutzt man Password Generator?",
+        "Kann ich Password Generator auf dem Handy nutzen?",
+        "Ist Password Generator kostenlos?",
+        "Ist Password Generator sicher?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "de"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "es",
+      "language": "Español",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/es/tools/password-generator",
+      "canonical": "https://lingxifield.com/es/tools/password-generator",
+      "searchIntentQuestions": [
+        "¿Cómo se usa Password Generator?",
+        "¿Puedo usar Password Generator en el móvil?",
+        "¿Password Generator es gratis?",
+        "¿Es seguro usar Password Generator?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "es"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "pt",
+      "language": "Português",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/pt/tools/password-generator",
+      "canonical": "https://lingxifield.com/pt/tools/password-generator",
+      "searchIntentQuestions": [
+        "Como usar Password Generator?",
+        "Posso usar Password Generator no celular?",
+        "Password Generator é gratuito?",
+        "Password Generator é seguro?"
+      ],
+      "curatedFaq": false,
+      "hreflang": "pt"
+    },
+    {
+      "slug": "password-generator",
+      "locale": "ar",
+      "language": "العربية",
+      "mode": "local",
+      "name": "Password Generator",
+      "url": "https://lingxifield.com/ar/tools/password-generator",
+      "canonical": "https://lingxifield.com/ar/tools/password-generator",
+      "searchIntentQuestions": [
+        "كيف أستخدم Password Generator؟",
+        "هل يمكن استخدام Password Generator على الهاتف؟",
+        "هل Password Generator مجاني؟",
+        "هل استخدام Password Generator آمن؟"
+      ],
+      "curatedFaq": false,
+      "hreflang": "ar"
+    },
     {
       "slug": "document-translate",
       "locale": "zh",
@@ -3980,159 +4133,6 @@
         "هل يمكن استخدام Images to PDF على الهاتف؟",
         "هل Images to PDF مجاني؟",
         "هل استخدام Images to PDF آمن؟"
-      ],
-      "curatedFaq": false,
-      "hreflang": "ar"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "zh",
-      "language": "中文",
-      "mode": "local",
-      "name": "图片转 PDF",
-      "url": "https://lingxifield.com/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "图片转 PDF怎么用？",
-        "图片转 PDF手机可以用吗？",
-        "图片转 PDF免费吗？",
-        "图片转 PDF处理安全吗？"
-      ],
-      "curatedFaq": false,
-      "hreflang": "zh-CN"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "en",
-      "language": "English",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/en/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/en/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "How do I use Images to PDF Pro?",
-        "Can I use Images to PDF Pro on my phone?",
-        "Is Images to PDF Pro free?",
-        "Is Images to PDF Pro safe to use?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "en"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "ja",
-      "language": "日本語",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/ja/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/ja/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "Images to PDF Proの使い方は？",
-        "Images to PDF Proはスマホで使えますか？",
-        "Images to PDF Proは無料ですか？",
-        "Images to PDF Proは安全ですか？"
-      ],
-      "curatedFaq": false,
-      "hreflang": "ja"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "ko",
-      "language": "한국어",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/ko/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/ko/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "Images to PDF Pro 사용 방법은?",
-        "휴대폰에서 Images to PDF Pro을 사용할 수 있나요?",
-        "Images to PDF Pro은 무료인가요?",
-        "Images to PDF Pro은 안전한가요?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "ko"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "fr",
-      "language": "Français",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/fr/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/fr/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "Comment utiliser Images to PDF Pro ?",
-        "Puis-je utiliser Images to PDF Pro sur mobile ?",
-        "Images to PDF Pro est-il gratuit ?",
-        "Images to PDF Pro est-il sûr ?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "fr"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "de",
-      "language": "Deutsch",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/de/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/de/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "Wie benutzt man Images to PDF Pro?",
-        "Kann ich Images to PDF Pro auf dem Handy nutzen?",
-        "Ist Images to PDF Pro kostenlos?",
-        "Ist Images to PDF Pro sicher?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "de"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "es",
-      "language": "Español",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/es/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/es/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "¿Cómo se usa Images to PDF Pro?",
-        "¿Puedo usar Images to PDF Pro en el móvil?",
-        "¿Images to PDF Pro es gratis?",
-        "¿Es seguro usar Images to PDF Pro?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "es"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "pt",
-      "language": "Português",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/pt/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/pt/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "Como usar Images to PDF Pro?",
-        "Posso usar Images to PDF Pro no celular?",
-        "Images to PDF Pro é gratuito?",
-        "Images to PDF Pro é seguro?"
-      ],
-      "curatedFaq": false,
-      "hreflang": "pt"
-    },
-    {
-      "slug": "image-to-pdf-pro",
-      "locale": "ar",
-      "language": "العربية",
-      "mode": "local",
-      "name": "Images to PDF Pro",
-      "url": "https://lingxifield.com/ar/tools/image-to-pdf-pro",
-      "canonical": "https://lingxifield.com/ar/tools/image-to-pdf-pro",
-      "searchIntentQuestions": [
-        "كيف أستخدم Images to PDF Pro؟",
-        "هل يمكن استخدام Images to PDF Pro على الهاتف؟",
-        "هل Images to PDF Pro مجاني؟",
-        "هل استخدام Images to PDF Pro آمن؟"
       ],
       "curatedFaq": false,
       "hreflang": "ar"

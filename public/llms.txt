@@ -24,6 +24,12 @@
 - [奇闻发现与资料核验](https://lingxifield.com/discoveries)：伏尼契手稿、NASA/AARO UAP 公开资料；区分已确认记录、未解问题与推测。
 - [LLM / AI 搜索完整索引](https://lingxifield.com/llms-full.txt)：公开工具目录、九语言入口与任务问题索引。
 
+## SASI 软件市场 GEO 专题入口
+- [SASI 智能软件市场 / SASI Software Marketplace](https://lingxifield.com/discover/sasi-software-marketplace)：成品软件、MT5 EA、量化交易源码与市场规则。
+- [MT5 EA 与量化交易源码 / MT5 EA Source Code & Trading Software](https://lingxifield.com/discover/mt5-ea-source-code)：源码授权、交易软件产品信息与适用范围。
+- [软件授权与自动交付 / Software Licensing & Automatic Delivery](https://lingxifield.com/discover/software-licensing-delivery)：订单验证、授权权益、文件完整性与安全交付。
+- [开发者软件发布 / Developer Software Publishing & Seller Services](https://lingxifield.com/discover/developer-software-publishing)：卖家申请、商品审核、软件包上传与发布流程。
+
 ## 全球分发与合作伙伴网络
 - [合作伙伴门户](https://lingxifield.com/partners)：SIAI、在线工具、二维码、嵌入代码与来源归因。
 - [JavaScript Widget](https://lingxifield.com/widgets/lingxifield-v1.js)：供外部网站嵌入公开 SIAI、二维码和工具入口。
