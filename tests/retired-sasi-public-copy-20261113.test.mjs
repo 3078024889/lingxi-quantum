@@ -36,3 +36,7 @@ const keywordMap=JSON.parse(readFileSync("public/seo-keywords-9lang.json","utf8"
 for(const locale of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
  assert.ok(Array.isArray(keywordMap[locale])&&keywordMap[locale].length>=22,"missing nine-language SEO keyword set: "+locale);
 }
+
+const legalCopy=readFileSync("components/SasiLegalBody.tsx","utf8");
+assert.doesNotMatch(legalCopy,/SI9\\.5|SI 9\\.5/);
+assert.match(legalCopy,/Copernicus SI 11\\.6/);
