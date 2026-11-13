@@ -14,6 +14,8 @@ on:
       - 'app/layout.tsx'
       - 'tests/dual-premium-visual-no-legacy-20261109.test.mjs'
       - 'tests/final-closure/dual-premium-new-visual.spec.ts'
+      - 'tests/final-closure/dual-home-market-release-20261113.spec.ts'
+      - 'components/tools/PasswordGeneratorWorkbench.tsx'
       - 'tests/com-static-balance-deferred-contract-20261109.test.mjs'
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'docs/operations/legacy-sasi-retirement-20261108.json'

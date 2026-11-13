@@ -31,7 +31,13 @@ for(const theme of ["light","dark"]){
  });
 }
 
-test("Password generation works locally with length validation",async({page})=>{
+test("Password generation works locally after access approval with length validation",async({page})=>{
+ await page.route("**/api/tools/access",async route=>{
+  const request=route.request().postDataJSON();
+  expect(request.toolSlug).toBe("password-generator");
+  expect(Object.keys(request).sort()).toEqual(["requestId","toolSlug","units"]);
+  await route.fulfill({json:{ok:true,requestId:request.requestId}});
+ });
  await page.goto("/tools/password-generator",{waitUntil:"domcontentloaded"});
  const workbench=page.locator("[data-tool-workbench]");
  const length=workbench.getByRole("spinbutton");
