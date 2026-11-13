@@ -57,6 +57,7 @@
     "components/gates/GateMind.tsx",
     "components/gates/GateOrigin.tsx",
     "components/gates/GateRelation.tsx",
+    "components/tools/UrlPromotionWorkbench.tsx",
     "components/useSasiRunStream.ts",
     "content/cangxuan-feed/field-source-mind/body/skills-devour-2026-09-18/bodies/SK-ai-short-drama.meta.json",
     "content/cangxuan-feed/field-source-mind/body/skills-devour-2026-09-18/bodies/SK-ai-short-drama.txt",
@@ -616,6 +617,6 @@
   "preservedApiRoutes": [
     "app/api/sasi/account/route.ts"
   ],
-  "removed_file_count": null,
-  "source_commit": "bd1af7f3162bc6b63b0f0b9c3b69ab71161eaa14"
+  "removed_file_count": 1,
+  "source_commit": "d061f3adab4acd437d4ee305ed1da05c1c328176"
 }

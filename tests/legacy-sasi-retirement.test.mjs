@@ -95,3 +95,8 @@ test('legacy generated-video runtime is no longer bundled into retired SASI rout
  const next=readFileSync('next.config.js','utf8');
  assert.doesNotMatch(next,/outputFileTracingIncludes|verify-generated-video|assemble-generated-episode/);
 });
+
+
+test('retired URL-to-video workbench is deleted from source',()=>{
+ assert.equal(existsSync('components/tools/UrlPromotionWorkbench.tsx'),false);
+});
