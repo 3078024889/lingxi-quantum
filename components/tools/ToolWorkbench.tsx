@@ -29,6 +29,7 @@ import { heicToJpgFiles, imagesToPdf, mergePdfFiles, pdfToJpgFiles, readQrCode, 
 import { rebuildCompressedPdf, type PdfCompressionPreset } from "@/lib/tools/shared/pdf-rebuild-compress";
 import { pptxToText } from "@/lib/tools/shared/pptx-text";
 import {consumeToolHandoff,createToolHandoff} from "@/lib/tools/workspace/handoff";
+import {authorizeToolPassStart} from "@/lib/tools/commerce/tool-pass-start-client";
 
 type Props = { tool: ToolMeta };
 
@@ -107,6 +108,20 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
     setBusy(true);
     setResult(null);
     try {
+      // A completed export is not required for the server to count a run.
+      // The feature flag is disabled until the billing cutover is verified.
+      const entitlement=await authorizeToolPassStart(tool.slug,crypto.randomUUID());
+      if(!entitlement.ok){
+        const login=entitlement.reason==="login_required";
+        setResult({
+          ok:false,
+          reasonZh:login?"请先登录后使用。":entitlement.reason==="payment_required"?"这项工具的首次免费使用已完成，请选择工具包。":"当前无法确认工具使用权益，请稍后再试。",
+          reasonEn:login?"Sign in before using this tool.":entitlement.reason==="payment_required"?"Your first free use is complete. Choose a tools pass.":"Tool access could not be verified. Try again later.",
+          hintZh:"已上传的文件仍保留在当前页面，无需重新选择。",
+          hintEn:"Your selected file remains here. You can retry without re-uploading."
+        });
+        return;
+      }
       const out = await runFileTool(tool, files, {
         webpTarget,
         quality,
