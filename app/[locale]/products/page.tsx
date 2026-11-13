@@ -15,7 +15,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
 export default async function Page({params}:Props){
  const {locale}=await params;if(!isSeoLocale(locale)||locale==="zh")notFound();
  const language=locale as SeoLocale,fact=pageGeoFact("products",language);
- return <GrowthPageShell locale={language} eyebrow={SEO_LOCALES[language].toolsTitle} title={fact.title} description={fact.description}>
+ return <GrowthPageShell locale={language} eyebrow={SEO_LOCALES[language].brand} title={fact.title} description={fact.description}>
   <ProductDirectory locale={language}/>
  </GrowthPageShell>;
 }
