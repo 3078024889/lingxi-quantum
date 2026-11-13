@@ -1,5 +1,7 @@
 {
   "removed": [
+    "app/api/knowledge/ask/route.ts",
+    "app/api/knowledge/pricing/route.ts",
     "app/api/sasi/ask/route.ts",
     "app/api/sasi/assets/[id]/inspect/route.ts",
     "app/api/sasi/assets/[id]/transcript/route.ts",
@@ -537,9 +539,10 @@
     "variants"
   ],
   "retiredRoutes": [
-    "app/api/sasi/[[...legacy]]/route.ts",
     "app/api/cron/sasi-v5-radar/route.ts",
-    "app/api/internal/sasi/worker/tick/route.ts"
+    "app/api/internal/sasi/worker/tick/route.ts",
+    "app/api/knowledge/[[...legacy]]/route.ts",
+    "app/api/sasi/[[...legacy]]/route.ts"
   ],
   "cloudApplied": false,
   "preservedLibFiles": [

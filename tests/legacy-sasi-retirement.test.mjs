@@ -11,7 +11,10 @@ test('retired endpoints cannot create provider jobs or run the radar',async()=>{
    const response=await route[method](new Request('https://lingxifield.com/retired',{method}));
    assert.equal(response.status,410);
    assert.equal(response.headers.get('cache-control'),'no-store');
-   assert.deepEqual(await response.json(),{error:'SASI_CREATION_RETIRED',replacement:'/sasi'});
+   const expected=file.startsWith('app/api/knowledge/')
+    ? {error:'KNOWLEDGE_MODULE_RETIRED',replacement:'/tools'}
+    : {error:'SASI_CREATION_RETIRED',replacement:'/sasi'};
+   assert.deepEqual(await response.json(),expected);
   }
  }
 });
@@ -94,4 +97,13 @@ test('retired URL-to-video workbench is deleted from source and product discover
  const copy=readFileSync('lib/tools/product-copy.ts','utf8');
  assert.doesNotMatch(copy,/'url-to-video'/);
  assert.equal(existsSync('components/tools/UrlPromotionWorkbench.tsx'),false);
+});
+
+test('retired knowledge API is a 410 tombstone',()=>{
+ assert.equal(existsSync('app/api/knowledge/ask/route.ts'),false);
+ assert.equal(existsSync('app/api/knowledge/pricing/route.ts'),false);
+ const source=readFileSync('app/api/knowledge/[[...legacy]]/route.ts','utf8');
+ assert.match(source,/KNOWLEDGE_MODULE_RETIRED/);
+ assert.match(source,/status:\s*410/);
+ assert.match(source,/cache-control.*no-store/);
 });

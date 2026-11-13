@@ -24,7 +24,7 @@
     },
     {
       "path": ".github/workflows/retired-sasi-cleanup-audit-20261113.yml",
-      "bytes": 2204
+      "bytes": 2344
     },
     {
       "path": ".github/workflows/retired-sasi-cloud-inventory.yml",
@@ -279,12 +279,8 @@
       "bytes": 218
     },
     {
-      "path": "app/api/knowledge/ask/route.ts",
-      "bytes": 4648
-    },
-    {
-      "path": "app/api/knowledge/pricing/route.ts",
-      "bytes": 361
+      "path": "app/api/knowledge/[[...legacy]]/route.ts",
+      "bytes": 509
     },
     {
       "path": "app/api/lingxi/route.ts",
@@ -9836,7 +9832,7 @@
     },
     {
       "path": "docs/operations/legacy-sasi-retirement-20261108.json",
-      "bytes": 29257
+      "bytes": 29454
     },
     {
       "path": "docs/PRE-SUBMIT-MANIFEST-V1181.txt",
@@ -12723,8 +12719,12 @@
       "bytes": 3829
     },
     {
+      "path": "scripts/audit/legacy-sasi-runtime-reachability.mjs",
+      "bytes": 4382
+    },
+    {
       "path": "scripts/audit/retired-code-cleanup.mjs",
-      "bytes": 6221
+      "bytes": 6616
     },
     {
       "path": "scripts/audit/tool-graph-coverage-v1593.mjs",
@@ -15580,7 +15580,7 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 6130
+      "bytes": 6678
     },
     {
       "path": "tests/retired-sasi-public-copy-20261113.test.mjs",

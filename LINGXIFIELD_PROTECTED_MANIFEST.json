@@ -206,12 +206,8 @@
       "bytes": 1653
     },
     {
-      "path": "app/api/knowledge/ask/route.ts",
-      "bytes": 4648
-    },
-    {
-      "path": "app/api/knowledge/pricing/route.ts",
-      "bytes": 361
+      "path": "app/api/knowledge/[[...legacy]]/route.ts",
+      "bytes": 509
     },
     {
       "path": "app/api/lingxi/route.ts",
@@ -11656,6 +11652,10 @@
     {
       "path": "scripts/audit/i18n-9lang-v1600.mjs",
       "bytes": 3829
+    },
+    {
+      "path": "scripts/audit/legacy-sasi-runtime-reachability.mjs",
+      "bytes": 4382
     },
     {
       "path": "scripts/audit/tool-graph-coverage-v1593.mjs",
