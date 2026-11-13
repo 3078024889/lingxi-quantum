@@ -22,7 +22,8 @@ Status: **implementation branch; production release pending**. Never present a b
 | data-vendor | One reviewed vendor profile card | Vendor submission is not automatic approval |
 | ResultGrowthActions | First-party result download/share/template actions | Not a standalone third-party share widget |
 | WordPress | PHP shortcodes, locally bundled JS, deterministic ZIP builder wired to prebuild | No WordPress.org listing or clean third-party-site installation claim |
-| MCP / ChatGPT | Local MCP v2 diagnostic server and protocol test source exist; public route remains disabled/noindex | No hosted ChatGPT app integration, production MCP endpoint or marketplace listing claim |\n| OpenAPI / RSS | Read-only public contract and reviewed-profile update feed in source | Production availability must be rechecked after release |
+| MCP / ChatGPT | Local MCP v2 diagnostic server and protocol test source exist; public route remains disabled/noindex | No hosted ChatGPT app integration, production MCP endpoint or marketplace listing claim |
+| OpenAPI / RSS | Read-only public contract and reviewed-profile update feed in source | Production availability must be rechecked after release |
 
 The global site currently sends frame-ancestors 'self' and X-Frame-Options: SAMEORIGIN. This is intentional: do not weaken the site-wide frame policy to make arbitrary tool pages embeddable. Any future in-page tool execution must use a separately reviewed, least-privilege widget surface or an explicitly isolated origin with a documented threat model.
 
@@ -67,7 +68,8 @@ Experiment: activate 10 genuinely installed partner widgets, compare visitors to
 - Machine-readable contract: https://lingxifield.com/siai-openapi.json.
 - RSS review activity: https://lingxifield.com/siai/updates.xml.
 - Channel options: documentation links on official project pages, voluntary integrations, open-source browser extension and narrowly scoped WordPress widget.
-- Experimental MCP: the v2 SDK-based diagnostic server is local-only and its tests are not a production deployment. The public JSON-RPC route remains off by default/noindex; hosted ChatGPT app identity, SDK hosting, abuse controls, privacy review and real-client conformance remain release gates. Do not claim ChatGPT integration or listing.\n- No pay-to-rank claims, no claims about unpublished products, no requests to buy backlinks.
+- Experimental MCP: the v2 SDK-based diagnostic server is local-only and its tests are not a production deployment. The public JSON-RPC route remains off by default/noindex; hosted ChatGPT app identity, SDK hosting, abuse controls, privacy review and real-client conformance remain release gates. Do not claim ChatGPT integration or listing.
+- No pay-to-rank claims, no claims about unpublished products, no requests to buy backlinks.
 
 ## Supplier acquisition and safety
 
