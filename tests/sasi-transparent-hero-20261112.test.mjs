@@ -66,7 +66,7 @@ test('SASI GEO facts describe software products and SIAI keeps independent video
  assert.match(facts,/SASI is LINGXIFIELD’s intelligent software marketplace/);
  assert.match(facts,/MT5 EAs, trading source code, source licenses/);
  assert.ok(marketApi.includes('VIDEO_RATES'));assert.ok(marketApi.includes('videoRates'));
- assert.ok(marketRates.includes('VIDEO_RATES'));assert.ok(marketApi.includes('Video/audio API charged by declared unit'));
+ assert.ok(marketRates.includes('VIDEO_RATES'));assert.ok(marketApi.includes('Video/audio API charged per declared unit'));
  for(const pattern of [
   /SASI[^\n]{0,90}短剧/,
   /SASI[^\n]{0,90}网站/,
