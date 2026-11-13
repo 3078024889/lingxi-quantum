@@ -12,6 +12,14 @@
 
 ## 搜索与 AI 搜索入口
 - 九语言工具目录：中文、English、日本語、한국어、Français、Deutsch、Español、Português、العربية。
+- [en tools](https://lingxifield.com/en/tools)
+- [ja tools](https://lingxifield.com/ja/tools)
+- [ko tools](https://lingxifield.com/ko/tools)
+- [fr tools](https://lingxifield.com/fr/tools)
+- [de tools](https://lingxifield.com/de/tools)
+- [es tools](https://lingxifield.com/es/tools)
+- [pt tools](https://lingxifield.com/pt/tools)
+- [ar tools](https://lingxifield.com/ar/tools)
 - 问题型落地页围绕真实任务、格式兼容、文件处理、转换、OCR、压缩与文档比较。
 - [奇闻发现与资料核验](https://lingxifield.com/discoveries)：伏尼契手稿、NASA/AARO UAP 公开资料；区分已确认记录、未解问题与推测。
 - [LLM / AI 搜索完整索引](https://lingxifield.com/llms-full.txt)：公开工具目录、九语言入口与任务问题索引。
