@@ -158,7 +158,8 @@ html[data-theme="dark"] .lx-seo-vendor{background:linear-gradient(110deg,rgba(95
  .lx-growth-page{padding:18px 14px 34px}
  .lx-growth-hero{padding:19px;border-radius:18px}
  .lx-growth-hero h1{font-size:clamp(28px,7vw,38px)}
- .lx-growth-tool-grid,.lx-growth-topic-grid,.lx-growth-tool-list,.lx-growth-faq-grid,.lx-growth-related ul{grid-template-columns:1fr}
+ .lx-growth-tool-grid,.lx-growth-topic-grid,.lx-growth-faq-grid,.lx-growth-related ul{grid-template-columns:1fr}
+ .lx-growth-tool-list{grid-template-columns:repeat(2,minmax(0,1fr))}
  .lx-growth-panel{padding:16px}
  .lx-growth-partner-page{padding:18px 14px 34px!important}
  .lx-growth-partner-grid{grid-template-columns:1fr!important}
