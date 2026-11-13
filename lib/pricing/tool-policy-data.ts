@@ -4,7 +4,6 @@ export type ToolBillingPolicy={toolId:string;billingClass:BillingClass;execution
 
 const POLICY:Record<string,ToolBillingPolicy>={
   "metered-tool-export":{toolId:"metered-tool-export",billingClass:"PAID_TOOL",executionMode:"local",reason:"daily per-tool account and IP trial; excess exports billed one unit per file"},
-  "url-to-video":{toolId:"url-to-video",billingClass:"SASI_BALANCE",executionMode:"connected_service",reason:"free URL extraction; video uses the existing SASI video quote and successful-output billing, supplier fees separate"},
   "batch-pdf":{toolId:"batch-pdf",billingClass:"PAID_TOOL",executionMode:"local",reason:"unified multi-file PDF workflow billed once per batch"},
   "pdf-ocr":{toolId:"pdf-ocr",billingClass:"PAID_TOOL",executionMode:"local",reason:"free first page preview; full OCR bills additional pages"},
   "handwriting-ocr":{toolId:"handwriting-ocr",billingClass:"PAID_TOOL",executionMode:"local",reason:"billed per page/image"},
