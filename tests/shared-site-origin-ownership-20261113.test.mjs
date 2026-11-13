@@ -8,7 +8,8 @@ const routes=[
  "app/api/pay/alipay/return/route.ts",
  "app/api/pay/create/route.ts",
  "app/api/pay/paypal/return/route.ts",
- "app/api/pay/wechat/create/route.ts"
+ "app/api/pay/wechat/create/route.ts",
+ "app/api/tools/pay/create/route.ts"
 ];
 for(const path of routes){
  const source=readFileSync(path,"utf8");
