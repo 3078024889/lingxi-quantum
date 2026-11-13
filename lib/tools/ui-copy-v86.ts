@@ -123,6 +123,7 @@ L('PDF 扁平化','Flatten PDF','PDFをフラット化','PDF 병합 평면화','
 L('PDF 比较','Compare PDFs','PDFを比較','PDF 비교','Comparer des PDF','PDFs vergleichen','Comparar PDF','Comparar PDFs','مقارنة ملفات PDF'),
 L('PDF 转 TXT','PDF to text','PDFからテキスト','PDF를 텍스트로','PDF en texte','PDF zu Text','PDF a texto','PDF para texto','PDF إلى نص'),
 L('PDF 转 Markdown','PDF to Markdown','PDFからMarkdown','PDF를 Markdown으로','PDF en Markdown','PDF zu Markdown','PDF a Markdown','PDF para Markdown','PDF إلى Markdown'),
+L('支持 PDF、JPG、PNG、WebP。GIF 动图不会被误转成单帧图片。','Supports PDF, JPG, PNG and WebP. Animated GIFs are never silently flattened.','PDF、JPG、PNG、WebPに対応。GIFアニメーションを静止画に変換しません。','PDF, JPG, PNG, WebP를 지원합니다. GIF 애니메이션을 정지 이미지로 변환하지 않습니다.','PDF, JPG, PNG et WebP sont pris en charge. Les animations GIF ne sont pas converties en images fixes.','PDF, JPG, PNG und WebP werden unterstützt. GIF-Animationen werden nicht in Standbilder umgewandelt.','Se admiten PDF, JPG, PNG y WebP. Los GIF animados no se convierten en imágenes estáticas.','Suporta PDF, JPG, PNG e WebP. Os GIFs animados não são convertidos em imagens estáticas.','يدعم PDF وJPG وPNG وWebP. لن يتم تحويل صور GIF المتحركة إلى صور ثابتة.'),
 ];
 export const TOOL_COPY_V86:Record<string,Copy>=Object.fromEntries([...rows,...detailCopyRows].map(row=>[row.zh,row]));
 export function extraToolCopy(lang:LingxiLang,source:string):string|undefined{
