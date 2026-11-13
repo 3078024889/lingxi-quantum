@@ -12,9 +12,10 @@ const domainPolicy=read("lib/seo/siai-domain-policy.ts");
 const metadata=read("lib/seo/search-tool-metadata.ts");
 const guide=read("components/seo/ToolFacts.tsx");
 const tools=read("components/tools/ToolsHubV11.tsx");
-test("124 catalog entries, 123 non-alias tools and nine locales have canonical indexable paths",()=>{
+test("123 current catalog entries, 122 non-alias tools and nine locales have canonical indexable paths",()=>{
  const slugs=[...seoCatalog.matchAll(/\{slug:"([^"]+)"/g)].map(x=>x[1]);
- assert.equal(slugs.length,124);
+ assert.equal(slugs.length,123);
+ assert(!slugs.includes("url-to-video"),"retired SASI video creation must not be indexable");
  assert.equal(new Set(slugs).size,slugs.length);
  assert.match(sitemap,/GLOBAL_TOOL_CATALOG\.filter\(t=>t\.slug!==/);
  assert.match(sitemap,/\.map\(t=>/);
