@@ -158,5 +158,5 @@ test("growth distribution documentation matches implemented widget boundaries an
  assert.match(guide,/Do not claim ChatGPT integration/);
  assert.match(guide,/not an approved WordPress\.org listing/);
  assert.match(config,/frame-ancestors 'self'/);
- assert.match(config,/X-Frame-Options","value":"SAMEORIGIN"/);
+ assert.match(config,/key: "X-Frame-Options", value: "SAMEORIGIN"/);
 });
