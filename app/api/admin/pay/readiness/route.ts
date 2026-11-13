@@ -8,7 +8,7 @@ import{SASI_SOFTWARE_CATALOG}from"@/lib/sasi-software/catalog";
 import{softwareCheckoutReady}from"@/lib/sasi-software/readiness";
 import{marketplaceR2Ready,marketplaceUploadReady}from"@/lib/sasi-marketplace/r2";
 import{marketplaceCommerceReady}from"@/lib/sasi-marketplace/checkout";
-import{trustedSiteOrigin}from"@/lib/sasi/site-origin";
+import{trustedSiteOrigin}from"@/lib/platform/site-origin";
 import{wechatOauthConfigured}from"@/lib/wechat-oauth";
 
 export const runtime="nodejs";
