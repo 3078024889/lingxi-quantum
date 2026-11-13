@@ -79,7 +79,7 @@ jobs:
       - name: Install real Chrome for mobile and desktop visual smoke
         run: pnpm exec playwright install --with-deps chrome
       - name: Run current premium visual smoke in real Chrome
-        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts
       - name: Preserve premium visual screenshots if tests fail
         if: always()
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4

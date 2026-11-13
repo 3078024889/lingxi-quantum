@@ -3,7 +3,7 @@
 ## 核心搜索主题
 全球SIAI排行榜；全球AI行情平台；全球AI排行榜；全球SI排行榜；全球SI行情平台；全球SIAI行情平台
 
-Generated: 2026-11-13T07:59:21.250Z
+Generated: 2026-11-13T12:03:35.968Z
 Tools: 123
 Tool entry points: 124 (the /tools directory plus unique tool detail entries)
 Locales: 9
@@ -35,18 +35,12 @@ It does not claim access to private Google/Bing/Search Console query-volume data
 - https://lingxifield.com/pt/discoveries
 - https://lingxifield.com/ar/discoveries
 
+
 ## Global AI / SI / SIAI rankings
 - Global SIAI directory: https://lingxifield.com/siai
 - China regional SIAI entry: https://lingxifield.cn/siai
-- Compare product capabilities, official prices, free allowances, regional availability, payment evidence and commercial-use terms.
-- Directory display order is not a performance or popularity ranking; research previews are not hands-on tests.
 
 ## SASI Software Marketplace
-- Marketplace: https://lingxifield.com/sasi
-- Seller workspace: https://lingxifield.com/sasi/seller
-- Buyer delivery guide: https://lingxifield.com/sasi/delivery
-- Product version, license scope, delivery format and price are determined by each live listing. Copernicus SI is source-code-only.
-
 - SASI Software Marketplace | SASI 智能软件市场: https://lingxifield.com/discover/sasi-software-marketplace
   - en: https://lingxifield.com/en/discover/sasi-software-marketplace
   - ja: https://lingxifield.com/ja/discover/sasi-software-marketplace
@@ -86,6 +80,7 @@ It does not claim access to private Google/Bing/Search Console query-volume data
 
 ## Evidence-led discoveries and content
 - https://lingxifield.com/discoveries | Voynich Manuscript and public NASA/AARO UAP records; separates documented facts, unresolved questions and speculation.
+- Localized discovery pages: https://lingxifield.com/en/discoveries · https://lingxifield.com/ja/discoveries · https://lingxifield.com/ko/discoveries · https://lingxifield.com/fr/discoveries · https://lingxifield.com/de/discoveries · https://lingxifield.com/es/discoveries · https://lingxifield.com/pt/discoveries · https://lingxifield.com/ar/discoveries
 - Related workflows: PDF text extraction, document translation, PDF comparison, image OCR and measured Before / After compression.
 
 ## Partner distribution and integrations
@@ -100,8 +95,17 @@ It does not claim access to private Google/Bing/Search Console query-volume data
 - Free tools let visitors complete a first task and verify the output before choosing a paid plan.
 - ToolPass supports recurring use, multiple files and sustained workflows across the practical-tool catalog.
 - The platform does not subsidize unpredictable third-party model-token costs; paid processing and applicable API costs must be disclosed before execution.
-
 ## Tool index
+- password-generator | 密码生成器 | Password Generator | local
+  - zh: https://lingxifield.com/tools/password-generator
+  - en: https://lingxifield.com/en/tools/password-generator
+  - ja: https://lingxifield.com/ja/tools/password-generator
+  - ko: https://lingxifield.com/ko/tools/password-generator
+  - fr: https://lingxifield.com/fr/tools/password-generator
+  - de: https://lingxifield.com/de/tools/password-generator
+  - es: https://lingxifield.com/es/tools/password-generator
+  - pt: https://lingxifield.com/pt/tools/password-generator
+  - ar: https://lingxifield.com/ar/tools/password-generator
 - document-translate | PDF / 文档翻译 | PDF / Document Translation | online
   - zh: https://lingxifield.com/tools/document-translate
   - en: https://lingxifield.com/en/tools/document-translate
@@ -362,16 +366,6 @@ It does not claim access to private Google/Bing/Search Console query-volume data
   - es: https://lingxifield.com/es/tools/image-to-pdf
   - pt: https://lingxifield.com/pt/tools/image-to-pdf
   - ar: https://lingxifield.com/ar/tools/image-to-pdf
-- image-to-pdf-pro | 图片转 PDF | Images to PDF Pro | local
-  - zh: https://lingxifield.com/tools/image-to-pdf-pro
-  - en: https://lingxifield.com/en/tools/image-to-pdf-pro
-  - ja: https://lingxifield.com/ja/tools/image-to-pdf-pro
-  - ko: https://lingxifield.com/ko/tools/image-to-pdf-pro
-  - fr: https://lingxifield.com/fr/tools/image-to-pdf-pro
-  - de: https://lingxifield.com/de/tools/image-to-pdf-pro
-  - es: https://lingxifield.com/es/tools/image-to-pdf-pro
-  - pt: https://lingxifield.com/pt/tools/image-to-pdf-pro
-  - ar: https://lingxifield.com/ar/tools/image-to-pdf-pro
 - image-translator | 图片翻译 | Image Translator | online
   - zh: https://lingxifield.com/tools/image-translator
   - en: https://lingxifield.com/en/tools/image-translator
