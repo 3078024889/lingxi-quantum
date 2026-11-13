@@ -107,30 +107,30 @@ test("homepage, localized SEO/GEO pages and partner distribution share the compa
  const homepage=read("components/HomeProblemHub.tsx");
  const homeAnswers=read("components/HomeSeoAnswers.tsx");
  const partner=read("components/partners/PartnerGrowthPortal.tsx");
- assert.match(layout,/import "\\.\\/growth-pages\\.css";/);
- assert.match(layout,/lingxifield-premium-20261109\\.css";\\s*import "\\.\\/growth-pages\\.css";/);
- assert.match(growthShell,/className="lx-growth-page"/);
- assert.match(growthShell,/<Nav\\/>/);
- assert.match(growthShell,/<Footer\\/>/);
+ assert.ok(layout.includes('import "./growth-pages.css";'));
+ assert.ok(layout.includes('import "./lingxifield-premium-20261109.css";\nimport "./growth-pages.css";'));
+ assert.ok(growthShell.includes('className="lx-growth-page"'));
+ assert.ok(growthShell.includes('<Nav/>'));
+ assert.ok(growthShell.includes('<Footer/>'));
  for(const route of [
   "app/[locale]/discover/[topic]/page.tsx",
   "app/[locale]/tools/page.tsx",
   "app/[locale]/tools/[slug]/page.tsx",
   "app/[locale]/products/page.tsx"
- ]) assert.match(read(route),/GrowthPageShell/);
- assert.match(growthCss,/--lx-growth-max:1500px/);
- assert.match(growthCss,/\\.lx11-page \\.lx11-wrap/);
- assert.match(growthCss,/\\.lx-growth-hero/);
- assert.match(growthCss,/\\.lx-growth-tool-grid/);
- assert.match(growthCss,/\\.lx-growth-partner-grid/);
- assert.match(growthCss,/@media\\(max-width:760px\\)/);
- assert.match(homepage,/SASI 软件市场/);
- assert.match(homepage,/100\\+ 在线工具/);
- assert.match(homeAnswers,/SASI 软件市场/);
- assert.match(partner,/lx-growth-partner-page/);
- assert.match(partner,/standard\\("free-tools"\\)/);
- assert.match(read("app/siai/page.tsx"),/lx-growth-siai-page/);
- assert.match(read("app/[locale]/siai/page.tsx"),/lx-growth-siai-page/);
+ ]) assert.ok(read(route).includes("GrowthPageShell"),route);
+ assert.ok(growthCss.includes("--lx-growth-max:1500px"));
+ assert.ok(growthCss.includes(".lx11-page .lx11-wrap"));
+ assert.ok(growthCss.includes(".lx-growth-hero"));
+ assert.ok(growthCss.includes(".lx-growth-tool-grid"));
+ assert.ok(growthCss.includes(".lx-growth-partner-grid"));
+ assert.ok(growthCss.includes("@media(max-width:760px)"));
+ assert.ok(homepage.includes("SASI 软件市场"));
+ assert.ok(homepage.includes("100+ 在线工具"));
+ assert.ok(homeAnswers.includes("SASI 软件市场"));
+ assert.ok(partner.includes("lx-growth-partner-page"));
+ assert.ok(partner.includes('standard("free-tools")'));
+ assert.ok(read("app/siai/page.tsx").includes("lx-growth-siai-page"));
+ assert.ok(read("app/[locale]/siai/page.tsx").includes("lx-growth-siai-page"));
 });
 
 test("growth visual shell preserves canonical SEO facts and does not create duplicate product routes",()=>{
@@ -139,14 +139,14 @@ test("growth visual shell preserves canonical SEO facts and does not create dupl
  const products=read("components/seo/ProductDirectory.tsx");
  const facts=read("components/seo/ToolFacts.tsx");
  const faq=read("components/seo/SearchIntentFaq.tsx");
- assert.match(discover,/TopicSeoJsonLd/);
- assert.match(tools,/ToolSeoJsonLd/);
- assert.match(tools,/buildSearchOptimizedToolMetadata/);
- assert.match(products,/GLOBAL_TOOL_CATALOG\\.map/);
- assert.match(products,/localePath\\(locale,/);
- assert.match(facts,/toolTutorialSteps/);
- assert.match(facts,/toolGeoFact/);
- assert.match(faq,/searchIntentFaq/);
- assert.match(read("lib/seo/sitemap-build.ts"),/GLOBAL_TOOL_CATALOG/);
- assert.match(read("app/llms.txt/route.ts"),/GEO_TOOL_SLUGS/);
+ assert.ok(discover.includes("TopicSeoJsonLd"));
+ assert.ok(tools.includes("ToolSeoJsonLd"));
+ assert.ok(tools.includes("buildSearchOptimizedToolMetadata"));
+ assert.ok(products.includes("GLOBAL_TOOL_CATALOG.map"));
+ assert.ok(products.includes("localePath(locale"));
+ assert.ok(facts.includes("toolTutorialSteps"));
+ assert.ok(facts.includes("toolGeoFact"));
+ assert.ok(faq.includes("searchIntentFaq"));
+ assert.ok(read("lib/seo/sitemap-build.ts").includes("GLOBAL_TOOL_CATALOG"));
+ assert.ok(read("app/llms.txt/route.ts").includes("GEO_TOOL_SLUGS"));
 });
