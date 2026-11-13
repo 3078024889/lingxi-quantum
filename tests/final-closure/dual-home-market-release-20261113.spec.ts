@@ -25,6 +25,17 @@ for(const theme of ["light","dark"]){
     await expect(page.locator("#listing-editor")).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content",/noindex/);
    }
+   if(theme==="dark"){
+    const contrast=await page.locator(".lx11-link.is-active").first().evaluate(element=>{
+     const style=getComputedStyle(element);
+     const rgb=(value:string)=>value.match(/rgba?\(([^)]+)\)/)![1].split(",").slice(0,3).map(Number);
+     const light=(values:number[])=>values.map(value=>{const s=value/255;return s<=.04045?s/12.92:((s+.055)/1.055)**2.4}).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
+     const a=light(rgb(style.color)),b=light(rgb(style.backgroundImage!=="none"?style.backgroundImage:style.backgroundColor));
+     return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+    });
+    expect(contrast).toBeGreaterThanOrEqual(4.5);
+    if(path==="/sasi/seller")expect(await page.locator("main h2").first().evaluate(element=>getComputedStyle(element).color)).not.toBe("rgb(16, 24, 45)");
+   }
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)).toBe(true);
    await testInfo.attach(`${path.replaceAll("/","-")||"home"}-${theme}`,{body:await page.screenshot({fullPage:true}),contentType:"image/png"});
   }
