@@ -98,3 +98,55 @@ test("robots.txt is build-static and selects only the configured allowlisted sit
  assert.ok(domainPolicy.includes("export function seoSiteForBuild"));
  assert.ok(domainPolicy.includes("CHINA_SITE:PRIMARY_SITE"));
 });
+
+
+test("homepage, localized SEO/GEO pages and partner distribution share the compact growth visual system",()=>{
+ const layout=read("app/layout.tsx");
+ const growthShell=read("components/seo/GrowthPageShell.tsx");
+ const growthCss=read("app/growth-pages.css");
+ const homepage=read("components/HomeProblemHub.tsx");
+ const homeAnswers=read("components/HomeSeoAnswers.tsx");
+ const partner=read("components/partners/PartnerGrowthPortal.tsx");
+ assert.ok(layout.includes('import "./growth-pages.css";'));
+ assert.ok(layout.includes('import "./lingxifield-premium-20261109.css";\nimport "./growth-pages.css";'));
+ assert.ok(growthShell.includes('className="lx-growth-page"'));
+ assert.ok(growthShell.includes('<Nav/>'));
+ assert.ok(growthShell.includes('<Footer/>'));
+ for(const route of [
+  "app/[locale]/discover/[topic]/page.tsx",
+  "app/[locale]/tools/page.tsx",
+  "app/[locale]/tools/[slug]/page.tsx",
+  "app/[locale]/products/page.tsx"
+ ]) assert.ok(read(route).includes("GrowthPageShell"),route);
+ assert.ok(growthCss.includes("--lx-growth-max:1500px"));
+ assert.ok(growthCss.includes(".lx11-page .lx11-wrap"));
+ assert.ok(growthCss.includes(".lx-growth-hero"));
+ assert.ok(growthCss.includes(".lx-growth-tool-grid"));
+ assert.ok(growthCss.includes(".lx-growth-partner-grid"));
+ assert.ok(growthCss.includes("@media(max-width:760px)"));
+ assert.ok(homepage.includes("SASI 软件市场"));
+ assert.ok(homepage.includes("100+ 在线工具"));
+ assert.ok(homeAnswers.includes("SASI 软件市场"));
+ assert.ok(partner.includes("lx-growth-partner-page"));
+ assert.ok(partner.includes('standard("free-tools")'));
+ assert.ok(read("app/siai/page.tsx").includes("lx-growth-siai-page"));
+ assert.ok(read("app/[locale]/siai/page.tsx").includes("lx-growth-siai-page"));
+});
+
+test("growth visual shell preserves canonical SEO facts and does not create duplicate product routes",()=>{
+ const discover=read("app/[locale]/discover/[topic]/page.tsx");
+ const tools=read("app/[locale]/tools/[slug]/page.tsx");
+ const products=read("components/seo/ProductDirectory.tsx");
+ const facts=read("components/seo/ToolFacts.tsx");
+ const faq=read("components/seo/SearchIntentFaq.tsx");
+ assert.ok(discover.includes("TopicSeoJsonLd"));
+ assert.ok(tools.includes("ToolSeoJsonLd"));
+ assert.ok(tools.includes("buildSearchOptimizedToolMetadata"));
+ assert.ok(products.includes("GLOBAL_TOOL_CATALOG.map"));
+ assert.ok(products.includes("localePath(locale"));
+ assert.ok(facts.includes("toolTutorialSteps"));
+ assert.ok(facts.includes("toolGeoFact"));
+ assert.ok(faq.includes("searchIntentFaq"));
+ assert.ok(read("lib/seo/sitemap-build.ts").includes("GLOBAL_TOOL_CATALOG"));
+ assert.ok(read("app/llms.txt/route.ts").includes("GEO_TOOL_SLUGS"));
+});
