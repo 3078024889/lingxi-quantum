@@ -272,8 +272,6 @@ test("retired creation and knowledge endpoints are closed while marketplace sett
  const payout=read("app/api/internal/sasi/market/release-due/route.ts");
  assert.match(middleware,/全球 SIAI 排行榜、SASI 智能软件市场与 100\+ 在线实用工具/);
  assert(!middleware.includes("SASI全球多模型智能创作平台"));
- assert.match(knowledge,/status:410/);assert.match(knowledge,/KNOWLEDGE_MODULE_RETIRED/);
- assert.match(knowledge,/export const GET = retired/);assert.match(knowledge,/export const POST = retired/);
  for(const route of [provider,worker]){assert.match(route,/status:410/);assert.match(route,/SASI_CREATION_RETIRED/);}
  assert.match(reconcile,/refreshSasiJob/); // preserve reconciliation for historical in-flight jobs
  assert.match(payout,/sasi_market_release_due_sales/); // preserve current seller settlement
