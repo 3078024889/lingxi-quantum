@@ -180,10 +180,10 @@ export default function HomeProblemHub(){
    {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格","compare","compress"],href:"/tools",label:c.tools},
    {words:["ai","模型","排行榜","免费额度","api","价格","模型能力","siai"],href:"/siai",label:market.title},
    {words:["ea","mt5","源码","软件","授权","成品","商品","市场","sasi"],href:"/sasi",label:c.sasi},
-   {words:["开发者","卖家","发布","上架","商品审核","seller"],href:"/sasi/seller",label:lang==="zh"?"开发者发布":"Seller services"},
-   {words:["安装","交付","教程","授权规则","delivery"],href:"/sasi/delivery",label:lang==="zh"?"软件安装与交付教程":"Installation & delivery guide"},
-   {words:["工具包","toolpass","会员","无限使用","批量处理"],href:"/tools/pass",label:lang==="zh"?"工具包会员":"ToolPass membership"},
-   {words:["ufo","uap","伏尼契","奇闻","神秘","考古","宇宙","外星","voynich","mystery","discoveries","发现"],href:"/discoveries",label:lang==="zh"?"奇闻发现与资料核验":"Discoveries & source verification"},
+   {words:["开发者","卖家","发布","上架","商品审核","seller","developer","vendor","vendeur","verkäufer","vendedor","vendedor","판매자","開発者","بائع"],href:"/sasi/seller",label:lang==="zh"?"开发者发布":"Seller services"},
+   {words:["安装","交付","教程","授权规则","delivery","installation","install","instalación","instalação","installation guide","導入","설치","تثبيت"],href:"/sasi/delivery",label:lang==="zh"?"软件安装与交付教程":"Installation & delivery guide"},
+   {words:["工具包","toolpass","会员","无限使用","批量处理","membership","abonnement","Mitgliedschaft","membresía","assinatura","会員","멤버십","عضوية"],href:"/tools/pass",label:lang==="zh"?"工具包会员":"ToolPass membership"},
+   {words:["ufo","uap","伏尼契","奇闻","神秘","考古","宇宙","外星","voynich","mystery","discoveries","发现","不思議","謎","考古学","宇宙","미스터리","고고학","우주","외계","mystère","archéologie","rätsel","archäologie","misterio","arqueología","mistério","arqueologia","لغز","أجسام طائرة"],href:"/discoveries",label:lang==="zh"?"奇闻发现与资料核验":"Discoveries & source verification"},
   ],[c,market.title,lang]);
  const hit=useMemo(()=>{const s=q.toLowerCase().replace(/\s+/g,"");return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
