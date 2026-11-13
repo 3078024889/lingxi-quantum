@@ -172,3 +172,15 @@ html[data-theme="dark"] .lx-seo-vendor{background:linear-gradient(110deg,rgba(95
  .lx-seo-answers{width:calc(100% - 28px)!important}
  .lx-growth-breadcrumb{font-size:11px}
 }
+
+.lx-growth-partner-settings{margin:16px 0 12px!important}
+.lx-growth-partner-vendor{margin-top:16px}
+.lx-growth-partner-label{display:block;margin:0 0 7px;font-size:13px;font-weight:760;color:var(--lx-ink)}
+.lx-growth-partner-example{margin:18px 0 0;font-size:13px;line-height:1.7;color:var(--lx-muted)}
+.lx-growth-partner-wordpress{margin-top:14px}
+.lx-growth-partner-card-copy{min-height:48px;margin:0 0 10px}
+.lx-growth-partner-button{margin-top:8px}
+.lx-growth-facts>.lx-growth-section-title{margin-top:0}
+.lx-growth-source-panel ul{display:grid;gap:7px;margin:10px 0 0;padding-inline-start:20px}
+.lx-growth-faq-item+ .lx-growth-faq-item{margin-top:8px}
+@media(max-width:760px){.lx-growth-partner-example{margin-top:14px}.lx-growth-partner-settings{padding:15px!important}}
