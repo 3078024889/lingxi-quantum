@@ -20,11 +20,19 @@ for(const [query,href] of cases){
  });
 }
 
-test('V44R2 homepage keeps the task when routing into tools',async({page})=>{
+test('V44R2 homepage opens a high-confidence PDF intent directly, without leaking the phrase',async({page})=>{
  await page.goto('/');
  await page.locator('.lx11-prompt textarea').fill('quiero comprimir un PDF');
  await page.locator('.lx11-prompt button').click();
+ await expect(page).toHaveURL(/\/tools\/pdf-compress\?lang=(zh|en|ja|ko|fr|de|es|pt|ar)$/);
+ expect(page.url()).not.toContain('quiero');
+ await expect(page.locator('h1').first()).toBeVisible();
+});
+
+test('V44R2 homepage retains the query when a broad tool task still needs filtering',async({page})=>{
+ await page.goto('/');
+ await page.locator('.lx11-prompt textarea').fill('quiero editar PDF');
+ await page.locator('.lx11-prompt button').click();
  await expect(page).toHaveURL(/\/tools\?q=/);
- await expect(page.locator('.lx11-tool-searchbox input')).toHaveValue('quiero comprimir un PDF');
- await expect(page.locator('a[href="/tools/pdf-compress"]').first()).toBeVisible();
+ await expect(page.locator('.lx11-tool-searchbox input')).toHaveValue('quiero editar PDF');
 });
