@@ -28,7 +28,9 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
  assert.ok(!component.includes('className={styles.benefits}'),'baked-in feature strip must not be duplicated');
  assert.ok(!component.includes(retiredAssetName));
  assert.equal(existsSync(path.join('public/images/sasi',retiredAssetName)),false,'obsolete generated hero must be removed');
- const heroCss=css.slice(css.lastIndexOf('Exact user-supplied SASI marketplace hero'));
+ const heroStart=css.lastIndexOf('Exact user-supplied SASI marketplace hero');
+ const layoutStart=css.indexOf('/* Compact, transparent SASI marketplace and three-column seller workspace. */',heroStart);
+ const heroCss=css.slice(heroStart,layoutStart>heroStart?layoutStart:css.length);
  for(const required of [
   'aspect-ratio:1024 / 341','object-fit:contain','height:auto',
   'background:transparent!important','border:0!important','box-shadow:none!important',

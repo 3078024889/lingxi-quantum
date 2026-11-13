@@ -46,11 +46,14 @@ jobs:
             tests/sasi-marketplace-review-security-20261108.test.mjs \
             tests/sasi-software-verified-fulfillment-20261108.test.mjs \
             tests/sasi-marketplace-draft-revision-20261110.test.mjs \
-            tests/sasi-first-party-package-upload-20261111.test.mjs
+            tests/sasi-first-party-package-upload-20261111.test.mjs \
+            tests/sasi-transparent-hero-20261112.test.mjs \
+            tests/home-sasi-visual-closure-20261113.test.mjs
       - name: TypeScript integrity
         run: |
           pnpm install --frozen-lockfile
           pnpm exec tsc --noEmit
+          node --test tests/unified-share-image.test.mjs
       - name: Run R6/R8 growth, GEO and anonymous conversion regression
         run: |
           node --check scripts/seo/growth/generate-llms-full.mjs

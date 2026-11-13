@@ -345,14 +345,17 @@ export function HomeHeroVisual(){
      </g>
     </g>
     <g className="lx-home-art-lotus" transform="translate(162 230)">
-     <ellipse cx="0" cy="52" rx="98" ry="20" fill="#a88aff" fillOpacity=".18" filter="url(#lx-soft-glow)"/>
-     <path d="M0 42 C-65 6-72-42-32-56 C-8-30-2 2 0 42z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".85" strokeWidth="2"/>
-     <path d="M0 42 C-40-35-15-90 12-92 C31-48 18-1 0 42z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".9" strokeWidth="2"/>
-     <path d="M0 42 C28-34 65-56 82-29 C70 13 34 35 0 42z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".86" strokeWidth="2"/>
-     <path d="M0 42 C-88 32-112-4-91-25 C-49-22-18 6 0 42z" fill="#c9b5ff" fillOpacity=".85" stroke="#ffffff" strokeOpacity=".75" strokeWidth="1.5"/>
-     <path d="M0 42 C78 30 112-3 94-26 C52-20 19 8 0 42z" fill="#b3a4ff" fillOpacity=".84" stroke="#ffffff" strokeOpacity=".75" strokeWidth="1.5"/>
-     <circle cx="0" cy="38" r="10" fill="#ffe6a3" filter="url(#lx-soft-glow)"/>
-     <path d="M-72 54 Q0 76 76 53" fill="none" stroke="#f1d58f" strokeWidth="2" strokeOpacity=".8"/>
+     <ellipse cx="0" cy="55" rx="104" ry="22" fill="#8dbfff" fillOpacity=".16" filter="url(#lx-soft-glow)"/>
+     <path d="M0 43 C-73 8-78-42-37-60 C-10-34-3 2 0 43z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".92" strokeWidth="2"/>
+     <path d="M0 43 C-45-42-17-96 12-99 C34-52 20-3 0 43z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".95" strokeWidth="2"/>
+     <path d="M0 43 C32-43 72-61 91-30 C78 15 39 37 0 43z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".92" strokeWidth="2"/>
+     <path d="M0 43 C-102 34-123-8-96-31 C-53-24-20 8 0 43z" fill="#d7e4ff" fillOpacity=".9" stroke="#ffffff" strokeOpacity=".82" strokeWidth="1.6"/>
+     <path d="M0 43 C94 34 122-8 96-31 C53-24 20 8 0 43z" fill="#c9b7ff" fillOpacity=".86" stroke="#ffffff" strokeOpacity=".82" strokeWidth="1.6"/>
+     <path d="M-5 42 C-31-5-28-52-8-72 C5-44 7-4-5 42z" fill="#f4f0ff" fillOpacity=".58" stroke="#ffffff" strokeOpacity=".9" strokeWidth="1.2"/>
+     <path d="M5 42 C29-8 42-42 61-46 C57-8 31 28 5 42z" fill="#a9dfff" fillOpacity=".5" stroke="#ffffff" strokeOpacity=".8" strokeWidth="1.2"/>
+     <path d="M-76 11L-14 39 M-22-42L-2 34 M20-49L4 34 M75-9L13 38" stroke="#ffffff" strokeOpacity=".65" strokeWidth="1.2" fill="none"/>
+     <circle cx="0" cy="39" r="11" fill="#fff0bd" filter="url(#lx-soft-glow)"/>
+     <path d="M-78 55 Q0 80 82 54" fill="none" stroke="#e9d19b" strokeWidth="2" strokeOpacity=".86"/>
     </g>
     <g className="lx-home-art-trophy" transform="translate(328 100)">
      <path d="M-31-30h62v36c0 24-13 41-31 41S-31 30-31 6z" fill="url(#lx-gold)" stroke="#fff3c4" strokeWidth="2"/>
@@ -370,14 +373,31 @@ export function HomeHeroVisual(){
      <text x="510" y="67" textAnchor="middle" fill="#4d4d96" fontSize="10" fontWeight="700">智能软件市场</text>
     </g>
     <g className="lx-home-art-laptop">
-     <path d="M414 244l37-132q4-13 17-13h180q13 0 10 14l-34 131z" fill="#253a73" fillOpacity=".9" stroke="#ffffff" strokeWidth="3"/>
-     <path d="M430 236l33-119q2-7 10-7h154q8 0 6 8l-31 118z" fill="#102a5e"/>
-     <circle cx="548" cy="174" r="52" fill="url(#lx-world-fill)" stroke="#8edcff" strokeWidth="2"/>
-     <ellipse cx="548" cy="174" rx="22" ry="52" fill="none" stroke="#e5f8ff" strokeOpacity=".8"/>
-     <ellipse cx="548" cy="174" rx="52" ry="18" fill="none" stroke="#e5f8ff" strokeOpacity=".75"/>
+     <ellipse cx="552" cy="286" rx="150" ry="12" fill="#6e8fe2" fillOpacity=".16" filter="url(#lx-soft-glow)"/>
+     <path d="M414 244l37-132q4-13 17-13h180q13 0 10 14l-34 131z" fill="#172d5d" stroke="#f5fbff" strokeWidth="3"/>
+     <path d="M430 236l33-119q2-7 10-7h154q8 0 6 8l-31 118z" fill="#0b1c43" stroke="#8fdcff" strokeOpacity=".72" strokeWidth="1.4"/>
+     <path d="M462 117h181l-27 109H433z" fill="#f4f8ff"/>
+     <path d="M462 117h181l-4 15H458z" fill="#17346e"/>
+     <circle cx="470" cy="124" r="2.2" fill="#ffcb83"/><circle cx="478" cy="124" r="2.2" fill="#9edfff"/><circle cx="486" cy="124" r="2.2" fill="#b7a5ff"/>
+     <text x="499" y="127" fill="#eaf4ff" fontSize="6.8" fontWeight="800" letterSpacing="1.1">SASI SOFTWARE MARKET</text>
+     <path d="M458 132l34 0-23 94h-36z" fill="#173b79"/>
+     <circle cx="468" cy="146" r="3" fill="#80dfff"/><path d="M476 146h9 M463 159h19 M460 170h20 M457 181h18 M454 192h18 M451 203h17" stroke="#dcecff" strokeOpacity=".72" strokeWidth="1.6" strokeLinecap="round"/>
+     <path d="M492 132h147l-22 94H469z" fill="#f5f8ff"/>
+     <path d="M501 140h55l-4 22h-56z" fill="#e5efff" stroke="#d2e1fa" strokeWidth=".7"/>
+     <path d="M562 140h67l-5 22h-67z" fill="#edf5ff" stroke="#d2e1fa" strokeWidth=".7"/>
+     <text x="507" y="150" fill="#4e6e9f" fontSize="5.6" fontWeight="700">PUBLISHED SOFTWARE</text>
+     <text x="507" y="158" fill="#243d70" fontSize="8" fontWeight="800">LIVE</text>
+     <text x="569" y="150" fill="#4e6e9f" fontSize="5.6" fontWeight="700">SECURE DELIVERY</text>
+     <text x="569" y="158" fill="#168f72" fontSize="8" fontWeight="800">VERIFIED</text>
+     <path d="M501 170h128l-12 46H489z" fill="#e8f0ff" stroke="#cfddf4" strokeWidth=".7"/>
+     <path d="M501 205l15-11 11 4 14-17 11 8 14-14 13 5 16-12 14 4" fill="none" stroke="#4b8de8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+     <path d="M504 211h104" stroke="#a6b9d8" strokeWidth=".7"/>
+     <path d="M508 217v-5h5v5 M518 217v-9h5v9 M528 217v-13h5v13 M538 217v-7h5v7 M548 217v-11h5v11 M558 217v-15h5v15" fill="#8b77dc" fillOpacity=".75"/>
      <path d="M487 253h190l25 15q7 5-4 9H421q-10-4-3-10z" fill="url(#lx-glass)" stroke="#ffffff" strokeWidth="2"/>
-     <path d="M512 262h114" stroke="#7b79dc" strokeWidth="2" strokeLinecap="round"/>
-     <circle cx="548" cy="174" r="5" fill="#ffffff" filter="url(#lx-soft-glow)"/>
+     <path d="M510 259h128l-4 6H506z" fill="#dce9ff" fillOpacity=".85" stroke="#ffffff" strokeOpacity=".65"/>
+     <path d="M512 262h114 M515 266h107 M526 258v10 M540 258v10 M554 258v10 M568 258v10 M582 258v10 M596 258v10 M610 258v10" stroke="#8da8d6" strokeOpacity=".72" strokeWidth=".75" strokeLinecap="round"/>
+     <path d="M477 245h120" stroke="#b8d7ff" strokeOpacity=".62" strokeWidth="1.5"/>
+     <circle cx="548" cy="104" r="2.5" fill="#e8f7ff"/>
     </g>
     <g className="lx-home-art-data">
      <rect x="606" y="104" width="106" height="54" rx="12" fill="url(#lx-glass)" stroke="#ffffff" strokeOpacity=".9"/>
@@ -398,12 +418,38 @@ export function HomeHeroVisual(){
  );
 }
 
+const SECURITY_COPY:Record<LingxiLang,{title:string;description:string}>={
+ zh:{title:"安全可靠服务",description:"数据保护 · 稳定高效 · 可依赖"},
+ en:{title:"Secure & Reliable",description:"Data protection · stability · dependable service"},
+ ja:{title:"安全と信頼",description:"データ保護 · 安定性 · 信頼できるサービス"},
+ ko:{title:"안전하고 신뢰할 수 있는 서비스",description:"데이터 보호 · 안정성 · 신뢰"},
+ fr:{title:"Sécurité et fiabilité",description:"Protection des données · stabilité · confiance"},
+ de:{title:"Sicher & zuverlässig",description:"Datenschutz · Stabilität · Verlässlichkeit"},
+ es:{title:"Seguridad y confianza",description:"Protección de datos · estabilidad · confianza"},
+ pt:{title:"Segurança e confiabilidade",description:"Proteção de dados · estabilidade · confiança"},
+ ar:{title:"خدمات آمنة وموثوقة",description:"حماية البيانات · الاستقرار · الثقة"}
+};
+const DISTRIBUTION_COPY:Record<LingxiLang,{title:string;steps:string[]}>={
+ zh:{title:"全球智能分发与合作",steps:["搜索入口","AI 搜索","全球分发","内容传播","合作网络","访问回流"]},
+ en:{title:"Global Distribution & Partnerships",steps:["Search","AI discovery","Distribution","Content","Partners","Return visits"]},
+ ja:{title:"グローバル配信とパートナーシップ",steps:["検索","AI検索","グローバル配信","コンテンツ","パートナー","再訪問"]},
+ ko:{title:"글로벌 배포 및 파트너십",steps:["검색","AI 검색","글로벌 배포","콘텐츠","파트너","재방문"]},
+ fr:{title:"Distribution mondiale et partenariats",steps:["Recherche","Recherche IA","Distribution","Contenu","Partenaires","Retour"]},
+ de:{title:"Globale Verteilung & Partnerschaften",steps:["Suche","KI-Suche","Verteilung","Inhalte","Partner","Rückkehr"]},
+ es:{title:"Distribución global y alianzas",steps:["Búsqueda","Búsqueda IA","Distribución","Contenido","Socios","Regreso"]},
+ pt:{title:"Distribuição global e parcerias",steps:["Pesquisa","Pesquisa IA","Distribuição","Conteúdo","Parceiros","Retorno"]},
+ ar:{title:"التوزيع العالمي والشراكات",steps:["البحث","بحث الذكاء الاصطناعي","التوزيع","المحتوى","الشركاء","العودة"]}
+};
+
 export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  const copy=COPY[lang]||COPY.en;
+ const security=SECURITY_COPY[lang]||SECURITY_COPY.en;
+ const distribution=DISTRIBUTION_COPY[lang]||DISTRIBUTION_COPY.en;
+ const features=[...copy.features,{icon:"◇",title:security.title,description:security.description,href:"/privacy"}];
  return (
   <section className="lx-home-growth-stack" aria-label={copy.growthTitle}>
    <div className="lx-home-feature-strip">
-    {copy.features.map(item=>(
+    {features.map(item=>(
      <Link className="lx-home-feature-card" href={item.href} key={item.href}>
       <span className="lx-home-feature-icon" aria-hidden="true">{item.icon}</span>
       <span className="lx-home-feature-copy"><strong>{item.title}</strong><small>{item.description}</small></span>
@@ -432,26 +478,18 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
       </article>
      ))}
     </div>
-    <div className="lx-home-growth-flywheel" aria-label={copy.flywheelTitle}>
-     <strong>{copy.flywheelTitle}</strong>
-     <div>{copy.flywheel.map((step,index)=><span key={step}><b>{step}</b>{index<copy.flywheel.length-1&&<i aria-hidden="true">→</i>}</span>)}</div>
+    <div className="lx-home-growth-flywheel" aria-label={distribution.title}>
+     <strong>{distribution.title}</strong>
+     <div>{distribution.steps.map((step,index)=><span key={step}><b>{step}</b>{index<copy.flywheel.length-1&&<i aria-hidden="true">→</i>}</span>)}</div>
     </div>
    </section>
-   <section className="lx-home-market-strip" aria-label={copy.marketSiaiTitle+" / "+copy.marketSasiTitle}>
-    <Link className="lx-home-market-card" href="/siai">
-     <span className="lx-home-market-icon" aria-hidden="true">🏆</span>
-     <span><strong>{copy.marketSiaiTitle}</strong><small>{copy.marketSiaiDesc}</small></span>
-     <b aria-hidden="true">→</b>
-    </Link>
-    <Link className="lx-home-market-card" href="/sasi">
-     <span className="lx-home-market-icon" aria-hidden="true">◈</span>
-     <span><strong>{copy.marketSasiTitle}</strong><small>{copy.marketSasiDesc}</small></span>
-     <b aria-hidden="true">→</b>
-    </Link>
-    <div className="lx-home-stats">
-     {copy.stats.map(item=><div key={item.label}><strong>{item.value}</strong><span>{item.label}</span></div>)}
-    </div>
-   </section>
+   <nav className="lx-home-market-strip" aria-label={copy.marketSiaiTitle+" / "+copy.marketSasiTitle+" / "+copy.toolsTitle+" / "+copy.passTitle}>
+    <Link className="lx-home-market-card" href="/siai"><span className="lx-home-market-icon" aria-hidden="true">🏆</span><span><strong>{copy.marketSiaiTitle}</strong><small>{copy.marketSiaiDesc}</small></span><b aria-hidden="true">→</b></Link>
+    <Link className="lx-home-market-card" href="/sasi"><span className="lx-home-market-icon" aria-hidden="true">◈</span><span><strong>{copy.marketSasiTitle}</strong><small>{copy.marketSasiDesc}</small></span><b aria-hidden="true">→</b></Link>
+    <Link className="lx-home-market-card" href="/tools"><span className="lx-home-market-icon" aria-hidden="true">▦</span><span><strong>{copy.stats[0].value}</strong><small>{copy.stats[0].label}</small></span><b aria-hidden="true">→</b></Link>
+    <Link className="lx-home-market-card" href="/tools/pass"><span className="lx-home-market-icon" aria-hidden="true">∞</span><span><strong>{copy.passTitle}</strong><small>{copy.stats[1].label}</small></span><b aria-hidden="true">→</b></Link>
+    <Link className="lx-home-market-card" href="/partners"><span className="lx-home-market-icon" aria-hidden="true">◎</span><span><strong>{copy.stats[2].value}</strong><small>{copy.stats[2].label}</small></span><b aria-hidden="true">→</b></Link>
+   </nav>
    <section className="lx-home-popular-tools" aria-labelledby="lx-home-tools-title">
     <div><h2 id="lx-home-tools-title">{copy.toolsTitle}</h2><p>{copy.passLead}</p></div>
     <nav>{copy.toolCategories.map(item=><Link href={item.href} key={item.title}>{item.title} <span aria-hidden="true">→</span></Link>)}</nav>
