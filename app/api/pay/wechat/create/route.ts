@@ -16,7 +16,7 @@ import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
-import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
+import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 
 // v240：默认的Vercel函数超时（不显式设置的话，Hobby档只有10秒）比
 // 微信支付接口的真实响应时间更容易不够用——之前"Unexpected token '<'"

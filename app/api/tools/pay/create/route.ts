@@ -11,7 +11,7 @@ import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {toolRuntimeState} from "@/lib/tools/service-readiness";
 import {toolPassCutoverRequested} from "@/lib/tools/commerce/tool-server-receipt";
 import {parseCurrency,providerAllowedForCurrency} from "@/lib/payments/currency-book";
-import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
+import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 
 export const runtime="nodejs";export const maxDuration=30;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

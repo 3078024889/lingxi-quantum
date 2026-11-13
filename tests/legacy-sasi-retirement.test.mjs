@@ -62,3 +62,43 @@ test('legacy URL-to-video creation is permanently redirected and excluded from d
  assert.doesNotMatch(catalog,/slug:"url-to-video"/);
  assert.doesNotMatch(hub,/\/tools\/url-to-video/);
 });
+
+
+test('current product copy and global styles do not expose retired SASI creation modules',()=>{
+ const home=readFileSync('components/HomeProblemHub.tsx','utf8');
+ const legal=readFileSync('components/SasiLegalBody.tsx','utf8');
+ const mini=readFileSync('miniapp/README.md','utf8');
+ const css=readFileSync('app/globals.css','utf8');
+ const llms=readFileSync('public/llms.txt','utf8')+'\n'+readFileSync('public/llms-full.txt','utf8');
+ assert.doesNotMatch(home,/ai短剧|短剧生成/);
+ assert.doesNotMatch(legal,/短剧|short drama|Kurzdrama|séries courtes|dramas y vídeos|dramas e vídeos|الدراما والفيديو الجديدة|동영상 신규 생성/i);
+ assert.doesNotMatch(mini,/SASI 创作|短剧|书本|学习|科研|资料智库/);
+ assert.doesNotMatch(css,/\.sasi-(?:hero-surface|home-tile|balance|connect|cangxuan|orchestration|works-|account-|start-path|utility-links|recharge-|send|header-topup|checkout-)|\.cangxuan-|\.lx-sasi-center|\.lx-sasi-hero|\.lx-sasi-prompt-panel|\.lx-sasi-entry-card|\.lx-knowledge-modebar|\.lx-knowledge-answer|\.lx-knowledge-recharge/);
+ assert.doesNotMatch(llms,/short[- ]drama|book SASI|learning SASI|research SASI|短剧生成|书本智能体|学习智能体|科研智能体/i);
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
+});
+
+
+test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
+ const catalog=readFileSync('lib/sasi-software/catalog.ts','utf8');
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.ok(catalog.includes("哥白尼 SI 11.6"));
+ assert.ok(catalog.includes("Copernicus SI 11.6"));
+ assert.match(catalog,/kind:"source"/);
+ assert.doesNotMatch(catalog,/SI9[.]5|SI 9[.]5/);
+ assert.ok(market.includes("featuredVisualTitle"));
+ assert.ok(market.includes("featured.titleZh"));
+ assert.ok(market.includes("<strong>{featuredVisualTitle}</strong>"));
+});
+
+
+test('legacy generated-video runtime is no longer bundled into retired SASI routes',()=>{
+ const next=readFileSync('next.config.js','utf8');
+ assert.doesNotMatch(next,/outputFileTracingIncludes|verify-generated-video|assemble-generated-episode/);
+});
+
+
+test('retired URL-to-video workbench is deleted from source',()=>{
+ assert.equal(existsSync('components/tools/UrlPromotionWorkbench.tsx'),false);
+});

@@ -10,6 +10,7 @@ import Link from "next/link";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import {isLikelyToolQuery} from "@/lib/tools/search-intents-v44r2.mjs";
+import {HomeHeroVisual,HomeGlobalGrowth} from "@/components/HomeGlobalGrowth";
 
 type Copy={
  kicker:string;seoTitle:string;seoDesc:string;hero:string;lead:string;placeholder:string;begin:string;startWith:string;
@@ -176,11 +177,13 @@ export default function HomeProblemHub(){
  const{lang}=useLingxiLang();const c=copy[lang]??copy.en;const market=SIAI_HOME_ENTRY[lang]??SIAI_HOME_ENTRY.en;
  const[q,setQ]=useState("");
  const intents=useMemo(()=>[
-   {words:["ai视频","视频生成","文生视频","图生视频","ai短剧","短剧生成"],href:"/siai",label:market.title},
-   {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格"],href:"/tools",label:c.tools},
-   {words:["ai","模型","排行榜","免费额度","api","价格","模型能力"],href:"/siai",label:market.title},
-   {words:["ea","mt5","源码","软件","授权","成品","商品","市场"],href:"/sasi",label:c.sasi},
-   {words:["开发者","卖家","发布","上架","商品审核"],href:"/sasi/seller",label:lang==="zh"?"卖家服务":"Seller services"},
+   {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格","compare","compress"],href:"/tools",label:c.tools},
+   {words:["ai","模型","排行榜","免费额度","api","价格","模型能力","siai"],href:"/siai",label:market.title},
+   {words:["ea","mt5","源码","软件","授权","成品","商品","市场","sasi"],href:"/sasi",label:c.sasi},
+   {words:["开发者","卖家","发布","上架","商品审核","seller","developer","vendor","vendeur","verkäufer","vendedor","vendedor","판매자","開発者","بائع"],href:"/sasi/seller",label:lang==="zh"?"开发者发布":"Seller services"},
+   {words:["安装","交付","教程","授权规则","delivery","installation","install","instalación","instalação","installation guide","導入","설치","تثبيت"],href:"/sasi/delivery",label:lang==="zh"?"软件安装与交付教程":"Installation & delivery guide"},
+   {words:["工具包","toolpass","会员","无限使用","批量处理","membership","abonnement","Mitgliedschaft","membresía","assinatura","会員","멤버십","عضوية"],href:"/tools/pass",label:lang==="zh"?"工具包会员":"ToolPass membership"},
+   {words:["ufo","uap","伏尼契","奇闻","神秘","考古","宇宙","外星","voynich","mystery","discoveries","发现","不思議","謎","考古学","宇宙","미스터리","고고학","우주","외계","mystère","archéologie","rätsel","archäologie","misterio","arqueología","mistério","arqueologia","لغز","أجسام طائرة"],href:"/discoveries",label:lang==="zh"?"奇闻发现与资料核验":"Discoveries & source verification"},
   ],[c,market.title,lang]);
  const hit=useMemo(()=>{const s=q.toLowerCase().replace(/\s+/g,"");return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
@@ -188,33 +191,47 @@ export default function HomeProblemHub(){
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(/(?:ai视频|视频生成|文生视频|图生视频|ai短剧|短剧生成|aivideo|texttovideo|imagetovideo)/i.test(normalized)){const url=new URL("/siai",location.origin);url.searchParams.set("q",v);url.searchParams.set("lang",lang);location.href=url.pathname+url.search;return}if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/tools',location.origin);if(hit?.score>0)url.searchParams.set('intent',v);else url.searchParams.set('q',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
-   <div className="grid items-center gap-8 ">
-    <div>
+   <div className="lx-home-hero-grid">
+    <div className="lx-home-hero-copy">
      <p className="lx-v37-brand-title">{BRAND_PUBLIC_COPY[lang].title}</p>
      <h1>{c.hero}</h1>
      <p className="mt-3 max-w-3xl text-base leading-7 text-[var(--lx-muted)]">{c.lead}</p>
      <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].headline}</strong></p>
      <p className="lx-v37-brand-desc"><strong>{PUBLIC_FEATURE_COPY[lang].freeTools}</strong></p>
-     <Link href="/siai" data-testid="home-global-siai-entry" className="mt-4 flex w-full max-w-3xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-300 bg-blue-50 px-5 py-4 text-blue-950 shadow-sm transition-shadow hover:border-blue-500 hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-600">
-      <span className="min-w-0 flex-1"><strong className="block text-base font-bold">{market.title}</strong><span className="mt-1 block text-xs leading-5">{SIAI_DISCOVERY[lang].hero}</span><small className="mt-1 block text-sm leading-6">{market.description}</small></span>
-      <span className="shrink-0 rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white">{market.cta} →</span>
-     </Link>
-     <details className="mt-4 rounded-xl border border-[var(--lx-border)] p-3" data-home-tool-catalog>
-      <summary className="cursor-pointer font-medium text-[var(--lx-ink)]">{TOOL_CATEGORY_LABEL[lang]}</summary>
-      <div className="mt-3 grid gap-1 text-sm leading-6 text-[var(--lx-muted)]">
-       {FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong className="text-[var(--lx-ink)]">{category.title}：</strong>{category.body}</p>)}
+     <div className="lx-home-hero-actions">
+      <Link href="/siai" data-testid="home-global-siai-entry" className="lx-home-siai-entry">
+       <span className="lx-home-siai-entry-copy"><strong>{market.title}</strong><small>{SIAI_DISCOVERY[lang].hero}</small><span>{market.description}</span></span>
+       <span className="lx-home-siai-entry-cta">{market.cta} →</span>
+      </Link>
+      <Link href="/tools/pass" className="lx-home-toolpass-entry">{lang==="zh"?"开通工具包":"ToolPass"} →</Link>
+     </div>
+     <div className="lx-home-hero-proof">
+      <span>✓ {lang==="zh"?"真实数据":"Verified facts"}</span>
+      <span>✓ {lang==="zh"?"持续更新":"Updated regularly"}</span>
+      <span>✓ {lang==="zh"?"全球可用":"Global access"}</span>
+      <span>✓ {lang==="zh"?"安全高效":"Secure & efficient"}</span>
+     </div>
+     <details className="lx-home-tool-catalog" data-home-tool-catalog>
+      <summary>{TOOL_CATEGORY_LABEL[lang]}</summary>
+      <div>
+       {FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong>{category.title}：</strong>{category.body}</p>)}
       </div>
      </details>
-     <p className="mt-3 text-sm leading-6 text-[var(--lx-muted)]">{lang==="zh"?"SASI 现为智能软件市场；按商品说明提供源码授权、开发者发布和安全交付。付款前展示费用与可用支付方式。":"SASI is now a software marketplace for developer products and source licenses. Prices and available payment methods appear before payment confirmation."}</p>
-     <p className="mt-1 text-xs text-[var(--lx-muted)]">lingxifield.com · lingxifield.cn</p>
-     <form onSubmit={submit} className="lx11-prompt" data-testid="home-task-search"><textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/><button>{c.begin}</button></form>
+     <p className="lx-home-sasi-note">{lang==="zh"?"SASI 现为智能软件市场；按商品说明提供源码授权、开发者发布和安全交付。付款前展示费用与可用支付方式。":"SASI is a software marketplace for developer products and source licenses. Prices and available payment methods appear before payment confirmation."}</p>
+     <p className="lx-home-domain-note">lingxifield.com · lingxifield.cn</p>
+     <form onSubmit={submit} className="lx11-prompt lx-home-prompt" data-testid="home-task-search">
+      <textarea value={q} onChange={e=>setQ(e.target.value)} rows={2} aria-label={c.placeholder} placeholder={c.placeholder}/>
+      <button>{c.begin}</button>
+     </form>
      {q.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{c.startWith}</span><Link href={hit.href}>{hit.label}</Link></div>}
     </div>
+    <HomeHeroVisual/>
    </div>
   </section>
+  <HomeGlobalGrowth lang={lang}/>
   <section className="lx11-home-section"><div className="lx11-section-heading"><div><span>01</span><h2>{c.taskTitle}</h2></div><p>{c.taskLead}</p></div>
    <div className="lx11-home-grid lx-home-v143-grid">{cards.map((item,i)=><Link href={item.href} key={item.href} className={`lx11-home-card lx-v143-card tone-${(i%6)+1}`}><LingxiMiniIcon name={item.icon} size="card" className="lx-v143-icon"/><h3>{item.title}</h3><p>{item.desc}</p><b>{c.start} →</b></Link>)}</div>
   </section>
