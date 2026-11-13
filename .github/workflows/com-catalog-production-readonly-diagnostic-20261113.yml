@@ -71,6 +71,38 @@ jobs:
           const marketplace=(routes.result||[]).filter(x=>/marketplace|api\/sasi/i.test(x.pattern));
           console.log("COM_MARKETPLACE_SPECIAL_ROUTE_COUNT="+marketplace.length);
           JS
+      - name: Inspect existing origin Worker bindings and public API behavior (READ ONLY)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --input-type=module <<'JS'
+          const account=process.env.CF_ACCOUNT,token=process.env.CF_TOKEN;
+          const headers={Authorization:"Bearer "+token};
+          for(const name of ["lingxifield-com-business-origin-20261110","lingxifield-com-static-gateway-canary-20261107"]){
+            const r=await fetch("https://api.cloudflare.com/client/v4/accounts/"+account+"/workers/scripts/"+name+"/settings",{headers,signal:AbortSignal.timeout(20000)});
+            const j=await r.json();
+            if(!r.ok||j.success!==true){console.log("ORIGIN_WORKER_SETTINGS",name,"HTTP="+r.status);continue;}
+            const bindings=j.result?.bindings||[];
+            console.log("ORIGIN_WORKER_BINDINGS",name,bindings.map(x=>x.name+":"+x.type+(x.type==="service"?":"+x.service:"")).join(","));
+          }
+          JS
+      - name: Probe origin Workers public catalog endpoints (READ ONLY)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --input-type=module <<'JS'
+          for(const name of ["lingxifield-com-business-origin-20261110","lingxifield-com-static-gateway-canary-20261107"]){
+            const url="https://"+name+".3078024889.workers.dev/api/sasi/marketplace/listings";
+            try{
+              const r=await fetch(url,{headers:{accept:"application/json"},redirect:"manual",signal:AbortSignal.timeout(15000)});
+              const body=await r.json().catch(()=>null);
+              console.log("ORIGIN_PUBLIC_API",name,"HTTP="+r.status,
+                "DIAGNOSTIC="+(r.headers.get("x-lingxi-catalog-diagnostic")||"none"),
+                "ERROR="+(typeof body?.error==="string"?body.error:"none"),
+                "ITEMS_ARRAY="+Array.isArray(body?.items));
+            }catch(e){console.log("ORIGIN_PUBLIC_API",name,"REQUEST_ERROR="+(e?.name||"unknown"));}
+          }
+          JS
       - name: Read public catalog status and coarse diagnostic headers only
         shell: bash
         run: |
