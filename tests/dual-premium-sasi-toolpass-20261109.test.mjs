@@ -21,6 +21,14 @@ test("premium ToolPass four-price catalog stays authoritative and does not fabri
  assert.match(pass,/premium\.payFooter/);
  assert.match(passStyle,/\.planFeatured/);
  assert.match(passStyle,/\.overlay/);
+ assert.match(passStyle, /\.root\{[^}]*width:100%;max-width:1500px/);
+ assert.match(passStyle, /\.plans\{[^}]*margin:14px 0 0[^}]*gap:12px/);
+ assert.match(passStyle, /\.plan\{[^}]*min-height:164px/);
+ assert.match(passStyle, /\.lowerPanels\{[^}]*gap:14px;margin-top:14px/);
+ const footerStyle=file("app/siai-home.css");
+ assert.match(footerStyle, /\.lx-footer-v3 \.lx-footer-v3-showcase\{\s*max-width:1500px/);
+ assert.match(footerStyle, /\.lx-footer-v3 \.lx-footer-v3-sasi\{max-width:1500px/);
+ assert.match(footerStyle, /\.lx-footer-v3 \.lx-footer-v3-nav\{\s*max-width:1500px/);
  assert.match(passStyle,/@media\(max-width:700px\)/);
 });
 test("ToolPass modal is connected to verified real order and user balance, never hard-coded funds",()=>{
