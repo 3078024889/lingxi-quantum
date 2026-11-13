@@ -10,7 +10,7 @@ import {getProduct} from "@/lib/plans";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
-import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
+import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 
 export const runtime="nodejs";
 export const maxDuration=30;

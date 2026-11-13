@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
+import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 import {safeLocalReturnPath} from "@/lib/sasi/payment-gate";
 
 export const runtime = "nodejs";
