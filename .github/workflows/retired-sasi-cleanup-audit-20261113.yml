@@ -1,0 +1,56 @@
+name: Retired SASI cleanup audit (NO DEPLOY)
+on:
+  push:
+    branches:
+      - cleanup/cn-retired-sasi-full-20261113
+      - cleanup/com-retired-sasi-full-20261113
+  pull_request:
+    branches:
+      - fix/toolpass-compact-align-cn-20261113
+      - release/com-sasi-full-20261108
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: retired-sasi-cleanup-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Run retired-source, redirect, 410 and SEO/GEO regression
+        run: |
+          node --check scripts/audit/retired-code-cleanup.mjs
+          node --test tests/legacy-sasi-retirement.test.mjs
+          node scripts/audit/retired-code-cleanup.mjs
+      - name: Run marketplace security and fulfillment regression
+        run: |
+          node --test \
+            tests/sasi-marketplace-security-contract.test.mjs \
+            tests/sasi-marketplace-review-security-20261108.test.mjs \
+            tests/sasi-software-verified-fulfillment-20261108.test.mjs \
+            tests/sasi-marketplace-draft-revision-20261110.test.mjs \
+            tests/sasi-first-party-package-upload-20261111.test.mjs
+      - name: TypeScript integrity
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec tsc --noEmit
+      - name: Confirm this workflow cannot deploy
+        run: |
+          ! grep -Eq 'wrangler deploy|vercel deploy|ssh .*lingxifield|systemctl restart' .github/workflows/retired-sasi-cleanup-audit-20261113.yml
+          echo RETIRED_SASI_AUDIT_COMPLETE_NO_DEPLOY
