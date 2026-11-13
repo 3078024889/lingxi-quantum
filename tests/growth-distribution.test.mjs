@@ -153,6 +153,9 @@ test("growth distribution documentation matches implemented widget boundaries an
  assert.match(guide,/Tool processing does not run inside the partner page/);
  assert.match(guide,/source and build implemented; clean sandbox install pending/);
  assert.match(guide,/prototype\/source and regression tests exist; store submission pending/);
+ assert.match(guide,/Local MCP v2 diagnostic server/);
+ assert.match(guide,/public route remains disabled\/noindex/);
+ assert.match(guide,/Do not claim ChatGPT integration/);
  assert.match(guide,/not an approved WordPress\.org listing/);
  assert.match(config,/frame-ancestors 'self'/);
  assert.match(config,/X-Frame-Options","value":"SAMEORIGIN"/);
