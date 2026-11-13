@@ -214,12 +214,18 @@ test("discoveries are included in SEO, GEO, sitemap, public analytics and LLM in
  const visits=read("lib/analytics/public-visit.ts");
  const llmsRoute=read("app/llms.txt/route.ts");
  const full=read("public/llms-full.txt");
+ const publicIndex=read("public/llms.txt");
  const index=JSON.parse(read("public/search-intent-index.json"));
  assert.match(geo,/discoveries/);
  assert.match(sitemap,/\/discoveries/);
  assert.match(visits,/siai\|tools\|products\|discoveries/);
  assert.match(llmsRoute,/Evidence-led discoveries and content/);
  assert.match(llmsRoute,/Partner distribution and integrations/);
+ for(const stale of ["short-drama","storyboard","research-workflow","website-generation","旧短剧","剧本/分镜","科研工作流"]){
+  assert(!llmsRoute.includes(stale),`dynamic llms.txt contains retired module label: ${stale}`);
+  assert(!publicIndex.includes(stale),`static llms.txt contains retired module label: ${stale}`);
+  assert(!full.includes(stale),`llms-full.txt contains retired module label: ${stale}`);
+ }
  assert.match(full,/Tool entry points: 124/);
  assert.match(full,/\/discoveries/);
  assert(!full.includes("url-to-video"));
