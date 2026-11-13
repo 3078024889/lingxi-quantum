@@ -78,3 +78,14 @@ test('current product copy and global styles do not expose retired SASI creation
  const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
  assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
 });
+
+
+test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
+ const catalog=readFileSync('lib/sasi-software/catalog.ts','utf8');
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.match(catalog,/哥白尼 SI 11\\.6/);
+ assert.match(catalog,/Copernicus SI 11\\.6/);
+ assert.match(catalog,/kind:"source"/);
+ assert.doesNotMatch(catalog,/SI9\\.5|SI 9\\.5/);
+ assert.match(market,/SI 11\\.6/);
+});

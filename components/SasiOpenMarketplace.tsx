@@ -246,7 +246,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{sasiSoftwareUiText(lang,"浏览开发者作品","Browse creator software")}</a></div>
    <article className={styles.featuredCard}>
-    <div className={styles.featuredVisual} aria-hidden="true"><small>MT5 · SOURCE</small><strong>SI 9.5</strong><span>CODE · LICENSE</span></div>
+    <div className={styles.featuredVisual} aria-hidden="true"><small>MT5 · SOURCE</small><strong>SI 11.6</strong><span>CODE · LICENSE</span></div>
     <div className={styles.featuredDescription}>
      <p className={styles.featuredBadge}>{sasiSoftwareUiText(lang,"仅售源码授权版","Source code license only")}</p>
      <h3>{zh?featured.titleZh:featured.titleEn}</h3>

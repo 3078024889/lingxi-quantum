@@ -1,5 +1,5 @@
 {
-  "source_commit": "5afded975c3f2c9536235171799987467516927c",
+  "source_commit": "2d7c3ea82911759a50cfaafd5a4bc6849ebdb5d4",
   "basis": "COM cleanup candidate derived from source tree 07546849537f5af6e2b247fdb7b7576754a845d4; retired SASI modules removed by the COM-specific manifest.",
   "files": [
     {
@@ -1284,7 +1284,7 @@
     },
     {
       "path": "components/SasiLegalBody.tsx",
-      "bytes": 14695
+      "bytes": 14905
     },
     {
       "path": "components/SasiMultiEpisodeWorkspace.tsx",
@@ -15556,11 +15556,11 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 5366
+      "bytes": 5807
     },
     {
       "path": "tests/retired-sasi-public-copy-20261113.test.mjs",
-      "bytes": 2650
+      "bytes": 2963
     },
     {
       "path": "tsconfig.json",
