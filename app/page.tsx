@@ -7,8 +7,10 @@ import HomeProblemHub from "@/components/HomeProblemHub";
 import HomeSeoAnswers from "@/components/HomeSeoAnswers";
 import {PUBLIC_FEATURE_COPY,PUBLIC_SEARCH_TITLES} from "@/lib/public-feature-copy";
 
-export const dynamic="force-dynamic";
-export const revalidate=0;
+// Public homepage is entirely request-independent; let CDN serve its HTML without
+// invoking a Worker on each visit. Authentication and visit tracking stay client-side.
+export const dynamic="force-static";
+export const revalidate=false;
 
 const homeFact=pageGeoFact("home","zh");
 export const metadata:Metadata=publicPageMetadata("zh","/",PUBLIC_SEARCH_TITLES.zh,PUBLIC_FEATURE_COPY.zh.description);

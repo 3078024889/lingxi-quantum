@@ -1,0 +1,71 @@
+name: COM PayPal public website + tool reliability gate (READ ONLY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-public-paypal-readiness-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-website:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - name: Verify real public pages and canonical redirect without credentials
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import urllib.request, urllib.error, time, sys
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl):
+                  return None
+          opener=urllib.request.build_opener(NoRedirect())
+          def probe(url,read_body=False):
+              req=urllib.request.Request(url,headers={"User-Agent":UA,"Accept":"text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8","Cache-Control":"no-cache"})
+              try:
+                  with opener.open(req,timeout=18) as f:
+                      body=f.read(200000) if read_body else b""
+                      return f.status, f.headers.get("Content-Type",""), f.headers.get("Location",""), body
+              except urllib.error.HTTPError as e:
+                  sample=e.read(4096).lower()
+                  markers=[t for t in (b"1101",b"1102",b"worker exceeded",b"cpu time",b"memory",b"origin error") if t in sample]
+                  print("PUBLIC_HTTP_ERROR_DIAGNOSTIC",e.code,"cf_markers",markers,"server",e.headers.get("Server",""))
+                  return e.code,e.headers.get("Content-Type",""),e.headers.get("Location",""),b""
+              except Exception as e:
+                  print("PROBE_TRANSPORT_ERROR",type(e).__name__,str(e)[:150])
+                  return 0,"","",b""
+          failed=[]
+          base="https://lingxifield.com"
+          for p in ("/","/tools","/siai"):
+              for n in range(1,4):
+                  code,typ,loc,body=probe(base+p,n==1)
+                  print("PUBLIC_SITE",p,n,code,typ)
+                  if code!=200 or (n==1 and (b"LINGXIFIELD" not in body or "html" not in typ.lower())):
+                      failed.append(("PUBLIC_PAGE_UNAVAILABLE",p,n,code))
+                  time.sleep(0.3)
+          for p in ("/tools/pdf-editor","/tools/e-sign-pdf"):
+              for n in range(1,7):
+                  code,typ,_,body=probe(base+p,False)
+                  print("PUBLIC_TOOL_DETAIL",p,n,code,typ)
+                  if code!=200 or "html" not in typ.lower():
+                      failed.append(("TOOL_DETAIL_INTERMITTENT",p,n,code))
+                  time.sleep(0.3)
+          for n in range(1,4):
+              code,typ,_,_=probe(base+"/api/health")
+              print("DYNAMIC_HEALTH_SEPARATE",n,code,typ)
+              if code!=200:
+                  failed.append(("DYNAMIC_BACKEND_HEALTH_NOT_READY","/api/health",n,code))
+          for p in ("/","/tools/e-sign-pdf"):
+              code,typ,loc,body=probe("https://www.lingxifield.com"+p,p=="/")
+              print("WWW_CANONICAL",p,code,loc)
+              redirected=(code in (301,308) and loc==base+p)
+              directly_served=(p=="/" and code==200 and "html" in typ.lower() and b"LINGXIFIELD" in body)
+              if not (redirected or directly_served):
+                  failed.append(("WWW_REDIRECT_OR_PUBLIC_CONTENT_INVALID",p,code,loc[:150]))
+          if failed:
+              print("PUBLIC_PAYMENT_REVIEW_AND_TOOL_GATE_FAILED",failed[:30])
+              sys.exit(1)
+          print("PUBLIC_PAYMENT_REVIEW_AND_TOOL_GATE_PASSED_HTTPS_REAL_GET_NO_MUTATIONS")
+          PY

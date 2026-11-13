@@ -1,0 +1,56 @@
+name: COM static HTML asset offload feasibility (NO DEPLOY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths:
+      - '.github/workflows/com-static-asset-html-audit-20261107.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+      NEXT_PUBLIC_SUPABASE_URL: https://sxsgdpqojepgbbrxrzlq.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 33d3cbd1c7cdbb859f103292ee99c7f1ac47a564
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with: {version: 11.28.0, run_install: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with: {node-version-file: .nvmrc, cache: pnpm}
+      - run: pnpm install --frozen-lockfile
+      - name: Build real static HTML in official OpenNext Cloudflare output
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          pnpm add -D @opennextjs/cloudflare@1.20.16 wrangler@4.158.0 --save-exact
+          pnpm exec opennextjs-cloudflare build
+          node --input-type=module <<'JS'
+          import {readFileSync,existsSync,statSync} from "node:fs";
+          import {join} from "node:path";
+          const m=JSON.parse(readFileSync(".next/prerender-manifest.json","utf8"));
+          for(const [route,slug] of [["/","index"],["/tools","tools"],["/siai","siai"]]){
+            if(!m.routes?.[route]) throw Error("STATIC_ROUTE_MANIFEST_MISSING:"+route);
+            const candidates=[
+              ".next/server/app/"+slug+".html",
+              ".next/server/app/"+(route==="/"?"index":slug+"/index")+".html"
+            ];
+            const file=candidates.find(existsSync);
+            if(!file)throw Error("STATIC_HTML_BUILD_FILE_NOT_FOUND:"+route);
+            const t=readFileSync(file,"utf8");
+            if(t.length<1000||!t.includes("<html")||!t.includes("</html>"))throw Error("HTML_INVALID:"+route);
+            for(const forbidden of ["SUPABASE_SERVICE_ROLE_KEY","CLOUDFLARE_API_TOKEN","PRIVATE_KEY","DATABASE_URL="])
+              if(t.includes(forbidden))throw Error("PRIVATE_KEY_REFERENCE_IN_STATIC_HTML:"+route);
+            console.log("COM_ASSET_READY",route,"file="+file,"bytes="+statSync(file).size);
+            const target=join(".open-next/assets",slug+".html");
+            console.log("COM_ASSET_EXISTING",route,"present="+existsSync(target));
+          }
+          console.log("COM_OFFLOAD_HTML_BUILD_EVIDENCE_PASS");
+          JS

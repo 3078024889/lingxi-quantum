@@ -1,0 +1,366 @@
+#!/usr/bin/env python3
+"""LINGXIFIELD .com public-maintenance cutover. Explicit opt-in, exact scope, auto rollback.
+
+This deliberately preserves old Vercel A/CNAME targets and never reads or alters
+financial data. Cloudflare routes intercept proxied DNS; on failure proxying and
+newly created routes are reverted. Vercel project is not modified.
+"""
+import hashlib
+import json
+import os
+import re
+import sys
+import socket
+import subprocess
+import tempfile
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
+API = "https://api.cloudflare.com/client/v4"
+ZONE_NAME = "lingxifield.com"
+EXPECTED_ZONE_ID = "0e9df0e4cf67601f60ce1b73fe011b94"
+EXPECTED_ACCOUNT_ID = "a2f0881406e2477818e14a924c48ed4e"
+SCRIPT = "lingxifield-com-full-canary-20261107"
+CANARY = "https://lingxifield-com-full-canary-20261107.3078024889.workers.dev"
+HOSTS = ("lingxifield.com", "www.lingxifield.com")
+
+def stop(msg):
+    raise RuntimeError(msg)
+
+def request(url, *, method="GET", payload=None, headers=None, timeout=25):
+    h = {"User-Agent": "LINGXIFIELD-exact-domain-cutover/20261107", "Accept": "application/json"}
+    if headers:
+        h.update(headers)
+    body = None if payload is None else json.dumps(payload, separators=(",", ":")).encode()
+    if body is not None:
+        h["Content-Type"] = "application/json"
+    req = urllib.request.Request(url, data=body, method=method, headers=h)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as f:
+            return f.status, f.read(200000)
+    except urllib.error.HTTPError as e:
+        return e.code, e.read(5000)
+
+def cf(path, *, method="GET", payload=None):
+    token = os.environ["CLOUDFLARE_API_TOKEN"]
+    code, raw = request(API + path, method=method, payload=payload,
+                        headers={"Authorization": "Bearer " + token})
+    try:
+        result = json.loads(raw)
+    except ValueError:
+        stop("CF_API_NONJSON:" + str(code) + ":" + path.split("?")[0])
+    if code < 200 or code >= 300 or result.get("success") is not True:
+        errors = [str(e.get("code", "")) + ":" + str(e.get("message", ""))[:120]
+                  for e in result.get("errors", [])[:3]]
+        stop("CF_API_FAILED:" + str(code) + ":" + path.split("?")[0] + ":" + ";".join(errors))
+    return result["result"]
+
+def page(host, path):
+    url = host + path
+    return request(url, headers={"Accept-Encoding": "identity", "Cache-Control": "no-cache"}, timeout=25)
+
+def assert_canary():
+    expected = {"/": 200, "/tools": 200, "/siai": 200,
+                "/api/public/site-status": 200, "/api/site-release-announcement": 200,
+                "/api/sasi/account": 401, "/api/tools/jobs": 401,
+                "/api/public/siai-widget": 200}
+    baseline = {}
+    for path, wanted in expected.items():
+        code, body = page(CANARY, path)
+        print("COM_PRE_CUTOVER_CANARY", path, code)
+        if code != wanted:
+            stop("CANARY_NOT_READY:" + path + ":" + str(code))
+        if path in ("/", "/tools", "/siai"):
+            if len(body) < 1000 or b"<html" not in body:
+                stop("CANARY_PUBLIC_HTML_INVALID:" + path)
+            baseline[path] = hashlib.sha256(body).hexdigest()
+        if path == "/api/public/site-status":
+            d = json.loads(body)
+            if (d.get("scope") != "public-maintenance-assets-only"
+                or d.get("publicSurface") != "ready"
+                or d.get("dynamicBackend") != "not-attested"
+                or d.get("payments") != "not-attested"
+                or d.get("sasi") != "not-attested"):
+                stop("PUBLIC_STATUS_INCORRECTLY_CLAIMS_DYNAMIC_READINESS")
+            baseline[path] = hashlib.sha256(body).hexdigest()
+        if path == "/api/site-release-announcement":
+            d = json.loads(body)
+            if d.get("enabled") is not True or d.get("phase") != "maintenance" or d.get("site") != "main":
+                stop("CANARY_MAINTENANCE_NOTICE_NOT_ACTIVE")
+    return baseline
+
+def exact_dns(zone_id):
+    result = {}
+    for hostname in HOSTS:
+        value = cf("/zones/" + zone_id + "/dns_records?"
+                   + urllib.parse.urlencode({"name": hostname, "per_page": 100}))
+        a = [d for d in value if d.get("type") in ("A", "AAAA", "CNAME")
+             and d.get("name") == hostname]
+        if len(a) != 1:
+            stop("UNEXPECTED_EXACT_HOST_DNS_COUNT:" + hostname + ":" + str(len(a)))
+        record = a[0]
+        if hostname == HOSTS[0]:
+            if record["type"] != "A" or record.get("content") != "216.198.79.1":
+                stop("APEX_VERCEL_BACKUP_ORIGIN_NOT_MATCHED")
+        else:
+            if record["type"] != "CNAME" or not str(record.get("content", "")).endswith(".vercel-dns-017.com"):
+                stop("WWW_VERCEL_BACKUP_ORIGIN_NOT_MATCHED")
+        if record.get("proxied") is not False or record.get("proxiable") is False:
+            stop("DNS_ALREADY_PROXIED_OR_UNPROXYABLE:" + hostname)
+        result[hostname] = record
+        print("COM_VERCEL_DNS_BACKUP_HELD", hostname, record["type"], str(record["content"])[:100])
+    return result
+
+def proxied(zone_id, rec, enable):
+    doc = {"type": rec["type"], "name": rec["name"],
+           "content": rec["content"], "ttl": 1 if enable else rec["ttl"], "proxied": enable}
+    out = cf("/zones/" + zone_id + "/dns_records/" + rec["id"],
+             method="PATCH", payload=doc)
+    if out.get("proxied") is not enable or out.get("content") != rec["content"]:
+        stop("DNS_PROXY_UPDATE_UNEXPECTED:" + rec["name"])
+    print("COM_DNS_PROXY_STATE", rec["name"], enable)
+
+def probe_live(hostname, baseline):
+    url = "https://" + hostname
+    checks = {"/api/public/site-status": 200, "/": 200, "/tools": 200,
+              "/siai": 200, "/api/site-release-announcement": 200,
+              "/api/sasi/account": 401, "/api/tools/jobs": 401}
+    last = {}
+    for attempt in range(1, 25):
+        results = {}
+        for path, wanted in checks.items():
+            code, body = page(url, path)
+            results[path] = code
+            if code == wanted and path in baseline:
+                if hashlib.sha256(body).hexdigest() != baseline[path]:
+                    results[path] = -1
+            if path == "/api/public/site-status" and code == 200:
+                try:
+                    d = json.loads(body)
+                    if (d.get("scope") != "public-maintenance-assets-only"
+                        or d.get("dynamicBackend") != "not-attested"
+                        or d.get("payments") != "not-attested"):
+                        results[path] = -4
+                except (ValueError, TypeError):
+                    results[path] = -5
+            if path == "/api/site-release-announcement" and code == 200:
+                try:
+                    d = json.loads(body)
+                    if d.get("enabled") is not True or d.get("phase") != "maintenance":
+                        results[path] = -2
+                except (ValueError, TypeError):
+                    results[path] = -3
+        if all(results.get(p) == wanted for p, wanted in checks.items()):
+            print("COM_EXACT_HOST_HTTP_GATE_PASS", hostname, "attempt", attempt)
+            for p in ("/", "/tools", "/siai"):
+                print("COM_EXACT_HOST_ASSET_SHA256_PASS", hostname, p)
+            return
+        last = results
+        if attempt >= 3 and all(x == 402 for x in results.values()):
+            stop("EXACT_HOST_DNS_CACHE_STILL_VERCEL:" + hostname)
+        print("COM_EXACT_HOST_STILL_PROPAGATING", hostname, attempt,
+              ",".join(p + "=" + str(results.get(p)) for p in checks if results.get(p) != checks[p]))
+        time.sleep(5)
+    stop("EXACT_HOST_HEALTH_GATE_FAILED:" + hostname + ":" + json.dumps(last))
+
+def steady_check(hostname):
+    url = "https://" + hostname
+    for attempt in range(1, 5):
+        for path in ("/", "/tools", "/siai"):
+            code, _ = page(url, path)
+            if code != 200:
+                stop("LIVE_PUBLIC_INTERMITTENT_ERROR:" + hostname + ":" + path + ":" + str(code))
+        print("COM_LIVE_STEADY_3_ROUTES_PASS", hostname, attempt)
+
+def forced_edge_page(hostname, ip, path):
+    """Verify real Cloudflare TLS/SNI and Worker route despite stale recursive DNS."""
+    with tempfile.NamedTemporaryFile() as tmp:
+        cmd = ["curl", "--silent", "--show-error", "--noproxy", "*",
+               "--connect-timeout", "9", "--max-time", "28",
+               "--resolve", hostname + ":443:" + ip,
+               "-H", "Accept-Encoding: identity",
+               "-o", tmp.name, "-w", "%{http_code}\\n%{redirect_url}",
+               "https://" + hostname + path]
+        try:
+            process = subprocess.run(cmd, capture_output=True, text=True,
+                                     timeout=32, check=False)
+            lines = process.stdout.splitlines()
+            status = int(lines[0].strip() or "0") if process.returncode == 0 and lines else 0
+            destination = lines[1].strip() if len(lines) > 1 else ""
+            tmp.seek(0)
+            return status, tmp.read(200000), destination
+        except (OSError, ValueError, subprocess.TimeoutExpired):
+            return 0, b"", ""
+
+def edge_probe(hostname, baseline):
+    """Only accept a verified Cloudflare edge, not a fabricated health response."""
+    worker_host = urllib.parse.urlsplit(CANARY).hostname
+    try:
+        answers = socket.getaddrinfo(worker_host, 443, socket.AF_INET,
+                                     socket.SOCK_STREAM)
+    except OSError as exc:
+        stop("CLOUDFLARE_EDGE_DNS_LOOKUP_FAILED:" + type(exc).__name__)
+    ips = list(dict.fromkeys(a[4][0] for a in answers))[:5]
+    if not ips:
+        stop("CLOUDFLARE_ANYCAST_IPS_EMPTY")
+    checks = {"/": 200, "/tools": 200, "/siai": 200,
+              "/api/public/site-status": 200,
+              "/api/site-release-announcement": 200,
+              "/api/sasi/account": 401, "/api/tools/jobs": 401}
+    for ip in ips:
+        for trial in range(1, 6):
+            results = {}
+            for path, wanted in checks.items():
+                status, body, destination = forced_edge_page(hostname, ip, path)
+                # Canonical www API redirect is legitimate ONLY when the target
+                # is the exact https apex + identical pathname. Check the apex
+                # response on the SAME Cloudflare edge before accepting 308.
+                redirectable = {"/api/site-release-announcement",
+                                "/api/sasi/account", "/api/tools/jobs"}
+                if hostname == HOSTS[1] and path in redirectable and status == 308:
+                    expected_target = "https://" + HOSTS[0] + path
+                    if destination != expected_target:
+                        status = -6
+                    else:
+                        apex_status, apex_body, _ = forced_edge_page(HOSTS[0], ip, path)
+                        if apex_status != wanted:
+                            status = -7
+                        elif path == "/api/site-release-announcement":
+                            try:
+                                data = json.loads(apex_body)
+                                if data.get("enabled") is not True or data.get("phase") != "maintenance":
+                                    status = -8
+                                else:
+                                    status = wanted
+                            except (ValueError, TypeError):
+                                status = -9
+                        else:
+                            status = wanted
+                        if status == wanted:
+                            print("COM_WWW_EXACT_CANONICAL_REDIRECT_AND_APEX_GUARD_PASS",path)
+                if status == wanted and path in baseline:
+                    if hashlib.sha256(body).hexdigest() != baseline[path]:
+                        status = -1
+                if path == "/api/public/site-status" and status == 200:
+                    try:
+                        data = json.loads(body)
+                        if data.get("dynamicBackend") != "not-attested":
+                            status = -2
+                    except (ValueError, TypeError):
+                        status = -3
+                results[path] = status
+            if all(results[p] == wanted for p, wanted in checks.items()):
+                print("COM_CLOUDFLARE_EDGE_ROUTE_AND_TLS_VERIFIED", hostname,
+                      ip, "trial", trial)
+                for _ in range(4):
+                    for p in ("/", "/tools", "/siai", "/api/public/site-status"):
+                        status, body, _ = forced_edge_page(hostname, ip, p)
+                        if status != 200 or hashlib.sha256(body).hexdigest() != baseline[p]:
+                            stop("FORCED_EDGE_STATIC_STEADY_FAILURE:" + hostname + ":" + p)
+                print("COM_CLOUDFLARE_EDGE_PUBLIC_STATIC_STEADY_PASS", hostname)
+                return ip
+            print("COM_CLOUDFLARE_EDGE_PROBE_RETRY", hostname, ip, trial,
+                  ",".join(p + "=" + str(results[p]) for p in checks
+                           if results[p] != checks[p]))
+    stop("CLOUDFLARE_EDGE_WORKER_ROUTE_NOT_VERIFIABLE:" + hostname)
+
+def main():
+    if sys.argv[1:] != ["--promote-public-maintenance-only"]:
+        stop("EXPLICIT_OPT_IN_REQUIRED")
+    account = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "")
+    if account != EXPECTED_ACCOUNT_ID:
+        stop("CF_ACCOUNT_ID_UNEXPECTED")
+    if not os.environ.get("CLOUDFLARE_API_TOKEN", ""):
+        stop("CF_TOKEN_MISSING")
+    token = cf("/user/tokens/verify")
+    if token.get("status") != "active":
+        stop("CF_TOKEN_NOT_ACTIVE")
+    zones = cf("/zones?" + urllib.parse.urlencode({"name": ZONE_NAME, "per_page": 5}))
+    active = [z for z in zones if z.get("name") == ZONE_NAME and z.get("status") == "active"]
+    if len(active) != 1 or active[0]["id"] != EXPECTED_ZONE_ID:
+        stop("ZONE_ID_OR_ACTIVE_STATE_UNEXPECTED")
+    zid = active[0]["id"]
+    routes = cf("/zones/" + zid + "/workers/routes?per_page=100")
+    if any("lingxifield.com" in str(x.get("pattern", ""))
+           for x in routes):
+        stop("EXISTING_DOMAIN_WORKER_ROUTES_REQUIRE_MANUAL_REVIEW")
+    dns = exact_dns(zid)
+    baseline = assert_canary()
+    print("COM_DEPLOYMENT_PRECHECK_PASS")
+    new_routes = []
+    changed_dns = []
+    success = False
+    dns_propagation_pending = False
+    try:
+        for hostname in HOSTS:
+            pattern = hostname + "/*"
+            new = cf("/zones/" + zid + "/workers/routes", method="POST",
+                     payload={"pattern": pattern, "script": SCRIPT})
+            if new.get("script") != SCRIPT or new.get("pattern") != pattern or not new.get("id"):
+                stop("ROUTE_CREATED_WITH_WRONG_TARGET:" + hostname)
+            new_routes.append(new["id"])
+            print("COM_NEW_WORKER_ROUTE_STAGED", hostname, SCRIPT)
+            # Track the intended DNS change BEFORE the API call; a successful
+            # mutation followed by a lost/malformed response still gets rolled back.
+            changed_dns.append(hostname)
+            proxied(zid, dns[hostname], True)
+            readback_routes = cf("/zones/" + zid + "/workers/routes?per_page=100")
+            if not any(x.get("pattern") == pattern and x.get("script") == SCRIPT
+                       for x in readback_routes):
+                stop("CLOUDFLARE_ROUTE_NOT_VISIBLE_AFTER_WRITE:" + hostname)
+            try:
+                probe_live(hostname, baseline)
+                steady_check(hostname)
+            except RuntimeError as exc:
+                if not (str(exc).startswith("EXACT_HOST_HEALTH_GATE_FAILED:")
+                        or str(exc).startswith("EXACT_HOST_DNS_CACHE_STILL_VERCEL:")):
+                    raise
+                # The old unproxied Vercel A/CNAME may remain in recursive
+                # caches. Confirm true Cloudflare edge routing with TLS/SNI,
+                # and report DNS propagation pending rather than false green.
+                edge_probe(hostname, baseline)
+                dns_propagation_pending = True
+                print("COM_OLD_VERCEL_RECURSIVE_DNS_CACHE_PENDING", hostname)
+        check_routes = cf("/zones/" + zid + "/workers/routes?per_page=100")
+        for hostname in HOSTS:
+            if not any(r.get("pattern") == hostname + "/*" and r.get("script") == SCRIPT for r in check_routes):
+                stop("WORKER_ROUTE_READBACK_MISMATCH:" + hostname)
+        if dns_propagation_pending:
+            print("COM_PUBLIC_CLOUDFLARE_EDGE_SWITCH_SUCCESS_DNS_PROPAGATION_PENDING")
+        else:
+            print("COM_PUBLIC_MAINTENANCE_SITE_SWITCH_SUCCESS")
+        print("COM_VERCEL_PROJECT_AND_DNS_ORIGIN_VALUES_PRESERVED=true")
+        if not dns_propagation_pending:
+            print("COM_NAMED_DOMAINS_LIVE=lingxifield.com,www.lingxifield.com")
+        else:
+            print("COM_NAMED_DOMAINS_EDGE_CONFIRMED_RECURSIVE_DNS_NOT_FULLY_PROPAGATED=true")
+        print("COM_REAL_LOGIN_PAYMENTS_REFUNDS_SASI_FILE_EXPORT_NOT_ATTESTED=true")
+        print("COM_DYNAMIC_HEALTH_NOT_CLAIMED_BY_STATIC_PUBLIC_MAINTENANCE_GATE=true")
+        success = True
+    finally:
+        if not success:
+            print("COM_PUBLIC_SWITCH_FAILED_ROLLING_BACK")
+            errors = []
+            for hostname in reversed(changed_dns):
+                try:
+                    proxied(zid, dns[hostname], False)
+                except Exception as exc:
+                    errors.append("RESTORE_DNS:" + hostname + ":" + str(exc)[:130])
+            for rid in reversed(new_routes):
+                try:
+                    cf("/zones/" + zid + "/workers/routes/" + rid, method="DELETE")
+                except Exception as exc:
+                    errors.append("DELETE_ROUTE:" + rid + ":" + str(exc)[:130])
+            if errors:
+                print("COM_PUBLIC_ROLLBACK_INCOMPLETE:", ";".join(errors))
+            else:
+                print("COM_PUBLIC_ROLLBACK_VERCEL_DNS_TARGETS_RESTORED")
+
+if __name__ == "__main__":
+    try:
+        main()
+    except Exception as error:
+        print("COM_RELEASE_ABORT:", str(error)[:420], file=sys.stderr)
+        sys.exit(1)

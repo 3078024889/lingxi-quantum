@@ -1,0 +1,38 @@
+name: COM CN public payment and product readiness truth check (READ ONLY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-public-payment-readiness-check-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Query provider enablement and tool pass without any payment actions
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import urllib.request, urllib.error, json
+          for site in ("https://lingxifield.cn","https://lingxifield.com"):
+              for path in ("/api/pay/providers","/api/tools/pass","/api/sasi/readiness"):
+                  url=site+path
+                  req=urllib.request.Request(url,headers={"Accept":"application/json","User-Agent":"LINGXIFIELD-public-payment-readiness-audit/1.0","Cache-Control":"no-cache"})
+                  try:
+                      with urllib.request.urlopen(req,timeout=15) as r:
+                          v=json.loads(r.read(32768))
+                          if path.endswith("/providers"):
+                              fields={"wechat":v.get("wechat"),"alipay":v.get("alipay"),"paypal":v.get("paypal"),"configured":{k:v.get("diagnostics",{}).get(k,{}).get("configured") for k in ("wechat","alipay","paypal")}}
+                          elif path.endswith("/pass"):
+                              fields={"available":v.get("available"),"offersCount":len(v.get("offers",[])) if isinstance(v.get("offers"),list) else None}
+                          else:
+                              obj=v.get("readiness") if isinstance(v.get("readiness"),dict) else {}
+                              fields={"readinessKeys":sorted(obj.keys()),"enabled":{k:val for k,val in obj.items() if k in ("ready","available","enabled","paidEnabled","productionEnabled") and isinstance(val,bool)}}
+                          print("PUBLIC_PAYMENT_READINESS",site,path,r.status,json.dumps(fields,ensure_ascii=False))
+                  except Exception as e:
+                      print("PUBLIC_PAYMENT_READINESS_UNAVAILABLE",site,path,type(e).__name__)
+          print("NO_PAYMENT_CREATE_NO_PAYMENT_CAPTURE_NO_BALANCE_MUTATIONS")
+          PY

@@ -1,0 +1,41 @@
+name: COM verified public gateway production promotion
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-static-public-promote-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lingxifield-com-production-route-release
+  cancel-in-progress: false
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: 9fc8c428faac9d397759f8c00cb013a998873f43
+          persist-credentials: false
+      - run: python3 tests/ops/com-static-gateway-promote-test.py
+  promote-public:
+    needs: regression
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: cloudflare-com-preview
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: 9fc8c428faac9d397759f8c00cb013a998873f43
+          persist-credentials: false
+      - name: Promote verified public gateway with exact-route rollback
+        run: python3 scripts/cloudflare/com-static-gateway-promote-20261107.py --promote-public-only
+      - name: Record bounded release scope
+        run: |
+          echo '## Public gateway production routing' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Public HTML only; dynamic backend and merchant credentials still require separate acceptance.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Preserved Vercel DNS origin, legacy backend service, CN site and all user data.' >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,46 @@
+name: COM current Cloudflare production scripts and zone route snapshot (READ ONLY)
+on:
+  push:
+    branches: [infra/com-cloudflare-readiness-20261106]
+    paths: ['.github/workflows/com-legacy-worker-route-snapshot-readonly-20261107.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    environment: cloudflare-com-preview
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Read exact zone routes and script names, no DNS or worker changes
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import urllib.request,urllib.error,json,os
+          token=os.environ.get("CF_TOKEN","")
+          if not token:raise SystemExit("NO_PREVIEW_TOKEN")
+          base="https://api.cloudflare.com/client/v4"
+          def call(path):
+              req=urllib.request.Request(base+path,headers={"Authorization":"Bearer "+token,"Accept":"application/json"})
+              try:
+                  with urllib.request.urlopen(req,timeout=15) as f:return f.status,json.load(f)
+              except urllib.error.HTTPError as e:return e.code,{}
+          status,zones=call("/zones?name=lingxifield.com&per_page=20")
+          if status!=200:raise SystemExit("ZONE_LIST_FAILED:"+str(status))
+          found=[z["id"] for z in zones.get("result",[]) if z.get("name")=="lingxifield.com" and z.get("status")=="active"]
+          if len(found)!=1:raise SystemExit("EXACT_ACTIVE_ZONE_COUNT_INVALID:"+str(len(found)))
+          zone=found[0]
+          code,data=call("/zones/"+zone+"/workers/routes?per_page=100")
+          if code!=200:raise SystemExit("ZONE_WORKERS_ROUTE_READ_FAILED:"+str(code))
+          matches=[{"pattern":r.get("pattern"),"script":r.get("script"),"idSuffix":str(r.get("id",""))[-6:]} for r in data.get("result",[]) if "lingxifield.com" in str(r.get("pattern",""))]
+          print("EXACT_PRODUCTION_ROUTING",json.dumps(matches,ensure_ascii=False))
+          if len(matches)==0:raise SystemExit("NO_ROUTE_UNKNOWN")
+          scripts=sorted(set(x["script"] for x in matches if x["script"]))
+          print("CURRENT_ZONE_SCRIPT_NAMES",json.dumps(scripts))
+          print("READ_ONLY_VERIFIED_NO_CF_MUTATIONS")
+          PY
+
+# Read-only resnapshot after 2026-11-08 cutover blocked by changed live route ownership.

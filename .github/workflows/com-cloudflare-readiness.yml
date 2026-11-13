@@ -1,0 +1,47 @@
+name: com Cloudflare readiness (audit only)
+
+on:
+  push:
+    branches:
+      - infra/com-cloudflare-readiness-20261106
+    paths:
+      - 'scripts/cloudflare/**'
+      - 'tests/cloudflare/**'
+      - 'lib/sasi-kernel/compute/native-client.ts'
+      - 'lib/sasi-kernel/compute/native-readiness.mjs'
+      - 'docs/deploy/com-cloudflare-vercel-fallback-20261106.md'
+      - '.github/workflows/com-cloudflare-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: com-cf-readiness-branch
+  cancel-in-progress: true
+
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Verify dual-origin probe fail-closed behavior
+        run: node --test tests/cloudflare/*.test.mjs
+      - name: Read-only Cloudflare migration audit
+        run: |
+          node --version
+          node scripts/cloudflare/audit-com-readiness.mjs --json "$RUNNER_TEMP/com-audit.json"
+          node --input-type=module - "$RUNNER_TEMP/com-audit.json" <<'NODE'
+          import { readFileSync, appendFileSync } from "node:fs";
+          const report=JSON.parse(readFileSync(process.argv[2],"utf8"));
+          if(report.releaseReady !== false || report.compatible !== "unknown") throw new Error("Audit must not claim compatibility");
+          if(report.examinedApiEntryFiles < 1) throw new Error("No API entry points scanned");
+          if(report.legacyCrons.length !== 3) throw new Error("Vercel cron inventory changed; review before migration");
+          const counts=Object.entries(report.groupCounts).map(([key,value])=>"- "+key+": "+value).join("\n");
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            "## .com migration: source inventory only\n\n**No deployment or DNS change.**\n\n"+counts+
+            "\n\nVercel stays enabled as fallback. .cn is not modified.\n");
+          NODE

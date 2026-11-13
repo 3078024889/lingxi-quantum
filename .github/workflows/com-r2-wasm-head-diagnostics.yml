@@ -1,0 +1,50 @@
+name: com R2 WASM public header diagnostics (read-only)
+
+on:
+  push:
+    branches:
+      - infra/com-cloudflare-readiness-20261106
+    paths:
+      - '.github/workflows/com-r2-wasm-head-diagnostics.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  public-wasm-headers:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Probe two publicly available WASM files with identity and browser encodings
+        run: |
+          node --input-type=module <<'NODE'
+          const origin="https://assets.lingxifield.com";
+          const items=[
+            ["runtime/food-onnx/ort-wasm-simd-threaded.asyncify.wasm",26861777],
+            ["media/ffmpeg-0.12.10/ffmpeg-core.wasm",32232419],
+          ];
+          const keys=["content-type","content-length","content-encoding","content-range",
+            "accept-ranges","access-control-allow-origin","vary","cf-cache-status","server"];
+          for(const [path,expectedBytes] of items){
+            for(const encoding of ["default","identity"]){
+              const headers={"Origin":"https://lingxifield.com"};
+              if(encoding==="identity")headers["Accept-Encoding"]="identity";
+              const url=origin+"/"+path;
+              for(const method of ["HEAD","GET_RANGE"]){
+                const h={...headers};
+                if(method==="GET_RANGE")h.Range="bytes=0-31";
+                try{
+                  const response=await fetch(url,{
+                    method:method==="HEAD"?"HEAD":"GET",
+                    headers:h,redirect:"manual",signal:AbortSignal.timeout(20000)
+                  });
+                  const details=Object.fromEntries(keys.map(key=>[key,response.headers.get(key)]));
+                  let length=null;
+                  if(method==="GET_RANGE"){const bytes=await response.arrayBuffer();length=bytes.byteLength;}
+                  console.log(JSON.stringify({path,expectedBytes,encoding,method,status:response.status,
+                    details,responseByteLength:length}));
+                }catch(e){console.error("READ_ONLY_PUBLIC_HEADER_PROBE_FAILED",path,encoding,method,e.message);process.exitCode=1}
+              }
+            }
+          }
+          NODE

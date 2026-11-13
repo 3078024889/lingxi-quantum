@@ -1,0 +1,48 @@
+name: com Cloudflare preview real user browser smoke
+
+on:
+  push:
+    branches:
+      - infra/com-cloudflare-readiness-20261106
+    paths:
+      - 'scripts/cloudflare/smoke-preview-browser.mjs'
+      - '.github/workflows/com-cloudflare-preview-browser.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: com-preview-client-browser
+  cancel-in-progress: true
+
+jobs:
+  browser-real-local-tools:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout committed client-only verification script
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 11.28.0
+          run_install: false
+      - name: Setup Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install pinned project dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Chromium only (no macOS, no Firefox)
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Actually operate public preview and two browser-only tools
+        run: node scripts/cloudflare/smoke-preview-browser.mjs
+      - name: Report scope without implying production readiness
+        if: always()
+        run: |
+          echo "## External real-browser Cloudflare preview smoke" >> "$GITHUB_STEP_SUMMARY"
+          echo "Public pages, UUID and URL parser only; full product tests not included" >> "$GITHUB_STEP_SUMMARY"
+          echo "No production DNS or .cn modification; no new Cloudflare deployments" >> "$GITHUB_STEP_SUMMARY"
