@@ -23,6 +23,14 @@
       "bytes": 774
     },
     {
+      "path": ".github/workflows/retired-sasi-cleanup-audit-20261113.yml",
+      "bytes": 2204
+    },
+    {
+      "path": ".github/workflows/retired-sasi-cloud-inventory.yml",
+      "bytes": 847
+    },
+    {
       "path": ".gitignore",
       "bytes": 1133
     },
@@ -12755,6 +12763,10 @@
       "bytes": 1912
     },
     {
+      "path": "scripts/cloudflare/retirement-inventory.mjs",
+      "bytes": 1444
+    },
+    {
       "path": "scripts/commerce-security-v1/audit-food-local.mjs",
       "bytes": 1279
     },
@@ -12889,6 +12901,10 @@
     {
       "path": "scripts/nutrition/verify-usda-import.mjs",
       "bytes": 1157
+    },
+    {
+      "path": "scripts/ops/Sync-Lingxi-COM-Release-D.ps1",
+      "bytes": 3842
     },
     {
       "path": "scripts/patch-copy-v1469.mjs",
@@ -15541,6 +15557,10 @@
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
       "bytes": 5366
+    },
+    {
+      "path": "tests/retired-sasi-public-copy-20261113.test.mjs",
+      "bytes": 2650
     },
     {
       "path": "tsconfig.json",

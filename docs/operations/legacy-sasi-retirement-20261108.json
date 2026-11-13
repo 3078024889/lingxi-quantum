@@ -591,5 +591,7 @@
   ],
   "site": "COM",
   "source_commit": "07546849537f5af6e2b247fdb7b7576754a845d4",
-  "removed_file_count": 518
+  "removed_file_count": 518,
+  "cloudflareInventoryWorkflow": ".github/workflows/retired-sasi-cloud-inventory.yml",
+  "dDriveSyncScript": "scripts/ops/Sync-Lingxi-COM-Release-D.ps1"
 }
