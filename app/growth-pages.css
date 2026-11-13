@@ -184,3 +184,20 @@ html[data-theme="dark"] .lx-seo-vendor{background:linear-gradient(110deg,rgba(95
 .lx-growth-source-panel ul{display:grid;gap:7px;margin:10px 0 0;padding-inline-start:20px}
 .lx-growth-faq-item+ .lx-growth-faq-item{margin-top:8px}
 @media(max-width:760px){.lx-growth-partner-example{margin-top:14px}.lx-growth-partner-settings{padding:15px!important}}
+
+/* Align action baselines and preserve contrast in the black theme. */
+.lx-seo-question,.lx-growth-tool-card,.lx-growth-topic-card,.lx-growth-partner-card{display:flex;flex-direction:column}
+.lx-seo-question a{margin-top:auto;padding-top:8px}
+.lx-growth-tool-card span,.lx-growth-topic-card p{margin-bottom:0}
+.lx-growth-partner-card-copy{min-height:48px}
+.lx-growth-partner-snippet{flex:1}
+html[data-theme="dark"] .lx-seo-eyebrow,
+html[data-theme="dark"] .lx-seo-question a,
+html[data-theme="dark"] .lx-seo-action span,
+html[data-theme="dark"] .lx-growth-eyebrow,
+html[data-theme="dark"] .lx-growth-text-link,
+html[data-theme="dark"] .lx-growth-tool-actions a,
+html[data-theme="dark"] .lx-growth-partner-eyebrow,
+html[data-theme="dark"] .lx-growth-partner-links a{color:#a9c4ff!important}
+html[data-theme="dark"] .lx-growth-text-link,
+html[data-theme="dark"] .lx-growth-tool-actions a{border-color:rgba(151,180,255,.28);background:rgba(99,133,220,.12)}
