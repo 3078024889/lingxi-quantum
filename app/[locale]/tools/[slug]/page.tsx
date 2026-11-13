@@ -5,7 +5,7 @@ import {ToolSeoJsonLd} from "@/components/seo/GlobalSeoJsonLd";
 import ToolFacts from "@/components/seo/ToolFacts";
 import LocaleEntryLink from "@/components/seo/LocaleEntryLink";
 import GrowthPageShell from "@/components/seo/GrowthPageShell";
-import {GLOBAL_TOOL_CATALOG,LOCALIZED_LOCALES,SEO_LOCALES,getGlobalTool,isSeoLocale,type SeoLocale,toolTitle} from "@/lib/seo/global-seo";
+import {GLOBAL_TOOL_CATALOG,LOCALIZED_LOCALES,SEO_LOCALES,getGlobalTool,isSeoLocale,type SeoLocale,toolDescription,toolTitle} from "@/lib/seo/global-seo";
 import {buildSearchOptimizedToolMetadata} from "@/lib/seo/search-tool-metadata";
 
 type Props={params:Promise<{locale:string;slug:string}>};
@@ -21,7 +21,7 @@ export default async function LocalizedTool(props:Props){
  if(!isSeoLocale(params.locale)||params.locale==="zh")notFound();
  const tool=getGlobalTool(params.slug);if(!tool)notFound();
  const locale=params.locale as SeoLocale,c=SEO_LOCALES[locale],title=toolTitle(locale,tool);
- const description=buildSearchOptimizedToolMetadata(tool.slug,locale).description;
+ const description=buildSearchOptimizedToolMetadata(tool.slug,locale).description??toolDescription(locale,tool);
  return <GrowthPageShell locale={locale} eyebrow={c.toolsTitle} title={title} description={description} backHref="/tools" backLabel={c.toolsTitle}>
   <ToolSeoJsonLd locale={locale} tool={tool}/>
   <div className="lx-growth-tool-actions"><LocaleEntryLink locale={locale} href={`/tools/${tool.slug}`}>{c.open} →</LocaleEntryLink></div>
