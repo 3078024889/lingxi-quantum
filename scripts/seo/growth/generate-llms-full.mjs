@@ -24,7 +24,7 @@ const catalog = [...globalSeo.slice(start,end).matchAll(
   /\{slug:"([^"]+)",zh:"([^"]+)",en:"([^"]+)",mode:"([^"]+)"/g
 )].map(m => ({slug:m[1],zh:m[2],en:m[3],mode:m[4]}));
 
-const unique = [...new Map(catalog.map(x => [x.slug,x])).values()];
+const unique = [...new Map(catalog.filter(x => x.slug !== "image-to-pdf-pro").map(x => [x.slug,x])).values()];
 const toolEntryPoints = unique.length + 1; // /tools directory plus unique tool detail entries.
 
 const faqKeys = [...faq.matchAll(/^\s*"([^"]+)":\s*\{/gm)].map(m => m[1]);
