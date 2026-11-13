@@ -17,7 +17,7 @@ FLAGS="/etc/lingxifield/tool-pass-3194-$SHORT.env"
 PORT=3194
 NGINX=/etc/nginx/conf.d/lingxifield.conf
 PROBE="/run/cn-payment-live-probe-$SHORT.mjs"
-PROBE_SHA="2aec891d25ea78769d9c12b8ae9a89016d4425a9"
+PROBE_SHA="10481e05605177e6bd65485d5a9484ca5f8441bd"
 
 [[ -x "$NODE" ]] || { echo NODE_NOT_READY;exit 1; }
 systemctl is-active --quiet "$SVC" || { echo CN3194_NOT_RUNNING;exit 1; }
