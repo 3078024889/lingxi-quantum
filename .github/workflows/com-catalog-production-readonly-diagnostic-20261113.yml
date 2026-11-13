@@ -152,3 +152,5 @@ jobs:
           JS
 
 # Re-run after the 2026-11-13 CN3194 promotion; diagnostic remains read-only.
+
+# Re-run after the 2026-11-13 COM production Worker promotion; read-only verification only.
