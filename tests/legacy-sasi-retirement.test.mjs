@@ -83,9 +83,9 @@ test('current product copy and global styles do not expose retired SASI creation
 test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
  const catalog=readFileSync('lib/sasi-software/catalog.ts','utf8');
  const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
- assert.match(catalog,/哥白尼 SI 11\\.6/);
- assert.match(catalog,/Copernicus SI 11\\.6/);
+ assert.ok(catalog.includes("哥白尼 SI 11.6"));
+ assert.ok(catalog.includes("Copernicus SI 11.6"));
  assert.match(catalog,/kind:"source"/);
- assert.doesNotMatch(catalog,/SI9\\.5|SI 9\\.5/);
- assert.match(market,/SI 11\\.6/);
+ assert.doesNotMatch(catalog,/SI9[.]5|SI 9[.]5/);
+ assert.ok(market.includes("SI 11.6"));
 });

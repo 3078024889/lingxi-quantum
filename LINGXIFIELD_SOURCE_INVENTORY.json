@@ -1,5 +1,5 @@
 {
-  "source_commit": "2d7c3ea82911759a50cfaafd5a4bc6849ebdb5d4",
+  "source_commit": "1855ebcdb88e143cd5e4f4463f7536f7e9d2bb55",
   "basis": "COM cleanup candidate derived from source tree 07546849537f5af6e2b247fdb7b7576754a845d4; retired SASI modules removed by the COM-specific manifest.",
   "files": [
     {
@@ -1021,6 +1021,10 @@
     {
       "path": "app/tools/temp-mail/page.tsx",
       "bytes": 1229
+    },
+    {
+      "path": "app/tools/url-to-video/page.tsx",
+      "bytes": 400
     },
     {
       "path": "app/tools/video-dubbing/layout.tsx",
@@ -9819,6 +9823,10 @@
       "bytes": 1218
     },
     {
+      "path": "docs/operations/legacy-sasi-retirement-20261108.json",
+      "bytes": 29103
+    },
+    {
       "path": "docs/PRE-SUBMIT-MANIFEST-V1181.txt",
       "bytes": 4965
     },
@@ -15556,11 +15564,11 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 5807
+      "bytes": 5822
     },
     {
       "path": "tests/retired-sasi-public-copy-20261113.test.mjs",
-      "bytes": 2963
+      "bytes": 3095
     },
     {
       "path": "tsconfig.json",
