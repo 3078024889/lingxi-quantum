@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import {useEffect,useMemo,useState,type CSSProperties} from "react";
+import {useEffect,useMemo,useState} from "react";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 const copy:Record<LingxiLang,{eyebrow:string;title:string;intro:string;partners:string;partnerHint:string;siai:string;siaiInfo:string;qr:string;qrInfo:string;freeTools:string;freeToolsInfo:string;copy:string;copied:string;example:string;feed:string;update:string;rules:string;community:string;note:string}>={
