@@ -1,1 +1,0 @@
-export interface FailurePattern{signature:string;count:number;preferredCapability?:string;avoidCapability?:string;confidence:number}export function promoteFailurePattern(rows:FailurePattern[],minCount=3,minConfidence=.7){return rows.filter(x=>x.count>=minCount&&x.confidence>=minConfidence)}

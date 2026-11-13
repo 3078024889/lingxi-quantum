@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-const retired=[
+const retiredBase=[
  "scripts/audit-autonomy-v1583.mjs",
  "app/sasi/SasiComposer.tsx",
  "app/sasi/SasiProjectMemory.tsx",
@@ -59,6 +59,8 @@ const retired=[
  "public/media/lingxifield-9d-field-structure-v320.mp4",
  "docs/LINGXIFIELD-P1-ACTUAL-SOURCE-20260923-203431.zip"
 ];
+const report=JSON.parse(fs.readFileSync("docs/operations/legacy-sasi-retirement-20261108.json","utf8"));
+const retired=[...new Set([...retiredBase,...report.removed])];
 const remains=retired.filter(p=>fs.existsSync(p));
 if(fs.existsSync("lib/tools/platform/platform"))throw new Error("NESTED_PLATFORM_DIRECTORY_REMAINS");
 if(remains.length)throw new Error(`RETIRED_PACKAGE_ARTIFACTS_REMAIN:${remains.join(",")}`);
@@ -84,6 +86,25 @@ for(const name of ["LINGXIFIELD_SOURCE_INVENTORY.json","LINGXIFIELD_PROTECTED_MA
  const stale=(manifest.files||[]).filter(row=>retired.includes(row.path));
  if(stale.length)throw new Error(`RETIRED_MANIFEST_REFERENCES:${name}:${stale.map(row=>row.path).join(",")}`);
 }
+function listFiles(dir){
+ if(!fs.existsSync(dir))return [];
+ return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
+  const file=path.join(dir,entry.name);
+  return entry.isDirectory()?listFiles(file):[file.replaceAll("\\\\","/")];
+ });
+}
+const legacySasiLibraryFiles=listFiles("lib/sasi").filter(file=>file!=="lib/sasi/request-security.ts");
+if(legacySasiLibraryFiles.length)throw new Error("LEGACY_SASI_LIBRARY_REMAINS:"+legacySasiLibraryFiles.join(","));
+const sasiApiFiles=listFiles("app/api/sasi").filter(file=>file.endsWith("/route.ts"));
+const unexpectedSasiApiFiles=sasiApiFiles.filter(file=>
+ file!=="app/api/sasi/[[...legacy]]/route.ts" &&
+ !file.startsWith("app/api/sasi/marketplace/") &&
+ !file.startsWith("app/api/sasi/software/")
+);
+if(unexpectedSasiApiFiles.length)throw new Error("LEGACY_SASI_API_REMAINS:"+unexpectedSasiApiFiles.join(","));
+console.log("LEGACY_SASI_API_IMPLEMENTATIONS=0");
+console.log("LEGACY_SASI_LIBRARY_FILES=0");
+
 const burnToken=fs.readFileSync("lib/tools/burn-link-token.ts","utf8");
 if(burnToken.includes("isTrustedBurnWebViewRequest"))throw new Error("RETIRED_BURN_WEBVIEW_EXEMPTION_RETURNED");
 
