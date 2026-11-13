@@ -1640,5 +1640,17 @@
     "requiresMobile": true,
     "requiresRealFixture": true,
     "privacyMode": "local-first"
+  },
+  {
+    "slug": "password-generator",
+    "capabilities": [
+      "privacy.password.generate"
+    ],
+    "contractVersion": 1,
+    "requiresNineLanguage": true,
+    "requiresDesktop": true,
+    "requiresMobile": true,
+    "requiresRealFixture": true,
+    "privacyMode": "local-first"
   }
 ]

@@ -746,5 +746,16 @@
       "video-brief"
     ],
     "localPreferred": false
+  },
+  {
+    "id": "privacy.password.generate",
+    "domain": "privacy",
+    "input": [
+      "length"
+    ],
+    "output": [
+      "password"
+    ],
+    "localPreferred": true
   }
 ]
