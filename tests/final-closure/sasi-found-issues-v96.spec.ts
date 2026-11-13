@@ -34,7 +34,7 @@ test("image generation shows the quoted size and actual delivered dimensions",as
 
 test("retired URL-to-video creation route redirects to the current tool directory",async({page})=>{
  await page.goto("/tools/url-to-video?lang=en");
- await expect(page).toHaveURL(/\\/tools$/);
+ await expect(page).toHaveURL(/\/tools$/);
 });
 
 test("tool hub has one canonical image-to-PDF entry",async({page})=>{
