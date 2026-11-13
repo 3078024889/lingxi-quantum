@@ -147,8 +147,12 @@ test("vendor applications must pass same-origin and rate-limit gate",()=>{
 
 test("growth distribution documentation matches implemented widget boundaries and release status",()=>{
  const guide=read("docs/growth/siai-global-distribution-20261105.md");
+ const globalSeo=read("lib/seo/global-seo.ts");
+ const toolHub=read("lib/tools/advanced-catalog.ts");
  const config=read("next.config.js");
  assert.match(guide,/data-lx-widget="siai"/);
+ assert.ok(!globalSeo.includes('slug:"url-to-video"'));
+ assert.ok(!toolHub.includes("/tools/url-to-video"));
  assert.match(guide,/data-lx-widget="tools"/);
  assert.match(guide,/Tool processing does not run inside the partner page/);
  assert.match(guide,/source and build implemented; clean sandbox install pending/);
