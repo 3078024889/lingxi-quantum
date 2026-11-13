@@ -17,7 +17,7 @@ export function buildSiteSitemap(site:string,siaiIndexable:boolean):MetadataRout
       priority:0.9
     }]:[];
   }
-  const paths=["/","/products","/tools",...GLOBAL_TOOL_CATALOG.filter(t=>t.slug!=="image-to-pdf-pro").map(t=>"/tools/"+t.slug),...Object.keys(SEO_TOPICS).map(topic=>"/discover/"+topic)];
+  const paths=["/","/products","/tools","/discoveries",...GLOBAL_TOOL_CATALOG.filter(t=>t.slug!=="image-to-pdf-pro").map(t=>"/tools/"+t.slug),...Object.keys(SEO_TOPICS).map(topic=>"/discover/"+topic)];
   const rows:MetadataRoute.Sitemap=[];
   for(const path of paths){
     const languages=Object.fromEntries(Object.entries(languageAlternates(path)).map(([lang,url])=>[lang,PRIMARY_SITE+url]));

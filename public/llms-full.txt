@@ -1,25 +1,105 @@
 # LINGXIFIELD LLM / AI SEARCH INDEX
 
-Generated: 2026-10-16T03:31:38.324Z
-Tools: 121
+## 核心搜索主题
+全球SIAI排行榜；全球AI行情平台；全球AI排行榜；全球SI排行榜；全球SI行情平台；全球SIAI行情平台
+
+Generated: 2026-11-13T07:59:21.250Z
+Tools: 123
+Tool entry points: 124 (the /tools directory plus unique tool detail entries)
 Locales: 9
 
 This machine-readable index maps public tool pages to languages, processing modes and common task-intent questions.
 It does not claim access to private Google/Bing/Search Console query-volume data.
 
-## Global AI / SI / SIAI rankings
-
-- Global SIAI Tool Directory: https://lingxifield.com/siai
-- 中文搜索：全球AI行情平台、全球AI排行榜、全球SI排行榜、全球SI行情平台、全球SIAI行情平台、全球SIAI排行榜
-- Compare product functions, free allowances, official pricing, commercial-use terms, country restrictions and payment evidence by source.
-- Publication is a sourced directory, not a verified performance leaderboard or live stock/crypto quote. Candidate rows labeled as research previews have not passed real-use tests.
-- Site index: https://lingxifield.com/sitemap.xml
-- Search phrase groups are aliases of the same canonical SIAI page, not six duplicate content pages.
-
 ## Primary pages
 - https://lingxifield.com/tools
+- https://lingxifield.com/discoveries
+- https://lingxifield.com/siai
+- https://lingxifield.cn/siai
 - https://lingxifield.com/sasi
+- https://lingxifield.com/sasi/seller
+- https://lingxifield.com/sasi/delivery
+- https://lingxifield.com/tools/pass
 - https://lingxifield.com/products
+- https://lingxifield.com/partners
+- https://lingxifield.com/siai-openapi.json
+- https://lingxifield.com/siai/updates.xml
+- https://lingxifield.com/widgets/lingxifield-v1.js
+- https://lingxifield.com/downloads/lingxifield-siai-wordpress.zip
+- https://lingxifield.com/en/discoveries
+- https://lingxifield.com/ja/discoveries
+- https://lingxifield.com/ko/discoveries
+- https://lingxifield.com/fr/discoveries
+- https://lingxifield.com/de/discoveries
+- https://lingxifield.com/es/discoveries
+- https://lingxifield.com/pt/discoveries
+- https://lingxifield.com/ar/discoveries
+
+## Global AI / SI / SIAI rankings
+- Global SIAI directory: https://lingxifield.com/siai
+- China regional SIAI entry: https://lingxifield.cn/siai
+- Compare product capabilities, official prices, free allowances, regional availability, payment evidence and commercial-use terms.
+- Directory display order is not a performance or popularity ranking; research previews are not hands-on tests.
+
+## SASI Software Marketplace
+- Marketplace: https://lingxifield.com/sasi
+- Seller workspace: https://lingxifield.com/sasi/seller
+- Buyer delivery guide: https://lingxifield.com/sasi/delivery
+- Product version, license scope, delivery format and price are determined by each live listing. Copernicus SI is source-code-only.
+
+- SASI Software Marketplace | SASI 智能软件市场: https://lingxifield.com/discover/sasi-software-marketplace
+  - en: https://lingxifield.com/en/discover/sasi-software-marketplace
+  - ja: https://lingxifield.com/ja/discover/sasi-software-marketplace
+  - ko: https://lingxifield.com/ko/discover/sasi-software-marketplace
+  - fr: https://lingxifield.com/fr/discover/sasi-software-marketplace
+  - de: https://lingxifield.com/de/discover/sasi-software-marketplace
+  - es: https://lingxifield.com/es/discover/sasi-software-marketplace
+  - pt: https://lingxifield.com/pt/discover/sasi-software-marketplace
+  - ar: https://lingxifield.com/ar/discover/sasi-software-marketplace
+- MT5 EA Source Code & Trading Software | MT5 EA 源码与交易软件: https://lingxifield.com/discover/mt5-ea-source-code
+  - en: https://lingxifield.com/en/discover/mt5-ea-source-code
+  - ja: https://lingxifield.com/ja/discover/mt5-ea-source-code
+  - ko: https://lingxifield.com/ko/discover/mt5-ea-source-code
+  - fr: https://lingxifield.com/fr/discover/mt5-ea-source-code
+  - de: https://lingxifield.com/de/discover/mt5-ea-source-code
+  - es: https://lingxifield.com/es/discover/mt5-ea-source-code
+  - pt: https://lingxifield.com/pt/discover/mt5-ea-source-code
+  - ar: https://lingxifield.com/ar/discover/mt5-ea-source-code
+- Software Licensing & Automatic Delivery | 软件授权与自动交付: https://lingxifield.com/discover/software-licensing-delivery
+  - en: https://lingxifield.com/en/discover/software-licensing-delivery
+  - ja: https://lingxifield.com/ja/discover/software-licensing-delivery
+  - ko: https://lingxifield.com/ko/discover/software-licensing-delivery
+  - fr: https://lingxifield.com/fr/discover/software-licensing-delivery
+  - de: https://lingxifield.com/de/discover/software-licensing-delivery
+  - es: https://lingxifield.com/es/discover/software-licensing-delivery
+  - pt: https://lingxifield.com/pt/discover/software-licensing-delivery
+  - ar: https://lingxifield.com/ar/discover/software-licensing-delivery
+- Developer Software Publishing & Seller Services | 开发者软件发布与卖家服务: https://lingxifield.com/discover/developer-software-publishing
+  - en: https://lingxifield.com/en/discover/developer-software-publishing
+  - ja: https://lingxifield.com/ja/discover/developer-software-publishing
+  - ko: https://lingxifield.com/ko/discover/developer-software-publishing
+  - fr: https://lingxifield.com/fr/discover/developer-software-publishing
+  - de: https://lingxifield.com/de/discover/developer-software-publishing
+  - es: https://lingxifield.com/es/discover/developer-software-publishing
+  - pt: https://lingxifield.com/pt/discover/developer-software-publishing
+  - ar: https://lingxifield.com/ar/discover/developer-software-publishing
+
+## Evidence-led discoveries and content
+- https://lingxifield.com/discoveries | Voynich Manuscript and public NASA/AARO UAP records; separates documented facts, unresolved questions and speculation.
+- Related workflows: PDF text extraction, document translation, PDF comparison, image OCR and measured Before / After compression.
+
+## Partner distribution and integrations
+- Partner portal: https://lingxifield.com/partners
+- JavaScript widget: https://lingxifield.com/widgets/lingxifield-v1.js
+- WordPress plugin: https://lingxifield.com/downloads/lingxifield-siai-wordpress.zip
+- Read-only SIAI OpenAPI: https://lingxifield.com/siai-openapi.json
+- SIAI updates RSS: https://lingxifield.com/siai/updates.xml
+- Public share links carry bounded attribution labels only; private files, prompts and account identifiers are not placed in URLs.
+
+## Value-first tool and membership model
+- Free tools let visitors complete a first task and verify the output before choosing a paid plan.
+- ToolPass supports recurring use, multiple files and sustained workflows across the practical-tool catalog.
+- The platform does not subsidize unpredictable third-party model-token costs; paid processing and applicable API costs must be disclosed before execution.
 
 ## Tool index
 - document-translate | PDF / 文档翻译 | PDF / Document Translation | online
@@ -32,16 +112,6 @@ It does not claim access to private Google/Bing/Search Console query-volume data
   - es: https://lingxifield.com/es/tools/document-translate
   - pt: https://lingxifield.com/pt/tools/document-translate
   - ar: https://lingxifield.com/ar/tools/document-translate
-- url-to-video | 网址生成推广视频 | URL to Promotional Video | online
-  - zh: https://lingxifield.com/tools/url-to-video
-  - en: https://lingxifield.com/en/tools/url-to-video
-  - ja: https://lingxifield.com/ja/tools/url-to-video
-  - ko: https://lingxifield.com/ko/tools/url-to-video
-  - fr: https://lingxifield.com/fr/tools/url-to-video
-  - de: https://lingxifield.com/de/tools/url-to-video
-  - es: https://lingxifield.com/es/tools/url-to-video
-  - pt: https://lingxifield.com/pt/tools/url-to-video
-  - ar: https://lingxifield.com/ar/tools/url-to-video
 - audio-transcription | 音频转文字 | Audio Transcription | online
   - zh: https://lingxifield.com/tools/audio-transcription
   - en: https://lingxifield.com/en/tools/audio-transcription
@@ -52,6 +122,16 @@ It does not claim access to private Google/Bing/Search Console query-volume data
   - es: https://lingxifield.com/es/tools/audio-transcription
   - pt: https://lingxifield.com/pt/tools/audio-transcription
   - ar: https://lingxifield.com/ar/tools/audio-transcription
+- ai-video-audio-check | AI 视频音频检测 | AI Video & Audio Detection | local
+  - zh: https://lingxifield.com/tools/ai-video-audio-check
+  - en: https://lingxifield.com/en/tools/ai-video-audio-check
+  - ja: https://lingxifield.com/ja/tools/ai-video-audio-check
+  - ko: https://lingxifield.com/ko/tools/ai-video-audio-check
+  - fr: https://lingxifield.com/fr/tools/ai-video-audio-check
+  - de: https://lingxifield.com/de/tools/ai-video-audio-check
+  - es: https://lingxifield.com/es/tools/ai-video-audio-check
+  - pt: https://lingxifield.com/pt/tools/ai-video-audio-check
+  - ar: https://lingxifield.com/ar/tools/ai-video-audio-check
 - avif-to-jpg | AVIF 转 JPG | AVIF to JPG | local
   - zh: https://lingxifield.com/tools/avif-to-jpg
   - en: https://lingxifield.com/en/tools/avif-to-jpg
@@ -312,6 +392,16 @@ It does not claim access to private Google/Bing/Search Console query-volume data
   - es: https://lingxifield.com/es/tools/image-watermark-remover
   - pt: https://lingxifield.com/pt/tools/image-watermark-remover
   - ar: https://lingxifield.com/ar/tools/image-watermark-remover
+- ai-image-check | AI 图片检测 | AI Image Detection | local
+  - zh: https://lingxifield.com/tools/ai-image-check
+  - en: https://lingxifield.com/en/tools/ai-image-check
+  - ja: https://lingxifield.com/ja/tools/ai-image-check
+  - ko: https://lingxifield.com/ko/tools/ai-image-check
+  - fr: https://lingxifield.com/fr/tools/ai-image-check
+  - de: https://lingxifield.com/de/tools/ai-image-check
+  - es: https://lingxifield.com/es/tools/ai-image-check
+  - pt: https://lingxifield.com/pt/tools/ai-image-check
+  - ar: https://lingxifield.com/ar/tools/ai-image-check
 - jpg-to-png | JPG 转 PNG | JPG to PNG | local
   - zh: https://lingxifield.com/tools/jpg-to-png
   - en: https://lingxifield.com/en/tools/jpg-to-png
@@ -672,6 +762,16 @@ It does not claim access to private Google/Bing/Search Console query-volume data
   - es: https://lingxifield.com/es/tools/pdf-search
   - pt: https://lingxifield.com/pt/tools/pdf-search
   - ar: https://lingxifield.com/ar/tools/pdf-search
+- rotate-video | 视频旋转 | Rotate Video | local
+  - zh: https://lingxifield.com/tools/rotate-video
+  - en: https://lingxifield.com/en/tools/rotate-video
+  - ja: https://lingxifield.com/ja/tools/rotate-video
+  - ko: https://lingxifield.com/ko/tools/rotate-video
+  - fr: https://lingxifield.com/fr/tools/rotate-video
+  - de: https://lingxifield.com/de/tools/rotate-video
+  - es: https://lingxifield.com/es/tools/rotate-video
+  - pt: https://lingxifield.com/pt/tools/rotate-video
+  - ar: https://lingxifield.com/ar/tools/rotate-video
 - reverse-video | 视频倒放 | Reverse Video | local
   - zh: https://lingxifield.com/tools/reverse-video
   - en: https://lingxifield.com/en/tools/reverse-video

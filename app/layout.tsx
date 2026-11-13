@@ -48,7 +48,7 @@ export const metadata:Metadata={
   title:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能软件 · 免费在线实用工具",
   description:PUBLIC_FEATURE_COPY.zh.description,
   url:SITE,
-  images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
+  images:[{url:SHARE_IMAGE,width:1200,height:675,alt:"灵犀场 LINGXIFIELD"}]
  },
  twitter:{
   card:"summary_large_image",

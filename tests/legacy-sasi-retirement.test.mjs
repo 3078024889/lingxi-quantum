@@ -11,7 +11,10 @@ test('retired endpoints cannot create provider jobs or run the radar',async()=>{
    const response=await route[method](new Request('https://lingxifield.com/retired',{method}));
    assert.equal(response.status,410);
    assert.equal(response.headers.get('cache-control'),'no-store');
-   assert.deepEqual(await response.json(),{error:'SASI_CREATION_RETIRED',replacement:'/sasi'});
+   const expected=file.startsWith('app/api/knowledge/')
+    ? {error:'KNOWLEDGE_MODULE_RETIRED',replacement:'/tools'}
+    : {error:'SASI_CREATION_RETIRED',replacement:'/sasi'};
+   assert.deepEqual(await response.json(),expected);
   }
  }
 });
@@ -49,4 +52,60 @@ test('retired legacy source files and media are absent from the repository and s
   const stale=(manifest.files||[]).filter(row=>report.removed.includes(row.path));
   assert.equal(stale.length,0,name+' still lists retired files: '+stale.map(x=>x.path).join(','));
  }
+});
+
+test('legacy URL-to-video creation is permanently redirected and excluded from discovery',()=>{
+ const page=readFileSync('app/tools/url-to-video/page.tsx','utf8');
+ const config=readFileSync('next.config.js','utf8');
+ const catalog=readFileSync('lib/seo/global-seo.ts','utf8');
+ const hub=readFileSync('lib/tools/advanced-catalog.ts','utf8');
+ assert.match(page,/permanentRedirect\("\/tools"\)/);
+ assert.match(config,/source: "\/tools\/url-to-video", destination: "\/tools", permanent: true/);
+ assert.match(config,/source: "\/:lang\(en\|ja\|ko\|fr\|de\|es\|pt\|ar\)\/tools\/url-to-video"/);
+ assert.doesNotMatch(catalog,/slug:"url-to-video"/);
+ assert.doesNotMatch(hub,/\/tools\/url-to-video/);
+});
+
+
+test('current product copy and global styles do not expose retired SASI creation modules',()=>{
+ const home=readFileSync('components/HomeProblemHub.tsx','utf8');
+ const legal=readFileSync('components/SasiLegalBody.tsx','utf8');
+ const mini=readFileSync('miniapp/README.md','utf8');
+ const css=readFileSync('app/globals.css','utf8');
+ const llms=readFileSync('public/llms.txt','utf8')+'\n'+readFileSync('public/llms-full.txt','utf8');
+ assert.doesNotMatch(home,/ai短剧|短剧生成/);
+ assert.doesNotMatch(legal,/短剧|short drama|Kurzdrama|séries courtes|dramas y vídeos|dramas e vídeos|الدراما والفيديو الجديدة|동영상 신규 생성/i);
+ assert.doesNotMatch(mini,/SASI 创作|短剧|书本|学习|科研|资料智库/);
+ assert.doesNotMatch(css,/\.sasi-(?:hero-surface|home-tile|balance|connect|cangxuan|orchestration|works-|account-|start-path|utility-links|recharge-|send|header-topup|checkout-)|\.cangxuan-|\.lx-sasi-center|\.lx-sasi-hero|\.lx-sasi-prompt-panel|\.lx-sasi-entry-card|\.lx-knowledge-modebar|\.lx-knowledge-answer|\.lx-knowledge-recharge/);
+ assert.doesNotMatch(llms,/short[- ]drama|book SASI|learning SASI|research SASI|短剧生成|书本智能体|学习智能体|科研智能体/i);
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
+});
+
+
+test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
+ const catalog=readFileSync('lib/sasi-software/catalog.ts','utf8');
+ const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
+ assert.ok(catalog.includes("哥白尼 SI 11.6"));
+ assert.ok(catalog.includes("Copernicus SI 11.6"));
+ assert.ok(catalog.includes('kind:"source"'));
+ assert.ok(!catalog.includes("SI9.5") && !catalog.includes("SI 9.5"));
+ assert.ok(market.includes("featuredVisualTitle"));
+ assert.ok(market.includes("featured.titleZh"));
+ assert.ok(market.includes("<strong>{featuredVisualTitle}</strong>"));
+});
+
+test('retired URL-to-video workbench is deleted from source and product discovery',()=>{
+ const copy=readFileSync('lib/tools/product-copy.ts','utf8');
+ assert.doesNotMatch(copy,/'url-to-video'/);
+ assert.equal(existsSync('components/tools/UrlPromotionWorkbench.tsx'),false);
+});
+
+test('retired knowledge API is a 410 tombstone',()=>{
+ assert.equal(existsSync('app/api/knowledge/ask/route.ts'),false);
+ assert.equal(existsSync('app/api/knowledge/pricing/route.ts'),false);
+ const source=readFileSync('app/api/knowledge/[[...legacy]]/route.ts','utf8');
+ assert.match(source,/KNOWLEDGE_MODULE_RETIRED/);
+ assert.match(source,/status:\s*410/);
+ assert.match(source,/cache-control.*no-store/);
 });
