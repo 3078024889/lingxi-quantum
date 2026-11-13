@@ -58,8 +58,8 @@ test("tool completion funnel joins visits to tool events by anonymous host-scope
 test("tool funnel keeps UTM labels bounded and exposes truncation",()=>{
  const events=[event("orphan","process_completed",{utm_source:"partner_widget",utm_campaign:"launch_01",utm_content:"wp_site"})];
  const report=summarizeGrowthToolFunnel([],events,50);
- assert.equal(report.toolEventsTruncated,true);assert.equal(report.channels[0].source,"partner_widget");
- assert.equal(report.channels[0].campaign,"launch_01");assert.equal(report.channels[0].partner,"wp_site");
+ assert.equal(report.toolEventsTruncated,true);assert.equal(report.toolFunnelChannels[0].source,"partner_widget");
+ assert.equal(report.toolFunnelChannels[0].campaign,"launch_01");assert.equal(report.toolFunnelChannels[0].partner,"wp_site");
 });
 test("growth analytics are administrator-only and never expose hashes to client UI",()=>{
  const api=read("app/api/account/growth-stats/route.ts");
