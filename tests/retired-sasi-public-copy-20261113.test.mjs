@@ -30,3 +30,9 @@ assert.doesNotMatch(home,/aivideo|texttovideo|imagetovideo|视频生成|文生�
 const market=readFileSync("components/SasiOpenMarketplace.tsx","utf8");
 assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
 console.log("RETIRED_SASI_PUBLIC_COPY_AND_SIX_GEO_TERMS=PASS");
+
+
+const keywordMap=JSON.parse(readFileSync("public/seo-keywords-9lang.json","utf8"));
+for(const locale of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
+ assert.ok(Array.isArray(keywordMap[locale])&&keywordMap[locale].length>=22,"missing nine-language SEO keyword set: "+locale);
+}
