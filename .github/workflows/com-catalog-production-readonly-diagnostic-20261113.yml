@@ -129,7 +129,6 @@ jobs:
               console.log("PRIVATE_ANON_BOUNDARY",new URL(host).hostname,path,"HTTP="+r.status);
             }
           }
-          JS
           for(const host of ["https://lingxifield.com","https://lingxifield.cn"]){
             const hostname=new URL(host).hostname;
             try{
