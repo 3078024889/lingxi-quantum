@@ -9,7 +9,7 @@ const productsFact=pageGeoFact("products","zh");
 export const metadata:Metadata=publicPageMetadata("zh","/products",productsFact.title,productsFact.description);
 
 export default function Page(){
- return <GrowthPageShell locale="zh" eyebrow={SEO_LOCALES.zh.toolsTitle} title={productsFact.title} description={productsFact.description}>
+ return <GrowthPageShell locale="zh" eyebrow={SEO_LOCALES.zh.brand} title={productsFact.title} description={productsFact.description}>
   <ProductDirectory locale="zh"/>
  </GrowthPageShell>;
 }
