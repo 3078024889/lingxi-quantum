@@ -3,7 +3,7 @@ import type {PublicToolSurfaceItem} from './public-surface';
 import type {LingxiLang} from '@/lib/lingxi-i18n';
 
 // Local execution alone does not imply free export: paid PDF/OCR/audio tools stay excluded.
-export function isAnonymousLocalTool(tool:Pick<PublicToolSurfaceItem,'slug'|'localOnly'>){return tool.localOnly&&!isPublicPaidToolId(tool.slug)&&tool.slug!=='document-translate'&&tool.slug!=='url-to-video'}
+export function isAnonymousLocalTool(tool:Pick<PublicToolSurfaceItem,'slug'|'localOnly'>){return tool.localOnly&&!isPublicPaidToolId(tool.slug)&&tool.slug!=='document-translate'}
 const copy:Record<LingxiLang,string[]>={
  zh:['全部服务','免费本地工具','每日免费体验','使用方式'],
  en:['All services','Free local tools','Daily free trial','Access'],
