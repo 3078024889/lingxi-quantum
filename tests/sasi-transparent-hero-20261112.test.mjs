@@ -59,10 +59,14 @@ test('SASI hero ships the exact user-supplied transparent PNG and preserves its 
  assert.deepEqual(staleReferences,[],'retired hero assets must have no remaining source or test references');
 });
 
-test('SASI GEO facts describe software products and SIAI video pricing only',()=>{
+test('SASI GEO facts describe software products and SIAI keeps independent video pricing data',()=>{
  const facts=readFileSync('lib/seo/site-facts.ts','utf8');
+ const marketApi=readFileSync('lingxifield-ai-market/lib/market-api-service-catalog.ts','utf8');
+ const marketRates=readFileSync('lingxifield-ai-market/lib/market-rate-catalog.ts','utf8');
  assert.match(facts,/SASI is LINGXIFIELD’s intelligent software marketplace/);
- assert.match(facts,/SIAI video-model quote flow/);
+ assert.match(facts,/MT5 EAs, trading source code, source licenses/);
+ assert.ok(marketApi.includes('VIDEO_RATES'));assert.ok(marketApi.includes('videoRates'));
+ assert.ok(marketRates.includes('VIDEO_RATES'));assert.ok(marketApi.includes('Video/audio API charged by declared unit'));
  for(const pattern of [
   /SASI[^\n]{0,90}短剧/,
   /SASI[^\n]{0,90}网站/,
