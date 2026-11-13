@@ -1,6 +1,6 @@
 {
-  "source_commit": "f5ce709fbd2dfe49662eb303f73b39cd7ba0648b",
-  "basis": "COM cleanup candidate derived from source tree 07546849537f5af6e2b247fdb7b7576754a845d4; retired SASI modules removed by the COM-specific manifest.",
+  "source_commit": "2aea17503b005672a26f5d459b76141301376154",
+  "basis": "COM cleanup candidate is a two-parent merge of the current COM growth branch 2aea17503b005672a26f5d459b76141301376154 and the SASI retirement branch; public SEO keyword index retains the more complete retired-content-free version.",
   "files": [
     {
       "path": ".env.example",
@@ -639,6 +639,10 @@
       "bytes": 128576
     },
     {
+      "path": "app/growth-pages.css",
+      "bytes": 21372
+    },
+    {
       "path": "app/layout.tsx",
       "bytes": 3251
     },
@@ -749,6 +753,10 @@
     {
       "path": "app/share/20260928/page.tsx",
       "bytes": 1244
+    },
+    {
+      "path": "app/siai-home.css",
+      "bytes": 60315
     },
     {
       "path": "app/sitemap.ts",
@@ -897,6 +905,10 @@
     {
       "path": "app/tools/page.tsx",
       "bytes": 509
+    },
+    {
+      "path": "app/tools/pass/ToolPassPremium.module.css",
+      "bytes": 14208
     },
     {
       "path": "app/tools/pay/page.tsx",
@@ -15561,6 +15573,10 @@
     {
       "path": "tailwind.config.ts",
       "bytes": 3966
+    },
+    {
+      "path": "tests/dual-premium-sasi-toolpass-20261109.test.mjs",
+      "bytes": 7158
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",

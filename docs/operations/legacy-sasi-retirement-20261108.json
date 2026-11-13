@@ -593,11 +593,12 @@
     "app/api/sasi/account/route.ts"
   ],
   "site": "COM",
-  "source_commit": "770c4cb008a381933bca7ce0c2881fba43d2d428",
+  "source_commit": "2aea17503b005672a26f5d459b76141301376154",
   "removed_file_count": 521,
   "cloudflareInventoryWorkflow": ".github/workflows/retired-sasi-cloud-inventory.yml",
   "dDriveSyncScript": "scripts/ops/Sync-Lingxi-COM-Release-D.ps1",
   "redirectedRoutes": [
     "app/tools/url-to-video/page.tsx"
-  ]
+  ],
+  "source_base_commit": "07546849537f5af6e2b247fdb7b7576754a845d4"
 }
