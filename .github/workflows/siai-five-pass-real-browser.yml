@@ -1,0 +1,55 @@
+name: SIAI five-pass SSR and real file browser
+on:
+  pull_request:
+    paths:
+      - 'app/layout.tsx'
+      - 'middleware.ts'
+      - 'lingxifield-ai-market/data/company-intake/**'
+      - 'tests/siai-ssr-root-locale.test.mjs'
+      - 'tests/final-closure/siai-ssr-root-locale.spec.ts'
+      - '.github/workflows/siai-five-pass-real-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-browser:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [desktop-chromium, mobile-chromium]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: First-party source data and SSR checks
+        run: |
+          node --test tests/siai-ssr-root-locale.test.mjs
+          node --test lingxifield-ai-market/tests/market-major-publisher-b006-official.test.mjs
+          node lingxifield-ai-market/scripts/validate-company-official-observations.mjs
+      - name: Build Next.js and preserve static SEO routes
+        run: |
+          set -o pipefail
+          pnpm build | tee next-production-build.log
+          node scripts/ci/ensure-static-page-budget.mjs next-production-build.log
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Real browser SSR and downloaded document checks
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=${{ matrix.project }} --workers=1 tests/final-closure/siai-ssr-root-locale.spec.ts tests/final-closure/office-file-roundtrip.spec.ts tests/final-closure/docx-file-real-output.spec.ts
+      - name: Store failures
+        if: failure()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: siai-five-pass-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7

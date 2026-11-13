@@ -1,0 +1,11 @@
+import {readFileSync} from "node:fs";
+const file=process.argv[2];
+if(!file)throw Error("NEXT_BUILD_LOG_REQUIRED");
+const output=readFileSync(file,"utf8").replace(/\x1B\[[0-9;]*m/g,"");
+const lines=output.split(/\r?\n/);
+const rows=lines.filter(s=>/[├└]\s+[○●ƒ]\s+\//.test(s));
+const staticCount=rows.filter(s=>/[├└]\s+○\s+\//.test(s)).length;
+const ssgCount=rows.filter(s=>/[├└]\s+●\s+\//.test(s)).length;
+const dynamicCount=rows.filter(s=>/[├└]\s+ƒ\s+\//.test(s)).length;
+console.log(JSON.stringify({staticCount,ssgCount,dynamicCount,requireAtLeast:100}));
+if(rows.length<200||staticCount<100||ssgCount<5)process.exitCode=1;
