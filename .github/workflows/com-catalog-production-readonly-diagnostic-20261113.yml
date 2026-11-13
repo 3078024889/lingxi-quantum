@@ -51,6 +51,26 @@ jobs:
             console.log("COM_PROD_"+name+"_BINDING_TYPE="+(binding?.type||"MISSING"));
           }
           JS
+      - name: Inspect apex Worker route shadowing for SASI marketplace (READ ONLY)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node --input-type=module <<'JS'
+          const headers={Authorization:"Bearer "+process.env.CF_TOKEN};
+          const zonesResponse=await fetch("https://api.cloudflare.com/client/v4/zones?name=lingxifield.com",{headers,signal:AbortSignal.timeout(20000)});
+          const zones=await zonesResponse.json();
+          if(!zonesResponse.ok||zones.success!==true)throw Error("ZONE_LOOKUP_FAILED");
+          const zone=zones.result?.find(x=>x.name==="lingxifield.com"&&x.status==="active");
+          if(!zone)throw Error("ACTIVE_COM_ZONE_MISSING");
+          const routeResponse=await fetch("https://api.cloudflare.com/client/v4/zones/"+zone.id+"/workers/routes",{headers,signal:AbortSignal.timeout(20000)});
+          const routes=await routeResponse.json();
+          if(!routeResponse.ok||routes.success!==true)throw Error("WORKER_ROUTE_LOOKUP_FAILED");
+          for(const route of routes.result||[]){
+            console.log("COM_WORKER_ROUTE",route.pattern,"SCRIPT="+(route.script||"zone-default"));
+          }
+          const marketplace=(routes.result||[]).filter(x=>/marketplace|api\/sasi/i.test(x.pattern));
+          console.log("COM_MARKETPLACE_SPECIAL_ROUTE_COUNT="+marketplace.length);
+          JS
       - name: Read public catalog status and coarse diagnostic headers only
         shell: bash
         run: |
