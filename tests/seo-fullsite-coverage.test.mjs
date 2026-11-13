@@ -77,10 +77,10 @@ test("search FAQs never claim unverified search demand",()=>{
 
 
 test("static public LLM index describes the current software marketplace and excludes retired SASI creation modules",()=>{
-  assert.match(publicLlms,/SASI Software Marketplace/);
-  assert.match(publicLlms,/MT5 EA Source Code & Trading Software/);
-  assert.match(publicLlms,/Software Licensing & Automatic Delivery/);
-  assert.match(publicLlms,/Developer Software Publishing & Seller Services/);
+  assert.match(publicLlms,/SASI 智能软件市场/);
+  assert.match(publicLlms,/MT5 EA/);
+  assert.match(publicLlms,/量化交易源码/);
+  assert.match(publicLlms,/自动交付/);
   for(const slug of ["sasi-software-marketplace","mt5-ea-source-code","software-licensing-delivery","developer-software-publishing"])
     assert(publicLlms.includes("/discover/"+slug),slug);
   assert.doesNotMatch(publicLlms,/AI 短剧|AI Short Drama Generator|网站构建|书本、学习与科研创作/);
