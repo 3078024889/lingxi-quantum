@@ -177,10 +177,13 @@ export default function HomeProblemHub(){
  const{lang}=useLingxiLang();const c=copy[lang]??copy.en;const market=SIAI_HOME_ENTRY[lang]??SIAI_HOME_ENTRY.en;
  const[q,setQ]=useState("");
  const intents=useMemo(()=>[
-   {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格"],href:"/tools",label:c.tools},
-   {words:["ai","模型","排行榜","免费额度","api","价格","模型能力"],href:"/siai",label:market.title},
-   {words:["ea","mt5","源码","软件","授权","成品","商品","市场"],href:"/sasi",label:c.sasi},
-   {words:["开发者","卖家","发布","上架","商品审核"],href:"/sasi/seller",label:lang==="zh"?"卖家服务":"Seller services"},
+   {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格","compare","compress"],href:"/tools",label:c.tools},
+   {words:["ai","模型","排行榜","免费额度","api","价格","模型能力","siai"],href:"/siai",label:market.title},
+   {words:["ea","mt5","源码","软件","授权","成品","商品","市场","sasi"],href:"/sasi",label:c.sasi},
+   {words:["开发者","卖家","发布","上架","商品审核","seller"],href:"/sasi/seller",label:lang==="zh"?"开发者发布":"Seller services"},
+   {words:["安装","交付","教程","授权规则","delivery"],href:"/sasi/delivery",label:lang==="zh"?"软件安装与交付教程":"Installation & delivery guide"},
+   {words:["工具包","toolpass","会员","无限使用","批量处理"],href:"/tools/pass",label:lang==="zh"?"工具包会员":"ToolPass membership"},
+   {words:["ufo","uap","伏尼契","奇闻","神秘","考古","宇宙","外星","voynich","mystery","discoveries","发现"],href:"/discoveries",label:lang==="zh"?"奇闻发现与资料核验":"Discoveries & source verification"},
   ],[c,market.title,lang]);
  const hit=useMemo(()=>{const s=q.toLowerCase().replace(/\s+/g,"");return intents.map(x=>({...x,score:x.words.filter(w=>s.includes(w)).length})).sort((a,b)=>b.score-a.score)[0]},[q,intents]);
  const cards=[
@@ -188,7 +191,7 @@ export default function HomeProblemHub(){
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/tools',location.origin);if(hit?.score>0)url.searchParams.set('intent',v);else url.searchParams.set('q',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
    <div className="lx-home-hero-grid">
@@ -206,12 +209,16 @@ export default function HomeProblemHub(){
       <Link href="/tools/pass" className="lx-home-toolpass-entry">{lang==="zh"?"开通工具包":"ToolPass"} →</Link>
      </div>
      <div className="lx-home-hero-proof">
-      <span>✓ {lang==="zh"?"真实数据":"Verified facts"}</span><span>✓ {lang==="zh"?"持续更新":"Updated regularly"}</span>
-      <span>✓ {lang==="zh"?"全球可用":"Global access"}</span><span>✓ {lang==="zh"?"安全高效":"Secure & efficient"}</span>
+      <span>✓ {lang==="zh"?"真实数据":"Verified facts"}</span>
+      <span>✓ {lang==="zh"?"持续更新":"Updated regularly"}</span>
+      <span>✓ {lang==="zh"?"全球可用":"Global access"}</span>
+      <span>✓ {lang==="zh"?"安全高效":"Secure & efficient"}</span>
      </div>
      <details className="lx-home-tool-catalog" data-home-tool-catalog>
       <summary>{TOOL_CATEGORY_LABEL[lang]}</summary>
-      <div>{FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong>{category.title}：</strong>{category.body}</p>)}</div>
+      <div>
+       {FOOTER_CATALOG[lang].map(category=><p key={category.title}><strong>{category.title}：</strong>{category.body}</p>)}
+      </div>
      </details>
      <p className="lx-home-sasi-note">{lang==="zh"?"SASI 现为智能软件市场；按商品说明提供源码授权、开发者发布和安全交付。付款前展示费用与可用支付方式。":"SASI is a software marketplace for developer products and source licenses. Prices and available payment methods appear before payment confirmation."}</p>
      <p className="lx-home-domain-note">lingxifield.com · lingxifield.cn</p>

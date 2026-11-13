@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {ALL_TOOLS_PASS_CATALOG} from "@/lib/tools/commerce/all-tools-pass";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
-import type {LingxiLang} from "@/lib/lingxi-i18n";
+import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 
 type GrowthChip={label:string;href?:string};
 type GrowthCard={tag:string;title:string;description:string;href:string;cta:string;chips:GrowthChip[]};
@@ -13,7 +13,7 @@ type HomeGrowthCopy={
  features:Feature[];
  growthTitle:string;growthLead:string;growthCards:GrowthCard[];
  flywheelTitle:string;flywheel:string[];
- passTitle:string;passLead:string;passBenefits:string[];
+ passTitle:string;passLead:string;passValueLead:string;passBenefits:string[];
  planDays:string[];planDescriptions:string[];planCta:string;popular:string;
  marketSiaiTitle:string;marketSiaiDesc:string;marketSasiTitle:string;marketSasiDesc:string;
  stats:{value:string;label:string}[];
@@ -35,13 +35,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"搜索入口",description:"九语言 SEO、124 个工具目录与问题型落地页，让真实需求直接进入可用工具。",href:"/tools",cta:"浏览工具目录",chips:[{label:"九种语言"},{label:"124 个工具入口"},{label:"问题型页面"}]},
    {tag:"GEO",title:"AI 搜索入口",description:"通过 llms.txt、llms-full.txt 与结构化产品资料，让 AI 准确理解平台、工具和服务。",href:"/llms.txt",cta:"查看 AI 搜索资料",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"结构化资料"}]},
    {tag:"SIAI",title:"全球 SIAI 分发",description:"集中呈现排行榜、模型资料、真实价格、免费额度、地区可用性与商业授权。",href:"/siai",cta:"进入全球 SIAI 排行榜",chips:[{label:"排行榜"},{label:"价格与免费额度"},{label:"地区及商用条件"}]},
-   {tag:"SASI",title:"SASI 商业入口",description:"覆盖 MT5 EA、量化交易源码、其他成品软件、安装教程、授权说明与安全自动交付。",href:"/sasi",cta:"浏览 SASI 智能软件市场",chips:[{label:"MT5 EA"},{label:"量化源码"},{label:"授权与自动交付"}]},
+   {tag:"SASI",title:"SASI 商业入口",description:"覆盖 MT5 EA、量化交易源码、其他成品软件、安装教程、授权说明与安全自动交付。",href:"/sasi",cta:"浏览 SASI 智能软件市场",chips:[{"label":"MT5 EA","href":"/sasi"},{"label":"量化源码","href":"/sasi"},{"label":"安装与交付教程","href":"/sasi/delivery"},{"label":"开发者发布","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"外部增长网络",description:"连接 WordPress、JS Widget、合作伙伴、开放 API、RSS、二维码与分享归因。",href:"/partners",cta:"进入合作伙伴中心",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"二维码"},{label:"分享归因"}]},
-   {tag:"STORIES",title:"内容传播",description:"以奇闻发现吸引关注，以真实工具问题提供答案，再用 Before / After 和实际应用场景展示结果。",href:"/tools",cta:"从真实问题开始",chips:[{label:"奇闻发现"},{label:"真实工具问题"},{label:"Before / After"},{label:"实际应用场景"}]}
+   {tag:"STORIES",title:"内容传播",description:"以奇闻发现吸引关注，以真实工具问题提供答案，再用 Before / After 和实际应用场景展示结果。",href:"/discoveries",cta:"从真实问题开始",chips:[{"label":"奇闻发现","href":"/discoveries"},{"label":"真实工具问题","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"实际应用场景","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"从发现到分享，让每次体验都有下一步",
   flywheel:["发现","搜索","体验","结果","分享","再回来"],
-  passTitle:"ToolPass 工具包会员",passLead:"一站畅用 100+ 实用工具，持续处理文件与日常任务更高效。",
+  passTitle:"ToolPass 工具包会员",passLead:"一站畅用 100+ 实用工具，持续处理文件与日常任务更高效。",passValueLead:"先免费完成一项任务；需要持续处理、多文件批量工作时，再选择合适的工具包周期。"
   passBenefits:["全场 100+ 工具 · 无限使用","多文件批量处理 · 提升效率","持续更新新工具 · 覆盖更多场景","一个账户 · 双站可用（.com / .cn）"],
   planDays:["7 天体验","30 天","90 天","365 天"],
   planDescriptions:["短期使用 · 轻松上手","畅享全站工具","更优惠 · 更省心","长期使用 · 超值之选"],
@@ -66,13 +66,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"Search Discovery",description:"Nine-language SEO, 124 tool entries and problem-led landing pages that lead directly to usable tools.",href:"/tools",cta:"Browse the tool directory",chips:[{label:"9 languages"},{label:"124 tool entries"},{label:"Problem pages"}]},
    {tag:"GEO",title:"AI Search Discovery",description:"Help AI systems understand the platform through llms.txt, llms-full.txt and structured product facts.",href:"/llms.txt",cta:"View AI search resources",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"Structured facts"}]},
    {tag:"SIAI",title:"Global SIAI Distribution",description:"Rankings, model profiles, real prices, free allowances, regional availability and commercial rights.",href:"/siai",cta:"Explore Global SIAI",chips:[{label:"Rankings"},{label:"Prices & free tiers"},{label:"Regions & rights"}]},
-   {tag:"SASI",title:"SASI Business",description:"MT5 EAs, trading source code, finished software, installation guides, licensing and secure automatic delivery.",href:"/sasi",cta:"Browse SASI Marketplace",chips:[{label:"MT5 EAs"},{label:"Trading source code"},{label:"Licensing & delivery"}]},
+   {tag:"SASI",title:"SASI Business",description:"MT5 EAs, trading source code, finished software, installation guides, licensing and secure automatic delivery.",href:"/sasi",cta:"Browse SASI Marketplace",chips:[{"label":"MT5 EAs","href":"/sasi"},{"label":"Trading source code","href":"/sasi"},{"label":"Buyer guide & delivery","href":"/sasi/delivery"},{"label":"Seller publishing","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"External Growth Network",description:"WordPress, JS Widget, partner portal, public API, RSS, QR codes and share attribution.",href:"/partners",cta:"Open partner center",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"Share attribution"}]},
-   {tag:"STORIES",title:"Content & Discovery",description:"Curiosity-led discoveries, real tool problems, Before / After evidence and practical use cases.",href:"/tools",cta:"Start with a real task",chips:[{label:"Discoveries"},{label:"Real problems"},{label:"Before / After"},{label:"Use cases"}]}
+   {tag:"STORIES",title:"Content & Discovery",description:"Curiosity-led discoveries, real tool problems, Before / After evidence and practical use cases.",href:"/discoveries",cta:"Start with a real task",chips:[{"label":"Discoveries","href":"/discoveries"},{"label":"Real tool problems","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"Use cases","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"From discovery to sharing, every useful result creates a next step",
   flywheel:["Discover","Search","Try","Result","Share","Return"],
-  passTitle:"ToolPass Membership",passLead:"Use 100+ practical tools in one place and handle everyday files more efficiently.",
+  passTitle:"ToolPass Membership",passLead:"Use 100+ practical tools in one place and handle everyday files more efficiently.",passValueLead:"Start with a free task. Choose a pass when you need ongoing work or batch processing."
   passBenefits:["100+ practical tools · unlimited use","Batch file workflows · save time","New tools added continuously","One account · .com and .cn"],
   planDays:["7-day trial","30 days","90 days","365 days"],
   planDescriptions:["A simple way to start","Access all practical tools","Better value over time","Best for long-term use"],
@@ -97,13 +97,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"検索入口",description:"9言語 SEO、124件のツール案内、課題別ランディングページ。",href:"/tools",cta:"ツール一覧を見る",chips:[{label:"9言語"},{label:"124件の入口"},{label:"課題別ページ"}]},
    {tag:"GEO",title:"AI検索入口",description:"llms.txt、llms-full.txt、構造化された製品情報でAI検索を支援。",href:"/llms.txt",cta:"AI検索資料を見る",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"構造化情報"}]},
    {tag:"SIAI",title:"世界の SIAI 配信",description:"ランキング、モデル情報、価格、無料枠、地域対応、商用利用条件。",href:"/siai",cta:"SIAIランキングを見る",chips:[{label:"ランキング"},{label:"価格と無料枠"},{label:"地域と権利"}]},
-   {tag:"SASI",title:"SASI ビジネス入口",description:"MT5 EA、取引ソースコード、完成ソフト、導入ガイド、ライセンスと安全な納品。",href:"/sasi",cta:"SASI市場を見る",chips:[{label:"MT5 EA"},{label:"取引ソース"},{label:"ライセンスと納品"}]},
+   {tag:"SASI",title:"SASI ビジネス入口",description:"MT5 EA、取引ソースコード、完成ソフト、導入ガイド、ライセンスと安全な納品。",href:"/sasi",cta:"SASI市場を見る",chips:[{"label":"MT5 EA","href":"/sasi"},{"label":"取引ソース","href":"/sasi"},{"label":"導入・納品ガイド","href":"/sasi/delivery"},{"label":"開発者出品","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"外部連携ネットワーク",description:"WordPress、JS Widget、パートナー、API、RSS、QR、共有経由の分析。",href:"/partners",cta:"パートナーセンター",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"共有分析"}]},
-   {tag:"STORIES",title:"発見とコンテンツ",description:"不思議な発見、実際のツール課題、Before / After、利用シーン。",href:"/tools",cta:"実際の課題から始める",chips:[{label:"発見"},{label:"実際の課題"},{label:"Before / After"},{label:"利用シーン"}]}
+   {tag:"STORIES",title:"発見とコンテンツ",description:"不思議な発見、実際のツール課題、Before / After、利用シーン。",href:"/discoveries",cta:"実際の課題から始める",chips:[{"label":"発見","href":"/discoveries"},{"label":"実際のツール課題","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"利用シーン","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"発見から共有まで、役立つ体験を次につなぐ",
   flywheel:["発見","検索","体験","結果","共有","再訪"],
-  passTitle:"ToolPass ツール会員",passLead:"100以上の実用ツールを一か所で利用し、日常のファイル作業を効率化。",
+  passTitle:"ToolPass ツール会員",passLead:"100以上の実用ツールを一か所で利用し、日常のファイル作業を効率化。",passValueLead:"まず無料で一つの作業を完了。継続利用や複数ファイルの一括処理が必要になったらプランを選べます。"
   passBenefits:["100以上のツール · 無制限利用","複数ファイル処理 · 効率向上","新しいツールを継続追加","1アカウント · .com / .cn"],
   planDays:["7日体験","30日","90日","365日"],
   planDescriptions:["まずは気軽に","全ツールを利用","長期利用でお得","長期利用に最適"],
@@ -128,13 +128,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"검색 입구",description:"9개 언어 SEO, 124개 도구 디렉터리와 문제 해결 랜딩 페이지.",href:"/tools",cta:"도구 디렉터리 보기",chips:[{label:"9개 언어"},{label:"124개 도구"},{label:"문제 페이지"}]},
    {tag:"GEO",title:"AI 검색 입구",description:"llms.txt, llms-full.txt와 구조화된 제품 정보로 AI 검색을 지원합니다.",href:"/llms.txt",cta:"AI 검색 자료 보기",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"구조화 정보"}]},
    {tag:"SIAI",title:"글로벌 SIAI 배포",description:"순위, 모델 정보, 실제 가격, 무료 한도, 지역 지원과 상업적 권리.",href:"/siai",cta:"SIAI 순위 보기",chips:[{label:"순위"},{label:"가격과 무료 한도"},{label:"지역과 권리"}]},
-   {tag:"SASI",title:"SASI 비즈니스 입구",description:"MT5 EA, 트레이딩 소스 코드, 완성 소프트웨어, 설치 안내, 라이선스와 안전한 자동 전달.",href:"/sasi",cta:"SASI 마켓 보기",chips:[{label:"MT5 EA"},{label:"트레이딩 소스"},{label:"라이선스와 전달"}]},
+   {tag:"SASI",title:"SASI 비즈니스 입구",description:"MT5 EA, 트레이딩 소스 코드, 완성 소프트웨어, 설치 안내, 라이선스와 안전한 자동 전달.",href:"/sasi",cta:"SASI 마켓 보기",chips:[{"label":"MT5 EA","href":"/sasi"},{"label":"트레이딩 소스","href":"/sasi"},{"label":"설치·전달 안내","href":"/sasi/delivery"},{"label":"개발자 판매 등록","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"외부 성장 네트워크",description:"WordPress, JS Widget, 파트너, API, RSS, QR 코드와 공유 유입 분석.",href:"/partners",cta:"파트너 센터 열기",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"공유 분석"}]},
-   {tag:"STORIES",title:"콘텐츠 확산",description:"흥미로운 발견, 실제 도구 문제, Before / After와 실사용 사례.",href:"/tools",cta:"실제 문제부터 시작",chips:[{label:"발견"},{label:"실제 문제"},{label:"Before / After"},{label:"활용 사례"}]}
+   {tag:"STORIES",title:"콘텐츠 확산",description:"흥미로운 발견, 실제 도구 문제, Before / After와 실사용 사례.",href:"/discoveries",cta:"실제 문제부터 시작",chips:[{"label":"발견","href":"/discoveries"},{"label":"실제 도구 문제","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"활용 사례","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"발견에서 공유까지, 유용한 경험을 다음 단계로 연결",
   flywheel:["발견","검색","체험","결과","공유","재방문"],
-  passTitle:"ToolPass 도구 멤버십",passLead:"100개 이상의 실용 도구를 한곳에서 사용하고 파일 작업을 효율적으로 처리하세요.",
+  passTitle:"ToolPass 도구 멤버십",passLead:"100개 이상의 실용 도구를 한곳에서 사용하고 파일 작업을 효율적으로 처리하세요.",passValueLead:"먼저 무료로 작업을 완료하세요. 지속 사용이나 여러 파일의 일괄 처리가 필요할 때 패스를 선택하세요."
   passBenefits:["실용 도구 100+ · 무제한 사용","여러 파일 일괄 처리 · 효율 향상","새 도구 지속 추가","하나의 계정 · .com / .cn"],
   planDays:["7일 체험","30일","90일","365일"],
   planDescriptions:["가볍게 시작","전체 도구 이용","더 경제적인 선택","장기 이용에 적합"],
@@ -159,13 +159,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"Entrée par la recherche",description:"SEO en 9 langues, 124 outils répertoriés et pages dédiées aux problèmes réels.",href:"/tools",cta:"Voir les outils",chips:[{label:"9 langues"},{label:"124 outils"},{label:"Pages-problèmes"}]},
    {tag:"GEO",title:"Entrée par la recherche IA",description:"llms.txt, llms-full.txt et données produit structurées pour aider les systèmes IA à comprendre le service.",href:"/llms.txt",cta:"Voir les ressources IA",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"Données structurées"}]},
    {tag:"SIAI",title:"Diffusion mondiale SIAI",description:"Classements, fiches modèles, prix réels, quotas gratuits, régions et droits commerciaux.",href:"/siai",cta:"Explorer SIAI",chips:[{label:"Classements"},{label:"Prix et quotas"},{label:"Régions et droits"}]},
-   {tag:"SASI",title:"Entrée commerciale SASI",description:"EA MT5, code source de trading, logiciels finis, guides, licences et livraison automatique sécurisée.",href:"/sasi",cta:"Voir le marché SASI",chips:[{label:"EA MT5"},{label:"Code de trading"},{label:"Licences et livraison"}]},
+   {tag:"SASI",title:"Entrée commerciale SASI",description:"EA MT5, code source de trading, logiciels finis, guides, licences et livraison automatique sécurisée.",href:"/sasi",cta:"Voir le marché SASI",chips:[{"label":"EA MT5","href":"/sasi"},{"label":"Code de trading","href":"/sasi"},{"label":"Guide d’installation et livraison","href":"/sasi/delivery"},{"label":"Publication vendeur","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"Réseau de croissance externe",description:"WordPress, JS Widget, partenaires, API, RSS, QR codes et attribution des partages.",href:"/partners",cta:"Centre partenaires",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"Attribution"}]},
-   {tag:"STORIES",title:"Découverte et diffusion",description:"Découvertes étonnantes, problèmes concrets, Before / After et cas d'usage réels.",href:"/tools",cta:"Partir d'un besoin réel",chips:[{label:"Découvertes"},{label:"Problèmes réels"},{label:"Before / After"},{label:"Cas d'usage"}]}
+   {tag:"STORIES",title:"Découverte et diffusion",description:"Découvertes étonnantes, problèmes concrets, Before / After et cas d'usage réels.",href:"/discoveries",cta:"Partir d'un besoin réel",chips:[{"label":"Découvertes","href":"/discoveries"},{"label":"Problèmes réels","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"Cas d’usage","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"De la découverte au partage, chaque résultat ouvre une suite",
   flywheel:["Découvrir","Rechercher","Essayer","Résultat","Partager","Revenir"],
-  passTitle:"Abonnement ToolPass",passLead:"Plus de 100 outils pratiques au même endroit pour traiter les fichiers plus efficacement.",
+  passTitle:"Abonnement ToolPass",passLead:"Plus de 100 outils pratiques au même endroit pour traiter les fichiers plus efficacement.",passValueLead:"Commencez par une tâche gratuite. Choisissez un pass lorsque vous avez besoin d’un usage continu ou du traitement par lots."
   passBenefits:["100+ outils · utilisation illimitée","Traitement par lots · gain de temps","Nouveaux outils ajoutés en continu","Un compte · .com et .cn"],
   planDays:["Essai 7 jours","30 jours","90 jours","365 jours"],
   planDescriptions:["Pour commencer","Tous les outils","Plus avantageux","Idéal à long terme"],
@@ -190,13 +190,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"Sucheinstieg",description:"SEO in neun Sprachen, 124 Tool-Einträge und problemorientierte Landingpages.",href:"/tools",cta:"Tool-Verzeichnis öffnen",chips:[{label:"9 Sprachen"},{label:"124 Tools"},{label:"Problemseiten"}]},
    {tag:"GEO",title:"KI-Sucheinstieg",description:"llms.txt, llms-full.txt und strukturierte Produktdaten helfen KI-Systemen, das Angebot zu verstehen.",href:"/llms.txt",cta:"KI-Suchdaten ansehen",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"Strukturierte Daten"}]},
    {tag:"SIAI",title:"Globale SIAI-Verteilung",description:"Rankings, Modellprofile, echte Preise, Gratis-Kontingente, Regionen und kommerzielle Rechte.",href:"/siai",cta:"SIAI-Ranking öffnen",chips:[{label:"Rankings"},{label:"Preise und Gratislimits"},{label:"Regionen und Rechte"}]},
-   {tag:"SASI",title:"SASI-Geschäftseinstieg",description:"MT5-EAs, Trading-Quellcode, fertige Software, Anleitungen, Lizenzen und sichere automatische Lieferung.",href:"/sasi",cta:"SASI-Markt öffnen",chips:[{label:"MT5-EAs"},{label:"Trading-Quellcode"},{label:"Lizenz und Lieferung"}]},
+   {tag:"SASI",title:"SASI-Geschäftseinstieg",description:"MT5-EAs, Trading-Quellcode, fertige Software, Anleitungen, Lizenzen und sichere automatische Lieferung.",href:"/sasi",cta:"SASI-Markt öffnen",chips:[{"label":"MT5-EAs","href":"/sasi"},{"label":"Trading-Quellcode","href":"/sasi"},{"label":"Installation & Lieferung","href":"/sasi/delivery"},{"label":"Verkäufer werden","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"Externes Wachstumsnetzwerk",description:"WordPress, JS Widget, Partner, API, RSS, QR-Codes und Share-Attribution.",href:"/partners",cta:"Partnerbereich öffnen",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"Attribution"}]},
-   {tag:"STORIES",title:"Inhalte und Entdeckungen",description:"Spannende Entdeckungen, echte Tool-Probleme, Before / After und konkrete Anwendungsfälle.",href:"/tools",cta:"Mit einer Aufgabe beginnen",chips:[{label:"Entdeckungen"},{label:"Echte Probleme"},{label:"Before / After"},{label:"Anwendungsfälle"}]}
+   {tag:"STORIES",title:"Inhalte und Entdeckungen",description:"Spannende Entdeckungen, echte Tool-Probleme, Before / After und konkrete Anwendungsfälle.",href:"/discoveries",cta:"Mit einer Aufgabe beginnen",chips:[{"label":"Entdeckungen","href":"/discoveries"},{"label":"Echte Tool-Probleme","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"Anwendungsfälle","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"Von der Entdeckung zum Teilen: jedes Ergebnis führt weiter",
   flywheel:["Entdecken","Suchen","Testen","Ergebnis","Teilen","Zurückkehren"],
-  passTitle:"ToolPass-Mitgliedschaft",passLead:"Mehr als 100 praktische Tools an einem Ort für effiziente Datei- und Alltagsarbeit.",
+  passTitle:"ToolPass-Mitgliedschaft",passLead:"Mehr als 100 praktische Tools an einem Ort für effiziente Datei- und Alltagsarbeit.",passValueLead:"Erledige zuerst eine Aufgabe kostenlos. Wähle einen Pass erst bei regelmäßigem Bedarf oder Stapelverarbeitung."
   passBenefits:["100+ Tools · unbegrenzte Nutzung","Stapelverarbeitung · Zeit sparen","Neue Tools kommen laufend hinzu","Ein Konto · .com und .cn"],
   planDays:["7-Tage-Test","30 Tage","90 Tage","365 Tage"],
   planDescriptions:["Einfach starten","Alle Tools nutzen","Mehr Preisvorteil","Für langfristige Nutzung"],
@@ -221,13 +221,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"Entrada de búsqueda",description:"SEO en nueve idiomas, 124 herramientas y páginas de destino basadas en problemas reales.",href:"/tools",cta:"Ver directorio de herramientas",chips:[{label:"9 idiomas"},{label:"124 herramientas"},{label:"Páginas de problemas"}]},
    {tag:"GEO",title:"Entrada de búsqueda IA",description:"llms.txt, llms-full.txt y datos estructurados ayudan a los sistemas de IA a comprender el servicio.",href:"/llms.txt",cta:"Ver recursos de IA",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"Datos estructurados"}]},
    {tag:"SIAI",title:"Distribución global SIAI",description:"Rankings, fichas de modelos, precios reales, límites gratuitos, regiones y derechos comerciales.",href:"/siai",cta:"Explorar SIAI",chips:[{label:"Rankings"},{label:"Precios y límites"},{label:"Regiones y derechos"}]},
-   {tag:"SASI",title:"Entrada comercial SASI",description:"EA MT5, código fuente de trading, software terminado, tutoriales, licencias y entrega automática segura.",href:"/sasi",cta:"Ver mercado SASI",chips:[{label:"EA MT5"},{label:"Código de trading"},{label:"Licencias y entrega"}]},
+   {tag:"SASI",title:"Entrada comercial SASI",description:"EA MT5, código fuente de trading, software terminado, tutoriales, licencias y entrega automática segura.",href:"/sasi",cta:"Ver mercado SASI",chips:[{"label":"EA MT5","href":"/sasi"},{"label":"Código de trading","href":"/sasi"},{"label":"Guía de instalación y entrega","href":"/sasi/delivery"},{"label":"Publicar como vendedor","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"Red externa de crecimiento",description:"WordPress, JS Widget, socios, API, RSS, códigos QR y atribución de compartidos.",href:"/partners",cta:"Abrir centro de socios",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"Atribución"}]},
-   {tag:"STORIES",title:"Contenido y descubrimiento",description:"Descubrimientos curiosos, problemas reales, Before / After y casos prácticos.",href:"/tools",cta:"Empezar por un problema real",chips:[{label:"Descubrimientos"},{label:"Problemas reales"},{label:"Before / After"},{label:"Casos de uso"}]}
+   {tag:"STORIES",title:"Contenido y descubrimiento",description:"Descubrimientos curiosos, problemas reales, Before / After y casos prácticos.",href:"/discoveries",cta:"Empezar por un problema real",chips:[{"label":"Descubrimientos","href":"/discoveries"},{"label":"Problemas reales","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"Casos de uso","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"De descubrir a compartir: cada resultado abre el siguiente paso",
   flywheel:["Descubrir","Buscar","Probar","Resultado","Compartir","Volver"],
-  passTitle:"Membresía ToolPass",passLead:"Más de 100 herramientas prácticas en un solo lugar para procesar archivos con mayor eficiencia.",
+  passTitle:"Membresía ToolPass",passLead:"Más de 100 herramientas prácticas en un solo lugar para procesar archivos con mayor eficiencia.",passValueLead:"Empieza con una tarea gratuita. Elige un pase cuando necesites uso continuo o procesamiento por lotes."
   passBenefits:["100+ herramientas · uso ilimitado","Procesamiento por lotes · más eficiencia","Nuevas herramientas continuamente","Una cuenta · .com y .cn"],
   planDays:["Prueba 7 días","30 días","90 días","365 días"],
   planDescriptions:["Para empezar","Todas las herramientas","Más ahorro","Ideal a largo plazo"],
@@ -252,13 +252,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"Entrada de busca",description:"SEO em nove idiomas, 124 ferramentas e páginas de destino orientadas por problemas reais.",href:"/tools",cta:"Ver diretório de ferramentas",chips:[{label:"9 idiomas"},{label:"124 ferramentas"},{label:"Páginas de problemas"}]},
    {tag:"GEO",title:"Entrada de busca por IA",description:"llms.txt, llms-full.txt e dados estruturados ajudam sistemas de IA a entender o serviço.",href:"/llms.txt",cta:"Ver recursos de IA",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"Dados estruturados"}]},
    {tag:"SIAI",title:"Distribuição global SIAI",description:"Rankings, perfis de modelos, preços reais, limites gratuitos, regiões e direitos comerciais.",href:"/siai",cta:"Explorar SIAI",chips:[{label:"Rankings"},{label:"Preços e limites"},{label:"Regiões e direitos"}]},
-   {tag:"SASI",title:"Entrada comercial SASI",description:"EA MT5, código-fonte de trading, software pronto, tutoriais, licenças e entrega automática segura.",href:"/sasi",cta:"Ver mercado SASI",chips:[{label:"EA MT5"},{label:"Código de trading"},{label:"Licenças e entrega"}]},
+   {tag:"SASI",title:"Entrada comercial SASI",description:"EA MT5, código-fonte de trading, software pronto, tutoriais, licenças e entrega automática segura.",href:"/sasi",cta:"Ver mercado SASI",chips:[{"label":"EA MT5","href":"/sasi"},{"label":"Código de trading","href":"/sasi"},{"label":"Guia de instalação e entrega","href":"/sasi/delivery"},{"label":"Publicar como vendedor","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"Rede externa de crescimento",description:"WordPress, JS Widget, parceiros, API, RSS, QR e atribuição de compartilhamentos.",href:"/partners",cta:"Abrir centro de parceiros",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"Atribuição"}]},
-   {tag:"STORIES",title:"Conteúdo e descoberta",description:"Descobertas curiosas, problemas reais, Before / After e cenários de aplicação.",href:"/tools",cta:"Começar por um problema real",chips:[{label:"Descobertas"},{label:"Problemas reais"},{label:"Before / After"},{label:"Casos de uso"}]}
+   {tag:"STORIES",title:"Conteúdo e descoberta",description:"Descobertas curiosas, problemas reais, Before / After e cenários de aplicação.",href:"/discoveries",cta:"Começar por um problema real",chips:[{"label":"Descobertas","href":"/discoveries"},{"label":"Problemas reais","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"Casos de uso","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"Da descoberta ao compartilhamento, cada resultado abre o próximo passo",
   flywheel:["Descobrir","Buscar","Testar","Resultado","Compartilhar","Voltar"],
-  passTitle:"Assinatura ToolPass",passLead:"Mais de 100 ferramentas práticas em um só lugar para lidar com arquivos com eficiência.",
+  passTitle:"Assinatura ToolPass",passLead:"Mais de 100 ferramentas práticas em um só lugar para lidar com arquivos com eficiência.",passValueLead:"Comece com uma tarefa gratuita. Escolha um passe quando precisar de uso contínuo ou processamento em lote."
   passBenefits:["100+ ferramentas · uso ilimitado","Processamento em lote · mais eficiência","Novas ferramentas adicionadas sempre","Uma conta · .com e .cn"],
   planDays:["Teste de 7 dias","30 dias","90 dias","365 dias"],
   planDescriptions:["Para começar","Todas as ferramentas","Mais economia","Ideal para longo prazo"],
@@ -283,13 +283,13 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"SEO",title:"مدخل البحث",description:"تحسين البحث بتسع لغات، و124 مدخلاً للأدوات وصفحات مخصصة للمشكلات الحقيقية.",href:"/tools",cta:"استعرض دليل الأدوات",chips:[{label:"9 لغات"},{label:"124 أداة"},{label:"صفحات المشكلات"}]},
    {tag:"GEO",title:"مدخل بحث الذكاء الاصطناعي",description:"ملفات llms.txt وllms-full.txt وبيانات المنتجات المنظمة لتسهيل فهم الخدمات.",href:"/llms.txt",cta:"عرض موارد البحث",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"بيانات منظمة"}]},
    {tag:"SIAI",title:"توزيع SIAI العالمي",description:"التصنيفات وملفات النماذج والأسعار الحقيقية والحصص المجانية والمناطق والحقوق التجارية.",href:"/siai",cta:"استكشف تصنيف SIAI",chips:[{label:"التصنيفات"},{label:"الأسعار والحصص"},{label:"المناطق والحقوق"}]},
-   {tag:"SASI",title:"مدخل SASI التجاري",description:"MT5 EA وشيفرات التداول والبرامج الجاهزة والدروس والتراخيص والتسليم الآمن التلقائي.",href:"/sasi",cta:"استعرض سوق SASI",chips:[{label:"MT5 EA"},{label:"شيفرات التداول"},{label:"التراخيص والتسليم"}]},
+   {tag:"SASI",title:"مدخل SASI التجاري",description:"MT5 EA وشيفرات التداول والبرامج الجاهزة والدروس والتراخيص والتسليم الآمن التلقائي.",href:"/sasi",cta:"استعرض سوق SASI",chips:[{"label":"MT5 EA","href":"/sasi"},{"label":"شيفرات التداول","href":"/sasi"},{"label":"دليل التثبيت والتسليم","href":"/sasi/delivery"},{"label":"النشر كبائع","href":"/sasi/seller"}]},
    {tag:"NETWORK",title:"شبكة النمو الخارجية",description:"WordPress وJS Widget والشركاء وAPI وRSS ورموز QR وإسناد المشاركات.",href:"/partners",cta:"مركز الشركاء",chips:[{label:"WordPress",href:"/partners"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"QR"},{label:"إسناد المشاركة"}]},
-   {tag:"STORIES",title:"المحتوى والاكتشاف",description:"اكتشافات مميزة ومشكلات أدوات حقيقية وBefore / After وسيناريوهات تطبيقية.",href:"/tools",cta:"ابدأ بمشكلة حقيقية",chips:[{label:"اكتشافات"},{label:"مشكلات حقيقية"},{label:"Before / After"},{label:"حالات استخدام"}]}
+   {tag:"STORIES",title:"المحتوى والاكتشاف",description:"اكتشافات مميزة ومشكلات أدوات حقيقية وBefore / After وسيناريوهات تطبيقية.",href:"/discoveries",cta:"ابدأ بمشكلة حقيقية",chips:[{"label":"اكتشافات","href":"/discoveries"},{"label":"مشكلات أدوات حقيقية","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"حالات استخدام","href":"/discoveries#use-cases"}]}
   ],
   flywheelTitle:"من الاكتشاف إلى المشاركة، كل نتيجة تفتح خطوة جديدة",
   flywheel:["اكتشاف","بحث","تجربة","نتيجة","مشاركة","عودة"],
-  passTitle:"عضوية ToolPass",passLead:"أكثر من 100 أداة عملية في مكان واحد لإنجاز الملفات والمهام اليومية بكفاءة.",
+  passTitle:"عضوية ToolPass",passLead:"أكثر من 100 أداة عملية في مكان واحد لإنجاز الملفات والمهام اليومية بكفاءة.",passValueLead:"ابدأ بمهمة مجانية. اختر الباقة عندما تحتاج إلى استخدام مستمر أو معالجة الملفات دفعة واحدة."
   passBenefits:["أكثر من 100 أداة · استخدام غير محدود","معالجة ملفات متعددة · كفاءة أعلى","إضافة أدوات جديدة باستمرار","حساب واحد · .com و.cn"],
   planDays:["تجربة 7 أيام","30 يوماً","90 يوماً","365 يوماً"],
   planDescriptions:["للبداية","جميع الأدوات","قيمة أفضل","للاستخدام الطويل"],
@@ -400,8 +400,6 @@ export function HomeHeroVisual(){
 
 export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  const copy=COPY[lang]||COPY.en;
- const {currency}=usePreferredCurrency();
- const symbol=currency==="CNY"?"¥":"$";
  return (
   <section className="lx-home-growth-stack" aria-label={copy.growthTitle}>
    <div className="lx-home-feature-strip">
@@ -439,27 +437,6 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
      <div>{copy.flywheel.map((step,index)=><span key={step}><b>{step}</b>{index<copy.flywheel.length-1&&<i aria-hidden="true">→</i>}</span>)}</div>
     </div>
    </section>
-   <section className="lx-home-toolpass" aria-labelledby="lx-home-toolpass-title">
-    <div className="lx-home-toolpass-intro">
-     <span className="lx-home-toolpass-crown" aria-hidden="true">♛</span>
-     <p className="lx-home-section-eyebrow">TOOLPASS · ALL PRACTICAL TOOLS</p>
-     <h2 id="lx-home-toolpass-title">{copy.passTitle}</h2>
-     <p>{copy.passLead}</p>
-     <ul>{copy.passBenefits.map(item=><li key={item}><span aria-hidden="true">✓</span>{item}</li>)}</ul>
-     <Link href="/tools/pass" className="lx-home-toolpass-link">{copy.planCta} <span aria-hidden="true">→</span></Link>
-    </div>
-    <div className="lx-home-plan-grid">
-     {ALL_TOOLS_PASS_CATALOG.map((offer,index)=>(
-      <article className={index===1?"lx-home-plan-card is-featured":"lx-home-plan-card"} key={offer.sku}>
-       {index===1&&<span className="lx-home-plan-badge">✦ {copy.popular}</span>}
-       <h3>{copy.planDays[index]}</h3>
-       <strong>{symbol}{offer.price}</strong>
-       <p>{copy.planDescriptions[index]}</p>
-       <Link href="/tools/pass">{copy.planCta} <span aria-hidden="true">→</span></Link>
-      </article>
-     ))}
-    </div>
-   </section>
    <section className="lx-home-market-strip" aria-label={copy.marketSiaiTitle+" / "+copy.marketSasiTitle}>
     <Link className="lx-home-market-card" href="/siai">
      <span className="lx-home-market-icon" aria-hidden="true">🏆</span>
@@ -478,6 +455,39 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
    <section className="lx-home-popular-tools" aria-labelledby="lx-home-tools-title">
     <div><h2 id="lx-home-tools-title">{copy.toolsTitle}</h2><p>{copy.passLead}</p></div>
     <nav>{copy.toolCategories.map(item=><Link href={item.href} key={item.title}>{item.title} <span aria-hidden="true">→</span></Link>)}</nav>
+   </section>
+  </section>
+ );
+}
+
+
+export function HomeToolPassMembership(){
+ const {lang}=useLingxiLang();
+ const copy=COPY[lang]||COPY.en;
+ const {currency}=usePreferredCurrency();
+ const symbol=currency==="CNY"?"¥":"$";
+ return (
+  <section className="lx-home-toolpass-wrap" aria-label={copy.passTitle}>
+   <section className="lx-home-toolpass" id="toolpass-membership" aria-labelledby="lx-home-toolpass-title">
+    <div className="lx-home-toolpass-intro">
+     <span className="lx-home-toolpass-crown" aria-hidden="true">♛</span>
+     <p className="lx-home-section-eyebrow">TOOLPASS · ALL PRACTICAL TOOLS</p>
+     <h2 id="lx-home-toolpass-title">{copy.passTitle}</h2>
+     <p>{copy.passValueLead}</p>
+     <ul>{copy.passBenefits.map(item=><li key={item}><span aria-hidden="true">✓</span>{item}</li>)}</ul>
+     <Link href="/tools/pass" className="lx-home-toolpass-link">{copy.planCta} <span aria-hidden="true">→</span></Link>
+    </div>
+    <div className="lx-home-plan-grid">
+     {ALL_TOOLS_PASS_CATALOG.map((offer,index)=>(
+      <article className={index===1?"lx-home-plan-card is-featured":"lx-home-plan-card"} key={offer.sku}>
+       {index===1&&<span className="lx-home-plan-badge">✦ {copy.popular}</span>}
+       <h3>{copy.planDays[index]}</h3>
+       <strong>{symbol}{offer.price}</strong>
+       <p>{copy.planDescriptions[index]}</p>
+       <Link href="/tools/pass">{copy.planCta} <span aria-hidden="true">→</span></Link>
+      </article>
+     ))}
+    </div>
    </section>
   </section>
  );
