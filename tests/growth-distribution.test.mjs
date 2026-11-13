@@ -144,3 +144,16 @@ test("vendor applications must pass same-origin and rate-limit gate",()=>{
  assert.match(route,/ipLimit:30/);
  assert.match(route,/return verifiedSubmission\(req\)/);
 });
+
+test("growth distribution documentation matches implemented widget boundaries and release status",()=>{
+ const guide=read("docs/growth/siai-global-distribution-20261105.md");
+ const config=read("next.config.js");
+ assert.match(guide,/data-lx-widget="siai"/);
+ assert.match(guide,/data-lx-widget="tools"/);
+ assert.match(guide,/Tool processing does not run inside the partner page/);
+ assert.match(guide,/source and build implemented; clean sandbox install pending/);
+ assert.match(guide,/prototype\/source and regression tests exist; store submission pending/);
+ assert.match(guide,/not an approved WordPress\.org listing/);
+ assert.match(config,/frame-ancestors 'self'/);
+ assert.match(config,/X-Frame-Options","value":"SAMEORIGIN"/);
+});
