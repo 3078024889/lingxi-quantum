@@ -25,9 +25,9 @@ test('SASI marketplace is compact and seller workspace uses real data in a three
  assert.match(css,/\.sellerWorkspaceGrid\{display:grid;grid-template-columns:minmax\(225px/);
  assert.match(css,/\.main \.heroArtwork\{max-height:426px\}/);assert.match(css,/background:transparent/);
 });
-test('new social image uses original logo and transparent SASI foreground artwork',()=>{
- const og=read('app/opengraph-image.tsx'),share=read('lib/share-image.ts');
- assert.match(og,/new ImageResponse/);assert.match(og,/width:1200,height:630/);
- assert.match(og,/images\/lingxifield-logo\.png/);assert.match(og,/images\/sasi\/sasi-market-hero-lingxifield\.png/);
- assert.match(share,/opengraph-image\?v=20261113/);
+test('new social image uses the supplied global brand composition',()=>{
+ const share=read('lib/share-image.ts');
+ assert.ok(share.includes('og-lingxifield-20261113.jpg'));
+ assert.ok(share.includes('width:1200,height:675'));
+ assert.ok(!share.includes('opengraph-image'));
 });

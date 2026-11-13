@@ -90,7 +90,9 @@ test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
  assert.ok(catalog.includes("Copernicus SI 11.6"));
  assert.ok(catalog.includes('kind:"source"'));
  assert.ok(!catalog.includes("SI9.5") && !catalog.includes("SI 9.5"));
- assert.ok(market.includes("SI 11.6"));
+ assert.ok(market.includes("featuredVisualTitle"));
+ assert.ok(market.includes("featured.titleZh"));
+ assert.ok(market.includes("<strong>{featuredVisualTitle}</strong>"));
 });
 
 test('retired URL-to-video workbench is deleted from source and product discovery',()=>{
