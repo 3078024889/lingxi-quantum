@@ -90,7 +90,7 @@ function listFiles(dir){
  if(!fs.existsSync(dir))return [];
  return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
   const file=path.join(dir,entry.name);
-  return entry.isDirectory()?listFiles(file):[file.replaceAll("\\\\","/")];
+  return entry.isDirectory()?listFiles(file):[file.replaceAll("\\","/")];
  });
 }
 const legacySasiLibraryFiles=listFiles("lib/sasi").filter(file=>file!=="lib/sasi/request-security.ts");

@@ -16,7 +16,7 @@ function listFiles(dir){
 test('retired SASI APIs return 410 and cannot create provider jobs',async()=>{
  for(const file of report.retiredRoutes){
   const source=readFileSync(file,'utf8');
-  assert(!/\\bimport\\b|\\bfetch\\s*\\(/.test(source),file);
+  assert(!/\bimport\b|\bfetch\s*\(/.test(source),file);
   const route=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
   const methods=file.includes('[[...legacy]]')?['GET','POST','PUT','PATCH','DELETE','OPTIONS']:['GET','POST'];
   for(const method of methods){
@@ -44,12 +44,12 @@ test('retired SASI pages remain permanent redirects and are never indexed',()=>{
  ];
  for(const file of pages){
   const source=readFileSync(file,'utf8');
-  assert.match(source,/permanentRedirect\\(/,file+' must use a server-side permanent redirect');
-  assert.match(source,/robots:\\s*\\{index:false,follow:false\\}/,file+' must not be indexed');
+  assert.match(source,/permanentRedirect\(/,file+' must use a server-side permanent redirect');
+  assert.match(source,/robots:\s*\{index:false,follow:false\}/,file+' must not be indexed');
   assert.doesNotMatch(source,/Sasi(?:OneSurface|UnifiedLauncher|MultiEpisodeWorkspace|SeriesStudio|ChatCreationStudio|VideoAssembler)/,file+' must not import retired creation UI');
  }
  const pricing=readFileSync('app/sasi/pricing/page.tsx','utf8');
- assert.match(pricing,/permanentRedirect\\("\\/ai-wallet"\\)/);
+ assert.match(pricing,/permanentRedirect\("\/ai-wallet"\)/);
 });
 
 test('only current marketplace and software APIs remain under /api/sasi',()=>{
