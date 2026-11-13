@@ -12,7 +12,8 @@ import {LOCALIZED_LOCALES,SEO_LOCALES,isSeoLocale,localePath} from "@/lib/seo/gl
 import {siaiLanguageAlternates} from "@/lib/seo/siai-domain-policy";
 import {siaiLandingShouldIndex} from "@/lib/siai-seo-policy";
 
-export const dynamicParams=false;
+export const dynamic="force-dynamic";
+export const revalidate=0;
 type Props={params:Promise<{locale:string}>};
 export function generateStaticParams(){return LOCALIZED_LOCALES.map(locale=>({locale}))}
 const languages=siaiLanguageAlternates();
@@ -44,5 +45,5 @@ export default async function LocalizedSiaiDirectory({params}:Props){
  const faqld={"@context":"https://schema.org","@type":"FAQPage",
   "@id":canonical+"#faq",inLanguage:c.hreflang,
   mainEntity:copy.topics.map(t=>({"@type":"Question",name:t.q,acceptedAnswer:{"@type":"Answer",text:t.rank}}))};
- return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><SiaiPartnerLink/><div lang={c.hreflang} dir={c.dir}><SiaiRankingHome rows={rows}/></div><Footer/></>;
+ return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonld).replace(/</g,"\\u003c")}}/><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(faqld).replace(/</g,"\\u003c")}}/><Nav/><SiaiPartnerLink/><div lang={c.hreflang} dir={c.dir}><div className="lx-growth-siai-page"><SiaiRankingHome rows={rows}/></div></div><Footer/></>;
 }
