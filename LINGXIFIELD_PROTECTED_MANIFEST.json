@@ -206,6 +206,10 @@
       "bytes": 1653
     },
     {
+      "path": "app/api/internal/sasi/worker/tick/route.ts",
+      "bytes": 476
+    },
+    {
       "path": "app/api/knowledge/ask/route.ts",
       "bytes": 4648
     },
@@ -303,7 +307,11 @@
     },
     {
       "path": "app/api/sasi/[[...legacy]]/route.ts",
-      "bytes": 482
+      "bytes": 476
+    },
+    {
+      "path": "app/api/sasi/account/route.ts",
+      "bytes": 4354
     },
     {
       "path": "app/api/sasi/byok/image/route.ts",
@@ -9627,7 +9635,7 @@
     },
     {
       "path": "docs/operations/legacy-sasi-retirement-20261108.json",
-      "bytes": 23983
+      "bytes": 25203
     },
     {
       "path": "knowledge/_shared/avoid-words.json",
@@ -10226,16 +10234,192 @@
       "bytes": 3590
     },
     {
+      "path": "lib/sasi/aigc-label.ts",
+      "bytes": 2697
+    },
+    {
+      "path": "lib/sasi/ark-text.ts",
+      "bytes": 4086
+    },
+    {
       "path": "lib/sasi/autonomy/index.ts",
       "bytes": 100
+    },
+    {
+      "path": "lib/sasi/byok-text-profile.ts",
+      "bytes": 1016
+    },
+    {
+      "path": "lib/sasi/catalog.ts",
+      "bytes": 8930
+    },
+    {
+      "path": "lib/sasi/core/intake-contract.ts",
+      "bytes": 2596
+    },
+    {
+      "path": "lib/sasi/core/platform-identity.ts",
+      "bytes": 6473
+    },
+    {
+      "path": "lib/sasi/credential-vault.ts",
+      "bytes": 2370
+    },
+    {
+      "path": "lib/sasi/director-plan.ts",
+      "bytes": 3882
+    },
+    {
+      "path": "lib/sasi/durable/orchestrator.ts",
+      "bytes": 3108
+    },
+    {
+      "path": "lib/sasi/durable/public-event-codec.ts",
+      "bytes": 2293
+    },
+    {
+      "path": "lib/sasi/durable/public-event-store.ts",
+      "bytes": 2458
+    },
+    {
+      "path": "lib/sasi/durable/run-store.ts",
+      "bytes": 2275
+    },
+    {
+      "path": "lib/sasi/durable/runtime-capability.ts",
+      "bytes": 647
+    },
+    {
+      "path": "lib/sasi/durable/step-store.ts",
+      "bytes": 4318
+    },
+    {
+      "path": "lib/sasi/durable/trace.ts",
+      "bytes": 899
+    },
+    {
+      "path": "lib/sasi/durable/unified-task-view.ts",
+      "bytes": 2423
+    },
+    {
+      "path": "lib/sasi/experience/canary.ts",
+      "bytes": 356
+    },
+    {
+      "path": "lib/sasi/experience/daily-budget.ts",
+      "bytes": 2174
+    },
+    {
+      "path": "lib/sasi/experience/free-provider-config.ts",
+      "bytes": 8299
+    },
+    {
+      "path": "lib/sasi/experience/free-text-router.ts",
+      "bytes": 11547
+    },
+    {
+      "path": "lib/sasi/experience/provider-state.ts",
+      "bytes": 3215
+    },
+    {
+      "path": "lib/sasi/experience/request-coalescer.ts",
+      "bytes": 917
+    },
+    {
+      "path": "lib/sasi/experience/resilient-text.ts",
+      "bytes": 3269
+    },
+    {
+      "path": "lib/sasi/experience/session-affinity.ts",
+      "bytes": 1383
+    },
+    {
+      "path": "lib/sasi/gateway/ssrf-guard.ts",
+      "bytes": 616
+    },
+    {
+      "path": "lib/sasi/intelligence/provider-defaults.ts",
+      "bytes": 3113
+    },
+    {
+      "path": "lib/sasi/intelligence/runtime-health.ts",
+      "bytes": 2055
+    },
+    {
+      "path": "lib/sasi/intelligence/telemetry.ts",
+      "bytes": 1140
+    },
+    {
+      "path": "lib/sasi/intelligence/user-text.ts",
+      "bytes": 10135
+    },
+    {
+      "path": "lib/sasi/knowledge/durable-knowledge.ts",
+      "bytes": 2541
+    },
+    {
+      "path": "lib/sasi/mp4-duration.ts",
+      "bytes": 3649
+    },
+    {
+      "path": "lib/sasi/payment-gate.ts",
+      "bytes": 1674
+    },
+    {
+      "path": "lib/sasi/pricing-v49.ts",
+      "bytes": 2031
+    },
+    {
+      "path": "lib/sasi/production.ts",
+      "bytes": 10941
+    },
+    {
+      "path": "lib/sasi/promotion-brief.ts",
+      "bytes": 7894
+    },
+    {
+      "path": "lib/sasi/provider.ts",
+      "bytes": 11845
+    },
+    {
+      "path": "lib/sasi/readiness.ts",
+      "bytes": 2820
     },
     {
       "path": "lib/sasi/request-security.ts",
       "bytes": 1223
     },
     {
+      "path": "lib/sasi/skill-runtime.ts",
+      "bytes": 3273
+    },
+    {
+      "path": "lib/sasi/skills/catalog.ts",
+      "bytes": 14274
+    },
+    {
+      "path": "lib/sasi/skills/router.ts",
+      "bytes": 2646
+    },
+    {
+      "path": "lib/sasi/skills/types.ts",
+      "bytes": 1008
+    },
+    {
+      "path": "lib/sasi/skills/ui.ts",
+      "bytes": 20286
+    },
+    {
       "path": "lib/sasi/sovereign-generation/worker-client.ts",
       "bytes": 472
+    },
+    {
+      "path": "lib/sasi/unified-balance.ts",
+      "bytes": 2018
+    },
+    {
+      "path": "lib/sasi/video-pricing.ts",
+      "bytes": 3802
     },
     {
       "path": "lib/security/abuse-guard.ts",
@@ -11659,7 +11843,7 @@
     },
     {
       "path": "scripts/audit/retired-code-cleanup.mjs",
-      "bytes": 5912
+      "bytes": 6221
     },
     {
       "path": "scripts/audit/tool-graph-coverage-v1593.mjs",
@@ -11728,54 +11912,6 @@
     {
       "path": "scripts/csv-stream.mjs",
       "bytes": 1744
-    },
-    {
-      "path": "scripts/drama-pipeline/assemble-plan-route.ts",
-      "bytes": 915
-    },
-    {
-      "path": "scripts/drama-pipeline/character-canon.mjs",
-      "bytes": 13923
-    },
-    {
-      "path": "scripts/drama-pipeline/continuity-foundation-bridge.mjs",
-      "bytes": 6126
-    },
-    {
-      "path": "scripts/drama-pipeline/drama-eight-step.ts",
-      "bytes": 7344
-    },
-    {
-      "path": "scripts/drama-pipeline/eight-step-automaton.mjs",
-      "bytes": 9421
-    },
-    {
-      "path": "scripts/drama-pipeline/eight-step-demo.json",
-      "bytes": 7088
-    },
-    {
-      "path": "scripts/drama-pipeline/README-本机可点.md",
-      "bytes": 833
-    },
-    {
-      "path": "scripts/drama-pipeline/route.ts",
-      "bytes": 875
-    },
-    {
-      "path": "scripts/drama-pipeline/shotpack.mjs",
-      "bytes": 8779
-    },
-    {
-      "path": "scripts/drama-pipeline/skill-teach/continuity-canon-compiler-index.json",
-      "bytes": 46365
-    },
-    {
-      "path": "scripts/drama-pipeline/skill-teach/priority-compiler-index.json",
-      "bytes": 4772
-    },
-    {
-      "path": "scripts/drama-pipeline/skill-teach/wave2-compiler-index.json",
-      "bytes": 11288
     },
     {
       "path": "scripts/expected-paid-tools-v1581.json",
@@ -12659,7 +12795,7 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 4923
+      "bytes": 4977
     },
     {
       "path": "workers/sasi-compute-v19/__pycache__/download_models.cpython-313.pyc",

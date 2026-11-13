@@ -93,11 +93,15 @@ function listFiles(dir){
   return entry.isDirectory()?listFiles(file):[file.replaceAll("\\","/")];
  });
 }
-const legacySasiLibraryFiles=listFiles("lib/sasi").filter(file=>file!=="lib/sasi/request-security.ts");
-if(legacySasiLibraryFiles.length)throw new Error("LEGACY_SASI_LIBRARY_REMAINS:"+legacySasiLibraryFiles.join(","));
+const expectedSasiLibs=new Set(report.preservedLibFiles||["lib/sasi/request-security.ts"]);
+const actualSasiLibs=listFiles("lib/sasi");
+const unexpectedSasiLibs=actualSasiLibs.filter(file=>!expectedSasiLibs.has(file));
+const missingSasiLibs=[...expectedSasiLibs].filter(file=>!fs.existsSync(file));
+if(unexpectedSasiLibs.length||missingSasiLibs.length)throw new Error("SASI_SHARED_LIBRARY_SET_MISMATCH: unexpected="+unexpectedSasiLibs.join(",")+" missing="+missingSasiLibs.join(","));
 const sasiApiFiles=listFiles("app/api/sasi").filter(file=>file.endsWith("/route.ts"));
 const unexpectedSasiApiFiles=sasiApiFiles.filter(file=>
  file!=="app/api/sasi/[[...legacy]]/route.ts" &&
+ file!=="app/api/sasi/account/route.ts" &&
  !file.startsWith("app/api/sasi/marketplace/") &&
  !file.startsWith("app/api/sasi/software/")
 );

@@ -1,0 +1,302 @@
+import "server-only";
+import { settleVideoSeconds } from "@/lib/sasi/video-pricing";
+import { createHash } from "node:crypto";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { pollSasiVideo, providerAssetAccess, submitSasiVideo, type SasiVideoSelection } from "@/lib/sasi/provider";
+import { createSasiAigcMetadata, embedSasiAigcMetadata, readSasiAigcMetadata } from "@/lib/sasi/aigc-label";
+import { billableWholeSeconds, readMp4DurationSeconds } from "@/lib/sasi/mp4-duration";
+import { validateVideoDelivery } from "@/lib/sasi-v5/visual/validate";
+import { recordVisualValidation } from "@/lib/sasi-v5/visual-repository";
+
+export type SasiJobRow = {
+  id: string;
+  user_id: string;
+  project_id: string;
+  node_id: string | null;
+  provider: string;
+  model: string;
+  provider_job_id: string | null;
+  status: string;
+  quoted_points: number;
+  reserved_points: number;
+  settled_points: number;
+  input: Record<string, unknown>;
+  output: Record<string, unknown>;
+  error_code: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+const MAX_DELIVERY_BYTES = 100 * 1024 * 1024;
+
+async function downloadTrustedVideo(provider: string, initialUrl: string) {
+  const {fetchPublicMedia}=await import('@/lib/security/public-media-fetch');
+  const downloaded=await fetchPublicMedia(initialUrl,{
+    kind:'video',allowHtml:false,deadline:Date.now()+60_000,maxBytes:MAX_DELIVERY_BYTES,
+    allowTarget:url=>providerAssetAccess(provider,url.toString()).trusted,
+  });
+  const bytes=new Uint8Array(await downloaded.response.arrayBuffer());
+  if(bytes.byteLength<12||String.fromCharCode(...bytes.slice(4,8))!=='ftyp')throw Error('AIGC_LABEL_REQUIRES_MP4');
+  return{bytes,mimeType:'video/mp4',extension:'mp4'};
+}
+
+export async function dispatchSasiJob(admin: SupabaseClient, job: SasiJobRow) {
+  if (job.status !== "confirmed") return job;
+  try {
+    const submitted = await submitSasiVideo({
+      prompt: String(job.input.prompt ?? "").slice(0, 4000),
+      duration: Number(job.input.duration),
+      aspectRatio: job.input.aspectRatio === "9:16" || job.input.aspectRatio === "1:1" ? job.input.aspectRatio : "16:9",
+      quality: job.input.quality === "balanced" || job.input.quality === "cinema" ? job.input.quality : "fast",
+      selection: { provider: job.provider, model: job.model, quality: job.input.quality } as SasiVideoSelection,
+    });
+    const { data, error } = await admin.from("sasi_jobs").update({
+      status: "queued",
+      provider_job_id: submitted.providerJobId,
+      started_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }).eq("id", job.id).eq("status", "confirmed").select().single();
+    if (error || !data) throw new Error("JOB_DISPATCH_STATE_FAILED");
+    return data as SasiJobRow;
+  } catch (error) {
+    const code = error instanceof Error ? error.message.slice(0, 120) : "PROVIDER_SUBMIT_FAILED";
+    await admin.rpc("release_sasi_job", { p_job_id: job.id, p_status: "failed", p_error_code: code });
+    throw error;
+  }
+}
+
+export async function refreshSasiJob(admin: SupabaseClient, job: SasiJobRow) {
+  if (!new Set(["queued", "running"]).has(job.status) || !job.provider_job_id) return job;
+  const provider = await pollSasiVideo(job.provider, job.model, job.provider_job_id);
+  if (provider.state === "queued" || provider.state === "running") {
+    if (job.status !== provider.state) {
+      const { data } = await admin.from("sasi_jobs").update({ status: provider.state, updated_at: new Date().toISOString() })
+        .eq("id", job.id).in("status", ["queued", "running"]).select().single();
+      return (data ?? job) as SasiJobRow;
+    }
+    return job;
+  }
+  if (provider.state === "failed") {
+    await admin.rpc("release_sasi_job", { p_job_id: job.id, p_status: "failed", p_error_code: provider.errorCode });
+    const { data } = await admin.from("sasi_jobs").select("*").eq("id", job.id).single();
+    return (data ?? job) as SasiJobRow;
+  }
+
+  const { data: existing } = await admin
+    .from("sasi_deliveries")
+    .select("*")
+    .eq("job_id", job.id)
+    .maybeSingle();
+
+  const previousUsage = job.output.verifiedUsage as {
+    source?: string;
+    reference?: string;
+    billableSeconds?: number;
+    measuredDurationSeconds?: number;
+  } | undefined;
+
+  let verifiedUsage =
+    previousUsage?.source === "delivery-mp4"
+      && typeof previousUsage.reference === "string"
+      && previousUsage.reference.length > 0
+      && Number.isSafeInteger(previousUsage.billableSeconds)
+      && Number(previousUsage.billableSeconds) > 0
+      ? previousUsage
+      : null;
+
+  let deliverySha =
+    existing && typeof existing.sha256 === "string" && existing.sha256.length > 0
+      ? existing.sha256
+      : null;
+
+  if (!verifiedUsage || !existing) {
+    const downloaded = await downloadTrustedVideo(job.provider, provider.videoUrl);
+    const tier = job.input.quality === "cinema" ? "premium" : job.input.quality === "balanced" ? "standard" : "fast";
+    const v5Validation = await validateVideoDelivery(downloaded.bytes, {
+      instruction: String(job.input.prompt ?? ""),
+      tier,
+      identityCritical: Boolean(job.input.identityCritical),
+    });
+    void recordVisualValidation({
+      userId: job.user_id,
+      projectId: job.project_id,
+      taskId: null,
+      kind: "video",
+      tier,
+      passed: v5Validation.pass,
+      vector: v5Validation.quality,
+      reasons: v5Validation.reasons,
+      technical: v5Validation.technical,
+      semanticModel: v5Validation.semantic?.model ?? null,
+    });
+    if (!v5Validation.pass) {
+      throw new Error(`SASI_V5_VIDEO_QUALITY_REJECTED:${v5Validation.reasons.slice(0,3).join("|")}`);
+    }
+    const measuredDurationSeconds = readMp4DurationSeconds(downloaded.bytes);
+    const billableSeconds = billableWholeSeconds(measuredDurationSeconds);
+
+    const aigcMetadata = createSasiAigcMetadata(job.id);
+    const labeledBytes = embedSasiAigcMetadata(downloaded.bytes, aigcMetadata);
+    const verifiedLabel = readSasiAigcMetadata(labeledBytes);
+
+    if (
+      !verifiedLabel
+      || verifiedLabel.AIGC.ProduceID !== job.id
+      || verifiedLabel.AIGC.Label !== "1"
+    ) {
+      throw new Error("AIGC_METADATA_VERIFICATION_FAILED");
+    }
+
+    const media = {
+      ...downloaded,
+      bytes: labeledBytes,
+      sha256: createHash("sha256").update(labeledBytes).digest("hex"),
+    };
+
+    deliverySha = media.sha256;
+
+    if (billableSeconds != null) {
+      verifiedUsage = {
+        source: "delivery-mp4",
+        reference: media.sha256,
+        billableSeconds,
+        measuredDurationSeconds: measuredDurationSeconds ?? undefined,
+      };
+    }
+
+    if (!existing) {
+      const objectPath = `${job.user_id}/${job.project_id}/AI-generated-${job.id}.${media.extension}`;
+      const uploaded = await admin.storage
+        .from("sasi-deliveries")
+        .upload(objectPath, media.bytes, {
+          contentType: media.mimeType,
+          upsert: false,
+          cacheControl: "0",
+        });
+
+      if (
+        uploaded.error
+        && !String(uploaded.error.message).toLowerCase().includes("already exists")
+      ) {
+        throw new Error("DELIVERY_STORAGE_FAILED");
+      }
+
+      const inserted = await admin.from("sasi_deliveries").upsert(
+        {
+          user_id: job.user_id,
+          project_id: job.project_id,
+          job_id: job.id,
+          bucket_id: "sasi-deliveries",
+          object_path: objectPath,
+          media_kind: "video",
+          mime_type: media.mimeType,
+          byte_size: media.bytes.byteLength,
+          sha256: media.sha256,
+          ai_generated: true,
+          label_metadata: {
+            ...aigcMetadata,
+            visibleDisclosure: "delivery_interface",
+            cleanVisualExportRequested: true,
+            verifiedUsage,
+          },
+        },
+        { onConflict: "job_id" },
+      );
+
+      if (inserted.error) throw new Error("DELIVERY_RECORD_FAILED");
+    }
+  }
+
+  const approvedRate = Number(job.input.retailFenPerSecond);
+  const usageVerified =
+    verifiedUsage != null
+    && verifiedUsage.source === "delivery-mp4"
+    && typeof verifiedUsage.reference === "string"
+    && verifiedUsage.reference.length > 0
+    && Number.isSafeInteger(verifiedUsage.billableSeconds)
+    && Number(verifiedUsage.billableSeconds) > 0
+    && Number.isSafeInteger(approvedRate)
+    && approvedRate > 0;
+
+  const settlement = usageVerified
+    ? settleVideoSeconds(Number(verifiedUsage!.billableSeconds), {
+        amountFen: job.quoted_points,
+        retailFenPerSecond: approvedRate,
+      })
+    : null;
+
+  if (!settlement || settlement.requiresApproval) {
+    const errorCode = settlement?.requiresApproval
+      ? "BUDGET_APPROVAL_REQUIRED"
+      : "BILLING_USAGE_PENDING";
+
+    const output = {
+      ...job.output,
+      deliveryReady: true,
+      billingPending: true,
+      verifiedUsage,
+      deliverySha256: deliverySha,
+    };
+
+    const pending = await admin
+      .from("sasi_jobs")
+      .update({
+        status: "running",
+        error_code: errorCode,
+        output,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", job.id)
+      .in("status", ["queued", "running"])
+      .select()
+      .single();
+
+    if (pending.error) throw new Error("BILLING_RECONCILIATION_STATE_FAILED");
+    return (pending.data ?? job) as SasiJobRow;
+  }
+
+  const output = {
+    ...job.output,
+    verifiedUsage,
+    deliverySha256: deliverySha,
+    billingPending: false,
+    billableSeconds: Number(verifiedUsage!.billableSeconds),
+    measuredDurationSeconds: verifiedUsage!.measuredDurationSeconds ?? null,
+    releasedAmountFen: settlement.releasedAmountFen,
+    deliveryReady: true,
+    providerResultReceived: true,
+    aiGenerated: true,
+    supplierCost: provider.providerCostMinor == null ? null : {
+      minor: provider.providerCostMinor,
+      currency: provider.providerCostCurrency,
+      source: job.provider === "xai" ? "provider-reported" : "provider-estimate",
+    },
+  };
+  const settled = await admin.rpc("settle_sasi_job", {
+    p_job_id: job.id,
+    p_actual_points: settlement.settledAmountFen,
+    p_provider_cost_minor: provider.providerCostMinor,
+    p_output: output,
+  });
+  if (settled.error || !(settled.data as { ok?: boolean } | null)?.ok) throw new Error("JOB_SETTLEMENT_FAILED");
+  const { data } = await admin.from("sasi_jobs").select("*").eq("id", job.id).single();
+  return (data ?? { ...job, status: "succeeded", output }) as SasiJobRow;
+}
+
+export function publicSasiJob(job: SasiJobRow) {
+  return {
+    id: job.id,
+    projectId: job.project_id,
+    nodeId: job.node_id,
+    status: job.status,
+    canCancel: job.status === "confirmed" && !job.provider_job_id,
+    quotedAmountFen: job.quoted_points,
+    reservedAmountFen: job.reserved_points,
+    settledAmountFen: job.settled_points,
+    errorCode: job.error_code,
+    input: job.input,
+    output: job.output,
+    createdAt: job.created_at,
+    updatedAt: job.updated_at,
+  };
+}

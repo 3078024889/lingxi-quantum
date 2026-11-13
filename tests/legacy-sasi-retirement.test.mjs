@@ -4,7 +4,6 @@ import {readFileSync,existsSync,readdirSync} from 'node:fs';
 import path from 'node:path';
 
 const report=JSON.parse(readFileSync('docs/operations/legacy-sasi-retirement-20261108.json','utf8'));
-
 function listFiles(dir){
  if(!existsSync(dir))return [];
  return readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
@@ -13,7 +12,7 @@ function listFiles(dir){
  }).sort();
 }
 
-test('retired SASI APIs return 410 and cannot create provider jobs',async()=>{
+test('retired SASI APIs and worker endpoint return 410',async()=>{
  for(const file of report.retiredRoutes){
   const source=readFileSync(file,'utf8');
   assert(!/\bimport\b|\bfetch\s*\(/.test(source),file);
@@ -21,13 +20,13 @@ test('retired SASI APIs return 410 and cannot create provider jobs',async()=>{
   const methods=file.includes('[[...legacy]]')?['GET','POST','PUT','PATCH','DELETE','OPTIONS']:['GET','POST'];
   for(const method of methods){
    assert.equal(typeof route[method],'function',file+' '+method);
-   const response=await route[method](new Request('https://lingxifield.com/api/sasi/retired',{method}));
+   const response=await route[method](new Request('https://lingxifield.com/retired',{method}));
    assert.equal(response.status,410,file+' '+method);
    assert.equal(response.headers.get('cache-control'),'no-store',file+' '+method);
    assert.deepEqual(await response.json(),{error:'SASI_CREATION_RETIRED',replacement:'/sasi'});
   }
-  if(file.includes('[[...legacy]]')){
-   const response=await route.HEAD(new Request('https://lingxifield.com/api/sasi/retired',{method:'HEAD'}));
+  if(file.includes('[[...legacy]]')||file.includes('/worker/tick/')){
+   const response=await route.HEAD(new Request('https://lingxifield.com/retired',{method:'HEAD'}));
    assert.equal(response.status,410);
    assert.equal(response.headers.get('cache-control'),'no-store');
   }
@@ -52,29 +51,30 @@ test('retired SASI pages remain permanent redirects and are never indexed',()=>{
  assert.match(pricing,/permanentRedirect\("\/ai-wallet"\)/);
 });
 
-test('only current marketplace and software APIs remain under /api/sasi',()=>{
+test('only current SASI marketplace, software and protected account APIs remain',()=>{
  const routes=listFiles('app/api/sasi').filter(file=>file.endsWith('/route.ts'));
  for(const file of routes){
   assert(
    file==='app/api/sasi/[[...legacy]]/route.ts' ||
+   file==='app/api/sasi/account/route.ts' ||
    file.startsWith('app/api/sasi/marketplace/') ||
    file.startsWith('app/api/sasi/software/'),
    'unexpected legacy SASI API implementation: '+file
   );
  }
  assert(routes.includes('app/api/sasi/[[...legacy]]/route.ts'));
+ assert(routes.includes('app/api/sasi/account/route.ts'));
  assert(routes.some(file=>file==='app/api/sasi/marketplace/listings/route.ts'));
  assert(routes.some(file=>file==='app/api/sasi/software/catalog/route.ts'));
- const sasiLibs=listFiles('lib/sasi');
- assert.deepEqual(sasiLibs,['lib/sasi/request-security.ts'],'only the shared same-origin security helper may remain');
+ assert.deepEqual(listFiles('lib/sasi'),report.preservedLibFiles);
 });
 
 test('software marketplace and delivery remain available',()=>{
  for(const file of [
   'app/sasi/page.tsx','app/sasi/delivery/page.tsx','app/sasi/seller/page.tsx',
-  'app/api/sasi/software/download/route.ts','app/api/sasi/software/catalog/route.ts',
-  'app/api/sasi/marketplace/download/route.ts','app/api/sasi/marketplace/listings/route.ts',
-  'app/api/internal/sasi/market/release-due/route.ts'
+  'app/api/sasi/account/route.ts','app/api/sasi/software/download/route.ts',
+  'app/api/sasi/software/catalog/route.ts','app/api/sasi/marketplace/download/route.ts',
+  'app/api/sasi/marketplace/listings/route.ts','app/api/internal/sasi/market/release-due/route.ts'
  ])assert(existsSync(file),file);
  assert(readFileSync('app/sasi/page.tsx','utf8').includes('SasiOpenMarketplace'));
  const config=JSON.parse(readFileSync('vercel.json','utf8'));
