@@ -463,6 +463,8 @@
     "scripts/drama-pipeline/skill-teach/continuity-canon-compiler-index.json",
     "scripts/drama-pipeline/skill-teach/priority-compiler-index.json",
     "scripts/drama-pipeline/skill-teach/wave2-compiler-index.json",
+    "scripts/runtime/assemble-generated-episode.cjs",
+    "scripts/runtime/verify-generated-video.cjs",
     "skills/devoured-2026-09-18/wave1/ai-short-drama-skill/README.md",
     "skills/devoured-2026-09-18/wave1/ai-short-drama-skill/SKILL.md",
     "skills/devoured-2026-09-18/wave1/ai-video-storyboard-skill/README.md",
@@ -590,8 +592,8 @@
     "app/api/sasi/account/route.ts"
   ],
   "site": "COM",
-  "source_commit": "07546849537f5af6e2b247fdb7b7576754a845d4",
-  "removed_file_count": 518,
+  "source_commit": "c912d2661523eee93775422faa71a6ce461e23d3",
+  "removed_file_count": 520,
   "cloudflareInventoryWorkflow": ".github/workflows/retired-sasi-cloud-inventory.yml",
   "dDriveSyncScript": "scripts/ops/Sync-Lingxi-COM-Release-D.ps1",
   "redirectedRoutes": [

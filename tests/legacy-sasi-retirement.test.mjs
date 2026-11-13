@@ -89,3 +89,9 @@ test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
  assert.doesNotMatch(catalog,/SI9[.]5|SI 9[.]5/);
  assert.ok(market.includes("SI 11.6"));
 });
+
+
+test('legacy generated-video runtime is no longer bundled into retired SASI routes',()=>{
+ const next=readFileSync('next.config.js','utf8');
+ assert.doesNotMatch(next,/outputFileTracingIncludes|verify-generated-video|assemble-generated-episode/);
+});

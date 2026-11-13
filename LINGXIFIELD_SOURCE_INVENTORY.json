@@ -1,5 +1,5 @@
 {
-  "source_commit": "1855ebcdb88e143cd5e4f4463f7536f7e9d2bb55",
+  "source_commit": "c912d2661523eee93775422faa71a6ce461e23d3",
   "basis": "COM cleanup candidate derived from source tree 07546849537f5af6e2b247fdb7b7576754a845d4; retired SASI modules removed by the COM-specific manifest.",
   "files": [
     {
@@ -9824,7 +9824,7 @@
     },
     {
       "path": "docs/operations/legacy-sasi-retirement-20261108.json",
-      "bytes": 29103
+      "bytes": 29207
     },
     {
       "path": "docs/PRE-SUBMIT-MANIFEST-V1181.txt",
@@ -11988,7 +11988,7 @@
     },
     {
       "path": "next.config.js",
-      "bytes": 2941
+      "bytes": 3917
     },
     {
       "path": "package-lock.json",
@@ -15564,7 +15564,7 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 5822
+      "bytes": 6075
     },
     {
       "path": "tests/retired-sasi-public-copy-20261113.test.mjs",
