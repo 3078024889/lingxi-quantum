@@ -176,7 +176,6 @@ export default function HomeProblemHub(){
  const{lang}=useLingxiLang();const c=copy[lang]??copy.en;const market=SIAI_HOME_ENTRY[lang]??SIAI_HOME_ENTRY.en;
  const[q,setQ]=useState("");
  const intents=useMemo(()=>[
-   {words:["ai视频","视频生成","文生视频","图生视频"],href:"/siai",label:market.title},
    {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格"],href:"/tools",label:c.tools},
    {words:["ai","模型","排行榜","免费额度","api","价格","模型能力"],href:"/siai",label:market.title},
    {words:["ea","mt5","源码","软件","授权","成品","商品","市场"],href:"/sasi",label:c.sasi},
@@ -188,7 +187,7 @@ export default function HomeProblemHub(){
   {href:"/sasi",icon:"sasi" as LingxiIconName,title:c.sasi,desc:c.sasiDesc},
   {href:"/tools",icon:"tools" as LingxiIconName,title:c.tools,desc:c.toolsDesc},
  ];
- function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(/(?:ai视频|视频生成|文生视频|图生视频|aivideo|texttovideo|imagetovideo)/i.test(normalized)){const url=new URL("/siai",location.origin);url.searchParams.set("q",v);url.searchParams.set("lang",lang);location.href=url.pathname+url.search;return}if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
+ function submit(e:FormEvent){e.preventDefault();const v=q.trim();if(!v)return;const normalized=v.toLowerCase().replace(/\s+/g,"");if(isLikelyToolQuery(v)){location.href=`/tools?q=${encodeURIComponent(v)}&lang=${lang}`;return}const url=new URL(hit?.score>0?hit.href:'/sasi',location.origin);url.searchParams.set('intent',v);url.searchParams.set('lang',lang);location.href=url.pathname+url.search;}
  return <main className="lx11-page"><div className="lx11-wrap">
   <section className="lx11-home-hero lx-home-v143 overflow-hidden">
    <div className="grid items-center gap-8 ">

@@ -23,6 +23,10 @@
       "bytes": 774
     },
     {
+      "path": ".github/workflows/retired-sasi-cleanup-audit-20261113.yml",
+      "bytes": 2156
+    },
+    {
       "path": ".gitignore",
       "bytes": 1133
     },
@@ -628,7 +632,7 @@
     },
     {
       "path": "app/layout.tsx",
-      "bytes": 3251
+      "bytes": 4832
     },
     {
       "path": "app/legal/sasi/page.tsx",
@@ -1176,7 +1180,7 @@
     },
     {
       "path": "components/HomeProblemHub.tsx",
-      "bytes": 27571
+      "bytes": 27210
     },
     {
       "path": "components/KnowledgeWorkspace.tsx",
@@ -1269,6 +1273,10 @@
     {
       "path": "components/SasiFunctionMenu.tsx",
       "bytes": 4320
+    },
+    {
+      "path": "components/SasiLegalBody.tsx",
+      "bytes": 15290
     },
     {
       "path": "components/SasiMultiEpisodeWorkspace.tsx",
@@ -10076,7 +10084,7 @@
     },
     {
       "path": "docs/seo/keyword-map-v216.md",
-      "bytes": 3762
+      "bytes": 6606
     },
     {
       "path": "docs/SUPABASE-ENVIRONMENT-SETUP.md",
@@ -10716,7 +10724,7 @@
     },
     {
       "path": "lib/lingxi-i18n.ts",
-      "bytes": 55571
+      "bytes": 57969
     },
     {
       "path": "lib/membership-content.ts",
@@ -12151,8 +12159,12 @@
       "bytes": 48
     },
     {
+      "path": "public/llms-full.txt",
+      "bytes": 69498
+    },
+    {
       "path": "public/llms.txt",
-      "bytes": 1167
+      "bytes": 4407
     },
     {
       "path": "public/manifest.webmanifest",
@@ -12280,7 +12292,7 @@
     },
     {
       "path": "public/seo-keywords-9lang.json",
-      "bytes": 4260
+      "bytes": 4314
     },
     {
       "path": "public/vendor/transformers/e34a2307c15be978b153.mjs",
@@ -15525,6 +15537,14 @@
     {
       "path": "tailwind.config.ts",
       "bytes": 3966
+    },
+    {
+      "path": "tests/legacy-sasi-retirement.test.mjs",
+      "bytes": 5366
+    },
+    {
+      "path": "tests/retired-sasi-public-copy-20261113.test.mjs",
+      "bytes": 2366
     },
     {
       "path": "tsconfig.json",
