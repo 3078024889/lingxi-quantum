@@ -11491,7 +11491,7 @@
     },
     {
       "path": "scripts/audit-release-inventory.mjs",
-      "bytes": 2915
+      "bytes": 2940
     },
     {
       "path": "scripts/audit-sasi-platform-kernel-v180.mjs",

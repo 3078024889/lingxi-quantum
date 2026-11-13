@@ -1,6 +1,6 @@
 {
   "source_commit": "2aea17503b005672a26f5d459b76141301376154",
-  "basis": "COM cleanup candidate is a two-parent merge of the current COM growth branch 2aea17503b005672a26f5d459b76141301376154 and the SASI retirement branch; public SEO keyword index retains the more complete retired-content-free version.",
+  "basis": "COM release candidate combines R6/R8 growth and the 2026-11-13 OG image from 2b75be8ec9eb710b10d236fa632fc04069da6ba9 with the latest SASI retirement baseline 4710bb71d55957d5b73d755d675021464eb53704; preserved modules and file sizes reflect the merged source tree.",
   "files": [
     {
       "path": ".env.example",
@@ -276,7 +276,7 @@
     },
     {
       "path": "app/api/internal/sasi/worker/tick/route.ts",
-      "bytes": 218
+      "bytes": 476
     },
     {
       "path": "app/api/knowledge/[[...legacy]]/route.ts",
@@ -9832,7 +9832,7 @@
     },
     {
       "path": "docs/operations/legacy-sasi-retirement-20261108.json",
-      "bytes": 29454
+      "bytes": 30478
     },
     {
       "path": "docs/PRE-SUBMIT-MANIFEST-V1181.txt",
@@ -12556,7 +12556,7 @@
     },
     {
       "path": "scripts/audit-release-inventory.mjs",
-      "bytes": 2915
+      "bytes": 2940
     },
     {
       "path": "scripts/audit-sasi-platform-kernel-v180.mjs",
