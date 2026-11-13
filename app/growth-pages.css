@@ -366,3 +366,6 @@ html[data-theme="dark"] .lx-home-siai-entry,html[data-theme="dark"] .lx-home-too
 .lx-discovery-tools .lx-growth-tool-grid{margin-top:12px}
 .lx-discovery-note{margin:14px 0 0;color:var(--lx-muted);font-size:12px;line-height:1.8}
 @media(max-width:760px){.lx-discovery-grid,.lx-discovery-facts{grid-template-columns:1fr}.lx-discovery-card{padding:15px}}
+
+.lx-discovery-share{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;margin:10px 0 0;padding:7px 11px;border:1px solid var(--lx-line);border-radius:10px;background:transparent;color:var(--lx-ink);font-size:11px;font-weight:760;cursor:pointer}
+.lx-discovery-share:hover{border-color:rgba(130,108,225,.5);color:#765fd1}

@@ -1,12 +1,13 @@
 import Link from "next/link";
+import DiscoveryShareAction from "@/components/seo/DiscoveryShareAction";
 import type {SeoLocale} from "@/lib/seo/global-seo";
 
 type DiscoverySource={label:string;url:string};
 type DiscoveryTool={label:string;href:string};
-type DiscoveryArticle={id:string;tag:string;status:string;title:string;summary:string;known:string;open:string;sources:DiscoverySource[];tools:DiscoveryTool[]};
+type DiscoveryArticle={id:"voynich"|"uap";tag:string;status:string;title:string;summary:string;known:string;open:string;sources:DiscoverySource[];tools:DiscoveryTool[]};
 type DiscoveryCopy={
  title:string;description:string;eyebrow:string;methodTitle:string;methodIntro:string;
- knownLabel:string;openLabel:string;sourcesLabel:string;toolsLabel:string;
+ knownLabel:string;openLabel:string;sourcesLabel:string;toolsLabel:string;shareLabel:string;copiedLabel:string;
  articles:DiscoveryArticle[];workflowTitle:string;workflowIntro:string;steps:string[];
  toolsTitle:string;toolsIntro:string;tools:DiscoveryTool[];note:string;
 };
@@ -21,7 +22,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"奇闻发现与资料核验",description:"从伏尼契手稿到 UAP 公开报告，区分已确认记录、尚未解释的问题与推测，并用真实工具处理公开资料。",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"未知可以保持未知，证据必须可追溯",
   methodIntro:"奇闻内容不把猜测写成事实。每个专题分开呈现公开来源、已知事实、仍未解决的问题，以及能够实际完成的资料处理任务。",
-  knownLabel:"公开资料确认了什么",openLabel:"仍然未知什么",sourcesLabel:"原始来源",toolsLabel:"相关工具",
+  knownLabel:"公开资料确认了什么",openLabel:"仍然未知什么",sourcesLabel:"原始来源",toolsLabel:"相关工具",shareLabel:"分享专题",copiedLabel:"链接已复制",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"历史馆藏 · 原始来源可查",title:"伏尼契手稿：文字未解，不等于来源神秘",
     summary:"耶鲁贝内克图书馆将其编目为 Beinecke MS 408，认为它制作于 15 世纪末或 16 世纪初的中欧；作者与文字系统仍未知。",
@@ -44,7 +45,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"Unusual Discoveries & Source Verification",description:"Explore the Voynich Manuscript and public UAP reports by separating documented facts, unresolved questions and speculation, then work with the original material using practical tools.",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"The unknown can remain unknown. Evidence must remain traceable.",
   methodIntro:"Curiosity is not a license to present speculation as fact. Each topic separates primary sources, documented facts, unresolved questions and practical file tasks.",
-  knownLabel:"What public records establish",openLabel:"What remains unresolved",sourcesLabel:"Primary sources",toolsLabel:"Related tools",
+  knownLabel:"What public records establish",openLabel:"What remains unresolved",sourcesLabel:"Primary sources",toolsLabel:"Related tools",shareLabel:"Share dossier",copiedLabel:"Link copied",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"Catalogued collection · source available",title:"The Voynich Manuscript: an undeciphered text is not proof of a hidden origin",
     summary:"Yale's Beinecke Library catalogues it as Beinecke MS 408 and dates its production to Central Europe in the late fifteenth or sixteenth century. Its author and script remain unidentified.",
@@ -67,7 +68,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"不思議な発見と資料検証",description:"ヴォイニッチ手稿やUAP公開報告を、確認済みの記録・未解決の問い・推測に分け、実用ツールで一次資料を扱います。",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"未知は未知のままでよい。証拠は追跡可能にする。",
   methodIntro:"好奇心を理由に推測を事実として扱いません。一次資料、確認できる事実、未解決の問い、実際のファイル作業を分けて示します。",
-  knownLabel:"公開資料で確認できること",openLabel:"まだ解決していないこと",sourcesLabel:"一次資料",toolsLabel:"関連ツール",
+  knownLabel:"公開資料で確認できること",openLabel:"まだ解決していないこと",sourcesLabel:"一次資料",toolsLabel:"関連ツール",shareLabel:"特集を共有",copiedLabel:"リンクをコピーしました",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"図書館所蔵 · 出典確認可能",title:"ヴォイニッチ手稿：未解読の文字は、謎の起源の証拠ではない",
     summary:"イェール大学ベイネッケ図書館は Beinecke MS 408 として登録し、15世紀末または16世紀初頭の中欧で制作されたと説明しています。作者と文字体系は不明です。",
@@ -90,7 +91,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"미스터리 발견과 자료 검증",description:"보이니치 필사본과 공개 UAP 보고서를 확인된 기록, 미해결 질문, 추측으로 구분하고 실제 도구로 원자료를 다룹니다.",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"모르는 것은 미지로 남겨도 됩니다. 증거는 추적 가능해야 합니다.",
   methodIntro:"호기심을 이유로 추측을 사실처럼 쓰지 않습니다. 원출처, 확인된 사실, 미해결 질문과 실제 파일 작업을 구분합니다.",
-  knownLabel:"공개 기록으로 확인된 내용",openLabel:"아직 해결되지 않은 내용",sourcesLabel:"원자료",toolsLabel:"관련 도구",
+  knownLabel:"공개 기록으로 확인된 내용",openLabel:"아직 해결되지 않은 내용",sourcesLabel:"원자료",toolsLabel:"관련 도구",shareLabel:"자료 공유",copiedLabel:"링크가 복사되었습니다",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"도서관 소장 자료 · 출처 확인 가능",title:"보이니치 필사본: 해독되지 않은 문자가 숨겨진 기원을 증명하지는 않습니다",
     summary:"예일대 베이니키 도서관은 이 자료를 Beinecke MS 408로 분류하며 15세기 말 또는 16세기 초 중부 유럽에서 제작된 것으로 설명합니다. 저자와 문자 체계는 알려져 있지 않습니다.",
@@ -113,7 +114,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"Découvertes insolites et vérification des sources",description:"Du manuscrit de Voynich aux rapports publics sur les UAP, distinguer les faits documentés, les questions ouvertes et les hypothèses, puis traiter les sources avec des outils pratiques.",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"L’inconnu peut rester inconnu. Les preuves doivent rester traçables.",
   methodIntro:"La curiosité ne transforme pas une hypothèse en fait. Chaque dossier sépare les sources primaires, les faits établis, les questions ouvertes et les tâches documentaires.",
-  knownLabel:"Ce que les sources établissent",openLabel:"Ce qui reste sans réponse",sourcesLabel:"Sources primaires",toolsLabel:"Outils associés",
+  knownLabel:"Ce que les sources établissent",openLabel:"Ce qui reste sans réponse",sourcesLabel:"Sources primaires",toolsLabel:"Outils associés",shareLabel:"Partager le dossier",copiedLabel:"Lien copié",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"Collection cataloguée · source consultable",title:"Le manuscrit de Voynich : un texte indéchiffré ne prouve pas une origine cachée",
     summary:"La bibliothèque Beinecke de Yale le catalogue sous le nom Beinecke MS 408 et situe sa production en Europe centrale à la fin du XVe ou au XVIe siècle. Son auteur et son écriture restent inconnus.",
@@ -136,7 +137,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"Ungewöhnliche Entdeckungen und Quellenprüfung",description:"Vom Voynich-Manuskript bis zu öffentlichen UAP-Berichten: dokumentierte Fakten, offene Fragen und Vermutungen trennen und Originalmaterial mit praktischen Tools bearbeiten.",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"Unbekanntes darf unbekannt bleiben. Belege müssen nachvollziehbar sein.",
   methodIntro:"Neugier macht eine Vermutung nicht zur Tatsache. Jedes Dossier trennt Primärquellen, belegte Fakten, offene Fragen und konkrete Dateiaufgaben.",
-  knownLabel:"Was öffentliche Quellen belegen",openLabel:"Was ungeklärt bleibt",sourcesLabel:"Primärquellen",toolsLabel:"Passende Tools",
+  knownLabel:"Was öffentliche Quellen belegen",openLabel:"Was ungeklärt bleibt",sourcesLabel:"Primärquellen",toolsLabel:"Passende Tools",shareLabel:"Dossier teilen",copiedLabel:"Link kopiert",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"Katalogisierter Bestand · Quelle verfügbar",title:"Das Voynich-Manuskript: eine unentzifferte Schrift beweist keine verborgene Herkunft",
     summary:"Die Beinecke Library der Yale University führt es als Beinecke MS 408 und datiert seine Entstehung auf Mitteleuropa im späten 15. oder 16. Jahrhundert. Autor und Schriftsystem sind unbekannt.",
@@ -159,7 +160,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"Descubrimientos y verificación de fuentes",description:"Del manuscrito Voynich a los informes públicos sobre UAP: separar hechos documentados, preguntas abiertas y especulación, y trabajar con fuentes originales mediante herramientas prácticas.",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"Lo desconocido puede seguir siendo desconocido. La evidencia debe poder rastrearse.",
   methodIntro:"La curiosidad no convierte una hipótesis en un hecho. Cada dossier separa fuentes primarias, hechos documentados, preguntas abiertas y tareas reales con archivos.",
-  knownLabel:"Qué confirman las fuentes públicas",openLabel:"Qué sigue sin resolverse",sourcesLabel:"Fuentes primarias",toolsLabel:"Herramientas relacionadas",
+  knownLabel:"Qué confirman las fuentes públicas",openLabel:"Qué sigue sin resolverse",sourcesLabel:"Fuentes primarias",toolsLabel:"Herramientas relacionadas",shareLabel:"Compartir dossier",copiedLabel:"Enlace copiado",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"Colección catalogada · fuente disponible",title:"El manuscrito Voynich: una escritura sin descifrar no demuestra un origen oculto",
     summary:"La Biblioteca Beinecke de Yale lo cataloga como Beinecke MS 408 y sitúa su producción en Europa central a finales del siglo XV o durante el XVI. Se desconocen el autor y el sistema de escritura.",
@@ -182,7 +183,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"Descobertas e verificação de fontes",description:"Do manuscrito Voynich aos relatórios públicos de UAP: separar fatos documentados, perguntas em aberto e especulação, trabalhando com fontes originais por meio de ferramentas práticas.",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"O desconhecido pode continuar desconhecido. A evidência precisa ser rastreável.",
   methodIntro:"Curiosidade não transforma hipótese em fato. Cada dossiê separa fontes primárias, fatos documentados, questões em aberto e tarefas reais com arquivos.",
-  knownLabel:"O que as fontes públicas confirmam",openLabel:"O que continua sem resposta",sourcesLabel:"Fontes primárias",toolsLabel:"Ferramentas relacionadas",
+  knownLabel:"O que as fontes públicas confirmam",openLabel:"O que continua sem resposta",sourcesLabel:"Fontes primárias",toolsLabel:"Ferramentas relacionadas",shareLabel:"Compartilhar dossiê",copiedLabel:"Link copiado",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"Coleção catalogada · fonte disponível",title:"O manuscrito Voynich: uma escrita não decifrada não prova uma origem oculta",
     summary:"A Biblioteca Beinecke de Yale cataloga o manuscrito como Beinecke MS 408 e situa sua produção na Europa Central no fim do século XV ou durante o século XVI. Autor e sistema de escrita são desconhecidos.",
@@ -205,7 +206,7 @@ const COPY:Record<SeoLocale,DiscoveryCopy>={
   title:"اكتشافات غير مألوفة والتحقق من المصادر",description:"من مخطوطة فوينيتش إلى تقارير UAP العامة: افصل بين الوقائع الموثقة والأسئلة المفتوحة والتكهنات، ثم عالج المصادر الأصلية بأدوات عملية.",
   eyebrow:"DISCOVERY LAB · EVIDENCE FIRST",methodTitle:"يمكن أن يبقى المجهول مجهولًا. ويجب أن تظل الأدلة قابلة للتتبع.",
   methodIntro:"الفضول لا يحوّل الفرضية إلى حقيقة. يفصل كل ملف بين المصادر الأولية والوقائع المثبتة والأسئلة المفتوحة ومهام الملفات العملية.",
-  knownLabel:"ما الذي تثبته السجلات العامة",openLabel:"ما الذي لا يزال غير محسوم",sourcesLabel:"المصادر الأولية",toolsLabel:"الأدوات المرتبطة",
+  knownLabel:"ما الذي تثبته السجلات العامة",openLabel:"ما الذي لا يزال غير محسوم",sourcesLabel:"المصادر الأولية",toolsLabel:"الأدوات المرتبطة",shareLabel:"مشاركة الملف",copiedLabel:"تم نسخ الرابط",
   articles:[
    {id:"voynich",tag:"HISTORICAL MANUSCRIPT · MS 408",status:"مجموعة مفهرسة · المصدر متاح",title:"مخطوطة فوينيتش: النص غير المفكوك لا يثبت أصلًا خفيًا",
     summary:"تفهرس مكتبة Beinecke في جامعة Yale المخطوطة باسم Beinecke MS 408، وتؤرخ إنتاجها إلى أوروبا الوسطى في أواخر القرن الخامس عشر أو القرن السادس عشر. المؤلف ونظام الكتابة غير معروفين.",
@@ -238,7 +239,7 @@ export default function DiscoveriesHub({locale}:{locale:SeoLocale}){
   <div className="lx-discovery-grid">
    {c.articles.map(article=><article className="lx-discovery-card" key={article.id}>
     <div className="lx-discovery-card-meta"><span>{article.tag}</span><span>{article.status}</span></div>
-    <h2>{article.title}</h2><p>{article.summary}</p>
+    <h2>{article.title}</h2><p>{article.summary}</p><DiscoveryShareAction slug={article.id} title={article.title} label={c.shareLabel} copiedLabel={c.copiedLabel}/>
     <div className="lx-discovery-facts">
      <section><h3>{c.knownLabel}</h3><p>{article.known}</p></section>
      <section><h3>{c.openLabel}</h3><p>{article.open}</p></section>

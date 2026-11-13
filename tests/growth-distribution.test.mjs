@@ -200,6 +200,9 @@ test("discoveries content is localized, evidence-led and connected to actual fil
  assert.match(hub,/tools\/pdf-compare/);
  assert.match(hub,/id="use-cases"/);
  assert.match(hub,/id="before-after"/);
+ assert.match(hub,/DiscoveryShareAction/);
+ assert.match(read("components/seo/DiscoveryShareAction.tsx"),/utm_source","discovery_share"/);
+ assert.match(read("components/seo/DiscoveryShareAction.tsx"),/utm_campaign","field_notes"/);
  assert.match(zh,/publicPageMetadata\("zh","\/discoveries"/);
  assert.match(localized,/LOCALIZED_LOCALES/);
  assert.match(localized,/publicPageMetadata\(language,"\/discoveries"/);
