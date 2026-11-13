@@ -518,6 +518,9 @@
     },
     "xml-formatter": {
       "kind": "local-contract"
+    },
+    "password-generator": {
+      "kind": "local-contract"
     }
   },
   "classificationCount": 124
