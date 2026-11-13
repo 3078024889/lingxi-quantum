@@ -1,5 +1,5 @@
 {
-  "source_commit": "4910687b8af6f1d696f275130db526563c12c8ff",
+  "source_commit": "299d89e48b19749eb04c104cc2c0d340a9c2d10e",
   "basis": "CN source snapshot at b1930b25875710d2b3eb261b96162ffc55624a70 reconciled with the canonical retired-SASI manifest; active marketplace and account paths preserved",
   "files": [
     {
@@ -15540,11 +15540,11 @@
     },
     {
       "path": "tests/legacy-sasi-retirement.test.mjs",
-      "bytes": 5807
+      "bytes": 5822
     },
     {
       "path": "tests/retired-sasi-public-copy-20261113.test.mjs",
-      "bytes": 2819
+      "bytes": 2951
     },
     {
       "path": "tsconfig.json",

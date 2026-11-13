@@ -38,5 +38,7 @@ for(const locale of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
 }
 
 const legalCopy=readFileSync("components/SasiLegalBody.tsx","utf8");
-assert.doesNotMatch(legalCopy,/SI9\\.5|SI 9\\.5/);
-assert.match(legalCopy,/Copernicus SI 11\\.6/);
+assert.doesNotMatch(legalCopy,/SI9[.]5|SI 9[.]5/);
+assert.ok(legalCopy.includes("SI 11.6"));
+const firstPartyCatalog=readFileSync("lib/sasi-software/catalog.ts","utf8");
+assert.ok(firstPartyCatalog.includes("Copernicus SI 11.6"));
