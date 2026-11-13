@@ -15,7 +15,7 @@ for(const [lang,translate]of [['zh','开始翻译'],['en','Translate'],['ja','�
  await page.goto('/tools/document-translate?lang='+lang);await expect(page.getByRole('button',{name:translate,exact:true})).toBeVisible();await expect(page.locator('[data-tool-workbench]')).toContainText('200');
 });
 test('retired URL-to-video creation redirects to the current tools directory',async({page})=>{
- await page.goto('/tools/url-to-video?lang=en');await expect(page).toHaveURL(/\\/tools$/);
+ await page.goto('/tools/url-to-video?lang=en');await expect(page).toHaveURL(/\/tools$/);
 });
 test('metadata removal downloads a reopened PDF with Info, dates, custom properties and XMP absent while page text stays',async({page})=>{
  const doc=await PDFDocument.create();doc.addPage([400,300]).drawText('Visible author: Ada Lovelace');doc.setAuthor('Private author');
