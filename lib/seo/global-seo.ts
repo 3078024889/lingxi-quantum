@@ -83,7 +83,6 @@ export function isSeoLocale(v:string):v is SeoLocale{return Object.prototype.has
 
 export const GLOBAL_TOOL_CATALOG=[
   {slug:"document-translate",zh:"PDF / 文档翻译",en:"PDF / Document Translation",mode:"online" as const},
-  {slug:"url-to-video",zh:"网址生成推广视频",en:"URL to Promotional Video",mode:"online" as const},
   {slug:"audio-transcription",zh:"音频转文字",en:"Audio Transcription",mode:"online" as const},
   {slug:"ai-video-audio-check",zh:"AI 视频音频检测",en:"AI Video & Audio Detection",mode:"local" as const},
   {slug:"avif-to-jpg",zh:"AVIF 转 JPG",en:"AVIF to JPG",mode:"local" as const},
