@@ -46,7 +46,7 @@ assert.match(fulfill,/if\(!verifiedPayment\)return \{ok:false,error:"PROVIDER_PA
 console.log("PAYPAL_SOFTWARE_AND_MARKETPLACE_USD_CHECKOUT_UI_CONTRACT_PASS");
 
 
-const origin=readFileSync("lib/sasi/site-origin.ts","utf8");
+const origin=readFileSync("lib/platform/site-origin.ts","utf8");
 assert.match(origin,/TRUSTED_HOSTS/);
 assert.match(origin,/lingxifield\.cn/);
 assert.match(origin,/lingxifield\.com/);
