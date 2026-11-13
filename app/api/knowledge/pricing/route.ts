@@ -1,12 +1,11 @@
-import {NextResponse} from "next/server";
-export const runtime="nodejs";export const dynamic="force-dynamic";
-export async function GET(){
- return NextResponse.json({
-  billing:"free",
-  tiers:{
-   light:{factor:1,minimumRmb:0},
-   standard:{factor:2,minimumRmb:0},
-   high:{factor:5,minimumRmb:0},
-  }
- },{headers:{"Cache-Control":"no-store"}});
-}
+const retired=()=>Response.json(
+ {error:"LEGACY_KNOWLEDGE_API_RETIRED"},
+ {status:410,headers:{"Cache-Control":"no-store","X-Robots-Tag":"noindex, nofollow, noarchive"}}
+);
+export const GET=retired;
+export const POST=retired;
+export const PUT=retired;
+export const PATCH=retired;
+export const DELETE=retired;
+export const OPTIONS=retired;
+export const HEAD=()=>new Response(null,{status:410,headers:{"Cache-Control":"no-store","X-Robots-Tag":"noindex, nofollow, noarchive"}});

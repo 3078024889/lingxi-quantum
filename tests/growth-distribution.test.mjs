@@ -251,3 +251,20 @@ test("result sharing strips private query and hash and carries bounded source at
  assert(!share.includes("url:location.href"));
  assert(!share.includes("writeText(location.href)"));
 });
+
+
+test("retired creation and knowledge endpoints are closed while marketplace settlement remains",()=>{
+ const middleware=read("middleware.ts");
+ const knowledge=read("app/api/knowledge/ask/route.ts");
+ const pricing=read("app/api/knowledge/pricing/route.ts");
+ const provider=read("app/api/internal/sasi/provider-smoke/route.ts");
+ const worker=read("app/api/internal/sasi/worker/configure/route.ts");
+ const reconcile=read("app/api/internal/sasi/reconcile/route.ts");
+ const payout=read("app/api/internal/sasi/market/release-due/route.ts");
+ assert.match(middleware,/全球 SIAI 排行榜、SASI 智能软件市场与 100\+ 在线实用工具/);
+ assert(!middleware.includes("SASI全球多模型智能创作平台"));
+ for(const route of [knowledge,pricing]){assert.match(route,/status:410/);assert.match(route,/LEGACY_KNOWLEDGE_API_RETIRED/);}
+ for(const route of [provider,worker]){assert.match(route,/status:410/);assert.match(route,/SASI_CREATION_RETIRED/);}
+ assert.match(reconcile,/refreshSasiJob/); // preserve reconciliation for historical in-flight jobs
+ assert.match(payout,/sasi_market_release_due_sales/); // preserve current seller settlement
+});
