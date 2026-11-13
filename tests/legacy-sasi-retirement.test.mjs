@@ -50,3 +50,15 @@ test('retired legacy source files and media are absent from the repository and s
   assert.equal(stale.length,0,name+' still lists retired files: '+stale.map(x=>x.path).join(','));
  }
 });
+
+test('legacy URL-to-video creation is permanently redirected and excluded from discovery',()=>{
+ const page=readFileSync('app/tools/url-to-video/page.tsx','utf8');
+ const config=readFileSync('next.config.js','utf8');
+ const catalog=readFileSync('lib/seo/global-seo.ts','utf8');
+ const hub=readFileSync('lib/tools/advanced-catalog.ts','utf8');
+ assert.match(page,/permanentRedirect\("\/tools"\)/);
+ assert.match(config,/source: "\/tools\/url-to-video", destination: "\/tools", permanent: true/);
+ assert.match(config,/source: "\/:lang\(en\|ja\|ko\|fr\|de\|es\|pt\|ar\)\/tools\/url-to-video"/);
+ assert.doesNotMatch(catalog,/slug:"url-to-video"/);
+ assert.doesNotMatch(hub,/\/tools\/url-to-video/);
+});
