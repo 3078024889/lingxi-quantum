@@ -171,7 +171,7 @@ test("homepage growth engines are integrated into the problem hub and aligned wi
  const problem=read("components/HomeProblemHub.tsx");
  const home=read("app/page.tsx");
  const localizedHome=read("app/[locale]/page.tsx");
- const css=read("app/growth-pages.css");
+ const css=read("app/growth-pages.css")+read("app/home-afternoon-20261114.css");
  assert.match(growth,/tag:"STORIES"[^\n]*href:"\/discoveries"/);
  assert.match(growth,/Before \/ After/);
  assert.ok(growth.includes('"href":"/sasi/seller"')||growth.includes('href:"/sasi/seller"'));

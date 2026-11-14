@@ -2,6 +2,7 @@
 import {useCallback,useEffect,useMemo,useRef,useState} from "react";
 import Link from "next/link";
 import JSZip from "jszip";
+import AfternoonArtworkIcon,{type AfternoonIconKind} from "./AfternoonArtworkIcon";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {sasiSoftwareUiText} from "@/lib/sasi-software/ui-copy";
 import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
@@ -290,39 +291,20 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    setError(friendlyError(e,lang));
   }finally{setBusy("")}
  };
- return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container + (sellerOnly ? "" : " " + styles.marketplaceContainer)}>
+ return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main} data-release-design="20261114-afternoon-three-pages"><div className={styles.container + (sellerOnly ? "" : " " + styles.marketplaceContainer)}>
   {!sellerOnly&&<>
-  <div className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="sasi-market-hero-lingxifield.png">
-    <img
-      src="/images/sasi/sasi-market-hero-lingxifield.png"
-      className={styles.heroArtwork}
-      alt={sasiSoftwareUiText(lang,"灵犀场 SASI 智能软件市场，包含 MT5 EA 与开发者发布入口","LINGXIFIELD SASI intelligent software marketplace with MT5 EA and developer publishing")}
-      width={1024}
-      height={341}
-      loading="eager"
-      fetchPriority="high"
-      decoding="async"
-      draggable={false}
-    />
-    <a
-      className={styles.browseHotspot}
-      href="#products"
-      aria-label={sasiSoftwareUiText(lang,"浏览软件","Browse software")}
-      title={sasiSoftwareUiText(lang,"浏览软件","Browse software")}
-    />
-    <button
-      className={styles.publishHotspot}
-      type="button"
-      onClick={()=>setShowStudio(true)}
-      aria-label={sasiSoftwareUiText(lang,"发布产品","Publish software")}
-      title={sasiSoftwareUiText(lang,"发布产品","Publish software")}
-      aria-expanded={showStudio}
-      aria-controls="sasi-seller-studio"
-    />
-  </div>
+  <section className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="global-scene-20261114.webp" aria-labelledby="sasi-market-title" aria-label={sasiSoftwareUiText(lang,"灵犀场 SASI 智能软件市场","LINGXIFIELD SASI intelligent software marketplace")}>
+    <img src="/images/global-scene-20261114.webp" className={styles.heroArtwork} alt="" width={2172} height={724} loading="eager" fetchPriority="high" decoding="async"/>
+    <div className={styles.heroCopy}>
+     <p className={styles.heroBrand}>LINGXIFIELD · SASI</p>
+     <h1 id="sasi-market-title">{sasiSoftwareUiText(lang,"SASI 智能软件市场","SASI Software Marketplace")}</h1>
+     <p>{sasiSoftwareUiText(lang,"成品软件 · MT5 EA 与指标模块 · 安装教程 · 开发者发布 · 源码授权 · 自动交付","Finished software · MT5 EAs & indicators · Installation guides · Developer publishing · Source licenses · Automatic delivery")}</p>
+     <div className={styles.heroActions}><a href="#products">{sasiSoftwareUiText(lang,"浏览软件","Browse software")} →</a><Link href="/sasi/seller">＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</Link></div>
+    </div>
+  </section>
   <div className={styles.marketFeatures} aria-label={sasiSoftwareUiText(lang,"软件市场服务能力","Marketplace capabilities")}>
-   {MARKET_FEATURES.map(item=><div className={styles.marketFeature} key={item.zh}>
-    <span className={styles.marketFeatureIcon} aria-hidden="true">{item.icon}</span>
+   {MARKET_FEATURES.map((item,index)=><div className={styles.marketFeature} key={item.zh}>
+    <span className={styles.marketFeatureIcon}><AfternoonArtworkIcon kind={(["layers","chart","shield","people","tools"] as AfternoonIconKind[])[index]}/></span>
     <span><strong>{sasiSoftwareUiText(lang,item.zh,item.en)}</strong><small>{sasiSoftwareUiText(lang,item.zhDesc,item.enDesc)}</small></span>
    </div>)}
   </div>
@@ -427,14 +409,14 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   </div>
   <div className={styles.sellerHeroArt} aria-hidden="true">
    <img className={styles.sellerHeroArtwork} data-testid="seller-hero-artwork"
-    src="/images/sasi/sasi-market-hero-lingxifield.png" alt="" loading="eager" decoding="async"/>
+    src="/images/global-scene-20261114.webp" alt="" loading="eager" decoding="async"/>
   </div>
  </section>
  <div className={styles.metrics} aria-label={sasiSoftwareUiText(lang,"卖家经营数据","Seller activity")} data-testid="seller-metrics">
-  <div data-metric="published"><span className={styles.metricIcon} aria-hidden="true">▱</span><div className={styles.metricCopy}><span>{sasiSoftwareUiText(lang,"已发布软件","Published software")}</span><strong>{publishedCount}</strong><small>{sasiSoftwareUiText(lang,"当前公开展示","Currently listed")}</small></div></div>
+  <div data-metric="published"><span className={styles.metricIcon}><AfternoonArtworkIcon kind="layers"/></span><div className={styles.metricCopy}><span>{sasiSoftwareUiText(lang,"已发布软件","Published software")}</span><strong>{publishedCount}</strong><small>{sasiSoftwareUiText(lang,"当前公开展示","Currently listed")}</small></div></div>
   <div data-metric="pending"><span className={styles.metricIcon} aria-hidden="true">⌛</span><div className={styles.metricCopy}><span>{sasiSoftwareUiText(lang,"待审核","Pending review")}</span><strong>{pendingCount}</strong><small>{sasiSoftwareUiText(lang,"等待平台审核","Awaiting review")}</small></div></div>
-  <div data-metric="sales"><span className={styles.metricIcon} aria-hidden="true">¥</span><div className={styles.metricCopy}><span>{sasiSoftwareUiText(lang,"总销售额","Gross sales")}</span><strong>{payments?"¥"+format(cnyGross):"—"}</strong><small>{payments?"USD $ "+format(usdGross):sasiSoftwareUiText(lang,"等待真实结算数据","Waiting for verified settlement data")}</small></div></div>
-  <div data-metric="delivery"><span className={styles.metricIcon} aria-hidden="true">↗</span><div className={styles.metricCopy}><span>{sasiSoftwareUiText(lang,"自动交付成功率","Automatic delivery success")}</span><strong>—</strong><small>{sasiSoftwareUiText(lang,"等待真实订单统计，不展示估算值","Shown after verified order data is available")}</small></div></div>
+  <div data-metric="sales"><span className={styles.metricIcon}><AfternoonArtworkIcon kind="coins"/></span><div className={styles.metricCopy}><span>{sasiSoftwareUiText(lang,"总销售额","Gross sales")}</span><strong>{payments?"¥"+format(cnyGross):"—"}</strong><small>{payments?"USD $ "+format(usdGross):sasiSoftwareUiText(lang,"等待真实结算数据","Waiting for verified settlement data")}</small></div></div>
+  <div data-metric="delivery"><span className={styles.metricIcon}><AfternoonArtworkIcon kind="shield"/></span><div className={styles.metricCopy}><span>{sasiSoftwareUiText(lang,"自动交付成功率","Automatic delivery success")}</span><strong>—</strong><small>{sasiSoftwareUiText(lang,"等待真实订单统计，不展示估算值","Shown after verified order data is available")}</small></div></div>
  </div>
 </>}
 {showStudio&&<section id="sasi-seller-studio" className={styles.section + (sellerOnly ? " " + styles.sellerWorkspaceSection : "")} data-testid="seller-workspace-section">{!sellerOnly&&<div className={styles.sectionHeading}><div><h2>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>}
@@ -442,8 +424,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     <aside className={styles.sellerJoinColumn}>
     <div className={styles.formCard}><h3>{seller?(sasiSoftwareUiText(lang,"卖家资料","Seller profile")):(sasiSoftwareUiText(lang,"零费用申请入驻","Apply to sell for free"))}</h3>
     {!seller&&<div className={styles.sellerJoinArt} aria-hidden="true">
-     <img className={styles.sellerJoinArtwork} data-testid="seller-join-artwork"
-      src="/images/global-scene-20261114.webp" alt="" loading="lazy" decoding="async"/>
+     <AfternoonArtworkIcon kind="seller" className={styles.sellerJoinArtwork} testId="seller-join-artwork"/>
     </div>}
     {seller?<div className={styles.profile}><strong>{seller.display_name}</strong><p>{sasiSoftwareUiText(lang,"审核状态","Review status")}: {translatedStatus(lang,seller.status)}</p><p>{sasiSoftwareUiText(lang,"身份核验","Identity verification")}: {seller.kyc_status==="verified"?(sasiSoftwareUiText(lang,"已完成","Verified")):(sasiSoftwareUiText(lang,"待完成","Pending"))}</p><p>{sasiSoftwareUiText(lang,"完成身份和收款方式审核后才能提现。","Identity and payout verification are required before cash-out.")}</p></div>:<>
      <label>{sasiSoftwareUiText(lang,"展示名称","Display name")}<input value={displayName} onChange={e=>setDisplayName(e.target.value)} maxLength={60} placeholder={sasiSoftwareUiText(lang,"软件开发者 / 工作室","Developer / studio")}/></label>
@@ -461,8 +442,8 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     </aside>
     <div className={styles.sellerMainColumn}>
     <div id="listing-editor" className={styles.formCard}><div className={styles.sellerFormHeading}><h3>{editingId?sasiSoftwareUiText(lang,"修改商品资料","Edit listing"):sasiSoftwareUiText(lang,"发布新软件","Create a software listing")}</h3>{resumableDraft&&<button type="button" className={styles.resumeDraftButton} disabled={busy!==""} onClick={()=>editDraft(resumableDraft)}><span aria-hidden="true">↶</span>{sasiSoftwareUiText(lang,"从草稿继续","Continue draft")}</button>}</div>
-      <label>{sasiSoftwareUiText(lang,"软件名称","Product name")}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={sasiSoftwareUiText(lang,"软件名称、版本、授权类型","Software name, version, license")}/></label>
-      <label>{sasiSoftwareUiText(lang,"分类","Category")}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id])=><option key={id} value={id}>{categoryLabel(lang,id)}</option>)}</select></label>
+      <div className={styles.identityFields}><label>{sasiSoftwareUiText(lang,"软件名称","Product name")}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={sasiSoftwareUiText(lang,"软件名称、版本、授权类型","Software name, version, license")}/></label>
+      <label>{sasiSoftwareUiText(lang,"分类","Category")}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id])=><option key={id} value={id}>{categoryLabel(lang,id)}</option>)}</select></label></div>
       <label>{sasiSoftwareUiText(lang,"完整软件介绍（最多5,000字）","Full software description (up to 5,000 characters)")}<textarea rows={5} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={sasiSoftwareUiText(lang,"介绍核心功能、适用场景、MT5版本与账户模式（对冲/净额）、适用品种和周期、安装要求、依赖项、版本更新及授权范围。支持换行分段，详情页可完整展开。","Explain features, use cases, MT5 build and account mode (hedging/netting), supported symbols and timeframes, installation, dependencies, updates and license scope.")}/><span className={styles.descriptionCount} aria-live="polite">{description.length.toLocaleString("en-US")} / 5,000</span></label>
       <div className={styles.priceFields}><label>{sasiSoftwareUiText(lang,"人民币标价","CNY price")}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{sasiSoftwareUiText(lang,"美元标价","USD price")}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>

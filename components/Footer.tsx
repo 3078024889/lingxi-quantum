@@ -146,10 +146,10 @@ export default function Footer({compact=false}:{compact?:boolean}={}){
 );
  return <footer className="lx11-footer lx-branded-footer lx-footer-v3 lx-footer-v4" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
   {compact?<details className="lx-footer-directory"><summary>{overview.headline}</summary>{showcase}</details>:showcase}
-  <div className="lx-footer-v3-sasi">
+  {!compact&&<div className="lx-footer-v3-sasi">
    <div><strong>✨ {overview.sasiTitle}</strong><span>{overview.sasiDescription}</span></div>
    <Link href="/sasi">{c.sasi} ↗</Link>
-  </div>
+  </div>}
   <div className="lx11-footer-grid lx-footer-v3-nav lx-footer-v4-nav">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={70} height={70}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
@@ -225,7 +225,7 @@ export default function Footer({compact=false}:{compact?:boolean}={}){
   <div className="lx11-footer-legal"><span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>
    <label className="lx-footer-language"><span aria-hidden="true">🌐</span><select value={lang} aria-label={t("language")} onChange={e=>setLang(e.target.value as LingxiLang)}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(k=><option value={k} key={k}>{LANG_NAMES[k]}</option>)}</select></label>
    <Link href="/terms">{t("terms")}</Link><Link href="/privacy">{t("privacy")}</Link>
-   <Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{t("sasiRules")}</Link>
+   <Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{c.sasi} · {c.terms}</Link>
    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener">湘ICP备2026031465号 ↗</a>
   </div>
  </footer>;

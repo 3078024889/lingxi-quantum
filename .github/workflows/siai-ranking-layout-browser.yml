@@ -10,7 +10,7 @@ on:
       - 'components/HomeGlobalGrowth.tsx'
       - 'components/HomeSeoAnswers.tsx'
       - 'app/layout.tsx'
-      - 'app/home-sidebar-20261114.css'
+      - 'app/home-afternoon-20261114.css'
       - 'tests/home-reference-layout-20261114.test.mjs'
       - 'tests/final-closure/dual-home-market-release-20261113.spec.ts'
       - 'components/Footer.tsx'

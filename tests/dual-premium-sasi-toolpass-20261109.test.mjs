@@ -67,26 +67,23 @@ test("announcements show actual published API items and deep-links to individual
  assert.match(pass,/premium\.noticeRow/);
  assert.match(pass,/premium\.balanceBody/);
 });
-test("SASI uses the exact user-supplied transparent marketplace artwork and reviewed real listings",()=>{
- const img=fs.readFileSync("public/images/sasi/sasi-market-hero-lingxifield.png");
- assert.deepEqual([...img.subarray(0,8)],[137,80,78,71,13,10,26,10]);
- assert.equal(img.readUInt32BE(16),1024);
- assert.equal(img.readUInt32BE(20),341);
- assert.equal(img[25],6);
- assert.equal(createHash("sha256").update(img).digest("hex"),"d718ed0c5a4115b7eb4e47ba3a940ceeee2623fade73fe4beccefce1cc73d9cc");
+test("SASI uses a complete scene with real controls and reviewed real listings",()=>{
+ const img=fs.readFileSync("public/images/global-scene-20261114.webp");
+ assert.equal(img.subarray(0,4).toString(),"RIFF");
+ assert.equal(img.subarray(8,12).toString(),"WEBP");
  assert.ok(artwork.includes('data-testid="sasi-transparent-hero"'));
- assert.ok(artwork.includes('data-hero-asset="sasi-market-hero-lingxifield.png"'));
- assert.ok(artwork.includes('src="/images/sasi/sasi-market-hero-lingxifield.png"'));
+ assert.ok(artwork.includes('data-hero-asset="global-scene-20261114.webp"'));
+ assert.ok(artwork.includes('src="/images/global-scene-20261114.webp"'));
  assert.ok(artwork.includes("styles.heroArtwork"));
- assert.ok(artwork.includes("styles.browseHotspot"));
- assert.ok(artwork.includes("styles.publishHotspot"));
+ assert.ok(artwork.includes('href="#products"'));
+ assert.ok(artwork.includes('href="/sasi/seller"'));
  assert.ok(!artwork.includes("styles.laptopScene"));
- assert.ok(!artwork.includes("styles.heroCopy"));
+ assert.ok(artwork.includes("styles.heroCopy"));
  assert.ok(!artwork.includes("styles.benefits"));
  assert.ok(style.includes(".main .heroArtwork{"));
- assert.ok(style.includes("width:100%;height:auto;"));
- assert.ok(style.includes("aspect-ratio:1024 / 341"));
- assert.ok(style.includes("Exact user-supplied SASI marketplace hero"));
+ assert.ok(style.includes("object-fit:fill"));
+ assert.ok(artwork.includes('<h1 id="sasi-market-title">'));
+ assert.ok(artwork.includes("styles.marketFeatures"));
  for(const retiredSelector of [".laptopScene",".laptopDisplay",".laptopKeyboard",".laptopShadow",".alienPlant",".crystalCup"])
   assert.ok(!style.includes(retiredSelector),"retired laptop-scene CSS remains: "+retiredSelector);
  assert.ok(artwork.includes("setListings(values[0].items)"));
@@ -114,7 +111,10 @@ test("homepage, SEO/GEO, ToolPass and footer use one transparent celestial surfa
  const growth=file("app/growth-pages.css");
  const footer=file("app/siai-home.css");
  assert.match(growth,/--lx-growth-max:1500px/);
- assert.match(growth,/\.lx-home-v143-grid \.lx11-home-card[^}]*background:transparent!important/);
+ const home=file("app/home-afternoon-20261114.css");
+ assert.doesNotMatch(growth,/\.lx-home-v143-grid/);
+ assert.match(home,/--home-card:linear-gradient/);
+ assert.match(home,/\.lx-home-feature-card\{[^}]*background:var\(--home-card\)/);
  assert.match(growth,/\.lx-growth-panel[^}]*background:transparent!important/);
  assert.match(growth,/\.lx-seo-question[^}]*background:transparent!important/);
  assert.match(passStyle,/container-type:inline-size;container-name:toolpass/);

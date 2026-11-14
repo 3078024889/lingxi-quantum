@@ -27,7 +27,7 @@ on:
       - 'tests/sasi-seller-reference-20261114.test.mjs'
       - 'tests/final-closure/sasi-seller-workspace-reference.spec.ts'
       - 'tests/final-closure/dual-home-market-release-20261113.spec.ts'
-      - 'public/images/sasi/sasi-market-hero-lingxifield.png'
+      - 'public/images/sasi/afternoon-icons-20261114.png'
       - 'lib/seo/site-facts.ts'
       - 'app/llms.txt/route.ts'
       - 'tests/sasi-transparent-hero-20261112.test.mjs'
