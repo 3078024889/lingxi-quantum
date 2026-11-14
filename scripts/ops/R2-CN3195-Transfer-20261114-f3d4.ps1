@@ -433,8 +433,8 @@ bash "$STAGE" --stage-local "$TAG"
 echo 'STEP 7/7: VERIFY 3195 ROUTES AND AUTH BOUNDARIES'
 bash "$STAGE" --verify-stage "$TAG"
 SELLER_3195="$(curl --noproxy '*' -fLsS --connect-timeout 5 --max-time 25 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3195/sasi/seller)"
-grep -Fq '卖家工作台' <<<"$SELLER_3195"
-grep -Fq '发布新软件' <<<"$SELLER_3195"
+grep -Fq "$(printf '\xE5\x8D\x96\xE5\xAE\xB6\xE5\xB7\xA5\xE4\xBD\x9C\xE5\x8F\xB0')" <<<"$SELLER_3195"
+grep -Fq "$(printf '\xE5\x8F\x91\xE5\xB8\x83\xE6\x96\xB0\xE8\xBD\xAF\xE4\xBB\xB6')" <<<"$SELLER_3195"
 echo 'CN3195_SELLER_WORKSPACE_CONTENT_PASS'
 echo "CN3195_STAGING_PASS SOURCE_SHA=$SOURCE_SHA"
 echo 'CN3195_ACTIVE_NGINX_UPSTREAM_UNCHANGED'
@@ -485,8 +485,8 @@ bash -n "$PAYMENT"
 echo 'CN_PROMOTION_PREFLIGHT: REVERIFY ISOLATED 3195'
 bash "$STAGE" --verify-stage "$TAG"
 SELLER_3195="$(curl --noproxy '*' -fLsS --connect-timeout 5 --max-time 25 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3195/sasi/seller)"
-grep -Fq '卖家工作台' <<<"$SELLER_3195"
-grep -Fq '发布新软件' <<<"$SELLER_3195"
+grep -Fq "$(printf '\xE5\x8D\x96\xE5\xAE\xB6\xE5\xB7\xA5\xE4\xBD\x9C\xE5\x8F\xB0')" <<<"$SELLER_3195"
+grep -Fq "$(printf '\xE5\x8F\x91\xE5\xB8\x83\xE6\x96\xB0\xE8\xBD\xAF\xE4\xBB\xB6')" <<<"$SELLER_3195"
 echo 'CN3195_SELLER_WORKSPACE_CONTENT_PASS'
 CONFIRM="PROMOTE-CN3194-$SHORT"
 printf 'Type %s to switch production traffic: ' "$CONFIRM"
@@ -495,15 +495,15 @@ read -r ANSWER
 echo 'CN3194_EXPLICIT_PROMOTION_CONFIRMATION_ACCEPTED'
 bash "$STAGE" --promote "$TAG"
 if ! SELLER_3194="$(curl --noproxy '*' -fLsS --connect-timeout 5 --max-time 25 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3194/sasi/seller)" ||
-   ! grep -Fq '卖家工作台' <<<"$SELLER_3194" ||
-   ! grep -Fq '发布新软件' <<<"$SELLER_3194"; then
+   ! grep -Fq "$(printf '\xE5\x8D\x96\xE5\xAE\xB6\xE5\xB7\xA5\xE4\xBD\x9C\xE5\x8F\xB0')" <<<"$SELLER_3194" ||
+   ! grep -Fq "$(printf '\xE5\x8F\x91\xE5\xB8\x83\xE6\x96\xB0\xE8\xBD\xAF\xE4\xBB\xB6')" <<<"$SELLER_3194"; then
   echo 'CN3194_SELLER_WORKSPACE_POSTCHECK_FAILED_ROLLBACK_TO_3193'
   bash "$STAGE" --rollback "$TAG" || { echo CN3194_SELLER_WORKSPACE_ROLLBACK_FAILED_MANUAL_REVIEW_REQUIRED >&2; exit 1; }
   exit 1
 fi
 if ! PUBLIC_SELLER="$(curl -fLsS --connect-timeout 8 --max-time 35 https://lingxifield.cn/sasi/seller)" ||
-   ! grep -Fq '卖家工作台' <<<"$PUBLIC_SELLER" ||
-   ! grep -Fq '发布新软件' <<<"$PUBLIC_SELLER"; then
+   ! grep -Fq "$(printf '\xE5\x8D\x96\xE5\xAE\xB6\xE5\xB7\xA5\xE4\xBD\x9C\xE5\x8F\xB0')" <<<"$PUBLIC_SELLER" ||
+   ! grep -Fq "$(printf '\xE5\x8F\x91\xE5\xB8\x83\xE6\x96\xB0\xE8\xBD\xAF\xE4\xBB\xB6')" <<<"$PUBLIC_SELLER"; then
   echo 'CN_PUBLIC_SELLER_WORKSPACE_POSTCHECK_FAILED_ROLLBACK_TO_3193'
   bash "$STAGE" --rollback "$TAG" || { echo CN3194_PUBLIC_SELLER_WORKSPACE_ROLLBACK_FAILED_MANUAL_REVIEW_REQUIRED >&2; exit 1; }
   exit 1
