@@ -12,6 +12,8 @@ test("effect-4 homepage layer is loaded and attached to both home routes",()=>{
  assert.ok(layout.indexOf("home-sidebar-20261114.css")<layout.indexOf("home-effect4-20261114.css"));
  assert.match(home,/data-home-effect4="20261114"/);
  assert.match(localized,/data-home-effect4="20261114"/);
+ assert.match(home,/<Footer compact\\/>/);
+ assert.match(localized,/<Footer compact\\/>/);
  assert.match(css,/\.lx-home-fixed-sidebar \.lx11-link\{min-height:41px;font-size:14px!important/);
  assert.match(css,/\.lx-home-fixed-sidebar \.lx11-brand b\{font-size:16px!important/);
  assert.match(css,/-webkit-text-fill-color:#211a58!important/);
