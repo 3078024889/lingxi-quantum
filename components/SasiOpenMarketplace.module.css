@@ -374,3 +374,27 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
  .sellerGuideCard p{font-size:14px}
  .formCard>p,.profile p{font-size:14px}
 }
+
+
+/* Seller publishing form: three clear upload tiles, with honest server-side limits and package rules. */
+.uploadGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:17px 0 14px}
+.uploadTile{position:relative;display:flex;min-width:0;min-height:154px;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:8px;padding:15px 13px;border:1px dashed rgba(105,91,220,.42);border-radius:15px;background:linear-gradient(155deg,rgba(255,255,255,.9),rgba(238,239,255,.76));color:var(--lx-ink,#17162f);cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.uploadTile:hover{border-color:rgba(103,68,242,.78);box-shadow:0 8px 22px rgba(93,69,202,.12);transform:translateY(-1px)}
+.uploadTile strong{font-size:15px;line-height:1.45;font-weight:800}
+.uploadTile small{font-size:13px;line-height:1.55;color:var(--lx-muted,#66647d)}
+.uploadTile em{font-size:13px;line-height:1.5;font-style:normal;font-weight:700;color:#5d43d8}
+.uploadTileIcon{display:grid;width:34px;height:34px;place-items:center;border-radius:11px;background:linear-gradient(145deg,#e9e4ff,#fff);box-shadow:0 4px 12px rgba(103,68,242,.12);color:#6848ec;font-size:21px;font-weight:800}
+.uploadTile input{position:absolute;inset:auto auto 8px 8px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.uploadTile:focus-within{outline:3px solid rgba(111,77,239,.28);outline-offset:2px}
+.uploadTileDisabled{cursor:not-allowed;opacity:.58;transform:none!important;box-shadow:none!important}
+.activeDraftActions{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:5px 0 13px}
+.activeDraftActions>span{flex:1 1 180px;min-width:0;font-size:13px;line-height:1.5;color:var(--lx-muted,#66647d)}
+.activeDraftActions>button{min-height:40px;padding:9px 13px;border:1px solid rgba(109,91,220,.28);border-radius:12px;background:#fff;color:#553bd2;font-size:14px;font-weight:750}
+.activeDraftActions>button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:760px){
+ .uploadGrid{grid-template-columns:1fr}
+ .uploadTile{min-height:120px}
+ .activeDraftActions{align-items:stretch}
+ .activeDraftActions>span{flex-basis:100%}
+ .activeDraftActions>button{flex:1 1 130px}
+}
