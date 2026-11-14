@@ -33,6 +33,13 @@ test('SASI marketplace and seller workspace retain verified data and readable re
  assert.match(css,/\.marketFeature strong\{font-size:17px/);
  assert.match(css,/\.sellerBenefits small\{font-size:13px/);
  assert.match(css,/\.sellerGuideSteps small\{font-size:13px/);
+ assert.match(market,/styles\.uploadGrid/);
+ assert.match(market,/styles\.uploadTile/);
+ assert.match(market,/activeDraft/);
+ assert.match(market,/最大 30MB/);
+ assert.match(market,/请放入软件 ZIP 包内/);
+ assert.match(css,/\.uploadGrid\{display:grid;grid-template-columns:repeat\(3/);
+ assert.match(css,/\.uploadTile\{position:relative/);
  assert.match(css,/\.featuredShelf\{display:grid;grid-template-columns:minmax\(0,1\.55fr\)/);assert.match(css,/\.featuredMiniCard\{/);assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(250px/);assert.match(css,/\.sellerGuideCard p\{font-size:15px/);
  assert.match(css,/\.marketFeature strong\{font-size:16px/);assert.match(css,/\.sellerHeroCopy h1\{font-size:clamp\(32px/);
 });
