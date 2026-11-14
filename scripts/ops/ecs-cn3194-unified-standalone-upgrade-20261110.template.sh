@@ -217,6 +217,24 @@ probe(){
 }
 
 
+probe_public_design(){
+ local attempt path html ready
+ # nginx reload returns before new workers necessarily accept connections.
+ # Require the new rendered pages at nginx, rather than accepting old HTTP 200s.
+ for attempt in $(seq 1 30);do
+  ready=true
+  for path in / /sasi /sasi/seller;do
+   if ! html="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 20 "https://lingxifield.cn$path?__afternoon_gate=$attempt")" || ! grep -Fq 'data-release-design="20261114-afternoon-three-pages"' <<<"$html";then
+    echo "CN_PUBLIC_NEW_DESIGN_WAIT attempt=$attempt path=$path"
+    ready=false;break
+   fi
+  done
+  if [[ "$ready" == true ]];then echo CN_PUBLIC_THREE_NEW_DESIGNS_PASS;return 0;fi
+  sleep 1
+ done
+ echo CN_PUBLIC_THREE_NEW_DESIGNS_FAILED >&2;return 1
+}
+
 rollback_to_3193(){
  local reason="$1" health path status
  FALLBACK_SVC="$(find_service_for_port 3193 || true)"
@@ -449,6 +467,7 @@ EOF
  OLD_3194_SVC="$(find_service_for_port 3194 || true)"
  [[ -n "$OLD_3194_SVC" && "$OLD_3194_SVC" != "$FINAL_SVC" ]] || { echo CN3194_OLD_SERVICE_NOT_FOUND_FOR_SAFE_REBIND >&2;exit 1; }
  if ! set_nginx_upstream 3195;then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_UPSTREAM_SWITCH_FAILED_OLD_SERVICE_RETAINED >&2;exit 1;fi
+ if ! probe_public_design;then set_nginx_upstream "$ACTIVE_PORT" || true;echo CN3195_TEMPORARY_DESIGN_GATE_FAILED_OLD_UPSTREAM_RESTORED >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
   expected=200
   [[ "$path" == "/sasi/marketplace" ]] && expected=308
@@ -470,6 +489,7 @@ EOF
  fi
 
  if ! set_nginx_upstream 3194;then rollback_to_3193 "CN3194_FINAL_UPSTREAM_SWITCH_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
+ if ! probe_public_design;then rollback_to_3193 "CN3194_PUBLIC_DESIGN_GATE_FAILED" || echo CN3193_AUTOMATIC_ROLLBACK_FAILED_SERVERS_RETAINED >&2;exit 1;fi
  for path in / /tools /siai /sasi /sasi/marketplace /announcements /tools/pass /ai-wallet /account /api/health /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
   expected=200
   [[ "$path" == "/sasi/marketplace" ]] && expected=308
