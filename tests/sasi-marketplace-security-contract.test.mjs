@@ -31,7 +31,10 @@ assert.doesNotMatch(listings,/const PUBLIC_LISTING_COLUMNS=[^;]*rejection_reason
 assert.match(listings,/const SELLER_LISTING_COLUMNS=PUBLIC_LISTING_COLUMNS\+",rejection_reason"/);
 assert.match(listings,/\.select\(SELLER_LISTING_COLUMNS\)/);
 assert.match(listings,/const sessionDb=createClient\(\)/);
-assert.ok(listings.indexOf('if(!user)')<listings.indexOf('createAdminClient().from("sasi_market_listings")'));
+assert.ok(listings.indexOf('if(!user)')<listings.indexOf('const admin=createAdminClient()'));
+assert.match(listings,/admin\.from\("sasi_market_listings"\)/);
+assert.match(listings,/count:"exact",head:true/);
+assert.match(listings,/\.eq\("seller_id",user\.id\)/);
 assert.match(listings,/mode==="public"\?data\.map/);
 const uploader=read("app/api/sasi/marketplace/upload-ticket/route.ts");
 assert.match(uploader,/!marketplaceUploadReady\(\)/);

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
+import AfternoonArtworkIcon,{type AfternoonIconKind} from "@/components/AfternoonArtworkIcon";
 import {ALL_TOOLS_PASS_CATALOG} from "@/lib/tools/commerce/all-tools-pass";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -304,119 +305,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
 };
 
 export function HomeHeroVisual(){
- return (
-  <div className="lx-home-hero-art" role="img" aria-label="灵犀场全球智能服务、SIAI 排行榜与 SASI 智能软件市场">
-   <svg viewBox="0 0 760 440" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-    <defs>
-     <radialGradient id="lx-world-fill" cx="38%" cy="28%" r="78%">
-      <stop offset="0%" stopColor="#c9f1ff" stopOpacity=".96"/>
-      <stop offset="46%" stopColor="#7f9fff" stopOpacity=".66"/>
-      <stop offset="100%" stopColor="#7a55d8" stopOpacity=".12"/>
-     </radialGradient>
-     <linearGradient id="lx-gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#fff7c8"/><stop offset="45%" stopColor="#eab75b"/><stop offset="100%" stopColor="#a66b22"/>
-     </linearGradient>
-     <linearGradient id="lx-lotus" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#fff0ff"/><stop offset="48%" stopColor="#b58cff"/><stop offset="100%" stopColor="#6d62e9"/>
-     </linearGradient>
-     <linearGradient id="lx-glass" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stopColor="#ffffff" stopOpacity=".92"/><stop offset="100%" stopColor="#c6d4ff" stopOpacity=".24"/>
-     </linearGradient>
-     <filter id="lx-soft-glow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="9" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-     </filter>
-    </defs>
-    <g className="lx-home-art-orbits" fill="none" strokeLinecap="round">
-     <ellipse cx="382" cy="310" rx="345" ry="74" stroke="#a89aff" strokeOpacity=".34" strokeWidth="2"/>
-     <ellipse cx="382" cy="310" rx="296" ry="54" stroke="#f1d58f" strokeOpacity=".55" strokeWidth="1.5" transform="rotate(-8 382 310)"/>
-     <ellipse cx="470" cy="188" rx="258" ry="178" stroke="#b6b8ff" strokeOpacity=".23" strokeWidth="1.4" transform="rotate(-22 470 188)"/>
-     <path d="M42 290 C190 70 550 20 716 176" stroke="#ffffff" strokeOpacity=".62" strokeWidth="2"/>
-     <path d="M22 338 C220 166 524 112 740 246" stroke="#e6c98c" strokeOpacity=".46" strokeWidth="1.5"/>
-    </g>
-    <g className="lx-home-art-globe">
-     <circle cx="520" cy="157" r="120" fill="url(#lx-world-fill)" stroke="#ffffff" strokeOpacity=".82" strokeWidth="2"/>
-     <circle cx="520" cy="157" r="127" fill="none" stroke="#9a9bff" strokeOpacity=".55" strokeWidth="2"/>
-     <ellipse cx="520" cy="157" rx="53" ry="120" fill="none" stroke="#ffffff" strokeOpacity=".58" strokeWidth="1.5"/>
-     <ellipse cx="520" cy="157" rx="91" ry="120" fill="none" stroke="#ffffff" strokeOpacity=".36" strokeWidth="1.2"/>
-     <ellipse cx="520" cy="157" rx="120" ry="38" fill="none" stroke="#ffffff" strokeOpacity=".56" strokeWidth="1.4"/>
-     <ellipse cx="520" cy="157" rx="120" ry="77" fill="none" stroke="#ffffff" strokeOpacity=".35" strokeWidth="1.2"/>
-     <path d="M451 104l19-19 24 5 13 20-9 14 13 13-8 19-20 6-6 23-21-10-6-23-22-15 7-18-9-15z M539 91l21-12 28 9 9 17-15 14 4 17-17 9-12-12-20 4-8-17 11-13z M558 173l18-10 18 12-2 20-20 10-19-12z" fill="#c9f4f2" fillOpacity=".52" stroke="#ffffff" strokeOpacity=".35" strokeWidth="1"/>
-     <g fill="#ffffff" filter="url(#lx-soft-glow)">
-      <circle cx="469" cy="102" r="3"/><circle cx="566" cy="118" r="3"/><circle cx="542" cy="194" r="2.8"/><circle cx="490" cy="178" r="2.5"/><circle cx="587" cy="165" r="2.4"/>
-     </g>
-    </g>
-    <g className="lx-home-art-lotus" transform="translate(162 230)">
-     <ellipse cx="0" cy="55" rx="104" ry="22" fill="#8dbfff" fillOpacity=".16" filter="url(#lx-soft-glow)"/>
-     <path d="M0 43 C-73 8-78-42-37-60 C-10-34-3 2 0 43z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".92" strokeWidth="2"/>
-     <path d="M0 43 C-45-42-17-96 12-99 C34-52 20-3 0 43z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".95" strokeWidth="2"/>
-     <path d="M0 43 C32-43 72-61 91-30 C78 15 39 37 0 43z" fill="url(#lx-lotus)" stroke="#ffffff" strokeOpacity=".92" strokeWidth="2"/>
-     <path d="M0 43 C-102 34-123-8-96-31 C-53-24-20 8 0 43z" fill="#d7e4ff" fillOpacity=".9" stroke="#ffffff" strokeOpacity=".82" strokeWidth="1.6"/>
-     <path d="M0 43 C94 34 122-8 96-31 C53-24 20 8 0 43z" fill="#c9b7ff" fillOpacity=".86" stroke="#ffffff" strokeOpacity=".82" strokeWidth="1.6"/>
-     <path d="M-5 42 C-31-5-28-52-8-72 C5-44 7-4-5 42z" fill="#f4f0ff" fillOpacity=".58" stroke="#ffffff" strokeOpacity=".9" strokeWidth="1.2"/>
-     <path d="M5 42 C29-8 42-42 61-46 C57-8 31 28 5 42z" fill="#a9dfff" fillOpacity=".5" stroke="#ffffff" strokeOpacity=".8" strokeWidth="1.2"/>
-     <path d="M-76 11L-14 39 M-22-42L-2 34 M20-49L4 34 M75-9L13 38" stroke="#ffffff" strokeOpacity=".65" strokeWidth="1.2" fill="none"/>
-     <circle cx="0" cy="39" r="11" fill="#fff0bd" filter="url(#lx-soft-glow)"/>
-     <path d="M-78 55 Q0 80 82 54" fill="none" stroke="#e9d19b" strokeWidth="2" strokeOpacity=".86"/>
-    </g>
-    <g className="lx-home-art-trophy" transform="translate(328 100)">
-     <path d="M-31-30h62v36c0 24-13 41-31 41S-31 30-31 6z" fill="url(#lx-gold)" stroke="#fff3c4" strokeWidth="2"/>
-     <path d="M-31-17c-29-8-37 8-26 28 5 9 15 13 27 13 M31-17c29-8 37 8 26 28-5 9-15 13-27 13" fill="none" stroke="#dcae5a" strokeWidth="7" strokeLinecap="round"/>
-     <path d="M-13 48h26v16h-26z" fill="#c38a3c"/><path d="M-42 64h84v13h-84z" fill="url(#lx-gold)" stroke="#fff0b9" strokeWidth="1.5"/>
-     <text x="0" y="4" textAnchor="middle" fill="#fff8dd" fontSize="19" fontWeight="800">SIAI</text>
-     <text x="0" y="74" textAnchor="middle" fill="#fff9d8" fontSize="10" fontWeight="800">GLOBAL</text>
-     <path d="M-42-42l-7-12 M42-42l7-12 M0-52v-12" stroke="#ffe4a5" strokeWidth="2" strokeLinecap="round"/>
-    </g>
-    <g className="lx-home-art-sasi-panel">
-     <rect x="420" y="15" width="155" height="73" rx="17" fill="url(#lx-glass)" fillOpacity=".78" stroke="#ffffff" strokeOpacity=".9" strokeWidth="2"/>
-     <rect x="429" y="24" width="137" height="55" rx="12" fill="#7967e8" fillOpacity=".13" stroke="#9b8cff" strokeOpacity=".42"/>
-     <path d="M445 47l15-10 15 10-15 10z M445 57l15 10 15-10" fill="none" stroke="#7160d8" strokeWidth="3" strokeLinejoin="round"/>
-     <text x="510" y="50" textAnchor="middle" fill="#5542bc" fontSize="22" fontWeight="900" letterSpacing="2">SASI</text>
-     <text x="510" y="67" textAnchor="middle" fill="#4d4d96" fontSize="10" fontWeight="700">智能软件市场</text>
-    </g>
-    <g className="lx-home-art-laptop">
-     <ellipse cx="552" cy="286" rx="150" ry="12" fill="#6e8fe2" fillOpacity=".16" filter="url(#lx-soft-glow)"/>
-     <path d="M414 244l37-132q4-13 17-13h180q13 0 10 14l-34 131z" fill="#172d5d" stroke="#f5fbff" strokeWidth="3"/>
-     <path d="M430 236l33-119q2-7 10-7h154q8 0 6 8l-31 118z" fill="#0b1c43" stroke="#8fdcff" strokeOpacity=".72" strokeWidth="1.4"/>
-     <path d="M462 117h181l-27 109H433z" fill="#f4f8ff"/>
-     <path d="M462 117h181l-4 15H458z" fill="#17346e"/>
-     <circle cx="470" cy="124" r="2.2" fill="#ffcb83"/><circle cx="478" cy="124" r="2.2" fill="#9edfff"/><circle cx="486" cy="124" r="2.2" fill="#b7a5ff"/>
-     <text x="499" y="127" fill="#eaf4ff" fontSize="6.8" fontWeight="800" letterSpacing="1.1">SASI SOFTWARE MARKET</text>
-     <path d="M458 132l34 0-23 94h-36z" fill="#173b79"/>
-     <circle cx="468" cy="146" r="3" fill="#80dfff"/><path d="M476 146h9 M463 159h19 M460 170h20 M457 181h18 M454 192h18 M451 203h17" stroke="#dcecff" strokeOpacity=".72" strokeWidth="1.6" strokeLinecap="round"/>
-     <path d="M492 132h147l-22 94H469z" fill="#f5f8ff"/>
-     <path d="M501 140h55l-4 22h-56z" fill="#e5efff" stroke="#d2e1fa" strokeWidth=".7"/>
-     <path d="M562 140h67l-5 22h-67z" fill="#edf5ff" stroke="#d2e1fa" strokeWidth=".7"/>
-     <text x="507" y="150" fill="#4e6e9f" fontSize="5.6" fontWeight="700">PUBLISHED SOFTWARE</text>
-     <text x="507" y="158" fill="#243d70" fontSize="8" fontWeight="800">LIVE</text>
-     <text x="569" y="150" fill="#4e6e9f" fontSize="5.6" fontWeight="700">SECURE DELIVERY</text>
-     <text x="569" y="158" fill="#168f72" fontSize="8" fontWeight="800">VERIFIED</text>
-     <path d="M501 170h128l-12 46H489z" fill="#e8f0ff" stroke="#cfddf4" strokeWidth=".7"/>
-     <path d="M501 205l15-11 11 4 14-17 11 8 14-14 13 5 16-12 14 4" fill="none" stroke="#4b8de8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-     <path d="M504 211h104" stroke="#a6b9d8" strokeWidth=".7"/>
-     <path d="M508 217v-5h5v5 M518 217v-9h5v9 M528 217v-13h5v13 M538 217v-7h5v7 M548 217v-11h5v11 M558 217v-15h5v15" fill="#8b77dc" fillOpacity=".75"/>
-     <path d="M487 253h190l25 15q7 5-4 9H421q-10-4-3-10z" fill="url(#lx-glass)" stroke="#ffffff" strokeWidth="2"/>
-     <path d="M510 259h128l-4 6H506z" fill="#dce9ff" fillOpacity=".85" stroke="#ffffff" strokeOpacity=".65"/>
-     <path d="M512 262h114 M515 266h107 M526 258v10 M540 258v10 M554 258v10 M568 258v10 M582 258v10 M596 258v10 M610 258v10" stroke="#8da8d6" strokeOpacity=".72" strokeWidth=".75" strokeLinecap="round"/>
-     <path d="M477 245h120" stroke="#b8d7ff" strokeOpacity=".62" strokeWidth="1.5"/>
-     <circle cx="548" cy="104" r="2.5" fill="#e8f7ff"/>
-    </g>
-    <g className="lx-home-art-data">
-     <rect x="606" y="104" width="106" height="54" rx="12" fill="url(#lx-glass)" stroke="#ffffff" strokeOpacity=".9"/>
-     <path d="M620 143l16-14 13 6 17-19 15 9" fill="none" stroke="#6d66df" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-     <circle cx="620" cy="143" r="3" fill="#f1c96f"/><circle cx="681" cy="125" r="3" fill="#f1c96f"/>
-     <rect x="37" y="95" width="102" height="50" rx="12" fill="url(#lx-glass)" stroke="#ffffff" strokeOpacity=".8"/>
-     <path d="M55 130v-12h11v12 M74 130v-22h11v22 M93 130v-31h11v31" fill="none" stroke="#6c66dd" strokeWidth="4" strokeLinecap="round"/>
-    </g>
-    <g className="lx-home-art-stars" fill="#fff">
-     <circle cx="94" cy="64" r="3"/><circle cx="226" cy="72" r="2.5"/><circle cx="382" cy="25" r="2.5"/><circle cx="658" cy="64" r="2.7"/><circle cx="704" cy="206" r="2.2"/><circle cx="265" cy="304" r="2.4"/><circle cx="380" cy="355" r="2.2"/>
-    </g>
-    <g className="lx-home-art-signature">
-     <text x="574" y="355" fill="#6542b9" fontSize="23" fontFamily="cursive" fontStyle="italic">Celestial 小仙女</text>
-     <path d="M566 365 Q635 378 722 349 M690 371l8-8 6 7" fill="none" stroke="#8063d5" strokeWidth="1.7" strokeLinecap="round"/>
-    </g>
-   </svg>
-  </div>
- );
+ return <div className="lx-home-hero-art" aria-hidden="true"><img src="/images/global-scene-20261114.webp" width={2172} height={724} alt="" fetchPriority="high" decoding="async"/></div>;
 }
 
 const SECURITY_COPY:Record<LingxiLang,{title:string;description:string}>={
@@ -442,6 +331,33 @@ const DISTRIBUTION_COPY:Record<LingxiLang,{title:string;steps:string[]}>={
  ar:{title:"التوزيع العالمي والشراكات",steps:["البحث","بحث الذكاء الاصطناعي","التوزيع","المحتوى","الشركاء","العودة"]}
 };
 
+const SIAI_CATEGORY_COPY={
+ zh:{
+  title:"全球 AI / SI 工具怎么选？按任务比较六类产品",
+  intro:"从写作、编程、图片、视频到模型 API，按功能、价格、免费额度、地区和商用条件找到适合的产品。",
+  cards:[
+   {title:"全球 AI 行情平台",description:"查看 AI 软件、模型 API 和视频创作工具的套餐价格、免费额度与功能说明，按预算快速找到适用产品。"},
+   {title:"全球 AI 排行榜",description:"想写文章、做演示、画图片、生成视频或编程？按实际任务比较不同工具的特色和操作方式。"},
+   {title:"全球 SI 排行榜",description:"需要长文分析、代码辅助或图像理解？查看不同 SI / AI 工具擅长的任务和代表模型。"},
+   {title:"全球 SI 行情平台",description:"按使用地区、付款方式和商用条件筛选工具，先确认地区可用性与服务限制。"},
+   {title:"全球 SIAI 行情平台",description:"从聊天助手到图像、视频、语音和模型 API，一起比较可用功能、价格和免费试用方案。"},
+   {title:"全球 SIAI 排行榜",description:"灵犀场汇集不同用途的全球 SI / AI 工具，选择产品后即可查看功能详情并进入厂商官网。"}
+  ]
+ },
+ en:{
+  title:"How to choose global AI / SI tools? Compare six categories by task",
+  intro:"Compare writing, coding, image, video and model APIs by capability, pricing, free limits, regional access and commercial terms.",
+  cards:[
+   {title:"Global AI Market Intelligence",description:"Compare plans, free allowances and capabilities for AI software, model APIs and video tools."},
+   {title:"Global AI Rankings",description:"Find tools for writing, presentations, images, video generation and programming by task."},
+   {title:"Global SI Rankings",description:"Compare long-context analysis, coding assistance, image understanding and representative models."},
+   {title:"Global SI Market Intelligence",description:"Check regional availability, payment methods and commercial-use conditions before choosing."},
+   {title:"Global SIAI Market Intelligence",description:"Compare chat, image, video, voice and model APIs by features, prices and free trials."},
+   {title:"Global SIAI Rankings",description:"Explore global SI / AI tools, review product details and continue to official provider pages."}
+  ]
+ } 
+} as const;
+
 export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  const copy=COPY[lang]||COPY.en;
  const security=SECURITY_COPY[lang]||SECURITY_COPY.en;
@@ -452,9 +368,9 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  return (
   <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="九语言搜索入口;124 个工具目录;AI 搜索资料;全球 SIAI 排行榜;SASI 智能软件市场;100+ 实用工具;网站合作;内容传播;二维码分享;分享来源统计;工具包无限使用;隐私与安全">
    <div className="lx-home-feature-strip">
-    {features.map(item=>(
+    {features.map((item,index)=>(
      <Link className="lx-home-feature-card" href={item.href} key={item.href}>
-      <LingxiMiniIcon name={item.icon} size="title" className="lx-home-feature-icon"/>
+      <span className="lx-home-feature-icon"><AfternoonArtworkIcon kind={(["chart","tools","layers","cart","people","shield"] as AfternoonIconKind[])[index]}/></span>
       <span className="lx-home-feature-copy"><strong>{item.title}</strong><small>{item.description}</small></span>
      </Link>
     ))}
@@ -502,6 +418,19 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
      <Link className="lx-home-market-card" href="/partners"><LingxiMiniIcon name={marketIcons[4]} size="tiny" className="lx-home-market-icon"/><span><strong>{lang==="zh"?"全球合作网络":"Partner network"}</strong><small>{lang==="zh"?"连接网站、创作者与产品合作伙伴":"Connect websites, creators and product teams"}</small></span><b>→</b></Link>
     </nav>
     <div className="lx-home-growth-flywheel" aria-label={copy.flywheelTitle}><strong>{copy.flywheelTitle}</strong><div>{copy.flywheel.map((step,index)=><span key={step}><b>{step}</b>{index<copy.flywheel.length-1&&<i aria-hidden="true">→</i>}</span>)}</div></div>
+   </section>
+   <section className="lx-home-siai-categories" aria-labelledby="lx-home-siai-categories-title" data-testid="home-siai-categories">
+    <div className="lx-home-siai-heading">
+     <p className="lx-home-section-eyebrow">GLOBAL SIAI DIRECTORY</p>
+     <h2 id="lx-home-siai-categories-title">{(lang==="zh"?SIAI_CATEGORY_COPY.zh:SIAI_CATEGORY_COPY.en).title}</h2>
+     <p>{(lang==="zh"?SIAI_CATEGORY_COPY.zh:SIAI_CATEGORY_COPY.en).intro}</p>
+    </div>
+    <div className="lx-home-siai-category-grid">
+     {(lang==="zh"?SIAI_CATEGORY_COPY.zh:SIAI_CATEGORY_COPY.en).cards.map((item,index)=><Link href="/siai" className="lx-home-siai-category-card" key={item.title}>
+      <LingxiMiniIcon name={(["recognition","sparkles","compare","book","connections","products"] as LingxiIconName[])[index]} size="title" className="lx-home-siai-category-icon"/>
+      <span><strong>{item.title}</strong><small>{item.description}</small></span><b aria-hidden="true">→</b>
+     </Link>)}
+    </div>
    </section>
    <section className="lx-home-popular-tools" aria-labelledby="lx-home-tools-title">
     <div><h2 id="lx-home-tools-title">{copy.toolsTitle}</h2><p>{copy.passLead}</p></div>

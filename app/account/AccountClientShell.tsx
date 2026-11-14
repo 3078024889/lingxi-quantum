@@ -26,6 +26,7 @@ export default function AccountClientShell() {
   const [view, setView] = useState<"loading" | "login" | "account" | "error">("loading");
   const [user, setUser] = useState<AccountUser | null>(null);
   const [paidOrderCount, setPaidOrderCount] = useState<number | null>(null);
+  const [retry, setRetry] = useState(0);
   const [login, setLogin] = useState<LoginParams>({
     afterAuthPath: "/products",
     initialMode: "signin",
@@ -67,7 +68,8 @@ export default function AccountClientShell() {
       return;
     }
     let active = true;
-    let initialResolved = false;
+    let revision = 0;
+    let scheduled: ReturnType<typeof setTimeout> | undefined;
     let countedUserId = "";
     const loadPaidOrderCount = (userId: string) => {
       if (countedUserId === userId) return;
@@ -79,10 +81,10 @@ export default function AccountClientShell() {
         .eq("status", "paid");
       void Promise.resolve(query)
         .then(({ count, error }) => {
-          if (active) setPaidOrderCount(!error && typeof count === "number" ? count : null);
+          if (active && countedUserId === userId) setPaidOrderCount(!error && typeof count === "number" ? count : null);
         })
         .catch(() => {
-          if (active) setPaidOrderCount(null);
+          if (active && countedUserId === userId) setPaidOrderCount(null);
         });
     };
     const applyUser = (nextUser: AccountUser | null) => {
@@ -95,33 +97,60 @@ export default function AccountClientShell() {
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!active) return;
-      if (event === "INITIAL_SESSION" && !initialResolved) return;
-      const nextUser = (session?.user ?? null) as AccountUser | null;
-      applyUser(nextUser);
-    });
-
-    void supabase.auth.getUser().then(({ data, error }) => {
-      if (!active) return;
-      initialResolved = true;
-      if (error) {
-        setView("error");
+    // Missing cookies are normal in mobile/in-app browsers. Never mistake an
+    // anonymous or expired session for an outage, or trust cached user details.
+    const verifyUser = async () => {
+      const request = ++revision;
+      setView("loading");
+      setUser(null);
+      setPaidOrderCount(null);
+      countedUserId = "";
+      let timeout: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const result = await Promise.race([
+          supabase.auth.getUser(),
+          new Promise<never>((_, reject) => {
+            timeout = setTimeout(() => reject(new Error("SESSION_CHECK_TIMEOUT")), 15000);
+          })
+        ]);
+        if (!active || request !== revision) return;
+        const { data, error } = result;
+        if (error) {
+          if (error.name === "AuthSessionMissingError" ||
+              ["session_not_found", "refresh_token_not_found", "refresh_token_already_used"].includes(error.code || "")) {
+            applyUser(null);
+          } else setView("error");
+          return;
+        }
+        applyUser((data.user ?? null) as AccountUser | null);
+      } catch {
+        if (active && request === revision) setView("error");
+      } finally {
+        if (timeout) clearTimeout(timeout);
+      }
+    };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (!active || event === "INITIAL_SESSION") return;
+      if (event === "SIGNED_OUT") {
+        ++revision;
+        if (scheduled) clearTimeout(scheduled);
+        applyUser(null);
         return;
       }
-      const nextUser = (data.user ?? null) as AccountUser | null;
-      applyUser(nextUser);
-    }).catch(() => {
-      if (!active) return;
-      initialResolved = true;
-      setView("error");
+      // Supabase emits these events while holding its auth lock. Verify after
+      // the callback returns instead of starting another auth operation inside it.
+      if (scheduled) clearTimeout(scheduled);
+      scheduled = setTimeout(() => { void verifyUser(); }, 0);
     });
+    void verifyUser();
 
     return () => {
       active = false;
+      ++revision;
+      if (scheduled) clearTimeout(scheduled);
       subscription.unsubscribe();
     };
-  }, []);
+  }, [retry]);
 
   if (view === "loading") {
     return (
@@ -142,8 +171,11 @@ export default function AccountClientShell() {
         <p className="mt-4 text-sm leading-7 text-[var(--lx-muted)]">
           <LxText zh="登录状态服务暂时没有响应，账户资料不会在未验证时显示。" en="The session service did not respond. Private account details remain hidden until verification succeeds." />
         </p>
-        <button onClick={() => window.location.reload()} className="mt-6 border border-[var(--lx-line)] px-5 py-3 text-sm text-[var(--lx-ink)]">
+        <button onClick={() => setRetry(value => value + 1)} className="mt-6 border border-[var(--lx-line)] px-5 py-3 text-sm text-[var(--lx-ink)]">
           <LxText zh="重新检查" en="Retry" />
+        </button>
+        <button onClick={() => setView("login")} className="mt-4 block w-full text-sm text-[var(--lx-ink)]">
+          <LxText zh="重新登录" en="Sign in again" />
         </button>
       </div>
     );

@@ -4,9 +4,9 @@ import Footer from "@/components/Footer";
 import SasiOpenMarketplace from "@/components/SasiOpenMarketplace";
 
 export const metadata:Metadata={
- title:"SASI 卖家服务与软件发布工作台｜灵犀场",
- description:"申请成为 SASI 软件卖家，创建软件商品、上传安装包和商品图片，查看安全检查、审核进度及销售记录。",
+ title:"卖家工作台｜SASI 智能软件市场｜灵犀场",
+ description:"管理卖家入驻、软件商品发布、私密文件上传、安全审核、销售结算与自动交付。",
  robots:{index:false,follow:true},
  alternates:{canonical:"/sasi/seller"}
 };
-export default function Page(){return <><Nav/><SasiOpenMarketplace view="seller"/><Footer/></>}
+export default function Page(){return <><Nav/><SasiOpenMarketplace view="seller"/><Footer compact/></>}

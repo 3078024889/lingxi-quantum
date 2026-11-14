@@ -162,41 +162,6 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 }
 
 
-/* Exact user-supplied SASI marketplace hero: source pixels remain untouched. */
-.main .marketplaceContainer{width:100%;max-width:1600px;margin-inline:auto}
-.main .hero{
- position:relative;isolation:isolate;display:block;width:100%;
- aspect-ratio:1024 / 341;min-height:0!important;max-height:none!important;
- margin:0 auto clamp(14px,1.8vw,24px);padding:0!important;
- overflow:visible!important;background:transparent!important;
- border:0!important;border-radius:0!important;box-shadow:none!important;
-}
-.main .heroArtwork{
- position:relative;inset:auto;display:block;width:100%;height:auto;
- aspect-ratio:1024 / 341;object-fit:contain;object-position:center;
- margin:0;padding:0;border:0;border-radius:0;box-shadow:none;
- background:transparent!important;opacity:1;mix-blend-mode:normal;pointer-events:none;
-}
-.main .browseHotspot,.main .publishHotspot{
- position:absolute;z-index:2;display:block;top:50.4%;height:12.2%;
- min-height:44px;margin:0;padding:0;border:0;border-radius:999px;
- background:transparent!important;box-shadow:none!important;cursor:pointer;
- outline-offset:3px;-webkit-tap-highlight-color:transparent;
-}
-.main .browseHotspot{left:6.7%;width:16.2%}
-.main .publishHotspot{left:23.8%;width:13.2%}
-.main .browseHotspot:focus-visible,.main .publishHotspot:focus-visible{
- outline:2px solid #5f8cff;outline-offset:3px;
-}
-@media(max-width:620px){
- .main{padding-top:12px}
- .main .marketplaceContainer{max-width:none}
- .main .hero{width:100%;aspect-ratio:1024 / 341;margin-bottom:14px}
- .main .browseHotspot,.main .publishHotspot{top:44%;height:34%;min-height:44px}
- .main .browseHotspot{left:6.5%;width:17.5%}
- .main .publishHotspot{left:23%;width:15.5%}
-}
-
 /* Compact, transparent SASI marketplace and three-column seller workspace. */
 .main{min-height:0;padding:14px clamp(12px,1.8vw,28px) 38px}
 .main .marketplaceContainer{max-width:1480px}
@@ -218,13 +183,6 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .sellerHeroCopy h1{margin:5px 0 4px;color:var(--lx-ink,#1d2b42);font-size:clamp(26px,2.5vw,36px);font-weight:900;line-height:1.2}
 .sellerHeroCopy p{margin:0;color:var(--lx-muted,#6d7f96);font-size:13px;line-height:1.7}
 .sellerBack{display:inline-flex;align-items:center;gap:7px;margin-top:11px;padding:8px 12px;border:1px solid var(--lx-line,#dfe7f2);border-radius:999px;color:#4769bd;font-size:11px;font-weight:750;text-decoration:none}
-.sellerHeroArt{position:relative;display:flex;align-items:center;justify-content:center;min-height:118px;isolation:isolate}
-.sellerHeroOrbit{position:absolute;inset:7px 4%;border:1px solid rgba(122,159,232,.28);border-radius:50%;transform:rotate(-11deg);box-shadow:0 0 24px rgba(121,170,255,.12)}
-.sellerHeroTrophy{position:relative;z-index:2;display:grid;place-items:center;width:82px;height:92px;margin-right:20px;border:1px solid rgba(238,190,105,.7);border-radius:22px 22px 16px 16px;background:linear-gradient(145deg,#fff3c9,#e5b45c 55%,#a8732f);color:#704719;font-size:13px;font-weight:950;letter-spacing:.08em;box-shadow:0 13px 25px rgba(193,145,69,.2),inset 0 1px 0 #fff}
-.sellerHeroTrophy:before{content:"";position:absolute;top:19px;left:-15px;width:20px;height:28px;border:4px solid #d8a64d;border-right:0;border-radius:14px 0 0 14px}
-.sellerHeroTrophy:after{content:"";position:absolute;top:19px;right:-15px;width:20px;height:28px;border:4px solid #d8a64d;border-left:0;border-radius:0 14px 14px 0}
-.sellerHeroScreen{position:relative;display:flex;flex-direction:column;gap:8px;width:180px;height:112px;padding:13px 12px;border:5px solid #233e70;border-radius:12px;background:linear-gradient(145deg,#102b59,#183c78);box-shadow:0 14px 25px rgba(48,78,135,.2);transform:perspective(400px) rotateY(-12deg) rotateX(4deg)}
-.sellerHeroScreen b{color:#d9ebff;font-size:8px;letter-spacing:.12em}.sellerHeroScreen i{display:block;height:10px;border-radius:4px;background:linear-gradient(90deg,#70c8ff 0 26%,rgba(255,255,255,.18) 26% 100%);box-shadow:0 0 9px rgba(112,200,255,.18)}
 .metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 14px}.metrics>div{min-width:0;padding:13px 15px;border-radius:15px;background:transparent;backdrop-filter:blur(12px);box-shadow:0 7px 20px rgba(74,99,157,.05)}
 .metrics span{font-size:11px;font-weight:700}.metrics strong{font-size:23px;margin-top:5px;overflow-wrap:anywhere}.metrics small{display:block;margin-top:4px;color:var(--lx-muted,#74849a);font-size:9px;line-height:1.4}
 .sellerWorkspaceGrid{display:grid;grid-template-columns:minmax(225px,.82fr) minmax(440px,1.7fr) minmax(225px,.92fr);gap:11px;align-items:start}
@@ -242,7 +200,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .sellerGuideSteps li>b{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:rgba(111,157,241,.14);color:#5578ce;font-size:10px}
 .sellerGuideSteps li>span{display:grid;gap:1px;min-width:0}.sellerGuideSteps strong{font-size:10.5px;color:var(--lx-ink,#263750)}.sellerGuideSteps small{font-size:9px;color:var(--lx-muted,#74849a)}
 @media(max-width:1260px){.sellerWorkspaceGrid{grid-template-columns:minmax(220px,.82fr) minmax(0,1.5fr)}.sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}.marketFeatures{grid-template-columns:repeat(3,minmax(0,1fr))}.steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:760px){.sellerHero{grid-template-columns:1fr;padding:15px}.sellerHeroArt{min-height:95px;justify-content:flex-end;padding-right:10px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:1fr}.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.marketFeature{min-height:58px;padding:8px}.marketFeatureIcon{width:31px;height:31px}.featuredCard{grid-template-columns:1fr;gap:12px}.featuredVisual{height:120px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps>button{min-height:46px}}
+@media(max-width:760px){.sellerHero{grid-template-columns:1fr;padding:15px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:1fr}.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.marketFeature{min-height:58px;padding:8px}.marketFeatureIcon{width:31px;height:31px}.featuredCard{grid-template-columns:1fr;gap:12px}.featuredVisual{height:120px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps>button{min-height:46px}}
 @media(max-width:430px){.marketFeatures{grid-template-columns:1fr}.sellerBenefits{grid-template-columns:repeat(3,minmax(0,1fr))}.sellerGuideColumn{grid-template-columns:1fr}}
 
 /* SASI seller workspace typography and density: match the approved three-column reference. */
@@ -250,13 +208,13 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .featured{margin-top:22px}.featured .sectionHeading h2,.sectionHeading h2{font-size:24px;line-height:1.35;font-weight:950}.featuredCard{gap:18px;padding:17px;border-radius:20px}.featuredVisual{min-height:148px;border-radius:16px}.featuredVisual>small{font-size:12px;letter-spacing:.16em}.featuredVisual>strong{font-size:38px;line-height:1.1}.featuredVisual>span{font-size:12px;letter-spacing:.14em}.featuredDescription h3{font-size:22px;line-height:1.4;font-weight:950}.featuredDescription>p:not(.featuredBadge){font-size:15px;line-height:1.7}.featuredBadge{font-size:12px;padding:5px 10px}.featuredChips{gap:7px}.featuredChips span{font-size:13px;padding:5px 9px}.featuredPrice strong{font-size:29px;line-height:1.1}.featuredPrice small{font-size:14px}.featuredAction{min-height:42px;padding:0 15px;font-size:14px}
 .main .products{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.main .card{border-radius:18px}.main .cardContent{padding:15px}.main .card h3{font-size:17px;line-height:1.45;min-height:0;font-weight:900}.main .card p{font-size:14px;line-height:1.7}.main .cardBottom strong{font-size:20px}.main .cardBottom span{font-size:13px}
 .steps{gap:12px}.steps>div{min-height:88px;padding:15px;border-radius:16px}.steps b{font-size:25px}.steps strong{font-size:16px;line-height:1.4}.steps span{font-size:14px;line-height:1.5}.steps>button{min-height:58px;font-size:16px;font-weight:900}
-.sellerHero{min-height:190px;padding:25px 30px;border-radius:22px}.sellerHeroCopy>small{font-size:12px;letter-spacing:.14em}.sellerHeroCopy h1{font-size:clamp(32px,3vw,42px);line-height:1.15;font-weight:950}.sellerHeroCopy p{font-size:16px;line-height:1.7}.sellerBack{font-size:14px}.sellerHeroArt{transform:scale(1.08);transform-origin:center right}
+.sellerHero{min-height:190px;padding:25px 30px;border-radius:22px}.sellerHeroCopy>small{font-size:12px;letter-spacing:.14em}.sellerHeroCopy h1{font-size:clamp(32px,3vw,42px);line-height:1.15;font-weight:950}.sellerHeroCopy p{font-size:16px;line-height:1.7}.sellerBack{font-size:14px}
 .metrics{gap:13px;margin-top:16px}.metrics>div{min-height:94px;padding:17px;border-radius:17px}.metrics span{font-size:14px;line-height:1.4}.metrics strong{font-size:29px;line-height:1.2}.metrics small{font-size:12px;line-height:1.5}
 .sellerWorkspaceGrid{grid-template-columns:minmax(250px,.82fr) minmax(480px,1.55fr) minmax(250px,.82fr);gap:16px;align-items:start}.sellerJoinColumn,.sellerMainColumn,.sellerGuideColumn{gap:12px}.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:20px;border-radius:18px}.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:21px;line-height:1.4;font-weight:950}.sellerMainColumn .formCard>label,.sellerJoinColumn .formCard>label{margin-top:15px;font-size:15px;line-height:1.5;font-weight:800}.sellerMainColumn .formCard input:not([type=checkbox]),.sellerMainColumn .formCard textarea,.sellerMainColumn .formCard select,.sellerJoinColumn .formCard input:not([type=checkbox]){min-height:43px;font-size:15px;line-height:1.5}.sellerMainColumn .formCard textarea{min-height:140px;padding:13px}.sellerMainColumn .formCard>button,.sellerJoinColumn .formCard>button{min-height:44px;padding:0 17px;font-size:15px;font-weight:900}.sellerMainColumn .formCard>p,.sellerJoinColumn .formCard>p{font-size:14px;line-height:1.7}
 .sellerBenefits{gap:8px;margin-top:12px}.sellerBenefits>div{min-height:82px;padding:11px 8px}.sellerBenefits span{font-size:22px}.sellerBenefits strong{font-size:13px;line-height:1.4}.sellerBenefits small{font-size:12px;line-height:1.5}.sellerGuideColumn{gap:12px}.sellerGuideCard{padding:17px;border-radius:17px}.sellerGuideCard h3{font-size:18px;line-height:1.4;font-weight:900}.sellerGuideCard p{font-size:15px;line-height:1.7}.sellerGuideSteps{gap:10px}.sellerGuideSteps li>b{width:30px;height:30px;font-size:14px}.sellerGuideSteps strong{font-size:15px}.sellerGuideSteps small{font-size:13px;line-height:1.45}.drafts h3{font-size:18px;font-weight:900}.draft{padding:14px;gap:10px}.draft strong{font-size:15px}.draft small,.mediaCounter,.note{font-size:13px;line-height:1.6}.upload{min-height:43px;padding:10px 12px;font-size:14px}.descriptionCount{font-size:12px}
 @media(max-width:1320px){.sellerWorkspaceGrid{grid-template-columns:minmax(230px,.85fr) minmax(420px,1.4fr)}.sellerGuideColumn{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:900px){.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px}.marketFeature{min-height:70px}.marketFeature strong{font-size:14px}.marketFeature small{font-size:12px}.featuredCard{grid-template-columns:1fr}.featuredVisual{min-height:128px}.featuredDescription h3{font-size:20px}.featuredPrice{align-items:flex-start}.featuredAction{width:100%}.sellerHero{padding:20px;min-height:0}.sellerHeroArt{display:none}.sellerGuideColumn{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:1fr}.steps>div{min-height:70px}}
+@media(max-width:620px){.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px}.marketFeature{min-height:70px}.marketFeature strong{font-size:14px}.marketFeature small{font-size:12px}.featuredCard{grid-template-columns:1fr}.featuredVisual{min-height:128px}.featuredDescription h3{font-size:20px}.featuredPrice{align-items:flex-start}.featuredAction{width:100%}.sellerHero{padding:20px;min-height:0}.sellerGuideColumn{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:1fr}.steps>div{min-height:70px}}
 
 /* Three-card featured shelf: one first-party product plus up to two real approved listings. */
 .featuredShelf{display:grid;grid-template-columns:minmax(0,1.55fr) repeat(2,minmax(190px,.72fr));gap:14px;align-items:stretch}
@@ -416,6 +374,38 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 :global(html[data-theme="dark"]) .detailUploadRow strong{color:#f0edff}
 :global(html[data-theme="dark"]) .detailUploadRow small{color:#c0bdd2}
 :global(html[data-theme="dark"]) .detailUploadRow em{color:#c7b8ff}
+/* The same real content, arranged at the approved reference proportions. */
+.main{--lx-line:#ded7f7;--lx-panel:#ffffffd9;--lx-bg:#f9f7ff;--lx-ink:#1f1835;--lx-muted:#625a74;background:radial-gradient(ellipse at 85% 15%,#e6e8ff88,transparent 50%),linear-gradient(130deg,#fff,#f6f3ff);padding:12px 22px 35px}
+.container{max-width:1640px}
+.main .hero{position:relative;width:100%;margin:0 0 12px;aspect-ratio:auto;min-height:315px;border-radius:23px;overflow:hidden;border:1px solid #e4ddf7;background:#eeecff;isolation:isolate}
+.main .heroArtwork{position:absolute;inset:0;display:block;width:100%;height:100%;max-height:none;object-fit:fill;pointer-events:none}
+.heroCopy{position:relative;z-index:1;width:47%;padding:35px 28px 28px;box-sizing:border-box}
+.heroCopy .heroBrand{font-size:15px;font-weight:900;letter-spacing:.1em;color:#5822bd;margin:0 0 10px}
+.heroCopy h1{font-size:clamp(29px,2.9vw,48px);font-weight:950;line-height:1.17;color:#2c0a80;margin:0 0 13px;letter-spacing:-.035em}
+.heroCopy>p:not(.heroBrand){font-size:14px;font-weight:700;line-height:1.8;color:#302344}
+.heroActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:19px}.heroActions a{display:inline-flex;align-items:center;justify-content:center;min-height:45px;padding:0 26px;border-radius:999px;background:linear-gradient(110deg,#3c72ff,#a32bfa);color:white;font-size:17px;font-weight:850;text-decoration:none;box-shadow:0 5px 10px #6f32e83b;border:1px solid #ffffffb0}.heroActions a+ a{background:linear-gradient(#ffe4b2,#ffc56f);color:#2d1744;box-shadow:0 5px 10px #cc8b4738}
+.main .marketFeatures{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding:12px 0;margin:0 0 20px;border:1px solid #dcd4f4;border-radius:20px;background:linear-gradient(140deg,#fff,#f2eeff);box-shadow:0 5px 12px #5940a620}
+.main .marketFeature{min-height:54px;padding:0 18px;border:0;border-right:1px solid #cabef0;border-radius:0;background:transparent;box-shadow:none;gap:12px}.main .marketFeature:last-child{border:0}.marketFeatureIcon{flex-shrink:0;background:linear-gradient(135deg,#fff,#dcd4ff);color:#7834fa;border:1px solid #ddd3ff;box-shadow:0 4px 9px #8548db25;min-width:42px;height:42px;font-size:27px;border-radius:13px}.main .marketFeature strong{font-size:18px;font-weight:900}.main .marketFeature small{font-size:13px;margin-top:4px}
+.main .sectionHeading{margin-bottom:12px}.main .sectionHeading h2{font-size:26px;font-weight:900;margin:0}.main .sectionHeading h2:before{content:'';display:inline-block;width:6px;height:24px;border-radius:6px;background:linear-gradient(#cb35ff,#5d26ff);transform:skew(-18deg);margin-right:12px;vertical-align:-2px}
+.featuredShelf{grid-template-columns:minmax(0,1.65fr) repeat(2,minmax(0,.53fr));gap:12px}.featuredCard{padding:16px;gap:16px;border-radius:20px;border-color:#e1d7f9;background:linear-gradient(140deg,#fff,#f6f2ff);box-shadow:0 4px 10px #4b35a61c;grid-template-columns:minmax(130px,.9fr) minmax(0,1.4fr) auto}.featuredVisual{min-height:145px;border-radius:16px}.featuredDescription h3{font-size:22px}.featuredDescription>p{font-size:14px}.featuredPrice strong{font-size:28px;color:#c26b00}.featuredMiniCard,.featuredMiniCta{border:1px solid #e1d7f9;border-radius:20px;background:linear-gradient(140deg,#fff,#f4f0ff);box-shadow:0 4px 10px #4b35a61c}
+.main .section{margin-top:24px}.filters button{border-radius:999px;padding:10px 17px;font-size:14px;background:#faf8ff;border-color:#d9cff7;box-shadow:0 3px 6px #4e2b9810}.filters button.active{background:linear-gradient(110deg,#7460ff,#b338f9);color:#fff;border-color:transparent}
+.steps{padding:17px;background:#f7f3ff;border:1px solid #e0d6f9;border-radius:20px;box-shadow:0 4px 12px #4b35a615}.steps>div{border-radius:17px;box-shadow:0 3px 7px #5a36b71c;background:linear-gradient(130deg,#fff,#eee8ff)}
+.metrics{gap:14px;margin:12px 0 20px}.metrics>div{position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-content:center;min-height:95px;padding:15px 18px;background:linear-gradient(135deg,#fff,#f2edff);border:1px solid #dcd1f5;border-radius:18px;box-shadow:0 4px 10px #5434ab20}.metrics span{font-size:16px;font-weight:850;color:#211734}.metrics strong{margin-top:3px;font-size:30px}.metrics small{grid-column:2;font-size:12px;color:#706585;line-height:1.4}
+.sellerWorkspaceGrid{display:grid;grid-template-columns:minmax(220px,.86fr) minmax(380px,1.68fr) minmax(220px,1fr);gap:14px}.sellerGuideColumn{grid-column:auto;display:grid;grid-template-columns:1fr;gap:13px}.sellerJoinColumn,.sellerMainColumn{min-width:0}.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:19px;border:1px solid #dbd1f5;border-radius:20px;background:linear-gradient(145deg,#fff,#f6f2ff);box-shadow:0 5px 12px #5434ab20}
+.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:23px;margin-bottom:15px}.sellerMainColumn .formCard label,.sellerJoinColumn .formCard label{font-size:14px;margin-top:10px}.sellerMainColumn .formCard input:not([type=checkbox]),.sellerMainColumn .formCard select,.sellerJoinColumn .formCard input:not([type=checkbox]){min-height:36px;padding:7px 10px;margin-top:6px;font-size:14px;background:#ffffffb8;border-color:#cfc3ed;border-radius:11px}.sellerMainColumn .formCard textarea{min-height:95px;padding:9px 11px;font-size:14px;margin-top:6px;background:#ffffffb8;border-color:#cfc3ed}
+.identityFields{display:grid;grid-template-columns:1.15fr 1fr;gap:15px}.identityFields>label{display:block;min-width:0;color:#332443;font-weight:800}.priceFields{gap:13px}.priceFields label{margin-top:10px}.sellerMainColumn .formCard>button,.sellerJoinColumn .formCard>button{min-height:42px;background:linear-gradient(110deg,#7043ff,#b733f5);box-shadow:0 4px 9px #7228d638;border-radius:12px;font-weight:850}
+.joinIllustration{position:relative;height:132px;display:grid;place-items:center;margin:8px 0 12px;background:radial-gradient(ellipse at 50% 85%,#b999ff77,transparent 55%)}.joinIllustration span{display:grid;place-items:center;width:104px;height:112px;background:linear-gradient(135deg,#e1d6ff,#9048ff 40%,#4c20c7);color:#fff;font-size:76px;line-height:1;border:5px solid #c8aeff;border-radius:24px 24px 50px 50px;box-shadow:0 9px 0 -3px #ddcdff,0 14px 15px #7244c447,inset 0 0 0 3px #f2eaff}.joinIllustration i{position:absolute;left:calc(50% + 28px);bottom:18px;border-radius:50%;width:26px;height:26px;text-align:center;background:#b18cff;border:2px solid white;color:white;font-style:normal;font-weight:bold}
+.sellerBenefits{gap:8px}.sellerBenefits>div{border:1px solid #d8ccf2;background:linear-gradient(130deg,#fff,#eee7ff);border-radius:14px;padding:11px 5px;box-shadow:0 3px 8px #5434ab17}.sellerBenefits strong{font-size:13px}.sellerBenefits small{font-size:12px}.sellerBenefits span{color:#7430f0}
+.sellerGuideCard{padding:20px 18px;border:1px solid #dbd1f5;border-radius:18px;background:linear-gradient(135deg,#fff,#eee7ff);box-shadow:0 5px 12px #5434ab20}.sellerGuideCard h3{font-size:21px}.sellerGuideCard p{font-size:14px;line-height:1.75}.sellerGuideMark{font-size:17px;color:#7e30ec}.sellerGuideSteps{gap:8px}.sellerGuideSteps li{font-size:13px}.sellerGuideSteps strong{font-size:14px}.sellerGuideSteps small{font-size:12px}
+.uploadGrid{gap:9px;margin-top:13px}.uploadTile{min-height:130px;padding:12px 6px;border-radius:13px;background:linear-gradient(135deg,#fff,#f0eaff);border-color:#bfacf6}.uploadTile strong{font-size:13px}.uploadTile small,.uploadTile em{font-size:11px}.uploadTileIcon{font-size:28px}.detailUploadRow{margin-top:10px}
+:global(html[data-theme="dark"]) .main{--lx-line:#56436c;--lx-panel:#252031;--lx-bg:#191521;--lx-ink:#f5edff;--lx-muted:#c7bad9;background:#18131f}
+:global(html[data-theme="dark"]) .heroCopy,:global(html[data-theme="dark"]) .sellerHeroCopy{background:linear-gradient(90deg,#1a1428ed,#1a1428c9,transparent);border-radius:20px}:global(html[data-theme="dark"]) .heroCopy h1,:global(html[data-theme="dark"]) .heroCopy p,:global(html[data-theme="dark"]) .sellerHeroCopy h1,:global(html[data-theme="dark"]) .sellerHeroCopy p{color:#fff}
+:global(html[data-theme="dark"]) .marketFeatures,:global(html[data-theme="dark"]) .metrics>div,:global(html[data-theme="dark"]) .formCard,:global(html[data-theme="dark"]) .sellerGuideCard,:global(html[data-theme="dark"]) .sellerBenefits>div,:global(html[data-theme="dark"]) .steps,:global(html[data-theme="dark"]) .steps>div,:global(html[data-theme="dark"]) .featuredCard,:global(html[data-theme="dark"]) .featuredMiniCard,:global(html[data-theme="dark"]) .featuredMiniCta{background:linear-gradient(135deg,#2d233b,#211a30);border-color:#56436c;color:#f7efff}
+:global(html[data-theme="dark"]) .metrics span,:global(html[data-theme="dark"]) .identityFields>label{color:#f7efff}:global(html[data-theme="dark"]) .sellerMainColumn .formCard input,:global(html[data-theme="dark"]) .sellerMainColumn .formCard textarea,:global(html[data-theme="dark"]) .sellerMainColumn .formCard select,:global(html[data-theme="dark"]) .sellerJoinColumn .formCard input{background:#1e172a;border-color:#66507c;color:#f7efff}
+@media(max-width:1400px){.main{padding-inline:15px}.heroCopy{width:49%;padding:27px 22px}.heroCopy h1{font-size:35px}.main .marketFeature{padding:0 11px;gap:8px}.main .marketFeature strong{font-size:16px}.main .marketFeature small{font-size:12px}.sellerWorkspaceGrid{grid-template-columns:minmax(200px,.82fr) minmax(340px,1.6fr) minmax(205px,1fr);gap:11px}.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:15px}.sellerGuideCard{padding:17px 14px}.sellerGuideCard h3{font-size:18px}.featuredShelf{grid-template-columns:minmax(0,1.5fr) repeat(2,minmax(0,.6fr))}.featuredCard{grid-template-columns:125px minmax(0,1fr)}.featuredPrice{grid-column:2}.featuredDescription h3{font-size:19px}}
+@media(max-width:1120px){.sellerWorkspaceGrid{grid-template-columns:minmax(210px,.85fr) minmax(0,1.5fr)}.sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}.featuredShelf{grid-template-columns:1fr 1fr}.featuredCard{grid-column:1/-1;grid-template-columns:180px minmax(0,1fr) auto}.featuredPrice{grid-column:auto}.main .marketFeatures{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:12px}.main .marketFeature:nth-child(3){border:0}}
+@media(max-width:760px){.main .hero{min-height:405px}.heroCopy{width:100%;padding:22px 19px 205px}.heroCopy h1{font-size:32px}.main .heroArtwork{height:215px;top:auto;bottom:0;width:180%;max-width:none;object-position:right;transform:translateX(-44%)}.heroActions{margin-top:12px}.heroActions a{min-height:40px;font-size:15px;padding-inline:20px}.main .marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px 3px;gap:10px}.main .marketFeature{border:0;min-height:55px}.main .marketFeature:last-child{grid-column:1/-1}.main .marketFeature strong{font-size:16px}.sellerHero{min-height:240px;padding:20px}.sellerHeroCopy{width:100%}.sellerHeroCopy h1{font-size:32px}.sellerHeroCopy p{max-width:75%}.metrics{gap:9px}.metrics>div{padding:12px;column-gap:8px}.metrics span{font-size:13px}.metrics strong{font-size:24px}.metrics small{font-size:11px}.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:1fr}.featuredCard{grid-template-columns:1fr}.featuredPrice{grid-column:auto}.featuredShelf{gap:9px}.featuredDescription h3{font-size:21px}.identityFields{grid-template-columns:1fr}.uploadGrid{grid-template-columns:1fr 1fr 1fr}.uploadTile{min-height:150px}.sellerMainColumn .formCard textarea{min-height:120px}}
+@media(max-width:760px){}
 
 
 /* 2026-11-14 SASI marketplace refinement: readable controls, live sorting and dense glass layout. */
@@ -484,3 +474,198 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 :global(html[data-theme="dark"]) .main .sortSelect{
  background:#1d2031;color:#f0edff;border-color:rgba(169,145,255,.32)
 }
+
+
+/* 2026-11-14 · Seller workspace reference rebuild */
+.main .sellerWorkspaceSection{margin-top:5px;scroll-margin-top:104px}
+.main .sellerHero{min-height:154px;grid-template-columns:minmax(0,1fr) minmax(320px,.86fr);gap:18px;padding:17px 24px;margin:2px 0 12px;border:1px solid rgba(132,158,226,.28);border-radius:20px;background:linear-gradient(112deg,rgba(255,255,255,.9),rgba(243,245,255,.82) 54%,rgba(230,239,255,.78));box-shadow:0 12px 30px rgba(73,93,164,.09),inset 0 1px 0 rgba(255,255,255,.92)}
+.sellerHeroEyebrow{display:inline-block;color:#7182c6;font-size:10px;font-weight:900;letter-spacing:.18em}
+.sellerHeroCopy h1{margin:5px 0;font-size:clamp(32px,2.8vw,42px);font-weight:950;letter-spacing:-.045em;line-height:1.16}
+.sellerHeroCopy h1:before{content:"";display:inline-block;width:7px;height:34px;margin:0 15px 0 0;border-radius:8px;background:linear-gradient(180deg,#bf55f4,#4b58ff);transform:skewX(-15deg);vertical-align:-4px;box-shadow:0 4px 12px rgba(113,78,239,.25)}
+.sellerHeroCopy p{max-width:650px;font-size:14px;line-height:1.65}
+.sellerBack{margin-top:9px;padding:7px 12px;border-color:rgba(112,132,205,.22);background:rgba(255,255,255,.52);font-size:12px}
+.metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 12px}
+.metrics>div{display:flex;align-items:center;gap:11px;min-width:0;min-height:80px;padding:11px 13px;border:1px solid rgba(135,155,220,.25);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(244,245,255,.78));backdrop-filter:blur(14px);box-shadow:0 8px 20px rgba(77,95,169,.075),inset 0 1px 0 rgba(255,255,255,.9)}
+.metricIcon{display:grid;flex:none;width:44px;height:44px;place-items:center;border:1px solid rgba(255,255,255,.82);border-radius:14px;background:linear-gradient(145deg,#e8f4ff,#b6d6ff);color:#4269db;font-size:22px!important;font-weight:900;box-shadow:0 6px 14px rgba(85,116,213,.14)}
+.metrics>div[data-metric="pending"] .metricIcon{background:linear-gradient(145deg,#f1eaff,#c9b8ff);color:#7753df}
+.metrics>div[data-metric="sales"] .metricIcon{background:linear-gradient(145deg,#fff4d8,#f1c46b);color:#a46b1d}
+.metrics>div[data-metric="delivery"] .metricIcon{background:linear-gradient(145deg,#eeeaff,#b8b7ff);color:#6654e8}
+.metricCopy{display:grid;gap:3px;min-width:0}
+.metrics .metricCopy>span{font-size:12px;font-weight:800;line-height:1.35;color:var(--lx-ink,#25344e)}
+.metrics .metricCopy>strong{margin:0;font-size:25px;line-height:1.12;letter-spacing:-.035em;color:var(--lx-ink,#202d47)}
+.metrics .metricCopy>small{display:block;margin:0;font-size:10px;line-height:1.4;color:var(--lx-muted,#74849a);overflow-wrap:anywhere}
+.main .sellerWorkspaceGrid{grid-template-columns:minmax(240px,.9fr) minmax(480px,1.72fr) minmax(255px,.96fr);gap:12px;align-items:start}
+.sellerJoinColumn .formCard,.sellerMainColumn .formCard,.sellerGuideCard{border:1px solid rgba(135,155,220,.25);background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(246,247,255,.82));box-shadow:0 9px 24px rgba(75,94,166,.075),inset 0 1px 0 rgba(255,255,255,.88)}
+.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:16px;border-radius:17px}
+.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{margin-bottom:11px;font-size:18px;line-height:1.4;font-weight:950}
+.sellerFormHeading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sellerFormHeading h3{margin:0!important}
+.resumeDraftButton{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:34px;padding:7px 11px;border:1px solid rgba(128,117,234,.28);border-radius:11px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(239,235,255,.85));color:#6549d6;font-size:12px;font-weight:850;box-shadow:0 5px 12px rgba(100,79,204,.1)}
+.resumeDraftButton:disabled{opacity:.45;cursor:not-allowed}
+.sellerMainColumn .formCard>label{margin-top:9px;font-size:13px;line-height:1.45;font-weight:800}
+.sellerMainColumn .formCard input:not([type="checkbox"]),.sellerMainColumn .formCard select{min-height:41px;padding:9px 12px;font-size:13px;border-radius:10px}
+.sellerMainColumn .formCard textarea{min-height:92px;padding:10px 12px;font-size:13px;border-radius:11px}
+.sellerMainColumn .descriptionCount{font-size:10px}
+.uploadGrid{gap:8px;margin:13px 0 11px}.uploadTile{min-height:124px;padding:12px 11px;border-radius:14px;gap:6px}
+.uploadTile strong{font-size:13px;line-height:1.4}.uploadTile small,.uploadTile em{font-size:11px;line-height:1.45}.uploadTileIcon{width:32px;height:32px}
+.detailUploadRow{margin-bottom:11px;padding:10px 12px}.detailUploadRow strong{font-size:13px}.detailUploadRow small,.detailUploadRow em{font-size:11px}
+.sellerGuideColumn{gap:9px}.sellerGuideCard{padding:13px;border-radius:16px}
+.sellerGuideCard h3{gap:9px;margin-bottom:8px;font-size:15px;line-height:1.35}.sellerGuideMark{width:31px;height:31px;border-radius:10px;font-size:13px}
+.sellerGuideCard p{font-size:12px;line-height:1.65}
+.sellerGuideSteps{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.sellerGuideSteps li{position:relative;display:grid;justify-items:center;align-content:start;gap:5px;text-align:center}
+.sellerGuideSteps li:not(:last-child):after{content:"›";position:absolute;top:5px;right:-3px;color:#8b85dd;font-size:20px;font-weight:800}
+.sellerGuideSteps li>b{width:33px;height:33px;border:1px solid rgba(255,255,255,.82);background:linear-gradient(145deg,#edf2ff,#d3d5ff);color:#6559d5;font-size:12px;box-shadow:0 4px 10px rgba(99,105,207,.12)}
+.sellerGuideSteps li>span{display:grid;gap:2px;min-width:0;text-align:center}.sellerGuideSteps strong{font-size:11px;line-height:1.35}.sellerGuideSteps small{font-size:9px;line-height:1.35}
+.sellerBenefits>div{background:linear-gradient(145deg,rgba(255,255,255,.74),rgba(236,241,255,.56))}
+:global(html[data-theme="dark"]) .sellerHero{border-color:rgba(150,160,226,.2);background:linear-gradient(112deg,rgba(25,29,51,.96),rgba(31,37,69,.92) 56%,rgba(24,42,74,.9))}
+:global(html[data-theme="dark"]) .sellerHeroEyebrow{color:#b8b9ff}
+:global(html[data-theme="dark"]) .sellerJoinArt{background:radial-gradient(ellipse at 50% 55%,rgba(107,113,220,.22),transparent 58%),linear-gradient(135deg,rgba(34,38,65,.8),rgba(26,32,56,.75))}
+:global(html[data-theme="dark"]) .sellerJoinColumn .formCard,:global(html[data-theme="dark"]) .sellerMainColumn .formCard,:global(html[data-theme="dark"]) .sellerGuideCard{border-color:rgba(155,162,222,.2);background:linear-gradient(145deg,rgba(34,37,62,.94),rgba(27,31,52,.92));box-shadow:0 12px 28px rgba(0,0,0,.22)}
+:global(html[data-theme="dark"]) .metrics>div{border-color:rgba(155,162,222,.2);background:linear-gradient(145deg,rgba(36,40,66,.94),rgba(28,33,56,.92));box-shadow:0 8px 22px rgba(0,0,0,.2)}
+:global(html[data-theme="dark"]) .metrics .metricCopy>span,:global(html[data-theme="dark"]) .metrics .metricCopy>strong{color:#f1f3ff}
+:global(html[data-theme="dark"]) .resumeDraftButton{border-color:rgba(177,159,255,.25);background:linear-gradient(145deg,#302b4b,#24243a);color:#d4c9ff}
+@media(max-width:1360px){.main .sellerWorkspaceGrid{grid-template-columns:minmax(220px,.82fr) minmax(0,1.5fr)}.sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1080px){.main .sellerHero{grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);padding:15px 18px}.main .sellerWorkspaceGrid{grid-template-columns:minmax(210px,.78fr) minmax(0,1.22fr)}.sellerGuideColumn{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:960px){.main .sellerHero{grid-template-columns:1fr}.main .sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.main .sellerHero{padding:14px;border-radius:16px}.sellerHeroCopy h1{font-size:30px}.sellerHeroCopy p{font-size:13px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metrics>div{min-height:70px;padding:9px}.metricIcon{width:38px;height:38px;border-radius:12px}.metrics .metricCopy>span{font-size:11px}.metrics .metricCopy>strong{font-size:21px}.metrics .metricCopy>small{font-size:9px}.sellerGuideColumn{grid-template-columns:1fr}.sellerFormHeading{align-items:flex-start;flex-wrap:wrap}.resumeDraftButton{min-height:31px}}
+@media(max-width:430px){.sellerHeroCopy h1:before{height:27px;margin-right:10px}.metrics>div{gap:7px;padding:8px}.metricIcon{width:33px;height:33px;font-size:18px!important}.metrics .metricCopy>strong{font-size:18px}}
+
+
+/* Seller workspace typography: keep reference-scale text readable at desktop. */
+.sellerHeroEyebrow{font-size:11px}
+.sellerHeroCopy p{font-size:15px;line-height:1.7}
+.sellerBack{font-size:13px}
+.metrics>div{min-height:84px;padding:12px 14px}
+.metrics .metricCopy>span{font-size:13px}
+.metrics .metricCopy>strong{font-size:27px}
+.metrics .metricCopy>small{font-size:11px}
+.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:20px}
+.sellerJoinColumn .formCard>label{font-size:14px}
+.sellerJoinColumn .formCard input:not([type="checkbox"]){font-size:14px}
+.sellerMainColumn .formCard>label{font-size:14px}
+.sellerMainColumn .formCard input:not([type="checkbox"]),.sellerMainColumn .formCard select{font-size:14px}
+.sellerMainColumn .formCard textarea{font-size:14px}
+.uploadTile strong{font-size:14px}
+.uploadTile small,.uploadTile em{font-size:12px}
+.resumeDraftButton{font-size:13px}
+.sellerGuideCard h3{font-size:16px}
+.sellerGuideCard p{font-size:13px;line-height:1.7}
+.sellerGuideSteps strong{font-size:12px}
+.sellerGuideSteps small{font-size:10px}
+@media(max-width:760px){
+ .sellerHeroCopy p{font-size:14px}
+ .metrics>div{min-height:72px;padding:9px}
+ .metrics .metricCopy>span{font-size:12px}
+ .metrics .metricCopy>strong{font-size:21px}
+ .metrics .metricCopy>small{font-size:10px}
+ .sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:19px}
+ .sellerMainColumn .formCard>label,.sellerJoinColumn .formCard>label{font-size:14px}
+ .sellerMainColumn .formCard input:not([type="checkbox"]),.sellerMainColumn .formCard select,.sellerMainColumn .formCard textarea{font-size:14px}
+ .uploadTile strong{font-size:13px}
+ .uploadTile small,.uploadTile em{font-size:11px}
+ .sellerGuideCard h3{font-size:15px}
+ .sellerGuideCard p{font-size:13px}
+ .sellerGuideSteps strong{font-size:12px}
+ .sellerGuideSteps small{font-size:10px}
+}
+
+
+/* Compact vertical rhythm to match the approved seller workspace reference. */
+.main .sellerHero{min-height:124px;padding:8px 20px;gap:12px}
+.sellerHeroCopy h1{font-size:clamp(32px,2.6vw,40px)}
+.metrics>div{min-height:78px;padding:10px 12px}
+.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:14px}
+.sellerMainColumn .formCard>label{margin-top:7px}
+.sellerMainColumn .formCard textarea{min-height:84px}
+.uploadGrid{gap:8px;margin:10px 0 8px}
+.uploadTile{min-height:112px;padding:10px}
+.sellerGuideColumn{gap:8px}
+.sellerGuideCard{padding:11px}
+@media(max-width:760px){
+ .main .sellerHero{min-height:120px;padding:10px 14px}
+ .metrics>div{min-height:70px}
+ .sellerMainColumn .formCard textarea{min-height:96px}
+ .uploadTile{min-height:110px}
+}
+
+
+/* 2026-11-14 SASI marketplace refinement: readable controls, live sorting and dense glass layout. */
+.main .hero{width:min(100%,1360px)}
+.main .marketFeatures{width:min(100%,1380px);gap:10px;margin-bottom:16px}
+.main .marketFeature{min-height:72px;padding:11px 14px;gap:12px}
+.main .marketFeatureIcon{width:42px;height:42px;flex-basis:42px;font-size:25px}
+.main .marketFeature strong{font-size:16px;line-height:1.4}
+.main .marketFeature small{font-size:12px;line-height:1.5}
+.main .featured{margin-top:16px}
+.main .featuredCard{gap:18px;padding:18px}
+.main .featuredVisual{min-height:148px}
+.main .featuredDescription h3{font-size:23px;line-height:1.45}
+.main .featuredDescription>p:not(.featuredBadge){font-size:15px;line-height:1.7}
+.main .featuredPrice strong{font-size:29px}
+.main .featuredMiniInfo h3{font-size:17px}
+.main .featuredMiniInfo p{font-size:13px;line-height:1.6}
+.main .sectionHeading h2{font-size:clamp(25px,2vw,30px);line-height:1.3}
+.main .find{display:flex;align-items:center;gap:8px;min-width:min(100%,430px);max-width:520px}
+.main .find input{flex:1 1 auto;min-width:140px;height:44px;font-size:14px;border-radius:13px}
+.main .sortSelect{flex:0 0 168px;width:168px;height:44px;padding:0 11px;border:1px solid var(--lx-line,#dce5ee);border-radius:13px;background:var(--lx-panel,#fff);color:var(--lx-ink,#193450);font-size:13px}
+.main .filters{align-items:center;gap:9px;margin-bottom:9px}
+.main .filters button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:9px 14px;font-size:14px;border-radius:999px}
+.main .filterCount{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:rgba(100,111,154,.1);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.main .filters button.active .filterCount{background:rgba(255,255,255,.2);color:#fff}
+.main .resultsMeta{margin:0 0 12px;color:var(--lx-muted,#728394);font-size:12px}
+.main .products{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.main .tile{height:138px}
+.main .cover{max-height:138px}
+.main .cardContent{padding:16px}
+.main .card h3{font-size:17px;line-height:1.45}
+.main .card p{font-size:14px;line-height:1.65;min-height:46px}
+.main .cardBottom strong{font-size:21px}
+.main .cardActions a,.main .cardActions button{font-size:13px}
+.main .steps{grid-template-columns:repeat(4,minmax(0,1fr)) minmax(150px,.82fr);gap:10px}
+.main .steps>div{min-height:84px;padding:13px 12px}
+.main .steps b{font-size:22px}
+.main .steps strong{font-size:15px}
+.main .steps span{font-size:13px;line-height:1.5}
+.main .steps .launchStudio{font-size:15px}
+@media(max-width:1180px){
+ .main .products{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .main .find{max-width:100%;width:100%}
+}
+@media(max-width:900px){
+ .main .products{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .main .marketFeatures{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .main .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .main .steps .launchStudio{min-height:62px}
+}
+@media(max-width:620px){
+ .main .find{display:grid;grid-template-columns:minmax(0,1fr);min-width:100%}
+ .main .find input,.main .sortSelect{width:100%;max-width:none;min-width:0;flex:auto}
+ .main .marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .main .marketFeature{min-height:66px;padding:9px}
+ .main .marketFeature strong{font-size:14px}
+ .main .marketFeature small{font-size:11px}
+ .main .products{grid-template-columns:1fr}
+ .main .steps{grid-template-columns:1fr 1fr}
+ .main .steps .launchStudio{grid-column:1/-1}
+}
+@media(max-width:390px){
+ .main .marketFeatures{grid-template-columns:1fr}
+ .main .steps{grid-template-columns:1fr}
+}
+:global(html[data-theme="dark"]) .main .sortSelect{
+ background:#1d2031;color:#f0edff;border-color:rgba(169,145,255,.32)
+}
+
+
+/* 20261114 seller workspace: real 3D artwork replaces the retired CSS/SVG illustrations. */
+.main .sellerHero{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.86fr);min-height:164px}
+.sellerHeroArt{position:relative;display:block;min-width:0;min-height:150px;overflow:hidden;isolation:isolate;border-radius:17px;background:radial-gradient(ellipse at 64% 54%,rgba(130,151,255,.22),transparent 58%),linear-gradient(125deg,rgba(239,242,255,.5),rgba(231,237,255,.18))}
+.sellerHeroArt:before{content:"";position:absolute;z-index:1;inset:15% 1%;border:1px solid rgba(137,153,237,.28);border-radius:50%;transform:rotate(-9deg);box-shadow:0 0 26px rgba(115,135,235,.16);pointer-events:none}
+.sellerHeroArtwork{position:absolute;z-index:0;top:0;right:0;width:175%;height:100%;max-width:none;object-fit:cover;object-position:right center;filter:drop-shadow(0 12px 24px rgba(77,89,174,.2));pointer-events:none}
+.sellerJoinArt{position:relative;display:grid;place-items:center;height:142px;min-height:112px;overflow:hidden;margin:0 0 8px;border-radius:15px;background:radial-gradient(ellipse at 50% 75%,rgba(135,153,255,.14),transparent 65%)}
+.sellerJoinArtwork{display:block;width:138px;height:138px;position:relative;margin:auto;filter:drop-shadow(0 7px 14px rgba(85,82,180,.14))}
+@media(max-width:960px){.sellerHeroArt{min-height:116px}}
+@media(max-width:760px){.sellerHeroArt{min-height:108px}.sellerHeroArtwork{top:-38%;width:180%;height:180%}.sellerJoinArt{height:112px}}
+@media(max-width:620px){.sellerHeroArt{min-height:96px}.sellerJoinArt{height:104px}}
+@media(max-width:960px){.main .sellerHero{grid-template-columns:minmax(0,1fr)}}

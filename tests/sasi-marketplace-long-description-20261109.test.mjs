@@ -29,8 +29,8 @@ test("long descriptions remain complete on detail pages but public listing respo
 
 test("software branding uses the supplied reference and avoids obsolete shopping language",()=>{
  const landing=read("components/SasiOpenMarketplace.tsx");
- assert.ok(landing.includes('data-hero-asset="sasi-market-hero-lingxifield.png"'));
- assert.ok(landing.includes("/images/sasi/sasi-market-hero-lingxifield.png"));
+ assert.ok(landing.includes('data-hero-asset="global-scene-20261114.webp"'));
+ assert.ok(landing.includes("/images/global-scene-20261114.webp"));
  assert.ok(landing.includes("灵犀场 SASI 智能软件市场"));
  assert.match(landing,/<section id="featured" className=\{styles\.featured\}/);
  assert.doesNotMatch(landing,/\{featuredReady&&<section id="featured"/);

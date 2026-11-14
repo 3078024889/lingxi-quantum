@@ -76,7 +76,7 @@ test('current product copy and global styles do not expose retired SASI creation
  assert.doesNotMatch(css,/\.sasi-(?:hero-surface|home-tile|balance|connect|cangxuan|orchestration|works-|account-|start-path|utility-links|recharge-|send|header-topup|checkout-)|\.cangxuan-|\.lx-sasi-center|\.lx-sasi-hero|\.lx-sasi-prompt-panel|\.lx-sasi-entry-card|\.lx-knowledge-modebar|\.lx-knowledge-answer|\.lx-knowledge-recharge/);
  assert.doesNotMatch(llms,/short[- ]drama|book SASI|learning SASI|research SASI|短剧生成|书本智能体|学习智能体|科研智能体/i);
  const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
- assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
+ assert.match(market,/\/images\/global-scene-20261114\.webp/);
 });
 
 

@@ -20,6 +20,7 @@ export async function GET(req:NextRequest){
  try{
   let data:unknown[]=[];
   let queryError:unknown=null;
+ let sellerCounts:{published:number|null;pending:number|null}|null=null;
   if(mode==="mine"){
    const sessionDb=createClient();
    const {data:{user}}=await sessionDb.auth.getUser();
@@ -27,13 +28,18 @@ export async function GET(req:NextRequest){
    // The service-role client is used only after resolving the session identity.
    // Its query is hard-scoped to that immutable auth.uid(); no caller-supplied seller ID is accepted.
    // This allows the owner to see rejection_reason without granting that private column to all authenticated users.
-   const result=await createAdminClient().from("sasi_market_listings")
-    .select(SELLER_LISTING_COLUMNS)
-    .eq("seller_id",user.id)
-    .order("created_at",{ascending:false})
-    .limit(36);
+   const admin=createAdminClient();
+   const [result,publishedResult,pendingResult]=await Promise.all([
+    admin.from("sasi_market_listings").select(SELLER_LISTING_COLUMNS)
+     .eq("seller_id",user.id).order("created_at",{ascending:false}).limit(36),
+    admin.from("sasi_market_listings").select("id",{count:"exact",head:true})
+     .eq("seller_id",user.id).eq("status","published"),
+    admin.from("sasi_market_listings").select("id",{count:"exact",head:true})
+     .eq("seller_id",user.id).eq("status","submitted")
+   ]);
    data=result.data??[];
    queryError=result.error;
+   if(!queryError)sellerCounts={published:publishedResult.error?null:publishedResult.count??0,pending:pendingResult.error?null:pendingResult.count??0};
   }else{
    // Public reads use only the explicitly granted public columns. Private moderation fields are never selected.
    const result=await createClient().from("sasi_market_listings")
@@ -49,7 +55,7 @@ export async function GET(req:NextRequest){
   // Public cards and hover previews are excerpts; the product endpoint serves the full long description.
   // Keep the public JSON compact even when a seller writes a 5,000-character description.
   const items=mode==="public"?data.map(value=>{const item=value as MarketplaceListingRow;return {...item,description:item.description.slice(0,800)}}):data;
-  return NextResponse.json({items},{headers:nocache});
+  return NextResponse.json({items,...(sellerCounts?{counts:sellerCounts}:{})},{headers:nocache});
  }catch(error){
   const code=typeof error==="object"&&error!==null&&"code" in error?String(error.code).slice(0,32):"UNKNOWN";
   console.error("[sasi marketplace listings] GET failed",{mode,code});

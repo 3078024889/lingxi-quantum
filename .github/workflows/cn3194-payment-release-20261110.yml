@@ -1,5 +1,7 @@
 name: CN3194 payment-integrated standalone prerelease (local R2 transfer; NO PROD DEPLOY)
 on:
+  push:
+    branches: [ci/cn3194-payment-base-20261110]
   workflow_dispatch:
   pull_request:
     branches: [ci/cn3194-payment-base-20261110]
@@ -19,7 +21,13 @@ on:
       - 'public/llms.txt'
       - 'components/SasiOpenMarketplace.tsx'
       - 'components/SasiOpenMarketplace.module.css'
-      - 'public/images/sasi/sasi-market-hero-lingxifield.png'
+      - 'components/Nav.tsx'
+      - 'app/sasi/seller/page.tsx'
+      - 'tests/sasi-marketplace-reference-20261114.test.mjs'
+      - 'tests/sasi-seller-reference-20261114.test.mjs'
+      - 'tests/final-closure/sasi-seller-workspace-reference.spec.ts'
+      - 'tests/final-closure/dual-home-market-release-20261113.spec.ts'
+      - 'public/images/sasi/afternoon-icons-20261114.png'
       - 'lib/seo/site-facts.ts'
       - 'app/llms.txt/route.ts'
       - 'tests/sasi-transparent-hero-20261112.test.mjs'
@@ -72,7 +80,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build:
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 65
     outputs:
@@ -120,6 +128,9 @@ jobs:
             tests/paypal-merchant-idempotency-20261108.test.mjs \
             tests/wallet-topup-live-contract-20261111.test.mjs \
             tests/sasi-marketplace-security-contract.test.mjs \
+            tests/sasi-marketplace-reference-20261114.test.mjs \
+            tests/sasi-seller-reference-20261114.test.mjs \
+            tests/home-sasi-effect4-closure-20261114.test.mjs \
             tests/sasi-software-paypal-fulfillment-contract.test.mjs \
             tests/cn3194-source-only-software-catalog.test.mjs \
             tests/cn3194-marketplace-readiness-gates.test.mjs \
@@ -174,6 +185,11 @@ jobs:
             sleep 1
           done
           [ "$ready" = 1 ] || { cat "$RUNNER_TEMP/cn3319.log";exit 1; }
+          for path in / /sasi /sasi/seller; do
+            curl --noproxy '*' -fsS --max-time 30 "http://127.0.0.1:3319$path" |
+              grep -F 'data-release-design="20261114-afternoon-three-pages"' > /dev/null
+          done
+          echo CN3194_AFTERNOON_THREE_PAGES_BUILD_ID_PASS
           for path in / /tools /siai /sasi /about /account/software /announcements /tools/pass /api/sasi/marketplace/listings /ai-wallet /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "PUBLIC_LOCAL_ROUTE:$path:$code"
@@ -202,7 +218,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm exec playwright install --with-deps chrome
-          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts
+          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts tests/final-closure/sasi-seller-workspace-reference.spec.ts
           echo CN3194_NEW_VISUAL_DESKTOP_MOBILE_CHROME_PASS
       - name: Package archive, render pinned stage script and write manifest
         id: package
@@ -292,7 +308,7 @@ jobs:
           if-no-files-found: error
   publish:
     needs: build
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     permissions:

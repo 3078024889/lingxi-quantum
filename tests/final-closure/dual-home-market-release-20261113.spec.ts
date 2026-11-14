@@ -12,6 +12,7 @@ for(const theme of ["light","dark"]){
    await expect(page.locator("html")).toHaveAttribute("data-theme",theme);
    if(path==="/"){
     await expect(page.locator(".lx-home-hero-art")).toBeVisible();
+    await expect(page.locator("[data-home-sidebar]")).toHaveCount(1);
     await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);
     await page.getByTestId("home-task-search").locator("input").fill("AI视频生成模型");
     await page.getByTestId("home-task-search").getByRole("button").click();
@@ -45,7 +46,7 @@ for(const theme of ["light","dark"]){
      return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
     });
     expect(contrast).toBeGreaterThanOrEqual(4.5);
-    if(path==="/sasi/seller")expect(await page.locator("main h2").first().evaluate(element=>getComputedStyle(element).color)).not.toBe("rgb(16, 24, 45)");
+    if(path==="/sasi/seller")expect(await page.locator("main h1").first().evaluate(element=>getComputedStyle(element).color)).not.toBe("rgb(16, 24, 45)");
    }
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)).toBe(true);
    const screenshot=await page.screenshot({fullPage:true});
