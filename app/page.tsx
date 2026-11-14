@@ -5,7 +5,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import HomeProblemHub from "@/components/HomeProblemHub";
 import HomeSeoAnswers from "@/components/HomeSeoAnswers";
-import {HomeGlobalGrowth,HomeToolPassMembership} from "@/components/HomeGlobalGrowth";
+import {HomeGlobalGrowth} from "@/components/HomeGlobalGrowth";
 import {PUBLIC_FEATURE_COPY,PUBLIC_SEARCH_TITLES} from "@/lib/public-feature-copy";
 
 export const dynamic="force-dynamic";
@@ -68,4 +68,4 @@ const HOME_STRUCTURED_DATA=[
  }
 ];
 
-export default function Home(){return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(HOME_STRUCTURED_DATA)}}/><Nav/><div className="lx-home-reference" lang="zh-CN"><HomeProblemHub/><HomeGlobalGrowth lang="zh"/><HomeToolPassMembership/><HomeSeoAnswers locale="zh"/><Footer/></div></>;}
+export default function Home(){return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(HOME_STRUCTURED_DATA)}}/><Nav homeLayout/><div className="lx-home-reference lang="zh-CN"><HomeProblemHub/><HomeGlobalGrowth lang="zh"/><HomeSeoAnswers locale="zh"/><Footer/></div></>;}

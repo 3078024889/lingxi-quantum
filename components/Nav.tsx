@@ -43,6 +43,19 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
 const softwareNavNames:Record<LingxiLang,string>={zh:"SASI 智能软件市场",en:"SASI Intelligent Software Marketplace",ja:"SASI インテリジェントソフトウェア市場",ko:"SASI 지능형 소프트웨어 마켓",fr:"Marché de logiciels intelligents SASI",de:"SASI-Marktplatz für intelligente Software",es:"Mercado de software inteligente SASI",pt:"Mercado de software inteligente SASI",ar:"سوق برامج SASI الذكية"};
 const sellerNavNames:Record<LingxiLang,string>={zh:"卖家服务",en:"Seller services",ja:"出品者サービス",ko:"판매자 서비스",fr:"Services vendeurs",de:"Verkäuferbereich",es:"Servicios para vendedores",pt:"Serviços para vendedores",ar:"خدمات البائعين"};
 const marketNavNames:Record<LingxiLang,string>={zh:"全球 SIAI 排行榜",en:"Global SIAI Rankings",ja:"世界の SIAI ランキング",ko:"글로벌 SIAI 순위",fr:"Classement mondial SIAI",de:"Globales SIAI-Ranking",es:"Ranking mundial SIAI",pt:"Ranking global SIAI",ar:"ترتيب SIAI العالمي"};
+const HOME_NAV_COPY:Record<LingxiLang,string[]>={
+ zh:["首页","全球 SIAI 排行榜","实用工具","SASI 智能软件市场","工具包会员","解决方案","资源中心"],
+ en:["Home","Global SIAI Rankings","Practical Tools","SASI Software Marketplace","ToolPass","Solutions","Resources"],
+ ja:["ホーム","世界の SIAI ランキング","実用ツール","SASIソフトウェア市場","ToolPass会員","ソリューション","リソース"],
+ ko:["홈","글로벌 SIAI 순위","실용 도구","SASI 소프트웨어 마켓","ToolPass 회원","솔루션","자료실"],
+ fr:["Accueil","Classement SIAI","Outils pratiques","Marché SASI","ToolPass","Solutions","Ressources"],
+ de:["Startseite","Globales SIAI-Ranking","Praktische Tools","SASI-Softwaremarkt","ToolPass","Lösungen","Ressourcen"],
+ es:["Inicio","Ranking SIAI global","Herramientas","Mercado SASI","ToolPass","Soluciones","Recursos"],
+ pt:["Início","Ranking SIAI global","Ferramentas","Mercado SASI","ToolPass","Soluções","Recursos"],
+ ar:["الرئيسية","تصنيف SIAI العالمي","الأدوات العملية","سوق SASI","عضوية ToolPass","الحلول","الموارد"]
+};
+const HOME_NAV_HREFS=["/","/siai","/tools","/sasi","/tools/pass","/partners","/discoveries"] as const;
+
 
 function active(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -65,13 +78,14 @@ const menuText: Record<LingxiLang, { account:string; orders:string; password:str
   ar: { account:"حسابي", orders:"المهام المدفوعة", password:"تغيير كلمة المرور", navigation:"التنقل", settings:"الإعدادات", switch:"تبديل الحساب", signout:"تسجيل الخروج", delete:"حذف الحساب", close:"إغلاق" },
 };
 
-export default function Nav() {
+export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
   const pathname = usePathname() || "/";
   const router = useRouter();
   const { lang, setLang, t } = useLingxiLang();
 
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [homeNavOpen,setHomeNavOpen]=useState(false);
   const [sidebarCollapsed,setSidebarCollapsed]=useState(false);
   useEffect(()=>{
    let saved=false;
@@ -105,6 +119,7 @@ export default function Nav() {
   }, []);
 
   useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => setHomeNavOpen(false), [pathname]);
 
   useEffect(() => {
     try{localStorage.setItem("lx-theme", theme)}catch{}
@@ -128,108 +143,26 @@ export default function Nav() {
     } catch {
       setSignedIn(false);
     }
-    return () => { alive = false; };
-  }, [pathname]);
-
-  useEffect(() => {
-    const h=(e:Event)=>{
-      const detail=(e as CustomEvent<{display_name?:string;avatar_url?:string}>).detail || {};
-      if (detail.display_name !== undefined) setDisplayName(String(detail.display_name || ""));
-      if (detail.avatar_url !== undefined) setAvatarUrl(String(detail.avatar_url || ""));
-    };
-    window.addEventListener("lingxi:profile",h);
-    return()=>window.removeEventListener("lingxi:profile",h);
-  }, []);
-
-  const agent =
-    pathname === "/sasi" ||
-    pathname.startsWith("/sasi/") ||
-    pathname.startsWith("/ai-");
-
-  const titles = [t("start"), t("sasi"), t("account")];
-  const mt = menuText[lang];
-
-  function submit(event: FormEvent) {
-    event.preventDefault();
-    const q = query.trim();
-    if (!q) return;
-    sessionStorage.setItem("lx-global-search", q);
-    router.push(isMoneyAdmin&&/管理后台|资金看板|退款管理|提现管理|money admin|funds dashboard|admin dashboard/i.test(q)?"/account/money-admin":`/tools?q=${encodeURIComponent(q)}`);
-  }
-
-  async function signOut() {
-    try { const {error}=await createClient().auth.signOut({scope:"global"}); if(error)throw error; window.location.replace("/account"); return; } catch { setMenuOpen(false); }
-  }
-
-  async function switchAccount() {
-    try { const {error}=await createClient().auth.signOut({scope:"global"}); if(error)throw error; window.location.replace("/account?mode=signin&switch=1"); return; } catch { setMenuOpen(false); }
-  }
-
-  const side = (
+    return (
     <>
-      <div className="lx11-brand-row">
-        <Link href="/" className="lx11-brand">
-          <NextImage src="/images/lingxifield-logo.png" alt=""  width={64} height={64}/>
-          <span>
-            <b>{lang==="zh"?"灵犀场 LINGXIFIELD":t("brand")}</b>
-            <small>{agent ? "SASI" : (lang==="zh"?"全球 SIAI · SASI · 免费在线工具":"SIAI · SASI · Online Tools")}</small>
-          </span>
-        </Link>
-        <button className="lx11-close lg:hidden" onClick={() => setOpen(false)}>×</button>
-      </div>
-
-      <div className="lx11-nav-scroll">
-        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{softwareNavNames[lang]}</span></Link>
-
-        {groups.map((group, index) => (
-          <section key={index} className="lx11-group">
-            <div className="lx11-group-title">{titles[index]}</div>
-            {group.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
-              >
-                <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
-                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/seller"?sellerNavNames[lang]:t(item.key)}</span>
-              </Link>
-            ))}
-          </section>
-        ))}
-        <Link href="/tools/pass" className={`lx11-link ${pathname==="/tools/pass"?"is-active":""}`}><LingxiMiniIcon name="tools" size="nav" className="lx11-nav-icon"/><span>{({
-          zh:"全场实用工具包",en:"All-tools Pass",ja:"全ツール共通パス",ko:"전체 도구 이용권",fr:"Pass tous outils",de:"Werkzeug-Pass",es:"Pase de herramientas",pt:"Passe de ferramentas",ar:"باقة جميع الأدوات"
-        } as Record<typeof lang,string>)[lang]}</span></Link>
-        {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
-        {!isMoneyAdmin&&signedIn&&isComHost&&<a href="https://lingxifield.cn/account/money-admin" className="lx11-link" title={lang==="zh"?"海外站尚未完成管理员后端配置，转至共用数据库的国内安全控制台":"Global admin backend pending; open China control plane"}><LingxiMiniIcon name="wallet" size="nav"/><span>{lang==="zh"?"管理后台备用入口 ↗":"Admin backup console ↗"}</span></a>}
-      </div>
-
-      <div style={{padding:"10px 12px 4px"}}>
-        <button type="button" onClick={()=>window.dispatchEvent(new Event("lingxifield:feedback"))} style={{width:"100%",display:"flex",alignItems:"center",gap:8,border:"1px solid rgba(150,125,70,.20)",borderRadius:12,padding:"9px 12px",background:"rgba(255,255,255,.55)",fontSize:14,fontWeight:500,lineHeight:"20px",cursor:"pointer"}}><span aria-hidden="true" style={{fontSize:12}}>✦</span><span>{supportCopy(lang).tell}</span></button>
-        <Link href="/account/support" style={{display:"block",padding:"7px 12px 0",fontSize:12,opacity:.55}}>{supportCopy(lang).mine}</Link>
-      </div>
-
-      <div className="lx11-sidebar-bottom">
-        <div className="lx11-theme-row">
-          <button onClick={() => setTheme("light")} className={theme === "light" ? "is-active" : ""}>☀ {t("light")}</button>
-          <button onClick={() => setTheme("dark")} className={theme === "dark" ? "is-active" : ""}>🌙 {t("dark")}</button>
+      {homeLayout ? (
+       <header className="lx-home-nav" data-home-nav>
+        <Link href="/" className="lx-home-nav-brand" aria-label="LINGXIFIELD home"><NextImage src="/images/lingxifield-logo.png" alt="" width={64} height={64}/><span><b>灵犀场 LINGXIFIELD</b><small>{lang==="zh"?"全球智能服务与实用工具平台":"Global intelligent services & practical tools"}</small></span></Link>
+        <nav className={homeNavOpen?"lx-home-nav-links is-open":"lx-home-nav-links"} aria-label="Main navigation">{HOME_NAV_HREFS.map((href,index)=><Link href={href} key={href} onClick={()=>setHomeNavOpen(false)} className={active(pathname,href)?"is-active":""}>{HOME_NAV_COPY[lang][index]}</Link>)}</nav>
+        <form className="lx-home-nav-search" onSubmit={submit}><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} placeholder={lang==="zh"?"搜索工具、问题或产品…":"Search tools, questions or products…"} aria-label={lang==="zh"?"搜索工具、问题或产品":"Search tools, questions or products"}/></form>
+        <div className="lx-home-nav-actions">
+         <select aria-label={t("language")} value={lang} onChange={event=>setLang(event.target.value as LingxiLang)}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(key=><option key={key} value={key}>{LANG_NAMES[key]}</option>)}</select>
+         <CurrencySelector compact/><NotificationBell/><button type="button" className="lx-home-theme-toggle" aria-label={lang==="zh"?"切换深浅主题":"Toggle theme"} onClick={()=>setTheme(theme==="light"?"dark":"light")}>{theme==="light"?"☾":"☀"}</button>
+         <Link href="/ai-wallet" onClick={rechargeClick} className="lx-home-recharge">💎 {t("recharge")}</Link>
+         {signedIn===false?<><Link href="/account?mode=signin" className="lx-home-signin">{lang==="zh"?"登录":"Sign in"}</Link><Link href="/account?mode=signup" className="lx-home-register">{lang==="zh"?"注册":"Register"}</Link></>:<button type="button" className="lx-home-account-trigger" aria-label={mt.account} aria-expanded={menuOpen} onClick={()=>setMenuOpen(value=>!value)}>{avatarUrl?<NextImage src={avatarUrl} alt="" width={36} height={36} unoptimized/>:<span>{Array.from(displayName||"L").slice(0,2).join("").toUpperCase()}</span>}</button>}
         </div>
-        <label className="lx11-lang-label">{t("language")}</label>
-        <select
-          value={lang}
-          onChange={(event) => setLang(event.target.value as LingxiLang)}
-          className="lx11-lang-select"
-        >
-          {(Object.keys(LANG_NAMES) as LingxiLang[]).map((key) => (
-            <option key={key} value={key}>{LANG_NAMES[key]}</option>
-          ))}
-        </select>
-        <CurrencySelector />
-      </div>
-    </>
-  );
-
-  return (
-    <>
+        <button type="button" className="lx-home-nav-toggle" aria-expanded={homeNavOpen} aria-label={lang==="zh"?"展开导航":"Open navigation"} onClick={()=>setHomeNavOpen(value=>!value)}>{homeNavOpen?"×":"☰"}</button>
+        {menuOpen&&<div className="lx11-account-menu lx-home-account-menu" role="menu"><div className="lx11-account-menu-head">{avatarUrl?<NextImage src={avatarUrl} alt="" className="lx11-account-menu-photo" width={64} height={64} unoptimized/>:<span className="lx11-account-menu-fallback">{Array.from(displayName||"L").slice(0,2).join("").toUpperCase()}</span>}<div><b>{displayName||mt.account}</b><small>{signedIn?mt.account:t("account")}</small></div></div><div className="lx11-account-menu-links">
+         <Link href="/account" onClick={()=>setMenuOpen(false)}><LingxiMiniIcon name="account" size="tiny"/><b>{mt.account}</b></Link><Link href="/account/orders" onClick={()=>setMenuOpen(false)}><LingxiMiniIcon name="orders" size="tiny"/><b>{mt.orders}</b></Link><Link href="/account/settings" onClick={()=>setMenuOpen(false)}><span>⚙</span><b>{mt.settings}</b></Link><button type="button" onClick={()=>{setMenuOpen(false);setOpen(true)}}><LingxiMiniIcon name="products" size="tiny"/><b>{mt.navigation}</b></button>{signedIn&&<button type="button" onClick={switchAccount}><LingxiMiniIcon name="switch" size="tiny"/><b>{mt.switch}</b></button>}{signedIn&&<button type="button" onClick={signOut}><LingxiMiniIcon name="signout" size="tiny"/><b>{mt.signout}</b></button>}
+        </div></div>}
+       </header>
+      ) : (
+       <>
       <aside className="lx11-sidebar hidden lg:flex">{side}</aside>
 
       <header className="lx11-topbar">
@@ -334,10 +267,14 @@ export default function Nav() {
         )}
       </header>
 
+
+       </>
+      )}
       <PublicAnnouncementTicker/>
       <MobileBottomNav/>
       {open && <button className="lx11-backdrop" onClick={() => setOpen(false)} />}
       <aside className={`lx11-sidebar lx11-drawer ${open ? "is-open" : ""}`}>{side}</aside>
+    </>
     </>
   );
 }

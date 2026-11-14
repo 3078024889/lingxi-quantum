@@ -23,24 +23,24 @@ type HomeGrowthCopy={
 const COPY:Record<LingxiLang,HomeGrowthCopy>={
  zh:{
   features:[
-   {icon:"◉",title:"全球 SIAI 排行榜",description:"模型 · 价格 · 免费额度",href:"/siai"},
+   {icon:"◉",title:"全球 SIAI 排行榜",description:"模型能力 · 真实价格 · 免费额度",href:"/siai"},
    {icon:"▦",title:"100+ 实用工具",description:"PDF · 图片 · 视频 · 音频",href:"/tools"},
-   {icon:"◈",title:"SASI 智能软件市场",description:"MT5 EA · 量化源码 · 成品软件",href:"/sasi"},
+   {icon:"◈",title:"SASI 智能软件市场",description:"成品软件 · MT5 EA · 源码授权",href:"/sasi"},
    {icon:"∞",title:"工具包会员",description:"全场工具 · 无限使用",href:"/tools/pass"},
-   {icon:"✧",title:"全球增长与合作",description:"SEO · GEO · API · 嵌入",href:"/partners"}
+   {icon:"✧",title:"全球增长与合作",description:"内容传播 · 网站合作 · 全球触达",href:"/partners"}
   ],
-  growthTitle:"让全球用户找到灵犀场，也让灵犀场连接更多产品与场景",
-  growthLead:"从搜索发现、AI 搜索、全球产品分发，到软件交易、合作网络与真实应用内容，形成完整的全球入口。",
+  growthTitle:"让更多人发现灵犀场，让每项服务都能找到合适用户",
+  growthLead:"搜索发现、智能搜索、全球 SIAI 分发、软件交易、网站合作与内容传播相互连接，让用户从发现到使用形成完整路径。",
   growthCards:[
-   {tag:"SEO",title:"搜索入口",description:"九语言 SEO、124 个工具目录与问题型落地页，让真实需求直接进入可用工具。",href:"/tools",cta:"浏览工具目录",chips:[{label:"九种语言"},{label:"124 个工具入口"},{label:"问题型页面"}]},
-   {tag:"GEO",title:"AI 搜索入口",description:"通过 llms.txt、llms-full.txt 与结构化产品资料，让 AI 准确理解平台、工具和服务。",href:"/llms.txt",cta:"查看 AI 搜索资料",chips:[{label:"llms.txt",href:"/llms.txt"},{label:"llms-full.txt",href:"/llms-full.txt"},{label:"结构化资料"}]},
-   {tag:"SIAI",title:"全球 SIAI 分发",description:"集中呈现排行榜、模型资料、真实价格、免费额度、地区可用性与商业授权。",href:"/siai",cta:"进入全球 SIAI 排行榜",chips:[{label:"排行榜"},{label:"价格与免费额度"},{label:"地区及商用条件"}]},
-   {tag:"SASI",title:"SASI 商业入口",description:"覆盖 MT5 EA、量化交易源码、其他成品软件、安装教程、授权说明与安全自动交付。",href:"/sasi",cta:"浏览 SASI 智能软件市场",chips:[{"label":"MT5 EA","href":"/sasi"},{"label":"量化源码","href":"/sasi"},{"label":"安装与交付教程","href":"/sasi/delivery"},{"label":"开发者发布","href":"/sasi/seller"}]},
-   {tag:"NETWORK",title:"外部增长网络",description:"连接 WordPress、JS Widget、合作伙伴、开放 API、RSS、二维码与分享归因。",href:"/partners",cta:"进入合作伙伴中心",chips:[{label:"WordPress",href:"/downloads/lingxifield-siai-wordpress.zip"},{label:"JS Widget",href:"/widgets/lingxifield-v1.js"},{label:"API",href:"/siai-openapi.json"},{label:"RSS",href:"/siai/updates.xml"},{label:"二维码",href:"/partners"},{label:"分享归因",href:"/partners"}]},
-   {tag:"STORIES",title:"内容传播",description:"以奇闻发现吸引关注，以真实工具问题提供答案，再用 Before / After 和实际应用场景展示结果。",href:"/discoveries",cta:"从真实问题开始",chips:[{"label":"奇闻发现","href":"/discoveries"},{"label":"真实工具问题","href":"/tools?q=PDF"},{"label":"Before / After","href":"/discoveries#before-after"},{"label":"实际应用场景","href":"/discoveries#use-cases"}]}
+   {tag:"搜索",title:"让正在找答案的人发现灵犀场",description:"覆盖九种语言、124 个工具入口和真实问题教程，让搜索访问直接进入可用服务。",href:"/tools",cta:"浏览工具目录",chips:[{label:"九种语言"},{label:"124 个工具入口"},{label:"问题型教程"}]},
+   {tag:"智能搜索",title:"让智能搜索准确理解灵犀场",description:"持续整理平台、产品和工具资料，让智能搜索准确了解服务内容与适用场景。",href:"/llms.txt",cta:"查看平台资料",chips:[{label:"平台介绍"},{label:"产品资料"},{label:"多语言说明"}]},
+   {tag:"全球排行",title:"帮助用户选到合适的 AI 工具",description:"集中比较模型能力、真实价格、免费额度、可用地区和商用条件，减少反复查找。",href:"/siai",cta:"浏览全球 SIAI 排行榜",chips:[{label:"模型能力"},{label:"价格与免费额度"},{label:"地区和授权"}]},
+   {tag:"软件交易",title:"让优质软件安全触达全球用户",description:"浏览成品软件、MT5 EA、交易指标和源码授权，查看版本、教程、授权范围与安全交付。",href:"/sasi",cta:"浏览 SASI 智能软件市场",chips:[{label:"MT5 EA"},{label:"成品软件"},{label:"源码授权"},{label:"自动交付"}]},
+   {tag:"合作网络",title:"让工具和排行榜进入更多网站",description:"与网站、内容创作者和产品伙伴合作，把实用工具与排行榜带到更多真实使用场景。",href:"/partners",cta:"了解全球合作",chips:[{label:"合作网站"},{label:"工具展示"},{label:"内容合作"},{label:"访问效果"}]},
+   {tag:"内容传播",title:"用真实问题和教程持续带来访问",description:"通过真实工具问题、使用教程、应用案例和结果展示，让更多人找到能直接使用的答案。",href:"/discoveries",cta:"查看内容与发现",chips:[{label:"奇闻发现"},{label:"真实工具问题"},{label:"使用前后对比"},{label:"应用场景"}]}
   ],
-  flywheelTitle:"从发现到分享，让每次体验都有下一步",
-  flywheel:["发现","搜索","体验","结果","分享","再回来"],
+  flywheelTitle:"从发现到使用，让每次体验都有下一步",
+  flywheel:["发现","了解","体验","完成任务","分享","再次访问"],
   passTitle:"ToolPass 工具包会员",passLead:"一站畅用 100+ 实用工具，持续处理文件与日常任务更高效。",passValueLead:"先免费完成一项任务；需要持续处理、多文件批量工作时，再选择合适的工具包周期。",
   passBenefits:["全场 100+ 工具 · 无限使用","多文件批量处理 · 提升效率","持续更新新工具 · 覆盖更多场景","一个账户 · 双站可用（.com / .cn）"],
   planDays:["7 天体验","30 天","90 天","365 天"],
@@ -483,13 +483,27 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
      <div>{distribution.steps.map((step,index)=><span key={step}><b>{step}</b>{index<copy.flywheel.length-1&&<i aria-hidden="true">→</i>}</span>)}</div>
     </div>
    </section>
-   <nav className="lx-home-market-strip" aria-label={copy.marketSiaiTitle+" / "+copy.marketSasiTitle+" / "+copy.toolsTitle+" / "+copy.passTitle}>
-    <Link className="lx-home-market-card" href="/siai"><span className="lx-home-market-icon" aria-hidden="true">🏆</span><span><strong>{copy.marketSiaiTitle}</strong><small>{copy.marketSiaiDesc}</small></span><b aria-hidden="true">→</b></Link>
-    <Link className="lx-home-market-card" href="/sasi"><span className="lx-home-market-icon" aria-hidden="true">◈</span><span><strong>{copy.marketSasiTitle}</strong><small>{copy.marketSasiDesc}</small></span><b aria-hidden="true">→</b></Link>
-    <Link className="lx-home-market-card" href="/tools"><span className="lx-home-market-icon" aria-hidden="true">▦</span><span><strong>{copy.stats[0].value}</strong><small>{copy.stats[0].label}</small></span><b aria-hidden="true">→</b></Link>
-    <Link className="lx-home-market-card" href="/tools/pass"><span className="lx-home-market-icon" aria-hidden="true">∞</span><span><strong>{copy.passTitle}</strong><small>{copy.stats[1].label}</small></span><b aria-hidden="true">→</b></Link>
-    <Link className="lx-home-market-card" href="/partners"><span className="lx-home-market-icon" aria-hidden="true">◎</span><span><strong>{copy.stats[2].value}</strong><small>{copy.stats[2].label}</small></span><b aria-hidden="true">→</b></Link>
-   </nav>
+   <HomeToolPassMembership/>
+   <section className="lx-home-distribution" aria-labelledby="lx-home-distribution-title">
+    <div className="lx-home-distribution-heading">
+     <div><p className="lx-home-section-eyebrow">{lang==="zh"?"全球用户连接":"GLOBAL REACH"}</p><h2 id="lx-home-distribution-title">{lang==="zh"?"全球智能分发与合作":distribution.title}</h2><p>{lang==="zh"?"连接搜索入口、智能推荐、全球排行榜、内容传播与合作伙伴，让更多用户从发现走向实际使用。":"Connect discovery, intelligent search, global rankings, useful content and partners so more people can move from discovery to real use."}</p></div>
+     <div className="lx-home-distribution-globe" aria-hidden="true"><svg viewBox="0 0 260 220" role="presentation">
+      <defs><radialGradient id="lx-distribution-globe-fill" cx="35%" cy="28%" r="80%"><stop offset="0%" stopColor="#d9f5ff"/><stop offset="55%" stopColor="#8e9df5"/><stop offset="100%" stopColor="#6544c9"/></radialGradient><filter id="lx-distribution-glow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <g fill="none" strokeLinecap="round"><ellipse cx="130" cy="112" rx="119" ry="35" stroke="#9c86ef" strokeWidth="2" opacity=".7" transform="rotate(-17 130 112)"/><ellipse cx="130" cy="112" rx="108" ry="55" stroke="#d6b76f" strokeWidth="1.5" opacity=".65" transform="rotate(22 130 112)"/><ellipse cx="130" cy="112" rx="94" ry="94" stroke="#9aabff" strokeWidth="1.5" opacity=".5"/></g>
+      <circle cx="130" cy="105" r="68" fill="url(#lx-distribution-globe-fill)" stroke="#fff" strokeWidth="2" filter="url(#lx-distribution-glow)"/><ellipse cx="130" cy="105" rx="30" ry="68" fill="none" stroke="#fff" strokeOpacity=".65"/><ellipse cx="130" cy="105" rx="68" ry="25" fill="none" stroke="#fff" strokeOpacity=".6"/>
+      <path d="M94 75l17-12 17 5 8 15-8 11-18-2-8 12-16-9 2-13z M151 88l15-7 13 12-7 16-15 5-8-12z M113 126l17-7 13 12-4 17-17 4-13-13z" fill="#d5f5e9" fillOpacity=".62" stroke="#fff" strokeOpacity=".4"/>
+      <g fill="#fff" filter="url(#lx-distribution-glow)"><circle cx="91" cy="104" r="3"/><circle cx="165" cy="73" r="3"/><circle cx="151" cy="145" r="2.5"/></g>
+     </svg></div>
+    </div>
+    <nav className="lx-home-market-strip" aria-label={lang==="zh"?"全球分发与合作入口":"Global discovery and partner links"}>
+     <Link className="lx-home-market-card" href="/tools"><span className="lx-home-market-icon">⌕</span><span><strong>{lang==="zh"?"搜索入口":"Search discovery"}</strong><small>{lang==="zh"?"按真实问题找到对应工具与教程":"Find tools and guides by task"}</small></span><b>→</b></Link>
+     <Link className="lx-home-market-card" href="/llms.txt"><span className="lx-home-market-icon">✧</span><span><strong>{lang==="zh"?"智能搜索入口":"Intelligent search"}</strong><small>{lang==="zh"?"让智能搜索准确了解平台与服务":"Help search services understand the platform"}</small></span><b>→</b></Link>
+     <Link className="lx-home-market-card" href="/siai"><span className="lx-home-market-icon">◉</span><span><strong>{lang==="zh"?"全球分发":"Global distribution"}</strong><small>{lang==="zh"?"比较模型能力、价格和使用条件":"Compare models, prices and access conditions"}</small></span><b>→</b></Link>
+     <Link className="lx-home-market-card" href="/discoveries"><span className="lx-home-market-icon">▧</span><span><strong>{lang==="zh"?"内容传播":"Useful content"}</strong><small>{lang==="zh"?"通过实用教程与真实场景持续分享":"Share practical guides and real use cases"}</small></span><b>→</b></Link>
+     <Link className="lx-home-market-card" href="/partners"><span className="lx-home-market-icon">◎</span><span><strong>{lang==="zh"?"全球合作网络":"Partner network"}</strong><small>{lang==="zh"?"连接网站、创作者与产品合作伙伴":"Connect websites, creators and product teams"}</small></span><b>→</b></Link>
+    </nav>
+    <div className="lx-home-growth-flywheel" aria-label={copy.flywheelTitle}><strong>{copy.flywheelTitle}</strong><div>{copy.flywheel.map((step,index)=><span key={step}><b>{step}</b>{index<copy.flywheel.length-1&&<i aria-hidden="true">→</i>}</span>)}</div></div>
+   </section>
    <section className="lx-home-popular-tools" aria-labelledby="lx-home-tools-title">
     <div><h2 id="lx-home-tools-title">{copy.toolsTitle}</h2><p>{copy.passLead}</p></div>
     <nav>{copy.toolCategories.map(item=><Link href={item.href} key={item.title}>{item.title} <span aria-hidden="true">→</span></Link>)}</nav>
