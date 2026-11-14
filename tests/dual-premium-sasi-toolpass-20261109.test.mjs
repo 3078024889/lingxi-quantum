@@ -111,7 +111,10 @@ test("homepage, SEO/GEO, ToolPass and footer use one transparent celestial surfa
  const growth=file("app/growth-pages.css");
  const footer=file("app/siai-home.css");
  assert.match(growth,/--lx-growth-max:1500px/);
- assert.match(growth,/\.lx-home-v143-grid \.lx11-home-card[^}]*background:transparent!important/);
+ const home=file("app/home-afternoon-20261114.css");
+ assert.doesNotMatch(growth,/\.lx-home-v143-grid/);
+ assert.match(home,/--home-card:linear-gradient/);
+ assert.match(home,/\.lx-home-feature-card\{[^}]*background:var\(--home-card\)/);
  assert.match(growth,/\.lx-growth-panel[^}]*background:transparent!important/);
  assert.match(growth,/\.lx-seo-question[^}]*background:transparent!important/);
  assert.match(passStyle,/container-type:inline-size;container-name:toolpass/);

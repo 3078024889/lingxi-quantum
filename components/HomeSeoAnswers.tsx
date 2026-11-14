@@ -5,17 +5,6 @@ import {useLingxiLang} from "@/lib/lingxi-i18n";
 
 type Question = {q:string;a:string;href:string;link:string};
 const FAQ_ICONS=["✦","◎","▦","▶","◉","◈","⌘","PDF","OCR","▧","◇","▣","✉","▥","AI","?"] as const;
-const FAQ_ASIDE:Record<SeoLocale,{title:string;body:string;cta:string}>={
- zh:{title:"把问题交给灵犀场，先找到能用的答案",body:"从 AI 选型、免费额度和真实价格，到软件购买、源码授权与安全交付；再到 PDF、图片、视频、音频和日常文件处理，常见问题都有对应教程与工具入口。",cta:"查看全部问题教程"},
- en:{title:"Start with the question. Find an answer that works.",body:"From AI choices, free limits and real prices to software, source licenses, secure delivery and everyday files, each common task has a clear guide and tool.",cta:"Browse all practical guides"},
- ja:{title:"質問から始めて、使える答えを見つける",body:"AIの選び方、無料枠、価格、ソフト購入、ソースライセンス、安全な納品、PDFや画像などの作業をガイドとツールで解決します。",cta:"すべてのガイドを見る"},
- ko:{title:"질문에서 시작해 실제로 쓸 수 있는 답 찾기",body:"AI 선택, 무료 한도와 가격부터 소프트웨어, 소스 라이선스, 안전한 전달, PDF와 이미지 작업까지 안내와 도구를 제공합니다.",cta:"전체 안내 보기"},
- fr:{title:"Partez de votre question et trouvez une réponse utile",body:"Choix IA, quotas gratuits, prix, logiciels, licences source, livraison sécurisée et fichiers du quotidien : chaque besoin mène à un guide et à un outil.",cta:"Voir tous les guides"},
- de:{title:"Mit der Frage beginnen und eine passende Lösung finden",body:"Von KI-Auswahl, Gratis-Kontingenten und Preisen bis zu Software, Quellcode-Lizenzen, sicherer Lieferung und Dateibearbeitung: mit passenden Anleitungen und Tools.",cta:"Alle Anleitungen ansehen"},
- es:{title:"Empieza por la pregunta y encuentra una respuesta útil",body:"Desde elegir IA, límites gratuitos y precios hasta software, licencias de código, entrega segura y archivos cotidianos: cada necesidad tiene una guía y una herramienta.",cta:"Ver todas las guías"},
- pt:{title:"Comece pela pergunta e encontre uma resposta prática",body:"Da escolha de IA, limites gratuitos e preços a software, licenças de código, entrega segura e arquivos do dia a dia: cada tarefa tem um guia e uma ferramenta.",cta:"Ver todos os guias"},
- ar:{title:"ابدأ بالسؤال واعثر على إجابة عملية",body:"من اختيار الذكاء الاصطناعي والحصص المجانية والأسعار إلى البرامج وتراخيص المصدر والتسليم الآمن ومعالجة الملفات اليومية، لكل مهمة دليل وأداة مناسبة.",cta:"عرض جميع الأدلة"}
-};
 
 type Content = {eyebrow:string;title:string;intro:string;questions:Question[];explore:string;create:string;tools:string};
 const FAQ:Record<SeoLocale,Content>={
@@ -335,8 +324,6 @@ const HOME_EXTRA:Record<SeoLocale,HomeExtra>={
     "vendorAction": "إرسال معلومات المنتج"
   }
 };
-const SASI_MARKET_PATHS=["/sasi","/sasi/seller","/sasi/delivery","/legal/sasi"] as const;
-const TOOL_PATHS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=CSV","/tools?q=临时邮箱"] as const;
 
 export default function HomeSeoAnswers({locale:initialLocale}:{locale:SeoLocale}){
  const {lang}=useLingxiLang();const locale=(lang||initialLocale) as SeoLocale;
