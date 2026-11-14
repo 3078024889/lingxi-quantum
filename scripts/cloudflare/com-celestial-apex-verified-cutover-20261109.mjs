@@ -152,6 +152,98 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     }
   }
 
+  // Verify the actual rendered product surfaces, not only HTTP 200 and edge headers.
+  // This prevents an older Worker/static snapshot from passing the release gate.
+  const referencePages = [
+    {
+      path: "/",
+      required: [
+        "全球智能服务与实用工具平台",
+        "全球 SIAI 排行榜",
+        "SASI 智能软件市场",
+        "100+ 在线实用工具",
+        "工具包会员",
+        "全球增长与合作",
+        "WordPress",
+        "JS Widget",
+        "二维码",
+        "ToolPass",
+        "Before / After"
+      ],
+      forbidden: [
+        "全球 AI 工具太多，不知道哪个好用",
+        "SASI 创作规则",
+        "AI短剧生成",
+        "书本问答",
+        "学习 SASI",
+        "科研 SASI"
+      ]
+    },
+    {
+      path: "/sasi",
+      required: [
+        "sasi-market-hero-lingxifield.png",
+        "精选软件",
+        "开发者作品",
+        "MT5 EA",
+        "MT5 指标",
+        "自动化软件",
+        "桌面程序",
+        "开发工具",
+        "其他软件",
+        "卖家发布与自动交付",
+        "软件授权",
+        "安全可靠",
+        "全球可用",
+        "开发者支持"
+      ],
+      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答"]
+    },
+    {
+      path: "/sasi/seller",
+      required: [
+        "卖家工作台",
+        "已发布软件",
+        "待审核",
+        "总销售额",
+        "自动交付成功率",
+        "零费用申请入驻",
+        "软件名称",
+        "分类",
+        "完整软件介绍",
+        "人民币标价",
+        "美元标价",
+        "软件 ZIP / 源码包",
+        "授权或许可文件",
+        "发布流程",
+        "结算说明",
+        "安全校验",
+        "授权范围",
+        "保存商品草稿"
+      ],
+      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答"]
+    }
+  ];
+  for (const page of referencePages) {
+    const response = await fetch(
+      base + page.path + "?__lx_com_reference_content=" + encodeURIComponent(phase),
+      { redirect: "manual", signal: AbortSignal.timeout(30000) }
+    );
+    const html = await response.text();
+    if (response.status !== 200 || html.length < 5000) {
+      throw Error("COM_" + phase + "_REFERENCE_PAGE_UNAVAILABLE:" + page.path + ":" + response.status);
+    }
+    const missing = page.required.filter(term => !html.includes(term));
+    const retired = page.forbidden.filter(term => html.includes(term));
+    console.log("COM_" + phase + "_REFERENCE_CONTENT " + JSON.stringify({
+      path: page.path, bytes: html.length, missing, retired
+    }));
+    if (missing.length || retired.length) {
+      throw Error("COM_" + phase + "_REFERENCE_CONTENT_MISMATCH:" + page.path);
+    }
+  }
+  console.log("COM_REFERENCE_DESIGN_CONTENT_GATE_PASS:" + phase);
+
   const legacyMarketUrl = base + "/sasi/marketplace";
   const legacyMarket = await fetch(legacyMarketUrl, {
     redirect: "manual",
