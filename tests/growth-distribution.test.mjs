@@ -183,8 +183,8 @@ test("homepage growth engines are integrated into the problem hub and aligned wi
  assert.match(problem,/<HomeGlobalGrowth lang=\{lang\}\/>/);
  assert.match(problem,/href:"\/discoveries"/);
  assert.match(problem,/hit\?\.score>0\?hit\.href:'\/tools'/);
- assert.match(home,/data-growth-anchor="#global-growth-entrances"><HomeProblemHub\/><\/div><HomeSeoAnswers locale="zh"\/><Footer/);assert.match(growth,/<HomeToolPassMembership\/>/);assert.ok(growth.indexOf("<HomeToolPassMembership/>")<growth.indexOf("lx-home-distribution"));
- assert.match(localizedHome,/data-growth-anchor="#global-growth-entrances"><HomeProblemHub\/><\/div><HomeSeoAnswers locale=\{locale\}\/\><Footer/);
+ assert.match(home,/data-growth-anchor="#global-growth-entrances"><HomeProblemHub\/><\/div><HomeSeoAnswers locale="zh"\/><\/main><Footer/);assert.match(growth,/<HomeToolPassMembership\/>/);assert.ok(growth.indexOf("<HomeToolPassMembership/>")<growth.indexOf("lx-home-distribution"));
+ assert.match(localizedHome,/data-growth-anchor="#global-growth-entrances"><HomeProblemHub\/><\/div><HomeSeoAnswers locale=\{locale\}\/\><\/main><Footer/);
  assert.match(css,/--lx-home-gutter/);
  assert.match(css,/\.lx-home-toolpass-wrap/);
  assert.match(css,/\.lx11-footer\.lx-branded-footer\{padding-left:var\(--lx-home-gutter\)/);
