@@ -42,6 +42,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const [adult,setAdult]=useState(false),[terms,setTerms]=useState(false);
  const [title,setTitle]=useState(""),[description,setDescription]=useState("");
  const [editingId,setEditingId]=useState<string|null>(null);
+ const [activeDraftId,setActiveDraftId]=useState<string|null>(null);
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
  const [showStudio,setShowStudio]=useState(sellerOnly);
@@ -98,6 +99,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const featuredFallbacks=featuredSide.length===0?["browse","publish"]:featuredSide.length===1?["publish"]:[];
  const publishedCount=mine.filter(item=>item.status==="published").length;
  const pendingCount=mine.filter(item=>item.status==="submitted").length;
+ const activeDraft=mine.find(item=>item.id===activeDraftId&&["draft","rejected"].includes(item.status))??null;
  const cnyGross=payments?.balances?.CNY?.grossMinor??0;
  const usdGross=payments?.balances?.USD?.grossMinor??0;
  const featuredVisualTitle=(zh?featured.titleZh:featured.titleEn).match(/SI\s*[\d.]+/i)?.[0]??"MT5 EA";
@@ -119,16 +121,19 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   setBusy("draft");setError("");setStatus("");
   try{
    const minor=(n:string)=>Math.round(Number(n)*100);
-   await post("/api/sasi/marketplace/listings",{
+   const listingId=editingId??activeDraftId;
+   const saved=await post("/api/sasi/marketplace/listings",{
     title,description,category,priceCnyMinor:minor(rmb),priceUsdMinor:minor(usd),
-    ...(editingId?{listingId:editingId}:{})
-   },editingId?"PATCH":"POST");
-   setStatus(sasiSoftwareUiText(lang,"商品草稿已保存，可继续上传安装包。","Draft saved. You can now upload its package."));
-   setTitle("");setDescription("");setEditingId(null);await refresh();
+    ...(listingId?{listingId}:{})
+   },listingId?"PATCH":"POST");
+   const savedId=saved?.item?.id??listingId;
+   if(savedId)setActiveDraftId(savedId);
+   setStatus(sasiSoftwareUiText(lang,"商品草稿已保存，可在下方上传区继续上传软件包和主图。","Draft saved. Continue with the package and cover uploads below."));
+   setEditingId(null);await refresh();
   }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
  };
  const editDraft=(item:Listing)=>{
-  setEditingId(item.id);setTitle(item.title);setDescription(item.description);setCategory(item.category);
+  setEditingId(item.id);setActiveDraftId(item.id);setTitle(item.title);setDescription(item.description);setCategory(item.category);
   setRmb((item.price_cny_minor/100).toFixed(2));setUsd((item.price_usd_minor/100).toFixed(2));setShowStudio(true);
   requestAnimationFrame(()=>document.getElementById("listing-editor")?.scrollIntoView({block:"start"}));
  };
@@ -153,7 +158,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    setStatus(result?.scanDispatched?
     (sasiSoftwareUiText(lang,"已提交审核，软件包正在安全检查。","Submitted for review; security scanning is in progress.")):
     (sasiSoftwareUiText(lang,"已提交审核，等待平台启动安全检查。","Submitted for review; security scanning is pending.")));
-   await refresh();
+   setActiveDraftId(null);setEditingId(null);await refresh();
   }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
  };
  const uploadImage=async(item:Listing,file:File,kind:"cover"|"detail")=>{
@@ -387,35 +392,41 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       <label>{sasiSoftwareUiText(lang,"完整软件介绍（最多5,000字）","Full software description (up to 5,000 characters)")}<textarea rows={7} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={sasiSoftwareUiText(lang,"介绍核心功能、适用场景、安装要求、版本与授权范围。支持换行分段，详情页可完整展开。","Explain features, uses, requirements, version and licensing. Paragraph breaks are preserved.")}/><span className={styles.descriptionCount} aria-live="polite">{description.length.toLocaleString("en-US")} / 5,000</span></label>
       <div className={styles.priceFields}><label>{sasiSoftwareUiText(lang,"人民币标价","CNY price")}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{sasiSoftwareUiText(lang,"美元标价","USD price")}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
-      <button disabled={busy!==""||seller?.status!=="approved"} onClick={()=>void makeDraft()}>{busy==="draft"?"…":editingId?sasiSoftwareUiText(lang,"保存修改","Save changes"):sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
-      {editingId&&<button type="button" disabled={busy!==""} onClick={()=>{setEditingId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"取消修改","Cancel editing")}</button>}
-      <p>{sasiSoftwareUiText(lang,"主图1张，详情图最多4张。软件 ZIP 可包含成品或源码，以及安装说明与授权文件；通过安全检查及管理员审核后上架。","One main image and up to four detail images. Upload finished software or source with installation and license documents in a ZIP. Security checks and administrator approval are required.")}</p>
+      <div className={styles.uploadGrid} aria-label={sasiSoftwareUiText(lang,"软件文件上传","Software file uploads")}>
+       <label className={`${styles.uploadTile} ${activeDraft?"":styles.uploadTileDisabled}`}>
+        <span className={styles.uploadTileIcon} aria-hidden="true">⇧</span>
+        <strong>{sasiSoftwareUiText(lang,"软件 ZIP / 源码包","Software ZIP / source package")}</strong>
+        <small>{sasiSoftwareUiText(lang,"仅支持 ZIP，最大 30MB","ZIP only · up to 30MB")}</small>
+        <em>{activeDraft?translatedStatus(lang,activeDraft.scan_status,true):sasiSoftwareUiText(lang,"保存草稿后上传","Save a draft to upload")}</em>
+        <input type="file" accept=".zip,application/zip" disabled={!activeDraft||busy!==""} onChange={e=>{const file=e.target.files?.[0];if(file&&activeDraft)void upload(activeDraft,file)}}/>
+       </label>
+       <label className={`${styles.uploadTile} ${activeDraft?"":styles.uploadTileDisabled}`}>
+        <span className={styles.uploadTileIcon} aria-hidden="true">▧</span>
+        <strong>{sasiSoftwareUiText(lang,"封面图片","Cover image")}</strong>
+        <small>{sasiSoftwareUiText(lang,"PNG / JPG / WebP，最大 1MB","PNG / JPG / WebP · up to 1MB")}</small>
+        <em>{activeDraft?sasiSoftwareUiText(lang,`已上传 ${mediaCounts[activeDraft.id]?.cover??0} / 1 张`,`${mediaCounts[activeDraft.id]?.cover??0} / 1 uploaded`):sasiSoftwareUiText(lang,"保存草稿后上传","Save a draft to upload")}</em>
+        <input type="file" accept="image/png,image/jpeg,image/webp" disabled={!activeDraft||busy!==""||(mediaCounts[activeDraft?.id??""]?.cover??0)>=1} onChange={e=>{const file=e.target.files?.[0];if(file&&activeDraft)void uploadImage(activeDraft,file,"cover")}}/>
+       </label>
+       <div className={styles.uploadTile}>
+        <span className={styles.uploadTileIcon} aria-hidden="true">▤</span>
+        <strong>{sasiSoftwareUiText(lang,"授权或许可文件","License document")}</strong>
+        <small>{sasiSoftwareUiText(lang,"请放入软件 ZIP 包内","Include it inside the software ZIP")}</small>
+        <em>{sasiSoftwareUiText(lang,"随软件包一并审核与交付","Reviewed and delivered with the package")}</em>
+       </div>
+      </div>
+      {activeDraft&&<div className={styles.activeDraftActions}>
+       <span>{sasiSoftwareUiText(lang,"当前草稿","Active draft")}：{activeDraft.title}</span>
+       <button type="button" disabled={busy!==""||(mediaCounts[activeDraft.id]?.cover??0)!==1} onClick={()=>void submitReview(activeDraft)} className={styles.launchStudio}>{busy==="submit-"+activeDraft.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}</button>
+       <button type="button" disabled={busy!==""} onClick={()=>{setActiveDraftId(null);setEditingId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"新建商品","New listing")}</button>
+      </div>}
+      <button disabled={busy!==""||seller?.status!=="approved"} onClick={()=>void makeDraft()}>{busy==="draft"?"…":(editingId||activeDraftId)?sasiSoftwareUiText(lang,"保存修改","Save changes"):sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
+      {editingId&&<button type="button" disabled={busy!==""} onClick={()=>{setEditingId(null);setActiveDraftId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"取消修改","Cancel editing")}</button>}
+      <p>{sasiSoftwareUiText(lang,"软件 ZIP 当前最大 30MB；授权、许可及安装说明请放入 ZIP 包内。主图仅1张，详情图最多4张。文件通过安全检查和管理员审核后上架。","ZIP packages are currently limited to 30MB. Include license and installation documents inside the ZIP. One cover image and up to four optional detail images are supported. Listings go live only after security checks and administrator review.")}</p>
     </div>
 
    {mine.length>0&&<div className={styles.drafts}><h3>{sasiSoftwareUiText(lang,"我的软件草稿与审核进度","My submissions")}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{translatedStatus(lang,item.status)} · {translatedStatus(lang,item.scan_status,true)}</small></div>
     {item.status==="rejected"&&item.rejection_reason&&<p role="status">{item.rejection_reason}</p>}
-    {["draft","rejected"].includes(item.status)&&<button type="button" disabled={busy!==""} onClick={()=>editDraft(item)}>{sasiSoftwareUiText(lang,"修改商品资料","Edit listing")}</button>}
-    {item.status==="draft"&&<>
-     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":sasiSoftwareUiText(lang,"上传主图（仅1张）","Main image (one only)")}
-       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""||(mediaCounts[item.id]?.cover??0)>=1} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"cover")}}/>
-     </label>
-     <label className={styles.upload}>{busy==="image-"+item.id?"上传图片中…":sasiSoftwareUiText(lang,"上传详情图（可选，最多4张）","Detail image (optional, max 4)")}
-       <input type="file" accept="image/png,image/jpeg,image/webp" disabled={busy!==""||(mediaCounts[item.id]?.detail??0)>=4} onChange={e=>{const f=e.target.files?.[0];if(f)void uploadImage(item,f,"detail")}}/>
-     </label>
-     <span className={styles.mediaCounter}>{sasiSoftwareUiText(lang,"图片数量","Images")}：{mediaCounts[item.id]?.cover??0}/1 {sasiSoftwareUiText(lang,"主图","main")} · {mediaCounts[item.id]?.detail??0}/4 {sasiSoftwareUiText(lang,"详情图（可选）","optional details")}</span>
-     {(mediaEntries[item.id]||[]).length>0&&<div className={styles.mediaEntries}>
-       {(mediaEntries[item.id]||[]).map((photo,index)=><div key={photo.id}>
-        <span>{photo.kind==="cover"?(sasiSoftwareUiText(lang,"主图","Main image")):(sasiSoftwareUiText(lang,"详情图","Detail image"))+" "+(index+1)} · {photo.status}</span>
-        <button type="button" disabled={busy!==""} onClick={()=>void removeMedia(item,photo.id)}>{sasiSoftwareUiText(lang,"移除并更换","Remove / replace")}</button>
-       </div>)}
-      </div>}
-     <label className={styles.upload}>{busy==="upload-"+item.id?"处理中…":sasiSoftwareUiText(lang,"上传软件 ZIP 包","Upload software ZIP")}
-       <input type="file" accept=".zip,application/zip" disabled={busy!==""} onChange={e=>{const f=e.target.files?.[0];if(f)void upload(item,f)}}/>
-     </label>
-     <button type="button" disabled={busy!==""||(mediaCounts[item.id]?.cover??0)!==1} onClick={()=>void submitReview(item)} className={styles.launchStudio}>
-      {busy==="submit-"+item.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}
-     </button>
-   </>}
+    {["draft","rejected"].includes(item.status)&&<button type="button" disabled={busy!==""} onClick={()=>editDraft(item)}>{sasiSoftwareUiText(lang,"继续编辑与上传","Continue editing and upload")}</button>}
     {item.status==="published"&&<button onClick={()=>void share(item)}>{sasiSoftwareUiText(lang,"分享商品","Share")}</button>}
    </div>)}</div>}
    {error&&<p className={styles.error} role="alert">{error}</p>}{status&&<p className={styles.success} role="status">{status}</p>}
