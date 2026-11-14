@@ -56,7 +56,7 @@ for(const term of ["124 个工具目录","llms.txt","llms-full.txt","WordPress",
  assert.ok(globalHomeGrowth.includes(term),"homepage growth experience missing "+term);
 }
 assert.doesNotMatch(globalHomeGrowth,/R6\s*\+?\s*R8|R6|R8|内部工程|部署平台|候选版本/i);
-const homeCss=readFileSync("app/growth-pages.css","utf8");
+const homeCss=readFileSync("app/home-afternoon-20261114.css","utf8");
 for(const selector of [".lx-home-hero-art",".lx-home-feature-strip",".lx-home-growth-grid",".lx-home-toolpass",".lx-home-plan-grid",".lx-home-popular-tools"]){
  assert.ok(homeCss.includes(selector),"homepage visual style missing "+selector);
 }

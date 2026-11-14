@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
+import AfternoonArtworkIcon,{type AfternoonIconKind} from "@/components/AfternoonArtworkIcon";
 import {ALL_TOOLS_PASS_CATALOG} from "@/lib/tools/commerce/all-tools-pass";
 import {usePreferredCurrency} from "@/components/CurrencyPreferenceProvider";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
@@ -367,9 +368,9 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  return (
   <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="九语言搜索入口;124 个工具目录;AI 搜索资料;全球 SIAI 排行榜;SASI 智能软件市场;100+ 实用工具;网站合作;内容传播;二维码分享;分享来源统计;工具包无限使用;隐私与安全">
    <div className="lx-home-feature-strip">
-    {features.map(item=>(
+    {features.map((item,index)=>(
      <Link className="lx-home-feature-card" href={item.href} key={item.href}>
-      <LingxiMiniIcon name={item.icon} size="title" className="lx-home-feature-icon"/>
+      <span className="lx-home-feature-icon"><AfternoonArtworkIcon kind={(["chart","tools","layers","cart","people","shield"] as AfternoonIconKind[])[index]}/></span>
       <span className="lx-home-feature-copy"><strong>{item.title}</strong><small>{item.description}</small></span>
      </Link>
     ))}
