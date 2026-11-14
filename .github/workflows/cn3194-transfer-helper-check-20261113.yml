@@ -1,7 +1,7 @@
 name: CN3194 exact release transfer helper lint (NO DEPLOY)
 on:
   push:
-    branches: [fix/cn3194-marketplace-503-transfer-20261113, feat/homepage-reference-rebuild-cn-20261113, cleanup/cn-retired-sasi-full-20261113]
+    branches: [fix/cn3194-marketplace-503-transfer-20261113, feat/homepage-reference-rebuild-cn-20261113, cleanup/cn-retired-sasi-full-20261113, ops/cn3195-transfer-e6c2-20261114]
     paths:
       - 'scripts/ops/R2-CN3195-Transfer-20261113.ps1'
       - 'scripts/ops/R2-CN3195-Transfer-20261114-f3d4.ps1'
