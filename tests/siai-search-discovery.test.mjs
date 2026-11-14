@@ -29,7 +29,8 @@ test("nine-language search-intent sections have six distinct human-readable topi
 });
 test("search terms visible in page title, center, footer and JSON-LD; exact canonical remains stable",()=>{
  for(const s of keywords)assert(layout.includes(s)||page.includes(s)||catalog.includes(s),s);
- assert.match(home,/SIAI_DISCOVERY\[lang\]\.hero/);
+ assert.match(home,/SIAI_DISCOVERY\[lang\]/);
+ assert.match(home,/data-siai-search-keywords=\{discovery\.hero\}/);
  assert.match(home,/<SiaiSearchDiscovery variant="home"\/>/);
  assert.match(rank,/<SiaiSearchDiscovery variant="ranking"\/>/);
  assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
@@ -82,7 +83,9 @@ test("nine-language FAQ body follows the language selection and spaced keywords 
  assert.match(faq,/lang\|\|initialLocale/);
  assert.match(home,/replace\(\/\\s\+\/g,""\)/);
  assert.match(home,/"ai视频"/);
- assert.match(home,/url\.searchParams\.set\("q",v\)/);
+ assert.match(home,/new URL\("\/siai",location\.origin\)/);
+ assert.match(home,/discovery\.searchParams\.set\("q",value\)/);
+ assert.match(home,/destination\.searchParams\.set\('q',value\)/);
  assert.match(home,/data-testid="home-task-search"/);
  assert.match(rank,/params\.get\("q"\)/);
  assert.match(rank,/setQuery\(incomingQuery\.trim\(\)\)/);

@@ -128,7 +128,7 @@ test("homepage, localized SEO/GEO pages and partner distribution share the compa
  assert.ok(growthCss.includes(".lx-growth-tool-grid"));
  assert.ok(growthCss.includes(".lx-growth-partner-grid"));
  assert.ok(growthCss.includes("@media(max-width:760px)"));
- assert.ok(homepage.includes("SASI 软件市场"));
+ assert.ok(homepage.includes("SASI 智能软件市场"));
  assert.ok(homepage.includes("100+ 在线工具"));
  assert.ok(zhProducts.includes("GrowthPageShell"));
  assert.ok(zhProducts.includes("ProductDirectory"));
