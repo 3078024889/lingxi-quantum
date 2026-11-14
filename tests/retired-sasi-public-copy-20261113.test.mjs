@@ -43,10 +43,11 @@ for(const locale of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
 }
 
 const legalCopy=readFileSync("components/SasiLegalBody.tsx","utf8");
-assert.doesNotMatch(legalCopy,/short drama|Kurzdrama|séries courtes|dramas y vídeos|dramas e vídeos|الدراما والفيديو الجديدة|동영상 신규 생성|SI9[.]5|SI 9[.]5/i);
-assert.ok(legalCopy.includes("SI 11.6"));
+assert.doesNotMatch(legalCopy,/short drama|Kurzdrama|séries courtes|dramas y vídeos|dramas e vídeos|الدراما والفيديو الجديدة|동영상 신규 생성|SI9[.]5|SI 9[.]5|SI\s*11[.]6/i);
+assert.match(legalCopy,/Copernicus SI|哥白尼 SI/);
 const firstPartyCatalog=readFileSync("lib/sasi-software/catalog.ts","utf8");
-assert.ok(firstPartyCatalog.includes("Copernicus SI 11.6"));
+assert.ok(firstPartyCatalog.includes("Copernicus SI · MT5 Source Code License"));
+assert.doesNotMatch(firstPartyCatalog,/SI9[.]5|SI 9[.]5|SI\s*11[.]6/i);
 const productCopy=readFileSync("lib/tools/product-copy.ts","utf8");
 assert.doesNotMatch(productCopy,/'url-to-video'/);
 
