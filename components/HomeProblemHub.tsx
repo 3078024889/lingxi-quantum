@@ -1,5 +1,5 @@
 "use client";
-import {useState,type FormEvent} from "react";
+import {useMemo,useState,type FormEvent} from "react";
 import {useRouter} from "next/navigation";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {isLikelyToolQuery} from "@/lib/tools/search-intents-v44r2.mjs";
@@ -18,16 +18,25 @@ const HERO_COPY:Record<LingxiLang,HeroCopy>={
 };
 export default function HomeProblemHub(){
  const {lang}=useLingxiLang();const copy=HERO_COPY[lang]||HERO_COPY.en;const router=useRouter();const [query,setQuery]=useState("");
+ const intents=useMemo(()=>[
+  {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格","excel"],href:"/tools",label:lang==="zh"?"实用工具":"Practical tools"},
+  {words:["ai","模型","排行榜","免费额度","价格","商用","siai","chatgpt","claude","gemini"],href:"/siai",label:lang==="zh"?"全球 SIAI 排行榜":"Global SIAI Rankings"},
+  {words:["ea","mt5","源码","软件","授权","成品","商品","市场","sasi"],href:"/sasi",label:lang==="zh"?"SASI 智能软件市场":"SASI Software Marketplace"},
+  {words:["开发者","卖家","发布","上架","seller","developer","vendor","vendeur","verkäufer","vendedor","판매자","開発者","بائع"],href:"/sasi/seller",label:lang==="zh"?"开发者发布":"Seller services"},
+  {words:["安装","交付","教程","授权规则","delivery","installation","install","instalación","instalação","導入","설치","تثبيت"],href:"/sasi/delivery",label:lang==="zh"?"软件安装与交付教程":"Installation & delivery guide"},
+  {words:["工具包","toolpass","会员","无限使用","批量处理","membership","abonnement","Mitgliedschaft","membresía","assinatura","会員","멤버십","عضوية"],href:"/tools/pass",label:lang==="zh"?"工具包会员":"ToolPass membership"},
+  {words:["ufo","uap","伏尼契","奇闻","神秘","考古","宇宙","外星","voynich","mystery","discoveries","发现","不思議","謎","고고학","mystère","archäologie","misterio","mistério","لغز"],href:"/discoveries",label:lang==="zh"?"奇闻发现与资料核验":"Discoveries & source verification"}
+ ],[lang]);
+ const hit=useMemo(()=>{const normalized=query.toLowerCase().replace(/\s+/g,"");return intents.map(item=>({...item,score:item.words.filter(word=>normalized.includes(word)).length})).sort((a,b)=>b.score-a.score)[0]},[query,intents]);
  function submit(event:FormEvent<HTMLFormElement>){
-  event.preventDefault();const value=query.trim();if(!value)return;const lower=value.toLowerCase();const encoded=encodeURIComponent(value);
-  if(/开发者|卖家|发布|上架|seller|developer|vendor|vendedor|verkäufer|vendeur|판매자|出品者|بائع/i.test(value)){router.push(`/sasi/seller?intent=${encoded}&lang=${lang}`);return}
-  if(/安装|交付|教程|授权规则|delivery|installation|license|licence/i.test(value)){router.push(`/sasi/delivery?q=${encoded}&lang=${lang}`);return}
-  if(/mt5|\bea\b|源码|软件|授权|成品|商品|市场|sasi/i.test(lower)){router.push(`/sasi?q=${encoded}&lang=${lang}`);return}
-  if(/ai|模型|排行榜|免费额度|价格|商用|siai|chatgpt|claude|gemini/i.test(lower)){const discovery=new URL("/siai",location.origin);discovery.searchParams.set("q",value);discovery.searchParams.set("lang",lang);router.push(discovery.pathname+discovery.search);return}
-  if(/工具包|toolpass|会员|无限使用|membership/i.test(value)){router.push(`/tools/pass?lang=${lang}`);return}
-  router.push(isLikelyToolQuery(value)?`/tools?q=${encoded}&lang=${lang}`:`/tools?q=${encoded}&lang=${lang}`);
+  event.preventDefault();const value=query.trim();if(!value)return;const normalized=value.toLowerCase().replace(/\s+/g,"");
+  if(/(?:\bai\b|模型|排行榜|免费额度|价格|商用|siai|chatgpt|claude|gemini)/i.test(value)){const discovery=new URL("/siai",location.origin);discovery.searchParams.set("q",value);discovery.searchParams.set("lang",lang);router.push(discovery.pathname+discovery.search);return}
+  if(isLikelyToolQuery(value)){router.push(`/tools?q=${encodeURIComponent(value)}&lang=${lang}`);return}
+  const destination=new URL(hit?.score>0?hit.href:'/tools',location.origin);
+  if(hit?.score>0)destination.searchParams.set('intent',value);else destination.searchParams.set('q',value);
+  destination.searchParams.set('lang',lang);router.push(destination.pathname+destination.search);
  }
- return <><section className="lx-home-hero-section" aria-labelledby="lx-home-hero-title">
+ return <><section className="lx-home-hero-section" aria-labelledby="lx-home-hero-title" data-editorial-topics="伏尼契 · UFO · 神秘事件">
   <div className="lx-home-hero-grid"><div className="lx-home-hero-copy">
    <p className="lx-home-hero-brand">LINGXIFIELD <span>·</span> GLOBAL INTELLIGENT SERVICES</p>
    <h1 id="lx-home-hero-title">{copy.title}</h1><p className="lx-home-hero-lead">{copy.lead}</p>
@@ -35,6 +44,7 @@ export default function HomeProblemHub(){
    <div className="lx-home-hero-actions"><a href="/siai" className="lx-home-cta-primary">{copy.primary} <span aria-hidden="true">→</span></a><a href="/tools/pass" className="lx-home-cta-secondary">{copy.secondary} <span aria-hidden="true">→</span></a></div>
    <div className="lx-home-hero-proof">{copy.proof.map(item=><span key={item}><b aria-hidden="true">✓</b>{item}</span>)}</div>
    <form onSubmit={submit} className="lx-home-question-search" data-testid="home-task-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} aria-label={copy.placeholder} placeholder={copy.placeholder}/><button type="submit">{copy.begin}</button></form>
+   {query.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{lang==="zh"?"建议入口":"Suggested"}</span><Link href={hit.href}>{hit.label}</Link></div>}
   </div><HomeHeroVisual/></div>
  </section><HomeGlobalGrowth lang={lang}/></>;
 }
