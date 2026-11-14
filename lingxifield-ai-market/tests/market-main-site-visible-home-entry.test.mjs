@@ -6,7 +6,7 @@ test('main LINGXIFIELD homepage exposes SIAI rankings above the long tool catalo
  const home=read('components/HomeProblemHub.tsx'),nav=read('components/Nav.tsx');
  const route=read('app/siai/page.tsx'),catalog=read('app/siai/catalog-data.ts');
  assert.match(home,/data-testid="home-global-siai-entry"/);
- assert.ok(home.indexOf('data-testid="home-global-siai-entry"')<home.indexOf('data-home-tool-catalog'));
+ assert.ok(home.indexOf('data-testid="home-global-siai-entry"')<home.indexOf("<HomeGlobalGrowth lang={lang}/>"));
  assert.ok(home.includes('href:"/siai",icon:"products"'));
  assert.match(nav,/href: "\/siai", key: "home"/);
  assert.match(route,/getSiaiDirectoryRows\(\)/);
