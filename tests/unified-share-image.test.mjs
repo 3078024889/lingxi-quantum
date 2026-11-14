@@ -25,11 +25,11 @@ test('web OpenGraph, X and independent SIAI pages use the supplied global brand 
 });
 test('the supplied global OG asset is present, 1200x675 JPEG, and WeChat miniapp art remains intact',async()=>{
  const og=new URL('../'+ogAsset,import.meta.url);assert(existsSync(og),ogAsset);
- const ogMeta=await sharp(og.pathname).metadata();assert.equal(ogMeta.format,'jpeg');assert.equal(ogMeta.width,1200);assert.equal(ogMeta.height,675);
- assert(statSync(og.pathname).size<700*1024,'OG image should remain optimized for social previews');
+ const ogMeta=await sharp(readFileSync(og)).metadata();assert.equal(ogMeta.format,'jpeg');assert.equal(ogMeta.width,1200);assert.equal(ogMeta.height,675);
+ assert(statSync(og).size<700*1024,'OG image should remain optimized for social previews');
  assert.equal(existsSync(new URL('../public/og-lingxifield-20261105.jpg',import.meta.url)),false);
  const mini=new URL('../'+miniAsset,import.meta.url);assert(existsSync(mini),miniAsset);
- const meta=await sharp(mini.pathname).metadata();assert.equal(meta.format,'jpeg');assert.equal(meta.width,600);assert.equal(meta.height,480);
+ const meta=await sharp(readFileSync(mini)).metadata();assert.equal(meta.format,'jpeg');assert.equal(meta.width,600);assert.equal(meta.height,480);
 });
 test('WeChat forwarding of SIAI leaderboard keeps the public ranking page',()=>{
  const share=require('../miniapp/utils/share.js');

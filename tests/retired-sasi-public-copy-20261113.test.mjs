@@ -33,7 +33,7 @@ const home=readFileSync("components/HomeProblemHub.tsx","utf8");
 assert.doesNotMatch(home.replace(/function submit\(e:FormEvent\)\{[^\n]+/,""),/aivideo|texttovideo|imagetovideo|视频生成|文生视频|图生视频/i);
 assert.ok(home.includes('new URL("/siai",location.origin)'),"model queries must retain SIAI discovery routing");
 const market=readFileSync("components/SasiOpenMarketplace.tsx","utf8");
-assert.match(market,/\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
+assert.match(market,/\/images\/global-scene-20261114\.webp/);
 console.log("RETIRED_SASI_PUBLIC_COPY_AND_SIX_GEO_TERMS=PASS");
 
 
@@ -51,7 +51,7 @@ const productCopy=readFileSync("lib/tools/product-copy.ts","utf8");
 assert.doesNotMatch(productCopy,/'url-to-video'/);
 
 const globalHomeGrowth=readFileSync("components/HomeGlobalGrowth.tsx","utf8");
-for(const term of ["124 个工具目录","llms.txt","llms-full.txt","WordPress","JS Widget","Before / After","Celestial 小仙女","SIAI","SASI 智能软件市场"]){
+for(const term of ["124 个工具目录","llms.txt","llms-full.txt","WordPress","JS Widget","Before / After","global-scene-20261114.webp","SIAI","SASI 智能软件市场"]){
  assert.ok(globalHomeGrowth.includes(term),"homepage growth experience missing "+term);
 }
 assert.doesNotMatch(globalHomeGrowth,/R6\s*\+?\s*R8|R6|R8|内部工程|部署平台|候选版本/i);
