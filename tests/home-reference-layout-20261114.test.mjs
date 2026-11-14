@@ -5,9 +5,9 @@ const read=p=>readFileSync(p,'utf8');
 test('reference homepage composition removes retired homepage blocks and preserves destinations',()=>{
  const home=read('app/page.tsx'),localized=read('app/[locale]/page.tsx'),hub=read('components/HomeProblemHub.tsx'),growth=read('components/HomeGlobalGrowth.tsx'),seo=read('components/HomeSeoAnswers.tsx'),nav=read('components/Nav.tsx'),css=read('app/home-reference-20261114.css');
  assert.match(home,/<HomeProblemHub\/>/);assert.match(localized,/<HomeProblemHub\/>/);assert.match(hub,/<HomeGlobalGrowth lang=\{lang\}\/>/);assert.match(home,/#global-growth-entrances/);
- assert.match(nav,/homeLayout\s*\?/);assert.match(nav,/HOME_NAV_HREFS\.map/);assert.match(nav,/function homeNavHref/);assert.match(nav,/homeNavHref\(lang,"\/"\)/);assert.match(nav,/homeNavHref\(lang,"\/tools"\)/);assert.match(home,/<main>/);assert.match(localized,/<main>/);
+ assert.match(nav,/homeLayout\s*\?/);assert.match(nav,/data-home-sidebar/);assert.match(nav,/lx-home-fixed-sidebar/);assert.match(nav,/lx-home-fixed-topbar/);assert.match(nav,/PublicAnnouncementTicker/);assert.match(nav,/function homeNavHref/);assert.doesNotMatch(nav,/lx-home-nav-links/);assert.match(home,/<main>/);assert.match(localized,/<main>/);
  assert.match(hub,/<SiaiSearchDiscovery variant="home"\/>/);assert.match(hub,/SIAI_DISCOVERY\[lang\]/);assert.doesNotMatch(hub,/FOOTER_CATALOG|taskTitle|finishNow/);
- assert.match(hub,/全球智能服务与实用工具平台/);assert.match(hub,/<HomeHeroVisual\/>/);assert.match(hub,/const globalSiaiEntry=\{href:"\/siai",icon:"products"\}/);assert.match(hub,/data-testid="home-global-siai-entry"/);assert.doesNotMatch(hub,/<a href="\/(?:siai|tools\/pass)"/);
+ assert.match(hub,/全球智能服务与实用工具平台/);assert.match(hub,/<HomeHeroVisual\/>/);assert.match(growth,/data-testid="home-siai-categories"/);assert.match(growth,/lx-home-siai-category-card/);assert.match(hub,/const globalSiaiEntry=\{href:"\/siai",icon:"products"\}/);assert.match(hub,/data-testid="home-global-siai-entry"/);assert.doesNotMatch(hub,/<a href="\/(?:siai|tools\/pass)"/);
  assert.match(growth,/<HomeToolPassMembership\/>/);assert.match(growth,/lx-home-distribution-globe/);assert.match(growth,/全球智能分发与合作/);for(const label of ["AI 搜索说明","完整平台资料","公开数据接口","WordPress 插件","网站嵌入组件","排行榜更新订阅","二维码分享","分享来源统计"])assert.ok(growth.includes(label),"growth link missing "+label);
  const packageJson=JSON.parse(read("package.json")),pluginBuilder=read("scripts/prepare-wordpress-plugin.cjs");
  for(const destination of ["/llms.txt","/llms-full.txt","/siai-openapi.json","/downloads/lingxifield-siai-wordpress.zip","/widgets/lingxifield-v1.js","/siai/updates.xml","/partners"])assert.ok(growth.includes(destination),"missing public destination "+destination);
@@ -36,8 +36,10 @@ test('SASI marketplace and seller workspace retain verified data and readable re
  assert.match(market,/styles\.uploadGrid/);
  assert.match(market,/styles\.uploadTile/);
  assert.match(market,/activeDraft/);
- assert.match(market,/最大 30MB/);
- assert.match(market,/请放入软件 ZIP 包内/);
+ assert.match(market,/ZIP_REQUIRED_MAX_30MB/);
+ assert.match(market,/LICENSE_PDF_TXT_PNG_MAX_20MB/);
+ assert.ok(market.includes("SASI_LICENSE/"));
+ assert.match(market,/许可文件可单独选择/);
  assert.match(market,/详情图（可选，最多4张）/);
  assert.match(market,/styles\.detailUploadRow/);
  assert.match(css,/\.detailUploadRow\{/);

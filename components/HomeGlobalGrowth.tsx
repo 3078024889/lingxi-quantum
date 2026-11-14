@@ -330,6 +330,33 @@ const DISTRIBUTION_COPY:Record<LingxiLang,{title:string;steps:string[]}>={
  ar:{title:"التوزيع العالمي والشراكات",steps:["البحث","بحث الذكاء الاصطناعي","التوزيع","المحتوى","الشركاء","العودة"]}
 };
 
+const SIAI_CATEGORY_COPY={
+ zh:{
+  title:"全球 AI / SI 工具怎么选？按任务比较六类产品",
+  intro:"从写作、编程、图片、视频到模型 API，按功能、价格、免费额度、地区和商用条件找到适合的产品。",
+  cards:[
+   {title:"全球 AI 行情平台",description:"查看 AI 软件、模型 API 和视频创作工具的套餐价格、免费额度与功能说明，按预算快速找到适用产品。"},
+   {title:"全球 AI 排行榜",description:"想写文章、做演示、画图片、生成视频或编程？按实际任务比较不同工具的特色和操作方式。"},
+   {title:"全球 SI 排行榜",description:"需要长文分析、代码辅助或图像理解？查看不同 SI / AI 工具擅长的任务和代表模型。"},
+   {title:"全球 SI 行情平台",description:"按使用地区、付款方式和商用条件筛选工具，先确认地区可用性与服务限制。"},
+   {title:"全球 SIAI 行情平台",description:"从聊天助手到图像、视频、语音和模型 API，一起比较可用功能、价格和免费试用方案。"},
+   {title:"全球 SIAI 排行榜",description:"灵犀场汇集不同用途的全球 SI / AI 工具，选择产品后即可查看功能详情并进入厂商官网。"}
+  ]
+ },
+ en:{
+  title:"How to choose global AI / SI tools? Compare six categories by task",
+  intro:"Compare writing, coding, image, video and model APIs by capability, pricing, free limits, regional access and commercial terms.",
+  cards:[
+   {title:"Global AI Market Intelligence",description:"Compare plans, free allowances and capabilities for AI software, model APIs and video tools."},
+   {title:"Global AI Rankings",description:"Find tools for writing, presentations, images, video generation and programming by task."},
+   {title:"Global SI Rankings",description:"Compare long-context analysis, coding assistance, image understanding and representative models."},
+   {title:"Global SI Market Intelligence",description:"Check regional availability, payment methods and commercial-use conditions before choosing."},
+   {title:"Global SIAI Market Intelligence",description:"Compare chat, image, video, voice and model APIs by features, prices and free trials."},
+   {title:"Global SIAI Rankings",description:"Explore global SI / AI tools, review product details and continue to official provider pages."}
+  ]
+ } 
+} as const;
+
 export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  const copy=COPY[lang]||COPY.en;
  const security=SECURITY_COPY[lang]||SECURITY_COPY.en;
@@ -390,6 +417,19 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
      <Link className="lx-home-market-card" href="/partners"><LingxiMiniIcon name={marketIcons[4]} size="tiny" className="lx-home-market-icon"/><span><strong>{lang==="zh"?"全球合作网络":"Partner network"}</strong><small>{lang==="zh"?"连接网站、创作者与产品合作伙伴":"Connect websites, creators and product teams"}</small></span><b>→</b></Link>
     </nav>
     <div className="lx-home-growth-flywheel" aria-label={copy.flywheelTitle}><strong>{copy.flywheelTitle}</strong><div>{copy.flywheel.map((step,index)=><span key={step}><b>{step}</b>{index<copy.flywheel.length-1&&<i aria-hidden="true">→</i>}</span>)}</div></div>
+   </section>
+   <section className="lx-home-siai-categories" aria-labelledby="lx-home-siai-categories-title" data-testid="home-siai-categories">
+    <div className="lx-home-siai-heading">
+     <p className="lx-home-section-eyebrow">GLOBAL SIAI DIRECTORY</p>
+     <h2 id="lx-home-siai-categories-title">{(lang==="zh"?SIAI_CATEGORY_COPY.zh:SIAI_CATEGORY_COPY.en).title}</h2>
+     <p>{(lang==="zh"?SIAI_CATEGORY_COPY.zh:SIAI_CATEGORY_COPY.en).intro}</p>
+    </div>
+    <div className="lx-home-siai-category-grid">
+     {(lang==="zh"?SIAI_CATEGORY_COPY.zh:SIAI_CATEGORY_COPY.en).cards.map((item,index)=><Link href="/siai" className="lx-home-siai-category-card" key={item.title}>
+      <LingxiMiniIcon name={(["recognition","sparkles","compare","book","connections","products"] as LingxiIconName[])[index]} size="title" className="lx-home-siai-category-icon"/>
+      <span><strong>{item.title}</strong><small>{item.description}</small></span><b aria-hidden="true">→</b>
+     </Link>)}
+    </div>
    </section>
    <section className="lx-home-popular-tools" aria-labelledby="lx-home-tools-title">
     <div><h2 id="lx-home-tools-title">{copy.toolsTitle}</h2><p>{copy.passLead}</p></div>
