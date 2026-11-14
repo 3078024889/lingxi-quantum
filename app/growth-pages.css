@@ -411,5 +411,5 @@ html[data-theme="dark"] .lx-home-siai-entry,html[data-theme="dark"] .lx-home-too
 }
 @media(max-width:480px){.lx-home-growth-grid{grid-template-columns:1fr}.lx-home-market-strip{grid-template-columns:1fr}.lx-home-growth-card{min-height:0}.lx-home-plan-grid{gap:7px}.lx-home-plan-card{min-height:128px}}
 
-/* Reference homepage: five service pillars and a full-width ToolPass row. */
-.lx-home-feature-strip{grid-template-columns:repeat(5,minmax(0,1fr))}.lx-home-toolpass-wrap{width:100%;margin:0}
+/* Reference homepage: six service pillars and a full-width ToolPass row. */
+.lx-home-feature-strip{grid-template-columns:repeat(6,minmax(0,1fr))}.lx-home-toolpass-wrap{width:100%;margin:0}
