@@ -27,7 +27,7 @@ export default function HomeProblemHub(){
   if(/工具包|toolpass|会员|无限使用|membership/i.test(value)){router.push(`/tools/pass?lang=${lang}`);return}
   router.push(isLikelyToolQuery(value)?`/tools?q=${encoded}&lang=${lang}`:`/tools?q=${encoded}&lang=${lang}`);
  }
- return <section className="lx-home-hero-section" aria-labelledby="lx-home-hero-title">
+ return <><section className="lx-home-hero-section" aria-labelledby="lx-home-hero-title">
   <div className="lx-home-hero-grid"><div className="lx-home-hero-copy">
    <p className="lx-home-hero-brand">LINGXIFIELD <span>·</span> GLOBAL INTELLIGENT SERVICES</p>
    <h1 id="lx-home-hero-title">{copy.title}</h1><p className="lx-home-hero-lead">{copy.lead}</p>
@@ -36,5 +36,5 @@ export default function HomeProblemHub(){
    <div className="lx-home-hero-proof">{copy.proof.map(item=><span key={item}><b aria-hidden="true">✓</b>{item}</span>)}</div>
    <form onSubmit={submit} className="lx-home-question-search" data-testid="home-task-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} aria-label={copy.placeholder} placeholder={copy.placeholder}/><button type="submit">{copy.begin}</button></form>
   </div><HomeHeroVisual/></div>
- </section><HomeGlobalGrowth lang={lang}/>;
+ </section><HomeGlobalGrowth lang={lang}/></>;
 }
