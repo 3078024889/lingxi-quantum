@@ -14,6 +14,8 @@ test('reference homepage composition removes retired homepage blocks and preserv
  assert.ok(pluginBuilder.includes('"public","downloads","lingxifield-siai-wordpress.zip"'));assert.match(packageJson.scripts.prebuild,/prepare-wordpress-plugin/);
  assert.equal(read("public/widgets/lingxifield-v1.js"),read("integrations/wordpress/lingxifield-widgets/assets/lingxifield-v1.js"));
  const zh=growth.slice(growth.indexOf(' zh:{'),growth.indexOf(' en:{'));
+ const copyStart=growth.indexOf("const COPY:Record"),copyEnd=growth.indexOf("const SECURITY_COPY",copyStart),copySource=growth.slice(copyStart,copyEnd),locales=["zh","en","ja","ko","fr","de","es","pt","ar"];
+ for(let i=0;i<locales.length;i++){const start=copySource.indexOf(" "+locales[i]+":{"),end=i+1<locales.length?copySource.indexOf(" "+locales[i+1]+":{",start+1):copySource.indexOf("\n};",start);assert.ok(start>=0,"missing locale "+locales[i]);assert.equal((copySource.slice(start,end<0?copySource.length:end).match(/icon:"/g)||[]).length,5,"feature icons "+locales[i]);}
  assert.doesNotMatch(zh,/tag:"(?:SEO|GEO|NETWORK|STORIES)"|description:"[^"]*(?:WordPress|JS Widget|RSS|API)[^"]*"/i);
  assert.equal((growth.match(/className="lx-home-market-card"/g)||[]).length,5);assert.match(growth,/icon:"privacy"/);assert.match(growth,/const features:Feature\[\]=/);assert.doesNotMatch(growth,/Celestial 小仙女|JS Widget;API;RSS/);assert.match(growth,/growthCardIcons:LingxiIconName\[\]/);assert.match(growth,/marketIcons:LingxiIconName\[\]/);assert.match(css,/\.lx-home-feature-strip\{display:grid;grid-template-columns:repeat\(6/);assert.match(css,/\.lx-home-growth-card-icon\{/);
  assert.match(seo,/lx-home-faq-layout/);assert.match(seo,/FAQ_ASIDE/);assert.match(seo,/FAQ_ICONS/);
