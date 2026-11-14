@@ -31,3 +31,18 @@ test('SASI marketplace and seller workspace retain verified data and readable re
  assert.match(css,/\.featuredShelf\{display:grid;grid-template-columns:minmax\(0,1\.55fr\)/);assert.match(css,/\.featuredMiniCard\{/);assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(250px/);assert.match(css,/\.sellerGuideCard p\{font-size:15px/);
  assert.match(css,/\.marketFeature strong\{font-size:16px/);assert.match(css,/\.sellerHeroCopy h1\{font-size:clamp\(32px/);
 });
+
+
+test('reference-scale homepage and seller typography remains readable',()=>{
+ const home=read('app/home-reference-20261114.css');
+ const seller=read('components/SasiOpenMarketplace.module.css');
+ assert.match(home,/\.lx-home-hero-copy h1\{font-size:clamp\(40px,3\.35vw,54px\)/);
+ assert.match(home,/\.lx-home-hero-lead\{font-size:18px/);
+ assert.match(home,/\.lx-home-faq-copy h3\{font-size:18px!important/);
+ assert.match(home,/\.lx-home-faq-copy p\{font-size:16px!important/);
+ assert.match(home,/\.lx-seo-question-grid\{display:grid;grid-template-columns:repeat\(3/);
+ assert.match(seller,/\.formCard input:not\(\[type="checkbox"\]\),\.formCard textarea,\.formCard select,\.payoutForm input,\.payoutForm select\{font-size:15px/);
+ assert.match(seller,/\.sellerGuideCard p\{font-size:14px/);
+ assert.match(seller,/\.sellerGuideSteps strong\{font-size:14px/);
+ assert.match(seller,/\.sellerBenefits strong\{font-size:13px/);
+});
