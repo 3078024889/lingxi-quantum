@@ -19,7 +19,7 @@ export default function SasiSoftwareMarket(){
   .then(r=>r.ok?r.json():null).then(v=>{if(live&&v)setState(v)})
   .catch(()=>{});return()=>{live=false}},[]);
  const product=SASI_SOFTWARE_CATALOG[0];
- const visualVersion=product.titleZh.match(/SI\s*[\d.]+/i)?.[0]??"MT5 EA";
+ const visualVersion=product.titleZh.match(/SI\s*[\d.]+/i)?.[0]??"COPERNICUS SI";
  const ready=state?.products?.[product.id]?.available===true;
  return <main className={styles.main}><div className={styles.wrap}>
   <section className={styles.hero}>

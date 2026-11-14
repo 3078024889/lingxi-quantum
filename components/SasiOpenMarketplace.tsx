@@ -112,7 +112,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const activeDraft=mine.find(item=>item.id===activeDraftId&&["draft","rejected"].includes(item.status))??null;
  const cnyGross=payments?.balances?.CNY?.grossMinor??0;
  const usdGross=payments?.balances?.USD?.grossMinor??0;
- const featuredVisualTitle=(zh?featured.titleZh:featured.titleEn).match(/SI\s*[\d.]+/i)?.[0]??"MT5 EA";
+ const featuredVisualTitle=(zh?featured.titleZh:featured.titleEn).match(/SI\s*[\d.]+/i)?.[0]??"COPERNICUS SI";
  const post=async(url:string,payload:unknown,method:"POST"|"PATCH"="POST")=>{
   const r=await fetch(url,{method,headers:{"content-type":"application/json"},body:JSON.stringify(payload),credentials:"same-origin"});
   const result=await r.json().catch(()=>null);
