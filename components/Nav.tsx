@@ -143,7 +143,107 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
     } catch {
       setSignedIn(false);
     }
-    return (
+    return () => { alive = false; };
+  }, [pathname]);
+
+  useEffect(() => {
+    const h=(e:Event)=>{
+      const detail=(e as CustomEvent<{display_name?:string;avatar_url?:string}>).detail || {};
+      if (detail.display_name !== undefined) setDisplayName(String(detail.display_name || ""));
+      if (detail.avatar_url !== undefined) setAvatarUrl(String(detail.avatar_url || ""));
+    };
+    window.addEventListener("lingxi:profile",h);
+    return()=>window.removeEventListener("lingxi:profile",h);
+  }, []);
+
+  const agent =
+    pathname === "/sasi" ||
+    pathname.startsWith("/sasi/") ||
+    pathname.startsWith("/ai-");
+
+  const titles = [t("start"), t("sasi"), t("account")];
+  const mt = menuText[lang];
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    sessionStorage.setItem("lx-global-search", q);
+    router.push(isMoneyAdmin&&/管理后台|资金看板|退款管理|提现管理|money admin|funds dashboard|admin dashboard/i.test(q)?"/account/money-admin":`/tools?q=${encodeURIComponent(q)}`);
+  }
+
+  async function signOut() {
+    try { const {error}=await createClient().auth.signOut({scope:"global"}); if(error)throw error; window.location.replace("/account"); return; } catch { setMenuOpen(false); }
+  }
+
+  async function switchAccount() {
+    try { const {error}=await createClient().auth.signOut({scope:"global"}); if(error)throw error; window.location.replace("/account?mode=signin&switch=1"); return; } catch { setMenuOpen(false); }
+  }
+
+  const side = (
+    <>
+      <div className="lx11-brand-row">
+        <Link href="/" className="lx11-brand">
+          <NextImage src="/images/lingxifield-logo.png" alt=""  width={64} height={64}/>
+          <span>
+            <b>{lang==="zh"?"灵犀场 LINGXIFIELD":t("brand")}</b>
+            <small>{agent ? "SASI" : (lang==="zh"?"全球 SIAI · SASI · 免费在线工具":"SIAI · SASI · Online Tools")}</small>
+          </span>
+        </Link>
+        <button className="lx11-close lg:hidden" onClick={() => setOpen(false)}>×</button>
+      </div>
+
+      <div className="lx11-nav-scroll">
+        <Link className="lx11-new-task" href="/sasi"><LingxiMiniIcon name="new" size="nav"/> <span>{softwareNavNames[lang]}</span></Link>
+
+        {groups.map((group, index) => (
+          <section key={index} className="lx11-group">
+            <div className="lx11-group-title">{titles[index]}</div>
+            {group.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`lx11-link ${active(pathname, item.href) ? "is-active" : ""}`}
+              >
+                <LingxiMiniIcon name={item.icon} size="nav" className="lx11-nav-icon"/>
+                <span>{item.href==="/siai"?marketNavNames[lang]:item.href==="/sasi"?softwareNavNames[lang]:item.href==="/sasi/seller"?sellerNavNames[lang]:t(item.key)}</span>
+              </Link>
+            ))}
+          </section>
+        ))}
+        <Link href="/tools/pass" className={`lx11-link ${pathname==="/tools/pass"?"is-active":""}`}><LingxiMiniIcon name="tools" size="nav" className="lx11-nav-icon"/><span>{({
+          zh:"全场实用工具包",en:"All-tools Pass",ja:"全ツール共通パス",ko:"전체 도구 이용권",fr:"Pass tous outils",de:"Werkzeug-Pass",es:"Pase de herramientas",pt:"Passe de ferramentas",ar:"باقة جميع الأدوات"
+        } as Record<typeof lang,string>)[lang]}</span></Link>
+        {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
+        {!isMoneyAdmin&&signedIn&&isComHost&&<a href="https://lingxifield.cn/account/money-admin" className="lx11-link" title={lang==="zh"?"海外站尚未完成管理员后端配置，转至共用数据库的国内安全控制台":"Global admin backend pending; open China control plane"}><LingxiMiniIcon name="wallet" size="nav"/><span>{lang==="zh"?"管理后台备用入口 ↗":"Admin backup console ↗"}</span></a>}
+      </div>
+
+      <div style={{padding:"10px 12px 4px"}}>
+        <button type="button" onClick={()=>window.dispatchEvent(new Event("lingxifield:feedback"))} style={{width:"100%",display:"flex",alignItems:"center",gap:8,border:"1px solid rgba(150,125,70,.20)",borderRadius:12,padding:"9px 12px",background:"rgba(255,255,255,.55)",fontSize:14,fontWeight:500,lineHeight:"20px",cursor:"pointer"}}><span aria-hidden="true" style={{fontSize:12}}>✦</span><span>{supportCopy(lang).tell}</span></button>
+        <Link href="/account/support" style={{display:"block",padding:"7px 12px 0",fontSize:12,opacity:.55}}>{supportCopy(lang).mine}</Link>
+      </div>
+
+      <div className="lx11-sidebar-bottom">
+        <div className="lx11-theme-row">
+          <button onClick={() => setTheme("light")} className={theme === "light" ? "is-active" : ""}>☀ {t("light")}</button>
+          <button onClick={() => setTheme("dark")} className={theme === "dark" ? "is-active" : ""}>🌙 {t("dark")}</button>
+        </div>
+        <label className="lx11-lang-label">{t("language")}</label>
+        <select
+          value={lang}
+          onChange={(event) => setLang(event.target.value as LingxiLang)}
+          className="lx11-lang-select"
+        >
+          {(Object.keys(LANG_NAMES) as LingxiLang[]).map((key) => (
+            <option key={key} value={key}>{LANG_NAMES[key]}</option>
+          ))}
+        </select>
+        <CurrencySelector />
+      </div>
+    </>
+  );
+
+  return (
     <>
       {homeLayout ? (
        <header className="lx-home-nav" data-home-nav>
