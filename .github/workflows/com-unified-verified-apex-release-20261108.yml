@@ -274,3 +274,4 @@ jobs:
 # Approved 20261114 SASI seller workspace release: exact source 5a50b934fe5271c9b0f33e5accef42f339928924 must pass the isolated workers.dev canary before apex cutover.
 # COM_PINNED_SASI_RELEASE_TRIGGER
 # 20261114 afternoon three-page verified release: exact application source 3ba9a96cd4c275adc0d7d7ce04691c7013b27d2c.
+# Exact content-gate correction: verified canary application source 2372ef933c6754a306e42902bf68ceb972558bfa.
