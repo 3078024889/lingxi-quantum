@@ -41,6 +41,8 @@ test('seller workspace collapses cleanly on mobile without overflowing its main 
  const hero=page.getByTestId('seller-workspace-hero');
  await expect(hero).toBeVisible({timeout:30000});
  await expect(hero.getByRole('heading',{name:'卖家工作台'})).toBeVisible({timeout:30000});
+ const heroColumns=await hero.evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
+ expect(heroColumns).toBe(1);
  const grid=page.getByTestId('seller-workspace-grid');
  const layout=await grid.evaluate(el=>({columns:getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
  expect(layout.columns).toBe(1);
