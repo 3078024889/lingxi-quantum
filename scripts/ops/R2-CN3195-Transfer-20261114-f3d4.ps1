@@ -14,7 +14,7 @@ $ReleaseBase = "https://github.com/3078024889/lingxi-quantum/releases/download/$
 
 $Expected = @{
     'cn3194-release-manifest.env' = @{ Bytes = 621; Sha = '946e50e2e5f0a3fcde5a112844afe54bd76e2aa0504a6f799d3c135d693dc068' }
-    'cn-20261110-unified-standalone.tar.gz' = @{ Bytes = 338041752; Sha = '827ff4489f2bf9a076ff40a2d4fd8e2ef99154c541015e5f814ab1c7d6e84fd5d' }
+    'cn-20261110-unified-standalone.tar.gz' = @{ Bytes = 338041752; Sha = '827ff4489f2bf9a076ff40a2d4fd8e2ef99154c541015e5f814ab1c7d6e84fd5' }
     'cn-20261110-unified-standalone.sha256' = @{ Bytes = 104; Sha = '8fea94772405f122ebe751aa38646047a5cdc9065258d163d84f70611409c518' }
     'ecs-cn3194-unified-standalone-upgrade-20261110.sh' = @{ Bytes = 26803; Sha = '5fe919ebf75c52c479abf8193d860d1627190e44c25121a0f353d1274ea99a18' }
     'cn-payment-activate-3194-20261110.sh' = @{ Bytes = 12147; Sha = '64762dd7378083f55926a912502d99a8c28da71d3494c2e7ea327c9e8fd29172' }
