@@ -185,6 +185,11 @@ jobs:
             sleep 1
           done
           [ "$ready" = 1 ] || { cat "$RUNNER_TEMP/cn3319.log";exit 1; }
+          for path in / /sasi /sasi/seller; do
+            curl --noproxy '*' -fsS --max-time 30 "http://127.0.0.1:3319$path" |
+              grep -F 'data-release-design="20261114-afternoon-three-pages"' > /dev/null
+          done
+          echo CN3194_AFTERNOON_THREE_PAGES_BUILD_ID_PASS
           for path in / /tools /siai /sasi /about /account/software /announcements /tools/pass /api/sasi/marketplace/listings /ai-wallet /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "PUBLIC_LOCAL_ROUTE:$path:$code"

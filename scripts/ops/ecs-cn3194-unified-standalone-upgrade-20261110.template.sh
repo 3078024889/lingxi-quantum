@@ -156,6 +156,15 @@ probe(){
  code /tools 200
  code /siai 200
  code /sasi 200
+ code /sasi/seller 200
+ for path in / /sasi /sasi/seller;do
+  if ! curl -fsS --noproxy '*' --connect-timeout 3 --max-time 25 \
+   -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' "http://127.0.0.1:$PORT$path" |
+   grep -F 'data-release-design="20261114-afternoon-three-pages"' > /dev/null;then
+   echo "CN_AFTERNOON_BUILD_ID_MISMATCH:$PORT:$path" >&2;return 1
+  fi
+ done
+ echo "CN_AFTERNOON_THREE_PAGES_BUILD_ID_PASS:$PORT"
  code /discover/sasi-software-marketplace 200
  code /en/discover/mt5-ea-source-code 200
  code /ja/discover/software-licensing-delivery 200
