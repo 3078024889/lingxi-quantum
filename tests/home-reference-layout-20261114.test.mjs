@@ -37,7 +37,8 @@ test('SASI marketplace and seller workspace retain verified data and readable re
  assert.match(market,/styles\.uploadTile/);
  assert.match(market,/activeDraft/);
  assert.match(market,/ZIP_REQUIRED_MAX_30MB/);
- assert.match(market,/LICENSE_PDF_TXT_PNG_MAX_20MB/);\n assert.ok(market.includes("SASI_LICENSE/"));\n assert.match(market,/许可文件可单独选择/);
+ assert.match(market,/LICENSE_PDF_TXT_PNG_MAX_20MB/);
+ assert.ok(market.includes("SASI_LICENSE/"));\n assert.match(market,/许可文件可单独选择/);
  assert.match(market,/详情图（可选，最多4张）/);
  assert.match(market,/styles\.detailUploadRow/);
  assert.match(css,/\.detailUploadRow\{/);
