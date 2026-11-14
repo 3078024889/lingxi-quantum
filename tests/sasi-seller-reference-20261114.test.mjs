@@ -51,7 +51,7 @@ test("seller layout includes desktop density and responsive breakpoints", () => 
   assert.match(styles, /\.main \.sellerHero\{[^}]*display:grid/);
   assert.doesNotMatch(styles, /\.sellerHero\{position:relative;display:block/);
   assert.match(styles, /\.sellerJoinArtwork\{/);
-  assert.doesNotMatch(styles, /sellerHeroGlobe|sellerHeroTrophy|sellerHeroScreen|sellerHeroCloud|sellerHeroOrbit|sellerJoinShield|sellerJoinOrbit|sellerJoinSpark/);
+  assert.doesNotMatch(styles, /sellerHeroGlobe|sellerHeroTrophy|sellerHeroScreen|sellerHeroCloud|sellerHeroOrbit|sellerJoinShield|sellerJoinOrbit|sellerJoinSpark|sellerScene/);
   assert.match(styles, /@media\s*\(max-width:\s*1360px\)/);
   assert.match(styles, /@media\s*\(max-width:\s*760px\)/);
 });
