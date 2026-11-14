@@ -9,7 +9,9 @@ test('seller navigation opens the reference seller workspace with real business 
  await expect(sellerLink).toHaveAttribute('href','/sasi/seller');
  await sellerLink.click();
  await expect(page).toHaveURL(/\/sasi\/seller/);
- await expect(page.getByRole('heading',{name:'卖家工作台'}).first()).toBeVisible({timeout:30000});
+ const hero=page.getByTestId('seller-workspace-hero');
+ await expect(hero).toBeVisible({timeout:30000});
+ await expect(hero.getByRole('heading',{name:'卖家工作台'})).toBeVisible({timeout:30000});
  const heroArtwork=page.getByTestId('seller-hero-artwork');
  await expect(heroArtwork).toBeVisible();
  await expect(heroArtwork).toHaveAttribute('src','/images/sasi/sasi-market-hero-lingxifield.png');
@@ -36,7 +38,9 @@ test('seller workspace collapses cleanly on mobile without overflowing its main 
  test.setTimeout(90000);
  await page.setViewportSize({width:390,height:844});
  await page.goto('/sasi/seller?lang=zh');
- await expect(page.getByRole('heading',{name:'卖家工作台'}).first()).toBeVisible({timeout:30000});
+ const hero=page.getByTestId('seller-workspace-hero');
+ await expect(hero).toBeVisible({timeout:30000});
+ await expect(hero.getByRole('heading',{name:'卖家工作台'})).toBeVisible({timeout:30000});
  const grid=page.getByTestId('seller-workspace-grid');
  const layout=await grid.evaluate(el=>({columns:getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
  expect(layout.columns).toBe(1);
