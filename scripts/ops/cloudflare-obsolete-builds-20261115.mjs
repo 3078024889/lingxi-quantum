@@ -10,8 +10,8 @@ async function api(path,method='GET'){
 const scripts=(await api(`/accounts/${account}/workers/scripts`)).result;
 if(!Array.isArray(scripts)||scripts.length>500)throw Error('UNEXPECTED_WORKER_INVENTORY');
 const domains=(await api(`/accounts/${account}/workers/domains`)).result;
-const zones=await api('/zones?per_page=50');
-if(zones.result_info?.total_pages>1)throw Error('ZONE_PAGINATION_REQUIRES_REVIEW');
+const zones=await api('/zones?name=lingxifield.com&per_page=50');
+if(zones.result.length!==1||zones.result[0].name!=='lingxifield.com')throw Error('COM_ZONE_SCOPE_MISMATCH');
 const routes=[];
 for(const z of zones.result){for(const r of (await api(`/zones/${z.id}/workers/routes`)).result)routes.push({zone:z.name,pattern:r.pattern,script:r.script});}
 const bindings=[];
@@ -22,7 +22,9 @@ for(const worker of scripts){
 const routed=new Set([...routes.map(x=>x.script),...domains.map(x=>x.service)].filter(Boolean));
 const live='lingxifield-com-celestial-20261109';
 if(!routed.has(live))throw Error('CURRENT_PRODUCTION_ROUTE_NOT_FOUND');
-const safeCandidates=scripts.filter(x=>/^lingxifield-com-/.test(x.id)&&x.id!==live&&!routed.has(x.id)&&!bindings.some(b=>b.to===x.id));
+// Only isolated exact-source canaries from this site's release pipeline are
+// eligible. Older shared workers can serve other hosts and are inventory-only.
+const safeCandidates=scripts.filter(x=>/^lingxifield-com-canary-[0-9a-f]{12}$/.test(x.id)&&x.id!==live&&!routed.has(x.id)&&!bindings.some(b=>b.to===x.id));
 const inventory={workers:scripts.map(x=>({name:x.id,modifiedOn:x.modified_on})),routes,domains:domains.map(x=>({hostname:x.hostname,service:x.service,environment:x.environment})),bindings,safeCandidates:safeCandidates.map(x=>({name:x.id,modifiedOn:x.modified_on}))};
 console.log('CLOUDFLARE_OBSOLETE_INVENTORY '+JSON.stringify(inventory));
 const approvedPath='scripts/ops/cloudflare-obsolete-approved-20261115.json';
