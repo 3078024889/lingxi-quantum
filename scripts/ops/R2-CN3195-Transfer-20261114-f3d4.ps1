@@ -65,7 +65,16 @@ function Download-Asset([string]$Name, [string]$Path, [Int64]$Bytes, [string]$Sh
         Write-Host "LOCAL_ASSET_CACHE_REJECTED: $Name"
     }
     $tmp = "$Path.downloading"
-    Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
+    if (Test-Path -LiteralPath $tmp -PathType Leaf) {
+        $tmpItem = Get-Item -LiteralPath $tmp
+        if ($tmpItem.Length -eq $Bytes -and (Get-Sha256 $tmp) -ceq $Sha) {
+            Move-Item -LiteralPath $tmp -Destination $Path -Force
+            Write-Host "LOCAL_DOWNLOADED_ASSET_CACHE_SHA256_PASS: $Name"
+            return
+        }
+        Write-Host "LOCAL_DOWNLOADED_ASSET_CACHE_REJECTED: $Name"
+        Remove-Item -LiteralPath $tmp -Force
+    }
     Write-Host "DOWNLOAD_EXACT_GITHUB_RELEASE_ASSET: $Name ($Bytes bytes)"
     & curl.exe --fail --location --retry 8 --retry-delay 4 --connect-timeout 25 --max-time 3600 --output $tmp $Url
     if ($LASTEXITCODE -ne 0) { throw "RELEASE_ASSET_DOWNLOAD_FAILED: $Name" }
