@@ -242,7 +242,10 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     if (response.status !== 200 || html.length < 5000) {
       throw Error("COM_" + phase + "_REFERENCE_PAGE_UNAVAILABLE:" + page.path + ":" + response.status);
     }
-    const missing = (page.required || []).filter(term => !html.includes(term));
+    // A visual line break must not make a complete heading fail the content
+    // gate. Keep all required labels, assets, links and build markers enforced.
+    const content = html.replace(/<br\s*\/?>/gi, "");
+    const missing = (page.required || []).filter(term => !content.includes(term));
     const missingAny = (page.requiredAny || [])
       .filter(group => !group.some(term => html.includes(term)))
       .map(group => group.join(" | "));
