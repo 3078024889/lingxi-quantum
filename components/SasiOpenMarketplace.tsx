@@ -38,6 +38,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const [seller,setSeller]=useState<Seller|null>(null);
  const [payments,setPayments]=useState<Payout|null>(null);
  const [filter,setFilter]=useState("all"),[search,setSearch]=useState("");
+ const [sort,setSort]=useState<"newest"|"price-asc"|"price-desc">("newest");
  const [displayName,setDisplayName]=useState("");
  const [adult,setAdult]=useState(false),[terms,setTerms]=useState(false);
  const [title,setTitle]=useState(""),[description,setDescription]=useState("");
@@ -93,8 +94,16 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    .catch(()=>{});
   return()=>{current=false};
  },[listings]);
- const visible=useMemo(()=>listings.filter(x=>(filter==="all"||x.category===filter)&&
- (x.title+" "+x.description).toLowerCase().includes(search.trim().toLowerCase())),[listings,filter,search]);
+ const visible=useMemo(()=>{
+  const query=search.trim().toLowerCase();
+  const matched=listings.filter(x=>(filter==="all"||x.category===filter)&&
+   (x.title+" "+x.description).toLowerCase().includes(query));
+  return matched.sort((a,b)=>{
+   if(sort==="price-asc")return a.price_cny_minor-b.price_cny_minor;
+   if(sort==="price-desc")return b.price_cny_minor-a.price_cny_minor;
+   return Date.parse(b.published_at||b.created_at)-Date.parse(a.published_at||a.created_at);
+  });
+ },[listings,filter,search,sort]);
  const featuredSide=visible.slice(0,2);
  const remainingVisible=visible.slice(featuredSide.length);
  const featuredFallbacks=featuredSide.length===0?["browse","publish"]:featuredSide.length===1?["publish"]:[];
@@ -322,8 +331,19 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    </div>
   </section>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
-   <div className={styles.find}><input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
-   <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)}</button>)}</div>
+   <div className={styles.find}>
+    <input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/>
+    <select data-testid="sasi-sort" className={styles.sortSelect} value={sort} onChange={e=>setSort(e.target.value as "newest"|"price-asc"|"price-desc")} aria-label={sasiSoftwareUiText(lang,"排序方式","Sort listings")}>
+     <option value="newest">{sasiSoftwareUiText(lang,"最新上架","Newest")}</option>
+     <option value="price-asc">{sasiSoftwareUiText(lang,"人民币价格：从低到高","Price: low to high")}</option>
+     <option value="price-desc">{sasiSoftwareUiText(lang,"人民币价格：从高到低","Price: high to low")}</option>
+    </select>
+   </div></div>
+   <div className={styles.filters} aria-label={sasiSoftwareUiText(lang,"软件分类筛选","Software category filters")}>
+    <button type="button" aria-pressed={filter==="all"} className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")} <span className={styles.filterCount}>{listings.length}</span></button>
+    {CATEGORIES.map(([key])=>{const count=listings.filter(item=>item.category===key).length;return <button type="button" key={key} aria-pressed={filter===key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)} <span className={styles.filterCount}>{count}</span></button>})}
+   </div>
+   <p className={styles.resultsMeta} aria-live="polite">{sasiSoftwareUiText(lang,`当前显示 ${visible.length} 款已审核软件`,`Showing ${visible.length} reviewed listings`)}</p>
    <div className={styles.products}>{remainingVisible.map((item,i)=><article className={styles.card} key={item.id}>
     <div className={styles.tile} data-tone={i%3}>{images[item.id]?.find(photo=>photo.kind==="cover")?.url?
     <img src={images[item.id].find(photo=>photo.kind==="cover")!.url} alt={item.title} loading="lazy" referrerPolicy="no-referrer" className={styles.cover}/>
@@ -391,7 +411,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     <div id="listing-editor" className={styles.formCard}><h3>{editingId?sasiSoftwareUiText(lang,"修改商品资料","Edit listing"):sasiSoftwareUiText(lang,"发布新软件","Create a software listing")}</h3>
       <label>{sasiSoftwareUiText(lang,"软件名称","Product name")}<input value={title} maxLength={120} onChange={e=>setTitle(e.target.value)} placeholder={sasiSoftwareUiText(lang,"软件名称、版本、授权类型","Software name, version, license")}/></label>
       <label>{sasiSoftwareUiText(lang,"分类","Category")}<select value={category} onChange={e=>setCategory(e.target.value)}>{CATEGORIES.map(([id])=><option key={id} value={id}>{categoryLabel(lang,id)}</option>)}</select></label>
-      <label>{sasiSoftwareUiText(lang,"完整软件介绍（最多5,000字）","Full software description (up to 5,000 characters)")}<textarea rows={7} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={sasiSoftwareUiText(lang,"介绍核心功能、适用场景、安装要求、版本与授权范围。支持换行分段，详情页可完整展开。","Explain features, uses, requirements, version and licensing. Paragraph breaks are preserved.")}/><span className={styles.descriptionCount} aria-live="polite">{description.length.toLocaleString("en-US")} / 5,000</span></label>
+      <label>{sasiSoftwareUiText(lang,"完整软件介绍（最多5,000字）","Full software description (up to 5,000 characters)")}<textarea rows={7} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={sasiSoftwareUiText(lang,"介绍核心功能、适用场景、MT5版本与账户模式（对冲/净额）、适用品种和周期、安装要求、依赖项、版本更新及授权范围。支持换行分段，详情页可完整展开。","Explain features, use cases, MT5 build and account mode (hedging/netting), supported symbols and timeframes, installation, dependencies, updates and license scope.")}/><span className={styles.descriptionCount} aria-live="polite">{description.length.toLocaleString("en-US")} / 5,000</span></label>
       <div className={styles.priceFields}><label>{sasiSoftwareUiText(lang,"人民币标价","CNY price")}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{sasiSoftwareUiText(lang,"美元标价","USD price")}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
       <div className={styles.uploadGrid} data-testid="seller-upload-grid" aria-label={sasiSoftwareUiText(lang,"软件文件上传","Software file uploads")}>
@@ -451,7 +471,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
      </article>
      <article className={styles.sellerGuideCard}><h3><span className={styles.sellerGuideMark}>02</span>{sasiSoftwareUiText(lang,"结算说明","Settlement")}</h3><p>{sasiSoftwareUiText(lang,"销售收入按实际成交、退款及卖家协议计算。结算与提现状态可在账户中查看。","Sales are calculated from completed orders, refunds and the seller agreement. View settlement and payout status in the account.")}</p></article>
      <article className={styles.sellerGuideCard}><h3><span className={styles.sellerGuideMark}>03</span>{sasiSoftwareUiText(lang,"安全校验","Security checks")}</h3><p>{sasiSoftwareUiText(lang,"软件包进入私密存储，提交后进行安全检查与管理员审核；未通过的文件不会公开交付。","Packages use private storage and undergo security scanning and administrator review. Rejected files are not made available for delivery.")}</p></article>
-     <article className={styles.sellerGuideCard}><h3><span className={styles.sellerGuideMark}>04</span>{sasiSoftwareUiText(lang,"授权范围","License scope")}</h3><p>{sasiSoftwareUiText(lang,"请写清成品或源码、设备数量、授权期限与商用范围。授权或许可文件可放入 ZIP 软件包。","Specify finished software or source, device limits, license duration and commercial scope. Include license documents in the ZIP package.")}</p></article>
+     <article className={styles.sellerGuideCard}><h3><span className={styles.sellerGuideMark}>04</span>{sasiSoftwareUiText(lang,"授权范围","License scope")}</h3><p>{sasiSoftwareUiText(lang,"请写清成品或源码、适用平台与账户模式、设备数量、授权期限、更新政策与商用范围。授权或许可文件可放入 ZIP 软件包。","Specify finished software or source, device limits, license duration and commercial scope. Include license documents in the ZIP package.")}</p></article>
     </aside>
    </div>
   </section>}
