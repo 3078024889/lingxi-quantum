@@ -42,7 +42,7 @@ export default function HomeProblemHub(){
    <p className="lx-home-hero-brand">LINGXIFIELD <span>·</span> GLOBAL INTELLIGENT SERVICES</p>
    <h1 id="lx-home-hero-title">{copy.title}</h1><p className="lx-home-hero-lead">{copy.lead}</p>
    <p className="lx-home-hero-subline">{copy.subline}</p>
-   <div className="lx-home-hero-actions"><a href="/siai" className="lx-home-cta-primary">{copy.primary} <span aria-hidden="true">→</span></a><a href="/tools/pass" className="lx-home-cta-secondary">{copy.secondary} <span aria-hidden="true">→</span></a></div>
+   <div className="lx-home-hero-actions"><Link href="/siai" className="lx-home-cta-primary">{copy.primary} <span aria-hidden="true">→</span></Link><Link href="/tools/pass" className="lx-home-cta-secondary">{copy.secondary} <span aria-hidden="true">→</span></Link></div>
    <div className="lx-home-hero-proof">{copy.proof.map(item=><span key={item}><b aria-hidden="true">✓</b>{item}</span>)}</div>
    <form onSubmit={submit} className="lx-home-question-search" data-testid="home-task-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} aria-label={copy.placeholder} placeholder={copy.placeholder}/><button type="submit">{copy.begin}</button></form>
    {query.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{lang==="zh"?"建议入口":"Suggested"}</span><Link href={hit.href}>{hit.label}</Link></div>}
