@@ -23,7 +23,7 @@ export default function HomeProblemHub(){
   if(/开发者|卖家|发布|上架|seller|developer|vendor|vendedor|verkäufer|vendeur|판매자|出品者|بائع/i.test(value)){router.push(`/sasi/seller?intent=${encoded}&lang=${lang}`);return}
   if(/安装|交付|教程|授权规则|delivery|installation|license|licence/i.test(value)){router.push(`/sasi/delivery?q=${encoded}&lang=${lang}`);return}
   if(/mt5|\bea\b|源码|软件|授权|成品|商品|市场|sasi/i.test(lower)){router.push(`/sasi?q=${encoded}&lang=${lang}`);return}
-  if(/ai|模型|排行榜|免费额度|价格|商用|siai|chatgpt|claude|gemini/i.test(lower)){router.push(`/siai?q=${encoded}&lang=${lang}`);return}
+  if(/ai|模型|排行榜|免费额度|价格|商用|siai|chatgpt|claude|gemini/i.test(lower)){const discovery=new URL("/siai",location.origin);discovery.searchParams.set("q",value);discovery.searchParams.set("lang",lang);router.push(discovery.pathname+discovery.search);return}
   if(/工具包|toolpass|会员|无限使用|membership/i.test(value)){router.push(`/tools/pass?lang=${lang}`);return}
   router.push(isLikelyToolQuery(value)?`/tools?q=${encoded}&lang=${lang}`:`/tools?q=${encoded}&lang=${lang}`);
  }

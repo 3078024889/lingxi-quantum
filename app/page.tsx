@@ -68,4 +68,4 @@ const HOME_STRUCTURED_DATA=[
  }
 ];
 
-export default function Home(){return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(HOME_STRUCTURED_DATA)}}/><Nav homeLayout/><div className="lx-home-reference" lang="zh-CN"><HomeProblemHub/><HomeGlobalGrowth lang="zh"/><HomeSeoAnswers locale="zh"/><Footer/></div></>;}
+export default function Home(){return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(HOME_STRUCTURED_DATA)}}/><Nav homeLayout/><div className="lx-home-reference" lang="zh-CN"><HomeProblemHub/><div id="global-growth-entrances" data-growth-anchor="#global-growth-entrances"><HomeGlobalGrowth lang="zh"/></div><HomeSeoAnswers locale="zh"/><Footer/></div></>;}
