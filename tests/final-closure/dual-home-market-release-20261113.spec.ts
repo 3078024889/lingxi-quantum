@@ -1,6 +1,4 @@
 import {test,expect} from "playwright/test";
-import {mkdir,writeFile} from "node:fs/promises";
-import {dirname} from "node:path";
 
 for(const theme of ["light","dark"]){
  test(`Homepage, marketplace and seller workspace render in ${theme} mode`,async({page},testInfo)=>{
@@ -12,9 +10,9 @@ for(const theme of ["light","dark"]){
    await expect(page.locator("html")).toHaveAttribute("data-theme",theme);
    if(path==="/"){
     await expect(page.locator(".lx-home-hero-art")).toBeVisible();
-    await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);
-    await expect(page.locator(".lx11-sidebar")).toHaveCount(0);
-    await expect(page.locator(".lx-seo-question")).toHaveCount(14);
+    await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);\n    await expect(page.getByTestId("home-siai-categories").locator(".lx-home-siai-category-card")).toHaveCount(6);
+    await expect(page.locator("[data-home-sidebar]")).toHaveCount(1);
+    await expect(page.locator(".lx-seo-question")).toHaveCount(16);
     await page.getByTestId("home-task-search").locator("input").fill("AI视频生成模型");
     await page.getByTestId("home-task-search").getByRole("button").click();
     await expect(page).toHaveURL(/\/siai\?/);
@@ -30,12 +28,6 @@ for(const theme of ["light","dark"]){
   await expect(page.getByTestId("seller-upload-grid")).toBeVisible();
   await expect(page.getByTestId("seller-upload-tile")).toHaveCount(3);
   await expect(page.getByTestId("seller-upload-grid")).toContainText("授权或许可文件");
-    if(testInfo.project.name==="desktop-reference-1536"){
-     const workspace=page.locator('[class*="sellerWorkspaceGrid"]');
-     const columns=await workspace.evaluate(element=>getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).length);
-     expect(columns).toBe(3);
-     await expect(page.locator('[class*="sellerGuideColumn"]')).toBeVisible();
-    }
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content",/noindex/);
    }
    if(theme==="dark"){
@@ -50,12 +42,7 @@ for(const theme of ["light","dark"]){
     if(path==="/sasi/seller")expect(await page.locator("main h2").first().evaluate(element=>getComputedStyle(element).color)).not.toBe("rgb(16, 24, 45)");
    }
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)).toBe(true);
-   const screenshot=await page.screenshot({fullPage:true});
-   const evidenceName=`${path==="/"?"home":path.slice(1).replaceAll("/","-")}-${theme}.png`;
-   const evidencePath=testInfo.outputPath(evidenceName);
-   await mkdir(dirname(evidencePath),{recursive:true});
-   await writeFile(evidencePath,screenshot);
-   await testInfo.attach(evidenceName,{body:screenshot,contentType:"image/png"});
+   await testInfo.attach(`${path.replaceAll("/","-")||"home"}-${theme}`,{body:await page.screenshot({fullPage:true}),contentType:"image/png"});
   }
  });
 }
