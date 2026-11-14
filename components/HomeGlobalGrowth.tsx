@@ -29,6 +29,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"SASI 智能软件市场",description:"成品软件 · MT5 EA · 源码授权",href:"/sasi"},
    {icon:"wallet",title:"工具包会员",description:"全场工具 · 无限使用",href:"/tools/pass"},
    {icon:"website",title:"全球增长与合作",description:"内容传播 · 网站合作 · 全球触达",href:"/partners"}
+   {icon:"privacy",title:"安全可靠服务",description:"数据保护 · 稳定高效 · 可信赖",href:"/privacy"}
   ],
   growthTitle:"让更多人发现灵犀场，让每项服务都能找到合适用户",
   growthLead:"搜索发现、智能搜索、全球 SIAI 分发、软件交易、网站合作与内容传播相互连接，让用户从发现到使用形成完整路径。",
@@ -60,6 +61,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"SASI Software Marketplace",description:"MT5 EAs · source code · software",href:"/sasi"},
    {icon:"wallet",title:"ToolPass Membership",description:"All tools · unlimited use",href:"/tools/pass"},
    {icon:"website",title:"Global Growth & Partners",description:"SEO · GEO · API · embeds",href:"/partners"}
+   {icon:"privacy",title:"Secure & Trusted Service",description:"Data protection · reliable · trusted",href:"/privacy"}
   ],
   growthTitle:"A global entry point for discovery, products and real-world use",
   growthLead:"Connect search discovery, AI search, SIAI distribution, software commerce, partner networks and useful stories in one coherent journey.",
@@ -91,6 +93,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"SASI ソフトウェア市場",description:"MT5 EA · ソースコード · 完成品",href:"/sasi"},
    {icon:"wallet",title:"ToolPass 会員",description:"全ツール · 無制限利用",href:"/tools/pass"},
    {icon:"website",title:"グローバル連携",description:"SEO · GEO · API · 埋め込み",href:"/partners"}
+   {icon:"privacy",title:"安全で信頼できるサービス",description:"データ保護 · 安定性 · 信頼性",href:"/privacy"}
   ],
   growthTitle:"世界から見つかり、製品と利用シーンをつなぐ入口",
   growthLead:"検索、AI検索、SIAIの情報配信、ソフトウェア取引、パートナー連携、実用コンテンツを一つにつなぎます。",
@@ -122,6 +125,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"SASI 소프트웨어 마켓",description:"MT5 EA · 소스 코드 · 완성품",href:"/sasi"},
    {icon:"wallet",title:"ToolPass 멤버십",description:"전체 도구 · 무제한 사용",href:"/tools/pass"},
    {icon:"website",title:"글로벌 성장과 협력",description:"SEO · GEO · API · 임베드",href:"/partners"}
+   {icon:"privacy",title:"안전하고 신뢰할 수 있는 서비스",description:"데이터 보호 · 안정성 · 신뢰",href:"/privacy"}
   ],
   growthTitle:"전 세계 사용자가 찾고 제품과 활용 사례가 연결되는 입구",
   growthLead:"검색, AI 검색, SIAI 정보 배포, 소프트웨어 거래, 파트너 네트워크와 실제 활용 콘텐츠를 하나로 연결합니다.",
@@ -153,6 +157,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"Marché logiciel SASI",description:"EA MT5 · code source · logiciels",href:"/sasi"},
    {icon:"wallet",title:"Abonnement ToolPass",description:"Tous les outils · sans limite",href:"/tools/pass"},
    {icon:"website",title:"Croissance et partenaires",description:"SEO · GEO · API · intégration",href:"/partners"}
+   {icon:"privacy",title:"Service sûr et fiable",description:"Protection des données · fiabilité · confiance",href:"/privacy"}
   ],
   growthTitle:"Une porte mondiale entre découverte, produits et usages réels",
   growthLead:"Reliez recherche, recherche IA, diffusion SIAI, commerce logiciel, partenaires et contenus utiles dans un parcours cohérent.",
@@ -184,6 +189,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"SASI-Softwaremarkt",description:"MT5-EAs · Quellcode · Software",href:"/sasi"},
    {icon:"wallet",title:"ToolPass-Mitgliedschaft",description:"Alle Tools · unbegrenzt nutzen",href:"/tools/pass"},
    {icon:"website",title:"Wachstum und Partner",description:"SEO · GEO · API · Einbindung",href:"/partners"}
+   {icon:"privacy",title:"Sicherer und vertrauenswürdiger Service",description:"Datenschutz · Stabilität · Vertrauen",href:"/privacy"}
   ],
   growthTitle:"Ein globaler Zugang für Entdeckung, Produkte und echte Anwendungen",
   growthLead:"Suchzugang, KI-Suche, SIAI-Verteilung, Softwarehandel, Partnernetzwerk und hilfreiche Inhalte werden zu einem Weg verbunden.",
@@ -215,6 +221,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"Mercado de software SASI",description:"EA MT5 · código fuente · software",href:"/sasi"},
    {icon:"wallet",title:"Membresía ToolPass",description:"Todas las herramientas · uso ilimitado",href:"/tools/pass"},
    {icon:"website",title:"Crecimiento y socios",description:"SEO · GEO · API · integración",href:"/partners"}
+   {icon:"privacy",title:"Servicio seguro y confiable",description:"Protección de datos · estabilidad · confianza",href:"/privacy"}
   ],
   growthTitle:"Una entrada global para descubrir, conectar productos y mostrar usos reales",
   growthLead:"Conecta búsqueda, búsqueda con IA, distribución SIAI, comercio de software, socios y contenidos útiles.",
@@ -246,6 +253,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"Mercado de software SASI",description:"EA MT5 · código-fonte · software",href:"/sasi"},
    {icon:"wallet",title:"Assinatura ToolPass",description:"Todas as ferramentas · uso ilimitado",href:"/tools/pass"},
    {icon:"website",title:"Crescimento e parceiros",description:"SEO · GEO · API · integração",href:"/partners"}
+   {icon:"privacy",title:"Serviço seguro e confiável",description:"Proteção de dados · estabilidade · confiança",href:"/privacy"}
   ],
   growthTitle:"Uma entrada global para descoberta, produtos e aplicações reais",
   growthLead:"Conecte busca, busca por IA, distribuição SIAI, comércio de software, parceiros e conteúdos úteis.",
@@ -277,6 +285,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {icon:"sasi",title:"سوق برامج SASI",description:"MT5 EA · الشيفرة المصدرية · البرامج",href:"/sasi"},
    {icon:"wallet",title:"عضوية ToolPass",description:"كل الأدوات · استخدام غير محدود",href:"/tools/pass"},
    {icon:"website",title:"النمو والشراكات العالمية",description:"SEO · GEO · API · التضمين",href:"/partners"}
+   {icon:"privacy",title:"خدمة آمنة وموثوقة",description:"حماية البيانات · الاستقرار · الثقة",href:"/privacy"}
   ],
   growthTitle:"مدخل عالمي للاكتشاف والمنتجات والتطبيقات الحقيقية",
   growthLead:"اربط البحث والبحث بالذكاء الاصطناعي وتوزيع SIAI وتجارة البرامج والشراكات والمحتوى العملي في مسار واحد.",
