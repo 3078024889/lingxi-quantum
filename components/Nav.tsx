@@ -57,13 +57,19 @@ const HOME_NAV_COPY:Record<LingxiLang,string[]>={
 const HOME_NAV_HREFS=["/","/siai","/tools","/sasi","/tools/pass","/partners","/discoveries"] as const;
 
 
+function homeNavHref(lang:LingxiLang,href:string){
+ if(lang==="zh")return href;
+ if(href==="/")return `/${lang}`;
+ if(href==="/siai"||href==="/tools"||href==="/discoveries")return `/${lang}${href}`;
+ return `${href}?lang=${lang}`;
+}
 function active(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  if (pathname === "/sasi/pricing") return href === "/sasi";
-  if (href === "/sasi") return pathname === "/sasi" || pathname === "/sasi/delivery" || pathname.startsWith("/sasi/marketplace/");
-  if (href === "/sasi/seller") return pathname === "/sasi/seller" || pathname.startsWith("/sasi/seller/");
-  if (href === "/tools") return pathname === "/tools" || pathname.startsWith("/tools/");
-  return pathname === href || pathname.startsWith(`${href}/`);
+ const path=href.split("?")[0];
+ if(path==="/")return pathname==="/";
+ if(path==="/sasi/pricing")return pathname==="/sasi/pricing";
+ if(path==="/sasi")return pathname==="/sasi"||pathname==="/sasi/delivery"||pathname.startsWith("/sasi/marketplace/");
+ if(path==="/sasi/seller")return pathname==="/sasi/seller"||pathname.startsWith("/sasi/seller/");
+ return pathname===path||pathname.startsWith(`${path}/`);
 }
 
 const menuText: Record<LingxiLang, { account:string; orders:string; password:string; navigation:string; settings:string; switch:string; signout:string; delete:string; close:string }> = {
@@ -169,7 +175,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
     const q = query.trim();
     if (!q) return;
     sessionStorage.setItem("lx-global-search", q);
-    router.push(isMoneyAdmin&&/管理后台|资金看板|退款管理|提现管理|money admin|funds dashboard|admin dashboard/i.test(q)?"/account/money-admin":`/tools?q=${encodeURIComponent(q)}`);
+    router.push(isMoneyAdmin&&/管理后台|资金看板|退款管理|提现管理|money admin|funds dashboard|admin dashboard/i.test(q)?"/account/money-admin":`${homeNavHref(lang,"/tools")}?q=${encodeURIComponent(q)}`);
   }
 
   async function signOut() {
@@ -247,8 +253,8 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
     <>
       {homeLayout ? (
        <header className="lx-home-nav" data-home-nav>
-        <Link href="/" className="lx-home-nav-brand" aria-label="LINGXIFIELD home"><NextImage src="/images/lingxifield-logo.png" alt="" width={64} height={64}/><span><b>灵犀场 LINGXIFIELD</b><small>{lang==="zh"?"全球智能服务与实用工具平台":"Global intelligent services & practical tools"}</small></span></Link>
-        <nav className={homeNavOpen?"lx-home-nav-links is-open":"lx-home-nav-links"} aria-label="Main navigation">{HOME_NAV_HREFS.map((href,index)=><Link href={href} key={href} onClick={()=>setHomeNavOpen(false)} className={active(pathname,href)?"is-active":""}>{HOME_NAV_COPY[lang][index]}</Link>)}</nav>
+        <Link href={homeNavHref(lang,"/")} className="lx-home-nav-brand" aria-label="LINGXIFIELD home"><NextImage src="/images/lingxifield-logo.png" alt="" width={64} height={64}/><span><b>灵犀场 LINGXIFIELD</b><small>{lang==="zh"?"全球智能服务与实用工具平台":"Global intelligent services & practical tools"}</small></span></Link>
+        <nav className={homeNavOpen?"lx-home-nav-links is-open":"lx-home-nav-links"} aria-label="Main navigation">{HOME_NAV_HREFS.map((href,index)=>{const target=homeNavHref(lang,href);return <Link href={target} key={href} onClick={()=>setHomeNavOpen(false)} className={active(pathname,target)?"is-active":""}>{HOME_NAV_COPY[lang][index]}</Link>;})}</nav>
         <form className="lx-home-nav-search" onSubmit={submit}><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} placeholder={lang==="zh"?"搜索工具、问题或产品…":"Search tools, questions or products…"} aria-label={lang==="zh"?"搜索工具、问题或产品":"Search tools, questions or products"}/></form>
         <div className="lx-home-nav-actions">
          <select aria-label={t("language")} value={lang} onChange={event=>setLang(event.target.value as LingxiLang)}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(key=><option key={key} value={key}>{LANG_NAMES[key]}</option>)}</select>

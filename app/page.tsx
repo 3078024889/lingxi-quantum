@@ -67,4 +67,4 @@ const HOME_STRUCTURED_DATA=[
  }
 ];
 
-export default function Home(){return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(HOME_STRUCTURED_DATA)}}/><Nav homeLayout/><div className="lx-home-reference" lang="zh-CN"><div data-growth-anchor="#global-growth-entrances"><HomeProblemHub/></div><HomeSeoAnswers locale="zh"/><Footer/></div></>;}
+export default function Home(){return <><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(HOME_STRUCTURED_DATA)}}/><Nav homeLayout/><div className="lx-home-reference" lang="zh-CN"><main><div data-growth-anchor="#global-growth-entrances"><HomeProblemHub/></div><HomeSeoAnswers locale="zh"/></main><Footer/></div></>;}
