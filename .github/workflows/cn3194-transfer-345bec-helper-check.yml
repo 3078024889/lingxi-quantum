@@ -1,0 +1,53 @@
+name: CN3194 345bec R2 transfer helper validation (NO DEPLOY)
+on:
+  push:
+    branches: [ops/cn3194-transfer-345bec-20261114]
+    paths:
+      - 'scripts/ops/R2-CN3195-Transfer-20261114-345bec.ps1'
+      - '.github/workflows/cn3194-transfer-345bec-helper-check.yml'
+permissions:
+  contents: read
+concurrency:
+  group: cn3194-transfer-345bec-helper-check
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - name: Parse PowerShell and verify immutable release pins
+        shell: pwsh
+        run: |
+          $path = 'scripts/ops/R2-CN3195-Transfer-20261114-345bec.ps1'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path).Path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | Format-List | Out-String | Write-Error
+            throw 'POWERSHELL_PARSE_FAILED'
+          }
+          $source = Get-Content -LiteralPath $path -Raw
+          $required = @(
+            'ecs-cn-unified-20261110-345bec4af1a8',
+            '345bec4af1a8210a8bf8e18d7efb2d1c4cc03187',
+            'a83cc9eaa9a6dbd8f3d717e81ccf508ac0a75fb480c094844bfb19fc8f86b9b6',
+            '337293946',
+            '68cc65538db19d2e289f3814858d16abbf6c0c4443d9f7fb0d0abc951068534f',
+            '28444bee75cf429669a918d09971ab2112d38575fdcdb95b6afae579915131e9',
+            '6db6895eec180c10d94f1fc74908e3e6bf148b28db26f4f79110e60d0cba7276',
+            '64762dd7378083f55926a912502d99a8c28da71d3494c2e7ea327c9e8fd29172',
+            'R2_REMOTE_CONTENT_SHA256_COMPARE_PASS',
+            'CN3195_ACTIVE_NGINX_UPSTREAM_UNCHANGED',
+            'CN3194_PRODUCTION_PROMOTION_NOT_EXECUTED',
+            'CN3193_ROLLBACK_BASELINE_RETAINED',
+            'PROMOTE-CN3194-'
+          )
+          foreach ($needle in $required) {
+            if (-not $source.Contains($needle)) { throw "PIN_OR_SAFETY_CHECK_MISSING:$needle" }
+          }
+          foreach ($stale in @('199ff1c73d43ffc13abc887c51ebcc091f5e305e','f3d4d52008617c5094ea64ac3835bf5a08fb6410','338028136','4f5aa583888bb4164e68caeec7199980ef9213ceb86f96742214f621651acc6d')) {
+            if ($source.Contains($stale)) { throw "STALE_RELEASE_PIN_PRESENT:$stale" }
+          }
+          Write-Host 'CN3194_345BEC_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'
