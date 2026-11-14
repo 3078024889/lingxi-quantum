@@ -24,11 +24,24 @@ async function dragGesture(page:Page,x:number,y:number,dx:number,dy:number,mobil
 test("PDF added image resizes on-page with handles and rotates using real mouse or touch",async({page},info)=>{
  test.setTimeout(90000);
  const mobile=info.project.name==="mobile-chromium";
+ // Returning visitor: acknowledge the public welcome notice separately from
+ // PDF manipulation so it cannot cover the real touch target mid-drag.
+ await page.addInitScript(()=>localStorage.setItem("lx-public-upgrade:web-cn-upgrade-20261108","closed"));
+ // Isolate entitlement for this PDF interaction regression. Production CN
+ // correctly requires a signed-in daily turn; billing has separate real gates.
+ await page.route("**/api/tools/access",async route=>{
+  if(route.request().method()!=="POST")return route.continue();
+  const claim=route.request().postDataJSON();
+  expect(claim.toolSlug).toBe("pdf-editor");expect(claim.units).toBe(1);
+  expect(typeof claim.requestId).toBe("string");
+  await route.fulfill({json:{ok:true,accessKind:"daily_free",requestId:claim.requestId}});
+ });
  await page.goto("/tools/pdf-editor?lang=en");
  const upload=page.locator('input[type=file]').first();
  await expect(upload).toBeEnabled({timeout:15000});
  await upload.setInputFiles({name:"demo.pdf",mimeType:"application/pdf",buffer:fs.readFileSync("tests/fixtures/generated/basic.pdf")});
  await expect(page.getByTestId("pdf-source-page-count")).toBeVisible({timeout:30000});
+ await expect(page.getByTestId("pdf-stage").locator(":scope > img")).toBeVisible({timeout:30000});
  const png=await page.evaluate(()=>{
   const c=document.createElement("canvas");c.width=160;c.height=60;
   const x=c.getContext("2d")!;x.fillStyle="#224488";x.fillRect(4,8,150,44);
