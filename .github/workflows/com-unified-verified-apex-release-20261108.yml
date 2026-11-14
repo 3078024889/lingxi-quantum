@@ -145,6 +145,9 @@ jobs:
           grep -Fq 'json.diagnostics[name].missingCount' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_VERSION_ROLLBACK_CONFIRMED' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_BINDING_PREFLIGHT_PASS' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'COM_REFERENCE_DESIGN_CONTENT_GATE_PASS' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq 'SASI / FEATURED' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
+          grep -Fq '03 / SELLER STUDIO' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"--keep-vars"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"/api/sasi/account"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq '"/ai-wallet"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
@@ -177,7 +180,7 @@ jobs:
         run: node scripts/ops/probe-sasi-anonymous-rest-20261109.mjs
       - name: Rebuild the exact pinned source and verified static assets
         run: bash scripts/cloudflare/build-com-static-assets-20261110.sh
-      - name: Resolve exact successful isolated canary for the previous release commit
+      - name: Wait for the exact successful isolated canary for the previous release commit
         id: canary
         env:
           EXPECTED_SHA: ${{ github.event.before }}
@@ -185,26 +188,42 @@ jobs:
         run: |
           node <<'NODE'
           const fs=require("node:fs");
+          const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
           (async()=>{
+            const expected=process.env.EXPECTED_SHA;
+            if(!/^[a-f0-9]{40}$/.test(expected||""))throw Error("INVALID_PREVIOUS_RELEASE_SHA");
             const url="https://api.github.com/repos/"+process.env.GH_REPO+
-              "/actions/workflows/com-unified-next-isolated-canary-20261108.yml/runs?branch=release/com-sasi-full-20261108&status=success&per_page=100";
-            const response=await fetch(url,{headers:{
-              authorization:"Bearer "+process.env.GH_TOKEN,
-              accept:"application/vnd.github+json",
-              "user-agent":"lingxifield-exact-canary-gate"
-            }});
-            if(!response.ok)throw Error("CANARY_RUN_LIST_HTTP_"+response.status);
-            const body=await response.json();
-            const matches=(body.workflow_runs||[]).filter(x=>
-              x.head_sha===process.env.EXPECTED_SHA &&
-              x.head_branch==="release/com-sasi-full-20261108" &&
-              x.name==="COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)" &&
-              x.status==="completed" && x.conclusion==="success"
-            ).sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
-            if(!matches.length)throw Error("NO_SUCCESSFUL_CANARY_FOR_PREVIOUS_COMMIT:"+process.env.EXPECTED_SHA);
-            const run=matches[0];
-            fs.appendFileSync(process.env.GITHUB_OUTPUT,"run_id="+run.id+"\nsha="+run.head_sha+"\n");
-            console.log("EXACT_CANARY_PINNED run_id="+run.id+" sha="+run.head_sha);
+              "/actions/workflows/com-unified-next-isolated-canary-20261108.yml/runs?branch=release/com-sasi-full-20261108&per_page=100";
+            for(let attempt=1;attempt<=30;attempt++){
+              const response=await fetch(url,{headers:{
+                authorization:"Bearer "+process.env.GH_TOKEN,
+                accept:"application/vnd.github+json",
+                "user-agent":"lingxifield-exact-canary-gate"
+              },signal:AbortSignal.timeout(20000)});
+              if(!response.ok)throw Error("CANARY_RUN_LIST_HTTP_"+response.status);
+              const body=await response.json();
+              const matches=(body.workflow_runs||[]).filter(x=>
+                x.head_sha===expected &&
+                x.head_branch==="release/com-sasi-full-20261108" &&
+                x.name==="COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)"
+              );
+              const successful=matches.filter(x=>x.status==="completed"&&x.conclusion==="success")
+                .sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
+              if(successful.length){
+                const run=successful[0];
+                fs.appendFileSync(process.env.GITHUB_OUTPUT,"run_id="+run.id+"\\nsha="+run.head_sha+"\\n");
+                console.log("EXACT_CANARY_PINNED run_id="+run.id+" sha="+run.head_sha);
+                return;
+              }
+              const pending=matches.some(x=>x.status!=="completed");
+              console.log("WAITING_FOR_EXACT_CANARY attempt="+attempt+"/30 sha="+expected+
+                " matching_runs="+matches.length+" pending="+pending);
+              if(!pending&&matches.length){
+                throw Error("EXACT_CANARY_COMPLETED_WITHOUT_SUCCESS:"+expected);
+              }
+              if(attempt<30)await wait(60000);
+            }
+            throw Error("EXACT_CANARY_TIMEOUT:"+expected);
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
       - name: Verify identical application source and all seven public R2 objects before cutover
@@ -250,4 +269,4 @@ jobs:
 
 # COM_PINNED_SASI_RELEASE_TRIGGER_MARKER_20261113: exact application source 270a06ce39d2a9cd559147ab9d8a7c096a09a1ce must have a successful isolated canary.
 
-# COM_PINNED_SASI_RELEASE_TRIGGER_20261114_REFERENCE_GATE: previous source 07fd60c8a7d816f3f1e39940235ce32521f23c16 must pass its exact isolated canary; candidate and production routes must pass rendered reference-content checks plus R2, provider, binding and rollback gates.
+# COM_PINNED_SASI_RELEASE_TRIGGER_20261114_REFERENCE_GATE: previous source 4db5f905680a2a8bb584da9e446b43b8701d76b9 must pass its exact isolated canary; poll until completion, then require rendered reference-content checks plus R2, provider, binding and rollback gates.
