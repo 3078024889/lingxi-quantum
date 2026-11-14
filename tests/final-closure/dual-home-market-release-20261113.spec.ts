@@ -40,7 +40,7 @@ for(const theme of ["light","dark"]){
      return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
     });
     expect(contrast).toBeGreaterThanOrEqual(4.5);
-    if(path==="/sasi/seller")expect(await page.locator("main h2").first().evaluate(element=>getComputedStyle(element).color)).not.toBe("rgb(16, 24, 45)");
+    if(path==="/sasi/seller")expect(await page.locator("main h3").first().evaluate(element=>getComputedStyle(element).color)).not.toBe("rgb(16, 24, 45)");
    }
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)).toBe(true);
    await testInfo.attach(`${path.replaceAll("/","-")||"home"}-${theme}`,{body:await page.screenshot({fullPage:true}),contentType:"image/png"});
