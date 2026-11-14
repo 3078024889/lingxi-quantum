@@ -11,7 +11,7 @@ for(const theme of ["light","dark"]){
    if(path==="/"){
     await expect(page.locator(".lx-home-hero-art")).toBeVisible();
     await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);
-    await page.getByTestId("home-task-search").locator("textarea").fill("AI视频生成模型");
+    await page.getByTestId("home-task-search").locator("input").fill("AI视频生成模型");
     await page.getByTestId("home-task-search").getByRole("button").click();
     await expect(page).toHaveURL(/\/siai\?/);
     await page.goto("/",{waitUntil:"domcontentloaded"});
