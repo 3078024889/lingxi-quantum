@@ -23,6 +23,9 @@ for(const theme of ["light","dark"]){
    }else{
     await expect(page.getByRole("heading",{name:/卖家工作台|Seller workspace/})).toBeVisible();
     await expect(page.locator("#listing-editor")).toBeVisible();
+  await expect(page.getByTestId("seller-upload-grid")).toBeVisible();
+  await expect(page.getByTestId("seller-upload-tile")).toHaveCount(3);
+  await expect(page.getByTestId("seller-upload-grid")).toContainText("授权或许可文件");
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content",/noindex/);
    }
    if(theme==="dark"){
