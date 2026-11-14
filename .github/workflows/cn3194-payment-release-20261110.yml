@@ -19,6 +19,11 @@ on:
       - 'public/llms.txt'
       - 'components/SasiOpenMarketplace.tsx'
       - 'components/SasiOpenMarketplace.module.css'
+      - 'components/Nav.tsx'
+      - 'app/sasi/seller/page.tsx'
+      - 'tests/sasi-marketplace-reference-20261114.test.mjs'
+      - 'tests/sasi-seller-reference-20261114.test.mjs'
+      - 'tests/final-closure/sasi-seller-workspace-reference.spec.ts'
       - 'public/images/sasi/sasi-market-hero-lingxifield.png'
       - 'lib/seo/site-facts.ts'
       - 'app/llms.txt/route.ts'
@@ -120,6 +125,8 @@ jobs:
             tests/paypal-merchant-idempotency-20261108.test.mjs \
             tests/wallet-topup-live-contract-20261111.test.mjs \
             tests/sasi-marketplace-security-contract.test.mjs \
+            tests/sasi-marketplace-reference-20261114.test.mjs \
+            tests/sasi-seller-reference-20261114.test.mjs \
             tests/sasi-software-paypal-fulfillment-contract.test.mjs \
             tests/cn3194-source-only-software-catalog.test.mjs \
             tests/cn3194-marketplace-readiness-gates.test.mjs \
@@ -202,7 +209,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm exec playwright install --with-deps chrome
-          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts
+          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts tests/final-closure/sasi-seller-workspace-reference.spec.ts
           echo CN3194_NEW_VISUAL_DESKTOP_MOBILE_CHROME_PASS
       - name: Package archive, render pinned stage script and write manifest
         id: package
