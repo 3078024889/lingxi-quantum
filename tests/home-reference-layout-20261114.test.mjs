@@ -5,7 +5,7 @@ const read=p=>readFileSync(p,'utf8');
 test('reference homepage composition removes retired homepage blocks and preserves destinations',()=>{
  const home=read('app/page.tsx'),localized=read('app/[locale]/page.tsx'),hub=read('components/HomeProblemHub.tsx'),growth=read('components/HomeGlobalGrowth.tsx'),seo=read('components/HomeSeoAnswers.tsx'),nav=read('components/Nav.tsx'),css=read('app/home-reference-20261114.css');
  assert.match(home,/<HomeProblemHub\/>/);assert.match(localized,/<HomeProblemHub\/>/);assert.match(hub,/<HomeGlobalGrowth lang=\{lang\}\/>/);assert.match(home,/#global-growth-entrances/);
- assert.match(nav,/homeLayout\s*\?/);assert.match(nav,/HOME_NAV_HREFS\.map/);assert.match(nav,/function homeNavHref/);assert.match(nav,/homeNavHref\(lang,"\/"\)/);assert.match(nav,/homeNavHref\(lang,"\/tools"\)/);assert.match(home,/<main>/);assert.match(localized,/<main>/);
+ assert.match(home,/<Nav\/>/);assert.doesNotMatch(home,/<Nav homeLayout\/>/);assert.match(nav,/lx11-sidebar/);assert.match(nav,/lx11-topbar/);assert.match(nav,/HOME_NAV_HREFS\.map/);assert.match(nav,/function homeNavHref/);assert.match(nav,/homeNavHref\(lang,"\/"\)/);assert.match(nav,/homeNavHref\(lang,"\/tools"\)/);assert.match(home,/<main>/);assert.match(localized,/<main>/);
  assert.match(hub,/<SiaiSearchDiscovery variant="home"\/>/);assert.match(hub,/SIAI_DISCOVERY\[lang\]/);assert.doesNotMatch(hub,/FOOTER_CATALOG|taskTitle|finishNow/);
  assert.match(hub,/全球智能服务与实用工具平台/);assert.match(hub,/<HomeHeroVisual\/>/);assert.match(hub,/const globalSiaiEntry=\{href:"\/siai",icon:"products"\}/);assert.match(hub,/data-testid="home-global-siai-entry"/);assert.doesNotMatch(hub,/<a href="\/(?:siai|tools\/pass)"/);
  assert.match(growth,/<HomeToolPassMembership\/>/);assert.match(growth,/lx-home-distribution-globe/);assert.match(growth,/全球智能分发与合作/);for(const label of ["AI 搜索说明","完整平台资料","公开数据接口","WordPress 插件","网站嵌入组件","排行榜更新订阅","二维码分享","分享来源统计"])assert.ok(growth.includes(label),"growth link missing "+label);
@@ -60,4 +60,13 @@ test('reference-scale homepage and seller typography remains readable',()=>{
  assert.match(seller,/\.sellerGuideCard p\{font-size:14px/);
  assert.match(seller,/\.sellerGuideSteps strong\{font-size:14px/);
  assert.match(seller,/\.sellerBenefits strong\{font-size:13px/);
+});
+
+test('20261114 homepage uses the vertical application rail rather than the horizontal marketing navbar',()=>{
+ const home=read('app/page.tsx'),localized=read('app/[locale]/page.tsx'),css=read('app/approved-pages-20261114.css');
+ assert.match(home,/<Nav\/>/);assert.match(localized,/<Nav\/>/);
+ assert.doesNotMatch(home,/<Nav homeLayout\/>/);assert.doesNotMatch(localized,/<Nav homeLayout\/>/);
+ assert.match(css,/lx-site-content:has\(\.lx-home-reference\)/);
+ assert.match(css,/lx11-sidebar \.lx11-brand-row\{height:116px/);
+ assert.match(css,/lx11-sidebar \.lx11-new-task\{display:none/);
 });
