@@ -89,7 +89,7 @@ test('first-party Copernicus product stays version-neutral until the uploaded so
  assert.ok(catalog.includes("Copernicus SI · MT5 Source Code License"));
  assert.match(catalog,/kind:"source"/);
  for(const source of [catalog,market,legal,legacyMarket]) {
-  assert.doesNotMatch(source,/SI\\s*9[.]5|SI\\s*11[.]6/i);
+  assert.doesNotMatch(source,/SI\s*9[.]5|SI\s*11[.]6/i);
  }
  assert.ok(market.includes("featuredVisualTitle"));
  assert.ok(market.includes("featured.titleZh"));
