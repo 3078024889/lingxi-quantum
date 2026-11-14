@@ -119,7 +119,7 @@ jobs:
           path: |
             test-results/
             playwright-report/
-          if-no-files-found: warn
+          if-no-files-found: error
       - name: Confirm this workflow cannot deploy
         run: |
           ! grep -Eq 'wrangler deploy|vercel deploy|ssh .*lingxifield|systemctl restart' .github/workflows/retired-sasi-cleanup-audit-20261113.yml
