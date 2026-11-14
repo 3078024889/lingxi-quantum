@@ -379,3 +379,5 @@ jobs:
           echo 'COM_NEXT_ISOLATED_CANARY_SASI_TOOLPASS_STATIC_R2_PASS_NO_PRODUCTION_ROUTE'
 
 # Approved three-page scene and layout candidate: 2026-11-14.
+
+# Explicit 20261114 SASI marketplace canary request: deploy this exact release-branch commit to workers.dev only; no production routes.
