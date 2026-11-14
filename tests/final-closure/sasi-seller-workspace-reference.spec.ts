@@ -13,6 +13,7 @@ test('seller navigation opens the reference seller workspace with real business 
  await expect(page.getByTestId('seller-metrics').locator(':scope > div')).toHaveCount(4);
  await expect(page.getByRole('heading',{name:'发布新软件'})).toBeVisible();
  await expect(page.getByTestId('seller-upload-grid').getByText('授权或许可文件',{exact:true})).toBeVisible();
+ await expect(page.getByTestId('seller-license-file-input')).toHaveAttribute('accept',/\.pdf.*\.txt.*\.png/);
  const grid=page.getByTestId('seller-workspace-grid');
  const columns=await grid.evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
  expect(columns).toBe(3);

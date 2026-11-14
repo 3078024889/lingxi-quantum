@@ -35,7 +35,10 @@ test("real seller operations remain connected to the existing protected APIs", (
     assert.ok(workspace.includes(endpoint), "missing seller endpoint: " + endpoint);
   }
   assert.match(workspace, /授权或许可文件/);
-  assert.match(workspace, /请放入软件 ZIP 包内/);
+  assert.match(workspace, /seller-license-file-input/);
+  assert.match(workspace, /LICENSE_PDF_TXT_PNG_MAX_20MB/);
+  assert.match(workspace, /SASI_LICENSE\\//);
+  assert.match(workspace, /import JSZip from "jszip"/);
 });
 test("seller layout includes desktop density and responsive breakpoints", () => {
   assert.match(styles, /\.sellerWorkspaceGrid\s*\{[^}]*minmax\(240px/);

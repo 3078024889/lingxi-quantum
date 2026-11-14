@@ -1,6 +1,7 @@
 "use client";
 import {useCallback,useEffect,useMemo,useRef,useState} from "react";
 import Link from "next/link";
+import JSZip from "jszip";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import {sasiSoftwareUiText} from "@/lib/sasi-software/ui-copy";
 import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
@@ -46,6 +47,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const [editingId,setEditingId]=useState<string|null>(null);
  const [activeDraftId,setActiveDraftId]=useState<string|null>(null);
  const [uploadedPackages,setUploadedPackages]=useState<Record<string,boolean>>({});
+ const [licenseFiles,setLicenseFiles]=useState<Record<string,File>>({});
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
  const [showStudio,setShowStudio]=useState(sellerOnly);
@@ -151,18 +153,57 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   setRmb((item.price_cny_minor/100).toFixed(2));setUsd((item.price_usd_minor/100).toFixed(2));setShowStudio(true);
   requestAnimationFrame(()=>document.getElementById("listing-editor")?.scrollIntoView({block:"start"}));
  };
+ const selectLicenseFile=async(item:Listing,file:File)=>{
+  setError("");setStatus("");
+  try{
+   const extension=file.name.split(".").pop()?.toLowerCase();
+   if(!extension||!["pdf","txt","png"].includes(extension)||file.size<1||file.size>20*1024*1024)
+    throw Error("LICENSE_PDF_TXT_PNG_MAX_20MB");
+   const signature=new Uint8Array(await file.slice(0,8).arrayBuffer());
+   if(extension==="pdf"&&new TextDecoder().decode(signature.slice(0,5))!=="%PDF-")
+    throw Error("LICENSE_PDF_SIGNATURE_INVALID");
+   if(extension==="png"&&![137,80,78,71,13,10,26,10].every((byte,index)=>signature[index]===byte))
+    throw Error("LICENSE_PNG_SIGNATURE_INVALID");
+   if(extension==="txt"){
+    const sample=new Uint8Array(await file.slice(0,4096).arrayBuffer());
+    if(sample.includes(0))throw Error("LICENSE_TEXT_FILE_INVALID");
+   }
+   setLicenseFiles(current=>({...current,[item.id]:file}));
+   if(uploadedPackages[item.id]){
+    setUploadedPackages(current=>({...current,[item.id]:false}));
+    setStatus(sasiSoftwareUiText(lang,"许可文件已更新，请重新选择 ZIP；系统会将许可文件合并后重新上传。","License file updated. Re-select the ZIP so the license can be bundled and uploaded."));
+   }else{
+    setStatus(sasiSoftwareUiText(lang,"许可文件已选择，上传 ZIP 时会自动合并，并随软件包统一安全检查与交付。","License selected. It will be bundled into the ZIP for the same security review and delivery."));
+   }
+  }catch(e){setError(friendlyError(e,lang))}
+ };
  const upload=async(item:Listing,file:File)=>{
   setBusy("upload-"+item.id);setStatus("");setError("");
   try{
    if(!/\.zip$/i.test(file.name)||file.size<1||file.size>30*1024*1024)
     throw Error("ZIP_REQUIRED_MAX_30MB");
+   let packageBlob:Blob=file;
+   const licenseFile=licenseFiles[item.id];
+   if(licenseFile){
+    const archive=await JSZip.loadAsync(file);
+    const entries=Object.values(archive.files);
+    if(entries.length>1000)throw Error("ZIP_TOO_MANY_ENTRIES");
+    const expandedBytes=entries.reduce((total,entry)=>total+Number((entry as unknown as {_data?:{uncompressedSize?:number}})._data?.uncompressedSize??0),0);
+    if(expandedBytes>512*1024*1024)throw Error("ZIP_EXPANSION_LIMIT_EXCEEDED");
+    const safeName=licenseFile.name.normalize("NFKC").replace(/[^A-Za-z0-9._-]+/g,"_").slice(0,120)||"license";
+    archive.file("SASI_LICENSE/"+safeName,licenseFile,{binary:true});
+    packageBlob=await archive.generateAsync({type:"blob",compression:"DEFLATE",compressionOptions:{level:5}});
+    if(packageBlob.size>30*1024*1024)throw Error("ZIP_WITH_LICENSE_MAX_30MB");
+   }
    const ticket=await post("/api/sasi/marketplace/upload-ticket",{
-    listingId:item.id,extension:"zip",fileSize:file.size
+    listingId:item.id,extension:"zip",fileSize:packageBlob.size
    });
-   const put=await fetch(ticket.uploadUrl,{method:"PUT",headers:{"Content-Type":"application/zip"},body:file});
+   const put=await fetch(ticket.uploadUrl,{method:"PUT",headers:{"Content-Type":"application/zip"},body:packageBlob});
    if(!put.ok)throw Error("PRIVATE_R2_UPLOAD_FAILED_"+put.status);
    setUploadedPackages(current=>({...current,[item.id]:true}));
-   setStatus(sasiSoftwareUiText(lang,"软件包已上传。上传1张主图即可提交审核；详情图最多4张，可不上传。","Package uploaded. Add one main image; up to four detail images are optional."));
+   setStatus(licenseFile?
+    sasiSoftwareUiText(lang,"软件包与许可文件已合并上传，将统一进行安全检查。","Package and license uploaded together for unified security review."):
+    sasiSoftwareUiText(lang,"软件包已上传。上传1张主图即可提交审核；详情图最多4张，可不上传。","Package uploaded. Add one main image; up to four detail images are optional."));
    await refresh();
   }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
  };
@@ -441,12 +482,13 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
         <em>{activeDraft?sasiSoftwareUiText(lang,`已上传 ${mediaCounts[activeDraft.id]?.cover??0} / 1 张`,`${mediaCounts[activeDraft.id]?.cover??0} / 1 uploaded`):sasiSoftwareUiText(lang,"保存草稿后上传","Save a draft to upload")}</em>
         <input type="file" accept="image/png,image/jpeg,image/webp" disabled={!activeDraft||busy!==""||(mediaCounts[activeDraft?.id??""]?.cover??0)>=1} onChange={e=>{const file=e.target.files?.[0];if(file&&activeDraft)void uploadImage(activeDraft,file,"cover")}}/>
        </label>
-       <div data-testid="seller-upload-tile" className={styles.uploadTile}>
+       <label data-testid="seller-upload-tile" className={`${styles.uploadTile} ${activeDraft?"":styles.uploadTileDisabled}`}>
         <span className={styles.uploadTileIcon} aria-hidden="true">▤</span>
         <strong>{sasiSoftwareUiText(lang,"授权或许可文件","License document")}</strong>
-        <small>{sasiSoftwareUiText(lang,"请放入软件 ZIP 包内","Include it inside the software ZIP")}</small>
-        <em>{sasiSoftwareUiText(lang,"随软件包一并审核与交付","Reviewed and delivered with the package")}</em>
-       </div>
+        <small>{licenseFiles[activeDraft?.id??""]?.name??sasiSoftwareUiText(lang,"PDF / TXT / PNG，最大 20MB","PDF / TXT / PNG · up to 20MB")}</small>
+        <em>{licenseFiles[activeDraft?.id??""]?sasiSoftwareUiText(lang,"已选择，上传 ZIP 时自动合并","Selected · bundled into ZIP on upload"):sasiSoftwareUiText(lang,"单独选择，随软件包统一审核与交付","Select separately · reviewed and delivered with the package")}</em>
+        <input data-testid="seller-license-file-input" type="file" accept=".pdf,.txt,.png,application/pdf,text/plain,image/png" disabled={!activeDraft||busy!==""} onChange={e=>{const file=e.target.files?.[0];if(file&&activeDraft)void selectLicenseFile(activeDraft,file)}}/>
+       </label>
       </div>
       {activeDraft&&<label className={styles.detailUploadRow}>
        <span><strong>{sasiSoftwareUiText(lang,"详情图（可选，最多4张）","Detail images (optional, up to 4)")}</strong><small>{sasiSoftwareUiText(lang,"用于商品详情页的补充展示","Optional images for the product detail page")}</small></span>
@@ -460,7 +502,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       </div>}
       <button disabled={busy!==""||seller?.status!=="approved"} onClick={()=>void makeDraft()}>{busy==="draft"?"…":(editingId||activeDraftId)?sasiSoftwareUiText(lang,"保存修改","Save changes"):sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
       {editingId&&<button type="button" disabled={busy!==""} onClick={()=>{setEditingId(null);setActiveDraftId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"取消修改","Cancel editing")}</button>}
-      <p>{sasiSoftwareUiText(lang,"软件 ZIP 当前最大 30MB；授权、许可及安装说明请放入 ZIP 包内。主图仅1张，详情图最多4张。文件通过安全检查和管理员审核后上架。","ZIP packages are currently limited to 30MB. Include license and installation documents inside the ZIP. One cover image and up to four optional detail images are supported. Listings go live only after security checks and administrator review.")}</p>
+      <p>{sasiSoftwareUiText(lang,"软件 ZIP 最大30MB；许可文件可单独选择，系统会合并进 ZIP 后统一安全检查与交付。主图1张，详情图最多4张。","ZIP packages are limited to 30MB. Select a PDF, TXT or PNG license file separately; it is bundled into the ZIP for unified security review and delivery. One cover image and up to four optional detail images are supported.")}</p>
     </div>
 
    {mine.length>0&&<div className={styles.drafts}><h3>{sasiSoftwareUiText(lang,"我的软件草稿与审核进度","My submissions")}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{translatedStatus(lang,item.status)} · {translatedStatus(lang,item.scan_status,true)}</small></div>
