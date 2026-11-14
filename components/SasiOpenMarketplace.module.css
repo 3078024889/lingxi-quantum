@@ -406,3 +406,13 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .detailUploadRow em{font-size:13px;font-style:normal;font-weight:750;color:#5d43d8}
 .detailUploadRow input{max-width:220px;font-size:12px;color:var(--lx-muted,#66647d)}
 @media(max-width:760px){.detailUploadRow{align-items:flex-start}.detailUploadRow input{max-width:100%;width:100%}}
+
+:global(html[data-theme="dark"]) .uploadTile{background:linear-gradient(155deg,#242238,#1a1b2a);border-color:rgba(169,145,255,.42);color:#f0edff;box-shadow:0 8px 22px rgba(0,0,0,.2)}
+:global(html[data-theme="dark"]) .uploadTile strong{color:#f0edff}
+:global(html[data-theme="dark"]) .uploadTile small{color:#c0bdd2}
+:global(html[data-theme="dark"]) .uploadTile em{color:#c7b8ff}
+:global(html[data-theme="dark"]) .uploadTileIcon{background:linear-gradient(145deg,#38304f,#28243a);color:#d9ccff;box-shadow:0 4px 12px rgba(0,0,0,.22)}
+:global(html[data-theme="dark"]) .detailUploadRow{background:rgba(38,34,55,.82);border-color:rgba(169,145,255,.4)}
+:global(html[data-theme="dark"]) .detailUploadRow strong{color:#f0edff}
+:global(html[data-theme="dark"]) .detailUploadRow small{color:#c0bdd2}
+:global(html[data-theme="dark"]) .detailUploadRow em{color:#c7b8ff}
