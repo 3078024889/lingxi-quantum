@@ -63,6 +63,22 @@ jobs:
           node scripts/seo/growth/generate-llms-full.mjs
           node --test tests/growth-attribution.test.mjs tests/growth-distribution.test.mjs
           node scripts/test-tool-usage.cjs
+      - name: Build exact CN candidate and WordPress package (NO DEPLOY)
+        env:
+          LINGXI_SELFHOST_BUILD: '1'
+          NEXT_TELEMETRY_DISABLED: '1'
+          NEXT_PUBLIC_TOOL_PASS_ENFORCED: 'true'
+          NEXT_PUBLIC_SITE_URL: https://lingxifield.cn
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL || 'https://sxsgdpqojepgbbrxrzlq.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN4c2dkcHFvamVwZ2JicnhyemxxIiwicm9sZSI6MTc4MjQxNzQ4MiwiZXhwIjoyMDk3OTkzNDgyfQ.x4LNnsCvmHsCiRk2HFIsVjg-0ddbTQlkcKpKQFaAdXE' }}
+        run: |
+          pnpm build
+          test -s .next/standalone/server.js
+          test -s public/downloads/lingxifield-siai-wordpress.zip
+          unzip -t public/downloads/lingxifield-siai-wordpress.zip
+          cmp public/widgets/lingxifield-v1.js integrations/wordpress/lingxifield-widgets/assets/lingxifield-v1.js
+          echo HOMEPAGE_REFERENCE_FULL_BUILD_PASS_NO_DEPLOY
+
       - name: Confirm this workflow cannot deploy
         run: |
           ! grep -Eq 'wrangler deploy|vercel deploy|ssh .*lingxifield|systemctl restart' .github/workflows/retired-sasi-cleanup-audit-20261113.yml
