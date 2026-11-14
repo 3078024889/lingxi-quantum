@@ -1,10 +1,11 @@
 name: CN3194 exact release transfer helper lint (NO DEPLOY)
 on:
   push:
-    branches: [fix/cn3194-marketplace-503-transfer-20261113, feat/homepage-reference-rebuild-cn-20261113]
+    branches: [fix/cn3194-marketplace-503-transfer-20261113, feat/homepage-reference-rebuild-cn-20261113, ops/cn3195-transfer-3f1c-20261114]
     paths:
       - 'scripts/ops/R2-CN3195-Transfer-20261113.ps1'
       - 'scripts/ops/R2-CN3195-Transfer-20261114-f3d4.ps1'
+      - 'scripts/ops/R2-CN3195-Transfer-20261114.ps1'
       - '.github/workflows/cn3194-transfer-helper-check-20261113.yml'
 permissions:
   contents: read
@@ -49,3 +50,46 @@ jobs:
             throw 'STALE_3194_RELEASE_PIN_REJECTED'
           }
           Write-Host 'CN3194_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'
+
+      - name: Parse exact 3f1c CN3195 transfer helper (NO DEPLOY)
+        shell: pwsh
+        run: |
+          $path = 'scripts/ops/R2-CN3195-Transfer-20261114.ps1'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path).Path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | Format-List | Out-String | Write-Error
+            throw 'POWERSHELL_PARSE_FAILED'
+          }
+          $source = Get-Content -LiteralPath $path -Raw
+          $required = @(
+            "ecs-cn-unified-20261110-3f1c2218d4e1",
+            "3f1c2218d4e1799007a612265f33c1c9e404132c",
+            "338058519",
+            "739b04632a8ae9638777c3ac8e1d3d1f207f649af638136fcbb72f89c5f62d33",
+            "5f142db8aa26cd031bbe91d9b00a1857c3262fdae46fe977261e3294758b3e57",
+            "c8c3db8a84a1652578a0472b0bd118d13b35b35b20b4b341bdf7e2a17e19a6a1",
+            "4abd537cbcf71da4d9efca34bbab88d9d97ef648629d9f9cafef1481c31d3ca8",
+            "7a61cac8f3a54ec266a538fe9830cb46eadfb9ca",
+            "8af6d46334f0d03d66be4d29176663e5bfa086fd",
+            "64762dd7378083f55926a912502d99a8c28da71d3494c2e7ea327c9e8fd29172",
+            "R2_REMOTE_SIZE_VERIFY_FAILED",
+            "R2_CONTENT_CHECK_DOWNLOAD_VERIFY_START",
+            "R2_MULTIPART_UPLOAD_8WAY",
+            "CN3195_ACTIVE_NGINX_UPSTREAM_UNCHANGED",
+            "CN3194_PRODUCTION_PROMOTION_NOT_EXECUTED",
+            "CN3193_ROLLBACK_BASELINE_RETAINED",
+            "SIGNED_URLS_EXPIRE_IN_6_HOURS_AND_ARE_NOT_PRINTED"
+          )
+          foreach ($needle in $required) {
+            if (-not $source.Contains($needle)) { throw "PIN_OR_SAFETY_CHECK_MISSING:$needle" }
+          }
+          foreach ($stale in @(
+            "199ff1c73d43ffc13abc887c51ebcc091f5e305e",
+            "f3d4d52008617c5094ea64ac3835bf5a08fb6410",
+            "e6c2a4612b9b72091497420477945753ebae8986"
+          )) {
+            if ($source.Contains($stale)) { throw "STALE_RELEASE_PIN_REJECTED:$stale" }
+          }
+          Write-Host 'CN3194_3F1C_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'
