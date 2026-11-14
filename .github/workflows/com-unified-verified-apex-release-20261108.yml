@@ -250,4 +250,4 @@ jobs:
 
 # COM_PINNED_SASI_RELEASE_TRIGGER_MARKER_20261113: exact application source 270a06ce39d2a9cd559147ab9d8a7c096a09a1ce must have a successful isolated canary.
 
-# COM_PINNED_SASI_RELEASE_TRIGGER_20261114: previous source 1c9115d524e6263d53b2a8e168e27978cff6f9a9 must pass the exact isolated canary; R2, provider, binding, route and rollback gates remain mandatory.
+# COM_PINNED_SASI_RELEASE_TRIGGER_20261114_REFERENCE_GATE: previous source 07fd60c8a7d816f3f1e39940235ce32521f23c16 must pass its exact isolated canary; candidate and production routes must pass rendered reference-content checks plus R2, provider, binding and rollback gates.
