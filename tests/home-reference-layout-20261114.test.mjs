@@ -8,7 +8,7 @@ test('reference homepage composition removes retired homepage blocks and preserv
  assert.match(nav,/homeLayout\s*\?/);assert.match(nav,/HOME_NAV_HREFS\.map/);
  assert.doesNotMatch(hub,/SiaiSearchDiscovery|SIAI_DISCOVERY|FOOTER_CATALOG|taskTitle|finishNow/);
  assert.match(hub,/全球智能服务与实用工具平台/);assert.match(hub,/<HomeHeroVisual\/>/);
- assert.match(growth,/<HomeToolPassMembership\/>/);assert.match(growth,/lx-home-distribution-globe/);assert.match(growth,/全球智能分发与合作/);
+ assert.match(growth,/<HomeToolPassMembership\/>/);assert.match(growth,/lx-home-distribution-globe/);assert.match(growth,/全球智能分发与合作/);for(const label of ["AI 搜索说明","完整平台资料","公开数据接口","WordPress 插件","网站嵌入组件","排行榜更新订阅","二维码分享","分享来源统计"])assert.ok(growth.includes(label),"growth link missing "+label);
  const zh=growth.slice(growth.indexOf(' zh:{'),growth.indexOf(' en:{'));
  assert.doesNotMatch(zh,/tag:"(?:SEO|GEO|NETWORK|STORIES)"|description:"[^"]*(?:WordPress|JS Widget|RSS|API)[^"]*"/i);
  assert.equal((growth.match(/className="lx-home-market-card"/g)||[]).length,5);
