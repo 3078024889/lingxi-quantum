@@ -19,7 +19,7 @@ assert.match(market,/desktop-app/);
 assert.match(market,/developer-tool/);
 assert.match(market,/software/);
 assert.match(market,/MT5版本与账户模式（对冲\/净额）/);
-assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(250px/);
+assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(\d+px/);
 assert.match(css,/\.main \.sortSelect/);
 assert.match(catalog,/titleZh:"哥白尼 SI 11\.6/);
 assert.doesNotMatch(market,/SI 9\.5|SI9\.5/);

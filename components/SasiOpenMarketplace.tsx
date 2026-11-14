@@ -6,7 +6,7 @@ import {sasiSoftwareUiText} from "@/lib/sasi-software/ui-copy";
 import {SASI_SOFTWARE_CATALOG} from "@/lib/sasi-software/catalog";
 import {parseMarketplacePayoutMinorUnits} from "@/lib/sasi-marketplace/fees";
 import styles from "./SasiOpenMarketplace.module.css";
-type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;rejection_reason?:string|null;};
+type Listing={id:string;seller_id:string;title:string;description:string;category:string;price_cny_minor:number;price_usd_minor:number;status:string;scan_status:string;created_at:string;published_at?:string|null;rejection_reason?:string|null;};
 type Seller={user_id:string;display_name:string;status:string;kyc_status:string;payout_provider:string|null};
 type Payout={balances:Record<string,{grossMinor:number;platformFeeMinor:number;availableMinor:number}>;payouts:Array<{id:string;currency:string;amount_minor:number;status:string;requested_at:string}>;payoutsOpen:boolean;submissionTargetMinutes:number};
 const MARKET_FEATURES=[
