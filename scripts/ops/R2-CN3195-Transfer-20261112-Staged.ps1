@@ -110,6 +110,10 @@ function Get-GitBlobSha1([string]$Path){
 }
 if((Get-GitBlobSha1 $StageOriginalPath) -cne $StageBlob){throw 'STAGE_GIT_BLOB_SHA1_MISMATCH'}
 $StageText=[IO.File]::ReadAllText($StageOriginalPath)
+$AlreadyHardened=$StageText.Contains('CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1') -and $StageText.Contains('CN3194_SOURCE_ENVFILE_DUPLICATE') -and $StageText.Contains('${#LIVE_ENV_FILES[@]} <= 16') -and $StageText.Contains('"$(stat -c %a "$f")" == 600')
+if($AlreadyHardened){
+ Copy-Item -LiteralPath $StageOriginalPath -Destination $StagePath -Force
+}else{
 $OldEnvLine=' (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 8 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
 $NewEnvLine1=' (( ${#LIVE_ENV_FILES[@]} >= 1 && ${#LIVE_ENV_FILES[@]} <= 16 )) || { echo CN3194_SOURCE_ENVFILE_COUNT_INVALID >&2;exit 1; }'
 $NewEnvLine2=' [[ "${#LIVE_ENV_FILES[@]}" -eq "$(printf ''%s\n'' "${LIVE_ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3194_SOURCE_ENVFILE_DUPLICATE >&2;exit 1; }'
@@ -155,6 +159,7 @@ PY
 $StageText=$StageText.Substring(0,$StageStart)+$MinimalStageBlock.TrimEnd([char[]]@([char]13,[char]10))+$StageText.Substring($StageEnd+3)
 if($StageText.Contains('python3 - "$ENV" "$STAGE_ENV"') -or !$StageText.Contains('CN3195_STAGE_ENV_MINIMAL_OVERLAY_V1') -or $StageText.Contains('lines=open(src,encoding="utf8").read().splitlines()')){throw 'STAGE_ENV_OVERLAY_PATCH_VERIFY_FAILED'}
 [IO.File]::WriteAllText($StagePath,$StageText,(New-Object Text.UTF8Encoding($false)))
+}
 $PatchedStageBlob=Get-GitBlobSha1 $StagePath
 Write-Host "STAGE_OVERLAY_PATCH_PASS: ENVFILE_LIMIT=16 MINIMAL_ENV=PASS PATCHED_GIT_BLOB=$PatchedStageBlob"
 if((Get-GitBlobSha1 $PaymentPath) -cne $PaymentBlob){throw 'PAYMENT_GIT_BLOB_SHA1_MISMATCH'}
@@ -225,6 +230,7 @@ try{
  if($LASTEXITCODE -ne 0){throw 'R2_REMOTE_CONTENT_CHECK_FAILED'}
  Write-Host 'R2_REMOTE_CONTENT_CHECK_DOWNLOAD_VERIFY_PASS_EXACT_SIX_ASSETS'
 }finally{
+ if(!([IO.Path]::GetFullPath($VerifyRoot).StartsWith([IO.Path]::GetFullPath($Root)+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase))){throw 'VERIFY_CLEANUP_PATH_OUTSIDE_ROOT'}
  Remove-Item -LiteralPath $VerifyRoot -Recurse -Force -ErrorAction SilentlyContinue
 }
 function Get-SignedLink([string]$Name){

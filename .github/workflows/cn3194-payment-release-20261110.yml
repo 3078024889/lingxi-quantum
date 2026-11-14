@@ -121,6 +121,7 @@ jobs:
           node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
           pnpm audit:retired-code
           node --test \
+            tests/cn-listener-owner-20261115.test.mjs \
             tests/cn-payment-activation-3194-20261110.test.mjs \
             tests/cn-payment-audit-probe-blob-pin-20261113.test.mjs \
             tests/cn-wallet-checkout-entry-20261108.test.mjs \

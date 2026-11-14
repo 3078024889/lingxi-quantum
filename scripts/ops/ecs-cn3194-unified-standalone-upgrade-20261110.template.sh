@@ -75,20 +75,22 @@ PY
 }
 
 find_service_for_port(){
- local port="$1" unit file
- while read -r unit;do
-  [[ "$unit" == lingxifield-cn-release-* ]] || continue
-  if systemctl cat "$unit" 2>/dev/null | grep -Eq "^[[:space:]]*Environment=PORT=$port([[:space:]]|$)";then
-   systemctl is-active --quiet "$unit" && { printf '%s\n' "$unit";return 0; }
-  fi
-  while read -r file;do
-   [[ -f "$file" && ! -L "$file" ]] || continue
-   if grep -Fxq "PORT=$port" "$file";then
-    systemctl is-active --quiet "$unit" && { printf '%s\n' "$unit";return 0; }
-   fi
-  done < <(systemctl show "$unit" -p EnvironmentFiles --value | python3 -c 'import re,sys;print("\n".join(re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",sys.stdin.read())))')
- done < <(systemctl list-units --type=service --state=active --no-legend | awk '{print $1}')
- return 1
+ local port="$1" pid unit
+ local -a listeners=() units=()
+ [[ "$port" =~ ^319[2-6]$ ]] || return 1
+ # Inherited EnvironmentFiles can contain PORT=3194 even when a later
+ # override runs this service on 3195. Only the actual listener owns a port.
+ mapfile -t listeners < <(ss -ltnpH "sport = :$port" | sed -n 's/.*pid=\([0-9]*\).*/\1/p' | sort -u)
+ [[ ${#listeners[@]} == 1 ]] || return 1
+ pid="${listeners[0]}"
+ [[ "$pid" =~ ^[0-9]+$ && -r "/proc/$pid/cgroup" ]] || return 1
+ mapfile -t units < <(awk -F/ '/lingxifield-cn-release-.*[.]service$/{print $NF}' "/proc/$pid/cgroup" | sort -u)
+ [[ ${#units[@]} == 1 ]] || return 1
+ unit="${units[0]}"
+ [[ "$unit" =~ ^lingxifield-cn-release-[a-zA-Z0-9.-]+\.service$ ]] || return 1
+ systemctl is-active --quiet "$unit" || return 1
+ [[ "$(systemctl show "$unit" -p MainPID --value)" == "$pid" ]] || return 1
+ printf '%s\n' "$unit"
 }
 
 old_live(){
