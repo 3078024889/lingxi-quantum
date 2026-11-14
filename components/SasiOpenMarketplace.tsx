@@ -420,7 +420,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
 {sellerOnly&&<>
  <section className={styles.sellerHero} data-testid="seller-workspace-hero">
   <div className={styles.sellerHeroCopy}>
-   <small className={styles.sellerHeroEyebrow}>SASI · SELLER CENTER</small>
+   <small className={styles.sellerHeroEyebrow}>SASI · SELLER WORKSPACE</small>
    <h1>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h1>
    <p>{sasiSoftwareUiText(lang,"在 SASI 发布软件，触达全球用户，管理商品审核、自动交付与安全结算。","Publish software on SASI, reach global users and manage review, verified delivery and settlement.")}</p>
    <Link href="/sasi" className={styles.sellerBack}>{sasiSoftwareUiText(lang,"返回软件市场","Back to software market")} ↗</Link>
