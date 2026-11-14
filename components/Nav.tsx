@@ -376,10 +376,10 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
 
        </>
       )}
-      <PublicAnnouncementTicker/>
+      {!homeLayout&&<PublicAnnouncementTicker/>}
       <MobileBottomNav/>
       {open && <button className="lx11-backdrop" onClick={() => setOpen(false)} />}
-      <aside className={`lx11-sidebar lx11-drawer ${open ? "is-open" : ""}`}>{side}</aside>
+      {open&&<aside className="lx11-sidebar lx11-drawer is-open">{side}</aside>}
     </>
   );
 }

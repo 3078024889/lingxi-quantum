@@ -13,7 +13,7 @@ test('homepage keeps one complete global-growth section and six platform pillars
  for(const term of ["WordPress","JS Widget","API","RSS","二维码","分享来源统计"])assert.ok(growth.includes(term),"growth channel missing "+term);
  assert.ok(seo.includes('type Question'));assert.ok(seo.includes('questions:'));assert.ok(llms.includes('SASI 智能软件市场'));assert.ok(llms.includes('全球 SIAI 排行榜'));assert.ok(!/short[- ]drama|book SASI|learning SASI|research SASI|短剧生成|书本智能体|学习智能体|科研智能体/i.test(llms));
  assert.match(css,/\.lx-home-feature-strip\{grid-template-columns:repeat\(6/);assert.match(css,/\.lx-home-toolpass-wrap\{width:min/);
- assert.match(growth,/SASI SOFTWARE MARKET/);assert.match(growth,/PUBLISHED SOFTWARE/);assert.match(growth,/VERIFIED/);assert.doesNotMatch(growth,/99\.6%|>128</);
+ assert.match(growth,/global-scene-20261114[.]webp/);assert.doesNotMatch(growth,/99\.6%|>128</);
 });
 test('SASI marketplace is compact and seller workspace uses real data in a three-column layout',()=>{
  const market=read('components/SasiOpenMarketplace.tsx'),css=read('components/SasiOpenMarketplace.module.css');

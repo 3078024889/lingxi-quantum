@@ -182,7 +182,7 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     {
       path: "/sasi",
       required: [
-        "sasi-market-hero-lingxifield.png",
+        "global-scene-20261114.webp",
         "精选软件",
         "开发者作品",
         "MT5 EA",
