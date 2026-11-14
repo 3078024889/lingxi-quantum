@@ -433,6 +433,10 @@ function cancelPointer(){if(activeTouchRef.current===null)gestureRef.current=nul
   if(editingTextId===o.id||e.pointerType!=="touch")return;
   const grip=overlayTouchGrip(e.currentTarget,e.target,e.clientX,e.clientY);
   if(!grip)return;
+  // Capture can retarget the bubbling event to this focusable overlay. Prevent
+  // the browser's default focus scroll here, before it moves the PDF under the
+  // active finger (the page otherwise uses smooth scrolling).
+  e.preventDefault();
   const rect=stageRef.current?.getBoundingClientRect();if(!rect)return;
   touchCornerRef.current={id:o.id,grip,startX:e.clientX,startY:e.clientY,pointerId:e.pointerId,rect,origin:{...o}};
   beginGesture(o.id,grip,e.clientX,e.clientY,e.pointerId);
