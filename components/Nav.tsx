@@ -275,6 +275,5 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
       {open && <button className="lx11-backdrop" onClick={() => setOpen(false)} />}
       <aside className={`lx11-sidebar lx11-drawer ${open ? "is-open" : ""}`}>{side}</aside>
     </>
-    </>
   );
 }
