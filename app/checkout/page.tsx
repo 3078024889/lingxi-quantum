@@ -1,7 +1,7 @@
 "use client";
 import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
 
-import { useEffect, useState, useRef, Suspense } from "react";
+import { useEffect, useState, useRef, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import Link from "next/link";
@@ -99,10 +99,11 @@ function CheckoutInner() {
   const [error, setError] = useState("");
   const [checkingNow, setCheckingNow] = useState(false);
   const [buyerEmail, setBuyerEmail] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("wechat");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(params.get("method")==="alipay"?"alipay":"wechat");
   const [alipayAvailable, setAlipayAvailable] = useState(false);
   const [wechatAvailable, setWechatAvailable] = useState(false);
   const [providersLoaded, setProvidersLoaded] = useState(false);
+  const [refreshingProviders, setRefreshingProviders] = useState(false);
   const [softwareAvailable,setSoftwareAvailable]=useState(false);
   useEffect(()=>{
     if(product?.group!=="software")return;
@@ -172,23 +173,36 @@ const orderIdRef = useRef<string | null>(null);
     });
   }, []);
 
-  useEffect(() => {
-    fetch("/api/pay/providers", {cache:"no-store",credentials:"same-origin"})
-      .then(r=>r.ok?r.json():null)
-      .then((data:{wechat?:boolean;alipay?:boolean}|null)=>{
-        const wx=data?.wechat===true,ali=data?.alipay===true;
-        setWechatAvailable(wx);setAlipayAvailable(ali);
-        if(!wx&&ali)setPaymentMethod("alipay");
-        setProvidersLoaded(true);
-      }).catch(()=>{setWechatAvailable(false);setAlipayAvailable(false);setProvidersLoaded(true)});
+  // One authoritative runtime capability endpoint: avoid racing a second
+  // Alipay status fetch against the channel selection and disabling a ready method.
+  const refreshProviders = useCallback(async () => {
+    setRefreshingProviders(true);
+    try {
+      const response = await fetch("/api/pay/providers", {
+        cache: "no-store", credentials: "same-origin",
+      });
+      if (!response.ok) throw new Error("PAYMENT_PROVIDER_STATUS_UNAVAILABLE");
+      const channels = await response.json() as {wechat?: boolean; alipay?: boolean};
+      const wx = channels.wechat === true;
+      const ali = channels.alipay === true;
+      setWechatAvailable(wx);
+      setAlipayAvailable(ali);
+      setPaymentMethod(current =>
+        (current === "wechat" && wx) || (current === "alipay" && ali)
+          ? current : wx ? "wechat" : ali ? "alipay" : "wechat"
+      );
+      if (wx || ali) setError("");
+    } catch {
+      // Never show an unverified payment method as enabled.
+      setWechatAvailable(false);
+      setAlipayAvailable(false);
+    } finally {
+      setProvidersLoaded(true);
+      setRefreshingProviders(false);
+    }
   }, []);
 
-  useEffect(() => {
-    fetch("/api/pay/alipay/status", { cache: "no-store" })
-      .then((response) => response.ok ? response.json() : { available: false })
-      .then((data: { available?: boolean }) => setAlipayAvailable(data.available === true))
-      .catch(() => setAlipayAvailable(false));
-  }, []);
+  useEffect(() => { void refreshProviders(); }, [refreshProviders]);
 
   const checkPaidOnce = async (manual = false) => {
     if (!orderIdRef.current || doneRef.current) return;
@@ -524,21 +538,33 @@ const orderIdRef = useRef<string | null>(null);
             </div>
           </div>
 
-          {providersLoaded&&!wechatAvailable&&!alipayAvailable&&<div style={{padding:"14px 16px",border:"1px solid var(--lx-line)",borderRadius:12,marginTop:18,fontSize:13,lineHeight:1.8}}>
-            <p>{t("国际站付款渠道暂未恢复，不会自动创建付费订单。可切换到国内站确认当前可用的支付方式。","Payment providers are unavailable on this site. No order will be created automatically. You may review available methods on the China site.")}</p>
-            {!isWechatCanonicalDomain&&<a href={cnSwitchUrl} style={{display:"inline-block",marginTop:8,color:"#285eb5",textDecoration:"underline"}}>{t("前往国内站查看支付方式 →","View payment options on China site →")}</a>}
+          {providersLoaded&&!wechatAvailable&&!alipayAvailable&&<div role="status" style={{padding:"14px 16px",border:"1px solid var(--lx-line)",borderRadius:12,marginTop:18,fontSize:13,lineHeight:1.8}}>
+            <p>{isWechatCanonicalDomain
+              ? t("当前国内站微信与支付宝渠道均未启用，因此不会创建收费订单，也不会扣款。可以重新检测支付状态，或前往余额与订单页面。","Both WeChat Pay and Alipay are currently unavailable in China. No charge or order will be created. Refresh the channel status or view your balance and orders.")
+              : t("当前站点尚无已启用的支付渠道，不会自动创建收费订单。国内站可能提供不同的支付方式。","No payment provider is enabled on this site. No charge or order will be created. China may offer different payment methods.")}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-4">
+              <button type="button" onClick={() => void refreshProviders()} disabled={refreshingProviders} className="font-semibold text-[var(--lx-ink)] underline underline-offset-4 disabled:opacity-50">
+                {refreshingProviders?t("正在检测…","Checking…"):t("重新检测支付渠道","Refresh payment channels")}
+              </button>
+              <Link href="/ai-wallet" className="font-semibold text-[var(--lx-ink)] underline underline-offset-4">{t("查看余额","View balance")}</Link>
+              {!isWechatCanonicalDomain&&<a href={cnSwitchUrl} className="font-semibold underline underline-offset-4">{t("前往国内站","Go to China site")}</a>}
+            </div>
           </div>}
           {product.group==="market"&&!marketProductCanBuy&&<p role="status" style={{color:"#a45634",marginTop:14,fontSize:13}}>{t("此卖家商品尚未开放支付与交付。","This seller listing is not currently available for purchase.")}</p>}
           {product.group==="software"&&!softwareAvailable&&<p role="status" style={{color:"#a45634",marginTop:14,fontSize:13}}>{t("此数字软件仍在进行文件与自动交付验收，尚未开售。","This software has not been released for sale. Delivery testing is in progress.")}</p>}
           {status === "review" && (
             <button
-              disabled={!providersLoaded || (product.group==="market"&&!marketProductCanBuy) || (product.group==="software"&&!softwareAvailable) || (paymentMethod==="wechat"&&!wechatAvailable) || (paymentMethod==="alipay"&&!alipayAvailable)}
+              disabled={!providersLoaded || (product.group==="market"&&!marketProductCanBuy) || (product.group==="software"&&!softwareAvailable)}
               onClick={payNow}
               className="mt-8 w-full bg-lattice py-4 font-display text-sm uppercase tracking-widest2 text-[var(--lx-bg)] transition hover:bg-amber"
             >
-              {`${lang === "zh" ? "立即支付" : lang === "ja" ? "今すぐ支払う" : lang === "ko" ? "지금 결제" : lang === "fr" ? "Payer maintenant" : lang === "de" ? "Jetzt bezahlen" : lang === "es" ? "Pagar ahora" : lang === "pt" ? "Pagar agora" : lang === "ar" ? "ادفع الآن" : "Pay Now"} · ¥${product.priceRmb}`}
+              {providersLoaded&&!wechatAvailable&&!alipayAvailable
+                ? t("支付通道未开放 · 查看原因","Payments unavailable · View reason")
+                : `${lang === "zh" ? "立即支付" : lang === "ja" ? "今すぐ支払う" : lang === "ko" ? "지금 결제" : lang === "fr" ? "Payer maintenant" : lang === "de" ? "Jetzt bezahlen" : lang === "es" ? "Pagar ahora" : lang === "pt" ? "Pagar agora" : lang === "ar" ? "ادفع الآن" : "Pay Now"} · ¥${product.priceRmb}`}
             </button>
           )}
+
+          {status === "review" && error && <p role="alert" className="mt-4 text-sm text-rose">{error}</p>}
 
           {status === "waiting" && jsapiParamsRef.current && (
             <div className="lx11-legacy-panel mt-8 p-6 text-center">

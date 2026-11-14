@@ -1,0 +1,30 @@
+name: COM nine-language and tool detail remote non-mutating probes
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-nine-language-readonly-20261108.yml']
+permissions: {contents: read}
+jobs:
+  nine-language:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Probe nine localized SIAI and three common file tools, report every failure
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          base='https://lingxifield-com-main-20261108.3078024889.workers.dev'
+          failures=0
+          for path in /siai /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai \
+             /tools/pdf-compress /tools/image-to-pdf-pro /tools/video-toolkit;do
+            ok=0
+            for i in 1 2;do
+              st="$(curl -4sS --connect-timeout 10 --max-time 30 -o /dev/null -w '%{http_code}' "$base$path" || true)"
+              echo "COM_LOCALIZED_ROUTE route=$path trial=$i http=$st"
+              [[ "$st" == 200 ]] && ok=$((ok+1)) || true
+            done
+            echo "COM_LOCALIZED_RESULT route=$path ok=$ok out_of=2"
+            [[ "$ok" == 2 ]] || failures=$((failures+1))
+          done
+          echo "COM_LOCALIZED_TOTAL_UNSTABLE_ROUTES=$failures"
+          test "$failures" = 0

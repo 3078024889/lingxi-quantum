@@ -4,7 +4,7 @@ import {createAdminClient} from "@/lib/supabase/admin";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 import {newMarketplaceObjectKey,marketplaceMime,marketplaceR2Ready,
-  marketplaceUploadLimit,signedMarketplaceUpload,MARKET_MEDIA_IMAGE_LIMIT} from "@/lib/sasi-marketplace/r2";
+  marketplaceUploadLimit,signedMarketplaceUpload,MARKET_MEDIA_IMAGE_LIMIT,MARKET_MEDIA_COVER_LIMIT,MARKET_MEDIA_DETAIL_LIMIT} from "@/lib/sasi-marketplace/r2";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -36,6 +36,12 @@ export async function POST(req:NextRequest){
     .eq("listing_id",listingId).neq("status","rejected");
   if(countError)throw Error("MEDIA_COUNT_FAILED");
   if((count||0)>=MARKET_MEDIA_IMAGE_LIMIT)return NextResponse.json({error:"FIVE_IMAGES_MAX"},{status:409,headers:h});
+  const {count:kindCount,error:kindError}=await admin.from("sasi_market_media")
+    .select("id",{count:"exact",head:true}).eq("listing_id",listingId)
+    .eq("kind",kind).neq("status","rejected");
+  if(kindError)throw Error("MEDIA_KIND_COUNT_FAILED");
+  if((kindCount||0)>=(kind==="cover"?MARKET_MEDIA_COVER_LIMIT:MARKET_MEDIA_DETAIL_LIMIT))
+   return NextResponse.json({error:kind==="cover"?"ONE_COVER_MAX":"FOUR_DETAILS_MAX"},{status:409,headers:h});
   const key=newMarketplaceObjectKey(user.id,listingId,kind,extension);
   const {data:reservation,error:saveError}=await admin.from("sasi_market_media").insert({
    listing_id:listingId,seller_id:user.id,kind,object_key:key,declared_mime:mime,declared_size:size

@@ -26,7 +26,7 @@ export async function POST(req:NextRequest){
   const {data:order}=await admin.from("orders").select("status").eq("id",sale.order_id).eq("user_id",user.id).single();
   if(order?.status!=="paid")return NextResponse.json({error:"PAYMENT_NOT_VERIFIED"},{status:403,headers:h});
   const {data:listing,error:listingError}=await admin.from("sasi_market_listings")
-   .select("seller_id,delivery_path,sha256,scan_status,status")
+   .select("seller_id,delivery_path,sha256,scan_status,status,file_size_bytes")
    .eq("id",sale.listing_id).single();
   if(listingError||listing?.scan_status!=="clean"||!listing.delivery_path||
    !listing.sha256||listing.status!=="published")throw Error("FILE_NOT_CLEARED");
@@ -34,7 +34,8 @@ export async function POST(req:NextRequest){
   if(!listing.delivery_path.startsWith(prefix)||!listing.delivery_path.endsWith(".zip"))
    throw Error("UNAPPROVED_FILE_PATH");
   const head=await marketplaceObjectHead(listing.delivery_path);
-  if(!head||head.size>30*1024*1024)throw Error("FILE_UNAVAILABLE");
+  if(!head||head.size>30*1024*1024||head.size!==Number(listing.file_size_bytes)||
+    head.sha256!==listing.sha256)throw Error("APPROVED_ARTIFACT_INTEGRITY_MISMATCH");
   const downloadUrl=signedMarketplaceDownload(listing.delivery_path,60);
   const {data:grant,error:grantError}=await db.rpc("sasi_market_claim_download",{p_order_id:sale.order_id});
   if(grantError)throw Error("DOWNLOAD_AUTH_NOT_READY");

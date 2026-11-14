@@ -5,38 +5,43 @@ import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+// No verified seller-transfer adapter or settlement worker exists in this branch yet.
+// Keep this code-level gate closed even if an operator accidentally flips the env flag.
+const MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY=false;
 export async function GET(){
  const db=createClient(),{data:{user}}=await db.auth.getUser();
  if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
  try{
-  const [sales,payouts,seller]=await Promise.all([
+  const [sales,payouts,seller,snapshot]=await Promise.all([
    db.from("sasi_market_sales").select("order_id,currency,gross_minor,platform_fee_minor,seller_net_minor,status,available_at,created_at")
-      .eq("seller_id",user.id).order("created_at",{ascending:false}).limit(150),
+      .eq("seller_id",user.id).order("created_at",{ascending:false}).limit(151),
    db.from("sasi_market_payouts").select("id,currency,amount_minor,status,requested_at,submission_target_at,submitted_at,completed_at")
-      .eq("seller_id",user.id).order("requested_at",{ascending:false}).limit(150),
-   db.from("sasi_market_sellers").select("status,kyc_status,payout_provider").eq("user_id",user.id).maybeSingle()
+      .eq("seller_id",user.id).order("requested_at",{ascending:false}).limit(151),
+   db.from("sasi_market_sellers").select("status,kyc_status,payout_provider").eq("user_id",user.id).maybeSingle(),
+   db.rpc("sasi_market_seller_balance_snapshot")
   ]);
-  if(sales.error||payouts.error||seller.error)throw Error("REPORT_NOT_READY");
-  const buckets=Object.fromEntries(["CNY","USD"].map(c=>{
-   const rows=(sales.data||[]).filter(s=>s.currency===c);
-   const gross=rows.reduce((n,s)=>n+s.gross_minor,0);
-   const fees=rows.reduce((n,s)=>n+s.platform_fee_minor,0);
-   const available=rows.filter(s=>s.status==="available"&&Date.parse(s.available_at)<=Date.now())
-     .reduce((n,s)=>n+s.seller_net_minor,0);
-   const committed=(payouts.data||[]).filter(p=>p.currency===c&&["requested","processing","submitted","paid"].includes(p.status))
-     .reduce((n,p)=>n+p.amount_minor,0);
-   return [c,{grossMinor:gross,platformFeeMinor:fees,availableMinor:Math.max(0,available-committed)}];
-  }));
-  return NextResponse.json({balances:buckets,
-    sales:sales.data||[],payouts:payouts.data||[],seller:seller.data,
-    payoutsOpen:process.env.SASI_MARKET_PAYOUTS_ENABLED==="true",
-    submissionTargetMinutes:15,providerArrivalGuaranteed:false,
-    reportTruncated:(sales.data?.length||0)>=150},{headers:h});
+  if(sales.error||payouts.error||seller.error||snapshot.error||snapshot.data?.ok!==true)
+    throw Error("REPORT_NOT_READY");
+  const salesRows=sales.data||[];
+  const payoutRows=payouts.data||[];
+  const salesTruncated=salesRows.length>150;
+  const payoutsTruncated=payoutRows.length>150;
+  return NextResponse.json({
+    balances:snapshot.data.balances,
+    sales:salesRows.slice(0,150),
+    payouts:payoutRows.slice(0,150),
+    seller:seller.data,
+    payoutsOpen:process.env.SASI_MARKET_PAYOUTS_ENABLED==="true"&&MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY,
+    submissionTargetMinutes:15,
+    providerArrivalGuaranteed:false,
+    reportTruncated:salesTruncated||payoutsTruncated,
+    history:{salesTruncated,payoutsTruncated,pageSize:150}
+  },{headers:h});
  }catch{return NextResponse.json({error:"MARKET_BALANCE_NOT_READY"},{status:503,headers:h});}
 }
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:h});
- if(process.env.SASI_MARKET_PAYOUTS_ENABLED!=="true")
+ if(process.env.SASI_MARKET_PAYOUTS_ENABLED!=="true"||!MARKETPLACE_PAYOUT_TRANSFER_WORKER_READY)
   return NextResponse.json({error:"PAYOUT_PROVIDER_NOT_VERIFIED"},{status:503,headers:h});
  const db=createClient(),{data:{user}}=await db.auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
@@ -51,8 +56,8 @@ export async function POST(req:NextRequest){
  });
  if(error)return NextResponse.json({error:"PAYOUT_REQUEST_NOT_READY"},{status:503,headers:h});
  if(!data?.ok)return NextResponse.json({error:data?.error||"PAYOUT_NOT_APPROVED"},{status:409,headers:h});
- // Provider transfer happens asynchronously via a separately verified worker;
- // "requested" NEVER means "paid" or "sent to bank".
+ // This path records a request only. Provider transfer is NOT implemented here;
+ // never report a request as submitted, paid or sent to a bank account.
  return NextResponse.json({id:data.id,status:data.status,submissionTargetMinutes:15,
   providerArrivalGuaranteed:false},{status:202,headers:h});
 }

@@ -1,0 +1,54 @@
+name: COM prod full-SASI nine-language release with original API preservation
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-production-apex-cutover-20261108.yml']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: lingxifield-com-apex-one-time-release
+  cancel-in-progress: false
+jobs:
+  release:
+    environment: cloudflare-production
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      GH_TOKEN: ${{ github.token }}
+      COM_VERIFIED_CANARY_RUN: '42460812556'
+      COM_VERIFIED_CANARY_SHA: 'a613488cf2092b970505dee17ae52a0ae0661cbf'
+      COM_CUTOVER_PROPAGATION_GATE: 'consecutive-with-cache-bypass-v2'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24}
+      - name: Only execute exact GitHub Actions canary after completed success
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$GH_TOKEN"
+          ok=0
+          for attempt in $(seq 1 30);do
+            result="$(curl -fLsS --connect-timeout 8 --max-time 22 -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/3078024889/lingxi-quantum/actions/runs/$COM_VERIFIED_CANARY_RUN")"
+            status="$(jq -r .status <<< "$result")"
+            verdict="$(jq -r .conclusion <<< "$result")"
+            sha="$(jq -r .head_sha <<< "$result")"
+            test "$sha" = "$COM_VERIFIED_CANARY_SHA" || exit 1
+            echo "PINNED_CANARY status=$status conclusion=$verdict attempt=$attempt"
+            if [[ "$status" == completed ]];then
+              if [[ "$verdict" == success ]];then ok=1;fi
+              break
+            fi
+            sleep 16
+          done
+          test "$ok" = 1
+          echo 'EXACT_COM_CANDIDATE_CI_GATE_SUCCESS'
+      - name: Deploy only validated apex wildcard with automatic rollback on failed live smoke
+        run: |
+          set -Eeuo pipefail
+          node --check scripts/cloudflare/com-verified-apex-cutover-20261108.mjs
+          node scripts/cloudflare/com-verified-apex-cutover-20261108.mjs

@@ -1,0 +1,28 @@
+name: COM wallet route read-only diagnosis (NO DEPLOY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-wallet-anonymous-route-probe-20261108.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Public wallet and payment endpoints (no credentials)
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for host in lingxifield-com-unified-20261108.3078024889.workers.dev lingxifield-com-next-20261108.3078024889.workers.dev lingxifield-com-static-gateway-canary-20261107.3078024889.workers.dev lingxifield.com lingxifield.cn; do
+            for path in /ai-wallet /api/health /api/pay/providers; do
+              file="$(mktemp)"; hdr="$(mktemp)"
+              code="$(curl -4sSL --connect-timeout 8 --max-time 22 -D "$hdr" -o "$file" -w '%{http_code}' "https://$host$path" || true)"
+              echo "WALLET_ROUTE_CHECK host=$host path=$path http=$code bytes=$(wc -c < "$file") render=$(grep -i '^x-lingxi-render-mode:' "$hdr" | tr -d '\r' | tail -1 || true)"
+              if [[ "$path" = /ai-wallet && "$code" = 200 ]];then
+                grep -Eo '余额与充值|Balance & top-ups|登录后查看真实余额|LINGXIFIELD' "$file" | sort -u | head -8 || true
+              fi
+              rm -f "$file" "$hdr"
+            done
+          done
+          echo COM_WALLET_READONLY_DIAGNOSTIC_COMPLETE

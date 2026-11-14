@@ -29,7 +29,8 @@ test("nine-language search-intent sections have six distinct human-readable topi
 });
 test("search terms visible in page title, center, footer and JSON-LD; exact canonical remains stable",()=>{
  for(const s of keywords)assert(layout.includes(s)||page.includes(s)||catalog.includes(s),s);
- assert.match(home,/SIAI_DISCOVERY\[lang\]\.hero/);
+ assert.match(home,/SIAI_DISCOVERY\[lang\]/);
+ assert.match(home,/data-siai-search-keywords=\{discovery\.hero\}/);
  assert.match(home,/<SiaiSearchDiscovery variant="home"\/>/);
  assert.match(rank,/<SiaiSearchDiscovery variant="ranking"\/>/);
  assert.match(footer,/discovery\.topics\.map\(\(topic,i\)=>/);
@@ -42,7 +43,15 @@ test("search terms visible in page title, center, footer and JSON-LD; exact cano
  assert.match(read("public/llms-full.txt"),/Global AI \/ SI \/ SIAI rankings/);
  assert.match(page,/const \{curated,rows\}=getSiaiDirectoryRows\(\)/);
  assert.match(page,/itemListElement:curated\.map/);
- assert.match(page,/alternates:\{canonical:PRIMARY_SITE\+"\/siai",languages:/);
+ if(/seoSiteForRequest/.test(page)){
+  assert.match(page,/const h=await headers\(\)/);
+  assert.match(page,/const site=seoSiteForRequest\(h\.get\("host"\),h\.get\("x-forwarded-host"\),h\.get\("x-lingxi-public-host"\)\)/);
+  assert.match(page,/alternates:\{canonical:site\+"\/siai",languages:/);
+  assert.match(page,/const canonical=site\+"\/siai"/);
+ }else{
+  assert.match(page,/const SITE=seoSiteForBuild\(process\.env\.NEXT_PUBLIC_SITE_URL\)/);
+  assert.match(page,/alternates:\{canonical:SITE\+"\/siai",languages:/);
+ }
  assert.doesNotMatch(page,/index:false/);
 });
 test("eight sourced corporate-history entries remain honest about parent/launch differences",()=>{
@@ -74,4 +83,10 @@ test("nine-language FAQ body follows the language selection and spaced keywords 
  assert.match(faq,/lang\|\|initialLocale/);
  assert.match(home,/replace\(\/\\s\+\/g,""\)/);
  assert.match(home,/"ai视频"/);
+ assert.match(home,/new URL\("\/siai",location\.origin\)/);
+ assert.match(home,/discovery\.searchParams\.set\("q",value\)/);
+ assert.match(home,/destination\.searchParams\.set\('q',value\)/);
+ assert.match(home,/data-testid="home-task-search"/);
+ assert.match(rank,/params\.get\("q"\)/);
+ assert.match(rank,/setQuery\(incomingQuery\.trim\(\)\)/);
 });

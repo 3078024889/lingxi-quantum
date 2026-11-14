@@ -3,7 +3,7 @@
  * Staging-only R2 large PUBLIC asset auditor/uploader.
  * Never touches user uploads, private storage, DNS, Worker routes or production DB.
  * Build/stage first; --audit is read-only. Upload only on explicit operator action
- * with Cloudflare credentials for the dedicated eight-object public R2 bucket.
+ * with Cloudflare credentials for the dedicated seven-object public R2 bucket.
  */
 import {createReadStream} from "node:fs";
 import {readFile,stat,mkdtemp,rm} from "node:fs/promises";
@@ -21,7 +21,7 @@ if(manifest.releaseReady!==false||manifest.bucketName!==bucket||
  cfg.r2_buckets[0]?.binding!=="LINGXI_PUBLIC_LARGE_R2")
  throw Error("UNVERIFIED_PUBLIC_R2_BUCKET_BINDING");
 const assets=manifest.assets||[];
-if(assets.length!==8)throw Error("R2_OBJECT_COUNT_MUST_BE_EIGHT");
+if(assets.length!==7)throw Error("R2_OBJECT_COUNT_MUST_BE_SEVEN");
 const entries=[];
 const seen=new Set();
 async function digest(file){
@@ -39,20 +39,22 @@ for(const asset of assets){
  if(!expected||asset.bytes!==expected.bytes||asset.contentType!==expected.contentType||
  asset.r2Key!=="public"+p||!/^[a-f0-9]{64}$/.test(String(asset.sha256||"")))
   throw Error("INVALID_PUBLIC_R2_OBJECT_MANIFEST:"+p);
- const path=hashed?join(root,".open-next","r2-upload-sources",p.slice(1)):join(root,"public",p.slice(1));
+ const publicPath=join(root,"public",p.slice(1));
+ const baselinePath=join(root,".open-next","r2-upload-sources",p.slice(1));
+ const path=hashed?baselinePath:publicPath;
  const st=await stat(path);
  if(!st.isFile()||st.size!==asset.bytes)throw Error("PUBLIC_R2_SOURCE_NOT_IDENTICAL:"+p);
  if(await digest(path)!==asset.sha256)throw Error("PUBLIC_R2_SOURCE_SHA256_MISMATCH:"+p);
  entries.push({path,object:bucket+"/"+asset.r2Key,sha256:asset.sha256,bytes:asset.bytes,contentType:asset.contentType});
 }
-if(entries.length!==8||!seen.has("/media/ffmpeg-0.12.10/ffmpeg-core.wasm")||
+if(entries.length!==7||!seen.has("/media/ffmpeg-0.12.10/ffmpeg-core.wasm")||
  [...seen].filter(x=>x.startsWith("/_next/static/media/")).length!==1)
  throw Error("R2_REQUIRED_WASM_MANIFEST_NOT_COMPLETE");
 const total=entries.reduce((n,e)=>n+e.bytes,0);
-console.log("R2_EIGHT_SOURCE_FILES_SHA256_VERIFIED");
+console.log("R2_SEVEN_SOURCE_FILES_SHA256_VERIFIED");
 console.log("R2_PUBLIC_BYTES="+total);
 if(process.argv[2]==="--audit"){
- console.log("R2_AUDIT_ONLY_NO_REMOTE_CALLS");
+ console.log("R2_AUDIT_ONLY_NO_REMOTE_WRITES");
  process.exit(0);
 }
 if(process.argv[2]!=="--upload-verified")throw Error("USAGE: --audit OR --upload-verified");
@@ -79,9 +81,9 @@ try{
   const size=(await stat(returned)).size;
   if(size!==e.bytes||await digest(returned)!==e.sha256)
    throw Error("R2_UPLOADED_OBJECT_READBACK_FAILED:"+i);
-  console.log("R2_REMOTE_UPLOADED_AND_HASH_VERIFIED:"+i+":of:8");
+  console.log("R2_REMOTE_UPLOADED_AND_HASH_VERIFIED:"+i+":of:7");
  }
- console.log("R2_EIGHT_PUBLIC_OBJECTS_STAGED_AND_VERIFIED_NOT_SITE_DEPLOYED");
+ console.log("R2_SEVEN_PUBLIC_OBJECTS_STAGED_AND_VERIFIED_NOT_SITE_DEPLOYED");
 }finally{
  await rm(temp,{recursive:true,force:true});
 }

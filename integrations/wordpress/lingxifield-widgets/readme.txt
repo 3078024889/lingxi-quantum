@@ -1,17 +1,17 @@
-=== LINGXIFIELD SIAI and QR Widgets ===
+=== LINGXIFIELD SIAI, Free Tools and QR Widgets ===
 Tags: ai tools, directory, qr code, shortcode, comparison
 Requires at least: 6.0
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Embed the reviewed Global SIAI directory, a single approved provider card, or a public-URL QR code generator on your website.
+Embed the reviewed Global SIAI directory, the anonymous free local-tools directory, a single approved provider card, or a public-URL QR code generator on your website.
 
 == Description ==
 
-LINGXIFIELD widgets provide a compact, searchable list of reviewed public SI/AI tools
-and an optional QR generator for public URLs. A WordPress editor chooses where to
+LINGXIFIELD widgets provide a compact, searchable list of reviewed public SI/AI platforms,
+an anonymous local-tools directory and an optional QR generator for public URLs. A WordPress editor chooses where to
 display the widgets by inserting a shortcode. This plugin does not automatically
 insert links, advertisements, trackers or widgets into pages.
 
@@ -19,6 +19,7 @@ insert links, advertisements, trackers or widgets into pages.
 
 * [lingxifield_siai partner="exampleblog" lang="en"]
 * [lingxifield_vendor vendor="chatgpt" partner="exampleblog" lang="en"]
+* [lingxifield_tools partner="exampleblog" lang="en"]
 * [lingxifield_qr partner="exampleblog" lang="en"]
 
 Replace "chatgpt" with the exact approved public vendor ID. Supported languages:
@@ -31,8 +32,10 @@ https://lingxifield.com/. Its executable JavaScript is bundled locally
 in this plugin and is loaded only on pages where the site owner has inserted
 a shortcode. No JavaScript is loaded from the remote service.
 
-The reviewed directory widget requests public profile data from
-https://lingxifield.com/api/public/siai-widget. The QR widget sends
+The reviewed SIAI widget requests public profile data from
+https://lingxifield.com/api/public/siai-widget. The free-tools widget requests
+only anonymously usable local tools from
+https://lingxifield.com/api/public/free-tools-widget. The QR widget sends
 a public URL entered by a visitor to
 https://lingxifield.com/api/public/qr-code to generate its QR image.
 Private documents and files are not accepted or uploaded through these widgets.
@@ -80,5 +83,6 @@ not independently verified ownership credentials.
 
 == Changelog ==
 
-= 0.1.0 =
-* Initial shortcodes for reviewed SIAI directory, provider cards and public QR URLs.
+= 0.2.0 =
+* Added a searchable directory of anonymous free local tools.
+* Retained the reviewed SIAI directory, provider-card and public QR shortcodes.

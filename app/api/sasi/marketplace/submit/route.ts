@@ -1,15 +1,16 @@
 import {NextRequest,NextResponse} from "next/server";
 import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
-import {marketplaceR2Ready,marketplaceObjectHead,marketplaceOwnedKey,marketplaceUploadLimit} from "@/lib/sasi-marketplace/r2";
+import {marketplaceUploadReady,marketplaceObjectHead,marketplaceOwnedKey,marketplaceUploadLimit} from "@/lib/sasi-marketplace/r2";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
 import {enforceAbuseGuard} from "@/lib/security/abuse-guard";
+import {dispatchMarketplaceScan} from "@/lib/sasi-marketplace/dispatch-scan";
 export const runtime="nodejs";export const dynamic="force-dynamic";
 const h={"Cache-Control":"private,no-store","X-Content-Type-Options":"nosniff"} as const;
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export async function POST(req:NextRequest){
  if(!isSameOriginMutation(req))return NextResponse.json({error:"INVALID_ORIGIN"},{status:403,headers:h});
- if(!marketplaceR2Ready())
+ if(!marketplaceUploadReady())
   return NextResponse.json({error:"UPLOAD_SCANNING_NOT_READY"},{status:503,headers:h});
  const {data:{user}}=await createClient().auth.getUser();
  if(!user?.email_confirmed_at)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401,headers:h});
@@ -25,6 +26,11 @@ export async function POST(req:NextRequest){
    .select("id,status,quarantine_path").eq("id",body.listingId).eq("seller_id",user.id).single();
   if(!listing||listing.status!=="draft"||!listing.quarantine_path)
    return NextResponse.json({error:"UPLOAD_TOKEN_REQUIRED"},{status:409,headers:h});
+  const {count:coverCount,error:coverError}=await admin.from("sasi_market_media")
+   .select("id",{count:"exact",head:true}).eq("listing_id",listing.id)
+   .eq("seller_id",user.id).eq("kind","cover").in("status",["awaiting_review","approved"]);
+  if(coverError)throw Error("MAIN_IMAGE_CHECK_FAILED");
+  if(coverCount!==1)return NextResponse.json({error:"ONE_CONFIRMED_MAIN_IMAGE_REQUIRED"},{status:409,headers:h});
   const path=marketplaceOwnedKey(user.id,listing.id,String(listing.quarantine_path));
   if(!path.includes("/quarantine/")||!path.endsWith(".zip"))throw Error("NOT_A_PRIVATE_ZIP");
   const info=await marketplaceObjectHead(path);
@@ -37,6 +43,7 @@ export async function POST(req:NextRequest){
   }).eq("id",listing.id).eq("seller_id",user.id).eq("status","draft")
     .select("id,status").maybeSingle();
   if(savedError||!saved)throw Error("SUBMISSION_CONFLICT");
-  return NextResponse.json({item:saved,message:"QUEUED_FOR_SECURITY_SCAN_AND_HUMAN_REVIEW",published:false},{headers:h});
+  const scanDispatched=await dispatchMarketplaceScan(saved.id);
+  return NextResponse.json({item:saved,scanQueued:scanDispatched,scanDispatched,published:false},{headers:h});
  }catch{return NextResponse.json({error:"SUBMISSION_REQUIRES_MANUAL_REVIEW"},{status:503,headers:h});}
 }

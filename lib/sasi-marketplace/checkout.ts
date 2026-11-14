@@ -2,13 +2,16 @@ import "server-only";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {marketProductUuid} from "./fees";
 import {marketplaceR2Ready} from "./r2";
-import {wechatPayEnabled} from "@/lib/wechatpay";
-import {alipayEnabled} from "@/lib/alipay";
+
 import type {Product} from "@/lib/plans";
 
+/** A separate finance gate protects every marketplace merchant provider. */
+export function marketplaceCommerceReady():boolean {
+ return marketplaceR2Ready() && process.env.SASI_MARKETPLACE_COMMERCE_READY==="true";
+}
 export async function resolveMarketplaceProduct(productId:string):Promise<(Product&{sellerId:string})|null>{
  const id=marketProductUuid(productId);
- if(!id||!marketplaceR2Ready()||!(wechatPayEnabled()||alipayEnabled()))return null;
+ if(!id||!marketplaceCommerceReady())return null;
  try{
   const db=createAdminClient();
   const {data:item,error}=await db.from("sasi_market_listings")

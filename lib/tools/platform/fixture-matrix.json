@@ -485,9 +485,6 @@
     "url-parser": {
       "kind": "local-contract"
     },
-    "url-to-video": {
-      "kind": "online-contract"
-    },
     "uuid-generator": {
       "kind": "local-contract"
     },
@@ -517,6 +514,9 @@
       "fixtureGroup": "table-xlsx"
     },
     "xml-formatter": {
+      "kind": "local-contract"
+    },
+    "password-generator": {
       "kind": "local-contract"
     }
   },

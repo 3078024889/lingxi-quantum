@@ -1,0 +1,63 @@
+name: COM production 9-language, 94 tool detail, SASI commerce and edge smoke (READ ONLY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-postcutover-full-readonly-20261108.yml']
+permissions: {contents: read}
+jobs:
+  production-public:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - name: Assert 14 edge static routes and safe SASI public boundaries
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          base='https://lingxifield.com'
+          count=0
+          for path in / /siai /tools /sasi /sasi/marketplace /announcements /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog;do
+            h="$(mktemp)"
+            status="$(curl -4sS --connect-timeout 9 --max-time 28 -D "$h" -o /dev/null -w '%{http_code}' "$base$path" || true)"
+            echo "COM_LIVE_STATIC path=$path HTTP_$status"
+            test "$status" = 200
+            grep -iq '^x-lingxi-render-mode: static-edge-verified' "$h"
+            rm -f "$h"
+            count=$((count+1))
+          done
+          test "$count" = 15
+          for path in /api/sasi/marketplace/seller /api/sasi/marketplace/my-orders /api/sasi/account;do
+            status="$(curl -4sS --connect-timeout 9 --max-time 28 -o /dev/null -w '%{http_code}' "$base$path" || true)"
+            echo "COM_LIVE_PRIVATE_BOUNDARY path=$path HTTP_$status"
+            test "$status" = 401
+          done
+          for path in /api/health /api/pay/providers /api/sasi/marketplace/listings;do
+            status="$(curl -4sS --connect-timeout 9 --max-time 28 -o /dev/null -w '%{http_code}' "$base$path" || true)"
+            echo "COM_LIVE_PUBLIC_API path=$path HTTP_$status"
+            test "$status" = 200
+          done
+          c="$(curl -4sS --connect-timeout 9 --max-time 28 -H 'Range: bytes=0-1023' -o /dev/null -w '%{http_code}' "$base/media/ffmpeg-0.12.10/ffmpeg-core.wasm" || true)"
+          echo "COM_LIVE_R2_BYTE_RANGE_HTTP_$c"
+          test "$c" = 206
+          c="$(curl -4sS --connect-timeout 9 --max-time 28 -o /dev/null -w '%{http_code}' https://www.lingxifield.com/siai || true)"
+          echo "COM_LIVE_WWW_CANONICAL_HTTP_$c"
+          test "$c" = 308
+          echo 'COM_PRODUCTION_9_LANG_SASI_R2_ANON_EDGE_PASS'
+      - name: Probe each actual checked-in tool page, not invented route names
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          count=0; ok=0; failed=0
+          while IFS= read -r file;do
+            slug="${file#app/tools/}";slug="${slug%/page.tsx}"
+            case "$slug" in "[slug]"|admin|pay|pass)continue;;esac
+            count=$((count+1))
+            status="$(curl -4L -sS --connect-timeout 9 --max-time 28 -o /dev/null -w '%{http_code}' "https://lingxifield.com/tools/$slug" || true)"
+            echo "COM_LIVE_TOOL_DETAIL slug=$slug HTTP_$status"
+            if [[ "$status" = 200 ]];then ok=$((ok+1));else failed=$((failed+1));fi
+          done < <(find app/tools -mindepth 2 -maxdepth 2 -name page.tsx -type f | LC_ALL=C sort)
+          echo "COM_TOOL_PAGES_CHECKED=$count PASS=$ok FAIL=$failed"
+          test "$count" -ge 90
+          test "$failed" = 0
+          echo 'COM_ALL_EXPLICIT_TOOL_PAGE_ROUTES_PASS'

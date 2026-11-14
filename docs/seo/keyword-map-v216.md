@@ -1,39 +1,44 @@
-# LINGXIFIELD V21.6 — Global SEO / GEO keyword map
+# LINGXIFIELD V21.7 — Global SEO / GEO keyword map
+Date: 2026-11-13
 
-Date: 2026-09-27
+This map reflects the current public product architecture. It records search intent and page ownership; it does not invent keyword-volume figures.
 
-This map uses current search-result wording and high-intent task phrases. It does **not** invent keyword-volume numbers.
+## Chinese — core platform terms
+全球SIAI排行榜；全球AI行情平台；全球AI排行榜；全球SI排行榜；全球SI行情平台；全球SIAI行情平台；全球AI模型价格对比；AI模型免费额度；AI模型地区可用性；AI商用授权；API Token成本。
 
-## Chinese
-免费在线工具；PDF压缩；PDF合并；PDF拆分；图片压缩；图片格式转换；视频转文字；音频转文字；字幕翻译；临时邮箱；阅后即焚；图片OCR；AI短剧生成；AI视频生成；书本智能体；科研智能体；学习智能体；AI网站生成
+## Chinese — practical tools and ToolPass
+100+在线实用工具；全场工具包无限使用；PDF压缩；PDF合并；PDF拆分；PDF编辑；PDF OCR；图片OCR；图片压缩；HEIC转JPG；视频压缩；视频裁剪；视频去水印；音频提取；音频降噪；字幕制作；音视频合并；临时邮箱；阅后即焚。
+
+## Chinese — SASI Software Marketplace
+SASI智能软件市场；成品软件市场；MT5 EA源码；软件源码授权；软件版本与兼容性；软件安装说明；软件许可；卖家工作台；商品审核；私有文件下载；软件安全自动交付。
 
 ## English
-free online tools; PDF compressor; merge PDF; split PDF; image compressor; image converter; video transcription; audio to text; subtitle translator; temporary email; burn after reading; image OCR; AI short drama generator; AI video generator; book to AI agent; AI research assistant; AI study assistant; AI website builder
+Global SIAI Rankings; Global AI Market Data Platform; Global AI Rankings; Global SI Rankings; Global SI Market Data Platform; Global SIAI Market Data Platform; AI model pricing comparison; free AI quotas; regional model availability; commercial AI licensing; API token cost; 100+ online practical tools; ToolPass unlimited tool use; PDF compressor; merge PDF; split PDF; PDF OCR; image OCR; HEIC to JPG; video compressor; video trimmer; audio extraction; audio denoising; subtitle tools; temporary email; burn after reading; SASI Software Marketplace; MT5 EA source code; software licensing; seller dashboard; secure digital delivery.
 
 ## Japanese
-無料オンラインツール；PDF 圧縮；PDF 結合；PDF 分割；画像 圧縮；画像 変換；動画 文字起こし；音声 文字起こし；字幕 翻訳；捨てメアド；OCR；AI 動画生成；AI ショートドラマ；書籍 AI；研究 AI；学習 AI；AI Webサイト作成
+グローバルSIAIランキング；グローバルAI市場データプラットフォーム；グローバルAIランキング；グローバルSIランキング；グローバルSI市場データ；グローバルSIAI市場データ；AIモデル価格比較；無料利用枠；地域別利用可否；商用ライセンス；APIトークン費用；100以上の実用オンラインツール；PDF圧縮；PDF結合；PDF分割；画像OCR；HEICからJPG；動画圧縮；音声抽出；ノイズ除去；一時メール；SASIソフトウェア市場；MT5 EAソースコード；ソフトウェアライセンス；安全なデジタル納品。
 
 ## Korean
-무료 온라인 도구; PDF 압축; PDF 합치기; PDF 분할; 이미지 압축; 이미지 변환; 영상 텍스트 변환; 음성 텍스트 변환; 자막 번역; 임시 이메일; OCR; AI 영상 생성; AI 숏폼 드라마; 책 AI 에이전트; AI 연구 도우미; AI 학습 도우미; AI 웹사이트 만들기
+글로벌 SIAI 순위；글로벌 AI 시장 데이터 플랫폼；글로벌 AI 순위；글로벌 SI 순위；글로벌 SI 시장 데이터 플랫폼；글로벌 SIAI 시장 데이터 플랫폼；AI 모델 가격 비교；무료 사용량；지역별 이용 가능성；상업용 라이선스；API 토큰 비용；100개 이상의 실용 온라인 도구；PDF 압축；PDF 병합；PDF 분할；이미지 OCR；HEIC JPG 변환；영상 압축；오디오 추출；노이즈 제거；임시 이메일；SASI 소프트웨어 마켓；MT5 EA 소스 코드；소프트웨어 라이선스；안전한 디지털 전달。
 
 ## French
-outils en ligne gratuits; compresser PDF; fusionner PDF; diviser PDF; compresser image; convertir image; transcription vidéo; audio en texte; traduction sous-titres; email temporaire; OCR; générateur vidéo IA; mini-série IA; livre agent IA; assistant recherche IA; assistant étude IA; créateur site IA
+Classement SIAI mondial；plateforme mondiale de données du marché IA；classement IA mondial；classement SI mondial；données du marché SI；données du marché SIAI；comparaison des prix des modèles IA；quotas gratuits；disponibilité régionale；licence commerciale；coût des jetons API；plus de 100 outils pratiques；compresser PDF；fusionner PDF；OCR image；convertir HEIC en JPG；compresser vidéo；extraire audio；réduire le bruit audio；marché de logiciels SASI；code source MT5 EA；licence logicielle；livraison numérique sécurisée。
 
 ## German
-kostenlose Online-Tools; PDF komprimieren; PDF zusammenfügen; PDF teilen; Bild komprimieren; Bild konvertieren; Video transkribieren; Audio in Text; Untertitel übersetzen; temporäre E-Mail; OCR; KI Video Generator; KI Kurzdrama; Buch KI Agent; KI Forschungsassistent; KI Lernassistent; KI Website erstellen
+Globales SIAI-Ranking；globale KI-Marktdatenplattform；globales KI-Ranking；globales SI-Ranking；SI-Marktdaten；SIAI-Marktdaten；KI-Modellpreisvergleich；kostenlose Kontingente；regionale Verfügbarkeit；kommerzielle Lizenz；API-Token-Kosten；über 100 praktische Online-Tools；PDF komprimieren；PDF zusammenfügen；Bild-OCR；HEIC in JPG；Video komprimieren；Audio extrahieren；Audi Rauschen entfernen；SASI-Softwaremarkt；MT5-EA-Quellcode；Softwarelizenz；sichere digitale Auslieferung。
 
 ## Spanish
-herramientas online gratis; comprimir PDF; unir PDF; dividir PDF; comprimir imagen; convertir imagen; transcribir video; audio a texto; traducir subtítulos; correo temporal; OCR; generador de videos IA; minidrama IA; libro a agente IA; asistente investigación IA; asistente estudio IA; crear sitio web con IA
+Ranking SIAI global；plataforma global de datos del mercado IA；ranking global de IA；ranking global SI；datos del mercado SI；datos del mercado SIAI；comparación de precios de modelos IA；cuotas gratuitas；disponibilidad regional；licencia comercial；coste de tokens API；más de 100 herramientas online；comprimir PDF；unir PDF；OCR de imagen；HEIC a JPG；comprimir vídeo；extraer audio；reducir ruido de audio；mercado de software SASI；código fuente MT5 EA；licencia de software；entrega digital segura。
 
 ## Portuguese
-ferramentas online grátis; comprimir PDF; juntar PDF; dividir PDF; comprimir imagem; converter imagem; transcrever vídeo; áudio para texto; traduzir legendas; email temporário; OCR; gerador de vídeo IA; minidrama IA; livro para agente IA; assistente pesquisa IA; assistente estudo IA; criar site com IA
+Ranking SIAI global；plataforma global de dados do mercado de IA；ranking global de IA；ranking global SI；dados do mercado SI；dados do mercado SIAI；comparação de preços de modelos IA；cotas gratuitas；disponibilidade regional；licença comercial；custo de tokens API；mais de 100 ferramentas online；comprimir PDF；juntar PDF；OCR de imagem；HEIC para JPG；comprimir vídeo；extrair áudio；reduzir ruído de áudio；mercado de software SASI；código-fonte MT5 EA；licença de software；entrega digital segura。
 
 ## Arabic
-أدوات مجانية اون لاين؛ ضغط PDF؛ دمج PDF؛ تقسيم PDF؛ ضغط الصور؛ تحويل الصور؛ تحويل الفيديو إلى نص؛ تحويل الصوت إلى نص؛ ترجمة الترجمة النصية؛ بريد مؤقت؛ OCR؛ مولد فيديو بالذكاء الاصطناعي؛ دراما قصيرة بالذكاء الاصطناعي؛ كتاب إلى وكيل ذكاء اصطناعي؛ مساعد بحث بالذكاء الاصطناعي؛ مساعد دراسة بالذكاء الاصطناعي؛ إنشاء موقع بالذكاء الاصطناعي
+تصنيف SIAI العالمي؛ منصة بيانات سوق الذكاء الاصطناعي العالمية؛ تصنيفات الذكاء الاصطناعي العالمية؛ تصنيفات SI العالمية؛ بيانات سوق SI؛ بيانات سوق SIAI؛ مقارنة أسعار نماذج الذكاء الاصطناعي؛ الحصص المجانية؛ التوفر حسب المنطقة؛ الترخيص التجاري؛ تكلفة رموز API؛ أكثر من 100 أداة عملية عبر الإنترنت؛ ضغط PDF؛ دمج PDF؛ OCR الصور؛ تحويل HEIC إلى JPG؛ ضغط الفيديو؛ استخراج الصوت؛ إزالة ضوضاء الصوت؛ سوق برامج SASI؛ الشيفرة المصدرية MT5 EA؛ ترخيص البرامج؛ التسليم الرقمي الآمن。
 
-## Rules
-- Do not stuff all phrases into visible copy.
-- Use one primary intent per page.
-- Localized URLs must carry self-referencing canonicals and complete hreflang clusters.
-- Retired spiritual/legacy URLs remain HTTP 410 and are excluded from all sitemaps/internal discovery.
-- Current product pages and tools are the only URLs promoted to crawlers.
+## Indexing and GEO rules
+- Keep one primary search intent per canonical page.
+- Localized pages must use self-referencing canonicals and complete hreflang clusters.
+- Put aliases in metadata and machine-readable indexes, not in duplicated thin pages.
+- Retired creation, book, learning, research-workflow and website-builder routes must not enter sitemaps, internal discovery or public AI indexes.
+- Public machine-readable files must never expose private account, seller, settlement, order or download data.

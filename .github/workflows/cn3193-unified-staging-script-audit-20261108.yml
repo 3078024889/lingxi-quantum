@@ -1,0 +1,33 @@
+name: CN3193 isolated source-only release script safety audit (NO DEPLOY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths:
+      - 'scripts/ops/ecs-cn3193-unified-standalone-stage-20261108.sh'
+      - '.github/workflows/cn3193-unified-staging-script-audit-20261108.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - name: Validate exact current service, isolated 3193, checksums and payment gate
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          s=scripts/ops/ecs-cn3193-unified-standalone-stage-20261108.sh
+          bash -n "$s"
+          grep -Fq 'SVC=lingxifield-cn-release-20261108-bed36092c854' "$s"
+          grep -Fq 'PORT=3193' "$s"
+          grep -Fq 'EnvironmentFile=$STAGE_ENV' "$s"
+          grep -Fq 'sha256sum -c "$CHECK"' "$s"
+          grep -Fq 'CN3193_STAGING_PASS_PRODUCTION_3192_UNCHANGED' "$s"
+          grep -Fq 'TOOL_PASS_COMMERCE_READY=false' "$s"
+          grep -Fq 'SASI_MARKET_SALES_ENABLED=false' "$s"
+          grep -Fq 'CN_NEW_3193_NGINX_PROMOTION_PASS_ROLLBACK_FILE' "$s"
+          ! grep -Fq '5584d80b794cd611' "$s"
+          ! grep -Fq '454377744' "$s"
+          echo CN3193_SAFE_SCRIPT_STATIC_GATE_PASS_NO_ECS_DEPLOY

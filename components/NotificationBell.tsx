@@ -4,7 +4,8 @@ import{useCallback,useEffect,useMemo,useRef,useState}from"react";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{accountText}from"@/lib/account-experience-i18n";
 import LingxiMiniIcon from"@/components/LingxiMiniIcon";
-type Item={read?:boolean;eventKey?:string;id:string;kind:"announcement"|"payment"|"refund"|"withdrawal";createdAt:string;href?:string|null;amountRmb?:number|null;status?:string|null;version?:string;title?:string;body?:string};
+import {loadUnifiedNotificationFeed,type UnifiedNotice} from "@/lib/notifications/unified-public-feed";
+type Item=UnifiedNotice;
 
 const LABELS={
  zh:{title:"消息中心",all:"查看全部消息",close:"关闭",new:"新消息"},
@@ -21,13 +22,13 @@ const LABELS={
 export default function NotificationBell(){
  const{lang}=useLingxiLang();const t=(k:string,v?:Record<string,string|number>)=>accountText(lang,k,v);const l=LABELS[lang]??LABELS.en;
  const[open,setOpen]=useState(false),[items,setItems]=useState<Item[]>([]),[seenAt,setSeenAt]=useState("");const ref=useRef<HTMLDivElement|null>(null);
- const load=useCallback(async()=>{try{const r=await fetch(`/api/notifications?lang=${lang}`,{cache:"no-store"});if(r.ok){const d=await r.json();setItems(Array.isArray(d.items)?d.items:[])}}catch{}},[lang]);
+ const load=useCallback(async()=>{const data=await loadUnifiedNotificationFeed(lang,"/api/notifications");if(data.available)setItems(data.items)},[lang]);
  useEffect(()=>{try{setSeenAt(localStorage.getItem("lx-notifications-seen-at")||"")}catch{setSeenAt("")};void load();const id=setInterval(load,60000);window.addEventListener("lingxi-money-updated",load);return()=>{clearInterval(id);window.removeEventListener("lingxi-money-updated",load)}},[load]);
  useEffect(()=>{const h=(e:MouseEvent)=>{if(open&&ref.current&&!ref.current.contains(e.target as Node))setOpen(false)};document.addEventListener("mousedown",h);return()=>document.removeEventListener("mousedown",h)},[open]);
  useEffect(()=>{document.documentElement.classList.toggle("lx-v40-notification-open",open);return()=>document.documentElement.classList.remove("lx-v40-notification-open")},[open]);
  const unread=useMemo(()=>items.filter(i=>i.read===false||(i.read==null&&(!seenAt||new Date(i.createdAt).getTime()>new Date(seenAt).getTime()))).length,[items,seenAt]);
  function toggle(){const next=!open;setOpen(next);if(next){void fetch("/api/account/notifications",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({eventKeys:items.map(x=>x.eventKey||x.id)})}).then(r=>{if(r.ok)setItems(xs=>xs.map(x=>({...x,read:true})))}).catch(()=>{});const now=new Date().toISOString();try{localStorage.setItem("lx-notifications-seen-at",now)}catch{};setSeenAt(now)}}
- const icon=(kind:Item["kind"])=>kind==="payment"?"✓":kind==="refund"?"↩":kind==="withdrawal"?"↗":"✦";
+ const icon=(kind:Item["kind"])=>kind==="payment"||kind==="topup"?"✓":kind==="refund"?"↩":kind==="withdrawal"?"↗":"✦";
  return <div className="lx11-notification-wrap" ref={ref}>
   <button className="lx11-icon-btn lx11-bell" aria-label={l.title} aria-expanded={open} onClick={toggle}><LingxiMiniIcon name="sparkles" size="tiny"/>{unread>0&&<span className="lx11-notification-count">{unread>9?"9+":unread}</span>}</button>
   {open&&<><button className="lx-v40-notification-backdrop" aria-label={l.close} onClick={()=>setOpen(false)}/><section className="lx-v40-notification-sheet" role="dialog" aria-modal="true" aria-label={l.title}>
