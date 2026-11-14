@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/sasi-software-commerce-com-admin-20261108
+      - feat/sasi-marketplace-reference-20261114-pm
     paths:
       - 'app/sasi/**'
       - 'app/account/software/**'
@@ -63,6 +64,8 @@ jobs:
         run: node tests/sasi-marketplace-fee.test.mjs
       - name: Seller, private storage, buyer entitlements and payouts
         run: node tests/sasi-marketplace-security-contract.test.mjs
+      - name: SASI marketplace reference layout and product catalogue regression
+        run: node tests/sasi-marketplace-reference-20261114.test.mjs
       - name: Direct four-tier toolpass merchant fulfillment regression
         run: node tests/toolpass-direct-fulfillment-20261108.test.mjs
       - name: PayPal order/capture idempotency regression
