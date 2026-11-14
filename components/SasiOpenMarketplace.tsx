@@ -408,7 +408,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   </div>
   <div className={styles.sellerHeroArt} aria-hidden="true">
    <img className={styles.sellerHeroArtwork} data-testid="seller-hero-artwork"
-    src="/images/global-scene-20261114.webp" alt="" loading="eager" decoding="async"/>
+    src="/images/sasi/sasi-market-hero-lingxifield.png" alt="" loading="eager" decoding="async"/>
   </div>
  </section>
  <div className={styles.metrics} aria-label={sasiSoftwareUiText(lang,"卖家经营数据","Seller activity")} data-testid="seller-metrics">
