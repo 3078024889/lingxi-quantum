@@ -197,7 +197,7 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
         "全球可用",
         "开发者支持"
       ],
-      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答"]
+      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答", "SASI / FEATURED", "01 / SOFTWARE", "02 / PUBLISH & DELIVERY"]
     },
     {
       path: "/sasi/seller",
@@ -221,7 +221,7 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
         "授权范围",
         "保存商品草稿"
       ],
-      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答"]
+      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答", "03 / SELLER STUDIO"]
     }
   ];
   for (const page of referencePages) {
