@@ -30,7 +30,7 @@ for(const theme of ["light","dark"]){
   await expect(page.getByTestId("seller-upload-grid")).toContainText("授权或许可文件");
     if(testInfo.project.name==="desktop-reference-1536"){
      const workspace=page.locator('[class*="sellerWorkspaceGrid"]');
-     const columns=await workspace.evaluate(element=>getComputedStyle(element).gridTemplateColumns.trim().split(/\\s+/).length);
+     const columns=await workspace.evaluate(element=>getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).length);
      expect(columns).toBe(3);
      await expect(page.locator('[class*="sellerGuideColumn"]')).toBeVisible();
     }
