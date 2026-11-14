@@ -104,5 +104,11 @@ assert.match(listings,/const SELLER_LISTING_COLUMNS=PUBLIC_LISTING_COLUMNS\+",re
 assert.match(listings,/\.select\(SELLER_LISTING_COLUMNS\)/);
 assert.match(listings,/\.eq\("seller_id",user\.id\)/);
 assert.match(listings,/const sessionDb=createClient\(\)/);
-assert.ok(listings.indexOf('if(!user)')<listings.indexOf('createAdminClient().from("sasi_market_listings")'));
+const sellerAuthIndex=listings.indexOf('if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"}');
+const sellerAdminIndex=listings.indexOf('const admin=createAdminClient();');
+const sellerReadIndex=listings.indexOf('admin.from("sasi_market_listings")');
+assert.ok(sellerAuthIndex>=0&&sellerAdminIndex>sellerAuthIndex&&sellerReadIndex>sellerAdminIndex);
+const sellerReadBlock=listings.slice(sellerAdminIndex,listings.indexOf('}else{',sellerAdminIndex));
+assert.equal((sellerReadBlock.match(/admin\.from\("sasi_market_listings"\)/g)||[]).length,3);
+assert.equal((sellerReadBlock.match(/\.eq\("seller_id",user\.id\)/g)||[]).length,3);
 assert.match(listings,/mode==="public"\?data\.map/);

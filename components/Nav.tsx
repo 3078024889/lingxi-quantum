@@ -41,7 +41,7 @@ const groups: { href: string; key: K; icon: LingxiIconName }[][] = [
 ]
 
 const softwareNavNames:Record<LingxiLang,string>={zh:"SASI 智能软件市场",en:"SASI Intelligent Software Marketplace",ja:"SASI インテリジェントソフトウェア市場",ko:"SASI 지능형 소프트웨어 마켓",fr:"Marché de logiciels intelligents SASI",de:"SASI-Marktplatz für intelligente Software",es:"Mercado de software inteligente SASI",pt:"Mercado de software inteligente SASI",ar:"سوق برامج SASI الذكية"};
-const sellerNavNames:Record<LingxiLang,string>={zh:"卖家服务",en:"Seller services",ja:"出品者サービス",ko:"판매자 서비스",fr:"Services vendeurs",de:"Verkäuferbereich",es:"Servicios para vendedores",pt:"Serviços para vendedores",ar:"خدمات البائعين"};
+const sellerNavNames:Record<LingxiLang,string>={zh:"卖家",en:"Seller",ja:"出品者",ko:"판매자",fr:"Vendeur",de:"Verkäufer",es:"Vendedor",pt:"Vendedor",ar:"البائع"};
 const marketNavNames:Record<LingxiLang,string>={zh:"全球 SIAI 排行榜",en:"Global SIAI Rankings",ja:"世界の SIAI ランキング",ko:"글로벌 SIAI 순위",fr:"Classement mondial SIAI",de:"Globales SIAI-Ranking",es:"Ranking mundial SIAI",pt:"Ranking global SIAI",ar:"ترتيب SIAI العالمي"};
 const HOME_NAV_COPY:Record<LingxiLang,string[]>={
  zh:["首页","全球 SIAI 排行榜","实用工具","SASI 智能软件市场","工具包会员","解决方案","资源中心"],
