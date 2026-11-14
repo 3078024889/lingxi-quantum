@@ -416,6 +416,11 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
         <em>{sasiSoftwareUiText(lang,"随软件包一并审核与交付","Reviewed and delivered with the package")}</em>
        </div>
       </div>
+      {activeDraft&&<label className={styles.detailUploadRow}>
+       <span><strong>{sasiSoftwareUiText(lang,"详情图（可选，最多4张）","Detail images (optional, up to 4)")}</strong><small>{sasiSoftwareUiText(lang,"用于商品详情页的补充展示","Optional images for the product detail page")}</small></span>
+       <em>{sasiSoftwareUiText(lang,`已上传 ${mediaCounts[activeDraft.id]?.detail??0} / 4 张`,`${mediaCounts[activeDraft.id]?.detail??0} / 4 uploaded`)}</em>
+       <input type="file" multiple accept="image/png,image/jpeg,image/webp" disabled={busy!==""||(mediaCounts[activeDraft.id]?.detail??0)>=4} onChange={e=>{const files=Array.from(e.target.files??[]).slice(0,4-(mediaCounts[activeDraft.id]?.detail??0));void(async()=>{for(const file of files)await uploadImage(activeDraft,file,"detail")})()}}/>
+      </label>}
       {activeDraft&&<div className={styles.activeDraftActions}>
        <span>{sasiSoftwareUiText(lang,"当前草稿","Active draft")}：{activeDraft.title}</span>
        <button type="button" disabled={busy!==""||(mediaCounts[activeDraft.id]?.cover??0)!==1} onClick={()=>void submitReview(activeDraft)} className={styles.launchStudio}>{busy==="submit-"+activeDraft.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}</button>
