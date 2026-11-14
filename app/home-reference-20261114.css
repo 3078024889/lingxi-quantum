@@ -36,3 +36,65 @@ html[data-theme="dark"] .lx-home-reference{background:linear-gradient(180deg,#15
 @media(max-width:1420px){.lx-home-nav-search{display:none}.lx-home-feature-strip{grid-template-columns:repeat(3,minmax(0,1fr))}.lx-home-growth-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lx-seo-question-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.lx-home-market-strip{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:980px){.lx-home-nav{min-height:62px;padding-inline:16px}.lx-home-nav-links{display:none;position:absolute;top:calc(100% + 8px);left:14px;right:14px;z-index:100;align-items:stretch;flex-direction:column;gap:2px;padding:12px;border:1px solid #e4dcf8;border-radius:18px;background:rgba(255,255,255,.98);box-shadow:0 18px 42px rgba(58,43,130,.15)}.lx-home-nav-links.is-open{display:flex}.lx-home-nav-links a{padding:11px 12px;border:0;border-radius:10px}.lx-home-nav-links a:hover,.lx-home-nav-links a.is-active{background:#f1edff}.lx-home-nav-toggle{display:inline-grid;place-items:center}.lx-home-hero-grid{grid-template-columns:1fr}.lx-home-hero-copy{max-width:none}.lx-home-hero-art{max-width:660px;min-height:250px}.lx-home-faq-layout{grid-template-columns:1fr}.lx-home-faq-aside{min-height:0}.lx-home-toolpass{grid-template-columns:1fr}.lx-home-distribution-heading{grid-template-columns:1fr 210px}}
 @media(max-width:700px){.lx-home-nav{gap:7px;padding:7px 12px}.lx-home-nav-brand{min-width:0}.lx-home-nav-brand img{width:36px;height:36px}.lx-home-nav-brand b{font-size:14px}.lx-home-nav-brand small{font-size:9px}.lx-home-nav-actions{gap:4px;margin-left:auto}.lx-home-nav-actions>select{max-width:66px;font-size:10px}.lx-home-theme-toggle,.lx-home-recharge,.lx-home-signin{display:none}.lx-home-register{min-height:32px;padding:0 9px;font-size:11px}.lx-home-account-trigger{width:32px;height:32px;min-height:32px}.lx-home-hero-section,.lx-home-growth-stack,.lx-seo-answers{width:calc(100% - 24px)}.lx-home-hero-section{margin:12px auto;padding:19px 15px;border-radius:22px}.lx-home-hero-grid{min-height:0;gap:4px}.lx-home-hero-copy h1{font-size:clamp(31px,8vw,40px)}.lx-home-hero-lead{font-size:15px}.lx-home-hero-subline{font-size:13px}.lx-home-hero-actions{gap:8px}.lx-home-cta-primary,.lx-home-cta-secondary{min-height:43px;padding:0 15px;font-size:14px}.lx-home-hero-proof{gap:8px 12px;font-size:12px}.lx-home-question-search{min-height:48px;margin-top:16px;padding-left:10px}.lx-home-question-search input{font-size:13px}.lx-home-question-search button{min-height:36px;padding:0 11px;font-size:12px}.lx-home-hero-art{min-height:0;margin-top:0}.lx-home-feature-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.lx-home-feature-card{min-height:70px;padding:9px;gap:8px}.lx-home-feature-icon{width:36px!important;height:36px!important;flex-basis:36px!important;font-size:18px!important}.lx-home-feature-copy strong{font-size:14px}.lx-home-feature-copy small{font-size:12px}.lx-home-growth-network,.lx-home-distribution{padding:15px 12px;border-radius:19px}.lx-home-growth-heading{text-align:start}.lx-home-growth-heading h2,.lx-home-distribution-heading h2{font-size:23px}.lx-home-growth-heading>p:last-child,.lx-home-distribution-heading p:last-child{font-size:14px}.lx-home-growth-grid{grid-template-columns:1fr;gap:9px}.lx-home-growth-card{min-height:0;padding:16px}.lx-home-growth-card h3{font-size:18px}.lx-home-growth-card>p{font-size:14px}.lx-home-growth-chips a,.lx-home-growth-chips span{font-size:11px}.lx-home-growth-cta{font-size:14px}.lx-home-toolpass{padding:16px;gap:14px;border-radius:20px}.lx-home-toolpass-intro{padding:0}.lx-home-toolpass-intro h2{font-size:22px}.lx-home-toolpass-intro li{font-size:13px}.lx-home-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.lx-home-plan-card{min-height:136px;padding:14px 8px}.lx-home-plan-card h3{font-size:14px}.lx-home-plan-card>strong{font-size:25px}.lx-home-distribution-heading{grid-template-columns:1fr;gap:0}.lx-home-distribution-globe{min-height:135px}.lx-home-distribution-globe svg{max-width:190px}.lx-home-market-strip{grid-template-columns:1fr 1fr;gap:8px}.lx-home-market-card{min-height:70px;padding:9px}.lx-home-market-card strong{font-size:13px}.lx-home-market-card small{font-size:12px}.lx-home-growth-flywheel{align-items:flex-start;flex-direction:column;padding:13px}.lx-home-growth-flywheel>strong{white-space:normal;font-size:15px}.lx-home-growth-flywheel>div{justify-content:flex-start}.lx-home-popular-tools{align-items:flex-start;flex-direction:column;padding:14px}.lx-home-popular-tools nav{justify-content:flex-start}.lx-home-popular-tools nav a{font-size:12px}.lx-seo-answers{margin-bottom:25px;padding-top:12px}.lx-seo-answers-head h2{font-size:25px!important}.lx-seo-answers-head>p:not(.lx-seo-eyebrow){font-size:15px}.lx-home-faq-aside{padding:20px}.lx-home-faq-aside h3{font-size:22px}.lx-home-faq-aside>p:not(.lx-home-faq-aside-kicker){font-size:14px}.lx-seo-question-grid{grid-template-columns:1fr!important}.lx-seo-question{min-height:0;padding:14px!important}.lx-home-faq-copy h3{font-size:16px!important}.lx-home-faq-copy p{font-size:14px!important}.lx-seo-extra{padding:15px}.lx-seo-extra>h2{font-size:20px}.lx-seo-action-grid,.lx-seo-steps{grid-template-columns:1fr}.lx-seo-action{font-size:14px}.lx-seo-vendor{align-items:flex-start;flex-direction:column;padding:18px}.lx-seo-vendor>a{width:100%}}
+
+
+/* Approved full-page reference: restore readable desktop typography without changing copy or destinations. */
+.lx-home-nav-links a{font-size:15px}
+.lx-home-nav-brand b{font-size:18px}
+.lx-home-hero-copy h1{font-size:clamp(40px,3.35vw,54px);line-height:1.12}
+.lx-home-hero-lead{font-size:18px;line-height:1.78}
+.lx-home-hero-subline{font-size:17px;line-height:1.65}
+.lx-home-hero-proof{font-size:15px}
+.lx-home-cta-primary,.lx-home-cta-secondary{min-height:52px;font-size:17px}
+.lx-home-feature-copy strong{font-size:17px}
+.lx-home-feature-copy small{font-size:14px;line-height:1.55}
+.lx-home-growth-heading h2,.lx-home-distribution-heading h2{font-size:29px}
+.lx-home-growth-heading>p:last-child,.lx-home-distribution-heading p:last-child{font-size:16px;line-height:1.7}
+.lx-home-growth-card h3{font-size:19px}
+.lx-home-growth-card>p{font-size:16px;line-height:1.72}
+.lx-home-growth-chips a,.lx-home-growth-chips span{font-size:13px}
+.lx-home-toolpass-intro h2{font-size:27px}
+.lx-home-toolpass-intro li{font-size:15px;line-height:1.7}
+.lx-home-plan-card h3{font-size:18px}
+.lx-home-plan-card>strong{font-size:34px}
+.lx-home-market-card strong{font-size:16px}
+.lx-home-market-card small{font-size:14px;line-height:1.5}
+.lx-seo-answers-head h2{font-size:clamp(30px,2.5vw,36px)!important}
+.lx-seo-answers-head>p:not(.lx-seo-eyebrow){font-size:17px;line-height:1.8}
+.lx-home-faq-aside{padding:30px}
+.lx-home-faq-aside h3{font-size:28px;line-height:1.42}
+.lx-home-faq-aside>p:not(.lx-home-faq-aside-kicker){font-size:16px;line-height:1.85}
+.lx-home-faq-aside>a{font-size:15px;padding:13px 19px}
+.lx-seo-question{min-height:190px;padding:18px!important;gap:13px}
+.lx-home-faq-icon{flex-basis:42px;width:42px;height:42px;font-size:19px}
+.lx-home-faq-copy h3{font-size:18px!important;line-height:1.48!important}
+.lx-home-faq-copy p{font-size:16px!important;line-height:1.75!important}
+.lx-home-faq-copy>a{font-size:15px;padding-top:11px}
+.lx-seo-extra>h2{font-size:25px}
+.lx-seo-action{font-size:16px}
+.lx-seo-vendor h2{font-size:28px}
+.lx-seo-vendor p{font-size:16px;line-height:1.75}
+@media(max-width:1100px){
+ .lx-home-hero-copy h1{font-size:clamp(36px,4.2vw,48px)}
+ .lx-home-feature-copy strong{font-size:16px}
+ .lx-home-feature-copy small{font-size:13px}
+ .lx-home-faq-copy h3{font-size:17px!important}
+ .lx-home-faq-copy p{font-size:15px!important}
+}
+@media(max-width:760px){
+ .lx-home-nav-links a{font-size:16px}
+ .lx-home-hero-copy h1{font-size:clamp(32px,8vw,42px)}
+ .lx-home-hero-lead{font-size:16px}
+ .lx-home-feature-copy strong{font-size:15px}
+ .lx-home-feature-copy small{font-size:13px}
+ .lx-home-growth-card h3{font-size:18px}
+ .lx-home-growth-card>p{font-size:15px}
+ .lx-home-toolpass-intro li{font-size:14px}
+ .lx-home-market-card strong{font-size:15px}
+ .lx-home-market-card small{font-size:13px}
+ .lx-home-faq-aside h3{font-size:25px}
+ .lx-home-faq-aside>p:not(.lx-home-faq-aside-kicker){font-size:15px}
+ .lx-home-faq-copy h3{font-size:17px!important}
+ .lx-home-faq-copy p{font-size:15px!important}
+ .lx-home-faq-copy>a{font-size:14px}
+}
