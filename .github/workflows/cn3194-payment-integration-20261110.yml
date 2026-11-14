@@ -31,7 +31,7 @@ jobs:
         run: |
           bash -n scripts/ops/cn-payment-activate-3194-20261110.sh
           node --check scripts/ops/cn-payment-live-probe-3194-20261110.mjs
-          node --test tests/cn-merchant-env-chain-20261115.test.mjs tests/cn-listener-owner-20261115.test.mjs tests/cn-payment-activation-3194-20261110.test.mjs tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs tests/sasi-software-paypal-fulfillment-contract.test.mjs tests/paypal-merchant-idempotency-20261108.test.mjs tests/sasi-marketplace-security-contract.test.mjs tests/cn3194-source-only-software-catalog.test.mjs tests/cn3194-marketplace-readiness-gates.test.mjs tests/seo-fullsite-coverage.test.mjs
+          node --test tests/cn-public-design-readiness-20261115.test.mjs tests/cn-merchant-env-chain-20261115.test.mjs tests/cn-listener-owner-20261115.test.mjs tests/cn-payment-activation-3194-20261110.test.mjs tests/cn-wallet-checkout-entry-20261108.test.mjs tests/cn-toolpass-public-ui-20261108.test.mjs tests/sasi-software-paypal-fulfillment-contract.test.mjs tests/paypal-merchant-idempotency-20261108.test.mjs tests/sasi-marketplace-security-contract.test.mjs tests/cn3194-source-only-software-catalog.test.mjs tests/cn3194-marketplace-readiness-gates.test.mjs tests/seo-fullsite-coverage.test.mjs
           python3 -m py_compile scripts/marketplace/scan-private-zip.py
           python3 -m unittest discover -s tests/marketplace -p 'test_*.py' -v
           node --test tests/com-admin-facade.test.mjs tests/tool-pass-server-http-contract.test.mjs
