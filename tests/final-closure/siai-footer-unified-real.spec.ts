@@ -7,6 +7,8 @@ test('global footer displays the same complete content on home, SIAI, SASI and t
   await page.goto(path,{waitUntil:'domcontentloaded'});
   const footer=page.locator('footer.lx11-footer');
   await expect(footer).toBeAttached({timeout:30000});
+  const directory=footer.locator("details.lx-footer-directory");
+  if(await directory.count())await directory.locator("summary").click();
   const overview=footer.locator('.lx-footer-unified');
   await expect(overview.getByRole('heading',{name:'🌍 全球SIAI排行榜｜全球SI AI工具行情平台'})).toHaveCount(1);
   await expect(overview.locator('.lx-footer-market li')).toHaveCount(7);
