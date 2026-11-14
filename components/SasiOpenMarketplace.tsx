@@ -43,6 +43,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  const [title,setTitle]=useState(""),[description,setDescription]=useState("");
  const [editingId,setEditingId]=useState<string|null>(null);
  const [activeDraftId,setActiveDraftId]=useState<string|null>(null);
+ const [uploadedPackages,setUploadedPackages]=useState<Record<string,boolean>>({});
  const [category,setCategory]=useState("mt5-ea"),[rmb,setRmb]=useState("99.00"),[usd,setUsd]=useState("99.00");
  const [busy,setBusy]=useState(""),[error,setError]=useState(""),[status,setStatus]=useState("");
  const [showStudio,setShowStudio]=useState(sellerOnly);
@@ -147,6 +148,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    });
    const put=await fetch(ticket.uploadUrl,{method:"PUT",headers:{"Content-Type":"application/zip"},body:file});
    if(!put.ok)throw Error("PRIVATE_R2_UPLOAD_FAILED_"+put.status);
+   setUploadedPackages(current=>({...current,[item.id]:true}));
    setStatus(sasiSoftwareUiText(lang,"软件包已上传。上传1张主图即可提交审核；详情图最多4张，可不上传。","Package uploaded. Add one main image; up to four detail images are optional."));
    await refresh();
   }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
@@ -427,6 +429,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    {mine.length>0&&<div className={styles.drafts}><h3>{sasiSoftwareUiText(lang,"我的软件草稿与审核进度","My submissions")}</h3>{mine.map(item=><div className={styles.draft} key={item.id}><div><strong>{item.title}</strong><small>{translatedStatus(lang,item.status)} · {translatedStatus(lang,item.scan_status,true)}</small></div>
     {item.status==="rejected"&&item.rejection_reason&&<p role="status">{item.rejection_reason}</p>}
     {["draft","rejected"].includes(item.status)&&<button type="button" disabled={busy!==""} onClick={()=>editDraft(item)}>{sasiSoftwareUiText(lang,"继续编辑与上传","Continue editing and upload")}</button>}
+    {item.status==="draft"&&<button type="button" disabled={busy!==""||mediaCounts[item.id]?.cover!==1||!uploadedPackages[item.id]} onClick={()=>void submitReview(item)}>{busy==="submit-"+item.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}</button>}
     {item.status==="published"&&<button onClick={()=>void share(item)}>{sasiSoftwareUiText(lang,"分享商品","Share")}</button>}
    </div>)}</div>}
    {error&&<p className={styles.error} role="alert">{error}</p>}{status&&<p className={styles.success} role="status">{status}</p>}
