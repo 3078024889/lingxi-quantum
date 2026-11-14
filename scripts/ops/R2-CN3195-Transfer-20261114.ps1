@@ -3,9 +3,9 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
 # Exact, CI-built CN3194 candidate. This script only uploads to R2 and stages 3195.
-$Tag = 'ecs-cn-unified-20261110-199ff1c73d43'
-$SourceSha = '199ff1c73d43ffc13abc887c51ebcc091f5e305e'
-$Short = '199ff1c73d43'
+$Tag = 'ecs-cn-unified-20261110-3f1c2218d4e1'
+$SourceSha = '3f1c2218d4e1799007a612265f33c1c9e404132c'
+$Short = '3f1c2218d4e1'
 
 $Config = 'D:\LINGXIFIELDCN3192\rclone.conf'
 $Root = 'D:\30780\lingxi-quantum'
@@ -13,10 +13,10 @@ $RemoteBase = 'cn3192r2:lingxi-cn3192-transfer/cn3195'
 $ReleaseBase = "https://github.com/3078024889/lingxi-quantum/releases/download/$Tag"
 
 $Expected = @{
-    'cn3194-release-manifest.env' = @{ Bytes = 621; Sha = 'dc42abe8687e10f12e9c04a2637289556c8b11005658faa1a46e157f7aabe926' }
-    'cn-20261110-unified-standalone.tar.gz' = @{ Bytes = 338028136; Sha = '4f5aa583888bb4164e68caeec7199980ef9213ceb86f96742214f621651acc6d' }
-    'cn-20261110-unified-standalone.sha256' = @{ Bytes = 104; Sha = '3077c9276cb616e1b4bad5de2fbed0e6ab4c2ceee06f55a2a5b9832f1ca2b053' }
-    'ecs-cn3194-unified-standalone-upgrade-20261110.sh' = @{ Bytes = 26803; Sha = 'caaeb01ede9de882f79f39a9cc92414077a7eddc2bde7718a1266904feb4e95a' }
+    'cn3194-release-manifest.env' = @{ Bytes = 621; Sha = 'c8c3db8a84a1652578a0472b0bd118d13b35b35b20b4b341bdf7e2a17e19a6a1' }
+    'cn-20261110-unified-standalone.tar.gz' = @{ Bytes = 338058519; Sha = '739b04632a8ae9638777c3ac8e1d3d1f207f649af638136fcbb72f89c5f62d33' }
+    'cn-20261110-unified-standalone.sha256' = @{ Bytes = 104; Sha = '5f142db8aa26cd031bbe91d9b00a1857c3262fdae46fe977261e3294758b3e57' }
+    'ecs-cn3194-unified-standalone-upgrade-20261110.sh' = @{ Bytes = 26803; Sha = '4abd537cbcf71da4d9efca34bbab88d9d97ef648629d9f9cafef1481c31d3ca8' }
     'cn-payment-activate-3194-20261110.sh' = @{ Bytes = 12147; Sha = '64762dd7378083f55926a912502d99a8c28da71d3494c2e7ea327c9e8fd29172' }
 }
 
@@ -115,7 +115,7 @@ if ($Manifest.ARCHIVE_FILE -cne 'cn-20261110-unified-standalone.tar.gz' -or
     $Manifest.PAYMENT_FILE -cne 'cn-payment-activate-3194-20261110.sh') {
     throw 'RELEASE_MANIFEST_ASSET_NAMES_MISMATCH'
 }
-if ([Int64]$Manifest.ARCHIVE_BYTES -ne 338028136 -or
+if ([Int64]$Manifest.ARCHIVE_BYTES -ne 338058519 -or
     $Manifest.ARCHIVE_SHA256 -cne $Expected['cn-20261110-unified-standalone.tar.gz'].Sha -or
     $Manifest.CHECK_SHA256 -cne $Expected['cn-20261110-unified-standalone.sha256'].Sha) {
     throw 'RELEASE_MANIFEST_ARCHIVE_DIGEST_MISMATCH'
@@ -145,7 +145,7 @@ function Get-R2ObjectList {
     return ,@((ConvertFrom-Json -InputObject $json -ErrorAction Stop))
 }
 $Uploads = @(
-    @{ Local = (Join-Path $Root 'cn-20261110-unified-standalone.tar.gz'); Name = 'cn-20261110-unified-standalone.tar.gz'; Size = [Int64]338028136 },
+    @{ Local = (Join-Path $Root 'cn-20261110-unified-standalone.tar.gz'); Name = 'cn-20261110-unified-standalone.tar.gz'; Size = [Int64]338058519 },
     @{ Local = (Join-Path $Root 'cn-20261110-unified-standalone.sha256'); Name = 'cn-20261110-unified-standalone.sha256'; Size = [Int64]104 },
     @{ Local = $StagePath; Name = [string]$Manifest.STAGE_FILE; Size = [Int64]26803 },
     @{ Local = $PaymentPath; Name = [string]$Manifest.PAYMENT_FILE; Size = [Int64]12147 },
