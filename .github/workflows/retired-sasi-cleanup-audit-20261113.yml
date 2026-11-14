@@ -4,11 +4,13 @@ on:
     branches:
       - cleanup/cn-retired-sasi-full-20261113
       - cleanup/com-retired-sasi-full-20261113
+      - feat/homepage-reference-rebuild-cn-20261113
   pull_request:
     branches:
       - fix/toolpass-compact-align-cn-20261113
       - release/com-sasi-full-20261108
       - fix/toolpass-compact-align-com-20261113
+      - feat/homepage-reference-rebuild-cn-20261113
   workflow_dispatch:
 
 permissions:
@@ -48,7 +50,8 @@ jobs:
             tests/sasi-marketplace-draft-revision-20261110.test.mjs \
             tests/sasi-first-party-package-upload-20261111.test.mjs \
             tests/sasi-transparent-hero-20261112.test.mjs \
-            tests/home-sasi-visual-closure-20261113.test.mjs
+            tests/home-sasi-visual-closure-20261113.test.mjs \
+            tests/home-reference-layout-20261114.test.mjs
       - name: TypeScript integrity
         run: |
           pnpm install --frozen-lockfile
