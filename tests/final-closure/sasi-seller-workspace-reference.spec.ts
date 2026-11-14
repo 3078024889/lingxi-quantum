@@ -13,7 +13,7 @@ test('seller navigation opens the reference seller workspace with real business 
  const heroArtwork=page.getByTestId('seller-hero-artwork');
  await expect(heroArtwork).toBeVisible();
  await expect(heroArtwork).toHaveAttribute('src','/images/global-scene-20261114.webp');
- const heroColumns=await page.getByTestId('seller-workspace-hero').evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\\s+/).length);
+ const heroColumns=await page.getByTestId('seller-workspace-hero').evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
  expect(heroColumns).toBe(2);
  expect(await heroArtwork.evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
  const joinArtwork=page.getByTestId('seller-join-artwork');
