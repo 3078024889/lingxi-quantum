@@ -17,7 +17,7 @@ test('seller navigation opens the reference seller workspace with real business 
  const grid=page.getByTestId('seller-workspace-grid');
  const columns=await grid.evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
  expect(columns).toBe(3);
- await page.screenshot({path:'artifacts/sasi-seller-workspace-desktop.png',fullPage:true});
+ await page.screenshot({path:'artifacts/sasi-seller-workspace-desktop.png',fullPage:false});
 });
 
 test('seller workspace collapses cleanly on mobile without overflowing its main grid',async({page})=>{

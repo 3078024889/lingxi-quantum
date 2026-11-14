@@ -559,3 +559,42 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 @media(max-width:960px){.main .sellerHero{grid-template-columns:1fr}.sellerHeroArt{min-height:116px}.main .sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.main .sellerHero{padding:14px;border-radius:16px}.sellerHeroCopy h1{font-size:30px}.sellerHeroCopy p{font-size:13px}.sellerHeroArt{min-height:108px}.sellerHeroGlobe{width:104px;height:104px;right:4%}.sellerHeroScreen{width:145px;height:88px;left:3%}.sellerHeroTrophy{left:43%;width:64px;height:77px}.sellerHeroCloud{left:29%;width:36px;height:36px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metrics>div{min-height:70px;padding:9px}.metricIcon{width:38px;height:38px;border-radius:12px}.metrics .metricCopy>span{font-size:11px}.metrics .metricCopy>strong{font-size:21px}.metrics .metricCopy>small{font-size:9px}.sellerGuideColumn{grid-template-columns:1fr}.sellerJoinArt{height:112px}.sellerFormHeading{align-items:flex-start;flex-wrap:wrap}.resumeDraftButton{min-height:31px}}
 @media(max-width:430px){.sellerHeroCopy h1:before{height:27px;margin-right:10px}.sellerHeroArt{min-height:94px}.sellerHeroGlobe{width:88px;height:88px}.sellerHeroScreen{width:126px;height:78px}.sellerHeroTrophy{width:56px;height:68px}.sellerHeroCloud{width:31px;height:31px;font-size:18px}.metrics>div{gap:7px;padding:8px}.metricIcon{width:33px;height:33px;font-size:18px!important}.metrics .metricCopy>strong{font-size:18px}}
+
+
+/* Seller workspace typography: keep reference-scale text readable at desktop. */
+.sellerHeroEyebrow{font-size:11px}
+.sellerHeroCopy p{font-size:15px;line-height:1.7}
+.sellerBack{font-size:13px}
+.metrics>div{min-height:84px;padding:12px 14px}
+.metrics .metricCopy>span{font-size:13px}
+.metrics .metricCopy>strong{font-size:27px}
+.metrics .metricCopy>small{font-size:11px}
+.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:20px}
+.sellerJoinColumn .formCard>label{font-size:14px}
+.sellerJoinColumn .formCard input:not([type="checkbox"]){font-size:14px}
+.sellerMainColumn .formCard>label{font-size:14px}
+.sellerMainColumn .formCard input:not([type="checkbox"]),.sellerMainColumn .formCard select{font-size:14px}
+.sellerMainColumn .formCard textarea{font-size:14px}
+.uploadTile strong{font-size:14px}
+.uploadTile small,.uploadTile em{font-size:12px}
+.resumeDraftButton{font-size:13px}
+.sellerGuideCard h3{font-size:16px}
+.sellerGuideCard p{font-size:13px;line-height:1.7}
+.sellerGuideSteps strong{font-size:12px}
+.sellerGuideSteps small{font-size:10px}
+@media(max-width:760px){
+ .sellerHeroCopy p{font-size:14px}
+ .metrics>div{min-height:72px;padding:9px}
+ .metrics .metricCopy>span{font-size:12px}
+ .metrics .metricCopy>strong{font-size:21px}
+ .metrics .metricCopy>small{font-size:10px}
+ .sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:19px}
+ .sellerMainColumn .formCard>label,.sellerJoinColumn .formCard>label{font-size:14px}
+ .sellerMainColumn .formCard input:not([type="checkbox"]),.sellerMainColumn .formCard select,.sellerMainColumn .formCard textarea{font-size:14px}
+ .uploadTile strong{font-size:13px}
+ .uploadTile small,.uploadTile em{font-size:11px}
+ .sellerGuideCard h3{font-size:15px}
+ .sellerGuideCard p{font-size:13px}
+ .sellerGuideSteps strong{font-size:12px}
+ .sellerGuideSteps small{font-size:10px}
+}
