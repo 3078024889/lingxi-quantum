@@ -23,7 +23,7 @@ test("seller reference layout contains the hero, four live metrics and three col
   assert.match(workspace, /data-testid="seller-metrics"/);
   assert.match(workspace, /sellerJoinArt/);
   assert.match(workspace, /data-testid="seller-hero-artwork"/);
-  assert.match(workspace, /\/images\/global-scene-20261114\.webp/);
+  assert.match(workspace, /\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
   assert.match(workspace, /data-testid="seller-join-artwork"/);
   assert.match(workspace, /\/images\/global-scene-20261114\.webp/);
   assert.doesNotMatch(workspace, /sellerHeroGlobe|sellerHeroTrophy|sellerHeroScreen|sellerHeroCloud|sellerJoinShield|<svg viewBox/);
