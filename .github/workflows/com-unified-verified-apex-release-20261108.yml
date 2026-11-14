@@ -271,4 +271,4 @@ jobs:
 
 # COM_PINNED_SASI_RELEASE_TRIGGER_20261114_REFERENCE_GATE: previous source ed24079f5e3354276c7eac89f5d5e90d7204ba07 must pass its exact isolated canary; poll until completion, then require rendered reference-content checks plus R2, provider, binding and rollback gates.
 
-# Approved 20261114 SASI marketplace reference release: exact source dd8a75d6c8879f2b298d397af3f8ba27079bb220 must pass the isolated workers.dev canary before apex cutover.
+# Approved 20261114 SASI seller workspace release: exact source 5a50b934fe5271c9b0f33e5accef42f339928924 must pass the isolated workers.dev canary before apex cutover.
