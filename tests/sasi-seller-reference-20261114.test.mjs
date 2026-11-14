@@ -48,6 +48,8 @@ test("real seller operations remain connected to the existing protected APIs", (
 test("seller layout includes desktop density and responsive breakpoints", () => {
   assert.match(styles, /\.sellerWorkspaceGrid\s*\{[^}]*minmax\(240px/);
   assert.match(styles, /\.sellerHeroArtwork\{/);
+  assert.match(styles, /\.main \.sellerHero\{[^}]*display:grid/);
+  assert.doesNotMatch(styles, /\.sellerHero\{position:relative;display:block/);
   assert.match(styles, /\.sellerJoinArtwork\{/);
   assert.doesNotMatch(styles, /sellerHeroGlobe|sellerHeroTrophy|sellerHeroScreen|sellerHeroCloud|sellerHeroOrbit|sellerJoinShield|sellerJoinOrbit|sellerJoinSpark/);
   assert.match(styles, /@media\s*\(max-width:\s*1360px\)/);
