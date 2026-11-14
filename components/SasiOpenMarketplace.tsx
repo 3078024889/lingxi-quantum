@@ -266,7 +266,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    </div>)}
   </div>
    <section id="featured" className={styles.featured} data-testid="featured-copernicus-source">
-   <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
+   <div className={styles.sectionHeading}><div><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{sasiSoftwareUiText(lang,"浏览开发者作品","Browse creator software")}</a></div>
    <div className={styles.featuredShelf}>
    <article className={styles.featuredCard}>
@@ -314,7 +314,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     </Link>)}
    </div>
   </section>
-  <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / SOFTWARE</small><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
+  <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
    <div className={styles.find}><input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)}</button>)}</div>
    <div className={styles.products}>{remainingVisible.map((item,i)=><article className={styles.card} key={item.id}>
@@ -334,7 +334,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     {visible.length===0&&<div className={styles.empty}>{sasiSoftwareUiText(lang,"已审核的软件将在这里展示；欢迎开发者发布原创作品。","No reviewed and published software matches this search.")}</div>}
   </section>
   <section className={styles.section} aria-label={sasiSoftwareUiText(lang,"软件发布与交付步骤","Software publishing steps")}>
-    <div className={styles.sectionHeading}><div><small>02 / PUBLISH & DELIVERY</small><h2>{sasiSoftwareUiText(lang,"卖家发布与自动交付","Publish and deliver")}</h2></div></div>
+    <div className={styles.sectionHeading}><div><h2>{sasiSoftwareUiText(lang,"卖家发布与自动交付","Publish and deliver")}</h2></div></div>
     <div className={styles.steps}>
        <div><b>01</b><strong>{sasiSoftwareUiText(lang,"填写商品资料","Product details")}</strong><span>{sasiSoftwareUiText(lang,"名称 · 介绍 · 价格","Name, description, price")}</span></div>
        <div><b>02</b><strong>{sasiSoftwareUiText(lang,"上传软件包","Upload software ZIP")}</strong><span>{sasiSoftwareUiText(lang,"成品或源码、说明与授权","Software or source, documentation and license")}</span></div>
@@ -348,7 +348,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
 {sellerOnly&&<>
  <section className={styles.sellerHero}>
   <div className={styles.sellerHeroCopy}>
-   <small>SASI · SELLER CENTER</small>
+   
    <h1>{sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h1>
    <p>{sasiSoftwareUiText(lang,"在 SASI 发布软件，触达全球用户，享受自动交付与安全结算。","Publish software on SASI, reach global users and manage verified delivery and settlement.")}</p>
    <Link href="/sasi" className={styles.sellerBack}>{sasiSoftwareUiText(lang,"返回软件市场","Back to software market")} ↗</Link>
@@ -362,7 +362,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   <div><span>{sasiSoftwareUiText(lang,"自动交付成功率","Automatic delivery success")}</span><strong>—</strong><small>{sasiSoftwareUiText(lang,"等待真实订单统计，不展示估算值","Shown after verified order data is available")}</small></div>
  </div>
 </>}
-{showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><small>03 / SELLER STUDIO</small><h2>{sellerOnly?sasiSoftwareUiText(lang,"发布新软件","Publish new software"):sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
+{showStudio&&<section id="sasi-seller-studio" className={styles.section}><div className={styles.sectionHeading}><div><h2>{sellerOnly?sasiSoftwareUiText(lang,"发布新软件","Publish new software"):sasiSoftwareUiText(lang,"卖家工作台","Seller workspace")}</h2></div><Link href="/account/software">{sasiSoftwareUiText(lang,"已购买的软件","Purchased software")} ↗</Link></div>
    <div className={styles.sellerWorkspaceGrid}>
     <aside className={styles.sellerJoinColumn}>
     <div className={styles.formCard}><h3>{seller?(sasiSoftwareUiText(lang,"卖家资料","Seller profile")):(sasiSoftwareUiText(lang,"零费用申请入驻","Apply to sell for free"))}</h3>
@@ -436,7 +436,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     </aside>
    </div>
   </section>}
-  {showStudio&&seller&&<section className={styles.section}><div className={styles.sectionHeading}><div><small>04 / SELLER EARNINGS</small><h2>{sasiSoftwareUiText(lang,"销售收入与提现","Seller earnings & payouts")}</h2></div></div>
+  {showStudio&&seller&&<section className={styles.section}><div className={styles.sectionHeading}><div><h2>{sasiSoftwareUiText(lang,"销售收入与提现","Seller earnings & payouts")}</h2></div></div>
    <div className={styles.earnings}><div><span>{sasiSoftwareUiText(lang,"人民币可提现","CNY available")}</span><strong>¥{format(payments?.balances?.CNY?.availableMinor??0)}</strong></div>
    <div><span>{sasiSoftwareUiText(lang,"美元可提现","USD available")}</span><strong>${format(payments?.balances?.USD?.availableMinor??0)}</strong></div></div>
    <div className={styles.payoutForm}><select value={requestCurrency} onChange={e=>setRequestCurrency(e.target.value as "CNY"|"USD")}><option value="CNY">CNY</option><option value="USD">USD</option></select>
