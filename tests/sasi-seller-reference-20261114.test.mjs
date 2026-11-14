@@ -22,6 +22,11 @@ test("seller reference layout contains the hero, four live metrics and three col
   assert.match(workspace, /data-testid="seller-workspace-hero"/);
   assert.match(workspace, /data-testid="seller-metrics"/);
   assert.match(workspace, /sellerJoinArt/);
+  assert.match(workspace, /data-testid="seller-hero-artwork"/);
+  assert.match(workspace, /\/images\/sasi\/sasi-market-hero-lingxifield\.png/);
+  assert.match(workspace, /data-testid="seller-join-artwork"/);
+  assert.match(workspace, /\/images\/global-scene-20261114\.webp/);
+  assert.doesNotMatch(workspace, /sellerHeroGlobe|sellerHeroTrophy|sellerHeroScreen|sellerHeroCloud|sellerJoinShield|<svg viewBox/);
   assert.match(workspace, /sellerWorkspaceGrid/);
   assert.match(workspace, /sellerGuideColumn/);
   assert.match(workspace, /publishedCount/);
@@ -42,8 +47,9 @@ test("real seller operations remain connected to the existing protected APIs", (
 });
 test("seller layout includes desktop density and responsive breakpoints", () => {
   assert.match(styles, /\.sellerWorkspaceGrid\s*\{[^}]*minmax\(240px/);
-  assert.match(styles, /\.sellerHeroGlobe/);
-  assert.match(styles, /\.sellerJoinShield/);
+  assert.match(styles, /\.sellerHeroArtwork\{/);
+  assert.match(styles, /\.sellerJoinArtwork\{/);
+  assert.doesNotMatch(styles, /sellerHeroGlobe|sellerHeroTrophy|sellerHeroScreen|sellerHeroCloud|sellerHeroOrbit|sellerJoinShield|sellerJoinOrbit|sellerJoinSpark/);
   assert.match(styles, /@media\s*\(max-width:\s*1360px\)/);
   assert.match(styles, /@media\s*\(max-width:\s*760px\)/);
 });
