@@ -446,11 +446,11 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  const copy=COPY[lang]||COPY.en;
  const security=SECURITY_COPY[lang]||SECURITY_COPY.en;
  const distribution=DISTRIBUTION_COPY[lang]||DISTRIBUTION_COPY.en;
- const features=[...copy.features,{icon:"privacy",title:security.title,description:security.description,href:"/privacy"}];
+ const features:Feature[]=[...copy.features,{icon:"privacy",title:security.title,description:security.description,href:"/privacy"}];
  const growthCardIcons:LingxiIconName[]=["recognition","sparkles","compare","sasi","connections","book"];
  const marketIcons:LingxiIconName[]=["recognition","sparkles","compare","book","connections"];
  return (
-  <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="124 个工具目录;llms.txt;llms-full.txt;WordPress;JS Widget;API;RSS;二维码;分享归因;Before / After;Celestial 小仙女;SIAI;SASI 智能软件市场;SASI SOFTWARE MARKET;PUBLISHED SOFTWARE;VERIFIED">
+  <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="九语言搜索入口;124 个工具目录;AI 搜索资料;全球 SIAI 排行榜;SASI 智能软件市场;100+ 实用工具;网站合作;内容传播;二维码分享;分享来源统计;工具包无限使用;隐私与安全">
    <div className="lx-home-feature-strip">
     {features.map(item=>(
      <Link className="lx-home-feature-card" href={item.href} key={item.href}>
