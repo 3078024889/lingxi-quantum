@@ -11,7 +11,8 @@ for(const theme of ["light","dark"]){
    expect(response?.status()).toBe(200);
    await expect(page.locator("html")).toHaveAttribute("data-theme",theme);
    if(path==="/"){
-    await expect(page.locator(".lx-home-hero-art")).toBeVisible();\n    await expect(page.locator("[data-home-sidebar]")).toHaveCount(1);
+    await expect(page.locator(".lx-home-hero-art")).toBeVisible();
+    await expect(page.locator("[data-home-sidebar]")).toHaveCount(1);
     await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);
     await page.getByTestId("home-task-search").locator("input").fill("AI视频生成模型");
     await page.getByTestId("home-task-search").getByRole("button").click();
