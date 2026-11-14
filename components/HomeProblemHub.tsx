@@ -5,6 +5,8 @@ import Link from "next/link";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {isLikelyToolQuery} from "@/lib/tools/search-intents-v44r2.mjs";
 import {HomeHeroVisual,HomeGlobalGrowth} from "@/components/HomeGlobalGrowth";
+import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
+import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 type HeroCopy={title:string;lead:string;subline:string;primary:string;secondary:string;placeholder:string;begin:string;proof:string[]};
 const HERO_COPY:Record<LingxiLang,HeroCopy>={
  zh:{title:"全球智能服务与实用工具平台",lead:"全球 SIAI 排行榜比较模型能力、真实价格、免费额度、地区可用性与商用授权；SASI 智能软件市场提供成品软件、MT5 EA、交易指标与源码授权；100+ 在线工具覆盖 PDF、图片、视频、音频、表格及日常文件处理。",subline:"全球 SIAI 排行榜 · 100+ 在线实用工具 · SASI 智能软件市场",primary:"立即探索",secondary:"开通工具包",placeholder:"输入问题或任务，快速找到对应工具…",begin:"查找答案",proof:["真实数据","持续更新","全球可用","安全高效"]},
@@ -18,9 +20,9 @@ const HERO_COPY:Record<LingxiLang,HeroCopy>={
  ar:{title:"خدمات ذكية عالمية وأدوات عملية",lead:"قارن نماذج الذكاء الاصطناعي والأسعار الفعلية والحصص المجانية والتوفر الإقليمي وحقوق الاستخدام التجاري. استعرض البرامج الجاهزة ومستشاري MT5 وتراخيص المصدر في SASI واستخدم أكثر من 100 أداة عبر الإنترنت.",subline:"تصنيف SIAI العالمي · أكثر من 100 أداة · سوق SASI",primary:"استكشف الآن",secondary:"استخدم ToolPass",placeholder:"اكتب المهمة أو السؤال الذي تريد حله…",begin:"اعثر على إجابة",proof:["بيانات موثوقة","تحديث مستمر","متاح عالميًا","آمن وفعال"]}
 };
 export default function HomeProblemHub(){
- const {lang}=useLingxiLang();const copy=HERO_COPY[lang]||HERO_COPY.en;const router=useRouter();const [query,setQuery]=useState("");
+ const {lang}=useLingxiLang();const discovery=SIAI_DISCOVERY[lang];const copy=HERO_COPY[lang]||HERO_COPY.en;const router=useRouter();const [query,setQuery]=useState("");
  const intents=useMemo(()=>[
-  {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格","excel"],href:"/tools",label:lang==="zh"?"实用工具":"Practical tools"},
+  {words:["pdf","图片","视频","ai视频","音频","字幕","文件","压缩","ocr","表格","excel"],href:"/tools",label:lang==="zh"?"实用工具":"Practical tools"},
   {words:["模型","排行榜","免费额度","价格","商用","siai","chatgpt","claude","gemini"],href:"/siai",label:lang==="zh"?"全球 SIAI 排行榜":"Global SIAI Rankings"},
   {words:["ea","mt5","源码","软件","授权","成品","商品","市场","sasi"],href:"/sasi",label:lang==="zh"?"SASI 智能软件市场":"SASI Software Marketplace"},
   {words:["开发者","卖家","发布","上架","seller","developer","vendor","vendeur","verkäufer","vendedor","판매자","開発者","بائع"],href:"/sasi/seller",label:lang==="zh"?"开发者发布":"Seller services"},
@@ -47,5 +49,5 @@ export default function HomeProblemHub(){
    <form onSubmit={submit} className="lx-home-question-search" data-testid="home-task-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} aria-label={copy.placeholder} placeholder={copy.placeholder}/><button type="submit">{copy.begin}</button></form>
    {query.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{lang==="zh"?"建议入口":"Suggested"}</span><Link href={hit.href}>{hit.label}</Link></div>}
   </div><HomeHeroVisual/></div>
- </section><HomeGlobalGrowth lang={lang}/></>;
+ </section><HomeGlobalGrowth lang={lang}/><div data-siai-search-keywords={discovery.hero}><SiaiSearchDiscovery variant="home"/></div></>;
 }
