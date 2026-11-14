@@ -293,7 +293,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main}><div className={styles.container + (sellerOnly ? "" : " " + styles.marketplaceContainer)}>
   {!sellerOnly&&<>
   <section className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="global-scene-20261114.webp" aria-labelledby="sasi-market-title" aria-label={sasiSoftwareUiText(lang,"灵犀场 SASI 智能软件市场","LINGXIFIELD SASI intelligent software marketplace")}>
-    <img src="/images/global-scene-20261114.webp" className={styles.heroArtwork} alt="" width={2172} height={724} loading="eager" fetchPriority="high" decoding="async"/>
+    src="/images/sasi/sasi-market-hero-lingxifield.png" alt="" loading="eager" decoding="async"/>
     <div className={styles.heroCopy}>
      <p className={styles.heroBrand}>LINGXIFIELD · SASI</p>
      <h1 id="sasi-market-title">{sasiSoftwareUiText(lang,"SASI 智能软件市场","SASI Software Marketplace")}</h1>
