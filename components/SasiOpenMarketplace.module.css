@@ -162,41 +162,6 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 }
 
 
-/* Exact user-supplied SASI marketplace hero: source pixels remain untouched. */
-.main .marketplaceContainer{width:100%;max-width:1600px;margin-inline:auto}
-.main .hero{
- position:relative;isolation:isolate;display:block;width:100%;
- aspect-ratio:1024 / 341;min-height:0!important;max-height:none!important;
- margin:0 auto clamp(14px,1.8vw,24px);padding:0!important;
- overflow:visible!important;background:transparent!important;
- border:0!important;border-radius:0!important;box-shadow:none!important;
-}
-.main .heroArtwork{
- position:relative;inset:auto;display:block;width:100%;height:auto;
- aspect-ratio:1024 / 341;object-fit:contain;object-position:center;
- margin:0;padding:0;border:0;border-radius:0;box-shadow:none;
- background:transparent!important;opacity:1;mix-blend-mode:normal;pointer-events:none;
-}
-.main .browseHotspot,.main .publishHotspot{
- position:absolute;z-index:2;display:block;top:50.4%;height:12.2%;
- min-height:44px;margin:0;padding:0;border:0;border-radius:999px;
- background:transparent!important;box-shadow:none!important;cursor:pointer;
- outline-offset:3px;-webkit-tap-highlight-color:transparent;
-}
-.main .browseHotspot{left:6.7%;width:16.2%}
-.main .publishHotspot{left:23.8%;width:13.2%}
-.main .browseHotspot:focus-visible,.main .publishHotspot:focus-visible{
- outline:2px solid #5f8cff;outline-offset:3px;
-}
-@media(max-width:620px){
- .main{padding-top:12px}
- .main .marketplaceContainer{max-width:none}
- .main .hero{width:100%;aspect-ratio:1024 / 341;margin-bottom:14px}
- .main .browseHotspot,.main .publishHotspot{top:44%;height:34%;min-height:44px}
- .main .browseHotspot{left:6.5%;width:17.5%}
- .main .publishHotspot{left:23%;width:15.5%}
-}
-
 /* Compact, transparent SASI marketplace and three-column seller workspace. */
 .main{min-height:0;padding:14px clamp(12px,1.8vw,28px) 38px}
 .main .marketplaceContainer{max-width:1480px}
@@ -416,3 +381,39 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 :global(html[data-theme="dark"]) .detailUploadRow strong{color:#f0edff}
 :global(html[data-theme="dark"]) .detailUploadRow small{color:#c0bdd2}
 :global(html[data-theme="dark"]) .detailUploadRow em{color:#c7b8ff}
+/* The same real content, arranged at the approved reference proportions. */
+.main{--lx-line:#ded7f7;--lx-panel:#ffffffd9;--lx-bg:#f9f7ff;--lx-ink:#1f1835;--lx-muted:#625a74;background:radial-gradient(ellipse at 85% 15%,#e6e8ff88,transparent 50%),linear-gradient(130deg,#fff,#f6f3ff);padding:12px 22px 35px}
+.container{max-width:1640px}
+.main .hero{position:relative;width:100%;margin:0 0 12px;aspect-ratio:auto;min-height:315px;border-radius:23px;overflow:hidden;border:1px solid #e4ddf7;background:#eeecff;isolation:isolate}
+.main .heroArtwork{position:absolute;inset:0;display:block;width:100%;height:100%;max-height:none;object-fit:fill;pointer-events:none}
+.heroCopy{position:relative;z-index:1;width:47%;padding:35px 28px 28px;box-sizing:border-box}
+.heroCopy .heroBrand{font-size:15px;font-weight:900;letter-spacing:.1em;color:#5822bd;margin:0 0 10px}
+.heroCopy h1{font-size:clamp(29px,2.9vw,48px);font-weight:950;line-height:1.17;color:#2c0a80;margin:0 0 13px;letter-spacing:-.035em}
+.heroCopy>p:not(.heroBrand){font-size:14px;font-weight:700;line-height:1.8;color:#302344}
+.heroActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:19px}.heroActions a{display:inline-flex;align-items:center;justify-content:center;min-height:45px;padding:0 26px;border-radius:999px;background:linear-gradient(110deg,#3c72ff,#a32bfa);color:white;font-size:17px;font-weight:850;text-decoration:none;box-shadow:0 5px 10px #6f32e83b;border:1px solid #ffffffb0}.heroActions a+ a{background:linear-gradient(#ffe4b2,#ffc56f);color:#2d1744;box-shadow:0 5px 10px #cc8b4738}
+.main .marketFeatures{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding:12px 0;margin:0 0 20px;border:1px solid #dcd4f4;border-radius:20px;background:linear-gradient(140deg,#fff,#f2eeff);box-shadow:0 5px 12px #5940a620}
+.main .marketFeature{min-height:54px;padding:0 18px;border:0;border-right:1px solid #cabef0;border-radius:0;background:transparent;box-shadow:none;gap:12px}.main .marketFeature:last-child{border:0}.marketFeatureIcon{flex-shrink:0;background:linear-gradient(135deg,#fff,#dcd4ff);color:#7834fa;border:1px solid #ddd3ff;box-shadow:0 4px 9px #8548db25;min-width:42px;height:42px;font-size:27px;border-radius:13px}.main .marketFeature strong{font-size:18px;font-weight:900}.main .marketFeature small{font-size:13px;margin-top:4px}
+.main .sectionHeading{margin-bottom:12px}.main .sectionHeading h2{font-size:26px;font-weight:900;margin:0}.main .sectionHeading h2:before{content:'';display:inline-block;width:6px;height:24px;border-radius:6px;background:linear-gradient(#cb35ff,#5d26ff);transform:skew(-18deg);margin-right:12px;vertical-align:-2px}
+.featuredShelf{grid-template-columns:minmax(0,1.65fr) repeat(2,minmax(0,.53fr));gap:12px}.featuredCard{padding:16px;gap:16px;border-radius:20px;border-color:#e1d7f9;background:linear-gradient(140deg,#fff,#f6f2ff);box-shadow:0 4px 10px #4b35a61c;grid-template-columns:minmax(130px,.9fr) minmax(0,1.4fr) auto}.featuredVisual{min-height:145px;border-radius:16px}.featuredDescription h3{font-size:22px}.featuredDescription>p{font-size:14px}.featuredPrice strong{font-size:28px;color:#c26b00}.featuredMiniCard,.featuredMiniCta{border:1px solid #e1d7f9;border-radius:20px;background:linear-gradient(140deg,#fff,#f4f0ff);box-shadow:0 4px 10px #4b35a61c}
+.main .section{margin-top:24px}.filters button{border-radius:999px;padding:10px 17px;font-size:14px;background:#faf8ff;border-color:#d9cff7;box-shadow:0 3px 6px #4e2b9810}.filters button.active{background:linear-gradient(110deg,#7460ff,#b338f9);color:#fff;border-color:transparent}
+.steps{padding:17px;background:#f7f3ff;border:1px solid #e0d6f9;border-radius:20px;box-shadow:0 4px 12px #4b35a615}.steps>div{border-radius:17px;box-shadow:0 3px 7px #5a36b71c;background:linear-gradient(130deg,#fff,#eee8ff)}
+.sellerHero{position:relative;display:block;min-height:160px;padding:26px 28px;border:0;background:#f1edff;isolation:isolate;margin:0 0 12px;border-radius:22px}
+.sellerHeroCopy{position:relative;z-index:1;width:52%}.sellerHeroCopy h1{font-size:40px;color:#24134c}.sellerHeroCopy p{font-size:15px;margin-top:10px}.sellerBack{display:inline-block;margin-top:10px;font-size:13px}
+.sellerScene{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right;z-index:-1}
+.metrics{gap:14px;margin:12px 0 20px}.metrics>div{position:relative;display:grid;grid-template-columns:auto 1fr;column-gap:12px;align-content:center;min-height:95px;padding:15px 18px;background:linear-gradient(135deg,#fff,#f2edff);border:1px solid #dcd1f5;border-radius:18px;box-shadow:0 4px 10px #5434ab20}.metrics>div:before{content:'▱';grid-row:1/4;align-self:center;display:grid;place-items:center;width:45px;height:45px;border-radius:50%;font-size:33px;color:#7536ed;background:linear-gradient(135deg,#f6f2ff,#dbd1ff)}.metrics>div:nth-child(2):before{content:'⌛'}.metrics>div:nth-child(3):before{content:'¥';color:#e89521;background:#fff0d5}.metrics>div:nth-child(4):before{content:'ϟ'}.metrics span{font-size:16px;font-weight:850;color:#211734}.metrics strong{margin-top:3px;font-size:30px}.metrics small{grid-column:2;font-size:12px;color:#706585;line-height:1.4}
+.sellerWorkspaceGrid{display:grid;grid-template-columns:minmax(220px,.86fr) minmax(380px,1.68fr) minmax(220px,1fr);gap:14px}.sellerGuideColumn{grid-column:auto;display:grid;grid-template-columns:1fr;gap:13px}.sellerJoinColumn,.sellerMainColumn{min-width:0}.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:19px;border:1px solid #dbd1f5;border-radius:20px;background:linear-gradient(145deg,#fff,#f6f2ff);box-shadow:0 5px 12px #5434ab20}
+.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:23px;margin-bottom:15px}.sellerMainColumn .formCard label,.sellerJoinColumn .formCard label{font-size:14px;margin-top:10px}.sellerMainColumn .formCard input:not([type=checkbox]),.sellerMainColumn .formCard select,.sellerJoinColumn .formCard input:not([type=checkbox]){min-height:36px;padding:7px 10px;margin-top:6px;font-size:14px;background:#ffffffb8;border-color:#cfc3ed;border-radius:11px}.sellerMainColumn .formCard textarea{min-height:95px;padding:9px 11px;font-size:14px;margin-top:6px;background:#ffffffb8;border-color:#cfc3ed}
+.identityFields{display:grid;grid-template-columns:1.15fr 1fr;gap:15px}.identityFields>label{display:block;min-width:0;color:#332443;font-weight:800}.priceFields{gap:13px}.priceFields label{margin-top:10px}.sellerMainColumn .formCard>button,.sellerJoinColumn .formCard>button{min-height:42px;background:linear-gradient(110deg,#7043ff,#b733f5);box-shadow:0 4px 9px #7228d638;border-radius:12px;font-weight:850}
+.joinIllustration{position:relative;height:132px;display:grid;place-items:center;margin:8px 0 12px;background:radial-gradient(ellipse at 50% 85%,#b999ff77,transparent 55%)}.joinIllustration span{display:grid;place-items:center;width:104px;height:112px;background:linear-gradient(135deg,#e1d6ff,#9048ff 40%,#4c20c7);color:#fff;font-size:76px;line-height:1;border:5px solid #c8aeff;border-radius:24px 24px 50px 50px;box-shadow:0 9px 0 -3px #ddcdff,0 14px 15px #7244c447,inset 0 0 0 3px #f2eaff}.joinIllustration i{position:absolute;left:calc(50% + 28px);bottom:18px;border-radius:50%;width:26px;height:26px;text-align:center;background:#b18cff;border:2px solid white;color:white;font-style:normal;font-weight:bold}
+.sellerBenefits{gap:8px}.sellerBenefits>div{border:1px solid #d8ccf2;background:linear-gradient(130deg,#fff,#eee7ff);border-radius:14px;padding:11px 5px;box-shadow:0 3px 8px #5434ab17}.sellerBenefits strong{font-size:13px}.sellerBenefits small{font-size:12px}.sellerBenefits span{color:#7430f0}
+.sellerGuideCard{padding:20px 18px;border:1px solid #dbd1f5;border-radius:18px;background:linear-gradient(135deg,#fff,#eee7ff);box-shadow:0 5px 12px #5434ab20}.sellerGuideCard h3{font-size:21px}.sellerGuideCard p{font-size:14px;line-height:1.75}.sellerGuideMark{font-size:17px;color:#7e30ec}.sellerGuideSteps{gap:8px}.sellerGuideSteps li{font-size:13px}.sellerGuideSteps strong{font-size:14px}.sellerGuideSteps small{font-size:12px}
+.uploadGrid{gap:9px;margin-top:13px}.uploadTile{min-height:130px;padding:12px 6px;border-radius:13px;background:linear-gradient(135deg,#fff,#f0eaff);border-color:#bfacf6}.uploadTile strong{font-size:13px}.uploadTile small,.uploadTile em{font-size:11px}.uploadTileIcon{font-size:28px}.detailUploadRow{margin-top:10px}
+:global(html[data-theme="dark"]) .main{--lx-line:#56436c;--lx-panel:#252031;--lx-bg:#191521;--lx-ink:#f5edff;--lx-muted:#c7bad9;background:#18131f}
+:global(html[data-theme="dark"]) .heroCopy,:global(html[data-theme="dark"]) .sellerHeroCopy{background:linear-gradient(90deg,#1a1428ed,#1a1428c9,transparent);border-radius:20px}:global(html[data-theme="dark"]) .heroCopy h1,:global(html[data-theme="dark"]) .heroCopy p,:global(html[data-theme="dark"]) .sellerHeroCopy h1,:global(html[data-theme="dark"]) .sellerHeroCopy p{color:#fff}
+:global(html[data-theme="dark"]) .marketFeatures,:global(html[data-theme="dark"]) .metrics>div,:global(html[data-theme="dark"]) .formCard,:global(html[data-theme="dark"]) .sellerGuideCard,:global(html[data-theme="dark"]) .sellerBenefits>div,:global(html[data-theme="dark"]) .steps,:global(html[data-theme="dark"]) .steps>div,:global(html[data-theme="dark"]) .featuredCard,:global(html[data-theme="dark"]) .featuredMiniCard,:global(html[data-theme="dark"]) .featuredMiniCta{background:linear-gradient(135deg,#2d233b,#211a30);border-color:#56436c;color:#f7efff}
+:global(html[data-theme="dark"]) .metrics span,:global(html[data-theme="dark"]) .identityFields>label{color:#f7efff}:global(html[data-theme="dark"]) .sellerMainColumn .formCard input,:global(html[data-theme="dark"]) .sellerMainColumn .formCard textarea,:global(html[data-theme="dark"]) .sellerMainColumn .formCard select,:global(html[data-theme="dark"]) .sellerJoinColumn .formCard input{background:#1e172a;border-color:#66507c;color:#f7efff}
+@media(max-width:1400px){.main{padding-inline:15px}.heroCopy{width:49%;padding:27px 22px}.heroCopy h1{font-size:35px}.main .marketFeature{padding:0 11px;gap:8px}.main .marketFeature strong{font-size:16px}.main .marketFeature small{font-size:12px}.sellerWorkspaceGrid{grid-template-columns:minmax(200px,.82fr) minmax(340px,1.6fr) minmax(205px,1fr);gap:11px}.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:15px}.sellerGuideCard{padding:17px 14px}.sellerGuideCard h3{font-size:18px}.featuredShelf{grid-template-columns:minmax(0,1.5fr) repeat(2,minmax(0,.6fr))}.featuredCard{grid-template-columns:125px minmax(0,1fr)}.featuredPrice{grid-column:2}.featuredDescription h3{font-size:19px}}
+@media(max-width:1120px){.sellerWorkspaceGrid{grid-template-columns:minmax(210px,.85fr) minmax(0,1.5fr)}.sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}.featuredShelf{grid-template-columns:1fr 1fr}.featuredCard{grid-column:1/-1;grid-template-columns:180px minmax(0,1fr) auto}.featuredPrice{grid-column:auto}.main .marketFeatures{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:12px}.main .marketFeature:nth-child(3){border:0}}
+@media(max-width:760px){.main .hero{min-height:405px}.heroCopy{width:100%;padding:22px 19px 205px}.heroCopy h1{font-size:32px}.main .heroArtwork{height:215px;top:auto;bottom:0;width:180%;max-width:none;object-position:right;transform:translateX(-44%)}.heroActions{margin-top:12px}.heroActions a{min-height:40px;font-size:15px;padding-inline:20px}.main .marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px 3px;gap:10px}.main .marketFeature{border:0;min-height:55px}.main .marketFeature:last-child{grid-column:1/-1}.main .marketFeature strong{font-size:16px}.sellerHero{min-height:240px;padding:20px}.sellerHeroCopy{width:100%}.sellerHeroCopy h1{font-size:32px}.sellerHeroCopy p{max-width:75%}.sellerScene{opacity:.45;object-position:right}.metrics{gap:9px}.metrics>div{padding:12px;column-gap:8px}.metrics>div:before{width:33px;height:33px;font-size:25px}.metrics span{font-size:13px}.metrics strong{font-size:24px}.metrics small{font-size:11px}.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:1fr}.featuredCard{grid-template-columns:1fr}.featuredPrice{grid-column:auto}.featuredShelf{gap:9px}.featuredDescription h3{font-size:21px}.identityFields{grid-template-columns:1fr}.uploadGrid{grid-template-columns:1fr 1fr 1fr}.uploadTile{min-height:150px}.sellerMainColumn .formCard textarea{min-height:120px}}
+.sellerScene{object-fit:fill}
+@media(max-width:760px){.sellerScene{object-fit:cover}}

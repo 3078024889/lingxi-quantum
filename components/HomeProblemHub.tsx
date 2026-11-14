@@ -50,5 +50,5 @@ export default function HomeProblemHub(){
    <form onSubmit={submit} className="lx-home-question-search" data-testid="home-task-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} aria-label={copy.placeholder} placeholder={copy.placeholder}/><button type="submit">{copy.begin}</button></form>
    {query.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{lang==="zh"?"建议入口":"Suggested"}</span><Link href={hit.href}>{hit.label}</Link></div>}
   </div><HomeHeroVisual/></div>
- </section><HomeGlobalGrowth lang={lang}/><div data-siai-search-keywords={discovery.hero}><SiaiSearchDiscovery variant="home"/></div></>;
+ </section><HomeGlobalGrowth lang={lang}/><details className="lx-home-directory" data-siai-search-keywords={discovery.hero}><summary>{discovery.hero}</summary><SiaiSearchDiscovery variant="home"/></details></>;
 }

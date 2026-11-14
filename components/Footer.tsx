@@ -109,7 +109,7 @@ const FOOTER_BRAND_SHORT:Record<LingxiLang,string>={
   ar:"تصنيفات SI وAI وSIAI العالمية وسوق برامج SASI وأكثر من 100 أداة عبر الإنترنت."
 };
 
-export default function Footer(){
+export default function Footer({compact=false}:{compact?:boolean}={}){
  const{t,lang,setLang}=useLingxiLang();
  const c=FOOTER_LINKS[lang]??FOOTER_LINKS.en;
  const discovery=SIAI_DISCOVERY[lang];
@@ -124,8 +124,7 @@ export default function Footer(){
   try{await navigator.clipboard.writeText(MINIAPP_COMMANDS[kind]);setCopiedMiniapp(kind);}
   catch{window.prompt(WECHAT_EXTRA[lang].miniapps,MINIAPP_COMMANDS[kind]);}
  }
- return <footer className="lx11-footer lx-branded-footer lx-footer-v3 lx-footer-v4" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
-  <section className="lx-footer-unified lx-footer-v3-showcase" lang={lang==="zh"?"zh-CN":lang} aria-label={overview.headline}>
+ const showcase=(<section className="lx-footer-unified lx-footer-v3-showcase" lang={lang==="zh"?"zh-CN":lang} aria-label={overview.headline}>
    <header className="lx-footer-unified-head"><h2>{overview.headline}</h2><p>{overview.intro}</p></header>
    <div className="lx-footer-unified-columns">
     <section className="lx-footer-market" aria-label={overview.headline}>
@@ -144,6 +143,9 @@ export default function Footer(){
     {overview.toolCategories.map((item,i)=><Link href={FOOTER_TOOL_LINKS[i]} key={item.title}><span className="lx-footer-v3-toolstrip-icon" aria-hidden="true">{FOOTER_TOOL_ICONS[i]}</span><span><strong>{item.title}</strong><small>{item.description}</small></span></Link>)}
    </nav>
   </section>
+);
+ return <footer className="lx11-footer lx-branded-footer lx-footer-v3 lx-footer-v4" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
+  {compact?<details className="lx-footer-directory"><summary>{overview.headline}</summary>{showcase}</details>:showcase}
   <div className="lx-footer-v3-sasi">
    <div><strong>✨ {overview.sasiTitle}</strong><span>{overview.sasiDescription}</span></div>
    <Link href="/sasi">{c.sasi} ↗</Link>
@@ -223,7 +225,7 @@ export default function Footer(){
   <div className="lx11-footer-legal"><span>© {new Date().getFullYear()} 灵犀场 LINGXIFIELD</span>
    <label className="lx-footer-language"><span aria-hidden="true">🌐</span><select value={lang} aria-label={t("language")} onChange={e=>setLang(e.target.value as LingxiLang)}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(k=><option value={k} key={k}>{LANG_NAMES[k]}</option>)}</select></label>
    <Link href="/terms">{t("terms")}</Link><Link href="/privacy">{t("privacy")}</Link>
-   <Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{t("sasiRules")}</Link>
+   <Link href="/refunds">{t("refunds")}</Link><Link href="/legal/sasi">{c.sasi} · {c.terms}</Link>
    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer noopener">湘ICP备2026031465号 ↗</a>
   </div>
  </footer>;

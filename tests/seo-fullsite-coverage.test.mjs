@@ -112,7 +112,7 @@ test("homepage, localized SEO/GEO pages and partner distribution share the compa
  const zhDiscover=read("app/discover/[topic]/page.tsx");
  const sasiMarketCss=read("components/SasiOpenMarketplace.module.css");
  assert.ok(layout.includes('import "./growth-pages.css";'));
- assert.ok(layout.includes('import "./lingxifield-premium-20261109.css";\nimport "./growth-pages.css";'));
+ assert.match(layout,/import \"[.]\/lingxifield-premium-20261109[.]css\";\s+import \"[.]\/growth-pages[.]css\";/);
  assert.ok(growthShell.includes('className="lx-growth-page"'));
  assert.ok(growthShell.includes('<Nav/>'));
  assert.ok(growthShell.includes('<Footer/>'));

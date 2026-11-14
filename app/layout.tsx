@@ -12,6 +12,7 @@ import "./celestial-ui-20261109.css";
 import "./lingxifield-premium-20261109.css";
 import "./growth-pages.css";
 import "./home-reference-20261114.css";
+import "./approved-pages-20261114.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";

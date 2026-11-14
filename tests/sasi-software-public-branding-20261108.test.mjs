@@ -8,8 +8,8 @@ test("public brand is SASI intelligent software and old shopping labels are reti
   assert.doesNotMatch(src,/软件商城|SASI Marketplace/);
  }
  const page=read("components/SasiOpenMarketplace.tsx");
- assert.ok(page.includes('data-hero-asset="sasi-market-hero-lingxifield.png"'),"the exact supplied hero is the marketplace brand surface");
- assert.ok(page.includes('src="/images/sasi/sasi-market-hero-lingxifield.png"'));
+ assert.ok(page.includes('data-hero-asset="global-scene-20261114.webp"'),"the exact supplied hero is the marketplace brand surface");
+ assert.ok(page.includes('src="/images/global-scene-20261114.webp"'));
  assert.ok(page.includes("灵犀场 SASI 智能软件市场"),"accessible brand description matches the supplied artwork");
  assert.match(read("app/sasi/page.tsx"),/canonical:"\/sasi"/);
  assert.match(read("app/sasi/marketplace/page.tsx"),/permanentRedirect\("\/sasi"\)/);
