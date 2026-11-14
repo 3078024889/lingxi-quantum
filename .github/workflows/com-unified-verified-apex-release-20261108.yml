@@ -270,3 +270,5 @@ jobs:
 # COM_PINNED_SASI_RELEASE_TRIGGER_MARKER_20261113: exact application source 270a06ce39d2a9cd559147ab9d8a7c096a09a1ce must have a successful isolated canary.
 
 # COM_PINNED_SASI_RELEASE_TRIGGER_20261114_REFERENCE_GATE: previous source ed24079f5e3354276c7eac89f5d5e90d7204ba07 must pass its exact isolated canary; poll until completion, then require rendered reference-content checks plus R2, provider, binding and rollback gates.
+
+# Approved 20261114 three-page release: verified isolated canary 73f90be3ec5cde9b5e0cb39b5af50bc1c47be52c.
