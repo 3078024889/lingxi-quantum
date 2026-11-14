@@ -84,3 +84,18 @@ test("release workflow rebuilds the pinned source and only promotes after exact 
   assert.ok(canary.includes("COM_CANARY_ROBOTS_STATIC_ORIGIN_PASS"));
   assert.ok(workflow.includes("pnpm install --frozen-lockfile"));
 });
+
+test("COM homepage reference gate accepts Chinese labels while requiring the real external destinations", () => {
+  const script = read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs");
+  const homepage = read("components/HomeGlobalGrowth.tsx");
+  assert.ok(script.includes('["JS Widget", "网站嵌入组件"]'));
+  assert.ok(script.includes('["Before / After", "使用前后对比"]'));
+  assert.ok(script.includes('"/widgets/lingxifield-v1.js"'));
+  assert.ok(script.includes('"/discoveries#before-after"'));
+  assert.ok(script.includes("const missingAny"));
+  assert.ok(script.includes("const missingLinks"));
+  assert.ok(homepage.includes('label:"网站嵌入组件"'));
+  assert.ok(homepage.includes('label:"使用前后对比"'));
+  assert.ok(homepage.includes('href:"/widgets/lingxifield-v1.js"'));
+  assert.ok(homepage.includes('href:"/discoveries#before-after"'));
+});
