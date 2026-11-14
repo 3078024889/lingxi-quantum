@@ -211,7 +211,7 @@ jobs:
                 .sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
               if(successful.length){
                 const run=successful[0];
-                fs.appendFileSync(process.env.GITHUB_OUTPUT,"run_id="+run.id+"\\nsha="+run.head_sha+"\\n");
+                fs.appendFileSync(process.env.GITHUB_OUTPUT,"run_id="+run.id+"\nsha="+run.head_sha+"\n");
                 console.log("EXACT_CANARY_PINNED run_id="+run.id+" sha="+run.head_sha);
                 return;
               }
