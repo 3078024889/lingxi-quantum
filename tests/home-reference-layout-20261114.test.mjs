@@ -38,6 +38,9 @@ test('SASI marketplace and seller workspace retain verified data and readable re
  assert.match(market,/activeDraft/);
  assert.match(market,/最大 30MB/);
  assert.match(market,/请放入软件 ZIP 包内/);
+ assert.match(market,/详情图（可选，最多4张）/);
+ assert.match(market,/styles\.detailUploadRow/);
+ assert.match(css,/\.detailUploadRow\{/);
  assert.match(css,/\.uploadGrid\{display:grid;grid-template-columns:repeat\(3/);
  assert.match(css,/\.uploadTile\{position:relative/);
  assert.match(css,/\.featuredShelf\{display:grid;grid-template-columns:minmax\(0,1\.55fr\)/);assert.match(css,/\.featuredMiniCard\{/);assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(250px/);assert.match(css,/\.sellerGuideCard p\{font-size:15px/);
