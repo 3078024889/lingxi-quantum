@@ -11,7 +11,7 @@ test('reference homepage composition removes retired homepage blocks and preserv
  assert.match(growth,/<HomeToolPassMembership\/>/);assert.match(growth,/lx-home-distribution-globe/);assert.match(growth,/全球智能分发与合作/);for(const label of ["AI 搜索说明","完整平台资料","公开数据接口","WordPress 插件","网站嵌入组件","排行榜更新订阅","二维码分享","分享来源统计"])assert.ok(growth.includes(label),"growth link missing "+label);
  const packageJson=JSON.parse(read("package.json")),pluginBuilder=read("scripts/prepare-wordpress-plugin.cjs");
  for(const destination of ["/llms.txt","/llms-full.txt","/siai-openapi.json","/downloads/lingxifield-siai-wordpress.zip","/widgets/lingxifield-v1.js","/siai/updates.xml","/partners"])assert.ok(growth.includes(destination),"missing public destination "+destination);
- assert.match(pluginBuilder,/public.*downloads.*lingxifield-siai-wordpress\\.zip/s);assert.match(packageJson.scripts.prebuild,/prepare-wordpress-plugin/);
+ assert.ok(pluginBuilder.includes('"public","downloads","lingxifield-siai-wordpress.zip"'));assert.match(packageJson.scripts.prebuild,/prepare-wordpress-plugin/);
  assert.equal(read("public/widgets/lingxifield-v1.js"),read("integrations/wordpress/lingxifield-widgets/assets/lingxifield-v1.js"));
  const zh=growth.slice(growth.indexOf(' zh:{'),growth.indexOf(' en:{'));
  assert.doesNotMatch(zh,/tag:"(?:SEO|GEO|NETWORK|STORIES)"|description:"[^"]*(?:WordPress|JS Widget|RSS|API)[^"]*"/i);
