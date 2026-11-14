@@ -28,6 +28,11 @@ test('SASI marketplace and seller workspace retain verified data and readable re
  assert.match(market,/publishedCount/);assert.match(market,/pendingCount/);assert.match(market,/cnyGross/);assert.match(market,/studioMountedRef/);
  assert.match(market,/styles\.sellerWorkspaceGrid/);assert.match(market,/styles\.sellerGuideColumn/);assert.match(market,/styles\.featuredVisual/);assert.match(market,/const featuredSide=visible\.slice\(0,2\)/);assert.match(market,/remainingVisible\.map/);assert.match(market,/featuredMiniCard/);assert.match(market,/images\[item\.id\]/);
  assert.doesNotMatch(market,/99\.6%|虚构销售额/);
+ assert.doesNotMatch(market,/SASI \/ FEATURED|01 \/ SOFTWARE|02 \/ PUBLISH & DELIVERY|03 \/ SELLER STUDIO|04 \/ SELLER EARNINGS|SASI · SELLER CENTER/);
+ assert.match(css,/\.main \.card p\{font-size:14px/);
+ assert.match(css,/\.marketFeature strong\{font-size:17px/);
+ assert.match(css,/\.sellerBenefits small\{font-size:13px/);
+ assert.match(css,/\.sellerGuideSteps small\{font-size:13px/);
  assert.match(css,/\.featuredShelf\{display:grid;grid-template-columns:minmax\(0,1\.55fr\)/);assert.match(css,/\.featuredMiniCard\{/);assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(250px/);assert.match(css,/\.sellerGuideCard p\{font-size:15px/);
  assert.match(css,/\.marketFeature strong\{font-size:16px/);assert.match(css,/\.sellerHeroCopy h1\{font-size:clamp\(32px/);
 });
