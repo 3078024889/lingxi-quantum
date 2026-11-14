@@ -9,4 +9,4 @@ export const metadata:Metadata={
  keywords:["SASI 智能软件市场","MT5 EA","MT5 EA源码","量化交易源码","软件安装教程","成品软件","软件源码授权","自动交付","开发者软件发布","灵犀场"],
  alternates:{canonical:"/sasi"}
 };
-export default function Page(){return <><Nav/><SasiOpenMarketplace/><Footer/></>;}
+export default function Page(){return <><Nav/><SasiOpenMarketplace/><Footer compact/></>;}

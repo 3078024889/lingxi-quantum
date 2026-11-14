@@ -9,4 +9,4 @@ export const metadata:Metadata={
  robots:{index:false,follow:true},
  alternates:{canonical:"/sasi/seller"}
 };
-export default function Page(){return <><Nav/><SasiOpenMarketplace view="seller"/><Footer/></>}
+export default function Page(){return <><Nav/><SasiOpenMarketplace view="seller"/><Footer compact/></>}
