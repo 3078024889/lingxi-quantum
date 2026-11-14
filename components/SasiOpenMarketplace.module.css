@@ -668,3 +668,4 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 @media(max-width:960px){.sellerHeroArt{min-height:116px}}
 @media(max-width:760px){.sellerHeroArt{min-height:108px}.sellerHeroArtwork{top:-38%;width:180%;height:180%}.sellerJoinArt{height:112px}}
 @media(max-width:620px){.sellerHeroArt{min-height:96px}.sellerJoinArt{height:104px}}
+@media(max-width:960px){.main .sellerHero{grid-template-columns:minmax(0,1fr)}}
