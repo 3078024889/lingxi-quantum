@@ -43,10 +43,11 @@ for(const locale of ["zh","en","ja","ko","fr","de","es","pt","ar"]){
 }
 
 const legalCopy=readFileSync("components/SasiLegalBody.tsx","utf8");
-assert.doesNotMatch(legalCopy,/SI9[.]5|SI 9[.]5/);
-assert.ok(legalCopy.includes("SI 11.6"));
+assert.doesNotMatch(legalCopy,/SI9[.]5|SI 9[.]5|SI\\s*11[.]6/i);
+assert.match(legalCopy,/Copernicus SI|哥白尼 SI/);
 const firstPartyCatalog=readFileSync("lib/sasi-software/catalog.ts","utf8");
-assert.ok(firstPartyCatalog.includes("Copernicus SI 11.6"));
+assert.ok(firstPartyCatalog.includes("Copernicus SI · MT5 Source Code License"));
+assert.doesNotMatch(firstPartyCatalog,/SI9[.]5|SI 9[.]5|SI\\s*11[.]6/i);
 
 const growth=readFileSync("components/HomeGlobalGrowth.tsx","utf8");
 for(const term of ["124 个工具目录","llms.txt","llms-full.txt","WordPress","JS Widget","Before / After","Celestial 小仙女","SIAI","SASI 智能软件市场"]){
