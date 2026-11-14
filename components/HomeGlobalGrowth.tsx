@@ -447,7 +447,7 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  const distribution=DISTRIBUTION_COPY[lang]||DISTRIBUTION_COPY.en;
  const features=[...copy.features,{icon:"◇",title:security.title,description:security.description,href:"/privacy"}];
  return (
-  <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="124 个工具目录;llms.txt;llms-full.txt;WordPress;JS Widget;API;RSS;二维码;分享归因;Before / After;Celestial 小仙女;SIAI;SASI 智能软件市场;SASI SOFTWARE MARKET;PUBLISHED SOFTWARE;VERIFIED;href:"/sasi/seller";href:"/sasi/delivery"">
+  <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="124 个工具目录;llms.txt;llms-full.txt;WordPress;JS Widget;API;RSS;二维码;分享归因;Before / After;Celestial 小仙女;SIAI;SASI 智能软件市场;SASI SOFTWARE MARKET;PUBLISHED SOFTWARE;VERIFIED">
    <div className="lx-home-feature-strip">
     {features.map(item=>(
      <Link className="lx-home-feature-card" href={item.href} key={item.href}>
