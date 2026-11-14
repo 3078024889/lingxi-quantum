@@ -10,7 +10,7 @@ test('homepage keeps one complete global-growth section and six platform pillars
  assert.match(growth,/const SECURITY_COPY/);assert.match(growth,/const features(?::Feature\[\])?=\[\.\.\.copy\.features/);assert.match(growth,/data-growth-inventory="[^"]*九语言搜索入口/);assert.match(growth,/\{features\.map/);
  assert.match(growth,/title:"安全可靠服务"/);assert.match(growth,/title:"全球智能分发与合作"/);
  assert.equal((growth.match(/className="lx-home-market-card"/g)||[]).length,5);
- for(const term of ["WordPress","JS Widget","API","RSS","二维码","分享归因"])assert.ok(growth.includes(term),"growth channel missing "+term);
+ for(const term of ["WordPress","JS Widget","API","RSS","二维码","分享来源统计"])assert.ok(growth.includes(term),"growth channel missing "+term);
  assert.ok(seo.includes('type Question'));assert.ok(seo.includes('questions:'));assert.ok(llms.includes('SASI 智能软件市场'));assert.ok(llms.includes('全球 SIAI 排行榜'));assert.ok(!/short[- ]drama|book SASI|learning SASI|research SASI|短剧生成|书本智能体|学习智能体|科研智能体/i.test(llms));
  assert.match(css,/\.lx-home-feature-strip\{grid-template-columns:repeat\(6/);assert.match(css,/\.lx-home-toolpass-wrap\{width:min/);
  assert.match(growth,/SASI SOFTWARE MARKET/);assert.match(growth,/PUBLISHED SOFTWARE/);assert.match(growth,/VERIFIED/);assert.doesNotMatch(growth,/99\.6%|>128</);
