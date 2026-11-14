@@ -3,7 +3,7 @@ import {useState,type FormEvent} from "react";
 import {useRouter} from "next/navigation";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {isLikelyToolQuery} from "@/lib/tools/search-intents-v44r2.mjs";
-import {HomeHeroVisual} from "@/components/HomeGlobalGrowth";
+import {HomeHeroVisual,HomeGlobalGrowth} from "@/components/HomeGlobalGrowth";
 type HeroCopy={title:string;lead:string;subline:string;primary:string;secondary:string;placeholder:string;begin:string;proof:string[]};
 const HERO_COPY:Record<LingxiLang,HeroCopy>={
  zh:{title:"全球智能服务与实用工具平台",lead:"全球 SIAI 排行榜比较模型能力、真实价格、免费额度、地区可用性与商用授权；SASI 智能软件市场提供成品软件、MT5 EA、交易指标与源码授权；100+ 在线工具覆盖 PDF、图片、视频、音频、表格及日常文件处理。",subline:"全球 SIAI 排行榜 · 100+ 在线实用工具 · SASI 智能软件市场",primary:"立即探索",secondary:"开通工具包",placeholder:"输入问题或任务，快速找到对应工具…",begin:"查找答案",proof:["真实数据","持续更新","全球可用","安全高效"]},
@@ -36,5 +36,5 @@ export default function HomeProblemHub(){
    <div className="lx-home-hero-proof">{copy.proof.map(item=><span key={item}><b aria-hidden="true">✓</b>{item}</span>)}</div>
    <form onSubmit={submit} className="lx-home-question-search" data-testid="home-task-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} aria-label={copy.placeholder} placeholder={copy.placeholder}/><button type="submit">{copy.begin}</button></form>
   </div><HomeHeroVisual/></div>
- </section>;
+ </section><HomeGlobalGrowth lang={lang}/>;
 }
