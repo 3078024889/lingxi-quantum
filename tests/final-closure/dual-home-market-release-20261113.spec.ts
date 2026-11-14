@@ -24,7 +24,9 @@ for(const theme of ["light","dark"]){
     const image=hero.locator("img");
     await expect.poll(()=>image.evaluate((element:HTMLImageElement)=>element.naturalWidth)).toBeGreaterThan(0);
    }else{
-    await expect(page.getByRole("heading",{name:/卖家工作台|Seller workspace/})).toBeVisible();
+    const sellerHero=page.getByTestId("seller-workspace-hero");
+    await expect(sellerHero).toBeVisible();
+    await expect(sellerHero.getByRole("heading",{name:/卖家工作台|Seller workspace/})).toBeVisible();
     await expect(page.locator("#listing-editor")).toBeVisible();
   await expect(page.getByTestId("seller-upload-grid")).toBeVisible();
   await expect(page.getByTestId("seller-upload-tile")).toHaveCount(3);
