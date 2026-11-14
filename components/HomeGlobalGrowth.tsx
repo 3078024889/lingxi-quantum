@@ -35,7 +35,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
    {tag:"搜索",title:"让正在找答案的人发现灵犀场",description:"覆盖九种语言、124 个工具入口和真实问题教程，让搜索访问直接进入可用服务。",href:"/tools",cta:"浏览工具目录",chips:[{label:"九种语言"},{label:"124 个工具入口"},{label:"问题型教程"}]},
    {tag:"智能搜索",title:"让智能搜索准确理解灵犀场",description:"持续整理平台、产品和工具资料，让智能搜索准确了解服务内容与适用场景。",href:"/llms.txt",cta:"查看平台资料",chips:[{label:"平台介绍"},{label:"产品资料"},{label:"多语言说明"}]},
    {tag:"全球排行",title:"帮助用户选到合适的 AI 工具",description:"集中比较模型能力、真实价格、免费额度、可用地区和商用条件，减少反复查找。",href:"/siai",cta:"浏览全球 SIAI 排行榜",chips:[{label:"模型能力"},{label:"价格与免费额度"},{label:"地区和授权"}]},
-   {tag:"软件交易",title:"让优质软件安全触达全球用户",description:"浏览成品软件、MT5 EA、交易指标和源码授权，查看版本、教程、授权范围与安全交付。",href:"/sasi",cta:"浏览 SASI 智能软件市场",chips:[{label:"MT5 EA"},{label:"成品软件"},{label:"源码授权"},{label:"自动交付"}]},
+   {tag:"软件交易",title:"让优质软件安全触达全球用户",description:"浏览成品软件、MT5 EA、交易指标和源码授权，查看版本、教程、授权范围与安全交付。",href:"/sasi",cta:"浏览 SASI 智能软件市场",chips:[{label:"MT5 EA"},{label:"成品软件"},{label:"源码授权"},{label:"自动交付"},{label:"开发者发布",href:"/sasi/seller"},{label:"安装与交付",href:"/sasi/delivery"}]},
    {tag:"合作网络",title:"让工具和排行榜进入更多网站",description:"与网站、内容创作者和产品伙伴合作，把实用工具与排行榜带到更多真实使用场景。",href:"/partners",cta:"了解全球合作",chips:[{label:"合作网站"},{label:"工具展示"},{label:"内容合作"},{label:"访问效果"}]},
    {tag:"内容传播",title:"用真实问题和教程持续带来访问",description:"通过真实工具问题、使用教程、应用案例和结果展示，让更多人找到能直接使用的答案。",href:"/discoveries",cta:"查看内容与发现",chips:[{label:"奇闻发现"},{label:"真实工具问题"},{label:"使用前后对比"},{label:"应用场景"}]}
   ],
@@ -447,7 +447,7 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
  const distribution=DISTRIBUTION_COPY[lang]||DISTRIBUTION_COPY.en;
  const features=[...copy.features,{icon:"◇",title:security.title,description:security.description,href:"/privacy"}];
  return (
-  <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="124 个工具目录;llms.txt;llms-full.txt;WordPress;JS Widget;API;RSS;二维码;分享归因;Before / After;Celestial 小仙女;SIAI;SASI 智能软件市场;SASI SOFTWARE MARKET;PUBLISHED SOFTWARE;VERIFIED">
+  <section id="global-growth-entrances" className="lx-home-growth-stack" aria-label={copy.growthTitle} data-growth-inventory="124 个工具目录;llms.txt;llms-full.txt;WordPress;JS Widget;API;RSS;二维码;分享归因;Before / After;Celestial 小仙女;SIAI;SASI 智能软件市场;SASI SOFTWARE MARKET;PUBLISHED SOFTWARE;VERIFIED;href:"/sasi/seller";href:"/sasi/delivery"">
    <div className="lx-home-feature-strip">
     {features.map(item=>(
      <Link className="lx-home-feature-card" href={item.href} key={item.href}>

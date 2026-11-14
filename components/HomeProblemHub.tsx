@@ -1,6 +1,7 @@
 "use client";
 import {useMemo,useState,type FormEvent} from "react";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
 import {useLingxiLang,type LingxiLang} from "@/lib/lingxi-i18n";
 import {isLikelyToolQuery} from "@/lib/tools/search-intents-v44r2.mjs";
 import {HomeHeroVisual,HomeGlobalGrowth} from "@/components/HomeGlobalGrowth";
@@ -20,7 +21,7 @@ export default function HomeProblemHub(){
  const {lang}=useLingxiLang();const copy=HERO_COPY[lang]||HERO_COPY.en;const router=useRouter();const [query,setQuery]=useState("");
  const intents=useMemo(()=>[
   {words:["pdf","图片","视频","音频","字幕","文件","压缩","ocr","表格","excel"],href:"/tools",label:lang==="zh"?"实用工具":"Practical tools"},
-  {words:["ai","模型","排行榜","免费额度","价格","商用","siai","chatgpt","claude","gemini"],href:"/siai",label:lang==="zh"?"全球 SIAI 排行榜":"Global SIAI Rankings"},
+  {words:["模型","排行榜","免费额度","价格","商用","siai","chatgpt","claude","gemini"],href:"/siai",label:lang==="zh"?"全球 SIAI 排行榜":"Global SIAI Rankings"},
   {words:["ea","mt5","源码","软件","授权","成品","商品","市场","sasi"],href:"/sasi",label:lang==="zh"?"SASI 智能软件市场":"SASI Software Marketplace"},
   {words:["开发者","卖家","发布","上架","seller","developer","vendor","vendeur","verkäufer","vendedor","판매자","開発者","بائع"],href:"/sasi/seller",label:lang==="zh"?"开发者发布":"Seller services"},
   {words:["安装","交付","教程","授权规则","delivery","installation","install","instalación","instalação","導入","설치","تثبيت"],href:"/sasi/delivery",label:lang==="zh"?"软件安装与交付教程":"Installation & delivery guide"},
@@ -29,7 +30,7 @@ export default function HomeProblemHub(){
  ],[lang]);
  const hit=useMemo(()=>{const normalized=query.toLowerCase().replace(/\s+/g,"");return intents.map(item=>({...item,score:item.words.filter(word=>normalized.includes(word)).length})).sort((a,b)=>b.score-a.score)[0]},[query,intents]);
  function submit(event:FormEvent<HTMLFormElement>){
-  event.preventDefault();const value=query.trim();if(!value)return;const normalized=value.toLowerCase().replace(/\s+/g,"");
+  event.preventDefault();const value=query.trim();if(!value)return;
   if(/(?:\bai\b|模型|排行榜|免费额度|价格|商用|siai|chatgpt|claude|gemini)/i.test(value)){const discovery=new URL("/siai",location.origin);discovery.searchParams.set("q",value);discovery.searchParams.set("lang",lang);router.push(discovery.pathname+discovery.search);return}
   if(isLikelyToolQuery(value)){router.push(`/tools?q=${encodeURIComponent(value)}&lang=${lang}`);return}
   const destination=new URL(hit?.score>0?hit.href:'/tools',location.origin);
