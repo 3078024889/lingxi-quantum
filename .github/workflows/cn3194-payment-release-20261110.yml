@@ -130,6 +130,7 @@ jobs:
             tests/sasi-marketplace-security-contract.test.mjs \
             tests/sasi-marketplace-reference-20261114.test.mjs \
             tests/sasi-seller-reference-20261114.test.mjs \
+            tests/home-sasi-effect4-closure-20261114.test.mjs \
             tests/sasi-software-paypal-fulfillment-contract.test.mjs \
             tests/cn3194-source-only-software-catalog.test.mjs \
             tests/cn3194-marketplace-readiness-gates.test.mjs \

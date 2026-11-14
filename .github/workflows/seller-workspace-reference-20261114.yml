@@ -6,6 +6,11 @@ on:
       - feat/20261114-afternoon-seller-workspace-com
     paths:
       - 'components/Nav.tsx'
+      - 'app/home-effect4-20261114.css'
+      - 'app/layout.tsx'
+      - 'app/page.tsx'
+      - 'app/[locale]/page.tsx'
+      - 'tests/home-sasi-effect4-closure-20261114.test.mjs'
       - 'components/SasiOpenMarketplace.tsx'
       - 'components/SasiOpenMarketplace.module.css'
       - 'app/sasi/seller/page.tsx'
@@ -59,6 +64,7 @@ jobs:
       - name: Seller UI and marketplace contract tests
         run: |
           node --test tests/sasi-seller-reference-20261114.test.mjs
+          node --test tests/home-sasi-effect4-closure-20261114.test.mjs
           node --test tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs
           node --test tests/sasi-marketplace-review-security-20261108.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
