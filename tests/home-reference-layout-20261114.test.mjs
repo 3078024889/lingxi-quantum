@@ -20,8 +20,8 @@ test('reference homepage composition removes retired homepage blocks and preserv
 test('SASI marketplace and seller workspace retain verified data and readable reference styling',()=>{
  const market=read('components/SasiOpenMarketplace.tsx'),css=read('components/SasiOpenMarketplace.module.css');
  assert.match(market,/publishedCount/);assert.match(market,/pendingCount/);assert.match(market,/cnyGross/);assert.match(market,/studioMountedRef/);
- assert.match(market,/styles\.sellerWorkspaceGrid/);assert.match(market,/styles\.sellerGuideColumn/);assert.match(market,/styles\.featuredVisual/);
+ assert.match(market,/styles\.sellerWorkspaceGrid/);assert.match(market,/styles\.sellerGuideColumn/);assert.match(market,/styles\.featuredVisual/);assert.match(market,/const featuredSide=visible\.slice\(0,2\)/);assert.match(market,/remainingVisible\.map/);assert.match(market,/featuredMiniCard/);assert.match(market,/images\[item\.id\]/);
  assert.doesNotMatch(market,/99\.6%|虚构销售额/);
- assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(250px/);assert.match(css,/\.sellerGuideCard p\{font-size:15px/);
+ assert.match(css,/\.featuredShelf\{display:grid;grid-template-columns:minmax\(0,1\.55fr\)/);assert.match(css,/\.featuredMiniCard\{/);assert.match(css,/\.sellerWorkspaceGrid\{grid-template-columns:minmax\(250px/);assert.match(css,/\.sellerGuideCard p\{font-size:15px/);
  assert.match(css,/\.marketFeature strong\{font-size:16px/);assert.match(css,/\.sellerHeroCopy h1\{font-size:clamp\(32px/);
 });

@@ -93,6 +93,9 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  },[listings]);
  const visible=useMemo(()=>listings.filter(x=>(filter==="all"||x.category===filter)&&
  (x.title+" "+x.description).toLowerCase().includes(search.trim().toLowerCase())),[listings,filter,search]);
+ const featuredSide=visible.slice(0,2);
+ const remainingVisible=visible.slice(featuredSide.length);
+ const featuredFallbacks=featuredSide.length===0?["browse","publish"]:featuredSide.length===1?["publish"]:[];
  const publishedCount=mine.filter(item=>item.status==="published").length;
  const pendingCount=mine.filter(item=>item.status==="submitted").length;
  const cnyGross=payments?.balances?.CNY?.grossMinor??0;
@@ -265,6 +268,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    <section id="featured" className={styles.featured} data-testid="featured-copernicus-source">
    <div className={styles.sectionHeading}><div><small>SASI / FEATURED</small><h2>{sasiSoftwareUiText(lang,"精选软件","Featured software")}</h2></div>
     <a href="#products" className={styles.featuredBrowse}>{sasiSoftwareUiText(lang,"浏览开发者作品","Browse creator software")}</a></div>
+   <div className={styles.featuredShelf}>
    <article className={styles.featuredCard}>
     <div className={styles.featuredVisual} aria-hidden="true"><small>MT5 · SOURCE</small><strong>{featuredVisualTitle}</strong><span>CODE · LICENSE</span></div>
     <div className={styles.featuredDescription}>
@@ -289,11 +293,31 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       <span className={styles.featuredUnavailable}>{sasiSoftwareUiText(lang,"当前没有可用的支付方式","No payment method is currently available")}</span>:null}
     </div>
    </article>
+    {featuredSide.map(item=>{
+     const cover=images[item.id]?.find(photo=>photo.kind==="cover")?.url;
+     return <article className={styles.featuredMiniCard} key={item.id}>
+      <Link href={"/sasi/marketplace/"+item.id} className={styles.featuredMiniVisual}>
+       {cover?<img src={cover} alt={item.title} loading="lazy" referrerPolicy="no-referrer"/>:<span>{categoryLabel(lang,item.category)}</span>}
+      </Link>
+      <div className={styles.featuredMiniInfo}>
+       <small className={styles.featuredMiniCategory}>{categoryLabel(lang,item.category)}</small>
+       <h3>{item.title}</h3><p>{item.description}</p>
+       <div className={styles.featuredMiniPrice}><strong>¥{format(item.price_cny_minor)}</strong><small>USD ${format(item.price_usd_minor)}</small></div>
+       <Link className={styles.featuredMiniDetail} href={"/sasi/marketplace/"+item.id}>{sasiSoftwareUiText(lang,"查看详情","View details")} →</Link>
+      </div>
+     </article>;
+    })}
+    {featuredFallbacks.map(kind=>kind==="browse"?<Link key={kind} href="#products" className={styles.featuredMiniCta}>
+     <span className={styles.featuredMiniCtaIcon}>◈</span><strong>{sasiSoftwareUiText(lang,"浏览全部软件","Browse all software")}</strong><small>{sasiSoftwareUiText(lang,"查看已审核发布的商品与开发者作品。","Explore reviewed software and developer listings.")}</small><b>{sasiSoftwareUiText(lang,"浏览软件","Browse software")} →</b>
+    </Link>:<Link key={kind} href="/sasi/seller" className={styles.featuredMiniCta}>
+     <span className={styles.featuredMiniCtaIcon}>✧</span><strong>{sasiSoftwareUiText(lang,"开发者发布","Publish as a developer")}</strong><small>{sasiSoftwareUiText(lang,"提交软件资料，审核通过后展示并自动交付。","Submit software for review and verified automatic delivery.")}</small><b>{sasiSoftwareUiText(lang,"进入卖家工作台","Open seller workspace")} →</b>
+    </Link>)}
+   </div>
   </section>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><small>01 / SOFTWARE</small><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
    <div className={styles.find}><input aria-label={sasiSoftwareUiText(lang,"搜索软件","Search software")} placeholder={sasiSoftwareUiText(lang,"搜索 EA、指标、应用…","Find EAs and software…")} value={search} onChange={e=>setSearch(e.target.value)}/></div></div>
    <div className={styles.filters}><button className={filter==="all"?styles.active:""} onClick={()=>setFilter("all")}>{sasiSoftwareUiText(lang,"全部","All")}</button>{CATEGORIES.map(([key])=><button key={key} className={filter===key?styles.active:""} onClick={()=>setFilter(key)}>{categoryLabel(lang,key)}</button>)}</div>
-   <div className={styles.products}>{visible.map((item,i)=><article className={styles.card} key={item.id}>
+   <div className={styles.products}>{remainingVisible.map((item,i)=><article className={styles.card} key={item.id}>
     <div className={styles.tile} data-tone={i%3}>{images[item.id]?.find(photo=>photo.kind==="cover")?.url?
     <img src={images[item.id].find(photo=>photo.kind==="cover")!.url} alt={item.title} loading="lazy" referrerPolicy="no-referrer" className={styles.cover}/>
     :<span>{item.category==="mt5-ea"?"EA":item.category==="mt5-indicator"?"SI":"SASI"}</span>}</div>
@@ -306,7 +330,8 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       <p>{item.description.trim().slice(0,260)}{item.description.length>260?"…":""}</p>
       <Link href={"/sasi/marketplace/"+item.id}>{sasiSoftwareUiText(lang,"查看完整介绍","View full details")} →</Link>
     </aside></article>)}</div>
-   {visible.length===0&&<div className={styles.empty}>{sasiSoftwareUiText(lang,"已审核的软件将在这里展示；欢迎开发者发布原创作品。","No reviewed and published software matches this search.")}</div>}
+   {remainingVisible.length===0&&visible.length>0&&<div className={styles.empty}>{sasiSoftwareUiText(lang,"精选软件已展示在上方，更多作品将在审核通过后持续出现。","Featured software is shown above. More listings appear as they pass review.")}</div>}
+    {visible.length===0&&<div className={styles.empty}>{sasiSoftwareUiText(lang,"已审核的软件将在这里展示；欢迎开发者发布原创作品。","No reviewed and published software matches this search.")}</div>}
   </section>
   <section className={styles.section} aria-label={sasiSoftwareUiText(lang,"软件发布与交付步骤","Software publishing steps")}>
     <div className={styles.sectionHeading}><div><small>02 / PUBLISH & DELIVERY</small><h2>{sasiSoftwareUiText(lang,"卖家发布与自动交付","Publish and deliver")}</h2></div></div>
