@@ -484,3 +484,78 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 :global(html[data-theme="dark"]) .main .sortSelect{
  background:#1d2031;color:#f0edff;border-color:rgba(169,145,255,.32)
 }
+
+
+/* 2026-11-14 · Seller workspace reference rebuild */
+.main .sellerWorkspaceSection{margin-top:5px;scroll-margin-top:104px}
+.main .sellerHero{min-height:154px;grid-template-columns:minmax(0,1fr) minmax(320px,.86fr);gap:18px;padding:17px 24px;margin:2px 0 12px;border:1px solid rgba(132,158,226,.28);border-radius:20px;background:linear-gradient(112deg,rgba(255,255,255,.9),rgba(243,245,255,.82) 54%,rgba(230,239,255,.78));box-shadow:0 12px 30px rgba(73,93,164,.09),inset 0 1px 0 rgba(255,255,255,.92)}
+.sellerHeroEyebrow{display:inline-block;color:#7182c6;font-size:10px;font-weight:900;letter-spacing:.18em}
+.sellerHeroCopy h1{margin:5px 0;font-size:clamp(32px,2.8vw,42px);font-weight:950;letter-spacing:-.045em;line-height:1.16}
+.sellerHeroCopy h1:before{content:"";display:inline-block;width:7px;height:34px;margin:0 15px 0 0;border-radius:8px;background:linear-gradient(180deg,#bf55f4,#4b58ff);transform:skewX(-15deg);vertical-align:-4px;box-shadow:0 4px 12px rgba(113,78,239,.25)}
+.sellerHeroCopy p{max-width:650px;font-size:14px;line-height:1.65}
+.sellerBack{margin-top:9px;padding:7px 12px;border-color:rgba(112,132,205,.22);background:rgba(255,255,255,.52);font-size:12px}
+.sellerHeroArt{position:relative;min-height:126px;overflow:visible;perspective:800px}
+.sellerHeroArt:before{content:"";position:absolute;inset:18% 7%;border-radius:50%;background:radial-gradient(ellipse,rgba(104,145,255,.2),rgba(164,122,255,.1) 48%,transparent 72%);filter:blur(12px)}
+.sellerHeroOrbit{inset:5px 2%;border-color:rgba(104,145,244,.4);transform:rotate(-12deg) scaleX(1.08);box-shadow:0 0 22px rgba(103,139,255,.2)}
+.sellerHeroOrbitAlt{position:absolute;inset:17px 10%;border:1px solid rgba(177,119,255,.36);border-radius:50%;transform:rotate(17deg) scaleX(1.12);box-shadow:0 0 18px rgba(170,119,255,.16)}
+.sellerHeroGlobe{position:absolute;z-index:1;right:4%;top:50%;width:126px;height:126px;transform:translateY(-50%);overflow:hidden;border:1px solid rgba(255,255,255,.82);border-radius:50%;background:radial-gradient(circle at 28% 23%,rgba(255,255,255,.95),transparent 19%),radial-gradient(circle at 65% 68%,rgba(46,103,229,.9),transparent 55%),linear-gradient(135deg,#d9edff 0%,#79b4ff 38%,#455bd1 72%,#1d2e72 100%);box-shadow:inset -13px -12px 24px rgba(17,35,102,.28),0 12px 28px rgba(70,102,204,.26),0 0 28px rgba(112,156,255,.24)}
+.sellerHeroGlobe:before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(0deg,transparent 0 17px,rgba(255,255,255,.22) 18px 19px),repeating-linear-gradient(90deg,transparent 0 20px,rgba(255,255,255,.18) 21px 22px);mask-image:radial-gradient(circle,#000 58%,transparent 72%)}
+.sellerHeroGlobe:after{content:"";position:absolute;inset:18% -8%;border:1px solid rgba(255,255,255,.48);border-radius:50%;transform:rotate(-25deg)}
+.sellerHeroCloud{position:absolute;z-index:4;top:3px;left:29%;display:grid;width:42px;height:42px;place-items:center;border:1px solid rgba(255,255,255,.7);border-radius:13px;background:linear-gradient(145deg,#9c7cff,#465bff);color:#fff;font-size:23px;font-weight:900;box-shadow:0 8px 18px rgba(92,78,226,.28),inset 0 1px 0 rgba(255,255,255,.65);transform:rotate(-5deg)}
+.sellerHeroScreen{position:absolute;z-index:2;left:5%;bottom:4px;width:170px;height:101px;padding:12px;border-width:5px;border-color:#1e356d;border-radius:12px;background:linear-gradient(145deg,#10275a,#17427d 62%,#1d5c9c);box-shadow:0 15px 24px rgba(36,61,128,.26),inset 0 1px 0 rgba(255,255,255,.18);transform:perspective(520px) rotateY(-15deg) rotateX(4deg)}
+.sellerHeroScreen b{font-size:8px;letter-spacing:.1em}.sellerHeroScreen i{height:8px}
+.sellerHeroTrophy{position:absolute;z-index:3;left:43%;top:50%;width:76px;height:88px;margin:0;border-radius:19px 19px 14px 14px;background:linear-gradient(145deg,#fff5d4 0%,#f0c76e 35%,#d69a3d 68%,#98612a 100%);box-shadow:0 13px 26px rgba(184,132,53,.28),inset 0 1px 0 #fff;transform:translate(-50%,-50%) rotate(-5deg)}
+.sellerHeroTrophy:before,.sellerHeroTrophy:after{top:17px;width:18px;height:25px;border-color:#d9a64b}
+.metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 12px}
+.metrics>div{display:flex;align-items:center;gap:11px;min-width:0;min-height:80px;padding:11px 13px;border:1px solid rgba(135,155,220,.25);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(244,245,255,.78));backdrop-filter:blur(14px);box-shadow:0 8px 20px rgba(77,95,169,.075),inset 0 1px 0 rgba(255,255,255,.9)}
+.metricIcon{display:grid;flex:none;width:44px;height:44px;place-items:center;border:1px solid rgba(255,255,255,.82);border-radius:14px;background:linear-gradient(145deg,#e8f4ff,#b6d6ff);color:#4269db;font-size:22px!important;font-weight:900;box-shadow:0 6px 14px rgba(85,116,213,.14)}
+.metrics>div[data-metric="pending"] .metricIcon{background:linear-gradient(145deg,#f1eaff,#c9b8ff);color:#7753df}
+.metrics>div[data-metric="sales"] .metricIcon{background:linear-gradient(145deg,#fff4d8,#f1c46b);color:#a46b1d}
+.metrics>div[data-metric="delivery"] .metricIcon{background:linear-gradient(145deg,#eeeaff,#b8b7ff);color:#6654e8}
+.metricCopy{display:grid;gap:3px;min-width:0}
+.metrics .metricCopy>span{font-size:12px;font-weight:800;line-height:1.35;color:var(--lx-ink,#25344e)}
+.metrics .metricCopy>strong{margin:0;font-size:25px;line-height:1.12;letter-spacing:-.035em;color:var(--lx-ink,#202d47)}
+.metrics .metricCopy>small{display:block;margin:0;font-size:10px;line-height:1.4;color:var(--lx-muted,#74849a);overflow-wrap:anywhere}
+.main .sellerWorkspaceGrid{grid-template-columns:minmax(240px,.9fr) minmax(480px,1.72fr) minmax(255px,.96fr);gap:12px;align-items:start}
+.sellerJoinColumn .formCard,.sellerMainColumn .formCard,.sellerGuideCard{border:1px solid rgba(135,155,220,.25);background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(246,247,255,.82));box-shadow:0 9px 24px rgba(75,94,166,.075),inset 0 1px 0 rgba(255,255,255,.88)}
+.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:16px;border-radius:17px}
+.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{margin-bottom:11px;font-size:18px;line-height:1.4;font-weight:950}
+.sellerJoinArt{position:relative;display:grid;height:126px;place-items:center;overflow:hidden;margin:0 0 8px;border:1px solid rgba(155,168,232,.15);border-radius:15px;background:radial-gradient(ellipse at 50% 55%,rgba(135,153,255,.2),transparent 58%),linear-gradient(135deg,rgba(248,250,255,.75),rgba(233,238,255,.4))}
+.sellerJoinArt:before{content:"";position:absolute;inset:17px 10%;border:1px solid rgba(116,145,232,.32);border-radius:50%;transform:rotate(-10deg);box-shadow:0 0 20px rgba(115,140,237,.15)}
+.sellerJoinArt:after{content:"";position:absolute;width:180px;height:54px;border:1px solid rgba(187,135,255,.38);border-radius:50%;transform:rotate(10deg);box-shadow:0 0 18px rgba(177,130,255,.16)}
+.sellerJoinOrbit{position:absolute;width:145px;height:48px;border:1px solid rgba(119,164,242,.32);border-radius:50%;transform:rotate(-13deg)}
+.sellerJoinSpark{position:absolute;z-index:2;top:12px;right:22%;color:#d2a64e;font-size:22px;text-shadow:0 3px 12px rgba(214,168,79,.4)}
+.sellerJoinShield{position:relative;z-index:3;display:grid;width:90px;height:104px;place-items:center;clip-path:polygon(50% 0,94% 17%,88% 65%,50% 100%,12% 65%,6% 17%);background:linear-gradient(145deg,#fefeff 0%,#b9c8ff 28%,#766cf4 58%,#384ed2 100%);filter:drop-shadow(0 12px 14px rgba(83,86,204,.26))}
+.sellerJoinShield svg{width:72px;height:82px;filter:drop-shadow(0 2px 4px rgba(25,47,129,.18))}
+.sellerFormHeading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sellerFormHeading h3{margin:0!important}
+.resumeDraftButton{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:34px;padding:7px 11px;border:1px solid rgba(128,117,234,.28);border-radius:11px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(239,235,255,.85));color:#6549d6;font-size:12px;font-weight:850;box-shadow:0 5px 12px rgba(100,79,204,.1)}
+.resumeDraftButton:disabled{opacity:.45;cursor:not-allowed}
+.sellerMainColumn .formCard>label{margin-top:9px;font-size:13px;line-height:1.45;font-weight:800}
+.sellerMainColumn .formCard input:not([type="checkbox"]),.sellerMainColumn .formCard select{min-height:41px;padding:9px 12px;font-size:13px;border-radius:10px}
+.sellerMainColumn .formCard textarea{min-height:92px;padding:10px 12px;font-size:13px;border-radius:11px}
+.sellerMainColumn .descriptionCount{font-size:10px}
+.uploadGrid{gap:8px;margin:13px 0 11px}.uploadTile{min-height:124px;padding:12px 11px;border-radius:14px;gap:6px}
+.uploadTile strong{font-size:13px;line-height:1.4}.uploadTile small,.uploadTile em{font-size:11px;line-height:1.45}.uploadTileIcon{width:32px;height:32px}
+.detailUploadRow{margin-bottom:11px;padding:10px 12px}.detailUploadRow strong{font-size:13px}.detailUploadRow small,.detailUploadRow em{font-size:11px}
+.sellerGuideColumn{gap:9px}.sellerGuideCard{padding:13px;border-radius:16px}
+.sellerGuideCard h3{gap:9px;margin-bottom:8px;font-size:15px;line-height:1.35}.sellerGuideMark{width:31px;height:31px;border-radius:10px;font-size:13px}
+.sellerGuideCard p{font-size:12px;line-height:1.65}
+.sellerGuideSteps{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.sellerGuideSteps li{position:relative;display:grid;justify-items:center;align-content:start;gap:5px;text-align:center}
+.sellerGuideSteps li:not(:last-child):after{content:"›";position:absolute;top:5px;right:-3px;color:#8b85dd;font-size:20px;font-weight:800}
+.sellerGuideSteps li>b{width:33px;height:33px;border:1px solid rgba(255,255,255,.82);background:linear-gradient(145deg,#edf2ff,#d3d5ff);color:#6559d5;font-size:12px;box-shadow:0 4px 10px rgba(99,105,207,.12)}
+.sellerGuideSteps li>span{display:grid;gap:2px;min-width:0;text-align:center}.sellerGuideSteps strong{font-size:11px;line-height:1.35}.sellerGuideSteps small{font-size:9px;line-height:1.35}
+.sellerBenefits>div{background:linear-gradient(145deg,rgba(255,255,255,.74),rgba(236,241,255,.56))}
+:global(html[data-theme="dark"]) .sellerHero{border-color:rgba(150,160,226,.2);background:linear-gradient(112deg,rgba(25,29,51,.96),rgba(31,37,69,.92) 56%,rgba(24,42,74,.9))}
+:global(html[data-theme="dark"]) .sellerHeroEyebrow{color:#b8b9ff}
+:global(html[data-theme="dark"]) .sellerJoinArt{background:radial-gradient(ellipse at 50% 55%,rgba(107,113,220,.22),transparent 58%),linear-gradient(135deg,rgba(34,38,65,.8),rgba(26,32,56,.75))}
+:global(html[data-theme="dark"]) .sellerJoinColumn .formCard,:global(html[data-theme="dark"]) .sellerMainColumn .formCard,:global(html[data-theme="dark"]) .sellerGuideCard{border-color:rgba(155,162,222,.2);background:linear-gradient(145deg,rgba(34,37,62,.94),rgba(27,31,52,.92));box-shadow:0 12px 28px rgba(0,0,0,.22)}
+:global(html[data-theme="dark"]) .metrics>div{border-color:rgba(155,162,222,.2);background:linear-gradient(145deg,rgba(36,40,66,.94),rgba(28,33,56,.92));box-shadow:0 8px 22px rgba(0,0,0,.2)}
+:global(html[data-theme="dark"]) .metrics .metricCopy>span,:global(html[data-theme="dark"]) .metrics .metricCopy>strong{color:#f1f3ff}
+:global(html[data-theme="dark"]) .resumeDraftButton{border-color:rgba(177,159,255,.25);background:linear-gradient(145deg,#302b4b,#24243a);color:#d4c9ff}
+@media(max-width:1360px){.main .sellerWorkspaceGrid{grid-template-columns:minmax(220px,.82fr) minmax(0,1.5fr)}.sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1080px){.main .sellerHero{grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);padding:15px 18px}.main .sellerWorkspaceGrid{grid-template-columns:minmax(210px,.78fr) minmax(0,1.22fr)}.sellerGuideColumn{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:960px){.main .sellerHero{grid-template-columns:1fr}.sellerHeroArt{min-height:116px}.main .sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.main .sellerHero{padding:14px;border-radius:16px}.sellerHeroCopy h1{font-size:30px}.sellerHeroCopy p{font-size:13px}.sellerHeroArt{min-height:108px}.sellerHeroGlobe{width:104px;height:104px;right:4%}.sellerHeroScreen{width:145px;height:88px;left:3%}.sellerHeroTrophy{left:43%;width:64px;height:77px}.sellerHeroCloud{left:29%;width:36px;height:36px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metrics>div{min-height:70px;padding:9px}.metricIcon{width:38px;height:38px;border-radius:12px}.metrics .metricCopy>span{font-size:11px}.metrics .metricCopy>strong{font-size:21px}.metrics .metricCopy>small{font-size:9px}.sellerGuideColumn{grid-template-columns:1fr}.sellerJoinArt{height:112px}.sellerFormHeading{align-items:flex-start;flex-wrap:wrap}.resumeDraftButton{min-height:31px}}
+@media(max-width:430px){.sellerHeroCopy h1:before{height:27px;margin-right:10px}.sellerHeroArt{min-height:94px}.sellerHeroGlobe{width:88px;height:88px}.sellerHeroScreen{width:126px;height:78px}.sellerHeroTrophy{width:56px;height:68px}.sellerHeroCloud{width:31px;height:31px;font-size:18px}.metrics>div{gap:7px;padding:8px}.metricIcon{width:33px;height:33px;font-size:18px!important}.metrics .metricCopy>strong{font-size:18px}}
