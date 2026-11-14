@@ -52,7 +52,7 @@ test("anonymous buyers can browse real products without draft/order access",asyn
  const failed=await publicMarketListings(req,env,async()=>Response.json([{status:"draft",scan_status:"clean"}]));
  assert.equal(failed.status,503);
  const frontend=read("components/SasiOpenMarketplace.tsx");
- assert.ok(frontend.includes("sasi-market-hero-lingxifield.png"));
+ assert.ok(frontend.includes("global-scene-20261114.webp"));
  assert.match(frontend,/5,000/);
  assert.match(frontend,/maxLength=\{5000\}/);
 });
