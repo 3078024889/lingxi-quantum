@@ -1,7 +1,7 @@
 name: CN3194 exact release transfer helper lint (NO DEPLOY)
 on:
   push:
-    branches: [fix/cn3194-marketplace-503-transfer-20261113, feat/homepage-reference-rebuild-cn-20261113, cleanup/cn-retired-sasi-full-20261113]
+    branches: [fix/cn3194-marketplace-503-transfer-20261113, feat/homepage-reference-rebuild-cn-20261113, cleanup/cn-retired-sasi-full-20261113, ci/cn3194-payment-base-20261110]
     paths:
       - 'scripts/ops/R2-CN3195-Transfer-20261113.ps1'
       - 'scripts/ops/R2-CN3195-Transfer-20261114-f3d4.ps1'
@@ -46,11 +46,11 @@ jobs:
           foreach ($needle in $required) {
             if (-not $source.Contains($needle)) { throw "PIN_OR_SAFETY_CHECK_MISSING:$needle" }
           }
-          if ($source.Contains('199ff1c73d43ffc13abc887c51ebcc091f5e305e') -or $source.Contains('fe253a6be0eae2360245e0a183820a7e2c3be1ed')) {
+          if ($source.Contains('199ff1c73d43ffc13abc887c51ebcc091f5e305e') -or $source.Contains('fe253a6be0eae2360245e0a183820a7e2c3be1ed') -or $source.Contains('e6c2a4612b9b72091497420477945753ebae8986')) {
             throw 'STALE_3194_RELEASE_PIN_REJECTED'
           }
           Write-Host 'CN3194_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'
-      - name: Parse current e6c2 release transfer helper (NO DEPLOY)
+      - name: Parse current 071e release transfer helper (NO DEPLOY)
         shell: pwsh
         run: |
           $path = 'scripts/ops/R2-CN3195-Transfer-20261114.ps1'
@@ -63,13 +63,13 @@ jobs:
           }
           $source = Get-Content -LiteralPath $path -Raw
           $required = @(
-            "ecs-cn-unified-20261110-e6c2a4612b9b",
-            "e6c2a4612b9b72091497420477945753ebae8986",
-            "338039481",
-            "5c3e13d7832e112e222971c722aecfdd5a368ae101adeccdc87eddfec2d68389",
-            "98952d9b780f1ebacc64f0bf50e03128a47812072ab1858819a7f4f61678a086",
-            "0761a512130c82933b691467ec20d44e123641ad2acb9da8280b6e4ff18335b4",
-            "70963434c41e44ca850131bd098b806c4963c9319a4404ed2abe430929d2f940",
+            "ecs-cn-unified-20261110-071e193ab3bb",
+            "071e193ab3bb68422c8bf33470a8aee94fd48524",
+            "338043934",
+            "deb802c158869c49465651c16342f103f8bdb1662126c90c8e9ce57756ae96ae",
+            "d9e5382c2a741262b0efbd09a9d214fc7e8f9da9d86e3a69124d2802958e4ca4",
+            "903d487d75bc45d0a63d1e1376fcc9dfd4c84f170306806550b2969071b82a54",
+            "455d6b64a2b47421ea98a2adb96e838c29868eb776f91c3216b3aa2a7cc82352",
             "64762dd7378083f55926a912502d99a8c28da71d3494c2e7ea327c9e8fd29172",
             "R2_REMOTE_SIZE_VERIFY_FAILED",
             "R2_SIGNED_LINK_INVALID",
@@ -84,4 +84,4 @@ jobs:
           if ($source.Contains('199ff1c73d43ffc13abc887c51ebcc091f5e305e') -or $source.Contains('fe253a6be0eae2360245e0a183820a7e2c3be1ed')) {
             throw 'STALE_3194_RELEASE_PIN_REJECTED'
           }
-          Write-Host 'CN3194_E6C2_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'
+          Write-Host 'CN3194_071E_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'
