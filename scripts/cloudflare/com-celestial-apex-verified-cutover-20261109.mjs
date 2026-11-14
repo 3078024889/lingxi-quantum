@@ -98,7 +98,7 @@ async function readProviderFlags(base) {
 async function probe(base, phase, attempts = 3, expectedProviders = null) {
   const routes = [
     "/", "/siai", "/tools", "/tools/pass", "/ai-wallet", "/account",
-    "/sasi", "/about", "/announcements",
+    "/sasi", "/sasi/seller", "/about", "/announcements",
     "/api/health", "/api/pay/providers", "/api/sasi/marketplace/listings",
     "/api/sasi/software/catalog",
     "/discover/sasi-software-marketplace",
