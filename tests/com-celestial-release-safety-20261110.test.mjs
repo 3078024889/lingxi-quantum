@@ -91,7 +91,7 @@ test("COM homepage reference gate accepts Chinese labels while requiring the rea
   assert.ok(script.includes('["JS Widget", "网站嵌入组件"]'));
   assert.ok(script.includes('["Before / After", "使用前后对比"]'));
   assert.ok(script.includes('"/widgets/lingxifield-v1.js"'));
-  assert.ok(script.includes('"/discoveries#before-after"'));
+  assert.ok(script.includes('"/discoveries"'));
   assert.ok(script.includes("const missingAny"));
   assert.ok(script.includes("const missingLinks"));
   assert.ok(homepage.includes('label:"网站嵌入组件"'));
