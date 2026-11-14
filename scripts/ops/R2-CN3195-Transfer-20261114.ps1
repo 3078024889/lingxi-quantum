@@ -202,8 +202,19 @@ echo 'STEP 3/6: STAGE EXACT RELEASE ON ISOLATED PORT 3195'
 bash "$STAGE" --stage-local "$TAG"
 echo 'STEP 4/6: VERIFY 3195 ROUTES AND AUTH BOUNDARIES'
 bash "$STAGE" --verify-stage "$TAG"
+SELLER_3195="$(curl --noproxy '*' -fLsS --connect-timeout 5 --max-time 25 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3195/sasi/seller)"
+grep -Fq '卖家工作台' <<<"$SELLER_3195"
+grep -Fq '发布新软件' <<<"$SELLER_3195"
+echo 'CN3195_SELLER_WORKSPACE_CONTENT_PASS'
 echo 'STEP 5/6: PROMOTE CN3194 (3195 TEMPORARY STAGE; 3193 ROLLBACK BASELINE)'
 bash "$STAGE" --promote "$TAG"
+SELLER_3194="$(curl --noproxy '*' -fLsS --connect-timeout 5 --max-time 25 -H 'Host: lingxifield.cn' -H 'X-Forwarded-Proto: https' http://127.0.0.1:3194/sasi/seller)"
+grep -Fq '卖家工作台' <<<"$SELLER_3194"
+grep -Fq '发布新软件' <<<"$SELLER_3194"
+PUBLIC_SELLER="$(curl -fLsS --connect-timeout 8 --max-time 35 https://lingxifield.cn/sasi/seller)"
+grep -Fq '卖家工作台' <<<"$PUBLIC_SELLER"
+grep -Fq '发布新软件' <<<"$PUBLIC_SELLER"
+echo 'CN3194_LOCAL_AND_PUBLIC_SELLER_WORKSPACE_PASS'
 echo 'STEP 6/6: SIGNED MERCHANT AUDIT ONLY; PRESERVE EXISTING PROVIDER AND WALLET FLAGS'
 bash "$PAYMENT" --audit "$TAG"
 echo 'CN3194_SIGNED_MERCHANT_AUDIT_PASS_EXISTING_FLAGS_PRESERVED'
