@@ -17,14 +17,14 @@ NGINX_SHA_BEFORE="$(sha256sum "$NGINX" | awk '{print $1}')"
 ACTIVE_PORT="$(python3 - "$NGINX" <<'PY'
 import re,sys
 data=open(sys.argv[1],"rb").read()
-ports=re.findall(rb'(?m)^\\s*(?:proxy_pass\\s+http://|server\\s+)127\\.0\\.0\\.1:(3193|3194|3195)(?:;|\\s)',data)
+ports=re.findall(rb'(?m)^\s*(?:proxy_pass\s+http://|server\s+)127\.0\.0\.1:(3193|3194|3195)(?:;|\s)',data)
 if len(ports)!=1:
     raise SystemExit("CN_NGINX_UPSTREAM_NOT_EXACTLY_ONE")
 print(ports[0].decode())
 PY
 )"
 [[ "$ACTIVE_PORT" == 3194 ]] || { echo "CN_PRODUCTION_UPSTREAM_NOT_3194:$ACTIVE_PORT"; exit 1; }
-if grep -Eq '127\\.0\\.0\\.1:3195' "$NGINX"; then
+if grep -Eq '127\.0\.0\.1:3195' "$NGINX"; then
   echo CN3195_MUST_NOT_BE_NGINX_PRODUCTION_UPSTREAM >&2; exit 1
 fi
 curl --noproxy '*' -fsS --connect-timeout 3 --max-time 12 -H 'Host: lingxifield.cn' http://127.0.0.1:3194/api/health >/dev/null
@@ -56,7 +56,7 @@ WORKDIR="$(systemctl show "$OLD_SVC" -p WorkingDirectory --value)"
 [[ -f "$WORKDIR/RELEASE_SOURCE_SHA" && ! -L "$WORKDIR/RELEASE_SOURCE_SHA" ]] || {
   echo OLD_STAGE_SOURCE_MARKER_MISSING >&2; exit 1
 }
-OLD_SHA="$(tr -d '\\r\\n' < "$WORKDIR/RELEASE_SOURCE_SHA")"
+OLD_SHA="$(tr -d '\r\n' < "$WORKDIR/RELEASE_SOURCE_SHA")"
 [[ "$OLD_SHA" =~ ^[a-f0-9]{40}$ ]] || { echo OLD_STAGE_SOURCE_SHA_INVALID >&2; exit 1; }
 [[ "$OLD_SHA" != "$EXPECTED_SHA" ]] || {
   echo CURRENT_F07D_CANDIDATE_ALREADY_STAGED_DO_NOT_STOP >&2; exit 1
@@ -91,7 +91,7 @@ systemctl is-active --quiet "$OLD_SVC" && { echo OLD_STAGE_SERVICE_STILL_ACTIVE 
 [[ "$(python3 - "$NGINX" <<'PY'
 import re,sys
 data=open(sys.argv[1],"rb").read()
-ports=re.findall(rb'(?m)^\\s*(?:proxy_pass\\s+http://|server\\s+)127\\.0\\.0\\.1:(3193|3194|3195)(?:;|\\s)',data)
+ports=re.findall(rb'(?m)^\s*(?:proxy_pass\s+http://|server\s+)127\.0\.0\.1:(3193|3194|3195)(?:;|\s)',data)
 if len(ports)!=1: raise SystemExit(2)
 print(ports[0].decode())
 PY
