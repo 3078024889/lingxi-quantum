@@ -423,7 +423,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       </label>}
       {activeDraft&&<div className={styles.activeDraftActions}>
        <span>{sasiSoftwareUiText(lang,"当前草稿","Active draft")}：{activeDraft.title}</span>
-       <button type="button" disabled={busy!==""||(mediaCounts[activeDraft.id]?.cover??0)!==1} onClick={()=>void submitReview(activeDraft)} className={styles.launchStudio}>{busy==="submit-"+activeDraft.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}</button>
+       <button type="button" disabled={busy!==""||(mediaCounts[activeDraft.id]?.cover??0)!==1||!uploadedPackages[activeDraft.id]} onClick={()=>void submitReview(activeDraft)} className={styles.launchStudio}>{busy==="submit-"+activeDraft.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}</button>
        <button type="button" disabled={busy!==""} onClick={()=>{setActiveDraftId(null);setEditingId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"新建商品","New listing")}</button>
       </div>}
       <button disabled={busy!==""||seller?.status!=="approved"} onClick={()=>void makeDraft()}>{busy==="draft"?"…":(editingId||activeDraftId)?sasiSoftwareUiText(lang,"保存修改","Save changes"):sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
