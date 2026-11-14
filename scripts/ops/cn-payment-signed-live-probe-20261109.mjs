@@ -28,6 +28,12 @@ function systemdEnv(unit){
    result[match[1]]=value;
   }
  }
+ // run_env_node launches this verifier with the approved EnvironmentFiles.
+ // systemd decodes quoted escapes; raw file text can retain an extra slash
+ // and make valid PEM material appear invalid. Only override validated keys.
+ if(typeof process!=="undefined"&&process.env?.INVOCATION_ID){
+  for(const key of Object.keys(result))if(typeof process.env[key]==="string")result[key]=process.env[key];
+ }
  return result;
 }
 const pem=(value,label)=>{
