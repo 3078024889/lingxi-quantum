@@ -121,8 +121,9 @@ assert.match(wechatPay,/Buffer\.byteLength\(API_V3_KEY!,"utf8"\)===32/);
 assert.match(wechatPay,/WECHAT_ENABLED\?\.trim\(\)\.toLowerCase\(\) === "true" && wechatPayKeyMaterialReady/);
 const alipay=read("lib/alipay.ts");
 assert.match(alipay,/alipayKeyMaterialReady/);
-assert.match(alipay,/createPublicKey\(privateKey\)/);
-assert.match(alipay,/Buffer\.from\(derived\)\.equals\(Buffer\.from\(configured\)\)/);
+assert.match(alipay,/privateKey\.asymmetricKeyType==="rsa"/);
+assert.match(alipay,/publicKey\.asymmetricKeyType==="rsa"/);
+assert.match(alipay,/modulusLength\?\?0\)>=2048/);
 
 const wxOrderCreator=wechatPay.slice(wechatPay.indexOf("export async function createWechatNativeOrder"),wechatPay.indexOf("export function buildJsapiInvokeParams"));
 assert.match(wxOrderCreator,/if \(!wechatPayEnabled\(\)\)/);

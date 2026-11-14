@@ -7,8 +7,9 @@ function env(name: string): string {
 }
 
 function asPem(value: string, label: "PRIVATE KEY" | "PUBLIC KEY"): string {
-  if (value.includes("-----BEGIN")) return value.replace(/\\n/g, "\n");
-  const body = value.replace(/\\s+/g, "");
+  const normalized=value.replace(/\\r\\n|\\n|\r\n|\r/g,"\n").trim();
+  if (normalized.includes("-----BEGIN")) return normalized;
+  const body = normalized.replace(/\s+/g, "");
   const rows = body.match(/.{1,64}/g)?.join("\n") ?? body;
   return `-----BEGIN ${label}-----\n${rows}\n-----END ${label}-----`;
 }
@@ -49,9 +50,11 @@ export function alipayKeyMaterialReady():boolean {
   try{
     const privateKey=createPrivateKey(asPem(env("ALIPAY_PRIVATE_KEY"),"PRIVATE KEY"));
     const publicKey=createPublicKey(asPem(env("ALIPAY_PUBLIC_KEY"),"PUBLIC KEY"));
-    const derived=createPublicKey(privateKey).export({type:"spki",format:"der"});
-    const configured=publicKey.export({type:"spki",format:"der"});
-    return Buffer.from(derived).equals(Buffer.from(configured));
+    // Requests use the merchant's private key; notifications use Alipay's
+    // gateway public key. They belong to different parties, not one keypair.
+    return privateKey.asymmetricKeyType==="rsa" && publicKey.asymmetricKeyType==="rsa"
+      && (privateKey.asymmetricKeyDetails?.modulusLength??0)>=2048
+      && (publicKey.asymmetricKeyDetails?.modulusLength??0)>=2048;
   }catch{return false;}
 }
 
