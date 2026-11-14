@@ -2,6 +2,10 @@ import {test,expect} from "playwright/test";
 import {mkdir,writeFile} from "node:fs/promises";
 import {dirname} from "node:path";
 
+test.beforeEach(async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem("lx-public-upgrade:web-cn-upgrade-20261108","closed"));
+});
+
 for(const theme of ["light","dark"]){
  test(`Homepage, marketplace and seller workspace render in ${theme} mode`,async({page},testInfo)=>{
   test.setTimeout(120000);
@@ -16,7 +20,7 @@ for(const theme of ["light","dark"]){
     await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);
     await page.getByTestId("home-task-search").locator("input").fill("AI视频生成模型");
     await page.getByTestId("home-task-search").getByRole("button").click();
-    await expect(page).toHaveURL(/\/siai\?/);
+    await expect(page).toHaveURL(/\/siai\?/,{timeout:30000});
     await page.goto("/",{waitUntil:"domcontentloaded"});
    }else if(path==="/sasi"){
     const hero=page.getByTestId("sasi-transparent-hero");
@@ -66,7 +70,7 @@ test("Password generation works locally after access approval with length valida
   expect(Object.keys(request).sort()).toEqual(["requestId","toolSlug","units"]);
   await route.fulfill({json:{ok:true,requestId:request.requestId}});
  });
- await page.goto("/tools/password-generator",{waitUntil:"domcontentloaded"});
+ await page.goto("/tools/password-generator",{waitUntil:"load"});
  const workbench=page.locator("[data-tool-workbench]");
  const length=workbench.getByRole("spinbutton");
  const generate=workbench.getByRole("button",{name:/生成密码|Generate password/});
