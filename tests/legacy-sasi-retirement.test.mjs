@@ -83,13 +83,17 @@ test('current product copy and global styles do not expose retired SASI creation
 });
 
 
-test('first-party Copernicus product is SI 11.6 and source-code only',()=>{
+test('first-party Copernicus product stays version-neutral until the uploaded source is verified',()=>{
  const catalog=readFileSync('lib/sasi-software/catalog.ts','utf8');
  const market=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
- assert.ok(catalog.includes("哥白尼 SI 11.6"));
- assert.ok(catalog.includes("Copernicus SI 11.6"));
- assert.ok(catalog.includes('kind:"source"'));
- assert.ok(!catalog.includes("SI9.5") && !catalog.includes("SI 9.5"));
+ const legal=readFileSync('components/SasiLegalBody.tsx','utf8');
+ const legacyMarket=readFileSync('components/SasiSoftwareMarket.tsx','utf8');
+ assert.ok(catalog.includes("哥白尼 SI · MT5 源码授权版"));
+ assert.ok(catalog.includes("Copernicus SI · MT5 Source Code License"));
+ assert.match(catalog,/kind:"source"/);
+ for(const source of [catalog,market,legal,legacyMarket]) {
+  assert.doesNotMatch(source,/SI\s*9[.]5|SI\s*11[.]6/i);
+ }
  assert.ok(market.includes("featuredVisualTitle"));
  assert.ok(market.includes("featured.titleZh"));
  assert.ok(market.includes("<strong>{featuredVisualTitle}</strong>"));
