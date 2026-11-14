@@ -1,6 +1,8 @@
 import {test,expect} from "playwright/test";
+import {mkdir,writeFile} from "node:fs/promises";
+import {dirname} from "node:path";
 
-test("partner network displays embeddable SIAI and QR tools without login",async({page})=>{
+test("partner network displays embeddable SIAI and QR tools without login",async({page},testInfo)=>{
  await page.goto("/partners");
  await expect(page.locator("h1")).toBeVisible();
  const snippets=page.locator("textarea[readonly]");
@@ -16,6 +18,11 @@ test("partner network displays embeddable SIAI and QR tools without login",async
  expect(bytes.subarray(0,2).toString("utf8")).toBe("PK");
  expect(bytes.length).toBeGreaterThan(1000);
  expect(bytes.length).toBeLessThan(300000);
+ const screenshot=await page.screenshot({fullPage:true});
+ const evidencePath=testInfo.outputPath("partner-portal.png");
+ await mkdir(dirname(evidencePath),{recursive:true});
+ await writeFile(evidencePath,screenshot);
+ await testInfo.attach("partner-portal",{body:screenshot,contentType:"image/png"});
 });
 
 test("external SIAI feed exports reviewed profiles and never source previews",async({request})=>{

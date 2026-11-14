@@ -10,6 +10,8 @@ import "./brand-home-v2.css";
 import "./site-news-ribbon.css";
 import "./celestial-ui-20261109.css";
 import "./lingxifield-premium-20261109.css";
+import "./growth-pages.css";
+import "./home-reference-20261114.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
@@ -47,7 +49,7 @@ export const metadata:Metadata={
   title:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能软件 · 免费在线实用工具",
   description:PUBLIC_FEATURE_COPY.zh.description,
   url:SITE,
-  images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
+  images:[{url:SHARE_IMAGE,width:1200,height:675,alt:"灵犀场 LINGXIFIELD"}]
  },
  twitter:{
   card:"summary_large_image",

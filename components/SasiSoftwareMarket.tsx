@@ -32,7 +32,7 @@ export default function SasiSoftwareMarket(){
     </div>
    </div>
    <div className={styles.heroViz} aria-hidden="true">
-    <div className={styles.monitor}><div className={styles.monitorTop}><i/><i/><i/> <span>SI9.5 / SOURCE</span></div>
+    <div className={styles.monitor}><div className={styles.monitorTop}><i/><i/><i/> <span>{product.titleZh.match(/SI\s*[\d.]+/i)?.[0]??"COPERNICUS SI"} / SOURCE</span></div>
      <div className={styles.codeRows}><span/><span/><span/><span/><span/><span/></div></div>
     <div className={styles.floatCode}>{"</>"}</div><div className={styles.floatShield}>✓</div>
     <div className={styles.monitorStand}/>
@@ -49,7 +49,7 @@ export default function SasiSoftwareMarket(){
    <span className={styles.state}>{ready?(zh?"已完成交付验收":"Delivery verified"):(zh?"待完成支付与交付验收":"Payment & delivery pending")}</span>
   </div>
   <article className={styles.product}>
-   <div className={styles.productArtwork} aria-hidden="true"><div className={styles.orbit}/><span>Copernicus</span><strong>SI 9.5</strong><small>MT5 SOURCE LICENSE</small></div>
+   <div className={styles.productArtwork} aria-hidden="true"><div className={styles.orbit}/><span>Copernicus</span><strong>{product.titleZh.match(/SI\s*[\d.]+/i)?.[0]??"COPERNICUS SI"}</strong><small>MT5 SOURCE LICENSE</small></div>
    <div className={styles.productCopy}><div className={styles.productTag}>{zh?"源码授权 · 仅此一种":"Source code only"}</div>
     <h3>{zh?product.titleZh:product.titleEn}</h3>
     <p>{zh?product.featureZh:product.featureEn}</p>

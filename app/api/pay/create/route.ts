@@ -10,7 +10,7 @@ import {getProduct} from "@/lib/plans";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
-import {trustedSiteOrigin} from "@/lib/sasi/site-origin";
+import {trustedSiteOrigin} from "@/lib/platform/site-origin";
 
 export const runtime="nodejs";
 export const maxDuration=30;
@@ -33,7 +33,9 @@ export async function POST(req:NextRequest){
   const {data:{user}}=await supabase.auth.getUser();
   if(!user)return NextResponse.json({error:"LOGIN_REQUIRED"},{status:401});
   const walletProduct=getUsdBalanceProduct(requestedId);
-  const catalog=getProduct(requestedId)||await resolveMarketplaceProduct(requestedId);
+  const passProduct=getProduct(requestedId);
+  const isDirectPass=passProduct?.group==="toolpass";
+  const catalog=passProduct||await resolveMarketplaceProduct(requestedId);
   const isCatalogPayable=Boolean(catalog&&["toolpass","software","market"].includes(catalog.group));
   const product:PaypalCatalogProduct|{id:string;amountUsd:number;nameEn:string;group:"wallet";type:"permanent"}|null=
    walletProduct
@@ -61,7 +63,7 @@ export async function POST(req:NextRequest){
   const {data:order,error}=await admin.from("orders").insert({
    user_id:user.id,
    product_id:product.id,
-   product_type:product.type,
+   product_type:isDirectPass?"subscription":"permanent",
    amount_usd:product.amountUsd,
    amount_rmb:null,
    status:"pending",

@@ -1,9 +1,11 @@
 name: CN3194 exact release transfer helper lint (NO DEPLOY)
 on:
   push:
-    branches: [fix/cn3194-marketplace-503-transfer-20261113]
+    branches: [fix/cn3194-marketplace-503-transfer-20261113, feat/homepage-reference-rebuild-cn-20261113, cleanup/cn-retired-sasi-full-20261113]
     paths:
       - 'scripts/ops/R2-CN3195-Transfer-20261113.ps1'
+      - 'scripts/ops/R2-CN3195-Transfer-20261114-f3d4.ps1'
+      - 'scripts/ops/R2-CN3195-Transfer-20261114.ps1'
       - '.github/workflows/cn3194-transfer-helper-check-20261113.yml'
 permissions:
   contents: read
@@ -20,7 +22,7 @@ jobs:
       - name: Parse PowerShell and verify immutable release pin
         shell: pwsh
         run: |
-          $path = 'scripts/ops/R2-CN3195-Transfer-20261113.ps1'
+          $path = 'scripts/ops/R2-CN3195-Transfer-20261114-f3d4.ps1'
           $tokens = $null
           $errors = $null
           [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path).Path, [ref]$tokens, [ref]$errors) | Out-Null
@@ -30,17 +32,56 @@ jobs:
           }
           $source = Get-Content -LiteralPath $path -Raw
           $required = @(
-            "ecs-cn-unified-20261110-fe253a6be0ea",
-            "fe253a6be0eae2360245e0a183820a7e2c3be1ed",
-            "5197da76e2c4298268a7c87011d875052bffc052a0e890836b7c8468e3f8093a",
+            "ecs-cn-unified-20261110-f3d4d5200861",
+            "f3d4d52008617c5094ea64ac3835bf5a08fb6410",
+            "827ff4489f2bf9a076ff40a2d4fd8e2ef99154c541015e5f814ab1c7d6e84fd5",
+            "338041752",
             "R2_REMOTE_SIZE_VERIFY_FAILED",
             "R2_SIGNED_LINK_INVALID",
+            "CN3195_ACTIVE_NGINX_UPSTREAM_UNCHANGED",
+            "CN3194_PRODUCTION_PROMOTION_NOT_EXECUTED",
+            "CN3193_ROLLBACK_BASELINE_RETAINED",
             "SIGNED_URLS_EXPIRE_IN_6_HOURS_AND_ARE_NOT_PRINTED"
           )
           foreach ($needle in $required) {
             if (-not $source.Contains($needle)) { throw "PIN_OR_SAFETY_CHECK_MISSING:$needle" }
           }
-          if ($source.Contains('ef30fe26a136c9879ef480767a7abf66c3e3509c')) {
+          if ($source.Contains('199ff1c73d43ffc13abc887c51ebcc091f5e305e') -or $source.Contains('fe253a6be0eae2360245e0a183820a7e2c3be1ed')) {
             throw 'STALE_3194_RELEASE_PIN_REJECTED'
           }
           Write-Host 'CN3194_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'
+      - name: Parse current e6c2 release transfer helper (NO DEPLOY)
+        shell: pwsh
+        run: |
+          $path = 'scripts/ops/R2-CN3195-Transfer-20261114.ps1'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path).Path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | Format-List | Out-String | Write-Error
+            throw 'POWERSHELL_PARSE_FAILED'
+          }
+          $source = Get-Content -LiteralPath $path -Raw
+          $required = @(
+            "ecs-cn-unified-20261110-e6c2a4612b9b",
+            "e6c2a4612b9b72091497420477945753ebae8986",
+            "338039481",
+            "5c3e13d7832e112e222971c722aecfdd5a368ae101adeccdc87eddfec2d68389",
+            "98952d9b780f1ebacc64f0bf50e03128a47812072ab1858819a7f4f61678a086",
+            "0761a512130c82933b691467ec20d44e123641ad2acb9da8280b6e4ff18335b4",
+            "70963434c41e44ca850131bd098b806c4963c9319a4404ed2abe430929d2f940",
+            "64762dd7378083f55926a912502d99a8c28da71d3494c2e7ea327c9e8fd29172",
+            "R2_REMOTE_SIZE_VERIFY_FAILED",
+            "R2_SIGNED_LINK_INVALID",
+            "CN3195_ACTIVE_NGINX_UPSTREAM_UNCHANGED",
+            "CN3194_PRODUCTION_PROMOTION_NOT_EXECUTED",
+            "CN3193_ROLLBACK_BASELINE_RETAINED",
+            "SIGNED_URLS_EXPIRE_IN_6_HOURS_AND_ARE_NOT_PRINTED"
+          )
+          foreach ($needle in $required) {
+            if (-not $source.Contains($needle)) { throw "PIN_OR_SAFETY_CHECK_MISSING:$needle" }
+          }
+          if ($source.Contains('199ff1c73d43ffc13abc887c51ebcc091f5e305e') -or $source.Contains('fe253a6be0eae2360245e0a183820a7e2c3be1ed')) {
+            throw 'STALE_3194_RELEASE_PIN_REJECTED'
+          }
+          Write-Host 'CN3194_E6C2_TRANSFER_HELPER_PARSE_AND_EXACT_RELEASE_PIN_PASS_NO_DEPLOY'

@@ -4,6 +4,19 @@ import type {SeoLocale} from "@/lib/seo/global-seo";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 
 type Question = {q:string;a:string;href:string;link:string};
+const FAQ_ICONS=["✦","◎","▦","▶","◉","◈","⌘","PDF","OCR","▧","◇","▣","✉","▥"] as const;
+const FAQ_ASIDE:Record<SeoLocale,{title:string;body:string;cta:string}>={
+ zh:{title:"把问题交给灵犀场，先找到能用的答案",body:"从 AI 选型、免费额度和真实价格，到软件购买、源码授权与安全交付；再到 PDF、图片、视频、音频和日常文件处理，常见问题都有对应教程与工具入口。",cta:"查看全部问题教程"},
+ en:{title:"Start with the question. Find an answer that works.",body:"From AI choices, free limits and real prices to software, source licenses, secure delivery and everyday files, each common task has a clear guide and tool.",cta:"Browse all practical guides"},
+ ja:{title:"質問から始めて、使える答えを見つける",body:"AIの選び方、無料枠、価格、ソフト購入、ソースライセンス、安全な納品、PDFや画像などの作業をガイドとツールで解決します。",cta:"すべてのガイドを見る"},
+ ko:{title:"질문에서 시작해 실제로 쓸 수 있는 답 찾기",body:"AI 선택, 무료 한도와 가격부터 소프트웨어, 소스 라이선스, 안전한 전달, PDF와 이미지 작업까지 안내와 도구를 제공합니다.",cta:"전체 안내 보기"},
+ fr:{title:"Partez de votre question et trouvez une réponse utile",body:"Choix IA, quotas gratuits, prix, logiciels, licences source, livraison sécurisée et fichiers du quotidien : chaque besoin mène à un guide et à un outil.",cta:"Voir tous les guides"},
+ de:{title:"Mit der Frage beginnen und eine passende Lösung finden",body:"Von KI-Auswahl, Gratis-Kontingenten und Preisen bis zu Software, Quellcode-Lizenzen, sicherer Lieferung und Dateibearbeitung: mit passenden Anleitungen und Tools.",cta:"Alle Anleitungen ansehen"},
+ es:{title:"Empieza por la pregunta y encuentra una respuesta útil",body:"Desde elegir IA, límites gratuitos y precios hasta software, licencias de código, entrega segura y archivos cotidianos: cada necesidad tiene una guía y una herramienta.",cta:"Ver todas las guías"},
+ pt:{title:"Comece pela pergunta e encontre uma resposta prática",body:"Da escolha de IA, limites gratuitos e preços a software, licenças de código, entrega segura e arquivos do dia a dia: cada tarefa tem um guia e uma ferramenta.",cta:"Ver todos os guias"},
+ ar:{title:"ابدأ بالسؤال واعثر على إجابة عملية",body:"من اختيار الذكاء الاصطناعي والحصص المجانية والأسعار إلى البرامج وتراخيص المصدر والتسليم الآمن ومعالجة الملفات اليومية، لكل مهمة دليل وأداة مناسبة.",cta:"عرض جميع الأدلة"}
+};
+
 type Content = {eyebrow:string;title:string;intro:string;questions:Question[];explore:string;create:string;tools:string};
 const FAQ:Record<SeoLocale,Content>={
  zh:{
@@ -324,41 +337,18 @@ const SASI_MARKET_PATHS=["/sasi","/sasi/seller","/sasi/delivery","/legal/sasi"] 
 const TOOL_PATHS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=CSV","/tools?q=临时邮箱"] as const;
 
 export default function HomeSeoAnswers({locale:initialLocale}:{locale:SeoLocale}){
- const {lang}=useLingxiLang();
- const locale=(lang||initialLocale) as SeoLocale;
- const copy=FAQ[locale]||FAQ.zh;
- const extra=HOME_EXTRA[locale]||HOME_EXTRA.zh;
+ const {lang}=useLingxiLang();const locale=(lang||initialLocale) as SeoLocale;
+ const copy=FAQ[locale]||FAQ.zh;const extra=HOME_EXTRA[locale]||HOME_EXTRA.zh;const aside=FAQ_ASIDE[locale]||FAQ_ASIDE.en;
  return <section className="lx-seo-answers" aria-labelledby="lx-seo-title" lang={locale==="zh"?"zh-CN":locale} dir={locale==="ar"?"rtl":"ltr"}>
-  <div className="lx-seo-answers-head">
-   <p className="lx-seo-eyebrow">{copy.eyebrow}</p>
-   <h2 id="lx-seo-title">{copy.title}</h2><p>{copy.intro}</p>
+  <div className="lx-seo-answers-head"><p className="lx-seo-eyebrow">{copy.eyebrow}</p><h2 id="lx-seo-title">{copy.title}</h2><p>{copy.intro}</p></div>
+  <div className="lx-home-faq-layout">
+   <aside className="lx-home-faq-aside"><span className="lx-home-faq-aside-icon" aria-hidden="true">✦</span><p className="lx-home-faq-aside-kicker">LINGXIFIELD · ANSWER CENTER</p><h3>{aside.title}</h3><p>{aside.body}</p><Link href="/tools">{aside.cta} <span aria-hidden="true">→</span></Link></aside>
+   <div className="lx-seo-question-grid">{copy.questions.map((item,index)=><article className="lx-seo-question" key={item.q}><span className="lx-home-faq-icon" aria-hidden="true">{FAQ_ICONS[index%FAQ_ICONS.length]}</span><div className="lx-home-faq-copy"><h3>{item.q}</h3><p>{item.a}</p><Link href={item.href}>{item.link} <span aria-hidden="true">→</span></Link></div></article>)}</div>
   </div>
-  <section className="lx-seo-extra" aria-labelledby="lx-seo-market">
-   <h2 id="lx-seo-market">{extra.servicesHeading}</h2><p>{extra.servicesText}</p>
-   <div className="lx-seo-action-grid">{extra.services.map((text,i)=><Link key={SASI_MARKET_PATHS[i]} href={SASI_MARKET_PATHS[i]} className="lx-seo-action">{text} <span aria-hidden="true">→</span></Link>)}</div>
-  </section>
-  <section className="lx-seo-extra" aria-labelledby="lx-seo-tools">
-   <h2 id="lx-seo-tools">{extra.toolsHeading}</h2><p>{extra.toolsText}</p>
-   <div className="lx-seo-action-grid">{extra.tools.map((text,i)=><Link key={TOOL_PATHS[i]} href={TOOL_PATHS[i]} className="lx-seo-action">{text} <span aria-hidden="true">→</span></Link>)}</div>
-  </section>
-  <div className="lx-seo-question-grid">
-   {copy.questions.map((item)=>(
-    <article className="lx-seo-question" key={item.q}>
-     <h3>{item.q}</h3><p>{item.a}</p>
-     <Link href={item.href}>{item.link} <span aria-hidden="true">→</span></Link>
-    </article>
-   ))}
-  </div>
-  <section className="lx-seo-extra" aria-labelledby="lx-seo-steps">
-   <h2 id="lx-seo-steps">{extra.stepsHeading}</h2>
-   <ol className="lx-seo-steps">{extra.steps.map((step,i)=><li key={step}><strong>{String(i+1).padStart(2,"0")}</strong><span>{step}</span></li>)}</ol>
-  </section>
-  <section className="lx-seo-vendor" aria-labelledby="lx-seo-vendor">
-   <h2 id="lx-seo-vendor">{extra.vendorHeading}</h2><p>{extra.vendorText}</p>
-   <a href="mailto:business@lingxifield.com?subject=SIAI%20product%20information">{extra.vendorAction} →</a>
-  </section>
-  <nav className="lx-seo-answers-links" aria-label="LINGXIFIELD">
-   <Link href="/siai">{copy.explore}</Link><Link href="/sasi">{copy.create}</Link><Link href="/tools">{copy.tools}</Link>
-  </nav>
- </section>
+  <section className="lx-seo-extra" aria-labelledby="lx-seo-market"><h2 id="lx-seo-market">{extra.servicesHeading}</h2><p>{extra.servicesText}</p><div className="lx-seo-action-grid">{extra.services.map((text,i)=><Link key={SASI_MARKET_PATHS[i]} href={SASI_MARKET_PATHS[i]} className="lx-seo-action">{text} <span aria-hidden="true">→</span></Link>)}</div></section>
+  <section className="lx-seo-extra" aria-labelledby="lx-seo-tools"><h2 id="lx-seo-tools">{extra.toolsHeading}</h2><p>{extra.toolsText}</p><div className="lx-seo-action-grid">{extra.tools.map((text,i)=><Link key={TOOL_PATHS[i]} href={TOOL_PATHS[i]} className="lx-seo-action">{text} <span aria-hidden="true">→</span></Link>)}</div></section>
+  <section className="lx-seo-extra" aria-labelledby="lx-seo-steps"><h2 id="lx-seo-steps">{extra.stepsHeading}</h2><ol className="lx-seo-steps">{extra.steps.map((step,i)=><li key={step}><strong>{String(i+1).padStart(2,"0")}</strong><span>{step}</span></li>)}</ol></section>
+  <section className="lx-seo-vendor" aria-labelledby="lx-seo-vendor"><div><h2 id="lx-seo-vendor">{extra.vendorHeading}</h2><p>{extra.vendorText}</p></div><a href="mailto:business@lingxifield.com?subject=SIAI%20product%20information">{extra.vendorAction} →</a></section>
+  <nav className="lx-seo-answers-links" aria-label="LINGXIFIELD"><Link href="/siai">{copy.explore}</Link><Link href="/sasi">{copy.create}</Link><Link href="/tools">{copy.tools}</Link></nav>
+ </section>;
 }

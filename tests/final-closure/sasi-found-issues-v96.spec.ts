@@ -32,18 +32,9 @@ test("image generation shows the quoted size and actual delivered dimensions",as
  expect(confirmed).toBe(true);
 });
 
-test("URL promotion enters the real drama generation workflow, not a text-as-video fallback",async({page})=>{
- await page.route("**/api/tools/promotion-source",route=>route.fulfill({json:{
-  url:"https://example.com/product",html:"<html><head><title>Product</title></head><body><h1>Product</h1><p>A useful product.</p></body></html>"
- }}));
+test("retired URL-to-video creation route redirects to the current tool directory",async({page})=>{
  await page.goto("/tools/url-to-video?lang=en");
- await page.getByLabel("Website or product URL").fill("https://example.com/product");
- await page.getByRole("button",{name:"Read page"}).click();
- await expect(page.getByRole("heading",{name:"Product",exact:true})).toBeVisible();
- await page.getByRole("button",{name:"Review and continue in SASI"}).click();
- await expect(page).toHaveURL(/\/sasi\?.*mode=drama/);
- await expect(page.locator('[data-sasi-task="drama"]')).toBeVisible({timeout:15000});
- await expect(page.locator('[data-sasi-result-kind="video"]')).toHaveCount(0);
+ await expect(page).toHaveURL(/\/tools$/);
 });
 
 test("tool hub has one canonical image-to-PDF entry",async({page})=>{

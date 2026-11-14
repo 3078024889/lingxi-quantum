@@ -26,6 +26,16 @@ on:
       - 'miniapp/assets/**'
       - 'public/og-lingxifield-*'
       - 'tests/unified-share-image.test.mjs'
+  pull_request:
+    branches:
+      - fix/toolpass-compact-align-cn-20261113
+      - fix/toolpass-compact-align-com-20261113
+    paths:
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'tests/unified-share-image.test.mjs'
+      - 'public/og-lingxifield-20261113.jpg'
+      - '.github/workflows/lingxifield-share-release-gate.yml'
   workflow_dispatch:
 
 permissions:
@@ -58,7 +68,7 @@ jobs:
       - name: All remaining share code uses the same image, never old 20260928
         run: |
           set -euo pipefail
-          if git grep -n -E '(og-lingxifield|share-lingxifield)-20260928' -- app lib miniapp lingxifield-ai-market/app; then
+          if git grep -n -E '(og-lingxifield|share-lingxifield)-20260928|og-lingxifield-20261105\.jpg|opengraph-image\?v=20261113' -- app lib miniapp lingxifield-ai-market/app lingxifield-ai-market/lib; then
             echo 'Legacy social share references remain'; exit 1
           fi
           node --check miniapp/utils/share.js
@@ -84,6 +94,6 @@ jobs:
       - run: npm ci
       - name: Confirm independent site references common visual
         run: |
-          node -e "const s=require('node:fs').readFileSync('lib/share-card.ts','utf8'); if(!s.includes('lingxifield.com/og-lingxifield-20261105.jpg')) process.exit(1)"
+          node -e "const s=require('node:fs').readFileSync('lib/share-card.ts','utf8'); if(!s.includes('lingxifield.com/og-lingxifield-20261113.jpg')) process.exit(1)"
       - name: Build independent market Next.js app
         run: npm run build

@@ -22,10 +22,11 @@ test("public brand is SASI intelligent software and old shopping labels are reti
   const source=read(path);assert.doesNotMatch(source,/短剧创作|短剧制作|书本智能体|学习智能体|科研智能体|short drama|short-film production|book-to-ai-agent|learning-ai-agent|research-ai-agent|ai-website-builder/);
  }
 });
-test("Copernicus SI9.5 only offers the source-code license across catalogue and delivery copy",()=>{
+test("Copernicus SI only offers the source-code license across catalogue and delivery copy",()=>{
  const cat=read("lib/sasi-software/catalog.ts"),delivery=read("app/sasi/delivery/page.tsx");
  assert.match(cat,/priceCny:6900,priceUsd:6900/);
  assert.match(cat,/kind:"source" as const/);
  assert.doesNotMatch(delivery,/标准授权|可选源码授权|标准安装包与源码版本分别授权/);
- assert.match(delivery,/仅提供 ¥6,900 \/ \$6,900 源码授权版/);
+ assert.match(delivery,/当前仅提供源码授权版，不提供非源码版本/);
+ assert.match(delivery,/以实时商品信息和订单记录为准/);
 });

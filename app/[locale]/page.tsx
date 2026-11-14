@@ -20,5 +20,5 @@ export default async function LocalizedHome(props:Props) {
  const params = await props.params;
  if(!isSeoLocale(params.locale)||params.locale==="zh")notFound();
  const locale=params.locale as SeoLocale,c=SEO_LOCALES[locale];
- return <><Nav/><div lang={c.hreflang} dir={c.dir}><HomeProblemHub/><HomeSeoAnswers locale={locale}/><Footer/></div></>;
+ return <><Nav homeLayout/><div className="lx-home-reference" lang={c.hreflang} dir={c.dir}><main><div data-growth-anchor="#global-growth-entrances"><HomeProblemHub/></div><HomeSeoAnswers locale={locale}/></main><Footer/></div></>;
 }
