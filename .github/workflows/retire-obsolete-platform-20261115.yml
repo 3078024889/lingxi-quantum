@@ -1,0 +1,26 @@
+name: Retire obsolete platform builds 20261115
+on:
+  push:
+    branches: [ops/retire-obsolete-builds-20261115]
+    paths:
+      - .github/workflows/retire-obsolete-platform-20261115.yml
+      - scripts/ops/cloudflare-obsolete-builds-20261115.mjs
+      - scripts/ops/cloudflare-obsolete-approved-20261115.json
+permissions:
+  contents: read
+concurrency:
+  group: retire-obsolete-platform-20261115
+  cancel-in-progress: false
+jobs:
+  inventory-and-retire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Inventory route and service dependencies before any retirement
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/ops/cloudflare-obsolete-builds-20261115.mjs
