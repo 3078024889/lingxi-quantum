@@ -10,12 +10,13 @@ function systemdEnv(unit){
  if(!/^lingxifield-cn-release-20261110-[a-f0-9]{12}-final$/.test(unit))throw Error("CN_PAYMENT_UNIT_NOT_APPROVED");
  const data=execFileSync("systemctl",["show",unit,"-p","EnvironmentFiles","--value"],{encoding:"utf8"});
  const files=[...data.matchAll(/(\/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)/g)].map(m=>m[1]);
- if(files.length<2||files.length>8)throw Error("CN_PAYMENT_ENV_FILES_INVALID");
+ if(files.length<2||files.length>16)throw Error("CN_PAYMENT_ENV_FILES_INVALID");
+ if(new Set(files).size!==files.length)throw Error("CN_PAYMENT_ENV_FILES_DUPLICATE");
  const result={};
  for(const file of files){
   if(!allowed.test(file))throw Error("CN_PAYMENT_ENV_PATH_INVALID");
   const stat=lstatSync(file);
-  if(!stat.isFile()||stat.isSymbolicLink()||stat.uid!==0||(stat.mode&0o022)!==0)
+  if(!stat.isFile()||stat.isSymbolicLink()||stat.uid!==0||(stat.mode&0o777)!==0o600)
    throw Error("CN_PAYMENT_ENV_FILE_PERMISSIONS_INVALID");
   for(const raw of readFileSync(file,"utf8").split(/\r?\n/)){
    const line=raw.trim();
@@ -139,4 +140,7 @@ async function main(){
  console.log("CN_MERCHANT_PUBLIC_READY_JSON="+JSON.stringify(out));
  if(!out.alipay&&!out.wechat)process.exitCode=2;
 }
-await main();
+await main().catch(error=>{
+ console.error("CN_MERCHANT_CONFIG_BLOCKED:"+String(error?.message||"ERROR").replace(/[^A-Z0-9_:]/gi,"").slice(0,100));
+ process.exitCode=2;
+});
