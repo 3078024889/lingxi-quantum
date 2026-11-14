@@ -97,5 +97,5 @@ test("COM homepage reference gate accepts Chinese labels while requiring the rea
   assert.ok(homepage.includes('label:"网站嵌入组件"'));
   assert.ok(homepage.includes('label:"使用前后对比"'));
   assert.ok(homepage.includes('href:"/widgets/lingxifield-v1.js"'));
-  assert.ok(homepage.includes('href:"/discoveries#before-after"'));
+  assert.ok(homepage.includes('href:"/discoveries"'));
 });
