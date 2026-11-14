@@ -165,10 +165,16 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
         "工具包会员",
         "全球增长与合作",
         "WordPress",
-        "JS Widget",
         "二维码",
-        "ToolPass",
-        "Before / After"
+        "ToolPass"
+      ],
+      requiredAny: [
+        ["JS Widget", "网站嵌入组件"],
+        ["Before / After", "使用前后对比"]
+      ],
+      requiredLinks: [
+        "/widgets/lingxifield-v1.js",
+        "/discoveries#before-after"
       ],
       forbidden: [
         "全球 AI 工具太多，不知道哪个好用",
@@ -233,12 +239,16 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     if (response.status !== 200 || html.length < 5000) {
       throw Error("COM_" + phase + "_REFERENCE_PAGE_UNAVAILABLE:" + page.path + ":" + response.status);
     }
-    const missing = page.required.filter(term => !html.includes(term));
+    const missing = (page.required || []).filter(term => !html.includes(term));
+    const missingAny = (page.requiredAny || [])
+      .filter(group => !group.some(term => html.includes(term)))
+      .map(group => group.join(" | "));
+    const missingLinks = (page.requiredLinks || []).filter(link => !html.includes(link));
     const retired = page.forbidden.filter(term => html.includes(term));
     console.log("COM_" + phase + "_REFERENCE_CONTENT " + JSON.stringify({
-      path: page.path, bytes: html.length, missing, retired
+      path: page.path, bytes: html.length, missing, missingAny, missingLinks, retired
     }));
-    if (missing.length || retired.length) {
+    if (missing.length || missingAny.length || missingLinks.length || retired.length) {
       throw Error("COM_" + phase + "_REFERENCE_CONTENT_MISMATCH:" + page.path);
     }
   }
