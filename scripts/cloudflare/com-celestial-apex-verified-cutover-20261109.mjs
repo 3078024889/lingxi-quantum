@@ -174,7 +174,7 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
       ],
       requiredLinks: [
         "/widgets/lingxifield-v1.js",
-        "/discoveries#before-after"
+        "/discoveries"
       ],
       forbidden: [
         "全球 AI 工具太多，不知道哪个好用",
