@@ -3,7 +3,7 @@
 name: COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)
 on:
   push:
-    branches: [release/com-sasi-full-20261108]
+    branches: [release/sasi-marketplace-20261114-com]
     paths:
       - '.github/workflows/com-unified-next-isolated-canary-20261108.yml'
       - 'app/siai/page.tsx'
@@ -15,6 +15,8 @@ on:
       - 'public/llms.txt'
       - 'components/SasiOpenMarketplace.tsx'
       - 'components/SasiOpenMarketplace.module.css'
+      - 'components/SasiSoftwareMarket.tsx'
+      - 'tests/sasi-marketplace-reference-20261114.test.mjs'
       - 'public/images/sasi/sasi-market-hero-lingxifield.png'
       - 'lib/seo/site-facts.ts'
       - 'app/llms.txt/route.ts'
@@ -144,7 +146,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: com-unified-sasi-canary-20261108
+  group: com-sasi-marketplace-20261114-canary
   cancel-in-progress: true
 jobs:
   deploy-isolated:
@@ -187,6 +189,7 @@ jobs:
           node --test tests/com-celestial-release-safety-20261110.test.mjs
           node --test tests/com-public-market-edge.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
+          node tests/sasi-marketplace-reference-20261114.test.mjs
           node --test tests/sasi-software-public-branding-20261108.test.mjs
           node --test tests/com-merchant-public-about-nine-language-20261109.test.mjs
           node --test tests/sasi-marketplace-long-description-20261109.test.mjs
@@ -296,7 +299,7 @@ jobs:
             sleep 5
           done
           test "$propagated" -eq 1
-          for path in / /siai /tools /tools/pass /tools/png-to-jpg /tools/compress-image /tools/merge-pdf /tools/json-formatter /ai-wallet /account /sasi /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
+          for path in / /siai /tools /tools/pass /tools/png-to-jpg /tools/compress-image /tools/merge-pdf /tools/json-formatter /ai-wallet /account /sasi /sasi/seller /about /announcements /api/health /api/pay/providers /api/sasi/marketplace/listings /en/siai /ja/siai /ko/siai /fr/siai /de/siai /es/siai /pt/siai /ar/siai /api/sasi/software/catalog /discover/sasi-software-marketplace /en/discover/mt5-ea-source-code /ja/discover/software-licensing-delivery /ko/discover/developer-software-publishing /fr/discover/sasi-software-marketplace /de/discover/mt5-ea-source-code /es/discover/software-licensing-delivery /pt/discover/developer-software-publishing /ar/discover/sasi-software-marketplace /llms.txt /sitemap.xml /robots.txt;do
             count=0
             for i in 1 2 3;do
               passed=0

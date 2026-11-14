@@ -98,7 +98,7 @@ async function readProviderFlags(base) {
 async function probe(base, phase, attempts = 3, expectedProviders = null) {
   const routes = [
     "/", "/siai", "/tools", "/tools/pass", "/ai-wallet", "/account",
-    "/sasi", "/about", "/announcements",
+    "/sasi", "/sasi/seller", "/about", "/announcements",
     "/api/health", "/api/pay/providers", "/api/sasi/marketplace/listings",
     "/api/sasi/software/catalog",
     "/discover/sasi-software-marketplace",
@@ -278,7 +278,7 @@ if (canaryRun.head_sha !== expectedSha ||
     canaryRun.status !== "completed" ||
     canaryRun.conclusion !== "success" ||
     canaryRun.name !== "COM unified wallet SASI ToolPass isolated canary (NO PROD ROUTES)" ||
-    canaryRun.head_branch !== "release/com-sasi-full-20261108") {
+    canaryRun.head_branch !== "release/sasi-marketplace-20261114-com") {
   throw Error("EXACT_COM_CANARY_CI_NOT_SUCCESS");
 }
 console.log("COM_PINNED_SOURCE_CI_SUCCESS:" + runId + ":" + expectedSha);
