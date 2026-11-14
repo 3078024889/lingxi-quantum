@@ -8,6 +8,7 @@ import {HomeHeroVisual,HomeGlobalGrowth} from "@/components/HomeGlobalGrowth";
 import {SiaiSearchDiscovery} from "@/components/SiaiSearchDiscovery";
 import {SIAI_DISCOVERY} from "@/lib/siai-search-discovery";
 type HeroCopy={title:string;lead:string;subline:string;primary:string;secondary:string;placeholder:string;begin:string;proof:string[]};
+const globalSiaiEntry={href:"/siai",icon:"products"} as const;
 const HERO_COPY:Record<LingxiLang,HeroCopy>={
  zh:{title:"全球智能服务与实用工具平台",lead:"全球 SIAI 排行榜比较模型能力、真实价格、免费额度、地区可用性与商用授权；SASI 智能软件市场提供成品软件、MT5 EA、交易指标与源码授权；100+ 在线工具覆盖 PDF、图片、视频、音频、表格及日常文件处理。",subline:"全球 SIAI 排行榜 · 100+ 在线实用工具 · SASI 智能软件市场",primary:"立即探索",secondary:"开通工具包",placeholder:"输入问题或任务，快速找到对应工具…",begin:"查找答案",proof:["真实数据","持续更新","全球可用","安全高效"]},
  en:{title:"Global Intelligent Services & Practical Tools",lead:"Compare model capabilities, real prices, free allowances, regional access and commercial rights in Global SIAI Rankings. Browse finished software, MT5 EAs, indicators and source licenses in SASI, or use 100+ online tools for everyday work.",subline:"Global SIAI Rankings · 100+ Practical Tools · SASI Software Marketplace",primary:"Explore now",secondary:"Get ToolPass",placeholder:"Describe the task to find the right tool…",begin:"Find an answer",proof:["Verified facts","Regular updates","Global access","Secure service"]},
@@ -44,7 +45,7 @@ export default function HomeProblemHub(){
    <p className="lx-home-hero-brand">LINGXIFIELD <span>·</span> GLOBAL INTELLIGENT SERVICES</p>
    <h1 id="lx-home-hero-title">{copy.title}</h1><p className="lx-home-hero-lead">{copy.lead}</p>
    <p className="lx-home-hero-subline">{copy.subline}</p>
-   <div className="lx-home-hero-actions"><Link href="/siai" className="lx-home-cta-primary">{copy.primary} <span aria-hidden="true">→</span></Link><Link href="/tools/pass" className="lx-home-cta-secondary">{copy.secondary} <span aria-hidden="true">→</span></Link></div>
+   <div className="lx-home-hero-actions"><Link href={globalSiaiEntry.href} data-testid="home-global-siai-entry" className="lx-home-cta-primary">{copy.primary} <span aria-hidden="true">→</span></Link><Link href="/tools/pass" className="lx-home-cta-secondary">{copy.secondary} <span aria-hidden="true">→</span></Link></div>
    <div className="lx-home-hero-proof">{copy.proof.map(item=><span key={item}><b aria-hidden="true">✓</b>{item}</span>)}</div>
    <form onSubmit={submit} className="lx-home-question-search" data-testid="home-task-search"><span aria-hidden="true">⌕</span><input value={query} onChange={event=>setQuery(event.target.value)} aria-label={copy.placeholder} placeholder={copy.placeholder}/><button type="submit">{copy.begin}</button></form>
    {query.trim()&&hit?.score>0&&<div className="lx11-suggestion"><span>{lang==="zh"?"建议入口":"Suggested"}</span><Link href={hit.href}>{hit.label}</Link></div>}
