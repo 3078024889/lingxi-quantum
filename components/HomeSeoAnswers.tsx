@@ -340,15 +340,12 @@ const TOOL_PATHS=["/tools?q=PDF","/tools?q=图片","/tools?q=视频","/tools?q=C
 
 export default function HomeSeoAnswers({locale:initialLocale}:{locale:SeoLocale}){
  const {lang}=useLingxiLang();const locale=(lang||initialLocale) as SeoLocale;
- const copy=FAQ[locale]||FAQ.zh;const extra=HOME_EXTRA[locale]||HOME_EXTRA.zh;const aside=FAQ_ASIDE[locale]||FAQ_ASIDE.en;
+ const copy=FAQ[locale]||FAQ.zh;const extra=HOME_EXTRA[locale]||HOME_EXTRA.zh;
  return <section className="lx-seo-answers" aria-labelledby="lx-seo-title" lang={locale==="zh"?"zh-CN":locale} dir={locale==="ar"?"rtl":"ltr"}>
   <div className="lx-seo-answers-head"><p className="lx-seo-eyebrow">{copy.eyebrow}</p><h2 id="lx-seo-title">{copy.title}</h2><p>{copy.intro}</p></div>
   <div className="lx-home-faq-layout">
-   <aside className="lx-home-faq-aside"><span className="lx-home-faq-aside-icon" aria-hidden="true">✦</span><p className="lx-home-faq-aside-kicker">LINGXIFIELD · ANSWER CENTER</p><h3>{aside.title}</h3><p>{aside.body}</p><Link href="/tools">{aside.cta} <span aria-hidden="true">→</span></Link></aside>
    <div className="lx-seo-question-grid">{copy.questions.map((item,index)=><article className="lx-seo-question" key={item.q}><span className="lx-home-faq-icon" aria-hidden="true">{FAQ_ICONS[index%FAQ_ICONS.length]}</span><div className="lx-home-faq-copy"><h3>{item.q}</h3><p>{item.a}</p><Link href={item.href}>{item.link} <span aria-hidden="true">→</span></Link></div></article>)}</div>
   </div>
-  <section className="lx-seo-extra" aria-labelledby="lx-seo-market"><h2 id="lx-seo-market">{extra.servicesHeading}</h2><p>{extra.servicesText}</p><div className="lx-seo-action-grid">{extra.services.map((text,i)=><Link key={SASI_MARKET_PATHS[i]} href={SASI_MARKET_PATHS[i]} className="lx-seo-action">{text} <span aria-hidden="true">→</span></Link>)}</div></section>
-  <section className="lx-seo-extra" aria-labelledby="lx-seo-tools"><h2 id="lx-seo-tools">{extra.toolsHeading}</h2><p>{extra.toolsText}</p><div className="lx-seo-action-grid">{extra.tools.map((text,i)=><Link key={TOOL_PATHS[i]} href={TOOL_PATHS[i]} className="lx-seo-action">{text} <span aria-hidden="true">→</span></Link>)}</div></section>
   <section className="lx-seo-extra" aria-labelledby="lx-seo-steps"><h2 id="lx-seo-steps">{extra.stepsHeading}</h2><ol className="lx-seo-steps">{extra.steps.map((step,i)=><li key={step}><strong>{String(i+1).padStart(2,"0")}</strong><span>{step}</span></li>)}</ol></section>
   <section className="lx-seo-vendor" aria-labelledby="lx-seo-vendor"><div><h2 id="lx-seo-vendor">{extra.vendorHeading}</h2><p>{extra.vendorText}</p></div><a href="mailto:business@lingxifield.com?subject=SIAI%20product%20information">{extra.vendorAction} →</a></section>
   <nav className="lx-seo-answers-links" aria-label="LINGXIFIELD"><Link href="/siai">{copy.explore}</Link><Link href="/sasi">{copy.create}</Link><Link href="/tools">{copy.tools}</Link></nav>

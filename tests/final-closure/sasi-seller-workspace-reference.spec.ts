@@ -14,15 +14,16 @@ test('seller navigation opens the reference seller workspace with real business 
  await expect(hero.getByRole('heading',{name:'卖家工作台'})).toBeVisible({timeout:30000});
  const heroArtwork=page.getByTestId('seller-hero-artwork');
  await expect(heroArtwork).toBeVisible();
- await expect(heroArtwork).toHaveAttribute('src','/images/sasi/sasi-market-hero-lingxifield.png');
+ await expect(heroArtwork).toHaveAttribute('src','/images/global-scene-20261114.webp');
  const heroColumns=await page.getByTestId('seller-workspace-hero').evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
  expect(heroColumns).toBe(2);
  expect(await heroArtwork.evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
  const joinArtwork=page.getByTestId('seller-join-artwork');
  if(await joinArtwork.count()){
   await expect(joinArtwork).toBeVisible();
-  await expect(joinArtwork).toHaveAttribute('src','/images/global-scene-20261114.webp');
-  expect(await joinArtwork.evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0)).toBe(true);
+  await expect(joinArtwork).toHaveAttribute('data-art-kind','seller');
+  expect(await joinArtwork.evaluate(el=>getComputedStyle(el).backgroundImage)).toContain('afternoon-icons-20261114.png');
+  expect((await page.request.get('/images/sasi/afternoon-icons-20261114.png')).ok()).toBe(true);
  }
  await expect(page.getByTestId('seller-metrics').locator(':scope > div')).toHaveCount(4);
  await expect(page.getByRole('heading',{name:'发布新软件'})).toBeVisible();

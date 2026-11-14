@@ -236,6 +236,9 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
       { redirect: "manual", signal: AbortSignal.timeout(30000) }
     );
     const html = await response.text();
+    if (!html.includes('data-release-design="20261114-afternoon-three-pages"')) {
+      throw Error("COM_" + phase + "_AFTERNOON_BUILD_ID_MISMATCH:" + page.path);
+    }
     if (response.status !== 200 || html.length < 5000) {
       throw Error("COM_" + phase + "_REFERENCE_PAGE_UNAVAILABLE:" + page.path + ":" + response.status);
     }

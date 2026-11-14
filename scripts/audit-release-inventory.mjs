@@ -16,7 +16,7 @@ const checks=[
  ["P0 export consume atomic",exportAtomic()],
  ["V15.25 retired metadata removed",exists("app/layout.tsx")&&!/一念显化|探索与显化/.test(read("app/layout.tsx"))],
  ["V15.25 live tool sitemap",exists("app/sitemap.ts")&&read("app/sitemap.ts").includes("liveTools()")],
- ["V15.25 SASI marketplace language passthrough",exists("components/SasiOpenMarketplace.tsx")&&read("components/SasiOpenMarketplace.tsx").includes("lang")&&read("components/SasiOpenMarketplace.tsx").includes("sasi-market-hero-lingxifield.png")],
+ ["V15.25 SASI marketplace language passthrough",exists("components/SasiOpenMarketplace.tsx")&&read("components/SasiOpenMarketplace.tsx").includes("lang")&&read("components/SasiOpenMarketplace.tsx").includes("20261114-afternoon-three-pages")],
  ["V15.25 knowledge no catch-any",exists("components/KnowledgeWorkspace.tsx")&&!read("components/KnowledgeWorkspace.tsx").includes("catch(e:any)")],
 ];
 let fail=0;for(const[n,ok] of checks){console.log(`${ok?"PASS":"FAIL"} ${n}`);if(!ok)fail++}

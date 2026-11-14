@@ -376,6 +376,11 @@ jobs:
             grep -iq '^content-range: bytes 0-1023/' "$headers"
             rm -f "$headers"
           done
+          for path in / /sasi /sasi/seller; do
+            curl -4fsS --retry 3 --connect-timeout 9 --max-time 45 "$url$path" |
+              grep -F 'data-release-design="20261114-afternoon-three-pages"' > /dev/null
+          done
+          echo 'COM_AFTERNOON_THREE_PAGES_BUILD_ID_PASS'
           echo 'COM_NEXT_ISOLATED_CANARY_SASI_TOOLPASS_STATIC_R2_PASS_NO_PRODUCTION_ROUTE'
 
 # Approved three-page scene and layout candidate: 2026-11-14.

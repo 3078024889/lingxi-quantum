@@ -146,10 +146,10 @@ export default function Footer({compact=false}:{compact?:boolean}={}){
 );
  return <footer className="lx11-footer lx-branded-footer lx-footer-v3 lx-footer-v4" id="wechat" dir={lang==="ar"?"rtl":"ltr"}>
   {compact?<details className="lx-footer-directory"><summary>{overview.headline}</summary>{showcase}</details>:showcase}
-  <div className="lx-footer-v3-sasi">
+  {!compact&&<div className="lx-footer-v3-sasi">
    <div><strong>✨ {overview.sasiTitle}</strong><span>{overview.sasiDescription}</span></div>
    <Link href="/sasi">{c.sasi} ↗</Link>
-  </div>
+  </div>}
   <div className="lx11-footer-grid lx-footer-v3-nav lx-footer-v4-nav">
    <section className="lx11-footer-brand">
     <Link className="lx11-footer-logo" href="/" aria-label="LINGXIFIELD"><Image src="/images/lingxifield-logo.png" alt="" width={70} height={70}/><div><b>灵犀场 LINGXIFIELD</b></div></Link>
