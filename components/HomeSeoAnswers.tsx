@@ -4,7 +4,7 @@ import type {SeoLocale} from "@/lib/seo/global-seo";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 
 type Question = {q:string;a:string;href:string;link:string};
-const FAQ_ICONS=["✦","◎","▦","▶","◉","◈","⌘","PDF","OCR","▧","◇","▣","✉","▥"] as const;
+const FAQ_ICONS=["✦","◎","▦","▶","◉","◈","⌘","PDF","OCR","▧","◇","▣","✉","▥","AI","?"] as const;
 const FAQ_ASIDE:Record<SeoLocale,{title:string;body:string;cta:string}>={
  zh:{title:"把问题交给灵犀场，先找到能用的答案",body:"从 AI 选型、免费额度和真实价格，到软件购买、源码授权与安全交付；再到 PDF、图片、视频、音频和日常文件处理，常见问题都有对应教程与工具入口。",cta:"查看全部问题教程"},
  en:{title:"Start with the question. Find an answer that works.",body:"From AI choices, free limits and real prices to software, source licenses, secure delivery and everyday files, each common task has a clear guide and tool.",cta:"Browse all practical guides"},
@@ -20,10 +20,11 @@ const FAQ_ASIDE:Record<SeoLocale,{title:string;body:string;cta:string}>={
 type Content = {eyebrow:string;title:string;intro:string;questions:Question[];explore:string;create:string;tools:string};
 const FAQ:Record<SeoLocale,Content>={
  zh:{
-  eyebrow:"把问题交给灵犀场，先找到能用的答案",
-  title:"AI 怎么选、免费能用多少、生成作品要花多少钱？",
-  intro:"先看要完成的事，再看功能、免费额度、价格、地区和商用条件。每个问题都有对应入口，查完就能继续操作。",
+  eyebrow:"常见问题与解决方案",
+  title:"选对工具，解决实际需求",
+  intro:"从 AI 怎么选、免费额度和生成成本，到软件授权、PDF、图片与文件处理；按真实问题找到教程、比较功能和费用，再进入对应工具。",
   questions:[
+   {q:"AI 工具怎么选？先看任务还是先看价格？",a:"先明确要完成的任务，再比较功能、代表模型、免费额度、实际价格、地区可用性、付款方式和商用条件。排行榜适合做横向比较，具体能力以厂商当前说明为准。",href:"/siai",link:"按任务比较全球 AI 工具"},
    {q:"ChatGPT、Claude、Gemini 这些 AI，到底选哪个？",a:"写文章、处理长文件、写代码、看图片，需要的能力不同。先选任务，再比较各工具的代表模型、擅长功能、免费额度、付费套餐和地区限制；别只看名字和热度。",href:"/siai",link:"按实际任务比较 AI"},
    {q:"哪个 AI 工具免费？免费额度用完会怎样？",a:"有的按次数，有的按积分，有的限制可选模型或输出清晰度。找到工具后，先看免费能做什么，再看升级套餐和超额费用，免得做到一半才发现需要付费。",href:"/siai",link:"比较免费额度与收费方式"},
    {q:"AI 视频生成 10 秒多少钱？720p、1080p、4K 怎么算？",a:"先确认平台按秒、按积分还是按套餐扣费，再选模型、时长和清晰度。能算到单次任务成本，才方便比较。各平台以当前公布的价格和实际计费规则为准。",href:"/siai",link:"查看视频模型价格"},
@@ -38,6 +39,7 @@ const FAQ:Record<SeoLocale,Content>={
    {q:"PDF 太大，怎么压缩后还能看清？",a:"先确认文件主要是文字还是扫描图片。进入 PDF 压缩工具选择文件并处理；下载后检查页数、表格和细小文字，再决定是否需要调整压缩强度。",href:"/tools?q=PDF压缩",link:"使用 PDF 压缩工具"},
    {q:"临时邮箱和阅后即焚分别能做什么？",a:"临时邮箱适合不想暴露常用邮箱的临时场景；阅后即焚适合限时查看信息。不要用临时邮箱接收重要账号的恢复邮件，也不要把一次性分享当作无法截屏的保密保证。",href:"/tools?q=临时邮箱",link:"查看隐私工具"},
    {q:"AI 工具价格、免费额度和商用条件在哪里比较？",a:"进入全球 SIAI 排行榜，按任务查看不同工具的功能、套餐价格、免费额度、可用地区和商用条件，并可直接访问厂商官网。",href:"/siai",link:"比较 AI 工具价格与功能"},
+   {q:"更多问题与帮助",a:"遇到工具选择、文件处理、软件购买或账户使用问题，可查看帮助中心并提交具体问题，按页面说明继续处理。",href:"/account/support",link:"查看全部帮助中心"},
   ],explore:"去全球 SIAI 排行榜选 AI",create:"浏览 SASI 软件市场",tools:"打开免费在线实用工具"
  },
  en:{

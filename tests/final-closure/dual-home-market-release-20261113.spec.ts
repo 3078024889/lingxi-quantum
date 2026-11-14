@@ -10,9 +10,9 @@ for(const theme of ["light","dark"]){
    await expect(page.locator("html")).toHaveAttribute("data-theme",theme);
    if(path==="/"){
     await expect(page.locator(".lx-home-hero-art")).toBeVisible();
-    await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);
-    await expect(page.locator(".lx11-sidebar")).toHaveCount(0);
-    await expect(page.locator(".lx-seo-question")).toHaveCount(14);
+    await expect(page.locator(".lx-home-feature-strip")).toHaveCount(1);\n    await expect(page.getByTestId("home-siai-categories").locator(".lx-home-siai-category-card")).toHaveCount(6);
+    await expect(page.locator("[data-home-sidebar]")).toHaveCount(1);
+    await expect(page.locator(".lx-seo-question")).toHaveCount(16);
     await page.getByTestId("home-task-search").locator("input").fill("AI视频生成模型");
     await page.getByTestId("home-task-search").getByRole("button").click();
     await expect(page).toHaveURL(/\/siai\?/);
