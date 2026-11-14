@@ -39,6 +39,7 @@ test("CN release package is rebuilt from the exact merged candidate commit",()=>
  const workflow=read(".github/workflows/cn3194-payment-release-20261110.yml");
  assert.match(workflow,/push:\\n    branches: \\[ci\\/cn3194-payment-base-20261110\\]/);
  assert.match(workflow,/github.event_name != 'pull_request'/);
+ assert.equal((workflow.match(/if: github.event_name != 'pull_request'/g)||[]).length,2);
  assert.match(workflow,/ref: \\$\\{\\{ github.event.pull_request.head.sha \\|\\| github.sha \\}\\}/);
  assert.match(workflow,/NO PROD DEPLOY/);
 });
