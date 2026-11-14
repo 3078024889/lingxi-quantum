@@ -1,4 +1,6 @@
 import {test,expect} from "playwright/test";
+import {mkdir,writeFile} from "node:fs/promises";
+import {dirname} from "node:path";
 
 for(const theme of ["light","dark"]){
  test(`Homepage, marketplace and seller workspace render in ${theme} mode`,async({page},testInfo)=>{
@@ -40,7 +42,12 @@ for(const theme of ["light","dark"]){
     if(path==="/sasi/seller")expect(await page.locator("main h2").first().evaluate(element=>getComputedStyle(element).color)).not.toBe("rgb(16, 24, 45)");
    }
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)).toBe(true);
-   await testInfo.attach(`${path.replaceAll("/","-")||"home"}-${theme}`,{body:await page.screenshot({fullPage:true}),contentType:"image/png"});
+   const screenshot=await page.screenshot({fullPage:true});
+   const evidenceName=`${path==="/"?"home":path.slice(1).replaceAll("/","-")}-${theme}.png`;
+   const evidencePath=testInfo.outputPath(evidenceName);
+   await mkdir(dirname(evidencePath),{recursive:true});
+   await writeFile(evidencePath,screenshot);
+   await testInfo.attach(evidenceName,{body:screenshot,contentType:"image/png"});
   }
  });
 }
