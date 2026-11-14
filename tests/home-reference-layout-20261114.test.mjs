@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(p,'utf8');
 test('reference homepage composition removes retired homepage blocks and preserves destinations',()=>{
  const home=read('app/page.tsx'),localized=read('app/[locale]/page.tsx'),hub=read('components/HomeProblemHub.tsx'),growth=read('components/HomeGlobalGrowth.tsx'),seo=read('components/HomeSeoAnswers.tsx'),nav=read('components/Nav.tsx'),css=read('app/home-reference-20261114.css');
- assert.match(home,/<HomeProblemHub\/>/);assert.match(home,/<HomeGlobalGrowth lang="zh"\/>/);assert.match(localized,/<HomeGlobalGrowth lang=\{locale\}/);
+ assert.match(home,/<HomeProblemHub\/>/);assert.match(localized,/<HomeProblemHub\/>/);assert.match(hub,/<HomeGlobalGrowth lang=\{lang\}\/>/);assert.match(home,/#global-growth-entrances/);
  assert.match(nav,/homeLayout\s*\?/);assert.match(nav,/HOME_NAV_HREFS\.map/);
  assert.doesNotMatch(hub,/SiaiSearchDiscovery|SIAI_DISCOVERY|FOOTER_CATALOG|taskTitle|finishNow/);
  assert.match(hub,/全球智能服务与实用工具平台/);assert.match(hub,/<HomeHeroVisual\/>/);
