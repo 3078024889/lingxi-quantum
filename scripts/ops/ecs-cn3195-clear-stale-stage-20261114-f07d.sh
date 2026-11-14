@@ -5,6 +5,7 @@ set -Eeuo pipefail
 [[ "$EUID" == 0 ]] || { echo ROOT_REQUIRED >&2; exit 1; }
 
 EXPECTED_SHA='f07d7a7bb7b79adc0664217044404a75c578aa25'
+EXPECTED_OLD_SHA='51a225ca1d9d9e955a31878c4ed02a12a106c48e'
 OLD_SVC='lingxifield-cn-release-20261110-51a225ca1d9d.service'
 NGINX='/etc/nginx/conf.d/lingxifield.conf'
 BASE='/opt/lingxifield/cn-staged-releases'
@@ -58,8 +59,11 @@ WORKDIR="$(systemctl show "$OLD_SVC" -p WorkingDirectory --value)"
 }
 OLD_SHA="$(tr -d '\r\n' < "$WORKDIR/RELEASE_SOURCE_SHA")"
 [[ "$OLD_SHA" =~ ^[a-f0-9]{40}$ ]] || { echo OLD_STAGE_SOURCE_SHA_INVALID >&2; exit 1; }
-[[ "$OLD_SHA" != "$EXPECTED_SHA" ]] || {
-  echo CURRENT_F07D_CANDIDATE_ALREADY_STAGED_DO_NOT_STOP >&2; exit 1
+[[ "$OLD_SHA" == "$EXPECTED_OLD_SHA" ]] || {
+  echo "STALE_STAGE_SOURCE_SHA_NOT_THE_CONFIRMED_OLD_CANDIDATE:$OLD_SHA" >&2; exit 1
+}
+[[ "$WORKDIR" == "$BASE/$EXPECTED_OLD_SHA" ]] || {
+  echo STALE_STAGE_WORKDIR_NOT_THE_CONFIRMED_OLD_CANDIDATE >&2; exit 1
 }
 MAIN_PID="$(systemctl show "$OLD_SVC" -p MainPID --value)"
 [[ "$MAIN_PID" =~ ^[1-9][0-9]*$ ]] || { echo OLD_STAGE_MAINPID_INVALID >&2; exit 1; }
