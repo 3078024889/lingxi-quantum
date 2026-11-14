@@ -183,13 +183,6 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .sellerHeroCopy h1{margin:5px 0 4px;color:var(--lx-ink,#1d2b42);font-size:clamp(26px,2.5vw,36px);font-weight:900;line-height:1.2}
 .sellerHeroCopy p{margin:0;color:var(--lx-muted,#6d7f96);font-size:13px;line-height:1.7}
 .sellerBack{display:inline-flex;align-items:center;gap:7px;margin-top:11px;padding:8px 12px;border:1px solid var(--lx-line,#dfe7f2);border-radius:999px;color:#4769bd;font-size:11px;font-weight:750;text-decoration:none}
-.sellerHeroArt{position:relative;display:flex;align-items:center;justify-content:center;min-height:118px;isolation:isolate}
-.sellerHeroOrbit{position:absolute;inset:7px 4%;border:1px solid rgba(122,159,232,.28);border-radius:50%;transform:rotate(-11deg);box-shadow:0 0 24px rgba(121,170,255,.12)}
-.sellerHeroTrophy{position:relative;z-index:2;display:grid;place-items:center;width:82px;height:92px;margin-right:20px;border:1px solid rgba(238,190,105,.7);border-radius:22px 22px 16px 16px;background:linear-gradient(145deg,#fff3c9,#e5b45c 55%,#a8732f);color:#704719;font-size:13px;font-weight:950;letter-spacing:.08em;box-shadow:0 13px 25px rgba(193,145,69,.2),inset 0 1px 0 #fff}
-.sellerHeroTrophy:before{content:"";position:absolute;top:19px;left:-15px;width:20px;height:28px;border:4px solid #d8a64d;border-right:0;border-radius:14px 0 0 14px}
-.sellerHeroTrophy:after{content:"";position:absolute;top:19px;right:-15px;width:20px;height:28px;border:4px solid #d8a64d;border-left:0;border-radius:0 14px 14px 0}
-.sellerHeroScreen{position:relative;display:flex;flex-direction:column;gap:8px;width:180px;height:112px;padding:13px 12px;border:5px solid #233e70;border-radius:12px;background:linear-gradient(145deg,#102b59,#183c78);box-shadow:0 14px 25px rgba(48,78,135,.2);transform:perspective(400px) rotateY(-12deg) rotateX(4deg)}
-.sellerHeroScreen b{color:#d9ebff;font-size:8px;letter-spacing:.12em}.sellerHeroScreen i{display:block;height:10px;border-radius:4px;background:linear-gradient(90deg,#70c8ff 0 26%,rgba(255,255,255,.18) 26% 100%);box-shadow:0 0 9px rgba(112,200,255,.18)}
 .metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 14px}.metrics>div{min-width:0;padding:13px 15px;border-radius:15px;background:transparent;backdrop-filter:blur(12px);box-shadow:0 7px 20px rgba(74,99,157,.05)}
 .metrics span{font-size:11px;font-weight:700}.metrics strong{font-size:23px;margin-top:5px;overflow-wrap:anywhere}.metrics small{display:block;margin-top:4px;color:var(--lx-muted,#74849a);font-size:9px;line-height:1.4}
 .sellerWorkspaceGrid{display:grid;grid-template-columns:minmax(225px,.82fr) minmax(440px,1.7fr) minmax(225px,.92fr);gap:11px;align-items:start}
@@ -207,7 +200,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .sellerGuideSteps li>b{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:rgba(111,157,241,.14);color:#5578ce;font-size:10px}
 .sellerGuideSteps li>span{display:grid;gap:1px;min-width:0}.sellerGuideSteps strong{font-size:10.5px;color:var(--lx-ink,#263750)}.sellerGuideSteps small{font-size:9px;color:var(--lx-muted,#74849a)}
 @media(max-width:1260px){.sellerWorkspaceGrid{grid-template-columns:minmax(220px,.82fr) minmax(0,1.5fr)}.sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}.marketFeatures{grid-template-columns:repeat(3,minmax(0,1fr))}.steps{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:760px){.sellerHero{grid-template-columns:1fr;padding:15px}.sellerHeroArt{min-height:95px;justify-content:flex-end;padding-right:10px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:1fr}.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.marketFeature{min-height:58px;padding:8px}.marketFeatureIcon{width:31px;height:31px}.featuredCard{grid-template-columns:1fr;gap:12px}.featuredVisual{height:120px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps>button{min-height:46px}}
+@media(max-width:760px){.sellerHero{grid-template-columns:1fr;padding:15px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:1fr}.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.marketFeature{min-height:58px;padding:8px}.marketFeatureIcon{width:31px;height:31px}.featuredCard{grid-template-columns:1fr;gap:12px}.featuredVisual{height:120px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.steps>button{min-height:46px}}
 @media(max-width:430px){.marketFeatures{grid-template-columns:1fr}.sellerBenefits{grid-template-columns:repeat(3,minmax(0,1fr))}.sellerGuideColumn{grid-template-columns:1fr}}
 
 /* SASI seller workspace typography and density: match the approved three-column reference. */
@@ -215,13 +208,13 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .featured{margin-top:22px}.featured .sectionHeading h2,.sectionHeading h2{font-size:24px;line-height:1.35;font-weight:950}.featuredCard{gap:18px;padding:17px;border-radius:20px}.featuredVisual{min-height:148px;border-radius:16px}.featuredVisual>small{font-size:12px;letter-spacing:.16em}.featuredVisual>strong{font-size:38px;line-height:1.1}.featuredVisual>span{font-size:12px;letter-spacing:.14em}.featuredDescription h3{font-size:22px;line-height:1.4;font-weight:950}.featuredDescription>p:not(.featuredBadge){font-size:15px;line-height:1.7}.featuredBadge{font-size:12px;padding:5px 10px}.featuredChips{gap:7px}.featuredChips span{font-size:13px;padding:5px 9px}.featuredPrice strong{font-size:29px;line-height:1.1}.featuredPrice small{font-size:14px}.featuredAction{min-height:42px;padding:0 15px;font-size:14px}
 .main .products{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.main .card{border-radius:18px}.main .cardContent{padding:15px}.main .card h3{font-size:17px;line-height:1.45;min-height:0;font-weight:900}.main .card p{font-size:14px;line-height:1.7}.main .cardBottom strong{font-size:20px}.main .cardBottom span{font-size:13px}
 .steps{gap:12px}.steps>div{min-height:88px;padding:15px;border-radius:16px}.steps b{font-size:25px}.steps strong{font-size:16px;line-height:1.4}.steps span{font-size:14px;line-height:1.5}.steps>button{min-height:58px;font-size:16px;font-weight:900}
-.sellerHero{min-height:190px;padding:25px 30px;border-radius:22px}.sellerHeroCopy>small{font-size:12px;letter-spacing:.14em}.sellerHeroCopy h1{font-size:clamp(32px,3vw,42px);line-height:1.15;font-weight:950}.sellerHeroCopy p{font-size:16px;line-height:1.7}.sellerBack{font-size:14px}.sellerHeroArt{transform:scale(1.08);transform-origin:center right}
+.sellerHero{min-height:190px;padding:25px 30px;border-radius:22px}.sellerHeroCopy>small{font-size:12px;letter-spacing:.14em}.sellerHeroCopy h1{font-size:clamp(32px,3vw,42px);line-height:1.15;font-weight:950}.sellerHeroCopy p{font-size:16px;line-height:1.7}.sellerBack{font-size:14px}
 .metrics{gap:13px;margin-top:16px}.metrics>div{min-height:94px;padding:17px;border-radius:17px}.metrics span{font-size:14px;line-height:1.4}.metrics strong{font-size:29px;line-height:1.2}.metrics small{font-size:12px;line-height:1.5}
 .sellerWorkspaceGrid{grid-template-columns:minmax(250px,.82fr) minmax(480px,1.55fr) minmax(250px,.82fr);gap:16px;align-items:start}.sellerJoinColumn,.sellerMainColumn,.sellerGuideColumn{gap:12px}.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:20px;border-radius:18px}.sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{font-size:21px;line-height:1.4;font-weight:950}.sellerMainColumn .formCard>label,.sellerJoinColumn .formCard>label{margin-top:15px;font-size:15px;line-height:1.5;font-weight:800}.sellerMainColumn .formCard input:not([type=checkbox]),.sellerMainColumn .formCard textarea,.sellerMainColumn .formCard select,.sellerJoinColumn .formCard input:not([type=checkbox]){min-height:43px;font-size:15px;line-height:1.5}.sellerMainColumn .formCard textarea{min-height:140px;padding:13px}.sellerMainColumn .formCard>button,.sellerJoinColumn .formCard>button{min-height:44px;padding:0 17px;font-size:15px;font-weight:900}.sellerMainColumn .formCard>p,.sellerJoinColumn .formCard>p{font-size:14px;line-height:1.7}
 .sellerBenefits{gap:8px;margin-top:12px}.sellerBenefits>div{min-height:82px;padding:11px 8px}.sellerBenefits span{font-size:22px}.sellerBenefits strong{font-size:13px;line-height:1.4}.sellerBenefits small{font-size:12px;line-height:1.5}.sellerGuideColumn{gap:12px}.sellerGuideCard{padding:17px;border-radius:17px}.sellerGuideCard h3{font-size:18px;line-height:1.4;font-weight:900}.sellerGuideCard p{font-size:15px;line-height:1.7}.sellerGuideSteps{gap:10px}.sellerGuideSteps li>b{width:30px;height:30px;font-size:14px}.sellerGuideSteps strong{font-size:15px}.sellerGuideSteps small{font-size:13px;line-height:1.45}.drafts h3{font-size:18px;font-weight:900}.draft{padding:14px;gap:10px}.draft strong{font-size:15px}.draft small,.mediaCounter,.note{font-size:13px;line-height:1.6}.upload{min-height:43px;padding:10px 12px;font-size:14px}.descriptionCount{font-size:12px}
 @media(max-width:1320px){.sellerWorkspaceGrid{grid-template-columns:minmax(230px,.85fr) minmax(420px,1.4fr)}.sellerGuideColumn{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:900px){.sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px}.marketFeature{min-height:70px}.marketFeature strong{font-size:14px}.marketFeature small{font-size:12px}.featuredCard{grid-template-columns:1fr}.featuredVisual{min-height:128px}.featuredDescription h3{font-size:20px}.featuredPrice{align-items:flex-start}.featuredAction{width:100%}.sellerHero{padding:20px;min-height:0}.sellerHeroArt{display:none}.sellerGuideColumn{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:1fr}.steps>div{min-height:70px}}
+@media(max-width:620px){.marketFeatures{grid-template-columns:repeat(2,minmax(0,1fr));padding:12px}.marketFeature{min-height:70px}.marketFeature strong{font-size:14px}.marketFeature small{font-size:12px}.featuredCard{grid-template-columns:1fr}.featuredVisual{min-height:128px}.featuredDescription h3{font-size:20px}.featuredPrice{align-items:flex-start}.featuredAction{width:100%}.sellerHero{padding:20px;min-height:0}.sellerGuideColumn{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:1fr}.steps>div{min-height:70px}}
 
 /* Three-card featured shelf: one first-party product plus up to two real approved listings. */
 .featuredShelf{display:grid;grid-template-columns:minmax(0,1.55fr) repeat(2,minmax(190px,.72fr));gap:14px;align-items:stretch}
@@ -495,18 +488,6 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .sellerHeroCopy h1:before{content:"";display:inline-block;width:7px;height:34px;margin:0 15px 0 0;border-radius:8px;background:linear-gradient(180deg,#bf55f4,#4b58ff);transform:skewX(-15deg);vertical-align:-4px;box-shadow:0 4px 12px rgba(113,78,239,.25)}
 .sellerHeroCopy p{max-width:650px;font-size:14px;line-height:1.65}
 .sellerBack{margin-top:9px;padding:7px 12px;border-color:rgba(112,132,205,.22);background:rgba(255,255,255,.52);font-size:12px}
-.sellerHeroArt{position:relative;min-height:126px;overflow:visible;perspective:800px}
-.sellerHeroArt:before{content:"";position:absolute;inset:18% 7%;border-radius:50%;background:radial-gradient(ellipse,rgba(104,145,255,.2),rgba(164,122,255,.1) 48%,transparent 72%);filter:blur(12px)}
-.sellerHeroOrbit{inset:5px 2%;border-color:rgba(104,145,244,.4);transform:rotate(-12deg) scaleX(1.08);box-shadow:0 0 22px rgba(103,139,255,.2)}
-.sellerHeroOrbitAlt{position:absolute;inset:17px 10%;border:1px solid rgba(177,119,255,.36);border-radius:50%;transform:rotate(17deg) scaleX(1.12);box-shadow:0 0 18px rgba(170,119,255,.16)}
-.sellerHeroGlobe{position:absolute;z-index:1;right:4%;top:50%;width:126px;height:126px;transform:translateY(-50%);overflow:hidden;border:1px solid rgba(255,255,255,.82);border-radius:50%;background:radial-gradient(circle at 28% 23%,rgba(255,255,255,.95),transparent 19%),radial-gradient(circle at 65% 68%,rgba(46,103,229,.9),transparent 55%),linear-gradient(135deg,#d9edff 0%,#79b4ff 38%,#455bd1 72%,#1d2e72 100%);box-shadow:inset -13px -12px 24px rgba(17,35,102,.28),0 12px 28px rgba(70,102,204,.26),0 0 28px rgba(112,156,255,.24)}
-.sellerHeroGlobe:before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(0deg,transparent 0 17px,rgba(255,255,255,.22) 18px 19px),repeating-linear-gradient(90deg,transparent 0 20px,rgba(255,255,255,.18) 21px 22px);mask-image:radial-gradient(circle,#000 58%,transparent 72%)}
-.sellerHeroGlobe:after{content:"";position:absolute;inset:18% -8%;border:1px solid rgba(255,255,255,.48);border-radius:50%;transform:rotate(-25deg)}
-.sellerHeroCloud{position:absolute;z-index:4;top:3px;left:29%;display:grid;width:42px;height:42px;place-items:center;border:1px solid rgba(255,255,255,.7);border-radius:13px;background:linear-gradient(145deg,#9c7cff,#465bff);color:#fff;font-size:23px;font-weight:900;box-shadow:0 8px 18px rgba(92,78,226,.28),inset 0 1px 0 rgba(255,255,255,.65);transform:rotate(-5deg)}
-.sellerHeroScreen{position:absolute;z-index:2;left:5%;bottom:4px;width:170px;height:101px;padding:12px;border-width:5px;border-color:#1e356d;border-radius:12px;background:linear-gradient(145deg,#10275a,#17427d 62%,#1d5c9c);box-shadow:0 15px 24px rgba(36,61,128,.26),inset 0 1px 0 rgba(255,255,255,.18);transform:perspective(520px) rotateY(-15deg) rotateX(4deg)}
-.sellerHeroScreen b{font-size:8px;letter-spacing:.1em}.sellerHeroScreen i{height:8px}
-.sellerHeroTrophy{position:absolute;z-index:3;left:43%;top:50%;width:76px;height:88px;margin:0;border-radius:19px 19px 14px 14px;background:linear-gradient(145deg,#fff5d4 0%,#f0c76e 35%,#d69a3d 68%,#98612a 100%);box-shadow:0 13px 26px rgba(184,132,53,.28),inset 0 1px 0 #fff;transform:translate(-50%,-50%) rotate(-5deg)}
-.sellerHeroTrophy:before,.sellerHeroTrophy:after{top:17px;width:18px;height:25px;border-color:#d9a64b}
 .metrics{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 12px}
 .metrics>div{display:flex;align-items:center;gap:11px;min-width:0;min-height:80px;padding:11px 13px;border:1px solid rgba(135,155,220,.25);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(244,245,255,.78));backdrop-filter:blur(14px);box-shadow:0 8px 20px rgba(77,95,169,.075),inset 0 1px 0 rgba(255,255,255,.9)}
 .metricIcon{display:grid;flex:none;width:44px;height:44px;place-items:center;border:1px solid rgba(255,255,255,.82);border-radius:14px;background:linear-gradient(145deg,#e8f4ff,#b6d6ff);color:#4269db;font-size:22px!important;font-weight:900;box-shadow:0 6px 14px rgba(85,116,213,.14)}
@@ -521,13 +502,6 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .sellerJoinColumn .formCard,.sellerMainColumn .formCard,.sellerGuideCard{border:1px solid rgba(135,155,220,.25);background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(246,247,255,.82));box-shadow:0 9px 24px rgba(75,94,166,.075),inset 0 1px 0 rgba(255,255,255,.88)}
 .sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:16px;border-radius:17px}
 .sellerJoinColumn .formCard h3,.sellerMainColumn .formCard h3{margin-bottom:11px;font-size:18px;line-height:1.4;font-weight:950}
-.sellerJoinArt{position:relative;display:grid;height:126px;place-items:center;overflow:hidden;margin:0 0 8px;border:1px solid rgba(155,168,232,.15);border-radius:15px;background:radial-gradient(ellipse at 50% 55%,rgba(135,153,255,.2),transparent 58%),linear-gradient(135deg,rgba(248,250,255,.75),rgba(233,238,255,.4))}
-.sellerJoinArt:before{content:"";position:absolute;inset:17px 10%;border:1px solid rgba(116,145,232,.32);border-radius:50%;transform:rotate(-10deg);box-shadow:0 0 20px rgba(115,140,237,.15)}
-.sellerJoinArt:after{content:"";position:absolute;width:180px;height:54px;border:1px solid rgba(187,135,255,.38);border-radius:50%;transform:rotate(10deg);box-shadow:0 0 18px rgba(177,130,255,.16)}
-.sellerJoinOrbit{position:absolute;width:145px;height:48px;border:1px solid rgba(119,164,242,.32);border-radius:50%;transform:rotate(-13deg)}
-.sellerJoinSpark{position:absolute;z-index:2;top:12px;right:22%;color:#d2a64e;font-size:22px;text-shadow:0 3px 12px rgba(214,168,79,.4)}
-.sellerJoinShield{position:relative;z-index:3;display:grid;width:90px;height:104px;place-items:center;clip-path:polygon(50% 0,94% 17%,88% 65%,50% 100%,12% 65%,6% 17%);background:linear-gradient(145deg,#fefeff 0%,#b9c8ff 28%,#766cf4 58%,#384ed2 100%);filter:drop-shadow(0 12px 14px rgba(83,86,204,.26))}
-.sellerJoinShield svg{width:72px;height:82px;filter:drop-shadow(0 2px 4px rgba(25,47,129,.18))}
 .sellerFormHeading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
 .sellerFormHeading h3{margin:0!important}
 .resumeDraftButton{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex:none;min-height:34px;padding:7px 11px;border:1px solid rgba(128,117,234,.28);border-radius:11px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(239,235,255,.85));color:#6549d6;font-size:12px;font-weight:850;box-shadow:0 5px 12px rgba(100,79,204,.1)}
@@ -557,9 +531,9 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 :global(html[data-theme="dark"]) .resumeDraftButton{border-color:rgba(177,159,255,.25);background:linear-gradient(145deg,#302b4b,#24243a);color:#d4c9ff}
 @media(max-width:1360px){.main .sellerWorkspaceGrid{grid-template-columns:minmax(220px,.82fr) minmax(0,1.5fr)}.sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:1080px){.main .sellerHero{grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);padding:15px 18px}.main .sellerWorkspaceGrid{grid-template-columns:minmax(210px,.78fr) minmax(0,1.22fr)}.sellerGuideColumn{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:960px){.main .sellerHero{grid-template-columns:1fr}.sellerHeroArt{min-height:116px}.main .sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){.main .sellerHero{padding:14px;border-radius:16px}.sellerHeroCopy h1{font-size:30px}.sellerHeroCopy p{font-size:13px}.sellerHeroArt{min-height:108px}.sellerHeroGlobe{width:104px;height:104px;right:4%}.sellerHeroScreen{width:145px;height:88px;left:3%}.sellerHeroTrophy{left:43%;width:64px;height:77px}.sellerHeroCloud{left:29%;width:36px;height:36px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metrics>div{min-height:70px;padding:9px}.metricIcon{width:38px;height:38px;border-radius:12px}.metrics .metricCopy>span{font-size:11px}.metrics .metricCopy>strong{font-size:21px}.metrics .metricCopy>small{font-size:9px}.sellerGuideColumn{grid-template-columns:1fr}.sellerJoinArt{height:112px}.sellerFormHeading{align-items:flex-start;flex-wrap:wrap}.resumeDraftButton{min-height:31px}}
-@media(max-width:430px){.sellerHeroCopy h1:before{height:27px;margin-right:10px}.sellerHeroArt{min-height:94px}.sellerHeroGlobe{width:88px;height:88px}.sellerHeroScreen{width:126px;height:78px}.sellerHeroTrophy{width:56px;height:68px}.sellerHeroCloud{width:31px;height:31px;font-size:18px}.metrics>div{gap:7px;padding:8px}.metricIcon{width:33px;height:33px;font-size:18px!important}.metrics .metricCopy>strong{font-size:18px}}
+@media(max-width:960px){.main .sellerHero{grid-template-columns:1fr}.main .sellerWorkspaceGrid{grid-template-columns:1fr}.sellerGuideColumn{grid-column:auto;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.main .sellerHero{padding:14px;border-radius:16px}.sellerHeroCopy h1{font-size:30px}.sellerHeroCopy p{font-size:13px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metrics>div{min-height:70px;padding:9px}.metricIcon{width:38px;height:38px;border-radius:12px}.metrics .metricCopy>span{font-size:11px}.metrics .metricCopy>strong{font-size:21px}.metrics .metricCopy>small{font-size:9px}.sellerGuideColumn{grid-template-columns:1fr}.sellerFormHeading{align-items:flex-start;flex-wrap:wrap}.resumeDraftButton{min-height:31px}}
+@media(max-width:430px){.sellerHeroCopy h1:before{height:27px;margin-right:10px}.metrics>div{gap:7px;padding:8px}.metricIcon{width:33px;height:33px;font-size:18px!important}.metrics .metricCopy>strong{font-size:18px}}
 
 
 /* Seller workspace typography: keep reference-scale text readable at desktop. */
@@ -603,14 +577,8 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 
 /* Compact vertical rhythm to match the approved seller workspace reference. */
 .main .sellerHero{min-height:124px;padding:8px 20px;gap:12px}
-.sellerHeroArt{min-height:108px}
-.sellerHeroGlobe{width:112px;height:112px}
-.sellerHeroScreen{width:150px;height:90px}
-.sellerHeroTrophy{width:68px;height:78px}
-.sellerHeroCloud{width:38px;height:38px}
 .sellerHeroCopy h1{font-size:clamp(32px,2.6vw,40px)}
 .metrics>div{min-height:78px;padding:10px 12px}
-.sellerJoinArt{height:112px}
 .sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:14px}
 .sellerMainColumn .formCard>label{margin-top:7px}
 .sellerMainColumn .formCard textarea{min-height:84px}
@@ -620,13 +588,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .sellerGuideCard{padding:11px}
 @media(max-width:760px){
  .main .sellerHero{min-height:120px;padding:10px 14px}
- .sellerHeroArt{min-height:96px}
- .sellerHeroGlobe{width:88px;height:88px}
- .sellerHeroScreen{width:126px;height:78px}
- .sellerHeroTrophy{width:56px;height:68px}
- .sellerHeroCloud{width:31px;height:31px}
  .metrics>div{min-height:70px}
- .sellerJoinArt{height:104px}
  .sellerMainColumn .formCard textarea{min-height:96px}
  .uploadTile{min-height:110px}
 }
@@ -698,3 +660,14 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 :global(html[data-theme="dark"]) .main .sortSelect{
  background:#1d2031;color:#f0edff;border-color:rgba(169,145,255,.32)
 }
+
+
+/* 20261114 seller workspace: real 3D artwork replaces the retired CSS/SVG illustrations. */
+.sellerHeroArt{position:relative;display:block;min-width:0;min-height:132px;overflow:hidden;isolation:isolate;border-radius:17px;background:radial-gradient(ellipse at 64% 54%,rgba(130,151,255,.22),transparent 58%),linear-gradient(125deg,rgba(239,242,255,.5),rgba(231,237,255,.18))}
+.sellerHeroArt:before{content:"";position:absolute;z-index:1;inset:15% 1%;border:1px solid rgba(137,153,237,.28);border-radius:50%;transform:rotate(-9deg);box-shadow:0 0 26px rgba(115,135,235,.16);pointer-events:none}
+.sellerHeroArtwork{position:absolute;z-index:0;top:-35%;right:0;width:165%;height:170%;max-width:none;object-fit:cover;object-position:right center;filter:drop-shadow(0 12px 24px rgba(77,89,174,.2));pointer-events:none}
+.sellerJoinArt{position:relative;display:block;height:126px;min-height:112px;overflow:hidden;margin:0 0 8px;border:1px solid rgba(155,168,232,.22);border-radius:15px;background:radial-gradient(ellipse at 50% 55%,rgba(135,153,255,.2),transparent 58%),linear-gradient(135deg,rgba(248,250,255,.75),rgba(233,238,255,.4))}
+.sellerJoinArtwork{position:absolute;top:-72%;left:-38%;width:190%;height:240%;max-width:none;object-fit:cover;object-position:48% 52%;filter:saturate(1.08) drop-shadow(0 10px 18px rgba(85,82,180,.2));pointer-events:none}
+@media(max-width:960px){.sellerHeroArt{min-height:116px}}
+@media(max-width:760px){.sellerHeroArt{min-height:108px}.sellerHeroArtwork{top:-38%;width:180%;height:180%}.sellerJoinArt{height:112px}}
+@media(max-width:620px){.sellerHeroArt{min-height:96px}.sellerJoinArt{height:104px}}
