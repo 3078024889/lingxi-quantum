@@ -392,22 +392,22 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       <label>{sasiSoftwareUiText(lang,"完整软件介绍（最多5,000字）","Full software description (up to 5,000 characters)")}<textarea rows={7} value={description} maxLength={5000} onChange={e=>setDescription(e.target.value)} placeholder={sasiSoftwareUiText(lang,"介绍核心功能、适用场景、安装要求、版本与授权范围。支持换行分段，详情页可完整展开。","Explain features, uses, requirements, version and licensing. Paragraph breaks are preserved.")}/><span className={styles.descriptionCount} aria-live="polite">{description.length.toLocaleString("en-US")} / 5,000</span></label>
       <div className={styles.priceFields}><label>{sasiSoftwareUiText(lang,"人民币标价","CNY price")}<input type="number" min="1" max="10000000" step="0.01" value={rmb} onChange={e=>setRmb(e.target.value)}/></label>
       <label>{sasiSoftwareUiText(lang,"美元标价","USD price")}<input type="number" min="1" max="10000000" step="0.01" value={usd} onChange={e=>setUsd(e.target.value)}/></label></div>
-      <div className={styles.uploadGrid} aria-label={sasiSoftwareUiText(lang,"软件文件上传","Software file uploads")}>
-       <label className={`${styles.uploadTile} ${activeDraft?"":styles.uploadTileDisabled}`}>
+      <div className={styles.uploadGrid} data-testid="seller-upload-grid" aria-label={sasiSoftwareUiText(lang,"软件文件上传","Software file uploads")}>
+       <label data-testid="seller-upload-tile" className={`${styles.uploadTile} ${activeDraft?"":styles.uploadTileDisabled}`}>
         <span className={styles.uploadTileIcon} aria-hidden="true">⇧</span>
         <strong>{sasiSoftwareUiText(lang,"软件 ZIP / 源码包","Software ZIP / source package")}</strong>
         <small>{sasiSoftwareUiText(lang,"仅支持 ZIP，最大 30MB","ZIP only · up to 30MB")}</small>
         <em>{activeDraft?translatedStatus(lang,activeDraft.scan_status,true):sasiSoftwareUiText(lang,"保存草稿后上传","Save a draft to upload")}</em>
         <input type="file" accept=".zip,application/zip" disabled={!activeDraft||busy!==""} onChange={e=>{const file=e.target.files?.[0];if(file&&activeDraft)void upload(activeDraft,file)}}/>
        </label>
-       <label className={`${styles.uploadTile} ${activeDraft?"":styles.uploadTileDisabled}`}>
+       <label data-testid="seller-upload-tile" className={`${styles.uploadTile} ${activeDraft?"":styles.uploadTileDisabled}`}>
         <span className={styles.uploadTileIcon} aria-hidden="true">▧</span>
         <strong>{sasiSoftwareUiText(lang,"封面图片","Cover image")}</strong>
         <small>{sasiSoftwareUiText(lang,"PNG / JPG / WebP，最大 1MB","PNG / JPG / WebP · up to 1MB")}</small>
         <em>{activeDraft?sasiSoftwareUiText(lang,`已上传 ${mediaCounts[activeDraft.id]?.cover??0} / 1 张`,`${mediaCounts[activeDraft.id]?.cover??0} / 1 uploaded`):sasiSoftwareUiText(lang,"保存草稿后上传","Save a draft to upload")}</em>
         <input type="file" accept="image/png,image/jpeg,image/webp" disabled={!activeDraft||busy!==""||(mediaCounts[activeDraft?.id??""]?.cover??0)>=1} onChange={e=>{const file=e.target.files?.[0];if(file&&activeDraft)void uploadImage(activeDraft,file,"cover")}}/>
        </label>
-       <div className={styles.uploadTile}>
+       <div data-testid="seller-upload-tile" className={styles.uploadTile}>
         <span className={styles.uploadTileIcon} aria-hidden="true">▤</span>
         <strong>{sasiSoftwareUiText(lang,"授权或许可文件","License document")}</strong>
         <small>{sasiSoftwareUiText(lang,"请放入软件 ZIP 包内","Include it inside the software ZIP")}</small>
