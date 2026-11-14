@@ -275,3 +275,45 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .featuredMiniCta strong{margin-top:12px;font-size:17px;font-weight:950;line-height:1.4}.featuredMiniCta small{margin-top:7px;color:#77738e;font-size:13px;line-height:1.65}.featuredMiniCta b{margin-top:14px;color:#5c42d4;font-size:13px}
 @media(max-width:1100px){.featuredShelf{grid-template-columns:repeat(2,minmax(0,1fr))}.featuredShelf .featuredCard{grid-column:1/-1}.featuredMiniCard,.featuredMiniCta{min-height:0}}
 @media(max-width:620px){.featuredShelf{grid-template-columns:1fr}.featuredShelf .featuredCard{grid-column:auto}.featuredMiniCard{display:grid;grid-template-columns:112px minmax(0,1fr)}.featuredMiniVisual{height:100%;min-height:150px}.featuredMiniInfo{padding:11px}.featuredMiniInfo p{-webkit-line-clamp:2}.featuredMiniCta{min-height:150px}}
+
+
+/* Three-column seller studio: readable controls and guidance at the approved reference scale. */
+.sellerHeroCopy>small{font-size:13px}
+.sellerHeroCopy h1{font-size:clamp(34px,3vw,44px)}
+.sellerHeroCopy p{font-size:17px;line-height:1.75}
+.sellerBack{font-size:14px;padding:10px 15px}
+.metrics span{font-size:14px;font-weight:750}
+.metrics strong{font-size:29px}
+.metrics small{font-size:12px}
+.sellerJoinColumn .formCard,.sellerMainColumn .formCard{padding:21px}
+.sellerMainColumn .formCard h3,.sellerJoinColumn .formCard h3{font-size:21px;line-height:1.4}
+.formCard>label,.priceFields label{font-size:15px;line-height:1.5}
+.formCard input:not([type="checkbox"]),.formCard textarea,.formCard select,.payoutForm input,.payoutForm select{font-size:15px;min-height:46px;padding:12px 14px}
+.formCard .check{font-size:14px;line-height:1.65}
+.formCard>button,.payoutForm>button{font-size:15px;min-height:48px}
+.formCard>p,.profile p{font-size:14px;line-height:1.8}
+.draft strong{font-size:15px}
+.draft small{font-size:13px;line-height:1.55}
+.draft>button,.upload{font-size:14px}
+.sellerBenefits strong{font-size:13px}
+.sellerBenefits small{font-size:11px;line-height:1.5}
+.sellerGuideCard{padding:17px}
+.sellerGuideCard h3{font-size:17px;line-height:1.4}
+.sellerGuideCard p{font-size:14px;line-height:1.8}
+.sellerGuideSteps li>b{width:28px;height:28px;font-size:13px}
+.sellerGuideSteps strong{font-size:14px;line-height:1.4}
+.sellerGuideSteps small{font-size:12px;line-height:1.5}
+.main .sectionHeading>a,.featuredBrowse{font-size:14px}
+.featuredDescription h3{font-size:23px}
+.featuredDescription>p:not(.featuredBadge){font-size:15px;line-height:1.75}
+@media(max-width:1100px){
+ .sellerWorkspaceGrid{grid-template-columns:minmax(220px,.82fr) minmax(0,1.5fr)}
+ .sellerGuideColumn{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+ .sellerWorkspaceGrid{grid-template-columns:1fr}
+ .sellerGuideColumn{grid-column:auto;grid-template-columns:1fr}
+ .sellerHeroCopy h1{font-size:32px}
+ .sellerHeroCopy p{font-size:15px}
+ .metrics strong{font-size:25px}
+}
