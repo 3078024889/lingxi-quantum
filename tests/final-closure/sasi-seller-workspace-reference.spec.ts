@@ -2,7 +2,7 @@ import {test,expect} from './export-test';
 
 test('seller navigation opens the reference seller workspace with real business metrics',async({page})=>{
  test.setTimeout(90000);
- await page.setViewportSize({width:1680,height:1000});
+ await page.setViewportSize({width:1680,height:960});
  await page.goto('/sasi?lang=zh');
  const sellerLink=page.locator('a[href="/sasi/seller"]:visible').first();
  await expect(sellerLink).toBeVisible({timeout:30000});
@@ -29,5 +29,5 @@ test('seller workspace collapses cleanly on mobile without overflowing its main 
  const layout=await grid.evaluate(el=>({columns:getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
  expect(layout.columns).toBe(1);
  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth+2);
- await page.screenshot({path:'artifacts/sasi-seller-workspace-mobile.png',fullPage:true});
+ await page.screenshot({path:'artifacts/sasi-seller-workspace-mobile.png',fullPage:false});
 });
