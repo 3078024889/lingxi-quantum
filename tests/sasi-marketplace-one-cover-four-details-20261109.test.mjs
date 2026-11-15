@@ -36,6 +36,11 @@ test("detail has one main cover, optional four detail images, real product text 
  const style=read("components/SasiMarketplaceProductDetail.module.css");
  assert.match(page,/photos\.find\(p=>p\.kind==="cover"\)/);
  assert.match(page,/photos\.filter\(p=>p\.kind==="detail"\)\.slice\(0,4\)/);
+ assert.match(page,/galleryPhotos/);
+ assert.match(page,/lightboxOpen/);
+ assert.match(page,/aria-modal="true"/);
+ assert.match(page,/ArrowLeft/);
+ assert.match(page,/ArrowRight/);
  assert.match(page,/descriptionOpen/);
  assert.match(page,/aria-expanded=\{descriptionOpen\}/);
  assert.match(page,/Show more/);
