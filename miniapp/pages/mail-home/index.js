@@ -17,7 +17,7 @@ Page({
  onShow(){share.enableShareMenu({includeTimeline:true})},
  open(event){const path=event.currentTarget.dataset.path;if(!allowed.has(path))return;wx.navigateTo({url:'/pages/web/index?path='+encodeURIComponent(path)})},
  start(){wx.navigateTo({url:'/pages/web/index?path=%2Ftools%2Ftemp-mail'})},
- recharge(){wx.navigateTo({url:'/pages/recharge/index'})},
+ recharge(){wx.navigateTo({url:'/pages/web/index?path=%2Fai-wallet'})},
  orders(){wx.navigateTo({url:'/pages/orders/index'})},
  mainApp(){wx.navigateToMiniProgram({appId:profile.mainAppId,path:'pages/web/index?path=%2F',envVersion:'release',fail:()=>wx.showModal({title:'暂未打开',content:'请重试，或点击官网入口继续使用。',showCancel:false})})},
  website(){wx.navigateTo({url:'/pages/web/index?path=%2F'})},
