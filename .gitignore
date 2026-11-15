@@ -91,3 +91,6 @@ _local/
 
 # Named local regression runs; reports remain in the ignored acceptance folder.
 /test-results-*/
+# Generated share artwork is created deterministically during miniapp builds
+/miniapp/assets/share-lingxifield-20261115.jpg
+/public/og-lingxifield-20261115.jpg
