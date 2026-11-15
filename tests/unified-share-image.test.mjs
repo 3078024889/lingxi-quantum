@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const projectRoot = fileURLToPath(new URL('../', import.meta.url));
 execFileSync(process.execPath, [fileURLToPath(new URL('../scripts/generate-social-assets.mjs', import.meta.url))], { cwd: projectRoot, stdio: 'inherit' });
-const read = (path) => readFileSync(new URL(\`../\${path}\`, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 const ogAsset = 'public/og-lingxifield-20261115.jpg';
 const miniAsset = 'miniapp/assets/share-lingxifield-20261115.jpg';
 

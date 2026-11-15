@@ -1,11 +1,21 @@
-﻿const SITE = 'https://lingxifield.cn'
-const SHARE_IMAGE = "/assets/share-lingxifield-20261115.jpg"
+const SITE = 'https://lingxifield.cn'
+const SHARE_IMAGE = '/assets/share-lingxifield-20261115.jpg'
 
 const PRIVATE_PREFIXES = [
   '/account',
   '/ai-wallet',
   '/api/wechat/mini/account-link/',
 ]
+const PUBLIC_EXACT = new Set([
+  '/',
+  '/siai',
+  '/sasi',
+  '/sasi/seller',
+  '/tools',
+  '/discoveries',
+  '/partners',
+  '/about',
+])
 
 function cleanPath(input) {
   if (typeof input !== 'string') return '/'
@@ -14,29 +24,25 @@ function cleanPath(input) {
   const cut = value.search(/[?#]/)
   const pathname = cut === -1 ? value : value.slice(0, cut)
   if (!pathname || pathname.includes('//') || pathname.includes('\\')) return '/'
-  return pathname === '/' || pathname === '/siai' || pathname === '/sasi' || pathname === '/tools' || /^\/tools\/[a-z0-9-]+$/.test(pathname) || ['/ai-knowledge', '/ai-learning', '/ai-research'].includes(pathname) ? pathname : '/'
+  return PUBLIC_EXACT.has(pathname) || /^\\/tools\\/[a-z0-9-]+$/.test(pathname) ? pathname : '/'
 }
 
 function publicWebPath(input) {
   const pathname = cleanPath(input)
   if (PRIVATE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix))) return '/'
-  if (pathname === '/sasi' && typeof input === 'string') {
-    const query = input.split('?')[1]?.split('#')[0] || ''
-    const match = query.match(/(?:^|&)mode=(chat|image|drama|website|book|learning|research)(?:&|$)/)
-    if (match) return '/sasi?mode=' + match[1]
-  }
   return pathname
 }
 
-function enableShareMenu() {
+function enableShareMenu(options = {}) {
   if (typeof wx.showShareMenu !== 'function') return
-  wx.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] })
+  const menus = options.includeTimeline ? ['shareAppMessage', 'shareTimeline'] : ['shareAppMessage']
+  wx.showShareMenu({ menus })
 }
 
 function copyWebLink(input, label = '链接已复制') {
   const pathname = publicWebPath(input)
   wx.setClipboardData({
-    data: `${SITE}${pathname}`,
+    data: SITE + pathname,
     success() { wx.showToast({ title: label, icon: 'success' }) },
     fail() { wx.showToast({ title: '复制失败，请重试', icon: 'none' }) },
   })
