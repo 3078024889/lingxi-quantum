@@ -84,11 +84,13 @@ const hash = execFileSync('sha256sum', [zipFile], { encoding: 'utf8' }).trim().s
 fs.writeFileSync(zipFile + '.sha256', hash + '  ' + path.basename(zipFile) + '\n');
 fs.writeFileSync(path.join(output, 'release-notes.txt'),
   '灵犀场小程序 5.7.0\n\n' +
-  '1. 首页、账户页和余额充值入口统一使用 pages/balance/index。\n' +
-  '2. 新版钱包所选金额准确传入原生虚拟支付确认页。\n' +
-  '3. 小程序自定义充值统一为 1–10,000 元整数元，与已发布的 lx_balance_custom 商品一致。\n' +
-  '4. 支付仍受服务端开关控制；未配置并验收微信虚拟支付前不会创建订单或扣款。\n' +
-  '5. 主小程序 AppID: ' + projectConfig.appid + '\n' +
+  '1. 移除旧双层 Portal，启动后直接进入灵犀场网站首页。\n' +
+  '2. 恢复好友与朋友圈原生分享；分享链接仅允许当前公开页面并清理私有参数。\n' +
+  '3. 首页、账户页和钱包页统一进入原生余额充值确认页，所选金额准确传递。\n' +
+  '4. 小程序自定义充值限制为 1–10,000 元整数元，与已发布的 lx_balance_custom 商品计费单位一致。\n' +
+  '5. 首页公告栏去除重复充值入口，保留主导航唯一入口。\n' +
+  '6. 支付仍受服务端开关控制；未配置并验收微信虚拟支付前不会创建订单或扣款。\n' +
+  '7. 主小程序 AppID: ' + projectConfig.appid + '\n' +
   'SOURCE_SHA=' + sourceSha + '\n' +
   'SHA256=' + hash + '\n');
 console.log(JSON.stringify({ version, sourceSha, appId: projectConfig.appid, zipFile, sha256: hash, entries: entries.length }, null, 2));
