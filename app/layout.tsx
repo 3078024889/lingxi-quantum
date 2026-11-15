@@ -22,7 +22,7 @@ import MainSiteReleaseNotice from "@/components/MainSiteReleaseNotice";
 import PublicUpgradeAnnouncementModal from "@/components/PublicUpgradeAnnouncementModal";
 import {PRIMARY_SITE} from "@/lib/seo/site-domains";
 import {PUBLIC_FEATURE_COPY} from "@/lib/public-feature-copy";
-import {SHARE_IMAGE_URL} from "@/lib/share-image";
+import {SHARE_IMAGE_URL,SHARE_IMAGES} from "@/lib/share-image";
 
 const SITE=PRIMARY_SITE;
 const SHARE_IMAGE=SHARE_IMAGE_URL;
@@ -50,7 +50,7 @@ export const metadata:Metadata={
   title:"灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能软件 · 免费在线实用工具",
   description:PUBLIC_FEATURE_COPY.zh.description,
   url:SITE,
-  images:[{url:SHARE_IMAGE,width:1200,height:630,alt:"灵犀场 LINGXIFIELD"}]
+  images:SHARE_IMAGES
  },
  twitter:{
   card:"summary_large_image",
