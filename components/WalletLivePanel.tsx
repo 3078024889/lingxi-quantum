@@ -42,6 +42,8 @@ export default function WalletLivePanel(){
     setTopupCurrency("CNY");
     const ready=await miniVirtualTopupsAvailable();
     if(alive)setMiniTopupsReady(ready);
+   }else if(new URLSearchParams(window.location.search).get("currency")==="USD"){
+    setTopupCurrency("USD");
    }
   });
   return()=>{alive=false};
