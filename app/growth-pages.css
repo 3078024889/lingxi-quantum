@@ -205,7 +205,7 @@ html[data-theme="dark"] .lx-growth-tool-actions a{border-color:rgba(151,180,255,
 
 /* 2026-11-13 transparent celestial system: homepage, SEO/GEO and directories share one content rail. */
 :root{--lx-growth-max:1500px;--lx-growth-reading:1240px}
-.lx11-page .lx11-wrap,.lx-growth-page .lx-growth-shell,.lx-growth-siai-page{width:min(1500px,100%);max-width:1500px;margin-inline:auto}
+.lx11-page .lx11-wrap,.lx-growth-page .lx-growth-shell,.lx-growth-siai-page{width:min(1600px,calc(100% - 32px));max-width:1600px;margin-inline:auto;box-sizing:border-box}
 .lx11-home-hero{background:radial-gradient(ellipse 48% 80% at 100% 0%,rgba(118,145,255,.10),transparent 72%),radial-gradient(ellipse 42% 70% at 0% 100%,rgba(181,132,255,.08),transparent 72%)!important;border-color:color-mix(in srgb,var(--lx-ink) 14%,transparent)!important;box-shadow:none!important}
 .lx11-home-hero a[data-testid="home-global-siai-entry"]{background:transparent!important;border-color:color-mix(in srgb,var(--lx-ink) 16%,transparent)!important;box-shadow:none!important}
 .lx11-home-hero details{background:transparent!important;box-shadow:none!important}
@@ -271,5 +271,27 @@ body:not(:has(.lx-home-reference)) .lx-seo-answers{width:min(var(--lx-home-rail-
 
 
 /* 20261115: align the SIAI directory rail with the homepage's wider content grid. */
-.lx-growth-siai-page{width:min(1600px,calc(100% - 24px));max-width:1600px;margin-inline:auto;min-width:0}
-.lx-growth-siai-page .siai-home{width:100%;max-width:100%;margin-inline:0}
+.lx-growth-siai-page{width:min(1600px,calc(100% - 32px));max-width:1600px;margin-inline:auto;min-width:0;box-sizing:border-box}
+.lx-growth-siai-page .siai-home{width:100%;max-width:none;margin:0;padding-left:0!important;padding-right:0!important;background:transparent!important}
+
+ 
+/* 20261115: white glass sidebar and shared page rails. */
+:root{--lx-home-gutter:16px;--lx-home-rail-max:1600px}
+.lx11-page,.lx-growth-page,.lx-growth-siai-page{background:transparent!important}
+.lx-growth-siai-page .siai-home{padding-top:18px!important;padding-bottom:48px!important}
+html[data-theme="light"] .lx11-sidebar{
+ background:rgba(255,255,255,.96)!important;
+ border-right:1px solid #e6ebf2!important;
+ box-shadow:12px 0 32px rgba(38,54,83,.045)!important;
+ backdrop-filter:blur(18px);
+ -webkit-backdrop-filter:blur(18px)
+}
+html[data-theme="light"] .lx11-sidebar .lx11-nav-scroll,
+html[data-theme="light"] .lx11-sidebar .lx11-sidebar-bottom{background:transparent!important}
+html[data-theme="light"] .lx11-sidebar .lx11-link.is-active{
+ background:linear-gradient(105deg,#f0f5ff,#fff)!important;
+ border-color:#e1e9f3!important;
+ box-shadow:inset 3px 0 #80a8e6!important;
+ color:#203451!important
+}
+html[data-theme="light"] .lx11-sidebar .lx11-group-title{color:#78869a!important}
