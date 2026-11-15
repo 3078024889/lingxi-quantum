@@ -12,7 +12,7 @@ fs.mkdirSync(base,{recursive:true});fs.cpSync(source,out,{recursive:true,filter:
  if(rel==='pages'||rel==='utils'||rel==='assets')return true;
  if(rel.startsWith('pages/'))return tempPages.has(rel.split('/')[1]);
  if(rel.startsWith('utils/'))return tempUtils.has(rel.split('/')[1]);
- if(rel.startsWith('assets/'))return rel==='assets/share-lingxifield-20260928.png';
+ if(rel.startsWith('assets/'))return rel==='assets/share-lingxifield-20261115.jpg';
  return ['app.js','app.json','app.wxss','share.wxss','project.config.json','sitemap.json'].includes(rel);
 }});
 const appId=target==='main'?'wxbf4ae90406e7e26b':'wx3330b29f4613a08e';
