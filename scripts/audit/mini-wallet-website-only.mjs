@@ -12,9 +12,9 @@ const packager=read("scripts/package-miniapp-5-7.cjs");
 
 assert.ok(app.pages.includes("pages/balance/index"),"Keep the old balance route as a compatibility deep link");
 assert.ok(!app.pages.includes("pages/recharge/index"),"Do not register the retired recharge page");
-assert.match(balance,/pages\\/web\\/index\\?path=/);
+assert.match(balance,/pages\/web\/index\?path=/);
 assert.match(balance,/%2Fai-wallet/);
-assert.doesNotMatch(balance,/requestVirtualPayment|balance-pay\\/create|balance-pay\\/availability/);
+assert.doesNotMatch(balance,/requestVirtualPayment|balance-pay\/create|balance-pay\/availability/);
 
 for(const path of [
  "miniapp/pages/recharge/index.js",
@@ -28,12 +28,12 @@ for(const path of [
  "app/api/wechat/mini/balance-pay/status/route.ts"
 ]) assert.equal(exists(path),false,"Retired native top-up implementation remains: "+path);
 
-assert.doesNotMatch(api,/balance-pay\\/availability/,"Mini login must not depend on the deleted top-up endpoint");
+assert.doesNotMatch(api,/balance-pay\/availability/,"Mini login must not depend on the deleted top-up endpoint");
 assert.doesNotMatch(wallet,/miniVirtualTopupsAvailable|miniTopupsReady|openMiniRecharge|requestVirtualPayment/);
-assert.match(wallet,/\\/checkout\\?productId=sasi-balance-/);
-assert.match(wallet,/\\/checkout-usd\\?productId=sasi-usd-balance-/);
-assert.doesNotMatch(builder,/pages\\/recharge\\/index|existing main-program WeChat recharge/);
-assert.match(builder,/pages\\/web\\/index\\?path=%2Fai-wallet/);
+assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
+assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);
+assert.doesNotMatch(builder,/pages\/recharge\/index|existing main-program WeChat recharge/);
+assert.match(builder,/pages\/web\/index\?path=%2Fai-wallet/);
 assert.match(packager,/const version = '5.7.3'/);
 assert.match(packager,/MINI_BALANCE_ROUTE_MUST_REDIRECT_TO_WEBSITE_WALLET/);
 
