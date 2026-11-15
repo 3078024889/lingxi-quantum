@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./global-compact-white-20261115.css";
 import "./unified-shell.css";
 import "./siai-home.css";
 import "./siai-detail.css";
