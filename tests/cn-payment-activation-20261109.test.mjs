@@ -44,5 +44,5 @@ test("Payment scripts are included in exact-SHA production archive and code revi
  assert.match(ci,/cp scripts\/ops\/cn-payment-signed-live-probe-20261109\.mjs .next\/standalone\/cn-payment-signed-live-probe\.mjs/);
  assert.match(ci,/cp scripts\/ops\/cn-payment-activate-20261109\.sh .next\/standalone\/cn-payment-activate\.sh/);
  assert.match(ci,/node --test tests\/cn-payment-activation-20261109\.test\.mjs/);
- assert.match(ci,/cn-payment-activate\.sh' cn-20261108-archive-manifest/);
+ assert.match(ci,/grep -Fxq '\.\/cn-payment-activate\.sh' cn-20261115-archive-manifest\.txt/);
 });
