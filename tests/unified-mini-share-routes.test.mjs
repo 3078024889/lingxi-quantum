@@ -40,7 +40,7 @@ test('mini share rejects outside hosts, secret/private pages and unsafe input',(
 test('mini share page and share menu show the one canonical local cover on forwards',()=>{
  const js=read('miniapp/pages/share/index.js'),page=read('miniapp/pages/share/index.wxml');
  const share=read('miniapp/utils/share.js'),web=read('miniapp/pages/web/index.js');
- assert.match(share,/const SHARE_IMAGE = "\/assets\/share-lingxifield-20261105\.jpg"/);
+ assert.match(share,/const SHARE_IMAGE = "\/assets\/share-lingxifield-20261115\.jpg"/);
  assert.match(js,/shareImage:SHARE_IMAGE/);
  assert.match(page,/src="{{shareImage}}"/);
  assert.match(js,/onShareAppMessage\(\).*imageUrl:SHARE_IMAGE/);
