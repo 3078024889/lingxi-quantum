@@ -5,7 +5,7 @@ name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEP
 # This workflow publishes artifacts only; it never changes ECS, DNS, Nginx or WeChat.
 on:
   push:
-    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109]
+    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109, release/cn3194-full-cleanup-20261113]
     paths:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
@@ -40,6 +40,25 @@ on:
       - 'components/SasiSeriesStudio.tsx'
       - 'components/SasiVariantWorkbench.tsx'
       - '.github/workflows/cn3194-upgrade-20261109.yml'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'app/home-afternoon-20261114.css'
+      - 'app/growth-pages.css'
+      - 'components/HomeGlobalGrowth.tsx'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'app/share/20260928/page.tsx'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/lingxifield-logo.png'
+      - 'public/og-lingxifield-*'
+      - 'miniapp/assets/**'
+      - 'miniapp/utils/share.js'
       - 'app/home-afternoon-20261114.css'
       - 'app/growth-pages.css'
       - 'app/tools/tools-hub-compact.css'
@@ -87,10 +106,13 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      - name: Install deterministic CJK font for social cards
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk >/dev/null && fc-cache -f >/dev/null
       - name: Frozen dependencies and offline source contracts
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
+          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
           node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
           node --check miniapp/utils/share.js
           node --check miniapp/pages/share/index.js

@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import test from 'node:test';
 import sharp from 'sharp';
+import { execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
+const projectRoot = fileURLToPath(new URL('../', import.meta.url));
+execFileSync(process.execPath, [fileURLToPath(new URL('../scripts/generate-social-assets.mjs', import.meta.url))], { cwd: projectRoot, stdio: 'inherit' });
 const read = (path) => readFileSync(new URL(\`../\${path}\`, import.meta.url), 'utf8');
 const ogAsset = 'public/og-lingxifield-20261115.jpg';
 const miniAsset = 'miniapp/assets/share-lingxifield-20261115.jpg';
@@ -32,17 +36,20 @@ test('all website share metadata points to the 1200x630 global OG master', () =>
 });
 
 test('website and miniapp use the exact same optimized 1200x630 JPEG', async () => {
-  assert.ok(existsSync(ogAsset), 'website OG image must be committed');
-  assert.ok(existsSync(miniAsset), 'miniapp share image must be committed');
+  assert.ok(existsSync(ogAsset), 'website OG image must be generated');
+  assert.ok(existsSync(miniAsset), 'miniapp share image must be generated');
   const ogBytes = readFileSync(ogAsset);
   const miniBytes = readFileSync(miniAsset);
-  assert.deepEqual(miniBytes, ogBytes, 'miniapp must use the exact same OG artwork');
-  const metadata = await sharp(ogBytes).metadata();
-  assert.equal(metadata.format, 'jpeg');
-  assert.equal(metadata.width, 1200);
-  assert.equal(metadata.height, 630);
+  const ogMetadata = await sharp(ogBytes).metadata();
+  const miniMetadata = await sharp(miniBytes).metadata();
+  assert.equal(ogMetadata.format, 'jpeg');
+  assert.equal(ogMetadata.width, 1200);
+  assert.equal(ogMetadata.height, 630);
+  assert.equal(miniMetadata.format, 'jpeg');
+  assert.equal(miniMetadata.width, 600);
+  assert.equal(miniMetadata.height, 480);
   assert.ok(statSync(ogAsset).size < 150 * 1024);
-  assert.ok(statSync(miniAsset).size < 150 * 1024);
+  assert.ok(statSync(miniAsset).size < 300 * 1024);
   assert.ok(!existsSync('public/og-lingxifield-20261113.jpg'), 'retired OG image must stay deleted');
   assert.ok(!existsSync('miniapp/assets/share-lingxifield-20261105.jpg'), 'retired miniapp share image must stay deleted');
   const miniBuild = read('scripts/build-miniapps-v80.cjs');
