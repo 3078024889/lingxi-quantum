@@ -80,6 +80,12 @@
       <button bindtap="openOrders">查看已有订单</button>
     </view>
 
+    <view class="mini-topup-card mini-usd-guide">
+      <view class="mini-topup-section-title">美元充值请前往灵犀场官网</view>
+      <view class="mini-topup-section-note">小程序仅支持人民币充值。复制官网地址后，请在微信外的手机浏览器打开，登录后进入余额与充值。</view>
+      <button class="mini-topup-light-button mini-usd-guide-action" bindtap="copyUsdTopupLink">复制官网充值地址</button>
+    </view>
+
     <view class="mini-topup-history">
       <view class="mini-topup-section-title">最近充值与到账进度</view>
       <view wx:for="{{topups}}" wx:key="id" class="mini-topup-history-row">
