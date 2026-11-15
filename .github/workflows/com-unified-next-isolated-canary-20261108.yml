@@ -391,7 +391,7 @@ jobs:
             curl -4fsS --retry 3 --max-time 45 "$url$asset" -o /dev/null
           done
           echo 'COM_HOME_WHITE_GLASS_ARTWORK_PASS'
-          echo 'COM_AFTERNOON_THREE_PAGES_BUILD_ID_PASS' 
+          echo 'COM_AFTERNOON_THREE_PAGES_BUILD_ID_PASS'
           echo 'COM_NEXT_ISOLATED_CANARY_SASI_TOOLPASS_STATIC_R2_PASS_NO_PRODUCTION_ROUTE'
 
 # Approved three-page scene and layout candidate: 2026-11-14.
