@@ -1,8 +1,8 @@
 # Unified toolpass purchase CTA contract audited at exact source SHA.
 name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEPLOY)
-# A 450 MB candidate should only be built after the independent source/build
-# and browser gates succeed on the exact SHA. Avoid per-commit quota burn.
-# The operator must explicitly dispatch this workflow for the reviewed branch.
+# The exact reviewed CN release branch builds a standalone package and a separate
+# WeChat miniapp ZIP only after source, share-image and responsive browser gates pass.
+# This workflow publishes artifacts only; it never changes ECS, DNS, Nginx or WeChat.
 on:
   push:
     branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109]
@@ -191,7 +191,7 @@ jobs:
           MINIAPP_DIR="$(node -e 'const fs=require("node:fs");const r=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));process.stdout.write(r.projectPath)' "$RUNNER_TEMP/miniapp-main-receipt.json")"
           test -s "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
           cmp -s public/og-lingxifield-20261115.jpg "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
-          MINIAPP_ZIP="lingxifield-miniapp-main-\${GITHUB_SHA:0:12}.zip"
+          MINIAPP_ZIP="lingxifield-miniapp-main-${GITHUB_SHA:0:12}.zip"
           (cd "$MINIAPP_DIR" && zip -qr "$GITHUB_WORKSPACE/$MINIAPP_ZIP" .)
           test -s "$GITHUB_WORKSPACE/$MINIAPP_ZIP"
           echo "CN_MINIAPP_PACKAGE=$MINIAPP_ZIP"
@@ -201,21 +201,25 @@ jobs:
           set -Eeuo pipefail
           printf '%s\n' "${GITHUB_SHA}" > .next/standalone/RELEASE_SOURCE_SHA
           tar -C .next/standalone -czf cn-20261115-unified-standalone.tar.gz .
-          sha256sum cn-20261108-unified-standalone.tar.gz > cn-20261108-unified-standalone.sha256
-          tar -tzf cn-20261108-unified-standalone.tar.gz > cn-20261108-archive-manifest.txt
-          grep -Fxq './server.js' cn-20261108-archive-manifest.txt
-          grep -Fxq './cn-payment-signed-live-probe.mjs' cn-20261108-archive-manifest.txt
-          grep -Fxq './cn-payment-activate.sh' cn-20261108-archive-manifest.txt
-          test "$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)" -lt 1300000000
-          echo "CN_RELEASE_ARCHIVE_BYTES=$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)"
+          sha256sum cn-20261115-unified-standalone.tar.gz > cn-20261115-unified-standalone.sha256
+          tar -tzf cn-20261115-unified-standalone.tar.gz > cn-20261115-archive-manifest.txt
+          grep -Fxq './server.js' cn-20261115-archive-manifest.txt
+          grep -Fxq './cn-payment-signed-live-probe.mjs' cn-20261115-archive-manifest.txt
+          grep -Fxq './cn-payment-activate.sh' cn-20261115-archive-manifest.txt
+          grep -Fxq './public/og-lingxifield-20261115.jpg' cn-20261115-archive-manifest.txt
+          grep -Fxq './public/images/home-hero-signature-20261115.webp' cn-20261115-archive-manifest.txt
+          grep -Fxq './public/images/home-distribution-globe-20261115.webp' cn-20261115-archive-manifest.txt
+          test "$(stat -c '%s' cn-20261115-unified-standalone.tar.gz)" -lt 1300000000
+          echo "CN_RELEASE_ARCHIVE_BYTES=$(stat -c '%s' cn-20261115-unified-standalone.tar.gz)"
           echo "CN_RELEASE_SOURCE_SHA=${GITHUB_SHA}"
       - name: Upload package for immutable prerelease promotion
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cn-unified-${{ github.sha }}
           path: |
-            cn-20261108-unified-standalone.tar.gz
-            cn-20261108-unified-standalone.sha256
+            cn-20261115-unified-standalone.tar.gz
+            cn-20261115-unified-standalone.sha256
+            lingxifield-miniapp-main-*.zip
           retention-days: 14
           if-no-files-found: error
   publish:
@@ -233,17 +237,18 @@ jobs:
           mkdir -p "$RUNNER_TEMP/lingxifield-verified"
           gh run download "$GITHUB_RUN_ID" --repo "$GH_REPO" --name "cn-unified-${GITHUB_SHA}" --dir "$RUNNER_TEMP/lingxifield-verified"
           cd "$RUNNER_TEMP/lingxifield-verified"
-          sha256sum -c cn-20261108-unified-standalone.sha256
-          tar -tzf cn-20261108-unified-standalone.tar.gz > manifest.txt
+          sha256sum -c cn-20261115-unified-standalone.sha256
+          tar -tzf cn-20261115-unified-standalone.tar.gz > manifest.txt
           grep -Fxq './server.js' manifest.txt
           grep -Fxq './RELEASE_SOURCE_SHA' manifest.txt
+          grep -Fxq './public/og-lingxifield-20261115.jpg' manifest.txt
           MINIAPP_ZIP="$(find . -maxdepth 1 -type f -name 'lingxifield-miniapp-main-*.zip' -print -quit)"
           test -n "$MINIAPP_ZIP"
           unzip -l "$MINIAPP_ZIP" | grep -Fq 'assets/share-lingxifield-20261115.jpg'
           MINIAPP_OG_SHA="$(unzip -p "$MINIAPP_ZIP" assets/share-lingxifield-20261115.jpg | sha256sum | awk '{print $1}')"
           SITE_OG_SHA="$(tar -xOf cn-20261115-unified-standalone.tar.gz ./public/og-lingxifield-20261115.jpg | sha256sum | awk '{print $1}')"
           test "$MINIAPP_OG_SHA" = "$SITE_OG_SHA"
-          test "$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)" -lt 1300000000
+          test "$(stat -c '%s' cn-20261115-unified-standalone.tar.gz)" -lt 1300000000
           echo CN_PUBLISH_IMMUTABLE_VERIFIED
       - name: Publish GitHub prerelease (does not touch ECS, DNS or Nginx)
         shell: bash
@@ -254,7 +259,7 @@ jobs:
             echo "::error::EXACT_RELEASE_TAG_ALREADY_EXISTS"; exit 1
           fi
           cd "$RUNNER_TEMP/lingxifield-verified"
-          gh release create "$tag" cn-20261108-unified-standalone.tar.gz cn-20261108-unified-standalone.sha256 \
+          gh release create "$tag" cn-20261115-unified-standalone.tar.gz cn-20261115-unified-standalone.sha256 lingxifield-miniapp-main-*.zip \
             --repo "$GH_REPO" --target "$GITHUB_SHA" --prerelease \
             --title "LINGXIFIELD CN website + miniapp OG exact source ${GITHUB_SHA:0:12} - STAGING ONLY" \
             --notes "Exact-source build, responsive browser tests, public OG image checks and miniapp package verification passed. NOT deployed. CN production upstream remains 127.0.0.1:3194; isolated candidate is 3196; rollback baseline is 3193. The standalone archive is for ENS staging only. The miniapp ZIP is a separate WeChat DevTools upload package and has not been submitted or published. Payment credentials, production database and DNS are unchanged."
