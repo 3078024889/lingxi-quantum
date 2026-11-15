@@ -1,7 +1,7 @@
 name: Miniapp 5.7 native wallet and import package (NO WECHAT UPLOAD)
 on:
   push:
-    branches: [release/sasi-marketplace-20261114-cn]
+    branches: [fix/cn-miniapp-wallet-entry-20261115, release/sasi-marketplace-20261114-cn]
     paths:
       - 'miniapp/**'
       - 'components/WalletLivePanel.tsx'
