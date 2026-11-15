@@ -1,4 +1,4 @@
-name: Miniapp 5.7.2 native wallet and import package (NO WECHAT UPLOAD)
+name: Miniapp 5.7.3 website wallet and import package (NO WECHAT UPLOAD)
 on:
   push:
     branches: [fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
@@ -17,9 +17,12 @@ on:
       - 'tests/cn-payment-activation-20261109.test.mjs'
       - 'lib/mini/payment-client.ts'
       - 'lib/mini/virtual-goods.ts'
-      - 'app/api/wechat/mini/balance-pay/**'
-      - 'scripts/audit/mini-topup-client.mjs'
       - 'scripts/audit/mini-virtual-payment.mjs'
+      - 'scripts/audit/mini-wallet-website-only.mjs'
+      - 'scripts/audit/mini-balance-checkout.mjs'
+      - 'scripts/audit/mini-web-account-sync.mjs'
+      - 'scripts/audit/mini-retired-purchases.mjs'
+      - 'scripts/audit/mini-api-recovery.mjs'
       - 'scripts/audit/mini-recharge-navigation.mjs'
       - 'scripts/audit/mini-unified-surface.mjs'
       - 'scripts/audit-mini-program.mjs'
@@ -60,28 +63,32 @@ jobs:
           node scripts/generate-social-assets.mjs
           node scripts/audit/mini-unified-surface.mjs
           node --test tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/mini-recharge-single-entry.test.mjs tests/usd-wallet-topup-readiness.test.mjs
-          node scripts/audit/mini-topup-client.mjs
           node scripts/audit/mini-virtual-payment.mjs
           node scripts/audit/mini-recharge-navigation.mjs
+          node scripts/audit/mini-wallet-website-only.mjs
+          node scripts/audit/mini-balance-checkout.mjs
+          node scripts/audit/mini-web-account-sync.mjs
+          node scripts/audit/mini-retired-purchases.mjs
+          node scripts/audit/mini-api-recovery.mjs
           node scripts/audit-mini-program.mjs
           node scripts/test-mini-sharing-v78.cjs
           node scripts/test-mini-profiles-v80.cjs
           pnpm exec tsc --noEmit
-          echo MINIAPP_5_7_SOURCE_AND_TYPECHECK_PASS
+          echo MINIAPP_5_7_3_SOURCE_AND_TYPECHECK_PASS
       - name: Build isolated main mini-program project
         run: |
           set -Eeuo pipefail
           node scripts/build-miniapps-v80.cjs main
           node scripts/package-miniapp-5-7.cjs
-          echo MINIAPP_5_7_IMPORT_PACKAGE_PASS_NO_UPLOAD
+          echo MINIAPP_5_7_3_IMPORT_PACKAGE_PASS_NO_UPLOAD
       - name: Upload importable WeChat Developer Tools package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: lingxifield-miniapp-5.7.2-${{ github.sha }}
+          name: lingxifield-miniapp-5.7.3-${{ github.sha }}
           path: |
-            dist/lingxifield-miniapp-5.7.2.zip
+            dist/lingxifield-miniapp-5.7.3.zip
             dist/lingxifield-miniapp-5.7.2.zip.sha256
-            dist/miniapp-5.7.2/release-notes.txt
+            dist/miniapp-5.7.3/release-notes.txt
           retention-days: 14
           if-no-files-found: error
       - name: Confirm no external release actions
