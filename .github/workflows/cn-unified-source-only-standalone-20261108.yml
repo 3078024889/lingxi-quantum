@@ -211,7 +211,11 @@ jobs:
           for path in / /tools /siai /sasi /sasi/marketplace /about /account/software /announcements /tools/pass /ai-wallet; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "PUBLIC_LOCAL_ROUTE:$path:$code"
-            [ "$code" = 200 ] || exit 1
+            if [ "$path" = "/sasi/marketplace" ]; then
+              [ "$code" = 308 ] || exit 1
+            else
+              [ "$code" = 200 ] || exit 1
+            fi
           done
           for path in /api/sasi/account /api/tools/jobs; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
