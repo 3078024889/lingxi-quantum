@@ -29,12 +29,19 @@ test("USD wallet top-up readiness includes PayPal Live and the wallet-specific r
 test("mini-program native virtual top-up remains CNY-only and does not expose USD checkout",()=>{
  const wallet=read("components/WalletLivePanel.tsx");
  const nativePage=read("miniapp/pages/balance/index.wxml");
+ const nativeScript=read("miniapp/pages/balance/index.js");
  const availability=read("app/api/wechat/mini/balance-pay/availability/route.ts");
  assert.ok(wallet.includes("if(mini){"));
  assert.ok(wallet.includes('setTopupCurrency("CNY")'));
  assert.ok(wallet.includes("miniContext===false&&<button"));
  assert.ok(wallet.includes("美元 USD"));
  assert.ok(nativePage.includes("人民币 CNY"));
+ assert.ok(nativePage.includes("美元充值请前往灵犀场官网"));
+ assert.ok(nativePage.includes('bindtap="copyUsdTopupLink"'));
+ assert.ok(nativeScript.includes("copyUsdTopupLink()"));
+ assert.ok(nativeScript.includes("https://lingxifield.com/ai-wallet?currency=USD"));
+ assert.ok(nativeScript.includes("wx.setClipboardData"));
+ assert.ok(wallet.includes('params.get("currency")==="USD"'));
  assert.ok(!/PayPal|USD/.test(nativePage));
  assert.ok(availability.includes('currency: "CNY"'));
 });
