@@ -7,9 +7,9 @@ vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/mini/payment-client.t
  exports,window:{location:{search:''},wx:{miniProgram:{getEnv:cb=>cb({miniprogram:native}),navigateTo:options=>{paths.push(options.url);fail?options.fail():options.success();}}}},navigator:{userAgent:'MicroMessenger iPhone'},URLSearchParams,setTimeout,clearTimeout,
 });
 assert.equal(await exports.detectMiniPaymentContext(),true,'iOS async bridge environment without query marker');
-assert.equal(await exports.openMiniRecharge('88'),true);assert.equal(paths[0],'/pages/balance/index?amount=88','Selected amount must be passed to native checkout');
-assert.equal(await exports.openMiniRecharge('12.34'),false,'Unsupported fractional amount must not silently open the default amount');assert.equal(paths.length,1);
-assert.equal(await exports.openMiniRecharge(),true);assert.equal(paths[1],'/pages/balance/index');
-fail=true;assert.equal(await exports.openMiniRecharge('10'),false,'Missing old-version page is visible to caller');
+assert.equal(await exports.openMiniWallet(),true);assert.equal(paths[0],'/pages/web/index?path=%2Fai-wallet');
+assert.equal(fail,false);
+fail=true;assert.equal(await exports.openMiniWallet(),false,'Missing website-wallet route is visible to caller');
 native=false;assert.equal(await exports.detectMiniPaymentContext(),false,'Ordinary WeChat web checkout remains separate');
-console.log('PASS: iOS asynchronous mini environment, native recharge destination, old-version navigation error and ordinary web detection.');
+assert.equal(typeof exports.miniVirtualTopupsAvailable,'undefined','No mini-program wallet top-up availability API remains');
+console.log('PASS: mini context detection and all wallet navigation opens the official website wallet');
