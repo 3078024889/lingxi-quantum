@@ -49,7 +49,7 @@ assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path=%2F');
 mail.copyWebsite();
 assert.equal(mailWx.calls.clipboard.pop().data,profile.website);
 mail.recharge();
-assert.equal(mailWx.calls.to.pop().url,'/pages/recharge/index');
+assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path=%2Fai-wallet');
 mail.orders();
 assert.equal(mailWx.calls.to.pop().url,'/pages/orders/index');
 mail.mainApp();
@@ -90,8 +90,10 @@ if(process.argv.includes('--check-builds')){
    assert(fs.readFileSync(path.join(root,'pages/orders/index.js'),'utf8').includes('/account/orders'));
    assert(!fs.existsSync(path.join(root,'utils/api.js')));
    assert(!fs.readFileSync(path.join(root,'app.js'),'utf8').includes('utils/api'));
-   assert(fs.readFileSync(path.join(root,'pages/balance/index.js'),'utf8').includes('redirectTo'));
-   assert(!fs.readFileSync(path.join(root,'pages/balance/index.js'),'utf8').includes('request('));
+   const balanceRoute=fs.readFileSync(path.join(root,'pages/balance/index.js'),'utf8');
+   assert(balanceRoute.includes('/pages/web/index?path=%2Fai-wallet'));
+   assert(!balanceRoute.includes('request('));
+   assert(!fs.existsSync(path.join(root,'pages/recharge')),'Secondary package must not recreate native recharge pages');
   }
  }
 }
