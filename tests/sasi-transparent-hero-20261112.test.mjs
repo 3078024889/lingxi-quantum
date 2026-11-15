@@ -7,6 +7,14 @@ import path from 'node:path';
 test('SASI scene is a complete opaque banner with real localized controls',async()=>{
  const component=readFileSync('components/SasiOpenMarketplace.tsx','utf8');
  const sharp=(await import('sharp')).default;
+ const css=readFileSync('components/SasiOpenMarketplace.module.css','utf8');
+ const heroRules=[...css.matchAll(/\.main \.hero\{([^}]*)\}/g)].map(m=>m[1]);
+ const heroRule=heroRules.find(rule=>rule.includes('aspect-ratio:'));
+ assert.ok(heroRule&&/aspect-ratio:3\s*\/\s*1/.test(heroRule),'SASI hero must preserve the approved 3:1 banner ratio');
+ const artRules=[...css.matchAll(/\.main \.heroArtwork\{([^}]*)\}/g)].map(m=>m[1]);
+ const artRule=artRules.find(rule=>rule.includes('object-fit:'));
+ assert.ok(artRule&&/object-fit:contain/.test(artRule),'SASI hero artwork must not be stretched or flattened');
+ assert.doesNotMatch(artRule,/object-fit:fill/);
  const asset=readFileSync('public/images/global-scene-20261114.webp');
  const metadata=await sharp(asset).metadata();
  assert.equal(metadata.format,'webp');
