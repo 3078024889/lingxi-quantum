@@ -1,6 +1,6 @@
 const fs=require('node:fs'),path=require('node:path'),{execFileSync}=require('node:child_process');
 const target=process.argv[2];if(!['main','temp-mail'].includes(target))throw Error('Expected main or temp-mail');
-const root=process.cwd(),source=path.resolve(root,'miniapp'),base=path.resolve(root,'_local/handoff/mini-build-v80');
+const root=process.cwd();execFileSync(process.execPath,[path.join(root,'scripts/generate-social-assets.mjs')],{encoding:'utf8',windowsHide:true,stdio:'inherit'});const source=path.resolve(root,'miniapp'),base=path.resolve(root,'_local/handoff/mini-build-v80');
 const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',windowsHide:true}).trim();
 const out=path.join(base,target+'-'+sha.slice(0,8)+'-'+Date.now());
 if(!out.startsWith(base+path.sep)||fs.existsSync(out))throw Error('Unexpected output path');

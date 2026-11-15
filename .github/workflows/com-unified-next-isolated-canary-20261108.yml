@@ -138,6 +138,10 @@ on:
       - 'app/home-afternoon-20261114.css'
       - 'app/growth-pages.css'
       - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/lingxifield-logo.png'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
       - 'public/images/home-distribution-globe-20261115.webp'
       - 'tests/final-closure/home-white-glass-20261115.spec.ts'
       - 'app/share/20260928/page.tsx'
@@ -181,6 +185,8 @@ jobs:
         with: {version: 11.28.0,run_install: false}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install deterministic CJK font for social cards
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk >/dev/null && fc-cache -f >/dev/null
       - name: Check token and public authentication input without printing values
         run: |
           test -n "$CLOUDFLARE_API_TOKEN"
@@ -222,6 +228,7 @@ jobs:
           node --test tests/sasi-com-closure-20261108.test.mjs tests/com-next-release-safety-20261108.test.mjs
           node --test tests/com-wallet-static-session-contract-20261108.test.mjs
           node --test tests/com-payment-edge-merchant-readiness-20261108.test.mjs
+          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
           pnpm exec tsc --noEmit
       - name: Diagnose anonymous database catalog from GitHub runner without payment changes
         run: |
