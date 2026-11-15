@@ -1,4 +1,4 @@
-name: Miniapp 5.7.1 native wallet and import package (NO WECHAT UPLOAD)
+name: Miniapp 5.7.2 native wallet and import package (NO WECHAT UPLOAD)
 on:
   push:
     branches: [fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
@@ -77,11 +77,11 @@ jobs:
       - name: Upload importable WeChat Developer Tools package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: lingxifield-miniapp-5.7.1-${{ github.sha }}
+          name: lingxifield-miniapp-5.7.2-${{ github.sha }}
           path: |
-            dist/lingxifield-miniapp-5.7.1.zip
-            dist/lingxifield-miniapp-5.7.1.zip.sha256
-            dist/miniapp-5.7.1/release-notes.txt
+            dist/lingxifield-miniapp-5.7.2.zip
+            dist/lingxifield-miniapp-5.7.2.zip.sha256
+            dist/miniapp-5.7.2/release-notes.txt
           retention-days: 14
           if-no-files-found: error
       - name: Confirm no external release actions
