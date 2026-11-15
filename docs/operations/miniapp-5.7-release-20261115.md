@@ -1,3 +1,5 @@
+> **已被 5.7.3 取代（2026-11-15）**：本文件仅保留 5.7.1 历史配置记录。不得再按本文启用 `WECHAT_MINI_VPAY_TOPUPS_ENABLED`，不得恢复原生余额充值页或 `balance-pay/create`。当前人民币与美元钱包充值统一跳转官网 `/ai-wallet`；原生微信虚拟支付只保留独立工具商品购买。详见 `docs/operations/miniapp-5.7.3-wallet-website-only-20261115.md`。
+
 # 灵犀场小程序 5.7.1 发布与微信虚拟支付配置
 
 ## 5.7.1 本轮修复
