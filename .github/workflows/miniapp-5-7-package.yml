@@ -1,7 +1,7 @@
 name: Miniapp 5.7.3 website wallet and import package (NO WECHAT UPLOAD)
 on:
   push:
-    branches: [fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
+    branches: [fix/miniapp-wallet-website-only-20261115, fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
     paths:
       - 'miniapp/**'
       - 'components/WalletLivePanel.tsx'
