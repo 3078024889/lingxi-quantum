@@ -3,7 +3,7 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 
 const root = process.cwd();
-const version = '5.7.0';
+const version = '5.7.1';
 const receiptFile = path.join(root, '_local/handoff/mini-build-v80/main-latest.json');
 if (!fs.existsSync(receiptFile)) throw new Error('MAIN_MINI_BUILD_RECEIPT_MISSING');
 const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
@@ -83,14 +83,14 @@ if (entries.some(name => name.includes('project.private.config.json') || name.st
 const hash = execFileSync('sha256sum', [zipFile], { encoding: 'utf8' }).trim().split(/\s+/)[0];
 fs.writeFileSync(zipFile + '.sha256', hash + '  ' + path.basename(zipFile) + '\n');
 fs.writeFileSync(path.join(output, 'release-notes.txt'),
-  '灵犀场小程序 5.7.0\n\n' +
+  '灵犀场小程序 5.7.1\n\n' +
   '1. 移除旧双层 Portal，启动后直接进入灵犀场网站首页。\n' +
   '2. 恢复好友与朋友圈原生分享；分享链接仅允许当前公开页面并清理私有参数。\n' +
   '3. 首页、账户页和钱包页统一进入原生余额充值确认页，所选金额准确传递。\n' +
   '4. 小程序自定义充值限制为 1–10,000 元整数元，与已发布的 lx_balance_custom 商品计费单位一致。\n' +
   '5. 首页公告栏去除重复充值入口，保留主导航唯一入口。\n' +
   '6. 支付仍受服务端开关控制；未配置并验收微信虚拟支付前不会创建订单或扣款。\n' +
-  '7. 主小程序 AppID: ' + projectConfig.appid + '\n' +
+  '7. 美元充值入口明确引导至官网，并复制官网美元钱包直达链接。\n' +\n  '8. 主小程序 AppID: ' + projectConfig.appid + '\n' +
   'SOURCE_SHA=' + sourceSha + '\n' +
   'SHA256=' + hash + '\n');
 console.log(JSON.stringify({ version, sourceSha, appId: projectConfig.appid, zipFile, sha256: hash, entries: entries.length }, null, 2));
