@@ -35,6 +35,12 @@ assert.equal(goods.virtualGoodsForQuote('fractional', 150).quantity, 3, 'Fractio
 assert.equal(goods.miniVirtualToolsEnabled(), false);
 env.WECHAT_MINI_VPAY_TOOL_GOODS = JSON.stringify({ 'food-calorie': { skuId: 'lx_food_calorie', unitPriceFen: 200 } });
 assert.equal(goods.virtualGoodsForQuote('food-calorie', 600).quantity, 3);
+const fixedTopup = goods.virtualTopupGoods('sasi-balance-10');
+assert.deepEqual({skuId:fixedTopup.skuId,unitPriceFen:fixedTopup.unitPriceFen,quantity:fixedTopup.quantity,amountFen:fixedTopup.amountFen},{skuId:'lx_balance_10',unitPriceFen:1000,quantity:1,amountFen:1000});
+const customTopup = goods.virtualTopupGoods('sasi-balance-custom-12');
+assert.deepEqual({skuId:customTopup.skuId,unitPriceFen:customTopup.unitPriceFen,quantity:customTopup.quantity,amountFen:customTopup.amountFen},{skuId:'lx_balance_custom',unitPriceFen:100,quantity:12,amountFen:1200});
+assert.equal(goods.virtualTopupGoods('sasi-balance-custom-12.34'),null,'Unpublished fractional SKU must fail closed');
+assert.equal(goods.virtualTopupGoods('sasi-balance-custom-0.50'),null,'Mini-program minimum is one yuan');
 assert.equal(goods.virtualGoodsForQuote('food-calorie', 599), null, 'No price rounding or hidden discount');
 assert.equal(goods.virtualGoodsForQuote('old-subscription', 99900), null);
 env.WECHAT_MINI_VPAY_TOOL_GOODS = 'null';
