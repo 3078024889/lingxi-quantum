@@ -1,6 +1,6 @@
 import {detectMiniPaymentContext,miniPaymentBridge} from './payment-client';
 
-const ALLOWED_PUBLIC_PATHS=new Set(['/','/siai','/sasi','/sasi/seller','/sasi/delivery','/tools','/discoveries','/partners','/about']);
+const ALLOWED_PUBLIC_PATHS=new Set(['/','/siai','/sasi','/sasi/seller','/tools','/discoveries','/partners','/about']);
 
 export function publicMiniSharePath(input:string){
  try{
