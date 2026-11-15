@@ -149,3 +149,26 @@ html[data-theme="dark"] .lx-home-fixed-sidebar,html[data-theme="dark"] .lx-home-
 .lx-home-reference .lx-home-plan-card>p{font-size:14px}
 .lx-home-reference .lx-seo-question{min-height:88px;padding:9px 10px}
 .lx-home-reference .lx-home-faq-copy p{font-size:14px;line-height:1.45}
+
+
+/* 20261115: homepage typography baseline matches the Tools and SIAI pages. */
+.lx-home-reference .lx-home-hero-proof{font-size:13px!important;line-height:1.5!important}
+.lx-home-reference .lx-home-growth-card>p,
+.lx-home-reference .lx-home-toolpass-intro>p,
+.lx-home-reference .lx-home-distribution-heading p:last-child,
+.lx-home-reference .lx-home-popular-tools p,
+.lx-home-reference .lx-home-market-card small,
+.lx-home-reference .lx-home-siai-category-card small,
+.lx-home-reference .lx-home-plan-card>p,
+.lx-home-reference .lx-home-faq-copy p{font-size:14px!important;line-height:1.55!important}
+.lx-home-reference .lx-home-feature-copy small{font-size:14px!important;line-height:1.45!important}
+.lx-home-reference .lx-home-market-card strong{font-size:15px!important}
+.lx-home-reference .lx-home-growth-chips a,
+.lx-home-reference .lx-home-growth-chips span{font-size:12px!important}
+.lx-home-reference .lx-home-growth-cta,
+.lx-home-reference .lx-home-plan-card>a,
+.lx-home-reference .lx-home-toolpass-link,
+.lx-home-reference .lx-home-popular-tools nav a,
+.lx-home-reference .lx-home-faq-copy>a{font-size:13px!important}
+.lx-home-reference .lx-home-faq-copy h3{font-size:16px!important;line-height:1.4!important}
+.lx-home-reference .lx-home-directory{font-size:14px!important;line-height:1.55!important}
