@@ -212,7 +212,8 @@ jobs:
           node scripts/build-miniapps-v80.cjs main > "$RUNNER_TEMP/miniapp-main-receipt.json"
           MINIAPP_DIR="$(node -e 'const fs=require("node:fs");const r=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));process.stdout.write(r.projectPath)' "$RUNNER_TEMP/miniapp-main-receipt.json")"
           test -s "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
-          cmp -s public/og-lingxifield-20261115.jpg "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
+          cmp -s miniapp/assets/share-lingxifield-20261115.jpg "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
+          printf 'SITE_OG_SHA256=%s\nMINIAPP_SHARE_SHA256=%s\n' "$(sha256sum public/og-lingxifield-20261115.jpg | awk '{print $1}')" "$(sha256sum "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg" | awk '{print $1}')" > "$GITHUB_WORKSPACE/cn-20261115-social-assets.sha256"
           MINIAPP_ZIP="lingxifield-miniapp-main-${GITHUB_SHA:0:12}.zip"
           (cd "$MINIAPP_DIR" && zip -qr "$GITHUB_WORKSPACE/$MINIAPP_ZIP" .)
           test -s "$GITHUB_WORKSPACE/$MINIAPP_ZIP"
@@ -241,6 +242,7 @@ jobs:
           path: |
             cn-20261115-unified-standalone.tar.gz
             cn-20261115-unified-standalone.sha256
+            cn-20261115-social-assets.sha256
             lingxifield-miniapp-main-*.zip
           retention-days: 14
           if-no-files-found: error
@@ -267,9 +269,10 @@ jobs:
           MINIAPP_ZIP="$(find . -maxdepth 1 -type f -name 'lingxifield-miniapp-main-*.zip' -print -quit)"
           test -n "$MINIAPP_ZIP"
           unzip -l "$MINIAPP_ZIP" | grep -Fq 'assets/share-lingxifield-20261115.jpg'
-          MINIAPP_OG_SHA="$(unzip -p "$MINIAPP_ZIP" assets/share-lingxifield-20261115.jpg | sha256sum | awk '{print $1}')"
+          MINIAPP_SHARE_SHA="$(unzip -p "$MINIAPP_ZIP" assets/share-lingxifield-20261115.jpg | sha256sum | awk '{print $1}')"
           SITE_OG_SHA="$(tar -xOf cn-20261115-unified-standalone.tar.gz ./public/og-lingxifield-20261115.jpg | sha256sum | awk '{print $1}')"
-          test "$MINIAPP_OG_SHA" = "$SITE_OG_SHA"
+          grep -Fxq "SITE_OG_SHA256=$SITE_OG_SHA" cn-20261115-social-assets.sha256
+          grep -Fxq "MINIAPP_SHARE_SHA256=$MINIAPP_SHARE_SHA" cn-20261115-social-assets.sha256
           test "$(stat -c '%s' cn-20261115-unified-standalone.tar.gz)" -lt 1300000000
           echo CN_PUBLISH_IMMUTABLE_VERIFIED
       - name: Publish GitHub prerelease (does not touch ECS, DNS or Nginx)
@@ -281,7 +284,7 @@ jobs:
             echo "::error::EXACT_RELEASE_TAG_ALREADY_EXISTS"; exit 1
           fi
           cd "$RUNNER_TEMP/lingxifield-verified"
-          gh release create "$tag" cn-20261115-unified-standalone.tar.gz cn-20261115-unified-standalone.sha256 lingxifield-miniapp-main-*.zip \
+          gh release create "$tag" cn-20261115-unified-standalone.tar.gz cn-20261115-unified-standalone.sha256 cn-20261115-social-assets.sha256 lingxifield-miniapp-main-*.zip \
             --repo "$GH_REPO" --target "$GITHUB_SHA" --prerelease \
             --title "LINGXIFIELD CN website + miniapp OG exact source ${GITHUB_SHA:0:12} - STAGING ONLY" \
             --notes "Exact-source build, responsive browser tests, public OG image checks and miniapp package verification passed. NOT deployed. CN production upstream remains 127.0.0.1:3194; isolated candidate is 3196; rollback baseline is 3193. The standalone archive is for ENS staging only. The miniapp ZIP is a separate WeChat DevTools upload package and has not been submitted or published. Payment credentials, production database and DNS are unchanged."
