@@ -19,7 +19,7 @@ const MARKET_FEATURES=[
  {icon:"⌘",zh:"开发者支持",en:"Developer support",zhDesc:"发布 · 审核 · 结算",enDesc:"Publishing · review · settlement"}
 ] as const;
 const CATEGORIES=[["mt5-ea","MT5 EA","MT5 EA"],["mt5-indicator","MT5 指标","MT5 indicator"],["automation","自动化软件","Automation software"],["desktop-app","桌面程序","Desktop application"],["developer-tool","开发工具","Developer tools"],["software","其他软件","Other software"]] as const;
-const STATUS_LABELS:Record<string,readonly [string,string]>={draft:["草稿","Draft"],submitted:["审核中","In review"],published:["已发布","Published"],rejected:["需修改","Changes required"],archived:["已下架","Unlisted"]};
+const STATUS_LABELS:Record<string,readonly [string,string]>={pending_review:["卖家资料待审核","Seller application pending"],approved:["卖家已通过","Seller approved"],suspended:["卖家已暂停","Seller suspended"],draft:["草稿","Draft"],submitted:["商品审核中","Product in review"],published:["已发布","Published"],rejected:["需修改","Changes required"],archived:["已下架","Unlisted"]};
 const SCAN_LABELS:Record<string,readonly [string,string]>={unscanned:["等待安全检查","Security check pending"],clean:["安全检查通过","Security checked"],infected:["文件存在风险","File risk detected"],scan_failed:["安全检查未通过","Security check failed"]};
 function translatedStatus(lang:string,key:string,scan=false){const pair=(scan?SCAN_LABELS:STATUS_LABELS)[key];return pair?sasiSoftwareUiText(lang,pair[0],pair[1]):"—"}
 function categoryLabel(lang:string,key:string){const c=CATEGORIES.find(([id])=>id===key);return c?sasiSoftwareUiText(lang,c[1],c[2]):sasiSoftwareUiText(lang,"其他软件","Other software")}
@@ -110,9 +110,9 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
    return Date.parse(b.published_at||b.created_at)-Date.parse(a.published_at||a.created_at);
   });
  },[listings,filter,search,sort]);
- const featuredSide=visible.slice(0,2);
- const remainingVisible=visible.slice(featuredSide.length);
- const featuredFallbacks=featuredSide.length===0?["browse","publish"]:featuredSide.length===1?["publish"]:[];
+ const featuredSide:Listing[]=[];
+ const remainingVisible=visible;
+ const featuredFallbacks:string[]=[];
  const publishedCount=mineCounts?(mineCounts.published??"—"):mine.filter(item=>item.status==="published").length;
  const pendingCount=mineCounts?(mineCounts.pending??"—"):mine.filter(item=>item.status==="submitted").length;
  const activeDraft=mine.find(item=>item.id===activeDraftId&&["draft","rejected"].includes(item.status))??null;
@@ -130,7 +130,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
   setBusy("seller");setError("");setStatus("");
   try{
    await post("/api/sasi/marketplace/seller",{displayName,adultConfirmed:adult,termsAccepted:terms});
-   setStatus(sasiSoftwareUiText(lang,"卖家申请已保存，审核通过后可上传软件。","Seller application saved. Uploads open after approval."));
+   setStatus(sasiSoftwareUiText(lang,"卖家申请已保存。可先提交商品介绍、ZIP 和图片；卖家资料与商品分别审核，未通过前不会公开上架。","Seller application saved. You can submit product details, ZIP and images now; seller and product reviews are separate, and nothing is listed publicly before approval."));
    await refresh();
   }catch(e){setError(friendlyError(e,lang))}finally{setBusy("")}
  };
