@@ -55,6 +55,8 @@ https://lingxifield.cn/api/wechat/mini/pay/notify
 
 只在当前承载 .cn 小程序 API 的生产服务端配置；不要写进小程序源码、ZIP、GitHub、浏览器前端，也不要配置到 .com Worker。
 
+.cn 发布端口约定：3194 为当前生产，3196 为隔离候选，3193 为回滚基线。候选验收前不得切换 3194；本轮构建工作流不会直接部署 ECS/ENS。
+
 | 变量 | 值/说明 |
 |---|---|
 | WECHAT_MINI_VPAY_ENV | production |
