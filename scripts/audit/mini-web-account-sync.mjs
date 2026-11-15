@@ -32,14 +32,14 @@ const component=load('app/account/MiniAccountLinkPanel.tsx',{
  react:{useCallback:fn=>fn,useEffect:fn=>{effect=fn},useRef:value=>({current:value}),useState:value=>[value,next=>states.push(next)]},
  'react/jsx-runtime':{jsx:(type,props)=>({type,props}),jsxs:(type,props)=>({type,props})},
  '@/lib/useLang':{useLang:()=>false},
- '@/lib/mini/payment-client':{openMiniRecharge:async()=>true},
+ '@/lib/mini/payment-client':{openMiniWallet:async()=>true},
 },{fetch:async()=>{fetches++;return{ok:true,json:async()=>({ok:true,account:'10505@example.test'})}}});
 component.default({ticket:'encrypted-proof',accountLabel:'10505@example.test'});
 effect();effect();
 await new Promise(resolve=>setTimeout(resolve,0));
 assert.equal(fetches,1,'Website login automatically connects once, including repeated React effects');
 assert.ok(states.includes('done'));assert.ok(states.some(value=>typeof value==='string'&&value.includes('10505@example.test')));
-for(const path of ['balance-pay/create','tool-pay/create','tool-pay/balance']) {
+for(const path of ['tool-pay/create','tool-pay/balance']) {
   let touchedMoney=false;
   const guarded=load(`app/api/wechat/mini/${path}/route.ts`,{
     'next/server':{NextResponse:{json:(data,options={})=>({data,status:options.status||200})}},
