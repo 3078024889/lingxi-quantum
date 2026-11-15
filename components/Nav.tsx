@@ -17,7 +17,7 @@ import LingxiMiniIcon,{type LingxiIconName} from "@/components/LingxiMiniIcon";
 import {supportCopy} from "@/lib/support-ui-copy";
 import LingxifieldFeedback from "@/components/support/LingxifieldFeedback";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import { detectMiniPaymentContext, openMiniRecharge } from "@/lib/mini/payment-client";
+import { detectMiniPaymentContext } from "@/lib/mini/payment-client";
 
 type Theme = "light" | "dark";
 type K =
@@ -113,11 +113,6 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [miniRecharge, setMiniRecharge] = useState(false);
   useEffect(() => { let alive = true; void detectMiniPaymentContext().then(value => { if (alive) setMiniRecharge(value); }); return () => { alive = false; }; }, []);
-  function rechargeClick(event: React.MouseEvent<HTMLAnchorElement>) {
-    if (!miniRecharge) return;
-    event.preventDefault();
-    void openMiniRecharge().then(opened => { if (!opened) window.alert("请使用最新小程序体验版，或等待新版本审核发布后再充值。"); });
-  }
 
   useEffect(() => {
     let stored:Theme="light";try{stored=(localStorage.getItem("lx-theme")||"light") as Theme}catch{}
@@ -259,7 +254,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
         <div className="lx-home-nav-actions">
          <select aria-label={t("language")} value={lang} onChange={event=>setLang(event.target.value as LingxiLang)}>{(Object.keys(LANG_NAMES) as LingxiLang[]).map(key=><option key={key} value={key}>{LANG_NAMES[key]}</option>)}</select>
          <CurrencySelector compact/><NotificationBell/><button type="button" className="lx-home-theme-toggle" aria-label={lang==="zh"?"切换深浅主题":"Toggle theme"} onClick={()=>setTheme(theme==="light"?"dark":"light")}>{theme==="light"?"☾":"☀"}</button>
-         <Link href="/ai-wallet" onClick={rechargeClick} className="lx-home-recharge">💎 {t("recharge")}</Link>
+         <Link href="/ai-wallet" className="lx-home-recharge">💎 {t("recharge")}</Link>
          {signedIn===false?<><Link href="/account?mode=signin" className="lx-home-signin">{lang==="zh"?"登录":"Sign in"}</Link><Link href="/account?mode=signup" className="lx-home-register">{lang==="zh"?"注册":"Register"}</Link></>:<button type="button" className="lx-home-account-trigger" aria-label={mt.account} aria-expanded={menuOpen} onClick={()=>setMenuOpen(value=>!value)}>{avatarUrl?<NextImage src={avatarUrl} alt="" width={36} height={36} unoptimized/>:<span>{Array.from(displayName||"L").slice(0,2).join("").toUpperCase()}</span>}</button>}
         </div>
         <button type="button" className="lx-home-nav-toggle" aria-expanded={homeNavOpen} aria-label={lang==="zh"?"展开导航":"Open navigation"} onClick={()=>setHomeNavOpen(value=>!value)}>{homeNavOpen?"×":"☰"}</button>
@@ -285,7 +280,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
           <NotificationBell />
           {miniRecharge&&<button type="button" onClick={()=>void openMiniShare(document.title)} aria-label={lang==='zh'?'分享':'Share'} className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-[var(--lx-line)]">↗</button>}
 
-          <Link href="/ai-wallet" onClick={rechargeClick} className="lx11-primary">💎 {t("recharge")}</Link>
+          <Link href="/ai-wallet" className="lx11-primary">💎 {t("recharge")}</Link>
 
           <button
             className="lx11-avatar lx11-account-trigger"
@@ -334,7 +329,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
         <div className="lx11-mobile-actions">
           <CurrencySelector compact />
           <NotificationBell />
-          <Link href="/ai-wallet" onClick={rechargeClick}>💎 {t("recharge")}</Link>
+          <Link href="/ai-wallet">💎 {t("recharge")}</Link>
           <button
             className="lx11-mobile-account"
             aria-label={mt.account}
