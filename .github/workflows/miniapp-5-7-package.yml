@@ -1,0 +1,69 @@
+name: Miniapp 5.7 native wallet and import package (NO WECHAT UPLOAD)
+on:
+  push:
+    branches: [fix/cn-miniapp-wallet-entry-20261115]
+    paths:
+      - 'miniapp/**'
+      - 'components/WalletLivePanel.tsx'
+      - 'lib/mini/payment-client.ts'
+      - 'lib/mini/virtual-goods.ts'
+      - 'app/api/wechat/mini/balance-pay/**'
+      - 'scripts/audit/mini-topup-client.mjs'
+      - 'scripts/audit/mini-virtual-payment.mjs'
+      - 'scripts/audit/mini-recharge-navigation.mjs'
+      - 'scripts/audit-mini-program.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'scripts/package-miniapp-5-7.cjs'
+      - '.github/workflows/miniapp-5-7-package.yml'
+permissions:
+  contents: read
+concurrency:
+  group: miniapp-5-7-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-and-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Miniapp wallet, payment, routing and privacy contracts
+        run: |
+          set -Eeuo pipefail
+          node scripts/audit/mini-topup-client.mjs
+          node scripts/audit/mini-virtual-payment.mjs
+          node scripts/audit/mini-recharge-navigation.mjs
+          node scripts/audit-mini-program.mjs
+          node scripts/test-mini-sharing-v78.cjs
+          node scripts/test-mini-profiles-v80.cjs
+          pnpm exec tsc --noEmit
+          echo MINIAPP_5_7_SOURCE_AND_TYPECHECK_PASS
+      - name: Build isolated main mini-program project
+        run: |
+          set -Eeuo pipefail
+          node scripts/build-miniapps-v80.cjs main
+          node scripts/package-miniapp-5-7.cjs
+          echo MINIAPP_5_7_IMPORT_PACKAGE_PASS_NO_UPLOAD
+      - name: Upload importable WeChat Developer Tools package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lingxifield-miniapp-5.7.0-${{ github.sha }}
+          path: |
+            dist/lingxifield-miniapp-5.7.0.zip
+            dist/lingxifield-miniapp-5.7.0.zip.sha256
+            dist/miniapp-5.7.0/release-notes.txt
+          retention-days: 14
+          if-no-files-found: error
+      - name: Confirm no external release actions
+        run: echo NO_WECHAT_UPLOAD_NO_WECHAT_REVIEW_NO_PRODUCTION_PAYMENT_ENABLE_NO_ECS_DEPLOY
