@@ -93,6 +93,41 @@ WECHAT_MINI_VPAY_SANDBOX_APP_KEY 只用于开发工具沙箱。生产支付必�
 
 以上验收完成后，才设置 WECHAT_MINI_VPAY_TOPUPS_ENABLED=true 并重启 .cn 服务。未通过时保持 false，页面只允许查看账户与订单，不创建支付订单。
 
+## USD 美元余额充值（网站 PayPal）
+
+USD 与小程序人民币虚拟支付是两条独立链路：
+
+- 网站使用 `/checkout-usd`，由 PayPal Live 以 USD 收款，到账到独立 USD 余额，不换算成人民币。
+- 商品 ID：`sasi-usd-balance-10`、`sasi-usd-balance-88`、`sasi-usd-balance-666`、`sasi-usd-balance-888`；自定义金额使用 `sasi-usd-balance-custom-金额`。
+- 小程序原生 `wx.requestVirtualPayment` 本轮只支持 CNY。小程序内不显示 USD 充值选项；不要把 PayPal USD 订单塞进微信虚拟支付链路。USD 充值从网站账户钱包进入。
+
+### PayPal Live 配置
+
+在每个实际承载网站支付 API 的生产环境分别核对以下变量：
+
+| 变量 | 生产值/用途 |
+|---|---|
+| `PAYPAL_ENV` | `live` |
+| `PAYPAL_ENABLED` | `true` |
+| `PAYPAL_CLIENT_ID` | PayPal Live 应用 Client ID |
+| `PAYPAL_CLIENT_SECRET` | 同一 Live 应用 Secret |
+| `PAYPAL_WEBHOOK_ID` | 当前部署域名在该 PayPal Live 应用中登记的 Webhook ID |
+| `USD_BALANCE_TOPUP_ENABLED` | USD 充值验收完成后才设为 `true` |
+| `SASI_REFUND_FLOW_TESTED` | USD 退款/撤销链路验收通过后才设为 `true` |
+
+PayPal Live 应用分别登记实际接收站点的 Webhook：
+
+- CN：`https://lingxifield.cn/api/pay/paypal/webhook`
+- COM：`https://lingxifield.com/api/pay/paypal/webhook`
+
+订阅代码处理的事件：`CHECKOUT.ORDER.APPROVED`、`CHECKOUT.ORDER.COMPLETED`、`PAYMENT.CAPTURE.COMPLETED`、`PAYMENT.CAPTURE.PENDING`、`PAYMENT.CAPTURE.DENIED`、`CHECKOUT.PAYMENT-APPROVAL.REVERSED`、`PAYMENT.CAPTURE.REFUNDED`。若两个域名分别注册 Webhook，每个站点的 `PAYPAL_WEBHOOK_ID` 必须对应本域名的 Webhook；不要把另一个 URL 的 ID 直接复制过来。
+
+**启用顺序：** 先在 PayPal Sandbox 验证创建订单、完成付款、回调验签、USD 余额只入账一次、退款后余额与账本回滚；再核对 Live 凭证、Webhook ID 和回调事件，完成一笔受控小额真实交易及退款演练。全部通过后才分别开启 `USD_BALANCE_TOPUP_ENABLED=true` 与 `SASI_REFUND_FLOW_TESTED=true`。
+
+网站钱包的 `/api/pay/providers` 现在会单独返回 `usdBalanceTopup`。只有 PayPal Live 本身已启用、且上述两个 USD 专用开关都通过时，USD 充值按钮才会启用；仅有 PayPal 已连接，不代表 USD 余额充值已开放。
+
+不要把 Client Secret、Webhook ID 或任何密钥发到聊天或写入小程序 ZIP、GitHub 源码。
+
 ## iOS 兼容条件
 
 微信虚拟支付的 iOS 端还需在微信后台配置小程序简称并开通苹果 IAP。用户设备需 iOS 15 及以上、微信 8.0.68 及以上，并使用中国大陆 App Store 账户；单笔至少 1 元。其他地区 App Store 账户可能无法完成 iOS 支付。可先用 Android 真机完成支付链路验收。
