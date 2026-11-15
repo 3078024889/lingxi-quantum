@@ -42,8 +42,8 @@
       </view>
 
       <view class="topup-options">
-        <button wx:for="{{amounts}}" wx:key="*this" data-amount="{{item}}" bindtap="choose" disabled="{{busy}}" class="topup-option {{enabled && selected == item ? 'selected' : ''}}" disabled="{{busy || !enabled}}">¥{{item}}</button>
-        <button data-amount="custom" bindtap="choose" disabled="{{busy}}" class="topup-option {{enabled && selected == 'custom' ? 'selected' : ''}}" disabled="{{busy || !enabled}}">自定义</button>
+        <button wx:for="{{amounts}}" wx:key="*this" data-amount="{{item}}" bindtap="choose" class="topup-option {{enabled && selected == item ? 'selected' : ''}}" disabled="{{busy || !enabled}}">¥{{item}}</button>
+        <button data-amount="custom" bindtap="choose" class="topup-option {{enabled && selected == 'custom' ? 'selected' : ''}}" disabled="{{busy || !enabled}}">自定义</button>
       </view>
 
       <view wx:if="{{selected == 'custom'}}" class="mini-topup-custom">
