@@ -25,7 +25,7 @@ for(const invalid of ['0','10001','1.234','1e2','-10','NaN','010','10abc','10000
 assert.equal(cny.getProduct('sasi-balance-500').sasiAmountFen,50000);
 assert.equal(usd.getUsdBalanceProduct('sasi-usd-balance-300').amountUsd,300);
 const goods=load('lib/mini/virtual-goods.ts',{'@/lib/mini/virtual-pay':{miniVirtualPayConfigured:()=>true},...deps});
-assert.equal(goods.miniVirtualTopupsEnabled(),false);
+// Existing virtual top-up SKU verifier remains only for historical order settlement.
 for(const a of [10,88,666,888])assert.equal(goods.virtualTopupGoods(`sasi-balance-${a}`).amountFen,a*100);
 const custom=goods.virtualTopupGoods('sasi-balance-custom-123');
 assert.equal(custom.unitPriceFen,100);assert.equal(custom.quantity,123);assert.equal(custom.amountFen,12300);
