@@ -7,10 +7,8 @@ export function miniVirtualToolsEnabled() {
   return process.env.WECHAT_MINI_VPAY_TOOLS_ENABLED === "true" && miniVirtualPayConfigured();
 }
 
-export function miniVirtualTopupsEnabled() {
-  return process.env.WECHAT_MINI_VPAY_TOPUPS_ENABLED === "true" && miniVirtualPayConfigured();
-}
-
+// Legacy-only verifier for already-created virtual top-up orders. New wallet top-ups
+// are created exclusively by the website checkout; no mini-program route may call this.
 export function virtualTopupGoods(productId: string) {
   const fixed = /^sasi-balance-(10|88|666|888)$/.exec(productId);
   const custom = /^sasi-balance-custom-(.+)$/.exec(productId);
