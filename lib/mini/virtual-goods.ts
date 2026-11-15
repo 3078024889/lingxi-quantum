@@ -1,5 +1,5 @@
 import { miniVirtualPayConfigured } from "@/lib/mini/virtual-pay";
-import { customTopupAmount, customTopupMinor } from "@/lib/balance-topups";
+import { customTopupAmount } from "@/lib/balance-topups";
 
 // Enable after virtual-payment goods publication and real-device acceptance.
 // An ordinary Android payment restriction is not proof that virtual payment is blocked.
@@ -15,10 +15,9 @@ export function virtualTopupGoods(productId: string) {
   const fixed = /^sasi-balance-(10|88|666|888)$/.exec(productId);
   const custom = /^sasi-balance-custom-(.+)$/.exec(productId);
   const amount = fixed ? Number(fixed[1]) : custom ? customTopupAmount(custom[1]) : null;
-  if (amount === null) return null;
-  const amountFen = fixed ? amount * 100 : customTopupMinor(custom![1])!;
-  const fractional = amountFen % 100 !== 0;
-  return { skuId: fixed ? `lx_balance_${amount}` : fractional ? "lx_balance_cent" : "lx_balance_custom", unitPriceFen: fixed ? amountFen : fractional ? 1 : 100, quantity: fixed ? 1 : fractional ? amountFen : amount, amountFen };
+  if (amount === null || !Number.isSafeInteger(amount) || amount < 1 || amount > 10000) return null;
+  const amountFen = amount * 100;
+  return { skuId: fixed ? `lx_balance_${amount}` : "lx_balance_custom", unitPriceFen: fixed ? amountFen : 100, quantity: fixed ? 1 : amount, amountFen };
 }
 
 export function virtualGoodsForQuote(toolId: string, amountFen: number) {
