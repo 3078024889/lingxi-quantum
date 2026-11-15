@@ -7,7 +7,8 @@ export function publicMiniSharePath(input:string){
   const url=new URL(input,'https://lingxifield.cn');
   if(!['https://lingxifield.cn','https://lingxifield.com'].includes(url.origin))return '/';
   const path=url.pathname;
-  return ALLOWED_PUBLIC_PATHS.has(path)||/^\\/tools\\/[a-z0-9-]+$/.test(path)?path:'/';
+  const toolSlug=path.startsWith('/tools/')?path.slice(7):'';
+  return ALLOWED_PUBLIC_PATHS.has(path)||/^[a-z0-9-]+$/.test(toolSlug)?path:'/';
  }catch{return '/'}
 }
 export async function openMiniShare(title='灵犀场 LINGXIFIELD'){

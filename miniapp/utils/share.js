@@ -23,8 +23,9 @@ function cleanPath(input) {
   if (!value.startsWith('/') || value.startsWith('//')) return '/'
   const cut = value.search(/[?#]/)
   const pathname = cut === -1 ? value : value.slice(0, cut)
-  if (!pathname || pathname.includes('//') || pathname.includes('\\')) return '/'
-  return PUBLIC_EXACT.has(pathname) || /^\\/tools\\/[a-z0-9-]+$/.test(pathname) ? pathname : '/'
+  if (!pathname || pathname.includes('//') || pathname.includes(String.fromCharCode(92))) return '/'
+  const toolSlug = pathname.startsWith('/tools/') ? pathname.slice(7) : ''
+  return PUBLIC_EXACT.has(pathname) || /^[a-z0-9-]+$/.test(toolSlug) ? pathname : '/'
 }
 
 function publicWebPath(input) {
