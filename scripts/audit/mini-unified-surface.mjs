@@ -7,6 +7,11 @@ vm.runInNewContext(ts.transpileModule(fs.readFileSync('app/api/wechat/mini/accou
 const result=await exports.GET({});assert.equal(queriedUser,userid);assert.equal(result.body.balanceFen,740);assert.equal(result.body.refundableFen,300);assert.equal(result.body.accountLabel,'1050542469@qq.com');
 const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));assert.equal(app.pages[0],'pages/web/index');assert.equal(app.tabBar,undefined);assert.ok(!app.pages.includes('pages/portal/index'));assert.equal(fs.existsSync('miniapp/pages/portal/index.js'),false);
 for(const [page,target] of [['home','/'],['tools','/tools'],['create','/sasi'],['profile','/account'],['agents','/siai']])assert.match(fs.readFileSync('miniapp/pages/'+page+'/index.js','utf8'),new RegExp('wx.redirectTo'));
-assert.doesNotMatch(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),/switchTab/);
+const balanceRoute=fs.readFileSync('miniapp/pages/balance/index.js','utf8');
+assert.match(balanceRoute,/pages\\/web\\/index\\?path=/);
+assert.match(balanceRoute,/%2Fai-wallet/);
+assert.doesNotMatch(balanceRoute,/requestVirtualPayment|balance-pay\\/create/);
+assert.equal(fs.existsSync('miniapp/pages/recharge/index.js'),false);
+assert.doesNotMatch(balanceRoute,/switchTab/);
 console.log('PASS: direct website homepage launch; legacy portal removed; one website navigation surface; compatibility links; native and web unified 740-fen balance, separate refundable principal and owned identity.');
 let appInstance;vm.runInNewContext(fs.readFileSync('miniapp/app.js','utf8'),{App:definition=>appInstance=definition,wx:{},require:path=>path.includes('i18n')?{getLanguage:()=> 'zh-CN'}:{API_BASE:'https://lingxifield.cn',login:()=>Promise.resolve()},console});appInstance.onLaunch();await Promise.resolve();assert.equal(appInstance.globalData.ready,true);console.log('PASS: app starts without obsolete native tab-bar dependency.');
