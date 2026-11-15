@@ -35,3 +35,5 @@
 .lx-web-retry::after {
   border: 0;
 }
+
+.lx-mini-share-entry{position:fixed;right:24rpx;bottom:150rpx;z-index:9999;padding:18rpx 26rpx;border:1rpx solid #c8d9e5;border-radius:999rpx;background:#fff;color:#235e72;font-size:24rpx;font-weight:700;box-shadow:0 8rpx 28rpx rgba(22,64,88,.18)}.lx-mini-share-entry-text{line-height:1.35}
