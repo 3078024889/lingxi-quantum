@@ -130,3 +130,11 @@ html[data-theme="dark"] .lx-home-fixed-sidebar,html[data-theme="dark"] .lx-home-
  .lx-home-reference .lx-home-siai-heading h2,
  .lx-home-reference .lx-seo-answers-head h2{font-size:23px}
 }
+
+/* 20261115: keep compact FAQ cards readable at the SIAI/Tools 14px text scale. */
+.lx-home-reference .lx-home-feature-copy small{font-size:14px}
+.lx-home-reference .lx-home-market-card small{font-size:13px}
+.lx-home-reference .lx-home-plan-card>p{font-size:14px}
+.lx-home-reference .lx-home-faq-copy h3{font-size:16px}
+.lx-home-reference .lx-home-faq-copy p{font-size:14px;line-height:1.45}
+.lx-home-reference .lx-home-faq-copy>a{font-size:13px}
