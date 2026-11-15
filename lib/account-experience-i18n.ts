@@ -57,6 +57,17 @@ const COPY:Record<string,Record<LingxiLang,string>>={
     "pt": "Salvar",
     "ar": "حفظ"
   },
+  "confirmChange": {
+    "zh": "确认修改",
+    "en": "Confirm",
+    "ja": "変更を確定",
+    "ko": "변경 확인",
+    "fr": "Confirmer",
+    "de": "Änderung bestätigen",
+    "es": "Confirmar",
+    "pt": "Confirmar",
+    "ar": "تأكيد التغيير"
+  },
   "saving": {
     "zh": "保存中…",
     "en": "Saving…",
