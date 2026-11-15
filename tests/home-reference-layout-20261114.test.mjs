@@ -55,3 +55,9 @@ test('reference-scale homepage and seller typography remains readable',()=>{
  assert.match(seller,/\.sellerGuideSteps strong\{font-size:14px/);
  assert.match(seller,/\.sellerBenefits strong\{font-size:13px/);
 });
+
+const globalWhiteCss=read("app/global-white-compact-20261115.css");
+assert.match(globalWhiteCss,/\.lx-growth-siai-page\{width:100%/);
+assert.match(globalWhiteCss,/\.lx26-tools-stage:not\(:has\(\.lx-tools-compact-recent\)\)/);
+assert.match(globalWhiteCss,/\.lx26-wallet-page\{background:#fff/);
+assert.match(globalWhiteCss,/\.lx26-balance-card/);
