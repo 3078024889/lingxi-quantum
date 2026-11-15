@@ -7,6 +7,7 @@ on:
       - 'fix/share-image-routing-20261105'
       - 'release/com-sasi-full-20261108'
       - 'ci/cn3194-payment-base-20261110'
+      - 'release/cn3194-full-cleanup-20261113'
     paths:
       - '.github/workflows/lingxifield-share-release-gate.yml'
       - 'app/layout.tsx'
@@ -34,6 +35,7 @@ on:
       - fix/toolpass-compact-align-com-20261113
       - release/com-sasi-full-20261108
       - ci/cn3194-payment-base-20261110
+      - release/cn3194-full-cleanup-20261113
     paths:
       - 'lib/share-image.ts'
       - 'lingxifield-ai-market/lib/share-card.ts'
