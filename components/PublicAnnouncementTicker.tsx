@@ -31,7 +31,6 @@ export default function PublicAnnouncementTicker(){
         </div>
       </div>
     </div>
-    <Link href="/ai-wallet" className={styles.recharge}>{lang==="zh"?"余额 · 充值":"Balance / Top up"}</Link>
     <Link href="/announcements" className={styles.more}>{lang==="zh"?"全部公告":"All updates"} →</Link>
   </div>;
 }
