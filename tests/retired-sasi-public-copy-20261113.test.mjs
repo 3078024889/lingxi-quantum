@@ -52,7 +52,7 @@ const productCopy=readFileSync("lib/tools/product-copy.ts","utf8");
 assert.doesNotMatch(productCopy,/'url-to-video'/);
 
 const globalHomeGrowth=readFileSync("components/HomeGlobalGrowth.tsx","utf8");
-for(const term of ["124 个工具目录","llms.txt","llms-full.txt","WordPress","JS Widget","Before / After","global-scene-20261114.webp","SIAI","SASI 智能软件市场"]){
+for(const term of ["124 个工具目录","llms.txt","llms-full.txt","WordPress","JS Widget","Before / After","home-hero-signature-20261115.webp","home-distribution-globe-20261115.webp","SIAI","SASI 智能软件市场"]){
  assert.ok(globalHomeGrowth.includes(term),"homepage growth experience missing "+term);
 }
 assert.doesNotMatch(globalHomeGrowth,/R6\s*\+?\s*R8|R6|R8|内部工程|部署平台|候选版本/i);
