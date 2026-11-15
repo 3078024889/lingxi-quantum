@@ -84,7 +84,7 @@ export default function SasiMarketplaceProductDetail(){
       {galleryPhotos.length>1&&<div className={styles.thumbs} aria-label={sasiSoftwareUiText(lang,"商品图片缩略图","Product image thumbnails")}>
        {galleryPhotos.map((photo,index)=><button key={photo.id} type="button" className={styles.thumb} aria-pressed={activePhoto?.id===photo.id} onClick={()=>setSelectedPhoto(photo)} aria-label={sasiSoftwareUiText(lang,index===0?"主图":"详情图 "+index,index===0?"Main image":"Detail image "+index)}><img src={photo.url} alt="" loading="lazy" referrerPolicy="no-referrer"/></button>)}
       </div>}
-      <p className={styles.galleryCount}>{sasiSoftwareUiText(lang,"每件软件展示1张主图；详情图可选","One main image per listing; detail images are optional")}</p>
+      <p className={styles.galleryCount}>{sasiSoftwareUiText(lang,"每件软件1张主图，最多4张详情图","1 main image and up to 4 detail images per product")}</p>
      </section>
      <section className={styles.purchase}>
       <small>SASI / VERIFIED SOFTWARE</small>
