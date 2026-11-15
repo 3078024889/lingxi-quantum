@@ -76,7 +76,7 @@ test("digital delivery stays verified-payment buyer-only and time-limited",()=>{
  assert.match(purchase,/sasi_market_record_verified_sale/);
 });
 
-test("SASI storefront has one real featured source-license product and seller upload workbench",()=>{
+test("SASI storefront keeps the featured source product while seller publishing lives on its own route",()=>{
  const page=file("app/sasi/page.tsx");
  const market=file("components/SasiOpenMarketplace.tsx");
  const catalog=file("lib/sasi-software/catalog.ts");
@@ -86,7 +86,10 @@ test("SASI storefront has one real featured source-license product and seller up
  assert.match(market,/SASI_SOFTWARE_CATALOG\[0\]/);
  assert.match(market,/featured\.priceCny/);
  assert.match(market,/featuredReady/);
- assert.match(market,/source.*|sasi-seller-studio/);
+ assert.match(market,/featured\.priceCny/);
+ assert.match(market,/href="\/sasi\/seller"/);
+ assert.match(market,/sellerOnly&&showStudio&&<section id="sasi-seller-studio"/);
+ assert.doesNotMatch(market,/onClick=\{\(\)=>setShowStudio\(true\)\}/);
  assert.match(catalog,/sasi-copernicus-si95-source/);
  assert.doesNotMatch(catalog,/sasi-copernicus-si95-mt5/);
  assert.match(css,/\.featuredCard/);
