@@ -82,6 +82,30 @@ on:
       - 'tests/final-closure/home-white-glass-20261115.spec.ts'
       - '.github/workflows/lingxifield-share-release-gate.yml'
       - '.github/workflows/miniapp-direct-tools-share-ci.yml'
+  pull_request:
+    branches: [ci/cn3194-payment-base-20261110]
+    paths:
+      - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'components/HomeGlobalGrowth.tsx'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'app/home-afternoon-20261114.css'
+      - 'app/growth-pages.css'
+      - 'app/tools/tools-hub-compact.css'
+      - 'app/share/20260928/page.tsx'
+      - 'public/og-lingxifield-*'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/home-distribution-globe-20261115.webp'
+      - 'miniapp/**'
   workflow_dispatch:
 permissions:
   contents: write
