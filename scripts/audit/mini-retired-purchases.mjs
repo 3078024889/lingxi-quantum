@@ -9,11 +9,17 @@ vm.runInNewContext(ts.transpileModule(fs.readFileSync('app/api/wechat/mini/pay/c
 for(let i=0;i<3;i++){const result=await oldRoute.POST();assert.equal(result.status,410);assert.equal(result.body.code,'MINI_PRODUCT_RETIRED')}
 assert.equal(fs.existsSync('lib/mini/catalog.ts'),false);
 assert.doesNotMatch(fs.readFileSync('app/api/wechat/mini/pay/notify/route.ts','utf8'),/miniSkuForProduct|fulfillPaidOrder/);
-const languages=['zh-CN','en','ja','ko','fr','de','es','pt','ar'];let page;const urls=[];
-vm.runInNewContext(fs.readFileSync('miniapp/pages/profile/index.js','utf8'),{
- Page(value){page=value},wx:{navigateTo({url}){urls.push(url)}},require(){return{SUPPORTED:languages.map(id=>({id})),copyFor(){return{}},getLanguage(){return'zh-CN'}}}
-});
-page.setData=next=>{page.data={...page.data,...next}};
-for(const lang of languages){page.refreshLanguage(lang);assert.ok(page.data.ui.recharge);assert.ok(page.data.ui.rechargeNote.includes('10'));page.openBalance();assert.equal(urls.at(-1),'/pages/balance/index')}
-const view=fs.readFileSync('miniapp/pages/profile/index.wxml','utf8');assert.match(view,/bindtap="openBalance"/);assert.match(view,/ui.recharge/);
-console.log('PASS: retired purchase code removed; legacy requests cannot create orders; native recharge entry works in 9 languages.');
+const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));
+assert.ok(app.pages.includes('pages/balance/index'),'Legacy balance deep links remain compatible');
+assert.ok(!app.pages.includes('pages/recharge/index'));
+assert.equal(fs.existsSync('miniapp/pages/recharge/index.js'),false);
+assert.equal(fs.existsSync('miniapp/pages/balance/index.wxss'),false);
+assert.equal(fs.existsSync('app/api/wechat/mini/balance-pay/create/route.ts'),false);
+assert.equal(fs.existsSync('app/api/wechat/mini/balance-pay/availability/route.ts'),false);
+const balance=fs.readFileSync('miniapp/pages/balance/index.js','utf8');
+assert.match(balance,/pages\\/web\\/index\\?path=/);assert.match(balance,/%2Fai-wallet/);
+assert.doesNotMatch(balance,/requestVirtualPayment|balance-pay/);
+assert.match(fs.readFileSync('miniapp/pages/pay/index.js','utf8'),/pages\\/web\\/index\\?path=%2Fai-wallet/);
+assert.match(fs.readFileSync('miniapp/pages/mail-home/index.js','utf8'),/pages\\/web\\/index\\?path=%2Fai-wallet/);
+assert.match(fs.readFileSync('lib/mini/virtual-fulfillment.ts','utf8'),/virtualTopupGoods/,'historical paid top-up orders still reconcile');
+console.log('PASS: retired purchase route remains 410; native wallet recharge removed; old balance deep link redirects to website; historical settlement retained.');
