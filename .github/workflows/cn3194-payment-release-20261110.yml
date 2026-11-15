@@ -22,10 +22,16 @@ on:
       - 'components/SasiOpenMarketplace.tsx'
       - 'components/SasiOpenMarketplace.module.css'
       - 'components/Nav.tsx'
+      - 'components/HomeGlobalGrowth.tsx'
+      - 'app/home-afternoon-20261114.css'
+      - 'app/growth-pages.css'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/home-distribution-globe-20261115.webp'
+      - 'tests/final-closure/home-white-glass-20261115.spec.ts'
       - 'app/sasi/seller/page.tsx'
       - 'tests/sasi-marketplace-reference-20261114.test.mjs'
       - 'tests/sasi-seller-reference-20261114.test.mjs'
-      - 'tests/final-closure/sasi-seller-workspace-reference.spec.ts'
+      - 'tests/final-closure/sasi-seller-workspace-reference.spec.ts tests/final-closure/home-white-glass-20261115.spec.ts'
       - 'tests/final-closure/dual-home-market-release-20261113.spec.ts'
       - 'public/images/sasi/afternoon-icons-20261114.png'
       - 'lib/seo/site-facts.ts'
@@ -219,7 +225,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm exec playwright install --with-deps chrome
-          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts tests/final-closure/sasi-seller-workspace-reference.spec.ts
+          pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts tests/final-closure/dual-home-market-release-20261113.spec.ts tests/final-closure/sasi-seller-workspace-reference.spec.ts tests/final-closure/home-white-glass-20261115.spec.ts
           echo CN3194_NEW_VISUAL_DESKTOP_MOBILE_CHROME_PASS
       - name: Package archive, render pinned stage script and write manifest
         id: package

@@ -19,7 +19,7 @@ sleep(){ :; }
 curl(){
  n=$(cat "$counter");n=$((n+1));printf '%s' "$n" > "$counter"
  if [[ "$n" == 1 || '${oldOnly}' == true ]];then printf '<main>old page with HTTP 200</main>'
- else printf '<main data-release-design="20261114-afternoon-three-pages">new page</main>';fi
+ else printf '<main data-release-design="20261114-afternoon-three-pages" data-home-polish="20261115-white-glass">new page</main>';fi
 }
 ${fn}
 probe_public_design

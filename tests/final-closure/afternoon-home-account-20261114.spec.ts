@@ -1,4 +1,7 @@
 import {test,expect} from './export-test';
+test.beforeEach(async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem("lx-public-upgrade:web-cn-upgrade-20261108","closed"));
+});
 
 for(const width of [1680,390]) {
  test(`afternoon homepage is readable, complete and fits ${width}px`,async({page})=>{
