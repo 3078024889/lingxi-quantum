@@ -77,7 +77,7 @@ export async function PATCH(req:NextRequest){
  try{
   const admin=createAdminClient();
   const {data:seller}=await admin.from("sasi_market_sellers").select("status").eq("user_id",user.id).maybeSingle();
-  if(seller?.status!=="approved")return NextResponse.json({error:"SELLER_NOT_APPROVED"},{status:403,headers:nocache});
+  if(!seller||!["pending_review","approved"].includes(seller.status))return NextResponse.json({error:"SELLER_APPLICATION_REQUIRED"},{status:403,headers:nocache});
   const {data:listing}=await admin.from("sasi_market_listings").select("seller_id,status").eq("id",id).eq("seller_id",user.id).maybeSingle();
   if(!editableMarketplaceListing(user.id,listing))return NextResponse.json({error:"DRAFT_OR_REJECTED_REQUIRED"},{status:409,headers:nocache});
   const {data,error}=await admin.from("sasi_market_listings")
@@ -104,12 +104,16 @@ export async function POST(req:NextRequest){
  !validMinor(body.priceCnyMinor)||!validMinor(body.priceUsdMinor))
   return NextResponse.json({error:"INVALID_LISTING"},{status:400,headers:nocache});
  try{
-  const db=createClient();
-  const {data,error}=await db.from("sasi_market_listings").insert({
+  const admin=createAdminClient();
+  const {data:seller,error:sellerError}=await admin.from("sasi_market_sellers").select("status").eq("user_id",user.id).maybeSingle();
+  if(sellerError||!seller||!["pending_review","approved"].includes(seller.status))
+   return NextResponse.json({error:"SELLER_APPLICATION_REQUIRED"},{status:403,headers:nocache});
+  // Service-role creation is bound to the authenticated session identity. Drafts stay private.
+  const {data,error}=await admin.from("sasi_market_listings").insert({
    seller_id:user.id,title,description,category,
    price_cny_minor:body.priceCnyMinor,price_usd_minor:body.priceUsdMinor
   }).select("id,title,status,created_at").single();
-  if(error||!data)return NextResponse.json({error:"SELLER_REGISTRATION_OR_LISTING_REQUIRED"},{status:403,headers:nocache});
+  if(error||!data)return NextResponse.json({error:"MARKET_DRAFT_CREATE_FAILED"},{status:503,headers:nocache});
   return NextResponse.json({item:data},{status:201,headers:nocache});
  }catch{return NextResponse.json({error:"MARKET_NOT_YET_LIVE"},{status:503,headers:nocache});}
 }
