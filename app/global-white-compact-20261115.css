@@ -3,10 +3,18 @@
 html:not([data-theme="dark"]) .lx-growth-siai-page{
  width:100%!important;max-width:none!important;margin-inline:0!important;padding-inline:10px!important;min-width:0!important
 }
-html:not([data-theme="dark"]) .lx-growth-siai-page .siai-home{
+html:not([data-theme="dark"]) .lx-growth-siai-page .siai-home:not(.siai-home-fullscreen){
  width:100%!important;max-width:none!important;margin:0!important;padding:14px 0 42px!important;
  background:transparent!important;color:#172235!important
 }
+/* Preserve the SIAI wide-table flow mode: it deliberately escapes the sidebar but keeps document scrolling. */
+html:not([data-theme="dark"]) .lx-growth-siai-page .siai-home.siai-home-fullscreen{
+ position:relative!important;inset:auto!important;z-index:4!important;width:calc(100vw - 24px)!important;max-width:none!important;
+ height:auto!important;max-height:none!important;min-height:0!important;
+ margin-inline-start:calc(-1 * var(--siai-wide-offset, 0px))!important;margin-inline-end:0!important;
+ overflow:visible!important;overscroll-behavior-y:auto!important;padding:16px 12px 22px!important;background:#fff!important
+}
+@media(max-width:900px){html:not([data-theme="dark"]) .lx-growth-siai-page .siai-home.siai-home-fullscreen{padding:12px 8px 18px!important}}
 html:not([data-theme="dark"]) .siai-home-head{margin-bottom:12px!important}
 html:not([data-theme="dark"]) .siai-home-head h1{font-size:clamp(32px,2.7vw,40px)!important;line-height:1.2!important;color:#172235!important}
 html:not([data-theme="dark"]) .siai-home-head>p:last-child{font-size:15px!important;color:#5b6676!important;line-height:1.6!important}
