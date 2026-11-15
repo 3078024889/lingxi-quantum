@@ -41,11 +41,13 @@ projectConfig.description = 'Lingxi Field native WeChat Mini Program ' + version
 fs.writeFileSync(projectConfigPath, JSON.stringify(projectConfig, null, 2) + '\n');
 
 const app = JSON.parse(fs.readFileSync(path.join(stage, 'app.json'), 'utf8'));
-if (projectConfig.appid !== 'wxbf4ae90406e7e26b' || app.pages?.[0] !== 'pages/portal/index' ||
+if (projectConfig.appid !== 'wxbf4ae90406e7e26b' || app.pages?.[0] !== 'pages/web/index' ||
+    app.entryPagePath !== undefined || app.pages.includes('pages/portal/index') ||
     !app.pages.includes('pages/web/index') || !app.pages.includes('pages/balance/index')) {
   throw new Error('MINI_MAIN_APP_ID_OR_ROUTES_INVALID');
 }
 if (fs.existsSync(path.join(stage, 'project.private.config.json')) ||
+    fs.existsSync(path.join(stage, 'pages', 'portal', 'index.js')) ||
     fs.existsSync(path.join(stage, 'pages', 'recharge', 'index.js')) ||
     fs.existsSync(path.join(stage, 'pages', 'mail-home', 'index.js'))) {
   throw new Error('SECONDARY_OR_PRIVATE_PROJECT_FILE_LEAKED');
