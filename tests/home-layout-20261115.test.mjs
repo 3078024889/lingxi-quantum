@@ -12,7 +12,7 @@ test('homepage FAQ uses a compact four-column desktop grid and responsive breakp
   assert.match(faq, /\.lx-home-faq-copy h3\{font-size:16px/);
   assert.match(faq, /\.lx-home-faq-copy p\{font-size:14px/);
   assert.match(faq, /@media\s*\(\s*max-width:\s*1180px\s*\)/);
-  assert.match(faq, /@media\s*\(\s*max-width:\s*760px\s*\)/);
+  assert.match(faq, /@media\s*\(\s*max-width:\s*640px\s*\)/);
 });
 
 test('homepage body copy follows the Tools and SIAI 14px reading scale', () => {
