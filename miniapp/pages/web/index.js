@@ -20,7 +20,7 @@ function shareTitleFor(path){return SHARE_TITLES[publicWebPath(path)]||'灵犀�
 Page({
  data:{src:'',path:'/tools',loading:true,failed:false},
  onLoad(options){enableShareMenu({includeTimeline:true});const decoded=safeDecode(options.path||'/tools'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
- onShow(){enableShareMenu()},
+ onShow(){enableShareMenu({includeTimeline:true})},
  onHide(){this.clearPreviousCheckout()},
  onUnload(){this.clearPreviousCheckout()},
  clearPreviousCheckout(){if(this.data.path.includes('miniLink=')){wx.removeStorageSync('lx_mini_topup_pending');wx.removeStorageSync('lx_mini_last_payment_error')}},
