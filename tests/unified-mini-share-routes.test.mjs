@@ -45,6 +45,8 @@ test('mini share page and share menu use the canonical local cover on forwards',
  assert.match(page,/src="{{shareImage}}"/);
  assert.ok(js.includes('onShareAppMessage()') && js.includes('imageUrl:SHARE_IMAGE'));
  assert.ok(js.includes('onShareTimeline()') && js.includes('imageUrl:SHARE_IMAGE'));
+ assert.ok(js.includes('enableShareMenu({includeTimeline:true})'));
+ assert.ok(web.includes('enableShareMenu({includeTimeline:true})'));
  assert.ok(web.includes('onShareAppMessage') && web.includes('appMessage'));
  assert.ok(web.includes('onShareTimeline') && web.includes('timeline'));
  const client=read('lib/mini/share-client.ts');
