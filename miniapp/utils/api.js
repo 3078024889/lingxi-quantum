@@ -1,7 +1,8 @@
-// Dedicated API domain; must be registered in WeChat before releasing the package.
-const API_BASE = 'https://mini-api.lingxifield.cn'
+// Use the active domestic production origin for every Mini Program API request.
+ // The retired dedicated API endpoint is not a valid production target.
+const API_BASE = 'https://lingxifield.cn'
 const REQUEST_TIMEOUT = 15000
-const FALLBACK_BASE = 'https://lingxifield.cn'
+const FALLBACK_BASE = API_BASE
 let activeBase = API_BASE
 let loginInFlight
 
