@@ -42,6 +42,7 @@ test("mini-program native virtual top-up remains CNY-only and does not expose US
  assert.ok(nativeScript.includes("https://lingxifield.com/ai-wallet?currency=USD"));
  assert.ok(nativeScript.includes("wx.setClipboardData"));
  assert.ok(wallet.includes('params.get("currency")==="USD"'));
+ assert.ok(wallet.includes('"/account?next=%2Fai-wallet%3Fcurrency%3DUSD"'));
  assert.ok(!/PayPal|USD/.test(nativePage));
  assert.ok(availability.includes('currency: "CNY"'));
 });
