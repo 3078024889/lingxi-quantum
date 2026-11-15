@@ -36,7 +36,7 @@ export default function SasiMarketplaceReviewConsole(){
    if(reason.length<8){setError("请填写至少 8 个字的审核原因。");return;}
   }
   if((action==="listing.publish"||action==="seller.approve")&&
-   !window.confirm(action==="listing.publish"?"确认商品已完成安全扫描、授权与展示资料审核，并正式发布？":"确认卖家身份及申请资料已审核，允许上传软件？"))return;
+   !window.confirm(action==="listing.publish"?"确认商品已完成安全扫描、授权与展示资料审核，并正式发布？":"确认卖家申请资料审核通过？已提交商品仍需单独审核后才能公开上架。"))return;
   setBusy(targetId);setError("");setOk("");
   try{
    const response=await fetch("/api/sasi/marketplace/admin/review",{
