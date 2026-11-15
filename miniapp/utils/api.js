@@ -7,10 +7,10 @@ let activeBase = API_BASE
 let loginInFlight
 
 function connectionMessage(error) {
-  if (error && error.statusCode === 403) return '充值连接被服务器拒绝，请稍后重新检查。已有订单保留，请勿重复付款。'
-  if (error && error.statusCode >= 500) return '充值服务暂时繁忙，请稍后重新检查。金额和已有订单保留。'
-  if (error && error.code === 'INVALID_API_RESPONSE') return '充值服务返回异常，请重新检查。已有订单保留，请勿重复付款。'
-  return '未能连接充值服务，请检查网络后重试。金额仍可选择，已有订单保留。'
+  if (error && error.statusCode === 403) return '小程序服务连接被服务器拒绝，请稍后重新检查。已有订单保留，请勿重复付款。'
+  if (error && error.statusCode >= 500) return '小程序服务暂时繁忙，请稍后重新检查。金额和已有订单保留。'
+  if (error && error.code === 'INVALID_API_RESPONSE') return '小程序服务返回异常，请重新检查。已有订单保留，请勿重复付款。'
+  return '未能连接小程序服务，请检查网络后重试。金额仍可选择，已有订单保留。'
 }
 
 function wxLogin() {
@@ -43,7 +43,6 @@ async function performLogin(force = false) {
   const expiresAt = wx.getStorageSync('lx_mini_expires')
   if (!force && token && expiresAt && Date.parse(expiresAt) > Date.now() + 60000) return token
 
-  await publicRequest('/api/wechat/mini/balance-pay/availability')
   const { code } = await wxLogin()
   const result = await rawRequest({
     url: `${activeBase}/api/wechat/mini/login`,
