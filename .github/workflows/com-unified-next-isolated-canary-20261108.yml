@@ -134,6 +134,12 @@ on:
       - 'tests/legacy-sasi-retirement.test.mjs'
       - 'tests/seo-fullsite-coverage.test.mjs'
       - 'components/HomeSeoAnswers.tsx'
+      - 'components/HomeGlobalGrowth.tsx'
+      - 'app/home-afternoon-20261114.css'
+      - 'app/growth-pages.css'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/home-distribution-globe-20261115.webp'
+      - 'tests/final-closure/home-white-glass-20261115.spec.ts'
       - 'components/Footer.tsx'
       - 'components/Nav.tsx'
       - 'app/sasi/**/page.tsx'
@@ -380,7 +386,12 @@ jobs:
             curl -4fsS --retry 3 --connect-timeout 9 --max-time 45 "$url$path" |
               grep -F 'data-release-design="20261114-afternoon-three-pages"' > /dev/null
           done
-          echo 'COM_AFTERNOON_THREE_PAGES_BUILD_ID_PASS'
+          curl -4fsS --retry 3 --connect-timeout 9 --max-time 45 "$url/" | grep -F 'data-home-polish="20261115-white-glass"' > /dev/null
+          for asset in /images/home-hero-signature-20261115.webp /images/home-distribution-globe-20261115.webp;do
+            curl -4fsS --retry 3 --max-time 45 "$url$asset" -o /dev/null
+          done
+          echo 'COM_HOME_WHITE_GLASS_ARTWORK_PASS'
+          echo 'COM_AFTERNOON_THREE_PAGES_BUILD_ID_PASS' 
           echo 'COM_NEXT_ISOLATED_CANARY_SASI_TOOLPASS_STATIC_R2_PASS_NO_PRODUCTION_ROUTE'
 
 # Approved three-page scene and layout candidate: 2026-11-14.
