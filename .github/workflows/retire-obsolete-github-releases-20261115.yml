@@ -1,0 +1,25 @@
+name: Retire obsolete GitHub release packages 20261115
+on:
+  push:
+    branches: [ops/retire-obsolete-builds-20261115]
+    paths:
+      - .github/workflows/retire-obsolete-github-releases-20261115.yml
+      - scripts/ops/github-obsolete-releases-20261115.mjs
+      - scripts/ops/github-obsolete-releases-approved-20261115.json
+permissions:
+  contents: write
+concurrency:
+  group: retire-obsolete-github-packages-20261115
+  cancel-in-progress: false
+jobs:
+  retire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify live sources and exact asset inventory then retire obsolete releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/ops/github-obsolete-releases-20261115.mjs
