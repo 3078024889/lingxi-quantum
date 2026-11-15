@@ -42,15 +42,15 @@
       </view>
 
       <view class="topup-options">
-        <button wx:for="{{amounts}}" wx:key="*this" data-amount="{{item}}" bindtap="choose" disabled="{{busy}}" class="topup-option {{selected == item ? 'selected' : ''}}">¥{{item}}</button>
-        <button data-amount="custom" bindtap="choose" disabled="{{busy}}" class="topup-option {{selected == 'custom' ? 'selected' : ''}}">自定义</button>
+        <button wx:for="{{amounts}}" wx:key="*this" data-amount="{{item}}" bindtap="choose" disabled="{{busy}}" class="topup-option {{enabled && selected == item ? 'selected' : ''}}" disabled="{{busy || !enabled}}">¥{{item}}</button>
+        <button data-amount="custom" bindtap="choose" disabled="{{busy}}" class="topup-option {{enabled && selected == 'custom' ? 'selected' : ''}}" disabled="{{busy || !enabled}}">自定义</button>
       </view>
 
       <view wx:if="{{selected == 'custom'}}" class="mini-topup-custom">
         <view class="mini-topup-label">自定义金额</view>
         <view class="mini-topup-custom-row">
           <text>¥</text>
-          <input type="digit" value="{{custom}}" bindinput="input" disabled="{{busy}}" placeholder="输入整数金额" maxlength="5"/>
+          <input type="digit" value="{{custom}}" bindinput="input" disabled="{{busy || !enabled}}" placeholder="输入整数金额" maxlength="5"/>
         </view>
       </view>
 
