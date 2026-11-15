@@ -12,6 +12,7 @@ function isPayableMiniAmount(value) {
 const { login, request, publicRequest, wxLogin, connectionMessage } = require('../../utils/api')
 const expiry = require('../../utils/topup-expiry')
 const paymentErrors = require('../../utils/virtual-payment-errors')
+const USD_TOPUP_URL = 'https://lingxifield.com/ai-wallet?currency=USD'
 
 Page({
   data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', refundableText: '', topups: [], hasRequestedAmount: false, canPay: true },
@@ -213,6 +214,21 @@ Page({
       if (typeof wx.showModal === 'function') wx.showModal({ title: '充值未完成', content: message, showCancel: false })
     }
     finally { this.setData({ busy: false }) }
+  },
+  copyUsdTopupLink() {
+    wx.setClipboardData({
+      data: USD_TOPUP_URL,
+      success: () => wx.showModal({
+        title: '美元充值',
+        content: '官网充值地址已复制。请在微信外的手机浏览器打开灵犀场官网，登录后进入余额与充值，选择美元余额完成充值。',
+        showCancel: false,
+      }),
+      fail: () => wx.showModal({
+        title: '美元充值',
+        content: '请在手机浏览器打开灵犀场官网：https://lingxifield.com/ai-wallet?currency=USD',
+        showCancel: false,
+      }),
+    })
   },
   openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
   openAccount() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/account') }) },
