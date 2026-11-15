@@ -46,3 +46,20 @@ test("mini-program native virtual top-up remains CNY-only and does not expose US
  assert.ok(!/PayPal|USD/.test(nativePage));
  assert.ok(availability.includes('currency: "CNY"'));
 });
+
+test("mini-program shows an explicit disabled-payment state and prevents misleading amount selection",()=>{
+ const nativeScript=read("miniapp/pages/balance/index.js");
+ const nativePage=read("miniapp/pages/balance/index.wxml");
+ const profile=read("components/AccountProfileCard.tsx");
+ const accountCss=read("app/unified-shell.css");
+ const i18n=read("lib/account-experience-i18n.ts");
+ assert.ok(nativeScript.includes("人民币充值服务尚未启用，当前不会创建订单或扣款"));
+ assert.ok(nativePage.includes('disabled="{{busy || !enabled}}"'));
+ assert.ok(nativePage.includes("美元充值请前往灵犀场官网"));
+ assert.ok(profile.includes('t("confirmChange")'));
+ assert.ok(i18n.includes('"zh": "确认修改"'));
+ assert.ok(accountCss.includes("grid-template-columns:82px minmax(0,1fr)"));
+ assert.ok(accountCss.includes(".lx-account-profile-copy{min-width:0;width:100%}"));
+ assert.ok(accountCss.includes("grid-template-columns:minmax(0,1fr) auto"));
+ assert.ok(accountCss.includes(".lx-account-name-edit button:disabled"));
+});
