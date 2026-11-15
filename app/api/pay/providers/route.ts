@@ -12,8 +12,11 @@ export async function GET(){
  const alipayConfigured=alipayMissingVars().length===0;
  const alipay=alipayEnabled();
  const paypal=paypalEnabled();
+ const usdBalanceTopup=paypal
+  && process.env.USD_BALANCE_TOPUP_ENABLED?.trim()==="true"
+  && process.env.SASI_REFUND_FLOW_TESTED?.trim()==="true";
  return NextResponse.json({
-  wechat,alipay,paypal,
+  wechat,alipay,paypal,usdBalanceTopup,
   diagnostics:{
    wechat:{configured:wechatConfigured,enabled:wechat,missingCount:wechatConfigured?0:wechatPayMissingVars().length},
    alipay:{configured:alipayConfigured,enabled:alipay,missingCount:alipayConfigured?0:alipayMissingVars().length},
