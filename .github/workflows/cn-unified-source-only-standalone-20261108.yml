@@ -1,11 +1,11 @@
 # Unified toolpass purchase CTA contract audited at exact source SHA.
 name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEPLOY)
-# A 450 MB candidate should only be built after the independent source/build
-# and browser gates succeed on the exact SHA. Avoid per-commit quota burn.
-# The operator must explicitly dispatch this workflow for the reviewed branch.
+# The exact reviewed CN release branch builds a standalone package and a separate
+# WeChat miniapp ZIP only after source, share-image and responsive browser gates pass.
+# This workflow publishes artifacts only; it never changes ECS, DNS, Nginx or WeChat.
 on:
   push:
-    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109]
+    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109, release/cn3194-full-cleanup-20261113, ci/cn3194-payment-base-20261110]
     paths:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
@@ -40,12 +40,78 @@ on:
       - 'components/SasiSeriesStudio.tsx'
       - 'components/SasiVariantWorkbench.tsx'
       - '.github/workflows/cn3194-upgrade-20261109.yml'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'app/home-afternoon-20261114.css'
+      - 'app/growth-pages.css'
+      - 'components/HomeGlobalGrowth.tsx'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'app/share/20260928/page.tsx'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/lingxifield-logo.png'
+      - 'public/og-lingxifield-*'
+      - 'miniapp/assets/**'
+      - 'miniapp/utils/share.js'
+      - 'app/home-afternoon-20261114.css'
+      - 'app/growth-pages.css'
+      - 'app/tools/tools-hub-compact.css'
+      - 'components/HomeGlobalGrowth.tsx'
+      - 'components/HomeProblemHub.tsx'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'app/share/20260928/page.tsx'
+      - 'public/og-lingxifield-20261115.jpg'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/home-distribution-globe-20261115.webp'
+      - 'miniapp/assets/share-lingxifield-20261115.jpg'
+      - 'miniapp/utils/share.js'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'scripts/ops/ecs-cn3196-unified-standalone-upgrade-20261115.template.sh'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'tests/final-closure/home-white-glass-20261115.spec.ts'
+      - '.github/workflows/lingxifield-share-release-gate.yml'
+      - '.github/workflows/miniapp-direct-tools-share-ci.yml'
+  pull_request:
+    branches: [ci/cn3194-payment-base-20261110]
+    paths:
+      - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'components/HomeGlobalGrowth.tsx'
+      - 'components/HomeSeoAnswers.tsx'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'app/home-afternoon-20261114.css'
+      - 'app/growth-pages.css'
+      - 'app/tools/tools-hub-compact.css'
+      - 'app/share/20260928/page.tsx'
+      - 'public/og-lingxifield-*'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/home-distribution-globe-20261115.webp'
+      - 'miniapp/**'
   workflow_dispatch:
 permissions:
   contents: write
   actions: read
 concurrency:
-  group: lingxifield-cn-unified-candidate-20261108
+  group: lingxifield-cn-unified-candidate-20261115
   cancel-in-progress: false
 jobs:
   build:
@@ -64,10 +130,18 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      - name: Install deterministic CJK font for social cards
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk >/dev/null && fc-cache -f >/dev/null
       - name: Frozen dependencies and offline source contracts
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
+          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
+          node --check miniapp/utils/share.js
+          node --check miniapp/pages/share/index.js
+          node --check miniapp/pages/web/index.js
+          node scripts/test-mini-sharing-v78.cjs
+          node scripts/test-mini-profiles-v80.cjs
           node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
           node --test tests/cn-payment-activation-20261109.test.mjs
           node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs
@@ -106,6 +180,9 @@ jobs:
           install -d .next/standalone/.next
           cp -a .next/static .next/standalone/.next/static
           cp -a public .next/standalone/public
+          test -s .next/standalone/public/og-lingxifield-20261115.jpg
+          test -s .next/standalone/public/images/home-hero-signature-20261115.webp
+          test -s .next/standalone/public/images/home-distribution-globe-20261115.webp
           cp .next/BUILD_ID .next/standalone/.next/BUILD_ID
           cp scripts/ops/cn-payment-signed-live-probe-20261109.mjs .next/standalone/cn-payment-signed-live-probe.mjs
           cp scripts/ops/cn-payment-activate-20261109.sh .next/standalone/cn-payment-activate.sh
@@ -134,7 +211,11 @@ jobs:
           for path in / /tools /siai /sasi /sasi/marketplace /about /account/software /announcements /tools/pass /ai-wallet; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "PUBLIC_LOCAL_ROUTE:$path:$code"
-            [ "$code" = 200 ] || exit 1
+            if [ "$path" = "/sasi/marketplace" ]; then
+              [ "$code" = 308 ] || exit 1
+            else
+              [ "$code" = 200 ] || exit 1
+            fi
           done
           for path in /api/sasi/account /api/tools/jobs; do
             code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
@@ -149,31 +230,51 @@ jobs:
           set -Eeuo pipefail
           pnpm exec playwright install --with-deps chrome
           pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium --project=mobile-chromium --workers=2 tests/final-closure/dual-premium-new-visual.spec.ts
+          LINGXIFIELD_E2E_BASE_URL=http://127.0.0.1:3000 NEXT_PUBLIC_SITE_URL=https://lingxifield.cn pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium tests/final-closure/home-white-glass-20261115.spec.ts
           echo 'CN3194_NEW_VISUAL_DESKTOP_MOBILE_CHROME_PASS'
+      - name: Build the WeChat miniapp with the same OG master
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          node scripts/build-miniapps-v80.cjs main > "$RUNNER_TEMP/miniapp-main-receipt.json"
+          MINIAPP_DIR="$(node -e 'const fs=require("node:fs");const r=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));process.stdout.write(r.projectPath)' "$RUNNER_TEMP/miniapp-main-receipt.json")"
+          test -s "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
+          cmp -s miniapp/assets/share-lingxifield-20261115.jpg "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
+          printf 'SITE_OG_SHA256=%s\nMINIAPP_SHARE_SHA256=%s\n' "$(sha256sum public/og-lingxifield-20261115.jpg | awk '{print $1}')" "$(sha256sum "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg" | awk '{print $1}')" > "$GITHUB_WORKSPACE/cn-20261115-social-assets.sha256"
+          MINIAPP_ZIP="lingxifield-miniapp-main-${GITHUB_SHA:0:12}.zip"
+          (cd "$MINIAPP_DIR" && zip -qr "$GITHUB_WORKSPACE/$MINIAPP_ZIP" .)
+          test -s "$GITHUB_WORKSPACE/$MINIAPP_ZIP"
+          echo "CN_MINIAPP_PACKAGE=$MINIAPP_ZIP"
       - name: Package immutable SHA-256-checked artifact
         shell: bash
         run: |
           set -Eeuo pipefail
           printf '%s\n' "${GITHUB_SHA}" > .next/standalone/RELEASE_SOURCE_SHA
-          tar -C .next/standalone -czf cn-20261108-unified-standalone.tar.gz .
-          sha256sum cn-20261108-unified-standalone.tar.gz > cn-20261108-unified-standalone.sha256
-          tar -tzf cn-20261108-unified-standalone.tar.gz > cn-20261108-archive-manifest.txt
-          grep -Fxq './server.js' cn-20261108-archive-manifest.txt
-          grep -Fxq './cn-payment-signed-live-probe.mjs' cn-20261108-archive-manifest.txt
-          grep -Fxq './cn-payment-activate.sh' cn-20261108-archive-manifest.txt
-          test "$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)" -lt 1300000000
-          echo "CN_RELEASE_ARCHIVE_BYTES=$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)"
+          tar -C .next/standalone -czf cn-20261115-unified-standalone.tar.gz .
+          sha256sum cn-20261115-unified-standalone.tar.gz > cn-20261115-unified-standalone.sha256
+          tar -tzf cn-20261115-unified-standalone.tar.gz > cn-20261115-archive-manifest.txt
+          grep -Fxq './server.js' cn-20261115-archive-manifest.txt
+          grep -Fxq './cn-payment-signed-live-probe.mjs' cn-20261115-archive-manifest.txt
+          grep -Fxq './cn-payment-activate.sh' cn-20261115-archive-manifest.txt
+          grep -Fxq './public/og-lingxifield-20261115.jpg' cn-20261115-archive-manifest.txt
+          grep -Fxq './public/images/home-hero-signature-20261115.webp' cn-20261115-archive-manifest.txt
+          grep -Fxq './public/images/home-distribution-globe-20261115.webp' cn-20261115-archive-manifest.txt
+          test "$(stat -c '%s' cn-20261115-unified-standalone.tar.gz)" -lt 1300000000
+          echo "CN_RELEASE_ARCHIVE_BYTES=$(stat -c '%s' cn-20261115-unified-standalone.tar.gz)"
           echo "CN_RELEASE_SOURCE_SHA=${GITHUB_SHA}"
       - name: Upload package for immutable prerelease promotion
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: cn-unified-${{ github.sha }}
           path: |
-            cn-20261108-unified-standalone.tar.gz
-            cn-20261108-unified-standalone.sha256
+            cn-20261115-unified-standalone.tar.gz
+            cn-20261115-unified-standalone.sha256
+            cn-20261115-social-assets.sha256
+            lingxifield-miniapp-main-*.zip
           retention-days: 14
           if-no-files-found: error
   publish:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-24.04
     timeout-minutes: 12
@@ -188,23 +289,31 @@ jobs:
           mkdir -p "$RUNNER_TEMP/lingxifield-verified"
           gh run download "$GITHUB_RUN_ID" --repo "$GH_REPO" --name "cn-unified-${GITHUB_SHA}" --dir "$RUNNER_TEMP/lingxifield-verified"
           cd "$RUNNER_TEMP/lingxifield-verified"
-          sha256sum -c cn-20261108-unified-standalone.sha256
-          tar -tzf cn-20261108-unified-standalone.tar.gz > manifest.txt
+          sha256sum -c cn-20261115-unified-standalone.sha256
+          tar -tzf cn-20261115-unified-standalone.tar.gz > manifest.txt
           grep -Fxq './server.js' manifest.txt
           grep -Fxq './RELEASE_SOURCE_SHA' manifest.txt
-          test "$(stat -c '%s' cn-20261108-unified-standalone.tar.gz)" -lt 1300000000
+          grep -Fxq './public/og-lingxifield-20261115.jpg' manifest.txt
+          MINIAPP_ZIP="$(find . -maxdepth 1 -type f -name 'lingxifield-miniapp-main-*.zip' -print -quit)"
+          test -n "$MINIAPP_ZIP"
+          unzip -l "$MINIAPP_ZIP" | grep -Fq 'assets/share-lingxifield-20261115.jpg'
+          MINIAPP_SHARE_SHA="$(unzip -p "$MINIAPP_ZIP" assets/share-lingxifield-20261115.jpg | sha256sum | awk '{print $1}')"
+          SITE_OG_SHA="$(tar -xOf cn-20261115-unified-standalone.tar.gz ./public/og-lingxifield-20261115.jpg | sha256sum | awk '{print $1}')"
+          grep -Fxq "SITE_OG_SHA256=$SITE_OG_SHA" cn-20261115-social-assets.sha256
+          grep -Fxq "MINIAPP_SHARE_SHA256=$MINIAPP_SHARE_SHA" cn-20261115-social-assets.sha256
+          test "$(stat -c '%s' cn-20261115-unified-standalone.tar.gz)" -lt 1300000000
           echo CN_PUBLISH_IMMUTABLE_VERIFIED
       - name: Publish GitHub prerelease (does not touch ECS, DNS or Nginx)
         shell: bash
         run: |
           set -Eeuo pipefail
-          tag="ecs-cn-unified-20261108-${GITHUB_SHA:0:12}"
+          tag="ecs-cn-unified-20261115-${GITHUB_SHA:0:12}"
           if gh release view "$tag" --repo "$GH_REPO" >/dev/null 2>&1;then
             echo "::error::EXACT_RELEASE_TAG_ALREADY_EXISTS"; exit 1
           fi
           cd "$RUNNER_TEMP/lingxifield-verified"
-          gh release create "$tag" cn-20261108-unified-standalone.tar.gz cn-20261108-unified-standalone.sha256 \
+          gh release create "$tag" cn-20261115-unified-standalone.tar.gz cn-20261115-unified-standalone.sha256 cn-20261115-social-assets.sha256 lingxifield-miniapp-main-*.zip \
             --repo "$GH_REPO" --target "$GITHUB_SHA" --prerelease \
-            --title "LINGXIFIELD CN unified SASI wallet and ToolPass exact source ${GITHUB_SHA:0:12} - STAGING ONLY" \
-            --notes "Build and read-only tests passed. NOT deployed. Live CN now uses port 3192; install candidate on isolated 3193 and verify account/admin, historical entitlements, payment providers, ToolPass, user tools and Nginx rollback before promotion. Do not claim real payment or login acceptance from this artifact."
+            --title "LINGXIFIELD CN website + miniapp OG exact source ${GITHUB_SHA:0:12} - STAGING ONLY" \
+            --notes "Exact-source build, responsive browser tests, public OG image checks and miniapp package verification passed. NOT deployed. CN production upstream remains 127.0.0.1:3194; isolated candidate is 3196; rollback baseline is 3193. The standalone archive is for ENS staging only. The miniapp ZIP is a separate WeChat DevTools upload package and has not been submitted or published. Payment credentials, production database and DNS are unchanged."
           echo "CN_ARTIFACT_PUBLISHED_NOT_DEPLOYED:${tag}"

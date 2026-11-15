@@ -1,7 +1,15 @@
 name: Miniapp direct tools entry and native share candidate (NO PUBLISH)
 on:
+  pull_request:
+    branches:
+      - release/cn3194-full-cleanup-20261113
+    paths:
+      - 'miniapp/**'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/unified-share-image.test.mjs'
   push:
-    branches: [feature/miniapp-direct-tools-share-20261107]
+    branches: [feature/miniapp-direct-tools-share-20261107, release/cn3194-full-cleanup-20261113]
     paths:
       - 'miniapp/**'
       - 'components/MiniEmbedMode.tsx'
@@ -29,6 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           node --test tests/mini-main-direct-tools-share.test.mjs
+          node --test tests/unified-mini-share-routes.test.mjs tests/unified-share-image.test.mjs
           node scripts/test-mini-sharing-v78.cjs
           node scripts/test-mini-profiles-v80.cjs
           echo "NO_WECHAT_RELEASE_NO_VERCEL_NO_CLOUDFLARE_DEPLOY"
