@@ -1,5 +1,5 @@
 ﻿const SITE = 'https://lingxifield.cn'
-const SHARE_IMAGE = "/assets/share-lingxifield-20261105.jpg"
+const SHARE_IMAGE = "/assets/share-lingxifield-20261115.jpg"
 
 const PRIVATE_PREFIXES = [
   '/account',
@@ -19,11 +19,8 @@ function cleanPath(input) {
 
 function publicWebPath(input) {
   const pathname = cleanPath(input)
-  if (PRIVATE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix))) {
-    return '/'
-  }
+  if (PRIVATE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(prefix))) return '/'
   if (pathname === '/sasi' && typeof input === 'string') {
-    // Share the creation mode, never personal thread, project, or credential parameters.
     const query = input.split('?')[1]?.split('#')[0] || ''
     const match = query.match(/(?:^|&)mode=(chat|image|drama|website|book|learning|research)(?:&|$)/)
     if (match) return '/sasi?mode=' + match[1]
@@ -33,47 +30,24 @@ function publicWebPath(input) {
 
 function enableShareMenu() {
   if (typeof wx.showShareMenu !== 'function') return
-  wx.showShareMenu({
-    menus: ['shareAppMessage', 'shareTimeline'],
-  })
+  wx.showShareMenu({ menus: ['shareAppMessage', 'shareTimeline'] })
 }
 
 function copyWebLink(input, label = '链接已复制') {
   const pathname = publicWebPath(input)
   wx.setClipboardData({
     data: `${SITE}${pathname}`,
-    success() {
-      wx.showToast({ title: label, icon: 'success' })
-    },
-    fail() {
-      wx.showToast({ title: '复制失败，请重试', icon: 'none' })
-    },
+    success() { wx.showToast({ title: label, icon: 'success' }) },
+    fail() { wx.showToast({ title: '复制失败，请重试', icon: 'none' }) },
   })
 }
 
 function appMessage(title, miniPath) {
-  return {
-    title,
-    path: miniPath,
-    imageUrl: SHARE_IMAGE,
-  }
+  return { title, path: miniPath, imageUrl: SHARE_IMAGE }
 }
 
 function timeline(title, query = '') {
-  return {
-    title,
-    query,
-    imageUrl: SHARE_IMAGE,
-  }
+  return { title, query, imageUrl: SHARE_IMAGE }
 }
 
-module.exports = {
-  SITE,
-  SHARE_IMAGE,
-  publicWebPath,
-  enableShareMenu,
-  copyWebLink,
-  appMessage,
-  timeline,
-}
-
+module.exports = { SITE, SHARE_IMAGE, publicWebPath, enableShareMenu, copyWebLink, appMessage, timeline }

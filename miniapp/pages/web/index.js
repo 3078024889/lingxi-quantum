@@ -15,7 +15,7 @@ function withMiniContext(path){
  const hashAt=path.indexOf('#'),route=hashAt>=0?path.slice(0,hashAt):path,hash=hashAt>=0?path.slice(hashAt):'',separator=route.includes('?')?'&':'?'
  return `${WEB_BASE}${route}${separator}mini=1&ads=0&currency=${preferredCurrency()}${hash}`
 }
-const SHARE_TITLES={'/':'灵犀场 · 一键创造，一念即达','/siai':'灵犀场 · 全球 SIAI 排行榜','/sasi':'灵犀场 SASI · 创作','/sasi/drama':'灵犀场 · 短剧创作','/sasi/connections':'灵犀场 · 扩展能力','/tools':'灵犀场 · 实用工具','/ai-knowledge':'灵犀场 · 资料变成可用知识','/ai-learning':'灵犀场 · 学习 SASI','/ai-research':'灵犀场 · 科研 SASI'}
+const SHARE_TITLES={'/':'灵犀场 · 一键创造，一念即达','/siai':'灵犀场 · 全球 SIAI 排行榜','/sasi':'灵犀场 · SASI 智能软件市场','/sasi/drama':'灵犀场 · 短剧创作','/sasi/connections':'灵犀场 · 扩展能力','/tools':'灵犀场 · 实用工具','/ai-knowledge':'灵犀场 · 资料变成可用知识','/ai-learning':'灵犀场 · 学习 SASI','/ai-research':'灵犀场 · 科研 SASI'}
 function shareTitleFor(path){return SHARE_TITLES[publicWebPath(path)]||'灵犀场 LINGXIFIELD'}
 Page({
  data:{src:'',path:'/tools',loading:true,failed:false},
