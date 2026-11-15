@@ -8,9 +8,9 @@ const result=await exports.GET({});assert.equal(queriedUser,userid);assert.equal
 const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));assert.equal(app.pages[0],'pages/web/index');assert.equal(app.tabBar,undefined);assert.ok(!app.pages.includes('pages/portal/index'));assert.equal(fs.existsSync('miniapp/pages/portal/index.js'),false);
 for(const [page,target] of [['home','/'],['tools','/tools'],['create','/sasi'],['profile','/account'],['agents','/siai']])assert.match(fs.readFileSync('miniapp/pages/'+page+'/index.js','utf8'),new RegExp('wx.redirectTo'));
 const balanceRoute=fs.readFileSync('miniapp/pages/balance/index.js','utf8');
-assert.match(balanceRoute,/pages\\/web\\/index\\?path=/);
+assert.match(balanceRoute,/pages\/web\/index\?path=/);
 assert.match(balanceRoute,/%2Fai-wallet/);
-assert.doesNotMatch(balanceRoute,/requestVirtualPayment|balance-pay\\/create/);
+assert.doesNotMatch(balanceRoute,/requestVirtualPayment|balance-pay\/create/);
 assert.equal(fs.existsSync('miniapp/pages/recharge/index.js'),false);
 assert.doesNotMatch(balanceRoute,/switchTab/);
 console.log('PASS: direct website homepage launch; legacy portal removed; one website navigation surface; compatibility links; native and web unified 740-fen balance, separate refundable principal and owned identity.');
