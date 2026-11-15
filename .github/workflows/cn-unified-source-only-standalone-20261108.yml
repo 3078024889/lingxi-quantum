@@ -5,7 +5,7 @@ name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEP
 # This workflow publishes artifacts only; it never changes ECS, DNS, Nginx or WeChat.
 on:
   push:
-    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109, release/cn3194-full-cleanup-20261113]
+    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109, release/cn3194-full-cleanup-20261113, ci/cn3194-payment-base-20261110]
     paths:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
