@@ -79,9 +79,9 @@ jobs:
         with:
           name: lingxifield-miniapp-5.7.1-${{ github.sha }}
           path: |
-            dist/lingxifield-miniapp-5.7.0.zip
-            dist/lingxifield-miniapp-5.7.0.zip.sha256
-            dist/miniapp-5.7.0/release-notes.txt
+            dist/lingxifield-miniapp-5.7.1.zip
+            dist/lingxifield-miniapp-5.7.1.zip.sha256
+            dist/miniapp-5.7.1/release-notes.txt
           retention-days: 14
           if-no-files-found: error
       - name: Confirm no external release actions
