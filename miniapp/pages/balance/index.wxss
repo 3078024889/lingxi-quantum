@@ -173,6 +173,9 @@
   font-weight: 740;
   box-sizing: border-box;
 }
+.topup-option:disabled { opacity: .48; color: #8992aa; border-color: #e5e8f0; background: #f5f6fa; box-shadow: none; }
+.topup-option.selected:disabled { border-color: #e5e8f0; color: #8992aa; background: #f5f6fa; }
+.mini-topup-custom-row input:disabled { color: #9aa3b8; opacity: .72; }
 .topup-option.selected {
   border-color: #7b68ef;
   background: linear-gradient(135deg, #f3f0ff, #edf3ff);
