@@ -52,8 +52,8 @@ export async function openMiniRecharge(amount?: string): Promise<boolean> {
   const bridge = await miniPaymentBridge();
   if (!bridge) return false;
   const value = typeof amount === "string" ? amount.trim() : "";
-  const valid = /^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(value) && Number(value) >= 0.01 && Number(value) <= 10000;
-  const suffix = valid ? "?amount=" + encodeURIComponent(value) : "";
+  if (amount !== undefined && (!/^[1-9][0-9]{0,4}$/.test(value) || Number(value) > 10000)) return false;
+  const suffix = amount === undefined ? "" : "?amount=" + encodeURIComponent(value);
   return new Promise(resolve => {
     const timeout = setTimeout(() => resolve(false), 5000);
     bridge.navigateTo({ url: "/pages/balance/index" + suffix, success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
