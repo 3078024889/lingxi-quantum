@@ -3,7 +3,7 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 
 const root = process.cwd();
-const version = '5.7.2';
+const version = '5.7.3';
 const receiptFile = path.join(root, '_local/handoff/mini-build-v80/main-latest.json');
 if (!fs.existsSync(receiptFile)) throw new Error('MAIN_MINI_BUILD_RECEIPT_MISSING');
 const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
@@ -48,7 +48,9 @@ if (projectConfig.appid !== 'wxbf4ae90406e7e26b' || app.pages?.[0] !== 'pages/we
 }
 if (fs.existsSync(path.join(stage, 'project.private.config.json')) ||
     fs.existsSync(path.join(stage, 'pages', 'portal', 'index.js')) ||
-    fs.existsSync(path.join(stage, 'pages', 'recharge', 'index.js')) ||
+    fs.existsSync(path.join(stage, 'pages', 'recharge')) ||
+    fs.existsSync(path.join(stage, 'utils', 'topup-expiry.js')) ||
+    fs.existsSync(path.join(stage, 'utils', 'virtual-payment-errors.js')) ||
     fs.existsSync(path.join(stage, 'pages', 'mail-home', 'index.js'))) {
   throw new Error('SECONDARY_OR_PRIVATE_PROJECT_FILE_LEAKED');
 }
@@ -67,6 +69,11 @@ function verifyDependencies(dir) {
     }
   }
 }
+const balanceRoute = fs.readFileSync(path.join(stage, 'pages', 'balance', 'index.js'), 'utf8');
+if (!balanceRoute.includes('/pages/web/index?path=') || !balanceRoute.includes('%2Fai-wallet') ||
+    balanceRoute.includes('requestVirtualPayment') || balanceRoute.includes('/api/wechat/mini/balance-pay/')) {
+  throw new Error('MINI_BALANCE_ROUTE_MUST_REDIRECT_TO_WEBSITE_WALLET');
+}
 verifyDependencies(stage);
 fs.writeFileSync(path.join(stage, 'VERSION.txt'),
   'LINGXIFIELD MINI PROGRAM\nVERSION=' + version + '\nSOURCE_SHA=' + sourceSha + '\nAPPID=' + projectConfig.appid + '\n');
@@ -74,7 +81,7 @@ fs.rmSync(zipFile, { force: true });
 execFileSync('zip', ['-qr', '-X', zipFile, '.'], { cwd: stage, stdio: 'inherit' });
 execFileSync('unzip', ['-t', zipFile], { stdio: 'inherit' });
 const entries = execFileSync('unzip', ['-Z1', zipFile], { encoding: 'utf8' }).trim().split(/\r?\n/);
-for (const required of ['project.config.json', 'app.json', 'pages/balance/index.js', 'pages/balance/index.wxml', 'pages/balance/index.wxss', 'pages/web/index.js', 'utils/api.js', 'VERSION.txt']) {
+for (const required of ['project.config.json', 'app.json', 'pages/balance/index.js', 'pages/balance/index.wxml', 'pages/web/index.js', 'utils/api.js', 'VERSION.txt']) {
   if (!entries.includes(required)) throw new Error('MINI_ZIP_REQUIRED_FILE_MISSING:' + required);
 }
 if (entries.some(name => name.includes('project.private.config.json') || name.startsWith('pages/recharge/') || name.startsWith('pages/mail-home/'))) {
@@ -83,15 +90,15 @@ if (entries.some(name => name.includes('project.private.config.json') || name.st
 const hash = execFileSync('sha256sum', [zipFile], { encoding: 'utf8' }).trim().split(/\s+/)[0];
 fs.writeFileSync(zipFile + '.sha256', hash + '  ' + path.basename(zipFile) + '\n');
 fs.writeFileSync(path.join(output, 'release-notes.txt'),
-  '灵犀场小程序 5.7.2\n\n' +
-  '1. 移除旧双层 Portal，启动后直接进入灵犀场网站首页。\n' +
-  '2. 恢复好友与朋友圈原生分享；分享链接仅允许当前公开页面并清理私有参数。\n' +
-  '3. 首页、账户页和钱包页统一进入原生余额充值确认页，所选金额准确传递。\n' +
-  '4. 小程序自定义充值限制为 1–10,000 元整数元，与已发布的 lx_balance_custom 商品计费单位一致。\n' +
-  '5. 首页公告栏去除重复充值入口，保留主导航唯一入口。\n' +
-  '6. 支付仍受服务端开关控制；未配置并验收微信虚拟支付前不会创建订单或扣款。\n' +
-  '7. 美元充值入口明确引导至官网，并复制官网美元钱包直达链接。\n' +
-  '8. 人民币充值未开通时明确说明不会创建订单或扣款，并禁用金额控件。\n' +
+  '灵犀场小程序 5.7.3\n\n' +
+  '1. 删除旧版原生充值页面、充值商品选择、充值下单与虚拟充值调用。\n' +
+  '2. 人民币与美元充值统一进入灵犀场官网钱包，由官网收银台处理。\n' +
+  '3. 旧余额页面路径仅保留兼容跳转，不再包含原生充值逻辑。\n' +
+  '4. 主小程序与独立临时邮箱小程序均不再打包旧充值页。\n' +
+  '5. 保留账户登录、余额查询、资金账本、订单、退款与提现记录。\n' +
+  '6. 保留已审核工具商品的独立微信虚拟支付，不与钱包充值混用。\n' +
+  '7. 历史虚拟充值订单仍可由服务端回调核验并完成结算。\n' +
+  '8. 新小程序版本不会调用原生钱包充值接口；服务端旧充值创建接口已移除。\n' +
   '9. 主小程序 AppID: ' + projectConfig.appid + '\n' +
   'SOURCE_SHA=' + sourceSha + '\n' +
   'SHA256=' + hash + '\n');
