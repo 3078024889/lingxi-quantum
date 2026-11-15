@@ -159,6 +159,9 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
       path: "/",
       required: [
         "全球智能服务与实用工具平台",
+        'data-home-polish="20261115-white-glass"',
+        "home-hero-signature-20261115.webp",
+        "home-distribution-globe-20261115.webp",
         "全球 SIAI 排行榜",
         "SASI 智能软件市场",
         "100+ 在线实用工具",
