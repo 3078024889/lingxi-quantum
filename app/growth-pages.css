@@ -52,17 +52,17 @@
 .lx11-page [data-siai-search-intents="home"]>div:first-child{margin-bottom:12px!important}
 .lx11-page [data-siai-search-intents="home"]>div:first-child p{line-height:1.7!important}
 .lx11-page [data-siai-search-intents="home"] article{padding:15px!important;border-radius:15px!important;background:var(--lx-panel)!important;box-shadow:0 5px 18px rgba(30,48,92,.035)}
-.lx-seo-answers{width:min(var(--lx-growth-max),calc(100% - 48px))!important;margin:0 auto 42px!important;padding:24px 0 0!important}
-.lx-seo-answers-head{max-width:980px!important;margin-bottom:15px!important}
-.lx-seo-answers-head h2{font-size:clamp(22px,2.2vw,29px)!important}
-.lx-seo-answers-head>p:not(.lx-seo-eyebrow){margin-top:7px!important;line-height:1.75!important}
+body:not(:has(.lx-home-reference)) .lx-seo-answers{width:min(var(--lx-growth-max),calc(100% - 48px))!important;margin:0 auto 42px!important;padding:24px 0 0!important}
+body:not(:has(.lx-home-reference)) .lx-seo-answers-head{max-width:980px!important;margin-bottom:15px!important}
+body:not(:has(.lx-home-reference)) .lx-seo-answers-head h2{font-size:clamp(22px,2.2vw,29px)!important}
+body:not(:has(.lx-home-reference)) .lx-seo-answers-head>p:not(.lx-seo-eyebrow){margin-top:7px!important;line-height:1.75!important}
 .lx-seo-question-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
 .lx-seo-question{padding:16px 17px!important;border-radius:15px!important;box-shadow:0 5px 18px rgba(30,48,92,.035)}
 .lx-seo-question h3{font-size:14px!important;line-height:1.55!important;margin-bottom:7px!important}
 .lx-seo-question p{font-size:13px!important;line-height:1.72!important;margin-bottom:9px!important}
 .lx-seo-question a{font-size:12px!important}
-.lx-seo-answers-links{gap:8px!important;margin-top:14px!important}
-.lx-seo-answers-links a{padding:9px 13px!important;border-radius:10px!important}
+body:not(:has(.lx-home-reference)) .lx-seo-answers-links{gap:8px!important;margin-top:14px!important}
+body:not(:has(.lx-home-reference)) .lx-seo-answers-links a{padding:9px 13px!important;border-radius:10px!important}
 .lx-seo-extra{margin:24px 0 18px!important}
 .lx-seo-action-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important}
 .lx-seo-action{padding:14px 15px!important;border-radius:13px!important}
@@ -152,7 +152,7 @@ html[data-theme="dark"] .lx-seo-vendor{background:linear-gradient(110deg,rgba(95
  .lx11-home-hero a[data-testid="home-global-siai-entry"]>span:last-child{width:100%}
  .lx11-home-section{padding-top:18px!important}
  .lx-v143-about-grid{grid-template-columns:1fr}
- .lx-seo-answers{width:calc(100% - 28px)!important;margin-bottom:30px!important}
+ body:not(:has(.lx-home-reference)) .lx-seo-answers{width:calc(100% - 28px)!important;margin-bottom:30px!important}
  .lx-seo-question-grid{grid-template-columns:1fr!important}
  .lx-seo-action-grid,.lx-seo-steps{grid-template-columns:1fr!important}
  .lx-growth-page{padding:18px 14px 34px}
@@ -170,7 +170,7 @@ html[data-theme="dark"] .lx-seo-vendor{background:linear-gradient(110deg,rgba(95
  .lx11-home-hero>div>div>p.mt-3{font-size:13px}
  .lx11-prompt{grid-template-columns:1fr}
  .lx11-prompt button{width:100%}
- .lx-seo-answers{width:calc(100% - 28px)!important}
+ body:not(:has(.lx-home-reference)) .lx-seo-answers{width:calc(100% - 28px)!important}
  .lx-growth-breadcrumb{font-size:11px}
 }
 
@@ -214,7 +214,7 @@ html[data-theme="dark"] .lx-growth-tool-actions a{border-color:rgba(151,180,255,
 .lx-growth-hero{background:radial-gradient(ellipse 50% 90% at 100% 0%,rgba(110,140,245,.10),transparent 72%),radial-gradient(ellipse 42% 80% at 0% 100%,rgba(178,128,244,.08),transparent 72%)!important;box-shadow:none!important}
 .lx-growth-panel,.lx-growth-tool-card,.lx-growth-topic-card,.lx-growth-tool-list a,.lx-growth-partner-card,.lx-growth-source-panel,.lx-growth-faq-item,.lx-seo-question,.lx-seo-action,.lx-seo-steps li,.lx-seo-vendor{background:transparent!important;box-shadow:none!important}
 .lx-growth-panel,.lx-growth-tool-card,.lx-growth-topic-card,.lx-growth-tool-list a,.lx-growth-partner-card,.lx-seo-question,.lx-seo-action,.lx-seo-steps li{border-color:var(--lx-line)!important}
-.lx-growth-text-link,.lx-growth-tool-actions a,.lx-seo-answers-links a{background:transparent!important;box-shadow:none!important}
+.lx-growth-text-link,.lx-growth-tool-actions a,body:not(:has(.lx-home-reference)) .lx-seo-answers-links a{background:transparent!important;box-shadow:none!important}
 .lx-growth-tool-card:hover,.lx-growth-topic-card:hover,.lx-seo-question:hover{box-shadow:0 12px 28px rgba(132,96,232,.09)!important;border-color:rgba(139,92,246,.38)!important}
 html[data-theme="dark"] .lx11-home-hero{background:radial-gradient(ellipse 48% 80% at 100% 0%,rgba(116,140,255,.13),transparent 72%),radial-gradient(ellipse 42% 70% at 0% 100%,rgba(176,127,255,.10),transparent 72%)!important;box-shadow:none!important}
 html[data-theme="dark"] .lx11-home-hero a[data-testid="home-global-siai-entry"],html[data-theme="dark"] .lx11-home-hero details,html[data-theme="dark"] .lx11-page [data-siai-search-intents="home"] article{background:transparent!important;box-shadow:none!important}
@@ -229,7 +229,7 @@ html[data-theme="dark"] .lx-growth-panel,html[data-theme="dark"] .lx-growth-tool
 @keyframes lx-home-lotus-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 
 /* One shared transparent content rail: ToolPass, SEO answers and footer now align exactly. */
-.lx-seo-answers{width:min(var(--lx-home-rail-max),calc(100% - 2*var(--lx-home-gutter)))!important}
+body:not(:has(.lx-home-reference)) .lx-seo-answers{width:min(var(--lx-home-rail-max),calc(100% - 2*var(--lx-home-gutter)))!important}
 .lx11-footer.lx-branded-footer{padding-left:var(--lx-home-gutter)!important;padding-right:var(--lx-home-gutter)!important;background:transparent!important}
 .lx-branded-footer .lx11-footer-grid,.lx-branded-footer .lx-footer-social-strip,.lx11-footer .lx-footer-v3-showcase{width:min(var(--lx-home-rail-max),100%)!important;max-width:none!important;margin-inline:auto!important}
 

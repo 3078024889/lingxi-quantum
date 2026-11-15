@@ -166,6 +166,10 @@ probe(){
    echo "CN_AFTERNOON_BUILD_ID_MISMATCH:$PORT:$path" >&2;return 1
   fi
  done
+ curl -fsS --noproxy '*' --max-time 25 -H 'Host: lingxifield.cn' "http://127.0.0.1:$PORT/" | grep -F 'data-home-polish="20261115-white-glass"' >/dev/null || return 1
+ code /images/home-hero-signature-20261115.webp 200
+ code /images/home-distribution-globe-20261115.webp 200
+ echo "CN_HOME_WHITE_GLASS_ARTWORK_PASS:$PORT"
  echo "CN_AFTERNOON_THREE_PAGES_BUILD_ID_PASS:$PORT"
  code /discover/sasi-software-marketplace 200
  code /en/discover/mt5-ea-source-code 200
@@ -224,7 +228,7 @@ probe_public_design(){
  for attempt in $(seq 1 30);do
   ready=true
   for path in / /sasi /sasi/seller;do
-   if ! html="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 20 "https://lingxifield.cn$path?__afternoon_gate=$attempt")" || ! grep -Fq 'data-release-design="20261114-afternoon-three-pages"' <<<"$html";then
+   if ! html="$(curl -kfsS --noproxy '*' --resolve lingxifield.cn:443:127.0.0.1 --max-time 20 "https://lingxifield.cn$path?__afternoon_gate=$attempt")" || ! grep -Fq 'data-release-design="20261114-afternoon-three-pages"' <<<"$html" || { [[ "$path" == / ]] && ! grep -Fq 'data-home-polish="20261115-white-glass"' <<<"$html"; };then
     echo "CN_PUBLIC_NEW_DESIGN_WAIT attempt=$attempt path=$path"
     ready=false;break
    fi

@@ -305,7 +305,7 @@ const COPY:Record<LingxiLang,HomeGrowthCopy>={
 };
 
 export function HomeHeroVisual(){
- return <div className="lx-home-hero-art" aria-hidden="true"><img src="/images/global-scene-20261114.webp" width={2172} height={724} alt="" fetchPriority="high" decoding="async"/></div>;
+ return <div className="lx-home-hero-art" data-home-polish="20261115-white-glass" aria-hidden="true"><img src="/images/home-hero-signature-20261115.webp" width={2172} height={724} alt="" fetchPriority="high" decoding="async"/></div>;
 }
 
 const SECURITY_COPY:Record<LingxiLang,{title:string;description:string}>={
@@ -402,13 +402,7 @@ export function HomeGlobalGrowth({lang}:{lang:LingxiLang}){
    <section className="lx-home-distribution" aria-labelledby="lx-home-distribution-title">
     <div className="lx-home-distribution-heading">
      <div><p className="lx-home-section-eyebrow">{lang==="zh"?"全球用户连接":"GLOBAL REACH"}</p><h2 id="lx-home-distribution-title">{lang==="zh"?"全球智能分发与合作":distribution.title}</h2><p>{lang==="zh"?"连接搜索入口、智能推荐、全球排行榜、内容传播与合作伙伴，让更多用户从发现走向实际使用。":"Connect discovery, intelligent search, global rankings, useful content and partners so more people can move from discovery to real use."}</p></div>
-     <div className="lx-home-distribution-globe" aria-hidden="true"><svg viewBox="0 0 260 220" role="presentation">
-      <defs><radialGradient id="lx-distribution-globe-fill" cx="35%" cy="28%" r="80%"><stop offset="0%" stopColor="#d9f5ff"/><stop offset="55%" stopColor="#8e9df5"/><stop offset="100%" stopColor="#6544c9"/></radialGradient><filter id="lx-distribution-glow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-      <g fill="none" strokeLinecap="round"><ellipse cx="130" cy="112" rx="119" ry="35" stroke="#9c86ef" strokeWidth="2" opacity=".7" transform="rotate(-17 130 112)"/><ellipse cx="130" cy="112" rx="108" ry="55" stroke="#d6b76f" strokeWidth="1.5" opacity=".65" transform="rotate(22 130 112)"/><ellipse cx="130" cy="112" rx="94" ry="94" stroke="#9aabff" strokeWidth="1.5" opacity=".5"/></g>
-      <circle cx="130" cy="105" r="68" fill="url(#lx-distribution-globe-fill)" stroke="#fff" strokeWidth="2" filter="url(#lx-distribution-glow)"/><ellipse cx="130" cy="105" rx="30" ry="68" fill="none" stroke="#fff" strokeOpacity=".65"/><ellipse cx="130" cy="105" rx="68" ry="25" fill="none" stroke="#fff" strokeOpacity=".6"/>
-      <path d="M94 75l17-12 17 5 8 15-8 11-18-2-8 12-16-9 2-13z M151 88l15-7 13 12-7 16-15 5-8-12z M113 126l17-7 13 12-4 17-17 4-13-13z" fill="#d5f5e9" fillOpacity=".62" stroke="#fff" strokeOpacity=".4"/>
-      <g fill="#fff" filter="url(#lx-distribution-glow)"><circle cx="91" cy="104" r="3"/><circle cx="165" cy="73" r="3"/><circle cx="151" cy="145" r="2.5"/></g>
-     </svg></div>
+     <div className="lx-home-distribution-globe" aria-hidden="true"><img src="/images/home-distribution-globe-20261115.webp" width={1536} height={1024} alt="" loading="lazy" decoding="async"/></div>
     </div>
     <nav className="lx-home-market-strip" aria-label={lang==="zh"?"全球分发与合作入口":"Global discovery and partner links"}>
      <Link className="lx-home-market-card" href="/tools"><LingxiMiniIcon name={marketIcons[0]} size="tiny" className="lx-home-market-icon"/><span><strong>{lang==="zh"?"搜索入口":"Search discovery"}</strong><small>{lang==="zh"?"按真实问题找到对应工具与教程":"Find tools and guides by task"}</small></span><b>→</b></Link>
