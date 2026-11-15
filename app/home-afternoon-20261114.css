@@ -72,7 +72,7 @@ body:has([data-home-sidebar]){--lx-side:232px;--lx-home-news-height:36px;--lx-ne
  .lx-home-fixed-topbar{top:var(--lx-news-height);left:var(--lx-side);right:0;height:var(--lx-top);padding:0 16px;background:#fffffff2;backdrop-filter:blur(16px);border-bottom:1px solid #e5eaf0;z-index:110}.lx-home-fixed-topbar .lx11-search{height:40px;max-width:760px;border-radius:14px;border-color:#c4b4f3;box-shadow:inset 0 1px #fff,0 3px 8px #7e52c41c}.lx-home-fixed-topbar .lx11-search input{font-size:14px}.lx-home-fixed-topbar .lx11-top-actions{gap:7px}.lx-home-signin,.lx-home-register{display:inline-flex;align-items:center;justify-content:center;min-height:35px;padding:0 14px;border:1px solid #d8cafa;border-radius:20px;background:#fff;color:#432475;font-size:13px;font-weight:700}.lx-home-register{color:#fff;background:linear-gradient(100deg,#9f36e9,#6c33e0)}
  .lx-home-mobile{display:none}
 }
-@media(max-width:1200px){.lx-home-reference .lx-home-feature-copy strong{font-size:14px}.lx-home-reference .lx-home-feature-copy small{font-size:11px}.lx-home-reference .lx-home-growth-card{padding:12px}.lx-home-reference .lx-home-growth-card-top{position:static;float:left;margin-right:8px}.lx-home-reference .lx-home-growth-card-top b{display:none}.lx-home-reference .lx-home-hero-copy{width:60%}.lx-home-reference .lx-home-market-strip{grid-template-columns:repeat(3,minmax(0,1fr))}.lx-home-reference .lx-seo-question-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:1200px){.lx-home-reference .lx-home-feature-copy strong{font-size:14px}.lx-home-reference .lx-home-feature-copy small{font-size:11px}.lx-home-reference .lx-home-growth-card{padding:12px}.lx-home-reference .lx-home-growth-card-top{position:static;float:left;margin-right:8px}.lx-home-reference .lx-home-growth-card-top b{display:none}.lx-home-reference .lx-home-hero-copy{width:60%}.lx-home-reference .lx-home-market-strip{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:1023px){
  .lx-site-content:has([data-home-sidebar]){width:100%;max-width:100%;margin-left:0!important;margin-right:0;padding-top:calc(58px + var(--lx-news-height));overflow-x:hidden}.lx-site-content:has([data-home-sidebar]) main{width:100%;max-width:100%;margin-left:0!important}
  .lx-home-fixed-sidebar,.lx-home-fixed-topbar{display:none!important}.lx-home-mobile{position:fixed;top:var(--lx-news-height);left:0;right:0;z-index:110;display:flex;align-items:center;justify-content:space-between;gap:6px;height:58px;padding:6px 12px;background:#fffffff2;border-bottom:1px solid #e5eaf0}.lx-home-mobile-menu{display:block;border:1px solid #dfd2f5;border-radius:9px;padding:5px 9px;background:#fff;color:#6840bf}.lx-home-mobile .lx11-mobile-brand{min-width:0;flex:1}.lx-home-mobile .lx11-mobile-brand b{font-size:13px}.lx-home-mobile-login{font-size:12px;white-space:nowrap}
@@ -138,32 +138,3 @@ html[data-theme="dark"] .lx-home-fixed-sidebar,html[data-theme="dark"] .lx-home-
 .lx-home-reference .lx-home-faq-copy h3{font-size:16px}
 .lx-home-reference .lx-home-faq-copy p{font-size:14px;line-height:1.45}
 .lx-home-reference .lx-home-faq-copy>a{font-size:13px}
-
-/* 2026-11-15 readability and compact four-column FAQ closure. */
-.lx-home-reference .lx-home-growth-heading>p:last-child,
-.lx-home-reference .lx-home-distribution-heading p:last-child,
-.lx-home-reference .lx-home-siai-heading p:last-child,
-.lx-home-reference .lx-seo-answers-head>p:not(.lx-seo-eyebrow),
-.lx-home-reference .lx-home-toolpass-intro>p{font-size:14px;line-height:1.65}
-.lx-home-reference .lx-home-growth-card>p{font-size:14px;line-height:1.65}
-.lx-home-reference .lx-home-feature-copy small{font-size:13px}
-.lx-home-reference .lx-home-growth-chips a,
-.lx-home-reference .lx-home-growth-chips span{font-size:12px}
-.lx-home-reference .lx-home-growth-cta,
-.lx-home-reference .lx-home-toolpass-link,
-.lx-home-reference .lx-home-plan-card>a,
-.lx-home-reference .lx-home-popular-tools nav a,
-.lx-home-reference .lx-home-faq-copy>a{font-size:13px}
-.lx-home-reference .lx-home-toolpass-intro li,
-.lx-home-reference .lx-home-plan-card>p{font-size:13px}
-.lx-home-reference .lx-home-market-card strong{font-size:14px}
-.lx-home-reference .lx-home-market-card small{font-size:12px}
-.lx-home-reference .lx-home-siai-category-card strong{font-size:16px}
-.lx-home-reference .lx-home-siai-category-card small{font-size:13px}
-.lx-home-reference .lx-home-popular-tools p,
-.lx-home-reference .lx-home-directory{font-size:13px}
-.lx-home-reference .lx-home-faq-copy p{font-size:13px;line-height:1.6}
-.lx-home-reference .lx11-footer p,
-.lx-home-reference .lx11-footer a{font-size:13px}
-@media(max-width:1200px){.lx-home-reference .lx-home-feature-copy small{font-size:12px}}
-@media(max-width:600px){.lx-home-reference .lx-home-feature-copy small{font-size:11px}}
