@@ -13,10 +13,10 @@ test('website, localized pages and independent SIAI pages use the new 2026-11-15
  const separate=read('lingxifield-ai-market/app/(default)/layout.tsx'),localizedMarket=read('lingxifield-ai-market/app/[lang]/layout.tsx');
  const separateProduct=read('lingxifield-ai-market/app/[lang]/platform/[id]/page.tsx');
  const independentCard=read('lingxifield-ai-market/lib/share-card.ts');
- assert(share.includes('/og-lingxifield-20261115.jpg'));assert(share.includes('width:1200, height:630'));
- assert(root.includes('SHARE_IMAGE_URL'));assert(page.includes('SHARE_IMAGE_URL'));assert(root.includes('width:1200,height:630'));
+ assert(share.includes('/og-lingxifield-20261115.jpg'));assert(share.includes('width:800, height:420'));
+ assert(root.includes('SHARE_IMAGE_URL'));assert(root.includes('SHARE_IMAGES'));assert(page.includes('SHARE_IMAGE_URL'));
  assert(siai.includes('images:SHARE_IMAGES'));assert(localizedSiai.includes('images:SHARE_IMAGES'));assert(localizedSiai.includes('summary_large_image'));
- assert(independentCard.includes('https://lingxifield.com/og-lingxifield-20261115.jpg'));assert(independentCard.includes('width:1200,height:630'));
+ assert(independentCard.includes('https://lingxifield.com/og-lingxifield-20261115.jpg'));assert(independentCard.includes('width:800,height:420'));
  assert(independentCard.includes('SASI 智能软件市场'));assert.doesNotMatch(independentCard,/SASI 智能创作/);
  assert(separate.includes('images:MARKET_SHARE_IMAGES'));assert(localizedMarket.includes('images:MARKET_SHARE_IMAGES'));
  assert(separateProduct.includes('images:MARKET_SHARE_IMAGES'));assert(separateProduct.includes('summary_large_image'));
@@ -24,13 +24,13 @@ test('website, localized pages and independent SIAI pages use the new 2026-11-15
  assert(!existsSync(new URL('../public/og-lingxifield-20261113.jpg',import.meta.url)),'old website OG asset must be removed');
  assert(!existsSync(new URL('../miniapp/assets/share-lingxifield-20261105.jpg',import.meta.url)),'old mini-program share asset must be removed');
 });
-test('the new website OG is optimized JPEG 1200x630 and the mini-program card is 600x480',async()=>{
+test('the new website OG and mini-program share use the same optimized 800x420 JPEG master',async()=>{
  const og=new URL('../'+ogAsset,import.meta.url);assert(existsSync(og),ogAsset);
- const ogMeta=await sharp(readFileSync(og)).metadata();assert.equal(ogMeta.format,'jpeg');assert.equal(ogMeta.width,1200);assert.equal(ogMeta.height,630);
- assert(statSync(og).size<700*1024,'OG image should remain optimized for social previews');
+ const ogMeta=await sharp(readFileSync(og)).metadata();assert.equal(ogMeta.format,'jpeg');assert.equal(ogMeta.width,800);assert.equal(ogMeta.height,420);
+ assert(statSync(og).size<150*1024,'OG image should remain optimized for social previews');
  const mini=new URL('../'+miniAsset,import.meta.url);assert(existsSync(mini),miniAsset);
- const meta=await sharp(readFileSync(mini)).metadata();assert.equal(meta.format,'jpeg');assert.equal(meta.width,600);assert.equal(meta.height,480);
- assert(statSync(mini).size<300*1024,'mini-program share card should remain optimized');
+ const miniBytes=readFileSync(mini);const meta=await sharp(miniBytes).metadata();assert.equal(meta.format,'jpeg');assert.equal(meta.width,800);assert.equal(meta.height,420);assert.deepEqual(miniBytes,readFileSync(og),'website and mini-program must use identical OG master bytes');
+ assert(statSync(mini).size<150*1024,'mini-program share card should remain optimized');
  const miniShare=read('miniapp/utils/share.js');assert(miniShare.includes('/assets/share-lingxifield-20261115.jpg'));
  const miniBuild=read('scripts/build-miniapps-v80.cjs');assert(miniBuild.includes('assets/share-lingxifield-20261115.jpg'));assert.doesNotMatch(miniBuild,/share-lingxifield-20260928\\.png/);
  const miniPage=read('miniapp/pages/web/index.js');assert(miniPage.includes('SASI 智能软件市场'));
