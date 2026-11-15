@@ -1,1 +1,6 @@
-{"navigationStyle":"custom","enablePullDownRefresh":false}
+{
+  "navigationStyle": "custom",
+  "enablePullDownRefresh": false,
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
+}
