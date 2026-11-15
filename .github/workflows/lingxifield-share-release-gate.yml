@@ -5,6 +5,10 @@ on:
     branches:
       - 'release/unified-share-visual-20261105'
       - 'fix/share-image-routing-20261105'
+      - 'release/com-sasi-full-20261108'
+      - 'ci/cn3194-payment-base-20261110'
+      - 'fix/home-layout-og-20261115-com'
+      - 'fix/home-layout-og-20261115-cn'
     paths:
       - '.github/workflows/lingxifield-share-release-gate.yml'
       - 'app/layout.tsx'
@@ -25,16 +29,40 @@ on:
       - 'miniapp/pages/share/index.js'
       - 'miniapp/assets/**'
       - 'public/og-lingxifield-*'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/lingxifield-logo.png'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
       - 'tests/unified-share-image.test.mjs'
   pull_request:
     branches:
       - fix/toolpass-compact-align-cn-20261113
       - fix/toolpass-compact-align-com-20261113
+      - release/com-sasi-full-20261108
+      - ci/cn3194-payment-base-20261110
+      - release/cn3194-full-cleanup-20261113
     paths:
       - 'lib/share-image.ts'
       - 'lingxifield-ai-market/lib/share-card.ts'
       - 'tests/unified-share-image.test.mjs'
-      - 'public/og-lingxifield-20261113.jpg'
+      - 'public/og-lingxifield-*'
+      - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/lingxifield-logo.png'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
+      - 'miniapp/assets/**'
+      - 'app/layout.tsx'
+      - 'miniapp/utils/share.js'
+      - 'miniapp/pages/share/index.wxml'
+      - 'miniapp/pages/web/index.js'
+      - 'app/home-afternoon-20261114.css'
+      - 'components/SasiOpenMarketplace.module.css'
+      - 'app/growth-pages.css'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'scripts/test-share-metadata.mjs'
+      - 'app/share/20260928/page.tsx'
       - '.github/workflows/lingxifield-share-release-gate.yml'
   workflow_dispatch:
 
@@ -62,13 +90,15 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      - name: Install deterministic CJK font for social cards
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk >/dev/null && fc-cache -f >/dev/null
       - run: pnpm install --frozen-lockfile
       - name: Exact image, metadata and old-file removal assertions
-        run: node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs
+        run: node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
       - name: All remaining share code uses the same image, never old 20260928
         run: |
           set -euo pipefail
-          if git grep -n -E '(og-lingxifield|share-lingxifield)-20260928|og-lingxifield-20261105\.jpg|opengraph-image\?v=20261113' -- app lib miniapp lingxifield-ai-market/app lingxifield-ai-market/lib; then
+          if git grep -n -E '(og-lingxifield|share-lingxifield)-20260928|og-lingxifield-20261105\.jpg|og-lingxifield-20261113\.jpg|share-lingxifield-20261105\.jpg|opengraph-image\?v=20261113' -- app lib miniapp lingxifield-ai-market/app lingxifield-ai-market/lib; then
             echo 'Legacy social share references remain'; exit 1
           fi
           node --check miniapp/utils/share.js
@@ -94,6 +124,6 @@ jobs:
       - run: npm ci
       - name: Confirm independent site references common visual
         run: |
-          node -e "const s=require('node:fs').readFileSync('lib/share-card.ts','utf8'); if(!s.includes('lingxifield.com/og-lingxifield-20261113.jpg')) process.exit(1)"
+          node -e "const s=require('node:fs').readFileSync('lib/share-card.ts','utf8'); if(!s.includes('lingxifield.com/og-lingxifield-20261115.jpg')) process.exit(1)"
       - name: Build independent market Next.js app
         run: npm run build

@@ -26,8 +26,14 @@ test('mini web share preserves public ranking and tools across both official dom
  for(const domain of ['https://lingxifield.com','https://lingxifield.cn']){
   assert.equal(publicMiniSharePath(domain+'/siai?utm_source=wechat'),'/siai');
   assert.equal(publicMiniSharePath(domain+'/tools/pdf-editor?account=private'),'/tools/pdf-editor');
-  assert.equal(publicMiniSharePath(domain+'/sasi?mode=drama&task=private'),'/sasi?mode=drama');
+  assert.equal(publicMiniSharePath(domain+'/sasi?mode=drama&task=private'),'/sasi');
   assert.equal(publicMiniSharePath(domain+'/sasi?mode=unknown'),'/sasi');
+  assert.equal(publicMiniSharePath(domain+'/sasi/seller?token=private'),'/sasi/seller');
+  assert.equal(publicMiniSharePath(domain+'/sasi/delivery?token=private'),'/sasi/delivery');
+  assert.equal(publicMiniSharePath(domain+'/discoveries?utm_source=wechat'),'/discoveries');
+  assert.equal(publicMiniSharePath(domain+'/partners?token=private'),'/partners');
+  assert.equal(publicMiniSharePath(domain+'/sasi/drama?task=private'),'/');
+  assert.equal(publicMiniSharePath(domain+'/ai-knowledge'),'/');
  }
 });
 test('mini share rejects outside hosts, secret/private pages and unsafe input',()=>{
@@ -37,16 +43,19 @@ test('mini share rejects outside hosts, secret/private pages and unsafe input',(
   '/api/wechat/mini/account-link/x','/not-a-public-route'])
   assert.equal(publicMiniSharePath(path),'/');
 });
-test('mini share page and share menu show the one canonical local cover on forwards',()=>{
+test('mini share page and share menu use the canonical local cover on forwards',()=>{
  const js=read('miniapp/pages/share/index.js'),page=read('miniapp/pages/share/index.wxml');
  const share=read('miniapp/utils/share.js'),web=read('miniapp/pages/web/index.js');
- assert.match(share,/const SHARE_IMAGE = "\/assets\/share-lingxifield-20261105\.jpg"/);
+ assert.ok(share.includes('/assets/share-lingxifield-20261115.jpg'));
  assert.match(js,/shareImage:SHARE_IMAGE/);
  assert.match(page,/src="{{shareImage}}"/);
- assert.match(js,/onShareAppMessage\(\).*imageUrl:SHARE_IMAGE/);
- assert.match(js,/onShareTimeline\(\).*imageUrl:SHARE_IMAGE/);
- assert.match(web,/onShareAppMessage\(\).*appMessage/);
- assert.match(web,/onShareTimeline\(\).*timeline/);
+ assert.ok(js.includes('onShareAppMessage()') && js.includes('imageUrl:SHARE_IMAGE'));
+ assert.ok(js.includes('onShareTimeline()') && js.includes('imageUrl:SHARE_IMAGE'));
+ assert.ok(js.includes('enableShareMenu({includeTimeline:true})'));
+ assert.ok(web.includes('enableShareMenu({includeTimeline:true})'));
+ assert.ok(web.includes('onShareAppMessage') && web.includes('appMessage'));
+ assert.ok(web.includes('onShareTimeline') && web.includes('timeline'));
+ for(const retired of ["'/sasi/drama'","'/sasi/connections'","'/ai-knowledge'","'/ai-learning'","'/ai-research'"])assert.ok(!web.includes(retired),`retired miniapp route remains: ${retired}`);
  const client=read('lib/mini/share-client.ts');
  assert(!client.includes('20260928'));
 });

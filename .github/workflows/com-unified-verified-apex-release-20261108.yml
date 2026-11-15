@@ -54,7 +54,21 @@ on:
       - 'components/HomeGlobalGrowth.tsx'
       - 'app/home-afternoon-20261114.css'
       - 'app/growth-pages.css'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'miniapp/**'
+      - 'public/og-lingxifield-*'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'scripts/test-share-metadata.mjs'
+      - 'app/share/20260928/page.tsx'
       - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/lingxifield-logo.png'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
       - 'public/images/home-distribution-globe-20261115.webp'
       - 'tests/final-closure/home-white-glass-20261115.spec.ts'
       - 'components/Footer.tsx'
@@ -110,7 +124,21 @@ on:
       - 'components/HomeGlobalGrowth.tsx'
       - 'app/home-afternoon-20261114.css'
       - 'app/growth-pages.css'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'miniapp/**'
+      - 'public/og-lingxifield-*'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'scripts/test-share-metadata.mjs'
+      - 'app/share/20260928/page.tsx'
       - 'public/images/home-hero-signature-20261115.webp'
+      - 'public/images/lingxifield-logo.png'
+      - 'scripts/generate-social-assets.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'package.json'
       - 'public/images/home-distribution-globe-20261115.webp'
       - 'tests/final-closure/home-white-glass-20261115.spec.ts'
       - 'components/Footer.tsx'
@@ -136,6 +164,8 @@ jobs:
         with: {version: 11.28.0,run_install: false}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install deterministic CJK font for social cards
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk >/dev/null && fc-cache -f >/dev/null
       - name: Install exact locked source-test dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts && pnpm seo:growth:generate && pnpm seo:growth:audit && node scripts/seo/audit-global.cjs
       - name: Pin exact verified candidate and check safe script
@@ -151,6 +181,7 @@ jobs:
           node --test tests/com-preserved-binding-inventory-20261110.test.mjs
           node scripts/seo/audit-global.cjs
           node --test tests/legacy-sasi-retirement.test.mjs tests/seo-fullsite-coverage.test.mjs tests/sasi-transparent-hero-20261112.test.mjs
+          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
           grep -Fq 'const productionWorker = "lingxifield-com-celestial-20261109"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'const candidateWorkerPrefix = "lingxifield-com-canary-"' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
           grep -Fq 'COM_PRODUCTION_PAYMENT_BASELINE' scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs
@@ -186,6 +217,8 @@ jobs:
         with: {version: 11.28.0,run_install: false}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with: {node-version-file: .nvmrc,cache: pnpm}
+      - name: Install deterministic CJK font for social cards
+        run: sudo apt-get update -qq && sudo apt-get install -y fonts-noto-cjk >/dev/null && fc-cache -f >/dev/null
       - name: Install exact locked build dependencies
         run: pnpm install --frozen-lockfile
       - name: Verify anonymous public catalog preflight
