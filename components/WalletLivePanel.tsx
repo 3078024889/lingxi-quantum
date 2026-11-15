@@ -35,6 +35,7 @@ export default function WalletLivePanel(){
  const [miniTopupsReady,setMiniTopupsReady]=useState(false);
  useEffect(()=>{
   let alive=true;
+  const params = new URLSearchParams(window.location.search);
   void detectMiniPaymentContext().then(async mini=>{
    if(!alive)return;
    setMiniContext(mini);
@@ -42,7 +43,7 @@ export default function WalletLivePanel(){
     setTopupCurrency("CNY");
     const ready=await miniVirtualTopupsAvailable();
     if(alive)setMiniTopupsReady(ready);
-   }else if(new URLSearchParams(window.location.search).get("currency")==="USD"){
+   }else if(params.get("currency")==="USD"){
     setTopupCurrency("USD");
    }
   });
@@ -81,7 +82,7 @@ export default function WalletLivePanel(){
  </div>;
  if(data.status==="login")return <div className="rounded-2xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-8">
   <p><LxText zh="登录后查看真实余额与账本记录。" en="Sign in to view your real balance and ledger."/></p>
-  <Link href="/account?next=%2Fai-wallet" className="mt-5 inline-flex rounded-lg bg-[var(--lx-ink)] px-5 py-3 text-sm text-[var(--lx-bg)]">
+  <Link href={topupCurrency==="USD"?"/account?next=%2Fai-wallet%3Fcurrency%3DUSD":"/account?next=%2Fai-wallet"} className="mt-5 inline-flex rounded-lg bg-[var(--lx-ink)] px-5 py-3 text-sm text-[var(--lx-bg)]">
    <LxText zh="登录账户" en="Sign in"/>
   </Link>
  </div>;
