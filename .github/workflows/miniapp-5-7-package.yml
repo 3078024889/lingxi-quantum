@@ -5,6 +5,12 @@ on:
     paths:
       - 'miniapp/**'
       - 'components/WalletLivePanel.tsx'
+      - 'components/MiniProgramShareEntry.tsx'
+      - 'components/MiniProgramShareEntry.module.css'
+      - 'components/PublicAnnouncementTicker.tsx'
+      - 'components/PublicAnnouncementTicker.module.css'
+      - 'lib/mini/share-client.ts'
+      - 'tests/cn-payment-activation-20261109.test.mjs'
       - 'lib/mini/payment-client.ts'
       - 'lib/mini/virtual-goods.ts'
       - 'app/api/wechat/mini/balance-pay/**'
