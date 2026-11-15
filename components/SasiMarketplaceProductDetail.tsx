@@ -15,6 +15,7 @@ export default function SasiMarketplaceProductDetail(){
  const {currency}=usePreferredCurrency();
  const [product,setProduct]=useState<Product|null>(null),[ready,setReady]=useState(false),[loading,setLoading]=useState(true);
  const [photos,setPhotos]=useState<Photo[]>([]);
+ const [activePhotoIndex,setActivePhotoIndex]=useState(0),[lightboxOpen,setLightboxOpen]=useState(false);
  const [descriptionOpen,setDescriptionOpen]=useState(false);
  const [payBusy,setPayBusy]=useState(false),[payError,setPayError]=useState(""),[shared,setShared]=useState(false);
  useEffect(()=>{
@@ -34,15 +35,27 @@ export default function SasiMarketplaceProductDetail(){
   fetch("/api/sasi/marketplace/images?listingId="+encodeURIComponent(id),
    {cache:"no-store",signal:controller.signal})
    .then(r=>r.ok?r.json():null)
-   .then(data=>{if(!controller.signal.aborted)setPhotos(Array.isArray(data?.items?.[id])?data.items[id]:[])})
+   .then(data=>{if(!controller.signal.aborted){setPhotos(Array.isArray(data?.items?.[id])?data.items[id]:[]);setActivePhotoIndex(0)}})
    .catch(()=>{});
   return()=>controller.abort();
  },[id,product]);
  const cover=photos.find(p=>p.kind==="cover")||null;
  const details=photos.filter(p=>p.kind==="detail").slice(0,4);
+ const galleryPhotos=[...(cover?[cover]:[]),...details];
+ const selectedPhoto=galleryPhotos[activePhotoIndex]??cover;
  const fullDescription=(zh?product?.note:product?.noteEn||product?.note)||"";
- const hasMore=fullDescription.length>EXCERPT_LIMIT||details.length>0;
+ const hasMore=fullDescription.length>EXCERPT_LIMIT;
  const excerpt=fullDescription.length>EXCERPT_LIMIT?fullDescription.slice(0,EXCERPT_LIMIT).trimEnd()+"…":fullDescription;
+ useEffect(()=>{
+  if(!lightboxOpen)return;
+  const onKey=(event:KeyboardEvent)=>{
+   if(event.key==="Escape")setLightboxOpen(false);
+   if(event.key==="ArrowLeft"&&galleryPhotos.length>1)setActivePhotoIndex(v=>(v+galleryPhotos.length-1)%galleryPhotos.length);
+   if(event.key==="ArrowRight"&&galleryPhotos.length>1)setActivePhotoIndex(v=>(v+1)%galleryPhotos.length);
+  };
+  window.addEventListener("keydown",onKey);
+  return()=>window.removeEventListener("keydown",onKey);
+ },[lightboxOpen,galleryPhotos.length]);
  const payPaypal=async()=>{
   if(!product||!ready||payBusy)return;
   setPayBusy(true);setPayError("");
@@ -73,11 +86,16 @@ export default function SasiMarketplaceProductDetail(){
    <>
     <div className={styles.intro}>
      <section className={styles.gallery} aria-label={sasiSoftwareUiText(lang,"软件主图","Software main image")}>
-      <div className={styles.mainImage}>
-       {cover?<img src={cover.url} alt={product.name} loading="eager" referrerPolicy="no-referrer"/>:
+      <button type="button" className={styles.mainImage} onClick={()=>selectedPhoto&&setLightboxOpen(true)} aria-label={sasiSoftwareUiText(lang,"放大查看商品图片","Open product image viewer")}>
+       {selectedPhoto?<img src={selectedPhoto.url} alt={product.name} loading="eager" referrerPolicy="no-referrer"/>:
         <div className={styles.fallback}><strong>SASI</strong><small>INTELLIGENT SOFTWARE</small></div>}
-      </div>
-      <p className={styles.galleryCount}>{sasiSoftwareUiText(lang,"每件软件展示1张主图；详情图可选","One main image per listing; detail images are optional")}</p>
+      </button>
+      {galleryPhotos.length>1&&<div className={styles.thumbs} aria-label={sasiSoftwareUiText(lang,"商品图片缩略图","Product image thumbnails")}>
+       {galleryPhotos.map((photo,index)=><button key={photo.id} type="button" className={styles.thumb} aria-pressed={activePhotoIndex===index} aria-label={sasiSoftwareUiText(lang,photo.kind==="cover"?"商品主图":"商品详情图 "+index,"Product image "+(index+1))} onClick={()=>setActivePhotoIndex(index)}>
+        <img src={photo.url} alt="" loading="lazy" referrerPolicy="no-referrer"/>
+       </button>)}
+      </div>}
+      <p className={styles.galleryCount}>{sasiSoftwareUiText(lang,"主图 1 张 · 详情图 "+details.length+" / 4 张，点击图片可放大查看","1 main image · "+details.length+" / 4 detail images. Select an image to enlarge.")}</p>
      </section>
      <section className={styles.purchase}>
       <small>SASI / VERIFIED SOFTWARE</small>
@@ -109,11 +127,6 @@ export default function SasiMarketplaceProductDetail(){
     <section className={styles.details} aria-labelledby="sasi-product-full-details">
      <h2 id="sasi-product-full-details">{sasiSoftwareUiText(lang,"软件详情","Software details")}</h2>
      <div id="sasi-product-expanded" className={styles.description}><p>{descriptionOpen?fullDescription:excerpt}</p></div>
-     {descriptionOpen&&details.length>0&&<div className={styles.detailGrid} aria-label={sasiSoftwareUiText(lang,"详情图片","Detail images")}>
-       {details.map((photo,index)=><div key={photo.id} className={styles.detailImage}>
-        <img src={photo.url} alt={zh?"软件详情图 "+(index+1):"Software detail "+(index+1)} loading="lazy" referrerPolicy="no-referrer"/>
-       </div>)}
-      </div>}
      {hasMore&&<button type="button" className={styles.expand} aria-expanded={descriptionOpen}
       aria-controls="sasi-product-expanded" onClick={()=>setDescriptionOpen(v=>!v)}>
        {descriptionOpen?(sasiSoftwareUiText(lang,"收起详情","Show less")):(sasiSoftwareUiText(lang,"展开更多 · 查看完整图文","Show more · Full description and images"))}
@@ -121,5 +134,11 @@ export default function SasiMarketplaceProductDetail(){
 
     </section>
    </>}
+  {lightboxOpen&&selectedPhoto&&<div className={styles.lightbox} role="dialog" aria-modal="true" aria-label={sasiSoftwareUiText(lang,"商品图片预览","Product image preview")} onClick={()=>setLightboxOpen(false)}>
+   <button type="button" className={styles.lightboxClose} aria-label={sasiSoftwareUiText(lang,"关闭图片","Close image")} onClick={event=>{event.stopPropagation();setLightboxOpen(false)}}>×</button>
+   {galleryPhotos.length>1&&<button type="button" className={styles.lightboxPrev} aria-label={sasiSoftwareUiText(lang,"上一张","Previous image")} onClick={event=>{event.stopPropagation();setActivePhotoIndex(v=>(v+galleryPhotos.length-1)%galleryPhotos.length)}}>‹</button>}
+   <img src={selectedPhoto.url} alt={product?.name||"SASI product"} />
+   {galleryPhotos.length>1&&<button type="button" className={styles.lightboxNext} aria-label={sasiSoftwareUiText(lang,"下一张","Next image")} onClick={event=>{event.stopPropagation();setActivePhotoIndex(v=>(v+1)%galleryPhotos.length)}}>›</button>}
+  </div>}
  </div></main>;
 }
