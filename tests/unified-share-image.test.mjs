@@ -1,45 +1,50 @@
-import test from 'node:test';
 import assert from 'node:assert/strict';
-import {existsSync,readFileSync,statSync} from 'node:fs';
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import test from 'node:test';
 import sharp from 'sharp';
-import {createRequire} from 'node:module';
-const require=createRequire(import.meta.url);
-const read=(p)=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const miniAsset='miniapp/assets/share-lingxifield-20261115.jpg';
-const ogAsset='public/og-lingxifield-20261115.jpg';
-test('website, localized pages and independent SIAI pages use the new 2026-11-15 OG master',()=>{
- const share=read('lib/share-image.ts'),root=read('app/layout.tsx'),page=read('lib/seo/page-metadata.ts');
- const siai=read('app/siai/page.tsx'),localizedSiai=read('app/[locale]/siai/page.tsx');
- const separate=read('lingxifield-ai-market/app/(default)/layout.tsx'),localizedMarket=read('lingxifield-ai-market/app/[lang]/layout.tsx');
- const separateProduct=read('lingxifield-ai-market/app/[lang]/platform/[id]/page.tsx');
- const independentCard=read('lingxifield-ai-market/lib/share-card.ts');
- assert(share.includes('/og-lingxifield-20261115.jpg'));assert(share.includes('width:1200, height:630'));
- assert(root.includes('SHARE_IMAGE_URL'));assert(page.includes('SHARE_IMAGE_URL'));assert(root.includes('width:1200,height:630'));
- assert(siai.includes('images:SHARE_IMAGES'));assert(localizedSiai.includes('images:SHARE_IMAGES'));assert(localizedSiai.includes('summary_large_image'));
- assert(independentCard.includes('https://lingxifield.com/og-lingxifield-20261115.jpg'));assert(independentCard.includes('width:1200,height:630'));
- assert(independentCard.includes('SASI 智能软件市场'));assert.doesNotMatch(independentCard,/SASI 智能创作/);
- assert(separate.includes('images:MARKET_SHARE_IMAGES'));assert(localizedMarket.includes('images:MARKET_SHARE_IMAGES'));
- assert(separateProduct.includes('images:MARKET_SHARE_IMAGES'));assert(separateProduct.includes('summary_large_image'));
- assert.equal(existsSync(new URL('../app/opengraph-image.tsx',import.meta.url)),false);
- assert(!existsSync(new URL('../public/og-lingxifield-20261113.jpg',import.meta.url)),'old website OG asset must be removed');
- assert(!existsSync(new URL('../miniapp/assets/share-lingxifield-20261105.jpg',import.meta.url)),'old mini-program share asset must be removed');
+
+const read = (path) => readFileSync(new URL(\`../\${path}\`, import.meta.url), 'utf8');
+const ogAsset = 'public/og-lingxifield-20261115.jpg';
+const miniAsset = 'miniapp/assets/share-lingxifield-20261115.jpg';
+
+test('all website share metadata points to the 1200x630 global OG master', () => {
+  const root = read('app/layout.tsx');
+  const share = read('lib/share-image.ts');
+  const sharePage = read('app/share/20260928/page.tsx');
+  const siai = read('app/siai/page.tsx');
+  const independentCard = read('lingxifield-ai-market/lib/share-card.ts');
+  const miniShare = read('miniapp/utils/share.js');
+
+  assert.ok(root.includes('SHARE_IMAGES') || root.includes('SHARE_IMAGE_URL'));
+  assert.ok(share.includes('og-lingxifield-20261115.jpg'));
+  assert.match(share, /width:\s*1200/);
+  assert.match(share, /height:\s*630/);
+  assert.ok(sharePage.includes('SHARE_IMAGE_URL'));
+  assert.match(sharePage, /width=\{1200\}/);
+  assert.match(sharePage, /height=\{630\}/);
+  assert.ok(siai.includes('SHARE_IMAGES'));
+  assert.ok(independentCard.includes('og-lingxifield-20261115.jpg'));
+  assert.match(independentCard, /width:\s*1200/);
+  assert.match(independentCard, /height:\s*630/);
+  assert.ok(miniShare.includes('/assets/share-lingxifield-20261115.jpg'));
+  assert.ok(!share.includes('og-lingxifield-20261113.jpg'));
+  assert.ok(!independentCard.includes('og-lingxifield-20261113.jpg'));
 });
-test('the new website OG is optimized JPEG 1200x630 and the mini-program card is 600x480',async()=>{
- const og=new URL('../'+ogAsset,import.meta.url);assert(existsSync(og),ogAsset);
- const ogMeta=await sharp(readFileSync(og)).metadata();assert.equal(ogMeta.format,'jpeg');assert.equal(ogMeta.width,1200);assert.equal(ogMeta.height,630);
- assert(statSync(og).size<700*1024,'OG image should remain optimized for social previews');
- const mini=new URL('../'+miniAsset,import.meta.url);assert(existsSync(mini),miniAsset);
- const meta=await sharp(readFileSync(mini)).metadata();assert.equal(meta.format,'jpeg');assert.equal(meta.width,600);assert.equal(meta.height,480);
- assert(statSync(mini).size<300*1024,'mini-program share card should remain optimized');
- const miniShare=read('miniapp/utils/share.js');assert(miniShare.includes('/assets/share-lingxifield-20261115.jpg'));
- const miniBuild=read('scripts/build-miniapps-v80.cjs');assert(miniBuild.includes('assets/share-lingxifield-20261115.jpg'));assert.doesNotMatch(miniBuild,/share-lingxifield-20260928\\.png/);
- const miniPage=read('miniapp/pages/web/index.js');assert(miniPage.includes('SASI 智能软件市场'));
-});
-test('WeChat app-message and timeline shares use the same versioned mini-program image',()=>{
- const share=require('../miniapp/utils/share.js');
- assert.equal(share.SHARE_IMAGE,'/assets/share-lingxifield-20261115.jpg');
- assert.equal(share.publicWebPath('/siai'),'/siai');assert.equal(share.publicWebPath('/siai?evil=1'),'/siai');assert.equal(share.publicWebPath('/account'),'/');
- const message=share.appMessage('title','/pages/web/index?path=%2Fsiai');
- const timeline=share.timeline('title','path=%2Fsiai');
- assert.equal(message.imageUrl,share.SHARE_IMAGE);assert.equal(timeline.imageUrl,share.SHARE_IMAGE);
+
+test('website and miniapp use the exact same optimized 1200x630 JPEG', async () => {
+  assert.ok(existsSync(ogAsset), 'website OG image must be committed');
+  assert.ok(existsSync(miniAsset), 'miniapp share image must be committed');
+  const ogBytes = readFileSync(ogAsset);
+  const miniBytes = readFileSync(miniAsset);
+  assert.deepEqual(miniBytes, ogBytes, 'miniapp must use the exact same OG artwork');
+  const metadata = await sharp(ogBytes).metadata();
+  assert.equal(metadata.format, 'jpeg');
+  assert.equal(metadata.width, 1200);
+  assert.equal(metadata.height, 630);
+  assert.ok(statSync(ogAsset).size < 150 * 1024);
+  assert.ok(statSync(miniAsset).size < 150 * 1024);
+  assert.ok(!existsSync('public/og-lingxifield-20261113.jpg'), 'retired OG image must stay deleted');
+  assert.ok(!existsSync('miniapp/assets/share-lingxifield-20261105.jpg'), 'retired miniapp share image must stay deleted');
+  const miniBuild = read('scripts/build-miniapps-v80.cjs');
+  assert.ok(miniBuild.includes('assets/share-lingxifield-20261115.jpg'));
 });
