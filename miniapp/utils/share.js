@@ -11,6 +11,7 @@ const PUBLIC_EXACT = new Set([
   '/siai',
   '/sasi',
   '/sasi/seller',
+  '/sasi/delivery',
   '/tools',
   '/discoveries',
   '/partners',
