@@ -16,8 +16,8 @@ test('homepage FAQ uses compact four-column desktop cards and responsive fallbac
 test('SASI hero artwork retains its original 3:1 ratio without object-fit fill',()=>{
  const css=read('components/SasiOpenMarketplace.module.css');
  const section=css.slice(css.lastIndexOf('20261115: responsive spacing'));
- assert.match(section,/\.main \.hero\{[^}]*aspect-ratio:3 \/ 1/);
- assert.match(section,/\.main \.heroArtwork\{[^}]*object-fit:contain/);
+ assert.match(section,/\.main \.hero\{[^}]*width:100%[^}]*max-width:1600px[^}]*aspect-ratio:3 \/ 1/);
+ assert.match(section,/\.main \.heroArtwork\{[^}]*object-fit:contain/);\n assert.match(section,/\.main \.marketFeatures\{[^}]*width:100%[^}]*max-width:1600px/);
  assert.doesNotMatch(section,/object-fit:fill/);
  assert.match(section,/@media\(max-width:760px\)[\s\S]*\.main \.heroArtwork\{[^}]*object-fit:contain/);
  assert.match(section,/\.sellerHeroArtwork\{[^}]*object-fit:contain/);
@@ -25,6 +25,6 @@ test('SASI hero artwork retains its original 3:1 ratio without object-fit fill',
 test('SIAI directory width follows the homepage content rail',()=>{
  const css=read('app/growth-pages.css');
  const section=css.slice(css.lastIndexOf('20261115: align the SIAI directory'));
- assert.match(section,/width:min\(1600px,calc\(100% - 24px\)\)/);
- assert.match(section,/max-width:1600px/);
+ assert.match(section,/width:min\(1600px,calc\(100% - 32px\)\)/);
+ assert.match(section,/max-width:1600px/);\n assert.match(section,/padding-left:0!important/);
 });
