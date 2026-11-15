@@ -22,15 +22,17 @@ for(const p of [
  "miniapp/pages/pay/index.js",
  "miniapp/pages/balance/index.js",
  "miniapp/pages/orders/index.js",
- "app/api/wechat/mini/tool-pay/create/route.ts",
- "app/api/wechat/mini/balance-pay/create/route.ts"
+ "app/api/wechat/mini/tool-pay/create/route.ts"
 ]) must(fs.existsSync(p),`MINI_PAYMENT_FILE_MISSING:${p}`);
 
-must(read("miniapp/pages/pay/index.js").includes("wx.requestPayment"),"MINI_TOOL_NATIVE_PAY_MISSING");
-must(read("miniapp/pages/balance/index.js").includes("wx.requestPayment"),"MINI_BALANCE_NATIVE_PAY_MISSING");
+must(read("miniapp/pages/pay/index.js").includes("wx.requestVirtualPayment"),"MINI_TOOL_VIRTUAL_PAY_MISSING");
+must(read("miniapp/pages/balance/index.js").includes("/pages/web/index?path=")&&read("miniapp/pages/balance/index.js").includes("%2Fai-wallet"),"MINI_BALANCE_WEBSITE_WALLET_REDIRECT_MISSING");
+must(!read("miniapp/pages/balance/index.js").includes("requestVirtualPayment"),"MINI_NATIVE_WALLET_TOPUP_REMAINS");
+must(!fs.existsSync("app/api/wechat/mini/balance-pay/create/route.ts"),"MINI_NATIVE_WALLET_TOPUP_API_REMAINS");
 
 const app=JSON.parse(read("miniapp/app.json"));
 for(const p of ["pages/pay/index","pages/balance/index","pages/orders/index"]) must(app.pages.includes(p),`MINI_ROUTE_MISSING:${p}`);
+must(!app.pages.includes("pages/recharge/index"),"MINI_RETIRED_RECHARGE_ROUTE_REMAINS");
 
 const pkg=JSON.parse(read("package.json"));
 for(const d of ["mammoth","exceljs","jsdom","dompurify","@mozilla/readability","turndown"])
@@ -43,6 +45,6 @@ console.log("FOOD_IMAGE_PRICE_MODE=2X");
 console.log("FOOD101_SELF_HOSTED_RUNTIME=PASS");
 console.log("FOOD_IMAGE_EXTERNAL_API_REQUIRED=NO");
 console.log("MINI_TOOL_NATIVE_PAY=PASS");
-console.log("MINI_BALANCE_NATIVE_PAY=PASS");
+console.log("MINI_BALANCE_WEBSITE_WALLET_REDIRECT=PASS");
 console.log("DOCUMENT_WEB_DEPS=PASS");
 console.log("V164_4_OFFLINE_FINAL_AUDIT=PASS");
