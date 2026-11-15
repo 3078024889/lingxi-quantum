@@ -14,4 +14,8 @@
   src="{{src}}"
   bindload="handleLoad"
   binderror="handleError"
-/>
+>
+  <cover-view wx:if="{{path === '/'}}" class="lx-mini-share-entry" bindtap="openNativeShare" aria-role="button">
+    <cover-view class="lx-mini-share-entry-text">好友 / 朋友圈分享</cover-view>
+  </cover-view>
+</web-view>
