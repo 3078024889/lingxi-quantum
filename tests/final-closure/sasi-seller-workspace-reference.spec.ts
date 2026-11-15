@@ -41,7 +41,7 @@ test('SASI marketplace uses compact MQL5-style product tiles and keeps publishin
  await page.goto('/sasi?lang=zh');
  const grid=page.locator('[class*="SasiOpenMarketplace_products"]');
  await expect(grid).toHaveCount(1,{timeout:30000});
- const columns=await grid.evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\\s+/).length);
+ const columns=await grid.evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
  expect(columns).toBeGreaterThanOrEqual(7);
  await expect(page.locator('#sasi-seller-studio')).toHaveCount(0);
  await expect(page.locator('[class*="SasiOpenMarketplace_launchStudio"]')).toHaveCount(0);
