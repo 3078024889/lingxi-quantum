@@ -25,6 +25,9 @@ for (const width of [1920,1440,390]) {
   await expect.poll(()=>globe.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
   await expect(page.locator('.lx-home-distribution-heading svg')).toHaveCount(0);
   await expect(page.locator('.lx-seo-question')).toHaveCount(16);
+  const faqColumns=await page.locator('.lx-seo-question-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
+  if(width>=1200)expect(faqColumns).toBe(4);else if(width>=1024)expect(faqColumns).toBe(3);else expect(faqColumns).toBe(1);
+
   const directory=page.locator('.lx-home-directory');
   await directory.locator('summary').click();
   await expect(directory).toHaveAttribute('open','');
