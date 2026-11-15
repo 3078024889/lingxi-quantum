@@ -26,7 +26,8 @@ test('reference homepage composition removes retired homepage blocks and preserv
 test('SASI marketplace and seller workspace retain verified data and readable reference styling',()=>{
  const market=read('components/SasiOpenMarketplace.tsx'),css=read('components/SasiOpenMarketplace.module.css');
  assert.match(market,/publishedCount/);assert.match(market,/pendingCount/);assert.match(market,/cnyGross/);assert.match(market,/studioMountedRef/);
- assert.match(market,/styles\.sellerWorkspaceGrid/);assert.match(market,/styles\.sellerGuideColumn/);assert.match(market,/styles\.featuredVisual/);assert.match(market,/const featuredSide=visible\.slice\(0,2\)/);assert.match(market,/remainingVisible\.map/);assert.match(market,/featuredMiniCard/);assert.match(market,/images\[item\.id\]/);
+ assert.match(market,/styles\.sellerWorkspaceGrid/);assert.match(market,/styles\.sellerGuideColumn/);assert.match(market,/styles\.featuredVisual/);assert.match(market,/const featuredSide:Listing\[\]=\[\]/);assert.match(market,/sellerOnly&&showStudio&&<section id="sasi-seller-studio"/);assert.doesNotMatch(market,/\{showStudio&&<section id="sasi-seller-studio"/);assert.match(market,/remainingVisible\.map/);assert.match(market,/featuredMiniCard/);assert.match(market,/images\[item\.id\]/);
+ assert.match(css,/grid-template-columns:repeat\(auto-fill,minmax\(136px,1fr\)\)!important/);assert.match(css,/\.main \.quickPreview/);
  assert.doesNotMatch(market,/99\.6%|虚构销售额/);
  assert.doesNotMatch(market,/SASI \/ FEATURED|01 \/ SOFTWARE|02 \/ PUBLISH & DELIVERY|03 \/ SELLER STUDIO|04 \/ SELLER EARNINGS|SASI · SELLER CENTER/);
 
@@ -54,3 +55,9 @@ test('reference-scale homepage and seller typography remains readable',()=>{
  assert.match(seller,/\.sellerGuideSteps strong\{font-size:14px/);
  assert.match(seller,/\.sellerBenefits strong\{font-size:13px/);
 });
+
+const globalWhiteCss=read("app/global-white-compact-20261115.css");
+assert.match(globalWhiteCss,/\.lx-growth-siai-page\{\s*width:100%/);
+assert.match(globalWhiteCss,/\.lx26-tools-stage:not\(:has\(\.lx-tools-compact-recent\)\)/);
+assert.match(globalWhiteCss,/\.lx26-wallet-page\{background:#fff/);
+assert.match(globalWhiteCss,/\.lx26-balance-card/);
