@@ -1,29 +1,20 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-let calls = 0, responses = [], exported;
-const wx = {request(options) { calls++; const next=responses.shift(); if(next.fail) options.fail(next.fail); else options.success(next); },
-  getStorageSync(key) { return key==='lx_mini_token'?'test-token':new Date(Date.now()+3600000).toISOString(); }};
+const calls=[];const storage=new Map();
+const wx={
+ getStorageSync:key=>storage.get(key),
+ setStorageSync:(key,value)=>storage.set(key,value),
+ login:options=>options.success({code:'fresh-login-code'}),
+ request(options){calls.push(options.url);options.success({statusCode:200,data:{token:'session-token',expiresAt:new Date(Date.now()+3600000).toISOString()}})}
+};
 const module={exports:{}};
 vm.runInNewContext(fs.readFileSync('miniapp/utils/api.js','utf8'),{module,wx,Date,Promise,setTimeout:callback=>callback()});
-exported=module.exports;
-responses=[{fail:{errMsg:'request:fail timeout'}},{statusCode:200,data:{enabled:true}}];
-assert.equal((await exported.publicRequest('/api/wechat/mini/balance-pay/availability')).enabled,true);assert.equal(calls,2);
-assert.equal(exported.API_BASE,'https://mini-api.lingxifield.cn');
-assert.match(exported.connectionMessage({statusCode:403}),/拒绝/);
-assert.match(exported.connectionMessage({statusCode:503}),/繁忙/);
-calls=0;responses=[{statusCode:200,data:'<html>challenge</html>'},{statusCode:200,data:{enabled:true}}];
-await exported.publicRequest('/api/wechat/mini/balance-pay/availability');assert.equal(calls,2);
-calls=0;responses=[{statusCode:403,data:{error:'forbidden'}}];
-await assert.rejects(exported.publicRequest('/api/wechat/mini/balance-pay/availability'));assert.equal(calls,1);
-calls=0;responses=[{statusCode:403,data:'<html>Security Checkpoint</html>'}];
-await assert.rejects(exported.publicRequest('/api/wechat/mini/balance-pay/availability'));assert.equal(calls,1,'An HTML 403 is still a rejection, not a retryable read');
-calls=0;responses=[{fail:{errMsg:'timeout'}}];
-await assert.rejects(exported.request('/api/wechat/mini/balance-pay/create',{method:'POST',data:{}}));assert.equal(calls,1,'Never repeat a payment POST on network failure');
-calls=0;responses=[{statusCode:401,data:{error:'expired'}}];
-await assert.rejects(exported.request('/api/wechat/mini/balance-pay/create',{method:'POST',data:{}}));assert.equal(calls,1,'Expired payment session cannot silently login as a different account');
-calls=0;responses=[{fail:{errMsg:'timeout'}},{statusCode:200,data:{linked:true,accountLabel:'10505',balanceFen:250}}];
-assert.equal((await exported.request('/api/wechat/mini/account-summary')).balanceFen,250);assert.equal(calls,2,'Account reads recover on the other registered API route');
-calls=0;responses=[{statusCode:403,data:{error:'forbidden'}}];
-await assert.rejects(exported.request('/api/wechat/mini/account-summary'));assert.equal(calls,1,'No fallback can bypass an identity rejection');
-console.log('PASS: bounded public GET recovery, HTML rejection, permission failure preserved, payment POST never automatically repeated');
+const api=module.exports;
+assert.equal(await api.login(),'session-token');
+assert.deepEqual(calls,['https://lingxifield.cn/api/wechat/mini/login']);
+assert.ok(!calls.some(url=>url.includes('/balance-pay/')),'Login must not depend on the retired native top-up availability endpoint');
+assert.match(api.connectionMessage({statusCode:403}),/小程序服务/);
+assert.match(api.connectionMessage({statusCode:503}),/小程序服务/);
+assert.throws(()=>api.request('/api/pay/create',{method:'POST'}),/Invalid Mini Program API path/);
+console.log('PASS: Mini Program login no longer calls native wallet top-up APIs; authenticated API boundary remains enforced.');
