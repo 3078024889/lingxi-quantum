@@ -15,11 +15,13 @@ export default function SasiMarketplaceProductDetail(){
  const {currency}=usePreferredCurrency();
  const [product,setProduct]=useState<Product|null>(null),[ready,setReady]=useState(false),[loading,setLoading]=useState(true);
  const [photos,setPhotos]=useState<Photo[]>([]);
+ const [selectedPhoto,setSelectedPhoto]=useState<Photo|null>(null);
+ const [lightboxOpen,setLightboxOpen]=useState(false);
  const [descriptionOpen,setDescriptionOpen]=useState(false);
  const [payBusy,setPayBusy]=useState(false),[payError,setPayError]=useState(""),[shared,setShared]=useState(false);
  useEffect(()=>{
   if(!id){setLoading(false);return}
-  const controller=new AbortController();setLoading(true);setProduct(null);setReady(false);setPhotos([]);setDescriptionOpen(false);
+  const controller=new AbortController();setLoading(true);setProduct(null);setReady(false);setPhotos([]);setSelectedPhoto(null);setLightboxOpen(false);setDescriptionOpen(false);
   fetch("/api/sasi/marketplace/product?id="+encodeURIComponent("sasi-market:"+id)+"&currency="+currency,
    {cache:"no-store",signal:controller.signal})
    .then(r=>r.ok?r.json():null)
@@ -34,12 +36,14 @@ export default function SasiMarketplaceProductDetail(){
   fetch("/api/sasi/marketplace/images?listingId="+encodeURIComponent(id),
    {cache:"no-store",signal:controller.signal})
    .then(r=>r.ok?r.json():null)
-   .then(data=>{if(!controller.signal.aborted)setPhotos(Array.isArray(data?.items?.[id])?data.items[id]:[])})
+   .then(data=>{if(!controller.signal.aborted){const next:Photo[]=Array.isArray(data?.items?.[id])?data.items[id].slice(0,5):[];setPhotos(next);setSelectedPhoto(next.find(p=>p.kind==="cover")||next[0]||null)}})
    .catch(()=>{});
   return()=>controller.abort();
  },[id,product]);
  const cover=photos.find(p=>p.kind==="cover")||null;
  const details=photos.filter(p=>p.kind==="detail").slice(0,4);
+ const activePhoto=selectedPhoto&&photos.some(p=>p.id===selectedPhoto.id)?selectedPhoto:cover;
+ const galleryPhotos=[...(cover?[cover]:[]),...details].slice(0,5);
  const fullDescription=(zh?product?.note:product?.noteEn||product?.note)||"";
  const hasMore=fullDescription.length>EXCERPT_LIMIT||details.length>0;
  const excerpt=fullDescription.length>EXCERPT_LIMIT?fullDescription.slice(0,EXCERPT_LIMIT).trimEnd()+"…":fullDescription;
@@ -74,10 +78,13 @@ export default function SasiMarketplaceProductDetail(){
     <div className={styles.intro}>
      <section className={styles.gallery} aria-label={sasiSoftwareUiText(lang,"软件主图","Software main image")}>
       <div className={styles.mainImage}>
-       {cover?<img src={cover.url} alt={product.name} loading="eager" referrerPolicy="no-referrer"/>:
+       {activePhoto?<button type="button" className={styles.mainImageButton} onClick={()=>setLightboxOpen(true)} aria-label={sasiSoftwareUiText(lang,"放大查看商品图片","Enlarge product image")}><img src={activePhoto.url} alt={product.name} loading="eager" referrerPolicy="no-referrer"/></button>:
         <div className={styles.fallback}><strong>SASI</strong><small>INTELLIGENT SOFTWARE</small></div>}
       </div>
-      <p className={styles.galleryCount}>{sasiSoftwareUiText(lang,"每件软件展示1张主图；详情图可选","One main image per listing; detail images are optional")}</p>
+      {galleryPhotos.length>1&&<div className={styles.thumbs} aria-label={sasiSoftwareUiText(lang,"商品图片缩略图","Product image thumbnails")}>
+       {galleryPhotos.map((photo,index)=><button key={photo.id} type="button" className={styles.thumb} aria-pressed={activePhoto?.id===photo.id} onClick={()=>setSelectedPhoto(photo)} aria-label={sasiSoftwareUiText(lang,index===0?"主图":"详情图 "+index,index===0?"Main image":"Detail image "+index)}><img src={photo.url} alt="" loading="lazy" referrerPolicy="no-referrer"/></button>)}
+      </div>}
+      <p className={styles.galleryCount}>{sasiSoftwareUiText(lang,"每件软件1张主图，最多4张详情图","1 main image and up to 4 detail images per product")}</p>
      </section>
      <section className={styles.purchase}>
       <small>SASI / VERIFIED SOFTWARE</small>
@@ -120,6 +127,7 @@ export default function SasiMarketplaceProductDetail(){
       </button>}
 
     </section>
+    {lightboxOpen&&activePhoto&&<div className={styles.lightbox} role="dialog" aria-modal="true" aria-label={sasiSoftwareUiText(lang,"商品图片预览","Product image preview")} onClick={()=>setLightboxOpen(false)}><button type="button" onClick={()=>setLightboxOpen(false)} aria-label={sasiSoftwareUiText(lang,"关闭图片","Close image")}>×</button><img src={activePhoto.url} alt={product.name} onClick={e=>e.stopPropagation()} referrerPolicy="no-referrer"/></div>}
    </>}
  </div></main>;
 }
