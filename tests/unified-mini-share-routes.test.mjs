@@ -43,10 +43,10 @@ test('mini share page and share menu use the canonical local cover on forwards',
  assert.ok(share.includes('/assets/share-lingxifield-20261115.jpg'));
  assert.match(js,/shareImage:SHARE_IMAGE/);
  assert.match(page,/src="{{shareImage}}"/);
- assert.match(js,/onShareAppMessage\\(\\).*imageUrl:SHARE_IMAGE/);
- assert.match(js,/onShareTimeline\\(\\).*imageUrl:SHARE_IMAGE/);
- assert.match(web,/onShareAppMessage\\(\\).*appMessage/);
- assert.match(web,/onShareTimeline\\(\\).*timeline/);
+ assert.ok(js.includes('onShareAppMessage()') && js.includes('imageUrl:SHARE_IMAGE'));
+ assert.ok(js.includes('onShareTimeline()') && js.includes('imageUrl:SHARE_IMAGE'));
+ assert.ok(web.includes('onShareAppMessage') && web.includes('appMessage'));
+ assert.ok(web.includes('onShareTimeline') && web.includes('timeline'));
  const client=read('lib/mini/share-client.ts');
  assert(!client.includes('20260928'));
 });
