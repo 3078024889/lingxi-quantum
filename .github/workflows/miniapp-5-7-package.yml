@@ -1,7 +1,7 @@
 name: Miniapp 5.7 native wallet and import package (NO WECHAT UPLOAD)
 on:
   push:
-    branches: [fix/cn-miniapp-wallet-entry-20261115, release/sasi-marketplace-20261114-cn]
+    branches: [fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
     paths:
       - 'miniapp/**'
       - 'components/WalletLivePanel.tsx'
@@ -11,7 +11,13 @@ on:
       - 'scripts/audit/mini-topup-client.mjs'
       - 'scripts/audit/mini-virtual-payment.mjs'
       - 'scripts/audit/mini-recharge-navigation.mjs'
+      - 'scripts/audit/mini-unified-surface.mjs'
       - 'scripts/audit-mini-program.mjs'
+      - 'scripts/generate-social-assets.mjs'
+      - 'tests/mini-main-direct-tools-share.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/mini-recharge-single-entry.test.mjs'
+      - '.gitignore'
       - 'scripts/build-miniapps-v80.cjs'
       - 'scripts/package-miniapp-5-7.cjs'
       - '.github/workflows/miniapp-5-7-package.yml'
@@ -41,6 +47,9 @@ jobs:
       - name: Miniapp wallet, payment, routing and privacy contracts
         run: |
           set -Eeuo pipefail
+          node scripts/generate-social-assets.mjs
+          node scripts/audit/mini-unified-surface.mjs
+          node --test tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/mini-recharge-single-entry.test.mjs
           node scripts/audit/mini-topup-client.mjs
           node scripts/audit/mini-virtual-payment.mjs
           node scripts/audit/mini-recharge-navigation.mjs
