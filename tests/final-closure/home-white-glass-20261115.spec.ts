@@ -32,6 +32,13 @@ for (const width of [1920,1440,1024,390]) {
   await expect(page.locator('.lx-seo-question')).toHaveCount(16);
   const faqColumns=await page.locator('.lx-seo-question-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
   if(width>1180)expect(faqColumns).toBe(4);else if(width>640)expect(faqColumns).toBe(2);else expect(faqColumns).toBe(1);
+  const faqVisual=await page.locator('.lx-seo-question').first().evaluate(el=>({
+   backgroundImage:getComputedStyle(el).backgroundImage,
+   textSize:getComputedStyle(el.querySelector('p')!).fontSize
+  }));
+  expect(faqVisual.backgroundImage).not.toBe('none');
+  expect(faqVisual.textSize).toBe('14px');
+
 
   const directory=page.locator('.lx-home-directory');
   await directory.locator('summary').click();
