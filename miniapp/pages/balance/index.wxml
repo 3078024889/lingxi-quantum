@@ -10,7 +10,7 @@
 
     <view class="mini-topup-hero">
       <view class="mini-topup-kicker">BALANCE / TOP UP</view>
-      <view class="mini-topup-title">{{hasRequestedAmount ? '确认充值' : '余额充值'}}</view>
+      <view class="mini-topup-title">{{hasRequestedAmount ? '确认充值' : '余额与充值'}}</view>
       <view class="mini-topup-subtitle">人民币 CNY · 微信小程序虚拟支付</view>
     </view>
 
