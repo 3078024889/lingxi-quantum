@@ -35,6 +35,18 @@ test('seller navigation opens the reference seller workspace with real business 
  await page.screenshot({path:'artifacts/sasi-seller-workspace-desktop.png',fullPage:false});
 });
 
+test('SASI marketplace uses compact MQL5-style product tiles and keeps publishing on seller route',async({page})=>{
+ test.setTimeout(60000);
+ await page.setViewportSize({width:1680,height:960});
+ await page.goto('/sasi?lang=zh');
+ const grid=page.locator('[class*="SasiOpenMarketplace_products"]');
+ await expect(grid).toHaveCount(1,{timeout:30000});
+ const columns=await grid.evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
+ expect(columns).toBeGreaterThanOrEqual(7);
+ await expect(page.locator('#sasi-seller-studio')).toHaveCount(0);
+ await expect(page.locator('[class*="SasiOpenMarketplace_launchStudio"]')).toHaveCount(0);
+});
+
 test('seller workspace collapses cleanly on mobile without overflowing its main grid',async({page})=>{
  test.setTimeout(90000);
  await page.setViewportSize({width:390,height:844});
