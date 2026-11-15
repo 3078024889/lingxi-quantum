@@ -22,7 +22,7 @@ export async function POST(req:NextRequest){
  try{
   const admin=createAdminClient();
   const {data:profile}=await admin.from("sasi_market_sellers").select("status").eq("user_id",user.id).single();
-  if(profile?.status!=="approved")return NextResponse.json({error:"SELLER_APPROVAL_REQUIRED"},{status:403,headers:nocache});
+  if(!profile||!["pending_review","approved"].includes(profile.status))return NextResponse.json({error:"SELLER_APPLICATION_REQUIRED"},{status:403,headers:nocache});
   const {data:listing}=await admin.from("sasi_market_listings")
    .select("id,quarantine_path,status").eq("id",body.listingId).eq("seller_id",user.id).single();
   if(!listing||listing.status!=="draft")
