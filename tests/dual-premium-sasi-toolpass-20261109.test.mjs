@@ -81,7 +81,8 @@ test("SASI uses a complete scene with real controls and reviewed real listings",
  assert.ok(artwork.includes("styles.heroCopy"));
  assert.ok(!artwork.includes("styles.benefits"));
  assert.ok(style.includes(".main .heroArtwork{"));
- assert.ok(style.includes("object-fit:contain"));\n assert.match(style,/\\.main \\.hero\\{[^}]*aspect-ratio:3\\s*\\/\\s*1/);
+ assert.ok(style.includes("object-fit:contain"));
+ assert.match(style, /\.main \.hero\{[^}]*aspect-ratio:3\s*\/\s*1/);
  assert.ok(artwork.includes('<h1 id="sasi-market-title">'));
  assert.ok(artwork.includes("styles.marketFeatures"));
  for(const retiredSelector of [".laptopScene",".laptopDisplay",".laptopKeyboard",".laptopShadow",".alienPlant",".crystalCup"])
