@@ -287,3 +287,5 @@
   .mini-topup-section-note, .mini-topup-subtitle, .mini-topup-account-note, .mini-topup-label, .mini-topup-total-note { color: #aab4d1; }
   .mini-topup-balance text, .mini-topup-total-amount { color: #c6bfff; }
 }
+.mini-usd-guide { margin-top: 22rpx; }
+.mini-usd-guide-action { width: 100%; margin-top: 18rpx; flex: none; }
