@@ -271,5 +271,5 @@ body:not(:has(.lx-home-reference)) .lx-seo-answers{width:min(var(--lx-home-rail-
 
 
 /* 20261115: align the SIAI directory rail with the homepage's wider content grid. */
-.lx-growth-siai-page{width:min(1600px,calc(100% - 24px));max-width:1600px;margin-inline:auto;min-width:0}
+.lx-growth-siai-page{width:min(1600px,calc(100% - 32px));max-width:1600px;margin-inline:auto;min-width:0}
 .lx-growth-siai-page .siai-home{width:100%;max-width:100%;margin-inline:0}
