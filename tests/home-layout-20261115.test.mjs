@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
-const read = (path) => readFileSync(new URL(\`../\${path}\`, import.meta.url), 'utf8');
+const read = (path) => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 
 test('homepage FAQ uses a compact four-column desktop grid and responsive breakpoints', () => {
   const css = read('app/home-afternoon-20261114.css');
