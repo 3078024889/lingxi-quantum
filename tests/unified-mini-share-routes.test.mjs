@@ -28,6 +28,12 @@ test('mini web share preserves public ranking and tools across both official dom
   assert.equal(publicMiniSharePath(domain+'/tools/pdf-editor?account=private'),'/tools/pdf-editor');
   assert.equal(publicMiniSharePath(domain+'/sasi?mode=drama&task=private'),'/sasi');
   assert.equal(publicMiniSharePath(domain+'/sasi?mode=unknown'),'/sasi');
+  assert.equal(publicMiniSharePath(domain+'/sasi/seller?token=private'),'/sasi/seller');
+  assert.equal(publicMiniSharePath(domain+'/sasi/delivery?token=private'),'/sasi/delivery');
+  assert.equal(publicMiniSharePath(domain+'/discoveries?utm_source=wechat'),'/discoveries');
+  assert.equal(publicMiniSharePath(domain+'/partners?token=private'),'/partners');
+  assert.equal(publicMiniSharePath(domain+'/sasi/drama?task=private'),'/');
+  assert.equal(publicMiniSharePath(domain+'/ai-knowledge'),'/');
  }
 });
 test('mini share rejects outside hosts, secret/private pages and unsafe input',()=>{
@@ -49,6 +55,7 @@ test('mini share page and share menu use the canonical local cover on forwards',
  assert.ok(web.includes('enableShareMenu({includeTimeline:true})'));
  assert.ok(web.includes('onShareAppMessage') && web.includes('appMessage'));
  assert.ok(web.includes('onShareTimeline') && web.includes('timeline'));
+ for(const retired of ["'/sasi/drama'","'/sasi/connections'","'/ai-knowledge'","'/ai-learning'","'/ai-research'"])assert.ok(!web.includes(retired),`retired miniapp route remains: ${retired}`);
  const client=read('lib/mini/share-client.ts');
  assert(!client.includes('20260928'));
 });
