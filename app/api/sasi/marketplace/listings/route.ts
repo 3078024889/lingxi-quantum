@@ -77,7 +77,7 @@ export async function PATCH(req:NextRequest){
  try{
   const admin=createAdminClient();
   const {data:seller}=await admin.from("sasi_market_sellers").select("status").eq("user_id",user.id).maybeSingle();
-  if(seller?.status!=="approved")return NextResponse.json({error:"SELLER_NOT_APPROVED"},{status:403,headers:nocache});
+  if(!seller||!["pending_review","approved"].includes(seller.status))return NextResponse.json({error:"SELLER_APPLICATION_REQUIRED"},{status:403,headers:nocache});
   const {data:listing}=await admin.from("sasi_market_listings").select("seller_id,status").eq("id",id).eq("seller_id",user.id).maybeSingle();
   if(!editableMarketplaceListing(user.id,listing))return NextResponse.json({error:"DRAFT_OR_REJECTED_REQUIRED"},{status:409,headers:nocache});
   const {data,error}=await admin.from("sasi_market_listings")
