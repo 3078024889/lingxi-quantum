@@ -7,7 +7,7 @@ let modalConfirm = true, linked = true, accountOffline = false;
 const wx={getStorageSync:k=>storage.get(k),setStorageSync:(k,v)=>storage.set(k,v),removeStorageSync:k=>storage.delete(k),showModal(options){options.success({confirm:modalConfirm});},requestVirtualPayment(options){charges++;options.success({});}};
 const api={login:async()=>{},publicRequest:async()=>({enabled:false}),wxLogin:async()=>{logins++;return{code:'fresh-code'};},request:async(path,options)=>{
  if(path.endsWith('/account-summary')){if(accountOffline)throw Error('offline');return{linked,accountLabel:'10505',balanceFen:250,topups:[]};}
- if(path.endsWith('/create')){creates++;await new Promise(resolve=>{release=resolve;});assert.equal(options.data.productId,'sasi-balance-custom-1.23');return{orderId:'owned-order',payment:{mode:'short_series_goods'}};}
+ if(path.endsWith('/create')){creates++;await new Promise(resolve=>{release=resolve;});assert.equal(options.data.productId,'sasi-balance-custom-12');return{orderId:'owned-order',payment:{mode:'short_series_goods'}};}
  checks++;return responseOverride || {paid:checks>3};
 }};
 const expiryModule={exports:{}};
@@ -18,10 +18,11 @@ vm.runInNewContext(fs.readFileSync('miniapp/pages/balance/index.js','utf8'),{Pag
 const page={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
 await page.pay();assert.equal(charges+creates+logins,0);
 page.data.enabled=true;page.data.selected='custom';page.data.custom='1.234';await page.pay();assert.equal(charges+creates+logins,0);
-page.data.custom='1.23';linked=false;await page.pay();assert.equal(charges+creates+logins,0,'Unlinked accounts cannot create or pay');
+page.data.custom='12.34';await page.pay();assert.equal(charges+creates+logins,0,'Fractional mini top-ups cannot use the published 1-CNY SKU');
+page.data.custom='12';linked=false;await page.pay();assert.equal(charges+creates+logins,0,'Unlinked accounts cannot create or pay');
 linked=true;accountOffline=true;await page.pay();assert.equal(charges+creates+logins,0,'Unknown account status cannot create or pay');
 accountOffline=false;
-page.data.custom='1.23';const pending=page.pay();await new Promise(resolve=>setTimeout(resolve,0));await page.pay();assert.equal(creates,1);assert.match(storage.get('lx_mini_topup_pending').requestId,/^[0-9a-f]{32}$/);
+page.data.custom='12';const pending=page.pay();await new Promise(resolve=>setTimeout(resolve,0));await page.pay();assert.equal(creates,1);assert.match(storage.get('lx_mini_topup_pending').requestId,/^[0-9a-f]{32}$/);
 release();await pending;assert.equal(charges,1);assert.equal(page.data.orderId,'owned-order');
 await page.pay();assert.equal(charges,1);assert.equal(creates,1);assert.equal(checks,4);assert.equal(storage.has('lx_mini_topup_pending'),false);
 page.data.enabled=false;page.data.orderId='uncertain-order';page.data.requestId='old-request';
@@ -39,10 +40,10 @@ storage.set('lx_mini_topup_pending',{orderId:'still-uncertain',requestId:'old-re
 modalConfirm=false;await page.startNew();assert.equal(page.data.orderId,'still-uncertain');
 modalConfirm=true;await page.startNew();assert.equal(page.data.orderId,'');assert.equal(page.data.requestId,'');assert.equal(storage.has('lx_mini_topup_pending'),false);
 assert.equal(charges,1,'Starting a new intent must never charge automatically');
-page.data.enabled=true;page.data.custom='1.23';const newIntent=page.pay();await new Promise(resolve=>setTimeout(resolve,0));assert.equal(creates,2);
+page.data.enabled=true;page.data.custom='12';const newIntent=page.pay();await new Promise(resolve=>setTimeout(resolve,0));assert.equal(creates,2);
 assert.notEqual(page.data.requestId,'old-request');release();await newIntent;assert.equal(charges,2);
 page.data.orderId='unknown';page.data.busy=true;await page.startNew();assert.equal(page.data.orderId,'unknown');
-console.log('PASS: old order retained, explicit independent checkout, cancellation guard, decimals, double clicks and durable request identity');
+console.log('PASS: old order retained, explicit independent checkout, whole-yuan custom amounts, cancellation guard, double clicks and durable request identity');
 page.data.busy=false;page.data.accountLabel='9454';page.data.orderId='old-account-order';page.data.requestId='old-request';
 storage.set('lx_mini_topup_pending',{orderId:'old-account-order'});
 const countBeforeSwitch=creates;
@@ -51,3 +52,22 @@ assert.equal(page.data.accountLabel,'10505');assert.equal(page.data.balanceText,
 assert.equal(page.data.orderId,'');assert.equal(storage.has('lx_mini_topup_pending'),false);
 assert.equal(creates,countBeforeSwitch,'Switching displayed account never creates or repeats a purchase');
 console.log('PASS: switching 9454 to 10505 clears stale checkout and shows only the refreshed destination balance');
+
+storage.clear();
+const amountPage={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
+await amountPage.onLoad({amount:'88'});
+assert.equal(amountPage.data.selected,'88','Wallet-selected fixed amount must reach the native payment page');
+assert.equal(amountPage.data.hasRequestedAmount,true);
+assert.equal(amountPage.data.canPay,true);
+storage.clear();
+const fractionalPage={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
+await fractionalPage.onLoad({amount:'12.34'});
+assert.equal(fractionalPage.data.selected,'custom');
+assert.equal(fractionalPage.data.custom,'12.34');
+assert.equal(fractionalPage.data.canPay,false,'Fractional mini custom amount must be blocked');
+storage.set('lx_mini_topup_pending',{orderId:'pending-order',requestId:'pending-request',selected:'88',custom:''});
+const pendingPage={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
+await pendingPage.onLoad({amount:'666'});
+assert.equal(pendingPage.data.orderId,'pending-order');
+assert.equal(pendingPage.data.selected,'88','An uncertain prior order must override a new navigation amount');
+console.log('PASS: fixed/custom amount deep links, integer-only mini custom, and pending-order precedence');
