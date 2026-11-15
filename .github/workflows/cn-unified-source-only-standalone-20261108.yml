@@ -137,7 +137,6 @@ jobs:
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
           node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
-          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
           node --check miniapp/utils/share.js
           node --check miniapp/pages/share/index.js
           node --check miniapp/pages/web/index.js
@@ -271,6 +270,7 @@ jobs:
           retention-days: 14
           if-no-files-found: error
   publish:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-24.04
     timeout-minutes: 12
