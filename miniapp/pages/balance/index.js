@@ -1,15 +1,39 @@
 const MESSAGE = '小程序内充值暂未开放。已有余额和订单仍保留，可在账户中查看。'
+function normalizeIncomingAmount(value) {
+  if (typeof value !== 'string') return null
+  const raw = value.trim()
+  if (!/^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(raw)) return null
+  const amount = Number(raw)
+  return Number.isFinite(amount) && amount >= 1 && amount <= 10000 ? raw : null
+}
+function isPayableMiniAmount(value) {
+  return typeof value === 'string' && /^[1-9][0-9]{0,4}$/.test(value) && Number(value) <= 10000
+}
 const { login, request, publicRequest, wxLogin, connectionMessage } = require('../../utils/api')
 const expiry = require('../../utils/topup-expiry')
 const paymentErrors = require('../../utils/virtual-payment-errors')
 
 Page({
-  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', refundableText: '', topups: [] },
-  async onLoad() {
+  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', refundableText: '', topups: [], hasRequestedAmount: false, canPay: true },
+  async onLoad(options = {}) {
     this.setData({ paymentNotice: paymentErrors.iosNotice() })
     expiry.expireCheckout()
     const pending = wx.getStorageSync('lx_mini_topup_pending')
-    if (pending) this.setData({ orderId: pending.orderId || '', requestId: pending.requestId || '', selected: pending.selected || '10', custom: pending.custom || '' })
+    if (pending) {
+      const selected = pending.selected || '10'
+      const custom = pending.custom || ''
+      this.setData({ orderId: pending.orderId || '', requestId: pending.requestId || '', selected, custom, hasRequestedAmount: Boolean(pending.orderId || pending.requestId), canPay: isPayableMiniAmount(selected === 'custom' ? custom : selected) })
+    } else {
+      const incoming = normalizeIncomingAmount(options && options.amount)
+      if (incoming !== null) {
+        const amount = Number(incoming)
+        const normalized = Number.isInteger(amount) ? String(amount) : incoming
+        const fixed = this.data.amounts.includes(amount)
+        const selected = fixed ? String(amount) : 'custom'
+        const custom = fixed ? '' : normalized
+        this.setData({ selected, custom, hasRequestedAmount: true, canPay: isPayableMiniAmount(fixed ? selected : custom) })
+      }
+    }
     await this.refreshAvailability()
     await this.refreshAccount()
   },
@@ -72,8 +96,17 @@ Page({
     }
     finally { this._checkingAvailability = false; this.setData({ loading: false }) }
   },
-  choose(e) { if (!this.data.busy) this.setData({ selected: String(e.currentTarget.dataset.amount) }) },
-  input(e) { if (!this.data.busy) this.setData({ custom: e.detail.value }) },
+  choose(e) {
+    if (this.data.busy) return
+    const selected = String(e.currentTarget.dataset.amount)
+    const raw = selected === 'custom' ? this.data.custom : selected
+    this.setData({ selected, canPay: isPayableMiniAmount(raw) })
+  },
+  input(e) {
+    if (this.data.busy) return
+    const custom = e.detail.value
+    this.setData({ custom, canPay: isPayableMiniAmount(custom) })
+  },
   clearPending(message) {
     wx.removeStorageSync('lx_mini_topup_pending')
     this.setData({ message, orderId: '', requestId: '' })
@@ -132,13 +165,17 @@ Page({
       this.setData({ selected: pending.selected, custom: pending.custom, message: '上一笔充值准备结果尚未确认，已恢复原金额。请先重试确认，避免重复下单。' }); return
     }
     const raw = this.data.selected === 'custom' ? this.data.custom : this.data.selected
-    if (!/^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(raw)) { this.setData({ message: '请输入有效金额，最多两位小数。' }); return }
-    const [whole, fraction = ''] = raw.split('.')
-    const minor = Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
-    if (minor < 1 || minor > 1000000) { this.setData({ message: '金额须大于零，单笔最高10000元。' }); return }
+    if (!/^[1-9][0-9]{0,4}$/.test(raw)) {
+      const fractional = /^(0|[1-9][0-9]{0,4})\.[0-9]{1,2}$/.test(raw) && Number(raw) >= 1 && Number(raw) <= 10000
+      this.setData({ message: fractional ? '小程序自定义充值按1元计费单位，只支持整数元。请调整金额后继续。' : '请输入1–10,000元之间的整数金额。' })
+      return
+    }
+    const whole = Number(raw)
+    if (!Number.isSafeInteger(whole) || whole < 1 || whole > 10000) { this.setData({ message: '金额须为1–10,000元之间的整数。' }); return }
+    const minor = whole * 100
     const paymentCondition = paymentErrors.preflight(minor)
     if (paymentCondition) { this.setData({ message: paymentCondition }); wx.showModal({ title: '苹果支付条件', content: paymentCondition, showCancel: false }); return }
-    const value = String(minor / 100)
+    const value = String(whole)
     this.setData({ busy: true })
     try {
       if (this.data.orderId) { await this.confirmPayment(); return }
@@ -178,6 +215,6 @@ Page({
     finally { this.setData({ busy: false }) }
   },
   openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
-  openAccount() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/sasi/pricing') }) },
+  openAccount() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/account') }) },
   openRefunds() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/refunds#mini') }) },
 })
