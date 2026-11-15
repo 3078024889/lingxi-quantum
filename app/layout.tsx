@@ -13,6 +13,7 @@ import "./lingxifield-premium-20261109.css";
 import "./growth-pages.css";
 import "./home-afternoon-20261114.css";
 import "./afternoon-artwork-20261114.css";
+import "./global-white-compact-20261115.css";
 import MiniEmbedMode from "@/components/MiniEmbedMode";
 import AdSenseLoader from "@/components/AdSenseLoader";
 import CurrencyPreferenceProvider from "@/components/CurrencyPreferenceProvider";
