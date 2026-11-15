@@ -19,7 +19,7 @@ const SHARE_TITLES={'/':'灵犀场 · 一键创造，一念即达','/siai':'灵�
 function shareTitleFor(path){return SHARE_TITLES[publicWebPath(path)]||'灵犀场 LINGXIFIELD'}
 Page({
  data:{src:'',path:'/tools',loading:true,failed:false},
- onLoad(options){enableShareMenu();const decoded=safeDecode(options.path||'/tools'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
+ onLoad(options){enableShareMenu({includeTimeline:true});const decoded=safeDecode(options.path||'/tools'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
  onShow(){enableShareMenu()},
  onHide(){this.clearPreviousCheckout()},
  onUnload(){this.clearPreviousCheckout()},
