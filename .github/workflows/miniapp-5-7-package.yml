@@ -5,6 +5,10 @@ on:
     paths:
       - 'miniapp/**'
       - 'components/WalletLivePanel.tsx'
+      - 'app/api/pay/providers/route.ts'
+      - 'app/api/pay/create/route.ts'
+      - 'app/checkout-usd/page.tsx'
+      - 'tests/usd-wallet-topup-readiness.test.mjs'
       - 'components/MiniProgramShareEntry.tsx'
       - 'components/MiniProgramShareEntry.module.css'
       - 'components/PublicAnnouncementTicker.tsx'
@@ -55,7 +59,7 @@ jobs:
           set -Eeuo pipefail
           node scripts/generate-social-assets.mjs
           node scripts/audit/mini-unified-surface.mjs
-          node --test tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/mini-recharge-single-entry.test.mjs
+          node --test tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/mini-recharge-single-entry.test.mjs tests/usd-wallet-topup-readiness.test.mjs
           node scripts/audit/mini-topup-client.mjs
           node scripts/audit/mini-virtual-payment.mjs
           node scripts/audit/mini-recharge-navigation.mjs
