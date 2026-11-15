@@ -47,7 +47,7 @@ for(const path of ['balance-pay/create','tool-pay/create','tool-pay/balance']) {
     '@/lib/supabase/admin':{createAdminClient:()=>{touchedMoney=true;throw Error('Must not touch a wallet')}},
     '@/lib/mini/session':{requireMiniSession:async()=>({userId:'old-9454',accountConnected:false})},
     '@/lib/mini/payment-availability':{MINI_PAYMENT_PAUSED:{}},
-    '@/lib/mini/virtual-goods':{miniVirtualTopupsEnabled:()=>true,miniVirtualToolsEnabled:()=>true},
+    '@/lib/mini/virtual-goods':{miniVirtualToolsEnabled:()=>true},
     '@/lib/mini/virtual-pay':{},'@/lib/mini/crypto':{},'@/lib/mini/wechat':{},
     '@/lib/tools/service-readiness':{},
     '@/lib/rate-limit':{checkRateLimit:async()=>true,getClientIp:()=>''},
