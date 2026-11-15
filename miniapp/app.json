@@ -1,6 +1,5 @@
 {
   "pages": [
-    "pages/portal/index",
     "pages/web/index",
     "pages/home/index",
     "pages/create/index",
@@ -24,6 +23,5 @@
     "backgroundTextStyle": "dark"
   },
   "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents",
-  "entryPagePath": "pages/web/index"
+  "lazyCodeLoading": "requiredComponents"
 }
