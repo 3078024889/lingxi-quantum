@@ -12,6 +12,8 @@ for(const path of ['/','/tools/food-calorie','/en','/en/tools/text-counter','/si
 }
 const r=await fetch(`${base}/${image}`);assert.equal(r.status,200);
 assert.match(r.headers.get('content-type'),/image\/jpeg/);
+const imageBytes=new Uint8Array(await r.arrayBuffer());
+assert(imageBytes.length<150*1024,'social preview image must remain optimized');
 const share=fs.readFileSync('miniapp/utils/share.js','utf8');
 assert(share.includes('/assets/share-lingxifield-20261115.jpg'));
 assert(!fs.existsSync('public/og-lingxifield-20261113.jpg'));
