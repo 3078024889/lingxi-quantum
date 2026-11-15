@@ -1,2 +1,2 @@
-// Compatibility entry; the website owns this page.
-Page({onLoad(){wx.redirectTo({url:'/pages/web/index?path='+encodeURIComponent('/ai-knowledge')})}})
+// Compatibility entry for old links; the retired knowledge workspace now resolves to the active SIAI directory.
+Page({onLoad(){wx.redirectTo({url:'/pages/web/index?path='+encodeURIComponent('/siai')})}})
