@@ -23,7 +23,7 @@ for (const width of [1920,1440,1024,390]) {
   for(const rect of result.rects){expect(Math.abs(rect.left-result.rects[0].left)).toBeLessThanOrEqual(1);expect(Math.abs(rect.right-result.rects[0].right)).toBeLessThanOrEqual(1);}
   if(width>=1024){
    expect(await page.locator('[data-home-sidebar]').evaluate(el=>getComputedStyle(el).backgroundImage)).toBe('none');
-   expect(result.sidebarBackground).toMatch(/^rgba\\(255,\\s*255,\\s*255,/);
+   expect(result.sidebarBackground).toMatch(/^rgba\(255,\s*255,\s*255,/);
   }
   const globe=page.locator('.lx-home-distribution-globe img');
   await globe.scrollIntoViewIfNeeded();
