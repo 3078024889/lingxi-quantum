@@ -28,7 +28,7 @@ function validSummary(value:unknown):value is Summary{
 export default function WalletLivePanel(){
  const [data,setData]=useState<State>({status:"loading"});
  const [tab,setTab]=useState<"ledger"|"withdrawals">("ledger");
- const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean;paypal:boolean}|null>(null);
+ const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean;paypal:boolean;usdBalanceTopup:boolean}|null>(null);
  const [topupCurrency,setTopupCurrency]=useState<Currency>("CNY");
  const [customAmount,setCustomAmount]=useState("");
  const [miniContext,setMiniContext]=useState<boolean|null>(null);
@@ -68,7 +68,7 @@ export default function WalletLivePanel(){
     const response=await fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin",signal:controller.signal});
     if(!response.ok)return;
     const p=await response.json();
-    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true,paypal:p.paypal===true});
+    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true,paypal:p.paypal===true,usdBalanceTopup:p.usdBalanceTopup===true});
    }catch{}
   };
   void load();void loadProviders();
@@ -91,7 +91,7 @@ export default function WalletLivePanel(){
   <Link href="/account/orders" className="ml-4 underline"><LxText zh="订单记录" en="Orders"/></Link>
  </section>;
  const {balances,withdrawals}=data.summary;
- const topupPayReady=miniContext===null?false:miniContext?miniTopupsReady:(topupCurrency==="CNY"?(providers?.wechat===true||providers?.alipay===true):providers?.paypal===true);
+ const topupPayReady=miniContext===null?false:miniContext?miniTopupsReady:(topupCurrency==="CNY"?(providers?.wechat===true||providers?.alipay===true):providers?.usdBalanceTopup===true);
  const customValue=customTopupAmount(customAmount.trim());
  const customValueText=customValue===null?"":Number.isInteger(customValue)?String(customValue):customValue.toFixed(2);
  const topupSymbol=topupCurrency==="CNY"?"¥":"$";
