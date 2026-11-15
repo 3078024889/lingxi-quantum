@@ -15,6 +15,7 @@ vm.runInNewContext(fs.readFileSync(filename,'utf8'),{require:createRequire(filen
 const instance={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
 instance.onLoad({path:encodeURIComponent('/sasi?mode=image&threadId=secret'),title:encodeURIComponent('AI图片生成')});
 assert.deepEqual(Array.from(menu.menus),['shareAppMessage','shareTimeline']);
+assert.ok(fs.readFileSync('miniapp/pages/web/index.js','utf8').includes('enableShareMenu({includeTimeline:true})'));
 assert.equal(instance.data.webPath,'/sasi');
 assert.equal(instance.onShareTimeline().query,'path='+encodeURIComponent('/sasi'));
 assert.equal(instance.onShareAppMessage().path,'/pages/web/index?path='+encodeURIComponent('/sasi'));
