@@ -1,4 +1,4 @@
-const MESSAGE = '小程序内充值暂未开放。已有余额和订单仍保留，可在账户中查看。'
+const MESSAGE = '人民币充值服务尚未启用，当前不会创建订单或扣款。已有余额和订单仍保留，可在账户中查看。美元充值请前往灵犀场官网。'
 function normalizeIncomingAmount(value) {
   if (typeof value !== 'string') return null
   const raw = value.trim()
