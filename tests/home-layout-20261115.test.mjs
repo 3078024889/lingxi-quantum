@@ -9,7 +9,7 @@ test('homepage FAQ uses compact four-column desktop cards and responsive fallbac
  assert.match(section,/\.lx-seo-question-grid\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
  assert.match(section,/@media\(max-width:1180px\)[\s\S]*repeat\(2,minmax\(0,1fr\)\)/);
  assert.match(section,/@media\(max-width:640px\)[\s\S]*minmax\(0,1fr\)/);
- assert.match(section,/\.lx-home-faq-copy p\{[^}]*font-size:13px/);
+ assert.match(section,/\.lx-home-faq-copy p\{[^}]*font-size:14px/);
  assert.match(section,/\.lx-home-growth-heading h2[\s\S]*font-size:28px/);
  assert(faq.includes('className="lx-seo-question-grid"'));
 });
