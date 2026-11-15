@@ -1,7 +1,7 @@
 import type {Metadata} from "next";
 import Link from "next/link";
 import {SHARE_IMAGES,SHARE_IMAGE_URL} from "@/lib/share-image";
-const url="https://lingxifield.com/share/20260928";
+const url="https://lingxifield.cn/share/20260928";
 const title="灵犀场 LINGXIFIELD｜全球 SIAI 排行榜 · SASI 智能软件市场 · 100+ 实用工具";
 const description="全球 SIAI 排行榜比较模型能力、价格、免费额度、地区与商用条件；SASI 智能软件市场提供 MT5 EA、量化交易软件与源码授权；100+ 在线实用工具覆盖日常文件处理。";
 export const metadata:Metadata={title,description,alternates:{canonical:url},openGraph:{url,title,description,images:SHARE_IMAGES},twitter:{card:"summary_large_image",title,description,images:[SHARE_IMAGE_URL]}};
