@@ -25,6 +25,16 @@ on:
       - 'components/HomeGlobalGrowth.tsx'
       - 'app/home-afternoon-20261114.css'
       - 'app/growth-pages.css'
+      - 'app/layout.tsx'
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'miniapp/**'
+      - 'public/og-lingxifield-*'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'scripts/test-share-metadata.mjs'
+      - 'app/share/20260928/page.tsx'
       - 'public/images/home-hero-signature-20261115.webp'
       - 'public/images/home-distribution-globe-20261115.webp'
       - 'tests/final-closure/home-white-glass-20261115.spec.ts'
@@ -152,6 +162,7 @@ jobs:
           node --test tests/legacy-sasi-retirement.test.mjs
           node --test tests/sasi-transparent-hero-20261112.test.mjs
           node --test tests/footer-unified.test.mjs tests/growth-distribution.test.mjs tests/seo-fullsite-coverage.test.mjs tests/siai-search-discovery.test.mjs
+          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
           node --test tests/supabase-applied-migration-parity-20261111.test.mjs
           node --test tests/celestial-premium-wallet-account-tools-20261109.test.mjs tests/dual-premium-sasi-toolpass-20261109.test.mjs tests/dual-premium-visual-no-legacy-20261109.test.mjs
           node --test tests/sasi-software-verified-fulfillment-20261108.test.mjs
