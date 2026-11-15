@@ -26,7 +26,7 @@ fs.mkdirSync(path.dirname(zipFile), { recursive: true });
 function includeFile(file) {
   const name = path.basename(file);
   const rel = path.relative(source, file).replaceAll(path.sep, '/');
-  if (name === 'project.private.config.json' || name === '.DS_Store' || name === 'Thumbs.db') return false;
+  if (name.startsWith('project.private.config.json') || name === '.DS_Store' || name === 'Thumbs.db') return false;
   if (rel.split('/').some(part => ['node_modules', '.git', '.next', 'dist', '_local'].includes(part))) return false;
   if (/^\.env(?:\.|$)/i.test(name) || /\.(?:pem|key|p12|pfx|keystore)$/i.test(name)) return false;
   return true;
