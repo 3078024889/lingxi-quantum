@@ -32,6 +32,7 @@ test('the new website OG is optimized JPEG 1200x630 and the mini-program card is
  const meta=await sharp(readFileSync(mini)).metadata();assert.equal(meta.format,'jpeg');assert.equal(meta.width,600);assert.equal(meta.height,480);
  assert(statSync(mini).size<300*1024,'mini-program share card should remain optimized');
  const miniShare=read('miniapp/utils/share.js');assert(miniShare.includes('/assets/share-lingxifield-20261115.jpg'));
+ const miniBuild=read('scripts/build-miniapps-v80.cjs');assert(miniBuild.includes('assets/share-lingxifield-20261115.jpg'));assert.doesNotMatch(miniBuild,/share-lingxifield-20260928\\.png/);
  const miniPage=read('miniapp/pages/web/index.js');assert(miniPage.includes('SASI 智能软件市场'));
 });
 test('WeChat app-message and timeline shares use the same versioned mini-program image',()=>{
