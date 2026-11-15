@@ -11,6 +11,15 @@ export async function miniVirtualPaymentAvailable() {
   } catch { return false; }
 }
 
+export async function miniVirtualTopupsAvailable(): Promise<boolean> {
+  try {
+    const response = await fetch("/api/wechat/mini/balance-pay/availability", { cache: "no-store", credentials: "same-origin" });
+    if (!response.ok) return false;
+    const result = await response.json();
+    return result?.enabled === true;
+  } catch { return false; }
+}
+
 type MiniBridge = { navigateTo: (options: { url: string; success: () => void; fail: () => void }) => void;
   getEnv?: (callback: (result: { miniprogram?: boolean }) => void) => void };
 let bridgePromise: Promise<MiniBridge | undefined> | undefined;
@@ -39,11 +48,14 @@ export async function detectMiniPaymentContext(): Promise<boolean> {
   });
 }
 
-export async function openMiniRecharge(): Promise<boolean> {
+export async function openMiniRecharge(amount?: string): Promise<boolean> {
   const bridge = await miniPaymentBridge();
   if (!bridge) return false;
+  const value = typeof amount === "string" ? amount.trim() : "";
+  if (amount !== undefined && (!/^[1-9][0-9]{0,4}$/.test(value) || Number(value) > 10000)) return false;
+  const suffix = amount === undefined ? "" : "?amount=" + encodeURIComponent(value);
   return new Promise(resolve => {
     const timeout = setTimeout(() => resolve(false), 5000);
-    bridge.navigateTo({ url: "/pages/balance/index", success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
+    bridge.navigateTo({ url: "/pages/balance/index" + suffix, success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
   });
 }
