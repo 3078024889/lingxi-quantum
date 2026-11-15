@@ -10,6 +10,16 @@ on:
       - 'components/SasiOpenMarketplace.module.css'
       - 'app/sasi/seller/page.tsx'
       - 'app/api/sasi/marketplace/listings/route.ts'
+      - 'app/api/sasi/marketplace/upload-ticket/route.ts'
+      - 'app/api/sasi/marketplace/image-ticket/route.ts'
+      - 'app/api/sasi/marketplace/submit/route.ts'
+      - 'components/SasiMarketplaceProductDetail.tsx'
+      - 'components/SasiMarketplaceProductDetail.module.css'
+      - 'components/MoneyAdminDashboard.tsx'
+      - 'components/money/AdminDashboard.module.css'
+      - 'app/global-compact-white-20261115.css'
+      - 'app/layout.tsx'
+      - 'tests/sasi-marketplace-mql5-catalog-20261115.test.mjs'
       - 'tests/sasi-seller-reference-20261114.test.mjs'
       - 'tests/final-closure/sasi-seller-workspace-reference.spec.ts'
       - 'tests/sasi-marketplace-security-contract.test.mjs'
@@ -61,6 +71,7 @@ jobs:
           node --test tests/sasi-seller-reference-20261114.test.mjs
           node --test tests/sasi-marketplace-one-cover-four-details-20261109.test.mjs
           node --test tests/sasi-marketplace-review-security-20261108.test.mjs
+          node --test tests/sasi-marketplace-mql5-catalog-20261115.test.mjs
           node tests/sasi-marketplace-security-contract.test.mjs
       - name: TypeScript validation
         run: pnpm exec tsc --noEmit
