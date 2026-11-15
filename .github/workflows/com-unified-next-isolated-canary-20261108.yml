@@ -140,6 +140,14 @@ on:
       - 'public/images/home-hero-signature-20261115.webp'
       - 'public/images/home-distribution-globe-20261115.webp'
       - 'tests/final-closure/home-white-glass-20261115.spec.ts'
+      - 'app/share/20260928/page.tsx'
+      - 'lib/share-image.ts'
+      - 'lingxifield-ai-market/lib/share-card.ts'
+      - 'public/og-lingxifield-20261115.jpg'
+      - 'miniapp/assets/share-lingxifield-20261115.jpg'
+      - 'miniapp/utils/share.js'
+      - 'tests/unified-share-image.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
       - 'components/Footer.tsx'
       - 'components/Nav.tsx'
       - 'app/sasi/**/page.tsx'
@@ -220,6 +228,13 @@ jobs:
           node scripts/ops/probe-sasi-anonymous-rest-20261109.mjs
       - name: Build static candidate assets and generate verified anonymous snapshots
         run: bash scripts/cloudflare/build-com-static-assets-20261110.sh
+      - name: Install Chrome for responsive homepage and page-rail acceptance
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Verify homepage glass, OG image, SIAI rails and SASI artwork
+        env:
+          LINGXIFIELD_E2E_BASE_URL: http://127.0.0.1:3000
+          NEXT_PUBLIC_SITE_URL: https://lingxifield.com
+        run: pnpm exec playwright test -c playwright.final.config.ts --project=desktop-chromium tests/final-closure/home-white-glass-20261115.spec.ts
       - name: Build isolated candidate config with NO production DNS or Worker routes
         run: |
           set -Eeuo pipefail
