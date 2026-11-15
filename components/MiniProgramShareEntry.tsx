@@ -6,14 +6,15 @@ import {openMiniShare,publicMiniSharePath} from "@/lib/mini/share-client";
 import {isMiniProgramContext} from "@/lib/mini/payment-client";
 import styles from "./MiniProgramShareEntry.module.css";
 
-const PUBLIC_ROUTE=/^\/(?:tools(?:\/[a-z0-9-]+)?|siai|sasi|ai-knowledge|ai-learning|ai-research)\/?$/;
+const PUBLIC_ROUTE=/^\/(?:|tools(?:\/[a-z0-9-]+)?|siai|sasi)\/?$/;
 export default function MiniProgramShareEntry(){
  const [message,setMessage]=useState("");
  const [working,setWorking]=useState(false);
  if(typeof window==="undefined")return null;
  if(new URLSearchParams(window.location.search).get("mini")!=="1"||!isMiniProgramContext())return null;
  const route=window.location.pathname;
- if(!PUBLIC_ROUTE.test(route)||publicMiniSharePath(window.location.href)==="/")return null;
+ const sharePath=publicMiniSharePath(window.location.href);
+ if(!PUBLIC_ROUTE.test(route)||(sharePath==="/"&&route!=="/"))return null;
  const lang=(document.documentElement.lang||"").toLowerCase();
  const cn=lang==="zh"||lang.startsWith("zh-");
  const params=new URLSearchParams(window.location.search);
@@ -25,7 +26,7 @@ export default function MiniProgramShareEntry(){
   setWorking(true);setMessage("");
   const title=document.querySelector("h1")?.textContent?.trim()||"灵犀场 LINGXIFIELD";
   const ok=await openMiniShare(title);
-  if(!ok)setMessage(cn?"暂时未能打开分享页，可通过右上角菜单重新尝试。":"Unable to open the share page. Try again from the mini-program menu.");
+  if(!ok)setMessage(cn?"分享页暂时未打开，请检查网络后重试。":"Unable to open the native share page. Check the connection and retry.");
   setWorking(false);
  }
  return <div className={styles.entry} data-testid="mini-native-share-entry">
@@ -34,7 +35,7 @@ export default function MiniProgramShareEntry(){
   </Link>
   <button type="button" onClick={openShare} disabled={working}
     aria-label={cn?"打开小程序分享页":"Open mini-program sharing"}
-    className={styles.button}>{working?(cn?"正在打开…":"Opening…"):(cn?"分享":"Share")}</button>
+    className={styles.button}>{working?(cn?"正在打开…":"Opening…"):(cn?"好友 / 朋友圈分享":"Share with friends / Moments")}</button>
   {message?<p role="status" className={styles.status}>{message}</p>:null}
  </div>;
 }
