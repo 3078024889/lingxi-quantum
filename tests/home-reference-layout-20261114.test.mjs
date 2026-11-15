@@ -48,7 +48,7 @@ test('reference-scale homepage and seller typography remains readable',()=>{
  // Exact pixels vary with the responsive viewport; actual readability, layering
  // and overflow are checked in afternoon-home-account-20261114.spec.ts.
  assert.match(home,/-webkit-text-fill-color:currentColor/);
- assert.match(home,/\.lx-home-reference \.lx-seo-question-grid\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);assert.match(home,/@media\\s*\\(\\s*max-width:\\s*1180px\\s*\\)/);assert.match(home,/@media\\s*\\(\\s*max-width:\\s*640px\\s*\\)/);
+ assert.match(home,/\.lx-home-reference \.lx-seo-question-grid\{grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);assert.match(home,/@media\s*\(\s*max-width:\s*1180px\s*\)/);assert.match(home,/@media\s*\(\s*max-width:\s*640px\s*\)/);
  assert.match(seller,/\.formCard input:not\(\[type="checkbox"\]\),\.formCard textarea,\.formCard select,\.payoutForm input,\.payoutForm select\{font-size:15px/);
  assert.match(seller,/\.sellerGuideCard p\{font-size:14px/);
  assert.match(seller,/\.sellerGuideSteps strong\{font-size:14px/);
