@@ -4,6 +4,8 @@ const profile=require('../miniapp/utils/app-profile');
 const appConfig=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));
 assert.equal(appConfig.pages[0],'pages/web/index','Main app must open the website homepage directly');
 assert(!appConfig.pages.includes('pages/portal/index'),'Legacy portal must not be registered');
+assert(!appConfig.pages.includes('pages/balance/index'),'Legacy native wallet page must not be registered');
+assert(!fs.existsSync('miniapp/pages/balance'),'Legacy native wallet page directory must be removed');
 assert(!fs.existsSync('miniapp/pages/portal/index.js'),'Legacy portal source must be removed');
 
 function makeWx(){
@@ -49,7 +51,7 @@ assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path=%2F');
 mail.copyWebsite();
 assert.equal(mailWx.calls.clipboard.pop().data,profile.website);
 mail.recharge();
-assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path=%2Fai-wallet');
+assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path=%2Fai-wallet%3Fcurrency%3DCNY');
 mail.orders();
 assert.equal(mailWx.calls.to.pop().url,'/pages/orders/index');
 mail.mainApp();
@@ -90,9 +92,8 @@ if(process.argv.includes('--check-builds')){
    assert(fs.readFileSync(path.join(root,'pages/orders/index.js'),'utf8').includes('/account/orders'));
    assert(!fs.existsSync(path.join(root,'utils/api.js')));
    assert(!fs.readFileSync(path.join(root,'app.js'),'utf8').includes('utils/api'));
-   const balanceRoute=fs.readFileSync(path.join(root,'pages/balance/index.js'),'utf8');
-   assert(balanceRoute.includes('/pages/web/index?path=%2Fai-wallet'));
-   assert(!balanceRoute.includes('request('));
+   assert(!built.pages.includes('pages/balance/index'));
+   assert(!fs.existsSync(path.join(root,'pages/balance')),'Secondary package must not recreate legacy balance page');
    assert(!fs.existsSync(path.join(root,'pages/recharge')),'Secondary package must not recreate native recharge pages');
   }
  }

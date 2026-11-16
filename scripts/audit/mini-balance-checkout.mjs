@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 let page, calls=0, release;
-const wx={showToast(){},navigateTo({url}){assert.equal(url,'/pages/web/index?path=%2Fai-wallet')}};
+const wx={showToast(){},navigateTo({url}){assert.equal(url,'/pages/web/index?path=%2Fai-wallet%3Fcurrency%3DCNY')}};
 vm.runInNewContext(fs.readFileSync('miniapp/pages/pay/index.js','utf8'),{Page:p=>page=p,wx,require:()=>({request:async(path,options)=>{
  assert.equal(path,'/api/wechat/mini/tool-pay/balance');assert.equal(options.data.quoteId,'q');calls++;
  await new Promise(resolve=>release=resolve);return{ok:true,paid:true};

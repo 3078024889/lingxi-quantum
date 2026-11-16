@@ -35,6 +35,7 @@ assert.equal(goods.virtualGoodsForQuote('fractional', 150).quantity, 3, 'Fractio
 assert.equal(goods.miniVirtualToolsEnabled(), false);
 env.WECHAT_MINI_VPAY_TOOL_GOODS = JSON.stringify({ 'food-calorie': { skuId: 'lx_food_calorie', unitPriceFen: 200 } });
 assert.equal(goods.virtualGoodsForQuote('food-calorie', 600).quantity, 3);
+assert.equal(typeof goods.virtualTopupGoods,'function','Historical CNY top-up settlement validator remains available');
 const fixedTopup = goods.virtualTopupGoods('sasi-balance-10');
 assert.deepEqual({skuId:fixedTopup.skuId,unitPriceFen:fixedTopup.unitPriceFen,quantity:fixedTopup.quantity,amountFen:fixedTopup.amountFen},{skuId:'lx_balance_10',unitPriceFen:1000,quantity:1,amountFen:1000});
 const customTopup = goods.virtualTopupGoods('sasi-balance-custom-12');
