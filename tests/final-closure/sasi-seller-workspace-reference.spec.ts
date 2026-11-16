@@ -62,3 +62,36 @@ test('seller workspace collapses cleanly on mobile without overflowing its main 
  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth+2);
  await page.screenshot({path:'artifacts/sasi-seller-workspace-mobile.png',fullPage:false});
 });
+
+test('pending seller can save a private product draft before seller approval',async({page})=>{
+ test.setTimeout(60000);
+ const sellerId='11111111-1111-4111-8111-111111111111';
+ let draft:Record<string,unknown>|null=null,created=0;
+ await page.route('**/api/sasi/marketplace/seller',route=>route.request().method()==='GET'
+  ?route.fulfill({json:{profile:{user_id:sellerId,display_name:'Pending Studio',status:'pending_review',kyc_status:'pending'}}})
+  :route.continue());
+ await page.route('**/api/sasi/marketplace/listings**',async route=>{
+  const request=route.request(),url=new URL(request.url());
+  if(request.method()==='POST'){
+   const body=request.postDataJSON();
+   expect(body.title).toBe('待审核卖家测试 EA');
+   draft={id:'22222222-2222-4222-8222-222222222222',seller_id:sellerId,title:String(body.title),description:String(body.description??''),category:String(body.category),price_cny_minor:Number(body.priceCnyMinor),price_usd_minor:Number(body.priceUsdMinor),status:'draft',scan_status:'unscanned',created_at:'2026-11-16T00:00:00.000Z'};
+   created++;
+   return route.fulfill({status:201,json:{item:draft}});
+  }
+  if(request.method()==='GET'&&url.searchParams.get('mode')==='mine')
+   return route.fulfill({json:{items:draft?[draft]:[],counts:{published:0,pending:0}}});
+  return route.fulfill({json:{items:[]}});
+ });
+ await page.route('**/api/sasi/marketplace/payouts',route=>route.fulfill({json:{balances:{CNY:{grossMinor:0},USD:{grossMinor:0}}}}));
+ await page.route('**/api/sasi/marketplace/my-media**',route=>route.fulfill({json:{counts:{},items:{}}}));
+ await page.goto('/sasi/seller?lang=zh');
+ await expect(page.getByText('卖家资料待审核')).toBeVisible({timeout:30000});
+ await page.locator('#listing-editor input').first().fill('待审核卖家测试 EA');
+ const save=page.getByRole('button',{name:'保存商品草稿',exact:true});
+ await expect(save).toBeEnabled();
+ await save.click();
+ await expect.poll(()=>created).toBe(1);
+ await expect(page.getByText('当前草稿：待审核卖家测试 EA')).toBeVisible({timeout:15000});
+ await expect(page.getByTestId('seller-upload-grid').locator('input[type=file]').first()).toBeEnabled();
+});
