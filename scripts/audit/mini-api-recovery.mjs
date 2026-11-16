@@ -16,5 +16,5 @@ assert.deepEqual(calls,['https://lingxifield.cn/api/wechat/mini/login']);
 assert.ok(!calls.some(url=>url.includes('/balance-pay/')),'Login must not depend on the retired native top-up availability endpoint');
 assert.match(api.connectionMessage({statusCode:403}),/小程序服务/);
 assert.match(api.connectionMessage({statusCode:503}),/小程序服务/);
-assert.throws(()=>api.request('/api/pay/create',{method:'POST'}),/Invalid Mini Program API path/);
+await assert.rejects(api.request('/api/pay/create',{method:'POST'}),/Invalid Mini Program API path/);
 console.log('PASS: Mini Program login no longer calls native wallet top-up APIs; authenticated API boundary remains enforced.');
