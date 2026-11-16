@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { verifyWechatApiResponseSignature } from "@/lib/wechatpay";
 
 const EXPECTED_MINI_APP_ID = "wxbf4ae90406e7e26b";
 function env(name:string){return process.env[name]?.trim()||""}
@@ -25,6 +26,7 @@ export function miniJsapiPayMissingReasons():string[]{
  if(Buffer.byteLength(env("WECHAT_API_V3_KEY"),"utf8")!==32)missing.push("API_V3_KEY_INVALID");
  if(!env("WECHAT_PLATFORM_PUBLIC_KEY")||!env("WECHAT_PLATFORM_PUBLIC_KEY_ID"))missing.push("PLATFORM_PUBLIC_KEY_MISSING");
  try{crypto.createPrivateKey(normalizePem(env("WECHAT_PRIVATE_KEY")))}catch{missing.push("MERCHANT_PRIVATE_KEY_INVALID")}
+ try{crypto.createPublicKey(normalizePem(env("WECHAT_PLATFORM_PUBLIC_KEY")))}catch{missing.push("PLATFORM_PUBLIC_KEY_INVALID")}
  return [...new Set(missing)];
 }
 export function miniJsapiPayConfigured(){return miniJsapiPayMissingReasons().length===0}
@@ -33,7 +35,10 @@ export function miniJsapiTopupsEnabled(){
 }
 async function request(method:"GET"|"POST",url:string,body=""){
  const r=await fetch(url,{method,headers:{Authorization:auth(method,url,body),"Content-Type":"application/json",Accept:"application/json"},...(body?{body}:{}),cache:"no-store",signal:AbortSignal.timeout(20000)});
- const d=await r.json().catch(()=>({}));
+ const raw=await r.text();
+ if(Buffer.byteLength(raw,"utf8")>1048576)throw new Error("MINI_WECHAT_RESPONSE_TOO_LARGE");
+ if(!verifyWechatApiResponseSignature(r.headers,raw))throw new Error("MINI_WECHAT_RESPONSE_SIGNATURE_INVALID");
+ let d:any={};try{d=raw?JSON.parse(raw):{}}catch{throw new Error("MINI_WECHAT_RESPONSE_JSON_INVALID")}
  if(!r.ok) {
   const code=typeof d?.code==="string"?d.code.replace(/[^A-Z0-9_]/gi,"").slice(0,48):"UNKNOWN";
   throw new Error(`MINI_WECHAT_API_${r.status}_${code}`);
