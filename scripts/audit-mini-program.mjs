@@ -61,7 +61,7 @@ for(const p of ["miniapp/pages/balance","miniapp/pages/recharge","miniapp/utils/
 const walletClient=read("lib/mini/payment-client.ts");
 must(walletClient.includes('openMiniWallet(currency: "CNY" | "USD"')&&!walletClient.includes("openMiniRecharge"),"MINI_WALLET_MUST_OPEN_OFFICIAL_WEBSITE_ONLY");
 must(walletClient.includes("/ai-wallet?currency="),"MINI_WALLET_CURRENCY_ROUTE_MISSING");
-must(read("miniapp/pages/pay/index.js").includes("/ai-wallet%3Fcurrency%3DCNY"),"MINI_TOOL_RECHARGE_MUST_RETURN_TO_OFFICIAL_CNY_WALLET");
+must(read("miniapp/pages/pay/index.js").includes("%2Fai-wallet%3Fcurrency%3DCNY"),"MINI_TOOL_RECHARGE_MUST_RETURN_TO_OFFICIAL_CNY_WALLET");
 const web=read("miniapp/pages/web/index.js");
 must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALLOWLIST_MISSING");
 must(web.includes("preferredCurrency()")&&web.includes("currency="),"MINI_CURRENCY_WEB_SYNC_MISSING");

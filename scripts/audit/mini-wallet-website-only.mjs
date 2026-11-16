@@ -7,7 +7,7 @@ assert.ok(!boundary.includes("openMiniRecharge")&&!boundary.includes("cnyBalance
 assert.match(wallet,/\/checkout\?productId=sasi-balance-/);assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);assert.match(wallet,/redirect=%2Fai-wallet%3Fcurrency%3DUSD/);
 assert.match(cny,/WeixinJSBridge|invokeWeixinPay/);assert.match(cny,/\/api\/pay\/wechat\/create/);assert.match(usd,/setUsdWalletReady/);assert.match(usd,/paypalReady/);
 assert.match(api,/path.startsWith\('\/api\/wechat\/mini\/'\)/);assert.ok(web.includes("const currencyParam=/(?:[?&])currency=/"));
-const tool=read("miniapp/pages/pay/index.js");assert.match(tool,/requestVirtualPayment/);assert.match(tool,/tool-pay\/create/);assert.ok(exists("app/api/wechat/mini/tool-pay/create/route.ts"));assert.ok(tool.includes("/ai-wallet%3Fcurrency%3DCNY"));
+const tool=read("miniapp/pages/pay/index.js");assert.match(tool,/requestVirtualPayment/);assert.match(tool,/tool-pay\/create/);assert.ok(exists("app/api/wechat/mini/tool-pay/create/route.ts"));assert.ok(tool.includes("%2Fai-wallet%3Fcurrency%3DCNY"));
 assert.match(read("lib/mini/virtual-fulfillment.ts"),/virtualTopupGoods/,"historical top-up settlement remains intact");
 assert.match(pack,/const version = '5.7.5'/);assert.match(profile,/className="lx-account-save-button"/);assert.match(profile,/t\("save"\)/);assert.match(css,/grid-template-columns:minmax\(0,1fr\)!important/);assert.match(css,/\.lx-account-save-button/);
 assert.equal(exists("app/api/wechat/mini/balance-pay/create/route.ts"),false);
