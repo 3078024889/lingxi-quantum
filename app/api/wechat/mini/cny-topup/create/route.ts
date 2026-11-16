@@ -48,7 +48,7 @@ async function cancelProviderUnpaidOrder(admin: ReturnType<typeof createAdminCli
       return false;
     }
   }
-  const { data, error } = await admin.from("orders").update({ status: "canceled" })
+  const { data, error } = await admin.from("orders").update({ status: "failed" })
     .eq("id", orderId).eq("status", "pending").select("id");
   if (error) throw new Error("MINI_CNY_LOCAL_ORDER_CLOSE_FAILED");
   return Boolean(data?.length) || true;
@@ -88,7 +88,7 @@ async function closeUnpreparedOrder(admin: ReturnType<typeof createAdminClient>,
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
     if (message.includes("WECHAT_API_404:ORDER_NOT_EXIST")) {
-      const { error: updateError } = await admin.from("orders").update({ status: "canceled" })
+      const { error: updateError } = await admin.from("orders").update({ status: "failed" })
         .eq("id", order.id).eq("status", "pending");
       if (updateError) throw new Error("MINI_CNY_LOCAL_ORDER_CLOSE_FAILED");
       return { paid: false, closed: true };
@@ -161,7 +161,7 @@ export async function POST(req: Request) {
         }
         return noStore({ orderId: existing.id, paid: true, status: "paid" });
       }
-      if (["canceled", "failed", "refunded"].includes(existing.status)) {
+      if (["failed", "refunded"].includes(existing.status)) {
         return noStore({ orderId: existing.id, closed: true, paid: false, status: existing.status });
       }
       if (existing.status !== "pending") return conflict("订单状态需要人工核验，请保留当前订单编号。", existing.id);
@@ -169,7 +169,7 @@ export async function POST(req: Request) {
       if (payment) return noStore({ orderId: existing.id, payment, status: "pending" });
       const state = await closeUnpreparedOrder(admin, existing, session.openid);
       if (state.paid) return noStore({ orderId: existing.id, paid: true, status: "paid" });
-      if (state.closed) return noStore({ orderId: existing.id, closed: true, paid: false, status: "canceled" });
+      if (state.closed) return noStore({ orderId: existing.id, closed: true, paid: false, status: "failed" });
       return conflict("原订单仍在微信端核验，暂不能重新发起支付。", existing.id);
     }
 
@@ -230,7 +230,7 @@ export async function POST(req: Request) {
       try {
         const state = await closeUnpreparedOrder(admin, order, session.openid);
         if (state.paid) return noStore({ orderId, paid: true, status: "paid" });
-        if (state.closed) return noStore({ orderId, closed: true, paid: false, status: "canceled" });
+        if (state.closed) return noStore({ orderId, closed: true, paid: false, status: "failed" });
       } catch {}
       console.error("[mini CNY JSAPI create]", safeProviderCode(error));
       return noStore({ error: "微信预支付暂未完成，原订单已保留并正在核验。请稍后恢复原订单，不要重复充值。", orderId }, 503);
