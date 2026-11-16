@@ -350,7 +350,9 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
           <Link href="/ai-wallet" onClick={rechargeClick}>💎 {t("recharge")}</Link>
           <button
             className="lx11-mobile-account"
+            type="button"
             aria-label={mt.account}
+            title={mt.account}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((value) => !value)}
           >
