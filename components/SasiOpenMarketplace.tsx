@@ -379,7 +379,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       <Link href={"/sasi/marketplace/"+item.id}>{sasiSoftwareUiText(lang,"查看完整介绍","View full details")} →</Link>
     </aside></article>)}</div>
    {remainingVisible.length===0&&visible.length>0&&<div className={styles.empty}>{sasiSoftwareUiText(lang,"精选软件已展示在上方，更多作品将在审核通过后持续出现。","Featured software is shown above. More listings appear as they pass review.")}</div>}
-    {visible.length===0&&<div className={styles.empty}>{sasiSoftwareUiText(lang,"已审核的软件将在这里展示；欢迎开发者发布原创作品。","No reviewed and published software matches this search.")}</div>}
+    {visible.length===0&&<div className={styles.empty}>{sasiSoftwareUiText(lang,"已审核的软件将在这里展示，商品详情以对应产品页面为准。","No reviewed and published software matches this search.")}</div>}
   </section>
 
    
