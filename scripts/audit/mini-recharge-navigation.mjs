@@ -1,4 +1,14 @@
 import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';import ts from 'typescript';
 const exports={};let native=true,fail=false;const paths=[];const bridge={getEnv:cb=>cb({miniprogram:native}),navigateTo:o=>{paths.push(o.url);fail?o.fail():o.success()}};
 vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/mini/payment-client.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,window:{location:{search:''},wx:{miniProgram:bridge}},navigator:{userAgent:'MicroMessenger iPhone'},URLSearchParams,setTimeout,clearTimeout});
-assert.equal(await exports.detectMiniPaymentContext(),true);assert.equal(await exports.openMiniRecharge(),true);assert.equal(paths[0],'/pages/balance/index');assert.equal(await exports.openMiniWallet(),true);assert.equal(paths[1],'/pages/web/index?path=%2Fai-wallet');fail=true;assert.equal(await exports.openMiniRecharge(),false);native=false;fail=false;assert.equal(await exports.detectMiniPaymentContext(),false);console.log('PASS: native CNY recharge and website wallet bridge remain separate');
+assert.equal(await exports.detectMiniPaymentContext(),true);
+assert.equal(await exports.openMiniRecharge('sasi-balance-88'),true);
+assert.equal(paths[0],'/pages/balance/index?productId=sasi-balance-88','selected preset amount must reach the native CNY page');
+assert.equal(await exports.openMiniRecharge('sasi-balance-custom-12.34'),true);
+assert.equal(paths[1],'/pages/balance/index?productId=sasi-balance-custom-12.34','custom amount must reach the native CNY page');
+assert.equal(await exports.openMiniRecharge('sasi-usd-balance-10'),true);
+assert.equal(paths[2],'/pages/balance/index','USD products must never enter native CNY payment');
+assert.equal(await exports.openMiniWallet(),true);assert.equal(paths[3],'/pages/web/index?path=%2Fai-wallet');
+fail=true;assert.equal(await exports.openMiniRecharge('sasi-balance-10'),false);
+native=false;fail=false;assert.equal(await exports.detectMiniPaymentContext(),false);
+console.log('PASS: selected CNY amount preserved; USD stays on website; bridge failures handled');

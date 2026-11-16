@@ -49,13 +49,17 @@ export async function openMiniWallet(): Promise<boolean> {
 }
 
 
-export async function openMiniRecharge(): Promise<boolean> {
+export async function openMiniRecharge(productId?: string): Promise<boolean> {
   const bridge = await miniPaymentBridge();
   if (!bridge) return false;
   return new Promise(resolve => {
     const timeout = setTimeout(() => resolve(false), 5000);
+    const safeProductId = typeof productId === "string" &&
+      /^sasi-balance-(?:10|88|666|888|custom-(?:0|[1-9][0-9]{0,4})(?:\\.[0-9]{1,2})?)$/.test(productId)
+      ? productId : "";
+    const url = safeProductId ? "/pages/balance/index?productId=" + encodeURIComponent(safeProductId) : "/pages/balance/index";
     bridge.navigateTo({
-      url: "/pages/balance/index",
+      url,
       success: () => { clearTimeout(timeout); resolve(true); },
       fail: () => { clearTimeout(timeout); resolve(false); },
     });

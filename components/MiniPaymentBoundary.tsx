@@ -10,10 +10,13 @@ export function isMiniPaymentContext() {
     (new URLSearchParams(window.location.search).get("mini") === "1" && /MicroMessenger/i.test(navigator.userAgent));
 }
 
-function isCnyBalanceTopup() {
-  if (typeof window === "undefined") return false;
+function cnyBalanceProductId() {
+  if (typeof window === "undefined") return "";
   const productId = new URLSearchParams(window.location.search).get("productId") || "";
-  return productId.startsWith("sasi-balance-") && !productId.startsWith("sasi-usd-balance-");
+  return /^sasi-balance-(?:10|88|666|888|custom-(?:0|[1-9][0-9]{0,4})(?:\\.[0-9]{1,2})?)$/.test(productId) ? productId : "";
+}
+function isCnyBalanceTopup() {
+  return Boolean(cnyBalanceProductId());
 }
 
 export default function MiniPaymentBoundary({ children, miniChildren }: { children: ReactNode; miniChildren?: ReactNode }) {
@@ -30,7 +33,7 @@ export default function MiniPaymentBoundary({ children, miniChildren }: { childr
 
   async function openRecharge() {
     setMessage("正在打开人民币小程序充值页…");
-    const opened = await openMiniRecharge();
+    const opened = await openMiniRecharge(cnyBalanceProductId());
     setMessage(opened ? "" : "当前小程序版本没有可用的人民币充值页，请更新体验版后重试。");
   }
 

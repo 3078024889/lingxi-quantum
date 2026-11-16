@@ -17,6 +17,10 @@ Page({
   async onLoad(options = {}) {
     this.migrateLegacyState()
     const currency = String(options.currency || 'CNY').toUpperCase()
+    const fixedProduct = /^sasi-balance-(10|88|666|888)$/.exec(String(options.productId || ''))
+    const customProduct = /^sasi-balance-custom-((?:0|[1-9][0-9]{0,4})(?:\\.[0-9]{1,2})?)$/.exec(String(options.productId || ''))
+    if (fixedProduct) this.setData({ selected: fixedProduct[1], custom: '' })
+    else if (customProduct) this.setData({ selected: 'custom', custom: customProduct[1] })
     if (currency === 'USD') {
       const path = '/ai-wallet?currency=USD'
       wx.redirectTo({ url: '/pages/web/index?path=' + encodeURIComponent(path) })
