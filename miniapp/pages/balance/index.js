@@ -1,13 +1,199 @@
-// Legacy route kept only for old deep links. All wallet activity is handled by the official website.
+const MESSAGE = '人民币小程序充值暂未开放。账户余额、历史订单和退款记录仍可在官网钱包查看。'
+const { login, request, publicRequest, wxLogin, connectionMessage } = require('../../utils/api')
+const expiry = require('../../utils/topup-expiry')
+const paymentErrors = require('../../utils/virtual-payment-errors')
+const PENDING_KEY = 'lx_mini_cny_topup_pending_v1'
+const LEGACY_PENDING_KEY = PENDING_KEY
+
 Page({
-  onLoad(options = {}) {
-    const currency = options.currency === "USD" ? "USD" : options.currency === "CNY" ? "CNY" : "";
-    const path = currency ? "/ai-wallet?currency=" + currency : "/ai-wallet";
-    wx.redirectTo({
-      url: "/pages/web/index?path=" + encodeURIComponent(path),
-      fail() {
-        wx.showModal({ title: "官网钱包暂未打开", content: "请返回小程序首页，重新进入灵犀场官网钱包。", showCancel: false });
-      },
-    });
+  data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', refundableText: '', topups: [] },
+  migrateLegacyState() {
+    const legacy = wx.getStorageSync(LEGACY_PENDING_KEY)
+    if (legacy && !wx.getStorageSync(PENDING_KEY)) wx.setStorageSync(PENDING_KEY, legacy)
+    wx.removeStorageSync(LEGACY_PENDING_KEY)
+    wx.removeStorageSync('lx_mini_last_payment_error')
+    wx.removeStorageSync('lx_mini_expired_checkouts')
   },
-});
+  async onLoad(options = {}) {
+    this.migrateLegacyState()
+    const currency = String(options.currency || 'CNY').toUpperCase()
+    if (currency === 'USD') {
+      const path = '/ai-wallet?currency=USD'
+      wx.redirectTo({ url: '/pages/web/index?path=' + encodeURIComponent(path) })
+      return
+    }
+    this.setData({ paymentNotice: paymentErrors.iosNotice() })
+    expiry.expireCheckout()
+    const pending = wx.getStorageSync(PENDING_KEY)
+    if (pending) this.setData({ orderId: pending.orderId || '', requestId: pending.requestId || '', selected: pending.selected || '10', custom: pending.custom || '' })
+    await this.refreshAvailability()
+    await this.refreshAccount()
+  },
+  async onShow() {
+    clearInterval(this._balanceTimer)
+    this._balanceTimer = setInterval(() => this.refreshProgress(), 30000)
+    if (this.data.busy) return
+    this.expirePending()
+    clearInterval(this._expiryTimer)
+    this._expiryTimer = setInterval(() => this.expirePending(), 1000)
+    const pending = wx.getStorageSync(PENDING_KEY)
+    this.setData({ orderId: pending && pending.orderId || '', requestId: pending && pending.requestId || '' })
+    await this.refreshAvailability()
+    await this.refreshAccount()
+  },
+  onHide() { clearInterval(this._expiryTimer); clearInterval(this._balanceTimer) },
+  onUnload() { clearInterval(this._expiryTimer); clearInterval(this._balanceTimer) },
+  async refreshProgress() {
+    if (this.data.busy || this._refreshingProgress) return
+    this._refreshingProgress = true
+    try {
+      if (this.data.linked) await request('/api/wechat/mini/refunds/progress', { method: 'POST' }).catch(() => {})
+      await this.refreshAccount()
+    } finally { this._refreshingProgress = false }
+  },
+  async refreshAccount() {
+    this.setData({ accountLoaded: false, linked: false, topups: [] })
+    try {
+      const result = await request('/api/wechat/mini/account-summary')
+      if (this.data.accountLabel && this.data.accountLabel !== result.accountLabel) this.clearPending('到账账户已改变，旧充值记录请在原账户中查看。')
+      this.setData({ accountLoaded: true, linked: result.linked === true, accountLabel: result.accountLabel || '', balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2), refundableText: (Number(result.refundableFen || 0) / 100).toFixed(2),
+        topups: (result.topups || []).map(row => ({ ...row, amountText: Number(row.amount_rmb).toFixed(2), statusText: row.status === 'paid' ? '已到账' : row.status === 'pending' ? '付款确认中' : row.status === 'refunded' ? '已退款' : '已关闭' })) })
+    } catch (_) { this.setData({ accountLoaded: false, linked: false, accountLabel: '', balanceText: '', topups: [], message: '账户余额暂未加载，请重试。已付款订单仍会核实到账。' }) }
+  },
+  async connectAccount() {
+    if (this.data.busy) return
+    try {
+      const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
+      wx.navigateTo({ url: `/pages/web/index?path=${encodeURIComponent(result.path)}` })
+    } catch (_) { this.setData({ message: '账户连接暂未完成，请重试。' }) }
+  },
+  expirePending() {
+    const pending = wx.getStorageSync(PENDING_KEY)
+    if (!this.data.busy && expiry.expireCheckout()) {
+      this.setData({ orderId: '', requestId: '', message: '未付款充值已超过5分钟，已从订单列表删除。可以开始新充值；实际付款仍会核实到账。' })
+      if (pending && pending.orderId) request('/api/wechat/mini/orders', { method: 'DELETE', data: { orderIds: [pending.orderId] } }).catch(() => {})
+    }
+  },
+  async refreshAvailability() {
+    if (this._checkingAvailability) return
+    this._checkingAvailability = true
+    this.setData({ loading: true })
+    try {
+      const result = await publicRequest('/api/wechat/mini/balance-pay/availability')
+      if (typeof result.enabled !== 'boolean') throw new Error('Invalid availability')
+      this.setData({ enabled: result.enabled, message: result.enabled ? (this.data.orderId ? '上一笔充值尚未确认。可以查单，或将它保留在订单中后开始一笔新的充值。' : '充值人民币余额，可用于支持余额支付的工具。') : MESSAGE })
+    } catch (error) {
+      this.setData({ enabled: false, message: connectionMessage(error) })
+      console.warn('[mini recharge availability]', { statusCode: error && error.statusCode, code: error && error.code })
+    }
+    finally { this._checkingAvailability = false; this.setData({ loading: false }) }
+  },
+  choose(e) { if (!this.data.busy) this.setData({ selected: String(e.currentTarget.dataset.amount) }) },
+  input(e) { if (!this.data.busy) this.setData({ custom: e.detail.value }) },
+  clearPending(message) {
+    wx.removeStorageSync(PENDING_KEY)
+    this.setData({ message, orderId: '', requestId: '' })
+  },
+  async confirmPayment() {
+    const result = await request(`/api/wechat/mini/tool-pay/status?orderId=${encodeURIComponent(this.data.orderId)}`)
+    if (result.closed === true && result.status === 'canceled' && result.paid === false) {
+      this.clearPending('上一笔充值已关闭且未付款，可以按当前金额重新充值。'); return
+    }
+    if (!result.paid) { this.setData({ message: '付款结果正在核验，订单已保留。若已扣款，请勿重复付款，可查看下方充值进度。' }); return false }
+    this.clearPending('充值已到账，可在账户中查看余额。')
+    await this.refreshAccount()
+    return true
+  },
+  async startNew() {
+    if (this.data.busy || !this.data.orderId) return
+    const previousId = this.data.orderId
+    const confirmed = await new Promise(resolve => wx.showModal({
+      title: '开始新充值',
+      content: '上一笔订单会保留，不会被取消。如果它已付款，后续核实后仍会到账。新充值是另外一笔付款，请勿为补确认而重复充值。',
+      confirmText: '开始新充值', success: result => resolve(result.confirm), fail: () => resolve(false),
+    }))
+    if (!confirmed || this.data.busy || this.data.orderId !== previousId) return
+    // Release the checkout slot, retaining the server order and its settlement.
+    this.clearPending('旧订单已保留在我的订单中，请确认金额后开始新的充值。')
+  },
+  async deletePending() {
+    if (this.data.busy || !this.data.orderId) return
+    const id = this.data.orderId
+    const confirmed = await new Promise(resolve => wx.showModal({ title: '删除充值订单', content: '从当前订单和历史记录中删除。不取消正在进行的付款；实际扣款仍会核实到账。', confirmText: '删除', success: result => resolve(result.confirm), fail: () => resolve(false) }))
+    if (!confirmed || this.data.busy || this.data.orderId !== id) return
+    this.setData({ busy: true })
+    try {
+      const result = await request('/api/wechat/mini/orders', { method: 'DELETE', data: { orderIds: [id] } })
+      if (!Array.isArray(result.deletedIds) || !result.deletedIds.includes(id)) throw new Error('Deletion not confirmed')
+      this.clearPending('旧充值订单已删除，请确认金额后开始新充值。')
+    } catch (_) { this.setData({ message: '删除未完成，请重试。' }) }
+    finally { this.setData({ busy: false }) }
+  },
+  async pay() {
+    if (this.data.busy) return
+    this.expirePending()
+    // Check an existing order even when availability is temporarily unavailable,
+    // and before validating a newly edited amount.
+    if (this.data.orderId) {
+      this.setData({ busy: true })
+      try { await this.confirmPayment() }
+      catch (_) { this.setData({ message: '暂时无法确认上一笔充值，请重试或查看已有订单。' }) }
+      finally { this.setData({ busy: false }) }
+      return
+    }
+    if (!this.data.enabled) { this.setData({ message: this.data.loading ? '正在连接充值服务，请稍候。' : '充值服务尚未连接，请点击重新检查充值服务。' }); return }
+    const pending = wx.getStorageSync(PENDING_KEY)
+    if (this.data.requestId && pending && !pending.orderId &&
+        (pending.selected !== this.data.selected || pending.custom !== this.data.custom)) {
+      this.setData({ selected: pending.selected, custom: pending.custom, message: '上一笔充值准备结果尚未确认，已恢复原金额。请先重试确认，避免重复下单。' }); return
+    }
+    const raw = this.data.selected === 'custom' ? this.data.custom : this.data.selected
+    if (!/^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(raw)) { this.setData({ message: '请输入有效金额，最多两位小数。' }); return }
+    const [whole, fraction = ''] = raw.split('.')
+    const minor = Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
+    if (minor < 1 || minor > 1000000) { this.setData({ message: '金额须大于零，单笔最高10000元。' }); return }
+    if (minor % 100 !== 0 && minor > 10000) { this.setData({ message: '小程序虚拟支付的小数金额单笔最高100元；超过100元请使用整数金额。' }); return }
+    const paymentCondition = paymentErrors.preflight(minor)
+    if (paymentCondition) { this.setData({ message: paymentCondition }); wx.showModal({ title: '苹果支付条件', content: paymentCondition, showCancel: false }); return }
+    const value = String(minor / 100)
+    this.setData({ busy: true })
+    try {
+      if (this.data.orderId) { await this.confirmPayment(); return }
+      if (typeof wx.requestVirtualPayment !== 'function') { this.setData({ message: '请更新微信后再试。' }); return }
+      const requestId = this.data.requestId || (Date.now().toString(16) + Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2)).padEnd(32, '0').slice(0, 32)
+      await login()
+      await this.refreshAccount()
+      if (!this.data.accountLoaded) { this.setData({ message: '账户服务暂未响应，请重新加载余额。此时没有创建充值或扣款。' }); return }
+      if (!this.data.linked) { this.setData({ message: '请先登录并连接灵犀场账户，确认充值到账的账户。' }); return }
+      this.setData({ requestId })
+      const { code } = await wxLogin()
+      const productId = `sasi-balance-${this.data.selected === 'custom' ? 'custom-' : ''}${value}`
+      const previous = wx.getStorageSync(PENDING_KEY)
+      const createdAt = expiry.timestamp(previous) || Date.now()
+      wx.setStorageSync(PENDING_KEY, { requestId, createdAt, selected: this.data.selected, custom: this.data.custom })
+      const created = await request('/api/wechat/mini/balance-pay/create', { method: 'POST', data: { productId, code, requestId } })
+      this.setData({ orderId: created.orderId })
+        wx.setStorageSync(PENDING_KEY, { orderId: created.orderId, requestId, createdAt, selected: this.data.selected, custom: this.data.custom, paymentAttempted: false })
+      if (!created.pending && !created.paid) {
+        wx.setStorageSync(PENDING_KEY, { ...wx.getStorageSync(PENDING_KEY), paymentAttempted: true })
+        await new Promise((resolve, reject) => wx.requestVirtualPayment({ ...created.payment, success: resolve, fail: reject }))
+      }
+      this.setData({ message: '购买操作已完成，正在确认余额到账，请勿重复付款。' })
+      // Read-only recovery: no second purchase, even if the first status request fails.
+      for (let attempt = 0; attempt < 3 && this.data.orderId; attempt++) {
+        try { if (await this.confirmPayment()) break }
+        catch (_) { this.setData({ message: '购买结果正在核验。请勿重复付款，稍后可检查到账进度。' }) }
+        if (attempt < 2 && this.data.orderId) await new Promise(resolve => setTimeout(resolve, 1500))
+      }
+      await this.refreshAccount()
+    } catch (error) {
+      const message = paymentErrors.failureMessage(error) + (this.data.orderId ? '若已扣款，请查付款结果，勿重复付款。未付款订单5分钟后自动删除。' : '')
+      this.setData({ message })
+      if (typeof wx.showModal === 'function') wx.showModal({ title: '充值未完成', content: message, showCancel: false })
+    }
+    finally { this.setData({ busy: false }) }
+  },
+  openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
+  openAccount() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/sasi/pricing') }) },
+  openRefunds() { wx.navigateTo({ url: '/pages/web/index?path='+encodeURIComponent('/refunds#mini') }) },
+})
