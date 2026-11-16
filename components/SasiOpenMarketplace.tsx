@@ -112,7 +112,6 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  },[listings,filter,search,sort]);
  const featuredSide:Listing[]=[];
  const remainingVisible=visible;
- const featuredFallbacks:string[]=[];
  const publishedCount=mineCounts?(mineCounts.published??"—"):mine.filter(item=>item.status==="published").length;
  const pendingCount=mineCounts?(mineCounts.pending??"—"):mine.filter(item=>item.status==="submitted").length;
  const activeDraft=mine.find(item=>item.id===activeDraftId&&["draft","rejected"].includes(item.status))??null;
@@ -298,8 +297,8 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
     <div className={styles.heroCopy}>
      <p className={styles.heroBrand}>LINGXIFIELD · SASI</p>
      <h1 id="sasi-market-title">{sasiSoftwareUiText(lang,"SASI 智能软件市场","SASI Software Marketplace")}</h1>
-     <p>{sasiSoftwareUiText(lang,"成品软件 · MT5 EA 与指标模块 · 安装教程 · 开发者发布 · 源码授权 · 自动交付","Finished software · MT5 EAs & indicators · Installation guides · Developer publishing · Source licenses · Automatic delivery")}</p>
-     <div className={styles.heroActions}><a href="#products">{sasiSoftwareUiText(lang,"浏览软件","Browse software")} →</a><Link href="/sasi/seller">＋ {sasiSoftwareUiText(lang,"发布产品","Publish software")}</Link></div>
+     <p>{sasiSoftwareUiText(lang,"成品软件 · MT5 EA 与指标模块 · 安装教程 · 源码授权 · 自动交付","Finished software · MT5 EAs & indicators · Installation guides · Source licenses · Automatic delivery")}</p>
+     <div className={styles.heroActions}><a href="#products">{sasiSoftwareUiText(lang,"浏览软件","Browse software")} →</a></div>
     </div>
   </section>
   <div className={styles.marketFeatures} aria-label={sasiSoftwareUiText(lang,"软件市场服务能力","Marketplace capabilities")}>
@@ -350,11 +349,6 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
       </div>
      </article>;
     })}
-    {featuredFallbacks.map(kind=>kind==="browse"?<Link key={kind} href="#products" className={styles.featuredMiniCta}>
-     <span className={styles.featuredMiniCtaIcon}>◈</span><strong>{sasiSoftwareUiText(lang,"浏览全部软件","Browse all software")}</strong><small>{sasiSoftwareUiText(lang,"查看已审核发布的商品与开发者作品。","Explore reviewed software and developer listings.")}</small><b>{sasiSoftwareUiText(lang,"浏览软件","Browse software")} →</b>
-    </Link>:<Link key={kind} href="/sasi/seller" className={styles.featuredMiniCta}>
-     <span className={styles.featuredMiniCtaIcon}>✧</span><strong>{sasiSoftwareUiText(lang,"开发者发布","Publish as a developer")}</strong><small>{sasiSoftwareUiText(lang,"提交软件资料，审核通过后展示并自动交付。","Submit software for review and verified automatic delivery.")}</small><b>{sasiSoftwareUiText(lang,"进入卖家工作台","Open seller workspace")} →</b>
-    </Link>)}
    </div>
   </section>
   <section id="products" className={styles.section}><div className={styles.sectionHeading}><div><h2>{sasiSoftwareUiText(lang,"开发者作品","Software & seller services")}</h2></div>
