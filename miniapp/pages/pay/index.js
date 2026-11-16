@@ -45,7 +45,7 @@ Page({
       this.setData({ message: (error && error.data && error.data.error) || '余额支付结果尚未确认，请查看订单后重试。' })
     } finally { this.setData({ busy: false }) }
   },
-  recharge() { wx.navigateTo({ url: '/pages/cny-wallet/index' }) },
+  recharge() { wx.navigateTo({ url: '/pages/balance/index' }) },
   back() { wx.navigateBack() },
   openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
 })
