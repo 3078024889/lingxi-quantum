@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { alipayEnabled, alipayMissingVars } from "@/lib/alipay";
 import { wechatPayConfigured, wechatPayEnabled, wechatPayMissingVars } from "@/lib/wechatpay";
 import {paypalPayEnabled} from "@/lib/paypal";
+import {sasiRmbBalanceV1Enabled} from "@/lib/sasi/payment-gate";
 
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
@@ -17,7 +18,7 @@ export async function GET(){
  const paypal=paypalPayEnabled();
 
  // Publish wallet-specific readiness using the same gates enforced by order creation.
- const cnyBalanceTopupReady=wechat||alipay;
+ const cnyBalanceTopupReady=sasiRmbBalanceV1Enabled() && (wechat||alipay);
  const usdBalanceTopupReady=paypal
   && process.env.USD_BALANCE_TOPUP_ENABLED==="true"
   && process.env.SASI_REFUND_FLOW_TESTED==="true";
