@@ -48,6 +48,9 @@ async function existingOrderResponse(admin:any,order:any,openid:string,amountFen
  catch(error){
   const message=error instanceof Error?error.message:"";
   if(message.includes("MINI_WECHAT_API_404_ORDER_NOT_EXIST")){
+   const ageMs=Date.now()-Date.parse(String(order.created_at||""));
+   if(!Number.isFinite(ageMs)||ageMs<90000)
+    return conflict("微信订单正在创建或同步，原订单已保留，请稍后核验。",order.id);
    await admin.from("orders").update({status:"failed"}).eq("id",order.id).eq("status","pending");
    return NextResponse.json({orderId:order.id,paid:false,closed:true,status:"failed"});
   }
@@ -110,7 +113,7 @@ export async function POST(req:Request){
   if(fresh.openid!==session.openid)return NextResponse.json({error:"微信身份不一致"},{status:403});
   const outTradeNo="LXM"+createHash("sha256").update(session.userId+":"+requestId).digest("hex").slice(0,29).toUpperCase();
   const {data:existing,error:lookupError}=await admin.from("orders")
-   .select("id,user_id,product_id,status,provider_payment_id,amount_rmb")
+   .select("id,user_id,product_id,status,provider_payment_id,amount_rmb,created_at")
    .eq("provider","wechat").eq("channel","mini-program").eq("provider_payment_id",outTradeNo).maybeSingle();
   if(lookupError)throw new Error("MINI_JSAPI_IDEMPOTENCY_LOOKUP_FAILED");
   if(existing){
@@ -162,7 +165,7 @@ export async function POST(req:Request){
    }catch(reconcileError){
     const reconciliationMessage=reconcileError instanceof Error?reconcileError.message:"";
     if(reconciliationMessage.includes("MINI_WECHAT_API_404_ORDER_NOT_EXIST"))
-     await admin.from("orders").update({status:"failed"}).eq("id",orderId).eq("status","pending");
+     return conflict("微信订单暂时不可查，原订单已锁定等待后续核验，请勿重复充值。",orderId);
     else return conflict("微信下单结果暂不明确，订单已锁定等待核验，请勿重复充值。",orderId);
    }
    console.error("[mini jsapi create]",error instanceof Error?error.message:"unknown");
