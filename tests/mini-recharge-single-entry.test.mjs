@@ -33,7 +33,7 @@ test("uncertain CNY payments retain the original idempotency key and never creat
   assert.match(page,/paymentAttempted/);
   assert.match(page,/recoverPending/);
   assert.match(page,/tool-pay\/status/);
-  assert.match(page,/balance-pay\/create/);
+  assert.match(page,/cny-topup\/create/);
   assert.doesNotMatch(page,/expireCheckout|orders['"]?,\s*\{\s*method:\s*['"]DELETE/);
   assert.match(read("app/api/wechat/mini/cny-topup/create/route.ts"),/reserve_mini_cny_topup_order/);
   assert.match(read("supabase/migrations/20261116120000_mini_cny_topup_atomic_reservation.sql"),/pg_advisory_xact_lock/);
@@ -50,7 +50,9 @@ test("tool-product virtual payment remains independent from wallet top-ups", () 
 test("historical CNY settlement, refund and idempotent credit paths remain intact", () => {
   assert.match(read("lib/mini/virtual-fulfillment.ts"),/virtualTopupGoods/);
   assert.match(read("lib/mini/virtual-fulfillment.ts"),/fulfillPaidOrder/);
-  assert.match(read("lib/mini/virtual-refund.ts"),/virtualTopupGoods/);
+  assert.match(read("lib/mini/virtual-refund.ts"),/reconcileVirtualRefund/);
+  assert.match(read("lib/mini/virtual-refund.ts"),/virtual_topup_order_created/);
+  assert.match(read("lib/mini/virtual-refund.ts"),/mini_order_refund_v1/);
   assert.match(read("app/api/wechat/mini/pay/notify/route.ts"),/reconcileVirtualToolOrder/);
 });
 

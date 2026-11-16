@@ -33,5 +33,7 @@ for (const path of [
 assert.ok(fs.readFileSync('miniapp/pages/pay/index.js','utf8').includes('tool-pay/create'));
 assert.ok(fs.readFileSync('miniapp/pages/pay/index.js','utf8').includes('/pages/cny-wallet/index'));
 assert.match(fs.readFileSync('lib/mini/virtual-fulfillment.ts','utf8'),/virtualTopupGoods/);
-assert.match(fs.readFileSync('lib/mini/virtual-refund.ts','utf8'),/virtualTopupGoods/);
+assert.match(fs.readFileSync('lib/mini/virtual-refund.ts','utf8'),/reconcileVirtualRefund/);
+assert.match(fs.readFileSync('lib/mini/virtual-refund.ts','utf8'),/virtual_topup_order_created/);
+assert.match(fs.readFileSync('lib/mini/virtual-refund.ts','utf8'),/mini_order_refund_v1/);
 console.log('PASS: retired purchase API remains closed; new CNY wallet is separate; old page/helpers are removed; tool payment and historical settlement/refunds remain');
