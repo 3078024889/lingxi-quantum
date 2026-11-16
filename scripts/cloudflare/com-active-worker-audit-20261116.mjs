@@ -28,6 +28,7 @@ if(!Array.isArray(scripts))throw Error("CF_SCRIPT_LIST_INVALID");
 console.log("COM_CLOUDFLARE_SCRIPT_COUNT="+scripts.length);
 const scriptNames=scripts.map(x=>String(x.id||"")).filter(Boolean);
 const candidates=new Set(scriptNames.filter(x=>/lingxi|com|global/i.test(x)));
+const routedScripts=new Set();
 try{
  const zones=await get("/zones?name=lingxifield.com&per_page=50");
  const zone=Array.isArray(zones)?zones.find(x=>x.name==="lingxifield.com"):null;
@@ -39,7 +40,7 @@ try{
   console.log("COM_PUBLIC_WORKER_ROUTE_COUNT="+matches.length);
   for(const route of matches){
    console.log("COM_PUBLIC_WORKER_ROUTE pattern="+String(route.pattern||"")+" script="+String(route.script||"NONE"));
-   if(route.script)candidates.add(String(route.script));
+   if(route.script){candidates.add(String(route.script));routedScripts.add(String(route.script));}
   }
  }
 }catch(e){console.log("COM_ZONE_ROUTE_AUDIT=BLOCKED:"+String(e?.message||"ERROR").replace(/[^A-Z0-9_]/gi,"_").slice(0,50));}
@@ -55,13 +56,29 @@ for(const name of [...candidates].sort()){
   }catch{}
   const installed=new Set([...bindingMap.keys(),...secrets.map(x=>x.name)]);
   const has=keys=>keys.every(k=>installed.has(k));
+  const serviceBindings=bindings.filter(x=>x.type==="service").map(x=>String(x.name||"")).filter(Boolean);
   console.log("COM_WORKER name="+name+
+   " routed="+yes(routedScripts.has(name))+
    " legacyGateway="+yes(bindingMap.get("LINGXI_COM_LEGACY_GATEWAY")?.type==="service")+
    " publicR2="+yes(bindingMap.get("LINGXI_PUBLIC_LARGE_R2")?.type==="r2_bucket")+
+   " serviceBindings="+(serviceBindings.join(",")||"NONE")+
    " wechatCredentials="+yes(has(names.slice(0,7)))+
    " alipayCredentials="+yes(has(names.slice(7,11)))+
    " paypalCredentials="+yes(has(names.slice(11,14))));
   for(const key of flags)console.log("COM_WORKER_FLAG name="+name+" key="+key+" state="+state(bindingMap.get(key)||secrets.find(x=>x.name===key)));
+  if(routedScripts.has(name)){
+   try{
+    const codeResponse=await fetch(root+"/accounts/"+encodeURIComponent(account)+"/workers/scripts/"+encodeURIComponent(name)+"/content/v2",{headers,signal:AbortSignal.timeout(20000)});
+    const code=await codeResponse.text();
+    if(!codeResponse.ok)throw Error("CODE_HTTP_"+codeResponse.status);
+    console.log("COM_WORKER_CODE name="+name+
+     " providerEndpoint="+yes(code.includes("/api/pay/providers"))+
+     " merchantReadiness="+yes(code.includes("edge-merchant-readiness")||code.includes("merchantAlipay"))+
+     " paypalFlag="+yes(code.includes("PAYPAL_ENABLED"))+
+     " wechatFlag="+yes(code.includes("WECHAT_ENABLED"))+
+     " alipayFlag="+yes(code.includes("ALIPAY_ENABLED")));
+   }catch(e){console.log("COM_WORKER_CODE name="+name+" state=BLOCKED");}
+  }
  }catch(e){console.log("COM_WORKER_SETTINGS name="+name+" state=BLOCKED code="+String(e?.message||"ERROR").replace(/[^A-Z0-9_]/gi,"_").slice(0,50));}
 }
 console.log("COM_CLOUDFLARE_ROUTING_AUDIT_COMPLETE_READ_ONLY");
