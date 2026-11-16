@@ -46,6 +46,10 @@ test("Alipay refund completion validates the exact original order and refund amo
  assert.match(adapters,/function assertAlipayRefund/);
  assert.match(adapters,/ALIPAY_REFUND_ORDER_MISMATCH/);
  assert.match(adapters,/ALIPAY_REFUND_AMOUNT_MISMATCH/);
+ assert.match(adapters,/ALIPAY_REFUND_AMOUNT_MISSING/);
+ assert.match(adapters,/WECHAT_REFUND_ORDER_REFERENCE_MISSING/);
+ assert.match(adapters,/WECHAT_REFUND_AMOUNT_MISSING/);
+ assert.match(adapters,/PAYPAL_REFUND_AMOUNT_MISSING/);
  assert.equal((adapters.match(/assertAlipayRefund\(r,x\)/g)||[]).length,2);
 });
 test("USD wallet top-up keeps its existing production readiness contract and exposes its live readiness to admins",()=>{
