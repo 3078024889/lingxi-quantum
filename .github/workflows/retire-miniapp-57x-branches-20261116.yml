@@ -1,0 +1,76 @@
+name: Retire obsolete Mini Program 5.7.x branches (owner-authorized)
+
+on:
+  pull_request:
+    branches:
+      - ci/cn3194-payment-base-20261110
+    types: [opened, reopened]
+    paths:
+      - '.github/workflows/retire-miniapp-57x-branches-20261116.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  retire:
+    if: github.event.pull_request.head.ref == 'ops/retire-miniapp-57x-branches-20261116' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Verify all superseded Mini Program PRs are closed and unmerged
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for pr in 346 347 352 354 355; do
+            state="$(gh api "repos/$GH_REPO/pulls/$pr" --jq '.state')"
+            merged="$(gh api "repos/$GH_REPO/pulls/$pr" --jq '.merged')"
+            [[ "$state" == "closed" && "$merged" == "false" ]] || {
+              echo "RETIREMENT_GUARD_FAILED:PR=$pr:STATE=$state:MERGED=$merged" >&2
+              exit 1
+            }
+            echo "RETIRED_PR_CONFIRMED:$pr"
+          done
+
+      - name: Delete only the allowlisted failed 5.7.x branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          branches=(
+            "fix/miniapp-5-7-wallet-share-20261115-cn"
+            "fix/miniapp-cny-native-usd-website-20261116"
+            "fix/miniapp-shell-share-recharge-20261115-cn"
+            "fix/miniapp-shell-share-recharge-20261115-com"
+            "fix/miniapp-wallet-website-only-20261115"
+            "tmp/miniapp-574-cny-core-20261116"
+          )
+
+          open_prs="$(gh api --paginate "repos/$GH_REPO/pulls?state=open&per_page=100")"
+          for branch in "${branches[@]}"; do
+            refs="$(printf '%s' "$branch" | jq -sRr @uri)"
+            referenced="$(jq --arg branch "$branch" '[.[] | select(.head.ref == $branch or .base.ref == $branch)] | length' <<<"$open_prs")"
+            [[ "$referenced" == "0" ]] || {
+              echo "BRANCH_STILL_REFERENCED_BY_OPEN_PR:$branch" >&2
+              exit 1
+            }
+
+            if gh api "repos/$GH_REPO/git/ref/heads/$refs" >/dev/null 2>&1; then
+              gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$refs"
+              echo "RETIRED_BRANCH_DELETED:$branch"
+            else
+              echo "RETIRED_BRANCH_ALREADY_ABSENT:$branch"
+            fi
+
+            if gh api "repos/$GH_REPO/git/ref/heads/$refs" >/dev/null 2>&1; then
+              echo "BRANCH_DELETE_VERIFICATION_FAILED:$branch" >&2
+              exit 1
+            fi
+          done
+
+          echo "MINIAPP_57X_BRANCH_RETIREMENT_PASS"
+          echo "PRESERVED: miniapp/ shared native source, AppID, account/session logic, historical orders, balances, ledger, refunds, tool entitlements."
