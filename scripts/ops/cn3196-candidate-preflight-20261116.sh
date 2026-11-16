@@ -72,7 +72,7 @@ else
   echo CN3193_ROLLBACK_LISTENER=NOT_RUNNING
 fi
 
-ENVFILE_COUNT="$(systemctl show "$SERVICE" -p EnvironmentFiles --value | python3 -c 'import re,sys; print(len(set(re.findall(r"/[^\\s()]+\\.env",sys.stdin.read()))))')"
+ENVFILE_COUNT="$(systemctl show "$SERVICE" -p EnvironmentFiles --value | python3 -c 'import re,sys; print(len(set(re.findall(r"/[^\s()]+\.env",sys.stdin.read()))))')"
 FREE_BYTES="$(df -PB1 "$BASE" | awk 'END{print $4}')"
 echo "CN3195_PRODUCTION_SERVICE=$SERVICE"
 echo "CN3195_PRODUCTION_SOURCE_SHA=$SOURCE_SHA"
