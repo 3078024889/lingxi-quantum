@@ -325,3 +325,5 @@ jobs:
 # COM_PINNED_SASI_RELEASE_TRIGGER_20261116 source=1e2d2d7c51e2fc6fc9b2bb9205d7849bc031c61a canary_run=43783926587
 
 # 20261116 exact approved production promotion source=e765c9181575026626776991ef4e7afacd6a876e; trigger commit only.
+
+# 2026-11-16 exact approved cutover trigger; previous source 1baa892ec2096385e0ec3022ba3672945167b1f2 passed isolated canary run 43839889399.
