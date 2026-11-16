@@ -42,13 +42,19 @@ test('SASI market hero artwork preserves its natural ratio and is never stretche
 });
 
 
-test('homepage rightmost action is an account entry, not a second diamond avatar', () => {
+test('homepage rightmost action is an account entry, not a duplicate recharge icon', () => {
   const nav = read('components/Nav.tsx');
-  const start = nav.indexOf('<div className="lx-home-nav-actions">');
-  const end = nav.indexOf('<button type="button" className="lx-home-nav-toggle"', start);
-  assert.ok(start >= 0 && end > start, 'homepage action group must exist');
+  const start = nav.indexOf('<div className="lx11-top-actions">');
+  const end = nav.indexOf('</div>', start);
+  assert.ok(start >= 0 && end > start, 'homepage desktop action group must exist');
   const actions = nav.slice(start, end);
-  assert.match(actions, /className="lx-home-account-trigger"/);
-  assert.match(actions, /LingxiMiniIcon name="account" size="nav"/);
-  assert.doesNotMatch(actions, /className="lx-home-account-trigger"[^}]*avatarUrl/);
+  assert.match(actions, /className="lx11-avatar lx11-account-trigger"/);
+  assert.match(actions, /<Link href="\\/ai-wallet" className="lx11-primary"/);
+  const mobileStart = nav.indexOf('<div className="lx-home-mobile-actions">');
+  const mobileEnd = nav.indexOf('</div>', mobileStart);
+  assert.ok(mobileStart >= 0 && mobileEnd > mobileStart, 'homepage mobile action group must exist');
+  const mobile = nav.slice(mobileStart, mobileEnd);
+  assert.match(mobile, /className="lx11-mobile-account"/);
+  assert.match(mobile, /LingxiMiniIcon name="account" size="nav"/);
+  assert.doesNotMatch(mobile, /avatarUrl/);
 });
