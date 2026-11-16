@@ -11,7 +11,7 @@ const required=[
  "miniapp/pages/home/index.js","miniapp/pages/create/index.js","miniapp/pages/tools/index.js","miniapp/pages/agents/index.js",
  "miniapp/pages/profile/index.js","miniapp/pages/settings/index.js","miniapp/pages/web/index.js","miniapp/pages/web/index.json",
  "miniapp/pages/share/index.js","miniapp/pages/share/index.json","miniapp/pages/mail-home/index.json",
- "miniapp/pages/orders/index.js","miniapp/pages/pay/index.js","miniapp/pages/notifications/index.js",
+ "miniapp/pages/orders/index.js","miniapp/pages/pay/index.js","miniapp/pages/cny-wallet/index.js","miniapp/pages/cny-wallet/index.wxml","miniapp/pages/cny-wallet/index.wxss","miniapp/pages/cny-wallet/index.json","miniapp/pages/notifications/index.js",
  "miniapp/pages/discover-e-sign-pdf/index.js","miniapp/pages/discover-image-watermark-remover/index.js",
  "miniapp/pages/discover-burn-after-read/index.js","miniapp/pages/discover-temp-mail/index.js",
  "app/api/wechat/mini/login/route.ts","app/api/wechat/mini/logout/route.ts","app/api/wechat/mini/account-link/start/route.ts"
@@ -21,7 +21,7 @@ for(const r of required)must(exists(r),"MINI_REQUIRED_FILE_MISSING:"+r);
 const app=JSON.parse(read("miniapp/app.json"));
 const expected=[
  "pages/web/index","pages/home/index","pages/create/index","pages/tools/index","pages/agents/index","pages/profile/index","pages/settings/index",
- "pages/share/index","pages/pay/index","pages/orders/index","pages/notifications/index",
+ "pages/share/index","pages/pay/index","pages/orders/index","pages/cny-wallet/index","pages/notifications/index",
  "pages/discover-temp-mail/index","pages/discover-burn-after-read/index","pages/discover-image-watermark-remover/index","pages/discover-e-sign-pdf/index"
 ];
 must(Array.isArray(app.pages),"MINI_PAGES_INVALID");
@@ -57,11 +57,14 @@ const i18n=read("miniapp/utils/i18n.js");
 for(const l of ["zh-CN","en","ja","ko","fr","de","es","pt","ar"])
  must(i18n.includes("'"+l+"'")||i18n.includes('"'+l+'"')||i18n.includes(l+":"),"MINI_LANGUAGE_MISSING:"+l);
 
-for(const p of ["miniapp/pages/balance","miniapp/pages/recharge","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js","app/api/wechat/mini/balance-pay"])must(!exists(p),"LEGACY_NATIVE_WALLET_MODULE_REMAINS:"+p);
+for(const p of ["miniapp/pages/balance","miniapp/pages/recharge","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js"])must(!exists(p),"RETIRED_MINI_WALLET_MODULE_REMAINS:"+p);
+must(app.pages.includes("pages/cny-wallet/index"),"NEW_CNY_WALLET_PAGE_MISSING");
+must(exists("app/api/wechat/mini/cny-topup/availability/route.ts")&&exists("app/api/wechat/mini/cny-topup/create/route.ts"),"CNY_NATIVE_TOPUP_API_MISSING");
 const walletClient=read("lib/mini/payment-client.ts");
-must(walletClient.includes('openMiniWallet(currency: "CNY" | "USD"')&&!walletClient.includes("openMiniRecharge"),"MINI_WALLET_MUST_OPEN_OFFICIAL_WEBSITE_ONLY");
-must(walletClient.includes("/ai-wallet?currency="),"MINI_WALLET_CURRENCY_ROUTE_MISSING");
-must(read("miniapp/pages/pay/index.js").includes("%2Fai-wallet%3Fcurrency%3DCNY"),"MINI_TOOL_RECHARGE_MUST_RETURN_TO_OFFICIAL_CNY_WALLET");
+must(walletClient.includes('openMiniWallet(currency: "CNY" | "USD"')&&walletClient.includes("/pages/cny-wallet/index")&&walletClient.includes("/ai-wallet?currency=USD"),"MINI_CNY_NATIVE_USD_WEBSITE_ROUTING_MISSING");
+must(read("miniapp/pages/pay/index.js").includes("/pages/cny-wallet/index"),"MINI_TOOL_RECHARGE_MUST_OPEN_NATIVE_CNY_WALLET");
+must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/balance-pay/create"),"NATIVE_CNY_WALLET_CREATE_API_MISSING");
+must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/tool-pay/status"),"NATIVE_CNY_WALLET_SERVER_CONFIRMATION_MISSING");
 const web=read("miniapp/pages/web/index.js");
 must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALLOWLIST_MISSING");
 must(web.includes("preferredCurrency()")&&web.includes("currency="),"MINI_CURRENCY_WEB_SYNC_MISSING");
@@ -70,7 +73,8 @@ must(!web.includes("ai-knowledge")&&!web.includes("ai-learning")&&!web.includes(
 
 console.log("AUDIT_MINI_PROGRAM=PASS");
 console.log("CURRENT_MINI_TOPOLOGY="+expected.length+"_PAGES_PASS");
-console.log("LEGACY_NATIVE_WALLET_REMOVED=PASS");
+console.log("RETIRED_WALLET_PAGE_REMOVED_NEW_CNY_NATIVE_WALLET_ACTIVE=PASS");
+console.log("CNY_NATIVE_USD_WEBSITE_WALLET_SPLIT=PASS");
 console.log("DIRECT_WEBSITE_HOME_LAUNCH=PASS");
 console.log("SINGLE_WEB_NAVIGATION=PASS");
 console.log("FRIEND_SHARE_WEBVIEW_AND_TIMELINE_NATIVE_PAGE=PASS");

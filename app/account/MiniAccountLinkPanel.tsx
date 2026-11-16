@@ -24,7 +24,7 @@ export default function MiniAccountLinkPanel({ ticket, accountLabel }: { ticket:
       const data = await response.json();
       if (!response.ok || !data.ok) throw new Error(data.error || (langEn ? "Account link failed" : "账户连接未完成"));
       setState("done");
-      setMessage(langEn ? `Connected ${data.account || ''}. You can now continue to the official wallet page.` : `已同步到账账户：${data.account || ''}。账户已同步，可前往官网钱包继续充值。`);
+      setMessage(langEn ? `Connected ${data.account || ''}. Continue to CNY top-up in the Mini Program.` : `已同步到账账户：${data.account || ''}。账户已同步，可继续进行人民币充值。`);
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : (langEn ? "Account link failed — please try again" : "账户连接未完成，请稍后重试"));
@@ -54,7 +54,7 @@ export default function MiniAccountLinkPanel({ ticket, accountLabel }: { ticket:
         </button>
       )}
       {message && <p className={`mt-3 text-sm leading-6 ${state === "error" ? "text-rose" : "text-lattice"}`}>{message}</p>}
-      {state === "done" && <button onClick={() => void openMiniWallet()} className="mt-4 border border-lattice/60 px-5 py-3 text-sm text-lattice">{t("前往官网钱包", "Open website wallet")}</button>}
+      {state === "done" && <button onClick={() => void openMiniWallet('CNY')} className="mt-4 border border-lattice/60 px-5 py-3 text-sm text-lattice">{t("继续人民币充值", "Continue CNY top-up")}</button>}
     </div>
   );
 }

@@ -10,6 +10,7 @@
     "pages/share/index",
     "pages/pay/index",
     "pages/orders/index",
+    "pages/cny-wallet/index",
     "pages/notifications/index",
     "pages/discover-temp-mail/index",
     "pages/discover-burn-after-read/index",

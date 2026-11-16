@@ -1,14 +1,14 @@
-name: Miniapp 5.7.5 website-only wallet and import package (NO WECHAT UPLOAD)
+name: Miniapp 5.7.6 native CNY and website USD wallet package (NO WECHAT UPLOAD)
 on:
   push:
-    branches: [fix/miniapp-wallet-website-only-20261115, fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
+    branches: [fix/miniapp-cny-native-usd-website-20261116, fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
     paths:
       - 'miniapp/**'
       - 'components/WalletLivePanel.tsx'
       - 'components/MiniPaymentBoundary.tsx'
       - 'components/AccountProfileCard.tsx'
       - 'app/unified-shell.css'
-      - 'app/api/wechat/mini/balance-pay/**'
+      - 'app/api/wechat/mini/cny-topup/**'
       - 'app/api/pay/providers/route.ts'
       - 'app/api/pay/create/route.ts'
       - 'app/checkout-usd/page.tsx'
@@ -22,7 +22,11 @@ on:
       - 'lib/mini/payment-client.ts'
       - 'lib/mini/virtual-goods.ts'
       - 'scripts/audit/mini-virtual-payment.mjs'
-      - 'scripts/audit/mini-wallet-website-only.mjs'
+      - 'scripts/audit/mini-cny-native-usd-website.mjs'
+      - 'scripts/audit/balance-topups.mjs'
+      - 'scripts/audit/mini-credit-confirmation.mjs'
+      - 'scripts/audit/mini-closed-order-recovery.mjs'
+      - 'supabase/migrations/20261116120000_mini_cny_topup_atomic_reservation.sql'
       - 'scripts/audit/mini-balance-checkout.mjs'
       - 'scripts/audit/mini-web-account-sync.mjs'
       - 'scripts/audit/mini-retired-purchases.mjs'
@@ -69,7 +73,10 @@ jobs:
           node --test tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/mini-recharge-single-entry.test.mjs tests/usd-wallet-topup-readiness.test.mjs
           node scripts/audit/mini-virtual-payment.mjs
           node scripts/audit/mini-recharge-navigation.mjs
-          node scripts/audit/mini-wallet-website-only.mjs
+          node scripts/audit/mini-cny-native-usd-website.mjs
+          node scripts/audit/balance-topups.mjs
+          node scripts/audit/mini-credit-confirmation.mjs
+          node scripts/audit/mini-closed-order-recovery.mjs
           node scripts/audit/mini-balance-checkout.mjs
           node scripts/audit/mini-web-account-sync.mjs
           node scripts/audit/mini-retired-purchases.mjs
@@ -78,21 +85,21 @@ jobs:
           node scripts/test-mini-sharing-v78.cjs
           node scripts/test-mini-profiles-v80.cjs
           pnpm exec tsc --noEmit
-          echo MINIAPP_5_7_5_SOURCE_AND_TYPECHECK_PASS
+          echo MINIAPP_5_7_6_SOURCE_AND_TYPECHECK_PASS
       - name: Build isolated main mini-program project
         run: |
           set -Eeuo pipefail
           node scripts/build-miniapps-v80.cjs main
           node scripts/package-miniapp-5-7.cjs
-          echo MINIAPP_5_7_5_IMPORT_PACKAGE_PASS_NO_UPLOAD
+          echo MINIAPP_5_7_6_IMPORT_PACKAGE_PASS_NO_UPLOAD
       - name: Upload importable WeChat Developer Tools package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: lingxifield-miniapp-5.7.5-${{ github.sha }}
+          name: lingxifield-miniapp-5.7.6-${{ github.sha }}
           path: |
-            dist/lingxifield-miniapp-5.7.5.zip
-            dist/lingxifield-miniapp-5.7.5.zip.sha256
-            dist/miniapp-5.7.5/release-notes.txt
+            dist/lingxifield-miniapp-5.7.6.zip
+            dist/lingxifield-miniapp-5.7.6.zip.sha256
+            dist/miniapp-5.7.6/release-notes.txt
           retention-days: 14
           if-no-files-found: error
       - name: Confirm no external release actions

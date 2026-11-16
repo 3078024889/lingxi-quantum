@@ -1054,3 +1054,16 @@ html[data-theme="dark"] .lx-footer-search-number{color:#91bcfa}
  .lx-account-name-edit .lx-account-save-button{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;max-width:100%!important;height:42px!important;min-height:42px!important;max-height:42px!important;box-sizing:border-box!important;flex:none!important;position:static!important;overflow:visible!important;white-space:nowrap!important;padding:0 16px!important;border:0!important;border-radius:11px!important;background:linear-gradient(110deg,#7257e8,#4d86df)!important;color:#fff!important;font-size:14px!important;font-weight:700!important;line-height:1!important}
  .lx-account-name-edit .lx-account-save-button:disabled{background:#e9ebf2!important;color:#59627a!important;opacity:1!important}
 }
+
+/* 5.7.6: stable mobile account-name editor; avoid WebView button clipping and dark native controls. */
+.lx-account-name-edit input.lx-account-name-input{-webkit-appearance:none;appearance:none;background:#fff!important;color:#24364b!important;-webkit-text-fill-color:#24364b!important;box-shadow:none!important;outline:0}
+.lx-account-name-edit .lx-account-save-button{-webkit-appearance:none;appearance:none;display:inline-flex;align-items:center;justify-content:center;border:0!important;outline:0;box-shadow:0 7px 18px rgba(78,105,186,.16);background:linear-gradient(110deg,#7257e8,#4d86df)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:700;line-height:1.2}
+.lx-account-name-edit .lx-account-save-button:disabled{background:#dce6f5!important;color:#536985!important;-webkit-text-fill-color:#536985!important;box-shadow:none;opacity:1}
+@media(max-width:700px){
+ .lx-account-profile{grid-template-columns:58px minmax(0,1fr)!important;gap:12px!important;align-items:start!important;overflow:visible!important}
+ .lx-account-avatar{width:56px!important;height:56px!important;border-radius:16px!important}
+ .lx-account-profile-copy{width:100%!important;min-width:0!important;overflow:visible!important}
+ .lx-account-name-edit{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;width:100%!important;min-width:0!important;max-width:100%!important;overflow:visible!important}
+ .lx-account-name-edit input.lx-account-name-input{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;height:46px!important;box-sizing:border-box!important;border:1px solid #cfd9e8!important;border-radius:11px!important;padding:0 13px!important;font-size:14px!important}
+ .lx-account-name-edit .lx-account-save-button{display:flex!important;position:static!important;flex:0 0 auto!important;width:100%!important;min-width:0!important;max-width:100%!important;height:44px!important;min-height:44px!important;max-height:44px!important;box-sizing:border-box!important;white-space:nowrap!important;padding:0 16px!important;border-radius:11px!important;font-size:14px!important;overflow:visible!important}
+}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "人民币余额充值",
+  "navigationBarBackgroundColor": "#f6f8fc",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#f6f8fc",
+  "enablePullDownRefresh": true
+}
