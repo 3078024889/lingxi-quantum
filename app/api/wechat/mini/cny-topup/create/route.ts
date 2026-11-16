@@ -65,7 +65,7 @@ async function existingOrderResponse(admin:any,order:any,openid:string,amountFen
   await admin.from("orders").update({status:"canceled"}).eq("id",order.id).eq("status","pending");
   return NextResponse.json({orderId:order.id,paid:false,closed:true,status:"canceled"});
  }
- if(raw.trade_state==="NOTPAY"&&prepayId&&providerOrderMatches(raw,order.provider_payment_id,amountFen)){
+ if(raw.trade_state==="NOTPAY"&&prepayId&&providerOrderMatches(raw,order.provider_payment_id,amountFen)&&raw?.payer?.openid===openid){
   return NextResponse.json({orderId:order.id,pending:true,providerConfirmedUnpaid:true,payment:buildMiniRequestPayment(prepayId)},
    {headers:{"Cache-Control":"private, no-store"}});
  }
