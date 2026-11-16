@@ -204,6 +204,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
         <Link href="/tools/pass" className={`lx11-link ${pathname==="/tools/pass"?"is-active":""}`}><LingxiMiniIcon name="tools" size="nav" className="lx11-nav-icon"/><span>{({
           zh:"全场实用工具包",en:"All-tools Pass",ja:"全ツール共通パス",ko:"전체 도구 이용권",fr:"Pass tous outils",de:"Werkzeug-Pass",es:"Pase de herramientas",pt:"Passe de ferramentas",ar:"باقة جميع الأدوات"
         } as Record<typeof lang,string>)[lang]}</span></Link>
+        {isMoneyAdmin&&<Link href={isComHost?"https://lingxifield.cn/sasi/marketplace/admin":"/sasi/marketplace/admin"} className={`lx11-link ${active(pathname,"/sasi/marketplace/admin")?"is-active":""}`}><LingxiMiniIcon name="tools" size="nav"/><span>{lang==="zh"?"SASI 审核管理":"SASI Review"}</span></Link>}
         {isMoneyAdmin&&<Link href="/account/money-admin" className={`lx11-link ${active(pathname,"/account/money-admin")?"is-active":""}`}><LingxiMiniIcon name="wallet" size="nav"/><span>{moneyText(lang,"moneyAdmin")}</span></Link>}
         {!isMoneyAdmin&&signedIn&&isComHost&&<a href="https://lingxifield.cn/account/money-admin" className="lx11-link" title={lang==="zh"?"海外站尚未完成管理员后端配置，转至共用数据库的国内安全控制台":"Global admin backend pending; open China control plane"}><LingxiMiniIcon name="wallet" size="nav"/><span>{lang==="zh"?"管理后台备用入口 ↗":"Admin backup console ↗"}</span></a>}
       </div>
