@@ -63,3 +63,15 @@ test("provider readiness requires complete merchant callback identity",()=>{
  const notify=read("app/api/pay/alipay/notify/route.ts");
  assert.match(notify,/params\.seller_id !== expectedSeller/);
 });
+
+test("wallet deep links select the requested CNY or USD currency",()=>{
+ const panel=read("components/WalletLivePanel.tsx");
+ assert.match(panel,/new URLSearchParams\(window\.location\.search\)\.get\("currency"\)/);
+ assert.match(panel,/requestedCurrency==="CNY"\|\|requestedCurrency==="USD"/);
+});
+test("Mini Program webview permits only the official USD wallet checkout, not H5 CNY payment",()=>{
+ const boundary=read("components/MiniPaymentBoundary.tsx");
+ assert.match(boundary,/getUsdBalanceProduct\(productId\)/);
+ assert.match(boundary,/mini && !allowWebsiteUsdWallet/);
+ assert.match(boundary,/setContext\(mini && !allowWebsiteUsdWallet \? "mini" : "web"\)/);
+});
