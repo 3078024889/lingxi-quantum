@@ -31,6 +31,23 @@ test("CNY wallet top-ups require the independent CNY gate and do not inherit the
  assert.match(wallet,/sasi-balance-custom-/);
  assert.match(wallet,/sasi-usd-balance-custom-/);
 });
+test("CNY payment order references are persisted atomically before provider checkout",()=>{
+ const wx=read("app/api/pay/wechat/create/route.ts");
+ const ali=read("app/api/pay/alipay/create/route.ts");
+ for(const [source,gateway] of [[wx,"createWechatNativeOrder"],[ali,"createAlipayPaymentUrl"]]){
+  assert.match(source,/randomUUID/);
+  assert.match(source,/provider_payment_id:\s*outTradeNo/);
+  assert.ok(source.indexOf("provider_payment_id: outTradeNo")<source.indexOf(gateway));
+  assert.doesNotMatch(source,/update\(\{\s*provider_payment_id:\s*outTradeNo/);
+ }
+});
+test("Alipay refund completion validates the exact original order and refund amount",()=>{
+ const adapters=read("lib/money/provider-adapters.ts");
+ assert.match(adapters,/function assertAlipayRefund/);
+ assert.match(adapters,/ALIPAY_REFUND_ORDER_MISMATCH/);
+ assert.match(adapters,/ALIPAY_REFUND_AMOUNT_MISMATCH/);
+ assert.equal((adapters.match(/assertAlipayRefund\(r,x\)/g)||[]).length,2);
+});
 test("USD wallet top-up keeps its existing production readiness contract and exposes its live readiness to admins",()=>{
  const paypal=read("app/api/pay/create/route.ts");
  assert.match(paypal,/USD_BALANCE_TOPUP_ENABLED/);
