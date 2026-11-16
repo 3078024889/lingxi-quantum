@@ -37,3 +37,6 @@
 - GitHub Actions：源码审计、支付幂等审计、历史订单/退款审计、TypeScript、隔离构建、ZIP 完整性与 SHA-256。
 - 微信开发者工具：导入 5.7.6 ZIP 后验证 CNY 原生支付、订单核验、到账、USD 官网跳转、账户用户名保存。
 - 真机支付验证通过前，不开启生产充值开关，不提交微信审核。
+
+
+CI 复核：退款审计以当前 `reconcileVirtualRefund` 实现为准；订单创建审计校验 service_role 专用的 SECURITY INVOKER 原子预留函数。
