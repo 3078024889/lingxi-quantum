@@ -85,11 +85,23 @@ test("new JSAPI reservation is service-role-only and legacy reservation RPC is r
  assert.ok(migration.includes("REVOKE ALL ON FUNCTION"));
  assert.ok(migration.includes("GRANT EXECUTE ON FUNCTION public.reserve_mini_cny_jsapi_topup_order"));
  assert.ok(migration.includes("TO service_role"));
+ assert.ok(migration.includes("p_snapshot->>'requestId' !~"));
+ assert.ok(migration.includes("NULLIF(p_snapshot->>'openid', '') IS NULL"));
  assert.ok(!migration.includes("SECURITY DEFINER"));
  assert.ok(retired.includes("DROP FUNCTION public.reserve_mini_cny_topup_order"));
  assert.ok(!retired.includes("CASCADE"));
 });
 
+test("WeChat callback validates mini AppID, payer openid and the exact reserved out-trade number",()=>{
+ const notify=read("app/api/pay/wechat/notify/route.ts");
+ assert.ok(notify.includes("WECHAT_MINI_APP_ID"));
+ assert.ok(notify.includes("mini_jsapi_topup_order_created"));
+ assert.ok(notify.includes("snapshot.outTradeNo !== outTradeNo"));
+ assert.ok(notify.includes("snapshot.openid !== (decrypted.payer as any)?.openid"));
+ const account=read("app/api/wechat/mini/account-summary/route.ts");
+ assert.ok(account.includes('.eq("channel", "mini-program")'));
+ assert.ok(account.includes('.eq("provider", "wechat_mini_virtual")'));
+});
 test("tool-product virtual payment and historical wallet settlement/refunds remain separate",()=>{
  const toolPage=read("miniapp/pages/pay/index.js");
  assert.ok(toolPage.includes("wx.requestVirtualPayment"));
