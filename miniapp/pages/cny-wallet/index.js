@@ -128,11 +128,17 @@ Page({
     this.setData({ loading: true })
     try {
       const result = await publicRequest('/api/wechat/mini/cny-topup/availability')
+      const disabledMessages = {
+        TOPUPS_DISABLED: '人民币充值开关尚未开启，请稍后重新检查。',
+        PAYMENT_ENV_UNSET: '微信虚拟支付环境尚未配置。',
+        PROVIDER_CONFIG_MISSING: '微信虚拟支付商户配置不完整，暂不能发起充值。',
+        PRODUCTION_ENV_REQUIRED: '微信虚拟支付尚未切换到正式环境。',
+      }
       this.setData({
         enabled: result.enabled === true,
         message: result.enabled === true
           ? '选择金额后使用微信原生支付。到账以服务端核验为准。'
-          : '小程序人民币充值通道暂未开放，请稍后重新检查。',
+          : (disabledMessages[result.reason] || '小程序人民币充值通道暂未开放，请稍后重新检查。'),
       })
     } catch (error) {
       this.setData({ enabled: false, message: '暂时无法连接人民币充值服务，请检查网络后重试。' })
