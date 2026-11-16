@@ -331,6 +331,11 @@ export function verifyWechatApiResponseSignature(headers:Headers,body:string):bo
 // 主动查询一笔订单的支付状态——前端轮询用，用户扫码付款之后，页面每隔
 // 几秒来问一次"付了没"，不完全依赖webhook（webhook可能因为网络原因
 // 延迟或者丢失，主动查询是一层保险）。
+export async function closeWechatOrder(outTradeNo:string):Promise<void> {
+  if(!/^[A-Za-z0-9_]{6,32}$/.test(outTradeNo))throw new Error("WECHAT_CLOSE_ORDER_INPUT_INVALID");
+  await wechatRequest("POST",`/v3/pay/transactions/out-trade-no/${outTradeNo}/close`,{mchid:MCH_ID});
+}
+
 export async function queryWechatOrder(
   outTradeNo:string, expectedAmountFen:number, expectedAppId:string=wechatAppId()
 ):Promise<{paid:boolean;status:string;raw:unknown}> {
