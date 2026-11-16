@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const [wallet, orders] = await Promise.all([
       readUnifiedBalanceSnapshot(admin, session.userId),
       admin.from("orders").select("id,amount_rmb,status,created_at,paid_at").eq("user_id", session.userId).is("user_deleted_at", null)
-        .in("provider", ["wechat", "wechat_mini_virtual"]).like("product_id", "sasi-balance-%")
+        .eq("provider", "wechat_mini_virtual").like("product_id", "sasi-balance-%")
         .order("created_at", { ascending: false }).limit(10),
     ]);
     if (orders.error) throw new Error("MINI_ACCOUNT_UNAVAILABLE");

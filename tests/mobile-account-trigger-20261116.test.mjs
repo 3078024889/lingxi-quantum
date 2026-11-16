@@ -9,7 +9,7 @@ const profile = read("components/AccountProfileCard.tsx");
 const css = read("app/unified-shell.css");
 
 test("all mobile and desktop recharge entries invoke the correct Mini Program wallet route", () => {
-  assert.equal((nav.match(/onClick=\{rechargeClick\}/g) || []).length, 4, "home desktop/mobile and standard desktop/mobile recharge links must share the handler");
+  assert.equal((nav.match(/onClick=\{rechargeClick\}/g) || []).length, 3, "homepage, desktop and mobile recharge links must share the handler");
   assert.match(nav, /const inMiniProgram = miniRecharge \|\| isMiniProgramContext\(\)/);
   assert.match(nav, /openMiniWallet\(currency\)/);
   assert.match(nav, /usePreferredCurrency\(\)/);

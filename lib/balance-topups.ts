@@ -13,6 +13,5 @@ export function customTopupMinor(value: string): number | null {
   if (!/^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(value)) return null;
   const [whole, fraction = ""] = value.split(".");
   const minor = Number(whole) * 100 + Number(fraction.padEnd(2, "0"));
-  const decimalLimitOk = !value.includes(".") || minor <= 10000;
-  return Number.isSafeInteger(minor) && minor >= 1 && minor <= MAX_CUSTOM_TOPUP * 100 && decimalLimitOk ? minor : null;
+  return Number.isSafeInteger(minor) && minor >= 1 && minor <= MAX_CUSTOM_TOPUP * 100 ? minor : null;
 }

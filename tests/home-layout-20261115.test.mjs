@@ -49,7 +49,7 @@ test('homepage rightmost action is an account entry, not a duplicate recharge ic
   assert.ok(start >= 0 && end > start, 'homepage desktop action group must exist');
   const actions = nav.slice(start, end);
   assert.match(actions, /className="lx11-avatar lx11-account-trigger"/);
-  assert.match(actions, /<Link href="\\/ai-wallet" className="lx11-primary"/);
+  assert.ok(actions.includes('<Link href="/ai-wallet" className="lx11-primary"'));
   const mobileStart = nav.indexOf('<div className="lx-home-mobile-actions">');
   const mobileEnd = nav.indexOf('</div>', mobileStart);
   assert.ok(mobileStart >= 0 && mobileEnd > mobileStart, 'homepage mobile action group must exist');

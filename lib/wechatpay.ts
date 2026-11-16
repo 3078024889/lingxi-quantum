@@ -191,47 +191,6 @@ export async function createWechatNativeOrder(params: {
 // 不同的下单接口，返回prepay_id，不是code_url。JSAPI支付必须知道
 // 付款人的openid（Native扫码不需要，因为是"谁扫码谁付"，JSAPI是
 // "在当前这个已知身份的微信用户面前直接弹收银台"，微信要求提前绑定）。
-export function miniWechatJsapiConfigured():boolean {
-  return Boolean(
-    process.env.WECHAT_MINI_APP_ID?.trim() &&
-    process.env.WECHAT_MINI_APP_SECRET?.trim() &&
-    wechatPayKeyMaterialReady()
-  );
-}
-
-export function wechatMiniAppId():string {
-  return process.env.WECHAT_MINI_APP_ID?.trim() ?? "";
-}
-
-export async function createWechatMiniJsapiOrder(params: {
-  outTradeNo:string; description:string; amountFen:number; notifyUrl:string; openid:string;
-}):Promise<{prepayId:string}> {
-  const miniAppId=wechatMiniAppId();
-  if(!miniWechatJsapiConfigured())throw new Error("MINI_WECHAT_JSAPI_NOT_CONFIGURED");
-  if(!/^[A-Za-z0-9_]{6,32}$/.test(params.outTradeNo) ||
-     !Number.isSafeInteger(params.amountFen) || params.amountFen<1 ||
-     !/^[A-Za-z0-9_-]{16,128}$/.test(params.openid)) {
-    throw new Error("MINI_WECHAT_JSAPI_ORDER_INPUT_INVALID");
-  }
-  const data=await wechatRequest("POST","/v3/pay/transactions/jsapi",{
-    appid:miniAppId,mchid:MCH_ID,description:params.description.slice(0,40),
-    out_trade_no:params.outTradeNo,notify_url:params.notifyUrl,
-    amount:{total:params.amountFen,currency:"CNY"},payer:{openid:params.openid},
-  });
-  if(typeof data.prepay_id!=="string"||!data.prepay_id)throw new Error("MINI_WECHAT_JSAPI_PREPAY_ID_MISSING");
-  return {prepayId:data.prepay_id};
-}
-
-export function buildWechatMiniJsapiInvokeParams(prepayId:string) {
-  const appId=wechatMiniAppId();
-  if(!appId||!prepayId||prepayId.length>256)throw new Error("MINI_WECHAT_JSAPI_PAYMENT_PARAMS_INVALID");
-  const timeStamp=Math.floor(Date.now()/1000).toString();
-  const nonceStr=crypto.randomBytes(16).toString("hex");
-  const pkg=`prepay_id=${prepayId}`;
-  const paySign=sign(`${appId}\n${timeStamp}\n${nonceStr}\n${pkg}\n`);
-  return {timeStamp,nonceStr,package:pkg,signType:"RSA" as const,paySign};
-}
-
 export async function createWechatJsapiOrder(params: {
   outTradeNo: string;
   description: string;
@@ -331,24 +290,11 @@ export function verifyWechatApiResponseSignature(headers:Headers,body:string):bo
 // 主动查询一笔订单的支付状态——前端轮询用，用户扫码付款之后，页面每隔
 // 几秒来问一次"付了没"，不完全依赖webhook（webhook可能因为网络原因
 // 延迟或者丢失，主动查询是一层保险）。
-export async function closeWechatOrder(outTradeNo:string):Promise<void> {
-  if(!/^[A-Za-z0-9_]{6,32}$/.test(outTradeNo))throw new Error("WECHAT_CLOSE_ORDER_INPUT_INVALID");
-  await wechatRequest("POST",`/v3/pay/transactions/out-trade-no/${outTradeNo}/close`,{mchid:MCH_ID});
-}
-
-export async function queryWechatOrder(
-  outTradeNo:string, expectedAmountFen:number, expectedAppId:string=wechatAppId()
-):Promise<{paid:boolean;status:string;raw:unknown}> {
-  if(!/^[A-Za-z0-9_]{6,32}$/.test(outTradeNo)||!Number.isSafeInteger(expectedAmountFen)||expectedAmountFen<1)
-    throw new Error("WECHAT_QUERY_INPUT_INVALID");
-  const data=await wechatRequest("GET",`/v3/pay/transactions/out-trade-no/${outTradeNo}?mchid=${MCH_ID}`);
-  if(String(data.mchid??"")!==String(MCH_ID??""))throw new Error("WECHAT_QUERY_MERCHANT_MISMATCH");
-  if(expectedAppId&&String(data.appid??"")!==expectedAppId)throw new Error("WECHAT_QUERY_APPID_MISMATCH");
-  const amount=data.amount;
-  if(!amount||String(amount.currency)!=="CNY"||Number(amount.total)!==expectedAmountFen)
-    throw new Error("WECHAT_QUERY_AMOUNT_OR_CURRENCY_MISMATCH");
-  const status=String(data.trade_state??"");
-  return {paid:status==="SUCCESS",status,raw:data};
+export async function queryWechatOrder(outTradeNo: string, expectedAmountFen: number): Promise<{ paid: boolean; raw: unknown }> {
+  const data = await wechatRequest("GET", `/v3/pay/transactions/out-trade-no/${outTradeNo}?mchid=${MCH_ID}`);
+  const amountMatches = data.amount && data.amount.currency === "CNY" && Number(data.amount.total) === expectedAmountFen
+  if (data.trade_state === "SUCCESS" && !amountMatches) throw new Error("WeChat payment amount or currency did not match the local order.")
+  return { paid: data.trade_state === "SUCCESS", raw: data }
 }
 
 // 解密微信支付webhook回调里的资源密文——微信推送过来的支付结果通知，

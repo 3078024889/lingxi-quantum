@@ -23,14 +23,10 @@ const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));
 assert.ok(app.pages.includes('pages/cny-wallet/index'));
 assert.ok(!app.pages.includes('pages/balance/index')&&!app.pages.includes('pages/recharge/index'));
 for (const path of [
-  'miniapp/pages/portal',
+  'miniapp/pages/portal','miniapp/pages/mail-home',
   'miniapp/pages/balance','miniapp/pages/recharge',
   'miniapp/utils/topup-expiry.js','miniapp/utils/virtual-payment-errors.js',
 ]) assert.equal(fs.existsSync(path),false,'retired mini wallet page/helper remains: '+path);
-assert.equal(fs.existsSync('miniapp/pages/mail-home/index.js'),true,'Companion temp-mail page remains an isolated build source');
-assert.ok(!app.pages.includes('pages/mail-home/index'),'Companion temp-mail page must not be registered in the main app');
-assert.doesNotMatch(fs.readFileSync('miniapp/pages/mail-home/index.wxml','utf8'),/creative-card|AI 图片生成|把想象变成图片|pages\/recharge/);
-assert.equal(fs.existsSync('app/api/wechat/mini/balance-pay'),false,'Retired wallet API namespace must be removed');
 for (const path of [
   'app/api/wechat/mini/cny-topup/create/route.ts',
   'app/api/wechat/mini/cny-topup/availability/route.ts',

@@ -61,8 +61,8 @@
     恢复上次充值
   </button>
   <button wx:elif="{{orderId}}" class="cny-primary-button"
-    bindtap="recoverPending" loading="{{busy}}" disabled="{{busy}}">
-    继续支付 / 核验上一笔订单
+    bindtap="confirmPayment" loading="{{busy}}" disabled="{{busy}}">
+    核验上一笔支付结果
   </button>
   <view wx:if="{{orderId || requestId}}" class="cny-pending-note">
     上一笔订单尚未完成核验。核验关闭前不会创建第二笔充值。

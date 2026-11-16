@@ -1,6 +1,6 @@
 // Web-view needs the registered business domain, not the request API domain.
 const WEB_BASE = 'https://lingxifield.cn'
-const { enableShareMenu, copyWebLink, publicWebPath, appMessage, timeline } = require('../../utils/share')
+const { enableShareMenu, copyWebLink, publicWebPath, appMessage } = require('../../utils/share')
 const EXACT_ALLOWED=new Set(['/','/siai','/sasi','/tools','/account','/account/orders','/account/notifications','/ai-wallet','/sasi/pricing','/privacy','/terms','/refunds'])
 const PREFIX_ALLOWED=['/tools/','/api/wechat/mini/account-link/'],MAX_PATH_LENGTH=2048,CURRENCY_KEY='lx_currency'
 function safeDecode(value){try{return decodeURIComponent(value)}catch(_){return''}}
@@ -28,7 +28,7 @@ function shareablePath(options,fallback){
 }
 Page({
  data:{src:'',path:'/',loading:true,failed:false},
- onLoad(options){enableShareMenu({includeTimeline:true});const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
+ onLoad(options){enableShareMenu();const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
  onShow(){enableShareMenu()},
  handleLoad(){this.setData({loading:false,failed:false})},
  handleError(event){console.warn('[mini webview load failed]',event&&event.detail);this.setData({loading:false,failed:true});wx.showModal({title:'页面没有打开',content:'请确认网络正常后重试。',showCancel:false})},
@@ -36,5 +36,4 @@ Page({
  copyCurrentLink(){copyWebLink(this.data.path,'当前页面链接已复制')},
  openNativeShare(){const sharePath=publicWebPath(this.data.path);const title=shareTitleFor(sharePath);wx.navigateTo({url:'/pages/share/index?path='+encodeURIComponent(sharePath)+'&title='+encodeURIComponent(title),fail(){wx.showToast({title:'暂时无法打开分享页，请重试',icon:'none'})}})},
  onShareAppMessage(options){const sharePath=shareablePath(options,this.data.path);return appMessage(shareTitleFor(sharePath),'/pages/web/index?path='+encodeURIComponent(sharePath))},
- onShareTimeline(options){const sharePath=shareablePath(options,this.data.path);return timeline(shareTitleFor(sharePath),'path='+encodeURIComponent(sharePath))},
 })

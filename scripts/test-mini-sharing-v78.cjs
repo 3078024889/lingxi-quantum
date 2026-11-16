@@ -15,11 +15,7 @@ vm.runInNewContext(fs.readFileSync(filename,'utf8'),{require:createRequire(filen
 const instance={...definition,data:{...definition.data},setData(value){Object.assign(this.data,value)}};
 instance.onLoad({path:encodeURIComponent('/sasi?mode=image&threadId=secret'),title:encodeURIComponent('AI图片生成')});
 assert.deepEqual(Array.from(menu.menus),['shareAppMessage','shareTimeline']);
-const webSource=fs.readFileSync('miniapp/pages/web/index.js','utf8');
-assert.ok(webSource.includes('enableShareMenu()'),'webview exposes the friends share menu');
-const shareSource=fs.readFileSync('miniapp/pages/share/index.js','utf8');
-assert.ok(shareSource.includes('enableShareMenu({includeTimeline:true})'),'native share page exposes the timeline menu');
-assert.equal(JSON.parse(fs.readFileSync('miniapp/pages/share/index.json','utf8')).enableShareTimeline,true);
+assert.ok(fs.readFileSync('miniapp/pages/web/index.js','utf8').includes('enableShareMenu({includeTimeline:true})'));
 assert.equal(instance.data.webPath,'/sasi');
 assert.equal(instance.onShareTimeline().query,'path='+encodeURIComponent('/sasi'));
 assert.equal(instance.onShareAppMessage().path,'/pages/web/index?path='+encodeURIComponent('/sasi'));

@@ -1,4 +1,4 @@
-const { login, request, publicRequest } = require('../../utils/api')
+const { login, request, publicRequest, wxLogin } = require('../../utils/api')
 
 const PENDING_KEY = 'lx_mini_cny_topup_pending_v2'
 const LEGACY_PENDING_KEY = 'lx_mini_cny_topup_pending_v1'
@@ -17,10 +17,43 @@ function parseAmount(raw) {
   if (minor % 100 !== 0 && minor > 10000) return null
   return { minor, text: (minor / 100).toFixed(2) }
 }
+function compareVersion(a, b) {
+  const left = String(a || '').split('.').map(Number), right = b.split('.').map(Number)
+  for (let i = 0; i < Math.max(left.length, right.length); i++) {
+    if ((left[i] || 0) !== (right[i] || 0)) return (left[i] || 0) > (right[i] || 0) ? 1 : -1
+  }
+  return 0
+}
+function iosGuard(minor) {
+  try {
+    const info = wx.getSystemInfoSync()
+    if (info.platform !== 'ios') return ''
+    const os = /(?:iOS|iPadOS)\s*(\d+(?:\.\d+)*)/i.exec(info.system || '')
+    const notice = '苹果端支付需使用中国大陆 App Store 账户、iOS 15及以上及微信 8.0.68及以上。'
+    if (minor < 100) return '苹果端单笔充值至少 ¥1。' + notice
+    if ((os && compareVersion(os[1], '15') < 0) || (info.version && compareVersion(info.version, '8.0.68') < 0)) return notice
+  } catch (_) {}
+  return ''
+}
 function paymentError(error) {
-  const message = String(error && (error.errMsg || error.message) || '')
-  if (/cancel/i.test(message)) return '已取消付款，原订单已保留，可以继续支付。'
-  return '微信支付暂未完成，正在核验原订单。'
+  const code = Number(error && (error.errCode ?? error.errcode))
+  const map = {
+    '-2': '已取消付款。',
+    '-4': '微信风控暂时拒绝本次付款。',
+    '-15002': '该支付单号已提交，请先核验原订单。',
+    '-15005': '支付身份签名校验失败。',
+    '-15006': '商家支付签名校验失败。',
+    '-15007': '微信登录状态已过期，请重新进入小程序。',
+    '-15008': '商家虚拟支付进件尚未完成。',
+    '-15010': '充值商品尚未发布。',
+    '-15013': '充值商品价格与微信配置不一致。',
+    '-15014': '充值商品发布尚未生效。',
+    '-15017': '微信暂时限制商家收款。',
+    '-15018': '充值商品尚未通过审核。',
+    '-15020': '操作过快，请稍后再试。',
+    '-15021': '微信暂时限制交易频率。',
+  }
+  return map[String(code)] || (error && error.data && error.data.error) || '微信支付暂未完成。'
 }
 
 Page({
@@ -96,9 +129,10 @@ Page({
     try {
       const result = await publicRequest('/api/wechat/mini/cny-topup/availability')
       const disabledMessages = {
-        TOPUPS_DISABLED: '人民币充值服务尚未开放，请稍后重新检查。',
-        APP_ID_MISMATCH: '小程序 AppID 与微信支付商户配置不一致。',
-        PROVIDER_CONFIG_MISSING: '微信支付 APIv3 商户证书或平台公钥配置不完整。',
+        TOPUPS_DISABLED: '人民币充值开关尚未开启，请稍后重新检查。',
+        PAYMENT_ENV_UNSET: '微信虚拟支付环境尚未配置。',
+        PROVIDER_CONFIG_MISSING: '微信虚拟支付商户配置不完整，暂不能发起充值。',
+        PRODUCTION_ENV_REQUIRED: '微信虚拟支付尚未切换到正式环境。',
       }
       this.setData({
         enabled: result.enabled === true,
@@ -186,7 +220,7 @@ Page({
     if (!this.data.orderId || this._checkingOrder) return false
     this._checkingOrder = true
     try {
-      const result = await request('/api/wechat/mini/cny-topup/status?orderId=' + encodeURIComponent(this.data.orderId))
+      const result = await request('/api/wechat/mini/tool-pay/status?orderId=' + encodeURIComponent(this.data.orderId))
       if (result.paid === true || result.status === 'paid') {
         this.clearPending('微信订单已核验，人民币余额已到账。')
         await this.refreshAccount()
@@ -210,16 +244,19 @@ Page({
 
   async pay() {
     if (this.data.busy) return
-    if (this.data.orderId || this.data.requestId) { await this.recoverPending(); return }
+    if (this.data.orderId) { await this.confirmPayment(); return }
+    if (this.data.requestId) { await this.recoverPending(); return }
     if (!this.data.enabled) {
       this.setData({ message: this.data.loading ? '正在连接充值服务，请稍候。' : '人民币充值通道尚未开放，请重新检查服务。' })
       return
     }
     const amount = this.currentAmount()
     if (!amount) { this.setData({ message: '请输入有效金额，最多两位小数。' }); return }
+    const guard = iosGuard(amount.minor)
+    if (guard) { this.setData({ message: guard }); wx.showModal({ title: '苹果支付条件', content: guard, showCancel: false }); return }
     if (!this.data.accountLoaded) { this.setData({ message: '请先重新加载账户余额，确认到账账户。' }); return }
     if (!this.data.linked) { this.setData({ message: '请先连接灵犀场账户，确认充值到账账户。' }); return }
-    if (typeof wx.requestPayment !== 'function') { this.setData({ message: '当前微信版本不支持商户支付，请更新微信后重试。' }); return }
+    if (typeof wx.requestVirtualPayment !== 'function') { this.setData({ message: '当前微信版本不支持虚拟支付，请更新微信后重试。' }); return }
     await this.submitPayment(makeRequestId(), amount)
   },
 
@@ -251,12 +288,13 @@ Page({
         this.setData({ message: '到账账户未连接。请先完成账户连接，不会创建充值订单。' })
         return
       }
+      const { code } = await wxLogin()
       const productId = this.data.selected === 'custom'
         ? 'sasi-balance-custom-' + amount.text
         : 'sasi-balance-' + this.data.selected
       const created = await request('/api/wechat/mini/cny-topup/create', {
         method: 'POST',
-        data: { productId, requestId },
+        data: { productId, code, requestId },
       })
       if (created.orderId) {
         pending.orderId = created.orderId
@@ -271,20 +309,14 @@ Page({
         this.clearPending('上一笔未付款订单已关闭，可以重新充值。')
         return
       }
-      if (created.payment) {
+      if (created.payment && pending.paymentAttempted !== true) {
         pending.paymentAttempted = true
         this.savePending(pending)
         try {
-          await new Promise((resolve, reject) => wx.requestPayment({
-            timeStamp: created.payment.timeStamp,
-            nonceStr: created.payment.nonceStr,
-            package: created.payment.package,
-            signType: created.payment.signType || 'RSA',
-            paySign: created.payment.paySign,
-            success: resolve,
-            fail: reject,
+          await new Promise((resolve, reject) => wx.requestVirtualPayment({
+            ...created.payment, success: resolve, fail: reject,
           }))
-          this.setData({ message: '微信支付操作已返回，正在核验订单、付款身份与余额。' })
+          this.setData({ message: '微信支付操作已返回，正在核验订单与余额。' })
         } catch (error) {
           this.setData({ message: paymentError(error) + '正在核验原订单，请勿重复充值。' })
         }

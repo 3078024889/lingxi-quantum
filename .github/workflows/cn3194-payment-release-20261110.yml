@@ -1,6 +1,4 @@
-name: RETIRED CN3194 payment prerelease (PORT TOPOLOGY MISMATCH; NO DEPLOY)
-# RETIRED 2026-11-16: actual CN production is 3195, candidate is 3196, rollback is 3193.
-# Never run the legacy 3194/3195 stage or activation scripts from this workflow.
+name: CN3194 payment-integrated standalone prerelease (local R2 transfer; NO PROD DEPLOY)
 on:
   push:
     branches: [ci/cn3194-payment-base-20261110]
@@ -10,8 +8,6 @@ on:
     paths:
       - 'scripts/ops/ecs-cn3194-unified-standalone-upgrade-20261110.template.sh'
       - 'scripts/ops/cn-payment-activate-3194-20261110.sh'
-      - 'scripts/ops/cn3195-payment-readiness-audit-20261116.sh'
-      - 'tests/cn3195-payment-readiness-audit-20261116.test.mjs'
       - 'lib/sasi-marketplace/checkout.ts'
       - 'app/api/pay/**'
       - 'app/api/tools/pay/**'
@@ -141,10 +137,9 @@ jobs:
           node scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs
           pnpm audit:retired-code
           node --test \
-            tests/alipay-distinct-merchant-gateway-keys-20261115.test.cjs tests/cn-public-design-readiness-20261115.test.mjs tests/cn-merchant-env-chain-20261115.test.mjs tests/cn-listener-owner-20261115.test.mjs \
+            tests/alipay-distinct-merchant-gateway-keys-20261115.test.cjs tests/cn-public-design-readiness-20261115.test.mjs tests/mobile-account-trigger-20261116.test.mjs tests/cn-merchant-env-chain-20261115.test.mjs tests/cn-listener-owner-20261115.test.mjs \
             tests/cn-payment-activation-3194-20261110.test.mjs \
             tests/cn-payment-audit-probe-blob-pin-20261113.test.mjs \
-            tests/cn3195-payment-readiness-audit-20261116.test.mjs \
             tests/cn-wallet-checkout-entry-20261108.test.mjs \
             tests/cn-toolpass-public-ui-20261108.test.mjs \
             tests/paypal-merchant-idempotency-20261108.test.mjs \
@@ -189,13 +184,7 @@ jobs:
           cp -a public .next/standalone/public
           cp .next/BUILD_ID .next/standalone/.next/BUILD_ID
           cp scripts/ops/cn-payment-signed-live-probe-20261109.mjs .next/standalone/cn-payment-signed-live-probe.mjs
-          cat > .next/standalone/cn-payment-activate.sh <<'RETIRED_SCRIPT'
-#!/usr/bin/env bash
-set -Eeuo pipefail
-echo 'RETIRED_PORT_TOPOLOGY: CN production=3195 candidate=3196 rollback=3193. This archived activation entrypoint is disabled.' >&2
-exit 64
-RETIRED_SCRIPT
-          chmod 700 .next/standalone/cn-payment-activate.sh
+          cp scripts/ops/cn-payment-activate-3194-20261110.sh .next/standalone/cn-payment-activate.sh
           chmod 600 .next/standalone/cn-payment-signed-live-probe.mjs .next/standalone/cn-payment-activate.sh
           test -s .next/standalone/cn-payment-activate.sh
           test -s .next/standalone/cn-payment-signed-live-probe.mjs
@@ -328,19 +317,16 @@ RETIRED_SCRIPT
           echo "CN3194_RELEASE_ARCHIVE_SHA256=$ARCHIVE_SHA"
           echo "CN3194_STAGE_SCRIPT_BLOB_SHA1=$STAGE_BLOB"
           echo "CN3194_PAYMENT_SCRIPT_BLOB_SHA1=$PAYMENT_BLOB"
-      - name: Attach standalone archive only (retired port scripts excluded)
+      - name: Attach exact package and pinned promotion scripts as GitHub artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: cn3194-release-${{ steps.package.outputs.source_sha }}
-          path: |
-            dist/cn3194/cn-20261110-unified-standalone.tar.gz
-            dist/cn3194/cn-20261110-unified-standalone.sha256
-            dist/cn3194/cn3194-release-manifest.env
+          path: dist/cn3194/*
           retention-days: 14
           if-no-files-found: error
   publish:
     needs: build
-    if: ${{ false }} # Disabled until a verified CN3195/3196/3193 release workflow replaces this legacy topology.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     permissions:

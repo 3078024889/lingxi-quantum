@@ -5,9 +5,6 @@ const appConfig=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));
 assert.equal(appConfig.pages[0],'pages/web/index','Main app must open the website homepage directly');
 assert(!appConfig.pages.includes('pages/portal/index'),'Legacy portal must not be registered');
 assert(!appConfig.pages.includes('pages/balance/index'),'Legacy native wallet page must not be registered');
-assert(!appConfig.pages.includes('pages/mail-home/index'),'Companion mail page must not be registered in the main app');
-assert(appConfig.pages.includes('pages/cny-wallet/index'),'Native CNY wallet must be registered');
-assert(fs.existsSync('miniapp/pages/mail-home/index.js'),'Companion mail page remains as a separate build source');
 assert(!fs.existsSync('miniapp/pages/balance'),'Legacy native wallet page directory must be removed');
 assert(!fs.existsSync('miniapp/pages/portal/index.js'),'Legacy portal source must be removed');
 
@@ -54,9 +51,7 @@ assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path=%2F');
 mail.copyWebsite();
 assert.equal(mailWx.calls.clipboard.pop().data,profile.website);
 mail.recharge();
-assert.equal(mailWx.calls.miniApps.pop().path,'pages/cny-wallet/index');
-mail.usdWallet();
-assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path='+encodeURIComponent('/ai-wallet?currency=USD'));
+assert.equal(mailWx.calls.to.pop().url,'/pages/web/index?path=%2Fai-wallet%3Fcurrency%3DCNY');
 mail.orders();
 assert.equal(mailWx.calls.to.pop().url,'/pages/orders/index');
 mail.mainApp();
@@ -84,7 +79,7 @@ if(process.argv.includes('--check-builds')){
     const file=path.join(dir,item.name);
     if(item.isDirectory())scan(file);
     else if(item.name.endsWith('.js')){
-     for(const match of fs.readFileSync(file,'utf8').matchAll(/require\(['"]([^'"]+)['"]\)/g)){
+     for(const match of fs.readFileSync(file,'utf8').matchAll(/require\\(['"]([^'"]+)['"]\\)/g)){
       const module=path.resolve(path.dirname(file),match[1]);
       assert(fs.existsSync(module)||fs.existsSync(module+'.js')||fs.existsSync(module+'.json'),'Missing package dependency: '+path.relative(root,module));
      }

@@ -48,55 +48,32 @@ export async function POST(req: Request) {
     }
 
     const decrypted = decryptWechatNotifyResource(resource);
+    if(String(decrypted.appid??"")!==wechatAppId()||String(decrypted.mchid??"")!==wechatMerchantId()){
+      return NextResponse.json({code:"FAIL",message:"商户身份校验失败"},{status:422});
+    }
     if (decrypted.trade_state !== "SUCCESS") {
+      // 不是"支付成功"这个状态，直接确认收到，不处理（微信支付也会推送
+      // 关闭、退款这些状态的通知）。
       return NextResponse.json({ code: "SUCCESS", message: "成功" });
     }
 
-    const outTradeNo = String(decrypted.out_trade_no ?? "");
+    const outTradeNo = decrypted.out_trade_no;
     const admin = createAdminClient();
-    const { data: order, error: orderError } = await admin
+    const { data: order } = await admin
       .from("orders")
-      .select("id,user_id,amount_rmb,provider,channel")
+      .select("id, amount_rmb, provider")
       .eq("provider_payment_id", outTradeNo)
-      .maybeSingle();
-    if (orderError || !order || order.provider !== "wechat") {
-      console.error("[wechat notify] order lookup or provider check failed");
-      return NextResponse.json({ code: "FAIL", message: "订单不存在或支付通道不匹配" }, { status: 404 });
+      .single();
+    if (!order) {
+      console.error("[wechat notify] 找不到对应的订单，out_trade_no:", outTradeNo);
+      return NextResponse.json({ code: "FAIL", message: "订单不存在" }, { status: 404 });
     }
 
-    const expectedAppId = order.channel === "mini-program"
-      ? (process.env.WECHAT_MINI_APP_ID ?? "").trim()
-      : wechatAppId();
-    if (!expectedAppId || String(decrypted.appid ?? "") !== expectedAppId ||
-        String(decrypted.mchid ?? "") !== wechatMerchantId()) {
-      return NextResponse.json({ code: "FAIL", message: "商户身份校验失败" }, { status: 422 });
-    }
-
-    if (order.channel === "mini-program") {
-      const { data: prepared, error: preparedError } = await admin.from("wechat_mini_payment_events")
-        .select("payload")
-        .eq("event_type", "mini_jsapi_topup_prepared")
-        .eq("out_trade_no", outTradeNo)
-        .eq("order_id", order.id)
-        .eq("transaction_id", "prepay")
-        .maybeSingle();
-      const payload = prepared?.payload as any;
-      const payerOpenid = String((decrypted as any)?.payer?.openid ?? "");
-      const expectedMiniFen = Math.round(Number(order.amount_rmb) * 100);
-      if (preparedError || !payload || payload.appid !== expectedAppId ||
-          !payload.openid || payload.openid !== payerOpenid ||
-          Number(payload.amountFen) !== expectedMiniFen ||
-          String((decrypted as any).trade_type ?? "") !== "JSAPI") {
-        console.error("[wechat notify] Mini Program payer identity or prepared order mismatch", { orderId: order.id });
-        return NextResponse.json({ code: "FAIL", message: "小程序支付身份校验失败" }, { status: 422 });
-      }
-    }
-
-    const paymentAmount = decrypted.amount as { total: number; currency: string } | undefined;
-    const expectedFen = Math.round(Number(order.amount_rmb) * 100);
-    if (!paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {
-      console.error("[wechat notify] payment amount did not match local order", { orderId: order.id });
-      return NextResponse.json({ code: "FAIL", message: "订单金额校验失败" }, { status: 422 });
+    const paymentAmount = decrypted.amount as { total: number; currency: string } | undefined
+    const expectedFen = Math.round(Number(order.amount_rmb) * 100)
+    if (order.provider !== "wechat" || !paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {
+      console.error("[wechat notify] payment did not match local order", { orderId: order.id })
+      return NextResponse.json({ code: "FAIL", message: "订单校验失败" }, { status: 422 })
     }
     const result = await fulfillPaidOrder(order.id,true)
     if (!result.ok) {

@@ -10,7 +10,6 @@ import{marketplaceR2Ready,marketplaceUploadReady}from"@/lib/sasi-marketplace/r2"
 import{marketplaceCommerceReady}from"@/lib/sasi-marketplace/checkout";
 import{trustedSiteOrigin}from"@/lib/platform/site-origin";
 import{wechatOauthConfigured}from"@/lib/wechat-oauth";
-import{miniCnyJsapiReadiness}from"@/lib/mini/payment-readiness";
 
 export const runtime="nodejs";
 export const dynamic="force-dynamic";
@@ -60,7 +59,6 @@ export async function GET(req:Request){
  })));
  const alipayMissing=alipayMissingVars();
  const wechatMissing=wechatPayMissingVars();
- const miniCnyJsapi=miniCnyJsapiReadiness();
  return NextResponse.json({
   payments:{
    wechat:{configured:wechatPayConfigured(),keyMaterialValid:wechatPayKeyMaterialReady(),enabled:wechatPayEnabled(),oauthConfigured:wechatOauthConfigured(),missing:wechatMissing},
@@ -70,10 +68,8 @@ export async function GET(req:Request){
   commerce:{
    wallet:{
     cnyBalanceV1:process.env.SASI_RMB_BALANCE_V1_ENABLED==="true",
-    cnyBalanceTopupReady:process.env.SASI_RMB_BALANCE_V1_ENABLED==="true"&&(wechatPayEnabled()||alipayEnabled()),
     usdBalanceTopup:process.env.USD_BALANCE_TOPUP_ENABLED==="true",
-    usdBalanceTopupReady:process.env.USD_BALANCE_TOPUP_ENABLED==="true"&&paypalEnabled()&&process.env.SASI_REFUND_FLOW_TESTED==="true",
-    miniCnyJsapiTopup:miniCnyJsapi,
+    usdBalanceTopupReady:process.env.USD_BALANCE_TOPUP_ENABLED==="true"&&process.env.SASI_REFUND_FLOW_TESTED==="true",
     refundFlowTested:process.env.SASI_REFUND_FLOW_TESTED==="true",
     usageSettlementTested:process.env.SASI_USAGE_SETTLEMENT_TESTED==="true"
    },

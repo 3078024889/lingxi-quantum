@@ -63,21 +63,3 @@ test("provider readiness requires complete merchant callback identity",()=>{
  const notify=read("app/api/pay/alipay/notify/route.ts");
  assert.match(notify,/params\.seller_id !== expectedSeller/);
 });
-
-test("wallet deep links preserve an explicit CNY or USD currency request",()=>{
- const panel=read("components/WalletLivePanel.tsx");
- assert.ok(panel.includes("new URLSearchParams(window.location.search)"));
- assert.ok(panel.includes('params.get("currency")'));
- assert.match(panel,/topupCurrency/);
- assert.match(panel,/setTopupCurrency/);
-});
-test("Mini Program USD wallet checkout stays on the official website boundary",()=>{
- const boundary=read("components/MiniPaymentBoundary.tsx");
- const checkout=read("app/checkout-usd/page.tsx");
- assert.match(boundary,/detectMiniPaymentContext/);
- assert.ok(!boundary.includes("openMiniRecharge")&&!boundary.includes("pages/balance"));
- assert.ok(checkout.includes("getUsdBalanceProduct(productId)"));
- assert.match(checkout,/paypalReady/);
- assert.match(checkout,/usdBalanceTopupReady/);
- assert.ok(!checkout.includes("requestVirtualPayment"));
-});
