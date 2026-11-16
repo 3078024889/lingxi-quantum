@@ -238,7 +238,7 @@ export async function POST(req: Request) {
 
     return noStore({ orderId, payment: buildMiniRequestPayment(prepayId), status: "pending" });
   } catch (error) {
-    console.error("[mini CNY JSAPI route]", error instanceof Error ? error.message : "unknown");
+    const message = error instanceof Error ? error.message : "";\n    const code = /^[A-Z0-9_]{1,80}$/.test(message) ? message : safeProviderCode(error);\n    console.error("[mini CNY JSAPI route]", code);
     return noStore({ error: "充值订单准备未完成，原请求编号已保留；请稍后恢复核验，不要重复充值。" }, 503);
   }
 }
