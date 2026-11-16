@@ -12,6 +12,10 @@ test("Cloudflare merchant secret provision is manual and never enables payments 
  assert.match(script,/method:"PUT"/);
  assert.match(script,/type:"secret_text"/);
  assert.match(script,/const active=flags.filter/);
+ assert.match(script,/ALIPAY_SELLER_ID/);
+ assert.match(script,/USD_BALANCE_TOPUP_ENABLED/);
+ assert.match(script,/COM_WORKER_FLAG_/);
+ assert.match(workflow,/ALIPAY_SELLER_ID: \\${\\{ secrets\\.ALIPAY_SELLER_ID \\}\\}/);
  assert.match(script,/COM_SECRETS_ENCRYPTED_PROVISION_PASS_PAYMENT_FLAGS_STILL_OFF/);
  assert.doesNotMatch(script,/workers\/routes/);
  assert.doesNotMatch(script,/process\.env\[[^\]]+\]\s*=\s*"true"/);
