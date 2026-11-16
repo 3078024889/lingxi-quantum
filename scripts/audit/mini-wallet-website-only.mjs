@@ -31,7 +31,7 @@ for(const path of [
 
 assert.doesNotMatch(api,/balance-pay\/availability/,"Mini login must not depend on the deleted top-up endpoint");
 assert.doesNotMatch(web,/lx_mini_topup_pending|lx_mini_last_payment_error/,"Retired top-up storage cleanup remains");
-assert.match(web,/currencyParam=\/(?:\[\?&\])currency=/,"Explicit CNY/USD wallet currency must not be duplicated by mini context");
+assert.ok(web.includes("currencyParam=/(?:[?&])currency="),"Explicit CNY/USD wallet currency must not be duplicated by mini context");
 assert.doesNotMatch(wallet,/miniVirtualTopupsAvailable|miniTopupsReady|openMiniRecharge|requestVirtualPayment/);
 assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
 assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);
