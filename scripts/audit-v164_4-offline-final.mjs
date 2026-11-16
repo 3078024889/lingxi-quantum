@@ -20,19 +20,18 @@ for(const p of [
 
 for(const p of [
  "miniapp/pages/pay/index.js",
- "miniapp/pages/balance/index.js",
  "miniapp/pages/orders/index.js",
  "app/api/wechat/mini/tool-pay/create/route.ts"
 ]) must(fs.existsSync(p),`MINI_PAYMENT_FILE_MISSING:${p}`);
 
 must(read("miniapp/pages/pay/index.js").includes("wx.requestVirtualPayment"),"MINI_TOOL_VIRTUAL_PAY_MISSING");
-must(read("miniapp/pages/balance/index.js").includes("/pages/web/index?path=")&&read("miniapp/pages/balance/index.js").includes("encodeURIComponent(path)")&&read("miniapp/pages/balance/index.js").includes("\"/ai-wallet\""),"MINI_BALANCE_WEBSITE_WALLET_REDIRECT_MISSING");
-must(!read("miniapp/pages/balance/index.js").includes("requestVirtualPayment"),"MINI_NATIVE_WALLET_TOPUP_REMAINS");
-must(!fs.existsSync("app/api/wechat/mini/balance-pay/create/route.ts"),"MINI_NATIVE_WALLET_TOPUP_API_REMAINS");
-
 const app=JSON.parse(read("miniapp/app.json"));
-for(const p of ["pages/pay/index","pages/balance/index","pages/orders/index"]) must(app.pages.includes(p),`MINI_ROUTE_MISSING:${p}`);
-must(!app.pages.includes("pages/recharge/index"),"MINI_RETIRED_RECHARGE_ROUTE_REMAINS");
+for(const p of ["pages/pay/index","pages/orders/index"])must(app.pages.includes(p),`MINI_ROUTE_MISSING:${p}`);
+must(!app.pages.includes("pages/balance/index")&&!app.pages.includes("pages/recharge/index"),"MINI_LEGACY_WALLET_ROUTE_REMAINS");
+for(const p of ["miniapp/pages/balance","miniapp/pages/recharge","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js","app/api/wechat/mini/balance-pay/create/route.ts","app/api/wechat/mini/balance-pay/availability/route.ts"])must(!fs.existsSync(p),`MINI_LEGACY_WALLET_MODULE_REMAINS:${p}`);
+must(read("miniapp/pages/pay/index.js").includes("wx.requestVirtualPayment"),"MINI_TOOL_VIRTUAL_PAY_MISSING");
+must(read("miniapp/pages/pay/index.js").includes("/ai-wallet%3Fcurrency%3DCNY"),"MINI_TOOL_RECHARGE_MUST_OPEN_WEBSITE_WALLET");
+
 
 const pkg=JSON.parse(read("package.json"));
 for(const d of ["mammoth","exceljs","jsdom","dompurify","@mozilla/readability","turndown"])
@@ -45,6 +44,6 @@ console.log("FOOD_IMAGE_PRICE_MODE=2X");
 console.log("FOOD101_SELF_HOSTED_RUNTIME=PASS");
 console.log("FOOD_IMAGE_EXTERNAL_API_REQUIRED=NO");
 console.log("MINI_TOOL_NATIVE_PAY=PASS");
-console.log("MINI_BALANCE_WEBSITE_WALLET_REDIRECT=PASS");
+console.log("MINI_LEGACY_BALANCE_PAGE_AND_API_REMOVED=PASS");
 console.log("DOCUMENT_WEB_DEPS=PASS");
 console.log("V164_4_OFFLINE_FINAL_AUDIT=PASS");
