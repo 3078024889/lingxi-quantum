@@ -99,3 +99,23 @@ test("COM homepage reference gate accepts Chinese labels while requiring the rea
   assert.ok(homepage.includes('href:"/widgets/lingxifield-v1.js"'));
   assert.ok(homepage.includes('href:"/discoveries"'));
 });
+
+
+test("SASI public marketplace is product-only and all publishing controls stay in the seller workspace", () => {
+  const component = read("components/SasiOpenMarketplace.tsx");
+  const releaseGate = read("scripts/cloudflare/com-celestial-apex-verified-cutover-20261109.mjs");
+  const marketBlock = component.split("{!sellerOnly&&<>")[1]?.split("{sellerOnly&&<>")[0] ?? "";
+  const sellerBlock = component.split("{sellerOnly&&<>")[1] ?? "";
+  assert.ok(marketBlock.length > 1000, "public marketplace render branch must exist");
+  assert.ok(marketBlock.includes('href="#products"'));
+  assert.doesNotMatch(marketBlock, /href=["']\/sasi\/seller["']/);
+  assert.doesNotMatch(marketBlock, /发布产品|Publish software|开发者发布|Publish as a developer|卖家发布与自动交付|立即发布软件|软件 ZIP \/ 源码包|保存商品草稿/);
+  assert.ok(sellerBlock.includes('data-testid="seller-workspace-hero"'));
+  assert.ok(sellerBlock.includes('data-testid="seller-workspace-section"'));
+  assert.ok(sellerBlock.includes("保存商品草稿"));
+  const marketGate = releaseGate.split('path: "/sasi",')[1]?.split('path: "/sasi/seller"')[0] ?? "";
+  assert.ok(marketGate.includes('"浏览软件"'));
+  assert.ok(marketGate.includes('"浏览开发者作品"'));
+  assert.ok(marketGate.includes('"卖家发布与自动交付"'));
+  assert.ok(marketGate.includes('"保存商品草稿"'));
+});
