@@ -13,7 +13,7 @@ export function isMiniPaymentContext() {
 function cnyBalanceProductId() {
   if (typeof window === "undefined") return "";
   const productId = new URLSearchParams(window.location.search).get("productId") || "";
-  return /^sasi-balance-(?:10|88|666|888|custom-(?:0|[1-9][0-9]{0,4})(?:\\.[0-9]{1,2})?)$/.test(productId) ? productId : "";
+  return /^sasi-balance-(?:10|88|666|888|custom-(?:0|[1-9][0-9]{0,4})(?:\.[0-9]{1,2})?)$/.test(productId) ? productId : "";
 }
 function isCnyBalanceTopup() {
   return Boolean(cnyBalanceProductId());
