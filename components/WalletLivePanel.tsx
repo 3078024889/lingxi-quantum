@@ -74,7 +74,7 @@ export default function WalletLivePanel(){
     const response=await fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin",signal:controller.signal});
     if(!response.ok)return;
     const p=await response.json();
-    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true,paypal:p.paypal===true,usdBalanceTopup:p.usdBalanceTopup===true});
+    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true,paypal:p.paypal===true,cnyBalanceTopup:p.cnyBalanceTopup===true,usdBalanceTopup:p.usdBalanceTopup===true});
    }catch{}
   };
   void load();void loadProviders();
