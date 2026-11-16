@@ -7,9 +7,9 @@ const fail=(name,code)=>{console.log("COM_MERCHANT_"+name+"_SIGNED_LIVE_PROBE=FA
 const pass=name=>{console.log("COM_MERCHANT_"+name+"_SIGNED_LIVE_PROBE=PASS");return true;};
 const pem=(value,label)=>{
  if(!value)throw Error("KEY_MISSING");
- const normalized=String(value).replace(/\\r\\n|\\n|\\r/g,"\n").trim();
+ const normalized=String(value).replace(/\\r\\n|\\n|\\r|\r\n|\r/g,"\n").trim();
  if(normalized.includes("-----BEGIN"))return normalized;
- const body=normalized.replace(/\\s+/g,"");
+ const body=normalized.replace(/\s+/g,"");
  return "-----BEGIN "+label+"-----\n"+(body.match(/.{1,64}/g)||[]).join("\n")+"\n-----END "+label+"-----";
 };
 const shanghaiTimestamp=()=>{
@@ -21,13 +21,13 @@ const responseNode=(raw,key)=>{
  const idx=raw.indexOf('"'+key+'":');
  if(idx<0)throw Error("ALIPAY_RESPONSE_NODE_MISSING");
  let i=idx+key.length+3;
- while(/\\s/.test(raw[i]||""))i++;
+ while(/\s/.test(raw[i]||""))i++;
  const start=i;
  if(raw[i]!=="{")throw Error("ALIPAY_RESPONSE_NODE_INVALID");
  let depth=0,quoted=false,escaped=false;
  for(;i<raw.length;i++){
   const c=raw[i];
-  if(quoted){if(escaped)escaped=false;else if(c==="\\\\")escaped=true;else if(c==='"')quoted=false;continue;}
+  if(quoted){if(escaped)escaped=false;else if(c==="\\")escaped=true;else if(c==='"')quoted=false;continue;}
   if(c==='"'){quoted=true;continue;}
   if(c==="{")depth++;
   if(c==="}"&&--depth===0)return raw.slice(start,i+1);
@@ -74,7 +74,7 @@ async function probeWechat(){
   if(env.NEXT_PUBLIC_SITE_URL!=="https://lingxifield.com")throw Error("SITE_ORIGIN_MISMATCH");
   const required=["WECHAT_APP_ID","WECHAT_MCH_ID","WECHAT_API_V3_KEY","WECHAT_PRIVATE_KEY","WECHAT_CERT_SERIAL_NO","WECHAT_PLATFORM_PUBLIC_KEY","WECHAT_PLATFORM_PUBLIC_KEY_ID"];
   if(required.some(k=>!String(env[k]||"").trim()))throw Error("MERCHANT_CONFIG_MISSING");
-  if(!/^\\d{8,15}$/.test(env.WECHAT_MCH_ID)||!/^wx[a-z0-9]{10,}$/i.test(env.WECHAT_APP_ID))throw Error("MERCHANT_ID_INVALID");
+  if(!/^\d{8,15}$/.test(env.WECHAT_MCH_ID)||!/^wx[a-z0-9]{10,}$/i.test(env.WECHAT_APP_ID))throw Error("MERCHANT_ID_INVALID");
   if(Buffer.byteLength(env.WECHAT_API_V3_KEY,"utf8")!==32)throw Error("API_V3_KEY_INVALID");
   const privateKey=createPrivateKey(pem(env.WECHAT_PRIVATE_KEY,"PRIVATE KEY"));
   const publicKey=createPublicKey(pem(env.WECHAT_PLATFORM_PUBLIC_KEY,"PUBLIC KEY"));
@@ -118,7 +118,7 @@ async function probePaypal(){
   const response=await fetch("https://api-m.paypal.com/v1/notifications/webhooks/"+encodeURIComponent(webhookId),{method:"GET",headers:{Authorization:"Bearer "+tokenBody.access_token,Accept:"application/json"},cache:"no-store",signal:AbortSignal.timeout(18000)});
   const webhook=await response.json();
   if(!response.ok||String(webhook?.id||"")!==webhookId)throw Error("WEBHOOK_ID_MISMATCH");
-  if(String(webhook?.url||"").replace(/\\/$/,"")!=="https://lingxifield.com/api/pay/paypal/webhook")throw Error("WEBHOOK_URL_MISMATCH");
+  if(String(webhook?.url||"").replace(/\/$/,"")!=="https://lingxifield.com/api/pay/paypal/webhook")throw Error("WEBHOOK_URL_MISMATCH");
   const required=["CHECKOUT.ORDER.APPROVED","CHECKOUT.ORDER.COMPLETED","CHECKOUT.PAYMENT-APPROVAL.REVERSED","PAYMENT.CAPTURE.PENDING","PAYMENT.CAPTURE.COMPLETED","PAYMENT.CAPTURE.DENIED","PAYMENT.CAPTURE.REFUNDED"];
   const actual=new Set(Array.isArray(webhook?.event_types)?webhook.event_types.map(x=>String(x?.name||"")):[]);
   if(required.some(x=>!actual.has(x)))throw Error("WEBHOOK_EVENT_SUBSCRIPTIONS_INCOMPLETE");
