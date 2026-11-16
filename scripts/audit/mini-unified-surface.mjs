@@ -10,7 +10,7 @@ for(const [page,target] of [['home','/'],['tools','/tools'],['create','/sasi'],[
 const webWallet=fs.readFileSync('lib/mini/payment-client.ts','utf8');
 assert.ok(webWallet.includes('openMiniWallet(currency: "CNY" | "USD"'));
 assert.ok(webWallet.includes('/ai-wallet?currency='));
-assert.doesNotMatch(webWallet,/openMiniRecharge|pages\\/balance/);
+assert.ok(!webWallet.includes("openMiniRecharge")&&!webWallet.includes("pages/balance"));
 for(const path of ['miniapp/pages/balance','miniapp/pages/recharge','app/api/wechat/mini/balance-pay'])assert.equal(fs.existsSync(path),false,'Legacy wallet module must be deleted: '+path);
 assert.ok(app.pages.includes('pages/web/index')&&!app.pages.includes('pages/balance/index'));
 console.log('PASS: direct website homepage launch; legacy portal removed; one website navigation surface; compatibility links; native and web unified 740-fen balance, separate refundable principal and owned identity.');

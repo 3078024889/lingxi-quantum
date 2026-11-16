@@ -11,5 +11,5 @@ assert.equal(await exports.openMiniWallet(),true);
 assert.equal(paths[2],'/pages/web/index?path=%2Fai-wallet%3Fcurrency%3DCNY','Default wallet route must be CNY');
 fail=true;assert.equal(await exports.openMiniWallet('USD'),false,'Bridge failure must be reported');
 native=false;fail=false;assert.equal(await exports.detectMiniPaymentContext(),false);
-assert.doesNotMatch(fs.readFileSync('lib/mini/payment-client.ts','utf8'),/openMiniRecharge|pages\\/balance/);
+assert.ok(!fs.readFileSync("lib/mini/payment-client.ts","utf8").includes("openMiniRecharge")&&!fs.readFileSync("lib/mini/payment-client.ts","utf8").includes("pages/balance"));
 console.log('PASS: CNY and USD both open the official wallet; currency is preserved; old native balance route is absent');
