@@ -35,7 +35,7 @@ must(app.entryPagePath===undefined,"UNSUPPORTED_ENTRY_PAGE_OVERRIDE_REMAINS");
 for(const p of ["home","tools","create","profile","agents"])must(read("miniapp/pages/"+p+"/index.js").includes("wx.redirectTo"),"LEGACY_COMPAT_REDIRECT_MISSING:"+p);
 
 const webConfig=JSON.parse(read("miniapp/pages/web/index.json"));
-must(webConfig.enableShareAppMessage===true&&webConfig.enableShareTimeline!==true,"MINI_WEB_FRIEND_SHARE_CONFIG_MISSING_OR_TIMELINE_MISCONFIGURED");
+must(webConfig.enableShareAppMessage===true&&webConfig.enableShareTimeline===true,"MINI_WEB_FRIEND_SHARE_CONFIG_MISSING_OR_TIMELINE_MISCONFIGURED");
 const shareConfig=JSON.parse(read("miniapp/pages/share/index.json"));
 must(shareConfig.enableShareAppMessage===true&&shareConfig.enableShareTimeline===true,"MINI_NATIVE_SHARE_CONFIG_MISSING");
 const mailConfig=JSON.parse(read("miniapp/pages/mail-home/index.json"));
@@ -59,24 +59,24 @@ for(const l of ["zh-CN","en","ja","ko","fr","de","es","pt","ar"])
 
 for(const p of ["miniapp/pages/balance","miniapp/pages/recharge","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js"])must(!exists(p),"RETIRED_MINI_WALLET_MODULE_REMAINS:"+p);
 must(app.pages.includes("pages/cny-wallet/index"),"NEW_CNY_WALLET_PAGE_MISSING");
-must(exists("app/api/wechat/mini/cny-topup/availability/route.ts")&&exists("app/api/wechat/mini/cny-topup/create/route.ts"),"CNY_NATIVE_TOPUP_API_MISSING");
+must(exists("app/api/wechat/mini/cny-topup/availability/route.ts")&&exists("app/api/wechat/mini/cny-topup/create/route.ts")&&exists("app/api/wechat/mini/cny-topup/status/route.ts"),"CNY_JSAPI_TOPUP_API_MISSING");
 const walletClient=read("lib/mini/payment-client.ts");
 must(walletClient.includes('openMiniWallet(currency: "CNY" | "USD"')&&walletClient.includes("/pages/cny-wallet/index")&&walletClient.includes("/ai-wallet?currency=USD"),"MINI_CNY_NATIVE_USD_WEBSITE_ROUTING_MISSING");
 must(read("miniapp/pages/pay/index.js").includes("/pages/cny-wallet/index"),"MINI_TOOL_RECHARGE_MUST_OPEN_NATIVE_CNY_WALLET");
 must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/cny-topup/create"),"NATIVE_CNY_WALLET_CREATE_API_MISSING");
-must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/tool-pay/status"),"NATIVE_CNY_WALLET_SERVER_CONFIRMATION_MISSING");
+const cnyWallet=read("miniapp/pages/cny-wallet/index.js");\nmust(cnyWallet.includes("/api/wechat/mini/cny-topup/status"),"NATIVE_CNY_WALLET_SERVER_CONFIRMATION_MISSING");\nmust(cnyWallet.includes("wx.requestPayment")&&!cnyWallet.includes("requestVirtualPayment"),"CNY_WALLET_MUST_USE_MERCHANT_JSAPI_NOT_VIRTUAL_PAYMENT");\nmust(read("miniapp/pages/pay/index.js").includes("requestVirtualPayment"),"MINI_TOOL_PRODUCT_VIRTUAL_PAYMENT_MUST_REMAIN_SEPARATE");\nmust(read("app/api/wechat/mini/cny-topup/create/route.ts").includes("reserve_mini_cny_jsapi_topup_order"),"CNY_JSAPI_ATOMIC_RESERVATION_MISSING");
 const web=read("miniapp/pages/web/index.js");
 must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALLOWLIST_MISSING");
 must(web.includes("preferredCurrency()")&&web.includes("currency="),"MINI_CURRENCY_WEB_SYNC_MISSING");
-must(web.includes("options.webViewUrl")&&web.includes("shareablePath"),"MINI_WEB_CURRENT_URL_SHARING_MISSING");
+must(web.includes("options.webViewUrl")&&web.includes("shareablePath"),"MINI_WEB_CURRENT_URL_SHARING_MISSING");\nmust(web.includes("onShareTimeline")&&web.includes("timeline"),"MINI_WEB_TIMELINE_SHARING_MISSING");
 must(!web.includes("ai-knowledge")&&!web.includes("ai-learning")&&!web.includes("ai-research"),"MINI_RETIRED_ROUTE_ALLOWLIST_REMAINS");
 
 console.log("AUDIT_MINI_PROGRAM=PASS");
 console.log("CURRENT_MINI_TOPOLOGY="+expected.length+"_PAGES_PASS");
-console.log("RETIRED_WALLET_PAGE_REMOVED_NEW_CNY_NATIVE_WALLET_ACTIVE=PASS");
+console.log("RETIRED_WALLET_PAGE_REMOVED_NEW_CNY_MERCHANT_JSAPI_WALLET_ACTIVE=PASS");
 console.log("CNY_NATIVE_USD_WEBSITE_WALLET_SPLIT=PASS");
 console.log("DIRECT_WEBSITE_HOME_LAUNCH=PASS");
 console.log("SINGLE_WEB_NAVIGATION=PASS");
-console.log("FRIEND_SHARE_WEBVIEW_AND_TIMELINE_NATIVE_PAGE=PASS");
+console.log("FRIEND_SHARE_WEBVIEW_AND_TIMELINE=PASS");
 console.log("MINI_9_LANGUAGE_STRUCTURE=PASS");
 console.log("MINI_API_BOUNDARY=PASS");
