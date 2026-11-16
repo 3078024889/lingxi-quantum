@@ -26,6 +26,8 @@ for(const x of["reconcileWithdrawal","money_claim_webhook_events_v53","dead_lett
  if(!inbox.includes(x))bad.push(`durable webhook convergence missing ${x}`);
 
 const adapters=read("lib/money/provider-adapters.ts");
+for(const x of["assertAlipayRefund","ALIPAY_REFUND_ORDER_MISMATCH","ALIPAY_REFUND_AMOUNT_MISMATCH"])
+ if(!adapters.includes(x))bad.push(`alipay refund guard missing ${x}`);
 for(const x of["WECHAT_REFUND_AMOUNT_MISMATCH","PAYPAL_REFUND_AMOUNT_MISMATCH",'errorCode:"WECHAT_ABNORMAL"'])
  if(!adapters.includes(x))bad.push(`provider refund guard missing ${x}`);
 
