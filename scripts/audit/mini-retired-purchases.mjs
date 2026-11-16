@@ -23,6 +23,7 @@ const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));
 assert.ok(app.pages.includes('pages/cny-wallet/index'));
 assert.ok(!app.pages.includes('pages/balance/index')&&!app.pages.includes('pages/recharge/index'));
 for (const path of [
+  'miniapp/pages/portal','miniapp/pages/mail-home',
   'miniapp/pages/balance','miniapp/pages/recharge',
   'miniapp/utils/topup-expiry.js','miniapp/utils/virtual-payment-errors.js',
 ]) assert.equal(fs.existsSync(path),false,'retired mini wallet page/helper remains: '+path);
