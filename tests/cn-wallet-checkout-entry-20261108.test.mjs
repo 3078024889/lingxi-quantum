@@ -67,7 +67,7 @@ test("provider readiness requires complete merchant callback identity",()=>{
 test("wallet deep links preserve an explicit CNY or USD currency request",()=>{
  const panel=read("components/WalletLivePanel.tsx");
  assert.ok(panel.includes("new URLSearchParams(window.location.search)"));
- assert.ok(panel.includes("params.get(\\\"currency\\\")"));
+ assert.ok(panel.includes('params.get("currency")'));
  assert.match(panel,/requestedCurrency/);
  assert.match(panel,/setCurrency/);
 });
