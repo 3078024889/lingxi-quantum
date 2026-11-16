@@ -471,7 +471,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
        <button type="button" disabled={busy!==""||(mediaCounts[activeDraft.id]?.cover??0)!==1||!uploadedPackages[activeDraft.id]} onClick={()=>void submitReview(activeDraft)} className={styles.launchStudio}>{busy==="submit-"+activeDraft.id?"…":sasiSoftwareUiText(lang,"提交商品审核","Submit for review")}</button>
        <button type="button" disabled={busy!==""} onClick={()=>{setActiveDraftId(null);setEditingId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"新建商品","New listing")}</button>
       </div>}
-      <button disabled={busy!==""||seller?.status!=="approved"} onClick={()=>void makeDraft()}>{busy==="draft"?"…":(editingId||activeDraftId)?sasiSoftwareUiText(lang,"保存修改","Save changes"):sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
+      <button disabled={busy!==""||!seller||!["pending_review","approved"].includes(seller.status)} onClick={()=>void makeDraft()}>{busy==="draft"?"…":(editingId||activeDraftId)?sasiSoftwareUiText(lang,"保存修改","Save changes"):sasiSoftwareUiText(lang,"保存商品草稿","Save product draft")}</button>
       {editingId&&<button type="button" disabled={busy!==""} onClick={()=>{setEditingId(null);setActiveDraftId(null);setTitle("");setDescription("");}}>{sasiSoftwareUiText(lang,"取消修改","Cancel editing")}</button>}
       <p>{sasiSoftwareUiText(lang,"软件 ZIP 最大30MB；许可文件可单独选择，系统会合并进 ZIP 后统一安全检查与交付。主图1张，详情图最多4张。","ZIP packages are limited to 30MB. Select a PDF, TXT or PNG license file separately; it is bundled into the ZIP for unified security review and delivery. One cover image and up to four optional detail images are supported.")}</p>
     </div>
