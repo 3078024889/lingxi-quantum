@@ -1,79 +1,113 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
-const read = path => readFileSync(path, "utf8");
-const exists = path => existsSync(path);
+import vm from "node:vm";
 
-test("CNY uses the native Mini Program merchant JSAPI wallet and USD uses the official website wallet", () => {
-  const client=read("lib/mini/payment-client.ts");
-  const wallet=read("components/WalletLivePanel.tsx");
-  const app=JSON.parse(read("miniapp/app.json"));
-  assert.ok(app.pages.includes("pages/cny-wallet/index"));
-  assert.ok(client.includes('openMiniWallet(currency: "CNY" | "USD"'));
-  assert.ok(client.includes("/pages/cny-wallet/index"));
-  assert.ok(client.includes("/ai-wallet?currency=USD"));
-  assert.ok(wallet.includes("detectMiniPaymentContext"));
-  assert.ok(wallet.includes("openMiniCnyTopup"));
-  assert.ok(wallet.includes("checkout-usd?productId=sasi-usd-balance-"));
-  assert.ok(read("app/checkout-usd/page.tsx").includes("paypalReady"));
+const read=path=>readFileSync(path,"utf8");
+const exists=path=>existsSync(path);
+
+test("CNY uses native merchant JSAPI and USD uses the official website wallet",()=>{
+ const app=JSON.parse(read("miniapp/app.json"));
+ const client=read("lib/mini/payment-client.ts");
+ const page=read("miniapp/pages/cny-wallet/index.js");
+ const create=read("app/api/wechat/mini/cny-topup/create/route.ts");
+ const availability=read("app/api/wechat/mini/cny-topup/availability/route.ts");
+ assert.ok(app.pages.includes("pages/cny-wallet/index"));
+ assert.ok(client.includes('openMiniWallet(currency: "CNY" | "USD"'));
+ assert.ok(client.includes("/pages/cny-wallet/index"));
+ assert.ok(client.includes("/ai-wallet?currency=USD"));
+ assert.ok(page.includes("wx.requestPayment"));
+ assert.ok(!page.includes("wx.requestVirtualPayment"));
+ assert.ok(page.includes("cny-topup/availability")&&page.includes("cny-topup/create")&&page.includes("cny-topup/status"));
+ assert.ok(create.includes("createMiniJsapiOrder"));
+ assert.ok(create.includes('admin.rpc("reserve_mini_cny_jsapi_topup_order"'));
+ assert.ok(availability.includes("WECHAT_MINI_JSAPI_TOPUPS_ENABLED"));
+ assert.ok(availability.includes("PRODUCTION_ENV_REQUIRED"));
+ assert.ok(availability.includes("APP_ID_MISMATCH"));
 });
 
-test("retired recharge pages are absent while the JSAPI API and native page are present", () => {
-  const app=JSON.parse(read("miniapp/app.json"));
-  assert.ok(!app.pages.includes("pages/balance/index"));
-  assert.ok(!app.pages.includes("pages/recharge/index"));
-  for(const path of ["miniapp/pages/balance","miniapp/pages/recharge","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js"]) assert.equal(exists(path),false,path);
-  for(const path of ["miniapp/pages/cny-wallet/index.js","app/api/wechat/mini/cny-topup/create/route.ts","app/api/wechat/mini/cny-topup/availability/route.ts","app/api/wechat/mini/cny-topup/status/route.ts"]) assert.equal(exists(path),true,path);
-  assert.ok(read("miniapp/pages/cny-wallet/index.js").includes("wx.requestPayment"));
-  assert.doesNotMatch(read("miniapp/pages/cny-wallet/index.js"),/requestVirtualPayment/);
+test("custom CNY amount parser accepts decimal JSAPI amounts through the 10000 CNY cap",()=>{
+ let page;
+ vm.runInNewContext(read("miniapp/pages/cny-wallet/index.js"),{
+  Page:value=>{page=value;},
+  wx:{},
+  require:()=>({login:async()=>{},request:async()=>({}),publicRequest:async()=>({}),wxLogin:async()=>({code:"test"})}),
+ });
+ page.setData=update=>Object.assign(page.data,update);
+ page.chooseCustom();
+ page.input({detail:{value:"123.45"}});
+ assert.equal(page.data.amountText,"123.45");
+ const parsed=page.currentAmount();assert.equal(parsed.minor,12345);assert.equal(parsed.text,"123.45");
+ page.input({detail:{value:"0.01"}});
+ assert.equal(page.data.amountText,"0.01");
+ page.input({detail:{value:"123.456"}});
+ assert.equal(page.data.amountText,"");
+ page.input({detail:{value:"10000.01"}});
+ assert.equal(page.data.amountText,"");
 });
 
-test("uncertain CNY payments retain the original idempotency key and never create a second order", () => {
-  const page=read("miniapp/pages/cny-wallet/index.js");
-  assert.ok(page.includes("lx_mini_cny_topup_pending_v2"));
-  assert.ok(page.includes("lx_mini_cny_topup_pending_v1"));
-  assert.ok(page.includes("paymentAttempted"));
-  assert.ok(page.includes("recoverPending"));
-  assert.ok(page.includes("cny-topup/status"));
-  assert.ok(page.includes("cny-topup/create"));
-  assert.ok(!page.includes("expireCheckout"));
-  assert.ok(read("app/api/wechat/mini/cny-topup/create/route.ts").includes("reserve_mini_cny_jsapi_topup_order"));
-  const availability=read("app/api/wechat/mini/cny-topup/availability/route.ts");
-  assert.ok(availability.includes("TOPUPS_DISABLED"));
-  assert.ok(availability.includes("APP_ID_MISMATCH"));
-  assert.ok(availability.includes("PROVIDER_CONFIG_MISSING"));
-  assert.ok(availability.includes("providerConfigured"));
-  assert.match(read("miniapp/pages/cny-wallet/index.js"),/disabledMessages/);
-  const migration=read("supabase/migrations/20261116180000_mini_cny_jsapi_topup_reservation.sql");
-  assert.match(migration,/pg_advisory_xact_lock/);
-  assert.match(migration,/SECURITY INVOKER/);
-  assert.match(migration,/REVOKE ALL ON FUNCTION/);
-  assert.ok(migration.includes("GRANT EXECUTE ON FUNCTION public.reserve_mini_cny_jsapi_topup_order"));
-  assert.ok(migration.includes("TO service_role"));
+test("retired wallet pages, APIs and client helpers are absent",()=>{
+ const app=JSON.parse(read("miniapp/app.json"));
+ assert.ok(!app.pages.includes("pages/balance/index")&&!app.pages.includes("pages/recharge/index"));
+ for(const path of [
+  "miniapp/pages/balance","miniapp/pages/recharge","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js",
+  "app/api/wechat/mini/balance-pay"
+ ])assert.equal(exists(path),false,path);
+ const client=read("lib/mini/payment-client.ts");
+ assert.ok(!client.includes("openMiniRecharge")&&!client.includes("/pages/balance/index"));
+ assert.ok(!read("components/MiniPaymentBoundary.tsx").includes("openMiniRecharge"));
+ assert.ok(!read("components/Nav.tsx").includes("openMiniRecharge"));
+ assert.ok(!read("app/account/MiniAccountLinkPanel.tsx").includes("openMiniRecharge"));
 });
 
-test("tool-product virtual payment remains independent from wallet top-ups", () => {
-  const page=read("miniapp/pages/pay/index.js");
-  assert.ok(page.includes("requestVirtualPayment"));
-  assert.ok(page.includes("tool-pay/create"));
-  assert.ok(page.includes("/pages/cny-wallet/index"));
-  assert.ok(exists("app/api/wechat/mini/tool-pay/create/route.ts"));
+test("CNY JSAPI top-up keeps idempotency and provider reconciliation",()=>{
+ const page=read("miniapp/pages/cny-wallet/index.js");
+ const create=read("app/api/wechat/mini/cny-topup/create/route.ts");
+ const status=read("app/api/wechat/mini/cny-topup/status/route.ts");
+ assert.ok(page.includes("lx_mini_cny_jsapi_pending_v1"));
+ assert.ok(page.includes("requestId")&&page.includes("orderId")&&page.includes("recoverPending"));
+ assert.ok(create.includes("REQUEST_ID"));
+ assert.ok(create.includes("existingOrderResponse"));
+ assert.ok(create.includes("queryMiniJsapiOrder")&&create.includes("closeMiniJsapiOrder"));
+ assert.ok(create.includes("reserve_mini_cny_jsapi_topup_order"));
+ assert.ok(create.includes("(\\.[0-9]{1,2})"));
+ assert.ok(status.includes("queryMiniJsapiOrder")&&status.includes("fulfillPaidOrder"));
+ assert.ok(!create.includes('admin.rpc("reserve_mini_cny_topup_order"'));
+ assert.ok(!/expireCheckout|orders['"]?,\s*\{\s*method:\s*['"]DELETE/.test(page));
 });
 
-test("historical CNY virtual settlements, refunds and idempotent credits remain intact", () => {
-  assert.ok(read("lib/mini/virtual-fulfillment.ts").includes("virtualTopupGoods"));
-  assert.ok(read("lib/mini/virtual-fulfillment.ts").includes("fulfillPaidOrder"));
-  assert.ok(read("lib/mini/virtual-refund.ts").includes("reconcileVirtualRefund"));
-  assert.ok(read("lib/mini/virtual-refund.ts").includes("virtual_topup_order_created"));
-  assert.ok(read("lib/mini/virtual-refund.ts").includes("mini_order_refund_v1"));
-  assert.ok(read("app/api/wechat/mini/pay/notify/route.ts").includes("reconcileVirtualToolOrder"));
+test("new JSAPI reservation is service-role-only and legacy reservation RPC is retired",()=>{
+ const migration=read("supabase/migrations/20261116181000_mini_cny_jsapi_topup_20261116.sql");
+ const retired=read("supabase/migrations/20261116194500_retire_legacy_mini_virtual_topup_rpc.sql");
+ assert.ok(migration.includes("reserve_mini_cny_jsapi_topup_order"));
+ assert.ok(migration.includes("pg_advisory_xact_lock"));
+ assert.ok(migration.includes("SECURITY INVOKER"));
+ assert.ok(migration.includes("REVOKE ALL ON FUNCTION"));
+ assert.ok(migration.includes("GRANT EXECUTE ON FUNCTION public.reserve_mini_cny_jsapi_topup_order"));
+ assert.ok(migration.includes("TO service_role"));
+ assert.ok(!migration.includes("SECURITY DEFINER"));
+ assert.ok(retired.includes("DROP FUNCTION public.reserve_mini_cny_topup_order"));
+ assert.ok(!retired.includes("CASCADE"));
 });
 
-test("mobile account name editor uses a visible full-width Save action", () => {
-  const profile=read("components/AccountProfileCard.tsx");
-  const css=read("app/unified-shell.css");
-  assert.ok(profile.includes("lx-account-save-button"));
-  assert.ok(profile.includes("lx-account-name-input"));
-  assert.ok(css.includes("flex-direction:column!important"));
-  assert.ok(css.includes(".lx-account-name-edit .lx-account-save-button"));
+test("tool-product virtual payment and historical wallet settlement/refunds remain separate",()=>{
+ const toolPage=read("miniapp/pages/pay/index.js");
+ assert.ok(toolPage.includes("wx.requestVirtualPayment"));
+ assert.ok(toolPage.includes("tool-pay/create"));
+ assert.ok(toolPage.includes("/pages/cny-wallet/index"));
+ assert.ok(exists("app/api/wechat/mini/tool-pay/create/route.ts"));
+ const fulfillment=read("lib/mini/virtual-fulfillment.ts");
+ const refund=read("lib/mini/virtual-refund.ts");
+ assert.ok(fulfillment.includes("virtualTopupGoods")&&fulfillment.includes("fulfillPaidOrder"));
+ assert.ok(refund.includes("reconcileVirtualRefund")&&refund.includes("mini_order_refund_v1"));
+ assert.ok(read("app/api/wechat/mini/pay/notify/route.ts").includes("reconcileVirtualToolOrder"));
+});
+
+test("account name editor remains visible and full-width on mobile",()=>{
+ const profile=read("components/AccountProfileCard.tsx");
+ const css=read("app/unified-shell.css");
+ assert.ok(profile.includes("lx-account-save-button"));
+ assert.ok(profile.includes("lx-account-name-input"));
+ assert.ok(css.includes("flex-direction:column!important"));
+ assert.ok(css.includes(".lx-account-name-edit .lx-account-save-button"));
 });
