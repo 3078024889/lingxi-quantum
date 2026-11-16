@@ -31,6 +31,8 @@ export default function WalletLivePanel(){
  const [topupCurrency,setTopupCurrency]=useState<Currency>("CNY");
  const [customAmount,setCustomAmount]=useState("");
  useEffect(()=>{
+  const requestedCurrency=new URLSearchParams(window.location.search).get("currency")?.toUpperCase();
+  if(requestedCurrency==="CNY"||requestedCurrency==="USD")setTopupCurrency(requestedCurrency);
   const controller=new AbortController();
   const load=async()=>{
    try{
