@@ -228,7 +228,7 @@ export function buildWechatMiniJsapiInvokeParams(prepayId:string) {
   const timeStamp=Math.floor(Date.now()/1000).toString();
   const nonceStr=crypto.randomBytes(16).toString("hex");
   const pkg=`prepay_id=${prepayId}`;
-  const paySign=sign(`${appId}\\n${timeStamp}\\n${nonceStr}\\n${pkg}\\n`);
+  const paySign=sign(`${appId}\n${timeStamp}\n${nonceStr}\n${pkg}\n`);
   return {timeStamp,nonceStr,package:pkg,signType:"RSA" as const,paySign};
 }
 
