@@ -87,14 +87,14 @@ if (entries.some(name => name.includes('project.private.config.json') || name.st
 const hash = execFileSync('sha256sum', [zipFile], { encoding: 'utf8' }).trim().split(/\s+/)[0];
 fs.writeFileSync(zipFile + '.sha256', hash + '  ' + path.basename(zipFile) + '\n');
 fs.writeFileSync(path.join(output, 'release-notes.txt'),
-  '灵犀场小程序 5.7.5\\n\\n' +
-  '1. CNY 与 USD 余额充值统一进入官网新版「余额与充值」页面。\\n' +
-  '2. CNY 在官网收银台使用微信支付或支付宝；USD 在官网收银台使用 PayPal，并保留币种返回路径。\\n' +
-  '3. 完整移除小程序旧原生余额充值页、页面样式、缓存模块及余额充值创建/可用性 API。\\n' +
-  '4. 工具商品微信虚拟支付独立保留，不与余额充值混用。\\n' +
-  '5. 历史原生充值订单的回调核验与结算逻辑保留，不删除历史订单或账本。\\n' +
-  '6. 修复账户用户名保存按钮在移动端被裁切的问题，保存操作改为全宽清晰显示。\\n' +
-  '7. 小程序 AppID: ' + projectConfig.appid + '\\n' +
-  'SOURCE_SHA=' + sourceSha + '\\n' +
-  'SHA256=' + hash + '\\n');
+  '灵犀场小程序 5.7.5\n\n' +
+  '1. CNY 与 USD 余额充值统一进入官网新版「余额与充值」页面。\n' +
+  '2. CNY 在官网收银台使用微信支付或支付宝；USD 在官网收银台使用 PayPal，并保留币种返回路径。\n' +
+  '3. 完整移除小程序旧原生余额充值页、页面样式、缓存模块及余额充值创建/可用性 API。\n' +
+  '4. 工具商品微信虚拟支付独立保留，不与余额充值混用。\n' +
+  '5. 历史原生充值订单的回调核验与结算逻辑保留，不删除历史订单或账本。\n' +
+  '6. 修复账户用户名保存按钮在移动端被裁切的问题，保存操作改为全宽清晰显示。\n' +
+  '7. 小程序 AppID: ' + projectConfig.appid + '\n' +
+  'SOURCE_SHA=' + sourceSha + '\n' +
+  'SHA256=' + hash + '\n');
 console.log(JSON.stringify({ version, sourceSha, appId: projectConfig.appid, zipFile, sha256: hash, entries: entries.length }, null, 2));
