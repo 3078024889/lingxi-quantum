@@ -36,7 +36,11 @@ test("uncertain CNY payments retain the original idempotency key and never creat
   assert.match(page,/cny-topup\/create/);
   assert.doesNotMatch(page,/expireCheckout|orders['"]?,\s*\{\s*method:\s*['"]DELETE/);
   assert.match(read("app/api/wechat/mini/cny-topup/create/route.ts"),/reserve_mini_cny_topup_order/);
-  assert.match(read("supabase/migrations/20261116120000_mini_cny_topup_atomic_reservation.sql"),/pg_advisory_xact_lock/);
+  const migration=read("supabase/migrations/20261116120000_mini_cny_topup_atomic_reservation.sql");
+  assert.match(migration,/pg_advisory_xact_lock/);
+  assert.match(migration,/SECURITY INVOKER/);
+  assert.match(migration,/REVOKE ALL ON FUNCTION/);
+  assert.match(migration,/GRANT EXECUTE ON FUNCTION public\\.reserve_mini_cny_topup_order.*TO service_role/s);
 });
 
 test("tool-product virtual payment remains independent from wallet top-ups", () => {

@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION public.reserve_mini_cny_topup_order(
 )
 RETURNS jsonb
 LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public, pg_temp
+SECURITY INVOKER
+SET search_path = ''
 AS $$
 DECLARE
   v_existing_id uuid;
