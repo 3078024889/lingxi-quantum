@@ -7,6 +7,8 @@ on:
       - 'components/WalletLivePanel.tsx'
       - 'components/MiniPaymentBoundary.tsx'
       - 'components/AccountProfileCard.tsx'
+      - 'components/Nav.tsx'
+      - 'tests/home-layout-20261115.test.mjs'
       - 'app/unified-shell.css'
       - 'app/api/wechat/mini/cny-topup/**'
       - 'app/api/pay/providers/route.ts'
@@ -70,7 +72,7 @@ jobs:
           set -Eeuo pipefail
           node scripts/generate-social-assets.mjs
           node scripts/audit/mini-unified-surface.mjs
-          node --test tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/mini-recharge-single-entry.test.mjs tests/usd-wallet-topup-readiness.test.mjs
+          node --test tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/mini-recharge-single-entry.test.mjs tests/usd-wallet-topup-readiness.test.mjs tests/home-layout-20261115.test.mjs
           node scripts/audit/mini-virtual-payment.mjs
           node scripts/audit/mini-recharge-navigation.mjs
           node scripts/audit/mini-cny-native-usd-website.mjs
