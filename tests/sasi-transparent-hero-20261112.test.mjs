@@ -22,8 +22,12 @@ test('SASI scene is a complete opaque banner with real localized controls',async
  assert.equal(metadata.hasAlpha,false,'approved complete scene must not be a cutout');
  assert.ok(asset.length<500000,'hero should remain small enough for both sites');
  assert.match(component,/<h1 id="sasi-market-title">/);
- assert.match(component,/href="#products"/);
- assert.match(component,/href="\/sasi\/seller"/);
+ const marketBlock=component.split("{!sellerOnly&&<>")[1]?.split("{sellerOnly&&<>")[0]??"";
+ const sellerBlock=component.split("{sellerOnly&&<>")[1]??"";
+ assert.ok(marketBlock.includes('href="#products"'));
+ assert.ok(!marketBlock.includes("/sasi/seller"));
+ assert.doesNotMatch(marketBlock,/发布产品|Publish software|开发者发布/);
+ assert.ok(sellerBlock.includes('data-testid="seller-workspace-section"'));
  assert.doesNotMatch(component,/styles\.(browseHotspot|publishHotspot)/);
  assert.equal((component.match(/className=\{styles\.marketFeatures\}/g)||[]).length,1);
 });

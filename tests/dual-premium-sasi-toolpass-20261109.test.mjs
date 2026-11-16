@@ -76,7 +76,10 @@ test("SASI uses a complete scene with real controls and reviewed real listings",
  assert.ok(artwork.includes('src="/images/global-scene-20261114.webp"'));
  assert.ok(artwork.includes("styles.heroArtwork"));
  assert.ok(artwork.includes('href="#products"'));
- assert.ok(artwork.includes('href="/sasi/seller"'));
+ const marketBlock = artwork.split("{!sellerOnly&&<>")[1]?.split("{sellerOnly&&<>")[0] ?? "";
+ assert.ok(marketBlock.includes('href="#products"'));
+ assert.ok(!marketBlock.includes("/sasi/seller"));
+ assert.ok(artwork.includes('data-testid="seller-workspace-section"'));
  assert.ok(!artwork.includes("styles.laptopScene"));
  assert.ok(artwork.includes("styles.heroCopy"));
  assert.ok(!artwork.includes("styles.benefits"));
