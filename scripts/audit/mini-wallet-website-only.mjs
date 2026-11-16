@@ -10,6 +10,7 @@ const api=read("miniapp/utils/api.js");
 const builder=read("scripts/build-miniapps-v80.cjs");
 const packager=read("scripts/package-miniapp-5-7.cjs");
 
+const web=read("miniapp/pages/web/index.js");
 assert.ok(app.pages.includes("pages/balance/index"),"Keep the old balance route as a compatibility deep link");
 assert.ok(!app.pages.includes("pages/recharge/index"),"Do not register the retired recharge page");
 assert.match(balance,/pages\/web\/index\?path=/);
@@ -29,6 +30,8 @@ for(const path of [
 ]) assert.equal(exists(path),false,"Retired native top-up implementation remains: "+path);
 
 assert.doesNotMatch(api,/balance-pay\/availability/,"Mini login must not depend on the deleted top-up endpoint");
+assert.doesNotMatch(web,/lx_mini_topup_pending|lx_mini_last_payment_error/,"Retired top-up storage cleanup remains");
+assert.match(web,/currencyParam=\/(?:\[\?&\])currency=/,"Explicit CNY/USD wallet currency must not be duplicated by mini context");
 assert.doesNotMatch(wallet,/miniVirtualTopupsAvailable|miniTopupsReady|openMiniRecharge|requestVirtualPayment/);
 assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
 assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);
