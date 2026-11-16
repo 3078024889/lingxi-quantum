@@ -277,7 +277,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
             <CurrencySelector compact/>
             <NotificationBell/>
             <Link href="/ai-wallet" onClick={rechargeClick}>💎</Link>
-            {signedIn===false?<Link href="/account?mode=signin" className="lx-home-mobile-login">{lang==="zh"?"登录":"Sign in"}</Link>:<button className="lx11-mobile-account" type="button" aria-label={mt.account} aria-expanded={menuOpen} onClick={()=>setMenuOpen(value=>!value)}>{avatarUrl?<NextImage src={avatarUrl} alt="" width={64} height={64} unoptimized/>:<span>{Array.from(displayName||"L").slice(0,2).join("").toUpperCase()}</span>}</button>}
+            {signedIn===false?<Link href="/account?mode=signin" className="lx-home-mobile-login">{lang==="zh"?"登录":"Sign in"}</Link>:<button className="lx11-mobile-account" type="button" aria-label={mt.account} title={mt.account} aria-expanded={menuOpen} onClick={()=>setMenuOpen(value=>!value)}><LingxiMiniIcon name="account" size="nav"/></button>}
           </div>
           {menuOpen&&<div className="lx11-account-menu lx11-account-menu-mobile" role="menu">
             <div className="lx11-account-menu-head">{avatarUrl?<NextImage src={avatarUrl} alt="" className="lx11-account-menu-photo" width={64} height={64} unoptimized/>:<span className="lx11-account-menu-fallback">{Array.from(displayName||"L").slice(0,2).join("").toUpperCase()}</span>}<div><b>{displayName||mt.account}</b><small>{mt.account}</small></div></div>
