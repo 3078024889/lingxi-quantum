@@ -63,7 +63,7 @@ must(exists("app/api/wechat/mini/cny-topup/availability/route.ts")&&exists("app/
 const walletClient=read("lib/mini/payment-client.ts");
 must(walletClient.includes('openMiniWallet(currency: "CNY" | "USD"')&&walletClient.includes("/pages/cny-wallet/index")&&walletClient.includes("/ai-wallet?currency=USD"),"MINI_CNY_NATIVE_USD_WEBSITE_ROUTING_MISSING");
 must(read("miniapp/pages/pay/index.js").includes("/pages/cny-wallet/index"),"MINI_TOOL_RECHARGE_MUST_OPEN_NATIVE_CNY_WALLET");
-must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/balance-pay/create"),"NATIVE_CNY_WALLET_CREATE_API_MISSING");
+must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/cny-topup/create"),"NATIVE_CNY_WALLET_CREATE_API_MISSING");
 must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/tool-pay/status"),"NATIVE_CNY_WALLET_SERVER_CONFIRMATION_MISSING");
 const web=read("miniapp/pages/web/index.js");
 must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALLOWLIST_MISSING");
