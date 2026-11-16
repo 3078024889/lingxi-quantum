@@ -11,7 +11,13 @@ test("CNY preset and custom wallet top-ups remain open without the SASI generati
  for(const path of ["app/api/pay/alipay/create/route.ts","app/api/pay/wechat/create/route.ts"])
   assert.match(read(path),/sasiTopupProductEnabled/);
  const wallet=read("components/WalletLivePanel.tsx");
- assert.match(wallet,/topupCurrency==="CNY"\?\(providers\?\.wechat===true\|\|providers\?\.alipay===true\):providers\?\.paypal===true/);
+ assert.match(wallet,/topupCurrency==="CNY"\?\(miniContext\?miniCnyReady:providers\?\.cnyBalanceTopup===true\):providers\?\.usdBalanceTopup===true/);
+ const providerReadiness=read("app/api/pay/providers/route.ts");
+ assert.match(providerReadiness,/sasiRmbBalanceV1Enabled\(\)/);
+ assert.match(providerReadiness,/cnyBalanceTopup/);
+ assert.match(providerReadiness,/USD_BALANCE_TOPUP_ENABLED/);
+ assert.match(providerReadiness,/SASI_REFUND_FLOW_TESTED/);
+ assert.match(providerReadiness,/usdBalanceTopup/);
  assert.match(wallet,/sasi-balance-custom-/);
  assert.match(wallet,/sasi-usd-balance-custom-/);
 });
