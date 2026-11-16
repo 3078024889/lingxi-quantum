@@ -40,3 +40,15 @@ test('SASI market hero artwork preserves its natural ratio and is never stretche
   assert.match(css, /\.main \.hero\{[^}]*aspect-ratio:3\s*\/\s*1/);
   assert.match(css, /\.main \.heroArtwork\{[^}]*object-fit:contain/);
 });
+
+
+test('homepage rightmost action is an account entry, not a second diamond avatar', () => {
+  const nav = read('components/Nav.tsx');
+  const start = nav.indexOf('<div className="lx-home-nav-actions">');
+  const end = nav.indexOf('<button type="button" className="lx-home-nav-toggle"', start);
+  assert.ok(start >= 0 && end > start, 'homepage action group must exist');
+  const actions = nav.slice(start, end);
+  assert.match(actions, /className="lx-home-account-trigger"/);
+  assert.match(actions, /LingxiMiniIcon name="account" size="nav"/);
+  assert.doesNotMatch(actions, /className="lx-home-account-trigger"[^}]*avatarUrl/);
+});
