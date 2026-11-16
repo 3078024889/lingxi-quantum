@@ -60,6 +60,8 @@ jobs:
           pnpm install --frozen-lockfile
           node --test tests/wallet-topup-live-contract-20261111.test.mjs
           node --test tests/cn3195-payment-readiness-audit-20261116.test.mjs
+          node scripts/test-refund-provider-signatures.cjs
+          node scripts/audit/v52f-refund-webhook-lifecycle.mjs
           pnpm exec tsc --noEmit
       - name: Build exact standalone CN candidate
         run: |
