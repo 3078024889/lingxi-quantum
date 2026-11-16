@@ -13,7 +13,7 @@ const packager=read("scripts/package-miniapp-5-7.cjs");
 assert.ok(app.pages.includes("pages/balance/index"),"Keep the old balance route as a compatibility deep link");
 assert.ok(!app.pages.includes("pages/recharge/index"),"Do not register the retired recharge page");
 assert.match(balance,/pages\/web\/index\?path=/);
-assert.match(balance,/%2Fai-wallet/);
+assert.match(balance,/encodeURIComponent\\(path\\)/);assert.match(balance,/\"\\/ai-wallet\"/);
 assert.doesNotMatch(balance,/requestVirtualPayment|balance-pay\/create|balance-pay\/availability/);
 
 for(const path of [
