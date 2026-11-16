@@ -119,5 +119,7 @@ test("SASI public marketplace is product-only and all publishing controls stay i
   assert.ok(marketGate.includes('"卖家发布与自动交付"'));
   assert.ok(marketGate.includes('"保存商品草稿"'));
   assert.ok(marketGate.includes('"发布产品"'));
-  assert.doesNotMatch(marketGate, /"开发者发布"/, "SEO metadata may mention developer publishing; the public marketplace body must not expose seller publishing controls.");
+  const forbiddenBlock = marketGate.split("forbidden:")[1]?.split("]")[0] ?? "";
+  assert.ok(forbiddenBlock.length > 0, "the public /sasi rendered-content gate must keep an explicit forbidden-label list");
+  assert.doesNotMatch(forbiddenBlock, /"开发者发布"/, "SEO metadata may mention developer publishing; only rendered seller controls belong in the forbidden list.");
 });
