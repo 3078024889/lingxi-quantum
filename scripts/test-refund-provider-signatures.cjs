@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),ts=require('typescript');
 const pair=crypto.generateKeyPairSync('rsa',{modulusLength:2048,privateKeyEncoding:{type:'pkcs8',format:'pem'},publicKeyEncoding:{type:'spki',format:'pem'}});
-process.env.WECHAT_APP_ID='fixture';process.env.WECHAT_API_V3_KEY='0'.repeat(32);process.env.WECHAT_MCH_ID='fixture';process.env.WECHAT_CERT_SERIAL_NO='fixture';process.env.WECHAT_PRIVATE_KEY=pair.privateKey;
-process.env.ALIPAY_APP_ID='fixture';process.env.ALIPAY_PRIVATE_KEY=pair.privateKey.replace(/-----[^\n]+-----/g,'');process.env.ALIPAY_PUBLIC_KEY=pair.publicKey.replace(/-----[^\n]+-----/g,'');
+process.env.WECHAT_APP_ID='fixture';process.env.WECHAT_API_V3_KEY='0'.repeat(32);process.env.WECHAT_MCH_ID='fixture';process.env.WECHAT_CERT_SERIAL_NO='fixture';process.env.WECHAT_PRIVATE_KEY=pair.privateKey;process.env.WECHAT_PLATFORM_PUBLIC_KEY=pair.publicKey;process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID='fixture';process.env.WECHAT_ENABLED='true';
+process.env.ALIPAY_APP_ID='fixture';process.env.ALIPAY_SELLER_ID='fixture';process.env.ALIPAY_PRIVATE_KEY=pair.privateKey.replace(/-----[^\n]+-----/g,'');process.env.ALIPAY_PUBLIC_KEY=pair.publicKey.replace(/-----[^\n]+-----/g,'');process.env.ALIPAY_ENABLED='true';
 function load(file){const mod={exports:{}},code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;new Function('require','module','exports',code)(name=>name==='@/lib/money/refund-identifiers'?{wechatRefundNotifyUrl:()=>null}:require(name),mod,mod.exports);return mod.exports;}
 const wx=load('lib/wechatpay.ts'),alipay=load('lib/alipay.ts');
 let calls=0;
