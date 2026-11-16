@@ -12,6 +12,8 @@ test("CN3195 payment readiness audit is syntax-valid and pinned to current produ
  assert.match(script,/127\.0\.0\.1:\$PORT/);
  assert.match(script,/\/proc\/\$PID\/environ/);
  assert.match(script,/cn3195-payment-audit/);
+ assert.match(script,/api\/wechat\/mini\/cny-topup\/availability/);
+ assert.match(script,/api\/wechat\/mini\/balance-pay\/availability/);
 });
 
 test("CN3195 audit prints only boolean credential readiness and safe payment flags",()=>{
@@ -29,6 +31,7 @@ test("CN3195 audit does not activate flags, restart services, or create payment 
  assert.doesNotMatch(script,/curl[^\n]*(?:-X\s+POST|--request\s+POST)/);
  assert.doesNotMatch(script,/WECHAT_ENABLED=true|ALIPAY_ENABLED=true|PAYPAL_ENABLED=true|USD_BALANCE_TOPUP_ENABLED=true/);
  assert.match(script,/NO_ORDER_CREATED_NO_CHARGE_NO_REFUND_NO_BALANCE_CHANGE_NO_ENV_CHANGE_NO_SERVICE_RESTART/);
+ assert.match(script,/CN3195_LEGACY_MINI_BALANCE_API_REMOVED/);
 });
 test("CN3195 audit correctly counts systemd EnvironmentFiles without matching literal backslashes",()=>{
  assert.ok(script.includes('re.findall(r"/[^\\s()]+\\.env",sys.stdin.read())'));

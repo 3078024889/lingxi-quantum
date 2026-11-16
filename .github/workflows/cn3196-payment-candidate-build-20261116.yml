@@ -1,4 +1,4 @@
-name: CN3196 payment candidate build and artifact (NO DEPLOY)
+name: CN3196 Mini Program 6.0.0 payment candidate build and artifact (NO DEPLOY)
 
 on:
   pull_request:
@@ -18,6 +18,18 @@ on:
       - 'lib/alipay.ts'
       - 'lib/wechatpay.ts'
       - 'tests/wallet-topup-live-contract-20261111.test.mjs'
+      - 'app/api/wechat/mini/**'
+      - 'lib/mini/**'
+      - 'miniapp/**'
+      - 'supabase/migrations/20261116120000_mini_cny_topup_atomic_reservation.sql'
+      - 'tests/miniapp-6.0.0-release-contract.test.mjs'
+      - 'tests/mini-recharge-single-entry.test.mjs'
+      - 'tests/mobile-account-trigger-20261116.test.mjs'
+      - 'scripts/audit/mini-cny-native-usd-website.mjs'
+      - 'scripts/audit/mini-retired-purchases.mjs'
+      - 'scripts/audit/mini-virtual-payment.mjs'
+      - 'scripts/test-mini-sharing-v78.cjs'
+      - 'scripts/test-mini-profiles-v80.cjs'
       - 'scripts/ops/cn3196-candidate-preflight-20261116.sh'
       - '.github/workflows/cn3196-payment-candidate-build-20261116.yml'
 
@@ -60,6 +72,13 @@ jobs:
           pnpm install --frozen-lockfile
           node --test tests/wallet-topup-live-contract-20261111.test.mjs
           node --test tests/cn3195-payment-readiness-audit-20261116.test.mjs
+          node --test tests/miniapp-6.0.0-release-contract.test.mjs tests/mini-recharge-single-entry.test.mjs tests/mobile-account-trigger-20261116.test.mjs
+          node scripts/audit/mini-cny-native-usd-website.mjs
+          node scripts/audit/mini-retired-purchases.mjs
+          node scripts/audit/mini-virtual-payment.mjs
+          node scripts/test-mini-sharing-v78.cjs
+          node scripts/test-mini-profiles-v80.cjs
+          bash -n scripts/ops/cn3196-candidate-preflight-20261116.sh
           node scripts/test-refund-provider-signatures.cjs
           node scripts/audit/v52f-refund-webhook-lifecycle.mjs
           pnpm exec tsc --noEmit
@@ -73,7 +92,8 @@ jobs:
           cp -a .next/static .next/standalone/.next/static
           cp -a public .next/standalone/public
           cp .next/BUILD_ID .next/standalone/.next/BUILD_ID
-          printf '%s\\n' "${{ github.event.pull_request.head.sha }}" > .next/standalone/RELEASE_SOURCE_SHA
+          printf '%s\n' "${{ github.event.pull_request.head.sha }}" > .next/standalone/RELEASE_SOURCE_SHA
+          test "$(tr -d '\\r\\n' < .next/standalone/RELEASE_SOURCE_SHA)" = "${{ github.event.pull_request.head.sha }}"
           echo CN3196_STANDALONE_BUILD_PASS
       - name: Loopback smoke test without payment mutations
         shell: bash
@@ -94,6 +114,9 @@ jobs:
             echo "CN3196_LOCAL_ROUTE:$path:$code"
             [ "$code" = 200 ] || exit 1
           done
+          legacy_code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' http://127.0.0.1:3319/api/wechat/mini/balance-pay/availability || true)"
+          [ "$legacy_code" = 404 ] || { echo "LEGACY_MINI_BALANCE_API_MUST_BE_404:$legacy_code"; exit 1; }
+          echo CN3196_LEGACY_MINI_BALANCE_API_REMOVED=PASS
           code="$(curl --noproxy '*' --silent --max-time 20 -o /dev/null -w '%{http_code}' http://127.0.0.1:3319/api/admin/pay/readiness || true)"
           [ "$code" = 401 ] || { echo "ADMIN_AUTH_BOUNDARY_FAILED:$code"; exit 1; }
           echo CN3196_LOCAL_ROUTES_AND_AUTH_BOUNDARIES_PASS_NO_PAYMENT
@@ -110,7 +133,7 @@ jobs:
           tar --sort=name --mtime='UTC 2026-01-01' --owner=0 --group=0 --numeric-owner -C "$DIST/standalone" -czf "$DIST/$ARCHIVE" .
           SHA="$(sha256sum "$DIST/$ARCHIVE" | awk '{print $1}')"
           BYTES="$(stat -c '%s' "$DIST/$ARCHIVE")"
-          printf '%s  %s\\n' "$SHA" "$ARCHIVE" > "$DIST/$ARCHIVE.sha256"
+          printf '%s  %s\n' "$SHA" "$ARCHIVE" > "$DIST/$ARCHIVE.sha256"
           cat > "$DIST/manifest.env" <<EOF
           SOURCE_SHA=$SOURCE_SHA
           ARCHIVE=$ARCHIVE
@@ -125,6 +148,7 @@ jobs:
           CHARGE_CREATED=NO
           REFUND_CREATED=NO
           EOF
+          (cd "$DIST" && sha256sum -c "$ARCHIVE.sha256")
           tar -tzf "$DIST/$ARCHIVE" > "$DIST/archive.list"
           grep -Fxq './server.js' "$DIST/archive.list"
           grep -Fxq './RELEASE_SOURCE_SHA' "$DIST/archive.list"

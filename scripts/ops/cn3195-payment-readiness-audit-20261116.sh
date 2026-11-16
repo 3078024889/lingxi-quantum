@@ -131,6 +131,11 @@ const p=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
 console.log("CN3195_MINI_CNY_TOPUP_ENABLED="+(p.enabled===true?"YES":"NO"));
 NODE
 fi
+if [[ "$ML" == 404 ]]; then
+  echo CN3195_LEGACY_MINI_BALANCE_API_REMOVED=YES
+else
+  echo "CN3195_LEGACY_MINI_BALANCE_API_HTTP=$ML"
+fi
 if [[ "$A" == 401 || "$A" == 403 ]]; then
   echo CN3195_ADMIN_READINESS_AUTH_BOUNDARY=PASS
 else
