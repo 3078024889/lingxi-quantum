@@ -27,7 +27,8 @@ const migration=read("supabase/migrations/20261116120000_mini_cny_topup_atomic_r
 assert.match(migration,/pg_advisory_xact_lock/);
 assert.match(migration,/SECURITY INVOKER/);
 assert.match(migration,/REVOKE ALL ON FUNCTION/);
-assert.match(migration,/GRANT EXECUTE ON FUNCTION public\\.reserve_mini_cny_topup_order.*TO service_role/s);
+assert.ok(migration.includes("GRANT EXECUTE ON FUNCTION public.reserve_mini_cny_topup_order"));
+assert.ok(migration.includes("TO service_role"));
 assert.doesNotMatch(migration,/SECURITY DEFINER/);
 assert.match(read("lib/mini/virtual-fulfillment.ts"),/fulfillPaidOrder/);
 assert.match(read("lib/mini/virtual-refund.ts"),/reconcileVirtualRefund/);

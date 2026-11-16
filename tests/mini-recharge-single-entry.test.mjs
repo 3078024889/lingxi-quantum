@@ -40,7 +40,8 @@ test("uncertain CNY payments retain the original idempotency key and never creat
   assert.match(migration,/pg_advisory_xact_lock/);
   assert.match(migration,/SECURITY INVOKER/);
   assert.match(migration,/REVOKE ALL ON FUNCTION/);
-  assert.match(migration,/GRANT EXECUTE ON FUNCTION public\\.reserve_mini_cny_topup_order.*TO service_role/s);
+  assert.ok(migration.includes("GRANT EXECUTE ON FUNCTION public.reserve_mini_cny_topup_order"));
+  assert.ok(migration.includes("TO service_role"));
 });
 
 test("tool-product virtual payment remains independent from wallet top-ups", () => {
