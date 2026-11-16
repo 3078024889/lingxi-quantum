@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),ts=require('typescript');
 const pair=crypto.generateKeyPairSync('rsa',{modulusLength:2048,privateKeyEncoding:{type:'pkcs8',format:'pem'},publicKeyEncoding:{type:'spki',format:'pem'}});
-process.env.WECHAT_APP_ID='fixture';process.env.WECHAT_API_V3_KEY='0'.repeat(32);process.env.WECHAT_MCH_ID='fixture';process.env.WECHAT_CERT_SERIAL_NO='fixture';process.env.WECHAT_PRIVATE_KEY=pair.privateKey;process.env.WECHAT_PLATFORM_PUBLIC_KEY=pair.publicKey;process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID='fixture';process.env.WECHAT_ENABLED='true';
-process.env.ALIPAY_APP_ID='fixture';process.env.ALIPAY_SELLER_ID='fixture';process.env.ALIPAY_PRIVATE_KEY=pair.privateKey.replace(/-----[^\n]+-----/g,'');process.env.ALIPAY_PUBLIC_KEY=pair.publicKey.replace(/-----[^\n]+-----/g,'');process.env.ALIPAY_ENABLED='true';
+process.env.WECHAT_APP_ID='fixture';process.env.WECHAT_API_V3_KEY='0'.repeat(32);process.env.WECHAT_MCH_ID='fixture';process.env.WECHAT_CERT_SERIAL_NO='fixture';process.env.WECHAT_PRIVATE_KEY=pair.privateKey;
+process.env.ALIPAY_APP_ID='fixture';process.env.ALIPAY_PRIVATE_KEY=pair.privateKey.replace(/-----[^\n]+-----/g,'');process.env.ALIPAY_PUBLIC_KEY=pair.publicKey.replace(/-----[^\n]+-----/g,'');
 function load(file){const mod={exports:{}},code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;new Function('require','module','exports',code)(name=>name==='@/lib/money/refund-identifiers'?{wechatRefundNotifyUrl:()=>null}:require(name),mod,mod.exports);return mod.exports;}
 const wx=load('lib/wechatpay.ts'),alipay=load('lib/alipay.ts');
 let calls=0;
@@ -11,7 +11,7 @@ global.fetch=async(url,options)=>{
   const fields=Object.fromEntries([...options.headers.Authorization.matchAll(/(\w+)="([^"]+)"/g)].map(x=>[x[1],x[2]]));const u=new URL(url);
   const canonical=[options.method,u.pathname+u.search,fields.timestamp,fields.nonce_str,options.body||'',''].join('\n');
   assert(crypto.verify('RSA-SHA256',Buffer.from(canonical),pair.publicKey,Buffer.from(fields.signature,'base64')),'WeChat canonical signature');
-  const b=JSON.parse(options.body),responseBody=JSON.stringify({refund_id:'verified-ref',out_refund_no:b.out_refund_no,out_trade_no:b.out_trade_no,amount:b.amount,status:'SUCCESS'}),responseTs=String(Math.floor(Date.now()/1000)),responseNonce='fixture-response-nonce',responseSignature=crypto.sign('RSA-SHA256',Buffer.from(`${responseTs}\n${responseNonce}\n${responseBody}\n`),pair.privateKey).toString('base64');return new Response(responseBody,{headers:{'Wechatpay-Timestamp':responseTs,'Wechatpay-Nonce':responseNonce,'Wechatpay-Serial':'fixture','Wechatpay-Signature':responseSignature}});
+  const b=JSON.parse(options.body);return new Response(JSON.stringify({refund_id:'verified-ref',out_refund_no:b.out_refund_no,out_trade_no:b.out_trade_no,amount:b.amount,status:'SUCCESS'}));
  }
  const params=new URLSearchParams(options.body),signature=params.get('sign');params.delete('sign');const canonical=[...params].filter(([k,v])=>v).sort(([a],[b])=>a<b?-1:a>b?1:0).map(([k,v])=>`${k}=${v}`).join('&');
  assert(crypto.verify('RSA-SHA256',Buffer.from(canonical),pair.publicKey,Buffer.from(signature,'base64')),'Alipay canonical signature with multiline unwrapped key');

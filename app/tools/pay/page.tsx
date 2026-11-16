@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import MiniPaymentBoundary from "@/components/MiniPaymentBoundary";
-import {openMiniRecharge} from '@/lib/mini/payment-client';
+import {openMiniWallet} from '@/lib/mini/payment-client';
 import {TEMP_MAIL_BATCH_SALES_ENABLED} from '@/lib/tools/temp-mail-policy';
 import {toolBalanceText} from '@/lib/tools/commerce/balance-copy';
 import {quoteDisplay} from "@/lib/tools/commerce/quote-display";
@@ -75,7 +75,7 @@ function Inner({balanceOnly=false}:{balanceOnly?:boolean}){
    <div className="mt-3 text-3xl font-semibold">{amount(q)}</div>
    <div className="mt-2 text-xs text-[var(--lx-faint)]">{zh?"支付币种":"Payment currency"} · {q.currency}</div>
    {batchPaused?<p role="status" className="mt-6 text-sm">{zh?'批量邮箱暂不接受新的付费，请查看订单或使用每日免费邮箱。':'New batch mailbox purchases are paused. View existing orders or use your daily free inboxes.'}</p>:<button disabled={busy} onClick={()=>void pay("balance")} className="mt-6 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{toolBalanceText(lang,"label")}</b></button>}
-   {balanceOnly&&!batchPaused&&<button disabled={busy} onClick={()=>void openMiniRecharge().then(opened=>{if(!opened)setErr(zh?'暂时无法打开充值，请返回小程序首页重试。':'Unable to open top-up. Please return to the Mini Program home and retry.')})} className="mt-3 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40">{zh?'余额不足？打开账户充值':'Need more balance? Open account top-up'}</button>}
+   {balanceOnly&&!batchPaused&&<button disabled={busy} onClick={()=>void openMiniWallet().then(opened=>{if(!opened)setErr(zh?'暂时无法打开官网钱包，请返回小程序首页重试。':'Unable to open the website wallet. Please return to the Mini Program home and retry.')})} className="mt-3 w-full rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40">{zh?'余额不足？打开账户充值':'Need more balance? Open account top-up'}</button>}
    {!balanceOnly&&!batchPaused&&(q.currency==="CNY"?<div className="mt-6 grid gap-3 sm:grid-cols-2">
     <button disabled={busy||!providers.wechat} onClick={()=>void pay("wechat")} className="rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{t("wechat")}</b></button>
     <button disabled={busy||!providers.alipay} onClick={()=>void pay("alipay")} className="rounded-xl border border-[var(--lx-line)] p-4 disabled:opacity-40"><b>{t("alipay")}</b></button>

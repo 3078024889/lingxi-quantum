@@ -1,10 +1,10 @@
 const fs=require('node:fs'),path=require('node:path'),{execFileSync}=require('node:child_process');
 const target=process.argv[2];if(!['main','temp-mail'].includes(target))throw Error('Expected main or temp-mail');
-const root=process.cwd();execFileSync(process.execPath,[path.join(root,'scripts/generate-social-assets.mjs')],{encoding:'utf8',windowsHide:true,stdio:['ignore','ignore','inherit']});const source=path.resolve(root,'miniapp'),base=path.resolve(root,'_local/handoff/mini-build-v80');
+const root=process.cwd();execFileSync(process.execPath,[path.join(root,'scripts/generate-social-assets.mjs')],{encoding:'utf8',windowsHide:true,stdio:'inherit'});const source=path.resolve(root,'miniapp'),base=path.resolve(root,'_local/handoff/mini-build-v80');
 const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',windowsHide:true}).trim();
 const out=path.join(base,target+'-'+sha.slice(0,8)+'-'+Date.now());
 if(!out.startsWith(base+path.sep)||fs.existsSync(out))throw Error('Unexpected output path');
-const tempPages=new Set(['mail-home','web','share','balance','recharge','orders']),tempUtils=new Set(['app-profile.js','share.js','i18n.js']),mainPages=new Set(JSON.parse(fs.readFileSync(path.join(source,'app.json'),'utf8')).pages.map(p=>p.split('/')[1]));
+const tempPages=new Set(['mail-home','web','share','orders']),tempUtils=new Set(['app-profile.js','share.js','i18n.js']),mainPages=new Set(JSON.parse(fs.readFileSync(path.join(source,'app.json'),'utf8')).pages.map(p=>p.split('/')[1]));
 fs.mkdirSync(base,{recursive:true});fs.cpSync(source,out,{recursive:true,filter:p=>{
  if(['project.private.config.json','node_modules'].includes(path.basename(p)))return false;
  if(target==='main'){const rel=path.relative(source,p).replaceAll('\\','/');return !rel.startsWith('pages/')||mainPages.has(rel.split('/')[1]);}
@@ -31,11 +31,9 @@ if(target==='temp-mail'){
  const specialized=ts.createPrinter().printFile(transformed.transformed[0]);transformed.dispose();if(specialized.includes("require('./utils/api')")||specialized.includes('login()'))throw Error('Main native login remained in secondary package');fs.writeFileSync(path.join(out,'app.js'),specialized);
  const profile={kind:'temp-mail',title:'灵犀场10分临时邮箱',homePath:'/tools/temp-mail',mainAppId:'wxbf4ae90406e7e26b',tempMailAppId:appId,website:'https://lingxifield.cn',sessionMode:'website'};
  fs.writeFileSync(path.join(out,'utils/app-profile.js'),'module.exports='+JSON.stringify(profile)+'\n');
- const appFile=path.join(out,'app.json'),app=JSON.parse(fs.readFileSync(appFile,'utf8'));app.pages=['pages/mail-home/index','pages/web/index','pages/share/index','pages/balance/index','pages/recharge/index','pages/orders/index'];fs.writeFileSync(appFile,JSON.stringify(app,null,2));
- fs.writeFileSync(path.join(out,'pages/balance/index.js'),"Page({onLoad(){wx.redirectTo({url:'/pages/recharge/index'})}})\n");
- fs.writeFileSync(path.join(out,'pages/balance/index.wxml'),'<view>正在打开账户充值</view>');
+ const appFile=path.join(out,'app.json'),app=JSON.parse(fs.readFileSync(appFile,'utf8'));app.pages=['pages/mail-home/index','pages/web/index','pages/share/index','pages/orders/index'];fs.writeFileSync(appFile,JSON.stringify(app,null,2));
  fs.writeFileSync(path.join(out,'sitemap.json'),JSON.stringify({rules:[{action:'allow',page:'pages/mail-home/index'},{action:'disallow',page:'*'}]},null,2));
 }
 const sourceDirty=Boolean(execFileSync('git',['status','--porcelain','--','miniapp'],{encoding:'utf8',windowsHide:true}).trim());
-const receipt={at:new Date().toISOString(),target,appId,sourceSha:sha,sourceDirty,projectPath:out,mode:target==='temp-mail'?'website session; existing main-program WeChat recharge; existing website Alipay checkout':'existing native session and payment',credentialsCopied:false};
+const receipt={at:new Date().toISOString(),target,appId,sourceSha:sha,sourceDirty,projectPath:out,mode:'official website wallet for CNY WeChat JSAPI/Alipay and USD PayPal; tool-product virtual payment remains independent',credentialsCopied:false};
 fs.writeFileSync(path.join(base,target+'-latest.json'),JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));

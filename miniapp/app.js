@@ -11,8 +11,6 @@ App({
     if (typeof wx.getUpdateManager === 'function') {
       const update = wx.getUpdateManager()
       update.onUpdateReady(() => {
-        // Do not interrupt an active native payment. Its recovery record is kept.
-        if (wx.getStorageSync('lx_mini_topup_pending')) return
         wx.showModal({title:'新版已准备好',content:'重新打开即可使用新版灵犀场，是否现在更新？',success:result=>{if(result.confirm)update.applyUpdate()}})
       })
     }

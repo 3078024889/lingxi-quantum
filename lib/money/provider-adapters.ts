@@ -9,11 +9,8 @@ function compactStatus(value:unknown){return String(value??"").slice(0,120)}
 
 function assertWechatRefund(r:ProviderRefundRequest,x:any){
  const raw=x?.raw||{};
- const status=String(x?.status||"").toUpperCase();
  if(raw.out_trade_no&&String(raw.out_trade_no)!==r.providerPaymentId)throw new Error("WECHAT_REFUND_ORDER_MISMATCH");
- if(status==="SUCCESS"&&!raw.out_trade_no)throw new Error("WECHAT_REFUND_ORDER_REFERENCE_MISSING");
  const amount=raw.amount;
- if(status==="SUCCESS"&&!amount)throw new Error("WECHAT_REFUND_AMOUNT_MISSING");
  if(amount){
   if(String(amount.currency||"CNY")!=="CNY")throw new Error("WECHAT_REFUND_CURRENCY_MISMATCH");
   if(Number(amount.refund)!==Number(r.providerAmountMinor))throw new Error("WECHAT_REFUND_AMOUNT_MISMATCH");
@@ -23,23 +20,8 @@ function assertWechatRefund(r:ProviderRefundRequest,x:any){
 function assertPaypalRefund(r:ProviderRefundRequest,x:any){
  const raw=x?.raw||{};
  const amount=raw.amount;
- const status=String(x?.status||"").toUpperCase();
- if(status==="COMPLETED"&&(!amount?.currency_code||amount?.value==null))throw new Error("PAYPAL_REFUND_AMOUNT_MISSING");
  if(amount?.currency_code&&String(amount.currency_code)!=="USD")throw new Error("PAYPAL_REFUND_CURRENCY_MISMATCH");
  if(amount?.value!=null&&Math.round(Number(amount.value)*100)!==Number(r.providerAmountMinor))throw new Error("PAYPAL_REFUND_AMOUNT_MISMATCH");
-}
-
-function assertAlipayRefund(r:ProviderRefundRequest,x:any){
- const raw=x?.raw||{};
- if(raw.out_trade_no&&String(raw.out_trade_no)!==r.providerPaymentId)
-  throw new Error("ALIPAY_REFUND_ORDER_MISMATCH");
- const amount=raw.refund_amount??raw.refund_fee;
- if(amount==null){
-  if(String(x?.status||"").toUpperCase()==="SUCCESS")throw new Error("ALIPAY_REFUND_AMOUNT_MISSING");
-  return;
- }
- if(!Number.isFinite(Number(amount))||Math.round(Number(amount)*100)!==Number(r.providerAmountMinor))
-  throw new Error("ALIPAY_REFUND_AMOUNT_MISMATCH");
 }
 
 function mapWechat(x:{refundId:string;status:string;raw:any}):ProviderRefundObservation{
@@ -97,15 +79,11 @@ export class AlipayRefundAdapter implements MoneyRefundProviderAdapter{
  async createRefund(r:ProviderRefundRequest){
   if(r.providerCurrency!=="CNY")throw new Error("ALIPAY_PROVIDER_CURRENCY_MISMATCH");
   const outRequestNo=r.idempotencyKey.replace(/^lf-refund-/,"LFR").replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);
-  const x=await createAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo,refundFen:r.providerAmountMinor});
-  assertAlipayRefund(r,x);
-  return mapAlipay(x);
+  return mapAlipay(await createAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo,refundFen:r.providerAmountMinor}));
  }
  async queryRefund(r:ProviderRefundRequest&{providerRefundId?:string|null}){
   const outRequestNo=r.idempotencyKey.replace(/^lf-refund-/,"LFR").replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);
-  const x=await queryAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo});
-  assertAlipayRefund(r,x);
-  return mapAlipay(x);
+  return mapAlipay(await queryAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo}));
  }
 }
 

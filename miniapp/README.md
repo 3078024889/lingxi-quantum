@@ -1,70 +1,54 @@
-# 灵犀场 LINGXIFIELD · 微信小程序
+# 灵犀场 LINGXIFIELD｜微信小程序 6.0.0
 
-微信小程序是灵犀场主站的移动入口，产品结构与主站保持一致。
+微信小程序是灵犀场主站的原生入口，主界面与官网统一，原生页面只承载必要的微信能力。
 
-## 当前产品入口
+## 主小程序
 
-- **100+ 实用工具**：处理 PDF、OCR、图片、视频、音频、文档、隐私与日常文件任务。
-- **全球 SIAI 排行榜**：比较 SI/AI 厂商、模型和工具的能力、真实价格、免费额度、地区可用性及商用授权。
-- **SASI 智能软件市场**：浏览经过审核的软件商品，查看版本、许可、价格、安装说明、订单和安全交付状态；开发者入口按账户权限开放。
-- **我的**：账户资料、余额、充值与退款记录、订单、语言和客服。
-- **WebView**：只允许经过白名单校验的灵犀场站内页面。
+- AppID：`wxbf4ae90406e7e26b`
+- 首屏：`pages/web/index`，直接打开灵犀场官网首页。
+- 100+ 实用工具、全球 SIAI 排行榜、SASI 智能软件市场均使用统一官网页面，不再维护第二套旧门户菜单。
+- 账户、订单、通知、分享和支付入口使用原生页面或受限 WebView。
 
-## 语言
+## 余额充值
 
-当前界面语言结构：
+- **人民币 CNY**：唯一原生入口为 `pages/cny-wallet/index`，使用微信原生虚拟商品支付 `wx.requestVirtualPayment`。订单创建使用 `/api/wechat/mini/cny-topup/create`，可用性使用 `/api/wechat/mini/cny-topup/availability`。
+- **美元 USD**：打开官网 `/ai-wallet?currency=USD`，使用官网 PayPal 钱包，不在小程序内创建美元充值订单。
+- **工具商品**：继续使用独立 `pages/pay/index` 与 `/api/wechat/mini/tool-pay/*`，不与余额充值混用。
+- 充值状态由服务端查询微信订单后确认；客户端支付回调不直接入账。重复请求沿用幂等编号，未确认订单不会被本地超时删除。
 
-- 中文
-- English
-- 日本語
-- 한국어
-- Français
-- Deutsch
-- Español
-- Português
-- العربية
+## 伴随临时邮箱小程序
 
-所有用户可见文字以功能和结果为中心。后台实现、模型厂商、任务节点、API、运行机制不作为普通用户界面说明。
+`pages/mail-home` 只作为独立临时邮箱小程序的构建源，不注册在主小程序 `app.json` 中。它通过 `scripts/build-miniapps-v80.cjs temp-mail` 单独生成，使用独立 AppID 和网站会话，不复制主小程序密钥。
 
-## 身份
+- 人民币充值：跳转主小程序 `pages/cny-wallet/index`。
+- 美元充值：打开官网 `/ai-wallet?currency=USD`。
+- 页面不再包含旧 SASI 图片创作入口或旧充值页跳转。
 
-- 使用 `wx.login` 建立微信小程序身份。
-- 客户端只保存短期不透明会话信息。
-- AppSecret、服务端密钥、支付签名密钥不得进入小程序包。
-- 已有灵犀场网页账户只有在用户主动确认后才连接；禁止按邮箱、手机号、昵称或历史订单自动猜测合并。
+## 旧版本清理
 
-## 页面安全边界
+以下旧实现已从当前发布源码移除，不允许重新注册或复制进发布包：
 
-- API 客户端只允许访问 `/api/wechat/mini/` 路径。
-- WebView 只允许显式白名单中的站内路径。
-- 拒绝外部 scheme、协议相对 URL、路径穿越和未知入口。
-- 账户/订单数据不会通过分享入口发送。
+- `miniapp/pages/portal`、`miniapp/pages/balance`、`miniapp/pages/recharge`
+- `miniapp/utils/topup-expiry.js`、`miniapp/utils/virtual-payment-errors.js`
+- `app/api/wechat/mini/balance-pay/*` 旧可用性、创建和查单接口
+- `openMiniRecharge` 与指向旧充值页的导航
 
-## 支付
+历史订单、微信支付回调验签、服务端查单、退款核验、幂等结算和资金账本继续保留。删除的是旧用户入口与旧创建接口，不是历史财务凭证。
 
-早期原生 `miniapp/utils/payment.js` 已退出当前客户端架构，不应为了兼容历史审计重新恢复。
+## 构建与验收
 
-服务端仍可保留微信小程序支付相关接口，用于后续经真实产品入口验证后的支付闭环。支付能力必须满足：
+主小程序：
 
-- 用户身份验证
-- 金额与商品服务端确定
-- 订单归属校验
-- 回调签名验证
-- 幂等发货
-- Rate Limit
-- 沙箱与生产密钥隔离
+```bash
+node scripts/build-miniapps-v80.cjs main
+node scripts/package-miniapp-6-0-0.cjs
+```
 
-没有真实用户入口调用的旧客户端支付代码不得作为上线必需项。
+伴随临时邮箱小程序仅作独立构建验证：
 
-## 发布前验收
+```bash
+node scripts/build-miniapps-v80.cjs temp-mail
+node scripts/test-mini-profiles-v80.cjs --check-builds
+```
 
-必须通过：
-
-- TypeScript / Build
-- SASI marketplace audit
-- Mini Program audit
-- Security audit
-- diff check
-- 微信开发者工具真机路径验证
-
-生产数据库变更、Git commit/push、小程序上传与提交审核均独立执行，不由普通代码补丁隐式触发。
+构建产物由 GitHub Actions 保存为可导入微信开发者工具的 ZIP 与 SHA-256。自动化流程不会上传微信、提交审核、开启生产支付或部署网站。微信开发者工具真机验收通过后，才由人工上传并提交微信审核。

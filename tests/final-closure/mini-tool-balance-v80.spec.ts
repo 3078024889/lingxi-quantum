@@ -15,10 +15,10 @@ for(const currency of ['CNY','USD'])test('Mini Program '+currency+' tool balance
  await expect(page.getByRole('button',{name:'微信',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'余额支付',exact:true}).click();await expect(page).toHaveURL(/\/tools\/temp-mail$/);expect(charges).toBe(1);
 });
-test('Mini insufficient balance preserves quote and opens the native recharge page',async({page})=>{
+test('Mini insufficient balance preserves quote and opens the official website wallet',async({page})=>{
  await setup(page);await page.route('**/api/tools/pay/create',route=>route.fulfill({status:402,json:{error:'SASI_BALANCE_INSUFFICIENT'}}));
  await page.goto('/tools/pay?lang=zh&quoteId='+id);await page.getByRole('button',{name:'余额支付',exact:true}).click();await expect(page.getByRole('alert').filter({hasText:'余额不足'})).toContainText('余额不足');
- await page.getByRole('button',{name:'余额不足？打开账户充值',exact:true}).click();await expect.poll(()=>page.evaluate(()=>(window as any).__rechargeDestination)).toBe('/pages/balance/index');await expect(page).toHaveURL(new RegExp(id));
+ await page.getByRole('button',{name:'余额不足？打开账户充值',exact:true}).click();await expect.poll(()=>page.evaluate(()=>(window as any).__rechargeDestination)).toBe('/pages/web/index?path=%2Fai-wallet');await expect(page).toHaveURL(new RegExp(id));
 });
 test('Mini unauthenticated quote has a login link retaining the quote and tool return',async({page})=>{
  await setup(page);await page.route('**/api/tools/quote?*',route=>route.fulfill({status:401,json:{error:'请先登录'}}));

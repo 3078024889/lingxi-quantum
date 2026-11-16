@@ -10,7 +10,11 @@ function load(file, dependencies = {}) {
 }
 const topups=load('lib/balance-topups.ts');
 assert.deepEqual(Array.from(topups.BALANCE_TOPUP_AMOUNTS),[10,88,666,888]);
-const deps={'@/lib/balance-topups':topups};
+const deps={
+ '@/lib/balance-topups':topups,
+ '@/lib/sasi-software/catalog':{SASI_SOFTWARE_CATALOG:[]},
+ '@/lib/tools/commerce/all-tools-pass':{ALL_TOOLS_PASS_CATALOG:[]},
+};
 const cny=load('lib/plans.ts',deps),usd=load('lib/usd-products.ts',deps);
 assert.deepEqual(cny.allProducts.map(x=>x.priceRmb).join(','),'10,88,666,888');
 assert.deepEqual(usd.usdBalanceProducts.map(x=>x.amountUsd).join(','),'10,88,666,888');
@@ -25,7 +29,8 @@ for(const invalid of ['0','10001','1.234','1e2','-10','NaN','010','10abc','10000
 assert.equal(cny.getProduct('sasi-balance-500').sasiAmountFen,50000);
 assert.equal(usd.getUsdBalanceProduct('sasi-usd-balance-300').amountUsd,300);
 const goods=load('lib/mini/virtual-goods.ts',{'@/lib/mini/virtual-pay':{miniVirtualPayConfigured:()=>true},...deps});
-assert.equal(goods.miniVirtualTopupsEnabled(),false);
+assert.equal(goods.miniCnyTopupsEnabled(),false,'CNY virtual top-ups must fail closed unless the production flag is enabled');
+// The SKU verifier also validates active top-ups and remains available to settle historical orders.
 for(const a of [10,88,666,888])assert.equal(goods.virtualTopupGoods(`sasi-balance-${a}`).amountFen,a*100);
 const custom=goods.virtualTopupGoods('sasi-balance-custom-123');
 assert.equal(custom.unitPriceFen,100);assert.equal(custom.quantity,123);assert.equal(custom.amountFen,12300);
