@@ -29,7 +29,9 @@ test('generated edge wrapper serves public merchant status without exposing auth
   assert.equal(providers.headers.get('x-lingxi-render-mode'),'edge-merchant-readiness');
   const readiness=await providers.json();
   assert.deepEqual([readiness.wechat,readiness.alipay,readiness.paypal],[false,false,false]);
-  assert.deepEqual(Object.keys(readiness).sort(),['alipay','diagnostics','paypal','wechat']);
+  assert.deepEqual(Object.keys(readiness).sort(),['alipay','cnyBalanceTopupReady','diagnostics','paypal','usdBalanceTopupReady','wechat']);
+  assert.equal(readiness.cnyBalanceTopupReady,false);
+  assert.equal(readiness.usdBalanceTopupReady,false);
   // Privileged balance queries must still be served by the real authenticated runtime.
   const money=await worker.fetch(new Request('https://lingxifield.com/api/money/summary',{headers:{cookie:'sb-example-auth-token=test'}}),env,{});
   assert.equal(money.status,401);
