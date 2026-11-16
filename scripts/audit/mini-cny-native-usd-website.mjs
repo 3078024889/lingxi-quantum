@@ -35,6 +35,7 @@ assert.match(read("lib/mini/virtual-refund.ts"),/reconcileVirtualRefund/);
 assert.match(read("app/api/wechat/mini/pay/notify/route.ts"),/reconcileVirtualToolOrder/);
 assert.ok(read("miniapp/pages/pay/index.js").includes("/pages/cny-wallet/index"));
 assert.match(read("app/checkout-usd/page.tsx"),/paypalReady/);
+assert.ok(read("scripts/audit-mini-program.mjs").includes("cny-topup/create"),"main mini-program audit must target the current CNY API route");
 assert.match(read("components/AccountProfileCard.tsx"),/lx-account-save-button/);
 assert.match(read("app/unified-shell.css"),/flex-direction:column!important/);
 console.log("PASS: CNY native Mini Program wallet; USD official website PayPal; atomic pending-order reservation; historical settlement/refunds retained; retired recharge UI absent");
