@@ -86,20 +86,19 @@ PY
 
 TMP="$(mktemp -d /tmp/cn3195-payment-audit.XXXXXX)"
 trap 'rm -rf "$TMP"' EXIT
+PROBE_CODE=""
 probe(){
   local path="$1" out="$2"
-  local code
-  code="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 20 -H 'Host: lingxifield.cn' -o "$out" -w '%{http_code}' "http://127.0.0.1:$PORT$path" || true)"
-  echo "CN3195_ROUTE $path HTTP=${code:-000}"
-  printf '%s' "$code"
+  PROBE_CODE="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 20 -H 'Host: lingxifield.cn' -o "$out" -w '%{http_code}' "http://127.0.0.1:$PORT$path" || true)"
+  echo "CN3195_ROUTE $path HTTP=${PROBE_CODE:-000}"
 }
 
 echo "===== LIVE LOOPBACK ROUTE READINESS ====="
-H="$(probe /api/health "$TMP/health.json")"
-P="$(probe /api/pay/providers "$TMP/providers.json")"
-T="$(probe /api/tools/pass "$TMP/toolpass.json")"
-M="$(probe /api/wechat/mini/balance-pay/availability "$TMP/mini-cny.json")"
-A="$(probe /api/admin/pay/readiness "$TMP/admin.json")"
+probe /api/health "$TMP/health.json"; H="$PROBE_CODE"
+probe /api/pay/providers "$TMP/providers.json"; P="$PROBE_CODE"
+probe /api/tools/pass "$TMP/toolpass.json"; T="$PROBE_CODE"
+probe /api/wechat/mini/balance-pay/availability "$TMP/mini-cny.json"; M="$PROBE_CODE"
+probe /api/admin/pay/readiness "$TMP/admin.json"; A="$PROBE_CODE"
 
 if [[ "$P" == 200 ]]; then
   "$NODE" - "$TMP/providers.json" <<'NODE'
