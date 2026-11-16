@@ -24,6 +24,15 @@ function assertPaypalRefund(r:ProviderRefundRequest,x:any){
  if(amount?.value!=null&&Math.round(Number(amount.value)*100)!==Number(r.providerAmountMinor))throw new Error("PAYPAL_REFUND_AMOUNT_MISMATCH");
 }
 
+function assertAlipayRefund(r:ProviderRefundRequest,x:any){
+ const raw=x?.raw||{};
+ if(raw.out_trade_no&&String(raw.out_trade_no)!==r.providerPaymentId)
+  throw new Error("ALIPAY_REFUND_ORDER_MISMATCH");
+ const amount=raw.refund_amount??raw.refund_fee;
+ if(amount==null||!Number.isFinite(Number(amount))||Math.round(Number(amount)*100)!==Number(r.providerAmountMinor))
+  throw new Error("ALIPAY_REFUND_AMOUNT_MISMATCH");
+}
+
 function mapWechat(x:{refundId:string;status:string;raw:any}):ProviderRefundObservation{
  const s=x.status.toUpperCase();
  if(s==="SUCCESS")return{status:"succeeded",providerRefundId:x.refundId,providerStatus:s,rawStatus:s};
@@ -79,11 +88,15 @@ export class AlipayRefundAdapter implements MoneyRefundProviderAdapter{
  async createRefund(r:ProviderRefundRequest){
   if(r.providerCurrency!=="CNY")throw new Error("ALIPAY_PROVIDER_CURRENCY_MISMATCH");
   const outRequestNo=r.idempotencyKey.replace(/^lf-refund-/,"LFR").replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);
-  return mapAlipay(await createAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo,refundFen:r.providerAmountMinor}));
+  const x=await createAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo,refundFen:r.providerAmountMinor});
+  assertAlipayRefund(r,x);
+  return mapAlipay(x);
  }
  async queryRefund(r:ProviderRefundRequest&{providerRefundId?:string|null}){
   const outRequestNo=r.idempotencyKey.replace(/^lf-refund-/,"LFR").replace(/[^A-Za-z0-9_-]/g,"").slice(0,64);
-  return mapAlipay(await queryAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo}));
+  const x=await queryAlipayRefund({outTradeNo:r.providerPaymentId,outRequestNo});
+  assertAlipayRefund(r,x);
+  return mapAlipay(x);
  }
 }
 
