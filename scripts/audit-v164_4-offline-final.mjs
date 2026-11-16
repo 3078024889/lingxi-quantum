@@ -8,7 +8,7 @@ const read=p=>fs.readFileSync(p,"utf8"),must=(v,m)=>{if(!v)throw new Error(m)};
 const food=read("components/tools/FoodCalorieWorkbench.tsx");
 must(food.includes("PaidActionButton"),"FOOD_PAYMENT_COMPONENT_MISSING");
 must(food.includes("manual={mode==='custom'}"),"FOOD_MANUAL_MODE_MISSING");
-must(food.includes("mode==='custom'?'custom':'image'"),"FOOD_ANALYSIS_MODE_ROUTING_MISSING");
+must(food.includes("manual?'custom':'image'"),"FOOD_ANALYSIS_MODE_ROUTING_MISSING");
 must(food.includes("<LabelEntry lang={lang} add={add} disabled={disabled}/>"),"FOOD_MANUAL_LABEL_ENTRY_MISSING");
 must(food.includes("quantity={prepared.quantity}"),"FOOD_SERVER_QUANTITY_BINDING_MISSING");
 must(food.includes("createFoodImageSession(files"),"FOOD_IMAGE_SESSION_MISSING");
