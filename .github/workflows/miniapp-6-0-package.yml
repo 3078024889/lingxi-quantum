@@ -18,6 +18,8 @@ on:
       - 'app/api/pay/create/route.ts'
       - 'app/api/pay/wechat/create/route.ts'
       - 'app/api/pay/alipay/create/route.ts'
+      - 'app/api/admin/pay/readiness/route.ts'
+      - 'app/api/admin/pay/readiness/route.ts'
       - 'app/api/pay/providers/route.ts'
       - 'app/api/pay/create/route.ts'
       - 'app/api/pay/wechat/create/route.ts'
