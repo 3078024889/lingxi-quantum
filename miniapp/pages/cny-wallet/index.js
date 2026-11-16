@@ -211,15 +211,12 @@ Page({
   async pay() {
     if (this.data.busy) return
     if (this.data.orderId || this.data.requestId) { await this.recoverPending(); return }
-    if (this.data.requestId) { await this.recoverPending(); return }
     if (!this.data.enabled) {
       this.setData({ message: this.data.loading ? '正在连接充值服务，请稍候。' : '人民币充值通道尚未开放，请重新检查服务。' })
       return
     }
     const amount = this.currentAmount()
     if (!amount) { this.setData({ message: '请输入有效金额，最多两位小数。' }); return }
-    const guard = iosGuard(amount.minor)
-    if (guard) { this.setData({ message: guard }); wx.showModal({ title: '苹果支付条件', content: guard, showCancel: false }); return }
     if (!this.data.accountLoaded) { this.setData({ message: '请先重新加载账户余额，确认到账账户。' }); return }
     if (!this.data.linked) { this.setData({ message: '请先连接灵犀场账户，确认充值到账账户。' }); return }
     if (typeof wx.requestPayment !== 'function') { this.setData({ message: '当前微信版本不支持商户支付，请更新微信后重试。' }); return }
