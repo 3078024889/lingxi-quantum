@@ -11,10 +11,10 @@
 
 ## 余额充值
 
-- **人民币 CNY**：唯一原生入口为 `pages/cny-wallet/index`，使用微信原生虚拟商品支付 `wx.requestVirtualPayment`。订单创建使用 `/api/wechat/mini/cny-topup/create`，可用性使用 `/api/wechat/mini/cny-topup/availability`。
+- **人民币 CNY**：唯一原生入口为 `pages/cny-wallet/index`，使用微信支付 APIv3 商户 JSAPI 预支付订单，并由小程序调用 `wx.requestPayment`。订单创建使用 `/api/wechat/mini/cny-topup/create`，状态核验使用 `/api/wechat/mini/cny-topup/status`，可用性使用 `/api/wechat/mini/cny-topup/availability`。
 - **美元 USD**：打开官网 `/ai-wallet?currency=USD`，使用官网 PayPal 钱包，不在小程序内创建美元充值订单。
 - **工具商品**：继续使用独立 `pages/pay/index` 与 `/api/wechat/mini/tool-pay/*`，不与余额充值混用。
-- 充值状态由服务端查询微信订单后确认；客户端支付回调不直接入账。重复请求沿用幂等编号，未确认订单不会被本地超时删除。
+- 充值状态由服务端验签回调或 APIv3 查单确认；核对小程序 AppID、商户号、付款 OpenID、订单金额和币种后幂等入账；客户端支付回调不直接入账。重复请求沿用幂等编号，未确认订单不会被本地超时删除。
 
 ## 伴随临时邮箱小程序
 
