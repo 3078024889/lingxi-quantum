@@ -20,7 +20,7 @@ BEGIN
   IF p_order_id IS NULL OR p_user_id IS NULL
      OR p_product_id IS NULL
      OR p_amount_fen IS NULL OR p_amount_fen < 1 OR p_amount_fen > 1000000
-     OR p_out_trade_no !~ '^LXJ[A-F0-9]{29} THEN
+     OR p_out_trade_no !~ '^LXJ[A-F0-9]{29}$' THEN
     RAISE EXCEPTION 'invalid mini CNY JSAPI top-up reservation';
   END IF;
 
