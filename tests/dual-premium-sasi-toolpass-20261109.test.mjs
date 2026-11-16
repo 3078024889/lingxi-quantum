@@ -78,7 +78,7 @@ test("SASI uses a complete scene with real controls and reviewed real listings",
  assert.ok(artwork.includes('href="#products"'));
  const marketBlock = artwork.split("{!sellerOnly&&<>")[1]?.split("{sellerOnly&&<>")[0] ?? "";
  assert.ok(marketBlock.includes('href="#products"'));
- assert.doesNotMatch(marketBlock, /href=["']\\/sasi\\/seller["']/);
+ assert.ok(!marketBlock.includes("/sasi/seller"));
  assert.ok(artwork.includes('data-testid="seller-workspace-section"'));
  assert.ok(!artwork.includes("styles.laptopScene"));
  assert.ok(artwork.includes("styles.heroCopy"));
