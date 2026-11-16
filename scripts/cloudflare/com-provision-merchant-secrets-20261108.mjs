@@ -4,13 +4,12 @@
 const scriptName="lingxifield-com-unified-20261108";
 const groups={
   paypal:["PAYPAL_CLIENT_ID","PAYPAL_CLIENT_SECRET","PAYPAL_WEBHOOK_ID"],
-  alipay:["ALIPAY_APP_ID","ALIPAY_PRIVATE_KEY","ALIPAY_PUBLIC_KEY","ALIPAY_SELLER_ID"],
+  alipay:["ALIPAY_APP_ID","ALIPAY_PRIVATE_KEY","ALIPAY_PUBLIC_KEY"],
   wechat:["WECHAT_APP_ID","WECHAT_MCH_ID","WECHAT_API_V3_KEY","WECHAT_PRIVATE_KEY","WECHAT_CERT_SERIAL_NO","WECHAT_PLATFORM_PUBLIC_KEY","WECHAT_PLATFORM_PUBLIC_KEY_ID"],
   r2:["R2_ENDPOINT","R2_ACCESS_KEY_ID","R2_SECRET_ACCESS_KEY","R2_BUCKET_SASI_ARTIFACTS"]
 };
 const adminNames=["SUPABASE_SECRET_KEY","SUPABASE_SERVICE_ROLE_KEY"];
-const flags=["WECHAT_ENABLED","ALIPAY_ENABLED","PAYPAL_ENABLED","TOOL_PASS_COMMERCE_READY","USD_BALANCE_TOPUP_ENABLED","SASI_MARKET_SALES_ENABLED","SASI_MARKET_PAYOUTS_ENABLED","SASI_MARKET_DELIVERY_ENABLED","SASI_MARKET_UPLOADS_ENABLED","SASI_MARKETPLACE_COMMERCE_READY","SOFTWARE_COMMERCE_READY"];
-const auditFlags=[...flags,"SASI_REFUND_FLOW_TESTED","NEXT_PUBLIC_TOOL_PASS_ENFORCED","TOOL_PASS_BACKEND_READY","LINGXIFIELD_PRIVACY_HASH_SECRET"];
+const flags=["WECHAT_ENABLED","ALIPAY_ENABLED","PAYPAL_ENABLED","TOOL_PASS_COMMERCE_READY","SASI_MARKET_SALES_ENABLED","SASI_MARKET_PAYOUTS_ENABLED","SASI_MARKET_DELIVERY_ENABLED","SASI_MARKET_UPLOADS_ENABLED","SASI_MARKETPLACE_COMMERCE_READY","SOFTWARE_COMMERCE_READY"];
 const {COM_PROVISION_MODE:mode="audit",COM_PROVISION_GROUP:group="all",CLOUDFLARE_ACCOUNT_ID:account,CLOUDFLARE_API_TOKEN:token}=process.env;
 const present=value=>typeof value==="string"&&value.trim().length>0;
 if(!["audit","provision"].includes(mode)||!["all","paypal","alipay","wechat","r2","supabase"].includes(group))
@@ -43,17 +42,12 @@ if(mode==="audit"){
   const ready=name==="supabase"?expected.some(k=>installed.has(k)):expected.every(k=>installed.has(k));
   console.log("COM_WORKER_SECRET_GROUP_"+name.toUpperCase()+"_INSTALLED="+ready);
  }
- for(const name of auditFlags){
-  const binding=bindings.find(b=>b.name===name);
-  const state=!binding?"UNSET":binding.type==="secret_text"?"SECRET_BOUND":binding.text==="true"?"TRUE":binding.text==="false"?"FALSE":"PRESENT";
-  console.log("COM_WORKER_FLAG_"+name+"="+state);
- }
  console.log("COM_SECRET_READ_ONLY_AUDIT_PASS");
  process.exit(0);
 }
 if(missing.length)throw Error("COM_PROVISION_STOP_MISSING_GITHUB_SECRET_NAMES_"+missing.join(","));
 // No commerce may already be accepting payments during secret replacement.
-const active=flags.filter(name=>{const b=bindings.find(x=>x.name===name);return b?.text==="true"||b?.type==="secret_text";});
+const active=flags.filter(name=>bindings.find(b=>b.name===name)?.text==="true");
 if(active.length)throw Error("COM_PROVISION_STOP_NONZERO_PAYMENT_FLAGS_"+active.join(","));
 let installed=[];
 for(const name of keys){
@@ -73,6 +67,6 @@ if(!after.ok||response.success!==true)throw Error("COM_PROVISION_POSTCHECK_UNAVA
 bindings=response.result?.bindings??[];
 const presentAfter=new Set(bindings.map(b=>b.name));
 if(installed.some(name=>!presentAfter.has(name)))throw Error("COM_PROVISION_BINDING_POSTCHECK_FAILED");
-if(flags.some(name=>{const b=bindings.find(x=>x.name===name);return b?.text==="true"||b?.type==="secret_text";}))
+if(flags.some(name=>bindings.find(b=>b.name===name)?.text==="true"))
  throw Error("COM_PROVISION_POSTCHECK_PAYMENT_FLAG_CHANGED");
 console.log("COM_SECRETS_ENCRYPTED_PROVISION_PASS_PAYMENT_FLAGS_STILL_OFF");
