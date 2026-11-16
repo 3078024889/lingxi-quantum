@@ -47,7 +47,9 @@ test("CN3196 candidate preflight is read-only and pins the live port topology",(
  assert.match(source,/CANDIDATE_PORT=3196/);
  assert.match(source,/ROLLBACK_PORT=3193/);
  assert.match(source,/EXPECTED_PROD_SHA='59d29734ca4cd4c2e6df81d22d2af0287764a9f2'/);
- assert.match(source,/NGINX_PRODUCTION_UPSTREAM_MUST_REMAIN_3195/);
+ assert.match(source,/CN_NGINX_PRODUCTION_UPSTREAM_3195_MISSING/);
+ assert.match(source,/CN_NGINX_CANDIDATE_NOT_PUBLIC=YES/);
+ assert.match(source,/CN3193_ROLLBACK_LISTENER=NOT_RUNNING/);
  assert.match(source,/CN3196_CANDIDATE_PORT_FREE=YES/);
  assert.match(source,/CN3196_CANDIDATE_PREFLIGHT_PASS/);
  assert.match(source,/NO_ENV_CHANGE_NO_SERVICE_RESTART_NO_NGINX_CHANGE_NO_ORDER_CREATED_NO_CHARGE/);
