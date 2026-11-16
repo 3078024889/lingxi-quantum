@@ -7,7 +7,8 @@ test("public pay/provider status uses constant-cost Cloudflare edge, never cache
  const s=read("scripts/cloudflare/patch-critical-static-html-20261108.mjs");
  for(const part of ["/api/pay/providers","edge-merchant-readiness","no-store, max-age=0",
   "WECHAT_PLATFORM_PUBLIC_KEY","WECHAT_PLATFORM_PUBLIC_KEY_ID",
-  "PAYPAL_CLIENT_SECRET","PAYPAL_WEBHOOK_ID","ALIPAY_PRIVATE_KEY","ALIPAY_PUBLIC_KEY"])
+  "PAYPAL_CLIENT_SECRET","PAYPAL_WEBHOOK_ID","ALIPAY_PRIVATE_KEY","ALIPAY_PUBLIC_KEY","ALIPAY_SELLER_ID",
+  "cnyBalanceTopupReady","usdBalanceTopupReady","USD_BALANCE_TOPUP_ENABLED","SASI_REFUND_FLOW_TESTED"])
    assert.ok(s.includes(part),part);
  assert.ok(s.indexOf('if(pathname===\\\"/api/pay/providers')!==-1 || s.includes('if(pathname===\\\"/api/pay/providers'));
  assert.ok(s.includes('configured.paypal&&env.PAYPAL_ENABLED===\\\"true\\\"'));
