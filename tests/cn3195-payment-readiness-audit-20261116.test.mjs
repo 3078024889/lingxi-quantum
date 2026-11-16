@@ -33,7 +33,7 @@ test("CN3195 audit does not activate flags, restart services, or create payment 
 });
 
 test("CN3195 audit correctly counts inherited systemd EnvironmentFiles",()=>{
- const code=String.raw`import re,sys; print(len(set(re.findall(r"/[^\s()]+\.env",sys.stdin.read()))))`;
+ const code=String.raw`import re,sys; print(len(set(re.findall(r'/[^\s()]+\.env',sys.stdin.read()))))`;
  const output=execFileSync("python3",["-c",code],{input:"- /etc/lingxifield/production.env (ignore_errors=no)\n"});
  assert.equal(output.toString().trim(),"1");
 });
