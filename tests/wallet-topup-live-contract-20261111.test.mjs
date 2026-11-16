@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
+import {spawnSync} from "node:child_process";
 const read=p=>readFileSync(p,"utf8");
 test("CNY wallet top-ups require the independent CNY gate and do not inherit the SASI generation refund flag",()=>{
  const gate=read("lib/sasi/payment-gate.ts");
@@ -52,4 +53,6 @@ test("CN3196 candidate preflight is read-only and pins the live port topology",(
  assert.match(source,/NO_ENV_CHANGE_NO_SERVICE_RESTART_NO_NGINX_CHANGE_NO_ORDER_CREATED_NO_CHARGE/);
  assert.doesNotMatch(source,/systemctl\s+(?:start|stop|restart|reload|enable|disable)\b/);
  assert.doesNotMatch(source,/nginx\s+-t|systemctl\s+reload\s+nginx|set_nginx_upstream/);
+ const syntax=spawnSync("bash",["-n","scripts/ops/cn3196-candidate-preflight-20261116.sh"],{encoding:"utf8"});
+ assert.equal(syntax.status,0,syntax.stderr);
 });
