@@ -70,7 +70,7 @@ function verifyDependencies(dir) {
   }
 }
 const balanceRoute = fs.readFileSync(path.join(stage, 'pages', 'balance', 'index.js'), 'utf8');
-if (!balanceRoute.includes('/pages/web/index?path=') || !balanceRoute.includes('%2Fai-wallet') ||
+if (!balanceRoute.includes('/pages/web/index?path=') || !balanceRoute.includes('encodeURIComponent(path)') || !balanceRoute.includes('"/ai-wallet"') ||
     balanceRoute.includes('requestVirtualPayment') || balanceRoute.includes('/api/wechat/mini/balance-pay/')) {
   throw new Error('MINI_BALANCE_ROUTE_MUST_REDIRECT_TO_WEBSITE_WALLET');
 }
