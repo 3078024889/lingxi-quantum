@@ -9,6 +9,7 @@ on:
       - 'components/AccountProfileCard.tsx'
       - 'components/Nav.tsx'
       - 'tests/home-layout-20261115.test.mjs'
+      - 'tests/mobile-account-trigger-20261116.test.mjs'
       - 'app/unified-shell.css'
       - 'app/api/wechat/mini/cny-topup/**'
       - 'app/api/pay/providers/route.ts'
