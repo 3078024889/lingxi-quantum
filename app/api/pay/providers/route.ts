@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { alipayEnabled, alipayMissingVars } from "@/lib/alipay";
 import { wechatPayConfigured, wechatPayEnabled, wechatPayMissingVars } from "@/lib/wechatpay";
 import { paypalConfigured, paypalEnabled } from "@/lib/paypal";
+import { sasiRmbBalanceV1Enabled } from "@/lib/sasi/payment-gate";
 
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
