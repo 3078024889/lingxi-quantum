@@ -36,3 +36,8 @@ test("CN3195 audit correctly counts systemd EnvironmentFiles without matching li
  const output=execFileSync("python3",["-c",code],{input:"- /etc/lingxifield/production.env (ignore_errors=no)\\n"});
  assert.equal(output.toString().trim(),"1");
 });
+
+test("CN3195 audit probes the new native CNY top-up readiness route only",()=>{
+ assert.match(script,/\/api\/wechat\/mini\/cny-topup\/availability/);
+ assert.doesNotMatch(script,/\/api\/wechat\/mini\/balance-pay\/availability/);
+});

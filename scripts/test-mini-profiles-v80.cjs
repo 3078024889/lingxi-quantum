@@ -84,7 +84,7 @@ if(process.argv.includes('--check-builds')){
     const file=path.join(dir,item.name);
     if(item.isDirectory())scan(file);
     else if(item.name.endsWith('.js')){
-     for(const match of fs.readFileSync(file,'utf8').matchAll(/require\\(['"]([^'"]+)['"]\\)/g)){
+     for(const match of fs.readFileSync(file,'utf8').matchAll(/require\(['"]([^'"]+)['"]\)/g)){
       const module=path.resolve(path.dirname(file),match[1]);
       assert(fs.existsSync(module)||fs.existsSync(module+'.js')||fs.existsSync(module+'.json'),'Missing package dependency: '+path.relative(root,module));
      }

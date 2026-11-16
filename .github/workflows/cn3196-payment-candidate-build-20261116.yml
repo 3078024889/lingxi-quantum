@@ -89,7 +89,7 @@ jobs:
             sleep 1
           done
           [ "$ready" = 1 ] || { cat "$RUNNER_TEMP/cn3319.log"; exit 1; }
-          for path in / /tools /siai /sasi /ai-wallet /api/pay/providers /api/tools/pass /api/wechat/mini/balance-pay/availability; do
+          for path in / /tools /siai /sasi /ai-wallet /api/pay/providers /api/tools/pass /api/wechat/mini/cny-topup/availability; do
             code="$(curl --noproxy '*' --silent --max-time 25 -o /dev/null -w '%{http_code}' "http://127.0.0.1:3319$path" || true)"
             echo "CN3196_LOCAL_ROUTE:$path:$code"
             [ "$code" = 200 ] || exit 1

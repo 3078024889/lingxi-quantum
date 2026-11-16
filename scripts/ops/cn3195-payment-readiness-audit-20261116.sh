@@ -102,7 +102,7 @@ echo "===== LIVE LOOPBACK ROUTE READINESS ====="
 probe /api/health "$TMP/health.json"; H="$PROBE_CODE"
 probe /api/pay/providers "$TMP/providers.json"; P="$PROBE_CODE"
 probe /api/tools/pass "$TMP/toolpass.json"; T="$PROBE_CODE"
-probe /api/wechat/mini/balance-pay/availability "$TMP/mini-cny.json"; M="$PROBE_CODE"
+probe /api/wechat/mini/cny-topup/availability "$TMP/mini-cny.json"; M="$PROBE_CODE"
 probe /api/admin/pay/readiness "$TMP/admin.json"; A="$PROBE_CODE"
 
 if [[ "$P" == 200 ]]; then

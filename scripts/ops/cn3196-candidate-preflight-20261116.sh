@@ -56,7 +56,7 @@ probe() {
 probe '/api/health' 200
 probe '/api/pay/providers' 200
 probe '/api/tools/pass' 200
-probe '/api/wechat/mini/balance-pay/availability' 200
+probe '/api/wechat/mini/cny-topup/availability' 200
 probe '/api/admin/pay/readiness' 401
 
 if ss -lntH "sport = :$CANDIDATE_PORT" | grep -q .; then

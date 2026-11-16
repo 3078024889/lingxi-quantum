@@ -18,7 +18,7 @@ jobs:
           set -Eeuo pipefail
           for host in lingxifield.cn lingxifield.com; do
             echo "===== PAYMENT READINESS: $host ====="
-            for path in /api/health /api/pay/providers /api/pay/alipay/status /api/tools/pass /api/admin/pay/readiness /api/wechat/mini/balance-pay/availability; do
+            for path in /api/health /api/pay/providers /api/pay/alipay/status /api/tools/pass /api/admin/pay/readiness /api/wechat/mini/cny-topup/availability; do
               tmp="$(mktemp)"
               code="$(curl -4 -sS --connect-timeout 8 --max-time 25 -o "$tmp" -w '%{http_code}' "https://$host$path" || true)"
               echo "PUBLIC_PROBE host=$host route=$path HTTP=${code:-000}"
