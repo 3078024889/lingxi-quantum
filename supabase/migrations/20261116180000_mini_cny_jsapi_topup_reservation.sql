@@ -29,9 +29,6 @@ BEGIN
   ELSIF p_product_id ~ '^sasi-balance-custom-(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$' THEN
     v_amount_text := regexp_replace(p_product_id, '^sasi-balance-custom-', '');
     v_expected_fen := round(v_amount_text::numeric * 100)::bigint;
-    IF position('.' in v_amount_text) > 0 AND v_expected_fen > 10000 THEN
-      RAISE EXCEPTION 'fractional mini top-up exceeds allowed limit';
-    END IF;
   ELSE
     RAISE EXCEPTION 'unsupported mini CNY top-up product';
   END IF;
