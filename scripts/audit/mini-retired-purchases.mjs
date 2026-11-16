@@ -17,7 +17,7 @@ assert.equal(fs.existsSync('miniapp/pages/balance/index.wxss'),false);
 assert.equal(fs.existsSync('app/api/wechat/mini/balance-pay/create/route.ts'),false);
 assert.equal(fs.existsSync('app/api/wechat/mini/balance-pay/availability/route.ts'),false);
 const balance=fs.readFileSync('miniapp/pages/balance/index.js','utf8');
-assert.match(balance,/pages\/web\/index\?path=/);assert.match(balance,/%2Fai-wallet/);
+assert.match(balance,/pages\/web\/index\?path=/);assert.match(balance,/encodeURIComponent\\(path\\)/);assert.match(balance,/\"\\/ai-wallet\"/);
 assert.doesNotMatch(balance,/requestVirtualPayment|balance-pay/);
 assert.match(fs.readFileSync('miniapp/pages/pay/index.js','utf8'),/pages\/web\/index\?path=%2Fai-wallet/);
 assert.match(fs.readFileSync('miniapp/pages/mail-home/index.js','utf8'),/pages\/web\/index\?path=%2Fai-wallet/);
