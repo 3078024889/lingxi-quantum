@@ -97,7 +97,7 @@ export default function WalletLivePanel(){
   <Link href="/account/orders" className="ml-4 underline"><LxText zh="订单记录" en="Orders"/></Link>
  </section>;
  const {balances,withdrawals}=data.summary;
- const topupPayReady=topupCurrency==="CNY"?(miniContext?miniCnyReady:(providers?.wechat===true||providers?.alipay===true)):providers?.usdBalanceTopup===true;
+ const topupPayReady=topupCurrency==="CNY"?(miniContext?miniCnyReady:providers?.cnyBalanceTopup===true):providers?.usdBalanceTopup===true;
  const customValue=customTopupAmount(customAmount.trim());
  const customValueText=customValue===null?"":Number.isInteger(customValue)?String(customValue):customValue.toFixed(2);
  const topupSymbol=topupCurrency==="CNY"?"¥":"$";
