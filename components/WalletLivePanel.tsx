@@ -28,7 +28,7 @@ function validSummary(value:unknown):value is Summary{
 export default function WalletLivePanel(){
  const [data,setData]=useState<State>({status:"loading"});
  const [tab,setTab]=useState<"ledger"|"withdrawals">("ledger");
- const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean;paypal:boolean;usdBalanceTopup:boolean}|null>(null);
+ const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean;paypal:boolean;cnyBalanceTopupReady:boolean;usdBalanceTopupReady:boolean}|null>(null);
  const [topupCurrency,setTopupCurrency]=useState<Currency>("CNY");
  const [customAmount,setCustomAmount]=useState("");
  const [miniContext,setMiniContext]=useState(false);
@@ -74,7 +74,7 @@ export default function WalletLivePanel(){
     const response=await fetch("/api/pay/providers",{cache:"no-store",credentials:"same-origin",signal:controller.signal});
     if(!response.ok)return;
     const p=await response.json();
-    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true,paypal:p.paypal===true,usdBalanceTopup:p.usdBalanceTopup===true});
+    if(!controller.signal.aborted)setProviders({wechat:p.wechat===true,alipay:p.alipay===true,paypal:p.paypal===true,cnyBalanceTopupReady:p.cnyBalanceTopupReady===true,usdBalanceTopupReady:p.usdBalanceTopupReady===true});
    }catch{}
   };
   void load();void loadProviders();
@@ -97,7 +97,7 @@ export default function WalletLivePanel(){
   <Link href="/account/orders" className="ml-4 underline"><LxText zh="订单记录" en="Orders"/></Link>
  </section>;
  const {balances,withdrawals}=data.summary;
- const topupPayReady=topupCurrency==="CNY"?(miniContext?miniCnyReady:(providers?.wechat===true||providers?.alipay===true)):providers?.usdBalanceTopup===true;
+ const topupPayReady=topupCurrency==="CNY"?(miniContext?miniCnyReady:(providers?.cnyBalanceTopupReady===true)):providers?.usdBalanceTopupReady===true;
  const customValue=customTopupAmount(customAmount.trim());
  const customValueText=customValue===null?"":Number.isInteger(customValue)?String(customValue):customValue.toFixed(2);
  const topupSymbol=topupCurrency==="CNY"?"¥":"$";
