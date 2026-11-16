@@ -14,9 +14,21 @@ on:
       - 'app/api/wechat/mini/cny-topup/**'
       - 'app/api/wechat/mini/account-summary/route.ts'
       - 'app/api/pay/wechat/notify/route.ts'
+      - 'app/api/pay/providers/route.ts'
+      - 'app/api/pay/create/route.ts'
+      - 'app/api/pay/wechat/create/route.ts'
+      - 'app/api/pay/alipay/create/route.ts'
+      - 'app/api/pay/providers/route.ts'
+      - 'app/api/pay/create/route.ts'
+      - 'app/api/pay/wechat/create/route.ts'
+      - 'app/api/pay/alipay/create/route.ts'
       - 'lib/mini/**'
       - 'lib/wechatpay.ts'
       - 'tests/mini-recharge-single-entry.test.mjs'
+      - 'tests/wallet-topup-live-contract-20261111.test.mjs'
+      - 'tests/sasi-marketplace-security-contract.test.mjs'
+      - 'tests/wallet-topup-live-contract-20261111.test.mjs'
+      - 'tests/sasi-marketplace-security-contract.test.mjs'
       - 'tests/mini-main-direct-tools-share.test.mjs'
       - 'tests/unified-mini-share-routes.test.mjs'
       - 'tests/usd-wallet-topup-readiness.test.mjs'
@@ -70,7 +82,7 @@ jobs:
       - name: Verify 6.0.0 wallet, merchant JSAPI, history and sharing contracts
         run: |
           set -Eeuo pipefail
-          node --test tests/mini-recharge-single-entry.test.mjs tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/usd-wallet-topup-readiness.test.mjs tests/home-layout-20261115.test.mjs tests/mobile-account-trigger-20261116.test.mjs
+          node --test tests/mini-recharge-single-entry.test.mjs tests/wallet-topup-live-contract-20261111.test.mjs tests/sasi-marketplace-security-contract.test.mjs tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/usd-wallet-topup-readiness.test.mjs tests/home-layout-20261115.test.mjs tests/mobile-account-trigger-20261116.test.mjs
           node scripts/audit/mini-unified-surface.mjs
           node scripts/audit/mini-recharge-navigation.mjs
           node scripts/audit/mini-cny-native-usd-website.mjs
