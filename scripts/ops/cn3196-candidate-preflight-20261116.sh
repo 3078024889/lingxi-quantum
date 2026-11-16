@@ -27,7 +27,7 @@ echo '===== CN3195/3196/3193 READ-ONLY CANDIDATE PREFLIGHT ====='
 python3 - "$NGINX" <<'PY'
 import re,sys
 data=open(sys.argv[1],"rb").read()
-matches=re.findall(rb'(?m)^\\s*(?:proxy_pass\\s+http://|server\\s+)127\\.0\\.0\\.1:(3193|3195|3196)(?:;|\\s)',data)
+matches=re.findall(rb'(?m)^\s*(?:proxy_pass\s+http://|server\s+)127\.0\.0\.1:(3193|3195|3196)(?:;|\s)',data)
 if len(matches)!=1:
     raise SystemExit("NGINX_UPSTREAM_NOT_EXACTLY_ONE")
 if matches[0]!=b"3195":
@@ -39,17 +39,17 @@ find_service_for_port() {
   local port="$1" pid unit
   local -a pids=() units=()
   [[ "$port" =~ ^(3193|3195)$ ]] || return 1
-  mapfile -t pids < <(ss -ltnpH "sport = :$port" | sed -n 's/.*pid=\\([0-9]\\+\\).*/\\1/p' | sort -u)
+  mapfile -t pids < <(ss -ltnpH "sport = :$port" | sed -n 's/.*pid=\([0-9]\+\).*/\1/p' | sort -u)
   [[ "${#pids[@]}" == 1 ]] || return 1
   pid="${pids[0]}"
   [[ "$pid" =~ ^[0-9]+$ && -r "/proc/$pid/cgroup" ]] || return 1
   mapfile -t units < <(awk -F/ '/lingxifield-cn-release-.*[.]service$/{print $NF}' "/proc/$pid/cgroup" | sort -u)
   [[ "${#units[@]}" == 1 ]] || return 1
   unit="${units[0]}"
-  [[ "$unit" =~ ^lingxifield-cn-release-[A-Za-z0-9.-]+\\.service$ ]] || return 1
+  [[ "$unit" =~ ^lingxifield-cn-release-[A-Za-z0-9.-]+\.service$ ]] || return 1
   systemctl is-active --quiet "$unit" || return 1
   [[ "$(systemctl show "$unit" -p MainPID --value)" == "$pid" ]] || return 1
-  printf '%s\\n' "$unit"
+  printf '%s\n' "$unit"
 }
 
 probe() {
@@ -94,12 +94,12 @@ mapfile -t ENV_FILES < <(
   systemctl show "$PROD_SERVICE" -p EnvironmentFiles --value |
     python3 -c 'import re,sys
 s=sys.stdin.read()
-for p in re.findall(r"(/[^\\s()]+\\.env)\\s+\\(ignore_errors=(?:yes|no)\\)",s): print(p)'
+for p in re.findall(r"(/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)",s): print(p)'
 )
 (( ${#ENV_FILES[@]} == 14 )) || { echo "CN3195_ENVFILE_COUNT_CHANGED:${#ENV_FILES[@]}"; exit 1; }
-[[ "${#ENV_FILES[@]}" -eq "$(printf '%s\\n' "${ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3195_ENVFILE_DUPLICATE; exit 1; }
+[[ "${#ENV_FILES[@]}" -eq "$(printf '%s\n' "${ENV_FILES[@]}" | sort -u | wc -l)" ]] || { echo CN3195_ENVFILE_DUPLICATE; exit 1; }
 for file in "${ENV_FILES[@]}"; do
-  [[ "$file" =~ ^/etc/lingxifield/[A-Za-z0-9_.-]+\\.env$ && -f "$file" && ! -L "$file" ]] || {
+  [[ "$file" =~ ^/etc/lingxifield/[A-Za-z0-9_.-]+\.env$ && -f "$file" && ! -L "$file" ]] || {
     echo CN3195_ENVFILE_PATH_INVALID
     exit 1
   }
