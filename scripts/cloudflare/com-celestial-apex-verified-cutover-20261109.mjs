@@ -200,13 +200,14 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
         "桌面程序",
         "开发工具",
         "其他软件",
-        "卖家发布与自动交付",
+        "浏览软件",
+        "浏览开发者作品",
         "软件授权",
         "安全可靠",
         "全球可用",
         "开发者支持"
       ],
-      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答", "SASI / FEATURED", "01 / SOFTWARE", "02 / PUBLISH & DELIVERY"]
+      forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答", "SASI / FEATURED", "01 / SOFTWARE", "02 / PUBLISH & DELIVERY", "卖家发布与自动交付", "发布产品", "立即发布软件", "开发者发布", "软件 ZIP / 源码包", "保存商品草稿"]
     },
     {
       path: "/sasi/seller",
