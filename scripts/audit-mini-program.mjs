@@ -64,11 +64,16 @@ const walletClient=read("lib/mini/payment-client.ts");
 must(walletClient.includes('openMiniWallet(currency: "CNY" | "USD"')&&walletClient.includes("/pages/cny-wallet/index")&&walletClient.includes("/ai-wallet?currency=USD"),"MINI_CNY_NATIVE_USD_WEBSITE_ROUTING_MISSING");
 must(read("miniapp/pages/pay/index.js").includes("/pages/cny-wallet/index"),"MINI_TOOL_RECHARGE_MUST_OPEN_NATIVE_CNY_WALLET");
 must(read("miniapp/pages/cny-wallet/index.js").includes("/api/wechat/mini/cny-topup/create"),"NATIVE_CNY_WALLET_CREATE_API_MISSING");
-const cnyWallet=read("miniapp/pages/cny-wallet/index.js");\nmust(cnyWallet.includes("/api/wechat/mini/cny-topup/status"),"NATIVE_CNY_WALLET_SERVER_CONFIRMATION_MISSING");\nmust(cnyWallet.includes("wx.requestPayment")&&!cnyWallet.includes("requestVirtualPayment"),"CNY_WALLET_MUST_USE_MERCHANT_JSAPI_NOT_VIRTUAL_PAYMENT");\nmust(read("miniapp/pages/pay/index.js").includes("requestVirtualPayment"),"MINI_TOOL_PRODUCT_VIRTUAL_PAYMENT_MUST_REMAIN_SEPARATE");\nmust(read("app/api/wechat/mini/cny-topup/create/route.ts").includes("reserve_mini_cny_jsapi_topup_order"),"CNY_JSAPI_ATOMIC_RESERVATION_MISSING");
+const cnyWallet=read("miniapp/pages/cny-wallet/index.js");
+must(cnyWallet.includes("/api/wechat/mini/cny-topup/status"),"NATIVE_CNY_WALLET_SERVER_CONFIRMATION_MISSING");
+must(cnyWallet.includes("wx.requestPayment")&&!cnyWallet.includes("requestVirtualPayment"),"CNY_WALLET_MUST_USE_MERCHANT_JSAPI_NOT_VIRTUAL_PAYMENT");
+must(read("miniapp/pages/pay/index.js").includes("requestVirtualPayment"),"MINI_TOOL_PRODUCT_VIRTUAL_PAYMENT_MUST_REMAIN_SEPARATE");
+must(read("app/api/wechat/mini/cny-topup/create/route.ts").includes("reserve_mini_cny_jsapi_topup_order"),"CNY_JSAPI_ATOMIC_RESERVATION_MISSING");
 const web=read("miniapp/pages/web/index.js");
 must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALLOWLIST_MISSING");
 must(web.includes("preferredCurrency()")&&web.includes("currency="),"MINI_CURRENCY_WEB_SYNC_MISSING");
-must(web.includes("options.webViewUrl")&&web.includes("shareablePath"),"MINI_WEB_CURRENT_URL_SHARING_MISSING");\nmust(web.includes("onShareTimeline")&&web.includes("timeline"),"MINI_WEB_TIMELINE_SHARING_MISSING");
+must(web.includes("options.webViewUrl")&&web.includes("shareablePath"),"MINI_WEB_CURRENT_URL_SHARING_MISSING");
+must(web.includes("onShareTimeline")&&web.includes("timeline"),"MINI_WEB_TIMELINE_SHARING_MISSING");
 must(!web.includes("ai-knowledge")&&!web.includes("ai-learning")&&!web.includes("ai-research"),"MINI_RETIRED_ROUTE_ALLOWLIST_REMAINS");
 
 console.log("AUDIT_MINI_PROGRAM=PASS");
