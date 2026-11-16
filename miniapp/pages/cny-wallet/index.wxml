@@ -60,6 +60,10 @@
     bindtap="recoverPending" loading="{{busy}}" disabled="{{busy || loading || !enabled || !linked}}">
     恢复上次充值
   </button>
+  <button wx:elif="{{orderId && canResumePayment}}" class="cny-primary-button"
+    bindtap="pay" loading="{{busy}}" disabled="{{busy}}">
+    继续完成上一笔支付
+  </button>
   <button wx:elif="{{orderId}}" class="cny-primary-button"
     bindtap="confirmPayment" loading="{{busy}}" disabled="{{busy}}">
     核验上一笔支付结果
