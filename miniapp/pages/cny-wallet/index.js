@@ -104,7 +104,7 @@ Page({
         paymentAttempted: pending.paymentAttempted === true,
         selected: pending.selected || '10',
         custom: pending.custom || '',
-        amountText: pending.amountText || pending.selected || '10',
+        amountText: pending.amountText || (pending.selected === 'custom' ? pending.custom : pending.selected) || '10',
       })
     }
   },

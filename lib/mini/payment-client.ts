@@ -44,7 +44,7 @@ export async function openMiniWallet(currency: "CNY" | "USD" = "CNY", amount?: s
   if (!bridge) return false;
   const safeCurrency = currency === "USD" ? "USD" : "CNY";
   const amountText = amount === undefined ? "" : String(amount).trim();
-  const validAmount = /^(0|[1-9][0-9]{0,4})(\\.[0-9]{1,2})?$/.test(amountText) &&
+  const validAmount = /^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(amountText) &&
     Number(amountText) > 0 && Number(amountText) <= 10000;
   const url = safeCurrency === "USD"
     ? "/pages/web/index?path=" + encodeURIComponent("/ai-wallet?currency=USD")
