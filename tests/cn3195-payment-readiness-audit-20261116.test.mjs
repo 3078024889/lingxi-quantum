@@ -30,3 +30,9 @@ test("CN3195 audit does not activate flags, restart services, or create payment 
  assert.doesNotMatch(script,/WECHAT_ENABLED=true|ALIPAY_ENABLED=true|PAYPAL_ENABLED=true|USD_BALANCE_TOPUP_ENABLED=true/);
  assert.match(script,/NO_ORDER_CREATED_NO_CHARGE_NO_REFUND_NO_BALANCE_CHANGE_NO_ENV_CHANGE_NO_SERVICE_RESTART/);
 });
+test("CN3195 audit correctly counts systemd EnvironmentFiles without matching literal backslashes",()=>{
+ assert.ok(script.includes('re.findall(r"/[^\\s()]+\\.env",sys.stdin.read())'));
+ const code='import re,sys; print(len(set(re.findall(r"/[^\\s()]+\\.env",sys.stdin.read()))))';
+ const output=execFileSync("python3",["-c",code],{input:"- /etc/lingxifield/production.env (ignore_errors=no)\\n"});
+ assert.equal(output.toString().trim(),"1");
+});
