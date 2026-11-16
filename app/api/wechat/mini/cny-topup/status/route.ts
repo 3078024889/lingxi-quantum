@@ -16,7 +16,7 @@ export async function GET(req:Request){
  const orderId=new URL(req.url).searchParams.get("orderId")||"";
  if(!/^[0-9a-f-]{36}$/i.test(orderId))return NextResponse.json({error:"订单无效"},{status:400});
  const admin=createAdminClient();
- const {data:order,error}=await admin.from("orders").select("id,user_id,product_id,amount_rmb,status,provider,provider_payment_id,channel")
+ const {data:order,error}=await admin.from("orders").select("id,user_id,product_id,amount_rmb,status,provider,provider_payment_id,channel,created_at")
   .eq("id",orderId).eq("user_id",session.userId).eq("provider","wechat").eq("channel","mini-program").maybeSingle();
  if(error||!order)return NextResponse.json({error:"订单不存在"},{status:404});
  if(order.status==="paid"){
@@ -37,6 +37,9 @@ export async function GET(req:Request){
  catch(error){
   const message=error instanceof Error?error.message:"";
   if(message.includes("MINI_WECHAT_API_404_ORDER_NOT_EXIST")){
+   const ageMs=Date.now()-Date.parse(String(order.created_at||""));
+   if(!Number.isFinite(ageMs)||ageMs<90000)
+    return NextResponse.json({paid:false,status:"PROCESSING"},{headers:{"Cache-Control":"private, no-store"}});
    await admin.from("orders").update({status:"failed"}).eq("id",order.id).eq("status","pending");
    return NextResponse.json({paid:false,closed:true,status:"failed"});
   }
