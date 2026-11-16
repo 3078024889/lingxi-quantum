@@ -24,7 +24,9 @@ function conflict(message: string, orderId?: string) {
   return noStore({ error: message, code: "UNCONFIRMED_TOPUP_EXISTS", ...(orderId ? { orderId } : {}) }, 409);
 }
 function safeProviderCode(error: unknown) {
-  const message = error instanceof Error ? error.message : "";
+    const message = error instanceof Error ? error.message : "";
+    const code = /^[A-Z0-9_]{1,80}$/.test(message) ? message : safeProviderCode(error);
+    console.error("[mini CNY JSAPI route]", code);
   const match = message.match(/WECHAT_API_(\\d{3}):([A-Z0-9_]+)/);
   return match ? `WECHAT_${match[1]}_${match[2]}` : "WECHAT_PROVIDER_UNCONFIRMED";
 }
