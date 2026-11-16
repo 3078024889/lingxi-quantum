@@ -61,6 +61,11 @@ const balanceRoute=read("miniapp/pages/balance/index.js");
 must(balanceRoute.includes("/pages/web/index?path=")&&balanceRoute.includes("encodeURIComponent(path)")&&balanceRoute.includes("\"/ai-wallet\""),"MINI_WALLET_MUST_REDIRECT_TO_WEBSITE");
 must(!balanceRoute.includes("requestVirtualPayment")&&!balanceRoute.includes("/api/wechat/mini/balance-pay/"),"NATIVE_WALLET_TOPUP_CODE_REMAINS");
 must(!exists("miniapp/pages/recharge/index.js"),"RETIRED_NATIVE_RECHARGE_PAGE_REMAINS");
+for(const p of [
+ "miniapp/pages/recharge/index.js","miniapp/pages/recharge/index.wxml","miniapp/pages/recharge/index.json","miniapp/pages/recharge/index.wxss",
+ "miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js",
+ "app/api/wechat/mini/balance-pay/availability/route.ts","app/api/wechat/mini/balance-pay/create/route.ts","app/api/wechat/mini/balance-pay/status/route.ts"
+])must(!exists(p),"RETIRED_MINI_WALLET_TOPUP_FILE_REMAINS:"+p);
 const web=read("miniapp/pages/web/index.js");
 must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALLOWLIST_MISSING");
 must(web.includes("preferredCurrency()")&&web.includes("currency="),"MINI_CURRENCY_WEB_SYNC_MISSING");
