@@ -28,7 +28,7 @@ function validSummary(value:unknown):value is Summary{
 export default function WalletLivePanel(){
  const [data,setData]=useState<State>({status:"loading"});
  const [tab,setTab]=useState<"ledger"|"withdrawals">("ledger");
- const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean;paypal:boolean;usdBalanceTopup:boolean}|null>(null);
+ const [providers,setProviders]=useState<{wechat:boolean;alipay:boolean;paypal:boolean;cnyBalanceTopup:boolean;usdBalanceTopup:boolean}|null>(null);
  const [topupCurrency,setTopupCurrency]=useState<Currency>("CNY");
  const [customAmount,setCustomAmount]=useState("");
  const [miniContext,setMiniContext]=useState(false);
