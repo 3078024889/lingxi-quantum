@@ -43,8 +43,8 @@ assert.match(listings,/!seller\|\|!\["pending_review","approved"\]\.includes\(se
 assert.match(read("app/api/sasi/marketplace/image-ticket/route.ts"),/!seller\|\|!\["pending_review","approved"\]\.includes\(seller\.status\)/);
 assert.match(read("app/api/sasi/marketplace/submit/route.ts"),/!seller\|\|!\["pending_review","approved"\]\.includes\(seller\.status\)/);
 const nav=read("components/Nav.tsx");
-assert.match(nav,/href:\\s*"\\/sasi\\/seller"/);
-assert.doesNotMatch(nav,/\\/sasi\\/marketplace\\/admin/);
+assert.ok(nav.includes("/sasi/seller"));
+assert.ok(!nav.includes("/sasi/marketplace/admin"));
 assert.match(uploader,/signedMarketplaceUpload/);
 assert.match(uploader,/newMarketplaceObjectKey/);
 assert.match(uploader,/upload.*RESERVATION|UPLOAD_RESERVATION_FAILED/);
