@@ -37,7 +37,10 @@ test("CNY payment order references are persisted atomically before provider chec
  for(const [source,gateway] of [[wx,"createWechatNativeOrder"],[ali,"createAlipayPaymentUrl"]]){
   assert.match(source,/randomUUID/);
   assert.match(source,/provider_payment_id:\s*outTradeNo/);
-  assert.ok(source.indexOf("provider_payment_id: outTradeNo")<source.indexOf(gateway));
+  const postHandler=source.indexOf("export async function POST");
+  const gatewayCall=source.indexOf(gateway+"({",postHandler);
+  assert.ok(gatewayCall>postHandler);
+  assert.ok(source.indexOf("provider_payment_id: outTradeNo",postHandler)<gatewayCall);
   assert.doesNotMatch(source,/update\(\{\s*provider_payment_id:\s*outTradeNo/);
  }
 });
