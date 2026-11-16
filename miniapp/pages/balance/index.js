@@ -3,7 +3,7 @@ const { login, request, publicRequest, wxLogin, connectionMessage } = require('.
 const expiry = require('../../utils/topup-expiry')
 const paymentErrors = require('../../utils/virtual-payment-errors')
 const PENDING_KEY = 'lx_mini_cny_topup_pending_v1'
-const LEGACY_PENDING_KEY = PENDING_KEY
+const LEGACY_PENDING_KEY = 'lx_mini_topup_pending'
 
 Page({
   data: { message: '正在检查充值服务…', paymentNotice: '', loading: true, enabled: false, amounts: [10, 88, 666, 888], selected: '10', custom: '', busy: false, orderId: '', requestId: '', linked: false, accountLoaded: false, accountLabel: '', balanceText: '', refundableText: '', topups: [] },
