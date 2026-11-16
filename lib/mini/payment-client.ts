@@ -39,11 +39,18 @@ export async function detectMiniPaymentContext(): Promise<boolean> {
   });
 }
 
-export async function openMiniRecharge(): Promise<boolean> {
+export async function openMiniWallet(currency: "CNY" | "USD" = "CNY", amount?: string | number): Promise<boolean> {
   const bridge = await miniPaymentBridge();
   if (!bridge) return false;
+  const safeCurrency = currency === "USD" ? "USD" : "CNY";
+  const amountText = amount === undefined ? "" : String(amount).trim();
+  const validAmount = /^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(amountText) &&
+    Number(amountText) > 0 && Number(amountText) <= 10000;
+  const url = safeCurrency === "USD"
+    ? "/pages/web/index?path=" + encodeURIComponent("/ai-wallet?currency=USD")
+    : "/pages/cny-wallet/index" + (validAmount ? "?amount=" + encodeURIComponent(amountText) : "");
   return new Promise(resolve => {
     const timeout = setTimeout(() => resolve(false), 5000);
-    bridge.navigateTo({ url: "/pages/balance/index", success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
+    bridge.navigateTo({ url, success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
   });
 }
