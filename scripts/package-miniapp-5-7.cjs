@@ -62,6 +62,9 @@ function verifyDependencies(dir) {
     if (item.isDirectory()) { verifyDependencies(file); continue; }
     if (!item.name.endsWith('.js')) continue;
     const sourceText = fs.readFileSync(file, 'utf8');
+    for (const retired of ['pages/balance/', 'pages/recharge/', 'openMiniRecharge', '/api/wechat/mini/balance-pay/']) {
+      if (sourceText.includes(retired)) throw new Error('MINI_PACKAGE_LEGACY_WALLET_REFERENCE:' + retired + ':' + path.relative(stage, file));
+    }
     for (const match of sourceText.matchAll(/require\(['"](\.[^'"]+)['"]\)/g)) {
       const candidate = path.resolve(path.dirname(file), match[1]);
       if (![candidate, candidate + '.js', candidate + '.json', path.join(candidate, 'index.js')].some(p => fs.existsSync(p))) {
