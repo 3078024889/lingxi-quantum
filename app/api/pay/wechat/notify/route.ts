@@ -82,7 +82,8 @@ export async function POST(req: Request) {
         .eq("out_trade_no", outTradeNo).eq("transaction_id", "created").maybeSingle();
       const snapshot = event?.payload as Record<string, unknown> | undefined;
       if (eventError || !snapshot || snapshot.orderId !== order.id ||
-          snapshot.appId !== expectedAppId || snapshot.openid !== (decrypted.payer as any)?.openid) {
+          snapshot.outTradeNo !== outTradeNo || snapshot.appId !== expectedAppId ||
+          snapshot.openid !== (decrypted.payer as any)?.openid) {
         return NextResponse.json({ code: "FAIL", message: "小程序付款身份校验失败" }, { status: 422 });
       }
     }
