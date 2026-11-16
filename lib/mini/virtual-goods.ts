@@ -5,11 +5,7 @@ export function miniVirtualToolsEnabled() {
   return process.env.WECHAT_MINI_VPAY_TOOLS_ENABLED === "true" && miniVirtualPayConfigured();
 }
 
-export function miniCnyTopupsEnabled() {
-  return process.env.WECHAT_MINI_VPAY_TOPUPS_ENABLED === "true" && miniVirtualPayConfigured();
-}
-
-// Shared SKU validation for CNY Mini Program top-ups and historical order settlement.
+// Historical SKU validation for legacy virtual-payment top-ups only. New CNY wallet top-ups use merchant JSAPI.
 export function virtualTopupGoods(productId: string) {
   const fixed = /^(?:sasi-balance-)(10|88|666|888)$/.exec(productId);
   const custom = /^sasi-balance-custom-(.+)$/.exec(productId);
