@@ -22,7 +22,12 @@ test("wallet resolves to authenticated real balances, not legacy pricing redirec
  assert.match(client, /\/account\/withdrawals/);
  assert.match(client, /\/account\/orders/);
  assert.match(client, /BALANCE_TOPUP_AMOUNTS/);
- assert.match(client, /providers\?\.wechat===true\|\|providers\?\.alipay===true/);
+ assert.match(client, /providers\?\.cnyBalanceTopupReady===true/);
+ assert.match(client, /providers\?\.usdBalanceTopupReady===true/);
+ assert.doesNotMatch(client, /providers\?\.paypal===true/);
+ const usdCheckout=read("app/checkout-usd/page.tsx");
+ assert.match(usdCheckout, /usdBalanceTopupReady/);
+ assert.match(usdCheckout, /setReady\(d\?\.usdBalanceTopupReady===true\)/);
  assert.match(client, /WalletLedgerPanel showCurrencyTabs/);
  const ledger=read("components/WalletLedgerPanel.tsx");
  assert.match(ledger,/showCurrencyTabs&&/);
