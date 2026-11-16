@@ -19,7 +19,7 @@ test("website wallet remains the single CNY/USD recharge surface",()=>{
 test("mini-program compatibility routes redirect to the official website wallet",()=>{
  const balance=read("miniapp/pages/balance/index.js");
  assert.match(balance,/pages\/web\/index\?path=/);
- assert.match(balance,/encodeURIComponent\\(path\\)/); assert.match(balance,/\"\\/ai-wallet\"/);
+ assert.ok(balance.includes("encodeURIComponent(path)")); assert.ok(balance.includes('"/ai-wallet"'));
  assert.doesNotMatch(balance,/requestVirtualPayment|balance-pay\/create/);
  assert.equal(existsSync("miniapp/pages/recharge/index.js"),false);
  assert.equal(existsSync("miniapp/utils/topup-expiry.js"),false);
