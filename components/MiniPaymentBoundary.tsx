@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { detectMiniPaymentContext } from "@/lib/mini/payment-client";
+import { detectMiniPaymentContext, openMiniRecharge } from "@/lib/mini/payment-client";
 
 export function isMiniPaymentContext() {
   if (typeof window === "undefined") return false;
@@ -10,15 +10,39 @@ export function isMiniPaymentContext() {
     (new URLSearchParams(window.location.search).get("mini") === "1" && /MicroMessenger/i.test(navigator.userAgent));
 }
 
-// Keep mini-program tool checkout separate from browser checkout, but never
-// block the official website wallet page or route top-ups into native UI.
+function isCnyBalanceTopup() {
+  if (typeof window === "undefined") return false;
+  const productId = new URLSearchParams(window.location.search).get("productId") || "";
+  return productId.startsWith("sasi-balance-") && !productId.startsWith("sasi-usd-balance-");
+}
+
 export default function MiniPaymentBoundary({ children, miniChildren }: { children: ReactNode; miniChildren?: ReactNode }) {
   const [context, setContext] = useState<"checking" | "mini" | "web">("checking");
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
     let alive = true;
-    void detectMiniPaymentContext().then(mini => { if (alive) setContext(mini ? "mini" : "web"); });
+    void detectMiniPaymentContext().then(mini => {
+      if (alive) setContext(mini ? "mini" : "web");
+    });
     return () => { alive = false; };
   }, []);
+
+  async function openRecharge() {
+    setMessage("正在打开人民币小程序充值页…");
+    const opened = await openMiniRecharge();
+    setMessage(opened ? "" : "当前小程序版本没有可用的人民币充值页，请更新体验版后重试。");
+  }
+
   if (context === "checking") return <p className="p-12 text-center" role="status">…</p>;
-  return context === "mini" && miniChildren ? miniChildren : children;
+  if (context === "mini" && miniChildren) return miniChildren;
+  if (context === "mini" && isCnyBalanceTopup()) {
+    return <main className="mx-auto max-w-xl px-6 py-20">
+      <h1 className="text-2xl font-semibold">在小程序中充值</h1>
+      <p className="mt-4 text-sm">人民币 CNY 余额使用微信虚拟支付充值。美元余额请在官网钱包选择 USD，使用 PayPal 结算。</p>
+      <button type="button" onClick={openRecharge} className="mt-6 rounded-xl bg-black px-6 py-3 text-white">打开余额充值</button>
+      <p className="mt-3 text-sm" role="status">{message}</p>
+    </main>;
+  }
+  return children;
 }

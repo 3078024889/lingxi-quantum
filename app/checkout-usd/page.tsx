@@ -180,7 +180,7 @@ function Inner(){
  const title=product?.group==="software"?c.softwareTitle:product?.group==="market"?c.marketTitle:product?.group==="toolpass"?c.toolTitle:c.title;
  const lead=product?.group==="software"?c.softwareLead:product?.group==="market"?c.marketLead:product?.group==="toolpass"?c.toolLead:c.lead;
  const itemName=product?.group==="wallet"?c.sasi:product?.name||"";
- const defaultReturn=product?.group==="software"?"/account/software":product?.group==="market"?"/sasi/marketplace":product?.group==="toolpass"?"/tools/pass":"/ai-wallet";
+ const defaultReturn=product?.group==="software"?"/account/software":product?.group==="market"?"/sasi/marketplace":product?.group==="toolpass"?"/tools/pass":"/ai-wallet?currency=USD";
  const requestedReturn=sp.get("redirect")||defaultReturn;
  const returnPath=requestedReturn.startsWith("/")&&!requestedReturn.startsWith("//")&&!requestedReturn.includes("\\")?requestedReturn:defaultReturn;
 

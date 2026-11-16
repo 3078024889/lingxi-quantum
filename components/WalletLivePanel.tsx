@@ -83,7 +83,7 @@ export default function WalletLivePanel(){
  const customValue=customTopupAmount(customAmount.trim());
  const customValueText=customValue===null?"":Number.isInteger(customValue)?String(customValue):customValue.toFixed(2);
  const topupSymbol=topupCurrency==="CNY"?"¥":"$";
- const customHref=topupCurrency==="CNY"?"/checkout?productId=sasi-balance-custom-"+customValueText+"&redirect=%2Fai-wallet":"/checkout-usd?productId=sasi-usd-balance-custom-"+customValueText+"&returnPath=%2Fai-wallet";
+ const customHref=topupCurrency==="CNY"?"/checkout?productId=sasi-balance-custom-"+customValueText+"&redirect=%2Fai-wallet":"/checkout-usd?productId=sasi-usd-balance-custom-"+customValueText+"&redirect=%2Fai-wallet%3Fcurrency%3DUSD";
  return <div className="lx26-wallet">
   <section className="lx26-wallet-overview">
    <h2 className="lx26-section-title"><span className="lx26-wallet-symbol">◇</span><LxText zh="资产总览" en="Balance overview" ja="資産概要" ko="잔액 개요" fr="Vue d'ensemble" de="Guthabenübersicht" es="Resumen de saldo" pt="Resumo do saldo" ar="نظرة عامة"/></h2>
@@ -113,7 +113,7 @@ export default function WalletLivePanel(){
     </div>
     <div className="lx26-topup-amounts">
      {BALANCE_TOPUP_AMOUNTS.map(amount=>topupPayReady
-      ? <Link key={amount} href={topupCurrency==="CNY"?"/checkout?productId=sasi-balance-"+amount+"&redirect=%2Fai-wallet":"/checkout-usd?productId=sasi-usd-balance-"+amount+"&returnPath=%2Fai-wallet"} className="lx26-topup-choice">{topupSymbol}{amount}</Link>
+      ? <Link key={amount} href={topupCurrency==="CNY"?"/checkout?productId=sasi-balance-"+amount+"&redirect=%2Fai-wallet":"/checkout-usd?productId=sasi-usd-balance-"+amount+"&redirect=%2Fai-wallet%3Fcurrency%3DUSD"} className="lx26-topup-choice">{topupSymbol}{amount}</Link>
       : <span key={amount} className="lx26-topup-choice is-unavailable" aria-disabled="true">{topupSymbol}{amount}</span>)}
     </div>
     <div className="lx26-topup-custom">

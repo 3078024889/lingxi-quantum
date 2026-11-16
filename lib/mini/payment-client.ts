@@ -47,3 +47,17 @@ export async function openMiniWallet(): Promise<boolean> {
     bridge.navigateTo({ url: "/pages/web/index?path=%2Fai-wallet", success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
   });
 }
+
+
+export async function openMiniRecharge(): Promise<boolean> {
+  const bridge = await miniPaymentBridge();
+  if (!bridge) return false;
+  return new Promise(resolve => {
+    const timeout = setTimeout(() => resolve(false), 5000);
+    bridge.navigateTo({
+      url: "/pages/balance/index",
+      success: () => { clearTimeout(timeout); resolve(true); },
+      fail: () => { clearTimeout(timeout); resolve(false); },
+    });
+  });
+}

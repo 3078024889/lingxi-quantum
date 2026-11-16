@@ -1034,3 +1034,13 @@ html[data-theme="dark"] .lx-footer-search-number{color:#91bcfa}
 .lx-footer-language select{font-size:14px;min-height:30px;background:var(--lx-panel);color:var(--lx-ink);border:1px solid var(--lx-line);border-radius:7px;padding:3px 6px}
 @media(max-width:1180px){.lx11-footer-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.lx11-footer-brand{grid-column:auto!important}.lx11-footer-grid>nav{grid-column:auto!important}.lx-footer-unified-columns{grid-template-columns:repeat(2,minmax(0,1fr))!important}.lx-footer-search-list{grid-column:1/-1!important;border:0;border-top:1px solid #d6e3f3;padding:16px 0 0}}
 @media(max-width:700px){.lx11-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.lx11-footer-brand{grid-column:1/-1!important}.lx-footer-unified-columns{grid-template-columns:minmax(0,1fr)!important}.lx-footer-search-list{grid-column:auto!important}.lx-footer-unified{padding:18px!important}.lx-footer-unified-head h2{font-size:20px!important}}
+
+/* 2026-11-16: keep the account Save action visible on narrow mini-program WebViews. */
+.lx-account-profile{width:100%;min-width:0;grid-template-columns:minmax(0,64px) minmax(0,1fr)}
+.lx-account-profile-copy{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.lx-account-name-edit{display:grid;grid-template-columns:minmax(0,1fr) 84px;gap:8px;width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.lx-account-name-edit input{display:block;width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.lx-account-name-edit button{display:inline-flex;width:84px;min-width:84px;max-width:84px;flex:0 0 84px;align-items:center;justify-content:center;white-space:nowrap;overflow:visible;box-sizing:border-box;color:#fff;background:linear-gradient(110deg,#6b5be7,#477edb);font-size:13px;line-height:1;padding:0 8px;position:relative;z-index:1}
+.lx-account-name-edit button:disabled{background:#e9ebf2;color:#59627a;opacity:1;cursor:not-allowed}
+@media(max-width:380px){.lx-account-profile{grid-template-columns:minmax(0,56px) minmax(0,1fr);gap:12px}.lx-account-name-edit{grid-template-columns:minmax(0,1fr) 72px;gap:6px}.lx-account-name-edit button{width:72px;min-width:72px;max-width:72px;flex-basis:72px;padding:0 5px}}
+@media(max-width:330px){.lx-account-name-edit{grid-template-columns:minmax(0,1fr)}.lx-account-name-edit button{width:100%;min-width:0;max-width:100%;flex-basis:auto}}
