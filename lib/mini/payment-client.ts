@@ -39,29 +39,14 @@ export async function detectMiniPaymentContext(): Promise<boolean> {
   });
 }
 
-export async function openMiniWallet(): Promise<boolean> {
+export async function openMiniWallet(currency: "CNY" | "USD" = "CNY"): Promise<boolean> {
   const bridge = await miniPaymentBridge();
   if (!bridge) return false;
+  const safeCurrency = currency === "USD" ? "USD" : "CNY";
+  const walletPath = "/ai-wallet?currency=" + safeCurrency;
+  const url = "/pages/web/index?path=" + encodeURIComponent(walletPath);
   return new Promise(resolve => {
     const timeout = setTimeout(() => resolve(false), 5000);
-    bridge.navigateTo({ url: "/pages/web/index?path=%2Fai-wallet", success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
-  });
-}
-
-
-export async function openMiniRecharge(productId?: string): Promise<boolean> {
-  const bridge = await miniPaymentBridge();
-  if (!bridge) return false;
-  return new Promise(resolve => {
-    const timeout = setTimeout(() => resolve(false), 5000);
-    const safeProductId = typeof productId === "string" &&
-      /^sasi-balance-(?:10|88|666|888|custom-(?:0|[1-9][0-9]{0,4})(?:\.[0-9]{1,2})?)$/.test(productId)
-      ? productId : "";
-    const url = safeProductId ? "/pages/balance/index?productId=" + encodeURIComponent(safeProductId) : "/pages/balance/index";
-    bridge.navigateTo({
-      url,
-      success: () => { clearTimeout(timeout); resolve(true); },
-      fail: () => { clearTimeout(timeout); resolve(false); },
-    });
+    bridge.navigateTo({ url, success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
   });
 }

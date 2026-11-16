@@ -1044,3 +1044,13 @@ html[data-theme="dark"] .lx-footer-search-number{color:#91bcfa}
 .lx-account-name-edit button:disabled{background:#e9ebf2;color:#59627a;opacity:1;cursor:not-allowed}
 @media(max-width:380px){.lx-account-profile{grid-template-columns:minmax(0,56px) minmax(0,1fr);gap:12px}.lx-account-name-edit{grid-template-columns:minmax(0,1fr) 72px;gap:6px}.lx-account-name-edit button{width:72px;min-width:72px;max-width:72px;flex-basis:72px;padding:0 5px}}
 @media(max-width:330px){.lx-account-name-edit{grid-template-columns:minmax(0,1fr)}.lx-account-name-edit button{width:100%;min-width:0;max-width:100%;flex-basis:auto}}
+
+/* 2026-11-16: mobile account profile uses a full-width Save action; never clip it beside the input. */
+@media(max-width:700px){
+ .lx-account-profile{grid-template-columns:minmax(0,60px) minmax(0,1fr)!important;gap:12px!important;align-items:start!important}
+ .lx-account-profile-copy{width:100%!important;min-width:0!important;max-width:100%!important;overflow:visible!important}
+ .lx-account-name-edit{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:8px!important;width:100%!important;min-width:0!important;max-width:100%!important;overflow:visible!important}
+ .lx-account-name-edit input{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;height:44px!important;box-sizing:border-box!important}
+ .lx-account-name-edit .lx-account-save-button{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;max-width:100%!important;height:42px!important;min-height:42px!important;max-height:42px!important;box-sizing:border-box!important;flex:none!important;position:static!important;overflow:visible!important;white-space:nowrap!important;padding:0 16px!important;border:0!important;border-radius:11px!important;background:linear-gradient(110deg,#7257e8,#4d86df)!important;color:#fff!important;font-size:14px!important;font-weight:700!important;line-height:1!important}
+ .lx-account-name-edit .lx-account-save-button:disabled{background:#e9ebf2!important;color:#59627a!important;opacity:1!important}
+}

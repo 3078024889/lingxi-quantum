@@ -7,10 +7,7 @@ export function miniVirtualToolsEnabled() {
   return process.env.WECHAT_MINI_VPAY_TOOLS_ENABLED === "true" && miniVirtualPayConfigured();
 }
 
-export function miniVirtualTopupsEnabled() {
-  return process.env.WECHAT_MINI_VPAY_TOPUPS_ENABLED === "true" && miniVirtualPayConfigured();
-}
-
+// Used only to validate and settle historical native CNY top-up orders; new top-ups use the official website wallet.
 export function virtualTopupGoods(productId: string) {
   const fixed = /^sasi-balance-(10|88|666|888)$/.exec(productId);
   const custom = /^sasi-balance-custom-(.+)$/.exec(productId);

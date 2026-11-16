@@ -58,7 +58,7 @@ export default function AccountProfileCard({ email, initialName }: { email: stri
         <div className="lx-account-name-edit">
           <input value={name} onChange={event => setName(event.target.value)} maxLength={24}
             autoComplete="nickname" aria-label={t("displayName")} />
-          <button type="button" onClick={save} disabled={busy || name.trim() === saved}
+          <button className="lx-account-save-button" type="button" onClick={save} disabled={busy || name.trim() === saved}
             aria-label={t("save")} title={t("save")}>
             {busy ? t("saving") : t("save")}
           </button>
