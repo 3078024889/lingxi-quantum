@@ -61,7 +61,7 @@ flags=[
  "PORT","WECHAT_ENABLED","ALIPAY_ENABLED","PAYPAL_ENABLED","PAYPAL_ENV",
  "SASI_RMB_BALANCE_V1_ENABLED","USD_BALANCE_TOPUP_ENABLED","SASI_REFUND_FLOW_TESTED",
  "TOOL_PASS_BACKEND_READY","TOOL_PASS_COMMERCE_READY","NEXT_PUBLIC_TOOL_PASS_ENFORCED",
- "WECHAT_MINI_VPAY_ENV","WECHAT_MINI_VPAY_TOPUPS_ENABLED","WECHAT_MINI_VPAY_TOOLS_ENABLED"
+ "WECHAT_MINI_VPAY_ENV","WECHAT_MINI_VPAY_TOOLS_ENABLED","WECHAT_MINI_JSAPI_TOPUPS_ENABLED"
 ]
 for key in flags:
     print("EFFECTIVE_"+key+"="+env.get(key,"<unset>"))
@@ -83,7 +83,7 @@ print("MINI_VPAY_PROVIDER_CREDENTIALS_PRESENT="+("YES" if present([
 ]) else "NO"))
 print("MINI_JSAPI_MERCHANT_CREDENTIALS_PRESENT="+("YES" if present([
  "WECHAT_MINI_APP_ID","WECHAT_MINI_APP_SECRET","WECHAT_MCH_ID","WECHAT_PRIVATE_KEY",
- "WECHAT_CERT_SERIAL_NO","WECHAT_API_V3_KEY"
+ "WECHAT_CERT_SERIAL_NO","WECHAT_API_V3_KEY","WECHAT_PLATFORM_PUBLIC_KEY","WECHAT_PLATFORM_PUBLIC_KEY_ID"
 ]) else "NO"))
 print("MINI_APP_ID_MATCHES_EXPECTED="+("YES" if env.get("WECHAT_MINI_APP_ID","").strip()=="wxbf4ae90406e7e26b" else "NO"))
 print("TOOLPASS_PRIVACY_HASH_READY="+("YES" if len(env.get("LINGXIFIELD_PRIVACY_HASH_SECRET",""))>=32 else "NO"))
@@ -103,6 +103,7 @@ probe /api/health "$TMP/health.json"; H="$PROBE_CODE"
 probe /api/pay/providers "$TMP/providers.json"; P="$PROBE_CODE"
 probe /api/tools/pass "$TMP/toolpass.json"; T="$PROBE_CODE"
 probe /api/wechat/mini/cny-topup/availability "$TMP/mini-cny.json"; M="$PROBE_CODE"
+probe /api/wechat/mini/balance-pay/availability "$TMP/legacy-mini.json"; ML="$PROBE_CODE"
 probe /api/admin/pay/readiness "$TMP/admin.json"; A="$PROBE_CODE"
 
 if [[ "$P" == 200 ]]; then
