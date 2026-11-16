@@ -28,7 +28,7 @@ function shareablePath(options,fallback){
 }
 Page({
  data:{src:'',path:'/',loading:true,failed:false},
- onLoad(options){enableShareMenu();const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
+ onLoad(options){enableShareMenu({includeTimeline:true});const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
  onShow(){enableShareMenu()},
  handleLoad(){this.setData({loading:false,failed:false})},
  handleError(event){console.warn('[mini webview load failed]',event&&event.detail);this.setData({loading:false,failed:true});wx.showModal({title:'页面没有打开',content:'请确认网络正常后重试。',showCancel:false})},
