@@ -1,0 +1,104 @@
+name: Miniapp 6.0.0 standard merchant JSAPI package (NO WECHAT UPLOAD)
+
+on:
+  pull_request:
+    branches:
+      - ci/cn3194-payment-base-20261110
+    paths:
+      - 'miniapp/**'
+      - 'components/WalletLivePanel.tsx'
+      - 'components/MiniPaymentBoundary.tsx'
+      - 'components/AccountProfileCard.tsx'
+      - 'components/Nav.tsx'
+      - 'app/unified-shell.css'
+      - 'app/api/wechat/mini/cny-topup/**'
+      - 'app/api/wechat/mini/account-summary/route.ts'
+      - 'app/api/pay/wechat/notify/route.ts'
+      - 'lib/mini/**'
+      - 'lib/wechatpay.ts'
+      - 'tests/mini-recharge-single-entry.test.mjs'
+      - 'tests/mini-main-direct-tools-share.test.mjs'
+      - 'tests/unified-mini-share-routes.test.mjs'
+      - 'tests/usd-wallet-topup-readiness.test.mjs'
+      - 'tests/home-layout-20261115.test.mjs'
+      - 'tests/mobile-account-trigger-20261116.test.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'scripts/package-miniapp-6-0-0.cjs'
+      - 'scripts/audit/mini-*.mjs'
+      - 'supabase/migrations/*mini*cny*'
+      - '.github/workflows/miniapp-6-0-package.yml'
+  push:
+    branches:
+      - fix/site-wallet-payment-readiness-20261116
+    paths:
+      - 'miniapp/**'
+      - 'app/api/wechat/mini/cny-topup/**'
+      - 'app/api/wechat/mini/account-summary/route.ts'
+      - 'app/api/pay/wechat/notify/route.ts'
+      - 'lib/mini/**'
+      - 'tests/mini-recharge-single-entry.test.mjs'
+      - 'scripts/build-miniapps-v80.cjs'
+      - 'scripts/package-miniapp-6-0-0.cjs'
+      - 'supabase/migrations/*mini*cny*'
+      - '.github/workflows/miniapp-6-0-package.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: miniapp-6-0-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-and-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 11.28.0
+          run_install: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Install locked dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify 6.0.0 wallet, merchant JSAPI, history and sharing contracts
+        run: |
+          set -Eeuo pipefail
+          node --test tests/mini-recharge-single-entry.test.mjs tests/mini-main-direct-tools-share.test.mjs tests/unified-mini-share-routes.test.mjs tests/usd-wallet-topup-readiness.test.mjs tests/home-layout-20261115.test.mjs tests/mobile-account-trigger-20261116.test.mjs
+          node scripts/audit/mini-unified-surface.mjs
+          node scripts/audit/mini-recharge-navigation.mjs
+          node scripts/audit/mini-cny-native-usd-website.mjs
+          node scripts/audit/mini-balance-checkout.mjs
+          node scripts/audit/mini-web-account-sync.mjs
+          node scripts/audit/mini-retired-purchases.mjs
+          node scripts/audit/mini-api-recovery.mjs
+          node scripts/audit/mini-virtual-payment.mjs
+          node scripts/audit-mini-program.mjs
+          node scripts/test-mini-sharing-v78.cjs
+          node scripts/test-mini-profiles-v80.cjs
+          pnpm exec tsc --noEmit
+          echo MINIAPP_6_0_0_STANDARD_JSAPI_SOURCE_AND_TYPECHECK_PASS
+      - name: Build isolated main mini-program project
+        run: |
+          set -Eeuo pipefail
+          node scripts/build-miniapps-v80.cjs main
+          node scripts/package-miniapp-6-0-0.cjs
+          echo MINIAPP_6_0_0_IMPORT_PACKAGE_PASS_NO_UPLOAD
+      - name: Upload importable WeChat Developer Tools package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lingxifield-miniapp-6.0.0-${{ github.sha }}
+          path: |
+            dist/lingxifield-miniapp-6.0.0.zip
+            dist/lingxifield-miniapp-6.0.0.zip.sha256
+            dist/miniapp-6.0.0/release-notes.txt
+          retention-days: 14
+          if-no-files-found: error
+      - name: Confirm no external release actions
+        run: echo NO_WECHAT_UPLOAD_NO_WECHAT_REVIEW_NO_PRODUCTION_PAYMENT_ENABLE_NO_ECS_DEPLOY
