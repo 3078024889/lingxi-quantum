@@ -58,7 +58,7 @@ for(const l of ["zh-CN","en","ja","ko","fr","de","es","pt","ar"])
  must(i18n.includes("'"+l+"'")||i18n.includes('"'+l+'"')||i18n.includes(l+":"),"MINI_LANGUAGE_MISSING:"+l);
 
 const balanceRoute=read("miniapp/pages/balance/index.js");
-must(balanceRoute.includes("/pages/web/index?path=")&&balanceRoute.includes("%2Fai-wallet"),"MINI_WALLET_MUST_REDIRECT_TO_WEBSITE");
+must(balanceRoute.includes("/pages/web/index?path=")&&balanceRoute.includes("encodeURIComponent(path)")&&balanceRoute.includes("\"/ai-wallet\""),"MINI_WALLET_MUST_REDIRECT_TO_WEBSITE");
 must(!balanceRoute.includes("requestVirtualPayment")&&!balanceRoute.includes("/api/wechat/mini/balance-pay/"),"NATIVE_WALLET_TOPUP_CODE_REMAINS");
 must(!exists("miniapp/pages/recharge/index.js"),"RETIRED_NATIVE_RECHARGE_PAGE_REMAINS");
 const web=read("miniapp/pages/web/index.js");
