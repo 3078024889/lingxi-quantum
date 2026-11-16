@@ -30,5 +30,9 @@ test("USD wallet top-up keeps its existing production readiness contract and exp
  assert.match(paypal,/SASI_REFUND_FLOW_TESTED/);
  const admin=read("app/api/admin/pay/readiness/route.ts");
  assert.match(admin,/usdBalanceTopupReady/);
+ assert.match(admin,/paypalEnabled\(\)/);
+ assert.match(admin,/cnyBalanceTopupReady/);
+ assert.match(admin,/miniCnyJsapiTopupReady/);
+ assert.match(admin,/miniCnyJsapiMissing/);
  assert.match(admin,/refundFlowTested/);
 });
