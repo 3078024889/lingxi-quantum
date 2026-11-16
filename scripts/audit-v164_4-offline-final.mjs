@@ -26,7 +26,7 @@ for(const p of [
 ]) must(fs.existsSync(p),`MINI_PAYMENT_FILE_MISSING:${p}`);
 
 must(read("miniapp/pages/pay/index.js").includes("wx.requestVirtualPayment"),"MINI_TOOL_VIRTUAL_PAY_MISSING");
-must(read("miniapp/pages/balance/index.js").includes("/pages/web/index?path=")&&read("miniapp/pages/balance/index.js").includes("%2Fai-wallet"),"MINI_BALANCE_WEBSITE_WALLET_REDIRECT_MISSING");
+must(read("miniapp/pages/balance/index.js").includes("/pages/web/index?path=")&&read("miniapp/pages/balance/index.js").includes("encodeURIComponent(path)")&&read("miniapp/pages/balance/index.js").includes("\"/ai-wallet\""),"MINI_BALANCE_WEBSITE_WALLET_REDIRECT_MISSING");
 must(!read("miniapp/pages/balance/index.js").includes("requestVirtualPayment"),"MINI_NATIVE_WALLET_TOPUP_REMAINS");
 must(!fs.existsSync("app/api/wechat/mini/balance-pay/create/route.ts"),"MINI_NATIVE_WALLET_TOPUP_API_REMAINS");
 
