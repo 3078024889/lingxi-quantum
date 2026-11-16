@@ -74,6 +74,9 @@ for(const name of [...candidates].sort()){
     console.log("COM_WORKER_CODE name="+name+
      " providerEndpoint="+yes(code.includes("/api/pay/providers"))+
      " merchantReadiness="+yes(code.includes("edge-merchant-readiness")||code.includes("merchantAlipay"))+
+     " apiProxyFetch="+yes(code.includes("fetch("))+
+     " referencesCNOrigin="+yes(code.includes("lingxifield.cn"))+
+     " referencesLegacyGateway="+yes(code.includes("LINGXI_COM_LEGACY_GATEWAY"))+
      " paypalFlag="+yes(code.includes("PAYPAL_ENABLED"))+
      " wechatFlag="+yes(code.includes("WECHAT_ENABLED"))+
      " alipayFlag="+yes(code.includes("ALIPAY_ENABLED")));
