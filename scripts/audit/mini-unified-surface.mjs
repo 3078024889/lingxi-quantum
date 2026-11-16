@@ -9,7 +9,7 @@ const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));assert.equal(ap
 for(const [page,target] of [['home','/'],['tools','/tools'],['create','/sasi'],['profile','/account'],['agents','/siai']])assert.match(fs.readFileSync('miniapp/pages/'+page+'/index.js','utf8'),new RegExp('wx.redirectTo'));
 const balanceRoute=fs.readFileSync('miniapp/pages/balance/index.js','utf8');
 assert.match(balanceRoute,/pages\/web\/index\?path=/);
-assert.match(balanceRoute,/encodeURIComponent\\(path\\)/);assert.match(balanceRoute,/\"\\/ai-wallet\"/);
+assert.ok(balanceRoute.includes("encodeURIComponent(path)"));assert.ok(balanceRoute.includes('"/ai-wallet"'));
 assert.doesNotMatch(balanceRoute,/requestVirtualPayment|balance-pay\/create/);
 assert.equal(fs.existsSync('miniapp/pages/recharge/index.js'),false);
 assert.doesNotMatch(balanceRoute,/switchTab/);
