@@ -38,3 +38,18 @@ test("USD wallet top-up keeps its existing production readiness contract and exp
  assert.match(admin,/usdBalanceTopupReady/);
  assert.match(admin,/refundFlowTested/);
 });
+
+
+test("CN3196 candidate preflight is read-only and pins the live port topology",()=>{
+ const source=read("scripts/ops/cn3196-candidate-preflight-20261116.sh");
+ assert.match(source,/PROD_PORT=3195/);
+ assert.match(source,/CANDIDATE_PORT=3196/);
+ assert.match(source,/ROLLBACK_PORT=3193/);
+ assert.match(source,/EXPECTED_PROD_SHA='59d29734ca4cd4c2e6df81d22d2af0287764a9f2'/);
+ assert.match(source,/NGINX_PRODUCTION_UPSTREAM_MUST_REMAIN_3195/);
+ assert.match(source,/CN3196_CANDIDATE_PORT_FREE=YES/);
+ assert.match(source,/CN3196_CANDIDATE_PREFLIGHT_PASS/);
+ assert.match(source,/NO_ENV_CHANGE_NO_SERVICE_RESTART_NO_NGINX_CHANGE_NO_ORDER_CREATED_NO_CHARGE/);
+ assert.doesNotMatch(source,/systemctl\\s+(?:start|stop|restart|reload|enable|disable)\\b/);
+ assert.doesNotMatch(source,/nginx\\s+-t|systemctl\\s+reload\\s+nginx|set_nginx_upstream/);
+});
