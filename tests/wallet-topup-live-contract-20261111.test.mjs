@@ -50,6 +50,6 @@ test("CN3196 candidate preflight is read-only and pins the live port topology",(
  assert.match(source,/CN3196_CANDIDATE_PORT_FREE=YES/);
  assert.match(source,/CN3196_CANDIDATE_PREFLIGHT_PASS/);
  assert.match(source,/NO_ENV_CHANGE_NO_SERVICE_RESTART_NO_NGINX_CHANGE_NO_ORDER_CREATED_NO_CHARGE/);
- assert.doesNotMatch(source,/systemctl\\s+(?:start|stop|restart|reload|enable|disable)\\b/);
- assert.doesNotMatch(source,/nginx\\s+-t|systemctl\\s+reload\\s+nginx|set_nginx_upstream/);
+ assert.doesNotMatch(source,/systemctl\s+(?:start|stop|restart|reload|enable|disable)\b/);
+ assert.doesNotMatch(source,/nginx\s+-t|systemctl\s+reload\s+nginx|set_nginx_upstream/);
 });
