@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { alipayEnabled, alipayMissingVars } from "@/lib/alipay";
 import { wechatPayConfigured, wechatPayEnabled, wechatPayMissingVars } from "@/lib/wechatpay";
 import { paypalConfigured, paypalEnabled } from "@/lib/paypal";
+import { sasiRmbBalanceV1Enabled } from "@/lib/sasi/payment-gate";
 
 export const dynamic="force-dynamic";
 export const runtime="nodejs";
@@ -15,7 +16,7 @@ export async function GET(){
 
  // Wallet checkout must expose the same gates enforced by its order APIs.
  // Do not report USD wallet recharge as available from PayPal alone.
- const cnyBalanceTopupReady=wechat||alipay;
+ const cnyBalanceTopupReady=sasiRmbBalanceV1Enabled() && (wechat||alipay);
  const usdBalanceTopupReady=paypal
   && process.env.USD_BALANCE_TOPUP_ENABLED==="true"
   && process.env.SASI_REFUND_FLOW_TESTED==="true";
