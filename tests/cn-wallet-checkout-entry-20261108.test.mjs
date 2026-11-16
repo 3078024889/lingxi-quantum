@@ -22,7 +22,12 @@ test("wallet resolves to authenticated real balances, not legacy pricing redirec
  assert.match(client, /\/account\/withdrawals/);
  assert.match(client, /\/account\/orders/);
  assert.match(client, /BALANCE_TOPUP_AMOUNTS/);
- assert.match(client, /providers\?\.wechat===true\|\|providers\?\.alipay===true/);
+ assert.match(client, /providers\?\.cnyBalanceTopupReady===true/);
+ assert.match(client, /providers\?\.usdBalanceTopupReady===true/);
+ assert.doesNotMatch(client, /providers\?\.paypal===true/);
+ const usdCheckout=read("app/checkout-usd/page.tsx");
+ assert.match(usdCheckout, /usdBalanceTopupReady/);
+ assert.match(usdCheckout, /setReady\(d\?\.usdBalanceTopupReady===true\)/);
  assert.match(client, /WalletLedgerPanel showCurrencyTabs/);
  const ledger=read("components/WalletLedgerPanel.tsx");
  assert.match(ledger,/showCurrencyTabs&&/);
@@ -74,4 +79,16 @@ test("server still refuses disabled payments and authenticates charge creation",
  const notify=read("app/api/pay/wechat/notify/route.ts");
  assert.match(notify, /verifyWechatNotifySignature/);
  assert.match(notify, /paymentAmount\.total/);
+});
+
+test("wallet deep links select the requested CNY or USD currency",()=>{
+ const panel=read("components/WalletLivePanel.tsx");
+ assert.match(panel,/new URLSearchParams\(window\.location\.search\)\.get\("currency"\)/);
+ assert.match(panel,/requestedCurrency==="CNY"\|\|requestedCurrency==="USD"/);
+});
+test("Mini Program webview permits only the official USD wallet checkout, not H5 CNY payment",()=>{
+ const boundary=read("components/MiniPaymentBoundary.tsx");
+ assert.match(boundary,/getUsdBalanceProduct\(productId\)/);
+ assert.match(boundary,/mini && !allowWebsiteUsdWallet/);
+ assert.match(boundary,/setContext\(mini && !allowWebsiteUsdWallet \? "mini" : "web"\)/);
 });

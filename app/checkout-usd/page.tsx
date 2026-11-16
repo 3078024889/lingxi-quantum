@@ -41,7 +41,7 @@ function Inner(){
   useEffect(()=>{
     const s=createClient();
     void s.auth.getUser().then(({data})=>setBuyer(data.user?.email||""));
-    void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>setReady(Boolean(d?.paypal))).catch(()=>setReady(false));
+    void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>setReady(d?.usdBalanceTopupReady===true)).catch(()=>setReady(false));
   },[]);
 
   async function pay(){

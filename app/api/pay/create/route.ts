@@ -38,6 +38,8 @@ export async function POST(req:NextRequest){
       wallet:"market" as const,sellerId:marketProduct.sellerId
     }:null);
     if(!product)return NextResponse.json({error:"INVALID_USD_PRODUCT"},{status:400});
+    if(walletProduct&&(process.env.USD_BALANCE_TOPUP_ENABLED!=="true"||process.env.SASI_REFUND_FLOW_TESTED!=="true"))
+      return NextResponse.json({error:"USD_BALANCE_TOPUP_NOT_ENABLED"},{status:503});
 
     if(isDirectPass&&!toolPassCommerceReady())return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
     if(isSoftware&&!await softwareCheckoutReady(requestedId))return NextResponse.json({error:"SOFTWARE_NOT_READY_FOR_SALE"},{status:503});
