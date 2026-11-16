@@ -34,7 +34,7 @@ systemctl is-active --quiet "$SVC" || { echo CN3195_SERVICE_NOT_ACTIVE; exit 1; 
 MAINPID="$(systemctl show "$SVC" -p MainPID --value)"
 DIR="$(systemctl show "$SVC" -p WorkingDirectory --value)"
 ENVFILES="$(systemctl show "$SVC" -p EnvironmentFiles --value)"
-ENVFILE_COUNT="$(python3 -c 'import re,sys; print(len(set(re.findall(r"/[^\\s()]+\\.env",sys.stdin.read()))))' <<< "$ENVFILES")"
+ENVFILE_COUNT="$(python3 -c 'import re,sys; print(len(set(re.findall(r"/[^\s()]+\.env",sys.stdin.read()))))' <<< "$ENVFILES")"
 echo "CN3195_LISTENER_PID=$PID"
 echo "CN3195_SYSTEMD_SERVICE=$SVC"
 echo "CN3195_SERVICE_MAINPID=$MAINPID"
