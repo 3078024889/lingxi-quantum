@@ -36,19 +36,19 @@ test("CNY payment order references are persisted atomically before provider chec
  const ali=read("app/api/pay/alipay/create/route.ts");
  for(const [source,gateway] of [[wx,"createWechatNativeOrder"],[ali,"createAlipayPaymentUrl"]]){
   assert.match(source,/randomUUID/);
-  assert.match(source,/provider_payment_id:\\s*outTradeNo/);
+  assert.match(source,/provider_payment_id:\s*outTradeNo/);
   const postHandler=source.indexOf("export async function POST");
   const gatewayCall=source.indexOf(gateway+"({",postHandler);
   assert.ok(gatewayCall>postHandler);
   assert.ok(source.indexOf("provider_payment_id: outTradeNo",postHandler)<gatewayCall);
-  assert.doesNotMatch(source,/update\\(\\{\\s*provider_payment_id:\\s*outTradeNo/);
+  assert.doesNotMatch(source,/update\(\{\s*provider_payment_id:\s*outTradeNo/);
  }
 });
 test("provider refund success must carry the matching amount and order reference",()=>{
  const adapters=read("lib/money/provider-adapters.ts");
  for(const term of ["assertAlipayRefund","ALIPAY_REFUND_ORDER_MISMATCH","ALIPAY_REFUND_AMOUNT_MISMATCH","ALIPAY_REFUND_AMOUNT_MISSING","WECHAT_REFUND_ORDER_REFERENCE_MISSING","WECHAT_REFUND_AMOUNT_MISSING","PAYPAL_REFUND_AMOUNT_MISSING"])
   assert.ok(adapters.includes(term),term);
- assert.equal((adapters.match(/assertAlipayRefund\\(r,x\\)/g)||[]).length,2);
+ assert.equal((adapters.match(/assertAlipayRefund\(r,x\)/g)||[]).length,2);
 });
 test("USD wallet checkout is blocked unless both explicit wallet and refund gates pass",()=>{
  const paypal=read("app/api/pay/create/route.ts");
