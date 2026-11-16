@@ -123,8 +123,9 @@ jobs:
           CHARGE_CREATED=NO
           REFUND_CREATED=NO
           EOF
-          tar -tzf "$DIST/$ARCHIVE" | grep -Fxq './server.js'
-          tar -tzf "$DIST/$ARCHIVE" | grep -Fxq './RELEASE_SOURCE_SHA'
+          tar -tzf "$DIST/$ARCHIVE" > "$DIST/archive.list"
+          grep -Fxq './server.js' "$DIST/archive.list"
+          grep -Fxq './RELEASE_SOURCE_SHA' "$DIST/archive.list"
           echo "CN3196_SOURCE_SHA=$SOURCE_SHA"
           echo "CN3196_ARCHIVE=$ARCHIVE"
           echo "CN3196_ARCHIVE_BYTES=$BYTES"
