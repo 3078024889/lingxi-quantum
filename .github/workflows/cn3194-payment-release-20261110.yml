@@ -1,4 +1,6 @@
-name: CN3194 payment-integrated standalone prerelease (local R2 transfer; NO PROD DEPLOY)
+name: RETIRED CN3194 payment prerelease (PORT TOPOLOGY MISMATCH; NO DEPLOY)
+# RETIRED 2026-11-16: actual CN production is 3195, candidate is 3196, rollback is 3193.
+# Never run the legacy 3194/3195 stage or activation scripts from this workflow.
 on:
   push:
     branches: [ci/cn3194-payment-base-20261110]
@@ -187,7 +189,13 @@ jobs:
           cp -a public .next/standalone/public
           cp .next/BUILD_ID .next/standalone/.next/BUILD_ID
           cp scripts/ops/cn-payment-signed-live-probe-20261109.mjs .next/standalone/cn-payment-signed-live-probe.mjs
-          cp scripts/ops/cn-payment-activate-3194-20261110.sh .next/standalone/cn-payment-activate.sh
+          cat > .next/standalone/cn-payment-activate.sh <<'RETIRED_SCRIPT'
+#!/usr/bin/env bash
+set -Eeuo pipefail
+echo 'RETIRED_PORT_TOPOLOGY: CN production=3195 candidate=3196 rollback=3193. This archived activation entrypoint is disabled.' >&2
+exit 64
+RETIRED_SCRIPT
+          chmod 700 .next/standalone/cn-payment-activate.sh
           chmod 600 .next/standalone/cn-payment-signed-live-probe.mjs .next/standalone/cn-payment-activate.sh
           test -s .next/standalone/cn-payment-activate.sh
           test -s .next/standalone/cn-payment-signed-live-probe.mjs
@@ -320,16 +328,19 @@ jobs:
           echo "CN3194_RELEASE_ARCHIVE_SHA256=$ARCHIVE_SHA"
           echo "CN3194_STAGE_SCRIPT_BLOB_SHA1=$STAGE_BLOB"
           echo "CN3194_PAYMENT_SCRIPT_BLOB_SHA1=$PAYMENT_BLOB"
-      - name: Attach exact package and pinned promotion scripts as GitHub artifact
+      - name: Attach standalone archive only (retired port scripts excluded)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: cn3194-release-${{ steps.package.outputs.source_sha }}
-          path: dist/cn3194/*
+          path: |
+            dist/cn3194/cn-20261110-unified-standalone.tar.gz
+            dist/cn3194/cn-20261110-unified-standalone.sha256
+            dist/cn3194/cn3194-release-manifest.env
           retention-days: 14
           if-no-files-found: error
   publish:
     needs: build
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    if: ${{ false }} # Disabled until a verified CN3195/3196/3193 release workflow replaces this legacy topology.
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     permissions:
