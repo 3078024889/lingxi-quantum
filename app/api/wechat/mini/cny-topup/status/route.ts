@@ -49,7 +49,7 @@ export async function GET(req: Request) {
       if (!(await hasCredit(admin, session.userId, order.id))) await commitCredit(admin, session.userId, order.id);
       return noStore({ paid: true, status: "paid" });
     }
-    if (["canceled", "failed", "refunded"].includes(order.status)) {
+    if (["failed", "refunded"].includes(order.status)) {
       return noStore({ paid: false, closed: true, status: order.status });
     }
     if (order.status !== "pending") return noStore({ paid: false, status: order.status });
@@ -75,10 +75,10 @@ export async function GET(req: Request) {
       return noStore({ paid: true, status: "paid" });
     }
     if (provider.status === "CLOSED" || provider.status === "REVOKED") {
-      const { error: closeError } = await admin.from("orders").update({ status: "canceled" })
+      const { error: closeError } = await admin.from("orders").update({ status: "failed" })
         .eq("id", order.id).eq("status", "pending");
       if (closeError) throw new Error("MINI_CNY_LOCAL_CLOSE_FAILED");
-      return noStore({ paid: false, closed: true, status: "canceled" });
+      return noStore({ paid: false, closed: true, status: "failed" });
     }
     return noStore({ paid: false, status: "pending", providerConfirmedUnpaid: provider.status === "NOTPAY" });
   } catch (error) {
