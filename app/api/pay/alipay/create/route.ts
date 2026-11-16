@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getProduct } from "@/lib/plans";
@@ -46,7 +47,11 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
     const abuse=await enforceAbuseGuard(req,{scope:"payment-create-alipay",userId:user.id,accountLimit:120,ipLimit:300});
     if(!abuse.ok)return NextResponse.json({error:abuse.error},{status:abuse.status});
 
+    const orderId = randomUUID();
+    const outTradeNo = `LX${orderId.replace(/-/g, "")}`.slice(0, 64);
     const { data: order, error } = await admin.from("orders").insert({
+      id: orderId,
+      provider_payment_id: outTradeNo,
       user_id: user.id,
       product_id: product.id,
       product_type: product.type,
@@ -58,7 +63,6 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
     }).select().single();
     if (error || !order) return NextResponse.json({ error: "创建订单失败" }, { status: 500 });
 
-    const outTradeNo = `LX${order.id.replace(/-/g, "")}`.slice(0, 64);
     const baseUrl = alipaySiteUrl();
     const destination = safeLocalReturnPath(returnPath, "/account/orders");
     try {
@@ -72,7 +76,6 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,
       });
-      await admin.from("orders").update({ provider_payment_id: outTradeNo }).eq("id", order.id);
       return NextResponse.json({ orderId: order.id, url: paymentUrl });
     } catch (gatewayError) {
       console.error("[alipay create] failed", { orderId: order.id, gatewayError });
