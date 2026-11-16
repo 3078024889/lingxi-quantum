@@ -1,0 +1,91 @@
+<view class="cny-wallet-page">
+  <view class="cny-wallet-nav">
+    <text class="cny-back" bindtap="back">‹ 返回</text>
+    <text class="cny-nav-title">人民币余额</text>
+    <text class="cny-nav-spacer"></text>
+  </view>
+
+  <view class="cny-wallet-hero">
+    <view class="cny-eyebrow">LINGXIFIELD · WALLET</view>
+    <view class="cny-hero-title">人民币充值</view>
+    <view class="cny-hero-subtitle">微信原生支付 · 订单核验后自动到账</view>
+  </view>
+
+  <view class="cny-balance-card">
+    <view class="cny-card-label">当前可用余额</view>
+    <view class="cny-balance-value">¥{{balanceText}}</view>
+    <view class="cny-account-row">
+      <view class="cny-account-copy">
+        <text class="cny-account-caption">到账账户</text>
+        <text class="cny-account-name">{{accountLabel || '尚未连接灵犀场账户'}}</text>
+      </view>
+      <button class="cny-account-button" bindtap="connectAccount">{{linked ? '切换账户' : '连接账户'}}</button>
+    </view>
+    <view wx:if="{{linked}}" class="cny-refundable">可退本金 ¥{{refundableText}}</view>
+  </view>
+
+  <view class="cny-section-card">
+    <view class="cny-section-heading">
+      <view>
+        <view class="cny-section-title">选择充值金额</view>
+        <view class="cny-section-subtitle">CNY · 微信小程序原生支付</view>
+      </view>
+      <view class="cny-currency-chip">CNY</view>
+    </view>
+    <view class="cny-amount-grid">
+      <button wx:for="{{amounts}}" wx:key="*this" data-amount="{{item}}" bindtap="choose"
+        class="cny-amount-option {{selected == item ? 'is-selected' : ''}}"
+        disabled="{{busy || orderId || requestId}}">¥{{item}}</button>
+      <button bindtap="chooseCustom" class="cny-amount-option {{selected == 'custom' ? 'is-selected' : ''}}"
+        disabled="{{busy || orderId || requestId}}">自定义金额</button>
+    </view>
+    <view wx:if="{{selected == 'custom'}}" class="cny-custom-field">
+      <text class="cny-custom-prefix">¥</text>
+      <input class="cny-custom-input" type="digit" value="{{custom}}" bindinput="input"
+        disabled="{{busy || orderId || requestId}}" placeholder="输入金额，例如 12.50" maxlength="8"/>
+    </view>
+    <view class="cny-amount-hint">单笔 ¥0.01–¥10,000；小数金额单笔最高 ¥100。</view>
+  </view>
+
+  <view class="cny-status-card">
+    <view class="cny-status-indicator"></view>
+    <view class="cny-status-message">{{message}}</view>
+  </view>
+
+  <button wx:if="{{!orderId && !requestId}}" class="cny-primary-button"
+    bindtap="pay" loading="{{busy}}" disabled="{{busy || loading || !enabled || !linked}}">
+    {{busy ? '正在准备支付…' : '确认金额并充值 ¥' + amountText}}
+  </button>
+  <button wx:elif="{{requestId && !orderId}}" class="cny-primary-button"
+    bindtap="recoverPending" loading="{{busy}}" disabled="{{busy || loading || !enabled || !linked}}">
+    恢复上次充值
+  </button>
+  <button wx:elif="{{orderId}}" class="cny-primary-button"
+    bindtap="confirmPayment" loading="{{busy}}" disabled="{{busy}}">
+    核验上一笔支付结果
+  </button>
+  <view wx:if="{{orderId || requestId}}" class="cny-pending-note">
+    上一笔订单尚未完成核验。核验关闭前不会创建第二笔充值。
+  </view>
+  <button wx:if="{{!enabled}}" class="cny-secondary-button" bindtap="refreshAvailability" loading="{{loading}}" disabled="{{loading}}">
+    重新检查充值服务
+  </button>
+
+  <view class="cny-service-links">
+    <button bindtap="openUsdWallet">美元余额 · 前往官网充值</button>
+    <button bindtap="openOrders">历史订单</button>
+    <button bindtap="openRefunds">退款与进度</button>
+    <button bindtap="openAccount">账户资料</button>
+  </view>
+
+  <view class="cny-topup-history">
+    <view class="cny-history-title">最近充值记录</view>
+    <view wx:for="{{topups}}" wx:key="id" class="cny-history-row">
+      <text>¥{{item.amountText}}</text><text>{{item.statusText}}</text>
+    </view>
+    <view wx:if="{{!topups.length}}" class="cny-history-empty">暂无充值记录</view>
+    <button class="cny-refresh-button" bindtap="refreshAll">刷新余额与进度</button>
+  </view>
+
+  <view class="cny-security-note">支付按钮返回不代表余额已到账。灵犀场会向微信核验订单，并以服务端账本入账结果为准。</view>
+</view>
