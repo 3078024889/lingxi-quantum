@@ -51,7 +51,7 @@ async function cancelProviderUnpaidOrder(admin: ReturnType<typeof createAdminCli
   const { data, error } = await admin.from("orders").update({ status: "failed" })
     .eq("id", orderId).eq("status", "pending").select("id");
   if (error) throw new Error("MINI_CNY_LOCAL_ORDER_CLOSE_FAILED");
-  return Boolean(data?.length) || true;
+  return true;
 }
 async function queryMiniOrder(order: any, openid: string) {
   const amountFen = Math.round(Number(order.amount_rmb) * 100);
@@ -61,12 +61,14 @@ async function queryMiniOrder(order: any, openid: string) {
   return result;
 }
 async function readPreparedPayment(admin: ReturnType<typeof createAdminClient>, order: any, sessionOpenid: string, amountFen: number) {
-  const { data, error } = await admin.from("wechat_mini_payment_events").select("payload")
+  const { data, error } = await admin.from("wechat_mini_payment_events").select("payload,created_at")
     .eq("event_type", "mini_jsapi_topup_prepared").eq("out_trade_no", order.provider_payment_id)
     .eq("order_id", order.id).eq("transaction_id", "prepay").maybeSingle();
   if (error) throw new Error("MINI_CNY_PREPAY_EVENT_LOOKUP_FAILED");
   const payload = data?.payload as any;
-  if (!payload) return null;
+  if (!payload || !data?.created_at) return null;
+  const preparedAt = Date.parse(String(data.created_at));
+  if (!Number.isFinite(preparedAt) || Date.now() - preparedAt >= 110 * 60 * 1000) return null;
   if (payload.openid !== sessionOpenid || payload.appid !== EXPECTED_WECHAT_MINI_APP_ID ||
       Number(payload.amountFen) !== amountFen || typeof payload.prepayId !== "string" || !payload.prepayId) {
     throw new Error("MINI_CNY_PREPAY_EVENT_IDENTITY_MISMATCH");
