@@ -1,6 +1,6 @@
 // Web-view needs the registered business domain, not the request API domain.
 const WEB_BASE = 'https://lingxifield.cn'
-const { enableShareMenu, copyWebLink, publicWebPath, appMessage } = require('../../utils/share')
+const { enableShareMenu, copyWebLink, publicWebPath, appMessage, timeline } = require('../../utils/share')
 const EXACT_ALLOWED=new Set(['/','/siai','/sasi','/tools','/account','/account/orders','/account/notifications','/ai-wallet','/sasi/pricing','/privacy','/terms','/refunds'])
 const PREFIX_ALLOWED=['/tools/','/api/wechat/mini/account-link/'],MAX_PATH_LENGTH=2048,CURRENCY_KEY='lx_currency'
 function safeDecode(value){try{return decodeURIComponent(value)}catch(_){return''}}
@@ -36,4 +36,5 @@ Page({
  copyCurrentLink(){copyWebLink(this.data.path,'当前页面链接已复制')},
  openNativeShare(){const sharePath=publicWebPath(this.data.path);const title=shareTitleFor(sharePath);wx.navigateTo({url:'/pages/share/index?path='+encodeURIComponent(sharePath)+'&title='+encodeURIComponent(title),fail(){wx.showToast({title:'暂时无法打开分享页，请重试',icon:'none'})}})},
  onShareAppMessage(options){const sharePath=shareablePath(options,this.data.path);return appMessage(shareTitleFor(sharePath),'/pages/web/index?path='+encodeURIComponent(sharePath))},
+ onShareTimeline(options){const sharePath=shareablePath(options,this.data.path);return timeline(shareTitleFor(sharePath),'path='+encodeURIComponent(sharePath))},
 })
