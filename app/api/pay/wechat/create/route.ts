@@ -10,7 +10,7 @@ import {
   wechatPayEnabled,
 } from "@/lib/wechatpay";
 import { exchangeCodeForOpenid, wechatOauthConfigured } from "@/lib/wechat-oauth";
-import { sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
+import { sasiRmbBalanceV1Enabled, sasiTopupProductEnabled } from "@/lib/sasi/payment-gate";
 import {softwareCheckoutReady} from "@/lib/sasi-software/readiness";
 import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
@@ -85,6 +85,9 @@ export async function POST(req: NextRequest) {
     }
     if(product.group==="toolpass"&&!toolPassCommerceReady())
       return NextResponse.json({error:"TOOLPASS_EXECUTION_NOT_READY"},{status:503});
+    if (product.group === "production" && !sasiRmbBalanceV1Enabled()) {
+      return NextResponse.json({ error: "CNY_BALANCE_TOPUP_NOT_ENABLED" }, { status: 503 });
+    }
     if (product.group === "production" && !sasiTopupProductEnabled(product.id)) {
       return NextResponse.json({ error: "SASI_PRODUCTION_NOT_READY" }, { status: 503 });
     }
