@@ -102,7 +102,7 @@ jobs:
           SOURCE_SHA="${{ github.event.pull_request.head.sha }}"
           SHORT="$(printf '%s' "$SOURCE_SHA" | cut -c1-12)"
           DIST="$RUNNER_TEMP/cn3196"
-          mkdir -p "$DIST"
+          mkdir -p "$DIST/standalone"
           cp -a .next/standalone/. "$DIST/standalone/"
           ARCHIVE="cn3196-payment-candidate-$SHORT.tar.gz"
           tar --sort=name --mtime='UTC 2026-01-01' --owner=0 --group=0 --numeric-owner -C "$DIST/standalone" -czf "$DIST/$ARCHIVE" .
