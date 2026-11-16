@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import {readFileSync,existsSync} from "node:fs";
 const read=p=>readFileSync(p,"utf8");
 
-test("CNY preset and custom wallet top-ups remain open without the SASI generation refund flag",()=>{
+test("CNY wallet top-ups require the independent CNY gate and do not inherit the SASI generation refund flag",()=>{
  const gate=read("lib/sasi/payment-gate.ts");
  assert.match(gate,/SASI_TOPUP_PRODUCTS\.has\(productId\)/);
  assert.match(gate,/customTopupAmount\(custom\[1\]\) !== null/);
@@ -14,7 +14,13 @@ test("CNY preset and custom wallet top-ups remain open without the SASI generati
  const wallet=read("components/WalletLivePanel.tsx");
  const providers=read("app/api/pay/providers/route.ts");
  const checkout=read("app/checkout-usd/page.tsx");
- assert.match(providers,/cnyBalanceTopupReady\s*=\s*wechat\s*\|\|\s*alipay/);
+ assert.match(providers,/sasiRmbBalanceV1Enabled/);
+ assert.match(providers,/cnyBalanceTopupReady\s*=\s*sasiRmbBalanceV1Enabled\(\)\s*&&\s*\(wechat\s*\|\|\s*alipay\)/);
+ for(const path of ["app/api/pay/wechat/create/route.ts","app/api/pay/alipay/create/route.ts"]){
+  const source=read(path);
+  assert.match(source,/sasiRmbBalanceV1Enabled/);
+  assert.match(source,/CNY_BALANCE_TOPUP_NOT_ENABLED/);
+ }
  assert.match(providers,/usdBalanceTopupReady\s*=\s*paypal[\s\S]*USD_BALANCE_TOPUP_ENABLED[\s\S]*SASI_REFUND_FLOW_TESTED/);
  assert.match(wallet,/providers\?\.cnyBalanceTopupReady===true/);
  assert.match(wallet,/providers\?\.usdBalanceTopupReady===true/);
