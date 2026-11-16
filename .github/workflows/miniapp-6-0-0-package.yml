@@ -21,6 +21,7 @@ on:
       - 'scripts/build-miniapps-v80.cjs'
       - 'scripts/package-miniapp-6-0-0.cjs'
       - 'scripts/test-mini-profiles-v80.cjs'
+      - 'scripts/test-mini-sharing-v78.cjs'
       - 'tests/miniapp-6.0.0-release-contract.test.mjs'
       - 'tests/mini-recharge-single-entry.test.mjs'
       - 'tests/mobile-account-trigger-20261116.test.mjs'
