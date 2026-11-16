@@ -37,5 +37,5 @@ if(target==='temp-mail'){
  fs.writeFileSync(path.join(out,'sitemap.json'),JSON.stringify({rules:[{action:'allow',page:'pages/mail-home/index'},{action:'disallow',page:'*'}]},null,2));
 }
 const sourceDirty=Boolean(execFileSync('git',['status','--porcelain','--','miniapp'],{encoding:'utf8',windowsHide:true}).trim());
-const receipt={at:new Date().toISOString(),target,appId,sourceSha:sha,sourceDirty,projectPath:out,mode:'website wallet checkout for all CNY/USD top-ups',credentialsCopied:false};
+const receipt={at:new Date().toISOString(),target,appId,sourceSha:sha,sourceDirty,projectPath:out,mode:'native CNY virtual top-up plus official website USD PayPal checkout',credentialsCopied:false};
 fs.writeFileSync(path.join(base,target+'-latest.json'),JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));

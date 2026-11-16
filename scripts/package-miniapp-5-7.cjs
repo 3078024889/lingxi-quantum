@@ -3,7 +3,7 @@ const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 
 const root = process.cwd();
-const version = '5.7.3';
+const version = '5.7.4';
 const receiptFile = path.join(root, '_local/handoff/mini-build-v80/main-latest.json');
 if (!fs.existsSync(receiptFile)) throw new Error('MAIN_MINI_BUILD_RECEIPT_MISSING');
 const receipt = JSON.parse(fs.readFileSync(receiptFile, 'utf8'));
@@ -49,8 +49,6 @@ if (projectConfig.appid !== 'wxbf4ae90406e7e26b' || app.pages?.[0] !== 'pages/we
 if (fs.existsSync(path.join(stage, 'project.private.config.json')) ||
     fs.existsSync(path.join(stage, 'pages', 'portal', 'index.js')) ||
     fs.existsSync(path.join(stage, 'pages', 'recharge')) ||
-    fs.existsSync(path.join(stage, 'utils', 'topup-expiry.js')) ||
-    fs.existsSync(path.join(stage, 'utils', 'virtual-payment-errors.js')) ||
     fs.existsSync(path.join(stage, 'pages', 'mail-home', 'index.js'))) {
   throw new Error('SECONDARY_OR_PRIVATE_PROJECT_FILE_LEAKED');
 }
@@ -70,9 +68,12 @@ function verifyDependencies(dir) {
   }
 }
 const balanceRoute = fs.readFileSync(path.join(stage, 'pages', 'balance', 'index.js'), 'utf8');
-if (!balanceRoute.includes('/pages/web/index?path=') || !balanceRoute.includes('encodeURIComponent(path)') || !balanceRoute.includes('"/ai-wallet"') ||
-    balanceRoute.includes('requestVirtualPayment') || balanceRoute.includes('/api/wechat/mini/balance-pay/')) {
-  throw new Error('MINI_BALANCE_ROUTE_MUST_REDIRECT_TO_WEBSITE_WALLET');
+if (!balanceRoute.includes("requestVirtualPayment") ||
+    !balanceRoute.includes('/api/wechat/mini/balance-pay/create') ||
+    !balanceRoute.includes("currency === 'USD'") ||
+    !balanceRoute.includes('/ai-wallet?currency=USD') ||
+    !balanceRoute.includes('lx_mini_cny_topup_pending_v1')) {
+  throw new Error('MINI_BALANCE_ROUTE_MUST_SUPPORT_CNY_NATIVE_AND_USD_WEBSITE');
 }
 verifyDependencies(stage);
 fs.writeFileSync(path.join(stage, 'VERSION.txt'),
@@ -81,7 +82,7 @@ fs.rmSync(zipFile, { force: true });
 execFileSync('zip', ['-qr', '-X', zipFile, '.'], { cwd: stage, stdio: 'inherit' });
 execFileSync('unzip', ['-t', zipFile], { stdio: 'inherit' });
 const entries = execFileSync('unzip', ['-Z1', zipFile], { encoding: 'utf8' }).trim().split(/\r?\n/);
-for (const required of ['project.config.json', 'app.json', 'pages/balance/index.js', 'pages/balance/index.wxml', 'pages/web/index.js', 'utils/api.js', 'VERSION.txt']) {
+for (const required of ['project.config.json', 'app.json', 'pages/balance/index.js', 'pages/balance/index.wxml', 'pages/balance/index.wxss', 'pages/web/index.js', 'utils/api.js', 'utils/topup-expiry.js', 'utils/virtual-payment-errors.js', 'VERSION.txt']) {
   if (!entries.includes(required)) throw new Error('MINI_ZIP_REQUIRED_FILE_MISSING:' + required);
 }
 if (entries.some(name => name.includes('project.private.config.json') || name.startsWith('pages/recharge/') || name.startsWith('pages/mail-home/'))) {
@@ -90,16 +91,14 @@ if (entries.some(name => name.includes('project.private.config.json') || name.st
 const hash = execFileSync('sha256sum', [zipFile], { encoding: 'utf8' }).trim().split(/\s+/)[0];
 fs.writeFileSync(zipFile + '.sha256', hash + '  ' + path.basename(zipFile) + '\n');
 fs.writeFileSync(path.join(output, 'release-notes.txt'),
-  '灵犀场小程序 5.7.3\n\n' +
-  '1. 删除旧版原生充值页面、充值商品选择、充值下单与虚拟充值调用。\n' +
-  '2. 人民币与美元充值统一进入灵犀场官网钱包，由官网收银台处理。\n' +
-  '3. 旧余额页面路径仅保留兼容跳转，不再包含原生充值逻辑。\n' +
-  '4. 主小程序与独立临时邮箱小程序均不再打包旧充值页。\n' +
-  '5. 保留账户登录、余额查询、资金账本、订单、退款与提现记录。\n' +
-  '6. 保留已审核工具商品的独立微信虚拟支付，不与钱包充值混用。\n' +
-  '7. 历史虚拟充值订单仍可由服务端回调核验并完成结算。\n' +
-  '8. 新小程序版本不会调用原生钱包充值接口；服务端旧充值创建接口已移除。\n' +
-  '9. 主小程序 AppID: ' + projectConfig.appid + '\n' +
+  '灵犀场小程序 5.7.4\n\n' +
+  '1. 恢复人民币 CNY 原生余额充值，使用微信虚拟支付与独立余额充值 API。\n' +
+  '2. 官网 CNY 充值入口在小程序 WebView 中引导至原生人民币充值页，不再形成循环跳转。\n' +
+  '3. 美元 USD 余额充值继续使用官网钱包与 PayPal，返回钱包时保留 USD 币种。\n' +
+  '4. 工具商品微信虚拟支付保持独立，不与钱包充值 SKU、订单和接口混用。\n' +
+  '5. 账户资料保存按钮恢复“保存”文案，并修复移动端输入框挤压和按钮裁切。\n' +
+  '6. 迁移旧版待处理订单缓存，清理旧支付错误状态，保留服务端历史订单与幂等结算。\n' +
+  '7. 小程序 AppID: ' + projectConfig.appid + '\n' +
   'SOURCE_SHA=' + sourceSha + '\n' +
   'SHA256=' + hash + '\n');
 console.log(JSON.stringify({ version, sourceSha, appId: projectConfig.appid, zipFile, sha256: hash, entries: entries.length }, null, 2));

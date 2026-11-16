@@ -1,10 +1,14 @@
-name: Miniapp 5.7.3 website wallet and import package (NO WECHAT UPLOAD)
+name: Miniapp 5.7.4 dual-currency wallet and import package (NO WECHAT UPLOAD)
 on:
   push:
     branches: [fix/miniapp-wallet-website-only-20261115, fix/miniapp-5-7-wallet-share-20261115-cn, ci/cn3194-payment-base-20261110]
     paths:
       - 'miniapp/**'
       - 'components/WalletLivePanel.tsx'
+      - 'components/MiniPaymentBoundary.tsx'
+      - 'components/AccountProfileCard.tsx'
+      - 'app/unified-shell.css'
+      - 'app/api/wechat/mini/balance-pay/**'
       - 'app/api/pay/providers/route.ts'
       - 'app/api/pay/create/route.ts'
       - 'app/checkout-usd/page.tsx'
@@ -74,21 +78,21 @@ jobs:
           node scripts/test-mini-sharing-v78.cjs
           node scripts/test-mini-profiles-v80.cjs
           pnpm exec tsc --noEmit
-          echo MINIAPP_5_7_3_SOURCE_AND_TYPECHECK_PASS
+          echo MINIAPP_5_7_4_SOURCE_AND_TYPECHECK_PASS
       - name: Build isolated main mini-program project
         run: |
           set -Eeuo pipefail
           node scripts/build-miniapps-v80.cjs main
           node scripts/package-miniapp-5-7.cjs
-          echo MINIAPP_5_7_3_IMPORT_PACKAGE_PASS_NO_UPLOAD
+          echo MINIAPP_5_7_4_IMPORT_PACKAGE_PASS_NO_UPLOAD
       - name: Upload importable WeChat Developer Tools package
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: lingxifield-miniapp-5.7.3-${{ github.sha }}
+          name: lingxifield-miniapp-5.7.4-${{ github.sha }}
           path: |
-            dist/lingxifield-miniapp-5.7.3.zip
-            dist/lingxifield-miniapp-5.7.3.zip.sha256
-            dist/miniapp-5.7.3/release-notes.txt
+            dist/lingxifield-miniapp-5.7.4.zip
+            dist/lingxifield-miniapp-5.7.4.zip.sha256
+            dist/miniapp-5.7.4/release-notes.txt
           retention-days: 14
           if-no-files-found: error
       - name: Confirm no external release actions

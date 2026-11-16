@@ -11,10 +11,10 @@ const required=[
  "miniapp/pages/home/index.js","miniapp/pages/create/index.js","miniapp/pages/tools/index.js","miniapp/pages/agents/index.js",
  "miniapp/pages/profile/index.js","miniapp/pages/settings/index.js","miniapp/pages/web/index.js","miniapp/pages/web/index.json",
  "miniapp/pages/share/index.js","miniapp/pages/share/index.json","miniapp/pages/mail-home/index.json",
- "miniapp/pages/orders/index.js","miniapp/pages/pay/index.js","miniapp/pages/balance/index.js","miniapp/pages/notifications/index.js",
+ "miniapp/pages/orders/index.js","miniapp/pages/pay/index.js","miniapp/pages/balance/index.js","miniapp/pages/balance/index.wxss","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js","miniapp/pages/notifications/index.js",
  "miniapp/pages/discover-e-sign-pdf/index.js","miniapp/pages/discover-image-watermark-remover/index.js",
  "miniapp/pages/discover-burn-after-read/index.js","miniapp/pages/discover-temp-mail/index.js",
- "app/api/wechat/mini/login/route.ts","app/api/wechat/mini/logout/route.ts","app/api/wechat/mini/account-link/start/route.ts"
+ "app/api/wechat/mini/login/route.ts","app/api/wechat/mini/logout/route.ts","app/api/wechat/mini/account-link/start/route.ts","app/api/wechat/mini/balance-pay/availability/route.ts","app/api/wechat/mini/balance-pay/create/route.ts"
 ];
 for(const r of required)must(exists(r),"MINI_REQUIRED_FILE_MISSING:"+r);
 
@@ -58,14 +58,11 @@ for(const l of ["zh-CN","en","ja","ko","fr","de","es","pt","ar"])
  must(i18n.includes("'"+l+"'")||i18n.includes('"'+l+'"')||i18n.includes(l+":"),"MINI_LANGUAGE_MISSING:"+l);
 
 const balanceRoute=read("miniapp/pages/balance/index.js");
-must(balanceRoute.includes("/pages/web/index?path=")&&balanceRoute.includes("encodeURIComponent(path)")&&balanceRoute.includes("\"/ai-wallet\""),"MINI_WALLET_MUST_REDIRECT_TO_WEBSITE");
-must(!balanceRoute.includes("requestVirtualPayment")&&!balanceRoute.includes("/api/wechat/mini/balance-pay/"),"NATIVE_WALLET_TOPUP_CODE_REMAINS");
-must(!exists("miniapp/pages/recharge/index.js"),"RETIRED_NATIVE_RECHARGE_PAGE_REMAINS");
-for(const p of [
- "miniapp/pages/recharge/index.js","miniapp/pages/recharge/index.wxml","miniapp/pages/recharge/index.json","miniapp/pages/recharge/index.wxss",
- "miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js",
- "app/api/wechat/mini/balance-pay/availability/route.ts","app/api/wechat/mini/balance-pay/create/route.ts","app/api/wechat/mini/balance-pay/status/route.ts"
-])must(!exists(p),"RETIRED_MINI_WALLET_TOPUP_FILE_REMAINS:"+p);
+must(balanceRoute.includes("requestVirtualPayment")&&balanceRoute.includes("/api/wechat/mini/balance-pay/create"),"CNY_NATIVE_WALLET_TOPUP_MISSING");
+must(balanceRoute.includes("currency === 'USD'")&&balanceRoute.includes("/ai-wallet?currency=USD"),"USD_MUST_REMAIN_ON_OFFICIAL_WEBSITE_WALLET");
+must(exists("miniapp/pages/balance/index.wxss")&&exists("miniapp/utils/topup-expiry.js")&&exists("miniapp/utils/virtual-payment-errors.js"),"CNY_NATIVE_WALLET_SUPPORT_FILES_MISSING");
+must(exists("app/api/wechat/mini/balance-pay/availability/route.ts")&&exists("app/api/wechat/mini/balance-pay/create/route.ts"),"CNY_NATIVE_WALLET_APIS_MISSING");
+must(!exists("miniapp/pages/recharge/index.js"),"RETIRED_SECOND_RECHARGE_PAGE_REMAINS");
 const web=read("miniapp/pages/web/index.js");
 must(web.includes("EXACT_ALLOWED")&&web.includes("PREFIX_ALLOWED"),"MINI_WEB_ALLOWLIST_MISSING");
 must(web.includes("preferredCurrency()")&&web.includes("currency="),"MINI_CURRENCY_WEB_SYNC_MISSING");

@@ -1,35 +1,5 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import {readFileSync,existsSync} from "node:fs";
-
-const read=path=>readFileSync(path,"utf8");
-
-test("website wallet remains the single CNY/USD recharge surface",()=>{
- const nav=read("components/Nav.tsx");
- assert.match(nav,/href="\/ai-wallet"/);
- assert.match(nav,/t\("recharge"\)/);
- const wallet=read("components/WalletLivePanel.tsx");
- assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
- assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);
- assert.doesNotMatch(wallet,/miniVirtualTopupsAvailable|openMiniRecharge|miniTopupsReady|requestVirtualPayment/);
- const boundary=read("components/MiniPaymentBoundary.tsx");
- assert.doesNotMatch(boundary,/miniVirtualTopupsAvailable|miniTopupsReady|小程序充值暂未开放/);
-});
-
-test("mini-program compatibility routes redirect to the official website wallet",()=>{
- const balance=read("miniapp/pages/balance/index.js");
- assert.match(balance,/pages\/web\/index\?path=/);
- assert.ok(balance.includes("encodeURIComponent(path)")); assert.ok(balance.includes('"/ai-wallet"'));
- assert.doesNotMatch(balance,/requestVirtualPayment|balance-pay\/create/);
- assert.equal(existsSync("miniapp/pages/recharge/index.js"),false);
- assert.equal(existsSync("miniapp/utils/topup-expiry.js"),false);
- assert.equal(existsSync("miniapp/utils/virtual-payment-errors.js"),false);
- assert.equal(existsSync("app/api/wechat/mini/balance-pay/create/route.ts"),false);
- assert.equal(existsSync("app/api/wechat/mini/balance-pay/availability/route.ts"),false);
- const pay=read("miniapp/pages/pay/index.js");
- assert.match(pay,/pages\/web\/index\?path=%2Fai-wallet/);
- const mail=read("miniapp/pages/mail-home/index.js");
- assert.match(mail,/pages\/web\/index\?path=%2Fai-wallet/);
- const api=read("miniapp/utils/api.js");
- assert.doesNotMatch(api,/balance-pay\/availability/);
-});
+import test from "node:test";import assert from "node:assert/strict";import{readFileSync,existsSync}from"node:fs";const read=p=>readFileSync(p,"utf8"),exists=p=>existsSync(p);
+test("CNY wallet top-up uses native mini-program virtual payment",()=>{const b=read("miniapp/pages/balance/index.js"),m=read("components/MiniPaymentBoundary.tsx");assert.match(b,/requestVirtualPayment/);assert.match(b,/balance-pay\/create/);assert.match(b,/balance-pay\/availability/);assert.match(m,/isCnyBalanceTopup/);assert.match(m,/openMiniRecharge/);for(const p of ["app/api/wechat/mini/balance-pay/create/route.ts","app/api/wechat/mini/balance-pay/availability/route.ts","miniapp/utils/topup-expiry.js","miniapp/utils/virtual-payment-errors.js"])assert.ok(exists(p),p);assert.equal(exists("miniapp/pages/recharge/index.js"),false)});
+test("USD wallet top-up remains on the official website and PayPal",()=>{const w=read("components/WalletLivePanel.tsx"),b=read("miniapp/pages/balance/index.js"),c=read("app/checkout-usd/page.tsx");assert.match(w,/checkout-usd\?productId=sasi-usd-balance-/);assert.match(w,/redirect=%2Fai-wallet%3Fcurrency%3DUSD/);assert.match(b,/currency === 'USD'/);assert.match(b,/ai-wallet\?currency=USD/);assert.match(c,/setUsdWalletReady/);assert.match(c,/paypalReady/)});
+test("tool-product virtual payment remains independent",()=>{const p=read("miniapp/pages/pay/index.js");assert.match(p,/requestVirtualPayment/);assert.match(p,/tool-pay\/create/);assert.ok(exists("app/api/wechat/mini/tool-pay/create/route.ts"))});
+test("legacy top-up cache migrates once and old payment errors are cleared",()=>{const b=read("miniapp/pages/balance/index.js"),e=read("miniapp/utils/topup-expiry.js");assert.match(b,/lx_mini_cny_topup_pending_v1/);assert.match(b,/LEGACY_PENDING_KEY/);assert.match(b,/removeStorageSync\('lx_mini_last_payment_error'\)/);assert.doesNotMatch(b,/setStorageSync\('lx_mini_last_payment_error'/);assert.match(e,/lx_mini_cny_topup_pending_v1/);assert.match(e,/lx_mini_cny_expired_checkouts_v1/)});
