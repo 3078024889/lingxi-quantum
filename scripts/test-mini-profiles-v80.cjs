@@ -34,7 +34,9 @@ assert.equal(main.data.src,'https://lingxifield.cn/?mini=1&ads=0&currency=CNY');
 assert(mainWx.calls.shareMenu.length>0);
 assert.equal(main.onShareAppMessage({webViewUrl:'https://lingxifield.cn/tools/pdf-editor?mini=1&ads=0&currency=CNY&invoice=private'}).path,'/pages/web/index?path=%2Ftools%2Fpdf-editor');
 assert.equal(JSON.parse(fs.readFileSync('miniapp/pages/web/index.json','utf8')).enableShareAppMessage,true);
-assert.equal(JSON.parse(fs.readFileSync('miniapp/pages/web/index.json','utf8')).enableShareTimeline,undefined);
+assert.equal(JSON.parse(fs.readFileSync('miniapp/pages/web/index.json','utf8')).enableShareTimeline,true);
+assert.equal(typeof main.onShareTimeline,'function');
+assert.equal(main.onShareTimeline({webViewUrl:'https://lingxifield.cn/siai?mini=1&ads=0&currency=CNY'}).query,'path=%2Fsiai');
 
 const mailWx=makeWx();
 global.wx=mailWx;
