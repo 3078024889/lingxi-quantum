@@ -36,6 +36,12 @@ test("uncertain CNY payments retain the original idempotency key and never creat
   assert.match(page,/cny-topup\/create/);
   assert.doesNotMatch(page,/expireCheckout|orders['"]?,\s*\{\s*method:\s*['"]DELETE/);
   assert.match(read("app/api/wechat/mini/cny-topup/create/route.ts"),/reserve_mini_cny_topup_order/);
+  const availability=read("app/api/wechat/mini/cny-topup/availability/route.ts");
+  assert.match(availability,/TOPUPS_DISABLED/);
+  assert.match(availability,/PROVIDER_CONFIG_MISSING/);
+  assert.match(availability,/PRODUCTION_ENV_REQUIRED/);
+  assert.match(availability,/providerConfigured/);
+  assert.match(read("miniapp/pages/cny-wallet/index.js"),/disabledMessages/);
   const migration=read("supabase/migrations/20261116120000_mini_cny_topup_atomic_reservation.sql");
   assert.match(migration,/pg_advisory_xact_lock/);
   assert.match(migration,/SECURITY INVOKER/);
