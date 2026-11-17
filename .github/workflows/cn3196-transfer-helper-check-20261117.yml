@@ -37,7 +37,8 @@ jobs:
           grep -Fq 'PROD_PORT=3195' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CANDIDATE_PORT=3196' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'ROLLBACK_PORT=3193' scripts/ops/cn3196-candidate-stage-20261116.sh
-          grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CN3196_CANDIDATE_FAILED_PRODUCTION_3195_UNCHANGED' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/R2-CN3196-Transfer-20261117.ps1
           if grep -Eq 'nginx -s reload|systemctl restart nginx|sed -i.*lingxifield\.conf' scripts/ops/cn3196-candidate-stage-20261116.sh; then
             echo 'CANDIDATE_SCRIPT_MUST_NOT_SWITCH_PRODUCTION'
             exit 1
