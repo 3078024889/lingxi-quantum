@@ -46,7 +46,7 @@ const callback=read("app/api/pay/wechat/notify/route.ts");
 assert.match(callback,/WECHAT_MINI_APP_ID/);
 assert.match(callback,/mini_jsapi_topup_order_created/);
 assert.match(callback,/fulfillPaidOrder/);
-const migration=read("supabase/migrations/20261116181000_mini_cny_jsapi_topup_20261116.sql");
+const migration=read("supabase/migrations/20261117013342_mini_cny_jsapi_topup_20261116.sql");
 assert.match(migration,/reserve_mini_cny_jsapi_topup_order/);
 assert.match(migration,/pg_advisory_xact_lock/);
 assert.match(migration,/SECURITY INVOKER/);
