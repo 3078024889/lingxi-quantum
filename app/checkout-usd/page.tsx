@@ -148,7 +148,7 @@ function Inner(){
  useEffect(()=>{
   const s=createClient();
   void s.auth.getUser().then(({data})=>setBuyer(data.user?.email||""));
-  void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>{setPaypalReady(d?.paypal===true);setUsdWalletReady(d?.usdBalanceTopup===true);}).catch(()=>{setPaypalReady(false);setUsdWalletReady(false);});
+  void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>{setPaypalReady(d?.paypal===true);setUsdWalletReady(d?.usdBalanceTopupReady===true);}).catch(()=>{setPaypalReady(false);setUsdWalletReady(false);});
  },[]);
  useEffect(()=>{
   if(!isMarketProductId(productId)){setMarketLoading(false);setMarketProduct(null);setMarketReady(false);return;}
