@@ -40,7 +40,7 @@ test("Mini Program CNY uses native merchant JSAPI; USD enters official website P
  assert.doesNotMatch(native,/wx\.requestVirtualPayment/);
  assert.match(cny,/\/api\/pay\/wechat\/create/);
  assert.match(usd,/paypalReady/);
- assert.match(web,/currencyParam=\/(?:\[?\&\])currency=/);
+ assert.match(web,/currencyParam=\/\(\?:\[\?&\]\)currency=\//);
  for(const path of ["miniapp/pages/balance","miniapp/pages/recharge","app/api/wechat/mini/balance-pay/create/route.ts","app/api/wechat/mini/balance-pay/availability/route.ts","app/api/wechat/mini/balance-pay/status/route.ts"])assert.equal(exists(path),false,path);
 });
 
