@@ -24,6 +24,17 @@ test("CNY uses native merchant JSAPI and USD uses the official website wallet",(
  assert.ok(availability.includes("WECHAT_MINI_JSAPI_TOPUPS_ENABLED"));
  assert.ok(availability.includes("PRODUCTION_ENV_REQUIRED"));
  assert.ok(availability.includes("APP_ID_MISMATCH"));
+ const wallet=read("components/WalletLivePanel.tsx");
+ assert.ok(wallet.includes("微信小程序原生 JSAPI 支付"));
+ assert.ok(!wallet.includes("微信小程序原生虚拟支付"));
+});
+
+test("Mini Program wallet bridge is prewarmed and safely retried before native navigation",()=>{
+ const client=read("lib/mini/payment-client.ts");
+ assert.match(client,/if \(isMiniProgramContext\(\)\) \{[\s\S]*?await miniPaymentBridge\(\);[\s\S]*?return true;/);
+ assert.match(client,/if \(!loaded\) bridgePromise = undefined/);
+ assert.match(client,/const finish = \(value: boolean\)/);
+ assert.match(client,/try \{\s*bridge\.navigateTo/);
 });
 
 test("custom CNY amount parser accepts decimal JSAPI amounts through the 10000 CNY cap",()=>{
