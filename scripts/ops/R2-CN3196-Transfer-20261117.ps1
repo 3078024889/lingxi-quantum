@@ -2,10 +2,10 @@ param()
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-# Exact 6.0 source archive. Stream GitHub -> private R2; do not download the 340 MB archive to D:.
-$ReleaseTag = 'ecs-cn-unified-20261110-e9018ac0317e'
-$SourceSha = 'e9018ac0317e61d6daf45f55395bdd7e561df890'
-$Short = 'e9018ac0317e'
+# Exact 6.0 source archive. Stream GitHub -> private R2; do not download the 339 MB archive to D:.
+$ReleaseTag = 'ecs-cn-unified-20261117-22c7558dcf40'
+$SourceSha = '22c7558dcf4059b690493c150f0ff5993c71c6a8'
+$Short = '22c7558dcf40'
 $CandidateTag = "cn3196-candidate-20261117-$Short"
 
 $Config = 'D:\LINGXIFIELDCN3192\rclone.conf'
@@ -14,7 +14,7 @@ $WorkDir = Join-Path $Root "cn3196-candidate-$Short"
 $RemoteBase = 'cn3192r2:lingxi-cn3192-transfer/cn3196'
 $RemoteRoot = "$RemoteBase/$CandidateTag"
 $ReleaseBase = "https://github.com/3078024889/lingxi-quantum/releases/download/$ReleaseTag"
-$StageSourceCommit = '5068827279da887f0b62b1eda8283b938df3fead'
+$StageSourceCommit = '3c900399986a1880debec44441f0f3be2a1e8156'
 $StageRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3196-candidate-stage-20261116.sh"
 $AuditRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3195-payment-readiness-audit-20261116.sh"
 $TemplateName = 'cn3196-r2-ens-stage-20261117.template.sh'
@@ -22,17 +22,17 @@ $TemplateRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$
 $TemplateGitBlobSha = '0de8892fe696a35dbb1d5277214dfbf36e3b9a3b'
 $TemplateBytes = [Int64]4276
 
-$SourceArchiveName = 'cn-20261110-unified-standalone.tar.gz'
+$SourceArchiveName = 'cn-20261115-unified-standalone.tar.gz'
 $ArchiveName = 'cn-20261117-cn3196-candidate.tar.gz'
 $ChecksumName = 'cn-20261117-cn3196-candidate.sha256'
 $StageName = 'cn3196-candidate-stage-20261116.sh'
 $AuditName = 'cn3195-payment-readiness-audit-20261116.sh'
 
-$ArchiveBytes = [Int64]340042760
-$ArchiveSha = 'c7c229fc8cdb884abab199fa6742ebdf222a8948ac67c28f5e3dbadc2d2234c0'
+$ArchiveBytes = [Int64]339005873
+$ArchiveSha = '533bf65e97c14b255b03742c6d552f3dc7b74c61c21c550c43b77839ca5e1c4b'
 $ChecksumBytes = [Int64]102
-$ChecksumSha = 'da628b63e8801fe4c53482f9bd7998c4580ac6d8f7214131a86f8d6295f4c245'
-$StageGitBlobSha = '982f1a243a6f21a7053b31510d0e730ad3f10cff'
+$ChecksumSha = 'a393efabd50ca3db13b325876223660afe0ea40714cbe3a4a6b35f7ccd7c6ca2'
+$StageGitBlobSha = '085051199845402a051dd69893fa43b59853198b'
 $StageBytes = [Int64]12266
 $AuditGitBlobSha = '02e0b843452d4a29aeb9a7b05a82bde6f9c76891'
 $AuditBytes = [Int64]6795
