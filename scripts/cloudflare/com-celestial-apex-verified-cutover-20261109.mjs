@@ -41,8 +41,13 @@ async function cf(path, init = {}) {
 
 async function status(url, options = {}) {
   try {
+    const headers = new Headers(options.headers || {});
+    headers.set("cache-control", "no-cache, no-store, max-age=0");
+    headers.set("pragma", "no-cache");
     const response = await fetch(url, {
       ...options,
+      headers,
+      cache: "no-store",
       redirect: "manual",
       signal: AbortSignal.timeout(30000)
     });
@@ -54,6 +59,24 @@ async function status(url, options = {}) {
 
 async function sleep(ms) {
   await new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function visibleTextFromHtml(html) {
+  return String(html)
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, " ")
+    .replace(/<template\b[^>]*>[\s\S]*?<\/template>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 async function getActiveVersion() {
@@ -232,34 +255,42 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
         "授权范围",
         "保存商品草稿"
       ],
+      requiredVisible: ["卖家工作台", "发布流程", "零费用申请入驻"],
       forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答", "03 / SELLER STUDIO"]
     }
   ];
   for (const page of referencePages) {
     const response = await fetch(
-      base + page.path + "?__lx_com_reference_content=" + encodeURIComponent(phase),
-      { redirect: "manual", signal: AbortSignal.timeout(30000) }
+      base + page.path + "?__lx_com_reference_content=" + encodeURIComponent(phase) + "&__lx_nonce=" + Date.now(),
+      {
+        headers: { "cache-control": "no-cache, no-store, max-age=0", pragma: "no-cache" },
+        cache: "no-store",
+        redirect: "manual",
+        signal: AbortSignal.timeout(30000)
+      }
     );
     const html = await response.text();
-    if (!html.includes('data-release-design="20261114-afternoon-three-pages"')) {
-      throw Error("COM_" + phase + "_AFTERNOON_BUILD_ID_MISMATCH:" + page.path);
-    }
     if (response.status !== 200 || html.length < 5000) {
       throw Error("COM_" + phase + "_REFERENCE_PAGE_UNAVAILABLE:" + page.path + ":" + response.status);
     }
-    // A visual line break must not make a complete heading fail the content
-    // gate. Keep all required labels, assets, links and build markers enforced.
+    if (!html.includes('data-release-design="20261114-afternoon-three-pages"')) {
+      throw Error("COM_" + phase + "_AFTERNOON_BUILD_ID_MISMATCH:" + page.path);
+    }
+    // Required assets/build markers are checked in HTML; retired UI labels are checked
+    // only in rendered text, never in serialized React/Next script payloads.
     const content = html.replace(/<br\s*\/?>/gi, "");
+    const visibleText = visibleTextFromHtml(content);
     const missing = (page.required || []).filter(term => !content.includes(term));
+    const missingVisible = (page.requiredVisible || []).filter(term => !visibleText.includes(term));
     const missingAny = (page.requiredAny || [])
-      .filter(group => !group.some(term => html.includes(term)))
+      .filter(group => !group.some(term => visibleText.includes(term)))
       .map(group => group.join(" | "));
     const missingLinks = (page.requiredLinks || []).filter(link => !html.includes(link));
-    const retired = page.forbidden.filter(term => html.includes(term));
+    const retired = page.forbidden.filter(term => visibleText.includes(term));
     console.log("COM_" + phase + "_REFERENCE_CONTENT " + JSON.stringify({
-      path: page.path, bytes: html.length, missing, missingAny, missingLinks, retired
+      path: page.path, bytes: html.length, missing, missingVisible, missingAny, missingLinks, retired
     }));
-    if (missing.length || missingAny.length || missingLinks.length || retired.length) {
+    if (missing.length || missingVisible.length || missingAny.length || missingLinks.length || retired.length) {
       throw Error("COM_" + phase + "_REFERENCE_CONTENT_MISMATCH:" + page.path);
     }
   }
