@@ -76,7 +76,8 @@ test("CNY JSAPI top-up keeps idempotency and provider reconciliation",()=>{
  assert.ok(!/expireCheckout|orders['"]?,\s*\{\s*method:\s*['"]DELETE/.test(page));
 });
 
-test("new JSAPI reservation is service-role-only and legacy reservation RPC is retired",()=>{
+test("new JSAPI reservation is service-role-only and legacy pending-order RPC remains isolated",()=>{
+ const create=read("app/api/wechat/mini/cny-topup/create/route.ts");
  const migration=read("supabase/migrations/20261116181000_mini_cny_jsapi_topup_20261116.sql");
  assert.ok(migration.includes("reserve_mini_cny_jsapi_topup_order"));
  assert.ok(migration.includes("pg_advisory_xact_lock"));
