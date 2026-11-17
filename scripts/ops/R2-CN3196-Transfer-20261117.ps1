@@ -167,9 +167,9 @@ if ((Get-Item -LiteralPath $TemplatePath).Length -ne $TemplateBytes) { throw 'CN
 if ((Get-GitBlobSha1 $TemplatePath) -cne $TemplateGitBlobSha) { throw 'CN3196_ENS_TEMPLATE_GIT_BLOB_SHA1_MISMATCH' }
 $ChecksumBytes = [Int64](Get-Item -LiteralPath $ChecksumPath).Length
 $ChecksumSha256 = Get-Sha256 $ChecksumPath
-Write-Host 'PINNED_CANDIDATE_STAGE_SCRIPT_PASS'
+Write-Host 'PINNED_STAGE_AUDIT_AND_ENS_TEMPLATE_PASS'
 
-Write-Host 'STEP 4/5: UPLOAD THREE VERIFIED OBJECTS TO PRIVATE R2 WITH 8-WAY MULTIPART'
+Write-Host 'STEP 4/5: UPLOAD FOUR VERIFIED OBJECTS TO PRIVATE R2 WITH 8-WAY MULTIPART'
 & $Rclone lsd 'cn3192r2:lingxi-cn3192-transfer' | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'R2_REMOTE_NOT_ACCESSIBLE' }
 & $Rclone mkdir $RemoteRoot
@@ -182,7 +182,7 @@ $Uploads = @(
     @{ Local = $AuditPath; Name = $AuditName; Size = $AuditBytes }
 )
 $Remote = Get-R2ObjectList
-if (@($Remote).Count -gt 3) { throw 'R2_CANDIDATE_PREFIX_HAS_UNEXPECTED_OBJECTS' }
+if (@($Remote).Count -gt 4) { throw 'R2_CANDIDATE_PREFIX_HAS_UNEXPECTED_OBJECTS' }
 foreach ($u in $Uploads) {
     $existing = @($Remote | Where-Object { [string]$_.Name -ceq [string]$u.Name })
     if ($existing.Count -gt 0) {
