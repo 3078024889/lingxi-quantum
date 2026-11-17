@@ -98,3 +98,48 @@ jobs:
             throw 'TRANSFER_HELPER_MUST_NOT_ENABLE_PRODUCTION_PAYMENTS'
           }
           Write-Host 'CN3196_POWERSHELL_PARSE_AND_PIN_GATE_PASS'
+
+  production-payment-readiness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Read-only public payment readiness probe for both production sites
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          probe() {
+            local name="$1" url="$2" code
+            code="$(curl -sS --connect-timeout 8 --max-time 25 --retry 1 --retry-delay 1 -H 'Accept: application/json' -o "$TMP/$name.json" -w '%{http_code}' "$url" || true)"
+            echo "PRODUCTION_READONLY_PROBE:$name:HTTP=$code"
+            [[ "$code" == "200" ]] || { echo "PRODUCTION_READONLY_PROBE_FAILED:$name"; exit 1; }
+          }
+          probe cn_providers https://lingxifield.cn/api/pay/providers
+          probe cn_mini_cny https://lingxifield.cn/api/wechat/mini/cny-topup/availability
+          probe com_providers https://lingxifield.com/api/pay/providers
+          probe cn_health https://lingxifield.cn/api/health
+          node - "$TMP" <<'NODE'
+          const fs=require("node:fs"),path=require("node:path"),dir=process.argv[2];
+          const read=n=>JSON.parse(fs.readFileSync(path.join(dir,n+".json"),"utf8"));
+          const yes=v=>v===true?"YES":v===false?"NO":"NOT_EXPOSED";
+          for(const [site,file] of [["CN","cn_providers"],["COM","com_providers"]]){
+            const p=read(file);
+            for(const key of ["wechat","alipay","paypal","cnyBalanceTopupReady","usdBalanceTopupReady"])
+              console.log(site+"_PAYMENT_"+key.toUpperCase()+"="+yes(p[key]));
+            if(p.diagnostics){
+              for(const key of ["wechat","alipay","paypal"]){
+                const d=p.diagnostics[key];
+                if(d) console.log(site+"_PAYMENT_"+key.toUpperCase()+"_CONFIGURED="+yes(d.configured));
+                if(d) console.log(site+"_PAYMENT_"+key.toUpperCase()+"_MISSING_COUNT="+Number(d.missingCount||0));
+              }
+            }
+          }
+          const m=read("cn_mini_cny");
+          console.log("CN_MINI_CNY_JSAPI_ENABLED="+yes(m.enabled));
+          console.log("CN_MINI_CNY_JSAPI_REASON="+String(m.reason||"NOT_EXPOSED").replace(/[^A-Z0-9_:-]/gi,"").slice(0,120));
+          console.log("CN_MINI_CNY_JSAPI_MISSING_COUNT="+(Array.isArray(m.missing)?m.missing.length:0));
+          const h=read("cn_health");
+          console.log("CN_HEALTH_STATUS="+String(h.status||h.ok||"HEALTHY"));
+          console.log("NO_ORDER_CREATED_NO_CHARGE_NO_REFUND_NO_BALANCE_MUTATION");
+          NODE
