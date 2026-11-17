@@ -81,6 +81,8 @@ jobs:
           cache: pnpm
       - name: Install locked dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate the shared official website and Mini Program share artwork
+        run: node scripts/generate-social-assets.mjs
       - name: Verify 6.0.0 wallet, merchant JSAPI, history and sharing contracts
         run: |
           set -Eeuo pipefail
