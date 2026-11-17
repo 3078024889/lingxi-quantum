@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const read=p=>readFileSync(p,"utf8");
+
 test("CNY website top-ups require the independent RMB gate but not the USD refund gate",()=>{
  const gate=read("lib/sasi/payment-gate.ts");
  assert.match(gate,/SASI_TOPUP_PRODUCTS\.has\(productId\)/);
@@ -14,7 +15,7 @@ test("CNY website top-ups require the independent RMB gate but not the USD refun
   assert.match(create,/sasiTopupProductEnabled/);
  }
  const wallet=read("components/WalletLivePanel.tsx");
- assert.match(wallet,/topupCurrency==="CNY"\?\(miniContext\?miniCnyReady:providers\?\.cnyBalanceTopup===true\):providers\?\.usdBalanceTopup===true/);
+ assert.match(wallet,/topupCurrency==="CNY"\?\(miniContext\?miniCnyReady:providers\?\.cnyBalanceTopupReady===true\):providers\?\.usdBalanceTopupReady===true/);
  const providerReadiness=read("app/api/pay/providers/route.ts");
  assert.match(providerReadiness,/sasiRmbBalanceV1Enabled\(\)/);
  assert.match(providerReadiness,/cnyBalanceTopupReady/);
@@ -24,7 +25,8 @@ test("CNY website top-ups require the independent RMB gate but not the USD refun
  assert.match(wallet,/sasi-balance-custom-/);
  assert.match(wallet,/sasi-usd-balance-custom-/);
 });
-test("USD wallet top-up keeps its existing production readiness contract and exposes its live readiness to admins",()=>{
+
+test("USD wallet top-up keeps its production readiness contract and exposes live readiness to admins",()=>{
  const paypal=read("app/api/pay/create/route.ts");
  assert.match(paypal,/USD_BALANCE_TOPUP_ENABLED/);
  assert.match(paypal,/SASI_REFUND_FLOW_TESTED/);
