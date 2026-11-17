@@ -72,8 +72,8 @@ jobs:
           }
           $source = Get-Content -LiteralPath $path -Raw
           foreach ($pin in @(
-            '197e60eae80268ea8c0e18320db58f9cac7eb573',
-            '273d4ee220faab90e98121b042cf51545666b96ff74ba5233f8c8d56c04d6c18',
+            'e9018ac0317e61d6daf45f55395bdd7e561df890',
+            'c7c229fc8cdb884abab199fa6742ebdf222a8948ac67c28f5e3dbadc2d2234c0',
             '58efcdbc7987aefe3b8e1627f8496735383e7c78',
             '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
             '0de8892fe696a35dbb1d5277214dfbf36e3b9a3b',
