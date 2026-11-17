@@ -17,10 +17,10 @@ test("CNY website top-ups require the independent RMB gate but not the USD refun
  assert.match(wallet,/topupCurrency==="CNY"\?\(miniContext\?miniCnyReady:providers\?\.cnyBalanceTopup===true\):providers\?\.usdBalanceTopup===true/);
  const providerReadiness=read("app/api/pay/providers/route.ts");
  assert.match(providerReadiness,/sasiRmbBalanceV1Enabled\(\)/);
- assert.match(providerReadiness,/cnyBalanceTopup/);
+ assert.match(providerReadiness,/cnyBalanceTopupReady/);
  assert.match(providerReadiness,/USD_BALANCE_TOPUP_ENABLED/);
  assert.match(providerReadiness,/SASI_REFUND_FLOW_TESTED/);
- assert.match(providerReadiness,/usdBalanceTopup/);
+ assert.match(providerReadiness,/usdBalanceTopupReady/);
  assert.match(wallet,/sasi-balance-custom-/);
  assert.match(wallet,/sasi-usd-balance-custom-/);
 });
