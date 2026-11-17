@@ -5,7 +5,7 @@ name: CN unified source-only SASI wallet ToolPass standalone package (NO ECS DEP
 # This workflow publishes artifacts only; it never changes ECS, DNS, Nginx or WeChat.
 on:
   push:
-    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109, release/cn3194-full-cleanup-20261113, ci/cn3194-payment-base-20261110]
+    branches: [release/com-sasi-full-20261108, release/cn3193-verified-stage-20261109, release/cn3194-full-cleanup-20261113, fix/cn-payment-live-activation-gates-20261109, ops/cn3194-upgrade-5054d6-20261109, release/cn3194-full-cleanup-20261113, ci/cn3194-payment-base-20261110, fix/site-wallet-payment-readiness-20261116]
     paths:
       - '.github/workflows/cn-unified-source-only-standalone-20261108.yml'
       - 'scripts/audit/dual-site-admin-toolpass-hardening-20261108.cjs'
@@ -16,6 +16,9 @@ on:
       - 'app/account/page.tsx'
       - 'app/ai-wallet/page.tsx'
       - 'components/WalletLivePanel.tsx'
+      - 'lib/mini/payment-client.ts'
+      - 'tests/mini-recharge-single-entry.test.mjs'
+      - 'tests/mobile-account-trigger-20261116.test.mjs'
       - 'components/tools/ToolsHubV11.tsx'
       - 'app/layout.tsx'
       - 'app/celestial-ui-20261109.css'
@@ -136,7 +139,7 @@ jobs:
         run: |
           set -Eeuo pipefail
           pnpm install --frozen-lockfile
-          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs
+          node --test tests/unified-share-image.test.mjs tests/unified-mini-share-routes.test.mjs tests/home-layout-20261115.test.mjs tests/mini-recharge-single-entry.test.mjs tests/mobile-account-trigger-20261116.test.mjs tests/wallet-topup-live-contract-20261111.test.mjs
           node --check miniapp/utils/share.js
           node --check miniapp/pages/share/index.js
           node --check miniapp/pages/web/index.js
@@ -321,7 +324,7 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          tag="ecs-cn-unified-20261115-${GITHUB_SHA:0:12}"
+          tag="ecs-cn-unified-20261117-${GITHUB_SHA:0:12}"
           if gh release view "$tag" --repo "$GH_REPO" >/dev/null 2>&1;then
             echo "::error::EXACT_RELEASE_TAG_ALREADY_EXISTS"; exit 1
           fi
@@ -329,5 +332,5 @@ jobs:
           gh release create "$tag" cn-20261115-unified-standalone.tar.gz cn-20261115-unified-standalone.sha256 cn-20261115-social-assets.sha256 lingxifield-miniapp-main-*.zip \
             --repo "$GH_REPO" --target "$GITHUB_SHA" --prerelease \
             --title "LINGXIFIELD CN website + miniapp OG exact source ${GITHUB_SHA:0:12} - STAGING ONLY" \
-            --notes "Exact-source build, responsive browser tests, public OG image checks and miniapp package verification passed. NOT deployed. CN production upstream remains 127.0.0.1:3194; isolated candidate is 3196; rollback baseline is 3193. The standalone archive is for ENS staging only. The miniapp ZIP is a separate WeChat DevTools upload package and has not been submitted or published. Payment credentials, production database and DNS are unchanged."
+            --notes "Exact-source build, responsive browser tests, public OG image checks and miniapp package verification passed. NOT deployed. This release does not change ECS, Nginx, DNS, payment flags, credentials, database records or WeChat release state. The separate CN3196 candidate helper performs a read-only live topology check and proceeds only when its pinned 3195 production / 3196 candidate / 3193 rollback topology is actually present; otherwise it aborts without changing production. The standalone archive is for ENS candidate staging only. The miniapp ZIP is a separate WeChat DevTools import package and has not been submitted or published."
           echo "CN_ARTIFACT_PUBLISHED_NOT_DEPLOYED:${tag}"
