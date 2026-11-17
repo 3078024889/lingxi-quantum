@@ -14,7 +14,7 @@ $WorkDir = Join-Path $Root "cn3196-candidate-$Short"
 $RemoteBase = 'cn3192r2:lingxi-cn3192-transfer/cn3196'
 $RemoteRoot = "$RemoteBase/$CandidateTag"
 $ReleaseBase = "https://github.com/3078024889/lingxi-quantum/releases/download/$ReleaseTag"
-$StageSourceCommit = '3c900399986a1880debec44441f0f3be2a1e8156'
+$StageSourceCommit = '3b3db7ed0c4067cf96da87f3572f96820d804bd1'
 $StageRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3196-candidate-stage-20261116.sh"
 $AuditRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3195-payment-readiness-audit-20261116.sh"
 $TemplateName = 'cn3196-r2-ens-stage-20261117.template.sh'
@@ -32,10 +32,10 @@ $ArchiveBytes = [Int64]339005873
 $ArchiveSha = '533bf65e97c14b255b03742c6d552f3dc7b74c61c21c550c43b77839ca5e1c4b'
 $ChecksumBytes = [Int64]102
 $ChecksumSha = 'a393efabd50ca3db13b325876223660afe0ea40714cbe3a4a6b35f7ccd7c6ca2'
-$StageGitBlobSha = '085051199845402a051dd69893fa43b59853198b'
-$StageBytes = [Int64]12266
-$AuditGitBlobSha = '02e0b843452d4a29aeb9a7b05a82bde6f9c76891'
-$AuditBytes = [Int64]6795
+$StageGitBlobSha = '60da604ce31a96ae24c9eff5f8942c0a27783e31'
+$StageBytes = [Int64]12615
+$AuditGitBlobSha = 'ce6242d61f75ab185851b26e2192b3d1e166154b'
+$AuditBytes = [Int64]7380
 
 if (!(Test-Path -LiteralPath $Config -PathType Leaf)) { throw "R2_CONFIG_NOT_FOUND: $Config" }
 if (!(Select-String -LiteralPath $Config -Pattern '^\s*\[cn3192r2\]\s*$' -Quiet)) { throw 'R2_REMOTE_SECTION_MISSING' }
