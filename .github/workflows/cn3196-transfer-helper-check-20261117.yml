@@ -78,7 +78,7 @@ jobs:
           foreach ($pin in @(
             'e9018ac0317e61d6daf45f55395bdd7e561df890',
             'c7c229fc8cdb884abab199fa6742ebdf222a8948ac67c28f5e3dbadc2d2234c0',
-            '58efcdbc7987aefe3b8e1627f8496735383e7c78',
+            '982f1a243a6f21a7053b31510d0e730ad3f10cff',
             '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
             '0de8892fe696a35dbb1d5277214dfbf36e3b9a3b',
             'cn3192r2:lingxi-cn3192-transfer/cn3196',
