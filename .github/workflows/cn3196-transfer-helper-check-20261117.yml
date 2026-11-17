@@ -79,7 +79,7 @@ jobs:
             '0de8892fe696a35dbb1d5277214dfbf36e3b9a3b',
             'cn3192r2:lingxi-cn3192-transfer/cn3196',
             '--s3-upload-concurrency','8',
-            'cn3196-candidate-20261117-e9018ac0317e',
+            'cn3196-candidate-20261117-',
             'copyurl',
             'R2_REMOTE_OBJECT_SIZE_GATE_PASS'
           )) {
