@@ -18,10 +18,10 @@ DECLARE
   v_expected_amount numeric;
 BEGIN
   IF p_order_id IS NULL OR p_user_id IS NULL
-     OR p_product_id !~ '^sasi-balance-(10|88|666|888|custom-(0|[1-9][0-9]{0,4})(\\.[0-9]{1,2})?)$'
+     OR p_product_id IS NULL OR p_product_id !~ '^sasi-balance-(10|88|666|888|custom-(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?)$'
      OR p_amount_rmb IS NULL OR p_amount_rmb <= 0 OR p_amount_rmb > 10000
      OR p_amount_rmb * 100 <> trunc(p_amount_rmb * 100)
-     OR p_out_trade_no !~ '^LXM[A-F0-9]{29}$'
+     OR p_out_trade_no IS NULL OR p_out_trade_no !~ '^LXM[A-F0-9]{29}$'
      OR COALESCE(jsonb_typeof(p_snapshot) <> 'object', true)
      OR p_snapshot->>'kind' IS DISTINCT FROM 'mini_jsapi_topup'
      OR p_snapshot->>'productId' IS DISTINCT FROM p_product_id
