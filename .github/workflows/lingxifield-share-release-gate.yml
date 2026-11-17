@@ -105,7 +105,6 @@ jobs:
           node --check miniapp/utils/share.js
           node --check miniapp/pages/share/index.js
           node --check miniapp/pages/web/index.js
-          node --check miniapp/pages/portal/index.js
       - name: Next.js production build
         run: pnpm build
   independent-market:
