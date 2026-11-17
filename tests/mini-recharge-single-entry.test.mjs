@@ -78,7 +78,6 @@ test("CNY JSAPI top-up keeps idempotency and provider reconciliation",()=>{
 
 test("new JSAPI reservation is service-role-only and legacy reservation RPC is retired",()=>{
  const migration=read("supabase/migrations/20261116181000_mini_cny_jsapi_topup_20261116.sql");
- const retired=read("supabase/migrations/20261116194500_retire_legacy_mini_virtual_topup_rpc.sql");
  assert.ok(migration.includes("reserve_mini_cny_jsapi_topup_order"));
  assert.ok(migration.includes("pg_advisory_xact_lock"));
  assert.ok(migration.includes("SECURITY INVOKER"));
