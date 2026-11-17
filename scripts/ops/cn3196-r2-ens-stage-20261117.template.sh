@@ -17,8 +17,8 @@ STAGE_URL='__STAGE_URL__'
 AUDIT_URL='__AUDIT_URL__'
 BASE='/opt/lingxifield/cn-staged-releases'
 DIR="$BASE/.download-$TAG"
-FILE='cn-20261116-cn3196-candidate.tar.gz'
-CHECK='cn-20261116-cn3196-candidate.sha256'
+FILE='cn-20261117-cn3196-candidate.tar.gz'
+CHECK='cn-20261117-cn3196-candidate.sha256'
 STAGE="$DIR/cn3196-candidate-stage-20261116.sh"
 AUDIT="$DIR/cn3195-payment-readiness-audit-20261116.sh"
 mkdir -p "$DIR"
