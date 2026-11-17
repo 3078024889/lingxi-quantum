@@ -126,8 +126,8 @@ if (Test-Path -LiteralPath $ArchivePath) {
 } else {
     Move-Item -LiteralPath $SourceArchivePath -Destination $ArchivePath
 }
-$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-[IO.File]::WriteAllText($ChecksumPath, [string]::Concat($ArchiveSha, '  ', $ArchiveName, [Environment]::NewLine), $utf8NoBom)
+$utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+[IO.File]::WriteAllText($ChecksumPath, [string]::Concat($ArchiveSha, '  ', $ArchiveName, [char]10), $utf8NoBom)
 if ((Get-Sha256 $ArchivePath) -cne $ArchiveSha) { throw 'CANDIDATE_ARCHIVE_SHA256_MISMATCH' }
 if ((Get-Item -LiteralPath $ArchivePath).Length -ne $ArchiveBytes) { throw 'CANDIDATE_ARCHIVE_LENGTH_MISMATCH' }
 
