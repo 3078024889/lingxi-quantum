@@ -11,7 +11,7 @@ const allowedRoot=path.resolve(root,'_local/handoff/mini-build-v80')+path.sep,so
 if(!source.startsWith(allowedRoot)||!fs.existsSync(path.join(source,'app.json')))throw new Error('MINI_BUILD_PATH_OUTSIDE_HANDOFF');
 const output=path.join(root,'dist','miniapp-'+version),stage=path.join(output,'project'),zipFile=path.join(root,'dist','lingxifield-miniapp-'+version+'.zip');
 fs.rmSync(output,{recursive:true,force:true});fs.mkdirSync(stage,{recursive:true});fs.mkdirSync(path.dirname(zipFile),{recursive:true});
-function includeFile(file){const name=path.basename(file),rel=path.relative(source,file).replaceAll(path.sep,'/');if(name==='project.private.config.json'||name==='.DS_Store'||name==='Thumbs.db')return false;if(rel.split('/').some(part=>['node_modules','.git','.next','dist','_local'].includes(part)))return false;if(/^\.env(?:\.|$)/i.test(name)||/\.(?:pem|key|p12|pfx|keystore)$/i.test(name))return false;return true;}
+function includeFile(file){const name=path.basename(file),rel=path.relative(source,file).replaceAll(path.sep,'/');if(name==='project.private.config.json'||name==='project.private.config.json.example'||name==='.DS_Store'||name==='Thumbs.db')return false;if(rel.split('/').some(part=>['node_modules','.git','.next','dist','_local'].includes(part)))return false;if(/^\.env(?:\.|$)/i.test(name)||/\.(?:pem|key|p12|pfx|keystore)$/i.test(name))return false;return true;}
 fs.cpSync(source,stage,{recursive:true,filter:includeFile});
 const configFile=path.join(stage,'project.config.json'),config=JSON.parse(fs.readFileSync(configFile,'utf8'));
 config.appid=appId;config.projectname='lingxifield-miniapp-'+version;config.description='Lingxi Field native WeChat Mini Program '+version;
