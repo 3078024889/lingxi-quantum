@@ -3,13 +3,13 @@
 set -Eeuo pipefail
 umask 077
 
-TAG="cn3196-candidate-20261116-197e60eae802"
-SOURCE_SHA="197e60eae80268ea8c0e18320db58f9cac7eb573"
-SHORT="197e60eae802"
-ARCHIVE_SHA="273d4ee220faab90e98121b042cf51545666b96ff74ba5233f8c8d56c04d6c18"
-ARCHIVE_BYTES="340036275"
-ARCHIVE_FILE="cn-20261116-cn3196-candidate.tar.gz"
-CHECK_FILE="cn-20261116-cn3196-candidate.sha256"
+TAG="cn3196-candidate-20261117-e9018ac0317e"
+SOURCE_SHA="e9018ac0317e61d6daf45f55395bdd7e561df890"
+SHORT="e9018ac0317e"
+ARCHIVE_SHA="c7c229fc8cdb884abab199fa6742ebdf222a8948ac67c28f5e3dbadc2d2234c0"
+ARCHIVE_BYTES="340042760"
+ARCHIVE_FILE="cn-20261117-cn3196-candidate.tar.gz"
+CHECK_FILE="cn-20261117-cn3196-candidate.sha256"
 
 BASE="/opt/lingxifield/cn-staged-releases"
 PROD_PORT=3195
@@ -28,9 +28,9 @@ RELEASE="$BASE/$SOURCE_SHA"
 [[ "$EUID" == 0 ]] || { echo ROOT_REQUIRED; exit 2; }
 [[ "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ && "$SHORT" == "${SOURCE_SHA:0:12}" ]] || { echo SOURCE_SHA_INVALID; exit 2; }
 [[ "$ARCHIVE_SHA" =~ ^[a-f0-9]{64}$ && "$ARCHIVE_BYTES" =~ ^[0-9]+$ ]] || { echo ARCHIVE_PIN_INVALID; exit 2; }
-[[ "$TAG" == "cn3196-candidate-20261116-$SHORT" ]] || { echo TAG_INVALID; exit 2; }
-[[ "$ARCHIVE_FILE" == "cn-20261116-cn3196-candidate.tar.gz" ]] || { echo ARCHIVE_NAME_INVALID; exit 2; }
-[[ "$CHECK_FILE" == "cn-20261116-cn3196-candidate.sha256" ]] || { echo CHECK_NAME_INVALID; exit 2; }
+[[ "$TAG" == "cn3196-candidate-20261117-$SHORT" ]] || { echo TAG_INVALID; exit 2; }
+[[ "$ARCHIVE_FILE" == "cn-20261117-cn3196-candidate.tar.gz" ]] || { echo ARCHIVE_NAME_INVALID; exit 2; }
+[[ "$CHECK_FILE" == "cn-20261117-cn3196-candidate.sha256" ]] || { echo CHECK_NAME_INVALID; exit 2; }
 [[ -x "$NODE" ]] || { echo NODE_RUNTIME_MISSING; exit 2; }
 command -v ss >/dev/null 2>&1 || { echo SS_COMMAND_MISSING; exit 2; }
 command -v curl >/dev/null 2>&1 || { echo CURL_COMMAND_MISSING; exit 2; }
@@ -82,16 +82,51 @@ verify_candidate() {
   systemctl cat "$SERVICE" | grep -Fq "Environment=PORT=$CANDIDATE_PORT" || { echo CN3196_CANDIDATE_PORT_MISMATCH; return 1; }
   assert_live_topology || return 1
   probe_http "$CANDIDATE_PORT" /api/health 200 || return 1
-  probe_http "$CANDIDATE_PORT" /api/pay/providers 200 || return 1
   probe_http "$CANDIDATE_PORT" /api/tools/pass 200 || return 1
   probe_http "$CANDIDATE_PORT" /api/wechat/mini/cny-topup/availability 200 || return 1
   probe_http "$CANDIDATE_PORT" /api/wechat/mini/balance-pay/availability 404 || return 1
   probe_http "$CANDIDATE_PORT" /api/admin/pay/readiness 401 || return 1
-  "$NODE" -e '
-    const fs=require("node:fs");
-    const p=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
-    if(p.cnyBalanceTopup!==false||p.usdBalanceTopup!==false)throw Error("CANDIDATE_WALLET_GATES_NOT_CLOSED");
-  ' "$DOWNLOAD/providers.json" 2>/dev/null || true
+
+  local providers_tmp mini_tmp providers_status mini_status
+  providers_tmp="$(mktemp)"
+  providers_status="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 18 -o "$providers_tmp" -w '%{http_code}' -H 'Host: lingxifield.cn' "http://127.0.0.1:$CANDIDATE_PORT/api/pay/providers" || true)"
+  if [[ "$providers_status" != "200" ]]; then
+    rm -f "$providers_tmp"
+    echo "CN3196_PROVIDER_READINESS_HTTP=$providers_status"
+    return 1
+  fi
+  if ! "$NODE" - "$providers_tmp" <<'NODE'
+const fs=require("node:fs");
+const p=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+for(const key of ["wechat","alipay","paypal","cnyBalanceTopupReady","usdBalanceTopupReady"])
+  if(p[key]!==false)throw new Error("CANDIDATE_PAYMENT_GATE_NOT_CLOSED:"+key);
+NODE
+  then
+    rm -f "$providers_tmp"
+    echo "CN3196_CANDIDATE_PAYMENT_GATES_CLOSED_CHECK_FAILED"
+    return 1
+  fi
+  rm -f "$providers_tmp"
+
+  mini_tmp="$(mktemp)"
+  mini_status="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 18 -o "$mini_tmp" -w '%{http_code}' -H 'Host: lingxifield.cn' "http://127.0.0.1:$CANDIDATE_PORT/api/wechat/mini/cny-topup/availability" || true)"
+  if [[ "$mini_status" != "200" ]]; then
+    rm -f "$mini_tmp"
+    echo "CN3196_MINI_CNY_READINESS_HTTP=$mini_status"
+    return 1
+  fi
+  if ! "$NODE" - "$mini_tmp" <<'NODE'
+const fs=require("node:fs");
+const p=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+if(p.enabled!==false||p.topupsEnabled!==false)throw new Error("CANDIDATE_MINI_CNY_GATE_NOT_CLOSED");
+NODE
+  then
+    rm -f "$mini_tmp"
+    echo "CN3196_MINI_CNY_GATE_CLOSED_CHECK_FAILED"
+    return 1
+  fi
+  rm -f "$mini_tmp"
+  echo "CN3196_CANDIDATE_PAYMENT_GATES_CLOSED_PASS"
   echo "CN3196_CANDIDATE_STAGED_NO_PRODUCTION_SWITCH"
 }
 
