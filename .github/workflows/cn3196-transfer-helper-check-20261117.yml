@@ -109,11 +109,13 @@ jobs:
           set -Eeuo pipefail
           TMP="$(mktemp -d)"
           trap 'rm -rf "$TMP"' EXIT
+          FAILED=0
           probe() {
             local name="$1" url="$2" code
-            code="$(curl -sS --connect-timeout 8 --max-time 25 --retry 1 --retry-delay 1 -H 'Accept: application/json' -o "$TMP/$name.json" -w '%{http_code}' "$url" || true)"
+            code="$(curl -sS --connect-timeout 8 --max-time 25 --retry 1 --retry-delay 1 -H 'Accept: application/json' -o "$TMP/$name.body" -w '%{http_code}' "$url" || true)"
+            printf '%s' "$code" > "$TMP/$name.status"
             echo "PRODUCTION_READONLY_PROBE:$name:HTTP=$code"
-            [[ "$code" == "200" ]] || { echo "PRODUCTION_READONLY_PROBE_FAILED:$name"; exit 1; }
+            [[ "$code" == "200" ]] || FAILED=1
           }
           probe cn_providers https://lingxifield.cn/api/pay/providers
           probe cn_mini_cny https://lingxifield.cn/api/wechat/mini/cny-topup/availability
@@ -121,25 +123,35 @@ jobs:
           probe cn_health https://lingxifield.cn/api/health
           node - "$TMP" <<'NODE'
           const fs=require("node:fs"),path=require("node:path"),dir=process.argv[2];
-          const read=n=>JSON.parse(fs.readFileSync(path.join(dir,n+".json"),"utf8"));
+          const status=n=>fs.readFileSync(path.join(dir,n+".status"),"utf8");
+          const read=n=>JSON.parse(fs.readFileSync(path.join(dir,n+".body"),"utf8"));
           const yes=v=>v===true?"YES":v===false?"NO":"NOT_EXPOSED";
           for(const [site,file] of [["CN","cn_providers"],["COM","com_providers"]]){
-            const p=read(file);
-            for(const key of ["wechat","alipay","paypal","cnyBalanceTopupReady","usdBalanceTopupReady"])
-              console.log(site+"_PAYMENT_"+key.toUpperCase()+"="+yes(p[key]));
-            if(p.diagnostics){
-              for(const key of ["wechat","alipay","paypal"]){
+            if(status(file)==="200"){
+              const p=read(file);
+              for(const key of ["wechat","alipay","paypal","cnyBalanceTopupReady","usdBalanceTopupReady"])
+                console.log(site+"_PAYMENT_"+key.toUpperCase()+"="+yes(p[key]));
+              if(p.diagnostics)for(const key of ["wechat","alipay","paypal"]){
                 const d=p.diagnostics[key];
-                if(d) console.log(site+"_PAYMENT_"+key.toUpperCase()+"_CONFIGURED="+yes(d.configured));
-                if(d) console.log(site+"_PAYMENT_"+key.toUpperCase()+"_MISSING_COUNT="+Number(d.missingCount||0));
+                if(d)console.log(site+"_PAYMENT_"+key.toUpperCase()+"_CONFIGURED="+yes(d.configured));
+                if(d)console.log(site+"_PAYMENT_"+key.toUpperCase()+"_MISSING_COUNT="+Number(d.missingCount||0));
               }
-            }
+            }else console.log(site+"_PAYMENT_PROVIDERS_ENDPOINT=HTTP_"+status(file));
           }
-          const m=read("cn_mini_cny");
-          console.log("CN_MINI_CNY_JSAPI_ENABLED="+yes(m.enabled));
-          console.log("CN_MINI_CNY_JSAPI_REASON="+String(m.reason||"NOT_EXPOSED").replace(/[^A-Z0-9_:-]/gi,"").slice(0,120));
-          console.log("CN_MINI_CNY_JSAPI_MISSING_COUNT="+(Array.isArray(m.missing)?m.missing.length:0));
-          const h=read("cn_health");
-          console.log("CN_HEALTH_STATUS="+String(h.status||h.ok||"HEALTHY"));
+          if(status("cn_mini_cny")==="200"){
+            const m=read("cn_mini_cny");
+            console.log("CN_MINI_CNY_JSAPI_ENABLED="+yes(m.enabled));
+            console.log("CN_MINI_CNY_JSAPI_REASON="+String(m.reason||"NOT_EXPOSED").replace(/[^A-Z0-9_:-]/gi,"").slice(0,120));
+            console.log("CN_MINI_CNY_JSAPI_MISSING_COUNT="+(Array.isArray(m.missing)?m.missing.length:0));
+          }else console.log("CN_MINI_CNY_JSAPI_ENDPOINT=HTTP_"+status("cn_mini_cny"));
+          if(status("cn_health")==="200"){
+            const h=read("cn_health");
+            console.log("CN_HEALTH_STATUS="+String(h.status||h.ok||"HEALTHY"));
+          }else console.log("CN_HEALTH_ENDPOINT=HTTP_"+status("cn_health"));
           console.log("NO_ORDER_CREATED_NO_CHARGE_NO_REFUND_NO_BALANCE_MUTATION");
           NODE
+          if [[ "$FAILED" -ne 0 ]]; then
+            echo "PRODUCTION_READONLY_AUDIT_INCOMPLETE; production deployment and payment activation remain blocked."
+            exit 1
+          fi
+          echo "PRODUCTION_READONLY_PAYMENT_ENDPOINTS_PASS"
