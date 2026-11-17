@@ -16,11 +16,18 @@ test("Both scripts are syntax-valid and never perform a live charge during signe
  assert.match(signedProbe,/\/v3\/pay\/transactions\/out-trade-no\//);
  assert.match(signedProbe,/ORDER_NOT_EXIST/);
  assert.match(signedProbe,/ACQ\.TRADE_NOT_EXIST/);
- for(const unsafe of ["alipay.trade.pay","/v3/pay/transactions/native","/v2/checkout/orders","/v3/refund/domestic/refunds"])
+ assert.match(signedProbe,/lingxifield-cn-candidate-\[a-f0-9\]\{12\}/);
+ assert.match(signedProbe,/CN_MERCHANT_PAYPAL_LIVE_OAUTH/);
+ assert.match(signedProbe,/CN_MERCHANT_PAYPAL_WEBHOOK_EVENTS/);
+ assert.match(signedProbe,/CN_MERCHANT_MINI_JSAPI_CONFIG/);
+ assert.match(signedProbe,/WECHAT_MINI_APP_ID/);
+ for(const unsafe of ["alipay.trade.pay","/v3/pay/transactions/native","/v2/checkout/orders","/v3/refund/domestic/refunds","/v2/payments/captures/"])
   assert.ok(!signedProbe.includes(unsafe),"merchant challenge must not charge: "+unsafe);
 });
 test("Channel activation is separate from release promotion, and never opens unapproved PayPal",()=>{
  assert.match(stage,/TOOL_PASS_COMMERCE_READY=false/);
+ assert.match(stage,/CN3196_READ_ONLY_LIVE_MERCHANT_PROBE_BEGIN/);
+ assert.match(stage,/CN3196_CANDIDATE_STAGED_NO_PRODUCTION_SWITCH/);
  assert.match(stage,/WECHAT_ENABLED=false/);
  assert.match(stage,/ALIPAY_ENABLED=false/);
  assert.match(activation,/ALIPAY_ENABLED/);
