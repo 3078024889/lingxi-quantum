@@ -113,17 +113,17 @@ $ArchivePath = Join-Path $WorkDir $ArchiveName
 $ChecksumPath = Join-Path $WorkDir $ChecksumName
 $StagePath = Join-Path $WorkDir $StageName
 
-Download-Asset $SourceArchiveName $SourceArchivePath $ArchiveBytes $ArchiveSha "$ReleaseBase/$SourceArchiveName"
-Download-Asset $SourceChecksumName $SourceChecksumPath $SourceChecksumBytes $SourceChecksumSha "$ReleaseBase/$SourceChecksumName"
-$sourceLine = (Get-Content -LiteralPath $SourceChecksumPath -Raw).Trim()
-if ($sourceLine -cne "$ArchiveSha  $SourceArchiveName") { throw 'SOURCE_CHECKSUM_CONTENT_MISMATCH' }
-
-Write-Host 'STEP 2/5: RENAME TO IMMUTABLE CN3196 CANDIDATE ASSET NAMES'
-if (Test-Path -LiteralPath $ArchivePath) {
+Write-Host 'STEP 2/5: REUSE OR MATERIALIZE IMMUTABLE CN3196 CANDIDATE ARCHIVE'
+if (Test-Path -LiteralPath $ArchivePath -PathType Leaf) {
     if ((Get-Item -LiteralPath $ArchivePath).Length -ne $ArchiveBytes -or (Get-Sha256 $ArchivePath) -cne $ArchiveSha) {
         throw 'CANDIDATE_ARCHIVE_CACHE_MISMATCH'
     }
+    Write-Host 'CANDIDATE_ARCHIVE_CACHE_SHA256_PASS'
 } else {
+    Download-Asset $SourceArchiveName $SourceArchivePath $ArchiveBytes $ArchiveSha "$ReleaseBase/$SourceArchiveName"
+    Download-Asset $SourceChecksumName $SourceChecksumPath $SourceChecksumBytes $SourceChecksumSha "$ReleaseBase/$SourceChecksumName"
+    $sourceLine = (Get-Content -LiteralPath $SourceChecksumPath -Raw).Trim()
+    if ($sourceLine -cne "$ArchiveSha  $SourceArchiveName") { throw 'SOURCE_CHECKSUM_CONTENT_MISMATCH' }
     Move-Item -LiteralPath $SourceArchivePath -Destination $ArchivePath
 }
 $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
