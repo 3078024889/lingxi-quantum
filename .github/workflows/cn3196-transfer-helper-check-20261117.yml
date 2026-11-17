@@ -1,0 +1,79 @@
+name: CN3196 isolated R2 transfer helper static gate
+
+on:
+  push:
+    branches:
+      - fix/site-wallet-payment-readiness-20261116
+    paths:
+      - scripts/ops/R2-CN3196-Transfer-20261117.ps1
+      - scripts/ops/cn3196-candidate-stage-20261116.sh
+      - .github/workflows/cn3196-transfer-helper-check-20261117.yml
+  pull_request:
+    branches:
+      - ci/cn3194-payment-base-20261110
+    paths:
+      - scripts/ops/R2-CN3196-Transfer-20261117.ps1
+      - scripts/ops/cn3196-candidate-stage-20261116.sh
+      - .github/workflows/cn3196-transfer-helper-check-20261117.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cn3196-transfer-helper-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bash-candidate-stage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Validate pinned candidate stage shell
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'PROD_PORT=3195' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CANDIDATE_PORT=3196' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'ROLLBACK_PORT=3193' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/cn3196-candidate-stage-20261116.sh
+          if grep -Eq 'nginx -s reload|systemctl restart nginx|sed -i.*lingxifield\.conf' scripts/ops/cn3196-candidate-stage-20261116.sh; then
+            echo 'CANDIDATE_SCRIPT_MUST_NOT_SWITCH_PRODUCTION'
+            exit 1
+          fi
+          echo 'CN3196_STAGE_SCRIPT_STATIC_GATE_PASS'
+
+  powershell-transfer:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Parse and verify pinned R2 transfer helper
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $path = 'scripts/ops/R2-CN3196-Transfer-20261117.ps1'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD $path), [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            throw 'POWERSHELL_PARSE_FAILED'
+          }
+          $source = Get-Content -LiteralPath $path -Raw
+          foreach ($pin in @(
+            '6f72f3dc23dc7716bc64f6735e470dc4b527547a',
+            '0782807ad4903efd7ff6a7a96385e44bcb56fc16118647feeab3802ed1db0b6c',
+            '7d91ef0cecca5c7aa8245e31236fe9e6ec3e06bc',
+            'cn3192r2:lingxi-cn3192-transfer/cn3196',
+            '--s3-upload-concurrency','8',
+            '--range',
+            'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH'
+          )) {
+            if (-not $source.Contains($pin)) { throw "TRANSFER_HELPER_PIN_MISSING: $pin" }
+          }
+          if ($source.Contains('WECHAT_MINI_JSAPI_TOPUPS_ENABLED=true') -or $source.Contains('USD_BALANCE_TOPUP_ENABLED=true')) {
+            throw 'TRANSFER_HELPER_MUST_NOT_ENABLE_PRODUCTION_PAYMENTS'
+          }
+          Write-Host 'CN3196_POWERSHELL_PARSE_AND_PIN_GATE_PASS'
