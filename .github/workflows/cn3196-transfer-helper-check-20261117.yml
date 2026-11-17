@@ -44,8 +44,8 @@ jobs:
           grep -Fq 'PROD_PORT=3195' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CANDIDATE_PORT=3196' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'ROLLBACK_PORT=3193' scripts/ops/cn3196-candidate-stage-20261116.sh
-          grep -Fq 'SOURCE_SHA="e9018ac0317e61d6daf45f55395bdd7e561df890"' scripts/ops/cn3196-candidate-stage-20261116.sh
-          grep -Fq 'ARCHIVE_SHA="c7c229fc8cdb884abab199fa6742ebdf222a8948ac67c28f5e3dbadc2d2234c0"' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'SOURCE_SHA="22c7558dcf4059b690493c150f0ff5993c71c6a8"' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'ARCHIVE_SHA="533bf65e97c14b255b03742c6d552f3dc7b74c61c21c550c43b77839ca5e1c4b"' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CN3196_CANDIDATE_FAILED_PRODUCTION_3195_UNCHANGED' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
           grep -Fq 'CN3196_CANDIDATE_PAYMENT_GATES_CLOSED_PASS' scripts/ops/cn3196-candidate-stage-20261116.sh
@@ -76,12 +76,14 @@ jobs:
           }
           $source = Get-Content -LiteralPath $path -Raw
           foreach ($pin in @(
-            'e9018ac0317e61d6daf45f55395bdd7e561df890',
-            'c7c229fc8cdb884abab199fa6742ebdf222a8948ac67c28f5e3dbadc2d2234c0',
-            '982f1a243a6f21a7053b31510d0e730ad3f10cff',
+            '22c7558dcf4059b690493c150f0ff5993c71c6a8',
+            '533bf65e97c14b255b03742c6d552f3dc7b74c61c21c550c43b77839ca5e1c4b',
+            '085051199845402a051dd69893fa43b59853198b',
             '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
             '0de8892fe696a35dbb1d5277214dfbf36e3b9a3b',
             'cn3192r2:lingxi-cn3192-transfer/cn3196',
+            'ecs-cn-unified-20261117-22c7558dcf40',
+            'cn-20261115-unified-standalone.tar.gz',
             '--s3-upload-concurrency','8',
             'cn3196-candidate-20261117-',
             'copyurl',
