@@ -41,14 +41,17 @@ jobs:
           grep -Fq 'CN3196_READ_ONLY_LIVE_MERCHANT_PROBE_BEGIN' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CN_MERCHANT_PAYPAL_LIVE_OAUTH' scripts/ops/cn-payment-signed-live-probe-20261109.mjs
           grep -Fq 'name==="miniJsapi"?"MINI_JSAPI_CONFIG"' scripts/ops/cn-payment-signed-live-probe-20261109.mjs
-          grep -Fq 'PROD_PORT=3195' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'mapfile -t upstream_ports' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq '3194|3195' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'mapfile -t ROUTED_PORTS' scripts/ops/cn3195-payment-readiness-audit-20261116.sh
           grep -Fq 'CANDIDATE_PORT=3196' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'ROLLBACK_PORT=3193' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'SOURCE_SHA="22c7558dcf4059b690493c150f0ff5993c71c6a8"' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'ARCHIVE_SHA="533bf65e97c14b255b03742c6d552f3dc7b74c61c21c550c43b77839ca5e1c4b"' scripts/ops/cn3196-candidate-stage-20261116.sh
-          grep -Fq 'CN3196_CANDIDATE_FAILED_PRODUCTION_3195_UNCHANGED' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CN3196_CANDIDATE_FAILED_CURRENT_PRODUCTION_UNCHANGED' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
           grep -Fq 'CN3196_CANDIDATE_PAYMENT_GATES_CLOSED_PASS' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CN3196_PLAN_PASS_CURRENT_PRODUCTION_AND_ROLLBACK_3193_UNCHANGED' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'cn-20261117-cn3196-candidate.tar.gz' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
           grep -Fq 'bash "$AUDIT"' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
           if grep -Eq 'nginx -s reload|systemctl restart nginx|sed -i.*lingxifield\.conf' scripts/ops/cn3196-candidate-stage-20261116.sh; then
@@ -78,8 +81,8 @@ jobs:
           foreach ($pin in @(
             '22c7558dcf4059b690493c150f0ff5993c71c6a8',
             '533bf65e97c14b255b03742c6d552f3dc7b74c61c21c550c43b77839ca5e1c4b',
-            '085051199845402a051dd69893fa43b59853198b',
-            '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
+            '60da604ce31a96ae24c9eff5f8942c0a27783e31',
+            'ce6242d61f75ab185851b26e2192b3d1e166154b',
             '0de8892fe696a35dbb1d5277214dfbf36e3b9a3b',
             'cn3192r2:lingxi-cn3192-transfer/cn3196',
             'ecs-cn-unified-20261117-22c7558dcf40',
