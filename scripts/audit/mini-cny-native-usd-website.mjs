@@ -54,9 +54,8 @@ assert.match(migration,/REVOKE ALL ON FUNCTION/);
 assert.match(migration,/GRANT EXECUTE ON FUNCTION public\.reserve_mini_cny_jsapi_topup_order/);
 assert.match(migration,/TO service_role/);
 assert.doesNotMatch(migration,/SECURITY DEFINER/);
-const retired=read("supabase/migrations/20261116194500_retire_legacy_mini_virtual_topup_rpc.sql");
-assert.match(retired,/DROP FUNCTION public\.reserve_mini_cny_topup_order/);
-assert.doesNotMatch(retired,/CASCADE/);
+assert.doesNotMatch(create,/reserve_mini_cny_topup_order/);
+assert.equal(exists("supabase/migrations/20261116194500_retire_legacy_mini_virtual_topup_rpc.sql"),false,"legacy RPC is retained only for historical pending-order reconciliation; new JSAPI flow must not call it");
 
 const toolPage=read("miniapp/pages/pay/index.js");
 assert.ok(toolPage.includes("wx.requestVirtualPayment"));
