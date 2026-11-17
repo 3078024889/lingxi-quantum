@@ -127,6 +127,13 @@ NODE
   fi
   rm -f "$mini_tmp"
   echo "CN3196_CANDIDATE_PAYMENT_GATES_CLOSED_PASS"
+
+  if [[ -s "$RELEASE/cn-payment-signed-live-probe.mjs" ]]; then
+    echo "CN3196_READ_ONLY_LIVE_MERCHANT_PROBE_BEGIN"
+    "$NODE" "$RELEASE/cn-payment-signed-live-probe.mjs" "${SERVICE%.service}" || echo "CN3196_READ_ONLY_LIVE_MERCHANT_PROBE_INCOMPLETE_NO_PAYMENT_FLAGS_CHANGED"
+  else
+    echo "CN3196_READ_ONLY_LIVE_MERCHANT_PROBE_MISSING"
+  fi
   echo "CN3196_CANDIDATE_STAGED_NO_PRODUCTION_SWITCH"
 }
 
