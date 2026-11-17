@@ -3,9 +3,9 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
 # Exact CI-built archive. This script uploads to private R2 and prepares an isolated CN3196 candidate only.
-$ReleaseTag = 'ecs-cn-unified-20261110-6f72f3dc23dc'
-$SourceSha = '6f72f3dc23dc7716bc64f6735e470dc4b527547a'
-$Short = '6f72f3dc23dc'
+$ReleaseTag = 'ecs-cn-unified-20261110-197e60eae802'
+$SourceSha = '197e60eae80268ea8c0e18320db58f9cac7eb573'
+$Short = '197e60eae802'
 $CandidateTag = "cn3196-candidate-20261116-$Short"
 
 $Config = 'D:\LINGXIFIELDCN3192\rclone.conf'
@@ -14,7 +14,7 @@ $WorkDir = Join-Path $Root "cn3196-candidate-$Short"
 $RemoteBase = 'cn3192r2:lingxi-cn3192-transfer/cn3196'
 $RemoteRoot = "$RemoteBase/$CandidateTag"
 $ReleaseBase = "https://github.com/3078024889/lingxi-quantum/releases/download/$ReleaseTag"
-$StageSourceCommit = '2d90c8c1f6b0e143bb2c3423d46764698c1d7fc1'
+$StageSourceCommit = '3cf0683c2ab0a523c9a5cf167a35fb714300d9f3'
 $StageRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3196-candidate-stage-20261116.sh"
 $AuditRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3195-payment-readiness-audit-20261116.sh"
 $TemplateName = 'cn3196-r2-ens-stage-20261117.template.sh'
@@ -29,11 +29,11 @@ $ChecksumName = 'cn-20261116-cn3196-candidate.sha256'
 $StageName = 'cn3196-candidate-stage-20261116.sh'
 $AuditName = 'cn3195-payment-readiness-audit-20261116.sh'
 
-$ArchiveBytes = [Int64]340040719
-$ArchiveSha = '0782807ad4903efd7ff6a7a96385e44bcb56fc16118647feeab3802ed1db0b6c'
+$ArchiveBytes = [Int64]340036275
+$ArchiveSha = '273d4ee220faab90e98121b042cf51545666b96ff74ba5233f8c8d56c04d6c18'
 $SourceChecksumBytes = [Int64]104
-$SourceChecksumSha = '9311882bd57ba2a5ea56736df616c4bf05e040b7b3a4a76370b9ec18e6599891'
-$StageGitBlobSha = '7d91ef0cecca5c7aa8245e31236fe9e6ec3e06bc'
+$SourceChecksumSha = 'f1ba346f3dcfd459cf0116f4ab34e0d63dddb2029a8305163fa88f54e2800f4c'
+$StageGitBlobSha = '2c555835d56133c870b79c6c7ae256cb2fa13c39'
 $StageBytes = [Int64]10581
 $AuditGitBlobSha = '02e0b843452d4a29aeb9a7b05a82bde6f9c76891'
 $AuditBytes = [Int64]6795
