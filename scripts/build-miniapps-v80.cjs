@@ -41,9 +41,13 @@ if(target==='main'&&fs.existsSync(canonicalShareAsset)){
   sha256:require('node:crypto').createHash('sha256').update(fs.readFileSync(canonicalShareAsset)).digest('hex')});
 }
 const expectedGenerated=new Set(generatedAssets.map(asset=>asset.path));
+const generatedDir=path.join(source,'assets');
+const generatedOnly=target==='main'&&generatedAssets.length===1&&fs.existsSync(generatedDir)
+ &&fs.readdirSync(generatedDir).filter(name=>fs.statSync(path.join(generatedDir,name)).isFile()).join(',')==='share-lingxifield-20261115.jpg';
 const changedMiniFiles=execFileSync('git',['status','--porcelain','--','miniapp'],{encoding:'utf8',windowsHide:true})
- .split(/\r?\n/).filter(Boolean).filter(line=>!expectedGenerated.has(line.slice(3).replaceAll('\\\\','/').replaceAll('\\','/')));
+ .split(/\r?\n/).filter(Boolean).map(line=>line.slice(3).replaceAll('\\\\','/').replaceAll('\\','/'))
+ .filter(changedPath=>!expectedGenerated.has(changedPath)&&!(generatedOnly&&changedPath==='miniapp/assets/'));
 const sourceDirty=changedMiniFiles.length>0;
-const receipt={at:new Date().toISOString(),target,appId,sourceSha:sha,sourceDirty,projectPath:out,generatedAssets,
+const receipt={at:new Date().toISOString(),target,appId,sourceSha:sha,sourceDirty,dirtyPaths:changedMiniFiles,projectPath:out,generatedAssets,
  mode:'official website wallet for CNY WeChat merchant JSAPI and USD PayPal; tool-product virtual payment remains independent',credentialsCopied:false};
 fs.writeFileSync(path.join(base,target+'-latest.json'),JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));
