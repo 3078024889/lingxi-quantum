@@ -74,8 +74,7 @@ jobs:
             '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
             'e478ec543e56c4f96b338be813851c468bda6af2',
             'cn3192r2:lingxi-cn3192-transfer/cn3196',
-            '--s3-upload-concurrency','8',
-            'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH'
+            '--s3-upload-concurrency','8'
           )) {
             if (-not $source.Contains($pin)) { throw "TRANSFER_HELPER_PIN_MISSING: $pin" }
           }
