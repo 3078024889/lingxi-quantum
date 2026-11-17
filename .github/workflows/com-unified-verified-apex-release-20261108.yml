@@ -329,3 +329,4 @@ jobs:
 # 2026-11-16 exact approved cutover trigger; previous source 1baa892ec2096385e0ec3022ba3672945167b1f2 passed isolated canary run 43839889399.
 
 # COM_PINNED_SASI_RELEASE_TRIGGER_20261117 exact_previous_canary=d9ff806cbd4081e6578d368171fa2a68e3e95494 run=43991878683
+# COM_PINNED_SASI_RELEASE_TRIGGER_20261117 previous_sha=ee5cce03044d592ce44ff1e57faa9ad4287ac877 canary_run=44000649757 seller_route_force_dynamic_visible_text_gate=pass
