@@ -7,6 +7,7 @@ on:
     paths:
       - scripts/ops/R2-CN3196-Transfer-20261117.ps1
       - scripts/ops/cn3196-candidate-stage-20261116.sh
+      - scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
       - .github/workflows/cn3196-transfer-helper-check-20261117.yml
   pull_request:
     branches:
@@ -14,6 +15,7 @@ on:
     paths:
       - scripts/ops/R2-CN3196-Transfer-20261117.ps1
       - scripts/ops/cn3196-candidate-stage-20261116.sh
+      - scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
       - .github/workflows/cn3196-transfer-helper-check-20261117.yml
 
 permissions:
@@ -34,11 +36,13 @@ jobs:
         run: |
           set -Eeuo pipefail
           bash -n scripts/ops/cn3196-candidate-stage-20261116.sh
+          bash -n scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
           grep -Fq 'PROD_PORT=3195' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CANDIDATE_PORT=3196' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'ROLLBACK_PORT=3193' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CN3196_CANDIDATE_FAILED_PRODUCTION_3195_UNCHANGED' scripts/ops/cn3196-candidate-stage-20261116.sh
-          grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/R2-CN3196-Transfer-20261117.ps1
+          grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
+          grep -Fq 'bash "$AUDIT"' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
           if grep -Eq 'nginx -s reload|systemctl restart nginx|sed -i.*lingxifield\.conf' scripts/ops/cn3196-candidate-stage-20261116.sh; then
             echo 'CANDIDATE_SCRIPT_MUST_NOT_SWITCH_PRODUCTION'
             exit 1
@@ -67,9 +71,10 @@ jobs:
             '6f72f3dc23dc7716bc64f6735e470dc4b527547a',
             '0782807ad4903efd7ff6a7a96385e44bcb56fc16118647feeab3802ed1db0b6c',
             '7d91ef0cecca5c7aa8245e31236fe9e6ec3e06bc',
+            '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
+            'e478ec543e56c4f96b338be813851c468bda6af2',
             'cn3192r2:lingxi-cn3192-transfer/cn3196',
             '--s3-upload-concurrency','8',
-            '--range',
             'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH'
           )) {
             if (-not $source.Contains($pin)) { throw "TRANSFER_HELPER_PIN_MISSING: $pin" }
