@@ -4,8 +4,13 @@
 set -Eeuo pipefail
 umask 077
 
-PORT=3195
+PORT=""
 NGINX=/etc/nginx/conf.d/lingxifield.conf
+[[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo CN_NGINX_CONFIG_NOT_REGULAR; exit 1; }
+mapfile -t ROUTED_PORTS < <(grep -oE '127\.0\.0\.1:(3194|3195)' "$NGINX" | sed 's/.*://' | sort -u)
+(( ${#ROUTED_PORTS[@]} == 1 )) || { echo CN_PRODUCTION_UPSTREAM_NOT_UNIQUE_OR_UNSUPPORTED; exit 1; }
+PORT="${ROUTED_PORTS[0]}"
+echo "CN_PRODUCTION_UPSTREAM_PORT=$PORT"
 NODE="$(command -v node || true)"
 [[ -n "$NODE" && -x "$NODE" ]] || NODE=/opt/lingxifield/runtime/node-24.19.0/bin/node
 [[ "$EUID" == 0 ]] || { echo ROOT_REQUIRED; exit 2; }
@@ -22,29 +27,29 @@ fi
 
 mapfile -t PIDS < <(ss -ltnpH "sport = :$PORT" 2>/dev/null | grep -oE 'pid=[0-9]+' | cut -d= -f2 | sort -u)
 if (( ${#PIDS[@]} != 1 )); then
-  echo "CN3195_LISTENER_PID_COUNT=${#PIDS[@]}"
-  echo CN3195_SERVICE_DISCOVERY_STOP
+  echo "CN_PRODUCTION_LISTENER_PID_COUNT=${#PIDS[@]}"
+  echo CN_PRODUCTION_SERVICE_DISCOVERY_STOP
   exit 1
 fi
 PID="${PIDS[0]}"
-[[ -r "/proc/$PID/cgroup" && -r "/proc/$PID/environ" ]] || { echo CN3195_PROCESS_CONTEXT_UNREADABLE; exit 1; }
+[[ -r "/proc/$PID/cgroup" && -r "/proc/$PID/environ" ]] || { echo CN_PRODUCTION_PROCESS_CONTEXT_UNREADABLE; exit 1; }
 SVC="$(awk -F/ '{for(i=1;i<=NF;i++)if($i ~ /\.service$/)s=$i} END{print s}' "/proc/$PID/cgroup")"
-[[ "$SVC" =~ ^[A-Za-z0-9_.@:-]+\.service$ ]] || { echo CN3195_SYSTEMD_SERVICE_NOT_FOUND; exit 1; }
-systemctl is-active --quiet "$SVC" || { echo CN3195_SERVICE_NOT_ACTIVE; exit 1; }
+[[ "$SVC" =~ ^[A-Za-z0-9_.@:-]+\.service$ ]] || { echo CN_PRODUCTION_SYSTEMD_SERVICE_NOT_FOUND; exit 1; }
+systemctl is-active --quiet "$SVC" || { echo CN_PRODUCTION_SERVICE_NOT_ACTIVE; exit 1; }
 MAINPID="$(systemctl show "$SVC" -p MainPID --value)"
 DIR="$(systemctl show "$SVC" -p WorkingDirectory --value)"
 ENVFILES="$(systemctl show "$SVC" -p EnvironmentFiles --value)"
 ENVFILE_COUNT="$(python3 -c 'import re,sys; print(len(set(re.findall(r"/[^\s()]+\.env",sys.stdin.read()))))' <<< "$ENVFILES")"
-echo "CN3195_LISTENER_PID=$PID"
-echo "CN3195_SYSTEMD_SERVICE=$SVC"
-echo "CN3195_SERVICE_MAINPID=$MAINPID"
-echo "CN3195_SERVICE_WORKDIR=$DIR"
-echo "CN3195_ACTIVE_ENVFILE_COUNT=$ENVFILE_COUNT"
+echo "CN_PRODUCTION_LISTENER_PID=$PID"
+echo "CN_PRODUCTION_SYSTEMD_SERVICE=$SVC"
+echo "CN_PRODUCTION_SERVICE_MAINPID=$MAINPID"
+echo "CN_PRODUCTION_SERVICE_WORKDIR=$DIR"
+echo "CN_PRODUCTION_ACTIVE_ENVFILE_COUNT=$ENVFILE_COUNT"
 if [[ -s "$DIR/RELEASE_SOURCE_SHA" ]]; then
   SOURCE_SHA="$(tr -d '\r\n' < "$DIR/RELEASE_SOURCE_SHA")"
-  [[ "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ ]] && echo "CN3195_RELEASE_SOURCE_SHA=$SOURCE_SHA" || echo CN3195_RELEASE_SOURCE_SHA=INVALID
+  [[ "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ ]] && echo "CN_PRODUCTION_RELEASE_SOURCE_SHA=$SOURCE_SHA" || echo CN_PRODUCTION_RELEASE_SOURCE_SHA=INVALID
 else
-  echo CN3195_RELEASE_SOURCE_SHA=UNAVAILABLE
+  echo CN_PRODUCTION_RELEASE_SOURCE_SHA=UNAVAILABLE
 fi
 
 python3 - "$PID" <<'PY'
@@ -95,7 +100,7 @@ PROBE_CODE=""
 probe(){
   local path="$1" out="$2"
   PROBE_CODE="$(curl -sS --noproxy '*' --connect-timeout 3 --max-time 20 -H 'Host: lingxifield.cn' -o "$out" -w '%{http_code}' "http://127.0.0.1:$PORT$path" || true)"
-  echo "CN3195_ROUTE $path HTTP=${PROBE_CODE:-000}"
+  echo "CN_PRODUCTION_ROUTE $path HTTP=${PROBE_CODE:-000}"
 }
 
 echo "===== LIVE LOOPBACK ROUTE READINESS ====="
@@ -112,33 +117,33 @@ const fs=require("node:fs");
 const p=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
 const yes=v=>v===true?"YES":v===false?"NO":"NOT_EXPOSED";
 for(const k of ["wechat","alipay","paypal"])
-  console.log("CN3195_PROVIDER_"+k.toUpperCase()+"="+yes(p[k]));
+  console.log("CN_PRODUCTION_PROVIDER_"+k.toUpperCase()+"="+yes(p[k]));
 for(const k of ["cnyBalanceTopupReady","usdBalanceTopupReady"])
-  console.log("CN3195_WALLET_GATE_"+k.toUpperCase()+"="+yes(p[k]));
+  console.log("CN_PRODUCTION_WALLET_GATE_"+k.toUpperCase()+"="+yes(p[k]));
 NODE
 fi
 if [[ "$T" == 200 ]]; then
   "$NODE" - "$TMP/toolpass.json" <<'NODE'
 const fs=require("node:fs");
 const p=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
-console.log("CN3195_TOOLPASS_AVAILABLE="+(p.available===true?"YES":"NO"));
-console.log("CN3195_TOOLPASS_OFFER_COUNT="+Number(p.offers?.length||0));
+console.log("CN_PRODUCTION_TOOLPASS_AVAILABLE="+(p.available===true?"YES":"NO"));
+console.log("CN_PRODUCTION_TOOLPASS_OFFER_COUNT="+Number(p.offers?.length||0));
 NODE
 fi
 if [[ "$M" == 200 ]]; then
   "$NODE" - "$TMP/mini-cny.json" <<'NODE'
 const fs=require("node:fs");
 const p=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
-console.log("CN3195_MINI_CNY_JSAPI_TOPUP_ENABLED="+(p.enabled===true?"YES":"NO"));
-console.log("CN3195_MINI_CNY_JSAPI_REASON="+String(p.reason||"UNKNOWN"));
-console.log("CN3195_MINI_CNY_JSAPI_MISSING_REASONS="+(Array.isArray(p.missing)?p.missing.join(","):"NOT_EXPOSED"));
+console.log("CN_PRODUCTION_MINI_CNY_JSAPI_TOPUP_ENABLED="+(p.enabled===true?"YES":"NO"));
+console.log("CN_PRODUCTION_MINI_CNY_JSAPI_REASON="+String(p.reason||"UNKNOWN"));
+console.log("CN_PRODUCTION_MINI_CNY_JSAPI_MISSING_REASONS="+(Array.isArray(p.missing)?p.missing.join(","):"NOT_EXPOSED"));
 NODE
 fi
 if [[ "$A" == 401 || "$A" == 403 ]]; then
-  echo CN3195_ADMIN_READINESS_AUTH_BOUNDARY=PASS
+  echo CN_PRODUCTION_ADMIN_READINESS_AUTH_BOUNDARY=PASS
 else
-  echo "CN3195_ADMIN_READINESS_AUTH_BOUNDARY=HTTP_$A"
+  echo "CN_PRODUCTION_ADMIN_READINESS_AUTH_BOUNDARY=HTTP_$A"
 fi
-if [[ "$ML" == 404 ]]; then echo CN3195_LEGACY_MINI_BALANCE_API=RETIRED; else echo "CN3195_LEGACY_MINI_BALANCE_API=HTTP_$ML"; fi
-echo "CN3195_READ_ONLY_AUDIT_COMPLETE"
+if [[ "$ML" == 404 ]]; then echo CN_PRODUCTION_LEGACY_MINI_BALANCE_API=RETIRED; else echo "CN_PRODUCTION_LEGACY_MINI_BALANCE_API=HTTP_$ML"; fi
+echo "CN_PRODUCTION_READ_ONLY_AUDIT_COMPLETE"
 echo "NO_ORDER_CREATED_NO_CHARGE_NO_REFUND_NO_BALANCE_CHANGE_NO_ENV_CHANGE_NO_SERVICE_RESTART"
