@@ -7,7 +7,7 @@ import {lstatSync,readFileSync} from "node:fs";
 
 const allowed=/^\/etc\/lingxifield\/[a-zA-Z0-9_.-]+\.env$/;
 function systemdEnv(unit){
- if(!/^lingxifield-cn-release-20261110-[a-f0-9]{12}-final$/.test(unit))throw Error("CN_PAYMENT_UNIT_NOT_APPROVED");
+ if(!/^(?:lingxifield-cn-release-20261110-[a-f0-9]{12}-final|lingxifield-cn-candidate-[a-f0-9]{12})$/.test(unit))throw Error("CN_PAYMENT_UNIT_NOT_APPROVED");
  const data=execFileSync("systemctl",["show",unit,"-p","EnvironmentFiles","--value"],{encoding:"utf8"});
  const files=[...data.matchAll(/(\/[^\s()]+\.env)\s+\(ignore_errors=(?:yes|no)\)/g)].map(m=>m[1]);
  if(files.length<2||files.length>16)throw Error("CN_PAYMENT_ENV_FILES_INVALID");
@@ -133,18 +133,71 @@ async function wechat(cfg){
  if(response.status!==404||body?.code!=="ORDER_NOT_EXIST")throw Error("WECHAT_LIVE_MERCHANT_NOT_READY_HTTP_"+response.status+"_CODE_"+String(body?.code||"UNKNOWN").replace(/[^A-Z0-9_]/g,"").slice(0,30));
  return true;
 }
+async function miniJsapi(cfg){
+ const expectedAppId="wxbf4ae90406e7e26b";
+ if(cfg.WECHAT_MINI_APP_ID!==expectedAppId)throw Error("MINI_APP_ID_MISMATCH");
+ if(!cfg.WECHAT_MINI_APP_SECRET)throw Error("MINI_APP_SECRET_MISSING");
+ const required=["WECHAT_MCH_ID","WECHAT_API_V3_KEY","WECHAT_PRIVATE_KEY","WECHAT_CERT_SERIAL_NO","WECHAT_PLATFORM_PUBLIC_KEY","WECHAT_PLATFORM_PUBLIC_KEY_ID"];
+ if(required.some(k=>!cfg[k]))throw Error("MINI_JSAPI_MERCHANT_CONFIG_MISSING");
+ if(Buffer.byteLength(cfg.WECHAT_API_V3_KEY)!==32)throw Error("MINI_JSAPI_API_V3_KEY_INVALID");
+ const key=createPrivateKey(pem(cfg.WECHAT_PRIVATE_KEY,"PRIVATE KEY"));
+ const pub=createPublicKey(pem(cfg.WECHAT_PLATFORM_PUBLIC_KEY,"PUBLIC KEY"));
+ if(key.asymmetricKeyType!=="rsa"||pub.asymmetricKeyType!=="rsa")throw Error("MINI_JSAPI_RSA_KEY_INVALID");
+ return true;
+}
+async function paypal(cfg){
+ if(String(cfg.PAYPAL_ENV||"").trim().toLowerCase()!=="live")throw Error("PAYPAL_ENV_NOT_LIVE");
+ const clientId=String(cfg.PAYPAL_CLIENT_ID||"").trim();
+ const clientSecret=String(cfg.PAYPAL_CLIENT_SECRET||"").trim();
+ const webhookId=String(cfg.PAYPAL_WEBHOOK_ID||"").trim();
+ if(!clientId||!clientSecret||!webhookId)throw Error("PAYPAL_LIVE_CREDENTIALS_MISSING");
+ const auth=Buffer.from(clientId+":"+clientSecret,"utf8").toString("base64");
+ const tokenResponse=await fetch("https://api-m.paypal.com/v1/oauth2/token",{
+  method:"POST",headers:{Authorization:"Basic "+auth,"Content-Type":"application/x-www-form-urlencoded"},
+  body:"grant_type=client_credentials",cache:"no-store",signal:AbortSignal.timeout(15000)
+ });
+ const tokenBody=await tokenResponse.json();
+ if(!tokenResponse.ok||typeof tokenBody?.access_token!=="string"||!tokenBody.access_token)
+  throw Error("PAYPAL_LIVE_OAUTH_AUTHENTICATION_FAILED");
+ const webhookResponse=await fetch("https://api-m.paypal.com/v1/notifications/webhooks/"+encodeURIComponent(webhookId),{
+  method:"GET",headers:{Authorization:"Bearer "+tokenBody.access_token,Accept:"application/json"},
+  cache:"no-store",signal:AbortSignal.timeout(15000)
+ });
+ const webhook=await webhookResponse.json();
+ if(!webhookResponse.ok||String(webhook?.id||"")!==webhookId)throw Error("PAYPAL_WEBHOOK_ID_MISMATCH");
+ const expectedUrl="https://lingxifield.cn/api/pay/paypal/webhook";
+ if(String(webhook?.url||"").replace(/\/$/,"")!==expectedUrl)throw Error("PAYPAL_WEBHOOK_URL_MISMATCH");
+ const required=[
+  "CHECKOUT.ORDER.APPROVED","CHECKOUT.ORDER.COMPLETED","CHECKOUT.PAYMENT-APPROVAL.REVERSED",
+  "PAYMENT.CAPTURE.PENDING","PAYMENT.CAPTURE.COMPLETED","PAYMENT.CAPTURE.DENIED","PAYMENT.CAPTURE.REFUNDED"
+ ];
+ const actual=new Set(Array.isArray(webhook?.event_types)?webhook.event_types.map(x=>String(x?.name||"")):[]);
+ const missing=required.filter(x=>!actual.has(x));
+ if(missing.length)throw Error("PAYPAL_WEBHOOK_EVENTS_MISSING_"+missing.length);
+ console.log("CN_MERCHANT_PAYPAL_LIVE_OAUTH=PASS");
+ console.log("CN_MERCHANT_PAYPAL_WEBHOOK_ID=PASS");
+ console.log("CN_MERCHANT_PAYPAL_WEBHOOK_URL=PASS");
+ console.log("CN_MERCHANT_PAYPAL_WEBHOOK_EVENTS=PASS");
+ return true;
+}
 async function main(){
  const unit=process.argv[2]||"";
  const cfg=systemdEnv(unit);
  if(cfg.NEXT_PUBLIC_SITE_URL&&cfg.NEXT_PUBLIC_SITE_URL!=="https://lingxifield.cn")
   throw Error("CN_PAYMENT_SITE_ORIGIN_MISMATCH");
- const out={alipay:false,wechat:false};
- for(const [name,test] of [["alipay",alipay],["wechat",wechat]]){
-  try{out[name]=await test(cfg);console.log("CN_MERCHANT_"+name.toUpperCase()+"_SIGNED_LIVE_PROBE=PASS");}
-  catch(e){console.log("CN_MERCHANT_"+name.toUpperCase()+"_SIGNED_LIVE_PROBE=BLOCKED:"+String(e?.message||"ERROR").replace(/[^A-Z0-9_:]/gi,"").slice(0,100));}
+ const out={alipay:false,wechat:false,paypal:false,miniJsapi:false};
+ for(const [name,test] of [["alipay",alipay],["wechat",wechat],["paypal",paypal],["miniJsapi",miniJsapi]]){
+  try{
+   out[name]=await test(cfg);
+   const label=name==="miniJsapi"?"MINI_JSAPI_CONFIG":name.toUpperCase()+"_SIGNED_LIVE_PROBE";
+   console.log("CN_MERCHANT_"+label+"=PASS");
+  }catch(e){
+   const label=name==="miniJsapi"?"MINI_JSAPI_CONFIG":name.toUpperCase()+"_SIGNED_LIVE_PROBE";
+   console.log("CN_MERCHANT_"+label+"=BLOCKED:"+String(e?.message||"ERROR").replace(/[^A-Z0-9_:]/gi,"").slice(0,100));
+  }
  }
  console.log("CN_MERCHANT_PUBLIC_READY_JSON="+JSON.stringify(out));
- if(!out.alipay&&!out.wechat)process.exitCode=2;
+ if(!out.alipay&&!out.wechat&&!out.paypal)process.exitCode=2;
 }
 await main().catch(error=>{
  console.error("CN_MERCHANT_CONFIG_BLOCKED:"+String(error?.message||"ERROR").replace(/[^A-Z0-9_:]/gi,"").slice(0,100));
