@@ -68,9 +68,9 @@ jobs:
           }
           $source = Get-Content -LiteralPath $path -Raw
           foreach ($pin in @(
-            '6f72f3dc23dc7716bc64f6735e470dc4b527547a',
-            '0782807ad4903efd7ff6a7a96385e44bcb56fc16118647feeab3802ed1db0b6c',
-            '7d91ef0cecca5c7aa8245e31236fe9e6ec3e06bc',
+            '197e60eae80268ea8c0e18320db58f9cac7eb573',
+            '273d4ee220faab90e98121b042cf51545666b96ff74ba5233f8c8d56c04d6c18',
+            '2c555835d56133c870b79c6c7ae256cb2fa13c39',
             '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
             'e478ec543e56c4f96b338be813851c468bda6af2',
             'cn3192r2:lingxi-cn3192-transfer/cn3196',
