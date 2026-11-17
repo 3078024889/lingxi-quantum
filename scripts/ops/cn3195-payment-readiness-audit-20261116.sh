@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Read-only audit for the current CN3195 production listener.
+# Read-only audit for whichever supported CN production listener Nginx currently routes.
 # No order creation, payment, refund, balance mutation, service restart or flag change.
 set -Eeuo pipefail
 umask 077
@@ -18,9 +18,9 @@ NODE="$(command -v node || true)"
 command -v ss >/dev/null 2>&1 || { echo SS_COMMAND_MISSING; exit 2; }
 command -v python3 >/dev/null 2>&1 || { echo PYTHON3_MISSING; exit 2; }
 
-echo "===== CN3195 PRODUCTION PAYMENT READINESS AUDIT (READ ONLY) ====="
+echo "===== CN PRODUCTION PAYMENT READINESS AUDIT (READ ONLY) ====="
 if [[ -f "$NGINX" ]]; then
-  if grep -qF "127.0.0.1:$PORT" "$NGINX"; then echo CN_NGINX_CONFIG_REFERENCES_3195=YES; else echo CN_NGINX_CONFIG_REFERENCES_3195=NO; fi
+  if grep -qF "127.0.0.1:$PORT" "$NGINX"; then echo CN_PRODUCTION_NGINX_CONFIG_REFERENCES_UPSTREAM=YES; else echo CN_PRODUCTION_NGINX_CONFIG_REFERENCES_UPSTREAM=NO; fi
 else
   echo CN_NGINX_CONFIG_FILE=MISSING
 fi
