@@ -63,11 +63,11 @@ async function sleep(ms) {
 
 function visibleTextFromHtml(html) {
   return String(html)
-    .replace(/<!--[\\s\\S]*?-->/g, " ")
-    .replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/gi, " ")
-    .replace(/<style\\b[^>]*>[\\s\\S]*?<\\/style>/gi, " ")
-    .replace(/<noscript\\b[^>]*>[\\s\\S]*?<\\/noscript>/gi, " ")
-    .replace(/<template\\b[^>]*>[\\s\\S]*?<\\/template>/gi, " ")
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, " ")
+    .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, " ")
+    .replace(/<template\b[^>]*>[\s\S]*?<\/template>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;|&#160;/gi, " ")
     .replace(/&amp;/gi, "&")
@@ -75,7 +75,7 @@ function visibleTextFromHtml(html) {
     .replace(/&gt;/gi, ">")
     .replace(/&quot;/gi, '"')
     .replace(/&#39;|&apos;/gi, "'")
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -277,7 +277,7 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
     }
     // Required assets/build markers are checked in HTML; retired UI labels are checked
     // only in rendered text, never in serialized React/Next script payloads.
-    const content = html.replace(/<br\\s*\\/?>/gi, "");
+    const content = html.replace(/<br\s*\/?>/gi, "");
     const visibleText = visibleTextFromHtml(content);
     const missing = (page.required || []).filter(term => !content.includes(term));
     const missingVisible = (page.requiredVisible || []).filter(term => !visibleText.includes(term));
