@@ -2,11 +2,11 @@ param()
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-# Exact CI-built archive. This script uploads to private R2 and prepares an isolated CN3196 candidate only.
-$ReleaseTag = 'ecs-cn-unified-20261110-197e60eae802'
-$SourceSha = '197e60eae80268ea8c0e18320db58f9cac7eb573'
-$Short = '197e60eae802'
-$CandidateTag = "cn3196-candidate-20261116-$Short"
+# Exact 6.0 source archive. Stream GitHub -> private R2; do not download the 340 MB archive to D:.
+$ReleaseTag = 'ecs-cn-unified-20261110-e9018ac0317e'
+$SourceSha = 'e9018ac0317e61d6daf45f55395bdd7e561df890'
+$Short = 'e9018ac0317e'
+$CandidateTag = "cn3196-candidate-20261117-$Short"
 
 $Config = 'D:\LINGXIFIELDCN3192\rclone.conf'
 $Root = 'D:\30780'
@@ -14,27 +14,26 @@ $WorkDir = Join-Path $Root "cn3196-candidate-$Short"
 $RemoteBase = 'cn3192r2:lingxi-cn3192-transfer/cn3196'
 $RemoteRoot = "$RemoteBase/$CandidateTag"
 $ReleaseBase = "https://github.com/3078024889/lingxi-quantum/releases/download/$ReleaseTag"
-$StageSourceCommit = '3cf0683c2ab0a523c9a5cf167a35fb714300d9f3'
+$StageSourceCommit = '9db7566e9b3d7b79291150bcadd13c46e934d2d7'
 $StageRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3196-candidate-stage-20261116.sh"
 $AuditRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3195-payment-readiness-audit-20261116.sh"
 $TemplateName = 'cn3196-r2-ens-stage-20261117.template.sh'
 $TemplateRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/$TemplateName"
-$TemplateGitBlobSha = 'e478ec543e56c4f96b338be813851c468bda6af2'
+$TemplateGitBlobSha = '0de8892fe696a35dbb1d5277214dfbf36e3b9a3b'
 $TemplateBytes = [Int64]4276
 
 $SourceArchiveName = 'cn-20261110-unified-standalone.tar.gz'
-$SourceChecksumName = 'cn-20261110-unified-standalone.sha256'
-$ArchiveName = 'cn-20261116-cn3196-candidate.tar.gz'
-$ChecksumName = 'cn-20261116-cn3196-candidate.sha256'
+$ArchiveName = 'cn-20261117-cn3196-candidate.tar.gz'
+$ChecksumName = 'cn-20261117-cn3196-candidate.sha256'
 $StageName = 'cn3196-candidate-stage-20261116.sh'
 $AuditName = 'cn3195-payment-readiness-audit-20261116.sh'
 
-$ArchiveBytes = [Int64]340036275
-$ArchiveSha = '273d4ee220faab90e98121b042cf51545666b96ff74ba5233f8c8d56c04d6c18'
-$SourceChecksumBytes = [Int64]104
-$SourceChecksumSha = 'f1ba346f3dcfd459cf0116f4ab34e0d63dddb2029a8305163fa88f54e2800f4c'
-$StageGitBlobSha = '2c555835d56133c870b79c6c7ae256cb2fa13c39'
-$StageBytes = [Int64]10581
+$ArchiveBytes = [Int64]340042760
+$ArchiveSha = 'c7c229fc8cdb884abab199fa6742ebdf222a8948ac67c28f5e3dbadc2d2234c0'
+$ChecksumBytes = [Int64]102
+$ChecksumSha = 'da628b63e8801fe4c53482f9bd7998c4580ac6d8f7214131a86f8d6295f4c245'
+$StageGitBlobSha = '58efcdbc7987aefe3b8e1627f8496735383e7c78'
+$StageBytes = [Int64]11918
 $AuditGitBlobSha = '02e0b843452d4a29aeb9a7b05a82bde6f9c76891'
 $AuditBytes = [Int64]6795
 
@@ -58,7 +57,7 @@ if (!(Get-Command curl.exe -ErrorAction SilentlyContinue)) { throw 'CURL_EXE_NOT
 New-Item -ItemType Directory -Force -Path $WorkDir | Out-Null
 $Drive = [IO.Path]::GetPathRoot($WorkDir)
 $Free = (Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='$($Drive.TrimEnd('\'))'").FreeSpace
-if ([Int64]$Free -lt 1500000000) { throw 'INSUFFICIENT_LOCAL_DISK_SPACE_1_5GB_REQUIRED' }
+if ([Int64]$Free -lt 100000000) { throw 'INSUFFICIENT_LOCAL_DISK_SPACE_100MB_REQUIRED_FOR_SMALL_VERIFIED_FILES' }
 
 function Get-Sha256([string]$Path) {
     return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -88,14 +87,14 @@ function Download-Asset([string]$Name, [string]$Path, [Int64]$Bytes, [string]$Sh
     }
     $tmp = "$Path.downloading"
     Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
-    Write-Host "DOWNLOAD_EXACT_RELEASE_ASSET: $Name ($Bytes bytes)"
-    & curl.exe --fail --location --retry 8 --retry-delay 4 --connect-timeout 25 --max-time 3600 --output $tmp $Url
-    if ($LASTEXITCODE -ne 0) { throw "RELEASE_ASSET_DOWNLOAD_FAILED: $Name" }
-    if (!(Test-Path -LiteralPath $tmp -PathType Leaf)) { throw "RELEASE_ASSET_MISSING: $Name" }
-    if ((Get-Item -LiteralPath $tmp).Length -ne $Bytes) { throw "RELEASE_ASSET_LENGTH_MISMATCH: $Name" }
-    if ((Get-Sha256 $tmp) -cne $Sha) { throw "RELEASE_ASSET_SHA256_MISMATCH: $Name" }
+    Write-Host "DOWNLOAD_SMALL_PINNED_ASSET: $Name ($Bytes bytes)"
+    & curl.exe --fail --location --retry 8 --retry-delay 3 --connect-timeout 25 --max-time 300 --output $tmp $Url
+    if ($LASTEXITCODE -ne 0) { throw "PINNED_ASSET_DOWNLOAD_FAILED: $Name" }
+    if (!(Test-Path -LiteralPath $tmp -PathType Leaf)) { throw "PINNED_ASSET_MISSING: $Name" }
+    if ((Get-Item -LiteralPath $tmp).Length -ne $Bytes) { throw "PINNED_ASSET_LENGTH_MISMATCH: $Name" }
+    if ((Get-Sha256 $tmp) -cne $Sha) { throw "PINNED_ASSET_SHA256_MISMATCH: $Name" }
     Move-Item -LiteralPath $tmp -Destination $Path -Force
-    Write-Host "GITHUB_RELEASE_ASSET_SHA256_PASS: $Name"
+    Write-Host "PINNED_ASSET_SHA256_PASS: $Name"
 }
 function Get-R2ObjectList {
     $raw = & $Rclone lsjson $RemoteRoot --files-only --no-modtime --no-mimetype
@@ -114,83 +113,41 @@ function Get-SignedLink([string]$Name) {
     return $url
 }
 
-Write-Host 'STEP 1/5: DOWNLOAD AND VERIFY EXACT CI RELEASE ASSETS'
-$SourceArchivePath = Join-Path $WorkDir $SourceArchiveName
-$SourceChecksumPath = Join-Path $WorkDir $SourceChecksumName
-$ArchivePath = Join-Path $WorkDir $ArchiveName
+$ArchiveUrl = "$ReleaseBase/$SourceArchiveName"
 $ChecksumPath = Join-Path $WorkDir $ChecksumName
 $StagePath = Join-Path $WorkDir $StageName
 $AuditPath = Join-Path $WorkDir $AuditName
 $TemplatePath = Join-Path $WorkDir $TemplateName
 
-Write-Host 'STEP 2/5: REUSE OR MATERIALIZE IMMUTABLE CN3196 CANDIDATE ARCHIVE'
-if (Test-Path -LiteralPath $ArchivePath -PathType Leaf) {
-    if ((Get-Item -LiteralPath $ArchivePath).Length -ne $ArchiveBytes -or (Get-Sha256 $ArchivePath) -cne $ArchiveSha) {
-        throw 'CANDIDATE_ARCHIVE_CACHE_MISMATCH'
-    }
-    Write-Host 'CANDIDATE_ARCHIVE_CACHE_SHA256_PASS'
-} else {
-    Download-Asset $SourceArchiveName $SourceArchivePath $ArchiveBytes $ArchiveSha "$ReleaseBase/$SourceArchiveName"
-    Download-Asset $SourceChecksumName $SourceChecksumPath $SourceChecksumBytes $SourceChecksumSha "$ReleaseBase/$SourceChecksumName"
-    $sourceLine = (Get-Content -LiteralPath $SourceChecksumPath -Raw).Trim()
-    if ($sourceLine -cne "$ArchiveSha  $SourceArchiveName") { throw 'SOURCE_CHECKSUM_CONTENT_MISMATCH' }
-    Move-Item -LiteralPath $SourceArchivePath -Destination $ArchivePath
-}
+Write-Host 'STEP 1/5: VERIFY EXACT 6.0 SOURCE AND SMALL PINNED STAGING ASSETS'
+if (!(Test-Path -LiteralPath $ArchiveUrl)) { } # URL is fetched by rclone copyurl; no local archive download.
+Download-Asset $StageName $StagePath $StageBytes $StageGitBlobSha "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/$StageName"
+Download-Asset $AuditName $AuditPath $AuditBytes $AuditGitBlobSha $AuditRawUrl
+Download-Asset $TemplateName $TemplatePath $TemplateBytes $TemplateGitBlobSha $TemplateRawUrl
+$StageSha256 = Get-Sha256 $StagePath
+$AuditSha256 = Get-Sha256 $AuditPath
+
+Write-Host 'STEP 2/5: MATERIALIZE THE 102-BYTE CANDIDATE CHECKSUM ONLY'
 $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
 [IO.File]::WriteAllText($ChecksumPath, [string]::Concat($ArchiveSha, '  ', $ArchiveName, [char]10), $utf8NoBom)
-if ((Get-Sha256 $ArchivePath) -cne $ArchiveSha) { throw 'CANDIDATE_ARCHIVE_SHA256_MISMATCH' }
-if ((Get-Item -LiteralPath $ArchivePath).Length -ne $ArchiveBytes) { throw 'CANDIDATE_ARCHIVE_LENGTH_MISMATCH' }
+if ((Get-Item -LiteralPath $ChecksumPath).Length -ne $ChecksumBytes) { throw 'CANDIDATE_CHECKSUM_LENGTH_MISMATCH' }
+if ((Get-Sha256 $ChecksumPath) -cne $ChecksumSha) { throw 'CANDIDATE_CHECKSUM_SHA256_MISMATCH' }
 
-Write-Host 'STEP 3/5: DOWNLOAD AND VERIFY PINNED CN3196 CANDIDATE STAGE SCRIPT'
-if (!(Test-Path -LiteralPath $StagePath -PathType Leaf) -or (Get-GitBlobSha1 $StagePath) -cne $StageGitBlobSha) {
-    Remove-Item -LiteralPath $StagePath -Force -ErrorAction SilentlyContinue
-    & curl.exe --fail --location --retry 8 --retry-delay 3 --connect-timeout 25 --max-time 300 --output $StagePath $StageRawUrl
-    if ($LASTEXITCODE -ne 0) { throw 'CANDIDATE_STAGE_SCRIPT_DOWNLOAD_FAILED' }
-}
-if ((Get-Item -LiteralPath $StagePath).Length -ne $StageBytes) { throw 'CANDIDATE_STAGE_SCRIPT_LENGTH_MISMATCH' }
-if ((Get-GitBlobSha1 $StagePath) -cne $StageGitBlobSha) { throw 'CANDIDATE_STAGE_SCRIPT_GIT_BLOB_SHA1_MISMATCH' }
-$StageSha256 = Get-Sha256 $StagePath
-if (!(Test-Path -LiteralPath $AuditPath -PathType Leaf) -or (Get-GitBlobSha1 $AuditPath) -cne $AuditGitBlobSha) {
-    Remove-Item -LiteralPath $AuditPath -Force -ErrorAction SilentlyContinue
-    & curl.exe --fail --location --retry 8 --retry-delay 3 --connect-timeout 25 --max-time 300 --output $AuditPath $AuditRawUrl
-    if ($LASTEXITCODE -ne 0) { throw 'CN3195_READ_ONLY_AUDIT_DOWNLOAD_FAILED' }
-}
-if ((Get-Item -LiteralPath $AuditPath).Length -ne $AuditBytes) { throw 'CN3195_READ_ONLY_AUDIT_LENGTH_MISMATCH' }
-if ((Get-GitBlobSha1 $AuditPath) -cne $AuditGitBlobSha) { throw 'CN3195_READ_ONLY_AUDIT_GIT_BLOB_SHA1_MISMATCH' }
-$AuditSha256 = Get-Sha256 $AuditPath
-if (!(Test-Path -LiteralPath $TemplatePath -PathType Leaf) -or (Get-GitBlobSha1 $TemplatePath) -cne $TemplateGitBlobSha) {
-    Remove-Item -LiteralPath $TemplatePath -Force -ErrorAction SilentlyContinue
-    & curl.exe --fail --location --retry 8 --retry-delay 3 --connect-timeout 25 --max-time 300 --output $TemplatePath $TemplateRawUrl
-    if ($LASTEXITCODE -ne 0) { throw 'CN3196_ENS_TEMPLATE_DOWNLOAD_FAILED' }
-}
-if ((Get-Item -LiteralPath $TemplatePath).Length -ne $TemplateBytes) { throw 'CN3196_ENS_TEMPLATE_LENGTH_MISMATCH' }
-if ((Get-GitBlobSha1 $TemplatePath) -cne $TemplateGitBlobSha) { throw 'CN3196_ENS_TEMPLATE_GIT_BLOB_SHA1_MISMATCH' }
-$ChecksumBytes = [Int64](Get-Item -LiteralPath $ChecksumPath).Length
-$ChecksumSha256 = Get-Sha256 $ChecksumPath
-Write-Host 'PINNED_STAGE_AUDIT_AND_ENS_TEMPLATE_PASS'
-
-Write-Host 'STEP 4/5: UPLOAD FOUR VERIFIED OBJECTS TO PRIVATE R2 WITH 8-WAY MULTIPART'
+Write-Host 'STEP 3/5: STREAM THE 340-MB RELEASE ASSET DIRECTLY FROM GITHUB TO PRIVATE R2'
 & $Rclone lsd 'cn3192r2:lingxi-cn3192-transfer' | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'R2_REMOTE_NOT_ACCESSIBLE' }
 & $Rclone mkdir $RemoteRoot
 if ($LASTEXITCODE -ne 0) { throw 'R2_CANDIDATE_PREFIX_CREATE_FAILED' }
 
-$Uploads = @(
-    @{ Local = $ArchivePath; Name = $ArchiveName; Size = $ArchiveBytes },
-    @{ Local = $ChecksumPath; Name = $ChecksumName; Size = $ChecksumBytes },
-    @{ Local = $StagePath; Name = $StageName; Size = $StageBytes },
-    @{ Local = $AuditPath; Name = $AuditName; Size = $AuditBytes }
-)
 $Remote = Get-R2ObjectList
 if (@($Remote).Count -gt 4) { throw 'R2_CANDIDATE_PREFIX_HAS_UNEXPECTED_OBJECTS' }
-foreach ($u in $Uploads) {
-    $existing = @($Remote | Where-Object { [string]$_.Name -ceq [string]$u.Name })
-    if ($existing.Count -gt 0) {
-        if ([Int64]$existing[0].Size -ne [Int64]$u.Size) { throw "R2_EXISTING_OBJECT_SIZE_MISMATCH: $($u.Name)" }
-        Write-Host "R2_OBJECT_ALREADY_PRESENT_SIZE_MATCH: $($u.Name)"
-        continue
+$existingArchive = @($Remote | Where-Object { [string]$_.Name -ceq $ArchiveName })
+if ($existingArchive.Count -gt 0) {
+    if ($existingArchive.Count -ne 1 -or [Int64]$existingArchive[0].Size -ne $ArchiveBytes) {
+        throw 'R2_EXISTING_CANDIDATE_ARCHIVE_SIZE_MISMATCH'
     }
-    Write-Host "R2_MULTIPART_UPLOAD_8WAY: $($u.Name)"
+    Write-Host 'R2_EXACT_ARCHIVE_OBJECT_ALREADY_PRESENT_SIZE_PASS'
+} else {
     $rcloneArgs = @(
         '--s3-upload-cutoff','32Mi',
         '--s3-chunk-size','16Mi',
@@ -203,25 +160,49 @@ foreach ($u in $Uploads) {
         '--stats','5s',
         '--stats-one-line'
     )
-    & $Rclone copyto $u.Local "$RemoteRoot/$($u.Name)" @rcloneArgs
-    if ($LASTEXITCODE -ne 0) { throw "R2_MULTIPART_UPLOAD_FAILED: $($u.Name)" }
+    & $Rclone copyurl $ArchiveUrl "$RemoteRoot/$ArchiveName" @rcloneArgs
+    if ($LASTEXITCODE -ne 0) { throw 'GITHUB_TO_R2_STREAM_COPY_FAILED' }
+}
+Write-Host 'GITHUB_TO_R2_STREAM_COPY_COMMAND_PASS'
+
+Write-Host 'STEP 4/5: UPLOAD SMALL VERIFIED MANIFESTS AND VERIFY REMOTE OBJECT SIZES'
+$Uploads = @(
+    @{ Local = $ChecksumPath; Name = $ChecksumName; Size = $ChecksumBytes },
+    @{ Local = $StagePath; Name = $StageName; Size = $StageBytes },
+    @{ Local = $AuditPath; Name = $AuditName; Size = $AuditBytes }
+)
+$Remote = Get-R2ObjectList
+foreach ($u in $Uploads) {
+    $existing = @($Remote | Where-Object { [string]$_.Name -ceq [string]$u.Name })
+    if ($existing.Count -gt 0) {
+        if ($existing.Count -ne 1 -or [Int64]$existing[0].Size -ne [Int64]$u.Size) {
+            throw "R2_EXISTING_OBJECT_SIZE_MISMATCH: $($u.Name)"
+        }
+        Write-Host "R2_OBJECT_ALREADY_PRESENT_SIZE_MATCH: $($u.Name)"
+        continue
+    }
+    & $Rclone copyto $u.Local "$RemoteRoot/$($u.Name)" --s3-upload-cutoff 32Mi --s3-chunk-size 16Mi --s3-upload-concurrency 8 --s3-no-check-bucket --retries 8 --low-level-retries 8
+    if ($LASTEXITCODE -ne 0) { throw "R2_SMALL_ASSET_UPLOAD_FAILED: $($u.Name)" }
 }
 $Remote = Get-R2ObjectList
 if (@($Remote).Count -ne 4) { throw 'R2_CANDIDATE_OBJECT_COUNT_NOT_EXACTLY_FOUR' }
-foreach ($u in $Uploads) {
+$Expected = @(
+    @{ Name = $ArchiveName; Size = $ArchiveBytes },
+    @{ Name = $ChecksumName; Size = $ChecksumBytes },
+    @{ Name = $StageName; Size = $StageBytes },
+    @{ Name = $AuditName; Size = $AuditBytes }
+)
+foreach ($u in $Expected) {
     $found = @($Remote | Where-Object { [string]$_.Name -ceq [string]$u.Name })
     if ($found.Count -ne 1 -or [Int64]$found[0].Size -ne [Int64]$u.Size) {
         throw "R2_REMOTE_SIZE_VERIFY_FAILED: $($u.Name)"
     }
     Write-Host "R2_REMOTE_SIZE_PASS: $($u.Name) $($u.Size)"
 }
-Write-Host 'R2_CONTENT_CHECK_DOWNLOAD_VERIFY_START'
-& $Rclone check $WorkDir $RemoteRoot --one-way --download --include $ArchiveName --include $ChecksumName --include $StageName --include $AuditName
-if ($LASTEXITCODE -ne 0) { throw 'R2_REMOTE_CONTENT_CHECK_FAILED' }
-Write-Host 'R2_REMOTE_CONTENT_SHA256_COMPARE_PASS'
+Write-Host 'R2_REMOTE_OBJECT_SIZE_GATE_PASS; ENS WILL VERIFY SHA256 AFTER RANGE DOWNLOAD'
 
 Write-Host 'STEP 5/5: GENERATE ENS ROOT 8-PART RANGE-DOWNLOAD STAGING SCRIPT'
-$ArchiveUrl = Get-SignedLink $ArchiveName
+$ArchiveSignedUrl = Get-SignedLink $ArchiveName
 $CheckUrl = Get-SignedLink $ChecksumName
 $StageUrl = Get-SignedLink $StageName
 $AuditUrl = Get-SignedLink $AuditName
@@ -233,13 +214,13 @@ $Ecs = $Ecs.Replace('__TAG__', $CandidateTag).
     Replace('__SOURCE_SHA__', $SourceSha).
     Replace('__ARCHIVE_SHA__', $ArchiveSha).
     Replace('__ARCHIVE_BYTES__', [string]$ArchiveBytes).
-    Replace('__CHECK_SHA__', $ChecksumSha256).
+    Replace('__CHECK_SHA__', $ChecksumSha).
     Replace('__CHECK_BYTES__', [string]$ChecksumBytes).
     Replace('__STAGE_SHA256__', $StageSha256).
     Replace('__STAGE_BYTES__', [string]$StageBytes).
     Replace('__AUDIT_SHA256__', $AuditSha256).
     Replace('__AUDIT_BYTES__', [string]$AuditBytes).
-    Replace('__ARCHIVE_URL__', $ArchiveUrl).
+    Replace('__ARCHIVE_URL__', $ArchiveSignedUrl).
     Replace('__CHECK_URL__', $CheckUrl).
     Replace('__STAGE_URL__', $StageUrl).
     Replace('__AUDIT_URL__', $AuditUrl)
@@ -253,7 +234,7 @@ try {
 } catch {
     Write-Host 'CLIPBOARD_UNAVAILABLE_USE_SAVED_SCRIPT'
 }
-Write-Host 'CN3196_R2_UPLOAD_AND_REMOTE_VERIFY_PASS'
+Write-Host 'CN3196_R2_STREAM_UPLOAD_AND_REMOTE_SIZE_VERIFY_PASS'
 Write-Host "CANDIDATE_TAG=$CandidateTag"
 Write-Host "SOURCE_SHA=$SourceSha"
 Write-Host "ARCHIVE_SHA256=$ArchiveSha"
