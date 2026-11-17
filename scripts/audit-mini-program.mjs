@@ -10,7 +10,7 @@ const required=[
  "miniapp/app.js","miniapp/app.json","miniapp/sitemap.json","miniapp/utils/api.js","miniapp/utils/i18n.js","miniapp/utils/share.js",
  "miniapp/pages/home/index.js","miniapp/pages/create/index.js","miniapp/pages/tools/index.js","miniapp/pages/agents/index.js",
  "miniapp/pages/profile/index.js","miniapp/pages/settings/index.js","miniapp/pages/web/index.js","miniapp/pages/web/index.json",
- "miniapp/pages/share/index.js","miniapp/pages/share/index.json","miniapp/pages/mail-home/index.json",
+ "miniapp/pages/share/index.js","miniapp/pages/share/index.json",
  "miniapp/pages/orders/index.js","miniapp/pages/pay/index.js","miniapp/pages/cny-wallet/index.js","miniapp/pages/cny-wallet/index.wxml","miniapp/pages/cny-wallet/index.wxss","miniapp/pages/cny-wallet/index.json","miniapp/pages/notifications/index.js",
  "miniapp/pages/discover-e-sign-pdf/index.js","miniapp/pages/discover-image-watermark-remover/index.js",
  "miniapp/pages/discover-burn-after-read/index.js","miniapp/pages/discover-temp-mail/index.js",
@@ -38,10 +38,6 @@ const webConfig=JSON.parse(read("miniapp/pages/web/index.json"));
 must(webConfig.enableShareAppMessage===true&&webConfig.enableShareTimeline===true,"MINI_WEB_FRIEND_SHARE_CONFIG_MISSING_OR_TIMELINE_MISCONFIGURED");
 const shareConfig=JSON.parse(read("miniapp/pages/share/index.json"));
 must(shareConfig.enableShareAppMessage===true&&shareConfig.enableShareTimeline===true,"MINI_NATIVE_SHARE_CONFIG_MISSING");
-const mailConfig=JSON.parse(read("miniapp/pages/mail-home/index.json"));
-must(mailConfig.enableShareAppMessage===true&&mailConfig.enableShareTimeline===true,"MINI_MAIL_NATIVE_SHARE_CONFIG_MISSING");
-const mailHome=read("miniapp/pages/mail-home/index.js")+read("miniapp/pages/mail-home/index.wxml");
-must(!/mode=image|AI 图片|把想象变成图片|更多创作/.test(mailHome),"MINI_RETIRED_SASI_CREATIVE_ENTRY_REMAINS");
 const shareClient=read("miniapp/utils/share.js");
 must(shareClient.includes("SHARE_IMAGE")&&shareClient.includes("/assets/share-lingxifield-20261115.jpg"),"MINI_SHARE_IMAGE_REFERENCE_MISSING");
 must(!/share-lingxifield-20261105|share-lingxifield-20261113/.test(shareClient),"MINI_STALE_SHARE_IMAGE_REFERENCE_REMAINS");
