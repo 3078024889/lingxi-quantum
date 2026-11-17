@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CN3196 isolated candidate only. Never switches Nginx or stops/restarts production 3195 or rollback 3193.
+# CN3196 isolated candidate only. Detects the live 3194/3195 production upstream and never switches it or rollback 3193.
 set -Eeuo pipefail
 umask 077
 
@@ -12,7 +12,7 @@ ARCHIVE_FILE="cn-20261117-cn3196-candidate.tar.gz"
 CHECK_FILE="cn-20261117-cn3196-candidate.sha256"
 
 BASE="/opt/lingxifield/cn-staged-releases"
-PROD_PORT=3195
+PROD_PORT=""
 CANDIDATE_PORT=3196
 ROLLBACK_PORT=3193
 NGINX="/etc/nginx/conf.d/lingxifield.conf"
@@ -61,13 +61,18 @@ probe_http() {
 
 assert_live_topology() {
   [[ -f "$NGINX" && ! -L "$NGINX" ]] || { echo CN_NGINX_CONFIG_NOT_REGULAR; return 1; }
-  grep -qF "127.0.0.1:$PROD_PORT" "$NGINX" || { echo CN_PRODUCTION_UPSTREAM_NOT_3195; return 1; }
+  local -a upstream_ports=()
+  mapfile -t upstream_ports < <(grep -oE '127\.0\.0\.1:(3194|3195)' "$NGINX" | sed 's/.*://' | sort -u)
+  (( ${#upstream_ports[@]} == 1 )) || { echo CN_PRODUCTION_UPSTREAM_NOT_UNIQUE_OR_UNSUPPORTED; return 1; }
+  PROD_PORT="${upstream_ports[0]}"
+  echo "CN_PRODUCTION_UPSTREAM_PORT=$PROD_PORT"
+  grep -qF "127.0.0.1:$PROD_PORT" "$NGINX" || { echo CN_PRODUCTION_UPSTREAM_NOT_VERIFIED; return 1; }
   local prod fallback
-  prod="$(find_service_for_port "$PROD_PORT")" || { echo CN3195_PRODUCTION_SERVICE_NOT_FOUND; return 1; }
+  prod="$(find_service_for_port "$PROD_PORT")" || { echo CN_PRODUCTION_SERVICE_NOT_FOUND; return 1; }
   fallback="$(find_service_for_port "$ROLLBACK_PORT")" || { echo CN3193_ROLLBACK_SERVICE_NOT_FOUND; return 1; }
-  probe_http "$PROD_PORT" /api/health 200 || { echo CN3195_PRODUCTION_HEALTH_FAILED; return 1; }
+  probe_http "$PROD_PORT" /api/health 200 || { echo CN_PRODUCTION_HEALTH_FAILED; return 1; }
   probe_http "$ROLLBACK_PORT" /api/health 200 || { echo CN3193_ROLLBACK_HEALTH_FAILED; return 1; }
-  echo "CN3195_PRODUCTION_SERVICE=$prod"
+  echo "CN_PRODUCTION_SERVICE=$prod"
   echo "CN3193_ROLLBACK_SERVICE=$fallback"
 }
 
@@ -146,7 +151,7 @@ case "$MODE" in
       exit 1
     fi
     df -h "$BASE" | tail -n 1
-    echo "CN3196_PLAN_PASS_PRODUCTION_3195_AND_ROLLBACK_3193_UNCHANGED"
+    echo "CN3196_PLAN_PASS_CURRENT_PRODUCTION_AND_ROLLBACK_3193_UNCHANGED"
     ;;
   --stage-local)
     assert_live_topology
@@ -216,7 +221,7 @@ PY
     {
       cat <<EOF
 [Unit]
-Description=LINGXIFIELD CN isolated 3196 candidate ($SHORT); production 3195 and rollback 3193 untouched
+Description=LINGXIFIELD CN isolated 3196 candidate ($SHORT); detected production upstream and rollback 3193 untouched
 After=network-online.target
 Wants=network-online.target
 [Service]
@@ -242,7 +247,7 @@ EOF
     systemctl daemon-reload
     systemctl start "$SERVICE"
     if ! verify_candidate; then
-      echo CN3196_CANDIDATE_FAILED_PRODUCTION_3195_UNCHANGED >&2
+      echo CN3196_CANDIDATE_FAILED_CURRENT_PRODUCTION_UNCHANGED >&2
       exit 1
     fi
     ;;
@@ -255,7 +260,7 @@ EOF
     rm -f "$UNIT" "$STAGE_ENV"
     systemctl daemon-reload
     assert_live_topology
-    echo "CN3196_CANDIDATE_CLEANED_PRODUCTION_3195_AND_ROLLBACK_3193_UNCHANGED"
+    echo "CN3196_CANDIDATE_CLEANED_CURRENT_PRODUCTION_AND_ROLLBACK_3193_UNCHANGED"
     ;;
   *)
     echo "MODE_INVALID: use --plan, --stage-local, --verify-stage or --cleanup"
