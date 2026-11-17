@@ -16,12 +16,14 @@ $RemoteRoot = "$RemoteBase/$CandidateTag"
 $ReleaseBase = "https://github.com/3078024889/lingxi-quantum/releases/download/$ReleaseTag"
 $StageSourceCommit = '0cb89353b2d9e376a37921324247cf96840371c8'
 $StageRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3196-candidate-stage-20261116.sh"
+$AuditRawUrl = "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/cn3195-payment-readiness-audit-20261116.sh"
 
 $SourceArchiveName = 'cn-20261110-unified-standalone.tar.gz'
 $SourceChecksumName = 'cn-20261110-unified-standalone.sha256'
 $ArchiveName = 'cn-20261116-cn3196-candidate.tar.gz'
 $ChecksumName = 'cn-20261116-cn3196-candidate.sha256'
 $StageName = 'cn3196-candidate-stage-20261116.sh'
+$AuditName = 'cn3195-payment-readiness-audit-20261116.sh'
 
 $ArchiveBytes = [Int64]340040719
 $ArchiveSha = '0782807ad4903efd7ff6a7a96385e44bcb56fc16118647feeab3802ed1db0b6c'
@@ -29,6 +31,8 @@ $SourceChecksumBytes = [Int64]104
 $SourceChecksumSha = '9311882bd57ba2a5ea56736df616c4bf05e040b7b3a4a76370b9ec18e6599891'
 $StageGitBlobSha = '7d91ef0cecca5c7aa8245e31236fe9e6ec3e06bc'
 $StageBytes = [Int64]10581
+$AuditGitBlobSha = '02e0b843452d4a29aeb9a7b05a82bde6f9c76891'
+$AuditBytes = [Int64]6795
 
 if (!(Test-Path -LiteralPath $Config -PathType Leaf)) { throw "R2_CONFIG_NOT_FOUND: $Config" }
 if (!(Select-String -LiteralPath $Config -Pattern '^\s*\[cn3192r2\]\s*$' -Quiet)) { throw 'R2_REMOTE_SECTION_MISSING' }
@@ -112,6 +116,7 @@ $SourceChecksumPath = Join-Path $WorkDir $SourceChecksumName
 $ArchivePath = Join-Path $WorkDir $ArchiveName
 $ChecksumPath = Join-Path $WorkDir $ChecksumName
 $StagePath = Join-Path $WorkDir $StageName
+$AuditPath = Join-Path $WorkDir $AuditName
 
 Write-Host 'STEP 2/5: REUSE OR MATERIALIZE IMMUTABLE CN3196 CANDIDATE ARCHIVE'
 if (Test-Path -LiteralPath $ArchivePath -PathType Leaf) {
@@ -140,6 +145,14 @@ if (!(Test-Path -LiteralPath $StagePath -PathType Leaf) -or (Get-GitBlobSha1 $St
 if ((Get-Item -LiteralPath $StagePath).Length -ne $StageBytes) { throw 'CANDIDATE_STAGE_SCRIPT_LENGTH_MISMATCH' }
 if ((Get-GitBlobSha1 $StagePath) -cne $StageGitBlobSha) { throw 'CANDIDATE_STAGE_SCRIPT_GIT_BLOB_SHA1_MISMATCH' }
 $StageSha256 = Get-Sha256 $StagePath
+if (!(Test-Path -LiteralPath $AuditPath -PathType Leaf) -or (Get-GitBlobSha1 $AuditPath) -cne $AuditGitBlobSha) {
+    Remove-Item -LiteralPath $AuditPath -Force -ErrorAction SilentlyContinue
+    & curl.exe --fail --location --retry 8 --retry-delay 3 --connect-timeout 25 --max-time 300 --output $AuditPath $AuditRawUrl
+    if ($LASTEXITCODE -ne 0) { throw 'CN3195_READ_ONLY_AUDIT_DOWNLOAD_FAILED' }
+}
+if ((Get-Item -LiteralPath $AuditPath).Length -ne $AuditBytes) { throw 'CN3195_READ_ONLY_AUDIT_LENGTH_MISMATCH' }
+if ((Get-GitBlobSha1 $AuditPath) -cne $AuditGitBlobSha) { throw 'CN3195_READ_ONLY_AUDIT_GIT_BLOB_SHA1_MISMATCH' }
+$AuditSha256 = Get-Sha256 $AuditPath
 $ChecksumBytes = [Int64](Get-Item -LiteralPath $ChecksumPath).Length
 $ChecksumSha256 = Get-Sha256 $ChecksumPath
 Write-Host 'PINNED_CANDIDATE_STAGE_SCRIPT_PASS'
@@ -153,7 +166,8 @@ if ($LASTEXITCODE -ne 0) { throw 'R2_CANDIDATE_PREFIX_CREATE_FAILED' }
 $Uploads = @(
     @{ Local = $ArchivePath; Name = $ArchiveName; Size = $ArchiveBytes },
     @{ Local = $ChecksumPath; Name = $ChecksumName; Size = $ChecksumBytes },
-    @{ Local = $StagePath; Name = $StageName; Size = $StageBytes }
+    @{ Local = $StagePath; Name = $StageName; Size = $StageBytes },
+    @{ Local = $AuditPath; Name = $AuditName; Size = $AuditBytes }
 )
 $Remote = Get-R2ObjectList
 if (@($Remote).Count -gt 3) { throw 'R2_CANDIDATE_PREFIX_HAS_UNEXPECTED_OBJECTS' }
@@ -181,7 +195,7 @@ foreach ($u in $Uploads) {
     if ($LASTEXITCODE -ne 0) { throw "R2_MULTIPART_UPLOAD_FAILED: $($u.Name)" }
 }
 $Remote = Get-R2ObjectList
-if (@($Remote).Count -ne 3) { throw 'R2_CANDIDATE_OBJECT_COUNT_NOT_EXACTLY_THREE' }
+if (@($Remote).Count -ne 4) { throw 'R2_CANDIDATE_OBJECT_COUNT_NOT_EXACTLY_FOUR' }
 foreach ($u in $Uploads) {
     $found = @($Remote | Where-Object { [string]$_.Name -ceq [string]$u.Name })
     if ($found.Count -ne 1 -or [Int64]$found[0].Size -ne [Int64]$u.Size) {
@@ -190,7 +204,7 @@ foreach ($u in $Uploads) {
     Write-Host "R2_REMOTE_SIZE_PASS: $($u.Name) $($u.Size)"
 }
 Write-Host 'R2_CONTENT_CHECK_DOWNLOAD_VERIFY_START'
-& $Rclone check $WorkDir $RemoteRoot --one-way --download --include $ArchiveName --include $ChecksumName --include $StageName
+& $Rclone check $WorkDir $RemoteRoot --one-way --download --include $ArchiveName --include $ChecksumName --include $StageName --include $AuditName
 if ($LASTEXITCODE -ne 0) { throw 'R2_REMOTE_CONTENT_CHECK_FAILED' }
 Write-Host 'R2_REMOTE_CONTENT_SHA256_COMPARE_PASS'
 
@@ -198,6 +212,7 @@ Write-Host 'STEP 5/5: GENERATE ENS ROOT 8-PART RANGE-DOWNLOAD STAGING SCRIPT'
 $ArchiveUrl = Get-SignedLink $ArchiveName
 $CheckUrl = Get-SignedLink $ChecksumName
 $StageUrl = Get-SignedLink $StageName
+$AuditUrl = Get-SignedLink $AuditName
 
 $Ecs = @'
 #!/usr/bin/env bash
@@ -211,14 +226,18 @@ CHECK_SHA='__CHECK_SHA__'
 CHECK_BYTES='__CHECK_BYTES__'
 STAGE_SHA256='__STAGE_SHA256__'
 STAGE_BYTES='__STAGE_BYTES__'
+AUDIT_SHA256='__AUDIT_SHA256__'
+AUDIT_BYTES='__AUDIT_BYTES__'
 ARCHIVE_URL='__ARCHIVE_URL__'
 CHECK_URL='__CHECK_URL__'
 STAGE_URL='__STAGE_URL__'
+AUDIT_URL='__AUDIT_URL__'
 BASE='/opt/lingxifield/cn-staged-releases'
 DIR="$BASE/.download-$TAG"
 FILE='cn-20261116-cn3196-candidate.tar.gz'
 CHECK='cn-20261116-cn3196-candidate.sha256'
 STAGE="$DIR/cn3196-candidate-stage-20261116.sh"
+AUDIT="$DIR/cn3195-payment-readiness-audit-20261116.sh"
 mkdir -p "$DIR"
 chmod 700 "$DIR"
 
@@ -254,6 +273,7 @@ download_range_part() {
 
 fetch_small_exact "$CHECK_URL" "$DIR/$CHECK" "$CHECK_BYTES" "$CHECK_SHA"
 fetch_small_exact "$STAGE_URL" "$STAGE" "$STAGE_BYTES" "$STAGE_SHA256"
+fetch_small_exact "$AUDIT_URL" "$AUDIT" "$AUDIT_BYTES" "$AUDIT_SHA256"
 
 echo 'R2_RANGE_SUPPORT_PROBE'
 code="$(curl -4sS -o /dev/null -w '%{http_code}' --range 0-0 "$ARCHIVE_URL")"
@@ -285,6 +305,9 @@ if grep -Eq '(^/|(^|/)\.\.(/|$))' "$DIR/archive-manifest.txt"; then echo 'CN3196
 [[ "$(tar -xOzf "$DIR/$FILE" ./RELEASE_SOURCE_SHA | tr -d '\r\n')" == "$SOURCE_SHA" ]] || { echo 'CN3196_ARTIFACT_SOURCE_SHA_MISMATCH'; exit 1; }
 chmod 600 "$DIR/$FILE" "$DIR/$CHECK" "$STAGE"
 echo 'CN3196_TRANSFER_VERIFIED'
+echo '===== CN3195 CURRENT PRODUCTION PAYMENT READINESS (READ ONLY) ====='
+bash "$AUDIT"
+echo '===== CN3196 CANDIDATE STAGING (PAYMENT GATES REMAIN CLOSED) ====='
 bash "$STAGE" --plan
 bash "$STAGE" --stage-local
 bash "$STAGE" --verify-stage
@@ -299,9 +322,12 @@ $Ecs = $Ecs.Replace('__TAG__', $CandidateTag).
     Replace('__CHECK_BYTES__', [string]$ChecksumBytes).
     Replace('__STAGE_SHA256__', $StageSha256).
     Replace('__STAGE_BYTES__', [string]$StageBytes).
+    Replace('__AUDIT_SHA256__', $AuditSha256).
+    Replace('__AUDIT_BYTES__', [string]$AuditBytes).
     Replace('__ARCHIVE_URL__', $ArchiveUrl).
     Replace('__CHECK_URL__', $CheckUrl).
-    Replace('__STAGE_URL__', $StageUrl)
+    Replace('__STAGE_URL__', $StageUrl).
+    Replace('__AUDIT_URL__', $AuditUrl)
 
 $RootScript = Join-Path $Root "PASTE-IN-ALIYUN-CN3196-STAGE-$Short.sh"
 [IO.File]::WriteAllText($RootScript, $Ecs, $utf8NoBom)
