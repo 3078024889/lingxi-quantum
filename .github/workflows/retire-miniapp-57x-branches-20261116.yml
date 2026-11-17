@@ -49,6 +49,9 @@ jobs:
             "fix/miniapp-wallet-website-only-20261115"
             "tmp/miniapp-574-cny-core-20261116"
             "fix/cn3196-r2-transfer-6.0-20261117"
+            "fix/miniapp-6.0.0-jsapi-cleanup-20261116"
+            "release/miniapp-6.0.0-20261116"
+            "feature/miniapp-direct-tools-share-20261107"
           )
 
           open_prs="$(gh api --paginate "repos/$GH_REPO/pulls?state=open&per_page=100")"
