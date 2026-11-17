@@ -1,4 +1,59 @@
-import test from "node:test";import assert from "node:assert/strict";import{readFileSync,existsSync}from"node:fs";const read=p=>readFileSync(p,"utf8"),exists=p=>existsSync(p);
-test("USD wallet top-up readiness includes PayPal Live and wallet-specific release gates",()=>{const p=read("app/api/pay/providers/route.ts"),c=read("app/api/pay/create/route.ts"),w=read("components/WalletLivePanel.tsx"),x=read("app/checkout-usd/page.tsx");assert.ok(p.includes("const usdBalanceTopup=paypal"));assert.ok(p.includes("USD_BALANCE_TOPUP_ENABLED"));assert.ok(p.includes("SASI_REFUND_FLOW_TESTED"));assert.ok(p.includes("wechat,alipay,paypal,usdBalanceTopup"));assert.ok(c.includes('USD_BALANCE_TOPUP_ENABLED!=="true"'));assert.ok(c.includes('SASI_REFUND_FLOW_TESTED!=="true"'));assert.ok(w.includes("usdBalanceTopup:boolean"));assert.ok(w.includes("providers?.usdBalanceTopup===true"));assert.ok(!w.includes('topupCurrency==="USD"?providers?.paypal===true'));assert.ok(x.includes("setUsdWalletReady(d?.usdBalanceTopup===true)"));assert.ok(x.includes('product?.group==="wallet"?usdWalletReady:paypalReady'));assert.ok(x.includes("!paymentReady"))});
-test("CNY and USD both enter the official website wallet with the selected currency",()=>{const w=read("components/WalletLivePanel.tsx"),p=read("lib/mini/payment-client.ts"),m=read("components/MiniPaymentBoundary.tsx"),web=read("miniapp/pages/web/index.js"),c=read("app/checkout/page.tsx"),x=read("app/checkout-usd/page.tsx");assert.ok(w.includes('"/checkout?productId=sasi-balance-"'));assert.ok(w.includes('"/checkout-usd?productId=sasi-usd-balance-"'));assert.ok(w.includes("redirect=%2Fai-wallet%3Fcurrency%3DUSD"));assert.ok(p.includes('openMiniWallet(currency: "CNY" | "USD"'));assert.ok(p.includes("/ai-wallet?currency="));assert.ok(!p.includes("openMiniRecharge")&&!p.includes("pages/balance"));assert.ok(!m.includes("openMiniRecharge")&&!m.includes("cnyBalanceProductId"));assert.ok(c.includes("/api/pay/wechat/create")&&c.includes("invokeWeixinPay"));assert.ok(x.includes("setUsdWalletReady")&&x.includes("paypalReady"));assert.ok(web.includes("currencyParam=/(?:[?&])currency="));for(const f of ["miniapp/pages/balance","miniapp/pages/recharge","app/api/wechat/mini/balance-pay/create/route.ts","app/api/wechat/mini/balance-pay/availability/route.ts"])assert.equal(exists(f),false,f)});
-test("account profile shows Save and keeps the mobile button in view",()=>{const p=read("components/AccountProfileCard.tsx"),c=read("app/unified-shell.css"),i=read("lib/account-experience-i18n.ts");assert.ok(p.includes('className="lx-account-save-button"'));assert.ok(p.includes('t("save")'));assert.ok(p.includes('t("saving")'));assert.ok(!p.includes('t("confirmChange")'));assert.ok(i.includes('"zh": "保存"'));assert.ok(c.includes(".lx-account-name-edit .lx-account-save-button"));assert.ok(c.includes("grid-template-columns:minmax(0,1fr)!important"));assert.ok(c.includes("width:100%!important"))});
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync,existsSync} from "node:fs";
+const read=p=>readFileSync(p,"utf8"),exists=p=>existsSync(p);
+
+test("CNY and USD wallet readiness are independent and enforced by server gates",()=>{
+ const providers=read("app/api/pay/providers/route.ts");
+ const create=read("app/api/pay/create/route.ts");
+ const wallet=read("components/WalletLivePanel.tsx");
+ const checkout=read("app/checkout-usd/page.tsx");
+ assert.match(providers,/cnyBalanceTopupReady\s*=\s*sasiRmbBalanceV1Enabled\(\)\s*&&\s*\(wechat\s*\|\|\s*alipay\)/);
+ assert.match(providers,/usdBalanceTopupReady\s*=\s*paypal[\s\S]*USD_BALANCE_TOPUP_ENABLED[\s\S]*SASI_REFUND_FLOW_TESTED/);
+ assert.match(create,/USD_BALANCE_TOPUP_ENABLED/);
+ assert.match(create,/SASI_REFUND_FLOW_TESTED/);
+ assert.match(wallet,/cnyBalanceTopupReady:boolean;usdBalanceTopupReady:boolean/);
+ assert.match(wallet,/providers\?\.cnyBalanceTopupReady===true/);
+ assert.match(wallet,/providers\?\.usdBalanceTopupReady===true/);
+ assert.match(checkout,/setWalletTopupReady\(d\?\.usdBalanceTopupReady===true\)/);
+ assert.match(checkout,/product\?\.group===\"wallet\"\?walletTopupReady:paypalReady/);
+});
+
+test("Mini Program CNY uses native merchant JSAPI; USD enters official website PayPal wallet",()=>{
+ const wallet=read("components/WalletLivePanel.tsx");
+ const client=read("lib/mini/payment-client.ts");
+ const boundary=read("components/MiniPaymentBoundary.tsx");
+ const web=read("miniapp/pages/web/index.js");
+ const native=read("miniapp/pages/cny-wallet/index.js");
+ const cny=read("app/checkout/page.tsx");
+ const usd=read("app/checkout-usd/page.tsx");
+ assert.match(wallet,/miniCnyReady/);
+ assert.match(wallet,/openMiniWallet\(\"CNY\",amount\)/);
+ assert.match(wallet,/\/checkout\?productId=sasi-balance-/);
+ assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);
+ assert.match(client,/openMiniWallet\(currency: \"CNY\" \| \"USD\"/);
+ assert.match(client,/\/pages\/cny-wallet\/index/);
+ assert.match(client,/\/ai-wallet\?currency=/);
+ assert.doesNotMatch(client,/openMiniRecharge|pages\/balance/);
+ assert.doesNotMatch(boundary,/openMiniRecharge/);
+ assert.match(native,/wx\.requestPayment/);
+ assert.doesNotMatch(native,/wx\.requestVirtualPayment/);
+ assert.match(cny,/\/api\/pay\/wechat\/create/);
+ assert.match(usd,/paypalReady/);
+ assert.match(web,/currencyParam=\/(?:\[?\&\])currency=/);
+ for(const path of ["miniapp/pages/balance","miniapp/pages/recharge","app/api/wechat/mini/balance-pay/create/route.ts","app/api/wechat/mini/balance-pay/availability/route.ts","app/api/wechat/mini/balance-pay/status/route.ts"])assert.equal(exists(path),false,path);
+});
+
+test("mobile account editor has a visible full-width Save action",()=>{
+ const profile=read("components/AccountProfileCard.tsx");
+ const css=read("app/unified-shell.css");
+ const i18n=read("lib/account-experience-i18n.ts");
+ assert.match(profile,/lx-account-save-button/);
+ assert.match(profile,/t\(\"save\"\)/);
+ assert.match(profile,/t\(\"saving\"\)/);
+ assert.doesNotMatch(profile,/t\(\"confirmChange\"\)/);
+ assert.match(i18n,/\"zh\": \"保存\"/);
+ assert.match(css,/\.lx-account-name-edit \.lx-account-save-button/);
+ assert.match(css,/grid-template-columns:minmax\(0,1fr\)!important/);
+ assert.match(css,/width:100%!important/);
+});
