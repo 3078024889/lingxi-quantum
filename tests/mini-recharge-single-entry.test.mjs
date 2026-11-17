@@ -86,10 +86,12 @@ test("new JSAPI reservation is service-role-only and legacy reservation RPC is r
  assert.ok(migration.includes("GRANT EXECUTE ON FUNCTION public.reserve_mini_cny_jsapi_topup_order"));
  assert.ok(migration.includes("TO service_role"));
  assert.ok(migration.includes("p_snapshot->>'requestId' !~"));
+ assert.ok(migration.includes("p_snapshot->>'appId' IS DISTINCT FROM 'wxbf4ae90406e7e26b'"));
  assert.ok(migration.includes("NULLIF(p_snapshot->>'openid', '') IS NULL"));
+ assert.ok(migration.includes("provider IN ('wechat', 'wechat_mini_virtual')"));
  assert.ok(!migration.includes("SECURITY DEFINER"));
- assert.ok(retired.includes("DROP FUNCTION public.reserve_mini_cny_topup_order"));
- assert.ok(!retired.includes("CASCADE"));
+ assert.ok(!exists("supabase/migrations/20261116194500_retire_legacy_mini_virtual_topup_rpc.sql"));
+ assert.ok(!create.includes('admin.rpc("reserve_mini_cny_topup_order"'));
 });
 
 test("WeChat callback validates mini AppID, payer openid and the exact reserved out-trade number",()=>{
