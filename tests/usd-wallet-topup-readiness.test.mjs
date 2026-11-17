@@ -15,8 +15,8 @@ test("CNY and USD wallet readiness are independent and enforced by server gates"
  assert.match(wallet,/cnyBalanceTopupReady:boolean;usdBalanceTopupReady:boolean/);
  assert.match(wallet,/providers\?\.cnyBalanceTopupReady===true/);
  assert.match(wallet,/providers\?\.usdBalanceTopupReady===true/);
- assert.match(checkout,/setWalletTopupReady\(d\?\.usdBalanceTopupReady===true\)/);
- assert.match(checkout,/product\?\.group===\"wallet\"\?walletTopupReady:paypalReady/);
+ assert.match(checkout,/setUsdWalletReady\(d\?\.usdBalanceTopupReady===true\)/);
+ assert.match(checkout,/product\?\.group===\"wallet\"\?usdWalletReady:paypalReady/);
 });
 
 test("Mini Program CNY uses native merchant JSAPI; USD enters official website PayPal wallet",()=>{
