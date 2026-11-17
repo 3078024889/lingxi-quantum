@@ -17,6 +17,8 @@ test("seller route is explicitly titled as the seller workspace", () => {
   assert.match(sellerPage, /title:"卖家工作台/);
   assert.match(sellerPage, /SasiOpenMarketplace view="seller"/);
   assert.match(sellerPage, /canonical:"\/sasi\/seller"/);
+  assert.match(sellerPage, /dynamic = "force-dynamic"/);
+  assert.match(sellerPage, /revalidate = 0/);
 });
 test("seller reference layout contains the hero, four live metrics and three columns", () => {
   assert.match(workspace, /data-testid="seller-workspace-hero"/);
