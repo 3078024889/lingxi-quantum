@@ -76,25 +76,25 @@ function Get-GitBlobSha1([string]$Path) {
         $sha.Dispose()
     }
 }
-function Download-Asset([string]$Name, [string]$Path, [Int64]$Bytes, [string]$Sha, [string]$Url) {
+function Download-GitBlobAsset([string]$Name, [string]$Path, [Int64]$Bytes, [string]$GitBlobSha, [string]$Url) {
     if (Test-Path -LiteralPath $Path -PathType Leaf) {
         $item = Get-Item -LiteralPath $Path
-        if ($item.Length -eq $Bytes -and (Get-Sha256 $Path) -ceq $Sha) {
-            Write-Host "LOCAL_ASSET_REUSE_VERIFIED: $Name"
+        if ($item.Length -eq $Bytes -and (Get-GitBlobSha1 $Path) -ceq $GitBlobSha) {
+            Write-Host "LOCAL_GIT_BLOB_REUSE_VERIFIED: $Name"
             return
         }
         Remove-Item -LiteralPath $Path -Force
     }
     $tmp = "$Path.downloading"
     Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
-    Write-Host "DOWNLOAD_SMALL_PINNED_ASSET: $Name ($Bytes bytes)"
+    Write-Host "DOWNLOAD_SMALL_PINNED_GIT_BLOB: $Name ($Bytes bytes)"
     & curl.exe --fail --location --retry 8 --retry-delay 3 --connect-timeout 25 --max-time 300 --output $tmp $Url
     if ($LASTEXITCODE -ne 0) { throw "PINNED_ASSET_DOWNLOAD_FAILED: $Name" }
     if (!(Test-Path -LiteralPath $tmp -PathType Leaf)) { throw "PINNED_ASSET_MISSING: $Name" }
     if ((Get-Item -LiteralPath $tmp).Length -ne $Bytes) { throw "PINNED_ASSET_LENGTH_MISMATCH: $Name" }
-    if ((Get-Sha256 $tmp) -cne $Sha) { throw "PINNED_ASSET_SHA256_MISMATCH: $Name" }
+    if ((Get-GitBlobSha1 $tmp) -cne $GitBlobSha) { throw "PINNED_ASSET_GIT_BLOB_SHA1_MISMATCH: $Name" }
     Move-Item -LiteralPath $tmp -Destination $Path -Force
-    Write-Host "PINNED_ASSET_SHA256_PASS: $Name"
+    Write-Host "PINNED_GIT_BLOB_SHA1_PASS: $Name"
 }
 function Get-R2ObjectList {
     $raw = & $Rclone lsjson $RemoteRoot --files-only --no-modtime --no-mimetype
@@ -120,10 +120,9 @@ $AuditPath = Join-Path $WorkDir $AuditName
 $TemplatePath = Join-Path $WorkDir $TemplateName
 
 Write-Host 'STEP 1/5: VERIFY EXACT 6.0 SOURCE AND SMALL PINNED STAGING ASSETS'
-if (!(Test-Path -LiteralPath $ArchiveUrl)) { } # URL is fetched by rclone copyurl; no local archive download.
-Download-Asset $StageName $StagePath $StageBytes $StageGitBlobSha "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/$StageName"
-Download-Asset $AuditName $AuditPath $AuditBytes $AuditGitBlobSha $AuditRawUrl
-Download-Asset $TemplateName $TemplatePath $TemplateBytes $TemplateGitBlobSha $TemplateRawUrl
+Download-GitBlobAsset $StageName $StagePath $StageBytes $StageGitBlobSha "https://raw.githubusercontent.com/3078024889/lingxi-quantum/$StageSourceCommit/scripts/ops/$StageName"
+Download-GitBlobAsset $AuditName $AuditPath $AuditBytes $AuditGitBlobSha $AuditRawUrl
+Download-GitBlobAsset $TemplateName $TemplatePath $TemplateBytes $TemplateGitBlobSha $TemplateRawUrl
 $StageSha256 = Get-Sha256 $StagePath
 $AuditSha256 = Get-Sha256 $AuditPath
 
