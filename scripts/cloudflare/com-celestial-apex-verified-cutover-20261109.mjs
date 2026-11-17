@@ -254,7 +254,7 @@ async function probe(base, phase, attempts = 3, expectedProviders = null) {
         "授权范围",
         "保存商品草稿"
       ],
-      requiredVisible: ["卖家工作台", "发布流程", "软件名称", "保存商品草稿"],
+      requiredVisible: ["卖家工作台", "发布流程", "零费用申请入驻"],
       forbidden: ["SASI 创作规则", "AI短剧生成", "书本问答", "03 / SELLER STUDIO"]
     }
   ];
