@@ -1,0 +1,86 @@
+name: CN3196 isolated R2 transfer helper static gate
+
+on:
+  push:
+    branches:
+      - fix/site-wallet-payment-readiness-20261116
+    paths:
+      - scripts/ops/R2-CN3196-Transfer-20261117.ps1
+      - scripts/ops/cn3196-candidate-stage-20261116.sh
+      - scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
+      - .github/workflows/cn3196-transfer-helper-check-20261117.yml
+  pull_request:
+    branches:
+      - ci/cn3194-payment-base-20261110
+    paths:
+      - scripts/ops/R2-CN3196-Transfer-20261117.ps1
+      - scripts/ops/cn3196-candidate-stage-20261116.sh
+      - scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
+      - .github/workflows/cn3196-transfer-helper-check-20261117.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cn3196-transfer-helper-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bash-candidate-stage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Validate pinned candidate stage shell
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/ops/cn3196-candidate-stage-20261116.sh
+          bash -n scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
+          grep -Fq 'PROD_PORT=3195' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CANDIDATE_PORT=3196' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'ROLLBACK_PORT=3193' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'SOURCE_SHA="197e60eae80268ea8c0e18320db58f9cac7eb573"' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'ARCHIVE_SHA="273d4ee220faab90e98121b042cf51545666b96ff74ba5233f8c8d56c04d6c18"' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CN3196_CANDIDATE_FAILED_PRODUCTION_3195_UNCHANGED' scripts/ops/cn3196-candidate-stage-20261116.sh
+          grep -Fq 'CN3196_CANDIDATE_READY_NO_PRODUCTION_SWITCH' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
+          grep -Fq 'bash "$AUDIT"' scripts/ops/cn3196-r2-ens-stage-20261117.template.sh
+          if grep -Eq 'nginx -s reload|systemctl restart nginx|sed -i.*lingxifield\.conf' scripts/ops/cn3196-candidate-stage-20261116.sh; then
+            echo 'CANDIDATE_SCRIPT_MUST_NOT_SWITCH_PRODUCTION'
+            exit 1
+          fi
+          echo 'CN3196_STAGE_SCRIPT_STATIC_GATE_PASS'
+
+  powershell-transfer:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Parse and verify pinned R2 transfer helper
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $path = 'scripts/ops/R2-CN3196-Transfer-20261117.ps1'
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD $path), [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            throw 'POWERSHELL_PARSE_FAILED'
+          }
+          $source = Get-Content -LiteralPath $path -Raw
+          foreach ($pin in @(
+            '197e60eae80268ea8c0e18320db58f9cac7eb573',
+            '273d4ee220faab90e98121b042cf51545666b96ff74ba5233f8c8d56c04d6c18',
+            '2c555835d56133c870b79c6c7ae256cb2fa13c39',
+            '02e0b843452d4a29aeb9a7b05a82bde6f9c76891',
+            'e478ec543e56c4f96b338be813851c468bda6af2',
+            'cn3192r2:lingxi-cn3192-transfer/cn3196',
+            '--s3-upload-concurrency','8'
+          )) {
+            if (-not $source.Contains($pin)) { throw "TRANSFER_HELPER_PIN_MISSING: $pin" }
+          }
+          if ($source.Contains('WECHAT_MINI_JSAPI_TOPUPS_ENABLED=true') -or $source.Contains('USD_BALANCE_TOPUP_ENABLED=true')) {
+            throw 'TRANSFER_HELPER_MUST_NOT_ENABLE_PRODUCTION_PAYMENTS'
+          }
+          Write-Host 'CN3196_POWERSHELL_PARSE_AND_PIN_GATE_PASS'

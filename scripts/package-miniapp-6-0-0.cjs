@@ -1,0 +1,38 @@
+const fs=require('node:fs');
+const path=require('node:path');
+const {execFileSync}=require('node:child_process');
+const root=process.cwd(),version='6.0.0',appId='wxbf4ae90406e7e26b';
+const receiptFile=path.join(root,'_local/handoff/mini-build-v80/main-latest.json');
+if(!fs.existsSync(receiptFile))throw new Error('MAIN_MINI_BUILD_RECEIPT_MISSING');
+const receipt=JSON.parse(fs.readFileSync(receiptFile,'utf8'));
+const sourceSha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8',windowsHide:true}).trim();
+if(receipt.target!=='main'||receipt.sourceSha!==sourceSha||receipt.sourceDirty)throw new Error('MINI_BUILD_RECEIPT_SOURCE_MISMATCH');
+const allowedRoot=path.resolve(root,'_local/handoff/mini-build-v80')+path.sep,source=path.resolve(root,receipt.projectPath);
+if(!source.startsWith(allowedRoot)||!fs.existsSync(path.join(source,'app.json')))throw new Error('MINI_BUILD_PATH_OUTSIDE_HANDOFF');
+const output=path.join(root,'dist','miniapp-'+version),stage=path.join(output,'project'),zipFile=path.join(root,'dist','lingxifield-miniapp-'+version+'.zip');
+fs.rmSync(output,{recursive:true,force:true});fs.mkdirSync(stage,{recursive:true});fs.mkdirSync(path.dirname(zipFile),{recursive:true});
+function includeFile(file){const name=path.basename(file),rel=path.relative(source,file).replaceAll(path.sep,'/');if(name==='project.private.config.json'||name==='project.private.config.json.example'||name==='.DS_Store'||name==='Thumbs.db')return false;if(rel.split('/').some(part=>['node_modules','.git','.next','dist','_local'].includes(part)))return false;if(/^\.env(?:\.|$)/i.test(name)||/\.(?:pem|key|p12|pfx|keystore)$/i.test(name))return false;return true;}
+fs.cpSync(source,stage,{recursive:true,filter:includeFile});
+const configFile=path.join(stage,'project.config.json'),config=JSON.parse(fs.readFileSync(configFile,'utf8'));
+config.appid=appId;config.projectname='lingxifield-miniapp-'+version;config.description='Lingxi Field native WeChat Mini Program '+version;
+fs.writeFileSync(configFile,JSON.stringify(config,null,2)+'\n');
+const app=JSON.parse(fs.readFileSync(path.join(stage,'app.json'),'utf8'));
+if(config.appid!==appId||app.pages?.[0]!=='pages/web/index'||!app.pages.includes('pages/cny-wallet/index')||app.pages.includes('pages/balance/index')||app.pages.includes('pages/recharge/index')||app.pages.includes('pages/portal/index')||app.pages.includes('pages/mail-home/index'))throw new Error('MINI_MAIN_APP_ID_OR_ROUTES_INVALID');
+const cnyWalletSource=fs.readFileSync(path.join(stage,'pages/cny-wallet/index.js'),'utf8');
+if(!cnyWalletSource.includes('wx.requestPayment')||cnyWalletSource.includes('wx.requestVirtualPayment'))throw new Error('MINI_CNY_TOPUP_MUST_USE_STANDARD_MERCHANT_JSAPI');
+const generated=receipt.generatedAssets&&receipt.generatedAssets.find(x=>x.path==='miniapp/assets/share-lingxifield-20261115.jpg');
+if(!generated||!fs.existsSync(path.join(stage,'assets/share-lingxifield-20261115.jpg')))throw new Error('MINI_CANONICAL_SHARE_ASSET_RECEIPT_MISSING');
+const packagedAssetHash=require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(stage,'assets/share-lingxifield-20261115.jpg'))).digest('hex');
+if(packagedAssetHash!==generated.sha256)throw new Error('MINI_CANONICAL_SHARE_ASSET_HASH_MISMATCH');
+for(const p of ['pages/balance','pages/recharge','pages/portal','pages/mail-home','utils/topup-expiry.js','utils/virtual-payment-errors.js'])if(fs.existsSync(path.join(stage,p)))throw new Error('MINI_PACKAGE_LEGACY_OR_COMPANION_FILE_LEAKED:'+p);
+function verifyDependencies(dir){for(const item of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,item.name);if(item.isDirectory()){verifyDependencies(file);continue;}if(!item.name.endsWith('.js'))continue;const sourceText=fs.readFileSync(file,'utf8');for(const retired of ['pages/balance/','pages/recharge/','pages/portal/','openMiniRecharge','/balance-pay/'])if(sourceText.includes(retired))throw new Error('MINI_PACKAGE_LEGACY_REFERENCE:'+retired+':'+path.relative(stage,file));for(const match of sourceText.matchAll(/require\(['"]([^'"]+)['"]\)/g)){const candidate=path.resolve(path.dirname(file),match[1]);if(![candidate,candidate+'.js',candidate+'.json',path.join(candidate,'index.js')].some(p=>fs.existsSync(p)))throw new Error('MINI_PACKAGE_DEPENDENCY_MISSING:'+path.relative(stage,candidate));}}}
+verifyDependencies(stage);
+fs.writeFileSync(path.join(stage,'VERSION.txt'),'LINGXIFIELD MINI PROGRAM\nVERSION='+version+'\nSOURCE_SHA='+sourceSha+'\nAPPID='+appId+'\n');
+execFileSync('zip',['-qr','-X',zipFile,'.'],{cwd:stage,stdio:'inherit'});execFileSync('unzip',['-t',zipFile],{stdio:'inherit'});
+const entries=execFileSync('unzip',['-Z1',zipFile],{encoding:'utf8'}).trim().split(/\r?\n/);
+for(const required of ['project.config.json','app.json','pages/web/index.js','pages/pay/index.js','pages/cny-wallet/index.js','utils/api.js','VERSION.txt'])if(!entries.includes(required))throw new Error('MINI_ZIP_REQUIRED_FILE_MISSING:'+required);
+if(entries.some(name=>name.includes('project.private.config.json')||name.startsWith('pages/balance/')||name.startsWith('pages/recharge/')||name.startsWith('pages/portal/')||name.startsWith('pages/mail-home/')))throw new Error('MINI_ZIP_CONTAINS_RETIRED_OR_COMPANION_APP_FILES');
+const hash=execFileSync('sha256sum',[zipFile],{encoding:'utf8'}).trim().split(/\s+/)[0];
+fs.writeFileSync(zipFile+'.sha256',hash+'  '+path.basename(zipFile)+'\n');
+fs.writeFileSync(path.join(output,'release-notes.txt'),'灵犀场微信小程序 6.0.0\n\n1. 主小程序首屏统一进入灵犀场官网首页。\n2. 人民币余额充值使用微信普通商户 JSAPI 下单，并由小程序原生 wx.requestPayment 调起。\n3. 美元余额充值跳转官网钱包，使用 PayPal。\n4. 工具商品支付保持独立，不与余额充值混用。\n5. 旧余额页、旧充值页、旧门户和旧充值缓存模块不进入发布包。\n6. 历史订单、支付回调、退款核验和资金账本保留。\n7. AppID: '+appId+'\nSOURCE_SHA='+sourceSha+'\nSHA256='+hash+'\n');
+console.log(JSON.stringify({version,sourceSha,appId,zipFile,sha256:hash,entries:entries.length},null,2));

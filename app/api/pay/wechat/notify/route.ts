@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     }
 
     const decrypted = decryptWechatNotifyResource(resource);
-    if(String(decrypted.appid??"")!==wechatAppId()||String(decrypted.mchid??"")!==wechatMerchantId()){
+    if(String(decrypted.mchid??"")!==wechatMerchantId()){
       return NextResponse.json({code:"FAIL",message:"商户身份校验失败"},{status:422});
     }
     if (decrypted.trade_state !== "SUCCESS") {
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const { data: order } = await admin
       .from("orders")
-      .select("id, amount_rmb, provider")
+      .select("id, amount_rmb, provider, channel, provider_payment_id")
       .eq("provider_payment_id", outTradeNo)
       .single();
     if (!order) {
@@ -69,6 +69,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ code: "FAIL", message: "订单不存在" }, { status: 404 });
     }
 
+    const expectedAppId = order.channel === "mini-program"
+      ? String(process.env.WECHAT_MINI_APP_ID || "")
+      : wechatAppId();
+    if (!expectedAppId || String(decrypted.appid ?? "") !== expectedAppId ||
+        order.provider_payment_id !== outTradeNo) {
+      return NextResponse.json({ code: "FAIL", message: "支付应用身份不匹配" }, { status: 422 });
+    }
+    if (order.channel === "mini-program") {
+      const { data: event, error: eventError } = await admin.from("wechat_mini_payment_events")
+        .select("payload").eq("event_type", "mini_jsapi_topup_order_created")
+        .eq("out_trade_no", outTradeNo).eq("transaction_id", "created").maybeSingle();
+      const snapshot = event?.payload as Record<string, unknown> | undefined;
+      if (eventError || !snapshot || snapshot.orderId !== order.id ||
+          snapshot.outTradeNo !== outTradeNo || snapshot.appId !== expectedAppId ||
+          snapshot.openid !== (decrypted.payer as any)?.openid) {
+        return NextResponse.json({ code: "FAIL", message: "小程序付款身份校验失败" }, { status: 422 });
+      }
+    }
     const paymentAmount = decrypted.amount as { total: number; currency: string } | undefined
     const expectedFen = Math.round(Number(order.amount_rmb) * 100)
     if (order.provider !== "wechat" || !paymentAmount || paymentAmount.currency !== "CNY" || Number(paymentAmount.total) !== expectedFen) {

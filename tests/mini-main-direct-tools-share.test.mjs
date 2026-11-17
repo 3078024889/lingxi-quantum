@@ -7,51 +7,42 @@ const require=createRequire(import.meta.url);
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 
 function loadNativePage(path,wx){
-  let page;
-  vm.runInNewContext(read(path),{
-    Page:definition=>{page=definition;},
-    wx,console,
-    require:p=>{
-      if(p.endsWith("share")){const mod={exports:{}};vm.runInNewContext(read("miniapp/utils/share.js"),{module:mod,exports:mod.exports,wx},{timeout:1500});return mod.exports;}
-      if(p.endsWith("app-profile"))return require("../miniapp/utils/app-profile.js");
-      throw Error("UNEXPECTED_REQUIRE:"+p);
-    }
-  },{timeout:1500});
-  page.setData=patch=>{page.data={...page.data,...patch};};
-  return page;
+ let page;
+ vm.runInNewContext(read(path),{
+  Page:definition=>{page=definition;},wx,console,
+  require:p=>{
+   if(p.endsWith("share")){const mod={exports:{}};vm.runInNewContext(read("miniapp/utils/share.js"),{module:mod,exports:mod.exports,wx},{timeout:1500});return mod.exports;}
+   if(p.endsWith("app-profile"))return require("../miniapp/utils/app-profile.js");
+   throw Error("UNEXPECTED_REQUIRE:"+p);
+  }
+ },{timeout:1500});
+ page.setData=patch=>{page.data={...page.data,...patch};};
+ return page;
 }
 function fakeWx(){
-  const calls={to:[],redirects:[],shareMenu:0};
-  return {calls,
-    getStorageSync:()=>"",
-    showShareMenu:()=>{calls.shareMenu++},
-    navigateTo:({url})=>calls.to.push(url),
-    redirectTo:({url})=>calls.redirects.push(url),
-    showModal:()=>{},showToast:()=>{},
-  };
+ const calls={to:[],redirects:[],shareMenu:0};
+ return {calls,getStorageSync:()=>"",showShareMenu:()=>{calls.shareMenu++;},
+  navigateTo:({url})=>calls.to.push(url),redirectTo:({url})=>calls.redirects.push(url),
+  showModal:()=>{},showToast:()=>{}};
 }
 
-test("main mini-program boots straight to /tools web-view rather than portal",()=>{
+test("main mini-program opens the website homepage and has no retired portal route",()=>{
  const app=JSON.parse(read("miniapp/app.json"));
- assert.equal(app.entryPagePath,"pages/web/index");
- assert(app.pages.includes("pages/portal/index"),"old links remain registered");
- assert(app.pages.includes("pages/share/index"),"native sharing page remains");
- assert.equal(app.tabBar,undefined,"no duplicate native bottom tab");
+ assert.equal(app.pages[0],"pages/web/index");
+ assert.ok(!app.pages.includes("pages/portal/index"));
+ assert.ok(!app.pages.includes("pages/balance/index"));
+ assert.ok(!app.pages.includes("pages/recharge/index"));
+ assert.ok(app.pages.includes("pages/share/index"));
+ assert.equal(app.tabBar,undefined);
  const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
  page.onLoad({});
- assert.equal(page.data.path,"/tools");
- assert.equal(page.data.src,"https://lingxifield.cn/tools?mini=1&ads=0&currency=CNY");
- assert(wx.calls.shareMenu>0);
+ assert.equal(page.data.path,"/");
+ assert.equal(page.data.src,"https://lingxifield.cn/?mini=1&ads=0&currency=CNY");
+ assert.ok(wx.calls.shareMenu>0);
  assert.match(read("miniapp/pages/web/index.wxml"),/<web-view/);
 });
 
-test("previously shared portal links redirect to real tools without showing old landing",()=>{
- const wx=fakeWx(),page=loadNativePage("miniapp/pages/portal/index.js",wx);
- page.onLoad({});
- assert.deepEqual(wx.calls.redirects,["/pages/web/index?path=%2Ftools"]);
-});
-
-test("native WeChat friend share preserves /tools and /siai without private query",()=>{
+test("native WeChat friend and timeline shares preserve public routes without private query data",()=>{
  const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
  page.onLoad({path:encodeURIComponent("/siai?token=secret&user=123")});
  assert.equal(page.data.path,"/siai?token=secret&user=123");
@@ -63,39 +54,57 @@ test("native WeChat friend share preserves /tools and /siai without private quer
  assert.equal(page.onShareAppMessage().path,"/pages/web/index?path="+encodeURIComponent("/"));
 });
 
+test("friend and timeline sharing opens every current public Mini Program route",()=>{
+ const routes=["/","/siai","/sasi","/sasi/seller","/sasi/delivery","/tools","/tools/pdf-editor","/discoveries","/partners","/about"];
+ for(const route of routes){
+  const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
+  page.onLoad({path:encodeURIComponent(route)});
+  assert.equal(page.data.failed,false,route);
+  assert.equal(page.data.path,route);
+  assert.equal(page.onShareAppMessage().path,"/pages/web/index?path="+encodeURIComponent(route),route+" friend");
+  assert.equal(page.onShareTimeline().query,"path="+encodeURIComponent(route),route+" timeline");
+ }
+});
+test("private account and wallet routes are never shared as private links",()=>{
+ const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
+ for(const route of ["/account/orders?token=secret","/ai-wallet?currency=USD","/api/wechat/mini/account-link/private"]){
+  page.onLoad({path:encodeURIComponent(route)});
+  assert.equal(page.onShareAppMessage().path,"/pages/web/index?path=%2F");
+  assert.equal(page.onShareTimeline().query,"path=%2F");
+ }
+});
 test("reject web-view path attacks and keep external URLs out of sharing",()=>{
  const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
  for(const hostile of ["//evil.example/x","https://evil.example/tools","/../../account","/bad//path"]){
-   page.onLoad({path:encodeURIComponent(hostile)});
-   assert.equal(page.data.failed,true,hostile);
+  page.onLoad({path:encodeURIComponent(hostile)});
+  assert.equal(page.data.failed,true,hostile);
  }
 });
 
-test("native share page has usable friend and timeline handlers without web-view",()=>{
+test("native share page has friend and timeline handlers without web-view",()=>{
  const wx=fakeWx(),page=loadNativePage("miniapp/pages/share/index.js",wx);
  page.onLoad({path:encodeURIComponent("/siai?token=SECRET"),title:encodeURIComponent("全球SIAI排行榜")});
  assert.equal(page.data.webPath,"/siai");
  assert.equal(page.onShareAppMessage().path,"/pages/web/index?path=%2Fsiai");
  assert.equal(page.onShareTimeline().query,"path=%2Fsiai");
- assert(read("miniapp/pages/share/index.wxml").includes('open-type="share"'));
- assert(!read("miniapp/pages/share/index.wxml").includes("<web-view"));
+ assert.ok(read("miniapp/pages/share/index.wxml").includes('open-type="share"'));
+ assert.ok(!read("miniapp/pages/share/index.wxml").includes("<web-view"));
 });
 
-test("website displays real native-share entry only in mini program public routes",()=>{
- const c=read("components/MiniProgramShareEntry.tsx");
- const wrapper=read("components/MiniEmbedMode.tsx");
- assert(c.includes("isMiniProgramContext()"));
- assert(c.includes("openMiniShare(title)"));
- assert(c.includes("PUBLIC_ROUTE"));
- assert(c.includes("mini-native-share-entry"));
- assert(c.includes("mini-siai-quick-link"));
- assert(c.includes('isRanking?"/tools":"/siai"'));
- assert(c.includes("mini=1&ads=0&currency="));
- assert(wrapper.includes("<MiniProgramShareEntry/>"));
- assert(read("lib/mini/share-client.ts").includes("/pages/share/index?path="));
+test("website native-share entry is restricted to supported public Mini Program routes",()=>{
+ const c=read("components/MiniProgramShareEntry.tsx"),wrapper=read("components/MiniEmbedMode.tsx");
+ assert.ok(c.includes("isMiniProgramContext()"));
+ assert.ok(c.includes("openMiniShare(title)"));
+ assert.ok(c.includes("PUBLIC_ROUTE"));
+ assert.ok(c.includes("mini-native-share-entry"));
+ assert.ok(c.includes("mini-siai-quick-link"));
+ assert.ok(c.includes('isRanking?"/tools":"/siai"'));
+ assert.ok(c.includes("mini=1&ads=0&currency="));
+ assert.ok(wrapper.includes("<MiniProgramShareEntry/>"));
+ assert.ok(read("lib/mini/share-client.ts").includes("/pages/share/index?path="));
 });
 
-test("main profile retains original miniapp and backend identities, no payment migration",()=>{
+test("main Mini Program retains its original AppID and account identity",()=>{
  const p=require("../miniapp/utils/app-profile.js");
  assert.equal(p.kind,"main");
  assert.equal(p.website,"https://lingxifield.cn");

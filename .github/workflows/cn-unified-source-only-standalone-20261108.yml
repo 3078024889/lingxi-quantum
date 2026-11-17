@@ -236,8 +236,22 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          node scripts/build-miniapps-v80.cjs main > "$RUNNER_TEMP/miniapp-main-receipt.json"
-          MINIAPP_DIR="$(node -e 'const fs=require("node:fs");const r=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));process.stdout.write(r.projectPath)' "$RUNNER_TEMP/miniapp-main-receipt.json")"
+          node scripts/build-miniapps-v80.cjs main > "$RUNNER_TEMP/miniapp-main-build.log"
+          MINIAPP_DIR="$(node - "$RUNNER_TEMP/miniapp-main-build.log" <<'NODE'
+          const fs = require('node:fs');
+          const lines = fs.readFileSync(process.argv[2], 'utf8').split(/\r?\n/);
+          for (const line of lines.reverse()) {
+            try {
+              const receipt = JSON.parse(line);
+              if (receipt && typeof receipt.projectPath === 'string' && receipt.projectPath.length > 0) {
+                process.stdout.write(receipt.projectPath);
+                process.exit(0);
+              }
+            } catch {}
+          }
+          throw new Error('MINIAPP_BUILD_RECEIPT_NOT_FOUND');
+          NODE
+          )"
           test -s "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
           cmp -s miniapp/assets/share-lingxifield-20261115.jpg "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg"
           printf 'SITE_OG_SHA256=%s\nMINIAPP_SHARE_SHA256=%s\n' "$(sha256sum public/og-lingxifield-20261115.jpg | awk '{print $1}')" "$(sha256sum "$MINIAPP_DIR/assets/share-lingxifield-20261115.jpg" | awk '{print $1}')" > "$GITHUB_WORKSPACE/cn-20261115-social-assets.sha256"

@@ -1,0 +1,49 @@
+page{background:#f4f7fc;color:#1c2b43;min-height:100%}
+.cny-wallet-page{box-sizing:border-box;min-height:100vh;padding:0 30rpx 56rpx;background:radial-gradient(circle at 92% 3%,rgba(199,218,255,.52),transparent 34%),linear-gradient(180deg,#f8faff 0%,#f1f5fb 100%)}
+.cny-wallet-nav{height:88rpx;display:flex;align-items:center;justify-content:space-between}
+.cny-back{width:140rpx;color:#52709c;font-size:26rpx}
+.cny-nav-title{font-size:29rpx;font-weight:700;color:#233957}
+.cny-nav-spacer{width:140rpx}
+.cny-wallet-hero{padding:28rpx 4rpx 34rpx}
+.cny-eyebrow{font-size:18rpx;font-weight:800;letter-spacing:3rpx;color:#7890b4}
+.cny-hero-title{margin-top:14rpx;font-size:48rpx;font-weight:800;letter-spacing:1rpx;color:#1f3554}
+.cny-hero-subtitle{margin-top:10rpx;font-size:23rpx;color:#7185a2}
+.cny-balance-card{padding:30rpx;border:1rpx solid rgba(181,201,232,.75);border-radius:28rpx;background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(238,245,255,.96));box-shadow:0 16rpx 42rpx rgba(57,88,135,.08)}
+.cny-card-label{font-size:22rpx;color:#7486a1}
+.cny-balance-value{margin-top:10rpx;font-size:56rpx;font-weight:800;letter-spacing:1rpx;color:#234b83}
+.cny-account-row{display:flex;align-items:center;justify-content:space-between;gap:16rpx;margin-top:24rpx;padding-top:20rpx;border-top:1rpx solid #e3eaf4}
+.cny-account-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:7rpx}
+.cny-account-caption{font-size:19rpx;color:#8797ae}
+.cny-account-name{font-size:22rpx;font-weight:650;color:#344b6a;overflow-wrap:anywhere}
+.cny-account-button{flex-shrink:0;margin:0;padding:0 22rpx;height:64rpx;line-height:64rpx;border:1rpx solid #cbd8eb;border-radius:14rpx;background:#fff;color:#3768a9;font-size:21rpx}
+.cny-refundable{margin-top:16rpx;font-size:20rpx;color:#7185a2}
+.cny-section-card{margin-top:24rpx;padding:28rpx;border:1rpx solid #e1e8f2;border-radius:26rpx;background:rgba(255,255,255,.96);box-shadow:0 12rpx 32rpx rgba(55,83,126,.05)}
+.cny-section-heading{display:flex;align-items:center;justify-content:space-between}
+.cny-section-title{font-size:31rpx;font-weight:800;color:#243b5b}
+.cny-section-subtitle{margin-top:8rpx;font-size:21rpx;color:#8292a9}
+.cny-currency-chip{padding:9rpx 17rpx;border:1rpx solid #d8e4f6;border-radius:999rpx;background:#f3f7ff;color:#4777b8;font-size:19rpx;font-weight:800;letter-spacing:1rpx}
+.cny-amount-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16rpx;margin-top:26rpx}
+.cny-amount-option{display:flex;align-items:center;justify-content:center;min-width:0;height:94rpx;margin:0;padding:0 10rpx;border:1rpx solid #dce5f1;border-radius:18rpx;background:#f9fbff;color:#344c6c;font-size:30rpx;font-weight:700;line-height:1.2}
+.cny-amount-option::after,.cny-account-button::after,.cny-primary-button::after,.cny-secondary-button::after{border:0}
+.cny-amount-option.is-selected{border:2rpx solid #5c8ed0;background:linear-gradient(135deg,#edf5ff,#f8fbff);color:#245eaa;box-shadow:inset 0 0 0 1rpx rgba(92,142,208,.12)}
+.cny-amount-option[disabled]{opacity:.58}
+.cny-custom-field{display:flex;align-items:center;gap:12rpx;margin-top:18rpx;padding:0 18rpx;height:84rpx;border:1rpx solid #dce5f1;border-radius:16rpx;background:#fbfcff}
+.cny-custom-prefix{font-size:28rpx;font-weight:800;color:#5479aa}
+.cny-custom-input{flex:1;min-width:0;height:80rpx;font-size:27rpx;color:#263d5d}
+.cny-amount-hint{margin-top:17rpx;font-size:19rpx;line-height:1.7;color:#8a99ad}
+.cny-status-card{display:flex;gap:13rpx;align-items:flex-start;margin-top:22rpx;padding:22rpx 23rpx;border:1rpx solid #dfe8f5;border-radius:18rpx;background:rgba(255,255,255,.82)}
+.cny-status-indicator{flex-shrink:0;width:13rpx;height:13rpx;margin-top:8rpx;border-radius:50%;background:#6f9bd2;box-shadow:0 0 0 6rpx rgba(111,155,210,.12)}
+.cny-status-message{font-size:22rpx;line-height:1.7;color:#60748f}
+.cny-primary-button{width:100%;height:94rpx;margin-top:24rpx;border-radius:19rpx;background:linear-gradient(105deg,#3978c5,#5b91d6);color:#fff;font-size:29rpx;font-weight:800;line-height:94rpx;box-shadow:0 12rpx 26rpx rgba(58,112,185,.2)}
+.cny-primary-button[disabled]{background:#cbd5e3;color:#fff;box-shadow:none}
+.cny-pending-note{margin-top:13rpx;text-align:center;font-size:20rpx;line-height:1.6;color:#9a7650}
+.cny-secondary-button{width:100%;height:78rpx;margin-top:14rpx;border:1rpx solid #d4dfef;border-radius:16rpx;background:#fff;color:#55749e;font-size:23rpx;line-height:78rpx}
+.cny-service-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13rpx;margin-top:24rpx}
+.cny-service-links button{margin:0;padding:0 8rpx;height:72rpx;border:1rpx solid #e0e8f2;border-radius:15rpx;background:rgba(255,255,255,.88);color:#607895;font-size:21rpx;line-height:72rpx}
+.cny-service-links button::after,.cny-refresh-button::after{border:0}
+.cny-topup-history{margin-top:24rpx;padding:25rpx;border:1rpx solid #e2e9f2;border-radius:22rpx;background:rgba(255,255,255,.92)}
+.cny-history-title{margin-bottom:12rpx;font-size:26rpx;font-weight:800;color:#344b6a}
+.cny-history-row{display:flex;justify-content:space-between;padding:15rpx 0;border-bottom:1rpx solid #edf1f6;font-size:21rpx;color:#6b7f99}
+.cny-history-empty{padding:18rpx 0;font-size:21rpx;color:#a0adbd}
+.cny-refresh-button{width:100%;height:68rpx;margin-top:14rpx;border:1rpx solid #d9e4f2;border-radius:14rpx;background:#f8faff;color:#5578a8;font-size:21rpx;line-height:68rpx}
+.cny-security-note{margin:22rpx 5rpx 0;text-align:center;font-size:18rpx;line-height:1.8;color:#98a5b6}

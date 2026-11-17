@@ -133,6 +133,7 @@ function Inner(){
  const [buyer,setBuyer]=useState("");
  const [busy,setBusy]=useState(false);
  const [paypalReady,setPaypalReady]=useState(false);
+ const [usdWalletReady,setUsdWalletReady]=useState(false);
  const [productReady,setProductReady]=useState<boolean|null>(null);
  const [error,setError]=useState("");
 
@@ -147,7 +148,7 @@ function Inner(){
  useEffect(()=>{
   const s=createClient();
   void s.auth.getUser().then(({data})=>setBuyer(data.user?.email||""));
-  void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>setPaypalReady(d?.paypal===true)).catch(()=>setPaypalReady(false));
+  void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>{setPaypalReady(d?.paypal===true);setUsdWalletReady(d?.usdBalanceTopupReady===true);}).catch(()=>{setPaypalReady(false);setUsdWalletReady(false);});
  },[]);
  useEffect(()=>{
   if(!isMarketProductId(productId)){setMarketLoading(false);setMarketProduct(null);setMarketReady(false);return;}
@@ -174,16 +175,17 @@ function Inner(){
   }).catch(()=>{if(active)setProductReady(false)});
   return()=>{active=false};
  },[product?.id,product?.group,marketReady]);
+ const paymentReady=product?.group==="wallet"?usdWalletReady:paypalReady;
  const amount=product?.amountUsd.toFixed(2)||"0.00";
  const title=product?.group==="software"?c.softwareTitle:product?.group==="market"?c.marketTitle:product?.group==="toolpass"?c.toolTitle:c.title;
  const lead=product?.group==="software"?c.softwareLead:product?.group==="market"?c.marketLead:product?.group==="toolpass"?c.toolLead:c.lead;
  const itemName=product?.group==="wallet"?c.sasi:product?.name||"";
- const defaultReturn=product?.group==="software"?"/account/software":product?.group==="market"?"/sasi/marketplace":product?.group==="toolpass"?"/tools/pass":"/ai-wallet";
+ const defaultReturn=product?.group==="software"?"/account/software":product?.group==="market"?"/sasi/marketplace":product?.group==="toolpass"?"/tools/pass":"/ai-wallet?currency=USD";
  const requestedReturn=sp.get("redirect")||defaultReturn;
  const returnPath=requestedReturn.startsWith("/")&&!requestedReturn.startsWith("//")&&!requestedReturn.includes("\\")?requestedReturn:defaultReturn;
 
  async function pay(){
-  if(!product||paypalReady!==true||productReady!==true)return;
+  if(!product||paymentReady!==true||productReady!==true)return;
   setBusy(true);setError("");
   try{
    const r=await fetch("/api/pay/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({productId:product.id,returnPath})});
@@ -212,8 +214,8 @@ function Inner(){
     </div>
    </div>
    <p className="mt-4 text-xs leading-6 text-[var(--lx-faint)]">{c.fx}</p>
-   <button disabled={busy||!paypalReady||productReady!==true} onClick={pay} className="mt-6 w-full rounded-xl bg-[#0070ba] px-5 py-4 text-sm font-semibold text-white disabled:opacity-40">{busy?c.opening:c.pay(amount)}</button>
-   {paypalReady===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
+   <button disabled={busy||!paymentReady||productReady!==true} onClick={pay} className="mt-6 w-full rounded-xl bg-[#0070ba] px-5 py-4 text-sm font-semibold text-white disabled:opacity-40">{busy?c.opening:c.pay(amount)}</button>
+   {!paymentReady&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
    {paypalReady&&productReady===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>

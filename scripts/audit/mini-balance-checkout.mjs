@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
 let page, calls=0, release;
-const wx={showToast(){},navigateTo({url}){assert.equal(url,'/pages/balance/index')}};
+const wx={showToast(){},navigateTo({url}){assert.equal(url,'/pages/cny-wallet/index')}};
 vm.runInNewContext(fs.readFileSync('miniapp/pages/pay/index.js','utf8'),{Page:p=>page=p,wx,require:()=>({request:async(path,options)=>{
  assert.equal(path,'/api/wechat/mini/tool-pay/balance');assert.equal(options.data.quoteId,'q');calls++;
  await new Promise(resolve=>release=resolve);return{ok:true,paid:true};
@@ -27,7 +27,7 @@ const deps={
 const exports={};vm.runInNewContext(ts.transpileModule(fs.readFileSync('app/api/wechat/mini/tool-pay/balance/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{exports,process:{env:{}},require:n=>deps[n]});
 const req={headers:{get:()=>null},json:async()=>({quoteId:'11111111-1111-4111-8111-111111111111',userId:'attacker'})};
 assert.equal((await exports.POST(req)).status,503);enabled=true;
-assert.equal((await exports.POST(req)).status,401);session={userId:'owner'};
+assert.equal((await exports.POST(req)).status,401);session={userId:'owner',accountConnected:true};
 currency='USD';assert.equal((await exports.POST(req)).status,409);currency='CNY';ready=false;
 assert.equal((await exports.POST(req)).status,503);assert.equal(rpcCount,0);ready=true;
 assert.equal((await exports.POST(req)).status,200);assert.equal(lastArgs.p_user_id,'owner');assert.equal(lastArgs.p_quote_id,'q');

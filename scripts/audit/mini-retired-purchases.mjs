@@ -2,18 +2,39 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-const oldRoute={};
-vm.runInNewContext(ts.transpileModule(fs.readFileSync('app/api/wechat/mini/pay/create/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{
- exports:oldRoute,require(name){assert.equal(name,'next/server');return{NextResponse:{json:(body,init)=>({body,...init})}}}
+const oldRoute = {};
+vm.runInNewContext(ts.transpileModule(fs.readFileSync('app/api/wechat/mini/pay/create/route.ts','utf8'), {
+  compilerOptions: { module: ts.ModuleKind.CommonJS }
+}).outputText, {
+  exports: oldRoute,
+  require(name) {
+    assert.equal(name, 'next/server');
+    return { NextResponse: { json: (body, init) => ({ body, status: init?.status || 200 }) } };
+  }
 });
-for(let i=0;i<3;i++){const result=await oldRoute.POST();assert.equal(result.status,410);assert.equal(result.body.code,'MINI_PRODUCT_RETIRED')}
+for (let i=0;i<3;i++) {
+  const result=await oldRoute.POST();
+  assert.equal(result.status,410);
+  assert.equal(result.body.code,'MINI_PRODUCT_RETIRED');
+}
 assert.equal(fs.existsSync('lib/mini/catalog.ts'),false);
 assert.doesNotMatch(fs.readFileSync('app/api/wechat/mini/pay/notify/route.ts','utf8'),/miniSkuForProduct|fulfillPaidOrder/);
-const languages=['zh-CN','en','ja','ko','fr','de','es','pt','ar'];let page;const urls=[];
-vm.runInNewContext(fs.readFileSync('miniapp/pages/profile/index.js','utf8'),{
- Page(value){page=value},wx:{navigateTo({url}){urls.push(url)}},require(){return{SUPPORTED:languages.map(id=>({id})),copyFor(){return{}},getLanguage(){return'zh-CN'}}}
-});
-page.setData=next=>{page.data={...page.data,...next}};
-for(const lang of languages){page.refreshLanguage(lang);assert.ok(page.data.ui.recharge);assert.ok(page.data.ui.rechargeNote.includes('10'));page.openBalance();assert.equal(urls.at(-1),'/pages/balance/index')}
-const view=fs.readFileSync('miniapp/pages/profile/index.wxml','utf8');assert.match(view,/bindtap="openBalance"/);assert.match(view,/ui.recharge/);
-console.log('PASS: retired purchase code removed; legacy requests cannot create orders; native recharge entry works in 9 languages.');
+const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));
+assert.ok(app.pages.includes('pages/cny-wallet/index'));
+assert.ok(!app.pages.includes('pages/balance/index')&&!app.pages.includes('pages/recharge/index'));
+for (const path of [
+  'miniapp/pages/portal','miniapp/pages/mail-home',
+  'miniapp/pages/balance','miniapp/pages/recharge',
+  'miniapp/utils/topup-expiry.js','miniapp/utils/virtual-payment-errors.js',
+]) assert.equal(fs.existsSync(path),false,'retired mini wallet page/helper remains: '+path);
+for (const path of [
+  'app/api/wechat/mini/cny-topup/create/route.ts',
+  'app/api/wechat/mini/cny-topup/availability/route.ts',
+]) assert.equal(fs.existsSync(path),true,'new CNY top-up API missing: '+path);
+assert.ok(fs.readFileSync('miniapp/pages/pay/index.js','utf8').includes('tool-pay/create'));
+assert.ok(fs.readFileSync('miniapp/pages/pay/index.js','utf8').includes('/pages/cny-wallet/index'));
+assert.match(fs.readFileSync('lib/mini/virtual-fulfillment.ts','utf8'),/virtualTopupGoods/);
+assert.match(fs.readFileSync('lib/mini/virtual-refund.ts','utf8'),/reconcileVirtualRefund/);
+assert.match(fs.readFileSync('lib/mini/virtual-refund.ts','utf8'),/virtual_topup_order_created/);
+assert.match(fs.readFileSync('lib/mini/virtual-refund.ts','utf8'),/mini_order_refund_v1/);
+console.log('PASS: retired purchase API remains closed; new CNY wallet is separate; old page/helpers are removed; tool payment and historical settlement/refunds remain');

@@ -40,3 +40,21 @@ test('SASI market hero artwork preserves its natural ratio and is never stretche
   assert.match(css, /\.main \.hero\{[^}]*aspect-ratio:3\s*\/\s*1/);
   assert.match(css, /\.main \.heroArtwork\{[^}]*object-fit:contain/);
 });
+
+
+test('homepage rightmost action is an account entry, not a duplicate recharge icon', () => {
+  const nav = read('components/Nav.tsx');
+  const start = nav.indexOf('<div className="lx11-top-actions">');
+  const end = nav.indexOf('</div>', start);
+  assert.ok(start >= 0 && end > start, 'homepage desktop action group must exist');
+  const actions = nav.slice(start, end);
+  assert.match(actions, /className="lx11-avatar lx11-account-trigger"/);
+  assert.ok(actions.includes('<Link href="/ai-wallet" className="lx11-primary"'));
+  const mobileStart = nav.indexOf('<div className="lx-home-mobile-actions">');
+  const mobileEnd = nav.indexOf('</div>', mobileStart);
+  assert.ok(mobileStart >= 0 && mobileEnd > mobileStart, 'homepage mobile action group must exist');
+  const mobile = nav.slice(mobileStart, mobileEnd);
+  assert.match(mobile, /className="lx11-mobile-account"/);
+  assert.match(mobile, /LingxiMiniIcon name="account" size="nav"/);
+  assert.doesNotMatch(mobile, /avatarUrl/);
+});

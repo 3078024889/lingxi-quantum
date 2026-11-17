@@ -6,7 +6,7 @@ import {openMiniShare,publicMiniSharePath} from "@/lib/mini/share-client";
 import {isMiniProgramContext} from "@/lib/mini/payment-client";
 import styles from "./MiniProgramShareEntry.module.css";
 
-const PUBLIC_ROUTE=/^\/(?:tools(?:\/[a-z0-9-]+)?|siai|sasi|ai-knowledge|ai-learning|ai-research)\/?$/;
+const PUBLIC_ROUTE=/^\/(?:|tools(?:\/[a-z0-9-]+)?|siai|sasi(?:\/(?:seller|delivery))?|discoveries|partners|about)\/?$/;
 export default function MiniProgramShareEntry(){
  const [message,setMessage]=useState("");
  const [working,setWorking]=useState(false);
@@ -34,7 +34,7 @@ export default function MiniProgramShareEntry(){
   </Link>
   <button type="button" onClick={openShare} disabled={working}
     aria-label={cn?"打开小程序分享页":"Open mini-program sharing"}
-    className={styles.button}>{working?(cn?"正在打开…":"Opening…"):(cn?"分享":"Share")}</button>
+    className={styles.button}>{working?(cn?"正在打开…":"Opening…"):(cn?"好友 / 朋友圈分享":"Share with friends / Moments")}</button>
   {message?<p role="status" className={styles.status}>{message}</p>:null}
  </div>;
 }
