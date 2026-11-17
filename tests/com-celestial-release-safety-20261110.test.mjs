@@ -35,6 +35,12 @@ test("production promotion updates the existing Worker in-place and preserves cu
   assert.ok(script.includes("COM_PRODUCTION_VERSION_ROLLBACK_CONFIRMED"));
   assert.ok(script.includes("PRODUCTION_APEX_WORKER_CHANGED_STOP"));
   assert.ok(script.includes("COM_EXISTING_PAYMENT_FLAGS_AND_SECRETS_PRESERVED"));
+  assert.ok(script.includes("function visibleTextFromHtml(html)"));
+  assert.ok(script.includes("const visibleText = visibleTextFromHtml(content)"));
+  assert.ok(script.includes("page.forbidden.filter(term => visibleText.includes(term))"));
+  assert.ok(script.includes('cache: "no-store"'));
+  assert.ok(script.includes('headers.set("cache-control", "no-cache, no-store, max-age=0")'));
+  assert.ok(script.includes("missingVisible"));
   assert.doesNotMatch(script, /method:\s*"PUT"[\s\S]{0,100}workers\/routes/);
 });
 
