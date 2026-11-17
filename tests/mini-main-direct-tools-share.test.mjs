@@ -54,6 +54,25 @@ test("native WeChat friend and timeline shares preserve public routes without pr
  assert.equal(page.onShareAppMessage().path,"/pages/web/index?path="+encodeURIComponent("/"));
 });
 
+test("friend and timeline sharing opens every current public Mini Program route",()=>{
+ const routes=["/","/siai","/sasi","/sasi/seller","/sasi/delivery","/tools","/tools/pdf-editor","/discoveries","/partners","/about"];
+ for(const route of routes){
+  const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
+  page.onLoad({path:encodeURIComponent(route)});
+  assert.equal(page.data.failed,false,route);
+  assert.equal(page.data.path,route);
+  assert.equal(page.onShareAppMessage().path,"/pages/web/index?path="+encodeURIComponent(route),route+" friend");
+  assert.equal(page.onShareTimeline().query,"path="+encodeURIComponent(route),route+" timeline");
+ }
+});
+test("private account and wallet routes are never shared as private links",()=>{
+ const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
+ for(const route of ["/account/orders?token=secret","/ai-wallet?currency=USD","/api/wechat/mini/account-link/private"]){
+  page.onLoad({path:encodeURIComponent(route)});
+  assert.equal(page.onShareAppMessage().path,"/pages/web/index?path=%2F");
+  assert.equal(page.onShareTimeline().query,"path=%2F");
+ }
+});
 test("reject web-view path attacks and keep external URLs out of sharing",()=>{
  const wx=fakeWx(),page=loadNativePage("miniapp/pages/web/index.js",wx);
  for(const hostile of ["//evil.example/x","https://evil.example/tools","/../../account","/bad//path"]){
