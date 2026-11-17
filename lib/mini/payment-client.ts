@@ -21,7 +21,12 @@ export function miniPaymentBridge(): Promise<MiniBridge | undefined> {
     const script = document.createElement("script");
     script.src = "https://res.wx.qq.com/open/js/jweixin-1.6.0.js";
     const timeout = setTimeout(() => { bridgePromise = undefined; resolve(undefined); }, 5000);
-    script.onload = () => { clearTimeout(timeout); resolve((window as Window & { wx?: { miniProgram?: MiniBridge } }).wx?.miniProgram); };
+    script.onload = () => {
+      clearTimeout(timeout);
+      const loaded = (window as Window & { wx?: { miniProgram?: MiniBridge } }).wx?.miniProgram;
+      if (!loaded) bridgePromise = undefined;
+      resolve(loaded);
+    };
     script.onerror = () => { clearTimeout(timeout); bridgePromise = undefined; resolve(undefined); };
     document.head.appendChild(script);
   });
@@ -29,7 +34,11 @@ export function miniPaymentBridge(): Promise<MiniBridge | undefined> {
 }
 
 export async function detectMiniPaymentContext(): Promise<boolean> {
-  if (isMiniProgramContext()) return true;
+  if (isMiniProgramContext()) {
+    // Warm the native bridge before the user taps the diamond wallet entry.
+    await miniPaymentBridge();
+    return true;
+  }
   if (!/MicroMessenger/i.test(navigator.userAgent)) return false;
   const bridge = await miniPaymentBridge();
   if (!bridge?.getEnv) return false;
@@ -50,7 +59,18 @@ export async function openMiniWallet(currency: "CNY" | "USD" = "CNY", amount?: s
     ? "/pages/web/index?path=" + encodeURIComponent("/ai-wallet?currency=USD")
     : "/pages/cny-wallet/index" + (validAmount ? "?amount=" + encodeURIComponent(amountText) : "");
   return new Promise(resolve => {
-    const timeout = setTimeout(() => resolve(false), 5000);
-    bridge.navigateTo({ url, success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
+    let settled = false;
+    const finish = (value: boolean) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      resolve(value);
+    };
+    const timeout = setTimeout(() => finish(false), 5000);
+    try {
+      bridge.navigateTo({ url, success: () => finish(true), fail: () => finish(false) });
+    } catch {
+      finish(false);
+    }
   });
 }
