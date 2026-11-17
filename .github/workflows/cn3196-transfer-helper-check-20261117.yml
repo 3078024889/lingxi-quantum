@@ -40,7 +40,7 @@ jobs:
           node --check scripts/ops/cn-payment-signed-live-probe-20261109.mjs
           grep -Fq 'CN3196_READ_ONLY_LIVE_MERCHANT_PROBE_BEGIN' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CN_MERCHANT_PAYPAL_LIVE_OAUTH' scripts/ops/cn-payment-signed-live-probe-20261109.mjs
-          grep -Fq 'CN_MERCHANT_MINI_JSAPI_CONFIG' scripts/ops/cn-payment-signed-live-probe-20261109.mjs
+          grep -Fq 'name==="miniJsapi"?"MINI_JSAPI_CONFIG"' scripts/ops/cn-payment-signed-live-probe-20261109.mjs
           grep -Fq 'PROD_PORT=3195' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'CANDIDATE_PORT=3196' scripts/ops/cn3196-candidate-stage-20261116.sh
           grep -Fq 'ROLLBACK_PORT=3193' scripts/ops/cn3196-candidate-stage-20261116.sh
