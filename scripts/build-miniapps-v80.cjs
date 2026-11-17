@@ -34,13 +34,16 @@ if(target==='temp-mail'){
  const appFile=path.join(out,'app.json'),app=JSON.parse(fs.readFileSync(appFile,'utf8'));app.pages=['pages/mail-home/index','pages/web/index','pages/share/index','pages/orders/index'];fs.writeFileSync(appFile,JSON.stringify(app,null,2));
  fs.writeFileSync(path.join(out,'sitemap.json'),JSON.stringify({rules:[{action:'allow',page:'pages/mail-home/index'},{action:'disallow',page:'*'}]},null,2));
 }
-const sourceDirty=Boolean(execFileSync('git',['status','--porcelain','--','miniapp'],{encoding:'utf8',windowsHide:true}).trim());
 const generatedAssets=[];
 const canonicalShareAsset=path.join(source,'assets','share-lingxifield-20261115.jpg');
 if(target==='main'&&fs.existsSync(canonicalShareAsset)){
  generatedAssets.push({path:'miniapp/assets/share-lingxifield-20261115.jpg',
   sha256:require('node:crypto').createHash('sha256').update(fs.readFileSync(canonicalShareAsset)).digest('hex')});
 }
+const expectedGenerated=new Set(generatedAssets.map(asset=>asset.path));
+const changedMiniFiles=execFileSync('git',['status','--porcelain','--','miniapp'],{encoding:'utf8',windowsHide:true})
+ .split(/\r?\n/).filter(Boolean).filter(line=>!expectedGenerated.has(line.slice(3).replaceAll('\\\\','/').replaceAll('\\','/')));
+const sourceDirty=changedMiniFiles.length>0;
 const receipt={at:new Date().toISOString(),target,appId,sourceSha:sha,sourceDirty,projectPath:out,generatedAssets,
  mode:'official website wallet for CNY WeChat merchant JSAPI and USD PayPal; tool-product virtual payment remains independent',credentialsCopied:false};
 fs.writeFileSync(path.join(base,target+'-latest.json'),JSON.stringify(receipt,null,2));console.log(JSON.stringify(receipt));
