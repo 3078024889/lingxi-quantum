@@ -12,7 +12,7 @@ const limitsCopy={zh:'PDF 试用上限 200 页。超长文档请先按章节拆�
 const loginCopy={zh:['请先登录账户，再回到本页重试。文件仍保留在当前页面。','登录账户'],en:['Sign in, then retry here. Your file remains on this page.','Sign in'],ja:['ログインしてからこのページで再試行してください。ファイルはこのページに保持されます。','ログイン'],ko:['로그인 후 이 페이지에서 다시 시도하세요. 파일은 이 페이지에 유지됩니다.','로그인'],fr:['Connectez-vous puis réessayez ici. Votre fichier reste sur cette page.','Se connecter'],de:['Anmelden und hier erneut versuchen. Die Datei bleibt auf dieser Seite.','Anmelden'],es:['Inicia sesión y reintenta aquí. El archivo permanece en esta página.','Iniciar sesión'],pt:['Entre e tente novamente aqui. O arquivo permanece nesta página.','Entrar'],ar:['سجّل الدخول ثم أعد المحاولة هنا. يبقى الملف في هذه الصفحة.','تسجيل الدخول']};
 const glossaryLabel={zh:'术语表（每行：原词 = 译词，最多 30 条）',en:'Glossary (source = target per line, up to 30)',ja:'用語集（原語 = 訳語、1行1組、最大30）',ko:'용어집 (원문 = 번역, 한 줄에 하나, 최대 30개)',fr:'Glossaire (source = cible par ligne, 30 maximum)',de:'Glossar (Quelle = Ziel pro Zeile, maximal 30)',es:'Glosario (origen = destino por línea, máximo 30)',pt:'Glossário (origem = destino por linha, até 30)',ar:'المصطلحات (المصدر = الترجمة في كل سطر، حتى 30)'};
 const C={
- zh:['源语言','自动检测','目标语言','原版式译文 PDF（试用）','原文＋译文对照 PDF','开始翻译','停止','已完成','已停止。未完成的文件不会作为成功结果导出。','处理未完成。请检查文件或稍后重试；没有自动付费重试。','正在读取文档…','正在生成并核验文件…','扫描件请先做 OCR；旋转文字或译文无法放入原区域时会停止，避免静默截断。','使用 SASI 体验额度，额度不足会停止。文件在浏览器解析，只有待翻译文字发送到服务器。PDF 译文以图像保存；Office 保留结构和样式，但长译文仍需在办公软件核对分页和文本框。'],
+ zh:['源语言','自动检测','目标语言','原版式译文 PDF（试用）','原文＋译文对照 PDF','开始翻译','停止','已完成','已停止。未完成的文件不会作为成功结果导出。','处理未完成。请检查文件或稍后重试；没有自动付费重试。','正在读取文档…','正在生成并核验文件…','扫描件请先做 OCR；旋转文字或译文无法放入原区域时会停止，避免静默截断。','免费翻译。文件在浏览器解析，只有待翻译文字发送到服务器。PDF 译文以图像保存；Office 保留结构和样式，但长译文仍需在办公软件核对分页和文本框。'],
  en:['Source','Detect automatically','Target','Translated PDF layout (preview)','Original + translation PDF','Translate','Stop','Complete','Stopped. Incomplete files are never exported as successful results.','Processing incomplete. Check the file or try later. No automatic paid retries.','Reading document…','Building and checking file…','Scans need OCR first. Rotated text or translations that do not fit stop processing rather than silently clipping.','Uses SASI included allowance; stops when unavailable. Files are parsed in your browser; only translation text is sent to the server. PDF translations are images. Office structure and styles remain, but check pagination and text boxes for longer translations.'],
  ja:['原文の言語','自動検出','翻訳先','元のレイアウトの翻訳PDF（試用）','原文＋訳文PDF','翻訳開始','停止','完了','停止しました。未完了のファイルは出力しません。','処理未完了。ファイルを確認するか再試行してください。有料の自動再試行はありません。','文書を読込中…','ファイルを生成・検証中…','スキャンは先にOCRが必要です。回転文字や領域に収まらない訳文では停止します。','SASI体験枠を使用し、不足時は停止します。ブラウザで解析し翻訳対象の文字のみ送信します。翻訳PDFは画像です。Officeの構造とスタイルは保持しますが、改ページとテキスト枠を確認してください。'],
  ko:['원문 언어','자동 감지','대상 언어','원본 배치 번역 PDF (시험)','원문 + 번역 PDF','번역 시작','중지','완료','중지했습니다. 미완성 파일은 내보내지 않습니다.','완료하지 못했습니다. 파일을 확인하거나 나중에 다시 시도하세요. 자동 유료 재시도는 없습니다.','문서 읽는 중…','파일 생성 및 검증 중…','스캔은 먼저 OCR이 필요합니다. 회전된 텍스트나 영역에 맞지 않는 번역은 중지됩니다.','SASI 체험 한도를 사용하며 부족하면 중지됩니다. 브라우저에서 분석하고 번역할 텍스트만 전송합니다. 번역 PDF는 이미지입니다. Office 구조와 스타일은 유지되지만 페이지 나눔과 텍스트 상자를 확인하세요.'],
@@ -41,11 +41,17 @@ export default function DocumentTranslateWorkbench(){
     let end=start,chars=0;while(end<document.segments.length&&end-start<30&&chars+document.segments[end].text.length<=4000){chars+=document.segments[end].text.length;end++}
     const batch=document.segments.slice(start,end);setStatus(`${translated.size} / ${document.segments.length}`);
     const response=await fetch('/api/tools/document-translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source,target,glossary,segments:batch}),signal:AbortSignal.any([controller.signal,AbortSignal.timeout(190000)])});
-    if(!response.ok)throw Error(response.status===401?'AUTH_REQUIRED':'TRANSLATION_UNAVAILABLE');const data=await response.json();const checked=parseTranslatedSegments(JSON.stringify(data.segments),batch);checked.forEach(item=>translated.set(item.id,item.text));start=end;
+    const data=await response.json().catch(()=>null);
+    if(!response.ok||!data){
+     if(response.status===401)throw Error('AUTH_REQUIRED');
+     if(response.status===429)throw Error('TRANSLATION_RATE_LIMITED');
+     throw Error('TRANSLATION_UNAVAILABLE');
+    }
+    const checked=parseTranslatedSegments(JSON.stringify(data.segments),batch);checked.forEach(item=>translated.set(item.id,item.text));start=end;
    }
    setStatus(t[11]);const blob=await document.finish(translated,layout,controller.signal);if(controller.signal.aborted)throw Error('CANCELLED');
    setResults([{name:`${target}-${files[0].name}`,blob,mime:blob.type,size:blob.size}]);setStatus(t[7]);
-  }catch(cause){setStatus('');const auth=cause instanceof Error&&cause.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?loginCopy[lang][0]:controller.signal.aborted?t[8]:cause instanceof Error&&/^PDF_(LAYOUT|ROTATED|SCAN)/.test(cause.message)?t[12]:t[9])}finally{document?.dispose();active.current=null;setBusy(false)}
+  }catch(cause){setStatus('');const auth=cause instanceof Error&&cause.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?loginCopy[lang][0]:cause instanceof Error&&cause.message==='TRANSLATION_RATE_LIMITED'&&lang==='zh'?'翻译请求较多，请稍后重试。原文件未被修改。':controller.signal.aborted?t[8]:cause instanceof Error&&/^PDF_(LAYOUT|ROTATED|SCAN)/.test(cause.message)?t[12]:t[9])}finally{document?.dispose();active.current=null;setBusy(false)}
  }
  return <div className="space-y-4" dir={lang==='ar'?'rtl':'ltr'}>
   <FileDropzone accept=".pdf,.docx,.pptx,.xlsx,.odt,.epub,.txt,.md,.srt,.vtt" normalizeDocuments={false} files={files} disabled={busy} maxSizeMB={40} onChange={next=>{setFiles(next);setResults([]);setError('');setStatus('')}}/>
