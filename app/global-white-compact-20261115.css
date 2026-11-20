@@ -152,3 +152,22 @@ html:not([data-theme="dark"]) .lx26-account {
   justify-self:start;
  }
 }
+
+/* Desktop content begins at the sidebar edge. Card padding is kept separately. */
+@media (min-width: 1024px) {
+ .lx-site-content:has(.lx11-sidebar) :is(.lx11-page, .lx10-page, .lx-growth-siai-page),
+ html:not([data-theme="dark"]) .lx-site-content:has(.lx11-sidebar) :is(.lx-tools-compact, .lx26-wallet-page-inner) {
+  padding-inline: 0 !important;
+ }
+ .lx-site-content:has(.lx11-sidebar) .lx11-page .lx11-wrap,
+ .lx-site-content:has(.lx11-sidebar) :is(.lx26-wallet-page-inner, .lx26-account-page, .lx26-account) {
+  width: 100% !important;
+  max-width: none !important;
+  margin-inline: 0 !important;
+ }
+ .lx-site-content .lx-home-reference :is(.lx-home-hero-section, .lx-home-growth-stack, .lx-home-directory, .lx-seo-answers) {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+ }
+}
