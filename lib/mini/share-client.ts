@@ -1,15 +1,14 @@
 import {detectMiniPaymentContext,miniPaymentBridge} from './payment-client';
 
+const ALLOWED_PUBLIC_PATHS=new Set(['/','/siai','/sasi','/sasi/seller','/sasi/delivery','/tools','/discoveries','/partners','/about']);
+
 export function publicMiniSharePath(input:string){
  try{
   const url=new URL(input,'https://lingxifield.cn');
   if(!['https://lingxifield.cn','https://lingxifield.com'].includes(url.origin))return '/';
   const path=url.pathname;
-  if(path==='/sasi'){
-   const mode=url.searchParams.get('mode');
-   return mode&&['chat','image','drama','website','book','learning','research'].includes(mode)?'/sasi?mode='+mode:'/sasi';
-  }
-  return path==='/'||path==='/siai'||path==='/tools'||/^\/tools\/[a-z0-9-]+$/.test(path)||['/ai-knowledge','/ai-learning','/ai-research'].includes(path)?path:'/';
+  const toolSlug=path.startsWith('/tools/')?path.slice(7):'';
+  return ALLOWED_PUBLIC_PATHS.has(path)||/^[a-z0-9-]+$/.test(toolSlug)?path:'/';
  }catch{return '/'}
 }
 export async function openMiniShare(title='灵犀场 LINGXIFIELD'){

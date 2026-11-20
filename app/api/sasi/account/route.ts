@@ -1,13 +1,19 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getServerUser } from "@/lib/supabase/server";
 import type { SasiJobRow } from "@/lib/sasi/production";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let supabase: ReturnType<typeof createClient>;
+  try {
+    supabase = createClient();
+  } catch (error) {
+    console.error("[sasi account] auth client unavailable", error instanceof Error ? error.message : "unknown");
+    return NextResponse.json({ error: "AUTH_UNAVAILABLE" }, { status: 503 });
+  }
+  const user = await getServerUser(supabase);
   if (!user) return NextResponse.json({ error: "AUTH_REQUIRED" }, { status: 401 });
   // Load ledger, admin and payment modules ONLY after the user was verified.
   // This preserves the auth boundary and avoids initializing privileged/native

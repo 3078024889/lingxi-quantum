@@ -15,12 +15,19 @@ export function hasIndexableFacts(facts:RequiredFact|undefined|null){
  return (['price','free','models','region'] as const).every(k=>
   known(facts[k])&&sourced(facts[(k+'Source') as keyof RequiredFact]));
 }
+/** Resolve production consistently on Vercel, Cloudflare Workers and self-hosted ECS. */
+function isProductionRuntime(env:Record<string,string|undefined>){
+ // Vercel preview deployments must stay noindex even though NODE_ENV is production.
+ if(env.VERCEL_ENV)return env.VERCEL_ENV==="production";
+ // Cloudflare Workers and ECS do not define VERCEL_ENV; Next.js production builds set NODE_ENV.
+ return env.NODE_ENV==="production";
+}
 /** The public ranking landing page is indexable in production independently of detail-page evidence gates. */
 export function siaiLandingShouldIndex(env:Record<string,string|undefined>=process.env){
- return env.VERCEL_ENV==="production";
+ return isProductionRuntime(env);
 }
 export function siaiSeoEnabled(env:Record<string,string|undefined>=process.env){
- return env.VERCEL_ENV==='production'&&env.SIAI_MAIN_INDEX_READY==='1';
+ return isProductionRuntime(env)&&env.SIAI_MAIN_INDEX_READY==='1';
 }
 export function siaiDetailShouldIndex(facts:RequiredFact|undefined|null,
  env:Record<string,string|undefined>=process.env){

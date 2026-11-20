@@ -1,0 +1,23 @@
+name: COM safe-cutover program static security assertions (NO DEPLOY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-release-program-audit-20261108.yml']
+permissions: {contents: read}
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version: 24}
+      - name: Validate static Worker patch and Cloudflare route rollback program syntax
+        run: |
+          node --check scripts/cloudflare/patch-critical-static-html-20261108.mjs
+          node --check scripts/cloudflare/com-verified-apex-cutover-20261108.mjs
+          grep -Fq 'COM_ROUTE_ROLLBACK_CONFIRMED' scripts/cloudflare/com-verified-apex-cutover-20261108.mjs
+          grep -Fq 'WWW_WILDCARD_CHANGED_STOP' scripts/cloudflare/com-verified-apex-cutover-20261108.mjs
+          grep -Fq 'EXACT_COM_CANARY_CI_NOT_SUCCESS' scripts/cloudflare/com-verified-apex-cutover-20261108.mjs
+          echo 'COM_ROUTE_PROTECTION_TEST_SOURCE_PASS_NO_DEPLOY'

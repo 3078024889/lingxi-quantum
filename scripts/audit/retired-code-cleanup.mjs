@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-const retired=[
+const retiredBase=[
  "scripts/audit-autonomy-v1583.mjs",
  "app/sasi/SasiComposer.tsx",
  "app/sasi/SasiProjectMemory.tsx",
@@ -33,8 +33,34 @@ const retired=[
  "tests/final-closure/language-stability-v12.spec.ts",
  "tests/final-closure/language-stability-v13.spec.ts",
  "public/vendor/transformers",
- "public/onnxruntime"
+ "public/onnxruntime",
+ "app/sasi/VideoAssembler.tsx",
+ "components/SasiByokImageStudio.tsx",
+ "components/gates/GateDestiny.tsx",
+ "components/gates/GateHealth.tsx",
+ "components/gates/GateMind.tsx",
+ "components/gates/GateOrigin.tsx",
+ "components/gates/GateRelation.tsx",
+ "lib/gates.ts",
+ "lib/gate-tone.ts",
+ "scripts/check-v320-video.mjs",
+ "public/images/9d-field-navigation-v317.png",
+ "public/images/breath-cycle.jpeg",
+ "public/images/breath-rhythm.jpeg",
+ "public/images/breath-structure.png",
+ "public/images/cosmos-bg.png",
+ "public/images/hero-lightbody.jpg",
+ "public/images/entrance/lingxi-opening-desktop-v310.mp4",
+ "public/images/entrance/lingxi-opening-mobile.mp4",
+ "public/images/entrance/lingxi-opening-poster-mobile.jpg",
+ "public/images/sky/aurora-hero-poster.jpg",
+ "public/images/sky/aurora-hero.mp4",
+ "public/images/sky/aurora-hero.webm",
+ "public/media/lingxifield-9d-field-structure-v320.mp4",
+ "docs/LINGXIFIELD-P1-ACTUAL-SOURCE-20260923-203431.zip"
 ];
+const report=JSON.parse(fs.readFileSync("docs/operations/legacy-sasi-retirement-20261108.json","utf8"));
+const retired=[...new Set([...retiredBase,...report.removed])];
 const remains=retired.filter(p=>fs.existsSync(p));
 if(fs.existsSync("lib/tools/platform/platform"))throw new Error("NESTED_PLATFORM_DIRECTORY_REMAINS");
 if(remains.length)throw new Error(`RETIRED_PACKAGE_ARTIFACTS_REMAIN:${remains.join(",")}`);
@@ -60,6 +86,33 @@ for(const name of ["LINGXIFIELD_SOURCE_INVENTORY.json","LINGXIFIELD_PROTECTED_MA
  const stale=(manifest.files||[]).filter(row=>retired.includes(row.path));
  if(stale.length)throw new Error(`RETIRED_MANIFEST_REFERENCES:${name}:${stale.map(row=>row.path).join(",")}`);
 }
+function listFiles(dir){
+ if(!fs.existsSync(dir))return [];
+ return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
+  const file=path.join(dir,entry.name);
+  return entry.isDirectory()?listFiles(file):[file.replaceAll("\\","/")];
+ });
+}
+const expectedSasiLibs=new Set(report.preservedLibFiles||["lib/sasi/request-security.ts"]);
+const actualSasiLibs=listFiles("lib/sasi");
+const unexpectedSasiLibs=actualSasiLibs.filter(file=>!expectedSasiLibs.has(file));
+const missingSasiLibs=[...expectedSasiLibs].filter(file=>!fs.existsSync(file));
+if(unexpectedSasiLibs.length||missingSasiLibs.length)throw new Error("SASI_SHARED_LIBRARY_SET_MISMATCH: unexpected="+unexpectedSasiLibs.join(",")+" missing="+missingSasiLibs.join(","));
+const sasiApiFiles=listFiles("app/api/sasi").filter(file=>file.endsWith("/route.ts"));
+const unexpectedSasiApiFiles=sasiApiFiles.filter(file=>
+ file!=="app/api/sasi/[[...legacy]]/route.ts" &&
+ file!=="app/api/sasi/account/route.ts" &&
+ !file.startsWith("app/api/sasi/marketplace/") &&
+ !file.startsWith("app/api/sasi/software/")
+);
+if(unexpectedSasiApiFiles.length)throw new Error("LEGACY_SASI_API_REMAINS:"+unexpectedSasiApiFiles.join(","));
+const knowledgeApiFiles=listFiles("app/api/knowledge").filter(file=>file.endsWith("/route.ts"));
+const unexpectedKnowledgeApiFiles=knowledgeApiFiles.filter(file=>file!=="app/api/knowledge/[[...legacy]]/route.ts");
+if(unexpectedKnowledgeApiFiles.length)throw new Error("LEGACY_KNOWLEDGE_API_REMAINS:"+unexpectedKnowledgeApiFiles.join(","));
+console.log("LEGACY_KNOWLEDGE_API_IMPLEMENTATIONS=0");
+console.log("LEGACY_SASI_API_IMPLEMENTATIONS=0");
+console.log("LEGACY_SASI_LIBRARY_FILES=0");
+
 const burnToken=fs.readFileSync("lib/tools/burn-link-token.ts","utf8");
 if(burnToken.includes("isTrustedBurnWebViewRequest"))throw new Error("RETIRED_BURN_WEBVIEW_EXEMPTION_RETURNED");
 

@@ -12,6 +12,10 @@ export function toolPassBackendReady():boolean {
         process.env.TOOL_PASS_BACKEND_READY==="true" &&
         Boolean(process.env.LINGXIFIELD_PRIVACY_HASH_SECRET?.length && process.env.LINGXIFIELD_PRIVACY_HASH_SECRET.length>=32);
 }
+/** Reject new paid tool-pass orders before merchant, webhook, and entitlement approval. */
+export function toolPassCommerceReady():boolean {
+ return toolPassBackendReady() && process.env.TOOL_PASS_COMMERCE_READY==="true";
+}
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export type ToolReceiptResult={ok:true;alreadyRedeemed:boolean}|{ok:false;error:string};
 /** A receipt authorizes just one operation ID and the same authenticated owner/tool. */

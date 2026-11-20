@@ -1,11 +1,4 @@
-import type {Metadata} from "next";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
-import SasiVariantWorkbench from "@/components/SasiVariantWorkbench";
-
-export const metadata:Metadata={
- title:"SASI Editable Storyboard Variants | LINGXIFIELD",
- description:"Build and export 1–100 editable storyboard variants locally before requesting a real video generation quote.",
- robots:{index:false,follow:false},
-};
-export default function Page(){return <><Nav/><main className="min-h-screen bg-[var(--lx-bg)] pt-16 lg:pt-8"><SasiVariantWorkbench/></main><Footer/></>;}
+import {permanentRedirect} from "next/navigation";
+export const metadata={robots:{index:false,follow:false}};
+/** Retired SASI creation route. Historical paid orders, files and entitlements remain preserved. */
+export default function Page(){permanentRedirect("/sasi");}

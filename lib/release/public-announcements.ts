@@ -1,50 +1,46 @@
-/**
- * Public, versioned release notices shared by desktop, mobile and the mini-program
- * announcement channel. Append a new verified notice after each actual release.
- * Do not claim that pending payment/ToolPass features are production-ready.
- */
+/** Fallback public announcements; production ticker and archive read the shared database. */
 export type PublicNotice={
-  id:string;createdAt:string;category:"operations"|"tools"|"mini";
-  titleZh:string;titleEn:string;bodyZh:string;bodyEn:string;href:string;
+ id:string;createdAt:string;category:"operations"|"tools"|"mini";
+ titleZh:string;titleEn:string;bodyZh:string;bodyEn:string;href:string;
 };
 export const PUBLIC_RELEASE_NOTICES:readonly PublicNotice[]=Object.freeze([
-  {
-    id:"20261108-cn-admin-recovery",createdAt:"2026-11-08T10:45:00+08:00",category:"operations",
-    titleZh:"公告：国内站管理后台访问已恢复",
-    titleEn:"Notice: China-site administrator access restored",
-    bodyZh:"国内站已完成管理员服务密钥修复，并恢复管理菜单。全球 SIAI 排行榜与公开工具入口可以访问。微信、支付宝、PayPal 充值及支付后的余额交付仍在验收，暂不宣布支付恢复。",
-    bodyEn:"The China site's administrator key and management menu have been restored. SIAI and public tool routes remain accessible. WeChat Pay, Alipay and PayPal funding and post-payment credit delivery are still undergoing verification.",
-    href:"/account/notifications"
-  },
-  {
-    id:"20261108-toolpass-readiness",createdAt:"2026-11-08T10:40:00+08:00",category:"tools",
-    titleZh:"公告：实用工具每日额度及通用工具包正在联调",
-    titleEn:"Notice: Daily tool quotas and shared passes in integration testing",
-    bodyZh:"百余项工具入口已恢复访问；每日免费次数、账户/IP 双重计次与四档工具包正在进行生产验证。付款入口未正式开放，旧版工具可能暂未拦截第二次使用；上线验收完成后发布明确公告。",
-    bodyEn:"Over 100 tool routes are accessible. Daily limits, account/IP accounting and the four shared passes are undergoing production validation. Paid passes are not open, and some legacy tools may not yet block repeated use.",
-    href:"/tools/pass"
-  },
-  {
-    id:"20261108-mini-status",createdAt:"2026-11-08T10:35:00+08:00",category:"mini",
-    titleZh:"公告：小程序版本及支付服务进展",
-    titleEn:"Notice: Mini-program release and payment status",
-    bodyZh:"小程序版本记录目前为 4.8.6。后续新版本、审核结果及已验收的功能会同步发布到消息中心；小程序充值与支付服务只有完成商户验收后才公告开放。",
-    bodyEn:"The currently recorded mini-program version is 4.8.6. Future verified releases and review results will appear in the notification centre. Mini-program payments will be announced only after merchant acceptance.",
-    href:"/account/notifications"
-  }
+ {
+  id:"web-cn-upgrade-20261108",createdAt:"2026-11-08T16:47:37+08:00",category:"operations",
+  titleZh:"灵犀场中国站焕新上线｜11月6—8日升级完成",
+  titleEn:"LINGXIFIELD China site refreshed | November 6–8 upgrade",
+  bodyZh:"11月6日至8日，灵犀场完成中国站重要升级。全球 SIAI 排行榜、实用工具、SASI 智能软件及公告中心以全新体验呈现。欢迎探索新版灵犀场。",
+  bodyEn:"From November 6 to 8, LINGXIFIELD completed a major China-site upgrade. Explore the refreshed SIAI rankings, practical tools, SASI software, and announcement center.",
+  href:"/announcements"
+ },
+ {
+  id:"web-tools-collection-20261108",createdAt:"2026-11-08T11:00:00+08:00",category:"tools",
+  titleZh:"100+ 实用工具，一站处理日常文件",titleEn:"100+ practical tools in one place",
+  bodyZh:"从 PDF、图片到音视频，常用工具集中呈现。工具包提供四档时长选择，后续新增的实用工具也将持续加入。",
+  bodyEn:"Discover PDF, image, audio, and video tools in one place. Four ToolPass durations are available to explore, with future practical tools included.",
+  href:"/tools/pass"
+ },
+ {
+  id:"web-sasi-software-20261108",createdAt:"2026-11-08T11:05:00+08:00",category:"operations",
+  titleZh:"SASI 智能软件专区，发现更多原创作品",titleEn:"Discover original software in SASI",
+  bodyZh:"SASI 智能软件与卖家服务专区已开放浏览。软件介绍、授权信息与作品展示将持续丰富，新品上架后会同步公布购买及交付说明。",
+  bodyEn:"Browse the SASI software and seller services area. Product details, licenses, and showcases will continue to grow. Purchase and delivery details will accompany official releases.",
+  href:"/sasi"
+ },
+ {
+  id:"mini-4.8.2",createdAt:"2026-09-30T14:28:54+08:00",category:"mini",
+  titleZh:"灵犀场小程序 4.8.2｜食物识别体验升级",titleEn:"LINGXIFIELD Mini-program 4.8.2 | Food recognition improvements",
+  bodyZh:"优化区域食物识别、结果展示与问题反馈，让日常记录更轻松。",
+  bodyEn:"Improved regional food recognition, result views, and feedback for easier daily tracking.",
+  href:"/announcements"
+ }
 ]);
 
 export function publicNoticeItems(lang:string){
-  const zh=lang==="zh";
-  return PUBLIC_RELEASE_NOTICES.map(n=>({
-    id:"notice:"+n.id,
-    eventKey:"notice:"+n.id,
-    kind:"announcement" as const,
-    createdAt:n.createdAt,
-    version:n.id,
-    title:zh?n.titleZh:n.titleEn,
-    body:zh?n.bodyZh:n.bodyEn,
-    href:n.href,
-    read:undefined as boolean|undefined
-  }));
+ const zh=lang==="zh";
+ return PUBLIC_RELEASE_NOTICES.map(n=>({
+  id:"notice:"+n.id,eventKey:"notice:"+n.id,kind:"announcement" as const,
+  createdAt:n.createdAt,version:n.id,
+  title:zh?n.titleZh:n.titleEn,body:zh?n.bodyZh:n.bodyEn,
+  href:n.href,read:undefined as boolean|undefined
+ }));
 }

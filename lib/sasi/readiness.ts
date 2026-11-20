@@ -1,6 +1,6 @@
 import "server-only";
 import { alipayEnabled } from "@/lib/alipay";
-import { wechatPayConfigured } from "@/lib/wechatpay";
+import { wechatPayEnabled } from "@/lib/wechatpay";
 import { sasiVideoProviderReadiness } from "@/lib/sasi/provider";
 import { SASI_AIGC_LABEL_MODE } from "@/lib/sasi/aigc-label";
 import { autonomousCoreReadiness } from "@/lib/sasi-kernel/policy/capability-graph";
@@ -19,7 +19,7 @@ export function sasiReadiness() {
   const video = sasiVideoProviderReadiness();
   const paymentChannels = {
     alipay: alipayEnabled(),
-    wechat: wechatPayConfigured(),
+    wechat: wechatPayEnabled(),
     paypal: paypalConfigured(),
   };
   const paymentConfigured = Object.values(paymentChannels).some(Boolean);

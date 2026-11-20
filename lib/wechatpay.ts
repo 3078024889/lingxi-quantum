@@ -28,13 +28,26 @@ const CERT_SERIAL_NO = process.env.WECHAT_CERT_SERIAL_NO;
 const PLATFORM_PUBLIC_KEY = process.env.WECHAT_PLATFORM_PUBLIC_KEY;
 const PLATFORM_PUBLIC_KEY_ID = process.env.WECHAT_PLATFORM_PUBLIC_KEY_ID;
 
+export function wechatAppId(): string { return APP_ID ?? ""; }
+export function wechatMerchantId(): string { return MCH_ID ?? ""; }
+
 export function wechatPayConfigured(): boolean {
-  return !!(APP_ID && MCH_ID && API_V3_KEY && PRIVATE_KEY && CERT_SERIAL_NO);
+  return wechatPayMissingVars().length === 0;
 }
 
-/** Only explicitly approved merchants may create NEW chargeable orders. */
+export function wechatPayKeyMaterialReady(): boolean {
+  if (!wechatPayConfigured()) return false;
+  try {
+    crypto.createPrivateKey(normalizePemKey(PRIVATE_KEY!, "WECHAT_PRIVATE_KEY"));
+    crypto.createPublicKey(normalizePemKey(PLATFORM_PUBLIC_KEY!, "WECHAT_PLATFORM_PUBLIC_KEY"));
+    return Buffer.byteLength(API_V3_KEY!, "utf8") === 32;
+  } catch {
+    return false;
+  }
+}
+
 export function wechatPayEnabled(): boolean {
-  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayConfigured();
+  return process.env.WECHAT_ENABLED?.trim().toLowerCase() === "true" && wechatPayKeyMaterialReady();
 }
 
 // 具体缺了哪几个——之前那个 wechatPayConfigured() 只回答"配没配全"，
@@ -47,6 +60,8 @@ export function wechatPayMissingVars(): string[] {
   if (!API_V3_KEY) missing.push("WECHAT_API_V3_KEY");
   if (!PRIVATE_KEY) missing.push("WECHAT_PRIVATE_KEY");
   if (!CERT_SERIAL_NO) missing.push("WECHAT_CERT_SERIAL_NO");
+  if (!PLATFORM_PUBLIC_KEY) missing.push("WECHAT_PLATFORM_PUBLIC_KEY");
+  if (!PLATFORM_PUBLIC_KEY_ID) missing.push("WECHAT_PLATFORM_PUBLIC_KEY_ID");
   return missing;
 }
 

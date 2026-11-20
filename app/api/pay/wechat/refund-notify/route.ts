@@ -20,7 +20,10 @@ function fail(message:string,status=400){return NextResponse.json({code:"FAIL",m
 
 export async function POST(req:Request){
  try{
+  const contentLength=Number(req.headers.get("content-length")||0);
+  if(Number.isFinite(contentLength)&&contentLength>512*1024)return fail("通知体过大",413);
   const rawBody=await req.text();
+  if(Buffer.byteLength(rawBody,"utf8")>512*1024)return fail("通知体过大",413);
   const timestamp=req.headers.get("Wechatpay-Timestamp")??"";
   const nonce=req.headers.get("Wechatpay-Nonce")??"";
   const signature=req.headers.get("Wechatpay-Signature")??"";

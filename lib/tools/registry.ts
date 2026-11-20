@@ -6,6 +6,7 @@ import type { ToolMeta } from "./types";
  * 状态 live = 本仓库已实现直接处理；planned = 仅目录占位，不假装可用。
  */
 export const TOOLS: ToolMeta[] = [
+  {slug:"password-generator",category:"utility",status:"live",localOnly:true,dedicatedRoute:true,titleZh:"密码生成器",titleEn:"Password Generator",oneLinerZh:"在浏览器本地生成随机密码，不上传、不保存。",oneLinerEn:"Generate cryptographically random passwords locally without uploading or saving them.",keywords:["随机密码","password generator"],related:["file-hash","base64-encode-decode"]},
   { slug: "ai-image-check", category: "image", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 图片检测", titleEn: "AI Image Analysis", oneLinerZh: "查看图片是否存在 AI 生成特征，并了解检测依据与适用范围。", oneLinerEn: "Review possible AI-generation indicators in an image, with clear limitations.", keywords: ["AI图片真假检测", "AI图片来源", "C2PA图片验证"], related: ["file-type-detector", "remove-exif"] },
   { slug: "ai-video-audio-check", category: "file", status: "live", localOnly: true, dedicatedRoute: true, titleZh: "AI 视频与音频检测", titleEn: "AI Video and Audio Analysis", oneLinerZh: "分析视频中的代表性画面或音频中的人声，查看可能的 AI 合成痕迹。", oneLinerEn: "Analyze selected video frames or speech for possible AI-generation indicators.", keywords: ["AI视频真假检测", "AI音频真假检测", "C2PA视频验证"], related: ["file-type-detector", "ai-image-check"] },
 

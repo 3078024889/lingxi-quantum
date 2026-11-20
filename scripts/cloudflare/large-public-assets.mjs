@@ -1,7 +1,6 @@
 // Public immutable-by-release media/models too large for Workers Static Assets.
 // These are read-only paths; no user-uploaded content or private R2 keys.
 export const largePublicAssets = Object.freeze({
- "/images/entrance/lingxi-opening-desktop-v310.mp4": {bytes:42282372,contentType:"video/mp4"},
  "/models/Xenova/clip-vit-base-patch32/onnx/text_model_quantized.onnx": {bytes:64504507,contentType:"application/octet-stream"},
  "/models/Xenova/clip-vit-base-patch32/onnx/vision_model_quantized.onnx": {bytes:89117001,contentType:"application/octet-stream"},
  "/models/onnx-community/swin-finetuned-food101-ONNX/onnx/model_q4f16.onnx": {bytes:52685075,contentType:"application/octet-stream"},

@@ -59,7 +59,7 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
   (window as Window&{__pdfTouchDiagnostics?:typeof events}).__pdfTouchDiagnostics=events;
   for(const type of ["pointerdown","touchstart","pointermove","touchmove","pointercancel","touchend"]){
    document.addEventListener(type,event=>{
-    if(events.length>=45)return;
+    if(events.length>=120)return;
     const e=event as PointerEvent&TouchEvent;
     const t=e.changedTouches?.[0];
     const target=event.target instanceof Element?event.target.closest("[data-testid]"):null;
@@ -78,6 +78,7 @@ test("PDF added image resizes on-page with handles and rotates using real mouse 
  await rotate.scrollIntoViewIfNeeded();await expect(rotate).toBeVisible();
  const rr=await rotate.boundingBox();expect(rr).not.toBeNull();
  await dragGesture(page,rr!.x+rr!.width/2,rr!.y+rr!.height/2,30,40,mobile);
+ if(mobile&&await item.evaluate(el=>Math.abs(new DOMMatrixReadOnly(getComputedStyle(el).transform).b)<.01))console.log("PDF_ROTATE_GESTURE_TRACE",JSON.stringify(await page.evaluate(()=>({events:(window as Window&{__pdfTouchDiagnostics?:unknown[]}).__pdfTouchDiagnostics||[],overlay:document.querySelector('[data-testid="pdf-overlay"]')?.getAttribute("style"),grip:document.querySelector('[data-testid="pdf-grip-rotate"]')?.getBoundingClientRect().toJSON()}))));
  await expect.poll(async()=>item.evaluate(el=>{
   const matrix=new DOMMatrixReadOnly(getComputedStyle(el).transform);
   return Math.abs(matrix.b)+Math.abs(matrix.c);

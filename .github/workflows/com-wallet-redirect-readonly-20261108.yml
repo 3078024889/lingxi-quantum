@@ -1,0 +1,27 @@
+name: COM wallet canonical redirect read-only probe (NO DEPLOY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-wallet-redirect-readonly-20261108.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Inspect anonymous 307/200 Location paths, never log cookies or signed URLs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          for host in lingxifield-com-static-gateway-canary-20261107.3078024889.workers.dev lingxifield-com-unified-20261108.3078024889.workers.dev lingxifield.com;do
+            for path in /ai-wallet /account?next=%2Fai-wallet;do
+              tmp="$(mktemp)"
+              status="$(curl -4sS --max-time 25 --connect-timeout 8 --header 'Accept: text/html' -D "$tmp" -o /dev/null -w '%{http_code}' "https://$host$path" || true)"
+              loc="$(grep -i '^location:' "$tmp" | tail -1 | tr -d '\r' || true)"
+              rm -f "$tmp"
+              # Strip any query before printing, so no account tokens are logged.
+              safe="$(printf '%s' "$loc" | sed -E 's/\?.*//')"
+              echo "WALLET_CANONICAL host=$host path=$path http=$status redirect=$safe"
+            done
+          done

@@ -1,0 +1,154 @@
+/* 2026-11-15 global compact white/transparent surfaces.
+   Keep the dark theme intact; normalize light-theme pages to the homepage rhythm. */
+html:not([data-theme="dark"]) .lx-growth-siai-page{
+ width:100%!important;max-width:none!important;margin-inline:0!important;padding-inline:10px!important;min-width:0!important
+}
+html:not([data-theme="dark"]) .lx-growth-siai-page .siai-home:not(.siai-home-fullscreen){
+ width:100%!important;max-width:none!important;margin:0!important;padding:14px 0 42px!important;
+ background:transparent!important;color:#172235!important
+}
+/* Preserve the SIAI wide-table flow mode: it deliberately escapes the sidebar but keeps document scrolling. */
+html:not([data-theme="dark"]) .lx-growth-siai-page .siai-home.siai-home-fullscreen{
+ position:relative!important;inset:auto!important;z-index:4!important;width:calc(100vw - 24px)!important;max-width:none!important;
+ height:auto!important;max-height:none!important;min-height:0!important;
+ margin-inline-start:calc(-1 * var(--siai-wide-offset, 0px))!important;margin-inline-end:0!important;
+ overflow:visible!important;overscroll-behavior-y:auto!important;padding:16px 12px 22px!important;background:#fff!important
+}
+@media(max-width:900px){html:not([data-theme="dark"]) .lx-growth-siai-page .siai-home.siai-home-fullscreen{padding:12px 8px 18px!important}}
+html:not([data-theme="dark"]) .siai-home-head{margin-bottom:12px!important}
+html:not([data-theme="dark"]) .siai-home-head h1{font-size:clamp(32px,2.7vw,40px)!important;line-height:1.2!important;color:#172235!important}
+html:not([data-theme="dark"]) .siai-home-head>p:last-child{font-size:15px!important;color:#5b6676!important;line-height:1.6!important}
+html:not([data-theme="dark"]) .siai-kicker{color:#526985!important}
+html:not([data-theme="dark"]) .siai-home-search{background:rgba(255,255,255,.96)!important;border-color:#dfe4eb!important;box-shadow:none!important}
+html:not([data-theme="dark"]) .siai-home-search input{color:#172235!important}
+html:not([data-theme="dark"]) .siai-home-table-scroll{background:rgba(255,255,255,.94)!important;border-color:#e2e7ed!important;border-radius:12px!important;box-shadow:0 4px 16px rgba(23,35,53,.035)!important}
+html:not([data-theme="dark"]) .siai-home-table{color:#344154!important}
+html:not([data-theme="dark"]) .siai-home-table th{background:#f3f5f7!important;color:#263548!important;border-bottom-color:#e2e7ed!important}
+html:not([data-theme="dark"]) .siai-home-table td{color:#3e4a5b!important;border-bottom-color:#edf0f3!important;font-size:14px!important;line-height:1.5!important}
+html:not([data-theme="dark"]) .siai-home-tr:nth-child(even){background:#fafbfc!important}
+html:not([data-theme="dark"]) .siai-home-tr:hover{background:#f2f5f8!important}
+html:not([data-theme="dark"]) .siai-home-table tbody tr.siai-home-tr>td:first-child,
+html:not([data-theme="dark"]) .siai-home-table tbody tr.siai-home-tr>td:nth-child(2){background:#fff!important}
+html:not([data-theme="dark"]) .siai-home-table tbody tr.siai-home-tr:nth-child(even)>td:first-child,
+html:not([data-theme="dark"]) .siai-home-table tbody tr.siai-home-tr:nth-child(even)>td:nth-child(2){background:#fafbfc!important}
+html:not([data-theme="dark"]) .siai-home-table tbody tr.siai-home-tr:hover>td:first-child,
+html:not([data-theme="dark"]) .siai-home-table tbody tr.siai-home-tr:hover>td:nth-child(2){background:#f2f5f8!important}
+html:not([data-theme="dark"]) .siai-home-categories button,
+html:not([data-theme="dark"]) .siai-filter-options>button,
+html:not([data-theme="dark"]) .siai-sort-label select,
+html:not([data-theme="dark"]) .siai-evidence-select select{background:#fff!important;border-color:#e0e5eb!important;color:#344154!important}
+html:not([data-theme="dark"]) .siai-filter-options>button.selected,
+html:not([data-theme="dark"]) .siai-filter-options>button[aria-pressed=true]{background:#edf3fa!important;border-color:#b9c8da!important;color:#214d7c!important}
+html:not([data-theme="dark"]) .siai-compare-toolbar,
+html:not([data-theme="dark"]) .siai-home-top-track{background:#f6f8fa!important;border-color:#e3e8ee!important;color:#344154!important}
+html:not([data-theme="dark"]) .siai-home-detail,
+html:not([data-theme="dark"]) .siai-home-cost-accordion{background:rgba(255,255,255,.94)!important;border-color:#e3e8ee!important;box-shadow:none!important;color:#344154!important}
+html:not([data-theme="dark"]) .siai-home-cost-inner .lxCostResult{background:#f7f9fb!important;border-color:#e3e8ee!important}
+html:not([data-theme="dark"]) .siai-home-claim{background:#245ca8!important;border-color:#245ca8!important;color:#fff!important}
+
+/* Tools: use the homepage's tighter page rail and remove the empty recent-work box. */
+html:not([data-theme="dark"]) .lx-tools-compact{
+ padding:14px clamp(12px,1.55vw,24px) 42px!important;
+ background:linear-gradient(180deg,#fff 0%,#fff 100%)!important
+}
+html:not([data-theme="dark"]) .lx26-tools-page .lx11-wrap{max-width:1600px!important}
+html:not([data-theme="dark"]) .lx26-tools-page .lx26-tools-stage{
+ border-color:#e5e9ef!important;background:rgba(255,255,255,.82)!important;box-shadow:none!important;border-radius:17px!important
+}
+html:not([data-theme="dark"]) .lx26-tools-heading h1{color:#172235!important}
+html:not([data-theme="dark"]) .lx26-tools-heading p{color:#5d6878!important}
+html:not([data-theme="dark"]) .lx26-tools-page .lx26-tools-search{border-color:#dce3eb!important;background:#fff!important;box-shadow:none!important}
+html:not([data-theme="dark"]) .lx26-tools-page .lx26-tools-categories button,
+html:not([data-theme="dark"]) .lx26-tools-page .lx26-tools-filters button{border-color:#e1e6ec!important;background:#fff!important;color:#354255!important}
+html:not([data-theme="dark"]) .lx26-tools-page .lx26-tools-categories button.is-active,
+html:not([data-theme="dark"]) .lx26-tools-page .lx26-tools-filters button.is-active{background:#202c3c!important;border-color:#202c3c!important;color:#fff!important;box-shadow:none!important}
+html:not([data-theme="dark"]) .lx26-tools-aside{border-color:#e5e9ef!important;background:rgba(255,255,255,.84)!important;box-shadow:none!important}
+html:not([data-theme="dark"]) .lx26-tools-aside .lx-tools-compact-recent-item{background:#fff!important;border-color:#e6eaf0!important}
+html:not([data-theme="dark"]) .lx26-tools-pass-link{border-color:#e5e9ef!important}
+html:not([data-theme="dark"]) .lx26-tools-pass-link .lx26-pass-glyph{background:#eef2f6!important;color:#344256!important}
+html:not([data-theme="dark"]) .lx26-tools-pass-link strong{color:#172235!important}
+html:not([data-theme="dark"]) .lx26-tools-pass-link small{color:#657184!important}
+html:not([data-theme="dark"]) .lx26-tools-stage:not(:has(.lx-tools-compact-recent)){grid-template-columns:minmax(0,1fr)!important;gap:0!important}
+html:not([data-theme="dark"]) .lx26-tools-stage:not(:has(.lx-tools-compact-recent)) .lx26-tools-aside{
+ display:flex!important;flex-direction:row!important;justify-content:flex-end!important;align-items:center!important;
+ padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;min-height:0!important
+}
+html:not([data-theme="dark"]) .lx26-tools-stage:not(:has(.lx-tools-compact-recent)) .lx26-tools-pass-link{
+ width:auto!important;min-width:min(270px,100%);max-width:360px;margin:0!important;padding:8px 12px!important;
+ border:1px solid #e5e9ef!important;border-radius:12px!important;background:rgba(255,255,255,.94)!important
+}
+html:not([data-theme="dark"]) .lx-tools-compact .lx-tools-v124-card{background:rgba(255,255,255,.96)!important;border-color:#e5e9ef!important;box-shadow:0 2px 10px rgba(22,34,50,.035)!important}
+html:not([data-theme="dark"]) .lx-tools-compact .lx-tools-v124-card:hover{border-color:#c8d5e3!important;box-shadow:0 8px 20px rgba(22,34,50,.075)!important}
+
+/* Account and wallet: neutral white glass, not violet gradient panels. */
+html:not([data-theme="dark"]) .lx26-account-profile,
+html:not([data-theme="dark"]) .lx26-account-welcome,
+html:not([data-theme="dark"]) .lx26-account-tile,
+html:not([data-theme="dark"]) .lx26-wallet-overview,
+html:not([data-theme="dark"]) .lx26-wallet-history,
+html:not([data-theme="dark"]) .lx26-topup-selector,
+html:not([data-theme="dark"]) .lx26-wallet-quicklinks,
+html:not([data-theme="dark"]) .lx26-balance-card,
+html:not([data-theme="dark"]) .lx26-wallet-ledger-panel{
+ background:rgba(255,255,255,.92)!important;border-color:#e4e9ef!important;box-shadow:none!important
+}
+html:not([data-theme="dark"]) .lx26-account-profile:after{display:none!important}
+html:not([data-theme="dark"]) .lx26-account-welcome{border-radius:14px!important}
+html:not([data-theme="dark"]) .lx26-account-tile{border-radius:13px!important}
+html:not([data-theme="dark"]) .lx26-account-tile:hover{border-color:#cbd6e2!important;box-shadow:0 5px 14px rgba(22,34,50,.05)!important}
+html:not([data-theme="dark"]) .lx26-wallet-page{background:#fff!important}
+html:not([data-theme="dark"]) .lx26-wallet-page-inner{max-width:1600px!important;padding:14px clamp(16px,1.55vw,26px) 48px!important}
+html:not([data-theme="dark"]) .lx26-wallet-hero{min-height:88px!important;padding:8px 4px!important}
+html:not([data-theme="dark"]) .lx26-wallet-orbit{display:none!important}
+html:not([data-theme="dark"]) .lx26-wallet-overview,
+html:not([data-theme="dark"]) .lx26-wallet-history,
+html:not([data-theme="dark"]) .lx26-topup-selector,
+html:not([data-theme="dark"]) .lx26-wallet-quicklinks{border-radius:15px!important;padding:18px 20px!important}
+html:not([data-theme="dark"]) .lx26-balance-card{border-radius:13px!important;padding:16px 18px!important}
+html:not([data-theme="dark"]) .lx26-currency-symbol,
+html:not([data-theme="dark"]) .is-usd .lx26-currency-symbol{background:#eef2f6!important;color:#334155!important;box-shadow:none!important}
+html:not([data-theme="dark"]) .lx26-balance-primary strong{color:#172235!important}
+html:not([data-theme="dark"]) .lx26-topup-choice{background:#fff!important;border-color:#e1e6ec!important;color:#172235!important}
+html:not([data-theme="dark"]) .lx26-topup-choice:not(.is-unavailable):hover{background:#f3f6f9!important;border-color:#cbd6e2!important}
+html:not([data-theme="dark"]) .lx26-ledger-currency-tabs,
+html:not([data-theme="dark"]) .lx26-topup-currency{background:#f5f7f9!important;border-color:#e4e9ef!important}
+html:not([data-theme="dark"]) .lx26-ledger-currency-tabs button.is-active,
+html:not([data-theme="dark"]) .lx26-topup-currency button.is-active{background:#202c3c!important;color:#fff!important;box-shadow:none!important}
+html:not([data-theme="dark"]) .lx26-topup-custom-row{background:#fff!important;border-color:#e1e6ec!important}
+
+/* Match the ranking page rail and keep the profile controls inside the card. */
+html:not([data-theme="dark"]) .lx-tools-compact,
+html:not([data-theme="dark"]) .lx26-wallet-page-inner {
+ padding-inline:10px!important;
+}
+html:not([data-theme="dark"]) .lx26-tools-page .lx11-wrap,
+html:not([data-theme="dark"]) .lx26-wallet-page-inner,
+html:not([data-theme="dark"]) .lx26-account-page,
+html:not([data-theme="dark"]) .lx26-account {
+ width:100%;
+ max-width:none!important;
+}
+.lx26-account-profile .lx-account-name-edit {
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto;
+}
+.lx26-account-profile .lx-account-name-edit button {
+ width:auto;
+ min-width:0;
+ max-width:none;
+ padding:0 12px;
+ background:#245ca8;
+}
+.lx26-account-profile .lx-account-name-edit button:disabled {
+ background:#edf1f5;
+ color:#626e7f;
+}
+#wallet-topup {scroll-margin-top:110px}
+@media(max-width:520px) {
+ .lx26-account-profile .lx-account-name-edit {
+  grid-template-columns:minmax(0,1fr);
+ }
+ .lx26-account-profile .lx-account-name-edit button {
+  justify-self:start;
+ }
+}

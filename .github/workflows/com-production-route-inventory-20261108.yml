@@ -1,0 +1,46 @@
+name: COM production Worker route inventory (READ ONLY)
+on:
+  push:
+    branches: [release/com-sasi-full-20261108]
+    paths: ['.github/workflows/com-production-route-inventory-20261108.yml']
+permissions:
+  contents: read
+concurrency:
+  group: com-route-readonly-20261108
+  cancel-in-progress: true
+jobs:
+  inventory:
+    runs-on: ubuntu-24.04
+    environment: cloudflare-production
+    timeout-minutes: 8
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - name: Confirm Cloudflare route state without mutations or private values
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "$CF_TOKEN"
+          scratch="$(mktemp -d)"
+          trap 'rm -rf "$scratch"' EXIT
+          api='https://api.cloudflare.com/client/v4'
+          curl -fsS --max-time 30 -H "Authorization: Bearer $CF_TOKEN" \
+            "$api/zones?name=lingxifield.com" -o "$scratch/zones.json"
+          zone="$(jq -r '[.result[]|select(.name=="lingxifield.com" and .status=="active")|.id] | if length==1 then .[0] else empty end' "$scratch/zones.json")"
+          test -n "$zone"
+          curl -fsS --max-time 30 -H "Authorization: Bearer $CF_TOKEN" \
+            "$api/zones/$zone/workers/routes" -o "$scratch/routes.json"
+          jq -e '.success==true' "$scratch/routes.json" >/dev/null
+          jq -r '.result | sort_by(.pattern)[] | select(.pattern|test("lingxifield\\.com")) | "COM_WORKER_ROUTE pattern="+.pattern+" script="+(.script//"NONE")' "$scratch/routes.json"
+          echo COM_CLOUDFLARE_ROUTES_READ_ONLY_COMPLETE
+      - name: Public endpoints anonymous status only
+        shell: bash
+        run: |
+          for url in \
+            'https://lingxifield.com/api/site-announcements' \
+            'https://lingxifield.com/sasi' \
+            'https://lingxifield-com-next-20261108.3078024889.workers.dev/api/site-announcements'
+          do
+            code="$(curl -4sSL --max-time 25 -o /dev/null -w '%{http_code}' "$url" || true)"
+            echo "PUBLIC_HTTP host=$(node -p 'new URL(process.argv[1]).hostname' "$url") path=$(node -p 'new URL(process.argv[1]).pathname' "$url") code=$code"
+          done

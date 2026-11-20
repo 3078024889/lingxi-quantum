@@ -18,8 +18,22 @@ const seo=load('lib/seo/global-seo.ts'),registry=load('lib/tools/registry.ts');
 const indexing=load('lib/seo/indexing.ts');
 const {buildSiteSitemap}=load('lib/seo/sitemap-build.ts');
 const {seoSiteForRequest,siaiLanguageAlternates}=load('lib/seo/siai-domain-policy.ts');
+const siaiPolicy=load('lib/siai-seo-policy.ts');
+const llmsSource=fs.readFileSync('app/llms.txt/route.ts','utf8');
+const publicLlms=fs.readFileSync('public/llms.txt','utf8');
+assert.match(publicLlms,/SASI Software Marketplace/,'public llms.txt must describe the live software marketplace');
+assert.match(publicLlms,/Software Licensing & Automatic Delivery/,'public llms.txt must describe automatic software delivery');
+assert.doesNotMatch(publicLlms,/AI 短剧|AI Short Drama Generator|网站构建|书本、学习与科研创作/,'public llms.txt must not promote retired creation-era modules');
+assert.match(llmsSource,/SASI Software Marketplace/,'llms.txt must describe the live software marketplace');
+assert.doesNotMatch(llmsSource,/Retired short-drama|website-generation and knowledge-agent/,'llms.txt must not promote retired creation-era product names');
 const sitemap=buildSiteSitemap(seo.SITE,true);
 const cnSitemap=buildSiteSitemap('https://lingxifield.cn',true);
+assert.equal(siaiPolicy.siaiLandingShouldIndex({NODE_ENV:'production'}),true,'Cloudflare/ECS production must publish the regional SIAI sitemap');
+assert.equal(siaiPolicy.siaiLandingShouldIndex({NODE_ENV:'production',VERCEL_ENV:'preview'}),false,'Vercel previews remain noindex');
+assert.equal(siaiPolicy.siaiLandingShouldIndex({NODE_ENV:'development'}),false,'local development remains noindex');
+assert.equal(siaiPolicy.siaiLandingShouldIndex({NODE_ENV:'development',VERCEL_ENV:'production'}),true,'explicit Vercel production remains indexable');
+assert.equal(siaiPolicy.siaiSeoEnabled({NODE_ENV:'production',SIAI_MAIN_INDEX_READY:'1'}),true,'Cloudflare/ECS production may index only when the evidence gate is enabled');
+assert.equal(siaiPolicy.siaiSeoEnabled({NODE_ENV:'production',VERCEL_ENV:'preview',SIAI_MAIN_INDEX_READY:'1'}),false,'preview deployments never index SIAI details');
 assert.deepEqual(cnSitemap.map(x=>x.url),['https://lingxifield.cn/siai']);
 assert.equal(seoSiteForRequest('lingxifield.cn'),'https://lingxifield.cn');
 assert.equal(seoSiteForRequest('www.lingxifield.cn'),'https://lingxifield.cn');
@@ -31,9 +45,9 @@ assert.equal(siaiLanguageAlternates()['zh-CN'],'https://lingxifield.cn/siai');
 assert.equal(siaiLanguageAlternates()['zh'],'https://lingxifield.com/siai');
 assert.equal(siaiLanguageAlternates()['x-default'],'https://lingxifield.com/siai');
 const urls=new Set(sitemap.map(x=>x.url));assert.equal(urls.size,sitemap.length,'duplicate canonical URLs');
-const redirectedLegacy=['/tools/image-to-pdf-pro','/sasi/drama','/sasi/build','/ai-knowledge','/ai-learning','/ai-research'];
+const redirectedLegacy=['/tools/image-to-pdf-pro','/sasi/drama','/sasi/build','/sasi/assemble','/sasi/chat','/sasi/connections','/sasi/director','/sasi/image','/sasi/marketplace','/sasi/operator','/sasi/operator/v5','/sasi/project-dna','/sasi/series','/sasi/variants','/sasi/pricing','/ai-knowledge','/ai-learning','/ai-research'];
 for(const p of redirectedLegacy)assert(!urls.has(seo.SITE+p),`redirected URL in sitemap: ${p}`);
-for(const p of ['/sasi','/sasi/image','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])
+for(const p of ['/sasi','/sasi/delivery','/about','/privacy','/terms','/refunds','/legal/sasi','/release'])
   assert(urls.has(seo.SITE+p),`indexable public route absent: ${p}`);
 for(const slug of ['pdf-editor','batch-image','video-transcription','temp-mail','e-sign-pdf','food-calorie'])
   assert(urls.has(seo.SITE+'/tools/'+slug),`core public tool missing from sitemap: ${slug}`);
@@ -70,5 +84,9 @@ for(const [topic,value] of Object.entries(facts.SERVICE_FACTS)){
  assert(fs.existsSync(path.join(root,'app',value.target,'page.tsx')),`missing service: ${topic}`);
  for(const locale of Object.keys(seo.SEO_LOCALES))assert(value.description[locale]?.length>30,`${topic}:${locale}`);
 }
-assert.equal(facts.SERVICE_FACTS['ai-website-builder'].target,'/sasi/build');
+assert.equal(facts.SERVICE_FACTS['sasi-software-marketplace'].target,'/sasi');
+assert.equal(facts.SERVICE_FACTS['mt5-ea-source-code'].target,'/sasi');
+assert.equal(facts.SERVICE_FACTS['software-licensing-delivery'].target,'/sasi/delivery');
+assert.equal(facts.SERVICE_FACTS['developer-software-publishing'].target,'/sasi/seller');
+for(const retired of ['ai-short-drama-generator','book-to-ai-agent','document-ai-agent','learning-ai-agent','research-ai-agent','ai-website-builder'])assert(!(retired in seo.SEO_TOPICS),`retired SASI topic still indexed: ${retired}`);
 console.log(`PASS: canonical-only sitemap and GEO guide with 2 domains (.com global + .cn SIAI), ${seo.GLOBAL_TOOL_CATALOG.length} tools, ${Object.keys(facts.SERVICE_FACTS).length} SASI product guides, 9 languages, ${urls.size} canonical URLs, reciprocal sitemap alternates, real entry routes and private-page exclusions.`);
