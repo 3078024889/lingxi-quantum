@@ -47,10 +47,12 @@ export async function openMiniWallet(currency: "CNY" | "USD" = "CNY", amount?: s
   const validAmount = /^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(amountText) &&
     Number(amountText) > 0 && Number(amountText) <= 10000;
   const url = safeCurrency === "USD"
-    ? "/pages/web/index?path=" + encodeURIComponent("/ai-wallet?currency=USD")
+    ? "/pages/web/index?usdWallet=1"
     : "/pages/cny-wallet/index" + (validAmount ? "?amount=" + encodeURIComponent(amountText) : "");
   return new Promise(resolve => {
     const timeout = setTimeout(() => resolve(false), 5000);
-    bridge.navigateTo({ url, success: () => { clearTimeout(timeout); resolve(true); }, fail: () => { clearTimeout(timeout); resolve(false); } });
+    const finish = (opened: boolean) => { clearTimeout(timeout); resolve(opened); };
+    try { bridge.navigateTo({ url, success: () => finish(true), fail: () => finish(false) }); }
+    catch { finish(false); }
   });
 }

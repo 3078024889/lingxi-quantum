@@ -10,7 +10,7 @@ for(const path of ["miniapp/pages/balance","miniapp/pages/recharge","miniapp/uti
 
 const client=read("lib/mini/payment-client.ts");
 assert.ok(client.includes("/pages/cny-wallet/index"));
-assert.ok(client.includes("/ai-wallet?currency=USD"));
+assert.ok(client.includes("/pages/web/index?usdWallet=1"));
 assert.ok(!client.includes("openMiniRecharge")&&!client.includes("pages/balance"));
 
 const wallet=read("components/WalletLivePanel.tsx");

@@ -10,20 +10,20 @@ const css = read("app/unified-shell.css");
 
 test("all mobile and desktop recharge entries invoke the correct Mini Program wallet route", () => {
   assert.equal((nav.match(/onClick=\{rechargeClick\}/g) || []).length, 4, "home desktop, standard desktop, home mobile and standard mobile recharge links must share the handler");
-  assert.match(nav, /const inMiniProgram = miniRecharge \|\| isMiniProgramContext\(\)/);
-  assert.match(nav, /openMiniWallet\(currency\)/);
+  assert.match(nav, /!miniRecharge && !isMiniProgramContext\(\)/);
+  assert.match(nav, /openMiniWallet\(preferredCurrency\)/);
   assert.match(nav, /usePreferredCurrency\(\)/);
   const start = nav.indexOf('<div className="lx11-mobile-actions">');
   const end = nav.indexOf("</div>", start);
   assert.ok(start >= 0 && end > start, "standard mobile header actions must exist");
   const mobile = nav.slice(start, end);
-  assert.match(mobile, /<Link href="\/ai-wallet" onClick=\{rechargeClick\}>/);
+  assert.match(mobile, /<Link href=\{rechargeHref\}[^>]*onClick=\{rechargeClick\}>/);
   assert.match(mobile, /className="lx11-mobile-account"/);
   assert.match(mobile, /<LingxiMiniIcon name="account" size="nav"\/>/);
   assert.doesNotMatch(mobile, /avatarUrl/);
   assert.match(payment, /\/pages\/cny-wallet\/index/);
-  assert.match(payment, /\/pages\/web\/index\?path=/);
-  assert.match(payment, /\/ai-wallet\?currency=USD/);
+  assert.match(payment, /\/pages\/web\/index\?usdWallet=1/);
+  assert.match(read("miniapp/pages/web/index.js"), /\/ai-wallet\?currency=USD/);
   assert.doesNotMatch(payment, /\/pages\/balance\/index/);
   assert.doesNotMatch(nav, /openMiniRecharge/);
 });

@@ -43,6 +43,7 @@ on:
       - '.github/workflows/miniapp-6-0-package.yml'
   push:
     branches:
+      - ci/cn3194-payment-base-20261110
       - fix/site-wallet-payment-readiness-20261116
     paths:
       - 'miniapp/**'

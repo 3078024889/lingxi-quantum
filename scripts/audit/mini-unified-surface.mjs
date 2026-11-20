@@ -9,7 +9,7 @@ const app=JSON.parse(fs.readFileSync('miniapp/app.json','utf8'));assert.equal(ap
 for(const [page,target] of [['home','/'],['tools','/tools'],['create','/sasi'],['profile','/account'],['agents','/siai']])assert.match(fs.readFileSync('miniapp/pages/'+page+'/index.js','utf8'),new RegExp('wx.redirectTo'));
 const webWallet=fs.readFileSync('lib/mini/payment-client.ts','utf8');
 assert.ok(webWallet.includes('openMiniWallet(currency: "CNY" | "USD"'));
-assert.ok(webWallet.includes('/ai-wallet?currency='));
+assert.ok(webWallet.includes('/pages/web/index?usdWallet=1'));
 assert.ok(!webWallet.includes("openMiniRecharge")&&!webWallet.includes("pages/balance"));
 for(const path of ['miniapp/pages/balance','miniapp/pages/recharge','app/api/wechat/mini/balance-pay'])assert.equal(fs.existsSync(path),false,'Legacy wallet module must be deleted: '+path);
 assert.ok(app.pages.includes('pages/web/index')&&!app.pages.includes('pages/balance/index'));

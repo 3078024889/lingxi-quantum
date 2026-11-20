@@ -115,3 +115,40 @@ html:not([data-theme="dark"]) .lx26-topup-currency{background:#f5f7f9!important;
 html:not([data-theme="dark"]) .lx26-ledger-currency-tabs button.is-active,
 html:not([data-theme="dark"]) .lx26-topup-currency button.is-active{background:#202c3c!important;color:#fff!important;box-shadow:none!important}
 html:not([data-theme="dark"]) .lx26-topup-custom-row{background:#fff!important;border-color:#e1e6ec!important}
+
+/* Match the ranking page rail and keep the profile controls inside the card. */
+html:not([data-theme="dark"]) .lx-tools-compact,
+html:not([data-theme="dark"]) .lx26-wallet-page-inner {
+ padding-inline:10px!important;
+}
+html:not([data-theme="dark"]) .lx26-tools-page .lx11-wrap,
+html:not([data-theme="dark"]) .lx26-wallet-page-inner,
+html:not([data-theme="dark"]) .lx26-account-page,
+html:not([data-theme="dark"]) .lx26-account {
+ width:100%;
+ max-width:none!important;
+}
+.lx26-account-profile .lx-account-name-edit {
+ display:grid;
+ grid-template-columns:minmax(0,1fr) auto;
+}
+.lx26-account-profile .lx-account-name-edit button {
+ width:auto;
+ min-width:0;
+ max-width:none;
+ padding:0 12px;
+ background:#245ca8;
+}
+.lx26-account-profile .lx-account-name-edit button:disabled {
+ background:#edf1f5;
+ color:#626e7f;
+}
+#wallet-topup {scroll-margin-top:110px}
+@media(max-width:520px) {
+ .lx26-account-profile .lx-account-name-edit {
+  grid-template-columns:minmax(0,1fr);
+ }
+ .lx26-account-profile .lx-account-name-edit button {
+  justify-self:start;
+ }
+}
