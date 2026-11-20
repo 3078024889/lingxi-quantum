@@ -741,6 +741,7 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 :global(html:not([data-theme="dark"])) .main .hero,
 :global(html:not([data-theme="dark"])) .main .marketFeatures {
  width:100%;
+ max-width:none;
 }
 :global(html:not([data-theme="dark"])) .main .marketFeatures,
 :global(html:not([data-theme="dark"])) .main .sellerHero,
