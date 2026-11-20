@@ -725,3 +725,26 @@ button.featuredAction:disabled{cursor:wait;opacity:.65}
 .main .section{margin-top:18px!important}.main .sectionHeading{margin-bottom:9px!important}.main .sectionHeading h2{font-size:21px!important}
 @media(max-width:760px){.main .products{grid-template-columns:repeat(auto-fill,minmax(128px,1fr))!important}.main .featuredShelf .featuredCard{grid-template-columns:1fr}.main .featuredVisual{height:92px;min-height:92px}}
 @media(max-width:420px){.main .products{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* Align banners, cards and seller tools with the ranking page gutter. */
+:global(html:not([data-theme="dark"])) .main {
+ --lx-bg:#fff;
+ --lx-line:#e2e7ef;
+ background:#fff;
+ padding-inline:10px;
+}
+:global(html:not([data-theme="dark"])) .main .container,
+:global(html:not([data-theme="dark"])) .main .marketplaceContainer {
+ width:100%;
+ max-width:none!important;
+}
+:global(html:not([data-theme="dark"])) .main .hero,
+:global(html:not([data-theme="dark"])) .main .marketFeatures {
+ width:100%;
+}
+:global(html:not([data-theme="dark"])) .main .marketFeatures,
+:global(html:not([data-theme="dark"])) .main .sellerHero,
+:global(html:not([data-theme="dark"])) .main .sellerHeroArt {
+ background:rgba(255,255,255,.94);
+ border-color:#e2e7ef;
+}

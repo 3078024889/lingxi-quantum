@@ -102,7 +102,7 @@ export default function WalletLivePanel(){
    </div>
   </section>
   <section className="lx26-wallet-topup">
-   <div className="lx26-topup-selector">
+   <div id="wallet-topup" className="lx26-topup-selector">
     <h2 className="lx26-section-title"><span aria-hidden="true">▣</span><LxText zh="余额充值" en="Top up balance" ja="残高チャージ" ko="잔액 충전" fr="Recharger le solde" de="Guthaben aufladen" es="Recargar saldo" pt="Recarregar saldo" ar="شحن الرصيد"/></h2>
     <p><LxText zh="选择币种和充值金额" en="Choose a currency and amount" ja="通貨と金額を選択" ko="통화와 금액 선택" fr="Choisissez une devise et un montant" de="Währung und Betrag wählen" es="Elige moneda e importe" pt="Escolha a moeda e o valor" ar="اختر العملة والمبلغ"/></p>
     <div className="lx26-topup-currency" role="tablist" aria-label="Top-up currency">
