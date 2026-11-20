@@ -1,5 +1,5 @@
 "use client";
-import{useRef,useState}from"react";
+import{useEffect,useRef,useState}from"react";
 import {claimToolStart,ToolAccessError,toolAccessMessage} from "@/lib/tools/commerce/tool-start-client";
 import{openPdf,renderPdfPage,canvasToBlob}from"@/lib/tools/pdf-render-client";
 import{DOCUMENT_INPUT_ACCEPT,documentIntakeError,documentIntakeText,normalizeDocumentFile,confirmDocumentUpload}from"@/lib/tools/document/intake-client";
@@ -22,6 +22,8 @@ const C:Record<LingxiLang,Copy>={
  ar:{pages:"الصفحات",format:"التنسيق",resolution:"الدقة",quality:"جودة JPG",convert:"تحويل",cancel:"إلغاء",ready:"الصور جاهزة. راجع النتيجة ثم احفظ ملف ZIP.",invalid:"نطاق الصفحات غير صالح. مثال: 1-3,5.",cancelled:"تم إلغاء التحويل.",failed:"فشل التحويل. تحقق من ملف PDF.",low:"ملف أصغر",high:"جودة عالية",highest:"أعلى جودة"}
 };
 
+const THUMBNAILS_PER_VIEW=8;
+
 function parseRange(raw:string,max:number){
  if(!raw.trim())return Array.from({length:max},(_,i)=>i+1);
  const out=new Set<number>();
@@ -33,11 +35,46 @@ export default function PdfToImageWorkbench(){
  const[file,setFile]=useState<File|null>(null),[pages,setPages]=useState(0),[range,setRange]=useState(""),[format,setFormat]=useState<"jpeg"|"png">("jpeg"),[quality,setQuality]=useState(.9),[scale,setScale]=useState(1.5),[busy,setBusy]=useState(false),[stage,setStage]=useState(""),[error,setError]=useState("");
  const abort=useRef(false);
  const [result,setResult]=useState<ToolResultFile[]>([]);
+ const [previewGroup,setPreviewGroup]=useState(0);
+ const [thumbs,setThumbs]=useState<Record<number,string>>({});
+ const firstVisible=previewGroup*THUMBNAILS_PER_VIEW+1;
+ const lastVisible=Math.min(pages,firstVisible+THUMBNAILS_PER_VIEW-1);
+ const selected=range.trim()?parseRange(range,pages):[];
+ const updateRange=(next:string)=>{setRange(next);setResult([]);setError("")};
+ function togglePage(page:number){
+  const next=new Set(selected);
+  if(next.has(page))next.delete(page);
+  else next.add(page);
+  updateRange([...next].sort((a,b)=>a-b).join(","));
+ }
+ useEffect(()=>{
+  if(!file||!pages)return;
+  let current=true;
+  let doc:Awaited<ReturnType<typeof openPdf>>|undefined;
+  setThumbs({});
+  void(async()=>{
+   try{
+    doc=await openPdf(file);
+    for(let n=firstVisible;n<=lastVisible&&current;n++){
+     const page=await doc.getPage(n),size=page.getViewport({scale:1});
+     const rendered=await renderPdfPage(doc,n,Math.min(.3,220/Math.max(size.width,size.height)));
+     try{
+      const url=rendered.canvas.toDataURL("image/jpeg",.72);
+      if(current)setThumbs(old=>({...old,[n]:url}));
+     }finally{rendered.canvas.width=1;rendered.canvas.height=1}
+    }
+   }catch{
+    // Page numbers remain usable if preview rendering fails.
+   }finally{await doc?.destroy?.().catch(()=>{})}
+  })();
+  return()=>{current=false};
+ },[file,pages,firstVisible,lastVisible]);
  async function choose(input:File){
-  if(!confirmDocumentUpload([input],lang))return;
-  try{await claimToolStart("pdf-to-jpg",1)}catch(e){setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"));return;}
-  setBusy(true);setError("");setResult([]);setFile(null);setPages(0);setRange("");
-  try{const f=await normalizeDocumentFile(input);setFile(f);const pdf=await openPdf(f);setPages(pdf.numPages);setRange(`1-${pdf.numPages}`);pdf.destroy?.()}
+  if(busy||!confirmDocumentUpload([input],lang))return;
+  setBusy(true);
+  try{await claimToolStart("pdf-to-jpg",1)}catch(e){setError(toolAccessMessage(lang,e instanceof ToolAccessError?e.code:"TOOL_ACCESS_UNAVAILABLE"));setBusy(false);return;}
+  setError("");setResult([]);setFile(null);setPages(0);setPreviewGroup(0);setThumbs({});setRange("");
+  try{const f=await normalizeDocumentFile(input);const pdf=await openPdf(f);const count=pdf.numPages;await pdf.destroy?.();setFile(f);setPages(count)}
   catch(e){setFile(null);setPages(0);setError(documentIntakeError(lang,e))}
   finally{setBusy(false)}
  }
@@ -50,12 +87,42 @@ export default function PdfToImageWorkbench(){
  }
  return <div className="space-y-4">
   <label onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)void choose(f)}} className="block cursor-pointer rounded-2xl border border-dashed border-[var(--lx-line)] bg-[var(--lx-soft)] p-7 text-center">
-   <input type="file" accept={DOCUMENT_INPUT_ACCEPT} className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)void choose(f)}}/>
+   <input type="file" accept={DOCUMENT_INPUT_ACCEPT} disabled={busy} className="hidden" onChange={e=>{const f=e.target.files?.[0];if(f)void choose(f)}}/>
    <b>{busy?documentIntakeText(lang,"busy"):documentIntakeText(lang,"hint")}</b>
   </label>
   {file&&<div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-sm text-[var(--lx-ink)]">{file.name} · {pages}</div>}
-  <div className="grid gap-3 sm:grid-cols-4">
-   <label className="text-sm">{c.pages}<input disabled={busy} value={range} onChange={e=>{setRange(e.target.value);setResult([]);setError("")}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2" placeholder="1-5,8"/></label>
+  {pages>0&&<section aria-label={lang==="zh"?"选取 PDF 页面":"Choose PDF pages"} className="space-y-3">
+   <div className="flex flex-wrap items-center justify-between gap-2">
+    <p className="text-sm">{lang==="zh"?"点选要导出的页面":"Tap the pages you want"}</p>
+    <button type="button" disabled={busy} aria-pressed={!range.trim()} onClick={()=>updateRange("")}
+     className="min-h-[44px] rounded-xl border border-[var(--lx-line)] px-3 text-sm aria-pressed:bg-[var(--lx-soft)]">
+     {lang==="zh"?"全部页面":"All pages"}
+    </button>
+   </div>
+   <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+    {Array.from({length:lastVisible-firstVisible+1},(_,index)=>{
+     const n=firstVisible+index;
+     return <button key={n} type="button" disabled={busy} data-testid={"pdf-image-page-"+n}
+      aria-label={(lang==="zh"?"第 ":"Page ")+n} aria-pressed={selected.includes(n)} onClick={()=>togglePage(n)}
+      className="flex min-h-[44px] min-w-0 flex-col items-center justify-end gap-1 rounded-lg border border-[var(--lx-line)] p-1.5 text-sm aria-pressed:border-sky-500 aria-pressed:bg-sky-500/15">
+      <span className="flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded bg-[var(--lx-soft)]">
+       {thumbs[n]&&<img src={thumbs[n]} alt="" className="h-full w-full object-contain"/>}
+      </span>
+      <span>{n}{selected.includes(n)?" ✓":""}</span>
+     </button>
+    })}
+   </div>
+   {pages>THUMBNAILS_PER_VIEW&&<div className="flex items-center justify-center gap-3 text-sm">
+    <button type="button" disabled={busy||previewGroup===0} onClick={()=>setPreviewGroup(g=>g-1)} className="min-h-[44px] rounded-lg border px-3 disabled:opacity-40">{lang==="zh"?"上一组":"Previous pages"}</button>
+    <span>{firstVisible}–{lastVisible} / {pages}</span>
+    <button type="button" disabled={busy||lastVisible===pages} onClick={()=>setPreviewGroup(g=>g+1)} className="min-h-[44px] rounded-lg border px-3 disabled:opacity-40">{lang==="zh"?"下一组":"Next pages"}</button>
+   </div>}
+   <details className="text-sm text-[var(--lx-muted)]">
+    <summary className="cursor-pointer">{lang==="zh"?"按页码输入（可选）":"Enter page numbers (optional)"}</summary>
+    <label className="mt-2 block">{c.pages}<input disabled={busy} value={range} onChange={e=>updateRange(e.target.value)} className="ml-2 rounded-lg border border-[var(--lx-line)] px-3 py-2" placeholder="1-5,8"/></label>
+   </details>
+  </section>}
+  <div className="grid gap-3 sm:grid-cols-3">
    <label className="text-sm">{c.format}<select disabled={busy} value={format} onChange={e=>{setFormat(e.target.value as "jpeg"|"png");setResult([]);setError("")}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"><option value="jpeg">JPG</option><option value="png">PNG</option></select></label>
    <label className="text-sm">{c.resolution}<select disabled={busy} value={scale} onChange={e=>{setScale(Number(e.target.value));setResult([]);setError("")}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"><option value="1">1x</option><option value="1.5">1.5x</option><option value="2">2x</option><option value="3">3x</option></select></label>
    <>{format==="jpeg"&&<label className="text-sm">{c.quality}<select disabled={busy} value={quality} onChange={e=>{setQuality(Number(e.target.value));setResult([]);setError("")}} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] px-3 py-2"><option value="0.7">{c.low}</option><option value="0.9">{c.high}</option><option value="1">{c.highest}</option></select></label>}</>
