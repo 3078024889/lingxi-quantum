@@ -316,7 +316,10 @@ Page({
   },
 
   openUsdWallet() {
-    wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent('/ai-wallet?currency=USD') })
+    wx.redirectTo({
+      url: '/pages/web/index?usdWallet=1',
+      fail() { wx.showToast({ title: '暂时无法打开官网充值入口', icon: 'none' }) },
+    })
   },
   openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
   openRefunds() { wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent('/refunds#mini') }) },

@@ -95,21 +95,13 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [miniRecharge, setMiniRecharge] = useState(false);
   useEffect(() => { let alive = true; void detectMiniPaymentContext().then(value => { if (alive) setMiniRecharge(value); }); return () => { alive = false; }; }, []);
+  const rechargeHref = "/ai-wallet?currency=" + preferredCurrency + "#wallet-topup";
   async function rechargeClick(event: React.MouseEvent<HTMLAnchorElement>) {
-    const inMiniProgram = miniRecharge || isMiniProgramContext();
-    if (!inMiniProgram) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (!miniRecharge && !isMiniProgramContext()) return;
+    const fallback = event.currentTarget.href;
     event.preventDefault();
-    let currency = currencyReady ? preferredCurrency : "CNY";
-    if (!currencyReady) {
-      try {
-        const saved = localStorage.getItem("lingxifield:preferred-currency");
-        if (saved === "CNY" || saved === "USD") currency = saved;
-      } catch {}
-    }
-    const opened = await openMiniWallet(currency);
-    if (!opened) window.alert(currency === "USD"
-      ? "暂时无法打开官网美元钱包，请检查小程序网络连接后重试。"
-      : "暂时无法打开小程序人民币充值页，请检查小程序版本后重试。");
+    if (!await openMiniWallet(preferredCurrency)) window.location.assign(fallback);
   }
 
   useEffect(() => {
@@ -256,7 +248,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
             <CurrencySelector compact />
             <NotificationBell />
             {miniRecharge&&<button type="button" onClick={()=>void openMiniShare(document.title)} aria-label={lang==='zh'?'分享':'Share'} className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-[var(--lx-line)]">↗</button>}
-            <Link href="/ai-wallet" className="lx11-primary" onClick={rechargeClick}>💎 {t("recharge")}</Link>
+            <Link href={rechargeHref} aria-label={t("recharge")} className="lx11-primary" onClick={rechargeClick}>💎 {t("recharge")}</Link>
             <button type="button" className="lx11-avatar lx11-account-trigger" aria-label={mt.account} title={mt.account} aria-expanded={menuOpen} onClick={() => setMenuOpen(value => !value)}>
               {avatarUrl ? <NextImage src={avatarUrl} alt="" className="lx11-avatar-photo" width={64} height={64} unoptimized/> : <span className="lx11-avatar-inner"><b>{Array.from(displayName || "L").slice(0,2).join("").toUpperCase()}</b></span>}
             </button>
@@ -290,7 +282,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
           <div className="lx-home-mobile-actions">
             <CurrencySelector compact />
             <NotificationBell />
-            <Link href="/ai-wallet" className="lx-home-mobile-login" onClick={rechargeClick}>💎</Link>
+            <Link href={rechargeHref} aria-label={t("recharge")} className="lx-home-mobile-login" onClick={rechargeClick}>💎</Link>
             <button type="button" className="lx11-mobile-account" aria-label={mt.account} title={mt.account} aria-expanded={menuOpen} onClick={() => setMenuOpen(value => !value)}>
               <LingxiMiniIcon name="account" size="nav"/>
             </button>
@@ -331,7 +323,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
           <NotificationBell />
           {miniRecharge&&<button type="button" onClick={()=>void openMiniShare(document.title)} aria-label={lang==='zh'?'分享':'Share'} className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-[var(--lx-line)]">↗</button>}
 
-          <Link href="/ai-wallet" className="lx11-primary" onClick={rechargeClick}>💎 {t("recharge")}</Link>
+          <Link href={rechargeHref} aria-label={t("recharge")} className="lx11-primary" onClick={rechargeClick}>💎 {t("recharge")}</Link>
 
           <button
             className="lx11-avatar lx11-account-trigger"
@@ -380,7 +372,7 @@ export default function Nav({homeLayout=false}:{homeLayout?:boolean}={}) {
         <div className="lx11-mobile-actions">
           <CurrencySelector compact />
           <NotificationBell />
-          <Link href="/ai-wallet" onClick={rechargeClick}>💎 {t("recharge")}</Link>
+          <Link href={rechargeHref} aria-label={t("recharge")} onClick={rechargeClick}>💎 {t("recharge")}</Link>
           <button
             className="lx11-mobile-account"
             type="button"

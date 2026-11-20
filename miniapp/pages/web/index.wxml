@@ -1,9 +1,17 @@
-<view wx:if="{{loading && !src}}" class="lx-web-state">
+<view wx:if="{{usdWallet && !src}}" class="lx-web-state">
+  <view class="lx-web-state-title">美元充值</view>
+  <view class="lx-web-state-note">在官网登录同一账户。若微信内无法打开 PayPal，请复制网址，在系统浏览器继续。</view>
+  <text selectable>{{usdBrowserUrl}}</text>
+  <button class="lx-web-retry" bindtap="openUsdWebsite">打开官网美元钱包</button>
+  <button class="lx-web-retry" bindtap="copyUsdWebsite">复制浏览器充值链接</button>
+</view>
+
+<view wx:if="{{!usdWallet && loading && !src}}" class="lx-web-state">
   <view class="lx-web-state-title">正在打开</view>
   <view class="lx-web-state-note">正在连接到灵犀场。</view>
 </view>
 
-<view wx:if="{{failed && !src}}" class="lx-web-state">
+<view wx:if="{{!usdWallet && failed && !src}}" class="lx-web-state">
   <view class="lx-web-state-title">暂时没有打开</view>
   <view class="lx-web-state-note">检查网络后可以重新尝试。</view>
   <button class="lx-web-retry" bindtap="retry">重新打开</button>

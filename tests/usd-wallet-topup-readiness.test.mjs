@@ -33,7 +33,7 @@ test("Mini Program CNY uses native merchant JSAPI; USD enters official website P
  assert.match(wallet,/\/checkout-usd\?productId=sasi-usd-balance-/);
  assert.match(client,/openMiniWallet\(currency: \"CNY\" \| \"USD\"/);
  assert.match(client,/\/pages\/cny-wallet\/index/);
- assert.match(client,/\/ai-wallet\?currency=/);
+ assert.match(client,/\/pages\/web\/index\?usdWallet=1/);
  assert.doesNotMatch(client,/openMiniRecharge|pages\/balance/);
  assert.doesNotMatch(boundary,/openMiniRecharge/);
  assert.match(native,/wx\.requestPayment/);

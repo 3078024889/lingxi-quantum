@@ -15,7 +15,7 @@ test("CNY uses native merchant JSAPI and USD uses the official website wallet",(
  assert.ok(app.pages.includes("pages/cny-wallet/index"));
  assert.ok(client.includes('openMiniWallet(currency: "CNY" | "USD"'));
  assert.ok(client.includes("/pages/cny-wallet/index"));
- assert.ok(client.includes("/ai-wallet?currency=USD"));
+ assert.ok(client.includes("/pages/web/index?usdWallet=1"));
  assert.ok(page.includes("wx.requestPayment"));
  assert.ok(!page.includes("wx.requestVirtualPayment"));
  assert.ok(page.includes("cny-topup/availability")&&page.includes("cny-topup/create")&&page.includes("cny-topup/status"));

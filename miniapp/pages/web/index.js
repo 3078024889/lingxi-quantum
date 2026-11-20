@@ -1,5 +1,7 @@
 // Web-view needs the registered business domain, not the request API domain.
 const WEB_BASE = 'https://lingxifield.cn'
+const USD_WALLET_PATH = '/ai-wallet?currency=USD#wallet-topup'
+const USD_BROWSER_URL = 'https://lingxifield.com' + USD_WALLET_PATH
 const { enableShareMenu, copyWebLink, publicWebPath, appMessage, timeline } = require('../../utils/share')
 const EXACT_ALLOWED=new Set(['/','/siai','/sasi','/sasi/seller','/sasi/delivery','/tools','/discoveries','/partners','/about','/account','/account/orders','/account/notifications','/ai-wallet','/sasi/pricing','/privacy','/terms','/refunds'])
 const PREFIX_ALLOWED=['/tools/','/api/wechat/mini/account-link/'],MAX_PATH_LENGTH=2048,CURRENCY_KEY='lx_currency'
@@ -27,11 +29,27 @@ function shareablePath(options,fallback){
  return publicWebPath(fallback)
 }
 Page({
- data:{src:'',path:'/',loading:true,failed:false},
- onLoad(options){enableShareMenu({includeTimeline:true});const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
+ data:{src:'',path:'/',loading:true,failed:false,usdWallet:false,usdBrowserUrl:USD_BROWSER_URL},
+ onLoad(options){
+  enableShareMenu({includeTimeline:true});
+  if(options.usdWallet==='1'){
+   this.setData({path:USD_WALLET_PATH,loading:false,usdWallet:true})
+   return
+  }
+  const decoded=safeDecode(options.path||'/'),path=normalizeMiniPath(decoded);if(!path){this.setData({loading:false,failed:true});wx.showModal({title:'暂时无法打开',content:'这个入口暂时没有连接到当前小程序。',showCancel:false});return}this.setData({src:withMiniContext(path),path,loading:true,failed:false})},
+ openUsdWebsite(){
+  this.setData({src:withMiniContext(USD_WALLET_PATH),loading:true,failed:false})
+ },
+ copyUsdWebsite(){
+  wx.setClipboardData({
+   data:USD_BROWSER_URL,
+   success(){wx.showToast({title:'官网链接已复制',icon:'none'})},
+   fail(){wx.showToast({title:'请长按上方网址复制',icon:'none'})},
+  })
+ },
  onShow(){enableShareMenu({includeTimeline:true})},
  handleLoad(){this.setData({loading:false,failed:false})},
- handleError(event){console.warn('[mini webview load failed]',event&&event.detail);this.setData({loading:false,failed:true});wx.showModal({title:'页面没有打开',content:'请确认网络正常后重试。',showCancel:false})},
+ handleError(){this.setData({src:'',loading:false,failed:true});if(this.data.usdWallet)return;wx.showModal({title:'页面没有打开',content:'请确认网络正常后重试。',showCancel:false})},
  retry(){const path=normalizeMiniPath(this.data.path);if(!path)return;const next=withMiniContext(path);this.setData({src:'',loading:true,failed:false});setTimeout(()=>this.setData({src:next}),50)},
  copyCurrentLink(){copyWebLink(this.data.path,'当前页面链接已复制')},
  openNativeShare(){const sharePath=publicWebPath(this.data.path);const title=shareTitleFor(sharePath);wx.navigateTo({url:'/pages/share/index?path='+encodeURIComponent(sharePath)+'&title='+encodeURIComponent(title),fail(){wx.showToast({title:'暂时无法打开分享页，请重试',icon:'none'})}})},
