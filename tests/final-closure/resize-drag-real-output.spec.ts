@@ -2,7 +2,7 @@ import {test,expect,type Page} from "./export-test";
 import {readFile} from "node:fs/promises";
 import sharp from "sharp";
 
-async function openSplitImage(page:Page){
+async function openSplitImage(page:Page,drop=false){
  await page.goto("/tools/resize-image?lang=en");
  const image=await page.evaluate(()=>{
   const c=document.createElement("canvas");c.width=400;c.height=200;
@@ -13,7 +13,17 @@ async function openSplitImage(page:Page){
  });
  const input=page.locator('input[type="file"]').first();
  await expect(input).toBeEnabled({timeout:15000});
- await input.setInputFiles({name:"red-blue.png",mimeType:"image/png",buffer:Buffer.from(image,"base64")});
+ if(drop){
+  const dataTransfer=await page.evaluateHandle((bytes)=>{
+   const transfer=new DataTransfer();
+   transfer.items.add(new File([Uint8Array.from(atob(bytes),c=>c.charCodeAt(0))],"red-blue.png",{type:"image/png"}));
+   return transfer;
+  },image);
+  await input.locator("..").dispatchEvent("drop",{dataTransfer});
+  await dataTransfer.dispose();
+ }else{
+  await input.setInputFiles({name:"red-blue.png",mimeType:"image/png",buffer:Buffer.from(image,"base64")});
+ }
  await expect(page.getByText("Source 400×200",{exact:true})).toBeVisible({timeout:15000});
 }
 async function imageAtSave(page:Page){
@@ -37,6 +47,7 @@ test("dragging a crop on the real preview moves the actual saved pixels and inva
  test.setTimeout(90000);
  await openSplitImage(page);
  await page.getByRole("button",{name:"Free",exact:true}).click();
+ await page.getByText("Exact pixels (optional)",{exact:true}).click();
  await page.getByLabel("Width px",{exact:true}).fill("100");
  await page.getByLabel("Height px",{exact:true}).fill("100");
  await page.getByRole("button",{name:/^Manual crop/}).click();
@@ -80,6 +91,7 @@ test("changing size, format, fit and output quality hides stale exports; PNG has
  test.setTimeout(90000);
  await openSplitImage(page);
  await page.getByRole("button",{name:"Free",exact:true}).click();
+ await page.getByText("Exact pixels (optional)",{exact:true}).click();
  await page.getByLabel("Width px",{exact:true}).fill("100");
  await page.getByLabel("Height px",{exact:true}).fill("100");
  await page.getByRole("button",{name:/^Stretch/}).click();
@@ -100,4 +112,42 @@ test("changing size, format, fit and output quality hides stale exports; PNG has
  await page.getByRole("button",{name:/^Manual crop/}).click();
  await page.getByLabel("Allow enlargement",{exact:true}).uncheck();
  await expect(save).toHaveCount(0);
+});
+
+test("a corner gesture updates the real export dimensions without opening number inputs",async({page},testInfo)=>{
+ test.setTimeout(90000);
+ await openSplitImage(page,true);
+ await expect(page.getByLabel("Width px",{exact:true})).toBeHidden();
+ const size=page.getByTestId("resize-output-size");
+ await expect(size).toHaveText("400×300 px");
+ const handle=page.getByTestId("resize-size-grip");
+ await handle.scrollIntoViewIfNeeded();
+ const rect=await handle.boundingBox();
+ if(!rect)throw Error("SIZE_HANDLE_MISSING");
+ const x=rect.x+rect.width/2,y=rect.y+rect.height/2;
+ if(testInfo.project.name.includes("mobile")){
+  const cdp=await page.context().newCDPSession(page);
+  await cdp.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y}]});
+  await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x-45,y:y-35}]});
+  await cdp.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+  await cdp.detach();
+ }else{
+  await page.mouse.move(x,y);
+  await page.mouse.down();
+  await page.mouse.move(x-45,y-35,{steps:10});
+  await page.mouse.up();
+ }
+ await expect(size).not.toHaveText("400×300 px");
+ const dimensions=(await size.innerText()).match(/\d+/g)?.map(Number);
+ expect(dimensions).toHaveLength(2);
+ expect(dimensions![0]).toBeLessThan(400);
+ expect(dimensions![0]/dimensions![1]).toBeCloseTo(4/3,2);
+ await page.getByRole("combobox",{name:"Output format",exact:true}).selectOption("image/png");
+ await page.getByRole("button",{name:/^Process 1 image/}).click();
+ const save=page.getByRole("button",{name:"Save file",exact:true}).first();
+ const pending=page.waitForEvent("download");
+ await save.click();
+ const download=await pending;
+ const info=await sharp(await readFile((await download.path())!)).metadata();
+ expect([info.width,info.height]).toEqual(dimensions);
 });
