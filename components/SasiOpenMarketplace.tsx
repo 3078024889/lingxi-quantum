@@ -292,6 +292,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
  };
  return <main dir={lang==="ar"?"rtl":"ltr"} className={styles.main} data-release-design="20261114-afternoon-three-pages"><div className={styles.container + (sellerOnly ? "" : " " + styles.marketplaceContainer)}>
   {!sellerOnly&&<>
+  <div className={styles.marketBanner}>
   <section className={styles.hero} data-testid="sasi-transparent-hero" data-hero-asset="global-scene-20261114.webp" aria-labelledby="sasi-market-title" aria-label={sasiSoftwareUiText(lang,"灵犀场 SASI 智能软件市场","LINGXIFIELD SASI intelligent software marketplace")}>
     <img src="/images/global-scene-20261114.webp" className={styles.heroArtwork} alt="" width={2172} height={724} loading="eager" fetchPriority="high" decoding="async"/>
     <div className={styles.heroCopy}>
@@ -301,6 +302,7 @@ export default function SasiOpenMarketplace({view="marketplace"}:{view?:"marketp
      <div className={styles.heroActions}><a href="#products">{sasiSoftwareUiText(lang,"浏览软件","Browse software")} →</a></div>
     </div>
   </section>
+  </div>
   <div className={styles.marketFeatures} aria-label={sasiSoftwareUiText(lang,"软件市场服务能力","Marketplace capabilities")}>
    {MARKET_FEATURES.map((item,index)=><div className={styles.marketFeature} key={item.zh}>
     <span className={styles.marketFeatureIcon}><AfternoonArtworkIcon kind={(["layers","chart","shield","people","tools"] as AfternoonIconKind[])[index]}/></span>
