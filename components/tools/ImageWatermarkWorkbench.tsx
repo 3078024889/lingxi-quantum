@@ -8,6 +8,7 @@ import ResultFileActions from './ResultFileActions';
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
 import{useLingxiLang}from"@/lib/lingxi-i18n";
 import{toolRuntimeText}from"@/lib/tool-runtime-i18n";
+import{isFreeLocalAcceptanceTool}from"@/lib/tools/commerce/free-acceptance";
 
 const initial:NormalizedBox={x:.65,y:.72,w:.28,h:.18};
 
@@ -16,7 +17,7 @@ function BoxSelector({file,box,onChange}:{file:File;box:NormalizedBox;onChange:(
  useEffect(()=>{const u=URL.createObjectURL(file);setSrc(u);return()=>URL.revokeObjectURL(u)},[file]);
  const point=(e:PointerEvent)=>{const r=ref.current!.getBoundingClientRect();return{x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))}};
  return <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);const p=point(e);setStart(p);onChange({...p,w:0,h:0})}} onPointerMove={e=>{if(!start)return;const p=point(e);onChange({x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(start.x-p.x),h:Math.abs(start.y-p.y)})}} onPointerUp={()=>setStart(null)} onPointerCancel={()=>setStart(null)}>
-  {src&&<img src={src} alt="" className="block max-h-[560px] max-w-full select-none"/>}
+  {src&&<img src={src} alt="" draggable={false} className="block max-h-[560px] max-w-full select-none"/>}
   <div className="pointer-events-none absolute border-2 border-rose-500 bg-rose-500/15" style={{left:`${box.x*100}%`,top:`${box.y*100}%`,width:`${box.w*100}%`,height:`${box.h*100}%`}}/>
  </div>
 }
@@ -27,8 +28,8 @@ function BrushSelector({file,strokes,onChange}:{file:File;strokes:NormalizedStro
  const point=(e:PointerEvent):NormalizedPoint=>{const r=ref.current!.getBoundingClientRect();return{x:Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)),y:Math.max(0,Math.min(1,(e.clientY-r.top)/r.height))}};
  function addPoint(e:PointerEvent){if(active.current!==e.pointerId)return;const p=point(e);onChange(current=>current.map((stroke,i)=>i===current.length-1?{...stroke,points:[...stroke.points,p]}:stroke))}
  return <div className="space-y-3">
-  <div ref={ref} className="relative mx-auto mt-4 w-fit max-w-full touch-none overflow-hidden rounded-2xl border" onPointerDown={e=>{if(active.current!==null)return;active.current=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);onChange(current=>[...current,{radius:brush/1000,points:[point(e)]}])}} onPointerMove={addPoint} onPointerUp={e=>{addPoint(e);active.current=null}} onPointerCancel={()=>{active.current=null}}>
-   {src&&<img src={src} alt="" className="block max-h-[560px] max-w-full select-none"/>}
+  <div ref={ref} data-testid="image-cleanup-brush" className="relative mx-auto mt-4 w-fit max-w-full cursor-crosshair touch-none overflow-hidden rounded-2xl border" onPointerDown={e=>{if(active.current!==null)return;active.current=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);onChange(current=>[...current,{radius:brush/1000,points:[point(e)]}])}} onPointerMove={addPoint} onPointerUp={e=>{addPoint(e);active.current=null}} onPointerCancel={()=>{active.current=null}}>
+   {src&&<img src={src} alt="" draggable={false} className="block max-h-[560px] max-w-full select-none"/>}
    <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
     {strokes.map((stroke,i)=><polyline key={i} points={stroke.points.map(p=>`${p.x*1000},${p.y*1000}`).join(" ")} fill="none" stroke="rgba(244,63,94,.55)" strokeLinecap="round" strokeLinejoin="round" strokeWidth={Math.max(4,stroke.radius*2000)}/>)}
    </svg>
@@ -44,6 +45,7 @@ function BrushSelector({file,strokes,onChange}:{file:File;strokes:NormalizedStro
 export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
  const{lang}=useLingxiLang(),t=(zh:string,en:string)=>toolRuntimeText(lang,zh,en);
  const toolId=batch?"batch-image-watermark-remover":"image-watermark-remover";
+ const freeAcceptance=isFreeLocalAcceptanceTool(toolId);
  const[files,setFiles]=useState<File[]>([]),[box,setBox]=useState(initial),[strokes,setStrokes]=useState<NormalizedStroke[]>([]);
  const[mode,setMode]=useState<"brush"|"box">(batch?"box":"brush"),[busy,setBusy]=useState(false),[error,setError]=useState("");
  const[results,setResults]=useState<Array<{name:string;blob:Blob;url:string}>>([]),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false);
@@ -72,11 +74,17 @@ export default function ImageWatermarkWorkbench({batch=false}:{batch?:boolean}){
  return <div className="space-y-4">
   <FileDropzone accept="image/*" multiple={batch} maxFiles={batch?20:1} maxSizeMB={30} files={files} onChange={rows=>{setFiles(rows);setResults([]);setDraftId("");setStrokes([])}} disabled={busy} kind="image"/>
   {files[0]&&<>
-   {!batch&&<div className="flex flex-wrap gap-2"><button type="button" onClick={()=>setMode("brush")} className={`rounded-xl border px-4 py-2 text-sm ${mode==="brush"?"bg-[var(--lx-soft)]":""}`}>{t("精细画笔","Precision brush")}</button><button type="button" onClick={()=>setMode("box")} className={`rounded-xl border px-4 py-2 text-sm ${mode==="box"?"bg-[var(--lx-soft)]":""}`}>{t("快速框选","Quick box")}</button></div>}
+   {!batch&&<div className="flex flex-wrap gap-2"><button type="button" disabled={busy} onClick={()=>{setMode("brush");setResults([])}} className={`rounded-xl border px-4 py-2 text-sm ${mode==="brush"?"bg-[var(--lx-soft)]":""}`}>{t("精细画笔","Precision brush")}</button><button type="button" disabled={busy} onClick={()=>{setMode("box");setResults([])}} className={`rounded-xl border px-4 py-2 text-sm ${mode==="box"?"bg-[var(--lx-soft)]":""}`}>{t("快速框选","Quick box")}</button></div>}
    <p className="text-sm text-[var(--lx-muted)]">{mode==="brush"?t("用画笔只涂住水印本身，可撤销或分多笔选择；选区越准确，修复越自然。","Paint only over the watermark. Smaller, precise masks usually produce cleaner repairs."):t(batch?"在第一张图上框出水印区域，相同位置会用于整批图片。":"拖动框出要移除的区域；适合纯色或简单背景。",batch?"Draw the watermark area on the first image; the same position is used for the batch.":"Draw a box around the area to remove; best for simple backgrounds.")}</p>
-   {mode==="brush"?<BrushSelector file={files[0]} strokes={strokes} onChange={setStrokes}/>:<BoxSelector file={files[0]} box={box} onChange={setBox}/>}
+   <fieldset disabled={busy} className="min-w-0" style={{pointerEvents:busy?"none":undefined}}>
+    {mode==="brush"?<BrushSelector file={files[0]} strokes={strokes} onChange={next=>{setStrokes(next);setResults([])}}/>
+     :<BoxSelector file={files[0]} box={box} onChange={next=>{setBox(next);setResults([])}}/>}
+   </fieldset>
   </>}
-  {files.length>0&&selectionReady&&draftReady&&<PaidActionButton toolId={toolId} quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{mode:"local",selectionMode:mode,box,strokes:mode==="brush"?strokes.length:0}} onPaid={run} label={t("查看本次价格","See price")}/>}
+  {files.length>0&&draftReady&&(freeAcceptance
+   ?<button type="button" disabled={!selectionReady||busy} data-testid="acceptance-image-cleanup"
+     onClick={()=>void run().catch(()=>{})} className="min-h-[44px] rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)] disabled:opacity-40">{t("修复选中区域","Repair selection")}</button>
+   :selectionReady&&<PaidActionButton toolId={toolId} quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{mode:"local",selectionMode:mode,box,strokes:mode==="brush"?strokes.length:0}} onPaid={run} label={t("查看本次价格","See price")}/>)}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{t("正在根据选区修复画面…","Repairing the selected area…")}</p>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}
   {results.length>0&&<div className="grid gap-4 sm:grid-cols-2">{results.map((r,i)=><div key={r.name+i} className="rounded-2xl border p-3"><img src={r.url} alt={t("处理结果","Result")} className="w-full rounded-xl"/><ResultFileActions blob={r.blob} name={`clean-${r.name.replace(/\.[^.]+$/,".png")}`} saveLabel={t("保存结果","Save result")}/></div>)}</div>}

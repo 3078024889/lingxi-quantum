@@ -20,8 +20,8 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/image-to-pdf-pro", title:"图片转 PDF", description:"多张 JPG/PNG 排序后生成一个 PDF。", keywords:["JPG转PDF","PNG转PDF","照片转PDF","图片转PDF"], category:"pdf", popular:true, localOnly:true },
   { href:"/tools/ocr", title:"图片 / 扫描件 OCR", description:"从图片中提取文字，中文、英文、日文等按需加载。", keywords:["OCR","图片转文字","截图转文字","扫描件文字"], category:"pdf", badge:"本地", localOnly:true },
 
-  { href:"/tools/image-watermark-remover", title:"图片去文字 / 去物体", description:"框选需要移除的区域，AI 重建背景。", keywords:["图片","水印","去水印","去文字","去物体","移除路人"], category:"image", badge:"AI", popular:true },
-  { href:"/tools/batch-image-watermark-remover", title:"批量图片去文字 / 去物体", description:"第一张框一次，同区域批量处理多张图片。", keywords:["批量","图片","水印","商品图","去文字"], category:"image", badge:"AI" },
+  { href:"/tools/image-watermark-remover", title:"图片去文字 / 去物体", description:"框选需要移除的区域，AI 重建背景。", keywords:["图片","水印","去水印","去文字","去物体","移除路人"], category:"image", badge:"AI", popular:true, localOnly:true },
+  { href:"/tools/batch-image-watermark-remover", title:"批量图片去文字 / 去物体", description:"第一张框一次，同区域批量处理多张图片。", keywords:["批量","图片","水印","商品图","去文字"], category:"image", badge:"AI", localOnly:true },
   { href:"/tools/batch-image", title:"批量图片处理", description:"批量压缩、改尺寸、转 JPG/PNG/WebP，打包 ZIP 下载。", keywords:["批量压缩","批量改尺寸","批量转换","ZIP","图片批处理"], category:"image", popular:true, localOnly:true },
   { href:"/tools/heic-local", title:"HEIC 转 JPG", description:"iPhone HEIC 照片直接在浏览器转 JPG。", keywords:["HEIC","JPG","iPhone照片","苹果照片"], category:"image", localOnly:true },
 
@@ -83,7 +83,7 @@ export const ADVANCED_TOOLS: AdvancedToolCard[] = [
   { href:"/tools/audio-transcription", title:"音频转文字", description:"按分钟转写，导出 TXT / SRT / VTT。", keywords:["音频转文字","录音转文字","语音转文字","SRT"], category:"audio", badge:"AI", popular:true },
   { href:"/tools/video-transcription", title:"视频转文字 / 自动字幕", description:"视频转写并生成字幕文件。", keywords:["视频转文字","自动字幕","视频字幕","SRT"], category:"video", badge:"AI", popular:true },
   { href:"/tools/subtitle-translate", title:"字幕翻译", description:"保留时间轴，只翻译 SRT / VTT 字幕文字。", keywords:["字幕翻译","SRT翻译","VTT翻译","双语字幕"], category:"video", badge:"AI" },
-  { href:"/tools/id-photo-ai", title:"AI 证件照换背景", description:"选择常用尺寸和底色，调整人物大小与位置，先免费预览再保存高清照片。", keywords:["证件照","换背景","蓝底照片","白底照片","红底照片"], category:"image", badge:"AI", popular:true },
+  { href:"/tools/id-photo-ai", title:"AI 证件照换背景", description:"选择常用尺寸和底色，调整人物大小与位置，先免费预览再保存高清照片。", keywords:["证件照","换背景","蓝底照片","白底照片","红底照片"], category:"image", badge:"AI", popular:true, localOnly:true },
   { href:"/tools/regex-tester", title:"正则表达式测试", description:"测试正则表达式并查看匹配位置与捕获组。", keywords:["Regex Tester","regex tester"], category:"developer", localOnly:true },
   { href:"/tools/text-diff", title:"文本对比", description:"逐行比较两段文字，快速找到变化。", keywords:["Text Diff","text diff"], category:"developer", localOnly:true },
   { href:"/tools/csv-json", title:"CSV 转 JSON", description:"把 CSV 表格本地转换成结构化 JSON。", keywords:["CSV to JSON","csv json"], category:"developer", localOnly:true },

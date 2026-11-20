@@ -4,6 +4,8 @@ import FileDropzone from"@/components/tools/FileDropzone";import PaidExportButto
 import {deliveryText} from "@/lib/tools/commerce/delivery-copy";
 import {useLingxiLang} from "@/lib/lingxi-i18n";
 import ResultFileActions from './ResultFileActions';
+import {isFreeLocalAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
+const FREE_ACCEPTANCE=isFreeLocalAcceptanceTool("id-photo-ai");
 type PreviewSettings={preset:string;background:string;zoom:number;x:number;y:number};
 type PortraitDrag={pointer:number;x:number;y:number;width:number;height:number;offsetX:number;offsetY:number};
 type R={url:string;hdUrl:string;blob:Blob;hdBlob:Blob;width:number;height:number;hdWidth:number;hdHeight:number;faceDetected:boolean;mattingApplied:boolean;quality:string;warnings:string[];rotation:number};
@@ -42,7 +44,7 @@ export default function IdPhotoAiWorkbench(){
   void run({preset,background,zoom,x:nextX,y:nextY});
  }
  async function paidSave(){if(!result)throw new Error("PHOTO_RESULT_MISSING");setDelivered(result.hdBlob);await downloadBlob(result.hdBlob,"lingxifield-id-photo-hd.png")} async function finishPaidSave(){const old=draftId;if(result){URL.revokeObjectURL(result.url);URL.revokeObjectURL(result.hdUrl)}setFiles([]);setResult(null);setDraftId("");if(old)await deletePaidTaskDraft(old)}
- return <div className="space-y-5">{delivered&&<section role="status" className="rounded-2xl border p-4 space-y-3"><p>{deliveryText(lang,"ready")}</p><ResultFileActions blob={delivered} name="lingxifield-id-photo-hd.png"/><button className="rounded-xl border px-4 py-3" onClick={()=>setDelivered(null)}>{deliveryText(lang,"fresh")}</button></section>}<div className="rounded-2xl bg-[var(--lx-soft)] px-4 py-3 text-sm leading-6 text-[var(--lx-muted)]"><ToolUiText text="生成、换底色、尺寸和位置调整可以先免费预览；确认满意后再导出高清照片。" /></div>
+ return <div className="space-y-5">{delivered&&<section role="status" className="rounded-2xl border p-4 space-y-3"><p>{deliveryText(lang,"ready")}</p><ResultFileActions blob={delivered} name="lingxifield-id-photo-hd.png"/><button className="rounded-xl border px-4 py-3" onClick={()=>setDelivered(null)}>{deliveryText(lang,"fresh")}</button></section>}<div className="rounded-2xl bg-[var(--lx-soft)] px-4 py-3 text-sm leading-6 text-[var(--lx-muted)]">{FREE_ACCEPTANCE?(lang==="zh"?"上传照片，调整背景和位置，然后保存高清照片。":"Upload a photo, adjust the background and position, then save in HD."):<ToolUiText text="生成、换底色、尺寸和位置调整可以先免费预览；确认满意后再导出高清照片。" />}</div>
   <FileDropzone accept="image/*" multiple={false} maxFiles={1} maxSizeMB={15} files={files} onChange={z=>{setFiles(z.slice(0,1));setResult(null);setDraftId("")}} disabled={busy} kind="image"/>
   <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1 text-sm"><ToolUiText text="尺寸" /><select value={preset} onChange={e=>setPreset(e.target.value)} className="w-full rounded-xl border border-[var(--lx-line)] bg-transparent p-3">{ID_PHOTO_PRESETS.map(z=><option key={z.id} value={z.id}><ToolUiText text={z.label}/></option>)}</select></label><label className="space-y-1 text-sm"><ToolUiText text="人物大小" /><input type="range" min=".85" max="1.8" step=".03" value={zoom} onChange={e=>setZoom(Number(e.target.value))} className="w-full"/></label><label className="space-y-1 text-sm"><ToolUiText text="左右位置" /><input type="range" min="-1" max="1" step=".02" value={x} onChange={e=>setX(Number(e.target.value))} className="w-full"/></label><label className="space-y-1 text-sm"><ToolUiText text="上下位置" /><input type="range" min="-1" max="1" step=".02" value={y} onChange={e=>setY(Number(e.target.value))} className="w-full"/></label></div>
   <div className="flex flex-wrap gap-2">{[["white","白底"],["blue","蓝底"],["red","红底"],["gray","灰底"]].map(([v,n])=><button type="button" key={v} onClick={()=>setBackground(v)} className={`rounded-full px-4 py-2 text-sm ${background===v?"bg-[var(--lx-ink)] text-[var(--lx-bg)]":"border border-[var(--lx-line)]"}`}><ToolUiText text={n}/></button>)}</div>
@@ -55,6 +57,9 @@ export default function IdPhotoAiWorkbench(){
    style={{cursor:previewCurrent&&!busy?"grab":"default",touchAction:previewCurrent&&!busy?"none":"pan-y"}}
   /><div className="mt-3"><b className="text-sm"><ToolUiText text="证件照预览已生成" /></b><p className="mt-1 text-sm text-[var(--lx-muted)]">{previewCurrent
     ?lang==="zh"?"直接拖动照片移动人物。":"Drag the photo to reposition the subject."
-    :lang==="zh"?"设置已调整，请重新生成预览。":"Settings changed. Generate the preview again."}</p></div><div className="mt-3"><PaidExportButton toolId="id-photo-ai" disabled={busy||!previewCurrent} quantity={1} draftId={draftId} metadata={{kind:"id-photo-hd"}} onUnlocked={paidSave} onCompleted={finishPaidSave} label="确认价格并保存高清照片"/></div></div>}
+    :lang==="zh"?"设置已调整，请重新生成预览。":"Settings changed. Generate the preview again."}</p></div><div className="mt-3">{FREE_ACCEPTANCE?<button type="button" data-testid="acceptance-save-id-photo" disabled={busy||!previewCurrent}
+   onClick={()=>void downloadBlob(result.hdBlob,"lingxifield-id-photo-hd.png").catch(()=>setError(lang==="zh"?"保存未完成，请重试。":"Could not save the photo. Try again."))}
+   className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)] disabled:opacity-40">{lang==="zh"?"保存高清照片":"Save HD photo"}</button>
+   :<PaidExportButton toolId="id-photo-ai" disabled={busy||!previewCurrent} quantity={1} draftId={draftId} metadata={{kind:"id-photo-hd"}} onUnlocked={paidSave} onCompleted={finishPaidSave} label="确认价格并保存高清照片"/>}</div></div>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="照片在浏览器中处理。正式提交前，请确认尺寸与照片要求符合目标机构的最新规定。" /></p></div>
 }
