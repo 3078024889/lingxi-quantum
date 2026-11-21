@@ -18,15 +18,15 @@ test("CNY wallet uses standard merchant JSAPI while USD uses the official websit
  assert.ok(page.includes("cny-topup/availability"));
  assert.ok(client.includes("/pages/cny-wallet/index"));
  assert.match(read("app/api/wechat/mini/cny-topup/create/route.ts"),/reserve_mini_cny_jsapi_topup_order/);
- assert.match(read("lib/wechatpay.ts"),/createWechatMiniJsapiOrder/);
+ assert.match(read("app/api/wechat/mini/cny-topup/create/route.ts"),/await createMiniJsapiOrder\(/);
+ assert.match(read("lib/mini/tool-pay.ts"),/\/v3\/pay\/transactions\/jsapi/);
  assert.match(read("app/checkout-usd/page.tsx"),/paypalReady/);
 });
 
-test("companion temp-mail source is isolated and contains no retired creative or recharge UI",()=>{
- const app=JSON.parse(read("miniapp/app.json"));assert.ok(!app.pages.includes("pages/mail-home/index"));assert.ok(exists("miniapp/pages/mail-home/index.js"));
- const js=read("miniapp/pages/mail-home/index.js"),wxml=read("miniapp/pages/mail-home/index.wxml");
- assert.ok(js.includes("pages/cny-wallet/index"));
- assert.ok(read("scripts/build-miniapps-v80.cjs").includes("mail-home"));
+test("the retired companion landing page is absent from the main Mini Program",()=>{
+ const app=JSON.parse(read("miniapp/app.json"));
+ assert.ok(!app.pages.includes("pages/mail-home/index"));
+ assert.equal(exists("miniapp/pages/mail-home"),false);
 });
 
 test("all account recharge entry points use the 6.0.0 wallet API",()=>{
