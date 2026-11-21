@@ -1,5 +1,5 @@
 "use client";
-import {isFreeLocalAcceptanceTool} from "./free-acceptance";
+import {isFreeLocalAcceptanceTool,isFreeTranslationAcceptanceTool} from "./free-acceptance";
 type ToolAccessResult={ok:boolean;error?:string;accessKind?:"daily_free"|"pass";alreadyClaimed?:boolean;requestId?:string};
 export const TOOL_PASS_ENFORCED=process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true";
 // Memory-only last confirmed receipt. NEVER persist entitlement across users or
@@ -11,8 +11,7 @@ export function latestConfirmedToolClaim(toolSlug:string){
 }
 export class ToolAccessError extends Error{constructor(public code:string){super(code);this.name="ToolAccessError";}}
 export async function claimToolStart(toolSlug:string,units=1,requestId=crypto.randomUUID()):Promise<ToolAccessResult>{
- const freeDocumentAcceptance=process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"&&toolSlug==="document-translate";
- if(!TOOL_PASS_ENFORCED||freeDocumentAcceptance||isFreeLocalAcceptanceTool(toolSlug))return {ok:true,requestId};
+ if(!TOOL_PASS_ENFORCED||isFreeTranslationAcceptanceTool(toolSlug)||isFreeLocalAcceptanceTool(toolSlug))return {ok:true,requestId};
  const response=await fetch("/api/tools/access",{
   method:"POST",headers:{"Content-Type":"application/json"},
   credentials:"same-origin",cache:"no-store",
