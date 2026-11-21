@@ -147,10 +147,11 @@ function Inner({inMini=false}:{inMini?:boolean}){
  },[balance,catalog,marketProduct]);
 
  useEffect(()=>{
+  if(inMini)return;
   const s=createClient();
   void s.auth.getUser().then(({data})=>setBuyer(data.user?.email||""));
   void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>{setPaypalReady(d?.paypal===true);setUsdWalletReady(d?.usdBalanceTopupReady===true);}).catch(()=>{setPaypalReady(false);setUsdWalletReady(false);});
- },[]);
+ },[inMini]);
  useEffect(()=>{
   if(!isMarketProductId(productId)){setMarketLoading(false);setMarketProduct(null);setMarketReady(false);return;}
   let active=true;setMarketLoading(true);
@@ -228,8 +229,8 @@ function Inner({inMini=false}:{inMini?:boolean}){
     <input aria-label={lang==="zh"?"官网付款链接":"Website checkout link"} readOnly value={publicCheckout} onFocus={event=>event.currentTarget.select()} className="w-full rounded-xl border p-3 text-sm"/>
     <button type="button" onClick={copyCheckout} className="min-h-11 rounded-xl border px-4 py-2 text-sm">{lang==="zh"?(copied?"链接已复制":"复制官网付款链接"):(copied?"Link copied":"Copy checkout link")}</button>
    </div>:<button disabled={busy||!paymentReady||productReady!==true} onClick={pay} className="mt-6 w-full rounded-xl bg-[#0070ba] px-5 py-4 text-sm font-semibold text-white disabled:opacity-40">{busy?c.opening:c.pay(amount)}</button>}
-   {!paymentReady&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
-   {paypalReady&&productReady===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
+   {!inMini&&!paymentReady&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
+   {!inMini&&paypalReady&&productReady===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
    {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
   </section>
   <div className="mt-6"><PaypalHelp compact/></div>
