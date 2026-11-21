@@ -40,10 +40,11 @@ function Inner({inMini=false}:{inMini?:boolean}){
   const[copied,setCopied]=useState(false);
 
   useEffect(()=>{
+    if(inMini)return;
     const s=createClient();
     void s.auth.getUser().then(({data})=>setBuyer(data.user?.email||""));
     void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>setReady(d?.usdBalanceTopupReady===true)).catch(()=>setReady(false));
-  },[]);
+  },[inMini]);
 
   const publicCheckout=product?"https://lingxifield.com/checkout-usd?"+new URLSearchParams({productId:product.id,returnPath:"/ai-wallet?currency=USD"}).toString():"";
   async function copyCheckout(){
