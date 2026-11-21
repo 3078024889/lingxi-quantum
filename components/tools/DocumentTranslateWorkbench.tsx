@@ -40,7 +40,11 @@ export default function DocumentTranslateWorkbench(){
    for(let start=0;start<document.segments.length;){
     let end=start,chars=0;while(end<document.segments.length&&end-start<30&&chars+document.segments[end].text.length<=4000){chars+=document.segments[end].text.length;end++}
     const batch=document.segments.slice(start,end);setStatus(`${translated.size} / ${document.segments.length}`);
-    const response=await fetch('/api/tools/document-translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source,target,glossary,segments:batch}),signal:AbortSignal.any([controller.signal,AbortSignal.timeout(190000)])});
+    const context={
+     before:Array.from(document.segments[start-1]?.text??'').slice(-600).join(''),
+     after:Array.from(document.segments[end]?.text??'').slice(0,600).join(''),
+    };
+    const response=await fetch('/api/tools/document-translate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source,target,glossary,context,segments:batch}),signal:AbortSignal.any([controller.signal,AbortSignal.timeout(190000)])});
     const data=await response.json().catch(()=>null);
     if(!response.ok||!data){
      if(response.status===401)throw Error('AUTH_REQUIRED');
