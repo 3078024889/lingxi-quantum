@@ -28,6 +28,26 @@ async function saveOutput(page:Page){
  const path=await download.path();expect(path).toBeTruthy();return readFile(path!);
 }
 
+test('PDF compression preserves the physical dimensions of each exported page', async ({ page }) => {
+  const source = await PDFDocument.create();
+  source.addPage([530, 710]).drawRectangle({ x: 40, y: 50, width: 100, height: 80 });
+  source.addPage([600, 410]).drawRectangle({ x: 35, y: 60, width: 65, height: 90 });
+
+  await page.goto('/tools/compress-pdf?lang=en');
+  const upload = page.locator('main input[type=file]').first();
+  await upload.setInputFiles({
+    name: 'mixed-page-sizes.pdf',
+    mimeType: 'application/pdf',
+    buffer: Buffer.from(await source.save()),
+  });
+  await page.getByRole('button', { name: 'Process now', exact: true }).click();
+  const exported = await PDFDocument.load(await saveOutput(page));
+  expect(exported.getPages().map(page => page.getSize())).toEqual([
+    { width: 530, height: 710 },
+    { width: 600, height: 410 },
+  ]);
+});
+
 test('PNG to JPG produces a downloadable image with dimensions and white transparency',async({page})=>{
  await page.goto('/tools/png-to-jpg?lang=en');
  const png=await page.evaluate(()=>{const c=document.createElement('canvas');c.width=16;c.height=12;return c.toDataURL('image/png').split(',')[1]});
