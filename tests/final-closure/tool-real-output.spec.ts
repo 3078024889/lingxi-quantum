@@ -28,6 +28,45 @@ async function saveOutput(page:Page){
  const path=await download.path();expect(path).toBeTruthy();return readFile(path!);
 }
 
+test('Image compression preset exports a decodable JPEG within the selected size', async ({ page }) => {
+  await page.goto('/tools/compress-image?lang=en');
+  const source = await page.evaluate(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 500;
+    canvas.height = 400;
+    const paint = canvas.getContext('2d')!;
+    for (let row = 0; row < 40; row++) {
+      for (let col = 0; col < 50; col++) {
+        paint.fillStyle = `hsl(${(col * 17 + row * 23) % 360} 70% 55%)`;
+        paint.fillRect(col * 10, row * 10, 10, 10);
+      }
+    }
+    return canvas.toDataURL('image/png').split(',')[1];
+  });
+  await page.locator('main input[type=file]').first().setInputFiles({
+    name: 'color-tile.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from(source, 'base64'),
+  });
+  const preset = page.getByRole('button', { name: '50 KB', exact: true });
+  await preset.click();
+  await expect(preset).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Process now', exact: true }).click();
+  const output = await saveOutput(page);
+  expect(output.byteLength).toBeLessThanOrEqual(50 * 1024);
+  expect([...output.subarray(0, 3)]).toEqual([255, 216, 255]);
+  const dimensions = await page.evaluate(async data => {
+    const bitmap = await createImageBitmap(await (await fetch(`data:image/jpeg;base64,${data}`)).blob());
+    try {
+      return [bitmap.width, bitmap.height];
+    } finally {
+      bitmap.close();
+    }
+  }, output.toString('base64'));
+  expect(dimensions[0]).toBeGreaterThan(0);
+  expect(dimensions[1]).toBeGreaterThan(0);
+});
+
 test('PDF compression preserves the physical dimensions of each exported page', async ({ page }) => {
   const source = await PDFDocument.create();
   source.addPage([530, 710]).drawRectangle({ x: 40, y: 50, width: 100, height: 80 });
