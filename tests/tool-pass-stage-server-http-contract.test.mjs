@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
 const stageCases=[
- ["document-translate","await resilientText("],
  ["document/normalize","await convertDocumentToPdf("],
  ["document/ticket","const gateway=safeGateway("],
  ["media-import","await fetchMediaOrResolveShare("],
@@ -22,6 +21,15 @@ test("remote provider, signed gateway, network probe and food analysis reject un
   assert(grant>=0&&cost>grant,route+" remote cost occurs before server authorization");
   assert(c.slice(grant,cost).includes("if(!stage.ok)"),route+" does not fail closed");
  }
+});
+test("document translation verifies the session and applies abuse limits before provider execution",()=>{
+ const route=read("app/api/tools/document-translate/route.ts");
+ const authentication=route.indexOf("await createClient().auth.getUser()");
+ const guard=route.indexOf("await enforceAbuseGuard(");
+ const provider=route.indexOf("await runExperienceText(");
+ assert(authentication>=0 && guard>authentication && provider>guard);
+ assert.match(route.slice(authentication,guard),/if\(!user\).*401/);
+ assert.match(route.slice(guard,provider),/if\(!abuse.ok\)/);
 });
 test("all one-time stage receipts authenticate owner and reject duplicate execution",()=>{
  const helper=read("lib/tools/commerce/tool-stage-gate.ts");

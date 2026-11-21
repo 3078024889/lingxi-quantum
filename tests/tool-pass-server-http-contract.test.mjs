@@ -15,8 +15,10 @@ test("remote URL source cannot bypass authenticated task receipt after activatio
 test("public release of new checkout requires unified backend readiness and commerce approval",()=>{
  const x=r("app/api/tools/pass/route.ts");
  const server=r("lib/tools/commerce/tool-server-receipt.ts");
- assert.match(x,/toolPassBackendReady\(\)/);
- assert.match(x,/TOOL_PASS_COMMERCE_READY/);
+ assert.match(x,/toolPassCommerceReady\(\)/);
+ const commerce=server.split("export function toolPassCommerceReady()")[1].split("const UUID")[0];
+ assert.match(commerce,/TOOL_PASS_BACKEND_READY/);
+ assert.match(commerce,/TOOL_PASS_COMMERCE_READY/);
  assert.match(server,/NEXT_PUBLIC_TOOL_PASS_ENFORCED/);
  assert.match(server,/TOOL_PASS_BACKEND_READY/);
  assert.match(server,/LINGXIFIELD_PRIVACY_HASH_SECRET/);
