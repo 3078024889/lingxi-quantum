@@ -107,6 +107,7 @@ export default function AllToolsPassPage(){
   {id:"wechat" as const,label:toolPassUiText(lang,"微信支付","WeChat Pay"),ready:paymentReady&&providers.wechat},
   {id:"alipay" as const,label:toolPassUiText(lang,"支付宝","Alipay"),ready:paymentReady&&providers.alipay}
  ]:[
+  {id:"wallet" as const,label:toolPassUiText(lang,"美元余额","USD wallet balance"),ready:paymentReady},
   {id:"paypal" as const,label:"PayPal",ready:paymentReady&&providers.paypal}
  ]);
  const selectedChoice=choices.find(x=>x.id===method);
