@@ -64,7 +64,7 @@ export default function DocumentTranslateWorkbench(){
   <div className="grid gap-3 sm:grid-cols-2"><label>{t[0]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={source} onChange={e=>setSource(e.target.value)}><option value="auto">{t[1]}</option>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label><label>{t[2]}<select className="mt-1 w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={target} onChange={e=>setTarget(e.target.value)}>{TRANSLATION_LANGUAGES.map(x=><option key={x} value={x}>{names[x]}</option>)}</select></label></div>
   {files[0]?.name.toLowerCase().endsWith('.pdf')&&<select aria-label="PDF" className="w-full rounded-lg border bg-[var(--lx-panel)] p-2" disabled={busy} value={layout} onChange={e=>setLayout(e.target.value as typeof layout)}><option value="bilingual">{t[4]}</option><option value="layout">{t[3]}</option></select>}
   <p className="text-sm text-[var(--lx-muted)]">{process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"&&(lang==="zh"||lang==="en")
-   ?(lang==="zh"?"验收期间可免费反复翻译。文件留在你的设备上，仅将需要翻译的文字发送给翻译服务。":"Translate for free during testing. The file stays on your device; only text is sent to the translation service.")
+   ?(lang==="zh"?"现在可以免费反复翻译。文件留在你的设备上，仅将需要翻译的文字发送给翻译服务。":"Translate for free. The file stays on your device; only text is sent to the translation service.")
    :t[13]}</p>
   {files[0]?.name.toLowerCase().endsWith('.pdf')&&<p className="text-xs text-[var(--lx-muted)]">
    {layout==='bilingual'&&lang==='zh'?'扫描件请先识别文字。译文放不下时会自动排到独立的译文页。':layout==='bilingual'&&lang==='en'?'Run OCR on scans first. Text that does not fit the original layout flows onto separate translation pages.':t[12]}{" "}

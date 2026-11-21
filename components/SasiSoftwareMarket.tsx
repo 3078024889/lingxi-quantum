@@ -10,7 +10,7 @@ const steps=[
  ["01","填写商品资料","名称、介绍、运行环境、授权说明","Describe software, system requirements and license"],
  ["02","上传私有源码包","ZIP 与封面、详情图；私有存储等待审核","Upload source ZIP and reviewed photos"],
  ["03","内部模拟订单","检查商品、权限、测试支付回执与发货记录","Simulate order and delivery without a charge"],
- ["04","真实收款后交付","只在商户回调、文件和订单授权核验完成后启用","Enable after payment and private delivery checks"]
+ ["04","真实收款后交付","付款确认后，按订单发放文件和授权","Enable after payment and private delivery checks"]
 ] as const;
 export default function SasiSoftwareMarket(){
  const {lang}=useLingxiLang();const zh=lang==="zh";
@@ -47,7 +47,7 @@ export default function SasiSoftwareMarket(){
   </nav>
   <div id="products" className={styles.sectionTitle}><div><span>01 / SOURCE CODE LICENSE</span>
    <h2>{zh?"源码软件与授权":"Source software & license"}</h2></div>
-   <span className={styles.state}>{ready?(zh?"已完成交付验收":"Delivery verified"):(zh?"待完成支付与交付验收":"Payment & delivery pending")}</span>
+   <span className={styles.state}>{ready?(zh?"可购买并下载":"Delivery verified"):(zh?"暂未开售":"Payment & delivery pending")}</span>
   </div>
   <article className={styles.product}>
    <div className={styles.productArtwork} aria-hidden="true"><div className={styles.orbit}/><span>Copernicus</span><strong>{visualVersion}</strong><small>MT5 SOURCE LICENSE</small></div>
@@ -59,7 +59,7 @@ export default function SasiSoftwareMarket(){
    <div className={styles.price}><strong>¥{product.priceCny.toLocaleString("en-US")}</strong><span>USD ${product.priceUsd.toLocaleString("en-US")}</span>
     <Link href="/sasi/delivery">{zh?"交付与授权说明":"Terms & delivery"}</Link>
     {ready?<Link className={styles.buy} href={`/checkout?productId=${encodeURIComponent(product.id)}&redirect=%2Faccount%2Fsoftware`}>{zh?"安全购买":"Secure checkout"}</Link>
-     :<span className={styles.disabled}>{zh?"正式支付功能待验收":"Checkout not yet enabled"}</span>}
+     :<span className={styles.disabled}>{zh?"暂未开售":"Checkout not yet enabled"}</span>}
    </div>
   </article>
   <div className={styles.sectionTitle}><div><span>02 / SELLER WORKSPACE</span><h2>{zh?"软件发布与交付工作台":"Seller workspace"}</h2></div><span className={styles.miniNote}>{zh?"内部测试不产生真实收款":"Test mode never takes a real payment"}</span></div>

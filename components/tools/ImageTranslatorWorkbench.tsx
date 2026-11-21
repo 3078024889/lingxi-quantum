@@ -2,6 +2,7 @@
 import{useEffect,useState}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from "@/components/tools/FileDropzone";
+import {isFreeTranslationAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import ResultPanel from "@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
@@ -27,6 +28,21 @@ const LANGS_BY_SOURCE:Record<string,string>={zh:"chi_sim+eng",en:"eng",ja:"jpn+e
 
 async function translate(text:string,source:string,target:string,quoteId:string){
  if(source===target)return text;
+ if(isFreeTranslationAcceptanceTool("image-translator")){
+  const engine=(globalThis as any).Translator;
+  if(engine?.create){
+   const options={sourceLanguage:source,targetLanguage:target};
+   const availability=await engine.availability?.(options);
+   if(availability!=="unavailable"){
+    const translator=await engine.create(options);
+    try{return await translator.translate(text)}finally{translator.destroy?.()}
+   }
+  }
+  const response=await fetch("/api/tools/document-translate",{method:"POST",headers:{"content-type":"application/json"},signal:AbortSignal.timeout(190000),body:JSON.stringify({source,target,segments:[{id:"image-line",text}]})});
+  const data=await response.json();
+  if(!response.ok||!data.segments?.[0]?.text)throw Error("TRANSLATE_FAILED");
+  return data.segments[0].text;
+ }
  const r=await fetch("/api/tools/media/translate",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text,source,target,quoteId})});
  const d=await r.json().catch(()=>({}));
  if(!r.ok)throw new Error(String(d.error||"TRANSLATE_FAILED"));
@@ -79,7 +95,7 @@ export default function ImageTranslatorWorkbench(){
    <label className="text-sm"><ToolUiText text="翻译为"/><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
   {files.length>0&&sameLanguage&&<p role="status" className="rounded-xl bg-[var(--lx-soft)] px-4 py-3 text-sm text-[var(--lx-muted)]">{c.sameLanguage}</p>}
-  {files.length>0&&!sameLanguage&&<PaidActionButton toolId="image-translator" quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{files:files.length,source,target}} onPaid={run} label={priceLabel}/>}
+  {files.length>0&&!sameLanguage&&(isFreeTranslationAcceptanceTool("image-translator")?<button type="button" disabled={busy} onClick={()=>void run("").catch(()=>{})} className="min-h-11 rounded-xl border px-4 py-2">{lang==="zh"?"开始翻译图片":"Translate image"}</button>:<PaidActionButton toolId="image-translator" quantity={files.length} draftId={draftId} draftReady={draftReady} metadata={{files:files.length,source,target}} onPaid={run} label={priceLabel}/>)}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="先识别图片里的文字，再翻译并尽量按原文字区域覆盖。复杂艺术字、弧形字或低清图片可能需要手动微调。"/></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}
