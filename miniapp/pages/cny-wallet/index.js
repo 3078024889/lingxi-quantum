@@ -131,15 +131,22 @@ Page({
     if (this.data.busy || this.accountLinkPending) return
     this.accountLinkPending = true
     try {
-      const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
+      const result = await request('/api/wechat/mini/account-link/start', { method: 'POST', data: {} })
+      if (typeof result.path !== 'string' || !result.path.startsWith('/account?miniLink=')) {
+        throw new Error('Account connection link unavailable')
+      }
       await new Promise((resolve, reject) => wx.navigateTo({
         url: '/pages/web/index?path=' + encodeURIComponent(result.path),
         success: resolve,
         fail: reject,
       }))
-    } catch (_) {
+    } catch (error) {
       this.accountLinkPending = false
-      this.setData({ message: '账户连接暂未完成，请重试。' })
+      const status = error?.statusCode
+      const message = status === 401 ? '微信登录已失效。请退出小程序后重新进入，再连接官网账户。'
+        : status >= 500 ? '官网账户连接服务暂时不可用，请稍后重试。'
+        : '未能打开官网账户连接页面，请检查网络后重试。'
+      this.setData({ message })
     }
   },
 

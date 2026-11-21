@@ -64,6 +64,8 @@ function login(force = false) {
 async function request(path, options = {}, retried = false) {
   assertMiniApiPath(path)
   const token = await login()
+  const readRequest = !options.method || options.method === 'GET'
+  const newLinkTicket = path === '/api/wechat/mini/account-link/start' && options.method === 'POST'
   try {
     return await rawRequest({
       url: `${activeBase}${path}`,
@@ -75,13 +77,13 @@ async function request(path, options = {}, retried = false) {
       },
     })
   } catch (error) {
-    if (!retried && error && error.statusCode === 401 && (!options.method || options.method === 'GET')) {
+    if (!retried && error && error.statusCode === 401 && (readRequest || newLinkTicket)) {
       await login(true)
       return request(path, options, true)
     }
     // Retry only authenticated reads with the same session. Never repeat a
     // payment mutation or bypass a rejected identity on the other domain.
-    if (!retried && (!options.method || options.method === 'GET') && (!error.statusCode || error.statusCode >= 500)) {
+    if (!retried && readRequest && (!error.statusCode || error.statusCode >= 500)) {
       const alternate = activeBase === API_BASE ? FALLBACK_BASE : API_BASE
       return rawRequest({url:`${alternate}${path}`,method:'GET',data:options.data,
         header:{Authorization:`Bearer ${token}`,'content-type':'application/json'}})
