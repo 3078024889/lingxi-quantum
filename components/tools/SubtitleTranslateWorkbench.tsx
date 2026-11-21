@@ -4,6 +4,7 @@ import Link from 'next/link';
 import ToolUiText from './ToolUiText';
 import FileDropzone from './FileDropzone';
 import PaidActionButton from './PaidActionButton';
+import {isFreeTranslationAcceptanceTool} from '@/lib/tools/commerce/free-acceptance';
 import ResultFileActions from './ResultFileActions';
 import {useLingxiLang} from '@/lib/lingxi-i18n';
 import {plainText} from '@/lib/tools/plain-copy';
@@ -30,7 +31,17 @@ export default function SubtitleTranslateWorkbench(){
  useEffect(()=>{const supported=Boolean((globalThis as any).Translator?.create);setNative(supported);setOnline(!supported);const id=new URLSearchParams(location.search).get('resumeDraft');if(!id){setRestored(true);return}void loadPaidTaskDraft<any>(id).then(d=>{if(d?.toolId==='subtitle-translate'){setFiles(draftFiles(d).slice(0,1));setDraftId(id);setSource(d.state?.source||'zh');setTarget(d.state?.target||'en');setOut(d.state?.out||'');setName(d.state?.name||'translated.srt');setCharCount(Number(d.state?.charCount||0));setOnline(d.state?.online??!supported)}setRestored(true)}).catch(()=>{setRestored(true);setError(c[2])});return()=>active.current?.abort()},[]);
  async function persist(){if(!files[0]||!draftId)throw Error('NO_SUBTITLE_DRAFT');await savePaidTaskDraft({id:draftId,toolId:'subtitle-translate',files:files.slice(0,1),state:{source,target,out,name,charCount,online}})}
  useEffect(()=>{setDraftReady(false);if(!restored||!files[0]||!draftId)return;let live=true;const timer=setTimeout(()=>{void persist().then(()=>{if(live)setDraftReady(true)}).catch(()=>{if(live)setError(c[2])})},120);return()=>{live=false;clearTimeout(timer)}},[files,source,target,out,name,charCount,draftId,restored,online]);
- async function run(){if(!files[0]||busy)return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setOut('');setNeedsLogin(false);try{const text=await files[0].text();setCharCount(text.length);const translated=online?await translateSubtitleOnline(text,target,source,controller.signal):await translateSubtitleLocal(text,target,source,controller.signal);controller.signal.throwIfAborted();setOut(translated);setName('translated-'+files[0].name)}catch(e){if(!controller.signal.aborted){const auth=e instanceof Error&&e.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?c[3]:c[2])}}finally{active.current=null;setBusy(false)}}
+ async function run(){if(!files[0]||busy)return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setOut('');setNeedsLogin(false);try{const text=await files[0].text();setCharCount(text.length);let translated:string;
+   if(online)translated=await translateSubtitleOnline(text,target,source,controller.signal);
+   else{
+    try{translated=await translateSubtitleLocal(text,target,source,controller.signal)}
+    catch(error){
+     controller.signal.throwIfAborted();
+     if(!(error instanceof Error)||!/^LOCAL_/.test(error.message))throw error;
+     setOnline(true);
+     translated=await translateSubtitleOnline(text,target,source,controller.signal);
+    }
+   }controller.signal.throwIfAborted();setOut(translated);setName('translated-'+files[0].name)}catch(e){if(!controller.signal.aborted){const auth=e instanceof Error&&e.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?c[3]:c[2])}}finally{active.current=null;setBusy(false)}}
  async function exportPaid(){if(!out)throw Error('SUBTITLE_RESULT_MISSING');const blob=new Blob([out],{type:name.toLowerCase().endsWith('.vtt')?'text/vtt':'application/x-subrip'});await downloadBlob(blob,name);setDelivered({blob,name})}
  return <div className="space-y-4">
   {delivered&&<ResultFileActions blob={delivered.blob} name={delivered.name}/>}
@@ -40,7 +51,15 @@ export default function SubtitleTranslateWorkbench(){
   {online&&<p className="text-sm text-[var(--lx-muted)]">{c[1]}</p>}
   {files.length>0&&<button disabled={busy} onClick={()=>void run()} className="rounded-xl border px-4 py-2">{busy?plainText(lang,'working'):online?c[0]:<ToolUiText text="先免费生成翻译预览"/>}</button>}
   {busy&&<button onClick={()=>active.current?.abort()} className="ml-2 rounded-xl border px-4 py-2"><ToolUiText text="取消"/></button>}
-  {out&&<><textarea aria-label={plainText(lang,"text")} value={out} readOnly rows={12} className="w-full rounded-2xl border bg-[var(--lx-soft)] p-4 text-sm"/><p className="text-xs text-[var(--lx-muted)]"><ToolUiText text="源字幕约"/> {charCount.toLocaleString()} <ToolUiText text="字符；每 5,000 字符 ¥1 / $1。"/></p><PaidActionButton toolId="subtitle-translate" quantity={Math.max(1,charCount)} draftId={draftId} draftReady={draftReady} beforePayment={persist} metadata={{source,target,characters:charCount}} onPaid={exportPaid} label="查看字幕导出价格"/></>}
+  {out&&<>
+   <textarea aria-label={plainText(lang,"text")} value={out} readOnly rows={12} className="w-full rounded-2xl border bg-[var(--lx-soft)] p-4 text-sm"/>
+   {isFreeTranslationAcceptanceTool("subtitle-translate")
+    ?<button type="button" data-testid="acceptance-subtitle-download" onClick={()=>void exportPaid().catch(()=>setError(c[2]))} className="min-h-11 rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)]">{lang==='zh'?'下载译文字幕':'Download translated subtitles'}</button>
+    :<>
+     <p className="text-xs text-[var(--lx-muted)]"><ToolUiText text="源字幕约"/> {charCount.toLocaleString()} <ToolUiText text="字符；每 5,000 字符 ¥1 / $1。"/></p>
+     <PaidActionButton toolId="subtitle-translate" quantity={Math.max(1,charCount)} draftId={draftId} draftReady={draftReady} beforePayment={persist} metadata={{source,target,characters:charCount}} onPaid={exportPaid} label="查看字幕导出价格"/>
+    </>}
+  </>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}{needsLogin&&<Link target="_blank" rel="noreferrer" href="/account" className="underline">{c[4]} ↗</Link>}
  </div>;
 }

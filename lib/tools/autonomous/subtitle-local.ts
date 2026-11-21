@@ -5,7 +5,7 @@ async function getTranslator(sourceLanguage:string,targetLanguage:string):Promis
  const T=(globalThis as unknown as {Translator?:{availability?:(o:any)=>Promise<string>;create:(o:any)=>Promise<TranslatorInstance>}}).Translator;
  if(!T?.create)throw new Error("LOCAL_TRANSLATOR_UNAVAILABLE");
  const opts={sourceLanguage,targetLanguage};
- if(T.availability){const a=await T.availability(opts);if(a==="unavailable")throw new Error("LOCAL_LANGUAGE_PAIR_UNAVAILABLE")}
+ if(T.availability){const a=await T.availability(opts);if(a!=="available")throw new Error("LOCAL_LANGUAGE_PACK_NOT_READY")}
  return await T.create(opts);
 }
 export async function translateSubtitleLocal(text:string,targetLanguage:string,sourceLanguage="auto",signal?:AbortSignal){

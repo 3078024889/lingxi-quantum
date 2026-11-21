@@ -1,7 +1,7 @@
 {
   "appid": "wxbf4ae90406e7e26b",
-  "projectname": "lingxi-field",
-  "description": "Lingxi Field native WeChat Mini Program",
+  "projectname": "lingxifield-miniapp-6.0.0",
+  "description": "Lingxi Field native WeChat Mini Program 6.0.0",
   "miniprogramRoot": "./",
   "compileType": "miniprogram",
   "setting": {

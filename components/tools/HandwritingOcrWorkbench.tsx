@@ -8,6 +8,7 @@ import ResultPanel from "@/components/tools/ResultPanel";
 import {downloadBlob} from "@/lib/tools/shared/download";
 import ResultFileActions from './ResultFileActions';
 import PaidActionButton from "@/components/tools/PaidActionButton";
+import {isFreeLocalAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
 import type { ToolResultFile } from "@/lib/tools/types";
 import { buildEditableDocx } from "@/lib/tools/shared/docx-builder";
 
@@ -299,7 +300,9 @@ export default function HandwritingOcrWorkbench() {
           : "多语言模式适合印刷体和较工整手写。潦草手写尤其中文/日文仍可能误识别，重要内容请核对；这一模式不冒充专业多语言手写模型。"} />
       </div>
 
-      {files.length > 0 && (<PaidActionButton toolId="handwriting-ocr" quantity={files.length} draftReady={!busy} metadata={{pages:files.length,mode}} onPaid={run} label="查看本次手写识别价格" />)}
+      {files.length > 0 && (isFreeLocalAcceptanceTool("handwriting-ocr")
+        ? <button type="button" data-testid="acceptance-read-handwriting" disabled={busy} onClick={()=>void run().catch(()=>{})} className="min-h-11 rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text="开始识别" /></button>
+        : <PaidActionButton toolId="handwriting-ocr" quantity={files.length} draftReady={!busy} metadata={{pages:files.length,mode}} onPaid={run} label="查看本次手写识别价格" />)}
 
       {stage && <p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
 

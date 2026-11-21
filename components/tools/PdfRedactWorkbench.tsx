@@ -1,5 +1,6 @@
 "use client";
 
+import {isFreeLocalAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
 import EditableNumberInput from "@/components/ui/EditableNumberInput";
 import NextImage from "next/image";
 import {PointerEvent,useEffect,useRef,useState} from "react";
@@ -36,6 +37,8 @@ const D:Record<LingxiLang,C>={
  pt:{page:"Página",one:"Somente esta página",all:"Mesma área em todas as páginas",warning:"A ocultação segura reconstrói as páginas exportadas como imagens. O texto coberto não pode ser recuperado por copiar/colar, mas o texto pesquisável/selecionável também é removido.",export:"Criar PDF com ocultação segura",busy:"Criando…",ready:"O PDF com ocultação segura está pronto. Revise antes de baixar.",error:"Não foi possível concluir a ocultação"},
  ar:{page:"الصفحة",one:"هذه الصفحة فقط",all:"المنطقة نفسها في كل الصفحات",warning:"يعيد الإخفاء الآمن إنشاء الصفحات المصدّرة كصور. لا يمكن استرجاع النص الموجود تحت المنطقة المخفية بالنسخ واللصق، لكن النص القابل للبحث والتحديد سيزول أيضًا.",export:"إنشاء PDF بإخفاء آمن",busy:"جارٍ الإنشاء…",ready:"ملف PDF الآمن جاهز. راجعه قبل التنزيل.",error:"تعذر إكمال الإخفاء"}
 };
+
+const FREE_ACCEPTANCE=isFreeLocalAcceptanceTool("pdf-redact");
 
 export default function PdfRedactWorkbench(){
  const{lang}=useLingxiLang();const c=D[lang]??D.en;
@@ -75,7 +78,12 @@ export default function PdfRedactWorkbench(){
  }
  return <div dir={lang==='ar'?'rtl':'ltr'} className="space-y-4">
   <FileDropzone accept="application/pdf,.pdf" files={files} onChange={load} disabled={busy||loading} kind="pdf" maxSizeMB={40}/>
-  {preview&&<><div className="flex flex-wrap items-center gap-3 text-sm text-[var(--lx-muted)]"><label>{c.page} <EditableNumberInput aria-label={c.page} type="number" min={1} max={pages} disabled={busy||loading} value={page} onChange={e=>void changePage(Math.max(1,Math.min(pages,Math.trunc(Number(e.target.value)))))} className="w-20 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/> / {pages}</label><select aria-label={c.all} disabled={busy||loading} value={scope} onChange={e=>{setScope(e.target.value as 'one'|'all');setDraw(false);setPending(null);setResult([]);setDraftId(crypto.randomUUID())}} className="rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="one">{c.one}</option><option value="all">{c.all}</option></select></div>
+  {preview&&<><div className="flex flex-wrap items-center gap-3 text-sm text-[var(--lx-muted)]"><label>{c.page} <EditableNumberInput aria-label={c.page} type="number" min={1} max={pages} disabled={busy||loading} value={page} onChange={e=>void changePage(Math.max(1,Math.min(pages,Math.trunc(Number(e.target.value)))))} className="w-20 rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"/> / {pages}</label>
+   <button type="button" aria-label={lang==="zh"?"上一页":"Previous page"} disabled={busy||loading||page<=1}
+    onClick={()=>void changePage(page-1)} className="min-h-[44px] rounded-lg border px-3 disabled:opacity-40">‹</button>
+   <button type="button" aria-label={lang==="zh"?"下一页":"Next page"} disabled={busy||loading||page>=pages}
+    onClick={()=>void changePage(page+1)} className="min-h-[44px] rounded-lg border px-3 disabled:opacity-40">›</button>
+   <select aria-label={c.all} disabled={busy||loading} value={scope} onChange={e=>{setScope(e.target.value as 'one'|'all');setDraw(false);setPending(null);setResult([]);setDraftId(crypto.randomUUID())}} className="rounded-lg border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2 text-[var(--lx-ink)]"><option value="one">{c.one}</option><option value="all">{c.all}</option></select></div>
   <div className="flex flex-wrap gap-2">{[false,true].map(active=><button key={String(active)} type="button" aria-pressed={draw===active} disabled={busy||loading} onClick={()=>{setDraw(active);setPending(null);start.current=null}} className="rounded-xl border border-[var(--lx-line)] px-4 py-3 text-sm aria-pressed:bg-[var(--lx-ink)] aria-pressed:text-[var(--lx-bg)]">{ui[active?1:0]}</button>)}<button type="button" disabled={!boxes.length||busy||loading} onClick={()=>edit(boxes.slice(0,-1))} className="rounded-xl border border-[var(--lx-line)] px-3 py-3 text-sm">{ui[2]}</button><button type="button" disabled={!boxes.length||busy||loading} onClick={()=>edit([])} className="rounded-xl border border-[var(--lx-line)] px-3 py-3 text-sm">{ui[3]}</button></div><p className="text-sm text-[var(--lx-muted)]">{ui[4]} · {ui[5]}: {boxes.length}</p>
   <div ref={wrap} data-redaction-surface data-mode={draw?'draw':'scroll'} className="relative mx-auto w-fit max-w-full overflow-hidden border border-[var(--lx-line)] bg-[var(--lx-soft)]" style={{touchAction:draw?'none':'pan-y pinch-zoom',cursor:draw?'crosshair':'auto'}}
    onPointerDown={e=>{if(!draw||loading||busy||!e.isPrimary||e.button!==0||start.current)return;e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);const p=point(e);start.current={...p,pointer:e.pointerId};setPending({...p,w:0,h:0})}}
@@ -87,8 +95,11 @@ export default function PdfRedactWorkbench(){
   </div></>}
   {loading&&<p role="status">{ui[7]}</p>}
   <div className="rounded-xl border border-[var(--lx-line)] bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]">{c.warning}</div>
-  <p className="text-sm text-[var(--lx-muted)]">{ui[6]}{pages>0&&<> · {pages} {c.page}: ¥{pages} / ${pages}</>}</p>
-  {file&&count>0&&<PaidActionButton toolId="pdf-redact" quantity={pages} draftId={draftId} draftReady={!busy&&!loading} metadata={{pages,scope,regions:count}} onPaid={exportRedacted} label={c.export}/>}
+  {!FREE_ACCEPTANCE&&<p className="text-sm text-[var(--lx-muted)]">{ui[6]}{pages>0&&<> · {pages} {c.page}: ¥{pages} / ${pages}</>}</p>}
+  {file&&count>0&&(FREE_ACCEPTANCE
+    ?<button type="button" data-testid="acceptance-create-redacted" disabled={busy||loading}
+       onClick={()=>void exportRedacted().catch(()=>{})} className="min-h-[44px] rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)] disabled:opacity-40">{c.export}</button>
+    :<PaidActionButton toolId="pdf-redact" quantity={pages} draftId={draftId} draftReady={!busy&&!loading} metadata={{pages,scope,regions:count}} onPaid={exportRedacted} label={c.export}/>)}
   {busy&&<p role="status" aria-live="polite">{c.busy} {progress} / {pages}</p>}
   {!!result.length&&<ResultPanel files={result} messageZh={c.ready} messageEn={c.ready}/>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{c.error} · {error}</p>}
