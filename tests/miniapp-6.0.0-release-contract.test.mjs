@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
+import {runInNewContext} from "node:vm";
 const read=path=>fs.readFileSync(path,"utf8"),exists=path=>fs.existsSync(path);
 
 test("6.0.0 has one registered CNY wallet and no legacy recharge modules",()=>{
@@ -38,4 +39,34 @@ test("release project metadata is versioned 6.0.0",()=>{
  const project=JSON.parse(read("miniapp/project.config.json"));assert.equal(project.appid,"wxbf4ae90406e7e26b");
  assert.ok(project.description.includes("6.0.0"));
  assert.ok(exists("scripts/package-miniapp-6-0-0.cjs"));
+});
+
+test("old CNY links return to the website wallet and selected amounts open confirmation", async()=>{
+ const opened=[];
+ let page;
+ runInNewContext(read("miniapp/pages/cny-wallet/index.js"),{
+  Page:config=>{page=config;},
+  require:()=>({}),
+  wx:{getStorageSync:()=>null,redirectTo:({url})=>opened.push(decodeURIComponent(url))},
+ });
+ const session=()=>({
+  ...page,
+  data:{...page.data},
+  connectionCount:0,
+  setData(update){Object.assign(this.data,update);},
+  async refreshAll(){this.setData({enabled:true,accountLoaded:true,linked:false});},
+  async connectAccount(){this.connectionCount++;},
+ });
+ const old=session();
+ old.onLoad();
+ assert.deepEqual(opened,["/pages/web/index?path=/ai-wallet?currency=CNY#wallet-topup"]);
+ assert.equal(old.connectionCount,0);
+ const payment=session();
+ payment.onLoad({amount:"12.50"});
+ await Promise.resolve();
+ assert.equal(payment.data.amountText,"12.50");
+ assert.equal(payment.connectionCount,1);
+ assert.equal(opened.length,1);
+ assert.doesNotMatch(read("miniapp/pages/cny-wallet/index.wxml"),/选择充值金额|最近充值记录/);
+ assert.match(read("miniapp/pages/web/index.js"),/src:withMiniContext\(USD_WALLET_PATH\)/);
 });

@@ -25,7 +25,6 @@ function paymentError(error) {
 
 Page({
   data: {
-    amounts: [10, 88, 666, 888],
     selected: '10',
     custom: '',
     amountText: '10.00',
@@ -35,24 +34,34 @@ Page({
     accountLoaded: false,
     linked: false,
     accountLabel: '',
-    balanceText: '0.00',
-    refundableText: '0.00',
     orderId: '',
     requestId: '',
     canResumePayment: false,
-    topups: [],
     message: '正在检查人民币充值服务…',
   },
 
   onLoad(options = {}) {
     this.restorePending()
     const amount = String(options.amount || '')
-    if (amount) this.applyAmount(amount)
-    void this.refreshAll()
+    if (!this.data.orderId && !this.data.requestId) {
+      if (!parseAmount(amount)) {
+        this.openWebsiteWallet('CNY')
+        return
+      }
+      this.applyAmount(amount)
+    }
+    void this.refreshAll().then(() => {
+      if (!this.data.orderId && !this.data.requestId && this.data.enabled &&
+          this.data.accountLoaded && !this.data.linked) void this.connectAccount()
+    })
   },
 
   onShow() {
     if (this.data.orderId && !this.data.busy) void this.confirmPayment()
+    if (this.accountLinkPending) {
+      this.accountLinkPending = false
+      void this.refreshAccount()
+    }
   },
 
   restorePending() {
@@ -110,13 +119,6 @@ Page({
         accountLoaded: true,
         linked: result.linked === true,
         accountLabel: result.accountLabel || '',
-        balanceText: (Number(result.balanceFen || 0) / 100).toFixed(2),
-        refundableText: (Number(result.refundableFen || 0) / 100).toFixed(2),
-        topups: (result.topups || []).slice(0, 4).map(row => ({
-          id: row.id,
-          amountText: Number(row.amount_rmb).toFixed(2),
-          statusText: row.status === 'paid' ? '已到账' : row.status === 'pending' ? '核验中' : row.status === 'refunded' ? '已退款' : '已关闭',
-        })),
       })
       return result
     } catch (_) {
@@ -126,31 +128,19 @@ Page({
   },
 
   async connectAccount() {
-    if (this.data.busy) return
+    if (this.data.busy || this.accountLinkPending) return
+    this.accountLinkPending = true
     try {
       const result = await request('/api/wechat/mini/account-link/start', { method: 'POST' })
-      wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent(result.path) })
+      await new Promise((resolve, reject) => wx.navigateTo({
+        url: '/pages/web/index?path=' + encodeURIComponent(result.path),
+        success: resolve,
+        fail: reject,
+      }))
     } catch (_) {
+      this.accountLinkPending = false
       this.setData({ message: '账户连接暂未完成，请重试。' })
     }
-  },
-
-  choose(event) {
-    if (this.data.busy || this.data.orderId || this.data.requestId) return
-    const value = String(event.currentTarget.dataset.amount || '')
-    this.setData({ selected: value, custom: '', amountText: Number(value).toFixed(2) })
-  },
-
-  chooseCustom() {
-    if (this.data.busy || this.data.orderId || this.data.requestId) return
-    this.setData({ selected: 'custom', custom: '', amountText: '' })
-  },
-
-  input(event) {
-    if (this.data.busy || this.data.orderId || this.data.requestId) return
-    const custom = String(event.detail.value || '')
-    const parsed = parseAmount(custom)
-    this.setData({ custom, amountText: parsed ? parsed.text : '' })
   },
 
   currentAmount() {
@@ -315,14 +305,11 @@ Page({
     } finally { this.setData({ busy: false }) }
   },
 
-  openUsdWallet() {
+  openWebsiteWallet(currency) {
     wx.redirectTo({
-      url: '/pages/web/index?usdWallet=1',
+      url: '/pages/web/index?path=' + encodeURIComponent('/ai-wallet?currency=' + (currency === 'USD' ? 'USD' : 'CNY') + '#wallet-topup'),
       fail() { wx.showToast({ title: '暂时无法打开官网充值入口', icon: 'none' }) },
     })
   },
-  openOrders() { wx.navigateTo({ url: '/pages/orders/index' }) },
-  openRefunds() { wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent('/refunds#mini') }) },
-  openAccount() { wx.navigateTo({ url: '/pages/web/index?path=' + encodeURIComponent('/account') }) },
   back() { wx.navigateBack() },
 })
