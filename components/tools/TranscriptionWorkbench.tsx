@@ -1,6 +1,7 @@
 "use client";
 import {useEffect,useMemo,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
+import {isFreeLocalAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
 import PaidActionButton from "@/components/tools/PaidActionButton";
 import {localMediaDuration,toSrt,toVtt,transcribeLocal} from "@/lib/tools/autonomous/transcribe-local";
 import ResultPanel from './ResultPanel';
@@ -11,6 +12,7 @@ import {plainText,type PlainCopyKey} from "@/lib/tools/plain-copy";
 export default function TranscriptionWorkbench({video=false}:{video?:boolean}){
  const {lang}=useLingxiLang();
  const toolId=video?"video-transcription":"audio-transcription";
+ const freeAcceptance=isFreeLocalAcceptanceTool(toolId);
  const [files,setFiles]=useState<File[]>([]),[minutes,setMinutes]=useState(0),[busy,setBusy]=useState(false),[progress,setProgress]=useState(0),[text,setText]=useState(""),[srt,setSrt]=useState(""),[vtt,setVtt]=useState(""),[error,setError]=useState<PlainCopyKey|null>(null),[draftId,setDraftId]=useState(""),[draftReady,setDraftReady]=useState(false),[restored,setRestored]=useState(false);
  useEffect(()=>{let active=true;const f=files[0];setMinutes(0);if(!f)return;void localMediaDuration(f).then(d=>{if(active){if(!Number.isFinite(d)||d<=0){setError("fileError");return}setMinutes(Math.max(1,Math.ceil(d/60)))}}).catch(()=>{if(active)setError("fileError")});return()=>{active=false}},[files]);
  useEffect(()=>{let active=true;const id=new URLSearchParams(location.search).get("resumeDraft")||"";if(!id){setRestored(true);return}void loadPaidTaskDraft<any>(id).then(d=>{if(!active)return;const saved=draftFiles(d);if(d?.toolId===toolId&&saved.length){setDraftId(id);setFiles(saved.slice(0,1))}else setError("restoreError")}).catch(()=>{if(active)setError("restoreError")}).finally(()=>{if(active)setRestored(true)});return()=>{active=false}},[toolId]);
@@ -20,7 +22,7 @@ export default function TranscriptionWorkbench({video=false}:{video?:boolean}){
  const exports=useMemo(()=>text?([[text,'txt','text/plain;charset=utf-8'],[srt,'srt','application/x-subrip'],[vtt,'vtt','text/vtt']] as const).map(([value,extension,mime])=>{const blob=new Blob([value],{type:mime});return{name:'lingxifield-transcript.'+extension,mime,size:blob.size,blob}}):[],[text,srt,vtt]);
  return <div className="space-y-4">
   <FileDropzone accept={video?"video/*,audio/*,.mp4,.mov,.m4v,.mkv,.webm,.wav,.mp3,.m4a,.aac,.ogg,.opus,.flac":"audio/*,.wav,.mp3,.m4a,.aac,.ogg,.opus,.flac"} files={files} onChange={f=>{setDraftReady(false);setFiles(f);setText("");setSrt("");setVtt("");setError(null);setDraftId(f[0]?newPaidTaskDraftId():"")}} disabled={busy||!restored} kind="media" maxSizeMB={250}/>
-  {files.length>0&&restored&&<PaidActionButton toolId={toolId} quantity={minutes} draftId={draftId} draftReady={draftReady} beforePayment={persistDraft} metadata={{minutes,mode:"local-open-model"}} onPaid={run} label={plainText(lang,"price")}/>}
+  {files.length>0&&restored&&(freeAcceptance?<button type="button" data-testid="acceptance-start-transcription" disabled={busy||minutes<=0} onClick={()=>void run().catch(()=>{})} className="min-h-11 rounded-xl bg-[var(--lx-fg)] px-4 py-2 font-semibold text-[var(--lx-bg)] disabled:opacity-50">{lang==="zh"?"开始转文字":"Transcribe"}</button>:<PaidActionButton toolId={toolId} quantity={minutes} draftId={draftId} draftReady={draftReady} beforePayment={persistDraft} metadata={{minutes,mode:"local-open-model"}} onPaid={run} label={plainText(lang,"price")}/>)}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{plainText(lang,"working")} {progress}%</p>}
   {draftReady&&<p role="status" data-testid="draft-saved" className="text-xs text-[var(--lx-muted)]">{plainText(lang,"draftSaved")}</p>}
   {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{plainText(lang,error)}</p>}

@@ -28,7 +28,7 @@ const COPY:Record<LingxiLang,CheckoutCopy>={
   ar:{missing:"تعذر العثور على خيار شحن USD هذا.",title:"شحن رصيد USD",lead:"تُضاف قيمة الدفع بالدولار إلى رصيد USD بالقيمة نفسها ولا تُحوّل إلى رصيد CNY.",sasi:"رصيد SASI بالدولار",credits:a=>`إضافة $${a} USD`,fx:"إذا كان حساب PayPal يستخدم EUR أو GBP أو عملة أخرى، يتولى PayPal التحويل في صفحة الدفع؛ وتتحقق LINGXIFIELD فقط من قيمة الطلب بالدولار.",opening:"جارٍ فتح PayPal…",pay:a=>`الدفع عبر PayPal بقيمة $${a}`,unavailable:"PayPal غير متاح مؤقتًا. حاول مرة أخرى لاحقًا.",error:"تعذر فتح PayPal الآن. حاول مرة أخرى لاحقًا."},
 };
 
-function Inner(){
+function Inner({inMini=false}:{inMini?:boolean}){
   const sp=useSearchParams()??new URLSearchParams();
   const{lang}=useLingxiLang();
   const c=COPY[lang];
@@ -37,6 +37,7 @@ function Inner(){
   const[busy,setBusy]=useState(false);
   const[ready,setReady]=useState<boolean|null>(null);
   const[error,setError]=useState("");
+  const[copied,setCopied]=useState(false);
 
   useEffect(()=>{
     const s=createClient();
@@ -44,12 +45,17 @@ function Inner(){
     void fetch("/api/pay/providers",{cache:"no-store"}).then(r=>r.json()).then(d=>setReady(d?.usdBalanceTopupReady===true)).catch(()=>setReady(false));
   },[]);
 
+  const publicCheckout=product?"https://lingxifield.com/checkout-usd?"+new URLSearchParams({productId:product.id,returnPath:"/ai-wallet?currency=USD"}).toString():"";
+  async function copyCheckout(){
+    try{await navigator.clipboard.writeText(publicCheckout);setCopied(true)}catch{setCopied(false)}
+  }
+
   async function pay(){
-    if(!product||ready!==true)return;
+    if(inMini||!product||ready!==true)return;
     setBusy(true);setError("");
     try{
       const returnPath=sp.get("returnPath")||"/ai-wallet";
-      const r=await fetch("/api/pay/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({productId:product.id,returnPath})});
+      const r=await fetch("/api/pay/create",{method:"POST",headers:{"Content-Type":"application/json"},signal:AbortSignal.timeout(35000),body:JSON.stringify({productId:product.id,returnPath})});
       const d=await r.json().catch(()=>({}));
       if(r.status===401){location.href=`/account?next=${encodeURIComponent(location.pathname+location.search)}`;return}
       if(!r.ok||!d.url)throw new Error(d.error||"PAYPAL_CREATE_FAILED");
@@ -74,12 +80,16 @@ function Inner(){
         </div>
       </div>
       <p className="mt-4 text-xs leading-6 text-[var(--lx-faint)]">{c.fx}</p>
-      <button disabled={busy||ready!==true} onClick={pay} className="mt-6 w-full rounded-xl bg-[#0070ba] px-5 py-4 text-sm font-semibold text-white disabled:opacity-40">{busy?c.opening:c.pay(amount)}</button>
-      {ready===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
+      {inMini?<div className="mt-6 space-y-3">
+        <p className="text-sm text-[var(--lx-muted)]">{lang==="zh"?"请在手机浏览器中打开此页，登录官网后使用 PayPal 付款。":"Open this page in your phone browser, then sign in to pay with PayPal."}</p>
+        <input aria-label={lang==="zh"?"官网付款链接":"Website checkout link"} readOnly value={publicCheckout} onFocus={event=>event.currentTarget.select()} className="w-full rounded-xl border p-3 text-sm"/>
+        <button type="button" onClick={copyCheckout} className="min-h-11 rounded-xl border px-4 py-2 text-sm">{lang==="zh"?(copied?"链接已复制":"复制官网付款链接"):(copied?"Link copied":"Copy checkout link")}</button>
+      </div>:<button disabled={busy||ready!==true} onClick={pay} className="mt-6 w-full rounded-xl bg-[#0070ba] px-5 py-4 text-sm font-semibold text-white disabled:opacity-40">{busy?c.opening:c.pay(amount)}</button>}
+      {!inMini&&ready===false&&<p className="mt-3 text-sm text-amber-700">{c.unavailable}</p>}
       {error&&<p className="mt-3 text-sm text-rose-600">{error}</p>}
     </section>
     <div className="mt-6"><PaypalHelp compact/></div>
   </main><Footer/></>;
 }
 
-export default function Page(){return <MiniPaymentBoundary><Suspense fallback={<div className="p-20 text-center">…</div>}><Inner/></Suspense></MiniPaymentBoundary>}
+export default function Page(){return <MiniPaymentBoundary miniChildren={<Suspense fallback={<div className="p-20 text-center">…</div>}><Inner inMini/></Suspense>}><Suspense fallback={<div className="p-20 text-center">…</div>}><Inner/></Suspense></MiniPaymentBoundary>}
