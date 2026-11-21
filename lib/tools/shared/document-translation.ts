@@ -84,8 +84,54 @@ export async function prepareTranslationDocument(file:File,signal:AbortSignal):P
  return {segments,pages:pdf.numPages,dispose,finish:async(values,layout,s)=>{
   const out=await PDFDocument.create();
   const original=layout==='bilingual'?await PDFDocument.load(await file.arrayBuffer()):null;
+  let expectedPages=0;
+  async function addImagePage(canvas:HTMLCanvasElement){
+   const image=await out.embedPng(await (await canvasToBlob(canvas,'image/png')).arrayBuffer());
+   const page=out.addPage([canvas.width/2,canvas.height/2]);
+   page.drawImage(image,{x:0,y:0,width:canvas.width/2,height:canvas.height/2});
+   expectedPages++;
+  }
+  async function addReadablePages(canvas:HTMLCanvasElement,parts:string[]){
+   const ctx=canvas.getContext('2d')!;
+   const inset=Math.min(48,Math.floor(Math.min(canvas.width,canvas.height)*.1));
+   const size=Math.max(2,Math.min(27,Math.floor((canvas.height-2*inset)/2),Math.floor((canvas.width-2*inset)/3)));
+   const lineHeight=Math.max(1,Math.ceil(size*1.4));
+   const maxWidth=canvas.width-2*inset;
+   let y=inset;
+   function reset(){
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle='#14171c';ctx.font=`${size}px Arial, "Microsoft YaHei", "PingFang SC", sans-serif`;
+    ctx.textBaseline='top';y=inset;
+   }
+   async function drawLine(line:string){
+    checkpoint(s);
+    if(y+lineHeight>canvas.height-inset&&y>inset){await addImagePage(canvas);reset()}
+    ctx.direction=/[\u0600-\u06FF]/.test(line)?'rtl':'ltr';
+    ctx.textAlign=ctx.direction==='rtl'?'right':'left';
+    ctx.fillText(line,ctx.direction==='rtl'?canvas.width-inset:inset,y,maxWidth);
+    y+=lineHeight;
+   }
+   reset();
+   for(const part of parts){
+    for(const paragraph of part.split(/\r?\n/)){
+     let line='';
+     for(const token of paragraph.split(/(\s+)/)){
+      if(line&&ctx.measureText(line+token).width>maxWidth){await drawLine(line);line=''}
+      if(ctx.measureText(token).width<=maxWidth){line+=token;continue}
+      for(const character of token){
+       if(line&&ctx.measureText(line+character).width>maxWidth){await drawLine(line);line=''}
+       line+=character;
+      }
+     }
+     if(line.trim())await drawLine(line.trim());
+    }
+    y+=Math.floor(lineHeight/2);
+   }
+   await addImagePage(canvas);
+  }
   for(let n=1;n<=pdf.numPages;n++){
    checkpoint(s);const rendered=await renderPdfPage(pdf,n,2),canvas=rendered.canvas,ctx=canvas.getContext('2d')!;
+   if(original){const [copy]=await out.copyPages(original,[n-1]);out.addPage(copy);expectedPages++;}
    try{
     for(const block of blocks[n-1]){
      const x=Math.max(0,block.x*2-1),y=Math.max(0,block.y*2-1),w=Math.min(canvas.width-x,block.width*2+2),h=Math.min(canvas.height-y,block.height*2+2);
@@ -103,11 +149,13 @@ export async function prepareTranslationDocument(file:File,signal:AbortSignal):P
      ctx.fillStyle=`rgb(${dominant.join(',')})`;ctx.fillRect(x,y,w,h);ctx.fillStyle=dominant.reduce((a,b)=>a+b,0)>384?'#111':'#fff';ctx.font=font(size);ctx.textBaseline='top';ctx.direction=/[\u0600-\u06FF]/.test(translated)?'rtl':'ltr';ctx.textAlign=ctx.direction==='rtl'?'right':'left';
      lines.forEach((line,i)=>ctx.fillText(line,ctx.direction==='rtl'?x+w-1:x+1,y+1+i*size*1.18));
     }
-    if(original){const [copy]=await out.copyPages(original,[n-1]);out.addPage(copy)}
-    const image=await out.embedPng(await (await canvasToBlob(canvas,'image/png')).arrayBuffer());const page=out.addPage([canvas.width/2,canvas.height/2]);page.drawImage(image,{x:0,y:0,width:canvas.width/2,height:canvas.height/2});
+    await addImagePage(canvas);
+   }catch(error){
+    if(!original||!(error instanceof Error)||error.message!=='PDF_LAYOUT_REVIEW_REQUIRED')throw error;
+    await addReadablePages(canvas,blocks[n-1].map(block=>translatedValue(values,block.id)));
    }finally{canvas.width=canvas.height=1}
   }
-  const bytes=await out.save();checkpoint(s);const verified=await PDFDocument.load(bytes);if(verified.getPageCount()!==pdf.numPages*(layout==='bilingual'?2:1))throw Error('TRANSLATION_OUTPUT_INVALID');
+  const bytes=await out.save();checkpoint(s);const verified=await PDFDocument.load(bytes);if(verified.getPageCount()!==expectedPages||expectedPages<pdf.numPages*(original?2:1))throw Error('TRANSLATION_OUTPUT_INVALID');
   return new Blob([new Uint8Array(bytes)],{type:'application/pdf'});
  }};
 }

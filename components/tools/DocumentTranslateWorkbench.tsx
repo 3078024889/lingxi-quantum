@@ -66,7 +66,10 @@ export default function DocumentTranslateWorkbench(){
   <p className="text-sm text-[var(--lx-muted)]">{process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"&&(lang==="zh"||lang==="en")
    ?(lang==="zh"?"验收期间可免费反复翻译。文件留在你的设备上，仅将需要翻译的文字发送给翻译服务。":"Translate for free during testing. The file stays on your device; only text is sent to the translation service.")
    :t[13]}</p>
-  {files[0]?.name.toLowerCase().endsWith('.pdf')&&<p className="text-xs text-[var(--lx-muted)]">{t[12]} <Link className="underline" href="/tools/pdf-ocr">OCR →</Link></p>}
+  {files[0]?.name.toLowerCase().endsWith('.pdf')&&<p className="text-xs text-[var(--lx-muted)]">
+   {layout==='bilingual'&&lang==='zh'?'扫描件请先识别文字。译文放不下时会自动排到独立的译文页。':layout==='bilingual'&&lang==='en'?'Run OCR on scans first. Text that does not fit the original layout flows onto separate translation pages.':t[12]}{" "}
+   <Link className="underline" href="/tools/pdf-ocr">OCR →</Link>
+  </p>}
   <details className="text-sm"><summary className="cursor-pointer">{lang==="zh"?"自定义术语（可选）":"Custom terms (optional)"}</summary><label className="mt-2 block">{glossaryLabel[lang]}<textarea disabled={busy} value={glossaryText} maxLength={7260} onChange={e=>setGlossaryText(e.target.value)} rows={3} className="mt-2 w-full rounded-lg border bg-[var(--lx-panel)] p-2"/></label></details>
   <button disabled={busy||!files.length} onClick={()=>void run()} className="rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)] disabled:opacity-40">{t[5]}</button>{busy&&<button onClick={()=>active.current?.abort()} className="mx-3 rounded-xl border px-4 py-2">{t[6]}</button>}
   {status&&<p role="status">{status}</p>}{error&&<p role="alert">{error}</p>}{needsLogin&&<Link href="/account" target="_blank" rel="noreferrer" className="inline-block underline">{loginCopy[lang][1]} ↗</Link>}{results.length>0&&<ResultPanel sourceSlug="document-translate" files={results} messageZh="翻译文件已生成，请核对内容与排版。" messageEn="Translation generated. Review the text and layout."/>}
