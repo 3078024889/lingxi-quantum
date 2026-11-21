@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLang } from "@/lib/useLang";
-import { openMiniRecharge } from "@/lib/mini/payment-client";
+import { openMiniWallet, returnToMiniTopup } from "@/lib/mini/payment-client";
 
 export default function MiniAccountLinkPanel({ ticket, accountLabel }: { ticket: string; accountLabel: string }) {
   const langEn = useLang();
@@ -54,7 +54,7 @@ export default function MiniAccountLinkPanel({ ticket, accountLabel }: { ticket:
         </button>
       )}
       {message && <p className={`mt-3 text-sm leading-6 ${state === "error" ? "text-rose" : "text-lattice"}`}>{message}</p>}
-      {state === "done" && <button onClick={() => void openMiniRecharge()} className="mt-4 border border-lattice/60 px-5 py-3 text-sm text-lattice">{t("返回充值，查看到账账户", "Return to top-up")}</button>}
+      {state === "done" && <button onClick={() => void returnToMiniTopup().then(returned => {if (!returned) void openMiniWallet("CNY");})} className="mt-4 border border-lattice/60 px-5 py-3 text-sm text-lattice">{t("返回充值，查看到账账户", "Return to top-up")}</button>}
     </div>
   );
 }

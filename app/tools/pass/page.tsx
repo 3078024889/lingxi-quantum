@@ -203,12 +203,12 @@ export default function AllToolsPassPage(){
    <div className={premium.lowerCard}>
     <div className={premium.lowerHeading}><div><span className={premium.lowerIcon} aria-hidden="true">▣</span>
      <div><h2>{toolPassUiText(lang,"余额与充值","Balance & top up")}</h2><p>{toolPassUiText(lang,"用于购买工具包与平台服务","Use your verified account funds for eligible purchases")}</p></div>
-     </div><Link className={premium.lowerLink} href="/ai-wallet">{toolPassUiText(lang,"充值与明细","Top up & details")} ↗</Link></div>
+     </div><Link className={premium.lowerLink} href={`/ai-wallet?currency=${currency}#wallet-topup`}>{toolPassUiText(lang,"充值与明细","Top up & details")} ↗</Link></div>
     <div className={premium.balanceBody}>
      <div><small>{toolPassUiText(lang,"账户余额","Account balance")} · {currency}</small>
       {verifiedCurrency!==currency||walletBalanceMinor===null?<p className={premium.balanceUnavailable}>{toolPassUiText(lang,"登录后查看实际余额","Sign in to view your actual balance")}</p>:
        <strong>{currency==="CNY"?"¥":"$"}{(walletBalanceMinor/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}</strong>}</div>
-     <Link href="/ai-wallet" className={premium.rechargeAction}>{toolPassUiText(lang,"充值","Top up")}</Link>
+     <Link href={`/ai-wallet?currency=${currency}#wallet-topup`} className={premium.rechargeAction}>{toolPassUiText(lang,"充值","Top up")}</Link>
      <Link href="/account/orders" className={premium.ordersAction}>{toolPassUiText(lang,"订单记录","Orders")}</Link>
     </div>
     <p className={premium.lowerFootnote}>{toolPassUiText(lang,"充值到账、账户明细与历史权益均以真实账户记录为准。","All funds, receipts and entitlements reflect verified account records.")}</p>
@@ -264,7 +264,7 @@ export default function AllToolsPassPage(){
      <button type="button" onClick={()=>void confirm()} disabled={busy||!selectedChoice?.ready}>{busy?c.processing:toolPassUiText(lang,"立即支付","Pay now")}</button>
     </div>
     {!choices.some(choice=>choice.ready)&&<p role="status" className={premium.modalNote}>{toolPassUiText(lang,"当前支付方式暂未开放，完成商户验证后可使用。","Payment methods open after merchant verification.")}</p>}
-    <p className={premium.modalNote}><Link href="/ai-wallet" className="underline underline-offset-4">{toolPassUiText(lang,"查看余额与充值","View balance & top up")}</Link></p>
+    <p className={premium.modalNote}><Link href={`/ai-wallet?currency=${currency}#wallet-topup`} className="underline underline-offset-4">{toolPassUiText(lang,"查看余额与充值","View balance & top up")}</Link></p>
    </section>
   </div>}
  </main>;

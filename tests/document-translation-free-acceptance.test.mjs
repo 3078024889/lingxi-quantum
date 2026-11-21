@@ -86,3 +86,19 @@ test('an incomplete translation uses the next provider without the streaming fir
   assert.deepEqual(affinities,['backup']);
   assert.deepEqual(timers,[60000,60000]);
 });
+
+test('free acceptance allows repeated document uploads without allocating a daily use',async()=>{
+  const dependencies={'./free-acceptance':{isFreeLocalAcceptanceTool:()=>false}};
+  const runtime=free=>({
+    process:{env:{NEXT_PUBLIC_TOOL_PASS_ENFORCED:'true',NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE:free}},
+    fetch:async()=>({ok:false,json:async()=>({error:'DAILY_TOOL_FREE_USED'})}),
+  });
+  const free=compile('../lib/tools/commerce/tool-start-client.ts',dependencies,runtime('true'));
+  for(const requestId of ['first','second']){
+    const result=await free.claimToolStart('document-translate',1,requestId);
+    assert.equal(result.ok,true);
+    assert.equal(result.requestId,requestId);
+  }
+  const normal=compile('../lib/tools/commerce/tool-start-client.ts',dependencies,runtime('false'));
+  await assert.rejects(normal.claimToolStart('document-translate',1,'normal'),/DAILY_TOOL_FREE_USED/);
+});
