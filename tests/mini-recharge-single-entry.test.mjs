@@ -15,7 +15,8 @@ test("CNY uses native merchant JSAPI and USD uses the official website wallet",(
  assert.ok(app.pages.includes("pages/cny-wallet/index"));
  assert.ok(client.includes('openMiniWallet(currency: "CNY" | "USD"'));
  assert.ok(client.includes("/pages/cny-wallet/index"));
- assert.ok(client.includes("/pages/web/index?usdWallet=1"));
+ assert.ok(client.includes("/ai-wallet?currency="));
+ assert.ok(client.includes("openMiniWechatTopup(amount:"));
  assert.ok(page.includes("wx.requestPayment"));
  assert.ok(!page.includes("wx.requestVirtualPayment"));
  assert.ok(page.includes("cny-topup/availability")&&page.includes("cny-topup/create")&&page.includes("cny-topup/status"));
@@ -34,16 +35,16 @@ test("custom CNY amount parser accepts decimal JSAPI amounts through the 10000 C
   require:()=>({login:async()=>{},request:async()=>({}),publicRequest:async()=>({}),wxLogin:async()=>({code:"test"})}),
  });
  page.setData=update=>Object.assign(page.data,update);
- page.chooseCustom();
- page.input({detail:{value:"123.45"}});
+
+ page.applyAmount("123.45");
  assert.equal(page.data.amountText,"123.45");
  const parsed=page.currentAmount();assert.equal(parsed.minor,12345);assert.equal(parsed.text,"123.45");
- page.input({detail:{value:"0.01"}});
+ page.applyAmount("0.01");
  assert.equal(page.data.amountText,"0.01");
- page.input({detail:{value:"123.456"}});
- assert.equal(page.data.amountText,"");
- page.input({detail:{value:"10000.01"}});
- assert.equal(page.data.amountText,"");
+ page.applyAmount("123.456");
+ assert.equal(page.data.amountText,"0.01");
+ page.applyAmount("10000.01");
+ assert.equal(page.data.amountText,"0.01");
 });
 
 test("retired wallet pages, APIs and client helpers are absent",()=>{

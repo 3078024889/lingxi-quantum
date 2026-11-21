@@ -18,6 +18,7 @@ test("direct pen signature produces tightly cropped transparent ink and a page o
  await expect(pad.getByRole("button",{name:"Undo stroke"})).toBeEnabled();
  await pad.getByRole("button",{name:"Place in PDF"}).click();
  await expect(pad).toHaveCount(0);
+ await expect(page.getByTestId("pdf-grip-se")).toBeVisible();
  const outcome=await page.locator('img[src^="data:image/png"]').last().evaluate(async(img:HTMLImageElement)=>{
   await img.decode();
   const c=document.createElement("canvas");c.width=img.naturalWidth;c.height=img.naturalHeight;

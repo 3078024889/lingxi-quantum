@@ -4,7 +4,8 @@ import {createAdminClient} from "@/lib/supabase/admin";
 /** A partial front/back cutover must not fall into legacy, unmetered execution. */
 export function toolPassCutoverRequested():boolean {
  return process.env.NEXT_PUBLIC_TOOL_PASS_ENFORCED==="true" ||
-        process.env.TOOL_PASS_BACKEND_READY==="true";
+        (process.env.TOOL_PASS_BACKEND_READY==="true" &&
+         process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE!=="true");
 }
 /** Only a full server migration may enable paid tool start accounting. */
 export function toolPassBackendReady():boolean {
@@ -14,7 +15,8 @@ export function toolPassBackendReady():boolean {
 }
 /** Reject new paid tool-pass orders before merchant, webhook, and entitlement approval. */
 export function toolPassCommerceReady():boolean {
- return toolPassBackendReady() && process.env.TOOL_PASS_COMMERCE_READY==="true";
+ return process.env.TOOL_PASS_BACKEND_READY==="true" &&
+        process.env.TOOL_PASS_COMMERCE_READY==="true";
 }
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 export type ToolReceiptResult={ok:true;alreadyRedeemed:boolean}|{ok:false;error:string};

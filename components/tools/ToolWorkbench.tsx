@@ -74,7 +74,6 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
 
   const [result, setResult] = useState<ToolRunResult | null>(null);
   const [webpTarget, setWebpTarget] = useState<"image/jpeg" | "image/png">("image/jpeg");
-  const [quality, setQuality] = useState(0.8);
 
 
 
@@ -130,7 +129,7 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
     try {
       if(TOOL_PASS_ENFORCED&&files.length){
         const signature=fileSignature(files);
-        // Repeatedly clicking Process (e.g. changing compression quality) cannot
+        // Repeatedly clicking Process (e.g. changing the compression target) cannot
         // reuse an already consumed upload receipt. Count again even without reupload.
         if(shouldClaimToolRun(accessTicket.current,processedFileSignature.current,signature)){
           await claimToolStart(tool.slug,files.length);
@@ -140,10 +139,6 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       }
       const out = await runFileTool(tool, files, {
         webpTarget,
-        quality,
-
-
-
         targetBytes: preciseTarget,
         pdfCompression,
       });
@@ -193,27 +188,30 @@ function FileToolWorkbench({ tool }: { tool: ToolMeta }) {
       )}
 
       {tool.slug === "compress-image" && (
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="mt-4 space-y-3">
+          <div role="group" aria-label={t("常用文件大小","Common file sizes")} className="flex flex-wrap gap-2">
+            {[20, 50, 100, 200, 500].map(size => (
+              <button
+                key={size}
+                type="button"
+                disabled={busy}
+                aria-pressed={customKb === size}
+                onClick={() => setCustomKb(size)}
+                className="min-h-11 rounded-full border border-[var(--lx-line)] px-4 text-sm text-[var(--lx-ink)] aria-pressed:bg-[var(--lx-soft)] aria-pressed:font-semibold"
+              >
+                {size} KB
+              </button>
+            ))}
+          </div>
           <label className="text-sm text-bone-dim">
             {t("目标大小 (KB)","Target size (KB)")}
             <EditableNumberInput
               type="number"
               min={10}
               max={5000}
+              disabled={busy}
               value={customKb}
               onChange={(e) => setCustomKb(Number(e.target.value))}
-              className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone outline-none focus:border-lattice/50"
-            />
-          </label>
-          <label className="text-sm text-bone-dim">
-            {t("质量起点 (0.4–0.95)","Quality seed (0.4–0.95)")}
-            <EditableNumberInput
-              type="number"
-              step={0.05}
-              min={0.4}
-              max={0.95}
-              value={quality}
-              onChange={(e) => setQuality(Number(e.target.value))}
               className="bg-void mt-1 w-full rounded-sm border border-white/15 px-3 py-2 text-bone outline-none focus:border-lattice/50"
             />
           </label>
@@ -277,7 +275,6 @@ async function runFileTool(
   files: File[],
   opts: {
     webpTarget: "image/jpeg" | "image/png";
-    quality: number;
 
 
 

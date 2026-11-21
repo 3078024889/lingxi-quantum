@@ -16,7 +16,8 @@ const COPY:Record<LingxiLang,readonly string[]>={
 };
 export default function PasswordGeneratorWorkbench(){
  const {lang}=useLingxiLang(),c=COPY[lang];
- const [length,setLength]=useState(20),[password,setPassword]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
+ const [lengthDraft,setLengthDraft]=useState("20"),[password,setPassword]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
+ const length=Number(lengthDraft);
  const active=useRef(false);
  async function generate(){
   if(active.current||!Number.isInteger(length)||length<8||length>128)return;
@@ -27,7 +28,7 @@ export default function PasswordGeneratorWorkbench(){
  }
  return <section className="space-y-4" dir={lang==="ar"?"rtl":"ltr"}>
   <h2 className="text-2xl font-bold">{c[0]}</h2><p>{c[1]}</p>
-  <label className="flex items-center gap-3">{c[2]}<input aria-label={c[2]} type="number" min={8} max={128} value={length} onChange={e=>setLength(Number(e.target.value))} className="w-24 rounded-lg border bg-transparent p-2"/></label>
+  <label className="flex items-center gap-3">{c[2]}<input aria-label={c[2]} type="number" min={8} max={128} value={lengthDraft} onChange={e=>setLengthDraft(e.target.value)} className="w-24 rounded-lg border bg-transparent p-2"/></label>
   <button type="button" disabled={busy||!Number.isInteger(length)||length<8||length>128} className="rounded-xl bg-blue-700 px-5 py-3 text-white disabled:opacity-40" onClick={()=>void generate()}>{c[3]}</button>
   {password&&<><input aria-label={c[0]} type="text" value={password} readOnly autoComplete="off" spellCheck={false} dir="ltr" className="block w-full rounded-xl border bg-transparent p-4 font-mono" onFocus={e=>e.target.select()}/><button type="button" className="rounded-xl border px-4 py-2" onClick={async()=>{try{await navigator.clipboard.writeText(password);setMessage(c[5]);}catch{setMessage(c[6]);}}}>{c[4]}</button></>}
   <p role="status" aria-live="polite">{message}</p><p className="text-sm text-[var(--lx-muted)]">{c[7]}</p>

@@ -12,6 +12,10 @@ export async function GET(req: Request) {
     if (accountError || !account.user) throw new Error('MINI_ACCOUNT_IDENTITY_UNAVAILABLE');
     const email = account.user.email || '';
     const linked = session.accountConnected && Boolean(account.user.phone || (email && !email.endsWith('@mini.lingxifield.invalid')));
+    const identity = { linked, accountLabel: linked ? email || account.user.phone : '' };
+    if (new URL(req.url).searchParams.get("view") === "identity") {
+      return NextResponse.json(identity, { headers: { "Cache-Control": "private, no-store" } });
+    }
     const [wallet, virtualOrders, jsapiOrders] = await Promise.all([
       readUnifiedBalanceSnapshot(admin, session.userId),
       admin.from("orders").select("id,amount_rmb,status,created_at,paid_at").eq("user_id", session.userId).is("user_deleted_at", null)
@@ -24,7 +28,7 @@ export async function GET(req: Request) {
     if (virtualOrders.error || jsapiOrders.error) throw new Error("MINI_ACCOUNT_UNAVAILABLE");
     const topups = [...(virtualOrders.data || []), ...(jsapiOrders.data || [])]
       .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)).slice(0, 10);
-    return NextResponse.json({ linked, accountLabel: linked ? email || account.user.phone : '', balanceFen: linked ? wallet.CNY.availableMinor : 0,
+    return NextResponse.json({ ...identity, balanceFen: linked ? wallet.CNY.availableMinor : 0,
       refundableFen: linked ? wallet.CNY.refundableMinor : 0, refundHoldFen: linked ? wallet.CNY.refundHoldMinor : 0,
       topups: linked ? topups : [] }, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) {

@@ -94,11 +94,16 @@ export async function transcribeLocal(file:File,onProgress?:(p:number,msg:string
    onProgress?.(.45,device==="webgpu"?"正在使用图形加速识别…":"正在使用兼容模式识别…");
    const result:any=await pipe(pcm,{chunk_length_s:30,stride_length_s:5,return_timestamps:true});
    const chunks=Array.isArray(result?.chunks)?result.chunks:[];
-   const segments:LocalSegment[]=chunks.map((c:any)=>({
-    start:Number(c?.timestamp?.[0]||0),
-    end:Number(c?.timestamp?.[1]||c?.timestamp?.[0]||0),
-    text:String(c?.text||"").trim()
-   })).filter((x:LocalSegment)=>x.text);
+   const duration=pcm.length/16000;
+   const segments:LocalSegment[]=chunks.flatMap((chunk:any,index:number)=>{
+    const text=String(chunk?.text||"").trim();
+    const start=Number(chunk?.timestamp?.[0]??0);
+    if(!text||!Number.isFinite(start)||start<0||start>=duration)return [];
+    // Whisper can leave the final timestamp open when audio ends mid-segment.
+    const candidateEnd=Number(chunk?.timestamp?.[1]??chunks[index+1]?.timestamp?.[0]??duration);
+    const end=Number.isFinite(candidateEnd)&&candidateEnd>start?Math.min(candidateEnd,duration):duration;
+    return [{start,end,text}];
+   });
    const text=String(result?.text||segments.map(x=>x.text).join(" ")).trim();
    if(!text)throw new Error("TRANSCRIPT_EMPTY");
    // Some ASR backends return a transcript without per-word timestamps. In that

@@ -4,6 +4,7 @@ import {useEffect,useState} from "react";
 import FileDropzone from "@/components/tools/FileDropzone";
 import ResultPanel from "@/components/tools/ResultPanel";
 import PaidActionButton from "@/components/tools/PaidActionButton";
+import {isFreeLocalAcceptanceTool} from "@/lib/tools/commerce/free-acceptance";
 import type {ToolResultFile} from "@/lib/tools/types";
 import {openPdf,renderPdfPage,canvasToBlob} from "@/lib/tools/pdf-render-client";
 import {buildEditableDocx,buildVisualDocx} from "@/lib/tools/shared/docx-builder";
@@ -50,5 +51,10 @@ export default function PdfToWordWorkbench(){
  <div className="grid gap-3 sm:grid-cols-2"><label className="text-sm"><ToolUiText text="Word 输出方式" /><select disabled={busy} value={mode} onChange={e=>setMode(e.target.value as Mode)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2"><option value="both"><ToolUiText text="可编辑版 + 版式保真版" /></option><option value="editable"><ToolUiText text="可编辑 Word" /></option><option value="visual"><ToolUiText text="版式保真 Word" /></option></select></label><label className="text-sm"><ToolUiText text="扫描件 OCR 语言" /><select disabled={busy} value={lang} onChange={e=>setLang(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] p-2">{LANGS.map(([v,n])=><option key={v} value={v}><ToolUiText text={n}/></option>)}</select></label></div>
  <label className="flex items-center gap-2 text-sm"><input type="checkbox" disabled={busy} checked={ocr} onChange={e=>setOcr(e.target.checked)}/><ToolUiText text="文本层不足时自动 OCR 扫描页" /></label>
  <div className="rounded-xl bg-[var(--lx-soft)] p-3 text-xs leading-5 text-[var(--lx-muted)]"><ToolUiText text="可编辑版优先提取 PDF 原始文本层；扫描页再 OCR。版式保真版把每页原貌嵌入 Word，适合保持视觉结构。复杂表格、分栏和字体不保证与原稿 1:1，还应人工核对。" /></div>
- {files.length>0&&pageCount>0&&<PaidActionButton toolId="pdf-to-word" quantity={pageCount} draftReady={!busy} metadata={{pages:pageCount,files:files.length,mode,ocr}} onPaid={run} label={`查看 PDF 转 Word 价格 · ${pageCount}页`}/>}{stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}{results.length>0&&<ResultPanel sourceSlug="pdf-to-word" files={results} messageZh="Word 已生成；建议先核对复杂排版和 OCR 内容。" messageEn="Word files are ready. Review complex layout and OCR output."/>}{error&&<p className="text-sm text-[var(--lx-danger)]">{error}</p>}</div>
+ {files.length>0&&pageCount>0&&(isFreeLocalAcceptanceTool("pdf-to-word")
+  ?<button type="button" data-testid="acceptance-convert-word" disabled={busy} onClick={()=>void run().catch(()=>{})} className="min-h-11 rounded-xl bg-[var(--lx-ink)] px-5 py-2.5 text-[var(--lx-bg)] disabled:opacity-40"><ToolUiText text="开始转换" /></button>
+  :<PaidActionButton toolId="pdf-to-word" quantity={pageCount} draftReady={!busy} metadata={{pages:pageCount,files:files.length,mode,ocr}} onPaid={run} label={`查看 PDF 转 Word 价格 · ${pageCount}页`}/>)}
+ {stage&&<p className="text-sm text-[var(--lx-muted)]">{stage}</p>}
+ {results.length>0&&<ResultPanel sourceSlug="pdf-to-word" files={results} messageZh="Word 已生成；建议先核对复杂排版和 OCR 内容。" messageEn="Word files are ready. Review complex layout and OCR output."/>}
+ {error&&<p role="alert" className="text-sm text-[var(--lx-danger)]">{error}</p>}</div>
 }
