@@ -69,4 +69,7 @@ test("old CNY links return to the website wallet and selected amounts open confi
  assert.equal(opened.length,1);
  assert.doesNotMatch(read("miniapp/pages/cny-wallet/index.wxml"),/选择充值金额|最近充值记录/);
  assert.match(read("miniapp/pages/web/index.js"),/src:withMiniContext\(USD_WALLET_PATH\)/);
+ assert.match(read("miniapp/pages/cny-wallet/index.js"),/account-summary\?view=identity/);
+ const summary=read("app/api/wechat/mini/account-summary/route.ts");
+ assert.match(summary,/if \(new URL\(req.url\).searchParams.get\("view"\) === "identity"\).*?NextResponse.json\(identity/s);
 });

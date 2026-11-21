@@ -114,7 +114,7 @@ Page({
 
   async refreshAccount() {
     try {
-      const result = await request('/api/wechat/mini/account-summary')
+      const result = await request('/api/wechat/mini/account-summary?view=identity')
       this.setData({
         accountLoaded: true,
         linked: result.linked === true,
@@ -122,7 +122,7 @@ Page({
       })
       return result
     } catch (_) {
-      this.setData({ accountLoaded: false, linked: false, accountLabel: '', message: '账户余额暂未加载，请重新加载账户信息。' })
+      this.setData({ accountLoaded: false, linked: false, accountLabel: '', message: '暂时无法确认到账账户，请重新读取账户后再付款。' })
       return null
     }
   },
