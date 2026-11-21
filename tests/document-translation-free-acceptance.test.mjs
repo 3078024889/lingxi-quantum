@@ -4,12 +4,12 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
 
-function compile(relativePath, dependencies={}) {
+function compile(relativePath, dependencies={}, runtime={}) {
   const exports={};
   const source=readFileSync(new URL(relativePath,import.meta.url),'utf8');
   const {outputText}=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS}});
   runInNewContext(outputText,{
-    exports,
+    exports, ...runtime,
     require(name) {
       if(!(name in dependencies)) throw Error('Unexpected dependency: '+name);
       return dependencies[name];
@@ -53,4 +53,36 @@ test('authenticated free translation handles several batches and rejects abuse',
   throttled=true;
   assert.equal((await run('s60')).status,429);
   assert.equal(providerCalls,2);
+});
+
+test('an incomplete translation uses the next provider without the streaming first-token timer', async()=>{
+  const contract=compile('../lib/tools/document-translation-contract.ts');
+  const providers=['primary','backup'].map((id,priority)=>({
+    id,priority,wire:'openai',tasks:['knowledge'],canaryPercent:100,dailyShare:1,
+    quality:1,speed:1,model:'test-model',apiKey:'fixture',baseUrl:'https://'+id+'.example.invalid',
+  }));
+  const timers=[], affinities=[];
+  const {runExperienceText}=compile('../lib/sasi/experience/free-text-router.ts',{
+    'server-only':{},
+    './free-provider-config':{experienceProviders:()=>providers},
+    './provider-state':{providerStates:async()=>({}),recordProviderRun:async()=>{}},
+    './session-affinity':{getSessionAffinity:async()=>null,setSessionAffinity:async(_user,_session,id)=>affinities.push(id)},
+    './canary':{canaryAllowed:()=>true},
+  },{
+    AbortController,
+    setTimeout:(_callback,delay)=>timers.push(delay),
+    clearTimeout:()=>{},
+    fetch:async url=>({ok:true,json:async()=>({choices:[{message:{
+      content:url.includes('primary')?'[]':'[{"id":"s0","text":"Complete translation"}]',
+    }}]})}),
+  });
+  const result=await runExperienceText({
+    region:'cn',task:'knowledge',userId:'fixture',sessionKey:'document-translate',
+    messages:[{role:'user',content:'测试'}],
+    validateText:text=>contract.parseTranslatedSegments(text,[{id:'s0',text:'测试'}]),
+  });
+  assert.equal(result.providerId,'backup');
+  assert.equal(result.attempts,2);
+  assert.deepEqual(affinities,['backup']);
+  assert.deepEqual(timers,[60000,60000]);
 });
