@@ -33,7 +33,7 @@ async function translate(text:string,source:string,target:string,quoteId:string)
   if(engine?.create){
    const options={sourceLanguage:source,targetLanguage:target};
    const availability=await engine.availability?.(options);
-   if(availability!=="unavailable"){
+   if(availability==="available"){
     const translator=await engine.create(options);
     try{return await translator.translate(text)}finally{translator.destroy?.()}
    }
