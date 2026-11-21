@@ -5,6 +5,7 @@ import FileDropzone from"@/components/tools/FileDropzone";
 import PaidActionButton from"@/components/tools/PaidActionButton";
 import ResultPanel from"@/components/tools/ResultPanel";
 import type{ToolResultFile}from"@/lib/tools/types";
+import {subtitleBlocks,rebuildSubtitles} from "@/lib/tools/shared/subtitle-document";
 import{localMediaDuration,toSrt,transcribeLocal}from"@/lib/tools/autonomous/transcribe-local";
 import{extractCompactAudio,muxDubbedVideo}from"@/lib/tools/media/client";
 import{draftFiles,loadPaidTaskDraft,newPaidTaskDraftId,savePaidTaskDraft}from"@/lib/tools/workspace/paid-task-draft";
@@ -50,8 +51,16 @@ export default function VideoDubbingWorkbench(){
      srt=`1\n00:00:00,000 --> ${new Date(Math.max(1000,duration*1000)).toISOString().slice(11,23).replace(".",",")}\n${text}`;
     }
     setStage(`${i+1}/${files.length} · 正在翻译…`);
-    const translated=source===target?text:await remoteTranslate(text,source,target,quoteId);
-    const translatedSrt=srt.replace(text,translated);
+    const blocks=subtitleBlocks(srt),translations=new Map<number,string>();
+    for(const [index,block] of blocks.entries()){
+     if(block.text===null)continue;
+     const translatedCue=source===target?block.text:await remoteTranslate(block.text,source,target,quoteId);
+     if(!translatedCue.trim())throw Error("EMPTY_TRANSLATION_RESULT");
+     translations.set(index,translatedCue);
+    }
+    const translatedSrt=rebuildSubtitles(blocks,translations);
+    const translated=Array.from(translations.values()).join("\n");
+
     const sb=new Blob([translatedSrt],{type:"text/plain;charset=utf-8"});
     subs.push({name:f.name.replace(/\.[^.]+$/,"")+`-${target}.srt`,blob:sb,mime:"text/plain",size:sb.size});
     setStage(`${i+1}/${files.length} · 正在生成配音…`);
