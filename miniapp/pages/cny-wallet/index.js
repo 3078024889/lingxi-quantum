@@ -99,12 +99,12 @@ Page({
         TOPUPS_DISABLED: '小程序人民币商户支付尚未开放。',
         PRODUCTION_ENV_REQUIRED: '当前环境未开放真实人民币支付。',
         APP_ID_MISMATCH: '小程序 AppID 与微信支付商户绑定配置不一致，已阻止下单。',
-        PROVIDER_CONFIG_MISSING: '微信商户 JSAPI 配置不完整，暂不能发起充值。',
+        PROVIDER_CONFIG_MISSING: '微信支付暂时无法连接，请稍后重试。',
       }
       this.setData({
         enabled: result.enabled === true,
         message: result.enabled === true
-          ? '微信商户支付已就绪。使用小程序原生支付，到账以服务端回调和查单为准。'
+          ? '微信支付已开放，付款后会自动核对到账情况。'
           : (disabledMessages[result.reason] || '小程序人民币商户支付暂未开放，请稍后重新检查。'),
       })
     } catch (_) {
@@ -190,7 +190,7 @@ Page({
       }
       this.setData({
         canResumePayment: false,
-        message: '付款结果仍在核验。若已扣款，余额会在服务端确认后入账；请勿重复付款。',
+        message: '付款结果仍在核验。若已扣款，订单确认后余额会自动到账；请勿重复付款。',
       })
       return { paid: false }
     } catch (_) {
@@ -243,7 +243,7 @@ Page({
         success: resolve,
         fail: reject,
       }))
-      this.setData({ message: '微信收银台已返回，正在向服务端核验订单与余额。' })
+      this.setData({ message: '微信收银台已返回，正在核对订单和余额。' })
     } catch (error) {
       this.setData({ message: paymentError(error) })
     } finally {

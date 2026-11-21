@@ -10,7 +10,7 @@ const localTranscription=new Set(["audio-transcription","video-transcription"]);
 
 export function isFreeTranslationAcceptanceTool(slug:string):boolean {
  return process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true" &&
-  (slug==="document-translate"||slug==="subtitle-translate");
+  (slug==="document-translate"||slug==="subtitle-translate"||slug==="image-translator");
 }
 
 /** Only browser-local processing joins the unrestricted acceptance run here. */

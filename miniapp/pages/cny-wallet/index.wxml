@@ -48,5 +48,5 @@
     重新读取账户
   </button>
 
-  <view class="cny-security-note">支付按钮返回不代表余额已到账。灵犀场会向微信核验订单，并以服务端账本入账结果为准。</view>
+  <view class="cny-security-note">付款后会自动核对到账情况。若已扣款，请等待结果，避免重复付款。</view>
 </view>
