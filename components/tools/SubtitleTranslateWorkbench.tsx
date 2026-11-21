@@ -31,7 +31,17 @@ export default function SubtitleTranslateWorkbench(){
  useEffect(()=>{const supported=Boolean((globalThis as any).Translator?.create);setNative(supported);setOnline(!supported);const id=new URLSearchParams(location.search).get('resumeDraft');if(!id){setRestored(true);return}void loadPaidTaskDraft<any>(id).then(d=>{if(d?.toolId==='subtitle-translate'){setFiles(draftFiles(d).slice(0,1));setDraftId(id);setSource(d.state?.source||'zh');setTarget(d.state?.target||'en');setOut(d.state?.out||'');setName(d.state?.name||'translated.srt');setCharCount(Number(d.state?.charCount||0));setOnline(d.state?.online??!supported)}setRestored(true)}).catch(()=>{setRestored(true);setError(c[2])});return()=>active.current?.abort()},[]);
  async function persist(){if(!files[0]||!draftId)throw Error('NO_SUBTITLE_DRAFT');await savePaidTaskDraft({id:draftId,toolId:'subtitle-translate',files:files.slice(0,1),state:{source,target,out,name,charCount,online}})}
  useEffect(()=>{setDraftReady(false);if(!restored||!files[0]||!draftId)return;let live=true;const timer=setTimeout(()=>{void persist().then(()=>{if(live)setDraftReady(true)}).catch(()=>{if(live)setError(c[2])})},120);return()=>{live=false;clearTimeout(timer)}},[files,source,target,out,name,charCount,draftId,restored,online]);
- async function run(){if(!files[0]||busy)return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setOut('');setNeedsLogin(false);try{const text=await files[0].text();setCharCount(text.length);const translated=online?await translateSubtitleOnline(text,target,source,controller.signal):await translateSubtitleLocal(text,target,source,controller.signal);controller.signal.throwIfAborted();setOut(translated);setName('translated-'+files[0].name)}catch(e){if(!controller.signal.aborted){const auth=e instanceof Error&&e.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?c[3]:c[2])}}finally{active.current=null;setBusy(false)}}
+ async function run(){if(!files[0]||busy)return;const controller=new AbortController();active.current=controller;setBusy(true);setError('');setOut('');setNeedsLogin(false);try{const text=await files[0].text();setCharCount(text.length);let translated:string;
+   if(online)translated=await translateSubtitleOnline(text,target,source,controller.signal);
+   else{
+    try{translated=await translateSubtitleLocal(text,target,source,controller.signal)}
+    catch(error){
+     controller.signal.throwIfAborted();
+     if(!(error instanceof Error)||!/^LOCAL_/.test(error.message))throw error;
+     setOnline(true);
+     translated=await translateSubtitleOnline(text,target,source,controller.signal);
+    }
+   }controller.signal.throwIfAborted();setOut(translated);setName('translated-'+files[0].name)}catch(e){if(!controller.signal.aborted){const auth=e instanceof Error&&e.message==='AUTH_REQUIRED';setNeedsLogin(auth);setError(auth?c[3]:c[2])}}finally{active.current=null;setBusy(false)}}
  async function exportPaid(){if(!out)throw Error('SUBTITLE_RESULT_MISSING');const blob=new Blob([out],{type:name.toLowerCase().endsWith('.vtt')?'text/vtt':'application/x-subrip'});await downloadBlob(blob,name);setDelivered({blob,name})}
  return <div className="space-y-4">
   {delivered&&<ResultFileActions blob={delivered.blob} name={delivered.name}/>}
