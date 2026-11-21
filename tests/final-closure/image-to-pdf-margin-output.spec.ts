@@ -47,8 +47,7 @@ test("Image-to-PDF: original-size pages retain exact margins and image order aft
  expect(second.getPages().map(p=>p.getSize())).toEqual([{width:112,height:172},{width:192,height:152}]);
 });
 
-test("Image-to-PDF desktop drag-and-drop reorders output pages without image re-encoding",async({page,isMobile})=>{
- test.skip(isMobile,"Mobile users can reorder using the up/down controls");
+test("Image-to-PDF dragging reorders output pages without image re-encoding",async({page,isMobile,context})=>{
  test.setTimeout(90000);
  const first=await sharp({create:{width:90,height:45,channels:3,background:"#cc2200"}}).png().toBuffer();
  const second=await sharp({create:{width:35,height:95,channels:3,background:"#0022cc"}}).jpeg().toBuffer();
@@ -59,7 +58,20 @@ test("Image-to-PDF desktop drag-and-drop reorders output pages without image re-
  ]);
  const rows=page.getByTestId("image-to-pdf-sort-item");
  await expect(rows).toHaveCount(2);
- await rows.nth(1).dragTo(rows.nth(0));
+ if(isMobile){
+  const grip=page.getByTestId("image-to-pdf-touch-grip").nth(1);
+  await grip.scrollIntoViewIfNeeded();
+  const from=await grip.boundingBox(),to=await rows.nth(0).boundingBox();
+  expect(from).not.toBeNull();expect(to).not.toBeNull();
+  const session=await context.newCDPSession(page);
+  try{
+   await session.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x:from!.x+from!.width/2,y:from!.y+from!.height/2}]});
+   await session.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:to!.x+30,y:to!.y+to!.height/2}]});
+   await session.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+  }finally{await session.detach()}
+ }else{
+  await rows.nth(1).dragTo(rows.nth(0));
+ }
  await expect(page.getByText("1. tall.jpg")).toBeVisible();
  await page.getByRole("button",{name:"Create PDF",exact:true}).click();
  const pdf=await download(page);
