@@ -1,4 +1,5 @@
 "use client";
+import FreeMediaActionButton from "@/components/tools/FreeMediaActionButton";
 import{useEffect,useMemo,useState}from"react";
 import ToolUiText from "@/components/tools/ToolUiText";
 import FileDropzone from"@/components/tools/FileDropzone";
@@ -80,7 +81,7 @@ export default function VideoDubbingWorkbench(){
    <label className="text-sm"><ToolUiText text="原始语言" /><select value={source} onChange={e=>setSource(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
    <label className="text-sm"><ToolUiText text="配音语言" /><select value={target} onChange={e=>setTarget(e.target.value)} className="mt-1 w-full rounded-xl border border-[var(--lx-line)] bg-[var(--lx-panel)] px-3 py-2">{LANGS.map(([v,n])=><option key={v} value={v}>{n}</option>)}</select></label>
   </div>
-  {files.length>0&&<PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{minutes:quantity,files:files.length,source,target,export:"dubbed-mp4"}} onPaid={run} label="查看本次配音成片价格"/>}
+  {files.length>0&&(process.env.NEXT_PUBLIC_TOOL_FREE_ACCEPTANCE==="true"?<FreeMediaActionButton disabled={busy} onRun={()=>run("")}/>: <PaidActionButton toolId="video-dubbing" quantity={quantity} draftId={draftId} draftReady={draftReady} metadata={{minutes:quantity,files:files.length,source,target,export:"dubbed-mp4"}} onPaid={run} label="查看本次配音成片价格"/>)}
   {busy&&<p className="text-sm text-[var(--lx-muted)]">{stage||"正在处理…"}</p>}
   <p className="text-xs leading-5 text-[var(--lx-faint)]"><ToolUiText text="生成结果包含翻译字幕和可下载 MP4 配音成片。当前版本使用新的合成语音替换原视频音轨，不宣称口型同步或原声克隆。生成语音为 AI 合成语音。" /></p>
   {error&&<p role="alert" className="rounded-xl border border-[var(--lx-danger)] p-4 text-sm text-[var(--lx-danger)]">{error}</p>}

@@ -1,3 +1,4 @@
+import {authorizeFreeMediaAcceptance} from "@/lib/tools/media/free-acceptance";
 import {authorizeToolPassStage} from "@/lib/tools/commerce/tool-stage-gate";
 import{NextRequest,NextResponse}from"next/server";
 import{isSameOriginMutation}from"@/lib/sasi/request-security";
@@ -12,10 +13,14 @@ export async function POST(req:NextRequest){
   const allowed=["video-dubbing","video-translate","video-transcription","audio-transcription"];
   const toolSlug=String(fd.get("toolSlug")||"video-transcription");
   if(!allowed.includes(toolSlug))return NextResponse.json({error:"INVALID_TOOL"},{status:400});
+  const free=await authorizeFreeMediaAcceptance(req,toolSlug);
+  if(free&&!free.ok)return NextResponse.json({error:free.error},{status:free.status});
+  if(!free){
   const stage=await authorizeToolPassStage({toolSlug,stage:"media-transcribe",
     accessRequestId:fd.get("accessRequestId"),operationId:fd.get("operationId")});
   if(!stage.ok)return NextResponse.json({error:stage.error},{status:stage.status});
   if(stage.mode==="legacy")await requirePaidMediaQuote(quoteId,allowed,{stage:"media-transcribe",characters:0,operationId:fd.get("stageCallId")});
+  }
   const text=await transcribeAudioRemote(x);
   return NextResponse.json({text});
  }catch(e){
