@@ -160,6 +160,18 @@ const rows=Object.entries(CRITICAL).map(([route,tool])=>{
   return {route,tool,state:owner&&ownershipBeforeR2&&verified?"CONTINUATION":"UNSAFE",
    reason:owner&&ownershipBeforeR2&&verified?"OWNED_AND_PASS_REVOCATION_CHECKED":"UNVERIFIED_PASS_CONTINUATION"};
  }
+ if(route==="document-translate"){
+  const auth=code.indexOf("await createClient().auth.getUser()");
+  const guard=code.indexOf("await enforceAbuseGuard(");
+  const provider=code.indexOf("await runExperienceText(");
+  const bounded=code.includes("boundedRequestJson(req,96*1024)") &&
+   code.includes("translationSegments(body.segments)");
+  const protectedExecution=auth>=0&&guard>auth&&provider>guard&&bounded&&
+   code.slice(auth,guard).includes("if(!user)")&&
+   code.slice(guard,provider).includes("if(!abuse.ok)");
+  return {route,tool,state:protectedExecution?"GUARDED":"UNSAFE",
+   reason:protectedExecution?"AUTHENTICATED_BOUNDED_FREE_TRANSLATION":"FREE_TRANSLATION_GUARD_MISSING"};
+ }
  if(route in REMOTE_CALL){
   const start=code.indexOf("await authorizeToolPassStage(");
   const cost=code.indexOf(REMOTE_CALL[route]);
