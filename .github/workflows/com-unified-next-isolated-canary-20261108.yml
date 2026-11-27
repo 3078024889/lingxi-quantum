@@ -6,6 +6,15 @@ on:
     branches: [release/com-sasi-full-20261108]
     paths:
       - '.github/workflows/com-unified-next-isolated-canary-20261108.yml'
+      - 'app/api/pay/**'
+      - 'app/checkout/**'
+      - 'app/pay/**'
+      - 'app/api/tools/pay/**'
+      - 'lib/alipay-handoff.ts'
+      - 'lib/mini/payment-client.ts'
+      - 'lib/wechat-oauth.ts'
+      - 'components/AlipayHandoff.tsx'
+      - 'tests/alipay-handoff.test.mjs'
       - 'app/siai/page.tsx'
       - 'app/[locale]/siai/page.tsx'
       - 'lib/seo/siai-domain-policy.ts'
