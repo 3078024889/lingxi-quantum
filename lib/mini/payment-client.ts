@@ -59,3 +59,16 @@ export async function returnToMiniTopup(): Promise<boolean> {
 }
 
 export function openMiniRecharge() { return openMiniWallet(); }
+
+export async function openMiniWechatTopup(amount:string|number):Promise<boolean>{
+ const value=String(amount).trim();
+ if(!/^(0|[1-9][0-9]{0,4})(\.[0-9]{1,2})?$/.test(value)||Number(value)<=0||Number(value)>10000)return false;
+ const bridge=await miniPaymentBridge();
+ if(!bridge)return false;
+ return new Promise(resolve=>{
+  const timer=setTimeout(()=>resolve(false),5000);
+  const finish=(opened:boolean)=>{clearTimeout(timer);resolve(opened)};
+  try{bridge.navigateTo({url:"/pages/cny-wallet/index?amount="+encodeURIComponent(value),success:()=>finish(true),fail:()=>finish(false)})}
+  catch{finish(false)}
+ });
+}

@@ -10,6 +10,7 @@ import {resolveMarketplaceProduct} from "@/lib/sasi-marketplace/checkout";
 import {toolPassCommerceReady} from "@/lib/tools/commerce/tool-server-receipt";
 import { isSameOriginMutation } from "@/lib/sasi/request-security";
 import { enforceAbuseGuard } from "@/lib/security/abuse-guard";
+import {createAlipayHandoff} from "@/lib/alipay-handoff";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -76,7 +77,8 @@ const product = getProduct(productId) || await resolveMarketplaceProduct(product
         returnUrl: `${baseUrl}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(destination)}`,
         mobile,
       });
-      return NextResponse.json({ orderId: order.id, url: paymentUrl });
+      void paymentUrl;
+      return NextResponse.json({ orderId: order.id, url: `${baseUrl}/pay/alipay/${createAlipayHandoff(order.id)}` });
     } catch (gatewayError) {
       console.error("[alipay create] failed", { orderId: order.id, gatewayError });
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);

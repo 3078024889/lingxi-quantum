@@ -4,6 +4,7 @@ import {createClient} from "@/lib/supabase/server";
 import {createAdminClient} from "@/lib/supabase/admin";
 import {createPaypalOrder} from "@/lib/paypal";
 import {alipayEnabled,alipaySiteUrl,createAlipayPaymentUrl} from "@/lib/alipay";
+import {createAlipayHandoff} from "@/lib/alipay-handoff";
 import {createWechatNativeOrder,createWechatJsapiOrder,buildJsapiInvokeParams,wechatPayConfigured} from "@/lib/wechatpay";
 import {exchangeCodeForOpenid,wechatOauthConfigured} from "@/lib/wechat-oauth";
 import {isSameOriginMutation} from "@/lib/sasi/request-security";
@@ -87,7 +88,10 @@ export async function POST(req:NextRequest){
   if(p==="alipay"){
    const outTradeNo=`LX${order.id.replace(/-/g,"")}`.slice(0,64),mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(req.headers.get("user-agent")||"");
    const paymentUrl=createAlipayPaymentUrl({outTradeNo,amountRmb:Number(quote.amount_rmb),subject:`灵犀场工具-${String(quote.tool_id).slice(0,40)}`,notifyUrl:`${alipaySiteUrl()}/api/pay/alipay/notify`,returnUrl:`${alipaySiteUrl()}/api/pay/alipay/return?orderId=${order.id}&dest=${encodeURIComponent(`/tools/pay?quoteId=${quote.id}&paid=1`)}`,mobile});
-   await admin.from("orders").update({provider_payment_id:outTradeNo}).eq("id",order.id);return NextResponse.json({orderId:order.id,url:paymentUrl});
+   const saved=await admin.from("orders").update({provider_payment_id:outTradeNo}).eq("id",order.id);
+   if(saved.error)throw new Error("ALIPAY_ORDER_SAVE_FAILED");
+   void paymentUrl;
+   return NextResponse.json({orderId:order.id,url:`${alipaySiteUrl()}/pay/alipay/${createAlipayHandoff(order.id)}`});
   }
   if(useJsapi){
    const{openid}=await exchangeCodeForOpenid(code!);(await cookies()).delete("lingxi_wechat_oauth_state");

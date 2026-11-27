@@ -28,6 +28,11 @@ export const maxDuration = 30;
 /** Only emit merchant status and documented code; do not log orders, signatures or payment payloads. */
 function safeWechatFailure(error:unknown){
   const message=error instanceof Error?error.message:"";
+  const apiCode=message.match(/^WECHAT_API_(\d{3}):([A-Z0-9_]{1,64})$/);
+  if(apiCode)return {kind:"GATEWAY_RESPONSE",httpStatus:Number(apiCode[1]),providerCode:apiCode[2]};
+  const oauthCode=message.match(/errcode\s+(\d{1,7})/);
+  if(oauthCode)return {kind:"WECHAT_AUTHORIZATION",providerCode:oauthCode[1]};
+  if(/^WECHAT_RESPONSE_[A-Z_]+$/.test(message))return {kind:message};
   const match=message.match(/微信支付接口返回错误\s+(\d{3}):\s*(\{[\s\S]*\})/);
   if(match){
     let code="UNKNOWN";
@@ -174,7 +179,7 @@ export async function POST(req: NextRequest) {
       console.error("[wechat-create-gateway]",safeWechatFailure(e));
       await admin.from("orders").update({ status: "failed" }).eq("id", order.id);
       return NextResponse.json(
-        { error: useJsapi ? "微信网页授权或JSAPI下单失败" : "微信支付网关返回异常"},
+        { error: "暂时无法打开微信付款，请返回充值页面重试。"},
         { status: 500 }
       );
     }
